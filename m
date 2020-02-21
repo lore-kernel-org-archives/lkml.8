@@ -2,85 +2,158 @@ Return-Path: <SRS0=1210=4J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2D79CC35666
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 22:11:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 953A4C3566F
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 22:11:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F3E06207FD
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 22:11:25 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="np1qz/bS"
+	by mail.kernel.org (Postfix) with ESMTP id 68DDD2465D
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 22:11:55 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1582323115;
+	bh=bf2RsaSvZhMI79nHgHionWDyrsV17B3qT+29dL6QM30=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=xzwW/td2A22uJbEt6+DiTl0u+LoOm9P25U1nlSL8I20VRVjVcwtXa/vfKGB9kXiVT
+	 8ZXZT3cPpvqlSk3sNJ67FHrMJuE2Ang1/52r/6Y99VQE/6Ilf3QQpE7PYVeTcU0jI6
+	 Ns2kx9dmXtcW6Ly5YywUuIvxel9KQQsGuT9Wjzsk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729107AbgBUWLY (ORCPT
+        id S1729198AbgBUWLy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Feb 2020 17:11:24 -0500
-Received: from mail-ed1-f45.google.com ([209.85.208.45]:43350 "EHLO
-        mail-ed1-f45.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726725AbgBUWLY (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Feb 2020 17:11:24 -0500
-Received: by mail-ed1-f45.google.com with SMTP id dc19so4184694edb.10;
-        Fri, 21 Feb 2020 14:11:22 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=6cdf8MxCPSbwySV/dQd+Gx1+0hE9oO2fF0yfSMCUfW8=;
-        b=np1qz/bSoS5HGnqI9USyTzsxjCZx8HlX9Vs6HFuzhgacMY87xRlaM4EUbwlwY3ctF2
-         QNXE38jfLRXVsMQZYg3+ENyX1OOZLPvUyELeB8i4Un/fk5slVf1mV1a1efc3JTjV2fVk
-         Kn2bHk0UAF5QRCzqG06wxeqikLPlnWAK79y9ap+alx5JXNyTViN55aBPnBnGm9Zwzyuy
-         EEM5rUbWfEN+NUEOv39hheJx534FCJpbRx9iMnoAQP7f+1hOYXNZh6AGqfN/u9UcTAfg
-         /icfKrU87gZTIwHDdL7Q7fvJ4ywaqv7jBesa1mZ7P+wjwAYbMz4LWQv/NueU7IhUiztz
-         jjnw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=6cdf8MxCPSbwySV/dQd+Gx1+0hE9oO2fF0yfSMCUfW8=;
-        b=AJ0+sD3uPv/Nydq5z+wjR+0q6jRZWwag8f0JdbBYOcx5zF7TE3pk8WCmgSg0/u35c6
-         WDE5QviJCK5DUAz4E6DgOduaSrUR4jAGaz8h/9IVuLNYDgcnZBVN75Waz9xIKEbprQ3w
-         /W5sE+zUGBQ0PYOKNGVgMjx7aKOlaNkl8LeOsghxcJcuaA8VgBmq3OxQc9xIc+Wp6+if
-         kGZ8mzdIi5aZRnjF/HsoUaBfAcgOL8R42xTJUy2otYB2cvsRNlGItm/CIxCV8YyyP2Rk
-         V9HH/ZbJIDNKGw68al6YHNUz5gr3U+hILpeSCd/UjWZFCsw+bAEMaFO6MFLsuc5W+S40
-         U5Dg==
-X-Gm-Message-State: APjAAAXRDFJ5ozSvya73N1VqXEyFw3v8ut1iBRKmcCDqgQlNFRHobedV
-        ga0xEzXL6mt+Fe9X/shmbahOMDwG2fSLn6n58Wc=
-X-Google-Smtp-Source: APXvYqz+ZLoDSjm7YkztodnQv9v6LWUZoPcWfWmqVJQS8ww1NWyzFQRyJhZ69DPBwlun6HTmY7rvt1/BLnKYgVHGSfY=
-X-Received: by 2002:aa7:c4da:: with SMTP id p26mr35953411edr.4.1582323082266;
- Fri, 21 Feb 2020 14:11:22 -0800 (PST)
+        Fri, 21 Feb 2020 17:11:54 -0500
+Received: from mail.kernel.org ([198.145.29.99]:50688 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726725AbgBUWLy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 21 Feb 2020 17:11:54 -0500
+Received: from mail-qv1-f44.google.com (mail-qv1-f44.google.com [209.85.219.44])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 212962467A;
+        Fri, 21 Feb 2020 22:11:53 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1582323113;
+        bh=bf2RsaSvZhMI79nHgHionWDyrsV17B3qT+29dL6QM30=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=uLjEhdPGfBBs8J8kMdI9gKpPjMd/M6RazcBBvo02LI5gk5BBFs1us7fw56ebDGrNr
+         hDqGewgjxff4DzdXTjm8dNTCjRJxHnGbNdbxaZF/ZCJqBbS4adXiRUSQWuVIIS7L26
+         e7yPR4613FuK8IHfzY0sRp0MoZGPOYUofpaCd1UI=
+Received: by mail-qv1-f44.google.com with SMTP id ci20so323874qvb.4;
+        Fri, 21 Feb 2020 14:11:53 -0800 (PST)
+X-Gm-Message-State: APjAAAVivR2353AR4kVorgtpB2nMIOumPz2X2wA3uQbFRmriV7WZGve4
+        1JONzwQhqHQM0bOzzn/vpgDpF1pWc5bNzb6XjA==
+X-Google-Smtp-Source: APXvYqyYbXN85xYUMFaOgLv6Q5mUpNeZ8NyF/CcoNZ4CxdRu4RUYJEOgtcn8M4e8AKdcB5TiFQMt27ZRzzmiMvhInMw=
+X-Received: by 2002:a0c:f68f:: with SMTP id p15mr31162876qvn.79.1582323112146;
+ Fri, 21 Feb 2020 14:11:52 -0800 (PST)
 MIME-Version: 1.0
-References: <CABLYT9ixWZu2NckMg689NdCTO08=-+UOHbALYrQFHCY26Bw91Q@mail.gmail.com>
- <CADVnQyn8t7EiorqHjGQe7wqH6jQy_sgK=M=gieb7JMjWqvbBHw@mail.gmail.com> <b390a9ed-84a7-d6ef-0647-107259fbd787@gmail.com>
-In-Reply-To: <b390a9ed-84a7-d6ef-0647-107259fbd787@gmail.com>
-From:   Vieri Di Paola <vieridipaola@gmail.com>
-Date:   Fri, 21 Feb 2020 23:11:08 +0100
-Message-ID: <CABLYT9jCD-FPZkJwsKP4gtgGaA8=P5DVtJkzUhuX9YoA5LLdww@mail.gmail.com>
-Subject: Re: warning messages for net/ipv4/tcp_output.c
-To:     Eric Dumazet <eric.dumazet@gmail.com>
-Cc:     Neal Cardwell <ncardwell@google.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Netdev <netdev@vger.kernel.org>,
-        Eric Dumazet <edumazet@google.com>
+References: <20200221053802.70716-1-evanbenn@chromium.org> <20200221163717.v2.1.I02ebc5b8743b1a71e0e15f68ea77e506d4e6f840@changeid>
+In-Reply-To: <20200221163717.v2.1.I02ebc5b8743b1a71e0e15f68ea77e506d4e6f840@changeid>
+From:   Rob Herring <robh+dt@kernel.org>
+Date:   Fri, 21 Feb 2020 16:11:40 -0600
+X-Gmail-Original-Message-ID: <CAL_JsqL94vtBEmV2gNWx-D==sLiRXjxBBFZS8fw1cR6=KjS7XQ@mail.gmail.com>
+Message-ID: <CAL_JsqL94vtBEmV2gNWx-D==sLiRXjxBBFZS8fw1cR6=KjS7XQ@mail.gmail.com>
+Subject: Re: [PATCH v2 1/2] dt-bindings: watchdog: Add mt8173,smc-wdt watchdog
+To:     Evan Benn <evanbenn@chromium.org>
+Cc:     LKML <linux-kernel@vger.kernel.org>,
+        Julius Werner <jwerner@chromium.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Guenter Roeck <linux@roeck-us.net>,
+        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        Wim Van Sebroeck <wim@linux-watchdog.org>,
+        devicetree@vger.kernel.org,
+        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "moderated list:ARM/Mediatek SoC support" 
+        <linux-mediatek@lists.infradead.org>,
+        LINUX-WATCHDOG <linux-watchdog@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Feb 12, 2020 at 4:47 AM Eric Dumazet <eric.dumazet@gmail.com> wrote:
+On Thu, Feb 20, 2020 at 11:38 PM Evan Benn <evanbenn@chromium.org> wrote:
 >
-> >> I get a lot of messages regarding net/ipv4/tcp_output.c in syslog.
+> This watchdog can be used on ARM systems with a Secure
+> Monitor firmware to forward watchdog operations to
+> firmware via a Secure Monitor Call.
+>
+> Signed-off-by: Evan Benn <evanbenn@chromium.org>
+> ---
+>
+> Changes in v2:
+> - Change name arm > mt8173
+>
+>  .../bindings/watchdog/mt8173,smc-wdt.yaml     | 30 +++++++++++++++++++
+>  MAINTAINERS                                   |  6 ++++
+>  2 files changed, 36 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/watchdog/mt8173,smc-wdt.yaml
+>
+> diff --git a/Documentation/devicetree/bindings/watchdog/mt8173,smc-wdt.yaml b/Documentation/devicetree/bindings/watchdog/mt8173,smc-wdt.yaml
+> new file mode 100644
+> index 0000000000000..ff45e13bc548b
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/watchdog/mt8173,smc-wdt.yaml
+> @@ -0,0 +1,30 @@
+> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/watchdog/mt8173,smc-wdt.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> +
+> +title: ARM Secure Monitor Call based watchdog
+> +
+> +allOf:
+> +  - $ref: "watchdog.yaml#"
+> +
+> +maintainers:
+> +  - Julius Werner <jwerner@chromium.org>
+> +
+> +properties:
+> +  compatible:
+> +    enum:
+> +      - mt8173,smc-wdt
 
-Hi,
+compatible strings are in the form <vendor>,<device>. 'mt8173' is not a vendor.
 
-These warning messages were triggered by the Suricata IDS/IPS software
-when used in NFQUEUE "repeat mode".
-I've found a workaround, so I don't know if this issue needs to be addressed.
+> +
+> +required:
+> +  - compatible
+> +
+> +examples:
+> +  - |
+> +    watchdog {
 
-Regards,
+This should be a child of some Mediatek firmware node. I assume
+watchdog is not the *only* function.
 
-Vieri
+> +      compatible = "mt8173,smc-wdt";
+> +      timeout-sec = <15>;
+> +    };
+> +
+> +...
+> diff --git a/MAINTAINERS b/MAINTAINERS
+> index e48ab79879ace..59e8779363c12 100644
+> --- a/MAINTAINERS
+> +++ b/MAINTAINERS
+> @@ -1421,6 +1421,12 @@ S:       Maintained
+>  F:     Documentation/devicetree/bindings/interrupt-controller/amazon,al-fic.txt
+>  F:     drivers/irqchip/irq-al-fic.c
+>
+> +ARM SMC WATCHDOG DRIVER
+> +M:     Julius Werner <jwerner@chromium.org>
+> +R:     Evan Benn <evanbenn@chromium.org>
+> +S:     Maintained
+> +F:     devicetree/bindings/watchdog/mt8173,smc-wdt.yaml
+> +
+>  ARM SMMU DRIVERS
+>  M:     Will Deacon <will@kernel.org>
+>  R:     Robin Murphy <robin.murphy@arm.com>
+> --
+> 2.25.0.265.gbab2e86ba0-goog
+>
