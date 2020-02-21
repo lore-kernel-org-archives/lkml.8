@@ -2,152 +2,220 @@ Return-Path: <SRS0=1210=4J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 145E1C35669
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 20:54:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DDF93C35666
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 20:54:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DE67E2067D
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 20:54:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 98C062067D
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 20:54:31 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="VcEXe+ch"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=embeddedor.com header.i=@embeddedor.com header.b="uKCawyr1"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727362AbgBUUyK (ORCPT
+        id S1728135AbgBUUy3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Feb 2020 15:54:10 -0500
-Received: from mail-lf1-f66.google.com ([209.85.167.66]:41995 "EHLO
-        mail-lf1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726681AbgBUUyJ (ORCPT
+        Fri, 21 Feb 2020 15:54:29 -0500
+Received: from gateway24.websitewelcome.com ([192.185.50.252]:26257 "EHLO
+        gateway24.websitewelcome.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726725AbgBUUy2 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Feb 2020 15:54:09 -0500
-Received: by mail-lf1-f66.google.com with SMTP id 83so2442963lfh.9;
-        Fri, 21 Feb 2020 12:54:07 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=TrycIB0Byl3AK0/v0YAATqy+JxvB3RPNOGJqr8JA/xw=;
-        b=VcEXe+chIrvnVX6OZ7ZdBGQGCnkMJBzOwQxBBzVz6riu1k8SR4N8biCIZ6e1GpL+a5
-         hIdlgF4jnQi7LetD8lBnZne8b7xm7PsVmdnXR2EsQCzU/BeJPaPWl9A+tYxSN80lizps
-         6tRbqaKxTacjzhIitdni9e05xLTY48tZGFvU81weF0jrOOiP1tlX3w2lGwcHftvThtS3
-         pOgwbrUy6E/dA/T/wGuGNfiVl4kgqxIjUdrHH2p2qmstUMIkqFgIU2SCpgqlRAjC0rSO
-         hJR7KPy9heZuPm5pdyyzMpMAP1sjJsmG60uppPrFl8BzuBwJxmpAEoFtc0KqRIuswjAl
-         +upQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=TrycIB0Byl3AK0/v0YAATqy+JxvB3RPNOGJqr8JA/xw=;
-        b=ccRquuMyec5rRZLJsH9H9ItJ8tfR+6V1a2rrkOOexsGwMnslg6f4yMk3NUYMg9Yb1n
-         gqYQlOZbjw3zlzmqxuXi96kW5JpK3yfuAAosr+mnnQDQ/l6E46IIiTpQhWjzgj45rxRR
-         ieHTqvVWG2fH0ZplxL0hvzL5e7bNpb2g4fLAL0AmJDWRvGkspCIYDXhZvzyVIY67vttg
-         6RGXL7Q7U5QsDmp0JpcI9o3tpRtHdJjDnbeXeDREsRYznYc+Br3wIdZ8WfalHixp1ssz
-         lhkMfp9z88SOTZuU+i4IycWkdHEivUiyvlA6k1aaUegS+IiiwmGV4j3mOlSLhy0+46tf
-         GI1g==
-X-Gm-Message-State: APjAAAWaHR7zfoN+mV3XH91ib6TDRx/jsZDTL3AJILx7LLUcfPBjT/Fb
-        T9hjfMTx1FxfPnXi/ovoInlIyYk5
-X-Google-Smtp-Source: APXvYqxOt9u2fSIhWRTt2ibCHFzbfYqE6UBnnkMsKJycj6okTC+5hRtdU3Asa2jDkGJ1HO3o8FkkUw==
-X-Received: by 2002:ac2:489b:: with SMTP id x27mr20442508lfc.130.1582318446607;
-        Fri, 21 Feb 2020 12:54:06 -0800 (PST)
-Received: from [192.168.2.145] (79-139-233-37.dynamic.spd-mgts.ru. [79.139.233.37])
-        by smtp.googlemail.com with ESMTPSA id r20sm2140722lfi.91.2020.02.21.12.54.05
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 21 Feb 2020 12:54:05 -0800 (PST)
-Subject: Re: [PATCH v9 09/17] arm: tegra20: cpuidle: Handle case where
- secondary CPU hangs on entering LP2
-To:     Daniel Lezcano <daniel.lezcano@linaro.org>
-Cc:     Thierry Reding <thierry.reding@gmail.com>,
-        Jonathan Hunter <jonathanh@nvidia.com>,
-        Peter De Schrijver <pdeschrijver@nvidia.com>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        =?UTF-8?B?TWljaGHFgiBNaXJvc8WCYXc=?= <mirq-linux@rere.qmqm.pl>,
-        Jasper Korten <jja2000@gmail.com>,
-        David Heidelberg <david@ixit.cz>,
-        Peter Geis <pgwipeout@gmail.com>, linux-pm@vger.kernel.org,
-        linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20200212235134.12638-1-digetx@gmail.com>
- <20200212235134.12638-10-digetx@gmail.com>
- <20200221154318.GO10516@linaro.org>
- <239a2b66-8da8-2e6c-d19d-9ed207ad0a64@gmail.com>
- <20200221173649.GU10516@linaro.org>
- <b51f3f6b-8287-5ce8-fcaa-77cbab507618@gmail.com>
- <f27481cf-ca5e-df47-932b-fcb4713f0d78@linaro.org>
- <50a8fb7c-f497-2234-c0b0-560aec1c5691@gmail.com>
- <21e3cc35-cc6b-5452-da93-bdaac43716c5@linaro.org>
-From:   Dmitry Osipenko <digetx@gmail.com>
-Message-ID: <c13aa8f9-092b-55ca-742e-17db0184649b@gmail.com>
-Date:   Fri, 21 Feb 2020 23:54:03 +0300
+        Fri, 21 Feb 2020 15:54:28 -0500
+Received: from cm17.websitewelcome.com (cm17.websitewelcome.com [100.42.49.20])
+        by gateway24.websitewelcome.com (Postfix) with ESMTP id EC7D0799DC
+        for <linux-kernel@vger.kernel.org>; Fri, 21 Feb 2020 14:54:26 -0600 (CST)
+Received: from gator4166.hostgator.com ([108.167.133.22])
+        by cmsmtp with SMTP
+        id 5FJajdLTFAGTX5FJajnge2; Fri, 21 Feb 2020 14:54:26 -0600
+X-Authority-Reason: nr=8
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=embeddedor.com; s=default; h=Content-Transfer-Encoding:Content-Type:
+        In-Reply-To:MIME-Version:Date:Message-ID:From:References:To:Subject:Sender:
+        Reply-To:Cc:Content-ID:Content-Description:Resent-Date:Resent-From:
+        Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
+        List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+        bh=HyOlPcJh0SxpUhdQMtn3AZCmhvZ+AcOeThCG2uDWLq0=; b=uKCawyr1v1M42UphMwBTTBsBUz
+        eLKY+keye06OnohB5TsXi4GQU0dq01p6hft4YJ0S+ddE5Ejxkjsqs6CSrOJZH+3IIinRPqx81C1qL
+        +U/AQtoR3HXCUqu7bHL909o1d5InpPXKrQ+v7ND3b9V6BzByA+AmG6cNnDoTUA6AdHgcMl1YBFarE
+        yhU/iOgl3WPdKR5pOcKQktY2lHfN8sMqvkz2ii+vD7Le0uOeOX3jC+mkIThJGMdYg/ICYqCwRwR+h
+        TGOTflzd+B2Y+0CA+qY/VFpzG7QNlRNdSRvKPhqtU3PnYVWh/Mj0Te33rgnxnGlrfJ8sPfGOopNaf
+        GzYvCdWg==;
+Received: from [200.68.140.54] (port=13534 helo=[192.168.43.131])
+        by gator4166.hostgator.com with esmtpsa (TLSv1.2:ECDHE-RSA-AES128-GCM-SHA256:128)
+        (Exim 4.92)
+        (envelope-from <gustavo@embeddedor.com>)
+        id 1j5FJa-0020Rw-HS; Fri, 21 Feb 2020 14:54:26 -0600
+Subject: Re: [PATCH] staging: qlge: add braces on all arms of if-else
+To:     Kaaira Gupta <kgupta@es.iitr.ac.in>,
+        Manish Chopra <manishc@marvell.com>,
+        GR-Linux-NIC-Dev@marvell.com,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        netdev@vger.kernel.org, devel@driverdev.osuosl.org,
+        linux-kernel@vger.kernel.org
+References: <20200221202904.GA19627@kaaira-HP-Pavilion-Notebook>
+From:   "Gustavo A. R. Silva" <gustavo@embeddedor.com>
+Autocrypt: addr=gustavo@embeddedor.com; keydata=
+ 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
+ VtSixD1uOgytAP7RWS474w==
+Message-ID: <11d2a5c5-789b-c371-0173-575b14e4d980@embeddedor.com>
+Date:   Fri, 21 Feb 2020 14:57:10 -0600
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.3.0
+ Thunderbird/68.4.1
 MIME-Version: 1.0
-In-Reply-To: <21e3cc35-cc6b-5452-da93-bdaac43716c5@linaro.org>
+In-Reply-To: <20200221202904.GA19627@kaaira-HP-Pavilion-Notebook>
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7bit
+X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
+X-AntiAbuse: Primary Hostname - gator4166.hostgator.com
+X-AntiAbuse: Original Domain - vger.kernel.org
+X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
+X-AntiAbuse: Sender Address Domain - embeddedor.com
+X-BWhitelist: no
+X-Source-IP: 200.68.140.54
+X-Source-L: No
+X-Exim-ID: 1j5FJa-0020Rw-HS
+X-Source: 
+X-Source-Args: 
+X-Source-Dir: 
+X-Source-Sender: ([192.168.43.131]) [200.68.140.54]:13534
+X-Source-Auth: gustavo@embeddedor.com
+X-Email-Count: 7
+X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
+X-Local-Domain: yes
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-21.02.2020 23:48, Daniel Lezcano пишет:
-> On 21/02/2020 21:21, Dmitry Osipenko wrote:
->> 21.02.2020 23:02, Daniel Lezcano пишет:
-> 
-> [ ... ]
-> 
->>>>>>>> +
->>>>>>>> +		/*
->>>>>>>> +		 * The primary CPU0 core shall wait for the secondaries
->>>>>>>> +		 * shutdown in order to power-off CPU's cluster safely.
->>>>>>>> +		 * The timeout value depends on the current CPU frequency,
->>>>>>>> +		 * it takes about 40-150us  in average and over 1000us in
->>>>>>>> +		 * a worst case scenario.
->>>>>>>> +		 */
->>>>>>>> +		do {
->>>>>>>> +			if (tegra_cpu_rail_off_ready())
->>>>>>>> +				return 0;
->>>>>>>> +
->>>>>>>> +		} while (ktime_before(ktime_get(), timeout));
->>>>>>>
->>>>>>> So this loop will aggresively call tegra_cpu_rail_off_ready() and retry 3
->>>>>>> times. The tegra_cpu_rail_off_ready() function can be called thoushand of times
->>>>>>> here but the function will hang 1.5s :/
->>>>>>>
->>>>>>> I suggest something like:
->>>>>>>
->>>>>>> 	while (retries--i && !tegra_cpu_rail_off_ready()) 
->>>>>>> 		udelay(100);
->>>>>>>
->>>>>>> So <retries> calls to tegra_cpu_rail_off_ready() and 100us x <retries> maximum
->>>>>>> impact.
->>>>>> But udelay() also results into CPU spinning in a busy-loop, and thus,
->>>>>> what's the difference?
->>>>>
->>>>> busy looping instead of register reads with all the hardware things involved behind.
->>>>
->>>> Please notice that this code runs only on an older Cortex-A9/A15, which
->>>> doesn't support WFE for the delaying, and thus, CPU always busy-loops
->>>> inside udelay().
->>>>
->>>> What about if I'll add cpu_relax() to the loop? Do you think it it could
->>>> have any positive effect?
->>>
->>> I think udelay() has a call to cpu_relax().
->>
->> Yes, my point is that udelay() doesn't bring much benefit for us here
->> because:
->>
->> 1. we want to enter into power-gated state as quick as possible and
->> udelay() just adds an unnecessary delay
->>
->> 2. udelay() spins in a busy-loop until delay is expired, just like we're
->> doing it in this function already
-> 
-> In this case why not remove ktime_get() and increase the number of retries?
 
-Because the busy-loop performance depends on CPU's frequency, so we
-can't rely on a bare number of the retries.
+
+On 2/21/20 14:29, Kaaira Gupta wrote:
+> fix all checkpatch.pl warnings of 'braces {} should be used on all arms
+> of this statement' in the file qlge_ethtool.c by adding the braces.
+> 
+> Signed-off-by: Kaaira Gupta <kgupta@es.iitr.ac.in>
+
+Acked-by: Gustavo A. R. Silva <gustavo@embeddedor.com>
+
+Thanks for you patch.
+--
+Gustavo
+
+> ---
+>  drivers/staging/qlge/qlge_ethtool.c | 18 ++++++++++++------
+>  1 file changed, 12 insertions(+), 6 deletions(-)
+> 
+> diff --git a/drivers/staging/qlge/qlge_ethtool.c b/drivers/staging/qlge/qlge_ethtool.c
+> index 790997aff995..592ca7edfc44 100644
+> --- a/drivers/staging/qlge/qlge_ethtool.c
+> +++ b/drivers/staging/qlge/qlge_ethtool.c
+> @@ -259,8 +259,9 @@ static void ql_update_stats(struct ql_adapter *qdev)
+>  				  "Error reading status register 0x%.04x.\n",
+>  				  i);
+>  			goto end;
+> -		} else
+> +		} else {
+>  			*iter = data;
+> +		}
+>  		iter++;
+>  	}
+>  
+> @@ -273,8 +274,9 @@ static void ql_update_stats(struct ql_adapter *qdev)
+>  				  "Error reading status register 0x%.04x.\n",
+>  				  i);
+>  			goto end;
+> -		} else
+> +		} else {
+>  			*iter = data;
+> +		}
+>  		iter++;
+>  	}
+>  
+> @@ -290,8 +292,9 @@ static void ql_update_stats(struct ql_adapter *qdev)
+>  				  "Error reading status register 0x%.04x.\n",
+>  				  i);
+>  			goto end;
+> -		} else
+> +		} else {
+>  			*iter = data;
+> +		}
+>  		iter++;
+>  	}
+>  
+> @@ -304,8 +307,9 @@ static void ql_update_stats(struct ql_adapter *qdev)
+>  				  "Error reading status register 0x%.04x.\n",
+>  				  i);
+>  			goto end;
+> -		} else
+> +		} else {
+>  			*iter = data;
+> +		}
+>  		iter++;
+>  	}
+>  
+> @@ -316,8 +320,9 @@ static void ql_update_stats(struct ql_adapter *qdev)
+>  		netif_err(qdev, drv, qdev->ndev,
+>  			  "Error reading status register 0x%.04x.\n", i);
+>  		goto end;
+> -	} else
+> +	} else {
+>  		*iter = data;
+> +	}
+>  end:
+>  	ql_sem_unlock(qdev, qdev->xg_sem_mask);
+>  quit:
+> @@ -488,8 +493,9 @@ static int ql_start_loopback(struct ql_adapter *qdev)
+>  	if (netif_carrier_ok(qdev->ndev)) {
+>  		set_bit(QL_LB_LINK_UP, &qdev->flags);
+>  		netif_carrier_off(qdev->ndev);
+> -	} else
+> +	} else {
+>  		clear_bit(QL_LB_LINK_UP, &qdev->flags);
+> +	}
+>  	qdev->link_config |= CFG_LOOPBACK_PCS;
+>  	return ql_mb_set_port_cfg(qdev);
+>  }
+> 
