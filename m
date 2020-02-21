@@ -2,281 +2,109 @@ Return-Path: <SRS0=1210=4J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C5F5AC11D25
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 00:19:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 00C39C11D24
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 00:20:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8CEC6208E4
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 00:19:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CAD9724653
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 00:20:00 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="TBe4Mgrv"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Hz3Wvel0"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729451AbgBUATD (ORCPT
+        id S1729477AbgBUAUA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Feb 2020 19:19:03 -0500
-Received: from mail-pl1-f195.google.com ([209.85.214.195]:32956 "EHLO
-        mail-pl1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729397AbgBUATD (ORCPT
+        Thu, 20 Feb 2020 19:20:00 -0500
+Received: from mail-oi1-f196.google.com ([209.85.167.196]:36763 "EHLO
+        mail-oi1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729397AbgBUAT7 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Feb 2020 19:19:03 -0500
-Received: by mail-pl1-f195.google.com with SMTP id ay11so112821plb.0;
-        Thu, 20 Feb 2020 16:19:02 -0800 (PST)
+        Thu, 20 Feb 2020 19:19:59 -0500
+Received: by mail-oi1-f196.google.com with SMTP id c16so300489oic.3
+        for <linux-kernel@vger.kernel.org>; Thu, 20 Feb 2020 16:19:59 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=O8eAGz/pqZqFUKTP2bb1ydmrb6R3JRzc7hCsXNdSvFE=;
-        b=TBe4MgrvRwfcCIFOsb4htsXOSxVcnusqrAp17ZTJA173b0arMS87znuql6TLiLPBBs
-         PUI3JNY1QM7e6eVYQK/vYJOS0acsigUqNnhX3AgH6+Wa5BTODyQLPukZVHgBXPmcc0GD
-         haF2UjOXFpcKHDe6xCbZi2TfFPwvrkmwMDlOE1hVjuhCfeWM3XuLh32Kk/JwhsCDrHnN
-         jdVBKWjt8fel7CLaF4sBq3VwDgaDbrjdkParEcYLojLvI1jfB9+r7Rtytk4PStJ48UnM
-         7YO6HNVkBXDnmU4Jf+rosLXooazseivSUcFWJ2+MzelyGvo3JKWGNBWZYyidtEMYaWRY
-         SRUQ==
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=IHr5qo3B7v5uxs0wZA0fZW6J9zqGy3IdsKd+NBLqxdQ=;
+        b=Hz3Wvel0TrnLWu2KOGBLM37xIzOel8u9Z3LL3LKWhQ5uDvm2hmCI+8lAaq9dDcnzK0
+         mmF29yC6bk6kCEp7Rp8Xphv7SaNuWSCpytm5t0gbTsUTgWYqT1kGf0Uk4snguMx7ktEB
+         CUaU4UXvlG8DiQPZ0fLoxZ7q8pzZGa6twCkjkNgfUTBep5MTIzKNPNNZmjXvVmIuajDT
+         x1oGn/KBMPVd010kg/4IBE9Z7pYnop4ImXcsjGIsjF1rqOEZh0XzY3XCKZGRIyEUPwgM
+         dnOCLimGwLQYnIXwqYXRG3zAdpZoXpkT5LDSWOlqz/mbvst5M1heaxiNSpmi3QJ6N3pL
+         qeqg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=O8eAGz/pqZqFUKTP2bb1ydmrb6R3JRzc7hCsXNdSvFE=;
-        b=EFNXHmp+LJA9rPKZmje7ehRidAJLHraXuxsMbrexziedx4iJG2QOCaRA+HZhPj8fT5
-         byTptY2NqVjaPHdUMjZLnH8NCVAC/8D50LQtJzZAut+7rVNCzEYRvpiIPG464nglPNOL
-         X+KN18pMi2/pDKLgF+MYjXY3WxUETs+zabdzM2THP0BjKCEnTqhOdATUo2K+pvVOussP
-         IsElb4XnBGtwy1L5GrlL8/Zl3kiI8HneJDgOG7p23z0dJ6yyvjlD3cazjyStNzTvgXwb
-         qVx8i3YN5aKq19foiaCY+XhG0geDC9snG+4npBzC6KkxGkDd2pK5XDcfkR2wLxfDfUjc
-         InmA==
-X-Gm-Message-State: APjAAAV/W4wcoVSL2MVJcZ19RaYgGx1RWhyCr+rSMaOopqTEMxgJ6/ys
-        wY00DkzvpLkjRa7HjY4KfSc=
-X-Google-Smtp-Source: APXvYqxdsEuhmZdInMso9eiW6bEOqmFq+cTvdyjVdA/nX5v1Zwxgg1ArC+STWWuiDuN1sQuyoE/14w==
-X-Received: by 2002:a17:902:7449:: with SMTP id e9mr32417669plt.139.1582244341895;
-        Thu, 20 Feb 2020 16:19:01 -0800 (PST)
-Received: from taoren-ubuntu-R90MNF91 ([2620:10d:c090:500::6:8f30])
-        by smtp.gmail.com with ESMTPSA id d2sm544486pjv.18.2020.02.20.16.19.00
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Thu, 20 Feb 2020 16:19:01 -0800 (PST)
-Date:   Thu, 20 Feb 2020 16:18:54 -0800
-From:   Tao Ren <rentao.bupt@gmail.com>
-To:     Benjamin Herrenschmidt <benh@kernel.crashing.org>
-Cc:     Felipe Balbi <balbi@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Joel Stanley <joel@jms.id.au>,
-        Andrew Jeffery <andrew@aj.id.au>,
-        Chunfeng Yun <chunfeng.yun@mediatek.com>,
-        Colin Ian King <colin.king@canonical.com>,
-        Stephen Boyd <swboyd@chromium.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>, linux-usb@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        linux-aspeed@lists.ozlabs.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, openbmc@lists.ozlabs.org,
-        taoren@fb.com
-Subject: Re: [PATCH 1/2] usb: gadget: aspeed: allow to customize vhub device
- IDs/strings
-Message-ID: <20200221001853.GA7815@taoren-ubuntu-R90MNF91>
-References: <20200218235600.6763-1-rentao.bupt@gmail.com>
- <20200218235600.6763-2-rentao.bupt@gmail.com>
- <86ab18e4ed01c6856ff47c859a3dda598dd94978.camel@kernel.crashing.org>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=IHr5qo3B7v5uxs0wZA0fZW6J9zqGy3IdsKd+NBLqxdQ=;
+        b=G/In1azAjMWjhIwdlGY8tPjo0bx7Y58kViTyB+guJ/4hS8KMbXMqNKTuQkIriG/9UB
+         p/PLJrSHpxglDkdXwey31t90bsJT2JZ8LKjZod+6/XoEPHV7V6PPDnKkmayZmk22n60q
+         GIcpsqhLVQeruy/ohVhnI9TGI0F3SRGAglcDGXTi8nfLv8Z/U6/HAhVxqv1UVTuvAtY9
+         xcihEtbUMGm/OAL/fiDrkhdXMY3nL+cHVfv6N3ccLQ26yq14CWbLjhJkP0AJ3YDlXa/l
+         M5RWEUiN5qhnrjL4JtatfgLOXqMleE3Zi/b4n1BfWnh4NSiFyAQ//P8VKoRlUZFF4Th3
+         jCKA==
+X-Gm-Message-State: APjAAAWjcpnq1RZmroPXKTWucHED2Pvmyznam97GCnEGiOanBuBB2GVF
+        lDtbZUO9N1mZIHqI1ymhkBxR7a0d5IZKiYv1xH7/vw==
+X-Google-Smtp-Source: APXvYqxyLS/9yBWFyxJu7nngbozjCnxStnGWdAIgQ8O7CZoqSKHHSFq255QaoTFU0a3hJMPv5SrYAZQF8EZ/aFXEwgA=
+X-Received: by 2002:aca:c0c5:: with SMTP id q188mr3935454oif.169.1582244398771;
+ Thu, 20 Feb 2020 16:19:58 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <86ab18e4ed01c6856ff47c859a3dda598dd94978.camel@kernel.crashing.org>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+References: <1582223216-23459-1-git-send-email-jcrouse@codeaurora.org>
+In-Reply-To: <1582223216-23459-1-git-send-email-jcrouse@codeaurora.org>
+From:   John Stultz <john.stultz@linaro.org>
+Date:   Thu, 20 Feb 2020 16:19:46 -0800
+Message-ID: <CALAqxLW3PHtdFY20AStETme7sp-YLMLXBhqRyjOeLkQDSFOeVQ@mail.gmail.com>
+Subject: Re: [PATCH v2 0/4] msm/gpu/a6xx: use the DMA-API for GMU memory allocations
+To:     Jordan Crouse <jcrouse@codeaurora.org>
+Cc:     linux-arm-msm@vger.kernel.org,
+        Sharat Masetty <smasetty@codeaurora.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Sean Paul <sean@poorly.run>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>, Stephen Boyd <swboyd@chromium.org>,
+        Douglas Anderson <dianders@chromium.org>,
+        lkml <linux-kernel@vger.kernel.org>,
+        dri-devel <dri-devel@lists.freedesktop.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Rob Clark <robdclark@gmail.com>,
+        David Airlie <airlied@linux.ie>,
+        Andy Gross <agross@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        freedreno@lists.freedesktop.org, Daniel Vetter <daniel@ffwll.ch>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Ben,
+On Thu, Feb 20, 2020 at 10:27 AM Jordan Crouse <jcrouse@codeaurora.org> wrote:
+> When CONFIG_INIT_ON_ALLOC_DEFAULT_ON the GMU memory allocator runs afoul of
+> cache coherency issues because it is mapped as write-combine without clearing
+> the cache after it was zeroed.
+>
+> Rather than duplicate the hacky workaround we use in the GEM allocator for the
+> same reason it turns out that we don't need to have a bespoke memory allocator
+> for the GMU anyway. It uses a flat, global address space and there are only
+> two relatively minor allocations anyway. In short, this is essentially what the
+> DMA API was created for so replace a bunch of memory management code with two
+> calls to allocate and free DMA memory and we're fine.
+>
+> The only wrinkle is that the memory allocations need to be in a very specific
+> location in the GMU virtual address space so in order to get the iova allocator
+> to do the right thing we need to specify the dma-ranges property in the device
+> tree for the GMU node. Since we've not yet converted the GMU bindings over to
+> YAML two patches quickly turn into four but at the end of it we have at least
+> one bindings file converted to YAML and 99 less lines of code to worry about.
+>
+> v2: Fix the example bindings for dma-ranges - the third item is the size
+> Pass false to of_dma_configure so that it fails probe if the DMA region is not
+> set up.
 
-On Thu, Feb 20, 2020 at 12:38:10PM +1100, Benjamin Herrenschmidt wrote:
-> On Tue, 2020-02-18 at 15:55 -0800, rentao.bupt@gmail.com wrote:
-> > From: Tao Ren <rentao.bupt@gmail.com>
-> > 
-> > This patch allows people to customize vendor/product/device IDs and
-> > manufacture/product/serial strings in vhub's device descriptor through
-> > device tree properties.
-> 
-> You should probably add a binding file to Documentation/devicetree/bindings/usb/*
-> 
-> We got away without one bcs there was no funky properties there but
-> now that we are adding some, we need to document them.
+This set still works for me as well. Thanks so much!
+Tested-by: John Stultz <john.stultz@linaro.org>
 
-Sure. Andrew also reminded me about the binding document. Will include
-the document in patch v2.
-
-> 
-> Also...
-> 
-> > Signed-off-by: Tao Ren <rentao.bupt@gmail.com>
-> > ---
-> >  drivers/usb/gadget/udc/aspeed-vhub/hub.c | 73 +++++++++++++++++++-----
-> >  1 file changed, 59 insertions(+), 14 deletions(-)
-> > 
-> > diff --git a/drivers/usb/gadget/udc/aspeed-vhub/hub.c b/drivers/usb/gadget/udc/aspeed-vhub/hub.c
-> > index 9c7e57fbd8ef..4e3ef83283a6 100644
-> > --- a/drivers/usb/gadget/udc/aspeed-vhub/hub.c
-> > +++ b/drivers/usb/gadget/udc/aspeed-vhub/hub.c
-> > @@ -43,19 +43,23 @@
-> >   *    - We may need to indicate TT support
-> >   *    - We may need a device qualifier descriptor
-> >   *	as devices can pretend to be usb1 or 2
-> > - *    - Make vid/did overridable
-> >   *    - make it look like usb1 if usb1 mode forced
-> >   */
-> >  #define KERNEL_REL	bin2bcd(((LINUX_VERSION_CODE >> 16) & 0x0ff))
-> >  #define KERNEL_VER	bin2bcd(((LINUX_VERSION_CODE >> 8) & 0x0ff))
-> >  
-> >  enum {
-> > +	AST_VHUB_STR_INDEX_MAX = 4,
-> >  	AST_VHUB_STR_MANUF = 3,
-> >  	AST_VHUB_STR_PRODUCT = 2,
-> >  	AST_VHUB_STR_SERIAL = 1,
-> >  };
-> >  
-> > -static const struct usb_device_descriptor ast_vhub_dev_desc = {
-> > +/*
-> > + * Below is the default Device Descriptor of the vhub device. Some fields
-> > + * may be updated in "ast_vhub_fixup_dev_desc" function.
-> > + */
-> > +static struct usb_device_descriptor ast_vhub_dev_desc = {
-> >  	.bLength		= USB_DT_DEVICE_SIZE,
-> >  	.bDescriptorType	= USB_DT_DEVICE,
-> >  	.bcdUSB			= cpu_to_le16(0x0200),
-> > @@ -148,10 +152,14 @@ static struct usb_hub_descriptor ast_vhub_hub_desc = {
-> >  };
-> >  
-> >  /*
-> > - * These strings converted to UTF-16 must be smaller than
-> > - * our EP0 buffer.
-> > + * Below tables define the default Language ID and String Descriptors of
-> > + * the vhub. Language ID and strings may be overridden if according device
-> > + * tree properties are defined. Refer to "ast_vhub_fixup_dev_desc" function
-> > + * for details.
-> > + * Note: these strings converted to UTF-16 must be smaller than vhub EP0
-> > + * buffer size.
-> >   */
-> > -static const struct usb_string ast_vhub_str_array[] = {
-> > +static struct usb_string ast_vhub_str_array[] = {
-> >  	{
-> >  		.id = AST_VHUB_STR_SERIAL,
-> >  		.s = "00000000"
-> > @@ -167,7 +175,7 @@ static const struct usb_string ast_vhub_str_array[] = {
-> >  	{ }
-> >  };
-> 
-> I dislike this. The array should remain static and contain the
-> defaults. The properties shouldn't modify the global array, there could
-> be a future chip with multiple vhubs and that would make them stomp on
-> each other.
-> 
-> Instead, duplicate the properties into the per-vhub instance data and
-> update the content there.
-
-Okay. I will include a copy of the descriptors in struct ast_vhub and
-override per-hub instances if needed.
-
-> 
-> You could also skip using usb_gadget_get_string() and expose the low
-> level conversion function directly though that's trickier.
-> 
-> Also have you thought about supporting a list of strings along with an
-> array of language IDs ? Vendors might want to provide multiple
-> languages...
-
-I thought people (aspeed bmc users) won't care much about multi-language
-usb strings in the near future. Maybe I'm wrong, but if this is what we
-want for now, I will try to add the support, but will need more guidance
-from you (such as device tree structure, dt property value to utf-16
-conversion, and etc.).
-
-
-Cheers,
-
-Tao
-
-> 
-> > -static const struct usb_gadget_strings ast_vhub_strings = {
-> > +static struct usb_gadget_strings ast_vhub_strings = {
-> >  	.language = 0x0409,
-> >  	.strings = (struct usb_string *)ast_vhub_str_array
-> >  };
-> > @@ -320,18 +328,15 @@ static int ast_vhub_rep_string(struct ast_vhub_ep *ep,
-> >  			       u8 string_id, u16 lang_id,
-> >  			       u16 len)
-> >  {
-> > -	int rc = usb_gadget_get_string (&ast_vhub_strings, string_id, ep->buf);
-> > -
-> > -	/*
-> > -	 * This should never happen unless we put too big strings in
-> > -	 * the array above
-> > -	 */
-> > -	BUG_ON(rc >= AST_VHUB_EP0_MAX_PACKET);
-> > +	int rc;
-> > +	u8 buf[256]; /* buffer size required by usb_gadget_get_string */
-> >  
-> > -	if (rc < 0)
-> > +	rc = usb_gadget_get_string(&ast_vhub_strings, string_id, buf);
-> > +	if (rc < 0 || rc >= AST_VHUB_EP0_MAX_PACKET)
-> >  		return std_req_stall;
-> >  
-> >  	/* Shoot it from the EP buffer */
-> > +	memcpy(ep->buf, buf, rc);
-> >  	return ast_vhub_reply(ep, NULL, min_t(u16, rc, len));
-> >  }
-> >  
-> > @@ -837,11 +842,51 @@ void ast_vhub_hub_reset(struct ast_vhub *vhub)
-> >  	writel(0, vhub->regs + AST_VHUB_EP1_STS_CHG);
-> >  }
-> >  
-> > +static void ast_vhub_fixup_dev_desc(struct ast_vhub *vhub)
-> > +{
-> > +	int i;
-> > +	u8 id;
-> > +	u16 of_id;
-> > +	const char *of_str[AST_VHUB_STR_INDEX_MAX] = {NULL};
-> > +	struct device_node *np = vhub->pdev->dev.of_node;
-> > +
-> > +	/*
-> > +	 * Update IDs in device descriptor if according properties are
-> > +	 * defined in device tree.
-> > +	 */
-> > +	if (!of_property_read_u16(np, "vendor-id", &of_id))
-> > +		ast_vhub_dev_desc.idVendor = cpu_to_le16(of_id);
-> > +	if (!of_property_read_u16(np, "product-id", &of_id))
-> > +		ast_vhub_dev_desc.idProduct = cpu_to_le16(of_id);
-> > +	if (!of_property_read_u16(np, "device-id", &of_id))
-> > +		ast_vhub_dev_desc.bcdDevice = cpu_to_le16(of_id);
-> > +
-> > +	/*
-> > +	 * Update string descriptors if according properties are defined
-> > +	 * in device tree.
-> > +	 */
-> > +	if (!of_property_read_u16(np, "language-id", &of_id))
-> > +		ast_vhub_strings.language = of_id;
-> > +
-> > +	of_str[AST_VHUB_STR_MANUF] = of_get_property(np, "manufacturer", NULL);
-> > +	of_str[AST_VHUB_STR_PRODUCT] = of_get_property(np, "product", NULL);
-> > +	of_str[AST_VHUB_STR_SERIAL] = of_get_property(np, "serial-number",
-> > +						      NULL);
-> > +
-> > +	for (i = 0; ast_vhub_str_array[i].s != NULL; i++) {
-> > +		id = ast_vhub_str_array[i].id;
-> > +		if (of_str[id])
-> > +			ast_vhub_str_array[i].s = of_str[id];
-> > +	}
-> > +}
-> > +
-> >  void ast_vhub_init_hub(struct ast_vhub *vhub)
-> >  {
-> >  	vhub->speed = USB_SPEED_UNKNOWN;
-> >  	INIT_WORK(&vhub->wake_work, ast_vhub_wake_work);
-> >  
-> > +	ast_vhub_fixup_dev_desc(vhub);
-> > +
-> >  	/*
-> >  	 * Fixup number of ports in hub descriptor.
-> >  	 */
-> 
+thanks
+-john
