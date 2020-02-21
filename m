@@ -2,145 +2,155 @@ Return-Path: <SRS0=1210=4J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+X-Spam-Status: No, score=-5.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8E42CC35657
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 15:59:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E4FFEC35656
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 15:59:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 596DE206EF
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 15:59:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B894D206EF
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 15:59:57 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=analog.onmicrosoft.com header.i=@analog.onmicrosoft.com header.b="79ii5LQV"
+	dkim=pass (1024-bit key) header.d=gmx.net header.i=@gmx.net header.b="LTg9ika+"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729196AbgBUP7j (ORCPT
+        id S1729379AbgBUP74 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Feb 2020 10:59:39 -0500
-Received: from mx0a-00128a01.pphosted.com ([148.163.135.77]:16992 "EHLO
-        mx0a-00128a01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1728235AbgBUP7j (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Feb 2020 10:59:39 -0500
-Received: from pps.filterd (m0167089.ppops.net [127.0.0.1])
-        by mx0a-00128a01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 01LFiFn3018109;
-        Fri, 21 Feb 2020 10:59:37 -0500
-Received: from nam11-bn8-obe.outbound.protection.outlook.com (mail-bn8nam11lp2177.outbound.protection.outlook.com [104.47.58.177])
-        by mx0a-00128a01.pphosted.com with ESMTP id 2y8ucu7juy-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Fri, 21 Feb 2020 10:59:36 -0500
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=nv6gT8d3VCZ3pisH52iOjLlpyfUI5NJqOpDdeHQ2ApU2VikQkWwJpnXqoI08nx0+pRjnUkywE4Tqtdwu/rr7xeXmIzbIHnHf8lYDqE5gRV3gJUrBcM5Cq3PW5EtKRpR79b8cnl3Bo11Oq1/ENVW5Z4FWVeymylLxVy+IAfHx0eC71KzyH9h7va9HKcnPc9lYRluKs/kIYZ95oFTs35CSj1cqZDK7Oq2CgG9vneftgyl2czwKTUh7GoN7sOlC5j/LsDTJGig9DM5AROtpP+80EI6kcGD/XHm58a/25Z++IeqkLlUbkOC+h93KTDovcHCkllHE22elEDVHbdlVU1uyYA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=98QCTJjbVsN2gR3Op8+mpd/gmOdTs1fDfBxqky5ZbPQ=;
- b=l6XnNwLFfUfmMaRw/uhK3vRzOLgiukObEkQASFqa7ATJRqf1gTurm24kilaVGzwY888F8Qygd7nY31jp03uhLT9aocBQvDltkGDptNyXShmKw3Z53UhdqTQzOXEXmya5OfDhk6cvOg4QvlnB5E9fOvpgBYHPuyYu0WIjv9pXHwu6KWfIp8IQqV7p67/8S6fwSCu+/fyLVUIrJEvCktLPXztp5kGDsUMYkgzMtyqfv/8jrae88Dfvzk5JFi5B8w9FYrvbV3bsebCvNcS+T3Nz79HEKmdnU9dB4pjWAxWM9kl4fPgC/PZ2JNiCTwPWw+4UatCc1QPxEZCXFslYudXckw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=analog.com; dmarc=pass action=none header.from=analog.com;
- dkim=pass header.d=analog.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=analog.onmicrosoft.com; s=selector2-analog-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=98QCTJjbVsN2gR3Op8+mpd/gmOdTs1fDfBxqky5ZbPQ=;
- b=79ii5LQVfo2k9jc+ttyJl/4c5QRbuocOFVTZtUJg9FtaSuM8f4GKpjxTNcokiOBSsw+X/oZ/l+j+q48l206CdPJThV8X2gIdyT+wqtuRAaaBbiFn3jgPAROdps+ABJBUAWPNnfKjt5gpmDuFzexIyCAgHRkB1Z7EoQTW9rS76mw=
-Received: from CH2PR03MB5192.namprd03.prod.outlook.com (2603:10b6:610:90::24)
- by CH2PR03MB5317.namprd03.prod.outlook.com (2603:10b6:610:9c::9) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2729.25; Fri, 21 Feb
- 2020 15:59:35 +0000
-Received: from CH2PR03MB5192.namprd03.prod.outlook.com
- ([fe80::edf0:3922:83f0:3056]) by CH2PR03MB5192.namprd03.prod.outlook.com
- ([fe80::edf0:3922:83f0:3056%4]) with mapi id 15.20.2729.033; Fri, 21 Feb 2020
- 15:59:35 +0000
-From:   "Ardelean, Alexandru" <alexandru.Ardelean@analog.com>
-To:     "jic23@kernel.org" <jic23@kernel.org>
-CC:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-iio@vger.kernel.org" <linux-iio@vger.kernel.org>
-Subject: Re: [PATCH 1/3] iio: imu: adis: add doc-string for 'adis' struct
-Thread-Topic: [PATCH 1/3] iio: imu: adis: add doc-string for 'adis' struct
-Thread-Index: AQHV6Kyqh2DoHgggAUWjgbyiyGgv6Kgln5YAgAAu4gA=
-Date:   Fri, 21 Feb 2020 15:59:35 +0000
-Message-ID: <414d7e293b75e556ce857e0ce985a0f89fb24ffd.camel@analog.com>
-References: <20200221114943.2056-1-alexandru.ardelean@analog.com>
-         <20200221131146.2213e8e1@archlinux>
-In-Reply-To: <20200221131146.2213e8e1@archlinux>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-originating-ip: [137.71.226.54]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-ht: Tenant
-x-ms-office365-filtering-correlation-id: e03b09dc-414e-413d-667e-08d7b6e70c07
-x-ms-traffictypediagnostic: CH2PR03MB5317:
-x-microsoft-antispam-prvs: <CH2PR03MB5317C2AABDA2ED3F819DBAEDF9120@CH2PR03MB5317.namprd03.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:7219;
-x-forefront-prvs: 0320B28BE1
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(346002)(396003)(366004)(136003)(39860400002)(376002)(199004)(189003)(26005)(186003)(81156014)(6916009)(2906002)(4326008)(81166006)(6506007)(6486002)(8676002)(5660300002)(71200400001)(36756003)(54906003)(91956017)(76116006)(6512007)(66476007)(478600001)(66446008)(86362001)(316002)(64756008)(8936002)(66556008)(2616005)(66946007);DIR:OUT;SFP:1101;SCL:1;SRVR:CH2PR03MB5317;H:CH2PR03MB5192.namprd03.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
-received-spf: None (protection.outlook.com: analog.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: Y2HVrWNkRx0HVrLJdHKHtkQC+fbJMph5igCvkxl6AKfd4UVoCN4MO5SyVbfLpJz+J5XZ/Z2LU1qDaAr5Csl42cGByDrh28P3fwVCr1m2607qnxG8SbMMfb/o0SIWA30+fR9GMtfPDAe74oqkP7P1rSEInDNOfndV8Ievh9tFdWoFSFJIvgqbbziPCLRbZ/H8I7v611gQobWFWXTr8OGIwBSQMTaMStiOYQV/hrwwbJ2KjHWJsbMaZNBBCgutLIlf+JbJX86QevXYU/UowTWIpxH5Jah6ahB2mJ56XRSVcs+lgt0zyzGE+HvFhaIIRlltnLsY08wX7tktA4U/gnANJhmj4kPZexaTbn1wB84OXIo+A32hZ39zGlJnFhWjpIezVqoRmIbu6puMZa+r/6nhYfDvlye4mAg9HHATaSsSv/WmRak33gGUCUafPc9fe2qH
-x-ms-exchange-antispam-messagedata: jIrwcK+7d8jYVqx9dR59JIsI4hatASNtQmVvB5naDAaPGCE6z1E1wrHgbYqFN9lTXsgdLIc/cr+fZgKlEy5yxr5WnsOICNb3A3ghfXL7a3DxyNQelP1kjOobjfeIxxExYx7IXHSoPn8a1umwEHIYwg==
-x-ms-exchange-transport-forked: True
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <03275B5AD207B345B40FD8F7AB89A246@namprd03.prod.outlook.com>
-Content-Transfer-Encoding: base64
+        Fri, 21 Feb 2020 10:59:56 -0500
+Received: from mout.gmx.net ([212.227.17.21]:41707 "EHLO mout.gmx.net"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728704AbgBUP74 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 21 Feb 2020 10:59:56 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gmx.net;
+        s=badeba3b8450; t=1582300755;
+        bh=d2ZkK443d4BHT30ZFEmF6Y8U3raLXQ/NQ1CVDMenM0M=;
+        h=X-UI-Sender-Class:Date:From:To:Cc:Subject:References:In-Reply-To;
+        b=LTg9ika+vD8hPIt//SK4kmSd46v43EK/4HE+WJEEURoF/pDD/29GRFGH7iGOhrMsJ
+         VJjq6S9UZkotp0OlzayL7dsMC4svIhVIwUpF0CG7oXqPkNOjGT6SKXtjOt2XRj95Rh
+         pNskVbStFZl7QYGFbOGZ7E5ww7v6K+9HCqiALX6Y=
+X-UI-Sender-Class: 01bb95c1-4bf8-414a-932a-4f6e2808ef9c
+Received: from longitude ([5.146.194.18]) by mail.gmx.com (mrgmx104
+ [212.227.17.168]) with ESMTPSA (Nemesis) id 1MAONX-1jAu0u1dVL-00BwT3; Fri, 21
+ Feb 2020 16:59:15 +0100
+Date:   Fri, 21 Feb 2020 16:59:12 +0100
+From:   Jonathan =?utf-8?Q?Neusch=C3=A4fer?= <j.neuschaefer@gmx.net>
+To:     Jonathan Corbet <corbet@lwn.net>
+Cc:     Jonathan =?utf-8?Q?Neusch=C3=A4fer?= <j.neuschaefer@gmx.net>,
+        linux-mtd@lists.infradead.org, Richard Weinberger <richard@nod.at>,
+        Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
+        Miklos Szeredi <mszeredi@redhat.com>,
+        "Daniel W. S. Almeida" <dwlsalmeida@gmail.com>,
+        Jaskaran Singh <jaskaransingh7654321@gmail.com>,
+        "Tobin C. Harding" <tobin@kernel.org>,
+        Stefan Hajnoczi <stefanha@redhat.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Rob Herring <robh@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+        linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 4/4] docs: ubifs-authentication: fix Sphinx warning
+Message-ID: <20200221155912.GF2031@latitude>
+References: <20200214170833.25803-1-j.neuschaefer@gmx.net>
+ <20200214170833.25803-4-j.neuschaefer@gmx.net>
+ <20200219041758.3b7316b8@lwn.net>
 MIME-Version: 1.0
-X-OriginatorOrg: analog.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: e03b09dc-414e-413d-667e-08d7b6e70c07
-X-MS-Exchange-CrossTenant-originalarrivaltime: 21 Feb 2020 15:59:35.1179
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: eaa689b4-8f87-40e0-9c6f-7228de4d754a
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: cmWUHfmmijqzSqJUbTeNLKc8B6CYPkO26M3WM+ldBWuwlXuOuMuzuG3kWfULJLEBVa2tyi4pjJPkMHZ6NxlItlyKBqsd7jbTvFliK80xbkE=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: CH2PR03MB5317
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.572
- definitions=2020-02-21_05:2020-02-21,2020-02-21 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 bulkscore=0 spamscore=0
- suspectscore=0 mlxscore=0 clxscore=1015 phishscore=0 priorityscore=1501
- mlxlogscore=999 lowpriorityscore=0 adultscore=0 malwarescore=0
- impostorscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2001150001 definitions=main-2002210119
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="cYtjc4pxslFTELvY"
+Content-Disposition: inline
+In-Reply-To: <20200219041758.3b7316b8@lwn.net>
+User-Agent: Mutt/1.10.1 (2018-07-13)
+X-Provags-ID: V03:K1:YbDiWGoUlkw7KYFFvHP0EElkU/3+yZiQU6F1r601m4IhkiTOywM
+ n4oxuP6TIHheM0ctLm+MSoLeEfLR9cakqC5W/UB1kuLb3lba3cUj81OIxmgq022idQwYIc8
+ OY8+jOOE7oV0VYU8ryop5YuvWEf1Y0zh3fj6YMEfMiXtpDc5RBwUBmJjqAsWuVE/fIs3UBM
+ bs65IMAAIibW7Dtf1AsEQ==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:fAoSyRD/Elo=:3ud0ELJ0bSkRjL4aJnhrFi
+ pMcEN++i6Jg7h71t8nR4u/z8NS9UrRQqAJi5aMEb2sX2yviRm6VgtnZ5YB+nfYWg2z2Cvs+oo
+ P/iCFxuA2kk0oX2icRUSZFodntAS56U6GTcdGz3ZAdMJM9eLlj/GQvDDOkxwryEfQw5kfFr+Q
+ Y6eydFu5a8EdJyxcjp2N0vsrah1u7gAdt+/oyQN3+S68DF5sjKQkH1EJP/Af/ci/4tHrbAaO+
+ 6vcqIqG+552ZmiSYu8y20svUhV9NXAJhZwc+C3tQ416HfbXtyDxhrtwirKyeym3uq8mgl0xA5
+ 6G0ZAR3Jij+1qKLaHXg9dC8YGxMT9jfFpICrdHaWzfs3plPryhef3ooAaIUflJtY6Bj5cwI6n
+ ZNxNI55sl/Rf45GjIluOktV+90EHSDpWPfByvtrIp+2Hl/1+/WXa+95qVmV+nD8CSu7OczCll
+ 7KdQ/qkBVZt3rEHi14IvlUTylW9duUMhlkGBkae4TZYbr2ANfROMPecLdfF3aNLtVjX4BJhyG
+ Xj3qezWmgAhZEnCnTHwkkiIWrXx7PWDnKz4DMN5ouRy0acGdS6S7NIfdYqxwnQZ4bzZvmJ7wa
+ X6ZzZLuLN09QbXa/wPyuTj2OpOaeblQ1+FiCOquEbVFMHiSERNfx4Iw5P7f4aA/tHCwFjdJdu
+ zd+r4Ci7fGzUbGvhydH+wK8mwbx1X6nODfqI9x+p06AXB4NSssWH/iAxap8mWQVTeBeBtHf9O
+ PEhWLtZGqwVaEJrrGqFgPTpWhKDwf9Wp9k3saf42lXI+DnxmZGBUrc/FiP1b4GRfTKeZDYNxP
+ 0l4BQc+6XOi0G42cMi0U3hs9NI8j93MF1+Ao6/DOBGKdUHQej1KZgsWlJ63E7K+6J/97nTKhB
+ Wwd83kpjKU4nj0ihtEBTnbufA3g2+M9WOiuhOgN9FboIgbrr/zdzTcZHkifVjViG2/xTOX0l1
+ VK0O9YEPezqW4HS1T0u0mc+z9D0IW8zcHX7FSmsdwPk6TrPEXkHwbhVRU+rfFwqkIJ10hzBhX
+ OitVbf9dpxS9+88oL9IACwFLXAWmgn+1yXtdFzP3Jb2iyVJoA4bKEOwenWQMpoE0Ljmj6iq9W
+ 7LeAUrQGY4In2lzoUOZ7Q90PjHIvnzfV6k4pDlIm8yhkNXWmBb18VbkcNyf1LvvDphJI/w5dI
+ IRIYBbMD/ovkLJ+e1E9Ne3rwS0vmUAECrifZPC+Jybe2iEPkogwnJCmr4OLVkbpQqKO5S9SLT
+ 8k6UFNmCdzAzvdb16
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-T24gRnJpLCAyMDIwLTAyLTIxIGF0IDEzOjExICswMDAwLCBKb25hdGhhbiBDYW1lcm9uIHdyb3Rl
-Og0KPiBPbiBGcmksIDIxIEZlYiAyMDIwIDEzOjQ5OjQxICswMjAwDQo+IEFsZXhhbmRydSBBcmRl
-bGVhbiA8YWxleGFuZHJ1LmFyZGVsZWFuQGFuYWxvZy5jb20+IHdyb3RlOg0KPiANCj4gPiBUaGlz
-IGNoYW5nZSBhZGRzIGEgZG9jLXN0cmluZyBmb3IgdGhlICdhZGlzJyBzdHJ1Y3QuIEl0IGRldGFp
-bHMgdGhlIGZpZWxkcw0KPiA+IGFuZCB0aGVpciByb2xlcy4NCj4gPiANCj4gPiBTaWduZWQtb2Zm
-LWJ5OiBBbGV4YW5kcnUgQXJkZWxlYW4gPGFsZXhhbmRydS5hcmRlbGVhbkBhbmFsb2cuY29tPg0K
-PiA+IC0tLQ0KPiA+ICBpbmNsdWRlL2xpbnV4L2lpby9pbXUvYWRpcy5oIHwgMTQgKysrKysrKysr
-KysrKysNCj4gPiAgMSBmaWxlIGNoYW5nZWQsIDE0IGluc2VydGlvbnMoKykNCj4gPiANCj4gPiBk
-aWZmIC0tZ2l0IGEvaW5jbHVkZS9saW51eC9paW8vaW11L2FkaXMuaCBiL2luY2x1ZGUvbGludXgv
-aWlvL2ltdS9hZGlzLmgNCj4gPiBpbmRleCBhYzdjZmQwNzM4MDQuLjA3ODdhM2FhYmQwNSAxMDA2
-NDQNCj4gPiAtLS0gYS9pbmNsdWRlL2xpbnV4L2lpby9pbXUvYWRpcy5oDQo+ID4gKysrIGIvaW5j
-bHVkZS9saW51eC9paW8vaW11L2FkaXMuaA0KPiA+IEBAIC03Myw2ICs3MywyMCBAQCBzdHJ1Y3Qg
-YWRpc19kYXRhIHsNCj4gPiAgCWJvb2wgaGFzX3BhZ2luZzsNCj4gPiAgfTsNCj4gPiAgDQo+ID4g
-Ky8qKg0KPiA+ICsgKiBzdHJ1Y3QgYWRpcyAtIEFESVMgZGV2aWNlIGluc3RhbmNlIGRhdGENCj4g
-PiArICogQHNwaTogUmVmZXJlbmNlIHRvIFNQSSBkZXZpY2Ugd2hpY2ggb3ducyB0aGlzIEFESVMg
-SUlPIGRldmljZQ0KPiA+ICsgKiBAdHJpZzogSUlPIHRyaWdnZXIgb2JqZWN0IGRhdGENCj4gPiAr
-ICogQGRhdGE6IEFESVMgY2hpcCB2YXJpYW50IHNwZWNpZmljIGRhdGENCj4gPiArICogQGJ1cnN0
-OiBBRElTIGJ1cnN0IHRyYW5zZmVyIGluZm9ybWF0aW9uDQo+ID4gKyAqIEBzdGF0ZV9sb2NrOiBM
-b2NrIHVzZWQgYnkgdGhlIGRldmljZSB0byBwcm90ZWN0IHN0YXRlDQo+ID4gKyAqIEBtc2c6IFNQ
-SSBtZXNzYWdlIG9iamVjdA0KPiA+ICsgKiBAeGZlcjogU1BJIHRyYW5zZmVyIG9iamVjdHMgdG8g
-YmUgdXNlZCBmb3IgYSBAbXNnDQo+ID4gKyAqIEBjdXJyZW50X3BhZ2U6IFNvbWUgQURJUyBkZXZp
-Y2VzIGhhdmUgcmVnaXN0ZXJzLCB0aGlzIHNlbGVjdHMgY3VycmVudA0KPiA+IHBhZ2UNCj4gPiAr
-ICogQGJ1ZmZlcjogRGF0YSBidWZmZXIgZm9yIGluZm9ybWF0aW9uIHJlYWQgZnJvbSB0aGUgZGV2
-aWNlDQo+ID4gKyAqIEB0eDogQ2FjaGVsaW5lIGFsaWduZWQgVFggYnVmZmVyIGZvciBTUEkgdHJh
-bnNmZXJzDQo+ID4gKyAqIEByeDogQ2FjaGVsaW5lIGFsaWduZWQgUlggYnVmZmVyIGZvciBTUEkg
-dHJhbnNmZXJzDQo+IA0KPiBUaGlzIGxhc3Qgb25lIGlzbid0IHRydWUuLiANCg0KT2ggcmlnaHQu
-DQpJIG5vdGljZWQgdGhpcyBhdCBzb21lIHBvaW50LCB0aGVuIGZvcmdvdCBhYm91dCBpdC4NClsg
-VGhlICJqb3lzIiBvZiBtdWx0aS10YXNraW5nOyBzb3JyeSBhYm91dCBpdCA6KSBdDQpJIGd1ZXNz
-IEkgc2hvdWxkIGFsc28gYWRkIGEgcGF0Y2ggaW4gdGhpcyBzZXJpZXMgbWFraW5nIGl0IGNhY2hl
-bGluZS1hbGlnbmVkLg0KSSBkb24ndCBzZWUgYSByZWFzb24gd2h5IG5vdC10byBbdW5sZXNzIEkg
-YW0gbWlzdW5kZXJzdGFuZ2luZyBzb21ldGhpbmddDQoNCg0KPiANCj4gPiArICovDQo+ID4gIHN0
-cnVjdCBhZGlzIHsNCj4gPiAgCXN0cnVjdCBzcGlfZGV2aWNlCSpzcGk7DQo+ID4gIAlzdHJ1Y3Qg
-aWlvX3RyaWdnZXIJKnRyaWc7DQo=
+
+--cYtjc4pxslFTELvY
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+
+On Wed, Feb 19, 2020 at 04:17:58AM -0700, Jonathan Corbet wrote:
+> On Fri, 14 Feb 2020 18:08:07 +0100
+> Jonathan Neusch=C3=A4fer <j.neuschaefer@gmx.net> wrote:
+>=20
+> > This fixes the following warning:
+> >=20
+> > Documentation/filesystems/ubifs-authentication.rst:98: WARNING:
+> >   Inline interpreted text or phrase reference start-string without end-=
+string.
+> >=20
+> > Signed-off-by: Jonathan Neusch=C3=A4fer <j.neuschaefer@gmx.net>
+>=20
+> So this, IMO, should be fixed in patch #2, when you're touching the file
+> anyway.  I don't see a lot of value in adding a warning to the docs build
+> then immediately removing it.
+
+Good point.
+
+> Also, please send a cover letter with multi-part sets like this so we
+> know what the overall objective is.
+
+Ok, I'll remember to do that more.
+
+In this case, I just saw this file and wanted it to work better with
+Sphinx.
+
+> Note also that Mauro is also playing with this file (and ubifs.txt, which
+> really should be included as well) at the same time.
+
+Hmm. I only saw Mauro's series after sending this one.
+
+I think I'll respin this series after Mauro's is merged, to keep the
+potential for merge conflicts low.
+
+
+Thanks,
+Jonathan Neusch=C3=A4fer
+
+--cYtjc4pxslFTELvY
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCgAdFiEEvHAHGBBjQPVy+qvDCDBEmo7zX9sFAl5P/kgACgkQCDBEmo7z
+X9sf0xAAttAMODr7tW1ee559PLozbCkEl7bXel6cTaK1qGk/qmoVN+eSJJZs4c7t
+8sXO26osJt/lzIejt6aExNH9KmPhcGYpjT0Dw94H1KScLKBUnRFaP1IJOMJsIgVK
+NNWM2HpAM04Eycdv8/T52G8hGa9NwCV3woS0zxFOAlyzedRvjt1BEZ2w4RwbhADO
+tdRy5QqdVM9WNsT3oyHA21EDNr45xPPtBTfgCAYsKJTpdX91l6KzutTxlCvU+Dwc
+Oy1YDorPE4H6oj5o7LPZ3hqY9Ek2yfEPgzy3UZq29AfrH1atgSlHmT3hp3o05VQN
+bKYbtgAUl48xL76iay++F3Nm7rUzWSV3HI2ASSu/D/fL6CQXxHUhhbpvQXMp7RMp
+fdlY2zzYxmRH+iheFyEEzK5umZM8CfIREVwDoho/p64bprszXoKHio+icumOQ5Wc
+c7HTkoCJLL93rzJc9qfMAWCJ2pnyMb/iR5SBhmsFtY7lWuoFJBpQ0H6QKAv9lh2h
+t5+IbzBwpG0tCG6zNsGbgZl+/X9BFnmGyP49iTiEv6vqEyaoh4/QhknQ3oE4gj/e
+hsQYWEG58KT1iHmWpAOzuSd5Yg66Mdl0od5KQg+/D89LCdG/e+/pD3/p9dXgXQUS
+UlXU6ZpqdDDBMBaowopT7+BcdJcuXYItawdDnIs02mhLFI/H56I=
+=t+dZ
+-----END PGP SIGNATURE-----
+
+--cYtjc4pxslFTELvY--
