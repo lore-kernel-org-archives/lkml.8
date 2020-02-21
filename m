@@ -5,51 +5,51 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A1C1CC35641
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 07:47:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8F8F7C35640
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 07:47:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 796C120801
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 07:47:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 62129222C4
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 07:47:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582271242;
-	bh=kwYS4IJqe/CCzOFwvS5e6qcl5rOhH6tgd+nA24huEr8=;
+	s=default; t=1582271245;
+	bh=j5FNwqbiDd3zQGbUoiAPV81bz+Jo7tUnvf567ZMQT54=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=trynTi+iO5498BRuh8klDdJUsz4g2yB4k9x33DFi+syi3t5ctfj3S6iqJ1Rqb+cLg
-	 kBGTPcS7+6/Xv3PDaubUH8hZpU9S09wqRM3aTWfyglgk2Rto5K6PterBqNGYKIu8q/
-	 2c4L+AuAOA29KbCWpn70pmNtnqe6axBBMgHmsGFY=
+	b=tCpGRL0vfC3Nm+9jP431x12cSf71jikUU2z+GhEwC5Q5SoHoYYn/2hwk7MwgZ50WN
+	 M5tVV/+0Tv2eaADjrixzBlLqWu7oxrPsvKsy216HKEvuDroEASAQVoh1v4vVMtcDkB
+	 0hYdgDsEpt2OzHtyUggevqc25CzU4EE5tq+m5pc8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728898AbgBUHrV (ORCPT
+        id S1728908AbgBUHrX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Feb 2020 02:47:21 -0500
-Received: from mail.kernel.org ([198.145.29.99]:43028 "EHLO mail.kernel.org"
+        Fri, 21 Feb 2020 02:47:23 -0500
+Received: from mail.kernel.org ([198.145.29.99]:42934 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728327AbgBUHrO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Feb 2020 02:47:14 -0500
+        id S1728258AbgBUHrJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 21 Feb 2020 02:47:09 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B8D1B20801;
-        Fri, 21 Feb 2020 07:47:13 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B618024673;
+        Fri, 21 Feb 2020 07:47:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1582271234;
-        bh=kwYS4IJqe/CCzOFwvS5e6qcl5rOhH6tgd+nA24huEr8=;
+        s=default; t=1582271229;
+        bh=j5FNwqbiDd3zQGbUoiAPV81bz+Jo7tUnvf567ZMQT54=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ZksfEvkC5Pdv9k1MSuJ5xoqGX5FcBdCvM71NVDLyMl9N7iczWmjv3RaQX2O0I8JwS
-         raeuj9NtrEFXHuR8Y3/yzCtLhUD3c2mvCspwqFGz7NnE7Ed4V1p2sLkzKDT7QOw9zq
-         nei8WTdlOEN6A7Q9+OBrV7hmYd5zLZltzT6oOCLg=
+        b=y0hw9TGNjHHkOel62rS5KwV3JA2CZhsFr1vP/hcpQLSQsR7d0UqQxYL4HTfVV86Yx
+         +t5f159w8iP3w+HrRect//1Uajp1uHechkq+V7vrgTwfcACZk4xqykznLBiSumSejH
+         iBwD+Bi2vk17BLjLzRufZF0bBEXPz+RQyu6i00/A=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Matthieu Baerts <matthieu.baerts@tessares.net>,
-        Kees Cook <keescook@chromium.org>,
-        Shuah Khan <skhan@linuxfoundation.org>,
+        stable@vger.kernel.org, Ping-Ke Shih <pkshih@realtek.com>,
+        Yan-Hsuan Chuang <yhchuang@realtek.com>,
+        Chris Chiu <chiu@endlessm.com>,
+        Kalle Valo <kvalo@codeaurora.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.5 090/399] selftests: settings: tests can be in subsubdirs
-Date:   Fri, 21 Feb 2020 08:36:55 +0100
-Message-Id: <20200221072411.075444301@linuxfoundation.org>
+Subject: [PATCH 5.5 088/399] rtw88: fix rate mask for 1SS chip
+Date:   Fri, 21 Feb 2020 08:36:53 +0100
+Message-Id: <20200221072410.889008864@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200221072402.315346745@linuxfoundation.org>
 References: <20200221072402.315346745@linuxfoundation.org>
@@ -62,58 +62,66 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Matthieu Baerts <matthieu.baerts@tessares.net>
+From: Ping-Ke Shih <pkshih@realtek.com>
 
-[ Upstream commit ac87813d4372f4c005264acbe3b7f00c1dee37c4 ]
+[ Upstream commit 35a68fa5f96a80797e11b6952a47c5a84939a7bf ]
 
-Commit 852c8cbf34d3 ("selftests/kselftest/runner.sh: Add 45 second
-timeout per test") adds support for a new per-test-directory "settings"
-file. But this only works for tests not in a sub-subdirectories, e.g.
+The rate mask is used to tell firmware the supported rate depends on
+negotiation. We loop 2 times for all VHT/HT 2SS rate mask first, and then
+only keep the part according to chip's NSS.
 
- - tools/testing/selftests/rtc (rtc) is OK,
- - tools/testing/selftests/net/mptcp (net/mptcp) is not.
+This commit fixes the logic error of '&' operations for VHT/HT rate, and
+we should run this logic before adding legacy rate.
 
-We have to increase the timeout for net/mptcp tests which are not
-upstreamed yet but this fix is valid for other tests if they need to add
-a "settings" file, see the full list with:
+To access HT MCS map, index 0/1 represent MCS 0-7/8-15 respectively. Use
+NL80211_BAND_xxx is incorrect, so fix it as well.
 
-  tools/testing/selftests/*/*/**/Makefile
-
-Note that this patch changes the text header message printed at the end
-of the execution but this text is modified only for the tests that are
-in sub-subdirectories, e.g.
-
-  ok 1 selftests: net/mptcp: mptcp_connect.sh
-
-Before we had:
-
-  ok 1 selftests: mptcp: mptcp_connect.sh
-
-But showing the full target name is probably better, just in case a
-subsubdir has the same name as another one in another subdirectory.
-
-Fixes: 852c8cbf34d3 (selftests/kselftest/runner.sh: Add 45 second timeout per test)
-Signed-off-by: Matthieu Baerts <matthieu.baerts@tessares.net>
-Reviewed-by: Kees Cook <keescook@chromium.org>
-Signed-off-by: Shuah Khan <skhan@linuxfoundation.org>
+Signed-off-by: Ping-Ke Shih <pkshih@realtek.com>
+Signed-off-by: Yan-Hsuan Chuang <yhchuang@realtek.com>
+Reviewed-by: Chris Chiu <chiu@endlessm.com>
+Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- tools/testing/selftests/kselftest/runner.sh | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/net/wireless/realtek/rtw88/main.c | 12 +++++-------
+ 1 file changed, 5 insertions(+), 7 deletions(-)
 
-diff --git a/tools/testing/selftests/kselftest/runner.sh b/tools/testing/selftests/kselftest/runner.sh
-index a8d20cbb711cf..e84d901f85672 100644
---- a/tools/testing/selftests/kselftest/runner.sh
-+++ b/tools/testing/selftests/kselftest/runner.sh
-@@ -91,7 +91,7 @@ run_one()
- run_many()
- {
- 	echo "TAP version 13"
--	DIR=$(basename "$PWD")
-+	DIR="${PWD#${BASE_DIR}/}"
- 	test_num=0
- 	total=$(echo "$@" | wc -w)
- 	echo "1..$total"
+diff --git a/drivers/net/wireless/realtek/rtw88/main.c b/drivers/net/wireless/realtek/rtw88/main.c
+index ae61415e16654..f369ddca953af 100644
+--- a/drivers/net/wireless/realtek/rtw88/main.c
++++ b/drivers/net/wireless/realtek/rtw88/main.c
+@@ -706,8 +706,8 @@ void rtw_update_sta_info(struct rtw_dev *rtwdev, struct rtw_sta_info *si)
+ 		if (sta->vht_cap.cap & IEEE80211_VHT_CAP_SHORT_GI_80)
+ 			is_support_sgi = true;
+ 	} else if (sta->ht_cap.ht_supported) {
+-		ra_mask |= (sta->ht_cap.mcs.rx_mask[NL80211_BAND_5GHZ] << 20) |
+-			   (sta->ht_cap.mcs.rx_mask[NL80211_BAND_2GHZ] << 12);
++		ra_mask |= (sta->ht_cap.mcs.rx_mask[1] << 20) |
++			   (sta->ht_cap.mcs.rx_mask[0] << 12);
+ 		if (sta->ht_cap.cap & IEEE80211_HT_CAP_RX_STBC)
+ 			stbc_en = HT_STBC_EN;
+ 		if (sta->ht_cap.cap & IEEE80211_HT_CAP_LDPC_CODING)
+@@ -717,6 +717,9 @@ void rtw_update_sta_info(struct rtw_dev *rtwdev, struct rtw_sta_info *si)
+ 			is_support_sgi = true;
+ 	}
+ 
++	if (efuse->hw_cap.nss == 1)
++		ra_mask &= RA_MASK_VHT_RATES_1SS | RA_MASK_HT_RATES_1SS;
++
+ 	if (hal->current_band_type == RTW_BAND_5G) {
+ 		ra_mask |= (u64)sta->supp_rates[NL80211_BAND_5GHZ] << 4;
+ 		if (sta->vht_cap.vht_supported) {
+@@ -750,11 +753,6 @@ void rtw_update_sta_info(struct rtw_dev *rtwdev, struct rtw_sta_info *si)
+ 		wireless_set = 0;
+ 	}
+ 
+-	if (efuse->hw_cap.nss == 1) {
+-		ra_mask &= RA_MASK_VHT_RATES_1SS;
+-		ra_mask &= RA_MASK_HT_RATES_1SS;
+-	}
+-
+ 	switch (sta->bandwidth) {
+ 	case IEEE80211_STA_RX_BW_80:
+ 		bw_mode = RTW_CHANNEL_WIDTH_80;
 -- 
 2.20.1
 
