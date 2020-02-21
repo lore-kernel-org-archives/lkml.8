@@ -2,52 +2,50 @@ Return-Path: <SRS0=1210=4J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8DF4FC35640
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 08:29:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DA958C35641
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 08:29:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 56B1520679
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 08:29:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A413020679
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 08:29:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582273791;
-	bh=HsmyTgW75idF7iuMGXUO1k5TzyWMjEjPkqXtRHcA6M0=;
+	s=default; t=1582273794;
+	bh=zGuNwgBkEi5yvKSF45AMZe+eW5wo5oCZKqvBCQSxQBo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=lJ/X7dTTOmlrc4GHYr+7EdlG2+lml/KY1tVE5VOOpepkPTkulgOHHGXdAGUZ1EHWb
-	 4w6M4uwHw9h/xDf1j71/5kRCQYOvFlwqWunHMEXDloKy7XJi0pXaUXrzSTIE2D/Pal
-	 tzR/GIZ+Wv4PaqYrJqm+a2YGs/XmF8Ogj8wUKNs4=
+	b=Hx63FWDxLGf0pBSLsorsuMIlCNEz6TIpB870IQ7uk+RlqVJ8t0ITgdu0LgB3Wgybb
+	 oQlofHSK2nk9RVPMOYduPPfkQH1dUineGl53tgpOp0M1tMHjNBvH1XmO3TXobrUfhr
+	 Dn7j+6sz1iXp0EOtC6a0dGuZcTKYztrhUGYlSgh8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387585AbgBUIQx (ORCPT
+        id S2388415AbgBUI3x (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Feb 2020 03:16:53 -0500
-Received: from mail.kernel.org ([198.145.29.99]:53974 "EHLO mail.kernel.org"
+        Fri, 21 Feb 2020 03:29:53 -0500
+Received: from mail.kernel.org ([198.145.29.99]:54088 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732822AbgBUIQr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Feb 2020 03:16:47 -0500
+        id S2387586AbgBUIQx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 21 Feb 2020 03:16:53 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A9F0E24670;
-        Fri, 21 Feb 2020 08:16:46 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 15BF724670;
+        Fri, 21 Feb 2020 08:16:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1582273007;
-        bh=HsmyTgW75idF7iuMGXUO1k5TzyWMjEjPkqXtRHcA6M0=;
+        s=default; t=1582273012;
+        bh=zGuNwgBkEi5yvKSF45AMZe+eW5wo5oCZKqvBCQSxQBo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=0ebTMRZE0PuYKq0LQODxDeTLrpntNizfh5lRZh1eAEFUgOxVd3l9e02mIq8VFQjkh
-         ei38PjaBc1cWc6tKbQs7Tc3mMiE5TcdvIP0HNNur6JzjnKuH1KenXjJh2a1Tvroe9i
-         WjaENbyWl7mt8MBA7iV+0esLNRIzCtonkLtzvbRw=
+        b=OoqzsGISfR885ylQbmYBTa2uOi+dJ7w6VMqwRxrLjREoRnYpuVl24uwyWTohx85g7
+         s10l67CCOF27oB99voK1lKopxMWnIzWnsUn599NrpdNqfWHdrySVLiaiyXL9XY8j+y
+         uaNzEI7zg980AWoFdztRTzpFRSd377z9SmuMaEt0=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Davide Caratti <dcaratti@redhat.com>,
-        Jiri Pirko <jiri@mellanox.com>,
-        "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 4.19 005/191] net/sched: matchall: add missing validation of TCA_MATCHALL_FLAGS
-Date:   Fri, 21 Feb 2020 08:39:38 +0100
-Message-Id: <20200221072251.539666828@linuxfoundation.org>
+        stable@vger.kernel.org, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.19 007/191] Revert "KVM: nVMX: Use correct root level for nested EPT shadow page tables"
+Date:   Fri, 21 Feb 2020 08:39:40 +0100
+Message-Id: <20200221072251.830134783@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200221072250.732482588@linuxfoundation.org>
 References: <20200221072250.732482588@linuxfoundation.org>
@@ -60,33 +58,29 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Davide Caratti <dcaratti@redhat.com>
+This reverts commit 740d876bd9565857a695ce7c05efda4eba5bc585.
 
-[ Upstream commit 1afa3cc90f8fb745c777884d79eaa1001d6927a6 ]
-
-unlike other classifiers that can be offloaded (i.e. users can set flags
-like 'skip_hw' and 'skip_sw'), 'cls_matchall' doesn't validate the size
-of netlink attribute 'TCA_MATCHALL_FLAGS' provided by user: add a proper
-entry to mall_policy.
-
-Fixes: b87f7936a932 ("net/sched: Add match-all classifier hw offloading.")
-Signed-off-by: Davide Caratti <dcaratti@redhat.com>
-Acked-by: Jiri Pirko <jiri@mellanox.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- net/sched/cls_matchall.c |    1 +
- 1 file changed, 1 insertion(+)
+ arch/x86/kvm/vmx/vmx.c | 3 ---
+ 1 file changed, 3 deletions(-)
 
---- a/net/sched/cls_matchall.c
-+++ b/net/sched/cls_matchall.c
-@@ -137,6 +137,7 @@ static void *mall_get(struct tcf_proto *
- static const struct nla_policy mall_policy[TCA_MATCHALL_MAX + 1] = {
- 	[TCA_MATCHALL_UNSPEC]		= { .type = NLA_UNSPEC },
- 	[TCA_MATCHALL_CLASSID]		= { .type = NLA_U32 },
-+	[TCA_MATCHALL_FLAGS]		= { .type = NLA_U32 },
- };
+diff --git a/arch/x86/kvm/vmx/vmx.c b/arch/x86/kvm/vmx/vmx.c
+index 997926a9121c0..3791ce8d269e0 100644
+--- a/arch/x86/kvm/vmx/vmx.c
++++ b/arch/x86/kvm/vmx/vmx.c
+@@ -2968,9 +2968,6 @@ void vmx_set_cr0(struct kvm_vcpu *vcpu, unsigned long cr0)
  
- static int mall_set_parms(struct net *net, struct tcf_proto *tp,
+ static int get_ept_level(struct kvm_vcpu *vcpu)
+ {
+-	/* Nested EPT currently only supports 4-level walks. */
+-	if (is_guest_mode(vcpu) && nested_cpu_has_ept(get_vmcs12(vcpu)))
+-		return 4;
+ 	if (cpu_has_vmx_ept_5levels() && (cpuid_maxphyaddr(vcpu) > 48))
+ 		return 5;
+ 	return 4;
+-- 
+2.20.1
+
 
 
