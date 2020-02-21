@@ -5,53 +5,49 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9B4F6C35641
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 08:00:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 03CCFC35642
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 08:00:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 64DB6206ED
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 08:00:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C319F24656
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 08:00:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582272013;
-	bh=pQXAymyow/dMd9ddSmCJOj/eaUwArnf4PFXihefFwlY=;
+	s=default; t=1582272015;
+	bh=RWrPWhIW4nq0JRUzQClNsebzVS2WeaoqVeS3VclYGbw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=MtGPYqvsc+hGeSGs+tXSaEbC9aogDjOcZujyBXoPSPJAtinYAU0U4X9nn2wA/1rWa
-	 Ql4aCiw7JcqHhGkpjjRulrvKF5czxPLDhvWgRSpwjQuExWsfS86CBiajMQQL3ARg3x
-	 R2P3wsiGIwdPnMd2VKZiraUG/0JtPWBqzXOz+0dE=
+	b=dk+e43p/8ncLmBe31zLiKzZgfJMkXAq6Sm1mib3CBrcQQAjTkoCLPQsMQjIJFqFj1
+	 jPGuoJiPYwAAEDuI+8f6tDTtOFRwhp4dPJ3df6AlrnE6tOWj07jggPnW7KCPdkvuT6
+	 wcRJ8cz+EWJrLbvqQLYknFiHGwJ1cI8EbYveKkyw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731021AbgBUIAM (ORCPT
+        id S1731029AbgBUIAO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Feb 2020 03:00:12 -0500
-Received: from mail.kernel.org ([198.145.29.99]:60516 "EHLO mail.kernel.org"
+        Fri, 21 Feb 2020 03:00:14 -0500
+Received: from mail.kernel.org ([198.145.29.99]:60578 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729111AbgBUIAK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Feb 2020 03:00:10 -0500
+        id S1729111AbgBUIAN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 21 Feb 2020 03:00:13 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D3EF7206ED;
-        Fri, 21 Feb 2020 08:00:09 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6053524650;
+        Fri, 21 Feb 2020 08:00:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1582272010;
-        bh=pQXAymyow/dMd9ddSmCJOj/eaUwArnf4PFXihefFwlY=;
+        s=default; t=1582272012;
+        bh=RWrPWhIW4nq0JRUzQClNsebzVS2WeaoqVeS3VclYGbw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=bEljiZBFZxMhiTIc+l0eV9tfkFp3j5AulzCxkACExHzb3QZ9DVcgLM+yVErgR3XJ3
-         eKgO5JbuDl7AnGQkP9c5tthM2CGA/KeixQt2RgDPDDlOnJ96CZt32Hgs8KpJBiqIZo
-         Xzs/jxdxVgnkiWyp80E+WI4iUJ0+uF/ABCPxVcpQ=
+        b=gVrtKfBMqrL2dEqKTfxStdz9ur4UeOb221Yp3L1DN7Adc5ZhViWdsO4cTQqNmltdp
+         4LJNc3mu+vWpR5LlKrtQfLiHPD2o4ZMPAdoq+WlU80tB8J7btJDAf7kGw54pxnFhP2
+         eIlhqQrSe5aX9Hr8y+boBYAhSZjWFwb+vfNNGOCU=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
-        "Aneesh Kumar K.V" <aneesh.kumar@linux.ibm.com>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
+        stable@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>,
+        Ilya Dryomov <idryomov@gmail.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.5 382/399] asm-generic/tlb: add missing CONFIG symbol
-Date:   Fri, 21 Feb 2020 08:41:47 +0100
-Message-Id: <20200221072437.310458796@linuxfoundation.org>
+Subject: [PATCH 5.5 356/399] rbd: work around -Wuninitialized warning
+Date:   Fri, 21 Feb 2020 08:41:21 +0100
+Message-Id: <20200221072435.456302295@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200221072402.315346745@linuxfoundation.org>
 References: <20200221072402.315346745@linuxfoundation.org>
@@ -64,38 +60,42 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Peter Zijlstra <peterz@infradead.org>
+From: Arnd Bergmann <arnd@arndb.de>
 
-[ Upstream commit 27796d03c9c4b2b937ed4cc2b10f21559ad5a8c9 ]
+[ Upstream commit a55e601b2f02df5db7070e9a37bd655c9c576a52 ]
 
-Without this the symbol will not actually end up in .config files.
+gcc -O3 warns about a dummy variable that is passed
+down into rbd_img_fill_nodata without being initialized:
 
-Link: http://lkml.kernel.org/r/20200116064531.483522-6-aneesh.kumar@linux.ibm.com
-Fixes: a30e32bd79e9 ("asm-generic/tlb: Provide generic tlb_flush() based on flush_tlb_mm()")
-Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-Signed-off-by: Aneesh Kumar K.V <aneesh.kumar@linux.ibm.com>
-Cc: Michael Ellerman <mpe@ellerman.id.au>
-Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
-Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
+drivers/block/rbd.c: In function 'rbd_img_fill_nodata':
+drivers/block/rbd.c:2573:13: error: 'dummy' is used uninitialized in this function [-Werror=uninitialized]
+  fctx->iter = *fctx->pos;
+
+Since this is a dummy, I assume the warning is harmless, but
+it's better to initialize it anyway and avoid the warning.
+
+Fixes: mmtom ("init/Kconfig: enable -O3 for all arches")
+Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+Reviewed-by: Ilya Dryomov <idryomov@gmail.com>
+Signed-off-by: Ilya Dryomov <idryomov@gmail.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/Kconfig | 3 +++
- 1 file changed, 3 insertions(+)
+ drivers/block/rbd.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/arch/Kconfig b/arch/Kconfig
-index 208aad1216300..5e907a954532e 100644
---- a/arch/Kconfig
-+++ b/arch/Kconfig
-@@ -399,6 +399,9 @@ config HAVE_RCU_TABLE_FREE
- config HAVE_MMU_GATHER_PAGE_SIZE
- 	bool
- 
-+config MMU_GATHER_NO_RANGE
-+	bool
-+
- config HAVE_MMU_GATHER_NO_GATHER
- 	bool
- 
+diff --git a/drivers/block/rbd.c b/drivers/block/rbd.c
+index 2b184563cd32e..38dcb39051a7f 100644
+--- a/drivers/block/rbd.c
++++ b/drivers/block/rbd.c
+@@ -2662,7 +2662,7 @@ static int rbd_img_fill_nodata(struct rbd_img_request *img_req,
+ 			       u64 off, u64 len)
+ {
+ 	struct ceph_file_extent ex = { off, len };
+-	union rbd_img_fill_iter dummy;
++	union rbd_img_fill_iter dummy = {};
+ 	struct rbd_img_fill_ctx fctx = {
+ 		.pos_type = OBJ_REQUEST_NODATA,
+ 		.pos = &dummy,
 -- 
 2.20.1
 
