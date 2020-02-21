@@ -2,282 +2,178 @@ Return-Path: <SRS0=1210=4J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNWANTED_LANGUAGE_BODY,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A5AC3C35642
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 08:32:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9D913C35640
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 08:32:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 741FB20578
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 08:32:47 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582273967;
-	bh=D9HbhU+UcBqY4TECvMjvT7jGgCD4EUBgLOFoAnWmjsE=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=LDFHmASqFl0+sdJediWr9sTMlz9cqsw1jhydZ4q2hpEs9IHyA7Vjno3LBh594d2QD
-	 f04sR7psHh0XIRlYoi1M7rIpUbgXIbW7yHlIN/MlAkB2u8/1iPHzAPqlh4By+Nn/IK
-	 9jnAgTWPJNxvDYj1gEzRT+K9EPqGUSOHLL/s5L0U=
+	by mail.kernel.org (Postfix) with ESMTP id 67A9820679
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 08:32:51 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="lq+K9+sq"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732753AbgBUIL4 (ORCPT
+        id S2387950AbgBUIct (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Feb 2020 03:11:56 -0500
-Received: from mail.kernel.org ([198.145.29.99]:47374 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728238AbgBUILr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Feb 2020 03:11:47 -0500
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7A18A20578;
-        Fri, 21 Feb 2020 08:11:45 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1582272705;
-        bh=D9HbhU+UcBqY4TECvMjvT7jGgCD4EUBgLOFoAnWmjsE=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=wQZbnb7v3GAyeCX67ZbjfpUWx4wAXs3ikewF6p9/kcG7eI2BDYAPLjMHbf3Ak56dX
-         njOZNlLMENdk2VjK1wYbrx5gSsXHdkpPhs22XgjhK9tXr4qjGFO416U3gS02RMPZn6
-         c8HxrjJbd3zOXEbnRBfyeD78NElH1S/07/PLJPmk=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Sami Tolvanen <samitolvanen@google.com>,
-        Andrew Murray <andrew.murray@arm.com>,
-        Kees Cook <keescook@chromium.org>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        Will Deacon <will@kernel.org>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 244/344] arm64: lse: fix LSE atomics with LLVMs integrated assembler
-Date:   Fri, 21 Feb 2020 08:40:43 +0100
-Message-Id: <20200221072411.541697806@linuxfoundation.org>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20200221072349.335551332@linuxfoundation.org>
-References: <20200221072349.335551332@linuxfoundation.org>
-User-Agent: quilt/0.66
+        Fri, 21 Feb 2020 03:32:49 -0500
+Received: from mail-wm1-f68.google.com ([209.85.128.68]:37037 "EHLO
+        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2387804AbgBUIcp (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 21 Feb 2020 03:32:45 -0500
+Received: by mail-wm1-f68.google.com with SMTP id a6so738805wme.2
+        for <linux-kernel@vger.kernel.org>; Fri, 21 Feb 2020 00:32:44 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=subject:to:cc:references:from:autocrypt:message-id:date:user-agent
+         :mime-version:in-reply-to;
+        bh=MFBkOBl3vMPcTP2LxPfANNNiV1IdpbUuNOmkpwgugEg=;
+        b=lq+K9+sq+I82qYKV7mW5DELtZGxd44h5cJVhMkvjZh+iTvaFzCZEz9yw2flaGZzz3K
+         V746KiDhrKvJxywLale/5eDfpiHLKjqqIwMHo5mZwPnde0GVNrnOtfwvfYb9mXxW7avX
+         KksvTvbCAfxI5vEJE3VgsSUvbye3xi//TnPwkBrFv7fs010aYl9XZ6rsJGT1SbPyWzJE
+         vBuSew4qUVaD0xrysr+nPLWyUzF+vtUCzNGgDxEuvsZ79dSLBTsDN+rcpFCBR4nGI9Jx
+         d2Tvk2DP+Pmfc6rOHHK2iZQ7r06fQA6jR4qODUZhrRrz5nKqUdMxLrmfkYyIdPONRmqr
+         Gsmg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:autocrypt
+         :message-id:date:user-agent:mime-version:in-reply-to;
+        bh=MFBkOBl3vMPcTP2LxPfANNNiV1IdpbUuNOmkpwgugEg=;
+        b=k4cDd3/eKqHoHSnVjQCH/QmjvYw0xw7ONSkVFs6Era/oT/JMVUQeWcQniVJS4FL3Z1
+         WNwnpNtU4AAUk1NnKfY/6M/QP58f/MhmXfM0U+Xc0lJKZ+wEiXNcpH7bp+N+zEM7VpPR
+         N0xl98OmhUJ1Her9avFWemX54VwK0JE5BLplPW+UJdCCJJoeMRsuwIjSJsx2xMMo0Wqi
+         VXvTJxqkTsQ8DuYuqUqCYZRpYTlqSfjLT3ObJQyVeRozzt+9aOdF4YnE89bhqT7k7iH+
+         W4dO6cb6pwKadIwqSXDRBMyXh/mkNEjpIN0dN+R4lvH4qb/IUpZi12RI+iTDJnlvkhd3
+         XvZQ==
+X-Gm-Message-State: APjAAAWwdBKwXZJh6gvqsX76sOJpgiQQM82ZvFvPWdU198SPkrv7aNOX
+        Mj3HGWfd51SrqY21TWqfJAwnbPyua9M=
+X-Google-Smtp-Source: APXvYqwdsTK/MbgxLKcjdvmMqTtyGiM4cnI3k3+XS7mf5Nv/XXQtOnt4JfSnbOCyEadACZuV7YfBvw==
+X-Received: by 2002:a1c:2b44:: with SMTP id r65mr2263549wmr.72.1582273963138;
+        Fri, 21 Feb 2020 00:32:43 -0800 (PST)
+Received: from ?IPv6:2a01:e34:ed2f:f020:2dfb:b5ce:9043:4adb? ([2a01:e34:ed2f:f020:2dfb:b5ce:9043:4adb])
+        by smtp.googlemail.com with ESMTPSA id a62sm2853052wmh.33.2020.02.21.00.32.42
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 21 Feb 2020 00:32:42 -0800 (PST)
+Subject: Re: linux-next: please clean up the clockevents tree
+To:     Stephen Rothwell <sfr@canb.auug.org.au>
+Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+References: <20200221113714.7293f125@canb.auug.org.au>
+From:   Daniel Lezcano <daniel.lezcano@linaro.org>
+Autocrypt: addr=daniel.lezcano@linaro.org; prefer-encrypt=mutual; keydata=
+ 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
+Message-ID: <501d1b8c-ae24-bdfd-e56f-7f5e907a2083@linaro.org>
+Date:   Fri, 21 Feb 2020 09:32:40 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200221113714.7293f125@canb.auug.org.au>
+Content-Type: multipart/signed; micalg=pgp-sha256;
+ protocol="application/pgp-signature";
+ boundary="wSSbaXgSqW4PXUUnEStSrR77zzH24rit8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Sami Tolvanen <samitolvanen@google.com>
+This is an OpenPGP/MIME signed message (RFC 4880 and 3156)
+--wSSbaXgSqW4PXUUnEStSrR77zzH24rit8
+Content-Type: multipart/mixed; boundary="c2gGM3Lgf5aCP5z4G4XSt2A8z0baaFgxK"
 
-[ Upstream commit e0d5896bd356cd577f9710a02d7a474cdf58426b ]
+--c2gGM3Lgf5aCP5z4G4XSt2A8z0baaFgxK
+Content-Type: text/plain; charset=UTF-8
+Content-Language: en-US
+Content-Transfer-Encoding: quoted-printable
 
-Unlike gcc, clang considers each inline assembly block to be independent
-and therefore, when using the integrated assembler for inline assembly,
-any preambles that enable features must be repeated in each block.
+On 21/02/2020 01:37, Stephen Rothwell wrote:
+> Hi Daniel,
+>=20
+> All the commits in the clockevents tree
+> (git://git.linaro.org/people/daniel.lezcano/linux.git#timers/drivers/ne=
+xt)
+> seem to have been applied to other trees as different commits. Please
+> clean it up as it is starting to cause unnecessary conflicts.
 
-This change defines __LSE_PREAMBLE and adds it to each inline assembly
-block that has LSE instructions, which allows them to be compiled also
-with clang's assembler.
+Done
 
-Link: https://github.com/ClangBuiltLinux/linux/issues/671
-Signed-off-by: Sami Tolvanen <samitolvanen@google.com>
-Tested-by: Andrew Murray <andrew.murray@arm.com>
-Tested-by: Kees Cook <keescook@chromium.org>
-Reviewed-by: Andrew Murray <andrew.murray@arm.com>
-Reviewed-by: Kees Cook <keescook@chromium.org>
-Reviewed-by: Nick Desaulniers <ndesaulniers@google.com>
-Signed-off-by: Will Deacon <will@kernel.org>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- arch/arm64/include/asm/atomic_lse.h | 19 +++++++++++++++++++
- arch/arm64/include/asm/lse.h        |  6 +++---
- 2 files changed, 22 insertions(+), 3 deletions(-)
 
-diff --git a/arch/arm64/include/asm/atomic_lse.h b/arch/arm64/include/asm/atomic_lse.h
-index 574808b9df4c8..da3280f639cd7 100644
---- a/arch/arm64/include/asm/atomic_lse.h
-+++ b/arch/arm64/include/asm/atomic_lse.h
-@@ -14,6 +14,7 @@
- static inline void __lse_atomic_##op(int i, atomic_t *v)			\
- {									\
- 	asm volatile(							\
-+	__LSE_PREAMBLE							\
- "	" #asm_op "	%w[i], %[v]\n"					\
- 	: [i] "+r" (i), [v] "+Q" (v->counter)				\
- 	: "r" (v));							\
-@@ -30,6 +31,7 @@ ATOMIC_OP(add, stadd)
- static inline int __lse_atomic_fetch_##op##name(int i, atomic_t *v)	\
- {									\
- 	asm volatile(							\
-+	__LSE_PREAMBLE							\
- "	" #asm_op #mb "	%w[i], %w[i], %[v]"				\
- 	: [i] "+r" (i), [v] "+Q" (v->counter)				\
- 	: "r" (v)							\
-@@ -58,6 +60,7 @@ static inline int __lse_atomic_add_return##name(int i, atomic_t *v)	\
- 	u32 tmp;							\
- 									\
- 	asm volatile(							\
-+	__LSE_PREAMBLE							\
- 	"	ldadd" #mb "	%w[i], %w[tmp], %[v]\n"			\
- 	"	add	%w[i], %w[i], %w[tmp]"				\
- 	: [i] "+r" (i), [v] "+Q" (v->counter), [tmp] "=&r" (tmp)	\
-@@ -77,6 +80,7 @@ ATOMIC_OP_ADD_RETURN(        , al, "memory")
- static inline void __lse_atomic_and(int i, atomic_t *v)
- {
- 	asm volatile(
-+	__LSE_PREAMBLE
- 	"	mvn	%w[i], %w[i]\n"
- 	"	stclr	%w[i], %[v]"
- 	: [i] "+&r" (i), [v] "+Q" (v->counter)
-@@ -87,6 +91,7 @@ static inline void __lse_atomic_and(int i, atomic_t *v)
- static inline int __lse_atomic_fetch_and##name(int i, atomic_t *v)	\
- {									\
- 	asm volatile(							\
-+	__LSE_PREAMBLE							\
- 	"	mvn	%w[i], %w[i]\n"					\
- 	"	ldclr" #mb "	%w[i], %w[i], %[v]"			\
- 	: [i] "+&r" (i), [v] "+Q" (v->counter)				\
-@@ -106,6 +111,7 @@ ATOMIC_FETCH_OP_AND(        , al, "memory")
- static inline void __lse_atomic_sub(int i, atomic_t *v)
- {
- 	asm volatile(
-+	__LSE_PREAMBLE
- 	"	neg	%w[i], %w[i]\n"
- 	"	stadd	%w[i], %[v]"
- 	: [i] "+&r" (i), [v] "+Q" (v->counter)
-@@ -118,6 +124,7 @@ static inline int __lse_atomic_sub_return##name(int i, atomic_t *v)	\
- 	u32 tmp;							\
- 									\
- 	asm volatile(							\
-+	__LSE_PREAMBLE							\
- 	"	neg	%w[i], %w[i]\n"					\
- 	"	ldadd" #mb "	%w[i], %w[tmp], %[v]\n"			\
- 	"	add	%w[i], %w[i], %w[tmp]"				\
-@@ -139,6 +146,7 @@ ATOMIC_OP_SUB_RETURN(        , al, "memory")
- static inline int __lse_atomic_fetch_sub##name(int i, atomic_t *v)	\
- {									\
- 	asm volatile(							\
-+	__LSE_PREAMBLE							\
- 	"	neg	%w[i], %w[i]\n"					\
- 	"	ldadd" #mb "	%w[i], %w[i], %[v]"			\
- 	: [i] "+&r" (i), [v] "+Q" (v->counter)				\
-@@ -159,6 +167,7 @@ ATOMIC_FETCH_OP_SUB(        , al, "memory")
- static inline void __lse_atomic64_##op(s64 i, atomic64_t *v)		\
- {									\
- 	asm volatile(							\
-+	__LSE_PREAMBLE							\
- "	" #asm_op "	%[i], %[v]\n"					\
- 	: [i] "+r" (i), [v] "+Q" (v->counter)				\
- 	: "r" (v));							\
-@@ -175,6 +184,7 @@ ATOMIC64_OP(add, stadd)
- static inline long __lse_atomic64_fetch_##op##name(s64 i, atomic64_t *v)\
- {									\
- 	asm volatile(							\
-+	__LSE_PREAMBLE							\
- "	" #asm_op #mb "	%[i], %[i], %[v]"				\
- 	: [i] "+r" (i), [v] "+Q" (v->counter)				\
- 	: "r" (v)							\
-@@ -203,6 +213,7 @@ static inline long __lse_atomic64_add_return##name(s64 i, atomic64_t *v)\
- 	unsigned long tmp;						\
- 									\
- 	asm volatile(							\
-+	__LSE_PREAMBLE							\
- 	"	ldadd" #mb "	%[i], %x[tmp], %[v]\n"			\
- 	"	add	%[i], %[i], %x[tmp]"				\
- 	: [i] "+r" (i), [v] "+Q" (v->counter), [tmp] "=&r" (tmp)	\
-@@ -222,6 +233,7 @@ ATOMIC64_OP_ADD_RETURN(        , al, "memory")
- static inline void __lse_atomic64_and(s64 i, atomic64_t *v)
- {
- 	asm volatile(
-+	__LSE_PREAMBLE
- 	"	mvn	%[i], %[i]\n"
- 	"	stclr	%[i], %[v]"
- 	: [i] "+&r" (i), [v] "+Q" (v->counter)
-@@ -232,6 +244,7 @@ static inline void __lse_atomic64_and(s64 i, atomic64_t *v)
- static inline long __lse_atomic64_fetch_and##name(s64 i, atomic64_t *v)	\
- {									\
- 	asm volatile(							\
-+	__LSE_PREAMBLE							\
- 	"	mvn	%[i], %[i]\n"					\
- 	"	ldclr" #mb "	%[i], %[i], %[v]"			\
- 	: [i] "+&r" (i), [v] "+Q" (v->counter)				\
-@@ -251,6 +264,7 @@ ATOMIC64_FETCH_OP_AND(        , al, "memory")
- static inline void __lse_atomic64_sub(s64 i, atomic64_t *v)
- {
- 	asm volatile(
-+	__LSE_PREAMBLE
- 	"	neg	%[i], %[i]\n"
- 	"	stadd	%[i], %[v]"
- 	: [i] "+&r" (i), [v] "+Q" (v->counter)
-@@ -263,6 +277,7 @@ static inline long __lse_atomic64_sub_return##name(s64 i, atomic64_t *v)	\
- 	unsigned long tmp;						\
- 									\
- 	asm volatile(							\
-+	__LSE_PREAMBLE							\
- 	"	neg	%[i], %[i]\n"					\
- 	"	ldadd" #mb "	%[i], %x[tmp], %[v]\n"			\
- 	"	add	%[i], %[i], %x[tmp]"				\
-@@ -284,6 +299,7 @@ ATOMIC64_OP_SUB_RETURN(        , al, "memory")
- static inline long __lse_atomic64_fetch_sub##name(s64 i, atomic64_t *v)	\
- {									\
- 	asm volatile(							\
-+	__LSE_PREAMBLE							\
- 	"	neg	%[i], %[i]\n"					\
- 	"	ldadd" #mb "	%[i], %[i], %[v]"			\
- 	: [i] "+&r" (i), [v] "+Q" (v->counter)				\
-@@ -305,6 +321,7 @@ static inline s64 __lse_atomic64_dec_if_positive(atomic64_t *v)
- 	unsigned long tmp;
- 
- 	asm volatile(
-+	__LSE_PREAMBLE
- 	"1:	ldr	%x[tmp], %[v]\n"
- 	"	subs	%[ret], %x[tmp], #1\n"
- 	"	b.lt	2f\n"
-@@ -332,6 +349,7 @@ __lse__cmpxchg_case_##name##sz(volatile void *ptr,			\
- 	unsigned long tmp;						\
- 									\
- 	asm volatile(							\
-+	__LSE_PREAMBLE							\
- 	"	mov	%" #w "[tmp], %" #w "[old]\n"			\
- 	"	cas" #mb #sfx "\t%" #w "[tmp], %" #w "[new], %[v]\n"	\
- 	"	mov	%" #w "[ret], %" #w "[tmp]"			\
-@@ -379,6 +397,7 @@ __lse__cmpxchg_double##name(unsigned long old1,				\
- 	register unsigned long x4 asm ("x4") = (unsigned long)ptr;	\
- 									\
- 	asm volatile(							\
-+	__LSE_PREAMBLE							\
- 	"	casp" #mb "\t%[old1], %[old2], %[new1], %[new2], %[v]\n"\
- 	"	eor	%[old1], %[old1], %[oldval1]\n"			\
- 	"	eor	%[old2], %[old2], %[oldval2]\n"			\
-diff --git a/arch/arm64/include/asm/lse.h b/arch/arm64/include/asm/lse.h
-index 80b3882781496..73834996c4b6d 100644
---- a/arch/arm64/include/asm/lse.h
-+++ b/arch/arm64/include/asm/lse.h
-@@ -6,6 +6,8 @@
- 
- #if defined(CONFIG_AS_LSE) && defined(CONFIG_ARM64_LSE_ATOMICS)
- 
-+#define __LSE_PREAMBLE	".arch armv8-a+lse\n"
-+
- #include <linux/compiler_types.h>
- #include <linux/export.h>
- #include <linux/jump_label.h>
-@@ -14,8 +16,6 @@
- #include <asm/atomic_lse.h>
- #include <asm/cpucaps.h>
- 
--__asm__(".arch_extension	lse");
--
- extern struct static_key_false cpu_hwcap_keys[ARM64_NCAPS];
- extern struct static_key_false arm64_const_caps_ready;
- 
-@@ -34,7 +34,7 @@ static inline bool system_uses_lse_atomics(void)
- 
- /* In-line patching at runtime */
- #define ARM64_LSE_ATOMIC_INSN(llsc, lse)				\
--	ALTERNATIVE(llsc, lse, ARM64_HAS_LSE_ATOMICS)
-+	ALTERNATIVE(llsc, __LSE_PREAMBLE lse, ARM64_HAS_LSE_ATOMICS)
- 
- #else	/* CONFIG_AS_LSE && CONFIG_ARM64_LSE_ATOMICS */
- 
--- 
-2.20.1
+--=20
+ <http://www.linaro.org/> Linaro.org =E2=94=82 Open source software for A=
+RM SoCs
+
+Follow Linaro:  <http://www.facebook.com/pages/Linaro> Facebook |
+<http://twitter.com/#!/linaroorg> Twitter |
+<http://www.linaro.org/linaro-blog/> Blog
 
 
 
+--c2gGM3Lgf5aCP5z4G4XSt2A8z0baaFgxK--
+
+--wSSbaXgSqW4PXUUnEStSrR77zzH24rit8
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: OpenPGP digital signature
+Content-Disposition: attachment; filename="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iHUEARYIAB0WIQRuKdf4M92Gi9vqihve5qtOL396pgUCXk+VqQAKCRDe5qtOL396
+prnpAQDNQo6Rj148yOA/foN6557qqsyVLJ2BPk0ZeEuXNXSGOQEAo2ZINVMAQ7WB
+CIvTq3B57lSeF0PqYckAFDXIttptoAk=
+=NkPM
+-----END PGP SIGNATURE-----
+
+--wSSbaXgSqW4PXUUnEStSrR77zzH24rit8--
