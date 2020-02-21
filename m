@@ -6,45 +6,45 @@ X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
 	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 101DFC35646
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 13:51:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 68BEAC35646
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 13:51:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D73DE24676
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 13:51:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 35B9B24650
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 13:51:26 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="FcHHQ2Za"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="OYZaO5jX"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728852AbgBUNuk (ORCPT
+        id S1729072AbgBUNvY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Feb 2020 08:50:40 -0500
-Received: from merlin.infradead.org ([205.233.59.134]:45512 "EHLO
+        Fri, 21 Feb 2020 08:51:24 -0500
+Received: from merlin.infradead.org ([205.233.59.134]:45510 "EHLO
         merlin.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728829AbgBUNui (ORCPT
+        with ESMTP id S1728828AbgBUNui (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Fri, 21 Feb 2020 08:50:38 -0500
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
         d=infradead.org; s=merlin.20170209; h=Content-Type:MIME-Version:References:
         Subject:Cc:To:From:Date:Message-Id:Sender:Reply-To:Content-Transfer-Encoding:
         Content-ID:Content-Description:In-Reply-To;
-        bh=4ftWpOmadAOI/R1k36uM0sOzlPG8YKuw4enMq9FixWQ=; b=FcHHQ2Za0ZHjLasjlAB4tJcaOc
-        B1KapfQ55WVx7k9On26pIvP2VetAPCfgz8RApbRSm2MujQM7r6J+GABxkqPvNP+1844FOXJrDgJcZ
-        MOzCiVFkqw/jA1aZOZMI/KIhIMYnsWsCUpDPVT5eNYq2PN6nbOrdPBTZ3fEnjV6gYxoP3OGJaLyBv
-        1CLQ27N5vEsWM9VY/rjB3RZew+Oz9PNtXHZfQ+bJVa/9N6ceCno3m44vfbwLM90sCj7m7mUZh9Ga4
-        pGiHn6eXlgk/kmybof1YjZYwK65Ze0lrlq+ERQim937Jx1XXgr9vpJ4zJNwrQfI/f27RAqTV0GxF2
-        xogcI4sg==;
+        bh=eb9IIA3CR0LweOzY8oDNQhcAxSg7moC5djB9xFdbk5k=; b=OYZaO5jXikb4ReQbFnoWq8tvyp
+        VCy7BYr8IXGYHDKPFpdKZT7h+xcXxx8JNI8OhLtC9Q2GNsg9+KqGXoS62//4wECx6AOQ0z7+HdTxE
+        dYdjD+KakzpGA2CtYEzeezIvcp/Rese5pOvbSd34VPenJ9BgkX/WJWiF/+W3ozgmZ5+3hPe1pSt75
+        XFS/pN4XvWJzD/EtTc5M2v5Q1Wh3TY/6T3OaD2tCROatXBeCpDslsPcFgbYUovbXhn99nMB5kYC3R
+        MppP4fyWVnR8RJOFkvMu4VNZwMbcH/VUwYXJo3v6nqjGMwP7d1SNW7PSUQyOhqT8ckLC0S9c5YmVa
+        ktFTqB8Q==;
 Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
         by merlin.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1j58gv-0006V0-4T; Fri, 21 Feb 2020 13:50:05 +0000
+        id 1j58gx-0006VQ-Fk; Fri, 21 Feb 2020 13:50:07 +0000
 Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (Client did not present a certificate)
-        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 468E53070F9;
+        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id D40CE307960;
         Fri, 21 Feb 2020 14:48:08 +0100 (CET)
 Received: by hirez.programming.kicks-ass.net (Postfix, from userid 0)
-        id BC15A29B59040; Fri, 21 Feb 2020 14:50:00 +0100 (CET)
-Message-Id: <20200221134215.385886177@infradead.org>
+        id C394F29B59043; Fri, 21 Feb 2020 14:50:00 +0100 (CET)
+Message-Id: <20200221134215.501225981@infradead.org>
 User-Agent: quilt/0.65
-Date:   Fri, 21 Feb 2020 14:34:22 +0100
+Date:   Fri, 21 Feb 2020 14:34:24 +0100
 From:   Peter Zijlstra <peterz@infradead.org>
 To:     linux-kernel@vger.kernel.org, linux-arch@vger.kernel.org,
         rostedt@goodmis.org
@@ -54,7 +54,7 @@ Cc:     peterz@infradead.org, mingo@kernel.org, joel@joelfernandes.org,
         mathieu.desnoyers@efficios.com, jiangshanlai@gmail.com,
         luto@kernel.org, tony.luck@intel.com, frederic@kernel.org,
         dan.carpenter@oracle.com, mhiramat@kernel.org
-Subject: [PATCH v4 06/27] x86/doublefault: Remove memmove() call
+Subject: [PATCH v4 08/27] rcu/kprobes: Comment why rcu_nmi_enter() is marked NOKPROBE
 References: <20200221133416.777099322@infradead.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -63,44 +63,50 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Use of memmove() in #DF is problematic when you consider tracing and
-other instrumentation.
+From: Steven Rostedt (VMware) <rostedt@goodmis.org>
 
-Remove the memmove() call and simply write out what need doing; Boris
-argues the ranges should not overlap.
+It's confusing that rcu_nmi_enter() is marked NOKPROBE and
+rcu_nmi_exit() is not. One may think that the exit needs to be marked
+for the same reason the enter is, as rcu_nmi_exit() reverts the RCU
+state back to what it was before rcu_nmi_enter(). But the reason has
+nothing to do with the state of RCU.
 
-Survives selftests/x86, specifically sigreturn_64.
+The breakpoint handler (int3 on x86) must not have any kprobe on it
+until the kprobe handler is called. Otherwise, it can cause an infinite
+recursion and crash the machine. It just so happens that
+rcu_nmi_enter() is called by the int3 handler before the kprobe handler
+can run, and therefore needs to be marked as NOKPROBE.
 
-(Andy ?!)
+Comment this to remove the confusion to why rcu_nmi_enter() is marked
+NOKPROBE but rcu_nmi_exit() is not.
 
+Reported-by: Joel Fernandes (Google) <joel@joelfernandes.org>
+Signed-off-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
 Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-Link: https://lkml.kernel.org/r/20200220121727.GB507@zn.tnic
+Reviewed-by: Paul E. McKenney <paulmck@kernel.org>
+Reviewed-by: Masami Hiramatsu <mhiramat@kernel.org>
+Acked-by: Joel Fernandes (Google) <joel@joelfernandes.org>
+Link: https://lore.kernel.org/r/20200213163800.5c51a5f1@gandalf.local.home
 ---
- arch/x86/kernel/traps.c |    7 ++++++-
- 1 file changed, 6 insertions(+), 1 deletion(-)
+ kernel/rcu/tree.c |    8 ++++++++
+ 1 file changed, 8 insertions(+)
 
---- a/arch/x86/kernel/traps.c
-+++ b/arch/x86/kernel/traps.c
-@@ -278,6 +278,7 @@ dotraplinkage void do_double_fault(struc
- 		regs->ip == (unsigned long)native_irq_return_iret)
- 	{
- 		struct pt_regs *gpregs = (struct pt_regs *)this_cpu_read(cpu_tss_rw.x86_tss.sp0) - 1;
-+		unsigned long *p = (unsigned long *)regs->sp;
+--- a/kernel/rcu/tree.c
++++ b/kernel/rcu/tree.c
+@@ -825,6 +825,14 @@ void rcu_nmi_enter(void)
+ 		   rdp->dynticks_nmi_nesting + incby);
+ 	barrier();
+ }
++/*
++ * All functions called in the breakpoint trap handler (e.g. do_int3()
++ * on x86), must not allow kprobes until the kprobe breakpoint handler
++ * is called, otherwise it can cause an infinite recursion.
++ * On some archs, rcu_nmi_enter() is called in the breakpoint handler
++ * before the kprobe breakpoint handler is called, thus it must be
++ * marked as NOKPROBE.
++ */
+ NOKPROBE_SYMBOL(rcu_nmi_enter);
  
- 		/*
- 		 * regs->sp points to the failing IRET frame on the
-@@ -285,7 +286,11 @@ dotraplinkage void do_double_fault(struc
- 		 * in gpregs->ss through gpregs->ip.
- 		 *
- 		 */
--		memmove(&gpregs->ip, (void *)regs->sp, 5*8);
-+		gpregs->ip	= p[0];
-+		gpregs->cs	= p[1];
-+		gpregs->flags	= p[2];
-+		gpregs->sp	= p[3];
-+		gpregs->ss	= p[4];
- 		gpregs->orig_ax = 0;  /* Missing (lost) #GP error code */
- 
- 		/*
+ /**
 
 
