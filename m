@@ -2,182 +2,104 @@ Return-Path: <SRS0=1210=4J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=no
+X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6F3C9C35656
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 14:56:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0D1F0C35656
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 14:58:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 42D9C206EF
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 14:56:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D6FFB24650
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 14:58:54 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="ipb0gqKp"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729000AbgBUO4N (ORCPT
+        id S1728985AbgBUO6x (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Feb 2020 09:56:13 -0500
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:21090 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1728264AbgBUO4N (ORCPT
+        Fri, 21 Feb 2020 09:58:53 -0500
+Received: from mail-wr1-f66.google.com ([209.85.221.66]:44501 "EHLO
+        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728264AbgBUO6w (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Feb 2020 09:56:13 -0500
-Received: from pps.filterd (m0098421.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 01LEoDdt085655
-        for <linux-kernel@vger.kernel.org>; Fri, 21 Feb 2020 09:56:12 -0500
-Received: from e06smtp05.uk.ibm.com (e06smtp05.uk.ibm.com [195.75.94.101])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2y8uc2mym3-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Fri, 21 Feb 2020 09:56:12 -0500
-Received: from localhost
-        by e06smtp05.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-kernel@vger.kernel.org> from <pasic@linux.ibm.com>;
-        Fri, 21 Feb 2020 14:56:10 -0000
-Received: from b06avi18878370.portsmouth.uk.ibm.com (9.149.26.194)
-        by e06smtp05.uk.ibm.com (192.168.101.135) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Fri, 21 Feb 2020 14:56:05 -0000
-Received: from d06av22.portsmouth.uk.ibm.com (d06av22.portsmouth.uk.ibm.com [9.149.105.58])
-        by b06avi18878370.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 01LEu3jL46924190
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Fri, 21 Feb 2020 14:56:03 GMT
-Received: from d06av22.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id C874B4C046;
-        Fri, 21 Feb 2020 14:56:03 +0000 (GMT)
-Received: from d06av22.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 424374C04E;
-        Fri, 21 Feb 2020 14:56:03 +0000 (GMT)
-Received: from oc2783563651 (unknown [9.152.224.149])
-        by d06av22.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Fri, 21 Feb 2020 14:56:03 +0000 (GMT)
-Date:   Fri, 21 Feb 2020 15:56:02 +0100
-From:   Halil Pasic <pasic@linux.ibm.com>
-To:     Jason Wang <jasowang@redhat.com>
-Cc:     "Michael S. Tsirkin" <mst@redhat.com>,
-        Marek Szyprowski <m.szyprowski@samsung.com>,
-        Robin Murphy <robin.murphy@arm.com>,
-        Christoph Hellwig <hch@lst.de>, linux-s390@vger.kernel.org,
-        virtualization@lists.linux-foundation.org,
-        linux-kernel@vger.kernel.org, iommu@lists.linux-foundation.org,
-        Christian Borntraeger <borntraeger@de.ibm.com>,
-        Janosch Frank <frankja@linux.ibm.com>,
-        Viktor Mihajlovski <mihajlov@linux.ibm.com>,
-        Cornelia Huck <cohuck@redhat.com>,
-        Ram Pai <linuxram@us.ibm.com>,
-        Thiago Jung Bauermann <bauerman@linux.ibm.com>,
-        David Gibson <david@gibson.dropbear.id.au>,
-        "Lendacky, Thomas" <Thomas.Lendacky@amd.com>,
-        Michael Mueller <mimu@linux.ibm.com>
-Subject: Re: [PATCH 0/2] virtio: decouple protected guest RAM form
- VIRTIO_F_IOMMU_PLATFORM
-In-Reply-To: <426e6972-0565-c931-e171-da0f58fbf856@redhat.com>
-References: <20200220160606.53156-1-pasic@linux.ibm.com>
-        <426e6972-0565-c931-e171-da0f58fbf856@redhat.com>
-Organization: IBM
-X-Mailer: Claws Mail 3.11.1 (GTK+ 2.24.31; x86_64-redhat-linux-gnu)
+        Fri, 21 Feb 2020 09:58:52 -0500
+Received: by mail-wr1-f66.google.com with SMTP id m16so2385263wrx.11
+        for <linux-kernel@vger.kernel.org>; Fri, 21 Feb 2020 06:58:51 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=oEykVJQOde/kw8FuzYyK6TbVeNPZu6MWcUJ10Pto0IA=;
+        b=ipb0gqKpnH8eZQgist6/WhFHScfIIDaUKF+YlbE6HPBeFQIemlkloXs81cSL1ZN4iZ
+         mTkfja6gIWCuppriqnMHuyB1am2J5DJYqQlrQ1HcbraCInK3TJESZy+li98cpiIEKEbP
+         3Urd/YdG2Xo4GXDBzarxrAO+CgdH44P3OeR2Ff8gfoGNyJLRPZKeC9J39b41W1GJ9uWk
+         18JrOBUtIvKTSGblB/mw1Bylv5ErmL/bxLhSrf/Gz2BXKca9J1xPWNFtivCbmdMWUIQa
+         GhPNOirMvH/3Y5kPYR2jHURDfNOSD70w79VpYYODoogSQAGDhzrHoFKgeyu9jtA33sBK
+         aZhQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=oEykVJQOde/kw8FuzYyK6TbVeNPZu6MWcUJ10Pto0IA=;
+        b=XOuJDYB7zP202JdaJpsvO2Ii8zFeMdCZ1ipJYVmqv7wB/Kl5m9sUtvsewIA/jnLjki
+         q4lcKzIiuO0OqtULT0129/E1JrqjtgJYCmBxgmmTQzxviThQvFgfPps/sLdfMweiz15G
+         GZxP4tZTF21q29RkaxvxE9+ptC3cZHpvIpzFJ5HfXVivAuWAGO3ZNXUhFyi+aigkTLqZ
+         lsPykxUZNuN7zNVDw4tJ2oi2j9N01osePVfnUX5t1+0yoKMWNHEQqtwnOINaxJ08aSac
+         ln5EPShHvA2DZWpxr+i/4oRU1FRs9sLt3dl0yJU6LIBYaL1y6Bd9TdxSJ/nA6YfDFjWR
+         uuNg==
+X-Gm-Message-State: APjAAAXjJPydIt+QRjYlbX5c593fIrFxOi/ypMwfNv4lwqbtTnLPqZ3m
+        8KSIiFOUqRHauMsikaTNNd4DMA==
+X-Google-Smtp-Source: APXvYqw5xErxKhMBv5gx7PiJTT4buaJCBAgeciEkFL3HX/fDBfWZq5ZsZ5zArg6gc4dn9bxvuaNzFQ==
+X-Received: by 2002:adf:b352:: with SMTP id k18mr48018831wrd.242.1582297130530;
+        Fri, 21 Feb 2020 06:58:50 -0800 (PST)
+Received: from linaro.org ([2a01:e34:ed2f:f020:903b:a048:f296:e3ae])
+        by smtp.gmail.com with ESMTPSA id b21sm4153587wmd.37.2020.02.21.06.58.49
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Fri, 21 Feb 2020 06:58:49 -0800 (PST)
+Date:   Fri, 21 Feb 2020 15:58:47 +0100
+From:   Daniel Lezcano <daniel.lezcano@linaro.org>
+To:     Dmitry Osipenko <digetx@gmail.com>
+Cc:     Thierry Reding <thierry.reding@gmail.com>,
+        Jonathan Hunter <jonathanh@nvidia.com>,
+        Peter De Schrijver <pdeschrijver@nvidia.com>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        =?utf-8?B?TWljaGHFgiBNaXJvc8WCYXc=?= <mirq-linux@rere.qmqm.pl>,
+        Jasper Korten <jja2000@gmail.com>,
+        David Heidelberg <david@ixit.cz>,
+        Peter Geis <pgwipeout@gmail.com>, linux-pm@vger.kernel.org,
+        linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v9 03/17] ARM: tegra: Remove pen-locking from
+ cpuidle-tegra20
+Message-ID: <20200221145847.GH10516@linaro.org>
+References: <20200212235134.12638-1-digetx@gmail.com>
+ <20200212235134.12638-4-digetx@gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-x-cbid: 20022114-0020-0000-0000-000003AC5719
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 20022114-0021-0000-0000-000022046169
-Message-Id: <20200221155602.4de41fa7.pasic@linux.ibm.com>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.572
- definitions=2020-02-21_04:2020-02-21,2020-02-21 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 adultscore=0 spamscore=0
- phishscore=0 impostorscore=0 mlxscore=0 mlxlogscore=999 priorityscore=1501
- lowpriorityscore=0 bulkscore=0 clxscore=1015 suspectscore=0 malwarescore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2001150001
- definitions=main-2002210114
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200212235134.12638-4-digetx@gmail.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 21 Feb 2020 14:22:26 +0800
-Jason Wang <jasowang@redhat.com> wrote:
+On Thu, Feb 13, 2020 at 02:51:20AM +0300, Dmitry Osipenko wrote:
+> Pen-locking is meant to block CPU0 if CPU1 wakes up during of entering
+> into LP2 because of some interrupt firing up, preventing unnecessary LP2
+> enter that will be resumed immediately. Apparently this case doesn't
+> happen often in practice, I checked how often it takes place and found
+> that after ~20 hours of browsing web, managing email, watching videos and
+> idling (15+ hours) there is only a dozen of early LP2 entering abortions
+> and they all happened while device was idling. Thus let's remove the
+> pen-locking and make LP2 entering uninterruptible, simplifying code quite
+> a lot. This will also become very handy for the upcoming unified cpuidle
+> driver, allowing to have a common LP2 code-path across of different
+> hardware generations.
+> 
+> Acked-by: Peter De Schrijver <pdeschrijver@nvidia.com>
+> Tested-by: Peter Geis <pgwipeout@gmail.com>
+> Tested-by: Jasper Korten <jja2000@gmail.com>
+> Tested-by: David Heidelberg <david@ixit.cz>
+> Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
 
-> 
-> On 2020/2/21 上午12:06, Halil Pasic wrote:
-> > Currently if one intends to run a memory protection enabled VM with
-> > virtio devices and linux as the guest OS, one needs to specify the
-> > VIRTIO_F_IOMMU_PLATFORM flag for each virtio device to make the guest
-> > linux use the DMA API, which in turn handles the memory
-> > encryption/protection stuff if the guest decides to turn itself into
-> > a protected one. This however makes no sense due to multiple reasons:
-> > * The device is not changed by the fact that the guest RAM is
-> > protected. The so called IOMMU bypass quirk is not affected.
-> > * This usage is not congruent with  standardised semantics of
-> > VIRTIO_F_IOMMU_PLATFORM. Guest memory protected is an orthogonal reason
-> > for using DMA API in virtio (orthogonal with respect to what is
-> > expressed by VIRTIO_F_IOMMU_PLATFORM).
-> >
-> > This series aims to decouple 'have to use DMA API because my (guest) RAM
-> > is protected' and 'have to use DMA API because the device told me
-> > VIRTIO_F_IOMMU_PLATFORM'.
-> >
-> > Please find more detailed explanations about the conceptual aspects in
-> > the individual patches. There is however also a very practical problem
-> > that is addressed by this series.
-> >
-> > For vhost-net the feature VIRTIO_F_IOMMU_PLATFORM has the following side
-> > effect The vhost code assumes it the addresses on the virtio descriptor
-> > ring are not guest physical addresses but iova's, and insists on doing a
-> > translation of these regardless of what transport is used (e.g. whether
-> > we emulate a PCI or a CCW device). (For details see commit 6b1e6cc7855b
-> > "vhost: new device IOTLB API".) On s390 this results in severe
-> > performance degradation (c.a. factor 10).
-> 
-> 
-> Do you see a consistent degradation on the performance, or it only 
-> happen when for during the beginning of the test?
-> 
-
-AFAIK the degradation is consistent.
-
-> 
-> > BTW with ccw I/O there is
-> > (architecturally) no IOMMU, so the whole address translation makes no
-> > sense in the context of virtio-ccw.
-> 
-> 
-> I suspect we can do optimization in qemu side.
-> 
-> E.g send memtable entry via IOTLB API when vIOMMU is not enabled.
-> 
-> If this makes sense, I can draft patch to see if there's any difference.
-
-Frankly I would prefer to avoid IOVAs on the descriptor ring (and the
-then necessary translation) for virtio-ccw altogether. But Michael
-voiced his opinion that we should mandate F_IOMMU_PLATFORM for devices
-that could be used with guests running in protected mode. I don't share
-his opinion, but that's an ongoing discussion.
-
-Should we end up having to do translation from IOVA in vhost, we are
-very interested in that translation being fast and efficient.
-
-In that sense we would be very happy to test any optimization that aim
-into that direction.
-
-Thank you very much for your input!
-
-Regards,
-Halil
-
-> 
-> Thanks
-> 
-> 
-> >
-> > Halil Pasic (2):
-> >    mm: move force_dma_unencrypted() to mem_encrypt.h
-> >    virtio: let virtio use DMA API when guest RAM is protected
-> >
-> >   drivers/virtio/virtio_ring.c |  3 +++
-> >   include/linux/dma-direct.h   |  9 ---------
-> >   include/linux/mem_encrypt.h  | 10 ++++++++++
-> >   3 files changed, 13 insertions(+), 9 deletions(-)
-> >
-> >
-> > base-commit: ca7e1fd1026c5af6a533b4b5447e1d2f153e28f2
-> 
-
+Acked-by: Daniel Lezcano <daniel.lezcano@linaro.org>
