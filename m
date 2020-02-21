@@ -7,47 +7,48 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A7A37C35641
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 08:14:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C4FCDC35640
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 08:14:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7D6022467E
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 08:14:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 89A1E20578
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 08:14:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582272855;
-	bh=KmtZZPuEoHO4gyd2nmECJTZBKi3nPgjlr6C/KvSZc3c=;
+	s=default; t=1582272858;
+	bh=jrIDkJCJcAj5Fx5ifyW1/d9XY7z2Jyo3nzdyGhxeQ3o=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=AKiFNsLetHML09e1LoZRtqeeRBSh0FQR5TvQsAMmmkpLRybWURE2iS2vR37c6AIct
-	 QmPSd2lY5ZUG3F2XIewSk75EG9gRsp8HPdTUyuZoRVvhWZGXQh91M2iLfSv0H1HBaU
-	 l0wJlBEdyeAps+xKcCKTOGS/ytiv8bNFdNFibzOQ=
+	b=u2S0rQNGM4lDkaZ76E83+SfptLSvpfX/mAKtHXHOLVe+yfet8WfHk1ohVdJjLEDA5
+	 dSE8O+Lbw5NHIpEXq2PoO/QR8WoU6JrottR0to4mHm+H4mYbIbyM45O6uOexRZfsvf
+	 YDYakMsHhmam3pm0QycOlBXoxgs0fQXyj10Vz9So=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733148AbgBUIOO (ORCPT
+        id S1733156AbgBUIOR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Feb 2020 03:14:14 -0500
-Received: from mail.kernel.org ([198.145.29.99]:50646 "EHLO mail.kernel.org"
+        Fri, 21 Feb 2020 03:14:17 -0500
+Received: from mail.kernel.org ([198.145.29.99]:50670 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732857AbgBUION (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Feb 2020 03:14:13 -0500
+        id S1732732AbgBUIOQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 21 Feb 2020 03:14:16 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 80AEA24680;
-        Fri, 21 Feb 2020 08:14:12 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id ED00A24650;
+        Fri, 21 Feb 2020 08:14:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1582272852;
-        bh=KmtZZPuEoHO4gyd2nmECJTZBKi3nPgjlr6C/KvSZc3c=;
+        s=default; t=1582272855;
+        bh=jrIDkJCJcAj5Fx5ifyW1/d9XY7z2Jyo3nzdyGhxeQ3o=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Fk/s1JDzdirQOzBwsCVtf6/t7r0BUTJfYIYAq3cmrP7ZNoNBTnNNneo6lgBc5Zb85
-         YGo9G7qJZf1eh6LeLnWxZXQJpazjEyxVvGwrZ3FL9XKWo0rmp7Cy6PYghWvU6AXBqV
-         X750dATlmOhMsI1AHUZTCoCAemHPZj1PADXQs9Dg=
+        b=InsRJF7yZYOUj/sy7UYn5o/npd47AhHafyTfUqsctCBrp/YiJlKsV9Mq6KyIyu91L
+         hvF3eo+/dN6C49CyStbw+LHfBFxG4qllbAtQeXTVGjCDaGTfMwJlY8diDLMi1Hp6uY
+         HXB8M3tHFAuf0tkDu05lBWWl4mZdeOlsXY3RfWzA=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Yan-Hsuan Chuang <yhchuang@realtek.com>,
+        stable@vger.kernel.org, Colin Ian King <colin.king@canonical.com>,
+        Stanislaw Gruszka <stf_xl@wp.pl>,
         Kalle Valo <kvalo@codeaurora.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 300/344] rtw88: fix potential NULL skb access in TX ISR
-Date:   Fri, 21 Feb 2020 08:41:39 +0100
-Message-Id: <20200221072417.143055591@linuxfoundation.org>
+Subject: [PATCH 5.4 301/344] iwlegacy: ensure loop counter addr does not wrap and cause an infinite loop
+Date:   Fri, 21 Feb 2020 08:41:40 +0100
+Message-Id: <20200221072417.234434582@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200221072349.335551332@linuxfoundation.org>
 References: <20200221072349.335551332@linuxfoundation.org>
@@ -60,41 +61,39 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Yan-Hsuan Chuang <yhchuang@realtek.com>
+From: Colin Ian King <colin.king@canonical.com>
 
-[ Upstream commit f4f84ff8377d4cedf18317747bc407b2cf657d0f ]
+[ Upstream commit c2f9a4e4a5abfc84c01b738496b3fd2d471e0b18 ]
 
-Sometimes the TX queue may be empty and we could possible
-dequeue a NULL pointer, crash the kernel. If the skb is NULL
-then there is nothing to do, just leave the ISR.
+The loop counter addr is a u16 where as the upper limit of the loop
+is an int. In the unlikely event that the il->cfg->eeprom_size is
+greater than 64K then we end up with an infinite loop since addr will
+wrap around an never reach upper loop limit. Fix this by making addr
+an int.
 
-And the TX queue should not be empty here, so print an error
-to see if there is anything wrong for DMA ring.
-
-Fixes: e3037485c68e ("rtw88: new Realtek 802.11ac driver")
-Signed-off-by: Yan-Hsuan Chuang <yhchuang@realtek.com>
+Addresses-Coverity: ("Infinite loop")
+Fixes: be663ab67077 ("iwlwifi: split the drivers for agn and legacy devices 3945/4965")
+Signed-off-by: Colin Ian King <colin.king@canonical.com>
+Acked-by: Stanislaw Gruszka <stf_xl@wp.pl>
 Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/wireless/realtek/rtw88/pci.c | 5 +++++
- 1 file changed, 5 insertions(+)
+ drivers/net/wireless/intel/iwlegacy/common.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/net/wireless/realtek/rtw88/pci.c b/drivers/net/wireless/realtek/rtw88/pci.c
-index d90928be663b9..77a2bdee50fa7 100644
---- a/drivers/net/wireless/realtek/rtw88/pci.c
-+++ b/drivers/net/wireless/realtek/rtw88/pci.c
-@@ -762,6 +762,11 @@ static void rtw_pci_tx_isr(struct rtw_dev *rtwdev, struct rtw_pci *rtwpci,
+diff --git a/drivers/net/wireless/intel/iwlegacy/common.c b/drivers/net/wireless/intel/iwlegacy/common.c
+index 73f7bbf742bc6..746749f379964 100644
+--- a/drivers/net/wireless/intel/iwlegacy/common.c
++++ b/drivers/net/wireless/intel/iwlegacy/common.c
+@@ -699,7 +699,7 @@ il_eeprom_init(struct il_priv *il)
+ 	u32 gp = _il_rd(il, CSR_EEPROM_GP);
+ 	int sz;
+ 	int ret;
+-	u16 addr;
++	int addr;
  
- 	while (count--) {
- 		skb = skb_dequeue(&ring->queue);
-+		if (!skb) {
-+			rtw_err(rtwdev, "failed to dequeue %d skb TX queue %d, BD=0x%08x, rp %d -> %d\n",
-+				count, hw_queue, bd_idx, ring->r.rp, cur_rp);
-+			break;
-+		}
- 		tx_data = rtw_pci_get_tx_data(skb);
- 		pci_unmap_single(rtwpci->pdev, tx_data->dma, skb->len,
- 				 PCI_DMA_TODEVICE);
+ 	/* allocate eeprom */
+ 	sz = il->cfg->eeprom_size;
 -- 
 2.20.1
 
