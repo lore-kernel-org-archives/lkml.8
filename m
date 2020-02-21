@@ -2,87 +2,189 @@ Return-Path: <SRS0=1210=4J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 27F76C35641
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 08:49:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B55C7C35641
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 08:49:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E500E24670
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 08:49:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8C90C2073A
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 08:49:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582274952;
-	bh=vUoHx5b0NGH+KG1C5W/cD75EpwMd7Q8IxzBf8FXvVgM=;
-	h=From:To:Cc:Subject:Date:List-ID:From;
-	b=FdxW1HTXbrZTyMVj/HOprBclmLcLOm9EnCflZAXjOCTXy0u27bcOOg/O7ddPih+x5
-	 7asBK0TNeiInAe1DbkimprychzfGg8FqLSPTeqLuyraijCjsHMiFCjH6RCsOjFrJsJ
-	 J2BLj2rmFeSN4pHthXhJOzQ9VVo0cmhipBlgnWRY=
+	s=default; t=1582274956;
+	bh=w6FmeglHbbjQyOVeVhB1YQFs2bUzBxmdI+GXM/tT2+I=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=bVemdyTZeIpJ0u/6ayqJ/3i80FACuVWS7U6cCa2rEdHg5YmwqE3DTjBQ+h0efO+xd
+	 QWAAlY1DyR7thrlupLpak79QwLiWroOMRMXOJuB0sYw2BRZGZYO4rSwM8pjPt2Spwf
+	 1nsBMZERrA3G76ZSiTL4q5yuM1kih9/oiuj4qGjs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729805AbgBUItK (ORCPT
+        id S1730602AbgBUItO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Feb 2020 03:49:10 -0500
-Received: from mail.kernel.org ([198.145.29.99]:58066 "EHLO mail.kernel.org"
+        Fri, 21 Feb 2020 03:49:14 -0500
+Received: from mail.kernel.org ([198.145.29.99]:58136 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726325AbgBUItH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Feb 2020 03:49:07 -0500
+        id S1728578AbgBUItK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 21 Feb 2020 03:49:10 -0500
 Received: from e123331-lin.home (amontpellier-657-1-18-247.w109-210.abo.wanadoo.fr [109.210.65.247])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 421C520722;
-        Fri, 21 Feb 2020 08:49:05 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A075924650;
+        Fri, 21 Feb 2020 08:49:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1582274946;
-        bh=vUoHx5b0NGH+KG1C5W/cD75EpwMd7Q8IxzBf8FXvVgM=;
-        h=From:To:Cc:Subject:Date:From;
-        b=S+rbV3QxSFMhLqddXEi8BSEabnbypAT7ZdrmpA62l3bbkI8s6lY4WGQJBIYKJfTNa
-         7V34FbrJdsWkBDdBbujs2qBf5c6vgtw/84QhsHfx0GoA2yFLdp2ocfgezA/dE9jXfJ
-         5kgr1PZUSvjSvu73O5td6YiQQRbATxLQn5ogB+FA=
+        s=default; t=1582274949;
+        bh=w6FmeglHbbjQyOVeVhB1YQFs2bUzBxmdI+GXM/tT2+I=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=riwpfHIPIcMULGmYyrkl0wTkBeHPKCmFb+zczCh1JnvTgviWzr+/fH5wxJE/pKn7c
+         ZuDc5phjLlhAoNGWldDL9oKfmyS6JVgJT4NYX1lcCVVbbxnjjfAiB37IR/rjRbKo04
+         K4RWmumB1x7prrghLRPf4Opg8tGev3dVB4IJVkqY=
 From:   Ard Biesheuvel <ardb@kernel.org>
 To:     linux-efi@vger.kernel.org, Ingo Molnar <mingo@kernel.org>,
         Thomas Gleixner <tglx@linutronix.de>
-Cc:     Ard Biesheuvel <ardb@kernel.org>, linux-kernel@vger.kernel.org,
-        Hans de Goede <hdegoede@redhat.com>,
-        "Jason A . Donenfeld" <Jason@zx2c4.com>
-Subject: [GIT PULL 0/4] EFI fixes for v5.6-rc
-Date:   Fri, 21 Feb 2020 09:48:45 +0100
-Message-Id: <20200221084849.26878-1-ardb@kernel.org>
+Cc:     Ard Biesheuvel <ardb@kernel.org>, linux-kernel@vger.kernel.org
+Subject: [PATCH 2/4] efi/x86: remove support for EFI time and counter services in mixed mode
+Date:   Fri, 21 Feb 2020 09:48:47 +0100
+Message-Id: <20200221084849.26878-3-ardb@kernel.org>
 X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20200221084849.26878-1-ardb@kernel.org>
+References: <20200221084849.26878-1-ardb@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The following changes since commit bb6d3fb354c5ee8d6bde2d576eb7220ea09862b9:
+Mixed mode calls at runtime are rather tricky with vmap'ed stacks,
+as we can no longer assume that data passed in by the callers of the
+EFI runtime wrapper routines is contiguous in physical memory.
 
-  Linux 5.6-rc1 (2020-02-09 16:08:48 -0800)
+We need to fix this, but before we do, let's drop the implementations
+of routines that we know are never used on x86, i.e., the RTC related
+ones. Given that UEFI rev2.8 permits any runtime service to return
+EFI_UNSUPPORTED at runtime, let's return that instead.
 
-are available in the Git repository at:
+As get_next_high_mono_count() is never used at all, even on other
+architectures, let's make that return EFI_UNSUPPORTED too.
 
-  git://git.kernel.org/pub/scm/linux/kernel/git/efi/efi.git tags/efi-urgent
+Signed-off-by: Ard Biesheuvel <ardb@kernel.org>
+---
+ arch/x86/platform/efi/efi_64.c | 81 +++-------------------------------
+ 1 file changed, 5 insertions(+), 76 deletions(-)
 
-for you to fetch changes up to 4905450b9255089ec1828882e0480831e535ccc5:
+diff --git a/arch/x86/platform/efi/efi_64.c b/arch/x86/platform/efi/efi_64.c
+index 543edfdcd1b9..ae398587f264 100644
+--- a/arch/x86/platform/efi/efi_64.c
++++ b/arch/x86/platform/efi/efi_64.c
+@@ -568,85 +568,25 @@ efi_thunk_set_virtual_address_map(unsigned long memory_map_size,
+ 
+ static efi_status_t efi_thunk_get_time(efi_time_t *tm, efi_time_cap_t *tc)
+ {
+-	efi_status_t status;
+-	u32 phys_tm, phys_tc;
+-	unsigned long flags;
+-
+-	spin_lock(&rtc_lock);
+-	spin_lock_irqsave(&efi_runtime_lock, flags);
+-
+-	phys_tm = virt_to_phys_or_null(tm);
+-	phys_tc = virt_to_phys_or_null(tc);
+-
+-	status = efi_thunk(get_time, phys_tm, phys_tc);
+-
+-	spin_unlock_irqrestore(&efi_runtime_lock, flags);
+-	spin_unlock(&rtc_lock);
+-
+-	return status;
++	return EFI_UNSUPPORTED;
+ }
+ 
+ static efi_status_t efi_thunk_set_time(efi_time_t *tm)
+ {
+-	efi_status_t status;
+-	u32 phys_tm;
+-	unsigned long flags;
+-
+-	spin_lock(&rtc_lock);
+-	spin_lock_irqsave(&efi_runtime_lock, flags);
+-
+-	phys_tm = virt_to_phys_or_null(tm);
+-
+-	status = efi_thunk(set_time, phys_tm);
+-
+-	spin_unlock_irqrestore(&efi_runtime_lock, flags);
+-	spin_unlock(&rtc_lock);
+-
+-	return status;
++	return EFI_UNSUPPORTED;
+ }
+ 
+ static efi_status_t
+ efi_thunk_get_wakeup_time(efi_bool_t *enabled, efi_bool_t *pending,
+ 			  efi_time_t *tm)
+ {
+-	efi_status_t status;
+-	u32 phys_enabled, phys_pending, phys_tm;
+-	unsigned long flags;
+-
+-	spin_lock(&rtc_lock);
+-	spin_lock_irqsave(&efi_runtime_lock, flags);
+-
+-	phys_enabled = virt_to_phys_or_null(enabled);
+-	phys_pending = virt_to_phys_or_null(pending);
+-	phys_tm = virt_to_phys_or_null(tm);
+-
+-	status = efi_thunk(get_wakeup_time, phys_enabled,
+-			     phys_pending, phys_tm);
+-
+-	spin_unlock_irqrestore(&efi_runtime_lock, flags);
+-	spin_unlock(&rtc_lock);
+-
+-	return status;
++	return EFI_UNSUPPORTED;
+ }
+ 
+ static efi_status_t
+ efi_thunk_set_wakeup_time(efi_bool_t enabled, efi_time_t *tm)
+ {
+-	efi_status_t status;
+-	u32 phys_tm;
+-	unsigned long flags;
+-
+-	spin_lock(&rtc_lock);
+-	spin_lock_irqsave(&efi_runtime_lock, flags);
+-
+-	phys_tm = virt_to_phys_or_null(tm);
+-
+-	status = efi_thunk(set_wakeup_time, enabled, phys_tm);
+-
+-	spin_unlock_irqrestore(&efi_runtime_lock, flags);
+-	spin_unlock(&rtc_lock);
+-
+-	return status;
++	return EFI_UNSUPPORTED;
+ }
+ 
+ static unsigned long efi_name_size(efi_char16_t *name)
+@@ -770,18 +710,7 @@ efi_thunk_get_next_variable(unsigned long *name_size,
+ static efi_status_t
+ efi_thunk_get_next_high_mono_count(u32 *count)
+ {
+-	efi_status_t status;
+-	u32 phys_count;
+-	unsigned long flags;
+-
+-	spin_lock_irqsave(&efi_runtime_lock, flags);
+-
+-	phys_count = virt_to_phys_or_null(count);
+-	status = efi_thunk(get_next_high_mono_count, phys_count);
+-
+-	spin_unlock_irqrestore(&efi_runtime_lock, flags);
+-
+-	return status;
++	return EFI_UNSUPPORTED;
+ }
+ 
+ static void
+-- 
+2.17.1
 
-  efi: READ_ONCE rng seed size before munmap (2020-02-17 17:46:26 +0100)
-
-----------------------------------------------------------------
-EFI fixes for v5.6-rcX:
-- some mixed mode fixes that came about after Hans reported issues in
-  the VA to PA translation code used by the mixed mode EFI runtime
-  service call wrappers.
-- use READ_ONCE() to dereference the UEFI rng seed structure, which gets
-  mapped, unmapped and remapped without the compiler being aware of it.
-
-----------------------------------------------------------------
-Ard Biesheuvel (3):
-      efi/x86: align GUIDs to their size in the mixed mode runtime wrapper
-      efi/x86: remove support for EFI time and counter services in mixed mode
-      efi/x86: Handle by-ref arguments covering multiple pages in mixed mode
-
-Jason A. Donenfeld (1):
-      efi: READ_ONCE rng seed size before munmap
-
- arch/x86/platform/efi/efi_64.c | 151 ++++++++++++++---------------------------
- drivers/firmware/efi/efi.c     |   4 +-
- 2 files changed, 54 insertions(+), 101 deletions(-)
