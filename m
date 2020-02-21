@@ -2,52 +2,51 @@ Return-Path: <SRS0=1210=4J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B7265C35642
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 07:44:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BB78DC35642
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 07:44:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8322424650
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 07:44:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 84812222C4
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 07:44:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582271091;
-	bh=nKJjF866yjwJPSLo14ekLgStyMcGGRJrLmEcN+E0vcA=;
+	s=default; t=1582271094;
+	bh=5X0WupEnFfrRuUFOQtt2nR3NK/iuICCSLiohKNtFgtE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=KRLATVzAXfRtmaaMzFgq6z5fl8zVbvOajfLfawaXgFVm4/SzZyxuSdfDB7OQWZuqN
-	 0ja2F5w19sMLmsNjBX9f5jhgZ6RFoIXl3JIvhmUjwTkzklWLpvzKCBazT4H/TAXmFx
-	 AedijzRvt4pi/CFmqyykkBS9Mutu43vciH4L8VQA=
+	b=EUmm+t0kj43cDHPWaRa+tGT8XawEnBMuW15kyxxNjTCfv/bK+y735gru1evFpb3sq
+	 qZXZ7GSxMNLgEzaDDNltTcLX3TrmJDG4KjqivU1bzwG2Japlyq9RW2s3BrBCly3r+L
+	 fYccJBbQTM5jh8hiB6HDZSw6Sb3qT+mbOEk+dMBI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728179AbgBUHou (ORCPT
+        id S1728191AbgBUHox (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Feb 2020 02:44:50 -0500
-Received: from mail.kernel.org ([198.145.29.99]:39680 "EHLO mail.kernel.org"
+        Fri, 21 Feb 2020 02:44:53 -0500
+Received: from mail.kernel.org ([198.145.29.99]:39802 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728148AbgBUHor (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Feb 2020 02:44:47 -0500
+        id S1726395AbgBUHow (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 21 Feb 2020 02:44:52 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 272DC20801;
-        Fri, 21 Feb 2020 07:44:45 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5BCCC222C4;
+        Fri, 21 Feb 2020 07:44:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1582271086;
-        bh=nKJjF866yjwJPSLo14ekLgStyMcGGRJrLmEcN+E0vcA=;
+        s=default; t=1582271091;
+        bh=5X0WupEnFfrRuUFOQtt2nR3NK/iuICCSLiohKNtFgtE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=IOFnKkxDRfRgOhUTz5RBCq4QEHoTbMywwxQk1dUR1qQ9xvRYWmTkqg2afGIq4K5Fn
-         tySLzoqL5A7F5sHEjEQJClR7J9JAwWqDAEJ5YzJ/TMdZ6Cmq6Ki8uTb1LEL9lQmGTt
-         FlHumCfsQVUpbnrz/4kYLVby7upNyXW36iJuUm2Y=
+        b=JdjWPsCjRMSJBKpeu8HTzNhZeRlN6md52vCcCgex7fYL4/+7Vz44DSV+tcRWW6Xpv
+         NsWGbdvMMVe/MJC0j/MM0MGJMgVkXsqDjtUp0Ba8TWFH+9QDLQQz8ZYzGQGstEd706
+         h6L/kuswvECxvAcwh0GpboWcjoqhGU55INKGGSDU=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Davide Caratti <dcaratti@redhat.com>,
-        Jiri Pirko <jiri@mellanox.com>,
-        "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 5.5 006/399] net/sched: flower: add missing validation of TCA_FLOWER_FLAGS
-Date:   Fri, 21 Feb 2020 08:35:31 +0100
-Message-Id: <20200221072402.933005748@linuxfoundation.org>
+        stable@vger.kernel.org, Colin Ian King <colin.king@canonical.com>,
+        Lyude Paul <lyude@redhat.com>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.5 008/399] drm/dp_mst: fix multiple frees of tx->bytes
+Date:   Fri, 21 Feb 2020 08:35:33 +0100
+Message-Id: <20200221072403.123394889@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200221072402.315346745@linuxfoundation.org>
 References: <20200221072402.315346745@linuxfoundation.org>
@@ -60,33 +59,43 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Davide Caratti <dcaratti@redhat.com>
+From: Colin Ian King <colin.king@canonical.com>
 
-[ Upstream commit e2debf0852c4d66ba1a8bde12869b196094c70a7 ]
+[ Upstream commit 2c8bc91488fc57438c43b3bb19deb7fdbc1e5119 ]
 
-unlike other classifiers that can be offloaded (i.e. users can set flags
-like 'skip_hw' and 'skip_sw'), 'cls_flower' doesn't validate the size of
-netlink attribute 'TCA_FLOWER_FLAGS' provided by user: add a proper entry
-to fl_policy.
+Currently tx->bytes is being freed r->num_transactions number of
+times because tx is not being set correctly. Fix this by setting
+tx to &r->transactions[i] so that the correct objects are being
+freed on each loop iteration.
 
-Fixes: 5b33f48842fa ("net/flower: Introduce hardware offload support")
-Signed-off-by: Davide Caratti <dcaratti@redhat.com>
-Acked-by: Jiri Pirko <jiri@mellanox.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Addresses-Coverity: ("Double free")
+Fixes: 2f015ec6eab6 ("drm/dp_mst: Add sideband down request tracing + selftests")
+Signed-off-by: Colin Ian King <colin.king@canonical.com>
+Signed-off-by: Lyude Paul <lyude@redhat.com>
+Link: https://patchwork.freedesktop.org/patch/msgid/20191120173509.347490-1-colin.king@canonical.com
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- net/sched/cls_flower.c |    1 +
- 1 file changed, 1 insertion(+)
+ drivers/gpu/drm/drm_dp_mst_topology.c | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
---- a/net/sched/cls_flower.c
-+++ b/net/sched/cls_flower.c
-@@ -691,6 +691,7 @@ static const struct nla_policy fl_policy
- 					    .len = 128 / BITS_PER_BYTE },
- 	[TCA_FLOWER_KEY_CT_LABELS_MASK]	= { .type = NLA_BINARY,
- 					    .len = 128 / BITS_PER_BYTE },
-+	[TCA_FLOWER_FLAGS]		= { .type = NLA_U32 },
- };
+diff --git a/drivers/gpu/drm/drm_dp_mst_topology.c b/drivers/gpu/drm/drm_dp_mst_topology.c
+index 6cd90cb4b6b10..4a65ef8d8bff3 100644
+--- a/drivers/gpu/drm/drm_dp_mst_topology.c
++++ b/drivers/gpu/drm/drm_dp_mst_topology.c
+@@ -517,8 +517,10 @@ drm_dp_decode_sideband_req(const struct drm_dp_sideband_msg_tx *raw,
+ 			}
  
- static const struct nla_policy
+ 			if (failed) {
+-				for (i = 0; i < r->num_transactions; i++)
++				for (i = 0; i < r->num_transactions; i++) {
++					tx = &r->transactions[i];
+ 					kfree(tx->bytes);
++				}
+ 				return -ENOMEM;
+ 			}
+ 
+-- 
+2.20.1
+
 
 
