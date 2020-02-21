@@ -2,124 +2,137 @@ Return-Path: <SRS0=1210=4J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EF14EC35642
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 09:32:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9D41AC35640
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 09:33:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C709320722
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 09:32:55 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582277575;
-	bh=G4BWbdqWgqHFB1vkSMV5GmPqtmPSg9T3gpSeqLcAYsM=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=aLhoyIGyP/MY620rohaThvh+sAlk/ntFKqjXjx+YvD5RRpXUTZ7nHQAwN//OK+CNt
-	 aGsB8T82FS3xWV628UmbEmFCBJmz/1MPREg1jsHPFecY46cpkAEcORVWQezWUOYVWy
-	 59iVmvgVsdqNarH2l1lK72kZezwbh+rUyDYqolS4=
+	by mail.kernel.org (Postfix) with ESMTP id 6F9DC2073A
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 09:33:08 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="P6O8skGY"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728097AbgBUJcz (ORCPT
+        id S1728137AbgBUJdH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Feb 2020 04:32:55 -0500
-Received: from mail.kernel.org ([198.145.29.99]:40796 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727036AbgBUJcy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Feb 2020 04:32:54 -0500
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        Fri, 21 Feb 2020 04:33:07 -0500
+Received: from mail26.static.mailgun.info ([104.130.122.26]:22165 "EHLO
+        mail26.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727036AbgBUJdG (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 21 Feb 2020 04:33:06 -0500
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1582277586; h=Content-Transfer-Encoding: Content-Type:
+ In-Reply-To: MIME-Version: Date: Message-ID: From: References: Cc: To:
+ Subject: Sender; bh=YXNMIm4ZOZ9CnParaqb7qbfYy1/tzl8hkD+zHYO7eI0=; b=P6O8skGYkSnPko1d+kB4gyRIWATHQAU0HaQUDRRxiZHNN+7q1viktDxHbE2PyC2i2vjPfWeH
+ ZH8FG/IN4fYbZoq3IZS/XaQmpklPYEDlnIcbe7XkxuGUtR1vq0Ia9XbbyrOV8Akfa2c0mw1k
+ 7ZBNrz4Km/kTFNw7TMzBmBVrdLg=
+X-Mailgun-Sending-Ip: 104.130.122.26
+X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
+Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
+ by mxa.mailgun.org with ESMTP id 5e4fa3c9.7fe23163c768-smtp-out-n02;
+ Fri, 21 Feb 2020 09:32:57 -0000 (UTC)
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id D0C29C433A2; Fri, 21 Feb 2020 09:32:56 +0000 (UTC)
+Received: from [10.206.13.37] (blr-c-bdr-fw-01_GlobalNAT_AllZones-Outside.qualcomm.com [103.229.19.19])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0991720722;
+        (Authenticated sender: mkshah)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 7D745C43383;
         Fri, 21 Feb 2020 09:32:52 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1582277573;
-        bh=G4BWbdqWgqHFB1vkSMV5GmPqtmPSg9T3gpSeqLcAYsM=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=PLN0eLpYfl8hy2hEwzb08K4iT2od9gFOzpN8bv1ooPZxOor7mSzbjdLJUv9xmaUuL
-         lBkm7pXcqu4Il7LT9/TK7eRQ3R8PWrsMfu1psLYMuhRsGb35MJ1xSHva/Oic/BR5Cz
-         vuP7eOKvuIGbEbpv9vDXYY9eyZ8hRK1SaUV7hiVg=
-Date:   Fri, 21 Feb 2020 10:32:51 +0100
-From:   Greg KH <gregkh@linuxfoundation.org>
-To:     Jiri Slaby <jslaby@suse.cz>
-Cc:     linux-serial@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 3/9] vt: selection, remove 2 local variables from
- set_selection_kernel
-Message-ID: <20200221093251.GA90355@kroah.com>
-References: <20200219073951.16151-1-jslaby@suse.cz>
- <20200219073951.16151-3-jslaby@suse.cz>
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 7D745C43383
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=mkshah@codeaurora.org
+Subject: Re: [PATCH v5 1/7] drivers: qcom: rpmh: fix macro to accept NULL
+ argument
+To:     Matthias Kaehlcke <mka@chromium.org>
+Cc:     swboyd@chromium.org, evgreen@chromium.org,
+        bjorn.andersson@linaro.org, linux-kernel@vger.kernel.org,
+        linux-arm-msm@vger.kernel.org, agross@kernel.org,
+        dianders@chromium.org, rnayak@codeaurora.org, ilina@codeaurora.org,
+        lsrao@codeaurora.org
+References: <1582108810-21263-1-git-send-email-mkshah@codeaurora.org>
+ <1582108810-21263-2-git-send-email-mkshah@codeaurora.org>
+ <20200220193105.GB24720@google.com>
+From:   Maulik Shah <mkshah@codeaurora.org>
+Message-ID: <dbec4ecb-403a-3bfe-0404-9d212cdfeaab@codeaurora.org>
+Date:   Fri, 21 Feb 2020 15:02:50 +0530
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.5.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200219073951.16151-3-jslaby@suse.cz>
+In-Reply-To: <20200220193105.GB24720@google.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Content-Language: en-GB
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Feb 19, 2020 at 08:39:45AM +0100, Jiri Slaby wrote:
-> multiplier and mode are not actually needed:
-> * multiplier is used only in kmalloc_array, so use "use_unicode ? 4 : 1"
->   directly
-> * mode is used only to assign a bool in this manner:
->   if (cond)
->     x = true;
->   else
->     x = false;
->   So do "x = cond" directly.
-> 
-> Signed-off-by: Jiri Slaby <jslaby@suse.cz>
-> ---
->  drivers/tty/vt/selection.c | 14 +++++---------
->  1 file changed, 5 insertions(+), 9 deletions(-)
-> 
-> diff --git a/drivers/tty/vt/selection.c b/drivers/tty/vt/selection.c
-> index 714992693974..6541c09d8bba 100644
-> --- a/drivers/tty/vt/selection.c
-> +++ b/drivers/tty/vt/selection.c
-> @@ -191,9 +191,9 @@ int set_selection_kernel(struct tiocl_selection *v, struct tty_struct *tty)
->  	struct vc_data *vc = vc_cons[fg_console].d;
->  	int new_sel_start, new_sel_end, spc;
->  	char *bp, *obp;
-> -	int i, ps, pe, multiplier;
-> +	int i, ps, pe;
->  	u32 c;
-> -	int mode, ret = 0;
-> +	int ret = 0;
->  
->  	poke_blanked_console();
->  
-> @@ -224,11 +224,7 @@ int set_selection_kernel(struct tiocl_selection *v, struct tty_struct *tty)
->  		clear_selection();
->  		sel_cons = vc_cons[fg_console].d;
->  	}
-> -	mode = vt_do_kdgkbmode(fg_console);
-> -	if (mode == K_UNICODE)
-> -		use_unicode = 1;
-> -	else
-> -		use_unicode = 0;
-> +	use_unicode = vt_do_kdgkbmode(fg_console) == K_UNICODE;
->  
->  	switch (v->sel_mode)
->  	{
-> @@ -312,8 +308,8 @@ int set_selection_kernel(struct tiocl_selection *v, struct tty_struct *tty)
->  	sel_end = new_sel_end;
->  
->  	/* Allocate a new buffer before freeing the old one ... */
-> -	multiplier = use_unicode ? 4 : 1;  /* chars can take up to 4 bytes */
-> -	bp = kmalloc_array((sel_end - sel_start) / 2 + 1, multiplier,
-> +	/* chars can take up to 4 bytes with unicode */
-> +	bp = kmalloc_array((sel_end - sel_start) / 2 + 1, use_unicode ? 4 : 1,
->  			   GFP_KERNEL);
->  	if (!bp) {
->  		printk(KERN_WARNING "selection: kmalloc() failed\n");
-> -- 
-> 2.25.0
-> 
 
-This patch fails to apply to my tree, so I stopped here.  Can you rebase
-and resend the rest of these?
+On 2/21/2020 1:01 AM, Matthias Kaehlcke wrote:
+> Hi Maulik,
+>
+> this patch and '[v5,2/7] drivers: qcom: rpmh: remove rpmh_flush
+> export' already landed in the QCOM tree (in the branch 'drivers-for-5.7'):
+>
+> d5e205079c34a drivers: qcom: rpmh: remove rpmh_flush export
+> aff9cc0847a58 drivers: qcom: rpmh: fix macro to accept NULL argument
+>
+> Please rebase your working tree and stop sending these.
+>
+> Thanks
+>
+> Matthias
 
-thanks,
+Hi Matthias
 
-greg k-h
+Rebased and updated in v6.
+
+Thanks,
+
+Maulik
+
+>
+> On Wed, Feb 19, 2020 at 04:10:04PM +0530, Maulik Shah wrote:
+>> Device argument matches with dev variable declared in RPMH message.
+>> Compiler reports error when the argument is NULL since the argument
+>> matches the name of the property. Rename dev argument to device to
+>> fix this.
+>>
+>> Signed-off-by: Maulik Shah <mkshah@codeaurora.org>
+>> Reviewed-by: Stephen Boyd <swboyd@chromium.org>
+>> ---
+>>   drivers/soc/qcom/rpmh.c | 4 ++--
+>>   1 file changed, 2 insertions(+), 2 deletions(-)
+>>
+>> diff --git a/drivers/soc/qcom/rpmh.c b/drivers/soc/qcom/rpmh.c
+>> index 035091f..3a4579d 100644
+>> --- a/drivers/soc/qcom/rpmh.c
+>> +++ b/drivers/soc/qcom/rpmh.c
+>> @@ -23,7 +23,7 @@
+>>   
+>>   #define RPMH_TIMEOUT_MS			msecs_to_jiffies(10000)
+>>   
+>> -#define DEFINE_RPMH_MSG_ONSTACK(dev, s, q, name)	\
+>> +#define DEFINE_RPMH_MSG_ONSTACK(device, s, q, name)	\
+>>   	struct rpmh_request name = {			\
+>>   		.msg = {				\
+>>   			.state = s,			\
+>> @@ -33,7 +33,7 @@
+>>   		},					\
+>>   		.cmd = { { 0 } },			\
+>>   		.completion = q,			\
+>> -		.dev = dev,				\
+>> +		.dev = device,				\
+>>   		.needs_free = false,				\
+>>   	}
+>>   
+>> -- 
+>> QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member
+>> of Code Aurora Forum, hosted by The Linux Foundation
+
+-- 
+QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum, hosted by The Linux Foundation
