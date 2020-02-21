@@ -7,48 +7,48 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 619FBC35640
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 08:25:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BB10FC35640
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 08:25:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 365E5246AA
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 08:25:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8082D246A0
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 08:25:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582273503;
-	bh=BNCWoPz9N9JT1a4CxnyW2istYkmuYz1zj4L7Qm7jjnU=;
+	s=default; t=1582273506;
+	bh=A7mtqHMBRXmpZws71RLcV6YiKcGVfMgqWoLgobCuYsc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=MkEWKuFUvoBHSr6En+i22yuuIah4SJi1ndVRSfdYaxJOPZdgudZxyYwh+m0Dh9f7x
-	 FpH5QK1sO2/1QR+Kz5S33G5Ol07HqCnnuJbVyKyTEIhScueZQEg2T7IqxyhfdfOaKy
-	 3b7T1xU8ogPl7fw7BseGnKZeomWuZntRbQxVUwcQ=
+	b=srqNErlJbD1+aSM+aZ5RDN8tPtstjeYPoKT4GGsiYgLLX4l77iEp/CYUV4CDLNgzx
+	 100wHilhmbsGzEw9VVBfeYCy7sNsyIure2J5/ix1mHf128U7v9gURnnvsE0J1zi4uB
+	 Uzsi9+y/6ZYxevaJtaIJuIancNwS2xtEs7vXcEBI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388735AbgBUIZB (ORCPT
+        id S2388751AbgBUIZE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Feb 2020 03:25:01 -0500
-Received: from mail.kernel.org ([198.145.29.99]:37514 "EHLO mail.kernel.org"
+        Fri, 21 Feb 2020 03:25:04 -0500
+Received: from mail.kernel.org ([198.145.29.99]:37634 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1733083AbgBUIYx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Feb 2020 03:24:53 -0500
+        id S2388727AbgBUIY6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 21 Feb 2020 03:24:58 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4EB49246A0;
-        Fri, 21 Feb 2020 08:24:52 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4EB03246A0;
+        Fri, 21 Feb 2020 08:24:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1582273492;
-        bh=BNCWoPz9N9JT1a4CxnyW2istYkmuYz1zj4L7Qm7jjnU=;
+        s=default; t=1582273497;
+        bh=A7mtqHMBRXmpZws71RLcV6YiKcGVfMgqWoLgobCuYsc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=bIwVKpIgZKY90T7URTH0AfJo8jxjbsMYi2TbDYbWvjfqLZBBvUkC1RCm47580RguL
-         LOTdeZ2h4QFRzd76qfZp+d1N2RMHnCxvkmPziXyUZ7xtyZd2+eI7qYRiiYKekVBCL7
-         RUZq4Hvz2jqbtLjoEfaSsRnY3bBB1Nn23Jb2Zj7g=
+        b=h4nRy/h5oQB3KO0+y/EA5AI5MRtuEBI7cnQnkpXas+9Skf4ym8qoZ8HuNb0fVEBus
+         9tV8IqJekI5o/lnztRfJYIInkuuV6mroOifquDO3oVjkb4tvTvR606Cm31BVq1KRt9
+         zBz33bw4nmmLt9U9DHAzt9burcFxC0f8HX9ZE6tE=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Nicholas Kazlauskas <nicholas.kazlauskas@amd.com>,
-        Alex Deucher <alexander.deucher@amd.com>,
+        stable@vger.kernel.org, Xiubo Li <xiubli@redhat.com>,
+        Jeff Layton <jlayton@kernel.org>,
+        Ilya Dryomov <idryomov@gmail.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 191/191] drm/amdgpu/display: handle multiple numbers of fclks in dcn_calcs.c (v2)
-Date:   Fri, 21 Feb 2020 08:42:44 +0100
-Message-Id: <20200221072313.769324535@linuxfoundation.org>
+Subject: [PATCH 4.19 169/191] ceph: check availability of mds cluster on mount after wait timeout
+Date:   Fri, 21 Feb 2020 08:42:22 +0100
+Message-Id: <20200221072311.006077283@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200221072250.732482588@linuxfoundation.org>
 References: <20200221072250.732482588@linuxfoundation.org>
@@ -61,75 +61,57 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Alex Deucher <alexander.deucher@amd.com>
+From: Xiubo Li <xiubli@redhat.com>
 
-[ Upstream commit c37243579d6c881c575dcfb54cf31c9ded88f946 ]
+[ Upstream commit 97820058fb2831a4b203981fa2566ceaaa396103 ]
 
-We might get different numbers of clocks from powerplay depending
-on what the OEM has populated.
+If all the MDS daemons are down for some reason, then the first mount
+attempt will fail with EIO after the mount request times out.  A mount
+attempt will also fail with EIO if all of the MDS's are laggy.
 
-v2: add assert for at least one level
+This patch changes the code to return -EHOSTUNREACH in these situations
+and adds a pr_info error message to help the admin determine the cause.
 
-Bug: https://gitlab.freedesktop.org/drm/amd/issues/963
-Reviewed-by: Nicholas Kazlauskas <nicholas.kazlauskas@amd.com>
-Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
+URL: https://tracker.ceph.com/issues/4386
+Signed-off-by: Xiubo Li <xiubli@redhat.com>
+Reviewed-by: Jeff Layton <jlayton@kernel.org>
+Signed-off-by: Ilya Dryomov <idryomov@gmail.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- .../gpu/drm/amd/display/dc/calcs/dcn_calcs.c  | 34 +++++++++++++------
- 1 file changed, 23 insertions(+), 11 deletions(-)
+ fs/ceph/mds_client.c | 3 +--
+ fs/ceph/super.c      | 5 +++++
+ 2 files changed, 6 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/gpu/drm/amd/display/dc/calcs/dcn_calcs.c b/drivers/gpu/drm/amd/display/dc/calcs/dcn_calcs.c
-index 6342f64993512..b0956c360393e 100644
---- a/drivers/gpu/drm/amd/display/dc/calcs/dcn_calcs.c
-+++ b/drivers/gpu/drm/amd/display/dc/calcs/dcn_calcs.c
-@@ -1346,6 +1346,7 @@ void dcn_bw_update_from_pplib(struct dc *dc)
- 	struct dc_context *ctx = dc->ctx;
- 	struct dm_pp_clock_levels_with_voltage fclks = {0}, dcfclks = {0};
- 	bool res;
-+	unsigned vmin0p65_idx, vmid0p72_idx, vnom0p8_idx, vmax0p9_idx;
+diff --git a/fs/ceph/mds_client.c b/fs/ceph/mds_client.c
+index 09db6d08614d2..a2e903203bf9f 100644
+--- a/fs/ceph/mds_client.c
++++ b/fs/ceph/mds_client.c
+@@ -2343,8 +2343,7 @@ static void __do_request(struct ceph_mds_client *mdsc,
+ 		if (!(mdsc->fsc->mount_options->flags &
+ 		      CEPH_MOUNT_OPT_MOUNTWAIT) &&
+ 		    !ceph_mdsmap_is_cluster_available(mdsc->mdsmap)) {
+-			err = -ENOENT;
+-			pr_info("probably no mds server is up\n");
++			err = -EHOSTUNREACH;
+ 			goto finish;
+ 		}
+ 	}
+diff --git a/fs/ceph/super.c b/fs/ceph/super.c
+index 2bd0b1ed9708e..c4314f4492401 100644
+--- a/fs/ceph/super.c
++++ b/fs/ceph/super.c
+@@ -1106,6 +1106,11 @@ static struct dentry *ceph_mount(struct file_system_type *fs_type,
+ 	return res;
  
- 	/* TODO: This is not the proper way to obtain fabric_and_dram_bandwidth, should be min(fclk, memclk) */
- 	res = dm_pp_get_clock_levels_by_type_with_voltage(
-@@ -1357,17 +1358,28 @@ void dcn_bw_update_from_pplib(struct dc *dc)
- 		res = verify_clock_values(&fclks);
- 
- 	if (res) {
--		ASSERT(fclks.num_levels >= 3);
--		dc->dcn_soc->fabric_and_dram_bandwidth_vmin0p65 = 32 * (fclks.data[0].clocks_in_khz / 1000.0) / 1000.0;
--		dc->dcn_soc->fabric_and_dram_bandwidth_vmid0p72 = dc->dcn_soc->number_of_channels *
--				(fclks.data[fclks.num_levels - (fclks.num_levels > 2 ? 3 : 2)].clocks_in_khz / 1000.0)
--				* ddr4_dram_factor_single_Channel / 1000.0;
--		dc->dcn_soc->fabric_and_dram_bandwidth_vnom0p8 = dc->dcn_soc->number_of_channels *
--				(fclks.data[fclks.num_levels - 2].clocks_in_khz / 1000.0)
--				* ddr4_dram_factor_single_Channel / 1000.0;
--		dc->dcn_soc->fabric_and_dram_bandwidth_vmax0p9 = dc->dcn_soc->number_of_channels *
--				(fclks.data[fclks.num_levels - 1].clocks_in_khz / 1000.0)
--				* ddr4_dram_factor_single_Channel / 1000.0;
-+		ASSERT(fclks.num_levels);
+ out_splat:
++	if (!ceph_mdsmap_is_cluster_available(fsc->mdsc->mdsmap)) {
++		pr_info("No mds server is up or the cluster is laggy\n");
++		err = -EHOSTUNREACH;
++	}
 +
-+		vmin0p65_idx = 0;
-+		vmid0p72_idx = fclks.num_levels -
-+			(fclks.num_levels > 2 ? 3 : (fclks.num_levels > 1 ? 2 : 1));
-+		vnom0p8_idx = fclks.num_levels - (fclks.num_levels > 1 ? 2 : 1);
-+		vmax0p9_idx = fclks.num_levels - 1;
-+
-+		dc->dcn_soc->fabric_and_dram_bandwidth_vmin0p65 =
-+			32 * (fclks.data[vmin0p65_idx].clocks_in_khz / 1000.0) / 1000.0;
-+		dc->dcn_soc->fabric_and_dram_bandwidth_vmid0p72 =
-+			dc->dcn_soc->number_of_channels *
-+			(fclks.data[vmid0p72_idx].clocks_in_khz / 1000.0)
-+			* ddr4_dram_factor_single_Channel / 1000.0;
-+		dc->dcn_soc->fabric_and_dram_bandwidth_vnom0p8 =
-+			dc->dcn_soc->number_of_channels *
-+			(fclks.data[vnom0p8_idx].clocks_in_khz / 1000.0)
-+			* ddr4_dram_factor_single_Channel / 1000.0;
-+		dc->dcn_soc->fabric_and_dram_bandwidth_vmax0p9 =
-+			dc->dcn_soc->number_of_channels *
-+			(fclks.data[vmax0p9_idx].clocks_in_khz / 1000.0)
-+			* ddr4_dram_factor_single_Channel / 1000.0;
- 	} else
- 		BREAK_TO_DEBUGGER();
- 
+ 	ceph_mdsc_close_sessions(fsc->mdsc);
+ 	deactivate_locked_super(sb);
+ 	goto out_final;
 -- 
 2.20.1
 
