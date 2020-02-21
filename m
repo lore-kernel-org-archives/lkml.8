@@ -7,46 +7,49 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0FF72C35643
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 08:06:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A3650C35640
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 08:06:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D87062073A
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 08:06:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7550E222C4
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 08:06:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582272361;
-	bh=HPTBNIgufBhtrErdc5gIbRW4g4btuC/j0cH6+rg11NE=;
+	s=default; t=1582272366;
+	bh=PBddpNB+DNMdnowJ6YaKlTaS4CE/MvUsfaf/iV7W3yM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=H2AH2kkonyonvZddd1xoQ3E31UdoA+H8y7it1sVBU+WPPGrCSI5RdzfmSGofo8XXs
-	 iUhGh7W3yMNRjSFLGcim8xpXeQk3Vc6H5QSXtd1yFEkaHQ8CVoUcdY/o4pZ4BOc0oR
-	 9yXn92F8UzIZ0iRCQnYIE/lqAEA3guJTPuVTnngs=
+	b=TAt79/Ia7AVhYrdazm6p/ut/hgBVHTtybK1xePOfU767COnxCkKcSoCBkJaX3LVG1
+	 477oeXKSBUglYYNvIFWN6dbVIBISD1MB4bmY2iuzWcfreGpkxNoBWhN+2Rn548b3Zo
+	 A0H86aydlYuBQ+iO/XDUNKMgbzlmZtCYICDph/88=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730263AbgBUIGA (ORCPT
+        id S1731902AbgBUIGE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Feb 2020 03:06:00 -0500
-Received: from mail.kernel.org ([198.145.29.99]:39500 "EHLO mail.kernel.org"
+        Fri, 21 Feb 2020 03:06:04 -0500
+Received: from mail.kernel.org ([198.145.29.99]:39596 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731883AbgBUIFx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Feb 2020 03:05:53 -0500
+        id S1731892AbgBUIF6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 21 Feb 2020 03:05:58 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B080120801;
-        Fri, 21 Feb 2020 08:05:51 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6AF7A20578;
+        Fri, 21 Feb 2020 08:05:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1582272352;
-        bh=HPTBNIgufBhtrErdc5gIbRW4g4btuC/j0cH6+rg11NE=;
+        s=default; t=1582272357;
+        bh=PBddpNB+DNMdnowJ6YaKlTaS4CE/MvUsfaf/iV7W3yM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=GDP8bYufzl+bkoak0WDkhp/jFaUgbzE8EvqNj2Emxg+k0BXM6cSFcr5ckUE0pgDX3
-         BdXFECrrSjEm69kU5tv/qYltAoZYTmFB5a88DcbdANDVBYEK0wRyVo0dWzZ9SUX68H
-         V4lLHMpBZ7soHxHl1bF0DRbkagT9/YyS63Vzj6Vc=
+        b=txZstLmh8aPllD6CdUV385TazMWTbO323TySCCHn5de7u4l666WPZeBCER19H4Vt3
+         ZIAOsCs19YQpADlGI+rU5bmrEm6oeUzrTfBsnlPx5JXUuL9PLfLo14veE4VUUzNwyh
+         rT9P5l6bXClgaeG0HsVmdMKzp7FKUQ+0zq10kHps=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Kai Li <li.kai4@h3c.com>,
-        Theodore Tso <tytso@mit.edu>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 064/344] jbd2: clear JBD2_ABORT flag before journal_reset to update log tail info when load journal
-Date:   Fri, 21 Feb 2020 08:37:43 +0100
-Message-Id: <20200221072354.832846800@linuxfoundation.org>
+        stable@vger.kernel.org, Daniel Jordan <daniel.m.jordan@oracle.com>,
+        Eric Biggers <ebiggers@kernel.org>,
+        Herbert Xu <herbert@gondor.apana.org.au>,
+        Steffen Klassert <steffen.klassert@secunet.com>,
+        linux-crypto@vger.kernel.org, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.4 113/344] padata: always acquire cpu_hotplug_lock before pinst->lock
+Date:   Fri, 21 Feb 2020 08:38:32 +0100
+Message-Id: <20200221072359.161516198@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200221072349.335551332@linuxfoundation.org>
 References: <20200221072349.335551332@linuxfoundation.org>
@@ -59,53 +62,69 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Kai Li <li.kai4@h3c.com>
+From: Daniel Jordan <daniel.m.jordan@oracle.com>
 
-[ Upstream commit a09decff5c32060639a685581c380f51b14e1fc2 ]
+[ Upstream commit 38228e8848cd7dd86ccb90406af32de0cad24be3 ]
 
-If the journal is dirty when the filesystem is mounted, jbd2 will replay
-the journal but the journal superblock will not be updated by
-journal_reset() because JBD2_ABORT flag is still set (it was set in
-journal_init_common()). This is problematic because when a new transaction
-is then committed, it will be recorded in block 1 (journal->j_tail was set
-to 1 in journal_reset()). If unclean shutdown happens again before the
-journal superblock is updated, the new recorded transaction will not be
-replayed during the next mount (because of stale sb->s_start and
-sb->s_sequence values) which can lead to filesystem corruption.
+lockdep complains when padata's paths to update cpumasks via CPU hotplug
+and sysfs are both taken:
 
-Fixes: 85e0c4e89c1b ("jbd2: if the journal is aborted then don't allow update of the log tail")
-Signed-off-by: Kai Li <li.kai4@h3c.com>
-Link: https://lore.kernel.org/r/20200111022542.5008-1-li.kai4@h3c.com
-Signed-off-by: Theodore Ts'o <tytso@mit.edu>
+  # echo 0 > /sys/devices/system/cpu/cpu1/online
+  # echo ff > /sys/kernel/pcrypt/pencrypt/parallel_cpumask
+
+  ======================================================
+  WARNING: possible circular locking dependency detected
+  5.4.0-rc8-padata-cpuhp-v3+ #1 Not tainted
+  ------------------------------------------------------
+  bash/205 is trying to acquire lock:
+  ffffffff8286bcd0 (cpu_hotplug_lock.rw_sem){++++}, at: padata_set_cpumask+0x2b/0x120
+
+  but task is already holding lock:
+  ffff8880001abfa0 (&pinst->lock){+.+.}, at: padata_set_cpumask+0x26/0x120
+
+  which lock already depends on the new lock.
+
+padata doesn't take cpu_hotplug_lock and pinst->lock in a consistent
+order.  Which should be first?  CPU hotplug calls into padata with
+cpu_hotplug_lock already held, so it should have priority.
+
+Fixes: 6751fb3c0e0c ("padata: Use get_online_cpus/put_online_cpus")
+Signed-off-by: Daniel Jordan <daniel.m.jordan@oracle.com>
+Cc: Eric Biggers <ebiggers@kernel.org>
+Cc: Herbert Xu <herbert@gondor.apana.org.au>
+Cc: Steffen Klassert <steffen.klassert@secunet.com>
+Cc: linux-crypto@vger.kernel.org
+Cc: linux-kernel@vger.kernel.org
+Signed-off-by: Herbert Xu <herbert@gondor.apana.org.au>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/jbd2/journal.c | 6 +++++-
- 1 file changed, 5 insertions(+), 1 deletion(-)
+ kernel/padata.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/fs/jbd2/journal.c b/fs/jbd2/journal.c
-index ef485f892d1b0..389c9be4e7919 100644
---- a/fs/jbd2/journal.c
-+++ b/fs/jbd2/journal.c
-@@ -1682,6 +1682,11 @@ int jbd2_journal_load(journal_t *journal)
- 		       journal->j_devname);
- 		return -EFSCORRUPTED;
- 	}
-+	/*
-+	 * clear JBD2_ABORT flag initialized in journal_init_common
-+	 * here to update log tail information with the newest seq.
-+	 */
-+	journal->j_flags &= ~JBD2_ABORT;
+diff --git a/kernel/padata.c b/kernel/padata.c
+index fda7a7039422d..fdbbe96547713 100644
+--- a/kernel/padata.c
++++ b/kernel/padata.c
+@@ -643,8 +643,8 @@ int padata_set_cpumask(struct padata_instance *pinst, int cpumask_type,
+ 	struct cpumask *serial_mask, *parallel_mask;
+ 	int err = -EINVAL;
  
- 	/* OK, we've finished with the dynamic journal bits:
- 	 * reinitialise the dynamic contents of the superblock in memory
-@@ -1689,7 +1694,6 @@ int jbd2_journal_load(journal_t *journal)
- 	if (journal_reset(journal))
- 		goto recovery_error;
+-	mutex_lock(&pinst->lock);
+ 	get_online_cpus();
++	mutex_lock(&pinst->lock);
  
--	journal->j_flags &= ~JBD2_ABORT;
- 	journal->j_flags |= JBD2_LOADED;
- 	return 0;
+ 	switch (cpumask_type) {
+ 	case PADATA_CPU_PARALLEL:
+@@ -662,8 +662,8 @@ int padata_set_cpumask(struct padata_instance *pinst, int cpumask_type,
+ 	err =  __padata_set_cpumasks(pinst, parallel_mask, serial_mask);
  
+ out:
+-	put_online_cpus();
+ 	mutex_unlock(&pinst->lock);
++	put_online_cpus();
+ 
+ 	return err;
+ }
 -- 
 2.20.1
 
