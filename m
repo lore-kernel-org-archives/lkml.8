@@ -2,197 +2,302 @@ Return-Path: <SRS0=1210=4J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FAKE_REPLY_C,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-17.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT,USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 488A8C35669
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 23:09:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B743DC35641
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 23:10:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 155A8206EF
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 23:09:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 78E14206EF
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 23:10:38 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="D/ui6mhf"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="nUZ4jtYu"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726044AbgBUXJj (ORCPT
+        id S1729418AbgBUXKh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Feb 2020 18:09:39 -0500
-Received: from mail-wm1-f65.google.com ([209.85.128.65]:53542 "EHLO
-        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727273AbgBUXJi (ORCPT
+        Fri, 21 Feb 2020 18:10:37 -0500
+Received: from mail-wr1-f74.google.com ([209.85.221.74]:33018 "EHLO
+        mail-wr1-f74.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726290AbgBUXKh (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Feb 2020 18:09:38 -0500
-Received: by mail-wm1-f65.google.com with SMTP id s10so3399462wmh.3
-        for <linux-kernel@vger.kernel.org>; Fri, 21 Feb 2020 15:09:36 -0800 (PST)
+        Fri, 21 Feb 2020 18:10:37 -0500
+Received: by mail-wr1-f74.google.com with SMTP id z15so1706826wrw.0
+        for <linux-kernel@vger.kernel.org>; Fri, 21 Feb 2020 15:10:34 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=from:date:to:cc:subject:message-id:mime-version:content-disposition
-         :content-transfer-encoding:in-reply-to:user-agent;
-        bh=ErSLOhP8cH6/i4WEty75XIcQhtj43iqEl60JDrRHWwc=;
-        b=D/ui6mhfoNsquR4JxpneqHDBHp5E4D7oJClgkV6ieDV9xFohEYJ4LOwBmt/V4R0YJZ
-         qN46W4dnwOMYVnXt4HPMicTv2PLivH5Rk5xbtc1qp3wawYwYoyhzPmGgjYJ57mY+/3WY
-         GCCsThB+itDJ/0CbtGSi4GvbSQNcT8+FleCIg=
+        d=google.com; s=20161025;
+        h=date:message-id:mime-version:subject:from:to:cc;
+        bh=Jn6Uxzj8UrrWQ3MFOKJO4gCOCt/S0XlKGs1U1eQelhE=;
+        b=nUZ4jtYuS3Nf5zh/TN9Cp3Jjx9Kkrj5Xy9tENF4TiBWTZ+8E2FT+jLJcIJYwLvrCqO
+         TwvC++Vp1s5ooeRihtDSEglIiRwvuVsvdaPlFeRnZdCASR5x5rEbHd9eogU+1W0RlbLS
+         NJ/+Yx1Iwqy72mpXwXfGjzhGMk010nty0ZNbE1bmCgotqVJ2Bl/nH6tBRI7jF3bH81yx
+         x1K4ahtCda7lHLRyrNvkZCgv3U6rdx1QyYCysj7g6ddkmJYmjZ5o1hoLSRXiU/JhwmjS
+         9G0WybEm/R3RxFtzNK0yRNJqoEETmht73FJ66BsSJwjGdFfVjWj1eYdeR2/SlYpsyBM0
+         kLzg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:date:to:cc:subject:message-id:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to
-         :user-agent;
-        bh=ErSLOhP8cH6/i4WEty75XIcQhtj43iqEl60JDrRHWwc=;
-        b=rggc9wM793FfGkzU/7gVdAA8Sx68D7nqSkbCJtA5iK7FxbdDFSr5uOA1DNZvZMTErn
-         D7jLR8OwqhmZVleGQPmnBp9vYccclFGtUUbp50k3+78OJBlMtNQYaMcwcDA6CAZm+wW1
-         1G26UBUbstL3hcK4bIYVuP0ZIcSvANhATnV0BZojKYeuW+hthLTH5E6hUzXZYSiU0ARE
-         Bnp9UmVv0og2ejbPmyTTGvvQh6zxnH7nDL6T8LUxI2QmyeHbpfEL0ZMg9GkD6WP5jtmV
-         V5Wynq1FkSVrOHLuxxvwcrumLBKdLnagLZf2UPfDgkc4AwQxv7JfRN+NpMto8qS0TGXN
-         VQWA==
-X-Gm-Message-State: APjAAAX4ftQ4DdN8giUlcdKA+49AF9giNU5mw8FY5Etaw8PFUUiGlijR
-        TDUNnRMNPNvLyN/x6iynLonViQ==
-X-Google-Smtp-Source: APXvYqz/ZGDWmsdrZBhy/dLmKc4u/bAxInlKpGlPlpNVMwQ+tujBaJPyW0zkhJ4UDXdOZkDerm3PDQ==
-X-Received: by 2002:a1c:b603:: with SMTP id g3mr5985561wmf.130.1582326575877;
-        Fri, 21 Feb 2020 15:09:35 -0800 (PST)
-Received: from chromium.org (77-56-209-237.dclient.hispeed.ch. [77.56.209.237])
-        by smtp.gmail.com with ESMTPSA id q9sm5895723wrx.18.2020.02.21.15.09.34
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 21 Feb 2020 15:09:35 -0800 (PST)
-From:   KP Singh <kpsingh@chromium.org>
-X-Google-Original-From: KP Singh <kpsingh>
-Date:   Sat, 22 Feb 2020 00:09:33 +0100
-To:     Casey Schaufler <casey@schaufler-ca.com>
-Cc:     Linux Security Module list 
-        <linux-security-module@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>, bpf <bpf@vger.kernel.org>,
-        James Morris <jmorris@namei.org>,
-        Kees Cook <keescook@chromium.org>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>
-Subject: Re: [PATCH bpf-next v4 0/8] MAC and Audit policy using eBPF (KRSI)
-Message-ID: <20200221230933.GA23663@chromium.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <8a2a2d59-ec4b-80d1-2710-c2ead588e638@schaufler-ca.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+        h=x-gm-message-state:date:message-id:mime-version:subject:from:to:cc;
+        bh=Jn6Uxzj8UrrWQ3MFOKJO4gCOCt/S0XlKGs1U1eQelhE=;
+        b=fGdx5TYGQdoJP8jlSFXeBD2fTBtRHvpdkiG+c0BgNlz7V5Tfu2JDrESc2v/V6uKT/J
+         HRH6/jZZUCqARlRFcp9UwUhQPF1WONwgNs943hWBXO5/puPkP04rR+2LljCW93Qutgte
+         I8jXJ2ADqGHlcHAUPXbovo2dHLjiMKG0rcIYlmS0hauX9Zk52bCZdkZH98AOXzKqSTxW
+         MfGWokDEeI9w6GfK65bXeaGCgIEZIMq79BoAkNdD08M8oQKeNRYy0E2MnuZ6YPQCUJVi
+         Vrmhhs02Vx9m+DeyQUXTW5jGbzpvwVyTsymw0bXLvuglhqtNSxo+jxlukzNMIjpHPd4i
+         GuEw==
+X-Gm-Message-State: APjAAAUX5XnInbReYHdqSUiZ9MZnMMIYiq6AIHicHcD4XbAYIE25suiQ
+        acVCvLQCIkRQfv4LVj9a9sPDYNfcaA==
+X-Google-Smtp-Source: APXvYqyr1qgKMClvqN5lUVA9JRB3rN8BmHycA+dfIQ1qTkAVq5C5xrQi/MhnRkfLOK4jhl8nICm9b/l3lA==
+X-Received: by 2002:a5d:614a:: with SMTP id y10mr53068523wrt.73.1582326633667;
+ Fri, 21 Feb 2020 15:10:33 -0800 (PST)
+Date:   Sat, 22 Feb 2020 00:10:27 +0100
+Message-Id: <20200221231027.230147-1-elver@google.com>
+Mime-Version: 1.0
+X-Mailer: git-send-email 2.25.0.265.gbab2e86ba0-goog
+Subject: [PATCH v3] kcsan: Add option for verbose reporting
+From:   Marco Elver <elver@google.com>
+To:     elver@google.com
+Cc:     paulmck@kernel.org, andreyknvl@google.com, glider@google.com,
+        dvyukov@google.com, kasan-dev@googlegroups.com,
+        linux-kernel@vger.kernel.org, Qian Cai <cai@lca.pw>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Thanks Casey,
+Adds CONFIG_KCSAN_VERBOSE to optionally enable more verbose reports.
+Currently information about the reporting task's held locks and IRQ
+trace events are shown, if they are enabled.
 
-I appreciate your quick responses!
+Signed-off-by: Marco Elver <elver@google.com>
+Suggested-by: Qian Cai <cai@lca.pw>
+---
+v3:
+* Typos
+v2:
+* Rework obtaining 'current' for the "other thread" -- it now passes
+  'current' and ensures that we stall until the report was printed, so
+  that the lockdep information contained in 'current' is accurate. This
+  was non-trivial but testing so far leads me to conclude this now
+  reliably prints the held locks for the "other thread" (please test
+  more!).
+---
+ kernel/kcsan/core.c   |   4 +-
+ kernel/kcsan/kcsan.h  |   3 ++
+ kernel/kcsan/report.c | 103 +++++++++++++++++++++++++++++++++++++++++-
+ lib/Kconfig.kcsan     |  13 ++++++
+ 4 files changed, 120 insertions(+), 3 deletions(-)
 
-On 21-Feb 14:31, Casey Schaufler wrote:
-> On 2/21/2020 11:41 AM, KP Singh wrote:
-> > On 21-Feb 11:19, Casey Schaufler wrote:
-> >> On 2/20/2020 9:52 AM, KP Singh wrote:
-> >>> From: KP Singh <kpsingh@google.com>
-> >> Again, apologies for the CC list trimming.
-> >>
-> >>> # v3 -> v4
-> >>>
-> >>>   https://lkml.org/lkml/2020/1/23/515
-> >>>
-> >>> * Moved away from allocating a separate security_hook_heads and adding a
-> >>>   new special case for arch_prepare_bpf_trampoline to using BPF fexit
-> >>>   trampolines called from the right place in the LSM hook and toggled by
-> >>>   static keys based on the discussion in:
-> >>>
-> >>>     https://lore.kernel.org/bpf/CAG48ez25mW+_oCxgCtbiGMX07g_ph79UOJa07h=o_6B6+Q-u5g@mail.gmail.com/
-> >>>
-> >>> * Since the code does not deal with security_hook_heads anymore, it goes
-> >>>   from "being a BPF LSM" to "BPF program attachment to LSM hooks".
+diff --git a/kernel/kcsan/core.c b/kernel/kcsan/core.c
+index e7387fec66795..065615df88eaa 100644
+--- a/kernel/kcsan/core.c
++++ b/kernel/kcsan/core.c
+@@ -18,8 +18,8 @@
+ #include "kcsan.h"
+ 
+ static bool kcsan_early_enable = IS_ENABLED(CONFIG_KCSAN_EARLY_ENABLE);
+-static unsigned int kcsan_udelay_task = CONFIG_KCSAN_UDELAY_TASK;
+-static unsigned int kcsan_udelay_interrupt = CONFIG_KCSAN_UDELAY_INTERRUPT;
++unsigned int kcsan_udelay_task = CONFIG_KCSAN_UDELAY_TASK;
++unsigned int kcsan_udelay_interrupt = CONFIG_KCSAN_UDELAY_INTERRUPT;
+ static long kcsan_skip_watch = CONFIG_KCSAN_SKIP_WATCH;
+ static bool kcsan_interrupt_watcher = IS_ENABLED(CONFIG_KCSAN_INTERRUPT_WATCHER);
+ 
+diff --git a/kernel/kcsan/kcsan.h b/kernel/kcsan/kcsan.h
+index 892de5120c1b6..e282f8b5749e9 100644
+--- a/kernel/kcsan/kcsan.h
++++ b/kernel/kcsan/kcsan.h
+@@ -13,6 +13,9 @@
+ /* The number of adjacent watchpoints to check. */
+ #define KCSAN_CHECK_ADJACENT 1
+ 
++extern unsigned int kcsan_udelay_task;
++extern unsigned int kcsan_udelay_interrupt;
++
+ /*
+  * Globally enable and disable KCSAN.
+  */
+diff --git a/kernel/kcsan/report.c b/kernel/kcsan/report.c
+index 11c791b886f3c..7bdb515e3662f 100644
+--- a/kernel/kcsan/report.c
++++ b/kernel/kcsan/report.c
+@@ -1,5 +1,7 @@
+ // SPDX-License-Identifier: GPL-2.0
+ 
++#include <linux/debug_locks.h>
++#include <linux/delay.h>
+ #include <linux/jiffies.h>
+ #include <linux/kernel.h>
+ #include <linux/lockdep.h>
+@@ -31,7 +33,26 @@ static struct {
+ 	int			cpu_id;
+ 	unsigned long		stack_entries[NUM_STACK_ENTRIES];
+ 	int			num_stack_entries;
+-} other_info = { .ptr = NULL };
++
++	/*
++	 * Optionally pass @current. Typically we do not need to pass @current
++	 * via @other_info since just @task_pid is sufficient. Passing @current
++	 * has additional overhead.
++	 *
++	 * To safely pass @current, we must either use get_task_struct/
++	 * put_task_struct, or stall the thread that populated @other_info.
++	 *
++	 * We cannot rely on get_task_struct/put_task_struct in case
++	 * release_report() races with a task being released, and would have to
++	 * free it in release_report(). This may result in deadlock if we want
++	 * to use KCSAN on the allocators.
++	 *
++	 * Since we also want to reliably print held locks for
++	 * CONFIG_KCSAN_VERBOSE, the current implementation stalls the thread
++	 * that populated @other_info until it has been consumed.
++	 */
++	struct task_struct	*task;
++} other_info;
+ 
+ /*
+  * Information about reported races; used to rate limit reporting.
+@@ -245,6 +266,16 @@ static int sym_strcmp(void *addr1, void *addr2)
+ 	return strncmp(buf1, buf2, sizeof(buf1));
+ }
+ 
++static void print_verbose_info(struct task_struct *task)
++{
++	if (!task)
++		return;
++
++	pr_err("\n");
++	debug_show_held_locks(task);
++	print_irqtrace_events(task);
++}
++
+ /*
+  * Returns true if a report was generated, false otherwise.
+  */
+@@ -319,6 +350,9 @@ static bool print_report(const volatile void *ptr, size_t size, int access_type,
+ 				  other_info.num_stack_entries - other_skipnr,
+ 				  0);
+ 
++		if (IS_ENABLED(CONFIG_KCSAN_VERBOSE))
++		    print_verbose_info(other_info.task);
++
+ 		pr_err("\n");
+ 		pr_err("%s to 0x%px of %zu bytes by %s on cpu %i:\n",
+ 		       get_access_type(access_type), ptr, size,
+@@ -340,6 +374,9 @@ static bool print_report(const volatile void *ptr, size_t size, int access_type,
+ 	stack_trace_print(stack_entries + skipnr, num_stack_entries - skipnr,
+ 			  0);
+ 
++	if (IS_ENABLED(CONFIG_KCSAN_VERBOSE))
++		print_verbose_info(current);
++
+ 	/* Print report footer. */
+ 	pr_err("\n");
+ 	pr_err("Reported by Kernel Concurrency Sanitizer on:\n");
+@@ -357,6 +394,67 @@ static void release_report(unsigned long *flags, enum kcsan_report_type type)
+ 	spin_unlock_irqrestore(&report_lock, *flags);
+ }
+ 
++/*
++ * Sets @other_info.task and awaits consumption of @other_info.
++ *
++ * Precondition: report_lock is held.
++ * Postcondition: report_lock is held.
++ */
++static void
++set_other_info_task_blocking(unsigned long *flags, const volatile void *ptr)
++{
++	/*
++	 * We may be instrumenting a code-path where current->state is already
++	 * something other than TASK_RUNNING.
++	 */
++	const bool is_running = current->state == TASK_RUNNING;
++	/*
++	 * To avoid deadlock in case we are in an interrupt here and this is a
++	 * race with a task on the same CPU (KCSAN_INTERRUPT_WATCHER), provide a
++	 * timeout to ensure this works in all contexts.
++	 *
++	 * Await approximately the worst case delay of the reporting thread (if
++	 * we are not interrupted).
++	 */
++	int timeout = max(kcsan_udelay_task, kcsan_udelay_interrupt);
++
++	other_info.task = current;
++	do {
++		if (is_running) {
++			/*
++			 * Let lockdep know the real task is sleeping, to print
++			 * the held locks (recall we turned lockdep off, so
++			 * locking/unlocking @report_lock won't be recorded).
++			 */
++			set_current_state(TASK_UNINTERRUPTIBLE);
++		}
++		spin_unlock_irqrestore(&report_lock, *flags);
++		/*
++		 * We cannot call schedule() since we also cannot reliably
++		 * determine if sleeping here is permitted -- see in_atomic().
++		 */
++
++		udelay(1);
++		spin_lock_irqsave(&report_lock, *flags);
++		if (timeout-- < 0) {
++			/*
++			 * Abort. Reset other_info.task to NULL, since it
++			 * appears the other thread is still going to consume
++			 * it. It will result in no verbose info printed for
++			 * this task.
++			 */
++			other_info.task = NULL;
++			break;
++		}
++		/*
++		 * If @ptr nor @current matches, then our information has been
++		 * consumed and we may continue. If not, retry.
++		 */
++	} while (other_info.ptr == ptr && other_info.task == current);
++	if (is_running)
++		set_current_state(TASK_RUNNING);
++}
++
+ /*
+  * Depending on the report type either sets other_info and returns false, or
+  * acquires the matching other_info and returns true. If other_info is not
+@@ -388,6 +486,9 @@ static bool prepare_report(unsigned long *flags, const volatile void *ptr,
+ 		other_info.cpu_id		= cpu_id;
+ 		other_info.num_stack_entries	= stack_trace_save(other_info.stack_entries, NUM_STACK_ENTRIES, 1);
+ 
++		if (IS_ENABLED(CONFIG_KCSAN_VERBOSE))
++			set_other_info_task_blocking(flags, ptr);
++
+ 		spin_unlock_irqrestore(&report_lock, *flags);
+ 
+ 		/*
+diff --git a/lib/Kconfig.kcsan b/lib/Kconfig.kcsan
+index 081ed2e1bf7b1..0f1447ff8f558 100644
+--- a/lib/Kconfig.kcsan
++++ b/lib/Kconfig.kcsan
+@@ -20,6 +20,19 @@ menuconfig KCSAN
+ 
+ if KCSAN
+ 
++config KCSAN_VERBOSE
++	bool "Show verbose reports with more information about system state"
++	depends on PROVE_LOCKING
++	help
++	  If enabled, reports show more information about the system state that
++	  may help better analyze and debug races. This includes held locks and
++	  IRQ trace events.
++
++	  While this option should generally be benign, we call into more
++	  external functions on report generation; if a race report is
++	  generated from any one of them, system stability may suffer due to
++	  deadlocks or recursion.  If in doubt, say N.
++
+ config KCSAN_DEBUG
+ 	bool "Debugging of KCSAN internals"
+ 
+-- 
+2.25.0.265.gbab2e86ba0-goog
 
-[...]
-
-> >> likely harmful.
-> > We will be happy to document each of the macros in detail. Do note a
-> > few things here:
-> >
-> > * There is really nothing magical about them though,
-> 
-> 
-> +#define LSM_HOOK_void(NAME, ...) \
-> +	noinline void bpf_lsm_##NAME(__VA_ARGS__) {}
-> +
-> +#include <linux/lsm_hook_names.h>
-> +#undef LSM_HOOK
-> 
-> I haven't seen anything this ... novel ... in a very long time.
-
-This is not "novel", it's a fairly common pattern followed in tracing:
-
-For example, the TRACE_INCLUDE macro which is used for tracepoints:
-
-  include/trace/define_trace.h
-
-and used in:
-
-  * include/trace/bpf_probe.h
-
-    https://github.com/torvalds/linux/blob/master/include/trace/bpf_probe.h#L110
-
-  * include/trace/perf.h
-
-    https://github.com/torvalds/linux/blob/master/include/trace/perf.h#L90
-
-  * include/trace/trace_events.h
-
-    https://github.com/torvalds/linux/blob/master/include/trace/trace_events.h#L402
-
-> I see why you want to do this, but you're tying the two sets
-> of code together unnaturally. When (not if) the two sets diverge
-> you're going to be introducing another clever way to deal with
-
-I don't fully understand what "two sets diverge means" here. All the
-BPF headers need is the name, return type and the args. This is the
-same information which is needed by the call_{int, void}_hooks and the
-LSM declarataions (i.e. security_hook_heads and
-security_list_options).
-
-> the special case.
-> 
-> It's not that I don't understand what you're doing. It's that
-> I don't like what you're doing. Explanation doesn't make me like
-> it better.
-
-As I have previously said, we will be happy to (and have already)
-updated our approach based on the consensus we arrive at here. The
-best outcome would be to not sacrifice performance as the LSM hooks
-are called from various performance critical code-paths.
-
-It would be great to know the maintainers' (BPF and Security)
-perspective on this as well.
-
-- KP
-
-> 
-> >  the LSM hooks are
-> >   collectively declared in lsm_hook_names.h and are used to delcare
-> >   the security_list_options and security_hook_heads for the LSM
-> >   framework (this was previously maitained in two different places):
-> >
-> >   For BPF, they declare:
-> >
-> >     * bpf_lsm_<name> attachment points and their prototypes.
-> >     * A static key (bpf_lsm_key_<name>) to enable and disable these
-> >        hooks with a function to set its value i.e.
-> >        (bpf_lsm_<name>_set_enabled).
-> >
-> > * We have kept the BPF related macros out of security/.
-> > * All the BPF calls in the LSM infrastructure are guarded by
-> >   CONFIG_BPF_LSM (there are only two main calls though, i.e.
-> >   call_int_hook, call_void_hook).
-> >
-> > Honestly, the macros aren't any more complicated than
-> > call_int_progs/call_void_progs.
-> >
-> > - KP
-> >
-> >> Would you please drop the excessive optimization? I understand
-> >> that there's been a lot of discussion and debate about it,
-> >> but this implementation is out of control, disruptive, and
-> >> dangerous to the code around it.
-> >>
-> >>
-> 
