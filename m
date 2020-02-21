@@ -7,46 +7,50 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2F306C35641
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 08:13:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D6C89C35641
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 08:13:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EE49320578
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 08:13:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id ABD5420578
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 08:13:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582272786;
-	bh=FSZNZhAOFhYYMThmr+oCAnsLgXdPEgdWYjoPiw6Ulfs=;
+	s=default; t=1582272788;
+	bh=xR3TCnZhgPJN93bqdEvo5BwP1dB3RHfGLzJ+ceAVSPg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=XVdoc0UCWfd4RLmb2TvIDTajVOK07KKz/ZyqbIxPq0FRqcCxQaWzHxPZtnqrZOLEu
-	 ZIiumXnMy6IYf2AWVdh+jqWV0Hhj8K9gj3bl7cT34ifXWAYCt8uhQeNHEc3xeT0MWV
-	 SctdgYXCIMf2mcVxdBO6f53Vs0hljtfZNo3o3opQ=
+	b=m7kXmJgBR+nU9nnKH7mZCoHzgvD4jU4MLrYZsPs9zSfpdEgxXl6hp512X4p9j0qZc
+	 59TxRPDnhUmYSHManD/PJHPMUdeSf736iX+ZfNswOjdUyLQ3cyLSEOseVi8AWNxkHS
+	 cygo7b4pggjLhhvljITZFupj6UrbGUZHq211Ah14=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732945AbgBUINE (ORCPT
+        id S1732953AbgBUINH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Feb 2020 03:13:04 -0500
-Received: from mail.kernel.org ([198.145.29.99]:49008 "EHLO mail.kernel.org"
+        Fri, 21 Feb 2020 03:13:07 -0500
+Received: from mail.kernel.org ([198.145.29.99]:49066 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732376AbgBUINC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Feb 2020 03:13:02 -0500
+        id S1732943AbgBUINE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 21 Feb 2020 03:13:04 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7D8AE20722;
-        Fri, 21 Feb 2020 08:13:01 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 12C7320722;
+        Fri, 21 Feb 2020 08:13:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1582272782;
-        bh=FSZNZhAOFhYYMThmr+oCAnsLgXdPEgdWYjoPiw6Ulfs=;
+        s=default; t=1582272784;
+        bh=xR3TCnZhgPJN93bqdEvo5BwP1dB3RHfGLzJ+ceAVSPg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=RJzE7lbK4xApE3uQGMD5ZXgQI4wadO9Qzp7Ll7nAViM5fgwSmjEYDI/glVNUCX0Tz
-         NsTMEyVJnhnycD9Id/kCzvjE2TLlFtmjicc9illXFUS3RgeHawYAlgS+UXmkAGgo6b
-         XkKuoaqxH6uVvjXzhol9HvNmuQ2JKOAGxcP+iYuc=
+        b=vOK6eeXPu0So8KVaAxJrm4olxWvvL9lbaF/dpYW1NdnkzSShE5LMT1QM0hBb4mOBE
+         fVIneWNsLENCL5OcSJ8EZY9BAFwDVHTyQRBzHgi257EG8wDQkbjipfh5bcDgX23Zo7
+         qR7QKMjmxliz7gqVrNJ7SDJCL7T+QRTe/6vUkvSw=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Masahiro Yamada <masahiroy@kernel.org>,
+        stable@vger.kernel.org,
+        Shile Zhang <shile.zhang@linux.alibaba.com>,
+        Josh Poimboeuf <jpoimboe@redhat.com>,
+        Ingo Molnar <mingo@kernel.org>,
+        Kamalesh Babulal <kamalesh@linux.vnet.ibm.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 273/344] kbuild: use -S instead of -E for precise cc-option test in Kconfig
-Date:   Fri, 21 Feb 2020 08:41:12 +0100
-Message-Id: <20200221072414.510202665@linuxfoundation.org>
+Subject: [PATCH 5.4 274/344] objtool: Fix ARCH=x86_64 build error
+Date:   Fri, 21 Feb 2020 08:41:13 +0100
+Message-Id: <20200221072414.609965291@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200221072349.335551332@linuxfoundation.org>
 References: <20200221072349.335551332@linuxfoundation.org>
@@ -59,47 +63,61 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Masahiro Yamada <masahiroy@kernel.org>
+From: Shile Zhang <shile.zhang@linux.alibaba.com>
 
-[ Upstream commit 3bed1b7b9d79ca40e41e3af130931a3225e951a3 ]
+[ Upstream commit 8580bed7e751e6d4f17881e059daf3cb37ba4717 ]
 
-Currently, -E (stop after the preprocessing stage) is used to check
-whether the given compiler flag is supported.
+Building objtool with ARCH=x86_64 fails with:
 
-While it is faster than -S (or -c), it can be false-positive. You need
-to run the compilation proper to check the flag more precisely.
+   $make ARCH=x86_64 -C tools/objtool
+   ...
+     CC       arch/x86/decode.o
+   arch/x86/decode.c:10:22: fatal error: asm/insn.h: No such file or directory
+    #include <asm/insn.h>
+                         ^
+   compilation terminated.
+   mv: cannot stat ‘arch/x86/.decode.o.tmp’: No such file or directory
+   make[2]: *** [arch/x86/decode.o] Error 1
+   ...
 
-For example, -E and -S disagree about the support of
-"--param asan-instrument-allocas=1".
+The root cause is that the command-line variable 'ARCH' cannot be
+overridden.  It can be replaced by 'SRCARCH', which is defined in
+'tools/scripts/Makefile.arch'.
 
-$ gcc -Werror --param asan-instrument-allocas=1 -E -x c /dev/null -o /dev/null
-$ echo $?
-0
-
-$ gcc -Werror --param asan-instrument-allocas=1 -S -x c /dev/null -o /dev/null
-cc1: error: invalid --param name ‘asan-instrument-allocas’; did you mean ‘asan-instrument-writes’?
-$ echo $?
-1
-
-Signed-off-by: Masahiro Yamada <masahiroy@kernel.org>
+Signed-off-by: Shile Zhang <shile.zhang@linux.alibaba.com>
+Signed-off-by: Josh Poimboeuf <jpoimboe@redhat.com>
+Signed-off-by: Ingo Molnar <mingo@kernel.org>
+Reviewed-by: Kamalesh Babulal <kamalesh@linux.vnet.ibm.com>
+Link: https://lore.kernel.org/r/d5d11370ae116df6c653493acd300ec3d7f5e925.1579543924.git.jpoimboe@redhat.com
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- scripts/Kconfig.include | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ tools/objtool/Makefile | 6 +-----
+ 1 file changed, 1 insertion(+), 5 deletions(-)
 
-diff --git a/scripts/Kconfig.include b/scripts/Kconfig.include
-index d4adfbe426903..bfb44b265a948 100644
---- a/scripts/Kconfig.include
-+++ b/scripts/Kconfig.include
-@@ -25,7 +25,7 @@ failure = $(if-success,$(1),n,y)
+diff --git a/tools/objtool/Makefile b/tools/objtool/Makefile
+index d2a19b0bc05aa..ee08aeff30a19 100644
+--- a/tools/objtool/Makefile
++++ b/tools/objtool/Makefile
+@@ -2,10 +2,6 @@
+ include ../scripts/Makefile.include
+ include ../scripts/Makefile.arch
  
- # $(cc-option,<flag>)
- # Return y if the compiler supports <flag>, n otherwise
--cc-option = $(success,$(CC) -Werror $(CLANG_FLAGS) $(1) -E -x c /dev/null -o /dev/null)
-+cc-option = $(success,$(CC) -Werror $(CLANG_FLAGS) $(1) -S -x c /dev/null -o /dev/null)
+-ifeq ($(ARCH),x86_64)
+-ARCH := x86
+-endif
+-
+ # always use the host compiler
+ HOSTAR	?= ar
+ HOSTCC	?= gcc
+@@ -33,7 +29,7 @@ all: $(OBJTOOL)
  
- # $(ld-option,<flag>)
- # Return y if the linker supports <flag>, n otherwise
+ INCLUDES := -I$(srctree)/tools/include \
+ 	    -I$(srctree)/tools/arch/$(HOSTARCH)/include/uapi \
+-	    -I$(srctree)/tools/arch/$(ARCH)/include
++	    -I$(srctree)/tools/arch/$(SRCARCH)/include
+ WARNINGS := $(EXTRA_WARNINGS) -Wno-switch-default -Wno-switch-enum -Wno-packed
+ CFLAGS   := -Werror $(WARNINGS) $(KBUILD_HOSTCFLAGS) -g $(INCLUDES) $(LIBELF_FLAGS)
+ LDFLAGS  += $(LIBELF_LIBS) $(LIBSUBCMD) $(KBUILD_HOSTLDFLAGS)
 -- 
 2.20.1
 
