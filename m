@@ -2,173 +2,69 @@ Return-Path: <SRS0=1210=4J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 400A9C35640
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 08:48:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CC7C7C35640
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 08:48:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 12F9C2071E
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 08:48:45 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582274925;
-	bh=ERfQ3eAbohrmh759MhxBh8l+4EKx0sFujaFwkM2jL3g=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=YQb+tczDgOTpNSsbHtohowZyNJ4wOWYdODMv1Dmhvi63yiVFDQA0pmaZLK6tWu1P+
-	 mLJKWvZCtTGYCzctNBFx3avkRK5EjCl7RXbLksqaJhQmWEpqC6iGbczdn9pa64BKQb
-	 W68vhoqqLhltC2YKMjZo0CnCi7AzLu91FrmjV7fM=
+	by mail.kernel.org (Postfix) with ESMTP id AC59C2073A
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 08:48:51 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728725AbgBUHqb (ORCPT
+        id S1729155AbgBUIsu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Feb 2020 02:46:31 -0500
-Received: from mail.kernel.org ([198.145.29.99]:41930 "EHLO mail.kernel.org"
+        Fri, 21 Feb 2020 03:48:50 -0500
+Received: from ms.lwn.net ([45.79.88.28]:54224 "EHLO ms.lwn.net"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727966AbgBUHq0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Feb 2020 02:46:26 -0500
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        id S1728259AbgBUIss (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 21 Feb 2020 03:48:48 -0500
+Received: from localhost.localdomain (localhost [127.0.0.1])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D342B20801;
-        Fri, 21 Feb 2020 07:46:25 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1582271186;
-        bh=ERfQ3eAbohrmh759MhxBh8l+4EKx0sFujaFwkM2jL3g=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=DUFiQYgME23YXqWoM7z0YbWA1l2TVWtNkeOlmuZeuEeFw0M4DThA+HkjG3uJNdn20
-         x0zwCkb8YJY7O8a5czSxuwlbyoNW9tDQKvq4oyXaAUZ0PnTKIm85DUDIlI2SyNFFt7
-         B40+iGYPUH32IWcPWefNAna+jg/sAhKDF99DmyNM=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Siddhesh Poyarekar <siddhesh@gotplt.org>,
-        Masami Hiramatsu <masami.hiramatsu@linaro.org>,
-        Tim Bird <tim.bird@sony.com>,
-        Shuah Khan <skhan@linuxfoundation.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.5 070/399] kselftest: Minimise dependency of get_size on C library interfaces
-Date:   Fri, 21 Feb 2020 08:36:35 +0100
-Message-Id: <20200221072409.158041132@linuxfoundation.org>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20200221072402.315346745@linuxfoundation.org>
-References: <20200221072402.315346745@linuxfoundation.org>
-User-Agent: quilt/0.66
+        by ms.lwn.net (Postfix) with ESMTPSA id D3C77382;
+        Fri, 21 Feb 2020 08:48:46 +0000 (UTC)
+Date:   Fri, 21 Feb 2020 01:48:41 -0700
+From:   Jonathan Corbet <corbet@lwn.net>
+To:     "Rafael J. Wysocki" <rafael@kernel.org>
+Cc:     Kees Cook <keescook@chromium.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        "open list:DOCUMENTATION" <linux-doc@vger.kernel.org>
+Subject: Re: [Regression] Docs build broken by commit 51e46c7a4007
+Message-ID: <20200221014841.3137229d@lwn.net>
+In-Reply-To: <CAJZ5v0gu_2wkncukKK7u340KLzSCVL_7F9cJTz3wVhxfogR8NQ@mail.gmail.com>
+References: <CAJZ5v0he=WQ6159fyaYYffdi66y596rVo7z1yLyGFcH45PXNUg@mail.gmail.com>
+        <202002201158.2911CE2388@keescook>
+        <CAJZ5v0hkKUi7FUOneEy2nO-=RM8ZbcoG1uHRYNWzrjONEhKYxQ@mail.gmail.com>
+        <202002201448.62894C394@keescook>
+        <CAJZ5v0gu_2wkncukKK7u340KLzSCVL_7F9cJTz3wVhxfogR8NQ@mail.gmail.com>
+Organization: LWN.net
+X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; x86_64-redhat-linux-gnu)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Siddhesh Poyarekar <siddhesh@gotplt.org>
+On Fri, 21 Feb 2020 09:40:01 +0100
+"Rafael J. Wysocki" <rafael@kernel.org> wrote:
 
-[ Upstream commit 6b64a650f0b2ae3940698f401732988699eecf7a ]
+> 1.6.5 (I realize that it is older than recommended, but it had been
+> working fine before 5.5-rc1 :-)).
 
-It was observed[1] on arm64 that __builtin_strlen led to an infinite
-loop in the get_size selftest.  This is because __builtin_strlen (and
-other builtins) may sometimes result in a call to the C library
-function.  The C library implementation of strlen uses an IFUNC
-resolver to load the most efficient strlen implementation for the
-underlying machine and hence has a PLT indirection even for static
-binaries.  Because this binary avoids the C library startup routines,
-the PLT initialization never happens and hence the program gets stuck
-in an infinite loop.
+We still intend to support back to 1.4; this version should work.
 
-On x86_64 the __builtin_strlen just happens to expand inline and avoid
-the call but that is not always guaranteed.
+> I've tried that too, but most often I do something like "make
+> O=../build/somewhere/ htmldocs".
+> 
+> But I can do "make O=../build/somewhere/ -j 2 htmldocs" too just fine. :-)
 
-Further, while testing on x86_64 (Fedora 31), it was observed that the
-test also failed with a segfault inside write() because the generated
-code for the write function in glibc seems to access TLS before the
-syscall (probably due to the cancellation point check) and fails
-because TLS is not initialised.
+I suspect that the O= plays into this somehow; that's not something I do
+in my own testing.  I'll try to take a look at this, but I'm on the road
+and somewhat distracted at the moment...
 
-To mitigate these problems, this patch reduces the interface with the
-C library to just the syscall function.  The syscall function still
-sets errno on failure, which is undesirable but for now it only
-affects cases where syscalls fail.
+Thanks,
 
-[1] https://bugs.linaro.org/show_bug.cgi?id=5479
-
-Signed-off-by: Siddhesh Poyarekar <siddhesh@gotplt.org>
-Reported-by: Masami Hiramatsu <masami.hiramatsu@linaro.org>
-Tested-by: Masami Hiramatsu <masami.hiramatsu@linaro.org>
-Reviewed-by: Tim Bird <tim.bird@sony.com>
-Signed-off-by: Shuah Khan <skhan@linuxfoundation.org>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- tools/testing/selftests/size/get_size.c | 24 ++++++++++++++++++------
- 1 file changed, 18 insertions(+), 6 deletions(-)
-
-diff --git a/tools/testing/selftests/size/get_size.c b/tools/testing/selftests/size/get_size.c
-index 2ad45b9443550..2980b1a63366b 100644
---- a/tools/testing/selftests/size/get_size.c
-+++ b/tools/testing/selftests/size/get_size.c
-@@ -11,23 +11,35 @@
-  * own execution.  It also attempts to have as few dependencies
-  * on kernel features as possible.
-  *
-- * It should be statically linked, with startup libs avoided.
-- * It uses no library calls, and only the following 3 syscalls:
-+ * It should be statically linked, with startup libs avoided.  It uses
-+ * no library calls except the syscall() function for the following 3
-+ * syscalls:
-  *   sysinfo(), write(), and _exit()
-  *
-  * For output, it avoids printf (which in some C libraries
-  * has large external dependencies) by  implementing it's own
-  * number output and print routines, and using __builtin_strlen()
-+ *
-+ * The test may crash if any of the above syscalls fails because in some
-+ * libc implementations (e.g. the GNU C Library) errno is saved in
-+ * thread-local storage, which does not get initialized due to avoiding
-+ * startup libs.
-  */
- 
- #include <sys/sysinfo.h>
- #include <unistd.h>
-+#include <sys/syscall.h>
- 
- #define STDOUT_FILENO 1
- 
- static int print(const char *s)
- {
--	return write(STDOUT_FILENO, s, __builtin_strlen(s));
-+	size_t len = 0;
-+
-+	while (s[len] != '\0')
-+		len++;
-+
-+	return syscall(SYS_write, STDOUT_FILENO, s, len);
- }
- 
- static inline char *num_to_str(unsigned long num, char *buf, int len)
-@@ -79,12 +91,12 @@ void _start(void)
- 	print("TAP version 13\n");
- 	print("# Testing system size.\n");
- 
--	ccode = sysinfo(&info);
-+	ccode = syscall(SYS_sysinfo, &info);
- 	if (ccode < 0) {
- 		print("not ok 1");
- 		print(test_name);
- 		print(" ---\n reason: \"could not get sysinfo\"\n ...\n");
--		_exit(ccode);
-+		syscall(SYS_exit, ccode);
- 	}
- 	print("ok 1");
- 	print(test_name);
-@@ -100,5 +112,5 @@ void _start(void)
- 	print(" ...\n");
- 	print("1..1\n");
- 
--	_exit(0);
-+	syscall(SYS_exit, 0);
- }
--- 
-2.20.1
-
-
-
+jon
