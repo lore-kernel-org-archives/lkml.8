@@ -2,112 +2,131 @@ Return-Path: <SRS0=1210=4J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL autolearn=no
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6BEFBC35666
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 20:19:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 224A9C35666
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 20:19:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4146D24650
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 20:19:36 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="uEcpgNIx"
+	by mail.kernel.org (Postfix) with ESMTP id F2380208C4
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 20:19:57 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727515AbgBUUTf (ORCPT
+        id S1728028AbgBUUT4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Feb 2020 15:19:35 -0500
-Received: from mail-ot1-f68.google.com ([209.85.210.68]:34058 "EHLO
-        mail-ot1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726725AbgBUUTe (ORCPT
+        Fri, 21 Feb 2020 15:19:56 -0500
+Received: from outbound-smtp43.blacknight.com ([46.22.139.229]:50369 "EHLO
+        outbound-smtp43.blacknight.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726725AbgBUUT4 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Feb 2020 15:19:34 -0500
-Received: by mail-ot1-f68.google.com with SMTP id j16so3198239otl.1
-        for <linux-kernel@vger.kernel.org>; Fri, 21 Feb 2020 12:19:34 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=OfpZw+eQB6iSYwMvRBzJaMRaqdbsGid5gEGpxbg9sSM=;
-        b=uEcpgNIxyzARyyktOQSbbTIs3P/w6TgKfs9rTrYnQfUyOtw+Y/jWrbLk7GkpTw92F7
-         YHwCKs5T5uF+WI5VOd8W3VJSXefpdWblnH2gBQoZnI+NHI3YMXR7Z3urY25D/8f0kt+5
-         ettm551MbN+59D/LxW/SLaMiPedHQ9kOlXA3X8v3r5noGfJwngzmXCWszw3mqnCjIzvo
-         r7Z6FaMc9KsSbykj/UPyzOLNB2wYbJqvXWsCv08JWsILT0TMm+92HS6wbrXIHvqew/Kd
-         4mh4l1iYel1wAbHtHlNBjxSVzH58UCi+aOlqSAai7VkXTKw6DzwAqSLjD83fek6LJzR4
-         Swfw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=OfpZw+eQB6iSYwMvRBzJaMRaqdbsGid5gEGpxbg9sSM=;
-        b=PiYvK7jWde7GVBcXZfIv5uKm3qH30Vvqcp3ae2m/lJCYTgb1B4L+alET+g8DqL63en
-         eP4S32XDF4n2mVC3a6xTjCxFl2V5jK4NqI9jAIDSS3hyeutyiKSpJC4qJtj0vOoWdvvW
-         KHB8U9GHytyzEIerqCDRRX8/th01wFnqZz7JJUxISQTXgjGF5jHPwvqHKKDK8AbcRd3j
-         l1u9rCNwsivD4osO92te1MT1cnkmrIQCXyBghALpKMw2A9TY2G9WcUoyJx/cgqA/3fM8
-         DI2PqYdYNZFaGoZfrVICPuzCQRQ+OIzbu5AJxi3h8XmVk01CP4IHwjcb9sv3c+8R25aZ
-         l1rA==
-X-Gm-Message-State: APjAAAX0NLYdxaYjq2RZv20j0IiIBivUO8La4+gQF3YztauRAC/UTvyt
-        K1nWYfojebPd3CIDdOKoQtuqDTDxBEJ0ejdvW7KLEA==
-X-Google-Smtp-Source: APXvYqyx/RGSX2qyoU/QNIJeZF7dI+U24Dxth1TtmWp8pOZPVerHNA8pMkzSW7LFvniRoOIoJ5G9d1IhZP3X8SA4R3Y=
-X-Received: by 2002:a9d:518b:: with SMTP id y11mr28357211otg.349.1582316373221;
- Fri, 21 Feb 2020 12:19:33 -0800 (PST)
+        Fri, 21 Feb 2020 15:19:56 -0500
+Received: from mail.blacknight.com (pemlinmail05.blacknight.ie [81.17.254.26])
+        by outbound-smtp43.blacknight.com (Postfix) with ESMTPS id A28281858
+        for <linux-kernel@vger.kernel.org>; Fri, 21 Feb 2020 20:19:54 +0000 (GMT)
+Received: (qmail 2516 invoked from network); 21 Feb 2020 20:19:54 -0000
+Received: from unknown (HELO techsingularity.net) (mgorman@techsingularity.net@[84.203.18.57])
+  by 81.17.254.9 with ESMTPSA (AES256-SHA encrypted, authenticated); 21 Feb 2020 20:19:54 -0000
+Date:   Fri, 21 Feb 2020 20:19:51 +0000
+From:   Mel Gorman <mgorman@techsingularity.net>
+To:     Alexander Duyck <alexander.h.duyck@linux.intel.com>
+Cc:     Alexander Duyck <alexander.duyck@gmail.com>, kvm@vger.kernel.org,
+        david@redhat.com, mst@redhat.com, linux-kernel@vger.kernel.org,
+        linux-mm@kvack.org, akpm@linux-foundation.org,
+        yang.zhang.wz@gmail.com, pagupta@redhat.com,
+        konrad.wilk@oracle.com, nitesh@redhat.com, riel@surriel.com,
+        willy@infradead.org, lcapitulino@redhat.com, dave.hansen@intel.com,
+        wei.w.wang@intel.com, aarcange@redhat.com, pbonzini@redhat.com,
+        dan.j.williams@intel.com, mhocko@kernel.org, vbabka@suse.cz,
+        osalvador@suse.de
+Subject: Re: [PATCH v17 4/9] mm: Introduce Reported pages
+Message-ID: <20200221201951.GZ3466@techsingularity.net>
+References: <20200211224416.29318.44077.stgit@localhost.localdomain>
+ <20200211224635.29318.19750.stgit@localhost.localdomain>
+ <20200219145511.GS3466@techsingularity.net>
+ <7d3c732d9ec7725dcb5a90c1dc8e9859fbe6ccc0.camel@linux.intel.com>
+ <20200220223508.GX3466@techsingularity.net>
+ <2e4ff237de090dd4760995d948b9a1788c2f351d.camel@linux.intel.com>
 MIME-Version: 1.0
-References: <20200211213128.73302-1-almasrymina@google.com>
- <20200211151906.637d1703e4756066583b89da@linux-foundation.org>
- <CAHS8izPUFQWq3PzhhRzp7u11173_-cmRkNuQWEswS51Xz6ZM0Q@mail.gmail.com> <20200219130648.83e6810848774c6fd649c445@linux-foundation.org>
-In-Reply-To: <20200219130648.83e6810848774c6fd649c445@linux-foundation.org>
-From:   Mina Almasry <almasrymina@google.com>
-Date:   Fri, 21 Feb 2020 12:19:22 -0800
-Message-ID: <CAHS8izPB1vwuZVFha+5_ca9gKC7UceDdJFJZe9eb-T43a6GF8A@mail.gmail.com>
-Subject: Re: [PATCH v12 1/9] hugetlb_cgroup: Add hugetlb_cgroup reservation counter
-To:     Andrew Morton <akpm@linux-foundation.org>
-Cc:     Mike Kravetz <mike.kravetz@oracle.com>, shuah <shuah@kernel.org>,
-        David Rientjes <rientjes@google.com>,
-        Shakeel Butt <shakeelb@google.com>,
-        Greg Thelen <gthelen@google.com>,
-        open list <linux-kernel@vger.kernel.org>, linux-mm@kvack.org,
-        linux-kselftest@vger.kernel.org, cgroups@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=iso-8859-15
+Content-Disposition: inline
+In-Reply-To: <2e4ff237de090dd4760995d948b9a1788c2f351d.camel@linux.intel.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Feb 19, 2020 at 1:06 PM Andrew Morton <akpm@linux-foundation.org> wrote:
->
-> On Wed, 19 Feb 2020 11:05:41 -0800 Mina Almasry <almasrymina@google.com> wrote:
->
-> > On Tue, Feb 11, 2020 at 3:19 PM Andrew Morton <akpm@linux-foundation.org> wrote:
-> > >
-> > > On Tue, 11 Feb 2020 13:31:20 -0800 Mina Almasry <almasrymina@google.com> wrote:
-> > >
-> > > > These counters will track hugetlb reservations rather than hugetlb
-> > > > memory faulted in. This patch only adds the counter, following patches
-> > > > add the charging and uncharging of the counter.
-> > >
-> > > We're still pretty thin on review here, but as it's v12 and Mike
-> > > appears to be signed up to look at this work, I'll add them to -next to
-> > > help move things forward.
-> > >
-> >
-> > Hi Andrew,
-> >
-> > Since the patches were merged into -next there have been build fixes
-> > and test fixes and some review comments. Would you like me to submit
-> > *new* patches to address these, or would you like me to squash the
-> > fixes into my existing patch series and submit another iteration of
-> > the patch series?
->
-> What you did worked OK ;)
->
-> Please check the end result next time I release a kernel.
+On Fri, Feb 21, 2020 at 11:25:49AM -0800, Alexander Duyck wrote:
+> On Thu, 2020-02-20 at 22:35 +0000, Mel Gorman wrote:
+> > On Thu, Feb 20, 2020 at 10:44:21AM -0800, Alexander Duyck wrote:
+> > > > > +static int
+> > > > > +page_reporting_cycle(struct page_reporting_dev_info *prdev, struct zone *zone,
+> > > > > +		     unsigned int order, unsigned int mt,
+> > > > > +		     struct scatterlist *sgl, unsigned int *offset)
+> > > > > +{
+> > > > > +	struct free_area *area = &zone->free_area[order];
+> > > > > +	struct list_head *list = &area->free_list[mt];
+> > > > > +	unsigned int page_len = PAGE_SIZE << order;
+> > > > > +	struct page *page, *next;
+> > > > > +	int err = 0;
+> > > > > +
+> > > > > +	/*
+> > > > > +	 * Perform early check, if free area is empty there is
+> > > > > +	 * nothing to process so we can skip this free_list.
+> > > > > +	 */
+> > > > > +	if (list_empty(list))
+> > > > > +		return err;
+> > > > > +
+> > > > > +	spin_lock_irq(&zone->lock);
+> > > > > +
+> > > > > +	/* loop through free list adding unreported pages to sg list */
+> > > > > +	list_for_each_entry_safe(page, next, list, lru) {
+> > > > > +		/* We are going to skip over the reported pages. */
+> > > > > +		if (PageReported(page))
+> > > > > +			continue;
+> > > > > +
+> > > > > +		/* Attempt to pull page from list */
+> > > > > +		if (!__isolate_free_page(page, order))
+> > > > > +			break;
+> > > > > +
+> > > > 
+> > > > Might want to note that you are breaking because the only reason to fail
+> > > > the isolation is that watermarks are not met and we are likely under
+> > > > memory pressure. It's not a big issue.
+> > > > 
+> > > > However, while I think this is correct, it's hard to follow. This loop can
+> > > > be broken out of with pages still on the scatter gather list. The current
+> > > > flow guarantees that err will not be set at this point so the caller
+> > > > cleans it up so we always drain the list either here or in the caller.
+> > > 
+> > > I can probably submit a follow-up patch to update the comments. The reason
+> > > for not returning an error is because I didn't consider it an error that
+> > > we encountered the watermark and were not able to pull any more pages.
+> > > Instead I considered that the "stop" point for this pass and have it just
+> > > exit out of the loop and flush the data.
+> > > 
+> > 
+> > I don't consider it an error and I don't think you should return an
+> > error. The comment just needs to explain that the draining happens in
+> > the caller in this case. That should be enough of a warning to a future
+> > developer to double check the flow after any changes to make sure the
+> > drain is reached.
+> 
+> The comment I can do, that shouldn't be an issue. The point I was getting
+> at is that a separate drain call is expected for this any time the
+> function is not returning an error, and the only way it can return an
+> error is if there was a reporting issue.
+> 
 
-Hey Andrew,
+I'm not suggesting you return an error. I'm suggesting you put a warn in
+before you break due to watermarks *if* there is an error. It should
+*never* trigger unless someone modifies the flow and breaks it in which
+case the warning will not kill the system but give a strong hint to the
+developer that they need to think a bit more.
 
-Thanks for taking in the patset and fixes. Only pending change in the
-latest -next tree is this one:
-https://lore.kernel.org/linux-mm/20200219233610.13808-1-almasrymina@google.com/
+It's ok to leave it out because at this point, it's a distraction and I
+do not see a problem with the current code.
 
-It's reviewed by Mike here:
-https://lore.kernel.org/linux-mm/a0d7b8e1-cb43-3b43-68c3-55631f2ce199@oracle.com/
+-- 
+Mel Gorman
+SUSE Labs
