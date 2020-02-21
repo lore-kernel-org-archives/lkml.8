@@ -7,47 +7,48 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4A394C35643
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 08:06:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8B8E9C35641
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 08:07:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0F6F620578
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 08:06:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 596C62073A
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 08:07:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582272417;
-	bh=dL1C9ZtwKKPWFltFPjdkV6dCvn5rHMctGRPlSveN5sc=;
+	s=default; t=1582272421;
+	bh=sYHwINYDTcWh7EmWRxPDfsVNBX9NO+F8ciF4WJXac0s=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=labHn6G7d98x3OiH38MOrrwwC8H/2BJb8Z9TS77JsIDJVoB0Z+EtaEnLUm8yYuSsZ
-	 pMPmi/Ks7UiSbElk4r9KXCcyyCPCbbsyCIUmK2wqk1fb+cYbnRYtz5S83/t1NX+XEF
-	 3DCDcAvLOerzzagF2VRPppbgURXy8r4zy6Fhfeh8=
+	b=ZC60124C5xvV8g29Angy0TLIgdhRK9K49/A4R8AAF+ydqXcfD6bvatdyuhJxTH6cp
+	 Trd+gZPK35zGimYF6RJ7T9YqMauHLa+3IWHl6XUVGAdFuY06jG+pdOML9UBl0sdqdf
+	 Mca0axPD423x5VPEUVeQJ4//X45CksPXMbOdK1WI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732015AbgBUIGz (ORCPT
+        id S1732020AbgBUIG7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Feb 2020 03:06:55 -0500
-Received: from mail.kernel.org ([198.145.29.99]:40880 "EHLO mail.kernel.org"
+        Fri, 21 Feb 2020 03:06:59 -0500
+Received: from mail.kernel.org ([198.145.29.99]:40938 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732007AbgBUIGx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Feb 2020 03:06:53 -0500
+        id S1732016AbgBUIG4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 21 Feb 2020 03:06:56 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A2AC020578;
-        Fri, 21 Feb 2020 08:06:52 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3557720722;
+        Fri, 21 Feb 2020 08:06:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1582272413;
-        bh=dL1C9ZtwKKPWFltFPjdkV6dCvn5rHMctGRPlSveN5sc=;
+        s=default; t=1582272415;
+        bh=sYHwINYDTcWh7EmWRxPDfsVNBX9NO+F8ciF4WJXac0s=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=mPEg8gafDDE5I0EOj4FT87Vf0c2owLB96FCd0nvF9z2+FXp/dUeu0fjpvDb3ak4Ga
-         Jw5PSJsWXVBDRu2TxOShOcBIQQDruj5Ao2XhpFz6FDxULU3SrLbmQkrrosXmvD9EWj
-         vR5xNwx0E37grVS6hzh3b1ol66+6CmT9S/6KZaEU=
+        b=mFpCa/ZfsY5UQURB5UG35AEsPUtyIMDd7Dhw4U0c5oBaLUOuYDC/dJzCaNFGRp9f4
+         jvfaUCgBb0sepdY/AsGHfT25BG+hfXDdGlMnzl5KQjqeG8UZPuQ8HSxujDFuPJqv6I
+         GytFCigDr8qTS/RS/7maOM+Okvl/HIlBDoiI2p6k=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Andre Przywara <andre.przywara@arm.com>,
-        Maxime Ripard <maxime@cerno.tech>,
+        stable@vger.kernel.org, Xin Long <lucien.xin@gmail.com>,
+        Simon Horman <simon.horman@netronome.com>,
+        Pablo Neira Ayuso <pablo@netfilter.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 106/344] arm64: dts: allwinner: H6: Add PMU mode
-Date:   Fri, 21 Feb 2020 08:38:25 +0100
-Message-Id: <20200221072358.547442478@linuxfoundation.org>
+Subject: [PATCH 5.4 133/344] netfilter: nft_tunnel: add the missing ERSPAN_VERSION nla_policy
+Date:   Fri, 21 Feb 2020 08:38:52 +0100
+Message-Id: <20200221072400.909595150@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200221072349.335551332@linuxfoundation.org>
 References: <20200221072349.335551332@linuxfoundation.org>
@@ -60,45 +61,37 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Andre Przywara <andre.przywara@arm.com>
+From: Xin Long <lucien.xin@gmail.com>
 
-[ Upstream commit 7aa9b9eb7d6a8fde7acbe0446444f7e3fae1fe3b ]
+[ Upstream commit 0705f95c332081036d85f26691e9d3cd7d901c31 ]
 
-Add the Performance Monitoring Unit (PMU) device tree node to the H6
-.dtsi, which tells DT users which interrupts are triggered by PMU
-overflow events on each core. The numbers come from the manual and have
-been checked in U-Boot and with perf in Linux.
+ERSPAN_VERSION is an attribute parsed in kernel side, nla_policy
+type should be added for it, like other attributes.
 
-Tested with perf record and taskset on a Pine H64.
-
-Signed-off-by: Andre Przywara <andre.przywara@arm.com>
-Signed-off-by: Maxime Ripard <maxime@cerno.tech>
+Fixes: af308b94a2a4 ("netfilter: nf_tables: add tunnel support")
+Signed-off-by: Xin Long <lucien.xin@gmail.com>
+Reviewed-by: Simon Horman <simon.horman@netronome.com>
+Signed-off-by: Pablo Neira Ayuso <pablo@netfilter.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi | 10 ++++++++++
- 1 file changed, 10 insertions(+)
+ net/netfilter/nft_tunnel.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi b/arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi
-index 0d5ea19336a19..d192538916724 100644
---- a/arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi
-+++ b/arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi
-@@ -70,6 +70,16 @@
- 		clock-output-names = "ext_osc32k";
- 	};
+diff --git a/net/netfilter/nft_tunnel.c b/net/netfilter/nft_tunnel.c
+index 5284fcf16be73..f8d2919cf9fdc 100644
+--- a/net/netfilter/nft_tunnel.c
++++ b/net/netfilter/nft_tunnel.c
+@@ -248,8 +248,9 @@ static int nft_tunnel_obj_vxlan_init(const struct nlattr *attr,
+ }
  
-+	pmu {
-+		compatible = "arm,cortex-a53-pmu",
-+			     "arm,armv8-pmuv3";
-+		interrupts = <GIC_SPI 140 IRQ_TYPE_LEVEL_HIGH>,
-+			     <GIC_SPI 141 IRQ_TYPE_LEVEL_HIGH>,
-+			     <GIC_SPI 142 IRQ_TYPE_LEVEL_HIGH>,
-+			     <GIC_SPI 143 IRQ_TYPE_LEVEL_HIGH>;
-+		interrupt-affinity = <&cpu0>, <&cpu1>, <&cpu2>, <&cpu3>;
-+	};
-+
- 	psci {
- 		compatible = "arm,psci-0.2";
- 		method = "smc";
+ static const struct nla_policy nft_tunnel_opts_erspan_policy[NFTA_TUNNEL_KEY_ERSPAN_MAX + 1] = {
++	[NFTA_TUNNEL_KEY_ERSPAN_VERSION]	= { .type = NLA_U32 },
+ 	[NFTA_TUNNEL_KEY_ERSPAN_V1_INDEX]	= { .type = NLA_U32 },
+-	[NFTA_TUNNEL_KEY_ERSPAN_V2_DIR]	= { .type = NLA_U8 },
++	[NFTA_TUNNEL_KEY_ERSPAN_V2_DIR]		= { .type = NLA_U8 },
+ 	[NFTA_TUNNEL_KEY_ERSPAN_V2_HWID]	= { .type = NLA_U8 },
+ };
+ 
 -- 
 2.20.1
 
