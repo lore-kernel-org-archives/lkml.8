@@ -2,144 +2,101 @@ Return-Path: <SRS0=1210=4J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.3 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 659A1C35641
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 08:03:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 315A7C35641
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 08:03:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4413C222C4
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 08:03:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EE7D82073A
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 08:03:37 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1582272218;
+	bh=dfBe6pGOa3MtzNF/br7Jv7bQkVvBqp+VpqCIZVOiRto=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=SdBBI1Uhx1ktI62GY8cqSoaFQxdo4zX/sm9ULjT5pEf81fD4f8Ng3K+YG6OOuWC8p
+	 YAxhkkbrMQmF83+xrgGIuIYTckxPohDEnvtY2z8ViPXSNQIuYPjmG5/jXOuOnWuZso
+	 zwLYw2MWgZfEU+lNFosqKqpua4l09acO7MjOy2eY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731351AbgBUIDd (ORCPT
+        id S1731504AbgBUIDg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Feb 2020 03:03:33 -0500
-Received: from mga01.intel.com ([192.55.52.88]:39992 "EHLO mga01.intel.com"
+        Fri, 21 Feb 2020 03:03:36 -0500
+Received: from mail.kernel.org ([198.145.29.99]:36366 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731477AbgBUIDa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Feb 2020 03:03:30 -0500
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from fmsmga007.fm.intel.com ([10.253.24.52])
-  by fmsmga101.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 21 Feb 2020 00:03:29 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.70,467,1574150400"; 
-   d="scan'208";a="229139800"
-Received: from shbuild999.sh.intel.com (HELO localhost) ([10.239.147.113])
-  by fmsmga007.fm.intel.com with ESMTP; 21 Feb 2020 00:03:26 -0800
-Date:   Fri, 21 Feb 2020 16:03:25 +0800
-From:   Feng Tang <feng.tang@intel.com>
-To:     Peter Zijlstra <peterz@infradead.org>
-Cc:     kernel test robot <rong.a.chen@intel.com>,
-        Jiri Olsa <jolsa@redhat.com>, Ingo Molnar <mingo@kernel.org>,
-        Vince Weaver <vincent.weaver@maine.edu>,
-        Jiri Olsa <jolsa@kernel.org>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Arnaldo Carvalho de Melo <acme@redhat.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        "Naveen N. Rao" <naveen.n.rao@linux.vnet.ibm.com>,
-        Ravi Bangoria <ravi.bangoria@linux.ibm.com>,
-        Stephane Eranian <eranian@google.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        LKML <linux-kernel@vger.kernel.org>, lkp@lists.01.org,
-        andi.kleen@intel.com, ying.huang@intel.com
-Subject: Re: [LKP] Re: [perf/x86] 81ec3f3c4c: will-it-scale.per_process_ops
- -5.5% regression
-Message-ID: <20200221080325.GA67807@shbuild999.sh.intel.com>
-References: <20200205123216.GO12867@shao2-debian>
- <20200205125804.GM14879@hirez.programming.kicks-ass.net>
+        id S1731477AbgBUIDe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 21 Feb 2020 03:03:34 -0500
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id AA2502073A;
+        Fri, 21 Feb 2020 08:03:33 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1582272214;
+        bh=dfBe6pGOa3MtzNF/br7Jv7bQkVvBqp+VpqCIZVOiRto=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=Bfq4QM5CeGLSHShqvlrlCBegAPG9legWcFThCIP5wtm2V3LK5aF06wK1Ayet5FCoX
+         afQwCH4kpqfDENP+YrpsGKWvXGM0UphXxnb8I0m8VFyHNuFVYyFhfLkiW900hPvBZD
+         JVqHSljBJPgoK8dx4CZqX4pbvK8kb9wT3Hj63oLI=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org, Colin Ian King <colin.king@canonical.com>,
+        Ben Skeggs <bskeggs@redhat.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.4 058/344] drm/nouveau/nouveau: fix incorrect sizeof on args.src an args.dst
+Date:   Fri, 21 Feb 2020 08:37:37 +0100
+Message-Id: <20200221072354.310599788@linuxfoundation.org>
+X-Mailer: git-send-email 2.25.1
+In-Reply-To: <20200221072349.335551332@linuxfoundation.org>
+References: <20200221072349.335551332@linuxfoundation.org>
+User-Agent: quilt/0.66
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200205125804.GM14879@hirez.programming.kicks-ass.net>
-User-Agent: Mutt/1.5.24 (2015-08-30)
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+From: Colin Ian King <colin.king@canonical.com>
 
-On Wed, Feb 05, 2020 at 01:58:04PM +0100, Peter Zijlstra wrote:
-> On Wed, Feb 05, 2020 at 08:32:16PM +0800, kernel test robot wrote:
-> > Greeting,
-> > 
-> > FYI, we noticed a -5.5% regression of will-it-scale.per_process_ops due to commit:
-> > 
-> > 
-> > commit: 81ec3f3c4c4d78f2d3b6689c9816bfbdf7417dbb ("perf/x86: Add check_period PMU callback")
-> > https://git.kernel.org/cgit/linux/kernel/git/torvalds/linux.git master
-> > 
-> 
-> I'm fairly sure this bisect/result is bogus.
+[ Upstream commit f42e4b337b327b1336c978c4b5174990a25f68a0 ]
+
+The sizeof is currently on args.src and args.dst and should be on
+*args.src and *args.dst. Fortunately these sizes just so happen
+to be the same size so it worked, however, this should be fixed
+and it also cleans up static analysis warnings
+
+Addresses-Coverity: ("sizeof not portable")
+Fixes: f268307ec7c7 ("nouveau: simplify nouveau_dmem_migrate_vma")
+Signed-off-by: Colin Ian King <colin.king@canonical.com>
+Signed-off-by: Ben Skeggs <bskeggs@redhat.com>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ drivers/gpu/drm/nouveau/nouveau_dmem.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/drivers/gpu/drm/nouveau/nouveau_dmem.c b/drivers/gpu/drm/nouveau/nouveau_dmem.c
+index fa14399415965..0ad5d87b5a8e5 100644
+--- a/drivers/gpu/drm/nouveau/nouveau_dmem.c
++++ b/drivers/gpu/drm/nouveau/nouveau_dmem.c
+@@ -635,10 +635,10 @@ nouveau_dmem_migrate_vma(struct nouveau_drm *drm,
+ 	unsigned long c, i;
+ 	int ret = -ENOMEM;
+ 
+-	args.src = kcalloc(max, sizeof(args.src), GFP_KERNEL);
++	args.src = kcalloc(max, sizeof(*args.src), GFP_KERNEL);
+ 	if (!args.src)
+ 		goto out;
+-	args.dst = kcalloc(max, sizeof(args.dst), GFP_KERNEL);
++	args.dst = kcalloc(max, sizeof(*args.dst), GFP_KERNEL);
+ 	if (!args.dst)
+ 		goto out_free_src;
+ 
+-- 
+2.20.1
 
 
-Hi Peter,
 
-Some updates:
-
-We checked more on this. We run 14 times test for it, and the
-results are consistent about the 5.5% degradation, and we
-run the same test on several other platforms, whose test results
-are also consistent, though there are no such -5.5% seen.
-
-We are also curious that the commit seems to be completely not
-relative to this scalability test of signal, which starts a task
-for each online CPU, and keeps calling raise(), and calculating
-the run numbers.
-
-One experiment we did is checking which part of the commit
-really affects the test, and it turned out to be the change of
-"struct pmu". Effectively, applying this patch upon 5.0-rc6 
-which triggers the same regression.
-
-diff --git a/include/linux/perf_event.h b/include/linux/perf_event.h
-index 1d5c551..e1a0517 100644
---- a/include/linux/perf_event.h
-+++ b/include/linux/perf_event.h
-@@ -447,6 +447,11 @@ struct pmu {
- 	 * Filter events for PMU-specific reasons.
- 	 */
- 	int (*filter_match)		(struct perf_event *event); /* optional */
-+
-+	/*
-+	 * Check period value for PERF_EVENT_IOC_PERIOD ioctl.
-+	 */
-+	int (*check_period)		(struct perf_event *event, u64 value); /* optional */
- };
-
-So likely, this commit changes the layout of the kernel text
-and data, which may trigger some cacheline level change. From
-the system map of the 2 kernels, a big trunk of symbol's address
-changes which follow the global "pmu",
-
-5.0-rc6-systemap:
-
-ffffffff8221d000 d pmu
-ffffffff8221d100 d pmc_reserve_mutex
-ffffffff8221d120 d amd_f15_PMC53
-ffffffff8221d160 d amd_f15_PMC50
-
-5.0-rc6+pmu-change-systemap:
-
-ffffffff8221d000 d pmu
-ffffffff8221d120 d pmc_reserve_mutex
-ffffffff8221d140 d amd_f15_PMC53
-ffffffff8221d180 d amd_f15_PMC50
-
-But we can hardly identify which exact symbol is responsible
-for the change, as too many symbols are offseted. 
-
-btw, we've seen similar case that an irrelevant commit changes
-the benchmark, like a hugetlb patch improves pagefault test on
-a platform that never uses hugetlb https://lkml.org/lkml/2020/1/14/150  
-
-Thanks,
-Feng
-
-> _______________________________________________
-> LKP mailing list -- lkp@lists.01.org
-> To unsubscribe send an email to lkp-leave@lists.01.org
