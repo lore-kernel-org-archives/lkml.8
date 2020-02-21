@@ -2,158 +2,96 @@ Return-Path: <SRS0=1210=4J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+X-Spam-Status: No, score=-5.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 953A4C3566F
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 22:11:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E5631C35641
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 22:14:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 68DDD2465D
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 22:11:55 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582323115;
-	bh=bf2RsaSvZhMI79nHgHionWDyrsV17B3qT+29dL6QM30=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=xzwW/td2A22uJbEt6+DiTl0u+LoOm9P25U1nlSL8I20VRVjVcwtXa/vfKGB9kXiVT
-	 8ZXZT3cPpvqlSk3sNJ67FHrMJuE2Ang1/52r/6Y99VQE/6Ilf3QQpE7PYVeTcU0jI6
-	 Ns2kx9dmXtcW6Ly5YywUuIvxel9KQQsGuT9Wjzsk=
+	by mail.kernel.org (Postfix) with ESMTP id AFF13207FD
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 22:14:53 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="kGkAs4Nb"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729198AbgBUWLy (ORCPT
+        id S1727902AbgBUWOw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Feb 2020 17:11:54 -0500
-Received: from mail.kernel.org ([198.145.29.99]:50688 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726725AbgBUWLy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Feb 2020 17:11:54 -0500
-Received: from mail-qv1-f44.google.com (mail-qv1-f44.google.com [209.85.219.44])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 212962467A;
-        Fri, 21 Feb 2020 22:11:53 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1582323113;
-        bh=bf2RsaSvZhMI79nHgHionWDyrsV17B3qT+29dL6QM30=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=uLjEhdPGfBBs8J8kMdI9gKpPjMd/M6RazcBBvo02LI5gk5BBFs1us7fw56ebDGrNr
-         hDqGewgjxff4DzdXTjm8dNTCjRJxHnGbNdbxaZF/ZCJqBbS4adXiRUSQWuVIIS7L26
-         e7yPR4613FuK8IHfzY0sRp0MoZGPOYUofpaCd1UI=
-Received: by mail-qv1-f44.google.com with SMTP id ci20so323874qvb.4;
-        Fri, 21 Feb 2020 14:11:53 -0800 (PST)
-X-Gm-Message-State: APjAAAVivR2353AR4kVorgtpB2nMIOumPz2X2wA3uQbFRmriV7WZGve4
-        1JONzwQhqHQM0bOzzn/vpgDpF1pWc5bNzb6XjA==
-X-Google-Smtp-Source: APXvYqyYbXN85xYUMFaOgLv6Q5mUpNeZ8NyF/CcoNZ4CxdRu4RUYJEOgtcn8M4e8AKdcB5TiFQMt27ZRzzmiMvhInMw=
-X-Received: by 2002:a0c:f68f:: with SMTP id p15mr31162876qvn.79.1582323112146;
- Fri, 21 Feb 2020 14:11:52 -0800 (PST)
-MIME-Version: 1.0
-References: <20200221053802.70716-1-evanbenn@chromium.org> <20200221163717.v2.1.I02ebc5b8743b1a71e0e15f68ea77e506d4e6f840@changeid>
-In-Reply-To: <20200221163717.v2.1.I02ebc5b8743b1a71e0e15f68ea77e506d4e6f840@changeid>
-From:   Rob Herring <robh+dt@kernel.org>
-Date:   Fri, 21 Feb 2020 16:11:40 -0600
-X-Gmail-Original-Message-ID: <CAL_JsqL94vtBEmV2gNWx-D==sLiRXjxBBFZS8fw1cR6=KjS7XQ@mail.gmail.com>
-Message-ID: <CAL_JsqL94vtBEmV2gNWx-D==sLiRXjxBBFZS8fw1cR6=KjS7XQ@mail.gmail.com>
-Subject: Re: [PATCH v2 1/2] dt-bindings: watchdog: Add mt8173,smc-wdt watchdog
-To:     Evan Benn <evanbenn@chromium.org>
-Cc:     LKML <linux-kernel@vger.kernel.org>,
-        Julius Werner <jwerner@chromium.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Guenter Roeck <linux@roeck-us.net>,
-        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+        Fri, 21 Feb 2020 17:14:52 -0500
+Received: from mail-pf1-f194.google.com ([209.85.210.194]:45435 "EHLO
+        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726725AbgBUWOw (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 21 Feb 2020 17:14:52 -0500
+Received: by mail-pf1-f194.google.com with SMTP id 2so1969599pfg.12;
+        Fri, 21 Feb 2020 14:14:51 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=W8KaZGmDosurwlNJD9BGtUyzNAa4jQOZ04o70/FjZgc=;
+        b=kGkAs4Nbpvsh0LSiFUur6Wb/TbQ7PlbWJAOcbz65Qdv1Uw+Vl3ItNQQMcq77KAYZtJ
+         m2urSGoIRXXmBgm7E9zWqbYRJ+5nnXrjCjuYwEMSV5irgIy80/nbHWZ2XU6OXDiBPYJv
+         szqdDyeVflofbn6119zAg2Af45wfFrvegUCV58BoK/8EFrO8aWmVrRGB0AEm3jHvnZwq
+         g1wiEIh+kkSJDiHR4tM7g/to6tuY6/ds7sh5OENeLGPrw7vXXN0mSnsFAVAAIUn5CXPR
+         b8xb4ji8dTq0+IsQw7wVgeeGwqWP+aZc8EV+CmH2yRI8/SyKIhiNvK3/B5nUMCwO2jKu
+         gxvg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=W8KaZGmDosurwlNJD9BGtUyzNAa4jQOZ04o70/FjZgc=;
+        b=UAlkI0guNtddGYE8vWPPpuxWNEgm2EEaoMCcCxoSc3j0hwpb3804V3R7yQ30u+oDB1
+         /2RTY9rH6WaeyFr3yVsxypmZc8oCeDtzae49RCO+n6iWy2E5375I8Sy5vwVdnPATP4j3
+         kUII0A+1pLVHhOaQIO2j+qqUk3sJsIwkSnHf0P9kaltYhQW2plrke/CIgLZMZ7pSbMJD
+         tyyIMCD8h1vqYHm+ui72a9GMY2lvm1uCh/WI3SwDysRZ3fTMCgf5S8qaee/QhOMj4kQW
+         ukcPyC79dm3HXAxuH/TDB/a+XDWGbl6mnIP0S6k8Z22V0ky0blj1bTX8RKL9MrnEq8qT
+         sF1g==
+X-Gm-Message-State: APjAAAXJKqF7ec4m9+ScflebulMjoyT+GykfySusl0FZrg+443M8h1Jz
+        qI5LHYO8H2CNNGtkIHpVhUeNH4Xww5c=
+X-Google-Smtp-Source: APXvYqzuFzGOe6xFIcYN9MIIJZs1pHKUSIf83YFRjQMgSwSuWxPGqeqGheyj2Ocv0clngLUDLTvy9A==
+X-Received: by 2002:aa7:8805:: with SMTP id c5mr17210828pfo.142.1582323291138;
+        Fri, 21 Feb 2020 14:14:51 -0800 (PST)
+Received: from localhost (g183.222-224-185.ppp.wakwak.ne.jp. [222.224.185.183])
+        by smtp.gmail.com with ESMTPSA id h3sm4051033pfr.15.2020.02.21.14.14.49
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 21 Feb 2020 14:14:50 -0800 (PST)
+Date:   Sat, 22 Feb 2020 07:14:47 +0900
+From:   Stafford Horne <shorne@gmail.com>
+To:     Christoph Hellwig <hch@lst.de>
+Cc:     Jonas Bonn <jonas@southpole.se>,
+        Stefan Kristiansson <stefan.kristiansson@saunalahti.fi>,
+        Marek Szyprowski <m.szyprowski@samsung.com>,
+        Robin Murphy <robin.murphy@arm.com>,
+        Will Deacon <will@kernel.org>,
         Mark Rutland <mark.rutland@arm.com>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
-        Wim Van Sebroeck <wim@linux-watchdog.org>,
-        devicetree@vger.kernel.org,
-        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "moderated list:ARM/Mediatek SoC support" 
-        <linux-mediatek@lists.infradead.org>,
-        LINUX-WATCHDOG <linux-watchdog@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+        openrisc@lists.librecores.org, iommu@lists.linux-foundation.org,
+        linux-arm-kernel@lists.infradead.org, linux-arch@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 2/2] openrisc: use the generic in-place uncached DMA
+ allocator
+Message-ID: <20200221221447.GA7926@lianli.shorne-pla.net>
+References: <20200220170139.387354-1-hch@lst.de>
+ <20200220170139.387354-3-hch@lst.de>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200220170139.387354-3-hch@lst.de>
+User-Agent: Mutt/1.11.4 (2019-03-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Feb 20, 2020 at 11:38 PM Evan Benn <evanbenn@chromium.org> wrote:
->
-> This watchdog can be used on ARM systems with a Secure
-> Monitor firmware to forward watchdog operations to
-> firmware via a Secure Monitor Call.
->
-> Signed-off-by: Evan Benn <evanbenn@chromium.org>
-> ---
->
-> Changes in v2:
-> - Change name arm > mt8173
->
->  .../bindings/watchdog/mt8173,smc-wdt.yaml     | 30 +++++++++++++++++++
->  MAINTAINERS                                   |  6 ++++
->  2 files changed, 36 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/watchdog/mt8173,smc-wdt.yaml
->
-> diff --git a/Documentation/devicetree/bindings/watchdog/mt8173,smc-wdt.yaml b/Documentation/devicetree/bindings/watchdog/mt8173,smc-wdt.yaml
-> new file mode 100644
-> index 0000000000000..ff45e13bc548b
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/watchdog/mt8173,smc-wdt.yaml
-> @@ -0,0 +1,30 @@
-> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/watchdog/mt8173,smc-wdt.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> +
-> +title: ARM Secure Monitor Call based watchdog
-> +
-> +allOf:
-> +  - $ref: "watchdog.yaml#"
-> +
-> +maintainers:
-> +  - Julius Werner <jwerner@chromium.org>
-> +
-> +properties:
-> +  compatible:
-> +    enum:
-> +      - mt8173,smc-wdt
+On Thu, Feb 20, 2020 at 09:01:39AM -0800, Christoph Hellwig wrote:
+> Switch openrisc to use the dma-direct allocator and just provide the
+> hooks for setting memory uncached or cached.
+> 
+> Signed-off-by: Christoph Hellwig <hch@lst.de>
 
-compatible strings are in the form <vendor>,<device>. 'mt8173' is not a vendor.
+Reviewed-by: Stafford Horne <shorne@gmail.com>
 
-> +
-> +required:
-> +  - compatible
-> +
-> +examples:
-> +  - |
-> +    watchdog {
-
-This should be a child of some Mediatek firmware node. I assume
-watchdog is not the *only* function.
-
-> +      compatible = "mt8173,smc-wdt";
-> +      timeout-sec = <15>;
-> +    };
-> +
-> +...
-> diff --git a/MAINTAINERS b/MAINTAINERS
-> index e48ab79879ace..59e8779363c12 100644
-> --- a/MAINTAINERS
-> +++ b/MAINTAINERS
-> @@ -1421,6 +1421,12 @@ S:       Maintained
->  F:     Documentation/devicetree/bindings/interrupt-controller/amazon,al-fic.txt
->  F:     drivers/irqchip/irq-al-fic.c
->
-> +ARM SMC WATCHDOG DRIVER
-> +M:     Julius Werner <jwerner@chromium.org>
-> +R:     Evan Benn <evanbenn@chromium.org>
-> +S:     Maintained
-> +F:     devicetree/bindings/watchdog/mt8173,smc-wdt.yaml
-> +
->  ARM SMMU DRIVERS
->  M:     Will Deacon <will@kernel.org>
->  R:     Robin Murphy <robin.murphy@arm.com>
-> --
-> 2.25.0.265.gbab2e86ba0-goog
->
+Also, I test booted openrisc with linux 5.5 + these patches.  Thanks for
+continuing to shrink my code base.
+ 
