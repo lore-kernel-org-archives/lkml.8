@@ -2,184 +2,128 @@ Return-Path: <SRS0=1210=4J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_2 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-13.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0F4EFC11D28
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 04:40:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E3D01C11D24
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 04:57:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DA0F524650
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 04:40:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9E4F5207FD
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 04:57:47 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="rATm3auc"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="kIEoFngw"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729664AbgBUEkI (ORCPT
+        id S1729656AbgBUE5o (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Feb 2020 23:40:08 -0500
-Received: from mailgw01.mediatek.com ([210.61.82.183]:54134 "EHLO
-        mailgw01.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1729229AbgBUEkH (ORCPT
+        Thu, 20 Feb 2020 23:57:44 -0500
+Received: from mail-ot1-f66.google.com ([209.85.210.66]:45016 "EHLO
+        mail-ot1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729546AbgBUE5o (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Feb 2020 23:40:07 -0500
-X-UUID: e13c9e81f83840d8976ee203bb4026c7-20200221
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
-        h=Content-Transfer-Encoding:MIME-Version:Content-Type:References:In-Reply-To:Date:CC:To:From:Subject:Message-ID; bh=c6LxKOrtf7zqmWMQ6HOJ1i4yDenxu3IQklK++RZdHNY=;
-        b=rATm3auciYfKwqBo300ayxZ+epaBIPidFLEOlYR9R+lDw3Sp+wVUGJfQ/SnMCJj2IlLlRrnfPhygOlPO76AN/7FP6irXcAVyfhVWuWJj5+EoGJyr4O+QUJUqF41kXVEViY6blmVtLf130JmWPN0aA6yAcj65lUJZjI08MHLM4xs=;
-X-UUID: e13c9e81f83840d8976ee203bb4026c7-20200221
-Received: from mtkcas06.mediatek.inc [(172.21.101.30)] by mailgw01.mediatek.com
-        (envelope-from <ck.hu@mediatek.com>)
-        (Cellopoint E-mail Firewall v4.1.10 Build 0809 with TLS)
-        with ESMTP id 1525354134; Fri, 21 Feb 2020 12:39:57 +0800
-Received: from mtkcas08.mediatek.inc (172.21.101.126) by
- mtkmbs07n2.mediatek.inc (172.21.101.141) with Microsoft SMTP Server (TLS) id
- 15.0.1395.4; Fri, 21 Feb 2020 12:39:09 +0800
-Received: from [172.21.77.4] (172.21.77.4) by mtkcas08.mediatek.inc
- (172.21.101.73) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
- Transport; Fri, 21 Feb 2020 12:40:26 +0800
-Message-ID: <1582259996.1846.7.camel@mtksdaap41>
-Subject: Re: [PATCH v8 0/6] arm/arm64: mediatek: Fix mmsys device probing
-From:   CK Hu <ck.hu@mediatek.com>
-To:     Enric Balletbo i Serra <enric.balletbo@collabora.com>
-CC:     <robh+dt@kernel.org>, <mark.rutland@arm.com>,
-        <p.zabel@pengutronix.de>, <airlied@linux.ie>,
-        <mturquette@baylibre.com>, <sboyd@kernel.org>,
-        <ulrich.hecht+renesas@gmail.com>,
-        <laurent.pinchart@ideasonboard.com>,
-        "Mauro Carvalho Chehab" <mchehab@kernel.org>,
-        <rdunlap@infradead.org>, <dri-devel@lists.freedesktop.org>,
-        Weiyi Lu <weiyi.lu@mediatek.com>,
-        "Seiya Wang" <seiya.wang@mediatek.com>,
-        <linux-clk@vger.kernel.org>,
-        "Collabora Kernel ML" <kernel@collabora.com>,
-        mtk01761 <wendell.lin@mediatek.com>,
-        Allison Randal <allison@lohutok.net>,
-        Thomas Gleixner <tglx@linutronix.de>, <wens@csie.org>,
-        Kate Stewart <kstewart@linuxfoundation.org>,
-        "Greg Kroah-Hartman" <gregkh@linuxfoundation.org>,
-        Houlong Wei <houlong.wei@mediatek.com>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        <linux-media@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <sean.wang@mediatek.com>, <frank-w@public-files.de>,
-        Minghsiu Tsai <minghsiu.tsai@mediatek.com>,
-        Andrew-CT Chen <andrew-ct.chen@mediatek.com>,
-        <linux-mediatek@lists.infradead.org>, <hsinyi@chromium.org>,
-        Matthias Brugger <mbrugger@suse.com>,
-        <linux-arm-kernel@lists.infradead.org>,
-        Richard Fontana <rfontana@redhat.com>,
-        <linux-kernel@vger.kernel.org>, <matthias.bgg@kernel.org>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Fabien Parent <fparent@baylibre.com>,
-        Krzysztof Kozlowski <krzk@kernel.org>,
-        "Nicolas Boichat" <drinkcat@chromium.org>,
-        Owen Chen <owen.chen@mediatek.com>
-Date:   Fri, 21 Feb 2020 12:39:56 +0800
-In-Reply-To: <20200220172147.919996-1-enric.balletbo@collabora.com>
-References: <20200220172147.919996-1-enric.balletbo@collabora.com>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.10.4-0ubuntu2 
+        Thu, 20 Feb 2020 23:57:44 -0500
+Received: by mail-ot1-f66.google.com with SMTP id h9so909734otj.11;
+        Thu, 20 Feb 2020 20:57:42 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=ogn/J4giaQGLC3qcPsRUe3cWuadkZCD6KASZ61C4ThA=;
+        b=kIEoFngwEB2uizuWztZrPisyrMtzekpWhy+TjV93VsYmFrHQ3Pcp6fut+K4lBdL3F7
+         hYa9mFpXC8zQIhW+jAeRG5kaQQ+o4UqewiTjbLWESn0auaUWUuJCV7O3C5kgofVNKFJG
+         /iTmwExGNd2RaaHRUpPWxtVOUGPLGCGIcJRFw44gQvapOxF7tsIUE0jheKYMr7+4XeqD
+         8DEljxOi3rTum3dIVxr0d2sdcNUtqLpO6g2dZyI4vJz7razV1oKmftSI1k4IlqJ03ImG
+         9dPEMiZpxF4xZnlBOtWVsIhwXKgBlg1I2790KQFCu/Ph2crRExpSPfFPiGOkQy7gct72
+         8Edw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=ogn/J4giaQGLC3qcPsRUe3cWuadkZCD6KASZ61C4ThA=;
+        b=BdoM0MtoFyQ2qRuFt99O8pPyag7SA/6IRCXQADMcwk6IUR7pdcNQ9kLUcvu9slIrBn
+         BblqrSGLoFjXeCJ+Raxk518cOrJbtnz7S+JPfgMcdb3iv0lu7dOnv09LDBQ4+UmSgN4l
+         afeHhxhAeUkuD41wcICcdeMVzcO4SEZphBQzos5SRHNI1LyrtrBfIlytUmM8IRdIVgjL
+         QQvlhqh3IKcI+HB1kwt8FeCOPAX68HjpnnaCZ2zjaDw5riJgcc3jm+R87DS3ifKroDCP
+         XVIg8yrpSt/qODXUxWOj28k1Qv14s0w2Nt75QJOwvMTJ6YQwH25OvuZfCsE5t1acCOi+
+         00Ag==
+X-Gm-Message-State: APjAAAU0p8UjJFAmj64QneNnFz1RUJUzdfizvc91S3ZmVK45Xh5j8hLX
+        8xGs+ptz95Oz+lQkkz9sIfE=
+X-Google-Smtp-Source: APXvYqzTqMZvH/9ZgI3+G8aJjVo4IcNpjr++SOjdjDD/PR19TdNUf9R7rgpYCw/rQP3r0Sv9FTMfWA==
+X-Received: by 2002:a9d:6e98:: with SMTP id a24mr25542147otr.53.1582261062265;
+        Thu, 20 Feb 2020 20:57:42 -0800 (PST)
+Received: from ubuntu-m2-xlarge-x86 ([2604:1380:4111:8b00::1])
+        by smtp.gmail.com with ESMTPSA id y25sm660670oto.27.2020.02.20.20.57.41
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Thu, 20 Feb 2020 20:57:41 -0800 (PST)
+Date:   Thu, 20 Feb 2020 21:57:40 -0700
+From:   Nathan Chancellor <natechancellor@gmail.com>
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     Felipe Balbi <balbi@kernel.org>,
+        Ashwini Pahuja <ashwini.linux@gmail.com>,
+        linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org,
+        clang-built-linux@googlegroups.com
+Subject: Re: [PATCH] usb: gadget: udc: bdc: Remove unnecessary NULL checks in
+ bdc_req_complete
+Message-ID: <20200221045740.GA43417@ubuntu-m2-xlarge-x86>
+References: <20191023002014.22571-1-natechancellor@gmail.com>
 MIME-Version: 1.0
-X-MTK:  N
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191023002014.22571-1-natechancellor@gmail.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-SGksIEVucmljOg0KDQpPbiBUaHUsIDIwMjAtMDItMjAgYXQgMTg6MjEgKzAxMDAsIEVucmljIEJh
-bGxldGJvIGkgU2VycmEgd3JvdGU6DQo+IERlYXIgYWxsLA0KPiANCj4gVGhvc2UgcGF0Y2hlcyBh
-cmUgaW50ZW5kZWQgdG8gc29sdmUgYW4gb2xkIHN0YW5kaW5nIGlzc3VlIG9uIHNvbWUNCj4gTWVk
-aWF0ZWsgZGV2aWNlcyAobXQ4MTczLCBtdDI3MDEgYW5kIG10MjcxMikgaW4gYSBzbGlnaHRseSBk
-aWZmZXJlbnQgd2F5DQo+IHRvIHRoZSBwcmVjZWRlbnQgc2VyaWVzLg0KPiANCj4gVXAgdG8gbm93
-IGJvdGggZHJpdmVycywgY2xvY2sgYW5kIGRybSBhcmUgcHJvYmVkIHdpdGggdGhlIHNhbWUgZGV2
-aWNlIHRyZWUNCj4gY29tcGF0aWJsZS4gQnV0IG9ubHkgdGhlIGZpcnN0IGRyaXZlciBnZXQgcHJv
-YmVkLCB3aGljaCBpbiBlZmZlY3QgYnJlYWtzDQo+IGdyYXBoaWNzIG9uIHRob3NlIGRldmljZXMu
-DQo+IA0KPiBUaGUgdmVyc2lvbiBlaWdodCBvZiB0aGUgc2VyaWVzIHRyaWVzIHRvIHNvbHZlIHRo
-ZSBwcm9ibGVtIHdpdGggYQ0KPiBkaWZmZXJlbnQgYXBwcm9hY2ggdGhhbiB0aGUgcHJldmlvdXMg
-c2VyaWVzIGJ1dCBzaW1pbGFyIHRvIGhvdyBpcyBzb2x2ZWQNCj4gb24gb3RoZXIgTWVkaWF0ZWsg
-ZGV2aWNlcy4NCj4gDQo+IFRoZSBNTVNZUyAoTXVsdGltZWRpYSBzdWJzeXN0ZW0pIGluIE1lZGlh
-dGVrIFNvQ3MgaGFzIHNvbWUgcmVnaXN0ZXJzIHRvDQo+IGNvbnRyb2wgY2xvY2sgZ2F0ZXMgKHdo
-aWNoIGlzIHVzZWQgaW4gdGhlIGNsayBkcml2ZXIpIGFuZCBzb21lIHJlZ2lzdGVycw0KPiB0byBz
-ZXQgdGhlIHJvdXRpbmcgYW5kIGVuYWJsZSB0aGUgZGlmZmVybmV0IGJsb2NrcyBvZiB0aGUgZGlz
-cGxheQ0KPiBhbmQgTURQIChNZWRpYSBEYXRhIFBhdGgpIHN1YnN5c3RlbS4gT24gdGhpcyBzZXJp
-ZXMgdGhlIGNsayBkcml2ZXIgaXMNCj4gbm90IGEgcHVyZSBjbG9jayBjb250cm9sbGVyIGJ1dCBh
-IHN5c3RlbSBjb250cm9sbGVyIHRoYXQgY2FuIHByb3ZpZGUNCj4gYWNjZXNzIHRvIHRoZSBzaGFy
-ZWQgcmVnaXN0ZXJzIGJldHdlZW4gdGhlIGRpZmZlcmVudCBkcml2ZXJzIHRoYXQgbmVlZA0KPiBp
-dCAobWVkaWF0ZWstZHJtIGFuZCBtZWRpYXRlay1tZHApLiBBbmQgdGhlIGJpZ2dlc3QgY2hhbmdl
-IGlzLCB0aGF0IGluDQo+IHRoaXMgdmVyc2lvbiwgY2xrIGRyaXZlciBpcyB0aGUgZW50cnkgcG9p
-bnQgKHBhcmVudCkgd2hpY2ggd2lsbCB0cmlnZ2VyDQo+IHRoZSBwcm9iZSBvZiB0aGUgY29ycmVz
-cG9uZGluZyBtZWRpYXRlay1kcm0gZHJpdmVyIGFuZCBwYXNzIGl0cyBNTVNZUw0KPiBwbGF0Zm9y
-bSBkYXRhIGZvciBkaXNwbGF5IGNvbmZpZ3VyYXRpb24uDQoNCldoZW4gbW1zeXMgaXMgYSBzeXN0
-ZW0gY29udHJvbGxlciwgSSBwcmVmZXIgdG8gcGxhY2UgbW1zeXMgaW4NCmRyaXZlcnMvc29jL21l
-ZGlhdGVrLCBhbmQgaXQgc2hhcmUgcmVnaXN0ZXJzIGZvciBjbG9jaywgZGlzcGxheSwgYW5kIG1k
-cA0KZHJpdmVyLiBUaGlzIG1lYW5zIHRoZSBwcm9iZSBmdW5jdGlvbiBpcyBwbGFjZWQgaW4NCmRy
-aXZlcnMvc29jL21lZGlhdGVrICxpdHMgZGlzcGxheSBjbG9jayBmdW5jdGlvbiwgbWRwIGNsb2Nr
-IGZ1bmN0aW9uIGFyZQ0KcGxhY2VkIGluIGRyaXZlcnMvY2xrLCBkaXNwbGF5IHJvdXRpbmcgYXJl
-IHBsYWNlZCBpbiBkcml2ZXJzL2dwdS9kcm0sDQphbmQgbWRwIHJvdXRpbmcgYXJlIHBsYWNlZCBp
-biBkaXJ2ZXJzL3ZpZGVvLg0KDQpSZWdhcmRzLA0KQ0sNCg0KPiANCj4gQWxsIHRoaXMgc2VyaWVz
-IHdhcyB0ZXN0ZWQgb24gdGhlIEFjZXIgUjEzIENocm9tZWJvb2sgb25seS4NCj4gDQo+IEZvciBy
-ZWZlcmVuY2UsIGhlcmUgYXJlIHRoZSBsaW5rcyB0byB0aGUgb2xkIGRpc2N1c3Npb25zOg0KPiAN
-Cj4gKiB2NzogaHR0cHM6Ly9wYXRjaHdvcmsua2VybmVsLm9yZy9wcm9qZWN0L2xpbnV4LW1lZGlh
-dGVrL2xpc3QvP3Nlcmllcz0yNDEyMTcNCj4gKiB2NjogaHR0cHM6Ly9wYXRjaHdvcmsua2VybmVs
-Lm9yZy9wcm9qZWN0L2xpbnV4LW1lZGlhdGVrL2xpc3QvP3Nlcmllcz0yMTMyMTkNCj4gKiB2NTog
-aHR0cHM6Ly9wYXRjaHdvcmsua2VybmVsLm9yZy9wcm9qZWN0L2xpbnV4LW1lZGlhdGVrL2xpc3Qv
-P3Nlcmllcz00NDA2Mw0KPiAqIHY0Og0KPiAgICogaHR0cHM6Ly9wYXRjaHdvcmsua2VybmVsLm9y
-Zy9wYXRjaC8xMDUzMDg3MS8NCj4gICAqIGh0dHBzOi8vcGF0Y2h3b3JrLmtlcm5lbC5vcmcvcGF0
-Y2gvMTA1MzA4ODMvDQo+ICAgKiBodHRwczovL3BhdGNod29yay5rZXJuZWwub3JnL3BhdGNoLzEw
-NTMwODg1Lw0KPiAgICogaHR0cHM6Ly9wYXRjaHdvcmsua2VybmVsLm9yZy9wYXRjaC8xMDUzMDkx
-MS8NCj4gICAqIGh0dHBzOi8vcGF0Y2h3b3JrLmtlcm5lbC5vcmcvcGF0Y2gvMTA1MzA5MTMvDQo+
-ICogdjM6DQo+ICAgKiBodHRwczovL3BhdGNod29yay5rZXJuZWwub3JnL3BhdGNoLzEwMzY3ODU3
-Lw0KPiAgICogaHR0cHM6Ly9wYXRjaHdvcmsua2VybmVsLm9yZy9wYXRjaC8xMDM2Nzg2MS8NCj4g
-ICAqIGh0dHBzOi8vcGF0Y2h3b3JrLmtlcm5lbC5vcmcvcGF0Y2gvMTAzNjc4NzcvDQo+ICAgKiBo
-dHRwczovL3BhdGNod29yay5rZXJuZWwub3JnL3BhdGNoLzEwMzY3ODc1Lw0KPiAgICogaHR0cHM6
-Ly9wYXRjaHdvcmsua2VybmVsLm9yZy9wYXRjaC8xMDM2Nzg4NS8NCj4gICAqIGh0dHBzOi8vcGF0
-Y2h3b3JrLmtlcm5lbC5vcmcvcGF0Y2gvMTAzNjc4ODMvDQo+ICAgKiBodHRwczovL3BhdGNod29y
-ay5rZXJuZWwub3JnL3BhdGNoLzEwMzY3ODg5Lw0KPiAgICogaHR0cHM6Ly9wYXRjaHdvcmsua2Vy
-bmVsLm9yZy9wYXRjaC8xMDM2NzkwNy8NCj4gICAqIGh0dHBzOi8vcGF0Y2h3b3JrLmtlcm5lbC5v
-cmcvcGF0Y2gvMTAzNjc5MDkvDQo+ICAgKiBodHRwczovL3BhdGNod29yay5rZXJuZWwub3JnL3Bh
-dGNoLzEwMzY3OTA1Lw0KPiAqIHYyOiBObyByZWxldmFudCBkaXNjdXNzaW9uLCBzZWUgdjMNCj4g
-KiB2MToNCj4gICAqIGh0dHBzOi8vcGF0Y2h3b3JrLmtlcm5lbC5vcmcvcGF0Y2gvMTAwMTY0OTcv
-DQo+ICAgKiBodHRwczovL3BhdGNod29yay5rZXJuZWwub3JnL3BhdGNoLzEwMDE2NDk5Lw0KPiAg
-ICogaHR0cHM6Ly9wYXRjaHdvcmsua2VybmVsLm9yZy9wYXRjaC8xMDAxNjUwNS8NCj4gICAqIGh0
-dHBzOi8vcGF0Y2h3b3JrLmtlcm5lbC5vcmcvcGF0Y2gvMTAwMTY1MDcvDQo+IA0KPiBCZXN0IHJl
-Z2FyZHMsDQo+ICBFbnJpYw0KPiANCj4gQ2hhbmdlcyBpbiB2ODoNCj4gLSBCZSBhIGJ1aWx0aW5f
-cGxhdGZvcm1fZHJpdmVyIGxpa2Ugb3RoZXIgbWVkaWF0ZWsgbW1zeXMgZHJpdmVycy4NCj4gLSBO
-ZXcgcGF0Y2hlcyBpbnRyb2R1Y2VkIGluIHRoaXMgc2VyaWVzLg0KPiANCj4gQ2hhbmdlcyBpbiB2
-NzoNCj4gLSBBZGQgUi1ieSBmcm9tIENLDQo+IC0gQWRkIFItYnkgZnJvbSBDSw0KPiAtIEZpeCBj
-aGVjayBvZiByZXR1cm4gdmFsdWUgb2Ygb2ZfY2xrX2dldA0KPiAtIEZpeCBpZGVudGF0aW9uDQo+
-IC0gRnJlZSBjbGtfZGF0YS0+Y2xrcyBhcyB3ZWxsDQo+IC0gR2V0IHJpZCBvZiBwcml2YXRlIGRh
-dGEgc3RydWN0dXJlDQo+IA0KPiBFbnJpYyBCYWxsZXRibyBpIFNlcnJhICgyKToNCj4gICBkcm0v
-bWVkaWF0ZWs6IE1vdmUgTU1TWVMgY29uZmlndXJhdGlvbiB0byBpbmNsdWRlL2xpbnV4L3BsYXRm
-b3JtX2RhdGENCj4gICBjbGsvZHJtOiBtZWRpYXRlazogRml4IG1lZGlhdGVrLWRybSBkZXZpY2Ug
-cHJvYmluZw0KPiANCj4gTWF0dGhpYXMgQnJ1Z2dlciAoNCk6DQo+ICAgZHJtL21lZGlhdGVrOiBV
-c2UgcmVnbWFwIGZvciByZWdpc3RlciBhY2Nlc3MNCj4gICBkcm0vbWVkaWF0ZWs6IE9taXQgd2Fy
-bmluZyBvbiBwcm9iZSBkZWZlcnMNCj4gICBtZWRpYTogbXRrLW1kcDogQ2hlY2sgcmV0dXJuIHZh
-bHVlIG9mIG9mX2Nsa19nZXQNCj4gICBjbGs6IG1lZGlhdGVrOiBtdDgxNzM6IFN3aXRjaCBNTVNZ
-UyB0byBwbGF0Zm9ybSBkcml2ZXINCj4gDQo+ICBkcml2ZXJzL2Nsay9tZWRpYXRlay9LY29uZmln
-ICAgICAgICAgICAgICAgICAgfCAgIDYgKw0KPiAgZHJpdmVycy9jbGsvbWVkaWF0ZWsvTWFrZWZp
-bGUgICAgICAgICAgICAgICAgIHwgICAxICsNCj4gIGRyaXZlcnMvY2xrL21lZGlhdGVrL2Nsay1t
-dDI3MDEtbW0uYyAgICAgICAgICB8ICAzMCArKysNCj4gIGRyaXZlcnMvY2xrL21lZGlhdGVrL2Ns
-ay1tdDI3MTItbW0uYyAgICAgICAgICB8ICA0NCArKysrKw0KPiAgZHJpdmVycy9jbGsvbWVkaWF0
-ZWsvY2xrLW10ODE3My1tbS5jICAgICAgICAgIHwgMTcyICsrKysrKysrKysrKysrKysrKw0KPiAg
-ZHJpdmVycy9jbGsvbWVkaWF0ZWsvY2xrLW10ODE3My5jICAgICAgICAgICAgIHwgMTA0IC0tLS0t
-LS0tLS0tDQo+ICBkcml2ZXJzL2dwdS9kcm0vbWVkaWF0ZWsvbXRrX2Rpc3BfY29sb3IuYyAgICAg
-fCAgIDUgKy0NCj4gIGRyaXZlcnMvZ3B1L2RybS9tZWRpYXRlay9tdGtfZGlzcF9vdmwuYyAgICAg
-ICB8ICAgNSArLQ0KPiAgZHJpdmVycy9ncHUvZHJtL21lZGlhdGVrL210a19kaXNwX3JkbWEuYyAg
-ICAgIHwgICA1ICstDQo+ICBkcml2ZXJzL2dwdS9kcm0vbWVkaWF0ZWsvbXRrX2RwaS5jICAgICAg
-ICAgICAgfCAgMTIgKy0NCj4gIGRyaXZlcnMvZ3B1L2RybS9tZWRpYXRlay9tdGtfZHJtX2NydGMu
-YyAgICAgICB8ICAgNCArLQ0KPiAgZHJpdmVycy9ncHUvZHJtL21lZGlhdGVrL210a19kcm1fZGRw
-LmMgICAgICAgIHwgIDUzICsrKy0tLQ0KPiAgZHJpdmVycy9ncHUvZHJtL21lZGlhdGVrL210a19k
-cm1fZGRwLmggICAgICAgIHwgICA0ICstDQo+ICBkcml2ZXJzL2dwdS9kcm0vbWVkaWF0ZWsvbXRr
-X2RybV9kZHBfY29tcC5oICAgfCAgNTYgKy0tLS0tDQo+ICBkcml2ZXJzL2dwdS9kcm0vbWVkaWF0
-ZWsvbXRrX2RybV9kcnYuYyAgICAgICAgfCAxMTMgKy0tLS0tLS0tLS0tDQo+ICBkcml2ZXJzL2dw
-dS9kcm0vbWVkaWF0ZWsvbXRrX2RybV9kcnYuaCAgICAgICAgfCAgMTMgKy0NCj4gIGRyaXZlcnMv
-Z3B1L2RybS9tZWRpYXRlay9tdGtfZHNpLmMgICAgICAgICAgICB8ICAgOCArLQ0KPiAgZHJpdmVy
-cy9ncHUvZHJtL21lZGlhdGVrL210a19oZG1pLmMgICAgICAgICAgIHwgICA0ICstDQo+ICBkcml2
-ZXJzL21lZGlhL3BsYXRmb3JtL210ay1tZHAvbXRrX21kcF9jb21wLmMgfCAgIDYgKw0KPiAgaW5j
-bHVkZS9saW51eC9wbGF0Zm9ybV9kYXRhL210a19tbXN5cy5oICAgICAgIHwgIDczICsrKysrKysr
-DQo+ICAyMCBmaWxlcyBjaGFuZ2VkLCA0MDEgaW5zZXJ0aW9ucygrKSwgMzE3IGRlbGV0aW9ucygt
-KQ0KPiAgY3JlYXRlIG1vZGUgMTAwNjQ0IGRyaXZlcnMvY2xrL21lZGlhdGVrL2Nsay1tdDgxNzMt
-bW0uYw0KPiAgY3JlYXRlIG1vZGUgMTAwNjQ0IGluY2x1ZGUvbGludXgvcGxhdGZvcm1fZGF0YS9t
-dGtfbW1zeXMuaA0KPiANCg0K
+I know it has been a while but ping?
 
+On Tue, Oct 22, 2019 at 05:20:15PM -0700, Nathan Chancellor wrote:
+> When building with Clang + -Wtautological-pointer-compare:
+> 
+> drivers/usb/gadget/udc/bdc/bdc_ep.c:543:28: warning: comparison of
+> address of 'req->queue' equal to a null pointer is always false
+> [-Wtautological-pointer-compare]
+>         if (req == NULL  || &req->queue == NULL || &req->usb_req == NULL)
+>                              ~~~~~^~~~~    ~~~~
+> drivers/usb/gadget/udc/bdc/bdc_ep.c:543:51: warning: comparison of
+> address of 'req->usb_req' equal to a null pointer is always false
+> [-Wtautological-pointer-compare]
+>         if (req == NULL  || &req->queue == NULL || &req->usb_req == NULL)
+>                                                     ~~~~~^~~~~~~    ~~~~
+> 2 warnings generated.
+> 
+> As it notes, these statements will always evaluate to false so remove
+> them.
+> 
+> Fixes: efed421a94e6 ("usb: gadget: Add UDC driver for Broadcom USB3.0 device controller IP BDC")
+> Link: https://github.com/ClangBuiltLinux/linux/issues/749
+> Signed-off-by: Nathan Chancellor <natechancellor@gmail.com>
+> ---
+> 
+> Note: I am not sure if these checks were intended to check if the
+> contents of these arrays were NULL or if there should be some other
+> checks in lieu of these; I am not familiar with the USB subsystem to
+> answer this but I will happily respin the patch if this is not correct.
+> 
+>  drivers/usb/gadget/udc/bdc/bdc_ep.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/drivers/usb/gadget/udc/bdc/bdc_ep.c b/drivers/usb/gadget/udc/bdc/bdc_ep.c
+> index a4d9b5e1e50e..d49c6dc1082d 100644
+> --- a/drivers/usb/gadget/udc/bdc/bdc_ep.c
+> +++ b/drivers/usb/gadget/udc/bdc/bdc_ep.c
+> @@ -540,7 +540,7 @@ static void bdc_req_complete(struct bdc_ep *ep, struct bdc_req *req,
+>  {
+>  	struct bdc *bdc = ep->bdc;
+>  
+> -	if (req == NULL  || &req->queue == NULL || &req->usb_req == NULL)
+> +	if (req == NULL)
+>  		return;
+>  
+>  	dev_dbg(bdc->dev, "%s ep:%s status:%d\n", __func__, ep->name, status);
+> -- 
+> 2.23.0
+> 
