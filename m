@@ -2,144 +2,109 @@ Return-Path: <SRS0=1210=4J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D3741C35641
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 08:36:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8DE14C35641
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 08:36:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A57E920679
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 08:36:00 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Z2GvPJvR"
+	by mail.kernel.org (Postfix) with ESMTP id 61B6720679
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 08:36:05 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1582274165;
+	bh=UHTF/KQOikrcVa58Jc+AI++DU1+I2cfHGw4+SZ/+l5w=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=iFlHg6gqFGIXqkU6MBnlrEehd5BBAplM3irAqn1vep+RKdZ5zATRnD3vM6vGKCLYA
+	 sCXvAvbnr+j5XR0d3Aq5jLfRb+R9nFb14esAqRUQfWJ2hhggFv/fQO9ep9nRHqk/oR
+	 b0NxKR9mA40nn0qJpSmFAY3OTwqol6ADwWnKUTps=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732985AbgBUIf6 (ORCPT
+        id S1732630AbgBUIgD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Feb 2020 03:35:58 -0500
-Received: from us-smtp-1.mimecast.com ([205.139.110.61]:29048 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1731974AbgBUIGt (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 21 Feb 2020 03:36:03 -0500
+Received: from mail.kernel.org ([198.145.29.99]:40772 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1731989AbgBUIGt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Fri, 21 Feb 2020 03:06:49 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1582272408;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=nZPMKkDRpIygusMljWBR/rOUYIWd4dKR+JmAgMAgsbA=;
-        b=Z2GvPJvRkWsfuiiAD27KB6TojxSjhRQp9S9Av5hbeOWTA4eru/Ntys8T8U3ZjjGUVGKFyo
-        LK4BLomJMkfe1UkZOHpR15hsVBTaTZVlHPXsg0kARuVsP4OXebVj1B5visGXu4zEsUj1Hb
-        3Lks0tO/7IUluBqN0C2ELNogBuAfwuA=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-382-db6s2tGWP_mUlg7iG2WDtg-1; Fri, 21 Feb 2020 03:06:47 -0500
-X-MC-Unique: db6s2tGWP_mUlg7iG2WDtg-1
-Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 247D0107ACCA;
-        Fri, 21 Feb 2020 08:06:44 +0000 (UTC)
-Received: from [10.72.13.208] (ovpn-13-208.pek2.redhat.com [10.72.13.208])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id A64978B740;
-        Fri, 21 Feb 2020 08:06:25 +0000 (UTC)
-Subject: Re: [PATCH V4 4/5] virtio: introduce a vDPA based transport
-To:     Jason Gunthorpe <jgg@mellanox.com>
-Cc:     "mst@redhat.com" <mst@redhat.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
-        "virtualization@lists.linux-foundation.org" 
-        <virtualization@lists.linux-foundation.org>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-        "tiwei.bie@intel.com" <tiwei.bie@intel.com>,
-        "maxime.coquelin@redhat.com" <maxime.coquelin@redhat.com>,
-        "cunming.liang@intel.com" <cunming.liang@intel.com>,
-        "zhihong.wang@intel.com" <zhihong.wang@intel.com>,
-        "rob.miller@broadcom.com" <rob.miller@broadcom.com>,
-        "xiao.w.wang@intel.com" <xiao.w.wang@intel.com>,
-        "haotian.wang@sifive.com" <haotian.wang@sifive.com>,
-        "lingshan.zhu@intel.com" <lingshan.zhu@intel.com>,
-        "eperezma@redhat.com" <eperezma@redhat.com>,
-        "lulu@redhat.com" <lulu@redhat.com>,
-        Parav Pandit <parav@mellanox.com>,
-        "kevin.tian@intel.com" <kevin.tian@intel.com>,
-        "stefanha@redhat.com" <stefanha@redhat.com>,
-        "rdunlap@infradead.org" <rdunlap@infradead.org>,
-        "hch@infradead.org" <hch@infradead.org>,
-        "aadam@redhat.com" <aadam@redhat.com>,
-        Jiri Pirko <jiri@mellanox.com>,
-        Shahaf Shuler <shahafs@mellanox.com>,
-        "hanand@xilinx.com" <hanand@xilinx.com>,
-        "mhabets@solarflare.com" <mhabets@solarflare.com>
-References: <20200220061141.29390-1-jasowang@redhat.com>
- <20200220061141.29390-5-jasowang@redhat.com>
- <20200220151914.GW23930@mellanox.com>
-From:   Jason Wang <jasowang@redhat.com>
-Message-ID: <d6d910bb-8431-7e95-8808-9ed2d6ec9211@redhat.com>
-Date:   Fri, 21 Feb 2020 16:06:24 +0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        by mail.kernel.org (Postfix) with ESMTPSA id 411A220801;
+        Fri, 21 Feb 2020 08:06:47 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1582272407;
+        bh=UHTF/KQOikrcVa58Jc+AI++DU1+I2cfHGw4+SZ/+l5w=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=nbTOHns0Kl8g+ahEL/EpCo3TINb69WysSqbucjte0Z6BQRRxnWsHV/suAIt8WKPDU
+         NBT/ur5jyqZ22mcuooX+yd/4DFX1eQWMQXwYZGtxsu6Ts79MRCU3S5VpHth+jYhXOk
+         /clZVdF4wz2nhXapmDFy9cWwztAD2Pt+jPwlEfiQ=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org, kbuild test robot <lkp@intel.com>,
+        "kernelci.org bot" <bot@kernelci.org>,
+        Olofs autobuilder <build@lixom.net>,
+        Stephen Rothwell <sfr@canb.auug.org.au>,
+        Arnd Bergmann <arnd@arndb.de>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.4 131/344] isdn: dont mark kcapi_proc_exit as __exit
+Date:   Fri, 21 Feb 2020 08:38:50 +0100
+Message-Id: <20200221072400.740871446@linuxfoundation.org>
+X-Mailer: git-send-email 2.25.1
+In-Reply-To: <20200221072349.335551332@linuxfoundation.org>
+References: <20200221072349.335551332@linuxfoundation.org>
+User-Agent: quilt/0.66
 MIME-Version: 1.0
-In-Reply-To: <20200220151914.GW23930@mellanox.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+From: Arnd Bergmann <arnd@arndb.de>
 
-On 2020/2/20 =E4=B8=8B=E5=8D=8811:19, Jason Gunthorpe wrote:
-> On Thu, Feb 20, 2020 at 02:11:40PM +0800, Jason Wang wrote:
->> +static int virtio_vdpa_probe(struct vdpa_device *vdpa)
->> +{
->> +	const struct vdpa_config_ops *ops =3D vdpa->config;
->> +	struct virtio_vdpa_device *vd_dev;
->> +	int ret =3D -EINVAL;
->> +
->> +	vd_dev =3D kzalloc(sizeof(*vd_dev), GFP_KERNEL);
->> +	if (!vd_dev)
->> +		return -ENOMEM;
->> +
->> +	vd_dev->vdev.dev.parent =3D vdpa_get_dma_dev(vdpa);
->> +	vd_dev->vdev.dev.release =3D virtio_vdpa_release_dev;
->> +	vd_dev->vdev.config =3D &virtio_vdpa_config_ops;
->> +	vd_dev->vdpa =3D vdpa;
->> +	INIT_LIST_HEAD(&vd_dev->virtqueues);
->> +	spin_lock_init(&vd_dev->lock);
->> +
->> +	vd_dev->vdev.id.device =3D ops->get_device_id(vdpa);
->> +	if (vd_dev->vdev.id.device =3D=3D 0)
->> +		goto err;
->> +
->> +	vd_dev->vdev.id.vendor =3D ops->get_vendor_id(vdpa);
->> +	ret =3D register_virtio_device(&vd_dev->vdev);
->> +	if (ret)
->> +		goto err;
-> This error unwind is wrong. register_virtio_device() does
-> device_initialize() as it's first action. After that point error
-> unwind must be done with put_device() - particularly calling
-> kfree(vd_dev) after doing dev_set_name() leaks memory.
+[ Upstream commit b33bdf8020c94438269becc6dace9ed49257c4ba ]
 
+As everybody pointed out by now, my patch to clean up CAPI introduced
+a link time warning, as the two parts of the capi driver are now in
+one module and the exit function may need to be called in the error
+path of the init function:
 
-Exactly.
+>> WARNING: drivers/isdn/capi/kernelcapi.o(.text+0xea4): Section mismatch in reference from the function kcapi_exit() to the function .exit.text:kcapi_proc_exit()
+   The function kcapi_exit() references a function in an exit section.
+   Often the function kcapi_proc_exit() has valid usage outside the exit section
+   and the fix is to remove the __exit annotation of kcapi_proc_exit.
 
+Remove the incorrect __exit annotation.
 
->
-> Looks like about half of the register_virtio_device() users did this
-> right, the others not. Perhaps you should fix them too...
->
-> Jason
+Reported-by: kbuild test robot <lkp@intel.com>
+Reported-by: kernelci.org bot <bot@kernelci.org>
+Reported-by: Olof's autobuilder <build@lixom.net>
+Reported-by: Stephen Rothwell <sfr@canb.auug.org.au>
+Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+Link: https://lore.kernel.org/r/20191216194909.1983639-1-arnd@arndb.de
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ drivers/isdn/capi/kcapi_proc.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-
-Will do.
-
-Thanks
+diff --git a/drivers/isdn/capi/kcapi_proc.c b/drivers/isdn/capi/kcapi_proc.c
+index c94bd12c0f7c6..28cd051f1dfd9 100644
+--- a/drivers/isdn/capi/kcapi_proc.c
++++ b/drivers/isdn/capi/kcapi_proc.c
+@@ -239,7 +239,7 @@ kcapi_proc_init(void)
+ 	proc_create_seq("capi/driver",       0, NULL, &seq_capi_driver_ops);
+ }
+ 
+-void __exit
++void
+ kcapi_proc_exit(void)
+ {
+ 	remove_proc_entry("capi/driver",       NULL);
+-- 
+2.20.1
 
 
->
 
