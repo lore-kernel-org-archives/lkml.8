@@ -2,89 +2,232 @@ Return-Path: <SRS0=1210=4J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8CA9DC35656
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 14:20:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8F308C35646
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 14:21:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 59D8E222C4
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 14:20:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5AE9E206EF
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 14:21:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582294843;
-	bh=BsbXvV1cPAYeHc94oTX4QgLR0NK2OaDVtFgTPk+ODWA=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=ES+74k0e+oHRGpsq5+be/HkLdQ5bx0ewxfK3ur+C48CiJ0CRwlubl8r1WCQYiSwNW
-	 tzaL4leZml02LsgkeE08p3RkKFgWqYmnWlrPBWcMzWGY08Lzk/Ow3lm1OzqOcORE4W
-	 CHexskSl+f5BX7LTIyHY4x/uIslwm3CDyYYEBLbk=
+	s=default; t=1582294869;
+	bh=PvMhqGsnpbDQcrOBmCBHF8m0KXHh2kblzDTb9XhbZhQ=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:List-ID:From;
+	b=T48eBvzSdjUiYM/2ARooNGcQxwOVkOS/3zvai2V8zgEgCFTBNn4c7iQyi46YHTtTW
+	 fHo4YC+JQw+azzoB3q9Y40dBqzZmgShcrZW5DAHZYlVV9U9iQr0+wNcSJ586ZQiz2p
+	 eqAzWvf/2YQ2pp75rKX7EkI/I3Y0hNN42D8BMtIA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728804AbgBUOUl (ORCPT
+        id S1728838AbgBUOVI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Feb 2020 09:20:41 -0500
-Received: from mail.kernel.org ([198.145.29.99]:42134 "EHLO mail.kernel.org"
+        Fri, 21 Feb 2020 09:21:08 -0500
+Received: from foss.arm.com ([217.140.110.172]:40404 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728743AbgBUOUl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Feb 2020 09:20:41 -0500
-Received: from willie-the-truck (236.31.169.217.in-addr.arpa [217.169.31.236])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3BCBC206EF;
-        Fri, 21 Feb 2020 14:20:39 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1582294841;
-        bh=BsbXvV1cPAYeHc94oTX4QgLR0NK2OaDVtFgTPk+ODWA=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=t/G66Rhi956XQadbBUtgVu06y/KePgw4nmsPgJJ9V7GFETCBBF58JwOxFPoxbtr7U
-         Iz6xy7wfZ/FszKYmPQ5kbRIvCFCCps/6Zb09xELR97sKw+I6o8v82hUJgbSMaZ0pti
-         syb9tVwxIVVdQwJvKszKbmBRaAqFXtKP5U/rtoC0=
-Date:   Fri, 21 Feb 2020 14:20:35 +0000
-From:   Will Deacon <will@kernel.org>
-To:     Christoph Hellwig <hch@lst.de>
-Cc:     linux-kernel@vger.kernel.org, kernel-team@android.com,
-        akpm@linux-foundation.org,
-        "K . Prasad" <prasad@linux.vnet.ibm.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Frederic Weisbecker <frederic@kernel.org>,
-        Quentin Perret <qperret@google.com>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Masami Hiramatsu <mhiramat@kernel.org>
-Subject: Re: [PATCH 2/3] samples/hw_breakpoint: Drop use of
- kallsyms_lookup_name()
-Message-ID: <20200221142035.GA17979@willie-the-truck>
-References: <20200221114404.14641-1-will@kernel.org>
- <20200221114404.14641-3-will@kernel.org>
- <20200221141354.GC6968@lst.de>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200221141354.GC6968@lst.de>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+        id S1727851AbgBUOVH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 21 Feb 2020 09:21:07 -0500
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id CFFAF1FB;
+        Fri, 21 Feb 2020 06:21:06 -0800 (PST)
+Received: from localhost (unknown [10.37.6.21])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 458C63F703;
+        Fri, 21 Feb 2020 06:21:06 -0800 (PST)
+Date:   Fri, 21 Feb 2020 14:21:04 +0000
+From:   Mark Brown <broonie@kernel.org>
+To:     Dan Murphy <dmurphy@ti.com>
+Cc:     alsa-devel@alsa-project.org, broonie@kernel.org,
+        lgirdwood@gmail.com, linux-kernel@vger.kernel.org,
+        Mark Brown <broonie@kernel.org>, perex@perex.cz, tiwai@suse.com
+Subject: Applied "ASoC: tas2562: Add support for digital volume control" to the asoc tree
+In-Reply-To:  <20200221124151.8774-1-dmurphy@ti.com>
+Message-Id:  <applied-20200221124151.8774-1-dmurphy@ti.com>
+X-Patchwork-Hint: ignore
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Feb 21, 2020 at 03:13:54PM +0100, Christoph Hellwig wrote:
-> On Fri, Feb 21, 2020 at 11:44:03AM +0000, Will Deacon wrote:
-> > -static char ksym_name[KSYM_NAME_LEN] = "pid_max";
-> > +static char ksym_name[KSYM_NAME_LEN] = "jiffies";
-> 
-> Is jiffies actually an exported symbol on all configfs?  I thought
-> there was some weird aliasing going on with jiffies64.
+The patch
 
-There is some weird aliasing with jiffies_64, but kernel/time/jiffies.c
-has an unconditional:
+   ASoC: tas2562: Add support for digital volume control
 
-EXPORT_SYMBOL(jiffies);
+has been applied to the asoc tree at
 
-so I think we're ok.
+   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/sound.git 
 
-> Except for the symbol choice this looks fine, though:
-> 
-> Reviewed-by: Christoph Hellwig <hch@lst.de>
+All being well this means that it will be integrated into the linux-next
+tree (usually sometime in the next 24 hours) and sent to Linus during
+the next merge window (or sooner if it is a bug fix), however if
+problems are discovered then the patch may be dropped or reverted.  
 
-Brill, cheers.
+You may get further e-mails resulting from automated or manual testing
+and review of the tree, please engage with people reporting problems and
+send followup patches addressing any issues that are reported if needed.
 
-Will
+If any updates are required or you are submitting further changes they
+should be sent as incremental updates against current git, existing
+patches will not be replaced.
+
+Please add any relevant lists and maintainers to the CCs when replying
+to this mail.
+
+Thanks,
+Mark
+
+From bf726b1c86f2caab70ad614cdf7da3b81ad08e69 Mon Sep 17 00:00:00 2001
+From: Dan Murphy <dmurphy@ti.com>
+Date: Fri, 21 Feb 2020 06:41:51 -0600
+Subject: [PATCH] ASoC: tas2562: Add support for digital volume control
+
+Add support for digital volume control.  There is no dedicated register
+for volume control but instead there are 4.  The values of the registers
+are determined with exponential floating point math.
+So a table was created with register values for 2dB step increments
+from -110dB to 0dB.
+
+Signed-off-by: Dan Murphy <dmurphy@ti.com>
+Link: https://lore.kernel.org/r/20200221124151.8774-1-dmurphy@ti.com
+Signed-off-by: Mark Brown <broonie@kernel.org>
+---
+ sound/soc/codecs/tas2562.c | 78 ++++++++++++++++++++++++++++++++++++++
+ sound/soc/codecs/tas2562.h |  6 ++-
+ 2 files changed, 82 insertions(+), 2 deletions(-)
+
+diff --git a/sound/soc/codecs/tas2562.c b/sound/soc/codecs/tas2562.c
+index b517ada7e809..561ac0ac0795 100644
+--- a/sound/soc/codecs/tas2562.c
++++ b/sound/soc/codecs/tas2562.c
+@@ -26,6 +26,24 @@
+ #define TAS2562_FORMATS (SNDRV_PCM_FMTBIT_S16_LE | SNDRV_PCM_FMTBIT_S24_LE |\
+ 			 SNDRV_PCM_FORMAT_S32_LE)
+ 
++/* DVC equation involves floating point math
++ * round(10^(volume in dB/20)*2^30)
++ * so create a lookup table for 2dB step
++ */
++static const unsigned int float_vol_db_lookup[] = {
++0x00000d43, 0x000010b2, 0x00001505, 0x00001a67, 0x00002151,
++0x000029f1, 0x000034cd, 0x00004279, 0x000053af, 0x0000695b,
++0x0000695b, 0x0000a6fa, 0x0000d236, 0x000108a4, 0x00014d2a,
++0x0001a36e, 0x00021008, 0x000298c0, 0x000344df, 0x00041d8f,
++0x00052e5a, 0x000685c8, 0x00083621, 0x000a566d, 0x000d03a7,
++0x0010624d, 0x0014a050, 0x0019f786, 0x0020b0bc, 0x0029279d,
++0x0033cf8d, 0x004139d3, 0x00521d50, 0x00676044, 0x0082248a,
++0x00a3d70a, 0x00ce4328, 0x0103ab3d, 0x0146e75d, 0x019b8c27,
++0x02061b89, 0x028c423f, 0x03352529, 0x0409c2b0, 0x05156d68,
++0x080e9f96, 0x0a24b062, 0x0cc509ab, 0x10137987, 0x143d1362,
++0x197a967f, 0x2013739e, 0x28619ae9, 0x32d64617, 0x40000000
++};
++
+ struct tas2562_data {
+ 	struct snd_soc_component *component;
+ 	struct gpio_desc *sdz_gpio;
+@@ -34,6 +52,7 @@ struct tas2562_data {
+ 	struct i2c_client *client;
+ 	int v_sense_slot;
+ 	int i_sense_slot;
++	int volume_lvl;
+ };
+ 
+ static int tas2562_set_bias_level(struct snd_soc_component *component,
+@@ -413,6 +432,50 @@ static int tas2562_dac_event(struct snd_soc_dapm_widget *w,
+ 	return 0;
+ }
+ 
++static int tas2562_volume_control_get(struct snd_kcontrol *kcontrol,
++				      struct snd_ctl_elem_value *ucontrol)
++{
++	struct snd_soc_component *component = snd_soc_kcontrol_component(kcontrol);
++	struct tas2562_data *tas2562 = snd_soc_component_get_drvdata(component);
++
++	ucontrol->value.integer.value[0] = tas2562->volume_lvl;
++	return 0;
++}
++
++static int tas2562_volume_control_put(struct snd_kcontrol *kcontrol,
++				      struct snd_ctl_elem_value *ucontrol)
++{
++	struct snd_soc_component *component = snd_soc_kcontrol_component(kcontrol);
++	struct tas2562_data *tas2562 = snd_soc_component_get_drvdata(component);
++	int ret;
++	u32 reg_val;
++
++	reg_val = float_vol_db_lookup[ucontrol->value.integer.value[0]/2];
++	ret = snd_soc_component_write(component, TAS2562_DVC_CFG4,
++				      (reg_val & 0xff));
++	if (ret)
++		return ret;
++	ret = snd_soc_component_write(component, TAS2562_DVC_CFG3,
++				      ((reg_val >> 8) & 0xff));
++	if (ret)
++		return ret;
++	ret = snd_soc_component_write(component, TAS2562_DVC_CFG2,
++				      ((reg_val >> 16) & 0xff));
++	if (ret)
++		return ret;
++	ret = snd_soc_component_write(component, TAS2562_DVC_CFG1,
++				      ((reg_val >> 24) & 0xff));
++	if (ret)
++		return ret;
++
++	tas2562->volume_lvl = ucontrol->value.integer.value[0];
++
++	return ret;
++}
++
++/* Digital Volume Control. From 0 dB to -110 dB in 1 dB steps */
++static const DECLARE_TLV_DB_SCALE(dvc_tlv, -11000, 100, 0);
++
+ static DECLARE_TLV_DB_SCALE(tas2562_dac_tlv, 850, 50, 0);
+ 
+ static const struct snd_kcontrol_new isense_switch =
+@@ -426,6 +489,17 @@ static const struct snd_kcontrol_new vsense_switch =
+ static const struct snd_kcontrol_new tas2562_snd_controls[] = {
+ 	SOC_SINGLE_TLV("Amp Gain Volume", TAS2562_PB_CFG1, 0, 0x1c, 0,
+ 		       tas2562_dac_tlv),
++	{
++		.iface = SNDRV_CTL_ELEM_IFACE_MIXER,
++		.name = "Digital Volume Control",
++		.index = 0,
++		.tlv.p = dvc_tlv,
++		.access = SNDRV_CTL_ELEM_ACCESS_TLV_READ | SNDRV_CTL_ELEM_ACCESS_READWRITE,
++		.info = snd_soc_info_volsw,
++		.get = tas2562_volume_control_get,
++		.put = tas2562_volume_control_put,
++		.private_value = SOC_SINGLE_VALUE(TAS2562_DVC_CFG1, 0, 110, 0, 0) ,
++	},
+ };
+ 
+ static const struct snd_soc_dapm_widget tas2562_dapm_widgets[] = {
+@@ -516,6 +590,10 @@ static const struct reg_default tas2562_reg_defaults[] = {
+ 	{ TAS2562_PB_CFG1, 0x20 },
+ 	{ TAS2562_TDM_CFG0, 0x09 },
+ 	{ TAS2562_TDM_CFG1, 0x02 },
++	{ TAS2562_DVC_CFG1, 0x40 },
++	{ TAS2562_DVC_CFG2, 0x40 },
++	{ TAS2562_DVC_CFG3, 0x00 },
++	{ TAS2562_DVC_CFG4, 0x00 },
+ };
+ 
+ static const struct regmap_config tas2562_regmap_config = {
+diff --git a/sound/soc/codecs/tas2562.h b/sound/soc/codecs/tas2562.h
+index 6f55ebcf19ea..28e75fc431d0 100644
+--- a/sound/soc/codecs/tas2562.h
++++ b/sound/soc/codecs/tas2562.h
+@@ -35,8 +35,10 @@
+ #define TAS2562_REV_ID		TAS2562_REG(0, 0x7d)
+ 
+ /* Page 2 */
+-#define TAS2562_DVC_CFG1	TAS2562_REG(2, 0x01)
+-#define TAS2562_DVC_CFG2	TAS2562_REG(2, 0x02)
++#define TAS2562_DVC_CFG1	TAS2562_REG(2, 0x0c)
++#define TAS2562_DVC_CFG2	TAS2562_REG(2, 0x0d)
++#define TAS2562_DVC_CFG3	TAS2562_REG(2, 0x0e)
++#define TAS2562_DVC_CFG4	TAS2562_REG(2, 0x0f)
+ 
+ #define TAS2562_RESET	BIT(0)
+ 
+-- 
+2.20.1
+
