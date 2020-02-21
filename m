@@ -7,49 +7,47 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1771AC35640
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 08:13:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 099F4C35641
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 08:13:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D436320722
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 08:13:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D5ED924650
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 08:13:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582272799;
-	bh=ubBnZkwgknDaBQg2aA6dtbyYoa4IJ4vUfw1ndbHY2s8=;
+	s=default; t=1582272803;
+	bh=cgZgQbXA5EXmpfCJ4zk9MfAj8jEBQWtRyXE+AKDmBgU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=vX0rBN4ZvIeNuuZKTkzz7hUr38U8+W1sqm32RQA3XzXzu9YDEt5pXotF1JveU+e8D
-	 FePwbwhfts9f4WTUUAIaAVYT2uuAyOkfdm/t06is1Q0t69ms8yLEiob5/3KSUjTO73
-	 WRDq1RKVzS726/l4Uk0BbQ7bVQYsg7ETQ/JGeQ/w=
+	b=UXrra8HBz8+sDPoakAsW49LjC2wBB5DqJCW/djNlYo7xUXAvK1lPjHN54vtIPmy4d
+	 HYJ0zB7BC5ooDRwgnDzqvE17akCCVbnSz+1WWgcTDAYXd2F57PPIZm1oftxU+YJK5h
+	 bhgsLOHGUp6+JPyThxdsQ3Sfn2YnTn8ZG5PFhn28=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732980AbgBUINS (ORCPT
+        id S1732990AbgBUINW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Feb 2020 03:13:18 -0500
-Received: from mail.kernel.org ([198.145.29.99]:49278 "EHLO mail.kernel.org"
+        Fri, 21 Feb 2020 03:13:22 -0500
+Received: from mail.kernel.org ([198.145.29.99]:49344 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732545AbgBUINP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Feb 2020 03:13:15 -0500
+        id S1732978AbgBUINR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 21 Feb 2020 03:13:17 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3144620722;
-        Fri, 21 Feb 2020 08:13:14 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B1EAA24650;
+        Fri, 21 Feb 2020 08:13:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1582272794;
-        bh=ubBnZkwgknDaBQg2aA6dtbyYoa4IJ4vUfw1ndbHY2s8=;
+        s=default; t=1582272797;
+        bh=cgZgQbXA5EXmpfCJ4zk9MfAj8jEBQWtRyXE+AKDmBgU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=W7tsgp0ZYEETr17kp24cOmm+s8KF8i+zY4tOQC2OZKDvlAtq7L4qCtb/U2r3nPM4v
-         P1w1EhZAtz9HXzWbjVJkH2lrXHaU7OafKvTBSQdYV8FuDsdIVmA6xX1NhP7PCbX2lr
-         sRCDw6B8mO867r/MMAT4BIOLpytJF5Lu1Mny2288=
+        b=baH1pFIpynKRRXx+KYoV2yvNr5FUbTX/SpV+vLf/6lEJEGjIxqrh7/wdhpBAZpKoI
+         +Bb1Qg1nU3zk2wa8xufAaYfy+YfiX3Z/pWzomA1A53oJo8Ib0eZ+nycR4KhegujqGt
+         w5aQlpwD1ST29kFyM3pCB7GvuHuXdrkn3pTL+UVY=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= 
-        <u.kleine-koenig@pengutronix.de>,
-        Thierry Reding <thierry.reding@gmail.com>,
+        stable@vger.kernel.org, Colin Ian King <colin.king@canonical.com>,
+        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 260/344] pwm: omap-dmtimer: Remove PWM chip in .remove before making it unfunctional
-Date:   Fri, 21 Feb 2020 08:40:59 +0100
-Message-Id: <20200221072413.213712562@linuxfoundation.org>
+Subject: [PATCH 5.4 278/344] driver core: platform: fix u32 greater or equal to zero comparison
+Date:   Fri, 21 Feb 2020 08:41:17 +0100
+Message-Id: <20200221072415.010652868@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200221072349.335551332@linuxfoundation.org>
 References: <20200221072349.335551332@linuxfoundation.org>
@@ -62,47 +60,39 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Uwe Kleine-König <u.kleine-koenig@pengutronix.de>
+From: Colin Ian King <colin.king@canonical.com>
 
-[ Upstream commit 43efdc8f0e6d7088ec61bd55a73bf853f002d043 ]
+[ Upstream commit 0707cfa5c3ef58effb143db9db6d6e20503f9dec ]
 
-In the old code (e.g.) mutex_destroy() was called before
-pwmchip_remove(). Between these two calls it is possible that a PWM
-callback is used which tries to grab the mutex.
+Currently the check that a u32 variable i is >= 0 is always true because
+the unsigned variable will never be negative, causing the loop to run
+forever.  Fix this by changing the pre-decrement check to a zero check on
+i followed by a decrement of i.
 
-Fixes: 6604c6556db9 ("pwm: Add PWM driver for OMAP using dual-mode timers")
-Signed-off-by: Uwe Kleine-König <u.kleine-koenig@pengutronix.de>
-Signed-off-by: Thierry Reding <thierry.reding@gmail.com>
+Addresses-Coverity: ("Unsigned compared against 0")
+Fixes: 39cc539f90d0 ("driver core: platform: Prevent resouce overflow from causing infinite loops")
+Signed-off-by: Colin Ian King <colin.king@canonical.com>
+Reviewed-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+Link: https://lore.kernel.org/r/20200116175758.88396-1-colin.king@canonical.com
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/pwm/pwm-omap-dmtimer.c | 7 ++++++-
- 1 file changed, 6 insertions(+), 1 deletion(-)
+ drivers/base/platform.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/pwm/pwm-omap-dmtimer.c b/drivers/pwm/pwm-omap-dmtimer.c
-index 6cfeb0e1cc679..e36fcad668a68 100644
---- a/drivers/pwm/pwm-omap-dmtimer.c
-+++ b/drivers/pwm/pwm-omap-dmtimer.c
-@@ -361,6 +361,11 @@ put:
- static int pwm_omap_dmtimer_remove(struct platform_device *pdev)
- {
- 	struct pwm_omap_dmtimer_chip *omap = platform_get_drvdata(pdev);
-+	int ret;
-+
-+	ret = pwmchip_remove(&omap->chip);
-+	if (ret)
-+		return ret;
+diff --git a/drivers/base/platform.c b/drivers/base/platform.c
+index ee99b15581290..60386a32208ff 100644
+--- a/drivers/base/platform.c
++++ b/drivers/base/platform.c
+@@ -543,7 +543,7 @@ int platform_device_add(struct platform_device *pdev)
+ 		pdev->id = PLATFORM_DEVID_AUTO;
+ 	}
  
- 	if (pm_runtime_active(&omap->dm_timer_pdev->dev))
- 		omap->pdata->stop(omap->dm_timer);
-@@ -369,7 +374,7 @@ static int pwm_omap_dmtimer_remove(struct platform_device *pdev)
- 
- 	mutex_destroy(&omap->mutex);
- 
--	return pwmchip_remove(&omap->chip);
-+	return 0;
- }
- 
- static const struct of_device_id pwm_omap_dmtimer_of_match[] = {
+-	while (--i >= 0) {
++	while (i--) {
+ 		struct resource *r = &pdev->resource[i];
+ 		if (r->parent)
+ 			release_resource(r);
 -- 
 2.20.1
 
