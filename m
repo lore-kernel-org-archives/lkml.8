@@ -2,218 +2,94 @@ Return-Path: <SRS0=1210=4J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 19F69C35647
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 12:47:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 000FFC35646
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 12:47:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CEF5924656
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 12:47:51 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="cJVvpNNj"
+	by mail.kernel.org (Postfix) with ESMTP id CCE2F2073A
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 12:47:55 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1582289275;
+	bh=IjGS++0eyMo56akWPTSH0jQLlkTZPME/xQRqFwkYxEU=;
+	h=Date:From:To:cc:Subject:In-Reply-To:References:List-ID:From;
+	b=oqJRGPzd9JAUU1MYXCV/FI0eCn8Wtyrqw+U8rcTmBvqyaaMVPLHuGjj4zEkXgOZ7n
+	 RIa8v5OkAV1LEcZzgS7C4Id/H1LiCkorMNnQ/0v8MaVmUttj3NkpS/YbWD9UDJ921L
+	 X/nNI8nGbKAQg2dHYJzM44/oSKeqbBvzVeg0TfDk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728198AbgBUMru (ORCPT
+        id S1728326AbgBUMry (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Feb 2020 07:47:50 -0500
-Received: from fllv0016.ext.ti.com ([198.47.19.142]:46378 "EHLO
-        fllv0016.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727720AbgBUMru (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Feb 2020 07:47:50 -0500
-Received: from fllv0035.itg.ti.com ([10.64.41.0])
-        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id 01LCkwH7121888;
-        Fri, 21 Feb 2020 06:46:58 -0600
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1582289218;
-        bh=ODcuxk3N+DCNRIpo6D8j5nN3bPu5GAFQ11AiWBsj4b0=;
-        h=From:To:CC:Subject:Date;
-        b=cJVvpNNj+XBAvpK/+GwRFzz13sExnUSkuQCbpPMWFG6ptP1fMaHkInBJwWg2abXEN
-         fGLSGHOOnWYck5mFglt/ODuAR+P5gxeKGG0vq2+9yy1hYvyjn7ytxeSrq0R7gu3inD
-         WCrnd7EuvMe1ufbJoQBTew9JdMbXqGkUJzYLByms=
-Received: from DLEE115.ent.ti.com (dlee115.ent.ti.com [157.170.170.26])
-        by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTP id 01LCkwYc036861;
-        Fri, 21 Feb 2020 06:46:58 -0600
-Received: from DLEE112.ent.ti.com (157.170.170.23) by DLEE115.ent.ti.com
- (157.170.170.26) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Fri, 21
- Feb 2020 06:46:58 -0600
-Received: from lelv0326.itg.ti.com (10.180.67.84) by DLEE112.ent.ti.com
- (157.170.170.23) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
- Frontend Transport; Fri, 21 Feb 2020 06:46:58 -0600
-Received: from localhost (ileax41-snat.itg.ti.com [10.172.224.153])
-        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id 01LCkwdo084034;
-        Fri, 21 Feb 2020 06:46:58 -0600
-From:   Dan Murphy <dmurphy@ti.com>
-To:     <lgirdwood@gmail.com>, <broonie@kernel.org>, <perex@perex.cz>,
-        <tiwai@suse.com>
-CC:     <alsa-devel@alsa-project.org>, <linux-kernel@vger.kernel.org>,
-        Dan Murphy <dmurphy@ti.com>
-Subject: [PATCH for-next v3] ASoC: tas2562: Add support for digital volume control
-Date:   Fri, 21 Feb 2020 06:41:51 -0600
-Message-ID: <20200221124151.8774-1-dmurphy@ti.com>
-X-Mailer: git-send-email 2.25.0
+        Fri, 21 Feb 2020 07:47:54 -0500
+Received: from mail.kernel.org ([198.145.29.99]:36140 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728264AbgBUMrv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 21 Feb 2020 07:47:51 -0500
+Received: from pobox.suse.cz (prg-ext-pat.suse.com [213.151.95.130])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id D01532073A;
+        Fri, 21 Feb 2020 12:47:48 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1582289270;
+        bh=IjGS++0eyMo56akWPTSH0jQLlkTZPME/xQRqFwkYxEU=;
+        h=Date:From:To:cc:Subject:In-Reply-To:References:From;
+        b=yN0iLx15+zPqqBUBgZMkMjooRfOh33CVkPjS/hK2tYcHXIz7cqVO5MIdFReWGEA8X
+         shVPME33fsj4D3VFw5+Rz9CXkTI7y6N/VC5MtHhlSiYqAkOL91/pVuxwVJVuu8Muos
+         ioP3HK5GesdNg5E85FBKy66nEGqnT8/zrMcjzJfQ=
+Date:   Fri, 21 Feb 2020 13:47:38 +0100 (CET)
+From:   Jiri Kosina <jikos@kernel.org>
+To:     "Shah, Nehal-bakulchandra" <nehal-bakulchandra.shah@amd.com>
+cc:     Benjamin Tissoires <benjamin.tissoires@redhat.com>,
+        Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>,
+        Hans de Goede <hdegoede@redhat.com>,
+        Sandeep Singh <Sandeep.Singh@amd.com>,
+        lkml <linux-kernel@vger.kernel.org>,
+        "open list:HID CORE LAYER" <linux-input@vger.kernel.org>,
+        Jonathan Cameron <jic23@kernel.org>, linux-iio@vger.kernel.org,
+        Shyam-sundar.S-k@amd.com
+Subject: Re: [PATCH v3 0/5] SFH: Add Support for AMD Sensor Fusion Hub
+In-Reply-To: <79506ad3-5172-be36-cecc-19d97bfa8b36@amd.com>
+Message-ID: <nycvar.YFH.7.76.2002211346070.13129@cbobk.fhfr.pm>
+References: <1581476197-25854-1-git-send-email-Sandeep.Singh@amd.com> <1ce6f591-1e8b-8291-7f18-48876fd70e10@redhat.com> <CAO-hwJJkWkpApB-i0tHxEb0BeWcMpFLwSsOWKKdzGKnJEbHA_A@mail.gmail.com> <719b929927ce76dd7dda3a48319b5798aced591a.camel@linux.intel.com>
+ <7a9b6f51-ef50-9078-325c-28e8cd17c182@amd.com> <CAO-hwJJj8uHVr_BTG0rcBchiEttuQTr7ovrtTQ=Cp5vJ2eeoNg@mail.gmail.com> <79506ad3-5172-be36-cecc-19d97bfa8b36@amd.com>
+User-Agent: Alpine 2.21 (LSU 202 2017-01-01)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+Content-Type: text/plain; charset=US-ASCII
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add support for digital volume control.  There is no dedicated register
-for volume control but instead there are 4.  The values of the registers
-are determined with exponential floating point math.
-So a table was created with register values for 2dB step increments
-from -110dB to 0dB.
+On Wed, 19 Feb 2020, Shah, Nehal-bakulchandra wrote:
 
-Signed-off-by: Dan Murphy <dmurphy@ti.com>
----
+> > 2 problems here:
+> > - patch 3/5 references this debugfs interface which is only added in 4/5.
+> > - you are creating a new sysfs set of file for debug purpose only, but
+> > as soon as we start shipping those, some other people will find it
+> > more convenient to use that directly instead or IIO, and you won't be
+> > able to change anything there.
+> >
+> > So I would strongly advocate against having this debugfs, and suggest you to:
+> > - either keep this debugfs as a downstream patch
+> > - either play with eBPF or kprobes to retrieve the same information
+> > without changing the kernel.
+> >
+> > For reference, I recently tried to replicate the hidraw functionality
+> > with eBPF[0] without changing the kernel code, and it was working.
+> > Well, there was no filtering on the source of the HID event, but
+> > still, I got the same data directly from the kernel just by adding
+> > instrumentation in a couple of functions.
 
-v3 - Removed volume init in codec_probe.
+Wow. Complete eBPF supremacy is really coming shortly apparently :)
 
- sound/soc/codecs/tas2562.c | 78 ++++++++++++++++++++++++++++++++++++++
- sound/soc/codecs/tas2562.h |  6 ++-
- 2 files changed, 82 insertions(+), 2 deletions(-)
+> If Jiri is Ok, then we will push the next patch as per suggestion here 
+> i.e. taking out debugfs.
 
-diff --git a/sound/soc/codecs/tas2562.c b/sound/soc/codecs/tas2562.c
-index b2682c2360b6..d5e04030a0c1 100644
---- a/sound/soc/codecs/tas2562.c
-+++ b/sound/soc/codecs/tas2562.c
-@@ -26,6 +26,24 @@
- #define TAS2562_FORMATS (SNDRV_PCM_FMTBIT_S16_LE | SNDRV_PCM_FMTBIT_S24_LE |\
- 			 SNDRV_PCM_FORMAT_S32_LE)
- 
-+/* DVC equation involves floating point math
-+ * round(10^(volume in dB/20)*2^30)
-+ * so create a lookup table for 2dB step
-+ */
-+static const unsigned int float_vol_db_lookup[] = {
-+0x00000d43, 0x000010b2, 0x00001505, 0x00001a67, 0x00002151,
-+0x000029f1, 0x000034cd, 0x00004279, 0x000053af, 0x0000695b,
-+0x0000695b, 0x0000a6fa, 0x0000d236, 0x000108a4, 0x00014d2a,
-+0x0001a36e, 0x00021008, 0x000298c0, 0x000344df, 0x00041d8f,
-+0x00052e5a, 0x000685c8, 0x00083621, 0x000a566d, 0x000d03a7,
-+0x0010624d, 0x0014a050, 0x0019f786, 0x0020b0bc, 0x0029279d,
-+0x0033cf8d, 0x004139d3, 0x00521d50, 0x00676044, 0x0082248a,
-+0x00a3d70a, 0x00ce4328, 0x0103ab3d, 0x0146e75d, 0x019b8c27,
-+0x02061b89, 0x028c423f, 0x03352529, 0x0409c2b0, 0x05156d68,
-+0x080e9f96, 0x0a24b062, 0x0cc509ab, 0x10137987, 0x143d1362,
-+0x197a967f, 0x2013739e, 0x28619ae9, 0x32d64617, 0x40000000
-+};
-+
- struct tas2562_data {
- 	struct snd_soc_component *component;
- 	struct gpio_desc *sdz_gpio;
-@@ -34,6 +52,7 @@ struct tas2562_data {
- 	struct i2c_client *client;
- 	int v_sense_slot;
- 	int i_sense_slot;
-+	int volume_lvl;
- };
- 
- static int tas2562_set_bias_level(struct snd_soc_component *component,
-@@ -414,6 +433,50 @@ static int tas2562_dac_event(struct snd_soc_dapm_widget *w,
- 	return 0;
- }
- 
-+static int tas2562_volume_control_get(struct snd_kcontrol *kcontrol,
-+				      struct snd_ctl_elem_value *ucontrol)
-+{
-+	struct snd_soc_component *component = snd_soc_kcontrol_component(kcontrol);
-+	struct tas2562_data *tas2562 = snd_soc_component_get_drvdata(component);
-+
-+	ucontrol->value.integer.value[0] = tas2562->volume_lvl;
-+	return 0;
-+}
-+
-+static int tas2562_volume_control_put(struct snd_kcontrol *kcontrol,
-+				      struct snd_ctl_elem_value *ucontrol)
-+{
-+	struct snd_soc_component *component = snd_soc_kcontrol_component(kcontrol);
-+	struct tas2562_data *tas2562 = snd_soc_component_get_drvdata(component);
-+	int ret;
-+	u32 reg_val;
-+
-+	reg_val = float_vol_db_lookup[ucontrol->value.integer.value[0]/2];
-+	ret = snd_soc_component_write(component, TAS2562_DVC_CFG4,
-+				      (reg_val & 0xff));
-+	if (ret)
-+		return ret;
-+	ret = snd_soc_component_write(component, TAS2562_DVC_CFG3,
-+				      ((reg_val >> 8) & 0xff));
-+	if (ret)
-+		return ret;
-+	ret = snd_soc_component_write(component, TAS2562_DVC_CFG2,
-+				      ((reg_val >> 16) & 0xff));
-+	if (ret)
-+		return ret;
-+	ret = snd_soc_component_write(component, TAS2562_DVC_CFG1,
-+				      ((reg_val >> 24) & 0xff));
-+	if (ret)
-+		return ret;
-+
-+	tas2562->volume_lvl = ucontrol->value.integer.value[0];
-+
-+	return ret;
-+}
-+
-+/* Digital Volume Control. From 0 dB to -110 dB in 1 dB steps */
-+static const DECLARE_TLV_DB_SCALE(dvc_tlv, -11000, 100, 0);
-+
- static DECLARE_TLV_DB_SCALE(tas2562_dac_tlv, 850, 50, 0);
- 
- static const struct snd_kcontrol_new isense_switch =
-@@ -427,6 +490,17 @@ static const struct snd_kcontrol_new vsense_switch =
- static const struct snd_kcontrol_new tas2562_snd_controls[] = {
- 	SOC_SINGLE_TLV("Amp Gain Volume", TAS2562_PB_CFG1, 0, 0x1c, 0,
- 		       tas2562_dac_tlv),
-+	{
-+		.iface = SNDRV_CTL_ELEM_IFACE_MIXER,
-+		.name = "Digital Volume Control",
-+		.index = 0,
-+		.tlv.p = dvc_tlv,
-+		.access = SNDRV_CTL_ELEM_ACCESS_TLV_READ | SNDRV_CTL_ELEM_ACCESS_READWRITE,
-+		.info = snd_soc_info_volsw,
-+		.get = tas2562_volume_control_get,
-+		.put = tas2562_volume_control_put,
-+		.private_value = SOC_SINGLE_VALUE(TAS2562_DVC_CFG1, 0, 110, 0, 0) ,
-+	},
- };
- 
- static const struct snd_soc_dapm_widget tas2562_dapm_widgets[] = {
-@@ -517,6 +591,10 @@ static const struct reg_default tas2562_reg_defaults[] = {
- 	{ TAS2562_PB_CFG1, 0x20 },
- 	{ TAS2562_TDM_CFG0, 0x09 },
- 	{ TAS2562_TDM_CFG1, 0x02 },
-+	{ TAS2562_DVC_CFG1, 0x40 },
-+	{ TAS2562_DVC_CFG2, 0x40 },
-+	{ TAS2562_DVC_CFG3, 0x00 },
-+	{ TAS2562_DVC_CFG4, 0x00 },
- };
- 
- static const struct regmap_config tas2562_regmap_config = {
-diff --git a/sound/soc/codecs/tas2562.h b/sound/soc/codecs/tas2562.h
-index 6f55ebcf19ea..28e75fc431d0 100644
---- a/sound/soc/codecs/tas2562.h
-+++ b/sound/soc/codecs/tas2562.h
-@@ -35,8 +35,10 @@
- #define TAS2562_REV_ID		TAS2562_REG(0, 0x7d)
- 
- /* Page 2 */
--#define TAS2562_DVC_CFG1	TAS2562_REG(2, 0x01)
--#define TAS2562_DVC_CFG2	TAS2562_REG(2, 0x02)
-+#define TAS2562_DVC_CFG1	TAS2562_REG(2, 0x0c)
-+#define TAS2562_DVC_CFG2	TAS2562_REG(2, 0x0d)
-+#define TAS2562_DVC_CFG3	TAS2562_REG(2, 0x0e)
-+#define TAS2562_DVC_CFG4	TAS2562_REG(2, 0x0f)
- 
- #define TAS2562_RESET	BIT(0)
- 
+I agree with that. Thanks,
+
 -- 
-2.25.0
+Jiri Kosina
+SUSE Labs
 
