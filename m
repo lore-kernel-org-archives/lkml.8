@@ -2,163 +2,199 @@ Return-Path: <SRS0=1210=4J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_2 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8EC6CC35647
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 13:27:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 294C1C35647
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 13:28:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 64B272073A
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 13:27:48 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="R8P1cff+"
+	by mail.kernel.org (Postfix) with ESMTP id F29EA222C4
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 13:28:00 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728730AbgBUN1o (ORCPT
+        id S1728761AbgBUN17 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Feb 2020 08:27:44 -0500
-Received: from mail-wm1-f66.google.com ([209.85.128.66]:33647 "EHLO
-        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728235AbgBUN1n (ORCPT
+        Fri, 21 Feb 2020 08:27:59 -0500
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:36476 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1728130AbgBUN17 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Feb 2020 08:27:43 -0500
-Received: by mail-wm1-f66.google.com with SMTP id m10so5194153wmc.0
-        for <linux-kernel@vger.kernel.org>; Fri, 21 Feb 2020 05:27:41 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=KQBu6VS6mdZjlUnGBFMmf4Kt8OliCwC/g7VY9jMHRBc=;
-        b=R8P1cff+r97tnccnIx0KuGVNZZTXJPWFxXf9Lhe4IHel3+YxTrHWmsGQ7kJj9A6FE5
-         2sc2c9O2dg4Et6UwSqPGXprIfj3CVO3tKxO/547T9CRfhVxT1ZlTfh7/Pf95pS1p1sOY
-         IfxIwE/pwN5o80yHPF3Bg0kMPCYIgUVjb0xudzD9PjTHPK6/hPLXujvEOigUHLdIPPfq
-         qsu6647E0JiUqtNKq/9zikIslaHr6B/8Jphzed/L7LHDoEu0Iu3PuvUHRxUQe1u1tu85
-         9yJACg0NeAAYNGTVrSs8T8/elOYmnLGK8Zgnd1Yod95groiUfYpaSmO//7hIe3UNjuQG
-         57ng==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references;
-        bh=KQBu6VS6mdZjlUnGBFMmf4Kt8OliCwC/g7VY9jMHRBc=;
-        b=LfzP+9epHBhuM9PO83vVqetISlGR5MWd71RFaEsKuN75goRiQI+Rdz2pjq/Ddxgu+0
-         WXLkom28R0vjJN73DkTyF3WftB/WNeqfRKxlNIYyww985LfdNEonwnr0on1Bd+x7JReD
-         7VrycXmVAOXkX1BsLrXM8MceroYcjaM6BFjM2fDngsw1+8p/GI2f0tCggXv7oNk+S7UB
-         j0HX2bJsoQuXauN3j99hBf2//CIQCjvtw7SC4zN3Ue4NKiehdunMVZp9AUmyg/Ze7FVv
-         A7FXY0LsGsSKrUjj+pCK0RLULj6Bi26FZGVsJSnsjwI994HRPkJTEHvlLD+twfyvOSay
-         0xxQ==
-X-Gm-Message-State: APjAAAXbXe3kSW0sT8idGLEk7SFPwzo5NHgTtNM5Kz9akVUtYPMQ2nV+
-        Ax/5BDhAiKP70dkA7+6Th6OPtQ==
-X-Google-Smtp-Source: APXvYqza9HNVo9y7O7Y9RN8PhOYN9fuTe1oqG7S5Fvvcqw04Rz04sdrpmOocRxjPe+8bBgoWYJiYXw==
-X-Received: by 2002:a1c:2342:: with SMTP id j63mr4075334wmj.160.1582291660826;
-        Fri, 21 Feb 2020 05:27:40 -0800 (PST)
-Received: from localhost.localdomain ([2a01:e0a:f:6020:1c35:eef1:1bd1:92a7])
-        by smtp.gmail.com with ESMTPSA id y185sm4058308wmg.2.2020.02.21.05.27.39
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 21 Feb 2020 05:27:39 -0800 (PST)
-From:   Vincent Guittot <vincent.guittot@linaro.org>
-To:     mingo@redhat.com, peterz@infradead.org, juri.lelli@redhat.com,
-        dietmar.eggemann@arm.com, rostedt@goodmis.org, bsegall@google.com,
-        mgorman@suse.de, linux-kernel@vger.kernel.org
-Cc:     pauld@redhat.com, parth@linux.ibm.com, valentin.schneider@arm.com,
-        hdanton@sina.com, Vincent Guittot <vincent.guittot@linaro.org>
-Subject: [PATCH v4 5/5] sched/fair: Take into account runnable_avg to classify group
-Date:   Fri, 21 Feb 2020 14:27:15 +0100
-Message-Id: <20200221132715.20648-6-vincent.guittot@linaro.org>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20200221132715.20648-1-vincent.guittot@linaro.org>
-References: <20200221132715.20648-1-vincent.guittot@linaro.org>
+        Fri, 21 Feb 2020 08:27:59 -0500
+Received: from pps.filterd (m0098399.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 01LDJ6Du070703
+        for <linux-kernel@vger.kernel.org>; Fri, 21 Feb 2020 08:27:58 -0500
+Received: from e06smtp04.uk.ibm.com (e06smtp04.uk.ibm.com [195.75.94.100])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2y9ytrnbjn-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Fri, 21 Feb 2020 08:27:58 -0500
+Received: from localhost
+        by e06smtp04.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-kernel@vger.kernel.org> from <pasic@linux.ibm.com>;
+        Fri, 21 Feb 2020 13:27:54 -0000
+Received: from b06cxnps4074.portsmouth.uk.ibm.com (9.149.109.196)
+        by e06smtp04.uk.ibm.com (192.168.101.134) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Fri, 21 Feb 2020 13:27:50 -0000
+Received: from d06av21.portsmouth.uk.ibm.com (d06av21.portsmouth.uk.ibm.com [9.149.105.232])
+        by b06cxnps4074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 01LDRmrG20971590
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Fri, 21 Feb 2020 13:27:48 GMT
+Received: from d06av21.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 9DE4F5204F;
+        Fri, 21 Feb 2020 13:27:48 +0000 (GMT)
+Received: from oc2783563651 (unknown [9.152.224.149])
+        by d06av21.portsmouth.uk.ibm.com (Postfix) with ESMTP id 2DB6352052;
+        Fri, 21 Feb 2020 13:27:48 +0000 (GMT)
+Date:   Fri, 21 Feb 2020 14:27:46 +0100
+From:   Halil Pasic <pasic@linux.ibm.com>
+To:     David Gibson <david@gibson.dropbear.id.au>
+Cc:     Christoph Hellwig <hch@lst.de>,
+        "Michael S. Tsirkin" <mst@redhat.com>,
+        Jason Wang <jasowang@redhat.com>,
+        Marek Szyprowski <m.szyprowski@samsung.com>,
+        Robin Murphy <robin.murphy@arm.com>,
+        linux-s390@vger.kernel.org,
+        virtualization@lists.linux-foundation.org,
+        linux-kernel@vger.kernel.org, iommu@lists.linux-foundation.org,
+        Christian Borntraeger <borntraeger@de.ibm.com>,
+        Janosch Frank <frankja@linux.ibm.com>,
+        Viktor Mihajlovski <mihajlov@linux.ibm.com>,
+        Cornelia Huck <cohuck@redhat.com>,
+        Ram Pai <linuxram@us.ibm.com>,
+        Thiago Jung Bauermann <bauerman@linux.ibm.com>,
+        "Lendacky, Thomas" <Thomas.Lendacky@amd.com>,
+        Michael Mueller <mimu@linux.ibm.com>
+Subject: Re: [PATCH 2/2] virtio: let virtio use DMA API when guest RAM is
+ protected
+In-Reply-To: <20200221025915.GB2298@umbus.fritz.box>
+References: <20200220160606.53156-1-pasic@linux.ibm.com>
+        <20200220160606.53156-3-pasic@linux.ibm.com>
+        <20200220161309.GB12709@lst.de>
+        <20200221025915.GB2298@umbus.fritz.box>
+Organization: IBM
+X-Mailer: Claws Mail 3.11.1 (GTK+ 2.24.31; x86_64-redhat-linux-gnu)
+MIME-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha1;
+ boundary="Sig_/6L0zE9scbEzJxcRVxZin/tR"; protocol="application/pgp-signature"
+X-TM-AS-GCONF: 00
+x-cbid: 20022113-0016-0000-0000-000002E8FC1A
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 20022113-0017-0000-0000-0000334C1C9A
+Message-Id: <20200221142746.1da0881f.pasic@linux.ibm.com>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.572
+ definitions=2020-02-21_03:2020-02-19,2020-02-21 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ suspectscore=0 clxscore=1015 mlxlogscore=999 mlxscore=0 adultscore=0
+ lowpriorityscore=0 malwarescore=0 spamscore=0 impostorscore=0 phishscore=0
+ bulkscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2001150001 definitions=main-2002210103
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Take into account the new runnable_avg signal to classify a group and to
-mitigate the volatility of util_avg in face of intensive migration or
-new task with random utilization.
+--Sig_/6L0zE9scbEzJxcRVxZin/tR
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-Signed-off-by: Vincent Guittot <vincent.guittot@linaro.org>
-Reviewed-by: "Dietmar Eggemann <dietmar.eggemann@arm.com>"
----
- kernel/sched/fair.c | 31 ++++++++++++++++++++++++++++++-
- 1 file changed, 30 insertions(+), 1 deletion(-)
+On Fri, 21 Feb 2020 13:59:15 +1100
+David Gibson <david@gibson.dropbear.id.au> wrote:
 
-diff --git a/kernel/sched/fair.c b/kernel/sched/fair.c
-index 608c26d59c46..ef96049a02c3 100644
---- a/kernel/sched/fair.c
-+++ b/kernel/sched/fair.c
-@@ -5449,6 +5449,24 @@ static unsigned long cpu_runnable(struct rq *rq)
- 	return cfs_rq_runnable_avg(&rq->cfs);
- }
- 
-+static unsigned long cpu_runnable_without(struct rq *rq, struct task_struct *p)
-+{
-+	struct cfs_rq *cfs_rq;
-+	unsigned int runnable;
-+
-+	/* Task has no contribution or is new */
-+	if (cpu_of(rq) != task_cpu(p) || !READ_ONCE(p->se.avg.last_update_time))
-+		return cpu_runnable(rq);
-+
-+	cfs_rq = &rq->cfs;
-+	runnable = READ_ONCE(cfs_rq->avg.runnable_avg);
-+
-+	/* Discount task's runnable from CPU's runnable */
-+	lsub_positive(&runnable, p->se.avg.runnable_avg);
-+
-+	return runnable;
-+}
-+
- static unsigned long capacity_of(int cpu)
- {
- 	return cpu_rq(cpu)->cpu_capacity;
-@@ -7718,7 +7736,8 @@ struct sg_lb_stats {
- 	unsigned long avg_load; /*Avg load across the CPUs of the group */
- 	unsigned long group_load; /* Total load over the CPUs of the group */
- 	unsigned long group_capacity;
--	unsigned long group_util; /* Total utilization of the group */
-+	unsigned long group_util; /* Total utilization over the CPUs of the group */
-+	unsigned long group_runnable; /* Total runnable time over the CPUs of the group */
- 	unsigned int sum_nr_running; /* Nr of tasks running in the group */
- 	unsigned int sum_h_nr_running; /* Nr of CFS tasks running in the group */
- 	unsigned int idle_cpus;
-@@ -7939,6 +7958,10 @@ group_has_capacity(unsigned int imbalance_pct, struct sg_lb_stats *sgs)
- 	if (sgs->sum_nr_running < sgs->group_weight)
- 		return true;
- 
-+	if ((sgs->group_capacity * imbalance_pct) <
-+			(sgs->group_runnable * 100))
-+		return false;
-+
- 	if ((sgs->group_capacity * 100) >
- 			(sgs->group_util * imbalance_pct))
- 		return true;
-@@ -7964,6 +7987,10 @@ group_is_overloaded(unsigned int imbalance_pct, struct sg_lb_stats *sgs)
- 			(sgs->group_util * imbalance_pct))
- 		return true;
- 
-+	if ((sgs->group_capacity * imbalance_pct) <
-+			(sgs->group_runnable * 100))
-+		return true;
-+
- 	return false;
- }
- 
-@@ -8058,6 +8085,7 @@ static inline void update_sg_lb_stats(struct lb_env *env,
- 
- 		sgs->group_load += cpu_load(rq);
- 		sgs->group_util += cpu_util(i);
-+		sgs->group_runnable += cpu_runnable(rq);
- 		sgs->sum_h_nr_running += rq->cfs.h_nr_running;
- 
- 		nr_running = rq->nr_running;
-@@ -8333,6 +8361,7 @@ static inline void update_sg_wakeup_stats(struct sched_domain *sd,
- 
- 		sgs->group_load += cpu_load_without(rq, p);
- 		sgs->group_util += cpu_util_without(i, p);
-+		sgs->group_runnable += cpu_runnable_without(rq, p);
- 		local = task_running_on_cpu(i, p);
- 		sgs->sum_h_nr_running += rq->cfs.h_nr_running - local;
- 
--- 
-2.17.1
+> On Thu, Feb 20, 2020 at 05:13:09PM +0100, Christoph Hellwig wrote:
+> > On Thu, Feb 20, 2020 at 05:06:06PM +0100, Halil Pasic wrote:
+> > > diff --git a/drivers/virtio/virtio_ring.c b/drivers/virtio/virtio_rin=
+g.c
+> > > index 867c7ebd3f10..fafc8f924955 100644
+> > > --- a/drivers/virtio/virtio_ring.c
+> > > +++ b/drivers/virtio/virtio_ring.c
+> > > @@ -243,6 +243,9 @@ static bool vring_use_dma_api(struct virtio_devic=
+e *vdev)
+> > >  	if (!virtio_has_iommu_quirk(vdev))
+> > >  		return true;
+> > > =20
+> > > +	if (force_dma_unencrypted(&vdev->dev))
+> > > +		return true;
+> >=20
+> > Hell no.  This is a detail of the platform DMA direct implementation.
+> > Drivers have no business looking at this flag, and virtio finally needs
+> > to be fixed to use the DMA API properly for everything but legacy devic=
+es.
+>=20
+> So, this patch definitely isn't right as it stands, but I'm struggling
+> to understand what it is you're saying is the right way.
+>=20
+> By "legacy devices" I assume you mean pre-virtio-1.0 devices, that
+> lack the F_VERSION_1 feature flag.  Is that right?  Because I don't
+> see how being a legacy device or not relates to use of the DMA API.
+>=20
+> I *think* what you are suggesting here is that virtio devices that
+> have !F_IOMMU_PLATFORM should have their dma_ops set up so that the
+> DMA API treats IOVA=3D=3DPA, which will satisfy what the device expects.
+> Then the virtio driver can use the DMA API the same way for both
+> F_IOMMU_PLATFORM and !F_IOMMU_PLATFORM devices.
+
+I've considered this idea, and as a matter a fact would be my preferred
+solution. It would be, if we could use GFP_DMA when allocating coherent
+memory through the DMA API. For CCW devices we *must* have some of the
+device accessible memory 31 bit addressable (in physical address space),
+because the s390 architecture *mandates it*. I had patches
+(https://lkml.org/lkml/2019/9/23/313) that do that but Christoph was not
+open to the idea.
+
+Always pushing all the stuff allocated by virtio devices into the DMA
+zone is not a good option for us. We did that for protected guests,
+because that was what Christoph was willing to accept, but not happy
+with it.
+
+I'm willing to go down that rute, but I really need the capability to
+tell the DMA API 'do this allocation from ZONE_DMA'. I don't care how.
+
+
+>=20
+> But if that works for !F_IOMMU_PLATFORM_DEVICES+F_VERSION_1 devices,
+> then AFAICT it will work equally well for legacy devices.
+
+I agree.
+
+>=20
+> Using the DMA API for *everything* in virtio, legacy or not, seems
+> like a reasonable approach to me.  But, AFAICT, that does require the
+> DMA layer to have some kind of explicit call to turn on this
+> behaviour, which the virtio driver would call during initializsation.
+> I don't think we can do it 100% within the DMA layer, because only the
+> driver can reasonably know when a device has this weird non-standard
+> DMA behaviour.
+>=20
+
+IMHO one could make the DMA API work with different DMA ops. The
+virtio transport or the virtio core can probably intervene. But then, we
+(virtio-ccw) would need the iommu=3Doff DMA ops to do the bounce buffering
+iff force_dma_unencrypted().
+
+Regards,
+Halil
+
+--Sig_/6L0zE9scbEzJxcRVxZin/tR
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2.0.22 (GNU/Linux)
+
+iQIcBAEBAgAGBQJeT9rSAAoJEA0vhuyXGx0AgHQP+gLGTX4Ns4WO0rTvm272UO/v
+hxbJZMxeojiTFWHD4TkCbltyBOw2vVGwyCrlR264NQDgcPkDbUpp/kU5KyuUWkMx
+fg6K4ZOh4ZiwczUstvV5PB0qzEbKI4lK8uktHUzvHBdo7Hkflb3adUCZekqhKgJU
+E5dipJ6cqTuWGgjY9hqOhFHBphLbThSY1fUlgIv3yXFrwW0LGUX4WFETF3Mq9S5y
+4Z8xR8QsjPoNEmRpP6uZhSZ7ue5i0iRpf+zgJRF/F7mP4buODibZ3rN7YGhRP+ip
+LP4NDLuooYIDnVVGcDZm578p/20XCGYldebH7wIcpoJemQGMRE8ZxS3eqvqhFMS4
+PhUYS8/mR8v5Hq61r85qu4R6JDHJ8yH47YEFFVO+ZLrhk4WE7/NXohjGWzimmsx7
++oaTFLiuuQvn7K3ur1KGfgiMYDt4f2x7AstT3dr1qXj+jtKLcUUsSCjRdCN/CT65
+o+lpGU4sDp04ekLWOGCtyymzC4QoJq8fZ5osnQnRb+w5mbDleSUgKD8FZbX2Zonu
+t8XpKJBtY3ByHi2qu0Ll/1Kx22TTtTtt4CNedhQLvzZ6BEmZtx1/yQHZ6ju3V4p+
+y6kumCXn8PCdSsrnzJL2zblvZhrDuyshzKNtB2Ihgn5ksldJ6z54hUCuw/oFbZ/y
+B9ZUzg5KJmqce9haoZCY
+=zf/I
+-----END PGP SIGNATURE-----
+
+--Sig_/6L0zE9scbEzJxcRVxZin/tR--
 
