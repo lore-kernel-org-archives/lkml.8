@@ -4,43 +4,43 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 59D30C35669
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 21:25:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7C70AC35666
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 21:25:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 24ADE206EF
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 21:25:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 52C46206EF
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 21:25:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582320351;
-	bh=Nk7ieIw7uhXZur3CHmo8FQJnmX7WOV26wnY3gtojN5Y=;
+	s=default; t=1582320354;
+	bh=i0N2MrNKZHuX++taw3rFk2nCgTfZGw2eHHT1CJg4TdY=;
 	h=From:To:Subject:Date:In-Reply-To:References:In-Reply-To:
 	 References:List-ID:From;
-	b=jdWdP92Yuk0pNpvw2ha/Sl8xCwtqwmae98v0MPZrJy7HwNZtT665ptu608Z8cSXBi
-	 +m499bI8+sshXqovGi+L3AwDA5U+y/99Tk1hDLzVuMkBQJUyH35Na0Rzszg0H9VYnY
-	 xXr4Qwfgc/d2SWSeJT1LKkjbz2TEMG6IJZjmJYVw=
+	b=o3ec/aV2H2XNRMs3Cv1u5Cwg/xhejEFmOh9wH/ZGR93ecTyFXm2I1lA9btVjlgpr1
+	 7nckD6xGmHMY1IbSDaTXtLSCRMRDUtTDCJ32hpsd0UwRI9B0b5vhK2S9MZoouWkbt6
+	 3+E0naFNFLHQj4h0CrmQnoNk8+DcBeP7Y9rx2HLA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729757AbgBUVZp (ORCPT
+        id S1729699AbgBUVZm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Feb 2020 16:25:45 -0500
+        Fri, 21 Feb 2020 16:25:42 -0500
 Received: from mail.kernel.org ([198.145.29.99]:39406 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729637AbgBUVZh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Feb 2020 16:25:37 -0500
+        id S1729612AbgBUVZf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 21 Feb 2020 16:25:35 -0500
 Received: from localhost.localdomain (c-98-220-238-81.hsd1.il.comcast.net [98.220.238.81])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D0D9F24691;
-        Fri, 21 Feb 2020 21:25:35 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id DD4A12468E;
+        Fri, 21 Feb 2020 21:25:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1582320336;
-        bh=Nk7ieIw7uhXZur3CHmo8FQJnmX7WOV26wnY3gtojN5Y=;
+        s=default; t=1582320334;
+        bh=i0N2MrNKZHuX++taw3rFk2nCgTfZGw2eHHT1CJg4TdY=;
         h=From:To:Subject:Date:In-Reply-To:References:In-Reply-To:
          References:From;
-        b=t2+l7r2v5eGPa1fJVGhheQhgtIDGXlbHp3exkiPBnJhalPX2vf3GIf03rxcpc1RYM
-         eyb2ALnex4sBaaQqOltfzyCtOnEKl2NJ8NgEwnXS60GvNnG4B6m/f2g4Xm7f1oGxOw
-         YIEWKO2MPcNbBOQ0f9Zj/Gno0WC8Gg/oY1ark/M0=
+        b=loBbQsujoFNjW1nPPgpnThgEU8tmhdQ1wXas44PHwBj+Sxo410qVrrE0AniRmz3OG
+         4g/GjLhatI3Bdekhkp63NakEpEbpIjUGpMhPp8r/EFO/LS++ijDZqgNa7xCpXO3wpE
+         T72oVIIJm/ZSCR6USjLz3/OHO2CeRd0OymwKx7DI=
 From:   zanussi@kernel.org
 To:     LKML <linux-kernel@vger.kernel.org>,
         linux-rt-users <linux-rt-users@vger.kernel.org>,
@@ -51,9 +51,9 @@ To:     LKML <linux-kernel@vger.kernel.org>,
         Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
         Daniel Wagner <wagi@monom.org>,
         Tom Zanussi <zanussi@kernel.org>
-Subject: [PATCH RT 22/25] mm/memcontrol: Move misplaced local_unlock_irqrestore()
-Date:   Fri, 21 Feb 2020 15:24:50 -0600
-Message-Id: <960a2d2ccb60853d52f0dab91e391473dfa6035e.1582320278.git.zanussi@kernel.org>
+Subject: [PATCH RT 20/25] kmemleak: Cosmetic changes
+Date:   Fri, 21 Feb 2020 15:24:48 -0600
+Message-Id: <c3cf47877f79afa92634bf376488c8aa71378a26.1582320278.git.zanussi@kernel.org>
 X-Mailer: git-send-email 2.14.1
 In-Reply-To: <cover.1582320278.git.zanussi@kernel.org>
 References: <cover.1582320278.git.zanussi@kernel.org>
@@ -64,7 +64,7 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Matt Fleming <matt@codeblueprint.co.uk>
+From: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
 
 v4.14.170-rt75-rc1 stable review patch.
 If anyone has any objections, please let me know.
@@ -72,38 +72,60 @@ If anyone has any objections, please let me know.
 -----------
 
 
-[ Upstream commit 071a1d6a6e14d0dec240a8c67b425140d7f92f6a ]
+[ Upstream commit 65a387a0b45cdd6844b7c6269e6333c9f0113410 ]
 
-The comment about local_lock_irqsave() mentions just the counters and
-css_put_many()'s callback just invokes a worker so it is safe to move the
-unlock function after memcg_check_events() so css_put_many() can be invoked
-without the lock acquired.
+Align with the patch, that got sent upstream for review. Only cosmetic
+changes.
 
-Cc: Daniel Wagner <wagi@monom.org>
-Signed-off-by: Matt Fleming <matt@codeblueprint.co.uk>
-[bigeasy: rewrote the patch description]
 Signed-off-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
 Signed-off-by: Tom Zanussi <zanussi@kernel.org>
 ---
- mm/memcontrol.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ mm/kmemleak.c | 18 +++++++++---------
+ 1 file changed, 9 insertions(+), 9 deletions(-)
 
-diff --git a/mm/memcontrol.c b/mm/memcontrol.c
-index 0503b31e2a87..a359a24ebd9f 100644
---- a/mm/memcontrol.c
-+++ b/mm/memcontrol.c
-@@ -6102,10 +6102,10 @@ void mem_cgroup_swapout(struct page *page, swp_entry_t entry)
- 	mem_cgroup_charge_statistics(memcg, page, PageTransHuge(page),
- 				     -nr_entries);
- 	memcg_check_events(memcg, page);
-+	local_unlock_irqrestore(event_lock, flags);
+diff --git a/mm/kmemleak.c b/mm/kmemleak.c
+index 17718a11782b..d7925ee4b052 100644
+--- a/mm/kmemleak.c
++++ b/mm/kmemleak.c
+@@ -26,7 +26,7 @@
+  *
+  * The following locks and mutexes are used by kmemleak:
+  *
+- * - kmemleak_lock (raw spinlock): protects the object_list modifications and
++ * - kmemleak_lock (raw_spinlock_t): protects the object_list modifications and
+  *   accesses to the object_tree_root. The object_list is the main list
+  *   holding the metadata (struct kmemleak_object) for the allocated memory
+  *   blocks. The object_tree_root is a red black tree used to look-up
+@@ -35,13 +35,13 @@
+  *   object_tree_root in the create_object() function called from the
+  *   kmemleak_alloc() callback and removed in delete_object() called from the
+  *   kmemleak_free() callback
+- * - kmemleak_object.lock (spinlock): protects a kmemleak_object. Accesses to
+- *   the metadata (e.g. count) are protected by this lock. Note that some
+- *   members of this structure may be protected by other means (atomic or
+- *   kmemleak_lock). This lock is also held when scanning the corresponding
+- *   memory block to avoid the kernel freeing it via the kmemleak_free()
+- *   callback. This is less heavyweight than holding a global lock like
+- *   kmemleak_lock during scanning
++ * - kmemleak_object.lock (raw_spinlock_t): protects a kmemleak_object.
++ *   Accesses to the metadata (e.g. count) are protected by this lock. Note
++ *   that some members of this structure may be protected by other means
++ *   (atomic or kmemleak_lock). This lock is also held when scanning the
++ *   corresponding memory block to avoid the kernel freeing it via the
++ *   kmemleak_free() callback. This is less heavyweight than holding a global
++ *   lock like kmemleak_lock during scanning.
+  * - scan_mutex (mutex): ensures that only one thread may scan the memory for
+  *   unreferenced objects at a time. The gray_list contains the objects which
+  *   are already referenced or marked as false positives and need to be
+@@ -197,7 +197,7 @@ static LIST_HEAD(object_list);
+ static LIST_HEAD(gray_list);
+ /* search tree for object boundaries */
+ static struct rb_root object_tree_root = RB_ROOT;
+-/* rw_lock protecting the access to object_list and object_tree_root */
++/* protecting the access to object_list and object_tree_root */
+ static DEFINE_RAW_SPINLOCK(kmemleak_lock);
  
- 	if (!mem_cgroup_is_root(memcg))
- 		css_put_many(&memcg->css, nr_entries);
--	local_unlock_irqrestore(event_lock, flags);
- }
- 
- /**
+ /* allocation caches for kmemleak internal data */
 -- 
 2.14.1
 
