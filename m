@@ -2,79 +2,104 @@ Return-Path: <SRS0=1210=4J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BE46FC35646
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 16:36:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0E091C35657
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 16:39:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9B9ED2067D
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 16:36:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D9A9724650
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 16:39:20 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="SSPNOfzS"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726789AbgBUQgs (ORCPT
+        id S1726550AbgBUQjT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Feb 2020 11:36:48 -0500
-Received: from verein.lst.de ([213.95.11.211]:56386 "EHLO verein.lst.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726132AbgBUQgs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Feb 2020 11:36:48 -0500
-Received: by verein.lst.de (Postfix, from userid 2407)
-        id BAFB768BFE; Fri, 21 Feb 2020 17:36:45 +0100 (CET)
-Date:   Fri, 21 Feb 2020 17:36:45 +0100
-From:   Christoph Hellwig <hch@lst.de>
-To:     David Gibson <david@gibson.dropbear.id.au>
-Cc:     Christoph Hellwig <hch@lst.de>, Halil Pasic <pasic@linux.ibm.com>,
-        "Michael S. Tsirkin" <mst@redhat.com>,
-        Jason Wang <jasowang@redhat.com>,
-        Marek Szyprowski <m.szyprowski@samsung.com>,
-        Robin Murphy <robin.murphy@arm.com>,
-        linux-s390@vger.kernel.org,
-        virtualization@lists.linux-foundation.org,
-        linux-kernel@vger.kernel.org, iommu@lists.linux-foundation.org,
-        Christian Borntraeger <borntraeger@de.ibm.com>,
-        Janosch Frank <frankja@linux.ibm.com>,
-        Viktor Mihajlovski <mihajlov@linux.ibm.com>,
-        Cornelia Huck <cohuck@redhat.com>,
-        Ram Pai <linuxram@us.ibm.com>,
-        Thiago Jung Bauermann <bauerman@linux.ibm.com>,
-        "Lendacky, Thomas" <Thomas.Lendacky@amd.com>,
-        Michael Mueller <mimu@linux.ibm.com>
-Subject: Re: [PATCH 2/2] virtio: let virtio use DMA API when guest RAM is
- protected
-Message-ID: <20200221163645.GB10054@lst.de>
-References: <20200220160606.53156-1-pasic@linux.ibm.com> <20200220160606.53156-3-pasic@linux.ibm.com> <20200220161309.GB12709@lst.de> <20200221025915.GB2298@umbus.fritz.box>
+        Fri, 21 Feb 2020 11:39:19 -0500
+Received: from mail-wr1-f68.google.com ([209.85.221.68]:33491 "EHLO
+        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726150AbgBUQjT (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 21 Feb 2020 11:39:19 -0500
+Received: by mail-wr1-f68.google.com with SMTP id u6so2778334wrt.0
+        for <linux-kernel@vger.kernel.org>; Fri, 21 Feb 2020 08:39:17 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to
+         :user-agent;
+        bh=QjTyTbipJt5dMzjmIdDzAUN6hlDcjLhrXHCIzO32swU=;
+        b=SSPNOfzSs9LjzxjHRN7eg6XW28B3PaBN5bgPA5Pv+CJIpiaCw80cexZogBaEx3obvN
+         Ix0ERJnECtRHuNfPwlx6Lqof4XhKpEwuOHyRdRmIVnf7ZqdlIK1jfwPHdAT73zKnA5fi
+         kK/1cC+5JpjWdCIdTTlqpzlxmkDHIGh2dzLdC8QPIVCzYGhU2nT1VHomXeumu3Wb3ldU
+         mRQQWNmx8eHKBsy06cTVsIEsbt2keYOVa//zUotuolDVnG8sU22Am2VY12s1ikLBsBfI
+         Cb3dt2g/O+rXt5rYn1rjSUfI7pyblpgOCKc1/TCrfotm2O39qxxGXqCUmdXUXeENv93g
+         RcDQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to:user-agent;
+        bh=QjTyTbipJt5dMzjmIdDzAUN6hlDcjLhrXHCIzO32swU=;
+        b=lS+KvzTBmERDWY1OazuPZMpUH8J4WjQoyemOKd3UeP65UgPFlOgECbY7b+3K9bOQV2
+         QJJeOjx8LkWOpmTjra6Q4XcjLV68kIvzOo4b0tTqD73vxll83p4J2CtQ5Zl48sKfW93F
+         h7jyJ5r9gxfcHHLTHTPZ3T4gtT+9ENB6fG0/BcRT9aGu7NLzMIIDXgrXX1G6PU/cqQTN
+         xrzJ8mWYKzGU3RzSB+2f62hOGid5+3gwbbUnns3LYIPfVdTXkCI8t68OUS2VHGIKfKTQ
+         3ngZo7/zR/80KHOYyM+dtlue+K3qGdvPfME4X3rz8r+xVzOzrKxDPRLWAPQg1A0XyIB8
+         oIlA==
+X-Gm-Message-State: APjAAAU4roRJE2YuupfkOySqBxON/xCS/HcwwLFbanDmS6CkH6XLMjpf
+        9vHOn/q+NQmXJIrI42kAJeRWtA==
+X-Google-Smtp-Source: APXvYqyhVFhFBPSqnFo56LCyr1nJlT2hcmUgR2c5NunDYfi/Fc9CnjlmGN7Mc7+ge8fiAVpk5qDoGw==
+X-Received: by 2002:adf:f1cb:: with SMTP id z11mr47981280wro.375.1582303156945;
+        Fri, 21 Feb 2020 08:39:16 -0800 (PST)
+Received: from linaro.org ([2a01:e34:ed2f:f020:903b:a048:f296:e3ae])
+        by smtp.gmail.com with ESMTPSA id t9sm4805226wrv.63.2020.02.21.08.39.15
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Fri, 21 Feb 2020 08:39:16 -0800 (PST)
+Date:   Fri, 21 Feb 2020 17:39:13 +0100
+From:   Daniel Lezcano <daniel.lezcano@linaro.org>
+To:     Dmitry Osipenko <digetx@gmail.com>
+Cc:     Thierry Reding <thierry.reding@gmail.com>,
+        Jonathan Hunter <jonathanh@nvidia.com>,
+        Peter De Schrijver <pdeschrijver@nvidia.com>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        =?utf-8?B?TWljaGHFgiBNaXJvc8WCYXc=?= <mirq-linux@rere.qmqm.pl>,
+        Jasper Korten <jja2000@gmail.com>,
+        David Heidelberg <david@ixit.cz>,
+        Peter Geis <pgwipeout@gmail.com>, linux-pm@vger.kernel.org,
+        linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v9 15/17] cpuidle: tegra: Disable CC6 state if LP2
+ unavailable
+Message-ID: <20200221163913.GT10516@linaro.org>
+References: <20200212235134.12638-1-digetx@gmail.com>
+ <20200212235134.12638-16-digetx@gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20200221025915.GB2298@umbus.fritz.box>
-User-Agent: Mutt/1.5.17 (2007-11-01)
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200212235134.12638-16-digetx@gmail.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Feb 21, 2020 at 01:59:15PM +1100, David Gibson wrote:
-> > Hell no.  This is a detail of the platform DMA direct implementation.
-> > Drivers have no business looking at this flag, and virtio finally needs
-> > to be fixed to use the DMA API properly for everything but legacy devices.
+On Thu, Feb 13, 2020 at 02:51:32AM +0300, Dmitry Osipenko wrote:
+> LP2 suspending could be unavailable, for example if it is disabled in a
+> device-tree. CC6 cpuidle state won't work in that case.
 > 
-> So, this patch definitely isn't right as it stands, but I'm struggling
-> to understand what it is you're saying is the right way.
-> 
-> By "legacy devices" I assume you mean pre-virtio-1.0 devices, that
-> lack the F_VERSION_1 feature flag.  Is that right?  Because I don't
-> see how being a legacy device or not relates to use of the DMA API.
+> Acked-by: Peter De Schrijver <pdeschrijver@nvidia.com>
+> Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
 
-No.   "legacy" is anything that does not set F_ACCESS_PLATFORM.
+Acked-by: Daniel Lezcano <daniel.lezcano@linaro.org>
 
-> I *think* what you are suggesting here is that virtio devices that
-> have !F_IOMMU_PLATFORM should have their dma_ops set up so that the
-> DMA API treats IOVA==PA, which will satisfy what the device expects.
-> Then the virtio driver can use the DMA API the same way for both
-> F_IOMMU_PLATFORM and !F_IOMMU_PLATFORM devices.
 
-No.  Those should just keep using the existing legacy non-dma ops
-case and be done with it.  No changes to that and most certainly
-no new features.
+-- 
 
+ <http://www.linaro.org/> Linaro.org │ Open source software for ARM SoCs
+
+Follow Linaro:  <http://www.facebook.com/pages/Linaro> Facebook |
+<http://twitter.com/#!/linaroorg> Twitter |
+<http://www.linaro.org/linaro-blog/> Blog
