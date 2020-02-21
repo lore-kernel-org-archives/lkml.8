@@ -2,200 +2,253 @@ Return-Path: <SRS0=1210=4J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EE506C3566F
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 20:21:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F06B6C35666
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 20:21:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B63F62067D
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 20:21:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A03312072C
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 20:21:39 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Arxr0cUi"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=hansenpartnership.com header.i=@hansenpartnership.com header.b="MUEts7US";
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=hansenpartnership.com header.i=@hansenpartnership.com header.b="MUEts7US"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727973AbgBUUVP (ORCPT
+        id S1728317AbgBUUVi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Feb 2020 15:21:15 -0500
-Received: from mail-lj1-f195.google.com ([209.85.208.195]:42766 "EHLO
-        mail-lj1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726483AbgBUUVP (ORCPT
+        Fri, 21 Feb 2020 15:21:38 -0500
+Received: from bedivere.hansenpartnership.com ([66.63.167.143]:48276 "EHLO
+        bedivere.hansenpartnership.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726483AbgBUUVi (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Feb 2020 15:21:15 -0500
-Received: by mail-lj1-f195.google.com with SMTP id d10so3484951ljl.9;
-        Fri, 21 Feb 2020 12:21:12 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=WT+FZ++2NYg4V2NA5YedNOyUXAYOXzZO+ZHsnuxNnwc=;
-        b=Arxr0cUicsaHNBomhoItA7NdQd+fjF4resZYFuo7zrS9+pEhQyuWUrteVCKHXy3mdu
-         zPtXhRxHZcbBgRF07H9y3Xy0izDo+2rwlZj/tF+vaz+Cn+AWqfL7XHOvhTjOl1ZxvIy+
-         GZBGIX7AKG+5NWhOR/j+AjGowu70CCRPt0kR6v+i+u/M/CGsvx6NiLBHRUynglpMscq5
-         P4dRiq8XYXQNN0GorPt8ookHaKtSMkKrJYbTqSbgc0Hm1Kh+l/NzEa3L5nEeCXpY1Us/
-         a6x8C/8cG+lWQRwmbz4BisPkkMTEqqyxsLLk7Yt293GX0TFcZxpufutzazWHsSAfHdRA
-         Yncg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=WT+FZ++2NYg4V2NA5YedNOyUXAYOXzZO+ZHsnuxNnwc=;
-        b=tvIWlmthp48SBj9Q39hOtl88ok/BrGnFZVoHhFnT9n+bT95VrjJJlInkrzrxp1wJjg
-         rTveTKPqMHFYhvH2SW+XsbSXPVl624TrjKVpIcty55hsS17YagXdhzquFxmpXevV//ml
-         UvANZyq9I+AcFsa0hF5rMGIaCPrdTR5vjd/hbbxyQdTMHHHSMgMkxjqVXrRsuhvsRCBb
-         S6mw020EI4gMwPtmRmq6fxVC7VprcuSSTD5f6CgQDhpLDclFfqQyLmVTcE+/JuTWpPUI
-         1w9cDnkn2hgY+/k+nd153fLUiEKjYECICkYGX4F0Akb1/5Z8ZJHBoCaumbzX27NyMxEQ
-         TIzg==
-X-Gm-Message-State: APjAAAUz/wIzKLLwm+U3H417Hit68P3TlU67hgHmVVfBTSeRsmjlfs02
-        9SvYRWs22Jm/QaINeXj5FR4yU0j0
-X-Google-Smtp-Source: APXvYqxKJMo42Pj+umVP3QcnR7PAMToakaw6298dFWSrbDRwhqeFDGOgX/jf6g4SskY0diQaUbciaA==
-X-Received: by 2002:a2e:b5a5:: with SMTP id f5mr22798738ljn.162.1582316471775;
-        Fri, 21 Feb 2020 12:21:11 -0800 (PST)
-Received: from [192.168.2.145] (79-139-233-37.dynamic.spd-mgts.ru. [79.139.233.37])
-        by smtp.googlemail.com with ESMTPSA id z13sm2191960ljh.21.2020.02.21.12.21.10
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 21 Feb 2020 12:21:11 -0800 (PST)
-Subject: Re: [PATCH v9 09/17] arm: tegra20: cpuidle: Handle case where
- secondary CPU hangs on entering LP2
-To:     Daniel Lezcano <daniel.lezcano@linaro.org>
-Cc:     Thierry Reding <thierry.reding@gmail.com>,
-        Jonathan Hunter <jonathanh@nvidia.com>,
-        Peter De Schrijver <pdeschrijver@nvidia.com>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        =?UTF-8?B?TWljaGHFgiBNaXJvc8WCYXc=?= <mirq-linux@rere.qmqm.pl>,
-        Jasper Korten <jja2000@gmail.com>,
-        David Heidelberg <david@ixit.cz>,
-        Peter Geis <pgwipeout@gmail.com>, linux-pm@vger.kernel.org,
-        linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20200212235134.12638-1-digetx@gmail.com>
- <20200212235134.12638-10-digetx@gmail.com>
- <20200221154318.GO10516@linaro.org>
- <239a2b66-8da8-2e6c-d19d-9ed207ad0a64@gmail.com>
- <20200221173649.GU10516@linaro.org>
- <b51f3f6b-8287-5ce8-fcaa-77cbab507618@gmail.com>
- <f27481cf-ca5e-df47-932b-fcb4713f0d78@linaro.org>
-From:   Dmitry Osipenko <digetx@gmail.com>
-Message-ID: <50a8fb7c-f497-2234-c0b0-560aec1c5691@gmail.com>
-Date:   Fri, 21 Feb 2020 23:21:10 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.3.0
-MIME-Version: 1.0
-In-Reply-To: <f27481cf-ca5e-df47-932b-fcb4713f0d78@linaro.org>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+        Fri, 21 Feb 2020 15:21:38 -0500
+Received: from localhost (localhost [127.0.0.1])
+        by bedivere.hansenpartnership.com (Postfix) with ESMTP id B8A788EE3D5;
+        Fri, 21 Feb 2020 12:21:36 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=hansenpartnership.com;
+        s=20151216; t=1582316496;
+        bh=X9lwNoA40+rafWitx3M+xWbVDsNdql9HImMtv2QjhWQ=;
+        h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
+        b=MUEts7USA39twCVAZQqCBvLNWZDomXqzMPbZbKIWZih7ENCn3fbWk2hryWh/kMA85
+         kduhunZyO/HM6qqQXRIClt90s5Y5JzhLPjZBxe3Y/bMkg2GOU6VFbTIQQhLEr8mHDE
+         2ZjXS59RN0P0eHFS+Ckn+QhaR+XVgeGORqlHnncM=
+Received: from bedivere.hansenpartnership.com ([127.0.0.1])
+        by localhost (bedivere.hansenpartnership.com [127.0.0.1]) (amavisd-new, port 10024)
+        with ESMTP id 2Y69yOA-ybgd; Fri, 21 Feb 2020 12:21:36 -0800 (PST)
+Received: from jarvis.ext.hansenpartnership.com (jarvis.ext.hansenpartnership.com [153.66.160.226])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by bedivere.hansenpartnership.com (Postfix) with ESMTPSA id 9607F8EE180;
+        Fri, 21 Feb 2020 12:21:35 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=hansenpartnership.com;
+        s=20151216; t=1582316496;
+        bh=X9lwNoA40+rafWitx3M+xWbVDsNdql9HImMtv2QjhWQ=;
+        h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
+        b=MUEts7USA39twCVAZQqCBvLNWZDomXqzMPbZbKIWZih7ENCn3fbWk2hryWh/kMA85
+         kduhunZyO/HM6qqQXRIClt90s5Y5JzhLPjZBxe3Y/bMkg2GOU6VFbTIQQhLEr8mHDE
+         2ZjXS59RN0P0eHFS+Ckn+QhaR+XVgeGORqlHnncM=
+Message-ID: <1582316494.3376.45.camel@HansenPartnership.com>
+Subject: Re: [PATCH 00/17] VFS: Filesystem information and notifications
+ [ver #17]
+From:   James Bottomley <James.Bottomley@HansenPartnership.com>
+To:     David Howells <dhowells@redhat.com>, viro@zeniv.linux.org.uk
+Cc:     raven@themaw.net, mszeredi@redhat.com, christian@brauner.io,
+        jannh@google.com, darrick.wong@oracle.com,
+        linux-api@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Date:   Fri, 21 Feb 2020 12:21:34 -0800
+In-Reply-To: <158230810644.2185128.16726948836367716086.stgit@warthog.procyon.org.uk>
+References: <158230810644.2185128.16726948836367716086.stgit@warthog.procyon.org.uk>
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.26.6 
+Mime-Version: 1.0
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-21.02.2020 23:02, Daniel Lezcano пишет:
-> On 21/02/2020 19:19, Dmitry Osipenko wrote:
->> 21.02.2020 20:36, Daniel Lezcano пишет:
->>> On Fri, Feb 21, 2020 at 07:56:51PM +0300, Dmitry Osipenko wrote:
->>>> Hello Daniel,
->>>>
->>>> 21.02.2020 18:43, Daniel Lezcano пишет:
->>>>> On Thu, Feb 13, 2020 at 02:51:26AM +0300, Dmitry Osipenko wrote:
->>>>>> It is possible that something may go wrong with the secondary CPU, in that
->>>>>> case it is much nicer to get a dump of the flow-controller state before
->>>>>> hanging machine.
->>>>>>
->>>>>> Acked-by: Peter De Schrijver <pdeschrijver@nvidia.com>
->>>>>> Tested-by: Peter Geis <pgwipeout@gmail.com>
->>>>>> Tested-by: Jasper Korten <jja2000@gmail.com>
->>>>>> Tested-by: David Heidelberg <david@ixit.cz>
->>>>>> Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
->>>>>> ---
->>>
->>> [ ... ]
->>>
->>>>>> +static int tegra20_wait_for_secondary_cpu_parking(void)
->>>>>> +{
->>>>>> +	unsigned int retries = 3;
->>>>>> +
->>>>>> +	while (retries--) {
->>>>>> +		ktime_t timeout = ktime_add_ms(ktime_get(), 500);
->>>>>
->>>>> Oops I missed this one. Do not use ktime_get() in this code path, use jiffies.
->>>>
->>>> Could you please explain what benefits jiffies have over the ktime_get()?
->>>
->>> ktime_get() is very slow, jiffies is updated every tick.
->>
->> But how jiffies are supposed to be updated if interrupts are disabled?
+On Fri, 2020-02-21 at 18:01 +0000, David Howells wrote:
+[...]
+> ============================
+> FILESYSTEM INFORMATION QUERY
+> ============================
 > 
-> Yeah, other cpus must not be idle in this.
-
-Okay, then jiffies can't be used here because this function is used for
-the coupled / power-gated state only. All CPUs are idling in this state.
-
->> Aren't jiffies actually slower than ktime_get() because jiffies are
->> updating every 10/1ms (depending on CONFIG_HZ)?
+> The fsinfo() system call allows information about the filesystem at a
+> particular path point to be queried as a set of attributes, some of
+> which may have more than one value.
 > 
-> They are no slower, they have a lower resolution which is 10ms or 4ms.
+> Attribute values are of four basic types:
 > 
-> Given the 500ms timeout, it is fine.
+>  (1) Version dependent-length structure (size defined by type).
 > 
->> We're kinda interesting here in getting into deep-idling state as quick
->> as possible. I was checking how much time takes the busy-loop below and
->> it takes ~40-150us in average, which is good enough.
+>  (2) Variable-length string (up to 4096, including NUL).
 > 
-> ktime_get() gets a seq lock and it is very slow.
-
-Since all CPUs are idling here, the locking isn't a problem.
-
-The wait_for_secondary_cpu_parking() function is called on CPU0, it
-waits for the secondary CPUs to enter into safe-state before CPU0 could
-power-gate the whole CPU cluster.
-
->>>>>> +
->>>>>> +		/*
->>>>>> +		 * The primary CPU0 core shall wait for the secondaries
->>>>>> +		 * shutdown in order to power-off CPU's cluster safely.
->>>>>> +		 * The timeout value depends on the current CPU frequency,
->>>>>> +		 * it takes about 40-150us  in average and over 1000us in
->>>>>> +		 * a worst case scenario.
->>>>>> +		 */
->>>>>> +		do {
->>>>>> +			if (tegra_cpu_rail_off_ready())
->>>>>> +				return 0;
->>>>>> +
->>>>>> +		} while (ktime_before(ktime_get(), timeout));
->>>>>
->>>>> So this loop will aggresively call tegra_cpu_rail_off_ready() and retry 3
->>>>> times. The tegra_cpu_rail_off_ready() function can be called thoushand of times
->>>>> here but the function will hang 1.5s :/
->>>>>
->>>>> I suggest something like:
->>>>>
->>>>> 	while (retries--i && !tegra_cpu_rail_off_ready()) 
->>>>> 		udelay(100);
->>>>>
->>>>> So <retries> calls to tegra_cpu_rail_off_ready() and 100us x <retries> maximum
->>>>> impact.
->>>> But udelay() also results into CPU spinning in a busy-loop, and thus,
->>>> what's the difference?
->>>
->>> busy looping instead of register reads with all the hardware things involved behind.
->>
->> Please notice that this code runs only on an older Cortex-A9/A15, which
->> doesn't support WFE for the delaying, and thus, CPU always busy-loops
->> inside udelay().
->>
->> What about if I'll add cpu_relax() to the loop? Do you think it it could
->> have any positive effect?
+>  (3) List of structures (up to INT_MAX size).
 > 
-> I think udelay() has a call to cpu_relax().
+>  (4) Opaque blob (up to INT_MAX size).
+> 
+> Attributes can have multiple values either as a sequence of values or
+> a sequence-of-sequences of values and all the values of a particular
+> attribute must be of the same type.
+> 
+> Note that the values of an attribute *are* allowed to vary between
+> dentries within a single superblock, depending on the specific dentry
+> that you're looking at, but all the values of an attribute have to be
+> of the same type.
+> 
+> I've tried to make the interface as light as possible, so
+> integer/enum attribute selector rather than string and the core does
+> all the allocation and extensibility support work rather than leaving
+> that to the filesystems. That means that for the first two attribute
+> types, the filesystem will always see a sufficiently-sized buffer
+> allocated.  Further, this removes the possibility of the filesystem
+> gaining access to the userspace buffer.
+> 
+> 
+> fsinfo() allows a variety of information to be retrieved about a
+> filesystem and the mount topology:
+> 
+>  (1) General superblock attributes:
+> 
+>      - Filesystem identifiers (UUID, volume label, device numbers,
+> ...)
+>      - The limits on a filesystem's capabilities
+>      - Information on supported statx fields and attributes and IOC
+> flags.
+>      - A variety single-bit flags indicating supported capabilities.
+>      - Timestamp resolution and range.
+>      - The amount of space/free space in a filesystem (as statfs()).
+>      - Superblock notification counter.
+> 
+>  (2) Filesystem-specific superblock attributes:
+> 
+>      - Superblock-level timestamps.
+>      - Cell name.
+>      - Server names and addresses.
+>      - Filesystem-specific information.
+> 
+>  (3) VFS information:
+> 
+>      - Mount topology information.
+>      - Mount attributes.
+>      - Mount notification counter.
+> 
+>  (4) Information about what the fsinfo() syscall itself supports,
+> including
+>      the type and struct/element size of attributes.
+> 
+> The system is extensible:
+> 
+>  (1) New attributes can be added.  There is no requirement that a
+>      filesystem implement every attribute.  Note that the core VFS
+> keeps a
+>      table of types and sizes so it can handle future extensibility
+> rather
+>      than delegating this to the filesystems.
+> 
+>  (2) Version length-dependent structure attributes can be made larger
+> and
+>      have additional information tacked on the end, provided it keeps
+> the
+>      layout of the existing fields.  If an older process asks for a
+> shorter
+>      structure, it will only be given the bits it asks for.  If a
+> newer
+>      process asks for a longer structure on an older kernel, the
+> extra
+>      space will be set to 0.  In all cases, the size of the data
+> actually
+>      available is returned.
+> 
+>      In essence, the size of a structure is that structure's version:
+> a
+>      smaller size is an earlier version and a later version includes
+>      everything that the earlier version did.
+> 
+>  (3) New single-bit capability flags can be added.  This is a
+> structure-typed
+>      attribute and, as such, (2) applies.  Any bits you wanted but
+> the kernel
+>      doesn't support are automatically set to 0.
+> 
+> fsinfo() may be called like the following, for example:
+> 
+> 	struct fsinfo_params params = {
+> 		.at_flags	= AT_SYMLINK_NOFOLLOW,
+> 		.flags		= FSINFO_FLAGS_QUERY_PATH,
+> 		.request	= FSINFO_ATTR_AFS_SERVER_ADDRESSES,
+> 		.Nth		= 2,
+> 	};
+> 	struct fsinfo_server_address address;
+> 	len = fsinfo(AT_FDCWD, "/afs/grand.central.org/doc", &params,
+> 		     &address, sizeof(address));
+> 
+> The above example would query an AFS filesystem to retrieve the
+> address
+> list for the 3rd server, and:
+> 
+> 	struct fsinfo_params params = {
+> 		.at_flags	= AT_SYMLINK_NOFOLLOW,
+> 		.flags		= FSINFO_FLAGS_QUERY_PATH,
+> 		.request	= FSINFO_ATTR_AFS_CELL_NAME;
+> 	};
+> 	char cell_name[256];
+> 	len = fsinfo(AT_FDCWD, "/afs/grand.central.org/doc", &params,
+> 		     &cell_name, sizeof(cell_name));
+> 
+> would retrieve the name of an AFS cell as a string.
+> 
+> In future, I want to make fsinfo() capable of querying a context
+> created by
+> fsopen() or fspick(), e.g.:
+> 
+> 	fd = fsopen("ext4", 0);
+> 	struct fsinfo_params params = {
+> 		.flags		= FSINFO_FLAGS_QUERY_FSCONTEXT,
+> 		.request	= FSINFO_ATTR_PARAMETERS;
+> 	};
+> 	char buffer[65536];
+> 	fsinfo(fd, NULL, &params, &buffer, sizeof(buffer));
+> 
+> even if that context doesn't currently have a superblock attached.  I
+> would prefer this to contain length-prefixed strings so that there's
+> no need to insert escaping, especially as any character, including
+> '\', can be used as the separator in cifs and so that binary
+> parameters can be returned (though that is a lesser issue).
 
-Yes, my point is that udelay() doesn't bring much benefit for us here
-because:
+Could I make a suggestion about how this should be done in a way that
+doesn't actually require the fsinfo syscall at all: it could just be
+done with fsconfig.  The idea is based on something I've wanted to do
+for configfd but couldn't because otherwise it wouldn't substitute for
+fsconfig, but Christian made me think it was actually essential to the
+ability of the seccomp and other verifier tools in the critique of
+configfd and I belive the same critique applies here.
 
-1. we want to enter into power-gated state as quick as possible and
-udelay() just adds an unnecessary delay
+Instead of making fsconfig functionally configure ... as in you pass
+the attribute name, type and parameters down into the fs specific
+handler and the handler does a string match and then verifies the
+parameters and then acts on them, make it table configured, so what
+each fstype does is register a table of attributes which can be got and
+optionally set (with each attribute having a get and optional set
+function).  We'd have multiple tables per fstype, so the generic VFS
+can register a table of attributes it understands for every fstype
+(things like name, uuid and the like) and then each fs type would
+register a table of fs specific attributes following the same pattern. 
+The system would examine the fs specific table before the generic one,
+allowing overrides.  fsconfig would have the ability to both get and
+set attributes, permitting retrieval as well as setting (which is how I
+get rid of the fsinfo syscall), we'd have a global parameter, which
+would retrieve the entire table by name and type so the whole thing is
+introspectable because the upper layer knows a-priori all the
+attributes which can be set for a given fs type and what type they are
+(so we can make more of the parsing generic).  Any attribute which
+doesn't have a set routine would be read only and all attributes would
+have to have a get routine meaning everything is queryable.
 
-2. udelay() spins in a busy-loop until delay is expired, just like we're
-doing it in this function already
+I think I know how to code this up in a way that would be fully
+transparent to the existing syscalls.
+
+James
+
