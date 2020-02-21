@@ -2,53 +2,53 @@ Return-Path: <SRS0=1210=4J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 50B15C35641
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 08:45:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 096FCC35642
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 08:45:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 284DA206DB
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 08:45:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D423A206DB
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 08:45:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582274722;
-	bh=bl4iuWnv7Ff8rWhVfVF5g7jyH2xnHRR9FIkJVGc2BpQ=;
+	s=default; t=1582274730;
+	bh=6z/t0VhggveAqMfKd+GXVB1VM3eyWMPeYQwd11GIHLM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=rEPsefM7pZOFre4pvHwxuGKbnbpYJdZH/BhieZltl3g9Im5rX7I7kXcbmsBIwooZ5
-	 RN9fsSJdmC5dN769AoMay4RCxPASdt0Kvw7mMvULpFvg70G2hR9rLOJ0bkAQt4wDF8
-	 AkOzj+iZzRFxk1RaOiJn059THVlaA0/Bn+zLcdsw=
+	b=PFYtIo1xeIDqd+Q1JgJ45Ua4lC0cys1yFc/yIF/qM7fGEwsFsxZnsfaKCmOa65iov
+	 P2SlbzgJ5WtPAgZlw2Llxrv/LN2BiMeaeoIrSJJ2TT2JSiHHiIMP/6Je9Yk9S53w5O
+	 W5Zc1lWSt6MNmjJZKxNOecFs5LG+NI12RDBPwQ54=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731088AbgBUIpU (ORCPT
+        id S1729677AbgBUHvG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Feb 2020 03:45:20 -0500
-Received: from mail.kernel.org ([198.145.29.99]:48646 "EHLO mail.kernel.org"
+        Fri, 21 Feb 2020 02:51:06 -0500
+Received: from mail.kernel.org ([198.145.29.99]:48166 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729731AbgBUHvV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Feb 2020 02:51:21 -0500
+        id S1728602AbgBUHvC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 21 Feb 2020 02:51:02 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B793320578;
-        Fri, 21 Feb 2020 07:51:20 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5D59620801;
+        Fri, 21 Feb 2020 07:51:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1582271481;
-        bh=bl4iuWnv7Ff8rWhVfVF5g7jyH2xnHRR9FIkJVGc2BpQ=;
+        s=default; t=1582271461;
+        bh=6z/t0VhggveAqMfKd+GXVB1VM3eyWMPeYQwd11GIHLM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=DVUBKUhdYGyfKWcfm4mLj6YhPzM3EyPjXmIvHr8t3O65zzrbQaSbAvqGKXEpF2MRz
-         sEaaDR2RTlMuATwwj4aNfoA7X2d7huEfa1BkGdPZKB3sFT1mT6pk8ved0QbrjGXynp
-         VkkYemlaXsuYqG93Y6Jh+IZSiIh7yksHKSa4fDBI=
+        b=MoF3SSDUamvraDZFIq8E2BdVO3EapRJLf3BSnW6NsYdcX0uROte3xZaRLHU7r1yTI
+         jFN3dSsk9PPEtRhQ/Mh57h/FVNABVMzbqH68ARHNxDmN5Uti0F4Lfq3CQu4kfjArRm
+         bCCshXT/c94CdHIDJ+9zgHRkkuzlQeRR6VhoZk3s=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Phong Tran <tranmanphong@gmail.com>,
-        Kees Cook <keescook@chromium.org>,
-        Kalle Valo <kvalo@codeaurora.org>,
+        stable@vger.kernel.org, Dick Kennedy <dick.kennedy@broadcom.com>,
+        James Smart <jsmart2021@gmail.com>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.5 155/399] ipw2x00: Fix -Wcast-function-type
-Date:   Fri, 21 Feb 2020 08:38:00 +0100
-Message-Id: <20200221072417.579182101@linuxfoundation.org>
+Subject: [PATCH 5.5 175/399] scsi: lpfc: Fix: Rework setting of fdmi symbolic node name registration
+Date:   Fri, 21 Feb 2020 08:38:20 +0100
+Message-Id: <20200221072419.672458726@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200221072402.315346745@linuxfoundation.org>
 References: <20200221072402.315346745@linuxfoundation.org>
@@ -61,79 +61,91 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Phong Tran <tranmanphong@gmail.com>
+From: James Smart <jsmart2021@gmail.com>
 
-[ Upstream commit ebd77feb27e91bb5fe35a7818b7c13ea7435fb98 ]
+[ Upstream commit df9166bfa7750bade5737ffc91fbd432e0354442 ]
 
-correct usage prototype of callback in tasklet_init().
-Report by https://github.com/KSPP/linux/issues/20
+This patch reworks the fdmi symbolic node name data for the following two
+issues:
 
-Signed-off-by: Phong Tran <tranmanphong@gmail.com>
-Reviewed-by: Kees Cook <keescook@chromium.org>
-Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
+ - Correcting extraneous periods following the DV and HN fdmi data fields.
+
+ - Avoiding buffer overflow issues when formatting the data.
+
+The fix to the fist issue is to just remove the characters.
+
+The fix to the second issue has all data being staged in temporary storage
+before being moved to the real buffer.
+
+Link: https://lore.kernel.org/r/20191218235808.31922-3-jsmart2021@gmail.com
+Signed-off-by: Dick Kennedy <dick.kennedy@broadcom.com>
+Signed-off-by: James Smart <jsmart2021@gmail.com>
+Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/wireless/intel/ipw2x00/ipw2100.c | 7 ++++---
- drivers/net/wireless/intel/ipw2x00/ipw2200.c | 5 +++--
- 2 files changed, 7 insertions(+), 5 deletions(-)
+ drivers/scsi/lpfc/lpfc_ct.c | 42 +++++++++++++++++++------------------
+ 1 file changed, 22 insertions(+), 20 deletions(-)
 
-diff --git a/drivers/net/wireless/intel/ipw2x00/ipw2100.c b/drivers/net/wireless/intel/ipw2x00/ipw2100.c
-index c4c83ab60cbc4..0579554ed4b38 100644
---- a/drivers/net/wireless/intel/ipw2x00/ipw2100.c
-+++ b/drivers/net/wireless/intel/ipw2x00/ipw2100.c
-@@ -3206,8 +3206,9 @@ static void ipw2100_tx_send_data(struct ipw2100_priv *priv)
- 	}
- }
- 
--static void ipw2100_irq_tasklet(struct ipw2100_priv *priv)
-+static void ipw2100_irq_tasklet(unsigned long data)
+diff --git a/drivers/scsi/lpfc/lpfc_ct.c b/drivers/scsi/lpfc/lpfc_ct.c
+index 99c9bb249758c..1b4dbb28fb419 100644
+--- a/drivers/scsi/lpfc/lpfc_ct.c
++++ b/drivers/scsi/lpfc/lpfc_ct.c
+@@ -1493,33 +1493,35 @@ int
+ lpfc_vport_symbolic_node_name(struct lpfc_vport *vport, char *symbol,
+ 	size_t size)
  {
-+	struct ipw2100_priv *priv = (struct ipw2100_priv *)data;
- 	struct net_device *dev = priv->net_dev;
- 	unsigned long flags;
- 	u32 inta, tmp;
-@@ -6006,7 +6007,7 @@ static void ipw2100_rf_kill(struct work_struct *work)
- 	spin_unlock_irqrestore(&priv->low_lock, flags);
+-	char fwrev[FW_REV_STR_SIZE];
+-	int n;
++	char fwrev[FW_REV_STR_SIZE] = {0};
++	char tmp[MAXHOSTNAMELEN] = {0};
+ 
+-	lpfc_decode_firmware_rev(vport->phba, fwrev, 0);
++	memset(symbol, 0, size);
+ 
+-	n = scnprintf(symbol, size, "Emulex %s", vport->phba->ModelName);
+-	if (size < n)
+-		return n;
++	scnprintf(tmp, sizeof(tmp), "Emulex %s", vport->phba->ModelName);
++	if (strlcat(symbol, tmp, size) >= size)
++		goto buffer_done;
+ 
+-	n += scnprintf(symbol + n, size - n, " FV%s", fwrev);
+-	if (size < n)
+-		return n;
++	lpfc_decode_firmware_rev(vport->phba, fwrev, 0);
++	scnprintf(tmp, sizeof(tmp), " FV%s", fwrev);
++	if (strlcat(symbol, tmp, size) >= size)
++		goto buffer_done;
+ 
+-	n += scnprintf(symbol + n, size - n, " DV%s.",
+-		      lpfc_release_version);
+-	if (size < n)
+-		return n;
++	scnprintf(tmp, sizeof(tmp), " DV%s", lpfc_release_version);
++	if (strlcat(symbol, tmp, size) >= size)
++		goto buffer_done;
+ 
+-	n += scnprintf(symbol + n, size - n, " HN:%s.",
+-		      init_utsname()->nodename);
+-	if (size < n)
+-		return n;
++	scnprintf(tmp, sizeof(tmp), " HN:%s", init_utsname()->nodename);
++	if (strlcat(symbol, tmp, size) >= size)
++		goto buffer_done;
+ 
+ 	/* Note :- OS name is "Linux" */
+-	n += scnprintf(symbol + n, size - n, " OS:%s",
+-		      init_utsname()->sysname);
+-	return n;
++	scnprintf(tmp, sizeof(tmp), " OS:%s", init_utsname()->sysname);
++	strlcat(symbol, tmp, size);
++
++buffer_done:
++	return strnlen(symbol, size);
++
  }
  
--static void ipw2100_irq_tasklet(struct ipw2100_priv *priv);
-+static void ipw2100_irq_tasklet(unsigned long data);
- 
- static const struct net_device_ops ipw2100_netdev_ops = {
- 	.ndo_open		= ipw2100_open,
-@@ -6136,7 +6137,7 @@ static struct net_device *ipw2100_alloc_device(struct pci_dev *pci_dev,
- 	INIT_DELAYED_WORK(&priv->rf_kill, ipw2100_rf_kill);
- 	INIT_DELAYED_WORK(&priv->scan_event, ipw2100_scan_event);
- 
--	tasklet_init(&priv->irq_tasklet, (void (*)(unsigned long))
-+	tasklet_init(&priv->irq_tasklet,
- 		     ipw2100_irq_tasklet, (unsigned long)priv);
- 
- 	/* NOTE:  We do not start the deferred work for status checks yet */
-diff --git a/drivers/net/wireless/intel/ipw2x00/ipw2200.c b/drivers/net/wireless/intel/ipw2x00/ipw2200.c
-index 31e43fc1d12b3..5ef6f87a48ac7 100644
---- a/drivers/net/wireless/intel/ipw2x00/ipw2200.c
-+++ b/drivers/net/wireless/intel/ipw2x00/ipw2200.c
-@@ -1945,8 +1945,9 @@ static void notify_wx_assoc_event(struct ipw_priv *priv)
- 	wireless_send_event(priv->net_dev, SIOCGIWAP, &wrqu, NULL);
- }
- 
--static void ipw_irq_tasklet(struct ipw_priv *priv)
-+static void ipw_irq_tasklet(unsigned long data)
- {
-+	struct ipw_priv *priv = (struct ipw_priv *)data;
- 	u32 inta, inta_mask, handled = 0;
- 	unsigned long flags;
- 	int rc = 0;
-@@ -10677,7 +10678,7 @@ static int ipw_setup_deferred_work(struct ipw_priv *priv)
- 	INIT_WORK(&priv->qos_activate, ipw_bg_qos_activate);
- #endif				/* CONFIG_IPW2200_QOS */
- 
--	tasklet_init(&priv->irq_tasklet, (void (*)(unsigned long))
-+	tasklet_init(&priv->irq_tasklet,
- 		     ipw_irq_tasklet, (unsigned long)priv);
- 
- 	return ret;
+ static uint32_t
 -- 
 2.20.1
 
