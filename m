@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A16FBC35642
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 08:21:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 61B0DC35641
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 08:21:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 72F4D206ED
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 08:21:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3A42B206ED
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 08:21:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582273267;
-	bh=DJOrz9cU+Db2X5LufbrBNiGevY8hRrDU7M5k8LQc3Wg=;
+	s=default; t=1582273270;
+	bh=GRvpBHdwaRmGyhqFV9SutAkddtjGkMHJbBSngALE17A=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=CvBRu3iGxlaoU5FSij8knpQU6TEnsnwptAvjxWdo6F8CeUpwu0BrQhpyypEZe1AY1
-	 V6FuYLVNyU2RPf4pAMsd9p8jtSvo3LSMLZXLouLNi1A1btsiyd9Z3nI778KA+AVD3h
-	 ey1TnRYFCk2pojFq2VfIK22YoM/dze27j/P0x17c=
+	b=az8NajCR2W6u86bsDc8520XHOmJMmzmXa24GqwrlWA3hqwQYjMOPP2MeN9zTTBWGA
+	 0Wr6r4lFK49xMu82NTJkuHCPG8bmp6BiL0hbhVcUIgJHTCyrEzQzc78SPn+daHqlmw
+	 YXSJp7OwHAxf+1LjcdFJndVU7faQ74gFm8JoOOmY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388221AbgBUIVG (ORCPT
+        id S2388228AbgBUIVJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Feb 2020 03:21:06 -0500
-Received: from mail.kernel.org ([198.145.29.99]:60320 "EHLO mail.kernel.org"
+        Fri, 21 Feb 2020 03:21:09 -0500
+Received: from mail.kernel.org ([198.145.29.99]:60282 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387930AbgBUIVC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Feb 2020 03:21:02 -0500
+        id S2388208AbgBUIU7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 21 Feb 2020 03:20:59 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5C9552073A;
-        Fri, 21 Feb 2020 08:21:01 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C624E206ED;
+        Fri, 21 Feb 2020 08:20:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1582273261;
-        bh=DJOrz9cU+Db2X5LufbrBNiGevY8hRrDU7M5k8LQc3Wg=;
+        s=default; t=1582273259;
+        bh=GRvpBHdwaRmGyhqFV9SutAkddtjGkMHJbBSngALE17A=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=DswUV0cUqkOh30sk2p1xoo7H/1tOh/4UNYEuJB9AL3CZDwXj1Gc1sSgdKRw2ASITh
-         aCNNImm1s/WzLTlQlzH2FuCvjM3DCY+8VqgfLOemAJ63v02U6UW6K4NL5QL5tnRqz5
-         ljDhsKI3Jw86hkpnqdS2mYHMByiR3W+NXtn/uqyw=
+        b=kRpEf1FPcZLkTXzMhwqOA0Cs3clMncHDg4x/okiEyDIt1Uoa300LZNVpxy19ojq94
+         Zd8NwXlqz7iB9Lw4SOkLgsKfj/1I0X7/243xNX/EqCVM7+ind7m6y33Frkl6lO0Ndu
+         jgqTigRD+x8gkV6yLdZ/GyztA10jPitoxBY2rIvQ=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        =?UTF-8?q?Pali=20Roh=C3=A1r?= <pali.rohar@gmail.com>,
-        Jan Kara <jack@suse.cz>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 105/191] udf: Fix free space reporting for metadata and virtual partitions
-Date:   Fri, 21 Feb 2020 08:41:18 +0100
-Message-Id: <20200221072303.549580099@linuxfoundation.org>
+        stable@vger.kernel.org, Sascha Hauer <s.hauer@pengutronix.de>,
+        Robin Gong <yibin.gong@nxp.com>, Vinod Koul <vkoul@kernel.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.19 087/191] dmaengine: imx-sdma: Fix memory leak
+Date:   Fri, 21 Feb 2020 08:41:00 +0100
+Message-Id: <20200221072301.597359445@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200221072250.732482588@linuxfoundation.org>
 References: <20200221072250.732482588@linuxfoundation.org>
@@ -60,71 +60,76 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jan Kara <jack@suse.cz>
+From: Sascha Hauer <s.hauer@pengutronix.de>
 
-[ Upstream commit a4a8b99ec819ca60b49dc582a4287ef03411f117 ]
+[ Upstream commit 02939cd167095f16328a1bd5cab5a90b550606df ]
 
-Free space on filesystems with metadata or virtual partition maps
-currently gets misreported. This is because these partitions are just
-remapped onto underlying real partitions from which keep track of free
-blocks. Take this remapping into account when counting free blocks as
-well.
+The current descriptor is not on any list of the virtual DMA channel.
+Once sdma_terminate_all() is called when a descriptor is currently
+in flight then this one is forgotten to be freed. We have to call
+vchan_terminate_vdesc() on this descriptor to re-add it to the lists.
+Now that we also free the currently running descriptor we can (and
+actually have to) remove the current descriptor from its list also
+for the cyclic case.
 
-Reviewed-by: Pali Rohár <pali.rohar@gmail.com>
-Reported-by: Pali Rohár <pali.rohar@gmail.com>
-Signed-off-by: Jan Kara <jack@suse.cz>
+Signed-off-by: Sascha Hauer <s.hauer@pengutronix.de>
+Reviewed-by: Robin Gong <yibin.gong@nxp.com>
+Tested-by: Robin Gong <yibin.gong@nxp.com>
+Link: https://lore.kernel.org/r/20191216105328.15198-10-s.hauer@pengutronix.de
+Signed-off-by: Vinod Koul <vkoul@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/udf/super.c | 22 +++++++++++++++++-----
- 1 file changed, 17 insertions(+), 5 deletions(-)
+ drivers/dma/imx-sdma.c | 19 +++++++++++--------
+ 1 file changed, 11 insertions(+), 8 deletions(-)
 
-diff --git a/fs/udf/super.c b/fs/udf/super.c
-index 6fd0f14e9dd22..1676a175cd7a8 100644
---- a/fs/udf/super.c
-+++ b/fs/udf/super.c
-@@ -2469,17 +2469,29 @@ static unsigned int udf_count_free_table(struct super_block *sb,
- static unsigned int udf_count_free(struct super_block *sb)
- {
- 	unsigned int accum = 0;
--	struct udf_sb_info *sbi;
-+	struct udf_sb_info *sbi = UDF_SB(sb);
- 	struct udf_part_map *map;
-+	unsigned int part = sbi->s_partition;
-+	int ptype = sbi->s_partmaps[part].s_partition_type;
+diff --git a/drivers/dma/imx-sdma.c b/drivers/dma/imx-sdma.c
+index ceb82e74f5b4e..d66a7fdff898e 100644
+--- a/drivers/dma/imx-sdma.c
++++ b/drivers/dma/imx-sdma.c
+@@ -738,12 +738,8 @@ static void sdma_start_desc(struct sdma_channel *sdmac)
+ 		return;
+ 	}
+ 	sdmac->desc = desc = to_sdma_desc(&vd->tx);
+-	/*
+-	 * Do not delete the node in desc_issued list in cyclic mode, otherwise
+-	 * the desc allocated will never be freed in vchan_dma_desc_free_list
+-	 */
+-	if (!(sdmac->flags & IMX_DMA_SG_LOOP))
+-		list_del(&vd->node);
 +
-+	if (ptype == UDF_METADATA_MAP25) {
-+		part = sbi->s_partmaps[part].s_type_specific.s_metadata.
-+							s_phys_partition_ref;
-+	} else if (ptype == UDF_VIRTUAL_MAP15 || ptype == UDF_VIRTUAL_MAP20) {
-+		/*
-+		 * Filesystems with VAT are append-only and we cannot write to
-+ 		 * them. Let's just report 0 here.
-+		 */
-+		return 0;
++	list_del(&vd->node);
+ 
+ 	sdma->channel_control[channel].base_bd_ptr = desc->bd_phys;
+ 	sdma->channel_control[channel].current_bd_ptr = desc->bd_phys;
+@@ -1044,7 +1040,6 @@ static void sdma_channel_terminate_work(struct work_struct *work)
+ 
+ 	spin_lock_irqsave(&sdmac->vc.lock, flags);
+ 	vchan_get_all_descriptors(&sdmac->vc, &head);
+-	sdmac->desc = NULL;
+ 	spin_unlock_irqrestore(&sdmac->vc.lock, flags);
+ 	vchan_dma_desc_free_list(&sdmac->vc, &head);
+ }
+@@ -1052,11 +1047,19 @@ static void sdma_channel_terminate_work(struct work_struct *work)
+ static int sdma_disable_channel_async(struct dma_chan *chan)
+ {
+ 	struct sdma_channel *sdmac = to_sdma_chan(chan);
++	unsigned long flags;
++
++	spin_lock_irqsave(&sdmac->vc.lock, flags);
+ 
+ 	sdma_disable_channel(chan);
+ 
+-	if (sdmac->desc)
++	if (sdmac->desc) {
++		vchan_terminate_vdesc(&sdmac->desc->vd);
++		sdmac->desc = NULL;
+ 		schedule_work(&sdmac->terminate_worker);
 +	}
++
++	spin_unlock_irqrestore(&sdmac->vc.lock, flags);
  
--	sbi = UDF_SB(sb);
- 	if (sbi->s_lvid_bh) {
- 		struct logicalVolIntegrityDesc *lvid =
- 			(struct logicalVolIntegrityDesc *)
- 			sbi->s_lvid_bh->b_data;
--		if (le32_to_cpu(lvid->numOfPartitions) > sbi->s_partition) {
-+		if (le32_to_cpu(lvid->numOfPartitions) > part) {
- 			accum = le32_to_cpu(
--					lvid->freeSpaceTable[sbi->s_partition]);
-+					lvid->freeSpaceTable[part]);
- 			if (accum == 0xFFFFFFFF)
- 				accum = 0;
- 		}
-@@ -2488,7 +2500,7 @@ static unsigned int udf_count_free(struct super_block *sb)
- 	if (accum)
- 		return accum;
- 
--	map = &sbi->s_partmaps[sbi->s_partition];
-+	map = &sbi->s_partmaps[part];
- 	if (map->s_partition_flags & UDF_PART_FLAG_UNALLOC_BITMAP) {
- 		accum += udf_count_free_bitmap(sb,
- 					       map->s_uspace.s_bitmap);
+ 	return 0;
+ }
 -- 
 2.20.1
 
