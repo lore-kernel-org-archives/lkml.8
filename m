@@ -7,46 +7,47 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7F417C35641
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 08:16:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0BF5CC35641
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 08:16:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 49E1024682
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 08:16:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C8C3824682
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 08:16:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582273004;
-	bh=oqTT/1FyUaTJRtLSIyaPrRGQSsQSWyhw0sE6xLLLCFI=;
+	s=default; t=1582273009;
+	bh=Xj9uPktyd8h+TZiCVSTuf3BHXFC+ByLgoE3KHYSHwf8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=vmwwxpD+qOtWEd6mm408QcB6VFvGjm4OUvCpyJk5jrCfMt0uJn+NxLEFFsmuOV63b
-	 XxcSDiGkWjf1y+guZQy7r1zMIdxdrs+qR326Et4GIWg15IONT6Tw7Dhxavk3bcfg1K
-	 i/q54rc8qHTq97x6RiFSJK1M+rNoSR6Mlp+gpYP0=
+	b=IWlgmGBZtXfNJcfyQ5VyH/0jsMDIncFIOmno2oNErRVcSMB+RP+fNg8Ya/x87nD2Q
+	 nejvwg1qwAAD/pvqjfiHrdG/nIHRxfLCuWhPdF8yEmMUevdm1428/YlrRjSba/DBLk
+	 W8Wx3ZtCSd+GafJ1sVJBNeW4B7TgSQtrBieniefE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733245AbgBUIQm (ORCPT
+        id S2387579AbgBUIQs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Feb 2020 03:16:42 -0500
-Received: from mail.kernel.org ([198.145.29.99]:53796 "EHLO mail.kernel.org"
+        Fri, 21 Feb 2020 03:16:48 -0500
+Received: from mail.kernel.org ([198.145.29.99]:53926 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1733247AbgBUIQk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Feb 2020 03:16:40 -0500
+        id S2387566AbgBUIQp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 21 Feb 2020 03:16:45 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 17D6524682;
-        Fri, 21 Feb 2020 08:16:38 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1E45E2467B;
+        Fri, 21 Feb 2020 08:16:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1582272999;
-        bh=oqTT/1FyUaTJRtLSIyaPrRGQSsQSWyhw0sE6xLLLCFI=;
+        s=default; t=1582273004;
+        bh=Xj9uPktyd8h+TZiCVSTuf3BHXFC+ByLgoE3KHYSHwf8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=CQO/zbgQGNaBBH/8+PS0PxcpHofXE05nDPfv0T2V1yF+ekA5hY7vG+pq2lt2A77lT
-         C3M8wUxQaDzsUkBtPRE9fMKlKdhGpfqqYLWUcQvy5qyTaLT2PnO4iiTMkrUMOj3zmd
-         9qI98t7umWAY1AKlGbMVuZBmLeHgsgXkWeUdJo6I=
+        b=gedwdtq6OSh5BupJWC2fdQaneo4MRZJ/MTgngS+57p/ZEDy8BsF4pJnZvMzc9B2Y9
+         wF8wG1N6TYMLVedH2aiwaoMIXVeUfqw2Jmhst88iUVVCg6EWRxyUNqt96k4j4SXZRd
+         5NxYCCm0qBdeR5KotceYUxjUqFAexyQ2pj/PKhyY=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Firo Yang <firo.yang@suse.com>,
+        stable@vger.kernel.org, Per Forlin <perfn@axis.com>,
+        Florian Fainelli <f.fainelli@gmail.com>,
         "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 4.19 002/191] enic: prevent waking up stopped tx queues over watchdog reset
-Date:   Fri, 21 Feb 2020 08:39:35 +0100
-Message-Id: <20200221072251.022364530@linuxfoundation.org>
+Subject: [PATCH 4.19 004/191] net: dsa: tag_qca: Make sure there is headroom for tag
+Date:   Fri, 21 Feb 2020 08:39:37 +0100
+Message-Id: <20200221072251.310188750@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200221072250.732482588@linuxfoundation.org>
 References: <20200221072250.732482588@linuxfoundation.org>
@@ -59,57 +60,33 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Firo Yang <firo.yang@suse.com>
+From: Per Forlin <per.forlin@axis.com>
 
-[ Upstream commit 0f90522591fd09dd201065c53ebefdfe3c6b55cb ]
+[ Upstream commit 04fb91243a853dbde216d829c79d9632e52aa8d9 ]
 
-Recent months, our customer reported several kernel crashes all
-preceding with following message:
-NETDEV WATCHDOG: eth2 (enic): transmit queue 0 timed out
-Error message of one of those crashes:
-BUG: unable to handle kernel paging request at ffffffffa007e090
+Passing tag size to skb_cow_head will make sure
+there is enough headroom for the tag data.
+This change does not introduce any overhead in case there
+is already available headroom for tag.
 
-After analyzing severl vmcores, I found that most of crashes are
-caused by memory corruption. And all the corrupted memory areas
-are overwritten by data of network packets. Moreover, I also found
-that the tx queues were enabled over watchdog reset.
-
-After going through the source code, I found that in enic_stop(),
-the tx queues stopped by netif_tx_disable() could be woken up over
-a small time window between netif_tx_disable() and the
-napi_disable() by the following code path:
-napi_poll->
-  enic_poll_msix_wq->
-     vnic_cq_service->
-        enic_wq_service->
-           netif_wake_subqueue(enic->netdev, q_number)->
-              test_and_clear_bit(__QUEUE_STATE_DRV_XOFF, &txq->state)
-In turn, upper netowrk stack could queue skb to ENIC NIC though
-enic_hard_start_xmit(). And this might introduce some race condition.
-
-Our customer comfirmed that this kind of kernel crash doesn't occur over
-90 days since they applied this patch.
-
-Signed-off-by: Firo Yang <firo.yang@suse.com>
+Signed-off-by: Per Forlin <perfn@axis.com>
+Reviewed-by: Florian Fainelli <f.fainelli@gmail.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- drivers/net/ethernet/cisco/enic/enic_main.c |    2 +-
+ net/dsa/tag_qca.c |    2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/drivers/net/ethernet/cisco/enic/enic_main.c
-+++ b/drivers/net/ethernet/cisco/enic/enic_main.c
-@@ -2013,10 +2013,10 @@ static int enic_stop(struct net_device *
- 		napi_disable(&enic->napi[i]);
+--- a/net/dsa/tag_qca.c
++++ b/net/dsa/tag_qca.c
+@@ -41,7 +41,7 @@ static struct sk_buff *qca_tag_xmit(stru
+ 	struct dsa_port *dp = dsa_slave_to_port(dev);
+ 	u16 *phdr, hdr;
  
- 	netif_carrier_off(netdev);
--	netif_tx_disable(netdev);
- 	if (vnic_dev_get_intr_mode(enic->vdev) == VNIC_DEV_INTR_MODE_MSIX)
- 		for (i = 0; i < enic->wq_count; i++)
- 			napi_disable(&enic->napi[enic_cq_wq(enic, i)]);
-+	netif_tx_disable(netdev);
+-	if (skb_cow_head(skb, 0) < 0)
++	if (skb_cow_head(skb, QCA_HDR_LEN) < 0)
+ 		return NULL;
  
- 	if (!enic_is_dynamic(enic) && !enic_is_sriov_vf(enic))
- 		enic_dev_del_station_addr(enic);
+ 	skb_push(skb, QCA_HDR_LEN);
 
 
