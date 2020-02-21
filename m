@@ -7,47 +7,49 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C6E07C35641
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 08:11:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 23CA1C35641
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 08:11:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 936FE24650
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 08:11:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DF26A206ED
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 08:11:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582272691;
-	bh=z9lZsmTV7165P7cffCuoQ2Igv1tMoJpZxY/bd3jhAiI=;
+	s=default; t=1582272695;
+	bh=cBFPbr8CVvdMgTjBagQOmxmbeGJeF3llcrP0PGr67TY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=DjmKlzPdUaJPN6qVD7dPy6DRHFZrIQ/5ksnF3Q8X36W7tkCpH2AzESEy1Yo9A0mbn
-	 8ASr7O5HH9fw8Mn9hGwouVa/bJrYcnGz+ngxMuIQ06UYQPOxXlQyLZAJdoVMNyfQuz
-	 iFx3bb339FiqcEU2RQKAxb4gh8HV0krpWR9ksy3o=
+	b=N3TIDrUypWJTolgzK2YKOM6FnBmJr13aMH6UlNTik6Xj9teMDIE9vEBiYwSEsNmlG
+	 IVjI0xmZhLtPNsnQ4zQgKLJbehXxlbSkD7VgIx+PqLKNxrpETWqWE6gyYXvJ9V6LMB
+	 11ra5edIrqits+Q9h0WGypPGuNjTKmSgGSDgSrRY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732701AbgBUILa (ORCPT
+        id S1732712AbgBUILc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Feb 2020 03:11:30 -0500
-Received: from mail.kernel.org ([198.145.29.99]:46852 "EHLO mail.kernel.org"
+        Fri, 21 Feb 2020 03:11:32 -0500
+Received: from mail.kernel.org ([198.145.29.99]:46930 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731756AbgBUILZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Feb 2020 03:11:25 -0500
+        id S1732695AbgBUIL2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 21 Feb 2020 03:11:28 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A701C20578;
-        Fri, 21 Feb 2020 08:11:24 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id AC49020722;
+        Fri, 21 Feb 2020 08:11:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1582272685;
-        bh=z9lZsmTV7165P7cffCuoQ2Igv1tMoJpZxY/bd3jhAiI=;
+        s=default; t=1582272688;
+        bh=cBFPbr8CVvdMgTjBagQOmxmbeGJeF3llcrP0PGr67TY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=aip4s1HDByiFbfFkihe+SUocGr9DSvJJ+io359DcnIsKC7Ekeiwz4iL3vtaTLWGT/
-         n+Fm5S3ro7UZ0v6oRyHH12VPemIDbSYhSSjhHq5/YDAzYNQG2239DoEeL84g8NhToh
-         P32S2QPUcZu9co8bOvN71DT6wOwpiY3tL+8blwVc=
+        b=Ljxtwr3LVMl9aP8MmmH7UJb9OpMsdzTGUoa1biD4/Dub+tQDRIpKxJP+YYSBHsVX+
+         N4S4J6EjReCLTDN+s7RKfH7Zy7mME5+GDuu3tB6RyVhSe7IFODROrnxsQpCKW+Cxdn
+         VDAWYm2NSaU2ntsVwPZC7DFXH2dWzH+Q5whrQkN8=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Chao Yu <yuchao0@huawei.com>,
-        Jaegeuk Kim <jaegeuk@kernel.org>,
+        stable@vger.kernel.org,
+        Kai Vehmanen <kai.vehmanen@linux.intel.com>,
+        Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>,
+        Mark Brown <broonie@kernel.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 237/344] f2fs: free sysfs kobject
-Date:   Fri, 21 Feb 2020 08:40:36 +0100
-Message-Id: <20200221072410.848453998@linuxfoundation.org>
+Subject: [PATCH 5.4 220/344] ASoC: SOF: Intel: hda-dai: fix compilation warning in pcm_prepare
+Date:   Fri, 21 Feb 2020 08:40:19 +0100
+Message-Id: <20200221072409.183097978@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200221072349.335551332@linuxfoundation.org>
 References: <20200221072349.335551332@linuxfoundation.org>
@@ -60,29 +62,49 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jaegeuk Kim <jaegeuk@kernel.org>
+From: Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
 
-[ Upstream commit 820d366736c949ffe698d3b3fe1266a91da1766d ]
+[ Upstream commit d873997192ddcacb5333575502be2f91ea4b47b8 ]
 
-Detected kmemleak.
+Fix GCC warning with W=1, previous cleanup did not remove unnecessary
+variable.
 
-Reviewed-by: Chao Yu <yuchao0@huawei.com>
-Signed-off-by: Jaegeuk Kim <jaegeuk@kernel.org>
+sound/soc/sof/intel/hda-dai.c: In function ‘hda_link_pcm_prepare’:
+
+sound/soc/sof/intel/hda-dai.c:265:31: warning: variable ‘hda_stream’
+set but not used [-Wunused-but-set-variable]
+  265 |  struct sof_intel_hda_stream *hda_stream;
+      |                               ^~~~~~~~~~
+
+Fixes: a3ebccb52efdf ("ASoC: SOF: Intel: hda: reset link DMA state in prepare")
+Cc: Kai Vehmanen <kai.vehmanen@linux.intel.com>
+Signed-off-by: Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
+Link: https://lore.kernel.org/r/20200113205620.27285-1-pierre-louis.bossart@linux.intel.com
+Signed-off-by: Mark Brown <broonie@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/f2fs/sysfs.c | 1 +
- 1 file changed, 1 insertion(+)
+ sound/soc/sof/intel/hda-dai.c | 3 ---
+ 1 file changed, 3 deletions(-)
 
-diff --git a/fs/f2fs/sysfs.c b/fs/f2fs/sysfs.c
-index b558b64a4c9ca..8544c0ab7b32b 100644
---- a/fs/f2fs/sysfs.c
-+++ b/fs/f2fs/sysfs.c
-@@ -782,4 +782,5 @@ void f2fs_unregister_sysfs(struct f2fs_sb_info *sbi)
- 		remove_proc_entry(sbi->sb->s_id, f2fs_proc_root);
- 	}
- 	kobject_del(&sbi->s_kobj);
-+	kobject_put(&sbi->s_kobj);
- }
+diff --git a/sound/soc/sof/intel/hda-dai.c b/sound/soc/sof/intel/hda-dai.c
+index 896d21984b735..1923b0c36bcef 100644
+--- a/sound/soc/sof/intel/hda-dai.c
++++ b/sound/soc/sof/intel/hda-dai.c
+@@ -261,14 +261,11 @@ static int hda_link_pcm_prepare(struct snd_pcm_substream *substream,
+ {
+ 	struct hdac_ext_stream *link_dev =
+ 				snd_soc_dai_get_dma_data(dai, substream);
+-	struct sof_intel_hda_stream *hda_stream;
+ 	struct snd_sof_dev *sdev =
+ 				snd_soc_component_get_drvdata(dai->component);
+ 	struct snd_soc_pcm_runtime *rtd = snd_pcm_substream_chip(substream);
+ 	int stream = substream->stream;
+ 
+-	hda_stream = hstream_to_sof_hda_stream(link_dev);
+-
+ 	if (link_dev->link_prepared)
+ 		return 0;
+ 
 -- 
 2.20.1
 
