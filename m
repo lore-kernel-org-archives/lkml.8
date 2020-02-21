@@ -4,50 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 55589C35642
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 08:40:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AFCE9C35641
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 08:40:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 21C3A2073A
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 08:40:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 829442073A
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 08:40:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582274423;
-	bh=tgCT0oEeWzXKOoEEL8Brn5QErQ9nBloG8frtfrpx0Sc=;
+	s=default; t=1582274431;
+	bh=SsNL5MnR4n7Jo/4O0AhUOyWnChUJgbvbffrPq0oW3sA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=X6vwU7aXzO4WklmlTrBJ7hAi6wEXOpXCM0VgTjdmlizyjpb9YxQhJAARjbZjfcM3N
-	 08ziaaZc+txJ0QoIuMZsDLi13PPX/KabOlSdoOnRRmzzJxyPrHQJ3wFc/BBmWkK8Wm
-	 r+KHHOfQo4+skno997OC00Fapopd24B2OyKWD3vw=
+	b=xMsHFdUFUMU67CYGaSv0ldq80efTiS04iRYboxXqjAITh1PqjNi5v1fyf1yEKgb9/
+	 G9Ceuw6uDY6Orfwo2KacGakhIvuWVK4v40egSd3jKOv2HpQUqxdGgpxXO169LhXuB6
+	 ujldMsVgTO1ULIK+Kx2IBbEJUs0Itkcz6FafMxaY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730875AbgBUH7N (ORCPT
+        id S1731433AbgBUIka (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Feb 2020 02:59:13 -0500
-Received: from mail.kernel.org ([198.145.29.99]:59186 "EHLO mail.kernel.org"
+        Fri, 21 Feb 2020 03:40:30 -0500
+Received: from mail.kernel.org ([198.145.29.99]:59016 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730557AbgBUH7K (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Feb 2020 02:59:10 -0500
+        id S1730376AbgBUH7C (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 21 Feb 2020 02:59:02 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1FA7520578;
-        Fri, 21 Feb 2020 07:59:08 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0CBF8206ED;
+        Fri, 21 Feb 2020 07:59:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1582271949;
-        bh=tgCT0oEeWzXKOoEEL8Brn5QErQ9nBloG8frtfrpx0Sc=;
+        s=default; t=1582271941;
+        bh=SsNL5MnR4n7Jo/4O0AhUOyWnChUJgbvbffrPq0oW3sA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ZlTZoM3pZ/M3IAsnPs8GwNhkGOHBEppTvQp0pe1umsu8dNSuAdYyMy7VRgDlkvRlM
-         2iwPxbhw3oGj9I8O+ON0dYF4aw9V7CZAZ9vG9V+1cV1u+P/Jp+U+6lG60K58pLG+nF
-         zJxpAnk2bEVaHWJYn7At+gxTvac1Sv/hLnsPr2jo=
+        b=JHlE/Q7mdKhYzwfWyfIsLHAAlGmW6cNehGoIx2m76CnsoB0klhganHtTK8eV1A87r
+         fFjnDVHPUFMeHTuShMnve6XEiv8++IV17GB4LI3ASm+H46aYWAGmpo/Gx1Udd/R5Mt
+         aoq7Qn1IJy6AND+mR4QbuV8a5olgbZgpz+CASiQQ=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Colin Ian King <colin.king@canonical.com>,
-        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
+        stable@vger.kernel.org, Heiko Carstens <heiko.carstens@de.ibm.com>,
+        Vasily Gorbik <gor@linux.ibm.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.5 322/399] driver core: platform: fix u32 greater or equal to zero comparison
-Date:   Fri, 21 Feb 2020 08:40:47 +0100
-Message-Id: <20200221072432.647893902@linuxfoundation.org>
+Subject: [PATCH 5.5 319/399] s390: adjust -mpacked-stack support check for clang 10
+Date:   Fri, 21 Feb 2020 08:40:44 +0100
+Message-Id: <20200221072432.406329018@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200221072402.315346745@linuxfoundation.org>
 References: <20200221072402.315346745@linuxfoundation.org>
@@ -60,39 +60,47 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Colin Ian King <colin.king@canonical.com>
+From: Vasily Gorbik <gor@linux.ibm.com>
 
-[ Upstream commit 0707cfa5c3ef58effb143db9db6d6e20503f9dec ]
+[ Upstream commit 253b3c4b2920e07ce9e2b18800b9b65245e2fafa ]
 
-Currently the check that a u32 variable i is >= 0 is always true because
-the unsigned variable will never be negative, causing the loop to run
-forever.  Fix this by changing the pre-decrement check to a zero check on
-i followed by a decrement of i.
+clang 10 introduces -mpacked-stack compiler option implementation. At the
+same time currently it does not support a combination of -mpacked-stack
+and -mbackchain. This leads to the following build error:
 
-Addresses-Coverity: ("Unsigned compared against 0")
-Fixes: 39cc539f90d0 ("driver core: platform: Prevent resouce overflow from causing infinite loops")
-Signed-off-by: Colin Ian King <colin.king@canonical.com>
-Reviewed-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
-Link: https://lore.kernel.org/r/20200116175758.88396-1-colin.king@canonical.com
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+clang: error: unsupported option '-mpacked-stack with -mbackchain' for
+target 's390x-ibm-linux'
+
+If/when clang adds support for a combination of -mpacked-stack and
+-mbackchain it would also require -msoft-float (like gcc does). According
+to Ulrich Weigand "stack slot assigned to the kernel backchain overlaps
+the stack slot assigned to the FPR varargs (both are required to be
+placed immediately after the saved r15 slot if present)."
+
+Extend -mpacked-stack compiler option support check to include all 3
+options -mpacked-stack -mbackchain -msoft-float which must present to
+support -mpacked-stack with -mbackchain.
+
+Acked-by: Heiko Carstens <heiko.carstens@de.ibm.com>
+Signed-off-by: Vasily Gorbik <gor@linux.ibm.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/base/platform.c | 2 +-
+ arch/s390/Makefile | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/base/platform.c b/drivers/base/platform.c
-index 864b53b3d5980..7fa654f1288b8 100644
---- a/drivers/base/platform.c
-+++ b/drivers/base/platform.c
-@@ -571,7 +571,7 @@ int platform_device_add(struct platform_device *pdev)
- 		pdev->id = PLATFORM_DEVID_AUTO;
- 	}
+diff --git a/arch/s390/Makefile b/arch/s390/Makefile
+index ba8556bb0fb15..e0e3a465bbfd6 100644
+--- a/arch/s390/Makefile
++++ b/arch/s390/Makefile
+@@ -69,7 +69,7 @@ cflags-y += -Wa,-I$(srctree)/arch/$(ARCH)/include
+ #
+ cflags-$(CONFIG_FRAME_POINTER) += -fno-optimize-sibling-calls
  
--	while (--i >= 0) {
-+	while (i--) {
- 		struct resource *r = &pdev->resource[i];
- 		if (r->parent)
- 			release_resource(r);
+-ifeq ($(call cc-option-yn,-mpacked-stack),y)
++ifeq ($(call cc-option-yn,-mpacked-stack -mbackchain -msoft-float),y)
+ cflags-$(CONFIG_PACK_STACK)  += -mpacked-stack -D__PACK_STACK
+ aflags-$(CONFIG_PACK_STACK)  += -D__PACK_STACK
+ endif
 -- 
 2.20.1
 
