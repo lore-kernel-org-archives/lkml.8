@@ -4,49 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 42E34C35641
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 08:11:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CAA06C35641
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 08:11:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 19C0524650
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 08:11:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9DDDF20722
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 08:11:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582272685;
-	bh=kLfit3+l6JmuMoFIOggjqVIq/2lixWIxyIbQSNqbNQA=;
+	s=default; t=1582272688;
+	bh=BnLV/XiU1Mx19jyOQNilqFRCAMb07AFrLVYS7MrpU00=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ghA23geoTSYuV2SdaV9qJEOHGd9e6gI2Wl9XJT8WF2ptkkIPYX3ibnZ7YYoFP/BV9
-	 OD1i4Egc0R8kLlurrHjCez1K+QgRjcyftqTIkZqbXL2vLihpUiJehnguWMwJicIYae
-	 2ip5kfeAEKpoqHFlb5qoDLz2Oip0mb4DC20LxpnE=
+	b=RV7p+2JhwXS/EKEJMmeGJZtPe6o5cixUfj3anHTaaroWuWBHIzJr3FP2Iow+gPRkr
+	 ZNDe0KfPpmUft1xZL7hyIK2zDu1o9MpeUoZDzOiEpAUykTjcTBDOfnx5q2BPMhs2Zp
+	 MLArfH1zUiFQRDZm/RV2vwBCbNJy2zqjNfiizJg0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732411AbgBUILY (ORCPT
+        id S1732693AbgBUIL1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Feb 2020 03:11:24 -0500
-Received: from mail.kernel.org ([198.145.29.99]:46758 "EHLO mail.kernel.org"
+        Fri, 21 Feb 2020 03:11:27 -0500
+Received: from mail.kernel.org ([198.145.29.99]:46822 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732675AbgBUILU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Feb 2020 03:11:20 -0500
+        id S1732682AbgBUILX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 21 Feb 2020 03:11:23 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A7D7820578;
-        Fri, 21 Feb 2020 08:11:19 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 25E5224672;
+        Fri, 21 Feb 2020 08:11:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1582272680;
-        bh=kLfit3+l6JmuMoFIOggjqVIq/2lixWIxyIbQSNqbNQA=;
+        s=default; t=1582272682;
+        bh=BnLV/XiU1Mx19jyOQNilqFRCAMb07AFrLVYS7MrpU00=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=R8+jt0UgRF/JbvQpxiCkRC/CqEaGkFzENR5TcJjlrDaWSOuCJCp5L9qm4zSFY8trj
-         ixKRuPOKro3E8t63fsp94qTl2gHBRfYR3GIZpalEqm0OYJCFaz7iGMMINma3N+qjHu
-         RjSZDDt/0ygMCzlk34xUwzUBefwSdc3gpZlh94S4=
+        b=hMlk9VkDol0gLctKkNyzd4yVy3S5drHfow5jKBgXaHMGLaQKdBqXikvSUyOkanpXl
+         qypDnQyy2ua7TQ4i0ZfVNuIeaYyvQS0e6OGS+Kd5WON+Zd/NKxrlBvK0K9zeS3i69a
+         3fzHVw3iRjgaO0ifEJdX4DCNo86sQS8fQZMCTbSc=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Dan Carpenter <dan.carpenter@oracle.com>,
-        Takashi Iwai <tiwai@suse.de>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 235/344] ALSA: usb-audio: unlock on error in probe
-Date:   Fri, 21 Feb 2020 08:40:34 +0100
-Message-Id: <20200221072410.646085992@linuxfoundation.org>
+        stable@vger.kernel.org, Jaegeuk Kim <jaegeuk@kernel.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.4 236/344] f2fs: set I_LINKABLE early to avoid wrong access by vfs
+Date:   Fri, 21 Feb 2020 08:40:35 +0100
+Message-Id: <20200221072410.747000091@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200221072349.335551332@linuxfoundation.org>
 References: <20200221072349.335551332@linuxfoundation.org>
@@ -59,34 +59,132 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Dan Carpenter <dan.carpenter@oracle.com>
+From: Jaegeuk Kim <jaegeuk@kernel.org>
 
-[ Upstream commit a3afa29942b84b4e2548beacccc3a68b8d77e3dc ]
+[ Upstream commit 5b1dbb082f196278f82b6a15a13848efacb9ff11 ]
 
-We need to unlock before we returning on this error path.
+This patch moves setting I_LINKABLE early in rename2(whiteout) to avoid the
+below warning.
 
-Fixes: 73ac9f5e5b43 ("ALSA: usb-audio: Add boot quirk for MOTU M Series")
-Signed-off-by: Dan Carpenter <dan.carpenter@oracle.com>
-Link: https://lore.kernel.org/r/20200115174604.rhanfgy4j3uc65cx@kili.mountain
-Signed-off-by: Takashi Iwai <tiwai@suse.de>
+[ 3189.163385] WARNING: CPU: 3 PID: 59523 at fs/inode.c:358 inc_nlink+0x32/0x40
+[ 3189.246979] Call Trace:
+[ 3189.248707]  f2fs_init_inode_metadata+0x2d6/0x440 [f2fs]
+[ 3189.251399]  f2fs_add_inline_entry+0x162/0x8c0 [f2fs]
+[ 3189.254010]  f2fs_add_dentry+0x69/0xe0 [f2fs]
+[ 3189.256353]  f2fs_do_add_link+0xc5/0x100 [f2fs]
+[ 3189.258774]  f2fs_rename2+0xabf/0x1010 [f2fs]
+[ 3189.261079]  vfs_rename+0x3f8/0xaa0
+[ 3189.263056]  ? tomoyo_path_rename+0x44/0x60
+[ 3189.265283]  ? do_renameat2+0x49b/0x550
+[ 3189.267324]  do_renameat2+0x49b/0x550
+[ 3189.269316]  __x64_sys_renameat2+0x20/0x30
+[ 3189.271441]  do_syscall_64+0x5a/0x230
+[ 3189.273410]  entry_SYSCALL_64_after_hwframe+0x49/0xbe
+[ 3189.275848] RIP: 0033:0x7f270b4d9a49
+
+Signed-off-by: Jaegeuk Kim <jaegeuk@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- sound/usb/card.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ fs/f2fs/namei.c | 27 +++++++++++++--------------
+ 1 file changed, 13 insertions(+), 14 deletions(-)
 
-diff --git a/sound/usb/card.c b/sound/usb/card.c
-index e6a618a239948..54f9ce38471e6 100644
---- a/sound/usb/card.c
-+++ b/sound/usb/card.c
-@@ -599,7 +599,7 @@ static int usb_audio_probe(struct usb_interface *intf,
- 	if (! chip) {
- 		err = snd_usb_apply_boot_quirk_once(dev, intf, quirk, id);
- 		if (err < 0)
--			return err;
-+			goto __error;
+diff --git a/fs/f2fs/namei.c b/fs/f2fs/namei.c
+index a1c507b0b4ac4..5d9584281935f 100644
+--- a/fs/f2fs/namei.c
++++ b/fs/f2fs/namei.c
+@@ -797,6 +797,7 @@ static int __f2fs_tmpfile(struct inode *dir, struct dentry *dentry,
  
- 		/* it's a fresh one.
- 		 * now look for an empty slot and create a new card instance
+ 	if (whiteout) {
+ 		f2fs_i_links_write(inode, false);
++		inode->i_state |= I_LINKABLE;
+ 		*whiteout = inode;
+ 	} else {
+ 		d_tmpfile(dentry, inode);
+@@ -867,6 +868,12 @@ static int f2fs_rename(struct inode *old_dir, struct dentry *old_dentry,
+ 			F2FS_I(old_dentry->d_inode)->i_projid)))
+ 		return -EXDEV;
+ 
++	if (flags & RENAME_WHITEOUT) {
++		err = f2fs_create_whiteout(old_dir, &whiteout);
++		if (err)
++			return err;
++	}
++
+ 	err = dquot_initialize(old_dir);
+ 	if (err)
+ 		goto out;
+@@ -898,17 +905,11 @@ static int f2fs_rename(struct inode *old_dir, struct dentry *old_dentry,
+ 		}
+ 	}
+ 
+-	if (flags & RENAME_WHITEOUT) {
+-		err = f2fs_create_whiteout(old_dir, &whiteout);
+-		if (err)
+-			goto out_dir;
+-	}
+-
+ 	if (new_inode) {
+ 
+ 		err = -ENOTEMPTY;
+ 		if (old_dir_entry && !f2fs_empty_dir(new_inode))
+-			goto out_whiteout;
++			goto out_dir;
+ 
+ 		err = -ENOENT;
+ 		new_entry = f2fs_find_entry(new_dir, &new_dentry->d_name,
+@@ -916,7 +917,7 @@ static int f2fs_rename(struct inode *old_dir, struct dentry *old_dentry,
+ 		if (!new_entry) {
+ 			if (IS_ERR(new_page))
+ 				err = PTR_ERR(new_page);
+-			goto out_whiteout;
++			goto out_dir;
+ 		}
+ 
+ 		f2fs_balance_fs(sbi, true);
+@@ -948,7 +949,7 @@ static int f2fs_rename(struct inode *old_dir, struct dentry *old_dentry,
+ 		err = f2fs_add_link(new_dentry, old_inode);
+ 		if (err) {
+ 			f2fs_unlock_op(sbi);
+-			goto out_whiteout;
++			goto out_dir;
+ 		}
+ 
+ 		if (old_dir_entry)
+@@ -972,7 +973,7 @@ static int f2fs_rename(struct inode *old_dir, struct dentry *old_dentry,
+ 				if (IS_ERR(old_page))
+ 					err = PTR_ERR(old_page);
+ 				f2fs_unlock_op(sbi);
+-				goto out_whiteout;
++				goto out_dir;
+ 			}
+ 		}
+ 	}
+@@ -991,7 +992,6 @@ static int f2fs_rename(struct inode *old_dir, struct dentry *old_dentry,
+ 	f2fs_delete_entry(old_entry, old_page, old_dir, NULL);
+ 
+ 	if (whiteout) {
+-		whiteout->i_state |= I_LINKABLE;
+ 		set_inode_flag(whiteout, FI_INC_LINK);
+ 		err = f2fs_add_link(old_dentry, whiteout);
+ 		if (err)
+@@ -1027,15 +1027,14 @@ put_out_dir:
+ 	f2fs_unlock_op(sbi);
+ 	if (new_page)
+ 		f2fs_put_page(new_page, 0);
+-out_whiteout:
+-	if (whiteout)
+-		iput(whiteout);
+ out_dir:
+ 	if (old_dir_entry)
+ 		f2fs_put_page(old_dir_page, 0);
+ out_old:
+ 	f2fs_put_page(old_page, 0);
+ out:
++	if (whiteout)
++		iput(whiteout);
+ 	return err;
+ }
+ 
 -- 
 2.20.1
 
