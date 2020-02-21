@@ -2,53 +2,53 @@ Return-Path: <SRS0=1210=4J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-14.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 77906C35641
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 08:07:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A05B2C35641
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 08:07:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4EC0A20722
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 08:07:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 731E120578
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 08:07:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582272428;
-	bh=sHMiD2s6qCYL0fQzvhMv7F2WRvsDG09B1rN0XDLI99Y=;
+	s=default; t=1582272433;
+	bh=di+Zo++bk6Hy+GQT84NpmgmGGK9V84DgZQuKR743nwQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=VvLnqm7BJ1nZz5qLndZe5CazCgdXxdb8z2fAPS2AedxYXnhvDdXJzliCnP3x1Q0bM
-	 Xf+RxGa18KpQoKNDpeexxS2gzA61k1OKFw8mJ0zJCP7SZoi4DAtLY4k6N77L1hEEDx
-	 Cj+GVwZkSLrKJK9KVRwhjqUEzsBzT2nTDKribA4s=
+	b=LNyMkfH6wG5DsTDZioQ8GMNGImYhH9CSfOnU+KCqIBNa4cQFarURQOCVieBSXhRPM
+	 odr1cS/Y11qr2Dmf+yCT2kNITapcCF5Pn1sz/THuodXFja8XMgdoifu8kD5wGLpOZb
+	 LjDCvPzVYy/VsR04I1Yj8ejEVHpIqJk3m+zOqumc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732027AbgBUIHH (ORCPT
+        id S1731160AbgBUIHL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Feb 2020 03:07:07 -0500
-Received: from mail.kernel.org ([198.145.29.99]:41110 "EHLO mail.kernel.org"
+        Fri, 21 Feb 2020 03:07:11 -0500
+Received: from mail.kernel.org ([198.145.29.99]:41268 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731714AbgBUIHD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Feb 2020 03:07:03 -0500
+        id S1732033AbgBUIHJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 21 Feb 2020 03:07:09 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D463520722;
-        Fri, 21 Feb 2020 08:07:02 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6344D2073A;
+        Fri, 21 Feb 2020 08:07:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1582272423;
-        bh=sHMiD2s6qCYL0fQzvhMv7F2WRvsDG09B1rN0XDLI99Y=;
+        s=default; t=1582272428;
+        bh=di+Zo++bk6Hy+GQT84NpmgmGGK9V84DgZQuKR743nwQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=T3X1Yaao3dlkUitOzMeS2gxtjGr0zbKT5WZhsGkacXyYR76+/LmHE6LjFfM5SVsaf
-         AfPTn2xuVSHl2G0EiEU2+EpvWDbTXjW1fEhEEJisQ9UbLu/lsk94NW1M7/2UdnB666
-         Mt6OMwzTDPK+28s4TGbNddF+82iFMOnZuWfGRusw=
+        b=07HiSagi7KG/xY6aa27gpbx7cUvTCitR/rz/YwqWEcZFzSKUBYwrLBJq//NORtV35
+         uxBq/fLXcRBNYQKR2eEDpe1mzrowJfaxT8SzdSA90H3PSITDKLqkNbBeccoYBvd3W5
+         6sJ6edya+42jC8pOFxFgvh1OsrQfJAKm457+/9HI=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, James Sewart <jamessewart@arista.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Logan Gunthorpe <logang@deltatee.com>,
+        stable@vger.kernel.org, Phong Tran <tranmanphong@gmail.com>,
+        Kees Cook <keescook@chromium.org>,
+        Kalle Valo <kvalo@codeaurora.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 136/344] PCI: Add DMA alias quirk for PLX PEX NTB
-Date:   Fri, 21 Feb 2020 08:38:55 +0100
-Message-Id: <20200221072401.183770270@linuxfoundation.org>
+Subject: [PATCH 5.4 138/344] ipw2x00: Fix -Wcast-function-type
+Date:   Fri, 21 Feb 2020 08:38:57 +0100
+Message-Id: <20200221072401.374001398@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200221072349.335551332@linuxfoundation.org>
 References: <20200221072349.335551332@linuxfoundation.org>
@@ -61,52 +61,79 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: James Sewart <jamessewart@arista.com>
+From: Phong Tran <tranmanphong@gmail.com>
 
-[ Upstream commit 7b90dfc4873b87c468cc6046538f46a531c1d785 ]
+[ Upstream commit ebd77feb27e91bb5fe35a7818b7c13ea7435fb98 ]
 
-The PLX PEX NTB forwards DMA transactions using Requester IDs that don't
-exist as PCI devices.  The devfn for a transaction is used as an index into
-a lookup table storing the origin of a transaction on the other side of the
-bridge.
+correct usage prototype of callback in tasklet_init().
+Report by https://github.com/KSPP/linux/issues/20
 
-Alias all possible devfns to the NTB device so that any transaction coming
-in is governed by the mappings for the NTB.
-
-Signed-off-by: James Sewart <jamessewart@arista.com>
-Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
-Reviewed-by: Logan Gunthorpe <logang@deltatee.com>
+Signed-off-by: Phong Tran <tranmanphong@gmail.com>
+Reviewed-by: Kees Cook <keescook@chromium.org>
+Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/pci/quirks.c | 15 +++++++++++++++
- 1 file changed, 15 insertions(+)
+ drivers/net/wireless/intel/ipw2x00/ipw2100.c | 7 ++++---
+ drivers/net/wireless/intel/ipw2x00/ipw2200.c | 5 +++--
+ 2 files changed, 7 insertions(+), 5 deletions(-)
 
-diff --git a/drivers/pci/quirks.c b/drivers/pci/quirks.c
-index 67a9ad3734d18..2fdceaab73072 100644
---- a/drivers/pci/quirks.c
-+++ b/drivers/pci/quirks.c
-@@ -5352,6 +5352,21 @@ SWITCHTEC_QUIRK(0x8574);  /* PFXI 64XG3 */
- SWITCHTEC_QUIRK(0x8575);  /* PFXI 80XG3 */
- SWITCHTEC_QUIRK(0x8576);  /* PFXI 96XG3 */
+diff --git a/drivers/net/wireless/intel/ipw2x00/ipw2100.c b/drivers/net/wireless/intel/ipw2x00/ipw2100.c
+index 8dfbaff2d1fe2..a162146a43a72 100644
+--- a/drivers/net/wireless/intel/ipw2x00/ipw2100.c
++++ b/drivers/net/wireless/intel/ipw2x00/ipw2100.c
+@@ -3206,8 +3206,9 @@ static void ipw2100_tx_send_data(struct ipw2100_priv *priv)
+ 	}
+ }
  
-+/*
-+ * The PLX NTB uses devfn proxy IDs to move TLPs between NT endpoints.
-+ * These IDs are used to forward responses to the originator on the other
-+ * side of the NTB.  Alias all possible IDs to the NTB to permit access when
-+ * the IOMMU is turned on.
-+ */
-+static void quirk_plx_ntb_dma_alias(struct pci_dev *pdev)
-+{
-+	pci_info(pdev, "Setting PLX NTB proxy ID aliases\n");
-+	/* PLX NTB may use all 256 devfns */
-+	pci_add_dma_alias(pdev, 0, 256);
-+}
-+DECLARE_PCI_FIXUP_HEADER(PCI_VENDOR_ID_PLX, 0x87b0, quirk_plx_ntb_dma_alias);
-+DECLARE_PCI_FIXUP_HEADER(PCI_VENDOR_ID_PLX, 0x87b1, quirk_plx_ntb_dma_alias);
-+
- /*
-  * On Lenovo Thinkpad P50 SKUs with a Nvidia Quadro M1000M, the BIOS does
-  * not always reset the secondary Nvidia GPU between reboots if the system
+-static void ipw2100_irq_tasklet(struct ipw2100_priv *priv)
++static void ipw2100_irq_tasklet(unsigned long data)
+ {
++	struct ipw2100_priv *priv = (struct ipw2100_priv *)data;
+ 	struct net_device *dev = priv->net_dev;
+ 	unsigned long flags;
+ 	u32 inta, tmp;
+@@ -6007,7 +6008,7 @@ static void ipw2100_rf_kill(struct work_struct *work)
+ 	spin_unlock_irqrestore(&priv->low_lock, flags);
+ }
+ 
+-static void ipw2100_irq_tasklet(struct ipw2100_priv *priv);
++static void ipw2100_irq_tasklet(unsigned long data);
+ 
+ static const struct net_device_ops ipw2100_netdev_ops = {
+ 	.ndo_open		= ipw2100_open,
+@@ -6137,7 +6138,7 @@ static struct net_device *ipw2100_alloc_device(struct pci_dev *pci_dev,
+ 	INIT_DELAYED_WORK(&priv->rf_kill, ipw2100_rf_kill);
+ 	INIT_DELAYED_WORK(&priv->scan_event, ipw2100_scan_event);
+ 
+-	tasklet_init(&priv->irq_tasklet, (void (*)(unsigned long))
++	tasklet_init(&priv->irq_tasklet,
+ 		     ipw2100_irq_tasklet, (unsigned long)priv);
+ 
+ 	/* NOTE:  We do not start the deferred work for status checks yet */
+diff --git a/drivers/net/wireless/intel/ipw2x00/ipw2200.c b/drivers/net/wireless/intel/ipw2x00/ipw2200.c
+index ed0f06532d5e2..ac5f797fb1ad1 100644
+--- a/drivers/net/wireless/intel/ipw2x00/ipw2200.c
++++ b/drivers/net/wireless/intel/ipw2x00/ipw2200.c
+@@ -1945,8 +1945,9 @@ static void notify_wx_assoc_event(struct ipw_priv *priv)
+ 	wireless_send_event(priv->net_dev, SIOCGIWAP, &wrqu, NULL);
+ }
+ 
+-static void ipw_irq_tasklet(struct ipw_priv *priv)
++static void ipw_irq_tasklet(unsigned long data)
+ {
++	struct ipw_priv *priv = (struct ipw_priv *)data;
+ 	u32 inta, inta_mask, handled = 0;
+ 	unsigned long flags;
+ 	int rc = 0;
+@@ -10680,7 +10681,7 @@ static int ipw_setup_deferred_work(struct ipw_priv *priv)
+ 	INIT_WORK(&priv->qos_activate, ipw_bg_qos_activate);
+ #endif				/* CONFIG_IPW2200_QOS */
+ 
+-	tasklet_init(&priv->irq_tasklet, (void (*)(unsigned long))
++	tasklet_init(&priv->irq_tasklet,
+ 		     ipw_irq_tasklet, (unsigned long)priv);
+ 
+ 	return ret;
 -- 
 2.20.1
 
