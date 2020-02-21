@@ -7,58 +7,59 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 87CEEC35641
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 06:12:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AE028C35641
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 06:14:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4696E24680
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 06:12:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7655124683
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 06:14:23 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=brainfault-org.20150623.gappssmtp.com header.i=@brainfault-org.20150623.gappssmtp.com header.b="Yca2hIg1"
+	dkim=pass (2048-bit key) header.d=brainfault-org.20150623.gappssmtp.com header.i=@brainfault-org.20150623.gappssmtp.com header.b="IFrjxLAf"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727025AbgBUGM2 (ORCPT
+        id S1726909AbgBUGOW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Feb 2020 01:12:28 -0500
-Received: from mail-wr1-f67.google.com ([209.85.221.67]:35544 "EHLO
-        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726045AbgBUGM1 (ORCPT
+        Fri, 21 Feb 2020 01:14:22 -0500
+Received: from mail-wm1-f68.google.com ([209.85.128.68]:37138 "EHLO
+        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726325AbgBUGOV (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Feb 2020 01:12:27 -0500
-Received: by mail-wr1-f67.google.com with SMTP id w12so646011wrt.2
-        for <linux-kernel@vger.kernel.org>; Thu, 20 Feb 2020 22:12:25 -0800 (PST)
+        Fri, 21 Feb 2020 01:14:21 -0500
+Received: by mail-wm1-f68.google.com with SMTP id a6so434043wme.2
+        for <linux-kernel@vger.kernel.org>; Thu, 20 Feb 2020 22:14:19 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=brainfault-org.20150623.gappssmtp.com; s=20150623;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=a/3xB0RkiB7baFHATBbKKo2gUoBKvTJVWGEf9JZU5rw=;
-        b=Yca2hIg1iMX8Pd051IhevFUW+RX44TIW1j7XPpjUNrCGQFD6zjcIqHAsmEsjv8BzEZ
-         hHaSEh2FGkSYDe3A2YRFDIftCjQ4BjMzEzpg+OSZWNCK6OZBqf7IBrnUGK79fTBqL640
-         MoC4CNVjBGwskQvM4Vg5aOnNtTgypKzpg2yAfrGDuWluUTFeUZqH+j4yAtbQ2pjQ5L4Z
-         sa/NCmxLcNC59R9K/SIGcAbKpP6f0ynSK+BJUjFZ6P2HbcArT6nwKiotGm+dl2BeUsem
-         YJQjEn2/HvOl4nj1jO1zijoe3QiGgoBzXX315TmTa5IN2NxxsynTS1l6rxR4laau6nX0
-         uTlw==
+        bh=9NPzj0GacQ93xagAlNK8LgngBMkJMj6Y7tJEVRY8XPM=;
+        b=IFrjxLAfYapdU82d5FN6Qpsf+Ekh+12KMYjkVEpMNW7/82DoOy8WVlYlz+Rzqoo34M
+         JaoqTfkCCsbEeHTvN9kVq97rWd2e2Eygj+xOjfwThwCc/oD0gaqh7d+LTvjjKTjK000G
+         07hI03SrOmtad3wAPZaSYI+Mll+T+Of2cb7W7o/cZKBwVc6byUMAdIZocZ/FFIj1h+b5
+         UU/JAVH66iBb5kU+SjOB8BHk0vBXOZ2q2IN9PX4SSejcWucMniJO25FshU0UDI/u/QcC
+         /MC/vrICzX4QuZc21dWcDs0hYHqKHSeNXxreulhqmbWe1g+axscyL9sWWuWceHf/Lsfs
+         NKHg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=a/3xB0RkiB7baFHATBbKKo2gUoBKvTJVWGEf9JZU5rw=;
-        b=G2ey1PdH0+GlLdmJfp97smp+uz5NaOu9JlyHwB+1PjyAHi3ZvtCQ1hW5dvSx8+ggrn
-         wPuczYnId/5Qx/rgoBcUqabjgKrSPgA++0DNxCjO0/zTmBPa1ACjSd7HasA9pv13+GAk
-         qe6Drd+FEJhkDfPvwreQj5lCrUEP9h8HMvzf+1T/eNSgQdQeDtJuyQUyklJa4tbQYN5R
-         80mBAGdGn39zweThp+34h8bE5fHoZv8RwaS4MihUFSfzy8GA8VUZPBn2vDHl0WYLP0VG
-         y4G5olu4bcvUyYexflQbjopsR5FNkjF9T9lAqXXr5R7pY5gWEsvzqxtaboGmnJia/v/z
-         3sdQ==
-X-Gm-Message-State: APjAAAVRp4DzvS/jLvFzYbb7qga3tyPMtWYUqTYZ4aFpaB79hE9Sj7h2
-        HZStafnBYfK3/MtigjVIjFakv+bX3tfQqPpNfrGAKQ==
-X-Google-Smtp-Source: APXvYqw/wJV/aP71pHIx9ULj6Aq0vo1KUVXXwu51ia8m/F9FKNWcynrTp3OrNJr68GOOPhqd6bMlA62uOlc70XeUTLc=
-X-Received: by 2002:a5d:538e:: with SMTP id d14mr48492068wrv.358.1582265544274;
- Thu, 20 Feb 2020 22:12:24 -0800 (PST)
+        bh=9NPzj0GacQ93xagAlNK8LgngBMkJMj6Y7tJEVRY8XPM=;
+        b=WWxljIZFEyquVWmzzKmdEHaGytwr4Xwe556G/A/eLLz6n0FZzkb5Tn2PKHjazRHWoW
+         0I0kpPFqE7/1/M91gh3KezRdSH0mT8nXObnabg1YlbbioNalrVu8K0c0pSbNZGV+HFe+
+         ABakjQMA3jQ9SeA+CGxgNRk8JD5lOBDpu4K435oibeeE5RPuIXeVaRyrW9IzjtJlgTlK
+         W7uMKyIgVGflQKMzfrBJFMrv2hR04by6XJB/NIKEIVxsIyUC8aDmjVDeje+PAN5N3YHg
+         WieEJcwxBEhM53l4ZDLYtZAaPbKy+UXRzLsl5JvZbnpZG3Tn65jV1AzL44FCvlU7XAL/
+         2/oA==
+X-Gm-Message-State: APjAAAV+d+RzU2Szl3iyPJJIG+4JjN00m0EoF40MS/3kBwlYjjZiHheN
+        UZZkfgOocR2DT6AOQ0At3ksJ5mXq95fDBGLssbtZQA==
+X-Google-Smtp-Source: APXvYqz794x7M6ev4Ic+y22CYFH8oQAHpmcAHV37yjJe2Y9WTIKEB7WDPYuI8qFGk3AqjZnn1Zj5VoRdj+Y+lC3GDB4=
+X-Received: by 2002:a05:600c:285:: with SMTP id 5mr1535010wmk.120.1582265658118;
+ Thu, 20 Feb 2020 22:14:18 -0800 (PST)
 MIME-Version: 1.0
-References: <20200221004413.12869-1-atish.patra@wdc.com> <20200221004413.12869-12-atish.patra@wdc.com>
-In-Reply-To: <20200221004413.12869-12-atish.patra@wdc.com>
+References: <20200221004413.12869-1-atish.patra@wdc.com> <20200221004413.12869-13-atish.patra@wdc.com>
+In-Reply-To: <20200221004413.12869-13-atish.patra@wdc.com>
 From:   Anup Patel <anup@brainfault.org>
-Date:   Fri, 21 Feb 2020 11:42:12 +0530
-Message-ID: <CAAhSdy2tHH8e5j9nBdjAc-WoNrmTZxr_S4rWBUFvBOnRTJ86Eg@mail.gmail.com>
-Subject: Re: [PATCH v9 11/12] RISC-V: Support cpu hotplug
+Date:   Fri, 21 Feb 2020 11:44:06 +0530
+Message-ID: <CAAhSdy2nY1LStqDJPU10CN2d=p5XQzkE2RjXdkXoAoumhyO5-A@mail.gmail.com>
+Subject: Re: [PATCH v9 12/12] irqchip/sifive-plic: Initialize the plic handler
+ when cpu comes online
 To:     Atish Patra <atish.patra@wdc.com>
 Cc:     "linux-kernel@vger.kernel.org List" <linux-kernel@vger.kernel.org>,
         Albert Ou <aou@eecs.berkeley.edu>,
@@ -87,412 +88,143 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 On Fri, Feb 21, 2020 at 6:14 AM Atish Patra <atish.patra@wdc.com> wrote:
 >
-> This patch enable support for cpu hotplug in RISC-V. It uses SBI HSM
-> extension to online/offline any hart. As a result, the harts are
-> returned to firmware once they are offline. If the harts are brought
-> online afterwards, they re-enter Linux kernel as if a secondary hart
-> booted for the first time. All booting requirements are honored during
-> this process.
+> Currently, plic threshold and priority are only initialized once in the
+> beginning. However, threshold can be set to disabled if cpu is marked
+> offline with cpu hotplug feature. This will not allow to change the
+> irq affinity to a cpu that just came online.
 >
-> Tested both on QEMU and HighFive Unleashed board with. Test result follows.
->
-> ---------------------------------------------------
-> Offline cpu 2
-> ---------------------------------------------------
-> $ echo 0 > /sys/devices/system/cpu/cpu2/online
-> [   32.828684] CPU2: off
-> $ cat /proc/cpuinfo
-> processor       : 0
-> hart            : 0
-> isa             : rv64imafdcsu
-> mmu             : sv48
->
-> processor       : 1
-> hart            : 1
-> isa             : rv64imafdcsu
-> mmu             : sv48
->
-> processor       : 3
-> hart            : 3
-> isa             : rv64imafdcsu
-> mmu             : sv48
->
-> processor       : 4
-> hart            : 4
-> isa             : rv64imafdcsu
-> mmu             : sv48
->
-> processor       : 5
-> hart            : 5
-> isa             : rv64imafdcsu
-> mmu             : sv48
->
-> processor       : 6
-> hart            : 6
-> isa             : rv64imafdcsu
-> mmu             : sv48
->
-> processor       : 7
-> hart            : 7
-> isa             : rv64imafdcsu
-> mmu             : sv48
->
-> ---------------------------------------------------
-> online cpu 2
-> ---------------------------------------------------
-> $ echo 1 > /sys/devices/system/cpu/cpu2/online
-> $ cat /proc/cpuinfo
-> processor       : 0
-> hart            : 0
-> isa             : rv64imafdcsu
-> mmu             : sv48
->
-> processor       : 1
-> hart            : 1
-> isa             : rv64imafdcsu
-> mmu             : sv48
->
-> processor       : 2
-> hart            : 2
-> isa             : rv64imafdcsu
-> mmu             : sv48
->
-> processor       : 3
-> hart            : 3
-> isa             : rv64imafdcsu
-> mmu             : sv48
->
-> processor       : 4
-> hart            : 4
-> isa             : rv64imafdcsu
-> mmu             : sv48
->
-> processor       : 5
-> hart            : 5
-> isa             : rv64imafdcsu
-> mmu             : sv48
->
-> processor       : 6
-> hart            : 6
-> isa             : rv64imafdcsu
-> mmu             : sv48
->
-> processor       : 7
-> hart            : 7
-> isa             : rv64imafdcsu
-> mmu             : sv48
+> Add plic specific cpu hotplug callback and initialize the per cpu handler
+> when cpu comes online.
 >
 > Signed-off-by: Atish Patra <atish.patra@wdc.com>
 > ---
->  arch/riscv/Kconfig               | 12 ++++-
->  arch/riscv/include/asm/cpu_ops.h | 12 +++++
->  arch/riscv/include/asm/smp.h     | 17 +++++++
->  arch/riscv/kernel/Makefile       |  1 +
->  arch/riscv/kernel/cpu-hotplug.c  | 87 ++++++++++++++++++++++++++++++++
->  arch/riscv/kernel/cpu_ops_sbi.c  | 34 +++++++++++++
->  arch/riscv/kernel/setup.c        | 19 ++++++-
->  7 files changed, 180 insertions(+), 2 deletions(-)
->  create mode 100644 arch/riscv/kernel/cpu-hotplug.c
+>  arch/riscv/kernel/traps.c         |  2 +-
+>  drivers/irqchip/irq-sifive-plic.c | 38 +++++++++++++++++++++++++++----
+>  include/linux/cpuhotplug.h        |  1 +
+>  3 files changed, 36 insertions(+), 5 deletions(-)
 >
-> diff --git a/arch/riscv/Kconfig b/arch/riscv/Kconfig
-> index 8c0f5385fa30..27bfc7947e44 100644
-> --- a/arch/riscv/Kconfig
-> +++ b/arch/riscv/Kconfig
-> @@ -20,7 +20,6 @@ config RISCV
->         select CLONE_BACKWARDS
->         select COMMON_CLK
->         select GENERIC_CLOCKEVENTS
-> -       select GENERIC_CPU_DEVICES
->         select GENERIC_IRQ_SHOW
->         select GENERIC_PCI_IOMAP
->         select GENERIC_SCHED_CLOCK
-> @@ -247,6 +246,17 @@ config NR_CPUS
->         depends on SMP
->         default "8"
->
-> +config HOTPLUG_CPU
-> +       bool "Support for hot-pluggable CPUs"
-> +       depends on SMP
-> +       select GENERIC_IRQ_MIGRATION
-> +       help
-> +
-> +         Say Y here to experiment with turning CPUs off and on.  CPUs
-> +         can be controlled through /sys/devices/system/cpu.
-> +
-> +         Say N if you want to disable CPU hotplug.
-> +
->  choice
->         prompt "CPU Tuning"
->         default TUNE_GENERIC
-> diff --git a/arch/riscv/include/asm/cpu_ops.h b/arch/riscv/include/asm/cpu_ops.h
-> index daf29f70407d..efd6700d245d 100644
-> --- a/arch/riscv/include/asm/cpu_ops.h
-> +++ b/arch/riscv/include/asm/cpu_ops.h
-> @@ -18,12 +18,24 @@
->   *                     is a mechanism for doing so, tests whether it is
->   *                     possible to boot the given HART.
->   * @cpu_start:         Boots a cpu into the kernel.
-> + * @cpu_disable:       Prepares a cpu to die. May fail for some
-> + *                     mechanism-specific reason, which will cause the hot
-> + *                     unplug to be aborted. Called from the cpu to be killed.
-> + * @cpu_stop:          Makes a cpu leave the kernel. Must not fail. Called from
-> + *                     the cpu being stopped.
-> + * @cpu_is_stopped:    Ensures a cpu has left the kernel. Called from another
-> + *                     cpu.
->   */
->  struct cpu_operations {
->         const char      *name;
->         int             (*cpu_prepare)(unsigned int cpu);
->         int             (*cpu_start)(unsigned int cpu,
->                                      struct task_struct *tidle);
-> +#ifdef CONFIG_HOTPLUG_CPU
-> +       int             (*cpu_disable)(unsigned int cpu);
-> +       void            (*cpu_stop)(void);
-> +       int             (*cpu_is_stopped)(unsigned int cpu);
-> +#endif
->  };
->
->  extern const struct cpu_operations *cpu_ops[NR_CPUS];
-> diff --git a/arch/riscv/include/asm/smp.h b/arch/riscv/include/asm/smp.h
-> index 023f74fb8b3b..f4c7cfda6b7f 100644
-> --- a/arch/riscv/include/asm/smp.h
-> +++ b/arch/riscv/include/asm/smp.h
-> @@ -43,6 +43,13 @@ void riscv_cpuid_to_hartid_mask(const struct cpumask *in, struct cpumask *out);
->   */
->  #define raw_smp_processor_id() (current_thread_info()->cpu)
->
-> +#if defined CONFIG_HOTPLUG_CPU
-> +int __cpu_disable(void);
-> +void __cpu_die(unsigned int cpu);
-> +void cpu_stop(void);
-> +#else
-> +#endif /* CONFIG_HOTPLUG_CPU */
-> +
->  #else
->
->  static inline void show_ipi_stats(struct seq_file *p, int prec)
-> @@ -69,4 +76,14 @@ static inline void riscv_cpuid_to_hartid_mask(const struct cpumask *in,
+> diff --git a/arch/riscv/kernel/traps.c b/arch/riscv/kernel/traps.c
+> index 8e13ad45ccaa..16c59807da6a 100644
+> --- a/arch/riscv/kernel/traps.c
+> +++ b/arch/riscv/kernel/traps.c
+> @@ -157,5 +157,5 @@ void trap_init(void)
+>         /* Set the exception vector address */
+>         csr_write(CSR_TVEC, &handle_exception);
+>         /* Enable interrupts */
+> -       csr_write(CSR_IE, IE_SIE | IE_EIE);
+> +       csr_write(CSR_IE, IE_SIE);
 >  }
->
->  #endif /* CONFIG_SMP */
-> +
-> +#if defined(CONFIG_HOTPLUG_CPU) && (CONFIG_SMP)
-> +bool cpu_has_hotplug(unsigned int cpu);
-> +#else
-> +static inline bool cpu_has_hotplug(unsigned int cpu)
-> +{
-> +       return false;
-> +}
-> +#endif
-> +
->  #endif /* _ASM_RISCV_SMP_H */
-> diff --git a/arch/riscv/kernel/Makefile b/arch/riscv/kernel/Makefile
-> index a0be34b96846..9601ac907f70 100644
-> --- a/arch/riscv/kernel/Makefile
-> +++ b/arch/riscv/kernel/Makefile
-> @@ -47,5 +47,6 @@ obj-$(CONFIG_RISCV_SBI)               += sbi.o
->  ifeq ($(CONFIG_RISCV_SBI), y)
->  obj-$(CONFIG_SMP) += cpu_ops_sbi.o
->  endif
-> +obj-$(CONFIG_HOTPLUG_CPU)      += cpu-hotplug.o
->
->  clean:
-> diff --git a/arch/riscv/kernel/cpu-hotplug.c b/arch/riscv/kernel/cpu-hotplug.c
-> new file mode 100644
-> index 000000000000..2a37cfb6eb46
-> --- /dev/null
-> +++ b/arch/riscv/kernel/cpu-hotplug.c
-> @@ -0,0 +1,87 @@
-> +// SPDX-License-Identifier: GPL-2.0
-> +/*
-> + * Copyright (C) 2018 Western Digital Corporation or its affiliates.
-
-Use Copyright (C) 2020 here and all other patches.
-
-> + */
-> +
-> +#include <linux/kernel.h>
-> +#include <linux/mm.h>
-> +#include <linux/sched.h>
-> +#include <linux/err.h>
-> +#include <linux/irq.h>
+> diff --git a/drivers/irqchip/irq-sifive-plic.c b/drivers/irqchip/irq-sifive-plic.c
+> index aa4af886e43a..7c7f37393f99 100644
+> --- a/drivers/irqchip/irq-sifive-plic.c
+> +++ b/drivers/irqchip/irq-sifive-plic.c
+> @@ -4,6 +4,7 @@
+>   * Copyright (C) 2018 Christoph Hellwig
+>   */
+>  #define pr_fmt(fmt) "plic: " fmt
 > +#include <linux/cpu.h>
-> +#include <linux/sched/hotplug.h>
-> +#include <asm/irq.h>
-> +#include <asm/cpu_ops.h>
-> +#include <asm/sbi.h>
+>  #include <linux/interrupt.h>
+>  #include <linux/io.h>
+>  #include <linux/irq.h>
+> @@ -55,6 +56,9 @@
+>  #define     CONTEXT_THRESHOLD          0x00
+>  #define     CONTEXT_CLAIM              0x04
+>
+> +#define        PLIC_DISABLE_THRESHOLD          0xf
+> +#define        PLIC_ENABLE_THRESHOLD           0
 > +
-> +void cpu_stop(void);
-> +void arch_cpu_idle_dead(void)
-> +{
-> +       cpu_stop();
-> +}
-> +
-> +bool cpu_has_hotplug(unsigned int cpu)
-> +{
-> +       if (cpu_ops[cpu]->cpu_stop)
-> +               return true;
-> +
-> +       return false;
-> +}
-> +
-> +/*
-> + * __cpu_disable runs on the processor to be shutdown.
-> + */
-> +int __cpu_disable(void)
-> +{
-> +       int ret = 0;
-> +       unsigned int cpu = smp_processor_id();
-> +
-> +       if (!cpu_ops[cpu] || !cpu_ops[cpu]->cpu_stop)
-> +               return -EOPNOTSUPP;
-> +
-> +       if (cpu_ops[cpu]->cpu_disable)
-> +               ret = cpu_ops[cpu]->cpu_disable(cpu);
-> +
-> +       if (ret)
-> +               return ret;
-> +
-> +       remove_cpu_topology(cpu);
-> +       set_cpu_online(cpu, false);
-> +       irq_migrate_all_off_this_cpu();
-> +
-> +       return ret;
-> +}
-> +
-> +/*
-> + * Called on the thread which is asking for a CPU to be shutdown.
-> + */
-> +void __cpu_die(unsigned int cpu)
-> +{
-> +       int ret = 0;
-> +
-> +       if (!cpu_wait_death(cpu, 5)) {
-> +               pr_err("CPU %u: didn't die\n", cpu);
-> +               return;
-> +       }
-> +       pr_notice("CPU%u: off\n", cpu);
-> +
-> +       /* Verify from the firmware if the cpu is really stopped*/
-> +       if (cpu_ops[cpu]->cpu_is_stopped)
-> +               ret = cpu_ops[cpu]->cpu_is_stopped(cpu);
-> +       if (ret)
-> +               pr_warn("CPU%d may not have stopped: %d\n", cpu, ret);
-> +}
-> +
-> +/*
-> + * Called from the idle thread for the CPU which has been shutdown.
-> + */
-> +void cpu_stop(void)
-> +{
-> +       idle_task_exit();
-> +
-> +       (void)cpu_report_death();
-> +
-> +       cpu_ops[smp_processor_id()]->cpu_stop();
-> +       /* It should never reach here */
-> +       BUG();
-> +}
-> diff --git a/arch/riscv/kernel/cpu_ops_sbi.c b/arch/riscv/kernel/cpu_ops_sbi.c
-> index 70d02dfe0ab8..8848c5b6e1c4 100644
-> --- a/arch/riscv/kernel/cpu_ops_sbi.c
-> +++ b/arch/riscv/kernel/cpu_ops_sbi.c
-> @@ -74,8 +74,42 @@ static int sbi_cpu_prepare(unsigned int cpuid)
->         return 0;
+>  static void __iomem *plic_regs;
+>
+>  struct plic_handler {
+> @@ -230,6 +234,32 @@ static int plic_find_hart_id(struct device_node *node)
+>         return -1;
 >  }
 >
-> +#ifdef CONFIG_HOTPLUG_CPU
-> +static int sbi_cpu_disable(unsigned int cpuid)
+> +static void plic_set_threshold(struct plic_handler *handler, u32 threshold)
 > +{
-> +       if (!cpu_ops_sbi.cpu_stop)
-> +               return -EOPNOTSUPP;
+> +       /* priority must be > threshold to trigger an interrupt */
+> +       writel(threshold, handler->hart_base + CONTEXT_THRESHOLD);
+> +}
+> +
+> +static int plic_dying_cpu(unsigned int cpu)
+> +{
+> +       struct plic_handler *handler = this_cpu_ptr(&plic_handlers);
+> +
+> +       csr_clear(CSR_IE, IE_EIE);
+> +       plic_set_threshold(handler, PLIC_DISABLE_THRESHOLD);
+> +
 > +       return 0;
 > +}
 > +
-> +static void sbi_cpu_stop(void)
+> +static int plic_starting_cpu(unsigned int cpu)
 > +{
-> +       int ret;
+> +       struct plic_handler *handler = this_cpu_ptr(&plic_handlers);
 > +
-> +       ret = sbi_hsm_hart_stop();
-> +       pr_crit("Unable to stop the cpu %u (%d)\n", smp_processor_id(), ret);
+> +       csr_set(CSR_IE, IE_EIE);
+> +       plic_set_threshold(handler, PLIC_ENABLE_THRESHOLD);
+> +
+> +       return 0;
 > +}
 > +
-> +static int sbi_cpu_is_stopped(unsigned int cpuid)
-> +{
-> +       int rc;
-> +       int hartid = cpuid_to_hartid_map(cpuid);
-> +
-> +       rc = sbi_hsm_hart_get_status(hartid);
-> +
-> +       if (rc == SBI_HSM_HART_STATUS_NOT_AVAILABLE)
-> +               return 0;
-> +       return rc;
-> +}
-> +#endif
-> +
->  const struct cpu_operations cpu_ops_sbi = {
->         .name           = "sbi",
->         .cpu_prepare    = sbi_cpu_prepare,
->         .cpu_start      = sbi_cpu_start,
-> +#ifdef CONFIG_HOTPLUG_CPU
-> +       .cpu_disable    = sbi_cpu_disable,
-> +       .cpu_stop       = sbi_cpu_stop,
-> +       .cpu_is_stopped = sbi_cpu_is_stopped,
-> +#endif
->  };
-> diff --git a/arch/riscv/kernel/setup.c b/arch/riscv/kernel/setup.c
-> index 582ecbed6442..b3f8986a3b25 100644
-> --- a/arch/riscv/kernel/setup.c
-> +++ b/arch/riscv/kernel/setup.c
-> @@ -16,12 +16,13 @@
->  #include <linux/of_platform.h>
->  #include <linux/sched/task.h>
->  #include <linux/swiotlb.h>
-> +#include <linux/smp.h>
->
->  #include <asm/clint.h>
-> +#include <asm/cpu_ops.h>
->  #include <asm/setup.h>
->  #include <asm/sections.h>
->  #include <asm/pgtable.h>
-> -#include <asm/smp.h>
->  #include <asm/sbi.h>
->  #include <asm/tlbflush.h>
->  #include <asm/thread_info.h>
-> @@ -43,6 +44,7 @@ struct screen_info screen_info = {
->  /* The lucky hart to first increment this variable will boot the other cores */
->  atomic_t hart_lottery;
->  unsigned long boot_cpu_hartid;
-> +static DEFINE_PER_CPU(struct cpu, cpu_devices);
->
->  void __init parse_dtb(void)
+>  static int __init plic_init(struct device_node *node,
+>                 struct device_node *parent)
 >  {
-> @@ -90,3 +92,18 @@ void __init setup_arch(char **cmdline_p)
+> @@ -267,7 +297,6 @@ static int __init plic_init(struct device_node *node,
+>                 struct plic_handler *handler;
+>                 irq_hw_number_t hwirq;
+>                 int cpu, hartid;
+> -               u32 threshold = 0;
 >
->         riscv_fill_hwcap();
->  }
-> +
-> +static int __init topology_init(void)
-> +{
-> +       int i;
-> +
-> +       for_each_possible_cpu(i) {
-> +               struct cpu *cpu = &per_cpu(cpu_devices, i);
-> +
-> +               cpu->hotpluggable = cpu_has_hotplug(i);
-> +               register_cpu(cpu, i);
-> +       }
-> +
-> +       return 0;
-> +}
-> +subsys_initcall(topology_init);
+>                 if (of_irq_parse_one(node, i, &parent)) {
+>                         pr_err("failed to parse parent for context %d.\n", i);
+> @@ -301,7 +330,7 @@ static int __init plic_init(struct device_node *node,
+>                 handler = per_cpu_ptr(&plic_handlers, cpu);
+>                 if (handler->present) {
+>                         pr_warn("handler already present for context %d.\n", i);
+> -                       threshold = 0xffffffff;
+> +                       plic_set_threshold(handler, PLIC_DISABLE_THRESHOLD);
+>                         goto done;
+>                 }
+>
+> @@ -313,13 +342,14 @@ static int __init plic_init(struct device_node *node,
+>                         plic_regs + ENABLE_BASE + i * ENABLE_PER_HART;
+>
+>  done:
+> -               /* priority must be > threshold to trigger an interrupt */
+> -               writel(threshold, handler->hart_base + CONTEXT_THRESHOLD);
+>                 for (hwirq = 1; hwirq <= nr_irqs; hwirq++)
+>                         plic_toggle(handler, hwirq, 0);
+>                 nr_handlers++;
+>         }
+>
+> +       cpuhp_setup_state(CPUHP_AP_IRQ_SIFIVE_PLIC_STARTING,
+> +                                 "irqchip/sifive/plic:starting",
+> +                                 plic_starting_cpu, plic_dying_cpu);
+>         pr_info("mapped %d interrupts with %d handlers for %d contexts.\n",
+>                 nr_irqs, nr_handlers, nr_contexts);
+>         set_handle_irq(plic_handle_irq);
+> diff --git a/include/linux/cpuhotplug.h b/include/linux/cpuhotplug.h
+> index d37c17e68268..77d70b633531 100644
+> --- a/include/linux/cpuhotplug.h
+> +++ b/include/linux/cpuhotplug.h
+> @@ -102,6 +102,7 @@ enum cpuhp_state {
+>         CPUHP_AP_IRQ_ARMADA_XP_STARTING,
+>         CPUHP_AP_IRQ_BCM2836_STARTING,
+>         CPUHP_AP_IRQ_MIPS_GIC_STARTING,
+> +       CPUHP_AP_IRQ_SIFIVE_PLIC_STARTING,
+>         CPUHP_AP_ARM_MVEBU_COHERENCY,
+>         CPUHP_AP_MICROCODE_LOADER,
+>         CPUHP_AP_PERF_X86_AMD_UNCORE_STARTING,
 > --
 > 2.25.0
 >
 
-Otherwise, looks good to me.
+Looks good to me.
 
 Reviewed-by: Anup Patel <anup@brainfault.org>
+
+I will rebase my RISC-V local interrupt controller driver patches
+upon this patch series.
 
 Regards,
 Anup
