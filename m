@@ -2,117 +2,106 @@ Return-Path: <SRS0=1210=4J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B3C0FC3565B
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 18:50:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0D76EC3565B
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 18:54:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8A81B208E4
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 18:50:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CFC2D2071E
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 18:54:14 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=es-iitr-ac-in.20150623.gappssmtp.com header.i=@es-iitr-ac-in.20150623.gappssmtp.com header.b="cTgf7YYB"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Nj1J0Jd4"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729639AbgBUSuZ (ORCPT
+        id S1729627AbgBUSyN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Feb 2020 13:50:25 -0500
-Received: from mail-pl1-f193.google.com ([209.85.214.193]:46380 "EHLO
-        mail-pl1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729484AbgBUSuY (ORCPT
+        Fri, 21 Feb 2020 13:54:13 -0500
+Received: from mail-ed1-f65.google.com ([209.85.208.65]:42243 "EHLO
+        mail-ed1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726150AbgBUSyN (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Feb 2020 13:50:24 -0500
-Received: by mail-pl1-f193.google.com with SMTP id y8so1212267pll.13
-        for <linux-kernel@vger.kernel.org>; Fri, 21 Feb 2020 10:50:23 -0800 (PST)
+        Fri, 21 Feb 2020 13:54:13 -0500
+Received: by mail-ed1-f65.google.com with SMTP id e10so3588703edv.9;
+        Fri, 21 Feb 2020 10:54:12 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=es-iitr-ac-in.20150623.gappssmtp.com; s=20150623;
-        h=date:from:to:subject:message-id:mime-version:content-disposition
-         :user-agent;
-        bh=0k6g4uJ0ZA5B8EEB6+wWGSb0kBAwGtaPTJoeE/KO6EY=;
-        b=cTgf7YYBzjjKYDeSSov8Ngrm0EB/oHuDMO3f76yGWBHxsKiJgSEqcTSMspWlwVemva
-         9kEaN3vp+1YndpdsOBEEuYfcqvTxzvqvkzLbPMoxKRriQuWfsf93TY4VH0YJkyjffLys
-         aU3+ZomPrvurD3bLvSTNIHn63hUwWGn3D2y3hbhvljIQoOY9wP33ADHuFKijyY7+GsT/
-         rV4EroPWfgmn6Jbd40lSpjukVOkGu2aSNo0R6EG1/8cjg2EHCjyD5rViioVv9kiEvF+3
-         68YgXvsBr89yaEgpd0KRHU7TAHPLwWu8YTzvwAeLFiSYrK+IqyieuE9yvXyirJJ0jTee
-         tMlA==
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id;
+        bh=6H7czC/EWWOLG+c9dDSZL0yrJluOEN5LNYAxJRlBPZQ=;
+        b=Nj1J0Jd4bERbsqqC2RdvzymFWFfEKiqalI2qOX8Sjgq5gmNzefkKgNuBCDGQMxTqfL
+         sxVlAk4X06dQpEngnbk3tRqzaiAZJIZp6bzcOm1ft2qMYaL/Mf+95n3Q+mk6aQBcG2c4
+         D/Pn+vstVBh076/KljES7r5GvWzMPS3x2lHc5AY93eaZTg/5W/LfsAUodTTk7DAbHZHy
+         gd2nbpjSFHjWvWmVfQPWiYG5lyjGWVVP5VJrFNUMBzr+7ud2hCak1kznKB+WIGmxOjTU
+         rjngGRSkpqVXjTSQ21868E17hoWwDrY3/1nSSyNx/uPwNYs/AV8LJjiEw3NcREqL9Q/1
+         93vA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:subject:message-id:mime-version
-         :content-disposition:user-agent;
-        bh=0k6g4uJ0ZA5B8EEB6+wWGSb0kBAwGtaPTJoeE/KO6EY=;
-        b=qU/t50O3LPeRbKP8Sa1gMu1rcfDErwLfSl7FE4X2j5wNE9Ol7DvQG0wA0F4EeOJr5i
-         vZaUiViuMcwkdf4L1wVRGpapzl63kEITCV0fCCj3eP+sBWfFA6KNG3L7LyQFDkWLw4qM
-         1ymEyceJtdGJmIv8Lq1a/IjTFdqM1ufB4aSG9c5K83aOjIX1wY87u9qCgWi4PQsQ/XwY
-         JlnyDvCx4CXzZ00R1gm+gNPjTi3Axe5tQvNHfWS7oLHqzviBJealngWp5WkP14JON4+6
-         7B+Eca/I+I5sSj0tZ6jsOQsVMqCiS68nhqgJLhvam+PHx9RQiMFPg0pd84FhL65XggJN
-         GuAA==
-X-Gm-Message-State: APjAAAXq4YGk2iXyDngU8Z+Js6AXmq5MYBgYygC0e7Da6DP/WB0/WdFP
-        k85nAZXiFdVOV4dlfVX3O079Cw==
-X-Google-Smtp-Source: APXvYqzdOnHcE734UeoNfIg6UA7sYXb/onSusxfzPp6mfZ8rMrJD2viJqDfq0GktC3i6ug9UROadOg==
-X-Received: by 2002:a17:90a:da04:: with SMTP id e4mr4410210pjv.26.1582311023240;
-        Fri, 21 Feb 2020 10:50:23 -0800 (PST)
-Received: from kaaira-HP-Pavilion-Notebook ([103.37.201.178])
-        by smtp.gmail.com with ESMTPSA id b27sm3206242pgl.77.2020.02.21.10.50.18
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Fri, 21 Feb 2020 10:50:22 -0800 (PST)
-Date:   Sat, 22 Feb 2020 00:20:12 +0530
-From:   Kaaira Gupta <kgupta@es.iitr.ac.in>
-To:     Manish Chopra <manishc@marvell.com>, GR-Linux-NIC-Dev@marvell.com,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        netdev@vger.kernel.org, devel@driverdev.osuosl.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH] staging: qlge: unify multi-line string
-Message-ID: <20200221185012.GA16841@kaaira-HP-Pavilion-Notebook>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-User-Agent: Mutt/1.9.4 (2018-02-28)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=6H7czC/EWWOLG+c9dDSZL0yrJluOEN5LNYAxJRlBPZQ=;
+        b=qEt7e1VSsO6AdMfjpnAGX8p79mBb8PvdolHJ+Z7rpwfstK041RAOLzrVtIWChq02O0
+         aILJrRDVJTmUiS3PSVCCe8eGPUU99WwfxQO2H8f+ZrSLp9NXq8XvnVZlhHb+3vfbYfNj
+         DId91pk8VtYJppfNBKQhCuKZIk/4s/xcDaPiI2bpb9ki/JLWcznwC1JRImFwAULDmIJS
+         xC2Z+Q2SLUul5oxpbSbNIByM6/hFW6KPGdPAU56ltL0Y7Ym/qibrZuH66grU3+oDvspk
+         m6D1FBlu8bXh9V57PmIC6B5Z82219EgoO/YHWV69hYd3CdPMHSIHUmICWhjdix+NIrfP
+         3NSw==
+X-Gm-Message-State: APjAAAVlAMwKg+YNG3ajk4/R/O6jVjhHklc3Pgppz4Vz3Yn6XFV/MQli
+        FC1Qs+OwlR9m5Rlv05Qhma2iDez0iIM=
+X-Google-Smtp-Source: APXvYqw4D+LbiKAlW0MqDTX69Z2BKZfFCJPr23ydy58+Tn3OdmEKcevzhzN9ulkIeQBfs59EFEdPig==
+X-Received: by 2002:aa7:d9c6:: with SMTP id v6mr35455979eds.107.1582311251283;
+        Fri, 21 Feb 2020 10:54:11 -0800 (PST)
+Received: from felia.fritz.box ([2001:16b8:2d0c:d000:34f3:c27:3def:c058])
+        by smtp.gmail.com with ESMTPSA id v2sm307158ejj.44.2020.02.21.10.54.10
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 21 Feb 2020 10:54:10 -0800 (PST)
+From:   Lukas Bulwahn <lukas.bulwahn@gmail.com>
+To:     Tom Joseph <tjoseph@cadence.com>,
+        Andrew Murray <andrew.murray@arm.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+Cc:     linux-pci@vger.kernel.org, Joe Perches <joe@perches.com>,
+        kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Lukas Bulwahn <lukas.bulwahn@gmail.com>
+Subject: [PATCH] MAINTAINERS: adjust entry to moving cadence drivers
+Date:   Fri, 21 Feb 2020 19:54:02 +0100
+Message-Id: <20200221185402.4703-1-lukas.bulwahn@gmail.com>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Fix checkpatch.pl warning of 'quoted string split across lines' in
-qlge_dbg.c by merging the strings in one line. Fixing this warning is
-necessary to ease grep-ing the source for printk.
+Commit de80f95ccb9c ("PCI: cadence: Move all files to per-device cadence
+directory") moved files of the pci cadence drivers, but did not adjust
+the entry in MAINTAINERS.
 
-Signed-off-by: Kaaira Gupta <kgupta@es.iitr.ac.in>
+Since then, ./scripts/get_maintainer.pl --self-test complains:
+
+  warning: no file matches F: drivers/pci/controller/pcie-cadence*
+
+So, repair the MAINTAINERS entry now.
+
+Signed-off-by: Lukas Bulwahn <lukas.bulwahn@gmail.com>
 ---
- drivers/staging/qlge/qlge_dbg.c | 20 ++++++++++----------
- 1 file changed, 10 insertions(+), 10 deletions(-)
+Tom, Andrew, please ack. Lorenzo, please pick this patch.
+applies cleanly on current master and next-20200221
 
-diff --git a/drivers/staging/qlge/qlge_dbg.c b/drivers/staging/qlge/qlge_dbg.c
-index 8cf39615c520..28d8649ab384 100644
---- a/drivers/staging/qlge/qlge_dbg.c
-+++ b/drivers/staging/qlge/qlge_dbg.c
-@@ -1333,16 +1333,16 @@ void ql_mpi_core_to_log(struct work_struct *work)
- 		     "Core is dumping to log file!\n");
+ MAINTAINERS | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/MAINTAINERS b/MAINTAINERS
+index 4beb8dc4c7eb..d8f690f0e838 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -12740,7 +12740,7 @@ M:	Tom Joseph <tjoseph@cadence.com>
+ L:	linux-pci@vger.kernel.org
+ S:	Maintained
+ F:	Documentation/devicetree/bindings/pci/cdns,*.txt
+-F:	drivers/pci/controller/pcie-cadence*
++F:	drivers/pci/controller/cadence/
  
- 	for (i = 0; i < count; i += 8) {
--		pr_err("%.08x: %.08x %.08x %.08x %.08x %.08x "
--			"%.08x %.08x %.08x\n", i,
--			tmp[i + 0],
--			tmp[i + 1],
--			tmp[i + 2],
--			tmp[i + 3],
--			tmp[i + 4],
--			tmp[i + 5],
--			tmp[i + 6],
--			tmp[i + 7]);
-+		pr_err("%.08x: %.08x %.08x %.08x %.08x %.08x %.08x %.08x %.08x\n",
-+		       i,
-+		       tmp[i + 0],
-+		       tmp[i + 1],
-+		       tmp[i + 2],
-+		       tmp[i + 3],
-+		       tmp[i + 4],
-+		       tmp[i + 5],
-+		       tmp[i + 6],
-+		       tmp[i + 7]);
- 		msleep(5);
- 	}
- }
+ PCI DRIVER FOR FREESCALE LAYERSCAPE
+ M:	Minghuan Lian <minghuan.Lian@nxp.com>
 -- 
 2.17.1
 
