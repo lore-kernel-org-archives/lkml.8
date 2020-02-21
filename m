@@ -2,106 +2,99 @@ Return-Path: <SRS0=1210=4J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 941D0C3565B
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 18:16:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3FEDCC35646
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 18:19:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 76527222C4
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 18:16:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1D74F24656
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 18:19:02 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728759AbgBUSQ3 (ORCPT
+        id S1728442AbgBUSTA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Feb 2020 13:16:29 -0500
-Received: from 15.mo1.mail-out.ovh.net ([188.165.38.232]:33316 "EHLO
-        15.mo1.mail-out.ovh.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725947AbgBUSQ3 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Feb 2020 13:16:29 -0500
-Received: from player791.ha.ovh.net (unknown [10.110.171.125])
-        by mo1.mail-out.ovh.net (Postfix) with ESMTP id 68AD11B24DC
-        for <linux-kernel@vger.kernel.org>; Fri, 21 Feb 2020 17:58:19 +0100 (CET)
-Received: from sk2.org (82-65-25-201.subs.proxad.net [82.65.25.201])
-        (Authenticated sender: steve@sk2.org)
-        by player791.ha.ovh.net (Postfix) with ESMTPSA id 473BFF972430;
-        Fri, 21 Feb 2020 16:58:08 +0000 (UTC)
-From:   Stephen Kitt <steve@sk2.org>
-To:     Jonathan Corbet <corbet@lwn.net>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Martin KaFai Lau <kafai@fb.com>,
-        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
-        Andrii Nakryiko <andriin@fb.com>, bpf@vger.kernel.org,
-        linux-doc@vger.kernel.org
-Cc:     linux-kernel@vger.kernel.org, Stephen Kitt <steve@sk2.org>
-Subject: [PATCH] docs: sysctl/kernel: document BPF entries
-Date:   Fri, 21 Feb 2020 17:58:01 +0100
-Message-Id: <20200221165801.32687-1-steve@sk2.org>
-X-Mailer: git-send-email 2.20.1
+        Fri, 21 Feb 2020 13:19:00 -0500
+Received: from foss.arm.com ([217.140.110.172]:45326 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725947AbgBUSTA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 21 Feb 2020 13:19:00 -0500
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 1314D30E;
+        Fri, 21 Feb 2020 10:19:00 -0800 (PST)
+Received: from e119884-lin.cambridge.arm.com (e119884-lin.cambridge.arm.com [10.1.196.72])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 7E8163F6CF;
+        Fri, 21 Feb 2020 10:18:58 -0800 (PST)
+From:   Vincenzo Frascino <vincenzo.frascino@arm.com>
+To:     linux-arch@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org
+Cc:     catalin.marinas@arm.com, will.deacon@arm.com,
+        linux@armlinux.org.uk, tglx@linutronix.de, luto@kernel.org,
+        m.szyprowski@samsung.com, Mark.Rutland@arm.com, maz@kernel.org,
+        vincenzo.frascino@arm.com
+Subject: [PATCH v2 0/3] Fix arm_arch_timer clockmode when vDSO disabled
+Date:   Fri, 21 Feb 2020 18:18:46 +0000
+Message-Id: <20200221181849.40351-1-vincenzo.frascino@arm.com>
+X-Mailer: git-send-email 2.25.0
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
-X-Ovh-Tracer-Id: 876794555126336901
-X-VR-SPAMSTATE: OK
-X-VR-SPAMSCORE: -100
-X-VR-SPAMCAUSE: gggruggvucftvghtrhhoucdtuddrgedugedrkeeggdelhecutefuodetggdotefrodftvfcurfhrohhfihhlvgemucfqggfjpdevjffgvefmvefgnecuuegrihhlohhuthemucehtddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenucfjughrpefhvffufffkofgggfestdekredtredttdenucfhrhhomhepufhtvghphhgvnhcumfhithhtuceoshhtvghvvgesshhkvddrohhrgheqnecukfhppedtrddtrddtrddtpdekvddrieehrddvhedrvddtudenucevlhhushhtvghrufhiiigvpedunecurfgrrhgrmhepmhhouggvpehsmhhtphdqohhuthdphhgvlhhopehplhgrhigvrhejledurdhhrgdrohhvhhdrnhgvthdpihhnvghtpedtrddtrddtrddtpdhmrghilhhfrhhomhepshhtvghvvgesshhkvddrohhrghdprhgtphhtthhopehlihhnuhigqdhkvghrnhgvlhesvhhgvghrrdhkvghrnhgvlhdrohhrgh
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Based on the implementation in kernel/bpf/syscall.c,
-kernel/bpf/trampoline.c, include/linux/filter.h, and the documentation
-in bpftool-prog.rst.
+The arm_arch_timer requires that VDSO_CLOCKMODE_ARCHTIMER to be
+defined to compile correctly. On arm the vDSO can be disabled and when
+this is the case the compilation ends prematurely with an error:
 
-Signed-off-by: Stephen Kitt <steve@sk2.org>
----
- Documentation/admin-guide/sysctl/kernel.rst | 24 +++++++++++++++++++++
- 1 file changed, 24 insertions(+)
+ $ make ARCH=arm multi_v7_defconfig
+ $ ./scripts/config -d VDSO
+ $ make
 
-diff --git a/Documentation/admin-guide/sysctl/kernel.rst b/Documentation/admin-guide/sysctl/kernel.rst
-index 1c48ab4bfe30..89c70ea7de7c 100644
---- a/Documentation/admin-guide/sysctl/kernel.rst
-+++ b/Documentation/admin-guide/sysctl/kernel.rst
-@@ -102,6 +102,20 @@ See the ``type_of_loader`` and ``ext_loader_ver`` fields in
- :doc:`/x86/boot` for additional information.
- 
- 
-+bpf_stats_enabled
-+=================
-+
-+Controls whether the kernel should collect statistics on BPF programs
-+(total time spent running, number of times run...). Enabling
-+statistics causes a slight reduction in performance on each program
-+run. The statistics can be seen using ``bpftool``.
-+
-+= ===================================
-+0 Don't collect statistics (default).
-+1 Collect statistics.
-+= ===================================
-+
-+
- cap_last_cap
- ============
- 
-@@ -1152,6 +1166,16 @@ NMI switch that most IA32 servers have fires unknown NMI up, for
- example.  If a system hangs up, try pressing the NMI switch.
- 
- 
-+unprivileged_bpf_disabled
-+=========================
-+
-+Writing 1 to this entry will disabled unprivileged calls to ``bpf()``;
-+once disabled, calling ``bpf()`` without ``CAP_SYS_ADMIN`` will return
-+``-EPERM``.
-+
-+Once set, this can't be cleared.
-+
-+
- watchdog
- ========
- 
+ drivers/clocksource/arm_arch_timer.c:73:44: error:
+ ‘VDSO_CLOCKMODE_ARCHTIMER’ undeclared here (not in a function)
+ static enum vdso_clock_mode vdso_default = VDSO_CLOCKMODE_ARCHTIMER;
+                                            ^
+ scripts/Makefile.build:267: recipe for target
+ 'drivers/clocksource/arm_arch_timer.o' failed
+ make[2]: *** [drivers/clocksource/arm_arch_timer.o] Error 1
+ make[2]: *** Waiting for unfinished jobs....
+ scripts/Makefile.build:505: recipe for target 'drivers/clocksource' failed
+ make[1]: *** [drivers/clocksource] Error 2
+ make[1]: *** Waiting for unfinished jobs....
+ Makefile:1683: recipe for target 'drivers' failed
+ make: *** [drivers] Error 2
+
+This patch series addresses the issue defining a default arch clockmode
+for arm and arm64 and using it to initialize the arm_arch_timer.
+
+Changes:
+--------
+v2:
+  - Addressed Marc Zyngier comments.
+  - Rebased on 5.6-rc2.
+
+Cc: Catalin Marinas <catalin.marinas@arm.com>
+Cc: Will Deacon <will.deacon@arm.com>
+Cc: Russell King <linux@armlinux.org.uk>
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Cc: Marc Zyngier <maz@kernel.org>
+Cc: Mark Rutland <Mark.Rutland@arm.com>
+Cc: Marek Szyprowski <m.szyprowski@samsung.com>
+Signed-off-by: Vincenzo Frascino <vincenzo.frascino@arm.com>
+
+Vincenzo Frascino (3):
+  arm: clocksource: Add VDSO default clockmode
+  arm64: clocksource: Add VDSO default clockmode
+  clocksource: Fix arm_arch_timer clockmode when vDSO disabled
+
+ arch/arm/Kconfig                     |  1 +
+ arch/arm/include/asm/clocksource.h   | 10 ++++++++++
+ arch/arm64/include/asm/clocksource.h |  1 +
+ drivers/clocksource/arm_arch_timer.c |  2 +-
+ 4 files changed, 13 insertions(+), 1 deletion(-)
+
 -- 
-2.20.1
+2.25.0
 
