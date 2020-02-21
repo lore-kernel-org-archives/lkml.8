@@ -2,52 +2,51 @@ Return-Path: <SRS0=1210=4J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5C8ACC35642
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 08:23:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BAA11C35641
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 08:23:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2FC4524691
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 08:23:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8730A2467A
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 08:23:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582273388;
-	bh=zCSN13PuFpNnQ8k862eulbO3JS6sVcwQ5D/rjbdsX/8=;
+	s=default; t=1582273390;
+	bh=vz5gTBeqfS9iKhsuyNNi+PbAPPat9tNnC+F6SHigKak=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=NqVsimvjqomn7IupkiXpkTdHDzSQc7PeF3R2cUlhHu5aw3meMVJrUW+XGlXcwoltr
-	 2ndzqbAYuBhdxrnWwhULllgyCv/3yTEftzFRnsNxF9mUBkV6mwq4kLBAkWlknsRGvC
-	 p7HwOTBDJiSXBYbY4zjLCpXdeEu+xKrO/uUxri/M=
+	b=MfcoPZdzzO/uuZ2yybvMk17cxD26izhWV0WzThN/WtubrVpY7xRSYplSU1hEWbeef
+	 /XuZRXYpYaSKwjtYE8d88stM7U8m+lFAmt6jOUcfojqnxQtBG2NRDzqyU0GteUyEdz
+	 gnze8nYKs06gssRmi3a7ZuCPiVTmP2a2+kGJmcJ8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387982AbgBUIXG (ORCPT
+        id S2388426AbgBUIXI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Feb 2020 03:23:06 -0500
-Received: from mail.kernel.org ([198.145.29.99]:34948 "EHLO mail.kernel.org"
+        Fri, 21 Feb 2020 03:23:08 -0500
+Received: from mail.kernel.org ([198.145.29.99]:34982 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388398AbgBUIXD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Feb 2020 03:23:03 -0500
+        id S2388417AbgBUIXG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 21 Feb 2020 03:23:06 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id ACA932467A;
-        Fri, 21 Feb 2020 08:23:02 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2C9E92467A;
+        Fri, 21 Feb 2020 08:23:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1582273383;
-        bh=zCSN13PuFpNnQ8k862eulbO3JS6sVcwQ5D/rjbdsX/8=;
+        s=default; t=1582273385;
+        bh=vz5gTBeqfS9iKhsuyNNi+PbAPPat9tNnC+F6SHigKak=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=DXb36PN1Rj/IzrdNgxDlL4hF3pgCQrYj2vFREdST6pF3PlqfC6mnMmhjLy3VmC6+5
-         Fz+Y7m+1SV2TsJ5IRHPZBH/AFtaWewBK8WY8torS6x8P1auVNkua70fVv4qgxCBLd4
-         SsEpbOwrO8kvx1xBEirnbHp0o/ilNbK2ltvz5/6k=
+        b=oR8m9N1S1SuOINum0ywTBy/D1VKSvsaJmxRWB26UCaeDamHDGUmqr9BznWkm/CBAu
+         jhhRNju3O5NeClY4DTXRQXbjMnXUE4tVnfiIVgSpPIB+RpQmJQvCcbIcLQBflfPhBz
+         javFmg+4BYBUo9z3pO7xtK7J4Dcest3w4Nv09S6o=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Kai Vehmanen <kai.vehmanen@linux.intel.com>,
-        Takashi Iwai <tiwai@suse.de>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 150/191] ALSA: hda/hdmi - add retry logic to parse_intel_hdmi()
-Date:   Fri, 21 Feb 2020 08:42:03 +0100
-Message-Id: <20200221072308.716769725@linuxfoundation.org>
+        stable@vger.kernel.org, Masahiro Yamada <masahiroy@kernel.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.19 151/191] kbuild: use -S instead of -E for precise cc-option test in Kconfig
+Date:   Fri, 21 Feb 2020 08:42:04 +0100
+Message-Id: <20200221072308.858375369@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200221072250.732482588@linuxfoundation.org>
 References: <20200221072250.732482588@linuxfoundation.org>
@@ -60,50 +59,47 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Kai Vehmanen <kai.vehmanen@linux.intel.com>
+From: Masahiro Yamada <masahiroy@kernel.org>
 
-[ Upstream commit 2928fa0a97ebb9549cb877fdc99aed9b95438c3a ]
+[ Upstream commit 3bed1b7b9d79ca40e41e3af130931a3225e951a3 ]
 
-The initial snd_hda_get_sub_node() can fail on certain
-devices (e.g. some Chromebook models using Intel GLK).
-The failure rate is very low, but as this is is part of
-the probe process, end-user impact is high.
+Currently, -E (stop after the preprocessing stage) is used to check
+whether the given compiler flag is supported.
 
-In observed cases, related hardware status registers have
-expected values, but the node query still fails. Retrying
-the node query does seem to help, so fix the problem by
-adding retry logic to the query. This does not impact
-non-Intel platforms.
+While it is faster than -S (or -c), it can be false-positive. You need
+to run the compilation proper to check the flag more precisely.
 
-BugLink: https://github.com/thesofproject/linux/issues/1642
-Signed-off-by: Kai Vehmanen <kai.vehmanen@linux.intel.com>
-Reviewed-by: Takashi Iwai <tiwai@suse.de>
-Link: https://lore.kernel.org/r/20200120160117.29130-4-kai.vehmanen@linux.intel.com
-Signed-off-by: Takashi Iwai <tiwai@suse.de>
+For example, -E and -S disagree about the support of
+"--param asan-instrument-allocas=1".
+
+$ gcc -Werror --param asan-instrument-allocas=1 -E -x c /dev/null -o /dev/null
+$ echo $?
+0
+
+$ gcc -Werror --param asan-instrument-allocas=1 -S -x c /dev/null -o /dev/null
+cc1: error: invalid --param name ‘asan-instrument-allocas’; did you mean ‘asan-instrument-writes’?
+$ echo $?
+1
+
+Signed-off-by: Masahiro Yamada <masahiroy@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- sound/pci/hda/patch_hdmi.c | 7 +++++--
- 1 file changed, 5 insertions(+), 2 deletions(-)
+ scripts/Kconfig.include | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/sound/pci/hda/patch_hdmi.c b/sound/pci/hda/patch_hdmi.c
-index c827a2a89cc3d..c67fadd5aae53 100644
---- a/sound/pci/hda/patch_hdmi.c
-+++ b/sound/pci/hda/patch_hdmi.c
-@@ -2604,9 +2604,12 @@ static int alloc_intel_hdmi(struct hda_codec *codec)
- /* parse and post-process for Intel codecs */
- static int parse_intel_hdmi(struct hda_codec *codec)
- {
--	int err;
-+	int err, retries = 3;
-+
-+	do {
-+		err = hdmi_parse_codec(codec);
-+	} while (err < 0 && retries--);
+diff --git a/scripts/Kconfig.include b/scripts/Kconfig.include
+index 3b2861f47709b..79455ad6b3863 100644
+--- a/scripts/Kconfig.include
++++ b/scripts/Kconfig.include
+@@ -20,7 +20,7 @@ success = $(if-success,$(1),y,n)
  
--	err = hdmi_parse_codec(codec);
- 	if (err < 0) {
- 		generic_spec_free(codec);
- 		return err;
+ # $(cc-option,<flag>)
+ # Return y if the compiler supports <flag>, n otherwise
+-cc-option = $(success,$(CC) -Werror $(CLANG_FLAGS) $(1) -E -x c /dev/null -o /dev/null)
++cc-option = $(success,$(CC) -Werror $(CLANG_FLAGS) $(1) -S -x c /dev/null -o /dev/null)
+ 
+ # $(ld-option,<flag>)
+ # Return y if the linker supports <flag>, n otherwise
 -- 
 2.20.1
 
