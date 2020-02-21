@@ -2,101 +2,119 @@ Return-Path: <SRS0=1210=4J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0404BC35659
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 17:43:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6A039C35646
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 17:43:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D8312206E2
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 17:43:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 40356206E2
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 17:43:47 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="BC1E/NSY"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728351AbgBURnl (ORCPT
+        id S1729269AbgBURnp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Feb 2020 12:43:41 -0500
-Received: from vps-vb.mhejs.net ([37.28.154.113]:45300 "EHLO vps-vb.mhejs.net"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726550AbgBURnl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Feb 2020 12:43:41 -0500
-Received: from MUA
-        by vps-vb.mhejs.net with esmtps (TLSv1.2:ECDHE-RSA-AES256-GCM-SHA384:256)
-        (Exim 4.92.3)
-        (envelope-from <mail@maciej.szmigiero.name>)
-        id 1j5CKv-0002wU-0a; Fri, 21 Feb 2020 18:43:37 +0100
-From:   "Maciej S. Szmigiero" <mail@maciej.szmigiero.name>
-To:     "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>
-Cc:     Joao Martins <joao.m.martins@oracle.com>,
-        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
-        linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH] cpuidle-haltpoll: allow force loading on hosts without the REALTIME hint
-Date:   Fri, 21 Feb 2020 18:43:31 +0100
-Message-Id: <20200221174331.1480468-1-mail@maciej.szmigiero.name>
-X-Mailer: git-send-email 2.25.1
+        Fri, 21 Feb 2020 12:43:45 -0500
+Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:29152 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1727655AbgBURno (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 21 Feb 2020 12:43:44 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1582307023;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=DRklp/EGbzKFbnLcWYfCTJYwspK96XjQokoDYirC2jo=;
+        b=BC1E/NSYqNzfUh0RxMW6yxKtLq3K9WtvVA4og79JnwQCCL3SOa46rlgD1J/hvl5HJxwuKO
+        VL/8hDJiMzD74rSHywZtCWnQkLHJ1cWnoNyi2WnzoiKN0lASV2MNERS7b2bI31Uqt81jal
+        3Sy0x+6IsKl1ysmfReqrZB9DPq0hSxk=
+Received: from mail-wr1-f70.google.com (mail-wr1-f70.google.com
+ [209.85.221.70]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-352-Qe5uJ_sQNbOwbd1hyQSpUg-1; Fri, 21 Feb 2020 12:43:42 -0500
+X-MC-Unique: Qe5uJ_sQNbOwbd1hyQSpUg-1
+Received: by mail-wr1-f70.google.com with SMTP id u8so1332130wrp.10
+        for <linux-kernel@vger.kernel.org>; Fri, 21 Feb 2020 09:43:42 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=DRklp/EGbzKFbnLcWYfCTJYwspK96XjQokoDYirC2jo=;
+        b=A7KmJgkvpenG5fm8JiichfI1Hb1OStX19BxMUbcwLlvCH2buL72+Xdmscl1tRj51kQ
+         BapD4FHwLL4IonSq3YwfoFtdNlreK+L42H8sNzUzuFSC0RIdCPA4b1/AvJzS4E7yPqiJ
+         u5oZxna+kRO7/NZSv2W6gyfBGMQgzFJSXisOQGiHmobHNoeohNnVs5nUZvdozM5w5oa7
+         tJyGtdVk21Uismeuyh2ZriA6hXKBJS1aPAb/uIVvUwFtTCmlpEVXNchghe5txq/+AoYR
+         Ajy+uChSA9Vw4CQ8GziQ0GRSBbwS0mMqwVhAMmebZMdwTyqR/WR5+5yAVEuW3TcAnxvC
+         jx9A==
+X-Gm-Message-State: APjAAAUyTGJrpZwFa9J58W3KhOa7jdu5Q0P5Pfc6bCIuAzIyqzH72+uI
+        jXezEe5+JZkZJ6PcYkJpSM13kV4upRfjnjuVM9PmPlbbPmqcJjv//CZrAje2S7msd1MuOW9mIEk
+        lZb7asmnwojXPhhFmRgEcnpPU
+X-Received: by 2002:a5d:4289:: with SMTP id k9mr51196993wrq.280.1582307017029;
+        Fri, 21 Feb 2020 09:43:37 -0800 (PST)
+X-Google-Smtp-Source: APXvYqx2hj716qxeeRUnhWk7oLWJU5fIlTs2+zZOl+uuyj1LRQkzfullhSLke4OG8g9MBweopRblWg==
+X-Received: by 2002:a5d:4289:: with SMTP id k9mr51196974wrq.280.1582307016828;
+        Fri, 21 Feb 2020 09:43:36 -0800 (PST)
+Received: from [192.168.178.40] ([151.20.135.128])
+        by smtp.gmail.com with ESMTPSA id l131sm4908318wmf.31.2020.02.21.09.43.35
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 21 Feb 2020 09:43:36 -0800 (PST)
+Subject: Re: [PATCH v6 14/22] KVM: Clean up local variable usage in
+ __kvm_set_memory_region()
+To:     Sean Christopherson <sean.j.christopherson@intel.com>
+Cc:     Paul Mackerras <paulus@ozlabs.org>,
+        Christian Borntraeger <borntraeger@de.ibm.com>,
+        Janosch Frank <frankja@linux.ibm.com>,
+        David Hildenbrand <david@redhat.com>,
+        Cornelia Huck <cohuck@redhat.com>,
+        Vitaly Kuznetsov <vkuznets@redhat.com>,
+        Wanpeng Li <wanpengli@tencent.com>,
+        Jim Mattson <jmattson@google.com>,
+        Joerg Roedel <joro@8bytes.org>, Marc Zyngier <maz@kernel.org>,
+        James Morse <james.morse@arm.com>,
+        Julien Thierry <julien.thierry.kdev@gmail.com>,
+        Suzuki K Poulose <suzuki.poulose@arm.com>,
+        linux-mips@vger.kernel.org, kvm@vger.kernel.org,
+        kvm-ppc@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        kvmarm@lists.cs.columbia.edu, linux-kernel@vger.kernel.org,
+        Christoffer Dall <christoffer.dall@arm.com>,
+        Peter Xu <peterx@redhat.com>,
+        =?UTF-8?Q?Philippe_Mathieu-Daud=c3=a9?= <f4bug@amsat.org>
+References: <20200218210736.16432-1-sean.j.christopherson@intel.com>
+ <20200218210736.16432-15-sean.j.christopherson@intel.com>
+From:   Paolo Bonzini <pbonzini@redhat.com>
+Message-ID: <1467b8cd-3631-b5da-b285-dbdf31b75af7@redhat.com>
+Date:   Fri, 21 Feb 2020 18:43:34 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.1.1
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200218210736.16432-15-sean.j.christopherson@intel.com>
+Content-Type: text/plain; charset=windows-1252
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: "Maciej S. Szmigiero" <maciej.szmigiero@oracle.com>
+On 18/02/20 22:07, Sean Christopherson wrote:
+> -sorted by update_memslots(), and the old
+>  	 * memslot needs to be referenced after calling update_memslots(), e.g.
+> -	 * to free its resources and for arch specific behavior.
+> +	 * to free its resources and for arch specific behavior.  Kill @tmp
+> +	 * after making a copy to deter potentially dangerous usage.
+>  	 */
+> -	old = *slot;
+> +	tmp = id_to_memslot(__kvm_memslots(kvm, as_id), id);
+> +	old = *tmp;
+> +	tmp = NULL;
+> +
 
-Before commit 1328edca4a14 ("cpuidle-haltpoll: Enable kvm guest polling
-when dedicated physical CPUs are available") the cpuidle-haltpoll driver
-could also be used in scenarios when the host does not advertise the
-KVM_HINTS_REALTIME hint.
+Also: old = *id_to_memslot(...).
 
-While the behavior introduced by the aforementioned commit makes sense as
-the default there are cases where the old behavior is desired, for example,
-when other kernel changes triggered by presence by this hint are unwanted,
-for some workloads where the latency benefit from polling overweights the
-loss from idle CPU capacity that otherwise would be available, or just when
-running under older Qemu versions that lack this hint.
+Paolo
 
-Let's provide a typical "force" module parameter that allows restoring the
-old behavior.
-
-Signed-off-by: Maciej S. Szmigiero <maciej.szmigiero@oracle.com>
----
- drivers/cpuidle/cpuidle-haltpoll.c | 12 +++++++++++-
- 1 file changed, 11 insertions(+), 1 deletion(-)
-
-diff --git a/drivers/cpuidle/cpuidle-haltpoll.c b/drivers/cpuidle/cpuidle-haltpoll.c
-index b0ce9bc78113..07e5b36076bb 100644
---- a/drivers/cpuidle/cpuidle-haltpoll.c
-+++ b/drivers/cpuidle/cpuidle-haltpoll.c
-@@ -18,6 +18,11 @@
- #include <linux/kvm_para.h>
- #include <linux/cpuidle_haltpoll.h>
- 
-+static bool force __read_mostly;
-+module_param(force, bool, 0444);
-+MODULE_PARM_DESC(force,
-+		 "Load even if the host does not provide the REALTIME hint");
-+
- static struct cpuidle_device __percpu *haltpoll_cpuidle_devices;
- static enum cpuhp_state haltpoll_hp_state;
- 
-@@ -90,6 +95,11 @@ static void haltpoll_uninit(void)
- 	haltpoll_cpuidle_devices = NULL;
- }
- 
-+static bool haltpool_want(void)
-+{
-+	return kvm_para_has_hint(KVM_HINTS_REALTIME) || force;
-+}
-+
- static int __init haltpoll_init(void)
- {
- 	int ret;
-@@ -102,7 +112,7 @@ static int __init haltpoll_init(void)
- 	cpuidle_poll_state_init(drv);
- 
- 	if (!kvm_para_available() ||
--		!kvm_para_has_hint(KVM_HINTS_REALTIME))
-+	    !haltpool_want())
- 		return -ENODEV;
- 
- 	ret = cpuidle_register_driver(drv);
