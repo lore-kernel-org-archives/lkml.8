@@ -2,306 +2,118 @@ Return-Path: <SRS0=1210=4J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3222AC35646
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 11:02:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C5DAEC35647
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 11:05:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E86852073A
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 11:02:10 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="O9TeM2/D"
+	by mail.kernel.org (Postfix) with ESMTP id A2DA7208C4
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 11:05:48 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727489AbgBULCG (ORCPT
+        id S1727699AbgBULFr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Feb 2020 06:02:06 -0500
-Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:28118 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726410AbgBULCF (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Feb 2020 06:02:05 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1582282924;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=hUoay77NnYHID9nGLoLanlEf83tufjpRQXj47Pm5vbI=;
-        b=O9TeM2/DF28iTg4AV/eNJOVchvk8guqOh8Oj0AsndGzNXd81ADqXqapJGw6FlyFkugndeW
-        m9tCYwF+4gMgljEVBZ6fb4iUui0+UX/J4xZBRetrQ5g4BO6KyHnocvzsTsw50LtCuurngP
-        LuDTOebPq5XPyhx46x67nRSSpoFKuac=
-Received: from mail-qt1-f197.google.com (mail-qt1-f197.google.com
- [209.85.160.197]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-188-LsJdRo6cO-i19X9EhkMbGg-1; Fri, 21 Feb 2020 06:01:55 -0500
-X-MC-Unique: LsJdRo6cO-i19X9EhkMbGg-1
-Received: by mail-qt1-f197.google.com with SMTP id l1so1383662qtp.21
-        for <linux-kernel@vger.kernel.org>; Fri, 21 Feb 2020 03:01:55 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to;
-        bh=hUoay77NnYHID9nGLoLanlEf83tufjpRQXj47Pm5vbI=;
-        b=lNXUsa0wXgdg6QPns5yW/Eq7Z5AXWb/sq6BvxuwD7iXm8o/S67kDsK4idsbcSJEDSk
-         +VL68jg8GGczuntfNXuXpGWnKAPfuTQz4iO8QraNQOkE0NcLeci8JCl5W6GikXhExN8I
-         97D1czLSL1dJkqywQX7NCZ3GKTlYrc8tDU9jzz3iPjtCbB8pSjr0jyScedinIXUJCQuM
-         Icr0mONkPl8sh74mz3CZqYPNpgQ3OAeNa8MP36R4vvhJK6MaE5JbQCe6Ns+y+t3D2riR
-         TtUHm7GAd4oOSCZvSWtHSHz3F91Hg49UO6D4bG1BmuqHhGrmhRS2YvvnQZnbxVD5Uo5n
-         rz4g==
-X-Gm-Message-State: APjAAAUAjyatcWwpAgEL/J8hCtMJ7E4M/XoLH8tFC7hQCK9acLpjswbO
-        uNmPCcp2Ot8ENw+/6k72koMDyBP42lvQythUd97ax7xTVXUhj0YNM5CLLk4jl3TyNkpqAvLA4iA
-        86iKKM4sYrW+yn7pObtGmxqes
-X-Received: by 2002:a37:6153:: with SMTP id v80mr7092215qkb.257.1582282913099;
-        Fri, 21 Feb 2020 03:01:53 -0800 (PST)
-X-Google-Smtp-Source: APXvYqwpDh5WHyhgA5iqetUV4fOSii4YN0pccjuZPHfEIB81Vxi77KmquOXE3jOcIo0p7uQYOTJLNw==
-X-Received: by 2002:a37:6153:: with SMTP id v80mr7091872qkb.257.1582282909406;
-        Fri, 21 Feb 2020 03:01:49 -0800 (PST)
-Received: from redhat.com (bzq-109-67-14-209.red.bezeqint.net. [109.67.14.209])
-        by smtp.gmail.com with ESMTPSA id 73sm1328674qtg.40.2020.02.21.03.01.44
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 21 Feb 2020 03:01:48 -0800 (PST)
-Date:   Fri, 21 Feb 2020 06:01:42 -0500
-From:   "Michael S. Tsirkin" <mst@redhat.com>
-To:     Yuya Kusakabe <yuya.kusakabe@gmail.com>
-Cc:     Jason Wang <jasowang@redhat.com>, andriin@fb.com, ast@kernel.org,
-        bpf@vger.kernel.org, daniel@iogearbox.net, davem@davemloft.net,
-        hawk@kernel.org, john.fastabend@gmail.com, kafai@fb.com,
-        kuba@kernel.org, linux-kernel@vger.kernel.org,
-        netdev@vger.kernel.org, songliubraving@fb.com, yhs@fb.com
-Subject: Re: [PATCH bpf-next v5] virtio_net: add XDP meta data support
-Message-ID: <20200221060048-mutt-send-email-mst@kernel.org>
-References: <0c5eaba2-dd5a-fc3f-0e8f-154f7ad52881@redhat.com>
- <20200220085549.269795-1-yuya.kusakabe@gmail.com>
- <5bf11065-6b85-8253-8548-683c01c98ac1@redhat.com>
- <8fafd23d-4c80-539d-9f74-bc5cda0d5575@gmail.com>
+        Fri, 21 Feb 2020 06:05:47 -0500
+Received: from mx2.suse.de ([195.135.220.15]:42068 "EHLO mx2.suse.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727239AbgBULFr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 21 Feb 2020 06:05:47 -0500
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx2.suse.de (Postfix) with ESMTP id F03F2AE17;
+        Fri, 21 Feb 2020 11:05:43 +0000 (UTC)
+Date:   Fri, 21 Feb 2020 12:05:41 +0100
+From:   Torsten Duwe <duwe@suse.de>
+To:     Neil Armstrong <narmstrong@baylibre.com>
+Cc:     Vasily Khoruzhick <anarsoul@gmail.com>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Sam Ravnborg <sam@ravnborg.org>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Maxime Ripard <maxime@cerno.tech>,
+        Chen-Yu Tsai <wens@csie.org>,
+        Andrzej Hajda <a.hajda@samsung.com>,
+        Laurent Pinchart <Laurent.pinchart@ideasonboard.com>,
+        Jonas Karlman <jonas@kwiboo.se>,
+        Jernej Skrabec <jernej.skrabec@siol.net>,
+        Icenowy Zheng <icenowy@aosc.io>,
+        Heiko Stuebner <heiko.stuebner@theobroma-systems.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Stephan Gerhold <stephan@gerhold.net>,
+        Mark Brown <broonie@kernel.org>,
+        Stephen Rothwell <sfr@canb.auug.org.au>,
+        Samuel Holland <samuel@sholland.org>,
+        dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org
+Subject: Re: [PATCH 1/6] drm/bridge: anx6345: Fix getting anx6345 regulators
+Message-ID: <20200221110541.GA28948@suse.de>
+References: <20200220083508.792071-1-anarsoul@gmail.com>
+ <20200220083508.792071-2-anarsoul@gmail.com>
+ <fc4ed2c4-ae5f-cd67-1c8a-c17e1cb63423@baylibre.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <8fafd23d-4c80-539d-9f74-bc5cda0d5575@gmail.com>
+In-Reply-To: <fc4ed2c4-ae5f-cd67-1c8a-c17e1cb63423@baylibre.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Feb 21, 2020 at 05:36:08PM +0900, Yuya Kusakabe wrote:
-> On 2/21/20 1:23 PM, Jason Wang wrote:
+On Fri, Feb 21, 2020 at 09:32:01AM +0100, Neil Armstrong wrote:
+> On 20/02/2020 09:35, Vasily Khoruzhick wrote:
+> > From: Samuel Holland <samuel@sholland.org>
 > > 
-> > On 2020/2/20 下午4:55, Yuya Kusakabe wrote:
-> >> Implement support for transferring XDP meta data into skb for
-> >> virtio_net driver; before calling into the program, xdp.data_meta points
-> >> to xdp.data, where on program return with pass verdict, we call
-> >> into skb_metadata_set().
-> >>
-> >> Tested with the script at
-> >> https://github.com/higebu/virtio_net-xdp-metadata-test.
-> >>
-> >> Fixes: de8f3a83b0a0 ("bpf: add meta pointer for direct access")
+> > We don't need to pass '-supply' suffix to devm_get_regulator()
 > > 
+> > Fixes: 6aa192698089 ("drm/bridge: Add Analogix anx6345 support")
+> > Signed-off-by: Samuel Holland <samuel@sholland.org>
+> > Signed-off-by: Vasily Khoruzhick <anarsoul@gmail.com>
+> > ---
+> >  drivers/gpu/drm/bridge/analogix/analogix-anx6345.c | 4 ++--
+> >  1 file changed, 2 insertions(+), 2 deletions(-)
 > > 
-> > I'm not sure this is correct since virtio-net claims to not support metadata by calling xdp_set_data_meta_invalid()?
+> > diff --git a/drivers/gpu/drm/bridge/analogix/analogix-anx6345.c b/drivers/gpu/drm/bridge/analogix/analogix-anx6345.c
+> > index 56f55c53abfd..0d8d083b0207 100644
+> > --- a/drivers/gpu/drm/bridge/analogix/analogix-anx6345.c
+> > +++ b/drivers/gpu/drm/bridge/analogix/analogix-anx6345.c
+> > @@ -712,14 +712,14 @@ static int anx6345_i2c_probe(struct i2c_client *client,
+> >  		DRM_DEBUG("No panel found\n");
+> >  
+> >  	/* 1.2V digital core power regulator  */
+> > -	anx6345->dvdd12 = devm_regulator_get(dev, "dvdd12-supply");
+> > +	anx6345->dvdd12 = devm_regulator_get(dev, "dvdd12");
+> >  	if (IS_ERR(anx6345->dvdd12)) {
+> >  		DRM_ERROR("dvdd12-supply not found\n");
+> >  		return PTR_ERR(anx6345->dvdd12);
+> >  	}
+> >  
+> >  	/* 2.5V digital core power regulator  */
+> > -	anx6345->dvdd25 = devm_regulator_get(dev, "dvdd25-supply");
+> > +	anx6345->dvdd25 = devm_regulator_get(dev, "dvdd25");
+> >  	if (IS_ERR(anx6345->dvdd25)) {
+> >  		DRM_ERROR("dvdd25-supply not found\n");
+> >  		return PTR_ERR(anx6345->dvdd25);
+> > 
 > 
-> virtio_net doesn't support by calling xdp_set_data_meta_invalid() for now.
+> This is a duplicate of "drm/bridge: analogix-anx6345: Avoid duplicate -supply suffix" (20200218155440.BEFB968C65@verein.lst.de)
 > 
-> https://git.kernel.org/pub/scm/linux/kernel/git/bpf/bpf-next.git/tree/drivers/net/virtio_net.c?id=e42da4c62abb547d9c9138e0e7fcd1f36057b5e8#n686
-> https://git.kernel.org/pub/scm/linux/kernel/git/bpf/bpf-next.git/tree/drivers/net/virtio_net.c?id=e42da4c62abb547d9c9138e0e7fcd1f36057b5e8#n842
-> 
-> And xdp_set_data_meta_invalid() are added by de8f3a83b0a0.
-> 
-> $ git blame ./drivers/net/virtio_net.c | grep xdp_set_data_meta_invalid
-> de8f3a83b0a0f (Daniel Borkmann           2017-09-25 02:25:51 +0200  686)                xdp_set_data_meta_invalid(&xdp);
-> de8f3a83b0a0f (Daniel Borkmann           2017-09-25 02:25:51 +0200  842)                xdp_set_data_meta_invalid(&xdp);
-> 
-> So I added `Fixes: de8f3a83b0a0 ("bpf: add meta pointer for direct access")` to the comment.
+> But this one has fixes and review from laurent, so I'll push this one when the serie is ready
 
+I really don't mind, as long as it gets fixed.
+The change is pretty obvious when you look at commit 69511a452e6dc.
 
-Fixes basically means "must be backported to any kernel that has
-de8f3a83b0a0 in order to fix a bug". This looks more like
-a feature than a bug though, so I'm not sure Fixes
-is approproate. Correct me if I'm wrong.
+Signed-off-by: Torsten Duwe <duwe@suse.de>
+Reviewed-by: Mark Brown <broonie@kernel.org>
+(broonie had replied to my submission back in November)
 
-> > 
-> > 
-> >> Signed-off-by: Yuya Kusakabe <yuya.kusakabe@gmail.com>
-> >> ---
-> >> v5:
-> >>   - page_to_skb(): copy vnet header if hdr_valid without checking metasize.
-> >>   - receive_small(): do not copy vnet header if xdp_prog is availavle.
-> >>   - __virtnet_xdp_xmit_one(): remove the xdp_set_data_meta_invalid().
-> >>   - improve comments.
-> >> v4:
-> >>   - improve commit message
-> >> v3:
-> >>   - fix preserve the vnet header in receive_small().
-> >> v2:
-> >>   - keep copy untouched in page_to_skb().
-> >>   - preserve the vnet header in receive_small().
-> >>   - fix indentation.
-> >> ---
-> >>   drivers/net/virtio_net.c | 54 ++++++++++++++++++++++++----------------
-> >>   1 file changed, 33 insertions(+), 21 deletions(-)
-> >>
-> >> diff --git a/drivers/net/virtio_net.c b/drivers/net/virtio_net.c
-> >> index 2fe7a3188282..4ea0ae60c000 100644
-> >> --- a/drivers/net/virtio_net.c
-> >> +++ b/drivers/net/virtio_net.c
-> >> @@ -371,7 +371,7 @@ static struct sk_buff *page_to_skb(struct virtnet_info *vi,
-> >>                      struct receive_queue *rq,
-> >>                      struct page *page, unsigned int offset,
-> >>                      unsigned int len, unsigned int truesize,
-> >> -                   bool hdr_valid)
-> >> +                   bool hdr_valid, unsigned int metasize)
-> >>   {
-> >>       struct sk_buff *skb;
-> >>       struct virtio_net_hdr_mrg_rxbuf *hdr;
-> >> @@ -393,6 +393,7 @@ static struct sk_buff *page_to_skb(struct virtnet_info *vi,
-> >>       else
-> >>           hdr_padded_len = sizeof(struct padded_vnet_hdr);
-> >>   +    /* hdr_valid means no XDP, so we can copy the vnet header */
-> >>       if (hdr_valid)
-> >>           memcpy(hdr, p, hdr_len);
-> >>   @@ -405,6 +406,11 @@ static struct sk_buff *page_to_skb(struct virtnet_info *vi,
-> >>           copy = skb_tailroom(skb);
-> >>       skb_put_data(skb, p, copy);
-> >>   +    if (metasize) {
-> >> +        __skb_pull(skb, metasize);
-> >> +        skb_metadata_set(skb, metasize);
-> >> +    }
-> >> +
-> >>       len -= copy;
-> >>       offset += copy;
-> >>   @@ -450,10 +456,6 @@ static int __virtnet_xdp_xmit_one(struct virtnet_info *vi,
-> >>       struct virtio_net_hdr_mrg_rxbuf *hdr;
-> >>       int err;
-> >>   -    /* virtqueue want to use data area in-front of packet */
-> >> -    if (unlikely(xdpf->metasize > 0))
-> >> -        return -EOPNOTSUPP;
-> >> -
-> >>       if (unlikely(xdpf->headroom < vi->hdr_len))
-> >>           return -EOVERFLOW;
-> >>   @@ -644,6 +646,7 @@ static struct sk_buff *receive_small(struct net_device *dev,
-> >>       unsigned int delta = 0;
-> >>       struct page *xdp_page;
-> >>       int err;
-> >> +    unsigned int metasize = 0;
-> >>         len -= vi->hdr_len;
-> >>       stats->bytes += len;
-> >> @@ -683,8 +686,8 @@ static struct sk_buff *receive_small(struct net_device *dev,
-> >>             xdp.data_hard_start = buf + VIRTNET_RX_PAD + vi->hdr_len;
-> >>           xdp.data = xdp.data_hard_start + xdp_headroom;
-> >> -        xdp_set_data_meta_invalid(&xdp);
-> >>           xdp.data_end = xdp.data + len;
-> >> +        xdp.data_meta = xdp.data;
-> >>           xdp.rxq = &rq->xdp_rxq;
-> >>           orig_data = xdp.data;
-> >>           act = bpf_prog_run_xdp(xdp_prog, &xdp);
-> >> @@ -695,6 +698,7 @@ static struct sk_buff *receive_small(struct net_device *dev,
-> >>               /* Recalculate length in case bpf program changed it */
-> >>               delta = orig_data - xdp.data;
-> >>               len = xdp.data_end - xdp.data;
-> >> +            metasize = xdp.data - xdp.data_meta;
-> >>               break;
-> >>           case XDP_TX:
-> >>               stats->xdp_tx++;
-> >> @@ -735,11 +739,14 @@ static struct sk_buff *receive_small(struct net_device *dev,
-> >>       }
-> >>       skb_reserve(skb, headroom - delta);
-> >>       skb_put(skb, len);
-> >> -    if (!delta) {
-> >> +    if (!xdp_prog) {
-> >>           buf += header_offset;
-> >>           memcpy(skb_vnet_hdr(skb), buf, vi->hdr_len);
-> >>       } /* keep zeroed vnet hdr since packet was changed by bpf */
-> > 
-> > 
-> > I prefer to make this an independent patch and cc stable.
-> > 
-> > Other looks good.
-> > 
-> > Thanks
-> 
-> I see. So I need to revert to delta from xdp_prog?
-> 
-> Thank you.
-> 
-> > 
-> >>   +    if (metasize)
-> >> +        skb_metadata_set(skb, metasize);
-> >> +
-> >>   err:
-> >>       return skb;
-> >>   @@ -760,8 +767,8 @@ static struct sk_buff *receive_big(struct net_device *dev,
-> >>                      struct virtnet_rq_stats *stats)
-> >>   {
-> >>       struct page *page = buf;
-> >> -    struct sk_buff *skb = page_to_skb(vi, rq, page, 0, len,
-> >> -                      PAGE_SIZE, true);
-> >> +    struct sk_buff *skb =
-> >> +        page_to_skb(vi, rq, page, 0, len, PAGE_SIZE, true, 0);
-> >>         stats->bytes += len - vi->hdr_len;
-> >>       if (unlikely(!skb))
-> >> @@ -793,6 +800,7 @@ static struct sk_buff *receive_mergeable(struct net_device *dev,
-> >>       unsigned int truesize;
-> >>       unsigned int headroom = mergeable_ctx_to_headroom(ctx);
-> >>       int err;
-> >> +    unsigned int metasize = 0;
-> >>         head_skb = NULL;
-> >>       stats->bytes += len - vi->hdr_len;
-> >> @@ -839,8 +847,8 @@ static struct sk_buff *receive_mergeable(struct net_device *dev,
-> >>           data = page_address(xdp_page) + offset;
-> >>           xdp.data_hard_start = data - VIRTIO_XDP_HEADROOM + vi->hdr_len;
-> >>           xdp.data = data + vi->hdr_len;
-> >> -        xdp_set_data_meta_invalid(&xdp);
-> >>           xdp.data_end = xdp.data + (len - vi->hdr_len);
-> >> +        xdp.data_meta = xdp.data;
-> >>           xdp.rxq = &rq->xdp_rxq;
-> >>             act = bpf_prog_run_xdp(xdp_prog, &xdp);
-> >> @@ -848,24 +856,27 @@ static struct sk_buff *receive_mergeable(struct net_device *dev,
-> >>             switch (act) {
-> >>           case XDP_PASS:
-> >> +            metasize = xdp.data - xdp.data_meta;
-> >> +
-> >>               /* recalculate offset to account for any header
-> >> -             * adjustments. Note other cases do not build an
-> >> -             * skb and avoid using offset
-> >> +             * adjustments and minus the metasize to copy the
-> >> +             * metadata in page_to_skb(). Note other cases do not
-> >> +             * build an skb and avoid using offset
-> >>                */
-> >> -            offset = xdp.data -
-> >> -                    page_address(xdp_page) - vi->hdr_len;
-> >> +            offset = xdp.data - page_address(xdp_page) -
-> >> +                 vi->hdr_len - metasize;
-> >>   -            /* recalculate len if xdp.data or xdp.data_end were
-> >> -             * adjusted
-> >> +            /* recalculate len if xdp.data, xdp.data_end or
-> >> +             * xdp.data_meta were adjusted
-> >>                */
-> >> -            len = xdp.data_end - xdp.data + vi->hdr_len;
-> >> +            len = xdp.data_end - xdp.data + vi->hdr_len + metasize;
-> >>               /* We can only create skb based on xdp_page. */
-> >>               if (unlikely(xdp_page != page)) {
-> >>                   rcu_read_unlock();
-> >>                   put_page(page);
-> >> -                head_skb = page_to_skb(vi, rq, xdp_page,
-> >> -                               offset, len,
-> >> -                               PAGE_SIZE, false);
-> >> +                head_skb = page_to_skb(vi, rq, xdp_page, offset,
-> >> +                               len, PAGE_SIZE, false,
-> >> +                               metasize);
-> >>                   return head_skb;
-> >>               }
-> >>               break;
-> >> @@ -921,7 +932,8 @@ static struct sk_buff *receive_mergeable(struct net_device *dev,
-> >>           goto err_skb;
-> >>       }
-> >>   -    head_skb = page_to_skb(vi, rq, page, offset, len, truesize, !xdp_prog);
-> >> +    head_skb = page_to_skb(vi, rq, page, offset, len, truesize, !xdp_prog,
-> >> +                   metasize);
-> >>       curr_skb = head_skb;
-> >>         if (unlikely(!curr_skb))
-> > 
+There's one other fix required for the anx6345 and, while at it,
+I had also fixed the code I copied in that hurry as well. 
+What about these? All 3 fixes can go in independently, so I wouldn't
+tie them to this series.
+
+	Torsten
 
