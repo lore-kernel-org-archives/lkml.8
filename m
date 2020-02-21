@@ -5,49 +5,51 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AA9CEC35640
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 07:53:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 12C3FC35640
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 07:53:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7731524653
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 07:53:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D85C420801
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 07:53:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582271628;
-	bh=qj+b2RpW9TJz60O6E8Om1vFFC0f3M1Zglp4/l4ocLbg=;
+	s=default; t=1582271631;
+	bh=UsiEZwaNCOzGinm9GY9LYQeSFH9pbbl3cGztO6ANsr0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=k4s1iSxav/GF5nsyYVWhO9BhwOUQ86ekgE1Rq+9fiN6sLQizpicEpw93lt6uRiGnk
-	 uM1BMRBkEvTjarRF2Ba2XGAa2bmibxKF0XjRd9ttf1Rbe6bTPos8zM7w5z2QV2pQO2
-	 ACzK4DrYO4cwzcYvwle0Gjhb6UKFoSQV/0Lk2nPE=
+	b=s9SpaJMNu6WU2pUXLQ9Sp6qOK/79L4u0dieoUsjAALCNw3qd1H9DH2oAZ20Gw2Lkm
+	 zJpbvTe0K1Tk0jzCj7vHhV1rtjCb8G5ear28Hwsb2lmKNDvuqPiaBtXDcovG7O0YgZ
+	 8BIL2aZ7lbElb/X5QYSksS02Qej45tLAiMLWzm4c=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730160AbgBUHxr (ORCPT
+        id S1730165AbgBUHxu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Feb 2020 02:53:47 -0500
-Received: from mail.kernel.org ([198.145.29.99]:52122 "EHLO mail.kernel.org"
+        Fri, 21 Feb 2020 02:53:50 -0500
+Received: from mail.kernel.org ([198.145.29.99]:52178 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730120AbgBUHxn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Feb 2020 02:53:43 -0500
+        id S1730153AbgBUHxq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 21 Feb 2020 02:53:46 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9483E24653;
-        Fri, 21 Feb 2020 07:53:42 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8CC0420801;
+        Fri, 21 Feb 2020 07:53:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1582271623;
-        bh=qj+b2RpW9TJz60O6E8Om1vFFC0f3M1Zglp4/l4ocLbg=;
+        s=default; t=1582271626;
+        bh=UsiEZwaNCOzGinm9GY9LYQeSFH9pbbl3cGztO6ANsr0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=dHsQY5D9k/29RmsUCX84wHyYXf223YCq8EMeRNHUUD0vra8r4qTWDNG7hXaPCac5+
-         xgfJPqC7Ew/C+m4QAuL+oHKqnibOKfglJhnY83cytFoqxVL7S8nkkkucZbhrL+vaNH
-         L0rGIQUgRarbQTu6/oDDDc3iizyh1qqLnUE7R9P4=
+        b=FNXvGvZmdjPLjC+sCYojhNLTjQv6SZYhzlbMs+rrNkyCAmTaHh7yfiIHP1nWoBHGl
+         G5h4opTvO5AYV0oBGco2qR5HCmi7P8NUj/XrtJ35ZGt1eJM6C/A/hEta9+PmFHKoyH
+         myXTs4vVbvVUxpIWEbgvWIPmHFuKIJNn+MR349ig=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Jiewei Ke <kejiewei.cn@gmail.com>,
-        Jason Gunthorpe <jgg@mellanox.com>,
+        stable@vger.kernel.org,
+        Mitch Williams <mitch.a.williams@intel.com>,
+        Andrew Bowers <andrewx.bowers@intel.com>,
+        Jeff Kirsher <jeffrey.t.kirsher@intel.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.5 198/399] RDMA/rxe: Fix error type of mmap_offset
-Date:   Fri, 21 Feb 2020 08:38:43 +0100
-Message-Id: <20200221072422.053151016@linuxfoundation.org>
+Subject: [PATCH 5.5 199/399] ice: add extra check for null Rx descriptor
+Date:   Fri, 21 Feb 2020 08:38:44 +0100
+Message-Id: <20200221072422.152591489@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200221072402.315346745@linuxfoundation.org>
 References: <20200221072402.315346745@linuxfoundation.org>
@@ -60,36 +62,56 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jiewei Ke <kejiewei.cn@gmail.com>
+From: Mitch Williams <mitch.a.williams@intel.com>
 
-[ Upstream commit 6ca18d8927d468c763571f78c9a7387a69ffa020 ]
+[ Upstream commit 1f45ebe0d8fbe6178670b663005f38ef8535db5d ]
 
-The type of mmap_offset should be u64 instead of int to match the type of
-mminfo.offset. If otherwise, after we create several thousands of CQs, it
-will run into overflow issues.
+In the case where the hardware gives us a null Rx descriptor, it is
+theoretically possible that we could call one of our skb-construction
+functions with no data pointer, which would cause a panic.
 
-Link: https://lore.kernel.org/r/20191227113613.5020-1-kejiewei.cn@gmail.com
-Signed-off-by: Jiewei Ke <kejiewei.cn@gmail.com>
-Reviewed-by: Jason Gunthorpe <jgg@mellanox.com>
-Signed-off-by: Jason Gunthorpe <jgg@mellanox.com>
+In real life, this will never happen - we only get null RX
+descriptors as the final descriptor in a chain of otherwise-valid
+descriptors. When this happens, the skb will be extant and we'll just
+call ice_add_rx_frag(), which can deal with empty data buffers.
+
+Unfortunately, Coverity does not have intimate knowledge of our
+hardware, so we must add a check here.
+
+Signed-off-by: Mitch Williams <mitch.a.williams@intel.com>
+Tested-by: Andrew Bowers <andrewx.bowers@intel.com>
+Signed-off-by: Jeff Kirsher <jeffrey.t.kirsher@intel.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/infiniband/sw/rxe/rxe_verbs.h | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/net/ethernet/intel/ice/ice_txrx.c | 13 ++++++++-----
+ 1 file changed, 8 insertions(+), 5 deletions(-)
 
-diff --git a/drivers/infiniband/sw/rxe/rxe_verbs.h b/drivers/infiniband/sw/rxe/rxe_verbs.h
-index 95834206c80c3..92de39c4a7c1e 100644
---- a/drivers/infiniband/sw/rxe/rxe_verbs.h
-+++ b/drivers/infiniband/sw/rxe/rxe_verbs.h
-@@ -408,7 +408,7 @@ struct rxe_dev {
- 	struct list_head	pending_mmaps;
- 
- 	spinlock_t		mmap_offset_lock; /* guard mmap_offset */
--	int			mmap_offset;
-+	u64			mmap_offset;
- 
- 	atomic64_t		stats_counters[RXE_NUM_OF_COUNTERS];
- 
+diff --git a/drivers/net/ethernet/intel/ice/ice_txrx.c b/drivers/net/ethernet/intel/ice/ice_txrx.c
+index 2c212f64d99f2..8b2b9e254d28d 100644
+--- a/drivers/net/ethernet/intel/ice/ice_txrx.c
++++ b/drivers/net/ethernet/intel/ice/ice_txrx.c
+@@ -1071,13 +1071,16 @@ static int ice_clean_rx_irq(struct ice_ring *rx_ring, int budget)
+ 		ice_put_rx_buf(rx_ring, rx_buf);
+ 		continue;
+ construct_skb:
+-		if (skb)
++		if (skb) {
+ 			ice_add_rx_frag(rx_ring, rx_buf, skb, size);
+-		else if (ice_ring_uses_build_skb(rx_ring))
+-			skb = ice_build_skb(rx_ring, rx_buf, &xdp);
+-		else
++		} else if (likely(xdp.data)) {
++			if (ice_ring_uses_build_skb(rx_ring))
++				skb = ice_build_skb(rx_ring, rx_buf, &xdp);
++			else
++				skb = ice_construct_skb(rx_ring, rx_buf, &xdp);
++		} else {
+ 			skb = ice_construct_skb(rx_ring, rx_buf, &xdp);
+-
++		}
+ 		/* exit if we failed to retrieve a buffer */
+ 		if (!skb) {
+ 			rx_ring->rx_stats.alloc_buf_failed++;
 -- 
 2.20.1
 
