@@ -4,52 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3F2B1C35641
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 08:39:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BE35EC35641
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 08:39:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 128AB206ED
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 08:39:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8A97B20578
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 08:39:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582274341;
-	bh=dxyccyigJhbpHPCQ2eWhVt7tV6C/oCPf9Cj4BDUW/vo=;
+	s=default; t=1582274347;
+	bh=hOuaW7/hKWZaEBAmeRmZWycGWtxt52azLEnrtlhg/2E=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=vzv+BijXYQuBZIkGMPExrdC+OiXAUQ15Nw07enzDziDGjb08Cm0dTQYiOXrAqJcbZ
-	 l/d6bX9lb9JGyYwxABWLhwEHl6znYfhXdYFUfhJLM7kilLsw3RnpQPxLzsZ+zK0OyB
-	 N3X8JU3Un5m3msJag5w2aYbx2K7/IO1w6wt82FOc=
+	b=Na6ypQI2izZtHJkptumvCLxRwUVudMYP6n6NfMNqVbaS2iyuw/voU6nbk0cNYIPmC
+	 3SDhAFfip4yfkXxLAaHH9l7EFPzTpWdFREDjv/3mQX3S/ABbpkeeYa2QWQZ79sVEW1
+	 s7EjSsjpw7ixnO2ioJMzRbssChtzyeg1/J7UA2qI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731263AbgBUIBz (ORCPT
+        id S1731213AbgBUIBb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Feb 2020 03:01:55 -0500
-Received: from mail.kernel.org ([198.145.29.99]:34120 "EHLO mail.kernel.org"
+        Fri, 21 Feb 2020 03:01:31 -0500
+Received: from mail.kernel.org ([198.145.29.99]:33716 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731246AbgBUIBr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Feb 2020 03:01:47 -0500
+        id S1731200AbgBUIB0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 21 Feb 2020 03:01:26 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3C4502073A;
-        Fri, 21 Feb 2020 08:01:46 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id F2D522073A;
+        Fri, 21 Feb 2020 08:01:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1582272106;
-        bh=dxyccyigJhbpHPCQ2eWhVt7tV6C/oCPf9Cj4BDUW/vo=;
+        s=default; t=1582272085;
+        bh=hOuaW7/hKWZaEBAmeRmZWycGWtxt52azLEnrtlhg/2E=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ez8vyWWe+Zd3oCB0mCJi97G3wCIMiFESA08lgg7geBIoo8KJxMyKAGFts18QeHYYK
-         2YYT1mTvMZTaIDEwE4DAvgFP8asJE0lXF0Rny8dadOCqXULXqMONs7Bhq4ZxFTJhnZ
-         5vTMpReaQd0O4i+UgMYyRiLLnw6xZ+sIsAKS+mGw=
+        b=UuSSGp81xMzqQMRbXBSKjylNlSQrGslXoXmQLNUtjiMlkuct51efW5lyhX+G+I/k7
+         bG3kN9uI1S+eNKPSmmK/MmO45bQe9m+z8ORNu4tunWelbhmjO9mRle4fNANyGvoFOM
+         PlfOW+g96W5t5uRiYwrk3L/IJJxY3gE8lTXZ3tsI=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
-        Remi Pommarel <repk@triplefau.lt>,
-        Jerome Brunet <jbrunet@baylibre.com>,
+        stable@vger.kernel.org, Dan Carpenter <dan.carpenter@oracle.com>,
+        "J. Bruce Fields" <bfields@redhat.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 019/344] clk: meson: pll: Fix by 0 division in __pll_params_to_rate()
-Date:   Fri, 21 Feb 2020 08:36:58 +0100
-Message-Id: <20200221072350.959486973@linuxfoundation.org>
+Subject: [PATCH 5.4 011/344] nfsd4: avoid NULL deference on strange COPY compounds
+Date:   Fri, 21 Feb 2020 08:36:50 +0100
+Message-Id: <20200221072350.280729321@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200221072349.335551332@linuxfoundation.org>
 References: <20200221072349.335551332@linuxfoundation.org>
@@ -62,75 +60,52 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Remi Pommarel <repk@triplefau.lt>
+From: J. Bruce Fields <bfields@redhat.com>
 
-[ Upstream commit d8488a41800d9f5c80bc0d17b9cc2c91b4841464 ]
+[ Upstream commit d781e3df710745fbbaee4eb07fd5b64331a1b175 ]
 
-Some meson pll registers can be initialized with 0 as N value, introducing
-the following division by 0 when computing rate :
+With cross-server COPY we've introduced the possibility that the current
+or saved filehandle might not have fh_dentry/fh_export filled in, but we
+missed a place that assumed it was.  I think this could be triggered by
+a compound like:
 
-  UBSAN: Undefined behaviour in drivers/clk/meson/clk-pll.c:75:9
-  division by zero
-  CPU: 0 PID: 1 Comm: swapper/0 Not tainted 5.4.0-rc3-608075-g86c9af8630e1-dirty #400
-  Call trace:
-   dump_backtrace+0x0/0x1c0
-   show_stack+0x14/0x20
-   dump_stack+0xc4/0x100
-   ubsan_epilogue+0x14/0x68
-   __ubsan_handle_divrem_overflow+0x98/0xb8
-   __pll_params_to_rate+0xdc/0x140
-   meson_clk_pll_recalc_rate+0x278/0x3a0
-   __clk_register+0x7c8/0xbb0
-   devm_clk_hw_register+0x54/0xc0
-   meson_eeclkc_probe+0xf4/0x1a0
-   platform_drv_probe+0x54/0xd8
-   really_probe+0x16c/0x438
-   driver_probe_device+0xb0/0xf0
-   device_driver_attach+0x94/0xa0
-   __driver_attach+0x70/0x108
-   bus_for_each_dev+0xd8/0x128
-   driver_attach+0x30/0x40
-   bus_add_driver+0x1b0/0x2d8
-   driver_register+0xbc/0x1d0
-   __platform_driver_register+0x78/0x88
-   axg_driver_init+0x18/0x20
-   do_one_initcall+0xc8/0x24c
-   kernel_init_freeable+0x2b0/0x344
-   kernel_init+0x10/0x128
-   ret_from_fork+0x10/0x18
+	PUTFH(foreign filehandle)
+	GETATTR
+	SAVEFH
+	COPY
 
-This checks if N is null before doing the division.
+First, check_if_stalefh_allowed sets no_verify on the first (PUTFH) op.
+Then op_func = nfsd4_putfh runs and leaves current_fh->fh_export NULL.
+need_wrongsec_check returns true, since this PUTFH has OP_IS_PUTFH_LIKE
+set and GETATTR does not have OP_HANDLES_WRONGSEC set.
 
-Fixes: 7a29a869434e ("clk: meson: Add support for Meson clock controller")
-Reviewed-by: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
-Signed-off-by: Remi Pommarel <repk@triplefau.lt>
-[jbrunet@baylibre.com: update the comment in above the fix]
-Signed-off-by: Jerome Brunet <jbrunet@baylibre.com>
+We should probably also consider tightening the checks in
+check_if_stalefh_allowed and double-checking that we don't assume the
+filehandle is verified elsewhere in the compound.  But I think this
+fixes the immediate issue.
+
+Reported-by: Dan Carpenter <dan.carpenter@oracle.com>
+Fixes: 4e48f1cccab3 "NFSD: allow inter server COPY to have... "
+Signed-off-by: J. Bruce Fields <bfields@redhat.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/clk/meson/clk-pll.c | 9 +++++++++
- 1 file changed, 9 insertions(+)
+ fs/nfsd/nfs4proc.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/clk/meson/clk-pll.c b/drivers/clk/meson/clk-pll.c
-index ddb1e56347395..3a5853ca98c6c 100644
---- a/drivers/clk/meson/clk-pll.c
-+++ b/drivers/clk/meson/clk-pll.c
-@@ -77,6 +77,15 @@ static unsigned long meson_clk_pll_recalc_rate(struct clk_hw *hw,
- 	unsigned int m, n, frac;
+diff --git a/fs/nfsd/nfs4proc.c b/fs/nfsd/nfs4proc.c
+index 4798667af647c..4d1d0bf8e385f 100644
+--- a/fs/nfsd/nfs4proc.c
++++ b/fs/nfsd/nfs4proc.c
+@@ -2025,7 +2025,8 @@ nfsd4_proc_compound(struct svc_rqst *rqstp)
+ 			if (op->opdesc->op_flags & OP_CLEAR_STATEID)
+ 				clear_current_stateid(cstate);
  
- 	n = meson_parm_read(clk->map, &pll->n);
-+
-+	/*
-+	 * On some HW, N is set to zero on init. This value is invalid as
-+	 * it would result in a division by zero. The rate can't be
-+	 * calculated in this case
-+	 */
-+	if (n == 0)
-+		return 0;
-+
- 	m = meson_parm_read(clk->map, &pll->m);
- 
- 	frac = MESON_PARM_APPLICABLE(&pll->frac) ?
+-			if (need_wrongsec_check(rqstp))
++			if (current_fh->fh_export &&
++					need_wrongsec_check(rqstp))
+ 				op->status = check_nfsd_access(current_fh->fh_export, rqstp);
+ 		}
+ encode_op:
 -- 
 2.20.1
 
