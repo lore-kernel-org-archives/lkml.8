@@ -5,50 +5,49 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CAB5DC35640
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 07:56:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5F5DBC35641
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 07:56:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9F27824670
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 07:56:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 35C1C20578
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 07:56:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582271773;
-	bh=GenGKx8klKN5QOWUcat6rkevYzH+j2MnwyEAoetKWvM=;
+	s=default; t=1582271777;
+	bh=7cQc4SRp6iphGymWqLpNl7n+Za/QHc3wM/3uBQapzDQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=BmZvgwx8phEpGFjLkDfd0P5N0Qs1Co03QNrm+T9Ic1y2Gd6BcYSXdsLu2hn69GzIR
-	 arl3HwS15Rs3pQshL3yUofBIyCX/1qjtMWwjFt5D85u52L3Id5wjdxsx2dxLFZW+52
-	 UBEzoN/z8MnaZp4pjERWt48gPrOa4wh8Et0SsmZU=
+	b=JHXzsEZLJxc7e/h3PjJI9UW4PALdTov6S2Q1oyE1WFzkZliXFPZmAj9RrV+SjL+u+
+	 n4+0t0GsckKzqv6Y9Vs1iUqFWZsTyGqNwyRjU/KARgd9GM7XKjAtF9wR4igswLBJBH
+	 vShn5D7UXXD2ZbJaD1G6oYYShMajDhLUEqNxTgFk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730440AbgBUH4M (ORCPT
+        id S1730286AbgBUH4P (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Feb 2020 02:56:12 -0500
-Received: from mail.kernel.org ([198.145.29.99]:55360 "EHLO mail.kernel.org"
+        Fri, 21 Feb 2020 02:56:15 -0500
+Received: from mail.kernel.org ([198.145.29.99]:55416 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730435AbgBUH4J (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Feb 2020 02:56:09 -0500
+        id S1730439AbgBUH4M (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 21 Feb 2020 02:56:12 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 28CD124672;
-        Fri, 21 Feb 2020 07:56:07 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B1CFD222C4;
+        Fri, 21 Feb 2020 07:56:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1582271768;
-        bh=GenGKx8klKN5QOWUcat6rkevYzH+j2MnwyEAoetKWvM=;
+        s=default; t=1582271771;
+        bh=7cQc4SRp6iphGymWqLpNl7n+Za/QHc3wM/3uBQapzDQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Wuypue4I6qZKWA/mvksSHqd2A2SZU4xJX1Es5tJee8F58WDF4GaH+g5lFb3S6bH3c
-         MCYu3QDSAuV+dAfJttpvAG3xk2/HGWM8yCLg6QtJNvTEdN5rSM+xJD3NQi9UEgoE8z
-         RbiwvXN3EmfBNfOgfgmK4wHFgFs7wyjBLYcLyv8w=
+        b=YwB3IcRYnIgBuSxUozpzvNygj5HB6rVkG7sW1yKvSbTNDprj3QsHE+QU1wxRidWsf
+         +DSLH6Zi00gUvg1Wx/TsjgIkGNovQrXB3hmsVvkgMPGs/WSUnGHB0Bm0Y8ezmbkecG
+         MZp8avVCSdHfGyQaZUbZ5AgSVF2imBDCV4jBdX94=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Vladimir Oltean <vladimir.oltean@nxp.com>,
-        Andrew Lunn <andrew@lunn.ch>,
-        "David S. Miller" <davem@davemloft.net>,
+        stable@vger.kernel.org, Zaibo Xu <xuzaibo@huawei.com>,
+        Herbert Xu <herbert@gondor.apana.org.au>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.5 292/399] enetc: Dont print from enetc_sched_speed_set when link goes down
-Date:   Fri, 21 Feb 2020 08:40:17 +0100
-Message-Id: <20200221072430.170548830@linuxfoundation.org>
+Subject: [PATCH 5.5 275/399] crypto: hisilicon - Bugfixed tfm leak
+Date:   Fri, 21 Feb 2020 08:40:00 +0100
+Message-Id: <20200221072428.849850793@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200221072402.315346745@linuxfoundation.org>
 References: <20200221072402.315346745@linuxfoundation.org>
@@ -61,38 +60,81 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Vladimir Oltean <vladimir.oltean@nxp.com>
+From: Zaibo Xu <xuzaibo@huawei.com>
 
-[ Upstream commit 90f29f0eada4d60e1f6ae537502ddb2202b9540d ]
+[ Upstream commit dfee9955abc7ec9364413d16316181322cf44f2f ]
 
-It is not an error to unplug a cable from the ENETC port even with TSN
-offloads, so don't spam the log with link-related messages from the
-tc-taprio offload subsystem, a single notification is sufficient:
+1.Fixed the bug of software tfm leakage.
+2.Update HW error log message.
 
-[10972.351859] fsl_enetc 0000:00:00.0 eno0: Qbv PSPEED set speed link down.
-[10972.360241] fsl_enetc 0000:00:00.0 eno0: Link is Down
-
-Fixes: 2e47cb415f0a ("enetc: update TSN Qbv PSPEED set according to adjust link speed")
-Signed-off-by: Vladimir Oltean <vladimir.oltean@nxp.com>
-Reviewed-by: Andrew Lunn <andrew@lunn.ch>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Signed-off-by: Zaibo Xu <xuzaibo@huawei.com>
+Signed-off-by: Herbert Xu <herbert@gondor.apana.org.au>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/ethernet/freescale/enetc/enetc_qos.c | 1 -
- 1 file changed, 1 deletion(-)
+ drivers/crypto/hisilicon/hpre/hpre_crypto.c |  7 +++++-
+ drivers/crypto/hisilicon/hpre/hpre_main.c   | 24 ++++++++++-----------
+ 2 files changed, 18 insertions(+), 13 deletions(-)
 
-diff --git a/drivers/net/ethernet/freescale/enetc/enetc_qos.c b/drivers/net/ethernet/freescale/enetc/enetc_qos.c
-index 9190ffc9f6b21..de52686b1d467 100644
---- a/drivers/net/ethernet/freescale/enetc/enetc_qos.c
-+++ b/drivers/net/ethernet/freescale/enetc/enetc_qos.c
-@@ -36,7 +36,6 @@ void enetc_sched_speed_set(struct net_device *ndev)
- 	case SPEED_10:
- 	default:
- 		pspeed = ENETC_PMR_PSPEED_10M;
--		netdev_err(ndev, "Qbv PSPEED set speed link down.\n");
+diff --git a/drivers/crypto/hisilicon/hpre/hpre_crypto.c b/drivers/crypto/hisilicon/hpre/hpre_crypto.c
+index 98f037e6ea3e4..d8b015266ee49 100644
+--- a/drivers/crypto/hisilicon/hpre/hpre_crypto.c
++++ b/drivers/crypto/hisilicon/hpre/hpre_crypto.c
+@@ -1043,6 +1043,7 @@ static unsigned int hpre_rsa_max_size(struct crypto_akcipher *tfm)
+ static int hpre_rsa_init_tfm(struct crypto_akcipher *tfm)
+ {
+ 	struct hpre_ctx *ctx = akcipher_tfm_ctx(tfm);
++	int ret;
+ 
+ 	ctx->rsa.soft_tfm = crypto_alloc_akcipher("rsa-generic", 0, 0);
+ 	if (IS_ERR(ctx->rsa.soft_tfm)) {
+@@ -1050,7 +1051,11 @@ static int hpre_rsa_init_tfm(struct crypto_akcipher *tfm)
+ 		return PTR_ERR(ctx->rsa.soft_tfm);
  	}
  
- 	priv->speed = speed;
+-	return hpre_ctx_init(ctx);
++	ret = hpre_ctx_init(ctx);
++	if (ret)
++		crypto_free_akcipher(ctx->rsa.soft_tfm);
++
++	return ret;
+ }
+ 
+ static void hpre_rsa_exit_tfm(struct crypto_akcipher *tfm)
+diff --git a/drivers/crypto/hisilicon/hpre/hpre_main.c b/drivers/crypto/hisilicon/hpre/hpre_main.c
+index 34e0424410bfc..0c98c37e39f4a 100644
+--- a/drivers/crypto/hisilicon/hpre/hpre_main.c
++++ b/drivers/crypto/hisilicon/hpre/hpre_main.c
+@@ -106,18 +106,18 @@ static const char * const hpre_debug_file_name[] = {
+ };
+ 
+ static const struct hpre_hw_error hpre_hw_errors[] = {
+-	{ .int_msk = BIT(0), .msg = "hpre_ecc_1bitt_err" },
+-	{ .int_msk = BIT(1), .msg = "hpre_ecc_2bit_err" },
+-	{ .int_msk = BIT(2), .msg = "hpre_data_wr_err" },
+-	{ .int_msk = BIT(3), .msg = "hpre_data_rd_err" },
+-	{ .int_msk = BIT(4), .msg = "hpre_bd_rd_err" },
+-	{ .int_msk = BIT(5), .msg = "hpre_ooo_2bit_ecc_err" },
+-	{ .int_msk = BIT(6), .msg = "hpre_cltr1_htbt_tm_out_err" },
+-	{ .int_msk = BIT(7), .msg = "hpre_cltr2_htbt_tm_out_err" },
+-	{ .int_msk = BIT(8), .msg = "hpre_cltr3_htbt_tm_out_err" },
+-	{ .int_msk = BIT(9), .msg = "hpre_cltr4_htbt_tm_out_err" },
+-	{ .int_msk = GENMASK(15, 10), .msg = "hpre_ooo_rdrsp_err" },
+-	{ .int_msk = GENMASK(21, 16), .msg = "hpre_ooo_wrrsp_err" },
++	{ .int_msk = BIT(0), .msg = "core_ecc_1bit_err_int_set" },
++	{ .int_msk = BIT(1), .msg = "core_ecc_2bit_err_int_set" },
++	{ .int_msk = BIT(2), .msg = "dat_wb_poison_int_set" },
++	{ .int_msk = BIT(3), .msg = "dat_rd_poison_int_set" },
++	{ .int_msk = BIT(4), .msg = "bd_rd_poison_int_set" },
++	{ .int_msk = BIT(5), .msg = "ooo_ecc_2bit_err_int_set" },
++	{ .int_msk = BIT(6), .msg = "cluster1_shb_timeout_int_set" },
++	{ .int_msk = BIT(7), .msg = "cluster2_shb_timeout_int_set" },
++	{ .int_msk = BIT(8), .msg = "cluster3_shb_timeout_int_set" },
++	{ .int_msk = BIT(9), .msg = "cluster4_shb_timeout_int_set" },
++	{ .int_msk = GENMASK(15, 10), .msg = "ooo_rdrsp_err_int_set" },
++	{ .int_msk = GENMASK(21, 16), .msg = "ooo_wrrsp_err_int_set" },
+ 	{ /* sentinel */ }
+ };
+ 
 -- 
 2.20.1
 
