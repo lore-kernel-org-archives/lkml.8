@@ -7,47 +7,46 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5DC8FC35642
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 08:42:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0D1C8C35643
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 08:42:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 364BC20722
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 08:42:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D46CD206ED
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 08:42:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582274570;
-	bh=jJmGbjrMcrnfyaWkDHs+k6NYLdiYkzr+UWsEzaleZVE=;
+	s=default; t=1582274577;
+	bh=hVrg8rRe/pnLXFS4sp1Q4wJtlR5vsf1nCybQKCaUqxU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Miu2alwRcRNGIZjlSogD74YV57uluGyEe9XE1sP7GhIClkdnCVQYalVgfo8sIcDhk
-	 W3JQaoWI8bdU1yeXc2eGDXFHPqQGTY7r/FPDiDVZJ9zZhwnQ0tXRAP9BSy8HXuz6hM
-	 qzg6nBGmgvc3qZFkLn3v5d0div+24yi9XV7cNjVI=
+	b=Xqggwf12lMLeKnjPyxGBOmssRkkb3SzDe+UMsC8YcK2FcuIigqPoYVlvn0dZezYkc
+	 7JJFI304lcijiGhox6jIvqaNp7kANNMv8Zu9lS+ErMhBgJeC2dMiIqfe6Ba8CwsTW/
+	 8goUjyNIbRt2AhSFBc2CjSSldZkUBK8ZHTC++BTw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731435AbgBUIms (ORCPT
+        id S1730010AbgBUHyT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Feb 2020 03:42:48 -0500
-Received: from mail.kernel.org ([198.145.29.99]:53308 "EHLO mail.kernel.org"
+        Fri, 21 Feb 2020 02:54:19 -0500
+Received: from mail.kernel.org ([198.145.29.99]:52792 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730130AbgBUHym (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Feb 2020 02:54:42 -0500
+        id S1729510AbgBUHyP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 21 Feb 2020 02:54:15 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 42D4220801;
-        Fri, 21 Feb 2020 07:54:41 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 462672073A;
+        Fri, 21 Feb 2020 07:54:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1582271681;
-        bh=jJmGbjrMcrnfyaWkDHs+k6NYLdiYkzr+UWsEzaleZVE=;
+        s=default; t=1582271654;
+        bh=hVrg8rRe/pnLXFS4sp1Q4wJtlR5vsf1nCybQKCaUqxU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=bCasjLZjtkfJXP/Oz9z2BD9EG5eRdRhYBD6cBFSnf7ZnMg60vho5QxjD+FG8gfBHs
-         xf+/PFwKLgWuk/H7d0+99KlbyD0uZji2WkzNkdNtAhhtRktDBowWy+TBy3y+GKrF+B
-         HLnhS+Kbn/YXN28crNowQJ1HJwC95iO+jTo4K0hU=
+        b=pE/WuilmIDTtMQASThJkKUrIx6M9Ev/SITJZCjC1AX66Bwc4ti48Uqyg26jy5NFVp
+         CNYzxuyyHuZMWNcjxp+HXn0k8pwEoRC0uzBfhQb+Fgh1t1K4OEPLGTCfZuWCbzavUL
+         uSVw0LvGngHcjeUpN2WABIYWIt8y79BqVjYnQlLg=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, YueHaibing <yuehaibing@huawei.com>,
-        Ben Skeggs <bskeggs@redhat.com>,
+        stable@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.5 258/399] drm/nouveau: Fix copy-paste error in nouveau_fence_wait_uevent_handler
-Date:   Fri, 21 Feb 2020 08:39:43 +0100
-Message-Id: <20200221072427.503030406@linuxfoundation.org>
+Subject: [PATCH 5.5 249/399] visorbus: fix uninitialized variable access
+Date:   Fri, 21 Feb 2020 08:39:34 +0100
+Message-Id: <20200221072426.647069566@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200221072402.315346745@linuxfoundation.org>
 References: <20200221072402.315346745@linuxfoundation.org>
@@ -60,34 +59,58 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: YueHaibing <yuehaibing@huawei.com>
+From: Arnd Bergmann <arnd@arndb.de>
 
-[ Upstream commit 1eb013473bff5f95b6fe1ca4dd7deda47257b9c2 ]
+[ Upstream commit caf82f727e69b647f09d57a1fc56e69d22a5f483 ]
 
-Like other cases, it should use rcu protected 'chan' rather
-than 'fence->channel' in nouveau_fence_wait_uevent_handler.
+The setup_crash_devices_work_queue function only partially initializes
+the message it sends to chipset_init, leading to undefined behavior:
 
-Fixes: 0ec5f02f0e2c ("drm/nouveau: prevent stale fence->channel pointers, and protect with rcu")
-Signed-off-by: YueHaibing <yuehaibing@huawei.com>
-Signed-off-by: Ben Skeggs <bskeggs@redhat.com>
+drivers/visorbus/visorchipset.c: In function 'setup_crash_devices_work_queue':
+drivers/visorbus/visorchipset.c:333:6: error: '((unsigned char*)&msg.hdr.flags)[0]' is used uninitialized in this function [-Werror=uninitialized]
+  if (inmsg->hdr.flags.response_expected)
+
+Set up the entire structure, zero-initializing the 'response_expected'
+flag.
+
+This was apparently found by the patch that added the -O3 build option
+in Kconfig.
+
+Fixes: 12e364b9f08a ("staging: visorchipset driver to provide registration and other services")
+Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+Link: https://lore.kernel.org/r/20200107202950.782951-1-arnd@arndb.de
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/gpu/drm/nouveau/nouveau_fence.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/visorbus/visorchipset.c | 11 +++++++----
+ 1 file changed, 7 insertions(+), 4 deletions(-)
 
-diff --git a/drivers/gpu/drm/nouveau/nouveau_fence.c b/drivers/gpu/drm/nouveau/nouveau_fence.c
-index 9118df035b28d..70bb6bb97af87 100644
---- a/drivers/gpu/drm/nouveau/nouveau_fence.c
-+++ b/drivers/gpu/drm/nouveau/nouveau_fence.c
-@@ -156,7 +156,7 @@ nouveau_fence_wait_uevent_handler(struct nvif_notify *notify)
+diff --git a/drivers/visorbus/visorchipset.c b/drivers/visorbus/visorchipset.c
+index ca752b8f495fa..cb1eb7e05f871 100644
+--- a/drivers/visorbus/visorchipset.c
++++ b/drivers/visorbus/visorchipset.c
+@@ -1210,14 +1210,17 @@ static void setup_crash_devices_work_queue(struct work_struct *work)
+ {
+ 	struct controlvm_message local_crash_bus_msg;
+ 	struct controlvm_message local_crash_dev_msg;
+-	struct controlvm_message msg;
++	struct controlvm_message msg = {
++		.hdr.id = CONTROLVM_CHIPSET_INIT,
++		.cmd.init_chipset = {
++			.bus_count = 23,
++			.switch_count = 0,
++		},
++	};
+ 	u32 local_crash_msg_offset;
+ 	u16 local_crash_msg_count;
  
- 		fence = list_entry(fctx->pending.next, typeof(*fence), head);
- 		chan = rcu_dereference_protected(fence->channel, lockdep_is_held(&fctx->lock));
--		if (nouveau_fence_update(fence->channel, fctx))
-+		if (nouveau_fence_update(chan, fctx))
- 			ret = NVIF_NOTIFY_DROP;
- 	}
- 	spin_unlock_irqrestore(&fctx->lock, flags);
+ 	/* send init chipset msg */
+-	msg.hdr.id = CONTROLVM_CHIPSET_INIT;
+-	msg.cmd.init_chipset.bus_count = 23;
+-	msg.cmd.init_chipset.switch_count = 0;
+ 	chipset_init(&msg);
+ 	/* get saved message count */
+ 	if (visorchannel_read(chipset_dev->controlvm_channel,
 -- 
 2.20.1
 
