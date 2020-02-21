@@ -2,95 +2,134 @@ Return-Path: <SRS0=1210=4J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DD169C35642
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 08:37:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0C5B2C35641
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 08:37:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BD5D420578
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 08:37:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D0272206ED
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 08:37:38 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1582274258;
+	bh=3o+moJdI3Bx2Uf4bClVxh4euDetGCK+sY4WLt2A8PNo=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=A3UDDsqnPzg8JW/DmKTLUTb6GQUiD4FDjNKk8nufqvWeB0tA/mfOHaD4egKuyQ1Kl
+	 zFbidFOWtk5ZJRxEkI+D15qfcOHcVsisA9Vi9UpMpTkX7GDUJJgVvsNrY1eC4uX7yI
+	 H2eyoapL5lDpatvAIBLVT6AGkZLoPFgQUX+jfmQU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732265AbgBUIhT (ORCPT
+        id S1731329AbgBUIE0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Feb 2020 03:37:19 -0500
-Received: from szxga06-in.huawei.com ([45.249.212.32]:37472 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1731796AbgBUIhS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Feb 2020 03:37:18 -0500
-Received: from DGGEMS403-HUB.china.huawei.com (unknown [172.30.72.58])
-        by Forcepoint Email with ESMTP id C9E63AF9379C8FF77510;
-        Fri, 21 Feb 2020 16:37:15 +0800 (CST)
-Received: from localhost (10.133.213.239) by DGGEMS403-HUB.china.huawei.com
- (10.3.19.203) with Microsoft SMTP Server id 14.3.439.0; Fri, 21 Feb 2020
- 16:37:07 +0800
-From:   YueHaibing <yuehaibing@huawei.com>
-To:     <Roy.Pledge@nxp.com>, <leoyang.li@nxp.com>,
-        <youri.querry_1@nxp.com>
-CC:     <linux-kernel@vger.kernel.org>, <linuxppc-dev@lists.ozlabs.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        YueHaibing <yuehaibing@huawei.com>
-Subject: [PATCH -next] soc: fsl: dpio: remove set but not used variable 'addr_cena'
-Date:   Fri, 21 Feb 2020 16:36:37 +0800
-Message-ID: <20200221083637.13392-1-yuehaibing@huawei.com>
-X-Mailer: git-send-email 2.10.2.windows.1
+        Fri, 21 Feb 2020 03:04:26 -0500
+Received: from mail.kernel.org ([198.145.29.99]:37438 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1731619AbgBUIEX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 21 Feb 2020 03:04:23 -0500
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id C386524676;
+        Fri, 21 Feb 2020 08:04:21 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1582272262;
+        bh=3o+moJdI3Bx2Uf4bClVxh4euDetGCK+sY4WLt2A8PNo=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=B1Z+ClKOMPFe3TWDoasLVx+QQshnecmHzhmImG/0C8xlcUihb/6ou2qSgXTrzfLBf
+         oVeNLI/Q1PxGUnNI1eAJZfNDjG7FlhxRwlPdjafl9J5qL57RjDTvWV4Kusav/qzu6X
+         JUWqDrC+CLhoxXNEjbRIRauoa3w/1opRSk+n5ucc=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org, "zhangyi (F)" <yi.zhang@huawei.com>,
+        Jan Kara <jack@suse.cz>, Theodore Tso <tytso@mit.edu>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.4 077/344] ext4, jbd2: ensure panic when aborting with zero errno
+Date:   Fri, 21 Feb 2020 08:37:56 +0100
+Message-Id: <20200221072355.973617544@linuxfoundation.org>
+X-Mailer: git-send-email 2.25.1
+In-Reply-To: <20200221072349.335551332@linuxfoundation.org>
+References: <20200221072349.335551332@linuxfoundation.org>
+User-Agent: quilt/0.66
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.133.213.239]
-X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-commit 3b2abda7d28c ("soc: fsl: dpio: Replace QMAN array
-mode with ring mode enqueue") introduced this, but not
-used, so remove it.
+From: zhangyi (F) <yi.zhang@huawei.com>
 
-Reported-by: Hulk Robot <hulkci@huawei.com>
-Signed-off-by: YueHaibing <yuehaibing@huawei.com>
+[ Upstream commit 51f57b01e4a3c7d7bdceffd84de35144e8c538e7 ]
+
+JBD2_REC_ERR flag used to indicate the errno has been updated when jbd2
+aborted, and then __ext4_abort() and ext4_handle_error() can invoke
+panic if ERRORS_PANIC is specified. But if the journal has been aborted
+with zero errno, jbd2_journal_abort() didn't set this flag so we can
+no longer panic. Fix this by always record the proper errno in the
+journal superblock.
+
+Fixes: 4327ba52afd03 ("ext4, jbd2: ensure entering into panic after recording an error in superblock")
+Signed-off-by: zhangyi (F) <yi.zhang@huawei.com>
+Reviewed-by: Jan Kara <jack@suse.cz>
+Link: https://lore.kernel.org/r/20191204124614.45424-3-yi.zhang@huawei.com
+Signed-off-by: Theodore Ts'o <tytso@mit.edu>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/soc/fsl/dpio/qbman-portal.c | 4 ----
- 1 file changed, 4 deletions(-)
+ fs/jbd2/checkpoint.c |  2 +-
+ fs/jbd2/journal.c    | 15 ++++-----------
+ 2 files changed, 5 insertions(+), 12 deletions(-)
 
-diff --git a/drivers/soc/fsl/dpio/qbman-portal.c b/drivers/soc/fsl/dpio/qbman-portal.c
-index 740ee0d..350de56 100644
---- a/drivers/soc/fsl/dpio/qbman-portal.c
-+++ b/drivers/soc/fsl/dpio/qbman-portal.c
-@@ -658,7 +658,6 @@ int qbman_swp_enqueue_multiple_direct(struct qbman_swp *s,
- 	const uint32_t *cl = (uint32_t *)d;
- 	uint32_t eqcr_ci, eqcr_pi, half_mask, full_mask;
- 	int i, num_enqueued = 0;
--	uint64_t addr_cena;
+diff --git a/fs/jbd2/checkpoint.c b/fs/jbd2/checkpoint.c
+index a1909066bde66..62cf497f18eb4 100644
+--- a/fs/jbd2/checkpoint.c
++++ b/fs/jbd2/checkpoint.c
+@@ -164,7 +164,7 @@ void __jbd2_log_wait_for_space(journal_t *journal)
+ 				       "journal space in %s\n", __func__,
+ 				       journal->j_devname);
+ 				WARN_ON(1);
+-				jbd2_journal_abort(journal, 0);
++				jbd2_journal_abort(journal, -EIO);
+ 			}
+ 			write_lock(&journal->j_state_lock);
+ 		} else {
+diff --git a/fs/jbd2/journal.c b/fs/jbd2/journal.c
+index 389c9be4e7919..65e78d3a2f64c 100644
+--- a/fs/jbd2/journal.c
++++ b/fs/jbd2/journal.c
+@@ -2123,12 +2123,10 @@ static void __journal_abort_soft (journal_t *journal, int errno)
  
- 	spin_lock(&s->access_spinlock);
- 	half_mask = (s->eqcr.pi_ci_mask>>1);
-@@ -711,7 +710,6 @@ int qbman_swp_enqueue_multiple_direct(struct qbman_swp *s,
+ 	__jbd2_journal_abort_hard(journal);
  
- 	/* Flush all the cacheline without load/store in between */
- 	eqcr_pi = s->eqcr.pi;
--	addr_cena = (size_t)s->addr_cena;
- 	for (i = 0; i < num_enqueued; i++)
- 		eqcr_pi++;
- 	s->eqcr.pi = eqcr_pi & full_mask;
-@@ -822,7 +820,6 @@ int qbman_swp_enqueue_multiple_desc_direct(struct qbman_swp *s,
- 	const uint32_t *cl;
- 	uint32_t eqcr_ci, eqcr_pi, half_mask, full_mask;
- 	int i, num_enqueued = 0;
--	uint64_t addr_cena;
+-	if (errno) {
+-		jbd2_journal_update_sb_errno(journal);
+-		write_lock(&journal->j_state_lock);
+-		journal->j_flags |= JBD2_REC_ERR;
+-		write_unlock(&journal->j_state_lock);
+-	}
++	jbd2_journal_update_sb_errno(journal);
++	write_lock(&journal->j_state_lock);
++	journal->j_flags |= JBD2_REC_ERR;
++	write_unlock(&journal->j_state_lock);
+ }
  
- 	half_mask = (s->eqcr.pi_ci_mask>>1);
- 	full_mask = s->eqcr.pi_ci_mask;
-@@ -866,7 +863,6 @@ int qbman_swp_enqueue_multiple_desc_direct(struct qbman_swp *s,
+ /**
+@@ -2170,11 +2168,6 @@ static void __journal_abort_soft (journal_t *journal, int errno)
+  * failure to disk.  ext3_error, for example, now uses this
+  * functionality.
+  *
+- * Errors which originate from within the journaling layer will NOT
+- * supply an errno; a null errno implies that absolutely no further
+- * writes are done to the journal (unless there are any already in
+- * progress).
+- *
+  */
  
- 	/* Flush all the cacheline without load/store in between */
- 	eqcr_pi = s->eqcr.pi;
--	addr_cena = (uint64_t)s->addr_cena;
- 	for (i = 0; i < num_enqueued; i++)
- 		eqcr_pi++;
- 	s->eqcr.pi = eqcr_pi & full_mask;
+ void jbd2_journal_abort(journal_t *journal, int errno)
 -- 
-2.7.4
+2.20.1
+
 
 
