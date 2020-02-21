@@ -2,142 +2,85 @@ Return-Path: <SRS0=1210=4J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EF6F9C35666
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 22:11:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2D79CC35666
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 22:11:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C7366207FD
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 22:11:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F3E06207FD
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 22:11:25 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=riseup.net header.i=@riseup.net header.b="NKbG4bYO"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="np1qz/bS"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728723AbgBUWK7 (ORCPT
+        id S1729107AbgBUWLY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Feb 2020 17:10:59 -0500
-Received: from mx1.riseup.net ([198.252.153.129]:45096 "EHLO mx1.riseup.net"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726725AbgBUWK6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Feb 2020 17:10:58 -0500
-Received: from capuchin.riseup.net (capuchin-pn.riseup.net [10.0.1.176])
-        (using TLSv1 with cipher ECDHE-RSA-AES256-SHA (256/256 bits))
-        (Client CN "*.riseup.net", Issuer "Sectigo RSA Domain Validation Secure Server CA" (not verified))
-        by mx1.riseup.net (Postfix) with ESMTPS id 48PQdY5BjczFbgR;
-        Fri, 21 Feb 2020 14:10:57 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=riseup.net; s=squak;
-        t=1582323057; bh=xDOULZRpbeY7KpvwA2rDOTseM/Ct7CH+yfVqbVPQOHw=;
-        h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
-        b=NKbG4bYO6gvtg2/bKnLk14xCYOMnhVr53RVGZaHsJRKqOMLZYPIJHRemEdQBpTEC0
-         YOffv3QOfRBikqTDT1mzdN90/tOwANwm8zeAYggJCnV4yrebrZf61fLzv5ph30uc11
-         EDyn92fFGa9PAAdGClcARYwpQgaQ6FREOZAenCBY=
-X-Riseup-User-ID: 40F904F66C7E578679E7FE1A4FD79D280A24236C0758237B6635A1E2D09F48C0
-Received: from [127.0.0.1] (localhost [127.0.0.1])
-         by capuchin.riseup.net (Postfix) with ESMTPSA id 48PQdY15XFz8v7L;
-        Fri, 21 Feb 2020 14:10:57 -0800 (PST)
-From:   Francisco Jerez <currojerez@riseup.net>
-To:     "Rafael J. Wysocki" <rafael@kernel.org>
-Cc:     "Rafael J. Wysocki" <rafael@kernel.org>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Linux PM <linux-pm@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Amit Kucheria <amit.kucheria@linaro.org>,
-        "Pandruvada\, Srinivas" <srinivas.pandruvada@intel.com>,
-        Rodrigo Vivi <rodrigo.vivi@intel.com>,
-        Peter Zijlstra <peterz@infradead.org>
-Subject: Re: [PATCH 00/28] PM: QoS: Get rid of unuseful code and rework CPU latency QoS interface
-In-Reply-To: <CAJZ5v0hH1XiphdakYFPmHLL+hFKw2U3YNU9HSRxsdRUV6ZtM5g@mail.gmail.com>
-References: <1654227.8mz0SueHsU@kreacher> <87wo8rjsa4.fsf@riseup.net> <CAJZ5v0hAn0V-QhebFt=vqKK6gBLxjTq7SNOWOStt7huCXMSH7g@mail.gmail.com> <CAJZ5v0hrOma52rocMsitvYUK6WxHAa0702_8XJn1UJZVyhz=rQ@mail.gmail.com> <877e0qj4bm.fsf@riseup.net> <CAJZ5v0hH1XiphdakYFPmHLL+hFKw2U3YNU9HSRxsdRUV6ZtM5g@mail.gmail.com>
-Date:   Fri, 21 Feb 2020 14:10:54 -0800
-Message-ID: <87ftf3fv69.fsf@riseup.net>
+        Fri, 21 Feb 2020 17:11:24 -0500
+Received: from mail-ed1-f45.google.com ([209.85.208.45]:43350 "EHLO
+        mail-ed1-f45.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726725AbgBUWLY (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 21 Feb 2020 17:11:24 -0500
+Received: by mail-ed1-f45.google.com with SMTP id dc19so4184694edb.10;
+        Fri, 21 Feb 2020 14:11:22 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=6cdf8MxCPSbwySV/dQd+Gx1+0hE9oO2fF0yfSMCUfW8=;
+        b=np1qz/bSoS5HGnqI9USyTzsxjCZx8HlX9Vs6HFuzhgacMY87xRlaM4EUbwlwY3ctF2
+         QNXE38jfLRXVsMQZYg3+ENyX1OOZLPvUyELeB8i4Un/fk5slVf1mV1a1efc3JTjV2fVk
+         Kn2bHk0UAF5QRCzqG06wxeqikLPlnWAK79y9ap+alx5JXNyTViN55aBPnBnGm9Zwzyuy
+         EEM5rUbWfEN+NUEOv39hheJx534FCJpbRx9iMnoAQP7f+1hOYXNZh6AGqfN/u9UcTAfg
+         /icfKrU87gZTIwHDdL7Q7fvJ4ywaqv7jBesa1mZ7P+wjwAYbMz4LWQv/NueU7IhUiztz
+         jjnw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=6cdf8MxCPSbwySV/dQd+Gx1+0hE9oO2fF0yfSMCUfW8=;
+        b=AJ0+sD3uPv/Nydq5z+wjR+0q6jRZWwag8f0JdbBYOcx5zF7TE3pk8WCmgSg0/u35c6
+         WDE5QviJCK5DUAz4E6DgOduaSrUR4jAGaz8h/9IVuLNYDgcnZBVN75Waz9xIKEbprQ3w
+         /W5sE+zUGBQ0PYOKNGVgMjx7aKOlaNkl8LeOsghxcJcuaA8VgBmq3OxQc9xIc+Wp6+if
+         kGZ8mzdIi5aZRnjF/HsoUaBfAcgOL8R42xTJUy2otYB2cvsRNlGItm/CIxCV8YyyP2Rk
+         V9HH/ZbJIDNKGw68al6YHNUz5gr3U+hILpeSCd/UjWZFCsw+bAEMaFO6MFLsuc5W+S40
+         U5Dg==
+X-Gm-Message-State: APjAAAXRDFJ5ozSvya73N1VqXEyFw3v8ut1iBRKmcCDqgQlNFRHobedV
+        ga0xEzXL6mt+Fe9X/shmbahOMDwG2fSLn6n58Wc=
+X-Google-Smtp-Source: APXvYqz+ZLoDSjm7YkztodnQv9v6LWUZoPcWfWmqVJQS8ww1NWyzFQRyJhZ69DPBwlun6HTmY7rvt1/BLnKYgVHGSfY=
+X-Received: by 2002:aa7:c4da:: with SMTP id p26mr35953411edr.4.1582323082266;
+ Fri, 21 Feb 2020 14:11:22 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="==-=-=";
-        micalg=pgp-sha256; protocol="application/pgp-signature"
+References: <CABLYT9ixWZu2NckMg689NdCTO08=-+UOHbALYrQFHCY26Bw91Q@mail.gmail.com>
+ <CADVnQyn8t7EiorqHjGQe7wqH6jQy_sgK=M=gieb7JMjWqvbBHw@mail.gmail.com> <b390a9ed-84a7-d6ef-0647-107259fbd787@gmail.com>
+In-Reply-To: <b390a9ed-84a7-d6ef-0647-107259fbd787@gmail.com>
+From:   Vieri Di Paola <vieridipaola@gmail.com>
+Date:   Fri, 21 Feb 2020 23:11:08 +0100
+Message-ID: <CABLYT9jCD-FPZkJwsKP4gtgGaA8=P5DVtJkzUhuX9YoA5LLdww@mail.gmail.com>
+Subject: Re: warning messages for net/ipv4/tcp_output.c
+To:     Eric Dumazet <eric.dumazet@gmail.com>
+Cc:     Neal Cardwell <ncardwell@google.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Netdev <netdev@vger.kernel.org>,
+        Eric Dumazet <edumazet@google.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---==-=-=
-Content-Type: multipart/mixed; boundary="=-=-="
-
---=-=-=
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-
-"Rafael J. Wysocki" <rafael@kernel.org> writes:
-
-> On Thu, Feb 13, 2020 at 9:09 AM Francisco Jerez <currojerez@riseup.net> wrote:
->>
->> "Rafael J. Wysocki" <rafael@kernel.org> writes:
->>
->> > On Thu, Feb 13, 2020 at 1:16 AM Rafael J. Wysocki <rafael@kernel.org> wrote:
->> >>
->> >> On Thu, Feb 13, 2020 at 12:31 AM Francisco Jerez <currojerez@riseup.net> wrote:
->> >> >
+On Wed, Feb 12, 2020 at 4:47 AM Eric Dumazet <eric.dumazet@gmail.com> wrote:
 >
-> [cut]
->
->> >
->> > And BTW, posting patches as RFC is fine even if they have not been
->> > tested.  At least you let people know that you work on something this
->> > way, so if they work on changes in the same area, they may take that
->> > into consideration.
->> >
->>
->> Sure, that was going to be the first RFC.
->>
->> > Also if there are objections to your proposal, you may save quite a
->> > bit of time by sending it early.
->> >
->> > It is unfortunate that this series has clashed with the changes that
->> > you were about to propose, but in this particular case in my view it
->> > is better to clean up things and start over.
->> >
->>
->> Luckily it doesn't clash with the second RFC I was meaning to send,
->> maybe we should just skip the first?
->
-> Yes, please.
->
->> Or maybe it's valuable as a curiosity anyway?
->
-> No, let's just focus on the latest one.
->
-> Thanks!
+> >> I get a lot of messages regarding net/ipv4/tcp_output.c in syslog.
 
-We don't seem to have reached much of an agreement on the general
-direction of RFC2, so I can't really get started with it.  Here is RFC1
-for the record:
+Hi,
 
-https://github.com/curro/linux/commits/intel_pstate-lp-hwp-v10.8-alt
+These warning messages were triggered by the Suricata IDS/IPS software
+when used in NFQUEUE "repeat mode".
+I've found a workaround, so I don't know if this issue needs to be addressed.
 
-Specifically the following patch conflicts with this series:
+Regards,
 
-https://github.com/curro/linux/commit/9a16f35531bbb76d38493da892ece088e31dc2e0
-
-Series improves performance-per-watt of GfxBench gl_4 (AKA Car Chase) by
-over 15% on my system with the branch above, actual FPS "only" improves
-about 5.9% on ICL laptop due to it being very lightly TDP-bound with its
-rather huge TDP.  The performance of almost every graphics benchmark
-I've tried improves significantly with it (a number of SynMark
-test-cases are improved by around 40% in perf-per-watt, Egypt
-perf-per-watt improves by about 25%).
-
-Hopefully we can come up with some alternative plan of action.
-
---=-=-=--
-
---==-=-=
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iHUEAREIAB0WIQST8OekYz69PM20/4aDmTidfVK/WwUCXlBVbgAKCRCDmTidfVK/
-W/gtAP0dDbIUxAKRzrls42EXSlpM90oykm1O5NuaXw5FQsrp6wD7BqAQtSgtC7kt
-xSSD+vYRPoTK1cLrAHb6gTD2l3BeQRQ=
-=U3Wm
------END PGP SIGNATURE-----
---==-=-=--
+Vieri
