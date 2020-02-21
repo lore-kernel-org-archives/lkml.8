@@ -2,210 +2,222 @@ Return-Path: <SRS0=1210=4J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	HK_RANDOM_FROM,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3F7ABC11D00
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 02:59:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 27FA5C11D00
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 03:04:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 100D2208CD
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 02:59:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 006A3208CD
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 03:04:45 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729602AbgBUC72 (ORCPT
+        id S1729576AbgBUDEa convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Feb 2020 21:59:28 -0500
-Received: from mga07.intel.com ([134.134.136.100]:33230 "EHLO mga07.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729268AbgBUC71 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Feb 2020 21:59:27 -0500
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga008.jf.intel.com ([10.7.209.65])
-  by orsmga105.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 20 Feb 2020 18:59:26 -0800
-X-IronPort-AV: E=Sophos;i="5.70,466,1574150400"; 
-   d="scan'208";a="229702755"
-Received: from xiaoyaol-mobl.ccr.corp.intel.com (HELO [10.249.174.151]) ([10.249.174.151])
-  by orsmga008-auth.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-SHA; 20 Feb 2020 18:59:23 -0800
-Subject: Re: [PATCH v2 1/3] KVM: x86: Add EMULTYPE_PF when emulation is
- triggered by a page fault
-To:     Sean Christopherson <sean.j.christopherson@intel.com>
-Cc:     Paolo Bonzini <pbonzini@redhat.com>,
-        Vitaly Kuznetsov <vkuznets@redhat.com>,
-        Wanpeng Li <wanpengli@tencent.com>,
-        Jim Mattson <jmattson@google.com>,
-        Joerg Roedel <joro@8bytes.org>, kvm@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-References: <20200218230310.29410-1-sean.j.christopherson@intel.com>
- <20200218230310.29410-2-sean.j.christopherson@intel.com>
- <7d564331-9a77-d59a-73d3-a7452fd7b15f@intel.com>
- <20200220201145.GI3972@linux.intel.com>
-From:   Xiaoyao Li <xiaoyao.li@intel.com>
-Message-ID: <cd6d5d20-c533-009c-35ba-9f1777a4ec5d@intel.com>
-Date:   Fri, 21 Feb 2020 10:59:21 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.5.0
+        Thu, 20 Feb 2020 22:04:30 -0500
+Received: from mail-ed1-f65.google.com ([209.85.208.65]:46444 "EHLO
+        mail-ed1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729371AbgBUDEa (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 20 Feb 2020 22:04:30 -0500
+Received: by mail-ed1-f65.google.com with SMTP id p14so544791edy.13
+        for <linux-kernel@vger.kernel.org>; Thu, 20 Feb 2020 19:04:28 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:content-transfer-encoding;
+        bh=NnuOIkH/k/PEJ/s73MC7n0P8o0WQzooeJ7sSj3zBbiE=;
+        b=Q2IFLX+fw1k8xDyTRf2+308ErQEUd/ITsE6kNMzfGbnJBf97p2gRh2IkFmpjZl88s1
+         6YDvh1F6lA4X1CpgbIiFMnH+XBJNKluxSpPWtgxweV0IFansE82bLCW95tm/xwFQ62vU
+         j6dU9g8O2L0S4BF7U7C+DtwBjzA/aL1FZKSdQDALnJLomSW+ZfuguPkXnH1zK8l73PBc
+         r21AFrkYwODjLb3gHIpr4rftjINTb4ms17r0MXFiqBGg22O8nKDsKbliGHLa9RZhnzND
+         HfFjXOcApgpqWnYtP0FjBvuURGUEqWb/7jsJWa9AfIcscvD5K2YE1Xdml2iaXgzqqIKV
+         WdWw==
+X-Gm-Message-State: APjAAAW+pqG0C04SDDRlhJl+2lct2xHS6pjQ9Mm/BWnKRclW4h7TI0+F
+        q1Ck8cSy+VoGW9hw651rexRwlGRVVBM=
+X-Google-Smtp-Source: APXvYqzG3I4Yrsdt4AJsy6HdZVOeMAUcwplkggF0R8DW4ch9c118IgcQs+DIsisvBVQvh6O+WDrxVg==
+X-Received: by 2002:a17:906:1a05:: with SMTP id i5mr31255518ejf.347.1582254266350;
+        Thu, 20 Feb 2020 19:04:26 -0800 (PST)
+Received: from mail-wr1-f54.google.com (mail-wr1-f54.google.com. [209.85.221.54])
+        by smtp.gmail.com with ESMTPSA id a10sm155950edt.50.2020.02.20.19.04.25
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 20 Feb 2020 19:04:25 -0800 (PST)
+Received: by mail-wr1-f54.google.com with SMTP id k11so324486wrd.9
+        for <linux-kernel@vger.kernel.org>; Thu, 20 Feb 2020 19:04:25 -0800 (PST)
+X-Received: by 2002:a5d:6805:: with SMTP id w5mr47051708wru.64.1582254264966;
+ Thu, 20 Feb 2020 19:04:24 -0800 (PST)
 MIME-Version: 1.0
-In-Reply-To: <20200220201145.GI3972@linux.intel.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+References: <20200219010951.395599-1-megous@megous.com> <CAGb2v67BLODmDmQOJH-m-KWVtXS2EGrnPxi9czj6oipHPDTfjw@mail.gmail.com>
+ <20200219121424.dfvrwfcavupmwbvw@core.my.home>
+In-Reply-To: <20200219121424.dfvrwfcavupmwbvw@core.my.home>
+From:   Chen-Yu Tsai <wens@csie.org>
+Date:   Fri, 21 Feb 2020 11:04:14 +0800
+X-Gmail-Original-Message-ID: <CAGb2v64+C1Q8au_cR0PjY=0GJx1c+kk7Tw0=12+fFEhBF_Q-Rg@mail.gmail.com>
+Message-ID: <CAGb2v64+C1Q8au_cR0PjY=0GJx1c+kk7Tw0=12+fFEhBF_Q-Rg@mail.gmail.com>
+Subject: Re: [linux-sunxi] Re: [PATCH] bus: sunxi-rsb: Return correct data
+ when mixing 16-bit and 8-bit reads
+To:     =?UTF-8?Q?Ond=C5=99ej_Jirman?= <megous@megous.com>,
+        Chen-Yu Tsai <wens@csie.org>,
+        linux-sunxi <linux-sunxi@googlegroups.com>,
+        Maxime Ripard <mripard@kernel.org>,
+        Samuel Holland <samuel@sholland.org>,
+        Stephen Boyd <swboyd@chromium.org>,
+        "moderated list:ARM/Allwinner sunXi SoC support" 
+        <linux-arm-kernel@lists.infradead.org>,
+        open list <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8BIT
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2/21/2020 4:11 AM, Sean Christopherson wrote:
-> On Wed, Feb 19, 2020 at 05:01:41PM +0800, Xiaoyao Li wrote:
->> On 2/19/2020 7:03 AM, Sean Christopherson wrote:
->>> Add a new emulation type flag to explicitly mark emulation related to a
->>> page fault.  Move the propation of the GPA into the emulator from the
->>> page fault handler into x86_emulate_instruction, using EMULTYPE_PF as an
->>> indicator that cr2 is valid.  Similarly, don't propagate cr2 into the
->>> exception.address when it's *not* valid.
->>>
->>> Signed-off-by: Sean Christopherson <sean.j.christopherson@intel.com>
->>> ---
->>>   arch/x86/include/asm/kvm_host.h | 12 +++++++++---
->>>   arch/x86/kvm/mmu/mmu.c          | 10 ++--------
->>>   arch/x86/kvm/x86.c              | 25 +++++++++++++++++++------
->>>   3 files changed, 30 insertions(+), 17 deletions(-)
->>>
->>> diff --git a/arch/x86/include/asm/kvm_host.h b/arch/x86/include/asm/kvm_host.h
->>> index 4dffbc10d3f8..10c1e8f472b6 100644
->>> --- a/arch/x86/include/asm/kvm_host.h
->>> +++ b/arch/x86/include/asm/kvm_host.h
->>> @@ -1370,8 +1370,9 @@ extern u64 kvm_mce_cap_supported;
->>>    *		   decode the instruction length.  For use *only* by
->>>    *		   kvm_x86_ops->skip_emulated_instruction() implementations.
->>>    *
->>> - * EMULTYPE_ALLOW_RETRY - Set when the emulator should resume the guest to
->>> - *			  retry native execution under certain conditions.
->>> + * EMULTYPE_ALLOW_RETRY_PF - Set when the emulator should resume the guest to
->>> + *			     retry native execution under certain conditions,
->>> + *			     Can only be set in conjunction with EMULTYPE_PF.
->>>    *
->>>    * EMULTYPE_TRAP_UD_FORCED - Set when emulating an intercepted #UD that was
->>>    *			     triggered by KVM's magic "force emulation" prefix,
->>> @@ -1384,13 +1385,18 @@ extern u64 kvm_mce_cap_supported;
->>>    *			backdoor emulation, which is opt in via module param.
->>>    *			VMware backoor emulation handles select instructions
->>>    *			and reinjects the #GP for all other cases.
->>> + *
->>> + * EMULTYPE_PF - Set when emulating MMIO by way of an intercepted #PF, in which
->>> + *		 case the CR2/GPA value pass on the stack is valid.
->>>    */
->>>   #define EMULTYPE_NO_DECODE	    (1 << 0)
->>>   #define EMULTYPE_TRAP_UD	    (1 << 1)
->>>   #define EMULTYPE_SKIP		    (1 << 2)
->>> -#define EMULTYPE_ALLOW_RETRY	    (1 << 3)
->>> +#define EMULTYPE_ALLOW_RETRY_PF	    (1 << 3)
->>
->> How about naming it as EMULTYPE_PF_ALLOW_RETRY and exchanging the bit
->> position with EMULTYPE_PF ?
-> 
-> Hmm, EMULTYPE_PF_ALLOW_RETRY does sound better.  I'm on the fence regarding
-> shuffling the bits.  If I were to shuffle the bits, I'd do a more thorough
-> reorder so that the #UD and #PF types are consecutive, e.g.
-> 
-> 	#define EMULTYPE_NO_DECODE	    (1 << 0)
-> 	#define EMULTYPE_TRAP_UD	    (1 << 1)
-> 	#define EMULTYPE_TRAP_UD_FORCED	    (1 << 2)
-> 	#define EMULTYPE_SKIP		    (1 << 3)
-> 	#define EMULTYPE_VMWARE_GP	    (1 << 4)
-> 	#define EMULTYPE_PF		    (1 << 5)
-> 	#define EMULTYPE_PF_ALLOW_RETRY	    (1 << 6)
-> 
-> Part of me really wants to do that, the other part of me thinks it's
-> unnecessary thrash.
+On Wed, Feb 19, 2020 at 8:14 PM Ondřej Jirman <megous@megous.com> wrote:
 >
+> On Wed, Feb 19, 2020 at 10:49:18AM +0800, Chen-Yu Tsai wrote:
+> > On Wed, Feb 19, 2020 at 9:10 AM Ondrej Jirman <megous@megous.com> wrote:
+> > >
+> > > When doing a 16-bit read that returns data in the MSB byte, the
+> > > RSB_DATA register will keep the MSB byte unchanged when doing
+> > > the following 8-bit read. sunxi_rsb_read() will then return
+> > > a result that contains high byte from 16-bit read mixed with
+> > > the 8-bit result.
+> > >
+> > > The consequence is that after this happens the PMIC's regmap will
+> > > look like this: (0x33 is the high byte from the 16-bit read)
+> > >
+> > > % cat /sys/kernel/debug/regmap/sunxi-rsb-3a3/registers
+> > > 00: 33
+> > > 01: 33
+> > > 02: 33
+> > > 03: 33
+> > > 04: 33
+> > > 05: 33
+> > > 06: 33
+> > > 07: 33
+> > > 08: 33
+> > > 09: 33
+> > > 0a: 33
+> > > 0b: 33
+> > > 0c: 33
+> > > 0d: 33
+> > > 0e: 33
+> > > [snip]
+> > >
+> > > Fix this by masking the result of the read with the correct mask
+> > > based on the size of the read. There are no 16-bit users in the
+> > > mainline kernel, so this doesn't need to get into the stable tree.
+> > >
+> > > Signed-off-by: Ondrej Jirman <megous@megous.com>
+> >
+> > Acked-by: Chen-Yu Tsai <wens@csie.org>
+> >
+> > for the fix, however it's not entirely clear to me how the MSB 0x33
+> > value got into the regmap. Looks like I expected the regmap core to
+> > handle any overflows, or didn't expect the lingering MSB from 16-bit
+> > reads, as I didn't have any 16-bit register devices back when I wrote
+> > this.
+>
+> Now I feel like I masked some other bug. Though explanation may be quite simple.
+>
+> For example when AXP core does regmap_read on some values for showing charging
+> current or battery voltage, because regmap_read works with unsigned int, it
+> will simply get a number that's too big. And that was the major symptom
+> I observed. I got readings from sysfs that my tablet is consuming 600A or 200A,
+> etc. And this value was jumping around based on AC100 activity (as the MSB
+> byte got changed).
+>
+> In other places where the driver does regmap_update_bits, I think nothing bad
+> happened. The write after the read would simply discard the MSB byte.
+>
+> And for the debugfs/regmap/*/registers, those are printed such:
+>
+> https://elixir.bootlin.com/linux/latest/source/drivers/base/regmap/regmap-debugfs.c#L256
+>
+>         snprintf(buf + buf_pos, count - buf_pos,
+>                 "%.*x", map->debugfs_val_len, val);
+>
+> This doesn't truncate values, so the larger number gets printed to (for example):
+>
+>         33fe
+>
+> But regmap debugfs code truncates this by cutting off the formatted string to
+> this length:
+>
+>   https://elixir.bootlin.com/linux/latest/source/drivers/base/regmap/regmap-debugfs.c#L189
+>
+> So in the end, only:
+>
+>         00: 33
+>
+> remains, instead of the correct value of:
+>
+>         00: fe
+>
+> So in the case of debugfs this is just a cosmetic/formatting issue, that didn't
+> affect anything else.
+>
+> I think regmap_bus->reg_read API simply expects the returned value to not exceed
+> the sensible range.
 
-I'm fine with thorough reorder, it helps read the codes.
-It's up to Paolo, anyway.
+Sounds good. Thanks for digging through this. My ack still stands.
 
->>>   #define EMULTYPE_TRAP_UD_FORCED	    (1 << 4)
->>>   #define EMULTYPE_VMWARE_GP	    (1 << 5)
->>> +#define EMULTYPE_PF		    (1 << 6)
->>> +
->>>   int kvm_emulate_instruction(struct kvm_vcpu *vcpu, int emulation_type);
->>>   int kvm_emulate_instruction_from_buffer(struct kvm_vcpu *vcpu,
->>>   					void *insn, int insn_len);
->>> diff --git a/arch/x86/kvm/mmu/mmu.c b/arch/x86/kvm/mmu/mmu.c
->>> index 7011a4e54866..258624d46588 100644
->>> --- a/arch/x86/kvm/mmu/mmu.c
->>> +++ b/arch/x86/kvm/mmu/mmu.c
->>> @@ -5416,18 +5416,12 @@ EXPORT_SYMBOL_GPL(kvm_mmu_unprotect_page_virt);
->>>   int kvm_mmu_page_fault(struct kvm_vcpu *vcpu, gpa_t cr2_or_gpa, u64 error_code,
->>>   		       void *insn, int insn_len)
->>>   {
->>> -	int r, emulation_type = 0;
->>> +	int r, emulation_type = EMULTYPE_PF;
->>>   	bool direct = vcpu->arch.mmu->direct_map;
->>>   	if (WARN_ON(!VALID_PAGE(vcpu->arch.mmu->root_hpa)))
->>>   		return RET_PF_RETRY;
->>> -	/* With shadow page tables, fault_address contains a GVA or nGPA.  */
->>> -	if (vcpu->arch.mmu->direct_map) {
->>> -		vcpu->arch.gpa_available = true;
->>> -		vcpu->arch.gpa_val = cr2_or_gpa;
->>> -	}
->>> -
->>>   	r = RET_PF_INVALID;
->>>   	if (unlikely(error_code & PFERR_RSVD_MASK)) {
->>>   		r = handle_mmio_page_fault(vcpu, cr2_or_gpa, direct);
->>> @@ -5472,7 +5466,7 @@ int kvm_mmu_page_fault(struct kvm_vcpu *vcpu, gpa_t cr2_or_gpa, u64 error_code,
->>>   	 * for L1 isn't going to magically fix whatever issue cause L2 to fail.
->>>   	 */
->>>   	if (!mmio_info_in_cache(vcpu, cr2_or_gpa, direct) && !is_guest_mode(vcpu))
->>> -		emulation_type = EMULTYPE_ALLOW_RETRY;
->>> +		emulation_type |= EMULTYPE_ALLOW_RETRY_PF;
->>>   emulate:
->>>   	/*
->>>   	 * On AMD platforms, under certain conditions insn_len may be zero on #NPF.
->>> diff --git a/arch/x86/kvm/x86.c b/arch/x86/kvm/x86.c
->>> index fbabb2f06273..92af6c5a69e3 100644
->>> --- a/arch/x86/kvm/x86.c
->>> +++ b/arch/x86/kvm/x86.c
->>> @@ -6483,10 +6483,11 @@ static bool reexecute_instruction(struct kvm_vcpu *vcpu, gpa_t cr2_or_gpa,
->>>   	gpa_t gpa = cr2_or_gpa;
->>>   	kvm_pfn_t pfn;
->>> -	if (!(emulation_type & EMULTYPE_ALLOW_RETRY))
->>> +	if (!(emulation_type & EMULTYPE_ALLOW_RETRY_PF))
->>>   		return false;
->>> -	if (WARN_ON_ONCE(is_guest_mode(vcpu)))
->>> +	if (WARN_ON_ONCE(is_guest_mode(vcpu)) ||
->>> +	    WARN_ON_ONCE(!(emulation_type & EMULTYPE_PF)))
->>>   		return false;
->>>   	if (!vcpu->arch.mmu->direct_map) {
->>> @@ -6574,10 +6575,11 @@ static bool retry_instruction(struct x86_emulate_ctxt *ctxt,
->>>   	 */
->>>   	vcpu->arch.last_retry_eip = vcpu->arch.last_retry_addr = 0;
->>> -	if (!(emulation_type & EMULTYPE_ALLOW_RETRY))
->>> +	if (!(emulation_type & EMULTYPE_ALLOW_RETRY_PF))
->>>   		return false;
->>> -	if (WARN_ON_ONCE(is_guest_mode(vcpu)))
->>> +	if (WARN_ON_ONCE(is_guest_mode(vcpu)) ||
->>> +	    WARN_ON_ONCE(!(emulation_type & EMULTYPE_PF)))
->>>   		return false;
->>>   	if (x86_page_table_writing_insn(ctxt))
->>> @@ -6830,8 +6832,19 @@ int x86_emulate_instruction(struct kvm_vcpu *vcpu, gpa_t cr2_or_gpa,
->>>   	}
->>>   restart:
->>> -	/* Save the faulting GPA (cr2) in the address field */
->>> -	ctxt->exception.address = cr2_or_gpa;
->>> +	if (emulation_type & EMULTYPE_PF) {
->>> +		/* Save the faulting GPA (cr2) in the address field */
->>> +		ctxt->exception.address = cr2_or_gpa;
->>> +
->>> +		/* With shadow page tables, cr2 contains a GVA or nGPA. */
->>> +		if (vcpu->arch.mmu->direct_map) {
->>> +			vcpu->arch.gpa_available = true;
->>> +			vcpu->arch.gpa_val = cr2_or_gpa;
->>> +		}
->>> +	} else {
->>> +		/* Sanitize the address out of an abundance of paranoia. */
->>> +		ctxt->exception.address = 0;
->>> +	}
->>>   	r = x86_emulate_insn(ctxt);
->>>
->>
+ChenYu
 
+> regards,
+>         o.
+>
+>
+> > ChenYu
+> >
+> >
+> > > ---
+> > >  drivers/bus/sunxi-rsb.c | 6 +++++-
+> > >  1 file changed, 5 insertions(+), 1 deletion(-)
+> > >
+> > > diff --git a/drivers/bus/sunxi-rsb.c b/drivers/bus/sunxi-rsb.c
+> > > index b8043b58568ac..8ab6a3865f569 100644
+> > > --- a/drivers/bus/sunxi-rsb.c
+> > > +++ b/drivers/bus/sunxi-rsb.c
+> > > @@ -316,6 +316,7 @@ static int sunxi_rsb_read(struct sunxi_rsb *rsb, u8 rtaddr, u8 addr,
+> > >  {
+> > >         u32 cmd;
+> > >         int ret;
+> > > +       u32 mask;
+> > >
+> > >         if (!buf)
+> > >                 return -EINVAL;
+> > > @@ -323,12 +324,15 @@ static int sunxi_rsb_read(struct sunxi_rsb *rsb, u8 rtaddr, u8 addr,
+> > >         switch (len) {
+> > >         case 1:
+> > >                 cmd = RSB_CMD_RD8;
+> > > +               mask = 0xffu;
+> > >                 break;
+> > >         case 2:
+> > >                 cmd = RSB_CMD_RD16;
+> > > +               mask = 0xffffu;
+> > >                 break;
+> > >         case 4:
+> > >                 cmd = RSB_CMD_RD32;
+> > > +               mask = 0xffffffffu;
+> > >                 break;
+> > >         default:
+> > >                 dev_err(rsb->dev, "Invalid access width: %zd\n", len);
+> > > @@ -345,7 +349,7 @@ static int sunxi_rsb_read(struct sunxi_rsb *rsb, u8 rtaddr, u8 addr,
+> > >         if (ret)
+> > >                 goto unlock;
+> > >
+> > > -       *buf = readl(rsb->regs + RSB_DATA);
+> > > +       *buf = readl(rsb->regs + RSB_DATA) & mask;
+> > >
+> > >  unlock:
+> > >         mutex_unlock(&rsb->lock);
+> > > --
+> > > 2.25.1
+> > >
+>
+> --
+> You received this message because you are subscribed to the Google Groups "linux-sunxi" group.
+> To unsubscribe from this group and stop receiving emails from it, send an email to linux-sunxi+unsubscribe@googlegroups.com.
+> To view this discussion on the web, visit https://groups.google.com/d/msgid/linux-sunxi/20200219121424.dfvrwfcavupmwbvw%40core.my.home.
