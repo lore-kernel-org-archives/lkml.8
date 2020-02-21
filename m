@@ -2,108 +2,104 @@ Return-Path: <SRS0=1210=4J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-17.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT,
+	USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8783CC35641
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 08:45:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A8ED5C35640
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 08:45:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 51D09206ED
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 08:45:38 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582274738;
-	bh=fQQVjtG7RZ+eg+2c4fc2wZIBf8CzAv3R5TM2kKEdhPA=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=PF3LQm95zZQm3nLgYS4Lgr9WUa6onmd1TS7+mv0Db390XAZDVNx8vv9qopn+NI4RD
-	 YmsVV8+dO3w0t8uzxw2kphpXpK/JwEnZ4I7yFmMukn4Und/MgQ7alkvMeEkZk7rPtV
-	 piYK+x1q82aIu3QMlbPTe5RzfgRhHj6HwEXnklDU=
+	by mail.kernel.org (Postfix) with ESMTP id 72EAE206EF
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 08:45:45 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="HnA22rj1"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729633AbgBUHux (ORCPT
+        id S1729617AbgBUHuw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Feb 2020 02:50:53 -0500
-Received: from mail.kernel.org ([198.145.29.99]:47798 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729602AbgBUHuq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Feb 2020 02:50:46 -0500
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id BBA5724656;
-        Fri, 21 Feb 2020 07:50:45 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1582271446;
-        bh=fQQVjtG7RZ+eg+2c4fc2wZIBf8CzAv3R5TM2kKEdhPA=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ch9EGBE3VH18TIUwvWwzJwb2unSAKDpB5VNNogczhiKssq4eFwLSVX3YMaRQ2ygWu
-         6vvjd4A5gOOhaQlKEIeEUinwFqdqoKiR5CuK+iih7KqutHO8iug1LfYXBdpioBHVez
-         15qza5048C+j85gwC0btGHhvQfiFOAYoBYMtRCto=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Bibby Hsieh <bibby.hsieh@mediatek.com>,
-        CK Hu <ck.hu@mediatek.com>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.5 170/399] drm/mediatek: handle events when enabling/disabling crtc
-Date:   Fri, 21 Feb 2020 08:38:15 +0100
-Message-Id: <20200221072419.180515597@linuxfoundation.org>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20200221072402.315346745@linuxfoundation.org>
-References: <20200221072402.315346745@linuxfoundation.org>
-User-Agent: quilt/0.66
-MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+        Fri, 21 Feb 2020 02:50:52 -0500
+Received: from mail-pf1-f201.google.com ([209.85.210.201]:43938 "EHLO
+        mail-pf1-f201.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729605AbgBUHur (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 21 Feb 2020 02:50:47 -0500
+Received: by mail-pf1-f201.google.com with SMTP id x199so786302pfc.10
+        for <linux-kernel@vger.kernel.org>; Thu, 20 Feb 2020 23:50:47 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=date:in-reply-to:message-id:mime-version:references:subject:from:to
+         :cc;
+        bh=TmMGk/2HBR1UCtTSik3KGPjlUzxkj3b3kzWXZC6WT9Q=;
+        b=HnA22rj1dxnIqlA9T0G3M9hI7Ol0tPKBHB3zgMhpLpfKsZh8/7rGFL+VpJhCzde6Nu
+         KcE1Q8zAzVUc/5Pm34mVfvY0+9krjUAjkpmGtkonB048819Z48M+YWQacJJ340JKu+ue
+         x7jFulnQWyRBstsM4STMH8HFqMQwRJgZGycic6yiIPk4zOOgqYt0OF7JY3fIDkeE9ay/
+         vBGfyigOc4ICKdyI0inEGExZ9v733oWf1prfVUKJKrLGnDN1LlbIQUr/hv2jbk7vkLpX
+         cpO/cJXDixOMfE035fqyXvCsGbWDCU/ZBudmXUOPchl1J32YneGL6Hynb3WxV2w1p7ZF
+         amcg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:in-reply-to:message-id:mime-version
+         :references:subject:from:to:cc;
+        bh=TmMGk/2HBR1UCtTSik3KGPjlUzxkj3b3kzWXZC6WT9Q=;
+        b=bDIC5icCd1ipu6RIDQfFSNw1S/+AbTLlvYCALJTTbXeNxfCPVfkqb4MqVB55fEWCCJ
+         AAGFwqdwXf9OjOWAKhP4cYNniBeCLzvIpzEXulbdw2HQyGF1FRKYHpOhZcL+TfXvcnVq
+         K/1Jn8UB16o9qFNqSNDrjFQREo81Ys2Q4Ri54Jtw4Meih/PaapIzRg/PRVacBQO9pncT
+         TjGDxhGGsSGQcOriPpS8cWhUWTfW88OIFaCbiKQwUh0okrusww1D3ituHv9bQkKQ5sEF
+         Ke8jKzXte8baU8bqc1ZpCSBsQeZLSaMBWOEDKSqZI+/STjdzix3BbXSW8vzyt+ha+Tsk
+         Cynw==
+X-Gm-Message-State: APjAAAWzr7nIR2U51aU/kQHBmF4mpK4FvffK3gsP8D3Q+x4FzA6G4lEY
+        +2zjXy5Q1Hq0taLaiPv5G1BYMbAOflDF7Fo=
+X-Google-Smtp-Source: APXvYqwt26QxPKqFuPdNRe/xB5a2LF+NSPwWWlHVhdOULpbO8o8NeieDv3STiJzdiNCnYZDbmc/xqiEqVNxQlLQ=
+X-Received: by 2002:a63:5a11:: with SMTP id o17mr37742004pgb.60.1582271446721;
+ Thu, 20 Feb 2020 23:50:46 -0800 (PST)
+Date:   Thu, 20 Feb 2020 23:50:35 -0800
+In-Reply-To: <20200221075036.181885-1-saravanak@google.com>
+Message-Id: <20200221075036.181885-3-saravanak@google.com>
+Mime-Version: 1.0
+References: <20200221075036.181885-1-saravanak@google.com>
+X-Mailer: git-send-email 2.25.0.265.gbab2e86ba0-goog
+Subject: [PATCH v1 2/3] driver core: Add dev_has_sync_state()
+From:   Saravana Kannan <saravanak@google.com>
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        "Rafael J. Wysocki" <rafael@kernel.org>
+Cc:     Saravana Kannan <saravanak@google.com>, kernel-team@android.com,
+        linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Bibby Hsieh <bibby.hsieh@mediatek.com>
+Add an API to check if a device has sync_state support in its driver or
+bus.
 
-[ Upstream commit 411f5c1eacfebb1f6e40b653d29447cdfe7282aa ]
-
-The driver currently handles vblank events only when updating planes on
-an already enabled CRTC. The atomic update API however allows requesting
-an event when enabling or disabling a CRTC. This currently leads to
-event objects being leaked in the kernel and to events not being sent
-out. Fix it.
-
-Signed-off-by: Bibby Hsieh <bibby.hsieh@mediatek.com>
-Signed-off-by: CK Hu <ck.hu@mediatek.com>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+Signed-off-by: Saravana Kannan <saravanak@google.com>
 ---
- drivers/gpu/drm/mediatek/mtk_drm_crtc.c | 8 ++++++++
- 1 file changed, 8 insertions(+)
+ include/linux/device.h | 11 +++++++++++
+ 1 file changed, 11 insertions(+)
 
-diff --git a/drivers/gpu/drm/mediatek/mtk_drm_crtc.c b/drivers/gpu/drm/mediatek/mtk_drm_crtc.c
-index 3305a94fc9305..4132cd114a037 100644
---- a/drivers/gpu/drm/mediatek/mtk_drm_crtc.c
-+++ b/drivers/gpu/drm/mediatek/mtk_drm_crtc.c
-@@ -328,6 +328,7 @@ err_pm_runtime_put:
- static void mtk_crtc_ddp_hw_fini(struct mtk_drm_crtc *mtk_crtc)
- {
- 	struct drm_device *drm = mtk_crtc->base.dev;
-+	struct drm_crtc *crtc = &mtk_crtc->base;
- 	int i;
- 
- 	DRM_DEBUG_DRIVER("%s\n", __func__);
-@@ -353,6 +354,13 @@ static void mtk_crtc_ddp_hw_fini(struct mtk_drm_crtc *mtk_crtc)
- 	mtk_disp_mutex_unprepare(mtk_crtc->mutex);
- 
- 	pm_runtime_put(drm->dev);
-+
-+	if (crtc->state->event && !crtc->state->active) {
-+		spin_lock_irq(&crtc->dev->event_lock);
-+		drm_crtc_send_vblank_event(crtc, crtc->state->event);
-+		crtc->state->event = NULL;
-+		spin_unlock_irq(&crtc->dev->event_lock);
-+	}
+diff --git a/include/linux/device.h b/include/linux/device.h
+index 0cd7c647c16c..fa04dfd22bbc 100644
+--- a/include/linux/device.h
++++ b/include/linux/device.h
+@@ -798,6 +798,17 @@ static inline struct device_node *dev_of_node(struct device *dev)
+ 	return dev->of_node;
  }
  
- static void mtk_crtc_ddp_config(struct drm_crtc *crtc)
++static inline bool dev_has_sync_state(struct device *dev)
++{
++	if (!dev)
++		return false;
++	if (dev->driver && dev->driver->sync_state)
++		return true;
++	if (dev->bus && dev->bus->sync_state)
++		return true;
++	return false;
++}
++
+ /*
+  * High level routines for use by the bus drivers
+  */
 -- 
-2.20.1
-
-
+2.25.0.265.gbab2e86ba0-goog
 
