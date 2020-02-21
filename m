@@ -5,50 +5,50 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 74D45C35642
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 08:16:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CA6C9C35641
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 08:16:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4D37424686
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 08:16:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A201C2468D
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 08:16:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582272972;
-	bh=H0djIpIgCKD0Tf20YOgU5LkJ2ifFfJbbpxqtLDzx5TY=;
+	s=default; t=1582272977;
+	bh=bsY2Ez2fjYKqL4INXHo6t0AnfkI2oIAHfv+cfuoZhC0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=eqeT3n16LNVt5ddi/GIoJIg1uUSRAXjunedtiKO7PDm6TI3NflJxWgWyF/QBFuGVD
-	 W+pVHMDpS9L4U214ia/MLxtzyHriivUTPQePvtDQGjnYw/JD9HqnHDMT8UYEUYYTYD
-	 ZVW/ZFxXzULnu5Tgg5LuRi0q+rzrKwcmS0bYhTSc=
+	b=O2VVscosC1zhwVjz7JiNIuCkPY0Iqq7ADC13Ow4JANduEDDUufLZhrD6kqfbewTaA
+	 BlDosdTzuW9uAi0eSVKNsFMr/LZRUwb3qz3iIDxdto9+CI1bjm3yeT523bYDpQ4zDk
+	 M/7l36aGJ2+Fw/xekFr1DDn27XBwTjNb5lk/OiA0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732887AbgBUIQL (ORCPT
+        id S2387506AbgBUIQQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Feb 2020 03:16:11 -0500
-Received: from mail.kernel.org ([198.145.29.99]:53092 "EHLO mail.kernel.org"
+        Fri, 21 Feb 2020 03:16:16 -0500
+Received: from mail.kernel.org ([198.145.29.99]:53202 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387476AbgBUIQI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Feb 2020 03:16:08 -0500
+        id S1733018AbgBUIQN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 21 Feb 2020 03:16:13 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A60CA24681;
-        Fri, 21 Feb 2020 08:16:06 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B35F42467B;
+        Fri, 21 Feb 2020 08:16:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1582272967;
-        bh=H0djIpIgCKD0Tf20YOgU5LkJ2ifFfJbbpxqtLDzx5TY=;
+        s=default; t=1582272972;
+        bh=bsY2Ez2fjYKqL4INXHo6t0AnfkI2oIAHfv+cfuoZhC0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=skyhErt0m9WgpxXMTCII64rzhtypTUaglKrFrb/kWk8ShErtgWGTXxPMYTHSQqqFV
-         q3doYwBwu+kJrtrMCmuuwNwiCmNnrDFJeT4OiC0U++3vAwofAMeda5NL+PezRRoS/S
-         MaFjZo2cED5r0KpQNXpBtBYC+/qp93jSyDu3Ktrs=
+        b=iMccs9dGdZWg+TXqxa6aKc/VJdpObIVD3/1MBLqq90BQJTVx9yxJunkVOmL5hqvUF
+         VXDn6jp5PrXvGqBrP+WpZcgJueS6EwpZnbrX35e2t6gvd3S6l9V8xvaiPfe2jK1xJX
+         s8+x5Acn6ognwdzAejDYiojAbKYjOxOWzSWWrJ10=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org,
-        Nicholas Kazlauskas <nicholas.kazlauskas@amd.com>,
-        Alex Deucher <alexander.deucher@amd.com>,
+        Shubhrajyoti Datta <shubhrajyoti.datta@xilinx.com>,
+        Michal Simek <michal.simek@xilinx.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 343/344] drm/amdgpu/display: handle multiple numbers of fclks in dcn_calcs.c (v2)
-Date:   Fri, 21 Feb 2020 08:42:22 +0100
-Message-Id: <20200221072421.622181768@linuxfoundation.org>
+Subject: [PATCH 5.4 331/344] microblaze: Prevent the overflow of the start
+Date:   Fri, 21 Feb 2020 08:42:10 +0100
+Message-Id: <20200221072420.385857623@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200221072349.335551332@linuxfoundation.org>
 References: <20200221072349.335551332@linuxfoundation.org>
@@ -61,74 +61,34 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Alex Deucher <alexander.deucher@amd.com>
+From: Shubhrajyoti Datta <shubhrajyoti.datta@xilinx.com>
 
-[ Upstream commit c37243579d6c881c575dcfb54cf31c9ded88f946 ]
+[ Upstream commit 061d2c1d593076424c910cb1b64ecdb5c9a6923f ]
 
-We might get different numbers of clocks from powerplay depending
-on what the OEM has populated.
+In case the start + cache size is more than the max int the
+start overflows.
+Prevent the same.
 
-v2: add assert for at least one level
-
-Bug: https://gitlab.freedesktop.org/drm/amd/issues/963
-Reviewed-by: Nicholas Kazlauskas <nicholas.kazlauskas@amd.com>
-Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
+Signed-off-by: Shubhrajyoti Datta <shubhrajyoti.datta@xilinx.com>
+Signed-off-by: Michal Simek <michal.simek@xilinx.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- .../gpu/drm/amd/display/dc/calcs/dcn_calcs.c  | 34 +++++++++++++------
- 1 file changed, 23 insertions(+), 11 deletions(-)
+ arch/microblaze/kernel/cpu/cache.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/gpu/drm/amd/display/dc/calcs/dcn_calcs.c b/drivers/gpu/drm/amd/display/dc/calcs/dcn_calcs.c
-index 9b2cb57bf2bad..c9a241fe46cf4 100644
---- a/drivers/gpu/drm/amd/display/dc/calcs/dcn_calcs.c
-+++ b/drivers/gpu/drm/amd/display/dc/calcs/dcn_calcs.c
-@@ -1438,6 +1438,7 @@ void dcn_bw_update_from_pplib(struct dc *dc)
- 	struct dc_context *ctx = dc->ctx;
- 	struct dm_pp_clock_levels_with_voltage fclks = {0}, dcfclks = {0};
- 	bool res;
-+	unsigned vmin0p65_idx, vmid0p72_idx, vnom0p8_idx, vmax0p9_idx;
- 
- 	/* TODO: This is not the proper way to obtain fabric_and_dram_bandwidth, should be min(fclk, memclk) */
- 	res = dm_pp_get_clock_levels_by_type_with_voltage(
-@@ -1449,17 +1450,28 @@ void dcn_bw_update_from_pplib(struct dc *dc)
- 		res = verify_clock_values(&fclks);
- 
- 	if (res) {
--		ASSERT(fclks.num_levels >= 3);
--		dc->dcn_soc->fabric_and_dram_bandwidth_vmin0p65 = 32 * (fclks.data[0].clocks_in_khz / 1000.0) / 1000.0;
--		dc->dcn_soc->fabric_and_dram_bandwidth_vmid0p72 = dc->dcn_soc->number_of_channels *
--				(fclks.data[fclks.num_levels - (fclks.num_levels > 2 ? 3 : 2)].clocks_in_khz / 1000.0)
--				* ddr4_dram_factor_single_Channel / 1000.0;
--		dc->dcn_soc->fabric_and_dram_bandwidth_vnom0p8 = dc->dcn_soc->number_of_channels *
--				(fclks.data[fclks.num_levels - 2].clocks_in_khz / 1000.0)
--				* ddr4_dram_factor_single_Channel / 1000.0;
--		dc->dcn_soc->fabric_and_dram_bandwidth_vmax0p9 = dc->dcn_soc->number_of_channels *
--				(fclks.data[fclks.num_levels - 1].clocks_in_khz / 1000.0)
--				* ddr4_dram_factor_single_Channel / 1000.0;
-+		ASSERT(fclks.num_levels);
-+
-+		vmin0p65_idx = 0;
-+		vmid0p72_idx = fclks.num_levels -
-+			(fclks.num_levels > 2 ? 3 : (fclks.num_levels > 1 ? 2 : 1));
-+		vnom0p8_idx = fclks.num_levels - (fclks.num_levels > 1 ? 2 : 1);
-+		vmax0p9_idx = fclks.num_levels - 1;
-+
-+		dc->dcn_soc->fabric_and_dram_bandwidth_vmin0p65 =
-+			32 * (fclks.data[vmin0p65_idx].clocks_in_khz / 1000.0) / 1000.0;
-+		dc->dcn_soc->fabric_and_dram_bandwidth_vmid0p72 =
-+			dc->dcn_soc->number_of_channels *
-+			(fclks.data[vmid0p72_idx].clocks_in_khz / 1000.0)
-+			* ddr4_dram_factor_single_Channel / 1000.0;
-+		dc->dcn_soc->fabric_and_dram_bandwidth_vnom0p8 =
-+			dc->dcn_soc->number_of_channels *
-+			(fclks.data[vnom0p8_idx].clocks_in_khz / 1000.0)
-+			* ddr4_dram_factor_single_Channel / 1000.0;
-+		dc->dcn_soc->fabric_and_dram_bandwidth_vmax0p9 =
-+			dc->dcn_soc->number_of_channels *
-+			(fclks.data[vmax0p9_idx].clocks_in_khz / 1000.0)
-+			* ddr4_dram_factor_single_Channel / 1000.0;
- 	} else
- 		BREAK_TO_DEBUGGER();
+diff --git a/arch/microblaze/kernel/cpu/cache.c b/arch/microblaze/kernel/cpu/cache.c
+index 0bde47e4fa694..dcba53803fa5f 100644
+--- a/arch/microblaze/kernel/cpu/cache.c
++++ b/arch/microblaze/kernel/cpu/cache.c
+@@ -92,7 +92,8 @@ static inline void __disable_dcache_nomsr(void)
+ #define CACHE_LOOP_LIMITS(start, end, cache_line_length, cache_size)	\
+ do {									\
+ 	int align = ~(cache_line_length - 1);				\
+-	end = min(start + cache_size, end);				\
++	if (start <  UINT_MAX - cache_size)				\
++		end = min(start + cache_size, end);			\
+ 	start &= align;							\
+ } while (0)
  
 -- 
 2.20.1
