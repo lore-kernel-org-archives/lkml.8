@@ -6,72 +6,128 @@ X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 185F4C35656
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 16:39:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 06F63C35646
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 16:41:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E3B5C24650
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 16:39:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DB7D924650
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 16:41:14 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726927AbgBUQjm (ORCPT
+        id S1726710AbgBUQlN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Feb 2020 11:39:42 -0500
-Received: from verein.lst.de ([213.95.11.211]:56415 "EHLO verein.lst.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725988AbgBUQjm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Feb 2020 11:39:42 -0500
-Received: by verein.lst.de (Postfix, from userid 2407)
-        id 8C11368BFE; Fri, 21 Feb 2020 17:39:38 +0100 (CET)
-Date:   Fri, 21 Feb 2020 17:39:38 +0100
-From:   Christoph Hellwig <hch@lst.de>
-To:     Halil Pasic <pasic@linux.ibm.com>
-Cc:     Christoph Hellwig <hch@lst.de>,
-        "Michael S. Tsirkin" <mst@redhat.com>,
-        Jason Wang <jasowang@redhat.com>,
-        Marek Szyprowski <m.szyprowski@samsung.com>,
-        Robin Murphy <robin.murphy@arm.com>,
-        linux-s390@vger.kernel.org,
-        virtualization@lists.linux-foundation.org,
-        linux-kernel@vger.kernel.org, iommu@lists.linux-foundation.org,
-        Christian Borntraeger <borntraeger@de.ibm.com>,
-        Janosch Frank <frankja@linux.ibm.com>,
-        Viktor Mihajlovski <mihajlov@linux.ibm.com>,
-        Cornelia Huck <cohuck@redhat.com>,
-        Ram Pai <linuxram@us.ibm.com>,
-        Thiago Jung Bauermann <bauerman@linux.ibm.com>,
-        David Gibson <david@gibson.dropbear.id.au>,
-        "Lendacky, Thomas" <Thomas.Lendacky@amd.com>,
-        Michael Mueller <mimu@linux.ibm.com>
-Subject: Re: [PATCH 2/2] virtio: let virtio use DMA API when guest RAM is
- protected
-Message-ID: <20200221163938.GC10054@lst.de>
-References: <20200220160606.53156-1-pasic@linux.ibm.com> <20200220160606.53156-3-pasic@linux.ibm.com> <20200220161309.GB12709@lst.de> <20200221153340.4cdcde81.pasic@linux.ibm.com>
+        Fri, 21 Feb 2020 11:41:13 -0500
+Received: from mail-out.m-online.net ([212.18.0.10]:56838 "EHLO
+        mail-out.m-online.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725988AbgBUQlN (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 21 Feb 2020 11:41:13 -0500
+Received: from frontend01.mail.m-online.net (unknown [192.168.8.182])
+        by mail-out.m-online.net (Postfix) with ESMTP id 48PHK21SMHz1rd1Q;
+        Fri, 21 Feb 2020 17:41:10 +0100 (CET)
+Received: from localhost (dynscan1.mnet-online.de [192.168.6.70])
+        by mail.m-online.net (Postfix) with ESMTP id 48PHK20WlYz1r0bZ;
+        Fri, 21 Feb 2020 17:41:10 +0100 (CET)
+X-Virus-Scanned: amavisd-new at mnet-online.de
+Received: from mail.mnet-online.de ([192.168.8.182])
+        by localhost (dynscan1.mail.m-online.net [192.168.6.70]) (amavisd-new, port 10024)
+        with ESMTP id T2YKWe-QNZdI; Fri, 21 Feb 2020 17:41:08 +0100 (CET)
+X-Auth-Info: tPcD5NT6YuYT6cAPtv9wImntzVhf6GYyvo9WLMRjP8E=
+Received: from [127.0.0.1] (unknown [195.140.253.167])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.mnet-online.de (Postfix) with ESMTPSA;
+        Fri, 21 Feb 2020 17:41:08 +0100 (CET)
+Subject: Re: [PATCH v2 0/2] Add GPIO level-sensitive interrupt support
+To:     Alexandre Torgue <alexandre.torgue@st.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Jason Cooper <jason@lakedaemon.net>,
+        Marc Zyngier <marc.zyngier@arm.com>,
+        Linus Walleij <linus.walleij@linaro.org>
+Cc:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linux-gpio@vger.kernel.org
+References: <20200218131218.10789-1-alexandre.torgue@st.com>
+ <b5a2dcab-06db-4863-ac5c-28f4ef0c5ac9@denx.de>
+ <32e409e6-d475-802a-6a90-c8ba6c0cf6d5@st.com>
+ <088e786c-511e-cf95-fc41-5343b8134407@denx.de>
+ <d271f09b-6391-779a-b133-66bcdfbb0ec6@st.com>
+ <38e7cf57-2f89-7615-0841-316355a9102f@denx.de>
+ <66520848-f630-e210-aecb-96c8828605b7@st.com>
+From:   Marek Vasut <marex@denx.de>
+Message-ID: <faf55c81-e28f-20ed-ffdc-d20f00e3aefc@denx.de>
+Date:   Fri, 21 Feb 2020 17:41:07 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.2
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200221153340.4cdcde81.pasic@linux.ibm.com>
-User-Agent: Mutt/1.5.17 (2007-11-01)
+In-Reply-To: <66520848-f630-e210-aecb-96c8828605b7@st.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Feb 21, 2020 at 03:33:40PM +0100, Halil Pasic wrote:
-> > Hell no.  This is a detail of the platform DMA direct implementation.
+On 2/20/20 2:09 PM, Alexandre Torgue wrote:
+> Hi Marek
+
+Hi,
+
+> On 2/19/20 6:24 PM, Marek Vasut wrote:
+>> On 2/19/20 10:20 AM, Alexandre Torgue wrote:
+>> Hi,
+>> [...]
+>>>>>>> This series adds the possibility to handle gpio interrupts on level.
+>>>>>>>
+>>>>>>> GPIO hardware block is directly linked to EXTI block but EXTI
+>>>>>>> handles
+>>>>>>> external interrupts only on edge. To be able to handle GPIO
+>>>>>>> interrupt on
+>>>>>>> level a "hack" is done in gpio irq chip: parent interrupt (exti irq
+>>>>>>> chip)
+>>>>>>> is retriggered following interrupt type and gpio line value.
+>>>>>>>
+>>>>>>> In exti irq chip, retrigger ops function is added.
+>>>>>>
+>>>>>> btw. this might be unrelated, but is it possible to have e.g. gpioC2
+>>>>>> set
+>>>>>> as trigger-level-low and gpioD2 set as trigger-edge-falling ? It
+>>>>>> seems
+>>>>>> 8eb2dfee9fb1 ("pinctrl: stm32: add lock mechanism for irqmux
+>>>>>> selection")
+>>>>>> prevents that.
+>>>>>>
+>>>>>
+>>>>> No it's not possible. Each gpio line doesn't have a dedicated Exti
+>>>>> line
+>>>>> Each Exti line is muxing between gpio banks.
+>>>>
+>>>> OK, that confirms my assumption.
+>>>>
+>>>>> Mapping is done as following:
+>>>>>
+>>>>> EXTI0 = A0 or B0 or C0 .... or Z0 : selected by Mux
+>>>>> EXTI1 = A1 or B1 or C1 ....or Z1 : selected by Mux
+>>>>> EXTI2 = A2 or B2 or C2 ....or Z2 : selected by Mux
+>>>>> ...
+>>>>
+>>>> Is it at least possible to have IRQs of the same type on the same exti
+>>>> line? E.g. gpioA2 of trigger-edge-falling and gpioB2
+>>>> trigger-edge-falling ?
+>>>>
+>>>
+>>> Sorry I don't catch your point. If you already succeed to get gpioA2,
+>>> then you will failed to get gpioB2 but looking at function call stack we
+>>> could get an other issue.
+>>
+>> Considering the EXTI line limitations, I'd like to know what kind of IRQ
+>> input configuration is allowed/valid and what kind of configuration is
+>> not valid.
 > 
-> I beg to differ. If it was a detail of the DMA direct implementation, it
-> should have/would have been private to kernel/dma/direct.c. 
+> As a mux is used to select which GPIO[A..Z]_X has to be mapped on exti_X
+> line, only one GPIO can be used on the EXTI line.
+> 
+> For example, on EXTI2 you could map either gpioa2 or gpiob2 or
+> ....gpioz2 but not gpioa2 and gpiob2 in the same time.
 
-It can't given that platforms have to implement it.  It is an arch hook
-for dma-direct.
+Got it, thank you for the clarification.
 
-> Consider what would we have to do to make PCI devices do I/O trough
-> pages that were shared when the guest is running in a protected VM. The
-> s390_pci_dma_ops would also need to know whether to 'force dma uencrypted'
-> or not, and it's the exact same logic. I doubt simply using DMA direct
-> for zPCI would do, because we still have to do all the Z specific IOMMU
-> management.
-
-And your IOMMU can't deal with the encryption bit?  In the case we
-could think of allowing IOMMU implementation to access it.  But the
-point that it is an internal detail of the DMA implementation and by
-now means for drivers.
+Maybe that could be something to improve for MP2 :-)
