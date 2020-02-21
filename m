@@ -2,108 +2,84 @@ Return-Path: <SRS0=1210=4J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.4 required=3.0 tests=FROM_LOCAL_HEX,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7AD38C35646
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 19:01:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DEC8CC3565B
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 19:05:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 595222071E
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 19:01:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BCF1C2071E
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 19:05:04 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729533AbgBUTBU (ORCPT
+        id S1729627AbgBUTFD convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Feb 2020 14:01:20 -0500
-Received: from foss.arm.com ([217.140.110.172]:46126 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726150AbgBUTBT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Feb 2020 14:01:19 -0500
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 1341A30E;
-        Fri, 21 Feb 2020 11:01:19 -0800 (PST)
-Received: from [10.1.197.50] (e120937-lin.cambridge.arm.com [10.1.197.50])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 0EC233F6CF;
-        Fri, 21 Feb 2020 11:01:17 -0800 (PST)
-Subject: Re: [RFC PATCH v2 07/13] firmware: arm_scmi: Add notification
- dispatch and delivery
-To:     Lukasz Luba <lukasz.luba@arm.com>, linux-kernel@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org
-Cc:     sudeep.holla@arm.com, james.quinlan@broadcom.com,
-        Jonathan.Cameron@Huawei.com
-References: <20200214153535.32046-1-cristian.marussi@arm.com>
- <20200214153535.32046-8-cristian.marussi@arm.com>
- <e45e87e2-aaaf-c35b-b864-c080fd6e0ba6@arm.com>
-From:   Cristian Marussi <cristian.marussi@arm.com>
-Message-ID: <d59c3f3e-324b-05fe-547d-1e64bf4c6a69@arm.com>
-Date:   Fri, 21 Feb 2020 19:01:16 +0000
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.1
+        Fri, 21 Feb 2020 14:05:03 -0500
+Received: from mail-io1-f72.google.com ([209.85.166.72]:38099 "EHLO
+        mail-io1-f72.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729430AbgBUTFD (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 21 Feb 2020 14:05:03 -0500
+Received: by mail-io1-f72.google.com with SMTP id x2so2980298iog.5
+        for <linux-kernel@vger.kernel.org>; Fri, 21 Feb 2020 11:05:03 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:date:in-reply-to:message-id:subject
+         :from:to:content-transfer-encoding;
+        bh=6HPd5BpaEdwQYZOa0Jq69qrFdmHHelt8oh9R02313yI=;
+        b=gUxdTO12A6uoNcjsMr6tupec4qcAA3sS87TXjLtaBFHhZFO9oZ8BFJyIY8JRd4lJGK
+         V66eKQ2eld63tczIW8+fWinuWVMakvCu/6qQ4kgmuYjNgqjS/sOUUVV4dHqoHKIm1M5t
+         cEOA7D/4koFEBh5mykDZ6ZNjJd/1ZsS6VTaNfnHMWXxrOfCykD6w3/X5qBIVBKpNdJIw
+         R018X2RMr1wTv2K0pl0paDlUVRXC2Yp5se5/TjLctj+hwKfIXCPzjPmGi9e3gnaE3iEY
+         SgjQ4auYFWn/NrDEqFXMdviKAPHjkpOJtAyOBAoP7lh/+I6aZDhQUq4pd6ItiAVanIEw
+         a4ZA==
+X-Gm-Message-State: APjAAAXKapiAA/+smSeA9fgNpPABT8Pj76Z3L2VneCNiC6giRd9FImbM
+        IRRIQauKNpv4FbPpDB1EC4mWCO28A2XFYwNN3oulXpFoh5Zz
+X-Google-Smtp-Source: APXvYqwLW2r3BmTlbIIeJFfAs7Uv80Ut/LNDiARQZ70MK0QKfO5+10fP12va8gN8C1TWjny8qjdR5O6xuKt+aWLqAsKZ/K16uMae
 MIME-Version: 1.0
-In-Reply-To: <e45e87e2-aaaf-c35b-b864-c080fd6e0ba6@arm.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+X-Received: by 2002:a5e:8e4d:: with SMTP id r13mr30243768ioo.60.1582311902722;
+ Fri, 21 Feb 2020 11:05:02 -0800 (PST)
+Date:   Fri, 21 Feb 2020 11:05:02 -0800
+In-Reply-To: <000000000000f649ad059c8ca893@google.com>
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <000000000000e2c2c9059f1ab2bb@google.com>
+Subject: Re: KASAN: slab-out-of-bounds Write in bitmap_ip_del
+From:   syzbot <syzbot+24d0577de55b8b8f6975@syzkaller.appspotmail.com>
+To:     allison@lohutok.net, arvid.brodin@alten.se, coreteam@netfilter.org,
+        davem@davemloft.net, dirk.vandermerwe@netronome.com, fw@strlen.de,
+        gregkh@linuxfoundation.org, info@metux.net,
+        jakub.kicinski@netronome.com, jeremy@azazel.net,
+        kadlec@blackhole.kfki.hu, kadlec@netfilter.org,
+        linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
+        netfilter-devel@vger.kernel.org, pablo@netfilter.org,
+        syzkaller-bugs@googlegroups.com, tglx@linutronix.de
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8BIT
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Lukasz
+syzbot suspects this bug was fixed by commit:
 
-Thanks for your feedback !
+commit 32c72165dbd0e246e69d16a3ad348a4851afd415
+Author: Kadlecsik József <kadlec@blackhole.kfki.hu>
+Date:   Sun Jan 19 21:06:49 2020 +0000
 
-On 21/02/2020 13:25, Lukasz Luba wrote:
-> Hi Cristian,
-> 
-> I didn't want to jump into your discussion with Jim in other broader
-> thread with this small thought, so I added a comment below.
-> 
-> On 2/14/20 3:35 PM, Cristian Marussi wrote:
->> Add core SCMI Notifications dispatch and delivery support logic which is
-> [snip]
-> 
->>   
->> @@ -840,6 +1071,11 @@ static struct scmi_notify_ops notify_ops = {
->>    */
->>   int scmi_notification_init(struct scmi_handle *handle)
->>   {
->> +	scmi_notify_wq = alloc_workqueue("scmi_notify",
->> +					 WQ_UNBOUND | WQ_FREEZABLE, 0);
-> 
-> I think it might limit some platforms. It depends on their workload.
-> If they have some high priority workloads which rely on this mechanisms,
-> they might need a RT task here. The workqueues would be scheduled in
-> CFS, so it depends on workload in there (we might even see 10s ms delays
-> in scheduling-up them). If we use RT we would grab the CPU from CFS.
-> 
-> It would be good if it is a customization option: which mechanism
-> to use based on some a parameter. Then we could create:
-> a) workqueue with the flags above
-> b) workqueue with WQ_HIGHPRI (limited by minimum nice)
-> c) kthread_create_worker() with RT/DL/FIFO sched policy
->    (with also a parameterized priority) 
-> In default clients might use a) but when they want to tune their
-> platform, they might change only a parameter in their scmi code,
-> not maintaining a patch for the RT function out of tree.
+    netfilter: ipset: use bitmap infrastructure completely
 
-In this series, I have not addressed configurability issues at all (as noted in the cover):
-in fact I was thinking that stuff like WQ_HIGHPRI flags and per-protocol queue sizes could
-be beneficial to be customizable depending on the specific platform, but I had not gone to
-the extreme of thinking of adopting a dedicated RT kthread as a worker...good point...it
-makes surely sense to have this configurable option to try to reduce the latency where possible.
+bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=1226da7ee00000
+start commit:   d96d875e Merge tag 'fixes_for_v5.5-rc8' of git://git.kerne..
+git tree:       upstream
+kernel config:  https://syzkaller.appspot.com/x/.config?x=cf8e288883e40aba
+dashboard link: https://syzkaller.appspot.com/bug?extid=24d0577de55b8b8f6975
+syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=14cddd76e00000
+C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=10f459c9e00000
 
-I think it's important to give the user the possibility to configure the deferred worker
-as you suggested, if the user decides to rely on Linux to handle a critical notification,
-but I'd prefer queuing up this work you suggested on a different series on top of this one.
-(which is starting to be a little to much voluminous...for being just the core support)
+If the result looks correct, please mark the bug fixed by replying with:
 
-Regards
+#syz fix: netfilter: ipset: use bitmap infrastructure completely
 
-Cristian
-
-> 
-> Regards,
-> Lukasz
-> 
-
+For information about bisection process see: https://goo.gl/tpsmEJ#bisection
