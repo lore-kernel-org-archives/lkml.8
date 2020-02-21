@@ -7,49 +7,47 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C8285C35641
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 08:26:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BF445C35643
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 08:26:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 93F7420679
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 08:26:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8CDFC2467B
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 08:26:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582273561;
-	bh=Dsh/Qd043VlBj8iAhdts5UbxfZgcXm4Hu4M2aPNVJ/o=;
+	s=default; t=1582273566;
+	bh=6uuL2kpSArz8OwtyYslYE7k2qCheH7HvEGUTMDexYsI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=iofpoqlY8HQGBN4ewRLEesGTmOn/87m/BPiIdrTJkS62fQdo5Ad+U3z/Dvon3ijKu
-	 8YAzU5MQktel9Lyo2/rId5CHT7ojbLrrBha3aj+x/td7A38Th+MHcZVXL3q1wsnHpv
-	 YHSELyBMnFY9rQQfE6HzlWw/crzT2foH4xAdvTgE=
+	b=kLDEx3zGOmrzUJb0dIv3HC+nRIpxpcL8C0KYL7VH+cNCQWeOiwKS1AXWoQUywXrTH
+	 rn85r+8bl4pswykoAHqjrO1El1L8WYvLPgCsGAIccRmvVcVgxMwmOjCdcnH/AjPrzA
+	 BHAyA4cMipndMsskByph/cqpn8rJu7q5p1I+zIG4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388713AbgBUIYz (ORCPT
+        id S2388692AbgBUIYs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Feb 2020 03:24:55 -0500
-Received: from mail.kernel.org ([198.145.29.99]:37334 "EHLO mail.kernel.org"
+        Fri, 21 Feb 2020 03:24:48 -0500
+Received: from mail.kernel.org ([198.145.29.99]:37152 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388687AbgBUIYp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Feb 2020 03:24:45 -0500
+        id S2388391AbgBUIYg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 21 Feb 2020 03:24:36 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2DA4A2469F;
-        Fri, 21 Feb 2020 08:24:44 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id EA1B3246A9;
+        Fri, 21 Feb 2020 08:24:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1582273484;
-        bh=Dsh/Qd043VlBj8iAhdts5UbxfZgcXm4Hu4M2aPNVJ/o=;
+        s=default; t=1582273476;
+        bh=6uuL2kpSArz8OwtyYslYE7k2qCheH7HvEGUTMDexYsI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Pb5F8teg/hNA07G7BP3RS7poI6CLKXhERBNOc5gPk6wQNfjIobCcexZF6v80lApC4
-         qG25xwOhXoW88lx6gXBweXar643/kKr9ZVbBOqIuX8jphyPNB41eP5qrpfZ8SnS2FA
-         xSUJHuPOwLLYYnPqzYHwSrxK0RxRfoEiWlOvDd2k=
+        b=ZFl6EAomVZOM9MnLrcwbaetsiHfNE1VL95YjzNN5h2ZCIb967318g8t3muCe753H9
+         lW0mdUaTaIdwdlEKQIsUud42Jpp+J6l4An19XuFRc2kn3NWb+hYkkvzLZRhowHZZyQ
+         rStLjQWSQoz0t7iW+O5Pnuowxzm1M+lUG3OnTcRk=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Steve French <stfrench@microsoft.com>,
-        Oleg Kravtsov <oleg@tuxera.com>,
-        Ronnie Sahlberg <lsahlber@redhat.com>,
-        Pavel Shilovsky <pshilov@microsoft.com>,
+        stable@vger.kernel.org, Evan Quan <evan.quan@amd.com>,
+        Alex Deucher <alexander.deucher@amd.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 188/191] cifs: log warning message (once) if out of disk space
-Date:   Fri, 21 Feb 2020 08:42:41 +0100
-Message-Id: <20200221072313.381537875@linuxfoundation.org>
+Subject: [PATCH 4.19 185/191] drm/amdgpu/smu10: fix smu10_get_clock_by_type_with_voltage
+Date:   Fri, 21 Feb 2020 08:42:38 +0100
+Message-Id: <20200221072312.966159239@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200221072250.732482588@linuxfoundation.org>
 References: <20200221072250.732482588@linuxfoundation.org>
@@ -62,40 +60,39 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Steve French <stfrench@microsoft.com>
+From: Alex Deucher <alexander.deucher@amd.com>
 
-[ Upstream commit d6fd41905ec577851734623fb905b1763801f5ef ]
+[ Upstream commit 1064ad4aeef94f51ca230ac639a9e996fb7867a0 ]
 
-We ran into a confusing problem where an application wasn't checking
-return code on close and so user didn't realize that the application
-ran out of disk space.  log a warning message (once) in these
-cases. For example:
+Cull out 0 clocks to avoid a warning in DC.
 
-  [ 8407.391909] Out of space writing to \\oleg-server\small-share
-
-Signed-off-by: Steve French <stfrench@microsoft.com>
-Reported-by: Oleg Kravtsov <oleg@tuxera.com>
-Reviewed-by: Ronnie Sahlberg <lsahlber@redhat.com>
-Reviewed-by: Pavel Shilovsky <pshilov@microsoft.com>
+Bug: https://gitlab.freedesktop.org/drm/amd/issues/963
+Reviewed-by: Evan Quan <evan.quan@amd.com>
+Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/cifs/smb2pdu.c | 3 +++
- 1 file changed, 3 insertions(+)
+ drivers/gpu/drm/amd/powerplay/hwmgr/smu10_hwmgr.c | 8 +++++---
+ 1 file changed, 5 insertions(+), 3 deletions(-)
 
-diff --git a/fs/cifs/smb2pdu.c b/fs/cifs/smb2pdu.c
-index 0d4e4d97e6cf5..e2d2b749c8f38 100644
---- a/fs/cifs/smb2pdu.c
-+++ b/fs/cifs/smb2pdu.c
-@@ -3425,6 +3425,9 @@ smb2_writev_callback(struct mid_q_entry *mid)
- 				     wdata->cfile->fid.persistent_fid,
- 				     tcon->tid, tcon->ses->Suid, wdata->offset,
- 				     wdata->bytes, wdata->result);
-+		if (wdata->result == -ENOSPC)
-+			printk_once(KERN_WARNING "Out of space writing to %s\n",
-+				    tcon->treeName);
- 	} else
- 		trace_smb3_write_done(0 /* no xid */,
- 				      wdata->cfile->fid.persistent_fid,
+diff --git a/drivers/gpu/drm/amd/powerplay/hwmgr/smu10_hwmgr.c b/drivers/gpu/drm/amd/powerplay/hwmgr/smu10_hwmgr.c
+index 3fa6e8123b8eb..48e31711bc68f 100644
+--- a/drivers/gpu/drm/amd/powerplay/hwmgr/smu10_hwmgr.c
++++ b/drivers/gpu/drm/amd/powerplay/hwmgr/smu10_hwmgr.c
+@@ -1048,9 +1048,11 @@ static int smu10_get_clock_by_type_with_voltage(struct pp_hwmgr *hwmgr,
+ 
+ 	clocks->num_levels = 0;
+ 	for (i = 0; i < pclk_vol_table->count; i++) {
+-		clocks->data[i].clocks_in_khz = pclk_vol_table->entries[i].clk  * 10;
+-		clocks->data[i].voltage_in_mv = pclk_vol_table->entries[i].vol;
+-		clocks->num_levels++;
++		if (pclk_vol_table->entries[i].clk) {
++			clocks->data[clocks->num_levels].clocks_in_khz = pclk_vol_table->entries[i].clk  * 10;
++			clocks->data[clocks->num_levels].voltage_in_mv = pclk_vol_table->entries[i].vol;
++			clocks->num_levels++;
++		}
+ 	}
+ 
+ 	return 0;
 -- 
 2.20.1
 
