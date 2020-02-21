@@ -2,208 +2,701 @@ Return-Path: <SRS0=1210=4J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=no
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3891AC35646
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 18:03:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8873BC35657
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 18:03:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0D4C020722
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 18:03:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3DC5C20722
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 18:03:51 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="PRF+ucWW"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729674AbgBUSDr (ORCPT
+        id S1729684AbgBUSDt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Feb 2020 13:03:47 -0500
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:39536 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1725947AbgBUSDq (ORCPT
+        Fri, 21 Feb 2020 13:03:49 -0500
+Received: from us-smtp-1.mimecast.com ([207.211.31.81]:28836 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726408AbgBUSDs (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Feb 2020 13:03:46 -0500
-Received: from pps.filterd (m0098416.ppops.net [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 01LHxAmc143046
-        for <linux-kernel@vger.kernel.org>; Fri, 21 Feb 2020 13:03:44 -0500
-Received: from e06smtp04.uk.ibm.com (e06smtp04.uk.ibm.com [195.75.94.100])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 2y8ubybse2-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Fri, 21 Feb 2020 13:03:44 -0500
-Received: from localhost
-        by e06smtp04.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-kernel@vger.kernel.org> from <pasic@linux.ibm.com>;
-        Fri, 21 Feb 2020 18:03:42 -0000
-Received: from b06avi18626390.portsmouth.uk.ibm.com (9.149.26.192)
-        by e06smtp04.uk.ibm.com (192.168.101.134) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Fri, 21 Feb 2020 18:03:38 -0000
-Received: from d06av24.portsmouth.uk.ibm.com (mk.ibm.com [9.149.105.60])
-        by b06avi18626390.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 01LI2ePe18219486
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Fri, 21 Feb 2020 18:02:40 GMT
-Received: from d06av24.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id A619F42042;
-        Fri, 21 Feb 2020 18:03:36 +0000 (GMT)
-Received: from d06av24.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 2DC004203F;
-        Fri, 21 Feb 2020 18:03:36 +0000 (GMT)
-Received: from oc2783563651 (unknown [9.152.224.149])
-        by d06av24.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Fri, 21 Feb 2020 18:03:36 +0000 (GMT)
-Date:   Fri, 21 Feb 2020 19:03:34 +0100
-From:   Halil Pasic <pasic@linux.ibm.com>
-To:     "Michael S. Tsirkin" <mst@redhat.com>
-Cc:     Jason Wang <jasowang@redhat.com>,
-        Marek Szyprowski <m.szyprowski@samsung.com>,
-        Robin Murphy <robin.murphy@arm.com>,
-        Christoph Hellwig <hch@lst.de>, linux-s390@vger.kernel.org,
-        virtualization@lists.linux-foundation.org,
-        linux-kernel@vger.kernel.org, iommu@lists.linux-foundation.org,
-        Christian Borntraeger <borntraeger@de.ibm.com>,
-        Janosch Frank <frankja@linux.ibm.com>,
-        Viktor Mihajlovski <mihajlov@linux.ibm.com>,
-        Cornelia Huck <cohuck@redhat.com>,
-        Ram Pai <linuxram@us.ibm.com>,
-        Thiago Jung Bauermann <bauerman@linux.ibm.com>,
-        David Gibson <david@gibson.dropbear.id.au>,
-        "Lendacky, Thomas" <Thomas.Lendacky@amd.com>,
-        Michael Mueller <mimu@linux.ibm.com>
-Subject: Re: [PATCH 2/2] virtio: let virtio use DMA API when guest RAM is
- protected
-In-Reply-To: <20200221104901-mutt-send-email-mst@kernel.org>
-References: <20200220160606.53156-1-pasic@linux.ibm.com>
-        <20200220160606.53156-3-pasic@linux.ibm.com>
-        <20200220154904-mutt-send-email-mst@kernel.org>
-        <20200221141230.13eebc35.pasic@linux.ibm.com>
-        <20200221104901-mutt-send-email-mst@kernel.org>
-Organization: IBM
-X-Mailer: Claws Mail 3.11.1 (GTK+ 2.24.31; x86_64-redhat-linux-gnu)
+        Fri, 21 Feb 2020 13:03:48 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1582308226;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=+hPcm6No4j1q5tBD4QlFsS/Y5JtuK+CqPI/YtDkFAwA=;
+        b=PRF+ucWWQGKe32SChhAyQe9J2aFqkTyF60Ab0007td8FIgJnZNn9i71ly1OrqS+cjQ5KJf
+        h+iqkG9SLfZRG7Xgg5biF+0qRBZuE+8bayiQZKwT+5QdKeM2yONQUkF9GM17ooLeMgpEFU
+        BERgVfabQuBlNUMZOcn3h3ff+iQrDFw=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-227-6GhJKX-fM9eBvNvfnxGQQw-1; Fri, 21 Feb 2020 13:03:44 -0500
+X-MC-Unique: 6GhJKX-fM9eBvNvfnxGQQw-1
+Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 10BC9108BC90;
+        Fri, 21 Feb 2020 18:03:43 +0000 (UTC)
+Received: from warthog.procyon.org.uk (ovpn-122-163.rdu2.redhat.com [10.10.122.163])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 058AD2708E;
+        Fri, 21 Feb 2020 18:03:40 +0000 (UTC)
+Organization: Red Hat UK Ltd. Registered Address: Red Hat UK Ltd, Amberley
+        Place, 107-111 Peascod Street, Windsor, Berkshire, SI4 1TE, United
+        Kingdom.
+        Registered in England and Wales under Company Registration No. 3798903
+Subject: [PATCH 14/17] fsinfo: Add API documentation [ver #17]
+From:   David Howells <dhowells@redhat.com>
+To:     viro@zeniv.linux.org.uk
+Cc:     dhowells@redhat.com, raven@themaw.net, mszeredi@redhat.com,
+        christian@brauner.io, jannh@google.com, darrick.wong@oracle.com,
+        linux-api@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Date:   Fri, 21 Feb 2020 18:03:40 +0000
+Message-ID: <158230822028.2185128.5408262159157374165.stgit@warthog.procyon.org.uk>
+In-Reply-To: <158230810644.2185128.16726948836367716086.stgit@warthog.procyon.org.uk>
+References: <158230810644.2185128.16726948836367716086.stgit@warthog.procyon.org.uk>
+User-Agent: StGit/0.21
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-x-cbid: 20022118-0016-0000-0000-000002E91112
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 20022118-0017-0000-0000-0000334C3285
-Message-Id: <20200221190334.3b03d296.pasic@linux.ibm.com>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.572
- definitions=2020-02-21_06:2020-02-21,2020-02-21 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxscore=0 bulkscore=0
- lowpriorityscore=0 spamscore=0 suspectscore=0 mlxlogscore=999
- clxscore=1015 malwarescore=0 adultscore=0 impostorscore=0 phishscore=0
- priorityscore=1501 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2001150001 definitions=main-2002210137
+Content-Type: text/plain; charset="utf-8"
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 21 Feb 2020 10:56:45 -0500
-"Michael S. Tsirkin" <mst@redhat.com> wrote:
+Add API documentation for fsinfo.
 
-> On Fri, Feb 21, 2020 at 02:12:30PM +0100, Halil Pasic wrote:
-> > On Thu, 20 Feb 2020 15:55:14 -0500
-> > "Michael S. Tsirkin" <mst@redhat.com> wrote:
-[..]
-> > > To summarize, the necessary conditions for a hack along these lines
-> > > (using DMA API without VIRTIO_F_ACCESS_PLATFORM) are that we detect that:
-> > > 
-> > >   - secure guest mode is enabled - so we know that since we don't share
-> > >     most memory regular virtio code won't
-> > >     work, even though the buggy hypervisor didn't set VIRTIO_F_ACCESS_PLATFORM
-> > 
-> > force_dma_unencrypted(&vdev->dev) is IMHO exactly about this.
-> > 
-> > >   - DMA API is giving us addresses that are actually also physical
-> > >     addresses
-> > 
-> > In case of s390 this is given.
-> > I talked with the power people before
-> > posting this, and they ensured me they can are willing to deal with
-> > this. I was hoping to talk abut this with the AMD SEV people here (hence
-> > the cc).
-> 
-> We'd need a part of DMA API that promises this though. Platform
-> maintainers aren't going to go out of their way to do the
-> right thing just for virtio, and I can't track all arches
-> to make sure they don't violate virtio requirements.
-> 
+Signed-off-by: David Howells <dhowells@redhat.com>
+---
 
-One would have to track only the arches that have
-force_dma_unecrypted(), and generally speaking the arches shall make
-sure the DMA ops are suitable, whatever that means in the given context.
+ Documentation/filesystems/fsinfo.rst |  491 ++++++++++++++++++++++++++++=
+++++++
+ 1 file changed, 491 insertions(+)
+ create mode 100644 Documentation/filesystems/fsinfo.rst
 
-> > 
-> > >   - Hypervisor is buggy and didn't enable VIRTIO_F_ACCESS_PLATFORM
-> > > 
-> > 
-> > I don't get this point. The argument where the hypervisor is buggy is a
-> > bit hard to follow for me. If hypervisor is buggy we have already lost
-> > anyway most of the time, or?
-> 
-> If VIRTIO_F_ACCESS_PLATFORM is set then things just work.  If
-> VIRTIO_F_ACCESS_PLATFORM is clear device is supposed to have access to
-> all of memory.  You can argue in various ways but it's easier to just
-> declare a behaviour that violates this a bug. Which might still be worth
-> working around, for various reasons.
-> 
+diff --git a/Documentation/filesystems/fsinfo.rst b/Documentation/filesys=
+tems/fsinfo.rst
+new file mode 100644
+index 000000000000..6283293d3bce
+--- /dev/null
++++ b/Documentation/filesystems/fsinfo.rst
+@@ -0,0 +1,491 @@
++=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D
++Filesystem Information Query
++=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D
++
++The fsinfo() system call allows the querying of filesystem and filesyste=
+m
++security information beyond what stat(), statx() and statfs() can obtain=
+.  It
++does not require a file to be opened as does ioctl().
++
++fsinfo() may be called with a path, with open file descriptor or a with =
+a mount
++object identifier.
++
++The fsinfo() system call needs to be configured on by enabling:
++
++	"File systems"/"Enable the fsinfo() system call" (CONFIG_FSINFO)
++
++This document has the following sections:
++
++.. contents:: :local:
++
++
++Overview
++=3D=3D=3D=3D=3D=3D=3D=3D
++
++The fsinfo() system call retrieves one of a number of attributes, the ID=
+s of
++which can be found in include/uapi/linux/fsinfo.h::
++
++	FSINFO_ATTR_STATFS	- statfs()-style state
++	FSINFO_ATTR_IDS		- Filesystem IDs
++	FSINFO_ATTR_LIMITS	- Filesystem limits
++	...
++	FSINFO_ATTR_FSINFO_ATTRIBUTE_INFO - Information about an attribute
++	FSINFO_ATTR_FSINFO_ATTRIBUTES - List of available attributes
++	...
++	FSINFO_ATTR_MOUNT_INFO	- Information about the mount topology
++	...
++
++Each attribute can have zero or more values, which can be of one of the
++following types:
++
++ * ``VStruct``.  This is a structure with a version-dependent length.  N=
+ew
++   versions of the kernel may append more fields, though they are not
++   permitted to remove or replace old ones.
++
++   Older applications, expecting an older version of the field, can ask =
+for a
++   shorter struct and will only get the fields they requested; newer
++   applications running on an older kernel will get the extra fields the=
+y
++   requested filled with zeros.  Either way, the system call returns the=
+ size
++   of the internal struct, regardless of how much data it returned.
++
++   This allows for struct-type fields to be extended in future.
++
++ * ``String``.  This is a variable-length string of up to 4096 character=
+s (no
++   NUL character is included).  The returned string will be truncated if=
+ the
++   output buffer is too small.  The total size of the string is returned=
+,
++   regardless of any truncation.
++
++ * ``Opaque``.  This is a variable-length blob of indeterminate structur=
+e.  It
++   may be up to INT_MAX bytes in size.
++
++ * ``List``.  This is a variable-length list of fixed-size structures.  =
+The
++   element size may not vary over time, so the element format must be de=
+signed
++   with care.  The maximum length is INT_MAX bytes, though this depends =
+on the
++   kernel being able to allocate an internal buffer large enough.
++
++Value type is an inherent propery of an attribute and all the values of =
+an
++attribute must be of that type.  Each attribute can have a single value,=
+ a
++sequence of values or a sequence-of-sequences of values.
++
++
++Filesystem API
++=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
++
++If the filesystem wishes to provide a list of queryable attributes, it s=
+hould
++set the table pointer in the superblock::
++
++	const struct fsinfo_attribute *fsinfo_attributes;
++
++terminating it with a blank entry.  Each entry is a ``struct fsinfo_attr=
+ibute``
++and these can be created with a set of helper macros::
++
++	FSINFO_VSTRUCT(A,G)
++	FSINFO_VSTRUCT_N(A,G)
++	FSINFO_VSTRUCT_NM(A,G)
++	FSINFO_STRING(A,G)
++	FSINFO_STRING_N(A,G)
++	FSINFO_STRING_NM(A,G)
++	FSINFO_OPAQUE(A,G)
++	FSINFO_LIST(A,G)
++	FSINFO_LIST_N(A,G)
++
++The names of the macro are a combination of type (vstruct, string, opaqu=
+e and
++list) and an optional qualifier, if the attribute has N values or N lots=
+ of M
++values.  ``A`` is the name of the attribute and ``G`` is a function to g=
+et a
++value for that attribute.
++
++For vstruct- and list-type attributes, it is expected that there is a ma=
+cro
++defined with the name ``A##__STRUCT`` that indicates the structure or el=
+ement
++type.
++
++The get function needs to match the following type::
++
++	int (*get)(struct path *path, struct fsinfo_context *ctx);
++
++where "path" indicates the object to be queried and ctx is a context des=
+cribing
++the parameters and the output buffer.  The function should return the to=
+tal
++size of the data it would like to produce or an error.
++
++The parameter struct looks like::
++
++	struct fsinfo_context {
++		__u32		requested_attr;
++		__u32		Nth;
++		__u32		Mth;
++		bool		want_size_only;
++		unsigned int	buf_size;
++		unsigned int	usage;
++		void		*buffer;
++		...
++	};
++
++The fields relevant to the filesystem are as follows:
++
++ * ``requested_attr``
++
++   Which attribute is being requested.  EOPNOTSUPP should be returned if=
+ the
++   attribute is not supported by the filesystem or the LSM.
++
++ * ``Nth`` and ``Mth``
++
++   Which value of an attribute is being requested.
++
++   For a single-value attribute Nth and Mth will both be 0.
++
++   For a "1D" attribute, Nth will indicate which value and Mth will alwa=
+ys
++   be 0.  Take, for example, FSINFO_ATTR_SERVER_NAME - for a network
++   filesystem, the superblock will be backed by a number of servers.  Th=
+is will
++   return the name of the Nth server.  ENODATA will be returned if Nth g=
+oes
++   beyond the end of the array.
++
++   For a "2D" attribute, Mth will indicate the index in the Nth set of v=
+alues.
++   Take, for example, an attribute for a network filesystems that return=
+s
++   server addresses - each server may have one or more addresses.  This =
+could
++   return the Mth address of the Nth server.  ENODATA should be returned=
+ if the
++   Nth set doesn't exist or the Mth element of the Nth set doesn't exist=
+.
++
++ * ``want_size_only``
++
++   Is set to true if the caller only wants the size of the value so that=
+ the
++   get function doesn't have to make expensive calculations or calls to
++   retrieve the value.
++
++ * ``buf_size``
++
++   This indicates the current size of the buffer.  For the list type and=
+ the
++   opaque type this will be increased if the current buffer won't hold t=
+he
++   value and the filesystem will be called again.
++
++ * ``usage``
++
++   This indicates how much of the buffer has been used so far for an lis=
+t or
++   opaque type attribute.  This is updated by the fsinfo_note_param*()
++   functions.
++
++ * ``buffer``
++
++   This points to the output buffer.  For struct- and string-type attrib=
+utes it
++   will always be big enough; for list- and opaque-type, it will be buf_=
+size in
++   size and will be resized if the returned size is larger than this.
++
++To simplify filesystem code, there will always be at least a minimal buf=
+fer
++available if the ->fsinfo() method gets called - and the filesystem shou=
+ld
++always write what it can into the buffer.  It's possible that the fsinfo=
+()
++system call will then throw the contents away and just return the length=
+.
++
++
++Helper Functions
++=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
++
++The API includes a number of helper functions:
++
++ * ``void fsinfo_set_feature(struct fsinfo_features *ft,
++			     enum fsinfo_feature feature);``
++
++   This function sets a feature flag.
++
++ * ``void fsinfo_clear_feature(struct fsinfo_features *ft,
++			       enum fsinfo_feature feature);``
++
++   This function clears a feature flag.
++
++ * ``void fsinfo_set_unix_features(struct fsinfo_features *ft);``
++
++   Set feature flags appropriate to the features of a standard UNIX file=
+system,
++   such as having numeric UIDS and GIDS; allowing the creation of direct=
+ories,
++   symbolic links, hard links, device files, FIFO and socket files; perm=
+itting
++   sparse files; and having access, change and modification times.
++
++
++Attribute Summary
++=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
++
++To summarise the attributes that are defined::
++
++  Symbolic name				Type
++  =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D	=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D
++  FSINFO_ATTR_STATFS			vstruct
++  FSINFO_ATTR_IDS			vstruct
++  FSINFO_ATTR_LIMITS			vstruct
++  FSINFO_ATTR_SUPPORTS			vstruct
++  FSINFO_ATTR_FEATURES			vstruct
++  FSINFO_ATTR_TIMESTAMP_INFO		vstruct
++  FSINFO_ATTR_VOLUME_ID			string
++  FSINFO_ATTR_VOLUME_UUID		vstruct
++  FSINFO_ATTR_VOLUME_NAME		string
++  FSINFO_ATTR_NAME_ENCODING		string
++  FSINFO_ATTR_NAME_CODEPAGE		string
++  FSINFO_ATTR_FSINFO			vstruct
++  FSINFO_ATTR_FSINFO_ATTRIBUTE_INFO	vstruct
++  FSINFO_ATTR_FSINFO_ATTRIBUTES		list
++  FSINFO_ATTR_MOUNT_INFO		vstruct
++  FSINFO_ATTR_MOUNT_DEVNAME		string
++  FSINFO_ATTR_MOUNT_POINT		string
++  FSINFO_ATTR_MOUNT_CHILDREN		list
++  FSINFO_ATTR_AFS_CELL_NAME		string
++  FSINFO_ATTR_AFS_SERVER_NAME		N =C3=97 string
++  FSINFO_ATTR_AFS_SERVER_ADDRESS	N =C3=97 struct
++
++
++Attribute Catalogue
++=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
++
++A number of the attributes convey information about a filesystem superbl=
+ock:
++
++ *  ``FSINFO_ATTR_STATFS``
++
++    This struct-type attribute gives most of the equivalent data to stat=
+fs(),
++    but with all the fields as unconditional 64-bit or 128-bit integers.=
+  Note
++    that static data like IDs that don't change are retrieved with
++    FSINFO_ATTR_IDS instead.
++
++    Further, superblock flags (such as MS_RDONLY) are not exposed by thi=
+s
++    attribute; rather the parameters must be listed and the attributes p=
+icked
++    out from that.
++
++ *  ``FSINFO_ATTR_IDS``
++
++    This struct-type attribute conveys various identifiers used by the t=
+arget
++    filesystem.  This includes the filesystem name, the NFS filesystem I=
+D, the
++    superblock ID used in notifications, the filesystem magic type numbe=
+r and
++    the primary device ID.
++
++ *  ``FSINFO_ATTR_LIMITS``
++
++    This struct-type attribute conveys the limits on various aspects of =
+a
++    filesystem, such as maximum file, symlink and xattr sizes, maxiumm f=
+ilename
++    and xattr name length, maximum number of symlinks, maximum device ma=
+jor and
++    minor numbers and maximum UID, GID and project ID numbers.
++
++ *  ``FSINFO_ATTR_SUPPORTS``
++
++    This struct-type attribute conveys information about the support the
++    filesystem has for various UAPI features of a filesystem.  This incl=
+udes
++    information about which bits are supported in various masks employed=
+ by the
++    statx system call, what FS_IOC_* flags are supported by ioctls and w=
+hat
++    DOS/Windows file attribute flags are supported.
++
++ *  ``FSINFO_ATTR_TIMESTAMP_INFO``
++
++    This struct-type attribute conveys information about the resolution =
+and
++    range of the timestamps available in a filesystem.  The resolutions =
+are
++    given as a mantissa and exponent (resolution =3D mantissa * 10^expon=
+ent
++    seconds), where the exponent can be negative to indicate a sub-secon=
+d
++    resolution (-9 being nanoseconds, for example).
++
++ *  ``FSINFO_ATTR_VOLUME_ID``
++
++    This is a string-type attribute that conveys the superblock identifi=
+er for
++    the volume.  By default it will be filled in from the contents of s_=
+id from
++    the superblock.  For a block-based filesystem, for example, this mig=
+ht be
++    the name of the primary block device.
++
++ *  ``FSINFO_ATTR_VOLUME_UUID``
++
++    This is a struct-type attribute that conveys the UUID identifier for=
+ the
++    volume.  By default it will be filled in from the contents of s_uuid=
+ from
++    the superblock.  If this doesn't exist, it will be an entirely zeros=
+.
++
++ *  ``FSINFO_ATTR_VOLUME_NAME``
++
++    This is a string-type attribute that conveys the name of the volume.=
+  By
++    default it will return EOPNOTSUPP.  For a disk-based filesystem, it =
+might
++    convey the partition label; for a network-based filesystem, it might=
+ convey
++    the name of the remote volume.
++
++ *  ``FSINFO_ATTR_FEATURES``
++
++    This is a special attribute, being a set of single-bit feature flags=
+,
++    formatted as struct-type attribute.  The meanings of the feature bit=
+s are
++    listed below - see the "Feature Bit Catalogue" section.  The feature=
+ bits
++    are grouped numerically into bytes, such that features 0-7 are in by=
+te 0,
++    8-15 are in byte 1, 16-23 in byte 2 and so on.
++
++    Any feature bit that's not supported by the kernel will be set to fa=
+lse if
++    asked for.  The highest supported feature can be obtained from attri=
+bute
++    "FSINFO_ATTR_FSINFO".
++
++
++Some attributes give information about fsinfo itself:
++
++ *  ``FSINFO_ATTR_FSINFO_ATTRIBUTE_INFO``
++
++    This struct-type attribute gives metadata about the attribute with t=
+he ID
++    specified by the Nth parameter, including its type, default size and
++    element size.
++
++ *  ``FSINFO_ATTR_FSINFO_ATTRIBUTES``
++
++    This list-type attribute gives a list of the attribute IDs available=
+ at the
++    point of reference.  FSINFO_ATTR_FSINFO_ATTRIBUTE_INFO can then be u=
+sed to
++    query each attribute.
++
++ *  ``FSINFO_ATTR_FSINFO``
++
++    This struct-type attribute gives information about the fsinfo() syst=
+em call
++    itself, including the maximum number of feature bits supported.
++
++
++Then there are filesystem-specific attributes, e.g.:
++
++ *  ``FSINFO_ATTR_AFS_CELL_NAME``
++
++    This is a string-type attribute that retrieves the AFS cell name of =
+the
++    target object.
++
++ *  ``FSINFO_ATTR_AFS_SERVER_NAME``
++
++    This is a string-type attribute that conveys the name of the Nth ser=
+ver
++    backing a network-filesystem superblock.
++
++ *  ``FSINFO_ATTR_AFS_SERVER_ADDRESSES``
++
++    This is a list-type attribute that conveys the Mth address of the Nt=
+h
++    server, as returned by FSINFO_ATTR_SERVER_NAME.
++
++
++Feature Bit Catalogue
++=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
++
++The feature bits convey single true/false assertions about a specific in=
+stance
++of a filesystem (ie. a specific superblock).  They are accessed using th=
+e
++"FSINFO_ATTR_FEATURE" attribute:
++
++ *  ``FSINFO_FEAT_IS_KERNEL_FS``
++ *  ``FSINFO_FEAT_IS_BLOCK_FS``
++ *  ``FSINFO_FEAT_IS_FLASH_FS``
++ *  ``FSINFO_FEAT_IS_NETWORK_FS``
++ *  ``FSINFO_FEAT_IS_AUTOMOUNTER_FS``
++ *  ``FSINFO_FEAT_IS_MEMORY_FS``
++
++    These indicate what kind of filesystem the target is: kernel API (pr=
+oc),
++    block-based (ext4), flash/nvm-based (jffs2), remote over the network=
+ (NFS),
++    local quasi-filesystem that acts as a tray of mountpoints (autofs), =
+plain
++    in-memory filesystem (shmem).
++
++ *  ``FSINFO_FEAT_AUTOMOUNTS``
++
++    This indicate if a filesystem may have objects that are automount po=
+ints.
++
++ *  ``FSINFO_FEAT_ADV_LOCKS``
++ *  ``FSINFO_FEAT_MAND_LOCKS``
++ *  ``FSINFO_FEAT_LEASES``
++
++    These indicate if a filesystem supports advisory locks, mandatory lo=
+cks or
++    leases.
++
++ *  ``FSINFO_FEAT_UIDS``
++ *  ``FSINFO_FEAT_GIDS``
++ *  ``FSINFO_FEAT_PROJIDS``
++
++    These indicate if a filesystem supports/stores/transports numeric us=
+er IDs,
++    group IDs or project IDs.  The "FSINFO_ATTR_LIMITS" attribute can be=
+ used
++    to find out the upper limits on the IDs values.
++
++ *  ``FSINFO_FEAT_STRING_USER_IDS``
++
++    This indicates if a filesystem supports/stores/transports string use=
+r
++    identifiers.
++
++ *  ``FSINFO_FEAT_GUID_USER_IDS``
++
++    This indicates if a filesystem supports/stores/transports Windows GU=
+IDs as
++    user identifiers (eg. ntfs).
++
++ *  ``FSINFO_FEAT_WINDOWS_ATTRS``
++
++    This indicates if a filesystem supports Windows FILE_* attribute bit=
+s
++    (eg. cifs, jfs).  The "FSINFO_ATTR_SUPPORTS" attribute can be used t=
+o find
++    out which windows file attributes are supported by the filesystem.
++
++ *  ``FSINFO_FEAT_USER_QUOTAS``
++ *  ``FSINFO_FEAT_GROUP_QUOTAS``
++ *  ``FSINFO_FEAT_PROJECT_QUOTAS``
++
++    These indicate if a filesystem supports quotas for users, groups or
++    projects.
++
++ *  ``FSINFO_FEAT_XATTRS``
++
++    These indicate if a filesystem supports extended attributes.  The
++    "FSINFO_ATTR_LIMITS" attribute can be used to find out the upper lim=
+its on
++    the supported name and body lengths.
++
++ *  ``FSINFO_FEAT_JOURNAL``
++ *  ``FSINFO_FEAT_DATA_IS_JOURNALLED``
++
++    These indicate whether the filesystem has a journal and whether data
++    changes are logged to it.
++
++ *  ``FSINFO_FEAT_O_SYNC``
++ *  ``FSINFO_FEAT_O_DIRECT``
++
++    These indicate whether the filesystem supports the O_SYNC and O_DIRE=
+CT
++    flags.
++
++ *  ``FSINFO_FEAT_VOLUME_ID``
++ *  ``FSINFO_FEAT_VOLUME_UUID``
++ *  ``FSINFO_FEAT_VOLUME_NAME``
++ *  ``FSINFO_FEAT_VOLUME_FSID``
++
++    These indicate whether ID, UUID, name and FSID identifiers actually =
+exist
++    in the filesystem and thus might be considered persistent.
++
++ *  ``FSINFO_FEAT_IVER_ALL_CHANGE``
++ *  ``FSINFO_FEAT_IVER_DATA_CHANGE``
++ *  ``FSINFO_FEAT_IVER_MONO_INCR``
++
++    These indicate whether i_version in the inode is supported and, if s=
+o, what
++    mode it operates in.  The first two indicate if it's changed for any=
+ data
++    or metadata change, or whether it's only changed for any data change=
+s; the
++    last indicates whether or not it's monotonically increasing for each=
+ such
++    change.
++
++ *  ``FSINFO_FEAT_HARD_LINKS``
++ *  ``FSINFO_FEAT_HARD_LINKS_1DIR``
++
++    These indicate whether the filesystem can have hard links made in it=
+, and
++    whether they can be made between directory or only within the same
++    directory.
++
++ *  ``FSINFO_FEAT_DIRECTORIES``
++ *  ``FSINFO_FEAT_SYMLINKS``
++ *  ``FSINFO_FEAT_DEVICE_FILES``
++ *  ``FSINFO_FEAT_UNIX_SPECIALS``
++
++    These indicate whether directories; symbolic links; device files; or=
+ pipes
++    and sockets can be made within the filesystem.
++
++ *  ``FSINFO_FEAT_RESOURCE_FORKS``
++
++    This indicates if the filesystem supports resource forks.
++
++ *  ``FSINFO_FEAT_NAME_CASE_INDEP``
++ *  ``FSINFO_FEAT_NAME_NON_UTF8``
++ *  ``FSINFO_FEAT_NAME_HAS_CODEPAGE``
++
++    These indicate if the filesystem supports case-independent file name=
+s,
++    whether the filenames are non-utf8 (see the "FSINFO_ATTR_NAME_ENCODI=
+NG"
++    attribute) and whether a codepage is in use to transliterate them (s=
+ee
++    the "FSINFO_ATTR_NAME_CODEPAGE" attribute).
++
++ *  ``FSINFO_FEAT_SPARSE``
++
++    This indicates if a filesystem supports sparse files.
++
++ *  ``FSINFO_FEAT_NOT_PERSISTENT``
++
++    This indicates if a filesystem is not persistent.
++
++ *  ``FSINFO_FEAT_NO_UNIX_MODE``
++
++    This indicates if a filesystem doesn't support UNIX mode bits (thoug=
+h they
++    may be manufactured from other bits, such as Windows file attribute =
+flags).
++
++ *  ``FSINFO_FEAT_HAS_ATIME``
++ *  ``FSINFO_FEAT_HAS_BTIME``
++ *  ``FSINFO_FEAT_HAS_CTIME``
++ *  ``FSINFO_FEAT_HAS_MTIME``
++
++    These indicate which timestamps a filesystem supports (access, birth=
+,
++    change, modify).  The range and resolutions can be queried with the
++    "FSINFO_ATTR_TIMESTAMPS" attribute).
 
-
-I don't agree. The spec explicitly states "If this feature bit is set
-to 0, then the device has same access to memory addresses supplied to it
-as the driver has." That ain't any guest memory, but the addresses
-supplied to it. BTW this is how channel I/O works as well: the channel
-program authorizes the device to use the memory locations specified by
-the channel program, for as long as the channel program is executed.
-That's how channel I/O does isolation without an architected IOMMU.
-
-Can you please show me the words in the specification that say, the
-device has to have access to the entire guest memory all the time?
-
-Maybe I have to understand all the intentions behind
-VIRTIO_F_ACCESS_PLATFORM better. I've read the spec several times, but I
-still have the feeling, when we discuss, that I didn't get it right.
-IOMMUs and PCI style DMA are unfortunately not my bread and butter.
-
-I only know that the devices do not need any new device capability (I
-assume VIRTIO_F_ACCESS_PLATFORM does express a device capability), to
-work with protected virtualization. Unless one defines
-VIRTIO_F_ACCESS_PLATFORM is the capability that the device won't poke
-*arbitrary* guest memory.  From that perspective mandating the flag
-feels wrong. (CCW devices are never allowed to poke arbitrary
-memory.)
-
-Yet, if VIRTIO_F_ACCESS_PLATFORM is a flag that every nice and modern
-virtio device should have (i.e. a lack of it means kida broken), then I
-have the feeling virtio-ccw should probably evolve in the direction, that
-having VIRTIO_F_ACCESS_PLATFORM set does not hurt.
-
-I have to think some more.
-
-> 
-> > > I don't see how this patch does this.
-> > 
-> > I do get your point. I don't know of a good way to check that DMA API
-> > is giving us addresses that are actually physical addresses, and the
-> > situation you describe definitely has some risk to it.
-> 
-> One way would be to extend the DMA API with such an API.
-
-Seems Christoph does not like that idea.
-
-> 
-> Another would be to make virtio always use DMA API
-> and hide the logic in there.
-
-I thought Christoph wants that, but I was wrong.
-
-> This second approach is not easy, in particular since DMA API adds
-> a bunch of overhead which we need to find ways to
-> measure and mitigate.
-> 
-
-Agreed. From s390 perspective, I think it ain't to bad if we get GFP_DMA.
-
-Many thanks for your patience!
-Halil
-
-[..]
 
