@@ -4,50 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 62EC0C35641
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 08:05:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 167CBC35641
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 08:05:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 34E8C20801
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 08:05:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D582224670
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 08:05:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582272350;
-	bh=idBDqzu2y3o0QPiMY39TEUWKHEZlHWZnr1qSgzMQ1lU=;
+	s=default; t=1582272354;
+	bh=ZknrHGTXKbZ2v9A+wXYcE5FK+LWxVzwyBYWT016O4gg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=qp8A1XciFRWzpBfrNzh+wJ/lVGdgP7p9YTc8SZOCuAsS2lui8jySqLZPNn4jcMbOD
-	 5Ufz1I2bYb69gQkP8sCE81qQ60ajee6GU4+PC7zu0ycHNG09vocy0+X9BK4oOLT2tP
-	 qafn5KKTqF50euwssuP0Ml5BGbYgj+gqikKjrL40=
+	b=L0fskELxEK5y1hFwLX+TBF5z2WX5KXclQMHQ3/xaAZGq1Pg8nuxSsthF4Sss8CAKx
+	 f32/tTm5Jy6AbZ12gxF/fOqnTU4Oae2rTKakXzy/17FMnWmq6i3EwBFHD5pIzebUXJ
+	 yyksesqsik59pZRUs81O5TMdDA51CkDySdd786BQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731501AbgBUIFt (ORCPT
+        id S1731706AbgBUIFx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Feb 2020 03:05:49 -0500
-Received: from mail.kernel.org ([198.145.29.99]:39210 "EHLO mail.kernel.org"
+        Fri, 21 Feb 2020 03:05:53 -0500
+Received: from mail.kernel.org ([198.145.29.99]:39424 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731845AbgBUIFi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Feb 2020 03:05:38 -0500
+        id S1731500AbgBUIFr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 21 Feb 2020 03:05:47 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id ECF92222C4;
-        Fri, 21 Feb 2020 08:05:37 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id F0DA220801;
+        Fri, 21 Feb 2020 08:05:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1582272338;
-        bh=idBDqzu2y3o0QPiMY39TEUWKHEZlHWZnr1qSgzMQ1lU=;
+        s=default; t=1582272346;
+        bh=ZknrHGTXKbZ2v9A+wXYcE5FK+LWxVzwyBYWT016O4gg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=aGj4lty5ufKxA1XYmT40vHoQ2GvOtUHJMde98JIkb1ubLUfvswVbJo3gIqRFpSaGp
-         2AWmR4PFKWtlnckRpLkJo/SCQ0xZ/2BR+F5lnY/l5Fn+Dvy0tuM3Ny/CuUQwCA5qM7
-         BhG4bYBc1EUilbUJXz30Zdnp4hU1n7ZUk7VMxrPA=
+        b=qDtyLDrc0n9galqvo+m0nSQmjE3p6TZNB5VSA9QnfXJ7WYQqrS2APlpV3MTj76jZi
+         Q+oI7C1i/Bmi/eaw9eTZ7TrOgtlgUd1TGgOqgivBzEsH/1j0tU2e379A4whBLGKjIY
+         BdMpqpGtx9JxPxWc2GzFlVi8elFFS6uQd0ufXxig=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        =?UTF-8?q?Pali=20Roh=C3=A1r?= <pali.rohar@gmail.com>,
-        Jan Kara <jack@suse.cz>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 069/344] udf: Allow writing to Rewritable partitions
-Date:   Fri, 21 Feb 2020 08:37:48 +0100
-Message-Id: <20200221072355.267881947@linuxfoundation.org>
+        stable@vger.kernel.org, Niklas Schnelle <schnelle@linux.ibm.com>,
+        Peter Oberparleiter <oberpar@linux.ibm.com>,
+        Vasily Gorbik <gor@linux.ibm.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.4 072/344] s390/pci: Fix possible deadlock in recover_store()
+Date:   Fri, 21 Feb 2020 08:37:51 +0100
+Message-Id: <20200221072355.546226966@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200221072349.335551332@linuxfoundation.org>
 References: <20200221072349.335551332@linuxfoundation.org>
@@ -60,55 +61,214 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jan Kara <jack@suse.cz>
+From: Niklas Schnelle <schnelle@linux.ibm.com>
 
-[ Upstream commit 15fb05fd286ac57a0802d71624daeb5c1c2d5b07 ]
+[ Upstream commit 576c75e36c689bec6a940e807bae27291ab0c0de ]
 
-UDF 2.60 standard states in section 2.2.14.2:
+With zpci_disable() working, lockdep detected a potential deadlock
+(lockdep output at the end).
 
-    A partition with Access Type 3 (rewritable) shall define a Freed
-    Space Bitmap or a Freed Space Table, see 2.3.3. All other partitions
-    shall not define a Freed Space Bitmap or a Freed Space Table.
+The deadlock is between recovering a PCI function via the
 
-    Rewritable partitions are used on media that require some form of
-    preprocessing before re-writing data (for example legacy MO). Such
-    partitions shall use Access Type 3.
+/sys/bus/pci/devices/<dev>/recover
 
-    Overwritable partitions are used on media that do not require
-    preprocessing before overwriting data (for example: CD-RW, DVD-RW,
-    DVD+RW, DVD-RAM, BD-RE, HD DVD-Rewritable). Such partitions shall
-    use Access Type 4.
+attribute vs powering it off via
 
-however older versions of the standard didn't have this wording and
-there are tools out there that create UDF filesystems with rewritable
-partitions but that don't contain a Freed Space Bitmap or a Freed Space
-Table on media that does not require pre-processing before overwriting a
-block. So instead of forcing media with rewritable partition read-only,
-base this decision on presence of a Freed Space Bitmap or a Freed Space
-Table.
+/sys/bus/pci/slots/<slot>/power.
 
-Reported-by: Pali Rohár <pali.rohar@gmail.com>
-Reviewed-by: Pali Rohár <pali.rohar@gmail.com>
-Fixes: b085fbe2ef7f ("udf: Fix crash during mount")
-Link: https://lore.kernel.org/linux-fsdevel/20200112144735.hj2emsoy4uwsouxz@pali
-Signed-off-by: Jan Kara <jack@suse.cz>
+The fix is analogous to the changes in commit 0ee223b2e1f6 ("scsi: core:
+Avoid that SCSI device removal through sysfs triggers a deadlock")
+that fixed a potential deadlock on removing a SCSI device via sysfs.
+
+[  204.830107] ======================================================
+[  204.830109] WARNING: possible circular locking dependency detected
+[  204.830111] 5.5.0-rc2-06072-gbc03ecc9a672 #6 Tainted: G        W
+[  204.830112] ------------------------------------------------------
+[  204.830113] bash/1034 is trying to acquire lock:
+[  204.830115] 0000000192a1a610 (kn->count#200){++++}, at: kernfs_remove_by_name_ns+0x5c/0xa8
+[  204.830122]
+               but task is already holding lock:
+[  204.830123] 00000000c16134a8 (pci_rescan_remove_lock){+.+.}, at: pci_stop_and_remove_bus_device_locked+0x26/0x48
+[  204.830128]
+               which lock already depends on the new lock.
+
+[  204.830129]
+               the existing dependency chain (in reverse order) is:
+[  204.830130]
+               -> #1 (pci_rescan_remove_lock){+.+.}:
+[  204.830134]        validate_chain+0x93a/0xd08
+[  204.830136]        __lock_acquire+0x4ae/0x9d0
+[  204.830137]        lock_acquire+0x114/0x280
+[  204.830140]        __mutex_lock+0xa2/0x960
+[  204.830142]        mutex_lock_nested+0x32/0x40
+[  204.830145]        recover_store+0x4c/0xa8
+[  204.830147]        kernfs_fop_write+0xe6/0x218
+[  204.830151]        vfs_write+0xb0/0x1b8
+[  204.830152]        ksys_write+0x6c/0xf8
+[  204.830154]        system_call+0xd8/0x2d8
+[  204.830155]
+               -> #0 (kn->count#200){++++}:
+[  204.830187]        check_noncircular+0x1e6/0x240
+[  204.830189]        check_prev_add+0xfc/0xdb0
+[  204.830190]        validate_chain+0x93a/0xd08
+[  204.830192]        __lock_acquire+0x4ae/0x9d0
+[  204.830193]        lock_acquire+0x114/0x280
+[  204.830194]        __kernfs_remove.part.0+0x2e4/0x360
+[  204.830196]        kernfs_remove_by_name_ns+0x5c/0xa8
+[  204.830198]        remove_files.isra.0+0x4c/0x98
+[  204.830199]        sysfs_remove_group+0x66/0xc8
+[  204.830201]        sysfs_remove_groups+0x46/0x68
+[  204.830204]        device_remove_attrs+0x52/0x90
+[  204.830207]        device_del+0x182/0x418
+[  204.830208]        pci_remove_bus_device+0x8a/0x130
+[  204.830210]        pci_stop_and_remove_bus_device_locked+0x3a/0x48
+[  204.830212]        disable_slot+0x68/0x100
+[  204.830213]        power_write_file+0x7c/0x130
+[  204.830215]        kernfs_fop_write+0xe6/0x218
+[  204.830217]        vfs_write+0xb0/0x1b8
+[  204.830218]        ksys_write+0x6c/0xf8
+[  204.830220]        system_call+0xd8/0x2d8
+[  204.830221]
+               other info that might help us debug this:
+
+[  204.830223]  Possible unsafe locking scenario:
+
+[  204.830224]        CPU0                    CPU1
+[  204.830225]        ----                    ----
+[  204.830226]   lock(pci_rescan_remove_lock);
+[  204.830227]                                lock(kn->count#200);
+[  204.830229]                                lock(pci_rescan_remove_lock);
+[  204.830231]   lock(kn->count#200);
+[  204.830233]
+                *** DEADLOCK ***
+
+[  204.830234] 4 locks held by bash/1034:
+[  204.830235]  #0: 00000001b6fbc498 (sb_writers#4){.+.+}, at: vfs_write+0x158/0x1b8
+[  204.830239]  #1: 000000018c9f5090 (&of->mutex){+.+.}, at: kernfs_fop_write+0xaa/0x218
+[  204.830242]  #2: 00000001f7da0810 (kn->count#235){.+.+}, at: kernfs_fop_write+0xb6/0x218
+[  204.830245]  #3: 00000000c16134a8 (pci_rescan_remove_lock){+.+.}, at: pci_stop_and_remove_bus_device_locked+0x26/0x48
+[  204.830248]
+               stack backtrace:
+[  204.830250] CPU: 2 PID: 1034 Comm: bash Tainted: G        W         5.5.0-rc2-06072-gbc03ecc9a672 #6
+[  204.830252] Hardware name: IBM 8561 T01 703 (LPAR)
+[  204.830253] Call Trace:
+[  204.830257]  [<00000000c05e10c0>] show_stack+0x88/0xf0
+[  204.830260]  [<00000000c112dca4>] dump_stack+0xa4/0xe0
+[  204.830261]  [<00000000c0694c06>] check_noncircular+0x1e6/0x240
+[  204.830263]  [<00000000c0695bec>] check_prev_add+0xfc/0xdb0
+[  204.830264]  [<00000000c06971da>] validate_chain+0x93a/0xd08
+[  204.830266]  [<00000000c06994c6>] __lock_acquire+0x4ae/0x9d0
+[  204.830267]  [<00000000c069867c>] lock_acquire+0x114/0x280
+[  204.830269]  [<00000000c09ca15c>] __kernfs_remove.part.0+0x2e4/0x360
+[  204.830270]  [<00000000c09cb5c4>] kernfs_remove_by_name_ns+0x5c/0xa8
+[  204.830272]  [<00000000c09cee14>] remove_files.isra.0+0x4c/0x98
+[  204.830274]  [<00000000c09cf2ae>] sysfs_remove_group+0x66/0xc8
+[  204.830276]  [<00000000c09cf356>] sysfs_remove_groups+0x46/0x68
+[  204.830278]  [<00000000c0e3dfe2>] device_remove_attrs+0x52/0x90
+[  204.830280]  [<00000000c0e40382>] device_del+0x182/0x418
+[  204.830281]  [<00000000c0dcfd7a>] pci_remove_bus_device+0x8a/0x130
+[  204.830283]  [<00000000c0dcfe92>] pci_stop_and_remove_bus_device_locked+0x3a/0x48
+[  204.830285]  [<00000000c0de7190>] disable_slot+0x68/0x100
+[  204.830286]  [<00000000c0de6514>] power_write_file+0x7c/0x130
+[  204.830288]  [<00000000c09cc846>] kernfs_fop_write+0xe6/0x218
+[  204.830290]  [<00000000c08f3480>] vfs_write+0xb0/0x1b8
+[  204.830291]  [<00000000c08f378c>] ksys_write+0x6c/0xf8
+[  204.830293]  [<00000000c1154374>] system_call+0xd8/0x2d8
+[  204.830294] INFO: lockdep is turned off.
+
+Signed-off-by: Niklas Schnelle <schnelle@linux.ibm.com>
+Reviewed-by: Peter Oberparleiter <oberpar@linux.ibm.com>
+Signed-off-by: Vasily Gorbik <gor@linux.ibm.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/udf/super.c | 1 -
- 1 file changed, 1 deletion(-)
+ arch/s390/pci/pci_sysfs.c | 63 ++++++++++++++++++++++++++-------------
+ 1 file changed, 42 insertions(+), 21 deletions(-)
 
-diff --git a/fs/udf/super.c b/fs/udf/super.c
-index 8c28e93e9b730..008bf96b1732d 100644
---- a/fs/udf/super.c
-+++ b/fs/udf/super.c
-@@ -1035,7 +1035,6 @@ static int check_partition_desc(struct super_block *sb,
- 	switch (le32_to_cpu(p->accessType)) {
- 	case PD_ACCESS_TYPE_READ_ONLY:
- 	case PD_ACCESS_TYPE_WRITE_ONCE:
--	case PD_ACCESS_TYPE_REWRITABLE:
- 	case PD_ACCESS_TYPE_NONE:
- 		goto force_ro;
- 	}
+diff --git a/arch/s390/pci/pci_sysfs.c b/arch/s390/pci/pci_sysfs.c
+index a433ba01a3175..215f17437a4f6 100644
+--- a/arch/s390/pci/pci_sysfs.c
++++ b/arch/s390/pci/pci_sysfs.c
+@@ -13,6 +13,8 @@
+ #include <linux/stat.h>
+ #include <linux/pci.h>
+ 
++#include "../../../drivers/pci/pci.h"
++
+ #include <asm/sclp.h>
+ 
+ #define zpci_attr(name, fmt, member)					\
+@@ -49,31 +51,50 @@ static DEVICE_ATTR_RO(mio_enabled);
+ static ssize_t recover_store(struct device *dev, struct device_attribute *attr,
+ 			     const char *buf, size_t count)
+ {
++	struct kernfs_node *kn;
+ 	struct pci_dev *pdev = to_pci_dev(dev);
+ 	struct zpci_dev *zdev = to_zpci(pdev);
+-	int ret;
+-
+-	if (!device_remove_file_self(dev, attr))
+-		return count;
+-
++	int ret = 0;
++
++	/* Can't use device_remove_self() here as that would lead us to lock
++	 * the pci_rescan_remove_lock while holding the device' kernfs lock.
++	 * This would create a possible deadlock with disable_slot() which is
++	 * not directly protected by the device' kernfs lock but takes it
++	 * during the device removal which happens under
++	 * pci_rescan_remove_lock.
++	 *
++	 * This is analogous to sdev_store_delete() in
++	 * drivers/scsi/scsi_sysfs.c
++	 */
++	kn = sysfs_break_active_protection(&dev->kobj, &attr->attr);
++	WARN_ON_ONCE(!kn);
++	/* device_remove_file() serializes concurrent calls ignoring all but
++	 * the first
++	 */
++	device_remove_file(dev, attr);
++
++	/* A concurrent call to recover_store() may slip between
++	 * sysfs_break_active_protection() and the sysfs file removal.
++	 * Once it unblocks from pci_lock_rescan_remove() the original pdev
++	 * will already be removed.
++	 */
+ 	pci_lock_rescan_remove();
+-	pci_stop_and_remove_bus_device(pdev);
+-	ret = zpci_disable_device(zdev);
+-	if (ret)
+-		goto error;
+-
+-	ret = zpci_enable_device(zdev);
+-	if (ret)
+-		goto error;
+-
+-	pci_rescan_bus(zdev->bus);
++	if (pci_dev_is_added(pdev)) {
++		pci_stop_and_remove_bus_device(pdev);
++		ret = zpci_disable_device(zdev);
++		if (ret)
++			goto out;
++
++		ret = zpci_enable_device(zdev);
++		if (ret)
++			goto out;
++		pci_rescan_bus(zdev->bus);
++	}
++out:
+ 	pci_unlock_rescan_remove();
+-
+-	return count;
+-
+-error:
+-	pci_unlock_rescan_remove();
+-	return ret;
++	if (kn)
++		sysfs_unbreak_active_protection(kn);
++	return ret ? ret : count;
+ }
+ static DEVICE_ATTR_WO(recover);
+ 
 -- 
 2.20.1
 
