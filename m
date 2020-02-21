@@ -4,50 +4,52 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E5D66C35646
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 07:59:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 25372C35642
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 08:00:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B71A524650
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 07:59:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DF6D22073A
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 08:00:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582271997;
-	bh=XoLjqGzT8TlCe9ldxSJPulUGD353dP5/aXwrHZtpYuw=;
+	s=default; t=1582272002;
+	bh=4MDVES3THZ/HyptygoMnFX/brvs0LcNdsxCNUjLPTbk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ebLX1ubdlTUiAIEwiWhsCsXAcY8nBbz2ksZ5NKBV4LSQjxpMezgW5DdMTgWn/5a0a
-	 GZrKTr5ZbnQdfMY/aXAdrDu64q6+pvTt+R6SB0ZCma9WKf7//i0fSnxq6GeZng2uo/
-	 Nvn7HlKJf7lGyaiFTuLoMp/MC6D4DbPYPAh6x2HU=
+	b=p7ON2hZHyb3bsgw8TpGrTtRHbOFOdgGlNaGol6WFljhSpEqxDx+HMkU3xFUDClhlG
+	 j+C2JZ0FhFCLTfUk5QmLAoJRs8i3pETE+ZFxOgH82pPVUyCn/1yQUx48qctBbiOZB+
+	 phA/Sm6gEHt1qJmmaDQXSGg+vHFmP2K6g19YzYCE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730975AbgBUH74 (ORCPT
+        id S1730991AbgBUIAA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Feb 2020 02:59:56 -0500
-Received: from mail.kernel.org ([198.145.29.99]:60034 "EHLO mail.kernel.org"
+        Fri, 21 Feb 2020 03:00:00 -0500
+Received: from mail.kernel.org ([198.145.29.99]:60184 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730401AbgBUH7x (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Feb 2020 02:59:53 -0500
+        id S1730982AbgBUH76 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 21 Feb 2020 02:59:58 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B818A2073A;
-        Fri, 21 Feb 2020 07:59:51 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3B4FB206ED;
+        Fri, 21 Feb 2020 07:59:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1582271992;
-        bh=XoLjqGzT8TlCe9ldxSJPulUGD353dP5/aXwrHZtpYuw=;
+        s=default; t=1582271997;
+        bh=4MDVES3THZ/HyptygoMnFX/brvs0LcNdsxCNUjLPTbk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=UOSx7aV9LTuL20Qkk+0P7MNUqsbSREMqgScSlvflf42pRuX8PAsKSF+vRohjE8yVp
-         18kBMAKtkVnqcewt9EUyxJTHFBZgQZ/0iyqk5NQZiByDx+iKDXYFV/l0xGa4FotMXS
-         F+avV7wnvcDtoaYYwUCwo7AmDvV0JVduIl1CB9rg=
+        b=qlo08bQOQLosRIi6x6tlJhV4GhWDPOdx7R7nBS3NThJlzmQtKP/n81SV0RaAIOV7v
+         kALMf1n+J3ZYYIc9uwm1R/l4MwIihMhNP1yjg8Fb2l+dNvB6vJSvIRXHYDWi39xZrE
+         FO7Tz5b3QbVWwXR98nSFl4MZx17Z81xVV74TF/B8=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Dan Carpenter <dan.carpenter@oracle.com>,
-        Coly Li <colyli@suse.de>, Jens Axboe <axboe@kernel.dk>,
+        stable@vger.kernel.org, kbuild test robot <lkp@intel.com>,
+        "Joel Fernandes (Google)" <joel@joelfernandes.org>,
+        Amol Grover <frextrite@gmail.com>,
+        Keith Busch <kbusch@kernel.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.5 375/399] bcache: fix incorrect data type usage in btree_flush_write()
-Date:   Fri, 21 Feb 2020 08:41:40 +0100
-Message-Id: <20200221072436.813495037@linuxfoundation.org>
+Subject: [PATCH 5.5 377/399] nvmet: Pass lockdep expression to RCU lists
+Date:   Fri, 21 Feb 2020 08:41:42 +0100
+Message-Id: <20200221072436.950442563@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200221072402.315346745@linuxfoundation.org>
 References: <20200221072402.315346745@linuxfoundation.org>
@@ -60,84 +62,50 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Coly Li <colyli@suse.de>
+From: Amol Grover <frextrite@gmail.com>
 
-[ Upstream commit d1c3cc34f5a78b38d2b809b289d912c3560545df ]
+[ Upstream commit 4ac76436a6d07dec1c3c766f234aa787a16e8f65 ]
 
-Dan Carpenter points out that from commit 2aa8c529387c ("bcache: avoid
-unnecessary btree nodes flushing in btree_flush_write()"), there is a
-incorrect data type usage which leads to the following static checker
-warning:
-	drivers/md/bcache/journal.c:444 btree_flush_write()
-	warn: 'ref_nr' unsigned <= 0
+ctrl->subsys->namespaces and subsys->namespaces are traversed with
+list_for_each_entry_rcu outside an RCU read-side critical section but
+under the protection of ctrl->subsys->lock and subsys->lock respectively.
 
-drivers/md/bcache/journal.c
-   422  static void btree_flush_write(struct cache_set *c)
-   423  {
-   424          struct btree *b, *t, *btree_nodes[BTREE_FLUSH_NR];
-   425          unsigned int i, nr, ref_nr;
-                                    ^^^^^^
+Hence, add the corresponding lockdep expression to the list traversal
+primitive to silence false-positive lockdep warnings, and harden RCU
+lists.
 
-   426          atomic_t *fifo_front_p, *now_fifo_front_p;
-   427          size_t mask;
-   428
-   429          if (c->journal.btree_flushing)
-   430                  return;
-   431
-   432          spin_lock(&c->journal.flush_write_lock);
-   433          if (c->journal.btree_flushing) {
-   434                  spin_unlock(&c->journal.flush_write_lock);
-   435                  return;
-   436          }
-   437          c->journal.btree_flushing = true;
-   438          spin_unlock(&c->journal.flush_write_lock);
-   439
-   440          /* get the oldest journal entry and check its refcount */
-   441          spin_lock(&c->journal.lock);
-   442          fifo_front_p = &fifo_front(&c->journal.pin);
-   443          ref_nr = atomic_read(fifo_front_p);
-   444          if (ref_nr <= 0) {
-                    ^^^^^^^^^^^
-Unsigned can't be less than zero.
-
-   445                  /*
-   446                   * do nothing if no btree node references
-   447                   * the oldest journal entry
-   448                   */
-   449                  spin_unlock(&c->journal.lock);
-   450                  goto out;
-   451          }
-   452          spin_unlock(&c->journal.lock);
-
-As the warning information indicates, local varaible ref_nr in unsigned
-int type is wrong, which does not matche atomic_read() and the "<= 0"
-checking.
-
-This patch fixes the above error by defining local variable ref_nr as
-int type.
-
-Fixes: 2aa8c529387c ("bcache: avoid unnecessary btree nodes flushing in btree_flush_write()")
-Reported-by: Dan Carpenter <dan.carpenter@oracle.com>
-Signed-off-by: Coly Li <colyli@suse.de>
-Signed-off-by: Jens Axboe <axboe@kernel.dk>
+Reported-by: kbuild test robot <lkp@intel.com>
+Reviewed-by: Joel Fernandes (Google) <joel@joelfernandes.org>
+Signed-off-by: Amol Grover <frextrite@gmail.com>
+Signed-off-by: Keith Busch <kbusch@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/md/bcache/journal.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ drivers/nvme/target/core.c | 6 ++++--
+ 1 file changed, 4 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/md/bcache/journal.c b/drivers/md/bcache/journal.c
-index 33ddc5269e8dc..6730820780b06 100644
---- a/drivers/md/bcache/journal.c
-+++ b/drivers/md/bcache/journal.c
-@@ -422,7 +422,8 @@ err:
- static void btree_flush_write(struct cache_set *c)
- {
- 	struct btree *b, *t, *btree_nodes[BTREE_FLUSH_NR];
--	unsigned int i, nr, ref_nr;
-+	unsigned int i, nr;
-+	int ref_nr;
- 	atomic_t *fifo_front_p, *now_fifo_front_p;
- 	size_t mask;
+diff --git a/drivers/nvme/target/core.c b/drivers/nvme/target/core.c
+index 28438b833c1b0..35810a0a8d212 100644
+--- a/drivers/nvme/target/core.c
++++ b/drivers/nvme/target/core.c
+@@ -555,7 +555,8 @@ int nvmet_ns_enable(struct nvmet_ns *ns)
+ 	} else {
+ 		struct nvmet_ns *old;
+ 
+-		list_for_each_entry_rcu(old, &subsys->namespaces, dev_link) {
++		list_for_each_entry_rcu(old, &subsys->namespaces, dev_link,
++					lockdep_is_held(&subsys->lock)) {
+ 			BUG_ON(ns->nsid == old->nsid);
+ 			if (ns->nsid < old->nsid)
+ 				break;
+@@ -1172,7 +1173,8 @@ static void nvmet_setup_p2p_ns_map(struct nvmet_ctrl *ctrl,
+ 
+ 	ctrl->p2p_client = get_device(req->p2p_client);
+ 
+-	list_for_each_entry_rcu(ns, &ctrl->subsys->namespaces, dev_link)
++	list_for_each_entry_rcu(ns, &ctrl->subsys->namespaces, dev_link,
++				lockdep_is_held(&ctrl->subsys->lock))
+ 		nvmet_p2pmem_ns_add_p2p(ctrl, ns);
+ }
  
 -- 
 2.20.1
