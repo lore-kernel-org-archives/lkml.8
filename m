@@ -5,49 +5,49 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A0C25C35640
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 07:50:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 20259C35641
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 07:50:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6904E24653
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 07:50:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E196D24650
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 07:50:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582271416;
-	bh=vMAIxQCEcBteBvTjRTi8zaQHQRbcimfsWflvIWcKtRU=;
+	s=default; t=1582271419;
+	bh=xn0c89TUYb91GwJwguGAuyRfda2/y67RUJKduA4/pk4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=nTTHO/GBbkfmZxdKOKTiGRc64a4rBPuM2tRdqbw3a7/IrxFzw8ylLBRm5swUKwCl5
-	 Hf55gTY8RdnLgJjBm7VfVGYru2bWWbuteXizJElJP7ukxKskelntTasXbI4PIv353N
-	 P2ok6/jRzUfDOy0kYjqTSKASIeYXwmU35fJ9iuhw=
+	b=RFIpN/TYTkWfoy5BMCF0xz8id0aka6W70c4hYd+qozIxV3Fjt9BeVmvG5opWqL+oT
+	 UU8hguf4owUtNA598VQ13ALqcHPdVwffel1Ea+hoDMu30ggZpDdGXGHiMlYKfUMseM
+	 Y9XL2fYTNgBdGkjB6YAdiCSxRH0umMhUl2B+l3Cc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729011AbgBUHuO (ORCPT
+        id S1729524AbgBUHuR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Feb 2020 02:50:14 -0500
-Received: from mail.kernel.org ([198.145.29.99]:46998 "EHLO mail.kernel.org"
+        Fri, 21 Feb 2020 02:50:17 -0500
+Received: from mail.kernel.org ([198.145.29.99]:47114 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729497AbgBUHuL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Feb 2020 02:50:11 -0500
+        id S1729101AbgBUHuQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 21 Feb 2020 02:50:16 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0DDB224650;
-        Fri, 21 Feb 2020 07:50:09 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 102DF24650;
+        Fri, 21 Feb 2020 07:50:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1582271410;
-        bh=vMAIxQCEcBteBvTjRTi8zaQHQRbcimfsWflvIWcKtRU=;
+        s=default; t=1582271415;
+        bh=xn0c89TUYb91GwJwguGAuyRfda2/y67RUJKduA4/pk4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=spD3UyQyw1uDR0sNUtIqXtDYEKNxl4wOzeOLepQD08gYinK/YCydUzmKv8nfjGgdU
-         7EqvPLljfKd90SMEhRjfPWYHOlWou2+JNJ9LqtsodfYrn2tLUWYW2DL+P6vXuuciqE
-         SD7vT6PZCMLEjNUcO4oCFlG/C6/X1GY8fGulRs5M=
+        b=MpRc6k1T/FLVA9pzj8oIH6UekEhxfiREWmWx3QFlhK1kS1Pn/tKouQnl+YPBVLFTf
+         lKhCLiFMMxd3KHyvDsxP08r3vuVCY0YZRB2vrJMYSEAbiN+bvO9E9yGuJajhTmZi5W
+         9QxdDXsdsvWFqu9FbktGG+4jSG35u+JYNyPuLSvg=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Thong Thai <thong.thai@amd.com>,
-        Alex Deucher <alexander.deucher@amd.com>,
+        stable@vger.kernel.org, Andre Przywara <andre.przywara@arm.com>,
+        Maxime Ripard <maxime@cerno.tech>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.5 117/399] Revert "drm/amdgpu: enable VCN DPG on Raven and Raven2"
-Date:   Fri, 21 Feb 2020 08:37:22 +0100
-Message-Id: <20200221072413.830241556@linuxfoundation.org>
+Subject: [PATCH 5.5 119/399] arm64: dts: allwinner: H6: Add PMU mode
+Date:   Fri, 21 Feb 2020 08:37:24 +0100
+Message-Id: <20200221072414.042546952@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200221072402.315346745@linuxfoundation.org>
 References: <20200221072402.315346745@linuxfoundation.org>
@@ -60,49 +60,45 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Thong Thai <thong.thai@amd.com>
+From: Andre Przywara <andre.przywara@arm.com>
 
-[ Upstream commit d515959125f24767d02e82587a11e444eeba0e7b ]
+[ Upstream commit 7aa9b9eb7d6a8fde7acbe0446444f7e3fae1fe3b ]
 
-This reverts commit a4840d91c984f93b2acdcd44441d624bbc1af0d2.
+Add the Performance Monitoring Unit (PMU) device tree node to the H6
+.dtsi, which tells DT users which interrupts are triggered by PMU
+overflow events on each core. The numbers come from the manual and have
+been checked in U-Boot and with perf in Linux.
 
-Reverting due to power efficiency issues seen on Raven 1 and 2
-when DPG mode is enabled.
+Tested with perf record and taskset on a Pine H64.
 
-Signed-off-by: Thong Thai <thong.thai@amd.com>
-Reviewed-by: Alex Deucher <alexander.deucher@amd.com>
-Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
+Signed-off-by: Andre Przywara <andre.przywara@arm.com>
+Signed-off-by: Maxime Ripard <maxime@cerno.tech>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/gpu/drm/amd/amdgpu/soc15.c | 8 ++------
- 1 file changed, 2 insertions(+), 6 deletions(-)
+ arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi | 10 ++++++++++
+ 1 file changed, 10 insertions(+)
 
-diff --git a/drivers/gpu/drm/amd/amdgpu/soc15.c b/drivers/gpu/drm/amd/amdgpu/soc15.c
-index 8e1640bc07aff..04ea7cd692955 100644
---- a/drivers/gpu/drm/amd/amdgpu/soc15.c
-+++ b/drivers/gpu/drm/amd/amdgpu/soc15.c
-@@ -1145,9 +1145,7 @@ static int soc15_common_early_init(void *handle)
- 				AMD_CG_SUPPORT_SDMA_LS |
- 				AMD_CG_SUPPORT_VCN_MGCG;
+diff --git a/arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi b/arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi
+index 29824081b43b0..24ffe2dcbddbf 100644
+--- a/arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi
++++ b/arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi
+@@ -70,6 +70,16 @@
+ 		clock-output-names = "ext_osc32k";
+ 	};
  
--			adev->pg_flags = AMD_PG_SUPPORT_SDMA |
--				AMD_PG_SUPPORT_VCN |
--				AMD_PG_SUPPORT_VCN_DPG;
-+			adev->pg_flags = AMD_PG_SUPPORT_SDMA | AMD_PG_SUPPORT_VCN;
- 		} else if (adev->pdev->device == 0x15d8) {
- 			adev->cg_flags = AMD_CG_SUPPORT_GFX_MGCG |
- 				AMD_CG_SUPPORT_GFX_MGLS |
-@@ -1190,9 +1188,7 @@ static int soc15_common_early_init(void *handle)
- 				AMD_CG_SUPPORT_SDMA_LS |
- 				AMD_CG_SUPPORT_VCN_MGCG;
- 
--			adev->pg_flags = AMD_PG_SUPPORT_SDMA |
--				AMD_PG_SUPPORT_VCN |
--				AMD_PG_SUPPORT_VCN_DPG;
-+			adev->pg_flags = AMD_PG_SUPPORT_SDMA | AMD_PG_SUPPORT_VCN;
- 		}
- 		break;
- 	case CHIP_ARCTURUS:
++	pmu {
++		compatible = "arm,cortex-a53-pmu",
++			     "arm,armv8-pmuv3";
++		interrupts = <GIC_SPI 140 IRQ_TYPE_LEVEL_HIGH>,
++			     <GIC_SPI 141 IRQ_TYPE_LEVEL_HIGH>,
++			     <GIC_SPI 142 IRQ_TYPE_LEVEL_HIGH>,
++			     <GIC_SPI 143 IRQ_TYPE_LEVEL_HIGH>;
++		interrupt-affinity = <&cpu0>, <&cpu1>, <&cpu2>, <&cpu3>;
++	};
++
+ 	psci {
+ 		compatible = "arm,psci-0.2";
+ 		method = "smc";
 -- 
 2.20.1
 
