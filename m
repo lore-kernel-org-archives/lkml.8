@@ -2,116 +2,223 @@ Return-Path: <SRS0=1210=4J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D8091C35640
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 08:41:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8AD23C35641
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 08:41:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AC5E9206ED
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 08:41:10 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582274470;
-	bh=ZODufpkoPxhKGDUVFpS1KtfdoQy0axXfQ6zc5KDAAWg=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=2hCzfSacTaU48ObUkkXApFAo8Elm0othuAZgyCJqcJwU/f8kWOF+Up4rMPO0yvT/7
-	 GD6Hs3hqijUTsWVH+jwe1/wHKXQS5eZZOesWsHVfo5WTK9LmBLuftepzOH+NA2PLUz
-	 Oyqicr6gIAOibvla2UqlQhJud5RCYn+/ndFX/bMU=
+	by mail.kernel.org (Postfix) with ESMTP id 626FD206ED
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 08:41:13 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="fICJukfY"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730685AbgBUH5w (ORCPT
+        id S1731177AbgBUIlM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Feb 2020 02:57:52 -0500
-Received: from mail.kernel.org ([198.145.29.99]:57398 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730658AbgBUH5t (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Feb 2020 02:57:49 -0500
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        Fri, 21 Feb 2020 03:41:12 -0500
+Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:50435 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1730683AbgBUH5x (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 21 Feb 2020 02:57:53 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1582271872;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=qZ2vYX6aTEtYA+Rmtsl2PSnzUra/4wEX+6A+xs3OWnE=;
+        b=fICJukfYhcyMyFkOqBlQi6nnMvVXDkasO/fHBO4MvkX33xhY7jiPQbioiDX7/DQktAMZVy
+        L3sFBD3s/TTKuZ0NtGge89eKIL1o8fV1jQFNHw9YxruLPMQ/aQq6TnmWn5smQgWkbnxd9B
+        zU6S0yr0b6bUzkhn3IntLZjHwUlHZ/g=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-347-s328FKtIP_GiYZgic4bVwg-1; Fri, 21 Feb 2020 02:57:50 -0500
+X-MC-Unique: s328FKtIP_GiYZgic4bVwg-1
+Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 711C32073A;
-        Fri, 21 Feb 2020 07:57:44 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1582271864;
-        bh=ZODufpkoPxhKGDUVFpS1KtfdoQy0axXfQ6zc5KDAAWg=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ZqEqtm7eD+UEdeKftyuOqnPn601j6CXnBoDJUi9A7MMqK5VilSPETHOFBHSsKRuUS
-         JodU791B2eyYe/h7dhz0T1nITT1bIUqbB8lbXVtj6qPP/AxpVqRs+tvOthxbA123FF
-         FGpWnab83bUrAELGEz0g0531cXUxkBSrWWu+H6LE=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Oliver OHalloran <oohall@gmail.com>,
-        Sam Bobroff <sbobroff@linux.ibm.com>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.5 328/399] powerpc/sriov: Remove VF eeh_dev state when disabling SR-IOV
-Date:   Fri, 21 Feb 2020 08:40:53 +0100
-Message-Id: <20200221072433.087450245@linuxfoundation.org>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20200221072402.315346745@linuxfoundation.org>
-References: <20200221072402.315346745@linuxfoundation.org>
-User-Agent: quilt/0.66
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 89523107ACC5;
+        Fri, 21 Feb 2020 07:57:47 +0000 (UTC)
+Received: from [10.72.13.208] (ovpn-13-208.pek2.redhat.com [10.72.13.208])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id A094B8ECFD;
+        Fri, 21 Feb 2020 07:57:31 +0000 (UTC)
+Subject: Re: [PATCH V4 5/5] vdpasim: vDPA device simulator
+To:     Jason Gunthorpe <jgg@mellanox.com>
+Cc:     "mst@redhat.com" <mst@redhat.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
+        "virtualization@lists.linux-foundation.org" 
+        <virtualization@lists.linux-foundation.org>,
+        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+        "tiwei.bie@intel.com" <tiwei.bie@intel.com>,
+        "maxime.coquelin@redhat.com" <maxime.coquelin@redhat.com>,
+        "cunming.liang@intel.com" <cunming.liang@intel.com>,
+        "zhihong.wang@intel.com" <zhihong.wang@intel.com>,
+        "rob.miller@broadcom.com" <rob.miller@broadcom.com>,
+        "xiao.w.wang@intel.com" <xiao.w.wang@intel.com>,
+        "haotian.wang@sifive.com" <haotian.wang@sifive.com>,
+        "lingshan.zhu@intel.com" <lingshan.zhu@intel.com>,
+        "eperezma@redhat.com" <eperezma@redhat.com>,
+        "lulu@redhat.com" <lulu@redhat.com>,
+        Parav Pandit <parav@mellanox.com>,
+        "kevin.tian@intel.com" <kevin.tian@intel.com>,
+        "stefanha@redhat.com" <stefanha@redhat.com>,
+        "rdunlap@infradead.org" <rdunlap@infradead.org>,
+        "hch@infradead.org" <hch@infradead.org>,
+        "aadam@redhat.com" <aadam@redhat.com>,
+        Jiri Pirko <jiri@mellanox.com>,
+        Shahaf Shuler <shahafs@mellanox.com>,
+        "hanand@xilinx.com" <hanand@xilinx.com>,
+        "mhabets@solarflare.com" <mhabets@solarflare.com>
+References: <20200220061141.29390-1-jasowang@redhat.com>
+ <20200220061141.29390-6-jasowang@redhat.com>
+ <20200220151215.GU23930@mellanox.com>
+From:   Jason Wang <jasowang@redhat.com>
+Message-ID: <6c341a77-a297-b7c7-dea5-b3f7b920b1f3@redhat.com>
+Date:   Fri, 21 Feb 2020 15:57:29 +0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200220151215.GU23930@mellanox.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Oliver O'Halloran <oohall@gmail.com>
 
-[ Upstream commit 1fb4124ca9d456656a324f1ee29b7bf942f59ac8 ]
+On 2020/2/20 =E4=B8=8B=E5=8D=8811:12, Jason Gunthorpe wrote:
+> On Thu, Feb 20, 2020 at 02:11:41PM +0800, Jason Wang wrote:
+>> +static void vdpasim_device_release(struct device *dev)
+>> +{
+>> +	struct vdpasim *vdpasim =3D dev_to_sim(dev);
+>> +
+>> +	cancel_work_sync(&vdpasim->work);
+>> +	kfree(vdpasim->buffer);
+>> +	vhost_iotlb_free(vdpasim->iommu);
+>> +	kfree(vdpasim);
+>> +}
+>> +
+>> +static struct vdpasim *vdpasim_create(void)
+>> +{
+>> +	struct virtio_net_config *config;
+>> +	struct vhost_iotlb *iommu;
+>> +	struct vdpasim *vdpasim;
+>> +	struct device *dev;
+>> +	void *buffer;
+>> +	int ret =3D -ENOMEM;
+>> +
+>> +	iommu =3D vhost_iotlb_alloc(2048, 0);
+>> +	if (!iommu)
+>> +		goto err;
+>> +
+>> +	buffer =3D kmalloc(PAGE_SIZE, GFP_KERNEL);
+>> +	if (!buffer)
+>> +		goto err_buffer;
+>> +
+>> +	vdpasim =3D kzalloc(sizeof(*vdpasim), GFP_KERNEL);
+>> +	if (!vdpasim)
+>> +		goto err_alloc;
+>> +
+>> +	vdpasim->buffer =3D buffer;
+>> +	vdpasim->iommu =3D iommu;
+>> +
+>> +	config =3D &vdpasim->config;
+>> +	config->mtu =3D 1500;
+>> +	config->status =3D VIRTIO_NET_S_LINK_UP;
+>> +	eth_random_addr(config->mac);
+>> +
+>> +	INIT_WORK(&vdpasim->work, vdpasim_work);
+>> +	spin_lock_init(&vdpasim->lock);
+>> +
+>> +	vringh_set_iotlb(&vdpasim->vqs[0].vring, vdpasim->iommu);
+>> +	vringh_set_iotlb(&vdpasim->vqs[1].vring, vdpasim->iommu);
+>> +
+>> +	dev =3D &vdpasim->dev;
+>> +	dev->release =3D vdpasim_device_release;
+>> +	dev->coherent_dma_mask =3D DMA_BIT_MASK(64);
+>> +	set_dma_ops(dev, &vdpasim_dma_ops);
+>> +	dev_set_name(dev, "%s", VDPASIM_NAME);
+>> +
+>> +	ret =3D device_register(&vdpasim->dev);
+>> +	if (ret)
+>> +		goto err_init;
+> It is a bit weird to be creating this dummy parent, couldn't this be
+> done by just passing a NULL parent to vdpa_alloc_device, doing
+> set_dma_ops() on the vdpasim->vdpa->dev and setting dma_device to
+> vdpasim->vdpa->dev ?
 
-When disabling virtual functions on an SR-IOV adapter we currently do not
-correctly remove the EEH state for the now-dead virtual functions. When
-removing the pci_dn that was created for the VF when SR-IOV was enabled
-we free the corresponding eeh_dev without removing it from the child device
-list of the eeh_pe that contained it. This can result in crashes due to the
-use-after-free.
 
-Signed-off-by: Oliver O'Halloran <oohall@gmail.com>
-Reviewed-by: Sam Bobroff <sbobroff@linux.ibm.com>
-Tested-by: Sam Bobroff <sbobroff@linux.ibm.com>
-Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
-Link: https://lore.kernel.org/r/20190821062655.19735-1-oohall@gmail.com
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- arch/powerpc/kernel/pci_dn.c | 15 ++++++++++++++-
- 1 file changed, 14 insertions(+), 1 deletion(-)
-
-diff --git a/arch/powerpc/kernel/pci_dn.c b/arch/powerpc/kernel/pci_dn.c
-index 9524009ca1ae4..d876eda926094 100644
---- a/arch/powerpc/kernel/pci_dn.c
-+++ b/arch/powerpc/kernel/pci_dn.c
-@@ -244,9 +244,22 @@ void remove_dev_pci_data(struct pci_dev *pdev)
- 				continue;
- 
- #ifdef CONFIG_EEH
--			/* Release EEH device for the VF */
-+			/*
-+			 * Release EEH state for this VF. The PCI core
-+			 * has already torn down the pci_dev for this VF, but
-+			 * we're responsible to removing the eeh_dev since it
-+			 * has the same lifetime as the pci_dn that spawned it.
-+			 */
- 			edev = pdn_to_eeh_dev(pdn);
- 			if (edev) {
-+				/*
-+				 * We allocate pci_dn's for the totalvfs count,
-+				 * but only only the vfs that were activated
-+				 * have a configured PE.
-+				 */
-+				if (edev->pe)
-+					eeh_rmv_from_parent_pe(edev);
-+
- 				pdn->edev = NULL;
- 				kfree(edev);
- 			}
--- 
-2.20.1
+I think it works.
 
 
+>> +	vdpasim->vdpa =3D vdpa_alloc_device(dev, dev, &vdpasim_net_config_op=
+s);
+>> +	if (ret)
+>> +		goto err_vdpa;
+>> +	ret =3D vdpa_register_device(vdpasim->vdpa);
+>> +	if (ret)
+>> +		goto err_register;
+>> +
+>> +	return vdpasim;
+>> +
+>> +err_register:
+>> +	put_device(&vdpasim->vdpa->dev);
+>> +err_vdpa:
+>> +	device_del(&vdpasim->dev);
+>> +	goto err;
+>> +err_init:
+>> +	put_device(&vdpasim->dev);
+>> +	goto err;
+> If you do the vdmasim alloc first, and immediately do
+> device_initialize() then all the failure paths can do put_device
+> instead of having this ugly goto unwind split. Just check for
+> vdpasim->iommu =3D=3D NULL during release.
+
+
+Yes, that looks simpler.
+
+
+>
+>> +static int __init vdpasim_dev_init(void)
+>> +{
+>> +	vdpasim_dev =3D vdpasim_create();
+>> +
+>> +	if (!IS_ERR(vdpasim_dev))
+>> +		return 0;
+>> +
+>> +	return PTR_ERR(vdpasim_dev);
+>> +}
+>> +
+>> +static int vdpasim_device_remove_cb(struct device *dev, void *data)
+>> +{
+>> +	struct vdpa_device *vdpa =3D dev_to_vdpa(dev);
+>> +
+>> +	vdpa_unregister_device(vdpa);
+>> +
+>> +	return 0;
+>> +}
+>> +
+>> +static void __exit vdpasim_dev_exit(void)
+>> +{
+>> +	device_for_each_child(&vdpasim_dev->dev, NULL,
+>> +			      vdpasim_device_remove_cb);
+> Why the loop? There is only one device, and it is in the global
+> varaible vdmasim_dev ?
+
+
+Not necessary but doesn't harm, will remove this.
+
+Thanks
+
+
+>
+> Jason
+>
 
