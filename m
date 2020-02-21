@@ -7,49 +7,46 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B03CFC35641
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 07:57:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 38CC9C35642
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 07:57:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 88ABB2073A
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 07:57:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0D49120578
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 07:57:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582271823;
-	bh=RkAkK3r3Uy5zJD5SozveWwmaAWEz+z5hCpz+soPyAyU=;
+	s=default; t=1582271825;
+	bh=LUbkeXlPtCA6S3i2O8c+vGXGoIF16WvHwsz2W6tdzrE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=vlQ/KoeTaDeQ3ZiwfkGv6twuJwWc9MnYd4M6bcOMJNnE4OSczsMrpDkDqXm/flWUM
-	 gzQBmhWqz9N665WeMFn/BH3QCslDYOEGPnRsH9Qk1Yu0RG088qX7j/SHvF/0oBqZUD
-	 0mt/vO8Ejd3kx0s88VcL50xkWXNNyqVnrHj8aSNY=
+	b=iy0KakfVyCRBtyH5Ua4acrhJnaWRnWpuuY55okohlzPr+OHdqNFlGPBWkYaVGq57H
+	 OKEY+wnrt9SpByjW3OHi7XaSmuNxUAHpriISQaQNXzoZE+0pO5bVLL7Q4B2MWw3Quf
+	 K4dQlSKZFdvOJscq6NNQFHS/BTjPYBEk5G2cmmYk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729093AbgBUH5C (ORCPT
+        id S1730562AbgBUH5E (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Feb 2020 02:57:02 -0500
-Received: from mail.kernel.org ([198.145.29.99]:56450 "EHLO mail.kernel.org"
+        Fri, 21 Feb 2020 02:57:04 -0500
+Received: from mail.kernel.org ([198.145.29.99]:56502 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730392AbgBUH47 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Feb 2020 02:56:59 -0500
+        id S1728301AbgBUH5C (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 21 Feb 2020 02:57:02 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 791BA2073A;
-        Fri, 21 Feb 2020 07:56:58 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 000E020578;
+        Fri, 21 Feb 2020 07:57:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1582271819;
-        bh=RkAkK3r3Uy5zJD5SozveWwmaAWEz+z5hCpz+soPyAyU=;
+        s=default; t=1582271821;
+        bh=LUbkeXlPtCA6S3i2O8c+vGXGoIF16WvHwsz2W6tdzrE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=lu3mXrW1wdscwGeYMFsCkc2c9mKkrHJ84GWJ6zvGoxXUWa4o35bcJ36wVZqrZdYC9
-         j7PTKZfDnjCfyrCRlNRPeBMMiXzOyjRsbJszbhFBOX32Ds3SR00Uo/b9hw5FBotVdz
-         36huRhbbBrxHnX+WG5YKuAAKVpqpQwIgPpPZXV7o=
+        b=CufJDoYz2ZgAzuh1oQ0Mzwf8agXR42kXDoedzok6sBgTNZfKD5NAFCO4fLeO2htJJ
+         H3SArrrlYKjedSuj3I/lM0dgLWffgAss4+dOUMkhV98bYVtkXfiZg5nIWI7EGhNNH5
+         dOeXFkxjZ/LMAKIUz6jJZhiToxqG5BMb3LsZHxLo=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, philip@philip-seeger.de,
-        Josef Bacik <josef@toxicpanda.com>,
-        Anand Jain <anand.jain@oracle.com>,
-        David Sterba <dsterba@suse.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.5 309/399] btrfs: device stats, log when stats are zeroed
-Date:   Fri, 21 Feb 2020 08:40:34 +0100
-Message-Id: <20200221072431.607827648@linuxfoundation.org>
+        stable@vger.kernel.org, Miroslav Benes <mbenes@suse.cz>,
+        Jessica Yu <jeyu@kernel.org>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.5 310/399] module: avoid setting info->name early in case we can fall back to info->mod->name
+Date:   Fri, 21 Feb 2020 08:40:35 +0100
+Message-Id: <20200221072431.685881155@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200221072402.315346745@linuxfoundation.org>
 References: <20200221072402.315346745@linuxfoundation.org>
@@ -62,45 +59,58 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Anand Jain <anand.jain@oracle.com>
+From: Jessica Yu <jeyu@kernel.org>
 
-[ Upstream commit a69976bc69308aa475d0ba3b8b3efd1d013c0460 ]
+[ Upstream commit 708e0ada1916be765b7faa58854062f2bc620bbf ]
 
-We had a report indicating that some read errors aren't reported by the
-device stats in the userland. It is important to have the errors
-reported in the device stat as user land scripts might depend on it to
-take the reasonable corrective actions. But to debug these issue we need
-to be really sure that request to reset the device stat did not come
-from the userland itself. So log an info message when device error reset
-happens.
+In setup_load_info(), info->name (which contains the name of the module,
+mostly used for early logging purposes before the module gets set up)
+gets unconditionally assigned if .modinfo is missing despite the fact
+that there is an if (!info->name) check near the end of the function.
+Avoid assigning a placeholder string to info->name if .modinfo doesn't
+exist, so that we can fall back to info->mod->name later on.
 
-For example:
- BTRFS info (device sdc): device stats zeroed by btrfs(9223)
-
-Reported-by: philip@philip-seeger.de
-Link: https://www.spinics.net/lists/linux-btrfs/msg96528.html
-Reviewed-by: Josef Bacik <josef@toxicpanda.com>
-Signed-off-by: Anand Jain <anand.jain@oracle.com>
-Reviewed-by: David Sterba <dsterba@suse.com>
-Signed-off-by: David Sterba <dsterba@suse.com>
+Fixes: 5fdc7db6448a ("module: setup load info before module_sig_check()")
+Reviewed-by: Miroslav Benes <mbenes@suse.cz>
+Signed-off-by: Jessica Yu <jeyu@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/btrfs/volumes.c | 2 ++
- 1 file changed, 2 insertions(+)
+ kernel/module.c | 9 ++++-----
+ 1 file changed, 4 insertions(+), 5 deletions(-)
 
-diff --git a/fs/btrfs/volumes.c b/fs/btrfs/volumes.c
-index 72ff80f7f24ca..c5c0dc0cbf517 100644
---- a/fs/btrfs/volumes.c
-+++ b/fs/btrfs/volumes.c
-@@ -7342,6 +7342,8 @@ int btrfs_get_dev_stats(struct btrfs_fs_info *fs_info,
- 			else
- 				btrfs_dev_stat_set(dev, i, 0);
- 		}
-+		btrfs_info(fs_info, "device stats zeroed by %s (%d)",
-+			   current->comm, task_pid_nr(current));
- 	} else {
- 		for (i = 0; i < BTRFS_DEV_STAT_VALUES_MAX; i++)
- 			if (stats->nr_items > i)
+diff --git a/kernel/module.c b/kernel/module.c
+index d83edc3a41a33..4810ce0fbbca3 100644
+--- a/kernel/module.c
++++ b/kernel/module.c
+@@ -3059,9 +3059,7 @@ static int setup_load_info(struct load_info *info, int flags)
+ 
+ 	/* Try to find a name early so we can log errors with a module name */
+ 	info->index.info = find_sec(info, ".modinfo");
+-	if (!info->index.info)
+-		info->name = "(missing .modinfo section)";
+-	else
++	if (info->index.info)
+ 		info->name = get_modinfo(info, "name");
+ 
+ 	/* Find internal symbols and strings. */
+@@ -3076,14 +3074,15 @@ static int setup_load_info(struct load_info *info, int flags)
+ 	}
+ 
+ 	if (info->index.sym == 0) {
+-		pr_warn("%s: module has no symbols (stripped?)\n", info->name);
++		pr_warn("%s: module has no symbols (stripped?)\n",
++			info->name ?: "(missing .modinfo section or name field)");
+ 		return -ENOEXEC;
+ 	}
+ 
+ 	info->index.mod = find_sec(info, ".gnu.linkonce.this_module");
+ 	if (!info->index.mod) {
+ 		pr_warn("%s: No module found in object\n",
+-			info->name ?: "(missing .modinfo name field)");
++			info->name ?: "(missing .modinfo section or name field)");
+ 		return -ENOEXEC;
+ 	}
+ 	/* This is temporary: point mod into copy of data. */
 -- 
 2.20.1
 
