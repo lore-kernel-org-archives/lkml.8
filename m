@@ -7,48 +7,51 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 30C1DC35640
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 08:19:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6758DC35641
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 08:19:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0775324697
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 08:19:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 399382468E
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 08:19:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582273148;
-	bh=ZJorePCda0YcuQNvCo5Rl+Qv7CjHpuqxHxskctmSdTY=;
+	s=default; t=1582273152;
+	bh=EmHy02QxIAceinsrla6/OOJZSbxSoVsrW2LFm6TIsi0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=nZqEv3UhBc+/2maLxaE/tclMJVtuL41ep1X1vYa39OwFi3Kf6dL+CdccMUgraxgwF
-	 5o54iKEbsCRkb8QrShbIHzg49jTORt1cWMa+n9by+igbUPEHR1ZEv9FyZM1CQdwP9P
-	 37j7ZP760PQBZwZNO1sDLgowHQ2w9iyUJZQJoubk=
+	b=pK8i9YWleMopNZtHa0mhFQFgrRroEMtJSLIQH6pL+OR4MtMj7gFXX1vXYw16U+RXV
+	 iycGTx4fmopALtBlNsxnuIwSHPagXUHN9ypx7GvtEv3JZvC+16oDppU+SbO8sdW9pa
+	 83C/jZbxbgp05JPUZGNry8RZIZe4bnTF/bYIEzTU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387934AbgBUITA (ORCPT
+        id S2387961AbgBUITK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Feb 2020 03:19:00 -0500
-Received: from mail.kernel.org ([198.145.29.99]:57064 "EHLO mail.kernel.org"
+        Fri, 21 Feb 2020 03:19:10 -0500
+Received: from mail.kernel.org ([198.145.29.99]:57242 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387644AbgBUIS4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Feb 2020 03:18:56 -0500
+        id S2387502AbgBUITF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 21 Feb 2020 03:19:05 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7E21724689;
-        Fri, 21 Feb 2020 08:18:55 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id EC32724695;
+        Fri, 21 Feb 2020 08:19:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1582273136;
-        bh=ZJorePCda0YcuQNvCo5Rl+Qv7CjHpuqxHxskctmSdTY=;
+        s=default; t=1582273144;
+        bh=EmHy02QxIAceinsrla6/OOJZSbxSoVsrW2LFm6TIsi0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=g8aAmsbvav4/LXtQyIk7iqkNC+69nVGJlqAwxXrV1TpbLhel8LIK1RD8QuEY0/8Yh
-         cub9yATaKxHKmwE7K0+IKEB9Lqvev17K7z+DCM2pAdr+OdHh9eofPKjxYRg5pHjdKO
-         8ZQV2gHRE0yu9ttkk9uwUTY3QJ+Wf5ukOSPFa21c=
+        b=CWO26ji+5QI4r2AObuCCclkE+un5j/shg4+CgyxO0drsxXA8xeH9AXnEgMxCxPQho
+         pQWjvW++fzjzQDYT411D9o2mNnbynsKRU0vBo3Q5SFH4qqjN5aUTnuj49aXV9wU9nW
+         A/LYIeukfbGCvO3EatrO274OGDlNK4DK7TA2EBIc=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Manu Gautam <mgautam@codeaurora.org>,
-        Paolo Pisati <p.pisati@gmail.com>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        stable@vger.kernel.org, Chris Healy <cphealy@gmail.com>,
+        Lucas Stach <l.stach@pengutronix.de>,
+        Andrey Smirnov <andrew.smirnov@gmail.com>,
+        Shawn Guo <shawnguo@kernel.org>,
+        Fabio Estevam <festevam@gmail.com>,
+        linux-arm-kernel@lists.infradead.org,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 060/191] arm64: dts: qcom: msm8996: Disable USB2 PHY suspend by core
-Date:   Fri, 21 Feb 2020 08:40:33 +0100
-Message-Id: <20200221072258.650945363@linuxfoundation.org>
+Subject: [PATCH 4.19 063/191] ARM: dts: imx6: rdu2: Limit USBH1 to Full Speed
+Date:   Fri, 21 Feb 2020 08:40:36 +0100
+Message-Id: <20200221072258.967997633@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200221072250.732482588@linuxfoundation.org>
 References: <20200221072250.732482588@linuxfoundation.org>
@@ -61,48 +64,40 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Manu Gautam <mgautam@codeaurora.org>
+From: Andrey Smirnov <andrew.smirnov@gmail.com>
 
-[ Upstream commit d026c96b25b7ce5df89526aad2df988d553edb4d ]
+[ Upstream commit 6bb1e09c4c375db29770444f689f35f5cbe696bc ]
 
-QUSB2 PHY on msm8996 doesn't work well when autosuspend by
-dwc3 core using USB2PHYCFG register is enabled. One of the
-issue seen is that PHY driver reports PLL lock failure and
-fails phy_init() if dwc3 core has USB2 PHY suspend enabled.
-Fix this by using quirks to disable USB2 PHY LPM/suspend and
-dwc3 core already takes care of explicitly suspending PHY
-during suspend if quirks are specified.
+Cabling used to connect devices to USBH1 on RDU2 does not meet USB
+spec cable quality and cable length requirements to operate at High
+Speed, so limit the port to Full Speed only.
 
-Signed-off-by: Manu Gautam <mgautam@codeaurora.org>
-Signed-off-by: Paolo Pisati <p.pisati@gmail.com>
-Link: https://lore.kernel.org/r/20191209151501.26993-1-p.pisati@gmail.com
-Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
+Reported-by: Chris Healy <cphealy@gmail.com>
+Reviewed-by: Chris Healy <cphealy@gmail.com>
+Reviewed-by: Lucas Stach <l.stach@pengutronix.de>
+Signed-off-by: Andrey Smirnov <andrew.smirnov@gmail.com>
+Cc: Shawn Guo <shawnguo@kernel.org>
+Cc: Fabio Estevam <festevam@gmail.com>
+Cc: Lucas Stach <l.stach@pengutronix.de>
+Cc: linux-arm-kernel@lists.infradead.org
+Cc: linux-kernel@vger.kernel.org
+Signed-off-by: Shawn Guo <shawnguo@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm64/boot/dts/qcom/msm8996.dtsi | 4 ++++
- 1 file changed, 4 insertions(+)
+ arch/arm/boot/dts/imx6qdl-zii-rdu2.dtsi | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/arch/arm64/boot/dts/qcom/msm8996.dtsi b/arch/arm64/boot/dts/qcom/msm8996.dtsi
-index 8c86c41a0d25f..3e7baabf64507 100644
---- a/arch/arm64/boot/dts/qcom/msm8996.dtsi
-+++ b/arch/arm64/boot/dts/qcom/msm8996.dtsi
-@@ -918,6 +918,8 @@
- 				interrupts = <0 138 IRQ_TYPE_LEVEL_HIGH>;
- 				phys = <&hsusb_phy2>;
- 				phy-names = "usb2-phy";
-+				snps,dis_u2_susphy_quirk;
-+				snps,dis_enblslpm_quirk;
- 			};
- 		};
- 
-@@ -947,6 +949,8 @@
- 				interrupts = <0 131 IRQ_TYPE_LEVEL_HIGH>;
- 				phys = <&hsusb_phy1>, <&ssusb_phy_0>;
- 				phy-names = "usb2-phy", "usb3-phy";
-+				snps,dis_u2_susphy_quirk;
-+				snps,dis_enblslpm_quirk;
- 			};
- 		};
+diff --git a/arch/arm/boot/dts/imx6qdl-zii-rdu2.dtsi b/arch/arm/boot/dts/imx6qdl-zii-rdu2.dtsi
+index 56d6e82b75337..bc5f2de02d433 100644
+--- a/arch/arm/boot/dts/imx6qdl-zii-rdu2.dtsi
++++ b/arch/arm/boot/dts/imx6qdl-zii-rdu2.dtsi
+@@ -804,6 +804,7 @@
+ &usbh1 {
+ 	vbus-supply = <&reg_5p0v_main>;
+ 	disable-over-current;
++	maximum-speed = "full-speed";
+ 	status = "okay";
+ };
  
 -- 
 2.20.1
