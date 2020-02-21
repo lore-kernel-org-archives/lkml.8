@@ -5,33 +5,33 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AE847C11D27
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 05:14:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1713FC11D29
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 05:15:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 577F5208E4
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 05:14:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D9064208E4
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 05:15:19 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=flygoat.com header.i=jiaxun.yang@flygoat.com header.b="F/f8spRj"
+	dkim=pass (1024-bit key) header.d=flygoat.com header.i=jiaxun.yang@flygoat.com header.b="DvSaTE2Z"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727426AbgBUFOo (ORCPT
+        id S1727077AbgBUFPS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Feb 2020 00:14:44 -0500
-Received: from sender3-op-o12.zoho.com.cn ([124.251.121.243]:17855 "EHLO
+        Fri, 21 Feb 2020 00:15:18 -0500
+Received: from sender3-op-o12.zoho.com.cn ([124.251.121.243]:17853 "EHLO
         sender3-op-o12.zoho.com.cn" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726018AbgBUFOn (ORCPT
+        by vger.kernel.org with ESMTP id S1726018AbgBUFPS (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Feb 2020 00:14:43 -0500
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1582261985;
+        Fri, 21 Feb 2020 00:15:18 -0500
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1582262022;
         s=mail; d=flygoat.com; i=jiaxun.yang@flygoat.com;
         h=From:To:Cc:Message-ID:Subject:Date:In-Reply-To:References:MIME-Version:Content-Transfer-Encoding:Content-Type;
-        bh=z8xfYY1oGTzcoLAgttAm9nrkip2cQNuXBdes8Ar4O58=;
-        b=F/f8spRjTzvaJgpQybtl7uR0aaJALJmkqdTDVSWsFGyHxYYveHlwKwURW0NtDk+C
-        Dji9ueVDS+9k4sA6bFEaoyVI4INhVSsC+355wKjJBbbBf+nx/MaKBHs5ko4+6b6Wm33
-        yDo6K5oCQtATj0IVP1HKRUmYOfqozOVyAQdz++4E=
+        bh=SMPsZ2QjhqA7TbbR4u+Kj1udrZ4uGZW8Wu3gotH49cU=;
+        b=DvSaTE2Z2oT62GcWxCwyZwe6ueQ+EUZQYSPWO9FNkG9lcNXkq9zwJo0PAdjHi1+j
+        MfpT2llJqKnsFwGJmj4VpXRp/CWejGoqvAjnR4/MPj+LbnKkShX9ls5i9jziPpLRYZD
+        uidvMdn0qcermwyVVs0PMsERZfRjo30dO627pSuM=
 Received: from localhost.localdomain (39.155.141.144 [39.155.141.144]) by mx.zoho.com.cn
-        with SMTPS id 1582261983888313.2127495354823; Fri, 21 Feb 2020 13:13:03 +0800 (CST)
+        with SMTPS id 1582262019465426.8608229631426; Fri, 21 Feb 2020 13:13:39 +0800 (CST)
 From:   Jiaxun Yang <jiaxun.yang@flygoat.com>
 To:     linux-mips@vger.kernel.org
 Cc:     Jiaxun Yang <jiaxun.yang@flygoat.com>,
@@ -43,12 +43,12 @@ Cc:     Jiaxun Yang <jiaxun.yang@flygoat.com>,
         Ralf Baechle <ralf@linux-mips.org>,
         Paul Burton <paulburton@kernel.org>,
         Huacai Chen <chenhc@lemote.com>,
-        Allison Randal <allison@lohutok.net>,
         Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Allison Randal <allison@lohutok.net>,
         linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
-Message-ID: <20200221050942.507775-7-jiaxun.yang@flygoat.com>
-Subject: [PATCH v4 06/10] MIPS: Loongson64: Drop legacy IRQ code
-Date:   Fri, 21 Feb 2020 13:09:21 +0800
+Message-ID: <20200221050942.507775-9-jiaxun.yang@flygoat.com>
+Subject: [PATCH v4 08/10] MIPS: Loongson64: Add generic dts
+Date:   Fri, 21 Feb 2020 13:09:23 +0800
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200221050942.507775-1-jiaxun.yang@flygoat.com>
 References: <20200221050942.507775-1-jiaxun.yang@flygoat.com>
@@ -61,363 +61,246 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-We've made generic irqchip drivers for Loongson-3 platform, it's time
-to say goodbye to these legacy code.
+Add generic device dts for Loongson-3 devices.
+They are currently almost identical but will be different later.
+Some PCH devices like PCI Host Bridge is still enabled by platform
+code for now.
 
 Signed-off-by: Jiaxun Yang <jiaxun.yang@flygoat.com>
 ---
- .../include/asm/mach-loongson64/boot_param.h  |   2 +
- arch/mips/include/asm/mach-loongson64/irq.h   |  29 ----
- arch/mips/loongson64/Makefile                 |   2 +-
- arch/mips/loongson64/init.c                   |   6 +
- arch/mips/loongson64/irq.c                    | 162 ------------------
- arch/mips/loongson64/smp.c                    |  28 ++-
- 6 files changed, 20 insertions(+), 209 deletions(-)
- delete mode 100644 arch/mips/loongson64/irq.c
+ arch/mips/Kconfig                             |  6 +-
+ arch/mips/boot/dts/Makefile                   |  1 +
+ arch/mips/boot/dts/loongson/Makefile          |  4 ++
+ .../boot/dts/loongson/loongson3-package.dtsi  | 62 +++++++++++++++++++
+ .../dts/loongson/loongson3_4core_rs780e.dts   | 25 ++++++++
+ .../dts/loongson/loongson3_8core_rs780e.dts   | 25 ++++++++
+ arch/mips/boot/dts/loongson/rs780e-pch.dtsi   | 26 ++++++++
+ 7 files changed, 147 insertions(+), 2 deletions(-)
+ create mode 100644 arch/mips/boot/dts/loongson/Makefile
+ create mode 100644 arch/mips/boot/dts/loongson/loongson3-package.dtsi
+ create mode 100644 arch/mips/boot/dts/loongson/loongson3_4core_rs780e.dts
+ create mode 100644 arch/mips/boot/dts/loongson/loongson3_8core_rs780e.dts
+ create mode 100644 arch/mips/boot/dts/loongson/rs780e-pch.dtsi
 
-diff --git a/arch/mips/include/asm/mach-loongson64/boot_param.h b/arch/mips=
-/include/asm/mach-loongson64/boot_param.h
-index 8c286bedff3e..2ed483e32d8c 100644
---- a/arch/mips/include/asm/mach-loongson64/boot_param.h
-+++ b/arch/mips/include/asm/mach-loongson64/boot_param.h
-@@ -2,6 +2,8 @@
- #ifndef __ASM_MACH_LOONGSON64_BOOT_PARAM_H_
- #define __ASM_MACH_LOONGSON64_BOOT_PARAM_H_
+diff --git a/arch/mips/Kconfig b/arch/mips/Kconfig
+index 797d7f1ad5fe..c3aefb49c61a 100644
+--- a/arch/mips/Kconfig
++++ b/arch/mips/Kconfig
+@@ -486,9 +486,11 @@ config MACH_LOONGSON64
+ =09select SYS_SUPPORTS_HIGHMEM
+ =09select SYS_SUPPORTS_LITTLE_ENDIAN
+ =09select SYS_SUPPORTS_ZBOOT
+-=09select LOONGSON_MC146818
+ =09select ZONE_DMA32
+ =09select NUMA
++=09select COMMON_CLK
++=09select USE_OF
++=09select BUILTIN_DTB
+ =09help
+ =09  This enables the support of Loongson-2/3 family of machines.
 =20
-+#include <linux/types.h>
+@@ -3070,7 +3072,7 @@ endchoice
+ choice
+ =09prompt "Kernel command line type" if !CMDLINE_OVERRIDE
+ =09default MIPS_CMDLINE_FROM_DTB if USE_OF && !ATH79 && !MACH_INGENIC && \
+-=09=09=09=09=09 !MIPS_MALTA && \
++=09=09=09=09=09 !MACH_LOONGSON64 && !MIPS_MALTA && \
+ =09=09=09=09=09 !CAVIUM_OCTEON_SOC
+ =09default MIPS_CMDLINE_FROM_BOOTLOADER
+=20
+diff --git a/arch/mips/boot/dts/Makefile b/arch/mips/boot/dts/Makefile
+index 1e79cab8e269..d429a69bfe30 100644
+--- a/arch/mips/boot/dts/Makefile
++++ b/arch/mips/boot/dts/Makefile
+@@ -4,6 +4,7 @@ subdir-y=09+=3D cavium-octeon
+ subdir-y=09+=3D img
+ subdir-y=09+=3D ingenic
+ subdir-y=09+=3D lantiq
++subdir-y=09+=3D loongson
+ subdir-y=09+=3D mscc
+ subdir-y=09+=3D mti
+ subdir-y=09+=3D netlogic
+diff --git a/arch/mips/boot/dts/loongson/Makefile b/arch/mips/boot/dts/loon=
+gson/Makefile
+new file mode 100644
+index 000000000000..56d379471262
+--- /dev/null
++++ b/arch/mips/boot/dts/loongson/Makefile
+@@ -0,0 +1,4 @@
++# SPDX_License_Identifier: GPL_2.0
++dtb-$(CONFIG_MACH_LOONGSON64)=09+=3D loongson3_4core_rs780e.dtb loongson3_=
+8core_rs780e.dtb
 +
- #define SYSTEM_RAM_LOW=09=091
- #define SYSTEM_RAM_HIGH=09=092
- #define SYSTEM_RAM_RESERVED=093
-diff --git a/arch/mips/include/asm/mach-loongson64/irq.h b/arch/mips/includ=
-e/asm/mach-loongson64/irq.h
-index 73a89913dc38..12208119aac0 100644
---- a/arch/mips/include/asm/mach-loongson64/irq.h
-+++ b/arch/mips/include/asm/mach-loongson64/irq.h
-@@ -7,34 +7,5 @@
- /* cpu core interrupt numbers */
- #define MIPS_CPU_IRQ_BASE 56
-=20
--#define LOONGSON_UART_IRQ   (MIPS_CPU_IRQ_BASE + 2) /* UART */
--#define LOONGSON_BRIDGE_IRQ (MIPS_CPU_IRQ_BASE + 3) /* CASCADE */
--#define LOONGSON_TIMER_IRQ  (MIPS_CPU_IRQ_BASE + 7) /* CPU Timer */
--
--#define LOONGSON_HT1_CFG_BASE=09=09loongson_sysconf.ht_control_base
--#define LOONGSON_HT1_INT_VECTOR_BASE=09(LOONGSON_HT1_CFG_BASE + 0x80)
--#define LOONGSON_HT1_INT_EN_BASE=09(LOONGSON_HT1_CFG_BASE + 0xa0)
--#define LOONGSON_HT1_INT_VECTOR(n)=09\
--=09=09LOONGSON3_REG32(LOONGSON_HT1_INT_VECTOR_BASE, 4 * (n))
--#define LOONGSON_HT1_INTN_EN(n)=09=09\
--=09=09LOONGSON3_REG32(LOONGSON_HT1_INT_EN_BASE, 4 * (n))
--
--#define LOONGSON_INT_ROUTER_OFFSET=090x1400
--#define LOONGSON_INT_ROUTER_INTEN=09\
--=09  LOONGSON3_REG32(LOONGSON3_REG_BASE, LOONGSON_INT_ROUTER_OFFSET + 0x24=
-)
--#define LOONGSON_INT_ROUTER_INTENSET=09\
--=09  LOONGSON3_REG32(LOONGSON3_REG_BASE, LOONGSON_INT_ROUTER_OFFSET + 0x28=
-)
--#define LOONGSON_INT_ROUTER_INTENCLR=09\
--=09  LOONGSON3_REG32(LOONGSON3_REG_BASE, LOONGSON_INT_ROUTER_OFFSET + 0x2c=
-)
--#define LOONGSON_INT_ROUTER_ENTRY(n)=09\
--=09  LOONGSON3_REG8(LOONGSON3_REG_BASE, LOONGSON_INT_ROUTER_OFFSET + n)
--#define LOONGSON_INT_ROUTER_LPC=09=09LOONGSON_INT_ROUTER_ENTRY(0x0a)
--#define LOONGSON_INT_ROUTER_HT1(n)=09LOONGSON_INT_ROUTER_ENTRY(n + 0x18)
--
--#define LOONGSON_INT_COREx_INTy(x, y)=09(1<<(x) | 1<<(y+4))=09/* route to =
-int y of core x */
--
--extern void fixup_irqs(void);
--extern void loongson3_ipi_interrupt(struct pt_regs *regs);
--
- #include_next <irq.h>
- #endif /* __ASM_MACH_LOONGSON64_IRQ_H_ */
-diff --git a/arch/mips/loongson64/Makefile b/arch/mips/loongson64/Makefile
-index 7821891bc5d0..b7f40b179c71 100644
---- a/arch/mips/loongson64/Makefile
-+++ b/arch/mips/loongson64/Makefile
-@@ -2,7 +2,7 @@
- #
- # Makefile for Loongson-3 family machines
- #
--obj-$(CONFIG_MACH_LOONGSON64) +=3D irq.o cop2-ex.o platform.o acpi_init.o =
-dma.o \
-+obj-$(CONFIG_MACH_LOONGSON64) +=3D cop2-ex.o platform.o acpi_init.o dma.o =
-\
- =09=09=09=09setup.o init.o env.o time.o reset.o \
-=20
- obj-$(CONFIG_SMP)=09+=3D smp.o
-diff --git a/arch/mips/loongson64/init.c b/arch/mips/loongson64/init.c
-index 5ac1a0f35ca4..da38944471f4 100644
---- a/arch/mips/loongson64/init.c
-+++ b/arch/mips/loongson64/init.c
-@@ -4,6 +4,7 @@
-  * Author: Wu Zhangjin, wuzhangjin@gmail.com
-  */
-=20
-+#include <linux/irqchip.h>
- #include <linux/memblock.h>
- #include <asm/bootinfo.h>
- #include <asm/traps.h>
-@@ -44,3 +45,8 @@ void __init prom_init(void)
- void __init prom_free_prom_memory(void)
- {
- }
++obj-$(CONFIG_BUILTIN_DTB)=09+=3D $(addsuffix .o, $(dtb-y))
+diff --git a/arch/mips/boot/dts/loongson/loongson3-package.dtsi b/arch/mips=
+/boot/dts/loongson/loongson3-package.dtsi
+new file mode 100644
+index 000000000000..d09c313603f1
+--- /dev/null
++++ b/arch/mips/boot/dts/loongson/loongson3-package.dtsi
+@@ -0,0 +1,62 @@
++// SPDX-License-Identifier: GPL-2.0
 +
-+void __init arch_init_irq(void)
-+{
-+=09irqchip_init();
-+}
-diff --git a/arch/mips/loongson64/irq.c b/arch/mips/loongson64/irq.c
-deleted file mode 100644
-index 79ad797497e4..000000000000
---- a/arch/mips/loongson64/irq.c
-+++ /dev/null
-@@ -1,162 +0,0 @@
--// SPDX-License-Identifier: GPL-2.0
--#include <loongson.h>
--#include <irq.h>
--#include <linux/interrupt.h>
--#include <linux/init.h>
--
--#include <asm/irq_cpu.h>
--#include <asm/i8259.h>
--#include <asm/mipsregs.h>
--
--#include "smp.h"
--
--extern void loongson3_send_irq_by_ipi(int cpu, int irqs);
--
--unsigned int irq_cpu[16] =3D {[0 ... 15] =3D -1};
--unsigned int ht_irq[] =3D {0, 1, 3, 4, 5, 6, 7, 8, 12, 14, 15};
--unsigned int local_irq =3D 1<<0 | 1<<1 | 1<<2 | 1<<7 | 1<<8 | 1<<12;
--
--int plat_set_irq_affinity(struct irq_data *d, const struct cpumask *affini=
-ty,
--=09=09=09  bool force)
--{
--=09unsigned int cpu;
--=09struct cpumask new_affinity;
--
--=09/* I/O devices are connected on package-0 */
--=09cpumask_copy(&new_affinity, affinity);
--=09for_each_cpu(cpu, affinity)
--=09=09if (cpu_data[cpu].package > 0)
--=09=09=09cpumask_clear_cpu(cpu, &new_affinity);
--
--=09if (cpumask_empty(&new_affinity))
--=09=09return -EINVAL;
--
--=09cpumask_copy(d->common->affinity, &new_affinity);
--
--=09return IRQ_SET_MASK_OK_NOCOPY;
--}
--
--static void ht_irqdispatch(void)
--{
--=09unsigned int i, irq;
--=09struct irq_data *irqd;
--=09struct cpumask affinity;
--
--=09irq =3D LOONGSON_HT1_INT_VECTOR(0);
--=09LOONGSON_HT1_INT_VECTOR(0) =3D irq; /* Acknowledge the IRQs */
--
--=09for (i =3D 0; i < ARRAY_SIZE(ht_irq); i++) {
--=09=09if (!(irq & (0x1 << ht_irq[i])))
--=09=09=09continue;
--
--=09=09/* handled by local core */
--=09=09if (local_irq & (0x1 << ht_irq[i])) {
--=09=09=09do_IRQ(ht_irq[i]);
--=09=09=09continue;
--=09=09}
--
--=09=09irqd =3D irq_get_irq_data(ht_irq[i]);
--=09=09cpumask_and(&affinity, irqd->common->affinity, cpu_active_mask);
--=09=09if (cpumask_empty(&affinity)) {
--=09=09=09do_IRQ(ht_irq[i]);
--=09=09=09continue;
--=09=09}
--
--=09=09irq_cpu[ht_irq[i]] =3D cpumask_next(irq_cpu[ht_irq[i]], &affinity);
--=09=09if (irq_cpu[ht_irq[i]] >=3D nr_cpu_ids)
--=09=09=09irq_cpu[ht_irq[i]] =3D cpumask_first(&affinity);
--
--=09=09if (irq_cpu[ht_irq[i]] =3D=3D 0) {
--=09=09=09do_IRQ(ht_irq[i]);
--=09=09=09continue;
--=09=09}
--
--=09=09/* balanced by other cores */
--=09=09loongson3_send_irq_by_ipi(irq_cpu[ht_irq[i]], (0x1 << ht_irq[i]));
--=09}
--}
--
--#define UNUSED_IPS (CAUSEF_IP5 | CAUSEF_IP4 | CAUSEF_IP1 | CAUSEF_IP0)
--
--asmlinkage void plat_irq_dispatch(void)
--{
--=09unsigned int pending;
--
--=09pending =3D read_c0_cause() & read_c0_status() & ST0_IM;
--
--=09if (pending & CAUSEF_IP7)
--=09=09do_IRQ(LOONGSON_TIMER_IRQ);
--#if defined(CONFIG_SMP)
--=09if (pending & CAUSEF_IP6)
--=09=09loongson3_ipi_interrupt(NULL);
--#endif
--=09if (pending & CAUSEF_IP3)
--=09=09ht_irqdispatch();
--=09if (pending & CAUSEF_IP2)
--=09=09do_IRQ(LOONGSON_UART_IRQ);
--=09if (pending & UNUSED_IPS) {
--=09=09pr_err("%s : spurious interrupt\n", __func__);
--=09=09spurious_interrupt();
--=09}
--}
--
--static inline void mask_loongson_irq(struct irq_data *d) { }
--static inline void unmask_loongson_irq(struct irq_data *d) { }
--
-- /* For MIPS IRQs which shared by all cores */
--static struct irq_chip loongson_irq_chip =3D {
--=09.name=09=09=3D "Loongson",
--=09.irq_ack=09=3D mask_loongson_irq,
--=09.irq_mask=09=3D mask_loongson_irq,
--=09.irq_mask_ack=09=3D mask_loongson_irq,
--=09.irq_unmask=09=3D unmask_loongson_irq,
--=09.irq_eoi=09=3D unmask_loongson_irq,
--};
--
--void irq_router_init(void)
--{
--=09int i;
--
--=09/* route LPC int to cpu core0 int 0 */
--=09LOONGSON_INT_ROUTER_LPC =3D
--=09=09LOONGSON_INT_COREx_INTy(loongson_sysconf.boot_cpu_id, 0);
--=09/* route HT1 int0 ~ int7 to cpu core0 INT1*/
--=09for (i =3D 0; i < 8; i++)
--=09=09LOONGSON_INT_ROUTER_HT1(i) =3D
--=09=09=09LOONGSON_INT_COREx_INTy(loongson_sysconf.boot_cpu_id, 1);
--=09/* enable HT1 interrupt */
--=09LOONGSON_HT1_INTN_EN(0) =3D 0xffffffff;
--=09/* enable router interrupt intenset */
--=09LOONGSON_INT_ROUTER_INTENSET =3D
--=09=09LOONGSON_INT_ROUTER_INTEN | (0xffff << 16) | 0x1 << 10;
--}
--
--void __init arch_init_irq(void)
--{
--=09struct irq_chip *chip;
--
--=09clear_c0_status(ST0_IM | ST0_BEV);
--
--=09irq_router_init();
--=09mips_cpu_irq_init();
--=09init_i8259_irqs();
--=09chip =3D irq_get_chip(I8259A_IRQ_BASE);
--=09chip->irq_set_affinity =3D plat_set_irq_affinity;
--
--=09irq_set_chip_and_handler(LOONGSON_UART_IRQ,
--=09=09=09&loongson_irq_chip, handle_percpu_irq);
--=09irq_set_chip_and_handler(LOONGSON_BRIDGE_IRQ,
--=09=09=09&loongson_irq_chip, handle_percpu_irq);
--
--=09set_c0_status(STATUSF_IP2 | STATUSF_IP3 | STATUSF_IP6);
--}
--
--#ifdef CONFIG_HOTPLUG_CPU
--
--void fixup_irqs(void)
--{
--=09irq_cpu_offline();
--=09clear_c0_status(ST0_IM);
--}
--
--#endif
-diff --git a/arch/mips/loongson64/smp.c b/arch/mips/loongson64/smp.c
-index de8e0741ce2d..e1fe8bbb377d 100644
---- a/arch/mips/loongson64/smp.c
-+++ b/arch/mips/loongson64/smp.c
-@@ -4,6 +4,7 @@
-  * Author: Chen Huacai, chenhc@lemote.com
-  */
-=20
-+#include <irq.h>
- #include <linux/init.h>
- #include <linux/cpu.h>
- #include <linux/sched.h>
-@@ -25,6 +26,8 @@
-=20
- DEFINE_PER_CPU(int, cpu_state);
-=20
-+#define LS_IPI_IRQ (MIPS_CPU_IRQ_BASE + 6)
++#include <dt-bindings/interrupt-controller/irq.h>
 +
- static void *ipi_set0_regs[16];
- static void *ipi_clear0_regs[16];
- static void *ipi_status0_regs[16];
-@@ -302,20 +305,13 @@ loongson3_send_ipi_mask(const struct cpumask *mask, u=
-nsigned int action)
- =09=09ipi_write_action(cpu_logical_map(i), (u32)action);
- }
-=20
--#define IPI_IRQ_OFFSET 6
--
--void loongson3_send_irq_by_ipi(int cpu, int irqs)
--{
--=09ipi_write_action(cpu_logical_map(cpu), irqs << IPI_IRQ_OFFSET);
--}
-=20
--void loongson3_ipi_interrupt(struct pt_regs *regs)
-+static irqreturn_t loongson3_ipi_interrupt(int irq, void *dev_id)
- {
- =09int i, cpu =3D smp_processor_id();
--=09unsigned int action, c0count, irqs;
-+=09unsigned int action, c0count;
-=20
- =09action =3D ipi_read_clear(cpu);
--=09irqs =3D action >> IPI_IRQ_OFFSET;
-=20
- =09if (action & SMP_RESCHEDULE_YOURSELF)
- =09=09scheduler_ipi();
-@@ -335,13 +331,7 @@ void loongson3_ipi_interrupt(struct pt_regs *regs)
- =09=09__wbflush(); /* Let others see the result ASAP */
- =09}
-=20
--=09if (irqs) {
--=09=09int irq;
--=09=09while ((irq =3D ffs(irqs))) {
--=09=09=09do_IRQ(irq-1);
--=09=09=09irqs &=3D ~(1<<(irq-1));
--=09=09}
--=09}
-+=09return IRQ_HANDLED;
- }
-=20
- #define MAX_LOOPS 800
-@@ -438,6 +428,9 @@ static void __init loongson3_smp_setup(void)
-=20
- static void __init loongson3_prepare_cpus(unsigned int max_cpus)
- {
-+=09if (request_irq(LS_IPI_IRQ, loongson3_ipi_interrupt,
-+=09=09=09IRQF_PERCPU | IRQF_NO_SUSPEND, "SMP_IPI", NULL))
-+=09=09pr_err("Failed to request IPI IRQ\n");
- =09init_cpu_present(cpu_possible_mask);
- =09per_cpu(cpu_state, smp_processor_id()) =3D CPU_ONLINE;
- }
-@@ -484,7 +477,8 @@ static int loongson3_cpu_disable(void)
- =09set_cpu_online(cpu, false);
- =09calculate_cpu_foreign_map();
- =09local_irq_save(flags);
--=09fixup_irqs();
-+=09irq_cpu_offline();
-+=09clear_c0_status(ST0_IM);
- =09local_irq_restore(flags);
- =09local_flush_tlb_all();
-=20
++/ {
++=09#address-cells =3D <2>;
++=09#size-cells =3D <2>;
++
++=09cpuintc: interrupt-controller {
++=09=09#address-cells =3D <0>;
++=09=09#interrupt-cells =3D <1>;
++=09=09interrupt-controller;
++=09=09compatible =3D "mti,cpu-interrupt-controller";
++=09};
++
++=09package0: bus@1fe00000 {
++=09=09compatible =3D "simple-bus";
++=09=09#address-cells =3D <2>;
++=09=09#size-cells =3D <1>;
++=09=09ranges =3D <0 0x1fe00000 0 0x1fe00000 0x100000
++=09=09=090 0x3ff00000 0 0x3ff00000 0x100000
++=09=09=090xefd 0xfb000000 0xefd 0xfb000000 0x10000000 /* 3A HT Config Spac=
+e */
++=09=09=090x1efd 0xfb000000 0x1efd 0xfb000000 0x10000000 /* 3B HT Config Sp=
+ace */>;
++
++=09=09liointc: interrupt-controller@3ff01400 {
++=09=09=09compatible =3D "loongson,liointc-1.0";
++=09=09=09reg =3D <0 0x3ff01400 0x64>;
++
++=09=09=09interrupt-controller;
++=09=09=09#interrupt-cells =3D <2>;
++
++=09=09=09interrupt-parent =3D <&cpuintc>;
++=09=09=09interrupts =3D <2>, <3>;
++=09=09=09interrupt-names =3D "int0", "int1";
++
++=09=09=09loongson,parent_int_map =3D <0xf0ffffff>, /* int0 */
++=09=09=09=09=09=09<0x0f000000>, /* int1 */
++=09=09=09=09=09=09<0x00000000>, /* int2 */
++=09=09=09=09=09=09<0x00000000>; /* int3 */
++
++=09=09};
++
++=09=09cpu_uart0: serial@1fe001e0 {
++=09=09=09compatible =3D "ns16550a";
++=09=09=09reg =3D <0 0x1fe001e0 0x8>;
++=09=09=09clock-frequency =3D <33000000>;
++=09=09=09interrupt-parent =3D <&liointc>;
++=09=09=09interrupts =3D <10 IRQ_TYPE_LEVEL_HIGH>;
++=09=09=09no-loopback-test;
++=09=09};
++
++=09=09cpu_uart1: serial@1fe001e8 {
++=09=09=09status =3D "disabled";
++=09=09=09compatible =3D "ns16550a";
++=09=09=09reg =3D <0 0x1fe001e8 0x8>;
++=09=09=09clock-frequency =3D <33000000>;
++=09=09=09interrupts =3D <10 IRQ_TYPE_LEVEL_HIGH>;
++=09=09=09interrupt-parent =3D <&liointc>;
++=09=09=09no-loopback-test;
++=09=09};
++=09};
++};
+diff --git a/arch/mips/boot/dts/loongson/loongson3_4core_rs780e.dts b/arch/=
+mips/boot/dts/loongson/loongson3_4core_rs780e.dts
+new file mode 100644
+index 000000000000..6b5694ca0f95
+--- /dev/null
++++ b/arch/mips/boot/dts/loongson/loongson3_4core_rs780e.dts
+@@ -0,0 +1,25 @@
++// SPDX-License-Identifier: GPL-2.0
++
++/dts-v1/;
++
++#include "loongson3-package.dtsi"
++#include "rs780e-pch.dtsi"
++
++/ {
++=09compatible =3D "loongson,loongson3-4core-rs780e";
++};
++
++&package0 {
++=09htpic: interrupt-controller@efdfb000080 {
++=09=09compatible =3D "loongson,htpic-1.0";
++=09=09reg =3D <0xefd 0xfb000080 0x40>;
++=09=09interrupt-controller;
++=09=09#interrupt-cells =3D <1>;
++
++=09=09interrupt-parent =3D <&liointc>;
++=09=09interrupts =3D <24 IRQ_TYPE_LEVEL_HIGH>,
++=09=09=09=09<25 IRQ_TYPE_LEVEL_HIGH>,
++=09=09=09=09<26 IRQ_TYPE_LEVEL_HIGH>,
++=09=09=09=09<27 IRQ_TYPE_LEVEL_HIGH>;
++=09};
++};
+diff --git a/arch/mips/boot/dts/loongson/loongson3_8core_rs780e.dts b/arch/=
+mips/boot/dts/loongson/loongson3_8core_rs780e.dts
+new file mode 100644
+index 000000000000..ffefa2f829b0
+--- /dev/null
++++ b/arch/mips/boot/dts/loongson/loongson3_8core_rs780e.dts
+@@ -0,0 +1,25 @@
++// SPDX-License-Identifier: GPL-2.0
++
++/dts-v1/;
++
++#include "loongson3-package.dtsi"
++#include "rs780e-pch.dtsi"
++
++/ {
++=09compatible =3D "loongson,loongson3-8core-rs780e";
++};
++
++&package0 {
++=09htpic: interrupt-controller@1efdfb000080 {
++=09=09compatible =3D "loongson,htpic-1.0";
++=09=09reg =3D <0x1efd 0xfb000080 0x40>;
++=09=09interrupt-controller;
++=09=09#interrupt-cells =3D <1>;
++
++=09=09interrupt-parent =3D <&liointc>;
++=09=09interrupts =3D <24 IRQ_TYPE_LEVEL_HIGH>,
++=09=09=09=09<25 IRQ_TYPE_LEVEL_HIGH>,
++=09=09=09=09<26 IRQ_TYPE_LEVEL_HIGH>,
++=09=09=09=09<27 IRQ_TYPE_LEVEL_HIGH>;
++=09};
++};
+diff --git a/arch/mips/boot/dts/loongson/rs780e-pch.dtsi b/arch/mips/boot/d=
+ts/loongson/rs780e-pch.dtsi
+new file mode 100644
+index 000000000000..45c54d555fa4
+--- /dev/null
++++ b/arch/mips/boot/dts/loongson/rs780e-pch.dtsi
+@@ -0,0 +1,26 @@
++// SPDX-License-Identifier: GPL-2.0
++
++/ {
++=09bus@10000000 {
++=09=09compatible =3D "simple-bus";
++=09=09#address-cells =3D <2>;
++=09=09#size-cells =3D <2>;
++=09=09ranges =3D <0 0x10000000 0 0x10000000 0 0x10000000
++=09=09=09=090 0x40000000 0 0x40000000 0 0x40000000
++=09=09=09=090xfd 0xfe000000 0xfd 0xfe000000  0 0x2000000 /* PCI Config Spa=
+ce */>;
++
++=09=09isa {
++=09=09=09compatible =3D "isa";
++=09=09=09#address-cells =3D <2>;
++=09=09=09#size-cells =3D <1>;
++=09=09=09ranges =3D <1 0 0 0 0x1000>;
++
++=09=09=09rtc0: rtc@70 {
++=09=09=09=09compatible =3D "motorola,mc146818";
++=09=09=09=09reg =3D <1 0x70 0x8>;
++=09=09=09=09interrupts =3D <8>;
++=09=09=09=09interrupt-parent =3D <&htpic>;
++=09=09=09};
++=09=09};
++=09};
++};
 --=20
 2.25.0
 
