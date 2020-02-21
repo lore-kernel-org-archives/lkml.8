@@ -2,106 +2,155 @@ Return-Path: <SRS0=1210=4J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A25F4C35647
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 13:14:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AA989C35647
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 13:15:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7950A2073A
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 13:14:53 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582290893;
-	bh=zLeMnqmezs9X0Xy259yO8BM4pOGYsFwjR8qRbebbfLM=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=a4e9uf91rAVROufaXopYKNE3FwC+rezYUrd2+eutrMAuU4w+Zx1Ycjs+0/f3KhCRh
-	 HdJ4MdOoFGSUtu/0X+34q/3qYvIBXAhIlJfzOxbRyf/6XSbzW+01YGMOXqiXPdifT9
-	 SHWXGrgYSgZ9phVUr9laud3+VKy3yy491h35pDoo=
+	by mail.kernel.org (Postfix) with ESMTP id 76B2724650
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 13:15:07 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="HqVYXx0Z"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728431AbgBUNOw (ORCPT
+        id S1727686AbgBUNPG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Feb 2020 08:14:52 -0500
-Received: from mail.kernel.org ([198.145.29.99]:45344 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727039AbgBUNOv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Feb 2020 08:14:51 -0500
-Received: from archlinux (cpc149474-cmbg20-2-0-cust94.5-4.cable.virginm.net [82.4.196.95])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id ED9652073A;
-        Fri, 21 Feb 2020 13:14:49 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1582290890;
-        bh=zLeMnqmezs9X0Xy259yO8BM4pOGYsFwjR8qRbebbfLM=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=ph+4u/BXZz9G+9Ax45OcrnZ6Q3noZzZboM+ugFYchqZECl91wxBnYOWbCmuD/1iG5
-         B60w7GPnuZyJ9MkLPkqRzo50/5nh58WDhZ2js4VxxoU158CB6GgZds6bPvK+HQ8C8N
-         pKP/8TvqCJmt7TTZbCDC5ceDquRVMozitmDpU87M=
-Date:   Fri, 21 Feb 2020 13:14:46 +0000
-From:   Jonathan Cameron <jic23@kernel.org>
-To:     Alexandru Ardelean <alexandru.ardelean@analog.com>
-Cc:     <linux-iio@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH 3/3] iio: imu: adis: add a note better explaining
- state_lock
-Message-ID: <20200221131446.20363088@archlinux>
-In-Reply-To: <20200221114943.2056-3-alexandru.ardelean@analog.com>
-References: <20200221114943.2056-1-alexandru.ardelean@analog.com>
-        <20200221114943.2056-3-alexandru.ardelean@analog.com>
-X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        Fri, 21 Feb 2020 08:15:06 -0500
+Received: from mail-lf1-f66.google.com ([209.85.167.66]:38038 "EHLO
+        mail-lf1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727039AbgBUNPG (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 21 Feb 2020 08:15:06 -0500
+Received: by mail-lf1-f66.google.com with SMTP id r14so1458851lfm.5;
+        Fri, 21 Feb 2020 05:15:04 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:date:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=CaDjJtC85YNtsj2xpF6xVXxkswCcqeIPuJeW2JV6kJw=;
+        b=HqVYXx0ZjkswM+ia3xZW3JJp3IJeX/Iv+EGyg6DWVfYYZ7SgXw1NJHeRw8YjmUZ/T/
+         qUcct2FWztWnBnrkOvrQl98MGqKzRZJa5shEHFUgZa77W4+U9hGi5CNrzaHKbqhlB9OX
+         tLi144JkGdZUkWFxzbLjzdDlOVsQI6Fs5vxrSOnTFdpLLC2Vj0IVlstSPEKRo65TwTNI
+         gUVYldOlVDhvbGJWJgwHey7kMXnSCzho796VTAkxPmzpDr6okfW6AiWoG2WQSBjoSX1c
+         6QiLDNsjoWBLM997hJsD7gdArE4/f39W9Wwr/Dx4445TPzc11byaRVZWspFYU6+mMCV5
+         4xPw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:date:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=CaDjJtC85YNtsj2xpF6xVXxkswCcqeIPuJeW2JV6kJw=;
+        b=HgMYLFd421J5jBX/Ii5VLqQtTPqpKKKXqfGe8BUOhqpmykddMXG8GjtfAvZcfqXRyt
+         rvCg3vQHoqUUOrfW+eSvSY6x7XDu4KTu/QPWUMMnPtpfl0mx3d97emsK804IF15rJvik
+         NMVQCdLxNsLTxslYs/KLL++g42Oumf084FNHVBsQ0O1v25BKVjPc2EAT3i+pSUDKncwp
+         z4wbsLcG810usDXzt/EOgj7XKQsHkLgEvJhqWxM1XPokBRySGLsoob/n4enS3wzkD0VI
+         3ME/iLjRC0HxrcFjsBJaUPrONkZcQApHy+UFwF6qHePB5uHeSYZONDDoC5A4NWfFlBFm
+         he4Q==
+X-Gm-Message-State: APjAAAVVQV3KYBMooQ59U4BOvg3mfTH636iU91sJ3JqGZBukj2u+/dLE
+        MIHOAMm4j9gdccfb490/IdE=
+X-Google-Smtp-Source: APXvYqxbwMkLt2Grc+dtAOcGWx2e7gf5I6J0o52FKlWia8hqKn8FOfNkjSIarfoANstubV2LtsSf3w==
+X-Received: by 2002:ac2:47ec:: with SMTP id b12mr20028529lfp.162.1582290903887;
+        Fri, 21 Feb 2020 05:15:03 -0800 (PST)
+Received: from pc636 ([37.139.158.167])
+        by smtp.gmail.com with ESMTPSA id u7sm1672921lfn.31.2020.02.21.05.15.02
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 21 Feb 2020 05:15:03 -0800 (PST)
+From:   Uladzislau Rezki <urezki@gmail.com>
+X-Google-Original-From: Uladzislau Rezki <urezki@pc636>
+Date:   Fri, 21 Feb 2020 14:14:55 +0100
+To:     "Paul E. McKenney" <paulmck@kernel.org>,
+        "Theodore Y. Ts'o" <tytso@mit.edu>,
+        Joel Fernandes <joel@joelfernandes.org>
+Cc:     "Theodore Y. Ts'o" <tytso@mit.edu>,
+        Uladzislau Rezki <urezki@gmail.com>,
+        Joel Fernandes <joel@joelfernandes.org>,
+        Ext4 Developers List <linux-ext4@vger.kernel.org>,
+        Suraj Jitindar Singh <surajjs@amazon.com>,
+        LKML <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH RFC] ext4: fix potential race between online resizing and
+ write operations
+Message-ID: <20200221131455.GA4904@pc636>
+References: <20200215233817.GA670792@mit.edu>
+ <20200216121246.GG2935@paulmck-ThinkPad-P72>
+ <20200217160827.GA5685@pc636>
+ <20200217193314.GA12604@mit.edu>
+ <20200218170857.GA28774@pc636>
+ <20200220045233.GC476845@mit.edu>
+ <20200221003035.GC2935@paulmck-ThinkPad-P72>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200221003035.GC2935@paulmck-ThinkPad-P72>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 21 Feb 2020 13:49:43 +0200
-Alexandru Ardelean <alexandru.ardelean@analog.com> wrote:
-
-> The 'state_lock' mutex was renamed from 'txrx_lock' in a previous patch and
-> is intended to be used by ADIS drivers to protect the state of devices
-> during consecutive R/W ops.
-> The initial patch that introduced this change did not do a good [well, any]
-> job at explaining this. This patch adds a comment to the 'state_lock'
-> better explaining it's use.
-
-Nice work.
-
-Will pick up in v2.
-
-Thanks,
-
-Jonathan
-
+On Thu, Feb 20, 2020 at 04:30:35PM -0800, Paul E. McKenney wrote:
+> On Wed, Feb 19, 2020 at 11:52:33PM -0500, Theodore Y. Ts'o wrote:
+> > On Tue, Feb 18, 2020 at 06:08:57PM +0100, Uladzislau Rezki wrote:
+> > > now it becomes possible to use it like: 
+> > > 	...
+> > > 	void *p = kvmalloc(PAGE_SIZE);
+> > > 	kvfree_rcu(p);
+> > > 	...
+> > > also have a look at the example in the mm/list_lru.c diff.
+> > 
+> > I certainly like the interface, thanks!  I'm going to be pushing
+> > patches to fix this using ext4_kvfree_array_rcu() since there are a
+> > number of bugs in ext4's online resizing which appear to be hitting
+> > multiple cloud providers (with reports from both AWS and GCP) and I
+> > want something which can be easily backported to stable kernels.
+> > 
+> > But once kvfree_rcu() hits mainline, I'll switch ext4 to use it, since
+> > your kvfree_rcu() is definitely more efficient than my expedient
+> > jury-rig.
+> > 
+> > I don't feel entirely competent to review the implementation, but I do
+> > have one question.  It looks like the rcutiny implementation of
+> > kfree_call_rcu() isn't going to do the right thing with kvfree_rcu(p).
+> > Am I missing something?
 > 
-> Signed-off-by: Alexandru Ardelean <alexandru.ardelean@analog.com>
-> ---
->  include/linux/iio/imu/adis.h | 11 +++++++++++
->  1 file changed, 11 insertions(+)
+> Good catch!  I believe that rcu_reclaim_tiny() would need to do
+> kvfree() instead of its current kfree().
 > 
-> diff --git a/include/linux/iio/imu/adis.h b/include/linux/iio/imu/adis.h
-> index 11c915b61ae2..a3110c097fa1 100644
-> --- a/include/linux/iio/imu/adis.h
-> +++ b/include/linux/iio/imu/adis.h
-> @@ -98,6 +98,17 @@ struct adis {
->  	const struct adis_data	*data;
->  	struct adis_burst	*burst;
->  
-> +	/**
-> +	 * The state_lock is meant to be used during operations that require
-> +	 * a sequence of SPI R/W in order to protect the SPI transfer
-> +	 * information (fields 'xfer', 'msg' & 'current_page') between
-> +	 * potential concurrent accesses.
-> +	 * This lock is used by all "adis_{functions}" that have to read/write
-> +	 * registers. These functions also have unlocked variants
-> +	 * (see "__adis_{functions}"), which don't hold this lock.
-> +	 * This allows users of the ADIS library to group SPI R/W into
-> +	 * the drivers, but they also must manage this lock themselves.
-> +	 */
->  	struct mutex		state_lock;
->  	struct spi_message	msg;
->  	struct spi_transfer	*xfer;
+> Vlad, anything I am missing here?
+>
+Yes something like that. There are some open questions about
+realization, when it comes to tiny RCU. Since we are talking
+about "headless" kvfree_rcu() interface, i mean we can not link
+freed "objects" between each other, instead we should place a
+pointer directly into array that will be drained later on.
 
+It would be much more easier to achieve that if we were talking
+about the interface like: kvfree_rcu(p, rcu), but that is not our
+case :)
+
+So, for CONFIG_TINY_RCU we should implement very similar what we
+have done for CONFIG_TREE_RCU or just simply do like Ted has done
+with his
+
+void ext4_kvfree_array_rcu(void *to_free)
+
+i mean:
+
+   local_irq_save(flags);
+   struct foo *ptr = kzalloc(sizeof(*ptr), GFP_ATOMIC);
+
+   if (ptr) {
+           ptr->ptr = to_free;
+           call_rcu(&ptr->rcu, kvfree_callback);
+   }
+   local_irq_restore(flags);
+
+Also there is one more open question what to do if GFP_ATOMIC
+gets failed in case of having low memory condition. Probably
+we can make use of "mempool interface" that allows to have
+min_nr guaranteed pre-allocated pages. 
+
+Thanks!
+
+--
+Vlad Rezki
