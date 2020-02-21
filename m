@@ -2,96 +2,130 @@ Return-Path: <SRS0=1210=4J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E501FC35646
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 10:32:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A136CC35647
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 10:33:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BA043207FD
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 10:32:38 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582281158;
-	bh=28w4tF8+nJO7Wfx8ImCYA2NdorvJ+P431dmFqTMjq8I=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=MrJDjXgRWNtJR9B6Ij/d4ypXWg6rfNJiEJL7sDNUoWo2BICRry2Nzxq/uGg0Xch9v
-	 8qYnRlc1RzOxuHj5BJqCvBEJ5HRpslvYTtwyiMwrCU8zDQHq3OK0ZXlvfTz7PU6EUW
-	 0kWcDvBG/ugbOPsmSqqVOOpYrSQjEjt5IRw0byGw=
+	by mail.kernel.org (Postfix) with ESMTP id 8201A207FD
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 10:33:01 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727616AbgBUKch (ORCPT
+        id S1727851AbgBUKdA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Feb 2020 05:32:37 -0500
-Received: from mail.kernel.org ([198.145.29.99]:54470 "EHLO mail.kernel.org"
+        Fri, 21 Feb 2020 05:33:00 -0500
+Received: from foss.arm.com ([217.140.110.172]:36156 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726100AbgBUKch (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Feb 2020 05:32:37 -0500
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 92D88207FD;
-        Fri, 21 Feb 2020 10:32:35 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1582281156;
-        bh=28w4tF8+nJO7Wfx8ImCYA2NdorvJ+P431dmFqTMjq8I=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=ZnGxUZ2QpCHmhv5qOZp0G08sGbK1AztHqYn35ryNv9A3JQSFXmisDUpeivEMySmJA
-         i11/TTbYcbjxnZdQ9SYpGQWTZRtTRjGrL+MzKztXlhl9gQxdRCzTksBfnbNRgk4b03
-         xcYeQfq/xrqBo8zrgWM6QxoG6KjKwzMi4d9pqs5Y=
-Date:   Fri, 21 Feb 2020 11:32:33 +0100
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     Saravana Kannan <saravanak@google.com>
-Cc:     "Rafael J. Wysocki" <rafael@kernel.org>,
-        Android Kernel Team <kernel-team@android.com>,
-        LKML <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v2 1/3] driver core: Call sync_state() even if supplier
- has no consumers
-Message-ID: <20200221103233.GA101069@kroah.com>
-References: <20200221080510.197337-1-saravanak@google.com>
- <20200221080510.197337-2-saravanak@google.com>
- <20200221092540.GA71325@kroah.com>
- <CAGETcx_yQZtU4O2KgMxVt-hSJCBtNsOpyWsSXc+OZcjjJ91M3g@mail.gmail.com>
+        id S1726976AbgBUKc7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 21 Feb 2020 05:32:59 -0500
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 4350131B;
+        Fri, 21 Feb 2020 02:32:59 -0800 (PST)
+Received: from [10.37.12.243] (unknown [10.37.12.243])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 21EB53F68F;
+        Fri, 21 Feb 2020 02:32:55 -0800 (PST)
+Subject: Re: [RESEND PATCH v2 0/2] Enable Odroid-XU3/4 to use Energy Model and
+ Energy Aware Scheduler
+To:     Krzysztof Kozlowski <krzk@kernel.org>
+Cc:     linux-kernel@vger.kernel.org, kgene@kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        linux-samsung-soc@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-pm@vger.kernel.org, myungjoo.ham@samsung.com,
+        kyungmin.park@samsung.com, cw00.choi@samsung.com,
+        robh+dt@kernel.org, mark.rutland@arm.com, b.zolnierkie@samsung.com,
+        dietmar.eggemann@arm.com
+References: <20200220095636.29469-1-lukasz.luba@arm.com>
+ <20200220180040.GA8338@kozik-lap>
+From:   Lukasz Luba <lukasz.luba@arm.com>
+Message-ID: <597f1475-754c-d77a-b599-0fa07d8ee948@arm.com>
+Date:   Fri, 21 Feb 2020 10:32:53 +0000
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAGETcx_yQZtU4O2KgMxVt-hSJCBtNsOpyWsSXc+OZcjjJ91M3g@mail.gmail.com>
+In-Reply-To: <20200220180040.GA8338@kozik-lap>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Feb 21, 2020 at 01:48:49AM -0800, Saravana Kannan wrote:
-> On Fri, Feb 21, 2020 at 1:25 AM Greg Kroah-Hartman
-> <gregkh@linuxfoundation.org> wrote:
-> >
-> > On Fri, Feb 21, 2020 at 12:05:08AM -0800, Saravana Kannan wrote:
-> > > The initial patch that added sync_state() support didn't handle the case
-> > > where a supplier has no consumers. This was because when a device is
-> > > successfully bound with a driver, only its suppliers were checked to see
-> > > if they are eligible to get a sync_state(). This is not sufficient for
-> > > devices that have no consumers but still need to do device state clean
-> > > up. So fix this.
-> > >
-> > > Fixes: fc5a251d0fd7ca90 (driver core: Add sync_state driver/bus callback)
-> >
-> > Should be:
-> > Fixes: fc5a251d0fd7 ("driver core: Add sync_state driver/bus callback")
+Hi Krzysztof,
+
+On 2/20/20 6:00 PM, Krzysztof Kozlowski wrote:
+> On Thu, Feb 20, 2020 at 09:56:34AM +0000, Lukasz Luba wrote:
+>> Hi all,
+>>
+>> This is just a resend, now with proper v2 in the patches subject.
+>>
+>> The Odroid-XU4/3 is a decent and easy accessible ARM big.LITTLE platform,
+>> which might be used for research and development.
+>>
+>> This small patch set provides possibility to run Energy Aware Scheduler (EAS)
+>> on Odroid-XU4/3 and experiment with it.
+>>
+>> The patch 1/2 provides 'dynamic-power-coefficient' in CPU DT nodes, which is
+>> then used by the Energy Model (EM).
+>> The patch 2/2 enables SCHED_MC (which adds another level in scheduling domains)
+>> and enables EM making EAS possible to run (when schedutil is set as a CPUFreq
+>> governor).
+>>
+>> 1. Test results
+>>
+>> Two types of different tests have been executed. The first is energy test
+>> case showing impact on energy consumption of this patch set. It is using a
+>> synthetic set of tasks (rt-app based). The second is the performance test
+>> case which is using hackbench (less time to complete is better).
+>> In both tests schedutil has been used as cpufreq governor. In all tests
+>> PROVE_LOCKING has not been compiled into the kernels.
+>>
+>> 1.1 Energy test case
+>>
+>> 10 iterations of 24 periodic rt-app tasks (16ms period, 10% duty-cycle)
+>> with energy measurement. The cpufreq governor - schedutil. Unit is Joules.
+>> The energy is calculated based on hwmon0 and hwmon3 power1_input.
+>> The goal is to save energy, lower is better.
+>>
+>> +-----------+-----------------+------------------------+
+>> |           | Without patches | With patches           |
+>> +-----------+--------+--------+----------------+-------+
+>> | benchmark |  Mean  | RSD*   | Mean           | RSD*  |
+>> +-----------+--------+--------+----------------+-------+
+>> | 24 rt-app |  21.56 |  1.37% |  19.85 (-9.2%) | 0.92% |
+>> |    tasks  |        |        |                |       |
+>> +-----------+--------+--------+----------------+-------+
+>>
+>> 1.2 Performance test case
+>>
+>> 10 consecutive iterations of hackbench (hackbench -l 500 -s 4096),
+>> no delay between two successive executions.
+>> The cpufreq governor - schedutil. Units in seconds.
+>> The goal is to see not regression, lower completion time is better.
+>>
+>> +-----------+-----------------+------------------------+
+>> |           | Without patches | With patches           |
+>> +-----------+--------+--------+----------------+-------+
+>> | benchmark | Mean   | RSD*   | Mean           | RSD*  |
+>> +-----------+--------+--------+----------------+-------+
+>> | hackbench |  8.15  | 2.86%  |  7.95 (-2.5%)  | 0.60% |
+>> +-----------+--------+--------+----------------+-------+
+>>
+>> *RSD: Relative Standard Deviation (std dev / mean)
 > 
-> Sorry, late night sleepy patches are never good!
-> Btw I thought the sha should be only 12 characters but then saw
-> another instance where you used 16 chars. What's the right one?
+> Nice measurements!
 
-I used 16 chars?  12 should be all that is needed.
+Glad to hear that.
 
-> > > Signed-off-by: Saravana Kannan <saravanak@google.com>
-> >
-> > So this needs to go to 5.5 also, right?
 > 
-> Did you mean 5.4? Yes.
+> Applied both, thank you.
+> 
+> Best regards,
+> Krzysztof
+> 
 
-fc5a251d0fd7 is only in 5.5, not 5.4 from what I can see, right?
+Thank you for applying this.
 
-thanks,
-
-greg k-h
+Regards,
+Lukasz
