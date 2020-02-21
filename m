@@ -2,53 +2,52 @@ Return-Path: <SRS0=1210=4J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 079EBC35640
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 08:07:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 110B5C35642
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 08:07:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D401920578
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 08:07:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D895520578
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 08:07:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582272436;
-	bh=6bg20xgzmssxyeH7ivBMhEcUxrLYmmoh21+Gie1Fxxc=;
+	s=default; t=1582272438;
+	bh=8HUB1l7K/kfrc9BPVRbNuWolaKKk6PF6kPZqwuYtyTg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=xyiTdbhtd9TY0NR8uwETZdghu5So1wcwAXsKWRa8TEE2bMgp6qGmsE1nAaByFJ0R5
-	 UuvQ7yu8t/bbfkboewtCmzoGV6TBwQGc6VIa3Nx60YXENTkqygEuRHx31e4oaVf/56
-	 Gxbh74MAhQ2ZGnnc+5g/ptssg4jKRfAy3wT34sY8=
+	b=fv6P4MwKHVmf5vvP4aU3LuzUfhZ23VtQHJnvG84j+1cCeyLI5Jp3J4mBzyZKTlYVY
+	 7ncxnJsHYggOOQg+7sqO+Xag/xOU9e9Strlf4b99wtjVn3fOITvjxj+nnWwtq2Us56
+	 D20vRj6j/mPaf8s78wQhhgJRKlHDR9rTfvhrJdfA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731734AbgBUIHP (ORCPT
+        id S1732042AbgBUIHQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Feb 2020 03:07:15 -0500
-Received: from mail.kernel.org ([198.145.29.99]:41316 "EHLO mail.kernel.org"
+        Fri, 21 Feb 2020 03:07:16 -0500
+Received: from mail.kernel.org ([198.145.29.99]:41384 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732038AbgBUIHL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Feb 2020 03:07:11 -0500
+        id S1731133AbgBUIHP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 21 Feb 2020 03:07:15 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D681B20578;
-        Fri, 21 Feb 2020 08:07:10 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E5D1720578;
+        Fri, 21 Feb 2020 08:07:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1582272431;
-        bh=6bg20xgzmssxyeH7ivBMhEcUxrLYmmoh21+Gie1Fxxc=;
+        s=default; t=1582272434;
+        bh=8HUB1l7K/kfrc9BPVRbNuWolaKKk6PF6kPZqwuYtyTg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=wKbGHGdQFEU2JmPC5WLQ1b60q6MbfufxCMuJGm+N6s8qU2OWsKa3ZO4R6xjY1U6ai
-         tP/LWgC12LOML9uftAnDtH5XeIs7QQiK00OfT6tNZTNym49BaKHsmZIp47BtEP5zP3
-         L9FGbseoB/aguY+roQuDmxFV4Np3/Ozk1EQlALrA=
+        b=eHH6PQr1oS0ut1NUEhJA8PvVqAWMPlJ2gyZYHpZ+JK9ZpSPkQdJZGrVq0P4RmDyl1
+         RQtuSxlz6Gt8JcETFl2YcozJpAeYnQWIquKUcpdB1q7pCRm/pRAvqRwAh0PYJ+XqEo
+         NuqQt2Oy4kMv8sqE/EPGw2BbJVuXor0UswwCyyVs=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Phong Tran <tranmanphong@gmail.com>,
-        Kees Cook <keescook@chromium.org>,
-        Kalle Valo <kvalo@codeaurora.org>,
+        stable@vger.kernel.org, Andre Przywara <andre.przywara@arm.com>,
+        Maxime Ripard <maxime@cerno.tech>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 139/344] iwlegacy: Fix -Wcast-function-type
-Date:   Fri, 21 Feb 2020 08:38:58 +0100
-Message-Id: <20200221072401.464557052@linuxfoundation.org>
+Subject: [PATCH 5.4 107/344] arm64: dts: allwinner: H5: Add PMU node
+Date:   Fri, 21 Feb 2020 08:38:26 +0100
+Message-Id: <20200221072358.635552303@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200221072349.335551332@linuxfoundation.org>
 References: <20200221072349.335551332@linuxfoundation.org>
@@ -61,70 +60,72 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Phong Tran <tranmanphong@gmail.com>
+From: Andre Przywara <andre.przywara@arm.com>
 
-[ Upstream commit da5e57e8a6a3e69dac2937ba63fa86355628fbb2 ]
+[ Upstream commit c35a516a46187c8eeb7a56c64505ec6f7e22a0c7 ]
 
-correct usage prototype of callback in tasklet_init().
-Report by https://github.com/KSPP/linux/issues/20
+Add the Performance Monitoring Unit (PMU) device tree node to the H5
+.dtsi, which tells DT users which interrupts are triggered by PMU
+overflow events on each core.
+As with the A64, the interrupt numbers from the manual were wrong (off
+by 4), the actual SPI IDs have been gathered in U-Boot, and were
+verified with perf in Linux.
 
-Signed-off-by: Phong Tran <tranmanphong@gmail.com>
-Reviewed-by: Kees Cook <keescook@chromium.org>
-Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
+Tested with perf record and taskset on an OrangePi PC2.
+
+Signed-off-by: Andre Przywara <andre.przywara@arm.com>
+Signed-off-by: Maxime Ripard <maxime@cerno.tech>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/wireless/intel/iwlegacy/3945-mac.c | 5 +++--
- drivers/net/wireless/intel/iwlegacy/4965-mac.c | 5 +++--
- 2 files changed, 6 insertions(+), 4 deletions(-)
+ arch/arm64/boot/dts/allwinner/sun50i-h5.dtsi | 16 +++++++++++++---
+ 1 file changed, 13 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/net/wireless/intel/iwlegacy/3945-mac.c b/drivers/net/wireless/intel/iwlegacy/3945-mac.c
-index 4fbcc7fba3cc1..e2e9c3e8fff51 100644
---- a/drivers/net/wireless/intel/iwlegacy/3945-mac.c
-+++ b/drivers/net/wireless/intel/iwlegacy/3945-mac.c
-@@ -1376,8 +1376,9 @@ il3945_dump_nic_error_log(struct il_priv *il)
- }
+diff --git a/arch/arm64/boot/dts/allwinner/sun50i-h5.dtsi b/arch/arm64/boot/dts/allwinner/sun50i-h5.dtsi
+index f002a496d7cbb..1d34e3eefda3f 100644
+--- a/arch/arm64/boot/dts/allwinner/sun50i-h5.dtsi
++++ b/arch/arm64/boot/dts/allwinner/sun50i-h5.dtsi
+@@ -54,21 +54,21 @@
+ 			enable-method = "psci";
+ 		};
  
- static void
--il3945_irq_tasklet(struct il_priv *il)
-+il3945_irq_tasklet(unsigned long data)
- {
-+	struct il_priv *il = (struct il_priv *)data;
- 	u32 inta, handled = 0;
- 	u32 inta_fh;
- 	unsigned long flags;
-@@ -3403,7 +3404,7 @@ il3945_setup_deferred_work(struct il_priv *il)
- 	timer_setup(&il->watchdog, il_bg_watchdog, 0);
+-		cpu@1 {
++		cpu1: cpu@1 {
+ 			compatible = "arm,cortex-a53";
+ 			device_type = "cpu";
+ 			reg = <1>;
+ 			enable-method = "psci";
+ 		};
  
- 	tasklet_init(&il->irq_tasklet,
--		     (void (*)(unsigned long))il3945_irq_tasklet,
-+		     il3945_irq_tasklet,
- 		     (unsigned long)il);
- }
+-		cpu@2 {
++		cpu2: cpu@2 {
+ 			compatible = "arm,cortex-a53";
+ 			device_type = "cpu";
+ 			reg = <2>;
+ 			enable-method = "psci";
+ 		};
  
-diff --git a/drivers/net/wireless/intel/iwlegacy/4965-mac.c b/drivers/net/wireless/intel/iwlegacy/4965-mac.c
-index ffb705b18fb13..5fe17039a3375 100644
---- a/drivers/net/wireless/intel/iwlegacy/4965-mac.c
-+++ b/drivers/net/wireless/intel/iwlegacy/4965-mac.c
-@@ -4344,8 +4344,9 @@ il4965_synchronize_irq(struct il_priv *il)
- }
+-		cpu@3 {
++		cpu3: cpu@3 {
+ 			compatible = "arm,cortex-a53";
+ 			device_type = "cpu";
+ 			reg = <3>;
+@@ -76,6 +76,16 @@
+ 		};
+ 	};
  
- static void
--il4965_irq_tasklet(struct il_priv *il)
-+il4965_irq_tasklet(unsigned long data)
- {
-+	struct il_priv *il = (struct il_priv *)data;
- 	u32 inta, handled = 0;
- 	u32 inta_fh;
- 	unsigned long flags;
-@@ -6238,7 +6239,7 @@ il4965_setup_deferred_work(struct il_priv *il)
- 	timer_setup(&il->watchdog, il_bg_watchdog, 0);
- 
- 	tasklet_init(&il->irq_tasklet,
--		     (void (*)(unsigned long))il4965_irq_tasklet,
-+		     il4965_irq_tasklet,
- 		     (unsigned long)il);
- }
- 
++	pmu {
++		compatible = "arm,cortex-a53-pmu",
++			     "arm,armv8-pmuv3";
++		interrupts = <GIC_SPI 116 IRQ_TYPE_LEVEL_HIGH>,
++			     <GIC_SPI 117 IRQ_TYPE_LEVEL_HIGH>,
++			     <GIC_SPI 118 IRQ_TYPE_LEVEL_HIGH>,
++			     <GIC_SPI 119 IRQ_TYPE_LEVEL_HIGH>;
++		interrupt-affinity = <&cpu0>, <&cpu1>, <&cpu2>, <&cpu3>;
++	};
++
+ 	psci {
+ 		compatible = "arm,psci-0.2";
+ 		method = "smc";
 -- 
 2.20.1
 
