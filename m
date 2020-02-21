@@ -2,69 +2,93 @@ Return-Path: <SRS0=1210=4J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 966FDC35658
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 17:13:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BD7B9C35646
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 17:13:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6D800222C4
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 17:13:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9DF9220722
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 17:13:34 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728385AbgBURM7 (ORCPT
+        id S1728292AbgBURNd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Feb 2020 12:12:59 -0500
-Received: from mx2.suse.de ([195.135.220.15]:39640 "EHLO mx2.suse.de"
+        Fri, 21 Feb 2020 12:13:33 -0500
+Received: from verein.lst.de ([213.95.11.211]:56597 "EHLO verein.lst.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725957AbgBURM6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Feb 2020 12:12:58 -0500
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx2.suse.de (Postfix) with ESMTP id 76F9BAC37;
-        Fri, 21 Feb 2020 17:12:57 +0000 (UTC)
-Date:   Fri, 21 Feb 2020 18:12:56 +0100
-From:   Michal =?iso-8859-1?Q?Koutn=FD?= <mkoutny@suse.com>
-To:     Johannes Weiner <hannes@cmpxchg.org>
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        Roman Gushchin <guro@fb.com>, Michal Hocko <mhocko@suse.com>,
-        Tejun Heo <tj@kernel.org>, linux-mm@kvack.org,
-        cgroups@vger.kernel.org, linux-kernel@vger.kernel.org,
-        kernel-team@fb.com
-Subject: Re: [PATCH v2 3/3] mm: memcontrol: recursive memory.low protection
-Message-ID: <20200221171256.GB23476@blackbody.suse.cz>
-References: <20191219200718.15696-1-hannes@cmpxchg.org>
- <20191219200718.15696-4-hannes@cmpxchg.org>
+        id S1726408AbgBURNd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 21 Feb 2020 12:13:33 -0500
+Received: by verein.lst.de (Postfix, from userid 2005)
+        id 06ABD68BFE; Fri, 21 Feb 2020 18:13:29 +0100 (CET)
+Date:   Fri, 21 Feb 2020 18:13:28 +0100
+From:   Torsten Duwe <duwe@lst.de>
+To:     Icenowy Zheng <icenowy@aosc.io>
+Cc:     Andrzej Hajda <a.hajda@samsung.com>,
+        Neil Armstrong <narmstrong@baylibre.com>,
+        Laurent Pinchart <Laurent.pinchart@ideasonboard.com>,
+        Jonas Karlman <jonas@kwiboo.se>,
+        Jernej Skrabec <jernej.skrabec@siol.net>,
+        Maxime Ripard <maxime@cerno.tech>,
+        Vasily Khoruzhick <anarsoul@gmail.com>,
+        dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] drm/bridge: analogix-anx6345: fix set of link bandwidth
+Message-ID: <20200221171328.GC6928@lst.de>
+References: <20200221165127.813325-1-icenowy@aosc.io>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20191219200718.15696-4-hannes@cmpxchg.org>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20200221165127.813325-1-icenowy@aosc.io>
+User-Agent: Mutt/1.5.17 (2007-11-01)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Dec 19, 2019 at 03:07:18PM -0500, Johannes Weiner <hannes@cmpxchg.org> wrote:
-> Unfortunately, this limitation makes it impossible to protect an
-> entire subtree from another without forcing the user to make explicit
-> protection allocations all the way to the leaf cgroups - something
-> that is highly undesirable in real life scenarios.
-I see that the jobs in descedant cgroups don't know (or care) what
-protection is above them and hence the implicit distribution is sensible
-here.
+On Sat, Feb 22, 2020 at 12:51:27AM +0800, Icenowy Zheng wrote:
+> Current code tries to store the link rate (in bps, which is a big
+> number) in a u8, which surely overflow. Then it's converted back to
+> bandwidth code (which is thus 0) and written to the chip.
+> 
+> The code sometimes works because the chip will automatically fallback to
+> the lowest possible DP link rate (1.62Gbps) when get the invalid value.
+> However, on the eDP panel of Olimex TERES-I, which wants 2.7Gbps link,
+> it failed.
+> 
+> As we had already read the link bandwidth as bandwidth code in earlier
+> code (to check whether it is supported), use it when setting bandwidth,
+> instead of converting it to link rate and then converting back.
+> 
+> Fixes: e1cff82c1097 ("drm/bridge: fix anx6345 compilation for v5.5")
+> Signed-off-by: Icenowy Zheng <icenowy@aosc.io>
+> ---
+>  drivers/gpu/drm/bridge/analogix/analogix-anx6345.c | 3 +--
+>  1 file changed, 1 insertion(+), 2 deletions(-)
+> 
+> diff --git a/drivers/gpu/drm/bridge/analogix/analogix-anx6345.c b/drivers/gpu/drm/bridge/analogix/analogix-anx6345.c
+> index 56f55c53abfd..2dfa2fd2a23b 100644
+> --- a/drivers/gpu/drm/bridge/analogix/analogix-anx6345.c
+> +++ b/drivers/gpu/drm/bridge/analogix/analogix-anx6345.c
+> @@ -210,8 +210,7 @@ static int anx6345_dp_link_training(struct anx6345 *anx6345)
+>  	if (err)
+>  		return err;
+>  
+> -	dpcd[0] = drm_dp_max_link_rate(anx6345->dpcd);
+> -	dpcd[0] = drm_dp_link_rate_to_bw_code(dpcd[0]);
+> +	dpcd[0] = dp_bw;
 
-However, the protection your case requires can already be reached thanks
-to the the hierachical capping and overcommit normalization -- you can
-set memory.low to "max" at all the non-caring descendants.
-IIUC, that is the same as setting zeroes (after your patch) and relying
-on the recursive distribution of unused protection -- or is there a
-mistake in my reasoning?
+Why do you make this assignment and not use dp_bw directly in the call?
 
-So in my view, the recursive distribution doesn't bring anything new,
-however, its new semantics of memory.low doesn't allow turning the
-protection off in a protected subtree (delegating the decision to
-distribute protection within parent bounds is IMO a valid use case).
+>  	err = regmap_write(anx6345->map[I2C_IDX_DPTX],
+>  			   SP_DP_MAIN_LINK_BW_SET_REG, dpcd[0]);
+                                                       ^^^^^^
+>  	if (err)
+> -- 
+> 2.24.1
 
-Regards,
-Michal
+BTW, my version is only a bit more verbose:
+
+https://patchwork.freedesktop.org/patch/354344/
+
+	Torsten
+
