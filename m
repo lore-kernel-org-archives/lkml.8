@@ -2,112 +2,111 @@ Return-Path: <SRS0=1210=4J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 02DDFC35640
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 08:30:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9A3AEC35641
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 08:30:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CF76E20679
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 08:30:35 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="DghcjZaQ"
+	by mail.kernel.org (Postfix) with ESMTP id 6E10020679
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 08:30:44 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1582273844;
+	bh=PNI4J4LnI5EeNudriscWBtbKyV+GK1O1DWXIYeyYIG4=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=YrTCPui+BDe1/2TxFpz9sBltrzbbfR6NnMNQGJlB5160nPJ7Z0nY6hwrqFEiRe/gy
+	 3TltGDnv87QOrS0QX0i5/behLpwQmKaJzN3MZyCH8fgBjjf88a3l7HogCduTT9Za7s
+	 7cTOui5VAMeJQm6VYgcRV2DCPeNw2WcgpNc4nt2I=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388839AbgBUIae (ORCPT
+        id S2387423AbgBUIPq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Feb 2020 03:30:34 -0500
-Received: from lelv0142.ext.ti.com ([198.47.23.249]:57696 "EHLO
-        lelv0142.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2388010AbgBUIac (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Feb 2020 03:30:32 -0500
-Received: from lelv0265.itg.ti.com ([10.180.67.224])
-        by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id 01L8UBTi015091;
-        Fri, 21 Feb 2020 02:30:11 -0600
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1582273811;
-        bh=+GwlT/Yat0yhSuALWos65geLATvxwiVl9nMI6ZThU74=;
-        h=Subject:To:CC:References:From:Date:In-Reply-To;
-        b=DghcjZaQsPfTbKfnW/1UJ7PRfuWJ+c78eU1tqmFIwTARL8D3YzAwWvMkKNdkYCFIi
-         1CX8KZmbKFisJ4b4RetAzP2XHCypsnQVCIkHkvtXm3S7sFP9Rn0hqyLvfnk7VDW9Ia
-         Xe6Cl4sojFoR1i3HHMeA6X9uI3Tn53vK3Rulj7Ik=
-Received: from DFLE114.ent.ti.com (dfle114.ent.ti.com [10.64.6.35])
-        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 01L8UBXA075825
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Fri, 21 Feb 2020 02:30:11 -0600
-Received: from DFLE109.ent.ti.com (10.64.6.30) by DFLE114.ent.ti.com
- (10.64.6.35) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Fri, 21
- Feb 2020 02:30:11 -0600
-Received: from fllv0040.itg.ti.com (10.64.41.20) by DFLE109.ent.ti.com
- (10.64.6.30) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
- Frontend Transport; Fri, 21 Feb 2020 02:30:11 -0600
-Received: from [172.24.190.4] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by fllv0040.itg.ti.com (8.15.2/8.15.2) with ESMTP id 01L8U6eo107119;
-        Fri, 21 Feb 2020 02:30:07 -0600
-Subject: Re: [PATCH v2 1/3] dt-bindings: m_can: Add Documentation for
- transceiver regulator
-To:     Rob Herring <robh@kernel.org>
-CC:     <linux-arm-kernel@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <netdev@vger.kernel.org>, <linux-can@vger.kernel.org>,
-        <broonie@kernel.org>, <lgirdwood@gmail.com>,
-        <catalin.marinas@arm.com>, <mark.rutland@arm.com>,
-        <mkl@pengutronix.de>, <wg@grandegger.com>,
-        <sriram.dash@samsung.com>, <dmurphy@ti.com>
-References: <20200217142836.23702-1-faiz_abbas@ti.com>
- <20200217142836.23702-2-faiz_abbas@ti.com> <20200219203529.GA21085@bogus>
-From:   Faiz Abbas <faiz_abbas@ti.com>
-Message-ID: <a987bcd7-ca1c-dfda-72f3-cd2004a87ea5@ti.com>
-Date:   Fri, 21 Feb 2020 14:01:46 +0530
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.1
+        Fri, 21 Feb 2020 03:15:46 -0500
+Received: from mail.kernel.org ([198.145.29.99]:52530 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1732657AbgBUIPl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 21 Feb 2020 03:15:41 -0500
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8836624670;
+        Fri, 21 Feb 2020 08:15:40 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1582272941;
+        bh=PNI4J4LnI5EeNudriscWBtbKyV+GK1O1DWXIYeyYIG4=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=AQDxkluAlHUrfNjCw0gN9Xn95K4eC0Xhx0SBXOMOKwoen6TbDd1tOM4H+Pt5eKWq0
+         KFw4iTJmonK1+kFC13r5PY2FYNeCu87FXtCyEIRSHbJMIMgr2dgyVNiVcuvAHWMzby
+         Yc1O4reUROukYZ/rybsIS6xyAPYELUnqR8cBnnTI=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org, Steve Best <sbest@redhat.com>,
+        Douglas Miller <dougmill@us.ibm.com>,
+        Oliver OHalloran <oohall@gmail.com>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.4 296/344] selftests/eeh: Bump EEH wait time to 60s
+Date:   Fri, 21 Feb 2020 08:41:35 +0100
+Message-Id: <20200221072416.768276335@linuxfoundation.org>
+X-Mailer: git-send-email 2.25.1
+In-Reply-To: <20200221072349.335551332@linuxfoundation.org>
+References: <20200221072349.335551332@linuxfoundation.org>
+User-Agent: quilt/0.66
 MIME-Version: 1.0
-In-Reply-To: <20200219203529.GA21085@bogus>
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Rob,
+From: Oliver O'Halloran <oohall@gmail.com>
 
-On 20/02/20 2:05 am, Rob Herring wrote:
-> On Mon, Feb 17, 2020 at 07:58:34PM +0530, Faiz Abbas wrote:
->> Some CAN transceivers have a standby line that needs to be asserted
->> before they can be used. Model this GPIO lines as an optional
->> fixed-regulator node. Document bindings for the same.
->>
->> Signed-off-by: Faiz Abbas <faiz_abbas@ti.com>
->> ---
->>  Documentation/devicetree/bindings/net/can/m_can.txt | 3 +++
->>  1 file changed, 3 insertions(+)
-> 
-> This has moved to DT schema in my tree, so please adjust it and resend.
+[ Upstream commit 414f50434aa2463202a5b35e844f4125dd1a7101 ]
 
-Ok.
-> 
->> diff --git a/Documentation/devicetree/bindings/net/can/m_can.txt b/Documentation/devicetree/bindings/net/can/m_can.txt
->> index ed614383af9c..f17e2a5207dc 100644
->> --- a/Documentation/devicetree/bindings/net/can/m_can.txt
->> +++ b/Documentation/devicetree/bindings/net/can/m_can.txt
->> @@ -48,6 +48,9 @@ Optional Subnode:
->>  			  that can be used for CAN/CAN-FD modes. See
->>  			  Documentation/devicetree/bindings/net/can/can-transceiver.txt
->>  			  for details.
->> +
->> +- xceiver-supply: Regulator that powers the CAN transceiver.
-> 
-> The supply for a transceiver should go in the transceiver node.
-> 
+Some newer cards supported by aacraid can take up to 40s to recover
+after an EEH event. This causes spurious failures in the basic EEH
+self-test since the current maximim timeout is only 30s.
 
-Marc, while I have you here, do you agree with this?
+Fix the immediate issue by bumping the timeout to a default of 60s,
+and allow the wait time to be specified via an environmental variable
+(EEH_MAX_WAIT).
 
-Thanks,
-Faiz
+Reported-by: Steve Best <sbest@redhat.com>
+Suggested-by: Douglas Miller <dougmill@us.ibm.com>
+Signed-off-by: Oliver O'Halloran <oohall@gmail.com>
+Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
+Link: https://lore.kernel.org/r/20200122031125.25991-1-oohall@gmail.com
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ tools/testing/selftests/powerpc/eeh/eeh-functions.sh | 10 +++++++---
+ 1 file changed, 7 insertions(+), 3 deletions(-)
+
+diff --git a/tools/testing/selftests/powerpc/eeh/eeh-functions.sh b/tools/testing/selftests/powerpc/eeh/eeh-functions.sh
+index 26112ab5cdf42..f52ed92b53e74 100755
+--- a/tools/testing/selftests/powerpc/eeh/eeh-functions.sh
++++ b/tools/testing/selftests/powerpc/eeh/eeh-functions.sh
+@@ -53,9 +53,13 @@ eeh_one_dev() {
+ 	# is a no-op.
+ 	echo $dev >/sys/kernel/debug/powerpc/eeh_dev_check
+ 
+-	# Enforce a 30s timeout for recovery. Even the IPR, which is infamously
+-	# slow to reset, should recover within 30s.
+-	max_wait=30
++	# Default to a 60s timeout when waiting for a device to recover. This
++	# is an arbitrary default which can be overridden by setting the
++	# EEH_MAX_WAIT environmental variable when required.
++
++	# The current record holder for longest recovery time is:
++	#  "Adaptec Series 8 12G SAS/PCIe 3" at 39 seconds
++	max_wait=${EEH_MAX_WAIT:=60}
+ 
+ 	for i in `seq 0 ${max_wait}` ; do
+ 		if pe_ok $dev ; then
+-- 
+2.20.1
+
+
+
