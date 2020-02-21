@@ -2,229 +2,111 @@ Return-Path: <SRS0=1210=4J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1D8ABC35658
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 17:10:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A21ACC35646
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 17:10:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E5890222C4
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 17:10:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 78CA4222C4
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 17:10:39 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b="REgQwD+8"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728319AbgBURKe (ORCPT
+        id S1728373AbgBURKi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Feb 2020 12:10:34 -0500
-Received: from mx2.suse.de ([195.135.220.15]:38514 "EHLO mx2.suse.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726408AbgBURKe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Feb 2020 12:10:34 -0500
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx2.suse.de (Postfix) with ESMTP id 2D534ABBD;
-        Fri, 21 Feb 2020 17:10:31 +0000 (UTC)
-Date:   Fri, 21 Feb 2020 18:10:24 +0100
-From:   Michal =?iso-8859-1?Q?Koutn=FD?= <mkoutny@suse.com>
-To:     Johannes Weiner <hannes@cmpxchg.org>
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        Roman Gushchin <guro@fb.com>, Michal Hocko <mhocko@suse.com>,
-        Tejun Heo <tj@kernel.org>, linux-mm@kvack.org,
-        cgroups@vger.kernel.org, linux-kernel@vger.kernel.org,
-        kernel-team@fb.com
-Subject: Re: [PATCH v2 2/3] mm: memcontrol: clean up and document effective
- low/min calculations
-Message-ID: <20200221171024.GA23476@blackbody.suse.cz>
-References: <20191219200718.15696-1-hannes@cmpxchg.org>
- <20191219200718.15696-3-hannes@cmpxchg.org>
+        Fri, 21 Feb 2020 12:10:38 -0500
+Received: from pandora.armlinux.org.uk ([78.32.30.218]:51614 "EHLO
+        pandora.armlinux.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727469AbgBURKh (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 21 Feb 2020 12:10:37 -0500
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=armlinux.org.uk; s=pandora-2019; h=Sender:In-Reply-To:Content-Type:
+        MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=bp1lWcxGkXI1dOKZa2p+oi0pswujYwX0tBwQBCst0zM=; b=REgQwD+8Du6hBrxoBK+zFIs0Z
+        6A92OGFjwvYnNCRJJ4qpiWJuwucUoi9OHxhYoVQDQTqgVMyaLdK99gZoOtjJRNalWF75yRLvkGVrx
+        INHqGMXfpmgKCx6R82YcA0tWuC5c2i3Gq6M97zYis9unSS1TXNpFEWC36zXygXPLHbv2SQJGmJDmd
+        KvyqZZIlkf0TWJOJ8yKuJ+dKNLqFI2LVLkvRj1wRGfas03zBgiNIX56pOMgwo8RJPrpZ9XpuWF5QC
+        DJ2P8BGlVXy6JKxT8HFqs342ASPkC203Kc66tMqLZ746HkX28SgQ2NBwi7bw1sDQUIoQKdUuKpu3w
+        VaFWa05lQ==;
+Received: from shell.armlinux.org.uk ([2001:4d48:ad52:3201:5054:ff:fe00:4ec]:43400)
+        by pandora.armlinux.org.uk with esmtpsa (TLSv1.2:ECDHE-RSA-AES256-GCM-SHA384:256)
+        (Exim 4.90_1)
+        (envelope-from <linux@armlinux.org.uk>)
+        id 1j5Bop-0002S1-IA; Fri, 21 Feb 2020 17:10:27 +0000
+Received: from linux by shell.armlinux.org.uk with local (Exim 4.92)
+        (envelope-from <linux@shell.armlinux.org.uk>)
+        id 1j5Bom-0003fn-Jw; Fri, 21 Feb 2020 17:10:24 +0000
+Date:   Fri, 21 Feb 2020 17:10:24 +0000
+From:   Russell King - ARM Linux admin <linux@armlinux.org.uk>
+To:     Florian Fainelli <f.fainelli@gmail.com>
+Cc:     Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Nicolas Ferre <nicolas.ferre@microchip.com>,
+        Antoine =?iso-8859-1?Q?T=E9nart?= <antoine.tenart@bootlin.com>,
+        netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org
+Subject: Re: [PATCH net] net: macb: Properly handle phylink on at91rm9200
+Message-ID: <20200221171024.GK25745@shell.armlinux.org.uk>
+References: <20200217104348.43164-1-alexandre.belloni@bootlin.com>
+ <661c1e61-11c8-0c54-83a2-5e81674246e0@gmail.com>
 MIME-Version: 1.0
-Content-Type: multipart/mixed; boundary="8P1HSweYDcXXzwPJ"
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20191219200718.15696-3-hannes@cmpxchg.org>
+In-Reply-To: <661c1e61-11c8-0c54-83a2-5e81674246e0@gmail.com>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Mon, Feb 17, 2020 at 02:03:47PM -0800, Florian Fainelli wrote:
+> 
+> 
+> On 2/17/2020 2:43 AM, Alexandre Belloni wrote:
+> > at91ether_init was handling the phy mode and speed but since the switch to
+> > phylink, the NCFGR register got overwritten by macb_mac_config().
+> > 
+> > Add new phylink callbacks to handle emac and at91rm9200 properly.
+> > 
+> > Fixes: 7897b071ac3b ("net: macb: convert to phylink")
+> > Signed-off-by: Alexandre Belloni <alexandre.belloni@bootlin.com>
+> > ---
+> 
+> [snip]
+> 
+> > +static void at91ether_mac_link_up(struct phylink_config *config,
+> > +				  unsigned int mode,
+> > +				  phy_interface_t interface,
+> > +				  struct phy_device *phy)
+> > +{
+> > +	struct net_device *ndev = to_net_dev(config->dev);
+> > +	struct macb *bp = netdev_priv(ndev);
+> > +
+> > +	/* Enable Rx and Tx */
+> > +	macb_writel(bp, NCR, macb_readl(bp, NCR) | MACB_BIT(RE) | MACB_BIT(TE));
+> > +
+> > +	netif_tx_wake_all_queues(ndev);
+> 
+> So this happens to be copied from the mvpp2 driver, if this is a
+> requirement, should not this be moved to the phylink implementation
+> since it already manages the carrier? Those two drivers are the only
+> ones doing this.
 
---8P1HSweYDcXXzwPJ
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Looking at mvneta, it does stuff with managing the queues itself, and
+I suspect adding that into phylink will mess that driver up.  Maybe
+someone with more knowledge can take a look.
 
-On Thu, Dec 19, 2019 at 03:07:17PM -0500, Johannes Weiner <hannes@cmpxchg.org> wrote:
-> The effective protection of any given cgroup is a somewhat complicated
-> construct that depends on the ancestor's configuration, siblings'
-> configurations, as well as current memory utilization in all these
-> groups.
-I agree with that. It makes it a bit hard to determine the equilibrium
-in advance.
+But, IMHO, two drivers doing something is not grounds for moving it
+into higher layers.
 
-
-> + *    Consider the following example tree:
->   *
-> + *        A      A/memory.low = 2G, A/memory.current = 6G
-> + *       //\\
-> + *      BC  DE   B/memory.low = 3G  B/memory.current = 2G
-> + *               C/memory.low = 1G  C/memory.current = 2G
-> + *               D/memory.low = 0   D/memory.current = 2G
-> + *               E/memory.low = 10G E/memory.current = 0
->   *
-> + *    and memory pressure is applied, the following memory
-> + *    distribution is expected (approximately*):
->   *
-> + *      A/memory.current = 2G
-> + *      B/memory.current = 1.3G
-> + *      C/memory.current = 0.6G
-> + *      D/memory.current = 0
-> + *      E/memory.current = 0
->   *
-> + *    *assuming equal allocation rate and reclaimability
-I think the assumptions for this example don't hold (anymore).
-Because reclaim rate depends on the usage above protection, the siblings
-won't be reclaimed equally and so the low_usage proportionality will
-change over time and the equilibrium distribution is IMO different (I'm
-attaching an Octave script to calculate it).
-
-As it depends on the initial usage, I don't think there can be given
-such a general example (for overcommit).
-
-
-> @@ -6272,12 +6262,63 @@ struct cgroup_subsys memory_cgrp_subsys = {
->   * for next usage. This part is intentionally racy, but it's ok,
->   * as memory.low is a best-effort mechanism.
-Although it's a different issue but since this updates the docs I'm
-mentioning it -- we treat memory.min the same, i.e. it's subject to the
-same race, however, it's not meant to be best effort. I didn't look into
-outcomes of potential misaccounting but the comment seems to miss impact
-on memory.min protection.
-
-> @@ -6292,52 +6333,29 @@ enum mem_cgroup_protection mem_cgroup_protected(struct mem_cgroup *root,
-> [...]
-> +	if (parent == root) {
-> +		memcg->memory.emin = memcg->memory.min;
-> +		memcg->memory.elow = memcg->memory.low;
-> +		goto out;
->  	}
-Shouldn't this condition be 'if (parent == root_mem_cgroup)'? (I.e. 1st
-level takes direct input, but 2nd and further levels redistribute only
-what they really got from parent.)
-
-
-Michal
-
-
---8P1HSweYDcXXzwPJ
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: attachment; filename=script
-Content-Transfer-Encoding: quoted-printable
-
-% run as: octave-cli script
-%
-% Input configurations
-% -------------------
-% E parent effective protection
-% n nominal protection of siblings set at the givel level
-% c current consumption -,,-
-
-% example from effective_protection 3.
-E =3D 2;
-n =3D [3 1 0 10];
-c =3D [2 2 2 0];  % this converges to      [1.16 0.84 0 0]
-% c =3D [6 2 2 0];  % keeps ratio          [1.5 0.5 0 0]
-% c =3D [5 2 2 0];  % mixed ratio          [1.45 0.55 0 0]
-% c =3D [8 2 2 0];  % mixed ratio          [1.53 0.47 0 0]
-
-% example from effective_protection 5.
-%E =3D 2;
-%n =3D [1 0];
-%c =3D [2 1];  % coming from close to equilibrium  -> [1.50 0.50]
-%c =3D [100 100];  % coming from "infinity"        -> [1.50 0.50]
-%c =3D [2 2];   % coming from uniformity            -> [1.33 0.67]
-
-% example of recursion by default
-%E =3D 2;
-%n =3D [0 0];
-%c =3D [2 1];  % coming from disbalance            -> [1.33 0.67]
-%c =3D [100 100];  % coming from "infinity"        -> [1.00 1.00]
-%c =3D [2 2];   % coming from uniformity           -> [1.00 1.00]
-
-% example by using infinities (_without_ recursive protection)
-%E =3D 2;
-%n =3D [1e7 1e7];
-%c =3D [2 1];  % coming from disbalance            -> [1.33 0.67]
-%c =3D [100 100];  % coming from "infinity"        -> [1.00 1.00]
-%c =3D [2 2];   % coming from uniformity           -> [1.00 1.00]
-
-% Reclaim parameters
-% ------------------
-
-% Minimal reclaim amount (GB)
-cluster =3D 4e-6;
-
-% Reclaim coefficient (think as 0.5^sc->priority)
-alpha =3D .1
-
-% Simulation parameters
-% ---------------------
-epsilon =3D 1e-7;
-timeout =3D 1000;
-
-% Simulation loop
-% ---------------------
-% Simulation assumes siblings consumed the initial amount of memory (w/out
-% reclaim) and then the reclaim starts, all memory is reclaimable, i.e. tre=
-ated
-% same. It simulates only non-low reclaim and assumes all memory.min =3D 0.
-
-ch =3D [];
-eh =3D [];
-rh =3D [];
-
-for t =3D 1:timeout
-	% low_usage
-	u =3D min(c, n);
-	siblings =3D sum(u);
-
-	% effective_protection()
-	protected =3D min(n, c);                % start with nominal
-	e =3D protected * min(1, E / siblings); % normalize overcommit
-
-	% recursive protection
-	unclaimed =3D max(0, E - siblings);
-	parent_overuse =3D sum(c) - siblings;
-	if (unclaimed > 0 && parent_overuse > 0)
-		overuse =3D max(0, c - protected);
-		e +=3D unclaimed * (overuse / parent_overuse);
-	endif
-
-	% get_scan_count()
-	r =3D alpha * c;             % assume all memory is in a single LRU list
-
-	% 1bc63fb1272b ("mm, memcg: make scan aggression always exclude protection=
-")
-	sz =3D max(e, c);
-	r .*=3D (1 - (e+epsilon) ./ (sz+epsilon));
-
-	% uncomment to debug prints
-	e, c, r
-=09
-	% nothing to reclaim, reached equilibrium
-	if max(r) < epsilon
-		break;
-	endif
-
-	% SWAP_CLUSTER_MAX
-	r =3D max(r, (r > epsilon) .* cluster);
-	c =3D max(c - r, 0);
-=09
-	ch =3D [ch ; c];
-	eh =3D [eh ; e];
-	rh =3D [rh ; r];
-endfor
-
-t
-c, e
-plot([ch, eh])
-pause()
-
---8P1HSweYDcXXzwPJ--
+-- 
+RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
+FTTC broadband for 0.8mile line in suburbia: sync at 12.1Mbps down 622kbps up
+According to speedtest.net: 11.9Mbps down 500kbps up
