@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0671DC35640
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 08:32:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 19C6EC35640
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 08:32:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C546D20578
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 08:32:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D836620578
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 08:32:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582273958;
-	bh=JisXudK13Jk6Kspb8myNxbaBJxcABpU3ZxO3USpbX0w=;
+	s=default; t=1582273963;
+	bh=nX975cmkEA4sifV9b0KMKOPMIxYt2YzC5TeY+ulhTIM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=HH4dz5ye+pdlIFlrewfRmEA1J2mIZCmSBZt5MRTVzGsU5Vwayo2WmbxNQ2JnzsI7j
-	 KxKeG4wkKUHCeDCDkx6QsR5EWe2o+dXsIU0VkJRV8CefPA3I7QbDWr2jXMGHBjYiFk
-	 0doLyut9ckkHmkv7F76LIdjrhIU1lu0XkYlzVqt0=
+	b=Z/A7PBjV9432x5y5gGrTt9R5hJr9oC7E51xPDBlVl/W+fMUR7rLiD2CULyYEfo3Mv
+	 cXxIk2RoJS+ypiM/Y5ouNoStLfQ1t3VbPyiiv2InVj8Vm85Q+w5yR6Lu4w348Rq0fv
+	 3u3QNd6t8GmCxX0sXYSsvLj1c0rhDhgjc8wANFRc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732596AbgBUIMG (ORCPT
+        id S2387653AbgBUIcm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Feb 2020 03:12:06 -0500
-Received: from mail.kernel.org ([198.145.29.99]:47708 "EHLO mail.kernel.org"
+        Fri, 21 Feb 2020 03:32:42 -0500
+Received: from mail.kernel.org ([198.145.29.99]:47602 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728862AbgBUIMD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Feb 2020 03:12:03 -0500
+        id S1732763AbgBUIL5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 21 Feb 2020 03:11:57 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 421772467A;
-        Fri, 21 Feb 2020 08:12:02 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0E34E20722;
+        Fri, 21 Feb 2020 08:11:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1582272722;
-        bh=JisXudK13Jk6Kspb8myNxbaBJxcABpU3ZxO3USpbX0w=;
+        s=default; t=1582272717;
+        bh=nX975cmkEA4sifV9b0KMKOPMIxYt2YzC5TeY+ulhTIM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=pBo17/wXvVgoRlKTDUMVdIKcwB0AqAbXFzSWfYOXCynThpUbMxb04RrDLGD5Lk+ag
-         Qrf2du6XcfY3JYgr97vBWnBZPXU7vs3kiisera6SLyMEaWcgcDC3Bhh0C2xGh51hqZ
-         NlU+oyNXCTIAagTRJtGtbjhmnyfqLvObR+iSOaCQ=
+        b=aZbEqOs3NiGdBrYPgQZtqXdjzWiFfwE+WSKcpjLajMj2E+9Xo1RUWzhDbOFyLXO4r
+         ct0ATqZvpkiWXlwxN8PvueXmz10FY98WMrRUBCsVQzEqZx/jM41CAYqj9lqXi62juS
+         Y9MLyXUpClUWvFMRmMo2Px+geE5BTUIEtSO4BtKA=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Suman Anna <s-anna@ti.com>,
-        Lokesh Vutla <lokeshvutla@ti.com>,
-        Tero Kristo <t-kristo@ti.com>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 249/344] arm64: dts: ti: k3-j721e-main: Add missing power-domains for smmu
-Date:   Fri, 21 Feb 2020 08:40:48 +0100
-Message-Id: <20200221072412.079807827@linuxfoundation.org>
+        stable@vger.kernel.org, Daniel Borkmann <daniel@iogearbox.net>,
+        Li RongQing <lirongqing@baidu.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.4 221/344] bpf: Return -EBADRQC for invalid map type in __bpf_tx_xdp_map
+Date:   Fri, 21 Feb 2020 08:40:20 +0100
+Message-Id: <20200221072409.277055765@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200221072349.335551332@linuxfoundation.org>
 References: <20200221072349.335551332@linuxfoundation.org>
@@ -60,35 +60,43 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Lokesh Vutla <lokeshvutla@ti.com>
+From: Li RongQing <lirongqing@baidu.com>
 
-[ Upstream commit 3f03a58b25753843ce9e4511e9e246c51bd11011 ]
+[ Upstream commit 0a29275b6300f39f78a87f2038bbfe5bdbaeca47 ]
 
-Add power-domains entry for smmu, so that the it is accessible as long
-as the driver is active. Without this device shutdown is throwing the
-below warning:
-"[   44.736348] arm-smmu-v3 36600000.smmu: failed to clear cr0"
+A negative value should be returned if map->map_type is invalid
+although that is impossible now, but if we run into such situation
+in future, then xdpbuff could be leaked.
 
-Reported-by: Suman Anna <s-anna@ti.com>
-Signed-off-by: Lokesh Vutla <lokeshvutla@ti.com>
-Signed-off-by: Tero Kristo <t-kristo@ti.com>
+Daniel Borkmann suggested:
+
+-EBADRQC should be returned to stay consistent with generic XDP
+for the tracepoint output and not to be confused with -EOPNOTSUPP
+from other locations like dev_map_enqueue() when ndo_xdp_xmit is
+missing and such.
+
+Suggested-by: Daniel Borkmann <daniel@iogearbox.net>
+Signed-off-by: Li RongQing <lirongqing@baidu.com>
+Signed-off-by: Daniel Borkmann <daniel@iogearbox.net>
+Link: https://lore.kernel.org/bpf/1578618277-18085-1-git-send-email-lirongqing@baidu.com
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm64/boot/dts/ti/k3-j721e-main.dtsi | 1 +
- 1 file changed, 1 insertion(+)
+ net/core/filter.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/arch/arm64/boot/dts/ti/k3-j721e-main.dtsi b/arch/arm64/boot/dts/ti/k3-j721e-main.dtsi
-index 698ef9a1d5b75..96445111e3985 100644
---- a/arch/arm64/boot/dts/ti/k3-j721e-main.dtsi
-+++ b/arch/arm64/boot/dts/ti/k3-j721e-main.dtsi
-@@ -43,6 +43,7 @@
- 	smmu0: smmu@36600000 {
- 		compatible = "arm,smmu-v3";
- 		reg = <0x0 0x36600000 0x0 0x100000>;
-+		power-domains = <&k3_pds 229 TI_SCI_PD_EXCLUSIVE>;
- 		interrupt-parent = <&gic500>;
- 		interrupts = <GIC_SPI 772 IRQ_TYPE_EDGE_RISING>,
- 			     <GIC_SPI 768 IRQ_TYPE_EDGE_RISING>;
+diff --git a/net/core/filter.c b/net/core/filter.c
+index 1a78d64096bbd..d59dbc88fef5d 100644
+--- a/net/core/filter.c
++++ b/net/core/filter.c
+@@ -3543,7 +3543,7 @@ static int __bpf_tx_xdp_map(struct net_device *dev_rx, void *fwd,
+ 		return err;
+ 	}
+ 	default:
+-		break;
++		return -EBADRQC;
+ 	}
+ 	return 0;
+ }
 -- 
 2.20.1
 
