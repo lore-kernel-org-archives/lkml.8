@@ -7,47 +7,48 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B2C5EC35641
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 08:27:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E83B2C35642
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 08:27:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5D02324681
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 08:27:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B626920679
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 08:27:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582273669;
-	bh=gPxlp4Q153bbUxomQbbVWstHM7c/0MR9rk3K5NF5G9w=;
+	s=default; t=1582273674;
+	bh=XqHntQ68nAA1PkhJZLhzZ1cKTnOr9ceFKNXlAqKnqBA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=MBPVQN8mgYoGWwKsiMOgZvxR8Ewhfuq7iVIPH3CEWAeutpQBkHSQj2EM7aOyzjFVI
-	 MxRJJzPOvBCgJrWHlRN68TpYvELiLaGxElgAlmfqky7MLtH1UIqqAK//Zw/9lL6/w2
-	 UyrEa9YmGZ+6bPK+6iSoiyYwyQ/o7SMyicUEhHqY=
+	b=grv7bjYMVNl0wMPqecihoIafv2U70yaUqXM1pYYXLMLENOUfOITU3IRqGKWnMjU0R
+	 GBoxyJe0DKYOBpJvkJEN9WGxae6U2RZbEezV6zI5yRiJOfv0cFfcxfOPb/Uqoc88gc
+	 TwBzqGZODo1vMjHic9Ssaf9/1Qy7DpM6rSm0sLDI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388675AbgBUI1s (ORCPT
+        id S2388203AbgBUIU6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Feb 2020 03:27:48 -0500
-Received: from mail.kernel.org ([198.145.29.99]:60502 "EHLO mail.kernel.org"
+        Fri, 21 Feb 2020 03:20:58 -0500
+Received: from mail.kernel.org ([198.145.29.99]:60180 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388230AbgBUIVJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Feb 2020 03:21:09 -0500
+        id S2387967AbgBUIUy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 21 Feb 2020 03:20:54 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 11F6B24650;
-        Fri, 21 Feb 2020 08:21:08 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A9618206ED;
+        Fri, 21 Feb 2020 08:20:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1582273269;
-        bh=gPxlp4Q153bbUxomQbbVWstHM7c/0MR9rk3K5NF5G9w=;
+        s=default; t=1582273254;
+        bh=XqHntQ68nAA1PkhJZLhzZ1cKTnOr9ceFKNXlAqKnqBA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=jb78vYdPRiEcml6LYWYWUY6BhKAp4gGeTW7DAkCk2MmGZiuKKY/UwlXI0adXjjznR
-         FA2wiiaY97pFl4LJLEaw2tYcmOQf6S2alqZrfdqh/czWToBaOlY4l40uih1Yx12M9P
-         QLz4b49qrOUJAUqJkld1C4BgB8wfMoMOOUw6uylc=
+        b=gEOy13192lyh9+TbIRqma+c03kp9wrd5NHQ0IiHdgoIofYJ6JnQcAQDJ2YZn79WfN
+         CeoaJrW4MFCEI/FltOCZieiSHXbdd5hGlypXNuVTjw8AUcfSvMuc8p1752YjrZvG1b
+         SlImB8knrHMib2GvxaDBTmBhpx0Z7ANMjopipI0g=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Dmitry Osipenko <digetx@gmail.com>,
-        Thierry Reding <treding@nvidia.com>,
+        stable@vger.kernel.org,
+        Benjamin Gaignard <benjamin.gaignard@st.com>,
+        Alexandre Torgue <alexandre.torgue@st.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 108/191] soc/tegra: fuse: Correct straps address for older Tegra124 device trees
-Date:   Fri, 21 Feb 2020 08:41:21 +0100
-Message-Id: <20200221072303.879083184@linuxfoundation.org>
+Subject: [PATCH 4.19 103/191] ARM: dts: stm32: Add power-supply for DSI panel on stm32f469-disco
+Date:   Fri, 21 Feb 2020 08:41:16 +0100
+Message-Id: <20200221072303.347219469@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200221072250.732482588@linuxfoundation.org>
 References: <20200221072250.732482588@linuxfoundation.org>
@@ -60,35 +61,47 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Dmitry Osipenko <digetx@gmail.com>
+From: Benjamin Gaignard <benjamin.gaignard@st.com>
 
-[ Upstream commit 2d9ea1934f8ef0dfb862d103389562cc28b4fc03 ]
+[ Upstream commit 0ff15a86d0c5a3f004fee2e92d65b88e56a3bc58 ]
 
-Trying to read out Chip ID before APBMISC registers are mapped won't
-succeed, in a result Tegra124 gets a wrong address for the HW straps
-register if machine uses an old outdated device tree.
+Add a fixed regulator and use it as power supply for DSI panel.
 
-Fixes: 297c4f3dcbff ("soc/tegra: fuse: Restrict legacy code to 32-bit ARM")
-Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
-Signed-off-by: Thierry Reding <treding@nvidia.com>
+Fixes: 18c8866266 ("ARM: dts: stm32: Add display support on stm32f469-disco")
+
+Signed-off-by: Benjamin Gaignard <benjamin.gaignard@st.com>
+Signed-off-by: Alexandre Torgue <alexandre.torgue@st.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/soc/tegra/fuse/tegra-apbmisc.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ arch/arm/boot/dts/stm32f469-disco.dts | 8 ++++++++
+ 1 file changed, 8 insertions(+)
 
-diff --git a/drivers/soc/tegra/fuse/tegra-apbmisc.c b/drivers/soc/tegra/fuse/tegra-apbmisc.c
-index e5a4d8f98b10e..d1cbb0fe1691a 100644
---- a/drivers/soc/tegra/fuse/tegra-apbmisc.c
-+++ b/drivers/soc/tegra/fuse/tegra-apbmisc.c
-@@ -135,7 +135,7 @@ void __init tegra_init_apbmisc(void)
- 			apbmisc.flags = IORESOURCE_MEM;
+diff --git a/arch/arm/boot/dts/stm32f469-disco.dts b/arch/arm/boot/dts/stm32f469-disco.dts
+index 3ee768cb86fc9..eea979ef5512f 100644
+--- a/arch/arm/boot/dts/stm32f469-disco.dts
++++ b/arch/arm/boot/dts/stm32f469-disco.dts
+@@ -75,6 +75,13 @@
+ 		regulator-max-microvolt = <3300000>;
+ 	};
  
- 			/* strapping options */
--			if (tegra_get_chip_id() == TEGRA124) {
-+			if (of_machine_is_compatible("nvidia,tegra124")) {
- 				straps.start = 0x7000e864;
- 				straps.end = 0x7000e867;
- 			} else {
++	vdd_dsi: vdd-dsi {
++		compatible = "regulator-fixed";
++		regulator-name = "vdd_dsi";
++		regulator-min-microvolt = <3300000>;
++		regulator-max-microvolt = <3300000>;
++	};
++
+ 	soc {
+ 		dma-ranges = <0xc0000000 0x0 0x10000000>;
+ 	};
+@@ -154,6 +161,7 @@
+ 		compatible = "orisetech,otm8009a";
+ 		reg = <0>; /* dsi virtual channel (0..3) */
+ 		reset-gpios = <&gpioh 7 GPIO_ACTIVE_LOW>;
++		power-supply = <&vdd_dsi>;
+ 		status = "okay";
+ 
+ 		port {
 -- 
 2.20.1
 
