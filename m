@@ -2,51 +2,52 @@ Return-Path: <SRS0=1210=4J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A6C9AC35643
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 07:44:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 05DB1C35641
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 07:44:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 77D21207FD
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 07:44:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C737320801
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 07:44:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582271082;
-	bh=7+wHRW/OFH6ZSv2n77YPfpKBJ3mqYTMJDhk1Z2zwpLs=;
+	s=default; t=1582271084;
+	bh=9BwBJac7NVNb19LFJDio4pQeE/QC+ki3xzkjll2pn9U=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=1jwpg/i6FGnCcI8S/9bnUQYV6UVyNSovrxIF6hL23PxJYyGDRANYCsTauKt90S98F
-	 4TttIdRdv8975xKTLLxuqOtIUSxWkJ7rRhrayUJGWISLj6AfGSOf+66aEy2hRvl12L
-	 dwpsQlpwvn7lSGkDYP0YEe/7Y75EnYFrGb+DjJ4Q=
+	b=i4H79e3sy54DLUHNwm8gqUC1Kg4wl28TkmdkMSs4v2AJD+c/qKq4z+LQ0FootUyIy
+	 dS7LorBNhuEImupv7ktOzEEqSZ23bhe8ezdowOHZaehBzHKJ4bg1r8tQEEj9zeLurf
+	 9j0z65n7zMM/Foeo/mLDI6HMgadnL6lzbOFUb3zE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728114AbgBUHol (ORCPT
+        id S1728137AbgBUHon (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Feb 2020 02:44:41 -0500
-Received: from mail.kernel.org ([198.145.29.99]:39500 "EHLO mail.kernel.org"
+        Fri, 21 Feb 2020 02:44:43 -0500
+Received: from mail.kernel.org ([198.145.29.99]:39564 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728031AbgBUHoj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Feb 2020 02:44:39 -0500
+        id S1727034AbgBUHol (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 21 Feb 2020 02:44:41 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8C3DC20801;
-        Fri, 21 Feb 2020 07:44:38 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id F21A724650;
+        Fri, 21 Feb 2020 07:44:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1582271079;
-        bh=7+wHRW/OFH6ZSv2n77YPfpKBJ3mqYTMJDhk1Z2zwpLs=;
+        s=default; t=1582271081;
+        bh=9BwBJac7NVNb19LFJDio4pQeE/QC+ki3xzkjll2pn9U=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Uikza30caJLAb3xvt3HiyLbur5u4zuYA3emdK8VX2wSW5l0RWqVxVimRY/uqysWH1
-         tynebHxFBQp5vBGfdo6jOwL6oVEg/kvm090AKKkiTvlV2cdjepmBUeJ6b+CEJX/r8b
-         CtzqRQnMjy5gX+2jFgsc/6Xpgf3lveBAIHAJ9+mk=
+        b=fAlYPGh1+yrlXcFE2Y4Q0ZkAkD+gsHYLp2iKryKhUoYHiQBN3t/dbQSm8TT5Iayl9
+         yD/XQ3tx5RuGe79MRVYOwF2u5r8gNaj3VzH5m1WUxfiSSssxMbygN5OBosh+M4Rwlc
+         +9OnmNGhw6Kk/o5IH0hyCjUs2kRz7KwFLbI47/ag=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Zahari Petkov <zahari@balena.io>,
-        Pavel Machek <pavel@ucw.cz>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.5 030/399] leds: pca963x: Fix open-drain initialization
-Date:   Fri, 21 Feb 2020 08:35:55 +0100
-Message-Id: <20200221072405.284467581@linuxfoundation.org>
+        stable@vger.kernel.org, Per Forlin <perfn@axis.com>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        "David S. Miller" <davem@davemloft.net>
+Subject: [PATCH 5.5 004/399] net: dsa: tag_qca: Make sure there is headroom for tag
+Date:   Fri, 21 Feb 2020 08:35:29 +0100
+Message-Id: <20200221072402.750839568@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200221072402.315346745@linuxfoundation.org>
 References: <20200221072402.315346745@linuxfoundation.org>
@@ -59,69 +60,33 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Zahari Petkov <zahari@balena.io>
+From: Per Forlin <per.forlin@axis.com>
 
-[ Upstream commit 697529091ac7a0a90ca349b914bb30641c13c753 ]
+[ Upstream commit 04fb91243a853dbde216d829c79d9632e52aa8d9 ]
 
-Before commit bb29b9cccd95 ("leds: pca963x: Add bindings to invert
-polarity") Mode register 2 was initialized directly with either 0x01
-or 0x05 for open-drain or totem pole (push-pull) configuration.
+Passing tag size to skb_cow_head will make sure
+there is enough headroom for the tag data.
+This change does not introduce any overhead in case there
+is already available headroom for tag.
 
-Afterwards, MODE2 initialization started using bitwise operations on
-top of the default MODE2 register value (0x05). Using bitwise OR for
-setting OUTDRV with 0x01 and 0x05 does not produce correct results.
-When open-drain is used, instead of setting OUTDRV to 0, the driver
-keeps it as 1:
-
-Open-drain: 0x05 | 0x01 -> 0x05 (0b101 - incorrect)
-Totem pole: 0x05 | 0x05 -> 0x05 (0b101 - correct but still wrong)
-
-Now OUTDRV setting uses correct bitwise operations for initialization:
-
-Open-drain: 0x05 & ~0x04 -> 0x01 (0b001 - correct)
-Totem pole: 0x05 | 0x04 -> 0x05 (0b101 - correct)
-
-Additional MODE2 register definitions are introduced now as well.
-
-Fixes: bb29b9cccd95 ("leds: pca963x: Add bindings to invert polarity")
-Signed-off-by: Zahari Petkov <zahari@balena.io>
-Signed-off-by: Pavel Machek <pavel@ucw.cz>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+Signed-off-by: Per Forlin <perfn@axis.com>
+Reviewed-by: Florian Fainelli <f.fainelli@gmail.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- drivers/leds/leds-pca963x.c | 8 +++++---
- 1 file changed, 5 insertions(+), 3 deletions(-)
+ net/dsa/tag_qca.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/leds/leds-pca963x.c b/drivers/leds/leds-pca963x.c
-index 4afc317901a89..66cdc003b8f42 100644
---- a/drivers/leds/leds-pca963x.c
-+++ b/drivers/leds/leds-pca963x.c
-@@ -40,6 +40,8 @@
- #define PCA963X_LED_PWM		0x2	/* Controlled through PWM */
- #define PCA963X_LED_GRP_PWM	0x3	/* Controlled through PWM/GRPPWM */
+--- a/net/dsa/tag_qca.c
++++ b/net/dsa/tag_qca.c
+@@ -33,7 +33,7 @@ static struct sk_buff *qca_tag_xmit(stru
+ 	struct dsa_port *dp = dsa_slave_to_port(dev);
+ 	u16 *phdr, hdr;
  
-+#define PCA963X_MODE2_OUTDRV	0x04	/* Open-drain or totem pole */
-+#define PCA963X_MODE2_INVRT	0x10	/* Normal or inverted direction */
- #define PCA963X_MODE2_DMBLNK	0x20	/* Enable blinking */
+-	if (skb_cow_head(skb, 0) < 0)
++	if (skb_cow_head(skb, QCA_HDR_LEN) < 0)
+ 		return NULL;
  
- #define PCA963X_MODE1		0x00
-@@ -438,12 +440,12 @@ static int pca963x_probe(struct i2c_client *client,
- 						    PCA963X_MODE2);
- 		/* Configure output: open-drain or totem pole (push-pull) */
- 		if (pdata->outdrv == PCA963X_OPEN_DRAIN)
--			mode2 |= 0x01;
-+			mode2 &= ~PCA963X_MODE2_OUTDRV;
- 		else
--			mode2 |= 0x05;
-+			mode2 |= PCA963X_MODE2_OUTDRV;
- 		/* Configure direction: normal or inverted */
- 		if (pdata->dir == PCA963X_INVERTED)
--			mode2 |= 0x10;
-+			mode2 |= PCA963X_MODE2_INVRT;
- 		i2c_smbus_write_byte_data(pca963x->chip->client, PCA963X_MODE2,
- 					  mode2);
- 	}
--- 
-2.20.1
-
+ 	skb_push(skb, QCA_HDR_LEN);
 
 
