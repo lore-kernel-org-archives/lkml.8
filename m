@@ -2,101 +2,119 @@ Return-Path: <SRS0=1210=4J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MIME_BASE64_TEXT,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D13E5C35645
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 10:12:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 481F7C35644
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 10:13:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A3BD824656
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 10:12:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1F84120722
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 10:13:20 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="l4nBRRhC"
+	dkim=pass (1024-bit key) header.d=renesasgroup.onmicrosoft.com header.i=@renesasgroup.onmicrosoft.com header.b="XOuYvc4t"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728749AbgBUKMi (ORCPT
+        id S1728558AbgBUKNS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Feb 2020 05:12:38 -0500
-Received: from mailgw01.mediatek.com ([210.61.82.183]:9240 "EHLO
-        mailgw01.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1728396AbgBUKMi (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Feb 2020 05:12:38 -0500
-X-UUID: 2fec0106058b4108b7102098fe56fd44-20200221
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
-        h=Content-Transfer-Encoding:Content-Type:MIME-Version:References:In-Reply-To:Message-ID:Date:Subject:CC:To:From; bh=ARXJmjqMj0hTx5/WyykP1t7usiaCNGTpnwPDf5OrFYI=;
-        b=l4nBRRhCOPOQWMinALq2q2u300Ha+r+ovp6y5rwObVBXbach3VOHcd6BxfQjnrM8JR/Lj9AsdA5BQ6K1D9V57Cc4GlJpFDF3Rp69scv/ANazREZQsbErpr5PJGAJ1nbjKSMT0RwjMTOMNtDybbdHvo9DgfDgsDqnzUvQCoyH1ng=;
-X-UUID: 2fec0106058b4108b7102098fe56fd44-20200221
-Received: from mtkcas09.mediatek.inc [(172.21.101.178)] by mailgw01.mediatek.com
-        (envelope-from <macpaul.lin@mediatek.com>)
-        (Cellopoint E-mail Firewall v4.1.10 Build 0809 with TLS)
-        with ESMTP id 1465237031; Fri, 21 Feb 2020 18:12:32 +0800
-Received: from mtkcas09.mediatek.inc (172.21.101.178) by
- mtkmbs02n2.mediatek.inc (172.21.101.101) with Microsoft SMTP Server (TLS) id
- 15.0.1395.4; Fri, 21 Feb 2020 18:09:42 +0800
-Received: from mtkswgap22.mediatek.inc (172.21.77.33) by mtkcas09.mediatek.inc
- (172.21.101.73) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
- Transport; Fri, 21 Feb 2020 18:11:53 +0800
-From:   Macpaul Lin <macpaul.lin@mediatek.com>
-To:     Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will@kernel.org>,
-        Michael Turquette <mturquette@baylibre.com>,
-        Stephen Boyd <sboyd@kernel.org>,
-        mtk01761 <wendell.lin@mediatek.com>,
-        Fabien Parent <fparent@baylibre.com>,
-        Weiyi Lu <weiyi.lu@mediatek.com>,
-        Mars Cheng <mars.cheng@mediatek.com>,
-        Sean Wang <Sean.Wang@mediatek.com>,
-        Macpaul Lin <macpaul.lin@mediatek.com>,
-        Owen Chen <owen.chen@mediatek.com>,
-        Chunfeng Yun <chunfeng.yun@mediatek.com>,
-        Evan Green <evgreen@chromium.org>,
-        Yong Wu <yong.wu@mediatek.com>, Joerg Roedel <jroedel@suse.de>,
-        Shawn Guo <shawnguo@kernel.org>,
-        Marc Zyngier <marc.zyngier@arm.com>,
-        Ryder Lee <Ryder.Lee@mediatek.com>,
-        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-mediatek@lists.infradead.org>, <linux-clk@vger.kernel.org>
-CC:     Mediatek WSD Upstream <wsd_upstream@mediatek.com>,
-        CC Hwang <cc.hwang@mediatek.com>,
-        Loda Chou <loda.chou@mediatek.com>
-Subject: [PATCH v8 4/4] arm64: defconfig: add CONFIG_COMMON_CLK_MT6765_XXX clocks
-Date:   Fri, 21 Feb 2020 18:12:09 +0800
-Message-ID: <1582279929-11535-5-git-send-email-macpaul.lin@mediatek.com>
-X-Mailer: git-send-email 1.7.9.5
-In-Reply-To: <1582279929-11535-1-git-send-email-macpaul.lin@mediatek.com>
-References: <1582279929-11535-1-git-send-email-macpaul.lin@mediatek.com>
-MIME-Version: 1.0
-Content-Type: text/plain
-X-TM-SNTS-SMTP: C739C5E12C447902CF866A1404BB87A25E2BD863623992A5BE480521300D28D92000:8
-X-MTK:  N
+        Fri, 21 Feb 2020 05:13:18 -0500
+Received: from mail-eopbgr1410112.outbound.protection.outlook.com ([40.107.141.112]:44244
+        "EHLO JPN01-OS2-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1727150AbgBUKNS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 21 Feb 2020 05:13:18 -0500
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=fkIO6MIE7bz0XkV+Km8/+m0/kbzUuGIz4E5YpGW7nfxWhX3oftInf0ipPGhqt+o2k7s0NtstxqM6eGJCOoHg5eyuUHwMV28Dm2SLfwNC5g0KipmjOGrwsQVHNhxOAsnUD7BbJVBiZ8uN4vbQXjG2Kk3+kf4tHYxykHelsXb/kpLzmRZJf7MKCw7ALcuQYPEGoZokw+1q3stKcPiR3csuWsfNPfEUl7ncxxijLVDXXGfHJQ7yaRP9h5Q+ySjXBOqyrfk7wFsDCh4c8vtSgn+jqvzr3yuhf33+P1MPYeA40Jr8yItA5WXk64C7SYs3/v7fsNJ1X4E4YD9shS443q/C1w==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=lWyOzyK9USraGk+KqxItGj4sL/sIeI3C9dVxC9LKKHY=;
+ b=e4iLaeR2wTPASwqcGu0usilVhjG7A8KdsgKQNcTusUh0seJ0lPdxGIT+aPmLyaWBOq7FBAWVAmv6jtQpJETn2zRWUmcvT/V7QLPtWcd9tH0rYN5zfQSiqBTzkU3cIu0l4nxJirtpx1uNa5NAQRdE3MN+GMjc0bKWIu5aZsydtSENZEXoVcGieoIpLf+haP5XJ8YDEC7b6UDj005Xj7rWprHrB64nNnwzsFdpb245knqIWQL1Do7c7Y7pC6rH5a2+PDfbHESKP5A13SZ3dZB7Oh2D5LyImL6FaoUrVds4dhCWeYyjElzLr4H4o03W1sZBVMRgipn5aUE9Gj0/R//cQw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=renesas.com; dmarc=pass action=none header.from=renesas.com;
+ dkim=pass header.d=renesas.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=renesasgroup.onmicrosoft.com; s=selector2-renesasgroup-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=lWyOzyK9USraGk+KqxItGj4sL/sIeI3C9dVxC9LKKHY=;
+ b=XOuYvc4tAqSpF4TUwMRTZQ1h03iNRIWZGYR/6DfBfncLepSmWFEx5OcYo3I582s24HYWapd8X4XL121xpiD2VQUjC1RzDYQBlDlWZetmcSJUesgegPHrODtbGfJYL9CKLKwMHAxEa//efUUZchrxkqYdxWIjb1+WhSAr8EWmyOk=
+Received: from TYAPR01MB2285.jpnprd01.prod.outlook.com (52.133.177.145) by
+ TYAPR01MB2669.jpnprd01.prod.outlook.com (20.177.102.203) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2729.22; Fri, 21 Feb 2020 10:13:15 +0000
+Received: from TYAPR01MB2285.jpnprd01.prod.outlook.com
+ ([fe80::1045:4879:77ed:8a70]) by TYAPR01MB2285.jpnprd01.prod.outlook.com
+ ([fe80::1045:4879:77ed:8a70%7]) with mapi id 15.20.2729.033; Fri, 21 Feb 2020
+ 10:13:15 +0000
+From:   Chris Paterson <Chris.Paterson2@renesas.com>
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+CC:     "torvalds@linux-foundation.org" <torvalds@linux-foundation.org>,
+        "akpm@linux-foundation.org" <akpm@linux-foundation.org>,
+        "linux@roeck-us.net" <linux@roeck-us.net>,
+        "shuah@kernel.org" <shuah@kernel.org>,
+        "patches@kernelci.org" <patches@kernelci.org>,
+        "ben.hutchings@codethink.co.uk" <ben.hutchings@codethink.co.uk>,
+        "lkft-triage@lists.linaro.org" <lkft-triage@lists.linaro.org>,
+        "stable@vger.kernel.org" <stable@vger.kernel.org>
+Subject: RE: [PATCH 4.19 000/191] 4.19.106-stable review
+Thread-Topic: [PATCH 4.19 000/191] 4.19.106-stable review
+Thread-Index: AQHV6I9JzS0hdk3yWkilhKK8EfzpqKglbVjQ
+Date:   Fri, 21 Feb 2020 10:13:15 +0000
+Message-ID: <TYAPR01MB2285808EB540D90E812B514FB7120@TYAPR01MB2285.jpnprd01.prod.outlook.com>
+References: <20200221072250.732482588@linuxfoundation.org>
+In-Reply-To: <20200221072250.732482588@linuxfoundation.org>
+Accept-Language: en-GB, en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=Chris.Paterson2@renesas.com; 
+x-originating-ip: [176.27.142.199]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-ht: Tenant
+x-ms-office365-filtering-correlation-id: 4f92d8eb-98a2-43bd-2134-08d7b6b6aa54
+x-ms-traffictypediagnostic: TYAPR01MB2669:
+x-microsoft-antispam-prvs: <TYAPR01MB2669DA50015AA1F025CB331FB7120@TYAPR01MB2669.jpnprd01.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:8273;
+x-forefront-prvs: 0320B28BE1
+x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(4636009)(366004)(199004)(189003)(8676002)(26005)(66946007)(66446008)(52536014)(66556008)(76116006)(64756008)(66476007)(9686003)(966005)(8936002)(81166006)(81156014)(5660300002)(186003)(33656002)(110136005)(7696005)(498600001)(2906002)(4326008)(86362001)(55016002)(71200400001)(4744005)(7416002)(54906003)(6506007);DIR:OUT;SFP:1102;SCL:1;SRVR:TYAPR01MB2669;H:TYAPR01MB2285.jpnprd01.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+received-spf: None (protection.outlook.com: renesas.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: Yk16zoauf77nqPU7FDnfuTqzspG8Lm56z2/ojk9irOdB5kndJBB98pkx3+A5hdoAOVihsrYywQRhSWF9ZR34Xxm4RHxsoWAhY3kKI1XlXLQOMiOJlMX+EJl3UZ3Vn7SDtkFGhi6OYEr2W79n42yQON8qMU5JD/AtQlbOvpwfVoSpeqhJhRSKKCDDRWtpgHQwLhVt30zeJMo971+W157lVxk91ys3QMmKMO8Zy5timli6/euvt6NfuG31K+0JguXZ7P0zF0L6zT+fPjcJjpP9nFznODM2E7m8s2FxHcnNbKFa0y8lIesGLFGVowzcpiMSHFTjJeaNO2fvoMpAnMV1ejXp0AJJS9Mdn2FPdWNVbfbRdoUt0JN1KulZZvszUooDSvxOyWbUR4pkveLxLvL5uaUTEbMrbNMOUXkTsc8VkJz/+QksFBebYkgvgVdhTH5A9ibCwfsWRoehmsn6ciV2vx1+yrozckYJ4Bk0HiN8UMzhmCx+czvJ0j7GZsFwRJSxvV1pVhp7v2ZAedijm3WQxA==
+x-ms-exchange-antispam-messagedata: BgnPpS4sUOpHM3L2sMdK8EI2/ktFZ65cXEJCjMBe3bE2PR+ltBJ2tXSmS62EK/1YJ5cASM3DpdsvOuaVPWQtJ0Oz+M6XEO/GaCfA+/2mpRZ7QnjulA3r0recakCLZT4dw+fKZsANDn+UYKSaxwnZZw==
+x-ms-exchange-transport-forked: True
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: base64
+MIME-Version: 1.0
+X-OriginatorOrg: renesas.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 4f92d8eb-98a2-43bd-2134-08d7b6b6aa54
+X-MS-Exchange-CrossTenant-originalarrivaltime: 21 Feb 2020 10:13:15.2358
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 53d82571-da19-47e4-9cb4-625a166a4a2a
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: 4mSR6DeLGWwcA34r2rqCFUCU9kUkA66SkCBXr1giRehT2q4q99MMkifmK7fZSoovHBSC1162+3PCKgxzPCDILYlPM6dHSlnqynDnCcvkNy8=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: TYAPR01MB2669
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-RnJvbTogT3dlbiBDaGVuIDxvd2VuLmNoZW5AbWVkaWF0ZWsuY29tPg0KDQpFbmFibGUgTVQ2NzY1
-IGNsb2NrIGNvbmZpZ3MsIGluY2x1ZGUgdG9wY2tnZW4sIGFwbWl4ZWRzeXMsDQppbmZyYWNmZywg
-YW5kIHN1YnN5c3RlbSBjbG9ja3MuDQoNClNpZ25lZC1vZmYtYnk6IE93ZW4gQ2hlbiA8b3dlbi5j
-aGVuQG1lZGlhdGVrLmNvbT4NClNpZ25lZC1vZmYtYnk6IE1hY3BhdWwgTGluIDxtYWNwYXVsLmxp
-bkBtZWRpYXRlay5jb20+DQotLS0NCiBhcmNoL2FybTY0L2NvbmZpZ3MvZGVmY29uZmlnIHwgICAg
-NiArKysrKysNCiAxIGZpbGUgY2hhbmdlZCwgNiBpbnNlcnRpb25zKCspDQoNCmRpZmYgLS1naXQg
-YS9hcmNoL2FybTY0L2NvbmZpZ3MvZGVmY29uZmlnIGIvYXJjaC9hcm02NC9jb25maWdzL2RlZmNv
-bmZpZw0KaW5kZXggNmE4M2JhMi4uOWQzZGE4MSAxMDA2NDQNCi0tLSBhL2FyY2gvYXJtNjQvY29u
-Zmlncy9kZWZjb25maWcNCisrKyBiL2FyY2gvYXJtNjQvY29uZmlncy9kZWZjb25maWcNCkBAIC00
-ODksNiArNDg5LDEyIEBAIENPTkZJR19SRUdVTEFUT1JfUUNPTV9TTURfUlBNPXkNCiBDT05GSUdf
-UkVHVUxBVE9SX1FDT01fU1BNST15DQogQ09ORklHX1JFR1VMQVRPUl9SSzgwOD15DQogQ09ORklH
-X1JFR1VMQVRPUl9TMk1QUzExPXkNCitDT05GSUdfQ09NTU9OX0NMS19NVDY3NjVfQVVESU9TWVM9
-eQ0KK0NPTkZJR19DT01NT05fQ0xLX01UNjc2NV9DQU1TWVM9eQ0KK0NPTkZJR19DT01NT05fQ0xL
-X01UNjc2NV9NTVNZUz15DQorQ09ORklHX0NPTU1PTl9DTEtfTVQ2NzY1X0lNR1NZUz15DQorQ09O
-RklHX0NPTU1PTl9DTEtfTVQ2NzY1X1ZDT0RFQ1NZUz15DQorQ09ORklHX0NPTU1PTl9DTEtfTVQ2
-NzY1X01JUEkwQVNZUz15DQogQ09ORklHX1JFR1VMQVRPUl9WQ1RSTD1tDQogQ09ORklHX1JDX0NP
-UkU9bQ0KIENPTkZJR19SQ19ERUNPREVSUz15DQotLSANCjEuNy45LjUNCg==
-
+SGVsbG8gR3JlZywNCg0KPiBGcm9tOiBzdGFibGUtb3duZXJAdmdlci5rZXJuZWwub3JnIDxzdGFi
+bGUtb3duZXJAdmdlci5rZXJuZWwub3JnPiBPbg0KPiBCZWhhbGYgT2YgR3JlZyBLcm9haC1IYXJ0
+bWFuDQo+IFNlbnQ6IDIxIEZlYnJ1YXJ5IDIwMjAgMDc6NDANCj4gDQo+IFRoaXMgaXMgdGhlIHN0
+YXJ0IG9mIHRoZSBzdGFibGUgcmV2aWV3IGN5Y2xlIGZvciB0aGUgNC4xOS4xMDYgcmVsZWFzZS4N
+Cj4gVGhlcmUgYXJlIDE5MSBwYXRjaGVzIGluIHRoaXMgc2VyaWVzLCBhbGwgd2lsbCBiZSBwb3N0
+ZWQgYXMgYSByZXNwb25zZQ0KPiB0byB0aGlzIG9uZS4gIElmIGFueW9uZSBoYXMgYW55IGlzc3Vl
+cyB3aXRoIHRoZXNlIGJlaW5nIGFwcGxpZWQsIHBsZWFzZQ0KPiBsZXQgbWUga25vdy4NCj4gDQo+
+IFJlc3BvbnNlcyBzaG91bGQgYmUgbWFkZSBieSBTdW4sIDIzIEZlYiAyMDIwIDA3OjE5OjQ5ICsw
+MDAwLg0KPiBBbnl0aGluZyByZWNlaXZlZCBhZnRlciB0aGF0IHRpbWUgbWlnaHQgYmUgdG9vIGxh
+dGUuDQoNCk5vIGlzc3VlcyBzZWVuIGZvciBDSVAgY29uZmlncyBmb3IgTGludXggNC4xOS4xMDYt
+cmMxICgyN2FjOTg0NDkwMTcpLg0KDQpCdWlsZC90ZXN0IGxvZ3M6IGh0dHBzOi8vZ2l0bGFiLmNv
+bS9jaXAtcHJvamVjdC9jaXAtdGVzdGluZy9saW51eC1zdGFibGUtcmMtY2kvcGlwZWxpbmVzLzEx
+OTg1NjUyNw0KUGlwZWxpbmU6IGh0dHBzOi8vZ2l0bGFiLmNvbS9jaXAtcHJvamVjdC9jaXAtdGVz
+dGluZy9saW51eC1jaXAtcGlwZWxpbmVzLy0vYmxvYi9iYTMyMzM0Yi90cmVlcy9saW51eC00LjE5
+LnkueW1sDQoNCktpbmQgcmVnYXJkcywgQ2hyaXMNCg==
