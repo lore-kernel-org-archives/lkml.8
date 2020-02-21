@@ -7,46 +7,47 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 27285C35640
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 08:16:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DA3F9C35641
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 08:16:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CE0F924689
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 08:16:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AECFE2467B
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 08:16:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582272979;
-	bh=nO1lbYzeUI/0cN40Lb8FauXfvU/NcVzMBGSp7aObBl0=;
+	s=default; t=1582272985;
+	bh=z45Deq5jpfh5BBTwJ6zU+HtvdTraWuKGso37UKduEvs=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=jIcydlxvIDIjyNflFcpCXXgEVyNWWE9iYlpTNeo5q1WZT9vjLOlGfr/O7/4S/YbiL
-	 RLcvEQHa46YBOZ7YX25LAnAciaiktAvk7FINn6fm9YCJoFOmMYCdWxzfviMwIMGy+F
-	 WxWOVxpoTjPCOCKMJ7cmKSiCjlsvAxFM7lk3PuJc=
+	b=CtAj8ArTieC0ZO1rZeSi7R3fQF8aOf3pNwdn5jkXccIpQLp5ZoYNXKZuPVToYDNec
+	 neapFUE72jUIysg9e/J+8+YJZOlMR/RoRL0pB1NQ32Xoh2HqWAnmUc/OLeo8wDBrr5
+	 Va7/W/E1KALf6YlhCPwzFglvpP04PPn6OyfdvOuM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387498AbgBUIQP (ORCPT
+        id S2387520AbgBUIQY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Feb 2020 03:16:15 -0500
-Received: from mail.kernel.org ([198.145.29.99]:53140 "EHLO mail.kernel.org"
+        Fri, 21 Feb 2020 03:16:24 -0500
+Received: from mail.kernel.org ([198.145.29.99]:53308 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387489AbgBUIQK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Feb 2020 03:16:10 -0500
+        id S1733018AbgBUIQR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 21 Feb 2020 03:16:17 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 34E9F2467B;
-        Fri, 21 Feb 2020 08:16:09 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id CDE9924689;
+        Fri, 21 Feb 2020 08:16:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1582272969;
-        bh=nO1lbYzeUI/0cN40Lb8FauXfvU/NcVzMBGSp7aObBl0=;
+        s=default; t=1582272977;
+        bh=z45Deq5jpfh5BBTwJ6zU+HtvdTraWuKGso37UKduEvs=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=zQxyDFZrMleRnfnuV4xF3jhMstt3Lc0MWV1h8X1bE6me0g/zcJnkMzSSAUmye6qr2
-         7zjevxgEufcUbd8WdlVRKG1Ly1Jt0onyV2DISLSKcvZBtGtctKDTnixGFQ95uUsqR9
-         pUiUxCnvufnYZMvRM2kQCzMhstLS7YQhN62sdUFM=
+        b=ZAP3fRC38+jhDC5oBFSBSbaoR9aqbhV+FcO1DyK5faqwF77jmftYpVZU33KEKEyR7
+         xuprRA80FiUfy9xHsNoxvUQl6dhGNSu9/+bUZ0OUQmHk6JLJ0jgXc2VRxIEIPkzscq
+         quUeIiTD1cyLxc3zd+WnsCewluQ//lfsuzy/jyOc=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Coly Li <colyli@suse.de>,
-        Jens Axboe <axboe@kernel.dk>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 344/344] bcache: properly initialize path and err in register_bcache()
-Date:   Fri, 21 Feb 2020 08:42:23 +0100
-Message-Id: <20200221072421.728892150@linuxfoundation.org>
+        stable@vger.kernel.org, Evan Quan <evan.quan@amd.com>,
+        Alex Deucher <alexander.deucher@amd.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.4 333/344] drm/amdgpu/smu10: fix smu10_get_clock_by_type_with_latency
+Date:   Fri, 21 Feb 2020 08:42:12 +0100
+Message-Id: <20200221072420.612307785@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200221072349.335551332@linuxfoundation.org>
 References: <20200221072349.335551332@linuxfoundation.org>
@@ -59,58 +60,47 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Coly Li <colyli@suse.de>
+From: Alex Deucher <alexander.deucher@amd.com>
 
-[ Upstream commit 29cda393bcaad160c4bf3676ddd99855adafc72f ]
+[ Upstream commit 4d0a72b66065dd7e274bad6aa450196d42fd8f84 ]
 
-Patch "bcache: rework error unwinding in register_bcache" from
-Christoph Hellwig changes the local variables 'path' and 'err'
-in undefined initial state. If the code in register_bcache() jumps
-to label 'out:' or 'out_module_put:' by goto, these two variables
-might be reference with undefined value by the following line,
+Only send non-0 clocks to DC for validation.  This mirrors
+what the windows driver does.
 
-	out_module_put:
-	        module_put(THIS_MODULE);
-	out:
-	        pr_info("error %s: %s", path, err);
-	        return ret;
-
-Therefore this patch initializes these two local variables properly
-in register_bcache() to avoid such issue.
-
-Signed-off-by: Coly Li <colyli@suse.de>
-Signed-off-by: Jens Axboe <axboe@kernel.dk>
+Bug: https://gitlab.freedesktop.org/drm/amd/issues/963
+Reviewed-by: Evan Quan <evan.quan@amd.com>
+Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/md/bcache/super.c | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+ drivers/gpu/drm/amd/powerplay/hwmgr/smu10_hwmgr.c | 15 +++++++++------
+ 1 file changed, 9 insertions(+), 6 deletions(-)
 
-diff --git a/drivers/md/bcache/super.c b/drivers/md/bcache/super.c
-index 485ebc2b2144c..658b0f4a01f56 100644
---- a/drivers/md/bcache/super.c
-+++ b/drivers/md/bcache/super.c
-@@ -2373,18 +2373,20 @@ static ssize_t register_bcache(struct kobject *k, struct kobj_attribute *attr,
- 			       const char *buffer, size_t size)
- {
- 	const char *err;
--	char *path;
-+	char *path = NULL;
- 	struct cache_sb *sb;
- 	struct block_device *bdev = NULL;
- 	struct page *sb_page;
- 	ssize_t ret;
+diff --git a/drivers/gpu/drm/amd/powerplay/hwmgr/smu10_hwmgr.c b/drivers/gpu/drm/amd/powerplay/hwmgr/smu10_hwmgr.c
+index 1115761982a78..627a42e8fd318 100644
+--- a/drivers/gpu/drm/amd/powerplay/hwmgr/smu10_hwmgr.c
++++ b/drivers/gpu/drm/amd/powerplay/hwmgr/smu10_hwmgr.c
+@@ -1026,12 +1026,15 @@ static int smu10_get_clock_by_type_with_latency(struct pp_hwmgr *hwmgr,
  
- 	ret = -EBUSY;
-+	err = "failed to reference bcache module";
- 	if (!try_module_get(THIS_MODULE))
- 		goto out;
+ 	clocks->num_levels = 0;
+ 	for (i = 0; i < pclk_vol_table->count; i++) {
+-		clocks->data[i].clocks_in_khz = pclk_vol_table->entries[i].clk * 10;
+-		clocks->data[i].latency_in_us = latency_required ?
+-						smu10_get_mem_latency(hwmgr,
+-						pclk_vol_table->entries[i].clk) :
+-						0;
+-		clocks->num_levels++;
++		if (pclk_vol_table->entries[i].clk) {
++			clocks->data[clocks->num_levels].clocks_in_khz =
++				pclk_vol_table->entries[i].clk * 10;
++			clocks->data[clocks->num_levels].latency_in_us = latency_required ?
++				smu10_get_mem_latency(hwmgr,
++						      pclk_vol_table->entries[i].clk) :
++				0;
++			clocks->num_levels++;
++		}
+ 	}
  
- 	/* For latest state of bcache_is_reboot */
- 	smp_mb();
-+	err = "bcache is in reboot";
- 	if (bcache_is_reboot)
- 		goto out_module_put;
- 
+ 	return 0;
 -- 
 2.20.1
 
