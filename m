@@ -2,93 +2,98 @@ Return-Path: <SRS0=1210=4J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BD7B9C35646
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 17:13:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4D3DBC35658
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 17:13:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9DF9220722
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 17:13:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 24D4C2465D
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 17:13:47 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1582305227;
+	bh=ClSnmbdLtqR6leem+D1hOzjaaJ0Onh+mXdiJUHo1EDU=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=eYEowipCMVu0vCBY+HcghjnRxS4HFH3j6GR3QSB6ggWp4FL+M9xat397OZont8nks
+	 32dF+TY3Du0t4DR4BTXKccWxncrk6S8ZDxdTC+eZS/oJS0TsBrndF2u23hqdL/VJ7D
+	 Y7HRPY6g02oYFSQ+/sCwWJUc7JSsbsTPbZ9jTnjw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728292AbgBURNd (ORCPT
+        id S1728387AbgBURNp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Feb 2020 12:13:33 -0500
-Received: from verein.lst.de ([213.95.11.211]:56597 "EHLO verein.lst.de"
+        Fri, 21 Feb 2020 12:13:45 -0500
+Received: from foss.arm.com ([217.140.110.172]:44062 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726408AbgBURNd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Feb 2020 12:13:33 -0500
-Received: by verein.lst.de (Postfix, from userid 2005)
-        id 06ABD68BFE; Fri, 21 Feb 2020 18:13:29 +0100 (CET)
-Date:   Fri, 21 Feb 2020 18:13:28 +0100
-From:   Torsten Duwe <duwe@lst.de>
-To:     Icenowy Zheng <icenowy@aosc.io>
-Cc:     Andrzej Hajda <a.hajda@samsung.com>,
-        Neil Armstrong <narmstrong@baylibre.com>,
-        Laurent Pinchart <Laurent.pinchart@ideasonboard.com>,
-        Jonas Karlman <jonas@kwiboo.se>,
-        Jernej Skrabec <jernej.skrabec@siol.net>,
-        Maxime Ripard <maxime@cerno.tech>,
-        Vasily Khoruzhick <anarsoul@gmail.com>,
-        dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] drm/bridge: analogix-anx6345: fix set of link bandwidth
-Message-ID: <20200221171328.GC6928@lst.de>
-References: <20200221165127.813325-1-icenowy@aosc.io>
+        id S1725957AbgBURNp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 21 Feb 2020 12:13:45 -0500
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 0986E30E;
+        Fri, 21 Feb 2020 09:13:45 -0800 (PST)
+Received: from localhost (unknown [10.37.6.21])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 73B143F68F;
+        Fri, 21 Feb 2020 09:13:44 -0800 (PST)
+Date:   Fri, 21 Feb 2020 17:13:42 +0000
+From:   Mark Brown <broonie@kernel.org>
+To:     Marek Szyprowski <m.szyprowski@samsung.com>
+Cc:     linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Krzysztof Kozlowski <krzk@kernel.org>,
+        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
+        Chanwoo Choi <cw00.choi@samsung.com>,
+        MyungJoo Ham <myungjoo.ham@samsung.com>,
+        Sebastian Reichel <sre@kernel.org>,
+        Rob Herring <robh+dt@kernel.org>
+Subject: Re: [PATCH 1/3] regulator: max14577: Add proper dt-compatible strings
+Message-ID: <20200221171342.GI5546@sirena.org.uk>
+References: <CGME20200220145134eucas1p288ae1910d3e8d12dc12f010ed0b07b45@eucas1p2.samsung.com>
+ <20200220145127.21273-1-m.szyprowski@samsung.com>
+ <20200220165614.GD3926@sirena.org.uk>
+ <964b8c4c-36ca-203d-e62b-4a8fc970e23d@samsung.com>
+ <20200221123813.GB5546@sirena.org.uk>
+ <b52332cd-1dec-fdfe-51fc-8605d94abe7d@samsung.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="16qp2B0xu0fRvRD7"
 Content-Disposition: inline
-In-Reply-To: <20200221165127.813325-1-icenowy@aosc.io>
-User-Agent: Mutt/1.5.17 (2007-11-01)
+In-Reply-To: <b52332cd-1dec-fdfe-51fc-8605d94abe7d@samsung.com>
+X-Cookie: Dead? No excuse for laying off work.
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, Feb 22, 2020 at 12:51:27AM +0800, Icenowy Zheng wrote:
-> Current code tries to store the link rate (in bps, which is a big
-> number) in a u8, which surely overflow. Then it's converted back to
-> bandwidth code (which is thus 0) and written to the chip.
-> 
-> The code sometimes works because the chip will automatically fallback to
-> the lowest possible DP link rate (1.62Gbps) when get the invalid value.
-> However, on the eDP panel of Olimex TERES-I, which wants 2.7Gbps link,
-> it failed.
-> 
-> As we had already read the link bandwidth as bandwidth code in earlier
-> code (to check whether it is supported), use it when setting bandwidth,
-> instead of converting it to link rate and then converting back.
-> 
-> Fixes: e1cff82c1097 ("drm/bridge: fix anx6345 compilation for v5.5")
-> Signed-off-by: Icenowy Zheng <icenowy@aosc.io>
-> ---
->  drivers/gpu/drm/bridge/analogix/analogix-anx6345.c | 3 +--
->  1 file changed, 1 insertion(+), 2 deletions(-)
-> 
-> diff --git a/drivers/gpu/drm/bridge/analogix/analogix-anx6345.c b/drivers/gpu/drm/bridge/analogix/analogix-anx6345.c
-> index 56f55c53abfd..2dfa2fd2a23b 100644
-> --- a/drivers/gpu/drm/bridge/analogix/analogix-anx6345.c
-> +++ b/drivers/gpu/drm/bridge/analogix/analogix-anx6345.c
-> @@ -210,8 +210,7 @@ static int anx6345_dp_link_training(struct anx6345 *anx6345)
->  	if (err)
->  		return err;
->  
-> -	dpcd[0] = drm_dp_max_link_rate(anx6345->dpcd);
-> -	dpcd[0] = drm_dp_link_rate_to_bw_code(dpcd[0]);
-> +	dpcd[0] = dp_bw;
 
-Why do you make this assignment and not use dp_bw directly in the call?
+--16qp2B0xu0fRvRD7
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
->  	err = regmap_write(anx6345->map[I2C_IDX_DPTX],
->  			   SP_DP_MAIN_LINK_BW_SET_REG, dpcd[0]);
-                                                       ^^^^^^
->  	if (err)
-> -- 
-> 2.24.1
+On Fri, Feb 21, 2020 at 02:23:57PM +0100, Marek Szyprowski wrote:
+> On 21.02.2020 13:38, Mark Brown wrote:
 
-BTW, my version is only a bit more verbose:
+> > We could just remove the compatible strings from the binding
+> > documentation, they won't do any harm if we don't use them.
 
-https://patchwork.freedesktop.org/patch/354344/
+> Frankly I have no strong opinion on this. I've just wanted to fix the=20
+> broken autoloading of the drivers compiled as modules.
 
-	Torsten
+Shouldn't adding the relevant module table for the platform devices work
+just as well for that?  Possibly also deleting the of_compatible bits in
+the MFD as well, ISTR that's needed to make the platform device work.
 
+--16qp2B0xu0fRvRD7
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl5QD8YACgkQJNaLcl1U
+h9Bw3Qf+ICypwgqpOfbViorwhsNd3hYeovxUVDcqxnxihICh9+jgxBTl7heRL5hd
+QsO0mgj65HXPtElBIxhBtE7WZiKbT/WavCR8EHVpoST/q00zg4FKMWlVfbiP3Nqm
+2NcRBzx43XUlji4hEiwq4c4FI22PwMw84dqqWczq47rU7AdDX/vTfJEJzgs3jRDb
+LcZRK/8ShQjhv8nTDfNIm57atMXTraRQmnRLCH21RkhRo652Pz2oLnWhYamUJvtj
+WR/yFEXF20EkD1hAaHYwy2KnaQG5dJuBW9nvD+iFcOq9rQm+IlK+FHb3lG44wAAy
+nkIA9S0bNtrAzcebaglfcs3wtVORAA==
+=vq2s
+-----END PGP SIGNATURE-----
+
+--16qp2B0xu0fRvRD7--
