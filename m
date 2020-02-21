@@ -2,92 +2,113 @@ Return-Path: <SRS0=1210=4J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_2
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1BB47C35641
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 22:32:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 75E01C35641
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 22:35:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id ED434206EF
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 22:32:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 52FFC206EF
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 22:35:24 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729195AbgBUWcV (ORCPT
+        id S1728792AbgBUWfW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Feb 2020 17:32:21 -0500
-Received: from bhuna.collabora.co.uk ([46.235.227.227]:34104 "EHLO
-        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726802AbgBUWcV (ORCPT
+        Fri, 21 Feb 2020 17:35:22 -0500
+Received: from shelob.surriel.com ([96.67.55.147]:46516 "EHLO
+        shelob.surriel.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726731AbgBUWfW (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Feb 2020 17:32:21 -0500
-Received: from localhost (unknown [IPv6:2a01:e0a:2c:6930:5cf4:84a1:2763:fe0d])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        (Authenticated sender: bbrezillon)
-        by bhuna.collabora.co.uk (Postfix) with ESMTPSA id D6056295BD2;
-        Fri, 21 Feb 2020 22:32:19 +0000 (GMT)
-Date:   Fri, 21 Feb 2020 23:32:16 +0100
-From:   Boris Brezillon <boris.brezillon@collabora.com>
-To:     Vitor Soares <Vitor.Soares@synopsys.com>
-Cc:     linux-kernel@vger.kernel.org, linux-i3c@lists.infradead.org,
-        Jose.Abreu@synopsys.com, corbet@lwn.net, Joao.Pinto@synopsys.com,
-        arnd@arndb.de, wsa@the-dreams.de, gregkh@linuxfoundation.org,
-        bbrezillon@kernel.org, broonie@kernel.org
-Subject: Re: [PATCH v3 4/5] i3c: add i3cdev module to expose i3c dev in /dev
-Message-ID: <20200221233216.3b2038f8@collabora.com>
-In-Reply-To: <e093ae9da81e7702c188a20d1e8b9d7f8024bfeb.1582069402.git.vitor.soares@synopsys.com>
-References: <cover.1582069402.git.vitor.soares@synopsys.com>
-        <e093ae9da81e7702c188a20d1e8b9d7f8024bfeb.1582069402.git.vitor.soares@synopsys.com>
-Organization: Collabora
-X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; x86_64-redhat-linux-gnu)
+        Fri, 21 Feb 2020 17:35:22 -0500
+Received: from imladris.surriel.com ([96.67.55.152])
+        by shelob.surriel.com with esmtpsa (TLSv1.2:ECDHE-RSA-AES256-GCM-SHA384:256)
+        (Exim 4.92.3)
+        (envelope-from <riel@shelob.surriel.com>)
+        id 1j5GtD-0003s1-6Q; Fri, 21 Feb 2020 17:35:19 -0500
+Message-ID: <67d927c6161b15664b4a912ad34fc3a147109760.camel@surriel.com>
+Subject: Re: [PATCH 2/2] mm,thp,compaction,cma: allow THP migration for CMA
+ allocations
+From:   Rik van Riel <riel@surriel.com>
+To:     Zi Yan <ziy@nvidia.com>
+Cc:     linux-kernel@vger.kernel.org, kernel-team@fb.com,
+        akpm@linux-foundation.org, linux-mm@kvack.org, mhocko@kernel.org,
+        vbabka@suse.cz, mgorman@techsingularity.net, rientjes@google.com,
+        aarcange@redhat.com
+Date:   Fri, 21 Feb 2020 17:35:15 -0500
+In-Reply-To: <FF5B51C0-8D6E-47AB-82C8-020D5C522502@nvidia.com>
+References: <cover.1582321645.git.riel@surriel.com>
+         <3289dc5e6c4c3174999598d8293adf8ed3e93b57.1582321645.git.riel@surriel.com>
+         <FF5B51C0-8D6E-47AB-82C8-020D5C522502@nvidia.com>
+Content-Type: multipart/signed; micalg="pgp-sha256";
+        protocol="application/pgp-signature"; boundary="=-N3fCwb3Sg4Ms25pOkexS"
+User-Agent: Evolution 3.34.3 (3.34.3-1.fc31) 
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 19 Feb 2020 01:20:42 +0100
-Vitor Soares <Vitor.Soares@synopsys.com> wrote:
 
-> +static int i3cdev_detach(struct device *dev, void *dummy)
-> +{
-> +	struct i3cdev_data *i3cdev;
-> +	struct i3c_device *i3c;
-> +
-> +	if (dev->type == &i3c_masterdev_type)
-> +		return 0;
-> +
-> +	i3c = dev_to_i3cdev(dev);
-> +
-> +	i3cdev = i3cdev_get_drvdata(i3c);
-> +	if (!i3cdev)
-> +		return 0;
-> +
-> +	/* Prevent transfers while cdev removal */
-> +	mutex_lock(&i3cdev->xfer_lock);
-> +	cdev_del(&i3cdev->cdev);
+--=-N3fCwb3Sg4Ms25pOkexS
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-When cdev_del() returns there might be opened FDs pointing to your
-i3cdev [1] ...
+On Fri, 2020-02-21 at 17:31 -0500, Zi Yan wrote:
+> On 21 Feb 2020, at 16:53, Rik van Riel wrote:
+>=20
+> > +++ b/mm/compaction.c
+> > @@ -894,12 +894,12 @@ isolate_migratepages_block(struct
+> > compact_control *cc, unsigned long low_pfn,
+> >=20
+> >  		/*
+> >  		 * Regardless of being on LRU, compound pages such as
+> > THP and
+> > -		 * hugetlbfs are not to be compacted. We can
+> > potentially save
+> > -		 * a lot of iterations if we skip them at once. The
+> > check is
+> > -		 * racy, but we can consider only valid values and the
+> > only
+> > -		 * danger is skipping too much.
+> > +		 * hugetlbfs are not to be compacted most of the time.
+> > We can
+> > +		 * potentially save a lot of iterations if we skip them
+> > at
+> > +		 * once. The check is racy, but we can consider only
+> > valid
+> > +		 * values and the only danger is skipping too much.
+> >  		 */
+>=20
+> Maybe add =E2=80=9Cwe do want to move them when allocating contiguous mem=
+ory
+> using CMA=E2=80=9D to help
+> people understand the context of using cc->alloc_contig?
 
-> +	device_destroy(i3cdev_class, MKDEV(MAJOR(i3cdev_number), i3cdev->id));
-> +	mutex_unlock(&i3cdev->xfer_lock);
-> +
-> +	ida_simple_remove(&i3cdev_ida, i3cdev->id);
-> +	put_i3cdev(i3cdev);
+I can certainly do that.
 
-... and you call put_i3cdev() here which frees the i3cdev object,
-leading to potential use-after-free if any of the fops (ioctl, read,
-write) are called on those dangling FDs. That's exactly the kind of
-nightmare I'd like to avoid.
+I'll wait for feedback from other people to see if
+more changes are wanted, and plan to post v2 by
+Tuesday or so :)
 
-> +
-> +	pr_debug("i3cdev: device [%s] unregistered\n", dev_name(&i3c->dev));
-> +
-> +	return 0;
-> +}
-> +
+--=20
+All Rights Reversed.
 
-[1]https://elixir.bootlin.com/linux/latest/source/fs/char_dev.c#L587
+--=-N3fCwb3Sg4Ms25pOkexS
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: This is a digitally signed message part
+Content-Transfer-Encoding: 7bit
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCAAdFiEEKR73pCCtJ5Xj3yADznnekoTE3oMFAl5QWyMACgkQznnekoTE
+3oNG4Qf+NIlz59enImNBYGxlLc+a6Zw6OUfHlPKtL3xXWApRER8KxyzqehnAaDHD
+2SyRCoaOObt30qL9telaoqfinbnZP57ud4cpuUrhZ6R/EPYvhWmPzOCuy/ON8n1q
+J3+SPHSHIdpO0yLqECbkjh8yqqcgeH4MRzvAkUlJ5sl7zLzMUcXLM4lAMRIPP3bE
+t3GEAVk32mZlYWVowBgYbqTXOPdvha/nJpqpQVOHqLXKDxho/GgXmBzBxqk/JTPd
+HOHmd9VCOgdmMiylg+s+WVaEP4iGJkE+QrtywHtKVwvYCyOdcTp5d6vAK0Dv85a3
+2CU5VojKKKWQL74efpSrnIrmMdGGqQ==
+=/pq0
+-----END PGP SIGNATURE-----
+
+--=-N3fCwb3Sg4Ms25pOkexS--
+
