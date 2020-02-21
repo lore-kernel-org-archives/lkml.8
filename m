@@ -2,77 +2,138 @@ Return-Path: <SRS0=1210=4J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5729AC3566F
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 21:05:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8C131C35666
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 21:09:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3605C2073A
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 21:05:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 62A0E2072C
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 21:09:21 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=lca.pw header.i=@lca.pw header.b="VeesGLC8"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727635AbgBUVF2 (ORCPT
+        id S1729533AbgBUVJU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Feb 2020 16:05:28 -0500
-Received: from 1.mo178.mail-out.ovh.net ([178.33.251.53]:48503 "EHLO
-        1.mo178.mail-out.ovh.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726683AbgBUVF2 (ORCPT
+        Fri, 21 Feb 2020 16:09:20 -0500
+Received: from mail-qk1-f194.google.com ([209.85.222.194]:43305 "EHLO
+        mail-qk1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727362AbgBUVJU (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Feb 2020 16:05:28 -0500
-Received: from player786.ha.ovh.net (unknown [10.110.171.31])
-        by mo178.mail-out.ovh.net (Postfix) with ESMTP id EF59790615
-        for <linux-kernel@vger.kernel.org>; Fri, 21 Feb 2020 21:57:51 +0100 (CET)
-Received: from sk2.org (82-65-25-201.subs.proxad.net [82.65.25.201])
-        (Authenticated sender: steve@sk2.org)
-        by player786.ha.ovh.net (Postfix) with ESMTPSA id 11382FCCF25F;
-        Fri, 21 Feb 2020 20:57:42 +0000 (UTC)
-From:   Stephen Kitt <steve@sk2.org>
-To:     Jonathan Corbet <corbet@lwn.net>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, x86@kernel.org,
-        linux-doc@vger.kernel.org
-Cc:     linux-kernel@vger.kernel.org, Stephen Kitt <steve@sk2.org>
-Subject: [PATCH] docs: remove MPX from the x86 toc
-Date:   Fri, 21 Feb 2020 21:57:33 +0100
-Message-Id: <20200221205733.26351-1-steve@sk2.org>
-X-Mailer: git-send-email 2.20.1
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Ovh-Tracer-Id: 4922152920520740229
-X-VR-SPAMSTATE: OK
-X-VR-SPAMSCORE: -100
-X-VR-SPAMCAUSE: gggruggvucftvghtrhhoucdtuddrgedugedrkeeggddugedvucetufdoteggodetrfdotffvucfrrhhofhhilhgvmecuqfggjfdpvefjgfevmfevgfenuceurghilhhouhhtmecuhedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmnecujfgurhephffvufffkffoggfgsedtkeertdertddtnecuhfhrohhmpefuthgvphhhvghnucfmihhtthcuoehsthgvvhgvsehskhdvrdhorhhgqeenucfkpheptddrtddrtddrtddpkedvrdeihedrvdehrddvtddunecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehmohguvgepshhmthhpqdhouhhtpdhhvghlohepphhlrgihvghrjeekiedrhhgrrdhovhhhrdhnvghtpdhinhgvtheptddrtddrtddrtddpmhgrihhlfhhrohhmpehsthgvvhgvsehskhdvrdhorhhgpdhrtghpthhtoheplhhinhhugidqkhgvrhhnvghlsehvghgvrhdrkhgvrhhnvghlrdhorhhg
+        Fri, 21 Feb 2020 16:09:20 -0500
+Received: by mail-qk1-f194.google.com with SMTP id p7so3162057qkh.10
+        for <linux-kernel@vger.kernel.org>; Fri, 21 Feb 2020 13:09:19 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=lca.pw; s=google;
+        h=from:to:cc:subject:date:message-id;
+        bh=ENPq/7GL2LdhwWd45tusEGIXiUDzJQV+38GbQQfDu9Y=;
+        b=VeesGLC8L7IzrzUN89qTRkqVXcW8jd53cLBfKygxcqlUrbJxcGc7bp+qUu5jCyDADH
+         EFzyxAyXvvYYmGIdXrocupJmYKEvrPvx8NDyBs2hFpLJmOBlvlBRikDqJjxCbgQJirlg
+         cnpRslIQxdm/MIQI51Ie35aGcmCU+FF6haH2N+J1IT0hqSkWeq0bJsT6zeiU2NWtk8gw
+         KniHr/MXtAVag3o4PU5+oWGTg5uEij0ZObOHno5LKAr5XeMyQcigiQ7kLrCewHgvYtU+
+         XeUbjFE/aV8iI2Tq3bFTinhkLWG4Rpg57qRpEOpaz9t/jboqevP8L581oOPP/DWH2ggA
+         hqRA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=ENPq/7GL2LdhwWd45tusEGIXiUDzJQV+38GbQQfDu9Y=;
+        b=HyNcYrdTfWtS2GnyH4iE1yai4I4JheqE4u13ucHriIhCjTU4KQU27oI3yLJrHN2GWX
+         9kYsKoYCGM41nGRzp6PksNkYgPNeWikdESZHpUcj3D9dZDsZbiGq0GhL18hbKBNb0BtI
+         nX2wqMy/B0e7hnHLSG+g17kmJpl6T/KGfCy6z8SNBwIpjwmo5eHWfXjm7bG8t+BFqAi5
+         l4oVumh0V773lO+pUWxDh7e3x5E19z87i8Rz0tXN3eYBdOorwAXdSrPUlRi7ltYgWJ3o
+         Vy1bemxUj8kf1kpe3G6RFjMyHzo8//3fF9erotLZB1RVsPguKns1JshTWua0M1Amt2Uy
+         Gmfg==
+X-Gm-Message-State: APjAAAXnIPqXrSQWLpCQmTprWELhwmSbT15qCwufQaSQXPakikOQm8Ae
+        ukIHovrReLoA0E8e0xBIgLv85g==
+X-Google-Smtp-Source: APXvYqzATGs4NTBVmPJHvs7Z3ZHgRZmLgy9kkqqhvC+t4Mg3ozlWXa7l0q0WQNcSuMmGZmO1EmypVg==
+X-Received: by 2002:a37:a84f:: with SMTP id r76mr35023486qke.115.1582319358843;
+        Fri, 21 Feb 2020 13:09:18 -0800 (PST)
+Received: from qcai.nay.com (nat-pool-bos-t.redhat.com. [66.187.233.206])
+        by smtp.gmail.com with ESMTPSA id n191sm2120818qkn.6.2020.02.21.13.09.17
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Fri, 21 Feb 2020 13:09:18 -0800 (PST)
+From:   Qian Cai <cai@lca.pw>
+To:     rjw@rjwysocki.net
+Cc:     elver@google.com, linux-pm@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Qian Cai <cai@lca.pw>
+Subject: [PATCH -next] power/qos: fix a data race in pm_qos_*_value
+Date:   Fri, 21 Feb 2020 16:09:10 -0500
+Message-Id: <1582319350-23515-1-git-send-email-cai@lca.pw>
+X-Mailer: git-send-email 1.8.3.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-MPX was removed in commit 45fc24e89b7c ("x86/mpx: remove MPX from
-arch/x86"), this removes the corresponding entry in the x86 toc.
+cpu_latency_constraints.target_value could be accessed concurrently as
+noticed by KCSAN,
 
-This was suggested by a Sphinx warning.
+ LTP: starting ppoll01
+ BUG: KCSAN: data-race in cpu_latency_qos_limit / pm_qos_update_target
 
-Signed-off-by: Stephen Kitt <steve@sk2.org>
+ write to 0xffffffff99081470 of 4 bytes by task 27532 on cpu 2:
+  pm_qos_update_target+0xa4/0x370
+  pm_qos_set_value at kernel/power/qos.c:78
+  cpu_latency_qos_apply+0x3b/0x50
+  cpu_latency_qos_remove_request+0xea/0x270
+  cpu_latency_qos_release+0x4b/0x70
+  __fput+0x187/0x3d0
+  ____fput+0x1e/0x30
+  task_work_run+0xbf/0x130
+  do_exit+0xa78/0xfd0
+  do_group_exit+0x8b/0x180
+  __x64_sys_exit_group+0x2e/0x30
+  do_syscall_64+0x91/0xb05
+  entry_SYSCALL_64_after_hwframe+0x49/0xbe
+
+ read to 0xffffffff99081470 of 4 bytes by task 0 on cpu 41:
+  cpu_latency_qos_limit+0x1f/0x30
+  pm_qos_read_value at kernel/power/qos.c:55
+  cpuidle_governor_latency_req+0x4f/0x80
+  cpuidle_governor_latency_req at drivers/cpuidle/governor.c:114
+  menu_select+0x6b/0xc29
+  cpuidle_select+0x50/0x70
+  do_idle+0x214/0x280
+  cpu_startup_entry+0x1d/0x1f
+  start_secondary+0x1b2/0x230
+  secondary_startup_64+0xb6/0xc0
+
+ Reported by Kernel Concurrency Sanitizer on:
+ CPU: 41 PID: 0 Comm: swapper/41 Tainted: G L 5.6.0-rc2-next-20200221+ #7
+ Hardware name: HPE ProLiant DL385 Gen10/ProLiant DL385 Gen10, BIOS A40 07/10/2019
+
+The read is outside pm_qos_lock critical section which results in a data
+race. Fix it by adding a pair of READ|WRITE_ONCE().
+
+Signed-off-by: Qian Cai <cai@lca.pw>
 ---
- Documentation/x86/index.rst | 1 -
- 1 file changed, 1 deletion(-)
+ kernel/power/qos.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/Documentation/x86/index.rst b/Documentation/x86/index.rst
-index a8de2fbc1caa..265d9e9a093b 100644
---- a/Documentation/x86/index.rst
-+++ b/Documentation/x86/index.rst
-@@ -19,7 +19,6 @@ x86-specific Documentation
-    tlb
-    mtrr
-    pat
--   intel_mpx
-    intel-iommu
-    intel_txt
-    amd-memory-encryption
-
-base-commit: ca7e1fd1026c5af6a533b4b5447e1d2f153e28f2
+diff --git a/kernel/power/qos.c b/kernel/power/qos.c
+index 32927682bcc4..db0bed2cae26 100644
+--- a/kernel/power/qos.c
++++ b/kernel/power/qos.c
+@@ -52,7 +52,7 @@
+  */
+ s32 pm_qos_read_value(struct pm_qos_constraints *c)
+ {
+-	return c->target_value;
++	return READ_ONCE(c->target_value);
+ }
+ 
+ static int pm_qos_get_value(struct pm_qos_constraints *c)
+@@ -75,7 +75,7 @@ static int pm_qos_get_value(struct pm_qos_constraints *c)
+ 
+ static void pm_qos_set_value(struct pm_qos_constraints *c, s32 value)
+ {
+-	c->target_value = value;
++	WRITE_ONCE(c->target_value, value);
+ }
+ 
+ /**
 -- 
-2.24.1
+1.8.3.1
 
