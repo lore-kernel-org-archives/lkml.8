@@ -7,48 +7,48 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 65680C35641
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 07:59:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 212D6C35641
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 07:59:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 370C22073A
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 07:59:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E007A2073A
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 07:59:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582271948;
-	bh=NnihoHZO7gG4+vQsjdpCtoIC62QSyg5BA43hTajBID8=;
+	s=default; t=1582271951;
+	bh=ooos8tpZKnXbpVHIh/6tszTvkd3+TRtE+CbR4oBMCBk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=wxoXmEMqLqDiwfHeKUqRbWaop+ZWP7Gp2YMxiQ8VfoxbRCF4qD/yI8LVOakN0ykwn
-	 e8/j4RsfVRVBDSjZvf4tEilv/mW/0ci1tpEZn6qXJMFabHW71Zt9yNhslk3RIkjpU/
-	 8SKCH7twDyaMhtyNyjTMxGB3QtBlnklEvm9dRyBc=
+	b=y8epusn9NtDZSMuBS+YPkNNnwF+2fEbnJFvf59rDaBBuq/boDkt+MRcp6x86zugWv
+	 tBl1Ka1k8jVG5CHBkJqADSP8E46eQ2ptgIOBEVE1deBWB+DnZzeq1FsGhPHcbkjwGl
+	 V+nymczmdYMv9ITQG7rKVEafrosApaN3R3nBFTSA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730859AbgBUH7G (ORCPT
+        id S1730867AbgBUH7J (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Feb 2020 02:59:06 -0500
-Received: from mail.kernel.org ([198.145.29.99]:59062 "EHLO mail.kernel.org"
+        Fri, 21 Feb 2020 02:59:09 -0500
+Received: from mail.kernel.org ([198.145.29.99]:59134 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730557AbgBUH7F (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Feb 2020 02:59:05 -0500
+        id S1730557AbgBUH7H (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 21 Feb 2020 02:59:07 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 194B92073A;
-        Fri, 21 Feb 2020 07:59:03 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 972CF20578;
+        Fri, 21 Feb 2020 07:59:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1582271944;
-        bh=NnihoHZO7gG4+vQsjdpCtoIC62QSyg5BA43hTajBID8=;
+        s=default; t=1582271947;
+        bh=ooos8tpZKnXbpVHIh/6tszTvkd3+TRtE+CbR4oBMCBk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=dqXpAY1bRkvGEZHz53S3WfXC7zP1hfYHCdNl616mbAw5kXJELldLuLBPs2HKjkucB
-         G8kmvnQWXx9kooGxqQO5ZqVZVUZ45dCL8wtRC8LzZEEG+pH54sYzgNV8mYyqWL//t8
-         YE0+n5G8O6nbjBwGcOBALrydwIp/7irp/jUnmgd8=
+        b=B6yPAufWj2F3PX6vhI0fsVahbkrM6EtSg2jVCc5nYYBffRhTD7KKl6GNw/oyKkRxV
+         UVvtNM+W1K33rQN/CeEkq+nkbvJjaXjjuIofeL+1rg2gj4N9aXsfr/YBZD3/1H44HH
+         lslQB0briF4SsVlRKWHnRV7jkiiBqG9GiykJlKsI=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Sven Schnelle <sven.schnelle@ibm.com>,
-        Heiko Carstens <heiko.carstens@de.ibm.com>,
+        stable@vger.kernel.org, Heiko Carstens <heiko.carstens@de.ibm.com>,
+        Sven Schnelle <svens@linux.ibm.com>,
         Vasily Gorbik <gor@linux.ibm.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.5 320/399] s390/ftrace: generate traced function stack frame
-Date:   Fri, 21 Feb 2020 08:40:45 +0100
-Message-Id: <20200221072432.490291063@linuxfoundation.org>
+Subject: [PATCH 5.5 321/399] s390: fix __EMIT_BUG() macro
+Date:   Fri, 21 Feb 2020 08:40:46 +0100
+Message-Id: <20200221072432.570098002@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200221072402.315346745@linuxfoundation.org>
 References: <20200221072402.315346745@linuxfoundation.org>
@@ -61,101 +61,199 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Vasily Gorbik <gor@linux.ibm.com>
+From: Sven Schnelle <svens@linux.ibm.com>
 
-[ Upstream commit 45f7a0da600d3c409b5ad8d5ddddacd98ddc8840 ]
+[ Upstream commit 17248ea0367465f4aaef728f6af661ed38e38cf1 ]
 
-Currently backtrace from ftraced function does not contain ftraced
-function itself. e.g. for "path_openat":
+Setting a kprobe on getname_flags() failed:
 
-arch_stack_walk+0x15c/0x2d8
-stack_trace_save+0x50/0x68
-stack_trace_call+0x15e/0x3d8
-ftrace_graph_caller+0x0/0x1c <-- ftrace code
-do_filp_open+0x7c/0xe8 <-- ftraced function caller
-do_open_execat+0x76/0x1b8
-open_exec+0x52/0x78
-load_elf_binary+0x180/0x1160
-search_binary_handler+0x8e/0x288
-load_script+0x2a8/0x2b8
-search_binary_handler+0x8e/0x288
-__do_execve_file.isra.39+0x6fa/0xb40
-__s390x_sys_execve+0x56/0x68
-system_call+0xdc/0x2d8
+$ echo 'p:tmr1 getname_flags +0(%r2):ustring' > kprobe_events
+-bash: echo: write error: Invalid argument
 
-Ftraced function is expected in the backtrace by ftrace kselftests, which
-are now failing. It would also be nice to have it for clarity reasons.
+Debugging the kprobes code showed that the address of
+getname_flags() is contained in the __bug_table. Kprobes
+doesn't allow to set probes at BUG() locations.
 
-"ftrace_caller" itself is called without stack frame allocated for it
-and does not store its caller (ftraced function). Instead it simply
-allocates a stack frame for "ftrace_trace_function" and sets backchain
-to point to ftraced function stack frame (which contains ftraced function
-caller in saved r14).
+$ objdump -j  __bug_table -x build/fs/namei.o
+[..]
+0000000000000108 R_390_PC32        .text+0x00000000000075a8
+000000000000010c R_390_PC32        .L223+0x0000000000000004
 
-To fix this issue make "ftrace_caller" allocate a stack frame
-for itself just to store ftraced function for the stack unwinder.
-As a result backtrace looks like the following:
+I was expecting getname_flags() to start with a BUG(), but:
 
-arch_stack_walk+0x15c/0x2d8
-stack_trace_save+0x50/0x68
-stack_trace_call+0x15e/0x3d8
-ftrace_graph_caller+0x0/0x1c <-- ftrace code
-path_openat+0x6/0xd60  <-- ftraced function
-do_filp_open+0x7c/0xe8 <-- ftraced function caller
-do_open_execat+0x76/0x1b8
-open_exec+0x52/0x78
-load_elf_binary+0x180/0x1160
-search_binary_handler+0x8e/0x288
-load_script+0x2a8/0x2b8
-search_binary_handler+0x8e/0x288
-__do_execve_file.isra.39+0x6fa/0xb40
-__s390x_sys_execve+0x56/0x68
-system_call+0xdc/0x2d8
+7598:       e3 20 10 00 00 04       lg      %r2,0(%r1)
+759e:       c0 f4 00 00 00 00       jg      759e <putname+0x7e>
+75a0: R_390_PLT32DBL    kmem_cache_free+0x2
+75a4:       a7 f4 00 01             j       75a6 <putname+0x86>
 
-Reported-by: Sven Schnelle <sven.schnelle@ibm.com>
-Tested-by: Sven Schnelle <sven.schnelle@ibm.com>
+00000000000075a8 <getname_flags>:
+75a8:       c0 04 00 00 00 00       brcl    0,75a8 <getname_flags>
+75ae:       eb 6f f0 48 00 24       stmg    %r6,%r15,72(%r15)
+75b4:       b9 04 00 ef             lgr     %r14,%r15
+75b8:       e3 f0 ff a8 ff 71       lay     %r15,-88(%r15)
+
+So the BUG() is actually the last opcode of the previous function.
+Fix this by switching to using the MONITOR CALL (MC) instruction,
+and set the entry in __bug_table to the beginning of that MC.
+
 Reviewed-by: Heiko Carstens <heiko.carstens@de.ibm.com>
+Signed-off-by: Sven Schnelle <svens@linux.ibm.com>
 Signed-off-by: Vasily Gorbik <gor@linux.ibm.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/s390/kernel/mcount.S | 15 ++++++++++++++-
- 1 file changed, 14 insertions(+), 1 deletion(-)
+ arch/s390/boot/head.S        |  2 +-
+ arch/s390/include/asm/bug.h  | 16 ++++++--------
+ arch/s390/kernel/entry.h     |  1 +
+ arch/s390/kernel/pgm_check.S |  2 +-
+ arch/s390/kernel/traps.c     | 41 +++++++++++++++++++++++++++++++-----
+ 5 files changed, 46 insertions(+), 16 deletions(-)
 
-diff --git a/arch/s390/kernel/mcount.S b/arch/s390/kernel/mcount.S
-index c3597d2e2ae0e..f942341429b1c 100644
---- a/arch/s390/kernel/mcount.S
-+++ b/arch/s390/kernel/mcount.S
-@@ -26,6 +26,12 @@ ENDPROC(ftrace_stub)
- #define STACK_PTREGS	  (STACK_FRAME_OVERHEAD)
- #define STACK_PTREGS_GPRS (STACK_PTREGS + __PT_GPRS)
- #define STACK_PTREGS_PSW  (STACK_PTREGS + __PT_PSW)
-+#ifdef __PACK_STACK
-+/* allocate just enough for r14, r15 and backchain */
-+#define TRACED_FUNC_FRAME_SIZE	24
-+#else
-+#define TRACED_FUNC_FRAME_SIZE	STACK_FRAME_OVERHEAD
-+#endif
+diff --git a/arch/s390/boot/head.S b/arch/s390/boot/head.S
+index 4b86a8d3c1219..dae10961d0724 100644
+--- a/arch/s390/boot/head.S
++++ b/arch/s390/boot/head.S
+@@ -329,7 +329,7 @@ ENTRY(startup_kdump)
+ 	.quad	.Lduct			# cr5: primary-aste origin
+ 	.quad	0			# cr6:	I/O interrupts
+ 	.quad	0			# cr7:	secondary space segment table
+-	.quad	0			# cr8:	access registers translation
++	.quad	0x0000000000008000	# cr8:	access registers translation
+ 	.quad	0			# cr9:	tracing off
+ 	.quad	0			# cr10: tracing off
+ 	.quad	0			# cr11: tracing off
+diff --git a/arch/s390/include/asm/bug.h b/arch/s390/include/asm/bug.h
+index a2b11ac00f607..7725f8006fdfb 100644
+--- a/arch/s390/include/asm/bug.h
++++ b/arch/s390/include/asm/bug.h
+@@ -10,15 +10,14 @@
  
- ENTRY(_mcount)
- 	BR_EX	%r14
-@@ -40,9 +46,16 @@ ENTRY(ftrace_caller)
- #if !(defined(CC_USING_HOTPATCH) || defined(CC_USING_NOP_MCOUNT))
- 	aghi	%r0,MCOUNT_RETURN_FIXUP
- #endif
--	aghi	%r15,-STACK_FRAME_SIZE
-+	# allocate stack frame for ftrace_caller to contain traced function
-+	aghi	%r15,-TRACED_FUNC_FRAME_SIZE
- 	stg	%r1,__SF_BACKCHAIN(%r15)
-+	stg	%r0,(__SF_GPRS+8*8)(%r15)
-+	stg	%r15,(__SF_GPRS+9*8)(%r15)
-+	# allocate pt_regs and stack frame for ftrace_trace_function
-+	aghi	%r15,-STACK_FRAME_SIZE
- 	stg	%r1,(STACK_PTREGS_GPRS+15*8)(%r15)
-+	aghi	%r1,-TRACED_FUNC_FRAME_SIZE
-+	stg	%r1,__SF_BACKCHAIN(%r15)
- 	stg	%r0,(STACK_PTREGS_PSW+8)(%r15)
- 	stmg	%r2,%r14,(STACK_PTREGS_GPRS+2*8)(%r15)
- #ifdef CONFIG_HAVE_MARCH_Z196_FEATURES
+ #define __EMIT_BUG(x) do {					\
+ 	asm_inline volatile(					\
+-		"0:	j	0b+2\n"				\
+-		"1:\n"						\
++		"0:	mc	0,0\n"				\
+ 		".section .rodata.str,\"aMS\",@progbits,1\n"	\
+-		"2:	.asciz	\""__FILE__"\"\n"		\
++		"1:	.asciz	\""__FILE__"\"\n"		\
+ 		".previous\n"					\
+ 		".section __bug_table,\"awM\",@progbits,%2\n"	\
+-		"3:	.long	1b-3b,2b-3b\n"			\
++		"2:	.long	0b-2b,1b-2b\n"			\
+ 		"	.short	%0,%1\n"			\
+-		"	.org	3b+%2\n"			\
++		"	.org	2b+%2\n"			\
+ 		".previous\n"					\
+ 		: : "i" (__LINE__),				\
+ 		    "i" (x),					\
+@@ -29,12 +28,11 @@
+ 
+ #define __EMIT_BUG(x) do {					\
+ 	asm_inline volatile(					\
+-		"0:	j	0b+2\n"				\
+-		"1:\n"						\
++		"0:	mc	0,0\n"				\
+ 		".section __bug_table,\"awM\",@progbits,%1\n"	\
+-		"2:	.long	1b-2b\n"			\
++		"1:	.long	0b-1b\n"			\
+ 		"	.short	%0\n"				\
+-		"	.org	2b+%1\n"			\
++		"	.org	1b+%1\n"			\
+ 		".previous\n"					\
+ 		: : "i" (x),					\
+ 		    "i" (sizeof(struct bug_entry)));		\
+diff --git a/arch/s390/kernel/entry.h b/arch/s390/kernel/entry.h
+index b2956d49b6ad7..1d3927e01a5fd 100644
+--- a/arch/s390/kernel/entry.h
++++ b/arch/s390/kernel/entry.h
+@@ -45,6 +45,7 @@ void specification_exception(struct pt_regs *regs);
+ void transaction_exception(struct pt_regs *regs);
+ void translation_exception(struct pt_regs *regs);
+ void vector_exception(struct pt_regs *regs);
++void monitor_event_exception(struct pt_regs *regs);
+ 
+ void do_per_trap(struct pt_regs *regs);
+ void do_report_trap(struct pt_regs *regs, int si_signo, int si_code, char *str);
+diff --git a/arch/s390/kernel/pgm_check.S b/arch/s390/kernel/pgm_check.S
+index 59dee9d3bebf1..eee3a482195a6 100644
+--- a/arch/s390/kernel/pgm_check.S
++++ b/arch/s390/kernel/pgm_check.S
+@@ -81,7 +81,7 @@ PGM_CHECK_DEFAULT			/* 3c */
+ PGM_CHECK_DEFAULT			/* 3d */
+ PGM_CHECK_DEFAULT			/* 3e */
+ PGM_CHECK_DEFAULT			/* 3f */
+-PGM_CHECK_DEFAULT			/* 40 */
++PGM_CHECK(monitor_event_exception)	/* 40 */
+ PGM_CHECK_DEFAULT			/* 41 */
+ PGM_CHECK_DEFAULT			/* 42 */
+ PGM_CHECK_DEFAULT			/* 43 */
+diff --git a/arch/s390/kernel/traps.c b/arch/s390/kernel/traps.c
+index 164c0282b41ae..dc75588d78943 100644
+--- a/arch/s390/kernel/traps.c
++++ b/arch/s390/kernel/traps.c
+@@ -53,11 +53,6 @@ void do_report_trap(struct pt_regs *regs, int si_signo, int si_code, char *str)
+                 if (fixup)
+ 			regs->psw.addr = extable_fixup(fixup);
+ 		else {
+-			enum bug_trap_type btt;
+-
+-			btt = report_bug(regs->psw.addr, regs);
+-			if (btt == BUG_TRAP_TYPE_WARN)
+-				return;
+ 			die(regs, str);
+ 		}
+         }
+@@ -245,6 +240,27 @@ void space_switch_exception(struct pt_regs *regs)
+ 	do_trap(regs, SIGILL, ILL_PRVOPC, "space switch event");
+ }
+ 
++void monitor_event_exception(struct pt_regs *regs)
++{
++	const struct exception_table_entry *fixup;
++
++	if (user_mode(regs))
++		return;
++
++	switch (report_bug(regs->psw.addr - (regs->int_code >> 16), regs)) {
++	case BUG_TRAP_TYPE_NONE:
++		fixup = s390_search_extables(regs->psw.addr);
++		if (fixup)
++			regs->psw.addr = extable_fixup(fixup);
++		break;
++	case BUG_TRAP_TYPE_WARN:
++		break;
++	case BUG_TRAP_TYPE_BUG:
++		die(regs, "monitor event");
++		break;
++	}
++}
++
+ void kernel_stack_overflow(struct pt_regs *regs)
+ {
+ 	bust_spinlocks(1);
+@@ -255,8 +271,23 @@ void kernel_stack_overflow(struct pt_regs *regs)
+ }
+ NOKPROBE_SYMBOL(kernel_stack_overflow);
+ 
++static void test_monitor_call(void)
++{
++	int val = 1;
++
++	asm volatile(
++		"	mc	0,0\n"
++		"0:	xgr	%0,%0\n"
++		"1:\n"
++		EX_TABLE(0b,1b)
++		: "+d" (val));
++	if (!val)
++		panic("Monitor call doesn't work!\n");
++}
++
+ void __init trap_init(void)
+ {
+ 	sort_extable(__start_dma_ex_table, __stop_dma_ex_table);
+ 	local_mcck_enable();
++	test_monitor_call();
+ }
 -- 
 2.20.1
 
