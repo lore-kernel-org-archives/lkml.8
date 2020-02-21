@@ -2,84 +2,145 @@ Return-Path: <SRS0=1210=4J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MIME_BASE64_TEXT,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_GIT
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C1E13C35646
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 11:29:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 34F7CC35647
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 11:29:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9A370208C4
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 11:29:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 09081208C4
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 11:29:35 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="kXK6lRau"
+	dkim=pass (2048-bit key) header.d=isovalent-com.20150623.gappssmtp.com header.i=@isovalent-com.20150623.gappssmtp.com header.b="dpFq32bb"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727903AbgBUL2p (ORCPT
+        id S1727978AbgBUL3d (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Feb 2020 06:28:45 -0500
-Received: from Mailgw01.mediatek.com ([1.203.163.78]:13977 "EHLO
-        mailgw01.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1727039AbgBUL2o (ORCPT
+        Fri, 21 Feb 2020 06:29:33 -0500
+Received: from mail-wr1-f66.google.com ([209.85.221.66]:45038 "EHLO
+        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726395AbgBUL3d (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Feb 2020 06:28:44 -0500
-X-UUID: e7882cf78e704a66978959e01bcd9da8-20200221
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
-        h=Content-Transfer-Encoding:Content-Type:MIME-Version:Message-ID:Date:Subject:CC:To:From; bh=WqPXsEqYilGj+Se9aLiobnNaBsVbzCQKOya7+P5P4dk=;
-        b=kXK6lRaunl7/UWOwtZbJMinLn9Pk7NfLiwoe+htins+csdOl4IeXIFEe82u1oJ6R8mIrUVlCrBxTdM4HXQAsxN02J3XyMszYOcOBAtMMEbOHv01Cp13WpS59BTWZz2+GS7iPsxMdX0RPczaVkkk0eCyoSFHxFirEE8pwsBceTlc=;
-X-UUID: e7882cf78e704a66978959e01bcd9da8-20200221
-Received: from mtkcas36.mediatek.inc [(172.27.4.253)] by mailgw01.mediatek.com
-        (envelope-from <jitao.shi@mediatek.com>)
-        (mailgw01.mediatek.com ESMTP with TLS)
-        with ESMTP id 1701413800; Fri, 21 Feb 2020 19:28:34 +0800
-Received: from MTKCAS36.mediatek.inc (172.27.4.186) by MTKMBS33N1.mediatek.inc
- (172.27.4.75) with Microsoft SMTP Server (TLS) id 15.0.1395.4; Fri, 21 Feb
- 2020 19:27:13 +0800
-Received: from mszsdclx1018.gcn.mediatek.inc (10.16.6.18) by
- MTKCAS36.mediatek.inc (172.27.4.170) with Microsoft SMTP Server id
- 15.0.1395.4 via Frontend Transport; Fri, 21 Feb 2020 19:27:32 +0800
-From:   Jitao Shi <jitao.shi@mediatek.com>
-To:     Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        David Airlie <airlied@linux.ie>,
-        <dri-devel@lists.freedesktop.org>, <linux-kernel@vger.kernel.org>
-CC:     <linux-mediatek@lists.infradead.org>, <devicetree@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <srv_heupstream@mediatek.com>, <yingjoe.chen@mediatek.com>,
-        <eddie.huang@mediatek.com>, <cawa.cheng@mediatek.com>,
-        <bibby.hsieh@mediatek.com>, <ck.hu@mediatek.com>,
-        <stonea168@163.com>, <huijuan.xie@mediatek.com>,
-        Jitao Shi <jitao.shi@mediatek.com>
-Subject: [PATCH v6 0/4] add mt8183 dpi driver
-Date:   Fri, 21 Feb 2020 19:28:24 +0800
-Message-ID: <20200221112828.55837-1-jitao.shi@mediatek.com>
-X-Mailer: git-send-email 2.21.0
+        Fri, 21 Feb 2020 06:29:33 -0500
+Received: by mail-wr1-f66.google.com with SMTP id m16so1614811wrx.11
+        for <linux-kernel@vger.kernel.org>; Fri, 21 Feb 2020 03:29:32 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=isovalent-com.20150623.gappssmtp.com; s=20150623;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=ISb1ahsdqyDpNndMm9k4MryKRAmuNFLa5XvM/5lEHrM=;
+        b=dpFq32bbS0i4OObcZqRN90dmE8bmajzsSxDy61W8dRwMlROs5qvrRFewu5bvvNGQwH
+         evC7XBjXob68qVSuMV/FMf4yN3XuF28WTjpUOFuriHFkV7abah/OQ4jbUb9sPFzDwGYB
+         yU7wKUd9dWBI7g+Mq4OI88Hj3IWl+IpYk2PP1N4JGVytif996cxOMj8SU4B7cTewf8aZ
+         AXYvPiHn3UbgKBkRwxBXF2pqjJfMpUxF0nTh5UwWjwZuE2gzSKEcWpawwR/7TcZ68FYs
+         a1FngtGWi1XoJwbhc1fz2QPf8MHto/MwLRz6drRhsvH+kkCAaYBglHURSEsCVdyJ1RSy
+         nH2w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=ISb1ahsdqyDpNndMm9k4MryKRAmuNFLa5XvM/5lEHrM=;
+        b=NL2HI+B5RjS3ymNvbW56z8Be0y19rfl8KzPm8okNitpRG9vqWbLOrn/WRkzKLEsn2Y
+         Xc7P6SfiU1OX7BMFUmgmLQbPwxT80am3dtmS3RAd1k9Te3UGxBrNxfWW8TU90+kNZcR8
+         G211Sqay6jTMAnsB5SoDdvccDhxwQ/iAH9fRKkjGyWtWa2p34qMRSzIZbTUjmtiHk0Xk
+         WPmNbtHUDffkX4jOyQB0jRSmm/FCjbkyziBEC7Qpb7uwEPs8LhN5XLDq0WwDvT1Namkt
+         QxR9/MyoLaqoZWXm0KuQQYpAphULGPv9gqkMC1QqZDbqu5vnXzWSyCfboUNO5M9QFRqx
+         RULA==
+X-Gm-Message-State: APjAAAW1QRZCrvUhm4VddQ0ZdDt28nMG7krfm0zJA2W8mwtu1NacEd+B
+        KHV+kO/XZydZDQAQaRtlDojXDQ==
+X-Google-Smtp-Source: APXvYqwo/wcsiFTfCaz7K7GiNYnP+aK8Ly6FiMLPGG1YRCamaaEnYkndZlGCFD7DwIS5uBFCL1v9wg==
+X-Received: by 2002:a05:6000:10c:: with SMTP id o12mr49019570wrx.106.1582284571520;
+        Fri, 21 Feb 2020 03:29:31 -0800 (PST)
+Received: from [192.168.1.23] ([91.143.66.155])
+        by smtp.gmail.com with ESMTPSA id b13sm3838699wrq.48.2020.02.21.03.29.30
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 21 Feb 2020 03:29:31 -0800 (PST)
+Subject: Re: [PATCH bpf-next v2 4/5] bpftool: Update bash completion for
+ "bpftool feature" command
+To:     Michal Rostecki <mrostecki@opensuse.org>, bpf@vger.kernel.org
+Cc:     Alexei Starovoitov <ast@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Martin KaFai Lau <kafai@fb.com>,
+        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
+        Andrii Nakryiko <andriin@fb.com>,
+        Jakub Kicinski <kuba@kernel.org>, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Shuah Khan <shuah@kernel.org>,
+        "open list:KERNEL SELFTEST FRAMEWORK" 
+        <linux-kselftest@vger.kernel.org>
+References: <20200221031702.25292-1-mrostecki@opensuse.org>
+ <20200221031702.25292-5-mrostecki@opensuse.org>
+From:   Quentin Monnet <quentin@isovalent.com>
+Message-ID: <7e37246c-a154-1cd6-fbae-ed29497903e8@isovalent.com>
+Date:   Fri, 21 Feb 2020 11:29:30 +0000
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.5.0
 MIME-Version: 1.0
-Content-Type: text/plain
-X-TM-SNTS-SMTP: 65587B8808C753827096943E733EBABAA07D4FF1005ED706468AEEA59267476E2000:8
-X-MTK:  N
-Content-Transfer-Encoding: base64
+In-Reply-To: <20200221031702.25292-5-mrostecki@opensuse.org>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-GB
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Q2hhbmdlcyBzaW5jZSB2NToNCiAtIGZpbmUgdHVuZSB0aGUgZHQtYmluZGluZ3MgY29tbWl0IG1l
-c3NhZ2UuDQoNCkNoYW5nZXMgc2luY2UgdjQ6DQogLSBtb3ZlIHBpbiBtb2RlIGNvbnRyb2wgYW5k
-IGR1YWwgZWRnZSBjb250cm9sIHRvIGRldmVpY2UgdHJlZS4NCiAtIHVwZGF0ZSBkdC1iaW5kaW5n
-cyBkb2N1bWVudCBmb3IgcGluIG1vZGUgc3dhcCBhbmQgZHVhbCBlZGdlIGNvbnRyb2wuDQoNCkNo
-YW5nZXMgc2luY2UgdjM6DQogLSBhZGQgZHBpIHBpbiBtb2RlIGNvbnRyb2wgd2hlbiBkcGkgb24g
-b3Igb2ZmLg0KIC0gdXBkYXRlIGRwaSBkdWFsIGVkZ2UgY29tbWVudC4NCg0KQ2hhbmdlcyBzaW5j
-ZSB2MjoNCiAtIHVwZGF0ZSBkdC1iaW5kaW5ncyBkb2N1bWVudCBmb3IgbXQ4MTgzIGRwaS4NCiAt
-IHNlcGFyYXRlIGR1YWwgZWRnZSBtb2RmaWNhdGlvbiBhcyBpbmRlcGVuZGVudCBwYXRjaC4NCg0K
-Sml0YW8gU2hpICg0KToNCiAgZHQtYmluZGluZ3M6IGRpc3BsYXk6IG1lZGlhdGVrOiB1cGRhdGUg
-ZHBpIHN1cHBvcnRlZCBjaGlwcw0KICBkcm0vbWVkaWF0ZWs6IGRwaSBkdWFsIGVkZ2Ugc3VwcG9y
-dA0KICBkcm0vbWVkaWF0ZWs6IGFkZCBtdDgxODMgZHBpIGNsb2NrIGZhY3Rvcg0KICBkcm0vbWVk
-aWF0ZWs6IHNldCBkcGkgcGluIG1vZGUgdG8gZ3BpbyBsb3cgdG8gYXZvaWQgbGVha2FnZSBjdXJy
-ZW50DQoNCiAuLi4vZGlzcGxheS9tZWRpYXRlay9tZWRpYXRlayxkcGkudHh0ICAgICAgICAgfCAx
-MSArKysNCiBkcml2ZXJzL2dwdS9kcm0vbWVkaWF0ZWsvbXRrX2RwaS5jICAgICAgICAgICAgfCA2
-OSArKysrKysrKysrKysrKysrKystDQogMiBmaWxlcyBjaGFuZ2VkLCA3OSBpbnNlcnRpb25zKCsp
-LCAxIGRlbGV0aW9uKC0pDQoNCi0tIA0KMi4yMS4wDQo=
+2020-02-21 04:16 UTC+0100 ~ Michal Rostecki <mrostecki@opensuse.org>
+> Update bash completion for "bpftool feature" command with the new
+> argument: "full".
+> 
+> Signed-off-by: Michal Rostecki <mrostecki@opensuse.org>
+> ---
+>   tools/bpf/bpftool/bash-completion/bpftool | 27 ++++++++++++++++-------
+>   1 file changed, 19 insertions(+), 8 deletions(-)
+> 
+> diff --git a/tools/bpf/bpftool/bash-completion/bpftool b/tools/bpf/bpftool/bash-completion/bpftool
+> index 754d8395e451..f2bcc4bacee2 100644
+> --- a/tools/bpf/bpftool/bash-completion/bpftool
+> +++ b/tools/bpf/bpftool/bash-completion/bpftool
+> @@ -981,14 +981,25 @@ _bpftool()
+>           feature)
+>               case $command in
+>                   probe)
+> -                    [[ $prev == "prefix" ]] && return 0
+> -                    if _bpftool_search_list 'macros'; then
+> -                        COMPREPLY+=( $( compgen -W 'prefix' -- "$cur" ) )
+> -                    else
+> -                        COMPREPLY+=( $( compgen -W 'macros' -- "$cur" ) )
+> -                    fi
+> -                    _bpftool_one_of_list 'kernel dev'
+> -                    return 0
+> +                    case $prev in
+> +                        $command)
+> +                            COMPREPLY+=( $( compgen -W 'kernel dev full macros' -- \
+> +                                "$cur" ) )
+> +                            return 0
+> +                            ;;
+> +                        prefix)
+> +                            return 0
+> +                            ;;
+> +                        macros)
+> +                            COMPREPLY+=( $( compgen -W 'prefix' -- "$cur" ) )
+> +                            return 0
+
+I have not tested, but I think because of the "return 0" this will 
+propose only "prefix" after "macros". But "kernel" or "dev" should also 
+be in the list.
+
+Maybe just add "_bpftool_once_attr 'full'" under the 
+"_bpftool_one_of_list 'kernel dev'" instead of changing to the "case 
+$prev in" structure?
+
+> +                            ;;
+> +                        *)
+> +                            _bpftool_one_of_list 'kernel dev'
+> +                            _bpftool_once_attr 'full macros'
+> +                            return 0
+> +                            ;;
+> +                    esac
+>                       ;;
+>                   *)
+>                       [[ $prev == $object ]] && \
+> 
 
