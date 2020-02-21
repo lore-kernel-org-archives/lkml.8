@@ -5,50 +5,49 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5BB44C35641
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 08:06:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 11A55C35641
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 08:06:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 308C520722
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 08:06:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DD07620801
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 08:06:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582272383;
-	bh=AOoUCVz+M6lYYlM1lQNzSbPm93ZmILm9W0AXjwEgkTM=;
+	s=default; t=1582272385;
+	bh=kJ+GEgyavCSD+Gyv/bXnbhVvtw92kKW+0WVumqnbQDg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=EjTHPlZnVjeclw1bRglH2yljMs4d2WTzh8y/1Trqu7/+DM0zpTN16+85zCoZ+8iQL
-	 NdA8yKHZnP5XEGOmj2yMTIzXB9ZZaeUeVd+mJ6/P4lpKFDnlTFr72fCJfE6YrTeDux
-	 M212PD0N3rCppcsUjssQkVJZGXT0GVZALOcDbVSE=
+	b=tGNX8WlOdK7A39mdgQha+pX5OADws/PaymPS1qgNyf85w9tKS+BP5HXCjyR+HUgsQ
+	 eFPiDBs19WCGP9UTpOPbPmFqhDA06LJ4a9Xdyt2G7Uu+ap4ZbKlqWV1WC9nY9W+T4l
+	 yyUJUxPCoe0ju6lr0dRDVt5FE/ftDY2iwQSTahM0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728962AbgBUIGU (ORCPT
+        id S1731942AbgBUIGX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Feb 2020 03:06:20 -0500
-Received: from mail.kernel.org ([198.145.29.99]:39898 "EHLO mail.kernel.org"
+        Fri, 21 Feb 2020 03:06:23 -0500
+Received: from mail.kernel.org ([198.145.29.99]:39958 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731557AbgBUIGL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Feb 2020 03:06:11 -0500
+        id S1731637AbgBUIGO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 21 Feb 2020 03:06:14 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9A71020578;
-        Fri, 21 Feb 2020 08:06:10 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 223B620801;
+        Fri, 21 Feb 2020 08:06:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1582272371;
-        bh=AOoUCVz+M6lYYlM1lQNzSbPm93ZmILm9W0AXjwEgkTM=;
+        s=default; t=1582272373;
+        bh=kJ+GEgyavCSD+Gyv/bXnbhVvtw92kKW+0WVumqnbQDg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=NGk5G7pFGr0hvTdtY68/+zs0DIhFmfBz+1iEmSkz6y+WjXOR9EXXhZ3ukwHJsxRis
-         fZRtjdBmRHvUMskpcrwGDvhm4aRO1jcy/tRRbbrO7n2cfMH7EcDMp5pJPjh9k6Unuc
-         YKNwah92Y27Ko/yLWHQLdtPv3a1VGQcUEPHJsKQw=
+        b=2B1l279kQjAWiKVlHSRp47qunUwd0OZFI+ar/gkQhJqd1ammPWxwhXtdVLViyTJin
+         EgASKv2hsmmEzJD/O0MqqnSov2tmWW7Ge+mHNU3yjDG/5yTXjDdwo08IY/Mla0masn
+         jLk+SOVDILxVdw/2n8zs2QODedZm1WZRBaqIxX8c=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Keerthy <j-keerthy@ti.com>,
-        Roger Quadros <rogerq@ti.com>, Tero Kristo <t-kristo@ti.com>,
-        Tony Lindgren <tony@atomide.com>,
+        stable@vger.kernel.org, Wei Liu <wei.liu@kernel.org>,
+        Bjorn Helgaas <bhelgaas@google.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 118/344] bus: ti-sysc: Implement quirk handling for CLKDM_NOAUTO
-Date:   Fri, 21 Feb 2020 08:38:37 +0100
-Message-Id: <20200221072359.611087030@linuxfoundation.org>
+Subject: [PATCH 5.4 119/344] PCI: iproc: Apply quirk_paxc_bridge() for module as well as built-in
+Date:   Fri, 21 Feb 2020 08:38:38 +0100
+Message-Id: <20200221072359.694623605@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200221072349.335551332@linuxfoundation.org>
 References: <20200221072349.335551332@linuxfoundation.org>
@@ -61,71 +60,103 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Tony Lindgren <tony@atomide.com>
+From: Wei Liu <wei.liu@kernel.org>
 
-[ Upstream commit 94f6345712b37e4bb23cb265ce4c65b9d177e75a ]
+[ Upstream commit 574f29036fce385e28617547955dd6911d375025 ]
 
-For dra7 dcan and dwc3 instances we need to block clockdomain autoidle.
-Let's do this with CLKDM_NOAUTO quirk flag and enable it for dcan and
-dwc3.
+Previously quirk_paxc_bridge() was applied when the iproc driver was
+built-in, but not when it was compiled as a module.
 
-Cc: Keerthy <j-keerthy@ti.com>
-Cc: Roger Quadros <rogerq@ti.com>
-Cc: Tero Kristo <t-kristo@ti.com>
-Signed-off-by: Tony Lindgren <tony@atomide.com>
+This happened because it was under #ifdef CONFIG_PCIE_IPROC_PLATFORM:
+PCIE_IPROC_PLATFORM=y causes CONFIG_PCIE_IPROC_PLATFORM to be defined, but
+PCIE_IPROC_PLATFORM=m causes CONFIG_PCIE_IPROC_PLATFORM_MODULE to be
+defined.
+
+Move quirk_paxc_bridge() to pcie-iproc.c and drop the #ifdef so the quirk
+is always applied, whether iproc is built-in or a module.
+
+[bhelgaas: commit log, move to pcie-iproc.c, not pcie-iproc-platform.c]
+Link: https://lore.kernel.org/r/20191211174511.89713-1-wei.liu@kernel.org
+Signed-off-by: Wei Liu <wei.liu@kernel.org>
+Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/bus/ti-sysc.c                 | 10 ++++++++--
- include/linux/platform_data/ti-sysc.h |  1 +
- 2 files changed, 9 insertions(+), 2 deletions(-)
+ drivers/pci/controller/pcie-iproc.c | 24 ++++++++++++++++++++++++
+ drivers/pci/quirks.c                | 26 --------------------------
+ 2 files changed, 24 insertions(+), 26 deletions(-)
 
-diff --git a/drivers/bus/ti-sysc.c b/drivers/bus/ti-sysc.c
-index d9846265a5cd9..a0cecb12b6f96 100644
---- a/drivers/bus/ti-sysc.c
-+++ b/drivers/bus/ti-sysc.c
-@@ -479,7 +479,7 @@ static void sysc_clkdm_deny_idle(struct sysc *ddata)
- {
- 	struct ti_sysc_platform_data *pdata;
+diff --git a/drivers/pci/controller/pcie-iproc.c b/drivers/pci/controller/pcie-iproc.c
+index 2d457bfdaf66e..933a4346ae5d6 100644
+--- a/drivers/pci/controller/pcie-iproc.c
++++ b/drivers/pci/controller/pcie-iproc.c
+@@ -1608,6 +1608,30 @@ DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_BROADCOM, 0xd802,
+ DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_BROADCOM, 0xd804,
+ 			quirk_paxc_disable_msi_parsing);
  
--	if (ddata->legacy_mode)
-+	if (ddata->legacy_mode || (ddata->cfg.quirks & SYSC_QUIRK_CLKDM_NOAUTO))
- 		return;
++static void quirk_paxc_bridge(struct pci_dev *pdev)
++{
++	/*
++	 * The PCI config space is shared with the PAXC root port and the first
++	 * Ethernet device.  So, we need to workaround this by telling the PCI
++	 * code that the bridge is not an Ethernet device.
++	 */
++	if (pdev->hdr_type == PCI_HEADER_TYPE_BRIDGE)
++		pdev->class = PCI_CLASS_BRIDGE_PCI << 8;
++
++	/*
++	 * MPSS is not being set properly (as it is currently 0).  This is
++	 * because that area of the PCI config space is hard coded to zero, and
++	 * is not modifiable by firmware.  Set this to 2 (e.g., 512 byte MPS)
++	 * so that the MPS can be set to the real max value.
++	 */
++	pdev->pcie_mpss = 2;
++}
++DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_BROADCOM, 0x16cd, quirk_paxc_bridge);
++DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_BROADCOM, 0x16f0, quirk_paxc_bridge);
++DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_BROADCOM, 0xd750, quirk_paxc_bridge);
++DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_BROADCOM, 0xd802, quirk_paxc_bridge);
++DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_BROADCOM, 0xd804, quirk_paxc_bridge);
++
+ MODULE_AUTHOR("Ray Jui <rjui@broadcom.com>");
+ MODULE_DESCRIPTION("Broadcom iPROC PCIe common driver");
+ MODULE_LICENSE("GPL v2");
+diff --git a/drivers/pci/quirks.c b/drivers/pci/quirks.c
+index 2f88b1ff7ada4..7afbce082d83e 100644
+--- a/drivers/pci/quirks.c
++++ b/drivers/pci/quirks.c
+@@ -2381,32 +2381,6 @@ DECLARE_PCI_FIXUP_ENABLE(PCI_VENDOR_ID_BROADCOM,
+ 			 PCI_DEVICE_ID_TIGON3_5719,
+ 			 quirk_brcm_5719_limit_mrrs);
  
- 	pdata = dev_get_platdata(ddata->dev);
-@@ -491,7 +491,7 @@ static void sysc_clkdm_allow_idle(struct sysc *ddata)
- {
- 	struct ti_sysc_platform_data *pdata;
- 
--	if (ddata->legacy_mode)
-+	if (ddata->legacy_mode || (ddata->cfg.quirks & SYSC_QUIRK_CLKDM_NOAUTO))
- 		return;
- 
- 	pdata = dev_get_platdata(ddata->dev);
-@@ -1251,6 +1251,12 @@ static const struct sysc_revision_quirk sysc_revision_quirks[] = {
- 	/* Quirks that need to be set based on detected module */
- 	SYSC_QUIRK("aess", 0, 0, 0x10, -1, 0x40000000, 0xffffffff,
- 		   SYSC_MODULE_QUIRK_AESS),
-+	SYSC_QUIRK("dcan", 0x48480000, 0x20, -1, -1, 0xa3170504, 0xffffffff,
-+		   SYSC_QUIRK_CLKDM_NOAUTO),
-+	SYSC_QUIRK("dwc3", 0x48880000, 0, 0x10, -1, 0x500a0200, 0xffffffff,
-+		   SYSC_QUIRK_CLKDM_NOAUTO),
-+	SYSC_QUIRK("dwc3", 0x488c0000, 0, 0x10, -1, 0x500a0200, 0xffffffff,
-+		   SYSC_QUIRK_CLKDM_NOAUTO),
- 	SYSC_QUIRK("hdq1w", 0, 0, 0x14, 0x18, 0x00000006, 0xffffffff,
- 		   SYSC_MODULE_QUIRK_HDQ1W),
- 	SYSC_QUIRK("hdq1w", 0, 0, 0x14, 0x18, 0x0000000a, 0xffffffff,
-diff --git a/include/linux/platform_data/ti-sysc.h b/include/linux/platform_data/ti-sysc.h
-index 8cfe570fdece6..2cbde6542849d 100644
---- a/include/linux/platform_data/ti-sysc.h
-+++ b/include/linux/platform_data/ti-sysc.h
-@@ -49,6 +49,7 @@ struct sysc_regbits {
- 	s8 emufree_shift;
- };
- 
-+#define SYSC_QUIRK_CLKDM_NOAUTO		BIT(21)
- #define SYSC_QUIRK_FORCE_MSTANDBY	BIT(20)
- #define SYSC_MODULE_QUIRK_AESS		BIT(19)
- #define SYSC_MODULE_QUIRK_SGX		BIT(18)
+-#ifdef CONFIG_PCIE_IPROC_PLATFORM
+-static void quirk_paxc_bridge(struct pci_dev *pdev)
+-{
+-	/*
+-	 * The PCI config space is shared with the PAXC root port and the first
+-	 * Ethernet device.  So, we need to workaround this by telling the PCI
+-	 * code that the bridge is not an Ethernet device.
+-	 */
+-	if (pdev->hdr_type == PCI_HEADER_TYPE_BRIDGE)
+-		pdev->class = PCI_CLASS_BRIDGE_PCI << 8;
+-
+-	/*
+-	 * MPSS is not being set properly (as it is currently 0).  This is
+-	 * because that area of the PCI config space is hard coded to zero, and
+-	 * is not modifiable by firmware.  Set this to 2 (e.g., 512 byte MPS)
+-	 * so that the MPS can be set to the real max value.
+-	 */
+-	pdev->pcie_mpss = 2;
+-}
+-DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_BROADCOM, 0x16cd, quirk_paxc_bridge);
+-DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_BROADCOM, 0x16f0, quirk_paxc_bridge);
+-DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_BROADCOM, 0xd750, quirk_paxc_bridge);
+-DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_BROADCOM, 0xd802, quirk_paxc_bridge);
+-DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_BROADCOM, 0xd804, quirk_paxc_bridge);
+-#endif
+-
+ /*
+  * Originally in EDAC sources for i82875P: Intel tells BIOS developers to
+  * hide device 6 which configures the overflow device access containing the
 -- 
 2.20.1
 
