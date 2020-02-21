@@ -2,163 +2,172 @@ Return-Path: <SRS0=1210=4J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 615E2C35655
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 13:05:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 58600C35655
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 13:05:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 308C1206EF
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 13:05:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2948A20722
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 13:05:48 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="tOVwwD8q"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728512AbgBUNFL (ORCPT
+        id S1728526AbgBUNFq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Feb 2020 08:05:11 -0500
-Received: from mx2.suse.de ([195.135.220.15]:42484 "EHLO mx2.suse.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728330AbgBUNFL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Feb 2020 08:05:11 -0500
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx2.suse.de (Postfix) with ESMTP id BFE13B149;
-        Fri, 21 Feb 2020 13:05:07 +0000 (UTC)
-Date:   Fri, 21 Feb 2020 14:05:06 +0100
-From:   Petr Mladek <pmladek@suse.com>
-To:     Ilya Dryomov <idryomov@gmail.com>,
-        Rasmus Villemoes <linux@rasmusvillemoes.dk>
-Cc:     Steven Rostedt <rostedt@goodmis.org>,
-        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Kees Cook <keescook@chromium.org>,
-        "Tobin C . Harding" <me@tobin.cc>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Linux Documentation List <linux-doc@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] vsprintf: sanely handle NULL passed to %pe
-Message-ID: <20200221130506.mly26uycxpdjl6oz@pathway.suse.cz>
-References: <CAHk-=wjEd-gZ1g52kgi_g8gq-QCF2E01TkQd5Hmj4W5aThLw3A@mail.gmail.com>
- <20200219082155.6787-1-linux@rasmusvillemoes.dk>
- <CAOi1vP-4=QCSZ2A89g1po2p=6n_g09SXUCa0_r2SBJm2greRmw@mail.gmail.com>
- <0fef2a1f-9391-43a9-32d5-2788ae96c529@rasmusvillemoes.dk>
- <20200219134826.qqdhy2z67ubsnr2m@pathway.suse.cz>
- <5459eb50-48e2-2fd9-3560-0bc921e3678c@rasmusvillemoes.dk>
- <20200219144558.2jbawr52qb63vysq@pathway.suse.cz>
- <bcfb2f94-e7a8-0860-86e3-9fc866d98742@rasmusvillemoes.dk>
- <20200220125707.hbcox3xgevpezq4l@pathway.suse.cz>
- <CAOi1vP8E_DL7y=STP5-vbe_Wf5PZRiXWGTNV3rN96i4N2R3zUQ@mail.gmail.com>
+        Fri, 21 Feb 2020 08:05:46 -0500
+Received: from mail-wr1-f68.google.com ([209.85.221.68]:42386 "EHLO
+        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728085AbgBUNFq (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 21 Feb 2020 08:05:46 -0500
+Received: by mail-wr1-f68.google.com with SMTP id k11so1975320wrd.9
+        for <linux-kernel@vger.kernel.org>; Fri, 21 Feb 2020 05:05:44 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to
+         :user-agent;
+        bh=Jmee0gPaCTfsOpWSoQjCJFto4t8cMGzSFxQTb3xz48k=;
+        b=tOVwwD8qmpuy5R/iusBnSTi8xzbbMZqdDcRX1UOwcX8kYv5EzHXV5Ir5H2I6/HY6Hv
+         GHf+wxF/Eu/sDmuamXnYsjUsxTYXICaKH1O67ZVlBrWMNCXCIY8FwA5CAIT5tRVzIm5R
+         SzzKxvH5U9ZGw02P+TWARGK1gYUEDSeg0Nil+OEPJxqUoNA9ceBM1Xs+S2wAuJCu2a2t
+         BcG8GYWfdv51wj9aVj+vQ6z1GkOcoaDsm2wii0rDsEMImic2AUBX6vBFegMWdWgq+3Dv
+         Xqma0ebK4QQ3qXwG/wD/JNMq7nmiAXc4fiLJTXOZPl/Fg4IPEXNX+500312IIPGI2tC1
+         Ht6w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to:user-agent;
+        bh=Jmee0gPaCTfsOpWSoQjCJFto4t8cMGzSFxQTb3xz48k=;
+        b=BRT6BZn+Vav5h934OWKWjDgECTAHGKTjZA1k6Vw4Zeb8AdzeA+k5BwkT3+40JJ7bXg
+         TXJSrIXs8Pje2Avnp1DJISMbQVciLvzBNrR17eka3khbMStxaEaS/wkjxmJMD1FHHu6U
+         piLoU6DPowICb+IalymA2e+MC4Pq80pMKdXTIDquCz3I/uYQAqHAaCYuvCTITSyrJ0JZ
+         3CP539d8KDWm9yxhSAR7R9Qvk5z5MNZNntOmwfNFiIkThQse8Ri4e+IFp1LBod0r0QeA
+         xkhodqVfY5cX4XTCO6VGndECcdF3dqvmwHRgibZgnSmAKYvPp0kr2RhkStHXSra5ucfy
+         BpxQ==
+X-Gm-Message-State: APjAAAXKaWF7JqUBqx/HOQrLaKwZpDafHUVOiBFP80pFaOoSYlRxHYCf
+        PVFsAhNJIc900N7x7vEtqMyKOw==
+X-Google-Smtp-Source: APXvYqxdbqMgUjOMna0Vnnx+4FKMnwXT3QMS6vD/TsFNrXqcxXU3SY8DOXJ72CRLWnbQ393hdP3QPw==
+X-Received: by 2002:a5d:53c1:: with SMTP id a1mr47209498wrw.373.1582290343755;
+        Fri, 21 Feb 2020 05:05:43 -0800 (PST)
+Received: from linaro.org ([2a01:e34:ed2f:f020:2dfb:b5ce:9043:4adb])
+        by smtp.gmail.com with ESMTPSA id y1sm3422496wrq.16.2020.02.21.05.05.41
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Fri, 21 Feb 2020 05:05:43 -0800 (PST)
+Date:   Fri, 21 Feb 2020 14:05:40 +0100
+From:   Daniel Lezcano <daniel.lezcano@linaro.org>
+To:     Anson Huang <Anson.Huang@nxp.com>
+Cc:     robh+dt@kernel.org, mark.rutland@arm.com, shawnguo@kernel.org,
+        s.hauer@pengutronix.de, kernel@pengutronix.de, festevam@gmail.com,
+        catalin.marinas@arm.com, will@kernel.org, rui.zhang@intel.com,
+        amit.kucheria@verdurent.com, aisheng.dong@nxp.com,
+        linux@roeck-us.net, srinivas.kandagatla@linaro.org,
+        krzk@kernel.org, fugang.duan@nxp.com, peng.fan@nxp.com,
+        daniel.baluta@nxp.com, bjorn.andersson@linaro.org, olof@lixom.net,
+        dinguyen@kernel.org, leonard.crestez@nxp.com,
+        marcin.juszkiewicz@linaro.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-pm@vger.kernel.org, Linux-imx@nxp.com
+Subject: Re: [PATCH V15 RESEND 5/5] arm64: dts: imx: add i.MX8QXP thermal
+ support
+Message-ID: <20200221130540.GD10516@linaro.org>
+References: <1582161028-2844-1-git-send-email-Anson.Huang@nxp.com>
+ <1582161028-2844-5-git-send-email-Anson.Huang@nxp.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <CAOi1vP8E_DL7y=STP5-vbe_Wf5PZRiXWGTNV3rN96i4N2R3zUQ@mail.gmail.com>
-User-Agent: NeoMutt/20170912 (1.9.0)
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <1582161028-2844-5-git-send-email-Anson.Huang@nxp.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu 2020-02-20 16:02:48, Ilya Dryomov wrote:
-> On Thu, Feb 20, 2020 at 1:57 PM Petr Mladek <pmladek@suse.com> wrote:
-> >
-> > On Wed 2020-02-19 16:40:08, Rasmus Villemoes wrote:
-> > > On 19/02/2020 15.45, Petr Mladek wrote:
-> > > > On Wed 2020-02-19 14:56:32, Rasmus Villemoes wrote:
-> > > >> On 19/02/2020 14.48, Petr Mladek wrote:
-> > > >>> On Wed 2020-02-19 12:53:22, Rasmus Villemoes wrote:
-> > > >>>> --- a/lib/vsprintf.c
-> > > >>>> +++ b/lib/vsprintf.c
-> > > >>> The test should go into null_pointer() instead of errptr().
-> > > >>
-> > > >> Eh, no, the behaviour of %pe is tested by errptr(). I'll keep it that
-> > > >> way. But I should add a #else section that tests how %pe behaves without
-> > > >> CONFIG_SYMBOLIC_ERRNAME - though that's orthogonal to this patch.
-> > > >
-> > > > OK, we should agree on some structure first.
-> > > >
-> > > > We already have two top level functions that test how a particular
-> > > > pointer is printed using different pointer modifiers:
-> > > >
-> > > >     null_pointer();     -> NULL with %p, %pX, %pE
-> > > >     invalid_pointer();  -> random pointer with %p, %pX, %pE
-> > > >
-> > > > Following this logic, errptr() should test how a pointer from IS_ERR() range
-> > > > is printed using different pointer formats.
-> > >
-> > > Oh please. I wrote test_printf.c originally and structured it with one
-> > > helper for each %p<whatever>. How are your additions null_pointer and
-> > > invalid_pointer good examples for what the existing style is?
-> >
-> > I see, I was the one who broke the style. Please, find below a patch
-> > that tries to fix it. If you agree with the approach then I could
-> > split it into smaller steps.
-> >
-> > Also it would make sense to add checks for NULL and ERR pointer
-> > into each existing %p modifier check. It will make sure that
-> > check_pointer() is called in all handlers.
-> >
-> >
-> > > So yeah, I'm going to continue testing the behaviour of %pe in errptr, TYVM.
-> >
-> > OK.
-> >
-> > > >>>> BTW., your original patch for %p lacks corresponding update of
-> > > >>>> test_vsprintf.c. Please add appropriate test cases.
-> > > >>>
-> > > >>> diff --git a/lib/test_printf.c b/lib/test_printf.c
-> > > >>> index 2d9f520d2f27..1726a678bccd 100644
-> > > >>> --- a/lib/test_printf.c
-> > > >>> +++ b/lib/test_printf.c
-> > > >>> @@ -333,7 +333,7 @@ test_hashed(const char *fmt, const void *p)
-> > > >>>  static void __init
-> > > >>>  null_pointer(void)
-> > > >>>  {
-> > > >>> - test_hashed("%p", NULL);
-> > > >>> + test(ZEROS "00000000", "%p", NULL);
-> > > >>
-> > > >> No, it most certainly also needs to check a few "%p", ERR_PTR(-4) cases
-> > > >> (where one of course has to use explicit integers and not E* constants).
-> > > >
-> > > > Yes, it would be great to add checks for %p, %px for IS_ERR() range.
-> > > > But it is different story. The above change is for the original patch
-> > > > and it was about NULL pointer handling.
-> > >
-> > > Wrong. The original patch (i.e. Ilya's) had subject "vsprintf: don't
-> > > obfuscate NULL and error pointers" and did
-> > >
-> > > +     if (IS_ERR_OR_NULL(ptr))
-> > >
-> > > so the tests that should be part of that patch very much need to cover
-> > > both NULL and ERR_PTRs passed to plain %p.
-> >
-> > Grr, I see. I was too fast yesterday. OK, I suggest to fix the
-> > structure of the tests first. All these patches are for 5.7
-> > anyway.
+On Thu, Feb 20, 2020 at 09:10:28AM +0800, Anson Huang wrote:
+> Add i.MX8QXP CPU thermal zone support.
 > 
-> My patch fixes a regression introduced by 3e5903eb9cff ("vsprintf:
-> Prevent crash when dereferencing invalid pointers" in 5.2, which
-> made debugging based on existing pr_debugs (used extensively in some
-> subsystems) very annoying.
+> Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
+> ---
+> No change.
+> ---
+>  arch/arm64/boot/dts/freescale/imx8qxp.dtsi | 36 ++++++++++++++++++++++++++++++
+>  1 file changed, 36 insertions(+)
 > 
-> I would like to see it in 5.6, so that it is backported to 5.4 and 5.5.
+> diff --git a/arch/arm64/boot/dts/freescale/imx8qxp.dtsi b/arch/arm64/boot/dts/freescale/imx8qxp.dtsi
+> index fb5f752..0a14fe4 100644
+> --- a/arch/arm64/boot/dts/freescale/imx8qxp.dtsi
+> +++ b/arch/arm64/boot/dts/freescale/imx8qxp.dtsi
+> @@ -11,6 +11,7 @@
+>  #include <dt-bindings/input/input.h>
+>  #include <dt-bindings/interrupt-controller/arm-gic.h>
+>  #include <dt-bindings/pinctrl/pads-imx8qxp.h>
+> +#include <dt-bindings/thermal/thermal.h>
+>  
+>  / {
+>  	interrupt-parent = <&gic>;
+> @@ -189,6 +190,11 @@
+>  			compatible = "fsl,imx8qxp-sc-wdt", "fsl,imx-sc-wdt";
+>  			timeout-sec = <60>;
+>  		};
+> +
+> +		tsens: thermal-sensor {
+> +			compatible = "fsl,imx8qxp-sc-thermal", "fsl,imx-sc-thermal";
+> +			#thermal-sensor-cells = <1>;
+> +		};
+>  	};
+>  
+>  	timer {
+> @@ -586,4 +592,34 @@
+>  			#clock-cells = <1>;
+>  		};
+>  	};
+> +
+> +	thermal_zones: thermal-zones {
+> +		cpu-thermal0 {
+> +			polling-delay-passive = <250>;
+> +			polling-delay = <2000>;
+> +			thermal-sensors = <&tsens IMX_SC_R_SYSTEM>;
+> +			trips {
+> +				cpu_alert0: trip0 {
+> +					temperature = <107000>;
+> +					hysteresis = <2000>;
+> +					type = "passive";
+> +				};
 
-OK, it would make sense to make the patch minimalist to make it
-easier for backporting.
+Same comment as previous patch.
 
+> +				cpu_crit0: trip1 {
+> +					temperature = <127000>;
+> +					hysteresis = <2000>;
+> +					type = "critical";
+> +				};
+> +			};
+> +			cooling-maps {
+> +				map0 {
+> +					trip = <&cpu_alert0>;
+> +					cooling-device =
+> +						<&A35_0 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
+> +						<&A35_1 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
+> +						<&A35_2 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
+> +						<&A35_3 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>;
+> +				};
+> +			};
+> +		};
+> +	};
+>  };
+> -- 
+> 2.7.4
+> 
 
-> Please note that I sent v2 of my patch ("[PATCH v2] vsprintf: don't
-> obfuscate NULL and error pointers"), fixing null_pointer() and adding
-> error_pointer() test cases, which conflicts with this restructure.
+-- 
 
-IMHO, v2 creates even more mess in print tests that would need
-to be fixed later.
+ <http://www.linaro.org/> Linaro.org │ Open source software for ARM SoCs
 
-If we agree to have a minimalist patch for backport
-then I suggest to take v1. We could clean up and update
-tests later.
-
-Rasmus, others, is anyone against this approach (v1 first,
-tests later)?
-
-Best Regards,
-Petr
+Follow Linaro:  <http://www.facebook.com/pages/Linaro> Facebook |
+<http://twitter.com/#!/linaroorg> Twitter |
+<http://www.linaro.org/linaro-blog/> Blog
