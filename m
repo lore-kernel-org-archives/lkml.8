@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D0161C35641
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 08:23:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 95A83C35640
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 08:23:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9C15F24697
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 08:23:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5E3AD24697
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 08:23:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582273425;
-	bh=IyLLtVHl5dqCwlj4ZeFJHDfJHrnChzzGasCQVGen4fs=;
+	s=default; t=1582273431;
+	bh=Cn24knfDqUAqJvb4N8NFHPFVd8dzAnate7ktenvU3Ek=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=wb4BwHvn4Jh9DwpV6nzBvmSkplMe1OhMP/Aw8o9KX+1FS52tFg/i5SQCIJy0PGiGp
-	 GOCnG045jwVopqj1zzienzsHw2C358LTotaXACp4xuBxF+EnHe0AgfT4H4vCMazUq5
-	 IFgkkXHM7WC4RhnXOJ5IZrl4g9hat4dWnk7j4+vg=
+	b=g7J0DE5XJwdBB43IoA5nzQP+7UO7oF92PEoYqCIb9cpiNIRG51Z1Cwq8dGs64IJ7Q
+	 g7tmQVmk8LdmSmsuUEoVWiDY5TncBQ7ec6Fm1rBqcd4BlmVnVy009SL28Ll4XuZtRg
+	 hyEHkIhG7uYuWX1ZJd8s9O2PDqF1tH7CTiXNDyFc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731751AbgBUIXo (ORCPT
+        id S2388555AbgBUIXt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Feb 2020 03:23:44 -0500
-Received: from mail.kernel.org ([198.145.29.99]:35862 "EHLO mail.kernel.org"
+        Fri, 21 Feb 2020 03:23:49 -0500
+Received: from mail.kernel.org ([198.145.29.99]:35996 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388520AbgBUIXl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Feb 2020 03:23:41 -0500
+        id S2388543AbgBUIXq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 21 Feb 2020 03:23:46 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A865524697;
-        Fri, 21 Feb 2020 08:23:40 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A82A22469D;
+        Fri, 21 Feb 2020 08:23:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1582273421;
-        bh=IyLLtVHl5dqCwlj4ZeFJHDfJHrnChzzGasCQVGen4fs=;
+        s=default; t=1582273426;
+        bh=Cn24knfDqUAqJvb4N8NFHPFVd8dzAnate7ktenvU3Ek=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=LjW3zNs8ZPeoqv2Zu/OStVEPaY3VPjW9WAUBmeDpX0IvPwGZFHWF5/sQQDdR4AfXu
-         UJwszIR0re5G9uyTrQ5HNzsB1cQwle1WaCjOLpEYFHdi0BSQ+ZnNFOsWkDb7knGiW0
-         6fW2LR6jlrN3VLaC3dtZaJg75qbqRXUnqWFI2zSY=
+        b=st1NPQK9GZWjCFDRXWQe9eVGsyfKhU3iK24cSOaaL9hYIcydTAxGPqeyU/F4Txhuc
+         TKJ68V4Lo1Tc4SMBM1KNBgif5xppEQ2k6nHM8j52eZTxjN/Cp3/YOGRebGxctSFuN4
+         k+mRZ2NoTGlDyxfBQ4Ukg8yo3k7kA6wnDzikLtxE=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, "zhangyi (F)" <yi.zhang@huawei.com>,
-        Jan Kara <jack@suse.cz>, Theodore Tso <tytso@mit.edu>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 163/191] jbd2: make sure ESHUTDOWN to be recorded in the journal superblock
-Date:   Fri, 21 Feb 2020 08:42:16 +0100
-Message-Id: <20200221072310.345726702@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Jean-Philippe Brucker <jean-philippe@linaro.org>,
+        Will Deacon <will@kernel.org>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.19 130/191] iommu/arm-smmu-v3: Use WRITE_ONCE() when changing validity of an STE
+Date:   Fri, 21 Feb 2020 08:41:43 +0100
+Message-Id: <20200221072306.451259038@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200221072250.732482588@linuxfoundation.org>
 References: <20200221072250.732482588@linuxfoundation.org>
@@ -60,41 +60,38 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: zhangyi (F) <yi.zhang@huawei.com>
+From: Will Deacon <will@kernel.org>
 
-[ Upstream commit 0e98c084a21177ef136149c6a293b3d1eb33ff92 ]
+[ Upstream commit d71e01716b3606a6648df7e5646ae12c75babde4 ]
 
-Commit fb7c02445c49 ("ext4: pass -ESHUTDOWN code to jbd2 layer") want
-to allow jbd2 layer to distinguish shutdown journal abort from other
-error cases. So the ESHUTDOWN should be taken precedence over any other
-errno which has already been recoded after EXT4_FLAGS_SHUTDOWN is set,
-but it only update errno in the journal suoerblock now if the old errno
-is 0.
+If, for some bizarre reason, the compiler decided to split up the write
+of STE DWORD 0, we could end up making a partial structure valid.
 
-Fixes: fb7c02445c49 ("ext4: pass -ESHUTDOWN code to jbd2 layer")
-Signed-off-by: zhangyi (F) <yi.zhang@huawei.com>
-Reviewed-by: Jan Kara <jack@suse.cz>
-Link: https://lore.kernel.org/r/20191204124614.45424-4-yi.zhang@huawei.com
-Signed-off-by: Theodore Ts'o <tytso@mit.edu>
+Although this probably won't happen, follow the example of the
+context-descriptor code and use WRITE_ONCE() to ensure atomicity of the
+write.
+
+Reported-by: Jean-Philippe Brucker <jean-philippe@linaro.org>
+Signed-off-by: Will Deacon <will@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/jbd2/journal.c | 3 +--
- 1 file changed, 1 insertion(+), 2 deletions(-)
+ drivers/iommu/arm-smmu-v3.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/fs/jbd2/journal.c b/fs/jbd2/journal.c
-index 1a96287f92647..a15a22d209090 100644
---- a/fs/jbd2/journal.c
-+++ b/fs/jbd2/journal.c
-@@ -2133,8 +2133,7 @@ static void __journal_abort_soft (journal_t *journal, int errno)
- 
- 	if (journal->j_flags & JBD2_ABORT) {
- 		write_unlock(&journal->j_state_lock);
--		if (!old_errno && old_errno != -ESHUTDOWN &&
--		    errno == -ESHUTDOWN)
-+		if (old_errno != -ESHUTDOWN && errno == -ESHUTDOWN)
- 			jbd2_journal_update_sb_errno(journal);
- 		return;
+diff --git a/drivers/iommu/arm-smmu-v3.c b/drivers/iommu/arm-smmu-v3.c
+index eff1f3aa5ef43..6b7664052b5be 100644
+--- a/drivers/iommu/arm-smmu-v3.c
++++ b/drivers/iommu/arm-smmu-v3.c
+@@ -1185,7 +1185,8 @@ static void arm_smmu_write_strtab_ent(struct arm_smmu_device *smmu, u32 sid,
  	}
+ 
+ 	arm_smmu_sync_ste_for_sid(smmu, sid);
+-	dst[0] = cpu_to_le64(val);
++	/* See comment in arm_smmu_write_ctx_desc() */
++	WRITE_ONCE(dst[0], cpu_to_le64(val));
+ 	arm_smmu_sync_ste_for_sid(smmu, sid);
+ 
+ 	/* It's likely that we'll want to use the new STE soon */
 -- 
 2.20.1
 
