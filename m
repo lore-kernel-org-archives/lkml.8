@@ -5,49 +5,49 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9C6F6C35640
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 08:30:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DB56AC35641
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 08:30:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7038620679
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 08:30:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B40B620637
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 08:30:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582273814;
-	bh=uiFWzuo/y1vx3D80IkrnHuinHjU+Bj+7CiDyhZhphNc=;
+	s=default; t=1582273815;
+	bh=o2SSratsKeLW5BDF4DIAFp+zHraaHnFQYUKoplhPdFg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=uhFp8k7aJIG7FjgGs7vyBBNVqhWEcWlO8lYv7/EwNfZK0x1/LQ2gnjQstBLOtb7/p
-	 VjUqcag8liLE9tPlMSICsuixXmYSfLypW3z2ZtUAVeL4sarx/0n79uEkvqr40WJPWO
-	 hmDtBQ9K127kkC1VhnJ59wgjVfxtEf22ColXZUYY=
+	b=Mu2Un5KoPkIyrGVH7DS/F7V/udAoTXBOu3OQJ+oQ7X9Qg5/vBIsyxtkez+pYulpg0
+	 xddPF5TpRiJf7PZ2zqw6/nL1PgG3zhB4934vzTPLy14sVecjvPYb2SxHYTfFHmabUn
+	 GZF39ewPOkhtoywMHUs/PT+dMsBHrX+M7Mwh9gp0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388577AbgBUIaM (ORCPT
+        id S2387513AbgBUIQW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Feb 2020 03:30:12 -0500
-Received: from mail.kernel.org ([198.145.29.99]:53490 "EHLO mail.kernel.org"
+        Fri, 21 Feb 2020 03:16:22 -0500
+Received: from mail.kernel.org ([198.145.29.99]:53262 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387523AbgBUIQZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Feb 2020 03:16:25 -0500
+        id S2387497AbgBUIQP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 21 Feb 2020 03:16:15 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id F38E924689;
-        Fri, 21 Feb 2020 08:16:24 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 439482467B;
+        Fri, 21 Feb 2020 08:16:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1582272985;
-        bh=uiFWzuo/y1vx3D80IkrnHuinHjU+Bj+7CiDyhZhphNc=;
+        s=default; t=1582272974;
+        bh=o2SSratsKeLW5BDF4DIAFp+zHraaHnFQYUKoplhPdFg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=raWKnFEP+XgfdJr/2ggqbYpv0aDEDbx60tY7qGIxdAwnvVr4GFirqVKCLLG2Glmph
-         muLpd1IeHTqHlLX1500GTX89jfCiW5EN+ihI+QVVKys+addZ5mifURFhj4L4ZmY8AM
-         YPHXDp9g5M6DMSejTB8pdQMZ1PEOK+aehhsRrRBs=
+        b=bK0+/WBOMxY3udnHpbC6lbYlCu++Sc73tNGgdXrzuRlYAqwA+uG79bPDoz6PXKjyi
+         kx/EtpCtQoKkgBmhZdHMD0F6GXHjWdtQ6iGhAVfs+DKmycg+r382NM++Fzcd+sxWVj
+         QAHUA4N8Wi77sju3mhZRinsRwTjij8jkia9R7c/4=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Vasily Averin <vvs@virtuozzo.com>,
-        Mike Marshall <hubcap@omnibond.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 336/344] help_next should increase position index
-Date:   Fri, 21 Feb 2020 08:42:15 +0100
-Message-Id: <20200221072420.936356526@linuxfoundation.org>
+        stable@vger.kernel.org, Zhiqiang Liu <liuzhiqiang26@huawei.com>,
+        Bob Liu <bob.liu@oracle.com>, Ming Lei <ming.lei@redhat.com>,
+        Jens Axboe <axboe@kernel.dk>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.4 332/344] brd: check and limit max_part par
+Date:   Fri, 21 Feb 2020 08:42:11 +0100
+Message-Id: <20200221072420.512001655@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200221072349.335551332@linuxfoundation.org>
 References: <20200221072349.335551332@linuxfoundation.org>
@@ -60,33 +60,107 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Vasily Averin <vvs@virtuozzo.com>
+From: Zhiqiang Liu <liuzhiqiang26@huawei.com>
 
-[ Upstream commit 9f198a2ac543eaaf47be275531ad5cbd50db3edf ]
+[ Upstream commit c8ab422553c81a0eb070329c63725df1cd1425bc ]
 
-if seq_file .next fuction does not change position index,
-read after some lseek can generate unexpected output.
+In brd_init func, rd_nr num of brd_device are firstly allocated
+and add in brd_devices, then brd_devices are traversed to add each
+brd_device by calling add_disk func. When allocating brd_device,
+the disk->first_minor is set to i * max_part, if rd_nr * max_part
+is larger than MINORMASK, two different brd_device may have the same
+devt, then only one of them can be successfully added.
+when rmmod brd.ko, it will cause oops when calling brd_exit.
 
-https://bugzilla.kernel.org/show_bug.cgi?id=206283
-Signed-off-by: Vasily Averin <vvs@virtuozzo.com>
-Signed-off-by: Mike Marshall <hubcap@omnibond.com>
+Follow those steps:
+  # modprobe brd rd_nr=3 rd_size=102400 max_part=1048576
+  # rmmod brd
+then, the oops will appear.
+
+Oops log:
+[  726.613722] Call trace:
+[  726.614175]  kernfs_find_ns+0x24/0x130
+[  726.614852]  kernfs_find_and_get_ns+0x44/0x68
+[  726.615749]  sysfs_remove_group+0x38/0xb0
+[  726.616520]  blk_trace_remove_sysfs+0x1c/0x28
+[  726.617320]  blk_unregister_queue+0x98/0x100
+[  726.618105]  del_gendisk+0x144/0x2b8
+[  726.618759]  brd_exit+0x68/0x560 [brd]
+[  726.619501]  __arm64_sys_delete_module+0x19c/0x2a0
+[  726.620384]  el0_svc_common+0x78/0x130
+[  726.621057]  el0_svc_handler+0x38/0x78
+[  726.621738]  el0_svc+0x8/0xc
+[  726.622259] Code: aa0203f6 aa0103f7 aa1e03e0 d503201f (7940e260)
+
+Here, we add brd_check_and_reset_par func to check and limit max_part par.
+
+--
+V5->V6:
+ - remove useless code
+
+V4->V5:(suggested by Ming Lei)
+ - make sure max_part is not larger than DISK_MAX_PARTS
+
+V3->V4:(suggested by Ming Lei)
+ - remove useless change
+ - add one limit of max_part
+
+V2->V3: (suggested by Ming Lei)
+ - clear .minors when running out of consecutive minor space in brd_alloc
+ - remove limit of rd_nr
+
+V1->V2:
+ - add more checks in brd_check_par_valid as suggested by Ming Lei.
+
+Signed-off-by: Zhiqiang Liu <liuzhiqiang26@huawei.com>
+Reviewed-by: Bob Liu <bob.liu@oracle.com>
+Reviewed-by: Ming Lei <ming.lei@redhat.com>
+Signed-off-by: Jens Axboe <axboe@kernel.dk>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/orangefs/orangefs-debugfs.c | 1 +
- 1 file changed, 1 insertion(+)
+ drivers/block/brd.c | 22 ++++++++++++++++++++--
+ 1 file changed, 20 insertions(+), 2 deletions(-)
 
-diff --git a/fs/orangefs/orangefs-debugfs.c b/fs/orangefs/orangefs-debugfs.c
-index 25543a966c486..29eaa45443727 100644
---- a/fs/orangefs/orangefs-debugfs.c
-+++ b/fs/orangefs/orangefs-debugfs.c
-@@ -273,6 +273,7 @@ static void *help_start(struct seq_file *m, loff_t *pos)
+diff --git a/drivers/block/brd.c b/drivers/block/brd.c
+index c548a5a6c1a00..79f18cfa7049f 100644
+--- a/drivers/block/brd.c
++++ b/drivers/block/brd.c
+@@ -470,6 +470,25 @@ static struct kobject *brd_probe(dev_t dev, int *part, void *data)
+ 	return kobj;
+ }
  
- static void *help_next(struct seq_file *m, void *v, loff_t *pos)
++static inline void brd_check_and_reset_par(void)
++{
++	if (unlikely(!max_part))
++		max_part = 1;
++
++	/*
++	 * make sure 'max_part' can be divided exactly by (1U << MINORBITS),
++	 * otherwise, it is possiable to get same dev_t when adding partitions.
++	 */
++	if ((1U << MINORBITS) % max_part != 0)
++		max_part = 1UL << fls(max_part);
++
++	if (max_part > DISK_MAX_PARTS) {
++		pr_info("brd: max_part can't be larger than %d, reset max_part = %d.\n",
++			DISK_MAX_PARTS, DISK_MAX_PARTS);
++		max_part = DISK_MAX_PARTS;
++	}
++}
++
+ static int __init brd_init(void)
  {
-+	(*pos)++;
- 	gossip_debug(GOSSIP_DEBUGFS_DEBUG, "help_next: start\n");
+ 	struct brd_device *brd, *next;
+@@ -493,8 +512,7 @@ static int __init brd_init(void)
+ 	if (register_blkdev(RAMDISK_MAJOR, "ramdisk"))
+ 		return -EIO;
  
- 	return NULL;
+-	if (unlikely(!max_part))
+-		max_part = 1;
++	brd_check_and_reset_par();
+ 
+ 	for (i = 0; i < rd_nr; i++) {
+ 		brd = brd_alloc(i);
 -- 
 2.20.1
 
