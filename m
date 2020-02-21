@@ -5,50 +5,50 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 93F79C35640
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 08:06:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AF10DC35643
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 08:06:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6CC1F2467A
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 08:06:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 81C312465D
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 08:06:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582272397;
-	bh=zLAaDFzj2bwYv+0kiJhndvoOAmSRnnLJlpove3CrpdE=;
+	s=default; t=1582272399;
+	bh=8uG1pKmllG6vODb9BHuyO83kQ55D5RpViPviNkzTLOs=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=PkSbtUxPEbdYYxtB0c+QL6vtGF74ciP8nWoMplhWt+pda/mgpP5N1qZHTZkfdUzjD
-	 EIDx/ahigtL7/IsR/0qoRzd27+n4iSCd4WW7od+lngCOV+eJUS7Xdg3Eva/7UBXN5V
-	 wAkLQhcFfUvH8S7pOK0w4RJiEn+bMEL6YHY+kIyU=
+	b=rEBnWp/7tvuyD2nKobnIMH32Vk+YdCyjTVnMT0WQfqAHnfpr0vzTXaopjH367Egyn
+	 nMiWx0dLUbu6XDUTEKV1jwfjGmpzFmXcRbt8//FnocJDyucdHd0T/nyLNAp/7GTDXq
+	 YUDLzLyKvttAo3eD1ODjtP/VcwJwsLtzdH3+/t/4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731524AbgBUIGg (ORCPT
+        id S1731972AbgBUIGi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Feb 2020 03:06:36 -0500
-Received: from mail.kernel.org ([198.145.29.99]:40270 "EHLO mail.kernel.org"
+        Fri, 21 Feb 2020 03:06:38 -0500
+Received: from mail.kernel.org ([198.145.29.99]:40346 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731641AbgBUIGZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Feb 2020 03:06:25 -0500
+        id S1731946AbgBUIG1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 21 Feb 2020 03:06:27 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id ADCBC20722;
-        Fri, 21 Feb 2020 08:06:23 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 54E0D24670;
+        Fri, 21 Feb 2020 08:06:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1582272384;
-        bh=zLAaDFzj2bwYv+0kiJhndvoOAmSRnnLJlpove3CrpdE=;
+        s=default; t=1582272386;
+        bh=8uG1pKmllG6vODb9BHuyO83kQ55D5RpViPviNkzTLOs=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=13Or5oz/raI2ySkwfWBhmO4JM3XJw0WAQVyIdMWVHDmyvCAdEySBevL0TifKREubE
-         VD6WMDbVe77wAm5IVORoc9NQM/4boErIAeYTd/WZ+0RNCtYN4gC7WSThvPg88ZPYXu
-         0SzvNXpuqkCZvt8w3tPv+O52GhBLTRQ0WZ5RyC3g=
+        b=QpFuzaIBAXs0TcQaSzz0S8Hdl80HGMKyIks8PktFetxSFzWnYNDjEHr3pZNXDTjs8
+         P+tlft6YtvSe7sTkyfmDekiKCAYVpuCbdt+KNF4j3N6s2EAFZInxGyWQrdcJ+s0eO6
+         e9foMSkkLAMlNQVBX0EVpUJn9B3FI8brh+f7cZF8=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Hulk Robot <hulkci@huawei.com>,
-        Mao Wenan <maowenan@huawei.com>,
-        "David S. Miller" <davem@davemloft.net>,
+        stable@vger.kernel.org,
+        Jakub Kicinski <jakub.kicinski@netronome.com>,
+        John Hurley <john.hurley@netronome.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 105/344] NFC: port100: Convert cpu_to_le16(le16_to_cpu(E1) + E2) to use le16_add_cpu().
-Date:   Fri, 21 Feb 2020 08:38:24 +0100
-Message-Id: <20200221072358.459842917@linuxfoundation.org>
+Subject: [PATCH 5.4 123/344] Revert "nfp: abm: fix memory leak in nfp_abm_u32_knode_replace"
+Date:   Fri, 21 Feb 2020 08:38:42 +0100
+Message-Id: <20200221072400.039652706@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200221072349.335551332@linuxfoundation.org>
 References: <20200221072349.335551332@linuxfoundation.org>
@@ -61,34 +61,72 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Mao Wenan <maowenan@huawei.com>
+From: Jakub Kicinski <jakub.kicinski@netronome.com>
 
-[ Upstream commit 718eae277e62a26e5862eb72a830b5e0fe37b04a ]
+[ Upstream commit 1d1997db870f4058676439ef7014390ba9e24eb2 ]
 
-Convert cpu_to_le16(le16_to_cpu(frame->datalen) + len) to
-use le16_add_cpu(), which is more concise and does the same thing.
+This reverts commit 78beef629fd9 ("nfp: abm: fix memory leak in
+nfp_abm_u32_knode_replace").
 
-Reported-by: Hulk Robot <hulkci@huawei.com>
-Signed-off-by: Mao Wenan <maowenan@huawei.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+The quoted commit does not fix anything and resulted in a bogus
+CVE-2019-19076.
+
+If match is NULL then it is known there is no matching entry in
+list, hence, calling nfp_abm_u32_knode_delete() is pointless.
+
+Signed-off-by: Jakub Kicinski <jakub.kicinski@netronome.com>
+Reviewed-by: John Hurley <john.hurley@netronome.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/nfc/port100.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/net/ethernet/netronome/nfp/abm/cls.c | 14 ++++----------
+ 1 file changed, 4 insertions(+), 10 deletions(-)
 
-diff --git a/drivers/nfc/port100.c b/drivers/nfc/port100.c
-index 604dba4f18afd..8e4d355dc3aec 100644
---- a/drivers/nfc/port100.c
-+++ b/drivers/nfc/port100.c
-@@ -565,7 +565,7 @@ static void port100_tx_update_payload_len(void *_frame, int len)
- {
- 	struct port100_frame *frame = _frame;
+diff --git a/drivers/net/ethernet/netronome/nfp/abm/cls.c b/drivers/net/ethernet/netronome/nfp/abm/cls.c
+index 9f8a1f69c0c4c..23ebddfb95325 100644
+--- a/drivers/net/ethernet/netronome/nfp/abm/cls.c
++++ b/drivers/net/ethernet/netronome/nfp/abm/cls.c
+@@ -176,10 +176,8 @@ nfp_abm_u32_knode_replace(struct nfp_abm_link *alink,
+ 	u8 mask, val;
+ 	int err;
  
--	frame->datalen = cpu_to_le16(le16_to_cpu(frame->datalen) + len);
-+	le16_add_cpu(&frame->datalen, len);
+-	if (!nfp_abm_u32_check_knode(alink->abm, knode, proto, extack)) {
+-		err = -EOPNOTSUPP;
++	if (!nfp_abm_u32_check_knode(alink->abm, knode, proto, extack))
+ 		goto err_delete;
+-	}
+ 
+ 	tos_off = proto == htons(ETH_P_IP) ? 16 : 20;
+ 
+@@ -200,18 +198,14 @@ nfp_abm_u32_knode_replace(struct nfp_abm_link *alink,
+ 		if ((iter->val & cmask) == (val & cmask) &&
+ 		    iter->band != knode->res->classid) {
+ 			NL_SET_ERR_MSG_MOD(extack, "conflict with already offloaded filter");
+-			err = -EOPNOTSUPP;
+ 			goto err_delete;
+ 		}
+ 	}
+ 
+ 	if (!match) {
+ 		match = kzalloc(sizeof(*match), GFP_KERNEL);
+-		if (!match) {
+-			err = -ENOMEM;
+-			goto err_delete;
+-		}
+-
++		if (!match)
++			return -ENOMEM;
+ 		list_add(&match->list, &alink->dscp_map);
+ 	}
+ 	match->handle = knode->handle;
+@@ -227,7 +221,7 @@ nfp_abm_u32_knode_replace(struct nfp_abm_link *alink,
+ 
+ err_delete:
+ 	nfp_abm_u32_knode_delete(alink, knode);
+-	return err;
++	return -EOPNOTSUPP;
  }
  
- static bool port100_rx_frame_is_valid(void *_frame)
+ static int nfp_abm_setup_tc_block_cb(enum tc_setup_type type,
 -- 
 2.20.1
 
