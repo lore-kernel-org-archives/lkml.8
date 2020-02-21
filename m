@@ -5,48 +5,50 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 422B1C35642
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 08:43:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DFFF2C35641
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 08:43:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1A3BF206ED
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 08:43:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AE723222C4
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 08:43:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582274595;
-	bh=Blrkqpo0ttDNFxksJ/K85sjcbAzpjsltlkyUQBX/ffY=;
+	s=default; t=1582274601;
+	bh=TKNR1RggkVSKFIYabLZR0PfqLGHp4WwX0Rzzf+yWMoQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=rWzOJHOewg90efBKXTF01X+wpjt2VJhiSxQRUTWaBoBBua8maSiSpz0/IREiUOdzE
-	 3xqdsIUi4f53nWlhKwiHJiR6yPL9aeaW90yJH+sjVGr09fM35mVdWSky3ai3iT47Dp
-	 I6M3ZJgrIyiWaPxYIXp6AUF0imne1O7UctjRz13Q=
+	b=dsH40w1hvo/eFxHjR6SIKAY1fStG4zKlESUbtoTy91ZgQ+TEST2+5ZVKehecUxTKf
+	 scC8iJ1bb39CClFBkGeb2e+O/m6s8tGnlWELCZfPX0OHDfmcXWnBJcPImGpjs0mGXE
+	 mPUSTG/yxcaQ4vMerSsz5mX8YJjprgi4LpRkRXoU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730172AbgBUHxx (ORCPT
+        id S1730136AbgBUHxk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Feb 2020 02:53:53 -0500
-Received: from mail.kernel.org ([198.145.29.99]:52276 "EHLO mail.kernel.org"
+        Fri, 21 Feb 2020 02:53:40 -0500
+Received: from mail.kernel.org ([198.145.29.99]:51918 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729831AbgBUHxv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Feb 2020 02:53:51 -0500
+        id S1730120AbgBUHxf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 21 Feb 2020 02:53:35 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 74C2E222C4;
-        Fri, 21 Feb 2020 07:53:50 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3418F24672;
+        Fri, 21 Feb 2020 07:53:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1582271630;
-        bh=Blrkqpo0ttDNFxksJ/K85sjcbAzpjsltlkyUQBX/ffY=;
+        s=default; t=1582271614;
+        bh=TKNR1RggkVSKFIYabLZR0PfqLGHp4WwX0Rzzf+yWMoQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=thU5nkE3TrWsnaCISU6jCbroDK2NOVs6ni/SyUKS4sO7i0mUKYwlBC701jhrXVMXt
-         cLZaR+28mAVpyfeAaiYVFgMCsgldv7zbSU0vRmRF6lTMHhCmWXUfpegGPCWiM/O96i
-         4VD/FRGUouNl2TVwMxUAQPTRb7yzn+xAv68q3dQo=
+        b=fUhhvPgLbaSD5G+UFdhWsiaoudfm1bk+E5koFql3VtaytVs/asCqLKcQz4uXTcbgL
+         l5tQ4quMsApC+VK8F+77Y4Rkbkwc4ghIX7i/utSDNJo4HH1VGU9EyOTFWTzXXZeaFu
+         m/LBSpTOCTnOMCLyUEK3wxhrFOc+pK1q7DUa4kdo=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Takashi Iwai <tiwai@suse.de>,
+        stable@vger.kernel.org,
+        Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>,
+        Mark Brown <broonie@kernel.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.5 201/399] ALSA: sh: Fix unused variable warnings
-Date:   Fri, 21 Feb 2020 08:38:46 +0100
-Message-Id: <20200221072422.367785032@linuxfoundation.org>
+Subject: [PATCH 5.5 196/399] ASoC: soc-topology: fix endianness issues
+Date:   Fri, 21 Feb 2020 08:38:41 +0100
+Message-Id: <20200221072421.870562286@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200221072402.315346745@linuxfoundation.org>
 References: <20200221072402.315346745@linuxfoundation.org>
@@ -59,52 +61,142 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Takashi Iwai <tiwai@suse.de>
+From: Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
 
-[ Upstream commit 5da116f164ce265e397b8f59af5c39e4a61d61a5 ]
+[ Upstream commit 72bbeda0222bcd382ee33b3aff71346074410c21 ]
 
-Remove unused variables that are left over after the conversion of new
-PCM ops:
-  sound/sh/sh_dac_audio.c:166:26: warning: unused variable 'runtime'
-  sound/sh/sh_dac_audio.c:186:26: warning: unused variable 'runtime'
-  sound/sh/sh_dac_audio.c:205:26: warning: unused variable 'runtime'
+Sparse complains about a series of easy warnings, fix.
 
-Fixes: 1cc2f8ba0b3e ("ALSA: sh: Convert to the new PCM ops")
-Link: https://lore.kernel.org/r/20200104110057.13875-1-tiwai@suse.de
-Signed-off-by: Takashi Iwai <tiwai@suse.de>
+Signed-off-by: Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
+Link: https://lore.kernel.org/r/20200102195952.9465-3-pierre-louis.bossart@linux.intel.com
+Signed-off-by: Mark Brown <broonie@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- sound/sh/sh_dac_audio.c | 3 ---
- 1 file changed, 3 deletions(-)
+ sound/soc/soc-topology.c | 42 +++++++++++++++++++++-------------------
+ 1 file changed, 22 insertions(+), 20 deletions(-)
 
-diff --git a/sound/sh/sh_dac_audio.c b/sound/sh/sh_dac_audio.c
-index f9e36abc98ac7..725992937e8f1 100644
---- a/sound/sh/sh_dac_audio.c
-+++ b/sound/sh/sh_dac_audio.c
-@@ -175,7 +175,6 @@ static int snd_sh_dac_pcm_copy(struct snd_pcm_substream *substream,
- {
- 	/* channel is not used (interleaved data) */
- 	struct snd_sh_dac *chip = snd_pcm_substream_chip(substream);
--	struct snd_pcm_runtime *runtime = substream->runtime;
+diff --git a/sound/soc/soc-topology.c b/sound/soc/soc-topology.c
+index 4e1fe623c3908..0119f07cece6f 100644
+--- a/sound/soc/soc-topology.c
++++ b/sound/soc/soc-topology.c
+@@ -604,9 +604,11 @@ static int soc_tplg_kcontrol_bind_io(struct snd_soc_tplg_ctl_hdr *hdr,
+ 		ext_ops = tplg->bytes_ext_ops;
+ 		num_ops = tplg->bytes_ext_ops_count;
+ 		for (i = 0; i < num_ops; i++) {
+-			if (!sbe->put && ext_ops[i].id == be->ext_ops.put)
++			if (!sbe->put &&
++			    ext_ops[i].id == le32_to_cpu(be->ext_ops.put))
+ 				sbe->put = ext_ops[i].put;
+-			if (!sbe->get && ext_ops[i].id == be->ext_ops.get)
++			if (!sbe->get &&
++			    ext_ops[i].id == le32_to_cpu(be->ext_ops.get))
+ 				sbe->get = ext_ops[i].get;
+ 		}
  
- 	if (copy_from_user_toio(chip->data_buffer + pos, src, count))
- 		return -EFAULT;
-@@ -195,7 +194,6 @@ static int snd_sh_dac_pcm_copy_kernel(struct snd_pcm_substream *substream,
- {
- 	/* channel is not used (interleaved data) */
- 	struct snd_sh_dac *chip = snd_pcm_substream_chip(substream);
--	struct snd_pcm_runtime *runtime = substream->runtime;
+@@ -621,11 +623,11 @@ static int soc_tplg_kcontrol_bind_io(struct snd_soc_tplg_ctl_hdr *hdr,
+ 	num_ops = tplg->io_ops_count;
+ 	for (i = 0; i < num_ops; i++) {
  
- 	memcpy_toio(chip->data_buffer + pos, src, count);
- 	chip->buffer_end = chip->data_buffer + pos + count;
-@@ -214,7 +212,6 @@ static int snd_sh_dac_pcm_silence(struct snd_pcm_substream *substream,
- {
- 	/* channel is not used (interleaved data) */
- 	struct snd_sh_dac *chip = snd_pcm_substream_chip(substream);
--	struct snd_pcm_runtime *runtime = substream->runtime;
+-		if (k->put == NULL && ops[i].id == hdr->ops.put)
++		if (k->put == NULL && ops[i].id == le32_to_cpu(hdr->ops.put))
+ 			k->put = ops[i].put;
+-		if (k->get == NULL && ops[i].id == hdr->ops.get)
++		if (k->get == NULL && ops[i].id == le32_to_cpu(hdr->ops.get))
+ 			k->get = ops[i].get;
+-		if (k->info == NULL && ops[i].id == hdr->ops.info)
++		if (k->info == NULL && ops[i].id == le32_to_cpu(hdr->ops.info))
+ 			k->info = ops[i].info;
+ 	}
  
- 	memset_io(chip->data_buffer + pos, 0, count);
- 	chip->buffer_end = chip->data_buffer + pos + count;
+@@ -638,11 +640,11 @@ static int soc_tplg_kcontrol_bind_io(struct snd_soc_tplg_ctl_hdr *hdr,
+ 	num_ops = ARRAY_SIZE(io_ops);
+ 	for (i = 0; i < num_ops; i++) {
+ 
+-		if (k->put == NULL && ops[i].id == hdr->ops.put)
++		if (k->put == NULL && ops[i].id == le32_to_cpu(hdr->ops.put))
+ 			k->put = ops[i].put;
+-		if (k->get == NULL && ops[i].id == hdr->ops.get)
++		if (k->get == NULL && ops[i].id == le32_to_cpu(hdr->ops.get))
+ 			k->get = ops[i].get;
+-		if (k->info == NULL && ops[i].id == hdr->ops.info)
++		if (k->info == NULL && ops[i].id == le32_to_cpu(hdr->ops.info))
+ 			k->info = ops[i].info;
+ 	}
+ 
+@@ -931,7 +933,7 @@ static int soc_tplg_denum_create_texts(struct soc_enum *se,
+ 	if (se->dobj.control.dtexts == NULL)
+ 		return -ENOMEM;
+ 
+-	for (i = 0; i < ec->items; i++) {
++	for (i = 0; i < le32_to_cpu(ec->items); i++) {
+ 
+ 		if (strnlen(ec->texts[i], SNDRV_CTL_ELEM_ID_NAME_MAXLEN) ==
+ 			SNDRV_CTL_ELEM_ID_NAME_MAXLEN) {
+@@ -1325,7 +1327,7 @@ static struct snd_kcontrol_new *soc_tplg_dapm_widget_dmixer_create(
+ 		if (kc[i].name == NULL)
+ 			goto err_sm;
+ 		kc[i].iface = SNDRV_CTL_ELEM_IFACE_MIXER;
+-		kc[i].access = mc->hdr.access;
++		kc[i].access = le32_to_cpu(mc->hdr.access);
+ 
+ 		/* we only support FL/FR channel mapping atm */
+ 		sm->reg = tplc_chan_get_reg(tplg, mc->channel,
+@@ -1337,10 +1339,10 @@ static struct snd_kcontrol_new *soc_tplg_dapm_widget_dmixer_create(
+ 		sm->rshift = tplc_chan_get_shift(tplg, mc->channel,
+ 			SNDRV_CHMAP_FR);
+ 
+-		sm->max = mc->max;
+-		sm->min = mc->min;
+-		sm->invert = mc->invert;
+-		sm->platform_max = mc->platform_max;
++		sm->max = le32_to_cpu(mc->max);
++		sm->min = le32_to_cpu(mc->min);
++		sm->invert = le32_to_cpu(mc->invert);
++		sm->platform_max = le32_to_cpu(mc->platform_max);
+ 		sm->dobj.index = tplg->index;
+ 		INIT_LIST_HEAD(&sm->dobj.list);
+ 
+@@ -1401,7 +1403,7 @@ static struct snd_kcontrol_new *soc_tplg_dapm_widget_denum_create(
+ 			goto err_se;
+ 
+ 		tplg->pos += (sizeof(struct snd_soc_tplg_enum_control) +
+-				ec->priv.size);
++			      le32_to_cpu(ec->priv.size));
+ 
+ 		dev_dbg(tplg->dev, " adding DAPM widget enum control %s\n",
+ 			ec->hdr.name);
+@@ -1411,7 +1413,7 @@ static struct snd_kcontrol_new *soc_tplg_dapm_widget_denum_create(
+ 		if (kc[i].name == NULL)
+ 			goto err_se;
+ 		kc[i].iface = SNDRV_CTL_ELEM_IFACE_MIXER;
+-		kc[i].access = ec->hdr.access;
++		kc[i].access = le32_to_cpu(ec->hdr.access);
+ 
+ 		/* we only support FL/FR channel mapping atm */
+ 		se->reg = tplc_chan_get_reg(tplg, ec->channel, SNDRV_CHMAP_FL);
+@@ -1420,8 +1422,8 @@ static struct snd_kcontrol_new *soc_tplg_dapm_widget_denum_create(
+ 		se->shift_r = tplc_chan_get_shift(tplg, ec->channel,
+ 						  SNDRV_CHMAP_FR);
+ 
+-		se->items = ec->items;
+-		se->mask = ec->mask;
++		se->items = le32_to_cpu(ec->items);
++		se->mask = le32_to_cpu(ec->mask);
+ 		se->dobj.index = tplg->index;
+ 
+ 		switch (le32_to_cpu(ec->hdr.ops.info)) {
+@@ -1523,9 +1525,9 @@ static struct snd_kcontrol_new *soc_tplg_dapm_widget_dbytes_create(
+ 		if (kc[i].name == NULL)
+ 			goto err_sbe;
+ 		kc[i].iface = SNDRV_CTL_ELEM_IFACE_MIXER;
+-		kc[i].access = be->hdr.access;
++		kc[i].access = le32_to_cpu(be->hdr.access);
+ 
+-		sbe->max = be->max;
++		sbe->max = le32_to_cpu(be->max);
+ 		INIT_LIST_HEAD(&sbe->dobj.list);
+ 
+ 		/* map standard io handlers and check for external handlers */
 -- 
 2.20.1
 
