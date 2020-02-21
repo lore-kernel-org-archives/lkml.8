@@ -2,131 +2,194 @@ Return-Path: <SRS0=1210=4J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 369A2C35656
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 15:32:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0BBDAC35657
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 15:33:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 07C942073A
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 15:32:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CC46E2073A
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 15:33:03 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=embeddedor.com header.i=@embeddedor.com header.b="mQJFPMo/"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="NEud9/7F"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729015AbgBUPc5 (ORCPT
+        id S1729137AbgBUPdC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Feb 2020 10:32:57 -0500
-Received: from gateway30.websitewelcome.com ([50.116.127.1]:35259 "EHLO
-        gateway30.websitewelcome.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727053AbgBUPc5 (ORCPT
+        Fri, 21 Feb 2020 10:33:02 -0500
+Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:38106 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1729055AbgBUPdB (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Feb 2020 10:32:57 -0500
-Received: from cm17.websitewelcome.com (cm17.websitewelcome.com [100.42.49.20])
-        by gateway30.websitewelcome.com (Postfix) with ESMTP id 819BF1CE56
-        for <linux-kernel@vger.kernel.org>; Fri, 21 Feb 2020 09:32:56 -0600 (CST)
-Received: from gator4166.hostgator.com ([108.167.133.22])
-        by cmsmtp with SMTP
-        id 5AISjVy8iAGTX5AISjgLol; Fri, 21 Feb 2020 09:32:56 -0600
-X-Authority-Reason: nr=8
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=embeddedor.com; s=default; h=Content-Type:MIME-Version:Message-ID:Subject:
-        Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
-        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
-        :Resent-Message-ID:In-Reply-To:References:List-Id:List-Help:List-Unsubscribe:
-        List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=+9YZ68OI0u6bgnITF2OAOBLoHg77yAxtbt5DvFHnC8I=; b=mQJFPMo/HYUCfiMRMyFxwllgUo
-        5becAymoHLFxF2S9pAK8ZhE8LYy7gob16Cxm50yBwGMp/dvAPs7TKYs698+cxcqWcZYvbOySfkUoK
-        6aGx9KdrENW8uUPFaUnKX3Ua7JLetWVV+3ON743yYsj09XVphto5az0xRK4XlV/2grSneGEKaw2cM
-        D7p7FOQPLfCeuQAKzbZwBWSg3eMOv/V4+a5p3sOR7ixsA2tLqSQmdyZj6EkFg/DWQrL1wNKtp/kwV
-        ZACnKxWB8WSvO1QrTxSD92pKWN4QewM6RY5uz8MF/Lv5qtro99bEMaBTdqrZcEtDfrs5GrsyWlBj9
-        HhwTzuFg==;
-Received: from [200.68.140.54] (port=15958 helo=embeddedor)
-        by gator4166.hostgator.com with esmtpa (Exim 4.92)
-        (envelope-from <gustavo@embeddedor.com>)
-        id 1j5AIQ-003iv0-M4; Fri, 21 Feb 2020 09:32:54 -0600
-Date:   Fri, 21 Feb 2020 09:35:39 -0600
-From:   "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-To:     Peter Jones <pjones@redhat.com>,
-        Konrad Rzeszutek Wilk <konrad@kernel.org>
-Cc:     linux-kernel@vger.kernel.org,
-        "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-Subject: [PATCH] iscsi_ibft: Replace zero-length array with flexible-array
- member
-Message-ID: <20200221153539.GA23609@embeddedor>
+        Fri, 21 Feb 2020 10:33:01 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1582299179;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=PsBV6/KbvwCxicQByPJEUo2GVyBDVRqp1i+UcpJa+e0=;
+        b=NEud9/7FsuO5oPYQS8Fii7kYLdA77SKqKkVn2f5oS8BnZZc4AS17yNbM8kU7Q4s9nhyQ67
+        LZt2cowYZR9QdxzQtWz0e++ZvxZIFZytVPc8IPTmfncptR5PdlvNAesHAFOgdxeD13mHZB
+        S0qyCtbsKl1HDPTXTSYwC8ZO1Yn0J3w=
+Received: from mail-wr1-f70.google.com (mail-wr1-f70.google.com
+ [209.85.221.70]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-44--e7hKLkAOxyFbGzUZ5Dbjw-1; Fri, 21 Feb 2020 10:32:58 -0500
+X-MC-Unique: -e7hKLkAOxyFbGzUZ5Dbjw-1
+Received: by mail-wr1-f70.google.com with SMTP id s13so1161182wrb.21
+        for <linux-kernel@vger.kernel.org>; Fri, 21 Feb 2020 07:32:57 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:in-reply-to:references:date
+         :message-id:mime-version;
+        bh=PsBV6/KbvwCxicQByPJEUo2GVyBDVRqp1i+UcpJa+e0=;
+        b=LLz84RrGUsn/ZgvIt9bgUin/Fp6PNlgaqLTRwMrwdeIZpXvGjTMc/9JwYSeLAjYbOl
+         v3feNn/UkSzyKFft+LI7pY3GhmM73E7gQ8ZVxzSFsandT66825J0s49Jxe6eyigxUY+1
+         8+qGSgxShXQDYIStzypc5ffQIL/H0QceLbyFgmOwj1MrbWy4HVsFx8SoMRwqSdfxcJ/m
+         SMABMYlqSvrb+oVaIpbs6wluoTvhu6eHUFdHc2BQXSwDyPvUd6EYs30u9C30NT4qS1hi
+         hiN/rQ6r7/JZTnWN3kdlJxqqCfLlTn6TcTiMCcnbtJf7n6+xtEfZf5ePRm+EfXyZm7Ih
+         c15g==
+X-Gm-Message-State: APjAAAUBVb8lMTVF/lQODpR5Q9oMaDN/UfZ2kj/kcNIZNb2UH6AD+pXO
+        ZtYP5UE3vVJqK21VC4lW0NwMRaQ5xN3Pm7Hb0UQhXWDjmHroSUChP+vEuyjPFW3TLIk3y8Nkmuz
+        ZSg8B1AO1+s83nnYG95MW8rad
+X-Received: by 2002:adf:f44a:: with SMTP id f10mr51287323wrp.16.1582299176721;
+        Fri, 21 Feb 2020 07:32:56 -0800 (PST)
+X-Google-Smtp-Source: APXvYqzn1MYAtU3Eno+cnYlGWFX4Wfkgii6olk3cU22QAmG/lqfnIfAuKi/wJjXZQBAiVU/X/bklNA==
+X-Received: by 2002:adf:f44a:: with SMTP id f10mr51287299wrp.16.1582299176461;
+        Fri, 21 Feb 2020 07:32:56 -0800 (PST)
+Received: from vitty.brq.redhat.com (nat-pool-brq-t.redhat.com. [213.175.37.10])
+        by smtp.gmail.com with ESMTPSA id o2sm4019446wmh.46.2020.02.21.07.32.55
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 21 Feb 2020 07:32:55 -0800 (PST)
+From:   Vitaly Kuznetsov <vkuznets@redhat.com>
+To:     Sean Christopherson <sean.j.christopherson@intel.com>
+Cc:     Paolo Bonzini <pbonzini@redhat.com>,
+        Wanpeng Li <wanpengli@tencent.com>,
+        Jim Mattson <jmattson@google.com>,
+        Joerg Roedel <joro@8bytes.org>, kvm@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 21/61] KVM: x86: Use supported_xcr0 to detect MPX support
+In-Reply-To: <20200201185218.24473-22-sean.j.christopherson@intel.com>
+References: <20200201185218.24473-1-sean.j.christopherson@intel.com> <20200201185218.24473-22-sean.j.christopherson@intel.com>
+Date:   Fri, 21 Feb 2020 16:32:55 +0100
+Message-ID: <87k14gq7ko.fsf@vitty.brq.redhat.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-User-Agent: Mutt/1.9.4 (2018-02-28)
-X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
-X-AntiAbuse: Primary Hostname - gator4166.hostgator.com
-X-AntiAbuse: Original Domain - vger.kernel.org
-X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
-X-AntiAbuse: Sender Address Domain - embeddedor.com
-X-BWhitelist: no
-X-Source-IP: 200.68.140.54
-X-Source-L: No
-X-Exim-ID: 1j5AIQ-003iv0-M4
-X-Source: 
-X-Source-Args: 
-X-Source-Dir: 
-X-Source-Sender: (embeddedor) [200.68.140.54]:15958
-X-Source-Auth: gustavo@embeddedor.com
-X-Email-Count: 19
-X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
-X-Local-Domain: yes
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The current codebase makes use of the zero-length array language
-extension to the C90 standard, but the preferred mechanism to declare
-variable-length types such as these ones is a flexible array member[1][2],
-introduced in C99:
+Sean Christopherson <sean.j.christopherson@intel.com> writes:
 
-struct foo {
-        int stuff;
-        struct boo array[];
-};
+> Query supported_xcr0 when checking for MPX support instead of invoking
+> ->mpx_supported() and drop ->mpx_supported() as kvm_mpx_supported() was
+> its last user.  Rename vmx_mpx_supported() to cpu_has_vmx_mpx() to
+> better align with VMX/VMCS nomenclature.
+>
+> Modify VMX's adjustment of xcr0 to call cpus_has_vmx_mpx() (renamed from
+> vmx_mpx_supported()) directly to avoid reading supported_xcr0 before
+> it's fully configured.
+>
+> No functional change intended.
+>
+> Signed-off-by: Sean Christopherson <sean.j.christopherson@intel.com>
+> ---
+>  arch/x86/include/asm/kvm_host.h | 2 +-
+>  arch/x86/kvm/cpuid.c            | 3 +--
+>  arch/x86/kvm/svm.c              | 6 ------
+>  arch/x86/kvm/vmx/capabilities.h | 2 +-
+>  arch/x86/kvm/vmx/vmx.c          | 3 +--
+>  5 files changed, 4 insertions(+), 12 deletions(-)
+>
+> diff --git a/arch/x86/include/asm/kvm_host.h b/arch/x86/include/asm/kvm_host.h
+> index 77d206a93658..85f0d96cfeb2 100644
+> --- a/arch/x86/include/asm/kvm_host.h
+> +++ b/arch/x86/include/asm/kvm_host.h
+> @@ -1163,7 +1163,7 @@ struct kvm_x86_ops {
+>  			       enum x86_intercept_stage stage);
+>  	void (*handle_exit_irqoff)(struct kvm_vcpu *vcpu,
+>  		enum exit_fastpath_completion *exit_fastpath);
+> -	bool (*mpx_supported)(void);
+> +
+>  	bool (*xsaves_supported)(void);
+>  	bool (*umip_emulated)(void);
+>  	bool (*pt_supported)(void);
+> diff --git a/arch/x86/kvm/cpuid.c b/arch/x86/kvm/cpuid.c
+> index b9763eb711cb..84006cc4007c 100644
+> --- a/arch/x86/kvm/cpuid.c
+> +++ b/arch/x86/kvm/cpuid.c
+> @@ -47,8 +47,7 @@ static u32 xstate_required_size(u64 xstate_bv, bool compacted)
+>  
+>  bool kvm_mpx_supported(void)
+>  {
+> -	return ((host_xcr0 & (XFEATURE_MASK_BNDREGS | XFEATURE_MASK_BNDCSR))
+> -		 && kvm_x86_ops->mpx_supported());
+> +	return supported_xcr0 & (XFEATURE_MASK_BNDREGS | XFEATURE_MASK_BNDCSR);
+>  }
+>  EXPORT_SYMBOL_GPL(kvm_mpx_supported);
+>  
+> diff --git a/arch/x86/kvm/svm.c b/arch/x86/kvm/svm.c
+> index af096c4f9c5f..3c7ddaff405d 100644
+> --- a/arch/x86/kvm/svm.c
+> +++ b/arch/x86/kvm/svm.c
+> @@ -6082,11 +6082,6 @@ static bool svm_invpcid_supported(void)
+>  	return false;
+>  }
+>  
+> -static bool svm_mpx_supported(void)
+> -{
+> -	return false;
+> -}
+> -
+>  static bool svm_xsaves_supported(void)
+>  {
+>  	return boot_cpu_has(X86_FEATURE_XSAVES);
+> @@ -7468,7 +7463,6 @@ static struct kvm_x86_ops svm_x86_ops __ro_after_init = {
+>  
+>  	.rdtscp_supported = svm_rdtscp_supported,
+>  	.invpcid_supported = svm_invpcid_supported,
+> -	.mpx_supported = svm_mpx_supported,
+>  	.xsaves_supported = svm_xsaves_supported,
+>  	.umip_emulated = svm_umip_emulated,
+>  	.pt_supported = svm_pt_supported,
+> diff --git a/arch/x86/kvm/vmx/capabilities.h b/arch/x86/kvm/vmx/capabilities.h
+> index 1a6a99382e94..0a0b1494a934 100644
+> --- a/arch/x86/kvm/vmx/capabilities.h
+> +++ b/arch/x86/kvm/vmx/capabilities.h
+> @@ -100,7 +100,7 @@ static inline bool cpu_has_load_perf_global_ctrl(void)
+>  	       (vmcs_config.vmexit_ctrl & VM_EXIT_LOAD_IA32_PERF_GLOBAL_CTRL);
+>  }
+>  
+> -static inline bool vmx_mpx_supported(void)
+> +static inline bool cpu_has_vmx_mpx(void)
+>  {
+>  	return (vmcs_config.vmexit_ctrl & VM_EXIT_CLEAR_BNDCFGS) &&
+>  		(vmcs_config.vmentry_ctrl & VM_ENTRY_LOAD_BNDCFGS);
+> diff --git a/arch/x86/kvm/vmx/vmx.c b/arch/x86/kvm/vmx/vmx.c
+> index 32a84ec15064..98fd651f7f7e 100644
+> --- a/arch/x86/kvm/vmx/vmx.c
+> +++ b/arch/x86/kvm/vmx/vmx.c
+> @@ -7590,7 +7590,7 @@ static __init int hardware_setup(void)
+>  		WARN_ONCE(host_bndcfgs, "KVM: BNDCFGS in host will be lost");
+>  	}
+>  
+> -	if (!kvm_mpx_supported())
+> +	if (!cpu_has_vmx_mpx())
+>  		supported_xcr0 &= ~(XFEATURE_MASK_BNDREGS |
+>  				    XFEATURE_MASK_BNDCSR);
+>  
+> @@ -7857,7 +7857,6 @@ static struct kvm_x86_ops vmx_x86_ops __ro_after_init = {
+>  
+>  	.check_intercept = vmx_check_intercept,
+>  	.handle_exit_irqoff = vmx_handle_exit_irqoff,
+> -	.mpx_supported = vmx_mpx_supported,
+>  	.xsaves_supported = vmx_xsaves_supported,
+>  	.umip_emulated = vmx_umip_emulated,
+>  	.pt_supported = vmx_pt_supported,
 
-By making use of the mechanism above, we will get a compiler warning
-in case the flexible array does not occur last in the structure, which
-will help us prevent some kind of undefined behavior bugs from being
-inadvertently introduced[3] to the codebase from now on.
+Reviewed-by: Vitaly Kuznetsov <vkuznets@redhat.com>
 
-Also, notice that, dynamic memory allocations won't be affected by
-this change:
-
-"Flexible array members have incomplete type, and so the sizeof operator
-may not be applied. As a quirk of the original implementation of
-zero-length arrays, sizeof evaluates to zero."[1]
-
-This issue was found with the help of Coccinelle.
-
-[1] https://gcc.gnu.org/onlinedocs/gcc/Zero-Length.html
-[2] https://github.com/KSPP/linux/issues/21
-[3] commit 76497732932f ("cxgb3/l2t: Fix undefined behaviour")
-
-Signed-off-by: Gustavo A. R. Silva <gustavo@embeddedor.com>
----
- drivers/firmware/iscsi_ibft.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/drivers/firmware/iscsi_ibft.c b/drivers/firmware/iscsi_ibft.c
-index 96758b71a8db..7127a04bca19 100644
---- a/drivers/firmware/iscsi_ibft.c
-+++ b/drivers/firmware/iscsi_ibft.c
-@@ -104,7 +104,7 @@ struct ibft_control {
- 	u16 tgt0_off;
- 	u16 nic1_off;
- 	u16 tgt1_off;
--	u16 expansion[0];
-+	u16 expansion[];
- } __attribute__((__packed__));
- 
- struct ibft_initiator {
 -- 
-2.25.0
+Vitaly
 
