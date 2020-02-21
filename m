@@ -2,156 +2,121 @@ Return-Path: <SRS0=1210=4J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A39C1C35647
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 11:28:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9FFE8C35653
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 11:28:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 70BBC2073A
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 11:28:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 743CE24670
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 11:28:46 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=isovalent-com.20150623.gappssmtp.com header.i=@isovalent-com.20150623.gappssmtp.com header.b="YKUQdaBb"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="L0No1NMU"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727734AbgBUL2Z (ORCPT
+        id S1727940AbgBUL2p (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Feb 2020 06:28:25 -0500
-Received: from mail-wr1-f66.google.com ([209.85.221.66]:37598 "EHLO
-        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726940AbgBUL2Y (ORCPT
+        Fri, 21 Feb 2020 06:28:45 -0500
+Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:55035 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1727161AbgBUL2p (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Feb 2020 06:28:24 -0500
-Received: by mail-wr1-f66.google.com with SMTP id w15so1630900wru.4
-        for <linux-kernel@vger.kernel.org>; Fri, 21 Feb 2020 03:28:23 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=isovalent-com.20150623.gappssmtp.com; s=20150623;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=MmlIuWAhG574pRgwa2zTd9boc50vLeKyqoHfRi2itEU=;
-        b=YKUQdaBbggWW6llIQTJxlrtrnqsyXplrQDdDUNJHbpsAcIB2ml073JtDPuknhQ25To
-         X0b0jh80UPZ/YXbi4B9Z6xzv5bBYVs7tD7nmc21q7a3Qx4I7xvpCaImxvIJTVXVRUpAq
-         MVS+AHVq75/Ph0hOQn/jL6c1nIqYtCerq5Vsa+etZY0Dz5ALh1MjY4u90FvIyG95n4xv
-         uPD+hTWmiMAdgIOgGxjRP7fLYcHQ5IbxY+zYZkYRrAm1+4cYzHKA9ZPodJthRM5Am/H2
-         T8HXJVqxfhVAU4kPyU1/hCmw5fFW2vHAG5vhUoG1QNoHN6meJjBBPC8c0DJXPQNDzwrj
-         uiNg==
+        Fri, 21 Feb 2020 06:28:45 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1582284524;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:
+         content-transfer-encoding:content-transfer-encoding;
+        bh=leGu2vftUGPfPVaePqQJmsHbI2GoxR4hxMsr03GFDDo=;
+        b=L0No1NMUH9CXR/ma94DUDVVGvBpmuk0OnyCWKuugVW4eKQsIEviAglHM9tLtDYJ4ZKRLJp
+        JPh0Ps9EhskdB3MnkWUeJSRLjt14NVir2TL7vLsmQ/usef7LsfprUYcMiCFRkHop/MHJ5E
+        xQvGb6RaoNxoBmR3dNuCbsdxQ5C519w=
+Received: from mail-wm1-f69.google.com (mail-wm1-f69.google.com
+ [209.85.128.69]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-407-jTVogeYDMPCklHbtZOJxSw-1; Fri, 21 Feb 2020 06:28:43 -0500
+X-MC-Unique: jTVogeYDMPCklHbtZOJxSw-1
+Received: by mail-wm1-f69.google.com with SMTP id 7so483889wmf.9
+        for <linux-kernel@vger.kernel.org>; Fri, 21 Feb 2020 03:28:42 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
          :content-transfer-encoding;
-        bh=MmlIuWAhG574pRgwa2zTd9boc50vLeKyqoHfRi2itEU=;
-        b=rEx5/RDSBfVz3GjXowtyo6tEegUVbpuMwydJZodViG2PRIm4BE8Tw+qBMEk0P8LI3n
-         HJX88C6Tq+5qB+OCm5Gg3BKIOtmgXnZe32cD0akvCjRyTJVwO/T4LI2ko/SigscyHhLl
-         7hlSK6x4eY4Lu0/hBLgQheHiru3o8fm8prGV1YOzkCYwRcHi3FsOcogBC64cJoq15PtE
-         f6wIlEvt3rD27kBHwbFAI86xRx7ekC+bsvSn6NAmiSh9TC4/sIJk+tJ00Bl76CilS0XW
-         ig+n6D9M3vXdCcqLx/p6U/5okPBojad2Ub/kn4C+DVrTnlZojxG9TTKhyIsSaTFaFv1Y
-         /kGA==
-X-Gm-Message-State: APjAAAXggfHPM225r0dpG/HQom1dhGAEDapDTiueXD2TV5c1mLCbczIg
-        3KCCF9OHU4qOhOSgc3iHvJjXew==
-X-Google-Smtp-Source: APXvYqxlRq13BDDwBEWuDJjB0z/6G0z+UyZMu7ABeU3PZHVzjkvsXbK8jMbIsdAUZkjltC03HpdAbw==
-X-Received: by 2002:a05:6000:1206:: with SMTP id e6mr21158926wrx.410.1582284502523;
-        Fri, 21 Feb 2020 03:28:22 -0800 (PST)
-Received: from [192.168.1.23] ([91.143.66.155])
-        by smtp.gmail.com with ESMTPSA id a13sm3591825wrp.93.2020.02.21.03.28.21
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 21 Feb 2020 03:28:22 -0800 (PST)
-Subject: Re: [PATCH bpf-next v2 3/5] bpftool: Update documentation of "bpftool
- feature" command
-To:     Michal Rostecki <mrostecki@opensuse.org>, bpf@vger.kernel.org
-Cc:     Alexei Starovoitov <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Martin KaFai Lau <kafai@fb.com>,
-        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
-        Andrii Nakryiko <andriin@fb.com>,
-        Jakub Kicinski <kuba@kernel.org>, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Shuah Khan <shuah@kernel.org>,
-        "open list:KERNEL SELFTEST FRAMEWORK" 
-        <linux-kselftest@vger.kernel.org>
-References: <20200221031702.25292-1-mrostecki@opensuse.org>
- <20200221031702.25292-4-mrostecki@opensuse.org>
-From:   Quentin Monnet <quentin@isovalent.com>
-Message-ID: <85e7fcf3-0ad3-28e3-ef6f-a19669fd6c7f@isovalent.com>
-Date:   Fri, 21 Feb 2020 11:28:21 +0000
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.5.0
+        bh=leGu2vftUGPfPVaePqQJmsHbI2GoxR4hxMsr03GFDDo=;
+        b=kCQfylcEelqH/TsBPVV/26yOqSFLBF43d3bfshU9+epnpK/j9AJ/dLkIK1SeKmKHcr
+         +mOotzP0dIJFzpsE0Z5aESuveX2GTML244E6Hoc+f8+x7RQNB5y8iDUo4hmMmc1UaPnD
+         4trozxb2/JZ6sx+pKAMarK7LO34+uEwv1xOLyW3fi9b8pmYxvIBuhX4xmM/GYtnMEi7h
+         dLCsuYMFBfg59e83QDEBHfspOQbCetJIYn+J3PA5DzDLv1NKtw5H7C9R0CymmxqwqSGW
+         TjV271zRhx74GvrnA+I2L62JH4PMPu22E7WJljTldzWY/PIzo5siRNayfSJnB8lIPhHp
+         MIPA==
+X-Gm-Message-State: APjAAAXRFktHoESfqYY32C0MN7/OZA4mADf23YMreJWjrfs33GGiNC15
+        1DhvX94jMV3caJ17pTDBg+NoMEPTWHQCgDqJ9RhfcxebwPgW50FWTKWOMmqglhhVjlpjdJjjv61
+        RZvgxLEO776YjxyYxntS1Jdf2
+X-Received: by 2002:a5d:538e:: with SMTP id d14mr50171475wrv.358.1582284521809;
+        Fri, 21 Feb 2020 03:28:41 -0800 (PST)
+X-Google-Smtp-Source: APXvYqxpigxZVCabTqXi0Dp83mSJlYtrChLQUry58+gL+r8n8CHFpPJ+m2ty2tYlWkrhlbzsM2FfGA==
+X-Received: by 2002:a5d:538e:: with SMTP id d14mr50171449wrv.358.1582284521543;
+        Fri, 21 Feb 2020 03:28:41 -0800 (PST)
+Received: from mcroce-redhat.mxp.redhat.com (nat-pool-mxp-t.redhat.com. [149.6.153.186])
+        by smtp.gmail.com with ESMTPSA id a26sm3408087wmm.18.2020.02.21.03.28.40
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 21 Feb 2020 03:28:41 -0800 (PST)
+From:   Matteo Croce <mcroce@redhat.com>
+To:     netdev@vger.kernel.org, linux-security-module@vger.kernel.org
+Cc:     linux-kernel@vger.kernel.org, Paul Moore <paul@paul-moore.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Alexey Kuznetsov <kuznet@ms2.inr.ac.ru>,
+        Hideaki YOSHIFUJI <yoshfuji@linux-ipv6.org>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Guillaume Nault <gnault@redhat.com>,
+        Eric Dumazet <eric.dumazet@gmail.com>
+Subject: [PATCH net] ipv4: ensure rcu_read_lock() in cipso_v4_error()
+Date:   Fri, 21 Feb 2020 12:28:38 +0100
+Message-Id: <20200221112838.11324-1-mcroce@redhat.com>
+X-Mailer: git-send-email 2.24.1
 MIME-Version: 1.0
-In-Reply-To: <20200221031702.25292-4-mrostecki@opensuse.org>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-GB
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-2020-02-21 04:16 UTC+0100 ~ Michal Rostecki <mrostecki@opensuse.org>
-> Update documentation of "bpftool feature" command with information about
-> new arguments: "full".
-> 
-> Signed-off-by: Michal Rostecki <mrostecki@opensuse.org>
-> ---
->   .../bpf/bpftool/Documentation/bpftool-feature.rst | 15 ++++++++++-----
->   1 file changed, 10 insertions(+), 5 deletions(-)
-> 
-> diff --git a/tools/bpf/bpftool/Documentation/bpftool-feature.rst b/tools/bpf/bpftool/Documentation/bpftool-feature.rst
-> index 4d08f35034a2..2e8f66ee1e77 100644
-> --- a/tools/bpf/bpftool/Documentation/bpftool-feature.rst
-> +++ b/tools/bpf/bpftool/Documentation/bpftool-feature.rst
-> @@ -19,19 +19,24 @@ SYNOPSIS
->   FEATURE COMMANDS
->   ================
->   
-> -|	**bpftool** **feature probe** [*COMPONENT*] [**macros** [**prefix** *PREFIX*]]
-> +|	**bpftool** **feature probe** [*COMPONENT*] [**full**] [**macros** [**prefix** *PREFIX*]]
->   |	**bpftool** **feature help**
->   |
->   |	*COMPONENT* := { **kernel** | **dev** *NAME* }
->   
->   DESCRIPTION
->   ===========
-> -	**bpftool feature probe** [**kernel**] [**macros** [**prefix** *PREFIX*]]
-> +	**bpftool feature probe** [**kernel**] [**full**] [**macros** [**prefix** *PREFIX*]]
->   		  Probe the running kernel and dump a number of eBPF-related
->   		  parameters, such as availability of the **bpf()** system call,
->   		  JIT status, eBPF program types availability, eBPF helper
->   		  functions availability, and more.
->   
-> +		  By default, bpftool does not run probes for
-> +		  bpf_probe_write_user and bpf_trace_printk helpers which emit
+Similarly to commit c543cb4a5f07 ("ipv4: ensure rcu_read_lock() in
+ipv4_link_failure()"), __ip_options_compile() must be called under rcu
+protection.
 
-Please use formatting on helper function names, for readability and 
-consistency.
+Fixes: 3da1ed7ac398 ("net: avoid use IPCB in cipso_v4_error")
+Suggested-by: Guillaume Nault <gnault@redhat.com>
+Signed-off-by: Matteo Croce <mcroce@redhat.com>
+---
+ net/ipv4/cipso_ipv4.c | 7 ++++++-
+ 1 file changed, 6 insertions(+), 1 deletion(-)
 
-I would even be tempted to highlight part or all of the sentence, with 
-caps or bold, as some users may be surprised not to see those helpers in 
-the list of available helpers on their system.
-
-> +		  dmesg warnings. To enable them and run all probes, the
-> +		  **full** keyword should be used.
-> +
->   		  If the **macros** keyword (but not the **-j** option) is
->   		  passed, a subset of the output is dumped as a list of
->   		  **#define** macros that are ready to be included in a C
-> @@ -48,12 +53,12 @@ DESCRIPTION
->   		  **bpf_trace_printk**\ () or **bpf_probe_write_user**\ ()) may
->   		  print warnings to kernel logs.
-
-This should maybe be moved upwards and combined with your new paragraph?
-
->   
-> -	**bpftool feature probe dev** *NAME* [**macros** [**prefix** *PREFIX*]]
-> +	**bpftool feature probe dev** *NAME* [**full**] [**macros** [**prefix** *PREFIX*]]
->   		  Probe network device for supported eBPF features and dump
->   		  results to the console.
->   
-> -		  The two keywords **macros** and **prefix** have the same
-> -		  role as when probing the kernel.
-> +		  The keywords **full**, **macros** and **prefix** have the
-> +		  same role as when probing the kernel.
->   
->   	**bpftool feature help**
->   		  Print short help message.
-> 
+diff --git a/net/ipv4/cipso_ipv4.c b/net/ipv4/cipso_ipv4.c
+index 376882215919..0bd10a1f477f 100644
+--- a/net/ipv4/cipso_ipv4.c
++++ b/net/ipv4/cipso_ipv4.c
+@@ -1724,6 +1724,7 @@ void cipso_v4_error(struct sk_buff *skb, int error, u32 gateway)
+ {
+ 	unsigned char optbuf[sizeof(struct ip_options) + 40];
+ 	struct ip_options *opt = (struct ip_options *)optbuf;
++	int res;
+ 
+ 	if (ip_hdr(skb)->protocol == IPPROTO_ICMP || error != -EACCES)
+ 		return;
+@@ -1735,7 +1736,11 @@ void cipso_v4_error(struct sk_buff *skb, int error, u32 gateway)
+ 
+ 	memset(opt, 0, sizeof(struct ip_options));
+ 	opt->optlen = ip_hdr(skb)->ihl*4 - sizeof(struct iphdr);
+-	if (__ip_options_compile(dev_net(skb->dev), opt, skb, NULL))
++	rcu_read_lock();
++	res = __ip_options_compile(dev_net(skb->dev), opt, skb, NULL);
++	rcu_read_unlock();
++
++	if (res)
+ 		return;
+ 
+ 	if (gateway)
+-- 
+2.24.1
 
