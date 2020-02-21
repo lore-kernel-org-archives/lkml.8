@@ -5,50 +5,50 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2952DC35641
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 07:48:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 611ADC35640
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 07:48:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F05CD24650
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 07:48:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1EEE6208C4
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 07:48:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582271335;
-	bh=ekYjyNCK8N49Zy3Z98Cf9hLx+id4hjIpCRRgjkWzGX4=;
+	s=default; t=1582271339;
+	bh=7hru8cnJAo9ESKhHTHc5KphNWfsXPPMxbfD+k7yN1a8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=fFSjtSOlgARFqwhlfFa/3JE1A1USqzAabinay3rlfjO2/lwGQKJqOoGgC5978Sxl5
-	 iZlAzH8jsje9PWpmhWOfIr9DPIObwB21VEcpvh+l0IbzLxySotxzRU5y0DE9LXLPuQ
-	 4m64FCNMQk+AlznrdBLg5Dik6njnBlImNyIQiADY=
+	b=X71O3Bo9UE5MTO2eVQftZLY8giT0xdCQHUpMLSZBfA/vZ+n0FPi0obfyIIUnE+13z
+	 WUsFGSLgK0fXwZATesDs0DnOB7QeNpOQ8bd3et0zJamitR5b0f56iJMluC0KR2vfoX
+	 2bYCcYHNXBLvoZVyI1J8DQ39rcRDVFAxkEboOfGc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728595AbgBUHsx (ORCPT
+        id S1728923AbgBUHs5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Feb 2020 02:48:53 -0500
-Received: from mail.kernel.org ([198.145.29.99]:44852 "EHLO mail.kernel.org"
+        Fri, 21 Feb 2020 02:48:57 -0500
+Received: from mail.kernel.org ([198.145.29.99]:44940 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729093AbgBUHsn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Feb 2020 02:48:43 -0500
+        id S1727797AbgBUHst (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 21 Feb 2020 02:48:49 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4DDEC208C4;
-        Fri, 21 Feb 2020 07:48:42 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id EAB1D207FD;
+        Fri, 21 Feb 2020 07:48:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1582271322;
-        bh=ekYjyNCK8N49Zy3Z98Cf9hLx+id4hjIpCRRgjkWzGX4=;
+        s=default; t=1582271328;
+        bh=7hru8cnJAo9ESKhHTHc5KphNWfsXPPMxbfD+k7yN1a8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=LgdGCNCZImQ6/vdnQt0gX0AiWQlA0gunp/XXodiUwB6dfK2UeZkQmfgryZlKytwfQ
-         O9h4LX93MShEITyDNOEISLPeo/HDpnfNIqKvEkLtk0UQ6ChG/9lWY9oHFL9psQGv2h
-         Js4igHxFPK6OLY4+4mKuaAvX/yxYXcm4atX8Cx8U=
+        b=YdfT4AY156tK3gmZumrT2Ga3x1P1d1ZPUZxxFxHRZHXzgf2n7MY38a1kKQAoC1ibP
+         kvH840IcSTp1pZQPsxQi7MR7Tyw8xAy8PeENycWzueJZIlIRSpxo9kGWAWYE/o+/xv
+         lt2pXC3BnSopOcwsugZECgy09NBKcqdU6b6du5yA=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, rsiddoji@codeaurora.org,
-        Stephen Smalley <sds@tycho.nsa.gov>,
-        Paul Moore <paul@paul-moore.com>,
+        stable@vger.kernel.org, Manu Gautam <mgautam@codeaurora.org>,
+        Paolo Pisati <p.pisati@gmail.com>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.5 123/399] selinux: ensure we cleanup the internal AVC counters on error in avc_insert()
-Date:   Fri, 21 Feb 2020 08:37:28 +0100
-Message-Id: <20200221072414.435063037@linuxfoundation.org>
+Subject: [PATCH 5.5 125/399] arm64: dts: qcom: msm8996: Disable USB2 PHY suspend by core
+Date:   Fri, 21 Feb 2020 08:37:30 +0100
+Message-Id: <20200221072414.622935808@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200221072402.315346745@linuxfoundation.org>
 References: <20200221072402.315346745@linuxfoundation.org>
@@ -61,91 +61,48 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Paul Moore <paul@paul-moore.com>
+From: Manu Gautam <mgautam@codeaurora.org>
 
-[ Upstream commit d8db60cb23e49a92cf8cada3297395c7fa50fdf8 ]
+[ Upstream commit d026c96b25b7ce5df89526aad2df988d553edb4d ]
 
-Fix avc_insert() to call avc_node_kill() if we've already allocated
-an AVC node and the code fails to insert the node in the cache.
+QUSB2 PHY on msm8996 doesn't work well when autosuspend by
+dwc3 core using USB2PHYCFG register is enabled. One of the
+issue seen is that PHY driver reports PLL lock failure and
+fails phy_init() if dwc3 core has USB2 PHY suspend enabled.
+Fix this by using quirks to disable USB2 PHY LPM/suspend and
+dwc3 core already takes care of explicitly suspending PHY
+during suspend if quirks are specified.
 
-Fixes: fa1aa143ac4a ("selinux: extended permissions for ioctls")
-Reported-by: rsiddoji@codeaurora.org
-Suggested-by: Stephen Smalley <sds@tycho.nsa.gov>
-Acked-by: Stephen Smalley <sds@tycho.nsa.gov>
-Signed-off-by: Paul Moore <paul@paul-moore.com>
+Signed-off-by: Manu Gautam <mgautam@codeaurora.org>
+Signed-off-by: Paolo Pisati <p.pisati@gmail.com>
+Link: https://lore.kernel.org/r/20191209151501.26993-1-p.pisati@gmail.com
+Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- security/selinux/avc.c | 51 ++++++++++++++++++++----------------------
- 1 file changed, 24 insertions(+), 27 deletions(-)
+ arch/arm64/boot/dts/qcom/msm8996.dtsi | 4 ++++
+ 1 file changed, 4 insertions(+)
 
-diff --git a/security/selinux/avc.c b/security/selinux/avc.c
-index 23dc888ae3056..6646300f7ccb2 100644
---- a/security/selinux/avc.c
-+++ b/security/selinux/avc.c
-@@ -617,40 +617,37 @@ static struct avc_node *avc_insert(struct selinux_avc *avc,
- 	struct avc_node *pos, *node = NULL;
- 	int hvalue;
- 	unsigned long flag;
-+	spinlock_t *lock;
-+	struct hlist_head *head;
+diff --git a/arch/arm64/boot/dts/qcom/msm8996.dtsi b/arch/arm64/boot/dts/qcom/msm8996.dtsi
+index 4ca2e7b44559c..1eed3c41521ab 100644
+--- a/arch/arm64/boot/dts/qcom/msm8996.dtsi
++++ b/arch/arm64/boot/dts/qcom/msm8996.dtsi
+@@ -1602,6 +1602,8 @@
+ 				interrupts = <0 138 IRQ_TYPE_LEVEL_HIGH>;
+ 				phys = <&hsusb_phy2>;
+ 				phy-names = "usb2-phy";
++				snps,dis_u2_susphy_quirk;
++				snps,dis_enblslpm_quirk;
+ 			};
+ 		};
  
- 	if (avc_latest_notif_update(avc, avd->seqno, 1))
--		goto out;
-+		return NULL;
- 
- 	node = avc_alloc_node(avc);
--	if (node) {
--		struct hlist_head *head;
--		spinlock_t *lock;
--		int rc = 0;
--
--		hvalue = avc_hash(ssid, tsid, tclass);
--		avc_node_populate(node, ssid, tsid, tclass, avd);
--		rc = avc_xperms_populate(node, xp_node);
--		if (rc) {
--			kmem_cache_free(avc_node_cachep, node);
--			return NULL;
--		}
--		head = &avc->avc_cache.slots[hvalue];
--		lock = &avc->avc_cache.slots_lock[hvalue];
-+	if (!node)
-+		return NULL;
- 
--		spin_lock_irqsave(lock, flag);
--		hlist_for_each_entry(pos, head, list) {
--			if (pos->ae.ssid == ssid &&
--			    pos->ae.tsid == tsid &&
--			    pos->ae.tclass == tclass) {
--				avc_node_replace(avc, node, pos);
--				goto found;
--			}
-+	avc_node_populate(node, ssid, tsid, tclass, avd);
-+	if (avc_xperms_populate(node, xp_node)) {
-+		avc_node_kill(avc, node);
-+		return NULL;
-+	}
-+
-+	hvalue = avc_hash(ssid, tsid, tclass);
-+	head = &avc->avc_cache.slots[hvalue];
-+	lock = &avc->avc_cache.slots_lock[hvalue];
-+	spin_lock_irqsave(lock, flag);
-+	hlist_for_each_entry(pos, head, list) {
-+		if (pos->ae.ssid == ssid &&
-+			pos->ae.tsid == tsid &&
-+			pos->ae.tclass == tclass) {
-+			avc_node_replace(avc, node, pos);
-+			goto found;
- 		}
--		hlist_add_head_rcu(&node->list, head);
--found:
--		spin_unlock_irqrestore(lock, flag);
- 	}
--out:
-+	hlist_add_head_rcu(&node->list, head);
-+found:
-+	spin_unlock_irqrestore(lock, flag);
- 	return node;
- }
+@@ -1632,6 +1634,8 @@
+ 				interrupts = <0 131 IRQ_TYPE_LEVEL_HIGH>;
+ 				phys = <&hsusb_phy1>, <&ssusb_phy_0>;
+ 				phy-names = "usb2-phy", "usb3-phy";
++				snps,dis_u2_susphy_quirk;
++				snps,dis_enblslpm_quirk;
+ 			};
+ 		};
  
 -- 
 2.20.1
