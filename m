@@ -2,136 +2,164 @@ Return-Path: <SRS0=1210=4J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MSGID_FROM_MTA_HEADER,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F3028C11D00
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 02:27:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0E2E0C11D25
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 02:34:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B5F8220722
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 02:27:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D0ACF20722
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 02:34:03 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=amdcloud.onmicrosoft.com header.i=@amdcloud.onmicrosoft.com header.b="mxwy8Ah1"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="vLzlGE8R"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729499AbgBUC1r (ORCPT
+        id S1729539AbgBUCdv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Feb 2020 21:27:47 -0500
-Received: from mail-bn8nam11on2072.outbound.protection.outlook.com ([40.107.236.72]:6244
-        "EHLO NAM11-BN8-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1729239AbgBUC1r (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Feb 2020 21:27:47 -0500
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=fqTAeqapL5r2IzZr00+jilu5gJCOr2B5dwGv8dV0DTfDZRcf+mNn3YD4/p7KyRxiEmhw9oQGxH5HlGb+POlu7FwcQdSgtFN7RqPko25+qHQXnHkdKF7ywsXjhyxnsfmu8RhZDo1Dn4t1P++7+8ukFQ/FPkJuWS5sx/HP7QauKFIo5cCVBqplMpB3ZGXhY1Ydae/hwj4zfnHeiK/cEe0P2/Q+Bvtk2k/yZse4TMJUjmU68LN23IWHocQ8UNwOdJfDBaMR4bhIZw+kPc/7hVbqaWN5BeDqvNKU7PrJIOIbnmNYr5EUq81wwLkXyCfpFfEbhy9AQfTC0o9EPf8Xf86nlA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=qmYUffdwJvfZb9zlfHtItddsCmdtpHfl4MROZaaodbo=;
- b=MJcu5/Jj+mH40HfjrkNVg46PHq56cuaKTThHKPBRFbD3QhcmZO2/PPgndcCfcS9loFgQosrPpz1rMfMaPcn/8xIzv/hQJVTfiYmAC5SXGIyHEIown0Y82oFykOG7SWOxk1X1D50ZxaozsCxTaKwsILRYCW6Pc61+6b0IBzO5nzR9YQoMq4rSLaMa1LGoON+LXJqUnmaMfJPyeO3Ux4H8HXqaZPPU7qDD3l5KjZ+PNZz+Fkps/4uLg+KWUncwvZ53uecRebvjFpSmkrJIrNsuTlYkO/rHWk+ioXTVLmzOPs3v/KWwQtI0TXYoP+o0x7QpNHZoIzJJOj7dzCZHf0LSKg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
- header.d=amd.com; arc=none
+        Thu, 20 Feb 2020 21:33:51 -0500
+Received: from mail-qt1-f195.google.com ([209.85.160.195]:38474 "EHLO
+        mail-qt1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729268AbgBUCdu (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 20 Feb 2020 21:33:50 -0500
+Received: by mail-qt1-f195.google.com with SMTP id i23so283195qtr.5;
+        Thu, 20 Feb 2020 18:33:49 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=amdcloud.onmicrosoft.com; s=selector2-amdcloud-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=qmYUffdwJvfZb9zlfHtItddsCmdtpHfl4MROZaaodbo=;
- b=mxwy8Ah1Kr1nW5kXnbY7jc/PeokvH+cdqYiqzWojzyTlVA1bGSyid+zUJYBY7zZWH3wOU6pNNoLbEvO3lQDl91tFOdfLmMTTwaD60lixTXFki5HLmT33alinEI51zOuGohAbqEmPttZBuHNhE3fjCtZTIa1QpmhBqTkbsTwyRDk=
-Authentication-Results: spf=none (sender IP is )
- smtp.mailfrom=Suravee.Suthikulpanit@amd.com; 
-Received: from DM6PR12MB3865.namprd12.prod.outlook.com (2603:10b6:5:1c4::14)
- by DM6PR12MB3371.namprd12.prod.outlook.com (2603:10b6:5:116::27) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2729.22; Fri, 21 Feb
- 2020 02:27:44 +0000
-Received: from DM6PR12MB3865.namprd12.prod.outlook.com
- ([fe80::fdd1:4a97:85cc:d302]) by DM6PR12MB3865.namprd12.prod.outlook.com
- ([fe80::fdd1:4a97:85cc:d302%3]) with mapi id 15.20.2729.033; Fri, 21 Feb 2020
- 02:27:43 +0000
-Subject: Re: [PATCH v5 14/18] kvm: i8254: Deactivate APICv when using
- in-kernel PIT re-injection mode.
-To:     Alex Williamson <alex.williamson@redhat.com>
-Cc:     linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
-        pbonzini@redhat.com, joro@8bytes.org, vkuznets@redhat.com,
-        rkagan@virtuozzo.com, graf@amazon.com, jschoenh@amazon.de,
-        karahmed@amazon.de, rimasluk@amazon.com, jon.grimm@amd.com
-References: <1573762520-80328-1-git-send-email-suravee.suthikulpanit@amd.com>
- <1573762520-80328-15-git-send-email-suravee.suthikulpanit@amd.com>
- <20200218115135.4e09ffca@w520.home>
-From:   Suravee Suthikulpanit <suravee.suthikulpanit@amd.com>
-Message-ID: <24c6a681-df49-6dff-9688-de99faf295c9@amd.com>
-Date:   Fri, 21 Feb 2020 09:27:29 +0700
-User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:68.0)
- Gecko/20100101 Thunderbird/68.4.2
-In-Reply-To: <20200218115135.4e09ffca@w520.home>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: KL1PR01CA0043.apcprd01.prod.exchangelabs.com
- (2603:1096:820:1::31) To DM6PR12MB3865.namprd12.prod.outlook.com
- (2603:10b6:5:1c4::14)
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=CJP5LjskY0xuyHpqzi/Sp0OFSxwmRBAuuNSOyFdMDrw=;
+        b=vLzlGE8Rc4j0z0misWUTgTTV4OEkdRDWO+AGyOAJoSj3Aekh80TjcLWegGnsawrj9I
+         WnBwGlSjWApxCrR0HhHd+fbPigpt3KUTJkL0slgPyy2kxwzGMpr/NXUa1/EmCEO4mmFe
+         Z0DWzqpmfGZrVLdRB61ZzDTMXwUQMVTHJIANmqMln0U99pk6Q37pEuDXdT32cMzPt00s
+         k33BiEfASBiEXNYwx/u99yksKE5OBc5amDD74M6yNAFr4SPm9VAIqCKB308h09WLq9G7
+         GEXYcDSTY8CwZd11se0J8SNV0CEDZbOFQ6TUkAMp1ri7lqVpObNTaw/CX9KrQ34aG1Ol
+         tFsA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=CJP5LjskY0xuyHpqzi/Sp0OFSxwmRBAuuNSOyFdMDrw=;
+        b=nNrLox/tN54UM6KhbYeJiBQBCfFNCFMponIQbOCf/xi/vU0tCW03lwdeTd4Zg+/H6P
+         Tg/U9pLK0M8guamqrDhvdWOf2RNuusFeNQ4IkjkgYjESTbeGuJY74YSND8idlaZPrFxh
+         3+52ehM2lVhYTzrcapvhpCNRISLG5FHAyF25+uRaGRC+6Ro219LY7F7H6x0850dHicIG
+         OV/IZH82D4nhN0wzom3D1AO9Mb91GI3HQ83WrlnSbqottVj9ffHbOZGZH75rDbOJHe2D
+         OKDDELAn1UeeoeGvX8AQaFHLr69NMrr24uXnbz1DdgdLH8V8ZpuAk3G/Ff4ONM+v5cc7
+         H7yw==
+X-Gm-Message-State: APjAAAUT664yx/bFARZ4mTrGmSQlHYTA2+eXUiLKGIqmsFQI6xGyLEdK
+        +Pfp9oPafGBhgpiBTxCOPhY=
+X-Google-Smtp-Source: APXvYqxIHEQ+62I6c+ag0k9JoRxOaDsRZzdEfqlnCP5h4FV+YOdpMGvAhHMNcxyWGGM8xrfVruWfrA==
+X-Received: by 2002:aed:2a87:: with SMTP id t7mr29337838qtd.384.1582252429515;
+        Thu, 20 Feb 2020 18:33:49 -0800 (PST)
+Received: from auth2-smtp.messagingengine.com (auth2-smtp.messagingengine.com. [66.111.4.228])
+        by smtp.gmail.com with ESMTPSA id d185sm856433qkf.46.2020.02.20.18.33.48
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Thu, 20 Feb 2020 18:33:48 -0800 (PST)
+Received: from compute6.internal (compute6.nyi.internal [10.202.2.46])
+        by mailauth.nyi.internal (Postfix) with ESMTP id 5BE4021D25;
+        Thu, 20 Feb 2020 21:33:48 -0500 (EST)
+Received: from mailfrontend2 ([10.202.2.163])
+  by compute6.internal (MEProxy); Thu, 20 Feb 2020 21:33:48 -0500
+X-ME-Sender: <xms:ikFPXtagK57hemUqoQlkFvR8aR50EYdz22yZX_7m5XF_FxEN7-7z3w>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedugedrkeefgdeglecutefuodetggdotefrodftvf
+    curfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfghnecu
+    uegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenog
+    fuohhrthgvugftvggtihhpvdculdegtddmnecujfgurhepfffhvffukfhfgggtuggjseht
+    tdertddttddvnecuhfhrohhmpeeuohhquhhnucfhvghnghcuoegsohhquhhnrdhfvghngh
+    esghhmrghilhdrtghomheqnecuffhomhgrihhnpehkvghrnhgvlhdrohhrghenucfkphep
+    hedvrdduheehrdduuddurdejudenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmh
+    epmhgrihhlfhhrohhmpegsohhquhhnodhmvghsmhhtphgruhhthhhpvghrshhonhgrlhhi
+    thihqdeiledvgeehtdeigedqudejjeekheehhedvqdgsohhquhhnrdhfvghngheppehgmh
+    grihhlrdgtohhmsehfihigmhgvrdhnrghmvg
+X-ME-Proxy: <xmx:ikFPXnEUx8DUlerkl2WWSsKabLCwb-_JYU5cTdVquUfecPfxQEWLUw>
+    <xmx:ikFPXtdnhSmUpQdDUDatVLhkB8tIiRVmMlF-Noq2i38RWHsyNXDBIQ>
+    <xmx:ikFPXiDTcEmm7s_E1MjjprD8QgQF5ipsX5CHHgrK3sWQC_RFgtA8Fg>
+    <xmx:jEFPXgRwIIGl24hMjO5CE6WSMOeRJMzP8iCe0tf51uw8uwqwTPv2YzWi_xs>
+Received: from localhost (unknown [52.155.111.71])
+        by mail.messagingengine.com (Postfix) with ESMTPA id 58B213060F09;
+        Thu, 20 Feb 2020 21:33:46 -0500 (EST)
+Date:   Fri, 21 Feb 2020 10:33:44 +0800
+From:   Boqun Feng <boqun.feng@gmail.com>
+To:     linux-pci@vger.kernel.org, linux-hyperv@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Cc:     Michael Kelley <mikelley@microsoft.com>,
+        "K. Y. Srinivasan" <kys@microsoft.com>,
+        Haiyang Zhang <haiyangz@microsoft.com>,
+        Stephen Hemminger <sthemmin@microsoft.com>,
+        Sasha Levin <sashal@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        "H. Peter Anvin" <hpa@zytor.com>, x86@kernel.org,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Andrew Murray <andrew.murray@arm.com>,
+        Bjorn Helgaas <bhelgaas@google.com>
+Subject: Re: [PATCH v3 0/3] PCI: hv: Generify pci-hyperv.c
+Message-ID: <20200221023344.GJ69864@debian-boqun.qqnc3lrjykvubdpftowmye0fmh.lx.internal.cloudapp.net>
+References: <20200210033953.99692-1-boqun.feng@gmail.com>
 MIME-Version: 1.0
-Received: from Suravees-MacBook-Pro.local (165.204.80.7) by KL1PR01CA0043.apcprd01.prod.exchangelabs.com (2603:1096:820:1::31) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2750.18 via Frontend Transport; Fri, 21 Feb 2020 02:27:39 +0000
-X-Originating-IP: [165.204.80.7]
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-HT: Tenant
-X-MS-Office365-Filtering-Correlation-Id: 1348f071-1fe1-4e63-d963-08d7b675a116
-X-MS-TrafficTypeDiagnostic: DM6PR12MB3371:|DM6PR12MB3371:
-X-MS-Exchange-Transport-Forked: True
-X-Microsoft-Antispam-PRVS: <DM6PR12MB337119A5AAFE90B08D72203AF3120@DM6PR12MB3371.namprd12.prod.outlook.com>
-X-MS-Oob-TLC-OOBClassifiers: OLM:288;
-X-Forefront-PRVS: 0320B28BE1
-X-Forefront-Antispam-Report: SFV:NSPM;SFS:(10009020)(4636009)(366004)(39850400004)(346002)(396003)(136003)(376002)(199004)(189003)(31696002)(2616005)(956004)(66556008)(6916009)(86362001)(8676002)(7416002)(16526019)(66946007)(81156014)(81166006)(66476007)(52116002)(316002)(44832011)(53546011)(8936002)(6506007)(36756003)(478600001)(6486002)(26005)(5660300002)(31686004)(6512007)(186003)(45080400002)(6666004)(2906002)(966005)(4326008);DIR:OUT;SFP:1101;SCL:1;SRVR:DM6PR12MB3371;H:DM6PR12MB3865.namprd12.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
-Received-SPF: None (protection.outlook.com: amd.com does not designate
- permitted sender hosts)
-X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: raHkWBW+oi/Jbd1KGoBAKWq4Wv9jOnpEUpc1m7wHJiKvIKmsmGBn6MzkB/GgTrdE3TlhGDOgV2xrIcqJzbJSmn4via/23GZv0Z1ePneqwqiX5fZfE1fc1sHgwbBbRVCrCx5/oP2gM1MW6TeTiSM1q10mWYMyGDbxeBtl9/+BnMhJRh6Mb6xdfBPlbauO7BvFlLGUqoEeqzyiqS8asya8cJco8TSqhLVLtPRw8Dj1ZxoBnou3t23WW7h8yJrB+l61Isx8+JrffZ9sKFbbAB5BL3ehY+HJ2wiQH9puL/63l4JNH/9vVy58GVrGidHhV1fx5TIJ2P4qGSesFHW/ZwOzXBJ9q6bKl8r9b4IG3GbachIJhDPrM4qxhGpC1qs0H5y1cCvsyzhy8DQXa4RTzDC/TzMdeIhaiG44jS9gYPfcRvKJTXqduw+QBVvrqqxuh/3cCToCMN0N33/+iRChFMDzP36d+Lgg2lIE7jxO/XS5mAbdCAkfOKL8xR2S58ysLbQOEdEVyajsS9CViHVqYvGdpA==
-X-MS-Exchange-AntiSpam-MessageData: xQlcmEW2G4V9ZTZZljd7U+SZQ4NDsYqfcAs80L0qarT1bqtkeSGMjchttlzjGaL/KHPEb8TYznGXhww5I5LDN+Gk2wE11S2Pm3hfA8DhMhxdNuXsVM4PzNA5ZlieV7n1pdoHiGTK4i648DmrpXsJVw==
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 1348f071-1fe1-4e63-d963-08d7b675a116
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 21 Feb 2020 02:27:43.5297
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: I0jIlUaJB2FDaKmrT2GbnhXomqQm3hhoP4t9sjeIoN68g4W2ddfaKo3nKWk/uLSA5PpDzd5hSxe0y3z0vG4FVw==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM6PR12MB3371
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200210033953.99692-1-boqun.feng@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Alex,
+Ping ;-)
 
-On 2/19/20 1:51 AM, Alex Williamson wrote:
-> On Thu, 14 Nov 2019 14:15:16 -0600
-> Suravee Suthikulpanit <suravee.suthikulpanit@amd.com> wrote:
-> 
->> AMD SVM AVIC accelerates EOI write and does not trap. This causes
->> in-kernel PIT re-injection mode to fail since it relies on irq-ack
->> notifier mechanism. So, APICv is activated only when in-kernel PIT
->> is in discard mode e.g. w/ qemu option:
->>
->>    -global kvm-pit.lost_tick_policy=discard
->>
->> Also, introduce APICV_INHIBIT_REASON_PIT_REINJ bit to be used for this
->> reason.
->>
->> Suggested-by: Paolo Bonzini <pbonzini@redhat.com>
->> Signed-off-by: Suravee Suthikulpanit <suravee.suthikulpanit@amd.com>
->> ---
-> 
+Any suggestion or plan on this patchset?
+
+Thanks and Regards,
+Boqun
+
+On Mon, Feb 10, 2020 at 11:39:50AM +0800, Boqun Feng wrote:
 > Hi,
 > 
-> I've bisected https://nam11.safelinks.protection.outlook.com/?url=https%3A%2F%2Fbugzilla.kernel.org%2Fshow_bug.cgi%3Fid%3D206579&amp;data=02%7C01%7Csuravee.suthikulpanit%40amd.com%7C4d26019120374670e2ec08d7b4a39d9f%7C3dd8961fe4884e608e11a82d994e183d%7C0%7C0%7C637176487135073269&amp;sdata=Yp1ZSoOxVphXyd60gerlaJkOF67r65emQZ4zhc%2BLFy4%3D&amp;reserved=0 (a
-> kernel NULL pointer deref when using device assigned on AMD platforms)
-> to this commit, e2ed4078a6ef3ddf4063329298852e24c36d46c8.  My VM is a
-> very basic libvirt managed domain with an assigned NIC, I don't even
-> have an OS installed:
-
-Thanks for the bisect information. I'm currently working on reproducing this issue. On your system are you enabling AVIC 
-(e.g. modprobe kvm_amd avic=1)?
-
-Suravee
+> This is the first part for virtual PCI support of Hyper-V guest on
+> ARM64. The whole patchset doesn't have any functional change, but only
+> refactors the pci-hyperv.c code to make it more arch-independent.
+> 
+> Previous version:
+> v1: https://lore.kernel.org/lkml/20200121015713.69691-1-boqun.feng@gmail.com/
+> v2: https://lore.kernel.org/linux-arm-kernel/20200203050313.69247-1-boqun.feng@gmail.com/
+> 
+> Changes since v2:
+> 
+> *	Rebased on 5.6-rc1
+> 
+> *	Reword commit logs as per Andrew's suggestion.
+> 
+> *	It makes more sense to have a generic interface to set the whole
+> 	msi_entry rather than only the "address" field. So change
+> 	hv_set_msi_address_from_desc() to hv_set_msi_entry_from_desc().
+> 	Additionally, make it an inline function as per the suggestion
+> 	of Andrew and Thomas.
+> 
+> *	Add the missing comment saying the partition_id of
+> 	hv_retarget_device_interrupt must be self.
+> 
+> *	Add the explanation for why "__packed" is needed for TLFS
+> 	structures.
+> 
+> I've done compile and boot test of this patchset, also done some tests
+> with a pass-through NVMe device.
+> 
+> Suggestions and comments are welcome!
+> 
+> Regards,
+> Boqun
+> 
+> Boqun Feng (3):
+>   PCI: hv: Move hypercall related definitions into tlfs header
+>   PCI: hv: Move retarget related structures into tlfs header
+>   PCI: hv: Introduce hv_msi_entry
+> 
+>  arch/x86/include/asm/hyperv-tlfs.h  | 41 +++++++++++++++++++++++++++
+>  arch/x86/include/asm/mshyperv.h     |  8 ++++++
+>  drivers/pci/controller/pci-hyperv.c | 43 ++---------------------------
+>  3 files changed, 52 insertions(+), 40 deletions(-)
+> 
+> -- 
+> 2.24.1
+> 
