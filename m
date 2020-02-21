@@ -2,145 +2,120 @@ Return-Path: <SRS0=1210=4J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C20BFC35656
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 15:24:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B0F40C35646
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 15:24:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9888320679
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 15:24:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8896220679
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 15:24:05 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="pdGu78qA"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729183AbgBUPYB (ORCPT
+        id S1729207AbgBUPYE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Feb 2020 10:24:01 -0500
-Received: from mga03.intel.com ([134.134.136.65]:13619 "EHLO mga03.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728405AbgBUPYB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Feb 2020 10:24:01 -0500
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from fmsmga008.fm.intel.com ([10.253.24.58])
-  by orsmga103.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 21 Feb 2020 07:23:59 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.70,468,1574150400"; 
-   d="scan'208";a="230458771"
-Received: from sjchrist-coffee.jf.intel.com (HELO linux.intel.com) ([10.54.74.202])
-  by fmsmga008.fm.intel.com with ESMTP; 21 Feb 2020 07:23:58 -0800
-Date:   Fri, 21 Feb 2020 07:23:58 -0800
-From:   Sean Christopherson <sean.j.christopherson@intel.com>
-To:     linmiaohe <linmiaohe@huawei.com>
-Cc:     pbonzini@redhat.com, rkrcmar@redhat.com, vkuznets@redhat.com,
-        wanpengli@tencent.com, jmattson@google.com, joro@8bytes.org,
-        tglx@linutronix.de, mingo@redhat.com, bp@alien8.de, hpa@zytor.com,
-        kvm@vger.kernel.org, linux-kernel@vger.kernel.org, x86@kernel.org
-Subject: Re: [PATCH] KVM: X86: eliminate some meaningless code
-Message-ID: <20200221152358.GC12665@linux.intel.com>
-References: <1582293926-23388-1-git-send-email-linmiaohe@huawei.com>
+        Fri, 21 Feb 2020 10:24:04 -0500
+Received: from mail-pl1-f196.google.com ([209.85.214.196]:46352 "EHLO
+        mail-pl1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729187AbgBUPYC (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 21 Feb 2020 10:24:02 -0500
+Received: by mail-pl1-f196.google.com with SMTP id y8so964846pll.13
+        for <linux-kernel@vger.kernel.org>; Fri, 21 Feb 2020 07:24:02 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=/D8p3umAJnu2Rmie5wIDoJw/XtMw5bg4kYLl7SwrZqU=;
+        b=pdGu78qAVOal10Sy3Z0B22mZC2QD6KvLq0XrW0D4SXBwjRLWx2x65aL9uy4xbnVU0w
+         2yaacYhHhoU0hioia4BuUt1RKp4bj/LgGQsjpefcv9ITHNwI/dIfBK/Is7cnePaxqrfv
+         iTNFn6u+XCJTNHLNFOoxyKHDMfsnEUaa/p5DXRlcPvngtraX1n7+rYdosLE7SdTrPQar
+         8nYpIoW18oDr/sCviGKKJczzHMJB/jkuyjjNloiOZMFZySqSN9HeNODLnBCFTtaA1IDT
+         74OIE0ljfjFznWa1YAFI1nX1Vz0bTjlDCzTwOLqVc8p25Uj4EbWbz5FLuyE0plRi0b/D
+         YeXA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=/D8p3umAJnu2Rmie5wIDoJw/XtMw5bg4kYLl7SwrZqU=;
+        b=dHTsndevOU4yC46Xrg7Cw4ECDHdNTyqd731tY6GpP0+U1DVwKsEx9jgq/ItkXDi5kO
+         +GMtraAgK4Nfc+AYvIWytYqJIXfx52VbEAxPceMyCxvGXcifq+Ingf//rHQHdLBfabjs
+         b2AnvppiO8BdVYC0jDPMUTgcHBYH5OXLmqKWFZYcwZJShrorBTDniR6S0+0rm9vLBj3r
+         A6AUtepciyjDsXOeyh15E9yivMJocLuoLlmKTgSY1GxbdJXSBNxJujyvTashp5z3H15u
+         X5N9YzpCWLL9WSu+3/zJIog4TSyNrqHihYPyy2JhMRVS/PrdcLCx8glxzG0ht4AedbQ9
+         K5HQ==
+X-Gm-Message-State: APjAAAVQpylLnKnsan0DkmirJMbNdiriBW51wy//w+U0wdAyUPPumW0K
+        RDzGpdA9ME9RcDRow9/p4PVPU09aVBM=
+X-Google-Smtp-Source: APXvYqzz2U0DluWCLZiEeBReOXghgMu20G6wGfpeQL0V8X5eQAZa1JPH7eSPTdL15MsjFBlcZ/gAJQ==
+X-Received: by 2002:a17:90a:d80b:: with SMTP id a11mr3747256pjv.142.1582298641501;
+        Fri, 21 Feb 2020 07:24:01 -0800 (PST)
+Received: from localhost.localdomain ([103.87.57.170])
+        by smtp.googlemail.com with ESMTPSA id w128sm1588394pgb.55.2020.02.21.07.23.58
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 21 Feb 2020 07:24:01 -0800 (PST)
+From:   Amol Grover <frextrite@gmail.com>
+To:     Eric Dumazet <edumazet@google.com>,
+        "David S . Miller" <davem@davemloft.net>,
+        Alexey Kuznetsov <kuznet@ms2.inr.ac.ru>,
+        Hideaki YOSHIFUJI <yoshfuji@linux-ipv6.org>,
+        Jakub Kicinski <kuba@kernel.org>
+Cc:     linux-kernel@vger.kernel.org,
+        linux-kernel-mentees@lists.linuxfoundation.org,
+        Joel Fernandes <joel@joelfernandes.org>,
+        Madhuparna Bhowmik <madhuparnabhowmik10@gmail.com>,
+        "Paul E . McKenney" <paulmck@kernel.org>,
+        Amol Grover <frextrite@gmail.com>
+Subject: [PATCH] tcp: ipv4: Pass lockdep expression to RCU lists
+Date:   Fri, 21 Feb 2020 20:51:54 +0530
+Message-Id: <20200221152152.16685-1-frextrite@gmail.com>
+X-Mailer: git-send-email 2.24.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1582293926-23388-1-git-send-email-linmiaohe@huawei.com>
-User-Agent: Mutt/1.5.24 (2015-08-30)
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Feb 21, 2020 at 10:05:26PM +0800, linmiaohe wrote:
-> From: Miaohe Lin <linmiaohe@huawei.com>
-> 
-> When kvm_vcpu_ioctl_get_cpuid2() fails, we set cpuid->nent to the value of
-> vcpu->arch.cpuid_nent. But this is in vain as cpuid->nent is not copied to
-> userspace by copy_to_user() from call site. Get rid of this meaningless
-> assignment and further cleanup the var r and out jump label.
+md5sig->head maybe traversed using hlist_for_each_entry_rcu
+outside an RCU read-side critical section but under the protection
+of socket lock.
 
-Ha, took me a while to see that.
+Hence, add corresponding lockdep expression to silence false-positive
+warnings, and harden RCU lists.
+
+Signed-off-by: Amol Grover <frextrite@gmail.com>
+---
+ net/ipv4/tcp_ipv4.c | 6 ++++--
+ 1 file changed, 4 insertions(+), 2 deletions(-)
+
+diff --git a/net/ipv4/tcp_ipv4.c b/net/ipv4/tcp_ipv4.c
+index 1c7326e04f9b..6519429f32cd 100644
+--- a/net/ipv4/tcp_ipv4.c
++++ b/net/ipv4/tcp_ipv4.c
+@@ -1000,7 +1000,8 @@ struct tcp_md5sig_key *__tcp_md5_do_lookup(const struct sock *sk,
+ 	if (!md5sig)
+ 		return NULL;
  
-> On the other hand, when kvm_vcpu_ioctl_get_cpuid2() succeeds, we do not
-> change the content of struct cpuid. We can avoid copy_to_user() from call
-> site as struct cpuid remain unchanged.
-> 
-> Signed-off-by: Miaohe Lin <linmiaohe@huawei.com>
-> ---
->  arch/x86/kvm/cpuid.c | 14 ++++----------
->  arch/x86/kvm/x86.c   |  6 ------
->  2 files changed, 4 insertions(+), 16 deletions(-)
-> 
-> diff --git a/arch/x86/kvm/cpuid.c b/arch/x86/kvm/cpuid.c
-> index b1c469446b07..b83cedc63328 100644
-> --- a/arch/x86/kvm/cpuid.c
-> +++ b/arch/x86/kvm/cpuid.c
-> @@ -265,20 +265,14 @@ int kvm_vcpu_ioctl_get_cpuid2(struct kvm_vcpu *vcpu,
->  			      struct kvm_cpuid2 *cpuid,
->  			      struct kvm_cpuid_entry2 __user *entries)
->  {
-> -	int r;
-> -
-> -	r = -E2BIG;
->  	if (cpuid->nent < vcpu->arch.cpuid_nent)
-> -		goto out;
-> -	r = -EFAULT;
-> +		return -E2BIG;
-> +
->  	if (copy_to_user(entries, &vcpu->arch.cpuid_entries,
->  			 vcpu->arch.cpuid_nent * sizeof(struct kvm_cpuid_entry2)))
-> -		goto out;
-> -	return 0;
+-	hlist_for_each_entry_rcu(key, &md5sig->head, node) {
++	hlist_for_each_entry_rcu(key, &md5sig->head, node,
++				 lockdep_sock_is_held(sk)) {
+ 		if (key->family != family)
+ 			continue;
+ 
+@@ -1043,7 +1044,8 @@ static struct tcp_md5sig_key *tcp_md5_do_lookup_exact(const struct sock *sk,
+ 	if (family == AF_INET6)
+ 		size = sizeof(struct in6_addr);
+ #endif
+-	hlist_for_each_entry_rcu(key, &md5sig->head, node) {
++	hlist_for_each_entry_rcu(key, &md5sig->head, node,
++				 lockdep_sock_is_held(sk)) {
+ 		if (key->family != family)
+ 			continue;
+ 		if (!memcmp(&key->addr, addr, size) &&
+-- 
+2.24.1
 
-Hmm, so this ioctl() is straight up broken.  cpuid->nent should be updated
-on success so that userspace knows how many entries were retrieved, i.e.
-the code should look something like below, with kvm_arch_vcpu_ioctl()
-unchanged.
-
-I'm guessing no VMM actually uses this ioctl(), e.g. neither Qemu or CrosVM
-use it, which is why the broken behavior has gone unnoticed.  Don't suppose
-you'd want to write a selftest to hammer KVM_{SET,GET}_CPUID2?
-
-int kvm_vcpu_ioctl_get_cpuid2(struct kvm_vcpu *vcpu,
-                              struct kvm_cpuid2 *cpuid,
-                              struct kvm_cpuid_entry2 __user *entries)
-{
-        if (cpuid->nent < vcpu->arch.cpuid_nent)
-                return -E2BIG;
-
-        if (copy_to_user(entries, &vcpu->arch.cpuid_entries,
-                         vcpu->arch.cpuid_nent * sizeof(struct kvm_cpuid_entry2)))
-                return -EFAULT;
-
-	cpuid->nent = vcpu->arch.cpuid_nent;
-
-        return 0;
-}
-
-> +		return -EFAULT;
->  
-> -out:
-> -	cpuid->nent = vcpu->arch.cpuid_nent;
-> -	return r;
-> +	return 0;
->  }
->  
->  static __always_inline void cpuid_mask(u32 *word, int wordnum)
-> diff --git a/arch/x86/kvm/x86.c b/arch/x86/kvm/x86.c
-> index fbabb2f06273..683c54e7be36 100644
-> --- a/arch/x86/kvm/x86.c
-> +++ b/arch/x86/kvm/x86.c
-> @@ -4295,12 +4295,6 @@ long kvm_arch_vcpu_ioctl(struct file *filp,
->  			goto out;
->  		r = kvm_vcpu_ioctl_get_cpuid2(vcpu, &cpuid,
->  					      cpuid_arg->entries);
-> -		if (r)
-> -			goto out;
-> -		r = -EFAULT;
-> -		if (copy_to_user(cpuid_arg, &cpuid, sizeof(cpuid)))
-> -			goto out;
-> -		r = 0;
->  		break;
->  	}
->  	case KVM_GET_MSRS: {
-> -- 
-> 2.19.1
-> 
