@@ -2,94 +2,122 @@ Return-Path: <SRS0=1210=4J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 44BDDC35646
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 13:41:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D20C3C35647
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 13:43:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 18C61208C4
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 13:41:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A727F208C4
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 13:43:18 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="rvJIlx2N"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="jJsGXarV"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728425AbgBUNlf (ORCPT
+        id S1728299AbgBUNnR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Feb 2020 08:41:35 -0500
-Received: from mail-io1-f67.google.com ([209.85.166.67]:37583 "EHLO
-        mail-io1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727470AbgBUNle (ORCPT
+        Fri, 21 Feb 2020 08:43:17 -0500
+Received: from us-smtp-1.mimecast.com ([205.139.110.61]:58556 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1727161AbgBUNnQ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Feb 2020 08:41:34 -0500
-Received: by mail-io1-f67.google.com with SMTP id k24so2398776ioc.4
-        for <linux-kernel@vger.kernel.org>; Fri, 21 Feb 2020 05:41:34 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=jSKO1I3J8u4PED9xsWOVY1usxpEpUW0ahQemP6DdxxI=;
-        b=rvJIlx2N7gz+Yjaibh7a778aPGsgTGzHjVgX3Yy/ttvlC68iHyUFzaQjjB7z7oOLrN
-         5mI5gIxe77P7+vGisHdLQ/RBAUSlqRTKA3yO23zOzwQboA2TK5v3KtQYx2v8JOwmBhcs
-         Ko4ZjNaKDs6JNLJ3IFvp/uTsOH1Fu4CSxxBcOu4kT769SRXrg77mYsbT0ZtnkDmblYGL
-         PypqpjkWhQdciLDnPigraUZpezG24Wvc6Rxajjh7XjoCwwu9+V3JzROs/6P8F6+x8Vhr
-         oNI4ocq4K+ZU/ayH/C82GNWTBrTfcN8K6KZEgN/WaIAiU0W4t/8OcypD8tQ9+hVqSVvN
-         Na3w==
+        Fri, 21 Feb 2020 08:43:16 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1582292594;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=jxnMeM03TNX5Hwe3Ya5c3ghPkANO7e19ew4skX/ljXI=;
+        b=jJsGXarVtSN3t61tqx4KYdRKbVXw1U3MbNiQUktOdvurecOY98SPYdoa1Tv0KSJCUFEfMd
+        DdHHHh7dAT91ll/f8YzJGa60KfTr62r3B2X3jH4v26DTi9Pkj56qetMzbB7dd4nT675MSl
+        aOtV3NQjQt+zAen05W39yh5N+Q8kFiw=
+Received: from mail-wm1-f69.google.com (mail-wm1-f69.google.com
+ [209.85.128.69]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-378-THPZF0GgOWezd4wu21-qww-1; Fri, 21 Feb 2020 08:43:13 -0500
+X-MC-Unique: THPZF0GgOWezd4wu21-qww-1
+Received: by mail-wm1-f69.google.com with SMTP id f66so585576wmf.9
+        for <linux-kernel@vger.kernel.org>; Fri, 21 Feb 2020 05:43:13 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=jSKO1I3J8u4PED9xsWOVY1usxpEpUW0ahQemP6DdxxI=;
-        b=cXLeIn4ypZY9LE9WjlsTs27guJaog27i1hpFge/UwkJ478RnVFiQ7EgFHy1Q60zKLB
-         cDkjOJQSoC1medWylv4U4GQer5YlaK2NfzbiwXSu2ntpbwrVj54jHcDgHSeXoDpQfCet
-         s80xQY92apunCDfSD2CzHBpZ8E4OgnIen7Ym7MFQ6XDL6gZPB8JJwWvDNMcZ+XLZ0GRf
-         t0moSBuOKU5zS0HzPRl/cIh0YowcaiuIt8QvkLZLE+raqcXrsmVkziKlPFLUA1SNIXEt
-         lGGO+2B5cCEuoIrLKdHO4ZbFvmEEcwFW+qb8sJ0VGNX0bKxP3JxpetzMDI7AxC+yWAa8
-         SMfw==
-X-Gm-Message-State: APjAAAVWidqVJB1U4vRyFQUCyB8JtuPp6uL5TnSkELN/LXT/etDDFhs0
-        JtEy1j+BmBp1tweciX5pJYkOilL+u8VJea+U3A==
-X-Google-Smtp-Source: APXvYqz/qSrL6QBxpsETxKTK/IocLUif3N5rMDEFXByJx3KTErL5aVyQvlDuKFJHKSScmslacqVP/eU/PJzTiXO8Lxw=
-X-Received: by 2002:a6b:7d01:: with SMTP id c1mr31219001ioq.172.1582292494105;
- Fri, 21 Feb 2020 05:41:34 -0800 (PST)
+        h=x-gm-message-state:from:to:cc:subject:in-reply-to:references:date
+         :message-id:mime-version;
+        bh=jxnMeM03TNX5Hwe3Ya5c3ghPkANO7e19ew4skX/ljXI=;
+        b=LuMEdFfjLfLdk6VvvLvGBtbONKNqxkuLKJp3pcFpvxUyJ6iOXFKqCTrbm+e9IhWR0V
+         uriKyHKgQeZlv19Yq5CCDa6f1vv/kpb6TJb4CmgeZMSEwPPYH0v1PKIoEHyJpvBbW1+9
+         Fux+TaC0BtXyFnLHv3sA0+TUh59u/Vq4G24xkkPPcARhujPPyYAYlErTe3BTHvh2faEm
+         ONMWbNG+mXCp4xShOTFaof/e+TYzLyQvwiOFLGp4yi8LR58Memrd0Kl2hJ/NsW/COUM6
+         +TZmGRpvHLoaOIYqz/jlFCs8mWPctkg4CClDy/danFi3zgfVpQ67hbe9udJ6g+WRPPnD
+         E2PQ==
+X-Gm-Message-State: APjAAAXi1VaT6k5zxyMGItqnWcy/itvjEuBFLZ6QzdcP6KDLEgdjiuOz
+        wplWAaRmV+0c7j/xCaxB7kSieZaEMm03uKL5I+3Iigw6z89wVimpweWiMws5mfw7I/0g3t2kENi
+        cRewqPh7Dg2FBYhunxeSf7raK
+X-Received: by 2002:a5d:62d1:: with SMTP id o17mr50232130wrv.9.1582292589889;
+        Fri, 21 Feb 2020 05:43:09 -0800 (PST)
+X-Google-Smtp-Source: APXvYqwYjfMp0GXLA0Adtce96YFtLai3dGPE9oQ19+qhhnyjr/+5T/nNg1RRP70iIAwzi8r4Uxbw6w==
+X-Received: by 2002:a5d:62d1:: with SMTP id o17mr50232104wrv.9.1582292589636;
+        Fri, 21 Feb 2020 05:43:09 -0800 (PST)
+Received: from vitty.brq.redhat.com (nat-pool-brq-t.redhat.com. [213.175.37.10])
+        by smtp.gmail.com with ESMTPSA id h18sm4214888wrv.78.2020.02.21.05.43.08
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 21 Feb 2020 05:43:09 -0800 (PST)
+From:   Vitaly Kuznetsov <vkuznets@redhat.com>
+To:     Sean Christopherson <sean.j.christopherson@intel.com>
+Cc:     Paolo Bonzini <pbonzini@redhat.com>,
+        Wanpeng Li <wanpengli@tencent.com>,
+        Jim Mattson <jmattson@google.com>,
+        Joerg Roedel <joro@8bytes.org>, kvm@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 05/10] KVM: nVMX: Use vpid_sync_vcpu_addr() to emulate INVVPID with address
+In-Reply-To: <20200220204356.8837-6-sean.j.christopherson@intel.com>
+References: <20200220204356.8837-1-sean.j.christopherson@intel.com> <20200220204356.8837-6-sean.j.christopherson@intel.com>
+Date:   Fri, 21 Feb 2020 14:43:08 +0100
+Message-ID: <87wo8grr83.fsf@vitty.brq.redhat.com>
 MIME-Version: 1.0
-References: <20200221050934.719152-1-brgerst@gmail.com> <20200221050934.719152-3-brgerst@gmail.com>
- <20200221070704.GF3368@light.dominikbrodowski.net>
-In-Reply-To: <20200221070704.GF3368@light.dominikbrodowski.net>
-From:   Brian Gerst <brgerst@gmail.com>
-Date:   Fri, 21 Feb 2020 08:41:23 -0500
-Message-ID: <CAMzpN2hL=K9GVg91esHQwm+3LdG00X164k4qFn=HOwSev56DUg@mail.gmail.com>
-Subject: Re: [PATCH 2/5] x86: Move 32-bit compat syscalls to common location
-To:     Dominik Brodowski <linux@dominikbrodowski.net>
-Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        "the arch/x86 maintainers" <x86@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@kernel.org>, Borislav Petkov <bp@alien8.de>,
-        "H . Peter Anvin" <hpa@zytor.com>,
-        Andy Lutomirski <luto@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Feb 21, 2020 at 2:07 AM Dominik Brodowski
-<linux@dominikbrodowski.net> wrote:
->
-> On Fri, Feb 21, 2020 at 12:09:31AM -0500, Brian Gerst wrote:
-> > --- a/arch/x86/kernel/Makefile
-> > +++ b/arch/x86/kernel/Makefile
-> > @@ -57,6 +57,8 @@ obj-y                       += setup.o x86_init.o i8259.o irqinit.o
-> >  obj-$(CONFIG_JUMP_LABEL)     += jump_label.o
-> >  obj-$(CONFIG_IRQ_WORK)  += irq_work.o
-> >  obj-y                        += probe_roms.o
-> > +obj-$(CONFIG_X86_32) += sys_ia32.o
-> > +obj-$(CONFIG_IA32_EMULATION) += sys_ia32.o
->
-> That doesn't look nicely...
+Sean Christopherson <sean.j.christopherson@intel.com> writes:
 
-Do you have a better suggestion?  That's similar to how tls.o is
-already handled.
+> Use vpid_sync_vcpu_addr() to emulate the "individual address" variant of
+> INVVPID now that said function handles the fallback case of the (host)
+> CPU not supporting "individual address".
+>
+> Note, the "vpid == 0" checks in the vpid_sync_*() helpers aren't
+> actually redundant with the "!operand.vpid" check in handle_invvpid(),
+> as the vpid passed to vpid_sync_vcpu_addr() is a KVM (host) controlled
+> value, i.e. vpid02 can be zero even if operand.vpid is non-zero.
+>
+> No functional change intended.
+>
+> Signed-off-by: Sean Christopherson <sean.j.christopherson@intel.com>
+> ---
+>  arch/x86/kvm/vmx/nested.c | 6 +-----
+>  1 file changed, 1 insertion(+), 5 deletions(-)
+>
+> diff --git a/arch/x86/kvm/vmx/nested.c b/arch/x86/kvm/vmx/nested.c
+> index 19ac4083667f..5a174be314e5 100644
+> --- a/arch/x86/kvm/vmx/nested.c
+> +++ b/arch/x86/kvm/vmx/nested.c
+> @@ -5150,11 +5150,7 @@ static int handle_invvpid(struct kvm_vcpu *vcpu)
+>  		    is_noncanonical_address(operand.gla, vcpu))
+>  			return nested_vmx_failValid(vcpu,
+>  				VMXERR_INVALID_OPERAND_TO_INVEPT_INVVPID);
+> -		if (cpu_has_vmx_invvpid_individual_addr()) {
+> -			__invvpid(VMX_VPID_EXTENT_INDIVIDUAL_ADDR,
+> -				vpid02, operand.gla);
+> -		} else
+> -			vpid_sync_context(vpid02);
+> +		vpid_sync_vcpu_addr(vpid02, operand.gla);
+>  		break;
+>  	case VMX_VPID_EXTENT_SINGLE_CONTEXT:
+>  	case VMX_VPID_EXTENT_SINGLE_NON_GLOBAL:
 
---
-Brian Gerst
+Reviewed-by: Vitaly Kuznetsov <vkuznets@redhat.com>
+
+-- 
+Vitaly
+
