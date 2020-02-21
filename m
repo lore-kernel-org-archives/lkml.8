@@ -2,107 +2,95 @@ Return-Path: <SRS0=1210=4J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E16A9C35656
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 16:15:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A50ECC35657
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 16:16:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B3435222C4
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 16:15:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7C02F2073A
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 16:16:40 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="f9irWj4u"
+	dkim=pass (2048-bit key) header.d=kernel-dk.20150623.gappssmtp.com header.i=@kernel-dk.20150623.gappssmtp.com header.b="v5lA5xSH"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729562AbgBUQPM (ORCPT
+        id S1728299AbgBUQQj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Feb 2020 11:15:12 -0500
-Received: from bombadil.infradead.org ([198.137.202.133]:37366 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728477AbgBUQPM (ORCPT
+        Fri, 21 Feb 2020 11:16:39 -0500
+Received: from mail-pj1-f67.google.com ([209.85.216.67]:52041 "EHLO
+        mail-pj1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727213AbgBUQQi (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Feb 2020 11:15:12 -0500
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
-        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=V0WqPcL6jrlYy8Mri95pqh4xedop9zZfTO34Rah7SYQ=; b=f9irWj4ufDQFWVbNGC73W/ZfOM
-        Nxxuktp95Uu1vTujHzYPLF59FPwbQywNuskqcMt8Pjkgyb7UDraJI9d00Mf5PXGahuOT+b6Yan4U/
-        Bcyg0DAlaiatLQvxxkZaHC2wvbR4hmRZWvBs237dWTy/+uHpECEP+YJLiUx4Xv+BDVk8EtpcjB4Dd
-        Q9kw6vLv74K8OpPZMR3QBMBIxCHKkZtDox90dvZVNU84p1/lDi+54jhUklpiM2ljt6/rKc1gfBSc8
-        Ibob/Oz+pjv4ya2DKnZaIcNkJSL4+T/mu8vHSd9iXrgXcfbrX7vnamkSPSSz7SySeo9Lx/y4FHBw5
-        s/CkTe8g==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
-        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1j5Awx-0005fX-FO; Fri, 21 Feb 2020 16:14:47 +0000
-Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (Client did not present a certificate)
-        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 26D0A3070F9;
-        Fri, 21 Feb 2020 17:12:52 +0100 (CET)
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id 72FE02B26B89D; Fri, 21 Feb 2020 17:14:45 +0100 (CET)
-Date:   Fri, 21 Feb 2020 17:14:45 +0100
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     linux-kernel@vger.kernel.org, linux-arch@vger.kernel.org,
-        rostedt@goodmis.org
-Cc:     mingo@kernel.org, joel@joelfernandes.org,
-        gregkh@linuxfoundation.org, gustavo@embeddedor.com,
-        tglx@linutronix.de, paulmck@kernel.org, josh@joshtriplett.org,
-        mathieu.desnoyers@efficios.com, jiangshanlai@gmail.com,
-        luto@kernel.org, tony.luck@intel.com, frederic@kernel.org,
-        dan.carpenter@oracle.com, mhiramat@kernel.org
-Subject: Re: [PATCH v4 03/27] x86/entry: Flip _TIF_SIGPENDING and
- _TIF_NOTIFY_RESUME handling
-Message-ID: <20200221161445.GQ14879@hirez.programming.kicks-ass.net>
-References: <20200221133416.777099322@infradead.org>
- <20200221134215.206604505@infradead.org>
+        Fri, 21 Feb 2020 11:16:38 -0500
+Received: by mail-pj1-f67.google.com with SMTP id fa20so947838pjb.1
+        for <linux-kernel@vger.kernel.org>; Fri, 21 Feb 2020 08:16:37 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=kernel-dk.20150623.gappssmtp.com; s=20150623;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=/D/bCVh04fEfVjE3l+u65ysQqtalkQRAJeGslkh2Jlk=;
+        b=v5lA5xSH7LDA9vQ/4iVjZB56ndgIrMqEWa+q30hZWOaB/8Yk/iSra60oBQabsvw47c
+         ysRjVU22aBNfvLA3yMfqeAAHfjgG9NR7ExBkYgXCJ9AbqsALQs2aiVR0mWyqOujxdrPB
+         B4G/HL+CN0NmAEbRK0fxR8XnK1fPc40icdwd0PThc13FaZYozszyViIB3x3Hv1sJNllp
+         hZlOSVd/Kgm8e9y5V8hPpkz7XVdHbcfYsNDONcj2W0q/c20z72Yyl4WC9CiYJ+5xSqjn
+         iW1h6CaFaBDi3UWsNS1fPMgevOdnKbT2199lDkFRcATJelHZPTJN6Pb7vQa2Iott0OC0
+         0z4g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=/D/bCVh04fEfVjE3l+u65ysQqtalkQRAJeGslkh2Jlk=;
+        b=CXtUhLSfy1HFIr1KVjF9GwsfwVaE7ZH0H3uT9v53jcziAScHVHe1AYxhXAXExftYpl
+         yK227hnGSTQ953eNgp3rEp4LK5JRUJqrE6Rtziu0LYlTXqgKv1GQV/PTMNWu4gLlPvzp
+         vjBtA2cZVv4ARqBYHbGo/AhPbldJ0GpE6pKI9q3pdcMk2F9hpzgIUTYe6A3ay/5gI+wS
+         efvavn4baTC9QAycU5UJdkNFoEmGnT5OZ8eFDzHM9YlY1Pkw0JkeErT20qla8gxrbO4R
+         8RsptnipbZGHhkE8B7oR58c4AuZuxTSgi3qduvyXGezZtPspw6lWj6nFTeHLX9VXwkXX
+         kcVg==
+X-Gm-Message-State: APjAAAXuhEG7e7O+AStFa2AXTX73z5MMtHHWYD8I8Q4Y75IzZQ2VrjgP
+        qpc9ogcC7vMNOvElX5Ssjl200Q==
+X-Google-Smtp-Source: APXvYqycgYJ4Gzgbgcdcjq4J1ha4aIIHC2rr4MArvDn2fxyjV0Vy9hm/THa0WI1QyjDVYz+V64EmYA==
+X-Received: by 2002:a17:90a:858a:: with SMTP id m10mr3942252pjn.117.1582301797198;
+        Fri, 21 Feb 2020 08:16:37 -0800 (PST)
+Received: from ?IPv6:2605:e000:100e:8c61:91ff:e31e:f68d:32a9? ([2605:e000:100e:8c61:91ff:e31e:f68d:32a9])
+        by smtp.gmail.com with ESMTPSA id b18sm3380479pfb.116.2020.02.21.08.16.35
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 21 Feb 2020 08:16:36 -0800 (PST)
+Subject: Re: [PATCH] io_uring: prevent sq_thread from spinning when it should
+ stop
+To:     Stefano Garzarella <sgarzare@redhat.com>
+Cc:     linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        Hannes Reinecke <hare@suse.com>, io-uring@vger.kernel.org
+References: <20200221154216.206367-1-sgarzare@redhat.com>
+From:   Jens Axboe <axboe@kernel.dk>
+Message-ID: <916f5b1f-1e01-dfe6-7049-113e7175b66a@kernel.dk>
+Date:   Fri, 21 Feb 2020 08:16:33 -0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200221134215.206604505@infradead.org>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20200221154216.206367-1-sgarzare@redhat.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Feb 21, 2020 at 02:34:19PM +0100, Peter Zijlstra wrote:
-> Make sure we run task_work before we hit any kind of userspace -- very
-> much including signals.
+On 2/21/20 8:42 AM, Stefano Garzarella wrote:
+> This patch drops 'cur_mm' before calling cond_resched(), to prevent
+> the sq_thread from spinning even when the user process is finished.
 > 
-> Suggested-by: Andy Lutomirski <luto@kernel.org>
-> Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-> ---
->  arch/x86/entry/common.c                   |    8 
->  usr/src/linux-2.6/arch/x86/entry/common.c |  440 ------------------------------
->  2 files changed, 4 insertions(+), 444 deletions(-)
+> Before this patch, if the user process ended without closing the
+> io_uring fd, the sq_thread continues to spin until the
+> 'sq_thread_idle' timeout ends.
 > 
-> --- a/arch/x86/entry/common.c
-> +++ b/arch/x86/entry/common.c
-> @@ -155,16 +155,16 @@ static void exit_to_usermode_loop(struct
->  		if (cached_flags & _TIF_PATCH_PENDING)
->  			klp_update_patch_state(current);
->  
-> -		/* deal with pending signal delivery */
-> -		if (cached_flags & _TIF_SIGPENDING)
-> -			do_signal(regs);
-> -
->  		if (cached_flags & _TIF_NOTIFY_RESUME) {
->  			clear_thread_flag(TIF_NOTIFY_RESUME);
->  			tracehook_notify_resume(regs);
->  			rseq_handle_notify_resume(NULL, regs);
->  		}
->  
-> +		/* deal with pending signal delivery */
-> +		if (cached_flags & _TIF_SIGPENDING)
-> +			do_signal(regs);
-> +
+> In the worst case where the 'sq_thread_idle' parameter is bigger than
+> INT_MAX, the sq_thread will spin forever.
 
-For giggles, I just found:
+Thanks, applied.
 
-	do_signal()
-	  get_signal()
-	    task_work_run()
+-- 
+Jens Axboe
 
