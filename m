@@ -7,48 +7,47 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 151CEC35641
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 08:48:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 69495C35641
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 08:48:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DFD5D2071E
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 08:48:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3EF3A206DB
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 08:48:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582274900;
-	bh=YHz7O6G/jmkaVCvMuEpPsNeQD/iCyedN0ScyPG8tI5s=;
+	s=default; t=1582274906;
+	bh=I6NtYLAPNib460xwCVxXUT8qx07WuH0UxST/BdX8blg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=MAKjUM4qLWHM0u8yKAtga6rf6fvUZ8ODnuXDrTkJcb6Ef9MKNld6nW2/uQhuybXuT
-	 d84mECViSQIfw1tigWVhSZw8gZp0YlxEgnUU1uw3hJrlRoWuj63IjO2eUaGrC0T7IW
-	 kDnis7YzNVRHcnboCCy/uBhp8sCtYNJN5l8aXPUw=
+	b=1h8i9mipt6Y0ZpucijVuf9XtY3Zfifri1W773mrMEk9bXCtxXhVUQVvWbaX9gyNyG
+	 z5rtOqQT3UctRk9iD09g3BByYsfQ6FXiOT6uqjUrBAki6tun0/ywzFBBKGjLBkxjWf
+	 59dQmi1QWWBpCBfKuuVInaCdOUMiRJ4SkpWctg2I=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728860AbgBUHrJ (ORCPT
+        id S2387743AbgBUIsY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Feb 2020 02:47:09 -0500
-Received: from mail.kernel.org ([198.145.29.99]:42766 "EHLO mail.kernel.org"
+        Fri, 21 Feb 2020 03:48:24 -0500
+Received: from mail.kernel.org ([198.145.29.99]:42878 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728829AbgBUHrC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Feb 2020 02:47:02 -0500
+        id S1728389AbgBUHrH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 21 Feb 2020 02:47:07 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 35A5524676;
-        Fri, 21 Feb 2020 07:47:01 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3E90024650;
+        Fri, 21 Feb 2020 07:47:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1582271221;
-        bh=YHz7O6G/jmkaVCvMuEpPsNeQD/iCyedN0ScyPG8tI5s=;
+        s=default; t=1582271226;
+        bh=I6NtYLAPNib460xwCVxXUT8qx07WuH0UxST/BdX8blg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=TNysK6CfZxjRTIM3lkvUxMnOlLkVA2YYGCGGHVsXRbxG7HqnCp4lYr85+b8CMExQ6
-         5o21D+RVDjecB6iv3KlRw/ngGuLcF86uJargXyWzg6ryRfWTXUs7U5nT7wvTTcefBq
-         zjyVi8PKu50Ro4UN7lirxjMqk6eSVLQLjhEYr3Qw=
+        b=HzlgMZud36xM76U7VQexBxusJraGwT+gsC0kYpI7RzN78ISWyeQNP+CrysAUzZA1c
+         aLSohVxhZbtKdA6F2l+3A68MnZG7lVMOq326ZJZCopAptUlyMrby8/bFfzEeF9AD2c
+         Wt3rB51pFewQai0060t2jdX+7U7ep8g7nb2/1A1U=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Vincenzo Frascino <vincenzo.frascino@arm.com>,
-        Russell King <rmk+kernel@armlinux.org.uk>,
+        stable@vger.kernel.org, Rakesh Pillai <pillair@codeaurora.org>,
+        Kalle Valo <kvalo@codeaurora.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.5 085/399] ARM: 8952/1: Disable kmemleak on XIP kernels
-Date:   Fri, 21 Feb 2020 08:36:50 +0100
-Message-Id: <20200221072410.601248586@linuxfoundation.org>
+Subject: [PATCH 5.5 087/399] ath10k: Correct the DMA direction for management tx buffers
+Date:   Fri, 21 Feb 2020 08:36:52 +0100
+Message-Id: <20200221072410.803417902@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200221072402.315346745@linuxfoundation.org>
 References: <20200221072402.315346745@linuxfoundation.org>
@@ -61,52 +60,55 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Vincenzo Frascino <vincenzo.frascino@arm.com>
+From: Rakesh Pillai <pillair@codeaurora.org>
 
-[ Upstream commit bc420c6ceefbb86cbbc8c00061bd779c17fa6997 ]
+[ Upstream commit 6ba8b3b6bd772f575f7736c8fd893c6981fcce16 ]
 
-Kmemleak relies on specific symbols to register the read only data
-during init (e.g. __start_ro_after_init).
-Trying to build an XIP kernel on arm results in the linking error
-reported below because when this option is selected read only data
-after init are not allowed since .data is read only (.rodata).
+The management packets, send to firmware via WMI, are
+mapped using the direction DMA_TO_DEVICE. Currently in
+case of wmi cleanup, these buffers are being unmapped
+using an incorrect DMA direction. This can cause unwanted
+behavior when the host driver is handling a restart
+of the wlan firmware.
 
-  arm-linux-gnueabihf-ld: mm/kmemleak.o: in function `kmemleak_init':
-  kmemleak.c:(.init.text+0x148): undefined reference to `__end_ro_after_init'
-  arm-linux-gnueabihf-ld: kmemleak.c:(.init.text+0x14c):
-     undefined reference to `__end_ro_after_init'
-  arm-linux-gnueabihf-ld: kmemleak.c:(.init.text+0x150):
-     undefined reference to `__start_ro_after_init'
-  arm-linux-gnueabihf-ld: kmemleak.c:(.init.text+0x156):
-     undefined reference to `__start_ro_after_init'
-  arm-linux-gnueabihf-ld: kmemleak.c:(.init.text+0x162):
-     undefined reference to `__start_ro_after_init'
-  arm-linux-gnueabihf-ld: kmemleak.c:(.init.text+0x16a):
-     undefined reference to `__start_ro_after_init'
-  linux/Makefile:1078: recipe for target 'vmlinux' failed
+We might see a trace like below
 
-Fix the issue enabling kmemleak only on non XIP kernels.
+[<ffffff8008098b18>] __dma_inv_area+0x28/0x58
+[<ffffff8001176734>] ath10k_wmi_mgmt_tx_clean_up_pending+0x60/0xb0 [ath10k_core]
+[<ffffff80088c7c50>] idr_for_each+0x78/0xe4
+[<ffffff80011766a4>] ath10k_wmi_detach+0x4c/0x7c [ath10k_core]
+[<ffffff8001163d7c>] ath10k_core_stop+0x58/0x68 [ath10k_core]
+[<ffffff800114fb74>] ath10k_halt+0xec/0x13c [ath10k_core]
+[<ffffff8001165110>] ath10k_core_restart+0x11c/0x1a8 [ath10k_core]
+[<ffffff80080c36bc>] process_one_work+0x16c/0x31c
 
-Signed-off-by: Vincenzo Frascino <vincenzo.frascino@arm.com>
-Signed-off-by: Russell King <rmk+kernel@armlinux.org.uk>
+Fix the incorrect DMA direction during the wmi
+management tx buffer cleanup.
+
+Tested HW: WCN3990
+Tested FW: WLAN.HL.3.1-00784-QCAHLSWMTPLZ-1
+
+Fixes: dc405152bb6 ("ath10k: handle mgmt tx completion event")
+Signed-off-by: Rakesh Pillai <pillair@codeaurora.org>
+Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm/Kconfig | 2 +-
+ drivers/net/wireless/ath/ath10k/wmi.c | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/arch/arm/Kconfig b/arch/arm/Kconfig
-index 96dab76da3b39..2c3a9fd05f571 100644
---- a/arch/arm/Kconfig
-+++ b/arch/arm/Kconfig
-@@ -74,7 +74,7 @@ config ARM
- 	select HAVE_CONTEXT_TRACKING
- 	select HAVE_COPY_THREAD_TLS
- 	select HAVE_C_RECORDMCOUNT
--	select HAVE_DEBUG_KMEMLEAK
-+	select HAVE_DEBUG_KMEMLEAK if !XIP_KERNEL
- 	select HAVE_DMA_CONTIGUOUS if MMU
- 	select HAVE_DYNAMIC_FTRACE if !XIP_KERNEL && !CPU_ENDIAN_BE32 && MMU
- 	select HAVE_DYNAMIC_FTRACE_WITH_REGS if HAVE_DYNAMIC_FTRACE
+diff --git a/drivers/net/wireless/ath/ath10k/wmi.c b/drivers/net/wireless/ath/ath10k/wmi.c
+index 9f564e2b7a148..214d65108b294 100644
+--- a/drivers/net/wireless/ath/ath10k/wmi.c
++++ b/drivers/net/wireless/ath/ath10k/wmi.c
+@@ -9476,7 +9476,7 @@ static int ath10k_wmi_mgmt_tx_clean_up_pending(int msdu_id, void *ptr,
+ 
+ 	msdu = pkt_addr->vaddr;
+ 	dma_unmap_single(ar->dev, pkt_addr->paddr,
+-			 msdu->len, DMA_FROM_DEVICE);
++			 msdu->len, DMA_TO_DEVICE);
+ 	ieee80211_free_txskb(ar->hw, msdu);
+ 
+ 	return 0;
 -- 
 2.20.1
 
