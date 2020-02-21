@@ -2,56 +2,53 @@ Return-Path: <SRS0=1210=4J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 667A7C35646
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 12:58:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D4E31C35646
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 12:59:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2B78124650
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 12:58:03 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582289883;
-	bh=JfuMqEvxzqjs+LoLa/shLMP2qrszBuyjaIxCwTpw2+4=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=LJrMq92EKFE+traRMItw3OYFvMt6+RpZMpZ/SvyjgOBqjz/xTIrHnpRki3TtCS2bZ
-	 ux5q1KfrEve2p49wEbbUPPY5ylzo+sq33xV1ba5swlgYq3ss5YePiGoNq48f3uuIjZ
-	 7IX67e/CpoKEfPPwMK2cFpucU5sesNw2H8Ni3Qa0=
+	by mail.kernel.org (Postfix) with ESMTP id B1FDC206EF
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 12:59:18 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728344AbgBUM6C (ORCPT
+        id S1727973AbgBUM7R (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Feb 2020 07:58:02 -0500
-Received: from mail.kernel.org ([198.145.29.99]:37680 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727161AbgBUM6B (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Feb 2020 07:58:01 -0500
-Received: from archlinux (cpc149474-cmbg20-2-0-cust94.5-4.cable.virginm.net [82.4.196.95])
+        Fri, 21 Feb 2020 07:59:17 -0500
+Received: from bhuna.collabora.co.uk ([46.235.227.227]:57956 "EHLO
+        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727039AbgBUM7R (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 21 Feb 2020 07:59:17 -0500
+Received: from localhost (unknown [IPv6:2a01:e0a:2c:6930:5cf4:84a1:2763:fe0d])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 45449206EF;
-        Fri, 21 Feb 2020 12:57:59 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1582289880;
-        bh=JfuMqEvxzqjs+LoLa/shLMP2qrszBuyjaIxCwTpw2+4=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=ZqRgXg35D+cF6afTGRZtl/9kbo4xhDiCu/4GdaipVEk5amfKSMNH8spd7uJu7PNUo
-         qIohjCv80Xxsy0flIDoB1M+2tgqGzJJ8zQZtFNcKNMu3SS9yeiqWYRqTBuHMVME8po
-         NmJmnYoJMMty6lbuL0FrBqDLufzx3r4OeZ7kki1w=
-Date:   Fri, 21 Feb 2020 12:57:56 +0000
-From:   Jonathan Cameron <jic23@kernel.org>
-To:     Alexandru Ardelean <alexandru.ardelean@analog.com>
-Cc:     <linux-kernel@vger.kernel.org>, <linux-iio@vger.kernel.org>,
-        <devicetree@vger.kernel.org>, <robh+dt@kernel.org>,
-        Michael Hennerich <michael.hennerich@analog.com>,
-        Lars-Peter Clausen <lars@metafoo.de>
-Subject: Re: [PATCH 4/5] iio: adc: ad9467: add support AD9467 ADC
-Message-ID: <20200221125756.77e1e098@archlinux>
-In-Reply-To: <20200220150317.1864-4-alexandru.ardelean@analog.com>
-References: <20200220150317.1864-1-alexandru.ardelean@analog.com>
-        <20200220150317.1864-4-alexandru.ardelean@analog.com>
-X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        (Authenticated sender: bbrezillon)
+        by bhuna.collabora.co.uk (Postfix) with ESMTPSA id 726AC29617A;
+        Fri, 21 Feb 2020 12:59:14 +0000 (GMT)
+Date:   Fri, 21 Feb 2020 13:59:11 +0100
+From:   Boris Brezillon <boris.brezillon@collabora.com>
+To:     Greg KH <gregkh@linuxfoundation.org>
+Cc:     Vitor Soares <Vitor.Soares@synopsys.com>,
+        Jose Abreu <Jose.Abreu@synopsys.com>,
+        "corbet@lwn.net" <corbet@lwn.net>,
+        Joao Pinto <Joao.Pinto@synopsys.com>,
+        "arnd@arndb.de" <arnd@arndb.de>,
+        "wsa@the-dreams.de" <wsa@the-dreams.de>,
+        "bbrezillon@kernel.org" <bbrezillon@kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "broonie@kernel.org" <broonie@kernel.org>,
+        "linux-i3c@lists.infradead.org" <linux-i3c@lists.infradead.org>
+Subject: Re: [PATCH v3 3/5] i3c: master: add i3c_for_each_dev helper
+Message-ID: <20200221135911.1300170b@collabora.com>
+In-Reply-To: <20200221115229.GA116368@kroah.com>
+References: <cover.1582069402.git.vitor.soares@synopsys.com>
+        <868e5b37fd817b65e6953ed7279f5063e5fc06c5.1582069402.git.vitor.soares@synopsys.com>
+        <20200219073548.GA2728338@kroah.com>
+        <CH2PR12MB4216D5141E562974634430B8AE120@CH2PR12MB4216.namprd12.prod.outlook.com>
+        <20200221115229.GA116368@kroah.com>
+Organization: Collabora
+X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; x86_64-redhat-linux-gnu)
 MIME-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
@@ -60,563 +57,69 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 20 Feb 2020 17:03:16 +0200
-Alexandru Ardelean <alexandru.ardelean@analog.com> wrote:
+On Fri, 21 Feb 2020 12:52:29 +0100
+Greg KH <gregkh@linuxfoundation.org> wrote:
 
-> From: Michael Hennerich <michael.hennerich@analog.com>
+> On Fri, Feb 21, 2020 at 11:47:22AM +0000, Vitor Soares wrote:
+> > Hi Greg,
+> > 
+> > From: Greg KH <gregkh@linuxfoundation.org>
+> > Date: Wed, Feb 19, 2020 at 07:35:48
+> >   
+> > > On Wed, Feb 19, 2020 at 01:20:41AM +0100, Vitor Soares wrote:  
+> > > > Introduce i3c_for_each_dev(), an i3c device iterator for use by i3cdev.
+> > > > 
+> > > > Signed-off-by: Vitor Soares <vitor.soares@synopsys.com>
+> > > > ---
+> > > >  drivers/i3c/internals.h |  1 +
+> > > >  drivers/i3c/master.c    | 12 ++++++++++++
+> > > >  2 files changed, 13 insertions(+)
+> > > > 
+> > > > diff --git a/drivers/i3c/internals.h b/drivers/i3c/internals.h
+> > > > index bc062e8..a6deedf 100644
+> > > > --- a/drivers/i3c/internals.h
+> > > > +++ b/drivers/i3c/internals.h
+> > > > @@ -24,4 +24,5 @@ int i3c_dev_enable_ibi_locked(struct i3c_dev_desc *dev);
+> > > >  int i3c_dev_request_ibi_locked(struct i3c_dev_desc *dev,
+> > > >  			       const struct i3c_ibi_setup *req);
+> > > >  void i3c_dev_free_ibi_locked(struct i3c_dev_desc *dev);
+> > > > +int i3c_for_each_dev(void *data, int (*fn)(struct device *, void *));
+> > > >  #endif /* I3C_INTERNAL_H */
+> > > > diff --git a/drivers/i3c/master.c b/drivers/i3c/master.c
+> > > > index 21c4372..8e22da2 100644
+> > > > --- a/drivers/i3c/master.c
+> > > > +++ b/drivers/i3c/master.c
+> > > > @@ -2640,6 +2640,18 @@ void i3c_dev_free_ibi_locked(struct i3c_dev_desc *dev)
+> > > >  	dev->ibi = NULL;
+> > > >  }
+> > > >  
+> > > > +int i3c_for_each_dev(void *data, int (*fn)(struct device *, void *))
+> > > > +{
+> > > > +	int res;
+> > > > +
+> > > > +	mutex_lock(&i3c_core_lock);
+> > > > +	res = bus_for_each_dev(&i3c_bus_type, NULL, data, fn);
+> > > > +	mutex_unlock(&i3c_core_lock);  
+> > > 
+> > > Ick, why the lock?  Are you _sure_ you need that?  The core should
+> > > handle any list locking issues here, right?  
+> > 
+> > I want to make sure that no new devices (eg: Hot-Join capable device) are 
+> > added during this iteration and after this call, each new device will 
+> > release a bus notification.
+> >   
+> > > 
+> > > I don't see bus-specific-locks around other subsystem functions that do
+> > > this (like usb_for_each_dev).  
+> > 
+> > I based in I2C use case.  
 > 
-> The AD9467 is a 16-bit, monolithic, IF sampling analog-to-digital converter
-> (ADC). It is optimized for high performanceover wide bandwidths and ease of
-> use. The product operates at a 250 MSPS conversion rate and is designed for
-> wireless receivers, instrumentation, and test equipment that require a high
-> dynamic range. The ADC requires 1.8 V and 3.3 V power supplies and a low
-> voltage differential input clock for full performance operation. No
-> external reference or driver components are required for many applications.
-> Data outputs are LVDS compatible (ANSI-644 compatible) and include the
-> means to reduce the overall current needed for short trace distances.
-> 
-> Since the chip can operate at such high sample-rates (much higher than
-> classical interfaces), it requires that a DMA controller be used to
-> interface directly to the chip and push data into memory.
-> Typically, the AXI ADC IP core is used to interface with it.
-> 
-> Link: https://www.analog.com/media/en/technical-documentation/data-sheets/AD9467.pdf
-> 
-> Signed-off-by: Lars-Peter Clausen <lars@metafoo.de>
-> Signed-off-by: Michael Hennerich <michael.hennerich@analog.com>
-> Signed-off-by: Alexandru Ardelean <alexandru.ardelean@analog.com>
+> Check to see if this is really needed, for some reason I doubt it...
 
-A few minor things inline.
-
-Jonathan
-> ---
->  drivers/iio/adc/Kconfig  |  15 ++
->  drivers/iio/adc/Makefile |   1 +
->  drivers/iio/adc/ad9467.c | 447 +++++++++++++++++++++++++++++++++++++++
->  3 files changed, 463 insertions(+)
->  create mode 100644 drivers/iio/adc/ad9467.c
-> 
-> diff --git a/drivers/iio/adc/Kconfig b/drivers/iio/adc/Kconfig
-> index 6cd48a256122..229b8bc6f9b6 100644
-> --- a/drivers/iio/adc/Kconfig
-> +++ b/drivers/iio/adc/Kconfig
-> @@ -246,6 +246,21 @@ config AD799X
->  	  To compile this driver as a module, choose M here: the module will be
->  	  called ad799x.
->  
-> +config AD9467
-> +	tristate "Analog Devices AD9467 High Speed ADC driver"
-> +	depends on SPI
-> +	select AXI_ADC
-> +	help
-> +	  Say yes here to build support for Analog Devices:
-> +	  * AD9467 16-Bit, 200 MSPS/250 MSPS Analog-to-Digital Converter
-> +
-> +	  The driver requires the assistance of the AXI ADC IP core to operate,
-> +	  since SPI is used for configuration only, while data has to be
-> +	  streamed into memory via DMA.
-> +
-> +	  To compile this driver as a module, choose M here: the module will be
-> +	  called ad9467.
-> +
->  config ASPEED_ADC
->  	tristate "Aspeed ADC"
->  	depends on ARCH_ASPEED || COMPILE_TEST
-> diff --git a/drivers/iio/adc/Makefile b/drivers/iio/adc/Makefile
-> index e14fabd53246..5018220b8ec7 100644
-> --- a/drivers/iio/adc/Makefile
-> +++ b/drivers/iio/adc/Makefile
-> @@ -26,6 +26,7 @@ obj-$(CONFIG_AD7793) += ad7793.o
->  obj-$(CONFIG_AD7887) += ad7887.o
->  obj-$(CONFIG_AD7949) += ad7949.o
->  obj-$(CONFIG_AD799X) += ad799x.o
-> +obj-$(CONFIG_AD9467) += ad9467.o
->  obj-$(CONFIG_ASPEED_ADC) += aspeed_adc.o
->  obj-$(CONFIG_AT91_ADC) += at91_adc.o
->  obj-$(CONFIG_AT91_SAMA5D2_ADC) += at91-sama5d2_adc.o
-> diff --git a/drivers/iio/adc/ad9467.c b/drivers/iio/adc/ad9467.c
-> new file mode 100644
-> index 000000000000..f268bbb6bcf6
-> --- /dev/null
-> +++ b/drivers/iio/adc/ad9467.c
-> @@ -0,0 +1,447 @@
-> +// SPDX-License-Identifier: GPL-2.0-only
-> +/*
-> + * Analog Devices AD9467 SPI ADC driver
-> + *
-> + * Copyright 2012-2020 Analog Devices Inc.
-> + */
-> +
-> +#include <linux/module.h>
-> +#include <linux/device.h>
-> +#include <linux/kernel.h>
-> +#include <linux/slab.h>
-> +#include <linux/spi/spi.h>
-> +#include <linux/err.h>
-> +#include <linux/delay.h>
-> +#include <linux/gpio/consumer.h>
-> +#include <linux/of.h>
-> +
-> +#include <linux/iio/iio.h>
-> +#include <linux/iio/sysfs.h>
-> +
-> +#include <linux/clk.h>
-> +
-> +#include <linux/iio/adc/axi-adc.h>
-> +
-> +/*
-> + * ADI High-Speed ADC common spi interface registers
-> + * See Application-Note AN-877:
-> + *   https://www.analog.com/media/en/technical-documentation/application-notes/AN-877.pdf
-> + */
-> +
-> +#define ADI_ADC_REG_CHIP_PORT_CONF		0x00
-
-These prefixes should reflect the chip we are supporting here.
-They aren't true for 'all' ADI parts.  
-
-You could come up with some 'generic' but not to generic prefix
-if you prefer.
-
-> +#define ADI_ADC_REG_CHIP_ID			0x01
-> +#define ADI_ADC_REG_CHIP_GRADE			0x02
-> +#define ADI_ADC_REG_CHAN_INDEX			0x05
-> +#define ADI_ADC_REG_TRANSFER			0xFF
-> +#define ADI_ADC_REG_MODES			0x08
-> +#define ADI_ADC_REG_TEST_IO			0x0D
-> +#define ADI_ADC_REG_ADC_INPUT			0x0F
-> +#define ADI_ADC_REG_OFFSET			0x10
-> +#define ADI_ADC_REG_OUTPUT_MODE			0x14
-> +#define ADI_ADC_REG_OUTPUT_ADJUST		0x15
-> +#define ADI_ADC_REG_OUTPUT_PHASE		0x16
-> +#define ADI_ADC_REG_OUTPUT_DELAY		0x17
-> +#define ADI_ADC_REG_VREF			0x18
-> +#define ADI_ADC_REG_ANALOG_INPUT		0x2C
-> +
-> +/* ADI_ADC_REG_TEST_IO */
-> +#define ADI_ADC_TESTMODE_OFF			0x0
-> +#define ADI_ADC_TESTMODE_MIDSCALE_SHORT		0x1
-> +#define ADI_ADC_TESTMODE_POS_FULLSCALE		0x2
-> +#define ADI_ADC_TESTMODE_NEG_FULLSCALE		0x3
-> +#define ADI_ADC_TESTMODE_ALT_CHECKERBOARD	0x4
-> +#define ADI_ADC_TESTMODE_PN23_SEQ		0x5
-> +#define ADI_ADC_TESTMODE_PN9_SEQ		0x6
-> +#define ADI_ADC_TESTMODE_ONE_ZERO_TOGGLE	0x7
-> +#define ADI_ADC_TESTMODE_USER			0x8
-> +#define ADI_ADC_TESTMODE_BIT_TOGGLE		0x9
-> +#define ADI_ADC_TESTMODE_SYNC			0xA
-> +#define ADI_ADC_TESTMODE_ONE_BIT_HIGH		0xB
-> +#define ADI_ADC_TESTMODE_MIXED_BIT_FREQUENCY	0xC
-> +#define ADI_ADC_TESTMODE_RAMP			0xF
-> +
-> +/* ADI_ADC_REG_TRANSFER */
-> +#define ADI_ADC_TRANSFER_SYNC			0x1
-> +
-> +/* ADI_ADC_REG_OUTPUT_MODE */
-> +#define ADI_ADC_OUTPUT_MODE_OFFSET_BINARY	0x0
-> +#define ADI_ADC_OUTPUT_MODE_TWOS_COMPLEMENT	0x1
-> +#define ADI_ADC_OUTPUT_MODE_GRAY_CODE		0x2
-> +
-> +/* ADI_ADC_REG_OUTPUT_PHASE */
-> +#define ADI_ADC_OUTPUT_EVEN_ODD_MODE_EN		0x20
-> +#define ADI_ADC_INVERT_DCO_CLK			0x80
-> +
-> +/* ADI_ADC_REG_OUTPUT_DELAY */
-> +#define ADI_ADC_DCO_DELAY_ENABLE		0x80
-> +
-> +/*
-> + * Analog Devices AD9467 16-Bit, 200/250 MSPS ADC
-> + */
-> +
-> +#define CHIPID_AD9467			0x50
-> +#define AD9467_DEF_OUTPUT_MODE		0x08
-> +#define AD9467_REG_VREF_MASK		0x0F
-> +
-> +enum {
-> +	ID_AD9467,
-> +};
-> +
-> +struct ad9467_state {
-> +	struct spi_device		*spi;
-> +	struct clk			*clk;
-> +	unsigned int			output_mode;
-> +
-> +	struct gpio_desc		*pwrdown_gpio;
-> +	struct gpio_desc		*reset_gpio;
-> +};
-> +
-> +static int ad9467_spi_read(struct spi_device *spi, unsigned int reg)
-> +{
-> +	unsigned char buf[3];
-> +	int ret;
-> +
-> +	buf[0] = 0x80 | (reg >> 8);
-> +	buf[1] = reg & 0xFF;
-> +
-> +	ret = spi_write_then_read(spi, &buf[0], 2, &buf[2], 1);
-> +
-> +	if (ret < 0)
-> +		return ret;
-> +
-> +	return buf[2];
-> +}
-> +
-> +static int ad9467_spi_write(struct spi_device *spi, unsigned int reg,
-> +			    unsigned int val)
-> +{
-> +	unsigned char buf[3];
-> +
-> +	buf[0] = reg >> 8;
-> +	buf[1] = reg & 0xFF;
-> +	buf[2] = val;
-> +
-> +	return spi_write(spi, buf, ARRAY_SIZE(buf));
-> +}
-> +
-> +static int ad9467_reg_access(struct axi_adc_conv *conv, unsigned int reg,
-> +			     unsigned int writeval, unsigned int *readval)
-> +{
-> +	struct ad9467_state *st = axi_adc_conv_priv(conv);
-> +	struct spi_device *spi = st->spi;
-> +	int ret;
-> +
-> +	if (readval == NULL) {
-> +		ret = ad9467_spi_write(spi, reg, writeval);
-> +		ad9467_spi_write(spi, ADI_ADC_REG_TRANSFER,
-> +				 ADI_ADC_TRANSFER_SYNC);
-> +		return ret;
-> +	}
-> +
-> +	ret = ad9467_spi_read(spi, reg);
-> +	if (ret < 0)
-> +		return ret;
-> +	*readval = ret;
-> +
-> +	return 0;
-> +}
-> +
-> +static const unsigned int ad9467_scale_table[][2] = {
-> +	{2000, 0}, {2100, 6}, {2200, 7},
-> +	{2300, 8}, {2400, 9}, {2500, 10},
-> +};
-> +
-> +static void __ad9467_get_scale(struct axi_adc_conv *conv, int index,
-> +			       unsigned int *val, unsigned int *val2)
-> +{
-> +	const struct axi_adc_chip_info *info = conv->chip_info;
-> +	const struct iio_chan_spec *chan = &info->channels[0].iio_chan;
-> +	unsigned int tmp;
-> +
-> +	tmp = (info->scale_table[index][0] * 1000000ULL) >>
-> +			chan->scan_type.realbits;
-> +	*val = tmp / 1000000;
-> +	*val2 = tmp % 1000000;
-> +}
-> +
-> +#define AD9467_CHAN(_chan, _si, _bits, _sign)				\
-> +{									\
-> +	.type = IIO_VOLTAGE,						\
-> +	.indexed = 1,							\
-> +	.channel = _chan,						\
-> +	.info_mask_separate = BIT(IIO_CHAN_INFO_CALIBSCALE) |		\
-> +		BIT(IIO_CHAN_INFO_CALIBBIAS) |				\
-> +		BIT(IIO_CHAN_INFO_CALIBPHASE) |				\
-
-These don't seem to be handled that I can see...
-
-> +		BIT(IIO_CHAN_INFO_HIGH_PASS_FILTER_3DB_FREQUENCY),	\
-> +	.info_mask_shared_by_type = BIT(IIO_CHAN_INFO_SCALE) |		\
-> +		BIT(IIO_CHAN_INFO_SAMP_FREQ),				\
-> +	.scan_index = _si,						\
-> +	.scan_type = {							\
-> +		.sign = _sign,						\
-> +		.realbits = _bits,					\
-> +		.storagebits = 16,					\
-> +		.shift = 0,						\
-
-shift of 0 is the "obvious" default so no need to specify it...
-
-> +	},								\
-> +}
-> +
-> +static const struct axi_adc_chan_spec ad9467_channels[] = {
-> +	{
-> +		.iio_chan = AD9467_CHAN(0, 0, 16, 'S'),
-> +		.num_lanes = 8,
-> +	},
-> +};
-> +
-> +static const struct axi_adc_chip_info ad9467_chip_info_tbl[] = {
-> +	[ID_AD9467] = {
-> +		.id = CHIPID_AD9467,
-> +		.max_rate = 250000000UL,
-> +		.scale_table = ad9467_scale_table,
-> +		.num_scales = ARRAY_SIZE(ad9467_scale_table),
-> +		.channels = ad9467_channels,
-> +		.num_channels = ARRAY_SIZE(ad9467_channels),
-> +	},
-> +};
-> +
-> +static int ad9467_get_scale(struct axi_adc_conv *conv, int *val, int *val2)
-> +{
-> +	const struct axi_adc_chip_info *info = conv->chip_info;
-> +	struct ad9467_state *st = axi_adc_conv_priv(conv);
-> +	unsigned int i, vref_val, vref_mask;
-> +
-> +	vref_val = ad9467_spi_read(st->spi, ADI_ADC_REG_VREF);
-> +
-> +	switch (info->id) {
-> +	case CHIPID_AD9467:
-> +		vref_mask = AD9467_REG_VREF_MASK;
-> +		break;
-> +	default:
-> +		vref_mask = 0xFFFF;
-> +		break;
-> +	}
-> +
-> +	vref_val &= vref_mask;
-> +
-> +	for (i = 0; i < info->num_scales; i++) {
-> +		if (vref_val == info->scale_table[i][1])
-> +			break;
-> +	}
-> +
-> +	if (i == info->num_scales)
-> +		return -ERANGE;
-> +
-> +	__ad9467_get_scale(conv, i, val, val2);
-> +
-> +	return IIO_VAL_INT_PLUS_MICRO;
-> +}
-> +
-> +static int ad9467_set_scale(struct axi_adc_conv *conv, int val, int val2)
-> +{
-> +	const struct axi_adc_chip_info *info = conv->chip_info;
-> +	struct ad9467_state *st = axi_adc_conv_priv(conv);
-> +	unsigned int scale_val[2];
-> +	unsigned int i;
-> +
-> +	if (val != 0)
-> +		return -EINVAL;
-> +
-> +	for (i = 0; i < info->num_scales; i++) {
-> +		__ad9467_get_scale(conv, i, &scale_val[0], &scale_val[1]);
-> +		if (scale_val[0] != val || scale_val[1] != val2)
-> +			continue;
-> +
-> +		ad9467_spi_write(st->spi, ADI_ADC_REG_VREF,
-> +				 info->scale_table[i][1]);
-> +		ad9467_spi_write(st->spi, ADI_ADC_REG_TRANSFER,
-> +				 ADI_ADC_TRANSFER_SYNC);
-> +		return 0;
-> +	}
-> +
-> +	return -EINVAL;
-> +}
-> +
-> +static int ad9467_read_raw(struct axi_adc_conv *conv,
-> +			   struct iio_chan_spec const *chan,
-> +			   int *val, int *val2, long m)
-> +{
-> +	struct ad9467_state *st = axi_adc_conv_priv(conv);
-> +
-> +	switch (m) {
-> +	case IIO_CHAN_INFO_SCALE:
-> +		return ad9467_get_scale(conv, val, val2);
-> +	case IIO_CHAN_INFO_SAMP_FREQ:
-> +		if (!st->clk)
-> +			return -ENODEV;
-> +
-> +		*val = clk_get_rate(st->clk);
-> +
-> +		return IIO_VAL_INT;
-> +
-> +	}
-> +	return -EINVAL;
-
-I'd put that in a default in the switch as you may get warnings
-from some static checkers otherwise.
-
-> +}
-> +
-> +static int ad9467_write_raw(struct axi_adc_conv *conv,
-> +			    struct iio_chan_spec const *chan,
-> +			    int val, int val2, long mask)
-> +{
-> +	const struct axi_adc_chip_info *info = conv->chip_info;
-> +	struct ad9467_state *st = axi_adc_conv_priv(conv);
-> +	unsigned long r_clk;
-> +	int ret;
-> +
-> +	switch (mask) {
-> +	case IIO_CHAN_INFO_SCALE:
-> +		return ad9467_set_scale(conv, val, val2);
-> +	case IIO_CHAN_INFO_SAMP_FREQ:
-> +		if (!st->clk)
-> +			return -ENODEV;
-> +
-> +		if (chan->extend_name)
-> +			return -ENODEV;
-> +
-> +		r_clk = clk_round_rate(st->clk, val);
-> +		if (r_clk < 0 || r_clk > info->max_rate) {
-> +			dev_warn(&st->spi->dev,
-> +				 "Error setting ADC sample rate %ld", r_clk);
-> +			return -EINVAL;
-> +		}
-> +
-> +		ret = clk_set_rate(st->clk, r_clk);
-> +		if (ret < 0)
-> +			return ret;
-return clk_set_rate(st->clk, r_clk) is probably the same.
-Might as well do early returns everywhere.
-
-> +
-> +		break;
-> +	default:
-> +		return -EINVAL;
-> +	}
-> +
-> +	return 0;
-> +}
-> +
-> +static int ad9467_outputmode_set(struct spi_device *spi, unsigned int mode)
-> +{
-> +	int ret;
-> +
-> +	ret = ad9467_spi_write(spi, ADI_ADC_REG_OUTPUT_MODE, mode);
-> +	if (ret < 0)
-> +		return ret;
-> +
-> +	return ad9467_spi_write(spi, ADI_ADC_REG_TRANSFER,
-> +				ADI_ADC_TRANSFER_SYNC);
-> +}
-> +
-> +static int ad9467_preenable_setup(struct axi_adc_conv *conv)
-> +{
-> +	struct ad9467_state *st = axi_adc_conv_priv(conv);
-> +
-> +	return ad9467_outputmode_set(st->spi, st->output_mode);
-> +}
-> +
-> +static int ad9467_setup(struct ad9467_state *st, unsigned int chip_id)
-> +{
-> +	switch (chip_id) {
-> +	case CHIPID_AD9467:
-> +		st->output_mode = AD9467_DEF_OUTPUT_MODE |
-> +				  ADI_ADC_OUTPUT_MODE_TWOS_COMPLEMENT;
-> +		break;
-
-return 0 unless you are going to add anything after the switch statement.
-
-> +	default:
-> +		return -EINVAL;
-> +	}
-> +
-> +	return 0;
-> +}
-> +
-> +static void ad9467_clk_disable(void *data)
-> +{
-> +	struct ad9467_state *st = data;
-> +
-> +	clk_disable_unprepare(st->clk);
-> +}
-> +
-> +static int ad9467_probe(struct spi_device *spi)
-> +{
-> +	struct axi_adc_conv *conv;
-> +	struct ad9467_state *st;
-> +	unsigned int id;
-> +	int ret;
-> +
-> +	conv = devm_axi_adc_conv_register(&spi->dev, sizeof(*st));
-> +
-
-No blank line between a call and it's error handler.
-
-> +	if (IS_ERR(conv))
-> +		return PTR_ERR(conv);
-> +
-> +	st = axi_adc_conv_priv(conv);
-> +	st->spi = spi;
-> +
-> +	st->clk = devm_clk_get(&spi->dev, "sample-clock");
-> +	if (IS_ERR(st->clk))
-> +		return PTR_ERR(st->clk);
-> +
-> +	ret = clk_prepare_enable(st->clk);
-> +	if (ret < 0)
-> +		return ret;
-> +
-> +	ret = devm_add_action_or_reset(&spi->dev, ad9467_clk_disable, st);
-> +	if (ret)
-> +		return ret;
-> +
-> +	st->pwrdown_gpio = devm_gpiod_get_optional(&spi->dev, "powerdown",
-> +						   GPIOD_OUT_LOW);
-> +	if (IS_ERR(st->pwrdown_gpio))
-> +		return PTR_ERR(st->pwrdown_gpio);
-> +
-> +	st->reset_gpio = devm_gpiod_get_optional(&spi->dev, "reset",
-> +						 GPIOD_OUT_LOW);
-> +	if (IS_ERR(st->reset_gpio))
-> +		return PTR_ERR(st->reset_gpio);
-> +
-> +	if (st->reset_gpio) {
-> +		udelay(1);
-> +		ret = gpiod_direction_output(st->reset_gpio, 1);
-> +		mdelay(10);
-> +	}
-> +
-> +	spi_set_drvdata(spi, st);
-> +
-> +	id = spi_get_device_id(spi)->driver_data;
-> +	conv->chip_info = &ad9467_chip_info_tbl[id];
-> +
-> +	id = ad9467_spi_read(spi, ADI_ADC_REG_CHIP_ID);
-> +	if (id != conv->chip_info->id) {
-> +		dev_err(&spi->dev, "Unrecognized CHIP_ID 0x%X\n", id);
-> +		return -ENODEV;
-> +	}
-> +
-> +	conv->reg_access = ad9467_reg_access;
-> +	conv->write_raw = ad9467_write_raw;
-> +	conv->read_raw = ad9467_read_raw;
-> +	conv->preenable_setup = ad9467_preenable_setup;
-> +
-> +	return ad9467_setup(st, id);
-> +}
-> +
-> +static const struct spi_device_id ad9467_id[] = {
-> +	{ "ad9467", ID_AD9467 },
-> +	{}
-> +};
-> +MODULE_DEVICE_TABLE(spi, ad9467_id);
-> +
-> +static const struct of_device_id ad9467_of_match[] = {
-> +	{ .compatible = "adi,ad9467" },
-> +	{}
-> +};
-> +MODULE_DEVICE_TABLE(of, ad9467_of_match);
-> +
-> +static struct spi_driver ad9467_driver = {
-> +	.driver = {
-> +		.name = "ad9467",
-> +		.of_match_table = ad9467_of_match,
-> +	},
-> +	.probe = ad9467_probe,
-> +	.id_table = ad9467_id,
-
-This is something I've only just started raising in reviews.
-If a driver can't realistically be instantiated without firmware
-bindings, there isn't really any point in providing the id_table
-that I can think of so please remove.
-
-> +};
-> +module_spi_driver(ad9467_driver);
-> +
-> +MODULE_AUTHOR("Michael Hennerich <michael.hennerich@analog.com>");
-> +MODULE_DESCRIPTION("Analog Devices AD9467 ADC driver");
-> +MODULE_LICENSE("GPL v2");
-
+Can we please try the spidev approach before fixing those problems. None
+of that would be needed if we declare the i3cdev driver as a regular
+i3c_device_driver and let user space bind devices it wants to expose
+through the sysfs interface. As I said earlier, we even have all the
+pieces we need to automate that using a udev rule, and the resulting
+patchset would be 'less invasive'/simpler for pretty much the same
+result.
