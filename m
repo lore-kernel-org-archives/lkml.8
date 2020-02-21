@@ -2,52 +2,52 @@ Return-Path: <SRS0=1210=4J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0B018C35640
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 08:18:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D9FE1C35640
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 08:18:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CF39924695
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 08:18:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 974E224689
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 08:18:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582273109;
-	bh=+2u6VCYeEc6ZE9pvV3ZpiM8JNxbrXYBB8tjL4aeEA3s=;
+	s=default; t=1582273115;
+	bh=oEKpmrzqCgSu7PgM1D8SMqu8f8GXJSZ7tAmg5JtYbvg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=TVE7QwZEBGkos5sMh6/KT42ESf4V4i/huR9ExqcffNnlw+IoUv6pQbgL2Tu4Nht4m
-	 ib0/lXLsuRVE6rfTNHfzjPV3DRl1niKyUxgAia4LgeNvcIf3wiy6cqTS48cQNM3J76
-	 3ejk6ZPY0l3VjlTUPpWl6GNn47MJn8/h7OftSbuc=
+	b=FGFAZp2Q+c5KoogDfWtyq/23odaZv4v4YxBZT+cUMiOfUN+CFhFNNwyyEo2qUQ9Ml
+	 MNQwTff26zmLsiTA3ZCB5Az/yskX4qIgwSzraZ6giiyXv8Km/vCt8puXGTUgHWXYxX
+	 lFTgl2seJ7Wpc6A1/LvniBOuLsTqSyno8EPpvJ6g=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387838AbgBUIS2 (ORCPT
+        id S2387866AbgBUISe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Feb 2020 03:18:28 -0500
-Received: from mail.kernel.org ([198.145.29.99]:56334 "EHLO mail.kernel.org"
+        Fri, 21 Feb 2020 03:18:34 -0500
+Received: from mail.kernel.org ([198.145.29.99]:56546 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387488AbgBUISY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Feb 2020 03:18:24 -0500
+        id S1732908AbgBUISc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 21 Feb 2020 03:18:32 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 93C8D24694;
-        Fri, 21 Feb 2020 08:18:23 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E474C24694;
+        Fri, 21 Feb 2020 08:18:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1582273104;
-        bh=+2u6VCYeEc6ZE9pvV3ZpiM8JNxbrXYBB8tjL4aeEA3s=;
+        s=default; t=1582273112;
+        bh=oEKpmrzqCgSu7PgM1D8SMqu8f8GXJSZ7tAmg5JtYbvg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=VeYCXwnulq670N5lbuMsNACyrNqRQNrn/Z2Us/cV9RCEpkKWmLl1+tQM+3UzkapmI
-         AAf0cemT2ObkpsM5l7fC2ht3xNhe4+7z+q+YG84rsDOs25eZqocUIU8FGQdgCPQtw9
-         WBSnvYjUNgtFatX2Hodh1ZTNjfj9YFRea7911FiQ=
+        b=U8Dk/fLePPKfNof9Ch0i93S+mZclcFpM2X4oTorHILNkIPlQAZgzDYJDBxzGQuTOP
+         HyCoCl407dsxlE5ZZdh94nFw7l1XR5TYDh9QJ8PSz2ZfUfvqlLVjHjSAVYh9DyhejM
+         HCjbhYrFsU0LtT/Jhs50p5JIAK4Wa5YZbEqA5VMg=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, "Paul E. McKenney" <paulmck@kernel.org>,
-        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
-        Sasha Levin <sashal@kernel.org>, Tejun Heo <tj@kernel.org>
-Subject: [PATCH 4.19 013/191] cpu/hotplug, stop_machine: Fix stop_machine vs hotplug order
-Date:   Fri, 21 Feb 2020 08:39:46 +0100
-Message-Id: <20200221072252.751035068@linuxfoundation.org>
+        stable@vger.kernel.org, Davide Caratti <dcaratti@redhat.com>,
+        Jiri Pirko <jiri@mellanox.com>,
+        "David S. Miller" <davem@davemloft.net>
+Subject: [PATCH 4.19 006/191] net/sched: flower: add missing validation of TCA_FLOWER_FLAGS
+Date:   Fri, 21 Feb 2020 08:39:39 +0100
+Message-Id: <20200221072251.690370899@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200221072250.732482588@linuxfoundation.org>
 References: <20200221072250.732482588@linuxfoundation.org>
@@ -60,91 +60,33 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Peter Zijlstra <peterz@infradead.org>
+From: Davide Caratti <dcaratti@redhat.com>
 
-[ Upstream commit 45178ac0cea853fe0e405bf11e101bdebea57b15 ]
+[ Upstream commit e2debf0852c4d66ba1a8bde12869b196094c70a7 ]
 
-Paul reported a very sporadic, rcutorture induced, workqueue failure.
-When the planets align, the workqueue rescuer's self-migrate fails and
-then triggers a WARN for running a work on the wrong CPU.
+unlike other classifiers that can be offloaded (i.e. users can set flags
+like 'skip_hw' and 'skip_sw'), 'cls_flower' doesn't validate the size of
+netlink attribute 'TCA_FLOWER_FLAGS' provided by user: add a proper entry
+to fl_policy.
 
-Tejun then figured that set_cpus_allowed_ptr()'s stop_one_cpu() call
-could be ignored! When stopper->enabled is false, stop_machine will
-insta complete the work, without actually doing the work. Worse, it
-will not WARN about this (we really should fix this).
-
-It turns out there is a small window where a freshly online'ed CPU is
-marked 'online' but doesn't yet have the stopper task running:
-
-	BP				AP
-
-	bringup_cpu()
-	  __cpu_up(cpu, idle)	 -->	start_secondary()
-					...
-					cpu_startup_entry()
-	  bringup_wait_for_ap()
-	    wait_for_ap_thread() <--	  cpuhp_online_idle()
-					  while (1)
-					    do_idle()
-
-					... available to run kthreads ...
-
-	    stop_machine_unpark()
-	      stopper->enable = true;
-
-Close this by moving the stop_machine_unpark() into
-cpuhp_online_idle(), such that the stopper thread is ready before we
-start the idle loop and schedule.
-
-Reported-by: "Paul E. McKenney" <paulmck@kernel.org>
-Debugged-by: Tejun Heo <tj@kernel.org>
-Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-Tested-by: "Paul E. McKenney" <paulmck@kernel.org>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+Fixes: 5b33f48842fa ("net/flower: Introduce hardware offload support")
+Signed-off-by: Davide Caratti <dcaratti@redhat.com>
+Acked-by: Jiri Pirko <jiri@mellanox.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- kernel/cpu.c | 13 +++++++++----
- 1 file changed, 9 insertions(+), 4 deletions(-)
+ net/sched/cls_flower.c |    1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/kernel/cpu.c b/kernel/cpu.c
-index 8d6b8b5493f9f..2d850eaaf82e3 100644
---- a/kernel/cpu.c
-+++ b/kernel/cpu.c
-@@ -493,8 +493,7 @@ static int bringup_wait_for_ap(unsigned int cpu)
- 	if (WARN_ON_ONCE((!cpu_online(cpu))))
- 		return -ECANCELED;
+--- a/net/sched/cls_flower.c
++++ b/net/sched/cls_flower.c
+@@ -486,6 +486,7 @@ static const struct nla_policy fl_policy
+ 	[TCA_FLOWER_KEY_ENC_IP_TTL_MASK] = { .type = NLA_U8 },
+ 	[TCA_FLOWER_KEY_ENC_OPTS]	= { .type = NLA_NESTED },
+ 	[TCA_FLOWER_KEY_ENC_OPTS_MASK]	= { .type = NLA_NESTED },
++	[TCA_FLOWER_FLAGS]		= { .type = NLA_U32 },
+ };
  
--	/* Unpark the stopper thread and the hotplug thread of the target cpu */
--	stop_machine_unpark(cpu);
-+	/* Unpark the hotplug thread of the target cpu */
- 	kthread_unpark(st->thread);
- 
- 	/*
-@@ -1048,8 +1047,8 @@ void notify_cpu_starting(unsigned int cpu)
- 
- /*
-  * Called from the idle task. Wake up the controlling task which brings the
-- * stopper and the hotplug thread of the upcoming CPU up and then delegates
-- * the rest of the online bringup to the hotplug thread.
-+ * hotplug thread of the upcoming CPU up and then delegates the rest of the
-+ * online bringup to the hotplug thread.
-  */
- void cpuhp_online_idle(enum cpuhp_state state)
- {
-@@ -1059,6 +1058,12 @@ void cpuhp_online_idle(enum cpuhp_state state)
- 	if (state != CPUHP_AP_ONLINE_IDLE)
- 		return;
- 
-+	/*
-+	 * Unpart the stopper thread before we start the idle loop (and start
-+	 * scheduling); this ensures the stopper task is always available.
-+	 */
-+	stop_machine_unpark(smp_processor_id());
-+
- 	st->state = CPUHP_AP_ONLINE_IDLE;
- 	complete_ap_thread(st, true);
- }
--- 
-2.20.1
-
+ static const struct nla_policy
 
 
