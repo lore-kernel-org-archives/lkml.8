@@ -2,207 +2,225 @@ Return-Path: <SRS0=1210=4J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7E795C11D00
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 02:23:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 13B70C11D00
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 02:23:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4831720722
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 02:23:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D23D2207FD
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 02:23:17 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="Lkna8bgr"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729420AbgBUCXJ (ORCPT
+        id S1729562AbgBUCXQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Feb 2020 21:23:09 -0500
-Received: from mga17.intel.com ([192.55.52.151]:44492 "EHLO mga17.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729226AbgBUCXJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Feb 2020 21:23:09 -0500
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga003.fm.intel.com ([10.253.24.29])
-  by fmsmga107.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 20 Feb 2020 18:23:08 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.70,466,1574150400"; 
-   d="scan'208";a="283586698"
-Received: from fmsmsx108.amr.corp.intel.com ([10.18.124.206])
-  by FMSMGA003.fm.intel.com with ESMTP; 20 Feb 2020 18:23:08 -0800
-Received: from fmsmsx118.amr.corp.intel.com (10.18.116.18) by
- FMSMSX108.amr.corp.intel.com (10.18.124.206) with Microsoft SMTP Server (TLS)
- id 14.3.439.0; Thu, 20 Feb 2020 18:23:08 -0800
-Received: from fmsmsx117.amr.corp.intel.com ([169.254.3.129]) by
- fmsmsx118.amr.corp.intel.com ([169.254.1.229]) with mapi id 14.03.0439.000;
- Thu, 20 Feb 2020 18:23:08 -0800
-From:   "Souza, Jose" <jose.souza@intel.com>
-To:     "airlied@gmail.com" <airlied@gmail.com>,
-        "sinisa@4net.rs" <sinisa@4net.rs>,
-        "jani.nikula@linux.intel.com" <jani.nikula@linux.intel.com>,
-        "intel-gfx@lists.freedesktop.org" <intel-gfx@lists.freedesktop.org>
-CC:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [Intel-gfx] Linux 5.6-rc2
-Thread-Topic: [Intel-gfx] Linux 5.6-rc2
-Thread-Index: AQHV6Fe4HIpbjqtpMk6JnnbbXh11raglcVQA
-Date:   Fri, 21 Feb 2020 02:23:07 +0000
-Message-ID: <f9081410ef1135003720fa29d27aa10b9d12d509.camel@intel.com>
-References: <CAHk-=wgqwiBLGvwTqU2kJEPNmafPpPe_K0XgBU-A58M+mkwpgQ@mail.gmail.com>
-         <99fb887f-4a1b-6c15-64a6-9d089773cdd4@4net.rs>
-         <CAPM=9ty3NuSHBd+StNGxVCE9jkmppQ_VTr+jMRgB07qW3dRwrA@mail.gmail.com>
-In-Reply-To: <CAPM=9ty3NuSHBd+StNGxVCE9jkmppQ_VTr+jMRgB07qW3dRwrA@mail.gmail.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-originating-ip: [10.24.14.178]
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <5CCCD2877C984F4CB49676F76F7ED801@intel.com>
-Content-Transfer-Encoding: base64
+        Thu, 20 Feb 2020 21:23:16 -0500
+Received: from mail-il1-f194.google.com ([209.85.166.194]:43116 "EHLO
+        mail-il1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729222AbgBUCXQ (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 20 Feb 2020 21:23:16 -0500
+Received: by mail-il1-f194.google.com with SMTP id p78so407497ilb.10
+        for <linux-kernel@vger.kernel.org>; Thu, 20 Feb 2020 18:23:15 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=1r4Guz/pyXp2FmGJuccB7640iKmbat2fCQTpns04iQA=;
+        b=Lkna8bgrY1wIa2D6YpzLy0LrWfgzvaUEsUsl3en59bAJAaA2vZ9VPIKQlDXtm+3+2+
+         9pdBEzbHik3jHDJbH4uFvxBtmgF8H1fX2vh7XTfL3CQHeRV+r5yUeRR6SesXPJidAZxW
+         qE20XApR58nXLCYXwc7cWM3YGLzFqizc+vgPA=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=1r4Guz/pyXp2FmGJuccB7640iKmbat2fCQTpns04iQA=;
+        b=fTfiaL90qS3c/I2i/UnCKd/nS5hurgOpFsARDH5kkV8YQxPPLV9zOE6YaFE/saWLE4
+         xwqhMSnZi8aSutD7o4NE+MmMDLqg8DHgCjHa9UKnkEzIPKuwEucxOx3eiT6w0XS+WipI
+         +6rO0lvCQMr0TBfi9i+xWC5BcKsIYu3VgxZE9pfqhW/AZL7C4F4GDUDax70oEVp884em
+         vKrQ9mzKoa8ezWJZQss4awQmCInoRf/EczvsSjKqgzPXiiLkR0BnESHLBXabH9AYepOO
+         2vbSvWjZuonqQZBrSEAh/+TlbsG9PZ/TqYI0ZRcBB7bvMpQhmeezCrvd/mHIYygpUV2p
+         lOdA==
+X-Gm-Message-State: APjAAAVnuolmAdtLwHfxlds2rvWHTasN2KmA56HXIpyuLKPYzMda9lQX
+        8PHDMVJW/2a7Q/r5ZtSl+k/xGsTLT+QJKUgRxp9W+A==
+X-Google-Smtp-Source: APXvYqyrSLErmbSrh9z11lK8TdqiabptjiOsG76i8R6M6oB7VpHn99tIgFQZTTtENubg4nsK88nil5eScTiP60KPOrA=
+X-Received: by 2002:a92:af8e:: with SMTP id v14mr32001179ill.150.1582251795343;
+ Thu, 20 Feb 2020 18:23:15 -0800 (PST)
 MIME-Version: 1.0
+References: <20200210063523.133333-1-hsinyi@chromium.org> <20200210063523.133333-4-hsinyi@chromium.org>
+ <bbc75f19-0581-c902-a455-13157d66d72f@gmail.com>
+In-Reply-To: <bbc75f19-0581-c902-a455-13157d66d72f@gmail.com>
+From:   Hsin-Yi Wang <hsinyi@chromium.org>
+Date:   Fri, 21 Feb 2020 10:22:49 +0800
+Message-ID: <CAJMQK-iR4YHdgKfXGiM-gLVo7535KMaZobk=j4whF2g-xJ11DA@mail.gmail.com>
+Subject: Re: [PATCH v7 3/5] arm64: dts: mt8173: fix unit name warnings
+To:     Matthias Brugger <matthias.bgg@gmail.com>
+Cc:     "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
+        <linux-arm-kernel@lists.infradead.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Devicetree List <devicetree@vger.kernel.org>,
+        lkml <linux-kernel@vger.kernel.org>,
+        linux-mediatek@lists.infradead.org,
+        Nicolas Boichat <drinkcat@chromium.org>,
+        Enric Balletbo i Serra <enric.balletbo@collabora.com>,
+        Daniel Kurtz <djkurtz@chromium.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-V2UgaGF2ZSBhIGZpeCBmb3IgdGhpcyBpc3N1ZSwgc3RpbGwgZ29pbmcgdGhyb3VnaCByZXZpZXcu
-DQoNCmh0dHBzOi8vZ2l0bGFiLmZyZWVkZXNrdG9wLm9yZy9kcm0vaW50ZWwvaXNzdWVzLzExNTEN
-Cg0KT24gRnJpLCAyMDIwLTAyLTIxIGF0IDExOjM4ICsxMDAwLCBEYXZlIEFpcmxpZSB3cm90ZToN
-Cj4gbG9vcGluZyBpbiBpbnRlbC1nZnggKyBKYW5pLg0KPiANCj4gT24gVHVlLCAxOCBGZWIgMjAy
-MCBhdCAwNToyMCwgc2luaXNhIDxzaW5pc2FANG5ldC5ycz4gd3JvdGU6DQo+ID4gDQo+ID4gT24g
-MjAyMC0wMi0xNiAyMjozMiwgTGludXMgVG9ydmFsZHMgd3JvdGU6DQo+ID4gID4gLi4uDQo+ID4g
-ID4gQ2hyaXMgV2lsc29uICgxOSk6DQo+ID4gID4gICAgICAgZHJtL2k5MTUvcG11OiBDb3JyZWN0
-IHRoZSByYzYgb2Zmc2V0IHVwb24gZW5hYmxpbmcNCj4gPiAgPiAgICAgICBkcm0vaTkxNS9nZW06
-IFRha2UgbG9jYWwgdm1hIHJlZmVyZW5jZXMgZm9yIHRoZSBwYXJzZXINCj4gPiAgPiAgICAgICBk
-cm0vaTkxNS9zZWxmdGVzdHM6IEFkZCBhIG1vY2sgaTkxNV92bWEgdG8gdGhlIG1vY2tfcmluZw0K
-PiA+ICA+ICAgICAgIGRybS9pOTE1L2d0OiBVc2UgdGhlIEJJVCB3aGVuIGNoZWNraW5nIHRoZSBm
-bGFncywgbm90IHRoZQ0KPiA+IGluZGV4DQo+ID4gID4gICAgICAgZHJtL2k5MTUvZXhlY2xpc3Rz
-OiBMZWF2ZSByZXNldHRpbmcgcmluZyB0byBpbnRlbF9yaW5nDQo+ID4gID4gICAgICAgZHJtL2k5
-MTUvZ2VtOiBTdG9yZSBtbWFwX29mZnNldHMgaW4gYW4gcmJ0cmVlIHJhdGhlciB0aGFuDQo+ID4g
-YQ0KPiA+IHBsYWluIGxpc3QNCj4gPiAgPiAgICAgICBkcm0vaTkxNTogRG9uJ3Qgc2hvdyB0aGUg
-YmxhbmsgcHJvY2VzcyBuYW1lIGZvcg0KPiA+IGludGVybmFsL3NpbXVsYXRlZCBlcnJvcnMNCj4g
-PiAgPiAgICAgICBkcm0vaTkxNS9nZW06IERldGVjdCBvdmVyZmxvdyBpbiBjYWxjdWxhdGluZyBk
-dW1iIGJ1ZmZlcg0KPiA+IHNpemUNCj4gPiAgPiAgICAgICBkcm0vaTkxNTogQ2hlY2sgYWN0aXZp
-dHkgb24gaTkxNV92bWEgYWZ0ZXIgY29uZmlybWluZw0KPiA+IHBpbl9jb3VudD09MA0KPiA+ICA+
-ICAgICAgIGRybS9pOTE1OiBTdHViIG91dCBpOTE1X2dwdV9jb3JlZHVtcF9wdXQNCj4gPiAgPiAg
-ICAgICBkcm0vaTkxNTogVGlnaHRlbiBhdG9taWNpdHkgb2YgaTkxNV9hY3RpdmVfYWNxdWlyZSB2
-cw0KPiA+IGk5MTVfYWN0aXZlX3JlbGVhc2UNCj4gPiAgPiAgICAgICBkcm0vaTkxNS9ndDogQWNx
-dWlyZSBjZS0+YWN0aXZlIGJlZm9yZSBjZS0+cGluX2NvdW50L2NlLQ0KPiA+ID5waW5fbXV0ZXgN
-Cj4gPiAgPiAgICAgICBkcm0vaTkxNS9nZW06IFRpZ2h0ZW4gY2hlY2tzIGFuZCBhY3F1aXJpbmcg
-dGhlIG1tYXAgb2JqZWN0DQo+ID4gID4gICAgICAgZHJtL2k5MTU6IEtlZXAgdHJhY2sgb2YgcmVx
-dWVzdCBhbW9uZyB0aGUgc2NoZWR1bGluZyBsaXN0cw0KPiA+ICA+ICAgICAgIGRybS9pOTE1L2d0
-OiBBbGxvdyB0ZW1wb3Jhcnkgc3VzcGVuc2lvbiBvZiBpbmZsaWdodA0KPiA+IHJlcXVlc3RzDQo+
-ID4gID4gICAgICAgZHJtL2k5MTUvZXhlY2xpc3RzOiBPZmZsaW5lIGVycm9yIGNhcHR1cmUNCj4g
-PiAgPiAgICAgICBkcm0vaTkxNS9leGVjbGlzdHM6IFRha2UgYSByZWZlcmVuY2Ugd2hpbGUgY2Fw
-dHVyaW5nIHRoZQ0KPiA+IGd1aWx0eQ0KPiA+IHJlcXVlc3QNCj4gPiAgPiAgICAgICBkcm0vaTkx
-NS9leGVjbGlzdHM6IFJlY2xhaW0gdGhlIGhhbmdpbmcgdmlydHVhbCByZXF1ZXN0DQo+ID4gID4g
-ICAgICAgZHJtL2k5MTU6IE1hcmsgdGhlIHJlbW92YWwgb2YgdGhlIGk5MTVfcmVxdWVzdCBmcm9t
-IHRoZQ0KPiA+IHNjaGVkLmxpbmsNCj4gPiAgPiAuLi4NCj4gPiANCj4gPiBTb21ldGhpbmcgZnJv
-bSBoZXJlIG1ha2VzIG15IFRvc2hpYmEgUG9ydGVnZSBaMzAtQSAoQ1BVIGlzIGk1LTQyMTBVIA0K
-PiA+IHdpdGgNCj4gPiBpbnRlZ3JhdGVkIGdyYXBoaWNzKSB0byB0byBvbmx5IGdldCBibGFjayBz
-Y3JlZW4gd2hlbiBsb2FkaW5nIGk5MTUNCj4gPiBkcml2ZXIuDQo+ID4gDQo+ID4gSGFwcGVucyB0
-aGUgc2FtZSBpbiByYzEgYW5kIHJjMiwgd29ya3MgT0sgd2l0aCBhbGwgcHJldmlvdXMNCj4gPiBr
-ZXJuZWxzLg0KPiA+IA0KPiA+IA0KPiA+IEhlcmUgaXMgcmVsZXZhbnQgcGFydCBvZiB0aGUgZG1l
-c2cgb3V0cHV0Og0KPiA+IA0KPiA+IA0KPiA+IFsgICAgNC42NDM4NDhdIGk5MTUgMDAwMDowMDow
-Mi4wOiB2Z2FhcmI6IGRlYWN0aXZhdGUgdmdhIGNvbnNvbGUNCj4gPiBbICAgIDQuNjQ1MzYzXSBD
-b25zb2xlOiBzd2l0Y2hpbmcgdG8gY29sb3VyIGR1bW15IGRldmljZSA4MHgyNQ0KPiA+IFsgICAg
-NC42NjczNzJdIFtkcm1dIFN1cHBvcnRzIHZibGFuayB0aW1lc3RhbXAgY2FjaGluZyBSZXYgMg0K
-PiA+ICgyMS4xMC4yMDEzKS4NCj4gPiBbICAgIDQuNjY3Mzc5XSBbZHJtXSBEcml2ZXIgc3VwcG9y
-dHMgcHJlY2lzZSB2YmxhbmsgdGltZXN0YW1wDQo+ID4gcXVlcnkuDQo+ID4gWyAgICA0LjY2Nzc0
-M10gaTkxNSAwMDAwOjAwOjAyLjA6IHZnYWFyYjogY2hhbmdlZCBWR0EgZGVjb2RlczoNCj4gPiBv
-bGRkZWNvZGVzPWlvK21lbSxkZWNvZGVzPWlvK21lbTpvd25zPWlvK21lbQ0KPiA+IFsgICAgNC42
-ODIzNTVdIC0tLS0tLS0tLS0tLVsgY3V0IGhlcmUgXS0tLS0tLS0tLS0tLQ0KPiA+IFsgICAgNC42
-ODIzODldIFdBUk5JTkc6IENQVTogMyBQSUQ6IDQ1OSBhdA0KPiA+IGRyaXZlcnMvZ3B1L2RybS9k
-cm1fYXRvbWljLmM6Mjk2DQo+ID4gZHJtX2F0b21pY19nZXRfY3J0Y19zdGF0ZSsweGY4LzB4MTEw
-IFtkcm1dDQo+ID4gWyAgICA0LjY4MjM5NF0gTW9kdWxlcyBsaW5rZWQgaW46IGlUQ09fd2R0IGlU
-Q09fdmVuZG9yX3N1cHBvcnQNCj4gPiBubHNfaXNvODg1OV8xIHNuZF9oZGFfY29kZWNfcmVhbHRl
-ayBpOTE1KCspIGZ1c2UgbmxzX2NwNDM3DQo+ID4gc25kX2hkYV9jb2RlY19nZW5lcmljIHZmYXQg
-ZmF0IGl3bHdpZmkgdXZjdmlkZW8gbGVkdHJpZ19hdWRpbw0KPiA+IGFlc25pX2ludGVsKCspIGRy
-bV9rbXNfaGVscGVyIHZpZGVvYnVmMl92bWFsbG9jIGNyeXB0b19zaW1kDQo+ID4gc25kX2hkYV9p
-bnRlbCB2aWRlb2J1ZjJfbWVtb3BzIGNlYyBzbmRfaW50ZWxfZHNwY2ZnIHJjX2NvcmUNCj4gPiB2
-aWRlb2J1ZjJfdjRsMiBjcnlwdGQgc25kX2hkYV9jb2RlYyBnbHVlX2hlbHBlciB2aWRlb2J1ZjJf
-Y29tbW9uDQo+ID4gY2ZnODAyMTEgZHJtIHBjc3BrciB2aWRlb2RldiBzbmRfaGRhX2NvcmUgd21p
-X2Jtb2Ygc25kX2h3ZGVwDQo+ID4gc25kX3BjbQ0KPiA+IHRvc2hpYmFfYWNwaSBtYyBlMTAwMGUg
-c25kX3RpbWVyIHNwYXJzZV9rZXltYXAgZmJfc3lzX2ZvcHMNCj4gPiBzeXNjb3B5YXJlYQ0KPiA+
-IHN5c2ZpbGxyZWN0IGluZHVzdHJpYWxpbyBscGNfaWNoIHNuZCBzeXNpbWdibHQgaTJjX2FsZ29f
-Yml0DQo+ID4gdG9zaGliYV9ibHVldG9vdGggc291bmRjb3JlIHRoZXJtYWwgcmZraWxsIGludGVs
-X3NtYXJ0Y29ubmVjdCBhYw0KPiA+IGJ1dHRvbg0KPiA+IHhmcyBsaWJjcmMzMmMgeGhjaV9wY2kg
-eGhjaV9oY2QgcnRzeF9wY2lfc2RtbWMgbW1jX2NvcmUgZWhjaV9wY2kNCj4gPiBlaGNpX2hjZCB1
-c2Jjb3JlIGNyYzMyY19pbnRlbCBydHN4X3BjaSBzZXJpb19yYXcgYmF0dGVyeSB3bWkgdmlkZW8N
-Cj4gPiBsMnRwX3BwcCBsMnRwX25ldGxpbmsgbDJ0cF9jb3JlIGlwNl91ZHBfdHVubmVsIHVkcF90
-dW5uZWwgcHBwb3ggc2cNCj4gPiBwcHBfbXBwZSBwcHBfZ2VuZXJpYyBzbGhjIGxpYmFyYzQgZG1f
-bXVsdGlwYXRoIGRtX21vZCBzY3NpX2RoX3JkYWMNCj4gPiBzY3NpX2RoX2VtYyBzY3NpX2RoX2Fs
-dWENCj4gPiBbICAgIDQuNjgyNDU1XSBDUFU6IDMgUElEOiA0NTkgQ29tbTogc3lzdGVtZC11ZGV2
-ZCBOb3QgdGFpbnRlZA0KPiA+IDUuNi4wLXJjMi0xLmczMjdhYmM5LWRlZmF1bHQgIzEgb3BlblNV
-U0UgVHVtYmxld2VlZCAodW5yZWxlYXNlZCkNCj4gPiBbICAgIDQuNjgyNDYwXSBIYXJkd2FyZSBu
-YW1lOiBUT1NISUJBIFBPUlRFR0UgWjMwLUEvUE9SVEVHRSBaMzAtQSwNCj4gPiBCSU9TDQo+ID4g
-VmVyc2lvbiA0LjMwICAgMDQvMjYvMjAxOA0KPiA+IFsgICAgNC42ODI0ODZdIFJJUDogMDAxMDpk
-cm1fYXRvbWljX2dldF9jcnRjX3N0YXRlKzB4ZjgvMHgxMTAgW2RybV0NCj4gPiBbICAgIDQuNjgy
-NDkwXSBDb2RlOiA4OSAyYyAxMSA0OCA4OSA5OCBmMCAwMSAwMCAwMCA0OCA4YiA0ZCAyMCA4Yg0K
-PiA+IDU1IDYwDQo+ID4gZTggMmMgYWEgMDAgMDAgNDggOGIgMDQgMjQgNDggODMgYzQgMDggNWIg
-NWQgNDEgNWMgYzMgNDggOTggZTkgNGUNCj4gPiBmZiBmZg0KPiA+IGZmIDwwZj4gMGIgZTkgMjgg
-ZmYgZmYgZmYgNDggYzcgYzAgZjQgZmYgZmYgZmYgZTkgM2IgZmYgZmYgZmYgMGYgMWYNCj4gPiA0
-NA0KPiA+IFsgICAgNC42ODI0OTddIFJTUDogMDAwMDpmZmZmYWE1YmMwNDMzOGE4IEVGTEFHUzog
-MDAwMTAyNDYNCj4gPiBbICAgIDQuNjgyNTAwXSBSQVg6IDAwMDAwMDAwMDAwMDAwMDAgUkJYOiBm
-ZmZmOWM5Nzg2MmMxMDAwIFJDWDoNCj4gPiBmZmZmOWM5NzkxMDFlZDA4DQo+ID4gWyAgICA0LjY4
-MjUwNF0gUkRYOiAwMDAwMDAwMDAwMDAwMDJkIFJTSTogMDAwMDAwMDAwMDAwMDAwMCBSREk6DQo+
-ID4gZmZmZjljOTc4NjJjMTAwMA0KPiA+IFsgICAgNC42ODI1MDddIFJCUDogZmZmZjljOTc4NjJj
-NzgwMCBSMDg6IDAwMDAwMDAwMDAwMDAwNzkgUjA5Og0KPiA+IDAwMDAwMDAwMDAwMDAwNzkNCj4g
-PiBbICAgIDQuNjgyNTEwXSBSMTA6IDAwMDAwMDAwMDAwMDAwMmQgUjExOiAwMDAwMDAwMDAwMDAw
-MDA1IFIxMjoNCj4gPiAwMDAwMDAwMDAwMDAwMDAwDQo+ID4gWyAgICA0LjY4MjUxM10gUjEzOiBm
-ZmZmOWM5Nzg2MmM3ODAwIFIxNDogZmZmZjljOTc4NjJjMDgwMCBSMTU6DQo+ID4gZmZmZmZmZmZj
-MGVlMGY4MA0KPiA+IFsgICAgNC42ODI1MTddIEZTOiAgMDAwMDdmNjVkMmM5MmRjMCgwMDAwKQ0K
-PiA+IEdTOmZmZmY5Yzk3OTJlYzAwMDAoMDAwMCkNCj4gPiBrbmxHUzowMDAwMDAwMDAwMDAwMDAw
-DQo+ID4gWyAgICA0LjY4MjUyMV0gQ1M6ICAwMDEwIERTOiAwMDAwIEVTOiAwMDAwIENSMDogMDAw
-MDAwMDA4MDA1MDAzMw0KPiA+IFsgICAgNC42ODI1MjRdIENSMjogMDAwMDdmMDE2ZDI1YjYxMCBD
-UjM6IDAwMDAwMDAzMGY2MzQwMDQgQ1I0Og0KPiA+IDAwMDAwMDAwMDAxNjA2ZTANCj4gPiBbICAg
-IDQuNjgyNTI3XSBDYWxsIFRyYWNlOg0KPiA+IFsgICAgNC42ODI1NTFdICBkcm1fYXRvbWljX2Fk
-ZF9hZmZlY3RlZF9jb25uZWN0b3JzKzB4MmUvMHgxMTAgW2RybV0NCj4gPiBbICAgIDQuNjgyNTY5
-XSAgZHJtX2F0b21pY19oZWxwZXJfY2hlY2tfbW9kZXNldCsweDQ5Mi8weDc3MA0KPiA+IFtkcm1f
-a21zX2hlbHBlcl0NCj4gPiBbICAgIDQuNjgyNjQxXSAgaW50ZWxfYXRvbWljX2NoZWNrKzB4OTMv
-MHhjYzAgW2k5MTVdDQo+ID4gWyAgICA0LjY4MjY1N10gID8gZHJtX2F0b21pY19oZWxwZXJfZHVw
-bGljYXRlX3N0YXRlKzB4MTQ4LzB4MTcwDQo+ID4gW2RybV9rbXNfaGVscGVyXQ0KPiA+IFsgICAg
-NC42ODI3MjNdICBpbnRlbF9tb2Rlc2V0X2luaXQrMHhlNTUvMHgxMTgwIFtpOTE1XQ0KPiA+IFsg
-ICAgNC42ODI3NzddICBpOTE1X2RyaXZlcl9wcm9iZSsweDQ4ZS8weDU4MCBbaTkxNV0NCj4gPiBb
-ICAgIDQuNjgyNzg0XSAgPyBfY29uZF9yZXNjaGVkKzB4MTUvMHgzMA0KPiA+IFsgICAgNC42ODI3
-ODhdICA/IG11dGV4X2xvY2srMHhlLzB4MzANCj4gPiBbICAgIDQuNjgyODM5XSAgaTkxNV9wY2lf
-cHJvYmUrMHg1NC8weDE0MCBbaTkxNV0NCj4gPiBbICAgIDQuNjgyODQ1XSAgbG9jYWxfcGNpX3By
-b2JlKzB4NDIvMHg4MA0KPiA+IFsgICAgNC42ODI4NTFdICBwY2lfZGV2aWNlX3Byb2JlKzB4MTA3
-LzB4MWIwDQo+ID4gWyAgICA0LjY4Mjg1Nl0gIHJlYWxseV9wcm9iZSsweDE0Ny8weDNjMA0KPiA+
-IFsgICAgNC42ODI4NjBdICBkcml2ZXJfcHJvYmVfZGV2aWNlKzB4YjYvMHgxMDANCj4gPiBbICAg
-IDQuNjgyODY0XSAgZGV2aWNlX2RyaXZlcl9hdHRhY2grMHg1My8weDYwDQo+ID4gWyAgICA0LjY4
-Mjg2N10gIF9fZHJpdmVyX2F0dGFjaCsweDhhLzB4MTUwDQo+ID4gWyAgICA0LjY4Mjg3MF0gID8g
-ZGV2aWNlX2RyaXZlcl9hdHRhY2grMHg2MC8weDYwDQo+ID4gWyAgICA0LjY4Mjg3NF0gID8gZGV2
-aWNlX2RyaXZlcl9hdHRhY2grMHg2MC8weDYwDQo+ID4gWyAgICA0LjY4Mjg3OF0gIGJ1c19mb3Jf
-ZWFjaF9kZXYrMHg3OC8weGMwDQo+ID4gWyAgICA0LjY4Mjg4M10gIGJ1c19hZGRfZHJpdmVyKzB4
-MTRkLzB4MWYwDQo+ID4gWyAgICA0LjY4Mjg4N10gIGRyaXZlcl9yZWdpc3RlcisweDZjLzB4YzAN
-Cj4gPiBbICAgIDQuNjgyODkxXSAgPyAweGZmZmZmZmZmYzBmZjUwMDANCj4gPiBbICAgIDQuNjgy
-OTQ2XSAgaTkxNV9pbml0KzB4NWQvMHg3MCBbaTkxNV0NCj4gPiBbICAgIDQuNjgyOTUyXSAgZG9f
-b25lX2luaXRjYWxsKzB4NDYvMHgyMDANCj4gPiBbICAgIDQuNjgyOTU3XSAgPyBfY29uZF9yZXNj
-aGVkKzB4MTUvMHgzMA0KPiA+IFsgICAgNC42ODI5NjFdICA/IGttZW1fY2FjaGVfYWxsb2NfdHJh
-Y2UrMHgxODkvMHgyODANCj4gPiBbICAgIDQuNjgyOTY2XSAgPyBkb19pbml0X21vZHVsZSsweDIz
-LzB4MjMwDQo+ID4gWyAgICA0LjY4Mjk3MF0gIGRvX2luaXRfbW9kdWxlKzB4NWMvMHgyMzANCj4g
-PiBbICAgIDQuNjgyOTczXSAgbG9hZF9tb2R1bGUrMHgxNGIyLzB4MTY1MA0KPiA+IFsgICAgNC42
-ODI5ODBdICA/IF9fZG9fc3lzX2luaXRfbW9kdWxlKzB4MTZlLzB4MWEwDQo+ID4gWyAgICA0LjY4
-Mjk4M10gIF9fZG9fc3lzX2luaXRfbW9kdWxlKzB4MTZlLzB4MWEwDQo+ID4gWyAgICA0LjY4Mjk4
-OV0gIGRvX3N5c2NhbGxfNjQrMHg2NC8weDI0MA0KPiA+IFsgICAgNC42ODI5OTRdICBlbnRyeV9T
-WVNDQUxMXzY0X2FmdGVyX2h3ZnJhbWUrMHg0OS8weGJlDQo+ID4gWyAgICA0LjY4Mjk5OF0gUklQ
-OiAwMDMzOjB4N2Y2NWQzOGE5ZDlhDQo+ID4gWyAgICA0LjY4MzAwMV0gQ29kZTogNDggOGIgMGQg
-ZTkgMDAgMGMgMDAgZjcgZDggNjQgODkgMDEgNDggODMgYzgNCj4gPiBmZiBjMw0KPiA+IDY2IDJl
-IDBmIDFmIDg0IDAwIDAwIDAwIDAwIDAwIDBmIDFmIDQ0IDAwIDAwIDQ5IDg5IGNhIGI4IGFmIDAw
-IDAwDQo+ID4gMDAgMGYNCj4gPiAwNSA8NDg+IDNkIDAxIGYwIGZmIGZmIDczIDAxIGMzIDQ4IDhi
-IDBkIGI2IDAwIDBjIDAwIGY3IGQ4IDY0IDg5IDAxDQo+ID4gNDgNCj4gPiBbICAgIDQuNjgzMDA3
-XSBSU1A6IDAwMmI6MDAwMDdmZmZhZTM0MTAwOCBFRkxBR1M6IDAwMDAwMjQ2DQo+ID4gT1JJR19S
-QVg6DQo+ID4gMDAwMDAwMDAwMDAwMDBhZg0KPiA+IFsgICAgNC42ODMwMTJdIFJBWDogZmZmZmZm
-ZmZmZmZmZmZkYSBSQlg6IDAwMDA1NjNjMWQ0Y2I5MzAgUkNYOg0KPiA+IDAwMDA3ZjY1ZDM4YTlk
-OWENCj4gPiBbICAgIDQuNjgzMDE1XSBSRFg6IDAwMDA3ZjY1ZDM1NjY4OWQgUlNJOiAwMDAwMDAw
-MDAwNGJkZGU3IFJESToNCj4gPiAwMDAwN2Y2NWNkNjBjMDEwDQo+ID4gWyAgICA0LjY4MzAxOF0g
-UkJQOiAwMDAwN2Y2NWNkNjBjMDEwIFIwODogMDAwMDAwMDAwMDAwMDAwMCBSMDk6DQo+ID4gMDAw
-MDdmNjVkMzI2NDllMA0KPiA+IFsgICAgNC42ODMwMjJdIFIxMDogMDAwMDAwMDAwMDAwMDAwMSBS
-MTE6IDAwMDAwMDAwMDAwMDAyNDYgUjEyOg0KPiA+IDAwMDA3ZjY1ZDM1NjY4OWQNCj4gPiBbICAg
-IDQuNjgzMDI1XSBSMTM6IDAwMDAwMDAwMDAwMDAwMDAgUjE0OiAwMDAwNTYzYzFkMjJmMGMwIFIx
-NToNCj4gPiAwMDAwNTYzYzFkNGNiOTMwDQo+ID4gWyAgICA0LjY4MzAzMF0gLS0tWyBlbmQgdHJh
-Y2UgMmI1NjlhODg3OGNkNWI5OSBdLS0tDQo+ID4gDQo+ID4gDQo+ID4gDQo+ID4gLS0NCj4gPiBT
-cmRhxI1hbiBwb3pkcmF2L0Jlc3QgcmVnYXJkcy9GcmV1bmRsaWNoZSBHcsO8w59lL0NvcmRpYWxl
-bWVudA0KPiA+IFNpbmnFoWEgQmFuZGluDQo+IF9fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fDQo+IEludGVsLWdmeCBtYWlsaW5nIGxpc3QNCj4gSW50ZWwtZ2Z4
-QGxpc3RzLmZyZWVkZXNrdG9wLm9yZw0KPiBodHRwczovL2xpc3RzLmZyZWVkZXNrdG9wLm9yZy9t
-YWlsbWFuL2xpc3RpbmZvL2ludGVsLWdmeA0K
+On Fri, Feb 21, 2020 at 6:17 AM Matthias Brugger <matthias.bgg@gmail.com> wrote:
+>
+>
+>
+> On 10/02/2020 07:35, Hsin-Yi Wang wrote:
+> > Fixing several unit name warnings:
+> >
+> > Warning (unit_address_vs_reg): /oscillator@0: node has a unit name, but no reg property
+> > Warning (unit_address_vs_reg): /oscillator@1: node has a unit name, but no reg property
+> > Warning (unit_address_vs_reg): /oscillator@2: node has a unit name, but no reg property
+> > Warning (unit_address_vs_reg): /thermal-zones/cpu_thermal/trips/trip-point@0: node has a unit name, but no reg property
+> > Warning (unit_address_vs_reg): /thermal-zones/cpu_thermal/trips/trip-point@1: node has a unit name, but no reg property
+> > Warning (unit_address_vs_reg): /thermal-zones/cpu_thermal/trips/cpu_crit@0: node has a unit name, but no reg property
+> > Warning (unit_address_vs_reg): /thermal-zones/cpu_thermal/cooling-maps/map@0: node has a unit name, but no reg property
+> > Warning (unit_address_vs_reg): /thermal-zones/cpu_thermal/cooling-maps/map@1: node has a unit name, but no reg property
+> > Warning (unit_address_vs_reg): /reserved-memory/vpu_dma_mem_region: node has a reg or ranges property, but no unit name
+> > Warning (simple_bus_reg): /soc/pinctrl@10005000: simple-bus unit address format error, expected "1000b000"
+> > Warning (simple_bus_reg): /soc/interrupt-controller@10220000: simple-bus unit address format error, expected "10221000"
+> > Warning (alias_paths): /aliases: aliases property name must include only lowercase and '-'
+> >
+> > Signed-off-by: Hsin-Yi Wang <hsinyi@chromium.org>
+> > ---
+> >  arch/arm64/boot/dts/mediatek/mt8173.dtsi | 38 ++++++++++++------------
+> >  1 file changed, 19 insertions(+), 19 deletions(-)
+> >
+> > diff --git a/arch/arm64/boot/dts/mediatek/mt8173.dtsi b/arch/arm64/boot/dts/mediatek/mt8173.dtsi
+> > index 790cd64aa447..2b7f566fb407 100644
+> > --- a/arch/arm64/boot/dts/mediatek/mt8173.dtsi
+> > +++ b/arch/arm64/boot/dts/mediatek/mt8173.dtsi
+> > @@ -42,14 +42,14 @@ aliases {
+> >               dpi0 = &dpi0;
+> >               dsi0 = &dsi0;
+> >               dsi1 = &dsi1;
+> > -             mdp_rdma0 = &mdp_rdma0;
+> > -             mdp_rdma1 = &mdp_rdma1;
+> > -             mdp_rsz0 = &mdp_rsz0;
+> > -             mdp_rsz1 = &mdp_rsz1;
+> > -             mdp_rsz2 = &mdp_rsz2;
+> > -             mdp_wdma0 = &mdp_wdma0;
+> > -             mdp_wrot0 = &mdp_wrot0;
+> > -             mdp_wrot1 = &mdp_wrot1;
+> > +             mdp-rdma0 = &mdp_rdma0;
+> > +             mdp-rdma1 = &mdp_rdma1;
+> > +             mdp-rsz0 = &mdp_rsz0;
+> > +             mdp-rsz1 = &mdp_rsz1;
+> > +             mdp-rsz2 = &mdp_rsz2;
+> > +             mdp-wdma0 = &mdp_wdma0;
+> > +             mdp-wrot0 = &mdp_wrot0;
+> > +             mdp-wrot1 = &mdp_wrot1;
+>
+> Won't we need to update the mdp driver as well, as it uses of_alias_get_id()?
+>
+It's fixed in the fifth patch
+https://patchwork.kernel.org/patch/11372623/
+
+> >               serial0 = &uart0;
+> >               serial1 = &uart1;
+> >               serial2 = &uart2;
+> > @@ -246,21 +246,21 @@ psci {
+> >               cpu_on        = <0x84000003>;
+> >       };
+> >
+> > -     clk26m: oscillator@0 {
+> > +     clk26m: oscillator0 {
+> >               compatible = "fixed-clock";
+> >               #clock-cells = <0>;
+> >               clock-frequency = <26000000>;
+> >               clock-output-names = "clk26m";
+> >       };
+> >
+> > -     clk32k: oscillator@1 {
+> > +     clk32k: oscillator1 {
+> >               compatible = "fixed-clock";
+> >               #clock-cells = <0>;
+> >               clock-frequency = <32000>;
+> >               clock-output-names = "clk32k";
+> >       };
+> >
+> > -     cpum_ck: oscillator@2 {
+> > +     cpum_ck: oscillator2 {
+> >               compatible = "fixed-clock";
+> >               #clock-cells = <0>;
+> >               clock-frequency = <0>;
+> > @@ -276,19 +276,19 @@ cpu_thermal: cpu_thermal {
+> >                       sustainable-power = <1500>; /* milliwatts */
+> >
+> >                       trips {
+> > -                             threshold: trip-point@0 {
+> > +                             threshold: trip-point0 {
+> >                                       temperature = <68000>;
+> >                                       hysteresis = <2000>;
+> >                                       type = "passive";
+> >                               };
+> >
+> > -                             target: trip-point@1 {
+> > +                             target: trip-point1 {
+> >                                       temperature = <85000>;
+> >                                       hysteresis = <2000>;
+> >                                       type = "passive";
+> >                               };
+> >
+> > -                             cpu_crit: cpu_crit@0 {
+> > +                             cpu_crit: cpu_crit0 {
+> >                                       temperature = <115000>;
+> >                                       hysteresis = <2000>;
+> >                                       type = "critical";
+> > @@ -296,13 +296,13 @@ cpu_crit: cpu_crit@0 {
+> >                       };
+> >
+> >                       cooling-maps {
+> > -                             map@0 {
+> > +                             map0 {
+> >                                       trip = <&target>;
+> >                                       cooling-device = <&cpu0 0 0>,
+> >                                                        <&cpu1 0 0>;
+> >                                       contribution = <3072>;
+> >                               };
+> > -                             map@1 {
+> > +                             map1 {
+> >                                       trip = <&target>;
+> >                                       cooling-device = <&cpu2 0 0>,
+> >                                                        <&cpu3 0 0>;
+> > @@ -316,7 +316,7 @@ reserved-memory {
+> >               #address-cells = <2>;
+> >               #size-cells = <2>;
+> >               ranges;
+> > -             vpu_dma_reserved: vpu_dma_mem_region {
+> > +             vpu_dma_reserved: vpu_dma_mem_region@b7000000 {
+> >                       compatible = "shared-dma-pool";
+> >                       reg = <0 0xb7000000 0 0x500000>;
+> >                       alignment = <0x1000>;
+> > @@ -368,7 +368,7 @@ syscfg_pctl_a: syscfg_pctl_a@10005000 {
+> >                       reg = <0 0x10005000 0 0x1000>;
+> >               };
+> >
+> > -             pio: pinctrl@10005000 {
+> > +             pio: pinctrl@1000b000 {
+> >                       compatible = "mediatek,mt8173-pinctrl";
+> >                       reg = <0 0x1000b000 0 0x1000>;
+> >                       mediatek,pctl-regmap = <&syscfg_pctl_a>;
+> > @@ -575,7 +575,7 @@ mipi_tx1: mipi-dphy@10216000 {
+> >                       status = "disabled";
+> >               };
+> >
+> > -             gic: interrupt-controller@10220000 {
+> > +             gic: interrupt-controller@10221000 {
+> >                       compatible = "arm,gic-400";
+> >                       #interrupt-cells = <3>;
+> >                       interrupt-parent = <&gic>;
+> >
