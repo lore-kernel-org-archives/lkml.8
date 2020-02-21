@@ -7,49 +7,47 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 061A5C35640
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 07:54:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C30D1C35640
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 07:54:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BED6320578
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 07:54:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 990792073A
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 07:54:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582271665;
-	bh=cBFPbr8CVvdMgTjBagQOmxmbeGJeF3llcrP0PGr67TY=;
+	s=default; t=1582271669;
+	bh=zAa2uEgQbd2JoS7G+0gTzPTd/qwhQJyo3d9rW0gWzZU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=gk/ozub1BV68n1oJU6iNEmrdHTHp+j6m4Ps6SD/RZw+GO82y4AmpCg9r/9I1f5d8I
-	 7sqRFprEjVfsHOd9aH3vV0iLhPdscCzxfc8EknePyMSjlHDqSUdjKcGnqLGScTc2FS
-	 dMGw7NOu6XdKWilf8II9PYetLk2g4X9m7OWnkP1A=
+	b=R4Tp5ROjdjOCjp20EBxNGzHeXg5cC93s4BEpnrAJ/tmM8C49gXz4D6znRI6Kel/1s
+	 xKMDO2S0pV5Ygp7nXQP9jiEjWPMdjOYKgEkK0ohCSDLNwCQxqT+VitssDx1yubDBLF
+	 Ru4HKmFjMu6w3v7juDayJ5WqzNNT9KUWDCtEplJ0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730242AbgBUHyY (ORCPT
+        id S1730252AbgBUHy2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Feb 2020 02:54:24 -0500
-Received: from mail.kernel.org ([198.145.29.99]:52924 "EHLO mail.kernel.org"
+        Fri, 21 Feb 2020 02:54:28 -0500
+Received: from mail.kernel.org ([198.145.29.99]:52984 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729725AbgBUHyW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Feb 2020 02:54:22 -0500
+        id S1729725AbgBUHyZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 21 Feb 2020 02:54:25 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id CF0802073A;
-        Fri, 21 Feb 2020 07:54:21 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 596112073A;
+        Fri, 21 Feb 2020 07:54:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1582271662;
-        bh=cBFPbr8CVvdMgTjBagQOmxmbeGJeF3llcrP0PGr67TY=;
+        s=default; t=1582271664;
+        bh=zAa2uEgQbd2JoS7G+0gTzPTd/qwhQJyo3d9rW0gWzZU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=KQtFPhhKbwqFXy7m32kF8lUhjVqhftDlkW3welMiQF/SXI/EEsomF/uYKrzokZsWb
-         fDJU808jYrqHwmIzsfGCqpNyHiTwle6o9MGfKnuzb/yFkGbOSAkFNtrIGChGJune/E
-         tplbAlvv7olM8FRUuNeeUT9xjL8zQhwRdeZ4J24g=
+        b=LR5FSJpIZI5YRg/3OUA2QY1RG957mZ4CKbdyMFkNIdBApdY2oY36E/IUdfTDzL8zS
+         us3j9SAvf7bd/rEOMfqoP6ceAW4dRv0XW6zrhepQ++3CfTcdkpDOcj9xnKozs38M+S
+         bu41Qkscgpeq7aIWbL18iOJacywY/O+MpWnFBVA4=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org,
-        Kai Vehmanen <kai.vehmanen@linux.intel.com>,
-        Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>,
-        Mark Brown <broonie@kernel.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.5 252/399] ASoC: SOF: Intel: hda-dai: fix compilation warning in pcm_prepare
-Date:   Fri, 21 Feb 2020 08:39:37 +0100
-Message-Id: <20200221072426.928315328@linuxfoundation.org>
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Sekhar Nori <nsekhar@ti.com>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.5 235/399] clocksource: davinci: only enable clockevents once tim34 is initialized
+Date:   Fri, 21 Feb 2020 08:39:20 +0100
+Message-Id: <20200221072425.532861822@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200221072402.315346745@linuxfoundation.org>
 References: <20200221072402.315346745@linuxfoundation.org>
@@ -62,49 +60,55 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
+From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
 
-[ Upstream commit d873997192ddcacb5333575502be2f91ea4b47b8 ]
+[ Upstream commit cea931c25104e6bddc42eb067f58193f355dbdd7 ]
 
-Fix GCC warning with W=1, previous cleanup did not remove unnecessary
-variable.
+The DM365 platform has a strange quirk (only present when using ancient
+u-boot - mainline u-boot v2013.01 and later works fine) where if we
+enable the second half of the timer in periodic mode before we do its
+initialization - the time won't start flowing and we can't boot.
 
-sound/soc/sof/intel/hda-dai.c: In function ‘hda_link_pcm_prepare’:
+When using more recent u-boot, we can enable the timer, then reinitialize
+it and all works fine.
 
-sound/soc/sof/intel/hda-dai.c:265:31: warning: variable ‘hda_stream’
-set but not used [-Wunused-but-set-variable]
-  265 |  struct sof_intel_hda_stream *hda_stream;
-      |                               ^~~~~~~~~~
+To work around this issue only enable clockevents once tim34 is
+initialized i.e. move clockevents_config_and_register() below tim34
+initialization.
 
-Fixes: a3ebccb52efdf ("ASoC: SOF: Intel: hda: reset link DMA state in prepare")
-Cc: Kai Vehmanen <kai.vehmanen@linux.intel.com>
-Signed-off-by: Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
-Link: https://lore.kernel.org/r/20200113205620.27285-1-pierre-louis.bossart@linux.intel.com
-Signed-off-by: Mark Brown <broonie@kernel.org>
+Signed-off-by: Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Signed-off-by: Sekhar Nori <nsekhar@ti.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- sound/soc/sof/intel/hda-dai.c | 3 ---
- 1 file changed, 3 deletions(-)
+ drivers/clocksource/timer-davinci.c | 8 ++++----
+ 1 file changed, 4 insertions(+), 4 deletions(-)
 
-diff --git a/sound/soc/sof/intel/hda-dai.c b/sound/soc/sof/intel/hda-dai.c
-index 896d21984b735..1923b0c36bcef 100644
---- a/sound/soc/sof/intel/hda-dai.c
-+++ b/sound/soc/sof/intel/hda-dai.c
-@@ -261,14 +261,11 @@ static int hda_link_pcm_prepare(struct snd_pcm_substream *substream,
- {
- 	struct hdac_ext_stream *link_dev =
- 				snd_soc_dai_get_dma_data(dai, substream);
--	struct sof_intel_hda_stream *hda_stream;
- 	struct snd_sof_dev *sdev =
- 				snd_soc_component_get_drvdata(dai->component);
- 	struct snd_soc_pcm_runtime *rtd = snd_pcm_substream_chip(substream);
- 	int stream = substream->stream;
+diff --git a/drivers/clocksource/timer-davinci.c b/drivers/clocksource/timer-davinci.c
+index 62745c9620498..e421946a91c5a 100644
+--- a/drivers/clocksource/timer-davinci.c
++++ b/drivers/clocksource/timer-davinci.c
+@@ -302,10 +302,6 @@ int __init davinci_timer_register(struct clk *clk,
+ 		return rv;
+ 	}
  
--	hda_stream = hstream_to_sof_hda_stream(link_dev);
+-	clockevents_config_and_register(&clockevent->dev, tick_rate,
+-					DAVINCI_TIMER_MIN_DELTA,
+-					DAVINCI_TIMER_MAX_DELTA);
 -
- 	if (link_dev->link_prepared)
- 		return 0;
+ 	davinci_clocksource.dev.rating = 300;
+ 	davinci_clocksource.dev.read = davinci_clocksource_read;
+ 	davinci_clocksource.dev.mask =
+@@ -323,6 +319,10 @@ int __init davinci_timer_register(struct clk *clk,
+ 		davinci_clocksource_init_tim34(base);
+ 	}
  
++	clockevents_config_and_register(&clockevent->dev, tick_rate,
++					DAVINCI_TIMER_MIN_DELTA,
++					DAVINCI_TIMER_MAX_DELTA);
++
+ 	rv = clocksource_register_hz(&davinci_clocksource.dev, tick_rate);
+ 	if (rv) {
+ 		pr_err("Unable to register clocksource");
 -- 
 2.20.1
 
