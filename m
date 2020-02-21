@@ -2,298 +2,193 @@ Return-Path: <SRS0=1210=4J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C2762C35646
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 11:37:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7630CC35653
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 11:39:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8D41D222C4
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 11:37:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3DE6F222C4
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 11:39:06 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1582285146;
+	bh=3VbA/6IynnwAPZnk3kedddXUiGueUIj2LdQ/mwiF/xo=;
+	h=Date:From:To:Cc:Subject:List-ID:From;
+	b=mSr40/791w7KmfWb0pVZYBvc//EigMIjIoKHEGc2bpFAa2fPpoMh5NgstY8t8ynmK
+	 pMjcvjH/cJmzZVTiYE3Xg/P7wTIsDrC8L84ftKPnVncxogjd8/v5CwMCjD+VnFkIvv
+	 2FWvJ55Ra/bt3wBLT+k7KPvfo+XrOOCdaca1b314=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727616AbgBULhl (ORCPT
+        id S1727794AbgBULjE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Feb 2020 06:37:41 -0500
-Received: from bhuna.collabora.co.uk ([46.235.227.227]:57218 "EHLO
-        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726976AbgBULhl (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Feb 2020 06:37:41 -0500
-Received: from [127.0.0.1] (localhost [127.0.0.1])
-        (Authenticated sender: eballetbo)
-        with ESMTPSA id C43CB278760
-Subject: Re: [PATCH v8 0/6] arm/arm64: mediatek: Fix mmsys device probing
-To:     CK Hu <ck.hu@mediatek.com>, Matthias Brugger <mbrugger@suse.com>
-Cc:     mark.rutland@arm.com, Kate Stewart <kstewart@linuxfoundation.org>,
-        Minghsiu Tsai <minghsiu.tsai@mediatek.com>,
-        Andrew-CT Chen <andrew-ct.chen@mediatek.com>, airlied@linux.ie,
-        mturquette@baylibre.com, dri-devel@lists.freedesktop.org,
-        Richard Fontana <rfontana@redhat.com>,
-        laurent.pinchart@ideasonboard.com, ulrich.hecht+renesas@gmail.com,
-        Collabora Kernel ML <kernel@collabora.com>,
-        linux-clk@vger.kernel.org, Nicolas Boichat <drinkcat@chromium.org>,
-        Weiyi Lu <weiyi.lu@mediatek.com>,
-        Krzysztof Kozlowski <krzk@kernel.org>, wens@csie.org,
-        Allison Randal <allison@lohutok.net>,
-        mtk01761 <wendell.lin@mediatek.com>,
-        Owen Chen <owen.chen@mediatek.com>,
-        linux-media@vger.kernel.org, devicetree@vger.kernel.org,
-        p.zabel@pengutronix.de, frank-w@public-files.de,
-        Seiya Wang <seiya.wang@mediatek.com>, sean.wang@mediatek.com,
-        Houlong Wei <houlong.wei@mediatek.com>, robh+dt@kernel.org,
-        linux-mediatek@lists.infradead.org, hsinyi@chromium.org,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        linux-arm-kernel@lists.infradead.org,
-        Fabien Parent <fparent@baylibre.com>, sboyd@kernel.org,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        rdunlap@infradead.org, linux-kernel@vger.kernel.org,
-        Daniel Vetter <daniel@ffwll.ch>, matthias.bgg@kernel.org
-References: <20200220172147.919996-1-enric.balletbo@collabora.com>
- <1582259996.1846.7.camel@mtksdaap41>
- <7a87b486-1622-7f27-f5af-427b94a14c00@collabora.com>
- <1582277229.25992.9.camel@mtksdaap41>
- <1393a8c5-065f-cccb-2563-8b159c951d4b@suse.com>
- <1582283518.5889.10.camel@mtksdaap41>
-From:   Enric Balletbo i Serra <enric.balletbo@collabora.com>
-Message-ID: <6deab0a4-44a6-a15f-ac01-374f818b267c@collabora.com>
-Date:   Fri, 21 Feb 2020 12:37:28 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.5.0
+        Fri, 21 Feb 2020 06:39:04 -0500
+Received: from mail.kernel.org ([198.145.29.99]:41606 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726934AbgBULjE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 21 Feb 2020 06:39:04 -0500
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id EE26B222C4;
+        Fri, 21 Feb 2020 11:39:02 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1582285143;
+        bh=3VbA/6IynnwAPZnk3kedddXUiGueUIj2LdQ/mwiF/xo=;
+        h=Date:From:To:Cc:Subject:From;
+        b=MuRnZAq2frRfCGDw1SSCqIaE5VYoHhEUEVLvtXQ24hfaEOfbO3/gZHraQLv4XLC+R
+         /hbxT45o1EWL+WxZzV4In8c4M9SRNHiuQ4GG7+aYeWfF6jTDnK3fO1GpkAdLpRHDZW
+         t/SrSdKvBUaoc48jTTJKhkZLx/tGJD21DwlvKmHE=
+Date:   Fri, 21 Feb 2020 12:39:01 +0100
+From:   Greg KH <gregkh@linuxfoundation.org>
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        linux-kernel@vger.kernel.org, linux-usb@vger.kernel.org
+Subject: [GIT PULL] USB/Thunderbolt fixes for 5.6-rc3
+Message-ID: <20200221113901.GA114136@kroah.com>
 MIME-Version: 1.0
-In-Reply-To: <1582283518.5889.10.camel@mtksdaap41>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi CK and Matthias,
+The following changes since commit bb6d3fb354c5ee8d6bde2d576eb7220ea09862b9:
 
-On 21/2/20 12:11, CK Hu wrote:
-> Hi, Matthias:
-> 
-> On Fri, 2020-02-21 at 11:24 +0100, Matthias Brugger wrote:
->>
->> On 21/02/2020 10:27, CK Hu wrote:
->>> Hi, Enric:
->>>
->>> On Fri, 2020-02-21 at 09:56 +0100, Enric Balletbo i Serra wrote:
->>>> Hi CK,
->>>>
->>>> Thanks for your quick answer.
->>>>
->>>> On 21/2/20 5:39, CK Hu wrote:
->>>>> Hi, Enric:
->>>>>
->>>>> On Thu, 2020-02-20 at 18:21 +0100, Enric Balletbo i Serra wrote:
->>>>>> Dear all,
->>>>>>
->>>>>> Those patches are intended to solve an old standing issue on some
->>>>>> Mediatek devices (mt8173, mt2701 and mt2712) in a slightly different way
->>>>>> to the precedent series.
->>>>>>
->>>>>> Up to now both drivers, clock and drm are probed with the same device tree
->>>>>> compatible. But only the first driver get probed, which in effect breaks
->>>>>> graphics on those devices.
->>>>>>
->>>>>> The version eight of the series tries to solve the problem with a
->>>>>> different approach than the previous series but similar to how is solved
->>>>>> on other Mediatek devices.
->>>>>>
->>>>>> The MMSYS (Multimedia subsystem) in Mediatek SoCs has some registers to
->>>>>> control clock gates (which is used in the clk driver) and some registers
->>>>>> to set the routing and enable the differnet blocks of the display
->>>>>> and MDP (Media Data Path) subsystem. On this series the clk driver is
->>>>>> not a pure clock controller but a system controller that can provide
->>>>>> access to the shared registers between the different drivers that need
->>>>>> it (mediatek-drm and mediatek-mdp). And the biggest change is, that in
->>>>>> this version, clk driver is the entry point (parent) which will trigger
->>>>>> the probe of the corresponding mediatek-drm driver and pass its MMSYS
->>>>>> platform data for display configuration.
->>>>>
->>>>> When mmsys is a system controller, I prefer to place mmsys in
->>>>> drivers/soc/mediatek, and it share registers for clock, display, and mdp
->>>>> driver. This means the probe function is placed in
->>>>> drivers/soc/mediatek ,its display clock function, mdp clock function are
->>>>> placed in drivers/clk, display routing are placed in drivers/gpu/drm,
->>>>> and mdp routing are placed in dirvers/video.
->>>>>
->>>>
->>>> I understand what you mean but I am not sure this makes the code clearer and
->>>> useful. The driver in drivers/soc/mediatek will be a simple dummy implementation
->>>> of a "simple-mfd" device (a driver that simply matches with
->>>> "mediatek,mt8173-mmsys" and instantiates the "clk-mt8173-mm" and the
->>>> "mediatek-drm" driver (note that mediatek-mdp" is already instantiated via
->>>> device-tree).
->>>>
->>>
->>> It's clear that mmsys is neither a pure clock controller nor a pure
->>> routing controller for display and mdp. 
->>>
->>>> It'd be nice had a proper device-tree with a "simple-mfd" for mmsys from the
->>>> beginning representing how really hardwware is, but I think that, change this
->>>> now, will break backward compatibility.
->>>
->>> Maybe this is a solution. Current device tree would work only on old
->>> kernel version with a bug, so this mean there is no any device tree
->>> works on kernel version without bug. Why do we compatible with such
->>> device tree?
->>>
->>
+  Linux 5.6-rc1 (2020-02-09 16:08:48 -0800)
 
-So the only reason why current DT worked at some point is because there was a
-kernel bug?
+are available in the Git repository at:
 
-If that's the case I think we shouldn't worry about break DT compatibility (I'm
-sorry for those that having a buggy kernel makes display working)
+  git://git.kernel.org/pub/scm/linux/kernel/git/gregkh/usb.git tags/usb-5.6-rc3
 
->> The idea behind this is, that the device-tree could be passed by some boot
->> firmware, so that the OS do not care about it. For this we need a stable DTS as
->> otherwise newer kernel with older FW would break.
->>
->> DTS is supposed to be just a different description of the HW like ACPI. So it
->> has to be compatible (newer kernel with older DTS and if possible vice versa).
-> 
-> In my view, there is no FW (except some bug-inside FW) which works on
-> this dts, so this dts is in a initial state. I think the compatibility
-> is based on that dts correctly describe the HW. If we find this dts does
-> not correctly describe the HW and it's in a initial state, should we
-> still make it compatible?
-> 
+for you to fetch changes up to 8b978be8d067f58b29cbbf0579e88bb4a2d4350a:
 
-In this case I think we don't need to worry about buggy kernels, the only thing
-that we need to take in consideration is that mmsys is instantiated on both (the
-old DT and the new DT), we shouldn't expect display working (because never
-worked, right?)
+  Merge tag 'thunderbolt-fix-for-v5.6-rc3' of git://git.kernel.org/pub/scm/linux/kernel/git/westeri/thunderbolt into usb-linus (2020-02-18 19:39:29 +0100)
 
-With that in mind, I agree that is a good opportunity to fix properly the HW
-topology.
+----------------------------------------------------------------
+USB fixes for 5.6-rc3
 
-What thing that worries me is that I see this pattern on all Mediatek SoCs, does
-this mean that display was never well supported for Mediatek SoCs?
+Here are a number of small USB driver fixes for 5.6-rc3.
 
-Thanks.
+Included in here are:
+  - MAINTAINER file updates
+  - USB gadget driver fixes
+  - usb core quirk additions and fixes for regressions
+  - xhci driver fixes
+  - usb serial driver id additions and fixes
+  - thunderbolt bugfix
 
-> If you have better solution, just let's forget this.
-> 
-> Regards,
-> CK
-> 
->>
->> Regards,
->> Matthias
->>
->>> Regards,
->>> CK
->>>
->>>>
->>>> IMHO I think that considering the clk driver as entry point is fine, but this is
->>>> something that the clock maintainers should decide.
->>>>
->>>> Also note that this is not only a MT8173 problem I am seeing the same problem on
->>>> all other Mediatek SoCs.
->>>>
->>>> Thanks.
->>>>
->>>>> Regards,
->>>>> CK
->>>>>
->>>>>>
->>>>>> All this series was tested on the Acer R13 Chromebook only.
->>>>>>
->>>>>> For reference, here are the links to the old discussions:
->>>>>>
->>>>>> * v7: https://patchwork.kernel.org/project/linux-mediatek/list/?series=241217
->>>>>> * v6: https://patchwork.kernel.org/project/linux-mediatek/list/?series=213219
->>>>>> * v5: https://patchwork.kernel.org/project/linux-mediatek/list/?series=44063
->>>>>> * v4:
->>>>>>   * https://patchwork.kernel.org/patch/10530871/
->>>>>>   * https://patchwork.kernel.org/patch/10530883/
->>>>>>   * https://patchwork.kernel.org/patch/10530885/
->>>>>>   * https://patchwork.kernel.org/patch/10530911/
->>>>>>   * https://patchwork.kernel.org/patch/10530913/
->>>>>> * v3:
->>>>>>   * https://patchwork.kernel.org/patch/10367857/
->>>>>>   * https://patchwork.kernel.org/patch/10367861/
->>>>>>   * https://patchwork.kernel.org/patch/10367877/
->>>>>>   * https://patchwork.kernel.org/patch/10367875/
->>>>>>   * https://patchwork.kernel.org/patch/10367885/
->>>>>>   * https://patchwork.kernel.org/patch/10367883/
->>>>>>   * https://patchwork.kernel.org/patch/10367889/
->>>>>>   * https://patchwork.kernel.org/patch/10367907/
->>>>>>   * https://patchwork.kernel.org/patch/10367909/
->>>>>>   * https://patchwork.kernel.org/patch/10367905/
->>>>>> * v2: No relevant discussion, see v3
->>>>>> * v1:
->>>>>>   * https://patchwork.kernel.org/patch/10016497/
->>>>>>   * https://patchwork.kernel.org/patch/10016499/
->>>>>>   * https://patchwork.kernel.org/patch/10016505/
->>>>>>   * https://patchwork.kernel.org/patch/10016507/
->>>>>>
->>>>>> Best regards,
->>>>>>  Enric
->>>>>>
->>>>>> Changes in v8:
->>>>>> - Be a builtin_platform_driver like other mediatek mmsys drivers.
->>>>>> - New patches introduced in this series.
->>>>>>
->>>>>> Changes in v7:
->>>>>> - Add R-by from CK
->>>>>> - Add R-by from CK
->>>>>> - Fix check of return value of of_clk_get
->>>>>> - Fix identation
->>>>>> - Free clk_data->clks as well
->>>>>> - Get rid of private data structure
->>>>>>
->>>>>> Enric Balletbo i Serra (2):
->>>>>>   drm/mediatek: Move MMSYS configuration to include/linux/platform_data
->>>>>>   clk/drm: mediatek: Fix mediatek-drm device probing
->>>>>>
->>>>>> Matthias Brugger (4):
->>>>>>   drm/mediatek: Use regmap for register access
->>>>>>   drm/mediatek: Omit warning on probe defers
->>>>>>   media: mtk-mdp: Check return value of of_clk_get
->>>>>>   clk: mediatek: mt8173: Switch MMSYS to platform driver
->>>>>>
->>>>>>  drivers/clk/mediatek/Kconfig                  |   6 +
->>>>>>  drivers/clk/mediatek/Makefile                 |   1 +
->>>>>>  drivers/clk/mediatek/clk-mt2701-mm.c          |  30 +++
->>>>>>  drivers/clk/mediatek/clk-mt2712-mm.c          |  44 +++++
->>>>>>  drivers/clk/mediatek/clk-mt8173-mm.c          | 172 ++++++++++++++++++
->>>>>>  drivers/clk/mediatek/clk-mt8173.c             | 104 -----------
->>>>>>  drivers/gpu/drm/mediatek/mtk_disp_color.c     |   5 +-
->>>>>>  drivers/gpu/drm/mediatek/mtk_disp_ovl.c       |   5 +-
->>>>>>  drivers/gpu/drm/mediatek/mtk_disp_rdma.c      |   5 +-
->>>>>>  drivers/gpu/drm/mediatek/mtk_dpi.c            |  12 +-
->>>>>>  drivers/gpu/drm/mediatek/mtk_drm_crtc.c       |   4 +-
->>>>>>  drivers/gpu/drm/mediatek/mtk_drm_ddp.c        |  53 +++---
->>>>>>  drivers/gpu/drm/mediatek/mtk_drm_ddp.h        |   4 +-
->>>>>>  drivers/gpu/drm/mediatek/mtk_drm_ddp_comp.h   |  56 +-----
->>>>>>  drivers/gpu/drm/mediatek/mtk_drm_drv.c        | 113 +-----------
->>>>>>  drivers/gpu/drm/mediatek/mtk_drm_drv.h        |  13 +-
->>>>>>  drivers/gpu/drm/mediatek/mtk_dsi.c            |   8 +-
->>>>>>  drivers/gpu/drm/mediatek/mtk_hdmi.c           |   4 +-
->>>>>>  drivers/media/platform/mtk-mdp/mtk_mdp_comp.c |   6 +
->>>>>>  include/linux/platform_data/mtk_mmsys.h       |  73 ++++++++
->>>>>>  20 files changed, 401 insertions(+), 317 deletions(-)
->>>>>>  create mode 100644 drivers/clk/mediatek/clk-mt8173-mm.c
->>>>>>  create mode 100644 include/linux/platform_data/mtk_mmsys.h
->>>>>>
->>>>>
->>>>
->>>> _______________________________________________
->>>> Linux-mediatek mailing list
->>>> Linux-mediatek@lists.infradead.org
->>>> http://lists.infradead.org/mailman/listinfo/linux-mediatek
->>>
->>
->> _______________________________________________
->> Linux-mediatek mailing list
->> Linux-mediatek@lists.infradead.org
->> http://lists.infradead.org/mailman/listinfo/linux-mediatek
-> 
+Thunderbolt patches come in through here now that USB4 is really
+thunderbolt.
+
+All of these have been in linux-next for a while with no reported
+issues.
+
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
+----------------------------------------------------------------
+Alan Stern (1):
+      USB: hub: Don't record a connect-change event during reset-resume
+
+Andy Shevchenko (2):
+      MAINTAINERS: Sort entries in database for USB TYPEC
+      MAINTAINERS: Sort entries in database for THUNDERBOLT
+
+Anurag Kumar Vulisha (1):
+      usb: dwc3: gadget: Check for IOC/LST bit in TRB->ctrl fields
+
+Colin Ian King (2):
+      usb: dwc3: debug: fix string position formatting mixup with ret and len
+      usb: dwc3: debug: fix string position formatting mixup with ret and len
+
+Dan Carpenter (1):
+      USB: serial: ir-usb: Silence harmless uninitialized variable warning
+
+Dmitry Osipenko (1):
+      usb: phy: tegra: Add clarifying comments about the shared registers
+
+EJ Hsu (1):
+      usb: uas: fix a plug & unplug racing
+
+Greg Kroah-Hartman (7):
+      Revert "xhci: Fix memory leak when caching protocol extended capability PSI tables"
+      USB: misc: iowarrior: add support for 2 OEMed devices
+      USB: misc: iowarrior: add support for the 28 and 28L devices
+      Merge tag 'usb-serial-5.6-rc2' of https://git.kernel.org/.../johan/usb-serial into usb-linus
+      Merge tag 'fixes-for-v5.6-rc1' of git://git.kernel.org/.../balbi/usb into usb-linus
+      USB: misc: iowarrior: add support for the 100 device
+      Merge tag 'thunderbolt-fix-for-v5.6-rc3' of git://git.kernel.org/.../westeri/thunderbolt into usb-linus
+
+Hardik Gajjar (1):
+      USB: hub: Fix the broken detection of USB3 device in SMSC hub
+
+Jack Pham (2):
+      usb: gadget: composite: Fix bMaxPower for SuperSpeedPlus
+      usb: gadget: composite: Support more than 500mA MaxPower
+
+Johan Hovold (4):
+      USB: serial: ch341: fix receiver regression
+      USB: core: add endpoint-blacklist quirk
+      USB: quirks: blacklist duplicate ep on Sound Devices USBPre2
+      USB: core: clean up endpoint-descriptor parsing
+
+John Keeping (1):
+      usb: gadget: u_audio: Fix high-speed max packet size
+
+Lars-Peter Clausen (1):
+      usb: gadget: ffs: ffs_aio_cancel(): Save/restore IRQ flags
+
+Mathias Nyman (5):
+      xhci: Force Maximum Packet size for Full-speed bulk devices to valid range.
+      xhci: Fix memory leak when caching protocol extended capability PSI tables
+      xhci: fix runtime pm enabling for quirky Intel hosts
+      xhci: apply XHCI_PME_STUCK_QUIRK to Intel Comet Lake platforms
+      xhci: Fix memory leak when caching protocol extended capability PSI tables - take 2
+
+Michal Simek (1):
+      usb: gadget: udc-xilinx: Fix xudc_stop() kernel-doc format
+
+Mika Westerberg (1):
+      thunderbolt: Prevent crash if non-active NVMem file is read
+
+Minas Harutyunyan (2):
+      usb: dwc2: Fix in ISOC request length checking
+      usb: dwc2: Fix SET/CLEAR_FEATURE and GET_STATUS flows
+
+Peter Chen (1):
+      usb: charger: assign specific number for enum value
+
+Richard Dodd (1):
+      USB: Fix novation SourceControl XL after suspend
+
+Sergey Organov (1):
+      usb: gadget: serial: fix Tx stall after buffer overflow
+
+ MAINTAINERS                            | 20 +++++-----
+ drivers/thunderbolt/switch.c           |  7 ++++
+ drivers/usb/core/config.c              | 31 +++++++++------
+ drivers/usb/core/hub.c                 | 20 +++++++---
+ drivers/usb/core/hub.h                 |  1 +
+ drivers/usb/core/quirks.c              | 40 +++++++++++++++++++
+ drivers/usb/core/usb.h                 |  3 ++
+ drivers/usb/dwc2/gadget.c              | 40 +++++++++++--------
+ drivers/usb/dwc3/debug.h               | 39 +++++++------------
+ drivers/usb/dwc3/gadget.c              |  3 +-
+ drivers/usb/gadget/composite.c         | 30 +++++++++-----
+ drivers/usb/gadget/function/f_fs.c     |  5 ++-
+ drivers/usb/gadget/function/u_audio.c  | 10 ++---
+ drivers/usb/gadget/function/u_serial.c |  4 +-
+ drivers/usb/gadget/udc/udc-xilinx.c    |  1 -
+ drivers/usb/host/xhci-hub.c            | 25 ++++++++----
+ drivers/usb/host/xhci-mem.c            | 71 ++++++++++++++++++++++------------
+ drivers/usb/host/xhci-pci.c            | 10 +++--
+ drivers/usb/host/xhci.h                | 14 +++++--
+ drivers/usb/misc/iowarrior.c           | 31 ++++++++++++++-
+ drivers/usb/phy/phy-tegra-usb.c        |  8 ++++
+ drivers/usb/serial/ch341.c             | 10 +++++
+ drivers/usb/serial/ir-usb.c            |  2 +-
+ drivers/usb/storage/uas.c              | 23 ++++++++++-
+ include/linux/usb/quirks.h             |  3 ++
+ include/uapi/linux/usb/charger.h       | 16 ++++----
+ 26 files changed, 327 insertions(+), 140 deletions(-)
