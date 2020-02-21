@@ -4,51 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 212D6C35641
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 07:59:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3FAC1C35640
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 07:59:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E007A2073A
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 07:59:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 11A5B2465D
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 07:59:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582271951;
-	bh=ooos8tpZKnXbpVHIh/6tszTvkd3+TRtE+CbR4oBMCBk=;
+	s=default; t=1582271956;
+	bh=2o1WWQoBMGzmDpPyFqcjlSZ5s7gYYUk7TLywGJkq9G4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=y8epusn9NtDZSMuBS+YPkNNnwF+2fEbnJFvf59rDaBBuq/boDkt+MRcp6x86zugWv
-	 tBl1Ka1k8jVG5CHBkJqADSP8E46eQ2ptgIOBEVE1deBWB+DnZzeq1FsGhPHcbkjwGl
-	 V+nymczmdYMv9ITQG7rKVEafrosApaN3R3nBFTSA=
+	b=f/qSR3J21vEWs29mTTZg0uMH1I4lyr3Q8WNNnCileyj5SfCiD6r/XMPQJ1io3buE4
+	 yjWSfdclbuDadv4yIfo0g9bO4LH1zFRJ6rsBRaivop/sM+Hxxtsu7lWSSQyJhbAncr
+	 S7etgXld4ONqcBNZVIg7e0rR8D6VaykzQqtCnGkE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730867AbgBUH7J (ORCPT
+        id S1730885AbgBUH7O (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Feb 2020 02:59:09 -0500
-Received: from mail.kernel.org ([198.145.29.99]:59134 "EHLO mail.kernel.org"
+        Fri, 21 Feb 2020 02:59:14 -0500
+Received: from mail.kernel.org ([198.145.29.99]:59246 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730557AbgBUH7H (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Feb 2020 02:59:07 -0500
+        id S1730873AbgBUH7M (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 21 Feb 2020 02:59:12 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 972CF20578;
-        Fri, 21 Feb 2020 07:59:06 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A9EA2222C4;
+        Fri, 21 Feb 2020 07:59:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1582271947;
-        bh=ooos8tpZKnXbpVHIh/6tszTvkd3+TRtE+CbR4oBMCBk=;
+        s=default; t=1582271952;
+        bh=2o1WWQoBMGzmDpPyFqcjlSZ5s7gYYUk7TLywGJkq9G4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=B6yPAufWj2F3PX6vhI0fsVahbkrM6EtSg2jVCc5nYYBffRhTD7KKl6GNw/oyKkRxV
-         UVvtNM+W1K33rQN/CeEkq+nkbvJjaXjjuIofeL+1rg2gj4N9aXsfr/YBZD3/1H44HH
-         lslQB0briF4SsVlRKWHnRV7jkiiBqG9GiykJlKsI=
+        b=kmJ4speWHWN7K+3DVpgRr5I/epIzWE0xg54FDOCLKPii9JJFbHSRywMFgIX2aF8Pj
+         A9B3giQfnY5ZTBGGeXYbRgCB8uIAjS3XojmPgB+dmDSgq8JZ7kDL4siJxm1vOrv/La
+         ygaqS1z0jOG2K7vIwc7QKXrU6ca989ZtKePl/Kr0=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Heiko Carstens <heiko.carstens@de.ibm.com>,
-        Sven Schnelle <svens@linux.ibm.com>,
-        Vasily Gorbik <gor@linux.ibm.com>,
+        stable@vger.kernel.org, John Garry <john.garry@huawei.com>,
+        Marc Zyngier <maz@kernel.org>,
+        Hanjun Guo <guohanjun@huawei.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.5 321/399] s390: fix __EMIT_BUG() macro
-Date:   Fri, 21 Feb 2020 08:40:46 +0100
-Message-Id: <20200221072432.570098002@linuxfoundation.org>
+Subject: [PATCH 5.5 313/399] irqchip/mbigen: Set driver .suppress_bind_attrs to avoid remove problems
+Date:   Fri, 21 Feb 2020 08:40:38 +0100
+Message-Id: <20200221072431.913711177@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200221072402.315346745@linuxfoundation.org>
 References: <20200221072402.315346745@linuxfoundation.org>
@@ -61,199 +61,124 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Sven Schnelle <svens@linux.ibm.com>
+From: John Garry <john.garry@huawei.com>
 
-[ Upstream commit 17248ea0367465f4aaef728f6af661ed38e38cf1 ]
+[ Upstream commit d6152e6ec9e2171280436f7b31a571509b9287e1 ]
 
-Setting a kprobe on getname_flags() failed:
+The following crash can be seen for setting
+CONFIG_DEBUG_TEST_DRIVER_REMOVE=y for DT FW (which some people still use):
 
-$ echo 'p:tmr1 getname_flags +0(%r2):ustring' > kprobe_events
--bash: echo: write error: Invalid argument
+Hisilicon MBIGEN-V2 60080000.interrupt-controller: Failed to create mbi-gen irqdomain
+Hisilicon MBIGEN-V2: probe of 60080000.interrupt-controller failed with error -12
 
-Debugging the kprobes code showed that the address of
-getname_flags() is contained in the __bug_table. Kprobes
-doesn't allow to set probes at BUG() locations.
+[...]
 
-$ objdump -j  __bug_table -x build/fs/namei.o
-[..]
-0000000000000108 R_390_PC32        .text+0x00000000000075a8
-000000000000010c R_390_PC32        .L223+0x0000000000000004
+Unable to handle kernel paging request at virtual address 0000000000005008
+ Mem abort info:
+   ESR = 0x96000004
+   EC = 0x25: DABT (current EL), IL = 32 bits
+   SET = 0, FnV = 0
+   EA = 0, S1PTW = 0
+ Data abort info:
+   ISV = 0, ISS = 0x00000004
+   CM = 0, WnR = 0
+ user pgtable: 4k pages, 48-bit VAs, pgdp=0000041fb9990000
+ [0000000000005008] pgd=0000000000000000
+ Internal error: Oops: 96000004 [#1] PREEMPT SMP
+ Modules linked in:
+ CPU: 7 PID: 1 Comm: swapper/0 Not tainted 5.5.0-rc6-00002-g3fc42638a506-dirty #1622
+ Hardware name: Huawei Taishan 2280 /D05, BIOS Hisilicon D05 IT21 Nemo 2.0 RC0 04/18/2018
+ pstate: 40000085 (nZcv daIf -PAN -UAO)
+ pc : mbigen_set_type+0x38/0x60
+ lr : __irq_set_trigger+0x6c/0x188
+ sp : ffff800014b4b400
+ x29: ffff800014b4b400 x28: 0000000000000007
+ x27: 0000000000000000 x26: 0000000000000000
+ x25: ffff041fd83bd0d4 x24: ffff041fd83bd188
+ x23: 0000000000000000 x22: ffff80001193ce00
+ x21: 0000000000000004 x20: 0000000000000000
+ x19: ffff041fd83bd000 x18: ffffffffffffffff
+ x17: 0000000000000000 x16: 0000000000000000
+ x15: ffff8000119098c8 x14: ffff041fb94ec91c
+ x13: ffff041fb94ec1a1 x12: 0000000000000030
+ x11: 0101010101010101 x10: 0000000000000040
+ x9 : 0000000000000000 x8 : ffff041fb98c6680
+ x7 : ffff800014b4b380 x6 : ffff041fd81636c8
+ x5 : 0000000000000000 x4 : 000000000000025f
+ x3 : 0000000000005000 x2 : 0000000000005008
+ x1 : 0000000000000004 x0 : 0000000080000000
+ Call trace:
+  mbigen_set_type+0x38/0x60
+  __setup_irq+0x744/0x900
+  request_threaded_irq+0xe0/0x198
+  pcie_pme_probe+0x98/0x118
+  pcie_port_probe_service+0x38/0x78
+  really_probe+0xa0/0x3e0
+  driver_probe_device+0x58/0x100
+  __device_attach_driver+0x90/0xb0
+  bus_for_each_drv+0x64/0xc8
+  __device_attach+0xd8/0x138
+  device_initial_probe+0x10/0x18
+  bus_probe_device+0x90/0x98
+  device_add+0x4c4/0x770
+  device_register+0x1c/0x28
+  pcie_port_device_register+0x1e4/0x4f0
+  pcie_portdrv_probe+0x34/0xd8
+  local_pci_probe+0x3c/0xa0
+  pci_device_probe+0x128/0x1c0
+  really_probe+0xa0/0x3e0
+  driver_probe_device+0x58/0x100
+  __device_attach_driver+0x90/0xb0
+  bus_for_each_drv+0x64/0xc8
+  __device_attach+0xd8/0x138
+  device_attach+0x10/0x18
+  pci_bus_add_device+0x4c/0xb8
+  pci_bus_add_devices+0x38/0x88
+  pci_host_probe+0x3c/0xc0
+  pci_host_common_probe+0xf0/0x208
+  hisi_pcie_almost_ecam_probe+0x24/0x30
+  platform_drv_probe+0x50/0xa0
+  really_probe+0xa0/0x3e0
+  driver_probe_device+0x58/0x100
+  device_driver_attach+0x6c/0x90
+  __driver_attach+0x84/0xc8
+  bus_for_each_dev+0x74/0xc8
+  driver_attach+0x20/0x28
+  bus_add_driver+0x148/0x1f0
+  driver_register+0x60/0x110
+  __platform_driver_register+0x40/0x48
+  hisi_pcie_almost_ecam_driver_init+0x1c/0x24
 
-I was expecting getname_flags() to start with a BUG(), but:
+The specific problem here is that the mbigen driver real probe has failed
+as the mbigen_of_create_domain()->of_platform_device_create() call fails,
+the reason for that being that we never destroyed the platform device
+created during the remove test dry run and there is some conflict.
 
-7598:       e3 20 10 00 00 04       lg      %r2,0(%r1)
-759e:       c0 f4 00 00 00 00       jg      759e <putname+0x7e>
-75a0: R_390_PLT32DBL    kmem_cache_free+0x2
-75a4:       a7 f4 00 01             j       75a6 <putname+0x86>
+Since we generally would never want to unbind this driver, and to save
+adding a driver tear down path for that, just set the driver
+.suppress_bind_attrs member to avoid this possibility.
 
-00000000000075a8 <getname_flags>:
-75a8:       c0 04 00 00 00 00       brcl    0,75a8 <getname_flags>
-75ae:       eb 6f f0 48 00 24       stmg    %r6,%r15,72(%r15)
-75b4:       b9 04 00 ef             lgr     %r14,%r15
-75b8:       e3 f0 ff a8 ff 71       lay     %r15,-88(%r15)
-
-So the BUG() is actually the last opcode of the previous function.
-Fix this by switching to using the MONITOR CALL (MC) instruction,
-and set the entry in __bug_table to the beginning of that MC.
-
-Reviewed-by: Heiko Carstens <heiko.carstens@de.ibm.com>
-Signed-off-by: Sven Schnelle <svens@linux.ibm.com>
-Signed-off-by: Vasily Gorbik <gor@linux.ibm.com>
+Signed-off-by: John Garry <john.garry@huawei.com>
+Signed-off-by: Marc Zyngier <maz@kernel.org>
+Reviewed-by: Hanjun Guo <guohanjun@huawei.com>
+Link: https://lore.kernel.org/r/1579196323-180137-1-git-send-email-john.garry@huawei.com
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/s390/boot/head.S        |  2 +-
- arch/s390/include/asm/bug.h  | 16 ++++++--------
- arch/s390/kernel/entry.h     |  1 +
- arch/s390/kernel/pgm_check.S |  2 +-
- arch/s390/kernel/traps.c     | 41 +++++++++++++++++++++++++++++++-----
- 5 files changed, 46 insertions(+), 16 deletions(-)
+ drivers/irqchip/irq-mbigen.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/arch/s390/boot/head.S b/arch/s390/boot/head.S
-index 4b86a8d3c1219..dae10961d0724 100644
---- a/arch/s390/boot/head.S
-+++ b/arch/s390/boot/head.S
-@@ -329,7 +329,7 @@ ENTRY(startup_kdump)
- 	.quad	.Lduct			# cr5: primary-aste origin
- 	.quad	0			# cr6:	I/O interrupts
- 	.quad	0			# cr7:	secondary space segment table
--	.quad	0			# cr8:	access registers translation
-+	.quad	0x0000000000008000	# cr8:	access registers translation
- 	.quad	0			# cr9:	tracing off
- 	.quad	0			# cr10: tracing off
- 	.quad	0			# cr11: tracing off
-diff --git a/arch/s390/include/asm/bug.h b/arch/s390/include/asm/bug.h
-index a2b11ac00f607..7725f8006fdfb 100644
---- a/arch/s390/include/asm/bug.h
-+++ b/arch/s390/include/asm/bug.h
-@@ -10,15 +10,14 @@
- 
- #define __EMIT_BUG(x) do {					\
- 	asm_inline volatile(					\
--		"0:	j	0b+2\n"				\
--		"1:\n"						\
-+		"0:	mc	0,0\n"				\
- 		".section .rodata.str,\"aMS\",@progbits,1\n"	\
--		"2:	.asciz	\""__FILE__"\"\n"		\
-+		"1:	.asciz	\""__FILE__"\"\n"		\
- 		".previous\n"					\
- 		".section __bug_table,\"awM\",@progbits,%2\n"	\
--		"3:	.long	1b-3b,2b-3b\n"			\
-+		"2:	.long	0b-2b,1b-2b\n"			\
- 		"	.short	%0,%1\n"			\
--		"	.org	3b+%2\n"			\
-+		"	.org	2b+%2\n"			\
- 		".previous\n"					\
- 		: : "i" (__LINE__),				\
- 		    "i" (x),					\
-@@ -29,12 +28,11 @@
- 
- #define __EMIT_BUG(x) do {					\
- 	asm_inline volatile(					\
--		"0:	j	0b+2\n"				\
--		"1:\n"						\
-+		"0:	mc	0,0\n"				\
- 		".section __bug_table,\"awM\",@progbits,%1\n"	\
--		"2:	.long	1b-2b\n"			\
-+		"1:	.long	0b-1b\n"			\
- 		"	.short	%0\n"				\
--		"	.org	2b+%1\n"			\
-+		"	.org	1b+%1\n"			\
- 		".previous\n"					\
- 		: : "i" (x),					\
- 		    "i" (sizeof(struct bug_entry)));		\
-diff --git a/arch/s390/kernel/entry.h b/arch/s390/kernel/entry.h
-index b2956d49b6ad7..1d3927e01a5fd 100644
---- a/arch/s390/kernel/entry.h
-+++ b/arch/s390/kernel/entry.h
-@@ -45,6 +45,7 @@ void specification_exception(struct pt_regs *regs);
- void transaction_exception(struct pt_regs *regs);
- void translation_exception(struct pt_regs *regs);
- void vector_exception(struct pt_regs *regs);
-+void monitor_event_exception(struct pt_regs *regs);
- 
- void do_per_trap(struct pt_regs *regs);
- void do_report_trap(struct pt_regs *regs, int si_signo, int si_code, char *str);
-diff --git a/arch/s390/kernel/pgm_check.S b/arch/s390/kernel/pgm_check.S
-index 59dee9d3bebf1..eee3a482195a6 100644
---- a/arch/s390/kernel/pgm_check.S
-+++ b/arch/s390/kernel/pgm_check.S
-@@ -81,7 +81,7 @@ PGM_CHECK_DEFAULT			/* 3c */
- PGM_CHECK_DEFAULT			/* 3d */
- PGM_CHECK_DEFAULT			/* 3e */
- PGM_CHECK_DEFAULT			/* 3f */
--PGM_CHECK_DEFAULT			/* 40 */
-+PGM_CHECK(monitor_event_exception)	/* 40 */
- PGM_CHECK_DEFAULT			/* 41 */
- PGM_CHECK_DEFAULT			/* 42 */
- PGM_CHECK_DEFAULT			/* 43 */
-diff --git a/arch/s390/kernel/traps.c b/arch/s390/kernel/traps.c
-index 164c0282b41ae..dc75588d78943 100644
---- a/arch/s390/kernel/traps.c
-+++ b/arch/s390/kernel/traps.c
-@@ -53,11 +53,6 @@ void do_report_trap(struct pt_regs *regs, int si_signo, int si_code, char *str)
-                 if (fixup)
- 			regs->psw.addr = extable_fixup(fixup);
- 		else {
--			enum bug_trap_type btt;
--
--			btt = report_bug(regs->psw.addr, regs);
--			if (btt == BUG_TRAP_TYPE_WARN)
--				return;
- 			die(regs, str);
- 		}
-         }
-@@ -245,6 +240,27 @@ void space_switch_exception(struct pt_regs *regs)
- 	do_trap(regs, SIGILL, ILL_PRVOPC, "space switch event");
- }
- 
-+void monitor_event_exception(struct pt_regs *regs)
-+{
-+	const struct exception_table_entry *fixup;
-+
-+	if (user_mode(regs))
-+		return;
-+
-+	switch (report_bug(regs->psw.addr - (regs->int_code >> 16), regs)) {
-+	case BUG_TRAP_TYPE_NONE:
-+		fixup = s390_search_extables(regs->psw.addr);
-+		if (fixup)
-+			regs->psw.addr = extable_fixup(fixup);
-+		break;
-+	case BUG_TRAP_TYPE_WARN:
-+		break;
-+	case BUG_TRAP_TYPE_BUG:
-+		die(regs, "monitor event");
-+		break;
-+	}
-+}
-+
- void kernel_stack_overflow(struct pt_regs *regs)
- {
- 	bust_spinlocks(1);
-@@ -255,8 +271,23 @@ void kernel_stack_overflow(struct pt_regs *regs)
- }
- NOKPROBE_SYMBOL(kernel_stack_overflow);
- 
-+static void test_monitor_call(void)
-+{
-+	int val = 1;
-+
-+	asm volatile(
-+		"	mc	0,0\n"
-+		"0:	xgr	%0,%0\n"
-+		"1:\n"
-+		EX_TABLE(0b,1b)
-+		: "+d" (val));
-+	if (!val)
-+		panic("Monitor call doesn't work!\n");
-+}
-+
- void __init trap_init(void)
- {
- 	sort_extable(__start_dma_ex_table, __stop_dma_ex_table);
- 	local_mcck_enable();
-+	test_monitor_call();
- }
+diff --git a/drivers/irqchip/irq-mbigen.c b/drivers/irqchip/irq-mbigen.c
+index 3f09f658e8e29..6b566bba263bd 100644
+--- a/drivers/irqchip/irq-mbigen.c
++++ b/drivers/irqchip/irq-mbigen.c
+@@ -374,6 +374,7 @@ static struct platform_driver mbigen_platform_driver = {
+ 		.name		= "Hisilicon MBIGEN-V2",
+ 		.of_match_table	= mbigen_of_match,
+ 		.acpi_match_table = ACPI_PTR(mbigen_acpi_match),
++		.suppress_bind_attrs = true,
+ 	},
+ 	.probe			= mbigen_device_probe,
+ };
 -- 
 2.20.1
 
