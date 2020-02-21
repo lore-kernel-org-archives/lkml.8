@@ -2,105 +2,114 @@ Return-Path: <SRS0=1210=4J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 985FAC35646
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 17:52:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1495CC35646
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 17:54:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6D7B2222C4
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 17:52:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DD7F720722
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 17:54:40 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="Rcjn0tP9"
+	dkim=pass (2048-bit key) header.d=resnulli-us.20150623.gappssmtp.com header.i=@resnulli-us.20150623.gappssmtp.com header.b="HMPZ83NG"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728385AbgBURwo (ORCPT
+        id S1727966AbgBURyj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Feb 2020 12:52:44 -0500
-Received: from aserp2120.oracle.com ([141.146.126.78]:54136 "EHLO
-        aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725947AbgBURwo (ORCPT
+        Fri, 21 Feb 2020 12:54:39 -0500
+Received: from mail-wm1-f65.google.com ([209.85.128.65]:55695 "EHLO
+        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725947AbgBURyj (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Feb 2020 12:52:44 -0500
-Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
-        by aserp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 01LHlRcF003163;
-        Fri, 21 Feb 2020 17:52:18 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=subject : to : cc :
- references : from : message-id : date : mime-version : in-reply-to :
- content-type : content-transfer-encoding; s=corp-2020-01-29;
- bh=RZgv87m8kiMmEbPjo4rGSbu6PXXl2pD15JjxGmUadck=;
- b=Rcjn0tP9Ib+ozuSxftRVNQXLa1PxDcIbFB/mUcLjEk7u+e0RoW1Aq8+/v5lX0/SRDXBn
- sL2YzO4P+gzp1L8j4RVxgwZfBW89OImA37xfz1XW37IjPotMh284bOMDFUy4bhFEOBm+
- QWxI0RgH00WntHg/+RpOGSMfwdEE1VRsKEJymhn/LxrANOkQBfhcNiS0Ql6sCUw0trG2
- URSTzXVeAROxfdTg3Ed0pbIRdNWjW0fdztVKFCIwV/kexP9whyTG3brYSIPSLvBYMt4F
- MkYXOG19ObY+yoxYfyOQY7b6wzAOSsYs2Ls764zw1e4RZmWPBWZh2CjCUrA1fOelNV52 aQ== 
-Received: from userp3020.oracle.com (userp3020.oracle.com [156.151.31.79])
-        by aserp2120.oracle.com with ESMTP id 2y8udkt1fm-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Fri, 21 Feb 2020 17:52:18 +0000
-Received: from pps.filterd (userp3020.oracle.com [127.0.0.1])
-        by userp3020.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 01LHpw0Z054916;
-        Fri, 21 Feb 2020 17:52:17 GMT
-Received: from userv0121.oracle.com (userv0121.oracle.com [156.151.31.72])
-        by userp3020.oracle.com with ESMTP id 2y8ud768y7-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Fri, 21 Feb 2020 17:52:17 +0000
-Received: from abhmp0014.oracle.com (abhmp0014.oracle.com [141.146.116.20])
-        by userv0121.oracle.com (8.14.4/8.13.8) with ESMTP id 01LHqFSr019810;
-        Fri, 21 Feb 2020 17:52:15 GMT
-Received: from [192.168.0.195] (/69.207.174.138)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Fri, 21 Feb 2020 09:52:14 -0800
-Subject: Re: [PATCH v3 0/3] Introduce per-task latency_nice for scheduler
- hints
-To:     Parth Shah <parth@linux.ibm.com>, vincent.guittot@linaro.org,
-        patrick.bellasi@matbug.net, valentin.schneider@arm.com,
-        dhaval.giani@oracle.com, dietmar.eggemann@arm.com
-Cc:     linux-kernel@vger.kernel.org, peterz@infradead.org,
-        mingo@redhat.com, qais.yousef@arm.com, pavel@ucw.cz,
-        qperret@qperret.net, David.Laight@ACULAB.COM, pjt@google.com,
-        tj@kernel.org
-References: <20200116120230.16759-1-parth@linux.ibm.com>
- <8ed0f40c-eeb4-c487-5420-a8eb185b5cdd@linux.ibm.com>
- <c7e5b9da-66a3-3d69-d7aa-0319de3aa736@oracle.com>
- <971909ed-d4e0-6afa-d20b-365ede5a195e@linux.ibm.com>
-From:   chris hyser <chris.hyser@oracle.com>
-Message-ID: <28b912d0-cfce-8abe-ad14-d64c3e36e723@oracle.com>
-Date:   Fri, 21 Feb 2020 12:52:09 -0500
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.2.2
+        Fri, 21 Feb 2020 12:54:39 -0500
+Received: by mail-wm1-f65.google.com with SMTP id q9so2656498wmj.5
+        for <linux-kernel@vger.kernel.org>; Fri, 21 Feb 2020 09:54:38 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=resnulli-us.20150623.gappssmtp.com; s=20150623;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=xIoPJC89gVWFrNtFw0AHmOeVBRfBncDtaR7CYLx5/Dg=;
+        b=HMPZ83NG9rwiQMFLrYVIV0XarG2yWBarAaYn0Or5vkNGo0gR6DPadrWYKJedIyWa/F
+         VDgnkJ6P4JpsRgH8kGhl+10HQHX6TSvl9GyowzdP8yYq70W6phN5Cb63/hOdgQbcu6Tx
+         YkdLfWx0HxrDj7fkgtG0WSO1onF1bWSHeJ8XdRiJqqE+rm1yLbOB6tSj6slBfjHUJA81
+         ner9fe3wnAZCTC0/zTIXmNjLemvcjc0X77JXFfVN7cVJTwWQRgTCKw03OS58T4dQocCW
+         OeqSWb+7aDsP0Bs+Azg4p85XZFNxPPM2WOX1NIg1ifNOQJRCrbbB/KUDp5Vkv4iw39hB
+         wIsQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=xIoPJC89gVWFrNtFw0AHmOeVBRfBncDtaR7CYLx5/Dg=;
+        b=q0+erXVVwziiVaQp5EUkBxKICTyp81DYMEUppRcgy2Nai6dpdfMqkN4GgbD7xiYmcK
+         dsQF6r07bSd/Z6PAI/p8KTWfGKj+6YTfQ+DNDR9V6C/oH3hQUs6YGDvoQRwOnK0y1qXZ
+         0w++AA6W1zQGrUw0JrwM2t+otcHNgiUznS2mDID4XdfjRRXr415kTYNYOHo9EPnOWm5A
+         4M00jV+FGhgvERYJnHnQdO7Vf7e4TKwjw8YxqFgNKDPiKMxEQ1UPnN7WMejHrGgQ005w
+         qhh/wsNKKJcRPzQtjdBIKMWF/BaEtHju+VlZZ2PjcItW8Ld9nl1bZtuKDT1V+OwH+hZ7
+         UgpA==
+X-Gm-Message-State: APjAAAU4DU2n1zMsQdsqkP6DsgwRJo8bEWqmTLF8oH5KVCMR+sNbKRqh
+        GlsOjwxh1QsmRZ4BKSwU/dtMlA==
+X-Google-Smtp-Source: APXvYqyDP0cz6luS0Fl6H3aL1bf+0QT5FEG4EgdaFEKW3zTlqWaHiJiVlOY6fjWQWE7rSFcxzNOAMA==
+X-Received: by 2002:a05:600c:21c4:: with SMTP id x4mr5079128wmj.147.1582307677644;
+        Fri, 21 Feb 2020 09:54:37 -0800 (PST)
+Received: from localhost (ip-89-177-130-96.net.upcbroadband.cz. [89.177.130.96])
+        by smtp.gmail.com with ESMTPSA id j5sm4914621wrw.24.2020.02.21.09.54.36
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 21 Feb 2020 09:54:37 -0800 (PST)
+Date:   Fri, 21 Feb 2020 18:54:36 +0100
+From:   Jiri Pirko <jiri@resnulli.us>
+To:     Madhuparna Bhowmik <madhuparnabhowmik10@gmail.com>
+Cc:     jiri@mellanox.com, davem@davemloft.net, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org, joel@joelfernandes.org,
+        frextrite@gmail.com,
+        linux-kernel-mentees@lists.linuxfoundation.org, paulmck@kernel.org
+Subject: Re: [PATCH] net: core: devlink.c: Use built-in RCU list checking
+Message-ID: <20200221175436.GB2181@nanopsycho>
+References: <20200221165141.24630-1-madhuparnabhowmik10@gmail.com>
+ <20200221172008.GA2181@nanopsycho>
+ <20200221173533.GA13198@madhuparna-HP-Notebook>
 MIME-Version: 1.0
-In-Reply-To: <971909ed-d4e0-6afa-d20b-365ede5a195e@linux.ibm.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9538 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 bulkscore=0 malwarescore=0
- mlxlogscore=999 suspectscore=0 adultscore=0 spamscore=0 mlxscore=0
- phishscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2001150001 definitions=main-2002210136
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9538 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 lowpriorityscore=0 suspectscore=0
- spamscore=0 priorityscore=1501 adultscore=0 mlxscore=0 clxscore=1015
- malwarescore=0 mlxlogscore=999 phishscore=0 impostorscore=0 bulkscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2001150001
- definitions=main-2002210135
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200221173533.GA13198@madhuparna-HP-Notebook>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2/19/20 5:09 AM, Parth Shah wrote:
-> Hi Chris,
+Fri, Feb 21, 2020 at 06:35:34PM CET, madhuparnabhowmik10@gmail.com wrote:
+>On Fri, Feb 21, 2020 at 06:20:08PM +0100, Jiri Pirko wrote:
+>> Fri, Feb 21, 2020 at 05:51:41PM CET, madhuparnabhowmik10@gmail.com wrote:
+>> >From: Madhuparna Bhowmik <madhuparnabhowmik10@gmail.com>
+>> >
+>> >list_for_each_entry_rcu() has built-in RCU and lock checking.
+>> >
+>> >Pass cond argument to list_for_each_entry_rcu() to silence
+>> >false lockdep warning when CONFIG_PROVE_RCU_LIST is enabled
+>> >by default.
+>> >
+>> >Signed-off-by: Madhuparna Bhowmik <madhuparnabhowmik10@gmail.com>
+>> 
+>> Reviewed-by: Jiri Pirko <jiri@mellanox.com>
+>> 
+>> Thanks.
+>> 
+>> However, there is a callpath where not devlink lock neither rcu read is
+>> taken:
+>> devlink_dpipe_table_register()->devlink_dpipe_table_find()
+>>
+>Hi,
+>
+>Yes I had noticed this, but I was not sure if there is some other lock
+>which is being used.
+>
+>If yes, then can you please tell me which lock is held in this case,
+>and I can add that condition as well to list_for_each_entry_rcu() usage.
+>
+>And if no lock or rcu_read_lock is held then may be we should
+>use rcu_read_lock/unlock here.
+>
+>Let me know what you think about this.
 
->> Parth, I've been using your v3 patchset as the basis of an investigation
->> into the measurable effects of short-circuiting this search. I'm not quite
->> ready to put anything out, but the patchset is working well. The only
-> 
-> That's a good news as you are able to get a usecase of this patch-set.
+devlink->lock should be held since the beginning of
+devlink_dpipe_table_register()
 
-Parth, I wanted to make sure to thank you for all this effort. It has made it really easy to start experimenting with 
-these ideas and concepts and that's been an enormous help. Thanks again.
-
--chrish
