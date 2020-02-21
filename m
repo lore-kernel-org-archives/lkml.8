@@ -4,51 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 29680C35641
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 08:39:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7012EC35643
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 08:39:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F1512206ED
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 08:39:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3AF6C2073A
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 08:39:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582274365;
-	bh=H0djIpIgCKD0Tf20YOgU5LkJ2ifFfJbbpxqtLDzx5TY=;
+	s=default; t=1582274368;
+	bh=xMt+/WZJ7JX4l2wXXyGzZfDgtpkGtXEWwqSlZvxiJAE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=tOeoXsTCxOwY4i7PkrRQiQGVR0Yy1URvI2EjZQXQ7OMOdgy5LHFCjo5NvYjf8LEKx
-	 PwUGq0bqBmfTWwjmeV6SY85qzrfuKHVFYqzUG/+ewuO+75xpzm4GZo9DO8VaFUYRSx
-	 tVnCjxc9xEAyeamZb5VP5aNhWE/1Of+ZxeTAHvYE=
+	b=pAzIwlS+wyFfaQs+wA3EnmyilbgXmIT8R0DmurFoHtr145V9VrsnCqqQ9u4trKO0T
+	 VDX19kSYTNqR8rRfVUdEg28UpXIMnHwFDCoKzY6nO73RJLMJRLAx+w++oD8oLkgoHI
+	 2OtNbZilTc8qiqr0qMxJBkJOKGKJxLPUYEHeaR8E=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731855AbgBUIjX (ORCPT
+        id S1731162AbgBUIBL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Feb 2020 03:39:23 -0500
-Received: from mail.kernel.org ([198.145.29.99]:33494 "EHLO mail.kernel.org"
+        Fri, 21 Feb 2020 03:01:11 -0500
+Received: from mail.kernel.org ([198.145.29.99]:33308 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731166AbgBUIBM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Feb 2020 03:01:12 -0500
+        id S1730649AbgBUIBC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 21 Feb 2020 03:01:02 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 40A6D2073A;
-        Fri, 21 Feb 2020 08:01:11 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6BBD324670;
+        Fri, 21 Feb 2020 08:01:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1582272071;
-        bh=H0djIpIgCKD0Tf20YOgU5LkJ2ifFfJbbpxqtLDzx5TY=;
+        s=default; t=1582272061;
+        bh=xMt+/WZJ7JX4l2wXXyGzZfDgtpkGtXEWwqSlZvxiJAE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=XhmlP9rOrzRabEaY8SH4QiI/uFSRCm0DSvLHmgAEnhyek0iZhxv6s7UD99Q2w+spq
-         U5oJX+BFbJRzzp5WZzvJB8KMahJIsKJxqNiBe7HaKuyojKKeMt3NGd/W5EH+oDYApI
-         VP1mODx4JXc2HR/7AH7ZeYs/jWhWopx9GPv6X+I8=
+        b=FHGJma7MRfYf8T1TInTgV45LswH5mgutdTi1vI2590SLiUjCApOltJE+oyUMkhqp9
+         1l7Lhv1GCnRB+cQuSWguVHbf3iux9Jed16LyULe+MnqjBmVp1Iwbnxw7vwmUbR74LU
+         gsCsFrdInh8TC1kml7DJHkJsaSxPYgCFxg1ysxPQ=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Nicholas Kazlauskas <nicholas.kazlauskas@amd.com>,
-        Alex Deucher <alexander.deucher@amd.com>,
+        stable@vger.kernel.org, Xiao Yang <ice_yangxiao@163.com>,
+        Miklos Szeredi <mszeredi@redhat.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.5 398/399] drm/amdgpu/display: handle multiple numbers of fclks in dcn_calcs.c (v2)
-Date:   Fri, 21 Feb 2020 08:42:03 +0100
-Message-Id: <20200221072438.501365877@linuxfoundation.org>
+Subject: [PATCH 5.5 394/399] fuse: dont overflow LLONG_MAX with end offset
+Date:   Fri, 21 Feb 2020 08:41:59 +0100
+Message-Id: <20200221072438.196078759@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200221072402.315346745@linuxfoundation.org>
 References: <20200221072402.315346745@linuxfoundation.org>
@@ -61,75 +60,53 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Alex Deucher <alexander.deucher@amd.com>
+From: Miklos Szeredi <mszeredi@redhat.com>
 
-[ Upstream commit c37243579d6c881c575dcfb54cf31c9ded88f946 ]
+[ Upstream commit 2f1398291bf35fe027914ae7a9610d8e601fbfde ]
 
-We might get different numbers of clocks from powerplay depending
-on what the OEM has populated.
+Handle the special case of fuse_readpages() wanting to read the last page
+of a hugest file possible and overflowing the end offset in the process.
 
-v2: add assert for at least one level
+This is basically to unbreak xfstests:generic/525 and prevent filesystems
+from doing bad things with an overflowing offset.
 
-Bug: https://gitlab.freedesktop.org/drm/amd/issues/963
-Reviewed-by: Nicholas Kazlauskas <nicholas.kazlauskas@amd.com>
-Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
+Reported-by: Xiao Yang <ice_yangxiao@163.com>
+Signed-off-by: Miklos Szeredi <mszeredi@redhat.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- .../gpu/drm/amd/display/dc/calcs/dcn_calcs.c  | 34 +++++++++++++------
- 1 file changed, 23 insertions(+), 11 deletions(-)
+ fs/fuse/file.c | 12 ++++++++++++
+ 1 file changed, 12 insertions(+)
 
-diff --git a/drivers/gpu/drm/amd/display/dc/calcs/dcn_calcs.c b/drivers/gpu/drm/amd/display/dc/calcs/dcn_calcs.c
-index 9b2cb57bf2bad..c9a241fe46cf4 100644
---- a/drivers/gpu/drm/amd/display/dc/calcs/dcn_calcs.c
-+++ b/drivers/gpu/drm/amd/display/dc/calcs/dcn_calcs.c
-@@ -1438,6 +1438,7 @@ void dcn_bw_update_from_pplib(struct dc *dc)
- 	struct dc_context *ctx = dc->ctx;
- 	struct dm_pp_clock_levels_with_voltage fclks = {0}, dcfclks = {0};
- 	bool res;
-+	unsigned vmin0p65_idx, vmid0p72_idx, vnom0p8_idx, vmax0p9_idx;
+diff --git a/fs/fuse/file.c b/fs/fuse/file.c
+index 695369f46f92d..3dd37a998ea93 100644
+--- a/fs/fuse/file.c
++++ b/fs/fuse/file.c
+@@ -803,6 +803,10 @@ static int fuse_do_readpage(struct file *file, struct page *page)
  
- 	/* TODO: This is not the proper way to obtain fabric_and_dram_bandwidth, should be min(fclk, memclk) */
- 	res = dm_pp_get_clock_levels_by_type_with_voltage(
-@@ -1449,17 +1450,28 @@ void dcn_bw_update_from_pplib(struct dc *dc)
- 		res = verify_clock_values(&fclks);
+ 	attr_ver = fuse_get_attr_version(fc);
  
- 	if (res) {
--		ASSERT(fclks.num_levels >= 3);
--		dc->dcn_soc->fabric_and_dram_bandwidth_vmin0p65 = 32 * (fclks.data[0].clocks_in_khz / 1000.0) / 1000.0;
--		dc->dcn_soc->fabric_and_dram_bandwidth_vmid0p72 = dc->dcn_soc->number_of_channels *
--				(fclks.data[fclks.num_levels - (fclks.num_levels > 2 ? 3 : 2)].clocks_in_khz / 1000.0)
--				* ddr4_dram_factor_single_Channel / 1000.0;
--		dc->dcn_soc->fabric_and_dram_bandwidth_vnom0p8 = dc->dcn_soc->number_of_channels *
--				(fclks.data[fclks.num_levels - 2].clocks_in_khz / 1000.0)
--				* ddr4_dram_factor_single_Channel / 1000.0;
--		dc->dcn_soc->fabric_and_dram_bandwidth_vmax0p9 = dc->dcn_soc->number_of_channels *
--				(fclks.data[fclks.num_levels - 1].clocks_in_khz / 1000.0)
--				* ddr4_dram_factor_single_Channel / 1000.0;
-+		ASSERT(fclks.num_levels);
++	/* Don't overflow end offset */
++	if (pos + (desc.length - 1) == LLONG_MAX)
++		desc.length--;
 +
-+		vmin0p65_idx = 0;
-+		vmid0p72_idx = fclks.num_levels -
-+			(fclks.num_levels > 2 ? 3 : (fclks.num_levels > 1 ? 2 : 1));
-+		vnom0p8_idx = fclks.num_levels - (fclks.num_levels > 1 ? 2 : 1);
-+		vmax0p9_idx = fclks.num_levels - 1;
+ 	fuse_read_args_fill(&ia, file, pos, desc.length, FUSE_READ);
+ 	res = fuse_simple_request(fc, &ia.ap.args);
+ 	if (res < 0)
+@@ -888,6 +892,14 @@ static void fuse_send_readpages(struct fuse_io_args *ia, struct file *file)
+ 	ap->args.out_pages = true;
+ 	ap->args.page_zeroing = true;
+ 	ap->args.page_replace = true;
 +
-+		dc->dcn_soc->fabric_and_dram_bandwidth_vmin0p65 =
-+			32 * (fclks.data[vmin0p65_idx].clocks_in_khz / 1000.0) / 1000.0;
-+		dc->dcn_soc->fabric_and_dram_bandwidth_vmid0p72 =
-+			dc->dcn_soc->number_of_channels *
-+			(fclks.data[vmid0p72_idx].clocks_in_khz / 1000.0)
-+			* ddr4_dram_factor_single_Channel / 1000.0;
-+		dc->dcn_soc->fabric_and_dram_bandwidth_vnom0p8 =
-+			dc->dcn_soc->number_of_channels *
-+			(fclks.data[vnom0p8_idx].clocks_in_khz / 1000.0)
-+			* ddr4_dram_factor_single_Channel / 1000.0;
-+		dc->dcn_soc->fabric_and_dram_bandwidth_vmax0p9 =
-+			dc->dcn_soc->number_of_channels *
-+			(fclks.data[vmax0p9_idx].clocks_in_khz / 1000.0)
-+			* ddr4_dram_factor_single_Channel / 1000.0;
- 	} else
- 		BREAK_TO_DEBUGGER();
- 
++	/* Don't overflow end offset */
++	if (pos + (count - 1) == LLONG_MAX) {
++		count--;
++		ap->descs[ap->num_pages - 1].length--;
++	}
++	WARN_ON((loff_t) (pos + count) < 0);
++
+ 	fuse_read_args_fill(ia, file, pos, count, FUSE_READ);
+ 	ia->read.attr_ver = fuse_get_attr_version(fc);
+ 	if (fc->async_read) {
 -- 
 2.20.1
 
