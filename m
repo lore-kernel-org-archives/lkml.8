@@ -2,52 +2,52 @@ Return-Path: <SRS0=1210=4J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0866AC35647
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 08:29:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8DF4FC35640
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 08:29:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C838524670
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 08:29:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 56B1520679
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 08:29:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582273787;
-	bh=Kg5IVRnEpP2SMZz+UVMqxwQ0BK2QI7KyO+6LMZWsYPg=;
+	s=default; t=1582273791;
+	bh=HsmyTgW75idF7iuMGXUO1k5TzyWMjEjPkqXtRHcA6M0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=XeEER+TxKzk07ck6+LV4oilOTX2G9NHszKfO1wpnUK0w01k1BrashMNOuIDA7dFZi
-	 Mu5r1pYm9EZVAYDJN37wabs2Xf4SCxvwoh73qvDCSSH7yfVxSp1oOoRrfHMKwhMToZ
-	 wG/+zL8hWYUWMuekwbBsIqj4T2kOHiSrMHoms/ao=
+	b=lJ/X7dTTOmlrc4GHYr+7EdlG2+lml/KY1tVE5VOOpepkPTkulgOHHGXdAGUZ1EHWb
+	 4w6M4uwHw9h/xDf1j71/5kRCQYOvFlwqWunHMEXDloKy7XJi0pXaUXrzSTIE2D/Pal
+	 tzR/GIZ+Wv4PaqYrJqm+a2YGs/XmF8Ogj8wUKNs4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732117AbgBUIRB (ORCPT
+        id S2387585AbgBUIQx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Feb 2020 03:17:01 -0500
-Received: from mail.kernel.org ([198.145.29.99]:54232 "EHLO mail.kernel.org"
+        Fri, 21 Feb 2020 03:16:53 -0500
+Received: from mail.kernel.org ([198.145.29.99]:53974 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387599AbgBUIQ6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Feb 2020 03:16:58 -0500
+        id S1732822AbgBUIQr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 21 Feb 2020 03:16:47 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9651524682;
-        Fri, 21 Feb 2020 08:16:57 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A9F0E24670;
+        Fri, 21 Feb 2020 08:16:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1582273018;
-        bh=Kg5IVRnEpP2SMZz+UVMqxwQ0BK2QI7KyO+6LMZWsYPg=;
+        s=default; t=1582273007;
+        bh=HsmyTgW75idF7iuMGXUO1k5TzyWMjEjPkqXtRHcA6M0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=q2DdOPomZNiJOYs5W6UA6yfQT9qWWlG/e4K+VlnI49PhhY5k0OTAzq8PPL6vYf0Ju
-         qeschWZgHi1eV/uirIEUj0QzPPdvkFJBpOM/R7zZEPubpCuEin693UFZFPv1vCovcr
-         eIWF2iuFdrL+wFnK0gG5p/6DgbR6wo+zGnzEizhw=
+        b=0ebTMRZE0PuYKq0LQODxDeTLrpntNizfh5lRZh1eAEFUgOxVd3l9e02mIq8VFQjkh
+         ei38PjaBc1cWc6tKbQs7Tc3mMiE5TcdvIP0HNNur6JzjnKuH1KenXjJh2a1Tvroe9i
+         WjaENbyWl7mt8MBA7iV+0esLNRIzCtonkLtzvbRw=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Takashi Sakamoto <o-takashi@sakamocchi.jp>,
-        Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.de>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 017/191] ALSA: ctl: allow TLV read operation for callback type of element in locked case
-Date:   Fri, 21 Feb 2020 08:39:50 +0100
-Message-Id: <20200221072253.251887423@linuxfoundation.org>
+        stable@vger.kernel.org, Davide Caratti <dcaratti@redhat.com>,
+        Jiri Pirko <jiri@mellanox.com>,
+        "David S. Miller" <davem@davemloft.net>
+Subject: [PATCH 4.19 005/191] net/sched: matchall: add missing validation of TCA_MATCHALL_FLAGS
+Date:   Fri, 21 Feb 2020 08:39:38 +0100
+Message-Id: <20200221072251.539666828@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200221072250.732482588@linuxfoundation.org>
 References: <20200221072250.732482588@linuxfoundation.org>
@@ -60,60 +60,33 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Takashi Sakamoto <o-takashi@sakamocchi.jp>
+From: Davide Caratti <dcaratti@redhat.com>
 
-[ Upstream commit d61fe22c2ae42d9fd76c34ef4224064cca4b04b0 ]
+[ Upstream commit 1afa3cc90f8fb745c777884d79eaa1001d6927a6 ]
 
-A design of ALSA control core allows applications to execute three
-operations for TLV feature; read, write and command. Furthermore, it
-allows driver developers to process the operations by two ways; allocated
-array or callback function. In the former, read operation is just allowed,
-thus developers uses the latter when device driver supports variety of
-models or the target model is expected to dynamically change information
-stored in TLV container.
+unlike other classifiers that can be offloaded (i.e. users can set flags
+like 'skip_hw' and 'skip_sw'), 'cls_matchall' doesn't validate the size
+of netlink attribute 'TCA_MATCHALL_FLAGS' provided by user: add a proper
+entry to mall_policy.
 
-The core also allows applications to lock any element so that the other
-applications can't perform write operation to the element for element
-value and TLV information. When the element is locked, write and command
-operation for TLV information are prohibited as well as element value.
-Any read operation should be allowed in the case.
-
-At present, when an element has callback function for TLV information,
-TLV read operation returns EPERM if the element is locked. On the
-other hand, the read operation is success when an element has allocated
-array for TLV information. In both cases, read operation is success for
-element value expectedly.
-
-This commit fixes the bug. This change can be backported to v4.14
-kernel or later.
-
-Signed-off-by: Takashi Sakamoto <o-takashi@sakamocchi.jp>
-Reviewed-by: Jaroslav Kysela <perex@perex.cz>
-Link: https://lore.kernel.org/r/20191223093347.15279-1-o-takashi@sakamocchi.jp
-Signed-off-by: Takashi Iwai <tiwai@suse.de>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+Fixes: b87f7936a932 ("net/sched: Add match-all classifier hw offloading.")
+Signed-off-by: Davide Caratti <dcaratti@redhat.com>
+Acked-by: Jiri Pirko <jiri@mellanox.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- sound/core/control.c | 5 +++--
- 1 file changed, 3 insertions(+), 2 deletions(-)
+ net/sched/cls_matchall.c |    1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/sound/core/control.c b/sound/core/control.c
-index 649d3217590ed..d1312f14d78fb 100644
---- a/sound/core/control.c
-+++ b/sound/core/control.c
-@@ -1468,8 +1468,9 @@ static int call_tlv_handler(struct snd_ctl_file *file, int op_flag,
- 	if (kctl->tlv.c == NULL)
- 		return -ENXIO;
+--- a/net/sched/cls_matchall.c
++++ b/net/sched/cls_matchall.c
+@@ -137,6 +137,7 @@ static void *mall_get(struct tcf_proto *
+ static const struct nla_policy mall_policy[TCA_MATCHALL_MAX + 1] = {
+ 	[TCA_MATCHALL_UNSPEC]		= { .type = NLA_UNSPEC },
+ 	[TCA_MATCHALL_CLASSID]		= { .type = NLA_U32 },
++	[TCA_MATCHALL_FLAGS]		= { .type = NLA_U32 },
+ };
  
--	/* When locked, this is unavailable. */
--	if (vd->owner != NULL && vd->owner != file)
-+	/* Write and command operations are not allowed for locked element. */
-+	if (op_flag != SNDRV_CTL_TLV_OP_READ &&
-+	    vd->owner != NULL && vd->owner != file)
- 		return -EPERM;
- 
- 	return kctl->tlv.c(kctl, op_flag, size, buf);
--- 
-2.20.1
-
+ static int mall_set_parms(struct net *net, struct tcf_proto *tp,
 
 
