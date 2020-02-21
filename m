@@ -2,202 +2,208 @@ Return-Path: <SRS0=1210=4J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1AF12C35657
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 18:03:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3891AC35646
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 18:03:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DDA6420722
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 18:03:41 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="AMUzRDWA"
+	by mail.kernel.org (Postfix) with ESMTP id 0D4C020722
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 18:03:49 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729667AbgBUSDk (ORCPT
+        id S1729674AbgBUSDr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Feb 2020 13:03:40 -0500
-Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:24584 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726408AbgBUSDk (ORCPT
+        Fri, 21 Feb 2020 13:03:47 -0500
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:39536 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1725947AbgBUSDq (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Feb 2020 13:03:40 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1582308219;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=qzVlxJr1DeWwvc3LXR9+diXp8JzAmVhguH2fVi1gt6g=;
-        b=AMUzRDWA+Q6STW7SAzBGBe6apneeS8Gq8gXfc50HuL2CGlAvEJXoYK6VJfATmP4dPocCmh
-        9tsQGiGiydxv1NW50mrpqWCgk0y1qseFfjQdsdvlXnjvS5o0eb8DQoOONESpW11hXbnhqP
-        /uxLtrq/RcTu3azxxHdBo4gwpTsSpbw=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-433-rkX6j7A_N0KVBm8_uXIWuQ-1; Fri, 21 Feb 2020 13:03:36 -0500
-X-MC-Unique: rkX6j7A_N0KVBm8_uXIWuQ-1
-Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 17469800D5F;
-        Fri, 21 Feb 2020 18:03:35 +0000 (UTC)
-Received: from warthog.procyon.org.uk (ovpn-122-163.rdu2.redhat.com [10.10.122.163])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 0E8FC2718F;
-        Fri, 21 Feb 2020 18:03:32 +0000 (UTC)
-Organization: Red Hat UK Ltd. Registered Address: Red Hat UK Ltd, Amberley
-        Place, 107-111 Peascod Street, Windsor, Berkshire, SI4 1TE, United
-        Kingdom.
-        Registered in England and Wales under Company Registration No. 3798903
-Subject: [PATCH 13/17] fsinfo: Query superblock unique ID and notification
- counter [ver #17]
-From:   David Howells <dhowells@redhat.com>
-To:     viro@zeniv.linux.org.uk
-Cc:     dhowells@redhat.com, raven@themaw.net, mszeredi@redhat.com,
-        christian@brauner.io, jannh@google.com, darrick.wong@oracle.com,
-        linux-api@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Date:   Fri, 21 Feb 2020 18:03:32 +0000
-Message-ID: <158230821229.2185128.1448235461648568556.stgit@warthog.procyon.org.uk>
-In-Reply-To: <158230810644.2185128.16726948836367716086.stgit@warthog.procyon.org.uk>
-References: <158230810644.2185128.16726948836367716086.stgit@warthog.procyon.org.uk>
-User-Agent: StGit/0.21
+        Fri, 21 Feb 2020 13:03:46 -0500
+Received: from pps.filterd (m0098416.ppops.net [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 01LHxAmc143046
+        for <linux-kernel@vger.kernel.org>; Fri, 21 Feb 2020 13:03:44 -0500
+Received: from e06smtp04.uk.ibm.com (e06smtp04.uk.ibm.com [195.75.94.100])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 2y8ubybse2-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Fri, 21 Feb 2020 13:03:44 -0500
+Received: from localhost
+        by e06smtp04.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-kernel@vger.kernel.org> from <pasic@linux.ibm.com>;
+        Fri, 21 Feb 2020 18:03:42 -0000
+Received: from b06avi18626390.portsmouth.uk.ibm.com (9.149.26.192)
+        by e06smtp04.uk.ibm.com (192.168.101.134) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Fri, 21 Feb 2020 18:03:38 -0000
+Received: from d06av24.portsmouth.uk.ibm.com (mk.ibm.com [9.149.105.60])
+        by b06avi18626390.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 01LI2ePe18219486
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Fri, 21 Feb 2020 18:02:40 GMT
+Received: from d06av24.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id A619F42042;
+        Fri, 21 Feb 2020 18:03:36 +0000 (GMT)
+Received: from d06av24.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 2DC004203F;
+        Fri, 21 Feb 2020 18:03:36 +0000 (GMT)
+Received: from oc2783563651 (unknown [9.152.224.149])
+        by d06av24.portsmouth.uk.ibm.com (Postfix) with ESMTP;
+        Fri, 21 Feb 2020 18:03:36 +0000 (GMT)
+Date:   Fri, 21 Feb 2020 19:03:34 +0100
+From:   Halil Pasic <pasic@linux.ibm.com>
+To:     "Michael S. Tsirkin" <mst@redhat.com>
+Cc:     Jason Wang <jasowang@redhat.com>,
+        Marek Szyprowski <m.szyprowski@samsung.com>,
+        Robin Murphy <robin.murphy@arm.com>,
+        Christoph Hellwig <hch@lst.de>, linux-s390@vger.kernel.org,
+        virtualization@lists.linux-foundation.org,
+        linux-kernel@vger.kernel.org, iommu@lists.linux-foundation.org,
+        Christian Borntraeger <borntraeger@de.ibm.com>,
+        Janosch Frank <frankja@linux.ibm.com>,
+        Viktor Mihajlovski <mihajlov@linux.ibm.com>,
+        Cornelia Huck <cohuck@redhat.com>,
+        Ram Pai <linuxram@us.ibm.com>,
+        Thiago Jung Bauermann <bauerman@linux.ibm.com>,
+        David Gibson <david@gibson.dropbear.id.au>,
+        "Lendacky, Thomas" <Thomas.Lendacky@amd.com>,
+        Michael Mueller <mimu@linux.ibm.com>
+Subject: Re: [PATCH 2/2] virtio: let virtio use DMA API when guest RAM is
+ protected
+In-Reply-To: <20200221104901-mutt-send-email-mst@kernel.org>
+References: <20200220160606.53156-1-pasic@linux.ibm.com>
+        <20200220160606.53156-3-pasic@linux.ibm.com>
+        <20200220154904-mutt-send-email-mst@kernel.org>
+        <20200221141230.13eebc35.pasic@linux.ibm.com>
+        <20200221104901-mutt-send-email-mst@kernel.org>
+Organization: IBM
+X-Mailer: Claws Mail 3.11.1 (GTK+ 2.24.31; x86_64-redhat-linux-gnu)
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
+x-cbid: 20022118-0016-0000-0000-000002E91112
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 20022118-0017-0000-0000-0000334C3285
+Message-Id: <20200221190334.3b03d296.pasic@linux.ibm.com>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.572
+ definitions=2020-02-21_06:2020-02-21,2020-02-21 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxscore=0 bulkscore=0
+ lowpriorityscore=0 spamscore=0 suspectscore=0 mlxlogscore=999
+ clxscore=1015 malwarescore=0 adultscore=0 impostorscore=0 phishscore=0
+ priorityscore=1501 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2001150001 definitions=main-2002210137
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Provide an fsinfo attribute to query the superblock unique ID and
-notification counter.  The unique ID is placed in notification events and
-the counted it provided so that the changed superblock can be determined in
-the event of a notification buffer overrun.  This is accessed with:
+On Fri, 21 Feb 2020 10:56:45 -0500
+"Michael S. Tsirkin" <mst@redhat.com> wrote:
 
-	struct fsinfo_params params = {
-		.request = FSINFO_ATTR_SB_NOTIFICATIONS,
-	};
+> On Fri, Feb 21, 2020 at 02:12:30PM +0100, Halil Pasic wrote:
+> > On Thu, 20 Feb 2020 15:55:14 -0500
+> > "Michael S. Tsirkin" <mst@redhat.com> wrote:
+[..]
+> > > To summarize, the necessary conditions for a hack along these lines
+> > > (using DMA API without VIRTIO_F_ACCESS_PLATFORM) are that we detect that:
+> > > 
+> > >   - secure guest mode is enabled - so we know that since we don't share
+> > >     most memory regular virtio code won't
+> > >     work, even though the buggy hypervisor didn't set VIRTIO_F_ACCESS_PLATFORM
+> > 
+> > force_dma_unencrypted(&vdev->dev) is IMHO exactly about this.
+> > 
+> > >   - DMA API is giving us addresses that are actually also physical
+> > >     addresses
+> > 
+> > In case of s390 this is given.
+> > I talked with the power people before
+> > posting this, and they ensured me they can are willing to deal with
+> > this. I was hoping to talk abut this with the AMD SEV people here (hence
+> > the cc).
+> 
+> We'd need a part of DMA API that promises this though. Platform
+> maintainers aren't going to go out of their way to do the
+> right thing just for virtio, and I can't track all arches
+> to make sure they don't violate virtio requirements.
+> 
 
-and returns a structure that looks like:
+One would have to track only the arches that have
+force_dma_unecrypted(), and generally speaking the arches shall make
+sure the DMA ops are suitable, whatever that means in the given context.
 
-	struct fsinfo_sb_notifications {
-		__u64	watch_id;
-		__u32	notify_counter;
-		__u32	__reserved[1];
-	};
+> > 
+> > >   - Hypervisor is buggy and didn't enable VIRTIO_F_ACCESS_PLATFORM
+> > > 
+> > 
+> > I don't get this point. The argument where the hypervisor is buggy is a
+> > bit hard to follow for me. If hypervisor is buggy we have already lost
+> > anyway most of the time, or?
+> 
+> If VIRTIO_F_ACCESS_PLATFORM is set then things just work.  If
+> VIRTIO_F_ACCESS_PLATFORM is clear device is supposed to have access to
+> all of memory.  You can argue in various ways but it's easier to just
+> declare a behaviour that violates this a bug. Which might still be worth
+> working around, for various reasons.
+> 
 
-Where watch_id is a number uniquely identifying the superblock in
-notification records and notify_counter is incremented for each
-superblock notification posted.
 
-Signed-off-by: David Howells <dhowells@redhat.com>
----
+I don't agree. The spec explicitly states "If this feature bit is set
+to 0, then the device has same access to memory addresses supplied to it
+as the driver has." That ain't any guest memory, but the addresses
+supplied to it. BTW this is how channel I/O works as well: the channel
+program authorizes the device to use the memory locations specified by
+the channel program, for as long as the channel program is executed.
+That's how channel I/O does isolation without an architected IOMMU.
 
- fs/fsinfo.c                      |   11 +++++++++++
- include/uapi/linux/fsinfo.h      |   12 ++++++++++++
- include/uapi/linux/watch_queue.h |    2 +-
- samples/vfs/test-fsinfo.c        |   10 ++++++++++
- 4 files changed, 34 insertions(+), 1 deletion(-)
+Can you please show me the words in the specification that say, the
+device has to have access to the entire guest memory all the time?
 
-diff --git a/fs/fsinfo.c b/fs/fsinfo.c
-index e3377842a2c1..4334249339f9 100644
---- a/fs/fsinfo.c
-+++ b/fs/fsinfo.c
-@@ -217,6 +217,16 @@ static int fsinfo_generic_volume_id(struct path *path, struct fsinfo_context *ct
- 	return fsinfo_string(path->dentry->d_sb->s_id, ctx);
- }
- 
-+static int fsinfo_generic_sb_notifications(struct path *path, struct fsinfo_context *ctx)
-+{
-+	struct fsinfo_sb_notifications *p = ctx->buffer;
-+	struct super_block *sb = path->dentry->d_sb;
-+
-+	p->watch_id		= sb->s_unique_id;
-+	p->notify_counter	= atomic_read(&sb->s_notify_counter);
-+	return sizeof(*p);
-+}
-+
- static const struct fsinfo_attribute fsinfo_common_attributes[] = {
- 	FSINFO_VSTRUCT	(FSINFO_ATTR_STATFS,		fsinfo_generic_statfs),
- 	FSINFO_VSTRUCT	(FSINFO_ATTR_IDS,		fsinfo_generic_ids),
-@@ -226,6 +236,7 @@ static const struct fsinfo_attribute fsinfo_common_attributes[] = {
- 	FSINFO_STRING	(FSINFO_ATTR_VOLUME_ID,		fsinfo_generic_volume_id),
- 	FSINFO_VSTRUCT	(FSINFO_ATTR_VOLUME_UUID,	fsinfo_generic_volume_uuid),
- 	FSINFO_VSTRUCT	(FSINFO_ATTR_FEATURES,		fsinfo_generic_features),
-+	FSINFO_VSTRUCT	(FSINFO_ATTR_SB_NOTIFICATIONS,	fsinfo_generic_sb_notifications),
- 
- 	FSINFO_LIST	(FSINFO_ATTR_FSINFO_ATTRIBUTES,	(void *)123UL),
- 	FSINFO_VSTRUCT_N(FSINFO_ATTR_FSINFO_ATTRIBUTE_INFO, (void *)123UL),
-diff --git a/include/uapi/linux/fsinfo.h b/include/uapi/linux/fsinfo.h
-index 119c371697be..2f9280d16293 100644
---- a/include/uapi/linux/fsinfo.h
-+++ b/include/uapi/linux/fsinfo.h
-@@ -23,6 +23,7 @@
- #define FSINFO_ATTR_VOLUME_UUID		0x06	/* Volume UUID (LE uuid) */
- #define FSINFO_ATTR_VOLUME_NAME		0x07	/* Volume name (string) */
- #define FSINFO_ATTR_FEATURES		0x08	/* Filesystem features (bits) */
-+#define FSINFO_ATTR_SB_NOTIFICATIONS	0x09	/* sb_notify() information */
- 
- #define FSINFO_ATTR_FSINFO_ATTRIBUTE_INFO 0x100	/* Information about attr N (for path) */
- #define FSINFO_ATTR_FSINFO_ATTRIBUTES	0x101	/* List of supported attrs (for path) */
-@@ -286,4 +287,15 @@ struct fsinfo_volume_uuid {
- 
- #define FSINFO_ATTR_VOLUME_UUID__STRUCT struct fsinfo_volume_uuid
- 
-+/*
-+ * Information struct for fsinfo(FSINFO_ATTR_SB_NOTIFICATIONS).
-+ */
-+struct fsinfo_sb_notifications {
-+	__u64		watch_id;	/* Watch ID for superblock. */
-+	__u32		notify_counter;	/* Number of notifications. */
-+	__u32		__reserved[1];
-+};
-+
-+#define FSINFO_ATTR_SB_NOTIFICATIONS__STRUCT struct fsinfo_sb_notifications
-+
- #endif /* _UAPI_LINUX_FSINFO_H */
-diff --git a/include/uapi/linux/watch_queue.h b/include/uapi/linux/watch_queue.h
-index e9c37b1ae68d..9ac2ea6f4a75 100644
---- a/include/uapi/linux/watch_queue.h
-+++ b/include/uapi/linux/watch_queue.h
-@@ -151,7 +151,7 @@ enum superblock_notification_type {
-  */
- struct superblock_notification {
- 	struct watch_notification watch; /* WATCH_TYPE_SB_NOTIFY */
--	__u64	sb_id;			/* 64-bit superblock ID */
-+	__u64	sb_id;			/* 64-bit superblock ID [FSINFO_ATTR_SB_NOTIFICATIONS] */
- };
- 
- struct superblock_error_notification {
-diff --git a/samples/vfs/test-fsinfo.c b/samples/vfs/test-fsinfo.c
-index 6a61f3426982..247fae5bbb74 100644
---- a/samples/vfs/test-fsinfo.c
-+++ b/samples/vfs/test-fsinfo.c
-@@ -303,6 +303,15 @@ static void dump_fsinfo_generic_mount_child(void *reply, unsigned int size)
- 	printf("%8x %8x\n", f->mnt_id, f->change_counter);
- }
- 
-+static void dump_fsinfo_generic_sb_notifications(void *reply, unsigned int size)
-+{
-+	struct fsinfo_sb_notifications *f = reply;
-+
-+	printf("\n");
-+	printf("\twatch_id: %llx\n", (unsigned long long)f->watch_id);
-+	printf("\tnotifs  : %llx\n", (unsigned long long)f->notify_counter);
-+}
-+
- static void dump_string(void *reply, unsigned int size)
- {
- 	char *s = reply, *p;
-@@ -367,6 +376,7 @@ static const struct fsinfo_attribute fsinfo_attributes[] = {
- 	FSINFO_STRING	(FSINFO_ATTR_VOLUME_ID,		fsinfo_generic_volume_id),
- 	FSINFO_VSTRUCT	(FSINFO_ATTR_VOLUME_UUID,	fsinfo_generic_volume_uuid),
- 	FSINFO_STRING	(FSINFO_ATTR_VOLUME_NAME,	fsinfo_generic_volume_name),
-+	FSINFO_VSTRUCT	(FSINFO_ATTR_SB_NOTIFICATIONS,	fsinfo_generic_sb_notifications),
- 
- 	FSINFO_VSTRUCT	(FSINFO_ATTR_MOUNT_INFO,	fsinfo_generic_mount_info),
- 	FSINFO_STRING	(FSINFO_ATTR_MOUNT_DEVNAME,	fsinfo_generic_mount_devname),
+Maybe I have to understand all the intentions behind
+VIRTIO_F_ACCESS_PLATFORM better. I've read the spec several times, but I
+still have the feeling, when we discuss, that I didn't get it right.
+IOMMUs and PCI style DMA are unfortunately not my bread and butter.
 
+I only know that the devices do not need any new device capability (I
+assume VIRTIO_F_ACCESS_PLATFORM does express a device capability), to
+work with protected virtualization. Unless one defines
+VIRTIO_F_ACCESS_PLATFORM is the capability that the device won't poke
+*arbitrary* guest memory.  From that perspective mandating the flag
+feels wrong. (CCW devices are never allowed to poke arbitrary
+memory.)
+
+Yet, if VIRTIO_F_ACCESS_PLATFORM is a flag that every nice and modern
+virtio device should have (i.e. a lack of it means kida broken), then I
+have the feeling virtio-ccw should probably evolve in the direction, that
+having VIRTIO_F_ACCESS_PLATFORM set does not hurt.
+
+I have to think some more.
+
+> 
+> > > I don't see how this patch does this.
+> > 
+> > I do get your point. I don't know of a good way to check that DMA API
+> > is giving us addresses that are actually physical addresses, and the
+> > situation you describe definitely has some risk to it.
+> 
+> One way would be to extend the DMA API with such an API.
+
+Seems Christoph does not like that idea.
+
+> 
+> Another would be to make virtio always use DMA API
+> and hide the logic in there.
+
+I thought Christoph wants that, but I was wrong.
+
+> This second approach is not easy, in particular since DMA API adds
+> a bunch of overhead which we need to find ways to
+> measure and mitigate.
+> 
+
+Agreed. From s390 perspective, I think it ain't to bad if we get GFP_DMA.
+
+Many thanks for your patience!
+Halil
+
+[..]
 
