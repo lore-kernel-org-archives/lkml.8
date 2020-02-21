@@ -5,48 +5,51 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8C9CCC35640
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 07:50:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4255CC35640
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 07:50:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 60AA124670
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 07:50:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0F0EE24650
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 07:50:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582271409;
-	bh=HAmXvkOBj7wGi5sj2L8cQWewIrF6aeIPxUXQV2C0J68=;
+	s=default; t=1582271413;
+	bh=5frUTEE1/tpJIoyzeSXzhxHtKAjZb1k6HaWHwSQ/Jlg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=D1qY2PWzk2oDOe9l9W8aV6SftrwtnkgcEppLwOi9p8pPqCsxgjN2F14J0/x2DkdUd
-	 lkdV8fXPPdEPDZX/U5SwscXuEXEH0etr3jpZsJ6hhXKSW+DfeLTm3x02/UHkvmhfA7
-	 VDXb3wZXAQ0r1xP/8+FIO90WJvXMLl5VN8q1nF9c=
+	b=rmPsU5qgk4qmA8xxHGkDKhyNpiUfSeqmImo5jXQUKEVLzf/UtumjfvoihGa4fJeBv
+	 PbDVf+LFTmzhcBy7KXTjznLm21dBe2duhYZVQUu6gLGDG4ctYNr/zVcWfNqZm7wagT
+	 sNgYTW5EyxxcBjUzUwLbKJM9vXacMPCI1FhWF2pQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729001AbgBUHuH (ORCPT
+        id S1729503AbgBUHuM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Feb 2020 02:50:07 -0500
-Received: from mail.kernel.org ([198.145.29.99]:46838 "EHLO mail.kernel.org"
+        Fri, 21 Feb 2020 02:50:12 -0500
+Received: from mail.kernel.org ([198.145.29.99]:46918 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729483AbgBUHuF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Feb 2020 02:50:05 -0500
+        id S1728982AbgBUHuI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 21 Feb 2020 02:50:08 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7047524650;
-        Fri, 21 Feb 2020 07:50:04 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 977B6222C4;
+        Fri, 21 Feb 2020 07:50:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1582271404;
-        bh=HAmXvkOBj7wGi5sj2L8cQWewIrF6aeIPxUXQV2C0J68=;
+        s=default; t=1582271408;
+        bh=5frUTEE1/tpJIoyzeSXzhxHtKAjZb1k6HaWHwSQ/Jlg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=H0w4jw3SlDGgLaDW5QkR3Bv4A3vEbFQskVmKHzlWCZzzL0gDWovk9iMpx2Ph/87wN
-         Hdq+ENWoGbW995Zws0RmoihAbVUPXgCxuP2qwIYjEfCIWgMBFGfMeKK46ueP3cqlIE
-         SkuD3qkKB5A1SVznSMTgcTlGJwrU4lPCowgI6inw=
+        b=ZUV53mYZkh2jq9r+rSKSMMPlnQ1q6dD7Xl1Cc6vGgMpKmMnrfm9hstPKDJFq2Y0Jv
+         hFoRDzhHZBo/Ft2f+6uDCXQJKKueZYOj+TTnLQknDF2SruyDCmfSOmcrqDNofQV4er
+         YUO7WrtbLEuotm9N44baUFyDuKLSeSyvTqAWd9j4=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.5 151/399] nfs: fix timstamp debug prints
-Date:   Fri, 21 Feb 2020 08:37:56 +0100
-Message-Id: <20200221072417.169613497@linuxfoundation.org>
+        stable@vger.kernel.org, Qiang Zhao <qiang.zhao@nxp.com>,
+        Timur Tabi <timur@kernel.org>,
+        Rasmus Villemoes <linux@rasmusvillemoes.dk>,
+        "David S. Miller" <davem@davemloft.net>,
+        Li Yang <leoyang.li@nxp.com>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.5 116/399] net/wan/fsl_ucc_hdlc: reject muram offsets above 64K
+Date:   Fri, 21 Feb 2020 08:37:21 +0100
+Message-Id: <20200221072413.730008002@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200221072402.315346745@linuxfoundation.org>
 References: <20200221072402.315346745@linuxfoundation.org>
@@ -59,63 +62,42 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Arnd Bergmann <arnd@arndb.de>
+From: Rasmus Villemoes <linux@rasmusvillemoes.dk>
 
-[ Upstream commit 057f184b1245150b88e59997fc6f1af0e138d42e ]
+[ Upstream commit 148587a59f6b85831695e0497d9dd1af5f0495af ]
 
-Starting in v5.5, the timestamps are correctly passed down as
-64-bit seconds with NFSv4 on 32-bit machines, but some debug
-statements still truncate them to 'long'.
+Qiang Zhao points out that these offsets get written to 16-bit
+registers, and there are some QE platforms with more than 64K
+muram. So it is possible that qe_muram_alloc() gives us an allocation
+that can't actually be used by the hardware, so detect and reject
+that.
 
-Fixes: e86d5a02874c ("NFS: Convert struct nfs_fattr to use struct timespec64")
-Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+Reported-by: Qiang Zhao <qiang.zhao@nxp.com>
+Reviewed-by: Timur Tabi <timur@kernel.org>
+Signed-off-by: Rasmus Villemoes <linux@rasmusvillemoes.dk>
+Acked-by: David S. Miller <davem@davemloft.net>
+Signed-off-by: Li Yang <leoyang.li@nxp.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/nfs/nfs4xdr.c | 10 +++++-----
- 1 file changed, 5 insertions(+), 5 deletions(-)
+ drivers/net/wan/fsl_ucc_hdlc.c | 5 +++++
+ 1 file changed, 5 insertions(+)
 
-diff --git a/fs/nfs/nfs4xdr.c b/fs/nfs/nfs4xdr.c
-index d0feef17db50d..dc6b9c2f36b2a 100644
---- a/fs/nfs/nfs4xdr.c
-+++ b/fs/nfs/nfs4xdr.c
-@@ -4097,7 +4097,7 @@ static int decode_attr_time_access(struct xdr_stream *xdr, uint32_t *bitmap, str
- 			status = NFS_ATTR_FATTR_ATIME;
- 		bitmap[1] &= ~FATTR4_WORD1_TIME_ACCESS;
+diff --git a/drivers/net/wan/fsl_ucc_hdlc.c b/drivers/net/wan/fsl_ucc_hdlc.c
+index aef7de225783f..4ad0a0c33d853 100644
+--- a/drivers/net/wan/fsl_ucc_hdlc.c
++++ b/drivers/net/wan/fsl_ucc_hdlc.c
+@@ -245,6 +245,11 @@ static int uhdlc_init(struct ucc_hdlc_private *priv)
+ 		ret = -ENOMEM;
+ 		goto free_riptr;
  	}
--	dprintk("%s: atime=%ld\n", __func__, (long)time->tv_sec);
-+	dprintk("%s: atime=%lld\n", __func__, time->tv_sec);
- 	return status;
- }
++	if (riptr != (u16)riptr || tiptr != (u16)tiptr) {
++		dev_err(priv->dev, "MURAM allocation out of addressable range\n");
++		ret = -ENOMEM;
++		goto free_tiptr;
++	}
  
-@@ -4115,7 +4115,7 @@ static int decode_attr_time_metadata(struct xdr_stream *xdr, uint32_t *bitmap, s
- 			status = NFS_ATTR_FATTR_CTIME;
- 		bitmap[1] &= ~FATTR4_WORD1_TIME_METADATA;
- 	}
--	dprintk("%s: ctime=%ld\n", __func__, (long)time->tv_sec);
-+	dprintk("%s: ctime=%lld\n", __func__, time->tv_sec);
- 	return status;
- }
- 
-@@ -4132,8 +4132,8 @@ static int decode_attr_time_delta(struct xdr_stream *xdr, uint32_t *bitmap,
- 		status = decode_attr_time(xdr, time);
- 		bitmap[1] &= ~FATTR4_WORD1_TIME_DELTA;
- 	}
--	dprintk("%s: time_delta=%ld %ld\n", __func__, (long)time->tv_sec,
--		(long)time->tv_nsec);
-+	dprintk("%s: time_delta=%lld %ld\n", __func__, time->tv_sec,
-+		time->tv_nsec);
- 	return status;
- }
- 
-@@ -4197,7 +4197,7 @@ static int decode_attr_time_modify(struct xdr_stream *xdr, uint32_t *bitmap, str
- 			status = NFS_ATTR_FATTR_MTIME;
- 		bitmap[1] &= ~FATTR4_WORD1_TIME_MODIFY;
- 	}
--	dprintk("%s: mtime=%ld\n", __func__, (long)time->tv_sec);
-+	dprintk("%s: mtime=%lld\n", __func__, time->tv_sec);
- 	return status;
- }
- 
+ 	/* Set RIPTR, TIPTR */
+ 	iowrite16be(riptr, &priv->ucc_pram->riptr);
 -- 
 2.20.1
 
