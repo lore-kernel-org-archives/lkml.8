@@ -2,162 +2,297 @@ Return-Path: <SRS0=1210=4J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C2618C35642
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 10:11:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5876BC35642
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 10:12:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 99F3F24656
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 10:11:53 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582279913;
-	bh=6dpwMXiS279BFjVKhR4J8qsC0ooza4efDgKeRZh2MuI=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=kWdTIqXfiWGPw8JNQhw6Jkc0Sr+HDYvKahdBGHQ+FHA8fMmzBBASEPtg8jJUxCAtN
-	 nvgoOKfb7DE7XQSBBIFAwmnZJmTDBDsbXGi5XbGVKfqNbpj+DSIwogohVnsoNgiKbT
-	 wymERjSsH8wP2SNrp0TR22fQJI7Yni65MTerPRdA=
+	by mail.kernel.org (Postfix) with ESMTP id 24ADA20722
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 10:12:07 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728375AbgBUKLw (ORCPT
+        id S1728550AbgBUKMG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Feb 2020 05:11:52 -0500
-Received: from mail-wm1-f68.google.com ([209.85.128.68]:54358 "EHLO
-        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727150AbgBUKLw (ORCPT
+        Fri, 21 Feb 2020 05:12:06 -0500
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:16298 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1727150AbgBUKMF (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Feb 2020 05:11:52 -0500
-Received: by mail-wm1-f68.google.com with SMTP id n3so1092399wmk.4;
-        Fri, 21 Feb 2020 02:11:49 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=6zP/5ARV9Z0j3qqlT+U93tg/6H0b/blVsI4MpzZxVfM=;
-        b=XhDK3OmWvho/2t57L0FREFevEGrBUB9gLGKZwgOjHRsalaOmhoQok8y6iyFwxYB4dy
-         C3yrBh4mp3gf+Fb2GJu/TRBfgLCHTLpKj/mUPYpJNtqIJzAUNUzbRAHoEls10JH/71/L
-         HkqpD4dLa/bLRN1OR0w77ln5tTYTDWkdusJU2SYYOfJG3oZqOFKVauazRR9LtibMHW5n
-         7TGeCBxXwEd6mwHbrj2HjzF5cGyIjazNuNrgD7pZ7oCot91uCaIPbm1L3OMlV+PGE4BK
-         ftSIS9pmoaf9PnLDS2iedaOJSwb7bItarzgiZMgIKhR9suQ/3yTud0crxFF1oHL3iDc0
-         8OeQ==
-X-Gm-Message-State: APjAAAXBIx9fjX6jEIW/DVlNi1tIAMQFpg6uWAG8+ou3bVhGg+sqOX+X
-        Y7kmg/VGpE6eYO0+pYeFOSYnv8S5
-X-Google-Smtp-Source: APXvYqyGH7jwWXt/GPQ821RP3ryu7W+8ERCfEaKJ0x9dVQFNTZpaswY9yzL4ZQ/qO357BQ/1DcPGvg==
-X-Received: by 2002:a1c:bdc5:: with SMTP id n188mr2857996wmf.124.1582279909011;
-        Fri, 21 Feb 2020 02:11:49 -0800 (PST)
-Received: from localhost (prg-ext-pat.suse.com. [213.151.95.130])
-        by smtp.gmail.com with ESMTPSA id 59sm3592478wre.29.2020.02.21.02.11.47
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 21 Feb 2020 02:11:48 -0800 (PST)
-Date:   Fri, 21 Feb 2020 11:11:47 +0100
-From:   Michal Hocko <mhocko@kernel.org>
-To:     Johannes Weiner <hannes@cmpxchg.org>
-Cc:     Tejun Heo <tj@kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Roman Gushchin <guro@fb.com>, linux-mm@kvack.org,
-        cgroups@vger.kernel.org, linux-kernel@vger.kernel.org,
-        kernel-team@fb.com
-Subject: Re: [PATCH v2 3/3] mm: memcontrol: recursive memory.low protection
-Message-ID: <20200221101147.GO20509@dhcp22.suse.cz>
-References: <20200213154731.GE31689@dhcp22.suse.cz>
- <20200213155249.GI88887@mtj.thefacebook.com>
- <20200213163636.GH31689@dhcp22.suse.cz>
- <20200213165711.GJ88887@mtj.thefacebook.com>
- <20200214071537.GL31689@dhcp22.suse.cz>
- <20200214135728.GK88887@mtj.thefacebook.com>
- <20200214151318.GC31689@dhcp22.suse.cz>
- <20200214165311.GA253674@cmpxchg.org>
- <20200217084100.GE31531@dhcp22.suse.cz>
- <20200218195253.GA13406@cmpxchg.org>
+        Fri, 21 Feb 2020 05:12:05 -0500
+Received: from pps.filterd (m0098420.ppops.net [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 01LA9PuC182541
+        for <linux-kernel@vger.kernel.org>; Fri, 21 Feb 2020 05:12:04 -0500
+Received: from e06smtp03.uk.ibm.com (e06smtp03.uk.ibm.com [195.75.94.99])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 2y8ubuhsnt-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Fri, 21 Feb 2020 05:12:03 -0500
+Received: from localhost
+        by e06smtp03.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-kernel@vger.kernel.org> from <kjain@linux.ibm.com>;
+        Fri, 21 Feb 2020 10:12:01 -0000
+Received: from b06avi18878370.portsmouth.uk.ibm.com (9.149.26.194)
+        by e06smtp03.uk.ibm.com (192.168.101.133) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Fri, 21 Feb 2020 10:11:58 -0000
+Received: from b06wcsmtp001.portsmouth.uk.ibm.com (b06wcsmtp001.portsmouth.uk.ibm.com [9.149.105.160])
+        by b06avi18878370.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 01LAAfQd23462330
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Fri, 21 Feb 2020 10:10:41 GMT
+Received: from b06wcsmtp001.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 4FB15A4066;
+        Fri, 21 Feb 2020 10:10:41 +0000 (GMT)
+Received: from b06wcsmtp001.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 3F2DAA4064;
+        Fri, 21 Feb 2020 10:10:39 +0000 (GMT)
+Received: from localhost.in.ibm.com (unknown [9.124.31.35])
+        by b06wcsmtp001.portsmouth.uk.ibm.com (Postfix) with ESMTP;
+        Fri, 21 Feb 2020 10:10:39 +0000 (GMT)
+From:   Kajol Jain <kjain@linux.ibm.com>
+To:     acme@kernel.org
+Cc:     linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
+        kjain@linux.ibm.com, Jiri Olsa <jolsa@kernel.org>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Andi Kleen <ak@linux.intel.com>,
+        Kan Liang <kan.liang@linux.intel.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Jin Yao <yao.jin@linux.intel.com>,
+        Madhavan Srinivasan <maddy@linux.vnet.ibm.com>,
+        Anju T Sudhakar <anju@linux.vnet.ibm.com>,
+        Ravi Bangoria <ravi.bangoria@linux.ibm.com>
+Subject: [PATCh v6] tools/perf/metricgroup: Fix printing event names of metric group with multiple events incase of overlapping events
+Date:   Fri, 21 Feb 2020 15:40:37 +0530
+X-Mailer: git-send-email 2.21.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200218195253.GA13406@cmpxchg.org>
+Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
+x-cbid: 20022110-0012-0000-0000-00000388ECBA
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 20022110-0013-0000-0000-000021C58626
+Message-Id: <20200221101037.28820-1-kjain@linux.ibm.com>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.572
+ definitions=2020-02-21_02:2020-02-19,2020-02-21 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 malwarescore=0
+ lowpriorityscore=0 clxscore=1015 adultscore=0 bulkscore=0
+ priorityscore=1501 mlxscore=0 impostorscore=0 suspectscore=3 spamscore=0
+ mlxlogscore=999 phishscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.12.0-2001150001 definitions=main-2002210076
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[Sorry I didn't get to this email thread sooner]
+Commit f01642e4912b ("perf metricgroup: Support multiple
+events for metricgroup") introduced support for multiple events
+in a metric group. But with the current upstream, metric events
+names are not printed properly incase we try to run multiple
+metric groups with overlapping event.
 
-On Tue 18-02-20 14:52:53, Johannes Weiner wrote:
-> On Mon, Feb 17, 2020 at 09:41:00AM +0100, Michal Hocko wrote:
-> > On Fri 14-02-20 11:53:11, Johannes Weiner wrote:
-> > [...]
-> > > The proper solution to implement the kind of resource hierarchy you
-> > > want to express in cgroup2 is to reflect it in the cgroup tree. Yes,
-> > > the_workload might have been started by user 100 in session c2, but in
-> > > terms of resources, it's prioritized over system.slice and user.slice,
-> > > and so that's the level where it needs to sit:
-> > > 
-> > >                                root
-> > >                        /        |                 \
-> > >                system.slice  user.slice       the_workload
-> > >                /    |           |
-> > >            cron  journal     user-100.slice
-> > >                                 |
-> > >                              session-c2.scope
-> > >                                 |
-> > >                              misc
-> > > 
-> > > Then you can configure not just memory.low, but also a proper io
-> > > weight and a cpu weight. And the tree correctly reflects where the
-> > > workload is in the pecking order of who gets access to resources.
-> > 
-> > I have already mentioned that this would be the only solution when the
-> > protection would work, right. But I am also saying that this a trivial
-> > example where you simply _can_ move your workload to the 1st level. What
-> > about those that need to reflect organization into the hierarchy. Please
-> > have a look at http://lkml.kernel.org/r/20200214075916.GM31689@dhcp22.suse.cz
-> > Are you saying they are just not supported? Are they supposed to use
-> > cgroup v1 for the organization and v2 for the resource control?
-> 
-> >From that email:
-> 
->     > Let me give you an example. Say you have a DB workload which is the
->     > primary thing running on your system and which you want to protect from
->     > an unrelated activity (backups, frontends, etc). Running it inside a
->     > cgroup with memory.low while other components in other cgroups without
->     > any protection achieves that. If those cgroups are top level then this
->     > is simple and straightforward configuration.
->     > 
->     > Things would get much more tricky if you want run the same workload
->     > deeper down the hierarchy - e.g. run it in a container. Now your
->     > "root" has to use an explicit low protection as well and all other
->     > potential cgroups that are in the same sub-hierarchy (read in the same
->     > container) need to opt-out from the protection because they are not
->     > meant to be protected.
-> 
-> You can't prioritize some parts of a cgroup higher than the outside of
-> the cgroup, and other parts lower than the outside. That's just not
-> something that can be sanely supported from the controller interface.
+With current upstream version, incase of overlapping metric events
+issue is, we always start our comparision logic from start.
+So, the events which already matched with some metric group also
+take part in comparision logic. Because of that when we have overlapping
+events, we end up matching current metric group event with already matched
+one.
 
-I am sorry but I do not follow. We do allow to opt out from the reclaim
-protection with the current semantic and it seems to be reasonably sane.
-I also have hard time to grasp what you actually mean by the above.
-Let's say you have hiearchy where you split out low limit unevenly
-              root (5G of memory)
-             /    \
-   (low 3G) A      D (low 1,5G)
-           / \
- (low 1G) B   C (low 2G)
+For example, in skylake machine we have metric event CoreIPC and
+Instructions. Both of them need 'inst_retired.any' event value.
+As events in Instructions is subset of events in CoreIPC, they
+endup in pointing to same 'inst_retired.any' value.
 
-B gets lower priority than C and D while C gets higher priority than
-D? Is there any problem with such a configuration from the semantic
-point of view?
+In skylake platform:
 
-> However, that doesn't mean this usecase isn't supported. You *can*
-> always split cgroups for separate resource policies.
+command:# ./perf stat -M CoreIPC,Instructions  -C 0 sleep 1
 
-What if the split up is not possible or impractical. Let's say you want
-to control how much CPU share does your container workload get comparing
-to other containers running on the system? Or let's say you want to
-treat the whole container as a single entity from the OOM perspective
-(this would be an example of the logical organization constrain) because
-you do not want to leave any part of that workload lingering behind if
-the global OOM kicks in. I am pretty sure there are many other reasons
-to run related workload that doesn't really share the memory protection
-demand under a shared cgroup hierarchy.
+ Performance counter stats for 'CPU(s) 0':
+
+     1,254,992,790      inst_retired.any          # 1254992790.0
+                                                    Instructions
+                                                  #      1.3 CoreIPC
+       977,172,805      cycles
+     1,254,992,756      inst_retired.any
+
+       1.000802596 seconds time elapsed
+
+command:# sudo ./perf stat -M UPI,IPC sleep 1
+
+   Performance counter stats for 'sleep 1':
+           948,650      uops_retired.retire_slots
+           866,182      inst_retired.any          #      0.7 IPC
+           866,182      inst_retired.any
+         1,175,671      cpu_clk_unhalted.thread
+
+Patch fixes the issue by adding a new bool pointer 'evlist_used' to keep
+track of events which already matched with some group by setting it true.
+So, we skip all used events in list when we start comparision logic.
+Patch also make some changes in comparision logic, incase we get a match
+miss, we discard the whole match and start again with first event id in
+metric event.
+
+With this patch:
+In skylake platform:
+
+command:# ./perf stat -M CoreIPC,Instructions  -C 0 sleep 1
+
+ Performance counter stats for 'CPU(s) 0':
+
+         3,348,415      inst_retired.any          #      0.3 CoreIPC
+        11,779,026      cycles
+         3,348,381      inst_retired.any          # 3348381.0
+                                                    Instructions
+
+       1.001649056 seconds time elapsed
+
+command:# ./perf stat -M UPI,IPC sleep 1
+
+ Performance counter stats for 'sleep 1':
+
+         1,023,148      uops_retired.retire_slots #      1.1 UPI
+           924,976      inst_retired.any
+           924,976      inst_retired.any          #      0.6 IPC
+         1,489,414      cpu_clk_unhalted.thread
+
+       1.003064672 seconds time elapsed
+
+Signed-off-by: Kajol Jain <kjain@linux.ibm.com>
+Acked-by: Jiri Olsa <jolsa@kernel.org>
+
+Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
+Cc: Andi Kleen <ak@linux.intel.com>
+Cc: Kan Liang <kan.liang@linux.intel.com>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: Jin Yao <yao.jin@linux.intel.com>
+Cc: Madhavan Srinivasan <maddy@linux.vnet.ibm.com>
+Cc: Anju T Sudhakar <anju@linux.vnet.ibm.com>
+Cc: Ravi Bangoria <ravi.bangoria@linux.ibm.com>
+---
+ tools/perf/util/metricgroup.c | 49 +++++++++++++++++++++--------------
+ 1 file changed, 30 insertions(+), 19 deletions(-)
+
+Changelog:
+v5 -> v6
+- Remove bool cast
+- Add Acked-by tag
+
+v4 -> v5
+- Made small fix to return from function 'metricgroup__setup_events'
+  in case calloc fail
+
+v3 -> v4
+- Make 'evlist_used' a bool pointer.
+
+v2 -> v3
+- Add array in place of variable to keep track of matched events.
+  Because incase we miss match in previous approach, all events will
+  be rolled over in next condition. So, rather we add array and set  
+  it incase that variable already match with some group.
+  - Suggested by Jiri Olsa
+
+v1 -> v2
+- Rather then adding static variable in metricgroup.c,
+  add a new variable in evlist itself with name 'evlist_iter'
+
+diff --git a/tools/perf/util/metricgroup.c b/tools/perf/util/metricgroup.c
+index 02aee946b6c1..33bb138f7902 100644
+--- a/tools/perf/util/metricgroup.c
++++ b/tools/perf/util/metricgroup.c
+@@ -93,13 +93,16 @@ struct egroup {
+ static struct evsel *find_evsel_group(struct evlist *perf_evlist,
+ 				      const char **ids,
+ 				      int idnum,
+-				      struct evsel **metric_events)
++				      struct evsel **metric_events,
++				      bool *evlist_used)
+ {
+ 	struct evsel *ev;
+-	int i = 0;
++	int i = 0, j = 0;
+ 	bool leader_found;
+ 
+ 	evlist__for_each_entry (perf_evlist, ev) {
++		if (evlist_used[j++])
++			continue;
+ 		if (!strcmp(ev->name, ids[i])) {
+ 			if (!metric_events[i])
+ 				metric_events[i] = ev;
+@@ -107,22 +110,17 @@ static struct evsel *find_evsel_group(struct evlist *perf_evlist,
+ 			if (i == idnum)
+ 				break;
+ 		} else {
+-			if (i + 1 == idnum) {
+-				/* Discard the whole match and start again */
+-				i = 0;
+-				memset(metric_events, 0,
+-				       sizeof(struct evsel *) * idnum);
+-				continue;
+-			}
+-
+-			if (!strcmp(ev->name, ids[i]))
+-				metric_events[i] = ev;
+-			else {
+-				/* Discard the whole match and start again */
+-				i = 0;
+-				memset(metric_events, 0,
+-				       sizeof(struct evsel *) * idnum);
+-				continue;
++			/* Discard the whole match and start again */
++			i = 0;
++			memset(metric_events, 0,
++				sizeof(struct evsel *) * idnum);
++
++			if (!strcmp(ev->name, ids[i])) {
++				if (!metric_events[i])
++					metric_events[i] = ev;
++				i++;
++				if (i == idnum)
++					break;
+ 			}
+ 		}
+ 	}
+@@ -144,7 +142,10 @@ static struct evsel *find_evsel_group(struct evlist *perf_evlist,
+ 			    !strcmp(ev->name, metric_events[i]->name)) {
+ 				ev->metric_leader = metric_events[i];
+ 			}
++			j++;
+ 		}
++		ev = metric_events[i];
++		evlist_used[ev->idx] = true;
+ 	}
+ 
+ 	return metric_events[0];
+@@ -160,6 +161,13 @@ static int metricgroup__setup_events(struct list_head *groups,
+ 	int ret = 0;
+ 	struct egroup *eg;
+ 	struct evsel *evsel;
++	bool *evlist_used;
++
++	evlist_used = calloc(perf_evlist->core.nr_entries, sizeof(bool));
++	if (!evlist_used) {
++		ret = -ENOMEM;
++		return ret;
++	}
+ 
+ 	list_for_each_entry (eg, groups, nd) {
+ 		struct evsel **metric_events;
+@@ -170,7 +178,7 @@ static int metricgroup__setup_events(struct list_head *groups,
+ 			break;
+ 		}
+ 		evsel = find_evsel_group(perf_evlist, eg->ids, eg->idnum,
+-					 metric_events);
++					 metric_events, evlist_used);
+ 		if (!evsel) {
+ 			pr_debug("Cannot resolve %s: %s\n",
+ 					eg->metric_name, eg->metric_expr);
+@@ -194,6 +202,9 @@ static int metricgroup__setup_events(struct list_head *groups,
+ 		expr->metric_events = metric_events;
+ 		list_add(&expr->nd, &me->head);
+ 	}
++
++	free(evlist_used);
++
+ 	return ret;
+ }
+ 
 -- 
-Michal Hocko
-SUSE Labs
+2.21.0
+
