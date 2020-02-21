@@ -5,49 +5,52 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 69495C35641
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 08:48:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BA226C35642
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 08:48:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3EF3A206DB
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 08:48:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 91688206DB
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 08:48:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582274906;
-	bh=I6NtYLAPNib460xwCVxXUT8qx07WuH0UxST/BdX8blg=;
+	s=default; t=1582274915;
+	bh=c7JCE0FUS+3bdwXpx4DK8SQXjElF8rXBOwR4c3H51RI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=1h8i9mipt6Y0ZpucijVuf9XtY3Zfifri1W773mrMEk9bXCtxXhVUQVvWbaX9gyNyG
-	 z5rtOqQT3UctRk9iD09g3BByYsfQ6FXiOT6uqjUrBAki6tun0/ywzFBBKGjLBkxjWf
-	 59dQmi1QWWBpCBfKuuVInaCdOUMiRJ4SkpWctg2I=
+	b=iHIxx8pXr5YTdb5EYnDDlvw2npKr/DSJ+gS5mYiEywQUIf9TkNvNi2Thg3rE57Zx8
+	 Axs9otRbqO9GGJh+QpuWP/6a783pctVnL7DZ7iF0kL1UAK5218lk0faWKeJVAuTweW
+	 wrUUIJviu/tJ/434WLMjM4WDDi4jbO3ZOvBdvGqQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387743AbgBUIsY (ORCPT
+        id S1728590AbgBUIse (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Feb 2020 03:48:24 -0500
-Received: from mail.kernel.org ([198.145.29.99]:42878 "EHLO mail.kernel.org"
+        Fri, 21 Feb 2020 03:48:34 -0500
+Received: from mail.kernel.org ([198.145.29.99]:42310 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728389AbgBUHrH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Feb 2020 02:47:07 -0500
+        id S1728776AbgBUHqm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 21 Feb 2020 02:46:42 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3E90024650;
-        Fri, 21 Feb 2020 07:47:06 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9E002208C4;
+        Fri, 21 Feb 2020 07:46:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1582271226;
-        bh=I6NtYLAPNib460xwCVxXUT8qx07WuH0UxST/BdX8blg=;
+        s=default; t=1582271202;
+        bh=c7JCE0FUS+3bdwXpx4DK8SQXjElF8rXBOwR4c3H51RI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=HzlgMZud36xM76U7VQexBxusJraGwT+gsC0kYpI7RzN78ISWyeQNP+CrysAUzZA1c
-         aLSohVxhZbtKdA6F2l+3A68MnZG7lVMOq326ZJZCopAptUlyMrby8/bFfzEeF9AD2c
-         Wt3rB51pFewQai0060t2jdX+7U7ep8g7nb2/1A1U=
+        b=jO8mCzjn9na203pNXUOrvWMDANOWe+f/Ptdqon0ZAw2uTBBxf8J1xDgxPOLOO0/mP
+         NjON7K6Ow1At9dKjAuhPnWFxPjkHW/NGqEeZsZU7jqBH4RokrnqiAlK9VmIzzX4el6
+         YtnFoLcPBdLQAKBK/Q+8SnIwONHC2hMjjqZiXBFk=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Rakesh Pillai <pillair@codeaurora.org>,
-        Kalle Valo <kvalo@codeaurora.org>,
+        stable@vger.kernel.org, Wenyou Yang <wenyou.yang@microchip.com>,
+        Eugen Hristev <eugen.hristev@microchip.com>,
+        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+        Sakari Ailus <sakari.ailus@linux.intel.com>,
+        Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.5 087/399] ath10k: Correct the DMA direction for management tx buffers
-Date:   Fri, 21 Feb 2020 08:36:52 +0100
-Message-Id: <20200221072410.803417902@linuxfoundation.org>
+Subject: [PATCH 5.5 040/399] media: i2c: mt9v032: fix enum mbus codes and frame sizes
+Date:   Fri, 21 Feb 2020 08:36:05 +0100
+Message-Id: <20200221072406.249690333@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200221072402.315346745@linuxfoundation.org>
 References: <20200221072402.315346745@linuxfoundation.org>
@@ -60,55 +63,61 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Rakesh Pillai <pillair@codeaurora.org>
+From: Eugen Hristev <eugen.hristev@microchip.com>
 
-[ Upstream commit 6ba8b3b6bd772f575f7736c8fd893c6981fcce16 ]
+[ Upstream commit 1451d5ae351d938a0ab1677498c893f17b9ee21d ]
 
-The management packets, send to firmware via WMI, are
-mapped using the direction DMA_TO_DEVICE. Currently in
-case of wmi cleanup, these buffers are being unmapped
-using an incorrect DMA direction. This can cause unwanted
-behavior when the host driver is handling a restart
-of the wlan firmware.
+This driver supports both the mt9v032 (color) and the mt9v022 (mono)
+sensors. Depending on which sensor is used, the format from the sensor is
+different. The format.code inside the dev struct holds this information.
+The enum mbus and enum frame sizes need to take into account both type of
+sensors, not just the color one. To solve this, use the format.code in
+these functions instead of the hardcoded bayer color format (which is only
+used for mt9v032).
 
-We might see a trace like below
+[Sakari Ailus: rewrapped commit message]
 
-[<ffffff8008098b18>] __dma_inv_area+0x28/0x58
-[<ffffff8001176734>] ath10k_wmi_mgmt_tx_clean_up_pending+0x60/0xb0 [ath10k_core]
-[<ffffff80088c7c50>] idr_for_each+0x78/0xe4
-[<ffffff80011766a4>] ath10k_wmi_detach+0x4c/0x7c [ath10k_core]
-[<ffffff8001163d7c>] ath10k_core_stop+0x58/0x68 [ath10k_core]
-[<ffffff800114fb74>] ath10k_halt+0xec/0x13c [ath10k_core]
-[<ffffff8001165110>] ath10k_core_restart+0x11c/0x1a8 [ath10k_core]
-[<ffffff80080c36bc>] process_one_work+0x16c/0x31c
-
-Fix the incorrect DMA direction during the wmi
-management tx buffer cleanup.
-
-Tested HW: WCN3990
-Tested FW: WLAN.HL.3.1-00784-QCAHLSWMTPLZ-1
-
-Fixes: dc405152bb6 ("ath10k: handle mgmt tx completion event")
-Signed-off-by: Rakesh Pillai <pillair@codeaurora.org>
-Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
+Suggested-by: Wenyou Yang <wenyou.yang@microchip.com>
+Signed-off-by: Eugen Hristev <eugen.hristev@microchip.com>
+Reviewed-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Signed-off-by: Sakari Ailus <sakari.ailus@linux.intel.com>
+Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/wireless/ath/ath10k/wmi.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/media/i2c/mt9v032.c | 10 ++++++++--
+ 1 file changed, 8 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/net/wireless/ath/ath10k/wmi.c b/drivers/net/wireless/ath/ath10k/wmi.c
-index 9f564e2b7a148..214d65108b294 100644
---- a/drivers/net/wireless/ath/ath10k/wmi.c
-+++ b/drivers/net/wireless/ath/ath10k/wmi.c
-@@ -9476,7 +9476,7 @@ static int ath10k_wmi_mgmt_tx_clean_up_pending(int msdu_id, void *ptr,
+diff --git a/drivers/media/i2c/mt9v032.c b/drivers/media/i2c/mt9v032.c
+index 4b9b98cf6674c..5bd3ae82992f3 100644
+--- a/drivers/media/i2c/mt9v032.c
++++ b/drivers/media/i2c/mt9v032.c
+@@ -428,10 +428,12 @@ static int mt9v032_enum_mbus_code(struct v4l2_subdev *subdev,
+ 				  struct v4l2_subdev_pad_config *cfg,
+ 				  struct v4l2_subdev_mbus_code_enum *code)
+ {
++	struct mt9v032 *mt9v032 = to_mt9v032(subdev);
++
+ 	if (code->index > 0)
+ 		return -EINVAL;
  
- 	msdu = pkt_addr->vaddr;
- 	dma_unmap_single(ar->dev, pkt_addr->paddr,
--			 msdu->len, DMA_FROM_DEVICE);
-+			 msdu->len, DMA_TO_DEVICE);
- 	ieee80211_free_txskb(ar->hw, msdu);
- 
+-	code->code = MEDIA_BUS_FMT_SGRBG10_1X10;
++	code->code = mt9v032->format.code;
  	return 0;
+ }
+ 
+@@ -439,7 +441,11 @@ static int mt9v032_enum_frame_size(struct v4l2_subdev *subdev,
+ 				   struct v4l2_subdev_pad_config *cfg,
+ 				   struct v4l2_subdev_frame_size_enum *fse)
+ {
+-	if (fse->index >= 3 || fse->code != MEDIA_BUS_FMT_SGRBG10_1X10)
++	struct mt9v032 *mt9v032 = to_mt9v032(subdev);
++
++	if (fse->index >= 3)
++		return -EINVAL;
++	if (mt9v032->format.code != fse->code)
+ 		return -EINVAL;
+ 
+ 	fse->min_width = MT9V032_WINDOW_WIDTH_DEF / (1 << fse->index);
 -- 
 2.20.1
 
