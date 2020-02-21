@@ -2,128 +2,162 @@ Return-Path: <SRS0=1210=4J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5A8B1C35656
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 15:37:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B16CFC35656
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 15:39:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2DC84206E2
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 15:37:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7C9BE206E2
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 15:39:29 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=embeddedor.com header.i=@embeddedor.com header.b="Xyhucb8T"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="XZnp/lua"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728441AbgBUPhk (ORCPT
+        id S1728392AbgBUPj2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Feb 2020 10:37:40 -0500
-Received: from gateway20.websitewelcome.com ([192.185.46.107]:31521 "EHLO
-        gateway20.websitewelcome.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727053AbgBUPhk (ORCPT
+        Fri, 21 Feb 2020 10:39:28 -0500
+Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:48736 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1727039AbgBUPj1 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Feb 2020 10:37:40 -0500
-Received: from cm12.websitewelcome.com (cm12.websitewelcome.com [100.42.49.8])
-        by gateway20.websitewelcome.com (Postfix) with ESMTP id 3C591400ED3DA
-        for <linux-kernel@vger.kernel.org>; Fri, 21 Feb 2020 08:20:30 -0600 (CST)
-Received: from gator4166.hostgator.com ([108.167.133.22])
-        by cmsmtp with SMTP
-        id 5AK2jR7buvBMd5AK2jNzoC; Fri, 21 Feb 2020 09:34:34 -0600
-X-Authority-Reason: nr=8
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=embeddedor.com; s=default; h=Content-Type:MIME-Version:Message-ID:Subject:
-        Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
-        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
-        :Resent-Message-ID:In-Reply-To:References:List-Id:List-Help:List-Unsubscribe:
-        List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=GKpPXo3AQzEVA4yK0J3aDuF9U4AWBQfi0jCw2uWOJA8=; b=Xyhucb8TPqtTHYPTm2KwEZzI9v
-        45aburvxF5dgGvB7X/qjNl/CI03acT8Ulf3aZRD9UXd8WVUFurj4/CkeWrhVD8/9Y6xeLlKDxZZSB
-        UTWifZN/qWkO6EIo1Sj3SX8ab7l4vO34ZfRMxyqGxjJReS6FUmJJzX+YuqPQvcVu929mFuZI+bCcb
-        m/dgRBnVx0AUA6/3ArS1P6uAmPJSxAm9CLJioK6KrFGSaz7a7kqD2pZFHk5gKjtammRf+bZw9JFav
-        xzJ1N2xp3G12T06yef4KVb0Qiv2EAQ3AO0xmcxBvxURNAjTs2/W2lApFMK5o1LjB4Dmlc61mlqSNe
-        YOtTsfpg==;
-Received: from [200.68.140.54] (port=28252 helo=embeddedor)
-        by gator4166.hostgator.com with esmtpa (Exim 4.92)
-        (envelope-from <gustavo@embeddedor.com>)
-        id 1j5AJy-003jkr-Vk; Fri, 21 Feb 2020 09:34:32 -0600
-Date:   Fri, 21 Feb 2020 09:37:13 -0600
-From:   "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-To:     Khalid Aziz <khalid@gonehiking.org>
-Cc:     linux-kernel@vger.kernel.org,
-        "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-Subject: [PATCH] pcdp: Replace zero-length array with flexible-array member
-Message-ID: <20200221153713.GA23760@embeddedor>
+        Fri, 21 Feb 2020 10:39:27 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1582299567;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=o8eNL5pHSEEGDRXTPvdnZ+0kgLl4XLPDpXvj6Khj+a0=;
+        b=XZnp/lua9xBAG7oXd9WtXB2BVVawZ7SP3tQ+RNi9REU3EBNNXBZEVIGtbco8IW24lkHv8J
+        obxgBPfV3+eDHAZVyJ/VqZn5E1XRUHZIkm1LGX9a9flswMOODfZvinOcjoHiGLOT8cnsDG
+        ZBqdKYxYz0FEd/oczES34Do9x0g/rfk=
+Received: from mail-wr1-f71.google.com (mail-wr1-f71.google.com
+ [209.85.221.71]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-139-9tMmr1BdMPGIIb260MCddw-1; Fri, 21 Feb 2020 10:39:25 -0500
+X-MC-Unique: 9tMmr1BdMPGIIb260MCddw-1
+Received: by mail-wr1-f71.google.com with SMTP id r1so1173554wrc.15
+        for <linux-kernel@vger.kernel.org>; Fri, 21 Feb 2020 07:39:25 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:in-reply-to:references:date
+         :message-id:mime-version;
+        bh=o8eNL5pHSEEGDRXTPvdnZ+0kgLl4XLPDpXvj6Khj+a0=;
+        b=NRi+cqMHqMp1H3CndYsXXQe4q04RFfjDFCrrZGmpqQl8tyWY3xLD05we5sSrls8CGX
+         b8P2BoSoTnPJyvGnjHre8HpaOnKmPZUeR0PVqHsYISBBa4+zwoGsAKBLAz3xixcsmpqN
+         YTLazxe1x9UTOwlH8svVvXqwVJxjq3xbq/RyP2e/JcDaaZHqOaNse0NnkDqWjIi7O3Xt
+         BXE9flKybcu5Bq9kphTmeliaZEwbPx6HIS8tHsudU0+3+yR1BMvuPoU+r2hEKU3HnAet
+         171LxGiC8Kfl1GvcBoI41EyDo40J5bXrifQKmOU8vS6XbeX+o0nsrVRy42yPm39EN6l4
+         6vGw==
+X-Gm-Message-State: APjAAAWOZIJkMBnXoiNS0FzDRCToYIPhLjpmWT4ZOKwOEQ76B3X3oY/M
+        6Ul1rOtstY08qkiYqApQuQCNI+BiVBOeN0DnHbBybG5G64x+IN2PvznG/m3PMGAfJ/zbRY2Yeaq
+        egK3+QDt3ByD5aGftfV11sCdq
+X-Received: by 2002:adf:cd91:: with SMTP id q17mr49975313wrj.306.1582299564409;
+        Fri, 21 Feb 2020 07:39:24 -0800 (PST)
+X-Google-Smtp-Source: APXvYqzr4F9d46+i3gYzMKNjyyzFiTVMMNlK43Z08VINv7Bk6pLxSJAJ8bWgIQKaxG7GLSB02rXS9w==
+X-Received: by 2002:adf:cd91:: with SMTP id q17mr49975298wrj.306.1582299564176;
+        Fri, 21 Feb 2020 07:39:24 -0800 (PST)
+Received: from vitty.brq.redhat.com (nat-pool-brq-t.redhat.com. [213.175.37.10])
+        by smtp.gmail.com with ESMTPSA id a135sm3948958wme.47.2020.02.21.07.39.23
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 21 Feb 2020 07:39:23 -0800 (PST)
+From:   Vitaly Kuznetsov <vkuznets@redhat.com>
+To:     Sean Christopherson <sean.j.christopherson@intel.com>
+Cc:     Paolo Bonzini <pbonzini@redhat.com>,
+        Wanpeng Li <wanpengli@tencent.com>,
+        Jim Mattson <jmattson@google.com>,
+        Joerg Roedel <joro@8bytes.org>, kvm@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 24/61] KVM: x86: Drop explicit @func param from ->set_supported_cpuid()
+In-Reply-To: <20200201185218.24473-25-sean.j.christopherson@intel.com>
+References: <20200201185218.24473-1-sean.j.christopherson@intel.com> <20200201185218.24473-25-sean.j.christopherson@intel.com>
+Date:   Fri, 21 Feb 2020 16:39:22 +0100
+Message-ID: <87blpsq79x.fsf@vitty.brq.redhat.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-User-Agent: Mutt/1.9.4 (2018-02-28)
-X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
-X-AntiAbuse: Primary Hostname - gator4166.hostgator.com
-X-AntiAbuse: Original Domain - vger.kernel.org
-X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
-X-AntiAbuse: Sender Address Domain - embeddedor.com
-X-BWhitelist: no
-X-Source-IP: 200.68.140.54
-X-Source-L: No
-X-Exim-ID: 1j5AJy-003jkr-Vk
-X-Source: 
-X-Source-Args: 
-X-Source-Dir: 
-X-Source-Sender: (embeddedor) [200.68.140.54]:28252
-X-Source-Auth: gustavo@embeddedor.com
-X-Email-Count: 21
-X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
-X-Local-Domain: yes
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The current codebase makes use of the zero-length array language
-extension to the C90 standard, but the preferred mechanism to declare
-variable-length types such as these ones is a flexible array member[1][2],
-introduced in C99:
+Sean Christopherson <sean.j.christopherson@intel.com> writes:
 
-struct foo {
-        int stuff;
-        struct boo array[];
-};
+> Drop the explicit @func param from ->set_supported_cpuid() and instead
+> pull the CPUID function from the relevant entry.  This sets the stage
+> for hardening guest CPUID updates in future patches, e.g. allows adding
+> run-time assertions that the CPUID feature being changed is actually
+> a bit in the referenced CPUID entry.
+>
+> No functional change intended.
+>
+> Signed-off-by: Sean Christopherson <sean.j.christopherson@intel.com>
+> ---
+>  arch/x86/include/asm/kvm_host.h | 2 +-
+>  arch/x86/kvm/cpuid.c            | 2 +-
+>  arch/x86/kvm/svm.c              | 4 ++--
+>  arch/x86/kvm/vmx/vmx.c          | 4 ++--
+>  4 files changed, 6 insertions(+), 6 deletions(-)
+>
+> diff --git a/arch/x86/include/asm/kvm_host.h b/arch/x86/include/asm/kvm_host.h
+> index 85f0d96cfeb2..a61928d5435b 100644
+> --- a/arch/x86/include/asm/kvm_host.h
+> +++ b/arch/x86/include/asm/kvm_host.h
+> @@ -1148,7 +1148,7 @@ struct kvm_x86_ops {
+>  
+>  	void (*set_tdp_cr3)(struct kvm_vcpu *vcpu, unsigned long cr3);
+>  
+> -	void (*set_supported_cpuid)(u32 func, struct kvm_cpuid_entry2 *entry);
+> +	void (*set_supported_cpuid)(struct kvm_cpuid_entry2 *entry);
+>  
+>  	bool (*has_wbinvd_exit)(void);
+>  
+> diff --git a/arch/x86/kvm/cpuid.c b/arch/x86/kvm/cpuid.c
+> index 056faf27b14b..e3026fe638aa 100644
+> --- a/arch/x86/kvm/cpuid.c
+> +++ b/arch/x86/kvm/cpuid.c
+> @@ -784,7 +784,7 @@ static inline int __do_cpuid_func(struct kvm_cpuid_array *array, u32 function)
+>  		break;
+>  	}
+>  
+> -	kvm_x86_ops->set_supported_cpuid(function, entry);
+> +	kvm_x86_ops->set_supported_cpuid(entry);
+>  
+>  	r = 0;
+>  
+> diff --git a/arch/x86/kvm/svm.c b/arch/x86/kvm/svm.c
+> index 3c7ddaff405d..535eb746fb0f 100644
+> --- a/arch/x86/kvm/svm.c
+> +++ b/arch/x86/kvm/svm.c
+> @@ -6032,9 +6032,9 @@ static void svm_cpuid_update(struct kvm_vcpu *vcpu)
+>  
+>  #define F feature_bit
+>  
+> -static void svm_set_supported_cpuid(u32 func, struct kvm_cpuid_entry2 *entry)
+> +static void svm_set_supported_cpuid(struct kvm_cpuid_entry2 *entry)
+>  {
+> -	switch (func) {
+> +	switch (entry->function) {
+>  	case 0x1:
+>  		if (avic)
+>  			entry->ecx &= ~F(X2APIC);
+> diff --git a/arch/x86/kvm/vmx/vmx.c b/arch/x86/kvm/vmx/vmx.c
+> index 98fd651f7f7e..3ff830e2258e 100644
+> --- a/arch/x86/kvm/vmx/vmx.c
+> +++ b/arch/x86/kvm/vmx/vmx.c
+> @@ -7104,9 +7104,9 @@ static void vmx_cpuid_update(struct kvm_vcpu *vcpu)
+>  	}
+>  }
+>  
+> -static void vmx_set_supported_cpuid(u32 func, struct kvm_cpuid_entry2 *entry)
+> +static void vmx_set_supported_cpuid(struct kvm_cpuid_entry2 *entry)
+>  {
+> -	if (func == 1 && nested)
+> +	if (entry->function == 1 && nested)
+>  		entry->ecx |= feature_bit(VMX);
+>  }
 
-By making use of the mechanism above, we will get a compiler warning
-in case the flexible array does not occur last in the structure, which
-will help us prevent some kind of undefined behavior bugs from being
-inadvertently introduced[3] to the codebase from now on.
+Reviewed-by: Vitaly Kuznetsov <vkuznets@redhat.com>
 
-Also, notice that, dynamic memory allocations won't be affected by
-this change:
-
-"Flexible array members have incomplete type, and so the sizeof operator
-may not be applied. As a quirk of the original implementation of
-zero-length arrays, sizeof evaluates to zero."[1]
-
-This issue was found with the help of Coccinelle.
-
-[1] https://gcc.gnu.org/onlinedocs/gcc/Zero-Length.html
-[2] https://github.com/KSPP/linux/issues/21
-[3] commit 76497732932f ("cxgb3/l2t: Fix undefined behaviour")
-
-Signed-off-by: Gustavo A. R. Silva <gustavo@embeddedor.com>
----
- drivers/firmware/pcdp.h | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/drivers/firmware/pcdp.h b/drivers/firmware/pcdp.h
-index ce75d1da9e84..e02540571c52 100644
---- a/drivers/firmware/pcdp.h
-+++ b/drivers/firmware/pcdp.h
-@@ -103,6 +103,6 @@ struct pcdp {
- 	u8			creator_id[4];
- 	u32			creator_rev;
- 	u32			num_uarts;
--	struct pcdp_uart	uart[0];	/* actual size is num_uarts */
-+	struct pcdp_uart	uart[];	/* actual size is num_uarts */
- 	/* remainder of table is pcdp_device structures */
- } __attribute__((packed));
 -- 
-2.25.0
+Vitaly
 
