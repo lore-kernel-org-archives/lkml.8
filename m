@@ -2,119 +2,137 @@ Return-Path: <SRS0=1210=4J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E5463C35658
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 17:20:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 429B9C35658
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 17:21:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BBF1320722
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 17:20:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 194A120722
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 17:21:01 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=resnulli-us.20150623.gappssmtp.com header.i=@resnulli-us.20150623.gappssmtp.com header.b="JynLIov+"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="O2/SIg7l"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728480AbgBURUN (ORCPT
+        id S1728289AbgBURVA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Feb 2020 12:20:13 -0500
-Received: from mail-wm1-f65.google.com ([209.85.128.65]:53473 "EHLO
-        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726672AbgBURUM (ORCPT
+        Fri, 21 Feb 2020 12:21:00 -0500
+Received: from mail-yb1-f195.google.com ([209.85.219.195]:38904 "EHLO
+        mail-yb1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726198AbgBURU7 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Feb 2020 12:20:12 -0500
-Received: by mail-wm1-f65.google.com with SMTP id s10so2571991wmh.3
-        for <linux-kernel@vger.kernel.org>; Fri, 21 Feb 2020 09:20:10 -0800 (PST)
+        Fri, 21 Feb 2020 12:20:59 -0500
+Received: by mail-yb1-f195.google.com with SMTP id v12so1453069ybi.5;
+        Fri, 21 Feb 2020 09:20:59 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=resnulli-us.20150623.gappssmtp.com; s=20150623;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=hqQ+aTrDEnBx+s6claZe2vKTKMHC/7x41HzbdXRsZ8E=;
-        b=JynLIov+unMZmGChYa0cW1kD9wPV8hyIwmkvkxY2XgSnIKCbqVMYu0RQz+3zwwZyCv
-         +N3u7P764XeiKP3oOQFv7dXKC7+Oe4ZQDA/88VwAYfY6lrtrLbJNEvdvyuV/d9GRpOZ1
-         ZkMX8o/2quq4U5DJcXi8UuYkeXZJey2JnVfFKzF9TKPa88hn7dRrRu+jW+qIcl3gksOj
-         4xTz4SdkHQQUdE/5kZzWczDO3qTOKmqRbmh1IsYfFJZ94Uv9AWIYcC9I6qjUfmaNS3+A
-         xl90fPMcBWh6lQ2Gu0cPrw1W78ymY0t48sgRG64HIWovINycKZ6pBj5tY22Y+Bvv0N7X
-         AHGg==
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=IWVlgYAJf77FUNFo3/GoZgBj7JaoEHC4YwQbTnJvbbc=;
+        b=O2/SIg7l0/i5PbP4X5bVieM9HRmU9hfDvouoosrMYOossZA4EyT5dE/t+LsWCQnUeW
+         8mZbom/4oUeT1QMZPE0a8M5re6u9/XxzZHyMJewYMwKs+nWJbv/G44pfNCzD7LfCYTZV
+         6APUhf3rXva0+NHi+1/eYjTGU20lXmjPgtz78XrJFxXMQgryVwsnrBSKoVLu2kDWBroJ
+         QuIkrlvMzqCc1ZCJmgjfPUHIOxBY7ILAZ6dbeCEdudlQ4BJ5J5gdsCVBbx0WtGtUx7Lq
+         gtyfLuRUIUcr8H626+8YYIea6ctJOItRgmfhfvnHUVcDICue1KP5iN33iwQQtxa965OT
+         gUHQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=hqQ+aTrDEnBx+s6claZe2vKTKMHC/7x41HzbdXRsZ8E=;
-        b=ePHuTW5cnqXiMhh97xSAhSu3LY5xCw4+YwgSn+ldeAvOV0VkPXp8sB4Cx1H/nRENi5
-         VVnipc1wUzm3cM1p9MUd9W4KpxxtyCo7tVjuSq8woaA7x52/mCpfbrbdhYzZRfpyrNSu
-         r88uXYe7KgQKLUdSIe+md/KzA6xqp9jQ8AmTqjzqYMDgl5tbFZ2Wsf59e3nNdvPHCQD5
-         FWzgxGPsQyqTRLuIh5dgANzGZE1w9DGU3df0MZ5fT+uaa/ZFD8JYXEjPUHaqTigCeuli
-         8C/KbL/gt0RMAfYAQRr6Nsc4oUDLNUZ6UW9Nt2jiZHon78eFML9XCiWEVTakT3LbIYBQ
-         a9dw==
-X-Gm-Message-State: APjAAAWWa0qvZ+V/uG2QmukZIYjADSF+ymD63WE3jr1vGu/Zadsrg9zm
-        fr6jo3U3J9q5GrNJhrSsJP1zda2HaGs=
-X-Google-Smtp-Source: APXvYqzxk6iXslWi+d+A4DYTS4zK4n/WpayK/WU8wiRI+NtfEMydS6s1VGa9hfiASMIsFY/HqR57aw==
-X-Received: by 2002:a05:600c:20f:: with SMTP id 15mr4856445wmi.128.1582305610253;
-        Fri, 21 Feb 2020 09:20:10 -0800 (PST)
-Received: from localhost (ip-89-177-130-96.net.upcbroadband.cz. [89.177.130.96])
-        by smtp.gmail.com with ESMTPSA id d204sm4379677wmd.30.2020.02.21.09.20.09
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 21 Feb 2020 09:20:09 -0800 (PST)
-Date:   Fri, 21 Feb 2020 18:20:08 +0100
-From:   Jiri Pirko <jiri@resnulli.us>
-To:     madhuparnabhowmik10@gmail.com
-Cc:     jiri@mellanox.com, davem@davemloft.net, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org, joel@joelfernandes.org,
-        frextrite@gmail.com,
-        linux-kernel-mentees@lists.linuxfoundation.org, paulmck@kernel.org
-Subject: Re: [PATCH] net: core: devlink.c: Use built-in RCU list checking
-Message-ID: <20200221172008.GA2181@nanopsycho>
-References: <20200221165141.24630-1-madhuparnabhowmik10@gmail.com>
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=IWVlgYAJf77FUNFo3/GoZgBj7JaoEHC4YwQbTnJvbbc=;
+        b=NpNT50LZT+kb0uFcgmKIuxBy1UaBnqoFta3A6PVfbTdAmTunj4TP863ntFaeUMO4G8
+         GU9DOOa7BHE9b0cTRSPxboiLRQAadfzAt6+O+QToIPdvv3PAUUtA4AMGrLtSoBa7feTZ
+         Z6Wvw91C5M1CGwRf7rbs+pb6lUqXcROpkDvmPhCzEygXJBuHaRWnglv9oO8bI0Pe+203
+         7Jaz+CXCChUg3+0OaznsaNNDPvgtHE41IAfiuTbzCUL0MEZsSQpIvPagcivgr6zfVdx4
+         NhJsCNrtqxAgKqF3tnTknPoDnl2cN0926zjxX7e05igxTbwSWS14LV5dwv5nw8uE4jZA
+         IitQ==
+X-Gm-Message-State: APjAAAWUstZrmnJ2rE9evyQpQv7IfevYdZOqReUkqKoB4abEt+ZG0rDx
+        myLjN1zuUBky6pUlbkLBJIs=
+X-Google-Smtp-Source: APXvYqyxmw+5hIn9x8XNU+OdTvUPMMG4/1DpfpgIXHun2JCbsH+bBhK1YGyWv6rE/4E1+7rg1kiVSg==
+X-Received: by 2002:a25:b9c8:: with SMTP id y8mr31348517ybj.369.1582305658699;
+        Fri, 21 Feb 2020 09:20:58 -0800 (PST)
+Received: from [192.168.1.46] (c-73-88-245-53.hsd1.tn.comcast.net. [73.88.245.53])
+        by smtp.gmail.com with ESMTPSA id s68sm1539521ywg.69.2020.02.21.09.20.57
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Fri, 21 Feb 2020 09:20:58 -0800 (PST)
+Subject: Re: [PATCH v2 1/2] gpio: of: Extract of_gpiochip_add_hog()
+To:     Linus Walleij <linus.walleij@linaro.org>,
+        Geert Uytterhoeven <geert+renesas@glider.be>,
+        Rob Herring <robh+dt@kernel.org>
+Cc:     Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Pantelis Antoniou <pantelis.antoniou@konsulko.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Peter Ujfalusi <peter.ujfalusi@ti.com>,
+        Chris Brandt <chris.brandt@renesas.com>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+References: <20200220130149.26283-1-geert+renesas@glider.be>
+ <20200220130149.26283-2-geert+renesas@glider.be>
+ <CACRpkdbgsR1n1qj3HmQWcEjeDdN85N1Mw8kLOUAeDjESW36MDg@mail.gmail.com>
+ <d2b87102-fdf3-f22f-8477-5b2105d9583b@gmail.com>
+From:   Frank Rowand <frowand.list@gmail.com>
+Message-ID: <3d56743a-ffb2-4f26-dfb0-b8430f0a4583@gmail.com>
+Date:   Fri, 21 Feb 2020 11:20:57 -0600
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200221165141.24630-1-madhuparnabhowmik10@gmail.com>
+In-Reply-To: <d2b87102-fdf3-f22f-8477-5b2105d9583b@gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Fri, Feb 21, 2020 at 05:51:41PM CET, madhuparnabhowmik10@gmail.com wrote:
->From: Madhuparna Bhowmik <madhuparnabhowmik10@gmail.com>
->
->list_for_each_entry_rcu() has built-in RCU and lock checking.
->
->Pass cond argument to list_for_each_entry_rcu() to silence
->false lockdep warning when CONFIG_PROVE_RCU_LIST is enabled
->by default.
->
->Signed-off-by: Madhuparna Bhowmik <madhuparnabhowmik10@gmail.com>
-
-Reviewed-by: Jiri Pirko <jiri@mellanox.com>
-
-Thanks.
-
-However, there is a callpath where not devlink lock neither rcu read is
-taken:
-devlink_dpipe_table_register()->devlink_dpipe_table_find()
-
-I guess that was not the trace you were seeing, right?
-
-
->---
-> net/core/devlink.c | 3 ++-
-> 1 file changed, 2 insertions(+), 1 deletion(-)
->
->diff --git a/net/core/devlink.c b/net/core/devlink.c
->index 4c63c9a4c09e..3e8c94155d93 100644
->--- a/net/core/devlink.c
->+++ b/net/core/devlink.c
->@@ -2107,7 +2107,8 @@ devlink_dpipe_table_find(struct list_head *dpipe_tables,
-> {
-> 	struct devlink_dpipe_table *table;
+On 2/21/20 11:18 AM, Frank Rowand wrote:
+> Hi Linus, Rob,
 > 
->-	list_for_each_entry_rcu(table, dpipe_tables, list) {
->+	list_for_each_entry_rcu(table, dpipe_tables, list,
->+				lockdep_is_held(&devlink->lock)) {
-> 		if (!strcmp(table->name, table_name))
-> 			return table;
-> 	}
->-- 
->2.17.1
->
+> On 2/21/20 10:08 AM, Linus Walleij wrote:
+>> On Thu, Feb 20, 2020 at 2:01 PM Geert Uytterhoeven
+>> <geert+renesas@glider.be> wrote:
+>>
+>>> Extract the code to add all GPIO hogs of a gpio-hog node into its own
+>>> function, so it can be reused.
+>>>
+>>> Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
+>>> ---
+>>> v2:
+>>>   - No changes.
+>>
+>> Patch applied with Frank's Review tag.
+> 
+> I created a devicetree unittest to show the problem that Geert's patches
+> fix.
+
+I left out the link to my patch series:
+
+   https://lore.kernel.org/linux-devicetree/1582224021-12827-1-git-send-email-frowand.list@gmail.com/
+
+   [PATCH v2 0/2] of: unittest: add overlay gpio test to catch gpio hog problem
+
+-Frank
+
+> 
+> I would prefer to have my unittest patch series applied somewhere,
+> immediately followed by Geert's patch series.  This way, after
+> applying my series, a test fail is reported, then after Geert's
+> series is applied, the test fail becomes a test pass.
+> 
+> Can you coordinate with Rob to accept both series either via
+> your tree or Rob's tree?
+> 
+> -Frank
+> 
+>>
+>> Yours,
+>> Linus Walleij
+>>
+> 
+
