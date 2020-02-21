@@ -2,86 +2,162 @@ Return-Path: <SRS0=1210=4J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	UNWANTED_LANGUAGE_BODY,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 77983C35656
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 16:17:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EE805C35657
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 16:18:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4A18A2073A
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 16:17:25 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel-dk.20150623.gappssmtp.com header.i=@kernel-dk.20150623.gappssmtp.com header.b="igvfD2fJ"
+	by mail.kernel.org (Postfix) with ESMTP id CF8122073A
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 16:18:34 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728392AbgBUQRY (ORCPT
+        id S1728835AbgBUQSd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Feb 2020 11:17:24 -0500
-Received: from mail-pg1-f194.google.com ([209.85.215.194]:42085 "EHLO
-        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727213AbgBUQRX (ORCPT
+        Fri, 21 Feb 2020 11:18:33 -0500
+Received: from mx0a-00128a01.pphosted.com ([148.163.135.77]:52386 "EHLO
+        mx0a-00128a01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727213AbgBUQSd (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Feb 2020 11:17:23 -0500
-Received: by mail-pg1-f194.google.com with SMTP id w21so1194436pgl.9
-        for <linux-kernel@vger.kernel.org>; Fri, 21 Feb 2020 08:17:23 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kernel-dk.20150623.gappssmtp.com; s=20150623;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=aQGcVDwZYQWBOtAXil8SzgdiYPVSaSGZOeGTzRnc5aE=;
-        b=igvfD2fJPKAX9ygqtJrrPalny2QTmYWCBA5aUcmDkKSmfijQRdypWy+AHX5MU5kLH5
-         DKHxoGL1quqgjN8moD1oc+a7VeyYhurpgFd+P9B4kC2GHDHA/8shUcIpsC38TgwVals0
-         xpDPT+Tvx/csZKZCHbBcq1s5ffaqFNU135vHx9669aK32fSDxBzBM96qb+YQKYlIgtk1
-         KLC6F+x0A7d0NqLDbkrgxTdJTYnGSQtt3uH3UySe3cF7Q6CHbyzVlz3NuNJTTIY0P76A
-         Z0q5MxJVZUKyXXIf1aXuISrJnJw9ux9nvLlrM/9G3qHIDTIbUGYQtRpLjM/+wn55mAQA
-         B63w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=aQGcVDwZYQWBOtAXil8SzgdiYPVSaSGZOeGTzRnc5aE=;
-        b=OGgHrUHjgDFrpJQ+45RyNIolC5JI2FnSPmujYQ99n0w3G5yT3PTHQfejMyFCdwE+un
-         xNFPjmuFrMyr1N0xJM9uxni4l0wOzxtRWQCqKh7tu5hSTAGXVxIedVdW6whoDulMdGKH
-         5WOIm6CIKAzop5m+Vy2eTcEulYTlNM27EagfQP1dgI3czquUKGB9H4drHQsJ111LFI7/
-         MjwJ6pe8BTsufta1zipnmdLCDGg/me/YIfLJIbGPfdSh4NnOCzSoASFYRYeLlQo/W7xz
-         BIqQIilX6PM0dsyMkciJKhLsXc/am4pPgM+TO+Xg2kE4SRig3w9mu0m903FMcVtCftb+
-         pTcw==
-X-Gm-Message-State: APjAAAXJVtQjhHkpikRG8UFML/vy3M5Guiopbq69F56mA6JtbwqxbNjq
-        k72NLxmhng8Xqq3xWFd414RapMYCUik=
-X-Google-Smtp-Source: APXvYqwUA11U5oDvifmSn/+wBEXU6Z5cSGYf+l+J+XGmsYkQFGr5FQgzrVuTtm9KseVvsIoREIbjdQ==
-X-Received: by 2002:a65:424d:: with SMTP id d13mr40361290pgq.128.1582301842730;
-        Fri, 21 Feb 2020 08:17:22 -0800 (PST)
-Received: from ?IPv6:2605:e000:100e:8c61:91ff:e31e:f68d:32a9? ([2605:e000:100e:8c61:91ff:e31e:f68d:32a9])
-        by smtp.gmail.com with ESMTPSA id p16sm2944701pgi.50.2020.02.21.08.17.21
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 21 Feb 2020 08:17:22 -0800 (PST)
-Subject: Re: [PATCH liburing] test: add sq-poll-kthread test case
-To:     Stefano Garzarella <sgarzare@redhat.com>
-Cc:     io-uring@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20200221154400.207213-1-sgarzare@redhat.com>
-From:   Jens Axboe <axboe@kernel.dk>
-Message-ID: <0f04c1d4-0688-41be-8889-9b18838053a1@kernel.dk>
-Date:   Fri, 21 Feb 2020 08:17:20 -0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.1
+        Fri, 21 Feb 2020 11:18:33 -0500
+Received: from pps.filterd (m0167089.ppops.net [127.0.0.1])
+        by mx0a-00128a01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 01LGIVlp009407;
+        Fri, 21 Feb 2020 11:18:31 -0500
+Received: from nwd2mta3.analog.com ([137.71.173.56])
+        by mx0a-00128a01.pphosted.com with ESMTP id 2y8ucu7ma6-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Fri, 21 Feb 2020 11:18:31 -0500
+Received: from ASHBMBX8.ad.analog.com (ashbmbx8.ad.analog.com [10.64.17.5])
+        by nwd2mta3.analog.com (8.14.7/8.14.7) with ESMTP id 01LGIUFj011166
+        (version=TLSv1/SSLv3 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=FAIL);
+        Fri, 21 Feb 2020 11:18:30 -0500
+Received: from ASHBMBX9.ad.analog.com (10.64.17.10) by ASHBMBX8.ad.analog.com
+ (10.64.17.5) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1779.2; Fri, 21 Feb
+ 2020 11:18:29 -0500
+Received: from zeus.spd.analog.com (10.64.82.11) by ASHBMBX9.ad.analog.com
+ (10.64.17.10) with Microsoft SMTP Server id 15.1.1779.2 via Frontend
+ Transport; Fri, 21 Feb 2020 11:18:29 -0500
+Received: from saturn.ad.analog.com ([10.48.65.124])
+        by zeus.spd.analog.com (8.15.1/8.15.1) with ESMTP id 01LGIR75026502;
+        Fri, 21 Feb 2020 11:18:27 -0500
+From:   Alexandru Ardelean <alexandru.ardelean@analog.com>
+To:     <linux-iio@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+CC:     <jic23@kernel.org>, Sergiu Cuciurean <sergiu.cuciurean@analog.com>
+Subject: [PATCH v2] iio: amplifiers: ad8366: add support for HMC1119 Attenuator
+Date:   Fri, 21 Feb 2020 18:18:26 +0200
+Message-ID: <20200221161826.21291-1-alexandru.ardelean@analog.com>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20200220092821.11050-1-sergiu.cuciurean@analog.com>
+References: <20200220092821.11050-1-sergiu.cuciurean@analog.com>
 MIME-Version: 1.0
-In-Reply-To: <20200221154400.207213-1-sgarzare@redhat.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 7BIT
+Content-Type:   text/plain; charset=US-ASCII
+X-ADIRoutedOnPrem: True
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.572
+ definitions=2020-02-21_05:2020-02-21,2020-02-21 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 bulkscore=0 spamscore=0
+ suspectscore=0 mlxscore=0 clxscore=1015 phishscore=0 priorityscore=1501
+ mlxlogscore=999 lowpriorityscore=0 adultscore=0 malwarescore=0
+ impostorscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2001150001 definitions=main-2002210122
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2/21/20 8:44 AM, Stefano Garzarella wrote:
-> sq-poll-kthread tests if the 'io_uring-sq' kthread is stopped
-> when the userspace process ended with or without closing the
-> io_uring fd.
+From: Sergiu Cuciurean <sergiu.cuciurean@analog.com>
 
-Applied, thanks.
+This change adds support for the HMC1119 Silicon Digial Attenuator. The
+HMC1119 is a broadband, highly accurate, 7-bit digital attenuator,
+operating from 0.1 GHz to 6.0 GHz with 31.5 dB attenuation control range
+in 0.25 dB steps.
 
+Link: https://www.analog.com/media/en/technical-documentation/data-sheets/hmc1119.pdf
+
+Signed-off-by: Sergiu Cuciurean <sergiu.cuciurean@analog.com>
+---
+ drivers/iio/amplifiers/ad8366.c | 17 +++++++++++++++++
+ 1 file changed, 17 insertions(+)
+
+diff --git a/drivers/iio/amplifiers/ad8366.c b/drivers/iio/amplifiers/ad8366.c
+index 95972ab60f42..62167b87caea 100644
+--- a/drivers/iio/amplifiers/ad8366.c
++++ b/drivers/iio/amplifiers/ad8366.c
+@@ -5,6 +5,7 @@
+  *   AD8366 Dual-Digital Variable Gain Amplifier (VGA)
+  *   ADA4961 BiCMOS RF Digital Gain Amplifier (DGA)
+  *   ADL5240 Digitally controlled variable gain amplifier (VGA)
++ *   HMC1119 0.25 dB LSB, 7-Bit, Silicon Digital Attenuator
+  *
+  * Copyright 2012-2019 Analog Devices Inc.
+  */
+@@ -27,6 +28,7 @@ enum ad8366_type {
+ 	ID_AD8366,
+ 	ID_ADA4961,
+ 	ID_ADL5240,
++	ID_HMC1119,
+ };
+ 
+ struct ad8366_info {
+@@ -62,6 +64,10 @@ static struct ad8366_info ad8366_infos[] = {
+ 		.gain_min = -11500,
+ 		.gain_max = 20000,
+ 	},
++	[ID_HMC1119] = {
++		.gain_min = -31750,
++		.gain_max = 0,
++	},
+ };
+ 
+ static int ad8366_write(struct iio_dev *indio_dev,
+@@ -84,6 +90,9 @@ static int ad8366_write(struct iio_dev *indio_dev,
+ 	case ID_ADL5240:
+ 		st->data[0] = (ch_a & 0x3F);
+ 		break;
++	case ID_HMC1119:
++		st->data[0] = ch_a;
++		break;
+ 	}
+ 
+ 	ret = spi_write(st->spi, st->data, indio_dev->num_channels);
+@@ -118,6 +127,9 @@ static int ad8366_read_raw(struct iio_dev *indio_dev,
+ 		case ID_ADL5240:
+ 			gain = 20000 - 31500 + code * 500;
+ 			break;
++		case ID_HMC1119:
++			gain = -1 * code * 250;
++			break;
+ 		}
+ 
+ 		/* Values in dB */
+@@ -164,6 +176,9 @@ static int ad8366_write_raw(struct iio_dev *indio_dev,
+ 	case ID_ADL5240:
+ 		code = ((gain - 500 - 20000) / 500) & 0x3F;
+ 		break;
++	case ID_HMC1119:
++		code = (abs(gain) / 250) & 0x7F;
++		break;
+ 	}
+ 
+ 	mutex_lock(&st->lock);
+@@ -246,6 +261,7 @@ static int ad8366_probe(struct spi_device *spi)
+ 		break;
+ 	case ID_ADA4961:
+ 	case ID_ADL5240:
++	case ID_HMC1119:
+ 		st->reset_gpio = devm_gpiod_get(&spi->dev, "reset",
+ 			GPIOD_OUT_HIGH);
+ 		indio_dev->channels = ada4961_channels;
+@@ -298,6 +314,7 @@ static const struct spi_device_id ad8366_id[] = {
+ 	{"ad8366",  ID_AD8366},
+ 	{"ada4961", ID_ADA4961},
+ 	{"adl5240", ID_ADL5240},
++	{"hmc1119", ID_HMC1119},
+ 	{}
+ };
+ MODULE_DEVICE_TABLE(spi, ad8366_id);
 -- 
-Jens Axboe
+2.20.1
 
