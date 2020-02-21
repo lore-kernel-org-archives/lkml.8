@@ -1,117 +1,71 @@
-Return-Path: <SRS0=NukP=4I=vger.kernel.org=linux-kernel-owner@kernel.org>
+Return-Path: <SRS0=1210=4J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2DECDC11D24
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 23:59:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0DD19C11D00
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 00:00:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 03FFD20882
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 23:59:45 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="Q0xgQ8/d"
+	by mail.kernel.org (Postfix) with ESMTP id DE9C92067D
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 00:00:50 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729397AbgBTX7o (ORCPT
+        id S1729429AbgBUAAu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Feb 2020 18:59:44 -0500
-Received: from bilbo.ozlabs.org ([203.11.71.1]:38509 "EHLO ozlabs.org"
+        Thu, 20 Feb 2020 19:00:50 -0500
+Received: from mga12.intel.com ([192.55.52.136]:27875 "EHLO mga12.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729234AbgBTX7n (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Feb 2020 18:59:43 -0500
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 48Ns5T2bZGz9sRf;
-        Fri, 21 Feb 2020 10:59:41 +1100 (AEDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
-        s=201702; t=1582243181;
-        bh=H3Bhw27wgMSfXqZ06hdKW86qGZbRwhtvODS+7/bYq7M=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=Q0xgQ8/dL5ErWYPwEyNog28B1fCEM37HenFeUSmx/BYq8wmiOQ8vPI3f1zUeRC1Av
-         TCR09UDg729nveVLP7SvwqZyrkdozoKka7D1ZIUCwiSNiRQ7abGao2VzmfK+bos0DQ
-         JP5JqKIZRwvL5kB/+MiEQbBTFRdPYnvGaA0AIKbup8TpQeb5z/9TbSq0RWaWmYc3A9
-         cJDv43wnU/94SwtGikSSNFOTVAES3S/M/ERGMcs5mekzT9Rl1zgZ+2/NJ7fuMIVwhq
-         GdGg6x+JEg468Db1Y9d2NH6WD4qUirmwYVkA4+nWzk8XDbg41N7Mo5D08/P5hVnrKk
-         7nvhblx7/Lv0A==
-Date:   Fri, 21 Feb 2020 10:59:40 +1100
-From:   Stephen Rothwell <sfr@canb.auug.org.au>
-To:     Arjun Roy <arjunroy@google.com>
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        David Miller <davem@davemloft.net>
-Subject: Re: linux-next: build failure after merge of the akpm tree
-Message-ID: <20200221105940.44fd67f1@canb.auug.org.au>
-In-Reply-To: <CAOFY-A2tK5=eFt2AQx+FOjyHXQ85XE-N8gdbb49wJphjAAgFUQ@mail.gmail.com>
-References: <20200217145711.4af495a3@canb.auug.org.au>
-        <CAOFY-A1nfPjf3EcQB6KiEifbFR+aUtdSgK=CHGt_k3ziSG6T_Q@mail.gmail.com>
-        <CAOFY-A3q_pmtHKAoOJdbB09wy=dxs9SdpXjCsU1wBxU5EDHVmw@mail.gmail.com>
-        <20200221101845.21c0c8c5@canb.auug.org.au>
-        <CAOFY-A2ndGCSEDstOmXs-u1XjNsaj8wkLezYsMbzeZeVTJGC5g@mail.gmail.com>
-        <20200221104328.0f897efd@canb.auug.org.au>
-        <CAOFY-A2tK5=eFt2AQx+FOjyHXQ85XE-N8gdbb49wJphjAAgFUQ@mail.gmail.com>
+        id S1729234AbgBUAAt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 20 Feb 2020 19:00:49 -0500
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga002.jf.intel.com ([10.7.209.21])
+  by fmsmga106.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 20 Feb 2020 16:00:49 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.70,466,1574150400"; 
+   d="scan'208";a="254645732"
+Received: from blu2-mobl3.ccr.corp.intel.com (HELO [10.254.211.224]) ([10.254.211.224])
+  by orsmga002.jf.intel.com with ESMTP; 20 Feb 2020 16:00:46 -0800
+Subject: Re: [PATCH] iommu/vt-d: fix the wrong printing in RHSA parsing
+To:     Zhenzhong Duan <zhenzhong.duan@gmail.com>,
+        linux-kernel@vger.kernel.org
+Cc:     x86@kernel.org, David Woodhouse <dwmw2@infradead.org>,
+        Joerg Roedel <joro@8bytes.org>,
+        iommu@lists.linux-foundation.org
+References: <20200115102815.264-1-zhenzhong.duan@gmail.com>
+From:   Lu Baolu <baolu.lu@linux.intel.com>
+Message-ID: <470b6a1b-458e-0c81-71d7-51e2a6b70b9b@linux.intel.com>
+Date:   Fri, 21 Feb 2020 08:00:45 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.5.0
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/n=+M1qFwCmphl3AY.Cq.mx5";
- protocol="application/pgp-signature"; micalg=pgp-sha256
+In-Reply-To: <20200115102815.264-1-zhenzhong.duan@gmail.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/n=+M1qFwCmphl3AY.Cq.mx5
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+Hi,
 
-Hi Arjun,
+On 2020/1/15 18:28, Zhenzhong Duan wrote:
+> When base address in RHSA structure doesn't match base address in
+> each DRHD structure, the base address in last DRHD is printed out.
+> 
+> This doesn't make sense when there are multiple DRHD units, fix it
+> by printing the buggy RHSA's base address.
+> 
+> Signed-off-by: Zhenzhong Duan<zhenzhong.duan@gmail.com>
+> Cc: David Woodhouse<dwmw2@infradead.org>
+> Cc: Lu Baolu<baolu.lu@linux.intel.com>
+> Cc: Joerg Roedel<joro@8bytes.org>
+> Cc:iommu@lists.linux-foundation.org
 
-On Thu, 20 Feb 2020 15:44:28 -0800 Arjun Roy <arjunroy@google.com> wrote:
->
-> On Thu, Feb 20, 2020 at 3:43 PM Stephen Rothwell <sfr@canb.auug.org.au> w=
-rote:
-> >
-> > On Thu, 20 Feb 2020 15:22:04 -0800 Arjun Roy <arjunroy@google.com> wrot=
-e: =20
-> > >
-> > > I have a possible solution in mind, but it would involve a slight
-> > > change in the SPARC macro (to be more inline with the semantics of the
-> > > other platforms).
-> > > If you're open to such a change, I can send it out. =20
-> >
-> > Its not up to me :-)
-> >
-> > If it is not too much work, I would say, do the patch, test it as you
-> > can, then send it out cc'ing the Sparc maintainer (DaveM cc'd) and see
-> > what happens.
->=20
-> Certainly, I will do so.
+Queued for v5.7. Thanks!
 
-Just one thing: its worth while making it clear to DaveM that you just
-want his Ack (rather than for him to take the patch into the Sparc
-tree) so that the patch can go into Andrew's tree along with the rest
-of the series.
-
---=20
-Cheers,
-Stephen Rothwell
-
---Sig_/n=+M1qFwCmphl3AY.Cq.mx5
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl5PHWwACgkQAVBC80lX
-0GwXiwf+NAqXQ9gETVZZgq6sHUVnJj0/G11Axq+1O3yLWOEi8RpsRq8Fv0Gzg9oE
-l+yil+FOsWiCI5huwAGcHtBFe3D1Q98/qZSSS/tKVTLEbMpKXMCLbODv++66dyxy
-Pw3ugAeuJd7aWBlnA9RCMnD80X3k2yThO6UNZRvtx0GKs/yvokvF6g8ivKNKJFwf
-69czhR6nPVC1w+Lzqo98V9GZrMPfrh6n7eIvu0wXXiEBe8uPZgRvTkgU+2pLOYTD
-gvZpVO7bwd47a37XkBJx8bk23mdbCbi48jwMCBHgC7f/ep5rht6s8X12UCR+S4K9
-OZCwdguRNneS4yr48PulWpOnBPP0bA==
-=nMVK
------END PGP SIGNATURE-----
-
---Sig_/n=+M1qFwCmphl3AY.Cq.mx5--
+Best regards,
+baolu
