@@ -5,49 +5,49 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 06B79C35641
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 08:17:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 02ADFC35641
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 08:17:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CE2CC2468C
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 08:17:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CDB782468C
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 08:17:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582273066;
-	bh=2k5dLpzOTaQZE2SXUGDau5ksnSG+ZmybjEBTX6qlPmc=;
+	s=default; t=1582273070;
+	bh=UnMsQWUsQjYWat8/BAwihbk8GHrMfLjbO5UNSPoj6uE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=qkNFxfeIzu9QX4+SY9NNhOM/VC0qT6IY3CXnhMTDVORoDNpVhBncGhNxwoW7026UJ
-	 icvMwSe3Q2m0SGZn8FEB2X1MT+8BZN1ID4n91fBqRZjMe20RzQt05WppaKApD8FkTI
-	 ZBFeFd3U+tDnKPrOHxawpaBY5Dapa4VPyJGnJzKY=
+	b=Dcl3Hfqcoh82C0jQj90j8x4H/mbTHr0mTh6ks17QuDufOgohR9w7ezRti5XGxqWPK
+	 UTigXTNWmvp5E5c2YQRcTwBj7tDBqkTk0jIe1BQn6AEu5mczFmKDPJjitkKY/Ti6qf
+	 oVedBa8HBb3lHgY86NTsPW/Us/OlUsS6T12t1+mY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387720AbgBUIRp (ORCPT
+        id S2387729AbgBUIRt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Feb 2020 03:17:45 -0500
-Received: from mail.kernel.org ([198.145.29.99]:55254 "EHLO mail.kernel.org"
+        Fri, 21 Feb 2020 03:17:49 -0500
+Received: from mail.kernel.org ([198.145.29.99]:55338 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1733125AbgBUIRl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Feb 2020 03:17:41 -0500
+        id S2387722AbgBUIRq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 21 Feb 2020 03:17:46 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6CD592468A;
-        Fri, 21 Feb 2020 08:17:40 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 71E9F2468A;
+        Fri, 21 Feb 2020 08:17:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1582273060;
-        bh=2k5dLpzOTaQZE2SXUGDau5ksnSG+ZmybjEBTX6qlPmc=;
+        s=default; t=1582273065;
+        bh=UnMsQWUsQjYWat8/BAwihbk8GHrMfLjbO5UNSPoj6uE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=2nc16583SmNKzsC2JTQpkVhpBULHq6ZV8zuBCuCTqnCY2Lqj+XVK0UevQH/exyOAc
-         hMipvtsw+O9R+sIP0X6Moxn2ZYBCFxbfnn262ljAfHCX/5BgUrvuGQni7zqL32SvJK
-         cR85gn1lgYOVRkjyMzFbCOW8os9oz8xWOVn+aO4U=
+        b=yFxi1YN5QCoJQnf9dEjFhbeIFUN1Q9mYiPdH6IFp9kDBcGPuCm11s65a1cCfFjJlE
+         immaQykOhA5s+P7TqzMvReAWngR6otrxnizB9t5ht59PFBszXYrj4Y++35EXbY/DG8
+         EHDhGw161/gvUBIkmtgeTJgDMUmW7U/0WGHiBNQA=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Jia-Ju Bai <baijiaju1990@gmail.com>,
-        Felipe Balbi <balbi@kernel.org>,
+        stable@vger.kernel.org, Colin Ian King <colin.king@canonical.com>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 032/191] usb: gadget: udc: fix possible sleep-in-atomic-context bugs in gr_probe()
-Date:   Fri, 21 Feb 2020 08:40:05 +0100
-Message-Id: <20200221072255.095987384@linuxfoundation.org>
+Subject: [PATCH 4.19 034/191] clocksource/drivers/bcm2835_timer: Fix memory leak of timer
+Date:   Fri, 21 Feb 2020 08:40:07 +0100
+Message-Id: <20200221072255.659726549@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200221072250.732482588@linuxfoundation.org>
 References: <20200221072250.732482588@linuxfoundation.org>
@@ -60,108 +60,49 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jia-Ju Bai <baijiaju1990@gmail.com>
+From: Colin Ian King <colin.king@canonical.com>
 
-[ Upstream commit 9c1ed62ae0690dfe5d5e31d8f70e70a95cb48e52 ]
+[ Upstream commit 2052d032c06761330bca4944bb7858b00960e868 ]
 
-The driver may sleep while holding a spinlock.
-The function call path (from bottom to top) in Linux 4.19 is:
+Currently when setup_irq fails the error exit path will leak the
+recently allocated timer structure.  Originally the code would
+throw a panic but a later commit changed the behaviour to return
+via the err_iounmap path and hence we now have a memory leak. Fix
+this by adding a err_timer_free error path that kfree's timer.
 
-drivers/usb/gadget/udc/core.c, 1175:
-	kzalloc(GFP_KERNEL) in usb_add_gadget_udc_release
-drivers/usb/gadget/udc/core.c, 1272:
-	usb_add_gadget_udc_release in usb_add_gadget_udc
-drivers/usb/gadget/udc/gr_udc.c, 2186:
-	usb_add_gadget_udc in gr_probe
-drivers/usb/gadget/udc/gr_udc.c, 2183:
-	spin_lock in gr_probe
-
-drivers/usb/gadget/udc/core.c, 1195:
-	mutex_lock in usb_add_gadget_udc_release
-drivers/usb/gadget/udc/core.c, 1272:
-	usb_add_gadget_udc_release in usb_add_gadget_udc
-drivers/usb/gadget/udc/gr_udc.c, 2186:
-	usb_add_gadget_udc in gr_probe
-drivers/usb/gadget/udc/gr_udc.c, 2183:
-	spin_lock in gr_probe
-
-drivers/usb/gadget/udc/gr_udc.c, 212:
-	debugfs_create_file in gr_probe
-drivers/usb/gadget/udc/gr_udc.c, 2197:
-	gr_dfs_create in gr_probe
-drivers/usb/gadget/udc/gr_udc.c, 2183:
-    spin_lock in gr_probe
-
-drivers/usb/gadget/udc/gr_udc.c, 2114:
-	devm_request_threaded_irq in gr_request_irq
-drivers/usb/gadget/udc/gr_udc.c, 2202:
-	gr_request_irq in gr_probe
-drivers/usb/gadget/udc/gr_udc.c, 2183:
-    spin_lock in gr_probe
-
-kzalloc(GFP_KERNEL), mutex_lock(), debugfs_create_file() and
-devm_request_threaded_irq() can sleep at runtime.
-
-To fix these possible bugs, usb_add_gadget_udc(), gr_dfs_create() and
-gr_request_irq() are called without handling the spinlock.
-
-These bugs are found by a static analysis tool STCheck written by myself.
-
-Signed-off-by: Jia-Ju Bai <baijiaju1990@gmail.com>
-Signed-off-by: Felipe Balbi <balbi@kernel.org>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Addresses-Coverity: ("Resource Leak")
+Fixes: 524a7f08983d ("clocksource/drivers/bcm2835_timer: Convert init function to return error")
+Signed-off-by: Colin Ian King <colin.king@canonical.com>
+Signed-off-by: Daniel Lezcano <daniel.lezcano@linaro.org>
+Link: https://lore.kernel.org/r/20191219213246.34437-1-colin.king@canonical.com
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/usb/gadget/udc/gr_udc.c | 16 +++++++++-------
- 1 file changed, 9 insertions(+), 7 deletions(-)
+ drivers/clocksource/bcm2835_timer.c | 5 ++++-
+ 1 file changed, 4 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/usb/gadget/udc/gr_udc.c b/drivers/usb/gadget/udc/gr_udc.c
-index 729e60e495641..e50108f9a374e 100644
---- a/drivers/usb/gadget/udc/gr_udc.c
-+++ b/drivers/usb/gadget/udc/gr_udc.c
-@@ -2180,8 +2180,6 @@ static int gr_probe(struct platform_device *pdev)
- 		return -ENOMEM;
+diff --git a/drivers/clocksource/bcm2835_timer.c b/drivers/clocksource/bcm2835_timer.c
+index 60da2537bef93..1082dcef17d17 100644
+--- a/drivers/clocksource/bcm2835_timer.c
++++ b/drivers/clocksource/bcm2835_timer.c
+@@ -134,7 +134,7 @@ static int __init bcm2835_timer_init(struct device_node *node)
+ 	ret = setup_irq(irq, &timer->act);
+ 	if (ret) {
+ 		pr_err("Can't set up timer IRQ\n");
+-		goto err_iounmap;
++		goto err_timer_free;
  	}
  
--	spin_lock(&dev->lock);
--
- 	/* Inside lock so that no gadget can use this udc until probe is done */
- 	retval = usb_add_gadget_udc(dev->dev, &dev->gadget);
- 	if (retval) {
-@@ -2190,15 +2188,21 @@ static int gr_probe(struct platform_device *pdev)
- 	}
- 	dev->added = 1;
+ 	clockevents_config_and_register(&timer->evt, freq, 0xf, 0xffffffff);
+@@ -143,6 +143,9 @@ static int __init bcm2835_timer_init(struct device_node *node)
  
-+	spin_lock(&dev->lock);
+ 	return 0;
+ 
++err_timer_free:
++	kfree(timer);
 +
- 	retval = gr_udc_init(dev);
--	if (retval)
-+	if (retval) {
-+		spin_unlock(&dev->lock);
- 		goto out;
--
--	gr_dfs_create(dev);
-+	}
- 
- 	/* Clear all interrupt enables that might be left on since last boot */
- 	gr_disable_interrupts_and_pullup(dev);
- 
-+	spin_unlock(&dev->lock);
-+
-+	gr_dfs_create(dev);
-+
- 	retval = gr_request_irq(dev, dev->irq);
- 	if (retval) {
- 		dev_err(dev->dev, "Failed to request irq %d\n", dev->irq);
-@@ -2227,8 +2231,6 @@ static int gr_probe(struct platform_device *pdev)
- 		dev_info(dev->dev, "regs: %p, irq %d\n", dev->regs, dev->irq);
- 
- out:
--	spin_unlock(&dev->lock);
--
- 	if (retval)
- 		gr_remove(pdev);
- 
+ err_iounmap:
+ 	iounmap(base);
+ 	return ret;
 -- 
 2.20.1
 
