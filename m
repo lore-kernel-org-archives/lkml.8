@@ -2,488 +2,147 @@ Return-Path: <SRS0=1210=4J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9C852C35655
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 12:06:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4D2B9C35655
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 12:07:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5EE1F24656
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 12:06:27 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=joelfernandes.org header.i=@joelfernandes.org header.b="tNbd8UQv"
+	by mail.kernel.org (Postfix) with ESMTP id 2DC2D207FD
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 12:07:28 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728179AbgBUMG0 (ORCPT
+        id S1728198AbgBUMH1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Feb 2020 07:06:26 -0500
-Received: from mail-qk1-f195.google.com ([209.85.222.195]:37972 "EHLO
-        mail-qk1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727903AbgBUMGZ (ORCPT
+        Fri, 21 Feb 2020 07:07:27 -0500
+Received: from mx0a-00128a01.pphosted.com ([148.163.135.77]:4650 "EHLO
+        mx0a-00128a01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727053AbgBUMH0 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Feb 2020 07:06:25 -0500
-Received: by mail-qk1-f195.google.com with SMTP id z19so1553738qkj.5
-        for <linux-kernel@vger.kernel.org>; Fri, 21 Feb 2020 04:06:24 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=joelfernandes.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=rUrJscfe99zXbns0OXhbrROpIKiVy4N1rdzN23suJ+4=;
-        b=tNbd8UQvcO7kpOSeGc3dpk1vUxHdh2rIN6JOTe0CLwm+xj059KO4rHvm5zwghJCtId
-         8jshDL1gqd++w6AErmuG6YRz4kyIVrY7lcmQxHY3ExlxPLWgzUNeXTvF3zMTSV9C7Xl7
-         zlozjorlZ/yUq1oieISOEu4cr18Bnzddfnp80=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=rUrJscfe99zXbns0OXhbrROpIKiVy4N1rdzN23suJ+4=;
-        b=kBjTC7v1e+HeE4i98hg1O+rRWopyHE/3zxvrVEke9f8Fsyo5Sel3Fy/rhf+LydpDa1
-         RY0e1iH5C/duLU6o0lO0on3t8LSPjHjHHrJmYs26k8QQYTmUvs/EShc9zh0UcW48Tqkw
-         yxnFkLyUWSf/qH3QsNRp24TtYfY9DXM7Mu2t3fyGblQ3nA8ATkmJ5lcEdXzrUNH2Wlhi
-         knvRi8i+LzVwNkXjFp9LZ8iOkXh9K/Qm9tAzOO1C2ospTWVhojSRRWkQfaY7wSpcNmOb
-         3UiLBsbV31XqVWiqWsgPGtYO0h0fCNUZfu86eJ72QlgK0ikScVOKPx/JRNpvp5Zg3Vzs
-         EH6w==
-X-Gm-Message-State: APjAAAVGVFjWshf7nWtMMYqFekKCz0NHlD+i05lLfjtZf1HLEuvF2Hj9
-        rhxdzGG1k+a04d2rULiGbR/0QGj+IqE=
-X-Google-Smtp-Source: APXvYqxg48lU5TyFJz3rQKYKUXnGvwegUMsvHzkjXKRcQlxQdePMLLQVLYcg8hbHn9NsdpawKE7+3A==
-X-Received: by 2002:a37:b285:: with SMTP id b127mr6140165qkf.413.1582286779893;
-        Fri, 21 Feb 2020 04:06:19 -0800 (PST)
-Received: from localhost ([2620:15c:6:12:9c46:e0da:efbf:69cc])
-        by smtp.gmail.com with ESMTPSA id g62sm1361011qkd.25.2020.02.21.04.06.19
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 21 Feb 2020 04:06:19 -0800 (PST)
-Date:   Fri, 21 Feb 2020 07:06:18 -0500
-From:   Joel Fernandes <joel@joelfernandes.org>
-To:     Uladzislau Rezki <urezki@gmail.com>
-Cc:     "Theodore Y. Ts'o" <tytso@mit.edu>,
-        "Paul E. McKenney" <paulmck@kernel.org>,
-        Ext4 Developers List <linux-ext4@vger.kernel.org>,
-        Suraj Jitindar Singh <surajjs@amazon.com>,
-        LKML <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH RFC] ext4: fix potential race between online resizing and
- write operations
-Message-ID: <20200221120618.GA194360@google.com>
-References: <20200215233817.GA670792@mit.edu>
- <20200216121246.GG2935@paulmck-ThinkPad-P72>
- <20200217160827.GA5685@pc636>
- <20200217193314.GA12604@mit.edu>
- <20200218170857.GA28774@pc636>
+        Fri, 21 Feb 2020 07:07:26 -0500
+Received: from pps.filterd (m0167088.ppops.net [127.0.0.1])
+        by mx0a-00128a01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 01LC0PKc028503;
+        Fri, 21 Feb 2020 07:07:25 -0500
+Received: from nwd2mta3.analog.com ([137.71.173.56])
+        by mx0a-00128a01.pphosted.com with ESMTP id 2y8uduq0k7-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Fri, 21 Feb 2020 07:07:24 -0500
+Received: from SCSQMBX10.ad.analog.com (scsqmbx10.ad.analog.com [10.77.17.5])
+        by nwd2mta3.analog.com (8.14.7/8.14.7) with ESMTP id 01LC7Nkk032415
+        (version=TLSv1/SSLv3 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=FAIL);
+        Fri, 21 Feb 2020 07:07:23 -0500
+Received: from SCSQCASHYB6.ad.analog.com (10.77.17.132) by
+ SCSQMBX10.ad.analog.com (10.77.17.5) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.1779.2; Fri, 21 Feb 2020 04:07:21 -0800
+Received: from SCSQMBX10.ad.analog.com (10.77.17.5) by
+ SCSQCASHYB6.ad.analog.com (10.77.17.132) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.1779.2; Fri, 21 Feb 2020 04:06:32 -0800
+Received: from zeus.spd.analog.com (10.64.82.11) by SCSQMBX10.ad.analog.com
+ (10.77.17.5) with Microsoft SMTP Server id 15.1.1779.2 via Frontend
+ Transport; Fri, 21 Feb 2020 04:07:21 -0800
+Received: from tachici-Precision-5530.ad.analog.com ([10.48.65.175])
+        by zeus.spd.analog.com (8.15.1/8.15.1) with ESMTP id 01LC7H1L018878;
+        Fri, 21 Feb 2020 07:07:18 -0500
+From:   Alexandru Tachici <alexandru.tachici@analog.com>
+To:     <linux-iio@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+CC:     <jic23@kernel.org>,
+        Alexandru Tachici <alexandru.tachici@analog.com>,
+        Alexandru Ardelean <alexandru.ardelean@analog.com>
+Subject: [PATCH v2] iio: industrialio-core: Fix debugfs read
+Date:   Fri, 21 Feb 2020 14:06:55 +0200
+Message-ID: <20200221120655.20252-1-alexandru.tachici@analog.com>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200218170857.GA28774@pc636>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Transfer-Encoding: 7BIT
+Content-Type:   text/plain; charset=US-ASCII
+X-ADIRoutedOnPrem: True
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.572
+ definitions=2020-02-21_03:2020-02-19,2020-02-21 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 lowpriorityscore=0
+ malwarescore=0 impostorscore=0 spamscore=0 suspectscore=0 mlxlogscore=841
+ phishscore=0 mlxscore=0 priorityscore=1501 clxscore=1015 adultscore=0
+ bulkscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2001150001 definitions=main-2002210093
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Feb 18, 2020 at 06:08:57PM +0100, Uladzislau Rezki wrote:
-> On Mon, Feb 17, 2020 at 02:33:14PM -0500, Theodore Y. Ts'o wrote:
-> > On Mon, Feb 17, 2020 at 05:08:27PM +0100, Uladzislau Rezki wrote:
-> > > Hello, Joel, Paul, Ted. 
-> > > 
-> > > > 
-> > > > Good point!
-> > > > 
-> > > > Now that kfree_rcu() is on its way to being less of a hack deeply
-> > > > entangled into the bowels of RCU, this might be fairly easy to implement.
-> > > > It might well be simply a matter of a function pointer and a kvfree_rcu()
-> > > > API.  Adding Uladzislau Rezki and Joel Fernandez on CC for their thoughts.
-> > > > 
-> > > I think it makes sense. For example i see there is a similar demand in
-> > > the mm/list_lru.c too. As for implementation, it will not be hard, i think. 
-> > > 
-> > > The easiest way is to inject kvfree() support directly into existing kfree_call_rcu()
-> > > logic(probably will need to rename that function), i.e. to free vmalloc() allocations
-> > > only in "emergency path" by just calling kvfree(). So that function in its turn will
-> > > figure out if it is _vmalloc_ address or not and trigger corresponding "free" path.
-> > 
-> > The other difference between ext4_kvfree_array_rcu() and kfree_rcu()
-> > is that kfree_rcu() is a magic macro which frees a structure, which
-> > has to contain a struct rcu_head.  In this case, I'm freeing a pointer
-> > to set of structures, or in another case, a set of buffer_heads, which
-> > do *not* have an rcu_head structure.
-> > 
-> We can implement kvfree_rcu() that will deal with pointer only, it is not
-> an issue. I mean without embedding rcu_head to the structure or whatever
-> else.
-> 
-> I tried to implement it with less number of changes to make it more clear
-> and readable. Please have a look:
-> 
-> <snip>
-> diff --git a/include/linux/rcupdate.h b/include/linux/rcupdate.h
+Currently iio_debugfs_read_reg calls debugfs_reg_access
+every time it is ran. Reading the same hardware register
+multiple times during the same reading of a debugfs file
+can cause unintended effects.
 
-Overall this implementation is nice. You are basically avoiding allocating
-rcu_head like Ted did by using the array-of-pointers technique we used for
-the previous kfree_rcu() work.
+For example for each: cat iio:device0/direct_reg_access
+the file_operations.read function will be called at least
+twice. First will return the full length of the string in
+bytes  and the second will return 0.
 
-One thing stands out, the path where we could not allocate a page for the new
-block node:
+This patch makes iio_debugfs_read_reg to call debugfs_reg_access
+only when the user's buffer position (*ppos) is 0. (meaning
+it is the beginning of a new reading of the debugfs file).
 
-> @@ -3061,6 +3148,11 @@ void kfree_call_rcu(struct rcu_head *head, rcu_callback_t func)
->         if (krcp->initialized)
->                 spin_unlock(&krcp->lock);
->         local_irq_restore(flags);
-> +
-> +       if (!skip_call_rcu) {
-> +               synchronize_rcu();
-> +               kvfree(ptr_to_free);
+Fixes: e553f182d55b ("staging: iio: core: Introduce debugfs support, add support for direct register access")
+Signed-off-by: Alexandru Ardelean <alexandru.ardelean@analog.com>
+Signed-off-by: Alexandru Tachici <alexandru.tachici@analog.com>
+---
+ drivers/iio/industrialio-core.c | 15 +++++++++++----
+ include/linux/iio/iio.h         |  2 ++
+ 2 files changed, 13 insertions(+), 4 deletions(-)
 
-We can't block, it has to be async otherwise everything else blocks, and I
-think this can also be used from interrupt handlers which would at least be
-an SWA violation. So perhaps it needs to allocate an rcu_head wrapper object
-itself for the 'emergeny case' and use the regular techniques.
+diff --git a/drivers/iio/industrialio-core.c b/drivers/iio/industrialio-core.c
+index 65ff0d067018..c4d5104934fc 100644
+--- a/drivers/iio/industrialio-core.c
++++ b/drivers/iio/industrialio-core.c
+@@ -301,11 +301,14 @@ static ssize_t iio_debugfs_read_reg(struct file *file, char __user *userbuf,
+ 			      size_t count, loff_t *ppos)
+ {
+ 	struct iio_dev *indio_dev = file->private_data;
+-	char buf[20];
+ 	unsigned val = 0;
+-	ssize_t len;
+ 	int ret;
+ 
++	if (*ppos > 0)
++		return simple_read_from_buffer(userbuf, count, ppos,
++					       indio_dev->read_buf,
++					       indio_dev->read_buf_len);
++
+ 	ret = indio_dev->info->debugfs_reg_access(indio_dev,
+ 						  indio_dev->cached_reg_addr,
+ 						  0, &val);
+@@ -314,9 +317,13 @@ static ssize_t iio_debugfs_read_reg(struct file *file, char __user *userbuf,
+ 		return ret;
+ 	}
+ 
+-	len = snprintf(buf, sizeof(buf), "0x%X\n", val);
++	indio_dev->read_buf_len = snprintf(indio_dev->read_buf,
++					   sizeof(indio_dev->read_buf),
++					   "0x%X\n", val);
+ 
+-	return simple_read_from_buffer(userbuf, count, ppos, buf, len);
++	return simple_read_from_buffer(userbuf, count, ppos,
++				       indio_dev->read_buf,
++				       indio_dev->read_buf_len);
+ }
+ 
+ static ssize_t iio_debugfs_write_reg(struct file *file,
+diff --git a/include/linux/iio/iio.h b/include/linux/iio/iio.h
+index 862ce0019eba..eed58ed2f368 100644
+--- a/include/linux/iio/iio.h
++++ b/include/linux/iio/iio.h
+@@ -568,6 +568,8 @@ struct iio_dev {
+ #if defined(CONFIG_DEBUG_FS)
+ 	struct dentry			*debugfs_dentry;
+ 	unsigned			cached_reg_addr;
++	char				read_buf[20];
++	unsigned int			read_buf_len;
+ #endif
+ };
+ 
+-- 
+2.20.1
 
-Another thing that stands out is the code duplication, if we can make this
-reuse as much as of the previous code as possible, that'd be great. I'd like
-to avoid bvcached and bvhead if possible. Maybe we can store information
-about the fact that this is a 'special object' in some of the lower-order
-bits of the pointer. Then we can detect that it is 'special' and free it
-using kvfree() during the reclaim
-
-Nice to know there would be a few users of it. thanks!
-
- - Joel
-
-
-
-> index 2678a37c3169..9e75c15b53f9 100644
-> --- a/include/linux/rcupdate.h
-> +++ b/include/linux/rcupdate.h
-> @@ -805,7 +805,7 @@ static inline notrace void rcu_read_unlock_sched_notrace(void)
->  #define __kfree_rcu(head, offset) \
->         do { \  
->                 BUILD_BUG_ON(!__is_kfree_rcu_offset(offset)); \
-> -               kfree_call_rcu(head, (rcu_callback_t)(unsigned long)(offset)); \
-> +               kfree_call_rcu(head, (rcu_callback_t)(unsigned long)(offset), NULL); \
->         } while (0)
-> 
->  /**
-> @@ -842,6 +842,14 @@ do {                                                                       \
->                 __kfree_rcu(&((___p)->rhf), offsetof(typeof(*(ptr)), rhf)); \
->  } while (0)
-> 
-> +#define kvfree_rcu(ptr)                                                \
-> +do {                                                                   \
-> +       typeof (ptr) ___p = (ptr);                                      \
-> +                                                                       \
-> +       if (___p)                                                       \
-> +               kfree_call_rcu(NULL, (rcu_callback_t)(unsigned long)(0), ___p); \
-> +} while (0)
-> +
->  /*
->   * Place this after a lock-acquisition primitive to guarantee that
->   * an UNLOCK+LOCK pair acts as a full barrier.  This guarantee applies
-> diff --git a/include/linux/rcutiny.h b/include/linux/rcutiny.h
-> index 045c28b71f4f..a12ecc1645fa 100644
-> --- a/include/linux/rcutiny.h
-> +++ b/include/linux/rcutiny.h
-> @@ -34,7 +34,7 @@ static inline void synchronize_rcu_expedited(void)
->         synchronize_rcu();
->  }
-> 
-> -static inline void kfree_call_rcu(struct rcu_head *head, rcu_callback_t func)
-> +static inline void kfree_call_rcu(struct rcu_head *head, rcu_callback_t func, void *ptr)
->  {
->         call_rcu(head, func);
->  }
-> diff --git a/include/linux/rcutree.h b/include/linux/rcutree.h
-> index 45f3f66bb04d..1e445b566c01 100644
-> --- a/include/linux/rcutree.h
-> +++ b/include/linux/rcutree.h
-> @@ -33,7 +33,7 @@ static inline void rcu_virt_note_context_switch(int cpu)
->  }
->  
->  void synchronize_rcu_expedited(void);
-> -void kfree_call_rcu(struct rcu_head *head, rcu_callback_t func);
-> +void kfree_call_rcu(struct rcu_head *head, rcu_callback_t func, void *ptr);
->  
->  void rcu_barrier(void);
->  bool rcu_eqs_special_set(int cpu);
-> diff --git a/kernel/rcu/tree.c b/kernel/rcu/tree.c
-> index 4a885af2ff73..5f22f369cb98 100644
-> --- a/kernel/rcu/tree.c
-> +++ b/kernel/rcu/tree.c
-> @@ -2746,6 +2746,7 @@ EXPORT_SYMBOL_GPL(call_rcu);
->   * kfree_rcu_bulk_data structure becomes exactly one page.
->   */
->  #define KFREE_BULK_MAX_ENTR ((PAGE_SIZE / sizeof(void *)) - 3)
-> +#define KVFREE_BULK_MAX_ENTR ((PAGE_SIZE / sizeof(void *)) - 2)
->  
->  /**
->   * struct kfree_rcu_bulk_data - single block to store kfree_rcu() pointers
-> @@ -2761,6 +2762,12 @@ struct kfree_rcu_bulk_data {
->         struct rcu_head *head_free_debug;
->  };
-> +struct kvfree_rcu_bulk_data {
-> +       unsigned long nr_records;
-> +       void *records[KVFREE_BULK_MAX_ENTR];
-> +       struct kvfree_rcu_bulk_data *next;
-> +};
-> +
->  /**
->   * struct kfree_rcu_cpu_work - single batch of kfree_rcu() requests
->   * @rcu_work: Let queue_rcu_work() invoke workqueue handler after grace period
-> @@ -2773,6 +2780,7 @@ struct kfree_rcu_cpu_work {
->         struct rcu_work rcu_work;
->         struct rcu_head *head_free;
->         struct kfree_rcu_bulk_data *bhead_free;
-> +       struct kvfree_rcu_bulk_data *bvhead_free;
->         struct kfree_rcu_cpu *krcp;
->  };
->  
-> @@ -2796,6 +2804,10 @@ struct kfree_rcu_cpu {
->         struct rcu_head *head;
->         struct kfree_rcu_bulk_data *bhead;
->         struct kfree_rcu_bulk_data *bcached;
-> +       struct kvfree_rcu_bulk_data *bvhead;
-> +       struct kvfree_rcu_bulk_data *bvcached;
-> +
-> +       /* rename to "free_rcu_cpu_work" */
->         struct kfree_rcu_cpu_work krw_arr[KFREE_N_BATCHES];
->         spinlock_t lock;
->         struct delayed_work monitor_work;
-> @@ -2823,20 +2835,30 @@ static void kfree_rcu_work(struct work_struct *work)
->         unsigned long flags;
->         struct rcu_head *head, *next;
->         struct kfree_rcu_bulk_data *bhead, *bnext;
-> +       struct kvfree_rcu_bulk_data *bvhead, *bvnext;
->         struct kfree_rcu_cpu *krcp;
->         struct kfree_rcu_cpu_work *krwp;
-> +       int i;
->         krwp = container_of(to_rcu_work(work),
->                             struct kfree_rcu_cpu_work, rcu_work);
-> +
->         krcp = krwp->krcp;
->         spin_lock_irqsave(&krcp->lock, flags);
-> +       /* Channel 1. */
->         head = krwp->head_free;
->         krwp->head_free = NULL;
-> +
-> +       /* Channel 2. */
->         bhead = krwp->bhead_free;
->         krwp->bhead_free = NULL;
-> +
-> +       /* Channel 3. */
-> +       bvhead = krwp->bvhead_free;
-> +       krwp->bvhead_free = NULL;
->         spin_unlock_irqrestore(&krcp->lock, flags);
->  
-> -       /* "bhead" is now private, so traverse locklessly. */
-> +       /* kmalloc()/kfree_rcu() channel. */
->         for (; bhead; bhead = bnext) {
->                 bnext = bhead->next;
->  
-> @@ -2855,6 +2877,21 @@ static void kfree_rcu_work(struct work_struct *work)
->                 cond_resched_tasks_rcu_qs();
->         }
->  
-> +       /* kvmalloc()/kvfree_rcu() channel. */
-> +       for (; bvhead; bvhead = bvnext) {
-> +               bvnext = bvhead->next;
-> +
-> +               rcu_lock_acquire(&rcu_callback_map);
-> +               for (i = 0; i < bvhead->nr_records; i++)
-> +                       kvfree(bvhead->records[i]);
-> +               rcu_lock_release(&rcu_callback_map);
-> +
-> +               if (cmpxchg(&krcp->bvcached, NULL, bvhead))
-> +                       free_page((unsigned long) bvhead);
-> +
-> +               cond_resched_tasks_rcu_qs();
-> +       }
-> +
->         /*
->          * Emergency case only. It can happen under low memory
->          * condition when an allocation gets failed, so the "bulk"
-> @@ -2901,7 +2938,8 @@ static inline bool queue_kfree_rcu_work(struct kfree_rcu_cpu *krcp)
->                  * return false to tell caller to retry.
->                  */
->                 if ((krcp->bhead && !krwp->bhead_free) ||
-> -                               (krcp->head && !krwp->head_free)) {
-> +                               (krcp->head && !krwp->head_free) ||
-> +                               (krcp->bvhead && !krwp->bvhead_free)) {
->                         /* Channel 1. */
->                         if (!krwp->bhead_free) {
->                                 krwp->bhead_free = krcp->bhead;
-> @@ -2914,11 +2952,17 @@ static inline bool queue_kfree_rcu_work(struct kfree_rcu_cpu *krcp)
->                                 krcp->head = NULL;
->                         }
->  
-> +                       /* Channel 3. */
-> +                       if (!krwp->bvhead_free) {
-> +                               krwp->bvhead_free = krcp->bvhead;
-> +                               krcp->bvhead = NULL;
-> +                       }
-> +
->                         /*
-> -                        * One work is per one batch, so there are two "free channels",
-> -                        * "bhead_free" and "head_free" the batch can handle. It can be
-> -                        * that the work is in the pending state when two channels have
-> -                        * been detached following each other, one by one.
-> +                        * One work is per one batch, so there are three "free channels",
-> +                        * "bhead_free", "head_free" and "bvhead_free" the batch can handle.
-> +                        * It can be that the work is in the pending state when two channels
-> +                        * have been detached following each other, one by one.
->                          */
->                         queue_rcu_work(system_wq, &krwp->rcu_work);
->                         queued = true;
-> @@ -3010,6 +3054,42 @@ kfree_call_rcu_add_ptr_to_bulk(struct kfree_rcu_cpu *krcp,
->         return true;
->  }
->  
-> +static inline bool
-> +kvfree_call_rcu_add_ptr_to_bulk(struct kfree_rcu_cpu *krcp, void *ptr)
-> +{
-> +       struct kvfree_rcu_bulk_data *bnode;
-> +
-> +       if (unlikely(!krcp->initialized))
-> +               return false;
-> +
-> +       lockdep_assert_held(&krcp->lock);
-> +
-> +       if (!krcp->bvhead ||
-> +                       krcp->bvhead->nr_records == KVFREE_BULK_MAX_ENTR) {
-> +               bnode = xchg(&krcp->bvcached, NULL);
-> +               if (!bnode) {
-> +                       WARN_ON_ONCE(sizeof(struct kvfree_rcu_bulk_data) > PAGE_SIZE);
-> +
-> +                       bnode = (struct kvfree_rcu_bulk_data *)
-> +                               __get_free_page(GFP_NOWAIT | __GFP_NOWARN);
-> +               }
-> +
-> +               if (unlikely(!bnode))
-> +                       return false;
-> +
-> +               /* Initialize the new block. */
-> +               bnode->nr_records = 0;
-> +               bnode->next = krcp->bvhead;
-> +
-> +               /* Attach it to the bvhead. */
-> +               krcp->bvhead = bnode;
-> +       }
-> +
-> +       /* Finally insert. */
-> +       krcp->bvhead->records[krcp->bvhead->nr_records++] = ptr;
-> +       return true;
-> +}
-> +
->  /*
->   * Queue a request for lazy invocation of kfree_bulk()/kfree() after a grace
->   * period. Please note there are two paths are maintained, one is the main one
-> @@ -3022,32 +3102,39 @@ kfree_call_rcu_add_ptr_to_bulk(struct kfree_rcu_cpu *krcp,
->   * be free'd in workqueue context. This allows us to: batch requests together to
->   * reduce the number of grace periods during heavy kfree_rcu() load.
->   */
-> -void kfree_call_rcu(struct rcu_head *head, rcu_callback_t func)
-> +void kfree_call_rcu(struct rcu_head *head, rcu_callback_t func, void *ptr_to_free)
->  {
->         unsigned long flags;
->         struct kfree_rcu_cpu *krcp;
-> +       bool skip_call_rcu = true;
->  
->         local_irq_save(flags);  // For safely calling this_cpu_ptr().
->         krcp = this_cpu_ptr(&krc);
->         if (krcp->initialized)
->                 spin_lock(&krcp->lock);
->  
-> -       // Queue the object but don't yet schedule the batch.
-> -       if (debug_rcu_head_queue(head)) {
-> -               // Probable double kfree_rcu(), just leak.
-> -               WARN_ONCE(1, "%s(): Double-freed call. rcu_head %p\n",
-> -                         __func__, head);
-> -               goto unlock_return;
-> -       }
-> +       if (ptr_to_free) {
-> +               skip_call_rcu = kvfree_call_rcu_add_ptr_to_bulk(krcp, ptr_to_free);
-> +               if (!skip_call_rcu)
-> +                       goto unlock_return;
-> +       } else {
-> +               // Queue the object but don't yet schedule the batch.
-> +               if (debug_rcu_head_queue(head)) {
-> +                       // Probable double kfree_rcu(), just leak.
-> +                       WARN_ONCE(1, "%s(): Double-freed call. rcu_head %p\n",
-> +                               __func__, head);
-> +                       goto unlock_return;
-> +               }
->  
-> -       /*
-> -        * Under high memory pressure GFP_NOWAIT can fail,
-> -        * in that case the emergency path is maintained.
-> -        */
-> -       if (unlikely(!kfree_call_rcu_add_ptr_to_bulk(krcp, head, func))) {
-> -               head->func = func;
-> -               head->next = krcp->head;
-> -               krcp->head = head;
-> +               /*
-> +                * Under high memory pressure GFP_NOWAIT can fail,
-> +                * in that case the emergency path is maintained.
-> +                */
-> +               if (unlikely(!kfree_call_rcu_add_ptr_to_bulk(krcp, head, func))) {
-> +                       head->func = func;
-> +                       head->next = krcp->head;
-> +                       krcp->head = head;
-> +               }
->         }
->  
->         // Set timer to drain after KFREE_DRAIN_JIFFIES.
-> @@ -3061,6 +3148,11 @@ void kfree_call_rcu(struct rcu_head *head, rcu_callback_t func)
->         if (krcp->initialized)
->                 spin_unlock(&krcp->lock);
->         local_irq_restore(flags);
-> +
-> +       if (!skip_call_rcu) {
-> +               synchronize_rcu();
-> +               kvfree(ptr_to_free);
-> +       }
->  }
->  EXPORT_SYMBOL_GPL(kfree_call_rcu);
-> 
-> diff --git a/mm/list_lru.c b/mm/list_lru.c
-> index 0f1f6b06b7f3..0efb849b4f1f 100644
-> --- a/mm/list_lru.c
-> +++ b/mm/list_lru.c
-> @@ -390,14 +390,6 @@ static void memcg_destroy_list_lru_node(struct list_lru_node *nlru)
->         kvfree(memcg_lrus);
->  }
-> 
-> -static void kvfree_rcu(struct rcu_head *head)
-> -{
-> -       struct list_lru_memcg *mlru;
-> -
-> -       mlru = container_of(head, struct list_lru_memcg, rcu);
-> -       kvfree(mlru);
-> -}
-> -
->  static int memcg_update_list_lru_node(struct list_lru_node *nlru,
->                                       int old_size, int new_size)
->  {
-> @@ -429,7 +421,7 @@ static int memcg_update_list_lru_node(struct list_lru_node *nlru,
->         rcu_assign_pointer(nlru->memcg_lrus, new);
->         spin_unlock_irq(&nlru->lock);
-> 
-> -       call_rcu(&old->rcu, kvfree_rcu);
-> +       kvfree_rcu(old);
->         return 0;
->  }
-> <snip>
-> 
-> now it becomes possible to use it like: 
-> 	...
-> 	void *p = kvmalloc(PAGE_SIZE);
-> 	kvfree_rcu(p);
-> 	...
-> also have a look at the example in the mm/list_lru.c diff.
-> 
-> I can send out the RFC/PATCH that implements kvfree_rcu() API without need
-> of "rcu_head" structure. 
-> 
-> Paul, Joel what are your thoughts?
-> 
-> Thank you in advance!
-> 
-> --
-> Vlad Rezki
