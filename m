@@ -2,63 +2,63 @@ Return-Path: <SRS0=1210=4J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-11.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 51EF9C35640
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 06:01:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A6EC6C35640
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 06:03:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2437720637
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 06:01:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 59C6E20637
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 06:03:56 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=brainfault-org.20150623.gappssmtp.com header.i=@brainfault-org.20150623.gappssmtp.com header.b="uDyg6dtZ"
+	dkim=pass (2048-bit key) header.d=brainfault-org.20150623.gappssmtp.com header.i=@brainfault-org.20150623.gappssmtp.com header.b="k78bxUZh"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726440AbgBUGB0 (ORCPT
+        id S1726287AbgBUGDz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Feb 2020 01:01:26 -0500
-Received: from mail-wm1-f66.google.com ([209.85.128.66]:40560 "EHLO
-        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725973AbgBUGB0 (ORCPT
+        Fri, 21 Feb 2020 01:03:55 -0500
+Received: from mail-wr1-f68.google.com ([209.85.221.68]:37899 "EHLO
+        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725800AbgBUGDy (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Feb 2020 01:01:26 -0500
-Received: by mail-wm1-f66.google.com with SMTP id t14so404671wmi.5
-        for <linux-kernel@vger.kernel.org>; Thu, 20 Feb 2020 22:01:23 -0800 (PST)
+        Fri, 21 Feb 2020 01:03:54 -0500
+Received: by mail-wr1-f68.google.com with SMTP id e8so619864wrm.5
+        for <linux-kernel@vger.kernel.org>; Thu, 20 Feb 2020 22:03:53 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=brainfault-org.20150623.gappssmtp.com; s=20150623;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=BmMw69yF1xjsB+33COeMx7MgH3XoFsnMEnp3FC6eBks=;
-        b=uDyg6dtZ9smsx+eqycwjMVDhcPmlDEP1FZK5nl/O2qvCxKvW1P94PT8OnzZbHwCJpu
-         aN6M1H98LeutAxEAsUOtYbTjq+rVGdUqgZRvdwDbgzyvTAQRoDVZisFPZDjF/CE0YUnC
-         79gvRuR4oO27/YGdnNKEEseriACNpkx0xVTJ3QFQUlhSI33+LJafkcVNQCnHiQtZrB0o
-         ghUUHwvrlhn8PiFdgTV+ffKNK5dVIvOyIn0fsO75TJWs4w+Jl4Qm+FVtDLtgn7ZKEDhd
-         if4toeJjJuDjr0I+ECLbTjnulqYAvq4asTBj7oHOkCq1kJTnxlpUnWOgwYBZsz7QCfqX
-         1OaQ==
+        bh=aqtAvwxT6JrwXsCKyiro+Lp0pOc/Ni4qRf2FDo8jA7I=;
+        b=k78bxUZhB4k7Cc+JUEXD+nAd1mPCAv1V4W58+FtztDdj7Rs7vyd2zu2MHyjhqMI8Ti
+         IPUICzblgtxDIA60pRkSRhgKpiGZbivYVHmk5FzLgEo23O7c3gwutPCqjLIGmGw8nKuQ
+         n2s9xe2RhD8kyX09Jg1QMBvWv3q1aG5SUfawDmQuAg7Mj6Q0+r8MMTO9UY+mcYp8WQlc
+         l6JrcYXFOL8gtYGTwKRclqO59hlX4+KG2Ngp8uicdiMobm15Ry91KQFUEjUctfXzJFmE
+         BN+7qP7+ef3/LUCCD83C7N+GQF/HqipJTkBpBv36LRFeiJ/fD36AYZ3TMj/lwhVRjpwi
+         ZS7Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=BmMw69yF1xjsB+33COeMx7MgH3XoFsnMEnp3FC6eBks=;
-        b=RnpH1YrhLQZpzUxlIKNpUXQe9L1xs8iPVKR3SFC6QzfdKyMRQDR5Z0bh8iOOcHJ71o
-         BbGhnbmA4PeAt/Tb0AAVUOsZuXdw0XSUczZS08na2DoNZSrc1F07mYuSe0z4lKt+ItaF
-         oLntjrNAJom/Yw0Et8l5SK2UvYI+nprp1/UVagxBln7OBBmm9v51szhaxNr598rwju35
-         CaoICSLhAJ4TBLV1iMBFA07GkdCYn3ak68Hr9O5M6t3kXjlA9LaPfhuweo/kPA1mOJ0K
-         aYgO6urldFnh/hjeVxrmiiO2jxi9sxXSAZOLrhbrOVlCfGjYqOmSnS3U+XiUF4T3cg7a
-         NLOw==
-X-Gm-Message-State: APjAAAW5INPNl0LYkzg5Tak+YYq6uS2uB3ZtPgVZJM12XB2uOTuqC5E5
-        05JmQpGv5p8rfkulZ/hQoROICZ23pWJGPNf/8pFHIw==
-X-Google-Smtp-Source: APXvYqwSbWQx9lHm7xKEsIjxehHLlqsyvfT819rPiihd+ZTdxgf94VO6sABql9l/fp2RHuPgOyZ9ySzu33XnkEYOvEE=
-X-Received: by 2002:a05:600c:285:: with SMTP id 5mr1460069wmk.120.1582264882627;
- Thu, 20 Feb 2020 22:01:22 -0800 (PST)
+        bh=aqtAvwxT6JrwXsCKyiro+Lp0pOc/Ni4qRf2FDo8jA7I=;
+        b=VC7rrnJPMAEuMePn8XUoW0gQRUYxVxmIHXTdYEKU6uzJHt0DFN2SpUHtNbTHJBaGLz
+         6WROtw+5uKHATyULNHDV0J/0G1M6F67wYOudS4kPBugBAj1qNQEOVhYsGio8jPJQ3ns4
+         254NujShwQAz4HqikqbNpHkdvj5obF3sT9GjWLVND/VOp3a8yb2reLbvcgWvrSlqxdt0
+         B//oMVngb2lRrOZ0YefuMid90l97ldZYcLlp4C+rBzFwO/Yv7t4nE2CkC61DMUwFZEvH
+         1bfskeCnGeklIhTkuJsuB6XfmRwxNk9gL0SKGtMbA7HMKf0bC/3beMsQcTapJnZKDzcf
+         /cbw==
+X-Gm-Message-State: APjAAAWhvgPdmYB1IFzFuI/CQ8dUjroCE4nWV0HXU7qbpJqCJr9IaO21
+        gngRBCG/QAFhnp3gRIq48JvuYpjmZ1XAoVurq8Z8ww==
+X-Google-Smtp-Source: APXvYqzKt9n9Xq8la74Z+xvm6ahETvrqRFQztSYDibW0kIX5kMERSsw3QEO1Kd+rVdcG/sAhQmnfak0jzNiUTghp8IA=
+X-Received: by 2002:adf:f28f:: with SMTP id k15mr45926753wro.230.1582265032524;
+ Thu, 20 Feb 2020 22:03:52 -0800 (PST)
 MIME-Version: 1.0
-References: <20200221004413.12869-1-atish.patra@wdc.com> <20200221004413.12869-9-atish.patra@wdc.com>
-In-Reply-To: <20200221004413.12869-9-atish.patra@wdc.com>
+References: <20200221004413.12869-1-atish.patra@wdc.com> <20200221004413.12869-10-atish.patra@wdc.com>
+In-Reply-To: <20200221004413.12869-10-atish.patra@wdc.com>
 From:   Anup Patel <anup@brainfault.org>
-Date:   Fri, 21 Feb 2020 11:31:11 +0530
-Message-ID: <CAAhSdy0QE+5dXZnnzWaL-6GZCEN8FhLQY1f=kW6ZdEmaCwOxYg@mail.gmail.com>
-Subject: Re: [PATCH v9 08/12] RISC-V: Export SBI error to linux error mapping function
+Date:   Fri, 21 Feb 2020 11:33:40 +0530
+Message-ID: <CAAhSdy10hJ=Ucc27JZvq1fZ8pBuFnQukMTk6=ghNLOmNqrOyxg@mail.gmail.com>
+Subject: Re: [PATCH v9 09/12] RISC-V: Add SBI HSM extension definitions
 To:     Atish Patra <atish.patra@wdc.com>
 Cc:     "linux-kernel@vger.kernel.org List" <linux-kernel@vger.kernel.org>,
         Albert Ou <aou@eecs.berkeley.edu>,
@@ -87,56 +87,60 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 On Fri, Feb 21, 2020 at 6:14 AM Atish Patra <atish.patra@wdc.com> wrote:
 >
-> All SBI related extensions will not be implemented in sbi.c to avoid
-> bloating. Thus, sbi_err_map_linux_errno() will be used in other files
-> implementing that specific extension.
+> SBI specification defines HSM extension that allows to start/stop a hart
+> by a supervisor anytime. The specification is available at
 >
-> Export the function so that it can be used later.
+> https://github.com/riscv/riscv-sbi-doc/blob/master/riscv-sbi.adoc
+>
+> Add those definitions here.
 >
 > Signed-off-by: Atish Patra <atish.patra@wdc.com>
 > ---
->  arch/riscv/include/asm/sbi.h | 1 +
->  arch/riscv/kernel/sbi.c      | 3 ++-
->  2 files changed, 3 insertions(+), 1 deletion(-)
+>  arch/riscv/include/asm/sbi.h | 14 ++++++++++++++
+>  1 file changed, 14 insertions(+)
 >
 > diff --git a/arch/riscv/include/asm/sbi.h b/arch/riscv/include/asm/sbi.h
-> index d55d8090ab5c..abbf0a7d3b6e 100644
+> index abbf0a7d3b6e..0981a0c97eda 100644
 > --- a/arch/riscv/include/asm/sbi.h
 > +++ b/arch/riscv/include/asm/sbi.h
-> @@ -130,6 +130,7 @@ static inline unsigned long sbi_minor_version(void)
->  {
->         return sbi_spec_version & SBI_SPEC_VERSION_MINOR_MASK;
->  }
-> +int sbi_err_map_linux_errno(int err);
->  #else /* CONFIG_RISCV_SBI */
->  /* stubs for code that is only reachable under IS_ENABLED(CONFIG_RISCV_SBI): */
->  void sbi_set_timer(uint64_t stime_value);
-> diff --git a/arch/riscv/kernel/sbi.c b/arch/riscv/kernel/sbi.c
-> index 38ec99415060..d0c9516b6c0a 100644
-> --- a/arch/riscv/kernel/sbi.c
-> +++ b/arch/riscv/kernel/sbi.c
-> @@ -46,7 +46,7 @@ struct sbiret sbi_ecall(int ext, int fid, unsigned long arg0,
->  }
->  EXPORT_SYMBOL(sbi_ecall);
+> @@ -26,6 +26,7 @@ enum sbi_ext_id {
+>         SBI_EXT_TIME = 0x54494D45,
+>         SBI_EXT_IPI = 0x735049,
+>         SBI_EXT_RFENCE = 0x52464E43,
+> +       SBI_EXT_HSM = 0x48534D,
+>  };
 >
-> -static int sbi_err_map_linux_errno(int err)
-> +int sbi_err_map_linux_errno(int err)
->  {
->         switch (err) {
->         case SBI_SUCCESS:
-> @@ -63,6 +63,7 @@ static int sbi_err_map_linux_errno(int err)
->                 return -ENOTSUPP;
->         };
->  }
-> +EXPORT_SYMBOL(sbi_err_map_linux_errno);
+>  enum sbi_ext_base_fid {
+> @@ -56,6 +57,19 @@ enum sbi_ext_rfence_fid {
+>         SBI_EXT_RFENCE_REMOTE_HFENCE_VVMA_ASID,
+>  };
 >
->  #ifdef CONFIG_RISCV_SBI_V01
->  /**
+> +enum sbi_ext_hsm_fid {
+> +       SBI_EXT_HSM_HART_START = 0,
+> +       SBI_EXT_HSM_HART_STOP,
+> +       SBI_EXT_HSM_HART_STATUS,
+> +};
+> +
+> +enum sbi_hsm_hart_status {
+> +       SBI_HSM_HART_STATUS_AVAILABLE = 0,
+> +       SBI_HSM_HART_STATUS_NOT_AVAILABLE,
+
+Rename "_AVAILABLE" to "_STARTED" and
+"_NOT_AVAILABLE" to "STOPPED" to match
+SBI v0.2-rc1 spec.
+
+> +       SBI_HSM_HART_STATUS_START_PENDING,
+> +       SBI_HSM_HART_STATUS_STOP_PENDING,
+> +};
+> +
+>  #define SBI_SPEC_VERSION_DEFAULT       0x1
+>  #define SBI_SPEC_VERSION_MAJOR_SHIFT   24
+>  #define SBI_SPEC_VERSION_MAJOR_MASK    0x7f
 > --
 > 2.25.0
 >
 
-LGTM.
+Otherwise, looks good to me.
 
 Reviewed-by: Anup Patel <anup.patel@wdc.com>
 
