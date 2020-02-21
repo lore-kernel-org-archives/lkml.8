@@ -7,49 +7,50 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5BB25C35641
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 07:52:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E54BCC35640
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 07:53:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 242AE24656
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 07:52:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BA36E24653
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 07:53:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582271575;
-	bh=wIqsMrdKLb+D/TuHlWfbWthZCsYzOhhbmcyKf/OfsBY=;
+	s=default; t=1582271580;
+	bh=UG/BD9hscKmWK0RNNprICbSWct+Wubtc4+D89CyPTMo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=VLVdjNuSPQd3DnRpZsHE5FAzIUKgeuJxI+5uITai2Tq9hLXLbsWgXpJ8jEyLQqlrC
-	 ztxpC/GrZOULAaTTpKivyrB6ihoeowwgGocqhwGwZLmeMxmKvQ6o2Aalk3Mrvrr81/
-	 FqJYaJuXMfuJHOWo20QUAfEWQcJEQ7gDG2JAdWxo=
+	b=MVUndSgmY0e1sHX5D6tCAJerSIw0/N9OL/4CRtpKg9Wj9GqXIXDipusKZc2b0WnrM
+	 3APti6qOV8t0FDFj0jdNOLoIq+oDL6/XN0BIBPJBmFj8beq4+urUFy6Ni7StjPoNkB
+	 n4Wic3dtA75wFI8gU41BVgJXCAyxG+4XuO7OTgYM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729987AbgBUHwy (ORCPT
+        id S1729657AbgBUHw7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Feb 2020 02:52:54 -0500
-Received: from mail.kernel.org ([198.145.29.99]:50814 "EHLO mail.kernel.org"
+        Fri, 21 Feb 2020 02:52:59 -0500
+Received: from mail.kernel.org ([198.145.29.99]:50914 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728953AbgBUHws (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Feb 2020 02:52:48 -0500
+        id S1729636AbgBUHwx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 21 Feb 2020 02:52:53 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0EA1520578;
-        Fri, 21 Feb 2020 07:52:46 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 31A0220578;
+        Fri, 21 Feb 2020 07:52:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1582271567;
-        bh=wIqsMrdKLb+D/TuHlWfbWthZCsYzOhhbmcyKf/OfsBY=;
+        s=default; t=1582271572;
+        bh=UG/BD9hscKmWK0RNNprICbSWct+Wubtc4+D89CyPTMo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=XxtxnbKRaTchZ+GT+iyTOrykgJxoGu13kszGDX6+N9CQY7iPmixZc3Utsy/P0+gH7
-         YiIW0T2glPiotyJaU4WbNfXo0zHUEcHM6iRJqgpCV8q1lT+t2ch620rgS1AmEA35ZM
-         DN4aAPQBPnqEX8yVOlSV/R1+eVwewoAGBX4hrND8=
+        b=w+5yPewOWtFAsuCoNDyfvW0FzjLxsiFWEA4h2IgMCgh863Xysi3Xo+xw1atoFi5Qo
+         eR6doAcG9ieAWIOxcM0Lu/7sZX4u2BWMD07urCnMzfBce76+OGM5GS1IZe+tjyacks
+         cnXIvww17MUpdgeAc07Jl0fIpKN0hFt3e7PZk8Ss=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Adhemerval Zanella <adhemerval.zanella@linaro.org>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Saeed Mahameed <saeedm@mellanox.com>,
+        stable@vger.kernel.org, Leo Li <sunpeng.li@amd.com>,
+        Harry Wentland <Harry.Wentland@amd.com>,
+        Sam Ravnborg <sam@ravnborg.org>,
+        Dingchen Zhang <dingchen.zhang@amd.com>,
+        Alex Deucher <alexander.deucher@amd.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.5 215/399] mlx5: work around high stack usage with gcc
-Date:   Fri, 21 Feb 2020 08:39:00 +0100
-Message-Id: <20200221072423.900172139@linuxfoundation.org>
+Subject: [PATCH 5.5 217/399] drm: remove the newline for CRC source name.
+Date:   Fri, 21 Feb 2020 08:39:02 +0100
+Message-Id: <20200221072424.090869833@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200221072402.315346745@linuxfoundation.org>
 References: <20200221072402.315346745@linuxfoundation.org>
@@ -62,44 +63,46 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Arnd Bergmann <arnd@arndb.de>
+From: Dingchen Zhang <dingchen.zhang@amd.com>
 
-[ Upstream commit 42ae1a5c76691928ed217c7e40269db27f5225e9 ]
+[ Upstream commit 72a848f5c46bab4c921edc9cbffd1ab273b2be17 ]
 
-In some configurations, gcc tries too hard to optimize this code:
+userspace may transfer a newline, and this terminating newline
+is replaced by a '\0' to avoid followup issues.
 
-drivers/net/ethernet/mellanox/mlx5/core/en_stats.c: In function 'mlx5e_grp_sw_update_stats':
-drivers/net/ethernet/mellanox/mlx5/core/en_stats.c:302:1: error: the frame size of 1336 bytes is larger than 1024 bytes [-Werror=frame-larger-than=]
+'len-1' is the index to replace the newline of CRC source name.
 
-As was stated in the bug report, the reason is that gcc runs into a corner
-case in the register allocator that is rather hard to fix in a good way.
+v3: typo fix (Sam)
 
-As there is an easy way to work around it, just add a comment and the
-barrier that stops gcc from trying to overoptimize the function.
+v2: update patch subject, body and format. (Sam)
 
-Link: https://gcc.gnu.org/bugzilla/show_bug.cgi?id=92657
-Cc: Adhemerval Zanella <adhemerval.zanella@linaro.org>
-Signed-off-by: Arnd Bergmann <arnd@arndb.de>
-Signed-off-by: Saeed Mahameed <saeedm@mellanox.com>
+Cc: Leo Li <sunpeng.li@amd.com>
+Cc: Harry Wentland <Harry.Wentland@amd.com>
+Cc: Sam Ravnborg <sam@ravnborg.org>
+Signed-off-by: Dingchen Zhang <dingchen.zhang@amd.com>
+Reviewed-by: Sam Ravnborg <sam@ravnborg.org>
+Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
+Link: https://patchwork.freedesktop.org/patch/msgid/20190610134751.14356-1-dingchen.zhang@amd.com
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/ethernet/mellanox/mlx5/core/en_stats.c | 3 +++
- 1 file changed, 3 insertions(+)
+ drivers/gpu/drm/drm_debugfs_crc.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/net/ethernet/mellanox/mlx5/core/en_stats.c b/drivers/net/ethernet/mellanox/mlx5/core/en_stats.c
-index 9f09253f9f466..a05158472ed11 100644
---- a/drivers/net/ethernet/mellanox/mlx5/core/en_stats.c
-+++ b/drivers/net/ethernet/mellanox/mlx5/core/en_stats.c
-@@ -297,6 +297,9 @@ static void mlx5e_grp_sw_update_stats(struct mlx5e_priv *priv)
- 			s->tx_tls_drop_bypass_req   += sq_stats->tls_drop_bypass_req;
- #endif
- 			s->tx_cqes		+= sq_stats->cqes;
-+
-+			/* https://gcc.gnu.org/bugzilla/show_bug.cgi?id=92657 */
-+			barrier();
- 		}
- 	}
- }
+diff --git a/drivers/gpu/drm/drm_debugfs_crc.c b/drivers/gpu/drm/drm_debugfs_crc.c
+index ca3c55c6b8155..2ece2957da1af 100644
+--- a/drivers/gpu/drm/drm_debugfs_crc.c
++++ b/drivers/gpu/drm/drm_debugfs_crc.c
+@@ -140,8 +140,8 @@ static ssize_t crc_control_write(struct file *file, const char __user *ubuf,
+ 	if (IS_ERR(source))
+ 		return PTR_ERR(source);
+ 
+-	if (source[len] == '\n')
+-		source[len] = '\0';
++	if (source[len - 1] == '\n')
++		source[len - 1] = '\0';
+ 
+ 	ret = crtc->funcs->verify_crc_source(crtc, source, &values_cnt);
+ 	if (ret)
 -- 
 2.20.1
 
