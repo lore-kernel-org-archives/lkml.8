@@ -2,116 +2,69 @@ Return-Path: <SRS0=1210=4J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EAF7DC11D24
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 01:34:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8254EC11D24
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 01:35:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CCDF524656
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 01:34:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5AB2624670
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 01:35:04 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1582248904;
+	bh=6+kua7juze61hnWFLaQDyc1e9v2NQTjrUfu9hvGFRyk=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=pyXuvlR04Mi+tyUf/+7/kBsVTzFgw2iZTL/F4gqTysXj04zrRotaGv0uEx5nerc3G
+	 jLtHmughek7R8szHq6KfoLlxdB0YJ88ovmFOUhxhK1F+KcEMTQaYvR9pVhM/bYQHBc
+	 u6lPqKLuSSUAtBtikhiT8cDFtr26upC/U7fmrFo8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729598AbgBUBe4 (ORCPT
+        id S1729610AbgBUBfD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Feb 2020 20:34:56 -0500
-Received: from mail104.syd.optusnet.com.au ([211.29.132.246]:54386 "EHLO
-        mail104.syd.optusnet.com.au" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1729516AbgBUBez (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Feb 2020 20:34:55 -0500
-Received: from dread.disaster.area (pa49-195-185-106.pa.nsw.optusnet.com.au [49.195.185.106])
-        by mail104.syd.optusnet.com.au (Postfix) with ESMTPS id 9D2FA820B9F;
-        Fri, 21 Feb 2020 12:34:52 +1100 (AEDT)
-Received: from dave by dread.disaster.area with local (Exim 4.92.3)
-        (envelope-from <david@fromorbit.com>)
-        id 1j4xDP-0005DD-UK; Fri, 21 Feb 2020 12:34:51 +1100
-Date:   Fri, 21 Feb 2020 12:34:51 +1100
-From:   Dave Chinner <david@fromorbit.com>
-To:     ira.weiny@intel.com
-Cc:     linux-kernel@vger.kernel.org,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        "Darrick J. Wong" <darrick.wong@oracle.com>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Christoph Hellwig <hch@lst.de>,
-        "Theodore Y. Ts'o" <tytso@mit.edu>, Jan Kara <jack@suse.cz>,
-        linux-ext4@vger.kernel.org, linux-xfs@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org
-Subject: Re: [PATCH V4 02/13] fs/xfs: Clarify lockdep dependency for
- xfs_isilocked()
-Message-ID: <20200221013451.GU10776@dread.disaster.area>
-References: <20200221004134.30599-1-ira.weiny@intel.com>
- <20200221004134.30599-3-ira.weiny@intel.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200221004134.30599-3-ira.weiny@intel.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
-X-Optus-CM-Score: 0
-X-Optus-CM-Analysis: v=2.3 cv=W5xGqiek c=1 sm=1 tr=0
-        a=bkRQb8bsQZKWSSj4M57YXw==:117 a=bkRQb8bsQZKWSSj4M57YXw==:17
-        a=jpOVt7BSZ2e4Z31A5e1TngXxSK0=:19 a=kj9zAlcOel0A:10 a=l697ptgUJYAA:10
-        a=QyXUC8HyAAAA:8 a=7-415B0cAAAA:8 a=GGKX1iC3Kp7g_2JCx8gA:9
-        a=CjuIK1q_8ugA:10 a=biEYGPWJfzWAr4FL6Ov7:22
+        Thu, 20 Feb 2020 20:35:03 -0500
+Received: from mail.kernel.org ([198.145.29.99]:35218 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729516AbgBUBfC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 20 Feb 2020 20:35:02 -0500
+Received: from X1 (nat-ab2241.sltdut.senawave.net [162.218.216.4])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id AFBB0222C4;
+        Fri, 21 Feb 2020 01:35:01 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1582248901;
+        bh=6+kua7juze61hnWFLaQDyc1e9v2NQTjrUfu9hvGFRyk=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=Ai5nYwXadTcx45tmQqfDPNdBmHRKuYTs4LnnfYNiboalPV3Jca6/WcxKoJj2JYuxI
+         g4fotCxzuvHLMU98eFfkibrEOkkdSdWmbbIc+L6X/bNyT+IFdh8xVWW/lundiaqE/C
+         BsHvKxZvm/2YdG3EsD3JzNxKbYmAKfEbzrzH2iiw=
+Date:   Thu, 20 Feb 2020 17:35:01 -0800
+From:   Andrew Morton <akpm@linux-foundation.org>
+To:     Nathan Chancellor <natechancellor@gmail.com>
+Cc:     Catalin Marinas <catalin.marinas@arm.com>, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org, clang-built-linux@googlegroups.com,
+        Nick Desaulniers <ndesaulniers@google.com>
+Subject: Re: [PATCH v2] mm: kmemleak: Use address-of operator on section
+ symbols
+Message-Id: <20200220173501.0de88326911e41b15e27b62f@linux-foundation.org>
+In-Reply-To: <20200220051551.44000-1-natechancellor@gmail.com>
+References: <20200220051551.44000-1-natechancellor@gmail.com>
+X-Mailer: Sylpheed 3.5.1 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Feb 20, 2020 at 04:41:23PM -0800, ira.weiny@intel.com wrote:
-> From: Ira Weiny <ira.weiny@intel.com>
-> 
-> xfs_isilocked() can't work fully without CONFIG_LOCKDEP.  However,
-> making xfs_isilocked() dependant on CONFIG_LOCKDEP is not feasible
-> because it is used for more than the i_rwsem.  Therefore a short-circuit
-> was provided via debug_locks.  However, this caused confusion while
-> working through the xfs locking.
-> 
-> Rather than use debug_locks as a flag specify this clearly using
-> IS_ENABLED(CONFIG_LOCKDEP).
-> 
-> Signed-off-by: Ira Weiny <ira.weiny@intel.com>
-> 
-> ---
-> Changes from V3:
-> 	Reordered to be a "pre-cleanup" patch
-> 
-> Changes from V2:
-> 	This patch is new for V3
-> ---
->  fs/xfs/xfs_inode.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/fs/xfs/xfs_inode.c b/fs/xfs/xfs_inode.c
-> index c5077e6326c7..35df324875db 100644
-> --- a/fs/xfs/xfs_inode.c
-> +++ b/fs/xfs/xfs_inode.c
-> @@ -364,7 +364,7 @@ xfs_isilocked(
->  
->  	if (lock_flags & (XFS_IOLOCK_EXCL|XFS_IOLOCK_SHARED)) {
->  		if (!(lock_flags & XFS_IOLOCK_SHARED))
-> -			return !debug_locks ||
-> +			return !IS_ENABLED(CONFIG_LOCKDEP) ||
->  				lockdep_is_held_type(&VFS_I(ip)->i_rwsem, 0);
+On Wed, 19 Feb 2020 22:15:51 -0700 Nathan Chancellor <natechancellor@gmail.com> wrote:
 
-This breaks expected lockdep behaviour.
+> Clang warns:
+> 
+> These are not true arrays, they are linker defined symbols, which are
+> just addresses. Using the address of operator silences the warning and
+> does not change the resulting assembly with either clang/ld.lld or
+> gcc/ld (tested with diff + objdump -Dr).
 
-We need to use debug_locks here because lockdep turns off lock
-checking via debug_locks when lockdep encounters a locking
-inconsistency.  We only want to know about the first locking
-problem, not spew cascading lock problems over and over once we
-already know there is a locking problem.
-
-IOWs, checking debug_locks is required here for the same reason it
-is used in lockdep_assert_held_{read/write}(). essentially we are
-open coding lockdep_assert_held_write() here because this function
-is only called from within ASSERT() statements and we don't want
-multiple WARN/BUGs being issued when this triggers....
-
-Cheers,
-
-Dave.
--- 
-Dave Chinner
-david@fromorbit.com
+I guess you forgot to quote the clang output?
