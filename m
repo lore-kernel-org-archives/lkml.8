@@ -7,48 +7,47 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 03D10C35641
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 08:15:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D546CC35640
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 08:15:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CE28B24687
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 08:15:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9DFFE24680
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 08:15:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582272902;
-	bh=9QBWaElHKC0zBpOGCtZQxcNbGjkEOVXoSNV7W+soaiU=;
+	s=default; t=1582272906;
+	bh=/ftWOuIqJbuF1FJbcbyfQ/FpqcOGit5DcD0jDMgoevE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=rncXn7tt3Y8f9MPqvZQGtMpWM7BFqR9t6h6jgEP0NoYbAxk3FLySeWqcEm/2KwszZ
-	 2RrkVFFFJEdKYDjYA4fM44HQ23/4cEURrZM55lKqor4/ILjRAdzwSZdFzR1D2RxxBM
-	 XQtmP/ZSjB+y1QC+VrhGF0fGtaABSNZhFVHKHC4w=
+	b=lqygyx1iGN5FA2+bVgkrkN6I6HErFc6mFloqhOSyWscXoSmwWjFCAnZbOs8bn7JeA
+	 99M0ICOZgssJLgM9cznxmUTXyF4pvzLSXHd3gotiS4hq2GkvJFy1UQiXxYsuXcZWQE
+	 TJWqFVbQyDdfiB0n1Fn0ro263DjMilmboepMHEdU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733261AbgBUIPB (ORCPT
+        id S1733269AbgBUIPF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Feb 2020 03:15:01 -0500
-Received: from mail.kernel.org ([198.145.29.99]:51600 "EHLO mail.kernel.org"
+        Fri, 21 Feb 2020 03:15:05 -0500
+Received: from mail.kernel.org ([198.145.29.99]:51674 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732393AbgBUIO6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Feb 2020 03:14:58 -0500
+        id S1732984AbgBUIPB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 21 Feb 2020 03:15:01 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A69442467B;
-        Fri, 21 Feb 2020 08:14:56 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B1E0524670;
+        Fri, 21 Feb 2020 08:14:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1582272897;
-        bh=9QBWaElHKC0zBpOGCtZQxcNbGjkEOVXoSNV7W+soaiU=;
+        s=default; t=1582272900;
+        bh=/ftWOuIqJbuF1FJbcbyfQ/FpqcOGit5DcD0jDMgoevE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=jUuBz0YQyJlCQnHHzCGbQu3aPQXua/Cvv3Vp14/ge37efNdLydKdWoScTar/06Y2L
-         8KR4b0+/aLIqg7Lode8gCDlJm5aguPm4zGGH3lJ1cR3eCo7yTBZH6sLuLJHBW/XsrY
-         FnVAaV/so7gHBJeRsSj+R8rFNTzAtTnsK7IU/a0g=
+        b=HxtTNuqWbJjkTg8ZbsJa0go0gaMV/8TiwRp7xvpmQGPzUDA1Uk7fq/xlhyNJRaamF
+         p3NfO8n/XFEMVecO4bkF//1Wh1cd2oymnRkyxQOpkSxOplJg9srhH/RxAMgR+J87aI
+         gcPFcYyD7SHT37JODc0E+SfnGGtetw8pyO6PZSxA=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Stephen Rothwell <sfr@canb.auug.org.au>,
-        Alexandre Ghiti <alex@ghiti.fr>,
-        Michael Ellerman <mpe@ellerman.id.au>,
+        stable@vger.kernel.org, Josef Bacik <josef@toxicpanda.com>,
+        David Sterba <dsterba@suse.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 316/344] powerpc: Do not consider weak unresolved symbol relocations as bad
-Date:   Fri, 21 Feb 2020 08:41:55 +0100
-Message-Id: <20200221072418.814979001@linuxfoundation.org>
+Subject: [PATCH 5.4 317/344] btrfs: do not do delalloc reservation under page lock
+Date:   Fri, 21 Feb 2020 08:41:56 +0100
+Message-Id: <20200221072418.921021513@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200221072349.335551332@linuxfoundation.org>
 References: <20200221072349.335551332@linuxfoundation.org>
@@ -61,103 +60,218 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Alexandre Ghiti <alex@ghiti.fr>
+From: Josef Bacik <josef@toxicpanda.com>
 
-[ Upstream commit 43e76cd368fbb67e767da5363ffeaa3989993c8c ]
+[ Upstream commit f4b1363cae43fef7c86c993b7ca7fe7d546b3c68 ]
 
-Commit 8580ac9404f6 ("bpf: Process in-kernel BTF") introduced two weak
-symbols that may be unresolved at link time which result in an absolute
-relocation to 0. relocs_check.sh emits the following warning:
+We ran into a deadlock in production with the fixup worker.  The stack
+traces were as follows:
 
-"WARNING: 2 bad relocations
-c000000001a41478 R_PPC64_ADDR64    _binary__btf_vmlinux_bin_start
-c000000001a41480 R_PPC64_ADDR64    _binary__btf_vmlinux_bin_end"
+Thread responsible for the writeout, waiting on the page lock
 
-whereas those relocations are legitimate even for a relocatable kernel
-compiled with -pie option.
+  [<0>] io_schedule+0x12/0x40
+  [<0>] __lock_page+0x109/0x1e0
+  [<0>] extent_write_cache_pages+0x206/0x360
+  [<0>] extent_writepages+0x40/0x60
+  [<0>] do_writepages+0x31/0xb0
+  [<0>] __writeback_single_inode+0x3d/0x350
+  [<0>] writeback_sb_inodes+0x19d/0x3c0
+  [<0>] __writeback_inodes_wb+0x5d/0xb0
+  [<0>] wb_writeback+0x231/0x2c0
+  [<0>] wb_workfn+0x308/0x3c0
+  [<0>] process_one_work+0x1e0/0x390
+  [<0>] worker_thread+0x2b/0x3c0
+  [<0>] kthread+0x113/0x130
+  [<0>] ret_from_fork+0x35/0x40
+  [<0>] 0xffffffffffffffff
 
-relocs_check.sh already excluded some weak unresolved symbols explicitly:
-remove those hardcoded symbols and add some logic that parses the symbols
-using nm, retrieves all the weak unresolved symbols and excludes those from
-the list of the potential bad relocations.
+Thread of the fixup worker who is holding the page lock
 
-Reported-by: Stephen Rothwell <sfr@canb.auug.org.au>
-Signed-off-by: Alexandre Ghiti <alex@ghiti.fr>
-Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
-Link: https://lore.kernel.org/r/20200118170335.21440-1-alex@ghiti.fr
+  [<0>] start_delalloc_inodes+0x241/0x2d0
+  [<0>] btrfs_start_delalloc_roots+0x179/0x230
+  [<0>] btrfs_alloc_data_chunk_ondemand+0x11b/0x2e0
+  [<0>] btrfs_check_data_free_space+0x53/0xa0
+  [<0>] btrfs_delalloc_reserve_space+0x20/0x70
+  [<0>] btrfs_writepage_fixup_worker+0x1fc/0x2a0
+  [<0>] normal_work_helper+0x11c/0x360
+  [<0>] process_one_work+0x1e0/0x390
+  [<0>] worker_thread+0x2b/0x3c0
+  [<0>] kthread+0x113/0x130
+  [<0>] ret_from_fork+0x35/0x40
+  [<0>] 0xffffffffffffffff
+
+Thankfully the stars have to align just right to hit this.  First you
+have to end up in the fixup worker, which is tricky by itself (my
+reproducer does DIO reads into a MMAP'ed region, so not a common
+operation).  Then you have to have less than a page size of free data
+space and 0 unallocated space so you go down the "commit the transaction
+to free up pinned space" path.  This was accomplished by a random
+balance that was running on the host.  Then you get this deadlock.
+
+I'm still in the process of trying to force the deadlock to happen on
+demand, but I've hit other issues.  I can still trigger the fixup worker
+path itself so this patch has been tested in that regard, so the normal
+case is fine.
+
+Fixes: 87826df0ec36 ("btrfs: delalloc for page dirtied out-of-band in fixup worker")
+Signed-off-by: Josef Bacik <josef@toxicpanda.com>
+Reviewed-by: David Sterba <dsterba@suse.com>
+Signed-off-by: David Sterba <dsterba@suse.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/powerpc/Makefile.postlink     |  4 ++--
- arch/powerpc/tools/relocs_check.sh | 20 ++++++++++++--------
- 2 files changed, 14 insertions(+), 10 deletions(-)
+ fs/btrfs/inode.c | 76 ++++++++++++++++++++++++++++++++++++++----------
+ 1 file changed, 60 insertions(+), 16 deletions(-)
 
-diff --git a/arch/powerpc/Makefile.postlink b/arch/powerpc/Makefile.postlink
-index 134f12f89b92b..2268396ff4bba 100644
---- a/arch/powerpc/Makefile.postlink
-+++ b/arch/powerpc/Makefile.postlink
-@@ -17,11 +17,11 @@ quiet_cmd_head_check = CHKHEAD $@
- quiet_cmd_relocs_check = CHKREL  $@
- ifdef CONFIG_PPC_BOOK3S_64
-       cmd_relocs_check =						\
--	$(CONFIG_SHELL) $(srctree)/arch/powerpc/tools/relocs_check.sh "$(OBJDUMP)" "$@" ; \
-+	$(CONFIG_SHELL) $(srctree)/arch/powerpc/tools/relocs_check.sh "$(OBJDUMP)" "$(NM)" "$@" ; \
- 	$(BASH) $(srctree)/arch/powerpc/tools/unrel_branch_check.sh "$(OBJDUMP)" "$@"
- else
-       cmd_relocs_check =						\
--	$(CONFIG_SHELL) $(srctree)/arch/powerpc/tools/relocs_check.sh "$(OBJDUMP)" "$@"
-+	$(CONFIG_SHELL) $(srctree)/arch/powerpc/tools/relocs_check.sh "$(OBJDUMP)" "$(NM)" "$@"
- endif
+diff --git a/fs/btrfs/inode.c b/fs/btrfs/inode.c
+index 1b4ab02be9243..b83eef445db33 100644
+--- a/fs/btrfs/inode.c
++++ b/fs/btrfs/inode.c
+@@ -2168,6 +2168,7 @@ int btrfs_set_extent_delalloc(struct inode *inode, u64 start, u64 end,
+ /* see btrfs_writepage_start_hook for details on why this is required */
+ struct btrfs_writepage_fixup {
+ 	struct page *page;
++	struct inode *inode;
+ 	struct btrfs_work work;
+ };
  
- # `@true` prevents complaint when there is nothing to be done
-diff --git a/arch/powerpc/tools/relocs_check.sh b/arch/powerpc/tools/relocs_check.sh
-index 7b9fe0a567cf3..014e00e74d2b6 100755
---- a/arch/powerpc/tools/relocs_check.sh
-+++ b/arch/powerpc/tools/relocs_check.sh
-@@ -10,14 +10,21 @@
- # based on relocs_check.pl
- # Copyright © 2009 IBM Corporation
+@@ -2182,9 +2183,20 @@ static void btrfs_writepage_fixup_worker(struct btrfs_work *work)
+ 	u64 page_start;
+ 	u64 page_end;
+ 	int ret = 0;
++	bool free_delalloc_space = true;
  
--if [ $# -lt 2 ]; then
--	echo "$0 [path to objdump] [path to vmlinux]" 1>&2
-+if [ $# -lt 3 ]; then
-+	echo "$0 [path to objdump] [path to nm] [path to vmlinux]" 1>&2
- 	exit 1
- fi
- 
--# Have Kbuild supply the path to objdump so we handle cross compilation.
-+# Have Kbuild supply the path to objdump and nm so we handle cross compilation.
- objdump="$1"
--vmlinux="$2"
-+nm="$2"
-+vmlinux="$3"
+ 	fixup = container_of(work, struct btrfs_writepage_fixup, work);
+ 	page = fixup->page;
++	inode = fixup->inode;
++	page_start = page_offset(page);
++	page_end = page_offset(page) + PAGE_SIZE - 1;
 +
-+# Remove from the bad relocations those that match an undefined weak symbol
-+# which will result in an absolute relocation to 0.
-+# Weak unresolved symbols are of that form in nm output:
-+# "                  w _binary__btf_vmlinux_bin_end"
-+undef_weak_symbols=$($nm "$vmlinux" | awk '$1 ~ /w/ { print $2 }')
++	/*
++	 * This is similar to page_mkwrite, we need to reserve the space before
++	 * we take the page lock.
++	 */
++	ret = btrfs_delalloc_reserve_space(inode, &data_reserved, page_start,
++					   PAGE_SIZE);
+ again:
+ 	lock_page(page);
  
- bad_relocs=$(
- $objdump -R "$vmlinux" |
-@@ -26,8 +33,6 @@ $objdump -R "$vmlinux" |
- 	# These relocations are okay
- 	# On PPC64:
- 	#	R_PPC64_RELATIVE, R_PPC64_NONE
--	#	R_PPC64_ADDR64 mach_<name>
--	#	R_PPC64_ADDR64 __crc_<name>
- 	# On PPC:
- 	#	R_PPC_RELATIVE, R_PPC_ADDR16_HI,
- 	#	R_PPC_ADDR16_HA,R_PPC_ADDR16_LO,
-@@ -39,8 +44,7 @@ R_PPC_ADDR16_HI
- R_PPC_ADDR16_HA
- R_PPC_RELATIVE
- R_PPC_NONE' |
--	grep -E -v '\<R_PPC64_ADDR64[[:space:]]+mach_' |
--	grep -E -v '\<R_PPC64_ADDR64[[:space:]]+__crc_'
-+	([ "$undef_weak_symbols" ] && grep -F -w -v "$undef_weak_symbols" || cat)
- )
+@@ -2193,25 +2205,48 @@ again:
+ 	 * page->mapping may go NULL, but it shouldn't be moved to a different
+ 	 * address space.
+ 	 */
+-	if (!page->mapping || !PageDirty(page) || !PageChecked(page))
++	if (!page->mapping || !PageDirty(page) || !PageChecked(page)) {
++		/*
++		 * Unfortunately this is a little tricky, either
++		 *
++		 * 1) We got here and our page had already been dealt with and
++		 *    we reserved our space, thus ret == 0, so we need to just
++		 *    drop our space reservation and bail.  This can happen the
++		 *    first time we come into the fixup worker, or could happen
++		 *    while waiting for the ordered extent.
++		 * 2) Our page was already dealt with, but we happened to get an
++		 *    ENOSPC above from the btrfs_delalloc_reserve_space.  In
++		 *    this case we obviously don't have anything to release, but
++		 *    because the page was already dealt with we don't want to
++		 *    mark the page with an error, so make sure we're resetting
++		 *    ret to 0.  This is why we have this check _before_ the ret
++		 *    check, because we do not want to have a surprise ENOSPC
++		 *    when the page was already properly dealt with.
++		 */
++		if (!ret) {
++			btrfs_delalloc_release_extents(BTRFS_I(inode),
++						       PAGE_SIZE);
++			btrfs_delalloc_release_space(inode, data_reserved,
++						     page_start, PAGE_SIZE,
++						     true);
++		}
++		ret = 0;
+ 		goto out_page;
++	}
  
- if [ -z "$bad_relocs" ]; then
+ 	/*
+-	 * We keep the PageChecked() bit set until we're done with the
+-	 * btrfs_start_ordered_extent() dance that we do below.  That drops and
+-	 * retakes the page lock, so we don't want new fixup workers queued for
+-	 * this page during the churn.
++	 * We can't mess with the page state unless it is locked, so now that
++	 * it is locked bail if we failed to make our space reservation.
+ 	 */
+-	inode = page->mapping->host;
+-	page_start = page_offset(page);
+-	page_end = page_offset(page) + PAGE_SIZE - 1;
++	if (ret)
++		goto out_page;
+ 
+ 	lock_extent_bits(&BTRFS_I(inode)->io_tree, page_start, page_end,
+ 			 &cached_state);
+ 
+ 	/* already ordered? We're done */
+ 	if (PagePrivate2(page))
+-		goto out;
++		goto out_reserved;
+ 
+ 	ordered = btrfs_lookup_ordered_range(BTRFS_I(inode), page_start,
+ 					PAGE_SIZE);
+@@ -2224,11 +2259,6 @@ again:
+ 		goto again;
+ 	}
+ 
+-	ret = btrfs_delalloc_reserve_space(inode, &data_reserved, page_start,
+-					   PAGE_SIZE);
+-	if (ret)
+-		goto out;
+-
+ 	ret = btrfs_set_extent_delalloc(inode, page_start, page_end, 0,
+ 					&cached_state);
+ 	if (ret)
+@@ -2242,12 +2272,12 @@ again:
+ 	 * The page was dirty when we started, nothing should have cleaned it.
+ 	 */
+ 	BUG_ON(!PageDirty(page));
++	free_delalloc_space = false;
+ out_reserved:
+ 	btrfs_delalloc_release_extents(BTRFS_I(inode), PAGE_SIZE);
+-	if (ret)
++	if (free_delalloc_space)
+ 		btrfs_delalloc_release_space(inode, data_reserved, page_start,
+ 					     PAGE_SIZE, true);
+-out:
+ 	unlock_extent_cached(&BTRFS_I(inode)->io_tree, page_start, page_end,
+ 			     &cached_state);
+ out_page:
+@@ -2266,6 +2296,12 @@ out_page:
+ 	put_page(page);
+ 	kfree(fixup);
+ 	extent_changeset_free(data_reserved);
++	/*
++	 * As a precaution, do a delayed iput in case it would be the last iput
++	 * that could need flushing space. Recursing back to fixup worker would
++	 * deadlock.
++	 */
++	btrfs_add_delayed_iput(inode);
+ }
+ 
+ /*
+@@ -2303,10 +2339,18 @@ int btrfs_writepage_cow_fixup(struct page *page, u64 start, u64 end)
+ 	if (!fixup)
+ 		return -EAGAIN;
+ 
++	/*
++	 * We are already holding a reference to this inode from
++	 * write_cache_pages.  We need to hold it because the space reservation
++	 * takes place outside of the page lock, and we can't trust
++	 * page->mapping outside of the page lock.
++	 */
++	ihold(inode);
+ 	SetPageChecked(page);
+ 	get_page(page);
+ 	btrfs_init_work(&fixup->work, btrfs_writepage_fixup_worker, NULL, NULL);
+ 	fixup->page = page;
++	fixup->inode = inode;
+ 	btrfs_queue_work(fs_info->fixup_workers, &fixup->work);
+ 
+ 	return -EAGAIN;
 -- 
 2.20.1
 
