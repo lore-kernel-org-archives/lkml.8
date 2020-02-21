@@ -7,46 +7,48 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 78D23C35640
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 07:47:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 79133C35641
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 07:47:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 46263208C4
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 07:47:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4E44C24653
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 07:47:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582271254;
-	bh=3IvopkT27FOsq+8sijVVp9M6p5tv3XeeY25VMCYj45M=;
+	s=default; t=1582271257;
+	bh=9gbTX4h6BPWBNpPKfY9Ft7bGOh6sTb6+5ICetoDwNw8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=jVoc+Hm8phNGN23EsgoTXic4eRncxNIVPzwbvUlXe8t0nN3kObOwXk+MdhIBMvoy7
-	 lY0sOy62BzGQdESvM2nIK05YQ4yplJJAZTpFDXrsJWAtMwWLp2xqrKc35Io/FXJzNd
-	 lkELjCCRlTmjFIyIsIj7oiy8sXA6ZI/tdSKs4KYA=
+	b=XMNE+/N3zyxGJbOTdZF9iJECTr9kth2FjkOUH4IkAZqcnC3Obrxl7l12PMjAh8X/X
+	 YG132TqRVVWAxXh9S485lhslReKvPuGaFv6ca7izzGhA97YrZ2VCm+lQ6U7yKGG4VT
+	 BBUM047j8XohCXJ89xaGPGlWEOPZwrm4oCnNomN4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728930AbgBUHrd (ORCPT
+        id S1728943AbgBUHrf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Feb 2020 02:47:33 -0500
-Received: from mail.kernel.org ([198.145.29.99]:43306 "EHLO mail.kernel.org"
+        Fri, 21 Feb 2020 02:47:35 -0500
+Received: from mail.kernel.org ([198.145.29.99]:43422 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728901AbgBUHr1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Feb 2020 02:47:27 -0500
+        id S1728032AbgBUHrd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 21 Feb 2020 02:47:33 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1815D222C4;
-        Fri, 21 Feb 2020 07:47:26 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id F22B124653;
+        Fri, 21 Feb 2020 07:47:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1582271247;
-        bh=3IvopkT27FOsq+8sijVVp9M6p5tv3XeeY25VMCYj45M=;
+        s=default; t=1582271252;
+        bh=9gbTX4h6BPWBNpPKfY9Ft7bGOh6sTb6+5ICetoDwNw8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Iuiv07VThuj6010lo3I5RryNeb409wey+q+Bb/znRogFTRj55nE8IjMhueS4DMYZ8
-         petywk73Vzt0Y2rjmADM5ledkDxaGMJwKPf5lmy+/Lc98YLscHFnIMDUm6TeHqpLnP
-         J3Q55p0ygwr365GTNaHmOUNGs9uKi16x8L8fXzYk=
+        b=IKQAOnw908JDVznsjHW1hV8ZGavsGHon/tgmMbRyysiTk7y8m6DpLZWOgZ9hz3DRz
+         4yY+B8iJC8BsPYZc/n0DYc2dPR4EFWsq2WzSw214nfKfaGt3opsyHkL4cZqpL8LS0g
+         qNoxlKGZyMLGY3v0M09ZX1BHGXlOaEJV26MRzV60=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Sun Ke <sunke32@huawei.com>,
-        Jens Axboe <axboe@kernel.dk>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.5 094/399] nbd: add a flush_workqueue in nbd_start_device
-Date:   Fri, 21 Feb 2020 08:36:59 +0100
-Message-Id: <20200221072411.495353985@linuxfoundation.org>
+        stable@vger.kernel.org, Chris Mason <clm@fb.com>,
+        Josef Bacik <josef@toxicpanda.com>,
+        David Sterba <dsterba@suse.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.5 096/399] Btrfs: keep pages dirty when using btrfs_writepage_fixup_worker
+Date:   Fri, 21 Feb 2020 08:37:01 +0100
+Message-Id: <20200221072411.721545853@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200221072402.315346745@linuxfoundation.org>
 References: <20200221072402.315346745@linuxfoundation.org>
@@ -59,54 +61,164 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Sun Ke <sunke32@huawei.com>
+From: Chris Mason <clm@fb.com>
 
-[ Upstream commit 5c0dd228b5fc30a3b732c7ae2657e0161ec7ed80 ]
+[ Upstream commit 25f3c5021985e885292980d04a1423fd83c967bb ]
 
-When kzalloc fail, may cause trying to destroy the
-workqueue from inside the workqueue.
+For COW, btrfs expects pages dirty pages to have been through a few setup
+steps.  This includes reserving space for the new block allocations and marking
+the range in the state tree for delayed allocation.
 
-If num_connections is m (2 < m), and NO.1 ~ NO.n
-(1 < n < m) kzalloc are successful. The NO.(n + 1)
-failed. Then, nbd_start_device will return ENOMEM
-to nbd_start_device_ioctl, and nbd_start_device_ioctl
-will return immediately without running flush_workqueue.
-However, we still have n recv threads. If nbd_release
-run first, recv threads may have to drop the last
-config_refs and try to destroy the workqueue from
-inside the workqueue.
+A few places outside btrfs will dirty pages directly, especially when unmapping
+mmap'd pages.  In order for these to properly go through COW, we run them
+through a fixup worker to wait for stable pages, and do the delalloc prep.
 
-To fix it, add a flush_workqueue in nbd_start_device.
+87826df0ec36 added a window where the dirty pages were cleaned, but pending
+more action from the fixup worker.  We clear_page_dirty_for_io() before
+we call into writepage, so the page is no longer dirty.  The commit
+changed it so now we leave the page clean between unlocking it here and
+the fixup worker starting at some point in the future.
 
-Fixes: e9e006f5fcf2 ("nbd: fix max number of supported devs")
-Signed-off-by: Sun Ke <sunke32@huawei.com>
-Signed-off-by: Jens Axboe <axboe@kernel.dk>
+During this window, page migration can jump in and relocate the page.  Once our
+fixup work actually starts, it finds page->mapping is NULL and we end up
+freeing the page without ever writing it.
+
+This leads to crc errors and other exciting problems, since it screws up the
+whole statemachine for waiting for ordered extents.  The fix here is to keep
+the page dirty while we're waiting for the fixup worker to get to work.
+This is accomplished by returning -EAGAIN from btrfs_writepage_cow_fixup
+if we queued the page up for fixup, which will cause the writepage
+function to redirty the page.
+
+Because we now expect the page to be dirty once it gets to the fixup
+worker we must adjust the error cases to call clear_page_dirty_for_io()
+on the page.  That is the bulk of the patch, but it is not the fix, the
+fix is the -EAGAIN from btrfs_writepage_cow_fixup.  We cannot separate
+these two changes out because the error conditions change with the new
+expectations.
+
+Signed-off-by: Chris Mason <clm@fb.com>
+Signed-off-by: Josef Bacik <josef@toxicpanda.com>
+Reviewed-by: David Sterba <dsterba@suse.com>
+Signed-off-by: David Sterba <dsterba@suse.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/block/nbd.c | 10 ++++++++++
- 1 file changed, 10 insertions(+)
+ fs/btrfs/inode.c | 61 ++++++++++++++++++++++++++++++++++--------------
+ 1 file changed, 44 insertions(+), 17 deletions(-)
 
-diff --git a/drivers/block/nbd.c b/drivers/block/nbd.c
-index b4607dd961852..78181908f0df6 100644
---- a/drivers/block/nbd.c
-+++ b/drivers/block/nbd.c
-@@ -1265,6 +1265,16 @@ static int nbd_start_device(struct nbd_device *nbd)
- 		args = kzalloc(sizeof(*args), GFP_KERNEL);
- 		if (!args) {
- 			sock_shutdown(nbd);
-+			/*
-+			 * If num_connections is m (2 < m),
-+			 * and NO.1 ~ NO.n(1 < n < m) kzallocs are successful.
-+			 * But NO.(n + 1) failed. We still have n recv threads.
-+			 * So, add flush_workqueue here to prevent recv threads
-+			 * dropping the last config_refs and trying to destroy
-+			 * the workqueue from inside the workqueue.
-+			 */
-+			if (i)
-+				flush_workqueue(nbd->recv_workq);
- 			return -ENOMEM;
- 		}
- 		sk_set_memalloc(config->socks[i]->sock->sk);
+diff --git a/fs/btrfs/inode.c b/fs/btrfs/inode.c
+index c70baafb2a392..27f2c554cac32 100644
+--- a/fs/btrfs/inode.c
++++ b/fs/btrfs/inode.c
+@@ -2204,17 +2204,27 @@ static void btrfs_writepage_fixup_worker(struct btrfs_work *work)
+ 	struct inode *inode;
+ 	u64 page_start;
+ 	u64 page_end;
+-	int ret;
++	int ret = 0;
+ 
+ 	fixup = container_of(work, struct btrfs_writepage_fixup, work);
+ 	page = fixup->page;
+ again:
+ 	lock_page(page);
+-	if (!page->mapping || !PageDirty(page) || !PageChecked(page)) {
+-		ClearPageChecked(page);
++
++	/*
++	 * Before we queued this fixup, we took a reference on the page.
++	 * page->mapping may go NULL, but it shouldn't be moved to a different
++	 * address space.
++	 */
++	if (!page->mapping || !PageDirty(page) || !PageChecked(page))
+ 		goto out_page;
+-	}
+ 
++	/*
++	 * We keep the PageChecked() bit set until we're done with the
++	 * btrfs_start_ordered_extent() dance that we do below.  That drops and
++	 * retakes the page lock, so we don't want new fixup workers queued for
++	 * this page during the churn.
++	 */
+ 	inode = page->mapping->host;
+ 	page_start = page_offset(page);
+ 	page_end = page_offset(page) + PAGE_SIZE - 1;
+@@ -2239,24 +2249,22 @@ again:
+ 
+ 	ret = btrfs_delalloc_reserve_space(inode, &data_reserved, page_start,
+ 					   PAGE_SIZE);
+-	if (ret) {
+-		mapping_set_error(page->mapping, ret);
+-		end_extent_writepage(page, ret, page_start, page_end);
+-		ClearPageChecked(page);
++	if (ret)
+ 		goto out;
+-	 }
+ 
+ 	ret = btrfs_set_extent_delalloc(inode, page_start, page_end, 0,
+ 					&cached_state);
+-	if (ret) {
+-		mapping_set_error(page->mapping, ret);
+-		end_extent_writepage(page, ret, page_start, page_end);
+-		ClearPageChecked(page);
++	if (ret)
+ 		goto out_reserved;
+-	}
+ 
+-	ClearPageChecked(page);
+-	set_page_dirty(page);
++	/*
++	 * Everything went as planned, we're now the owner of a dirty page with
++	 * delayed allocation bits set and space reserved for our COW
++	 * destination.
++	 *
++	 * The page was dirty when we started, nothing should have cleaned it.
++	 */
++	BUG_ON(!PageDirty(page));
+ out_reserved:
+ 	btrfs_delalloc_release_extents(BTRFS_I(inode), PAGE_SIZE);
+ 	if (ret)
+@@ -2266,6 +2274,17 @@ out:
+ 	unlock_extent_cached(&BTRFS_I(inode)->io_tree, page_start, page_end,
+ 			     &cached_state);
+ out_page:
++	if (ret) {
++		/*
++		 * We hit ENOSPC or other errors.  Update the mapping and page
++		 * to reflect the errors and clean the page.
++		 */
++		mapping_set_error(page->mapping, ret);
++		end_extent_writepage(page, ret, page_start, page_end);
++		clear_page_dirty_for_io(page);
++		SetPageError(page);
++	}
++	ClearPageChecked(page);
+ 	unlock_page(page);
+ 	put_page(page);
+ 	kfree(fixup);
+@@ -2293,6 +2312,13 @@ int btrfs_writepage_cow_fixup(struct page *page, u64 start, u64 end)
+ 	if (TestClearPagePrivate2(page))
+ 		return 0;
+ 
++	/*
++	 * PageChecked is set below when we create a fixup worker for this page,
++	 * don't try to create another one if we're already PageChecked()
++	 *
++	 * The extent_io writepage code will redirty the page if we send back
++	 * EAGAIN.
++	 */
+ 	if (PageChecked(page))
+ 		return -EAGAIN;
+ 
+@@ -2305,7 +2331,8 @@ int btrfs_writepage_cow_fixup(struct page *page, u64 start, u64 end)
+ 	btrfs_init_work(&fixup->work, btrfs_writepage_fixup_worker, NULL, NULL);
+ 	fixup->page = page;
+ 	btrfs_queue_work(fs_info->fixup_workers, &fixup->work);
+-	return -EBUSY;
++
++	return -EAGAIN;
+ }
+ 
+ static int insert_reserved_file_extent(struct btrfs_trans_handle *trans,
 -- 
 2.20.1
 
