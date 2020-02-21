@@ -7,47 +7,50 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 57DF3C35640
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 08:29:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DE245C35640
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 08:29:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2EF7C20679
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 08:29:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B572120637
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 08:29:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582273761;
-	bh=gAkfpv4ncOrLT6/j6G/W8e8xXZzuNMbpqDoVeHHi7gw=;
+	s=default; t=1582273769;
+	bh=FDLTKae5L6Lt5h3s6D/TeS96VdvhDxPetZvWw6O8jx4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=T5H4MJsw/jyEDUokSMLLxxYpn1d4TzZ/wT6pHzKGa8xChiayIjPZ/un+FC/rompxT
-	 w5hlXXFtbox6wBZAnGQPAhLd4iWc5fUh9F8TYh5MU1DkYOj8lHUmbl2lJiB2mizwmc
-	 fyd6K2zJvtBQbvpPKi/BTspya/rXSDNYS7Fm8jVY=
+	b=ULIIMmsoeXPgQeudUBoGkTN/uNQgKucD2Zhb82G8Wbc31skvlcQYOb7Jimrv4HkFF
+	 YaJVzN9yd9HGiH2PRbKiIvnw+dnH/2YOx8P5Hdcd5/gxz9LHgFDyq/H5VrJQtol1OM
+	 +MDf44kjK3DEjTfwRjWDAo3vhslyjJxTFrqzK1w0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388344AbgBUI3U (ORCPT
+        id S2387689AbgBUIRe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Feb 2020 03:29:20 -0500
-Received: from mail.kernel.org ([198.145.29.99]:55626 "EHLO mail.kernel.org"
+        Fri, 21 Feb 2020 03:17:34 -0500
+Received: from mail.kernel.org ([198.145.29.99]:54994 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387753AbgBUIR5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Feb 2020 03:17:57 -0500
+        id S1732984AbgBUIRa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 21 Feb 2020 03:17:30 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 95B0B24689;
-        Fri, 21 Feb 2020 08:17:56 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id BE3152468A;
+        Fri, 21 Feb 2020 08:17:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1582273077;
-        bh=gAkfpv4ncOrLT6/j6G/W8e8xXZzuNMbpqDoVeHHi7gw=;
+        s=default; t=1582273050;
+        bh=FDLTKae5L6Lt5h3s6D/TeS96VdvhDxPetZvWw6O8jx4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=JXemThigWVclufvGL6XqWBWMypLWd8IBRxtXxx0BqBOVBiVAstYoJeYkLB/+jzf2J
-         fiRt+F3ghpzD4kQx15lY60IO1KaZkmR01y/CDwvfVoaJIemarBDDlfleWf7tn7utXR
-         dnzWFHq0eVyJhThSW25veVAfzZwqOJBHNEq4XD4A=
+        b=CNMngkibc/ATUazNbyZiNcJ04LWog+1CWkuf9FWn7f+DdMicOdz2Aeu3ChjbhkanN
+         qfPklL4xNhZFf0hGRPJMAjPz9/49Q7zcdV2jOUuvkxiFigE80sFPj/vsjt/0EvxbwJ
+         PFGtXN/5UyHOTEgsFvEvnrDglYPcsDMEYLIXjQeg=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Christopher Head <chead@chead.ca>,
+        stable@vger.kernel.org, Ard Biesheuvel <ardb@kernel.org>,
+        Andy Lutomirski <luto@kernel.org>,
+        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
         Arvind Sankar <nivedita@alum.mit.edu>,
-        Borislav Petkov <bp@suse.de>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 037/191] x86/sysfb: Fix check for bad VRAM size
-Date:   Fri, 21 Feb 2020 08:40:10 +0100
-Message-Id: <20200221072256.070751725@linuxfoundation.org>
+        Matthew Garrett <mjg59@google.com>, linux-efi@vger.kernel.org,
+        Ingo Molnar <mingo@kernel.org>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.19 028/191] efi/x86: Map the entire EFI vendor string before copying it
+Date:   Fri, 21 Feb 2020 08:40:01 +0100
+Message-Id: <20200221072254.613116725@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200221072250.732482588@linuxfoundation.org>
 References: <20200221072250.732482588@linuxfoundation.org>
@@ -60,48 +63,67 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Arvind Sankar <nivedita@alum.mit.edu>
+From: Ard Biesheuvel <ardb@kernel.org>
 
-[ Upstream commit dacc9092336be20b01642afe1a51720b31f60369 ]
+[ Upstream commit ffc2760bcf2dba0dbef74013ed73eea8310cc52c ]
 
-When checking whether the reported lfb_size makes sense, the height
-* stride result is page-aligned before seeing whether it exceeds the
-reported size.
+Fix a couple of issues with the way we map and copy the vendor string:
+- we map only 2 bytes, which usually works since you get at least a
+  page, but if the vendor string happens to cross a page boundary,
+  a crash will result
+- only call early_memunmap() if early_memremap() succeeded, or we will
+  call it with a NULL address which it doesn't like,
+- while at it, switch to early_memremap_ro(), and array indexing rather
+  than pointer dereferencing to read the CHAR16 characters.
 
-This doesn't work if height * stride is not an exact number of pages.
-For example, as reported in the kernel bugzilla below, an 800x600x32 EFI
-framebuffer gets skipped because of this.
-
-Move the PAGE_ALIGN to after the check vs size.
-
-Reported-by: Christopher Head <chead@chead.ca>
-Tested-by: Christopher Head <chead@chead.ca>
-Signed-off-by: Arvind Sankar <nivedita@alum.mit.edu>
-Signed-off-by: Borislav Petkov <bp@suse.de>
-Link: https://bugzilla.kernel.org/show_bug.cgi?id=206051
-Link: https://lkml.kernel.org/r/20200107230410.2291947-1-nivedita@alum.mit.edu
+Signed-off-by: Ard Biesheuvel <ardb@kernel.org>
+Cc: Andy Lutomirski <luto@kernel.org>
+Cc: Ard Biesheuvel <ard.biesheuvel@linaro.org>
+Cc: Arvind Sankar <nivedita@alum.mit.edu>
+Cc: Matthew Garrett <mjg59@google.com>
+Cc: linux-efi@vger.kernel.org
+Fixes: 5b83683f32b1 ("x86: EFI runtime service support")
+Link: https://lkml.kernel.org/r/20200103113953.9571-5-ardb@kernel.org
+Signed-off-by: Ingo Molnar <mingo@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/x86/kernel/sysfb_simplefb.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ arch/x86/platform/efi/efi.c | 13 +++++++------
+ 1 file changed, 7 insertions(+), 6 deletions(-)
 
-diff --git a/arch/x86/kernel/sysfb_simplefb.c b/arch/x86/kernel/sysfb_simplefb.c
-index 85195d447a922..f3215346e47fd 100644
---- a/arch/x86/kernel/sysfb_simplefb.c
-+++ b/arch/x86/kernel/sysfb_simplefb.c
-@@ -94,11 +94,11 @@ __init int create_simplefb(const struct screen_info *si,
- 	if (si->orig_video_isVGA == VIDEO_TYPE_VLFB)
- 		size <<= 16;
- 	length = mode->height * mode->stride;
--	length = PAGE_ALIGN(length);
- 	if (length > size) {
- 		printk(KERN_WARNING "sysfb: VRAM smaller than advertised\n");
- 		return -EINVAL;
- 	}
-+	length = PAGE_ALIGN(length);
+diff --git a/arch/x86/platform/efi/efi.c b/arch/x86/platform/efi/efi.c
+index 335a62e74a2e9..5b0275310070e 100644
+--- a/arch/x86/platform/efi/efi.c
++++ b/arch/x86/platform/efi/efi.c
+@@ -480,7 +480,6 @@ void __init efi_init(void)
+ 	efi_char16_t *c16;
+ 	char vendor[100] = "unknown";
+ 	int i = 0;
+-	void *tmp;
  
- 	/* setup IORESOURCE_MEM as framebuffer memory */
- 	memset(&res, 0, sizeof(res));
+ #ifdef CONFIG_X86_32
+ 	if (boot_params.efi_info.efi_systab_hi ||
+@@ -505,14 +504,16 @@ void __init efi_init(void)
+ 	/*
+ 	 * Show what we know for posterity
+ 	 */
+-	c16 = tmp = early_memremap(efi.systab->fw_vendor, 2);
++	c16 = early_memremap_ro(efi.systab->fw_vendor,
++				sizeof(vendor) * sizeof(efi_char16_t));
+ 	if (c16) {
+-		for (i = 0; i < sizeof(vendor) - 1 && *c16; ++i)
+-			vendor[i] = *c16++;
++		for (i = 0; i < sizeof(vendor) - 1 && c16[i]; ++i)
++			vendor[i] = c16[i];
+ 		vendor[i] = '\0';
+-	} else
++		early_memunmap(c16, sizeof(vendor) * sizeof(efi_char16_t));
++	} else {
+ 		pr_err("Could not map the firmware vendor!\n");
+-	early_memunmap(tmp, 2);
++	}
+ 
+ 	pr_info("EFI v%u.%.02u by %s\n",
+ 		efi.systab->hdr.revision >> 16,
 -- 
 2.20.1
 
