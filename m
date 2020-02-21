@@ -2,248 +2,198 @@ Return-Path: <SRS0=1210=4J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7765DC35656
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 15:03:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DF4A4C35656
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 15:04:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2CA0424673
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 15:03:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A984524650
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 15:04:58 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=embeddedor.com header.i=@embeddedor.com header.b="x5yRZJgj"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="yIRt2pGB"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729005AbgBUPDd (ORCPT
+        id S1729062AbgBUPE5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Feb 2020 10:03:33 -0500
-Received: from gateway24.websitewelcome.com ([192.185.50.252]:30095 "EHLO
-        gateway24.websitewelcome.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727315AbgBUPDc (ORCPT
+        Fri, 21 Feb 2020 10:04:57 -0500
+Received: from mail-wr1-f67.google.com ([209.85.221.67]:46559 "EHLO
+        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728910AbgBUPE4 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Feb 2020 10:03:32 -0500
-Received: from cm14.websitewelcome.com (cm14.websitewelcome.com [100.42.49.7])
-        by gateway24.websitewelcome.com (Postfix) with ESMTP id 39A48C3F5
-        for <linux-kernel@vger.kernel.org>; Fri, 21 Feb 2020 09:03:30 -0600 (CST)
-Received: from gator4166.hostgator.com ([108.167.133.22])
-        by cmsmtp with SMTP
-        id 59pyj6g2nXVkQ59pyjT0xJ; Fri, 21 Feb 2020 09:03:30 -0600
-X-Authority-Reason: nr=8
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=embeddedor.com; s=default; h=Content-Type:MIME-Version:Message-ID:Subject:
-        Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
-        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
-        :Resent-Message-ID:In-Reply-To:References:List-Id:List-Help:List-Unsubscribe:
-        List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=TuEkwNZ6abk0dgqShh1c2Fq2egiakxYWlYBo+Zgc8WU=; b=x5yRZJgjXzVicfceegBOAKBOdJ
-        Q2jboBFw7Q+2WEItU6X2mnaKFGW9xZqw4FYg0/SzY1AoIwOsIZzQDXlRz7JJC5FuMcGCt70pYrPkT
-        G/8GyingLPF7ZcV8950kLcZEcJWIB1b+OrZV2w8vMIBUHvDKBTd8ZgqK7szI4LdDp0NMQEgPcDO30
-        A6/bZzTz6ehOXR0cGRBycJPw+PPLjMSo08DwQ6miVqQPfv5/lMsLKC1geJjNybCcZgYUtuxdSRQD3
-        WeQCxVjk0XYNsfyVnaMCmQIxaNdm0AU5cVUzhbGfGhPvPJMkSqZCXvooo0sOo5WGis/kv27AZjiC5
-        HDJ3iamQ==;
-Received: from [200.68.141.13] (port=18984 helo=embeddedor)
-        by gator4166.hostgator.com with esmtpa (Exim 4.92)
-        (envelope-from <gustavo@embeddedor.com>)
-        id 1j59pw-003Uak-6R; Fri, 21 Feb 2020 09:03:28 -0600
-Date:   Fri, 21 Feb 2020 09:06:12 -0600
-From:   "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-To:     Heiko Carstens <heiko.carstens@de.ibm.com>,
-        Vasily Gorbik <gor@linux.ibm.com>,
-        Christian Borntraeger <borntraeger@de.ibm.com>,
-        Stefan Haberland <sth@linux.ibm.com>,
-        Jan Hoeppner <hoeppner@linux.ibm.com>,
-        Sebastian Ott <sebott@linux.ibm.com>,
-        Peter Oberparleiter <oberpar@linux.ibm.com>,
-        Harald Freudenberger <freude@linux.ibm.com>
-Cc:     linux-s390@vger.kernel.org, linux-kernel@vger.kernel.org,
-        "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-Subject: [PATCH] s390: Replace zero-length array with flexible-array member
-Message-ID: <20200221150612.GA9717@embeddedor>
+        Fri, 21 Feb 2020 10:04:56 -0500
+Received: by mail-wr1-f67.google.com with SMTP id z7so2400658wrl.13
+        for <linux-kernel@vger.kernel.org>; Fri, 21 Feb 2020 07:04:54 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to
+         :user-agent;
+        bh=u7fybSbTVdeR3YQux270IM8jxeqEYCpR8SjGQKbdS+k=;
+        b=yIRt2pGBKux6fna4iimxJdfcUZZX7Pgn5c6QhcImT0+fqlkJ70TZrIyVpdvl4aLeFR
+         Nr7nuvMgeoCApKCZlt4nP5Ucj2AHDlsbw08qr65dAnNkbMnCmv2RMyxR5TR4+NmMz8js
+         9Im0qZSoca51IRRJFaDwfiDzaH5uRfTXRkdoMECNLhBwp8O+bAXjxSrqMDeSygJdBp1G
+         jhdWu0+Ef9eU3YAyfGS/vNc1oRY4gSh4QeWLwhfOykOEgwsWPTHVICpRbSeLB0D4JOBw
+         8QMFUbnYFIWGUPME6xRjwGJ6MYlNEquUit9WtT6EBYaDCKtsOC/Gc65UA401aFdYFW6i
+         uVYQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to:user-agent;
+        bh=u7fybSbTVdeR3YQux270IM8jxeqEYCpR8SjGQKbdS+k=;
+        b=C1ioLrQS+cnPQc7ap9g5hjAcfPPFCfT/DqaRf0G0eLck6UmtojSyF+s3bYyfGxsmh8
+         BI9ANO+gYhtRtTeVqWUCuVLFhodW6qW0v/IAPdCZm9pq1Ziwdvdmd1MeK3iM5GsLnzDy
+         vinKLH8MfC+OHth1XApEsK3pnLXwuty+j4uYq9Eemvz1SrsLGmdxfpiW6yiCQTy8MOAd
+         r9xkIWrhUhg4Ayk7Rw4TZAvdQCrTcHeQpxtSqsAgYceZ+GtVDM6M27hsMCiadWYKAZkV
+         y5PMzIXoVnbao7UDSB9rLXMmRrkQgn8LGKt4UUtwY4WDFds3KwpiRONgn1fsmk6GUhAH
+         qJEQ==
+X-Gm-Message-State: APjAAAWxozCxmF4wsM8oQTmtAD9yO70Oh9G85OzitYG9losJ0yLhks4K
+        pKVyzZjQR+HIFjDXxq7RB99tug==
+X-Google-Smtp-Source: APXvYqyT1A5BG6nNdcMIM8CIrJkFezF89ObeJm7AWArr+UMLbxM3TxaSf1fpv516rDO8s/4z6atg/A==
+X-Received: by 2002:adf:f7c4:: with SMTP id a4mr49456348wrq.361.1582297493908;
+        Fri, 21 Feb 2020 07:04:53 -0800 (PST)
+Received: from linaro.org ([2a01:e34:ed2f:f020:903b:a048:f296:e3ae])
+        by smtp.gmail.com with ESMTPSA id c141sm3900298wme.41.2020.02.21.07.04.52
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Fri, 21 Feb 2020 07:04:52 -0800 (PST)
+Date:   Fri, 21 Feb 2020 16:04:50 +0100
+From:   Daniel Lezcano <daniel.lezcano@linaro.org>
+To:     Dmitry Osipenko <digetx@gmail.com>
+Cc:     Thierry Reding <thierry.reding@gmail.com>,
+        Jonathan Hunter <jonathanh@nvidia.com>,
+        Peter De Schrijver <pdeschrijver@nvidia.com>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        =?utf-8?B?TWljaGHFgiBNaXJvc8WCYXc=?= <mirq-linux@rere.qmqm.pl>,
+        Jasper Korten <jja2000@gmail.com>,
+        David Heidelberg <david@ixit.cz>,
+        Peter Geis <pgwipeout@gmail.com>, linux-pm@vger.kernel.org,
+        linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v9 04/17] ARM: tegra: Change tegra_set_cpu_in_lp2() type
+ to void
+Message-ID: <20200221150450.GI10516@linaro.org>
+References: <20200212235134.12638-1-digetx@gmail.com>
+ <20200212235134.12638-5-digetx@gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200212235134.12638-5-digetx@gmail.com>
 User-Agent: Mutt/1.9.4 (2018-02-28)
-X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
-X-AntiAbuse: Primary Hostname - gator4166.hostgator.com
-X-AntiAbuse: Original Domain - vger.kernel.org
-X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
-X-AntiAbuse: Sender Address Domain - embeddedor.com
-X-BWhitelist: no
-X-Source-IP: 200.68.141.13
-X-Source-L: No
-X-Exim-ID: 1j59pw-003Uak-6R
-X-Source: 
-X-Source-Args: 
-X-Source-Dir: 
-X-Source-Sender: (embeddedor) [200.68.141.13]:18984
-X-Source-Auth: gustavo@embeddedor.com
-X-Email-Count: 10
-X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
-X-Local-Domain: yes
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The current codebase makes use of the zero-length array language
-extension to the C90 standard, but the preferred mechanism to declare
-variable-length types such as these ones is a flexible array member[1][2],
-introduced in C99:
+On Thu, Feb 13, 2020 at 02:51:21AM +0300, Dmitry Osipenko wrote:
+> The Tegra30 CPUIDLE driver has intention to check whether primary CPU was
+> the last CPU that entered LP2 (CC6) idle-state, but that functionality
+> never got utilized because driver never supported the CC6 state for the
+> case where any secondary CPU is online. The new cpuidle driver will
+> properly support CC6 on Tegra30, including the case where secondary CPUs
+> are online, and that knowledge about what CPUs entered into CC6 won't be
+> needed at all because new driver will use different approach by making use
+> of the coupled idle-state and explicitly parking secondary CPUs before
+> entering into CC6. Thus this patch is just a minor cleanup change.
+> 
+> Acked-by: Peter De Schrijver <pdeschrijver@nvidia.com>
+> Tested-by: Peter Geis <pgwipeout@gmail.com>
+> Tested-by: Jasper Korten <jja2000@gmail.com>
+> Tested-by: David Heidelberg <david@ixit.cz>
+> Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
+> ---
+>  arch/arm/mach-tegra/cpuidle-tegra30.c | 14 ++++----------
 
-struct foo {
-        int stuff;
-        struct boo array[];
-};
+Mind to move to drivers/cpuidle ?
 
-By making use of the mechanism above, we will get a compiler warning
-in case the flexible array does not occur last in the structure, which
-will help us prevent some kind of undefined behavior bugs from being
-inadvertently introduced[3] to the codebase from now on.
+Acked-by: Daniel Lezcano <daniel.lezcano@linaro.org>
 
-Also, notice that, dynamic memory allocations won't be affected by
-this change:
+>  arch/arm/mach-tegra/pm.c              |  8 +-------
+>  arch/arm/mach-tegra/pm.h              |  2 +-
+>  3 files changed, 6 insertions(+), 18 deletions(-)
+> 
+> diff --git a/arch/arm/mach-tegra/cpuidle-tegra30.c b/arch/arm/mach-tegra/cpuidle-tegra30.c
+> index c6128526877d..a3ce8dabfe18 100644
+> --- a/arch/arm/mach-tegra/cpuidle-tegra30.c
+> +++ b/arch/arm/mach-tegra/cpuidle-tegra30.c
+> @@ -98,22 +98,16 @@ static int tegra30_idle_lp2(struct cpuidle_device *dev,
+>  			    int index)
+>  {
+>  	bool entered_lp2 = false;
+> -	bool last_cpu;
+>  
+>  	local_fiq_disable();
+>  
+> -	last_cpu = tegra_set_cpu_in_lp2();
+> +	tegra_set_cpu_in_lp2();
+>  	cpu_pm_enter();
+>  
+> -	if (dev->cpu == 0) {
+> -		if (last_cpu)
+> -			entered_lp2 = tegra30_cpu_cluster_power_down(dev, drv,
+> -								     index);
+> -		else
+> -			cpu_do_idle();
+> -	} else {
+> +	if (dev->cpu == 0)
+> +		entered_lp2 = tegra30_cpu_cluster_power_down(dev, drv, index);
+> +	else
+>  		entered_lp2 = tegra30_cpu_core_power_down(dev, drv, index);
+> -	}
+>  
+>  	cpu_pm_exit();
+>  	tegra_clear_cpu_in_lp2();
+> diff --git a/arch/arm/mach-tegra/pm.c b/arch/arm/mach-tegra/pm.c
+> index 1ff499068bb1..a72f9a2d3cb7 100644
+> --- a/arch/arm/mach-tegra/pm.c
+> +++ b/arch/arm/mach-tegra/pm.c
+> @@ -123,11 +123,9 @@ void tegra_clear_cpu_in_lp2(void)
+>  	spin_unlock(&tegra_lp2_lock);
+>  }
+>  
+> -bool tegra_set_cpu_in_lp2(void)
+> +void tegra_set_cpu_in_lp2(void)
+>  {
+>  	int phy_cpu_id = cpu_logical_map(smp_processor_id());
+> -	bool last_cpu = false;
+> -	cpumask_t *cpu_lp2_mask = tegra_cpu_lp2_mask;
+>  	u32 *cpu_in_lp2 = tegra_cpu_lp2_mask;
+>  
+>  	spin_lock(&tegra_lp2_lock);
+> @@ -135,11 +133,7 @@ bool tegra_set_cpu_in_lp2(void)
+>  	BUG_ON((*cpu_in_lp2 & BIT(phy_cpu_id)));
+>  	*cpu_in_lp2 |= BIT(phy_cpu_id);
+>  
+> -	if ((phy_cpu_id == 0) && cpumask_equal(cpu_lp2_mask, cpu_online_mask))
+> -		last_cpu = true;
+> -
+>  	spin_unlock(&tegra_lp2_lock);
+> -	return last_cpu;
+>  }
+>  
+>  static int tegra_sleep_cpu(unsigned long v2p)
+> diff --git a/arch/arm/mach-tegra/pm.h b/arch/arm/mach-tegra/pm.h
+> index b9cc12222bb1..2c294f6365c0 100644
+> --- a/arch/arm/mach-tegra/pm.h
+> +++ b/arch/arm/mach-tegra/pm.h
+> @@ -24,7 +24,7 @@ void tegra30_lp1_iram_hook(void);
+>  void tegra30_sleep_core_init(void);
+>  
+>  void tegra_clear_cpu_in_lp2(void);
+> -bool tegra_set_cpu_in_lp2(void);
+> +void tegra_set_cpu_in_lp2(void);
+>  void tegra_idle_lp2_last(void);
+>  extern void (*tegra_tear_down_cpu)(void);
+>  
+> -- 
+> 2.24.0
+> 
 
-"Flexible array members have incomplete type, and so the sizeof operator
-may not be applied. As a quirk of the original implementation of
-zero-length arrays, sizeof evaluates to zero."[1]
-
-This issue was found with the help of Coccinelle.
-
-[1] https://gcc.gnu.org/onlinedocs/gcc/Zero-Length.html
-[2] https://github.com/KSPP/linux/issues/21
-[3] commit 76497732932f ("cxgb3/l2t: Fix undefined behaviour")
-
-Signed-off-by: Gustavo A. R. Silva <gustavo@embeddedor.com>
----
- arch/s390/appldata/appldata_os.c      | 2 +-
- drivers/s390/block/dasd_diag.c        | 2 +-
- drivers/s390/block/dasd_eckd.h        | 2 +-
- drivers/s390/char/raw3270.h           | 2 +-
- drivers/s390/char/sclp_pci.c          | 2 +-
- drivers/s390/cio/idset.c              | 2 +-
- drivers/s390/crypto/pkey_api.c        | 2 +-
- drivers/s390/crypto/zcrypt_ccamisc.h  | 2 +-
- drivers/s390/crypto/zcrypt_msgtype6.c | 2 +-
- 9 files changed, 9 insertions(+), 9 deletions(-)
-
-diff --git a/arch/s390/appldata/appldata_os.c b/arch/s390/appldata/appldata_os.c
-index 54f375627532..8bf46d705957 100644
---- a/arch/s390/appldata/appldata_os.c
-+++ b/arch/s390/appldata/appldata_os.c
-@@ -75,7 +75,7 @@ struct appldata_os_data {
- 				   (waiting for I/O)               */
- 
- 	/* per cpu data */
--	struct appldata_os_per_cpu os_cpu[0];
-+	struct appldata_os_per_cpu os_cpu[];
- } __attribute__((packed));
- 
- static struct appldata_os_data *appldata_os_data;
-diff --git a/drivers/s390/block/dasd_diag.c b/drivers/s390/block/dasd_diag.c
-index 8d4971645cf1..facb588d09e4 100644
---- a/drivers/s390/block/dasd_diag.c
-+++ b/drivers/s390/block/dasd_diag.c
-@@ -58,7 +58,7 @@ struct dasd_diag_private {
- 
- struct dasd_diag_req {
- 	unsigned int block_count;
--	struct dasd_diag_bio bio[0];
-+	struct dasd_diag_bio bio[];
- };
- 
- static const u8 DASD_DIAG_CMS1[] = { 0xc3, 0xd4, 0xe2, 0xf1 };/* EBCDIC CMS1 */
-diff --git a/drivers/s390/block/dasd_eckd.h b/drivers/s390/block/dasd_eckd.h
-index 6943508d0f1d..ca24a78a256e 100644
---- a/drivers/s390/block/dasd_eckd.h
-+++ b/drivers/s390/block/dasd_eckd.h
-@@ -220,7 +220,7 @@ struct LRE_eckd_data {
- 	__u8 imbedded_count;
- 	__u8 extended_operation;
- 	__u16 extended_parameter_length;
--	__u8 extended_parameter[0];
-+	__u8 extended_parameter[];
- } __attribute__ ((packed));
- 
- /* Prefix data for format 0x00 and 0x01 */
-diff --git a/drivers/s390/char/raw3270.h b/drivers/s390/char/raw3270.h
-index 3afaa35f7351..08f36e973b43 100644
---- a/drivers/s390/char/raw3270.h
-+++ b/drivers/s390/char/raw3270.h
-@@ -211,7 +211,7 @@ struct string
- 	struct list_head update;
- 	unsigned long size;
- 	unsigned long len;
--	char string[0];
-+	char string[];
- } __attribute__ ((aligned(8)));
- 
- static inline struct string *
-diff --git a/drivers/s390/char/sclp_pci.c b/drivers/s390/char/sclp_pci.c
-index 995e9196852e..a3e5a5fb0c1e 100644
---- a/drivers/s390/char/sclp_pci.c
-+++ b/drivers/s390/char/sclp_pci.c
-@@ -39,7 +39,7 @@ struct err_notify_evbuf {
- 	u8 atype;
- 	u32 fh;
- 	u32 fid;
--	u8 data[0];
-+	u8 data[];
- } __packed;
- 
- struct err_notify_sccb {
-diff --git a/drivers/s390/cio/idset.c b/drivers/s390/cio/idset.c
-index 835de44dbbcc..77d0ea7b381b 100644
---- a/drivers/s390/cio/idset.c
-+++ b/drivers/s390/cio/idset.c
-@@ -13,7 +13,7 @@
- struct idset {
- 	int num_ssid;
- 	int num_id;
--	unsigned long bitmap[0];
-+	unsigned long bitmap[];
- };
- 
- static inline unsigned long bitmap_size(int num_ssid, int num_id)
-diff --git a/drivers/s390/crypto/pkey_api.c b/drivers/s390/crypto/pkey_api.c
-index 2f33c5fcf676..74e63ec49068 100644
---- a/drivers/s390/crypto/pkey_api.c
-+++ b/drivers/s390/crypto/pkey_api.c
-@@ -80,7 +80,7 @@ struct clearaeskeytoken {
- 	u8  res1[3];
- 	u32 keytype;	 /* key type, one of the PKEY_KEYTYPE values */
- 	u32 len;	 /* bytes actually stored in clearkey[] */
--	u8  clearkey[0]; /* clear key value */
-+	u8  clearkey[]; /* clear key value */
- } __packed;
- 
- /*
-diff --git a/drivers/s390/crypto/zcrypt_ccamisc.h b/drivers/s390/crypto/zcrypt_ccamisc.h
-index 3a9876d5ab0e..8b7a641671c9 100644
---- a/drivers/s390/crypto/zcrypt_ccamisc.h
-+++ b/drivers/s390/crypto/zcrypt_ccamisc.h
-@@ -90,7 +90,7 @@ struct cipherkeytoken {
- 	u16 kmf1;     /* key management field 1 */
- 	u16 kmf2;     /* key management field 2 */
- 	u16 kmf3;     /* key management field 3 */
--	u8  vdata[0]; /* variable part data follows */
-+	u8  vdata[]; /* variable part data follows */
- } __packed;
- 
- /* Some defines for the CCA AES cipherkeytoken kmf1 field */
-diff --git a/drivers/s390/crypto/zcrypt_msgtype6.c b/drivers/s390/crypto/zcrypt_msgtype6.c
-index a36251d138fb..eadd3a438a4b 100644
---- a/drivers/s390/crypto/zcrypt_msgtype6.c
-+++ b/drivers/s390/crypto/zcrypt_msgtype6.c
-@@ -590,7 +590,7 @@ struct type86x_reply {
- 	struct CPRBX cprbx;
- 	unsigned char pad[4];	/* 4 byte function code/rules block ? */
- 	unsigned short length;
--	char text[0];
-+	char text[];
- } __packed;
- 
- struct type86_ep11_reply {
 -- 
-2.25.0
 
+ <http://www.linaro.org/> Linaro.org │ Open source software for ARM SoCs
+
+Follow Linaro:  <http://www.facebook.com/pages/Linaro> Facebook |
+<http://twitter.com/#!/linaroorg> Twitter |
+<http://www.linaro.org/linaro-blog/> Blog
