@@ -2,158 +2,350 @@ Return-Path: <SRS0=1210=4J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,UNWANTED_LANGUAGE_BODY,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9DFC1C11D00
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 01:53:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 526C6C11D24
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 01:53:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 729742465D
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 01:53:49 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="IcfdLuIy"
+	by mail.kernel.org (Postfix) with ESMTP id 203CD24653
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 01:53:52 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1582250032;
+	bh=TmD2QnRxazk1C/XUjKvcFmvr9YFMmIyG5sHFJTl8XGY=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=KOVl+9fjeYn2QinXtjVg1D1ZsaU0a1bhpITPzprOlB4AqCX1eTUymLBgOC+gNh6zc
+	 RudRzFJHOLHU3KIiGIi2AWbV8rfPfSv7MrStzvIII932EMQpZKi7WztngSK3XXULMT
+	 l1FBZ0pZbxf+XKporq3ZBpBZinqbqrAyl1/Cmuu8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729694AbgBUBxr (ORCPT
+        id S1729723AbgBUBxv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Feb 2020 20:53:47 -0500
-Received: from hqnvemgate25.nvidia.com ([216.228.121.64]:6695 "EHLO
-        hqnvemgate25.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729676AbgBUBxp (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Feb 2020 20:53:45 -0500
-Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate25.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5e4f38060000>; Thu, 20 Feb 2020 17:53:10 -0800
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate101.nvidia.com (PGP Universal service);
-  Thu, 20 Feb 2020 17:53:43 -0800
-X-PGP-Universal: processed;
-        by hqpgpgate101.nvidia.com on Thu, 20 Feb 2020 17:53:43 -0800
-Received: from [10.110.48.28] (10.124.1.5) by HQMAIL107.nvidia.com
- (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Fri, 21 Feb
- 2020 01:53:43 +0000
-Subject: Re: [PATCH] mm/page_alloc: increase default min_free_kbytes bound
-To:     Joel Savitz <jsavitz@redhat.com>, <linux-kernel@vger.kernel.org>
-CC:     Andrew Morton <akpm@linux-foundation.org>,
-        Rafael Aquini <aquini@redhat.com>, <linux-mm@kvack.org>
-References: <20200220150103.5183-1-jsavitz@redhat.com>
-From:   John Hubbard <jhubbard@nvidia.com>
-X-Nvconfidentiality: public
-Message-ID: <4778f04b-7ff0-0648-1ff9-dd02c79f45ea@nvidia.com>
-Date:   Thu, 20 Feb 2020 17:53:42 -0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.5.0
+        Thu, 20 Feb 2020 20:53:51 -0500
+Received: from mail.kernel.org ([198.145.29.99]:57634 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729693AbgBUBxs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 20 Feb 2020 20:53:48 -0500
+Received: from quaco.ghostprotocols.net (unknown [179.97.37.151])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id B8F1424676;
+        Fri, 21 Feb 2020 01:53:43 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1582250027;
+        bh=TmD2QnRxazk1C/XUjKvcFmvr9YFMmIyG5sHFJTl8XGY=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=zG2vyUsm1T32O/xKlCml/fLZTjntw3TnETBG8G1F+GKL9c1NQ1qaRWOTAQsXJhEx1
+         mIzjumkn4NRebdXQUKAiDFPQEyuILj7110Iwz46qQd97Vzl+pC0um/2bQT8KAIa8U3
+         mIe5WKkEjcu2zO5a4a7IncUMgSSWSI7pj5/vBzvc=
+From:   Arnaldo Carvalho de Melo <acme@kernel.org>
+To:     Ingo Molnar <mingo@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>
+Cc:     Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>,
+        Clark Williams <williams@redhat.com>,
+        linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        Leo Yan <leo.yan@linaro.org>,
+        Mathieu Poirier <mathieu.poirier@linaro.org>,
+        Jiri Olsa <jolsa@redhat.com>,
+        Kim Phillips <kim.phillips@arm.com>,
+        Wei Li <liwei391@huawei.com>,
+        Arnaldo Carvalho de Melo <acme@redhat.com>
+Subject: [PATCH 7/8] perf auxtrace: Add auxtrace_record__read_finish()
+Date:   Thu, 20 Feb 2020 22:53:09 -0300
+Message-Id: <20200221015310.16914-8-acme@kernel.org>
+X-Mailer: git-send-email 2.21.1
+In-Reply-To: <20200221015310.16914-1-acme@kernel.org>
+References: <20200221015310.16914-1-acme@kernel.org>
 MIME-Version: 1.0
-In-Reply-To: <20200220150103.5183-1-jsavitz@redhat.com>
-X-Originating-IP: [10.124.1.5]
-X-ClientProxiedBy: HQMAIL111.nvidia.com (172.20.187.18) To
- HQMAIL107.nvidia.com (172.20.187.13)
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1582249990; bh=ZgqXP5uwpGcW0RceBT61zrwGEA5iC5CnbKuv9h2cRIU=;
-        h=X-PGP-Universal:Subject:To:CC:References:From:X-Nvconfidentiality:
-         Message-ID:Date:User-Agent:MIME-Version:In-Reply-To:
-         X-Originating-IP:X-ClientProxiedBy:Content-Type:Content-Language:
-         Content-Transfer-Encoding;
-        b=IcfdLuIyghaknA70cfsOuxsWbfNUyaGVDOj3dFHpp+X7LvYA46mp7IKBegdJ0kAFj
-         m105kyXVSvq1qyACSdc8vA2Ucq+k4SAEYvDRLqnScKUNpRGHAwgwaADoYaB3xuK/LR
-         weEtSggSSo5i/xZC7EmcivrIwwAT/tgwiQnIyFmHK3m35RN61TLkDpmku6lY5BecYf
-         vSYpzkW0huWld4MgPZq5bt7V2kKI8OgAaM5aLoUr6YYgmYynatnsbeeRvjCdv2agHd
-         2JZ5DFAG/f3DM3bZmAaO32LOpifLnGQitjo8oxI+DI6sa/KYVPjWCGnXI2ee2qZ0Zp
-         0Sh0njGNLEUdQ==
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2/20/20 7:01 AM, Joel Savitz wrote:
-> 
-> Currently, the vm.min_free_kbytes sysctl value is capped at a hardcoded
-> 64M in init_per_zone_wmark_min (unless it is overridden by khugepaged
-> initialization).
-> 
-> This value has not been modified since 2005, and enterprise-grade
-> systems now frequently have hundreds of GB of RAM and multiple 10, 40,
-> or even 100 GB NICs. We have seen page allocation failures on heavily
-> loaded systems related to NIC drivers. These issues were resolved by an
-> increase to vm.min_free_kbytes.
-> 
-> This patch increases the hardcoded value by a factor of 4 as a temporary
-> solution.
-> 
-> Further work to make the calculation of vm.min_free_kbytes more
-> consistent throughout the kernel would be desirable.
-> 
-> As an example of the inconsistency of the current method, this value is
-> recalculated by init_per_zone_wmark_min() in the case of memory hotplug
-> which will override the value set by set_recommended_min_free_kbytes()
-> called during khugepaged initialization even if khugepaged remains
-> enabled, however an on/off toggle of khugepaged will then recalculate
-> and set the value via set_recommended_min_free_kbytes().
-> 
-> Signed-off-by: Joel Savitz <jsavitz@redhat.com>
-> ---
->  mm/page_alloc.c | 4 ++--
->  1 file changed, 2 insertions(+), 2 deletions(-)
-> 
-> diff --git a/mm/page_alloc.c b/mm/page_alloc.c
-> index 3c4eb750a199..32cbfb13e958 100644
-> --- a/mm/page_alloc.c
-> +++ b/mm/page_alloc.c
-> @@ -7867,8 +7867,8 @@ int __meminit init_per_zone_wmark_min(void)
->  		min_free_kbytes = new_min_free_kbytes;
->  		if (min_free_kbytes < 128)
->  			min_free_kbytes = 128;
-> -		if (min_free_kbytes > 65536)
-> -			min_free_kbytes = 65536;
-> +		if (min_free_kbytes > 262144)
-> +			min_free_kbytes = 262144;
+From: Adrian Hunter <adrian.hunter@intel.com>
 
+All ->read_finish() implementations are doing the same thing. Add a
+helper function so that they can share the same implementation.
 
-Would it be any better to at least use symbols, instead of numbers, in the
-routine? Like this:
+Signed-off-by: Adrian Hunter <adrian.hunter@intel.com>
+Reviewed-by: Leo Yan <leo.yan@linaro.org>
+Tested-by: Leo Yan <leo.yan@linaro.org>
+Reviewed-by: Mathieu Poirier <mathieu.poirier@linaro.org>
+Cc: Jiri Olsa <jolsa@redhat.com>
+Cc: Kim Phillips <kim.phillips@arm.com>
+Cc: Wei Li <liwei391@huawei.com>
+Link: http://lore.kernel.org/lkml/20200217082300.6301-1-adrian.hunter@intel.com
+Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+---
+ tools/perf/arch/arm/util/cs-etm.c    | 21 ++-------------------
+ tools/perf/arch/arm64/util/arm-spe.c | 20 ++------------------
+ tools/perf/arch/x86/util/intel-bts.c | 20 ++------------------
+ tools/perf/arch/x86/util/intel-pt.c  | 20 ++------------------
+ tools/perf/util/auxtrace.c           | 22 +++++++++++++++++++++-
+ tools/perf/util/auxtrace.h           |  6 ++++++
+ 6 files changed, 35 insertions(+), 74 deletions(-)
 
-diff --git a/mm/page_alloc.c b/mm/page_alloc.c
-index 3c4eb750a199..e705636bb644 100644
---- a/mm/page_alloc.c
-+++ b/mm/page_alloc.c
-@@ -149,6 +149,9 @@ DEFINE_STATIC_KEY_FALSE(init_on_free);
- #endif
- EXPORT_SYMBOL(init_on_free);
+diff --git a/tools/perf/arch/arm/util/cs-etm.c b/tools/perf/arch/arm/util/cs-etm.c
+index 60141c3007a9..941f814820b8 100644
+--- a/tools/perf/arch/arm/util/cs-etm.c
++++ b/tools/perf/arch/arm/util/cs-etm.c
+@@ -858,24 +858,6 @@ static void cs_etm_recording_free(struct auxtrace_record *itr)
+ 	free(ptr);
+ }
  
-+static const int MIN_FREE_KBYTES_LOWER_LIMIT = 128;
-+static const int MIN_FREE_KBYTES_UPPER_LIMIT = 262144;
-+
- static int __init early_init_on_alloc(char *buf)
+-static int cs_etm_read_finish(struct auxtrace_record *itr, int idx)
+-{
+-	struct cs_etm_recording *ptr =
+-			container_of(itr, struct cs_etm_recording, itr);
+-	struct evsel *evsel;
+-
+-	evlist__for_each_entry(ptr->evlist, evsel) {
+-		if (evsel->core.attr.type == ptr->cs_etm_pmu->type) {
+-			if (evsel->disabled)
+-				return 0;
+-			return perf_evlist__enable_event_idx(ptr->evlist,
+-							     evsel, idx);
+-		}
+-	}
+-
+-	return -EINVAL;
+-}
+-
+ struct auxtrace_record *cs_etm_record_init(int *err)
  {
-        int ret;
-@@ -7865,10 +7868,10 @@ int __meminit init_per_zone_wmark_min(void)
+ 	struct perf_pmu *cs_etm_pmu;
+@@ -895,6 +877,7 @@ struct auxtrace_record *cs_etm_record_init(int *err)
+ 	}
  
-        if (new_min_free_kbytes > user_min_free_kbytes) {
-                min_free_kbytes = new_min_free_kbytes;
--               if (min_free_kbytes < 128)
--                       min_free_kbytes = 128;
--               if (min_free_kbytes > 65536)
--                       min_free_kbytes = 65536;
-+               if (min_free_kbytes < MIN_FREE_KBYTES_LOWER_LIMIT)
-+                       min_free_kbytes = MIN_FREE_KBYTES_LOWER_LIMIT;
-+               if (min_free_kbytes > MIN_FREE_KBYTES_UPPER_LIMIT)
-+                       min_free_kbytes = MIN_FREE_KBYTES_UPPER_LIMIT;
-        } else {
-                pr_warn("min_free_kbytes is not updated to %d because user defined value %d is preferred\n",
-                                new_min_free_kbytes, user_min_free_kbytes);
-
-
-thanks,
+ 	ptr->cs_etm_pmu			= cs_etm_pmu;
++	ptr->itr.pmu			= cs_etm_pmu;
+ 	ptr->itr.parse_snapshot_options	= cs_etm_parse_snapshot_options;
+ 	ptr->itr.recording_options	= cs_etm_recording_options;
+ 	ptr->itr.info_priv_size		= cs_etm_info_priv_size;
+@@ -904,7 +887,7 @@ struct auxtrace_record *cs_etm_record_init(int *err)
+ 	ptr->itr.snapshot_finish	= cs_etm_snapshot_finish;
+ 	ptr->itr.reference		= cs_etm_reference;
+ 	ptr->itr.free			= cs_etm_recording_free;
+-	ptr->itr.read_finish		= cs_etm_read_finish;
++	ptr->itr.read_finish		= auxtrace_record__read_finish;
+ 
+ 	*err = 0;
+ 	return &ptr->itr;
+diff --git a/tools/perf/arch/arm64/util/arm-spe.c b/tools/perf/arch/arm64/util/arm-spe.c
+index 1d993c27242b..8d6821d9c3f6 100644
+--- a/tools/perf/arch/arm64/util/arm-spe.c
++++ b/tools/perf/arch/arm64/util/arm-spe.c
+@@ -158,23 +158,6 @@ static void arm_spe_recording_free(struct auxtrace_record *itr)
+ 	free(sper);
+ }
+ 
+-static int arm_spe_read_finish(struct auxtrace_record *itr, int idx)
+-{
+-	struct arm_spe_recording *sper =
+-			container_of(itr, struct arm_spe_recording, itr);
+-	struct evsel *evsel;
+-
+-	evlist__for_each_entry(sper->evlist, evsel) {
+-		if (evsel->core.attr.type == sper->arm_spe_pmu->type) {
+-			if (evsel->disabled)
+-				return 0;
+-			return perf_evlist__enable_event_idx(sper->evlist,
+-							     evsel, idx);
+-		}
+-	}
+-	return -EINVAL;
+-}
+-
+ struct auxtrace_record *arm_spe_recording_init(int *err,
+ 					       struct perf_pmu *arm_spe_pmu)
+ {
+@@ -192,12 +175,13 @@ struct auxtrace_record *arm_spe_recording_init(int *err,
+ 	}
+ 
+ 	sper->arm_spe_pmu = arm_spe_pmu;
++	sper->itr.pmu = arm_spe_pmu;
+ 	sper->itr.recording_options = arm_spe_recording_options;
+ 	sper->itr.info_priv_size = arm_spe_info_priv_size;
+ 	sper->itr.info_fill = arm_spe_info_fill;
+ 	sper->itr.free = arm_spe_recording_free;
+ 	sper->itr.reference = arm_spe_reference;
+-	sper->itr.read_finish = arm_spe_read_finish;
++	sper->itr.read_finish = auxtrace_record__read_finish;
+ 	sper->itr.alignment = 0;
+ 
+ 	*err = 0;
+diff --git a/tools/perf/arch/x86/util/intel-bts.c b/tools/perf/arch/x86/util/intel-bts.c
+index 39e363151ad7..26cee1052179 100644
+--- a/tools/perf/arch/x86/util/intel-bts.c
++++ b/tools/perf/arch/x86/util/intel-bts.c
+@@ -413,23 +413,6 @@ static int intel_bts_find_snapshot(struct auxtrace_record *itr, int idx,
+ 	return err;
+ }
+ 
+-static int intel_bts_read_finish(struct auxtrace_record *itr, int idx)
+-{
+-	struct intel_bts_recording *btsr =
+-			container_of(itr, struct intel_bts_recording, itr);
+-	struct evsel *evsel;
+-
+-	evlist__for_each_entry(btsr->evlist, evsel) {
+-		if (evsel->core.attr.type == btsr->intel_bts_pmu->type) {
+-			if (evsel->disabled)
+-				return 0;
+-			return perf_evlist__enable_event_idx(btsr->evlist,
+-							     evsel, idx);
+-		}
+-	}
+-	return -EINVAL;
+-}
+-
+ struct auxtrace_record *intel_bts_recording_init(int *err)
+ {
+ 	struct perf_pmu *intel_bts_pmu = perf_pmu__find(INTEL_BTS_PMU_NAME);
+@@ -450,6 +433,7 @@ struct auxtrace_record *intel_bts_recording_init(int *err)
+ 	}
+ 
+ 	btsr->intel_bts_pmu = intel_bts_pmu;
++	btsr->itr.pmu = intel_bts_pmu;
+ 	btsr->itr.recording_options = intel_bts_recording_options;
+ 	btsr->itr.info_priv_size = intel_bts_info_priv_size;
+ 	btsr->itr.info_fill = intel_bts_info_fill;
+@@ -459,7 +443,7 @@ struct auxtrace_record *intel_bts_recording_init(int *err)
+ 	btsr->itr.find_snapshot = intel_bts_find_snapshot;
+ 	btsr->itr.parse_snapshot_options = intel_bts_parse_snapshot_options;
+ 	btsr->itr.reference = intel_bts_reference;
+-	btsr->itr.read_finish = intel_bts_read_finish;
++	btsr->itr.read_finish = auxtrace_record__read_finish;
+ 	btsr->itr.alignment = sizeof(struct branch);
+ 	return &btsr->itr;
+ }
+diff --git a/tools/perf/arch/x86/util/intel-pt.c b/tools/perf/arch/x86/util/intel-pt.c
+index be07d6886256..7eea4fd7ce58 100644
+--- a/tools/perf/arch/x86/util/intel-pt.c
++++ b/tools/perf/arch/x86/util/intel-pt.c
+@@ -1166,23 +1166,6 @@ static u64 intel_pt_reference(struct auxtrace_record *itr __maybe_unused)
+ 	return rdtsc();
+ }
+ 
+-static int intel_pt_read_finish(struct auxtrace_record *itr, int idx)
+-{
+-	struct intel_pt_recording *ptr =
+-			container_of(itr, struct intel_pt_recording, itr);
+-	struct evsel *evsel;
+-
+-	evlist__for_each_entry(ptr->evlist, evsel) {
+-		if (evsel->core.attr.type == ptr->intel_pt_pmu->type) {
+-			if (evsel->disabled)
+-				return 0;
+-			return perf_evlist__enable_event_idx(ptr->evlist, evsel,
+-							     idx);
+-		}
+-	}
+-	return -EINVAL;
+-}
+-
+ struct auxtrace_record *intel_pt_recording_init(int *err)
+ {
+ 	struct perf_pmu *intel_pt_pmu = perf_pmu__find(INTEL_PT_PMU_NAME);
+@@ -1203,6 +1186,7 @@ struct auxtrace_record *intel_pt_recording_init(int *err)
+ 	}
+ 
+ 	ptr->intel_pt_pmu = intel_pt_pmu;
++	ptr->itr.pmu = intel_pt_pmu;
+ 	ptr->itr.recording_options = intel_pt_recording_options;
+ 	ptr->itr.info_priv_size = intel_pt_info_priv_size;
+ 	ptr->itr.info_fill = intel_pt_info_fill;
+@@ -1212,7 +1196,7 @@ struct auxtrace_record *intel_pt_recording_init(int *err)
+ 	ptr->itr.find_snapshot = intel_pt_find_snapshot;
+ 	ptr->itr.parse_snapshot_options = intel_pt_parse_snapshot_options;
+ 	ptr->itr.reference = intel_pt_reference;
+-	ptr->itr.read_finish = intel_pt_read_finish;
++	ptr->itr.read_finish = auxtrace_record__read_finish;
+ 	/*
+ 	 * Decoding starts at a PSB packet. Minimum PSB period is 2K so 4K
+ 	 * should give at least 1 PSB per sample.
+diff --git a/tools/perf/util/auxtrace.c b/tools/perf/util/auxtrace.c
+index eb087e7df6f4..3571ce72ca28 100644
+--- a/tools/perf/util/auxtrace.c
++++ b/tools/perf/util/auxtrace.c
+@@ -629,8 +629,10 @@ int auxtrace_record__options(struct auxtrace_record *itr,
+ 			     struct evlist *evlist,
+ 			     struct record_opts *opts)
+ {
+-	if (itr)
++	if (itr) {
++		itr->evlist = evlist;
+ 		return itr->recording_options(itr, evlist, opts);
++	}
+ 	return 0;
+ }
+ 
+@@ -664,6 +666,24 @@ int auxtrace_parse_snapshot_options(struct auxtrace_record *itr,
+ 	return -EINVAL;
+ }
+ 
++int auxtrace_record__read_finish(struct auxtrace_record *itr, int idx)
++{
++	struct evsel *evsel;
++
++	if (!itr->evlist || !itr->pmu)
++		return -EINVAL;
++
++	evlist__for_each_entry(itr->evlist, evsel) {
++		if (evsel->core.attr.type == itr->pmu->type) {
++			if (evsel->disabled)
++				return 0;
++			return perf_evlist__enable_event_idx(itr->evlist, evsel,
++							     idx);
++		}
++	}
++	return -EINVAL;
++}
++
+ /*
+  * Event record size is 16-bit which results in a maximum size of about 64KiB.
+  * Allow about 4KiB for the rest of the sample record, to give a maximum
+diff --git a/tools/perf/util/auxtrace.h b/tools/perf/util/auxtrace.h
+index 749d72cd9c7b..e58ef160b599 100644
+--- a/tools/perf/util/auxtrace.h
++++ b/tools/perf/util/auxtrace.h
+@@ -29,6 +29,7 @@ struct record_opts;
+ struct perf_record_auxtrace_error;
+ struct perf_record_auxtrace_info;
+ struct events_stats;
++struct perf_pmu;
+ 
+ enum auxtrace_error_type {
+        PERF_AUXTRACE_ERROR_ITRACE  = 1,
+@@ -322,6 +323,8 @@ struct auxtrace_mmap_params {
+  * @read_finish: called after reading from an auxtrace mmap
+  * @alignment: alignment (if any) for AUX area data
+  * @default_aux_sample_size: default sample size for --aux sample option
++ * @pmu: associated pmu
++ * @evlist: selected events list
+  */
+ struct auxtrace_record {
+ 	int (*recording_options)(struct auxtrace_record *itr,
+@@ -346,6 +349,8 @@ struct auxtrace_record {
+ 	int (*read_finish)(struct auxtrace_record *itr, int idx);
+ 	unsigned int alignment;
+ 	unsigned int default_aux_sample_size;
++	struct perf_pmu *pmu;
++	struct evlist *evlist;
+ };
+ 
+ /**
+@@ -537,6 +542,7 @@ int auxtrace_record__find_snapshot(struct auxtrace_record *itr, int idx,
+ 				   struct auxtrace_mmap *mm,
+ 				   unsigned char *data, u64 *head, u64 *old);
+ u64 auxtrace_record__reference(struct auxtrace_record *itr);
++int auxtrace_record__read_finish(struct auxtrace_record *itr, int idx);
+ 
+ int auxtrace_index__auxtrace_event(struct list_head *head, union perf_event *event,
+ 				   off_t file_offset);
 -- 
-John Hubbard
-NVIDIA
+2.21.1
 
-
->  	} else {
->  		pr_warn("min_free_kbytes is not updated to %d because user defined value %d is preferred\n",
->  				new_min_free_kbytes, user_min_free_kbytes);
-> 
