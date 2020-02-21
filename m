@@ -2,91 +2,200 @@ Return-Path: <SRS0=1210=4J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_2 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D12A4C35669
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 20:20:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EE506C3566F
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 20:21:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AAFA82064C
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 20:20:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B63F62067D
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 20:21:16 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Arxr0cUi"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728206AbgBUUUC (ORCPT
+        id S1727973AbgBUUVP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Feb 2020 15:20:02 -0500
-Received: from mga14.intel.com ([192.55.52.115]:49646 "EHLO mga14.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726683AbgBUUUB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Feb 2020 15:20:01 -0500
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga001.jf.intel.com ([10.7.209.18])
-  by fmsmga103.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 21 Feb 2020 12:20:01 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.70,469,1574150400"; 
-   d="scan'208";a="316156726"
-Received: from jacob-xps-13-9365.jf.intel.com (HELO jacob-XPS-13-9365) ([10.54.75.153])
-  by orsmga001.jf.intel.com with ESMTP; 21 Feb 2020 12:19:55 -0800
-Date:   Fri, 21 Feb 2020 12:20:04 -0800
-From:   Jacob Pan <jacob.jun.pan@linux.intel.com>
-To:     Auger Eric <eric.auger@redhat.com>
-Cc:     iommu@lists.linux-foundation.org,
-        LKML <linux-kernel@vger.kernel.org>,
-        Lu Baolu <baolu.lu@linux.intel.com>,
-        Joerg Roedel <joro@8bytes.org>,
-        David Woodhouse <dwmw2@infradead.org>,
-        Yi Liu <yi.l.liu@intel.com>,
-        "Tian, Kevin" <kevin.tian@intel.com>,
-        Raj Ashok <ashok.raj@intel.com>,
-        Alex Williamson <alex.williamson@redhat.com>,
-        Christoph Hellwig <hch@infradead.org>,
-        Jean-Philippe Brucker <jean-philippe@linaro.com>,
-        Jonathan Cameron <jic23@kernel.org>,
-        jacob.jun.pan@linux.intel.com
-Subject: Re: [PATCH V9 07/10] iommu/vt-d: Cache virtual command capability
- register
-Message-ID: <20200221122004.0307c789@jacob-XPS-13-9365>
-In-Reply-To: <5776bf45-7541-1576-9ced-38883447bf29@redhat.com>
-References: <1580277713-66934-1-git-send-email-jacob.jun.pan@linux.intel.com>
-        <1580277713-66934-8-git-send-email-jacob.jun.pan@linux.intel.com>
-        <5776bf45-7541-1576-9ced-38883447bf29@redhat.com>
-Organization: OTC
-X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        Fri, 21 Feb 2020 15:21:15 -0500
+Received: from mail-lj1-f195.google.com ([209.85.208.195]:42766 "EHLO
+        mail-lj1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726483AbgBUUVP (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 21 Feb 2020 15:21:15 -0500
+Received: by mail-lj1-f195.google.com with SMTP id d10so3484951ljl.9;
+        Fri, 21 Feb 2020 12:21:12 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=WT+FZ++2NYg4V2NA5YedNOyUXAYOXzZO+ZHsnuxNnwc=;
+        b=Arxr0cUicsaHNBomhoItA7NdQd+fjF4resZYFuo7zrS9+pEhQyuWUrteVCKHXy3mdu
+         zPtXhRxHZcbBgRF07H9y3Xy0izDo+2rwlZj/tF+vaz+Cn+AWqfL7XHOvhTjOl1ZxvIy+
+         GZBGIX7AKG+5NWhOR/j+AjGowu70CCRPt0kR6v+i+u/M/CGsvx6NiLBHRUynglpMscq5
+         P4dRiq8XYXQNN0GorPt8ookHaKtSMkKrJYbTqSbgc0Hm1Kh+l/NzEa3L5nEeCXpY1Us/
+         a6x8C/8cG+lWQRwmbz4BisPkkMTEqqyxsLLk7Yt293GX0TFcZxpufutzazWHsSAfHdRA
+         Yncg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=WT+FZ++2NYg4V2NA5YedNOyUXAYOXzZO+ZHsnuxNnwc=;
+        b=tvIWlmthp48SBj9Q39hOtl88ok/BrGnFZVoHhFnT9n+bT95VrjJJlInkrzrxp1wJjg
+         rTveTKPqMHFYhvH2SW+XsbSXPVl624TrjKVpIcty55hsS17YagXdhzquFxmpXevV//ml
+         UvANZyq9I+AcFsa0hF5rMGIaCPrdTR5vjd/hbbxyQdTMHHHSMgMkxjqVXrRsuhvsRCBb
+         S6mw020EI4gMwPtmRmq6fxVC7VprcuSSTD5f6CgQDhpLDclFfqQyLmVTcE+/JuTWpPUI
+         1w9cDnkn2hgY+/k+nd153fLUiEKjYECICkYGX4F0Akb1/5Z8ZJHBoCaumbzX27NyMxEQ
+         TIzg==
+X-Gm-Message-State: APjAAAUz/wIzKLLwm+U3H417Hit68P3TlU67hgHmVVfBTSeRsmjlfs02
+        9SvYRWs22Jm/QaINeXj5FR4yU0j0
+X-Google-Smtp-Source: APXvYqxKJMo42Pj+umVP3QcnR7PAMToakaw6298dFWSrbDRwhqeFDGOgX/jf6g4SskY0diQaUbciaA==
+X-Received: by 2002:a2e:b5a5:: with SMTP id f5mr22798738ljn.162.1582316471775;
+        Fri, 21 Feb 2020 12:21:11 -0800 (PST)
+Received: from [192.168.2.145] (79-139-233-37.dynamic.spd-mgts.ru. [79.139.233.37])
+        by smtp.googlemail.com with ESMTPSA id z13sm2191960ljh.21.2020.02.21.12.21.10
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 21 Feb 2020 12:21:11 -0800 (PST)
+Subject: Re: [PATCH v9 09/17] arm: tegra20: cpuidle: Handle case where
+ secondary CPU hangs on entering LP2
+To:     Daniel Lezcano <daniel.lezcano@linaro.org>
+Cc:     Thierry Reding <thierry.reding@gmail.com>,
+        Jonathan Hunter <jonathanh@nvidia.com>,
+        Peter De Schrijver <pdeschrijver@nvidia.com>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        =?UTF-8?B?TWljaGHFgiBNaXJvc8WCYXc=?= <mirq-linux@rere.qmqm.pl>,
+        Jasper Korten <jja2000@gmail.com>,
+        David Heidelberg <david@ixit.cz>,
+        Peter Geis <pgwipeout@gmail.com>, linux-pm@vger.kernel.org,
+        linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20200212235134.12638-1-digetx@gmail.com>
+ <20200212235134.12638-10-digetx@gmail.com>
+ <20200221154318.GO10516@linaro.org>
+ <239a2b66-8da8-2e6c-d19d-9ed207ad0a64@gmail.com>
+ <20200221173649.GU10516@linaro.org>
+ <b51f3f6b-8287-5ce8-fcaa-77cbab507618@gmail.com>
+ <f27481cf-ca5e-df47-932b-fcb4713f0d78@linaro.org>
+From:   Dmitry Osipenko <digetx@gmail.com>
+Message-ID: <50a8fb7c-f497-2234-c0b0-560aec1c5691@gmail.com>
+Date:   Fri, 21 Feb 2020 23:21:10 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.3.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+In-Reply-To: <f27481cf-ca5e-df47-932b-fcb4713f0d78@linaro.org>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 12 Feb 2020 14:00:22 +0100
-Auger Eric <eric.auger@redhat.com> wrote:
-
-> Hi Jacob,
+21.02.2020 23:02, Daniel Lezcano пишет:
+> On 21/02/2020 19:19, Dmitry Osipenko wrote:
+>> 21.02.2020 20:36, Daniel Lezcano пишет:
+>>> On Fri, Feb 21, 2020 at 07:56:51PM +0300, Dmitry Osipenko wrote:
+>>>> Hello Daniel,
+>>>>
+>>>> 21.02.2020 18:43, Daniel Lezcano пишет:
+>>>>> On Thu, Feb 13, 2020 at 02:51:26AM +0300, Dmitry Osipenko wrote:
+>>>>>> It is possible that something may go wrong with the secondary CPU, in that
+>>>>>> case it is much nicer to get a dump of the flow-controller state before
+>>>>>> hanging machine.
+>>>>>>
+>>>>>> Acked-by: Peter De Schrijver <pdeschrijver@nvidia.com>
+>>>>>> Tested-by: Peter Geis <pgwipeout@gmail.com>
+>>>>>> Tested-by: Jasper Korten <jja2000@gmail.com>
+>>>>>> Tested-by: David Heidelberg <david@ixit.cz>
+>>>>>> Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
+>>>>>> ---
+>>>
+>>> [ ... ]
+>>>
+>>>>>> +static int tegra20_wait_for_secondary_cpu_parking(void)
+>>>>>> +{
+>>>>>> +	unsigned int retries = 3;
+>>>>>> +
+>>>>>> +	while (retries--) {
+>>>>>> +		ktime_t timeout = ktime_add_ms(ktime_get(), 500);
+>>>>>
+>>>>> Oops I missed this one. Do not use ktime_get() in this code path, use jiffies.
+>>>>
+>>>> Could you please explain what benefits jiffies have over the ktime_get()?
+>>>
+>>> ktime_get() is very slow, jiffies is updated every tick.
+>>
+>> But how jiffies are supposed to be updated if interrupts are disabled?
 > 
-> On 1/29/20 7:01 AM, Jacob Pan wrote:
-> > Virtual command registers are used in the guest only, to prevent
-> > vmexit cost, we cache the capability and store it during
-> > initialization.
-> > 
-> > Signed-off-by: Jacob Pan <jacob.jun.pan@linux.intel.com>  
-> I sent my R-b in https://lkml.org/lkml/2019/11/8/228
-> Also Baolo did. Do I miss any change?
-> 
-> Again history log would help.
-> 
-You didn't miss any change. I forgot to add R-bs.
+> Yeah, other cpus must not be idle in this.
 
-Thanks!
+Okay, then jiffies can't be used here because this function is used for
+the coupled / power-gated state only. All CPUs are idling in this state.
 
-Jacob
-
-> Thanks
+>> Aren't jiffies actually slower than ktime_get() because jiffies are
+>> updating every 10/1ms (depending on CONFIG_HZ)?
 > 
-> Eric
->  [...]  
+> They are no slower, they have a lower resolution which is 10ms or 4ms.
 > 
+> Given the 500ms timeout, it is fine.
+> 
+>> We're kinda interesting here in getting into deep-idling state as quick
+>> as possible. I was checking how much time takes the busy-loop below and
+>> it takes ~40-150us in average, which is good enough.
+> 
+> ktime_get() gets a seq lock and it is very slow.
 
-[Jacob Pan]
+Since all CPUs are idling here, the locking isn't a problem.
+
+The wait_for_secondary_cpu_parking() function is called on CPU0, it
+waits for the secondary CPUs to enter into safe-state before CPU0 could
+power-gate the whole CPU cluster.
+
+>>>>>> +
+>>>>>> +		/*
+>>>>>> +		 * The primary CPU0 core shall wait for the secondaries
+>>>>>> +		 * shutdown in order to power-off CPU's cluster safely.
+>>>>>> +		 * The timeout value depends on the current CPU frequency,
+>>>>>> +		 * it takes about 40-150us  in average and over 1000us in
+>>>>>> +		 * a worst case scenario.
+>>>>>> +		 */
+>>>>>> +		do {
+>>>>>> +			if (tegra_cpu_rail_off_ready())
+>>>>>> +				return 0;
+>>>>>> +
+>>>>>> +		} while (ktime_before(ktime_get(), timeout));
+>>>>>
+>>>>> So this loop will aggresively call tegra_cpu_rail_off_ready() and retry 3
+>>>>> times. The tegra_cpu_rail_off_ready() function can be called thoushand of times
+>>>>> here but the function will hang 1.5s :/
+>>>>>
+>>>>> I suggest something like:
+>>>>>
+>>>>> 	while (retries--i && !tegra_cpu_rail_off_ready()) 
+>>>>> 		udelay(100);
+>>>>>
+>>>>> So <retries> calls to tegra_cpu_rail_off_ready() and 100us x <retries> maximum
+>>>>> impact.
+>>>> But udelay() also results into CPU spinning in a busy-loop, and thus,
+>>>> what's the difference?
+>>>
+>>> busy looping instead of register reads with all the hardware things involved behind.
+>>
+>> Please notice that this code runs only on an older Cortex-A9/A15, which
+>> doesn't support WFE for the delaying, and thus, CPU always busy-loops
+>> inside udelay().
+>>
+>> What about if I'll add cpu_relax() to the loop? Do you think it it could
+>> have any positive effect?
+> 
+> I think udelay() has a call to cpu_relax().
+
+Yes, my point is that udelay() doesn't bring much benefit for us here
+because:
+
+1. we want to enter into power-gated state as quick as possible and
+udelay() just adds an unnecessary delay
+
+2. udelay() spins in a busy-loop until delay is expired, just like we're
+doing it in this function already
