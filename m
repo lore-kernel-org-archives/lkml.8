@@ -2,198 +2,126 @@ Return-Path: <SRS0=1210=4J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DF4A4C35656
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 15:04:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3601EC35656
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 15:05:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A984524650
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 15:04:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0A7D424650
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 15:05:03 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="yIRt2pGB"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="i2/lRd9r"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729062AbgBUPE5 (ORCPT
+        id S1729084AbgBUPFC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Feb 2020 10:04:57 -0500
-Received: from mail-wr1-f67.google.com ([209.85.221.67]:46559 "EHLO
-        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728910AbgBUPE4 (ORCPT
+        Fri, 21 Feb 2020 10:05:02 -0500
+Received: from us-smtp-2.mimecast.com ([205.139.110.61]:57297 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1728910AbgBUPFA (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Feb 2020 10:04:56 -0500
-Received: by mail-wr1-f67.google.com with SMTP id z7so2400658wrl.13
-        for <linux-kernel@vger.kernel.org>; Fri, 21 Feb 2020 07:04:54 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to
-         :user-agent;
-        bh=u7fybSbTVdeR3YQux270IM8jxeqEYCpR8SjGQKbdS+k=;
-        b=yIRt2pGBKux6fna4iimxJdfcUZZX7Pgn5c6QhcImT0+fqlkJ70TZrIyVpdvl4aLeFR
-         Nr7nuvMgeoCApKCZlt4nP5Ucj2AHDlsbw08qr65dAnNkbMnCmv2RMyxR5TR4+NmMz8js
-         9Im0qZSoca51IRRJFaDwfiDzaH5uRfTXRkdoMECNLhBwp8O+bAXjxSrqMDeSygJdBp1G
-         jhdWu0+Ef9eU3YAyfGS/vNc1oRY4gSh4QeWLwhfOykOEgwsWPTHVICpRbSeLB0D4JOBw
-         8QMFUbnYFIWGUPME6xRjwGJ6MYlNEquUit9WtT6EBYaDCKtsOC/Gc65UA401aFdYFW6i
-         uVYQ==
+        Fri, 21 Feb 2020 10:05:00 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1582297500;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=yTmEd9xc6G7csgDjNYZkoTzDRVdt6RCq+o8/c5+8RkI=;
+        b=i2/lRd9rd987aQMqOfkjJ7e2uExOVzLtVcItZUKHOoxhqKtUhmP0gKK1QRcr+iaVZEznyd
+        ziHLbXitp79S+7fGAotG+6repb6P4X26i3wH7ORWlsmvDGcw2XytPLl0BWphJg3IO6l+aC
+        oOLk7aGQzkZH52IInEcG5llAqMoGXjM=
+Received: from mail-wm1-f69.google.com (mail-wm1-f69.google.com
+ [209.85.128.69]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-206-tHg_yO-fMpG1mGzmGEvvqg-1; Fri, 21 Feb 2020 10:04:57 -0500
+X-MC-Unique: tHg_yO-fMpG1mGzmGEvvqg-1
+Received: by mail-wm1-f69.google.com with SMTP id p2so717583wmi.8
+        for <linux-kernel@vger.kernel.org>; Fri, 21 Feb 2020 07:04:57 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to:user-agent;
-        bh=u7fybSbTVdeR3YQux270IM8jxeqEYCpR8SjGQKbdS+k=;
-        b=C1ioLrQS+cnPQc7ap9g5hjAcfPPFCfT/DqaRf0G0eLck6UmtojSyF+s3bYyfGxsmh8
-         BI9ANO+gYhtRtTeVqWUCuVLFhodW6qW0v/IAPdCZm9pq1Ziwdvdmd1MeK3iM5GsLnzDy
-         vinKLH8MfC+OHth1XApEsK3pnLXwuty+j4uYq9Eemvz1SrsLGmdxfpiW6yiCQTy8MOAd
-         r9xkIWrhUhg4Ayk7Rw4TZAvdQCrTcHeQpxtSqsAgYceZ+GtVDM6M27hsMCiadWYKAZkV
-         y5PMzIXoVnbao7UDSB9rLXMmRrkQgn8LGKt4UUtwY4WDFds3KwpiRONgn1fsmk6GUhAH
-         qJEQ==
-X-Gm-Message-State: APjAAAWxozCxmF4wsM8oQTmtAD9yO70Oh9G85OzitYG9losJ0yLhks4K
-        pKVyzZjQR+HIFjDXxq7RB99tug==
-X-Google-Smtp-Source: APXvYqyT1A5BG6nNdcMIM8CIrJkFezF89ObeJm7AWArr+UMLbxM3TxaSf1fpv516rDO8s/4z6atg/A==
-X-Received: by 2002:adf:f7c4:: with SMTP id a4mr49456348wrq.361.1582297493908;
-        Fri, 21 Feb 2020 07:04:53 -0800 (PST)
-Received: from linaro.org ([2a01:e34:ed2f:f020:903b:a048:f296:e3ae])
-        by smtp.gmail.com with ESMTPSA id c141sm3900298wme.41.2020.02.21.07.04.52
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Fri, 21 Feb 2020 07:04:52 -0800 (PST)
-Date:   Fri, 21 Feb 2020 16:04:50 +0100
-From:   Daniel Lezcano <daniel.lezcano@linaro.org>
-To:     Dmitry Osipenko <digetx@gmail.com>
-Cc:     Thierry Reding <thierry.reding@gmail.com>,
-        Jonathan Hunter <jonathanh@nvidia.com>,
-        Peter De Schrijver <pdeschrijver@nvidia.com>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        =?utf-8?B?TWljaGHFgiBNaXJvc8WCYXc=?= <mirq-linux@rere.qmqm.pl>,
-        Jasper Korten <jja2000@gmail.com>,
-        David Heidelberg <david@ixit.cz>,
-        Peter Geis <pgwipeout@gmail.com>, linux-pm@vger.kernel.org,
-        linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v9 04/17] ARM: tegra: Change tegra_set_cpu_in_lp2() type
- to void
-Message-ID: <20200221150450.GI10516@linaro.org>
-References: <20200212235134.12638-1-digetx@gmail.com>
- <20200212235134.12638-5-digetx@gmail.com>
+        h=x-gm-message-state:from:to:cc:subject:in-reply-to:references:date
+         :message-id:mime-version;
+        bh=yTmEd9xc6G7csgDjNYZkoTzDRVdt6RCq+o8/c5+8RkI=;
+        b=uBDJ6PT6c3DWFayNcriAUOUlG/25/S+yVfNCd4X/UPntopX2YxgleciRnbd2ak1koA
+         r6fkmejSItRUoW0fE0to9Lwm/Ww7NtIszWjOEuwnjbxae6zqaIbnj96Hg2W4wd1dkOZW
+         bCpZ4A0Ordx/YcebVFOD71Itsja1N5ltiTUv/wRuZdEJDpz9bb6NbcYSZDtD7Y/TzXhY
+         jrWPhKrfZEoXcRFkVmnaNc2/YVjxqjF81I3cePq3QxB2yqUwU9BhQR5S+O/jI1mWYZ3e
+         /xRV16ILWjbGgGZHyAnaR53kaoO1UHEcxMdA6Mkr31gJ3LtDgemmv/AcNTIrdH/sARg+
+         YH5g==
+X-Gm-Message-State: APjAAAUnsU3BWX5hL7o5PDvN6TI9wkAjlsw1j3LnVSCCQ8mk+0xF4GPw
+        ww2RZNzbWWj4YWCs64gkBk1A58Wwrxm0G47Y6hC0Al2OckIUGd1p584jur0pkv5Z9ePSGZ/4Clh
+        JM5469RfZyPuDIcMtwY/LwHMk
+X-Received: by 2002:a5d:5647:: with SMTP id j7mr49375693wrw.265.1582297495746;
+        Fri, 21 Feb 2020 07:04:55 -0800 (PST)
+X-Google-Smtp-Source: APXvYqyi44kZL/ZGQMOMG/lXjt2ZRHdP4xnGFQQxWU89Ax6rGaeN+aFAthHOQCoYiqw1R5vHV/3FXA==
+X-Received: by 2002:a5d:5647:: with SMTP id j7mr49375673wrw.265.1582297495544;
+        Fri, 21 Feb 2020 07:04:55 -0800 (PST)
+Received: from vitty.brq.redhat.com (nat-pool-brq-t.redhat.com. [213.175.37.10])
+        by smtp.gmail.com with ESMTPSA id a26sm4147958wmm.18.2020.02.21.07.04.54
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 21 Feb 2020 07:04:55 -0800 (PST)
+From:   Vitaly Kuznetsov <vkuznets@redhat.com>
+To:     Sean Christopherson <sean.j.christopherson@intel.com>
+Cc:     Paolo Bonzini <pbonzini@redhat.com>,
+        Wanpeng Li <wanpengli@tencent.com>,
+        Jim Mattson <jmattson@google.com>,
+        Joerg Roedel <joro@8bytes.org>, kvm@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 18/61] KVM: x86: Use common loop iterator when handling CPUID 0xD.N
+In-Reply-To: <20200201185218.24473-19-sean.j.christopherson@intel.com>
+References: <20200201185218.24473-1-sean.j.christopherson@intel.com> <20200201185218.24473-19-sean.j.christopherson@intel.com>
+Date:   Fri, 21 Feb 2020 16:04:54 +0100
+Message-ID: <87sgj4q8vd.fsf@vitty.brq.redhat.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20200212235134.12638-5-digetx@gmail.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Feb 13, 2020 at 02:51:21AM +0300, Dmitry Osipenko wrote:
-> The Tegra30 CPUIDLE driver has intention to check whether primary CPU was
-> the last CPU that entered LP2 (CC6) idle-state, but that functionality
-> never got utilized because driver never supported the CC6 state for the
-> case where any secondary CPU is online. The new cpuidle driver will
-> properly support CC6 on Tegra30, including the case where secondary CPUs
-> are online, and that knowledge about what CPUs entered into CC6 won't be
-> needed at all because new driver will use different approach by making use
-> of the coupled idle-state and explicitly parking secondary CPUs before
-> entering into CC6. Thus this patch is just a minor cleanup change.
-> 
-> Acked-by: Peter De Schrijver <pdeschrijver@nvidia.com>
-> Tested-by: Peter Geis <pgwipeout@gmail.com>
-> Tested-by: Jasper Korten <jja2000@gmail.com>
-> Tested-by: David Heidelberg <david@ixit.cz>
-> Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
+Sean Christopherson <sean.j.christopherson@intel.com> writes:
+
+> Use __do_cpuid_func()'s common loop iterator, "i", when enumerating the
+> sub-leafs for CPUID 0xD now that the CPUID 0xD loop doesn't need to
+> manual maintain separate counts for the entries index and CPUID index.
+>
+> No functional changed intended.
+>
+> Signed-off-by: Sean Christopherson <sean.j.christopherson@intel.com>
 > ---
->  arch/arm/mach-tegra/cpuidle-tegra30.c | 14 ++++----------
+>  arch/x86/kvm/cpuid.c | 7 +++----
+>  1 file changed, 3 insertions(+), 4 deletions(-)
+>
+> diff --git a/arch/x86/kvm/cpuid.c b/arch/x86/kvm/cpuid.c
+> index 6516fec361c1..bfd8304a8437 100644
+> --- a/arch/x86/kvm/cpuid.c
+> +++ b/arch/x86/kvm/cpuid.c
+> @@ -634,7 +634,6 @@ static inline int __do_cpuid_func(struct kvm_cpuid_array *array, u32 function)
+>  		}
+>  		break;
+>  	case 0xd: {
+> -		int idx;
+>  		u64 supported = kvm_supported_xcr0();
+>  
+>  		entry->eax &= supported;
+> @@ -658,11 +657,11 @@ static inline int __do_cpuid_func(struct kvm_cpuid_array *array, u32 function)
+>  		entry->ecx = 0;
+>  		entry->edx = 0;
+>  
+> -		for (idx = 2; idx < 64; ++idx) {
+> -			if (!(supported & BIT_ULL(idx)))
+> +		for (i = 2; i < 64; ++i) {
+> +			if (!(supported & BIT_ULL(i)))
+>  				continue;
+>  
+> -			entry = do_host_cpuid(array, function, idx);
+> +			entry = do_host_cpuid(array, function, i);
+>  			if (!entry)
+>  				goto out;
 
-Mind to move to drivers/cpuidle ?
-
-Acked-by: Daniel Lezcano <daniel.lezcano@linaro.org>
-
->  arch/arm/mach-tegra/pm.c              |  8 +-------
->  arch/arm/mach-tegra/pm.h              |  2 +-
->  3 files changed, 6 insertions(+), 18 deletions(-)
-> 
-> diff --git a/arch/arm/mach-tegra/cpuidle-tegra30.c b/arch/arm/mach-tegra/cpuidle-tegra30.c
-> index c6128526877d..a3ce8dabfe18 100644
-> --- a/arch/arm/mach-tegra/cpuidle-tegra30.c
-> +++ b/arch/arm/mach-tegra/cpuidle-tegra30.c
-> @@ -98,22 +98,16 @@ static int tegra30_idle_lp2(struct cpuidle_device *dev,
->  			    int index)
->  {
->  	bool entered_lp2 = false;
-> -	bool last_cpu;
->  
->  	local_fiq_disable();
->  
-> -	last_cpu = tegra_set_cpu_in_lp2();
-> +	tegra_set_cpu_in_lp2();
->  	cpu_pm_enter();
->  
-> -	if (dev->cpu == 0) {
-> -		if (last_cpu)
-> -			entered_lp2 = tegra30_cpu_cluster_power_down(dev, drv,
-> -								     index);
-> -		else
-> -			cpu_do_idle();
-> -	} else {
-> +	if (dev->cpu == 0)
-> +		entered_lp2 = tegra30_cpu_cluster_power_down(dev, drv, index);
-> +	else
->  		entered_lp2 = tegra30_cpu_core_power_down(dev, drv, index);
-> -	}
->  
->  	cpu_pm_exit();
->  	tegra_clear_cpu_in_lp2();
-> diff --git a/arch/arm/mach-tegra/pm.c b/arch/arm/mach-tegra/pm.c
-> index 1ff499068bb1..a72f9a2d3cb7 100644
-> --- a/arch/arm/mach-tegra/pm.c
-> +++ b/arch/arm/mach-tegra/pm.c
-> @@ -123,11 +123,9 @@ void tegra_clear_cpu_in_lp2(void)
->  	spin_unlock(&tegra_lp2_lock);
->  }
->  
-> -bool tegra_set_cpu_in_lp2(void)
-> +void tegra_set_cpu_in_lp2(void)
->  {
->  	int phy_cpu_id = cpu_logical_map(smp_processor_id());
-> -	bool last_cpu = false;
-> -	cpumask_t *cpu_lp2_mask = tegra_cpu_lp2_mask;
->  	u32 *cpu_in_lp2 = tegra_cpu_lp2_mask;
->  
->  	spin_lock(&tegra_lp2_lock);
-> @@ -135,11 +133,7 @@ bool tegra_set_cpu_in_lp2(void)
->  	BUG_ON((*cpu_in_lp2 & BIT(phy_cpu_id)));
->  	*cpu_in_lp2 |= BIT(phy_cpu_id);
->  
-> -	if ((phy_cpu_id == 0) && cpumask_equal(cpu_lp2_mask, cpu_online_mask))
-> -		last_cpu = true;
-> -
->  	spin_unlock(&tegra_lp2_lock);
-> -	return last_cpu;
->  }
->  
->  static int tegra_sleep_cpu(unsigned long v2p)
-> diff --git a/arch/arm/mach-tegra/pm.h b/arch/arm/mach-tegra/pm.h
-> index b9cc12222bb1..2c294f6365c0 100644
-> --- a/arch/arm/mach-tegra/pm.h
-> +++ b/arch/arm/mach-tegra/pm.h
-> @@ -24,7 +24,7 @@ void tegra30_lp1_iram_hook(void);
->  void tegra30_sleep_core_init(void);
->  
->  void tegra_clear_cpu_in_lp2(void);
-> -bool tegra_set_cpu_in_lp2(void);
-> +void tegra_set_cpu_in_lp2(void);
->  void tegra_idle_lp2_last(void);
->  extern void (*tegra_tear_down_cpu)(void);
->  
-> -- 
-> 2.24.0
-> 
+Reviewed-by: Vitaly Kuznetsov <vkuznets@redhat.com>
 
 -- 
+Vitaly
 
- <http://www.linaro.org/> Linaro.org │ Open source software for ARM SoCs
-
-Follow Linaro:  <http://www.facebook.com/pages/Linaro> Facebook |
-<http://twitter.com/#!/linaroorg> Twitter |
-<http://www.linaro.org/linaro-blog/> Blog
