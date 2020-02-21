@@ -2,90 +2,78 @@ Return-Path: <SRS0=1210=4J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 647E7C35642
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 06:47:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 23FCBC35641
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 06:47:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3B51D24650
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 06:47:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D8D2E20722
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 06:47:14 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=geanix.com header.i=@geanix.com header.b="fwDB4CLn"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727053AbgBUGrK (ORCPT
+        id S1727150AbgBUGrN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Feb 2020 01:47:10 -0500
-Received: from inva021.nxp.com ([92.121.34.21]:37678 "EHLO inva021.nxp.com"
+        Fri, 21 Feb 2020 01:47:13 -0500
+Received: from first.geanix.com ([116.203.34.67]:55352 "EHLO first.geanix.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726100AbgBUGrK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Feb 2020 01:47:10 -0500
-Received: from inva021.nxp.com (localhost [127.0.0.1])
-        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id 20DF6206B9D;
-        Fri, 21 Feb 2020 07:47:08 +0100 (CET)
-Received: from invc005.ap-rdc01.nxp.com (invc005.ap-rdc01.nxp.com [165.114.16.14])
-        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id 2A932206BAE;
-        Fri, 21 Feb 2020 07:47:00 +0100 (CET)
-Received: from localhost.localdomain (shlinux2.ap.freescale.net [10.192.224.44])
-        by invc005.ap-rdc01.nxp.com (Postfix) with ESMTP id 5D98940381;
-        Fri, 21 Feb 2020 14:46:06 +0800 (SGT)
-From:   sherry sun <sherry.sun@nxp.com>
-To:     bp@alien8.de, mchehab@kernel.org, tony.luck@intel.com,
-        james.morse@arm.com, rrichter@marvell.com, michal.simek@xilinx.com,
-        shawnguo@kernel.org, s.hauer@pengutronix.de, robh+dt@kernel.org,
-        mark.rutland@arm.com
-Cc:     linux-edac@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-imx@nxp.com, frank.li@nxp.com
-Subject: [PATCH 1/3] dt-bindings: memory-controllers: Add i.MX8MP DDRC binding doc
-Date:   Fri, 21 Feb 2020 14:39:14 +0800
-Message-Id: <1582267156-20189-2-git-send-email-sherry.sun@nxp.com>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1582267156-20189-1-git-send-email-sherry.sun@nxp.com>
-References: <1582267156-20189-1-git-send-email-sherry.sun@nxp.com>
-X-Virus-Scanned: ClamAV using ClamSMTP
+        id S1726100AbgBUGrN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 21 Feb 2020 01:47:13 -0500
+Received: from localhost (87-49-45-242-mobile.dk.customer.tdc.net [87.49.45.242])
+        by first.geanix.com (Postfix) with ESMTPSA id 845BDAEB4D;
+        Fri, 21 Feb 2020 06:47:10 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=geanix.com; s=first;
+        t=1582267630; bh=v8hfyWw4kbOSf4Vr8iOqNpwVN5vkMHP3BbYopvXwRbo=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References;
+        b=fwDB4CLntBUZXODVM2cahRr/VQAtZPn9lNpIVIiNpOosKQMFtOvNweEJwPzrQFEqz
+         Ej22eU/HJg+Stttbh4O+BGQL2Oz9L+X0uhqlsyxSW/75MM61yAuPH1lXmG1bXqcaKB
+         tF5R9LhsLcCTV7qCLodEdc/W52+THIAcHgbwhQL5oRVSYDuPbnY/68GZ2o7gOv9xb/
+         9GN0tBryV5QcONGfisqhk9N4RnENk3oC24JC5nR0JNP2sksliUajyqCfl+7/lRU+Ag
+         HrwnJZN/HTr11ASBMKqVtl8Yc6W9NGNIUY+QnhdRdG1CkyuHii+aaht1d2RrTqom43
+         CPmXrxArJA32g==
+From:   Esben Haabendal <esben@geanix.com>
+To:     netdev@vger.kernel.org
+Cc:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        Andrew Lunn <andrew@lunn.ch>,
+        "David S . Miller" <davem@davemloft.net>,
+        Michal Simek <michal.simek@xilinx.com>,
+        =?UTF-8?q?Petr=20=C5=A0tetiar?= <ynezz@true.cz>
+Subject: [PATCH net v2 0/4] net: ll_temac: Bugfixes
+Date:   Fri, 21 Feb 2020 07:47:09 +0100
+Message-Id: <cover.1582267079.git.esben@geanix.com>
+X-Mailer: git-send-email 2.25.0
+In-Reply-To: <cover.1582108989.git.esben@geanix.com>
+References: <cover.1582108989.git.esben@geanix.com>
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Sherry Sun <sherry.sun@nxp.com>
+Fix a number of bugs which have been present since the first commit.
 
-Add documentation for i.MX8MP DDRC binding based on synopsys_edac doc,
-which use the same memory-controller IP.
+The bugs fixed in patch 1,2 and 4 have all been observed in real systems, and
+was relatively easy to reproduce given an appropriate stress setup.
 
-Signed-off-by: Sherry Sun <sherry.sun@nxp.com>
----
- .../devicetree/bindings/memory-controllers/synopsys.txt   | 8 ++++++--
- 1 file changed, 6 insertions(+), 2 deletions(-)
+Changes since v1:
 
-diff --git a/Documentation/devicetree/bindings/memory-controllers/synopsys.txt b/Documentation/devicetree/bindings/memory-controllers/synopsys.txt
-index 9d32762c47e1..5c03959a451f 100644
---- a/Documentation/devicetree/bindings/memory-controllers/synopsys.txt
-+++ b/Documentation/devicetree/bindings/memory-controllers/synopsys.txt
-@@ -6,16 +6,20 @@ bus width configurations.
- The Zynq DDR ECC controller has an optional ECC support in half-bus width
- (16-bit) configuration.
- 
--These both ECC controllers correct single bit ECC errors and detect double bit
-+The i.MX8MP DDR ECC controller has an ECC support in 64-bit bus width
-+configurations.
-+
-+These all ECC controllers correct single bit ECC errors and detect double bit
- ECC errors.
- 
- Required properties:
-  - compatible: One of:
- 	- 'xlnx,zynq-ddrc-a05' : Zynq DDR ECC controller
- 	- 'xlnx,zynqmp-ddrc-2.40a' : ZynqMP DDR ECC controller
-+	- 'fsl,imx8mp-ddrc' : i.MX8MP DDR ECC controller
-  - reg: Should contain DDR controller registers location and length.
- 
--Required properties for "xlnx,zynqmp-ddrc-2.40a":
-+Required properties for "xlnx,zynqmp-ddrc-2.40a" and "fsl,imx8mp-ddrc":
-  - interrupts: Property with a value describing the interrupt number.
- 
- Example:
+- Changed error handling of of dma_map_single() in temac_start_xmit() to drop
+  packet instead of returning NETDEV_TX_BUSY.
+
+Esben Haabendal (4):
+  net: ll_temac: Fix race condition causing TX hang
+  net: ll_temac: Add more error handling of dma_map_single() calls
+  net: ll_temac: Fix RX buffer descriptor handling on GFP_ATOMIC
+    pressure
+  net: ll_temac: Handle DMA halt condition caused by buffer underrun
+
+ drivers/net/ethernet/xilinx/ll_temac.h      |   4 +
+ drivers/net/ethernet/xilinx/ll_temac_main.c | 209 ++++++++++++++++----
+ 2 files changed, 175 insertions(+), 38 deletions(-)
+
 -- 
-2.17.1
+2.25.0
 
