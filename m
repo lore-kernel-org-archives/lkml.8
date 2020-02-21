@@ -7,48 +7,48 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 286F4C35641
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 08:06:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 93F79C35640
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 08:06:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F2C992467A
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 08:06:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6CC1F2467A
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 08:06:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582272395;
-	bh=hbhqy1VIf4rqPgX/t0HvXSAoqhLM+FaG+qBst9hGctM=;
+	s=default; t=1582272397;
+	bh=zLAaDFzj2bwYv+0kiJhndvoOAmSRnnLJlpove3CrpdE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=LTryRReSM+JEPyt6ttW5SR9hoQkEzFv0eS+ufdbm5EG7PTULRtwsVAEIHAbWS82ZB
-	 xJtwRQgicyykqZ61n+ftPTgtuDydd9nghEuUJhFPgQ+o7dZSDWl1ITShGwcMuzKAJA
-	 hfBz0sGAwYlSFexDqwFa7KLoQBhtGK4RLNw5+yHY=
+	b=PkSbtUxPEbdYYxtB0c+QL6vtGF74ciP8nWoMplhWt+pda/mgpP5N1qZHTZkfdUzjD
+	 EIDx/ahigtL7/IsR/0qoRzd27+n4iSCd4WW7od+lngCOV+eJUS7Xdg3Eva/7UBXN5V
+	 wAkLQhcFfUvH8S7pOK0w4RJiEn+bMEL6YHY+kIyU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731612AbgBUIGe (ORCPT
+        id S1731524AbgBUIGg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Feb 2020 03:06:34 -0500
-Received: from mail.kernel.org ([198.145.29.99]:40174 "EHLO mail.kernel.org"
+        Fri, 21 Feb 2020 03:06:36 -0500
+Received: from mail.kernel.org ([198.145.29.99]:40270 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731672AbgBUIGW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Feb 2020 03:06:22 -0500
+        id S1731641AbgBUIGZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 21 Feb 2020 03:06:25 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3CE2720578;
-        Fri, 21 Feb 2020 08:06:21 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id ADCBC20722;
+        Fri, 21 Feb 2020 08:06:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1582272381;
-        bh=hbhqy1VIf4rqPgX/t0HvXSAoqhLM+FaG+qBst9hGctM=;
+        s=default; t=1582272384;
+        bh=zLAaDFzj2bwYv+0kiJhndvoOAmSRnnLJlpove3CrpdE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=U8JkZe3bn9q80waY7U2W23BNPSpdm9lt75B/3My4eiirIu5hTSNkpvr1kRwZQVC3A
-         v/o95izAxOyVuBUAlqZo6cYMT6N62fFF814dWTV9wTL753sZAdroh2YOeOFPXY5rKW
-         Sd1oi/O07IVvOntlPVSq+Vty7rLT6eLqNUOLLJI8=
+        b=13Or5oz/raI2ySkwfWBhmO4JM3XJw0WAQVyIdMWVHDmyvCAdEySBevL0TifKREubE
+         VD6WMDbVe77wAm5IVORoc9NQM/4boErIAeYTd/WZ+0RNCtYN4gC7WSThvPg88ZPYXu
+         0SzvNXpuqkCZvt8w3tPv+O52GhBLTRQ0WZ5RyC3g=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Daniel Drake <drake@endlessm.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Mika Westerberg <mika.westerberg@linux.intel.com>,
+        stable@vger.kernel.org, Hulk Robot <hulkci@huawei.com>,
+        Mao Wenan <maowenan@huawei.com>,
+        "David S. Miller" <davem@davemloft.net>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 122/344] PCI: Increase D3 delay for AMD Ryzen5/7 XHCI controllers
-Date:   Fri, 21 Feb 2020 08:38:41 +0100
-Message-Id: <20200221072359.953191170@linuxfoundation.org>
+Subject: [PATCH 5.4 105/344] NFC: port100: Convert cpu_to_le16(le16_to_cpu(E1) + E2) to use le16_add_cpu().
+Date:   Fri, 21 Feb 2020 08:38:24 +0100
+Message-Id: <20200221072358.459842917@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200221072349.335551332@linuxfoundation.org>
 References: <20200221072349.335551332@linuxfoundation.org>
@@ -61,67 +61,34 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Daniel Drake <drake@endlessm.com>
+From: Mao Wenan <maowenan@huawei.com>
 
-[ Upstream commit 3030df209aa8cf831b9963829bd9f94900ee8032 ]
+[ Upstream commit 718eae277e62a26e5862eb72a830b5e0fe37b04a ]
 
-On Asus UX434DA (AMD Ryzen7 3700U) and Asus X512DK (AMD Ryzen5 3500U), the
-XHCI controller fails to resume from runtime suspend or s2idle, and USB
-becomes unusable from that point.
+Convert cpu_to_le16(le16_to_cpu(frame->datalen) + len) to
+use le16_add_cpu(), which is more concise and does the same thing.
 
-  xhci_hcd 0000:03:00.4: Refused to change power state, currently in D3
-  xhci_hcd 0000:03:00.4: enabling device (0000 -> 0002)
-  xhci_hcd 0000:03:00.4: WARN: xHC restore state timeout
-  xhci_hcd 0000:03:00.4: PCI post-resume error -110!
-  xhci_hcd 0000:03:00.4: HC died; cleaning up
-
-During suspend, a transition to D3cold is attempted, however the affected
-platforms do not seem to cut the power to the PCI device when in this
-state, so the device stays in D3hot.
-
-Upon resume, the D3hot-to-D0 transition is successful only if the D3 delay
-is increased to 20ms. The transition failure does not appear to be
-detectable as a CRS condition. Add a PCI quirk to increase the delay on the
-affected hardware.
-
-Link: https://bugzilla.kernel.org/show_bug.cgi?id=205587
-Link: http://lkml.kernel.org/r/CAD8Lp47Vh69gQjROYG69=waJgL7hs1PwnLonL9+27S_TcRhixA@mail.gmail.com
-Link: https://lore.kernel.org/r/20191127053836.31624-2-drake@endlessm.com
-Signed-off-by: Daniel Drake <drake@endlessm.com>
-Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
-Reviewed-by: Mika Westerberg <mika.westerberg@linux.intel.com>
+Reported-by: Hulk Robot <hulkci@huawei.com>
+Signed-off-by: Mao Wenan <maowenan@huawei.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/pci/quirks.c | 16 ++++++++++++++++
- 1 file changed, 16 insertions(+)
+ drivers/nfc/port100.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/pci/quirks.c b/drivers/pci/quirks.c
-index 5c863af9452ec..7b6df2d8d6cde 100644
---- a/drivers/pci/quirks.c
-+++ b/drivers/pci/quirks.c
-@@ -1889,6 +1889,22 @@ static void quirk_radeon_pm(struct pci_dev *dev)
- }
- DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_ATI, 0x6741, quirk_radeon_pm);
- 
-+/*
-+ * Ryzen5/7 XHCI controllers fail upon resume from runtime suspend or s2idle.
-+ * https://bugzilla.kernel.org/show_bug.cgi?id=205587
-+ *
-+ * The kernel attempts to transition these devices to D3cold, but that seems
-+ * to be ineffective on the platforms in question; the PCI device appears to
-+ * remain on in D3hot state. The D3hot-to-D0 transition then requires an
-+ * extended delay in order to succeed.
-+ */
-+static void quirk_ryzen_xhci_d3hot(struct pci_dev *dev)
-+{
-+	quirk_d3hot_delay(dev, 20);
-+}
-+DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_AMD, 0x15e0, quirk_ryzen_xhci_d3hot);
-+DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_AMD, 0x15e1, quirk_ryzen_xhci_d3hot);
-+
- #ifdef CONFIG_X86_IO_APIC
- static int dmi_disable_ioapicreroute(const struct dmi_system_id *d)
+diff --git a/drivers/nfc/port100.c b/drivers/nfc/port100.c
+index 604dba4f18afd..8e4d355dc3aec 100644
+--- a/drivers/nfc/port100.c
++++ b/drivers/nfc/port100.c
+@@ -565,7 +565,7 @@ static void port100_tx_update_payload_len(void *_frame, int len)
  {
+ 	struct port100_frame *frame = _frame;
+ 
+-	frame->datalen = cpu_to_le16(le16_to_cpu(frame->datalen) + len);
++	le16_add_cpu(&frame->datalen, len);
+ }
+ 
+ static bool port100_rx_frame_is_valid(void *_frame)
 -- 
 2.20.1
 
