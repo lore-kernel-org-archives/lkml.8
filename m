@@ -5,51 +5,49 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F3583C35641
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 08:36:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 72A73C35642
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 08:36:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B1A9620578
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 08:36:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 409B020578
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 08:36:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582274207;
-	bh=5frUTEE1/tpJIoyzeSXzhxHtKAjZb1k6HaWHwSQ/Jlg=;
+	s=default; t=1582274211;
+	bh=WuG/B6lmBEnh3GUKDiqWFqR3zitCFb14UJnbGdNR6mY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=aD48LTHGX9Q7jpE7S+oHXmKHD30veSxUPnTyTtkAATTaJUgZwh2z7rYbIpVt5TFR+
-	 akeJFCEClWq5YBY9bQxHTo4QpKHZ/KcP5QIbIPTXBBdMOi7uOa/0nVoNsXK3JYUnXg
-	 dmSwrNvcqh5Xb19B9gIkVjRadER6V+MnAiOrnuOk=
+	b=TrJTmZpwLALgfFoCJ/Lx6U5qmZ+169U7WhgnwXU/CHwrX+S/EJvw2B+cuzyhOux2H
+	 bvnztYmq+jUrR6OLN1J9M1z0Lx8BukylhrQr4tAspTQx5IBACHhToScmaNMritGHIm
+	 jffvKSDp2XCADRnzfrBwu5zfiLJSHQfiYxVuGj20=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732673AbgBUIgq (ORCPT
+        id S1731568AbgBUIFv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Feb 2020 03:36:46 -0500
-Received: from mail.kernel.org ([198.145.29.99]:39524 "EHLO mail.kernel.org"
+        Fri, 21 Feb 2020 03:05:51 -0500
+Received: from mail.kernel.org ([198.145.29.99]:39268 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731573AbgBUIFz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Feb 2020 03:05:55 -0500
+        id S1731852AbgBUIFl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 21 Feb 2020 03:05:41 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 33E6120578;
-        Fri, 21 Feb 2020 08:05:54 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6F40420801;
+        Fri, 21 Feb 2020 08:05:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1582272354;
-        bh=5frUTEE1/tpJIoyzeSXzhxHtKAjZb1k6HaWHwSQ/Jlg=;
+        s=default; t=1582272340;
+        bh=WuG/B6lmBEnh3GUKDiqWFqR3zitCFb14UJnbGdNR6mY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=y0Vvf8pf+Z99xvLMIyrAouRo2lFGV+yA4o0lPqzz+QL/rgnQAJ9xrWrtaoq2SuRFo
-         /Q/UnDOwMNpMItB6asXijoXhLLSxpUiBa+UgqF0YHi4xJK5lRfNn8kLN3dHm03dlxV
-         dDqNQybzwORpFCG2mJnfZKCwgMdeTqxpFgW23xEc=
+        b=oxVy9mriNRGHrATXWo7lY/VNtNuPXOU0GroOK3TmAI/8xIJVuhin76SuMHBVp26Lf
+         KhRTyxC4zUz0UW5KaARFpNIdYFNzHouRRgO9GwN0RPeb3jTjtccY66RYHn+f0B5Cem
+         bb/bvnmc9eaBGbvDLL007S/9Qtjo7zoJsUc9/Wo4=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Qiang Zhao <qiang.zhao@nxp.com>,
-        Timur Tabi <timur@kernel.org>,
-        Rasmus Villemoes <linux@rasmusvillemoes.dk>,
-        "David S. Miller" <davem@davemloft.net>,
-        Li Yang <leoyang.li@nxp.com>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 104/344] net/wan/fsl_ucc_hdlc: reject muram offsets above 64K
-Date:   Fri, 21 Feb 2020 08:38:23 +0100
-Message-Id: <20200221072358.371382790@linuxfoundation.org>
+        stable@vger.kernel.org, Chen Zhou <chenzhou10@huawei.com>,
+        Peng Ma <peng.ma@nxp.com>, Vinod Koul <vkoul@kernel.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.4 070/344] dmaengine: fsl-qdma: fix duplicated argument to &&
+Date:   Fri, 21 Feb 2020 08:37:49 +0100
+Message-Id: <20200221072355.353201379@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200221072349.335551332@linuxfoundation.org>
 References: <20200221072349.335551332@linuxfoundation.org>
@@ -62,42 +60,39 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Rasmus Villemoes <linux@rasmusvillemoes.dk>
+From: Chen Zhou <chenzhou10@huawei.com>
 
-[ Upstream commit 148587a59f6b85831695e0497d9dd1af5f0495af ]
+[ Upstream commit 4b048178854da11656596d36a107577d66fd1e08 ]
 
-Qiang Zhao points out that these offsets get written to 16-bit
-registers, and there are some QE platforms with more than 64K
-muram. So it is possible that qe_muram_alloc() gives us an allocation
-that can't actually be used by the hardware, so detect and reject
-that.
+There is duplicated argument to && in function fsl_qdma_free_chan_resources,
+which looks like a typo, pointer fsl_queue->desc_pool also needs NULL check,
+fix it.
+Detected with coccinelle.
 
-Reported-by: Qiang Zhao <qiang.zhao@nxp.com>
-Reviewed-by: Timur Tabi <timur@kernel.org>
-Signed-off-by: Rasmus Villemoes <linux@rasmusvillemoes.dk>
-Acked-by: David S. Miller <davem@davemloft.net>
-Signed-off-by: Li Yang <leoyang.li@nxp.com>
+Fixes: b092529e0aa0 ("dmaengine: fsl-qdma: Add qDMA controller driver for Layerscape SoCs")
+Signed-off-by: Chen Zhou <chenzhou10@huawei.com>
+Reviewed-by: Peng Ma <peng.ma@nxp.com>
+Tested-by: Peng Ma <peng.ma@nxp.com>
+Link: https://lore.kernel.org/r/20200120125843.34398-1-chenzhou10@huawei.com
+Signed-off-by: Vinod Koul <vkoul@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/wan/fsl_ucc_hdlc.c | 5 +++++
- 1 file changed, 5 insertions(+)
+ drivers/dma/fsl-qdma.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/net/wan/fsl_ucc_hdlc.c b/drivers/net/wan/fsl_ucc_hdlc.c
-index aef7de225783f..4ad0a0c33d853 100644
---- a/drivers/net/wan/fsl_ucc_hdlc.c
-+++ b/drivers/net/wan/fsl_ucc_hdlc.c
-@@ -245,6 +245,11 @@ static int uhdlc_init(struct ucc_hdlc_private *priv)
- 		ret = -ENOMEM;
- 		goto free_riptr;
- 	}
-+	if (riptr != (u16)riptr || tiptr != (u16)tiptr) {
-+		dev_err(priv->dev, "MURAM allocation out of addressable range\n");
-+		ret = -ENOMEM;
-+		goto free_tiptr;
-+	}
+diff --git a/drivers/dma/fsl-qdma.c b/drivers/dma/fsl-qdma.c
+index 89792083d62c5..95cc0256b3878 100644
+--- a/drivers/dma/fsl-qdma.c
++++ b/drivers/dma/fsl-qdma.c
+@@ -304,7 +304,7 @@ static void fsl_qdma_free_chan_resources(struct dma_chan *chan)
  
- 	/* Set RIPTR, TIPTR */
- 	iowrite16be(riptr, &priv->ucc_pram->riptr);
+ 	vchan_dma_desc_free_list(&fsl_chan->vchan, &head);
+ 
+-	if (!fsl_queue->comp_pool && !fsl_queue->comp_pool)
++	if (!fsl_queue->comp_pool && !fsl_queue->desc_pool)
+ 		return;
+ 
+ 	list_for_each_entry_safe(comp_temp, _comp_temp,
 -- 
 2.20.1
 
