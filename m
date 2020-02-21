@@ -2,90 +2,154 @@ Return-Path: <SRS0=1210=4J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 051ACC35657
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 16:59:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D07AAC35646
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 16:59:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CC83E222C4
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 16:59:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A38A2208C4
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 16:59:55 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=aosc.io header.i=@aosc.io header.b="CGpuMZck"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Mr8qL71m"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728019AbgBUQ7b (ORCPT
+        id S1728028AbgBUQ7y (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Feb 2020 11:59:31 -0500
-Received: from hermes.aosc.io ([199.195.250.187]:47627 "EHLO hermes.aosc.io"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725995AbgBUQ7b (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Feb 2020 11:59:31 -0500
-X-Greylist: delayed 450 seconds by postgrey-1.27 at vger.kernel.org; Fri, 21 Feb 2020 11:59:30 EST
-Received: from localhost (localhost [127.0.0.1]) (Authenticated sender: icenowy@aosc.io)
-        by hermes.aosc.io (Postfix) with ESMTPSA id EE6F748C57;
-        Fri, 21 Feb 2020 16:51:53 +0000 (UTC)
-From:   Icenowy Zheng <icenowy@aosc.io>
-To:     Andrzej Hajda <a.hajda@samsung.com>,
-        Neil Armstrong <narmstrong@baylibre.com>,
-        Laurent Pinchart <Laurent.pinchart@ideasonboard.com>,
-        Jonas Karlman <jonas@kwiboo.se>,
-        Jernej Skrabec <jernej.skrabec@siol.net>,
-        Torsten Duwe <duwe@lst.de>, Maxime Ripard <maxime@cerno.tech>,
-        Vasily Khoruzhick <anarsoul@gmail.com>
-Cc:     dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org,
-        Icenowy Zheng <icenowy@aosc.io>
-Subject: [PATCH] drm/bridge: analogix-anx6345: fix set of link bandwidth
-Date:   Sat, 22 Feb 2020 00:51:27 +0800
-Message-Id: <20200221165127.813325-1-icenowy@aosc.io>
+        Fri, 21 Feb 2020 11:59:54 -0500
+Received: from us-smtp-2.mimecast.com ([207.211.31.81]:38625 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726550AbgBUQ7y (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 21 Feb 2020 11:59:54 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1582304393;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:
+         content-transfer-encoding:content-transfer-encoding;
+        bh=jVP+GaOAhxIYChDGXltTUu+msDFFHu1e+G/CR9YhvOw=;
+        b=Mr8qL71mbhsYVJBL88UJAQaKfFpOLpzUo7PMT4os5TbS6P7Fcyw933RrmElkfndKIqHDuA
+        OnL39nbaO1dHUNv08BSKoi0X1Os8G7RJlHCy2I6J4MMZ4BY67LT600Q0s4Nt1N3pGVzzxH
+        YNzcYkfr3FKOzwl/f9g5+9iKOfyiOC0=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-39--qK4B4NONbSQOdTxiS95Yg-1; Fri, 21 Feb 2020 11:59:47 -0500
+X-MC-Unique: -qK4B4NONbSQOdTxiS95Yg-1
+Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 346381005510;
+        Fri, 21 Feb 2020 16:59:46 +0000 (UTC)
+Received: from x1.localdomain.com (ovpn-116-191.ams2.redhat.com [10.36.116.191])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 3002660C99;
+        Fri, 21 Feb 2020 16:59:43 +0000 (UTC)
+From:   Hans de Goede <hdegoede@redhat.com>
+To:     Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        "H . Peter Anvin" <hpa@zytor.com>
+Cc:     Hans de Goede <hdegoede@redhat.com>, x86@kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH resend] x86/purgatory: Make sure we fail the build if purgatory.ro has missing symbols
+Date:   Fri, 21 Feb 2020 17:59:41 +0100
+Message-Id: <20200221165941.508653-1-hdegoede@redhat.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=aosc.io; s=dkim;
-        t=1582303919;
-        h=from:subject:date:message-id:to:cc:mime-version:content-transfer-encoding;
-        bh=YNbFrFHVB1l3mDgNrrl772T+WtA//BPVhMlOVwCxv2w=;
-        b=CGpuMZckC4RiokZ8E/hXX2HzrZi04PYP127dKuQ0zyygfRpucOHsUVCrFfVVxuUPjKMhGE
-        i+mn3cNlswA+wrkBj8iP1MGIySNiv10k9D/bXsv6YLywh16R+Agx4TDPjG1Pj1wp38zvmv
-        YUBojk1AXs8ACNVGMe6E6ZydjLRFrsw=
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Current code tries to store the link rate (in bps, which is a big
-number) in a u8, which surely overflow. Then it's converted back to
-bandwidth code (which is thus 0) and written to the chip.
+Since we link purgatory.ro with -r aka we enable "incremental linking"
+no checks for unresolved symbols is done while linking purgatory.ro.
 
-The code sometimes works because the chip will automatically fallback to
-the lowest possible DP link rate (1.62Gbps) when get the invalid value.
-However, on the eDP panel of Olimex TERES-I, which wants 2.7Gbps link,
-it failed.
+Changes to the sha256 code has caused the purgatory in 5.4-rc1 to have
+a missing symbol on memzero_explicit, yet things still happily build.
 
-As we had already read the link bandwidth as bandwidth code in earlier
-code (to check whether it is supported), use it when setting bandwidth,
-instead of converting it to link rate and then converting back.
+This commit adds an extra check for unresolved symbols by calling ld
+without -r before running bin2c to generate kexec-purgatory.c.
 
-Fixes: e1cff82c1097 ("drm/bridge: fix anx6345 compilation for v5.5")
-Signed-off-by: Icenowy Zheng <icenowy@aosc.io>
+This causes a build of 5.4-rc1 with this patch added to fail as it should=
+:
+
+  CHK     arch/x86/purgatory/purgatory.ro
+ld: arch/x86/purgatory/purgatory.ro: in function `sha256_transform':
+sha256.c:(.text+0x1c0c): undefined reference to `memzero_explicit'
+make[2]: *** [arch/x86/purgatory/Makefile:72:
+    arch/x86/purgatory/kexec-purgatory.c] Error 1
+make[1]: *** [scripts/Makefile.build:509: arch/x86/purgatory] Error 2
+make: *** [Makefile:1650: arch/x86] Error 2
+
+This will help us catch missing symbols in the purgatory sooner.
+
+Note this commit also removes --no-undefined from LDFLAGS_purgatory.ro
+as that has no effect.
+
+Signed-off-by: Hans de Goede <hdegoede@redhat.com>
 ---
- drivers/gpu/drm/bridge/analogix/analogix-anx6345.c | 3 +--
- 1 file changed, 1 insertion(+), 2 deletions(-)
+Changes in v3:
+- Add a .gitignore file with purgatory.chk listed in it
 
-diff --git a/drivers/gpu/drm/bridge/analogix/analogix-anx6345.c b/drivers/gpu/drm/bridge/analogix/analogix-anx6345.c
-index 56f55c53abfd..2dfa2fd2a23b 100644
---- a/drivers/gpu/drm/bridge/analogix/analogix-anx6345.c
-+++ b/drivers/gpu/drm/bridge/analogix/analogix-anx6345.c
-@@ -210,8 +210,7 @@ static int anx6345_dp_link_training(struct anx6345 *anx6345)
- 	if (err)
- 		return err;
- 
--	dpcd[0] = drm_dp_max_link_rate(anx6345->dpcd);
--	dpcd[0] = drm_dp_link_rate_to_bw_code(dpcd[0]);
-+	dpcd[0] = dp_bw;
- 	err = regmap_write(anx6345->map[I2C_IDX_DPTX],
- 			   SP_DP_MAIN_LINK_BW_SET_REG, dpcd[0]);
- 	if (err)
--- 
-2.24.1
+Changes in v2:
+- Using 2 if_changed lines under a single rule does not work, then
+  1 of the 2 will always execute each build.
+  Instead add a new (unused) purgatory.chk intermediate which gets
+  linked from purgatory.ro without -r to do the missing symbols check
+- This also fixes the check generating an a.out file (oops)
+---
+ arch/x86/purgatory/.gitignore |  1 +
+ arch/x86/purgatory/Makefile   | 13 ++++++++++---
+ 2 files changed, 11 insertions(+), 3 deletions(-)
+ create mode 100644 arch/x86/purgatory/.gitignore
+
+diff --git a/arch/x86/purgatory/.gitignore b/arch/x86/purgatory/.gitignor=
+e
+new file mode 100644
+index 000000000000..d2be1500671d
+--- /dev/null
++++ b/arch/x86/purgatory/.gitignore
+@@ -0,0 +1 @@
++purgatory.chk
+diff --git a/arch/x86/purgatory/Makefile b/arch/x86/purgatory/Makefile
+index fb4ee5444379..5bb58247699d 100644
+--- a/arch/x86/purgatory/Makefile
++++ b/arch/x86/purgatory/Makefile
+@@ -14,8 +14,12 @@ $(obj)/sha256.o: $(srctree)/lib/crypto/sha256.c FORCE
+=20
+ CFLAGS_sha256.o :=3D -D__DISABLE_EXPORTS
+=20
+-LDFLAGS_purgatory.ro :=3D -e purgatory_start -r --no-undefined -nostdlib=
+ -z nodefaultlib
+-targets +=3D purgatory.ro
++# Since we link purgatory.ro with -r unresolved symbols are not checked,=
+ so we
++# also link a purgatory.chk binary without -r to check for unresolved sy=
+mbols.
++PURGATORY_LDFLAGS :=3D -e purgatory_start -nostdlib -z nodefaultlib
++LDFLAGS_purgatory.ro :=3D -r $(PURGATORY_LDFLAGS)
++LDFLAGS_purgatory.chk :=3D $(PURGATORY_LDFLAGS)
++targets +=3D purgatory.ro purgatory.chk
+=20
+ KASAN_SANITIZE	:=3D n
+ KCOV_INSTRUMENT :=3D n
+@@ -58,12 +62,15 @@ CFLAGS_string.o			+=3D $(PURGATORY_CFLAGS)
+ $(obj)/purgatory.ro: $(PURGATORY_OBJS) FORCE
+ 		$(call if_changed,ld)
+=20
++$(obj)/purgatory.chk: $(obj)/purgatory.ro FORCE
++		$(call if_changed,ld)
++
+ targets +=3D kexec-purgatory.c
+=20
+ quiet_cmd_bin2c =3D BIN2C   $@
+       cmd_bin2c =3D $(objtree)/scripts/bin2c kexec_purgatory < $< > $@
+=20
+-$(obj)/kexec-purgatory.c: $(obj)/purgatory.ro FORCE
++$(obj)/kexec-purgatory.c: $(obj)/purgatory.ro $(obj)/purgatory.chk FORCE
+ 	$(call if_changed,bin2c)
+=20
+ obj-$(CONFIG_KEXEC_FILE)	+=3D kexec-purgatory.o
+--=20
+2.25.0
 
