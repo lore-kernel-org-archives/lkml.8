@@ -7,50 +7,46 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B8962C35641
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 08:44:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E55B1C35640
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 08:44:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8C2EB206ED
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 08:44:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B03FF206DB
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 08:44:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582274679;
-	bh=rj39OSYrqoqu/gv7Js1ahDXPfUHMssE9lIG6TbNNZN8=;
+	s=default; t=1582274680;
+	bh=3ODXTUeZ35UJmyvQ2p0iB2Y0ndy83nSr1LYsnmFOKuU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=vLVw3SPRWbqN40eZQgKh5T8Suuabb29UJXLSeXdXSikCqgDwP4RdH46PgfTP8dd6u
-	 HMEXv82G64HGMdKkqvVcR4Hhbr8dbaMHwPQ0DxK6CqZeA3p51teKO5ZUFyEL3DQFYz
-	 76FRjrH+U4H4nuArKRBdkJupMoQMMJJjKuMC9ylI=
+	b=nt0BUD8oSTV1/qzC44E2kLh8IBmaNE2zMCXg5VkvLRJe9iSvPasogY748C5YAkC8m
+	 RqCLVXgXAPL+kX399iVY6XEF2kgZW0xj8h31j08YIDlHLYAIJkYDvuLOapIalyrk4v
+	 UkHpacqwrK7+hYkeOvHepCZdKXfPBMuIlgg3nbGE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732087AbgBUIoh (ORCPT
+        id S1731826AbgBUIof (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Feb 2020 03:44:37 -0500
-Received: from mail.kernel.org ([198.145.29.99]:49932 "EHLO mail.kernel.org"
+        Fri, 21 Feb 2020 03:44:35 -0500
+Received: from mail.kernel.org ([198.145.29.99]:50044 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729162AbgBUHwL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Feb 2020 02:52:11 -0500
+        id S1729870AbgBUHwQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 21 Feb 2020 02:52:16 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 70FEF20578;
-        Fri, 21 Feb 2020 07:52:10 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5D03820578;
+        Fri, 21 Feb 2020 07:52:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1582271530;
-        bh=rj39OSYrqoqu/gv7Js1ahDXPfUHMssE9lIG6TbNNZN8=;
+        s=default; t=1582271535;
+        bh=3ODXTUeZ35UJmyvQ2p0iB2Y0ndy83nSr1LYsnmFOKuU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=yK/KBuRDCg2vTZTJygn+Y3+ok+B0CpUuXK4I1wTm9pKPVzatr7oMoNi+d7hk+M1B0
-         R53n39icfIwbHPrx7NubL8W1U19JDaY0fv7qdzPqCUNh5cXUWjDcggAZtrw+t+7AEi
-         vwBqp1+fODOjiWSk1YA6Q3o7CgtzRh0Q09FTIcis=
+        b=DvSoukyzBNMmKu0juXEbS64Cz7HHrf0Tpp0cQO95KVLmbWPBCYhcnIKnDjR/WVt54
+         SqosxEv7xWJOnZDt8qnNSFHoya6iJQHAJTVjY0YX98XOU4PNli0JuD7WuYXVYr+C++
+         BfNGJPYAQu91lLrs0w9XgO6z11v0zE7AuGaC2q6w=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Niklas Cassel <niklas.cassel@linaro.org>,
-        Stephen Boyd <sboyd@kernel.org>,
-        Niklas Cassel <nks@flawful.org>,
+        stable@vger.kernel.org, Takashi Iwai <tiwai@suse.de>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.5 202/399] clk: Use parent node pointer during registration if necessary
-Date:   Fri, 21 Feb 2020 08:38:47 +0100
-Message-Id: <20200221072422.473897235@linuxfoundation.org>
+Subject: [PATCH 5.5 204/399] ALSA: hda/realtek - Apply mic mute LED quirk for Dell E7xx laptops, too
+Date:   Fri, 21 Feb 2020 08:38:49 +0100
+Message-Id: <20200221072422.690520749@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200221072402.315346745@linuxfoundation.org>
 References: <20200221072402.315346745@linuxfoundation.org>
@@ -63,92 +59,58 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Stephen Boyd <sboyd@kernel.org>
+From: Takashi Iwai <tiwai@suse.de>
 
-[ Upstream commit 9011f92622e5ef2d075f45e5fa818776d4feb8c0 ]
+[ Upstream commit 5fab5829674c279839a7408ab30c71c6dfe726b9 ]
 
-Sometimes clk drivers are attached to devices which are children of a
-parent device that is connected to a node in DT. This happens when
-devices are MFD-ish and the parent device driver mostly registers child
-devices to match against drivers placed in their respective subsystem
-directories like drivers/clk, drivers/regulator, etc. When the clk
-driver calls clk_register() with a device pointer, that struct device
-pointer won't have a device_node associated with it because it was
-created purely in software as a way to partition logic to a subsystem.
+Dell E7xx laptops have also mic mute LED that is driven by the
+dell-laptop platform driver.  Bind it with the capture control as
+already done for other models.
 
-This causes problems for the way we find parent clks for the clks
-registered by these child devices because we look at the registering
-device's device_node pointer to lookup 'clocks' and 'clock-names'
-properties. Let's use the parent device's device_node pointer if the
-registering device doesn't have a device_node but the parent does. This
-simplifies clk registration code by avoiding the need to assign some
-device_node to the device registering the clk.
+A caveat is that the fixup hook for the mic mute LED has to be applied
+at last, otherwise it results in the invalid override of the callback.
 
-Cc: Bjorn Andersson <bjorn.andersson@linaro.org>
-Reported-by: Niklas Cassel <niklas.cassel@linaro.org>
-Signed-off-by: Stephen Boyd <sboyd@kernel.org>
-Link: https://lkml.kernel.org/r/20191230190455.141339-1-sboyd@kernel.org
-[sboyd@kernel.org: Fixup kernel-doc notation]
-Reviewed-by: Niklas Cassel <nks@flawful.org>
-Reviewed-by: Bjorn Andersson <bjorn.andersson@linaro.org>
-Tested-by: Bjorn Andersson <bjorn.andersson@linaro.org>
+BugLink: https://bugzilla.kernel.org/show_bug.cgi?id=205529
+Link: https://lore.kernel.org/r/20200105081119.21396-1-tiwai@suse.de
+Signed-off-by: Takashi Iwai <tiwai@suse.de>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/clk/clk.c | 27 +++++++++++++++++++++++++--
- 1 file changed, 25 insertions(+), 2 deletions(-)
+ sound/pci/hda/patch_realtek.c | 10 +++++++++-
+ 1 file changed, 9 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/clk/clk.c b/drivers/clk/clk.c
-index 53585cfc4b9ba..66f056ac4c156 100644
---- a/drivers/clk/clk.c
-+++ b/drivers/clk/clk.c
-@@ -3736,6 +3736,28 @@ fail_out:
- 	return ERR_PTR(ret);
- }
- 
-+/**
-+ * dev_or_parent_of_node() - Get device node of @dev or @dev's parent
-+ * @dev: Device to get device node of
-+ *
-+ * Return: device node pointer of @dev, or the device node pointer of
-+ * @dev->parent if dev doesn't have a device node, or NULL if neither
-+ * @dev or @dev->parent have a device node.
-+ */
-+static struct device_node *dev_or_parent_of_node(struct device *dev)
-+{
-+	struct device_node *np;
-+
-+	if (!dev)
-+		return NULL;
-+
-+	np = dev_of_node(dev);
-+	if (!np)
-+		np = dev_of_node(dev->parent);
-+
-+	return np;
-+}
-+
- /**
-  * clk_register - allocate a new clock, register it and return an opaque cookie
-  * @dev: device that is registering this clock
-@@ -3751,7 +3773,7 @@ fail_out:
-  */
- struct clk *clk_register(struct device *dev, struct clk_hw *hw)
- {
--	return __clk_register(dev, dev_of_node(dev), hw);
-+	return __clk_register(dev, dev_or_parent_of_node(dev), hw);
- }
- EXPORT_SYMBOL_GPL(clk_register);
- 
-@@ -3767,7 +3789,8 @@ EXPORT_SYMBOL_GPL(clk_register);
-  */
- int clk_hw_register(struct device *dev, struct clk_hw *hw)
- {
--	return PTR_ERR_OR_ZERO(__clk_register(dev, dev_of_node(dev), hw));
-+	return PTR_ERR_OR_ZERO(__clk_register(dev, dev_or_parent_of_node(dev),
-+			       hw));
- }
- EXPORT_SYMBOL_GPL(clk_hw_register);
- 
+diff --git a/sound/pci/hda/patch_realtek.c b/sound/pci/hda/patch_realtek.c
+index 128d81b4140b3..c6b1581c6ffaa 100644
+--- a/sound/pci/hda/patch_realtek.c
++++ b/sound/pci/hda/patch_realtek.c
+@@ -5852,6 +5852,7 @@ enum {
+ 	ALC288_FIXUP_DELL1_MIC_NO_PRESENCE,
+ 	ALC288_FIXUP_DELL_XPS_13,
+ 	ALC288_FIXUP_DISABLE_AAMIX,
++	ALC292_FIXUP_DELL_E7X_AAMIX,
+ 	ALC292_FIXUP_DELL_E7X,
+ 	ALC292_FIXUP_DISABLE_AAMIX,
+ 	ALC293_FIXUP_DISABLE_AAMIX_MULTIJACK,
+@@ -6547,12 +6548,19 @@ static const struct hda_fixup alc269_fixups[] = {
+ 		.chained = true,
+ 		.chain_id = ALC293_FIXUP_DELL1_MIC_NO_PRESENCE
+ 	},
+-	[ALC292_FIXUP_DELL_E7X] = {
++	[ALC292_FIXUP_DELL_E7X_AAMIX] = {
+ 		.type = HDA_FIXUP_FUNC,
+ 		.v.func = alc_fixup_dell_xps13,
+ 		.chained = true,
+ 		.chain_id = ALC292_FIXUP_DISABLE_AAMIX
+ 	},
++	[ALC292_FIXUP_DELL_E7X] = {
++		.type = HDA_FIXUP_FUNC,
++		.v.func = snd_hda_gen_fixup_micmute_led,
++		/* micmute fixup must be applied at last */
++		.chained_before = true,
++		.chain_id = ALC292_FIXUP_DELL_E7X_AAMIX,
++	},
+ 	[ALC298_FIXUP_ALIENWARE_MIC_NO_PRESENCE] = {
+ 		.type = HDA_FIXUP_PINS,
+ 		.v.pins = (const struct hda_pintbl[]) {
 -- 
 2.20.1
 
