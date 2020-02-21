@@ -2,218 +2,107 @@ Return-Path: <SRS0=1210=4J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AD518C35641
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 08:57:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 63AE8C35640
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 08:57:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8167E2067D
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 08:57:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 42F7C2067D
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 08:57:30 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732555AbgBUI5F (ORCPT
+        id S2387777AbgBUI53 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Feb 2020 03:57:05 -0500
-Received: from bhuna.collabora.co.uk ([46.235.227.227]:55442 "EHLO
-        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727213AbgBUI5F (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Feb 2020 03:57:05 -0500
-Received: from [127.0.0.1] (localhost [127.0.0.1])
-        (Authenticated sender: eballetbo)
-        with ESMTPSA id 986C728CC36
-Subject: Re: [PATCH v8 0/6] arm/arm64: mediatek: Fix mmsys device probing
-To:     CK Hu <ck.hu@mediatek.com>
-Cc:     robh+dt@kernel.org, mark.rutland@arm.com, p.zabel@pengutronix.de,
-        airlied@linux.ie, mturquette@baylibre.com, sboyd@kernel.org,
-        ulrich.hecht+renesas@gmail.com, laurent.pinchart@ideasonboard.com,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        rdunlap@infradead.org, dri-devel@lists.freedesktop.org,
-        Weiyi Lu <weiyi.lu@mediatek.com>,
-        Seiya Wang <seiya.wang@mediatek.com>,
-        linux-clk@vger.kernel.org,
-        Collabora Kernel ML <kernel@collabora.com>,
-        mtk01761 <wendell.lin@mediatek.com>,
-        Allison Randal <allison@lohutok.net>,
-        Thomas Gleixner <tglx@linutronix.de>, wens@csie.org,
-        Kate Stewart <kstewart@linuxfoundation.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Houlong Wei <houlong.wei@mediatek.com>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        linux-media@vger.kernel.org, devicetree@vger.kernel.org,
-        sean.wang@mediatek.com, frank-w@public-files.de,
-        Minghsiu Tsai <minghsiu.tsai@mediatek.com>,
-        Andrew-CT Chen <andrew-ct.chen@mediatek.com>,
-        linux-mediatek@lists.infradead.org, hsinyi@chromium.org,
-        Matthias Brugger <mbrugger@suse.com>,
-        linux-arm-kernel@lists.infradead.org,
-        Richard Fontana <rfontana@redhat.com>,
-        linux-kernel@vger.kernel.org, matthias.bgg@kernel.org,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Fabien Parent <fparent@baylibre.com>,
-        Krzysztof Kozlowski <krzk@kernel.org>,
-        Nicolas Boichat <drinkcat@chromium.org>,
-        Owen Chen <owen.chen@mediatek.com>
-References: <20200220172147.919996-1-enric.balletbo@collabora.com>
- <1582259996.1846.7.camel@mtksdaap41>
-From:   Enric Balletbo i Serra <enric.balletbo@collabora.com>
-Message-ID: <7a87b486-1622-7f27-f5af-427b94a14c00@collabora.com>
-Date:   Fri, 21 Feb 2020 09:56:56 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.5.0
+        Fri, 21 Feb 2020 03:57:29 -0500
+Received: from mga12.intel.com ([192.55.52.136]:24941 "EHLO mga12.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728063AbgBUI52 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 21 Feb 2020 03:57:28 -0500
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga005.jf.intel.com ([10.7.209.41])
+  by fmsmga106.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 21 Feb 2020 00:57:27 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.70,467,1574150400"; 
+   d="scan'208";a="409077690"
+Received: from black.fi.intel.com ([10.237.72.28])
+  by orsmga005.jf.intel.com with ESMTP; 21 Feb 2020 00:57:25 -0800
+Received: by black.fi.intel.com (Postfix, from userid 1003)
+        id 222F194; Fri, 21 Feb 2020 10:57:23 +0200 (EET)
+From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To:     Petr Mladek <pmladek@suse.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
+        linux-kernel@vger.kernel.org,
+        Rasmus Villemoes <linux@rasmusvillemoes.dk>
+Cc:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= 
+        <u.kleine-koenig@pengutronix.de>
+Subject: [PATCH v1] lib/vsprintf: update comment about simple_strto<foo>() functions
+Date:   Fri, 21 Feb 2020 10:57:23 +0200
+Message-Id: <20200221085723.42469-1-andriy.shevchenko@linux.intel.com>
+X-Mailer: git-send-email 2.25.0
 MIME-Version: 1.0
-In-Reply-To: <1582259996.1846.7.camel@mtksdaap41>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi CK,
+The commit 885e68e8b7b1 ("kernel.h: update comment about simple_strto<foo>()
+functions") updated a comment regard to simple_strto<foo>() functions, but
+missed similar change in the vsprintf.c module.
 
-Thanks for your quick answer.
+Update comments in vsprintf.c as well for simple_strto<foo>() functions.
 
-On 21/2/20 5:39, CK Hu wrote:
-> Hi, Enric:
-> 
-> On Thu, 2020-02-20 at 18:21 +0100, Enric Balletbo i Serra wrote:
->> Dear all,
->>
->> Those patches are intended to solve an old standing issue on some
->> Mediatek devices (mt8173, mt2701 and mt2712) in a slightly different way
->> to the precedent series.
->>
->> Up to now both drivers, clock and drm are probed with the same device tree
->> compatible. But only the first driver get probed, which in effect breaks
->> graphics on those devices.
->>
->> The version eight of the series tries to solve the problem with a
->> different approach than the previous series but similar to how is solved
->> on other Mediatek devices.
->>
->> The MMSYS (Multimedia subsystem) in Mediatek SoCs has some registers to
->> control clock gates (which is used in the clk driver) and some registers
->> to set the routing and enable the differnet blocks of the display
->> and MDP (Media Data Path) subsystem. On this series the clk driver is
->> not a pure clock controller but a system controller that can provide
->> access to the shared registers between the different drivers that need
->> it (mediatek-drm and mediatek-mdp). And the biggest change is, that in
->> this version, clk driver is the entry point (parent) which will trigger
->> the probe of the corresponding mediatek-drm driver and pass its MMSYS
->> platform data for display configuration.
-> 
-> When mmsys is a system controller, I prefer to place mmsys in
-> drivers/soc/mediatek, and it share registers for clock, display, and mdp
-> driver. This means the probe function is placed in
-> drivers/soc/mediatek ,its display clock function, mdp clock function are
-> placed in drivers/clk, display routing are placed in drivers/gpu/drm,
-> and mdp routing are placed in dirvers/video.
-> 
+Reported-by: Uwe Kleine-König <u.kleine-koenig@pengutronix.de>
+Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+---
+ lib/vsprintf.c | 8 ++++----
+ 1 file changed, 4 insertions(+), 4 deletions(-)
 
-I understand what you mean but I am not sure this makes the code clearer and
-useful. The driver in drivers/soc/mediatek will be a simple dummy implementation
-of a "simple-mfd" device (a driver that simply matches with
-"mediatek,mt8173-mmsys" and instantiates the "clk-mt8173-mm" and the
-"mediatek-drm" driver (note that mediatek-mdp" is already instantiated via
-device-tree).
+diff --git a/lib/vsprintf.c b/lib/vsprintf.c
+index 7c488a1ce318..d5641a217685 100644
+--- a/lib/vsprintf.c
++++ b/lib/vsprintf.c
+@@ -58,7 +58,7 @@
+  * @endp: A pointer to the end of the parsed string will be placed here
+  * @base: The number base to use
+  *
+- * This function is obsolete. Please use kstrtoull instead.
++ * This function has caveats. Please use kstrtoull instead.
+  */
+ unsigned long long simple_strtoull(const char *cp, char **endp, unsigned int base)
+ {
+@@ -83,7 +83,7 @@ EXPORT_SYMBOL(simple_strtoull);
+  * @endp: A pointer to the end of the parsed string will be placed here
+  * @base: The number base to use
+  *
+- * This function is obsolete. Please use kstrtoul instead.
++ * This function has caveats. Please use kstrtoul instead.
+  */
+ unsigned long simple_strtoul(const char *cp, char **endp, unsigned int base)
+ {
+@@ -97,7 +97,7 @@ EXPORT_SYMBOL(simple_strtoul);
+  * @endp: A pointer to the end of the parsed string will be placed here
+  * @base: The number base to use
+  *
+- * This function is obsolete. Please use kstrtol instead.
++ * This function has caveats. Please use kstrtol instead.
+  */
+ long simple_strtol(const char *cp, char **endp, unsigned int base)
+ {
+@@ -114,7 +114,7 @@ EXPORT_SYMBOL(simple_strtol);
+  * @endp: A pointer to the end of the parsed string will be placed here
+  * @base: The number base to use
+  *
+- * This function is obsolete. Please use kstrtoll instead.
++ * This function has caveats. Please use kstrtoll instead.
+  */
+ long long simple_strtoll(const char *cp, char **endp, unsigned int base)
+ {
+-- 
+2.25.0
 
-It'd be nice had a proper device-tree with a "simple-mfd" for mmsys from the
-beginning representing how really hardwware is, but I think that, change this
-now, will break backward compatibility.
-
-IMHO I think that considering the clk driver as entry point is fine, but this is
-something that the clock maintainers should decide.
-
-Also note that this is not only a MT8173 problem I am seeing the same problem on
-all other Mediatek SoCs.
-
-Thanks.
-
-> Regards,
-> CK
-> 
->>
->> All this series was tested on the Acer R13 Chromebook only.
->>
->> For reference, here are the links to the old discussions:
->>
->> * v7: https://patchwork.kernel.org/project/linux-mediatek/list/?series=241217
->> * v6: https://patchwork.kernel.org/project/linux-mediatek/list/?series=213219
->> * v5: https://patchwork.kernel.org/project/linux-mediatek/list/?series=44063
->> * v4:
->>   * https://patchwork.kernel.org/patch/10530871/
->>   * https://patchwork.kernel.org/patch/10530883/
->>   * https://patchwork.kernel.org/patch/10530885/
->>   * https://patchwork.kernel.org/patch/10530911/
->>   * https://patchwork.kernel.org/patch/10530913/
->> * v3:
->>   * https://patchwork.kernel.org/patch/10367857/
->>   * https://patchwork.kernel.org/patch/10367861/
->>   * https://patchwork.kernel.org/patch/10367877/
->>   * https://patchwork.kernel.org/patch/10367875/
->>   * https://patchwork.kernel.org/patch/10367885/
->>   * https://patchwork.kernel.org/patch/10367883/
->>   * https://patchwork.kernel.org/patch/10367889/
->>   * https://patchwork.kernel.org/patch/10367907/
->>   * https://patchwork.kernel.org/patch/10367909/
->>   * https://patchwork.kernel.org/patch/10367905/
->> * v2: No relevant discussion, see v3
->> * v1:
->>   * https://patchwork.kernel.org/patch/10016497/
->>   * https://patchwork.kernel.org/patch/10016499/
->>   * https://patchwork.kernel.org/patch/10016505/
->>   * https://patchwork.kernel.org/patch/10016507/
->>
->> Best regards,
->>  Enric
->>
->> Changes in v8:
->> - Be a builtin_platform_driver like other mediatek mmsys drivers.
->> - New patches introduced in this series.
->>
->> Changes in v7:
->> - Add R-by from CK
->> - Add R-by from CK
->> - Fix check of return value of of_clk_get
->> - Fix identation
->> - Free clk_data->clks as well
->> - Get rid of private data structure
->>
->> Enric Balletbo i Serra (2):
->>   drm/mediatek: Move MMSYS configuration to include/linux/platform_data
->>   clk/drm: mediatek: Fix mediatek-drm device probing
->>
->> Matthias Brugger (4):
->>   drm/mediatek: Use regmap for register access
->>   drm/mediatek: Omit warning on probe defers
->>   media: mtk-mdp: Check return value of of_clk_get
->>   clk: mediatek: mt8173: Switch MMSYS to platform driver
->>
->>  drivers/clk/mediatek/Kconfig                  |   6 +
->>  drivers/clk/mediatek/Makefile                 |   1 +
->>  drivers/clk/mediatek/clk-mt2701-mm.c          |  30 +++
->>  drivers/clk/mediatek/clk-mt2712-mm.c          |  44 +++++
->>  drivers/clk/mediatek/clk-mt8173-mm.c          | 172 ++++++++++++++++++
->>  drivers/clk/mediatek/clk-mt8173.c             | 104 -----------
->>  drivers/gpu/drm/mediatek/mtk_disp_color.c     |   5 +-
->>  drivers/gpu/drm/mediatek/mtk_disp_ovl.c       |   5 +-
->>  drivers/gpu/drm/mediatek/mtk_disp_rdma.c      |   5 +-
->>  drivers/gpu/drm/mediatek/mtk_dpi.c            |  12 +-
->>  drivers/gpu/drm/mediatek/mtk_drm_crtc.c       |   4 +-
->>  drivers/gpu/drm/mediatek/mtk_drm_ddp.c        |  53 +++---
->>  drivers/gpu/drm/mediatek/mtk_drm_ddp.h        |   4 +-
->>  drivers/gpu/drm/mediatek/mtk_drm_ddp_comp.h   |  56 +-----
->>  drivers/gpu/drm/mediatek/mtk_drm_drv.c        | 113 +-----------
->>  drivers/gpu/drm/mediatek/mtk_drm_drv.h        |  13 +-
->>  drivers/gpu/drm/mediatek/mtk_dsi.c            |   8 +-
->>  drivers/gpu/drm/mediatek/mtk_hdmi.c           |   4 +-
->>  drivers/media/platform/mtk-mdp/mtk_mdp_comp.c |   6 +
->>  include/linux/platform_data/mtk_mmsys.h       |  73 ++++++++
->>  20 files changed, 401 insertions(+), 317 deletions(-)
->>  create mode 100644 drivers/clk/mediatek/clk-mt8173-mm.c
->>  create mode 100644 include/linux/platform_data/mtk_mmsys.h
->>
-> 
