@@ -7,47 +7,49 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 61B0DC35641
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 08:21:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 27138C35641
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 08:21:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3A42B206ED
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 08:21:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EC3DA222C4
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 08:21:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582273270;
-	bh=GRvpBHdwaRmGyhqFV9SutAkddtjGkMHJbBSngALE17A=;
+	s=default; t=1582273274;
+	bh=hEI+DnjtVdc0WPrY+zyzHd5RgdLumkLZqFZf81F03qA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=az8NajCR2W6u86bsDc8520XHOmJMmzmXa24GqwrlWA3hqwQYjMOPP2MeN9zTTBWGA
-	 0Wr6r4lFK49xMu82NTJkuHCPG8bmp6BiL0hbhVcUIgJHTCyrEzQzc78SPn+daHqlmw
-	 YXSJp7OwHAxf+1LjcdFJndVU7faQ74gFm8JoOOmY=
+	b=jThdZHNaUUjzife0gU0V25ZFm8VFDRxiNOrn12K6aY2h7OED9isvZ47twGP4QtO1/
+	 vTnMgT7czecPgPU1F/B6aeMOc5MhYN3eestIDjGpfGzj53uga38C/uUP2m4Zu4VX+o
+	 Qjdq+GrDmONg4AC8X4pcuyPl5rt6Gf3RopeRJTEI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388228AbgBUIVJ (ORCPT
+        id S2388039AbgBUIVN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Feb 2020 03:21:09 -0500
-Received: from mail.kernel.org ([198.145.29.99]:60282 "EHLO mail.kernel.org"
+        Fri, 21 Feb 2020 03:21:13 -0500
+Received: from mail.kernel.org ([198.145.29.99]:60438 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388208AbgBUIU7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Feb 2020 03:20:59 -0500
+        id S2388225AbgBUIVI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 21 Feb 2020 03:21:08 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C624E206ED;
-        Fri, 21 Feb 2020 08:20:58 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 759AD222C4;
+        Fri, 21 Feb 2020 08:21:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1582273259;
-        bh=GRvpBHdwaRmGyhqFV9SutAkddtjGkMHJbBSngALE17A=;
+        s=default; t=1582273266;
+        bh=hEI+DnjtVdc0WPrY+zyzHd5RgdLumkLZqFZf81F03qA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=kRpEf1FPcZLkTXzMhwqOA0Cs3clMncHDg4x/okiEyDIt1Uoa300LZNVpxy19ojq94
-         Zd8NwXlqz7iB9Lw4SOkLgsKfj/1I0X7/243xNX/EqCVM7+ind7m6y33Frkl6lO0Ndu
-         jgqTigRD+x8gkV6yLdZ/GyztA10jPitoxBY2rIvQ=
+        b=MssJ9WLtpa7FxkAal3EyIqM3NxGJh9g5UdQlPQAya1A9Y5ux8JiiSkQJsMylhdXUV
+         LekxMw4PHiaJuHcK2uTo5x8OK5LC5ZkcouG1eMabl1RAoCjQYFKfQXJm3azdynXwHC
+         +XDrkPyZdJZlLOK+zKmiugau2QywHqkiz8rpinE0=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Sascha Hauer <s.hauer@pengutronix.de>,
-        Robin Gong <yibin.gong@nxp.com>, Vinod Koul <vkoul@kernel.org>,
+        stable@vger.kernel.org, Kaike Wan <kaike.wan@intel.com>,
+        Mike Marciniszyn <mike.marciniszyn@intel.com>,
+        Dennis Dalessandro <dennis.dalessandro@intel.com>,
+        Jason Gunthorpe <jgg@mellanox.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 087/191] dmaengine: imx-sdma: Fix memory leak
-Date:   Fri, 21 Feb 2020 08:41:00 +0100
-Message-Id: <20200221072301.597359445@linuxfoundation.org>
+Subject: [PATCH 4.19 107/191] IB/hfi1: Add software counter for ctxt0 seq drop
+Date:   Fri, 21 Feb 2020 08:41:20 +0100
+Message-Id: <20200221072303.764816803@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200221072250.732482588@linuxfoundation.org>
 References: <20200221072250.732482588@linuxfoundation.org>
@@ -60,76 +62,93 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Sascha Hauer <s.hauer@pengutronix.de>
+From: Mike Marciniszyn <mike.marciniszyn@intel.com>
 
-[ Upstream commit 02939cd167095f16328a1bd5cab5a90b550606df ]
+[ Upstream commit 5ffd048698ea5139743acd45e8ab388a683642b8 ]
 
-The current descriptor is not on any list of the virtual DMA channel.
-Once sdma_terminate_all() is called when a descriptor is currently
-in flight then this one is forgotten to be freed. We have to call
-vchan_terminate_vdesc() on this descriptor to re-add it to the lists.
-Now that we also free the currently running descriptor we can (and
-actually have to) remove the current descriptor from its list also
-for the cyclic case.
+All other code paths increment some form of drop counter.
 
-Signed-off-by: Sascha Hauer <s.hauer@pengutronix.de>
-Reviewed-by: Robin Gong <yibin.gong@nxp.com>
-Tested-by: Robin Gong <yibin.gong@nxp.com>
-Link: https://lore.kernel.org/r/20191216105328.15198-10-s.hauer@pengutronix.de
-Signed-off-by: Vinod Koul <vkoul@kernel.org>
+This was missed in the original implementation.
+
+Fixes: 82c2611daaf0 ("staging/rdma/hfi1: Handle packets with invalid RHF on context 0")
+Link: https://lore.kernel.org/r/20200106134228.119356.96828.stgit@awfm-01.aw.intel.com
+Reviewed-by: Kaike Wan <kaike.wan@intel.com>
+Signed-off-by: Mike Marciniszyn <mike.marciniszyn@intel.com>
+Signed-off-by: Dennis Dalessandro <dennis.dalessandro@intel.com>
+Signed-off-by: Jason Gunthorpe <jgg@mellanox.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/dma/imx-sdma.c | 19 +++++++++++--------
- 1 file changed, 11 insertions(+), 8 deletions(-)
+ drivers/infiniband/hw/hfi1/chip.c   | 10 ++++++++++
+ drivers/infiniband/hw/hfi1/chip.h   |  1 +
+ drivers/infiniband/hw/hfi1/driver.c |  1 +
+ drivers/infiniband/hw/hfi1/hfi.h    |  2 ++
+ 4 files changed, 14 insertions(+)
 
-diff --git a/drivers/dma/imx-sdma.c b/drivers/dma/imx-sdma.c
-index ceb82e74f5b4e..d66a7fdff898e 100644
---- a/drivers/dma/imx-sdma.c
-+++ b/drivers/dma/imx-sdma.c
-@@ -738,12 +738,8 @@ static void sdma_start_desc(struct sdma_channel *sdmac)
- 		return;
- 	}
- 	sdmac->desc = desc = to_sdma_desc(&vd->tx);
--	/*
--	 * Do not delete the node in desc_issued list in cyclic mode, otherwise
--	 * the desc allocated will never be freed in vchan_dma_desc_free_list
--	 */
--	if (!(sdmac->flags & IMX_DMA_SG_LOOP))
--		list_del(&vd->node);
-+
-+	list_del(&vd->node);
- 
- 	sdma->channel_control[channel].base_bd_ptr = desc->bd_phys;
- 	sdma->channel_control[channel].current_bd_ptr = desc->bd_phys;
-@@ -1044,7 +1040,6 @@ static void sdma_channel_terminate_work(struct work_struct *work)
- 
- 	spin_lock_irqsave(&sdmac->vc.lock, flags);
- 	vchan_get_all_descriptors(&sdmac->vc, &head);
--	sdmac->desc = NULL;
- 	spin_unlock_irqrestore(&sdmac->vc.lock, flags);
- 	vchan_dma_desc_free_list(&sdmac->vc, &head);
+diff --git a/drivers/infiniband/hw/hfi1/chip.c b/drivers/infiniband/hw/hfi1/chip.c
+index b09a4b1cf397b..1221faea75a68 100644
+--- a/drivers/infiniband/hw/hfi1/chip.c
++++ b/drivers/infiniband/hw/hfi1/chip.c
+@@ -1687,6 +1687,14 @@ static u64 access_sw_pio_drain(const struct cntr_entry *entry,
+ 	return dd->verbs_dev.n_piodrain;
  }
-@@ -1052,11 +1047,19 @@ static void sdma_channel_terminate_work(struct work_struct *work)
- static int sdma_disable_channel_async(struct dma_chan *chan)
+ 
++static u64 access_sw_ctx0_seq_drop(const struct cntr_entry *entry,
++				   void *context, int vl, int mode, u64 data)
++{
++	struct hfi1_devdata *dd = context;
++
++	return dd->ctx0_seq_drop;
++}
++
+ static u64 access_sw_vtx_wait(const struct cntr_entry *entry,
+ 			      void *context, int vl, int mode, u64 data)
  {
- 	struct sdma_channel *sdmac = to_sdma_chan(chan);
-+	unsigned long flags;
+@@ -4247,6 +4255,8 @@ static struct cntr_entry dev_cntrs[DEV_CNTR_LAST] = {
+ 			    access_sw_cpu_intr),
+ [C_SW_CPU_RCV_LIM] = CNTR_ELEM("RcvLimit", 0, 0, CNTR_NORMAL,
+ 			    access_sw_cpu_rcv_limit),
++[C_SW_CTX0_SEQ_DROP] = CNTR_ELEM("SeqDrop0", 0, 0, CNTR_NORMAL,
++			    access_sw_ctx0_seq_drop),
+ [C_SW_VTX_WAIT] = CNTR_ELEM("vTxWait", 0, 0, CNTR_NORMAL,
+ 			    access_sw_vtx_wait),
+ [C_SW_PIO_WAIT] = CNTR_ELEM("PioWait", 0, 0, CNTR_NORMAL,
+diff --git a/drivers/infiniband/hw/hfi1/chip.h b/drivers/infiniband/hw/hfi1/chip.h
+index 36b04d6300e54..c9a352d8a7e13 100644
+--- a/drivers/infiniband/hw/hfi1/chip.h
++++ b/drivers/infiniband/hw/hfi1/chip.h
+@@ -909,6 +909,7 @@ enum {
+ 	C_DC_PG_STS_TX_MBE_CNT,
+ 	C_SW_CPU_INTR,
+ 	C_SW_CPU_RCV_LIM,
++	C_SW_CTX0_SEQ_DROP,
+ 	C_SW_VTX_WAIT,
+ 	C_SW_PIO_WAIT,
+ 	C_SW_PIO_DRAIN,
+diff --git a/drivers/infiniband/hw/hfi1/driver.c b/drivers/infiniband/hw/hfi1/driver.c
+index d5277c23cba60..769e114567a03 100644
+--- a/drivers/infiniband/hw/hfi1/driver.c
++++ b/drivers/infiniband/hw/hfi1/driver.c
+@@ -734,6 +734,7 @@ static noinline int skip_rcv_packet(struct hfi1_packet *packet, int thread)
+ {
+ 	int ret;
+ 
++	packet->rcd->dd->ctx0_seq_drop++;
+ 	/* Set up for the next packet */
+ 	packet->rhqoff += packet->rsize;
+ 	if (packet->rhqoff >= packet->maxcnt)
+diff --git a/drivers/infiniband/hw/hfi1/hfi.h b/drivers/infiniband/hw/hfi1/hfi.h
+index ab981874c71cc..e38de547785d0 100644
+--- a/drivers/infiniband/hw/hfi1/hfi.h
++++ b/drivers/infiniband/hw/hfi1/hfi.h
+@@ -1093,6 +1093,8 @@ struct hfi1_devdata {
+ 
+ 	char *boardname; /* human readable board info */
+ 
++	u64 ctx0_seq_drop;
 +
-+	spin_lock_irqsave(&sdmac->vc.lock, flags);
- 
- 	sdma_disable_channel(chan);
- 
--	if (sdmac->desc)
-+	if (sdmac->desc) {
-+		vchan_terminate_vdesc(&sdmac->desc->vd);
-+		sdmac->desc = NULL;
- 		schedule_work(&sdmac->terminate_worker);
-+	}
-+
-+	spin_unlock_irqrestore(&sdmac->vc.lock, flags);
- 
- 	return 0;
- }
+ 	/* reset value */
+ 	u64 z_int_counter;
+ 	u64 z_rcv_limit;
 -- 
 2.20.1
 
