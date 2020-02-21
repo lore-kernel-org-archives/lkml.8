@@ -2,78 +2,100 @@ Return-Path: <SRS0=1210=4J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EFAE9C35646
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 10:38:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B9563C35647
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 10:40:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D254220722
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 10:38:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 968FF20722
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 10:40:25 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727781AbgBUKi4 (ORCPT
+        id S1727513AbgBUKkY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Feb 2020 05:38:56 -0500
-Received: from mx2.suse.de ([195.135.220.15]:53760 "EHLO mx2.suse.de"
+        Fri, 21 Feb 2020 05:40:24 -0500
+Received: from mx2.suse.de ([195.135.220.15]:54242 "EHLO mx2.suse.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726100AbgBUKi4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Feb 2020 05:38:56 -0500
+        id S1726976AbgBUKkY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 21 Feb 2020 05:40:24 -0500
 X-Virus-Scanned: by amavisd-new at test-mx.suse.de
 Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx2.suse.de (Postfix) with ESMTP id 4A868AC66;
-        Fri, 21 Feb 2020 10:38:54 +0000 (UTC)
-From:   Juergen Gross <jgross@suse.com>
-To:     xen-devel@lists.xenproject.org, x86@kernel.org,
-        linux-kernel@vger.kernel.org
-Cc:     Juergen Gross <jgross@suse.com>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Andy Lutomirski <luto@kernel.org>,
+        by mx2.suse.de (Postfix) with ESMTP id 3DA21AC5C;
+        Fri, 21 Feb 2020 10:40:22 +0000 (UTC)
+Date:   Fri, 21 Feb 2020 10:40:18 +0000
+From:   Mel Gorman <mgorman@suse.de>
+To:     Vincent Guittot <vincent.guittot@linaro.org>
+Cc:     Valentin Schneider <valentin.schneider@arm.com>,
+        Ingo Molnar <mingo@redhat.com>,
         Peter Zijlstra <peterz@infradead.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        "H. Peter Anvin" <hpa@zytor.com>
-Subject: [PATCH] x86/mm: fix dump_pagetables with Xen PV
-Date:   Fri, 21 Feb 2020 11:38:51 +0100
-Message-Id: <20200221103851.7855-1-jgross@suse.com>
-X-Mailer: git-send-email 2.16.4
+        Juri Lelli <juri.lelli@redhat.com>,
+        Dietmar Eggemann <dietmar.eggemann@arm.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Ben Segall <bsegall@google.com>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        Phil Auld <pauld@redhat.com>, Parth Shah <parth@linux.ibm.com>,
+        Hillf Danton <hdanton@sina.com>
+Subject: Re: [PATCH v3 4/5] sched/pelt: Add a new runnable average signal
+Message-ID: <20200221104018.GR3420@suse.de>
+References: <20200214152729.6059-5-vincent.guittot@linaro.org>
+ <20200219125513.8953-1-vincent.guittot@linaro.org>
+ <9fe822fc-c311-2b97-ae14-b9269dd99f1e@arm.com>
+ <CAKfTPtD4kz07hikCuU2_cm67ntruopN9CdJEP+fg5L4_N=qEgg@mail.gmail.com>
+ <d9f78b94-2455-e000-82bd-c00cfb9bbc8e@arm.com>
+ <20200221090448.GQ3420@suse.de>
+ <CAKfTPtAgyGrYaiUEm-MjLxH+pSYMnk4LFJ+_ogJ=cWVvaHMnsg@mail.gmail.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=iso-8859-15
+Content-Disposition: inline
+In-Reply-To: <CAKfTPtAgyGrYaiUEm-MjLxH+pSYMnk4LFJ+_ogJ=cWVvaHMnsg@mail.gmail.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Commit 2ae27137b2db89 ("x86: mm: convert dump_pagetables to use
-walk_page_range") broke Xen PV guests as the hypervisor reserved hole
-in the memory map was not taken into account.
+On Fri, Feb 21, 2020 at 10:25:27AM +0100, Vincent Guittot wrote:
+> On Fri, 21 Feb 2020 at 10:04, Mel Gorman <mgorman@suse.de> wrote:
+> >
+> > On Thu, Feb 20, 2020 at 04:11:18PM +0000, Valentin Schneider wrote:
+> > > On 20/02/2020 14:36, Vincent Guittot wrote:
+> > > > I agree that setting by default to SCHED_CAPACITY_SCALE is too much
+> > > > for little core.
+> > > > The problem for little core can be fixed by using the cpu capacity instead
+> > > >
+> > >
+> > > So that's indeed better for big.LITTLE & co. Any reason however for not
+> > > aligning with the initialization of util_avg ?
+> > >
+> > > With the default MC imbalance_pct (117), it takes 875 utilization to make
+> > > a single CPU group (with 1024 capacity) overloaded (group_is_overloaded()).
+> > > For a completely idle CPU, that means forking at least 3 tasks (512 + 256 +
+> > > 128 util_avg)
+> > >
+> > > With your change, it only takes 2 tasks. I know I'm being nitpicky here, but
+> > > I feel like those should be aligned, unless we have a proper argument against
+> > > it - in which case this should also appear in the changelog with so far only
+> > > mentions issues with util_avg migration, not the fork time initialization.
+> > >
+> >
+> > So, what is the way forward here? Should this patch be modified now,
+> > a patch be placed on top or go with what we have for the moment that
+> > works for symmetric CPUs and deal with the asym case later?
+> >
+> > I do not have any asym systems at all so I've no means of checking
+> > whether there is a problem or not.
+> 
+> I'm going to send a new version at least for patch 4 and 5 using
+> cpu_scale as initial value and fixing update_sg_wakeup_stats()
+> 
 
-Fix that by starting the kernel range only at GUARD_HOLE_END_ADDR.
+No problem. FWIW, when I see them, I'll slot them in and rerun the tests
+as the previous results will be invalidated. Obviously the asym case will
+not be tested by me but I imagine you or Valentin have that covered.
 
-Fixes: 2ae27137b2db89 ("x86: mm: convert dump_pagetables to use walk_page_range")
-Reported-by: Julien Grall <julien@xen.org>
-Signed-off-by: Juergen Gross <jgross@suse.com>
----
- arch/x86/mm/dump_pagetables.c | 7 +------
- 1 file changed, 1 insertion(+), 6 deletions(-)
+Thanks.
 
-diff --git a/arch/x86/mm/dump_pagetables.c b/arch/x86/mm/dump_pagetables.c
-index 64229dad7eab..69309cd56fdf 100644
---- a/arch/x86/mm/dump_pagetables.c
-+++ b/arch/x86/mm/dump_pagetables.c
-@@ -363,13 +363,8 @@ static void ptdump_walk_pgd_level_core(struct seq_file *m,
- {
- 	const struct ptdump_range ptdump_ranges[] = {
- #ifdef CONFIG_X86_64
--
--#define normalize_addr_shift (64 - (__VIRTUAL_MASK_SHIFT + 1))
--#define normalize_addr(u) ((signed long)((u) << normalize_addr_shift) >> \
--			   normalize_addr_shift)
--
- 	{0, PTRS_PER_PGD * PGD_LEVEL_MULT / 2},
--	{normalize_addr(PTRS_PER_PGD * PGD_LEVEL_MULT / 2), ~0UL},
-+	{GUARD_HOLE_END_ADDR, ~0UL},
- #else
- 	{0, ~0UL},
- #endif
 -- 
-2.16.4
-
+Mel Gorman
+SUSE Labs
