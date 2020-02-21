@@ -2,200 +2,129 @@ Return-Path: <SRS0=1210=4J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E861DC35646
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 10:21:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9EDC6C35647
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 10:21:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B4AE7207FD
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 10:21:41 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=citrix.com header.i=@citrix.com header.b="VylwvEXa"
+	by mail.kernel.org (Postfix) with ESMTP id 7C7E2207FD
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 10:21:58 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728739AbgBUKVk (ORCPT
+        id S1728798AbgBUKV5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Feb 2020 05:21:40 -0500
-Received: from esa3.hc3370-68.iphmx.com ([216.71.145.155]:57846 "EHLO
-        esa3.hc3370-68.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728278AbgBUKVk (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Feb 2020 05:21:40 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
-  d=citrix.com; s=securemail; t=1582280499;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:content-transfer-encoding:in-reply-to;
-  bh=szw5kUCBwfMR4Umcye1UsaTnnWME1Rw3d5ErMmAgp5Q=;
-  b=VylwvEXapF9ZtvMecqCj6wXVvMQAf6e/RyQMTzTs/04GswkrWp0qfgyv
-   lBeIHT5VcnxHpfP11MgSKTslbKYdsaKPWiC3Igqt84YTbX/2QlFCuUjyN
-   5MZLEhelEqvGbI/iyA8VnuHppQaSOeAogr3NPbq2lJJQIQLJ+eDIpj0Hj
-   c=;
-Authentication-Results: esa3.hc3370-68.iphmx.com; dkim=none (message not signed) header.i=none; spf=None smtp.pra=roger.pau@citrix.com; spf=Pass smtp.mailfrom=roger.pau@citrix.com; spf=None smtp.helo=postmaster@mail.citrix.com
-Received-SPF: None (esa3.hc3370-68.iphmx.com: no sender
-  authenticity information available from domain of
-  roger.pau@citrix.com) identity=pra; client-ip=162.221.158.21;
-  receiver=esa3.hc3370-68.iphmx.com;
-  envelope-from="roger.pau@citrix.com";
-  x-sender="roger.pau@citrix.com";
-  x-conformance=sidf_compatible
-Received-SPF: Pass (esa3.hc3370-68.iphmx.com: domain of
-  roger.pau@citrix.com designates 162.221.158.21 as permitted
-  sender) identity=mailfrom; client-ip=162.221.158.21;
-  receiver=esa3.hc3370-68.iphmx.com;
-  envelope-from="roger.pau@citrix.com";
-  x-sender="roger.pau@citrix.com";
-  x-conformance=sidf_compatible; x-record-type="v=spf1";
-  x-record-text="v=spf1 ip4:209.167.231.154 ip4:178.63.86.133
-  ip4:195.66.111.40/30 ip4:85.115.9.32/28 ip4:199.102.83.4
-  ip4:192.28.146.160 ip4:192.28.146.107 ip4:216.52.6.88
-  ip4:216.52.6.188 ip4:162.221.158.21 ip4:162.221.156.83
-  ip4:168.245.78.127 ~all"
-Received-SPF: None (esa3.hc3370-68.iphmx.com: no sender
-  authenticity information available from domain of
-  postmaster@mail.citrix.com) identity=helo;
-  client-ip=162.221.158.21; receiver=esa3.hc3370-68.iphmx.com;
-  envelope-from="roger.pau@citrix.com";
-  x-sender="postmaster@mail.citrix.com";
-  x-conformance=sidf_compatible
-IronPort-SDR: QEFBJckE/MYkvO2flXPlpJQt4Otkt0cu31Hi8oseCOIldyuYhI4sG/WgtjoU3dqM8aobRm4cza
- BxgWJnLKK6ZDvkNxA2rHcJKaR9vO6P7KJs3kG9lY1MfghynCwXfmNppiLeicgubrKuiqo1Fp/3
- pT0BMg+orHucSFRXhRTwIVHLS35iD+RLBJkiXqk4tRcaujIhh9XTXNUi/k+EbebNfX3kzbj8BJ
- L/ofjVQpTcO38wip8DTDbTm9fbWxG9KrnTUIm30Odti4icb8IAzr0zDY/JpPQYsftQMCxbG/61
- qk0=
-X-SBRS: 2.7
-X-MesageID: 12791624
-X-Ironport-Server: esa3.hc3370-68.iphmx.com
-X-Remote-IP: 162.221.158.21
-X-Policy: $RELAYED
-X-IronPort-AV: E=Sophos;i="5.70,467,1574139600"; 
-   d="scan'208";a="12791624"
-Date:   Fri, 21 Feb 2020 11:21:30 +0100
-From:   Roger Pau =?utf-8?B?TW9ubsOp?= <roger.pau@citrix.com>
-To:     "Durrant, Paul" <pdurrant@amazon.co.uk>
-CC:     "Agarwal, Anchal" <anchalag@amazon.com>,
-        "Valentin, Eduardo" <eduval@amazon.com>,
-        "len.brown@intel.com" <len.brown@intel.com>,
-        "peterz@infradead.org" <peterz@infradead.org>,
-        "benh@kernel.crashing.org" <benh@kernel.crashing.org>,
-        "x86@kernel.org" <x86@kernel.org>,
-        "linux-mm@kvack.org" <linux-mm@kvack.org>,
-        "pavel@ucw.cz" <pavel@ucw.cz>, "hpa@zytor.com" <hpa@zytor.com>,
-        "tglx@linutronix.de" <tglx@linutronix.de>,
-        "sstabellini@kernel.org" <sstabellini@kernel.org>,
-        "fllinden@amaozn.com" <fllinden@amaozn.com>,
-        "Kamata, Munehisa" <kamatam@amazon.com>,
-        "mingo@redhat.com" <mingo@redhat.com>,
-        "xen-devel@lists.xenproject.org" <xen-devel@lists.xenproject.org>,
-        "Singh, Balbir" <sblbir@amazon.com>,
-        "axboe@kernel.dk" <axboe@kernel.dk>,
-        "konrad.wilk@oracle.com" <konrad.wilk@oracle.com>,
-        "bp@alien8.de" <bp@alien8.de>,
-        "boris.ostrovsky@oracle.com" <boris.ostrovsky@oracle.com>,
-        "jgross@suse.com" <jgross@suse.com>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-        "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>,
-        "rjw@rjwysocki.net" <rjw@rjwysocki.net>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "vkuznets@redhat.com" <vkuznets@redhat.com>,
-        "davem@davemloft.net" <davem@davemloft.net>,
-        "Woodhouse, David" <dwmw@amazon.co.uk>
-Subject: Re: [Xen-devel] [RFC PATCH v3 06/12] xen-blkfront: add callbacks for
- PM suspend and hibernation
-Message-ID: <20200221102130.GW4679@Air-de-Roger>
-References: <20200218091611.GN4679@Air-de-Roger>
- <20200219180424.GA17584@dev-dsk-anchalag-2a-9c2d1d96.us-west-2.amazon.com>
- <20200220083904.GI4679@Air-de-Roger>
- <f986b845491b47cc8469d88e2e65e2a7@EX13D32EUC003.ant.amazon.com>
- <20200220154507.GO4679@Air-de-Roger>
- <c9662397256a4568a5cc7d70a84940e5@EX13D32EUC003.ant.amazon.com>
- <20200220164839.GR4679@Air-de-Roger>
- <e42fa35800f04b6f953e4af87f2c1a02@EX13D32EUC003.ant.amazon.com>
- <20200221092219.GU4679@Air-de-Roger>
- <5ddf980a3fba4fb39571184e688cefc5@EX13D32EUC003.ant.amazon.com>
+        Fri, 21 Feb 2020 05:21:57 -0500
+Received: from mga07.intel.com ([134.134.136.100]:47081 "EHLO mga07.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728340AbgBUKV4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 21 Feb 2020 05:21:56 -0500
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from fmsmga002.fm.intel.com ([10.253.24.26])
+  by orsmga105.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 21 Feb 2020 02:21:55 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.70,467,1574150400"; 
+   d="scan'208";a="269939696"
+Received: from smile.fi.intel.com (HELO smile) ([10.237.68.40])
+  by fmsmga002.fm.intel.com with ESMTP; 21 Feb 2020 02:21:52 -0800
+Received: from andy by smile with local (Exim 4.93)
+        (envelope-from <andriy.shevchenko@intel.com>)
+        id 1j55RS-003kYn-Iv; Fri, 21 Feb 2020 12:21:54 +0200
+Date:   Fri, 21 Feb 2020 12:21:54 +0200
+From:   Andy Shevchenko <andriy.shevchenko@intel.com>
+To:     Jesse Brandeburg <jesse.brandeburg@intel.com>
+Cc:     tglx@linutronix.de, mingo@redhat.com, bp@alien8.de, x86@kernel.org,
+        linux-kernel@vger.kernel.org, linux@rasmusvillemoes.dk,
+        dan.j.williams@intel.com, peterz@infradead.org
+Subject: Re: [PATCH v3 1/2] x86: fix bitops.h warning with a moved cast
+Message-ID: <20200221102154.GL10400@smile.fi.intel.com>
+References: <20200220232155.2123827-1-jesse.brandeburg@intel.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <5ddf980a3fba4fb39571184e688cefc5@EX13D32EUC003.ant.amazon.com>
-X-ClientProxiedBy: AMSPEX02CAS02.citrite.net (10.69.22.113) To
- AMSPEX02CL01.citrite.net (10.69.22.125)
+In-Reply-To: <20200220232155.2123827-1-jesse.brandeburg@intel.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Feb 21, 2020 at 09:56:54AM +0000, Durrant, Paul wrote:
-> > -----Original Message-----
-> > From: Roger Pau Monné <roger.pau@citrix.com>
-> > Sent: 21 February 2020 09:22
-> > To: Durrant, Paul <pdurrant@amazon.co.uk>
-> > Cc: Agarwal, Anchal <anchalag@amazon.com>; Valentin, Eduardo
-> > <eduval@amazon.com>; len.brown@intel.com; peterz@infradead.org;
-> > benh@kernel.crashing.org; x86@kernel.org; linux-mm@kvack.org;
-> > pavel@ucw.cz; hpa@zytor.com; tglx@linutronix.de; sstabellini@kernel.org;
-> > fllinden@amaozn.com; Kamata, Munehisa <kamatam@amazon.com>;
-> > mingo@redhat.com; xen-devel@lists.xenproject.org; Singh, Balbir
-> > <sblbir@amazon.com>; axboe@kernel.dk; konrad.wilk@oracle.com;
-> > bp@alien8.de; boris.ostrovsky@oracle.com; jgross@suse.com;
-> > netdev@vger.kernel.org; linux-pm@vger.kernel.org; rjw@rjwysocki.net;
-> > linux-kernel@vger.kernel.org; vkuznets@redhat.com; davem@davemloft.net;
-> > Woodhouse, David <dwmw@amazon.co.uk>
-> > Subject: Re: [Xen-devel] [RFC PATCH v3 06/12] xen-blkfront: add callbacks
-> > for PM suspend and hibernation
-> > 
-> > On Thu, Feb 20, 2020 at 05:01:52PM +0000, Durrant, Paul wrote:
-> > > > > Hopefully what I said above illustrates why it may not be 100%
-> > common.
-> > > >
-> > > > Yes, that's fine. I don't expect it to be 100% common (as I guess
-> > > > that the hooks will have different prototypes), but I expect
-> > > > that routines can be shared, and that the approach taken can be the
-> > > > same.
-> > > >
-> > > > For example one necessary difference will be that xenbus initiated
-> > > > suspend won't close the PV connection, in case suspension fails. On PM
-> > > > suspend you seem to always close the connection beforehand, so you
-> > > > will always have to re-negotiate on resume even if suspension failed.
-> > > >
-> > > > What I'm mostly worried about is the different approach to ring
-> > > > draining. Ie: either xenbus is changed to freeze the queues and drain
-> > > > the shared rings, or PM uses the already existing logic of not
-> > > > flushing the rings an re-issuing in-flight requests on resume.
-> > > >
-> > >
-> > > Yes, that's needs consideration. I don’t think the same semantic can be
-> > suitable for both. E.g. in a xen-suspend we need to freeze with as little
-> > processing as possible to avoid dirtying RAM late in the migration cycle,
-> > and we know that in-flight data can wait. But in a transition to S4 we
-> > need to make sure that at least all the in-flight blkif requests get
-> > completed, since they probably contain bits of the guest's memory image
-> > and that's not going to get saved any other way.
-> > 
-> > Thanks, that makes sense and something along this lines should be
-> > added to the commit message IMO.
-> > 
-> > Wondering about S4, shouldn't we expect the queues to already be
-> > empty? As any subsystem that wanted to store something to disk should
-> > make sure requests have been successfully completed before
-> > suspending.
+On Thu, Feb 20, 2020 at 03:21:54PM -0800, Jesse Brandeburg wrote:
+> Fix many sparse warnings when building with C=1.
 > 
-> What about writing the suspend image itself? Normal filesystem I/O
-> will have been flushed of course, but whatever vestigial kernel
-> actually writes out the hibernation file may well expect a final
-> D0->D3 on the storage device to cause a flush.
+> When the kernel is compiled with C=1, there are lots of messages like:
+>   arch/x86/include/asm/bitops.h:77:37: warning: cast truncates bits from constant value (ffffff7f becomes 7f)
+> 
+> CONST_MASK() is using a signed integer "1" to create the mask which
+> is later cast to (u8) when used. Move the cast to the definition and
+> clean up the calling sites to prevent sparse from warning.
+> 
+> The reason the warning was occurring is because certain bitmasks that
+> end with a mask next to a natural boundary like 7, 15, 23, 31, end up
+> with a mask like 0x7f, which then results in sign extension when doing
+> an invert (but I'm not a compiler expert). It was really only
+> "clear_bit" that was having problems, and it was only on bit checks next
+> to a byte boundary (top bit).
+> 
+> Verified with a test module (see next patch) and assembly inspection
+> that the patch doesn't introduce any change in generated code.
 
-Hm, I have no idea really. I think whatever writes to the disk before
-suspend should actually make sure requests have completed, but what
-you suggest might also be a possibility.
+FWIW,
+Reviewed-by: Andy Shevchenko <andriy.shevchenko@intel.com>
 
-Can you figure out whether there are requests on the ring or in the
-queue before suspending?
+Thanks for fixing this, I have experienced tons of such messages.
 
-> Again, I don't know the specifics for Linux (and Windows actually
-> uses an incarnation of the crash kernel to do the job, which brings
-> with it a whole other set of complexity as far as PV drivers go).
+> Signed-off-by: Jesse Brandeburg <jesse.brandeburg@intel.com>
+> ---
+> v3: Clean up
+> the header file changes as per peterz.
+> 
+> v2: use correct CC: list
+> ---
+>  arch/x86/include/asm/bitops.h | 6 +++---
+>  1 file changed, 3 insertions(+), 3 deletions(-)
+> 
+> diff --git a/arch/x86/include/asm/bitops.h b/arch/x86/include/asm/bitops.h
+> index 062cdecb2f24..96ef19dcbde6 100644
+> --- a/arch/x86/include/asm/bitops.h
+> +++ b/arch/x86/include/asm/bitops.h
+> @@ -46,7 +46,7 @@
+>   * a mask operation on a byte.
+>   */
+>  #define CONST_MASK_ADDR(nr, addr)	WBYTE_ADDR((void *)(addr) + ((nr)>>3))
+> -#define CONST_MASK(nr)			(1 << ((nr) & 7))
+> +#define CONST_MASK(nr)			((u8)1 << ((nr) & 7))
+>  
+>  static __always_inline void
+>  arch_set_bit(long nr, volatile unsigned long *addr)
+> @@ -54,7 +54,7 @@ arch_set_bit(long nr, volatile unsigned long *addr)
+>  	if (__builtin_constant_p(nr)) {
+>  		asm volatile(LOCK_PREFIX "orb %1,%0"
+>  			: CONST_MASK_ADDR(nr, addr)
+> -			: "iq" ((u8)CONST_MASK(nr))
+> +			: "iq" (CONST_MASK(nr))
+>  			: "memory");
+>  	} else {
+>  		asm volatile(LOCK_PREFIX __ASM_SIZE(bts) " %1,%0"
+> @@ -74,7 +74,7 @@ arch_clear_bit(long nr, volatile unsigned long *addr)
+>  	if (__builtin_constant_p(nr)) {
+>  		asm volatile(LOCK_PREFIX "andb %1,%0"
+>  			: CONST_MASK_ADDR(nr, addr)
+> -			: "iq" ((u8)~CONST_MASK(nr)));
+> +			: "iq" (0xff ^ CONST_MASK(nr)));
+>  	} else {
+>  		asm volatile(LOCK_PREFIX __ASM_SIZE(btr) " %1,%0"
+>  			: : RLONG_ADDR(addr), "Ir" (nr) : "memory");
+> 
+> base-commit: ca7e1fd1026c5af6a533b4b5447e1d2f153e28f2
+> -- 
+> 2.24.1
+> 
 
-That seems extremely complex, I'm sure there's a reason for it :).
+-- 
+With Best Regards,
+Andy Shevchenko
 
-Thanks, Roger.
+
