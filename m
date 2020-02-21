@@ -2,155 +2,127 @@ Return-Path: <SRS0=1210=4J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 892BDC35640
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 05:35:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4CDC8C35641
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 05:38:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 69D2F222C4
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 05:35:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 24E50207FD
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 05:38:22 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="QVp/FC2N"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726331AbgBUFfU (ORCPT
+        id S1726836AbgBUFiU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Feb 2020 00:35:20 -0500
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:57074 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726100AbgBUFfT (ORCPT
+        Fri, 21 Feb 2020 00:38:20 -0500
+Received: from mail-pf1-f195.google.com ([209.85.210.195]:35727 "EHLO
+        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726201AbgBUFiU (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Feb 2020 00:35:19 -0500
-Received: from pps.filterd (m0098416.ppops.net [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 01L5P5Rx067632
-        for <linux-kernel@vger.kernel.org>; Fri, 21 Feb 2020 00:35:18 -0500
-Received: from e06smtp01.uk.ibm.com (e06smtp01.uk.ibm.com [195.75.94.97])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 2y8ubxm2mm-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Fri, 21 Feb 2020 00:35:18 -0500
-Received: from localhost
-        by e06smtp01.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-kernel@vger.kernel.org> from <ajd@linux.ibm.com>;
-        Fri, 21 Feb 2020 05:35:16 -0000
-Received: from b06avi18878370.portsmouth.uk.ibm.com (9.149.26.194)
-        by e06smtp01.uk.ibm.com (192.168.101.131) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Fri, 21 Feb 2020 05:35:08 -0000
-Received: from d06av21.portsmouth.uk.ibm.com (d06av21.portsmouth.uk.ibm.com [9.149.105.232])
-        by b06avi18878370.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 01L5Z73035062270
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Fri, 21 Feb 2020 05:35:07 GMT
-Received: from d06av21.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 8858A5204E;
-        Fri, 21 Feb 2020 05:35:07 +0000 (GMT)
-Received: from ozlabs.au.ibm.com (unknown [9.192.253.14])
-        by d06av21.portsmouth.uk.ibm.com (Postfix) with ESMTP id 3A62452057;
-        Fri, 21 Feb 2020 05:35:07 +0000 (GMT)
-Received: from [10.61.2.125] (haven.au.ibm.com [9.192.254.114])
-        (using TLSv1.2 with cipher DHE-RSA-AES128-SHA (128/128 bits))
-        (No client certificate requested)
-        by ozlabs.au.ibm.com (Postfix) with ESMTPSA id 7FFC2A0209;
-        Fri, 21 Feb 2020 16:35:02 +1100 (AEDT)
-Subject: Re: [PATCH v3 27/27] MAINTAINERS: Add myself & nvdimm/ocxl to ocxl
-To:     "Alastair D'Silva" <alastair@au1.ibm.com>, alastair@d-silva.org
-Cc:     "Aneesh Kumar K . V" <aneesh.kumar@linux.ibm.com>,
-        "Oliver O'Halloran" <oohall@gmail.com>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Paul Mackerras <paulus@samba.org>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Frederic Barrat <fbarrat@linux.ibm.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Vishal Verma <vishal.l.verma@intel.com>,
-        Dave Jiang <dave.jiang@intel.com>,
-        Ira Weiny <ira.weiny@intel.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        Fri, 21 Feb 2020 00:38:20 -0500
+Received: by mail-pf1-f195.google.com with SMTP id i19so623413pfa.2
+        for <linux-kernel@vger.kernel.org>; Thu, 20 Feb 2020 21:38:19 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=xR1GRxFdUV2TwDvxuNR/pK3VYzRWJYZmKivDEUcKc5w=;
+        b=QVp/FC2NiAc3rBycqqqlyoa0rlWBGhP8nW8nvvVd1pRXp9Io6ugF1YFhOrlCramk4m
+         maGakRF1l77Fn3JdI/QLF3uqnkV56NYnLn0ct7McCl8jjFS/RuIzCVK4rKwS0eMsanTp
+         JJZ6xUxzRnD685IHKwcVyvWnx6ogkbaou6bhU=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=xR1GRxFdUV2TwDvxuNR/pK3VYzRWJYZmKivDEUcKc5w=;
+        b=raNCCWwU/65UhAlLl4YVwt8wxPgS5kT0NX91TcxKyoBSLT1kTAV9DEY4pXxL3S44bw
+         pgLkb99EvI/SQSVakk+brQDD7GWy9jAiyn6XxbGj7Qg6bksZNLp+WBMjBkkMU7HD49xc
+         KOnaJGGlweVekegIHMs9eAQNEzN5IgpL2eWdxyw0k6TbcwHFljAuvUXzbshoRxs6YV9K
+         PlwIAcHNXFwQ2jFzaMuKz6aFl4maOWZUO/dY2HnUO4+/QiOgoLrckfw6B7U4ry1I91lW
+         W+GfNQnDrdoilDNIJd6tTrAvpYam/EFA/4Yms2+hJtqfMzIxzygZU165zLQPLwghlcTd
+         M1eQ==
+X-Gm-Message-State: APjAAAWM7gea3Ps/6pnLZrmdlzRK9xpHn72ZuT5BZkR6BW4NdGkC5zz+
+        1oNIOFbZ6cJ0cuC9GlsWDFkIUfZEJOWaRA==
+X-Google-Smtp-Source: APXvYqwNbEeASGO4ArQ+KQ49tlopvldlo5/I0QneTu45MVpD2X1Vvxvy9falEjB7Hs8GL48/Mzv+xA==
+X-Received: by 2002:a62:486:: with SMTP id 128mr36207829pfe.236.1582263499298;
+        Thu, 20 Feb 2020 21:38:19 -0800 (PST)
+Received: from localhost ([2401:fa00:9:14:1105:3e8a:838d:e326])
+        by smtp.gmail.com with ESMTPSA id b25sm1329060pfo.38.2020.02.20.21.38.11
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 20 Feb 2020 21:38:18 -0800 (PST)
+From:   Evan Benn <evanbenn@chromium.org>
+To:     LKML <linux-kernel@vger.kernel.org>
+Cc:     jwerner@chromium.org, Evan Benn <evanbenn@chromium.org>,
+        Anson Huang <Anson.Huang@nxp.com>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        =?UTF-8?q?Cl=C3=A9ment=20P=C3=A9ron?= <peron.clem@gmail.com>,
         "David S. Miller" <davem@davemloft.net>,
-        Rob Herring <robh@kernel.org>,
-        Anton Blanchard <anton@ozlabs.org>,
-        Krzysztof Kozlowski <krzk@kernel.org>,
-        Mahesh Salgaonkar <mahesh@linux.vnet.ibm.com>,
-        Madhavan Srinivasan <maddy@linux.vnet.ibm.com>,
-        =?UTF-8?Q?C=c3=a9dric_Le_Goater?= <clg@kaod.org>,
-        Anju T Sudhakar <anju@linux.vnet.ibm.com>,
-        Hari Bathini <hbathini@linux.ibm.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Greg Kurz <groug@kaod.org>,
-        Nicholas Piggin <npiggin@gmail.com>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        Alexey Kardashevskiy <aik@ozlabs.ru>,
-        linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
-        linux-nvdimm@lists.01.org, linux-mm@kvack.org
-References: <20200221032720.33893-1-alastair@au1.ibm.com>
- <20200221032720.33893-28-alastair@au1.ibm.com>
-From:   Andrew Donnellan <ajd@linux.ibm.com>
-Date:   Fri, 21 Feb 2020 16:35:01 +1100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.5.0
+        Dinh Nguyen <dinguyen@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Guenter Roeck <linux@roeck-us.net>,
+        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+        Leonard Crestez <leonard.crestez@nxp.com>,
+        Marcin Juszkiewicz <marcin.juszkiewicz@linaro.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        Olof Johansson <olof@lixom.net>,
+        Rob Herring <robh+dt@kernel.org>,
+        Rob Herring <robh@kernel.org>, Shawn Guo <shawnguo@kernel.org>,
+        Will Deacon <will@kernel.org>,
+        Wim Van Sebroeck <wim@linux-watchdog.org>,
+        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-mediatek@lists.infradead.org, linux-watchdog@vger.kernel.org
+Subject: [PATCH v2 0/2] Add a watchdog driver that uses ARM Secure Monitor Calls.
+Date:   Fri, 21 Feb 2020 16:38:00 +1100
+Message-Id: <20200221053802.70716-1-evanbenn@chromium.org>
+X-Mailer: git-send-email 2.25.0.265.gbab2e86ba0-goog
 MIME-Version: 1.0
-In-Reply-To: <20200221032720.33893-28-alastair@au1.ibm.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-TM-AS-GCONF: 00
-x-cbid: 20022105-4275-0000-0000-000003A40507
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 20022105-4276-0000-0000-000038B8133F
-Message-Id: <1df3e93b-74da-850b-ba21-881b2e34a2da@linux.ibm.com>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.572
- definitions=2020-02-20_19:2020-02-19,2020-02-20 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxscore=0 bulkscore=0
- lowpriorityscore=0 spamscore=0 suspectscore=0 mlxlogscore=835
- clxscore=1015 malwarescore=0 adultscore=0 impostorscore=0 phishscore=0
- priorityscore=1501 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2001150001 definitions=main-2002210035
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 21/2/20 2:27 pm, Alastair D'Silva wrote:
-> From: Alastair D'Silva <alastair@d-silva.org>
-> 
-> The OpenCAPI Persistent Memory driver will be maintained as part ofi
-> the ppc tree.
-> 
-> I'm also adding myself as an author of the driver & contributor to
-> the generic ocxl driver.
-> 
-> Signed-off-by: Alastair D'Silva <alastair@d-silva.org>
+This is currently supported in firmware deployed on oak, hana and elm mt8173
+chromebook devices. The kernel driver is written to be a generic SMC
+watchdog driver.
 
-You need to update the title of this patch :)
+Arm Trusted Firmware upstreaming review:
+    https://review.trustedfirmware.org/c/TF-A/trusted-firmware-a/+/3405
 
-> ---
->   MAINTAINERS | 3 +++
->   1 file changed, 3 insertions(+)
-> 
-> diff --git a/MAINTAINERS b/MAINTAINERS
-> index f8670989ec91..3fb9a9f576a7 100644
-> --- a/MAINTAINERS
-> +++ b/MAINTAINERS
-> @@ -12064,13 +12064,16 @@ F:	tools/objtool/
->   OCXL (Open Coherent Accelerator Processor Interface OpenCAPI) DRIVER
->   M:	Frederic Barrat <fbarrat@linux.ibm.com>
->   M:	Andrew Donnellan <ajd@linux.ibm.com>
-> +M:	Alastair D'Silva <alastair@d-silva.org>
->   L:	linuxppc-dev@lists.ozlabs.org
->   S:	Supported
->   F:	arch/powerpc/platforms/powernv/ocxl.c
-> +F:	arch/powerpc/platforms/powernv/pmem/*
->   F:	arch/powerpc/include/asm/pnv-ocxl.h
->   F:	drivers/misc/ocxl/
->   F:	include/misc/ocxl*
->   F:	include/uapi/misc/ocxl.h
-> +F:	include/uapi/nvdimm/ocxl-pmem.h
->   F:	Documentation/userspace-api/accelerators/ocxl.rst
+Patch to add oak, hana, elm device tree:
+    https://lore.kernel.org/linux-arm-kernel/20200110073730.213789-1-hsinyi@chromium.org/
+I would like to add the device tree support after the above patch is
+accepted.
 
-Should this be part of the ocxl entry or a separate entry? I guess I 
-don't care too much either way.
+Changes in v2:
+- Change name arm > mt8173
+- use watchdog_stop_on_reboot
+- use watchdog_stop_on_unregister
+- use devm_watchdog_register_device
+- remove smcwd_shutdown, smcwd_remove
+- change error codes
+
+Evan Benn (1):
+  dt-bindings: watchdog: Add mt8173,smc-wdt watchdog
+
+Julius Werner (1):
+  watchdog: Add new mt8173_smc_wdt watchdog driver
+
+ .../bindings/watchdog/mt8173,smc-wdt.yaml     |  30 ++++
+ MAINTAINERS                                   |   7 +
+ arch/arm64/configs/defconfig                  |   1 +
+ drivers/watchdog/Kconfig                      |  13 ++
+ drivers/watchdog/Makefile                     |   1 +
+ drivers/watchdog/mt8173_smc_wdt.c             | 160 ++++++++++++++++++
+ 6 files changed, 212 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/watchdog/mt8173,smc-wdt.yaml
+ create mode 100644 drivers/watchdog/mt8173_smc_wdt.c
 
 -- 
-Andrew Donnellan              OzLabs, ADL Canberra
-ajd@linux.ibm.com             IBM Australia Limited
+2.25.0.265.gbab2e86ba0-goog
 
