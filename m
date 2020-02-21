@@ -4,54 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3795DC35640
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 08:16:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A6FF7C35641
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 08:16:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0F34B2467B
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 08:16:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 733CA2467B
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 08:16:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582272964;
-	bh=mZ3fx8mTTL31/4gxDSr6omrV4zrRgZozY8m6tMPa8Eg=;
+	s=default; t=1582272966;
+	bh=xMt+/WZJ7JX4l2wXXyGzZfDgtpkGtXEWwqSlZvxiJAE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=jhnfpa3SLcloSVyHf05Yuz0u5QoYl0VGCXg4cpqVZ3MjBdnY1zTbeKM7roGz4yCh6
-	 tIjNZrJcZDhT6jVc1c33tK9JD3sBZFX7+pFJMYFSAyMxhcB2WhMmC5hTEIKcIbAEjr
-	 H4bW2WC2ozIva/Kr36lN3mOX+JXlwmDVUttL9OHQ=
+	b=nsoEqsgaMQADBosWxDC2THpX0pUc2iW0QSR3L0RuhpNO0kZejgDXkW8SyYNy3eoul
+	 3k3an1IrtCCuQ4CEy6A4N9pOgp7wTULXAtlybj6zcpAAjiv9gGhinCd4KcX2GQwrVp
+	 4YJ6UkqCH87+1KS8JzBBfgT9rD0Hlqxdo+clbFCc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387461AbgBUIQD (ORCPT
+        id S2387468AbgBUIQF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Feb 2020 03:16:03 -0500
-Received: from mail.kernel.org ([198.145.29.99]:52806 "EHLO mail.kernel.org"
+        Fri, 21 Feb 2020 03:16:05 -0500
+Received: from mail.kernel.org ([198.145.29.99]:52898 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1733131AbgBUIPy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Feb 2020 03:15:54 -0500
+        id S1733143AbgBUIP7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 21 Feb 2020 03:15:59 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4849C2467B;
-        Fri, 21 Feb 2020 08:15:53 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B7B672467B;
+        Fri, 21 Feb 2020 08:15:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1582272953;
-        bh=mZ3fx8mTTL31/4gxDSr6omrV4zrRgZozY8m6tMPa8Eg=;
+        s=default; t=1582272959;
+        bh=xMt+/WZJ7JX4l2wXXyGzZfDgtpkGtXEWwqSlZvxiJAE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=AfgtVfimCivTdV+/QQJVBdBsZqj/UHkjfXDAivHIk6Dr1pw/qoc6rgT2+9TKcXe9H
-         yh+W5uHn90u9jw9gatmbnQxQJORz2ZrlXivh+gxdUyyWU/87pKgO8kWy0J+dvF3nH/
-         PeJh+5Gi5+7djnM3Z3ntFIVlu1PnOh1aHW0KrDNw=
+        b=hQFJ7Zp9wVecj4XjvebzxDFdR9UjwrJEihfWrS1aF6S5BV1AtJhYgmYzUKNkjsBIz
+         0k9TUvFQaMsdvMjq0w/PFAnc/jkujaLwuGi7Qe8a/YfXAE1drIX3yqREB88vBHcHpQ
+         L2BB5Yw/6TsQFlcG6KCZ14NS8PUyyE8Sn8DObRz4=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
-        "Aneesh Kumar K.V" <aneesh.kumar@linux.ibm.com>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
+        stable@vger.kernel.org, Xiao Yang <ice_yangxiao@163.com>,
+        Miklos Szeredi <mszeredi@redhat.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 330/344] asm-generic/tlb: add missing CONFIG symbol
-Date:   Fri, 21 Feb 2020 08:42:09 +0100
-Message-Id: <20200221072420.266274766@linuxfoundation.org>
+Subject: [PATCH 5.4 340/344] fuse: dont overflow LLONG_MAX with end offset
+Date:   Fri, 21 Feb 2020 08:42:19 +0100
+Message-Id: <20200221072421.321737639@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200221072349.335551332@linuxfoundation.org>
 References: <20200221072349.335551332@linuxfoundation.org>
@@ -64,38 +60,53 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Peter Zijlstra <peterz@infradead.org>
+From: Miklos Szeredi <mszeredi@redhat.com>
 
-[ Upstream commit 27796d03c9c4b2b937ed4cc2b10f21559ad5a8c9 ]
+[ Upstream commit 2f1398291bf35fe027914ae7a9610d8e601fbfde ]
 
-Without this the symbol will not actually end up in .config files.
+Handle the special case of fuse_readpages() wanting to read the last page
+of a hugest file possible and overflowing the end offset in the process.
 
-Link: http://lkml.kernel.org/r/20200116064531.483522-6-aneesh.kumar@linux.ibm.com
-Fixes: a30e32bd79e9 ("asm-generic/tlb: Provide generic tlb_flush() based on flush_tlb_mm()")
-Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-Signed-off-by: Aneesh Kumar K.V <aneesh.kumar@linux.ibm.com>
-Cc: Michael Ellerman <mpe@ellerman.id.au>
-Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
-Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
+This is basically to unbreak xfstests:generic/525 and prevent filesystems
+from doing bad things with an overflowing offset.
+
+Reported-by: Xiao Yang <ice_yangxiao@163.com>
+Signed-off-by: Miklos Szeredi <mszeredi@redhat.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/Kconfig | 3 +++
- 1 file changed, 3 insertions(+)
+ fs/fuse/file.c | 12 ++++++++++++
+ 1 file changed, 12 insertions(+)
 
-diff --git a/arch/Kconfig b/arch/Kconfig
-index 43102756304c1..238dccfa76910 100644
---- a/arch/Kconfig
-+++ b/arch/Kconfig
-@@ -399,6 +399,9 @@ config HAVE_RCU_TABLE_FREE
- config HAVE_MMU_GATHER_PAGE_SIZE
- 	bool
+diff --git a/fs/fuse/file.c b/fs/fuse/file.c
+index 695369f46f92d..3dd37a998ea93 100644
+--- a/fs/fuse/file.c
++++ b/fs/fuse/file.c
+@@ -803,6 +803,10 @@ static int fuse_do_readpage(struct file *file, struct page *page)
  
-+config MMU_GATHER_NO_RANGE
-+	bool
+ 	attr_ver = fuse_get_attr_version(fc);
+ 
++	/* Don't overflow end offset */
++	if (pos + (desc.length - 1) == LLONG_MAX)
++		desc.length--;
 +
- config HAVE_MMU_GATHER_NO_GATHER
- 	bool
- 
+ 	fuse_read_args_fill(&ia, file, pos, desc.length, FUSE_READ);
+ 	res = fuse_simple_request(fc, &ia.ap.args);
+ 	if (res < 0)
+@@ -888,6 +892,14 @@ static void fuse_send_readpages(struct fuse_io_args *ia, struct file *file)
+ 	ap->args.out_pages = true;
+ 	ap->args.page_zeroing = true;
+ 	ap->args.page_replace = true;
++
++	/* Don't overflow end offset */
++	if (pos + (count - 1) == LLONG_MAX) {
++		count--;
++		ap->descs[ap->num_pages - 1].length--;
++	}
++	WARN_ON((loff_t) (pos + count) < 0);
++
+ 	fuse_read_args_fill(ia, file, pos, count, FUSE_READ);
+ 	ia->read.attr_ver = fuse_get_attr_version(fc);
+ 	if (fc->async_read) {
 -- 
 2.20.1
 
