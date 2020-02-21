@@ -2,97 +2,127 @@ Return-Path: <SRS0=1210=4J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 46AFCC35657
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 15:25:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5EC00C35656
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 15:25:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1EAAF20679
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 15:25:22 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="yX6oeuzD"
+	by mail.kernel.org (Postfix) with ESMTP id 3CF8820679
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 15:25:27 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729075AbgBUPZU (ORCPT
+        id S1729165AbgBUPZ0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Feb 2020 10:25:20 -0500
-Received: from mail-wr1-f67.google.com ([209.85.221.67]:35525 "EHLO
-        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727851AbgBUPZU (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Feb 2020 10:25:20 -0500
-Received: by mail-wr1-f67.google.com with SMTP id w12so2515829wrt.2
-        for <linux-kernel@vger.kernel.org>; Fri, 21 Feb 2020 07:25:18 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=ssZD75jnMR4hkpMZQUIaBV1XsPq4KUUD/45GvDXOh8w=;
-        b=yX6oeuzDqFoZotjwwRgZd5CJF3eHAtckqPKNrFkSSKUDFAL1TVu9g61iJVR0q4hHyW
-         epgF3jHjPOWQNa6WvdAnZZrzQtDlOrSuHdhobX7Y+3sUBfCK6GPrx8vuaWJLi+JUh1S0
-         RYm49beZQuMWbbzg/5bWn2uN27+wBKRv7RcXThQR+Pr3swRb9hG3E88MOMckycX14led
-         z8lJSPmTA4LPMZU/rdFJe2feUGN5EEDV/mzy+5itKq0TRuiTl1vYk3LqW1WGKJLXG2QK
-         gghGgkMqjtPYzdu8l4TDJUuLl+UNj5SpAJKfdbg838eN9hE58QjK/EsTpkej5LXnFk95
-         m5Og==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=ssZD75jnMR4hkpMZQUIaBV1XsPq4KUUD/45GvDXOh8w=;
-        b=tmGxA1xMS88mpMmEZhHlZGEC1R+93SUPXAEA7WUIQuwHohG428pSlDY122WJsSp51H
-         WMet1gXh0l6fyf87pCwwHV19ECpkEtTy//JuPoKui7vAalSwQ34C+XDFUpjCoNCbZ1Qx
-         ++8RBlp+s0H9h3GBpn9MraVtzuUH87QuVtX92hotTQWsShYnzTLerYJE0zMadgju7+pY
-         CWBIf+yBAR2cOBUucb4pO1+ReOcE8d/WAtLS8OgwBwcnPw8lcR49a3yiIsFgoGgQPYZT
-         RB2vSiALmclvnkKSlLLh9cqZDw2hHuNgnsKJbKUpNbdOqMFjjDOSEiVufEf1EJ3jbr0Y
-         UXGA==
-X-Gm-Message-State: APjAAAVtMx8EwzmmrxqkVsntRWQhUgNGMQwZyrLe7PFFuK2UDFzHQVlr
-        Fwogebos7WTp1Y3mC+IUvwVosA==
-X-Google-Smtp-Source: APXvYqw8hWuDjGFL1KGZLrxDnhUgXxseZzDmu9i2/+jn5uput9GGc8z+ISI5Gbt27cwRskGJrGca9Q==
-X-Received: by 2002:a5d:610c:: with SMTP id v12mr46836567wrt.88.1582298718203;
-        Fri, 21 Feb 2020 07:25:18 -0800 (PST)
-Received: from linaro.org ([2a01:e34:ed2f:f020:903b:a048:f296:e3ae])
-        by smtp.gmail.com with ESMTPSA id t187sm4488863wmt.25.2020.02.21.07.25.16
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Fri, 21 Feb 2020 07:25:17 -0800 (PST)
-Date:   Fri, 21 Feb 2020 16:25:15 +0100
-From:   Daniel Lezcano <daniel.lezcano@linaro.org>
-To:     Dmitry Osipenko <digetx@gmail.com>
-Cc:     Thierry Reding <thierry.reding@gmail.com>,
-        Jonathan Hunter <jonathanh@nvidia.com>,
-        Peter De Schrijver <pdeschrijver@nvidia.com>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        =?utf-8?B?TWljaGHFgiBNaXJvc8WCYXc=?= <mirq-linux@rere.qmqm.pl>,
-        Jasper Korten <jja2000@gmail.com>,
-        David Heidelberg <david@ixit.cz>,
-        Peter Geis <pgwipeout@gmail.com>, linux-pm@vger.kernel.org,
-        linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v9 10/17] arm: tegra20: cpuidle: Make abort_flag atomic
-Message-ID: <20200221152515.GM10516@linaro.org>
-References: <20200212235134.12638-1-digetx@gmail.com>
- <20200212235134.12638-11-digetx@gmail.com>
+        Fri, 21 Feb 2020 10:25:26 -0500
+Received: from foss.arm.com ([217.140.110.172]:41760 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728970AbgBUPZZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 21 Feb 2020 10:25:25 -0500
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 205251FB;
+        Fri, 21 Feb 2020 07:25:25 -0800 (PST)
+Received: from [10.1.196.105] (eglon.cambridge.arm.com [10.1.196.105])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 1AB473F703;
+        Fri, 21 Feb 2020 07:25:23 -0800 (PST)
+Subject: Re: [PATCH v2] x86/resctrl: Preserve CDP enable over cpuhp
+To:     Reinette Chatre <reinette.chatre@intel.com>
+Cc:     x86@kernel.org, linux-kernel@vger.kernel.org,
+        Fenghua Yu <fenghua.yu@intel.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        "H . Peter Anvin" <hpa@zytor.com>
+References: <20200214181600.38779-1-james.morse@arm.com>
+ <214c845b-d093-bafc-02d0-dfd810283f1a@intel.com>
+From:   James Morse <james.morse@arm.com>
+Message-ID: <32c563f9-c645-5c04-ed0b-18b3348c9c7f@arm.com>
+Date:   Fri, 21 Feb 2020 15:25:22 +0000
+User-Agent: Mozilla/5.0 (X11; Linux aarch64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200212235134.12638-11-digetx@gmail.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+In-Reply-To: <214c845b-d093-bafc-02d0-dfd810283f1a@intel.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-GB
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Feb 13, 2020 at 02:51:27AM +0300, Dmitry Osipenko wrote:
-> Replace memory accessors with atomic API just to make code consistent
-> with the abort_barrier. The new variant may be even more correct now since
-> atomic_read() will prevent compiler from generating wrong things like
-> carrying abort_flag value in a register instead of re-fetching it from
-> memory.
-> 
-> Acked-by: Peter De Schrijver <pdeschrijver@nvidia.com>
-> Tested-by: Peter Geis <pgwipeout@gmail.com>
-> Tested-by: Jasper Korten <jja2000@gmail.com>
-> Tested-by: David Heidelberg <david@ixit.cz>
-> Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
+Hi Reinette,
 
-Acked-by: Daniel Lezcano <daniel.lezcano@linaro.org>
+On 14/02/2020 19:24, Reinette Chatre wrote:
+> On 2/14/2020 10:16 AM, James Morse wrote:
+>> Resctrl assumes that all CPUs are online when the filesystem is
+>> mounted, and that CPUs remember their CDP-enabled state over CPU
+>> hotplug.
+>>
+>> This goes wrong when resctrl's CDP-enabled state changes while all
+>> the CPUs in a domain are offline.
+>>
+>> When a domain comes online, enable (or disable!) CDP to match resctrl's
+>> current setting.
+
+>> diff --git a/arch/x86/kernel/cpu/resctrl/rdtgroup.c b/arch/x86/kernel/cpu/resctrl/rdtgroup.c
+>> index 064e9ef44cd6..5967320a1951 100644
+>> --- a/arch/x86/kernel/cpu/resctrl/rdtgroup.c
+>> +++ b/arch/x86/kernel/cpu/resctrl/rdtgroup.c
+>> @@ -1831,6 +1831,9 @@ static int set_cache_qos_cfg(int level, bool enable)
+>>  	struct rdt_domain *d;
+>>  	int cpu;
+>>  
+>> +	 /* CDP state is restored during cpuhp, which takes this lock */
+>> +	lockdep_assert_held(&rdtgroup_mutex);
+>> +
+> 
+> I think this hunk can be dropped. (1) The code path where this
+> annotation is added is not part of this fix. (2) The comment implies
+> that the taking of the mutex is something new/unique added in the CPU
+> hotplug path but that is not accurate since this mutex is also taken in
+> the only other existing call path of this snippet that is handling the
+> mounting of the filesystem.
+
+These things answer the question: "what stops rdt_domain_reconfigure_cdp() racing with
+set_cache_qos_cfg() on the mount path, causing the wrong value to be restored?".
+
+We can try and answer that in the commit message, or comments, but these will quickly be
+lost, stale, or wrong.
+
+These annotations serve as a comment, and let lockdep check its still true.
+(I think you can never have enough lockdep annotations!)
+
+
+> You do mention that these annotations is helpful for the MPAM work.
+
+Indeed, it splits up the, er, "big RDT mutex", these annotations mean lockdep catches me
+out if I do something wrong, and makes it very clear when changing something subtle.
+
+
+> Could the annotations instead be added as a separate patch forming part
+> of that work?
+
+Ideally these things are there from the beginning. Adding them over time as part of other
+reviewed patches works. I don't think adding them in one go before refactoring helps: you
+wouldn't have the confidence that they were correct in the first place.
+
+I'll drop these.
+
+
+>>  	if (level == RDT_RESOURCE_L3)
+>>  		update = l3_qos_cfg_update;
+>>  	else if (level == RDT_RESOURCE_L2)
+>> @@ -1859,6 +1862,21 @@ static int set_cache_qos_cfg(int level, bool enable)
+>>  	return 0;
+>>  }
+>>  
+>> +/* Restore the qos cfg state when a package comes online */
+> 
+> s/package/domain/? When, for example, considering L2 then "package" is
+> not the right term to use.
+
+Sure,
+
+
+Thanks,
+
+James
