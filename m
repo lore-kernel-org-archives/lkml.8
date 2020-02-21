@@ -2,121 +2,109 @@ Return-Path: <SRS0=1210=4J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1DDBFC35657
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 14:35:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 41D94C35656
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 14:37:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F1A53222C4
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 14:35:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 164B020679
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 14:37:22 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="J4LtiqIC"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728835AbgBUOf3 (ORCPT
+        id S1728712AbgBUOhU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Feb 2020 09:35:29 -0500
-Received: from foss.arm.com ([217.140.110.172]:40708 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727096AbgBUOf3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Feb 2020 09:35:29 -0500
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 8DFE81FB;
-        Fri, 21 Feb 2020 06:35:28 -0800 (PST)
-Received: from e121166-lin.cambridge.arm.com (e121166-lin.cambridge.arm.com [10.1.196.255])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 553413F703;
-        Fri, 21 Feb 2020 06:35:27 -0800 (PST)
-Date:   Fri, 21 Feb 2020 14:35:25 +0000
-From:   Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-To:     Marc Gonzalez <marc.w.gonzalez@free.fr>
-Cc:     Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Stanimir Varbanov <svarbanov@mm-sol.com>,
-        Andrew Murray <andrew.murray@arm.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        linux-arm-msm@vger.kernel.org, linux-pci@vger.kernel.org,
-        linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Subject: Re: [PATCH v2] PCI: qcom: Fix the fixup of PCI_VENDOR_ID_QCOM
-Message-ID: <20200221143525.GC15440@e121166-lin.cambridge.arm.com>
-References: <20191227012717.78965-1-bjorn.andersson@linaro.org>
- <9e5ee7e8-aa63-e82c-8135-acc77b476c87@mm-sol.com>
- <38acf5fc-85aa-7090-e666-97a1281e9905@free.fr>
- <20191229024547.GH3755841@builder>
- <9c7d69cc-29e7-07c5-1e93-e9fdadf370a6@free.fr>
+        Fri, 21 Feb 2020 09:37:20 -0500
+Received: from mail-lf1-f67.google.com ([209.85.167.67]:40310 "EHLO
+        mail-lf1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728177AbgBUOhU (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 21 Feb 2020 09:37:20 -0500
+Received: by mail-lf1-f67.google.com with SMTP id c23so1650104lfi.7
+        for <linux-kernel@vger.kernel.org>; Fri, 21 Feb 2020 06:37:19 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=I7mTmKB1Y25U0g4q3RoTli21LYId0oXzN7cSDlfaxGU=;
+        b=J4LtiqICrcN1d1FVgUAW+f6vnzA520FQfsoVgKLyplCBIVY6LTQd0ghkLG9rNIifNR
+         Y4Yl8HIYrnw5JV5SphEUVgGMWU15R3N6kivbt95EfiN+JdzaGVX6zzpNX3qX9CZXcf4E
+         LYEjgEWi509SQIo8PlmMGsKVCtbweF5z92tDm08Ve+SXthMI17jFi55+CysFV+3yZjI2
+         7Gs1cGYR4yz7uKBhsfeGTLtR1Qb4qG6i5iUJ/RotNNXzByhhQe9y80JDZfMOOPN5GDyh
+         /eVeBYbLLYtgVj8NCBseh4C6efBuUTSQ72KFG2IHQYjM0KMawg6SxUSf3koWkFnGVCuU
+         r6GQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=I7mTmKB1Y25U0g4q3RoTli21LYId0oXzN7cSDlfaxGU=;
+        b=exXocaACuIaKuXj2+JOofJtrnYCGzMIEYRU7U4/81Au4yMABa9clDsLmnWLHdO6oXg
+         VSyLPxyS47Ln3HM6UYJEAvC0Gy4tQAXHgIwMRLs4IfYIxI/5FnoAywD6w8jp7L7Kh//+
+         F3J2YYTXSNqc7h8ouu46cysL57KtX6ziq+G6DEgEnnFhdhUuWRdo13gwRpsy/ypdS2xI
+         B8Q4MKUr61/JxaQahVh/iraAJRVKkpwSYDdZVVV8NI1ZUN0OxT8OJK/T+MJGTcnqExoF
+         CvxhAB4lWKKghdu5aSNZCbILELe5f/AtWXcMUZ/uCkjuDebP7mAz+gr7rYMUpz3ev72w
+         ialw==
+X-Gm-Message-State: APjAAAXMJsqQeyj/8rYbiyBN16ymrSzcjR/2FRV3cSx8YvOi2MtyN9F4
+        mZXwENisNR3k8HcWQ6g/YLkz61rH33poOusXMic8Og==
+X-Google-Smtp-Source: APXvYqyAWnLDYIxOg7JWzArkYp1QAJB8O//RA7y+f9fkdXf46018OkIiEEmlg593NgXDxY3ewyKPZHYklLUJa00pt3k=
+X-Received: by 2002:a19:5e1d:: with SMTP id s29mr20173445lfb.21.1582295838433;
+ Fri, 21 Feb 2020 06:37:18 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <9c7d69cc-29e7-07c5-1e93-e9fdadf370a6@free.fr>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+References: <20200217185437.GA20901@embeddedor>
+In-Reply-To: <20200217185437.GA20901@embeddedor>
+From:   Linus Walleij <linus.walleij@linaro.org>
+Date:   Fri, 21 Feb 2020 15:37:07 +0100
+Message-ID: <CACRpkdaJHQoZZCK0tJVb5Ntxsg+gr1FcHwtdxjQEHo=ZiKkxAQ@mail.gmail.com>
+Subject: Re: [PATCH] pinctrl: uniphier: Replace zero-length array with
+ flexible-array member
+To:     "Gustavo A. R. Silva" <gustavo@embeddedor.com>
+Cc:     Masahiro Yamada <yamada.masahiro@socionext.com>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Dec 30, 2019 at 09:25:28PM +0100, Marc Gonzalez wrote:
-> On 29/12/2019 03:45, Bjorn Andersson wrote:
-> 
-> > On Sat 28 Dec 07:41 PST 2019, Marc Gonzalez wrote:
-> > 
-> >> On 27/12/2019 09:51, Stanimir Varbanov wrote:
-> >>
-> >>> On 12/27/19 3:27 AM, Bjorn Andersson wrote:
-> >>>
-> >>>> There exists non-bridge PCIe devices with PCI_VENDOR_ID_QCOM, so limit
-> >>>> the fixup to only affect the relevant PCIe bridges.
-> >>>>
-> >>>> Cc: stable@vger.kernel.org
-> >>>> Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
-> >>>> ---
-> >>>>
-> >>>> Stan, I picked up all the suggested device id's from the previous thread and
-> >>>> added 0x1000 for QCS404. I looked at creating platform specific defines in
-> >>>> pci_ids.h, but SDM845 has both 106 and 107... Please let me know if you would
-> >>>> prefer that I do this anyway.
-> >>>
-> >>> Looks good,
-> >>>
-> >>> Acked-by: Stanimir Varbanov <svarbanov@mm-sol.com>
-> >>>
-> >>>>  drivers/pci/controller/dwc/pcie-qcom.c | 8 +++++++-
-> >>>>  1 file changed, 7 insertions(+), 1 deletion(-)
-> >>>>
-> >>>> diff --git a/drivers/pci/controller/dwc/pcie-qcom.c b/drivers/pci/controller/dwc/pcie-qcom.c
-> >>>> index 5ea527a6bd9f..138e1a2d21cc 100644
-> >>>> --- a/drivers/pci/controller/dwc/pcie-qcom.c
-> >>>> +++ b/drivers/pci/controller/dwc/pcie-qcom.c
-> >>>> @@ -1439,7 +1439,13 @@ static void qcom_fixup_class(struct pci_dev *dev)
-> >>>>  {
-> >>>>  	dev->class = PCI_CLASS_BRIDGE_PCI << 8;
-> >>>>  }
-> >>>> -DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_QCOM, PCI_ANY_ID, qcom_fixup_class);
-> >>>> +DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_QCOM, 0x0101, qcom_fixup_class);
-> >>>> +DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_QCOM, 0x0104, qcom_fixup_class);
-> >>>> +DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_QCOM, 0x0106, qcom_fixup_class);
-> >>>> +DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_QCOM, 0x0107, qcom_fixup_class);
-> >>>> +DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_QCOM, 0x0302, qcom_fixup_class);
-> >>>> +DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_QCOM, 0x1000, qcom_fixup_class);
-> >>>> +DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_QCOM, 0x1001, qcom_fixup_class);
-> >>
-> >> Hrmmm... still not CCed on the patch,
-> > 
-> > You are Cc'ed on the patch, but as usual your mail server responds "451
-> > too many errors from your ip" and throw my emails away.
-> > 
-> >> and still don't think the fixup is required(?) for 0x106 and 0x107.
-> >>
-> > 
-> > I re-read your reply in my v1 thread. So we know that 0x104 doesn't need
-> > the fixup, so presumably only 0x101 needs the fixup?
-> 
-> I apologize for the tone of my reply. I did not mean to sound
-> so snarky.
-> 
-> All I can say is that, if I remember correctly, the fixup was
-> not necessary on apq8098 (0x0105) and it was probably not
-> required on msm8996 and sdm845. For older platforms, all bets
-> are off.
+On Mon, Feb 17, 2020 at 7:51 PM Gustavo A. R. Silva
+<gustavo@embeddedor.com> wrote:
 
-How are we proceeding with this patch then ?
+> The current codebase makes use of the zero-length array language
+> extension to the C90 standard, but the preferred mechanism to declare
+> variable-length types such as these ones is a flexible array member[1][2],
+> introduced in C99:
+>
+> struct foo {
+>         int stuff;
+>         struct boo array[];
+> };
+>
+> By making use of the mechanism above, we will get a compiler warning
+> in case the flexible array does not occur last in the structure, which
+> will help us prevent some kind of undefined behavior bugs from being
+> inadvertently introduced[3] to the codebase from now on.
+>
+> Also, notice that, dynamic memory allocations won't be affected by
+> this change:
+>
+> "Flexible array members have incomplete type, and so the sizeof operator
+> may not be applied. As a quirk of the original implementation of
+> zero-length arrays, sizeof evaluates to zero."[1]
+>
+> This issue was found with the help of Coccinelle.
+>
+> [1] https://gcc.gnu.org/onlinedocs/gcc/Zero-Length.html
+> [2] https://github.com/KSPP/linux/issues/21
+> [3] commit 76497732932f ("cxgb3/l2t: Fix undefined behaviour")
+>
+> Signed-off-by: Gustavo A. R. Silva <gustavo@embeddedor.com>
 
-Thanks,
-Lorenzo
+Patch applied with Masahiro's ACK.
+
+Yours,
+Linus Walleij
