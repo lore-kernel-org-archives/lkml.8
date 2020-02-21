@@ -2,105 +2,123 @@ Return-Path: <SRS0=1210=4J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C5ACFC35641
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 08:33:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E9EBEC35641
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 08:33:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9D49E2067D
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 08:33:26 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="hI/LwG2K"
+	by mail.kernel.org (Postfix) with ESMTP id C2FB520578
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 08:33:33 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1582274013;
+	bh=tRYepbfaD7Zd5Bn6ptVzfWced5IDJEWaxH48PkLZIew=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=Z21a5Wzviu7YCGCNwWEHDZJU63sAGMPTKKm9cXXE8wobL4yb+ItwqFK+qiU51l7ta
+	 zTbQUcdpyqJOyECBpOd6s+dQcqFmVm2r6MYQkI33QhtqCRXqQbLXzo3NJwNStJgQtQ
+	 7ssH1NqGvfRJ1522JMrEZ0sbj9Wra6D+9der9Mdo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388407AbgBUIdZ (ORCPT
+        id S1732573AbgBUIKk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Feb 2020 03:33:25 -0500
-Received: from lelv0142.ext.ti.com ([198.47.23.249]:58058 "EHLO
-        lelv0142.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1732609AbgBUIdX (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Feb 2020 03:33:23 -0500
-Received: from fllv0034.itg.ti.com ([10.64.40.246])
-        by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id 01L8XJsc015920;
-        Fri, 21 Feb 2020 02:33:19 -0600
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1582273999;
-        bh=HS1Md6M0KSfcAvB5AaAuTKyUy/n3WhhTB/+q8IGl1yc=;
-        h=Subject:To:CC:References:From:Date:In-Reply-To;
-        b=hI/LwG2KS7nyGndqeFXCyRBVuIBvFnzyPcYsynXqpEpEBLfYP470xHU+CssX/b9S4
-         IXB4EXF5EMHAfKgC7b1aPySMu1193wD5DoTydMdcE4bO38Q03kFFwBVHs22v8zx9/D
-         HaAru45OYb/JFKjjXUibT0CpAxiEgHnWbwuScXCg=
-Received: from DFLE100.ent.ti.com (dfle100.ent.ti.com [10.64.6.21])
-        by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 01L8XJNN072114
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Fri, 21 Feb 2020 02:33:19 -0600
-Received: from DFLE102.ent.ti.com (10.64.6.23) by DFLE100.ent.ti.com
- (10.64.6.21) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Fri, 21
- Feb 2020 02:33:18 -0600
-Received: from lelv0327.itg.ti.com (10.180.67.183) by DFLE102.ent.ti.com
- (10.64.6.23) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
- Frontend Transport; Fri, 21 Feb 2020 02:33:18 -0600
-Received: from [10.24.69.159] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by lelv0327.itg.ti.com (8.15.2/8.15.2) with ESMTP id 01L8XGLE004067;
-        Fri, 21 Feb 2020 02:33:17 -0600
-Subject: Re: [PATCH v4 0/3] phy: qcom-qmp: Add SDM845 QMP and QHP PHYs
-To:     Bjorn Andersson <bjorn.andersson@linaro.org>
-CC:     Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        <linux-arm-msm@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <devicetree@vger.kernel.org>
-References: <20200106081821.3192922-1-bjorn.andersson@linaro.org>
- <20200220063837.GX1908628@ripper>
-From:   Kishon Vijay Abraham I <kishon@ti.com>
-Message-ID: <ec401b79-b0af-78b3-ba8a-03aee5ba3584@ti.com>
-Date:   Fri, 21 Feb 2020 14:06:58 +0530
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.2
+        Fri, 21 Feb 2020 03:10:40 -0500
+Received: from mail.kernel.org ([198.145.29.99]:45840 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727872AbgBUIKf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 21 Feb 2020 03:10:35 -0500
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id B300320578;
+        Fri, 21 Feb 2020 08:10:34 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1582272635;
+        bh=tRYepbfaD7Zd5Bn6ptVzfWced5IDJEWaxH48PkLZIew=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=Llt9TMgMVAw6aGRJixyQ1t9fc8LtwC1o5psdkxrT31gax4yRQ0MOoIHGloJH3DFgq
+         gH9pWXljCRj0TrHioFrVWYC2kZkl2L7b7Xo8a3XnClFLMRqvuB6NKQJlziu4wd6S/B
+         gvVY1EwKhK940fGjQTUTm7ZGiZuX1JqInFykvCSY=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org, Derek Kiernan <derek.kiernan@xilinx.com>,
+        Dragan Cvetic <dragan.cvetic@xilinx.com>,
+        Luc Van Oostenryck <luc.vanoostenryck@gmail.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.4 216/344] misc: xilinx_sdfec: fix xsdfec_poll()s return type
+Date:   Fri, 21 Feb 2020 08:40:15 +0100
+Message-Id: <20200221072408.808349955@linuxfoundation.org>
+X-Mailer: git-send-email 2.25.1
+In-Reply-To: <20200221072349.335551332@linuxfoundation.org>
+References: <20200221072349.335551332@linuxfoundation.org>
+User-Agent: quilt/0.66
 MIME-Version: 1.0
-In-Reply-To: <20200220063837.GX1908628@ripper>
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+From: Luc Van Oostenryck <luc.vanoostenryck@gmail.com>
+
+[ Upstream commit fa4e7fc1386078edcfddd8848cb0374f4af74fe7 ]
+
+xsdfec_poll() is defined as returning 'unsigned int' but the
+.poll method is declared as returning '__poll_t', a bitwise type.
+
+Fix this by using the proper return type and using the EPOLL
+constants instead of the POLL ones, as required for __poll_t.
+
+CC: Derek Kiernan <derek.kiernan@xilinx.com>
+CC: Dragan Cvetic <dragan.cvetic@xilinx.com>
+Signed-off-by: Luc Van Oostenryck <luc.vanoostenryck@gmail.com>
+Acked-by: Dragan Cvetic <dragan.cvetic@xilinx.com>
+Link: https://lore.kernel.org/r/20191209213655.57985-1-luc.vanoostenryck@gmail.com
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ drivers/misc/xilinx_sdfec.c | 10 +++++-----
+ 1 file changed, 5 insertions(+), 5 deletions(-)
+
+diff --git a/drivers/misc/xilinx_sdfec.c b/drivers/misc/xilinx_sdfec.c
+index 11835969e9828..48ba7e02bed72 100644
+--- a/drivers/misc/xilinx_sdfec.c
++++ b/drivers/misc/xilinx_sdfec.c
+@@ -1025,25 +1025,25 @@ static long xsdfec_dev_compat_ioctl(struct file *file, unsigned int cmd,
+ }
+ #endif
+ 
+-static unsigned int xsdfec_poll(struct file *file, poll_table *wait)
++static __poll_t xsdfec_poll(struct file *file, poll_table *wait)
+ {
+-	unsigned int mask = 0;
++	__poll_t mask = 0;
+ 	struct xsdfec_dev *xsdfec;
+ 
+ 	xsdfec = container_of(file->private_data, struct xsdfec_dev, miscdev);
+ 
+ 	if (!xsdfec)
+-		return POLLNVAL | POLLHUP;
++		return EPOLLNVAL | EPOLLHUP;
+ 
+ 	poll_wait(file, &xsdfec->waitq, wait);
+ 
+ 	/* XSDFEC ISR detected an error */
+ 	spin_lock_irqsave(&xsdfec->error_data_lock, xsdfec->flags);
+ 	if (xsdfec->state_updated)
+-		mask |= POLLIN | POLLPRI;
++		mask |= EPOLLIN | EPOLLPRI;
+ 
+ 	if (xsdfec->stats_updated)
+-		mask |= POLLIN | POLLRDNORM;
++		mask |= EPOLLIN | EPOLLRDNORM;
+ 	spin_unlock_irqrestore(&xsdfec->error_data_lock, xsdfec->flags);
+ 
+ 	return mask;
+-- 
+2.20.1
 
 
-On 20/02/20 12:08 pm, Bjorn Andersson wrote:
-> On Mon 06 Jan 00:18 PST 2020, Bjorn Andersson wrote:
-> 
->> Add support for the two PCIe PHYs found in Qualcomm SDM845
->>
-> 
-> Kishon, these patches still applies cleanly, could you please pick them
-> up?
 
-merged now, thanks!
-
--Kishon
-
-> 
-> Regards,
-> Bjorn
-> 
->> Bjorn Andersson (3):
->>   dt-bindings: phy-qcom-qmp: Add SDM845 PCIe to binding
->>   phy: qcom: qmp: Add SDM845 PCIe QMP PHY support
->>   phy: qcom: qmp: Add SDM845 QHP PCIe PHY
->>
->>  .../devicetree/bindings/phy/qcom-qmp-phy.txt  |  10 +
->>  drivers/phy/qualcomm/phy-qcom-qmp.c           | 313 ++++++++++++++++++
->>  drivers/phy/qualcomm/phy-qcom-qmp.h           | 114 +++++++
->>  3 files changed, 437 insertions(+)
->>
->> -- 
->> 2.24.0
->>
