@@ -6,45 +6,45 @@ X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
 	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 20993C35647
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 13:50:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 00CD0C35647
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 13:50:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E8750208C4
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 13:50:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CADC4208C4
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 13:50:43 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="cw08DLbJ"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="O/PpAFrM"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728826AbgBUNuh (ORCPT
+        id S1728891AbgBUNum (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Feb 2020 08:50:37 -0500
-Received: from bombadil.infradead.org ([198.137.202.133]:56358 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728777AbgBUNud (ORCPT
+        Fri, 21 Feb 2020 08:50:42 -0500
+Received: from merlin.infradead.org ([205.233.59.134]:45540 "EHLO
+        merlin.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728841AbgBUNuk (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Feb 2020 08:50:33 -0500
+        Fri, 21 Feb 2020 08:50:40 -0500
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=Content-Type:MIME-Version:References:
+        d=infradead.org; s=merlin.20170209; h=Content-Type:MIME-Version:References:
         Subject:Cc:To:From:Date:Message-Id:Sender:Reply-To:Content-Transfer-Encoding:
         Content-ID:Content-Description:In-Reply-To;
-        bh=VUxVM0zMD0yTdzXcfGzmRt1JL0NXbyE5uLB6keYVGUw=; b=cw08DLbJQYvhQZudJea9ctbBPs
-        gZDQ7Tf8xRXC0YkkOMJ0ti+COpp4uB3qpocq0Q1nq2jpurVEI7n8MIXJNrGHV9FYzNmR8ZPIam9ny
-        ZrvTrqLOXA4UwQVvXjnnTNJjrzaOgKNuEByWGsqr/9EHNbxrAGklvNOJf3w6+TTOPWrir9bpUKlXJ
-        ldAMxpmdjEDnDHCKH5XKCrHK8LNskWewRk1E9/OWzzeTBPdBan0yCyJWHQCvpG2ZI5y/hnToERfZG
-        hxC3SUAmZhWnW5+mJ0V28V4opOw6ghxT3zNjsxKlpYvDUqcCZnadIVYvU85jhTpRNIWgx/plgDzXC
-        qlQNNI6Q==;
+        bh=SKWUMBjFXunYZktv3+PwsTSKyH9hFj1H3mSFlJw71rk=; b=O/PpAFrMCSLa6/ZWKy82GufWPu
+        yg2jaXTm6OaoPCGOw8Pv9uwwWGnn0YapFAWHIPisIplZZaKEPIVe3XuIekUKy9thKTI4mSFt80xfT
+        LdsxNORHiMMOZDNP7l+fGoziLk5kRJZBxXJR/LPLpQiw5u5ok4BF8htn7gKQSJON/2sMV/H7coN6K
+        6uRP+0V82wdNmmyQL8NFrEXmlbFARdfU6G7KT/QMpanZns1UUpwVkHLChXdoxAJlyoCR+fTo+zvW+
+        avDX4fijN0KzQvq7qw/Wtp5EIa3afNRb51Twger/reBbBvkhGv8pxZyGTQ4pre9BuM8uBX8WFmw+x
+        SNWSEHaA==;
 Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
-        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1j58gt-0000OT-Nj; Fri, 21 Feb 2020 13:50:03 +0000
+        by merlin.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1j58gw-0006VH-IG; Fri, 21 Feb 2020 13:50:06 +0000
 Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (Client did not present a certificate)
-        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 85E1D304D2C;
-        Fri, 21 Feb 2020 14:48:07 +0100 (CET)
+        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 8906930783F;
+        Fri, 21 Feb 2020 14:48:08 +0100 (CET)
 Received: by hirez.programming.kicks-ass.net (Postfix, from userid 0)
-        id AFC5829B5903A; Fri, 21 Feb 2020 14:50:00 +0100 (CET)
-Message-Id: <20200221134215.206604505@infradead.org>
+        id 3B01829D740B7; Fri, 21 Feb 2020 14:50:01 +0100 (CET)
+Message-Id: <20200221134216.690116768@infradead.org>
 User-Agent: quilt/0.65
-Date:   Fri, 21 Feb 2020 14:34:19 +0100
+Date:   Fri, 21 Feb 2020 14:34:40 +0100
 From:   Peter Zijlstra <peterz@infradead.org>
 To:     linux-kernel@vger.kernel.org, linux-arch@vger.kernel.org,
         rostedt@goodmis.org
@@ -54,7 +54,7 @@ Cc:     peterz@infradead.org, mingo@kernel.org, joel@joelfernandes.org,
         mathieu.desnoyers@efficios.com, jiangshanlai@gmail.com,
         luto@kernel.org, tony.luck@intel.com, frederic@kernel.org,
         dan.carpenter@oracle.com, mhiramat@kernel.org
-Subject: [PATCH v4 03/27] x86/entry: Flip _TIF_SIGPENDING and _TIF_NOTIFY_RESUME handling
+Subject: [PATCH v4 24/27] x86/int3: Avoid atomic instrumentation
 References: <20200221133416.777099322@infradead.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -63,38 +63,40 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Make sure we run task_work before we hit any kind of userspace -- very
-much including signals.
+Use arch_atomic_*() and READ_ONCE_NOCHECK() to ensure nothing untoward
+creeps in and ruins things.
 
-Suggested-by: Andy Lutomirski <luto@kernel.org>
+That is; this is the INT3 text poke handler, strictly limit the code
+that runs in it, lest we inadvertenly hit yet another INT3.
+
+Reported-by: Thomas Gleixner <tglx@linutronix.de>
 Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
 ---
- arch/x86/entry/common.c                   |    8 
- usr/src/linux-2.6/arch/x86/entry/common.c |  440 ------------------------------
- 2 files changed, 4 insertions(+), 444 deletions(-)
+ arch/x86/kernel/alternative.c |    6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
---- a/arch/x86/entry/common.c
-+++ b/arch/x86/entry/common.c
-@@ -155,16 +155,16 @@ static void exit_to_usermode_loop(struct
- 		if (cached_flags & _TIF_PATCH_PENDING)
- 			klp_update_patch_state(current);
+--- a/arch/x86/kernel/alternative.c
++++ b/arch/x86/kernel/alternative.c
+@@ -960,9 +960,9 @@ static struct bp_patching_desc *bp_desc;
+ static __always_inline
+ struct bp_patching_desc *try_get_desc(struct bp_patching_desc **descp)
+ {
+-	struct bp_patching_desc *desc = READ_ONCE(*descp); /* rcu_dereference */
++	struct bp_patching_desc *desc = READ_ONCE_NOCHECK(*descp); /* rcu_dereference */
  
--		/* deal with pending signal delivery */
--		if (cached_flags & _TIF_SIGPENDING)
--			do_signal(regs);
--
- 		if (cached_flags & _TIF_NOTIFY_RESUME) {
- 			clear_thread_flag(TIF_NOTIFY_RESUME);
- 			tracehook_notify_resume(regs);
- 			rseq_handle_notify_resume(NULL, regs);
- 		}
+-	if (!desc || !atomic_inc_not_zero(&desc->refs))
++	if (!desc || !arch_atomic_inc_not_zero(&desc->refs))
+ 		return NULL;
  
-+		/* deal with pending signal delivery */
-+		if (cached_flags & _TIF_SIGPENDING)
-+			do_signal(regs);
-+
- 		if (cached_flags & _TIF_USER_RETURN_NOTIFY)
- 			fire_user_return_notifiers();
+ 	return desc;
+@@ -971,7 +971,7 @@ struct bp_patching_desc *try_get_desc(st
+ static __always_inline void put_desc(struct bp_patching_desc *desc)
+ {
+ 	smp_mb__before_atomic();
+-	atomic_dec(&desc->refs);
++	arch_atomic_dec(&desc->refs);
+ }
  
+ static __always_inline void *text_poke_addr(struct text_poke_loc *tp)
 
 
