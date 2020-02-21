@@ -4,51 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 167CBC35641
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 08:05:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 25EB1C35640
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 08:05:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D582224670
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 08:05:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F0A3B222C4
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 08:05:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582272354;
-	bh=ZknrHGTXKbZ2v9A+wXYcE5FK+LWxVzwyBYWT016O4gg=;
+	s=default; t=1582272359;
+	bh=FsDCGFXutCMRdUwir8BJRRaQZlwlI0XCDXOKRaP7r9A=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=L0fskELxEK5y1hFwLX+TBF5z2WX5KXclQMHQ3/xaAZGq1Pg8nuxSsthF4Sss8CAKx
-	 f32/tTm5Jy6AbZ12gxF/fOqnTU4Oae2rTKakXzy/17FMnWmq6i3EwBFHD5pIzebUXJ
-	 yyksesqsik59pZRUs81O5TMdDA51CkDySdd786BQ=
+	b=ulaH83pJKq+1lv8NTUlYqaQ/xl4CnJFlHl/hbESqeN698Mziv8dBn3BX7v8nfA+mW
+	 bKS/A+YPNpRnCVedOMKvkXS+XDqsxoVFupfMN4cN8nE7KS3UmsffU4c8TlMtIkb2DC
+	 UTp3alKmZ0PcMN7qM5jVRsSw+ZxqZJIvWTvjMqsY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731706AbgBUIFx (ORCPT
+        id S1731890AbgBUIF5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Feb 2020 03:05:53 -0500
-Received: from mail.kernel.org ([198.145.29.99]:39424 "EHLO mail.kernel.org"
+        Fri, 21 Feb 2020 03:05:57 -0500
+Received: from mail.kernel.org ([198.145.29.99]:39444 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731500AbgBUIFr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Feb 2020 03:05:47 -0500
+        id S1731870AbgBUIFu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 21 Feb 2020 03:05:50 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id F0DA220801;
-        Fri, 21 Feb 2020 08:05:45 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 75DBB20578;
+        Fri, 21 Feb 2020 08:05:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1582272346;
-        bh=ZknrHGTXKbZ2v9A+wXYcE5FK+LWxVzwyBYWT016O4gg=;
+        s=default; t=1582272348;
+        bh=FsDCGFXutCMRdUwir8BJRRaQZlwlI0XCDXOKRaP7r9A=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=qDtyLDrc0n9galqvo+m0nSQmjE3p6TZNB5VSA9QnfXJ7WYQqrS2APlpV3MTj76jZi
-         Q+oI7C1i/Bmi/eaw9eTZ7TrOgtlgUd1TGgOqgivBzEsH/1j0tU2e379A4whBLGKjIY
-         BdMpqpGtx9JxPxWc2GzFlVi8elFFS6uQd0ufXxig=
+        b=KcxN6DC9VBBiZieYOHphWC0MzV2hyxMTXskzSchmyeSGgQ3KzYpFv6F90MiYdPpnY
+         cCMMSNKXztmMPY1cBn/AH7wwwwTDZfNZ9UBHpf9GDrUdPKzWt0k8yuCualsJcOt7Et
+         EHZDR9EEXzq1eFmerNfHZ0PUHrMJwqWoRCH1P6IU=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Niklas Schnelle <schnelle@linux.ibm.com>,
-        Peter Oberparleiter <oberpar@linux.ibm.com>,
-        Vasily Gorbik <gor@linux.ibm.com>,
+        stable@vger.kernel.org, Oliver OHalloran <oohall@gmail.com>,
+        Alexey Kardashevskiy <aik@ozlabs.ru>,
+        Michael Ellerman <mpe@ellerman.id.au>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 072/344] s390/pci: Fix possible deadlock in recover_store()
-Date:   Fri, 21 Feb 2020 08:37:51 +0100
-Message-Id: <20200221072355.546226966@linuxfoundation.org>
+Subject: [PATCH 5.4 073/344] powerpc/iov: Move VF pdev fixup into pcibios_fixup_iov()
+Date:   Fri, 21 Feb 2020 08:37:52 +0100
+Message-Id: <20200221072355.632124230@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200221072349.335551332@linuxfoundation.org>
 References: <20200221072349.335551332@linuxfoundation.org>
@@ -61,214 +61,121 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Niklas Schnelle <schnelle@linux.ibm.com>
+From: Oliver O'Halloran <oohall@gmail.com>
 
-[ Upstream commit 576c75e36c689bec6a940e807bae27291ab0c0de ]
+[ Upstream commit 965c94f309be58fbcc6c8d3e4f123376c5970d79 ]
 
-With zpci_disable() working, lockdep detected a potential deadlock
-(lockdep output at the end).
+An ioda_pe for each VF is allocated in pnv_pci_sriov_enable() before
+the pci_dev for the VF is created. We need to set the pe->pdev pointer
+at some point after the pci_dev is created. Currently we do that in:
 
-The deadlock is between recovering a PCI function via the
+pcibios_bus_add_device()
+	pnv_pci_dma_dev_setup() (via phb->ops.dma_dev_setup)
+		/* fixup is done here */
+		pnv_pci_ioda_dma_dev_setup() (via pnv_phb->dma_dev_setup)
 
-/sys/bus/pci/devices/<dev>/recover
+The fixup needs to be done before setting up DMA for for the VF's PE,
+but there's no real reason to delay it until this point. Move the
+fixup into pnv_pci_ioda_fixup_iov() so the ordering is:
 
-attribute vs powering it off via
+	pcibios_add_device()
+		pnv_pci_ioda_fixup_iov() (via ppc_md.pcibios_fixup_sriov)
 
-/sys/bus/pci/slots/<slot>/power.
+	pcibios_bus_add_device()
+		...
 
-The fix is analogous to the changes in commit 0ee223b2e1f6 ("scsi: core:
-Avoid that SCSI device removal through sysfs triggers a deadlock")
-that fixed a potential deadlock on removing a SCSI device via sysfs.
+This isn't strictly required, but it's a slightly more logical place
+to do the fixup and it simplifies pnv_pci_dma_dev_setup().
 
-[  204.830107] ======================================================
-[  204.830109] WARNING: possible circular locking dependency detected
-[  204.830111] 5.5.0-rc2-06072-gbc03ecc9a672 #6 Tainted: G        W
-[  204.830112] ------------------------------------------------------
-[  204.830113] bash/1034 is trying to acquire lock:
-[  204.830115] 0000000192a1a610 (kn->count#200){++++}, at: kernfs_remove_by_name_ns+0x5c/0xa8
-[  204.830122]
-               but task is already holding lock:
-[  204.830123] 00000000c16134a8 (pci_rescan_remove_lock){+.+.}, at: pci_stop_and_remove_bus_device_locked+0x26/0x48
-[  204.830128]
-               which lock already depends on the new lock.
-
-[  204.830129]
-               the existing dependency chain (in reverse order) is:
-[  204.830130]
-               -> #1 (pci_rescan_remove_lock){+.+.}:
-[  204.830134]        validate_chain+0x93a/0xd08
-[  204.830136]        __lock_acquire+0x4ae/0x9d0
-[  204.830137]        lock_acquire+0x114/0x280
-[  204.830140]        __mutex_lock+0xa2/0x960
-[  204.830142]        mutex_lock_nested+0x32/0x40
-[  204.830145]        recover_store+0x4c/0xa8
-[  204.830147]        kernfs_fop_write+0xe6/0x218
-[  204.830151]        vfs_write+0xb0/0x1b8
-[  204.830152]        ksys_write+0x6c/0xf8
-[  204.830154]        system_call+0xd8/0x2d8
-[  204.830155]
-               -> #0 (kn->count#200){++++}:
-[  204.830187]        check_noncircular+0x1e6/0x240
-[  204.830189]        check_prev_add+0xfc/0xdb0
-[  204.830190]        validate_chain+0x93a/0xd08
-[  204.830192]        __lock_acquire+0x4ae/0x9d0
-[  204.830193]        lock_acquire+0x114/0x280
-[  204.830194]        __kernfs_remove.part.0+0x2e4/0x360
-[  204.830196]        kernfs_remove_by_name_ns+0x5c/0xa8
-[  204.830198]        remove_files.isra.0+0x4c/0x98
-[  204.830199]        sysfs_remove_group+0x66/0xc8
-[  204.830201]        sysfs_remove_groups+0x46/0x68
-[  204.830204]        device_remove_attrs+0x52/0x90
-[  204.830207]        device_del+0x182/0x418
-[  204.830208]        pci_remove_bus_device+0x8a/0x130
-[  204.830210]        pci_stop_and_remove_bus_device_locked+0x3a/0x48
-[  204.830212]        disable_slot+0x68/0x100
-[  204.830213]        power_write_file+0x7c/0x130
-[  204.830215]        kernfs_fop_write+0xe6/0x218
-[  204.830217]        vfs_write+0xb0/0x1b8
-[  204.830218]        ksys_write+0x6c/0xf8
-[  204.830220]        system_call+0xd8/0x2d8
-[  204.830221]
-               other info that might help us debug this:
-
-[  204.830223]  Possible unsafe locking scenario:
-
-[  204.830224]        CPU0                    CPU1
-[  204.830225]        ----                    ----
-[  204.830226]   lock(pci_rescan_remove_lock);
-[  204.830227]                                lock(kn->count#200);
-[  204.830229]                                lock(pci_rescan_remove_lock);
-[  204.830231]   lock(kn->count#200);
-[  204.830233]
-                *** DEADLOCK ***
-
-[  204.830234] 4 locks held by bash/1034:
-[  204.830235]  #0: 00000001b6fbc498 (sb_writers#4){.+.+}, at: vfs_write+0x158/0x1b8
-[  204.830239]  #1: 000000018c9f5090 (&of->mutex){+.+.}, at: kernfs_fop_write+0xaa/0x218
-[  204.830242]  #2: 00000001f7da0810 (kn->count#235){.+.+}, at: kernfs_fop_write+0xb6/0x218
-[  204.830245]  #3: 00000000c16134a8 (pci_rescan_remove_lock){+.+.}, at: pci_stop_and_remove_bus_device_locked+0x26/0x48
-[  204.830248]
-               stack backtrace:
-[  204.830250] CPU: 2 PID: 1034 Comm: bash Tainted: G        W         5.5.0-rc2-06072-gbc03ecc9a672 #6
-[  204.830252] Hardware name: IBM 8561 T01 703 (LPAR)
-[  204.830253] Call Trace:
-[  204.830257]  [<00000000c05e10c0>] show_stack+0x88/0xf0
-[  204.830260]  [<00000000c112dca4>] dump_stack+0xa4/0xe0
-[  204.830261]  [<00000000c0694c06>] check_noncircular+0x1e6/0x240
-[  204.830263]  [<00000000c0695bec>] check_prev_add+0xfc/0xdb0
-[  204.830264]  [<00000000c06971da>] validate_chain+0x93a/0xd08
-[  204.830266]  [<00000000c06994c6>] __lock_acquire+0x4ae/0x9d0
-[  204.830267]  [<00000000c069867c>] lock_acquire+0x114/0x280
-[  204.830269]  [<00000000c09ca15c>] __kernfs_remove.part.0+0x2e4/0x360
-[  204.830270]  [<00000000c09cb5c4>] kernfs_remove_by_name_ns+0x5c/0xa8
-[  204.830272]  [<00000000c09cee14>] remove_files.isra.0+0x4c/0x98
-[  204.830274]  [<00000000c09cf2ae>] sysfs_remove_group+0x66/0xc8
-[  204.830276]  [<00000000c09cf356>] sysfs_remove_groups+0x46/0x68
-[  204.830278]  [<00000000c0e3dfe2>] device_remove_attrs+0x52/0x90
-[  204.830280]  [<00000000c0e40382>] device_del+0x182/0x418
-[  204.830281]  [<00000000c0dcfd7a>] pci_remove_bus_device+0x8a/0x130
-[  204.830283]  [<00000000c0dcfe92>] pci_stop_and_remove_bus_device_locked+0x3a/0x48
-[  204.830285]  [<00000000c0de7190>] disable_slot+0x68/0x100
-[  204.830286]  [<00000000c0de6514>] power_write_file+0x7c/0x130
-[  204.830288]  [<00000000c09cc846>] kernfs_fop_write+0xe6/0x218
-[  204.830290]  [<00000000c08f3480>] vfs_write+0xb0/0x1b8
-[  204.830291]  [<00000000c08f378c>] ksys_write+0x6c/0xf8
-[  204.830293]  [<00000000c1154374>] system_call+0xd8/0x2d8
-[  204.830294] INFO: lockdep is turned off.
-
-Signed-off-by: Niklas Schnelle <schnelle@linux.ibm.com>
-Reviewed-by: Peter Oberparleiter <oberpar@linux.ibm.com>
-Signed-off-by: Vasily Gorbik <gor@linux.ibm.com>
+Signed-off-by: Oliver O'Halloran <oohall@gmail.com>
+Reviewed-by: Alexey Kardashevskiy <aik@ozlabs.ru>
+Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
+Link: https://lore.kernel.org/r/20200110070207.439-4-oohall@gmail.com
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/s390/pci/pci_sysfs.c | 63 ++++++++++++++++++++++++++-------------
- 1 file changed, 42 insertions(+), 21 deletions(-)
+ arch/powerpc/platforms/powernv/pci-ioda.c | 29 +++++++++++++++++++----
+ arch/powerpc/platforms/powernv/pci.c      | 14 -----------
+ 2 files changed, 25 insertions(+), 18 deletions(-)
 
-diff --git a/arch/s390/pci/pci_sysfs.c b/arch/s390/pci/pci_sysfs.c
-index a433ba01a3175..215f17437a4f6 100644
---- a/arch/s390/pci/pci_sysfs.c
-+++ b/arch/s390/pci/pci_sysfs.c
-@@ -13,6 +13,8 @@
- #include <linux/stat.h>
- #include <linux/pci.h>
+diff --git a/arch/powerpc/platforms/powernv/pci-ioda.c b/arch/powerpc/platforms/powernv/pci-ioda.c
+index 59de6a5bc41c2..058223233088e 100644
+--- a/arch/powerpc/platforms/powernv/pci-ioda.c
++++ b/arch/powerpc/platforms/powernv/pci-ioda.c
+@@ -2900,9 +2900,6 @@ static void pnv_pci_ioda_fixup_iov_resources(struct pci_dev *pdev)
+ 	struct pci_dn *pdn;
+ 	int mul, total_vfs;
  
-+#include "../../../drivers/pci/pci.h"
-+
- #include <asm/sclp.h>
- 
- #define zpci_attr(name, fmt, member)					\
-@@ -49,31 +51,50 @@ static DEVICE_ATTR_RO(mio_enabled);
- static ssize_t recover_store(struct device *dev, struct device_attribute *attr,
- 			     const char *buf, size_t count)
- {
-+	struct kernfs_node *kn;
- 	struct pci_dev *pdev = to_pci_dev(dev);
- 	struct zpci_dev *zdev = to_zpci(pdev);
--	int ret;
+-	if (!pdev->is_physfn || pci_dev_is_added(pdev))
+-		return;
 -
--	if (!device_remove_file_self(dev, attr))
--		return count;
--
-+	int ret = 0;
-+
-+	/* Can't use device_remove_self() here as that would lead us to lock
-+	 * the pci_rescan_remove_lock while holding the device' kernfs lock.
-+	 * This would create a possible deadlock with disable_slot() which is
-+	 * not directly protected by the device' kernfs lock but takes it
-+	 * during the device removal which happens under
-+	 * pci_rescan_remove_lock.
-+	 *
-+	 * This is analogous to sdev_store_delete() in
-+	 * drivers/scsi/scsi_sysfs.c
-+	 */
-+	kn = sysfs_break_active_protection(&dev->kobj, &attr->attr);
-+	WARN_ON_ONCE(!kn);
-+	/* device_remove_file() serializes concurrent calls ignoring all but
-+	 * the first
-+	 */
-+	device_remove_file(dev, attr);
-+
-+	/* A concurrent call to recover_store() may slip between
-+	 * sysfs_break_active_protection() and the sysfs file removal.
-+	 * Once it unblocks from pci_lock_rescan_remove() the original pdev
-+	 * will already be removed.
-+	 */
- 	pci_lock_rescan_remove();
--	pci_stop_and_remove_bus_device(pdev);
--	ret = zpci_disable_device(zdev);
--	if (ret)
--		goto error;
--
--	ret = zpci_enable_device(zdev);
--	if (ret)
--		goto error;
--
--	pci_rescan_bus(zdev->bus);
-+	if (pci_dev_is_added(pdev)) {
-+		pci_stop_and_remove_bus_device(pdev);
-+		ret = zpci_disable_device(zdev);
-+		if (ret)
-+			goto out;
-+
-+		ret = zpci_enable_device(zdev);
-+		if (ret)
-+			goto out;
-+		pci_rescan_bus(zdev->bus);
-+	}
-+out:
- 	pci_unlock_rescan_remove();
--
--	return count;
--
--error:
--	pci_unlock_rescan_remove();
--	return ret;
-+	if (kn)
-+		sysfs_unbreak_active_protection(kn);
-+	return ret ? ret : count;
+ 	pdn = pci_get_pdn(pdev);
+ 	pdn->vfs_expanded = 0;
+ 	pdn->m64_single_mode = false;
+@@ -2977,6 +2974,30 @@ truncate_iov:
+ 		res->end = res->start - 1;
+ 	}
  }
- static DEVICE_ATTR_WO(recover);
++
++static void pnv_pci_ioda_fixup_iov(struct pci_dev *pdev)
++{
++	if (WARN_ON(pci_dev_is_added(pdev)))
++		return;
++
++	if (pdev->is_virtfn) {
++		struct pnv_ioda_pe *pe = pnv_ioda_get_pe(pdev);
++
++		/*
++		 * VF PEs are single-device PEs so their pdev pointer needs to
++		 * be set. The pdev doesn't exist when the PE is allocated (in
++		 * (pcibios_sriov_enable()) so we fix it up here.
++		 */
++		pe->pdev = pdev;
++		WARN_ON(!(pe->flags & PNV_IODA_PE_VF));
++	} else if (pdev->is_physfn) {
++		/*
++		 * For PFs adjust their allocated IOV resources to match what
++		 * the PHB can support using it's M64 BAR table.
++		 */
++		pnv_pci_ioda_fixup_iov_resources(pdev);
++	}
++}
+ #endif /* CONFIG_PCI_IOV */
  
+ static void pnv_ioda_setup_pe_res(struct pnv_ioda_pe *pe,
+@@ -3873,7 +3894,7 @@ static void __init pnv_pci_init_ioda_phb(struct device_node *np,
+ 	ppc_md.pcibios_default_alignment = pnv_pci_default_alignment;
+ 
+ #ifdef CONFIG_PCI_IOV
+-	ppc_md.pcibios_fixup_sriov = pnv_pci_ioda_fixup_iov_resources;
++	ppc_md.pcibios_fixup_sriov = pnv_pci_ioda_fixup_iov;
+ 	ppc_md.pcibios_iov_resource_alignment = pnv_pci_iov_resource_alignment;
+ 	ppc_md.pcibios_sriov_enable = pnv_pcibios_sriov_enable;
+ 	ppc_md.pcibios_sriov_disable = pnv_pcibios_sriov_disable;
+diff --git a/arch/powerpc/platforms/powernv/pci.c b/arch/powerpc/platforms/powernv/pci.c
+index e8e58a2cccddf..8307e1f4086cb 100644
+--- a/arch/powerpc/platforms/powernv/pci.c
++++ b/arch/powerpc/platforms/powernv/pci.c
+@@ -814,20 +814,6 @@ void pnv_pci_dma_dev_setup(struct pci_dev *pdev)
+ {
+ 	struct pci_controller *hose = pci_bus_to_host(pdev->bus);
+ 	struct pnv_phb *phb = hose->private_data;
+-#ifdef CONFIG_PCI_IOV
+-	struct pnv_ioda_pe *pe;
+-
+-	/* Fix the VF pdn PE number */
+-	if (pdev->is_virtfn) {
+-		list_for_each_entry(pe, &phb->ioda.pe_list, list) {
+-			if (pe->rid == ((pdev->bus->number << 8) |
+-			    (pdev->devfn & 0xff))) {
+-				pe->pdev = pdev;
+-				break;
+-			}
+-		}
+-	}
+-#endif /* CONFIG_PCI_IOV */
+ 
+ 	if (phb && phb->dma_dev_setup)
+ 		phb->dma_dev_setup(phb, pdev);
 -- 
 2.20.1
 
