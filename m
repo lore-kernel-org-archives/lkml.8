@@ -2,111 +2,147 @@ Return-Path: <SRS0=1210=4J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E8309C35657
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 16:01:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F24B0C35657
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 16:05:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BFC102067D
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 16:01:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C3E2D2067D
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 16:05:04 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Zg7t7aQs"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="WjzTvRtK"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729388AbgBUQBn (ORCPT
+        id S1728985AbgBUQFD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Feb 2020 11:01:43 -0500
-Received: from mail-ot1-f65.google.com ([209.85.210.65]:38360 "EHLO
-        mail-ot1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728822AbgBUQBn (ORCPT
+        Fri, 21 Feb 2020 11:05:03 -0500
+Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:23993 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1728130AbgBUQFD (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Feb 2020 11:01:43 -0500
-Received: by mail-ot1-f65.google.com with SMTP id z9so2429330oth.5
-        for <linux-kernel@vger.kernel.org>; Fri, 21 Feb 2020 08:01:43 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=wLXxnQp7HIaEPOKqosq0pF27kK5rqBwu9jtY7ZzaZNg=;
-        b=Zg7t7aQs1mHUnhU9aTiekAaV+Bp3+M0P+YZeKti3TISeAY9CQdUrdOFmjsqepztxOx
-         48Dv1/D7WO6nWGRwPKlWwvIYThN07XeuH0zDZUdCQwJ+myRzcg5LnEG7ZVdKxGD26lTK
-         KVCopA4uqWUz+vUYIyv/B2l6y8PvqMHJ0cFB6loBx4vuTfe/wfetHc0eAkd6jfENDH+p
-         TXLTe/XjYDfrfxzrF+PgaQOaoeW0mhvhTp2yRu3bcltFFeuIsb7D8biIrvg7SoZduJja
-         kDZBbYU7R7e3gNPkSuTe0potbG8q/lX5OTUkpIedz5/7ibHouBzgPG4LLKgPybONZvUE
-         9pkg==
+        Fri, 21 Feb 2020 11:05:03 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1582301102;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=b/XFBGDvO3UXFNECW6P4x7ADbFivKxUA9DrB33OKpco=;
+        b=WjzTvRtKzRTq5zsdb4tDRrs26r0IxpM+lx6E1er697xfHJ+XO8V2YQ4BMLJ/w56Sw0BIot
+        it09RaVOZd00/Sr4YmYIdwp3DXSiy8PsG1haPUQznYbPcByQalDxFIwCBZlJQf2t5h123A
+        STYZv5aX80tAd2OiBq65wAV3sXcWohM=
+Received: from mail-wr1-f71.google.com (mail-wr1-f71.google.com
+ [209.85.221.71]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-472-GZPzp5fqM1OzzsI9NDh1EQ-1; Fri, 21 Feb 2020 11:05:00 -0500
+X-MC-Unique: GZPzp5fqM1OzzsI9NDh1EQ-1
+Received: by mail-wr1-f71.google.com with SMTP id p8so1221090wrw.5
+        for <linux-kernel@vger.kernel.org>; Fri, 21 Feb 2020 08:05:00 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=wLXxnQp7HIaEPOKqosq0pF27kK5rqBwu9jtY7ZzaZNg=;
-        b=GrQU48LAfAWgVXazRGCPk0hf+sCSAGWpjjktVGDIbwffeEc7Hy44AY4uL0fB6D3zvn
-         Znv9WSRI8PHU2fLALJJLijWub1fmjPUVwmJV6DXIj4URLnJEI6iWqKlP2P4s+6T/cJa8
-         NvgKkD9UF+NO207acDjIjiTjMM1nS7nUe0qUMuiBCK0KEquldMJmAormsdfNPuoGFJr3
-         FpLjFH16Um4l1c9RGV9WoR5SGSdF567zaNpUGDaWaJg2tpcoSt++e4EUfX6OS3eUxnol
-         xVgl/035dxRLPlXDEHhYXHy4jaMSVojrfk2sN+OWz2ZDOUIcGXcxTm5f1zN2o0X23NU+
-         Le8A==
-X-Gm-Message-State: APjAAAXSF4mFnlCZCk7I5oNHOWKCJWNGWsBBKPYMMdg83w3zN2ky4Usd
-        G+jPX5TuwkuJErHM4nBhNelGbGT21AXmKQ0kjLxafg==
-X-Google-Smtp-Source: APXvYqzaURoo4lqFhOzDSfM/yflLXGfwIE9mGC1jzOlYcjOmVHK4/ZIENpO+WI50lxlAFBPJA1F5KORZeiw2+L9fEio=
-X-Received: by 2002:a9d:3b09:: with SMTP id z9mr28988967otb.195.1582300888825;
- Fri, 21 Feb 2020 08:01:28 -0800 (PST)
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=b/XFBGDvO3UXFNECW6P4x7ADbFivKxUA9DrB33OKpco=;
+        b=B6HoheHgY/hcqFNLatwRzUXYx3xdV5N45ixMxvHtlrkRwZsk72uXKw5ZKgeKERrCRp
+         xEldtnzdNADn3ZAzsKCiOqPLDH9WurjHjI/3w5W5tRULDexQXuQtmYkcQ0zcJehXn2cp
+         LCUXxrI1yg9XfpyBL1VBWI0fxihtxCCuUgwr3k9TcnSF6uC21Z4Hfqqb2BwcMgYCjdNe
+         HZXpYXZMNmU9qbaFQwQg4FHemtyGPkc6UQyvyeEY9XmI0QDpW2GxSyHn1jpe+dtf1vN1
+         6mDxejd14wpa0ZTVM0vDBtVolULOwAOPH8nFkB29br90uF04OUgiYuTS5K52/Avqwzih
+         m5ow==
+X-Gm-Message-State: APjAAAXfVgfqRt1dSVJGEXYcMfxhDPHV7I7JKD1uQNyiCh9Ya+VGCDyp
+        AScyH2A8WHy1hQAkXHymE8v3qC/JswJtUdk4ymitSvvX1GXi//dP4zjwHN8fhpXgNpO4yroprvl
+        TacrMjkbsaE7iUlBRQzzQHdab
+X-Received: by 2002:adf:c453:: with SMTP id a19mr49870841wrg.341.1582301097009;
+        Fri, 21 Feb 2020 08:04:57 -0800 (PST)
+X-Google-Smtp-Source: APXvYqxcNZy47AONFyMZVt1Po1fABbweri3/gLj6WIymqQWTWEqb3bitDkuCMdiuyDTbVITIsZ7gWA==
+X-Received: by 2002:adf:c453:: with SMTP id a19mr49870335wrg.341.1582301089399;
+        Fri, 21 Feb 2020 08:04:49 -0800 (PST)
+Received: from [192.168.178.40] ([151.20.135.128])
+        by smtp.gmail.com with ESMTPSA id 25sm4424881wmi.32.2020.02.21.08.04.48
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 21 Feb 2020 08:04:48 -0800 (PST)
+Subject: Re: [PATCH] kvm: x86: svm: Fix NULL pointer dereference when AVIC not
+ enabled
+To:     Alex Williamson <alex.williamson@redhat.com>,
+        Suravee Suthikulpanit <suravee.suthikulpanit@amd.com>
+Cc:     linux-kernel@vger.kernel.org, kvm@vger.kernel.org, joro@8bytes.org,
+        jon.grimm@amd.com
+References: <1582296737-13086-1-git-send-email-suravee.suthikulpanit@amd.com>
+ <20200221083934.3ed38014@x1.home>
+From:   Paolo Bonzini <pbonzini@redhat.com>
+Message-ID: <bad78ab6-45b6-5d8d-be36-2ff18a5373a2@redhat.com>
+Date:   Fri, 21 Feb 2020 17:04:48 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.1.1
 MIME-Version: 1.0
-References: <20200221080510.197337-1-saravanak@google.com> <20200221080510.197337-2-saravanak@google.com>
- <20200221092540.GA71325@kroah.com> <CAGETcx_yQZtU4O2KgMxVt-hSJCBtNsOpyWsSXc+OZcjjJ91M3g@mail.gmail.com>
- <20200221103233.GA101069@kroah.com>
-In-Reply-To: <20200221103233.GA101069@kroah.com>
-From:   Saravana Kannan <saravanak@google.com>
-Date:   Fri, 21 Feb 2020 08:00:00 -0800
-Message-ID: <CAGETcx-YhSBf2r8wAjqkupnrsYKZHkvCWyMvo01gvdPTzQa7zA@mail.gmail.com>
-Subject: Re: [PATCH v2 1/3] driver core: Call sync_state() even if supplier
- has no consumers
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     "Rafael J. Wysocki" <rafael@kernel.org>,
-        Android Kernel Team <kernel-team@android.com>,
-        LKML <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20200221083934.3ed38014@x1.home>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Feb 21, 2020 at 2:32 AM Greg Kroah-Hartman
-<gregkh@linuxfoundation.org> wrote:
->
-> On Fri, Feb 21, 2020 at 01:48:49AM -0800, Saravana Kannan wrote:
-> > On Fri, Feb 21, 2020 at 1:25 AM Greg Kroah-Hartman
-> > <gregkh@linuxfoundation.org> wrote:
-> > >
-> > > On Fri, Feb 21, 2020 at 12:05:08AM -0800, Saravana Kannan wrote:
-> > > > The initial patch that added sync_state() support didn't handle the case
-> > > > where a supplier has no consumers. This was because when a device is
-> > > > successfully bound with a driver, only its suppliers were checked to see
-> > > > if they are eligible to get a sync_state(). This is not sufficient for
-> > > > devices that have no consumers but still need to do device state clean
-> > > > up. So fix this.
-> > > >
-> > > > Fixes: fc5a251d0fd7ca90 (driver core: Add sync_state driver/bus callback)
-> > >
-> > > Should be:
-> > > Fixes: fc5a251d0fd7 ("driver core: Add sync_state driver/bus callback")
-> >
-> > Sorry, late night sleepy patches are never good!
-> > Btw I thought the sha should be only 12 characters but then saw
-> > another instance where you used 16 chars. What's the right one?
->
-> I used 16 chars?  12 should be all that is needed.
->
-> > > > Signed-off-by: Saravana Kannan <saravanak@google.com>
-> > >
-> > > So this needs to go to 5.5 also, right?
-> >
-> > Did you mean 5.4? Yes.
->
-> fc5a251d0fd7 is only in 5.5, not 5.4 from what I can see, right?
+On 21/02/20 16:39, Alex Williamson wrote:
+> On Fri, 21 Feb 2020 08:52:17 -0600
+> Suravee Suthikulpanit <suravee.suthikulpanit@amd.com> wrote:
+> 
+>> Launching VM w/ AVIC disabled together with pass-through device
+>> results in NULL pointer dereference bug with the following call trace.
+>>
+>>     RIP: 0010:svm_refresh_apicv_exec_ctrl+0x17e/0x1a0 [kvm_amd]
+>>
+>>     Call Trace:
+>>      kvm_vcpu_update_apicv+0x44/0x60 [kvm]
+>>      kvm_arch_vcpu_ioctl_run+0x3f4/0x1c80 [kvm]
+>>      kvm_vcpu_ioctl+0x3d8/0x650 [kvm]
+>>      do_vfs_ioctl+0xaa/0x660
+>>      ? tomoyo_file_ioctl+0x19/0x20
+>>      ksys_ioctl+0x67/0x90
+>>      __x64_sys_ioctl+0x1a/0x20
+>>      do_syscall_64+0x57/0x190
+>>      entry_SYSCALL_64_after_hwframe+0x44/0xa9
+>>
+>> Investigation shows that this is due to the uninitialized usage of
+>> struct vapu_svm.ir_list in the svm_set_pi_irte_mode(), which is
+>> called from svm_refresh_apicv_exec_ctrl().
+>>
+>> The ir_list is initialized only if AVIC is enabled. So, fixes by
+>> adding a check if AVIC is enabled in the svm_refresh_apicv_exec_ctrl().
+>>
+>> Bugzilla: https://bugzilla.kernel.org/show_bug.cgi?id=206579
+>> Fixes: 8937d762396d ("kvm: x86: svm: Add support to (de)activate posted interrupts.")
+>> Signed-off-by: Suravee Suthikulpanit <suravee.suthikulpanit@amd.com>
+>> Cc: Alex Williamson <alex.williamson@redhat.com>
+>> ---
+>>  arch/x86/kvm/svm.c | 3 +++
+>>  1 file changed, 3 insertions(+)
+> 
+> Works for me, thanks Suravee!
+> 
+> Tested-by: Alex Williamson <alex.williamson@redhat.com>
+> 
+>>
+>> diff --git a/arch/x86/kvm/svm.c b/arch/x86/kvm/svm.c
+>> index 19035fb..1858455 100644
+>> --- a/arch/x86/kvm/svm.c
+>> +++ b/arch/x86/kvm/svm.c
+>> @@ -5222,6 +5222,9 @@ static void svm_refresh_apicv_exec_ctrl(struct kvm_vcpu *vcpu)
+>>  	struct vmcb *vmcb = svm->vmcb;
+>>  	bool activated = kvm_vcpu_apicv_active(vcpu);
+>>  
+>> +	if (!avic)
+>> +		return;
+>> +
+>>  	if (activated) {
+>>  		/**
+>>  		 * During AVIC temporary deactivation, guest could update
+> 
 
-Ah, right!
+Thanks to both of you.  I'll get it to Linus next Monday.
 
+Paolo
 
--Saravana
