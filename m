@@ -2,154 +2,353 @@ Return-Path: <SRS0=1210=4J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+X-Spam-Status: No, score=-5.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D07AAC35646
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 16:59:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 94D73C35657
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 17:00:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A38A2208C4
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 16:59:55 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Mr8qL71m"
+	by mail.kernel.org (Postfix) with ESMTP id 60D58206E2
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 17:00:44 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728028AbgBUQ7y (ORCPT
+        id S1728056AbgBURAn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Feb 2020 11:59:54 -0500
-Received: from us-smtp-2.mimecast.com ([207.211.31.81]:38625 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726550AbgBUQ7y (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Feb 2020 11:59:54 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1582304393;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:
-         content-transfer-encoding:content-transfer-encoding;
-        bh=jVP+GaOAhxIYChDGXltTUu+msDFFHu1e+G/CR9YhvOw=;
-        b=Mr8qL71mbhsYVJBL88UJAQaKfFpOLpzUo7PMT4os5TbS6P7Fcyw933RrmElkfndKIqHDuA
-        OnL39nbaO1dHUNv08BSKoi0X1Os8G7RJlHCy2I6J4MMZ4BY67LT600Q0s4Nt1N3pGVzzxH
-        YNzcYkfr3FKOzwl/f9g5+9iKOfyiOC0=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-39--qK4B4NONbSQOdTxiS95Yg-1; Fri, 21 Feb 2020 11:59:47 -0500
-X-MC-Unique: -qK4B4NONbSQOdTxiS95Yg-1
-Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 346381005510;
-        Fri, 21 Feb 2020 16:59:46 +0000 (UTC)
-Received: from x1.localdomain.com (ovpn-116-191.ams2.redhat.com [10.36.116.191])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 3002660C99;
-        Fri, 21 Feb 2020 16:59:43 +0000 (UTC)
-From:   Hans de Goede <hdegoede@redhat.com>
-To:     Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        "H . Peter Anvin" <hpa@zytor.com>
-Cc:     Hans de Goede <hdegoede@redhat.com>, x86@kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH resend] x86/purgatory: Make sure we fail the build if purgatory.ro has missing symbols
-Date:   Fri, 21 Feb 2020 17:59:41 +0100
-Message-Id: <20200221165941.508653-1-hdegoede@redhat.com>
+        Fri, 21 Feb 2020 12:00:43 -0500
+Received: from mga02.intel.com ([134.134.136.20]:17618 "EHLO mga02.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726150AbgBURAm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 21 Feb 2020 12:00:42 -0500
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga007.jf.intel.com ([10.7.209.58])
+  by orsmga101.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 21 Feb 2020 09:00:39 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.70,469,1574150400"; 
+   d="scan'208";a="225268867"
+Received: from lkp-server01.sh.intel.com (HELO lkp-server01) ([10.239.97.150])
+  by orsmga007.jf.intel.com with ESMTP; 21 Feb 2020 09:00:37 -0800
+Received: from kbuild by lkp-server01 with local (Exim 4.89)
+        (envelope-from <lkp@intel.com>)
+        id 1j5BfJ-000CkK-2W; Sat, 22 Feb 2020 01:00:37 +0800
+Date:   Sat, 22 Feb 2020 00:59:49 +0800
+From:   kbuild test robot <lkp@intel.com>
+To:     "Paul E. McKenney" <paulmck@kernel.org>
+Cc:     linux-kernel@vger.kernel.org
+Subject: [rcu:dev.2020.02.18a] BUILD SUCCESS
+ 35bc02b04a041f32470ae6d959c549bcce8483db
+Message-ID: <5e500c85.Ga1iXwD/1dtKR9t/%lkp@intel.com>
+User-Agent: Heirloom mailx 12.5 6/20/10
 MIME-Version: 1.0
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Since we link purgatory.ro with -r aka we enable "incremental linking"
-no checks for unresolved symbols is done while linking purgatory.ro.
+tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/paulmck/linux-rcu.git  dev.2020.02.18a
+branch HEAD: 35bc02b04a041f32470ae6d959c549bcce8483db  rcutorture: Mark data-race potential for rcu_barrier() test statistics
 
-Changes to the sha256 code has caused the purgatory in 5.4-rc1 to have
-a missing symbol on memzero_explicit, yet things still happily build.
+elapsed time: 3607m
 
-This commit adds an extra check for unresolved symbols by calling ld
-without -r before running bin2c to generate kexec-purgatory.c.
+configs tested: 290
+configs skipped: 0
 
-This causes a build of 5.4-rc1 with this patch added to fail as it should=
-:
+The following configs have been built successfully.
+More configs may be tested in the coming days.
 
-  CHK     arch/x86/purgatory/purgatory.ro
-ld: arch/x86/purgatory/purgatory.ro: in function `sha256_transform':
-sha256.c:(.text+0x1c0c): undefined reference to `memzero_explicit'
-make[2]: *** [arch/x86/purgatory/Makefile:72:
-    arch/x86/purgatory/kexec-purgatory.c] Error 1
-make[1]: *** [scripts/Makefile.build:509: arch/x86/purgatory] Error 2
-make: *** [Makefile:1650: arch/x86] Error 2
+arm                              allmodconfig
+arm                               allnoconfig
+arm                              allyesconfig
+arm64                            allmodconfig
+arm64                             allnoconfig
+arm64                            allyesconfig
+arm                         at91_dt_defconfig
+arm                           efm32_defconfig
+arm                          exynos_defconfig
+arm                        multi_v5_defconfig
+arm                        multi_v7_defconfig
+arm                        shmobile_defconfig
+arm                           sunxi_defconfig
+arm64                               defconfig
+sparc                            allyesconfig
+nios2                         10m50_defconfig
+xtensa                          iss_defconfig
+sparc                               defconfig
+parisc                generic-64bit_defconfig
+s390                             allyesconfig
+ia64                              allnoconfig
+powerpc                             defconfig
+sparc64                             defconfig
+parisc                            allnoconfig
+mips                              allnoconfig
+riscv                    nommu_virt_defconfig
+riscv                          rv32_defconfig
+ia64                                defconfig
+um                                  defconfig
+sh                               allmodconfig
+h8300                    h8300h-sim_defconfig
+m68k                           sun3_defconfig
+s390                       zfcpdump_defconfig
+m68k                             allmodconfig
+um                           x86_64_defconfig
+powerpc                           allnoconfig
+s390                                defconfig
+s390                              allnoconfig
+sh                                allnoconfig
+s390                          debug_defconfig
+mips                      malta_kvm_defconfig
+xtensa                       common_defconfig
+i386                             alldefconfig
+i386                              allnoconfig
+i386                             allyesconfig
+i386                                defconfig
+ia64                             alldefconfig
+ia64                             allmodconfig
+ia64                             allyesconfig
+c6x                              allyesconfig
+c6x                        evmc6678_defconfig
+nios2                         3c120_defconfig
+openrisc                    or1ksim_defconfig
+openrisc                 simple_smp_defconfig
+alpha                               defconfig
+csky                                defconfig
+nds32                             allnoconfig
+nds32                               defconfig
+h8300                     edosk2674_defconfig
+h8300                       h8s-sim_defconfig
+m68k                       m5475evb_defconfig
+m68k                          multi_defconfig
+arc                              allyesconfig
+arc                                 defconfig
+microblaze                      mmu_defconfig
+microblaze                    nommu_defconfig
+powerpc                       ppc64_defconfig
+powerpc                          rhel-kconfig
+mips                           32r2_defconfig
+mips                         64r6el_defconfig
+mips                             allmodconfig
+mips                             allyesconfig
+mips                      fuloong2e_defconfig
+parisc                           allyesconfig
+parisc                generic-32bit_defconfig
+x86_64               randconfig-a001-20200219
+x86_64               randconfig-a002-20200219
+x86_64               randconfig-a003-20200219
+i386                 randconfig-a001-20200219
+i386                 randconfig-a002-20200219
+i386                 randconfig-a003-20200219
+x86_64               randconfig-a001-20200220
+x86_64               randconfig-a002-20200220
+x86_64               randconfig-a003-20200220
+i386                 randconfig-a001-20200220
+i386                 randconfig-a002-20200220
+i386                 randconfig-a003-20200220
+x86_64               randconfig-a001-20200221
+x86_64               randconfig-a002-20200221
+x86_64               randconfig-a003-20200221
+i386                 randconfig-a001-20200221
+i386                 randconfig-a002-20200221
+i386                 randconfig-a003-20200221
+alpha                randconfig-a001-20200219
+m68k                 randconfig-a001-20200219
+nds32                randconfig-a001-20200219
+parisc               randconfig-a001-20200219
+riscv                randconfig-a001-20200219
+alpha                randconfig-a001-20200220
+m68k                 randconfig-a001-20200220
+mips                 randconfig-a001-20200220
+nds32                randconfig-a001-20200220
+parisc               randconfig-a001-20200220
+riscv                randconfig-a001-20200220
+c6x                  randconfig-a001-20200220
+h8300                randconfig-a001-20200220
+microblaze           randconfig-a001-20200220
+nios2                randconfig-a001-20200220
+sparc64              randconfig-a001-20200220
+c6x                  randconfig-a001-20200219
+h8300                randconfig-a001-20200219
+microblaze           randconfig-a001-20200219
+nios2                randconfig-a001-20200219
+sparc64              randconfig-a001-20200219
+c6x                  randconfig-a001-20200221
+h8300                randconfig-a001-20200221
+microblaze           randconfig-a001-20200221
+nios2                randconfig-a001-20200221
+sparc64              randconfig-a001-20200221
+csky                 randconfig-a001-20200219
+openrisc             randconfig-a001-20200219
+s390                 randconfig-a001-20200219
+xtensa               randconfig-a001-20200219
+csky                 randconfig-a001-20200220
+openrisc             randconfig-a001-20200220
+s390                 randconfig-a001-20200220
+sh                   randconfig-a001-20200220
+xtensa               randconfig-a001-20200220
+csky                 randconfig-a001-20200221
+openrisc             randconfig-a001-20200221
+s390                 randconfig-a001-20200221
+sh                   randconfig-a001-20200221
+xtensa               randconfig-a001-20200221
+x86_64               randconfig-b001-20200219
+x86_64               randconfig-b002-20200219
+x86_64               randconfig-b003-20200219
+i386                 randconfig-b001-20200219
+i386                 randconfig-b002-20200219
+i386                 randconfig-b003-20200219
+x86_64               randconfig-b001-20200220
+x86_64               randconfig-b002-20200220
+x86_64               randconfig-b003-20200220
+i386                 randconfig-b001-20200220
+i386                 randconfig-b002-20200220
+i386                 randconfig-b003-20200220
+x86_64               randconfig-c001-20200220
+x86_64               randconfig-c002-20200220
+x86_64               randconfig-c003-20200220
+i386                 randconfig-c001-20200220
+i386                 randconfig-c002-20200220
+i386                 randconfig-c003-20200220
+x86_64               randconfig-c001-20200219
+x86_64               randconfig-c002-20200219
+x86_64               randconfig-c003-20200219
+i386                 randconfig-c001-20200219
+i386                 randconfig-c002-20200219
+i386                 randconfig-c003-20200219
+x86_64               randconfig-c001-20200221
+x86_64               randconfig-c002-20200221
+x86_64               randconfig-c003-20200221
+i386                 randconfig-c001-20200221
+i386                 randconfig-c002-20200221
+i386                 randconfig-c003-20200221
+x86_64               randconfig-d001-20200219
+x86_64               randconfig-d002-20200219
+x86_64               randconfig-d003-20200219
+i386                 randconfig-d001-20200219
+i386                 randconfig-d002-20200219
+i386                 randconfig-d003-20200219
+x86_64               randconfig-d001-20200220
+x86_64               randconfig-d002-20200220
+x86_64               randconfig-d003-20200220
+i386                 randconfig-d001-20200220
+i386                 randconfig-d002-20200220
+i386                 randconfig-d003-20200220
+x86_64               randconfig-d001-20200221
+x86_64               randconfig-d002-20200221
+x86_64               randconfig-d003-20200221
+i386                 randconfig-d001-20200221
+i386                 randconfig-d002-20200221
+i386                 randconfig-d003-20200221
+x86_64               randconfig-e001-20200220
+x86_64               randconfig-e002-20200220
+x86_64               randconfig-e003-20200220
+i386                 randconfig-e001-20200220
+i386                 randconfig-e002-20200220
+i386                 randconfig-e003-20200220
+x86_64               randconfig-e001-20200219
+x86_64               randconfig-e002-20200219
+x86_64               randconfig-e003-20200219
+i386                 randconfig-e001-20200219
+i386                 randconfig-e002-20200219
+i386                 randconfig-e003-20200219
+x86_64               randconfig-e001-20200221
+x86_64               randconfig-e002-20200221
+x86_64               randconfig-e003-20200221
+i386                 randconfig-e001-20200221
+i386                 randconfig-e002-20200221
+i386                 randconfig-e003-20200221
+x86_64               randconfig-f001-20200220
+x86_64               randconfig-f002-20200220
+x86_64               randconfig-f003-20200220
+i386                 randconfig-f001-20200220
+i386                 randconfig-f002-20200220
+i386                 randconfig-f003-20200220
+x86_64               randconfig-f001-20200221
+x86_64               randconfig-f002-20200221
+x86_64               randconfig-f003-20200221
+i386                 randconfig-f001-20200221
+i386                 randconfig-f002-20200221
+i386                 randconfig-f003-20200221
+x86_64               randconfig-f001-20200219
+x86_64               randconfig-f002-20200219
+x86_64               randconfig-f003-20200219
+i386                 randconfig-f001-20200219
+i386                 randconfig-f002-20200219
+i386                 randconfig-f003-20200219
+i386                 randconfig-g002-20200219
+i386                 randconfig-g001-20200219
+x86_64               randconfig-g003-20200219
+x86_64               randconfig-g001-20200219
+i386                 randconfig-g003-20200219
+x86_64               randconfig-g002-20200219
+x86_64               randconfig-g001-20200220
+x86_64               randconfig-g002-20200220
+x86_64               randconfig-g003-20200220
+i386                 randconfig-g001-20200220
+i386                 randconfig-g002-20200220
+i386                 randconfig-g003-20200220
+x86_64               randconfig-g001-20200221
+x86_64               randconfig-g002-20200221
+x86_64               randconfig-g003-20200221
+i386                 randconfig-g001-20200221
+i386                 randconfig-g002-20200221
+i386                 randconfig-g003-20200221
+i386                 randconfig-h002-20200219
+i386                 randconfig-h001-20200219
+x86_64               randconfig-h002-20200219
+x86_64               randconfig-h001-20200219
+i386                 randconfig-h003-20200219
+x86_64               randconfig-h003-20200219
+x86_64               randconfig-h001-20200221
+x86_64               randconfig-h002-20200221
+x86_64               randconfig-h003-20200221
+i386                 randconfig-h001-20200221
+i386                 randconfig-h002-20200221
+i386                 randconfig-h003-20200221
+x86_64               randconfig-h001-20200220
+x86_64               randconfig-h002-20200220
+x86_64               randconfig-h003-20200220
+i386                 randconfig-h001-20200220
+i386                 randconfig-h002-20200220
+i386                 randconfig-h003-20200220
+arc                  randconfig-a001-20200219
+arm                  randconfig-a001-20200219
+arm64                randconfig-a001-20200219
+ia64                 randconfig-a001-20200219
+powerpc              randconfig-a001-20200219
+sparc                randconfig-a001-20200219
+arc                  randconfig-a001-20200220
+arm                  randconfig-a001-20200220
+arm64                randconfig-a001-20200220
+ia64                 randconfig-a001-20200220
+powerpc              randconfig-a001-20200220
+sparc                randconfig-a001-20200220
+arc                  randconfig-a001-20200221
+arm                  randconfig-a001-20200221
+arm64                randconfig-a001-20200221
+ia64                 randconfig-a001-20200221
+powerpc              randconfig-a001-20200221
+sparc                randconfig-a001-20200221
+riscv                            allmodconfig
+riscv                             allnoconfig
+riscv                            allyesconfig
+riscv                               defconfig
+s390                             alldefconfig
+s390                             allmodconfig
+sh                          rsk7269_defconfig
+sh                            titan_defconfig
+sh                  sh7785lcr_32bit_defconfig
+sparc64                          allmodconfig
+sparc64                           allnoconfig
+sparc64                          allyesconfig
+um                             i386_defconfig
+x86_64                              fedora-25
+x86_64                                  kexec
+x86_64                                    lkp
+x86_64                                   rhel
+x86_64                         rhel-7.2-clear
+x86_64                               rhel-7.6
 
-This will help us catch missing symbols in the purgatory sooner.
-
-Note this commit also removes --no-undefined from LDFLAGS_purgatory.ro
-as that has no effect.
-
-Signed-off-by: Hans de Goede <hdegoede@redhat.com>
 ---
-Changes in v3:
-- Add a .gitignore file with purgatory.chk listed in it
-
-Changes in v2:
-- Using 2 if_changed lines under a single rule does not work, then
-  1 of the 2 will always execute each build.
-  Instead add a new (unused) purgatory.chk intermediate which gets
-  linked from purgatory.ro without -r to do the missing symbols check
-- This also fixes the check generating an a.out file (oops)
----
- arch/x86/purgatory/.gitignore |  1 +
- arch/x86/purgatory/Makefile   | 13 ++++++++++---
- 2 files changed, 11 insertions(+), 3 deletions(-)
- create mode 100644 arch/x86/purgatory/.gitignore
-
-diff --git a/arch/x86/purgatory/.gitignore b/arch/x86/purgatory/.gitignor=
-e
-new file mode 100644
-index 000000000000..d2be1500671d
---- /dev/null
-+++ b/arch/x86/purgatory/.gitignore
-@@ -0,0 +1 @@
-+purgatory.chk
-diff --git a/arch/x86/purgatory/Makefile b/arch/x86/purgatory/Makefile
-index fb4ee5444379..5bb58247699d 100644
---- a/arch/x86/purgatory/Makefile
-+++ b/arch/x86/purgatory/Makefile
-@@ -14,8 +14,12 @@ $(obj)/sha256.o: $(srctree)/lib/crypto/sha256.c FORCE
-=20
- CFLAGS_sha256.o :=3D -D__DISABLE_EXPORTS
-=20
--LDFLAGS_purgatory.ro :=3D -e purgatory_start -r --no-undefined -nostdlib=
- -z nodefaultlib
--targets +=3D purgatory.ro
-+# Since we link purgatory.ro with -r unresolved symbols are not checked,=
- so we
-+# also link a purgatory.chk binary without -r to check for unresolved sy=
-mbols.
-+PURGATORY_LDFLAGS :=3D -e purgatory_start -nostdlib -z nodefaultlib
-+LDFLAGS_purgatory.ro :=3D -r $(PURGATORY_LDFLAGS)
-+LDFLAGS_purgatory.chk :=3D $(PURGATORY_LDFLAGS)
-+targets +=3D purgatory.ro purgatory.chk
-=20
- KASAN_SANITIZE	:=3D n
- KCOV_INSTRUMENT :=3D n
-@@ -58,12 +62,15 @@ CFLAGS_string.o			+=3D $(PURGATORY_CFLAGS)
- $(obj)/purgatory.ro: $(PURGATORY_OBJS) FORCE
- 		$(call if_changed,ld)
-=20
-+$(obj)/purgatory.chk: $(obj)/purgatory.ro FORCE
-+		$(call if_changed,ld)
-+
- targets +=3D kexec-purgatory.c
-=20
- quiet_cmd_bin2c =3D BIN2C   $@
-       cmd_bin2c =3D $(objtree)/scripts/bin2c kexec_purgatory < $< > $@
-=20
--$(obj)/kexec-purgatory.c: $(obj)/purgatory.ro FORCE
-+$(obj)/kexec-purgatory.c: $(obj)/purgatory.ro $(obj)/purgatory.chk FORCE
- 	$(call if_changed,bin2c)
-=20
- obj-$(CONFIG_KEXEC_FILE)	+=3D kexec-purgatory.o
---=20
-2.25.0
-
+0-DAY CI Kernel Test Service, Intel Corporation
+https://lists.01.org/hyperkitty/list/kbuild-all@lists.01.org
