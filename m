@@ -4,53 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9B450C35641
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 07:59:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0C543C35640
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 07:59:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6DD0D2465D
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 07:59:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D42182465D
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 07:59:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582271941;
-	bh=xR3TCnZhgPJN93bqdEvo5BwP1dB3RHfGLzJ+ceAVSPg=;
+	s=default; t=1582271944;
+	bh=qbbsCdrsrCkGn7EAbzaWAaGMdfYyj4oFCK63U/FyJN8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=VRUga9e/s0AhEIlfi2eEMRuzGTcUZKshqP56bD6wqA/GAhIcdc+Qo3Z/OGNpSIAm3
-	 UL1WbwlpD9LFo6R4frVpLDyhIDzI3EUghzrjWfcjze3Ezl+UQqubegHtavOQCxbeFB
-	 X8DdufUpjD03wo02+ftg+bMR5R4j2PduW2/F3Xbg=
+	b=LFz3KUPdkwO5aV6P3MD+Cojlo7ob4fKZeB81mI2zL0HV/akVfs6Gq/RgRN8/ndGF9
+	 Dy6+AvxUO5AdYsg3kxlVyYYLhZpRinJMD+LaPC9gs9UBQ2dUwQCr+22o0KNHNtZQ2M
+	 SLdr6A9tOB/SskLIGmewccJbeI2m1rZVqIJD4cLk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730850AbgBUH67 (ORCPT
+        id S1730856AbgBUH7D (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Feb 2020 02:58:59 -0500
-Received: from mail.kernel.org ([198.145.29.99]:58870 "EHLO mail.kernel.org"
+        Fri, 21 Feb 2020 02:59:03 -0500
+Received: from mail.kernel.org ([198.145.29.99]:58962 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730694AbgBUH64 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Feb 2020 02:58:56 -0500
+        id S1730846AbgBUH67 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 21 Feb 2020 02:58:59 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4A6F72073A;
-        Fri, 21 Feb 2020 07:58:55 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 78D6120801;
+        Fri, 21 Feb 2020 07:58:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1582271935;
-        bh=xR3TCnZhgPJN93bqdEvo5BwP1dB3RHfGLzJ+ceAVSPg=;
+        s=default; t=1582271938;
+        bh=qbbsCdrsrCkGn7EAbzaWAaGMdfYyj4oFCK63U/FyJN8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=1emjY1Bw7EC4L7zXsgaGtCEoXj9KtsD5GjtIPLkvqy1pEEPKwVK37Rt4CO3Va3A03
-         lHmwkiKO684uo0jr3Y9mRhGZeqJ/VGThLgivZY5PtcEJBawgANPSpt9ltVd7MGwu7W
-         aFt6Mb9JWPdOW9PhCtzhnVQFaygHLjCwf3UO8BGM=
+        b=2ja4hluJ1yMKpLy54WFMb1m0SOhAJ0S3XMnIRBX/HjGqkWDrZBaIAE+kdNiqj/Cq9
+         +jlPGHVHh2+QYbjhqUbna2Z2zr9G6s5pAzyeYAIBEWXEngyQu8jW4bvHz7/wml6rfA
+         Bx9yr6r0rLNpvYuI2xC9Q5hSzMPlVNeaI0mbcHFQ=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Shile Zhang <shile.zhang@linux.alibaba.com>,
-        Josh Poimboeuf <jpoimboe@redhat.com>,
-        Ingo Molnar <mingo@kernel.org>,
-        Kamalesh Babulal <kamalesh@linux.vnet.ibm.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.5 317/399] objtool: Fix ARCH=x86_64 build error
-Date:   Fri, 21 Feb 2020 08:40:42 +0100
-Message-Id: <20200221072432.218300175@linuxfoundation.org>
+        stable@vger.kernel.org, Randy Dunlap <rdunlap@infradead.org>,
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        Borislav Petkov <bp@suse.de>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.5 318/399] x86/decoder: Add TEST opcode to Group3-2
+Date:   Fri, 21 Feb 2020 08:40:43 +0100
+Message-Id: <20200221072432.307935759@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200221072402.315346745@linuxfoundation.org>
 References: <20200221072402.315346745@linuxfoundation.org>
@@ -63,61 +60,78 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Shile Zhang <shile.zhang@linux.alibaba.com>
+From: Masami Hiramatsu <mhiramat@kernel.org>
 
-[ Upstream commit 8580bed7e751e6d4f17881e059daf3cb37ba4717 ]
+[ Upstream commit 8b7e20a7ba54836076ff35a28349dabea4cec48f ]
 
-Building objtool with ARCH=x86_64 fails with:
+Add TEST opcode to Group3-2 reg=001b as same as Group3-1 does.
 
-   $make ARCH=x86_64 -C tools/objtool
-   ...
-     CC       arch/x86/decode.o
-   arch/x86/decode.c:10:22: fatal error: asm/insn.h: No such file or directory
-    #include <asm/insn.h>
-                         ^
-   compilation terminated.
-   mv: cannot stat ‘arch/x86/.decode.o.tmp’: No such file or directory
-   make[2]: *** [arch/x86/decode.o] Error 1
-   ...
+Commit
 
-The root cause is that the command-line variable 'ARCH' cannot be
-overridden.  It can be replaced by 'SRCARCH', which is defined in
-'tools/scripts/Makefile.arch'.
+  12a78d43de76 ("x86/decoder: Add new TEST instruction pattern")
 
-Signed-off-by: Shile Zhang <shile.zhang@linux.alibaba.com>
-Signed-off-by: Josh Poimboeuf <jpoimboe@redhat.com>
-Signed-off-by: Ingo Molnar <mingo@kernel.org>
-Reviewed-by: Kamalesh Babulal <kamalesh@linux.vnet.ibm.com>
-Link: https://lore.kernel.org/r/d5d11370ae116df6c653493acd300ec3d7f5e925.1579543924.git.jpoimboe@redhat.com
+added a TEST opcode assignment to f6 XX/001/XXX (Group 3-1), but did
+not add f7 XX/001/XXX (Group 3-2).
+
+Actually, this TEST opcode variant (ModRM.reg /1) is not described in
+the Intel SDM Vol2 but in AMD64 Architecture Programmer's Manual Vol.3,
+Appendix A.2 Table A-6. ModRM.reg Extensions for the Primary Opcode Map.
+
+Without this fix, Randy found a warning by insn_decoder_test related
+to this issue as below.
+
+    HOSTCC  arch/x86/tools/insn_decoder_test
+    HOSTCC  arch/x86/tools/insn_sanity
+    TEST    posttest
+  arch/x86/tools/insn_decoder_test: warning: Found an x86 instruction decoder bug, please report this.
+  arch/x86/tools/insn_decoder_test: warning: ffffffff81000bf1:	f7 0b 00 01 08 00    	testl  $0x80100,(%rbx)
+  arch/x86/tools/insn_decoder_test: warning: objdump says 6 bytes, but insn_get_length() says 2
+  arch/x86/tools/insn_decoder_test: warning: Decoded and checked 11913894 instructions with 1 failures
+    TEST    posttest
+  arch/x86/tools/insn_sanity: Success: decoded and checked 1000000 random instructions with 0 errors (seed:0x871ce29c)
+
+To fix this error, add the TEST opcode according to AMD64 APM Vol.3.
+
+ [ bp: Massage commit message. ]
+
+Reported-by: Randy Dunlap <rdunlap@infradead.org>
+Signed-off-by: Masami Hiramatsu <mhiramat@kernel.org>
+Signed-off-by: Borislav Petkov <bp@suse.de>
+Acked-by: Randy Dunlap <rdunlap@infradead.org>
+Tested-by: Randy Dunlap <rdunlap@infradead.org>
+Link: https://lkml.kernel.org/r/157966631413.9580.10311036595431878351.stgit@devnote2
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- tools/objtool/Makefile | 6 +-----
- 1 file changed, 1 insertion(+), 5 deletions(-)
+ arch/x86/lib/x86-opcode-map.txt       | 2 +-
+ tools/arch/x86/lib/x86-opcode-map.txt | 2 +-
+ 2 files changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/tools/objtool/Makefile b/tools/objtool/Makefile
-index d2a19b0bc05aa..ee08aeff30a19 100644
---- a/tools/objtool/Makefile
-+++ b/tools/objtool/Makefile
-@@ -2,10 +2,6 @@
- include ../scripts/Makefile.include
- include ../scripts/Makefile.arch
+diff --git a/arch/x86/lib/x86-opcode-map.txt b/arch/x86/lib/x86-opcode-map.txt
+index 8908c58bd6cd2..53adc1762ec08 100644
+--- a/arch/x86/lib/x86-opcode-map.txt
++++ b/arch/x86/lib/x86-opcode-map.txt
+@@ -929,7 +929,7 @@ EndTable
  
--ifeq ($(ARCH),x86_64)
--ARCH := x86
--endif
--
- # always use the host compiler
- HOSTAR	?= ar
- HOSTCC	?= gcc
-@@ -33,7 +29,7 @@ all: $(OBJTOOL)
+ GrpTable: Grp3_2
+ 0: TEST Ev,Iz
+-1:
++1: TEST Ev,Iz
+ 2: NOT Ev
+ 3: NEG Ev
+ 4: MUL rAX,Ev
+diff --git a/tools/arch/x86/lib/x86-opcode-map.txt b/tools/arch/x86/lib/x86-opcode-map.txt
+index 8908c58bd6cd2..53adc1762ec08 100644
+--- a/tools/arch/x86/lib/x86-opcode-map.txt
++++ b/tools/arch/x86/lib/x86-opcode-map.txt
+@@ -929,7 +929,7 @@ EndTable
  
- INCLUDES := -I$(srctree)/tools/include \
- 	    -I$(srctree)/tools/arch/$(HOSTARCH)/include/uapi \
--	    -I$(srctree)/tools/arch/$(ARCH)/include
-+	    -I$(srctree)/tools/arch/$(SRCARCH)/include
- WARNINGS := $(EXTRA_WARNINGS) -Wno-switch-default -Wno-switch-enum -Wno-packed
- CFLAGS   := -Werror $(WARNINGS) $(KBUILD_HOSTCFLAGS) -g $(INCLUDES) $(LIBELF_FLAGS)
- LDFLAGS  += $(LIBELF_LIBS) $(LIBSUBCMD) $(KBUILD_HOSTLDFLAGS)
+ GrpTable: Grp3_2
+ 0: TEST Ev,Iz
+-1:
++1: TEST Ev,Iz
+ 2: NOT Ev
+ 3: NEG Ev
+ 4: MUL rAX,Ev
 -- 
 2.20.1
 
