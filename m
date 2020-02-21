@@ -2,290 +2,149 @@ Return-Path: <SRS0=1210=4J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 14A75C35646
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 10:43:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4B112C35653
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 10:44:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D69E520722
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 10:43:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 227E620722
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 10:44:08 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="oztzjCZy"
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="bLPR7ypq"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727926AbgBUKne (ORCPT
+        id S1727973AbgBUKoH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Feb 2020 05:43:34 -0500
-Received: from mail-wr1-f67.google.com ([209.85.221.67]:45131 "EHLO
-        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727686AbgBUKne (ORCPT
+        Fri, 21 Feb 2020 05:44:07 -0500
+Received: from mailout1.w1.samsung.com ([210.118.77.11]:60158 "EHLO
+        mailout1.w1.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726913AbgBUKoG (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Feb 2020 05:43:34 -0500
-Received: by mail-wr1-f67.google.com with SMTP id g3so1433211wrs.12
-        for <linux-kernel@vger.kernel.org>; Fri, 21 Feb 2020 02:43:31 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
-        h=references:user-agent:from:to:cc:subject:in-reply-to:date
-         :message-id:mime-version;
-        bh=y17j3JfMjOhBp3bg0o/t76XeKtZ2b+e9QhazcUZ/DV0=;
-        b=oztzjCZyuKPCwe5jorKjqpGVUCsUh45QaV8hnlC1/6Ol0GqAWOEkRXfELn2BdK0wG3
-         qgXRuaXEt6mFUfdXJtCiTsSSpE619tWAHLuApmFtmpBhmjuJrnyz/gGZj1ZOEmv6CGPe
-         xFo/kVwsxny1VsK32QrRl+22bNULIFDEKfOYo5p4ksYHHIbAJFNDhgzb7Qz1GNzXTvQx
-         gQdbh9tr7v+Xskj2ffaldUHzSpqW7HsJWb6Id/rvlmrYiWjSSX70gijwaG0xMLRmlBCn
-         roLxbhhURKF6XR4OYdfLf2WxIDb9HshFovZCkB0Fh8uPwYUeccqsfX5SkZA+KdP+E05U
-         D8Ng==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:references:user-agent:from:to:cc:subject
-         :in-reply-to:date:message-id:mime-version;
-        bh=y17j3JfMjOhBp3bg0o/t76XeKtZ2b+e9QhazcUZ/DV0=;
-        b=XlVjNj7rgZQuTHsCxQWpQhBu6YdNgWzNVW2hoVsHlFhtsyAnMvJacfvaEf3+oNNXwW
-         LW0lNg5xFKlUCLpRo6DA1htdL5Q0JFfY3ZUF9MJg7XBQ4D7g/S/95Cf5JnA2rQY7qGfJ
-         yFecdSk/NuytcHPVMcQFlpymWWMv+EidzTHizdWvV+Hbto6T8f5asWGbmD50jaPxBGNm
-         Q6dGJtpIR4Jes64fjLKXcxR9789AhHT6bo9jYJgLJQmWJ2Wpt53Xxw15Sk1fd35dV6wD
-         DdiTPty3UPNQCT97Hd9elJCeEO1BQX+SH2zKUse8zfchOVaNj73QfQ1I7zI/RQ1ZZILy
-         LuyA==
-X-Gm-Message-State: APjAAAXzkBS4fF9wFgugUY9IrxpndOghVBL6yxODaj2LgXmS2fM7q470
-        ADM4g92evOHogEQL9at5ctj69Q==
-X-Google-Smtp-Source: APXvYqwQ6mtepZYIPlcj/NAAw+eWDJa/MMOiK0l4maoi5chkWidP9g3E3ZCQ0dYFbQuvk4hE+DhiSw==
-X-Received: by 2002:adf:dc8d:: with SMTP id r13mr49810404wrj.357.1582281811037;
-        Fri, 21 Feb 2020 02:43:31 -0800 (PST)
-Received: from localhost (laubervilliers-658-1-213-31.w90-63.abo.wanadoo.fr. [90.63.244.31])
-        by smtp.gmail.com with ESMTPSA id c15sm3403521wrt.1.2020.02.21.02.43.30
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 21 Feb 2020 02:43:30 -0800 (PST)
-References: <20200220205711.77953-1-martin.blumenstingl@googlemail.com> <20200220205711.77953-4-martin.blumenstingl@googlemail.com>
-User-agent: mu4e 1.3.3; emacs 26.3
-From:   Jerome Brunet <jbrunet@baylibre.com>
-To:     Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
-        broonie@kernel.org, robh+dt@kernel.org, mark.rutland@arm.com,
-        alsa-devel@alsa-project.org, devicetree@vger.kernel.org,
-        linux-amlogic@lists.infradead.org
-Cc:     lgirdwood@gmail.com, perex@perex.cz, tiwai@suse.com,
-        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
-Subject: Re: [PATCH 3/3] ASoC: meson: aiu: add support for the Meson8 and Meson8b SoC families
-In-reply-to: <20200220205711.77953-4-martin.blumenstingl@googlemail.com>
-Date:   Fri, 21 Feb 2020 11:43:29 +0100
-Message-ID: <1jr1yo2pbi.fsf@starbuckisacylon.baylibre.com>
+        Fri, 21 Feb 2020 05:44:06 -0500
+Received: from eucas1p1.samsung.com (unknown [182.198.249.206])
+        by mailout1.w1.samsung.com (KnoxPortal) with ESMTP id 20200221104404euoutp0199a89b86a0481681d05ec5d5e476b0a7~1ZPRVSRAL1959219592euoutp01N
+        for <linux-kernel@vger.kernel.org>; Fri, 21 Feb 2020 10:44:04 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout1.w1.samsung.com 20200221104404euoutp0199a89b86a0481681d05ec5d5e476b0a7~1ZPRVSRAL1959219592euoutp01N
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+        s=mail20170921; t=1582281844;
+        bh=8agBVibI27wvBvzg3vNVK2KuIXP3p0dC6rX3Pta/Ik4=;
+        h=Subject:To:Cc:From:Date:In-Reply-To:References:From;
+        b=bLPR7ypqZJdadc9M++y7sjMLV6vKQ73JN7ah2qiaMr+9BpEpiZU0WIdgSFioUP33X
+         inu94vKjvte32HzTWxJzjE97mXbSR3QpzTP1ZnU1KkN35yeoTKnHz2dzFEpmAjIaqD
+         sZ8+DzWljK0k11Cpj5BkXwSOSLX8l+xS7XQayB2Y=
+Received: from eusmges3new.samsung.com (unknown [203.254.199.245]) by
+        eucas1p1.samsung.com (KnoxPortal) with ESMTP id
+        20200221104404eucas1p14283d5c0a0bb81c8c8146517a72917e4~1ZPRIc5kv2428624286eucas1p1E;
+        Fri, 21 Feb 2020 10:44:04 +0000 (GMT)
+Received: from eucas1p2.samsung.com ( [182.198.249.207]) by
+        eusmges3new.samsung.com (EUCPMTA) with SMTP id 52.3C.60698.474BF4E5; Fri, 21
+        Feb 2020 10:44:04 +0000 (GMT)
+Received: from eusmtrp1.samsung.com (unknown [182.198.249.138]) by
+        eucas1p1.samsung.com (KnoxPortal) with ESMTPA id
+        20200221104404eucas1p147e55d6e5266c33892c8670425329cff~1ZPQx2Pq92430724307eucas1p1L;
+        Fri, 21 Feb 2020 10:44:04 +0000 (GMT)
+Received: from eusmgms2.samsung.com (unknown [182.198.249.180]) by
+        eusmtrp1.samsung.com (KnoxPortal) with ESMTP id
+        20200221104404eusmtrp1ce69e89c0424571f1bb30b480d534e33~1ZPQxIn_f2499724997eusmtrp1G;
+        Fri, 21 Feb 2020 10:44:04 +0000 (GMT)
+X-AuditID: cbfec7f5-a0fff7000001ed1a-43-5e4fb4748b1e
+Received: from eusmtip1.samsung.com ( [203.254.199.221]) by
+        eusmgms2.samsung.com (EUCPMTA) with SMTP id C7.21.07950.374BF4E5; Fri, 21
+        Feb 2020 10:44:03 +0000 (GMT)
+Received: from [106.120.51.15] (unknown [106.120.51.15]) by
+        eusmtip1.samsung.com (KnoxPortal) with ESMTPA id
+        20200221104403eusmtip16dc22efe67c669eb6bb34b08081c8593~1ZPQYkINd1718217182eusmtip1E;
+        Fri, 21 Feb 2020 10:44:03 +0000 (GMT)
+Subject: Re: [PATCH 1/3] regulator: max14577: Add proper dt-compatible
+ strings
+To:     Mark Brown <broonie@kernel.org>
+Cc:     linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Krzysztof Kozlowski <krzk@kernel.org>,
+        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
+        Chanwoo Choi <cw00.choi@samsung.com>,
+        MyungJoo Ham <myungjoo.ham@samsung.com>,
+        Sebastian Reichel <sre@kernel.org>
+From:   Marek Szyprowski <m.szyprowski@samsung.com>
+Message-ID: <964b8c4c-36ca-203d-e62b-4a8fc970e23d@samsung.com>
+Date:   Fri, 21 Feb 2020 11:44:03 +0100
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+        Thunderbird/68.5.0
 MIME-Version: 1.0
-Content-Type: text/plain
+In-Reply-To: <20200220165614.GD3926@sirena.org.uk>
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFlrKKsWRmVeSWpSXmKPExsWy7djP87olW/zjDL7vEbXYOGM9q8XUh0/Y
+        LK5/ec5qcf78BnaLy7vmsFl87j3CaHG7cQWbxendJQ4cHptWdbJ59G1ZxejxeZNcAHMUl01K
+        ak5mWWqRvl0CV8aGrm2sBcu5KqbsfszWwLiDo4uRk0NCwERizpHn7F2MXBxCAisYJfrvnWOB
+        cL4wShxpWw3lfGaU+PjxM2MXIwdYy/+DQhDx5YwSc1oXskI4bxklPn9/xwgyV1ggQGLBtVtg
+        toiAssTV73vBJjELTGCSuPHmFhNIgk3AUKLrbRcbiM0rYCdx9sludhCbRUBV4vOvs2A1ogKx
+        ErNXHmaBqBGUODnzCZjNKWAk8fjEP1YQm1lAXmL72znMELa4xK0n85lAlkkIrGOXWHh3PxPE
+        2S4Sv5oDIZ4Wlnh1fAs7hC0jcXpyDwtEfTOjxMNza9khnB5GictNMxghqqwl7pz7xQYyiFlA
+        U2L9Ln2IsKPEhSnnoObzSdx4KwhxA5/EpG3TmSHCvBIdbUIQ1WoSs46vg1t78MIl5gmMSrOQ
+        fDYLyTezkHwzC2HvAkaWVYziqaXFuempxcZ5qeV6xYm5xaV56XrJ+bmbGIGJ5/S/4193MO77
+        k3SIUYCDUYmHt6LBL06INbGsuDL3EKMEB7OSCK8aD1CINyWxsiq1KD++qDQntfgQozQHi5I4
+        r/Gil7FCAumJJanZqakFqUUwWSYOTqkGxlMhDxOMKoRkJ+3vTakMnb5pWbIih0WBgpWer32l
+        ofKu/gUVm4tnHRU7fjtGUo5v2owNb+44lr1cdUqO93Xp05T4jwcOh4eV7y195//ou/bflzcX
+        6rL7tCWszpAT2TPX+v2TV17Wqe4ZKwwVdiz7+Vw884ZPBS9/8ALFsxrvtxvOMZnKz3GuRoml
+        OCPRUIu5qDgRAFsezGo4AwAA
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFtrOIsWRmVeSWpSXmKPExsVy+t/xu7rFW/zjDJ59s7HYOGM9q8XUh0/Y
+        LK5/ec5qcf78BnaLy7vmsFl87j3CaHG7cQWbxendJQ4cHptWdbJ59G1ZxejxeZNcAHOUnk1R
+        fmlJqkJGfnGJrVK0oYWRnqGlhZ6RiaWeobF5rJWRqZK+nU1Kak5mWWqRvl2CXsaGrm2sBcu5
+        KqbsfszWwLiDo4uRg0NCwETi/0GhLkYuDiGBpYwSX5+2sHcxcgLFZSROTmtghbCFJf5c62KD
+        KHrNKHH21Vk2kGZhAT+JtbMMQGpEBJQlrn7fywJSwywwiUnizd2n7BANOxklfkz5wwJSxSZg
+        KNH1FmQSJwevgJ3E2Se7wbaxCKhKfP51lgnEFhWIlbgxs4MJokZQ4uTMJ2C9nAJGEo9P/AO7
+        iFnATGLe5ofMELa8xPa3c6BscYlbT+YzTWAUmoWkfRaSlllIWmYhaVnAyLKKUSS1tDg3PbfY
+        SK84Mbe4NC9dLzk/dxMjMNK2Hfu5ZQdj17vgQ4wCHIxKPLwVDX5xQqyJZcWVuYcYJTiYlUR4
+        1XiAQrwpiZVVqUX58UWlOanFhxhNgZ6byCwlmpwPTAJ5JfGGpobmFpaG5sbmxmYWSuK8HQIH
+        Y4QE0hNLUrNTUwtSi2D6mDg4pRoYHQ3nevxdVSMz03KD3wvht2ctL4dbMS+cIHz37ZninRJv
+        vepKmJ2v/OwOf/j774FpLRkCet0CBsvmrct7fvj5juvngp4/qIr7LpMVk1dntcrI63qGi9Sb
+        gJ6F+9402i+tdk/Pz+i+UvTN1POctvbhKW7vu53rA91v7I5PmTFheeGZyTZJr749UGIpzkg0
+        1GIuKk4EAMhDqxTKAgAA
+X-CMS-MailID: 20200221104404eucas1p147e55d6e5266c33892c8670425329cff
+X-Msg-Generator: CA
+Content-Type: text/plain; charset="utf-8"
+X-RootMTR: 20200220145134eucas1p288ae1910d3e8d12dc12f010ed0b07b45
+X-EPHeader: CA
+CMS-TYPE: 201P
+X-CMS-RootMailID: 20200220145134eucas1p288ae1910d3e8d12dc12f010ed0b07b45
+References: <CGME20200220145134eucas1p288ae1910d3e8d12dc12f010ed0b07b45@eucas1p2.samsung.com>
+        <20200220145127.21273-1-m.szyprowski@samsung.com>
+        <20200220165614.GD3926@sirena.org.uk>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Hi Mark,
 
-On Thu 20 Feb 2020 at 21:57, Martin Blumenstingl <martin.blumenstingl@googlemail.com> wrote:
+On 20.02.2020 17:56, Mark Brown wrote:
+> On Thu, Feb 20, 2020 at 03:51:25PM +0100, Marek Szyprowski wrote:
+>> Add device tree compatible strings and create proper modalias structures
+>> to let this driver load automatically if compiled as module, because
+>> max14577 MFD driver creates MFD cells with such compatible strings.
+>> +static const struct of_device_id of_max14577_regulator_dt_match[] = {
+>> +	{ .compatible = "maxim,max77836-regulator",
+>> +	  .data = (void *)MAXIM_DEVICE_TYPE_MAX77836, },
+>> +	{ .compatible = "maxim,max14577-regulator",
+>> +	  .data = (void *)MAXIM_DEVICE_TYPE_MAX14577, },
+> Why would we want to encode the particular way Linux happens to
+> represent regulators on a MFD into the DT binding?  It's not clear that
+> this is a generic thing (another OS might choose to have a separate
+> object for each regulator with no parent for example) and the compatible
+> isn't adding any information we didn't have already knowing about the
+> parent device.
 
-> The AIU audio controller on the Meson8 and Meson8b SoC families is
-> compatible with the one found in the later GXBB family. Add compatible
-> strings for these two older SoC families so the driver can be loaded for
-> them.
->
-> Instead of using the I2S divider from the AIU_CLK_CTRL_MORE register we
-> need to use the I2S divider from the AIU_CLK_CTRL register. This older
-> register is less flexible because it only supports four divider settings
-> (1, 2, 4, 8) compared to the AIU_CLK_CTRL_MORE register (which supports
-> dividers in the range 0..64).
->
-> Signed-off-by: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+Well, that's how the bindings for max14577/max77836 are defined:
 
-Reviewed-by: Jerome Brunet <jbrunet@baylibre.com>
+Documentation/devicetree/bindings/mfd/max14577.txt
 
-> ---
->  sound/soc/meson/Kconfig           |  2 +-
->  sound/soc/meson/aiu-encoder-i2s.c | 92 +++++++++++++++++++++++--------
->  sound/soc/meson/aiu.c             |  9 +++
->  sound/soc/meson/aiu.h             |  1 +
->  4 files changed, 81 insertions(+), 23 deletions(-)
->
-> diff --git a/sound/soc/meson/Kconfig b/sound/soc/meson/Kconfig
-> index 897a706dcda0..d27e9180b453 100644
-> --- a/sound/soc/meson/Kconfig
-> +++ b/sound/soc/meson/Kconfig
-> @@ -10,7 +10,7 @@ config SND_MESON_AIU
->  	imply SND_SOC_HDMI_CODEC if DRM_MESON_DW_HDMI
->  	help
->  	  Select Y or M to add support for the Audio output subsystem found
-> -	  in the Amlogic GX SoC family
-> +	  in the Amlogic Meson8, Meson8b and GX SoC families
->  
->  config SND_MESON_AXG_FIFO
->  	tristate
-> diff --git a/sound/soc/meson/aiu-encoder-i2s.c b/sound/soc/meson/aiu-encoder-i2s.c
-> index 4900e38e7e49..cc73b5d5c2b7 100644
-> --- a/sound/soc/meson/aiu-encoder-i2s.c
-> +++ b/sound/soc/meson/aiu-encoder-i2s.c
-> @@ -111,34 +111,40 @@ static int aiu_encoder_i2s_setup_desc(struct snd_soc_component *component,
->  	return 0;
->  }
->  
-> -static int aiu_encoder_i2s_set_clocks(struct snd_soc_component *component,
-> -				      struct snd_pcm_hw_params *params)
-> +static int aiu_encoder_i2s_set_legacy_div(struct snd_soc_component *component,
-> +					  struct snd_pcm_hw_params *params,
-> +					  unsigned int bs)
->  {
-> -	struct aiu *aiu = snd_soc_component_get_drvdata(component);
-> -	unsigned int srate = params_rate(params);
-> -	unsigned int fs, bs;
-> -
-> -	/* Get the oversampling factor */
-> -	fs = DIV_ROUND_CLOSEST(clk_get_rate(aiu->i2s.clks[MCLK].clk), srate);
-> +	switch (bs) {
-> +	case 1:
-> +	case 2:
-> +	case 4:
-> +	case 8:
-> +		/* These are the only valid legacy dividers */
-> +		break;
+I've only fixed regulator, charger and extcon drivers to match the cells 
+created by the current mfd driver.
 
-I wonder how it will work with the 8ch mode and 16bits but we can deal
-with this later on.
-
->  
-> -	if (fs % 64)
-> +	default:
-> +		dev_err(component->dev, "Unsupported i2s divider: %u\n", bs);
->  		return -EINVAL;
-> +	};
->  
-> -	/* Send data MSB first */
-> -	snd_soc_component_update_bits(component, AIU_I2S_DAC_CFG,
-> -				      AIU_I2S_DAC_CFG_MSB_FIRST,
-> -				      AIU_I2S_DAC_CFG_MSB_FIRST);
-> +	snd_soc_component_update_bits(component, AIU_CLK_CTRL,
-> +				      AIU_CLK_CTRL_I2S_DIV,
-> +				      FIELD_PREP(AIU_CLK_CTRL_I2S_DIV,
-> +						 __ffs(bs)));
->  
-> -	/* Set bclk to lrlck ratio */
-> -	snd_soc_component_update_bits(component, AIU_CODEC_DAC_LRCLK_CTRL,
-> -				      AIU_CODEC_DAC_LRCLK_CTRL_DIV,
-> -				      FIELD_PREP(AIU_CODEC_DAC_LRCLK_CTRL_DIV,
-> -						 64 - 1));
-> +	snd_soc_component_update_bits(component, AIU_CLK_CTRL_MORE,
-> +				      AIU_CLK_CTRL_MORE_I2S_DIV,
-> +				      FIELD_PREP(AIU_CLK_CTRL_MORE_I2S_DIV,
-> +						 0));
->  
-> -	/* Use CLK_MORE for mclk to bclk divider */
-> -	snd_soc_component_update_bits(component, AIU_CLK_CTRL,
-> -				      AIU_CLK_CTRL_I2S_DIV, 0);
-> +	return 0;
-> +}
->  
-> +static int aiu_encoder_i2s_set_more_div(struct snd_soc_component *component,
-> +					struct snd_pcm_hw_params *params,
-> +					unsigned int bs)
-> +{
->  	/*
->  	 * NOTE: this HW is odd.
->  	 * In most configuration, the i2s divider is 'mclk / blck'.
-> @@ -146,7 +152,6 @@ static int aiu_encoder_i2s_set_clocks(struct snd_soc_component *component,
->  	 * increased by 50% to get the correct output rate.
->  	 * No idea why !
->  	 */
-> -	bs = fs / 64;
->  	if (params_width(params) == 16 && params_channels(params) == 8) {
->  		if (bs % 2) {
->  			dev_err(component->dev,
-> @@ -156,11 +161,54 @@ static int aiu_encoder_i2s_set_clocks(struct snd_soc_component *component,
->  		bs += bs / 2;
->  	}
->  
-> +	/* Use CLK_MORE for mclk to bclk divider */
-> +	snd_soc_component_update_bits(component, AIU_CLK_CTRL,
-> +				      AIU_CLK_CTRL_I2S_DIV,
-> +				      FIELD_PREP(AIU_CLK_CTRL_I2S_DIV, 0));
-> +
->  	snd_soc_component_update_bits(component, AIU_CLK_CTRL_MORE,
->  				      AIU_CLK_CTRL_MORE_I2S_DIV,
->  				      FIELD_PREP(AIU_CLK_CTRL_MORE_I2S_DIV,
->  						 bs - 1));
->  
-> +	return 0;
-> +}
-> +
-> +static int aiu_encoder_i2s_set_clocks(struct snd_soc_component *component,
-> +				      struct snd_pcm_hw_params *params)
-> +{
-> +	struct aiu *aiu = snd_soc_component_get_drvdata(component);
-> +	unsigned int srate = params_rate(params);
-> +	unsigned int fs, bs;
-> +	int ret;
-> +
-> +	/* Get the oversampling factor */
-> +	fs = DIV_ROUND_CLOSEST(clk_get_rate(aiu->i2s.clks[MCLK].clk), srate);
-> +
-> +	if (fs % 64)
-> +		return -EINVAL;
-> +
-> +	/* Send data MSB first */
-> +	snd_soc_component_update_bits(component, AIU_I2S_DAC_CFG,
-> +				      AIU_I2S_DAC_CFG_MSB_FIRST,
-> +				      AIU_I2S_DAC_CFG_MSB_FIRST);
-> +
-> +	/* Set bclk to lrlck ratio */
-> +	snd_soc_component_update_bits(component, AIU_CODEC_DAC_LRCLK_CTRL,
-> +				      AIU_CODEC_DAC_LRCLK_CTRL_DIV,
-> +				      FIELD_PREP(AIU_CODEC_DAC_LRCLK_CTRL_DIV,
-> +						 64 - 1));
-> +
-> +	bs = fs / 64;
-> +
-> +	if (aiu->platform->has_clk_ctrl_more_i2s_div)
-> +		ret = aiu_encoder_i2s_set_more_div(component, params, bs);
-> +	else
-> +		ret = aiu_encoder_i2s_set_legacy_div(component, params, bs);
-> +
-> +	if (ret)
-> +		return ret;
-> +
->  	/* Make sure amclk is used for HDMI i2s as well */
->  	snd_soc_component_update_bits(component, AIU_CLK_CTRL_MORE,
->  				      AIU_CLK_CTRL_MORE_HDMI_AMCLK,
-> diff --git a/sound/soc/meson/aiu.c b/sound/soc/meson/aiu.c
-> index 38209312a8c3..dc35ca79021c 100644
-> --- a/sound/soc/meson/aiu.c
-> +++ b/sound/soc/meson/aiu.c
-> @@ -351,15 +351,24 @@ static int aiu_remove(struct platform_device *pdev)
->  
->  static const struct aiu_platform_data aiu_gxbb_pdata = {
->  	.has_acodec = false,
-> +	.has_clk_ctrl_more_i2s_div = true,
->  };
->  
->  static const struct aiu_platform_data aiu_gxl_pdata = {
->  	.has_acodec = true,
-> +	.has_clk_ctrl_more_i2s_div = true,
-> +};
-> +
-> +static const struct aiu_platform_data aiu_meson8_pdata = {
-> +	.has_acodec = false,
-> +	.has_clk_ctrl_more_i2s_div = false,
->  };
->  
->  static const struct of_device_id aiu_of_match[] = {
->  	{ .compatible = "amlogic,aiu-gxbb", .data = &aiu_gxbb_pdata },
->  	{ .compatible = "amlogic,aiu-gxl", .data = &aiu_gxl_pdata },
-> +	{ .compatible = "amlogic,aiu-meson8", .data = &aiu_meson8_pdata },
-> +	{ .compatible = "amlogic,aiu-meson8b", .data = &aiu_meson8_pdata },
->  	{}
->  };
->  MODULE_DEVICE_TABLE(of, aiu_of_match);
-> diff --git a/sound/soc/meson/aiu.h b/sound/soc/meson/aiu.h
-> index ab003638d5e5..87aa19ac4af3 100644
-> --- a/sound/soc/meson/aiu.h
-> +++ b/sound/soc/meson/aiu.h
-> @@ -29,6 +29,7 @@ struct aiu_interface {
->  
->  struct aiu_platform_data {
->  	bool has_acodec;
-> +	bool has_clk_ctrl_more_i2s_div;
->  };
->  
->  struct aiu {
+Best regards
+-- 
+Marek Szyprowski, PhD
+Samsung R&D Institute Poland
 
