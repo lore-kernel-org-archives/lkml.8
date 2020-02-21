@@ -2,92 +2,109 @@ Return-Path: <SRS0=1210=4J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3EC44C35646
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 18:08:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1018CC3565B
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 18:09:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 187C0208E4
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 18:08:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D599D222C4
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 18:09:57 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="hO+B1xyx"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729225AbgBUSI1 (ORCPT
+        id S1728105AbgBUSJ4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Feb 2020 13:08:27 -0500
-Received: from muru.com ([72.249.23.125]:56780 "EHLO muru.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725995AbgBUSI0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Feb 2020 13:08:26 -0500
-Received: from atomide.com (localhost [127.0.0.1])
-        by muru.com (Postfix) with ESMTPS id 060D9807E;
-        Fri, 21 Feb 2020 18:09:08 +0000 (UTC)
-Date:   Fri, 21 Feb 2020 10:08:21 -0800
-From:   Tony Lindgren <tony@atomide.com>
-To:     Peter Ujfalusi <peter.ujfalusi@ti.com>
-Cc:     Sebastian Reichel <sre@kernel.org>,
-        Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>,
-        Mark Brown <broonie@kernel.org>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        Jaroslav Kysela <perex@perex.cz>,
-        Takashi Iwai <tiwai@suse.com>, alsa-devel@alsa-project.org,
-        linux-kernel@vger.kernel.org, linux-omap@vger.kernel.org,
-        Aaro Koskinen <aaro.koskinen@iki.fi>,
-        "Arthur D ." <spinal.by@gmail.com>,
-        Jarkko Nikula <jarkko.nikula@bitmer.com>,
-        Merlijn Wajer <merlijn@wizzup.org>, Pavel Machek <pavel@ucw.cz>
-Subject: Re: [PATCH] ASoC: ti: Allocate dais dynamically for TDM and audio
- graph card
-Message-ID: <20200221180821.GA37466@atomide.com>
-References: <20200212143543.GI64767@atomide.com>
- <346dfd2b-23f8-87e0-6f45-27a5099b1066@ti.com>
- <20200214170322.GZ64767@atomide.com>
- <d9a43fcb-ed0f-5cd5-7e22-58924d571d17@ti.com>
- <20200217231001.GC35972@atomide.com>
- <5402eba8-4f84-0973-e11b-6ab2667ada85@ti.com>
- <20200218211631.fxojsxzvttoidfed@earth.universe>
- <a263a857-bb8a-0e37-6932-dd07df98ad63@ti.com>
- <20200220201559.GX37466@atomide.com>
- <9ea8239f-3b2d-8206-95ee-2789fbae83d4@ti.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <9ea8239f-3b2d-8206-95ee-2789fbae83d4@ti.com>
+        Fri, 21 Feb 2020 13:09:56 -0500
+Received: from mail-pj1-f68.google.com ([209.85.216.68]:56242 "EHLO
+        mail-pj1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725995AbgBUSJ4 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 21 Feb 2020 13:09:56 -0500
+Received: by mail-pj1-f68.google.com with SMTP id d5so1086657pjz.5;
+        Fri, 21 Feb 2020 10:09:55 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id;
+        bh=YnVHKaoJO1HX1P3NwrYh2l54OzBJ4vkSrlh4+CAHtGg=;
+        b=hO+B1xyxXHmcprcyOZM3Cy0x+2O3VQsdZjPTe+ekQC7GFiaiWjd8FyaNONdKkg3T/t
+         +2NAXkZ6mbo4wtvB8xBdIV4NrJs8TgXNSfzBUAAH2A9ZOR0gyFmB8mk+R4bGgM/sRkkT
+         KF3fmjik6hIhZFmPnqUH9EhRaJFnTE08Xg13MVZzcLSJCbEZq8KPvt59pr6NLkMfMj2y
+         IWgl1BCkSi7UPCaEdwwSkCyef472NQWEcpc/VBIZ1fKdf/m0/x1J3a7QsHCKZ19beETK
+         ZKAjShshl2w5hRyoJS2BZ6GFLemmWtsnNQzsQ91/yMUmQtK21LLt7FECYeEWnVqgwGk0
+         7e9g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=YnVHKaoJO1HX1P3NwrYh2l54OzBJ4vkSrlh4+CAHtGg=;
+        b=ryDgeQ7fjWudArEwSD4UJ27ssQ/ONAkD3S3SBBMLOYuuJwb6vdkNphFEj6AalqzpHp
+         CbftHzT2XBwp3LiKijSoxZ/NlTNDlB/2AO7U0mFV3NyhqYDMujms0TE8G6u9+Q7h10rF
+         fkRVI+aVkmwH1u4VtmEC2kUAodDh549GqCJSgnpVGz50YZBykXgy7z5FnWA8A+Mht/35
+         oHzRWgXPPFiL3zHsSyVGqFB1u1exwVz0Rj7WhoTtavy/GEiGfNx+WVMeJCSmRF25B2XT
+         +2z2SLrk5S+nxAdej7DE5JDkof3FAzLACqR017DSvHsbe7R873oaEKDHACRnkbIbSkLG
+         9bNg==
+X-Gm-Message-State: APjAAAV2Hl+tr0LGzI+T3/d5CKCErzRsHCPCbpwjdJaUdPjwU8mXhl3h
+        MKZZvi4sEwvfD4wbhPuo2uhISV8=
+X-Google-Smtp-Source: APXvYqwJhe7ghkmt0lMpu8J3qCpPScB3kKurmtqaq6raB9yrlGmcE021hxheks/b4wl7pzkD7yAQYg==
+X-Received: by 2002:a17:902:ab81:: with SMTP id f1mr38545653plr.5.1582308594745;
+        Fri, 21 Feb 2020 10:09:54 -0800 (PST)
+Received: from madhuparna-HP-Notebook.nitk.ac.in ([2402:3a80:1ee0:fe5e:d03d:769b:c838:c146])
+        by smtp.gmail.com with ESMTPSA id x65sm3639043pfb.171.2020.02.21.10.09.50
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 21 Feb 2020 10:09:54 -0800 (PST)
+From:   madhuparnabhowmik10@gmail.com
+To:     jiri@mellanox.com, davem@davemloft.net
+Cc:     netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+        joel@joelfernandes.org, frextrite@gmail.com,
+        linux-kernel-mentees@lists.linuxfoundation.org, paulmck@kernel.org,
+        Madhuparna Bhowmik <madhuparnabhowmik10@gmail.com>
+Subject: [PATCH] net: core: devlink.c: Hold devlink->lock from the beginning of devlink_dpipe_table_register()
+Date:   Fri, 21 Feb 2020 23:39:43 +0530
+Message-Id: <20200221180943.17415-1-madhuparnabhowmik10@gmail.com>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-* Peter Ujfalusi <peter.ujfalusi@ti.com> [200221 13:21]:
-> Hi Tony,
-> 
-> On 20/02/2020 22.15, Tony Lindgren wrote:
-> > * Peter Ujfalusi <peter.ujfalusi@ti.com> [200220 14:16]:
-> >> On 18/02/2020 23.16, Sebastian Reichel wrote:
-> >>> I suppose in the end its a question if generic card can provide TDM
-> >>> support.
-> >>
-> >> Sure it can, but can it handle the switching between the paths based on
-> >> use cases?
-> >> There should be machine level DAPM widgets to kick codec2codec (MDM6600
-> >> - CPAC_voice for example) and also to make sure that when you switch
-> >> between them the system is not going to get misconfigured.
-> >> Switching between CPAC and BT route during call?
-> >> Not allowing VoIP while on call, etc.
-> > 
-> > Well I guess the key thing to check here is if it's enough to
-> > keep track of things in the cpcap codec driver. If cpcap is always
-> > involved, that should be sufficient.
-> 
-> The codec driver should keep track on what it can do, but should not
-> start policing the outside world.
-> The machine driver knows the connections and should tell the components
-> on what to do.
+From: Madhuparna Bhowmik <madhuparnabhowmik10@gmail.com>
 
-OK that makes senes to me. So I guess now the question is if
-we can maintain this state in snd-soc-audio-graph-card instead
-of needing a custom machine driver.
+devlink_dpipe_table_find() should be called under either
+rcu_read_lock() or devlink->lock. devlink_dpipe_table_register()
+calls devlink_dpipe_table_find() without holding the lock
+and acquires it later. Therefore hold the devlink->lock
+from the beginning of devlink_dpipe_table_register().
 
-Regards,
+Suggested-by: Jiri Pirko <jiri@mellanox.com>
+Signed-off-by: Madhuparna Bhowmik <madhuparnabhowmik10@gmail.com>
+---
+ net/core/devlink.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-Tony
+diff --git a/net/core/devlink.c b/net/core/devlink.c
+index 3e8c94155d93..d54e1f156b6f 100644
+--- a/net/core/devlink.c
++++ b/net/core/devlink.c
+@@ -6840,6 +6840,8 @@ int devlink_dpipe_table_register(struct devlink *devlink,
+ {
+ 	struct devlink_dpipe_table *table;
+ 
++	mutex_lock(&devlink->lock);
++
+ 	if (devlink_dpipe_table_find(&devlink->dpipe_table_list, table_name))
+ 		return -EEXIST;
+ 
+@@ -6855,7 +6857,6 @@ int devlink_dpipe_table_register(struct devlink *devlink,
+ 	table->priv = priv;
+ 	table->counter_control_extern = counter_control_extern;
+ 
+-	mutex_lock(&devlink->lock);
+ 	list_add_tail_rcu(&table->list, &devlink->dpipe_table_list);
+ 	mutex_unlock(&devlink->lock);
+ 	return 0;
+-- 
+2.17.1
+
