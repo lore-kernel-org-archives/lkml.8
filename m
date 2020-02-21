@@ -5,50 +5,50 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D3A23C35642
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 08:26:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 36626C35641
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 08:26:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A9FA624681
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 08:26:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0000024682
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 08:26:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582273575;
-	bh=o5gr58TJGS5RzeBoS44nmEv9hIX3Y2a8lUvTlTQQlMU=;
+	s=default; t=1582273579;
+	bh=WfyRji/FvQF4TG98tKGWVFWrcCVN4w/9py2R/eS+vXo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=oeq82oJ8vXp2QnGMmW07X5rMbM3nN/LTvQm7zj53anLzbRH7YmE8BojRdcsyFKPNp
-	 MbZPABv5Wan6szb4si4Gvq09V2B6fMEy73Sf+6vfKMkd1CeNFQ1Ay5krHn994JuGXb
-	 ycEdrJxFc1i89dfKL9rMX6xlLJlCgUeQCvjnijiQ=
+	b=HyTTSqcOyhI8b4mCmAdpdp46Yr4yIe7T1wni6Ys37RSqa0pvOVuizuqb9veSw6pTq
+	 er4+5Rwi+/fOQsbwK3dy67ZLXQz1KiN6INiY1uGe0rsleEd+/XJYEKK8ZrWEe0A6Qk
+	 NXdRfpNBMzvZLnUrBwtYmUzYFuKsWM03HCg/ORlM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388316AbgBUIYI (ORCPT
+        id S1732739AbgBUI0R (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Feb 2020 03:24:08 -0500
-Received: from mail.kernel.org ([198.145.29.99]:36386 "EHLO mail.kernel.org"
+        Fri, 21 Feb 2020 03:26:17 -0500
+Received: from mail.kernel.org ([198.145.29.99]:36472 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388254AbgBUIYG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Feb 2020 03:24:06 -0500
+        id S2388598AbgBUIYI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 21 Feb 2020 03:24:08 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2FE002467D;
-        Fri, 21 Feb 2020 08:24:05 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A7B072469D;
+        Fri, 21 Feb 2020 08:24:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1582273445;
-        bh=o5gr58TJGS5RzeBoS44nmEv9hIX3Y2a8lUvTlTQQlMU=;
+        s=default; t=1582273448;
+        bh=WfyRji/FvQF4TG98tKGWVFWrcCVN4w/9py2R/eS+vXo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=i+doDxnR8xdDT+FPKtAOAaP4HVRURXTJcQORWfHNkDGfe3nF41lpD2gvz2GTA72E7
-         Tz9JsDC5qLeaYZuaffI+vhZc1NDYhFVm/Km6NIOZTwbIVaJehJiHbO8tN0I0EgQR56
-         HXWJE9It1twHFSzaVuU8eFKP07mWhq1Yvjdazb+s=
+        b=V7oxcgSus5ePOaTghRoAV4woKtuoiHHoNrR7anGhgqJliEKrJwkPAQO4zNOZri11J
+         sSmCEf7dZFP83+mBe1ZLl8Bpy4fd4B+wQJfEh7NeE1p8azVl5q/ucYAAOzhHiMW5g6
+         UpHwbGFnCF+vETMseK28nX2TGAfFs64C0ZfBh0B4=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Colin Ian King <colin.king@canonical.com>,
-        Stanislaw Gruszka <stf_xl@wp.pl>,
-        Kalle Valo <kvalo@codeaurora.org>,
+        stable@vger.kernel.org, Alex Deucher <alexander.deucher@amd.com>,
+        =?UTF-8?q?Michel=20D=C3=A4nzer?= <michel.daenzer@amd.com>,
+        Daniel Vetter <daniel.vetter@intel.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 166/191] iwlegacy: ensure loop counter addr does not wrap and cause an infinite loop
-Date:   Fri, 21 Feb 2020 08:42:19 +0100
-Message-Id: <20200221072310.618357945@linuxfoundation.org>
+Subject: [PATCH 4.19 175/191] radeon: insert 10ms sleep in dce5_crtc_load_lut
+Date:   Fri, 21 Feb 2020 08:42:28 +0100
+Message-Id: <20200221072311.718262780@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200221072250.732482588@linuxfoundation.org>
 References: <20200221072250.732482588@linuxfoundation.org>
@@ -61,39 +61,47 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Colin Ian King <colin.king@canonical.com>
+From: Daniel Vetter <daniel.vetter@ffwll.ch>
 
-[ Upstream commit c2f9a4e4a5abfc84c01b738496b3fd2d471e0b18 ]
+[ Upstream commit ec3d65082d7dabad6fa8f66a8ef166f2d522d6b2 ]
 
-The loop counter addr is a u16 where as the upper limit of the loop
-is an int. In the unlikely event that the il->cfg->eeprom_size is
-greater than 64K then we end up with an infinite loop since addr will
-wrap around an never reach upper loop limit. Fix this by making addr
-an int.
+Per at least one tester this is enough magic to recover the regression
+introduced for some people (but not all) in
 
-Addresses-Coverity: ("Infinite loop")
-Fixes: be663ab67077 ("iwlwifi: split the drivers for agn and legacy devices 3945/4965")
-Signed-off-by: Colin Ian King <colin.king@canonical.com>
-Acked-by: Stanislaw Gruszka <stf_xl@wp.pl>
-Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
+commit b8e2b0199cc377617dc238f5106352c06dcd3fa2
+Author: Peter Rosin <peda@axentia.se>
+Date:   Tue Jul 4 12:36:57 2017 +0200
+
+    drm/fb-helper: factor out pseudo-palette
+
+which for radeon had the side-effect of refactoring out a seemingly
+redudant writing of the color palette.
+
+10ms in a fairly slow modeset path feels like an acceptable form of
+duct-tape, so maybe worth a shot and see what sticks.
+
+Cc: Alex Deucher <alexander.deucher@amd.com>
+Cc: Michel Dänzer <michel.daenzer@amd.com>
+Signed-off-by: Daniel Vetter <daniel.vetter@intel.com>
+Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/wireless/intel/iwlegacy/common.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/gpu/drm/radeon/radeon_display.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/drivers/net/wireless/intel/iwlegacy/common.c b/drivers/net/wireless/intel/iwlegacy/common.c
-index 6514baf799fef..e16f2597c2199 100644
---- a/drivers/net/wireless/intel/iwlegacy/common.c
-+++ b/drivers/net/wireless/intel/iwlegacy/common.c
-@@ -717,7 +717,7 @@ il_eeprom_init(struct il_priv *il)
- 	u32 gp = _il_rd(il, CSR_EEPROM_GP);
- 	int sz;
- 	int ret;
--	u16 addr;
-+	int addr;
+diff --git a/drivers/gpu/drm/radeon/radeon_display.c b/drivers/gpu/drm/radeon/radeon_display.c
+index d8e2d7b3b8365..7d1e14f0140a2 100644
+--- a/drivers/gpu/drm/radeon/radeon_display.c
++++ b/drivers/gpu/drm/radeon/radeon_display.c
+@@ -121,6 +121,8 @@ static void dce5_crtc_load_lut(struct drm_crtc *crtc)
  
- 	/* allocate eeprom */
- 	sz = il->cfg->eeprom_size;
+ 	DRM_DEBUG_KMS("%d\n", radeon_crtc->crtc_id);
+ 
++	msleep(10);
++
+ 	WREG32(NI_INPUT_CSC_CONTROL + radeon_crtc->crtc_offset,
+ 	       (NI_INPUT_CSC_GRPH_MODE(NI_INPUT_CSC_BYPASS) |
+ 		NI_INPUT_CSC_OVL_MODE(NI_INPUT_CSC_BYPASS)));
 -- 
 2.20.1
 
