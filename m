@@ -4,49 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 68869C35640
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 08:22:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C2430C35640
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 08:22:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 36AC524697
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 08:22:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9699E2467A
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 08:22:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582273346;
-	bh=YIGZT7Mw55e964DtErPouRe21GxqEoy89dkTezE1Oy8=;
+	s=default; t=1582273348;
+	bh=O6NHsOKP5WI6rUdV37NfHsDshjlGXVTkDbk7qfG4Jhg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=qqXXZfV+asAPtey9mmv+ZkuIZxI1bFKMvxxomChibll+FAfpHervVsdcfBjGyzptN
-	 NpWs+TbYNMHbr0TkBeo5FI7sZVX8TQVDi75IWz0S2oy25ZDNdI41PkFNnSydVSY14f
-	 p6RGyle68DcQN9sy9X9SYpRGCypGM1MzDOxLojfk=
+	b=ZExqO3GOJA6FFqjskakGoEEkg/dTUrMIsHVY4JzzZtQX4AzrUkMYvxlYwsGb4Xs9x
+	 TwGbHiQ81E+esX5OvzxuOtca1il3dj7DCG/4IY6T4U/w892O39IRT2b5tuMcmBWJB7
+	 m0BifkzI0EXhXa4qpzWKvhcNQjgcwtqFnyWrnXyk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388292AbgBUIWY (ORCPT
+        id S2388302AbgBUIW1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Feb 2020 03:22:24 -0500
-Received: from mail.kernel.org ([198.145.29.99]:33910 "EHLO mail.kernel.org"
+        Fri, 21 Feb 2020 03:22:27 -0500
+Received: from mail.kernel.org ([198.145.29.99]:33976 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732397AbgBUIWU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Feb 2020 03:22:20 -0500
+        id S2388290AbgBUIWY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 21 Feb 2020 03:22:24 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D9668206ED;
-        Fri, 21 Feb 2020 08:22:19 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 07AC824672;
+        Fri, 21 Feb 2020 08:22:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1582273340;
-        bh=YIGZT7Mw55e964DtErPouRe21GxqEoy89dkTezE1Oy8=;
+        s=default; t=1582273343;
+        bh=O6NHsOKP5WI6rUdV37NfHsDshjlGXVTkDbk7qfG4Jhg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=lhVICAlalTpaWpfL1Q6nWT+pL85nf2eNmAW/WujH8qB/Eq5JJpKtBKpm5osMtnf0B
-         ApWO6uVOYPRr31QOQo/WkeX7P561gQQa8npGWZMYAx1EJq9vFpxOBtEgaq2F9Vyajn
-         VXKJRjYmi542Gx09DSk+qlvNSYhmBjibwO+xjoQU=
+        b=K86l6mVukoeVqz8gWq5GCJ4IqnRnXVL1uQKVgAb0CGtoOgfAoE7g6qT05CzeLlvJW
+         lur9tnTlzcWG573szagXydf0PSjFZyjkgcnvlcOD+EOT+ZCqwv3RkrK/yJ917zYwDn
+         MK2gxafkSezEam4WMn5nN4ZOs6OlbpfM1EC/PU0M=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Ben Skeggs <bskeggs@redhat.com>,
+        stable@vger.kernel.org, Robert Richter <rrichter@marvell.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 127/191] drm/nouveau/fault/gv100-: fix memory leak on module unload
-Date:   Fri, 21 Feb 2020 08:41:40 +0100
-Message-Id: <20200221072306.171221239@linuxfoundation.org>
+Subject: [PATCH 4.19 136/191] watchdog/softlockup: Enforce that timestamp is valid on boot
+Date:   Fri, 21 Feb 2020 08:41:49 +0100
+Message-Id: <20200221072307.055337500@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200221072250.732482588@linuxfoundation.org>
 References: <20200221072250.732482588@linuxfoundation.org>
@@ -59,28 +60,79 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Ben Skeggs <bskeggs@redhat.com>
+From: Thomas Gleixner <tglx@linutronix.de>
 
-[ Upstream commit 633cc9beeb6f9b5fa2f17a2a9d0e2790cb6c3de7 ]
+[ Upstream commit 11e31f608b499f044f24b20be73f1dcab3e43f8a ]
 
-Signed-off-by: Ben Skeggs <bskeggs@redhat.com>
+Robert reported that during boot the watchdog timestamp is set to 0 for one
+second which is the indicator for a watchdog reset.
+
+The reason for this is that the timestamp is in seconds and the time is
+taken from sched clock and divided by ~1e9. sched clock starts at 0 which
+means that for the first second during boot the watchdog timestamp is 0,
+i.e. reset.
+
+Use ULONG_MAX as the reset indicator value so the watchdog works correctly
+right from the start. ULONG_MAX would only conflict with a real timestamp
+if the system reaches an uptime of 136 years on 32bit and almost eternity
+on 64bit.
+
+Reported-by: Robert Richter <rrichter@marvell.com>
+Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+Link: https://lore.kernel.org/r/87o8v3uuzl.fsf@nanos.tec.linutronix.de
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/gpu/drm/nouveau/nvkm/subdev/fault/base.c | 1 +
- 1 file changed, 1 insertion(+)
+ kernel/watchdog.c | 10 ++++++----
+ 1 file changed, 6 insertions(+), 4 deletions(-)
 
-diff --git a/drivers/gpu/drm/nouveau/nvkm/subdev/fault/base.c b/drivers/gpu/drm/nouveau/nvkm/subdev/fault/base.c
-index 16ad91c91a7be..f18ce6ff5b7ed 100644
---- a/drivers/gpu/drm/nouveau/nvkm/subdev/fault/base.c
-+++ b/drivers/gpu/drm/nouveau/nvkm/subdev/fault/base.c
-@@ -150,6 +150,7 @@ nvkm_fault_dtor(struct nvkm_subdev *subdev)
- 	struct nvkm_fault *fault = nvkm_fault(subdev);
- 	int i;
+diff --git a/kernel/watchdog.c b/kernel/watchdog.c
+index bbc4940f21af6..6d60701dc6361 100644
+--- a/kernel/watchdog.c
++++ b/kernel/watchdog.c
+@@ -161,6 +161,8 @@ static void lockup_detector_update_enable(void)
  
-+	nvkm_notify_fini(&fault->nrpfb);
- 	nvkm_event_fini(&fault->event);
+ #ifdef CONFIG_SOFTLOCKUP_DETECTOR
  
- 	for (i = 0; i < fault->buffer_nr; i++) {
++#define SOFTLOCKUP_RESET	ULONG_MAX
++
+ /* Global variables, exported for sysctl */
+ unsigned int __read_mostly softlockup_panic =
+ 			CONFIG_BOOTPARAM_SOFTLOCKUP_PANIC_VALUE;
+@@ -267,7 +269,7 @@ notrace void touch_softlockup_watchdog_sched(void)
+ 	 * Preemption can be enabled.  It doesn't matter which CPU's timestamp
+ 	 * gets zeroed here, so use the raw_ operation.
+ 	 */
+-	raw_cpu_write(watchdog_touch_ts, 0);
++	raw_cpu_write(watchdog_touch_ts, SOFTLOCKUP_RESET);
+ }
+ 
+ notrace void touch_softlockup_watchdog(void)
+@@ -291,14 +293,14 @@ void touch_all_softlockup_watchdogs(void)
+ 	 * the softlockup check.
+ 	 */
+ 	for_each_cpu(cpu, &watchdog_allowed_mask)
+-		per_cpu(watchdog_touch_ts, cpu) = 0;
++		per_cpu(watchdog_touch_ts, cpu) = SOFTLOCKUP_RESET;
+ 	wq_watchdog_touch(-1);
+ }
+ 
+ void touch_softlockup_watchdog_sync(void)
+ {
+ 	__this_cpu_write(softlockup_touch_sync, true);
+-	__this_cpu_write(watchdog_touch_ts, 0);
++	__this_cpu_write(watchdog_touch_ts, SOFTLOCKUP_RESET);
+ }
+ 
+ static int is_softlockup(unsigned long touch_ts)
+@@ -376,7 +378,7 @@ static enum hrtimer_restart watchdog_timer_fn(struct hrtimer *hrtimer)
+ 	/* .. and repeat */
+ 	hrtimer_forward_now(hrtimer, ns_to_ktime(sample_period));
+ 
+-	if (touch_ts == 0) {
++	if (touch_ts == SOFTLOCKUP_RESET) {
+ 		if (unlikely(__this_cpu_read(softlockup_touch_sync))) {
+ 			/*
+ 			 * If the time stamp was touched atomically
 -- 
 2.20.1
 
