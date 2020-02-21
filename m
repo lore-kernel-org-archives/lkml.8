@@ -2,145 +2,381 @@ Return-Path: <SRS0=1210=4J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BC07FC35646
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 15:05:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B63C3C35656
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 15:07:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 867D6206E2
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 15:05:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6B8E6206EF
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 15:07:40 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=embeddedor.com header.i=@embeddedor.com header.b="A9eCgCb7"
+	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="nKxVgXbu"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729163AbgBUPF5 (ORCPT
+        id S1729025AbgBUPHj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Feb 2020 10:05:57 -0500
-Received: from gateway22.websitewelcome.com ([192.185.46.225]:35239 "EHLO
-        gateway22.websitewelcome.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727315AbgBUPF4 (ORCPT
+        Fri, 21 Feb 2020 10:07:39 -0500
+Received: from mail-wm1-f66.google.com ([209.85.128.66]:53521 "EHLO
+        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728690AbgBUPHj (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Feb 2020 10:05:56 -0500
-Received: from cm17.websitewelcome.com (cm17.websitewelcome.com [100.42.49.20])
-        by gateway22.websitewelcome.com (Postfix) with ESMTP id D71DC120A0
-        for <linux-kernel@vger.kernel.org>; Fri, 21 Feb 2020 09:05:54 -0600 (CST)
-Received: from gator4166.hostgator.com ([108.167.133.22])
-        by cmsmtp with SMTP
-        id 59sIjVGuRAGTX59sIjfeoA; Fri, 21 Feb 2020 09:05:54 -0600
-X-Authority-Reason: nr=8
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=embeddedor.com; s=default; h=Content-Transfer-Encoding:Content-Type:
-        In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:Subject:Sender
-        :Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
-        Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
-        List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=cRboVsbWUEPwGuWfgqo+v5EtxXTlBTRHmRBEEMttca4=; b=A9eCgCb71huWTqs9SOPBKMuYwO
-        kEfPPdcGnmXb8mZRplFMKZNbkAWcQSnEFgFSpzVq0FzlAhFidI/haLmlO1wTILipUSKdY7Hu1TjYc
-        UpxENZfWd0xNx7EwefdEWZ+zZNneAlc5YATUgl7yw2/NHiZFKnK24oCSZfAHh8JM6haiqpjOX6H7h
-        +a3BLkmEiVGhZIBuSfkek6C9GrLNE3NH8x3hhjWWamQppyjbOHs8KRcYy3ZxH8JumrRhGBKRA7g7t
-        o3wQdBmOpjZzkqYiEENu1RW+dxhAcyR+32eVXpLI5ocfc1qfHeJboEkE8OlD0T9IoKlVmiSQZGxSh
-        vu2LYb+g==;
-Received: from [200.68.141.13] (port=18808 helo=[192.168.43.131])
-        by gator4166.hostgator.com with esmtpsa (TLSv1.2:ECDHE-RSA-AES128-GCM-SHA256:128)
-        (Exim 4.92)
-        (envelope-from <gustavo@embeddedor.com>)
-        id 1j59sI-003VkV-Hk; Fri, 21 Feb 2020 09:05:54 -0600
-Subject: Re: [PATCH] firmware: arm_scmi: driver: Replace zero-length array
- with flexible-array member
-To:     Sudeep Holla <sudeep.holla@arm.com>
-Cc:     linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
-References: <20200211231045.GA13956@embeddedor> <20200220171840.GB44840@bogus>
-From:   "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-Autocrypt: addr=gustavo@embeddedor.com; keydata=
- xsFNBFssHAwBEADIy3ZoPq3z5UpsUknd2v+IQud4TMJnJLTeXgTf4biSDSrXn73JQgsISBwG
- 2Pm4wnOyEgYUyJd5tRWcIbsURAgei918mck3tugT7AQiTUN3/5aAzqe/4ApDUC+uWNkpNnSV
- tjOx1hBpla0ifywy4bvFobwSh5/I3qohxDx+c1obd8Bp/B/iaOtnq0inli/8rlvKO9hp6Z4e
- DXL3PlD0QsLSc27AkwzLEc/D3ZaqBq7ItvT9Pyg0z3Q+2dtLF00f9+663HVC2EUgP25J3xDd
- 496SIeYDTkEgbJ7WYR0HYm9uirSET3lDqOVh1xPqoy+U9zTtuA9NQHVGk+hPcoazSqEtLGBk
- YE2mm2wzX5q2uoyptseSNceJ+HE9L+z1KlWW63HhddgtRGhbP8pj42bKaUSrrfDUsicfeJf6
- m1iJRu0SXYVlMruGUB1PvZQ3O7TsVfAGCv85pFipdgk8KQnlRFkYhUjLft0u7CL1rDGZWDDr
- NaNj54q2CX9zuSxBn9XDXvGKyzKEZ4NY1Jfw+TAMPCp4buawuOsjONi2X0DfivFY+ZsjAIcx
- qQMglPtKk/wBs7q2lvJ+pHpgvLhLZyGqzAvKM1sVtRJ5j+ARKA0w4pYs5a5ufqcfT7dN6TBk
- LXZeD9xlVic93Ju08JSUx2ozlcfxq+BVNyA+dtv7elXUZ2DrYwARAQABzSxHdXN0YXZvIEEu
- IFIuIFNpbHZhIDxndXN0YXZvQGVtYmVkZGVkb3IuY29tPsLBfQQTAQgAJwUCWywcDAIbIwUJ
- CWYBgAULCQgHAgYVCAkKCwIEFgIDAQIeAQIXgAAKCRBHBbTLRwbbMZ6tEACk0hmmZ2FWL1Xi
- l/bPqDGFhzzexrdkXSfTTZjBV3a+4hIOe+jl6Rci/CvRicNW4H9yJHKBrqwwWm9fvKqOBAg9
- obq753jydVmLwlXO7xjcfyfcMWyx9QdYLERTeQfDAfRqxir3xMeOiZwgQ6dzX3JjOXs6jHBP
- cgry90aWbaMpQRRhaAKeAS14EEe9TSIly5JepaHoVdASuxklvOC0VB0OwNblVSR2S5i5hSsh
- ewbOJtwSlonsYEj4EW1noQNSxnN/vKuvUNegMe+LTtnbbocFQ7dGMsT3kbYNIyIsp42B5eCu
- JXnyKLih7rSGBtPgJ540CjoPBkw2mCfhj2p5fElRJn1tcX2McsjzLFY5jK9RYFDavez5w3lx
- JFgFkla6sQHcrxH62gTkb9sUtNfXKucAfjjCMJ0iuQIHRbMYCa9v2YEymc0k0RvYr43GkA3N
- PJYd/vf9vU7VtZXaY4a/dz1d9dwIpyQARFQpSyvt++R74S78eY/+lX8wEznQdmRQ27kq7BJS
- R20KI/8knhUNUJR3epJu2YFT/JwHbRYC4BoIqWl+uNvDf+lUlI/D1wP+lCBSGr2LTkQRoU8U
- 64iK28BmjJh2K3WHmInC1hbUucWT7Swz/+6+FCuHzap/cjuzRN04Z3Fdj084oeUNpP6+b9yW
- e5YnLxF8ctRAp7K4yVlvA87BTQRbLBwMARAAsHCE31Ffrm6uig1BQplxMV8WnRBiZqbbsVJB
- H1AAh8tq2ULl7udfQo1bsPLGGQboJSVN9rckQQNahvHAIK8ZGfU4Qj8+CER+fYPp/MDZj+t0
- DbnWSOrG7z9HIZo6PR9z4JZza3Hn/35jFggaqBtuydHwwBANZ7A6DVY+W0COEU4of7CAahQo
- 5NwYiwS0lGisLTqks5R0Vh+QpvDVfuaF6I8LUgQR/cSgLkR//V1uCEQYzhsoiJ3zc1HSRyOP
- otJTApqGBq80X0aCVj1LOiOF4rrdvQnj6iIlXQssdb+WhSYHeuJj1wD0ZlC7ds5zovXh+FfF
- l5qH5RFY/qVn3mNIVxeO987WSF0jh+T5ZlvUNdhedGndRmwFTxq2Li6GNMaolgnpO/CPcFpD
- jKxY/HBUSmaE9rNdAa1fCd4RsKLlhXda+IWpJZMHlmIKY8dlUybP+2qDzP2lY7kdFgPZRU+e
- zS/pzC/YTzAvCWM3tDgwoSl17vnZCr8wn2/1rKkcLvTDgiJLPCevqpTb6KFtZosQ02EGMuHQ
- I6Zk91jbx96nrdsSdBLGH3hbvLvjZm3C+fNlVb9uvWbdznObqcJxSH3SGOZ7kCHuVmXUcqoz
- ol6ioMHMb+InrHPP16aVDTBTPEGwgxXI38f7SUEn+NpbizWdLNz2hc907DvoPm6HEGCanpcA
- EQEAAcLBZQQYAQgADwUCWywcDAIbDAUJCWYBgAAKCRBHBbTLRwbbMdsZEACUjmsJx2CAY+QS
- UMebQRFjKavwXB/xE7fTt2ahuhHT8qQ/lWuRQedg4baInw9nhoPE+VenOzhGeGlsJ0Ys52sd
- XvUjUocKgUQq6ekOHbcw919nO5L9J2ejMf/VC/quN3r3xijgRtmuuwZjmmi8ct24TpGeoBK4
- WrZGh/1hAYw4ieARvKvgjXRstcEqM5thUNkOOIheud/VpY+48QcccPKbngy//zNJWKbRbeVn
- imua0OpqRXhCrEVm/xomeOvl1WK1BVO7z8DjSdEBGzbV76sPDJb/fw+y+VWrkEiddD/9CSfg
- fBNOb1p1jVnT2mFgGneIWbU0zdDGhleI9UoQTr0e0b/7TU+Jo6TqwosP9nbk5hXw6uR5k5PF
- 8ieyHVq3qatJ9K1jPkBr8YWtI5uNwJJjTKIA1jHlj8McROroxMdI6qZ/wZ1ImuylpJuJwCDC
- ORYf5kW61fcrHEDlIvGc371OOvw6ejF8ksX5+L2zwh43l/pKkSVGFpxtMV6d6J3eqwTafL86
- YJWH93PN+ZUh6i6Rd2U/i8jH5WvzR57UeWxE4P8bQc0hNGrUsHQH6bpHV2lbuhDdqo+cM9eh
- GZEO3+gCDFmKrjspZjkJbB5Gadzvts5fcWGOXEvuT8uQSvl+vEL0g6vczsyPBtqoBLa9SNrS
- VtSixD1uOgytAP7RWS474w==
-Message-ID: <b79e117f-1e1f-c3ab-9622-ed57914b530b@embeddedor.com>
-Date:   Fri, 21 Feb 2020 09:08:38 -0600
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.1
+        Fri, 21 Feb 2020 10:07:39 -0500
+Received: by mail-wm1-f66.google.com with SMTP id s10so2138545wmh.3
+        for <linux-kernel@vger.kernel.org>; Fri, 21 Feb 2020 07:07:37 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
+        h=references:user-agent:from:to:cc:subject:in-reply-to:date
+         :message-id:mime-version;
+        bh=e0L4/lKklK0pPHv+p72Qf9pkHd2IRBOpN8nR2j+6GjM=;
+        b=nKxVgXbuLxoFN5LZ1SEgJEJ6Q+p9oRBvp6Mu7yEf7xwANCpQC6zNg72BHYf0NA82S7
+         iBjBZ8gpnUD0HqJRWDiyVUPZU21XfXavtUUFOJ2sF4aeABbxhFGisVHwvtnE13iP7ql/
+         aiSblwtCEnHfPFaqwonU2maDbKsViGQ/fXAcwxb2Jf6XrBFIsRShH5v15u2sdmbB9P2N
+         qGsI7c/fdyT+DkNgYRMegxb3nd+kxF/GpPhdmGv4SK+bUd7MgOB6WxwgxaDb137PrXsQ
+         CEYzz70M6nU3SIgNU3ng4xQKpB/A27n3/rfqCOnzXRFUU5LAbAfMjRKDbbwwcSOz2Ynx
+         zy/Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:references:user-agent:from:to:cc:subject
+         :in-reply-to:date:message-id:mime-version;
+        bh=e0L4/lKklK0pPHv+p72Qf9pkHd2IRBOpN8nR2j+6GjM=;
+        b=UFoxwTgVeqqstHVvlPNqyvh1eRCNKFVyQxO5vtg4jSFoJpgly1hl8p/7FKSdqU8paz
+         OL7V4GaDFfskaM55FHh/UXAnX9tEjkaIVw+H0BdeRVrOxv8aTDV8unuu1t2BvsJxMT7G
+         uNtancwvG4TtTk5NAl6bgiu0R6y9Di1BAs44NcMnTJWegwQhwSLpiCSJczoHjsTK5Far
+         5H9F4qK96a5YuglIAx0KV9fHvSAIdxf85gMmtKG32KwN+1mjkTuciIKYIbyVaoEaPzPt
+         hlc3JpPi/jp3afBtreBBSjp4htdBrdEnG7AxFfurnnjIZF4bUVpCjGF0WsTTYCqPGvA2
+         1/sA==
+X-Gm-Message-State: APjAAAXawyaIHX/VZSMKvQEJTJkLQd9Z0zuiskb/UCDze7E1whx5OA8h
+        LlQLy3eb59eNQgZdMEN7TF5kQw==
+X-Google-Smtp-Source: APXvYqyuqN+IUjfBMyk8cWX21uCBxSpBZ1yH0FZnXDsBtGAM+msBu1kqHkIEg+2hGsqiibQjHskgcQ==
+X-Received: by 2002:a1c:a952:: with SMTP id s79mr4582992wme.83.1582297656460;
+        Fri, 21 Feb 2020 07:07:36 -0800 (PST)
+Received: from localhost (cag06-3-82-243-161-21.fbx.proxad.net. [82.243.161.21])
+        by smtp.gmail.com with ESMTPSA id w22sm4143316wmk.34.2020.02.21.07.07.34
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 21 Feb 2020 07:07:34 -0800 (PST)
+References: <20200221122242.1500093-1-jbrunet@baylibre.com> <20200221122242.1500093-3-jbrunet@baylibre.com>
+User-agent: mu4e 1.3.3; emacs 26.3
+From:   Jerome Brunet <jbrunet@baylibre.com>
+To:     Mark Brown <broonie@kernel.org>,
+        Liam Girdwood <lgirdwood@gmail.com>
+Cc:     alsa-devel@alsa-project.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-amlogic@lists.infradead.org,
+        Kevin Hilman <khilman@baylibre.com>
+Subject: Re: [PATCH 2/3] ASoC: meson: g12a: add internal DAC glue driver
+In-reply-to: <20200221122242.1500093-3-jbrunet@baylibre.com>
+Date:   Fri, 21 Feb 2020 16:07:33 +0100
+Message-ID: <1jo8ts2d3e.fsf@starbuckisacylon.baylibre.com>
 MIME-Version: 1.0
-In-Reply-To: <20200220171840.GB44840@bogus>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
-X-AntiAbuse: Primary Hostname - gator4166.hostgator.com
-X-AntiAbuse: Original Domain - vger.kernel.org
-X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
-X-AntiAbuse: Sender Address Domain - embeddedor.com
-X-BWhitelist: no
-X-Source-IP: 200.68.141.13
-X-Source-L: No
-X-Exim-ID: 1j59sI-003VkV-Hk
-X-Source: 
-X-Source-Args: 
-X-Source-Dir: 
-X-Source-Sender: ([192.168.43.131]) [200.68.141.13]:18808
-X-Source-Auth: gustavo@embeddedor.com
-X-Email-Count: 12
-X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
-X-Local-Domain: yes
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
 
+On Fri 21 Feb 2020 at 13:22, Jerome Brunet <jbrunet@baylibre.com> wrote:
 
-On 2/20/20 11:18, Sudeep Holla wrote:
+> Add support for the internal audio DAC glue found on the Amlogic g12a
+> and sm1 SoC families. This allows to connect the TDM outputs of the SoC
+> to the internal t9015 audio DAC.
+>
+> Signed-off-by: Jerome Brunet <jbrunet@baylibre.com>
 
->>
->> [1] https://gcc.gnu.org/onlinedocs/gcc/Zero-Length.html
->> [2] https://github.com/KSPP/linux/issues/21
->> [3] commit 76497732932f ("cxgb3/l2t: Fix undefined behaviour")
->>
->> Signed-off-by: Gustavo A. R. Silva <gustavo@embeddedor.com>
-> 
-> Applied these 3 patches [0][1][2] for v5.7
-> 
+Please ignore this patch. It is incomplete, a part was mistakenly
+squashed with another change I'm preparing
 
-Thanks, Sudeep.
---
-Gustavo
+> ---
+>  sound/soc/meson/Kconfig         |   9 ++
+>  sound/soc/meson/Makefile        |   2 +
+>  sound/soc/meson/g12a-toacodec.c | 240 ++++++++++++++++++++++++++++++++
+>  3 files changed, 251 insertions(+)
+>  create mode 100644 sound/soc/meson/g12a-toacodec.c
+>
+> diff --git a/sound/soc/meson/Kconfig b/sound/soc/meson/Kconfig
+> index d27e9180b453..8b6295283989 100644
+> --- a/sound/soc/meson/Kconfig
+> +++ b/sound/soc/meson/Kconfig
+> @@ -109,6 +109,15 @@ config SND_MESON_GX_SOUND_CARD
+>  	help
+>  	  Select Y or M to add support for the GXBB/GXL SoC sound card
+>  
+> +config SND_MESON_G12A_TOACODEC
+> +	tristate "Amlogic G12A To Internal DAC Control Support"
+> +	select SND_MESON_CODEC_GLUE
+> +	select REGMAP_MMIO
+> +	imply SND_SOC_MESON_T9015
+> +	help
+> +	  Select Y or M to add support for the internal audio DAC on the
+> +	  g12a SoC family
+> +
+>  config SND_MESON_G12A_TOHDMITX
+>  	tristate "Amlogic G12A To HDMI TX Control Support"
+>  	select REGMAP_MMIO
+> diff --git a/sound/soc/meson/Makefile b/sound/soc/meson/Makefile
+> index 3c9d48846816..e446bc980481 100644
+> --- a/sound/soc/meson/Makefile
+> +++ b/sound/soc/meson/Makefile
+> @@ -22,6 +22,7 @@ snd-soc-meson-axg-pdm-objs := axg-pdm.o
+>  snd-soc-meson-card-utils-objs := meson-card-utils.o
+>  snd-soc-meson-codec-glue-objs := meson-codec-glue.o
+>  snd-soc-meson-gx-sound-card-objs := gx-card.o
+> +snd-soc-meson-g12a-toacodec-objs := g12a-toacodec.o
+>  snd-soc-meson-g12a-tohdmitx-objs := g12a-tohdmitx.o
+>  snd-soc-meson-t9015-objs := t9015.o
+>  
+> @@ -40,5 +41,6 @@ obj-$(CONFIG_SND_MESON_AXG_PDM) += snd-soc-meson-axg-pdm.o
+>  obj-$(CONFIG_SND_MESON_CARD_UTILS) += snd-soc-meson-card-utils.o
+>  obj-$(CONFIG_SND_MESON_CODEC_GLUE) += snd-soc-meson-codec-glue.o
+>  obj-$(CONFIG_SND_MESON_GX_SOUND_CARD) += snd-soc-meson-gx-sound-card.o
+> +obj-$(CONFIG_SND_MESON_G12A_TOACODEC) += snd-soc-meson-g12a-toacodec.o
+>  obj-$(CONFIG_SND_MESON_G12A_TOHDMITX) += snd-soc-meson-g12a-tohdmitx.o
+>  obj-$(CONFIG_SND_SOC_MESON_T9015) += snd-soc-meson-t9015.o
+> diff --git a/sound/soc/meson/g12a-toacodec.c b/sound/soc/meson/g12a-toacodec.c
+> new file mode 100644
+> index 000000000000..719bbe9966b1
+> --- /dev/null
+> +++ b/sound/soc/meson/g12a-toacodec.c
+> @@ -0,0 +1,240 @@
+> +// SPDX-License-Identifier: GPL-2.0
+> +//
+> +// Copyright (c) 2020 BayLibre, SAS.
+> +// Author: Jerome Brunet <jbrunet@baylibre.com>
+> +
+> +#include <linux/bitfield.h>
+> +#include <linux/clk.h>
+> +#include <linux/module.h>
+> +#include <sound/pcm_params.h>
+> +#include <linux/regmap.h>
+> +#include <linux/regulator/consumer.h>
+> +#include <linux/reset.h>
+> +#include <sound/soc.h>
+> +#include <sound/soc-dai.h>
+> +
+> +#include <dt-bindings/sound/meson-g12a-toacodec.h>
+> +#include "axg-tdm.h"
+> +#include "meson-codec-glue.h"
+> +
+> +#define G12A_TOACODEC_DRV_NAME "g12a-toacodec"
+> +
+> +#define TOACODEC_CTRL0			0x0
+> +#define  CTRL0_ENABLE_SHIFT		31
+> +#define  CTRL0_DAT_SEL			GENMASK(15, 14)
+> +#define  CTRL0_LANE_SEL			12
+> +#define  CTRL0_LRCLK_SEL		GENMASK(9, 8)
+> +#define  CTRL0_BLK_CAP_INV		BIT(7)
+> +#define  CTRL0_BCLK_O_INV		BIT(6)
+> +#define  CTRL0_BCLK_SEL			GENMASK(5, 4)
+> +#define  CTRL0_MCLK_SEL			GENMASK(2, 0)
+> +
+> +#define TOACODEC_OUT_CHMAX		2
+> +
+> +static const char * const g12a_toacodec_mux_texts[] = {
+> +	"I2S A", "I2S B", "I2S C",
+> +};
+> +
+> +static int g12a_toacodec_get_mux(struct snd_soc_component *component)
+> +{
+> +	unsigned int val;
+> +
+> +	snd_soc_component_read(component, TOACODEC_CTRL0, &val);
+> +	return FIELD_GET(CTRL0_DAT_SEL, val);
+> +}
+> +
+> +static int g12a_toacodec_put_mux(struct snd_soc_component *component,
+> +				 unsigned int mux)
+> +{
+> +	snd_soc_component_update_bits(component, TOACODEC_CTRL0,
+> +				      CTRL0_DAT_SEL |
+> +				      CTRL0_LRCLK_SEL |
+> +				      CTRL0_BCLK_SEL,
+> +				      FIELD_PREP(CTRL0_DAT_SEL, mux) |
+> +				      FIELD_PREP(CTRL0_LRCLK_SEL, mux) |
+> +				      FIELD_PREP(CTRL0_BCLK_SEL, mux));
+> +
+> +	/*
+> +	 * FIXME:
+> +	 * On this soc, the glue gets the MCLK directly from the clock
+> +	 * controller instead of going the through the TDM interface.
+> +	 *
+> +	 * Here we assume interface A uses clock A, etc ... While it is
+> +	 * true for now, it could be different. Instead the glue should
+> +	 * find out the clock used by the interface and select the same
+> +	 * source. For that, we will need regmap backed clock mux which
+> +	 * is a work in progress
+> +	 */
+> +	snd_soc_component_update_bits(component, TOACODEC_CTRL0,
+> +				      CTRL0_MCLK_SEL,
+> +				      FIELD_PREP(CTRL0_MCLK_SEL, mux));
+> +
+> +	return 0;
+> +}
+> +
+> +static MESON_CODEC_GLUE_ENUM_DECL(g12a_toacodec_mux_glue,
+> +				  g12a_toacodec_mux_texts,
+> +				  g12a_toacodec_get_mux,
+> +				  g12a_toacodec_put_mux);
+> +
+> +static const struct snd_kcontrol_new g12a_toacodec_mux =
+> +	SOC_DAPM_ENUM_EXT("Source", g12a_toacodec_mux_enum,
+> +			  snd_soc_dapm_get_enum_double,
+> +			  g12a_toacodec_mux_put_enum);
+> +
+> +static const struct snd_kcontrol_new g12a_toacodec_out_enable =
+> +	SOC_DAPM_SINGLE_AUTODISABLE("Switch", TOACODEC_CTRL0,
+> +				    CTRL0_ENABLE_SHIFT, 1, 0);
+> +
+> +static const struct snd_soc_dapm_widget g12a_toacodec_widgets[] = {
+> +	SND_SOC_DAPM_MUX("SRC", SND_SOC_NOPM, 0, 0,
+> +			 &g12a_toacodec_mux),
+> +	SND_SOC_DAPM_SWITCH("OUT EN", SND_SOC_NOPM, 0, 0,
+> +			    &g12a_toacodec_out_enable),
+> +};
+> +
+> +static int g12a_toacodec_input_hw_params(struct snd_pcm_substream *substream,
+> +					 struct snd_pcm_hw_params *params,
+> +					 struct snd_soc_dai *dai)
+> +{
+> +	struct meson_codec_glue_input *data;
+> +	int ret;
+> +
+> +	ret = meson_codec_glue_input_hw_params(substream, params, dai);
+> +	if (ret)
+> +		return ret;
+> +
+> +	/* The glue will provide 1 lane out of the 4 to the output */
+> +	data = meson_codec_glue_input_get_data(dai);
+> +	data->params.channels_min = min_t(unsigned int, TOACODEC_OUT_CHMAX,
+> +					data->params.channels_min);
+> +	data->params.channels_max = min_t(unsigned int, TOACODEC_OUT_CHMAX,
+> +					data->params.channels_max);
+> +
+> +	return 0;
+> +}
+> +
+> +static const struct snd_soc_dai_ops g12a_toacodec_input_ops = {
+> +	.hw_params	= g12a_toacodec_input_hw_params,
+> +	.set_fmt	= meson_codec_glue_input_set_fmt,
+> +};
+> +
+> +static const struct snd_soc_dai_ops g12a_toacodec_output_ops = {
+> +	.startup	= meson_codec_glue_output_startup,
+> +};
+> +
+> +#define TOACODEC_STREAM(xname, xsuffix, xchmax)			\
+> +{								\
+> +	.stream_name	= xname " " xsuffix,			\
+> +	.channels_min	= 1,					\
+> +	.channels_max	= (xchmax),				\
+> +	.rate_min       = 5512,					\
+> +	.rate_max	= 192000,				\
+> +	.formats	= AXG_TDM_FORMATS,			\
+> +}
+> +
+> +#define TOACODEC_INPUT(xname, xid) {					\
+> +	.name = xname,							\
+> +	.id = (xid),							\
+> +	.playback = TOACODEC_STREAM(xname, "Playback", 8),		\
+> +	.ops = &g12a_toacodec_input_ops,				\
+> +	.probe = meson_codec_glue_input_dai_probe,			\
+> +	.remove = meson_codec_glue_input_dai_remove,			\
+> +}
+> +
+> +#define TOACODEC_OUTPUT(xname, xid) {					\
+> +	.name = xname,							\
+> +	.id = (xid),							\
+> +	.capture = TOACODEC_STREAM(xname, "Capture", TOACODEC_OUT_CHMAX), \
+> +	.ops = &g12a_toacodec_output_ops,				\
+> +}
+> +
+> +static struct snd_soc_dai_driver g12a_toacodec_dai_drv[] = {
+> +	TOACODEC_INPUT("IN A", TOACODEC_IN_A),
+> +	TOACODEC_INPUT("IN B", TOACODEC_IN_B),
+> +	TOACODEC_INPUT("IN C", TOACODEC_IN_C),
+> +	TOACODEC_OUTPUT("OUT", TOACODEC_OUT),
+> +};
+> +
+> +static int g12a_toacodec_component_probe(struct snd_soc_component *c)
+> +{
+> +	/* Initialize the static clock parameters */
+> +	return snd_soc_component_write(c, TOACODEC_CTRL0,
+> +				       CTRL0_BLK_CAP_INV);
+> +}
+> +
+> +static const struct snd_soc_dapm_route g12a_toacodec_routes[] = {
+> +	{ "SRC", "I2S A", "IN A Playback" },
+> +	{ "SRC", "I2S B", "IN B Playback" },
+> +	{ "SRC", "I2S C", "IN C Playback" },
+> +	{ "OUT EN", "Switch", "SRC" },
+> +	{ "OUT Capture", NULL, "OUT EN" },
+> +};
+> +
+> +static const struct snd_kcontrol_new g12a_toacodec_controls[] = {
+> +	SOC_SINGLE("Lane Select", TOACODEC_CTRL0, CTRL0_LANE_SEL, 3, 0),
+> +};
+> +
+> +static const struct snd_soc_component_driver g12a_toacodec_component_drv = {
+> +	.probe			= g12a_toacodec_component_probe,
+> +	.controls		= g12a_toacodec_controls,
+> +	.num_controls		= ARRAY_SIZE(g12a_toacodec_controls),
+> +	.dapm_widgets		= g12a_toacodec_widgets,
+> +	.num_dapm_widgets	= ARRAY_SIZE(g12a_toacodec_widgets),
+> +	.dapm_routes		= g12a_toacodec_routes,
+> +	.num_dapm_routes	= ARRAY_SIZE(g12a_toacodec_routes),
+> +	.endianness		= 1,
+> +	.non_legacy_dai_naming	= 1,
+> +};
+> +
+> +static const struct regmap_config g12a_toacodec_regmap_cfg = {
+> +	.reg_bits	= 32,
+> +	.val_bits	= 32,
+> +	.reg_stride	= 4,
+> +};
+> +
+> +static const struct of_device_id g12a_toacodec_of_match[] = {
+> +	{ .compatible = "amlogic,g12a-toacodec", },
+> +	{}
+> +};
+> +MODULE_DEVICE_TABLE(of, g12a_toacodec_of_match);
+> +
+> +static int g12a_toacodec_probe(struct platform_device *pdev)
+> +{
+> +	struct device *dev = &pdev->dev;
+> +	void __iomem *regs;
+> +	struct regmap *map;
+> +	int ret;
+> +
+> +	ret = device_reset(dev);
+> +	if (ret)
+> +		return ret;
+> +
+> +	regs = devm_platform_ioremap_resource(pdev, 0);
+> +	if (IS_ERR(regs))
+> +		return PTR_ERR(regs);
+> +
+> +	map = devm_regmap_init_mmio(dev, regs, &g12a_toacodec_regmap_cfg);
+> +	if (IS_ERR(map)) {
+> +		dev_err(dev, "failed to init regmap: %ld\n",
+> +			PTR_ERR(map));
+> +		return PTR_ERR(map);
+> +	}
+> +
+> +	return devm_snd_soc_register_component(dev,
+> +			&g12a_toacodec_component_drv, g12a_toacodec_dai_drv,
+> +			ARRAY_SIZE(g12a_toacodec_dai_drv));
+> +}
+> +
+> +static struct platform_driver g12a_toacodec_pdrv = {
+> +	.driver = {
+> +		.name = G12A_TOACODEC_DRV_NAME,
+> +		.of_match_table = g12a_toacodec_of_match,
+> +	},
+> +	.probe = g12a_toacodec_probe,
+> +};
+> +module_platform_driver(g12a_toacodec_pdrv);
+> +
+> +MODULE_AUTHOR("Jerome Brunet <jbrunet@baylibre.com>");
+> +MODULE_DESCRIPTION("Amlogic G12a To Internal DAC Codec Driver");
+> +MODULE_LICENSE("GPL v2");
+
