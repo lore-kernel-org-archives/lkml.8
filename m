@@ -5,50 +5,49 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D5C51C35640
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 08:29:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 57DF3C35640
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 08:29:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A4CD120679
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 08:29:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2EF7C20679
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 08:29:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582273751;
-	bh=GgRpWvLJvUfADI6jpLR7sdNqSk1r0qN4laNyfzj7NUw=;
+	s=default; t=1582273761;
+	bh=gAkfpv4ncOrLT6/j6G/W8e8xXZzuNMbpqDoVeHHi7gw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=XFSoldfjk2vc9h22osSx138HLey5tPP/8TQ1PSvv4LxRLGiLmU8ZyfooZIbIq0w7p
-	 WQ5wFVMFNP9e6yy4izH6/CFQirYydccRAc135xCfFyNG+pZdE5OZqOB32Xw17VAJ1u
-	 2p0LWS3NSlxxrRKAD7CSvqAarf0ttxCvi5bB/r8E=
+	b=T5H4MJsw/jyEDUokSMLLxxYpn1d4TzZ/wT6pHzKGa8xChiayIjPZ/un+FC/rompxT
+	 w5hlXXFtbox6wBZAnGQPAhLd4iWc5fUh9F8TYh5MU1DkYOj8lHUmbl2lJiB2mizwmc
+	 fyd6K2zJvtBQbvpPKi/BTspya/rXSDNYS7Fm8jVY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388152AbgBUI3K (ORCPT
+        id S2388344AbgBUI3U (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Feb 2020 03:29:10 -0500
-Received: from mail.kernel.org ([198.145.29.99]:56122 "EHLO mail.kernel.org"
+        Fri, 21 Feb 2020 03:29:20 -0500
+Received: from mail.kernel.org ([198.145.29.99]:55626 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387802AbgBUISR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Feb 2020 03:18:17 -0500
+        id S2387753AbgBUIR5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 21 Feb 2020 03:17:57 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 15E7724692;
-        Fri, 21 Feb 2020 08:18:15 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 95B0B24689;
+        Fri, 21 Feb 2020 08:17:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1582273096;
-        bh=GgRpWvLJvUfADI6jpLR7sdNqSk1r0qN4laNyfzj7NUw=;
+        s=default; t=1582273077;
+        bh=gAkfpv4ncOrLT6/j6G/W8e8xXZzuNMbpqDoVeHHi7gw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=VoY3mrXuf2cot9SFT0nNhU2zZfFjd9IjVHVIlBo8j5iA+fjB6cYHC0F5FMn26OIg0
-         4MY8CozmpAtAMcIwr5KWgSH3TFTmMs6Y39R+IdKJrNC+7wqXsZdQCMNeVM31ii9Yoj
-         /Jhqh7Ik6Fo/9Wgj5b9j3LUyKcZvultMTimkmbdk=
+        b=JXemThigWVclufvGL6XqWBWMypLWd8IBRxtXxx0BqBOVBiVAstYoJeYkLB/+jzf2J
+         fiRt+F3ghpzD4kQx15lY60IO1KaZkmR01y/CDwvfVoaJIemarBDDlfleWf7tn7utXR
+         dnzWFHq0eVyJhThSW25veVAfzZwqOJBHNEq4XD4A=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Paul Kocialkowski <paul.kocialkowski@bootlin.com>,
-        Patrik Jakobsson <patrik.r.jakobsson@gmail.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 010/191] drm/gma500: Fixup fbdev stolen size usage evaluation
-Date:   Fri, 21 Feb 2020 08:39:43 +0100
-Message-Id: <20200221072252.304048436@linuxfoundation.org>
+        stable@vger.kernel.org, Christopher Head <chead@chead.ca>,
+        Arvind Sankar <nivedita@alum.mit.edu>,
+        Borislav Petkov <bp@suse.de>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.19 037/191] x86/sysfb: Fix check for bad VRAM size
+Date:   Fri, 21 Feb 2020 08:40:10 +0100
+Message-Id: <20200221072256.070751725@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200221072250.732482588@linuxfoundation.org>
 References: <20200221072250.732482588@linuxfoundation.org>
@@ -61,59 +60,48 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Paul Kocialkowski <paul.kocialkowski@bootlin.com>
+From: Arvind Sankar <nivedita@alum.mit.edu>
 
-[ Upstream commit fd1a5e521c3c083bb43ea731aae0f8b95f12b9bd ]
+[ Upstream commit dacc9092336be20b01642afe1a51720b31f60369 ]
 
-psbfb_probe performs an evaluation of the required size from the stolen
-GTT memory, but gets it wrong in two distinct ways:
-- The resulting size must be page-size-aligned;
-- The size to allocate is derived from the surface dimensions, not the fb
-  dimensions.
+When checking whether the reported lfb_size makes sense, the height
+* stride result is page-aligned before seeing whether it exceeds the
+reported size.
 
-When two connectors are connected with different modes, the smallest will
-be stored in the fb dimensions, but the size that needs to be allocated must
-match the largest (surface) dimensions. This is what is used in the actual
-allocation code.
+This doesn't work if height * stride is not an exact number of pages.
+For example, as reported in the kernel bugzilla below, an 800x600x32 EFI
+framebuffer gets skipped because of this.
 
-Fix this by correcting the evaluation to conform to the two points above.
-It allows correctly switching to 16bpp when one connector is e.g. 1920x1080
-and the other is 1024x768.
+Move the PAGE_ALIGN to after the check vs size.
 
-Signed-off-by: Paul Kocialkowski <paul.kocialkowski@bootlin.com>
-Signed-off-by: Patrik Jakobsson <patrik.r.jakobsson@gmail.com>
-Link: https://patchwork.freedesktop.org/patch/msgid/20191107153048.843881-1-paul.kocialkowski@bootlin.com
+Reported-by: Christopher Head <chead@chead.ca>
+Tested-by: Christopher Head <chead@chead.ca>
+Signed-off-by: Arvind Sankar <nivedita@alum.mit.edu>
+Signed-off-by: Borislav Petkov <bp@suse.de>
+Link: https://bugzilla.kernel.org/show_bug.cgi?id=206051
+Link: https://lkml.kernel.org/r/20200107230410.2291947-1-nivedita@alum.mit.edu
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/gpu/drm/gma500/framebuffer.c | 8 ++++++--
- 1 file changed, 6 insertions(+), 2 deletions(-)
+ arch/x86/kernel/sysfb_simplefb.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/gpu/drm/gma500/framebuffer.c b/drivers/gpu/drm/gma500/framebuffer.c
-index adefae58b5fcd..b4035ef72af8a 100644
---- a/drivers/gpu/drm/gma500/framebuffer.c
-+++ b/drivers/gpu/drm/gma500/framebuffer.c
-@@ -480,6 +480,7 @@ static int psbfb_probe(struct drm_fb_helper *helper,
- 		container_of(helper, struct psb_fbdev, psb_fb_helper);
- 	struct drm_device *dev = psb_fbdev->psb_fb_helper.dev;
- 	struct drm_psb_private *dev_priv = dev->dev_private;
-+	unsigned int fb_size;
- 	int bytespp;
+diff --git a/arch/x86/kernel/sysfb_simplefb.c b/arch/x86/kernel/sysfb_simplefb.c
+index 85195d447a922..f3215346e47fd 100644
+--- a/arch/x86/kernel/sysfb_simplefb.c
++++ b/arch/x86/kernel/sysfb_simplefb.c
+@@ -94,11 +94,11 @@ __init int create_simplefb(const struct screen_info *si,
+ 	if (si->orig_video_isVGA == VIDEO_TYPE_VLFB)
+ 		size <<= 16;
+ 	length = mode->height * mode->stride;
+-	length = PAGE_ALIGN(length);
+ 	if (length > size) {
+ 		printk(KERN_WARNING "sysfb: VRAM smaller than advertised\n");
+ 		return -EINVAL;
+ 	}
++	length = PAGE_ALIGN(length);
  
- 	bytespp = sizes->surface_bpp / 8;
-@@ -489,8 +490,11 @@ static int psbfb_probe(struct drm_fb_helper *helper,
- 	/* If the mode will not fit in 32bit then switch to 16bit to get
- 	   a console on full resolution. The X mode setting server will
- 	   allocate its own 32bit GEM framebuffer */
--	if (ALIGN(sizes->fb_width * bytespp, 64) * sizes->fb_height >
--	                dev_priv->vram_stolen_size) {
-+	fb_size = ALIGN(sizes->surface_width * bytespp, 64) *
-+		  sizes->surface_height;
-+	fb_size = ALIGN(fb_size, PAGE_SIZE);
-+
-+	if (fb_size > dev_priv->vram_stolen_size) {
-                 sizes->surface_bpp = 16;
-                 sizes->surface_depth = 16;
-         }
+ 	/* setup IORESOURCE_MEM as framebuffer memory */
+ 	memset(&res, 0, sizeof(res));
 -- 
 2.20.1
 
