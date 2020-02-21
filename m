@@ -7,48 +7,48 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4133BC35640
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 08:22:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 82E66C35641
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 08:22:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0A3282469C
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 08:22:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 58758206ED
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 08:22:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582273372;
-	bh=Vo9ppF8tbSkSkbJ7l6Xs3X6/KUsvF3UdevzqhdqS7/Y=;
+	s=default; t=1582273375;
+	bh=Ces36Xuxm/J0MsYy3dOMzXQo+/rdaggAr3cJHw5nClQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=1XH3ApIe0RgZGgcf14Mss6tE/wED2jWsdLDU/4buENppCSkk8+ASwcXBcb0hG2B02
-	 7tT2W95KoIQOnATWYhzSjum79nqXWN8PkmpQfMi4JHgtYO5eYTher18/9QyCr16uAJ
-	 IHDhnuld9b5RaSOKUmqeQPrQui68rbb6mXRPHex0=
+	b=CAXXWjLA91+CeUshdaW6vGmXYMh6rywuW1J1bG3ifeaxhYNskabJ1fSmV+25EsXWn
+	 oiiJqFsGTiFO7PgF7YjNrVvaLSBVEIstcPQGKlyxBQtoyp2ORb8RRLuinPi7peA+ek
+	 fbcHqTewrWyYHj378zjpwkrPThYEItAcpoPd+2ek=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388374AbgBUIWu (ORCPT
+        id S2388383AbgBUIWy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Feb 2020 03:22:50 -0500
-Received: from mail.kernel.org ([198.145.29.99]:34506 "EHLO mail.kernel.org"
+        Fri, 21 Feb 2020 03:22:54 -0500
+Received: from mail.kernel.org ([198.145.29.99]:34572 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388363AbgBUIWr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Feb 2020 03:22:47 -0500
+        id S1730138AbgBUIWu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 21 Feb 2020 03:22:50 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id AF57D2467D;
-        Fri, 21 Feb 2020 08:22:46 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3ACFD2469C;
+        Fri, 21 Feb 2020 08:22:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1582273367;
-        bh=Vo9ppF8tbSkSkbJ7l6Xs3X6/KUsvF3UdevzqhdqS7/Y=;
+        s=default; t=1582273369;
+        bh=Ces36Xuxm/J0MsYy3dOMzXQo+/rdaggAr3cJHw5nClQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=BuGGUvqUjsJmg5ifnLQr28KIyhUF26Wh9e59OvEdWMyOETeHWqeNmqUjSB3pcXdCs
-         RswMfu8p0A6UR9dIRneRhEI6SUZonC1Tq0cfy3QUGnrkYgGqMkEsdmr3C5O0lWyVE+
-         5r1PzpJfn9ocz+X6Z84tX8DeaC3epDPvHpDJD0m4=
+        b=WBn3pA5RGVukl3EJEDoDcciHrX0KdJqPNFA5/hETzuZL1WfzSc21FPEXViSIW5Gju
+         hNiag6zWDijY7hTsIxi7miozUoDj1V28yzDhUYsXLSYxSrSrY+R9qaNVJ3nE1W0fIZ
+         wJswsSitX7uEMNbe3a1N/rytwU37qacg1qhWmVdA=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Dan Carpenter <dan.carpenter@oracle.com>,
-        Josef Bacik <josef@toxicpanda.com>,
-        David Sterba <dsterba@suse.com>,
+        stable@vger.kernel.org,
+        Navid Emamdoost <navid.emamdoost@gmail.com>,
+        Thomas Hellstrom <thellstrom@vmware.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 145/191] btrfs: safely advance counter when looking up bio csums
-Date:   Fri, 21 Feb 2020 08:41:58 +0100
-Message-Id: <20200221072308.005607611@linuxfoundation.org>
+Subject: [PATCH 4.19 128/191] drm/vmwgfx: prevent memory leak in vmw_cmdbuf_res_add
+Date:   Fri, 21 Feb 2020 08:41:41 +0100
+Message-Id: <20200221072306.267512292@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200221072250.732482588@linuxfoundation.org>
 References: <20200221072250.732482588@linuxfoundation.org>
@@ -61,51 +61,38 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: David Sterba <dsterba@suse.com>
+From: Navid Emamdoost <navid.emamdoost@gmail.com>
 
-[ Upstream commit 4babad10198fa73fe73239d02c2e99e3333f5f5c ]
+[ Upstream commit 40efb09a7f53125719e49864da008495e39aaa1e ]
 
-Dan's smatch tool reports
+In vmw_cmdbuf_res_add if drm_ht_insert_item fails the allocated memory
+for cres should be released.
 
-  fs/btrfs/file-item.c:295 btrfs_lookup_bio_sums()
-  warn: should this be 'count == -1'
-
-which points to the while (count--) loop. With count == 0 the check
-itself could decrement it to -1. There's a WARN_ON a few lines below
-that has never been seen in practice though.
-
-It turns out that the value of page_bytes_left matches the count (by
-sectorsize multiples). The loop never reaches the state where count
-would go to -1, because page_bytes_left == 0 is found first and this
-breaks out.
-
-For clarity, use only plain check on count (and only for positive
-value), decrement safely inside the loop. Any other discrepancy after
-the whole bio list processing should be reported by the exising
-WARN_ON_ONCE as well.
-
-Reported-by: Dan Carpenter <dan.carpenter@oracle.com>
-Reviewed-by: Josef Bacik <josef@toxicpanda.com>
-Signed-off-by: David Sterba <dsterba@suse.com>
+Fixes: 18e4a4669c50 ("drm/vmwgfx: Fix compat shader namespace")
+Signed-off-by: Navid Emamdoost <navid.emamdoost@gmail.com>
+Reviewed-by: Thomas Hellstrom <thellstrom@vmware.com>
+Signed-off-by: Thomas Hellstrom <thellstrom@vmware.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/btrfs/file-item.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ drivers/gpu/drm/vmwgfx/vmwgfx_cmdbuf_res.c | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
-diff --git a/fs/btrfs/file-item.c b/fs/btrfs/file-item.c
-index 4cf2817ab1202..f9e280d0b44f3 100644
---- a/fs/btrfs/file-item.c
-+++ b/fs/btrfs/file-item.c
-@@ -275,7 +275,8 @@ found:
- 		csum += count * csum_size;
- 		nblocks -= count;
- next:
--		while (count--) {
-+		while (count > 0) {
-+			count--;
- 			disk_bytenr += fs_info->sectorsize;
- 			offset += fs_info->sectorsize;
- 			page_bytes_left -= fs_info->sectorsize;
+diff --git a/drivers/gpu/drm/vmwgfx/vmwgfx_cmdbuf_res.c b/drivers/gpu/drm/vmwgfx/vmwgfx_cmdbuf_res.c
+index 3b75af9bf85f3..f27bd7cff579d 100644
+--- a/drivers/gpu/drm/vmwgfx/vmwgfx_cmdbuf_res.c
++++ b/drivers/gpu/drm/vmwgfx/vmwgfx_cmdbuf_res.c
+@@ -210,8 +210,10 @@ int vmw_cmdbuf_res_add(struct vmw_cmdbuf_res_manager *man,
+ 
+ 	cres->hash.key = user_key | (res_type << 24);
+ 	ret = drm_ht_insert_item(&man->resources, &cres->hash);
+-	if (unlikely(ret != 0))
++	if (unlikely(ret != 0)) {
++		kfree(cres);
+ 		goto out_invalid_key;
++	}
+ 
+ 	cres->state = VMW_CMDBUF_RES_ADD;
+ 	cres->res = vmw_resource_reference(res);
 -- 
 2.20.1
 
