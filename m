@@ -2,87 +2,225 @@ Return-Path: <SRS0=1210=4J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.3 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C5423C35641
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 08:50:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 656AEC35642
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 08:52:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9A71124670
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 08:50:56 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="vA0pGGNS"
+	by mail.kernel.org (Postfix) with ESMTP id 3E0F32067D
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 08:52:12 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732478AbgBUIuy (ORCPT
+        id S1728169AbgBUIwL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Feb 2020 03:50:54 -0500
-Received: from mail27.static.mailgun.info ([104.130.122.27]:19505 "EHLO
-        mail27.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S2388898AbgBUIut (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Feb 2020 03:50:49 -0500
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1582275049; h=References: In-Reply-To: Message-Id: Date:
- Subject: Cc: To: From: Sender;
- bh=mtFFCabUREGLYB41btneKfhLYC1nvRmrhWrz/tudsqg=; b=vA0pGGNSS0jVLxAlcCsEoj3RDi7LCMi1KfxD98dRyNYiCdf/yd7Jcw6AHs2fb0IJqqGF07Dn
- kIwBTlq4ZW5ZA95Ttlxqy8FPupoc4SRb2ItKIGf+yfIBP6fe0V1cfkAqpwrNCQt+4yWkqIsi
- lOnBOqYrdBCOtf+zA+clYUBz74M=
-X-Mailgun-Sending-Ip: 104.130.122.27
-X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
-Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
- by mxa.mailgun.org with ESMTP id 5e4f99e1.7fd110a1f068-smtp-out-n03;
- Fri, 21 Feb 2020 08:50:41 -0000 (UTC)
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id 83FA8C447A4; Fri, 21 Feb 2020 08:50:41 +0000 (UTC)
-Received: from mkshah-linux.qualcomm.com (blr-c-bdr-fw-01_GlobalNAT_AllZones-Outside.qualcomm.com [103.229.19.19])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: mkshah)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id D80C3C4479D;
-        Fri, 21 Feb 2020 08:50:36 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org D80C3C4479D
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=mkshah@codeaurora.org
-From:   Maulik Shah <mkshah@codeaurora.org>
-To:     swboyd@chromium.org, mka@chromium.org, evgreen@chromium.org,
-        bjorn.andersson@linaro.org
-Cc:     linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
-        agross@kernel.org, dianders@chromium.org, rnayak@codeaurora.org,
-        ilina@codeaurora.org, lsrao@codeaurora.org,
-        Maulik Shah <mkshah@codeaurora.org>
-Subject: [PATCH v2 4/4] arm64: defconfig: Enable SoC sleep stats driver for Qualcomm
-Date:   Fri, 21 Feb 2020 14:19:46 +0530
-Message-Id: <1582274986-17490-5-git-send-email-mkshah@codeaurora.org>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1582274986-17490-1-git-send-email-mkshah@codeaurora.org>
-References: <1582274986-17490-1-git-send-email-mkshah@codeaurora.org>
+        Fri, 21 Feb 2020 03:52:11 -0500
+Received: from mx2.suse.de ([195.135.220.15]:57720 "EHLO mx2.suse.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726930AbgBUIwK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 21 Feb 2020 03:52:10 -0500
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx2.suse.de (Postfix) with ESMTP id 7330BAAB8;
+        Fri, 21 Feb 2020 08:52:06 +0000 (UTC)
+Subject: Re: [PATCH] drm/hisilicon: Fixed pcie resource conflict using the
+ general API
+To:     Xinliang Liu <xinliang.liu@linaro.org>,
+        Tian Tao <tiantao6@hisilicon.com>
+Cc:     puck.chen@hisilicon.com, airlied@linux.ie,
+        Daniel Vetter <daniel@ffwll.ch>, kraxel@redhat.com,
+        alexander.deucher@amd.com, tglx@linutronix.de,
+        dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org,
+        linuxarm@huawei.com
+References: <1582264523-61170-1-git-send-email-tiantao6@hisilicon.com>
+ <CAKoKPbztX8--gWgLDYJFQX1=Wf1jiFKx+H2_RFN90fxOpr_RdQ@mail.gmail.com>
+From:   Thomas Zimmermann <tzimmermann@suse.de>
+Autocrypt: addr=tzimmermann@suse.de; keydata=
+ mQENBFs50uABCADEHPidWt974CaxBVbrIBwqcq/WURinJ3+2WlIrKWspiP83vfZKaXhFYsdg
+ XH47fDVbPPj+d6tQrw5lPQCyqjwrCPYnq3WlIBnGPJ4/jreTL6V+qfKRDlGLWFjZcsrPJGE0
+ BeB5BbqP5erN1qylK9i3gPoQjXGhpBpQYwRrEyQyjuvk+Ev0K1Jc5tVDeJAuau3TGNgah4Yc
+ hdHm3bkPjz9EErV85RwvImQ1dptvx6s7xzwXTgGAsaYZsL8WCwDaTuqFa1d1jjlaxg6+tZsB
+ 9GluwvIhSezPgnEmimZDkGnZRRSFiGP8yjqTjjWuf0bSj5rUnTGiyLyRZRNGcXmu6hjlABEB
+ AAG0J1Rob21hcyBaaW1tZXJtYW5uIDx0emltbWVybWFubkBzdXNlLmRlPokBVAQTAQgAPhYh
+ BHIX+6yM6c9jRKFo5WgNwR1TC3ojBQJbOdLgAhsDBQkDwmcABQsJCAcCBhUKCQgLAgQWAgMB
+ Ah4BAheAAAoJEGgNwR1TC3ojR80H/jH+vYavwQ+TvO8ksXL9JQWc3IFSiGpuSVXLCdg62AmR
+ irxW+qCwNncNQyb9rd30gzdectSkPWL3KSqEResBe24IbA5/jSkPweJasgXtfhuyoeCJ6PXo
+ clQQGKIoFIAEv1s8l0ggPZswvCinegl1diyJXUXmdEJRTWYAtxn/atut1o6Giv6D2qmYbXN7
+ mneMC5MzlLaJKUtoH7U/IjVw1sx2qtxAZGKVm4RZxPnMCp9E1MAr5t4dP5gJCIiqsdrVqI6i
+ KupZstMxstPU//azmz7ZWWxT0JzgJqZSvPYx/SATeexTYBP47YFyri4jnsty2ErS91E6H8os
+ Bv6pnSn7eAq5AQ0EWznS4AEIAMYmP4M/V+T5RY5at/g7rUdNsLhWv1APYrh9RQefODYHrNRH
+ UE9eosYbT6XMryR9hT8XlGOYRwKWwiQBoWSDiTMo/Xi29jUnn4BXfI2px2DTXwc22LKtLAgT
+ RjP+qbU63Y0xnQN29UGDbYgyyK51DW3H0If2a3JNsheAAK+Xc9baj0LGIc8T9uiEWHBnCH+R
+ dhgATnWWGKdDegUR5BkDfDg5O/FISymJBHx2Dyoklv5g4BzkgqTqwmaYzsl8UxZKvbaxq0zb
+ ehDda8lvhFXodNFMAgTLJlLuDYOGLK2AwbrS3Sp0AEbkpdJBb44qVlGm5bApZouHeJ/+n+7r
+ 12+lqdsAEQEAAYkBPAQYAQgAJhYhBHIX+6yM6c9jRKFo5WgNwR1TC3ojBQJbOdLgAhsMBQkD
+ wmcAAAoJEGgNwR1TC3ojpfcIAInwP5OlcEKokTnHCiDTz4Ony4GnHRP2fXATQZCKxmu4AJY2
+ h9ifw9Nf2TjCZ6AMvC3thAN0rFDj55N9l4s1CpaDo4J+0fkrHuyNacnT206CeJV1E7NYntxU
+ n+LSiRrOdywn6erjxRi9EYTVLCHcDhBEjKmFZfg4AM4GZMWX1lg0+eHbd5oL1as28WvvI/uI
+ aMyV8RbyXot1r/8QLlWldU3NrTF5p7TMU2y3ZH2mf5suSKHAMtbE4jKJ8ZHFOo3GhLgjVrBW
+ HE9JXO08xKkgD+w6v83+nomsEuf6C6LYrqY/tsZvyEX6zN8CtirPdPWu/VXNRYAl/lat7lSI
+ 3H26qrE=
+Message-ID: <e65e3728-406e-ff9c-a8ef-6829666fa573@suse.de>
+Date:   Fri, 21 Feb 2020 09:52:01 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.1
+MIME-Version: 1.0
+In-Reply-To: <CAKoKPbztX8--gWgLDYJFQX1=Wf1jiFKx+H2_RFN90fxOpr_RdQ@mail.gmail.com>
+Content-Type: multipart/signed; micalg=pgp-sha256;
+ protocol="application/pgp-signature";
+ boundary="iynYgojkQVb3wztvybX8DcPKnDzpVeDTz"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Enable SoC sleep stats driver. The driver gives statistics for
-various SoC level low power modes.
+This is an OpenPGP/MIME signed message (RFC 4880 and 3156)
+--iynYgojkQVb3wztvybX8DcPKnDzpVeDTz
+Content-Type: multipart/mixed; boundary="dWd4QpDv00Fahsdc4n185aYcPsdrURE5E";
+ protected-headers="v1"
+From: Thomas Zimmermann <tzimmermann@suse.de>
+To: Xinliang Liu <xinliang.liu@linaro.org>, Tian Tao <tiantao6@hisilicon.com>
+Cc: puck.chen@hisilicon.com, airlied@linux.ie, Daniel Vetter
+ <daniel@ffwll.ch>, kraxel@redhat.com, alexander.deucher@amd.com,
+ tglx@linutronix.de, dri-devel@lists.freedesktop.org,
+ linux-kernel@vger.kernel.org, linuxarm@huawei.com
+Message-ID: <e65e3728-406e-ff9c-a8ef-6829666fa573@suse.de>
+Subject: Re: [PATCH] drm/hisilicon: Fixed pcie resource conflict using the
+ general API
+References: <1582264523-61170-1-git-send-email-tiantao6@hisilicon.com>
+ <CAKoKPbztX8--gWgLDYJFQX1=Wf1jiFKx+H2_RFN90fxOpr_RdQ@mail.gmail.com>
+In-Reply-To: <CAKoKPbztX8--gWgLDYJFQX1=Wf1jiFKx+H2_RFN90fxOpr_RdQ@mail.gmail.com>
 
-Signed-off-by: Maulik Shah <mkshah@codeaurora.org>
----
- arch/arm64/configs/defconfig | 1 +
- 1 file changed, 1 insertion(+)
+--dWd4QpDv00Fahsdc4n185aYcPsdrURE5E
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: quoted-printable
 
-diff --git a/arch/arm64/configs/defconfig b/arch/arm64/configs/defconfig
-index 0f21288..c63399d 100644
---- a/arch/arm64/configs/defconfig
-+++ b/arch/arm64/configs/defconfig
-@@ -767,6 +767,7 @@ CONFIG_QCOM_SMD_RPM=y
- CONFIG_QCOM_SMP2P=y
- CONFIG_QCOM_SMSM=y
- CONFIG_QCOM_SOCINFO=m
-+CONFIG_QCOM_SOC_SLEEP_STATS=y
- CONFIG_ARCH_R8A774A1=y
- CONFIG_ARCH_R8A774B1=y
- CONFIG_ARCH_R8A774C0=y
--- 
-QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member
-of Code Aurora Forum, hosted by The Linux Foundation
+Hi
+
+Am 21.02.20 um 08:06 schrieb Xinliang Liu:
+> Hi tao,
+> Are you sending a wrong patch?
+> Function hibmc_remove_framebuffers is added by your prior reviewing pat=
+ch.
+> Please send patch based on=C2=A0drm-misc-next branch[1] or linux-next.
+
+There's drm_fb_helper_remove_conflicting_pci_framebuffers() which
+already implements the functionality. I asked to try using it instead of
+creating an own implementation.
+
+Best regards
+Thomas
+
+>=20
+> Thanks,
+> -Xinliang
+>=20
+> [1]=C2=A0https://anongit.freedesktop.org/git/drm-misc.git
+>=20
+> On Fri, 21 Feb 2020 at 13:56, Tian Tao <tiantao6@hisilicon.com
+> <mailto:tiantao6@hisilicon.com>> wrote:
+>=20
+>     the kernel provide the drm_fb_helper_remove_conflicting_pci_framebu=
+ffer
+>     to remvoe the pcie resource conflict,there is no need to driver it
+>     again.
+>=20
+>     Signed-off-by: Tian Tao <tiantao6@hisilicon.com
+>     <mailto:tiantao6@hisilicon.com>>
+>     ---
+>     =C2=A0drivers/gpu/drm/hisilicon/hibmc/hibmc_drm_drv.c | 22
+>     +++++-----------------
+>     =C2=A01 file changed, 5 insertions(+), 17 deletions(-)
+>=20
+>     diff --git a/drivers/gpu/drm/hisilicon/hibmc/hibmc_drm_drv.c
+>     b/drivers/gpu/drm/hisilicon/hibmc/hibmc_drm_drv.c
+>     index 7ebe831..0f7dba7 100644
+>     --- a/drivers/gpu/drm/hisilicon/hibmc/hibmc_drm_drv.c
+>     +++ b/drivers/gpu/drm/hisilicon/hibmc/hibmc_drm_drv.c
+>     @@ -47,22 +47,6 @@ static irqreturn_t hibmc_drm_interrupt(int irq,
+>     void *arg)
+>     =C2=A0 =C2=A0 =C2=A0 =C2=A0 return IRQ_HANDLED;
+>     =C2=A0}
+>=20
+>     -static void hibmc_remove_framebuffers(struct pci_dev *pdev)
+>     -{
+>     -=C2=A0 =C2=A0 =C2=A0 =C2=A0struct apertures_struct *ap;
+>     -
+>     -=C2=A0 =C2=A0 =C2=A0 =C2=A0ap =3D alloc_apertures(1);
+>     -=C2=A0 =C2=A0 =C2=A0 =C2=A0if (!ap)
+>     -=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0return;
+>     -
+>     -=C2=A0 =C2=A0 =C2=A0 =C2=A0ap->ranges[0].base =3D pci_resource_sta=
+rt(pdev, 0);
+>     -=C2=A0 =C2=A0 =C2=A0 =C2=A0ap->ranges[0].size =3D pci_resource_len=
+(pdev, 0);
+>     -
+>     -=C2=A0 =C2=A0 =C2=A0 =C2=A0drm_fb_helper_remove_conflicting_frameb=
+uffers(ap,
+>     "hibmcdrmfb", false);
+>     -
+>     -=C2=A0 =C2=A0 =C2=A0 =C2=A0kfree(ap);
+>     -}
+>     -
+>     =C2=A0static struct drm_driver hibmc_driver =3D {
+>     =C2=A0 =C2=A0 =C2=A0 =C2=A0 .driver_features=C2=A0 =C2=A0 =C2=A0 =C2=
+=A0 =3D DRIVER_GEM | DRIVER_MODESET |
+>     DRIVER_ATOMIC,
+>     =C2=A0 =C2=A0 =C2=A0 =C2=A0 .fops=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0=
+ =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0=3D &hibmc_fops,
+>     @@ -343,7 +327,11 @@ static int hibmc_pci_probe(struct pci_dev *pde=
+v,
+>     =C2=A0 =C2=A0 =C2=A0 =C2=A0 struct drm_device *dev;
+>     =C2=A0 =C2=A0 =C2=A0 =C2=A0 int ret;
+>=20
+>     -=C2=A0 =C2=A0 =C2=A0 =C2=A0hibmc_remove_framebuffers(pdev);
+>     +=C2=A0 =C2=A0 =C2=A0 =C2=A0ret =3D drm_fb_helper_remove_conflictin=
+g_pci_framebuffers(pdev,
+>     +=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=
+=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0=
+ =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=
+=A0
+>     =C2=A0"hibmcdrmfb");
+>     +=C2=A0 =C2=A0 =C2=A0 =C2=A0if (ret)
+>     +=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0return ret;=
+
+>     +
+>=20
+>     =C2=A0 =C2=A0 =C2=A0 =C2=A0 dev =3D drm_dev_alloc(&hibmc_driver, &p=
+dev->dev);
+>     =C2=A0 =C2=A0 =C2=A0 =C2=A0 if (IS_ERR(dev)) {
+>     --=20
+>     2.7.4
+>=20
+
+--=20
+Thomas Zimmermann
+Graphics Driver Developer
+SUSE Software Solutions Germany GmbH
+Maxfeldstr. 5, 90409 N=C3=BCrnberg, Germany
+(HRB 36809, AG N=C3=BCrnberg)
+Gesch=C3=A4ftsf=C3=BChrer: Felix Imend=C3=B6rffer
+
+
+--dWd4QpDv00Fahsdc4n185aYcPsdrURE5E--
+
+--iynYgojkQVb3wztvybX8DcPKnDzpVeDTz
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: OpenPGP digital signature
+Content-Disposition: attachment; filename="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEEchf7rIzpz2NEoWjlaA3BHVMLeiMFAl5PmjIACgkQaA3BHVML
+eiNcbQgAiKUIhgLpwCITPMQNdE3FHFb7GwEFbYPq2ULSgPUnDs6Kzx/bF72uRf/J
+vx4N/C94JdQoa07fz/TRrjpgYIaH+F/w7TLhT7yV/VpOpbzzySDjmYd1X7uAAxsY
+UNZOsRo/RqROUdIOKfRytndlK/Ivt1QZSknYUh6d3GptOnC8gBw6hbHn9TRa3rsl
+KE1SSCPeRr2MZ6fzobJaIhUlQsYRKx01/R2RQgKOJhFN6tyjQ/8Y8EEwiIOnNMgA
+8VDrf/xMAdfIWdv51ClJNLoxCIWF+HHlRPqzk2E3Jmjw+7tdkFPCxO9lp/Q3h21w
+1S96jmWQXdAQurL2pxDDbabP/0HlYQ==
+=NnDS
+-----END PGP SIGNATURE-----
+
+--iynYgojkQVb3wztvybX8DcPKnDzpVeDTz--
