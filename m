@@ -5,49 +5,49 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D1FD0C35641
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 07:51:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B4787C35640
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 07:51:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A5DD4222C4
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 07:51:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 89D49222C4
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 07:51:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582271474;
-	bh=uGPoaQq5sIQF55e4UpMPnmFtF7DSigxvWVTWul9hHJM=;
+	s=default; t=1582271478;
+	bh=pH3RsqpVld5qfAxEnwf2qQxsd5/8DLGOl92mZwcPoYE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=g+U2cWEkiFedFI2sq9s0yMNiYVSBxQc/JkGzJPE8rNGH22f0YC3qTFUoOunZGdYuW
-	 RCVz2kbkN5oSewD76rS6A0dUWGqq5aC0qYW4xPmbCqdYOCTTcCerHFNLycCPQfEfnN
-	 sef3e1wyJC9YJDI41ahIqCpKVFgbuL1iHWOpgAZg=
+	b=0nL9RP0361lR+bXVZpDCawK24qpmpMiIMPNGwiqkdV9tIVpO6EdEx/4RaumeQIc3E
+	 hCsKUgGoWeTkyXg8QouuUtPdmXooT63moNL+BcVIkN/eMLkAVabzl9E/4LfXdV2Xi2
+	 Lq2DunqikiBT1sNTNvzMHQ3zTk55kPW2yFJQFWqg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729705AbgBUHvM (ORCPT
+        id S1729721AbgBUHvQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Feb 2020 02:51:12 -0500
-Received: from mail.kernel.org ([198.145.29.99]:48358 "EHLO mail.kernel.org"
+        Fri, 21 Feb 2020 02:51:16 -0500
+Received: from mail.kernel.org ([198.145.29.99]:48412 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729688AbgBUHvK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Feb 2020 02:51:10 -0500
+        id S1729688AbgBUHvO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 21 Feb 2020 02:51:14 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4F8E324653;
-        Fri, 21 Feb 2020 07:51:09 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A3F4F20801;
+        Fri, 21 Feb 2020 07:51:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1582271469;
-        bh=uGPoaQq5sIQF55e4UpMPnmFtF7DSigxvWVTWul9hHJM=;
+        s=default; t=1582271473;
+        bh=pH3RsqpVld5qfAxEnwf2qQxsd5/8DLGOl92mZwcPoYE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=gTLPKGl/GrOdhnCjSGY7sO2TNg19ZBjJqMA087T9Lier+urJisSuSSnmrV/QLJPfu
-         dEV9F/K9F3P9/JE0uG4vgdHueO3cjCXAMDTeW5ZcVwXwuL6ryoeibreJgux8q/rZ9+
-         hu1xyNZI95HmD1ghpsslJH6HcAE4psPmOuW53Lh0=
+        b=E7Qdtl528XYfdMwqPaAcahLDIgI0Ohmw7eRLWkMyFDHyZ8bodrkwyVTrRyhaHNQqO
+         ZhoBUxK6In6T0miuqVj2UqgqEJ8s+6DDuWHOGMGBCBT8vaMfUbfao7IuMxf1Si7VYG
+         1RZCGXPQ1+Vh532Wuq4pUDEeXC6bv/aq+H3grexY=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org,
         Suravee Suthikulpanit <suravee.suthikulpanit@amd.com>,
         Joerg Roedel <jroedel@suse.de>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.5 178/399] iommu/amd: Check feature support bit before accessing MSI capability registers
-Date:   Fri, 21 Feb 2020 08:38:23 +0100
-Message-Id: <20200221072420.022833137@linuxfoundation.org>
+Subject: [PATCH 5.5 179/399] iommu/amd: Only support x2APIC with IVHD type 11h/40h
+Date:   Fri, 21 Feb 2020 08:38:24 +0100
+Message-Id: <20200221072420.116350331@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200221072402.315346745@linuxfoundation.org>
 References: <20200221072402.315346745@linuxfoundation.org>
@@ -62,78 +62,50 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Suravee Suthikulpanit <suravee.suthikulpanit@amd.com>
 
-[ Upstream commit 813071438e83d338ba5cfe98b3b26c890dc0a6c0 ]
+[ Upstream commit 966b753cf3969553ca50bacd2b8c4ddade5ecc9e ]
 
-The IOMMU MMIO access to MSI capability registers is available only if
-the EFR[MsiCapMmioSup] is set. Current implementation assumes this bit
-is set if the EFR[XtSup] is set, which might not be the case.
-
-Fix by checking the EFR[MsiCapMmioSup] before accessing the MSI address
-low/high and MSI data registers via the MMIO.
+Current implementation for IOMMU x2APIC support makes use of
+the MMIO access to MSI capability block registers, which requires
+checking EFR[MsiCapMmioSup]. However, only IVHD type 11h/40h contain
+the information, and not in the IVHD type 10h IOMMU feature reporting
+field. Since the BIOS in newer systems, which supports x2APIC, would
+normally contain IVHD type 11h/40h, remove the IOMMU_FEAT_XTSUP_SHIFT
+check for IVHD type 10h, and only support x2APIC with IVHD type 11h/40h.
 
 Fixes: 66929812955b ('iommu/amd: Add support for X2APIC IOMMU interrupts')
 Signed-off-by: Suravee Suthikulpanit <suravee.suthikulpanit@amd.com>
 Signed-off-by: Joerg Roedel <jroedel@suse.de>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/iommu/amd_iommu_init.c  | 17 ++++++++++++-----
- drivers/iommu/amd_iommu_types.h |  1 +
- 2 files changed, 13 insertions(+), 5 deletions(-)
+ drivers/iommu/amd_iommu_init.c  | 2 --
+ drivers/iommu/amd_iommu_types.h | 1 -
+ 2 files changed, 3 deletions(-)
 
 diff --git a/drivers/iommu/amd_iommu_init.c b/drivers/iommu/amd_iommu_init.c
-index 483f7bc379fa8..61628c906ce11 100644
+index 61628c906ce11..d7cbca8bf2cd4 100644
 --- a/drivers/iommu/amd_iommu_init.c
 +++ b/drivers/iommu/amd_iommu_init.c
-@@ -147,7 +147,7 @@ bool amd_iommu_dump;
- bool amd_iommu_irq_remap __read_mostly;
- 
- int amd_iommu_guest_ir = AMD_IOMMU_GUEST_IR_VAPIC;
--static int amd_iommu_xt_mode = IRQ_REMAP_X2APIC_MODE;
-+static int amd_iommu_xt_mode = IRQ_REMAP_XAPIC_MODE;
- 
- static bool amd_iommu_detected;
- static bool __initdata amd_iommu_disabled;
-@@ -1534,8 +1534,15 @@ static int __init init_iommu_one(struct amd_iommu *iommu, struct ivhd_header *h)
+@@ -1523,8 +1523,6 @@ static int __init init_iommu_one(struct amd_iommu *iommu, struct ivhd_header *h)
  			iommu->mmio_phys_end = MMIO_CNTR_CONF_OFFSET;
- 		if (((h->efr_reg & (0x1 << IOMMU_EFR_GASUP_SHIFT)) == 0))
+ 		if (((h->efr_attr & (0x1 << IOMMU_FEAT_GASUP_SHIFT)) == 0))
  			amd_iommu_guest_ir = AMD_IOMMU_GUEST_IR_LEGACY;
--		if (((h->efr_reg & (0x1 << IOMMU_EFR_XTSUP_SHIFT)) == 0))
+-		if (((h->efr_attr & (0x1 << IOMMU_FEAT_XTSUP_SHIFT)) == 0))
 -			amd_iommu_xt_mode = IRQ_REMAP_XAPIC_MODE;
-+		/*
-+		 * Note: Since iommu_update_intcapxt() leverages
-+		 * the IOMMU MMIO access to MSI capability block registers
-+		 * for MSI address lo/hi/data, we need to check both
-+		 * EFR[XtSup] and EFR[MsiCapMmioSup] for x2APIC support.
-+		 */
-+		if ((h->efr_reg & BIT(IOMMU_EFR_XTSUP_SHIFT)) &&
-+		    (h->efr_reg & BIT(IOMMU_EFR_MSICAPMMIOSUP_SHIFT)))
-+			amd_iommu_xt_mode = IRQ_REMAP_X2APIC_MODE;
  		break;
- 	default:
- 		return -EINVAL;
-@@ -1996,8 +2003,8 @@ static int iommu_init_intcapxt(struct amd_iommu *iommu)
- 	struct irq_affinity_notify *notify = &iommu->intcapxt_notify;
- 
- 	/**
--	 * IntCapXT requires XTSup=1, which can be inferred
--	 * amd_iommu_xt_mode.
-+	 * IntCapXT requires XTSup=1 and MsiCapMmioSup=1,
-+	 * which can be inferred from amd_iommu_xt_mode.
- 	 */
- 	if (amd_iommu_xt_mode != IRQ_REMAP_X2APIC_MODE)
- 		return 0;
+ 	case 0x11:
+ 	case 0x40:
 diff --git a/drivers/iommu/amd_iommu_types.h b/drivers/iommu/amd_iommu_types.h
-index f52f59d5c6bd4..f8a7945f3df90 100644
+index f8a7945f3df90..798e1533a1471 100644
 --- a/drivers/iommu/amd_iommu_types.h
 +++ b/drivers/iommu/amd_iommu_types.h
-@@ -383,6 +383,7 @@
+@@ -377,7 +377,6 @@
+ #define IOMMU_CAP_EFR     27
+ 
+ /* IOMMU Feature Reporting Field (for IVHD type 10h */
+-#define IOMMU_FEAT_XTSUP_SHIFT	0
+ #define IOMMU_FEAT_GASUP_SHIFT	6
+ 
  /* IOMMU Extended Feature Register (EFR) */
- #define IOMMU_EFR_XTSUP_SHIFT	2
- #define IOMMU_EFR_GASUP_SHIFT	7
-+#define IOMMU_EFR_MSICAPMMIOSUP_SHIFT	46
- 
- #define MAX_DOMAIN_ID 65536
- 
 -- 
 2.20.1
 
