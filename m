@@ -2,173 +2,225 @@ Return-Path: <SRS0=1210=4J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A86ADC35640
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 08:49:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1C10FC35640
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 08:49:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7EA7520722
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 08:49:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D3F4B20722
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 08:49:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582274967;
-	bh=HgwKMUg7AzFdprudduJfFZZhALobPBBE0qFbG220VFc=;
+	s=default; t=1582274975;
+	bh=aaj207FIdZCp8J89QIqEslcb0Ntch/67YAl/hSeNfyc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=FU/VxpGXZGBd7KIM6sFK6cbeGSys5vubveg5WFZsuk3Zw04G3RTnpVytgYcJColpP
-	 MAb5ZhBuJEWSxi2p1ODAYbqj25XS8NSXW2py3oFunhOtR7k5z+6Pv6njGVRm5YrsY8
-	 cGFrUDU2kxnpKTWigr6oECjZw69bSi/DzVaW28lI=
+	b=d5/sMlGZgkxleFfS195sLWDzVCRaa1v0Iq17U8w6FHVFo0JNFQzfVHvfWJ6WtrlcI
+	 0NKDutozj2v2Vd0J4hfk8C8eTZ+Ehn4HI3yu06eVDmHAyX03zMLsSZml/q9kPXEDDL
+	 uRXL9xUtRoFoM7Fkq+4M8mO+z9InU0o02XYylaJg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387849AbgBUIt0 (ORCPT
+        id S2387897AbgBUIte (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Feb 2020 03:49:26 -0500
-Received: from mail.kernel.org ([198.145.29.99]:58074 "EHLO mail.kernel.org"
+        Fri, 21 Feb 2020 03:49:34 -0500
+Received: from mail.kernel.org ([198.145.29.99]:40306 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728837AbgBUItJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Feb 2020 03:49:09 -0500
-Received: from e123331-lin.home (amontpellier-657-1-18-247.w109-210.abo.wanadoo.fr [109.210.65.247])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        id S1728273AbgBUHpO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 21 Feb 2020 02:45:14 -0500
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 20E822073A;
-        Fri, 21 Feb 2020 08:49:06 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id BEC36208C4;
+        Fri, 21 Feb 2020 07:45:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1582274948;
-        bh=HgwKMUg7AzFdprudduJfFZZhALobPBBE0qFbG220VFc=;
+        s=default; t=1582271113;
+        bh=aaj207FIdZCp8J89QIqEslcb0Ntch/67YAl/hSeNfyc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=PkeqJZiV3Sy+obWiFVhV/jF3H8zqAGhFN8Rqv1xZiNapNOs3bPsq/E8xEWSSc7BMo
-         BgF0HL4qoTTSWttmJhkEuHWyzCt6FRgGYGTMUsel+l6LakdpcQ58Q+ulaG+xoyMtAI
-         qychDX5r9Pud/70zi3bf+YZdaPhYWR7i+wSCqdo8=
-From:   Ard Biesheuvel <ardb@kernel.org>
-To:     linux-efi@vger.kernel.org, Ingo Molnar <mingo@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>
-Cc:     Ard Biesheuvel <ardb@kernel.org>, linux-kernel@vger.kernel.org
-Subject: [PATCH 1/4] efi/x86: align GUIDs to their size in the mixed mode runtime wrapper
-Date:   Fri, 21 Feb 2020 09:48:46 +0100
-Message-Id: <20200221084849.26878-2-ardb@kernel.org>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20200221084849.26878-1-ardb@kernel.org>
-References: <20200221084849.26878-1-ardb@kernel.org>
+        b=Rljylct+HRidFrWv3wwYbDUe+UdsoQCXerP3NclLGGtyd02HbRRFYDKfikPxcJYVx
+         fbqSvO472ZbAP19+XPGKdCW/8AyS9X3j0mhjcpi44l121fytdROvsBUz8BMhPdxTy1
+         C29Nc/3G8pk8xVsKF2ENLQMpqk6r78KTzqPW16ic=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org, Alexey Kardashevskiy <aik@ozlabs.ru>,
+        Oliver OHalloran <oohall@gmail.com>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.5 045/399] powerpc/powernv/iov: Ensure the pdn for VFs always contains a valid PE number
+Date:   Fri, 21 Feb 2020 08:36:10 +0100
+Message-Id: <20200221072406.750910388@linuxfoundation.org>
+X-Mailer: git-send-email 2.25.1
+In-Reply-To: <20200221072402.315346745@linuxfoundation.org>
+References: <20200221072402.315346745@linuxfoundation.org>
+User-Agent: quilt/0.66
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hans reports that his mixed mode systems running v5.6-rc1 kernels hit
-the WARN_ON() in virt_to_phys_or_null_size(), caused by the fact that
-efi_guid_t objects on the vmap'ed stack happen to be misaligned with
-respect to their sizes. As a quick (i.e., backportable) fix, copy GUID
-pointer arguments to the local stack into a buffer that is naturally
-aligned to its size, so that it is guaranteed to cover only one
-physical page.
+From: Oliver O'Halloran <oohall@gmail.com>
 
-Note that on x86, we cannot rely on the stack pointer being aligned
-the way the compiler expects, so we need to allocate an 8-byte aligned
-buffer of sufficient size, and copy the GUID into that buffer at an
-offset that is aligned to 16 bytes.
+[ Upstream commit 3b5b9997b331e77ce967eba2c4bc80dc3134a7fe ]
 
-Fixes: f6697df36bdf0bf7 ("x86/efi: Prevent mixed mode boot corruption with CONFIG_VMAP_STACK=y")
-Reported-by: Hans de Goede <hdegoede@redhat.com>
-Tested-by: Hans de Goede <hdegoede@redhat.com>
-Signed-off-by: Ard Biesheuvel <ardb@kernel.org>
+On pseries there is a bug with adding hotplugged devices to an IOMMU
+group. For a number of dumb reasons fixing that bug first requires
+re-working how VFs are configured on PowerNV. For background, on
+PowerNV we use the pcibios_sriov_enable() hook to do two things:
+
+  1. Create a pci_dn structure for each of the VFs, and
+  2. Configure the PHB's internal BARs so the MMIO range for each VF
+     maps to a unique PE.
+
+Roughly speaking a PE is the hardware counterpart to a Linux IOMMU
+group since all the devices in a PE share the same IOMMU table. A PE
+also defines the set of devices that should be isolated in response to
+a PCI error (i.e. bad DMA, UR/CA, AER events, etc). When isolated all
+MMIO and DMA traffic to and from devicein the PE is blocked by the
+root complex until the PE is recovered by the OS.
+
+The requirement to block MMIO causes a giant headache because the P8
+PHB generally uses a fixed mapping between MMIO addresses and PEs. As
+a result we need to delay configuring the IOMMU groups for device
+until after MMIO resources are assigned. For physical devices (i.e.
+non-VFs) the PE assignment is done in pcibios_setup_bridge() which is
+called immediately after the MMIO resources for downstream
+devices (and the bridge's windows) are assigned. For VFs the setup is
+more complicated because:
+
+  a) pcibios_setup_bridge() is not called again when VFs are activated, and
+  b) The pci_dev for VFs are created by generic code which runs after
+     pcibios_sriov_enable() is called.
+
+The work around for this is a two step process:
+
+  1. A fixup in pcibios_add_device() is used to initialised the cached
+     pe_number in pci_dn, then
+  2. A bus notifier then adds the device to the IOMMU group for the PE
+     specified in pci_dn->pe_number.
+
+A side effect fixing the pseries bug mentioned in the first paragraph
+is moving the fixup out of pcibios_add_device() and into
+pcibios_bus_add_device(), which is called much later. This results in
+step 2. failing because pci_dn->pe_number won't be initialised when
+the bus notifier is run.
+
+We can fix this by removing the need for the fixup. The PE for a VF is
+known before the VF is even scanned so we can initialise
+pci_dn->pe_number pcibios_sriov_enable() instead. Unfortunately,
+moving the initialisation causes two problems:
+
+  1. We trip the WARN_ON() in the current fixup code, and
+  2. The EEH core clears pdn->pe_number when recovering a VF and
+     relies on the fixup to correctly re-set it.
+
+The only justification for either of these is a comment in
+eeh_rmv_device() suggesting that pdn->pe_number *must* be set to
+IODA_INVALID_PE in order for the VF to be scanned. However, this
+comment appears to have no basis in reality. Both bugs can be fixed by
+just deleting the code.
+
+Tested-by: Alexey Kardashevskiy <aik@ozlabs.ru>
+Reviewed-by: Alexey Kardashevskiy <aik@ozlabs.ru>
+Signed-off-by: Oliver O'Halloran <oohall@gmail.com>
+Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
+Link: https://lore.kernel.org/r/20191028085424.12006-1-oohall@gmail.com
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/x86/platform/efi/efi_64.c | 25 +++++++++++++++++++++----
- 1 file changed, 21 insertions(+), 4 deletions(-)
+ arch/powerpc/kernel/eeh_driver.c          |  6 ------
+ arch/powerpc/platforms/powernv/pci-ioda.c | 19 +++++++++++++++----
+ arch/powerpc/platforms/powernv/pci.c      |  4 ----
+ 3 files changed, 15 insertions(+), 14 deletions(-)
 
-diff --git a/arch/x86/platform/efi/efi_64.c b/arch/x86/platform/efi/efi_64.c
-index fa8506e76bbe..543edfdcd1b9 100644
---- a/arch/x86/platform/efi/efi_64.c
-+++ b/arch/x86/platform/efi/efi_64.c
-@@ -658,6 +658,8 @@ static efi_status_t
- efi_thunk_get_variable(efi_char16_t *name, efi_guid_t *vendor,
- 		       u32 *attr, unsigned long *data_size, void *data)
- {
-+	u8 buf[24] __aligned(8);
-+	efi_guid_t *vnd = PTR_ALIGN((efi_guid_t *)buf, sizeof(*vnd));
- 	efi_status_t status;
- 	u32 phys_name, phys_vendor, phys_attr;
- 	u32 phys_data_size, phys_data;
-@@ -665,8 +667,10 @@ efi_thunk_get_variable(efi_char16_t *name, efi_guid_t *vendor,
+diff --git a/arch/powerpc/kernel/eeh_driver.c b/arch/powerpc/kernel/eeh_driver.c
+index 3dd1a422fc29d..a1eaffe868de4 100644
+--- a/arch/powerpc/kernel/eeh_driver.c
++++ b/arch/powerpc/kernel/eeh_driver.c
+@@ -525,12 +525,6 @@ static void eeh_rmv_device(struct eeh_dev *edev, void *userdata)
  
- 	spin_lock_irqsave(&efi_runtime_lock, flags);
+ 		pci_iov_remove_virtfn(edev->physfn, pdn->vf_index);
+ 		edev->pdev = NULL;
+-
+-		/*
+-		 * We have to set the VF PE number to invalid one, which is
+-		 * required to plug the VF successfully.
+-		 */
+-		pdn->pe_number = IODA_INVALID_PE;
+ #endif
+ 		if (rmv_data)
+ 			list_add(&edev->rmv_entry, &rmv_data->removed_vf_list);
+diff --git a/arch/powerpc/platforms/powernv/pci-ioda.c b/arch/powerpc/platforms/powernv/pci-ioda.c
+index da1068a9c2637..4374836b033b4 100644
+--- a/arch/powerpc/platforms/powernv/pci-ioda.c
++++ b/arch/powerpc/platforms/powernv/pci-ioda.c
+@@ -1558,6 +1558,10 @@ static void pnv_ioda_setup_vf_PE(struct pci_dev *pdev, u16 num_vfs)
  
-+	*vnd = *vendor;
+ 	/* Reserve PE for each VF */
+ 	for (vf_index = 0; vf_index < num_vfs; vf_index++) {
++		int vf_devfn = pci_iov_virtfn_devfn(pdev, vf_index);
++		int vf_bus = pci_iov_virtfn_bus(pdev, vf_index);
++		struct pci_dn *vf_pdn;
 +
- 	phys_data_size = virt_to_phys_or_null(data_size);
--	phys_vendor = virt_to_phys_or_null(vendor);
-+	phys_vendor = virt_to_phys_or_null(vnd);
- 	phys_name = virt_to_phys_or_null_size(name, efi_name_size(name));
- 	phys_attr = virt_to_phys_or_null(attr);
- 	phys_data = virt_to_phys_or_null_size(data, *data_size);
-@@ -683,14 +687,18 @@ static efi_status_t
- efi_thunk_set_variable(efi_char16_t *name, efi_guid_t *vendor,
- 		       u32 attr, unsigned long data_size, void *data)
- {
-+	u8 buf[24] __aligned(8);
-+	efi_guid_t *vnd = PTR_ALIGN((efi_guid_t *)buf, sizeof(*vnd));
- 	u32 phys_name, phys_vendor, phys_data;
- 	efi_status_t status;
- 	unsigned long flags;
+ 		if (pdn->m64_single_mode)
+ 			pe_num = pdn->pe_num_map[vf_index];
+ 		else
+@@ -1570,13 +1574,11 @@ static void pnv_ioda_setup_vf_PE(struct pci_dev *pdev, u16 num_vfs)
+ 		pe->pbus = NULL;
+ 		pe->parent_dev = pdev;
+ 		pe->mve_number = -1;
+-		pe->rid = (pci_iov_virtfn_bus(pdev, vf_index) << 8) |
+-			   pci_iov_virtfn_devfn(pdev, vf_index);
++		pe->rid = (vf_bus << 8) | vf_devfn;
  
- 	spin_lock_irqsave(&efi_runtime_lock, flags);
+ 		pe_info(pe, "VF %04d:%02d:%02d.%d associated with PE#%x\n",
+ 			hose->global_number, pdev->bus->number,
+-			PCI_SLOT(pci_iov_virtfn_devfn(pdev, vf_index)),
+-			PCI_FUNC(pci_iov_virtfn_devfn(pdev, vf_index)), pe_num);
++			PCI_SLOT(vf_devfn), PCI_FUNC(vf_devfn), pe_num);
  
-+	*vnd = *vendor;
+ 		if (pnv_ioda_configure_pe(phb, pe)) {
+ 			/* XXX What do we do here ? */
+@@ -1590,6 +1592,15 @@ static void pnv_ioda_setup_vf_PE(struct pci_dev *pdev, u16 num_vfs)
+ 		list_add_tail(&pe->list, &phb->ioda.pe_list);
+ 		mutex_unlock(&phb->ioda.pe_list_mutex);
+ 
++		/* associate this pe to it's pdn */
++		list_for_each_entry(vf_pdn, &pdn->parent->child_list, list) {
++			if (vf_pdn->busno == vf_bus &&
++			    vf_pdn->devfn == vf_devfn) {
++				vf_pdn->pe_number = pe_num;
++				break;
++			}
++		}
 +
- 	phys_name = virt_to_phys_or_null_size(name, efi_name_size(name));
--	phys_vendor = virt_to_phys_or_null(vendor);
-+	phys_vendor = virt_to_phys_or_null(vnd);
- 	phys_data = virt_to_phys_or_null_size(data, data_size);
+ 		pnv_pci_ioda2_setup_dma_pe(phb, pe);
+ #ifdef CONFIG_IOMMU_API
+ 		iommu_register_group(&pe->table_group,
+diff --git a/arch/powerpc/platforms/powernv/pci.c b/arch/powerpc/platforms/powernv/pci.c
+index c0bea75ac27bf..e8e58a2cccddf 100644
+--- a/arch/powerpc/platforms/powernv/pci.c
++++ b/arch/powerpc/platforms/powernv/pci.c
+@@ -816,16 +816,12 @@ void pnv_pci_dma_dev_setup(struct pci_dev *pdev)
+ 	struct pnv_phb *phb = hose->private_data;
+ #ifdef CONFIG_PCI_IOV
+ 	struct pnv_ioda_pe *pe;
+-	struct pci_dn *pdn;
  
- 	/* If data_size is > sizeof(u32) we've got problems */
-@@ -707,6 +715,8 @@ efi_thunk_set_variable_nonblocking(efi_char16_t *name, efi_guid_t *vendor,
- 				   u32 attr, unsigned long data_size,
- 				   void *data)
- {
-+	u8 buf[24] __aligned(8);
-+	efi_guid_t *vnd = PTR_ALIGN((efi_guid_t *)buf, sizeof(*vnd));
- 	u32 phys_name, phys_vendor, phys_data;
- 	efi_status_t status;
- 	unsigned long flags;
-@@ -714,8 +724,10 @@ efi_thunk_set_variable_nonblocking(efi_char16_t *name, efi_guid_t *vendor,
- 	if (!spin_trylock_irqsave(&efi_runtime_lock, flags))
- 		return EFI_NOT_READY;
- 
-+	*vnd = *vendor;
-+
- 	phys_name = virt_to_phys_or_null_size(name, efi_name_size(name));
--	phys_vendor = virt_to_phys_or_null(vendor);
-+	phys_vendor = virt_to_phys_or_null(vnd);
- 	phys_data = virt_to_phys_or_null_size(data, data_size);
- 
- 	/* If data_size is > sizeof(u32) we've got problems */
-@@ -732,14 +744,18 @@ efi_thunk_get_next_variable(unsigned long *name_size,
- 			    efi_char16_t *name,
- 			    efi_guid_t *vendor)
- {
-+	u8 buf[24] __aligned(8);
-+	efi_guid_t *vnd = PTR_ALIGN((efi_guid_t *)buf, sizeof(*vnd));
- 	efi_status_t status;
- 	u32 phys_name_size, phys_name, phys_vendor;
- 	unsigned long flags;
- 
- 	spin_lock_irqsave(&efi_runtime_lock, flags);
- 
-+	*vnd = *vendor;
-+
- 	phys_name_size = virt_to_phys_or_null(name_size);
--	phys_vendor = virt_to_phys_or_null(vendor);
-+	phys_vendor = virt_to_phys_or_null(vnd);
- 	phys_name = virt_to_phys_or_null_size(name, *name_size);
- 
- 	status = efi_thunk(get_next_variable, phys_name_size,
-@@ -747,6 +763,7 @@ efi_thunk_get_next_variable(unsigned long *name_size,
- 
- 	spin_unlock_irqrestore(&efi_runtime_lock, flags);
- 
-+	*vendor = *vnd;
- 	return status;
- }
- 
+ 	/* Fix the VF pdn PE number */
+ 	if (pdev->is_virtfn) {
+-		pdn = pci_get_pdn(pdev);
+-		WARN_ON(pdn->pe_number != IODA_INVALID_PE);
+ 		list_for_each_entry(pe, &phb->ioda.pe_list, list) {
+ 			if (pe->rid == ((pdev->bus->number << 8) |
+ 			    (pdev->devfn & 0xff))) {
+-				pdn->pe_number = pe->pe_number;
+ 				pe->pdev = pdev;
+ 				break;
+ 			}
 -- 
-2.17.1
+2.20.1
+
+
 
