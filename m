@@ -5,49 +5,51 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BA16EC35641
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 08:01:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EF0D5C35640
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 08:01:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 877D324673
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 08:01:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BDABF24656
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 08:01:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582272064;
-	bh=mKJXdC1spszpUhOmwpzsp8VjgJ+xnq6JmhBX2kjg/Cs=;
+	s=default; t=1582272068;
+	bh=yDTaCK/ytGY8aZ97lgRFlGc4UE+I2EUoD7z51dMYExw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=pE9ID+lh9PwncuUC6hDu/MLKN9eVVT3lmT02digSrYkmABqF9CZVS0Lklh6d3wrnf
-	 1gQJJoGeh1z6Y+jC8sZR/fHVtPDeuAddWKFlmLx4nwWM0rwbu/mPcUrYbVBeMjlCLV
-	 xXLR9nqFF5zrIcoxNi5yNva9IMXMyvPOENBdWzUI=
+	b=zv8BXLtID+zSejJSqjTo1ElWNBmAmCZk3nH6Wz3XAfRI++7lSK1t7L//J9xBQTz/q
+	 lxeHcOxp22F+1gA0cUfvsyboL09UfbX2tD3ZNvJKBLCGBwUB5WDBCn/HdTL437IXR5
+	 /vStgSRzPyg7/bggE5I/5GAPRC6tOqL0P/k1lmX4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731153AbgBUIBD (ORCPT
+        id S1731158AbgBUIBH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Feb 2020 03:01:03 -0500
-Received: from mail.kernel.org ([198.145.29.99]:33254 "EHLO mail.kernel.org"
+        Fri, 21 Feb 2020 03:01:07 -0500
+Received: from mail.kernel.org ([198.145.29.99]:33342 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731142AbgBUIBA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Feb 2020 03:01:00 -0500
+        id S1730878AbgBUIBE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 21 Feb 2020 03:01:04 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E8E2D2073A;
-        Fri, 21 Feb 2020 08:00:58 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A761F24656;
+        Fri, 21 Feb 2020 08:01:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1582272059;
-        bh=mKJXdC1spszpUhOmwpzsp8VjgJ+xnq6JmhBX2kjg/Cs=;
+        s=default; t=1582272064;
+        bh=yDTaCK/ytGY8aZ97lgRFlGc4UE+I2EUoD7z51dMYExw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=UvVnbCCKKWA+54eRtau/wQAK7ot3CI/L6cT9e16Yk2dMOqX0XsBlfxLQ8Cc3OYdRl
-         YwdEGCtss+BFLBQ1mF+VDt5vPnY8/oJC3QzhcLMrpg44Peh5Lw7ERCMfao/zEcuz6j
-         xGmV3Z1xKalgZyvTrRyyz6mv4XxguE3BjUw3SLEc=
+        b=iqT2zU51Taa08QidjZokPc6Y04y/eoZlaJlEWgx39sqmYzvFZG3tFy+VnvvthLnQt
+         knE9LFZRUozjMQ7x73acIazLBPeRsAMofCgNmPHpvLcs+kas3gk6FUDYybMLbcQ6Db
+         9vvWQV7+7c1HxtkV8iY7pJ0AxJ/2R7H7ACreTUqE=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Vasily Averin <vvs@virtuozzo.com>,
-        Daniel Borkmann <daniel@iogearbox.net>,
+        stable@vger.kernel.org, Vadim Pasternak <vadimp@mellanox.com>,
+        Jiri Pirko <jiri@mellanox.com>,
+        Ido Schimmel <idosch@mellanox.com>,
+        "David S. Miller" <davem@davemloft.net>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.5 353/399] bpf: map_seq_next should always increase position index
-Date:   Fri, 21 Feb 2020 08:41:18 +0100
-Message-Id: <20200221072435.276879379@linuxfoundation.org>
+Subject: [PATCH 5.5 395/399] mlxsw: core: Add validation of hardware device types for MGPIR register
+Date:   Fri, 21 Feb 2020 08:42:00 +0100
+Message-Id: <20200221072438.273759534@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200221072402.315346745@linuxfoundation.org>
 References: <20200221072402.315346745@linuxfoundation.org>
@@ -60,46 +62,95 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Vasily Averin <vvs@virtuozzo.com>
+From: Vadim Pasternak <vadimp@mellanox.com>
 
-[ Upstream commit 90435a7891a2259b0f74c5a1bc5600d0d64cba8f ]
+[ Upstream commit 36844c855b896f90bab51ccecf72940eb7e3cfe1 ]
 
-If seq_file .next fuction does not change position index,
-read after some lseek can generate an unexpected output.
+When reading the number of gearboxes from the hardware, the driver does
+not validate the returned 'device type' field. The driver can therefore
+wrongly assume that the queried devices are gearboxes.
 
-See also: https://bugzilla.kernel.org/show_bug.cgi?id=206283
+On Spectrum-3 systems that support different types of devices, this can
+prevent the driver from loading, as it will try to query the
+temperature sensors from devices which it assumes are gearboxes and in
+fact are not.
 
-v1 -> v2: removed missed increment in end of function
+For example:
+[  218.129230] mlxsw_minimal 2-0048: Reg cmd access status failed (status=7(bad parameter))
+[  218.138282] mlxsw_minimal 2-0048: Reg cmd access failed (reg_id=900a(mtmp),type=write)
+[  218.147131] mlxsw_minimal 2-0048: Failed to setup temp sensor number 256
+[  218.534480] mlxsw_minimal 2-0048: Fail to register core bus
+[  218.540714] mlxsw_minimal: probe of 2-0048 failed with error -5
 
-Signed-off-by: Vasily Averin <vvs@virtuozzo.com>
-Signed-off-by: Daniel Borkmann <daniel@iogearbox.net>
-Link: https://lore.kernel.org/bpf/eca84fdd-c374-a154-d874-6c7b55fc3bc4@virtuozzo.com
+Fix this by validating the 'device type' field.
+
+Fixes: 2e265a8b6c094 ("mlxsw: core: Extend hwmon interface with inter-connect temperature attributes")
+Fixes: f14f4e621b1b4 ("mlxsw: core: Extend thermal core with per inter-connect device thermal zones")
+Signed-off-by: Vadim Pasternak <vadimp@mellanox.com>
+Acked-by: Jiri Pirko <jiri@mellanox.com>
+Signed-off-by: Ido Schimmel <idosch@mellanox.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- kernel/bpf/inode.c | 3 +--
- 1 file changed, 1 insertion(+), 2 deletions(-)
+ drivers/net/ethernet/mellanox/mlxsw/core_hwmon.c   | 6 ++++--
+ drivers/net/ethernet/mellanox/mlxsw/core_thermal.c | 8 ++++++--
+ 2 files changed, 10 insertions(+), 4 deletions(-)
 
-diff --git a/kernel/bpf/inode.c b/kernel/bpf/inode.c
-index ecf42bec38c00..6f22e0e74ef24 100644
---- a/kernel/bpf/inode.c
-+++ b/kernel/bpf/inode.c
-@@ -196,6 +196,7 @@ static void *map_seq_next(struct seq_file *m, void *v, loff_t *pos)
- 	void *key = map_iter(m)->key;
- 	void *prev_key;
+diff --git a/drivers/net/ethernet/mellanox/mlxsw/core_hwmon.c b/drivers/net/ethernet/mellanox/mlxsw/core_hwmon.c
+index 9bf8da5f6dafc..3fe878d7c94cb 100644
+--- a/drivers/net/ethernet/mellanox/mlxsw/core_hwmon.c
++++ b/drivers/net/ethernet/mellanox/mlxsw/core_hwmon.c
+@@ -573,6 +573,7 @@ static int mlxsw_hwmon_module_init(struct mlxsw_hwmon *mlxsw_hwmon)
  
-+	(*pos)++;
- 	if (map_iter(m)->done)
- 		return NULL;
+ static int mlxsw_hwmon_gearbox_init(struct mlxsw_hwmon *mlxsw_hwmon)
+ {
++	enum mlxsw_reg_mgpir_device_type device_type;
+ 	int index, max_index, sensor_index;
+ 	char mgpir_pl[MLXSW_REG_MGPIR_LEN];
+ 	char mtmp_pl[MLXSW_REG_MTMP_LEN];
+@@ -584,8 +585,9 @@ static int mlxsw_hwmon_gearbox_init(struct mlxsw_hwmon *mlxsw_hwmon)
+ 	if (err)
+ 		return err;
  
-@@ -208,8 +209,6 @@ static void *map_seq_next(struct seq_file *m, void *v, loff_t *pos)
- 		map_iter(m)->done = true;
- 		return NULL;
- 	}
--
--	++(*pos);
- 	return key;
- }
+-	mlxsw_reg_mgpir_unpack(mgpir_pl, &gbox_num, NULL, NULL, NULL);
+-	if (!gbox_num)
++	mlxsw_reg_mgpir_unpack(mgpir_pl, &gbox_num, &device_type, NULL, NULL);
++	if (device_type != MLXSW_REG_MGPIR_DEVICE_TYPE_GEARBOX_DIE ||
++	    !gbox_num)
+ 		return 0;
  
+ 	index = mlxsw_hwmon->module_sensor_max;
+diff --git a/drivers/net/ethernet/mellanox/mlxsw/core_thermal.c b/drivers/net/ethernet/mellanox/mlxsw/core_thermal.c
+index c721b171bd8de..ce0a6837daa32 100644
+--- a/drivers/net/ethernet/mellanox/mlxsw/core_thermal.c
++++ b/drivers/net/ethernet/mellanox/mlxsw/core_thermal.c
+@@ -895,8 +895,10 @@ static int
+ mlxsw_thermal_gearboxes_init(struct device *dev, struct mlxsw_core *core,
+ 			     struct mlxsw_thermal *thermal)
+ {
++	enum mlxsw_reg_mgpir_device_type device_type;
+ 	struct mlxsw_thermal_module *gearbox_tz;
+ 	char mgpir_pl[MLXSW_REG_MGPIR_LEN];
++	u8 gbox_num;
+ 	int i;
+ 	int err;
+ 
+@@ -908,11 +910,13 @@ mlxsw_thermal_gearboxes_init(struct device *dev, struct mlxsw_core *core,
+ 	if (err)
+ 		return err;
+ 
+-	mlxsw_reg_mgpir_unpack(mgpir_pl, &thermal->tz_gearbox_num, NULL, NULL,
++	mlxsw_reg_mgpir_unpack(mgpir_pl, &gbox_num, &device_type, NULL,
+ 			       NULL);
+-	if (!thermal->tz_gearbox_num)
++	if (device_type != MLXSW_REG_MGPIR_DEVICE_TYPE_GEARBOX_DIE ||
++	    !gbox_num)
+ 		return 0;
+ 
++	thermal->tz_gearbox_num = gbox_num;
+ 	thermal->tz_gearbox_arr = kcalloc(thermal->tz_gearbox_num,
+ 					  sizeof(*thermal->tz_gearbox_arr),
+ 					  GFP_KERNEL);
 -- 
 2.20.1
 
