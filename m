@@ -2,165 +2,218 @@ Return-Path: <SRS0=1210=4J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3ED47C35641
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 06:48:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 52C93C35640
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 06:51:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0427E20722
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 06:48:58 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=embeddedor.com header.i=@embeddedor.com header.b="GTrF9K00"
+	by mail.kernel.org (Postfix) with ESMTP id 2DEF9208C4
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 06:51:51 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726909AbgBUGs4 (ORCPT
+        id S1727034AbgBUGvu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Feb 2020 01:48:56 -0500
-Received: from gateway23.websitewelcome.com ([192.185.50.141]:48485 "EHLO
-        gateway23.websitewelcome.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726201AbgBUGs4 (ORCPT
+        Fri, 21 Feb 2020 01:51:50 -0500
+Received: from metis.ext.pengutronix.de ([85.220.165.71]:60587 "EHLO
+        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726278AbgBUGvt (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Feb 2020 01:48:56 -0500
-Received: from cm14.websitewelcome.com (cm14.websitewelcome.com [100.42.49.7])
-        by gateway23.websitewelcome.com (Postfix) with ESMTP id A71161F0
-        for <linux-kernel@vger.kernel.org>; Fri, 21 Feb 2020 00:48:54 -0600 (CST)
-Received: from gator4166.hostgator.com ([108.167.133.22])
-        by cmsmtp with SMTP
-        id 527KjwnoQXVkQ527KjJCvr; Fri, 21 Feb 2020 00:48:54 -0600
-X-Authority-Reason: nr=8
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=embeddedor.com; s=default; h=Content-Transfer-Encoding:Content-Type:
-        In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:Subject:Sender
-        :Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
-        Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
-        List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=Nad0fubeYkDvfrUVkzt1lZoj+jY7cL/xLisjWoKQNWw=; b=GTrF9K002o9tKkf0NZBA3CDTkJ
-        rAMQScJrLM2rmrUJE2EWX2qte0DuRclflzkJpWTpTfNRdXLGRRwoOdjAa+EH4NsBBDAxQAacMN6bf
-        22xaPdY9BzkSt8BbEOcIvd/eqLgA9KRKOZor8yqPLBmFoptATnp7isDyGlAspbR+co7WRnr9aW9ks
-        3YFCXbg9bfrCwogYCV6TDAT8F2a49/r8CBop8sbrroNTS857/yKCdHoEa626Ju0v1iLa7arVRMSGt
-        Z5rjZFy4Dz4LUDNKyCkwu2t3OmVR21k8D9G/ErgLAli+DnkvA6XxMlTNlsfTRN6ZxZVPjqmbPyIOn
-        7JqcpwtA==;
-Received: from [200.68.141.13] (port=13612 helo=[192.168.43.131])
-        by gator4166.hostgator.com with esmtpsa (TLSv1.2:ECDHE-RSA-AES128-GCM-SHA256:128)
+        Fri, 21 Feb 2020 01:51:49 -0500
+Received: from pty.hi.pengutronix.de ([2001:67c:670:100:1d::c5])
+        by metis.ext.pengutronix.de with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
         (Exim 4.92)
-        (envelope-from <gustavo@embeddedor.com>)
-        id 1j527K-003Olm-9P; Fri, 21 Feb 2020 00:48:54 -0600
-Subject: Re: linux-next: build warning in Linus' tree
-To:     Stephen Rothwell <sfr@canb.auug.org.au>
-Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Linux USB Mailing List <linux-usb@vger.kernel.org>
-References: <20200221143930.620f381e@canb.auug.org.au>
-From:   "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-Autocrypt: addr=gustavo@embeddedor.com; keydata=
- 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
- VtSixD1uOgytAP7RWS474w==
-Message-ID: <786a4b98-207e-13e1-43fa-1c1b5f71346d@embeddedor.com>
-Date:   Fri, 21 Feb 2020 00:51:37 -0600
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.1
+        (envelope-from <ore@pengutronix.de>)
+        id 1j52A2-00025k-KS; Fri, 21 Feb 2020 07:51:42 +0100
+Received: from ore by pty.hi.pengutronix.de with local (Exim 4.89)
+        (envelope-from <ore@pengutronix.de>)
+        id 1j52A0-0001pi-RL; Fri, 21 Feb 2020 07:51:40 +0100
+Date:   Fri, 21 Feb 2020 07:51:40 +0100
+From:   Oleksij Rempel <o.rempel@pengutronix.de>
+To:     peng.fan@nxp.com
+Cc:     ohad@wizery.com, bjorn.andersson@linaro.org, robh+dt@kernel.org,
+        shawnguo@kernel.org, s.hauer@pengutronix.de, kernel@pengutronix.de,
+        festevam@gmail.com, devicetree@vger.kernel.org,
+        linux-remoteproc@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-imx@nxp.com, linux-arm-kernel@lists.infradead.org
+Subject: Re: [PATCH 0/9] remoteproc: imx_rproc: support i.MX8/8M/7ULP
+Message-ID: <20200221065140.mn4wxk5c2xayqwan@pengutronix.de>
+References: <1582097265-20170-1-git-send-email-peng.fan@nxp.com>
 MIME-Version: 1.0
-In-Reply-To: <20200221143930.620f381e@canb.auug.org.au>
-Content-Type: text/plain; charset=windows-1252
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
-X-AntiAbuse: Primary Hostname - gator4166.hostgator.com
-X-AntiAbuse: Original Domain - vger.kernel.org
-X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
-X-AntiAbuse: Sender Address Domain - embeddedor.com
-X-BWhitelist: no
-X-Source-IP: 200.68.141.13
-X-Source-L: No
-X-Exim-ID: 1j527K-003Olm-9P
-X-Source: 
-X-Source-Args: 
-X-Source-Dir: 
-X-Source-Sender: ([192.168.43.131]) [200.68.141.13]:13612
-X-Source-Auth: gustavo@embeddedor.com
-X-Email-Count: 3
-X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
-X-Local-Domain: yes
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="r3mvuywgdhewmqq6"
+Content-Disposition: inline
+In-Reply-To: <1582097265-20170-1-git-send-email-peng.fan@nxp.com>
+X-Sent-From: Pengutronix Hildesheim
+X-URL:  http://www.pengutronix.de/
+X-IRC:  #ptxdist @freenode
+X-Accept-Language: de,en
+X-Accept-Content-Type: text/plain
+X-Uptime: 07:49:19 up 97 days, 22:07, 121 users,  load average: 0.00, 0.05,
+ 0.07
+User-Agent: NeoMutt/20170113 (1.7.2)
+X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c5
+X-SA-Exim-Mail-From: ore@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
 
+--r3mvuywgdhewmqq6
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-On 2/20/20 21:39, Stephen Rothwell wrote:
-> Hi all,
-> 
-> For some time I have been getting the following warning from the powerpc
-> allyesconfig build:
-> 
-> drivers/usb/host/fhci-hcd.c: In function 'fhci_urb_enqueue':
-> drivers/usb/host/fhci-hcd.c:398:8: warning: this statement may fall through [-Wimplicit-fallthrough=]
->   398 |   size = 2;
->       |   ~~~~~^~~
-> drivers/usb/host/fhci-hcd.c:399:2: note: here
->   399 |  case PIPE_BULK:
->       |  ^~~~
-> 
-> Introduced by commit
-> 
->   236dd4d18f29 ("USB: Driver for Freescale QUICC Engine USB Host Controller")
-> 
-> from 2009, but exposed only recently.
-> 
+Hi Peng,
 
-Thanks for the report, Stephen. The following patch should fix that:
+i can't apply your patches on kernel master HEAD. Do I need some
+extras?
 
-https://lore.kernel.org/lkml/20200213085401.27862-1-linux@rasmusvillemoes.dk/
+Please add me to CC for this driver next time.
 
-Greg,
+On Wed, Feb 19, 2020 at 03:27:36PM +0800, peng.fan@nxp.com wrote:
+> From: Peng Fan <peng.fan@nxp.com>
+>=20
+> This patchset aim to replace NXP vendor imx_rpmsg.c driver.
+>=20
+> This patchset is tested with Loic PALLARDY's patch
+> "remoteproc: add support for co-processor loaded and booted before kernel"
+> https://patchwork.kernel.org/patch/11265869/,
+> and inspried from st's remoteproc early boot support.
+> Since Loic's patch is still under review, just expect your comments :)
+>=20
+> Patch [1,2]/9: dt-bindings convert to json and new SoC support
+> Patch 3/9: skip firmware load when recovery. To i.MX8, firmware is not
+>            handled by Linux.
+>=20
+> Patch [4-9]/9: i.MX specific part to support rpmsg/virtio with mbox.
+>       because NXP release image not have resoure table, so add resource
+>       table in dts
+>=20
+> My test dts diff for i.MX8QXP MEK, but I have tested this patchset
+> for i.MX8QXP MEK, i.MX8MM EVK, i.MX7ULP EVK:
+>=20
+> +
+> +	imx8x-cm4 {
+> +		compatible =3D "fsl,imx8qxp-cm4";
+> +		rsrc-table =3D <
+> +			0x1 0x2 0x0 0x0 0x18 0x5c
+> +			3
+> +			/*fw_rsc_vdev*/
+> +			7 0 1 0 0 0x200
+> +			/*fw_rsc_vdev_vring*/
+> +			0x90000000 4096 256 1 0
+> +			0x90008000 4096 256 2 0
+> +			3
+> +			/*fw_rsc_vdev*/
+> +			7 1 1 0 0 0x200
+> +			/*fw_rsc_vdev_vring*/
+> +			0x90010000 4096 256 1 0
+> +			0x90018000 4096 256 2 0
+> +		>;
+> +		early-booted;
+> +		mbox-names =3D "tx", "rx", "rxdb";
+> +		mboxes =3D <&lsio_mu5 0 1
+> +			  &lsio_mu5 1 1
+> +			  &lsio_mu5 3 1>;
+> +		mub-partition =3D <3>;
+> +		memory-region =3D <&vdev0vring0>, <&vdev0vring1>, <&vdev0buffer>,
+> +				<&vdev1vring0>, <&vdev1vring1>, <&vdev0buffer>;
+> +	};
+> +
+> +	reserved-memory {
+> +		#address-cells =3D <2>;
+> +		#size-cells =3D <2>;
+> +		ranges;
+> +
+> +		vdev0vring0: vdev0vring0@90000000 {
+> +                       compatible =3D "shared-dma-pool";
+> +			reg =3D <0 0x90000000 0 0x8000>;
+> +			no-map;
+> +		};
+> +
+> +		vdev0vring1: vdev0vring1@90008000 {
+> +                       compatible =3D "shared-dma-pool";
+> +			reg =3D <0 0x90008000 0 0x8000>;
+> +			no-map;
+> +		};
+> +
+> +		vdev1vring0: vdev1vring0@90010000 {
+> +                       compatible =3D "shared-dma-pool";
+> +			reg =3D <0 0x90010000 0 0x8000>;
+> +			no-map;
+> +		};
+> +
+> +		vdev1vring1: vdev1vring1@90018000 {
+> +                       compatible =3D "shared-dma-pool";
+> +			reg =3D <0 0x90018000 0 0x8000>;
+> +			no-map;
+> +		};
+> +
+> +		vdev0buffer: vdev0buffer {
+> +                       compatible =3D "shared-dma-pool";
+> +			reg =3D <0 0x90400000 0 0x100000>;
+> +			no-map;
+> +		};
+> +	};
+> +
+>=20
+> Peng Fan (9):
+>   dt-bindings: remoteproc: Convert imx-rproc to json-schema
+>   dt-bindings: remoteproc: imx-rproc: support i.MX[8,8M,7ULP]
+>   remoteproc: add support to skip firmware load when recovery
+>   remoteproc: imx_rproc: surport early booted remote processor
+>   remoteproc: imx_rproc: parse early-booted property
+>   remoteproc: imx_proc: enable virtio/mailbox
+>   remoteproc: imx_rproc: add i.MX8QM/QXP
+>   remoteproc: imx_rproc: support i.MX7ULP
+>   remoteproc: imx_rproc: add i.MX8MM support
+>=20
+>  .../devicetree/bindings/remoteproc/imx-rproc.txt   |  33 --
+>  .../devicetree/bindings/remoteproc/imx-rproc.yaml  |  95 +++++
+>  drivers/remoteproc/imx_rproc.c                     | 455 +++++++++++++++=
+++++--
+>  drivers/remoteproc/remoteproc_core.c               |  19 +-
+>  include/linux/remoteproc.h                         |   1 +
+>  5 files changed, 531 insertions(+), 72 deletions(-)
+>  delete mode 100644 Documentation/devicetree/bindings/remoteproc/imx-rpro=
+c.txt
+>  create mode 100644 Documentation/devicetree/bindings/remoteproc/imx-rpro=
+c.yaml
+>=20
+> --=20
+> 2.16.4
+>=20
+>=20
+>=20
 
-I would just replace the two "Fixes" tags in the patch above with this one:
+--=20
+Pengutronix e.K.                           |                             |
+Steuerwalder Str. 21                       | http://www.pengutronix.de/  |
+31137 Hildesheim, Germany                  | Phone: +49-5121-206917-0    |
+Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
 
-Fixes: 236dd4d18f29 ("USB: Driver for Freescale QUICC Engine USB Host Controller")
+--r3mvuywgdhewmqq6
+Content-Type: application/pgp-signature; name="signature.asc"
 
-Thanks
---
-Gustavo
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCAAdFiEERBNZvwSgvmcMY/T74omh9DUaUbMFAl5PffgACgkQ4omh9DUa
+UbMWkA//dIL2GgJzXR5afPwRrdvi0TCi5UXzzaX2RR4Up15wPHZC+lNzmH5yOBo+
+lDWxKth8CuPMk26g7x+WkrIZvJM8Hbdk/0Y1csnEWTt7IMf4o+FHec5XoJ8WCIIw
+ZEBSbytGL2AIfZCAUJ9J2PK64ZHW37HMgeI5S2t92wn7bV49OPEmR77vzevLZM/y
+FBORX6zWFKvWgXj0ulMaGU6q8/67ZSjoAqcyDkCMMhF7AQplT3yyy1FAgNKNFy5p
+N+W60csZiCMQHza7jYQmovsv2tgBSEYxCYmw2BYglQTDeTK9dolDTlJ+rCQNWR8u
+7Mzj+PUX/jyeHZBSQ9Irkg+sHgbzjsPVkb8+U5DOpHa6IBi3oV6aKkwFGp/agfhd
+7ZVI1bk02clGnM14/AypY1zogzHwo2CkMMXN0bOXFre72YMdNGLo42Op7Cq3tJ+N
+lejlAFc71+/DBjBxwSbUpuXqKt4TAZX8MD5vPmryEcFMPlSMdyftOQ6r7hhx/vNZ
+Svg8RI21V7HBsNfB3NlcqTjDXBK/cCVrgOSzzR3FDLq2EkmIBDvx4jHdteTwrsJO
+S1Mc2C3c1o1/WUnJAjyuuK/pl2wT4vrE5eaom9REedveO0BI8azwfzcfy8bxg5ei
+Xkc3/us2iWNeux1/x/V9wlrfcV4kpHnKtkDfvZP4vx5iSH0q2ak=
+=KJgP
+-----END PGP SIGNATURE-----
+
+--r3mvuywgdhewmqq6--
