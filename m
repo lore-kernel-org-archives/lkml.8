@@ -4,49 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 59ABEC35640
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 07:54:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 93639C35641
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 07:54:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2B36B24673
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 07:54:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 65EBE24672
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 07:54:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582271685;
-	bh=38p9MvRGjy//9Vx20f5bGwTQYOMD8UNHHMDJnca5RVU=;
+	s=default; t=1582271688;
+	bh=dUG8hZXnoAlkAXWnwLJJ7XWo2AfBZ7T/u6rOHU/eIoY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=bWVyPFCM+7tYLZvjMAPViafr7QbzOd0a7Le+O25E5aL4LEQLx1bYMoBYUAR45pbrk
-	 NEvb2xj33uCnuwkR8CnR9aVqRZf9N4vF2H6ebQjNYJE3hCaarSlLD45IJLl2n/RNy/
-	 Ftf8c/yF8PckSt2XBs29SzjP1cwhXo0TcJBqdJH4=
+	b=CyNzKno5wQLLYcq5o/0qNVMY1e/2V12cDbEpR66NJKEE1LNUe2oWgCU+bCljET5x+
+	 NeT6YTspyoeDu/g+E44Ub8qgKVlqffW2PquYjtjPpQOSKaE670RqY3kMagZamSFssm
+	 k313jDWI7xgPXCAK8QYgPFG9upTt/GeNM1O702fo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730012AbgBUHyo (ORCPT
+        id S1730275AbgBUHyq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Feb 2020 02:54:44 -0500
-Received: from mail.kernel.org ([198.145.29.99]:53286 "EHLO mail.kernel.org"
+        Fri, 21 Feb 2020 02:54:46 -0500
+Received: from mail.kernel.org ([198.145.29.99]:53370 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728602AbgBUHyj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Feb 2020 02:54:39 -0500
+        id S1728602AbgBUHyo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 21 Feb 2020 02:54:44 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id BD7AE20578;
-        Fri, 21 Feb 2020 07:54:38 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id BA74D222C4;
+        Fri, 21 Feb 2020 07:54:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1582271679;
-        bh=38p9MvRGjy//9Vx20f5bGwTQYOMD8UNHHMDJnca5RVU=;
+        s=default; t=1582271684;
+        bh=dUG8hZXnoAlkAXWnwLJJ7XWo2AfBZ7T/u6rOHU/eIoY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Qfwcqa7mQbg3YeOtM3SvkYToT4VHE3nwZe4w2wZ+rPEgQFiUOS5bOjJ50nRzedHLO
-         T4EpRmqq/SRGm4mk2W1qcIo+JtxxYkQH/pNs6MdlovgaE3zFZOVQXuEBNpcgOTi6FH
-         46na3/JTY/Dhc0kCBfOvqyWjdTo7y/624jGBKK/k=
+        b=xr714oesJ80ixMsV5GFDRRP8S0iJloPbYXouck5Cg0dkAJHxXuiwOQBKua/SaomKO
+         2yemLczqKdPCj2KvgTgSC6SnsaLcVK34HW3vQ1uKBzZsAxuZ0W6FXNwV0u2zEKczx6
+         iHMOgU3PHalm1WKEYGezvJwTuVH54/t91qQoB3wE=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Ben Skeggs <bskeggs@redhat.com>,
+        stable@vger.kernel.org, Hulk Robot <hulkci@huawei.com>,
+        YueHaibing <yuehaibing@huawei.com>,
+        Ben Skeggs <bskeggs@redhat.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.5 257/399] drm/nouveau/gr/gk20a,gm200-: add terminators to method lists read from fw
-Date:   Fri, 21 Feb 2020 08:39:42 +0100
-Message-Id: <20200221072427.400888034@linuxfoundation.org>
+Subject: [PATCH 5.5 259/399] drm/nouveau/drm/ttm: Remove set but not used variable mem
+Date:   Fri, 21 Feb 2020 08:39:44 +0100
+Message-Id: <20200221072427.595783530@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200221072402.315346745@linuxfoundation.org>
 References: <20200221072402.315346745@linuxfoundation.org>
@@ -59,73 +61,56 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Ben Skeggs <bskeggs@redhat.com>
+From: YueHaibing <yuehaibing@huawei.com>
 
-[ Upstream commit 7adc77aa0e11f25b0e762859219c70852cd8d56f ]
+[ Upstream commit 2e4534a22794746b11a794b2229b8d58797eccce ]
 
-Method init is typically ordered by class in the FW image as ThreeD,
-TwoD, Compute.
+drivers/gpu/drm/nouveau/nouveau_ttm.c: In function nouveau_vram_manager_new:
+drivers/gpu/drm/nouveau/nouveau_ttm.c:66:22: warning: variable mem set but not used [-Wunused-but-set-variable]
+drivers/gpu/drm/nouveau/nouveau_ttm.c: In function nouveau_gart_manager_new:
+drivers/gpu/drm/nouveau/nouveau_ttm.c:106:22: warning: variable mem set but not used [-Wunused-but-set-variable]
 
-Due to a bug in parsing the FW into our internal format, we've been
-accidentally sending Twod + Compute methods to the ThreeD class, as
-well as Compute methods to the TwoD class - oops.
+They are not used any more, so remove it.
 
+Reported-by: Hulk Robot <hulkci@huawei.com>
+Signed-off-by: YueHaibing <yuehaibing@huawei.com>
 Signed-off-by: Ben Skeggs <bskeggs@redhat.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- .../gpu/drm/nouveau/nvkm/engine/gr/gk20a.c    | 21 ++++++++++---------
- 1 file changed, 11 insertions(+), 10 deletions(-)
+ drivers/gpu/drm/nouveau/nouveau_ttm.c | 4 ----
+ 1 file changed, 4 deletions(-)
 
-diff --git a/drivers/gpu/drm/nouveau/nvkm/engine/gr/gk20a.c b/drivers/gpu/drm/nouveau/nvkm/engine/gr/gk20a.c
-index 500cb08dd6080..b57ab5cea9a10 100644
---- a/drivers/gpu/drm/nouveau/nvkm/engine/gr/gk20a.c
-+++ b/drivers/gpu/drm/nouveau/nvkm/engine/gr/gk20a.c
-@@ -143,23 +143,24 @@ gk20a_gr_av_to_method(struct gf100_gr *gr, const char *fw_name,
+diff --git a/drivers/gpu/drm/nouveau/nouveau_ttm.c b/drivers/gpu/drm/nouveau/nouveau_ttm.c
+index 77a0c6ad3cef5..7ca0a24985327 100644
+--- a/drivers/gpu/drm/nouveau/nouveau_ttm.c
++++ b/drivers/gpu/drm/nouveau/nouveau_ttm.c
+@@ -63,14 +63,12 @@ nouveau_vram_manager_new(struct ttm_mem_type_manager *man,
+ {
+ 	struct nouveau_bo *nvbo = nouveau_bo(bo);
+ 	struct nouveau_drm *drm = nouveau_bdev(bo->bdev);
+-	struct nouveau_mem *mem;
+ 	int ret;
  
- 	nent = (fuc.size / sizeof(struct gk20a_fw_av));
+ 	if (drm->client.device.info.ram_size == 0)
+ 		return -ENOMEM;
  
--	pack = vzalloc((sizeof(*pack) * max_classes) +
--		       (sizeof(*init) * (nent + 1)));
-+	pack = vzalloc((sizeof(*pack) * (max_classes + 1)) +
-+		       (sizeof(*init) * (nent + max_classes + 1)));
- 	if (!pack) {
- 		ret = -ENOMEM;
- 		goto end;
- 	}
+ 	ret = nouveau_mem_new(&drm->master, nvbo->kind, nvbo->comp, reg);
+-	mem = nouveau_mem(reg);
+ 	if (ret)
+ 		return ret;
  
--	init = (void *)(pack + max_classes);
-+	init = (void *)(pack + max_classes + 1);
+@@ -103,11 +101,9 @@ nouveau_gart_manager_new(struct ttm_mem_type_manager *man,
+ {
+ 	struct nouveau_bo *nvbo = nouveau_bo(bo);
+ 	struct nouveau_drm *drm = nouveau_bdev(bo->bdev);
+-	struct nouveau_mem *mem;
+ 	int ret;
  
--	for (i = 0; i < nent; i++) {
--		struct gf100_gr_init *ent = &init[i];
-+	for (i = 0; i < nent; i++, init++) {
- 		struct gk20a_fw_av *av = &((struct gk20a_fw_av *)fuc.data)[i];
- 		u32 class = av->addr & 0xffff;
- 		u32 addr = (av->addr & 0xffff0000) >> 14;
+ 	ret = nouveau_mem_new(&drm->master, nvbo->kind, nvbo->comp, reg);
+-	mem = nouveau_mem(reg);
+ 	if (ret)
+ 		return ret;
  
- 		if (prevclass != class) {
--			pack[classidx].init = ent;
-+			if (prevclass) /* Add terminator to the method list. */
-+				init++;
-+			pack[classidx].init = init;
- 			pack[classidx].type = class;
- 			prevclass = class;
- 			if (++classidx >= max_classes) {
-@@ -169,10 +170,10 @@ gk20a_gr_av_to_method(struct gf100_gr *gr, const char *fw_name,
- 			}
- 		}
- 
--		ent->addr = addr;
--		ent->data = av->data;
--		ent->count = 1;
--		ent->pitch = 1;
-+		init->addr = addr;
-+		init->data = av->data;
-+		init->count = 1;
-+		init->pitch = 1;
- 	}
- 
- 	*ppack = pack;
 -- 
 2.20.1
 
