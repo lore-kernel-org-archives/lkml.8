@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 78EF2C35640
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 08:30:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 11F7CC35640
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 08:30:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4CD6120637
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 08:30:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C0E0E20637
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 08:30:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582273825;
-	bh=8nF09Mx0R0VykZIsatHCLOID3H5n0MCFoFllwCAnXoI=;
+	s=default; t=1582273832;
+	bh=9AF6/sUnNmSe60shTp1e7QrFtjUm1sgv4Xy+8yP9Cpk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=I1kcbBAmKgOV0GBqv8OnQAkP7Z3bAtKt0W34kT7C10M05tkLYcm5pHNFQ5+jOPbOd
-	 k7btypnPDQdpP6LKGIjSbpv4heFLjeC99zkvit/IuSOk1Gll7aKT1MTKMUYMn9T36X
-	 6XtuJxZMBAM0SSAgXrNROOzxHQDCKggih9iIiw9I=
+	b=oTN/YWICj6LdlCe0Tejds+N9RT0WkeWs6KRP/DBDFoiIjtKFtG/svKO1vm12z+qOK
+	 wOV71aib0HlLeHWqZkWkbKytVxV3wrfAyd5AmszMuLty5yNaRcotAgw2HF8exn48/2
+	 ChY4l5f/sd6vHqnVOIKJlZ0WHrY3GX8A5B5FRiEk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733166AbgBUIQH (ORCPT
+        id S2388413AbgBUIac (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Feb 2020 03:16:07 -0500
-Received: from mail.kernel.org ([198.145.29.99]:52952 "EHLO mail.kernel.org"
+        Fri, 21 Feb 2020 03:30:32 -0500
+Received: from mail.kernel.org ([198.145.29.99]:52850 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387459AbgBUIQC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Feb 2020 03:16:02 -0500
+        id S2387450AbgBUIP4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 21 Feb 2020 03:15:56 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2792124670;
-        Fri, 21 Feb 2020 08:16:01 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E888324670;
+        Fri, 21 Feb 2020 08:15:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1582272961;
-        bh=8nF09Mx0R0VykZIsatHCLOID3H5n0MCFoFllwCAnXoI=;
+        s=default; t=1582272956;
+        bh=9AF6/sUnNmSe60shTp1e7QrFtjUm1sgv4Xy+8yP9Cpk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=v9yvAlbPDKqSvcbG+8MrXmq/nKZ6ajRhxpC8Hiv9fLNv/ItubrCSx6qWWUb5cKIDz
-         wknzFC93eSK0waWZGXxuYFyFuv2Sg+iissC3kruE3H0OOnUNdDnDpnUY/vJqisXSHN
-         kjX3kmD0sjmLdTEzOCHYmKBvHSpCz1/9n+uUPYHE=
+        b=uhj21BBQv3tn7rnwAtbRp+wjxKdrN0RkScVd1sFsaVFMo/Lyf81SxUiTwcMvW7CxN
+         cAndr2l/On5ujObg4IfvL/dB5WCmhIMGDVIsOzLgiLiLRoyPekF/RpD0mMcHlvZB7I
+         37z0wEUOAxKOHTiyimWK/o91dnCDF3KYt2ISmgZE=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Ido Schimmel <idosch@mellanox.com>,
-        "David S. Miller" <davem@davemloft.net>,
+        stable@vger.kernel.org, "Michael S. Tsirkin" <mst@redhat.com>,
+        David Hildenbrand <david@redhat.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 341/344] mlxsw: spectrum_dpipe: Add missing error path
-Date:   Fri, 21 Feb 2020 08:42:20 +0100
-Message-Id: <20200221072421.422703601@linuxfoundation.org>
+Subject: [PATCH 5.4 339/344] virtio_balloon: prevent pfn array overflow
+Date:   Fri, 21 Feb 2020 08:42:18 +0100
+Message-Id: <20200221072421.231089464@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200221072349.335551332@linuxfoundation.org>
 References: <20200221072349.335551332@linuxfoundation.org>
@@ -60,43 +60,34 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Ido Schimmel <idosch@mellanox.com>
+From: Michael S. Tsirkin <mst@redhat.com>
 
-[ Upstream commit 3a99cbb6fa7bca1995586ec2dc21b0368aad4937 ]
+[ Upstream commit 6e9826e77249355c09db6ba41cd3f84e89f4b614 ]
 
-In case devlink_dpipe_entry_ctx_prepare() failed, release RTNL that was
-previously taken and free the memory allocated by
-mlxsw_sp_erif_entry_prepare().
+Make sure, at build time, that pfn array is big enough to hold a single
+page.  It happens to be true since the PAGE_SHIFT value at the moment is
+20, which is 1M - exactly 256 4K balloon pages.
 
-Fixes: 2ba5999f009d ("mlxsw: spectrum: Add Support for erif table entries access")
-Signed-off-by: Ido Schimmel <idosch@mellanox.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Signed-off-by: Michael S. Tsirkin <mst@redhat.com>
+Reviewed-by: David Hildenbrand <david@redhat.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/ethernet/mellanox/mlxsw/spectrum_dpipe.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ drivers/virtio/virtio_balloon.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/drivers/net/ethernet/mellanox/mlxsw/spectrum_dpipe.c b/drivers/net/ethernet/mellanox/mlxsw/spectrum_dpipe.c
-index 49933818c6f59..2dc0978428e64 100644
---- a/drivers/net/ethernet/mellanox/mlxsw/spectrum_dpipe.c
-+++ b/drivers/net/ethernet/mellanox/mlxsw/spectrum_dpipe.c
-@@ -215,7 +215,7 @@ mlxsw_sp_dpipe_table_erif_entries_dump(void *priv, bool counters_enabled,
- start_again:
- 	err = devlink_dpipe_entry_ctx_prepare(dump_ctx);
- 	if (err)
--		return err;
-+		goto err_ctx_prepare;
- 	j = 0;
- 	for (; i < rif_count; i++) {
- 		struct mlxsw_sp_rif *rif = mlxsw_sp_rif_by_index(mlxsw_sp, i);
-@@ -247,6 +247,7 @@ start_again:
- 	return 0;
- err_entry_append:
- err_entry_get:
-+err_ctx_prepare:
- 	rtnl_unlock();
- 	devlink_dpipe_entry_clear(&entry);
- 	return err;
+diff --git a/drivers/virtio/virtio_balloon.c b/drivers/virtio/virtio_balloon.c
+index c962d9b370c69..d2c4eb9efd70b 100644
+--- a/drivers/virtio/virtio_balloon.c
++++ b/drivers/virtio/virtio_balloon.c
+@@ -157,6 +157,8 @@ static void set_page_pfns(struct virtio_balloon *vb,
+ {
+ 	unsigned int i;
+ 
++	BUILD_BUG_ON(VIRTIO_BALLOON_PAGES_PER_PAGE > VIRTIO_BALLOON_ARRAY_PFNS_MAX);
++
+ 	/*
+ 	 * Set balloon pfns pointing at this page.
+ 	 * Note that the first pfn points at start of the page.
 -- 
 2.20.1
 
