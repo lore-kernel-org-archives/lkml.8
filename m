@@ -2,225 +2,197 @@ Return-Path: <SRS0=1210=4J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0E0A0C11D00
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 00:45:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8D1A1C11D24
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 00:46:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D02FD207FD
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 00:45:21 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=wdc.com header.i=@wdc.com header.b="E8nHnYDk"
+	by mail.kernel.org (Postfix) with ESMTP id 6CA64208CD
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 00:46:23 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729727AbgBUApL (ORCPT
+        id S1729558AbgBUAqW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Feb 2020 19:45:11 -0500
-Received: from esa5.hgst.iphmx.com ([216.71.153.144]:5901 "EHLO
-        esa5.hgst.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729691AbgBUApG (ORCPT
+        Thu, 20 Feb 2020 19:46:22 -0500
+Received: from cloudserver094114.home.pl ([79.96.170.134]:61269 "EHLO
+        cloudserver094114.home.pl" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729419AbgBUAqW (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Feb 2020 19:45:06 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
-  d=wdc.com; i=@wdc.com; q=dns/txt; s=dkim.wdc.com;
-  t=1582245906; x=1613781906;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=zauByF+unia1xt0CTcHhbFkLtPm1qJJUe5iAcp7OYgY=;
-  b=E8nHnYDk5iFLDBOCqiuZQ/sGAvMuiDTUBtW1bJvix5ZVwtTJk9TiFPrY
-   6JvsvNdQUSnCxosczmT4Kg43+KjGzK+WxDlxW5mE4HUNAXW/QkGgreiF7
-   8F+2aC/XihcvHLPLmy3NTr4/k0oAMOXfOO+MFms2lfMgFa2hNJhXJEjgd
-   CeE5Pqv9B8W7GM+RxsfDespqkNytp09/fW2jKivx8hTRmj2Ygao7FVkXN
-   2UnVEUJG0U1B02rlQUumb7XU8GIrPpbK8HejfMfLo9tyD7a2X4tKk60VM
-   28+mm7REfBoPeMeVY5shKF8ak9EezlJNmcV8/VuowkpGY2hYpQ0hOrWQv
-   w==;
-IronPort-SDR: WqMvM8c9/VF/Qx1f5jXhO3Vaa+Hh/YWRLPNhYAZQHu6KzEUyf7b+FteCcclqBvOuHEFo/QWzUG
- 7MZoVkdIajT8sajOV43xjIJUbRUhurkkwy7rc7v2CY7KQ2hbM0b6IEofIYLa4jHMgpq5DmG+bj
- yH7LljnsOxa9anyP4oBE3NXlFma3BXVKZeiTsxPniowd07cQphrqxKOtIVUKB4R3bVKY/g3Lf/
- rJotsOkLC0yfpyZltI+TckEh3mT5szx0h85rOBGZQHFN9i2YqJx9deUXAuYatZ9acy/5+bTCTd
- My8=
-X-IronPort-AV: E=Sophos;i="5.70,466,1574092800"; 
-   d="scan'208";a="130852824"
-Received: from uls-op-cesaip01.wdc.com (HELO uls-op-cesaep01.wdc.com) ([199.255.45.14])
-  by ob1.hgst.iphmx.com with ESMTP; 21 Feb 2020 08:44:52 +0800
-IronPort-SDR: 2PHBa0EKVBYLcXgQwhBnw69v7Q52sDjdQn3m+TYcYzaVCAIwTnbRbSgGWkDmk2jBH5B2sJQno9
- j1F+t0v6HsYCYzrmko3eN0c9qmzJII8AH1bfVAoMShwm9m+e1Fq7W6ouFTVwvkOS1bwvy8MsHY
- aLzPOE0ODEhFM9RaJOD5OyVhy7TKSVZCDyqA39LqFgrgraX6vUJcgvd+B6WHZIF769C+tsKRlp
- JZ+v2IcqMMnRvOIz0pWdOnwgmBXR9cxnwGbSDqRpCo/SqC9UHY1lNx78wnNBWlzhVBUFlCC8IG
- bDrzsuR9mmPmzPkAaL3q6Vad
-Received: from uls-op-cesaip01.wdc.com ([10.248.3.36])
-  by uls-op-cesaep01.wdc.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 Feb 2020 16:37:25 -0800
-IronPort-SDR: mGqmtO4WvmnGdjt7Re0dJPbbwF0EOZsZXWkpQQKyaKAE7LJ7riPDNpffdnEIBg6iqbm/Yz+Qfa
- 16liW72fuKinmBTP+m/9S/CLu559Adyn0/xikgQeZOzIA7Avq0Z+0GUdY2dQDO/kz3H6CqV6Sm
- YmcRpq0L0YuUwigFh7QCo74cn60YCqSg9z3G4Iy+Rp2pI2F8S+wx/k5MzKmIP3lv+0AcItFFKH
- udthT6A83YL3yxM4olbpJaqDTXEKFgA+0nZo+CpdExO3kJYDcP+m2e/ZAe+g7qa8KYTn+5fq3V
- w9Q=
-WDCIronportException: Internal
-Received: from yoda.sdcorp.global.sandisk.com (HELO yoda.int.fusionio.com) ([10.196.158.80])
-  by uls-op-cesaip01.wdc.com with ESMTP; 20 Feb 2020 16:44:50 -0800
-From:   Atish Patra <atish.patra@wdc.com>
-To:     linux-kernel@vger.kernel.org
-Cc:     Atish Patra <atish.patra@wdc.com>,
-        Albert Ou <aou@eecs.berkeley.edu>,
-        Anup Patel <anup@brainfault.org>, Borislav Petkov <bp@suse.de>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>,
-        "Eric W. Biederman" <ebiederm@xmission.com>,
-        Geert Uytterhoeven <geert@linux-m68k.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Heiko Carstens <heiko.carstens@de.ibm.com>,
-        Jason Cooper <jason@lakedaemon.net>,
-        Kees Cook <keescook@chromium.org>,
-        linux-riscv@lists.infradead.org, Mao Han <han_mao@c-sky.com>,
-        Marc Zyngier <maz@kernel.org>,
-        Mike Rapoport <rppt@linux.ibm.com>,
-        Nick Hu <nickhu@andestech.com>,
-        Palmer Dabbelt <palmer@dabbelt.com>,
-        Paul Walmsley <paul.walmsley@sifive.com>,
+        Thu, 20 Feb 2020 19:46:22 -0500
+Received: from 79.184.254.252.ipv4.supernova.orange.pl (79.184.254.252) (HELO kreacher.localnet)
+ by serwer1319399.home.pl (79.96.170.134) with SMTP (IdeaSmtpServer 0.83.341)
+ id 7483224b3d42fef3; Fri, 21 Feb 2020 01:46:18 +0100
+From:   "Rafael J. Wysocki" <rjw@rjwysocki.net>
+To:     Chris Wilson <chris@chris-wilson.co.uk>
+Cc:     linux-kernel@vger.kernel.org,
+        Linus Torvalds <torvalds@linux-foundation.org>,
         "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Vincent Chen <vincent.chen@sifive.com>
-Subject: [PATCH v9 12/12] irqchip/sifive-plic: Initialize the plic handler when cpu comes online
-Date:   Thu, 20 Feb 2020 16:44:13 -0800
-Message-Id: <20200221004413.12869-13-atish.patra@wdc.com>
-X-Mailer: git-send-email 2.25.0
-In-Reply-To: <20200221004413.12869-1-atish.patra@wdc.com>
-References: <20200221004413.12869-1-atish.patra@wdc.com>
+        Linux PM <linux-pm@vger.kernel.org>,
+        Linux ACPI <linux-acpi@vger.kernel.org>
+Subject: Re: Linux 5.6-rc2
+Date:   Fri, 21 Feb 2020 01:46:18 +0100
+Message-ID: <4974198.mf5Me8BlfX@kreacher>
+In-Reply-To: <10791544.HYfhKnFLvn@kreacher>
+References: <CAHk-=wgqwiBLGvwTqU2kJEPNmafPpPe_K0XgBU-A58M+mkwpgQ@mail.gmail.com> <158197497594.2449.9692451182044632969@skylake-alporthouse-com> <10791544.HYfhKnFLvn@kreacher>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7Bit
+Content-Type: text/plain; charset="us-ascii"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Currently, plic threshold and priority are only initialized once in the
-beginning. However, threshold can be set to disabled if cpu is marked
-offline with cpu hotplug feature. This will not allow to change the
-irq affinity to a cpu that just came online.
+On Thursday, February 20, 2020 11:41:22 PM CET Rafael J. Wysocki wrote:
+> On Monday, February 17, 2020 10:29:35 PM CET Chris Wilson wrote:
+> > Quoting Linus Torvalds (2020-02-17 21:20:27)
+> > > On Mon, Feb 17, 2020 at 8:22 AM Chris Wilson <chris@chris-wilson.co.uk> wrote:
+> > > >
+> > > > Quoting Linus Torvalds (2020-02-16 21:32:32)
+> > > > > Rafael J. Wysocki (4):
+> > > > >       ACPI: EC: Fix flushing of pending work
+> > > > >       ACPI: PM: s2idle: Avoid possible race related to the EC GPE
+> > > > >       ACPICA: Introduce acpi_any_gpe_status_set()
+> > > > >       ACPI: PM: s2idle: Prevent spurious SCIs from waking up the system
+> > > >
+> > > > Our S0 testing broke on all platforms, so we've reverted
+> > > > e3728b50cd9b ("ACPI: PM: s2idle: Avoid possible race related to the EC GPE")
+> > > > fdde0ff8590b ("ACPI: PM: s2idle: Prevent spurious SCIs from waking up the system")
+> > > >
+> > > > There wasn't much in the logs, for example,
+> > > > https://intel-gfx-ci.01.org/tree/drm-tip/IGT_5445/fi-kbl-7500u/igt@gem_exec_suspend@basic-s0.html
+> > > 
+> > > So the machine suspends, but never comes back?
+> > > 
+> > > Do you need to revert both for it to work for you? Or is the revert of
+> > > fdde0ff8590b just to avoid the conflict?
+> > 
+> > fdde0ff85 was just to avoid conflicts.
+> >  
+> > > I'm assuming you bisected this, and the bisect indicated e3728b50cd9b,
+> > > and then to revert it you reverted the other commit too..
+> > 
+> > Lucky guess based on diff rc1..rc2. Bisect was going to be painful, but
+> > could be done if this is not enough clue for Rafael.
+> 
+> Sorry for the delayed response, was away.
+> 
+> I'm guessing that you are using rtcwake for wakeup, in which case reverting
+> fdde0ff85 alone should unbreak it.
+> 
+> Can you please double check that?
 
-Add plic specific cpu hotplug callback and initialize the per cpu handler
-when cpu comes online.
+And below is a patch that should fix it if I'm not mistaken (verified on my
+system where I was able to reproduce the issue), so it would suffice to test
+this one on top of the -rc2.
 
-Signed-off-by: Atish Patra <atish.patra@wdc.com>
 ---
- arch/riscv/kernel/traps.c         |  2 +-
- drivers/irqchip/irq-sifive-plic.c | 38 +++++++++++++++++++++++++++----
- include/linux/cpuhotplug.h        |  1 +
- 3 files changed, 36 insertions(+), 5 deletions(-)
+From: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+Subject: [PATCH] ACPI: PM: s2idle: Check fixed wakeup events in acpi_s2idle_wake()
 
-diff --git a/arch/riscv/kernel/traps.c b/arch/riscv/kernel/traps.c
-index 8e13ad45ccaa..16c59807da6a 100644
---- a/arch/riscv/kernel/traps.c
-+++ b/arch/riscv/kernel/traps.c
-@@ -157,5 +157,5 @@ void trap_init(void)
- 	/* Set the exception vector address */
- 	csr_write(CSR_TVEC, &handle_exception);
- 	/* Enable interrupts */
--	csr_write(CSR_IE, IE_SIE | IE_EIE);
-+	csr_write(CSR_IE, IE_SIE);
- }
-diff --git a/drivers/irqchip/irq-sifive-plic.c b/drivers/irqchip/irq-sifive-plic.c
-index aa4af886e43a..7c7f37393f99 100644
---- a/drivers/irqchip/irq-sifive-plic.c
-+++ b/drivers/irqchip/irq-sifive-plic.c
-@@ -4,6 +4,7 @@
-  * Copyright (C) 2018 Christoph Hellwig
-  */
- #define pr_fmt(fmt) "plic: " fmt
-+#include <linux/cpu.h>
- #include <linux/interrupt.h>
- #include <linux/io.h>
- #include <linux/irq.h>
-@@ -55,6 +56,9 @@
- #define     CONTEXT_THRESHOLD		0x00
- #define     CONTEXT_CLAIM		0x04
- 
-+#define	PLIC_DISABLE_THRESHOLD		0xf
-+#define	PLIC_ENABLE_THRESHOLD		0
-+
- static void __iomem *plic_regs;
- 
- struct plic_handler {
-@@ -230,6 +234,32 @@ static int plic_find_hart_id(struct device_node *node)
- 	return -1;
+Commit fdde0ff8590b ("ACPI: PM: s2idle: Prevent spurious SCIs from
+waking up the system") overlooked the fact that fixed events can wake
+up the system too and broke RTC wakeup from suspend-to-idle as a
+result.
+
+Fix this issue by checking the fixed events in acpi_s2idle_wake() in
+addition to checking wakeup GPEs and break out of the suspend-to-idle
+loop if the status bits of any enabled fixed events are set then.
+
+Fixes: fdde0ff8590b ("ACPI: PM: s2idle: Prevent spurious SCIs from waking up the system")
+Reported-by: Chris Wilson <chris@chris-wilson.co.uk>
+Cc: 5.4+ <stable@vger.kernel.org> # 5.4+
+Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+---
+ drivers/acpi/acpica/evevent.c |   45 ++++++++++++++++++++++++++++++++++++++++++
+ drivers/acpi/sleep.c          |    7 ++++++
+ include/acpi/acpixf.h         |    1 
+ 3 files changed, 53 insertions(+)
+
+Index: linux-pm/drivers/acpi/acpica/evevent.c
+===================================================================
+--- linux-pm.orig/drivers/acpi/acpica/evevent.c
++++ linux-pm/drivers/acpi/acpica/evevent.c
+@@ -265,4 +265,49 @@ static u32 acpi_ev_fixed_event_dispatch(
+ 		 handler) (acpi_gbl_fixed_event_handlers[event].context));
  }
  
-+static void plic_set_threshold(struct plic_handler *handler, u32 threshold)
++/*******************************************************************************
++ *
++ * FUNCTION:    acpi_any_fixed_event_status_set
++ *
++ * PARAMETERS:  None
++ *
++ * RETURN:      TRUE or FALSE
++ *
++ * DESCRIPTION: Checks the PM status register for active fixed events
++ *
++ ******************************************************************************/
++
++u32 acpi_any_fixed_event_status_set(void)
 +{
-+	/* priority must be > threshold to trigger an interrupt */
-+	writel(threshold, handler->hart_base + CONTEXT_THRESHOLD);
++	acpi_status status;
++	u32 in_status;
++	u32 in_enable;
++	u32 i;
++
++	status = acpi_hw_register_read(ACPI_REGISTER_PM1_ENABLE, &in_enable);
++	if (ACPI_FAILURE(status)) {
++		return (FALSE);
++	}
++
++	status = acpi_hw_register_read(ACPI_REGISTER_PM1_STATUS, &in_status);
++	if (ACPI_FAILURE(status)) {
++		return (FALSE);
++	}
++
++	/*
++	 * Check for all possible Fixed Events and dispatch those that are active
++	 */
++	for (i = 0; i < ACPI_NUM_FIXED_EVENTS; i++) {
++
++		/* Both the status and enable bits must be on for this event */
++
++		if ((in_status & acpi_gbl_fixed_event_info[i].status_bit_mask) &&
++		    (in_enable & acpi_gbl_fixed_event_info[i].enable_bit_mask)) {
++			return (TRUE);
++		}
++	}
++
++	return (FALSE);
 +}
 +
-+static int plic_dying_cpu(unsigned int cpu)
-+{
-+	struct plic_handler *handler = this_cpu_ptr(&plic_handlers);
-+
-+	csr_clear(CSR_IE, IE_EIE);
-+	plic_set_threshold(handler, PLIC_DISABLE_THRESHOLD);
-+
-+	return 0;
-+}
-+
-+static int plic_starting_cpu(unsigned int cpu)
-+{
-+	struct plic_handler *handler = this_cpu_ptr(&plic_handlers);
-+
-+	csr_set(CSR_IE, IE_EIE);
-+	plic_set_threshold(handler, PLIC_ENABLE_THRESHOLD);
-+
-+	return 0;
-+}
-+
- static int __init plic_init(struct device_node *node,
- 		struct device_node *parent)
- {
-@@ -267,7 +297,6 @@ static int __init plic_init(struct device_node *node,
- 		struct plic_handler *handler;
- 		irq_hw_number_t hwirq;
- 		int cpu, hartid;
--		u32 threshold = 0;
+ #endif				/* !ACPI_REDUCED_HARDWARE */
+Index: linux-pm/include/acpi/acpixf.h
+===================================================================
+--- linux-pm.orig/include/acpi/acpixf.h
++++ linux-pm/include/acpi/acpixf.h
+@@ -753,6 +753,7 @@ ACPI_HW_DEPENDENT_RETURN_STATUS(acpi_sta
+ ACPI_HW_DEPENDENT_RETURN_STATUS(acpi_status acpi_enable_all_runtime_gpes(void))
+ ACPI_HW_DEPENDENT_RETURN_STATUS(acpi_status acpi_enable_all_wakeup_gpes(void))
+ ACPI_HW_DEPENDENT_RETURN_UINT32(u32 acpi_any_gpe_status_set(void))
++ACPI_HW_DEPENDENT_RETURN_UINT32(u32 acpi_any_fixed_event_status_set(void))
  
- 		if (of_irq_parse_one(node, i, &parent)) {
- 			pr_err("failed to parse parent for context %d.\n", i);
-@@ -301,7 +330,7 @@ static int __init plic_init(struct device_node *node,
- 		handler = per_cpu_ptr(&plic_handlers, cpu);
- 		if (handler->present) {
- 			pr_warn("handler already present for context %d.\n", i);
--			threshold = 0xffffffff;
-+			plic_set_threshold(handler, PLIC_DISABLE_THRESHOLD);
- 			goto done;
- 		}
+ ACPI_HW_DEPENDENT_RETURN_STATUS(acpi_status
+ 				acpi_get_gpe_device(u32 gpe_index,
+Index: linux-pm/drivers/acpi/sleep.c
+===================================================================
+--- linux-pm.orig/drivers/acpi/sleep.c
++++ linux-pm/drivers/acpi/sleep.c
+@@ -1006,6 +1006,13 @@ static bool acpi_s2idle_wake(void)
+ 			return true;
  
-@@ -313,13 +342,14 @@ static int __init plic_init(struct device_node *node,
- 			plic_regs + ENABLE_BASE + i * ENABLE_PER_HART;
- 
- done:
--		/* priority must be > threshold to trigger an interrupt */
--		writel(threshold, handler->hart_base + CONTEXT_THRESHOLD);
- 		for (hwirq = 1; hwirq <= nr_irqs; hwirq++)
- 			plic_toggle(handler, hwirq, 0);
- 		nr_handlers++;
- 	}
- 
-+	cpuhp_setup_state(CPUHP_AP_IRQ_SIFIVE_PLIC_STARTING,
-+				  "irqchip/sifive/plic:starting",
-+				  plic_starting_cpu, plic_dying_cpu);
- 	pr_info("mapped %d interrupts with %d handlers for %d contexts.\n",
- 		nr_irqs, nr_handlers, nr_contexts);
- 	set_handle_irq(plic_handle_irq);
-diff --git a/include/linux/cpuhotplug.h b/include/linux/cpuhotplug.h
-index d37c17e68268..77d70b633531 100644
---- a/include/linux/cpuhotplug.h
-+++ b/include/linux/cpuhotplug.h
-@@ -102,6 +102,7 @@ enum cpuhp_state {
- 	CPUHP_AP_IRQ_ARMADA_XP_STARTING,
- 	CPUHP_AP_IRQ_BCM2836_STARTING,
- 	CPUHP_AP_IRQ_MIPS_GIC_STARTING,
-+	CPUHP_AP_IRQ_SIFIVE_PLIC_STARTING,
- 	CPUHP_AP_ARM_MVEBU_COHERENCY,
- 	CPUHP_AP_MICROCODE_LOADER,
- 	CPUHP_AP_PERF_X86_AMD_UNCORE_STARTING,
--- 
-2.25.0
+ 		/*
++		 * If the status bit of any enabled fixed event is set, the
++		 * wakeup is regarded as valid.
++		 */
++		if (acpi_any_fixed_event_status_set())
++			return true;
++
++		/*
+ 		 * If there are no EC events to process and at least one of the
+ 		 * other enabled GPEs is active, the wakeup is regarded as a
+ 		 * genuine one.
+
+
 
