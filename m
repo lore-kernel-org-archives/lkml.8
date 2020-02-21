@@ -7,48 +7,48 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8F050C35641
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 07:50:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EFEBFC35641
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 07:50:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 61DF2208C4
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 07:50:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B5A02207FD
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 07:50:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582271428;
-	bh=Nst9ebLRaE3NHXB6enkxe0pAhC967ktXa0/Y8kcJryM=;
+	s=default; t=1582271431;
+	bh=YPGPEDMa2swDKgTCQRDKlLnyvqjdbgcYK9BNY5SuAws=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=z7mipgn0iIJJgME3PhlE0cUA79RiNcAtgkWlM8ftI+6ditB6gnCCJFA1cQzB/UDp8
-	 lvQiSrftAflEVJ+LG6NMfUttq5008atymhGVXy06x6LhPgVC2NACahc5HIkzfKSdeP
-	 JlHMSHg9ar2eMsqN2urpNw4lrva3NZndK/iZuM7E=
+	b=sfILfjQfGVihLmeErt124FaqFSma46MoTYQWl5LbpZSu5Bf45U4xJuRyu90cb0j8t
+	 L0gRZko3FmPrUwCFIZwfyQ8Ncr21yqVaL1HuYCkera6obzzHFFBmO6Z+YKQn5EiR/D
+	 dQtrhdZHQ3/zvoAJu1YwbcQqi933fBPnb5Z+hYY4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729564AbgBUHu0 (ORCPT
+        id S1728619AbgBUHua (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Feb 2020 02:50:26 -0500
-Received: from mail.kernel.org ([198.145.29.99]:47286 "EHLO mail.kernel.org"
+        Fri, 21 Feb 2020 02:50:30 -0500
+Received: from mail.kernel.org ([198.145.29.99]:47340 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729528AbgBUHuX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Feb 2020 02:50:23 -0500
+        id S1729037AbgBUHu0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 21 Feb 2020 02:50:26 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9A79A207FD;
-        Fri, 21 Feb 2020 07:50:22 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 70351208C4;
+        Fri, 21 Feb 2020 07:50:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1582271423;
-        bh=Nst9ebLRaE3NHXB6enkxe0pAhC967ktXa0/Y8kcJryM=;
+        s=default; t=1582271425;
+        bh=YPGPEDMa2swDKgTCQRDKlLnyvqjdbgcYK9BNY5SuAws=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=KlWo+22aYOpk+499H1KaaX4j+rIACcXZuX6I8wM9GPqna/+ky7dG3YAZec6+onZD2
-         yBwVb9afqaDZghF9QO+ljHy/jS5I61uNaTzzVYjYtGzVQr3MaMNEsI0tSQsrEofccx
-         /LO5n2Cw1D9aHYckYjVnKzBxOV7muw/IlS4o2qZk=
+        b=eLIOSXR1ZCNXN6qkDU/g7dmMWUFYbHy0Yzo3/2Iy9/fTp1gZMVKkv0PFgEmtT2QC6
+         nJaLCQspLiqWNS9OkWmNZ84RLWKiIq4nTQAFHX2Shmce1bJ8NwFCPVo6YMrjr3FAgB
+         0BBTBCLPorYSQaOcXP4Wa9OdOFcNoLasG+1ZRdRg=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, James Sewart <jamessewart@arista.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Logan Gunthorpe <logang@deltatee.com>,
+        stable@vger.kernel.org, Monk Liu <Monk.Liu@amd.com>,
+        Emily Deng <Emily.Deng@amd.com>,
+        Alex Deucher <alexander.deucher@amd.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.5 153/399] PCI: Add DMA alias quirk for PLX PEX NTB
-Date:   Fri, 21 Feb 2020 08:37:58 +0100
-Message-Id: <20200221072417.363036813@linuxfoundation.org>
+Subject: [PATCH 5.5 162/399] drm/amdgpu: fix KIQ ring test fail in TDR of SRIOV
+Date:   Fri, 21 Feb 2020 08:38:07 +0100
+Message-Id: <20200221072418.319253235@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200221072402.315346745@linuxfoundation.org>
 References: <20200221072402.315346745@linuxfoundation.org>
@@ -61,52 +61,44 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: James Sewart <jamessewart@arista.com>
+From: Monk Liu <Monk.Liu@amd.com>
 
-[ Upstream commit 7b90dfc4873b87c468cc6046538f46a531c1d785 ]
+[ Upstream commit 5a7489a7e189ee2be889485f90c8cf24ea4b9a40 ]
 
-The PLX PEX NTB forwards DMA transactions using Requester IDs that don't
-exist as PCI devices.  The devfn for a transaction is used as an index into
-a lookup table storing the origin of a transaction on the other side of the
-bridge.
+issues:
+MEC is ruined by the amdkfd_pre_reset after VF FLR done
 
-Alias all possible devfns to the NTB device so that any transaction coming
-in is governed by the mappings for the NTB.
+fix:
+amdkfd_pre_reset() would ruin MEC after hypervisor finished the VF FLR,
+the correct sequence is do amdkfd_pre_reset before VF FLR but there is
+a limitation to block this sequence:
+if we do pre_reset() before VF FLR, it would go KIQ way to do register
+access and stuck there, because KIQ probably won't work by that time
+(e.g. you already made GFX hang)
 
-Signed-off-by: James Sewart <jamessewart@arista.com>
-Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
-Reviewed-by: Logan Gunthorpe <logang@deltatee.com>
+so the best way right now is to simply remove it.
+
+Signed-off-by: Monk Liu <Monk.Liu@amd.com>
+Reviewed-by: Emily Deng <Emily.Deng@amd.com>
+Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/pci/quirks.c | 15 +++++++++++++++
- 1 file changed, 15 insertions(+)
+ drivers/gpu/drm/amd/amdgpu/amdgpu_device.c | 2 --
+ 1 file changed, 2 deletions(-)
 
-diff --git a/drivers/pci/quirks.c b/drivers/pci/quirks.c
-index 9aa590eb712fe..83953752337c4 100644
---- a/drivers/pci/quirks.c
-+++ b/drivers/pci/quirks.c
-@@ -5371,6 +5371,21 @@ SWITCHTEC_QUIRK(0x8574);  /* PFXI 64XG3 */
- SWITCHTEC_QUIRK(0x8575);  /* PFXI 80XG3 */
- SWITCHTEC_QUIRK(0x8576);  /* PFXI 96XG3 */
+diff --git a/drivers/gpu/drm/amd/amdgpu/amdgpu_device.c b/drivers/gpu/drm/amd/amdgpu/amdgpu_device.c
+index c17505fba9884..332b9c24a2cd0 100644
+--- a/drivers/gpu/drm/amd/amdgpu/amdgpu_device.c
++++ b/drivers/gpu/drm/amd/amdgpu/amdgpu_device.c
+@@ -3639,8 +3639,6 @@ static int amdgpu_device_reset_sriov(struct amdgpu_device *adev,
+ 	if (r)
+ 		return r;
  
-+/*
-+ * The PLX NTB uses devfn proxy IDs to move TLPs between NT endpoints.
-+ * These IDs are used to forward responses to the originator on the other
-+ * side of the NTB.  Alias all possible IDs to the NTB to permit access when
-+ * the IOMMU is turned on.
-+ */
-+static void quirk_plx_ntb_dma_alias(struct pci_dev *pdev)
-+{
-+	pci_info(pdev, "Setting PLX NTB proxy ID aliases\n");
-+	/* PLX NTB may use all 256 devfns */
-+	pci_add_dma_alias(pdev, 0, 256);
-+}
-+DECLARE_PCI_FIXUP_HEADER(PCI_VENDOR_ID_PLX, 0x87b0, quirk_plx_ntb_dma_alias);
-+DECLARE_PCI_FIXUP_HEADER(PCI_VENDOR_ID_PLX, 0x87b1, quirk_plx_ntb_dma_alias);
-+
- /*
-  * On Lenovo Thinkpad P50 SKUs with a Nvidia Quadro M1000M, the BIOS does
-  * not always reset the secondary Nvidia GPU between reboots if the system
+-	amdgpu_amdkfd_pre_reset(adev);
+-
+ 	/* Resume IP prior to SMC */
+ 	r = amdgpu_device_ip_reinit_early_sriov(adev);
+ 	if (r)
 -- 
 2.20.1
 
