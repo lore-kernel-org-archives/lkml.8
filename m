@@ -5,49 +5,49 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5711FC35641
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 08:06:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4A394C35643
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 08:06:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 24EFB20722
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 08:06:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0F6F620578
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 08:06:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582272414;
-	bh=GOeJ1Am3Wg4tRNg8HglrIbM7WUIYtK8v9/ojJJPnBX8=;
+	s=default; t=1582272417;
+	bh=dL1C9ZtwKKPWFltFPjdkV6dCvn5rHMctGRPlSveN5sc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=tiXD2Sr1jSxO5eMyi14lQE3NO/kocMJ4zt0wXoS4tCFK454Z4MTIBDrH5vPgo+DZF
-	 aWFmsioBZ2T6bvMHnzk1uTZAKH0Gr8tlhEWw0OqRH9DqVYGDRCpTEnpYKw92Zkm0Iy
-	 TNbpEoXZu/PbWcmcWfRBQpv4vb8O3MmcqgyR+6jI=
+	b=labHn6G7d98x3OiH38MOrrwwC8H/2BJb8Z9TS77JsIDJVoB0Z+EtaEnLUm8yYuSsZ
+	 pMPmi/Ks7UiSbElk4r9KXCcyyCPCbbsyCIUmK2wqk1fb+cYbnRYtz5S83/t1NX+XEF
+	 3DCDcAvLOerzzagF2VRPppbgURXy8r4zy6Fhfeh8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731865AbgBUIGx (ORCPT
+        id S1732015AbgBUIGz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Feb 2020 03:06:53 -0500
-Received: from mail.kernel.org ([198.145.29.99]:40852 "EHLO mail.kernel.org"
+        Fri, 21 Feb 2020 03:06:55 -0500
+Received: from mail.kernel.org ([198.145.29.99]:40880 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731992AbgBUIGv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Feb 2020 03:06:51 -0500
+        id S1732007AbgBUIGx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 21 Feb 2020 03:06:53 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 40CF920722;
-        Fri, 21 Feb 2020 08:06:50 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A2AC020578;
+        Fri, 21 Feb 2020 08:06:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1582272410;
-        bh=GOeJ1Am3Wg4tRNg8HglrIbM7WUIYtK8v9/ojJJPnBX8=;
+        s=default; t=1582272413;
+        bh=dL1C9ZtwKKPWFltFPjdkV6dCvn5rHMctGRPlSveN5sc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=zTFE9CbLd6oslFKJQ0eFxz0eoSk4YltIBMlSme1dKKtEcXhej5yrwryrKb9nU9vz3
-         oSu3N6Albo92oadfuyKtC7CJg8iMRgp14iva43A3MBN/p9/gn1gA0BlYexk2eUUEF4
-         fRXUlQ0UMQnGvzTkc4Ue/q+N7pmBN/KHnlo3J5Ww=
+        b=mPEg8gafDDE5I0EOj4FT87Vf0c2owLB96FCd0nvF9z2+FXp/dUeu0fjpvDb3ak4Ga
+         Jw5PSJsWXVBDRu2TxOShOcBIQQDruj5Ao2XhpFz6FDxULU3SrLbmQkrrosXmvD9EWj
+         vR5xNwx0E37grVS6hzh3b1ol66+6CmT9S/6KZaEU=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Tero Kristo <t-kristo@ti.com>,
-        Tony Lindgren <tony@atomide.com>,
+        stable@vger.kernel.org, Andre Przywara <andre.przywara@arm.com>,
+        Maxime Ripard <maxime@cerno.tech>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 132/344] ARM: OMAP2+: pdata-quirks: add PRM data for reset support
-Date:   Fri, 21 Feb 2020 08:38:51 +0100
-Message-Id: <20200221072400.824135935@linuxfoundation.org>
+Subject: [PATCH 5.4 106/344] arm64: dts: allwinner: H6: Add PMU mode
+Date:   Fri, 21 Feb 2020 08:38:25 +0100
+Message-Id: <20200221072358.547442478@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200221072349.335551332@linuxfoundation.org>
 References: <20200221072349.335551332@linuxfoundation.org>
@@ -60,55 +60,45 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Tero Kristo <t-kristo@ti.com>
+From: Andre Przywara <andre.przywara@arm.com>
 
-[ Upstream commit 8de44fb70659a5bc0c53a443e6129ea1bf00fd8b ]
+[ Upstream commit 7aa9b9eb7d6a8fde7acbe0446444f7e3fae1fe3b ]
 
-The parent clockdomain for reset must be in force wakeup mode, otherwise
-the reset may never complete. Add pdata quirks for this purpose for PRM
-driver.
+Add the Performance Monitoring Unit (PMU) device tree node to the H6
+.dtsi, which tells DT users which interrupts are triggered by PMU
+overflow events on each core. The numbers come from the manual and have
+been checked in U-Boot and with perf in Linux.
 
-Signed-off-by: Tero Kristo <t-kristo@ti.com>
-Acked-by: Tony Lindgren <tony@atomide.com>
-Signed-off-by: Tony Lindgren <tony@atomide.com>
+Tested with perf record and taskset on a Pine H64.
+
+Signed-off-by: Andre Przywara <andre.przywara@arm.com>
+Signed-off-by: Maxime Ripard <maxime@cerno.tech>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm/mach-omap2/pdata-quirks.c | 8 ++++++++
- 1 file changed, 8 insertions(+)
+ arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi | 10 ++++++++++
+ 1 file changed, 10 insertions(+)
 
-diff --git a/arch/arm/mach-omap2/pdata-quirks.c b/arch/arm/mach-omap2/pdata-quirks.c
-index 247e3f8acffe6..2657752b90670 100644
---- a/arch/arm/mach-omap2/pdata-quirks.c
-+++ b/arch/arm/mach-omap2/pdata-quirks.c
-@@ -24,6 +24,7 @@
- #include <linux/platform_data/ti-sysc.h>
- #include <linux/platform_data/wkup_m3.h>
- #include <linux/platform_data/asoc-ti-mcbsp.h>
-+#include <linux/platform_data/ti-prm.h>
+diff --git a/arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi b/arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi
+index 0d5ea19336a19..d192538916724 100644
+--- a/arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi
++++ b/arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi
+@@ -70,6 +70,16 @@
+ 		clock-output-names = "ext_osc32k";
+ 	};
  
- #include "clockdomain.h"
- #include "common.h"
-@@ -463,6 +464,12 @@ void omap_pcs_legacy_init(int irq, void (*rearm)(void))
- 	pcs_pdata.rearm = rearm;
- }
- 
-+static struct ti_prm_platform_data ti_prm_pdata = {
-+	.clkdm_deny_idle = clkdm_deny_idle,
-+	.clkdm_allow_idle = clkdm_allow_idle,
-+	.clkdm_lookup = clkdm_lookup,
-+};
++	pmu {
++		compatible = "arm,cortex-a53-pmu",
++			     "arm,armv8-pmuv3";
++		interrupts = <GIC_SPI 140 IRQ_TYPE_LEVEL_HIGH>,
++			     <GIC_SPI 141 IRQ_TYPE_LEVEL_HIGH>,
++			     <GIC_SPI 142 IRQ_TYPE_LEVEL_HIGH>,
++			     <GIC_SPI 143 IRQ_TYPE_LEVEL_HIGH>;
++		interrupt-affinity = <&cpu0>, <&cpu1>, <&cpu2>, <&cpu3>;
++	};
 +
- /*
-  * GPIOs for TWL are initialized by the I2C bus and need custom
-  * handing until DSS has device tree bindings.
-@@ -565,6 +572,7 @@ static struct of_dev_auxdata omap_auxdata_lookup[] = {
- 	/* Common auxdata */
- 	OF_DEV_AUXDATA("ti,sysc", 0, NULL, &ti_sysc_pdata),
- 	OF_DEV_AUXDATA("pinctrl-single", 0, NULL, &pcs_pdata),
-+	OF_DEV_AUXDATA("ti,omap-prm-inst", 0, NULL, &ti_prm_pdata),
- 	{ /* sentinel */ },
- };
- 
+ 	psci {
+ 		compatible = "arm,psci-0.2";
+ 		method = "smc";
 -- 
 2.20.1
 
