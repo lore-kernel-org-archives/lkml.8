@@ -2,120 +2,301 @@ Return-Path: <SRS0=1210=4J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-14.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 935DEC35646
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 17:57:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B7F46C35646
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 17:58:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6C4F220722
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 17:57:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6EBA020722
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 17:58:50 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Ww5wf2M+"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Wsv50n8Q"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728759AbgBUR55 (ORCPT
+        id S1728105AbgBUR6t (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Feb 2020 12:57:57 -0500
-Received: from mail-pg1-f195.google.com ([209.85.215.195]:42869 "EHLO
-        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725947AbgBUR54 (ORCPT
+        Fri, 21 Feb 2020 12:58:49 -0500
+Received: from mail-ot1-f68.google.com ([209.85.210.68]:38841 "EHLO
+        mail-ot1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725947AbgBUR6t (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Feb 2020 12:57:56 -0500
-Received: by mail-pg1-f195.google.com with SMTP id w21so1336445pgl.9;
-        Fri, 21 Feb 2020 09:57:54 -0800 (PST)
+        Fri, 21 Feb 2020 12:58:49 -0500
+Received: by mail-ot1-f68.google.com with SMTP id z9so2785964oth.5
+        for <linux-kernel@vger.kernel.org>; Fri, 21 Feb 2020 09:58:48 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=/D8p3umAJnu2Rmie5wIDoJw/XtMw5bg4kYLl7SwrZqU=;
-        b=Ww5wf2M+U9Q9PdbDPXvGrX8xRuaMm0OJNS0dg5taavKaGzja/6wQ3vcI5viCda1hJs
-         lT90s9PxizSUnPh3GM6n7qW+L3P2b19jUVhx2RfEwGHYN5izqrmRByIp/87hBfNltO8L
-         2SUidAyZB5hV0u7D/3L+t/gBL0725j/KTFVW8YciNMCupa5X8m0xJpz+hBaOwEDO3j0M
-         D70mPvxlyGYUSS7hCu9AF9eReMfQR1OCoJub8D0zPtzVxw+LsuGB5Bqdx0sjEpijjpN+
-         Zt7HxKVu/v4sDrpVaLWN+j95T8BCuWMRsMOScR551d1agjYGg6MXaD679cRGftp+HHcn
-         VkOg==
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=02nz5IY2LDSzsi6Uwi52GMpeaKEGb8jSNiWMvCCts+g=;
+        b=Wsv50n8Q9c9FO9EmNBmQOtFrLHiCL1ewuU16RjFVw6klebZY725b8j5BAv8N6Vwj0J
+         sMvP2NGGk5Xh3vofbSSJtcTtIbkOudT1vMKDWYQCEsZ4QvXlNyRidAC5Ok3xyJFzoXeG
+         EM24RX+BP0APhts8JGOywYa5e5T+R0MthuIESWOkGX5zAhQ4v+fGwLtB/iE/wBUN2j2+
+         QPNY/099g7BpMpx7gs4qnbDrGVLEUlNUAARBq5sfy5dWAzphI/RDEJto7uVqPoyoari7
+         ZPOKPiCl2CqggebttO9roTZ1S+jV0TpRLl1zSLKiqQKatK9SNrkbBZtcXK58ojXBTcBj
+         gySA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=/D8p3umAJnu2Rmie5wIDoJw/XtMw5bg4kYLl7SwrZqU=;
-        b=g3ISJIYU0QssCYzAPuPadxvkhJQvylD5d3uWNq7bUToMpDcAubfYdXmImlGOZwidyX
-         X3GETyP+v40RxOADWxt8lqfc3p1mSPOY1YsdG9/JForiHXAWLRph88mka226dEl5rf1W
-         /Fw6ZTHy2+1hfCholCE8S3CC4Ug696lW/gWx9zA1+nUWiAciiVvwl/uwTWsiJomqOReF
-         fCiII/1PmhbUVNzp4PfnEYH8WsRvZ7QMn9TJ6NALGMBtJzDywpHRIfulAKQOrZ0vGWzp
-         +7mhG2b5S3Wk/7CyZqwPXdgoSrUkmMK+C/cckrkSbnKtRjiMpCm+QKbdXtdU2qC7ULR9
-         W3Sw==
-X-Gm-Message-State: APjAAAU03dEkT5YSc2c6973jKLZ7xDzMeaQeigXoeLi5aqIHTo+d+c9T
-        7it20/THd2JAL7BDF2l7uCU=
-X-Google-Smtp-Source: APXvYqyuPt2CUyWo6GMoDeY5O469l5MPv7Qd2vF+TA+kyd9ggfinqj2ZrCDRKtEIY+r/Ko20/RKbnA==
-X-Received: by 2002:a63:cd03:: with SMTP id i3mr40862108pgg.257.1582307874467;
-        Fri, 21 Feb 2020 09:57:54 -0800 (PST)
-Received: from localhost.localdomain ([103.87.57.170])
-        by smtp.googlemail.com with ESMTPSA id t19sm3128544pgg.23.2020.02.21.09.57.50
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 21 Feb 2020 09:57:54 -0800 (PST)
-From:   Amol Grover <frextrite@gmail.com>
-To:     Eric Dumazet <edumazet@google.com>,
-        "David S . Miller" <davem@davemloft.net>,
-        Alexey Kuznetsov <kuznet@ms2.inr.ac.ru>,
-        Hideaki YOSHIFUJI <yoshfuji@linux-ipv6.org>,
-        Jakub Kicinski <kuba@kernel.org>
-Cc:     linux-kernel@vger.kernel.org,
-        linux-kernel-mentees@lists.linuxfoundation.org,
-        Joel Fernandes <joel@joelfernandes.org>,
-        Madhuparna Bhowmik <madhuparnabhowmik10@gmail.com>,
-        "Paul E . McKenney" <paulmck@kernel.org>, netdev@vger.kernel.org,
-        Amol Grover <frextrite@gmail.com>
-Subject: [PATCH] tcp: ipv4: Pass lockdep expression to RCU lists
-Date:   Fri, 21 Feb 2020 23:27:14 +0530
-Message-Id: <20200221175713.2112-1-frextrite@gmail.com>
-X-Mailer: git-send-email 2.24.1
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=02nz5IY2LDSzsi6Uwi52GMpeaKEGb8jSNiWMvCCts+g=;
+        b=lhLGHYrJndJiBrZG8xgmR/upcQw2B4JxGFUsXBkNP/nXjs6res9l1h9n07M/r+zQEh
+         pAKhfe4nDQk0SzoTkN3etLSaAgXiy9TpYdi5UWZZ3bjbACi9a0KQmzV/CYjxWtXGBCxt
+         XRtpP3b16yClbQe+DeyN2hBjtSHCs35CE4ZrE9ulw+ePS3QgOgMiHJwHgGWznaodvjFz
+         uUShqrorlzvQMdjRWj/4I00KT/11vRwXmIm2l7vFC09O5z+8Eo8++sRYwfaPMuMSnKZP
+         JS4QVfCvlwNeAWDZh34ixPO+b16Hx5rqGV8ezBVR8pnDzGwWSfZmMiMkBmJGH9KUSGhn
+         Ldqw==
+X-Gm-Message-State: APjAAAX/DXne9C7pCvDwL4lRyEns6gCorbkWdF8LJoEbNbcHQs4KM689
+        tPCdyUeNtbkhk1VgE0uWmMG13Z37PEzI3sHzZWyq1w==
+X-Google-Smtp-Source: APXvYqyTQpLKn5mk9pVf4ftGL846zu9cQ5dx4FwkJ7BtEMT7Fyn5KWCXiAcoZfE44n5b1v+b5nvpdfK5NbPxSBv2pPQ=
+X-Received: by 2002:a05:6830:1d7b:: with SMTP id l27mr27496908oti.251.1582307927408;
+ Fri, 21 Feb 2020 09:58:47 -0800 (PST)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20200219151531.161515-1-elver@google.com> <1582305008.7365.111.camel@lca.pw>
+In-Reply-To: <1582305008.7365.111.camel@lca.pw>
+From:   Marco Elver <elver@google.com>
+Date:   Fri, 21 Feb 2020 18:58:36 +0100
+Message-ID: <CANpmjNMG4nZYLi+wFR-R_ifq1+u-YfC7b68iucCRWNd4M==vrw@mail.gmail.com>
+Subject: Re: [PATCH] kcsan: Add option for verbose reporting
+To:     Qian Cai <cai@lca.pw>
+Cc:     "Paul E. McKenney" <paulmck@kernel.org>,
+        Andrey Konovalov <andreyknvl@google.com>,
+        Alexander Potapenko <glider@google.com>,
+        Dmitry Vyukov <dvyukov@google.com>,
+        kasan-dev <kasan-dev@googlegroups.com>,
+        LKML <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-md5sig->head maybe traversed using hlist_for_each_entry_rcu
-outside an RCU read-side critical section but under the protection
-of socket lock.
+On Fri, 21 Feb 2020 at 18:10, Qian Cai <cai@lca.pw> wrote:
+>
+> On Wed, 2020-02-19 at 16:15 +0100, Marco Elver wrote:
+> > Adds CONFIG_KCSAN_VERBOSE to optionally enable more verbose reports.
+> > Currently information about the reporting task's held locks and IRQ
+> > trace events are shown, if they are enabled.
+>
+> Well, there is a report. I don't understand why it said there is no lock held in
+> the writer, but clearly there is this right after in
+> jbd2_journal_commit_transaction(),
+>
+>  spin_unlock(&jh->b_state_lock);
 
-Hence, add corresponding lockdep expression to silence false-positive
-warnings, and harden RCU lists.
+This is sort of expected right now.  In the comment that adds this
+feature, it also has a comment for the "other thread" (in this case
+the writer):
 
-Signed-off-by: Amol Grover <frextrite@gmail.com>
----
- net/ipv4/tcp_ipv4.c | 6 ++++--
- 1 file changed, 4 insertions(+), 2 deletions(-)
+/*
+* Showing held locks for a running task is unreliable, so just
+* skip this. The printed locks are very likely inconsistent,
+* since the stack trace was obtained when the actual race
+* occurred and the task has since continued execution. Since we
+* cannot display the below information from the racing thread,
+* but must print it all from the watcher thread, bail out.
+* Note: Even if the task is not running, there is a chance that
+* the locks held may be inconsistent.
+*/
 
-diff --git a/net/ipv4/tcp_ipv4.c b/net/ipv4/tcp_ipv4.c
-index 1c7326e04f9b..6519429f32cd 100644
---- a/net/ipv4/tcp_ipv4.c
-+++ b/net/ipv4/tcp_ipv4.c
-@@ -1000,7 +1000,8 @@ struct tcp_md5sig_key *__tcp_md5_do_lookup(const struct sock *sk,
- 	if (!md5sig)
- 		return NULL;
- 
--	hlist_for_each_entry_rcu(key, &md5sig->head, node) {
-+	hlist_for_each_entry_rcu(key, &md5sig->head, node,
-+				 lockdep_sock_is_held(sk)) {
- 		if (key->family != family)
- 			continue;
- 
-@@ -1043,7 +1044,8 @@ static struct tcp_md5sig_key *tcp_md5_do_lookup_exact(const struct sock *sk,
- 	if (family == AF_INET6)
- 		size = sizeof(struct in6_addr);
- #endif
--	hlist_for_each_entry_rcu(key, &md5sig->head, node) {
-+	hlist_for_each_entry_rcu(key, &md5sig->head, node,
-+				 lockdep_sock_is_held(sk)) {
- 		if (key->family != family)
- 			continue;
- 		if (!memcmp(&key->addr, addr, size) &&
--- 
-2.24.1
+Hmm, I suppose I could try harder and make this reliable by stalling
+the other task if this option is on. Let me give that a try.
 
+Thanks,
+-- Marco
+
+
+> [ 2268.021382][T25724] BUG: KCSAN: data-race in __jbd2_journal_refile_buffer
+> [jbd2] / jbd2_write_access_granted [jbd2]
+> [ 2268.031888][T25724]
+> [ 2268.034099][T25724] write to 0xffff99f9b1bd0e30 of 8 bytes by task 25721 on
+> cpu 70:
+> [ 2268.041842][T25724]  __jbd2_journal_refile_buffer+0xdd/0x210 [jbd2]
+> __jbd2_journal_refile_buffer at fs/jbd2/transaction.c:2569
+> [ 2268.048181][T25724]  jbd2_journal_commit_transaction+0x2d15/0x3f20 [jbd2]
+> (inlined by) jbd2_journal_commit_transaction at fs/jbd2/commit.c:1033
+> [ 2268.055042][T25724]  kjournald2+0x13b/0x450 [jbd2]
+> [ 2268.059876][T25724]  kthread+0x1cd/0x1f0
+> [ 2268.063835][T25724]  ret_from_fork+0x27/0x50
+> [ 2268.068143][T25724]
+> [ 2268.070348][T25724] no locks held by jbd2/loop0-8/25721.
+> [ 2268.075699][T25724] irq event stamp: 77604
+> [ 2268.079830][T25724] hardirqs last  enabled at (77603): [<ffffffff986da853>]
+> _raw_spin_unlock_irqrestore+0x53/0x60
+> [ 2268.090166][T25724] hardirqs last disabled at (77604): [<ffffffff986d0841>]
+> __schedule+0x181/0xa50
+> [ 2268.099192][T25724] softirqs last  enabled at (76092): [<ffffffff98a0034c>]
+> __do_softirq+0x34c/0x57c
+> [ 2268.108392][T25724] softirqs last disabled at (76005): [<ffffffff97cc67a2>]
+> irq_exit+0xa2/0xc0
+> [ 2268.117062][T25724]
+> [ 2268.119269][T25724] read to 0xffff99f9b1bd0e30 of 8 bytes by task 25724 on
+> cpu 68:
+> [ 2268.126916][T25724]  jbd2_write_access_granted+0x1b2/0x250 [jbd2]
+> jbd2_write_access_granted at fs/jbd2/transaction.c:1155
+> [ 2268.133086][T25724]  jbd2_journal_get_write_access+0x2c/0x60 [jbd2]
+> [ 2268.139492][T25724]  __ext4_journal_get_write_access+0x50/0x90 [ext4]
+> [ 2268.146076][T25724]  ext4_mb_mark_diskspace_used+0x158/0x620 [ext4]
+> [ 2268.152507][T25724]  ext4_mb_new_blocks+0x54f/0xca0 [ext4]
+> [ 2268.158125][T25724]  ext4_ind_map_blocks+0xc79/0x1b40 [ext4]
+> [ 2268.163923][T25724]  ext4_map_blocks+0x3b4/0x950 [ext4]
+> [ 2268.169284][T25724]  _ext4_get_block+0xfc/0x270 [ext4]
+> [ 2268.174556][T25724]  ext4_get_block+0x3b/0x50 [ext4]
+> [ 2268.179566][T25724]  __block_write_begin_int+0x22e/0xae0
+> [ 2268.184921][T25724]  __block_write_begin+0x39/0x50
+> [ 2268.189842][T25724]  ext4_write_begin+0x388/0xb50 [ext4]
+> [ 2268.195195][T25724]  generic_perform_write+0x15d/0x290
+> [ 2268.200467][T25724]  ext4_buffered_write_iter+0x11f/0x210 [ext4]
+> [ 2268.206612][T25724]  ext4_file_write_iter+0xce/0x9e0 [ext4]
+> [ 2268.212228][T25724]  new_sync_write+0x29c/0x3b0
+> [ 2268.216794][T25724]  __vfs_write+0x92/0xa0
+> [ 2268.220924][T25724]  vfs_write+0x103/0x260
+> [ 2268.225052][T25724]  ksys_write+0x9d/0x130
+> [ 2268.229182][T25724]  __x64_sys_write+0x4c/0x60
+> [ 2268.233666][T25724]  do_syscall_64+0x91/0xb05
+> [ 2268.238058][T25724]  entry_SYSCALL_64_after_hwframe+0x49/0xbe
+> [ 2268.243846][T25724]
+> [ 2268.246056][T25724] 5 locks held by fsync04/25724:
+> [ 2268.250880][T25724]  #0: ffff99f9911093f8 (sb_writers#13){.+.+}, at:
+> vfs_write+0x21c/0x260
+> [ 2268.259211][T25724]  #1: ffff99f9db4c0348 (&sb->s_type-
+> >i_mutex_key#15){+.+.}, at: ext4_buffered_write_iter+0x65/0x210 [ext4]
+> [ 2268.270693][T25724]  #2: ffff99f5e7dfcf58 (jbd2_handle){++++}, at:
+> start_this_handle+0x1c1/0x9d0 [jbd2]
+> [ 2268.280180][T25724]  #3: ffff99f9db4c0168 (&ei->i_data_sem){++++}, at:
+> ext4_map_blocks+0x176/0x950 [ext4]
+> [ 2268.289913][T25724]  #4: ffffffff99086b40 (rcu_read_lock){....}, at:
+> jbd2_write_access_granted+0x4e/0x250 [jbd2]
+> [ 2268.300187][T25724] irq event stamp: 1407125
+> [ 2268.304496][T25724] hardirqs last  enabled at (1407125): [<ffffffff980da9b7>]
+> __find_get_block+0x107/0x790
+> [ 2268.314218][T25724] hardirqs last disabled at (1407124): [<ffffffff980da8f9>]
+> __find_get_block+0x49/0x790
+> [ 2268.323856][T25724] softirqs last  enabled at (1405528): [<ffffffff98a0034c>]
+> __do_softirq+0x34c/0x57c
+> [ 2268.333229][T25724] softirqs last disabled at (1405521): [<ffffffff97cc67a2>]
+> irq_exit+0xa2/0xc0
+> [ 2268.342075][T25724]
+> [ 2268.344282][T25724] Reported by Kernel Concurrency Sanitizer on:
+> [ 2268.350339][T25724] CPU: 68 PID: 25724 Comm: fsync04 Tainted:
+> G             L    5.6.0-rc2-next-20200221+ #7
+> [ 2268.360234][T25724] Hardware name: HPE ProLiant DL385 Gen10/ProLiant DL385
+> Gen10, BIOS A40 07/10/2019
+>
+> >
+> > Signed-off-by: Marco Elver <elver@google.com>
+> > Suggested-by: Qian Cai <cai@lca.pw>
+> > ---
+> >  kernel/kcsan/report.c | 48 +++++++++++++++++++++++++++++++++++++++++++
+> >  lib/Kconfig.kcsan     | 13 ++++++++++++
+> >  2 files changed, 61 insertions(+)
+> >
+> > diff --git a/kernel/kcsan/report.c b/kernel/kcsan/report.c
+> > index 11c791b886f3c..f14becb6f1537 100644
+> > --- a/kernel/kcsan/report.c
+> > +++ b/kernel/kcsan/report.c
+> > @@ -1,10 +1,12 @@
+> >  // SPDX-License-Identifier: GPL-2.0
+> >
+> > +#include <linux/debug_locks.h>
+> >  #include <linux/jiffies.h>
+> >  #include <linux/kernel.h>
+> >  #include <linux/lockdep.h>
+> >  #include <linux/preempt.h>
+> >  #include <linux/printk.h>
+> > +#include <linux/rcupdate.h>
+> >  #include <linux/sched.h>
+> >  #include <linux/spinlock.h>
+> >  #include <linux/stacktrace.h>
+> > @@ -245,6 +247,29 @@ static int sym_strcmp(void *addr1, void *addr2)
+> >       return strncmp(buf1, buf2, sizeof(buf1));
+> >  }
+> >
+> > +static void print_verbose_info(struct task_struct *task)
+> > +{
+> > +     if (!task)
+> > +             return;
+> > +
+> > +     if (task != current && task->state == TASK_RUNNING)
+> > +             /*
+> > +              * Showing held locks for a running task is unreliable, so just
+> > +              * skip this. The printed locks are very likely inconsistent,
+> > +              * since the stack trace was obtained when the actual race
+> > +              * occurred and the task has since continued execution. Since we
+> > +              * cannot display the below information from the racing thread,
+> > +              * but must print it all from the watcher thread, bail out.
+> > +              * Note: Even if the task is not running, there is a chance that
+> > +              * the locks held may be inconsistent.
+> > +              */
+> > +             return;
+> > +
+> > +     pr_err("\n");
+> > +     debug_show_held_locks(task);
+> > +     print_irqtrace_events(task);
+> > +}
+> > +
+> >  /*
+> >   * Returns true if a report was generated, false otherwise.
+> >   */
+> > @@ -319,6 +344,26 @@ static bool print_report(const volatile void *ptr, size_t size, int access_type,
+> >                                 other_info.num_stack_entries - other_skipnr,
+> >                                 0);
+> >
+> > +             if (IS_ENABLED(CONFIG_KCSAN_VERBOSE) && other_info.task_pid != -1) {
+> > +                     struct task_struct *other_task;
+> > +
+> > +                     /*
+> > +                      * Rather than passing @current from the other task via
+> > +                      * @other_info, obtain task_struct here. The problem
+> > +                      * with passing @current via @other_info is that, we
+> > +                      * would have to get_task_struct/put_task_struct, and if
+> > +                      * we race with a task being released, we would have to
+> > +                      * release it in release_report(). This may result in
+> > +                      * deadlock if we want to use KCSAN on the allocators.
+> > +                      * Instead, make this best-effort, and if the task was
+> > +                      * already released, we just do not print anything here.
+> > +                      */
+> > +                     rcu_read_lock();
+> > +                     other_task = find_task_by_pid_ns(other_info.task_pid, &init_pid_ns);
+> > +                     print_verbose_info(other_task);
+> > +                     rcu_read_unlock();
+> > +             }
+> > +
+> >               pr_err("\n");
+> >               pr_err("%s to 0x%px of %zu bytes by %s on cpu %i:\n",
+> >                      get_access_type(access_type), ptr, size,
+> > @@ -340,6 +385,9 @@ static bool print_report(const volatile void *ptr, size_t size, int access_type,
+> >       stack_trace_print(stack_entries + skipnr, num_stack_entries - skipnr,
+> >                         0);
+> >
+> > +     if (IS_ENABLED(CONFIG_KCSAN_VERBOSE))
+> > +             print_verbose_info(current);
+> > +
+> >       /* Print report footer. */
+> >       pr_err("\n");
+> >       pr_err("Reported by Kernel Concurrency Sanitizer on:\n");
+> > diff --git a/lib/Kconfig.kcsan b/lib/Kconfig.kcsan
+> > index f0b791143c6ab..ba9268076cfbc 100644
+> > --- a/lib/Kconfig.kcsan
+> > +++ b/lib/Kconfig.kcsan
+> > @@ -20,6 +20,19 @@ menuconfig KCSAN
+> >
+> >  if KCSAN
+> >
+> > +config KCSAN_VERBOSE
+> > +     bool "Show verbose reports with more information about system state"
+> > +     depends on PROVE_LOCKING
+> > +     help
+> > +       If enabled, reports show more information about the system state that
+> > +       may help better analyze and debug races. This includes held locks and
+> > +       IRQ trace events.
+> > +
+> > +       While this option should generally be benign, we call into more
+> > +       external functions on report generation; if a race report is
+> > +       generated from any one of them, system stability may suffer due to
+> > +       deadlocks or recursion.  If in doubt, say N.
+> > +
+> >  config KCSAN_DEBUG
+> >       bool "Debugging of KCSAN internals"
+> >
