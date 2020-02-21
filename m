@@ -2,54 +2,51 @@ Return-Path: <SRS0=1210=4J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EB1AFC35641
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 08:01:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C7ED4C35641
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 08:01:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B35F22073A
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 08:01:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9D6362073A
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 08:01:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582272111;
-	bh=HDNfsmOpb9MK1yv2aN+/E97lXV9iDVXQh3D1EFAviJE=;
+	s=default; t=1582272114;
+	bh=oqTT/1FyUaTJRtLSIyaPrRGQSsQSWyhw0sE6xLLLCFI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=pRK5VdHUECEWyKwtt3zal5Ul3w8QvBQxmDOvdx1tjFt4uPBvew5md6BwgMTu0JEb8
-	 BDeBobOhOArs3Gj7/ftM4nHkruHvb9jx5w4qUgXy9cjXuTbOK/X77lU1VLDin3L6GR
-	 ns09NDpvlvhPeoFtEGYE8wKcupq81q+kAusB4Z+s=
+	b=hMzRAwNcO+i+WeVUZl3zU2gIAOdDihOX0y9B5p1+/e8SD9Zrwax6Gsl5l892qpQLv
+	 JZrdtLvaKDpRm5joSs7wDhz61xRtoNGvPF3lrLkI/XBsZ7UicrIWwMIwvSlS4CdekO
+	 PUMO08Qf7WgoGlC5T/xSbsedzsPr5+cD0EbacEmw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731250AbgBUIBt (ORCPT
+        id S1731257AbgBUIBx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Feb 2020 03:01:49 -0500
-Received: from mail.kernel.org ([198.145.29.99]:34078 "EHLO mail.kernel.org"
+        Fri, 21 Feb 2020 03:01:53 -0500
+Received: from mail.kernel.org ([198.145.29.99]:34188 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731087AbgBUIBo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Feb 2020 03:01:44 -0500
+        id S1731087AbgBUIBu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 21 Feb 2020 03:01:50 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B869C20801;
-        Fri, 21 Feb 2020 08:01:43 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3594E20801;
+        Fri, 21 Feb 2020 08:01:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1582272104;
-        bh=HDNfsmOpb9MK1yv2aN+/E97lXV9iDVXQh3D1EFAviJE=;
+        s=default; t=1582272109;
+        bh=oqTT/1FyUaTJRtLSIyaPrRGQSsQSWyhw0sE6xLLLCFI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=mgEzOxwonY1OFOBaNYGjxiZj815+SkiHGqDnpEwjqgamUTeoVbmzPu5LaeTgdHXnu
-         VAMaNSvTwDuLzNkgDv5PxHQ2tLHFLlPhLx9im+V8oaN6Wz3Avi88MA49IqoWQrHWYJ
-         m74oeAD03FtawvDsDb+DepOImH8xL23TrrHyWcfg=
+        b=dIhTH623RZhKSehwhTcev+UzvrXuZJfQLFytRrQY/U75k85AVKxf41uyNVoNSYvpU
+         Hlb3O+dIpuGYHXs+Jjo9M6z3fs9/3U8IA/DBGbmviaPe3lyzuuDGI+dvqBbE7sMGMw
+         OxhO5CXSFGg+kpF70z3Ahox/OkwCggecOeqTilcU=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Colin Ian King <colin.king@canonical.com>,
-        Kevin Hilman <khilman@baylibre.com>,
-        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
-        Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 018/344] media: meson: add missing allocation failure check on new_buf
-Date:   Fri, 21 Feb 2020 08:36:57 +0100
-Message-Id: <20200221072350.877403151@linuxfoundation.org>
+        stable@vger.kernel.org, Firo Yang <firo.yang@suse.com>,
+        "David S. Miller" <davem@davemloft.net>
+Subject: [PATCH 5.4 002/344] enic: prevent waking up stopped tx queues over watchdog reset
+Date:   Fri, 21 Feb 2020 08:36:41 +0100
+Message-Id: <20200221072349.543331691@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200221072349.335551332@linuxfoundation.org>
 References: <20200221072349.335551332@linuxfoundation.org>
@@ -62,42 +59,57 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Colin Ian King <colin.king@canonical.com>
+From: Firo Yang <firo.yang@suse.com>
 
-[ Upstream commit 11e0e167d071a28288a7a0a211d48c571d19b56f ]
+[ Upstream commit 0f90522591fd09dd201065c53ebefdfe3c6b55cb ]
 
-Currently if the allocation of new_buf fails then a null pointer
-dereference occurs when assiging new_buf->vb. Avoid this by returning
-early on a memory allocation failure as there is not much more can
-be done at this point.
+Recent months, our customer reported several kernel crashes all
+preceding with following message:
+NETDEV WATCHDOG: eth2 (enic): transmit queue 0 timed out
+Error message of one of those crashes:
+BUG: unable to handle kernel paging request at ffffffffa007e090
 
-Addresses-Coverity: ("Dereference null return")
+After analyzing severl vmcores, I found that most of crashes are
+caused by memory corruption. And all the corrupted memory areas
+are overwritten by data of network packets. Moreover, I also found
+that the tx queues were enabled over watchdog reset.
 
-Fixes: 3e7f51bd9607 ("media: meson: add v4l2 m2m video decoder driver")
-Signed-off-by: Colin Ian King <colin.king@canonical.com>
-Reviewed-by: Kevin Hilman <khilman@baylibre.com>
-Signed-off-by: Hans Verkuil <hverkuil-cisco@xs4all.nl>
-Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+After going through the source code, I found that in enic_stop(),
+the tx queues stopped by netif_tx_disable() could be woken up over
+a small time window between netif_tx_disable() and the
+napi_disable() by the following code path:
+napi_poll->
+  enic_poll_msix_wq->
+     vnic_cq_service->
+        enic_wq_service->
+           netif_wake_subqueue(enic->netdev, q_number)->
+              test_and_clear_bit(__QUEUE_STATE_DRV_XOFF, &txq->state)
+In turn, upper netowrk stack could queue skb to ENIC NIC though
+enic_hard_start_xmit(). And this might introduce some race condition.
+
+Our customer comfirmed that this kind of kernel crash doesn't occur over
+90 days since they applied this patch.
+
+Signed-off-by: Firo Yang <firo.yang@suse.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- drivers/staging/media/meson/vdec/vdec.c | 2 ++
- 1 file changed, 2 insertions(+)
+ drivers/net/ethernet/cisco/enic/enic_main.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/staging/media/meson/vdec/vdec.c b/drivers/staging/media/meson/vdec/vdec.c
-index 0a1a04fd5d13d..8dd1396909d7e 100644
---- a/drivers/staging/media/meson/vdec/vdec.c
-+++ b/drivers/staging/media/meson/vdec/vdec.c
-@@ -133,6 +133,8 @@ vdec_queue_recycle(struct amvdec_session *sess, struct vb2_buffer *vb)
- 	struct amvdec_buffer *new_buf;
+--- a/drivers/net/ethernet/cisco/enic/enic_main.c
++++ b/drivers/net/ethernet/cisco/enic/enic_main.c
+@@ -2013,10 +2013,10 @@ static int enic_stop(struct net_device *
+ 		napi_disable(&enic->napi[i]);
  
- 	new_buf = kmalloc(sizeof(*new_buf), GFP_KERNEL);
-+	if (!new_buf)
-+		return;
- 	new_buf->vb = vb;
+ 	netif_carrier_off(netdev);
+-	netif_tx_disable(netdev);
+ 	if (vnic_dev_get_intr_mode(enic->vdev) == VNIC_DEV_INTR_MODE_MSIX)
+ 		for (i = 0; i < enic->wq_count; i++)
+ 			napi_disable(&enic->napi[enic_cq_wq(enic, i)]);
++	netif_tx_disable(netdev);
  
- 	mutex_lock(&sess->bufs_recycle_lock);
--- 
-2.20.1
-
+ 	if (!enic_is_dynamic(enic) && !enic_is_sriov_vf(enic))
+ 		enic_dev_del_station_addr(enic);
 
 
