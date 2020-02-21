@@ -7,46 +7,49 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4D262C35642
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 08:14:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6AE41C35642
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 08:14:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2436924681
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 08:14:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 36F3A24681
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 08:14:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582272887;
-	bh=vaK5QLAbHaoGjjiAE8dsHHEguWhG8eVINS0uUsivSg0=;
+	s=default; t=1582272892;
+	bh=hDDi7NfkHyAkUUnTbKQGRytKtjAXcZBx1AojSyMOTjA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=plDu8DpA6DJkq1TdwguleeL4h8iA8cYvKGYmIvJqM3dPa/YZAcE0y7IIucZT69j0g
-	 Sdv9uGmsjBXzbR9kZfi1ve05YSTVxii5Bbzlgn+cBsVZnzAtlWVhlvm+h42i2b6PLQ
-	 n3OBuXxO5dpr619e1bDno6QBffRwgxA+rtLlYDns=
+	b=IK7e+BUDMntLEpuMeE88L503d9vaTkG6IZTYlpm5qElRYa5JumE2+VPqRRTTx8+NG
+	 eHDuuOyEpd+p7i/1lI8VtewNt9/BI0dEr9oHEm9VDxmLDUVZo44t2XnrBOYbtZJHNa
+	 QhUyu0oYgykwPgINyKxZIvqg4svMgqJwAn2RI6wI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733224AbgBUIOq (ORCPT
+        id S1733234AbgBUIOt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Feb 2020 03:14:46 -0500
-Received: from mail.kernel.org ([198.145.29.99]:51296 "EHLO mail.kernel.org"
+        Fri, 21 Feb 2020 03:14:49 -0500
+Received: from mail.kernel.org ([198.145.29.99]:51392 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732492AbgBUIOm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Feb 2020 03:14:42 -0500
+        id S1732492AbgBUIOr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 21 Feb 2020 03:14:47 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id AB38A20722;
-        Fri, 21 Feb 2020 08:14:41 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A42AA24670;
+        Fri, 21 Feb 2020 08:14:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1582272882;
-        bh=vaK5QLAbHaoGjjiAE8dsHHEguWhG8eVINS0uUsivSg0=;
+        s=default; t=1582272887;
+        bh=hDDi7NfkHyAkUUnTbKQGRytKtjAXcZBx1AojSyMOTjA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=eZm1DSkas7DaR+NOzJZmotVgtil32swtr8gtiz7TYNLUptsLb7wBfXFoDmsfD8IrK
-         sNYK/spIHCjEQ+2Jx0/XcOefJi7X4gzlMTtr+WBH2czqcdafj5BH0FO2Tp24qIYokb
-         fOB7LgMNUIlCq0F9gaTNvOY0MNcJJdniDTQl/YE0=
+        b=Y+mUhSB+L/4xHwI2sLVHH79pkNKFV1ZHQzGNiwuhehikdGo5XlX00pCGsAvT49tbU
+         lVZ3dx1M1Du46YMYjGnk7ld+vlTvG32For/QgBfX/1ByQTBC/TXgrg89M3cpOK+MhN
+         zcLSSQFkfHdMH/OA78jo+qz/L/4DzhWNpXW+FIvE=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Marc Zyngier <maz@kernel.org>,
-        Heyi Guo <guoheyi@huawei.com>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 310/344] irqchip/gic-v3: Only provision redistributors that are enabled in ACPI
-Date:   Fri, 21 Feb 2020 08:41:49 +0100
-Message-Id: <20200221072418.171289758@linuxfoundation.org>
+        stable@vger.kernel.org,
+        "Gustavo A. R. Silva" <gustavo@embeddedor.com>,
+        Tetsuo Handa <penguin-kernel@I-love.SAKURA.ne.jp>,
+        Eric Biggers <ebiggers@kernel.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.4 312/344] char: hpet: Fix out-of-bounds read bug
+Date:   Fri, 21 Feb 2020 08:41:51 +0100
+Message-Id: <20200221072418.378382693@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200221072349.335551332@linuxfoundation.org>
 References: <20200221072349.335551332@linuxfoundation.org>
@@ -59,68 +62,54 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Marc Zyngier <maz@kernel.org>
+From: Gustavo A. R. Silva <gustavo@embeddedor.com>
 
-[ Upstream commit 926b5dfa6b8dc666ff398044af6906b156e1d949 ]
+[ Upstream commit 98c49f1746ac44ccc164e914b9a44183fad09f51 ]
 
-We currently allocate redistributor region structures for
-individual redistributors when ACPI doesn't present us with
-compact MMIO regions covering multiple redistributors.
+Currently, there is an out-of-bounds read on array hpetp->hp_dev
+in the following for loop:
 
-It turns out that we allocate these structures even when
-the redistributor is flagged as disabled by ACPI. It works
-fine until someone actually tries to tarse one of these
-structures, and access the corresponding MMIO region.
+870         for (i = 0; i < hdp->hd_nirqs; i++)
+871                 hpetp->hp_dev[i].hd_hdwirq = hdp->hd_irq[i];
 
-Instead, track the number of enabled redistributors, and
-only allocate what is required. This makes sure that there
-is no invalid data to misuse.
+This is due to the recent change from one-element array to
+flexible-array member in struct hpets:
 
-Signed-off-by: Marc Zyngier <maz@kernel.org>
-Reported-by: Heyi Guo <guoheyi@huawei.com>
-Tested-by: Heyi Guo <guoheyi@huawei.com>
-Link: https://lore.kernel.org/r/20191216062745.63397-1-guoheyi@huawei.com
+104 struct hpets {
+	...
+113         struct hpet_dev hp_dev[];
+114 };
+
+This change affected the total size of the dynamic memory
+allocation, decreasing it by one time the size of struct hpet_dev.
+
+Fix this by adjusting the allocation size when calling
+struct_size().
+
+Fixes: 987f028b8637c ("char: hpet: Use flexible-array member")
+Signed-off-by: Gustavo A. R. Silva <gustavo@embeddedor.com>
+Signed-off-by: Tetsuo Handa <penguin-kernel@I-love.SAKURA.ne.jp>
+Acked-by: Eric Biggers <ebiggers@kernel.org>
+Link: https://lore.kernel.org/r/20200129022613.GA24281@embeddedor.com
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/irqchip/irq-gic-v3.c | 9 +++++++--
- 1 file changed, 7 insertions(+), 2 deletions(-)
+ drivers/char/hpet.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/irqchip/irq-gic-v3.c b/drivers/irqchip/irq-gic-v3.c
-index 1edc99335a946..446603efbc90b 100644
---- a/drivers/irqchip/irq-gic-v3.c
-+++ b/drivers/irqchip/irq-gic-v3.c
-@@ -1801,6 +1801,7 @@ static struct
- 	struct redist_region *redist_regs;
- 	u32 nr_redist_regions;
- 	bool single_redist;
-+	int enabled_rdists;
- 	u32 maint_irq;
- 	int maint_irq_mode;
- 	phys_addr_t vcpu_base;
-@@ -1895,8 +1896,10 @@ static int __init gic_acpi_match_gicc(union acpi_subtable_headers *header,
- 	 * If GICC is enabled and has valid gicr base address, then it means
- 	 * GICR base is presented via GICC
- 	 */
--	if ((gicc->flags & ACPI_MADT_ENABLED) && gicc->gicr_base_address)
-+	if ((gicc->flags & ACPI_MADT_ENABLED) && gicc->gicr_base_address) {
-+		acpi_data.enabled_rdists++;
+diff --git a/drivers/char/hpet.c b/drivers/char/hpet.c
+index 9ac6671bb5141..f69609b47fef8 100644
+--- a/drivers/char/hpet.c
++++ b/drivers/char/hpet.c
+@@ -855,7 +855,7 @@ int hpet_alloc(struct hpet_data *hdp)
  		return 0;
-+	}
+ 	}
  
- 	/*
- 	 * It's perfectly valid firmware can pass disabled GICC entry, driver
-@@ -1926,8 +1929,10 @@ static int __init gic_acpi_count_gicr_regions(void)
+-	hpetp = kzalloc(struct_size(hpetp, hp_dev, hdp->hd_nirqs - 1),
++	hpetp = kzalloc(struct_size(hpetp, hp_dev, hdp->hd_nirqs),
+ 			GFP_KERNEL);
  
- 	count = acpi_table_parse_madt(ACPI_MADT_TYPE_GENERIC_INTERRUPT,
- 				      gic_acpi_match_gicc, 0);
--	if (count > 0)
-+	if (count > 0) {
- 		acpi_data.single_redist = true;
-+		count = acpi_data.enabled_rdists;
-+	}
- 
- 	return count;
- }
+ 	if (!hpetp)
 -- 
 2.20.1
 
