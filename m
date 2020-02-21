@@ -7,40 +7,40 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2A81EC35669
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 21:25:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A3AF4C35666
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 21:25:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EA5AA24689
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 21:25:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7B34624686
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 21:25:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582320330;
-	bh=U3QRFgorUSPKmV1pjsKNqZxdmuKqHi6ASTjt45Lygjc=;
+	s=default; t=1582320332;
+	bh=9L3zX4koVc32qpAT/bAy03gWL+eJ4yZPBNHEHX9BVO4=;
 	h=From:To:Subject:Date:In-Reply-To:References:In-Reply-To:
 	 References:List-ID:From;
-	b=GKmt3kN1W+oHiKKpSZExC1uTQ80c6WtBPGLIWWOc5RHUu1UtRT/WdDYQPllx50BC1
-	 0nIc57+aDx/zQXFRLMjDZL65iD8fFa/AipR9DDKAoY3j9rHULM5Ip+/Iwjljlj+EGD
-	 HN4chdVizHmSsYOj7+OqrjWR6cmeI00EdpbqS8UI=
+	b=NQX35iZyCNcGdyywtj2yx4V8dsLv8OeQo2D4QWixKANl1ygOlJCSLR1G6S7CvWXkI
+	 0Qh+AbCUCn+HmpR9f2Q/6yDAH2rAxcEYs423J4mEtvxc/1nrgLuLbhLt5HzXuRhgQB
+	 RzSYSRdkYPwdwNmQrNUUjMYEEKekj2lv6owUbDww=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729326AbgBUVZ2 (ORCPT
+        id S1729385AbgBUVZa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Feb 2020 16:25:28 -0500
-Received: from mail.kernel.org ([198.145.29.99]:39176 "EHLO mail.kernel.org"
+        Fri, 21 Feb 2020 16:25:30 -0500
+Received: from mail.kernel.org ([198.145.29.99]:39210 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729172AbgBUVZY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Feb 2020 16:25:24 -0500
+        id S1729278AbgBUVZ2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 21 Feb 2020 16:25:28 -0500
 Received: from localhost.localdomain (c-98-220-238-81.hsd1.il.comcast.net [98.220.238.81])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3E5282467A;
-        Fri, 21 Feb 2020 21:25:23 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3917724681;
+        Fri, 21 Feb 2020 21:25:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1582320323;
-        bh=U3QRFgorUSPKmV1pjsKNqZxdmuKqHi6ASTjt45Lygjc=;
+        s=default; t=1582320326;
+        bh=9L3zX4koVc32qpAT/bAy03gWL+eJ4yZPBNHEHX9BVO4=;
         h=From:To:Subject:Date:In-Reply-To:References:In-Reply-To:
          References:From;
-        b=YsRQzxWE3n5HLjDQRcu2WAdQciZkZRIetTpuume5gT0hZ+9OK2dJJHDW/o2FiZrBH
-         qOBTcxdD894Mc+xLGB03o9eEfUTpZnnu3OBGgpP7z8Eo39s5Gcaun9YAqhlkajl8Yf
-         0Lvy21CIr8un8Epg4iPd7YUJOG+1ZWygA2F5C8ZY=
+        b=cBi7WI0zmyqxGaphi9pITUSWgqlOJoyDZkvuLhXFrxymPOsk+7BEcfS+LpLQFDZ80
+         5XEgHZ1l6oiE/89ubFZcq8X4ZWvTBnVG6hKRIYQbn2kqJG6atSlCLptuTVc2pM8Eeb
+         pl0ztCek4VMqjuF+o7AsibsSKDR5ZygO+1G7WgqE=
 From:   zanussi@kernel.org
 To:     LKML <linux-kernel@vger.kernel.org>,
         linux-rt-users <linux-rt-users@vger.kernel.org>,
@@ -51,9 +51,9 @@ To:     LKML <linux-kernel@vger.kernel.org>,
         Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
         Daniel Wagner <wagi@monom.org>,
         Tom Zanussi <zanussi@kernel.org>
-Subject: [PATCH RT 09/25] sched: migrate disable: Protect cpus_ptr with lock
-Date:   Fri, 21 Feb 2020 15:24:37 -0600
-Message-Id: <c58bd5258b0f4f0b9ee767ca91402fd392a8c8db.1582320278.git.zanussi@kernel.org>
+Subject: [PATCH RT 12/25] locking/rtmutex: Clean ->pi_blocked_on in the error case
+Date:   Fri, 21 Feb 2020 15:24:40 -0600
+Message-Id: <befe685be1d8f3710d33ee259b869645117d2138.1582320278.git.zanussi@kernel.org>
 X-Mailer: git-send-email 2.14.1
 In-Reply-To: <cover.1582320278.git.zanussi@kernel.org>
 References: <cover.1582320278.git.zanussi@kernel.org>
@@ -64,7 +64,7 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Scott Wood <swood@redhat.com>
+From: Peter Zijlstra <peterz@infradead.org>
 
 v4.14.170-rt75-rc1 stable review patch.
 If anyone has any objections, please let me know.
@@ -72,44 +72,98 @@ If anyone has any objections, please let me know.
 -----------
 
 
-[ Upstream commit 27ee52a891ed2c7e2e2c8332ccae0de7c2674b09 ]
+[ Upstream commit 0be4ea6e3ce693101be0fbd55a0cc7ce238ab2eb ]
 
-Various places assume that cpus_ptr is protected by rq/pi locks,
-so don't change it before grabbing those locks.
+The function rt_mutex_wait_proxy_lock() cleans ->pi_blocked_on in case
+of failure (timeout, signal). The same cleanup is required in
+__rt_mutex_start_proxy_lock().
+In both the cases the tasks was interrupted by a signal or timeout while
+acquiring the lock and after the interruption it longer blocks on the
+lock.
 
-Signed-off-by: Scott Wood <swood@redhat.com>
+Fixes: 1a1fb985f2e2b ("futex: Handle early deadlock return correctly")
+Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
 Signed-off-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
 Signed-off-by: Tom Zanussi <zanussi@kernel.org>
 ---
- kernel/sched/core.c | 6 ++----
- 1 file changed, 2 insertions(+), 4 deletions(-)
+ kernel/locking/rtmutex.c | 43 +++++++++++++++++++++++++------------------
+ 1 file changed, 25 insertions(+), 18 deletions(-)
 
-diff --git a/kernel/sched/core.c b/kernel/sched/core.c
-index 4708129e8df1..189e6f08575e 100644
---- a/kernel/sched/core.c
-+++ b/kernel/sched/core.c
-@@ -6923,9 +6923,8 @@ migrate_disable_update_cpus_allowed(struct task_struct *p)
- 	struct rq *rq;
- 	struct rq_flags rf;
+diff --git a/kernel/locking/rtmutex.c b/kernel/locking/rtmutex.c
+index 1177f2815040..4bc01a2a9a88 100644
+--- a/kernel/locking/rtmutex.c
++++ b/kernel/locking/rtmutex.c
+@@ -2328,6 +2328,26 @@ void rt_mutex_proxy_unlock(struct rt_mutex *lock,
+ 	rt_mutex_set_owner(lock, NULL);
+ }
  
--	p->cpus_ptr = cpumask_of(smp_processor_id());
--
- 	rq = task_rq_lock(p, &rf);
-+	p->cpus_ptr = cpumask_of(smp_processor_id());
- 	update_nr_migratory(p, -1);
- 	p->nr_cpus_allowed = 1;
- 	task_rq_unlock(rq, p, &rf);
-@@ -6937,9 +6936,8 @@ migrate_enable_update_cpus_allowed(struct task_struct *p)
- 	struct rq *rq;
- 	struct rq_flags rf;
++static void fixup_rt_mutex_blocked(struct rt_mutex *lock)
++{
++	struct task_struct *tsk = current;
++	/*
++	 * RT has a problem here when the wait got interrupted by a timeout
++	 * or a signal. task->pi_blocked_on is still set. The task must
++	 * acquire the hash bucket lock when returning from this function.
++	 *
++	 * If the hash bucket lock is contended then the
++	 * BUG_ON(rt_mutex_real_waiter(task->pi_blocked_on)) in
++	 * task_blocks_on_rt_mutex() will trigger. This can be avoided by
++	 * clearing task->pi_blocked_on which removes the task from the
++	 * boosting chain of the rtmutex. That's correct because the task
++	 * is not longer blocked on it.
++	 */
++	raw_spin_lock(&tsk->pi_lock);
++	tsk->pi_blocked_on = NULL;
++	raw_spin_unlock(&tsk->pi_lock);
++}
++
+ /**
+  * __rt_mutex_start_proxy_lock() - Start lock acquisition for another task
+  * @lock:		the rt_mutex to take
+@@ -2400,6 +2420,9 @@ int __rt_mutex_start_proxy_lock(struct rt_mutex *lock,
+ 		ret = 0;
+ 	}
  
--	p->cpus_ptr = &p->cpus_mask;
--
- 	rq = task_rq_lock(p, &rf);
-+	p->cpus_ptr = &p->cpus_mask;
- 	p->nr_cpus_allowed = cpumask_weight(&p->cpus_mask);
- 	update_nr_migratory(p, 1);
- 	task_rq_unlock(rq, p, &rf);
++	if (ret)
++		fixup_rt_mutex_blocked(lock);
++
+ 	debug_rt_mutex_print_deadlock(waiter);
+ 
+ 	return ret;
+@@ -2480,7 +2503,6 @@ int rt_mutex_wait_proxy_lock(struct rt_mutex *lock,
+ 			       struct hrtimer_sleeper *to,
+ 			       struct rt_mutex_waiter *waiter)
+ {
+-	struct task_struct *tsk = current;
+ 	int ret;
+ 
+ 	raw_spin_lock_irq(&lock->wait_lock);
+@@ -2492,23 +2514,8 @@ int rt_mutex_wait_proxy_lock(struct rt_mutex *lock,
+ 	 * have to fix that up.
+ 	 */
+ 	fixup_rt_mutex_waiters(lock);
+-	/*
+-	 * RT has a problem here when the wait got interrupted by a timeout
+-	 * or a signal. task->pi_blocked_on is still set. The task must
+-	 * acquire the hash bucket lock when returning from this function.
+-	 *
+-	 * If the hash bucket lock is contended then the
+-	 * BUG_ON(rt_mutex_real_waiter(task->pi_blocked_on)) in
+-	 * task_blocks_on_rt_mutex() will trigger. This can be avoided by
+-	 * clearing task->pi_blocked_on which removes the task from the
+-	 * boosting chain of the rtmutex. That's correct because the task
+-	 * is not longer blocked on it.
+-	 */
+-	if (ret) {
+-		raw_spin_lock(&tsk->pi_lock);
+-		tsk->pi_blocked_on = NULL;
+-		raw_spin_unlock(&tsk->pi_lock);
+-	}
++	if (ret)
++		fixup_rt_mutex_blocked(lock);
+ 
+ 	raw_spin_unlock_irq(&lock->wait_lock);
+ 
 -- 
 2.14.1
 
