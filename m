@@ -2,188 +2,110 @@ Return-Path: <SRS0=1210=4J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CD21BC11D24
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 05:10:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 06CC1C11D27
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 05:12:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 968C0208E4
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 05:10:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D21E9208E4
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 05:12:34 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="d1Fu+ogQ"
+	dkim=pass (2048-bit key) header.d=ellerman.id.au header.i=@ellerman.id.au header.b="R+XtdpLE"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727239AbgBUFKv (ORCPT
+        id S1727053AbgBUFMd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Feb 2020 00:10:51 -0500
-Received: from mail-yb1-f194.google.com ([209.85.219.194]:45841 "EHLO
-        mail-yb1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726836AbgBUFKk (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Feb 2020 00:10:40 -0500
-Received: by mail-yb1-f194.google.com with SMTP id j78so566324ybg.12
-        for <linux-kernel@vger.kernel.org>; Thu, 20 Feb 2020 21:10:39 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=ue/f9kEN8w6QddyvIhT39ZkvX9Hca0EirpL9SV/YEhY=;
-        b=d1Fu+ogQGZMD0q7e9H3iAoCmudipLn8ZuzLY0G3GwkYcoza/uH2zJDM74Cb2jmDghf
-         Xpn6p5zwkkeVBx4nB0lmdNvVq+Dp+QSjC5/ZK6hQoyUlyqr+FoOEAYjfX3e8UAj1CXsi
-         kg6/G3+bXOGdrn4SHV2ktybc+iG30BAvAmWiPhoNh15Uv8bx4OeT9O57fZkQ1uacWPUx
-         eOdj80bTjm3gIoCs3T0FACFspcaZqngIQw++FzQPsYvjcvYlhE79s2mzCMvS2rA3Xugl
-         0ZRH/Ot3iFoOOa2ENkFMVPWjnQ5zlcyVaRFKJ/ccWPeiRGq36CFCe8KKM5RW+dtUFQiy
-         /W2w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=ue/f9kEN8w6QddyvIhT39ZkvX9Hca0EirpL9SV/YEhY=;
-        b=eU48zttbby9q6C0b8ZFYWA9chwnmtmwfPM0rTitmM9120VO+hvb6QMkWUdcKQK0Sf9
-         IGLZy0lwqd172tFyD5yFCpMLViW6rZh1cLlWTSefw/LQCViQvKysNJ0tI2UVSnwv5GEO
-         xNgfv2t4KWJF8IVj6Ul0rFlCVfkx5Y07j8R9gBsS807jZCh3VTzPQZH0qZDq9iVd2otU
-         EyF57w1dHcdSULuOp7X7gSdhUw91XVNvSWO/jKw52n+8KjDw32Ecs9JeLu6nVOFvOhf7
-         jOlaPGdCEHwcjWT3ZDGDdyXPZ7c15cyFFhuCirN72tA+FwMSmQiDpHHG5MEuM5N1Nfza
-         qVHg==
-X-Gm-Message-State: APjAAAVoAg4E8qWWAW80PrnjsCGcYhGSVBGCf+xLBQQmX+1Lvat5hM/v
-        5N8B0leCg5jpqQ+YCGwFkpYx1+A=
-X-Google-Smtp-Source: APXvYqzMh3iEsEwkshKFk8HwoLVBJqZ4sHXteP4uimssoCVi4tYyD1uFTbT9FLDSbhnIZsK4uUb9Cw==
-X-Received: by 2002:a25:6d05:: with SMTP id i5mr31802180ybc.520.1582261838589;
-        Thu, 20 Feb 2020 21:10:38 -0800 (PST)
-Received: from localhost.localdomain (174-084-153-250.res.spectrum.com. [174.84.153.250])
-        by smtp.gmail.com with ESMTPSA id a12sm840904ywa.95.2020.02.20.21.10.37
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 20 Feb 2020 21:10:38 -0800 (PST)
-From:   Brian Gerst <brgerst@gmail.com>
-To:     linux-kernel@vger.kernel.org, x86@kernel.org
-Cc:     Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@kernel.org>, Borislav Petkov <bp@alien8.de>,
-        "H . Peter Anvin" <hpa@zytor.com>,
-        Andy Lutomirski <luto@kernel.org>,
-        Brian Gerst <brgerst@gmail.com>
-Subject: [PATCH 5/5] x86: Drop asmlinkage from syscalls
-Date:   Fri, 21 Feb 2020 00:09:34 -0500
-Message-Id: <20200221050934.719152-6-brgerst@gmail.com>
-X-Mailer: git-send-email 2.24.1
-In-Reply-To: <20200221050934.719152-1-brgerst@gmail.com>
-References: <20200221050934.719152-1-brgerst@gmail.com>
+        Fri, 21 Feb 2020 00:12:33 -0500
+Received: from ozlabs.org ([203.11.71.1]:53129 "EHLO ozlabs.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725973AbgBUFMd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 21 Feb 2020 00:12:33 -0500
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 48P02R2Bh2z9sPk;
+        Fri, 21 Feb 2020 16:12:31 +1100 (AEDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ellerman.id.au;
+        s=201909; t=1582261951;
+        bh=VN01LPmrMRRE7xnQaiPGlfuivp3p3nCGU9JeUtjz/7s=;
+        h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
+        b=R+XtdpLEozvcl4JlLLYpijxvQ3ZHQ0ZijmxlvQlNWwRx5fdDNKl9AtanwNuf6YSnh
+         9t1peF/9ZWC5WMOdzPPuJNIGWAMxXbNxqjnpYJVEqCqxG7VLMQekya3eZw6PHNITGr
+         /Uudf/Qlewr4yRXBn7cmfEcwW/EwwUf12ltS5B1QVQTNqK8uHTpCIdmA4FptDytkTV
+         nUv0Esfr9v0ndMoSJGXvqvdF6aaVYqERN55P/NGlpvQxCuBhdTA+sjiSNPePE3G/QZ
+         5Fzir81AZ0ix9bnCLr18CH7u44SrcOaXxL5pJmAsnF2eVb06236eBMPt8e37z21I0x
+         6IY7O9q0I5gqg==
+From:   Michael Ellerman <mpe@ellerman.id.au>
+To:     Shuah Khan <skhan@linuxfoundation.org>,
+        Kees Cook <keescook@chromium.org>
+Cc:     linux-kselftest@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Shuah Khan <skhan@linuxfoundation.org>
+Subject: Re: [PATCH] selftests: Install settings files to fix TIMEOUT failures
+In-Reply-To: <fccfcd8b-628b-9b3d-13b1-6dcda49b4df9@linuxfoundation.org>
+References: <20200220044241.2878-1-mpe@ellerman.id.au> <202002201450.A4BB99421@keescook> <fccfcd8b-628b-9b3d-13b1-6dcda49b4df9@linuxfoundation.org>
+Date:   Fri, 21 Feb 2020 16:12:27 +1100
+Message-ID: <87o8tsed6s.fsf@mpe.ellerman.id.au>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-asmlinkage is no longer required since the syscall ABI is now fully under
-x86 architecture control.  This makes the 32-bit native syscalls a bit more
-effecient by passing in regs via EAX instead of on the stack.
+Shuah Khan <skhan@linuxfoundation.org> writes:
+> On 2/20/20 3:51 PM, Kees Cook wrote:
+>> On Thu, Feb 20, 2020 at 03:42:41PM +1100, Michael Ellerman wrote:
+>>> Commit 852c8cbf34d3 ("selftests/kselftest/runner.sh: Add 45 second
+>>> timeout per test") added a 45 second timeout for tests, and also added
+>>> a way for tests to customise the timeout via a settings file.
+>>>
+>>> For example the ftrace tests take multiple minutes to run, so they
+>>> were given longer in commit b43e78f65b1d ("tracing/selftests: Turn off
+>>> timeout setting").
+>>>
+>>> This works when the tests are run from the source tree. However if the
+>>> tests are installed with "make -C tools/testing/selftests install",
+>>> the settings files are not copied into the install directory. When the
+>>> tests are then run from the install directory the longer timeouts are
+>>> not applied and the tests timeout incorrectly.
+>> 
+>> Eek, yes, nice catch.
+>> 
+>>> So add the settings files to TEST_FILES of the appropriate Makefiles
+>>> to cause the settings files to be installed using the existing install
+>>> logic.
+>> 
+>> Instead, shouldn't lib.mk "notice" the settings file and automatically
+>> include it in TEST_FILES instead of having to do this in each separate
+>> Makefile?
+>> 
+>
+> Let's keep it custom per test for now.
 
-Signed-off-by: Brian Gerst <brgerst@gmail.com>
----
- arch/x86/entry/syscall_32.c            |  2 +-
- arch/x86/entry/syscall_64.c            |  2 +-
- arch/x86/include/asm/syscall.h         |  2 +-
- arch/x86/include/asm/syscall_wrapper.h | 20 ++++++++++----------
- 4 files changed, 13 insertions(+), 13 deletions(-)
+Yeah that seems less magical.
 
-diff --git a/arch/x86/entry/syscall_32.c b/arch/x86/entry/syscall_32.c
-index 7af944b686ef..4e0113f3d4e8 100644
---- a/arch/x86/entry/syscall_32.c
-+++ b/arch/x86/entry/syscall_32.c
-@@ -8,7 +8,7 @@
- #include <asm/asm-offsets.h>
- #include <asm/syscall.h>
- 
--#define __SYSCALL_I386(nr, sym, qual) extern asmlinkage long sym(const struct pt_regs *);
-+#define __SYSCALL_I386(nr, sym, qual) extern long sym(const struct pt_regs *);
- 
- #include <asm/syscalls_32.h>
- #undef __SYSCALL_I386
-diff --git a/arch/x86/entry/syscall_64.c b/arch/x86/entry/syscall_64.c
-index 058dc1b73e96..3331a71eec77 100644
---- a/arch/x86/entry/syscall_64.c
-+++ b/arch/x86/entry/syscall_64.c
-@@ -8,7 +8,7 @@
- #include <asm/asm-offsets.h>
- #include <asm/syscall.h>
- 
--#define __SYSCALL_64(nr, sym, qual) extern asmlinkage long sym(const struct pt_regs *);
-+#define __SYSCALL_64(nr, sym, qual) extern long sym(const struct pt_regs *);
- #define __SYSCALL_X32(nr, sym, qual) __SYSCALL_64(nr, sym, qual)
- #include <asm/syscalls_64.h>
- #undef __SYSCALL_64
-diff --git a/arch/x86/include/asm/syscall.h b/arch/x86/include/asm/syscall.h
-index 576178aefa01..a0b189714bac 100644
---- a/arch/x86/include/asm/syscall.h
-+++ b/arch/x86/include/asm/syscall.h
-@@ -17,7 +17,7 @@
- #include <asm/thread_info.h>	/* for TS_COMPAT */
- #include <asm/unistd.h>
- 
--typedef asmlinkage long (*sys_call_ptr_t)(const struct pt_regs *);
-+typedef long (*sys_call_ptr_t)(const struct pt_regs *);
- extern const sys_call_ptr_t sys_call_table[];
- 
- #if defined(CONFIG_X86_32)
-diff --git a/arch/x86/include/asm/syscall_wrapper.h b/arch/x86/include/asm/syscall_wrapper.h
-index 9e9259a92020..68d2231bbff0 100644
---- a/arch/x86/include/asm/syscall_wrapper.h
-+++ b/arch/x86/include/asm/syscall_wrapper.h
-@@ -8,8 +8,8 @@
- 
- struct pt_regs;
- 
--extern asmlinkage long __x64_sys_ni_syscall(const struct pt_regs *regs);
--extern asmlinkage long __ia32_sys_ni_syscall(const struct pt_regs *regs);
-+extern long __x64_sys_ni_syscall(const struct pt_regs *regs);
-+extern long __ia32_sys_ni_syscall(const struct pt_regs *regs);
- 
- /*
-  * Instead of the generic __SYSCALL_DEFINEx() definition, this macro takes
-@@ -59,23 +59,23 @@ extern asmlinkage long __ia32_sys_ni_syscall(const struct pt_regs *regs);
- 	      ,,(unsigned int)regs->di,,(unsigned int)regs->bp)
- 
- #define __SYS_STUBx(abi, name, ...)					\
--	asmlinkage long __##abi##_##name(const struct pt_regs *regs);	\
-+	long __##abi##_##name(const struct pt_regs *regs);		\
- 	ALLOW_ERROR_INJECTION(__##abi##_##name, ERRNO);			\
--	asmlinkage long __##abi##_##name(const struct pt_regs *regs)	\
-+	long __##abi##_##name(const struct pt_regs *regs)		\
- 	{								\
- 		return __se_##name(__VA_ARGS__);			\
- 	}
- 
- #define __SYS_STUB0(abi, name)						\
--	asmlinkage long __##abi##_##name(const struct pt_regs *regs);	\
-+	long __##abi##_##name(const struct pt_regs *regs);		\
- 	ALLOW_ERROR_INJECTION(__##abi##_##name, ERRNO);			\
--	asmlinkage long __##abi##_##name(const struct pt_regs *regs)	\
-+	long __##abi##_##name(const struct pt_regs *regs)		\
- 	{								\
- 		return __do_##name();					\
- 	}
- 
- #define __COND_SYSCALL(abi, name)					\
--	asmlinkage __weak long						\
-+	__weak long							\
- 	 __##abi##_##name(const struct pt_regs *regs)			\
- 	{								\
- 		return sys_ni_syscall();				\
-@@ -270,8 +270,8 @@ extern asmlinkage long __ia32_sys_ni_syscall(const struct pt_regs *regs);
-  * For VSYSCALLS, we need to declare these three syscalls with the new
-  * pt_regs-based calling convention for in-kernel use.
-  */
--asmlinkage long __x64_sys_getcpu(const struct pt_regs *regs);
--asmlinkage long __x64_sys_gettimeofday(const struct pt_regs *regs);
--asmlinkage long __x64_sys_time(const struct pt_regs *regs);
-+long __x64_sys_getcpu(const struct pt_regs *regs);
-+long __x64_sys_gettimeofday(const struct pt_regs *regs);
-+long __x64_sys_time(const struct pt_regs *regs);
- 
- #endif /* _ASM_X86_SYSCALL_WRAPPER_H */
--- 
-2.24.1
+FWIW the patch below does work, so it's a small patch, but I'm not sure
+it's worth the added complexity vs just listing the file in the few
+tests that need it.
 
+cheers
+
+
+diff --git a/tools/testing/selftests/lib.mk b/tools/testing/selftests/lib.mk
+index 1c8a1963d03f..82086c6ad5e7 100644
+--- a/tools/testing/selftests/lib.mk
++++ b/tools/testing/selftests/lib.mk
+@@ -20,6 +20,10 @@ TEST_GEN_PROGS := $(patsubst %,$(OUTPUT)/%,$(TEST_GEN_PROGS))
+ TEST_GEN_PROGS_EXTENDED := $(patsubst %,$(OUTPUT)/%,$(TEST_GEN_PROGS_EXTENDED))
+ TEST_GEN_FILES := $(patsubst %,$(OUTPUT)/%,$(TEST_GEN_FILES))
+ 
++ifeq ($(wildcard settings),settings)
++       TEST_FILES += settings
++endif
++
+ ifdef KSFT_KHDR_INSTALL
+ top_srcdir ?= ../../../..
+ include $(top_srcdir)/scripts/subarch.include
