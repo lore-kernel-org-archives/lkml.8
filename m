@@ -2,108 +2,207 @@ Return-Path: <SRS0=1210=4J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D2A8AC35646
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 19:11:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8A2EFC35646
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 19:16:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B1AB52071E
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 19:11:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3CCB6206E2
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 19:16:09 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="SbAp2IxV"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729745AbgBUTLi (ORCPT
+        id S1729658AbgBUTQG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Feb 2020 14:11:38 -0500
-Received: from foss.arm.com ([217.140.110.172]:46268 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726423AbgBUTLh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Feb 2020 14:11:37 -0500
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id A474E30E;
-        Fri, 21 Feb 2020 11:11:36 -0800 (PST)
-Received: from [10.37.12.243] (unknown [10.37.12.243])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 3460D3F6CF;
-        Fri, 21 Feb 2020 11:11:34 -0800 (PST)
-Subject: Re: [RFC PATCH v2 07/13] firmware: arm_scmi: Add notification
- dispatch and delivery
-To:     Cristian Marussi <cristian.marussi@arm.com>,
-        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
-Cc:     sudeep.holla@arm.com, james.quinlan@broadcom.com,
-        Jonathan.Cameron@Huawei.com
-References: <20200214153535.32046-1-cristian.marussi@arm.com>
- <20200214153535.32046-8-cristian.marussi@arm.com>
- <e45e87e2-aaaf-c35b-b864-c080fd6e0ba6@arm.com>
- <d59c3f3e-324b-05fe-547d-1e64bf4c6a69@arm.com>
-From:   Lukasz Luba <lukasz.luba@arm.com>
-Message-ID: <af8d2a1e-e78e-6d0e-4ffc-3af94cdc6784@arm.com>
-Date:   Fri, 21 Feb 2020 19:11:33 +0000
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        Fri, 21 Feb 2020 14:16:06 -0500
+Received: from mail-wm1-f65.google.com ([209.85.128.65]:40095 "EHLO
+        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729503AbgBUTQG (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 21 Feb 2020 14:16:06 -0500
+Received: by mail-wm1-f65.google.com with SMTP id t14so3050044wmi.5
+        for <linux-kernel@vger.kernel.org>; Fri, 21 Feb 2020 11:16:03 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=subject:to:cc:references:from:autocrypt:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=62kUg9syfOCN4km7rXz6Hz7RVsuZAMz1sPi3wovqHYw=;
+        b=SbAp2IxVoLY14NRhREF+8cLskF2vau9TtW5BjqkgbtfzqSjKJHMqDd2pVF9cDRijyz
+         h25Amj2El92ae3O236CNoQGIgL0C86nOO41mmPf2/ayahpC1lKU8ZzvqO0l8zzDX6XHK
+         fyjLImIoqkuciqnR4gb3IBIU5qm3lBQO0nLM5FZiZN/0EpHBHEBKZSR8Plb01t4PvGZl
+         Hf8IXBNaF7sJeyrLUJEl1jIDgx0srZTH+ooHOJZl/2ca86h6RcZ/kPYdfaU+DcveRcG4
+         p4/FgqRg1uaekbkQp48AlTdLOYmAVcue0YjeJ21PG1cmN35C0x4F/TVFJdBWb9hokYYM
+         YX1Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:autocrypt
+         :message-id:date:user-agent:mime-version:in-reply-to
+         :content-language:content-transfer-encoding;
+        bh=62kUg9syfOCN4km7rXz6Hz7RVsuZAMz1sPi3wovqHYw=;
+        b=iTBuGYMQRv4fw52r1u+t4r8jfW3sysF3P6NIUWi1FGaDA4ghQgfalM7qYEvBfU3QR9
+         QFhmK5D3lQzhCnebn3FQCBmwN9hi1CT2DSuZkK7kKEGqIyptCvcdW/BdYjQfnagF4dgD
+         IonRBGrr6XdeY8ycBJ/pcJKdQTvP+fZ/2LKipyEYKb07Ae7U3qFBnvMqw+VuM/vc0oJw
+         uGJCGjf1Zq772GHVLeG3lDj/z25sidDdizPXirhJG6WJAxnU/nH6azhN3fbhO+Dp10og
+         LLh5UzNt7Gc3/KCbxC/gyAZWIIC3lxGMCbhzfNzkPiWIUMQgCYa19JKL1seu2vQek++H
+         ESRw==
+X-Gm-Message-State: APjAAAVGMftFXcOeknzgFMnqCwFTl1U6NLZ66TgKZSSKL+MBWZpERNUW
+        sVJuZ1hsAB2oMHRWFQiICayEbZMylmo=
+X-Google-Smtp-Source: APXvYqxm6FxsAX9RGmwITCNZOE+rff76UsZdbhwJ4R/XF186HUptWUw1Jg2vw9wjJL70vxQMF+/NTA==
+X-Received: by 2002:a1c:5419:: with SMTP id i25mr5398715wmb.150.1582312562208;
+        Fri, 21 Feb 2020 11:16:02 -0800 (PST)
+Received: from ?IPv6:2a01:e34:ed2f:f020:903b:a048:f296:e3ae? ([2a01:e34:ed2f:f020:903b:a048:f296:e3ae])
+        by smtp.googlemail.com with ESMTPSA id 133sm5355641wmd.5.2020.02.21.11.16.00
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 21 Feb 2020 11:16:01 -0800 (PST)
+Subject: Re: [PATCH v9 05/17] ARM: tegra: Propagate error from
+ tegra_idle_lp2_last()
+To:     Dmitry Osipenko <digetx@gmail.com>
+Cc:     Thierry Reding <thierry.reding@gmail.com>,
+        Jonathan Hunter <jonathanh@nvidia.com>,
+        Peter De Schrijver <pdeschrijver@nvidia.com>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        =?UTF-8?B?TWljaGHFgiBNaXJvc8WCYXc=?= <mirq-linux@rere.qmqm.pl>,
+        Jasper Korten <jja2000@gmail.com>,
+        David Heidelberg <david@ixit.cz>,
+        Peter Geis <pgwipeout@gmail.com>, linux-pm@vger.kernel.org,
+        linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20200212235134.12638-1-digetx@gmail.com>
+ <20200212235134.12638-6-digetx@gmail.com> <20200221151612.GJ10516@linaro.org>
+ <1a8c81ab-6f6a-8221-6a4e-c080ba595836@gmail.com>
+ <20200221174033.GV10516@linaro.org>
+ <535bff1a-cb38-a36e-4c8e-1e656618588e@gmail.com>
+From:   Daniel Lezcano <daniel.lezcano@linaro.org>
+Autocrypt: addr=daniel.lezcano@linaro.org; prefer-encrypt=mutual; keydata=
+ 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
+Message-ID: <ecb91a99-1e5b-4b76-a27b-56e49e17e9a8@linaro.org>
+Date:   Fri, 21 Feb 2020 20:16:00 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.1
 MIME-Version: 1.0
-In-Reply-To: <d59c3f3e-324b-05fe-547d-1e64bf4c6a69@arm.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
+In-Reply-To: <535bff1a-cb38-a36e-4c8e-1e656618588e@gmail.com>
+Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On 21/02/2020 19:42, Dmitry Osipenko wrote:
+> 21.02.2020 20:40, Daniel Lezcano пишет:
+>> On Fri, Feb 21, 2020 at 08:21:41PM +0300, Dmitry Osipenko wrote:
+>>> 21.02.2020 18:16, Daniel Lezcano пишет:
+>>>> On Thu, Feb 13, 2020 at 02:51:22AM +0300, Dmitry Osipenko wrote:
+>>>>> Technically cpu_suspend() may fail and it's never good to lose information
+>>>>> about failure. For example things like cpuidle core could correctly sample
+>>>>> idling time in the case of failure.
+>>>>>
+>>>>> Acked-by: Peter De Schrijver <pdeschrijver@nvidia.com>
+>>>>> Tested-by: Peter Geis <pgwipeout@gmail.com>
+>>>>> Tested-by: Jasper Korten <jja2000@gmail.com>
+>>>>> Tested-by: David Heidelberg <david@ixit.cz>
+>>>>> Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
+>>>>> ---
+>>>>
+>>>> [ ... ]
+>>>>
+>>>>>  	cpu_cluster_pm_enter();
+>>>>>  	suspend_cpu_complex();
+>>>>>  
+>>>>> -	cpu_suspend(PHYS_OFFSET - PAGE_OFFSET, &tegra_sleep_cpu);
+>>>>> +	err = cpu_suspend(PHYS_OFFSET - PAGE_OFFSET, &tegra_sleep_cpu);
+>>>>>  
+>>>>>  	/*
+>>>>>  	 * Resume L2 cache if it wasn't re-enabled early during resume,
+>>>>> @@ -208,6 +210,8 @@ void tegra_idle_lp2_last(void)
+>>>>>  
+>>>>>  	restore_cpu_complex();
+>>>>
+>>>> If the cpu_suspend fails, does restore_cpu_complex() need to be called ?
+>>>
+>>> Yes, because suspend_cpu_complex() didn't fail. I don't see any reason
+>>> why restore_cpu_complex() shouldn't be called, please clarify yours thought.
+>>
+>> If the suspend fails, the power down does not happen, thus the logic is not
+>> lost and then it not necessary to restore something which has not been lost.
+>>
+>> I don't know the hardware details, so that may be partially correct.
+> 
+> At quick glance, the restore_cpu_complex() is only used for restoring
+> the GIC's state on Tegra.
+> 
+> I don't think it's really worth the effort to handle
+> restore_cpu_complex() specially in a case of the error condition because
+> the chance that the error will ever happen is very small and restoring
+> the cluster's state won't cause any trouble in that case.
+> 
+> Let's keep this patch as-is for simplicity :)
+
+Yep, not a big deal.
+
+Acked-by: Daniel Lezcano <daniel.lezcano@linaro.org>
 
 
-On 2/21/20 7:01 PM, Cristian Marussi wrote:
-> Hi Lukasz
-> 
-> Thanks for your feedback !
-> 
-> On 21/02/2020 13:25, Lukasz Luba wrote:
->> Hi Cristian,
->>
->> I didn't want to jump into your discussion with Jim in other broader
->> thread with this small thought, so I added a comment below.
->>
->> On 2/14/20 3:35 PM, Cristian Marussi wrote:
->>> Add core SCMI Notifications dispatch and delivery support logic which is
->> [snip]
->>
->>>    
->>> @@ -840,6 +1071,11 @@ static struct scmi_notify_ops notify_ops = {
->>>     */
->>>    int scmi_notification_init(struct scmi_handle *handle)
->>>    {
->>> +	scmi_notify_wq = alloc_workqueue("scmi_notify",
->>> +					 WQ_UNBOUND | WQ_FREEZABLE, 0);
->>
->> I think it might limit some platforms. It depends on their workload.
->> If they have some high priority workloads which rely on this mechanisms,
->> they might need a RT task here. The workqueues would be scheduled in
->> CFS, so it depends on workload in there (we might even see 10s ms delays
->> in scheduling-up them). If we use RT we would grab the CPU from CFS.
->>
->> It would be good if it is a customization option: which mechanism
->> to use based on some a parameter. Then we could create:
->> a) workqueue with the flags above
->> b) workqueue with WQ_HIGHPRI (limited by minimum nice)
->> c) kthread_create_worker() with RT/DL/FIFO sched policy
->>     (with also a parameterized priority)
->> In default clients might use a) but when they want to tune their
->> platform, they might change only a parameter in their scmi code,
->> not maintaining a patch for the RT function out of tree.
-> 
-> In this series, I have not addressed configurability issues at all (as noted in the cover):
-> in fact I was thinking that stuff like WQ_HIGHPRI flags and per-protocol queue sizes could
-> be beneficial to be customizable depending on the specific platform, but I had not gone to
-> the extreme of thinking of adopting a dedicated RT kthread as a worker...good point...it
-> makes surely sense to have this configurable option to try to reduce the latency where possible.
-> 
-> I think it's important to give the user the possibility to configure the deferred worker
-> as you suggested, if the user decides to rely on Linux to handle a critical notification,
-> but I'd prefer queuing up this work you suggested on a different series on top of this one.
-> (which is starting to be a little to much voluminous...for being just the core support)
 
-Agree, you can build these features incrementally.
+-- 
+ <http://www.linaro.org/> Linaro.org │ Open source software for ARM SoCs
 
-Regards,
-Lukasz
+Follow Linaro:  <http://www.facebook.com/pages/Linaro> Facebook |
+<http://twitter.com/#!/linaroorg> Twitter |
+<http://www.linaro.org/linaro-blog/> Blog
 
