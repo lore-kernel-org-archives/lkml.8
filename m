@@ -2,53 +2,56 @@ Return-Path: <SRS0=1210=4J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 06CAAC35640
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 08:09:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3AE32C35642
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 08:09:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CD4D320722
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 08:09:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 12C9D24681
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 08:09:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582272565;
-	bh=1MP3HKVGJ8PjGH3Oe1R8kWMJ7X5hfpIiKgITeNcU2NM=;
+	s=default; t=1582272569;
+	bh=VoQBGjb/JsFJM3BKoLOX/WXeB1JAJ+3TWYgmREkaBvI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=eDEFOGbBBCT36tL008niRJpZwmKG7aHttMMfH4XljMvwkKBR+jUA9mjOKY67kR4A8
-	 EP35DpQMgirnP5mDEoHmHVy2MbhtZ3RHqmpDDaPx+f3ncc3w1QU0PyMGN0KPR8kdaU
-	 du18Pft4P31mKcc/zUnhRYW80cTmldmth5M6QUDk=
+	b=b+91SYTz7FA+J9zA+kQoHYKyA7NlzMYPNZx7bTQeBWgGpXnd/E9ts9XAuasuhDfmD
+	 JlC3JEkaeGpn81Xs68JG7/TVjIZdfb/r0O5ESoGlHDC+RxGld8aVp7ZNz6RbMlxvhw
+	 GFnoBuc0R7wosrNmvSD2AEdommIM3qf9wwNQY1fY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731762AbgBUIJY (ORCPT
+        id S1732355AbgBUIJ1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Feb 2020 03:09:24 -0500
-Received: from mail.kernel.org ([198.145.29.99]:44076 "EHLO mail.kernel.org"
+        Fri, 21 Feb 2020 03:09:27 -0500
+Received: from mail.kernel.org ([198.145.29.99]:44256 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732340AbgBUIJW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Feb 2020 03:09:22 -0500
+        id S1732340AbgBUIJY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 21 Feb 2020 03:09:24 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0541020578;
-        Fri, 21 Feb 2020 08:09:14 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 172A520578;
+        Fri, 21 Feb 2020 08:09:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1582272555;
-        bh=1MP3HKVGJ8PjGH3Oe1R8kWMJ7X5hfpIiKgITeNcU2NM=;
+        s=default; t=1582272564;
+        bh=VoQBGjb/JsFJM3BKoLOX/WXeB1JAJ+3TWYgmREkaBvI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=U5AFqKUt7C+XAwgTnTAm4ms36q0dqBSHfNceNodDdsUEJD48urJ8WeOMlADugxk6B
-         Awpyx1L5giT00lqW+7rhvC65hrFMNPB6WyRN3fgY9aD/SbxESy+0ptILd4jfb1/Hej
-         kB9/WdN3xxCqOR4Yqa0PpSG/L3svRKpQx2/XLUek=
+        b=kx1AxzVIDbUoqz27v758FoVA/gURGqy7dO9wF4Aow61K6ve7feMCVQU0hELq15ATY
+         P8h2MH3QYqsSviXW8qNsa4E01yZPr4H/SZhtAqbcFQItnXfXD2SrTJDWOOgs7E0wCT
+         6guJDH2rfaqseiHPX/U1j0s4xztUoiB8vgEScMkA=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Phong Tran <tranmanphong@gmail.com>,
-        Kees Cook <keescook@chromium.org>,
-        Kalle Valo <kvalo@codeaurora.org>,
+        stable@vger.kernel.org,
+        Marek Szyprowski <m.szyprowski@samsung.com>,
+        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+        Hans de Goede <hdegoede@redhat.com>,
+        Felipe Balbi <balbi@kernel.org>,
+        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 140/344] rtlwifi: rtl_pci: Fix -Wcast-function-type
-Date:   Fri, 21 Feb 2020 08:38:59 +0100
-Message-Id: <20200221072401.546736843@linuxfoundation.org>
+Subject: [PATCH 5.4 191/344] usb: dwc3: use proper initializers for property entries
+Date:   Fri, 21 Feb 2020 08:39:50 +0100
+Message-Id: <20200221072406.390732331@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200221072349.335551332@linuxfoundation.org>
 References: <20200221072349.335551332@linuxfoundation.org>
@@ -61,56 +64,52 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Phong Tran <tranmanphong@gmail.com>
+From: Dmitry Torokhov <dmitry.torokhov@gmail.com>
 
-[ Upstream commit cb775c88da5d48a85d99d95219f637b6fad2e0e9 ]
+[ Upstream commit 5eb5afb07853d6e90d3a2b230c825e028e948f79 ]
 
-correct usage prototype of callback in tasklet_init().
-Report by https://github.com/KSPP/linux/issues/20
+We should not be reaching into property entries and initialize them by
+hand, but rather use proper initializer macros. This way we can alter
+internal representation of property entries with no visible changes to
+their users.
 
-Signed-off-by: Phong Tran <tranmanphong@gmail.com>
-Reviewed-by: Kees Cook <keescook@chromium.org>
-Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
+Reported-by: Marek Szyprowski <m.szyprowski@samsung.com>
+Tested-by: Marek Szyprowski <m.szyprowski@samsung.com>
+Signed-off-by: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+Acked-by: Hans de Goede <hdegoede@redhat.com>
+Acked-by: Felipe Balbi <balbi@kernel.org>
+Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/wireless/realtek/rtlwifi/pci.c | 10 ++++++----
- 1 file changed, 6 insertions(+), 4 deletions(-)
+ drivers/usb/dwc3/host.c | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/net/wireless/realtek/rtlwifi/pci.c b/drivers/net/wireless/realtek/rtlwifi/pci.c
-index f88d26535978d..25335bd2873b6 100644
---- a/drivers/net/wireless/realtek/rtlwifi/pci.c
-+++ b/drivers/net/wireless/realtek/rtlwifi/pci.c
-@@ -1061,13 +1061,15 @@ done:
- 	return ret;
- }
+diff --git a/drivers/usb/dwc3/host.c b/drivers/usb/dwc3/host.c
+index 5567ed2cddbec..fa252870c926f 100644
+--- a/drivers/usb/dwc3/host.c
++++ b/drivers/usb/dwc3/host.c
+@@ -88,10 +88,10 @@ int dwc3_host_init(struct dwc3 *dwc)
+ 	memset(props, 0, sizeof(struct property_entry) * ARRAY_SIZE(props));
  
--static void _rtl_pci_irq_tasklet(struct ieee80211_hw *hw)
-+static void _rtl_pci_irq_tasklet(unsigned long data)
- {
-+	struct ieee80211_hw *hw = (struct ieee80211_hw *)data;
- 	_rtl_pci_tx_chk_waitq(hw);
- }
+ 	if (dwc->usb3_lpm_capable)
+-		props[prop_idx++].name = "usb3-lpm-capable";
++		props[prop_idx++] = PROPERTY_ENTRY_BOOL("usb3-lpm-capable");
  
--static void _rtl_pci_prepare_bcn_tasklet(struct ieee80211_hw *hw)
-+static void _rtl_pci_prepare_bcn_tasklet(unsigned long data)
- {
-+	struct ieee80211_hw *hw = (struct ieee80211_hw *)data;
- 	struct rtl_priv *rtlpriv = rtl_priv(hw);
- 	struct rtl_pci *rtlpci = rtl_pcidev(rtl_pcipriv(hw));
- 	struct rtl_mac *mac = rtl_mac(rtl_priv(hw));
-@@ -1193,10 +1195,10 @@ static void _rtl_pci_init_struct(struct ieee80211_hw *hw,
+ 	if (dwc->usb2_lpm_disable)
+-		props[prop_idx++].name = "usb2-lpm-disable";
++		props[prop_idx++] = PROPERTY_ENTRY_BOOL("usb2-lpm-disable");
  
- 	/*task */
- 	tasklet_init(&rtlpriv->works.irq_tasklet,
--		     (void (*)(unsigned long))_rtl_pci_irq_tasklet,
-+		     _rtl_pci_irq_tasklet,
- 		     (unsigned long)hw);
- 	tasklet_init(&rtlpriv->works.irq_prepare_bcn_tasklet,
--		     (void (*)(unsigned long))_rtl_pci_prepare_bcn_tasklet,
-+		     _rtl_pci_prepare_bcn_tasklet,
- 		     (unsigned long)hw);
- 	INIT_WORK(&rtlpriv->works.lps_change_work,
- 		  rtl_lps_change_work_callback);
+ 	/**
+ 	 * WORKAROUND: dwc3 revisions <=3.00a have a limitation
+@@ -103,7 +103,7 @@ int dwc3_host_init(struct dwc3 *dwc)
+ 	 * This following flag tells XHCI to do just that.
+ 	 */
+ 	if (dwc->revision <= DWC3_REVISION_300A)
+-		props[prop_idx++].name = "quirk-broken-port-ped";
++		props[prop_idx++] = PROPERTY_ENTRY_BOOL("quirk-broken-port-ped");
+ 
+ 	if (prop_idx) {
+ 		ret = platform_device_add_properties(xhci, props);
 -- 
 2.20.1
 
