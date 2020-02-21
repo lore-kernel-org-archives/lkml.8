@@ -2,102 +2,133 @@ Return-Path: <SRS0=1210=4J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FSL_HELO_FAKE,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9F473C35655
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 11:47:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5A66DC35647
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 11:47:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 814D4222C4
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 11:47:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2D00624670
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 11:47:18 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="l8D2eEQg"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727958AbgBULrE (ORCPT
+        id S1727213AbgBULrQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Feb 2020 06:47:04 -0500
-Received: from mx0a-00128a01.pphosted.com ([148.163.135.77]:4674 "EHLO
-        mx0a-00128a01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727655AbgBULrD (ORCPT
+        Fri, 21 Feb 2020 06:47:16 -0500
+Received: from mail-wm1-f66.google.com ([209.85.128.66]:55234 "EHLO
+        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727686AbgBULrO (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Feb 2020 06:47:03 -0500
-Received: from pps.filterd (m0167088.ppops.net [127.0.0.1])
-        by mx0a-00128a01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 01LBiAFI026928;
-        Fri, 21 Feb 2020 06:47:01 -0500
-Received: from nwd2mta4.analog.com ([137.71.173.58])
-        by mx0a-00128a01.pphosted.com with ESMTP id 2y8udupy14-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Fri, 21 Feb 2020 06:47:01 -0500
-Received: from ASHBMBX9.ad.analog.com (ashbmbx9.ad.analog.com [10.64.17.10])
-        by nwd2mta4.analog.com (8.14.7/8.14.7) with ESMTP id 01LBl0Nu063040
-        (version=TLSv1/SSLv3 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=FAIL);
-        Fri, 21 Feb 2020 06:47:00 -0500
-Received: from ASHBMBX9.ad.analog.com (10.64.17.10) by ASHBMBX9.ad.analog.com
- (10.64.17.10) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1779.2; Fri, 21 Feb
- 2020 06:46:59 -0500
-Received: from zeus.spd.analog.com (10.64.82.11) by ASHBMBX9.ad.analog.com
- (10.64.17.10) with Microsoft SMTP Server id 15.1.1779.2 via Frontend
- Transport; Fri, 21 Feb 2020 06:46:59 -0500
-Received: from saturn.ad.analog.com ([10.48.65.124])
-        by zeus.spd.analog.com (8.15.1/8.15.1) with ESMTP id 01LBku5M017142;
-        Fri, 21 Feb 2020 06:46:57 -0500
-From:   Alexandru Ardelean <alexandru.ardelean@analog.com>
-To:     <linux-iio@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-CC:     <jic23@kernel.org>,
-        Alexandru Ardelean <alexandru.ardelean@analog.com>
-Subject: [PATCH 1/3] iio: imu: adis: add doc-string for 'adis' struct
-Date:   Fri, 21 Feb 2020 13:49:41 +0200
-Message-ID: <20200221114943.2056-1-alexandru.ardelean@analog.com>
-X-Mailer: git-send-email 2.20.1
+        Fri, 21 Feb 2020 06:47:14 -0500
+Received: by mail-wm1-f66.google.com with SMTP id n3so1436838wmk.4
+        for <linux-kernel@vger.kernel.org>; Fri, 21 Feb 2020 03:47:13 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=from:date:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=cxB7PUXTeUqygVh4eVSAkGxv4BrlTvTyre52qQTb2sk=;
+        b=l8D2eEQgmOITjwBuVm5VtuSNkygu1eW905ngMg9QqsVYUb/bc6DX12heuvwETKJWdJ
+         4Yznv+nripJTtuk89NxB5EF2XyEy7QrSHtrCsf9A4rDONqhKE+AgfTpv7BRTZsJyQLPl
+         QmNdYll/kSn7l93ypox+mWvynTb6er6z+wCG0=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:date:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=cxB7PUXTeUqygVh4eVSAkGxv4BrlTvTyre52qQTb2sk=;
+        b=l0XJVyerdB+WUd4pHu8XknjXzX2XGOaHjHfVerYEwec+Mr8QOBY4p5vB2PVRgFIjuc
+         AH0/V/X4iAW3ErLEl18+JRgwjCIuYV6Z2/hxLg7lMfga8EPtd8Fkrpm7Tx/2/7k8gLXC
+         sfVAA65bAGu2bbtaKsMGJcBWwRkviCKSCISQ15thkJOUBp4dLT0RChYF0WKCYHEd3XNT
+         3te+6ir+tAGPs++gNBPMVeBJ58z9rjVVHOchUQWtf5rnjLarSOxuDcN6BKXQVOmfQAAM
+         3lhGknl/L3cCJXC9qcJZptjnaC2pV7z2eDYWnrYSAroMavgGbJvGe6eYJzS+dohJTx8I
+         rGRA==
+X-Gm-Message-State: APjAAAWhhDi1NXesT3pLwo0Ik1aGP+lY4dq+y+Nk3hqizoI1JFRUVmCi
+        EcNqo25K0PlVOo92QyDK3r6MTIXnrhc=
+X-Google-Smtp-Source: APXvYqzi/myhHCRfm6m57QklRA0XyBoOWDLuktGXTj3oiVYDxwisfDnqgz8ZZMcjtH1LSQt61fygoA==
+X-Received: by 2002:a7b:cc6a:: with SMTP id n10mr3383352wmj.170.1582285632287;
+        Fri, 21 Feb 2020 03:47:12 -0800 (PST)
+Received: from google.com ([2a00:79e0:42:204:8a21:ba0c:bb42:75ec])
+        by smtp.gmail.com with ESMTPSA id z133sm3564118wmb.7.2020.02.21.03.47.11
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 21 Feb 2020 03:47:11 -0800 (PST)
+From:   KP Singh <kpsingh@chromium.org>
+X-Google-Original-From: KP Singh <kpsingh>
+Date:   Fri, 21 Feb 2020 12:47:10 +0100
+To:     Alexei Starovoitov <alexei.starovoitov@gmail.com>
+Cc:     KP Singh <kpsingh@chromium.org>, linux-kernel@vger.kernel.org,
+        bpf@vger.kernel.org, linux-security-module@vger.kernel.org,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        James Morris <jmorris@namei.org>,
+        Kees Cook <keescook@chromium.org>,
+        Jann Horn <jannh@google.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Subject: Re: [PATCH bpf-next v4 3/8] bpf: lsm: provide attachment points for
+ BPF LSM programs
+Message-ID: <20200221114710.GB56944@google.com>
+References: <20200220175250.10795-1-kpsingh@chromium.org>
+ <20200220175250.10795-4-kpsingh@chromium.org>
+ <20200221022537.wbmhdfkdbfvw2pww@ast-mbp>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7BIT
-Content-Type:   text/plain; charset=US-ASCII
-X-ADIRoutedOnPrem: True
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.572
- definitions=2020-02-21_03:2020-02-19,2020-02-21 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 lowpriorityscore=0
- malwarescore=0 impostorscore=0 spamscore=0 suspectscore=0 mlxlogscore=988
- phishscore=0 mlxscore=0 priorityscore=1501 clxscore=1015 adultscore=0
- bulkscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2001150001 definitions=main-2002210090
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200221022537.wbmhdfkdbfvw2pww@ast-mbp>
+User-Agent: Mutt/1.12.2 (2019-09-21)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This change adds a doc-string for the 'adis' struct. It details the fields
-and their roles.
+On 20-Feb 18:25, Alexei Starovoitov wrote:
+> On Thu, Feb 20, 2020 at 06:52:45PM +0100, KP Singh wrote:
+> > From: KP Singh <kpsingh@google.com>
+> > 
+> > The BPF LSM programs are implemented as fexit trampolines to avoid the
+> > overhead of retpolines. These programs cannot be attached to security_*
+> > wrappers as there are quite a few security_* functions that do more than
+> > just calling the LSM callbacks.
+> > 
+> > This was discussed on the lists in:
+> > 
+> >   https://lore.kernel.org/bpf/20200123152440.28956-1-kpsingh@chromium.org/T/#m068becce588a0cdf01913f368a97aea4c62d8266
+> > 
+> > Adding a NOP callback after all the static LSM callbacks are called has
+> > the following benefits:
+> > 
+> > - The BPF programs run at the right stage of the security_* wrappers.
+> > - They run after all the static LSM hooks allowed the operation,
+> >   therefore cannot allow an action that was already denied.
+> > 
+> > There are some hooks which do not call call_int_hooks or
+> > call_void_hooks. It's not possible to call the bpf_lsm_* functions
+> > without checking if there is BPF LSM program attached to these hooks.
+> > This is added further in a subsequent patch. For now, these hooks are
+> > marked as NO_BPF (i.e. attachment of BPF programs is not possible).
+> 
+> the commit log doesn't match the code.
 
-Signed-off-by: Alexandru Ardelean <alexandru.ardelean@analog.com>
----
- include/linux/iio/imu/adis.h | 14 ++++++++++++++
- 1 file changed, 14 insertions(+)
+Fixed. Thanks!
 
-diff --git a/include/linux/iio/imu/adis.h b/include/linux/iio/imu/adis.h
-index ac7cfd073804..0787a3aabd05 100644
---- a/include/linux/iio/imu/adis.h
-+++ b/include/linux/iio/imu/adis.h
-@@ -73,6 +73,20 @@ struct adis_data {
- 	bool has_paging;
- };
- 
-+/**
-+ * struct adis - ADIS device instance data
-+ * @spi: Reference to SPI device which owns this ADIS IIO device
-+ * @trig: IIO trigger object data
-+ * @data: ADIS chip variant specific data
-+ * @burst: ADIS burst transfer information
-+ * @state_lock: Lock used by the device to protect state
-+ * @msg: SPI message object
-+ * @xfer: SPI transfer objects to be used for a @msg
-+ * @current_page: Some ADIS devices have registers, this selects current page
-+ * @buffer: Data buffer for information read from the device
-+ * @tx: Cacheline aligned TX buffer for SPI transfers
-+ * @rx: Cacheline aligned RX buffer for SPI transfers
-+ */
- struct adis {
- 	struct spi_device	*spi;
- 	struct iio_trigger	*trig;
--- 
-2.20.1
+> 
+> > +
+> > +/* For every LSM hook  that allows attachment of BPF programs, declare a NOP
+> > + * function where a BPF program can be attached as an fexit trampoline.
+> > + */
+> > +#define LSM_HOOK(RET, NAME, ...) LSM_HOOK_##RET(NAME, __VA_ARGS__)
+> > +#define LSM_HOOK_int(NAME, ...) noinline int bpf_lsm_##NAME(__VA_ARGS__)  \
+> 
+> Did you check generated asm?
+> I think I saw cases when gcc ignored 'noinline' when function is defined in the
+> same file and still performed inlining while keeping the function body.
+> To be safe I think __weak is necessary. That will guarantee noinline.
 
+Sure, will change it to __weak.
+
+> 
+> And please reduce your cc next time. It's way too long.
+
+Will do.
+
+- KP
