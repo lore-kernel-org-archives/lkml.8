@@ -6,45 +6,45 @@ X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
 	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D1800C35647
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 13:51:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7CCE7C35647
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 13:51:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A3B4A24650
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 13:51:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5294E24650
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 13:51:18 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="XtPRYThk"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="0SDH+Y2g"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729056AbgBUNvO (ORCPT
+        id S1728871AbgBUNum (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Feb 2020 08:51:14 -0500
-Received: from merlin.infradead.org ([205.233.59.134]:45612 "EHLO
+        Fri, 21 Feb 2020 08:50:42 -0500
+Received: from merlin.infradead.org ([205.233.59.134]:45518 "EHLO
         merlin.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728896AbgBUNup (ORCPT
+        with ESMTP id S1728838AbgBUNuk (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Feb 2020 08:50:45 -0500
+        Fri, 21 Feb 2020 08:50:40 -0500
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
         d=infradead.org; s=merlin.20170209; h=Content-Type:MIME-Version:References:
         Subject:Cc:To:From:Date:Message-Id:Sender:Reply-To:Content-Transfer-Encoding:
         Content-ID:Content-Description:In-Reply-To;
-        bh=8DaqIg7UENVHdYwECwUjUJk0MIkR26PVzWqkahzuJg0=; b=XtPRYThkgjXPbZj3X48/eaFzhk
-        a3iMI4lSlCFrGqyb9fZU/vp3dmBeyqwKODW5qBxn2dx6bBoAjVoeVE3R02LKYNt7OYnD2fRFXpshh
-        AT8T8v3GI8eZ6aobdRAUjtaI4akLyLoONG5jbx8Nkcdov5kU6IGDpXnwjTboeqiKkGrc4cQTIi5cS
-        TYoYEKzd8bqrOztLXoZIufA6tW2FkemjrevGzBxl/WLMRi3fdVv6eev7tOCRI6MlQjcGODXwm1d0a
-        bGVWCanmqpoQYvGIKlKEZHiiwOfRO+dZQrrnM5QZBH+AKsP7+q8Iexp5H0V0bLT43zVIPfEt4SIg6
-        uJ+BvZQw==;
+        bh=KG3O1/yo2pVL3POGn2TdWO+kBU0S42cCRJBJffKoh/4=; b=0SDH+Y2gLwIIEMyLQ1/H47TtXg
+        0H8mzNmrP5RXMLghYgmxmb7YvdAGfAJnDzQS/RFJ+v0IH9oVcupakSDkTaCSrFx/qMSA85RoKpOac
+        Eo+oKtbM/AjBYGBmsIQe+Rlk2WTc4VtR/SsIwWTSRgimhr6coHLplPOFufzj3pjWzh8fl+QZTiZrB
+        JgpWJdNFCV9IsoehOS5cYpG/lGA5+EAs8kuYbU/FbdwOqFKsHP5813s1KRWSjf5xvFSZ3Qnvljz4n
+        WV3pIsfQNgq8zhw46Am8cuCQzFjqp3bvsCn8rfTV9SNFuDr8h4iNMmKzW3qE3qglQdsY3s4M4tkzC
+        oWTle0uw==;
 Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
         by merlin.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1j58gw-0006V6-2M; Fri, 21 Feb 2020 13:50:06 +0000
+        id 1j58gu-0006Uw-Gc; Fri, 21 Feb 2020 13:50:04 +0000
 Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (Client did not present a certificate)
-        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 6CB79307455;
-        Fri, 21 Feb 2020 14:48:08 +0100 (CET)
+        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 889113062BA;
+        Fri, 21 Feb 2020 14:48:07 +0100 (CET)
 Received: by hirez.programming.kicks-ass.net (Postfix, from userid 0)
-        id D5B3729D740AB; Fri, 21 Feb 2020 14:50:00 +0100 (CET)
-Message-Id: <20200221134215.793377175@infradead.org>
+        id A6E5C209DB0E9; Fri, 21 Feb 2020 14:50:00 +0100 (CET)
+Message-Id: <20200221134215.090538203@infradead.org>
 User-Agent: quilt/0.65
-Date:   Fri, 21 Feb 2020 14:34:29 +0100
+Date:   Fri, 21 Feb 2020 14:34:17 +0100
 From:   Peter Zijlstra <peterz@infradead.org>
 To:     linux-kernel@vger.kernel.org, linux-arch@vger.kernel.org,
         rostedt@goodmis.org
@@ -54,7 +54,7 @@ Cc:     peterz@infradead.org, mingo@kernel.org, joel@joelfernandes.org,
         mathieu.desnoyers@efficios.com, jiangshanlai@gmail.com,
         luto@kernel.org, tony.luck@intel.com, frederic@kernel.org,
         dan.carpenter@oracle.com, mhiramat@kernel.org
-Subject: [PATCH v4 13/27] x86,tracing: Add comments to do_nmi()
+Subject: [PATCH v4 01/27] lockdep: Teach lockdep about "USED" <- "IN-NMI" inversions
 References: <20200221133416.777099322@infradead.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -63,46 +63,118 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add a few comments to do_nmi() as a result of the audit.
+nmi_enter() does lockdep_off() and hence lockdep ignores everything.
+
+And NMI context makes it impossible to do full IN-NMI tracking like we
+do IN-HARDIRQ, that could result in graph_lock recursion.
+
+However, since look_up_lock_class() is lockless, we can find the class
+of a lock that has prior use and detect IN-NMI after USED, just not
+USED after IN-NMI.
+
+NOTE: By shifting the lockdep_off() recursion count to bit-16, we can
+easily differentiate between actual recursion and off.
 
 Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-Reviewed-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
 ---
- arch/x86/kernel/nmi.c |   10 ++++++++--
- 1 file changed, 8 insertions(+), 2 deletions(-)
+ kernel/locking/lockdep.c |   53 ++++++++++++++++++++++++++++++++++++++++++++---
+ 1 file changed, 50 insertions(+), 3 deletions(-)
 
---- a/arch/x86/kernel/nmi.c
-+++ b/arch/x86/kernel/nmi.c
-@@ -529,11 +529,14 @@ do_nmi(struct pt_regs *regs, long error_
- 	 * continue to use the NMI stack.
- 	 */
- 	if (unlikely(is_debug_stack(regs->sp))) {
--		debug_stack_set_zero();
-+		debug_stack_set_zero(); /* notrace due to Makefile */
- 		this_cpu_write(update_debug_stack, 1);
- 	}
+--- a/kernel/locking/lockdep.c
++++ b/kernel/locking/lockdep.c
+@@ -379,13 +379,13 @@ void lockdep_init_task(struct task_struc
+ 
+ void lockdep_off(void)
+ {
+-	current->lockdep_recursion++;
++	current->lockdep_recursion += BIT(16);
+ }
+ EXPORT_SYMBOL(lockdep_off);
+ 
+ void lockdep_on(void)
+ {
+-	current->lockdep_recursion--;
++	current->lockdep_recursion -= BIT(16);
+ }
+ EXPORT_SYMBOL(lockdep_on);
+ 
+@@ -575,6 +575,7 @@ static const char *usage_str[] =
+ #include "lockdep_states.h"
+ #undef LOCKDEP_STATE
+ 	[LOCK_USED] = "INITIAL USE",
++	[LOCK_USAGE_STATES] = "IN-NMI",
+ };
  #endif
  
-+	/*
-+	 * It is important that no tracing happens before nmi_enter()!
-+	 */
- 	nmi_enter();
+@@ -787,6 +788,7 @@ static int count_matching_names(struct l
+ 	return count + 1;
+ }
  
- 	inc_irq_stat(__nmi_count);
-@@ -542,10 +545,13 @@ do_nmi(struct pt_regs *regs, long error_
- 		default_do_nmi(regs);
++/* used from NMI context -- must be lockless */
+ static inline struct lock_class *
+ look_up_lock_class(const struct lockdep_map *lock, unsigned int subclass)
+ {
+@@ -4463,6 +4465,34 @@ void lock_downgrade(struct lockdep_map *
+ }
+ EXPORT_SYMBOL_GPL(lock_downgrade);
  
- 	nmi_exit();
-+	/*
-+	 * No tracing after nmi_exit()!
-+	 */
++/* NMI context !!! */
++static void verify_lock_unused(struct lockdep_map *lock, struct held_lock *hlock, int subclass)
++{
++	struct lock_class *class = look_up_lock_class(lock, subclass);
++
++	/* if it doesn't have a class (yet), it certainly hasn't been used yet */
++	if (!class)
++		return;
++
++	if (!(class->usage_mask & LOCK_USED))
++		return;
++
++	hlock->class_idx = class - lock_classes;
++
++	print_usage_bug(current, hlock, LOCK_USED, LOCK_USAGE_STATES);
++}
++
++static bool lockdep_nmi(void)
++{
++	if (current->lockdep_recursion & 0xFFFF)
++		return false;
++
++	if (!in_nmi())
++		return false;
++
++	return true;
++}
++
+ /*
+  * We are not always called with irqs disabled - do that here,
+  * and also avoid lockdep recursion:
+@@ -4473,8 +4503,25 @@ void lock_acquire(struct lockdep_map *lo
+ {
+ 	unsigned long flags;
  
- #ifdef CONFIG_X86_64
- 	if (unlikely(this_cpu_read(update_debug_stack))) {
--		debug_stack_reset();
-+		debug_stack_reset(); /* notrace due to Makefile */
- 		this_cpu_write(update_debug_stack, 0);
- 	}
- #endif
+-	if (unlikely(current->lockdep_recursion))
++	if (unlikely(current->lockdep_recursion)) {
++		/* XXX allow trylock from NMI ?!? */
++		if (lockdep_nmi() && !trylock) {
++			struct held_lock hlock;
++
++			hlock.acquire_ip = ip;
++			hlock.instance = lock;
++			hlock.nest_lock = nest_lock;
++			hlock.irq_context = 2; // XXX
++			hlock.trylock = trylock;
++			hlock.read = read;
++			hlock.check = check;
++			hlock.hardirqs_off = true;
++			hlock.references = 0;
++
++			verify_lock_unused(lock, &hlock, subclass);
++		}
+ 		return;
++	}
+ 
+ 	raw_local_irq_save(flags);
+ 	check_flags(flags);
 
 
