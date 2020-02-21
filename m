@@ -2,86 +2,215 @@ Return-Path: <SRS0=1210=4J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8E151C35642
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 09:50:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D25C6C35641
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 09:50:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6E446222C4
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 09:50:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B363824653
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 09:50:28 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728350AbgBUJuO (ORCPT
+        id S1728384AbgBUJu1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Feb 2020 04:50:14 -0500
-Received: from mail-ot1-f65.google.com ([209.85.210.65]:44011 "EHLO
-        mail-ot1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727150AbgBUJuO (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Feb 2020 04:50:14 -0500
-Received: by mail-ot1-f65.google.com with SMTP id p8so1447921oth.10;
-        Fri, 21 Feb 2020 01:50:13 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=LGtPhAVjIvRquefayqs6YiIA/tNdWVoN+WLDPh1u7gE=;
-        b=MvypmPBbjmipDMALQTb/Kz6EUsxFrmfj9XTg25swESgqg2fdIRrb7z9lEdnA4MN4FK
-         4w6kiqpXck/bhiBkMnn3usG90+InPrvLb7g6vsIxGGCSRNPO81V6R6LqY+ANhUCFatrE
-         PzNx9vTDqd9nfspRnsNZw1I+C/i6PMwglk5+fVFesyGlMVkADhu+LMOp62d+/zcmUUIh
-         SOXF2K6jhLY8H/0rfoPW8SxPqK3rNlnolNNMMFjFFIUXh81V0O5Z6WbG2a/OsQDLW1Dn
-         VRef4stnGCNJ1RJpyy+7Kye7tb9dp1eFr7q4CovRDTyixB5TojNC38TUEtET7SJqTvK+
-         WS6w==
-X-Gm-Message-State: APjAAAV4DuWk1iihnZF6YW2elnBQq99Ser9QcGQ77kvNdw9yueuqyVNW
-        UHAU1aABDr+iSMWNbyDmTpqw6i9xJQ6ZIzqLdWs=
-X-Google-Smtp-Source: APXvYqwm+9QUakxr4sAH21zwcX7ad8NwXiWnkq/zDR06hcy6RD3aCDm8gQ7zDkbZbqGMQTUgWgb5ROsz2Bqdvv3L3xg=
-X-Received: by 2002:a9d:5c0c:: with SMTP id o12mr12558550otk.145.1582278613276;
- Fri, 21 Feb 2020 01:50:13 -0800 (PST)
+        Fri, 21 Feb 2020 04:50:27 -0500
+Received: from foss.arm.com ([217.140.110.172]:35314 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727150AbgBUJu1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 21 Feb 2020 04:50:27 -0500
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 425C531B;
+        Fri, 21 Feb 2020 01:50:26 -0800 (PST)
+Received: from e121166-lin.cambridge.arm.com (e121166-lin.cambridge.arm.com [10.1.196.255])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id E01F43F68F;
+        Fri, 21 Feb 2020 01:50:24 -0800 (PST)
+Date:   Fri, 21 Feb 2020 09:50:19 +0000
+From:   Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     linux-kernel@vger.kernel.org, stable@vger.kernel.org,
+        Pankaj Bansal <pankaj.bansal@nxp.com>,
+        Hanjun Guo <guohanjun@huawei.com>,
+        Will Deacon <will@kernel.org>,
+        Sudeep Holla <sudeep.holla@arm.com>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Robin Murphy <robin.murphy@arm.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: Re: [PATCH 5.5 293/399] ACPI/IORT: Fix Number of IDs handling in
+ iort_id_map()
+Message-ID: <20200221095019.GA29220@e121166-lin.cambridge.arm.com>
+References: <20200221072402.315346745@linuxfoundation.org>
+ <20200221072430.253096930@linuxfoundation.org>
 MIME-Version: 1.0
-References: <20200220172403.26062-1-wsa+renesas@sang-engineering.com> <20200220172403.26062-5-wsa+renesas@sang-engineering.com>
-In-Reply-To: <20200220172403.26062-5-wsa+renesas@sang-engineering.com>
-From:   Geert Uytterhoeven <geert@linux-m68k.org>
-Date:   Fri, 21 Feb 2020 10:50:02 +0100
-Message-ID: <CAMuHMdW-foZ+o1RbvEH8xX_zPa0sJ_kqRX+u4=bFRFNCHbLdwg@mail.gmail.com>
-Subject: Re: [RFC PATCH 4/7] i2c: of: remove superfluous parameter from
- exported function
-To:     Wolfram Sang <wsa+renesas@sang-engineering.com>
-Cc:     Linux I2C <linux-i2c@vger.kernel.org>,
-        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
-        linux-i3c@lists.infradead.org,
-        Kieran Bingham <kieran@ksquared.org.uk>,
-        =?UTF-8?Q?Niklas_S=C3=B6derlund?= <niklas.soderlund@ragnatech.se>,
-        Luca Ceresoli <luca@lucaceresoli.net>,
-        Jacopo Mondi <jacopo@jmondi.org>,
-        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
-        Vladimir Zapolskiy <vz@mleia.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200221072430.253096930@linuxfoundation.org>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Feb 20, 2020 at 6:26 PM Wolfram Sang
-<wsa+renesas@sang-engineering.com> wrote:
-> 'dev' is only used for printing an error message. However, that
-> information is not needed because '%pOF' fully describes the location of
-> the error. Drop the 'dev' and remove the superfluous parameter.
->
-> Signed-off-by: Wolfram Sang <wsa+renesas@sang-engineering.com>
+On Fri, Feb 21, 2020 at 08:40:18AM +0100, Greg Kroah-Hartman wrote:
+> From: Hanjun Guo <guohanjun@huawei.com>
+> 
+> [ Upstream commit 3c23b83a88d00383e1d498cfa515249aa2fe0238 ]
 
-Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
+Hi Greg,
 
-Gr{oetje,eeting}s,
+this patch should not be applied to stable kernels, not yet at
+least, please drop it.
 
-                        Geert
+Thanks,
+Lorenzo
 
--- 
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+> The IORT specification [0] (Section 3, table 4, page 9) defines the
+> 'Number of IDs' as 'The number of IDs in the range minus one'.
+> 
+> However, the IORT ID mapping function iort_id_map() treats the 'Number
+> of IDs' field as if it were the full IDs mapping count, with the
+> following check in place to detect out of boundary input IDs:
+> 
+> InputID >= Input base + Number of IDs
+> 
+> This check is flawed in that it considers the 'Number of IDs' field as
+> the full number of IDs mapping and disregards the 'minus one' from
+> the IDs count.
+> 
+> The correct check in iort_id_map() should be implemented as:
+> 
+> InputID > Input base + Number of IDs
+> 
+> this implements the specification correctly but unfortunately it breaks
+> existing firmwares that erroneously set the 'Number of IDs' as the full
+> IDs mapping count rather than IDs mapping count minus one.
+> 
+> e.g.
+> 
+> PCI hostbridge mapping entry 1:
+> Input base:  0x1000
+> ID Count:    0x100
+> Output base: 0x1000
+> Output reference: 0xC4  //ITS reference
+> 
+> PCI hostbridge mapping entry 2:
+> Input base:  0x1100
+> ID Count:    0x100
+> Output base: 0x2000
+> Output reference: 0xD4  //ITS reference
+> 
+> Two mapping entries which the second entry's Input base = the first
+> entry's Input base + ID count, so for InputID 0x1100 and with the
+> correct InputID check in place in iort_id_map() the kernel would map
+> the InputID to ITS 0xC4 not 0xD4 as it would be expected.
+> 
+> Therefore, to keep supporting existing flawed firmwares, introduce a
+> workaround that instructs the kernel to use the old InputID range check
+> logic in iort_id_map(), so that we can support both firmwares written
+> with the flawed 'Number of IDs' logic and the correct one as defined in
+> the specifications.
+> 
+> [0]: http://infocenter.arm.com/help/topic/com.arm.doc.den0049d/DEN0049D_IO_Remapping_Table.pdf
+> 
+> Reported-by: Pankaj Bansal <pankaj.bansal@nxp.com>
+> Link: https://lore.kernel.org/linux-acpi/20191215203303.29811-1-pankaj.bansal@nxp.com/
+> Signed-off-by: Hanjun Guo <guohanjun@huawei.com>
+> Signed-off-by: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+> Cc: Pankaj Bansal <pankaj.bansal@nxp.com>
+> Cc: Will Deacon <will@kernel.org>
+> Cc: Sudeep Holla <sudeep.holla@arm.com>
+> Cc: Catalin Marinas <catalin.marinas@arm.com>
+> Cc: Robin Murphy <robin.murphy@arm.com>
+> Signed-off-by: Will Deacon <will@kernel.org>
+> Signed-off-by: Sasha Levin <sashal@kernel.org>
+> ---
+>  drivers/acpi/arm64/iort.c | 57 +++++++++++++++++++++++++++++++++++++--
+>  1 file changed, 55 insertions(+), 2 deletions(-)
+> 
+> diff --git a/drivers/acpi/arm64/iort.c b/drivers/acpi/arm64/iort.c
+> index 33f71983e0017..6078064684c6c 100644
+> --- a/drivers/acpi/arm64/iort.c
+> +++ b/drivers/acpi/arm64/iort.c
+> @@ -298,6 +298,59 @@ out:
+>  	return status;
+>  }
+>  
+> +struct iort_workaround_oem_info {
+> +	char oem_id[ACPI_OEM_ID_SIZE + 1];
+> +	char oem_table_id[ACPI_OEM_TABLE_ID_SIZE + 1];
+> +	u32 oem_revision;
+> +};
+> +
+> +static bool apply_id_count_workaround;
+> +
+> +static struct iort_workaround_oem_info wa_info[] __initdata = {
+> +	{
+> +		.oem_id		= "HISI  ",
+> +		.oem_table_id	= "HIP07   ",
+> +		.oem_revision	= 0,
+> +	}, {
+> +		.oem_id		= "HISI  ",
+> +		.oem_table_id	= "HIP08   ",
+> +		.oem_revision	= 0,
+> +	}
+> +};
+> +
+> +static void __init
+> +iort_check_id_count_workaround(struct acpi_table_header *tbl)
+> +{
+> +	int i;
+> +
+> +	for (i = 0; i < ARRAY_SIZE(wa_info); i++) {
+> +		if (!memcmp(wa_info[i].oem_id, tbl->oem_id, ACPI_OEM_ID_SIZE) &&
+> +		    !memcmp(wa_info[i].oem_table_id, tbl->oem_table_id, ACPI_OEM_TABLE_ID_SIZE) &&
+> +		    wa_info[i].oem_revision == tbl->oem_revision) {
+> +			apply_id_count_workaround = true;
+> +			pr_warn(FW_BUG "ID count for ID mapping entry is wrong, applying workaround\n");
+> +			break;
+> +		}
+> +	}
+> +}
+> +
+> +static inline u32 iort_get_map_max(struct acpi_iort_id_mapping *map)
+> +{
+> +	u32 map_max = map->input_base + map->id_count;
+> +
+> +	/*
+> +	 * The IORT specification revision D (Section 3, table 4, page 9) says
+> +	 * Number of IDs = The number of IDs in the range minus one, but the
+> +	 * IORT code ignored the "minus one", and some firmware did that too,
+> +	 * so apply a workaround here to keep compatible with both the spec
+> +	 * compliant and non-spec compliant firmwares.
+> +	 */
+> +	if (apply_id_count_workaround)
+> +		map_max--;
+> +
+> +	return map_max;
+> +}
+> +
+>  static int iort_id_map(struct acpi_iort_id_mapping *map, u8 type, u32 rid_in,
+>  		       u32 *rid_out)
+>  {
+> @@ -314,8 +367,7 @@ static int iort_id_map(struct acpi_iort_id_mapping *map, u8 type, u32 rid_in,
+>  		return -ENXIO;
+>  	}
+>  
+> -	if (rid_in < map->input_base ||
+> -	    (rid_in >= map->input_base + map->id_count))
+> +	if (rid_in < map->input_base || rid_in > iort_get_map_max(map))
+>  		return -ENXIO;
+>  
+>  	*rid_out = map->output_base + (rid_in - map->input_base);
+> @@ -1631,5 +1683,6 @@ void __init acpi_iort_init(void)
+>  		return;
+>  	}
+>  
+> +	iort_check_id_count_workaround(iort_table);
+>  	iort_init_platform_devices();
+>  }
+> -- 
+> 2.20.1
+> 
+> 
+> 
