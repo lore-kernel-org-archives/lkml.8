@@ -5,51 +5,49 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9A3AEC35641
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 08:30:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D4A05C35641
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 08:30:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6E10020679
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 08:30:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A10E820578
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 08:30:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582273844;
-	bh=PNI4J4LnI5EeNudriscWBtbKyV+GK1O1DWXIYeyYIG4=;
+	s=default; t=1582273846;
+	bh=VxGyWnEba5VNmYC+QZbrZ1DU0OE8ldnVhLLrAP06RRA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=YrTCPui+BDe1/2TxFpz9sBltrzbbfR6NnMNQGJlB5160nPJ7Z0nY6hwrqFEiRe/gy
-	 3TltGDnv87QOrS0QX0i5/behLpwQmKaJzN3MZyCH8fgBjjf88a3l7HogCduTT9Za7s
-	 7cTOui5VAMeJQm6VYgcRV2DCPeNw2WcgpNc4nt2I=
+	b=b/CVs7dIc5nA3wZIXof/R/Kqjd+Usd62XFz/HQUG4LqRzWyIke0t4CaCe2pCnll0G
+	 +7H8yYfFbgBNQ5DgXAg/OUY6LP0fSipU7JZzVVyghePwkC6RWvig5cAOF683020Zyr
+	 y0E/g0s4l81JkujE/M1bc4QTAt4FscDPr+n6G/Hs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387423AbgBUIPq (ORCPT
+        id S2387413AbgBUIPo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Feb 2020 03:15:46 -0500
-Received: from mail.kernel.org ([198.145.29.99]:52530 "EHLO mail.kernel.org"
+        Fri, 21 Feb 2020 03:15:44 -0500
+Received: from mail.kernel.org ([198.145.29.99]:52482 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732657AbgBUIPl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Feb 2020 03:15:41 -0500
+        id S2387405AbgBUIPi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 21 Feb 2020 03:15:38 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8836624670;
-        Fri, 21 Feb 2020 08:15:40 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 71A0B2467B;
+        Fri, 21 Feb 2020 08:15:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1582272941;
-        bh=PNI4J4LnI5EeNudriscWBtbKyV+GK1O1DWXIYeyYIG4=;
+        s=default; t=1582272937;
+        bh=VxGyWnEba5VNmYC+QZbrZ1DU0OE8ldnVhLLrAP06RRA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=AQDxkluAlHUrfNjCw0gN9Xn95K4eC0Xhx0SBXOMOKwoen6TbDd1tOM4H+Pt5eKWq0
-         KFw4iTJmonK1+kFC13r5PY2FYNeCu87FXtCyEIRSHbJMIMgr2dgyVNiVcuvAHWMzby
-         Yc1O4reUROukYZ/rybsIS6xyAPYELUnqR8cBnnTI=
+        b=MaaPCfRoFfUN+62z89gSFXNzwY2K9qzJBy03nUQcI7b8brV9tG/9cOuPwqkTTOaIX
+         F6dCDV5lG/eNgk1cAWDDI5A58ZejUA1g3aGIMuqngraY2Bf2DgpOPJBjR2tC3Kxq9L
+         PBc4Gx7jURUBqqRXainZWZqwy/8PARM7L/HpP5uA=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Steve Best <sbest@redhat.com>,
-        Douglas Miller <dougmill@us.ibm.com>,
-        Oliver OHalloran <oohall@gmail.com>,
+        stable@vger.kernel.org, Michael Bringmann <mwb@linux.ibm.com>,
         Michael Ellerman <mpe@ellerman.id.au>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 296/344] selftests/eeh: Bump EEH wait time to 60s
-Date:   Fri, 21 Feb 2020 08:41:35 +0100
-Message-Id: <20200221072416.768276335@linuxfoundation.org>
+Subject: [PATCH 5.4 295/344] powerpc/pseries/lparcfg: Fix display of Maximum Memory
+Date:   Fri, 21 Feb 2020 08:41:34 +0100
+Message-Id: <20200221072416.668300071@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200221072349.335551332@linuxfoundation.org>
 References: <20200221072349.335551332@linuxfoundation.org>
@@ -62,49 +60,39 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Oliver O'Halloran <oohall@gmail.com>
+From: Michael Bringmann <mwb@linux.ibm.com>
 
-[ Upstream commit 414f50434aa2463202a5b35e844f4125dd1a7101 ]
+[ Upstream commit f1dbc1c5c70d0d4c60b5d467ba941fba167c12f6 ]
 
-Some newer cards supported by aacraid can take up to 40s to recover
-after an EEH event. This causes spurious failures in the basic EEH
-self-test since the current maximim timeout is only 30s.
+Correct overflow problem in calculation and display of Maximum Memory
+value to syscfg.
 
-Fix the immediate issue by bumping the timeout to a default of 60s,
-and allow the wait time to be specified via an environmental variable
-(EEH_MAX_WAIT).
-
-Reported-by: Steve Best <sbest@redhat.com>
-Suggested-by: Douglas Miller <dougmill@us.ibm.com>
-Signed-off-by: Oliver O'Halloran <oohall@gmail.com>
+Signed-off-by: Michael Bringmann <mwb@linux.ibm.com>
+[mpe: Only n_lmbs needs casting to unsigned long]
 Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
-Link: https://lore.kernel.org/r/20200122031125.25991-1-oohall@gmail.com
+Link: https://lore.kernel.org/r/5577aef8-1d5a-ca95-ff0a-9c7b5977e5bf@linux.ibm.com
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- tools/testing/selftests/powerpc/eeh/eeh-functions.sh | 10 +++++++---
- 1 file changed, 7 insertions(+), 3 deletions(-)
+ arch/powerpc/platforms/pseries/lparcfg.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/tools/testing/selftests/powerpc/eeh/eeh-functions.sh b/tools/testing/selftests/powerpc/eeh/eeh-functions.sh
-index 26112ab5cdf42..f52ed92b53e74 100755
---- a/tools/testing/selftests/powerpc/eeh/eeh-functions.sh
-+++ b/tools/testing/selftests/powerpc/eeh/eeh-functions.sh
-@@ -53,9 +53,13 @@ eeh_one_dev() {
- 	# is a no-op.
- 	echo $dev >/sys/kernel/debug/powerpc/eeh_dev_check
+diff --git a/arch/powerpc/platforms/pseries/lparcfg.c b/arch/powerpc/platforms/pseries/lparcfg.c
+index e33e8bc4b69bd..38c306551f76b 100644
+--- a/arch/powerpc/platforms/pseries/lparcfg.c
++++ b/arch/powerpc/platforms/pseries/lparcfg.c
+@@ -435,10 +435,10 @@ static void maxmem_data(struct seq_file *m)
+ {
+ 	unsigned long maxmem = 0;
  
--	# Enforce a 30s timeout for recovery. Even the IPR, which is infamously
--	# slow to reset, should recover within 30s.
--	max_wait=30
-+	# Default to a 60s timeout when waiting for a device to recover. This
-+	# is an arbitrary default which can be overridden by setting the
-+	# EEH_MAX_WAIT environmental variable when required.
-+
-+	# The current record holder for longest recovery time is:
-+	#  "Adaptec Series 8 12G SAS/PCIe 3" at 39 seconds
-+	max_wait=${EEH_MAX_WAIT:=60}
+-	maxmem += drmem_info->n_lmbs * drmem_info->lmb_size;
++	maxmem += (unsigned long)drmem_info->n_lmbs * drmem_info->lmb_size;
+ 	maxmem += hugetlb_total_pages() * PAGE_SIZE;
  
- 	for i in `seq 0 ${max_wait}` ; do
- 		if pe_ok $dev ; then
+-	seq_printf(m, "MaxMem=%ld\n", maxmem);
++	seq_printf(m, "MaxMem=%lu\n", maxmem);
+ }
+ 
+ static int pseries_lparcfg_data(struct seq_file *m, void *v)
 -- 
 2.20.1
 
