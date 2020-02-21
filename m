@@ -4,51 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A197EC35641
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 08:18:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0B75AC35641
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 08:18:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 77A4E24696
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 08:18:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D231F24692
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 08:18:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582273101;
-	bh=lWAgD2Omqn54//9A3l2dvEl/1ZU//HbLZ4rJgI2VEQo=;
+	s=default; t=1582273104;
+	bh=kfQa1v1OuiAExi15uWYc+fe150B8w8uPydminWzQMrE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=wrWlvQcDVFRHnzuthYNeOfxkZsfUfHzMVxHTv86rtAP5Z63OL3nBKkBaby4M6cVqI
-	 /ChyXMnrT50ndin/2kSffykhm26Yh9836ScxGTrRdOK11Jdp6d4kOXP2TP9vzOf4Dg
-	 0XP79GL2qqWmRot4GHIOvjkRVXo4ne0gn7SRonGg=
+	b=rDXWuIBA3z12GzD+FveqhLnYCKUblGw/fNh8B6DvI94xHyex2oTQPskp4B7x1B2Pp
+	 eg+h6PRoHuVcmEZpmru8lfb7gQWfL+T104jRi2QEwizQey3BEA1vYNvFOHrL0SjTNx
+	 lSP7ZJtMZYk2uQoNDPKHbR8ADp3ujCit45BSYM1w=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387414AbgBUIST (ORCPT
+        id S2387820AbgBUISX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Feb 2020 03:18:19 -0500
-Received: from mail.kernel.org ([198.145.29.99]:56090 "EHLO mail.kernel.org"
+        Fri, 21 Feb 2020 03:18:23 -0500
+Received: from mail.kernel.org ([198.145.29.99]:56222 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387795AbgBUISO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Feb 2020 03:18:14 -0500
+        id S2387813AbgBUISU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 21 Feb 2020 03:18:20 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8F3F424696;
-        Fri, 21 Feb 2020 08:18:13 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 92C9E24695;
+        Fri, 21 Feb 2020 08:18:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1582273094;
-        bh=lWAgD2Omqn54//9A3l2dvEl/1ZU//HbLZ4rJgI2VEQo=;
+        s=default; t=1582273099;
+        bh=kfQa1v1OuiAExi15uWYc+fe150B8w8uPydminWzQMrE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Ir0RE0xxBVWS9cvQs/S3Kuohn0DEmTbT8+qFKs3a0Wb343Gn11ar1Rm5R1sHTQXXz
-         8cWSp0RK/hLXxQOCN0tOWW9XF31iP4+496VaCOqWz7mbBCiqSX91MCZzp1FHlp9KJn
-         ykwhgbm/5DbrAiU0S22YbJ0p00euE70K7na1fCv0=
+        b=m7T0A0VTafgt0SKjazD70SEym5So/yHXS5NCX+hEGulso3GFNpoBG96EUBHhWpjtU
+         C92uSeHNhkunFHBVzuh1zKUnTGs06RY8CixpTGJHtw/hmqNzGAG4fY3yBy2bWeKGHQ
+         xP8LghGnJcswTSmJg1Ap9sbkur3yEnpr4FkEHrjc=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Vincenzo Frascino <vincenzo.frascino@arm.com>,
-        Russell King <rmk+kernel@armlinux.org.uk>,
+        stable@vger.kernel.org, Dan Carpenter <dan.carpenter@oracle.com>,
+        "J. Bruce Fields" <bfields@redhat.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 043/191] ARM: 8952/1: Disable kmemleak on XIP kernels
-Date:   Fri, 21 Feb 2020 08:40:16 +0100
-Message-Id: <20200221072257.058524321@linuxfoundation.org>
+Subject: [PATCH 4.19 011/191] nfsd4: avoid NULL deference on strange COPY compounds
+Date:   Fri, 21 Feb 2020 08:39:44 +0100
+Message-Id: <20200221072252.497508893@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200221072250.732482588@linuxfoundation.org>
 References: <20200221072250.732482588@linuxfoundation.org>
@@ -61,52 +60,52 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Vincenzo Frascino <vincenzo.frascino@arm.com>
+From: J. Bruce Fields <bfields@redhat.com>
 
-[ Upstream commit bc420c6ceefbb86cbbc8c00061bd779c17fa6997 ]
+[ Upstream commit d781e3df710745fbbaee4eb07fd5b64331a1b175 ]
 
-Kmemleak relies on specific symbols to register the read only data
-during init (e.g. __start_ro_after_init).
-Trying to build an XIP kernel on arm results in the linking error
-reported below because when this option is selected read only data
-after init are not allowed since .data is read only (.rodata).
+With cross-server COPY we've introduced the possibility that the current
+or saved filehandle might not have fh_dentry/fh_export filled in, but we
+missed a place that assumed it was.  I think this could be triggered by
+a compound like:
 
-  arm-linux-gnueabihf-ld: mm/kmemleak.o: in function `kmemleak_init':
-  kmemleak.c:(.init.text+0x148): undefined reference to `__end_ro_after_init'
-  arm-linux-gnueabihf-ld: kmemleak.c:(.init.text+0x14c):
-     undefined reference to `__end_ro_after_init'
-  arm-linux-gnueabihf-ld: kmemleak.c:(.init.text+0x150):
-     undefined reference to `__start_ro_after_init'
-  arm-linux-gnueabihf-ld: kmemleak.c:(.init.text+0x156):
-     undefined reference to `__start_ro_after_init'
-  arm-linux-gnueabihf-ld: kmemleak.c:(.init.text+0x162):
-     undefined reference to `__start_ro_after_init'
-  arm-linux-gnueabihf-ld: kmemleak.c:(.init.text+0x16a):
-     undefined reference to `__start_ro_after_init'
-  linux/Makefile:1078: recipe for target 'vmlinux' failed
+	PUTFH(foreign filehandle)
+	GETATTR
+	SAVEFH
+	COPY
 
-Fix the issue enabling kmemleak only on non XIP kernels.
+First, check_if_stalefh_allowed sets no_verify on the first (PUTFH) op.
+Then op_func = nfsd4_putfh runs and leaves current_fh->fh_export NULL.
+need_wrongsec_check returns true, since this PUTFH has OP_IS_PUTFH_LIKE
+set and GETATTR does not have OP_HANDLES_WRONGSEC set.
 
-Signed-off-by: Vincenzo Frascino <vincenzo.frascino@arm.com>
-Signed-off-by: Russell King <rmk+kernel@armlinux.org.uk>
+We should probably also consider tightening the checks in
+check_if_stalefh_allowed and double-checking that we don't assume the
+filehandle is verified elsewhere in the compound.  But I think this
+fixes the immediate issue.
+
+Reported-by: Dan Carpenter <dan.carpenter@oracle.com>
+Fixes: 4e48f1cccab3 "NFSD: allow inter server COPY to have... "
+Signed-off-by: J. Bruce Fields <bfields@redhat.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm/Kconfig | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ fs/nfsd/nfs4proc.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/arch/arm/Kconfig b/arch/arm/Kconfig
-index 185e552f14610..9f03befdfbf06 100644
---- a/arch/arm/Kconfig
-+++ b/arch/arm/Kconfig
-@@ -61,7 +61,7 @@ config ARM
- 	select HAVE_EBPF_JIT if !CPU_ENDIAN_BE32
- 	select HAVE_CONTEXT_TRACKING
- 	select HAVE_C_RECORDMCOUNT
--	select HAVE_DEBUG_KMEMLEAK
-+	select HAVE_DEBUG_KMEMLEAK if !XIP_KERNEL
- 	select HAVE_DMA_CONTIGUOUS if MMU
- 	select HAVE_DYNAMIC_FTRACE if (!XIP_KERNEL) && !CPU_ENDIAN_BE32 && MMU
- 	select HAVE_DYNAMIC_FTRACE_WITH_REGS if HAVE_DYNAMIC_FTRACE
+diff --git a/fs/nfsd/nfs4proc.c b/fs/nfsd/nfs4proc.c
+index f35aa9f88b5ec..895123518fd42 100644
+--- a/fs/nfsd/nfs4proc.c
++++ b/fs/nfsd/nfs4proc.c
+@@ -1789,7 +1789,8 @@ nfsd4_proc_compound(struct svc_rqst *rqstp)
+ 			if (op->opdesc->op_flags & OP_CLEAR_STATEID)
+ 				clear_current_stateid(cstate);
+ 
+-			if (need_wrongsec_check(rqstp))
++			if (current_fh->fh_export &&
++					need_wrongsec_check(rqstp))
+ 				op->status = check_nfsd_access(current_fh->fh_export, rqstp);
+ 		}
+ encode_op:
 -- 
 2.20.1
 
