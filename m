@@ -2,507 +2,117 @@ Return-Path: <SRS0=1210=4J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNPARSEABLE_RELAY,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5B7A1C35646
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 15:40:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BB037C35656
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 15:40:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 15B61206E2
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 15:40:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 91C23206E2
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 15:40:14 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1582299614;
+	bh=+DoRoBMJXa06a9s5rF/Tg0R2Bb7OUU1w4NYR6LGt5us=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=NiR62UiAbvaGRpJ7Tm2b6KpEdlkPTt5YP7PmvsUKClgf05G18UAHxS2NayTiEdh/c
+	 OnqcUUnEfprG1o9ePfLL+NHDjmU2qpXAIOJ7VFpS8I3sj8ajiv1aSBKMDhPETb0dj9
+	 C3ZSBKjKvjrN9hz0paqQAD6LeGGZF2JiIi48Y4cs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728895AbgBUPkK (ORCPT
+        id S1729002AbgBUPkN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Feb 2020 10:40:10 -0500
-Received: from mail-il-dmz.mellanox.com ([193.47.165.129]:40062 "EHLO
-        mellanox.co.il" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1728815AbgBUPkK (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Feb 2020 10:40:10 -0500
-Received: from Internal Mail-Server by MTLPINE2 (envelope-from asmaa@mellanox.com)
-        with ESMTPS (AES256-SHA encrypted); 21 Feb 2020 17:40:06 +0200
-Received: from farm-0002.mtbu.labs.mlnx (farm-0002.mtbu.labs.mlnx [10.15.2.32])
-        by mtbu-labmailer.labs.mlnx (8.14.4/8.14.4) with ESMTP id 01LFe5Y3030560;
-        Fri, 21 Feb 2020 10:40:05 -0500
-Received: (from asmaa@localhost)
-        by farm-0002.mtbu.labs.mlnx (8.14.7/8.13.8/Submit) id 01LFe5e4013408;
-        Fri, 21 Feb 2020 10:40:05 -0500
-From:   Asmaa Mnebhi <Asmaa@mellanox.com>
-To:     bgolaszewski@baylibre.com, linus.walleij@linaro.org
-Cc:     Asmaa Mnebhi <Asmaa@mellanox.com>, linux-kernel@vger.kernel.org
-Subject: [PATCH v1 1/1] gpio: add driver for Mellanox BlueField 2 GPIO controller
-Date:   Fri, 21 Feb 2020 10:39:55 -0500
-Message-Id: <d5d95e7b2823ef45878739ea338a1661df2e6a89.1582299415.git.Asmaa@mellanox.com>
-X-Mailer: git-send-email 2.1.2
-In-Reply-To: <cover.1582299415.git.Asmaa@mellanox.com>
-References: <cover.1582299415.git.Asmaa@mellanox.com>
-In-Reply-To: <cover.1582299415.git.Asmaa@mellanox.com>
-References: <cover.1582299415.git.Asmaa@mellanox.com>
+        Fri, 21 Feb 2020 10:40:13 -0500
+Received: from mail.kernel.org ([198.145.29.99]:33888 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728815AbgBUPkM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 21 Feb 2020 10:40:12 -0500
+Received: from mail-qk1-f176.google.com (mail-qk1-f176.google.com [209.85.222.176])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3325F208E4;
+        Fri, 21 Feb 2020 15:40:12 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1582299612;
+        bh=+DoRoBMJXa06a9s5rF/Tg0R2Bb7OUU1w4NYR6LGt5us=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=C50UxxIIkUBAA2owQJBxXLzj5mfErfF8Pc2OBetl4t/cV2KyEMFMjn8eC4BwC7mmB
+         kCwDosbSs53gE4Sdr5Fg43Ax+XA9Ho+WY/6Ra20KzNoV0s1vrbxL2eSWxW29kf/Mqk
+         pkg+U+QsIhllO3E7zJbObensr46EDR31k4fiVQ/w=
+Received: by mail-qk1-f176.google.com with SMTP id u124so2142822qkh.13;
+        Fri, 21 Feb 2020 07:40:12 -0800 (PST)
+X-Gm-Message-State: APjAAAVWTnkvg0TT+tYQ0dwv4VG90sEhb2AlHYq/UYKheOekFsdrUtva
+        UyaKIOjoiDlVrAqb3AWsHyj9DjU4LPJxqKXl/g==
+X-Google-Smtp-Source: APXvYqy0D6b0D+YPb02EPEVdZaz7+H9RHdQphCR7I5xx5+N9sBx4J8AdIN+Hdpb187sXHw7HfZ4TtvWRgV6uosWTKgo=
+X-Received: by 2002:a05:620a:1237:: with SMTP id v23mr17847336qkj.223.1582299611320;
+ Fri, 21 Feb 2020 07:40:11 -0800 (PST)
+MIME-Version: 1.0
+References: <20200221041631.10960-1-chris.packham@alliedtelesis.co.nz> <20200221041631.10960-4-chris.packham@alliedtelesis.co.nz>
+In-Reply-To: <20200221041631.10960-4-chris.packham@alliedtelesis.co.nz>
+From:   Rob Herring <robh+dt@kernel.org>
+Date:   Fri, 21 Feb 2020 09:40:00 -0600
+X-Gmail-Original-Message-ID: <CAL_JsqK+jKyRr98_YX1GGwk-rHrLMOq_v7Z_57dQWYYQPuLS7A@mail.gmail.com>
+Message-ID: <CAL_JsqK+jKyRr98_YX1GGwk-rHrLMOq_v7Z_57dQWYYQPuLS7A@mail.gmail.com>
+Subject: Re: [PATCH v4 3/5] dt-bindings: hwmon: Document adt7475 invert-pwm property
+To:     Chris Packham <chris.packham@alliedtelesis.co.nz>
+Cc:     Jean Delvare <jdelvare@suse.com>,
+        Guenter Roeck <linux@roeck-us.net>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Linux HWMON List <linux-hwmon@vger.kernel.org>,
+        devicetree@vger.kernel.org,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Logan Shaw <logan.shaw@alliedtelesis.co.nz>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This patch adds support for the GPIO controller used by
-Mellanox BlueField 2 SOCs.
+On Thu, Feb 20, 2020 at 10:16 PM Chris Packham
+<chris.packham@alliedtelesis.co.nz> wrote:
+>
+> Add binding information for the invert-pwm property.
+>
+> Signed-off-by: Chris Packham <chris.packham@alliedtelesis.co.nz>
+> ---
+>
+> Notes:
+>     Changes in v4:
+>     - use $ref uint32 and enum
+>     - add adi vendor prefix
+>
+>     Cahnges in v3:
+>     - new
+>
+>  Documentation/devicetree/bindings/hwmon/adt7475.yaml | 12 ++++++++++++
+>  1 file changed, 12 insertions(+)
+>
+> diff --git a/Documentation/devicetree/bindings/hwmon/adt7475.yaml b/Documentation/devicetree/bindings/hwmon/adt7475.yaml
+> index e40612ee075f..6a358b30586c 100644
+> --- a/Documentation/devicetree/bindings/hwmon/adt7475.yaml
+> +++ b/Documentation/devicetree/bindings/hwmon/adt7475.yaml
+> @@ -50,6 +50,17 @@ patternProperties:
+>       - $ref: /schemas/types.yaml#/definitions/uint32
+>       - enum: [0, 1]
+>
+> +  "^adi,invert-pwm[1-3]$":
+> +    description: |
+> +      Configures the pwm output to use inverted logic. If set to 1
+> +      the pwm uses a logic low output for 100% duty cycle. If set
+> +      to 0 the pwm uses a logic high output for 100% duty cycle.
+> +      If the property is absent the pwm retains it's configuration
+> +      from the bios/bootloader.
 
-Signed-off-by: Asmaa Mnebhi <Asmaa@mellanox.com>
----
- drivers/gpio/Kconfig       |   7 +
- drivers/gpio/Makefile      |   1 +
- drivers/gpio/gpio-mlxbf2.c | 411 +++++++++++++++++++++++++++++++++++++++++++++
- 3 files changed, 419 insertions(+)
- create mode 100644 drivers/gpio/gpio-mlxbf2.c
+I believe we already have an inverted flag for consumers. That doesn't
+work if you don't have a consumer described in DT, but then the
+question is should you? Or is this something the user will want to
+configure from userspace.
 
-diff --git a/drivers/gpio/Kconfig b/drivers/gpio/Kconfig
-index b8013cf..6234ccc 100644
---- a/drivers/gpio/Kconfig
-+++ b/drivers/gpio/Kconfig
-@@ -1399,6 +1399,13 @@ config GPIO_MLXBF
- 	help
- 	  Say Y here if you want GPIO support on Mellanox BlueField SoC.
- 
-+config GPIO_MLXBF2
-+	tristate "Mellanox BlueField 2 SoC GPIO"
-+	depends on (MELLANOX_PLATFORM && ARM64 && ACPI) || (64BIT && COMPILE_TEST)
-+	select GPIO_GENERIC
-+	help
-+	  Say Y here if you want GPIO support on Mellanox BlueField 2 SoC.
-+
- config GPIO_ML_IOH
- 	tristate "OKI SEMICONDUCTOR ML7213 IOH GPIO support"
- 	depends on X86 || COMPILE_TEST
-diff --git a/drivers/gpio/Makefile b/drivers/gpio/Makefile
-index 0b57126..b2cfc21 100644
---- a/drivers/gpio/Makefile
-+++ b/drivers/gpio/Makefile
-@@ -93,6 +93,7 @@ obj-$(CONFIG_GPIO_MENZ127)		+= gpio-menz127.o
- obj-$(CONFIG_GPIO_MERRIFIELD)		+= gpio-merrifield.o
- obj-$(CONFIG_GPIO_ML_IOH)		+= gpio-ml-ioh.o
- obj-$(CONFIG_GPIO_MLXBF)		+= gpio-mlxbf.o
-+obj-$(CONFIG_GPIO_MLXBF2)		+= gpio-mlxbf2.o
- obj-$(CONFIG_GPIO_MM_LANTIQ)		+= gpio-mm-lantiq.o
- obj-$(CONFIG_GPIO_MOCKUP)		+= gpio-mockup.o
- obj-$(CONFIG_GPIO_MOXTET)		+= gpio-moxtet.o
-diff --git a/drivers/gpio/gpio-mlxbf2.c b/drivers/gpio/gpio-mlxbf2.c
-new file mode 100644
-index 0000000..a4ffe0b
---- /dev/null
-+++ b/drivers/gpio/gpio-mlxbf2.c
-@@ -0,0 +1,411 @@
-+// SPDX-License-Identifier: GPL-2.0
-+
-+#include <linux/acpi.h>
-+#include <linux/bitfield.h>
-+#include <linux/bitops.h>
-+#include <linux/device.h>
-+#include <linux/gpio/driver.h>
-+#include <linux/io.h>
-+#include <linux/ioport.h>
-+#include <linux/kernel.h>
-+#include <linux/module.h>
-+#include <linux/platform_device.h>
-+#include <linux/pm.h>
-+#include <linux/resource.h>
-+#include <linux/spinlock.h>
-+#include <linux/types.h>
-+#include <linux/version.h>
-+
-+/*
-+ * There are 3 YU GPIO blocks:
-+ * gpio[0]: HOST_GPIO0->HOST_GPIO31
-+ * gpio[1]: HOST_GPIO32->HOST_GPIO63
-+ * gpio[2]: HOST_GPIO64->HOST_GPIO69
-+ */
-+#define YU_GPIO_BLOCKS		3
-+
-+/* Max number of pins per YU GPIO block in the YU */
-+#define YU_GPIO_BLOCK_MAX_PINS		32
-+
-+/* Total number of GPIO pins supported */
-+#define BF2_HOST_GPIO_NUM		70
-+
-+#define YU_GPIO0_MAX_GPIO_ID	(YU_GPIO_BLOCK_MAX_PINS - 1)
-+#define YU_GPIO1_MAX_GPIO_ID	\
-+	(YU_GPIO0_MAX_GPIO_ID + YU_GPIO_BLOCK_MAX_PINS)
-+#define YU_GPIO2_MAX_GPIO_ID	(BF2_HOST_GPIO_NUM - 1)
-+
-+/* Retrieve start address of a YU GPIO block */
-+#define YU_GPIO_BLOCK_STRIDE(block)	(block * 0x100)
-+
-+/*
-+ * arm_gpio_lock register:
-+ * bit[31]	lock status: active if set
-+ * bit[15:0]	set lock
-+ * The lock is enabled only if 0xd42f is written to this field
-+ */
-+#define YU_LOCK_ACTIVE_BIT(val)		(val >> 31)
-+#define YU_ARM_GPIO_LOCK_ACQUIRE	0xd42f
-+#define YU_ARM_GPIO_LOCK_RELEASE	0x0
-+
-+/*
-+ * gpio[x] block registers and their offset
-+ */
-+#define YU_GPIO_DATAOUT			0x00
-+#define YU_GPIO_DATAIN			0x04
-+#define YU_GPIO_MODE1			0x08
-+#define YU_GPIO_MODE0			0x0c
-+#define YU_GPIO_DATASET			0x14
-+#define YU_GPIO_DATACLEAR		0x18
-+#define YU_GPIO_MODE1_CLEAR		0x50
-+#define YU_GPIO_MODE0_SET		0x54
-+#define YU_GPIO_MODE0_CLEAR		0x58
-+
-+enum {
-+	GPIO_BLOCK0,
-+	GPIO_BLOCK1,
-+	GPIO_BLOCK2
-+};
-+
-+enum {
-+	GPIO_BLOCKS,
-+	ARM_GPIO_LOCK,
-+};
-+
-+#ifdef CONFIG_PM
-+struct mlxbf2_gpio_context_save_regs {
-+	u32 gpio_mode0[YU_GPIO_BLOCKS];
-+	u32 gpio_mode1[YU_GPIO_BLOCKS];
-+};
-+#endif
-+
-+/* BF2 Device state structure. */
-+struct mlxbf2_gpio_state {
-+	struct gpio_chip gc;
-+	struct irq_chip irq_chip;
-+
-+	/* Must hold this lock to modify shared data. */
-+	spinlock_t lock;
-+
-+	/* YU GPIO blocks address */
-+	void __iomem *gpio_io;
-+	/* YU ARM GPIO lock address */
-+	void __iomem *arm_gpio_lock_io;
-+#ifdef CONFIG_PM
-+	struct mlxbf2_gpio_context_save_regs *csave_regs;
-+#endif
-+};
-+
-+/*
-+ * Acquire the YU arm_gpio_lock to be able to change the direction
-+ * mode. If the lock_active bit is already set, return an error.
-+ */
-+static int mlxbf2_gpio_lock_acquire(struct mlxbf2_gpio_state *gs)
-+{
-+	u32 arm_gpio_lock_val;
-+
-+	arm_gpio_lock_val = readl(gs->arm_gpio_lock_io);
-+
-+	/*
-+	 * When lock active bit[31] is set, ModeX is write enabled
-+	 */
-+	if (YU_LOCK_ACTIVE_BIT(arm_gpio_lock_val))
-+		return -EINVAL;
-+
-+	writel(YU_ARM_GPIO_LOCK_ACQUIRE, gs->arm_gpio_lock_io);
-+
-+	return 0;
-+}
-+
-+/*
-+ * Release the YU arm_gpio_lock after changing the direction mode.
-+ */
-+static void mlxbf2_gpio_lock_release(struct mlxbf2_gpio_state *gs)
-+{
-+	writel(YU_ARM_GPIO_LOCK_RELEASE, gs->arm_gpio_lock_io);
-+}
-+
-+/* Get the YU gpio block offset based on the GPIO pin. */
-+static u32 gpio_pin_to_blk_offset(unsigned int offset)
-+{
-+	if (offset <= YU_GPIO0_MAX_GPIO_ID)
-+		return YU_GPIO_BLOCK_STRIDE(GPIO_BLOCK0);
-+	else if (offset <= YU_GPIO1_MAX_GPIO_ID)
-+		return YU_GPIO_BLOCK_STRIDE(GPIO_BLOCK1);
-+	else if (offset <= YU_GPIO2_MAX_GPIO_ID)
-+		return YU_GPIO_BLOCK_STRIDE(GPIO_BLOCK2);
-+	else
-+		return -EINVAL;
-+}
-+
-+/*
-+ * mode0 and mode1 are both locked by the gpio_lock field.
-+ *
-+ * Together, mode0 and mode1 define the gpio Mode dependeing also
-+ * on Reg_DataOut.
-+ *
-+ * {mode1,mode0}:{Reg_DataOut=0,Reg_DataOut=1}->{DataOut=0,DataOut=1}
-+ *
-+ * {0,0}:Reg_DataOut{0,1}->{Z,Z} Input PAD
-+ * {0,1}:Reg_DataOut{0,1}->{0,1} Full drive Output PAD
-+ * {1,0}:Reg_DataOut{0,1}->{0,Z} 0-set PAD to low, 1-float
-+ * {1,1}:Reg_DataOut{0,1}->{Z,1} 0-float, 1-set PAD to high
-+ */
-+
-+/*
-+ * Set input direction:
-+ * {mode1,mode0} = {0,0}
-+ */
-+static int mlxbf2_gpio_direction_input(struct gpio_chip *chip,
-+				       unsigned int offset)
-+{
-+	struct mlxbf2_gpio_state *gs = gpiochip_get_data(chip);
-+	unsigned int local_offset;
-+	u32 blk_offset;
-+	int ret;
-+
-+	blk_offset = gpio_pin_to_blk_offset(offset);
-+	if (blk_offset < 0)
-+		return blk_offset;
-+
-+	local_offset = (offset % YU_GPIO_BLOCK_MAX_PINS);
-+
-+	/*
-+	 * Although the arm_gpio_lock was set in the probe function, check again
-+	 * it is still enabled to be able to write to the ModeX registers.
-+	 */
-+	spin_lock(&gs->lock);
-+	ret = mlxbf2_gpio_lock_acquire(gs);
-+	if (ret < 0) {
-+		spin_unlock(&gs->lock);
-+		return ret;
-+	}
-+
-+	writel(BIT(local_offset), gs->gpio_io + blk_offset +
-+		YU_GPIO_MODE0_CLEAR);
-+	writel(BIT(local_offset), gs->gpio_io + blk_offset +
-+		YU_GPIO_MODE1_CLEAR);
-+
-+	mlxbf2_gpio_lock_release(gs);
-+	spin_unlock(&gs->lock);
-+
-+	return ret;
-+}
-+
-+/*
-+ * Set output direction:
-+ * {mode1,mode0} = {0,1}
-+ */
-+static int mlxbf2_gpio_direction_output(struct gpio_chip *chip,
-+					unsigned int offset,
-+					int value)
-+{
-+	struct mlxbf2_gpio_state *gs = gpiochip_get_data(chip);
-+	unsigned int local_offset;
-+	u32 blk_offset;
-+	int ret = 0;
-+
-+	blk_offset = gpio_pin_to_blk_offset(offset);
-+	if (blk_offset < 0)
-+		return blk_offset;
-+
-+	local_offset = (offset % YU_GPIO_BLOCK_MAX_PINS);
-+
-+	/*
-+	 * Although the arm_gpio_lock was set in the probe function,
-+	 * check again it is still enabled to be able to write to the
-+	 * ModeX registers.
-+	 */
-+	spin_lock(&gs->lock);
-+	ret = mlxbf2_gpio_lock_acquire(gs);
-+	if (ret < 0) {
-+		spin_unlock(&gs->lock);
-+		return ret;
-+	}
-+
-+	writel(BIT(local_offset), gs->gpio_io + blk_offset +
-+		YU_GPIO_MODE1_CLEAR);
-+	writel(BIT(local_offset), gs->gpio_io + blk_offset +
-+		YU_GPIO_MODE0_SET);
-+
-+	mlxbf2_gpio_lock_release(gs);
-+	spin_unlock(&gs->lock);
-+
-+	return ret;
-+}
-+
-+/* Get state of GPIO pin when direction is set to in */
-+static int mlxbf2_gpio_get(struct gpio_chip *chip, unsigned int offset)
-+{
-+	struct mlxbf2_gpio_state *gs;
-+	unsigned int local_offset;
-+	u32 blk_offset;
-+	u32 value;
-+
-+	blk_offset = gpio_pin_to_blk_offset(offset);
-+	if (blk_offset < 0)
-+		return blk_offset;
-+
-+	local_offset = (offset % YU_GPIO_BLOCK_MAX_PINS);
-+
-+	gs = gpiochip_get_data(chip);
-+
-+	spin_lock(&gs->lock);
-+	value = readl(gs->gpio_io + blk_offset + YU_GPIO_DATAIN);
-+	spin_unlock(&gs->lock);
-+
-+	return (value >> local_offset) & 1;
-+}
-+
-+/* Set GPIO pin when direction is set to out */
-+static void mlxbf2_gpio_set(struct gpio_chip *chip, unsigned int offset,
-+	int value)
-+{
-+	struct mlxbf2_gpio_state *gs;
-+	unsigned int local_offset;
-+	u32 blk_offset;
-+
-+	blk_offset = gpio_pin_to_blk_offset(offset);
-+	if (blk_offset < 0)
-+		return;
-+
-+	local_offset = (offset % YU_GPIO_BLOCK_MAX_PINS);
-+
-+	gs = gpiochip_get_data(chip);
-+
-+	/*
-+	 * Use dataset reg if "value" is 1.
-+	 * Use dataclear reg if "value" is 0.
-+	 * dataset and dataclear enable us to write to dataout
-+	 * without having to do a read and mask before.
-+	 * Write 0x1 to the corresponding gpio pin in
-+	 * both dataset and dataclear reg to set or clear
-+	 * a value respectively.
-+	 */
-+	spin_lock(&gs->lock);
-+
-+	if (value)
-+		writel(BIT(local_offset), gs->gpio_io + blk_offset +
-+			YU_GPIO_DATASET);
-+	else
-+		writel(BIT(local_offset), gs->gpio_io + blk_offset +
-+			YU_GPIO_DATACLEAR);
-+
-+	spin_unlock(&gs->lock);
-+}
-+
-+/* BF2 GPIO driver initialization routine. */
-+static int
-+mlxbf2_gpio_probe(struct platform_device *pdev)
-+{
-+	struct mlxbf2_gpio_state *gs;
-+	struct device *dev = &pdev->dev;
-+	const char *name = dev_name(dev);
-+	struct gpio_chip *gc;
-+	struct resource *res;
-+	int ret;
-+
-+	gs = devm_kzalloc(dev, sizeof(*gs), GFP_KERNEL);
-+	if (!gs)
-+		return -ENOMEM;
-+
-+	/* All 3 YU GPIO block address */
-+	res = platform_get_resource(pdev, IORESOURCE_MEM, GPIO_BLOCKS);
-+	if (!res)
-+		return -ENODEV;
-+
-+	gs->gpio_io = devm_ioremap(dev, res->start, resource_size(res));
-+	if (!gs->gpio_io)
-+		return -ENOMEM;
-+
-+	/* YU ARM GPIO Lock address */
-+	res = platform_get_resource(pdev, IORESOURCE_MEM, ARM_GPIO_LOCK);
-+	if (!res)
-+		return -ENOMEM;
-+
-+	gs->arm_gpio_lock_io = devm_ioremap_resource(dev, res);
-+	if (IS_ERR(gs->arm_gpio_lock_io))
-+		return PTR_ERR(gs->arm_gpio_lock_io);
-+
-+	gc = &gs->gc;
-+	gc->direction_input = mlxbf2_gpio_direction_input;
-+	gc->direction_output = mlxbf2_gpio_direction_output;
-+	gc->get = mlxbf2_gpio_get;
-+	gc->set = mlxbf2_gpio_set;
-+	gc->label = name;
-+	gc->parent = dev;
-+	gc->owner = THIS_MODULE;
-+	gc->base = -1;
-+	gc->ngpio = BF2_HOST_GPIO_NUM;
-+
-+	spin_lock_init(&gs->lock);
-+
-+	platform_set_drvdata(pdev, gs);
-+
-+	ret = devm_gpiochip_add_data(dev, &gs->gc, gs);
-+	if (ret) {
-+		dev_err(dev, "Failed adding memory mapped gpiochip\n");
-+		return ret;
-+	}
-+
-+	dev_info(dev, "Registered Mellanox BlueField 2 GPIO");
-+
-+	return 0;
-+}
-+
-+#ifdef CONFIG_PM
-+static int mlxbf2_gpio_suspend(struct platform_device *pdev,
-+				pm_message_t state)
-+{
-+	struct mlxbf2_gpio_state *gs = platform_get_drvdata(pdev);
-+	unsigned int blk;
-+
-+	for (blk = GPIO_BLOCK0; blk < YU_GPIO_BLOCKS; blk++) {
-+		gs->csave_regs->gpio_mode0[blk] = readl(gs->gpio_io +
-+		    YU_GPIO_BLOCK_STRIDE(blk) + YU_GPIO_MODE0);
-+		gs->csave_regs->gpio_mode1[blk] = readl(gs->gpio_io +
-+		    YU_GPIO_BLOCK_STRIDE(blk) + YU_GPIO_MODE1);
-+	}
-+
-+	return 0;
-+}
-+
-+static int mlxbf2_gpio_resume(struct platform_device *pdev)
-+{
-+	struct mlxbf2_gpio_state *gs = platform_get_drvdata(pdev);
-+	unsigned int blk;
-+
-+	for (blk = GPIO_BLOCK0; blk < YU_GPIO_BLOCKS; blk++) {
-+		writel(gs->csave_regs->gpio_mode0[blk], gs->gpio_io +
-+		    YU_GPIO_BLOCK_STRIDE(blk) + YU_GPIO_MODE0);
-+		writel(gs->csave_regs->gpio_mode1[blk], gs->gpio_io +
-+		    YU_GPIO_BLOCK_STRIDE(blk) + YU_GPIO_MODE1);
-+	}
-+
-+	return 0;
-+}
-+#endif
-+
-+static const struct acpi_device_id mlxbf2_gpio_acpi_match[] = {
-+	{ "MLNXBF22", 0 },
-+	{},
-+};
-+MODULE_DEVICE_TABLE(acpi, mlxbf2_gpio_acpi_match);
-+
-+static struct platform_driver mlxbf2_gpio_driver = {
-+	.driver = {
-+		.name = "mlxbf2_gpio",
-+		.acpi_match_table = ACPI_PTR(mlxbf2_gpio_acpi_match),
-+	},
-+	.probe    = mlxbf2_gpio_probe,
-+#ifdef CONFIG_PM
-+	.suspend  = mlxbf2_gpio_suspend,
-+	.resume   = mlxbf2_gpio_resume,
-+#endif
-+};
-+
-+module_platform_driver(mlxbf2_gpio_driver);
-+
-+MODULE_DESCRIPTION("Mellanox BlueField 2 GPIO Driver");
-+MODULE_AUTHOR("Mellanox Technologies");
-+MODULE_LICENSE("GPL v2");
--- 
-2.1.2
+The problem with 'invert' properties is they assume you know what the
+not inverted state is. I would also make this an array:
 
+adi,pwm-active-state = <1 0 0 1>; // PWM1 and PWM2 active low
+
+And not present means <1 1 1 1>.
+
+Rob
