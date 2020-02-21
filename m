@@ -4,50 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EEBC3C35641
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 08:24:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AB8FFC35641
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 08:24:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B7E2C246A9
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 08:24:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7F1D6246A6
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 08:24:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582273485;
-	bh=9j8X2m67R4Ml4yEuJzG98wz75DIpMegNzJAmtFU/4bQ=;
+	s=default; t=1582273491;
+	bh=na6MCkvM/gU1JTmFSKwL58UmWb1R7nW/sp5fjyKvY64=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ArDks3IouW+bdyNfwRX/rg29ppgyR5Nlvdp+tWJDAK/gVKgXh6sRJFAGYGmW6Ru1W
-	 k2EsB4GWmHIuE/1sNNhnB3wNdTXqBLe6qPAwAnSZcBkKxN4+rC74xEDEHccM+iMbK2
-	 hBV/yMBKz0cknKoPLFpTurwmT9f0wM7MAwKVyqkA=
+	b=SZdNarV+ny7BELPbTgXauGSbjDYR6htn/UeW82VWVdFrQ/nvq4XrAfEquUcM6H9nN
+	 q8GK+q/7YW4Be9W1L/RhW/Swa6CfZc1OqtFRYkZkVeCVw2ZveGtiectDUcT8q95Pr5
+	 pkxbXkcH/P+a36gnM4bH4Y2MqdQjl8/VFX1jzWFA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388684AbgBUIYn (ORCPT
+        id S2388700AbgBUIYu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Feb 2020 03:24:43 -0500
-Received: from mail.kernel.org ([198.145.29.99]:37084 "EHLO mail.kernel.org"
+        Fri, 21 Feb 2020 03:24:50 -0500
+Received: from mail.kernel.org ([198.145.29.99]:37184 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388670AbgBUIYe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Feb 2020 03:24:34 -0500
+        id S1732929AbgBUIYj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 21 Feb 2020 03:24:39 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 514B5246A1;
-        Fri, 21 Feb 2020 08:24:33 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 903B7246A9;
+        Fri, 21 Feb 2020 08:24:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1582273473;
-        bh=9j8X2m67R4Ml4yEuJzG98wz75DIpMegNzJAmtFU/4bQ=;
+        s=default; t=1582273479;
+        bh=na6MCkvM/gU1JTmFSKwL58UmWb1R7nW/sp5fjyKvY64=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=2N0ZEwfynCz5w5cjaF14f99bq0DqRrbABWx0QNAyChwWJzUMACPO+Cjs2BgG0CttF
-         o1bi5YdgYg5oWoSnhrFnz39IEBMSg0acurKqEKiM5vHgvzSZ34m/1I4lwoK8WwpuO9
-         /cPYqM2iVcsG10D4ABjdN+xmld/P+irJhjAY+sco=
+        b=dlangvg/o+TzOpJlbsG5HJ4+KYfNunkYkewad0rWPqt66Z/hw8sFmFK9CQ5lyFypm
+         ZX0nmbyyJpmEJX0znu9MFlXzhV0XJnkPeKqnv8aoklNP9+MQXxOCIoE0z257nqBokF
+         6oz/7RkKvJJCOa/aWjSb+vnAgEpBo1L2UabU4i/U=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Ronnie Sahlberg <lsahlber@redhat.com>,
-        Steve French <stfrench@microsoft.com>,
+        stable@vger.kernel.org, Wenwen Wang <wenwen@cs.uga.edu>,
+        Anna Schumaker <Anna.Schumaker@Netapp.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 167/191] cifs: fix NULL dereference in match_prepath
-Date:   Fri, 21 Feb 2020 08:42:20 +0100
-Message-Id: <20200221072310.707468432@linuxfoundation.org>
+Subject: [PATCH 4.19 186/191] NFS: Fix memory leaks
+Date:   Fri, 21 Feb 2020 08:42:39 +0100
+Message-Id: <20200221072313.109685050@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200221072250.732482588@linuxfoundation.org>
 References: <20200221072250.732482588@linuxfoundation.org>
@@ -60,41 +60,49 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Ronnie Sahlberg <lsahlber@redhat.com>
+From: Wenwen Wang <wenwen@cs.uga.edu>
 
-[ Upstream commit fe1292686333d1dadaf84091f585ee903b9ddb84 ]
+[ Upstream commit 123c23c6a7b7ecd2a3d6060bea1d94019f71fd66 ]
 
-RHBZ: 1760879
+In _nfs42_proc_copy(), 'res->commit_res.verf' is allocated through
+kzalloc() if 'args->sync' is true. In the following code, if
+'res->synchronous' is false, handle_async_copy() will be invoked. If an
+error occurs during the invocation, the following code will not be executed
+and the error will be returned . However, the allocated
+'res->commit_res.verf' is not deallocated, leading to a memory leak. This
+is also true if the invocation of process_copy_commit() returns an error.
 
-Fix an oops in match_prepath() by making sure that the prepath string is not
-NULL before we pass it into strcmp().
+To fix the above leaks, redirect the execution to the 'out' label if an
+error is encountered.
 
-This is similar to other checks we make for example in cifs_root_iget()
-
-Signed-off-by: Ronnie Sahlberg <lsahlber@redhat.com>
-Signed-off-by: Steve French <stfrench@microsoft.com>
+Signed-off-by: Wenwen Wang <wenwen@cs.uga.edu>
+Signed-off-by: Anna Schumaker <Anna.Schumaker@Netapp.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/cifs/connect.c | 6 ++++--
- 1 file changed, 4 insertions(+), 2 deletions(-)
+ fs/nfs/nfs42proc.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/fs/cifs/connect.c b/fs/cifs/connect.c
-index 576cf71576da1..6c62ce40608a1 100644
---- a/fs/cifs/connect.c
-+++ b/fs/cifs/connect.c
-@@ -3342,8 +3342,10 @@ match_prepath(struct super_block *sb, struct cifs_mnt_data *mnt_data)
- {
- 	struct cifs_sb_info *old = CIFS_SB(sb);
- 	struct cifs_sb_info *new = mnt_data->cifs_sb;
--	bool old_set = old->mnt_cifs_flags & CIFS_MOUNT_USE_PREFIX_PATH;
--	bool new_set = new->mnt_cifs_flags & CIFS_MOUNT_USE_PREFIX_PATH;
-+	bool old_set = (old->mnt_cifs_flags & CIFS_MOUNT_USE_PREFIX_PATH) &&
-+		old->prepath;
-+	bool new_set = (new->mnt_cifs_flags & CIFS_MOUNT_USE_PREFIX_PATH) &&
-+		new->prepath;
+diff --git a/fs/nfs/nfs42proc.c b/fs/nfs/nfs42proc.c
+index 94f98e190e632..526441de89c1d 100644
+--- a/fs/nfs/nfs42proc.c
++++ b/fs/nfs/nfs42proc.c
+@@ -283,14 +283,14 @@ static ssize_t _nfs42_proc_copy(struct file *src,
+ 		status = handle_async_copy(res, server, src, dst,
+ 				&args->src_stateid);
+ 		if (status)
+-			return status;
++			goto out;
+ 	}
  
- 	if (old_set && new_set && !strcmp(new->prepath, old->prepath))
- 		return 1;
+ 	if ((!res->synchronous || !args->sync) &&
+ 			res->write_res.verifier.committed != NFS_FILE_SYNC) {
+ 		status = process_copy_commit(dst, pos_dst, res);
+ 		if (status)
+-			return status;
++			goto out;
+ 	}
+ 
+ 	truncate_pagecache_range(dst_inode, pos_dst,
 -- 
 2.20.1
 
