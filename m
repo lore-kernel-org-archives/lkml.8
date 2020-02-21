@@ -2,133 +2,115 @@ Return-Path: <SRS0=1210=4J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 21B4FC35644
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 10:14:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 57ABBC35640
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 10:14:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0448024650
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 10:14:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2F2D124650
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 10:14:05 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1582280045;
+	bh=nO5MzX5N/JzArtsAYaiCeqGA2+KEQX9ht2RlhkrW54s=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=CPF2TO35hHRd2n6xr1kpXkIuhnZM6w6vUfryJHyy4d+lNqpJ+WgwwiSw2C9e6CTXM
+	 gnB9wD7FJQBaSMiId6pye2anthYqOUnC2RMFiyZIIHusT4SvnvNIyN9ycWYQ2+AhGL
+	 04hG1WjERG5AI/xDtm+vtjmUSaUXi7vX6G6Hh6go=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728652AbgBUKOB (ORCPT
+        id S1728754AbgBUKOD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
+        Fri, 21 Feb 2020 05:14:03 -0500
+Received: from mail.kernel.org ([198.145.29.99]:49702 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727150AbgBUKOB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Fri, 21 Feb 2020 05:14:01 -0500
-Received: from mail-oi1-f196.google.com ([209.85.167.196]:38911 "EHLO
-        mail-oi1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727150AbgBUKOA (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Feb 2020 05:14:00 -0500
-Received: by mail-oi1-f196.google.com with SMTP id r137so1078645oie.5;
-        Fri, 21 Feb 2020 02:13:59 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=IZocKraqIUJZ35HEbFK9lQ7GF0tGKhiv0gssLBu8UR0=;
-        b=f0k3A63MKX/hki582NVNwPguuS2v7MpC3FCzOcSLgfoMib+o125m+oqmZ8luRMi8wj
-         qWQAIIeJvSa1AD3ifJ6wyZv7bhei3nAenf3eia1YLIEL8zz9ABGuSnZVUgrS4pG1flN8
-         oNtrT2L6V5GEoybEaJEjewyDun+1O8LmHvrJVk0dj5uZuNqCHcwYnzi6GTLbAXkRxjIg
-         TrWZnHSKqP5ApK6+ui0GKKZTiG+CmLrv8ooQIhEZiDLgg991FFUIbiCsuM8lA6rWhu89
-         hNwnJih1b1XC+5bPU6yS2ls1Gu+9A3H2hIFcjpW+4q0u2e0u0SpxC3mqiDgDVCN+maYG
-         qWqw==
-X-Gm-Message-State: APjAAAU034Fpx1GadIVJRFVnst7WGBObHsCJ+S7UTUTv4G7u8vpQDapz
-        o2Gdc40l2WyUVy4Gk9LTos8OIWU4u6hJceXn7JxOg8o/
-X-Google-Smtp-Source: APXvYqy8ctrMdeADSQHxwR9cRnUsbwVavhFTJOapRHb2udJuBdEfDAXWSOiRn1HggkpBEl/pTw91mKIAc1cco0Xe+B8=
-X-Received: by 2002:aca:1a06:: with SMTP id a6mr1284059oia.148.1582280039481;
- Fri, 21 Feb 2020 02:13:59 -0800 (PST)
+Received: from disco-boy.misterjones.org (disco-boy.misterjones.org [51.254.78.96])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 14A4C20722;
+        Fri, 21 Feb 2020 10:14:01 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1582280041;
+        bh=nO5MzX5N/JzArtsAYaiCeqGA2+KEQX9ht2RlhkrW54s=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=GeJYVaIKmz6PQk7Ypo8ZZVVod/zsrBbqXb3cv/VBI8N6TjBFUMc9QnnJhMaN3HtrX
+         rofkMc88HrtsU2ixHL7y2QBJYavb5B95FhYEkbhb3WYL5SATkPw0Y6TwAk2naiPQY8
+         xp08rqmWcWcubPI+AnzmJyCz0fTJ9ueox47B8JS8=
+Received: from disco-boy.misterjones.org ([51.254.78.96] helo=www.loen.fr)
+        by disco-boy.misterjones.org with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.92)
+        (envelope-from <maz@kernel.org>)
+        id 1j55Jn-0070UG-3T; Fri, 21 Feb 2020 10:13:59 +0000
 MIME-Version: 1.0
-References: <20200220172403.26062-1-wsa+renesas@sang-engineering.com> <20200220172403.26062-8-wsa+renesas@sang-engineering.com>
-In-Reply-To: <20200220172403.26062-8-wsa+renesas@sang-engineering.com>
-From:   Geert Uytterhoeven <geert@linux-m68k.org>
-Date:   Fri, 21 Feb 2020 11:13:48 +0100
-Message-ID: <CAMuHMdV-dfjukuSKiFg4vb4Ntn+XWU0XwHPxyoaWs1vtQVg4cw@mail.gmail.com>
-Subject: Re: [RFC PATCH 7/7] i2c: core: hand over reserved devices when
- requesting ancillary addresses
-To:     Wolfram Sang <wsa+renesas@sang-engineering.com>
-Cc:     Linux I2C <linux-i2c@vger.kernel.org>,
-        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
-        linux-i3c@lists.infradead.org,
-        Kieran Bingham <kieran@ksquared.org.uk>,
-        =?UTF-8?Q?Niklas_S=C3=B6derlund?= <niklas.soderlund@ragnatech.se>,
-        Luca Ceresoli <luca@lucaceresoli.net>,
-        Jacopo Mondi <jacopo@jmondi.org>,
-        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
-        Vladimir Zapolskiy <vz@mleia.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=US-ASCII;
+ format=flowed
+Content-Transfer-Encoding: 7bit
+Date:   Fri, 21 Feb 2020 10:13:58 +0000
+From:   Marc Zyngier <maz@kernel.org>
+To:     Zenghui Yu <yuzenghui@huawei.com>
+Cc:     linux-kernel@vger.kernel.org, tglx@linutronix.de,
+        wanghaibin.wang@huawei.com
+Subject: Re: [PATCH] genirq/irqdomain: Make sure all irq domain flags are
+ distinct
+In-Reply-To: <20200221020725.2038-1-yuzenghui@huawei.com>
+References: <20200221020725.2038-1-yuzenghui@huawei.com>
+Message-ID: <7dec8c6eb07f634a4cccec3be5136e2f@kernel.org>
+X-Sender: maz@kernel.org
+User-Agent: Roundcube Webmail/1.3.10
+X-SA-Exim-Connect-IP: 51.254.78.96
+X-SA-Exim-Rcpt-To: yuzenghui@huawei.com, linux-kernel@vger.kernel.org, tglx@linutronix.de, wanghaibin.wang@huawei.com
+X-SA-Exim-Mail-From: maz@kernel.org
+X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Wolfram,
+On 2020-02-21 02:07, Zenghui Yu wrote:
+> This was noticed when printing debugfs for MSIs on my ARM64 server.
+> The new dstate IRQD_MSI_NOMASK_QUIRK came out surprisingly while it
+> should only be the x86 stuff for the time being...
+> 
+> It's the overlap in irqdomain flags which leads to this confusion.
+> (1 << 1) might be a good choice for old IRQ_DOMAIN_NAME_ALLOCATED,
+> use it to avoid this overlap.
+> 
+> Fixes: 6f1a4891a592 ("x86/apic/msi: Plug non-maskable MSI affinity 
+> race")
 
-On Thu, Feb 20, 2020 at 6:26 PM Wolfram Sang
-<wsa+renesas@sang-engineering.com> wrote:
-> With i2c_new_ancillary_address, we can check if the intended driver is
-> requesting a reserved address. Update the function to do these checks.
-> If the check passes, the "reserved" device will become a regular "dummy"
-> device.
->
-> Signed-off-by: Wolfram Sang <wsa+renesas@sang-engineering.com>
+To be fair, the real source of the bug is this:
 
-Thanks for your patch!
+6a6544e520abe ("genirq/irqdomain: Remove auto-recursive hierarchy 
+support")
 
-> --- a/drivers/i2c/i2c-core-base.c
-> +++ b/drivers/i2c/i2c-core-base.c
-> @@ -975,6 +975,8 @@ struct i2c_client *i2c_new_ancillary_device(struct i2c_client *client,
->                                                 u16 default_addr)
->  {
->         struct device_node *np = client->dev.of_node;
-> +       struct device *reserved_dev, *adapter_dev = &client->adapter->dev;
-> +       struct i2c_client *reserved_client;
->         u32 addr = default_addr;
->         int i;
->
-> @@ -984,7 +986,21 @@ struct i2c_client *i2c_new_ancillary_device(struct i2c_client *client,
->                         of_property_read_u32_index(np, "reg", i, &addr);
->         }
->
-> -       dev_dbg(&client->adapter->dev, "Address for %s : 0x%x\n", name, addr);
-> +       dev_info(adapter_dev, "Address for %s : 0x%x\n", name, addr);
-> +
-> +       /* No need to scan muxes, siblings must sit on the same adapter */
-> +       reserved_dev = device_find_child(adapter_dev, &addr, __i2c_check_addr_busy);
-> +       reserved_client = i2c_verify_client(reserved_dev);
-> +
-> +       if (reserved_client) {
-> +               if (reserved_client->dev.of_node != np ||
-> +                   strcmp(reserved_client->name, I2C_RESERVED_DRV_NAME) != 0)
-> +                       return ERR_PTR(-EBUSY);
+> Signed-off-by: Zenghui Yu <yuzenghui@huawei.com>
+> ---
+>  include/linux/irqdomain.h | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/include/linux/irqdomain.h b/include/linux/irqdomain.h
+> index b2d47571ab67..8d062e86d954 100644
+> --- a/include/linux/irqdomain.h
+> +++ b/include/linux/irqdomain.h
+> @@ -192,7 +192,7 @@ enum {
+>  	IRQ_DOMAIN_FLAG_HIERARCHY	= (1 << 0),
+> 
+>  	/* Irq domain name was allocated in __irq_domain_add() */
+> -	IRQ_DOMAIN_NAME_ALLOCATED	= (1 << 6),
+> +	IRQ_DOMAIN_NAME_ALLOCATED	= (1 << 1),
+> 
+>  	/* Irq domain is an IPI domain with virq per cpu */
+>  	IRQ_DOMAIN_FLAG_IPI_PER_CPU	= (1 << 2),
 
-Missing put_device(reserved_dev).
+Acked-by: Marc Zyngier <maz@kernel.org>
 
-> +
-> +               strlcpy(reserved_client->name, I2C_DUMMY_DRV_NAME, sizeof(client->name));
-> +               return reserved_client;
-> +       }
+Thomas, do you mind picking this one up, as I don't have anything
+else for the time being?
 
-else put_device(reserved_dev)
 
-(perhaps i2c_verify_client() checking dev was not such a great idea, as
- callers need to act on dev && !verified anyway?)
-
-> +
->         return i2c_new_dummy_device(client->adapter, addr);
->  }
->  EXPORT_SYMBOL_GPL(i2c_new_ancillary_device);
-
-Gr{oetje,eeting}s,
-
-                        Geert
-
+         M.
 -- 
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+Jazz is not dead. It just smells funny...
