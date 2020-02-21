@@ -2,110 +2,115 @@ Return-Path: <SRS0=1210=4J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 81B81C35641
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 09:48:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5D875C35642
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 09:49:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6354224673
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 09:48:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 320E624680
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 09:49:03 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="VDGmJFut"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728306AbgBUJsk (ORCPT
+        id S1728314AbgBUJtB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Feb 2020 04:48:40 -0500
-Received: from mail-ot1-f65.google.com ([209.85.210.65]:41351 "EHLO
-        mail-ot1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727142AbgBUJsk (ORCPT
+        Fri, 21 Feb 2020 04:49:01 -0500
+Received: from mail-vs1-f67.google.com ([209.85.217.67]:34039 "EHLO
+        mail-vs1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728085AbgBUJtB (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Feb 2020 04:48:40 -0500
-Received: by mail-ot1-f65.google.com with SMTP id r27so1455639otc.8;
-        Fri, 21 Feb 2020 01:48:39 -0800 (PST)
+        Fri, 21 Feb 2020 04:49:01 -0500
+Received: by mail-vs1-f67.google.com with SMTP id g15so852962vsf.1
+        for <linux-kernel@vger.kernel.org>; Fri, 21 Feb 2020 01:49:00 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=NiubFi99EPYJ/n2rj3yTrsNaDIZ6xoOQx9Jr6SvpoR4=;
+        b=VDGmJFutt04VedpvKWAZ6kMFeFwm6k4hIHn0h4jsA5Ke3Nr81Ifna4QyMk/xMZNqHu
+         9JJVbtDerM3lWcLd6Zfusk1fq9Zt4pLQg16o4mE3ATox5uakBQS/gK6ci3/GuoyErE7A
+         dmfanSLS9WV8TpbC8JZp44r11OLIk444gHgv30w1F7oCtBUisMLTXObrbTcX0znv7V4r
+         g7YuneHNVRkw1fIlPZXx8sY6DVWKEjOytK8d4TLDZcXOBjG0cSbxdQCsmOJrzJiEgrvx
+         PSxYw3OAYUrlbKnHEtDgRjcqoTKsI1FNXxUQQ0Ye8NFdA2t44jpoOx/a7KTeM8ilMjr9
+         AbtA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=uIi0c0G5Zb0Jw5ypN9sLASPQpOpXkoB2JbMIvsoRlKU=;
-        b=UclMjFAuAV1kAwedwAHcV8UzQWdlayQz+SAZsLLuOeez26hKTozvjWe/1jiwfipf67
-         WpsRg+wL4q4vyukT6lcHN6/B5Qe1isJODO1u6yiZuH6o81LlzB0fHXmL2gpAvyzlS/iR
-         QoLmBsvmGi7k/HOVD3SD+5lcBI88YVKF75W5wmMpK+TAFgrinaP0t50j6Q5Z9aQn1gkd
-         pOEEyzPBh5AuvqiFOV3C2gjp0pgYsIg2A7Nker5ICYUZ/4LYFnKr1BYRuk90V46P7dA3
-         vNb8z26M/uIbfRqsS/gvckwl0IYzaxMuBSoLx9j71z79iOplVOe6yhVcQMRz5rj5XdKO
-         oGwQ==
-X-Gm-Message-State: APjAAAV7UcncDfsQYtRGzXRfiSWQ4TpkLQLGIZSq5WQgL/IjctFDFcJz
-        550NfDeplfKfvXjk+Q/5eF77HHMipZRwlbTZz7I=
-X-Google-Smtp-Source: APXvYqzCfDGAqcLdudcohpMobUQi25VoP3sGfFSGSDz0m/c8bEwK2Ubq4fI8d2E03xtKyfavurE7PLjwAUBVVtlYtvQ=
-X-Received: by 2002:a9d:7984:: with SMTP id h4mr27799290otm.297.1582278518775;
- Fri, 21 Feb 2020 01:48:38 -0800 (PST)
+        bh=NiubFi99EPYJ/n2rj3yTrsNaDIZ6xoOQx9Jr6SvpoR4=;
+        b=YfWNNkywXu+0n+/6SRj1LnLNJxaEo3o37iOC04hxxpnBZ2wXkc2TTeIVMMgQBdqEB2
+         ST3W5XWfKX3E3twGqm9sCMVlwoHCYG4TCTjYycFxCI26ChMfMP5gNoCCnZUGRvi9uwku
+         tpyiymbcgA3xsSg6HsuOj6+8myd8FspcxkqF2kN8lL2c1ZuaD112ZxQhWJFHOP1SZHhH
+         sNT/kp6hNJ6/i4Kyatfc1sK3xVwh3wsUXtI8iubmjo3pYnTXmL4ksCF4E0b613heFMHm
+         AIKpJwuhTISIurWRnJGr0R9jN7iY/sRKcQGJbGRXnFMC6ilzJk6cGGnBQpGgcX+BBcWE
+         NvMw==
+X-Gm-Message-State: APjAAAXixdRC9o+RAMiYf3ja0LR9WfmIW3r6XDDQ0fvwUtRfd242qZfQ
+        Rkm/fs5KjVGIavL79ezC+7Gb/pLUNKOZXJ0FzoUSBw==
+X-Google-Smtp-Source: APXvYqxIRRKXnARX9u6btKQ3O9gJaec7WIe9eCcj9XZJ870sXHNxs5I8Z8nwuzduLJgoO7/z/UNDEdOwwm1N++0cxlU=
+X-Received: by 2002:a67:5e45:: with SMTP id s66mr19891897vsb.200.1582278539428;
+ Fri, 21 Feb 2020 01:48:59 -0800 (PST)
 MIME-Version: 1.0
-References: <20200220172403.26062-1-wsa+renesas@sang-engineering.com>
- <20200220172403.26062-4-wsa+renesas@sang-engineering.com> <CAMuHMdWaPfc050dZiRr+gAFzsdjSo9Vo70ztWgrMGPJxLUqupw@mail.gmail.com>
-In-Reply-To: <CAMuHMdWaPfc050dZiRr+gAFzsdjSo9Vo70ztWgrMGPJxLUqupw@mail.gmail.com>
-From:   Geert Uytterhoeven <geert@linux-m68k.org>
-Date:   Fri, 21 Feb 2020 10:48:27 +0100
-Message-ID: <CAMuHMdXGvRRJUU7fOszPuKcvHA2ttpLTvQ5=9h3vVWPYFUbjaQ@mail.gmail.com>
-Subject: Re: [RFC PATCH 3/7] i2c: allow DT nodes without 'compatible'
-To:     Wolfram Sang <wsa+renesas@sang-engineering.com>
-Cc:     Linux I2C <linux-i2c@vger.kernel.org>,
-        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
-        linux-i3c@lists.infradead.org,
-        Kieran Bingham <kieran@ksquared.org.uk>,
-        =?UTF-8?Q?Niklas_S=C3=B6derlund?= <niklas.soderlund@ragnatech.se>,
-        Luca Ceresoli <luca@lucaceresoli.net>,
-        Jacopo Mondi <jacopo@jmondi.org>,
-        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
-        Vladimir Zapolskiy <vz@mleia.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>
+References: <CA+G9fYuqAQfhzF2BzHr7vMHx68bo8-jT+ob_F3eHQ3=oFjgYdg@mail.gmail.com>
+ <CAPDyKFqqhxC-pmV_j8PLY-D=AbqCAbiipAAHXLpJ4N_BiYYOFw@mail.gmail.com> <CA+G9fYugQuAERqp3VXUFG-3QxXoF8bz7OSMh6WGSZcrGkbfDSQ@mail.gmail.com>
+In-Reply-To: <CA+G9fYugQuAERqp3VXUFG-3QxXoF8bz7OSMh6WGSZcrGkbfDSQ@mail.gmail.com>
+From:   Ulf Hansson <ulf.hansson@linaro.org>
+Date:   Fri, 21 Feb 2020 10:48:23 +0100
+Message-ID: <CAPDyKFo-vEO7zN_F+NqcKtnKmAo_deOZx3gYNiks3yTAQAjv-Q@mail.gmail.com>
+Subject: Re: LKFT: arm x15: mmc1: cache flush error -110
+To:     Naresh Kamboju <naresh.kamboju@linaro.org>
+Cc:     Jens Axboe <axboe@kernel.dk>, Alexei Starovoitov <ast@kernel.org>,
+        linux-block <linux-block@vger.kernel.org>,
+        lkft-triage@lists.linaro.org,
+        open list <linux-kernel@vger.kernel.org>,
+        "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>,
+        Arnd Bergmann <arnd@arndb.de>,
+        John Stultz <john.stultz@linaro.org>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Feb 21, 2020 at 10:45 AM Geert Uytterhoeven
-<geert@linux-m68k.org> wrote:
-> On Thu, Feb 20, 2020 at 6:26 PM Wolfram Sang
-> <wsa+renesas@sang-engineering.com> wrote:
-> > Sometimes, we have unknown devices in a system and still want to block
-> > their address. For that, we allow DT nodes with only a 'reg' property.
-> > These devices will be bound to the "dummy" driver but with the name
-> > "reserved". That way, we can distinguish them and even hand them over to
-> > the "dummy" driver later when they are really requested using
-> > i2c_new_ancillary_device().
+On Thu, 20 Feb 2020 at 18:54, Naresh Kamboju <naresh.kamboju@linaro.org> wrote:
+>
+> On Wed, 19 Feb 2020 at 21:54, Ulf Hansson <ulf.hansson@linaro.org> wrote:
 > >
-> > Signed-off-by: Wolfram Sang <wsa+renesas@sang-engineering.com>
->
-> Thanks for your patch!
->
-> Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
-
-FTR, depending on the extra dummy removed.
-
-> but one question below.
->
-> > --- a/Documentation/devicetree/bindings/i2c/i2c-ocores.txt
-> > +++ b/Documentation/devicetree/bindings/i2c/i2c-ocores.txt
-> > @@ -50,7 +50,6 @@ Examples:
-> >                 reg-io-width = <1>;     /* 8 bit read/write */
+> > On Thu, 13 Feb 2020 at 16:43, Naresh Kamboju <naresh.kamboju@linaro.org> wrote:
+> > >
 > >
-> >                 dummy@60 {
-> > -                       compatible = "dummy";
-> >                         reg = <0x60>;
-> >                 };
-> >         };
+> > Try to restore the value for the cache flush timeout, by updating the
+> > define MMC_CACHE_FLUSH_TIMEOUT_MS to 10 * 60 * 1000".
 >
-> There's a second instance to remove 18 lines below.
+> I have increased the timeout to 10 minutes but it did not help.
+> Same error found.
+> [  608.679353] mmc1: Card stuck being busy! mmc_poll_for_busy
+> [  608.684964] mmc1: cache flush error -110
+> [  608.689005] blk_update_request: I/O error, dev mmcblk1, sector
+> 4302400 op 0x1:(WRITE) flags 0x20800 phys_seg 1 prio class 0
+>
+> OTOH, What best i could do for my own experiment to revert all three patches and
+> now the reported error gone and device mount successfully [1].
+>
+> List of patches reverted,
+>   mmc: core: Specify timeouts for BKOPS and CACHE_FLUSH for eMMC
+>   mmc: block: Use generic_cmd6_time when modifying
+>     INAND_CMD38_ARG_EXT_CSD
+>   mmc: core: Default to generic_cmd6_time as timeout in __mmc_switch()
+>
+> [1] https://lkft.validation.linaro.org/scheduler/job/1238275#L4346
+>
+> - Naresh
 
-Gr{oetje,eeting}s,
+Thanks for testing!
 
-                        Geert
+This sounds a bit weird, I must say. Also, while looking into the
+logs, it seems like you are comparing a v5.5 kernel with v5.6-rc2, but
+maybe I didn't read the logs carefully enough.
 
--- 
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+ In any case, I am looking into creating a debug patch so we can
+narrow down the problem a bit further.
 
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+Kind regards
+Uffe
