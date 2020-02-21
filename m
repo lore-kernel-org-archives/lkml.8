@@ -7,48 +7,47 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 37652C35641
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 07:57:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ABA93C35641
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 07:57:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0D96E222C4
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 07:57:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7660A24656
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 07:57:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582271857;
-	bh=1xCCUDJRyOV29jDvyw2qulGXTvVC0OZvGv+a2Mz9d4o=;
+	s=default; t=1582271860;
+	bh=vhv9ahD5jt/VGshNDEu0h4s5rHcm99nOExO90XMU3HQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=wVnSlQ6YEFI77KRCSpq3BDRtGlC3qEFot329kCiUa/RyqV+eKgsmvNuxCMf3+vAKO
-	 Nxq81SM6Der7dML1bG9WopXP49hmo0gX0hvqyf3r2Ok2LNMN4peZf0klQXXp9WyQmx
-	 jIcn39Hpg0dSMa1oabHs3Kv2KgFMgZffTbwWeb28=
+	b=NXkNTVzruhJqqq2XNE8Vrc1NJi44FtsYOHLTMm5MNhME+9zAt2fCBWavX43pjJmHX
+	 akVuSN9IYbFrfobenZVWmsKx/6iucLUH3HbypopTP2v8SWO4f5AUg9EEAhBNGpaPvT
+	 4OzYQUAQHt6V5D8kn0rv0+YK0/294jChEcwNaYwo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730653AbgBUH5f (ORCPT
+        id S1730663AbgBUH5j (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Feb 2020 02:57:35 -0500
-Received: from mail.kernel.org ([198.145.29.99]:57112 "EHLO mail.kernel.org"
+        Fri, 21 Feb 2020 02:57:39 -0500
+Received: from mail.kernel.org ([198.145.29.99]:57178 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730639AbgBUH5c (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Feb 2020 02:57:32 -0500
+        id S1730651AbgBUH5e (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 21 Feb 2020 02:57:34 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 845552073A;
-        Fri, 21 Feb 2020 07:57:31 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0EFC72465D;
+        Fri, 21 Feb 2020 07:57:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1582271852;
-        bh=1xCCUDJRyOV29jDvyw2qulGXTvVC0OZvGv+a2Mz9d4o=;
+        s=default; t=1582271854;
+        bh=vhv9ahD5jt/VGshNDEu0h4s5rHcm99nOExO90XMU3HQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=v5FN93LGDIVreehBp6TWtxKrAStpinKpk8TcpHMiMTYPh9YCp7qEkF1Cv136qOOX6
-         HkTG+EYG6G4/PP7vmKylUUlDLx3unbriBonQ4Fs9lanTpCD8qZEPW2Md9uZfPqvYJw
-         9CPxBUrhXs0OLrGkvgAC9BQSeaKLLoPe9S2Bi9+A=
+        b=FgwaoNAFKo46Bcp98ez5J2VSaLRrg9r5+UlTZGG7mNZCkvN9noHuut8yoB7CYq5W4
+         pIbfxInbFQ6iulj5edMHxUJLmYjoRFQzdSO/himv9YHcaIAve2xHmFhNH+M3GNLptY
+         TsFRIQLUeIaxGnBRca5CEBoswUI2V5KHwkD/UvPE=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Chris Down <chris@chrisdown.name>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Andrii Nakryiko <andriin@fb.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.5 323/399] bpf, btf: Always output invariant hit in pahole DWARF to BTF transform
-Date:   Fri, 21 Feb 2020 08:40:48 +0100
-Message-Id: <20200221072432.723008609@linuxfoundation.org>
+        stable@vger.kernel.org,
+        =?UTF-8?q?Peter=20Gro=C3=9Fe?= <pegro@friiks.de>,
+        Takashi Iwai <tiwai@suse.de>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.5 324/399] ALSA: hda - Add docking station support for Lenovo Thinkpad T420s
+Date:   Fri, 21 Feb 2020 08:40:49 +0100
+Message-Id: <20200221072432.797559662@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200221072402.315346745@linuxfoundation.org>
 References: <20200221072402.315346745@linuxfoundation.org>
@@ -61,58 +60,33 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Chris Down <chris@chrisdown.name>
+From: Peter Große <pegro@friiks.de>
 
-[ Upstream commit 2a67a6ccb01f21b854715d86ff6432a18b97adb3 ]
+[ Upstream commit ef7d84caa5928b40b1c93a26dbe5a3f12737c6ab ]
 
-When trying to compile with CONFIG_DEBUG_INFO_BTF enabled, I got this
-error:
+Lenovo Thinkpad T420s uses the same codec as T420, so apply the
+same quirk to enable audio output on a docking station.
 
-    % make -s
-    Failed to generate BTF for vmlinux
-    Try to disable CONFIG_DEBUG_INFO_BTF
-    make[3]: *** [vmlinux] Error 1
-
-Compiling again without -s shows the true error (that pahole is
-missing), but since this is fatal, we should show the error
-unconditionally on stderr as well, not silence it using the `info`
-function. With this patch:
-
-    % make -s
-    BTF: .tmp_vmlinux.btf: pahole (pahole) is not available
-    Failed to generate BTF for vmlinux
-    Try to disable CONFIG_DEBUG_INFO_BTF
-    make[3]: *** [vmlinux] Error 1
-
-Signed-off-by: Chris Down <chris@chrisdown.name>
-Signed-off-by: Daniel Borkmann <daniel@iogearbox.net>
-Acked-by: Andrii Nakryiko <andriin@fb.com>
-Link: https://lore.kernel.org/bpf/20200122000110.GA310073@chrisdown.name
+Signed-off-by: Peter Große <pegro@friiks.de>
+Link: https://lore.kernel.org/r/20200122180106.9351-1-pegro@friiks.de
+Signed-off-by: Takashi Iwai <tiwai@suse.de>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- scripts/link-vmlinux.sh | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ sound/pci/hda/patch_conexant.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/scripts/link-vmlinux.sh b/scripts/link-vmlinux.sh
-index 4363799403561..408b5c0b99b1b 100755
---- a/scripts/link-vmlinux.sh
-+++ b/scripts/link-vmlinux.sh
-@@ -108,13 +108,13 @@ gen_btf()
- 	local bin_arch
- 
- 	if ! [ -x "$(command -v ${PAHOLE})" ]; then
--		info "BTF" "${1}: pahole (${PAHOLE}) is not available"
-+		echo >&2 "BTF: ${1}: pahole (${PAHOLE}) is not available"
- 		return 1
- 	fi
- 
- 	pahole_ver=$(${PAHOLE} --version | sed -E 's/v([0-9]+)\.([0-9]+)/\1\2/')
- 	if [ "${pahole_ver}" -lt "113" ]; then
--		info "BTF" "${1}: pahole version $(${PAHOLE} --version) is too old, need at least v1.13"
-+		echo >&2 "BTF: ${1}: pahole version $(${PAHOLE} --version) is too old, need at least v1.13"
- 		return 1
- 	fi
- 
+diff --git a/sound/pci/hda/patch_conexant.c b/sound/pci/hda/patch_conexant.c
+index 90aa0f400a57d..1e20e85e9b466 100644
+--- a/sound/pci/hda/patch_conexant.c
++++ b/sound/pci/hda/patch_conexant.c
+@@ -922,6 +922,7 @@ static const struct snd_pci_quirk cxt5066_fixups[] = {
+ 	SND_PCI_QUIRK(0x17aa, 0x215f, "Lenovo T510", CXT_PINCFG_LENOVO_TP410),
+ 	SND_PCI_QUIRK(0x17aa, 0x21ce, "Lenovo T420", CXT_PINCFG_LENOVO_TP410),
+ 	SND_PCI_QUIRK(0x17aa, 0x21cf, "Lenovo T520", CXT_PINCFG_LENOVO_TP410),
++	SND_PCI_QUIRK(0x17aa, 0x21d2, "Lenovo T420s", CXT_PINCFG_LENOVO_TP410),
+ 	SND_PCI_QUIRK(0x17aa, 0x21da, "Lenovo X220", CXT_PINCFG_LENOVO_TP410),
+ 	SND_PCI_QUIRK(0x17aa, 0x21db, "Lenovo X220-tablet", CXT_PINCFG_LENOVO_TP410),
+ 	SND_PCI_QUIRK(0x17aa, 0x38af, "Lenovo IdeaPad Z560", CXT_FIXUP_MUTE_LED_EAPD),
 -- 
 2.20.1
 
