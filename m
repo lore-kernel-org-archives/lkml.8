@@ -2,188 +2,123 @@ Return-Path: <SRS0=1210=4J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 949ADC11D27
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 05:16:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 08DB8C11D28
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 05:17:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6B26A2467D
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 05:16:35 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=flygoat.com header.i=jiaxun.yang@flygoat.com header.b="aE4+C2Ry"
+	by mail.kernel.org (Postfix) with ESMTP id DC43F208E4
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 05:17:15 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726561AbgBUFQe (ORCPT
+        id S1727150AbgBUFRO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Feb 2020 00:16:34 -0500
-Received: from sender3-op-o12.zoho.com.cn ([124.251.121.243]:17850 "EHLO
-        sender3-op-o12.zoho.com.cn" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726084AbgBUFQd (ORCPT
+        Fri, 21 Feb 2020 00:17:14 -0500
+Received: from stargate.chelsio.com ([12.32.117.8]:5324 "EHLO
+        stargate.chelsio.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725800AbgBUFRO (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Feb 2020 00:16:33 -0500
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1582262039;
-        s=mail; d=flygoat.com; i=jiaxun.yang@flygoat.com;
-        h=From:To:Cc:Message-ID:Subject:Date:In-Reply-To:References:MIME-Version:Content-Transfer-Encoding:Content-Type;
-        bh=GMsmbrI9/BLBWFuYIg+sygdLa2erlXzlYRX1a5u/aA0=;
-        b=aE4+C2RyPQ1+iVt2OeKlwdP0ZLsBN5bX5MKPwv0wkdmxNOpbvWfU7WSZWFsZWdQn
-        iL8dvcAIvNgqiJ8/l6NMMgQBz4DaE4mE9ZPCRHBkX+AYqK6ZCQ4oxipAQjyqEbm6ZAp
-        jfwU7qK3Vl1z1wSGf9yy/Z8vQodsLpbheMSUa+Q8=
-Received: from localhost.localdomain (39.155.141.144 [39.155.141.144]) by mx.zoho.com.cn
-        with SMTPS id 1582262037275559.787205491624; Fri, 21 Feb 2020 13:13:57 +0800 (CST)
-From:   Jiaxun Yang <jiaxun.yang@flygoat.com>
-To:     linux-mips@vger.kernel.org
-Cc:     Jiaxun Yang <jiaxun.yang@flygoat.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Jason Cooper <jason@lakedaemon.net>,
-        Marc Zyngier <maz@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Ralf Baechle <ralf@linux-mips.org>,
-        Paul Burton <paulburton@kernel.org>,
-        Huacai Chen <chenhc@lemote.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Allison Randal <allison@lohutok.net>,
-        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
-Message-ID: <20200221050942.507775-10-jiaxun.yang@flygoat.com>
-Subject: [PATCH v4 09/10] MIPS: Loongson64: Load built-in dtbs
-Date:   Fri, 21 Feb 2020 13:09:24 +0800
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20200221050942.507775-1-jiaxun.yang@flygoat.com>
-References: <20200221050942.507775-1-jiaxun.yang@flygoat.com>
+        Fri, 21 Feb 2020 00:17:14 -0500
+Received: from [10.193.191.44] (ayushsawal.asicdesigners.com [10.193.191.44])
+        by stargate.chelsio.com (8.13.8/8.13.8) with ESMTP id 01L5H3OK009192;
+        Thu, 20 Feb 2020 21:17:04 -0800
+Cc:     linux-crypto@vger.kernel.org, linux-kernel@vger.kernel.org,
+        vinay.yadav@chelsio.com
+Subject: Re: [RFC][PATCH] almost certain bug in
+ drivers/crypto/chelsio/chcr_algo.c:create_authenc_wr()
+To:     viro@zeniv.linux.org.uk, Herbert Xu <herbert@gondor.apana.org.au>
+References: <20200215061416.GZ23230@ZenIV.linux.org.uk>
+ <CAEopUdxRUoMo+uGgiFLWz8NsM1eL7CnkV7gY5PypxrG_nzhNWw@mail.gmail.com>
+From:   Ayush Sawal <ayush.sawal@chelsio.com>
+Message-ID: <db4ee9c7-400e-5932-8708-581d91b38385@chelsio.com>
+Date:   Fri, 21 Feb 2020 10:47:01 +0530
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.5.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-X-ZohoCNMailClient: External
-Content-Type: text/plain; charset=utf8
+In-Reply-To: <CAEopUdxRUoMo+uGgiFLWz8NsM1eL7CnkV7gY5PypxrG_nzhNWw@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8bit
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Load proper dtb according to firmware passed parameters and
-CPU PRID.
+On 2/15/2020 11:45 AM, Al Viro wrote:
 
-Signed-off-by: Jiaxun Yang <jiaxun.yang@flygoat.com>
----
- .../asm/mach-loongson64/builtin_dtbs.h        | 13 +++++++++++
- .../include/asm/mach-loongson64/loongson.h    |  1 +
- arch/mips/loongson64/env.c                    | 23 +++++++++++++++++++
- arch/mips/loongson64/setup.c                  | 16 +++++++++++++
- 4 files changed, 53 insertions(+)
- create mode 100644 arch/mips/include/asm/mach-loongson64/builtin_dtbs.h
+>
+>         kctx_len = (ntohl(KEY_CONTEXT_CTX_LEN_V(aeadctx->key_ctx_hdr)) 
+> << 4)
+>                 - sizeof(chcr_req->key_ctx);
+> can't possibly be endian-safe.  Look: ->key_ctx_hdr is __be32.  And
+> KEY_CONTEXT_CTX_LEN_V is "shift up by 24 bits".  On little-endian hosts it
+> sees
+>         b0 b1 b2 b3
+> in memory, inteprets that into b0 + (b1 << 8) + (b2 << 16) + (b3 << 24),
+> shifts up by 24, resulting in b0 << 24, does ntohl (byteswap on l-e),
+> gets b0 and shifts that up by 4.  So we get b0 * 16 - sizeof(...).
+>
+> Sounds reasonable, but on b-e we get
+> b3 + (b2 << 8) + (b1 << 16) + (b0 << 24), shift up by 24,
+> yielding b3 << 24, do ntohl (no-op on b-e) and then shift up by 4.
+> Resulting in b3 << 28 - sizeof(...), i.e. slightly under b3 * 256M.
+>
+> Then we increase it some more and pass to alloc_skb() as size.
+> Somehow I doubt that we really want a quarter-gigabyte skb allocation
+> here...
+>
+> Note that when you are building those values in
+> #define  FILL_KEY_CTX_HDR(ck_size, mk_size, d_ck, opad, ctx_len) \
+>                 htonl(KEY_CONTEXT_VALID_V(1) | \
+>                       KEY_CONTEXT_CK_SIZE_V((ck_size)) | \
+>                       KEY_CONTEXT_MK_SIZE_V(mk_size) | \
+>                       KEY_CONTEXT_DUAL_CK_V((d_ck)) | \
+>                       KEY_CONTEXT_OPAD_PRESENT_V((opad)) | \
+>                       KEY_CONTEXT_SALT_PRESENT_V(1) | \
+>                       KEY_CONTEXT_CTX_LEN_V((ctx_len)))
+> ctx_len ends up in the first octet (i.e. b0 in the above), which
+> matches the current behaviour on l-e.  If that's the intent, this
+> thing should've been
+>         kctx_len = (KEY_CONTEXT_CTX_LEN_G(ntohl(aeadctx->key_ctx_hdr)) 
+> << 4)
+>                 - sizeof(chcr_req->key_ctx);
+> instead - fetch after ntohl() we get (b0 << 24) + (b1 << 16) + (b2 << 
+> 8) + b3,
+> shift it down by 24 (b0), resuling in b0 * 16 - sizeof(...) both on 
+> l-e and
+> on b-e.
+>
+> PS: when sparse warns you about endianness problems, it might be worth 
+> checking
+> if there really is something wrong.  And I don't mean "slap __force 
+> cast on it"...
+>
+> Signed-off-by: Al Viro <viro@zeniv.linux.org.uk 
+> <mailto:viro@zeniv.linux.org.uk>>
+> ---
+> diff -urN a/drivers/crypto/chelsio/chcr_algo.c 
+> b/drivers/crypto/chelsio/chcr_algo.c
+> --- a/drivers/crypto/chelsio/chcr_algo.c
+> +++ b/drivers/crypto/chelsio/chcr_algo.c
+> @@ -2351,7 +2351,7 @@ static struct sk_buff *create_authenc_wr(struct 
+> aead_request *req,
+>         snents = sg_nents_xlen(req->src, req->assoclen + req->cryptlen,
+>                                CHCR_SRC_SG_SIZE, 0);
+>         dst_size = get_space_for_phys_dsgl(dnents);
+> -       kctx_len = (ntohl(KEY_CONTEXT_CTX_LEN_V(aeadctx->key_ctx_hdr)) 
+> << 4)
+> +       kctx_len = (KEY_CONTEXT_CTX_LEN_G(ntohl(aeadctx->key_ctx_hdr)) 
+> << 4)
+>                 - sizeof(chcr_req->key_ctx);
+>         transhdr_len = CIPHER_TRANSHDR_SIZE(kctx_len, dst_size);
+>         reqctx->imm = (transhdr_len + req->assoclen + req->cryptlen) <
 
-diff --git a/arch/mips/include/asm/mach-loongson64/builtin_dtbs.h b/arch/mi=
-ps/include/asm/mach-loongson64/builtin_dtbs.h
-new file mode 100644
-index 000000000000..853c6d80887b
---- /dev/null
-+++ b/arch/mips/include/asm/mach-loongson64/builtin_dtbs.h
-@@ -0,0 +1,13 @@
-+/* SPDX-License-Identifier: GPL-2.0-or-later */
-+/*
-+ * Copyright (C) 2019 Jiaxun Yang <jiaxun.yang@flygoat.com>
-+ *
-+ * Built-in Generic dtbs for MACH_LOONGSON64
-+ */
-+
-+#ifndef __ASM_MACH_LOONGSON64_BUILTIN_DTBS_H_
-+#define __ASM_MACH_LOONGSON64_BUILTIN_DTBS_H_
-+
-+extern u32 __dtb_loongson3_4core_rs780e_begin[];
-+extern u32 __dtb_loongson3_8core_rs780e_begin[];
-+#endif
-diff --git a/arch/mips/include/asm/mach-loongson64/loongson.h b/arch/mips/i=
-nclude/asm/mach-loongson64/loongson.h
-index a8fce112a9b0..fde1b75c45ea 100644
---- a/arch/mips/include/asm/mach-loongson64/loongson.h
-+++ b/arch/mips/include/asm/mach-loongson64/loongson.h
-@@ -25,6 +25,7 @@ extern const struct plat_smp_ops loongson3_smp_ops;
- /* loongson-specific command line, env and memory initialization */
- extern void __init prom_init_memory(void);
- extern void __init prom_init_env(void);
-+extern void *loongson_fdt_blob;
-=20
- /* irq operation functions */
- extern void mach_irq_dispatch(unsigned int pending);
-diff --git a/arch/mips/loongson64/env.c b/arch/mips/loongson64/env.c
-index 0daeb7bcf023..2554ef11170d 100644
---- a/arch/mips/loongson64/env.c
-+++ b/arch/mips/loongson64/env.c
-@@ -17,6 +17,7 @@
- #include <asm/bootinfo.h>
- #include <loongson.h>
- #include <boot_param.h>
-+#include <builtin_dtbs.h>
- #include <workarounds.h>
-=20
- u32 cpu_clock_freq;
-@@ -120,6 +121,28 @@ void __init prom_init_env(void)
- =09=09loongson_sysconf.cores_per_node - 1) /
- =09=09loongson_sysconf.cores_per_node;
-=20
-+=09if ((read_c0_prid() & PRID_IMP_MASK) =3D=3D PRID_IMP_LOONGSON_64C) {
-+=09=09switch (read_c0_prid() & PRID_REV_MASK) {
-+=09=09case PRID_REV_LOONGSON3A_R1:
-+=09=09case PRID_REV_LOONGSON3A_R2_0:
-+=09=09case PRID_REV_LOONGSON3A_R2_1:
-+=09=09case PRID_REV_LOONGSON3A_R3_0:
-+=09=09case PRID_REV_LOONGSON3A_R3_1:
-+=09=09=09loongson_fdt_blob =3D __dtb_loongson3_4core_rs780e_begin;
-+=09=09=09break;
-+=09=09case PRID_REV_LOONGSON3B_R1:
-+=09=09case PRID_REV_LOONGSON3B_R2:
-+=09=09=09loongson_fdt_blob =3D __dtb_loongson3_8core_rs780e_begin;
-+=09=09=09break;
-+=09=09default:
-+=09=09=09break;
-+=09=09}
-+=09}
-+
-+
-+=09if (!loongson_fdt_blob)
-+=09=09pr_err("Failed to determine built-in Loongson64 dtb\n");
-+
- =09loongson_sysconf.pci_mem_start_addr =3D eirq_source->pci_mem_start_addr=
-;
- =09loongson_sysconf.pci_mem_end_addr =3D eirq_source->pci_mem_end_addr;
- =09loongson_sysconf.pci_io_base =3D eirq_source->pci_io_start_addr;
-diff --git a/arch/mips/loongson64/setup.c b/arch/mips/loongson64/setup.c
-index 4fd27f4f90ed..6fe3ffffcaa6 100644
---- a/arch/mips/loongson64/setup.c
-+++ b/arch/mips/loongson64/setup.c
-@@ -8,9 +8,15 @@
-=20
- #include <asm/wbflush.h>
- #include <asm/bootinfo.h>
-+#include <linux/libfdt.h>
-+#include <linux/of_fdt.h>
-+
-+#include <asm/prom.h>
-=20
- #include <loongson.h>
-=20
-+void *loongson_fdt_blob;
-+
- static void wbflush_loongson(void)
- {
- =09asm(".set\tpush\n\t"
-@@ -27,4 +33,14 @@ EXPORT_SYMBOL(__wbflush);
-=20
- void __init plat_mem_setup(void)
- {
-+=09if (loongson_fdt_blob)
-+=09=09__dt_setup_arch(loongson_fdt_blob);
-+}
-+
-+void __init device_tree_init(void)
-+{
-+=09if (!initial_boot_params)
-+=09=09return;
-+
-+=09unflatten_and_copy_device_tree();
- }
---=20
-2.25.0
 
+This was a genuine bug, thanks a lot for pointing it out and providing
+the fix.We are checking other sparse warns in our files, and soon we
+will fix the warnings.
+
+Thanks,
+Ayush
 
