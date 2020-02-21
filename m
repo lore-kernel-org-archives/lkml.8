@@ -2,87 +2,70 @@ Return-Path: <SRS0=1210=4J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 99468C11D25
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 00:55:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1296BC11D25
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 00:58:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 680A824650
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 00:55:42 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582246542;
-	bh=vAQyARVfu9oqOzLyqVmfAikW+oYvYjWILRZBPPE0B5Y=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=tYZAEm8nIgcBYoQQtam1axRkZQx7v7lEk9kpZ7NGr6SrlcBsZziKFKanEctNDRJPu
-	 jetyBFFBWcXUtBy0qvvPzURl0P8pMWAdqZRhv+0pOm9mHmd+yU/EDx9h76ER+evKSF
-	 G4w/AhOdr3UZuZV90BJdmGI7vRGCEbZneI+EKD+Q=
+	by mail.kernel.org (Postfix) with ESMTP id DE11D208CD
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 00:58:30 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=crapouillou.net header.i=@crapouillou.net header.b="jCUJOUi1"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729504AbgBUAzl (ORCPT
+        id S1729508AbgBUA63 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Feb 2020 19:55:41 -0500
-Received: from mail.kernel.org ([198.145.29.99]:50040 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729365AbgBUAzk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Feb 2020 19:55:40 -0500
-Received: from X1 (nat-ab2241.sltdut.senawave.net [162.218.216.4])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id DE1D1206EF;
-        Fri, 21 Feb 2020 00:55:39 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1582246540;
-        bh=vAQyARVfu9oqOzLyqVmfAikW+oYvYjWILRZBPPE0B5Y=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=Dgccy3Rk/igP1hU3ILpjD5ruzaCS2eOXdWNPdQfYu+xig2CcOl9CHRGvorw3NkwTp
-         Gsq9FRE1D0iWE2sJ7Csk4Yc45w8KIV27VNU2m5cajIvERIpfOpZLMlz0NaTsNejmUf
-         DUDNXapGVQnks4mRAWFYn8I9tn3sNzHYdYN2WX5A=
-Date:   Thu, 20 Feb 2020 16:55:39 -0800
-From:   Andrew Morton <akpm@linux-foundation.org>
-To:     "Huang, Ying" <ying.huang@intel.com>
-Cc:     linux-mm@kvack.org, linux-kernel@vger.kernel.org,
-        Zi Yan <ziy@nvidia.com>,
-        "Kirill A . Shutemov" <kirill.shutemov@linux.intel.com>,
-        Andrea Arcangeli <aarcange@redhat.com>,
-        Michal Hocko <mhocko@kernel.org>,
-        Vlastimil Babka <vbabka@suse.cz>
-Subject: Re: [PATCH] mm: Fix possible PMD dirty bit lost in
- set_pmd_migration_entry()
-Message-Id: <20200220165539.5082db4b3e97eee474b0dd5d@linux-foundation.org>
-In-Reply-To: <20200220075220.2327056-1-ying.huang@intel.com>
-References: <20200220075220.2327056-1-ying.huang@intel.com>
-X-Mailer: Sylpheed 3.5.1 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
-Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+        Thu, 20 Feb 2020 19:58:29 -0500
+Received: from outils.crapouillou.net ([89.234.176.41]:40906 "EHLO
+        crapouillou.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729419AbgBUA63 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 20 Feb 2020 19:58:29 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=crapouillou.net;
+        s=mail; t=1582246707; h=from:from:sender:reply-to:subject:subject:date:date:
+         message-id:message-id:to:to:cc:cc:mime-version:mime-version:
+         content-type:content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:references; bh=hNL2y+v5S7yvFXD6Rd5po+APK5tuBqigpYaXtPqV024=;
+        b=jCUJOUi1gluCYom/AohDJtxmfoHUs4bc/3sNRCuZM+k8k5ZgldreudXZVS/NRDW5Eqp1Tm
+        9EAZyZijg3TEISAQHsTq/7LrQqkADmC/wvbjV2C5BbFbWxIE7lDkvbVRbiUdd3w9jTgrKr
+        sgWOM/jKG2qHiEP5XgCYIx0y7jI3jlo=
+From:   Paul Cercueil <paul@crapouillou.net>
+To:     Sebastian Reichel <sre@kernel.org>
+Cc:     od@zcrc.me, linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Paul Cercueil <paul@crapouillou.net>
+Subject: [PATCH] power/supply: ingenic-battery: Don't print error on -EPROBE_DEFER
+Date:   Thu, 20 Feb 2020 21:58:12 -0300
+Message-Id: <20200221005812.271187-1-paul@crapouillou.net>
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 20 Feb 2020 15:52:20 +0800 "Huang, Ying" <ying.huang@intel.com> wrote:
+Don't print an error message if devm_power_supply_register() returns
+-EPROBE_DEFER, since the driver will simply re-probe later.
 
-> From: Huang Ying <ying.huang@intel.com>
-> 
-> In set_pmd_migration_entry(), pmdp_invalidate() is used to change PMD
-> atomically.  But the PMD is read before that with an ordinary memory
-> reading.  If the THP (transparent huge page) is written between the
-> PMD reading and pmdp_invalidate(), the PMD dirty bit may be lost, and
-> cause data corruption.  The race window is quite small, but still
-> possible in theory, so need to be fixed.
-> 
-> The race is fixed via using the return value of pmdp_invalidate() to
-> get the original content of PMD, which is a read/modify/write atomic
-> operation.  So no THP writing can occur in between.
-> 
-> The race has been introduced when the THP migration support is added
-> in the commit 616b8371539a ("mm: thp: enable thp migration in generic
-> path").  But this fix depends on the commit d52605d7cb30 ("mm: do not
-> lose dirty and accessed bits in pmdp_invalidate()").  So it's easy to
-> be backported after v4.16.  But the race window is really small, so it
-> may be fine not to backport the fix at all.
+Signed-off-by: Paul Cercueil <paul@crapouillou.net>
+---
+ drivers/power/supply/ingenic-battery.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-Thanks.  I'm inclined to add a cc:stable to this one.  Silent data corruption is
-pretty serious.
+diff --git a/drivers/power/supply/ingenic-battery.c b/drivers/power/supply/ingenic-battery.c
+index 2748715c4c75..dd3d93dfe3eb 100644
+--- a/drivers/power/supply/ingenic-battery.c
++++ b/drivers/power/supply/ingenic-battery.c
+@@ -148,7 +148,8 @@ static int ingenic_battery_probe(struct platform_device *pdev)
+ 
+ 	bat->battery = devm_power_supply_register(dev, desc, &psy_cfg);
+ 	if (IS_ERR(bat->battery)) {
+-		dev_err(dev, "Unable to register battery\n");
++		if (PTR_ERR(bat->battery) != -EPROBE_DEFER)
++			dev_err(dev, "Unable to register battery\n");
+ 		return PTR_ERR(bat->battery);
+ 	}
+ 
+-- 
+2.25.0
 
