@@ -5,50 +5,50 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BBB84C35641
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 08:31:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D5EC5C35641
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 08:32:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 925C220637
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 08:31:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A92A820637
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 08:32:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582273915;
-	bh=fFOQjnVPcFd1wvOtxaBYad+RJUFESpmrhGZ80I46uD4=;
+	s=default; t=1582273924;
+	bh=1xCCUDJRyOV29jDvyw2qulGXTvVC0OZvGv+a2Mz9d4o=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=NyRrLxKaVGE0uGSpCYIfhu3ffEJpZWinxK4a7mJao0P7p149aDLs28f92zm+bjsen
-	 rVvQ8tTerQ1/mRl9DirD0WiA/QzSRkX4P/S28ctZAjF8gUOS/UNbPQ9U7amd89BLzY
-	 sRyuTzXQnNwD1wgcrvzTw2tuHvbLvw9vdoTMOvyI=
+	b=RQp6NbY7+V5vseRwM0e9NLLoBOmRuwoEOPBetoyb5uEhuQsTGzNHIn8wZWlaS5tRz
+	 Gm5ubwROTWVgywTeq+ywcOozKRXArVCajsMB3AoeK2TVOc5OnqrI/eoonrbg6MxP2P
+	 7TsRoJ79RPww8M54KAeT2mpPuf7ssHtYxeml9jDY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388609AbgBUIby (ORCPT
+        id S2388008AbgBUIcC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Feb 2020 03:31:54 -0500
-Received: from mail.kernel.org ([198.145.29.99]:49726 "EHLO mail.kernel.org"
+        Fri, 21 Feb 2020 03:32:02 -0500
+Received: from mail.kernel.org ([198.145.29.99]:49410 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731756AbgBUINg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Feb 2020 03:13:36 -0500
+        id S1730362AbgBUINU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 21 Feb 2020 03:13:20 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E3B4024650;
-        Fri, 21 Feb 2020 08:13:34 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9DF9520578;
+        Fri, 21 Feb 2020 08:13:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1582272815;
-        bh=fFOQjnVPcFd1wvOtxaBYad+RJUFESpmrhGZ80I46uD4=;
+        s=default; t=1582272800;
+        bh=1xCCUDJRyOV29jDvyw2qulGXTvVC0OZvGv+a2Mz9d4o=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=mXyppT+bJx1/qbKbW0ADNQzKt49M6A2nBbTredJ0vexaMRgAVWhX6BO7bst3qHwKe
-         +ti2Fu18Y/yP+TC85hsijeS6fDau+Kl//PxyPDlFLud87thvw2A6Ds43W9FIaQEqzp
-         zoqWhlzkvm7+yQoKWE6im6X2RIILe3nLg0D2rmTk=
+        b=qB9r8viDJcZNhIfYzU2isHTWu+t6+naQ6eyRsyh6OR1Vb961Xf3KDGQzFiBfZUkIw
+         VovJa0mCjQuto18NBjdTFtNblRYMYEC2LRpP09nttcRZmaAXHnVuXgrHJpVzUHrIDK
+         oC5XiXC1G6Kb+gWf8tSayJA+AIIVt2jeXvFsRhXA=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Josh Poimboeuf <jpoimboe@redhat.com>,
-        Randy Dunlap <rdunlap@infradead.org>,
-        David Sterba <dsterba@suse.com>,
+        stable@vger.kernel.org, Chris Down <chris@chrisdown.name>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Andrii Nakryiko <andriin@fb.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 285/344] btrfs: separate definition of assertion failure handlers
-Date:   Fri, 21 Feb 2020 08:41:24 +0100
-Message-Id: <20200221072415.665374073@linuxfoundation.org>
+Subject: [PATCH 5.4 279/344] bpf, btf: Always output invariant hit in pahole DWARF to BTF transform
+Date:   Fri, 21 Feb 2020 08:41:18 +0100
+Message-Id: <20200221072415.109588769@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200221072349.335551332@linuxfoundation.org>
 References: <20200221072349.335551332@linuxfoundation.org>
@@ -61,68 +61,58 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: David Sterba <dsterba@suse.com>
+From: Chris Down <chris@chrisdown.name>
 
-[ Upstream commit 68c467cbb2f389b6c933e235bce0d1756fc8cc34 ]
+[ Upstream commit 2a67a6ccb01f21b854715d86ff6432a18b97adb3 ]
 
-There's a report where objtool detects unreachable instructions, eg.:
+When trying to compile with CONFIG_DEBUG_INFO_BTF enabled, I got this
+error:
 
-  fs/btrfs/ctree.o: warning: objtool: btrfs_search_slot()+0x2d4: unreachable instruction
+    % make -s
+    Failed to generate BTF for vmlinux
+    Try to disable CONFIG_DEBUG_INFO_BTF
+    make[3]: *** [vmlinux] Error 1
 
-This seems to be a false positive due to compiler version. The cause is
-in the ASSERT macro implementation that does the conditional check as
-IS_DEFINED(CONFIG_BTRFS_ASSERT) and not an #ifdef.
+Compiling again without -s shows the true error (that pahole is
+missing), but since this is fatal, we should show the error
+unconditionally on stderr as well, not silence it using the `info`
+function. With this patch:
 
-To avoid that, use the ifdefs directly.
+    % make -s
+    BTF: .tmp_vmlinux.btf: pahole (pahole) is not available
+    Failed to generate BTF for vmlinux
+    Try to disable CONFIG_DEBUG_INFO_BTF
+    make[3]: *** [vmlinux] Error 1
 
-There are still 2 reports that aren't fixed:
-
-  fs/btrfs/extent_io.o: warning: objtool: __set_extent_bit()+0x71f: unreachable instruction
-  fs/btrfs/relocation.o: warning: objtool: find_data_references()+0x4e0: unreachable instruction
-
-Co-developed-by: Josh Poimboeuf <jpoimboe@redhat.com>
-Signed-off-by: Josh Poimboeuf <jpoimboe@redhat.com>
-Reported-by: Randy Dunlap <rdunlap@infradead.org>
-Signed-off-by: David Sterba <dsterba@suse.com>
+Signed-off-by: Chris Down <chris@chrisdown.name>
+Signed-off-by: Daniel Borkmann <daniel@iogearbox.net>
+Acked-by: Andrii Nakryiko <andriin@fb.com>
+Link: https://lore.kernel.org/bpf/20200122000110.GA310073@chrisdown.name
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/btrfs/ctree.h | 20 ++++++++++++--------
- 1 file changed, 12 insertions(+), 8 deletions(-)
+ scripts/link-vmlinux.sh | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/fs/btrfs/ctree.h b/fs/btrfs/ctree.h
-index 290ca193c6c0f..169075550a5a2 100644
---- a/fs/btrfs/ctree.h
-+++ b/fs/btrfs/ctree.h
-@@ -3107,17 +3107,21 @@ do {								\
- 	rcu_read_unlock();					\
- } while (0)
+diff --git a/scripts/link-vmlinux.sh b/scripts/link-vmlinux.sh
+index 4363799403561..408b5c0b99b1b 100755
+--- a/scripts/link-vmlinux.sh
++++ b/scripts/link-vmlinux.sh
+@@ -108,13 +108,13 @@ gen_btf()
+ 	local bin_arch
  
--__cold
--static inline void assfail(const char *expr, const char *file, int line)
-+#ifdef CONFIG_BTRFS_ASSERT
-+__cold __noreturn
-+static inline void assertfail(const char *expr, const char *file, int line)
- {
--	if (IS_ENABLED(CONFIG_BTRFS_ASSERT)) {
--		pr_err("assertion failed: %s, in %s:%d\n", expr, file, line);
--		BUG();
--	}
-+	pr_err("assertion failed: %s, in %s:%d\n", expr, file, line);
-+	BUG();
- }
+ 	if ! [ -x "$(command -v ${PAHOLE})" ]; then
+-		info "BTF" "${1}: pahole (${PAHOLE}) is not available"
++		echo >&2 "BTF: ${1}: pahole (${PAHOLE}) is not available"
+ 		return 1
+ 	fi
  
--#define ASSERT(expr)	\
--	(likely(expr) ? (void)0 : assfail(#expr, __FILE__, __LINE__))
-+#define ASSERT(expr)						\
-+	(likely(expr) ? (void)0 : assertfail(#expr, __FILE__, __LINE__))
-+
-+#else
-+static inline void assertfail(const char *expr, const char* file, int line) { }
-+#define ASSERT(expr)	(void)(expr)
-+#endif
+ 	pahole_ver=$(${PAHOLE} --version | sed -E 's/v([0-9]+)\.([0-9]+)/\1\2/')
+ 	if [ "${pahole_ver}" -lt "113" ]; then
+-		info "BTF" "${1}: pahole version $(${PAHOLE} --version) is too old, need at least v1.13"
++		echo >&2 "BTF: ${1}: pahole version $(${PAHOLE} --version) is too old, need at least v1.13"
+ 		return 1
+ 	fi
  
- /*
-  * Use that for functions that are conditionally exported for sanity tests but
 -- 
 2.20.1
 
