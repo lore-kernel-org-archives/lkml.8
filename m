@@ -2,219 +2,112 @@ Return-Path: <SRS0=1210=4J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0A6E4C35660
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 19:22:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 26017C3565B
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 19:22:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CE0E224650
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 19:22:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EE2EE208E4
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 19:22:23 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="d1rNua/l"
+	dkim=pass (2048-bit key) header.d=amacapital-net.20150623.gappssmtp.com header.i=@amacapital-net.20150623.gappssmtp.com header.b="CJkwaRDw"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729689AbgBUTWI (ORCPT
+        id S1729755AbgBUTWW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Feb 2020 14:22:08 -0500
-Received: from mail-lj1-f195.google.com ([209.85.208.195]:35962 "EHLO
-        mail-lj1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726423AbgBUTWH (ORCPT
+        Fri, 21 Feb 2020 14:22:22 -0500
+Received: from mail-pf1-f196.google.com ([209.85.210.196]:41823 "EHLO
+        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726423AbgBUTWW (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Feb 2020 14:22:07 -0500
-Received: by mail-lj1-f195.google.com with SMTP id r19so3348771ljg.3;
-        Fri, 21 Feb 2020 11:22:05 -0800 (PST)
+        Fri, 21 Feb 2020 14:22:22 -0500
+Received: by mail-pf1-f196.google.com with SMTP id j9so1736439pfa.8
+        for <linux-kernel@vger.kernel.org>; Fri, 21 Feb 2020 11:22:22 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:date:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=bDDD9QS51C8HABJX5Kswii4LZuMup2Q1KmKUNTg9WcI=;
-        b=d1rNua/lZJ5hE0ZUd/ZtqyYz4uPoKdWgw7gFNQSOhnpmXpqoyRpxXPAZ3AzI6QHfu7
-         uxZ/EjEufQ4uoqzIbMaUdH/+ZGiz/CU+TNxr3LOiB10oKqgdBmq1ULCWikJk9lQ424wM
-         LG8stYBGhHincNDLy52LYL7GoRP9K4qz8itg0UOUMLauWe6VssqKqbGFJK5i/BB5Qtp9
-         1ojRAi+TaPtTbeGuAlyS8JvJFQDrUCl88UEmQ24qaqPl69s4k2vqCib2w30EHqwOn9J8
-         2DAmWCXisbBxYhE6WtCp1plmCo2OJOq3tlQumJ0ecMe7+KJoJgMOWEPvjE3+LVQaLsgt
-         x1bg==
+        d=amacapital-net.20150623.gappssmtp.com; s=20150623;
+        h=content-transfer-encoding:from:mime-version:subject:date:message-id
+         :references:cc:in-reply-to:to;
+        bh=babJojdCDy0YFs2iVGK6X7zs9deO0pqtiXujS29YD44=;
+        b=CJkwaRDwnuJBn0C4v1Ltjfn9GF0b2pewUCw30smmKBLfZs4zRmMmDsgFkUdIYKzsyy
+         hB5perK5p3i1wSNVsj8Vo7g4ohOgdtvtAKo8M+3xZSRkPS9QNX/a6yvJMdGXgHKSz8Wo
+         snspxoVchaHx5HaO2sPszMzJITp1bYuLtHVRzOgyNDYni5/DAO0W7Cj9TdsnJgmt1ei2
+         pjwkM8rj9YK8ndNQCSAbD0MoFfEMU7lqxVe7LPGWb1lnOCHobBcCTvwbvbKhntI7HtXt
+         GzlGeK8AtrVMnKkPL9wFUuPKXMAQeJywGOVgfzfjrzvaLVsvwUs/11Y9cE4SPsmQiAR2
+         hgSg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:date:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=bDDD9QS51C8HABJX5Kswii4LZuMup2Q1KmKUNTg9WcI=;
-        b=T5YHAkr9iYiZK0OWxjXe6z6wcqd05iZAlLBHtx/yMBxLPutndouFEqU9B9MSxQRaUv
-         kgm1Sh7xvPMSDtTgsjnRBE9++4sF2rC5q+y72VmOJsbDk94+jdpBZySlIuqJizT51hhc
-         tYc+dVbnH60IXWtIvi1GU2hpo2473PrMuIuws8HBHmSudarQ4HiyucgmkLTerZ21KF/b
-         YoEMaT9bESTmtXWvCp6i7NRr6hCaqsdet3MiP/Jbv9mM4WhMHPdgX965papkwD5Npi8d
-         PgS/KuEemeiWPOh7mfYSfZufrDFntbI2kr7AwIHVialVD74cG5C9aOYC5F9sQgOkfI4K
-         ZDaA==
-X-Gm-Message-State: APjAAAVSVMi1ENADO6aY6UctZWmA9RLipxGyB9PxQmFK7Rf8EVr6J9+a
-        k5pvnMWq/1sA5gWXDpxAzDg=
-X-Google-Smtp-Source: APXvYqxHnV+rlw73EGLCV62VYkWgaqa5e6zLDPiymU4n0efao/yzLRnKeAfa93oR0Qdc7K1A1L/pvQ==
-X-Received: by 2002:a05:651c:314:: with SMTP id a20mr23125542ljp.91.1582312924151;
-        Fri, 21 Feb 2020 11:22:04 -0800 (PST)
-Received: from pc636 ([37.139.158.167])
-        by smtp.gmail.com with ESMTPSA id n3sm2116680ljc.100.2020.02.21.11.22.02
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 21 Feb 2020 11:22:03 -0800 (PST)
-From:   Uladzislau Rezki <urezki@gmail.com>
-X-Google-Original-From: Uladzislau Rezki <urezki@pc636>
-Date:   Fri, 21 Feb 2020 20:21:52 +0100
-To:     Joel Fernandes <joel@joelfernandes.org>
-Cc:     Uladzislau Rezki <urezki@gmail.com>,
-        "Theodore Y. Ts'o" <tytso@mit.edu>,
-        "Paul E. McKenney" <paulmck@kernel.org>,
-        Ext4 Developers List <linux-ext4@vger.kernel.org>,
-        Suraj Jitindar Singh <surajjs@amazon.com>,
-        LKML <linux-kernel@vger.kernel.org>, rcu@vger.kernel.org
-Subject: Re: [PATCH RFC] ext4: fix potential race between online resizing and
- write operations
-Message-ID: <20200221192152.GA6306@pc636>
-References: <20200215233817.GA670792@mit.edu>
- <20200216121246.GG2935@paulmck-ThinkPad-P72>
- <20200217160827.GA5685@pc636>
- <20200217193314.GA12604@mit.edu>
- <20200218170857.GA28774@pc636>
- <20200221120618.GA194360@google.com>
- <20200221132817.GB194360@google.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200221132817.GB194360@google.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+        h=x-gm-message-state:content-transfer-encoding:from:mime-version
+         :subject:date:message-id:references:cc:in-reply-to:to;
+        bh=babJojdCDy0YFs2iVGK6X7zs9deO0pqtiXujS29YD44=;
+        b=LRd3eYKcvrQpDCWkETq5TeS08C01AXKAj9eLeIXxsahaW2kefD36J6hZLjcz9RTNUP
+         H5DLegqL9XYmcB7JmsaSfvrGZZnIh9DOAieOOeHzmAipG2oS3XOa5al6JMgcqC3OPcAv
+         zi9WzRpazBqnrdrNsMn63d8CD1mBoKVs0YBCs62FntfnlRJLK+sVHjyoqY8ZI/jx8m+3
+         E08nCFJutEFaGjhyuufWfSlt4O6Hk0SUO8YXostY+iPT1J1pJ4lFrIZVvsRv/XyEiiHt
+         a9mOvz2sdLPIokzMzY4Wh2ZvtaLMI5ch3GnKIeV0RHspuIx+b7hTcXJITALb49tUI0Zf
+         i1uw==
+X-Gm-Message-State: APjAAAVX/mC6SYfF2wtrL58MREj4kb6rz56S8aGqH0ZrNsUTzqbnE6xz
+        jDOPVFYSR3C2eyjXZdooh4pTdg==
+X-Google-Smtp-Source: APXvYqy4kqrPrg8fqCqvVjEj6p+1x50JOT4UfcxeTKHgFx2Fy6nZcE6AJ79oq/DAaShFXQ7/BvCe1w==
+X-Received: by 2002:a63:7558:: with SMTP id f24mr39204054pgn.259.1582312941795;
+        Fri, 21 Feb 2020 11:22:21 -0800 (PST)
+Received: from ?IPv6:2601:646:c200:1ef2:4c99:8e8b:baf2:422? ([2601:646:c200:1ef2:4c99:8e8b:baf2:422])
+        by smtp.gmail.com with ESMTPSA id g16sm3364584pgb.54.2020.02.21.11.22.20
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 21 Feb 2020 11:22:21 -0800 (PST)
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+From:   Andy Lutomirski <luto@amacapital.net>
+Mime-Version: 1.0 (1.0)
+Subject: Re: [PATCH] mm/tlb: Fix use_mm() vs TLB invalidate
+Date:   Fri, 21 Feb 2020 11:22:16 -0800
+Message-Id: <6A09F721-0AD9-4B86-AB3E-563A1CF5ABDE@amacapital.net>
+References: <CAHk-=wi4uO+Djqr4Jc1TnCofwxUTuXHtgkgwnVX86q06UGV6DA@mail.gmail.com>
+Cc:     Peter Zijlstra <peterz@infradead.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Jens Axboe <axboe@kernel.dk>,
+        Kees Cook <keescook@chromium.org>,
+        Jann Horn <jannh@google.com>, Will Deacon <will@kernel.org>
+In-Reply-To: <CAHk-=wi4uO+Djqr4Jc1TnCofwxUTuXHtgkgwnVX86q06UGV6DA@mail.gmail.com>
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+X-Mailer: iPhone Mail (17D50)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-> > 
-> > Overall this implementation is nice. You are basically avoiding allocating
-> > rcu_head like Ted did by using the array-of-pointers technique we used for
-> > the previous kfree_rcu() work.
-> > 
-> > One thing stands out, the path where we could not allocate a page for the new
-> > block node:
-> > 
-> > > @@ -3061,6 +3148,11 @@ void kfree_call_rcu(struct rcu_head *head, rcu_callback_t func)
-> > >         if (krcp->initialized)
-> > >                 spin_unlock(&krcp->lock);
-> > >         local_irq_restore(flags);
-> > > +
-> > > +       if (!skip_call_rcu) {
-> > > +               synchronize_rcu();
-> > > +               kvfree(ptr_to_free);
-> > 
-> > We can't block, it has to be async otherwise everything else blocks, and I
-> > think this can also be used from interrupt handlers which would at least be
-> > an SWA violation. So perhaps it needs to allocate an rcu_head wrapper object
-> > itself for the 'emergeny case' and use the regular techniques.
-> > 
-> > Another thing that stands out is the code duplication, if we can make this
-> > reuse as much as of the previous code as possible, that'd be great. I'd like
-> > to avoid bvcached and bvhead if possible. Maybe we can store information
-> > about the fact that this is a 'special object' in some of the lower-order
-> > bits of the pointer. Then we can detect that it is 'special' and free it
-> > using kvfree() during the reclaim
-> 
-> Basically what I did different is:
-> 1. Use the existing kfree_rcu_bulk_data::records array to store the
->    to-be-freed array.
-> 2. In case of emergency, allocate a new wrapper and tag the pointer.
->    Read the tag later to figure its an array wrapper and do additional kvfree.
->
-I see your point and agree that duplication is odd and we should avoid
-it as much as possible. Also, i like the idea of using the wrapper as
-one more chance to build a "head" for headless object.
 
-I did not mix pointers because then you will need to understand what is what.
-It is OK for "emergency" path, because we simply can just serialize it by kvfree()
-call, it checks inside what the ptr address belong to:
 
-<snip>
-void kvfree(const void *addr)
-{
-    if (is_vmalloc_addr(addr))
-        vfree(addr);
-    else
-        kfree(addr);
-}
-<snip>
+> On Feb 21, 2020, at 11:19 AM, Linus Torvalds <torvalds@linux-foundation.or=
+g> wrote:
+>=20
+> =EF=BB=BFOn Fri, Feb 21, 2020 at 3:11 AM Peter Zijlstra <peterz@infradead.=
+org> wrote:
+>>=20
+>> +       BUG_ON(!(tsk->flags & PF_KTHREAD));
+>> +       BUG_ON(tsk->mm !=3D NULL);
+>=20
+> Stop this craziness.
+>=20
+> There is absolutely ZERO excuse for this kind of garbage.
+>=20
+> Making this a BUG_ON() will just cause all the possible debugging info
+> to be thrown away and lost, and you often have a dead machine.
+>=20
+> For absolutely no good reason.
+>=20
+> Make it a WARN_ON_ONCE(). If it triggers, everything works the way it
+> always did, but we get notified.
+>=20
+> Stop with the stupid crazy BUG_ON() crap already. It is actively _bad_
+> for debugging.
+>=20
+> =20
 
-whereas normal path, i mean "bulk one" where we store pointers into array
-would be broken. We can not call kfree_bulk(array, nr_entries) if the passed
-array contains "vmalloc" pointers, because it is different allocator. Therefore,
-i deliberately have made it as a special case.
+In this particular case, if we actually flub this, we are very likely to cau=
+se data corruption =E2=80=94 we=E2=80=99re about to do user access with the w=
+rong mm.
 
-> 
-> Perhaps the synchronize_rcu() should be done from a workqueue handler
-> to prevent IRQ crapping out?
->
-I think so. For example one approach would be:
-
-<snip>
-struct free_deferred {
- struct llist_head list;
- struct work_struct wq;
-};
-static DEFINE_PER_CPU(struct free_deferred, free_deferred);
-
-static void free_work(struct work_struct *w)
-{
-  struct free_deferred *p = container_of(w, struct free_deferred, wq);
-  struct llist_node *t, *llnode;
-
-  synchronize_rcu();
-
-  llist_for_each_safe(llnode, t, llist_del_all(&p->list))
-     vfree((void *)llnode, 1);
-}
-
-static inline void free_deferred_common(void *ptr_to_free)
-{
-    struct free_deferred *p = raw_cpu_ptr(&free_deferred);
-
-    if (llist_add((struct llist_node *)ptr_to_free, &p->list))
-        schedule_work(&p->wq);
-}
-<snip>
-
-and it seems it should work. Because we know that KMALLOC_MIN_SIZE
-can not be less then machine word:
-
-/*
- * Kmalloc subsystem.
- */
- #ifndef KMALLOC_MIN_SIZE
- #define KMALLOC_MIN_SIZE (1 << KMALLOC_SHIFT_LOW)
- #endif
-
-when it comes to vmalloc pointer it can not be less then one PAGE_SIZE :)
-
-Another thing:
-
-we are talking about "headless" variant that is special, therefore it
-implies to have some restrictions, since we need a dynamic memory to
-drive it. For example "headless" object can be freed from preemptible
-context only, because freeing can be inlined:
-
-<snip>
-+   // NOT SURE if permitted due to IRQ. Maybe we
-+   // should try doing this from WQ?
-+   synchronize_rcu();
-+   kvfree(ptr);
-<snip>
-
-Calling synchronize_rcu() from the IRQ context will screw the system up :)
-Because the current CPU will never pass the QS state if i do not miss something.
-Also kvfree() itself can be called from the preemptible context only, excluding IRQ,
-there is a special path for it, otherwise vfree() can sleep. 
-
-> 
-> debug_objects bits wouldn't work obviously for the !emergency kvfree case,
-> not sure what we can do there.
->
-Agree.
-
-Thank you, Joel, for your comments!
-
---
-Vlad Rezki
+So I suppose we could switch to init_mm and carry on. *Something* will crash=
+, but it probably won=E2=80=99t corrupt data or take down the machine.=
