@@ -2,112 +2,176 @@ Return-Path: <SRS0=1210=4J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F05C9C35666
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 21:24:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CF2CBC35669
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 21:25:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C0B7C206EF
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 21:24:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A05F7207FD
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 21:25:17 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1582320317;
+	bh=+XroxI3EJiMSxkRKHu1Xniyh64pp6vnvlxd5aw4FSeI=;
+	h=From:To:Subject:Date:List-ID:From;
+	b=QJlnzrWGPOCd62QrIItOPfF+rXk0aW7yT5KeA+VFC2XQ2ylhOiLZN9w7gzFkS+VNv
+	 L4sWfAri3jBCGbWPIKsu7Mg9b4/wWHW3vc/NM6TQ2/FII4noKPuv7JWpzNHeHKja4R
+	 KzqV9UX2pOc35SFU94dnfAhzg6abxZibAljIeN+M=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728384AbgBUVYy (ORCPT
+        id S1728624AbgBUVZQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Feb 2020 16:24:54 -0500
-Received: from mga04.intel.com ([192.55.52.120]:60189 "EHLO mga04.intel.com"
+        Fri, 21 Feb 2020 16:25:16 -0500
+Received: from mail.kernel.org ([198.145.29.99]:38964 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726725AbgBUVYy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Feb 2020 16:24:54 -0500
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga006.jf.intel.com ([10.7.209.51])
-  by fmsmga104.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 21 Feb 2020 13:24:53 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.70,469,1574150400"; 
-   d="scan'208";a="240446694"
-Received: from ray.jf.intel.com (HELO [10.7.201.139]) ([10.7.201.139])
-  by orsmga006.jf.intel.com with ESMTP; 21 Feb 2020 13:24:52 -0800
-Subject: Re: [PATCH] mm: Stop kswapd early when nothing's waiting for it to
- free pages
-To:     Sultan Alsawaf <sultan@kerneltoast.com>,
-        Michal Hocko <mhocko@kernel.org>
-Cc:     Mel Gorman <mgorman@suse.de>,
-        Andrew Morton <akpm@linux-foundation.org>, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org, Johannes Weiner <hannes@cmpxchg.org>
-References: <20200219182522.1960-1-sultan@kerneltoast.com>
- <dcd1cb4c-89dc-856b-ea1b-8d4930fec3eb@intel.com>
- <20200219194006.GA3075@sultan-book.localdomain>
- <20200219200527.GF11847@dhcp22.suse.cz>
- <20200219204220.GA3488@sultan-book.localdomain>
- <20200219214513.GL3420@suse.de>
- <20200219224231.GA5190@sultan-book.localdomain>
- <20200220101945.GN3420@suse.de>
- <20200221042232.GA2197@sultan-book.localdomain>
- <20200221080737.GK20509@dhcp22.suse.cz>
- <20200221210824.GA3605@sultan-book.localdomain>
-From:   Dave Hansen <dave.hansen@intel.com>
-Openpgp: preference=signencrypt
-Autocrypt: addr=dave.hansen@intel.com; keydata=
- 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
-Message-ID: <6800bdf1-3631-65c9-5664-e4f2dca5547e@intel.com>
-Date:   Fri, 21 Feb 2020 13:24:53 -0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        id S1726683AbgBUVZP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 21 Feb 2020 16:25:15 -0500
+Received: from localhost.localdomain (c-98-220-238-81.hsd1.il.comcast.net [98.220.238.81])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 59195206EF;
+        Fri, 21 Feb 2020 21:25:14 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1582320315;
+        bh=+XroxI3EJiMSxkRKHu1Xniyh64pp6vnvlxd5aw4FSeI=;
+        h=From:To:Subject:Date:From;
+        b=MKRIl7DAFUtGhujFLG+R/NORW+MyxUJsYvtRkAFj5K9jZHO+u9jV/nhjHPOrJgYyg
+         AdSIBFr5547SDWR5LWQaG2+YHndKeVSyeqSBlPn3VGoTiWB0DgapN69MwST5AGeXPh
+         T2rmdDRPVbOjUz3NmwuzK4fT779k+RSW2L1OiK9c=
+From:   zanussi@kernel.org
+To:     LKML <linux-kernel@vger.kernel.org>,
+        linux-rt-users <linux-rt-users@vger.kernel.org>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Carsten Emde <C.Emde@osadl.org>,
+        John Kacur <jkacur@redhat.com>,
+        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
+        Daniel Wagner <wagi@monom.org>,
+        Tom Zanussi <zanussi@kernel.org>
+Subject: [PATCH RT 00/25] Linux v4.14.170-rt75-rc1
+Date:   Fri, 21 Feb 2020 15:24:28 -0600
+Message-Id: <cover.1582320278.git.zanussi@kernel.org>
+X-Mailer: git-send-email 2.14.1
 MIME-Version: 1.0
-In-Reply-To: <20200221210824.GA3605@sultan-book.localdomain>
-Content-Type: text/plain; charset=windows-1252
-Content-Language: en-US
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2/21/20 1:08 PM, Sultan Alsawaf wrote:
-> Both of these logs are attached in a tarball.
+From: Tom Zanussi <zanussi@kernel.org>
 
-Could you post your vmlinux somewhere?  It's hard to do much with
-perf.data without it.  The other option is to do a 'perf report' on your
-system and send the resulting text output.
+Dear RT Folks,
+
+This is the RT stable review cycle of patch 4.14.170-rt75-rc1.
+
+Please scream at me if I messed something up. Please test the patches
+too.
+
+The -rc release will be uploaded to kernel.org and will be deleted
+when the final release is out. This is just a review release (or
+release candidate).
+
+The pre-releases will not be pushed to the git repository, only the
+final release is.
+
+If all goes well, this patch will be converted to the next main
+release on 2020-02-28.
+
+To build 4.14.170-rt75-rc1 directly, the following patches should be applied:
+
+  https://www.kernel.org/pub/linux/kernel/v4.x/linux-4.14.tar.xz
+
+  https://www.kernel.org/pub/linux/kernel/v4.x/patch-4.14.170.xz
+
+  https://www.kernel.org/pub/linux/kernel/projects/rt/4.14/patch-4.14.170-rt75-rc1.patch.xz
+
+You can also build from 4.14.170-rt74 by applying the incremental patch:
+
+  https://www.kernel.org/pub/linux/kernel/projects/rt/4.14/incr/patch-4.14.170-rt74-rt75-rc1.patch.xz
+
+
+Enjoy,
+
+-- Tom
+
+
+Joe Korty (1):
+  Fix wrong-variable use in irq_set_affinity_notifier
+
+Julien Grall (1):
+  lib/ubsan: Don't seralize UBSAN report
+
+Juri Lelli (1):
+  sched/deadline: Ensure inactive_timer runs in hardirq context
+
+Liu Haitao (1):
+  kmemleak: Change the lock of kmemleak_object to raw_spinlock_t
+
+Matt Fleming (1):
+  mm/memcontrol: Move misplaced local_unlock_irqrestore()
+
+Peter Zijlstra (1):
+  locking/rtmutex: Clean ->pi_blocked_on in the error case
+
+Scott Wood (5):
+  sched: migrate_dis/enable: Use sleeping_lock…() to annotate sleeping
+    points
+  sched: __set_cpus_allowed_ptr: Check cpus_mask, not cpus_ptr
+  sched: Remove dead __migrate_disabled() check
+  sched: migrate disable: Protect cpus_ptr with lock
+  sched: migrate_enable: Use select_fallback_rq()
+
+Sebastian Andrzej Siewior (11):
+  x86: preempt: Check preemption level before looking at lazy-preempt
+  i2c: hix5hd2: Remove IRQF_ONESHOT
+  i2c: exynos5: Remove IRQF_ONESHOT
+  futex: Make the futex_hash_bucket spinlock_t again and bring back its
+    old state
+  Revert "ARM: Initialize split page table locks for vector page"
+  x86/fpu: Don't cache access to fpu_fpregs_owner_ctx
+  locking: Make spinlock_t and rwlock_t a RCU section on RT
+  userfaultfd: Use a seqlock instead of seqcount
+  kmemleak: Cosmetic changes
+  smp: Use smp_cond_func_t as type for the conditional function
+  locallock: Include header for the `current' macro
+
+Thomas Gleixner (1):
+  sched: Provide migrate_disable/enable() inlines
+
+Tom Zanussi (1):
+  Linux 4.14.170-rt75-rc1
+
+Waiman Long (1):
+  lib/smp_processor_id: Don't use cpumask_equal()
+
+ arch/arm/kernel/process.c           |  24 ----
+ arch/x86/include/asm/fpu/internal.h |   2 +-
+ arch/x86/include/asm/preempt.h      |   2 +
+ drivers/i2c/busses/i2c-exynos5.c    |   4 +-
+ drivers/i2c/busses/i2c-hix5hd2.c    |   3 +-
+ fs/userfaultfd.c                    |  12 +-
+ include/linux/locallock.h           |   1 +
+ include/linux/preempt.h             |  26 +++-
+ include/linux/smp.h                 |   6 +-
+ kernel/cpu.c                        |   2 +
+ kernel/futex.c                      | 231 ++++++++++++++++++++----------------
+ kernel/irq/manage.c                 |   2 +-
+ kernel/locking/rtmutex.c            | 114 ++++++++++++++----
+ kernel/locking/rtmutex_common.h     |   3 +
+ kernel/locking/rwlock-rt.c          |   6 +
+ kernel/sched/core.c                 |  43 +++----
+ kernel/sched/deadline.c             |   4 +-
+ kernel/smp.c                        |   5 +-
+ kernel/up.c                         |   5 +-
+ lib/smp_processor_id.c              |   2 +-
+ lib/ubsan.c                         |  76 +++++-------
+ localversion-rt                     |   2 +-
+ mm/kmemleak.c                       |  90 +++++++-------
+ mm/memcontrol.c                     |   2 +-
+ 24 files changed, 370 insertions(+), 297 deletions(-)
+
+-- 
+2.14.1
+
