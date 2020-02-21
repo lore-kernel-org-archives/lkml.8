@@ -7,50 +7,47 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A0299C35642
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 07:51:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 573DEC35641
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 07:51:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 650FA2073A
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 07:51:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2C7DA20578
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 07:51:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582271508;
-	bh=t+CZ/Xrc3LGCVh6lVgMRcMaaEwqkKuYLyhpdG8JoK2A=;
+	s=default; t=1582271511;
+	bh=kHrVyKQu4EWN7X+O0OX9IdROv4KxjFWl9tyQX76enSU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=h60v0aorLFgveNzxFMTgckkY2btdKeCA3/w6r//JFFdG0u55jPC177VuCkyt/dnVz
-	 tOjLZC1Bsr5OrS2xeghKCFc4JgXTj1IisvVYNXLRm6kywDPOil62XkEk+wyz9CVvTo
-	 apnkRRnkkqQ8fmXjocjDjhywQDVDUIwQCjCgzNJM=
+	b=PmXZCVBjUdg5AxWHLfKCWdPpLmszLMXVeGQgNNzCWO32pzaX7buFmllj3m1d8pP76
+	 sZ3ibluyH2WQ9tCtJbn5dQW1PptTch5rLTARAONsBxst9QOr0CcV3CodxpDUIZGfo2
+	 IXMyxXtaSsmdyXVqp8tw30Dstqx+FBO5ki7tHBWw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729808AbgBUHvr (ORCPT
+        id S1729819AbgBUHvu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Feb 2020 02:51:47 -0500
-Received: from mail.kernel.org ([198.145.29.99]:49178 "EHLO mail.kernel.org"
+        Fri, 21 Feb 2020 02:51:50 -0500
+Received: from mail.kernel.org ([198.145.29.99]:49326 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729799AbgBUHvm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Feb 2020 02:51:42 -0500
+        id S1729806AbgBUHvr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 21 Feb 2020 02:51:47 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5810A20801;
-        Fri, 21 Feb 2020 07:51:41 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5711520578;
+        Fri, 21 Feb 2020 07:51:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1582271501;
-        bh=t+CZ/Xrc3LGCVh6lVgMRcMaaEwqkKuYLyhpdG8JoK2A=;
+        s=default; t=1582271506;
+        bh=kHrVyKQu4EWN7X+O0OX9IdROv4KxjFWl9tyQX76enSU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=uRv6jhRpiVdsUZYD6wuxPOzRmUaxRTgr6LrONBkJ8s9BxZ1Ga0Ppfep5bna24lqof
-         EPu89PRREWSOW8O7X77wPpQTnIo6CrkOiJgazVa0oRmK88NC5ZzafqGI8fgC5qxU/X
-         aQAuh53iXrXGDfXf5U/URgGHgzqqZRhbWowEUf14=
+        b=Yy5WrAKNKkJRYoj6fpFDRVkSc3KjpZ0BzKQpDQ+6NYC47XJtrflacbEP/JgnZk3/W
+         rnOwmF0MuKpScOO8Kg/sHOATlEDmFqMtn2I2lE5m8QbLGAwYV3Gtnw/R0OaDQN8CPl
+         bFGIkNtkl+sB9J/EjocOXem0WAXnySeu4Cmjgg4o=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Valdis Kletnieks <valdis.kletnieks@vt.edu>,
-        Borislav Petkov <bp@suse.de>, "H. Peter Anvin" <hpa@zytor.com>,
-        Andy Lutomirski <luto@kernel.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Thomas Gleixner <tglx@linutronix.de>, x86-ml <x86@kernel.org>,
+        stable@vger.kernel.org, Kamil Konieczny <k.konieczny@samsung.com>,
+        Chanwoo Choi <cw00.choi@samsung.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.5 189/399] x86/vdso: Provide missing include file
-Date:   Fri, 21 Feb 2020 08:38:34 +0100
-Message-Id: <20200221072421.184464346@linuxfoundation.org>
+Subject: [PATCH 5.5 191/399] PM / devfreq: Change time stats to 64-bit
+Date:   Fri, 21 Feb 2020 08:38:36 +0100
+Message-Id: <20200221072421.377625465@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200221072402.315346745@linuxfoundation.org>
 References: <20200221072402.315346745@linuxfoundation.org>
@@ -63,42 +60,93 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Valdis Klētnieks <valdis.kletnieks@vt.edu>
+From: Kamil Konieczny <k.konieczny@samsung.com>
 
-[ Upstream commit bff47c2302cc249bcd550b17067f8dddbd4b6f77 ]
+[ Upstream commit b76b3479dab948bea0a98b6d263eb56d8f358528 ]
 
-When building with C=1, sparse issues a warning:
+Change time stats counting to bigger type by using 64-bit jiffies.
+This will make devfreq stats code look similar to cpufreq stats and
+prevents overflow (for HZ = 1000 after 49.7 days).
 
-  CHECK   arch/x86/entry/vdso/vdso32-setup.c
-  arch/x86/entry/vdso/vdso32-setup.c:28:28: warning: symbol 'vdso32_enabled' was not declared. Should it be static?
-
-Provide the missing header file.
-
-Signed-off-by: Valdis Kletnieks <valdis.kletnieks@vt.edu>
-Signed-off-by: Borislav Petkov <bp@suse.de>
-Cc: "H. Peter Anvin" <hpa@zytor.com>
-Cc: Andy Lutomirski <luto@kernel.org>
-Cc: Ingo Molnar <mingo@redhat.com>
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Cc: x86-ml <x86@kernel.org>
-Link: https://lkml.kernel.org/r/36224.1575599767@turing-police
+Signed-off-by: Kamil Konieczny <k.konieczny@samsung.com>
+Acked-by: Chanwoo Choi <cw00.choi@samsung.com>
+Signed-off-by: Chanwoo Choi <cw00.choi@samsung.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/x86/entry/vdso/vdso32-setup.c | 1 +
- 1 file changed, 1 insertion(+)
+ drivers/devfreq/devfreq.c | 14 +++++++-------
+ include/linux/devfreq.h   |  4 ++--
+ 2 files changed, 9 insertions(+), 9 deletions(-)
 
-diff --git a/arch/x86/entry/vdso/vdso32-setup.c b/arch/x86/entry/vdso/vdso32-setup.c
-index 240626e7f55aa..43842fade8fa1 100644
---- a/arch/x86/entry/vdso/vdso32-setup.c
-+++ b/arch/x86/entry/vdso/vdso32-setup.c
-@@ -11,6 +11,7 @@
- #include <linux/smp.h>
- #include <linux/kernel.h>
- #include <linux/mm_types.h>
-+#include <linux/elf.h>
+diff --git a/drivers/devfreq/devfreq.c b/drivers/devfreq/devfreq.c
+index 07602083c743e..554d155106a5f 100644
+--- a/drivers/devfreq/devfreq.c
++++ b/drivers/devfreq/devfreq.c
+@@ -209,10 +209,10 @@ static int set_freq_table(struct devfreq *devfreq)
+ int devfreq_update_status(struct devfreq *devfreq, unsigned long freq)
+ {
+ 	int lev, prev_lev, ret = 0;
+-	unsigned long cur_time;
++	u64 cur_time;
  
- #include <asm/processor.h>
- #include <asm/vdso.h>
+ 	lockdep_assert_held(&devfreq->lock);
+-	cur_time = jiffies;
++	cur_time = get_jiffies_64();
+ 
+ 	/* Immediately exit if previous_freq is not initialized yet. */
+ 	if (!devfreq->previous_freq)
+@@ -535,7 +535,7 @@ void devfreq_monitor_resume(struct devfreq *devfreq)
+ 			msecs_to_jiffies(devfreq->profile->polling_ms));
+ 
+ out_update:
+-	devfreq->last_stat_updated = jiffies;
++	devfreq->last_stat_updated = get_jiffies_64();
+ 	devfreq->stop_polling = false;
+ 
+ 	if (devfreq->profile->get_cur_freq &&
+@@ -820,7 +820,7 @@ struct devfreq *devfreq_add_device(struct device *dev,
+ 
+ 	devfreq->time_in_state = devm_kcalloc(&devfreq->dev,
+ 			devfreq->profile->max_state,
+-			sizeof(unsigned long),
++			sizeof(*devfreq->time_in_state),
+ 			GFP_KERNEL);
+ 	if (!devfreq->time_in_state) {
+ 		mutex_unlock(&devfreq->lock);
+@@ -828,7 +828,7 @@ struct devfreq *devfreq_add_device(struct device *dev,
+ 		goto err_devfreq;
+ 	}
+ 
+-	devfreq->last_stat_updated = jiffies;
++	devfreq->last_stat_updated = get_jiffies_64();
+ 
+ 	srcu_init_notifier_head(&devfreq->transition_notifier_list);
+ 
+@@ -1589,8 +1589,8 @@ static ssize_t trans_stat_show(struct device *dev,
+ 		for (j = 0; j < max_state; j++)
+ 			len += sprintf(buf + len, "%10u",
+ 				devfreq->trans_table[(i * max_state) + j]);
+-		len += sprintf(buf + len, "%10u\n",
+-			jiffies_to_msecs(devfreq->time_in_state[i]));
++		len += sprintf(buf + len, "%10llu\n", (u64)
++			jiffies64_to_msecs(devfreq->time_in_state[i]));
+ 	}
+ 
+ 	len += sprintf(buf + len, "Total transition : %u\n",
+diff --git a/include/linux/devfreq.h b/include/linux/devfreq.h
+index fb376b5b72819..95816a8e3d266 100644
+--- a/include/linux/devfreq.h
++++ b/include/linux/devfreq.h
+@@ -177,8 +177,8 @@ struct devfreq {
+ 	/* information for device frequency transition */
+ 	unsigned int total_trans;
+ 	unsigned int *trans_table;
+-	unsigned long *time_in_state;
+-	unsigned long last_stat_updated;
++	u64 *time_in_state;
++	u64 last_stat_updated;
+ 
+ 	struct srcu_notifier_head transition_notifier_list;
+ 
 -- 
 2.20.1
 
