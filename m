@@ -4,68 +4,73 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7964DC11D24
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 02:06:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3B748C11D00
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 02:08:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5635120659
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 02:06:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 17E2020659
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 02:08:02 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729835AbgBUCGc (ORCPT
+        id S1729523AbgBUCIA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Feb 2020 21:06:32 -0500
-Received: from inva021.nxp.com ([92.121.34.21]:41724 "EHLO inva021.nxp.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728992AbgBUCGa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Feb 2020 21:06:30 -0500
-Received: from inva021.nxp.com (localhost [127.0.0.1])
-        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id D26062063CC;
-        Fri, 21 Feb 2020 03:06:28 +0100 (CET)
-Received: from invc005.ap-rdc01.nxp.com (invc005.ap-rdc01.nxp.com [165.114.16.14])
-        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id 967832063CD;
-        Fri, 21 Feb 2020 03:06:23 +0100 (CET)
-Received: from localhost.localdomain (shlinux2.ap.freescale.net [10.192.224.44])
-        by invc005.ap-rdc01.nxp.com (Postfix) with ESMTP id 7B16C402E0;
-        Fri, 21 Feb 2020 10:06:17 +0800 (SGT)
-From:   Anson Huang <Anson.Huang@nxp.com>
-To:     wim@linux-watchdog.org, linux@roeck-us.net, shawnguo@kernel.org,
-        s.hauer@pengutronix.de, kernel@pengutronix.de, festevam@gmail.com,
-        linux-watchdog@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Cc:     Linux-imx@nxp.com
-Subject: [PATCH 3/3] watchdog: imx2_wdt: Remove unused include of init.h
-Date:   Fri, 21 Feb 2020 10:00:30 +0800
-Message-Id: <1582250430-8872-3-git-send-email-Anson.Huang@nxp.com>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1582250430-8872-1-git-send-email-Anson.Huang@nxp.com>
-References: <1582250430-8872-1-git-send-email-Anson.Huang@nxp.com>
-X-Virus-Scanned: ClamAV using ClamSMTP
+        Thu, 20 Feb 2020 21:08:00 -0500
+Received: from szxga06-in.huawei.com ([45.249.212.32]:60196 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1727845AbgBUCIA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 20 Feb 2020 21:08:00 -0500
+Received: from DGGEMS406-HUB.china.huawei.com (unknown [172.30.72.59])
+        by Forcepoint Email with ESMTP id C9E913A4B175E03AC2E3;
+        Fri, 21 Feb 2020 10:07:58 +0800 (CST)
+Received: from DESKTOP-8RFUVS3.china.huawei.com (10.173.222.27) by
+ DGGEMS406-HUB.china.huawei.com (10.3.19.206) with Microsoft SMTP Server id
+ 14.3.439.0; Fri, 21 Feb 2020 10:07:50 +0800
+From:   Zenghui Yu <yuzenghui@huawei.com>
+To:     <linux-kernel@vger.kernel.org>
+CC:     <maz@kernel.org>, <tglx@linutronix.de>,
+        <wanghaibin.wang@huawei.com>, Zenghui Yu <yuzenghui@huawei.com>
+Subject: [PATCH] genirq/irqdomain: Make sure all irq domain flags are distinct
+Date:   Fri, 21 Feb 2020 10:07:25 +0800
+Message-ID: <20200221020725.2038-1-yuzenghui@huawei.com>
+X-Mailer: git-send-email 2.23.0.windows.1
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7BIT
+Content-Type:   text/plain; charset=US-ASCII
+X-Originating-IP: [10.173.222.27]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-There is nothing in use from init.h, remove it.
+This was noticed when printing debugfs for MSIs on my ARM64 server.
+The new dstate IRQD_MSI_NOMASK_QUIRK came out surprisingly while it
+should only be the x86 stuff for the time being...
 
-Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
+It's the overlap in irqdomain flags which leads to this confusion.
+(1 << 1) might be a good choice for old IRQ_DOMAIN_NAME_ALLOCATED,
+use it to avoid this overlap.
+
+Fixes: 6f1a4891a592 ("x86/apic/msi: Plug non-maskable MSI affinity race")
+Signed-off-by: Zenghui Yu <yuzenghui@huawei.com>
 ---
- drivers/watchdog/imx2_wdt.c | 1 -
- 1 file changed, 1 deletion(-)
+ include/linux/irqdomain.h | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/watchdog/imx2_wdt.c b/drivers/watchdog/imx2_wdt.c
-index f8d58bf..ce28e40 100644
---- a/drivers/watchdog/imx2_wdt.c
-+++ b/drivers/watchdog/imx2_wdt.c
-@@ -20,7 +20,6 @@
+diff --git a/include/linux/irqdomain.h b/include/linux/irqdomain.h
+index b2d47571ab67..8d062e86d954 100644
+--- a/include/linux/irqdomain.h
++++ b/include/linux/irqdomain.h
+@@ -192,7 +192,7 @@ enum {
+ 	IRQ_DOMAIN_FLAG_HIERARCHY	= (1 << 0),
  
- #include <linux/clk.h>
- #include <linux/delay.h>
--#include <linux/init.h>
- #include <linux/interrupt.h>
- #include <linux/io.h>
- #include <linux/kernel.h>
+ 	/* Irq domain name was allocated in __irq_domain_add() */
+-	IRQ_DOMAIN_NAME_ALLOCATED	= (1 << 6),
++	IRQ_DOMAIN_NAME_ALLOCATED	= (1 << 1),
+ 
+ 	/* Irq domain is an IPI domain with virq per cpu */
+ 	IRQ_DOMAIN_FLAG_IPI_PER_CPU	= (1 << 2),
 -- 
-2.7.4
+2.19.1
+
 
