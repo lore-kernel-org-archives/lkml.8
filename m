@@ -2,297 +2,112 @@ Return-Path: <SRS0=1210=4J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1F383C3566F
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 21:23:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F05C9C35666
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 21:24:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E6B6D206EF
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 21:23:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C0B7C206EF
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 21:24:55 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728528AbgBUVXt (ORCPT
+        id S1728384AbgBUVYy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Feb 2020 16:23:49 -0500
-Received: from fudo.makrotopia.org ([185.142.180.71]:37556 "EHLO
-        fudo.makrotopia.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726707AbgBUVXt (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Feb 2020 16:23:49 -0500
-Received: from local
-        by fudo.makrotopia.org with esmtpsa (TLSv1.3:TLS_AES_256_GCM_SHA384:256)
-         (Exim 4.92.2)
-        (envelope-from <daniel@makrotopia.org>)
-        id 1j5Flv-0004JZ-8B; Fri, 21 Feb 2020 22:23:43 +0100
-Date:   Fri, 21 Feb 2020 22:23:31 +0100
-From:   Daniel Golle <daniel@makrotopia.org>
-To:     linux-serial@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Jiri Slaby <jslaby@suse.com>,
-        Petr =?utf-8?Q?=C5=A0tetiar?= <ynezz@true.cz>,
-        Chuanhong Guo <gch981213@gmail.com>,
-        Piotr Dymacz <pepe2k@gmail.com>
-Subject: [PATCH v2] serial: ar933x_uart: add RS485 support
-Message-ID: <20200221212331.GA21467@makrotopia.org>
+        Fri, 21 Feb 2020 16:24:54 -0500
+Received: from mga04.intel.com ([192.55.52.120]:60189 "EHLO mga04.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726725AbgBUVYy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 21 Feb 2020 16:24:54 -0500
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga006.jf.intel.com ([10.7.209.51])
+  by fmsmga104.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 21 Feb 2020 13:24:53 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.70,469,1574150400"; 
+   d="scan'208";a="240446694"
+Received: from ray.jf.intel.com (HELO [10.7.201.139]) ([10.7.201.139])
+  by orsmga006.jf.intel.com with ESMTP; 21 Feb 2020 13:24:52 -0800
+Subject: Re: [PATCH] mm: Stop kswapd early when nothing's waiting for it to
+ free pages
+To:     Sultan Alsawaf <sultan@kerneltoast.com>,
+        Michal Hocko <mhocko@kernel.org>
+Cc:     Mel Gorman <mgorman@suse.de>,
+        Andrew Morton <akpm@linux-foundation.org>, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org, Johannes Weiner <hannes@cmpxchg.org>
+References: <20200219182522.1960-1-sultan@kerneltoast.com>
+ <dcd1cb4c-89dc-856b-ea1b-8d4930fec3eb@intel.com>
+ <20200219194006.GA3075@sultan-book.localdomain>
+ <20200219200527.GF11847@dhcp22.suse.cz>
+ <20200219204220.GA3488@sultan-book.localdomain>
+ <20200219214513.GL3420@suse.de>
+ <20200219224231.GA5190@sultan-book.localdomain>
+ <20200220101945.GN3420@suse.de>
+ <20200221042232.GA2197@sultan-book.localdomain>
+ <20200221080737.GK20509@dhcp22.suse.cz>
+ <20200221210824.GA3605@sultan-book.localdomain>
+From:   Dave Hansen <dave.hansen@intel.com>
+Openpgp: preference=signencrypt
+Autocrypt: addr=dave.hansen@intel.com; keydata=
+ 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
+Message-ID: <6800bdf1-3631-65c9-5664-e4f2dca5547e@intel.com>
+Date:   Fri, 21 Feb 2020 13:24:53 -0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+In-Reply-To: <20200221210824.GA3605@sultan-book.localdomain>
+Content-Type: text/plain; charset=windows-1252
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Emulate half-duplex operation and use mctrl_gpio to add support for
-RS485 tranceiver with transmit/receive switch hooked to RTS GPIO line.
-This is needed to make use of the RS485 port found on Teltonika RUT955.
+On 2/21/20 1:08 PM, Sultan Alsawaf wrote:
+> Both of these logs are attached in a tarball.
 
-Signed-off-by: Daniel Golle <daniel@makrotopia.org>
----
-v2: use bool to indicate ongoing half-duplex send, use it afterwards
-    to decide whether we've just been in a send operation.
-
- drivers/tty/serial/Kconfig       |   1 +
- drivers/tty/serial/ar933x_uart.c | 113 +++++++++++++++++++++++++++++--
- 2 files changed, 108 insertions(+), 6 deletions(-)
-
-diff --git a/drivers/tty/serial/Kconfig b/drivers/tty/serial/Kconfig
-index 52eaac21ff9f..b675924138e0 100644
---- a/drivers/tty/serial/Kconfig
-+++ b/drivers/tty/serial/Kconfig
-@@ -1279,6 +1279,7 @@ config SERIAL_AR933X
- 	tristate "AR933X serial port support"
- 	depends on HAVE_CLK && ATH79
- 	select SERIAL_CORE
-+	select SERIAL_MCTRL_GPIO if GPIOLIB
- 	help
- 	  If you have an Atheros AR933X SOC based board and want to use the
- 	  built-in UART of the SoC, say Y to this option.
-diff --git a/drivers/tty/serial/ar933x_uart.c b/drivers/tty/serial/ar933x_uart.c
-index ea12f10610b6..7e7f1398019f 100644
---- a/drivers/tty/serial/ar933x_uart.c
-+++ b/drivers/tty/serial/ar933x_uart.c
-@@ -13,6 +13,7 @@
- #include <linux/console.h>
- #include <linux/sysrq.h>
- #include <linux/delay.h>
-+#include <linux/gpio/consumer.h>
- #include <linux/platform_device.h>
- #include <linux/of.h>
- #include <linux/of_platform.h>
-@@ -29,6 +30,8 @@
- 
- #include <asm/mach-ath79/ar933x_uart.h>
- 
-+#include "serial_mctrl_gpio.h"
-+
- #define DRIVER_NAME "ar933x-uart"
- 
- #define AR933X_UART_MAX_SCALE	0xff
-@@ -47,6 +50,8 @@ struct ar933x_uart_port {
- 	unsigned int		min_baud;
- 	unsigned int		max_baud;
- 	struct clk		*clk;
-+	struct mctrl_gpios	*gpios;
-+	struct gpio_desc	*rts_gpiod;
- };
- 
- static inline unsigned int ar933x_uart_read(struct ar933x_uart_port *up,
-@@ -100,6 +105,18 @@ static inline void ar933x_uart_stop_tx_interrupt(struct ar933x_uart_port *up)
- 	ar933x_uart_write(up, AR933X_UART_INT_EN_REG, up->ier);
- }
- 
-+static inline void ar933x_uart_start_rx_interrupt(struct ar933x_uart_port *up)
-+{
-+	up->ier |= AR933X_UART_INT_RX_VALID;
-+	ar933x_uart_write(up, AR933X_UART_INT_EN_REG, up->ier);
-+}
-+
-+static inline void ar933x_uart_stop_rx_interrupt(struct ar933x_uart_port *up)
-+{
-+	up->ier &= ~AR933X_UART_INT_RX_VALID;
-+	ar933x_uart_write(up, AR933X_UART_INT_EN_REG, up->ier);
-+}
-+
- static inline void ar933x_uart_putc(struct ar933x_uart_port *up, int ch)
- {
- 	unsigned int rdata;
-@@ -125,11 +142,21 @@ static unsigned int ar933x_uart_tx_empty(struct uart_port *port)
- 
- static unsigned int ar933x_uart_get_mctrl(struct uart_port *port)
- {
--	return TIOCM_CAR;
-+	struct ar933x_uart_port *up =
-+		container_of(port, struct ar933x_uart_port, port);
-+	int ret = TIOCM_CTS | TIOCM_DSR | TIOCM_CAR;
-+
-+	mctrl_gpio_get(up->gpios, &ret);
-+
-+	return ret;
- }
- 
- static void ar933x_uart_set_mctrl(struct uart_port *port, unsigned int mctrl)
- {
-+	struct ar933x_uart_port *up =
-+		container_of(port, struct ar933x_uart_port, port);
-+
-+	mctrl_gpio_set(up->gpios, mctrl);
- }
- 
- static void ar933x_uart_start_tx(struct uart_port *port)
-@@ -140,6 +167,37 @@ static void ar933x_uart_start_tx(struct uart_port *port)
- 	ar933x_uart_start_tx_interrupt(up);
- }
- 
-+static void ar933x_uart_wait_tx_complete(struct ar933x_uart_port *up)
-+{
-+	unsigned int status;
-+	unsigned int timeout = 60000;
-+
-+	/* Wait up to 60ms for the character(s) to be sent. */
-+	do {
-+		status = ar933x_uart_read(up, AR933X_UART_CS_REG);
-+		if (--timeout == 0)
-+			break;
-+		udelay(1);
-+	} while (status & AR933X_UART_CS_TX_BUSY);
-+
-+	if (timeout == 0)
-+		dev_err(up->port.dev, "waiting for TX timed out\n");
-+}
-+
-+static void ar933x_uart_rx_flush(struct ar933x_uart_port *up)
-+{
-+	unsigned int status;
-+
-+	/* clear RX_VALID interrupt */
-+	ar933x_uart_write(up, AR933X_UART_INT_REG, AR933X_UART_INT_RX_VALID);
-+
-+	/* remove characters from the RX FIFO */
-+	do {
-+		ar933x_uart_write(up, AR933X_UART_DATA_REG, AR933X_UART_DATA_RX_CSR);
-+		status = ar933x_uart_read(up, AR933X_UART_DATA_REG);
-+	} while (status & AR933X_UART_DATA_RX_CSR);
-+}
-+
- static void ar933x_uart_stop_tx(struct uart_port *port)
- {
- 	struct ar933x_uart_port *up =
-@@ -153,8 +211,7 @@ static void ar933x_uart_stop_rx(struct uart_port *port)
- 	struct ar933x_uart_port *up =
- 		container_of(port, struct ar933x_uart_port, port);
- 
--	up->ier &= ~AR933X_UART_INT_RX_VALID;
--	ar933x_uart_write(up, AR933X_UART_INT_EN_REG, up->ier);
-+	ar933x_uart_stop_rx_interrupt(up);
- }
- 
- static void ar933x_uart_break_ctl(struct uart_port *port, int break_state)
-@@ -336,11 +393,20 @@ static void ar933x_uart_rx_chars(struct ar933x_uart_port *up)
- static void ar933x_uart_tx_chars(struct ar933x_uart_port *up)
- {
- 	struct circ_buf *xmit = &up->port.state->xmit;
-+	struct serial_rs485 *rs485conf = &up->port.rs485;
- 	int count;
-+	bool half_duplex_send = false;
- 
- 	if (uart_tx_stopped(&up->port))
- 		return;
- 
-+	if ((rs485conf->flags & SER_RS485_ENABLED) &&
-+	    (up->port.x_char || !uart_circ_empty(xmit))) {
-+		ar933x_uart_stop_rx_interrupt(up);
-+		gpiod_set_value(up->rts_gpiod, !!(rs485conf->flags & SER_RS485_RTS_ON_SEND));
-+		half_duplex_send = true;
-+	}
-+
- 	count = up->port.fifosize;
- 	do {
- 		unsigned int rdata;
-@@ -368,8 +434,14 @@ static void ar933x_uart_tx_chars(struct ar933x_uart_port *up)
- 	if (uart_circ_chars_pending(xmit) < WAKEUP_CHARS)
- 		uart_write_wakeup(&up->port);
- 
--	if (!uart_circ_empty(xmit))
-+	if (!uart_circ_empty(xmit)) {
- 		ar933x_uart_start_tx_interrupt(up);
-+	} else if (half_duplex_send) {
-+		ar933x_uart_wait_tx_complete(up);
-+		ar933x_uart_rx_flush(up);
-+		ar933x_uart_start_rx_interrupt(up);
-+		gpiod_set_value(up->rts_gpiod, !!(rs485conf->flags & SER_RS485_RTS_AFTER_SEND));
-+	}
- }
- 
- static irqreturn_t ar933x_uart_interrupt(int irq, void *dev_id)
-@@ -427,8 +499,7 @@ static int ar933x_uart_startup(struct uart_port *port)
- 		AR933X_UART_CS_TX_READY_ORIDE | AR933X_UART_CS_RX_READY_ORIDE);
- 
- 	/* Enable RX interrupts */
--	up->ier = AR933X_UART_INT_RX_VALID;
--	ar933x_uart_write(up, AR933X_UART_INT_EN_REG, up->ier);
-+	ar933x_uart_start_rx_interrupt(up);
- 
- 	spin_unlock_irqrestore(&up->port.lock, flags);
- 
-@@ -511,6 +582,21 @@ static const struct uart_ops ar933x_uart_ops = {
- 	.verify_port	= ar933x_uart_verify_port,
- };
- 
-+static int ar933x_config_rs485(struct uart_port *port,
-+				struct serial_rs485 *rs485conf)
-+{
-+	struct ar933x_uart_port *up =
-+		container_of(port, struct ar933x_uart_port, port);
-+
-+	if ((rs485conf->flags & SER_RS485_ENABLED) &&
-+	    !up->rts_gpiod) {
-+		dev_err(port->dev, "RS485 needs rts-gpio\n");
-+		return 1;
-+	}
-+	port->rs485 = *rs485conf;
-+	return 0;
-+}
-+
- #ifdef CONFIG_SERIAL_AR933X_CONSOLE
- static struct ar933x_uart_port *
- ar933x_console_ports[CONFIG_SERIAL_AR933X_NR_UARTS];
-@@ -680,6 +766,8 @@ static int ar933x_uart_probe(struct platform_device *pdev)
- 		goto err_disable_clk;
- 	}
- 
-+	uart_get_rs485_mode(&pdev->dev, &port->rs485);
-+
- 	port->mapbase = mem_res->start;
- 	port->line = id;
- 	port->irq = irq_res->start;
-@@ -690,6 +778,7 @@ static int ar933x_uart_probe(struct platform_device *pdev)
- 	port->regshift = 2;
- 	port->fifosize = AR933X_UART_FIFO_SIZE;
- 	port->ops = &ar933x_uart_ops;
-+	port->rs485_config = ar933x_config_rs485;
- 
- 	baud = ar933x_uart_get_baud(port->uartclk, AR933X_UART_MAX_SCALE, 1);
- 	up->min_baud = max_t(unsigned int, baud, AR933X_UART_MIN_BAUD);
-@@ -697,6 +786,18 @@ static int ar933x_uart_probe(struct platform_device *pdev)
- 	baud = ar933x_uart_get_baud(port->uartclk, 0, AR933X_UART_MAX_STEP);
- 	up->max_baud = min_t(unsigned int, baud, AR933X_UART_MAX_BAUD);
- 
-+	up->gpios = mctrl_gpio_init(port, 0);
-+	if (IS_ERR(up->gpios) && PTR_ERR(up->gpios) != -ENOSYS)
-+		return PTR_ERR(up->gpios);
-+
-+	up->rts_gpiod = mctrl_gpio_to_gpiod(up->gpios, UART_GPIO_RTS);
-+
-+	if ((port->rs485.flags & SER_RS485_ENABLED) &&
-+	    !up->rts_gpiod) {
-+		dev_err(&pdev->dev, "lacking rts-gpio, disabling RS485\n");
-+		port->rs485.flags &= ~SER_RS485_ENABLED;
-+	}
-+
- #ifdef CONFIG_SERIAL_AR933X_CONSOLE
- 	ar933x_console_ports[up->port.line] = up;
- #endif
--- 
-2.25.1
-
+Could you post your vmlinux somewhere?  It's hard to do much with
+perf.data without it.  The other option is to do a 'perf report' on your
+system and send the resulting text output.
