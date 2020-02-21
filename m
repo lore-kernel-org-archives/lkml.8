@@ -5,51 +5,51 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B580EC35640
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 08:49:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 691AFC35640
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 08:49:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7BCB620722
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 08:49:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3D72A24656
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 08:49:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582274981;
-	bh=uTLnBEJERTGry/cuDv6VzwuoL0a2YHXZt5HbDHNk0wA=;
+	s=default; t=1582274991;
+	bh=w72o9lcZbaZku5BCWTjN8fzU+n6bQrTtcghNJBGySBw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=rCm/sKggirQrl2S+ill2VjRq6l+KY0LvmdRc5YkIh4IXPIA7TAEW1Ru5Q58WDVOxd
-	 pmS9q1KP0Zn9d2uKYuN7qZkgxofpHr/PiCQbjsf8XH/zHJQydz7oOxqMKAE0L9yCNd
-	 aZiqylGtbP7LB8GDWQm7I23m+eoId8wa+jkL3pyQ=
+	b=asyXaErFibJIbezNQaeYsQ3TDZCizSDuqcldY7Q190FsyREIJSEGeSE5y+F9IfgvP
+	 RUTIK4KCIV3UZ56MDer1/2WPLk4LVmaEptedLAZpFiDXF9j/Bt1h4qoDf8zYOq/Rya
+	 2+KguKMWnVThqMXBrOkE7oyWXWRAimmMXE0WkFcw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388240AbgBUItj (ORCPT
+        id S2388347AbgBUItu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Feb 2020 03:49:39 -0500
-Received: from mail.kernel.org ([198.145.29.99]:40106 "EHLO mail.kernel.org"
+        Fri, 21 Feb 2020 03:49:50 -0500
+Received: from mail.kernel.org ([198.145.29.99]:39316 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727063AbgBUHpG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Feb 2020 02:45:06 -0500
+        id S1727973AbgBUHof (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 21 Feb 2020 02:44:35 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 16DD624656;
-        Fri, 21 Feb 2020 07:45:04 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 83020222C4;
+        Fri, 21 Feb 2020 07:44:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1582271105;
-        bh=uTLnBEJERTGry/cuDv6VzwuoL0a2YHXZt5HbDHNk0wA=;
+        s=default; t=1582271074;
+        bh=w72o9lcZbaZku5BCWTjN8fzU+n6bQrTtcghNJBGySBw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=XWoqsMAwUM5Mb3shTyj0gwLwHjjAY4w6T0DKPSIWiVJe8fyTRW4p2oQ7HGuKZ2WHU
-         utBwYZ7H4p7EgkW9DA3wImisSTNZwC3VVztI4M0MY76OzJ5XZ6KUB8bs9v0zGbRw/L
-         qR/vq3gqON/I7ysO1OANOlhwVqYVxlpnGXlf2YC8=
+        b=mYWAp57dY2cifJSDIFKJQ5F/V+8G+sa70SB4RsrXueP1AmWIOnV9llbWayFP3rY8y
+         vmhVfCZc6SeT/UDWHlmvG+1sFBWlB2AVvQLf4GmpOoA8k6PugUoUbaHcAYDm4GxaOk
+         YbkWGPGKvDJrVmZoaDvl9Xax3lO2KJpXNQfJy1NI=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Chen-Yu Tsai <wens@csie.org>,
-        Maxime Ripard <mripard@kernel.org>,
-        Sakari Ailus <sakari.ailus@linux.intel.com>,
-        Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
+        stable@vger.kernel.org, Nikola Cornij <nikola.cornij@amd.com>,
+        Jun Lei <Jun.Lei@amd.com>,
+        Rodrigo Siqueira <Rodrigo.Siqueira@amd.com>,
+        Alex Deucher <alexander.deucher@amd.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.5 042/399] media: sun4i-csi: Fix data sampling polarity handling
-Date:   Fri, 21 Feb 2020 08:36:07 +0100
-Message-Id: <20200221072406.455489326@linuxfoundation.org>
+Subject: [PATCH 5.5 029/399] drm/amd/display: Map ODM memory correctly when doing ODM combine
+Date:   Fri, 21 Feb 2020 08:35:54 +0100
+Message-Id: <20200221072405.176809360@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200221072402.315346745@linuxfoundation.org>
 References: <20200221072402.315346745@linuxfoundation.org>
@@ -62,43 +62,87 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Chen-Yu Tsai <wens@csie.org>
+From: Nikola Cornij <nikola.cornij@amd.com>
 
-[ Upstream commit cf9e6d5dbdd56ef2aa72f28c806711c4293c8848 ]
+[ Upstream commit ec5b356c58941bb8930858155d9ce14ceb3d30a0 ]
 
-The CLK_POL field specifies whether data is sampled on the falling or
-rising edge of PCLK, not whether the data lines are active high or low.
-Evidence of this can be found in the timing diagram labeled "horizontal
-size setting and pixel clock timing".
+[why]
+Up to 4 ODM memory pieces are required per ODM combine and cannot
+overlap, i.e. each ODM "session" has to use its own memory pieces.
+The ODM-memory mapping is currently broken for generic case.
 
-Fix the setting by checking the correct flag, V4L2_MBUS_PCLK_SAMPLE_RISING.
-While at it, reorder the three polarity flag checks so HSYNC and VSYNC
-are grouped together.
+The maximum number of memory pieces is ASIC-dependent, but it's always
+big enough to satisfy maximum number of ODM combines. Memory pieces
+are mapped as a bit-map, i.e. one memory piece corresponds to one bit.
+The OPTC doing ODM needs to select memory pieces by setting the
+corresponding bits, making sure there's no overlap with other OPTC
+instances that might be doing ODM.
 
-Fixes: 577bbf23b758 ("media: sunxi: Add A10 CSI driver")
-Signed-off-by: Chen-Yu Tsai <wens@csie.org>
-Acked-by: Maxime Ripard <mripard@kernel.org>
-Signed-off-by: Sakari Ailus <sakari.ailus@linux.intel.com>
-Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
+The current mapping works only for OPTC instance indexes smaller than
+3. For instance indexes 3 and up it practically maps no ODM memory,
+causing black, gray or white screen in display configs that include
+ODM on OPTC instance 3 or up.
+
+[how]
+Statically map two unique ODM memory pieces for each OPTC instance
+and piece them together when programming ODM combine mode.
+
+Signed-off-by: Nikola Cornij <nikola.cornij@amd.com>
+Reviewed-by: Jun Lei <Jun.Lei@amd.com>
+Acked-by: Rodrigo Siqueira <Rodrigo.Siqueira@amd.com>
+Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/media/platform/sunxi/sun4i-csi/sun4i_dma.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ .../gpu/drm/amd/display/dc/dcn20/dcn20_optc.c    | 16 ++++++++++++----
+ 1 file changed, 12 insertions(+), 4 deletions(-)
 
-diff --git a/drivers/media/platform/sunxi/sun4i-csi/sun4i_dma.c b/drivers/media/platform/sunxi/sun4i-csi/sun4i_dma.c
-index d6979e11a67b2..8b567d0f019bf 100644
---- a/drivers/media/platform/sunxi/sun4i-csi/sun4i_dma.c
-+++ b/drivers/media/platform/sunxi/sun4i-csi/sun4i_dma.c
-@@ -279,8 +279,8 @@ static int sun4i_csi_start_streaming(struct vb2_queue *vq, unsigned int count)
- 	       csi->regs + CSI_WIN_CTRL_H_REG);
+diff --git a/drivers/gpu/drm/amd/display/dc/dcn20/dcn20_optc.c b/drivers/gpu/drm/amd/display/dc/dcn20/dcn20_optc.c
+index 3b613fb93ef80..0162d3ffe268f 100644
+--- a/drivers/gpu/drm/amd/display/dc/dcn20/dcn20_optc.c
++++ b/drivers/gpu/drm/amd/display/dc/dcn20/dcn20_optc.c
+@@ -233,12 +233,13 @@ void optc2_set_odm_combine(struct timing_generator *optc, int *opp_id, int opp_c
+ 		struct dc_crtc_timing *timing)
+ {
+ 	struct optc *optc1 = DCN10TG_FROM_TG(optc);
+-	/* 2 pieces of memory required for up to 5120 displays, 4 for up to 8192 */
+ 	int mpcc_hactive = (timing->h_addressable + timing->h_border_left + timing->h_border_right)
+ 			/ opp_cnt;
+-	int memory_mask = mpcc_hactive <= 2560 ? 0x3 : 0xf;
++	uint32_t memory_mask;
+ 	uint32_t data_fmt = 0;
  
- 	hsync_pol = !!(bus->flags & V4L2_MBUS_HSYNC_ACTIVE_HIGH);
--	pclk_pol = !!(bus->flags & V4L2_MBUS_DATA_ACTIVE_HIGH);
- 	vsync_pol = !!(bus->flags & V4L2_MBUS_VSYNC_ACTIVE_HIGH);
-+	pclk_pol = !!(bus->flags & V4L2_MBUS_PCLK_SAMPLE_RISING);
- 	writel(CSI_CFG_INPUT_FMT(csi_fmt->input) |
- 	       CSI_CFG_OUTPUT_FMT(csi_fmt->output) |
- 	       CSI_CFG_VSYNC_POL(vsync_pol) |
++	ASSERT(opp_cnt == 2);
++
+ 	/* TODO: In pseudocode but does not affect maximus, delete comment if we dont need on asic
+ 	 * REG_SET(OTG_GLOBAL_CONTROL2, 0, GLOBAL_UPDATE_LOCK_EN, 1);
+ 	 * Program OTG register MASTER_UPDATE_LOCK_DB_X/Y to the position before DP frame start
+@@ -246,9 +247,17 @@ void optc2_set_odm_combine(struct timing_generator *optc, int *opp_id, int opp_c
+ 	 *		MASTER_UPDATE_LOCK_DB_X, 160,
+ 	 *		MASTER_UPDATE_LOCK_DB_Y, 240);
+ 	 */
++
++	/* 2 pieces of memory required for up to 5120 displays, 4 for up to 8192,
++	 * however, for ODM combine we can simplify by always using 4.
++	 * To make sure there's no overlap, each instance "reserves" 2 memories and
++	 * they are uniquely combined here.
++	 */
++	memory_mask = 0x3 << (opp_id[0] * 2) | 0x3 << (opp_id[1] * 2);
++
+ 	if (REG(OPTC_MEMORY_CONFIG))
+ 		REG_SET(OPTC_MEMORY_CONFIG, 0,
+-			OPTC_MEM_SEL, memory_mask << (optc->inst * 4));
++			OPTC_MEM_SEL, memory_mask);
+ 
+ 	if (timing->pixel_encoding == PIXEL_ENCODING_YCBCR422)
+ 		data_fmt = 1;
+@@ -257,7 +266,6 @@ void optc2_set_odm_combine(struct timing_generator *optc, int *opp_id, int opp_c
+ 
+ 	REG_UPDATE(OPTC_DATA_FORMAT_CONTROL, OPTC_DATA_FORMAT, data_fmt);
+ 
+-	ASSERT(opp_cnt == 2);
+ 	REG_SET_3(OPTC_DATA_SOURCE_SELECT, 0,
+ 			OPTC_NUM_OF_INPUT_SEGMENT, 1,
+ 			OPTC_SEG0_SRC_SEL, opp_id[0],
 -- 
 2.20.1
 
