@@ -2,150 +2,168 @@ Return-Path: <SRS0=1210=4J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5ABFFC3565B
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 18:19:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9ECB8C35646
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 18:20:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 26EA6222C4
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 18:19:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 73FF8222C4
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 18:20:10 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b="B/Bxn87l"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="XFlHOObl"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729574AbgBUST6 (ORCPT
+        id S1729597AbgBUSUJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Feb 2020 13:19:58 -0500
-Received: from mail-wm1-f66.google.com ([209.85.128.66]:35768 "EHLO
-        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728759AbgBUST5 (ORCPT
+        Fri, 21 Feb 2020 13:20:09 -0500
+Received: from mail-lf1-f65.google.com ([209.85.167.65]:40700 "EHLO
+        mail-lf1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728759AbgBUSUJ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Feb 2020 13:19:57 -0500
-Received: by mail-wm1-f66.google.com with SMTP id b17so2903909wmb.0
-        for <linux-kernel@vger.kernel.org>; Fri, 21 Feb 2020 10:19:56 -0800 (PST)
+        Fri, 21 Feb 2020 13:20:09 -0500
+Received: by mail-lf1-f65.google.com with SMTP id c23so2156530lfi.7;
+        Fri, 21 Feb 2020 10:20:07 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=broadcom.com; s=google;
+        d=gmail.com; s=20161025;
         h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-transfer-encoding:content-language;
-        bh=wDHwJafHUYO4eJUK4woQfDUsS2PWqX2xUsdpzcXqvFo=;
-        b=B/Bxn87ldHGPpmiTejB0PK8srG8CJRhgFVKn9I55oBbSoCzibcaXDBEHoNaolzi0Mt
-         ofSZAF5YXhhDTxrcXv/eWWGU6G6/l/ES+cdyBP2XSvO03A7ZAulAFAhqGCg/mucLRFo6
-         FQfnU/k2JlRY2372nKHUW5GEwaCh6dlpk5b9c=
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=FUjaUqxyiUgON33VsY6WWwS4Yfhr7OqQL1lnqu5PDUo=;
+        b=XFlHOOblbqwr7y7riUWmwEqug0A3tmqiCYT1aImiWk4YIOXEdeoD8vDRyhLvAesFbJ
+         akRSRq4jR2D7GgD9bmsCJDojb1LogbBFiY5WDLSvOLes334uvNJB6amLH3GZPtbQjMe+
+         IlZt4Bn2QE0BmN1phR01KBoo1XjeBioy5KWyQpxE74izc0g7t+FJMB1ZaIfjR3cMibhI
+         vOvYwQKz/qazCklv10E8xlMMReYXazO5IK28wAzAYEcycZcvDg76yMujWgMWo6GHFT/g
+         Pl3AVbuCEmlMbno2SLg223SqN0wtrCwCUv0iG7F1kFFu8K/p5abwXgDxlOmsuQxqlw2X
+         HCIg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-transfer-encoding
-         :content-language;
-        bh=wDHwJafHUYO4eJUK4woQfDUsS2PWqX2xUsdpzcXqvFo=;
-        b=abX76EuhAnYH6oMch9LYiu4aaNlZC8AHA1sodZeCkiRfbJXW5olNS348Mt1XCutehy
-         Qb7CiHDPlFPPKss66zPL3yNsv+iEoypekjiDrDtTsGlQECaTnULiwcCCzF9SxaHINmbN
-         nYcL1hITcuBAg8z4JmLepYwbpIEMehaXEYA5R3kLMCafeopJlrnyptxeBELCgeIgk+AZ
-         zjtEHuhQfRUvDpY1ubYDArqBJufw/qRpKc/1cuIs76Th4O005LsjSpBmTJXEgEQATOz7
-         OtTZAt4E2/yZuk553l8yQdKMorwbwfDibGGHyflz4802295pzsB1f9oALsqrw9JITFR/
-         39Jg==
-X-Gm-Message-State: APjAAAUnrGn4RHaUePzGaBmfovpSjeWHpHeGMwt9lcgMtY2b/FOAaL5F
-        gN1b302cpZDVzxOC2CceGjXmKQ==
-X-Google-Smtp-Source: APXvYqzQllr5uOwYGgFCk0oHK40yf7h67oQJx51bljL82rI3X++tkuZFqlo3TgkHXjrZ1TXYNvDhLg==
-X-Received: by 2002:a7b:c7d2:: with SMTP id z18mr5182272wmk.160.1582309195576;
-        Fri, 21 Feb 2020 10:19:55 -0800 (PST)
-Received: from [10.136.13.65] ([192.19.228.250])
-        by smtp.gmail.com with ESMTPSA id p5sm4789500wrt.79.2020.02.21.10.19.46
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=FUjaUqxyiUgON33VsY6WWwS4Yfhr7OqQL1lnqu5PDUo=;
+        b=rLoQzM/9meEiikkuEcmnvjNMZBhlkwyEQLgqbIWvkXJKOnIkhp6rNNiZKNJgZ5gHfz
+         qx7x+0R6JMZit6V3NWP/etJfpB+xjeqy8UE/VCKfx1cjV/rZ18B15vjvGCHSN5fz0Tbk
+         5QBuKKFmh+K4ddUzUGMdjEiEJ4fZKKQdPagXmJXdiHdoMVtDpLUjQ1DJQofto5jb3uA2
+         SwQz0OL6l3Qk8bVtXXPlL3GJOTtNMacPru9i6coyB5h3F+8AYHE0Hc2pFPkqrHwQY2YB
+         pK/Sjh9O43sOTlFBFWYEiUoEYw/vIvHscduC9FElraob4wfW784hOGADqyEdLlsfJt6l
+         k9DQ==
+X-Gm-Message-State: APjAAAXLQy9NQKaLEvVJZqGmMZMprn0vQnfx8g1OdzRgO2IO0iez6Ahb
+        4IbdRxVUyxCogJKaMhXDGh07uBlt
+X-Google-Smtp-Source: APXvYqyT3JSqBAYUvkzb+dwmrCpPPqoj21helZR6dyy6a3B/se73aYcbnsLf0Y0Lj0wzBasjk0VtMg==
+X-Received: by 2002:ac2:434f:: with SMTP id o15mr3226832lfl.86.1582309206012;
+        Fri, 21 Feb 2020 10:20:06 -0800 (PST)
+Received: from [192.168.2.145] (79-139-233-37.dynamic.spd-mgts.ru. [79.139.233.37])
+        by smtp.googlemail.com with ESMTPSA id d26sm2037966lfa.44.2020.02.21.10.20.04
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 21 Feb 2020 10:19:51 -0800 (PST)
-Subject: Re: [PATCH v2 6/7] misc: bcm-vk: add Broadcom VK driver
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     Luis Chamberlain <mcgrof@kernel.org>,
-        David Brown <david.brown@linaro.org>,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        Shuah Khan <shuah@kernel.org>, bjorn.andersson@linaro.org,
-        Shuah Khan <skhan@linuxfoundation.org>,
-        Arnd Bergmann <arnd@arndb.de>,
-        "Rafael J . Wysocki" <rafael@kernel.org>,
-        linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org,
-        BCM Kernel Feedback <bcm-kernel-feedback-list@broadcom.com>,
-        Olof Johansson <olof@lixom.net>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Dan Carpenter <dan.carpenter@oracle.com>,
-        Colin Ian King <colin.king@canonical.com>,
-        Kees Cook <keescook@chromium.org>,
-        Takashi Iwai <tiwai@suse.de>, linux-kselftest@vger.kernel.org,
-        Andy Gross <agross@kernel.org>,
-        Desmond Yan <desmond.yan@broadcom.com>,
-        James Hu <james.hu@broadcom.com>
-References: <20200220004825.23372-1-scott.branden@broadcom.com>
- <20200220004825.23372-7-scott.branden@broadcom.com>
- <20200220074711.GA3261162@kroah.com>
-From:   Scott Branden <scott.branden@broadcom.com>
-Message-ID: <ee53fe6f-53de-87c0-db16-989cc15abbce@broadcom.com>
-Date:   Fri, 21 Feb 2020 10:19:44 -0800
+        Fri, 21 Feb 2020 10:20:05 -0800 (PST)
+Subject: Re: [PATCH v9 09/17] arm: tegra20: cpuidle: Handle case where
+ secondary CPU hangs on entering LP2
+To:     Daniel Lezcano <daniel.lezcano@linaro.org>
+Cc:     Thierry Reding <thierry.reding@gmail.com>,
+        Jonathan Hunter <jonathanh@nvidia.com>,
+        Peter De Schrijver <pdeschrijver@nvidia.com>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        =?UTF-8?B?TWljaGHFgiBNaXJvc8WCYXc=?= <mirq-linux@rere.qmqm.pl>,
+        Jasper Korten <jja2000@gmail.com>,
+        David Heidelberg <david@ixit.cz>,
+        Peter Geis <pgwipeout@gmail.com>, linux-pm@vger.kernel.org,
+        linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20200212235134.12638-1-digetx@gmail.com>
+ <20200212235134.12638-10-digetx@gmail.com>
+ <20200221154318.GO10516@linaro.org>
+ <239a2b66-8da8-2e6c-d19d-9ed207ad0a64@gmail.com>
+ <20200221173649.GU10516@linaro.org>
+From:   Dmitry Osipenko <digetx@gmail.com>
+Message-ID: <b51f3f6b-8287-5ce8-fcaa-77cbab507618@gmail.com>
+Date:   Fri, 21 Feb 2020 21:19:59 +0300
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.1
+ Thunderbird/68.3.0
 MIME-Version: 1.0
-In-Reply-To: <20200220074711.GA3261162@kroah.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200221173649.GU10516@linaro.org>
+Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+21.02.2020 20:36, Daniel Lezcano пишет:
+> On Fri, Feb 21, 2020 at 07:56:51PM +0300, Dmitry Osipenko wrote:
+>> Hello Daniel,
+>>
+>> 21.02.2020 18:43, Daniel Lezcano пишет:
+>>> On Thu, Feb 13, 2020 at 02:51:26AM +0300, Dmitry Osipenko wrote:
+>>>> It is possible that something may go wrong with the secondary CPU, in that
+>>>> case it is much nicer to get a dump of the flow-controller state before
+>>>> hanging machine.
+>>>>
+>>>> Acked-by: Peter De Schrijver <pdeschrijver@nvidia.com>
+>>>> Tested-by: Peter Geis <pgwipeout@gmail.com>
+>>>> Tested-by: Jasper Korten <jja2000@gmail.com>
+>>>> Tested-by: David Heidelberg <david@ixit.cz>
+>>>> Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
+>>>> ---
+> 
+> [ ... ]
+> 
+>>>> +static int tegra20_wait_for_secondary_cpu_parking(void)
+>>>> +{
+>>>> +	unsigned int retries = 3;
+>>>> +
+>>>> +	while (retries--) {
+>>>> +		ktime_t timeout = ktime_add_ms(ktime_get(), 500);
+>>>
+>>> Oops I missed this one. Do not use ktime_get() in this code path, use jiffies.
+>>
+>> Could you please explain what benefits jiffies have over the ktime_get()?
+> 
+> ktime_get() is very slow, jiffies is updated every tick.
 
+But how jiffies are supposed to be updated if interrupts are disabled?
 
-On 2020-02-19 11:47 p.m., Greg Kroah-Hartman wrote:
-> On Wed, Feb 19, 2020 at 04:48:24PM -0800, Scott Branden wrote:
->> Add Broadcom VK driver offload engine.
->> This driver interfaces to the VK PCIe offload engine to perform
->> should offload functions as video transcoding on multiple streams
->> in parallel.  VK device is booted from files loaded using
->> request_firmware_into_buf mechanism.  After booted card status is updated
->> and messages can then be sent to the card.
->> Such messages contain scatter gather list of addresses
->> to pull data from the host to perform operations on.
-> Why is this a tty driver?
-We have a tty driver here as there are (multiple) console interfaces to 
-the card.
-The only viable interface to the card is through the PCIe bus.  We can't 
-hook up cables to the card to get at the consoles.
-As such we implemented a tty driver to access the console via a circular 
-buffer in PCIe BAR space.
+Aren't jiffies actually slower than ktime_get() because jiffies are
+updating every 10/1ms (depending on CONFIG_HZ)?
 
-It is extremely useful.  You get console access to virtual serial ports 
-connected to each processor inside the VK SoC.
-Future enhancement is to connect the tty driver to use an MSIX interrupt 
-rather than polling.
-Once that is done lrz/sz transfers will be much quicker.  I'd also look 
-at if I could use ser2net to get network access
-for the processors on the VK SoC over this interface as well.
->
-> Have you worked with the V4L developers to tie this into the proper
-> in-kernel apis for this type of functionality?
-We looked at the V4L model doesn't have any support for anything we are 
-doing in this driver.
-We also want a driver that doesn't care about video.  It could be 
-offloading crypto or other operations.
-We talked with Olof about all of this previously and he said leave it as 
-a misc driver for now.
-He was going to discuss at linux plumbers conference that we need some 
-sort of offload engine model that such devices could fit into.
-> Using a tty driver seems like the totally incorrect way to do this, what
-> am I missing?
-tty driver is used to provide console access to the processors running 
-on vk.
-Data is sent using the bcm_vk_msg interface by read/write operations 
-from user space.
-VK then gets the messages and DMA's the data to/from host memory when 
-needed to process.
->
-> Also, do not make up random error values, you return "-1" a lot here,
-> that is not ok.  Please fix up to return the correct -Ewhatever values
-> instead.
-OK.
->
-> thanks,
->
-> greg k-h
+We're kinda interesting here in getting into deep-idling state as quick
+as possible. I was checking how much time takes the busy-loop below and
+it takes ~40-150us in average, which is good enough.
 
+>>>> +
+>>>> +		/*
+>>>> +		 * The primary CPU0 core shall wait for the secondaries
+>>>> +		 * shutdown in order to power-off CPU's cluster safely.
+>>>> +		 * The timeout value depends on the current CPU frequency,
+>>>> +		 * it takes about 40-150us  in average and over 1000us in
+>>>> +		 * a worst case scenario.
+>>>> +		 */
+>>>> +		do {
+>>>> +			if (tegra_cpu_rail_off_ready())
+>>>> +				return 0;
+>>>> +
+>>>> +		} while (ktime_before(ktime_get(), timeout));
+>>>
+>>> So this loop will aggresively call tegra_cpu_rail_off_ready() and retry 3
+>>> times. The tegra_cpu_rail_off_ready() function can be called thoushand of times
+>>> here but the function will hang 1.5s :/
+>>>
+>>> I suggest something like:
+>>>
+>>> 	while (retries--i && !tegra_cpu_rail_off_ready()) 
+>>> 		udelay(100);
+>>>
+>>> So <retries> calls to tegra_cpu_rail_off_ready() and 100us x <retries> maximum
+>>> impact.
+>> But udelay() also results into CPU spinning in a busy-loop, and thus,
+>> what's the difference?
+> 
+> busy looping instead of register reads with all the hardware things involved behind.
+
+Please notice that this code runs only on an older Cortex-A9/A15, which
+doesn't support WFE for the delaying, and thus, CPU always busy-loops
+inside udelay().
+
+What about if I'll add cpu_relax() to the loop? Do you think it it could
+have any positive effect?
