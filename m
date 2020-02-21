@@ -2,90 +2,194 @@ Return-Path: <SRS0=1210=4J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CB06FC35646
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 10:51:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DEF04C35646
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 10:53:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9E3C220659
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 10:51:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B5B2920659
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 10:53:19 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727655AbgBUKvc (ORCPT
+        id S1727787AbgBUKxS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Feb 2020 05:51:32 -0500
-Received: from mail-ed1-f68.google.com ([209.85.208.68]:44230 "EHLO
-        mail-ed1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726100AbgBUKvc (ORCPT
+        Fri, 21 Feb 2020 05:53:18 -0500
+Received: from metis.ext.pengutronix.de ([85.220.165.71]:45385 "EHLO
+        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726100AbgBUKxS (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Feb 2020 05:51:32 -0500
-Received: by mail-ed1-f68.google.com with SMTP id g19so1766642eds.11
-        for <linux-kernel@vger.kernel.org>; Fri, 21 Feb 2020 02:51:30 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=zUs+q2XTJgmZqzi2EcjcLPs/D8n9r+lfPhLqHZHggX8=;
-        b=qaOMEFly+VIZ3jBwOpxItwRZJY5WKn4eytSjLoSz4UPLqkzHqLuiYCqfGkVZfRlmWn
-         tcUVsyxBI2rzzIv0S8ZZtcRcvF/DMl37kwQlwRN8rFJC98XIrxzCYRsz4frmZo10LLeq
-         Mysw1ykO1aptCPiedwgsVkcs6cQO1B0CBqHMZcugSUqKRcZkFJMvKsnxq2uJKzY0l4vG
-         5A7RUwBwkICx65rVgG4vK86RQKWmh4h1YIXCbc2gNSBmVpiJGA8ZO/I70HKvi2nDgAZI
-         3R0QXre21vhUC3lbdZCDUqEnOXxaAfaXy+MlhR0+tXzp7HJJ3UVFy9zqw48mhdjEKI5C
-         gqTg==
-X-Gm-Message-State: APjAAAUH2AY4QN4IU2IQ8GRHfeP5/nhRzmll9NpgZW4xPDlXKJsMHStw
-        BPAaYeRhURIAwFuP3I/LNZc=
-X-Google-Smtp-Source: APXvYqy+xFFz5cPNCaLt7lvgI1tU3VcFQg84RwQOmXrW1oEnb9aeBDNR9AkCB/KBhy3CIMAXyx2tEw==
-X-Received: by 2002:a17:906:c444:: with SMTP id ck4mr32964085ejb.224.1582282290179;
-        Fri, 21 Feb 2020 02:51:30 -0800 (PST)
-Received: from a483e7b01a66.ant.amazon.com (54-240-197-235.amazon.com. [54.240.197.235])
-        by smtp.gmail.com with ESMTPSA id cw10sm176653ejb.56.2020.02.21.02.51.29
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 21 Feb 2020 02:51:29 -0800 (PST)
-Subject: Re: [Xen-devel] [PATCH] x86/mm: fix dump_pagetables with Xen PV
-To:     Juergen Gross <jgross@suse.com>, xen-devel@lists.xenproject.org,
-        x86@kernel.org, linux-kernel@vger.kernel.org
-Cc:     Peter Zijlstra <peterz@infradead.org>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        Andy Lutomirski <luto@kernel.org>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        Thomas Gleixner <tglx@linutronix.de>
-References: <20200221103851.7855-1-jgross@suse.com>
-From:   Julien Grall <julien@xen.org>
-Message-ID: <e0f82927-919b-e93b-c07f-bfe4d5b85fe9@xen.org>
-Date:   Fri, 21 Feb 2020 10:51:28 +0000
-User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.14; rv:68.0)
- Gecko/20100101 Thunderbird/68.5.0
+        Fri, 21 Feb 2020 05:53:18 -0500
+Received: from pty.hi.pengutronix.de ([2001:67c:670:100:1d::c5])
+        by metis.ext.pengutronix.de with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1j55vl-0007RY-NN; Fri, 21 Feb 2020 11:53:13 +0100
+Received: from ukl by pty.hi.pengutronix.de with local (Exim 4.89)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1j55vk-0002Kq-1Q; Fri, 21 Feb 2020 11:53:12 +0100
+Date:   Fri, 21 Feb 2020 11:53:12 +0100
+From:   Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
+        <u.kleine-koenig@pengutronix.de>
+To:     Andy Shevchenko <andy.shevchenko@gmail.com>
+Cc:     Pengutronix Kernel Team <kernel@pengutronix.de>,
+        "open list:SERIAL DRIVERS" <linux-serial@vger.kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Jacek Anaszewski <jacek.anaszewski@gmail.com>,
+        Pavel Machek <pavel@ucw.cz>, Jiri Slaby <jslaby@suse.com>,
+        Linux LED Subsystem <linux-leds@vger.kernel.org>,
+        Dan Murphy <dmurphy@ti.com>
+Subject: Re: [PATCH v6 1/4] lib: new helper kstrtodev_t()
+Message-ID: <20200221105311.qxy3q7sf5owze2na@pengutronix.de>
+References: <20200213091600.554-1-uwe@kleine-koenig.org>
+ <20200213091600.554-2-uwe@kleine-koenig.org>
+ <CAHp75VcStj5sE3f0uK2deOWC=ojfx-z1fbrh6Lu6jAor9F9PgA@mail.gmail.com>
+ <20200220074901.ohcrisjgd26555ya@pengutronix.de>
+ <CAHp75VcxXWputX1y90t8f-c0a3dw2CHU6=ebQ+o6e8Z1GymiDw@mail.gmail.com>
+ <20200220105718.eoevd3kb63zzrotu@pengutronix.de>
+ <CAHp75Vd3KN81qxOWJQ7v=GimSLtVymur_iPsf91pka1STc1nfA@mail.gmail.com>
+ <20200220140101.frlxklnv6x3uhzow@pengutronix.de>
+ <CAHp75VdD5rJMBqH-YwGKuM5EHUXxeGAon6TfPwq_YxWGzkdrtQ@mail.gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <20200221103851.7855-1-jgross@suse.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-GB
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAHp75VdD5rJMBqH-YwGKuM5EHUXxeGAon6TfPwq_YxWGzkdrtQ@mail.gmail.com>
+User-Agent: NeoMutt/20170113 (1.7.2)
+X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c5
+X-SA-Exim-Mail-From: ukl@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Juergen,
+Hello Andy,
 
-On 21/02/2020 10:38, Juergen Gross wrote:
-> Commit 2ae27137b2db89 ("x86: mm: convert dump_pagetables to use
-> walk_page_range") broke Xen PV guests as the hypervisor reserved hole
-> in the memory map was not taken into account.
+On Fri, Feb 21, 2020 at 10:42:29AM +0200, Andy Shevchenko wrote:
+> On Thu, Feb 20, 2020 at 4:01 PM Uwe Kleine-König
+> <u.kleine-koenig@pengutronix.de> wrote:
+> > > > Also I don't understand yet, what you want me to do.
+> > >
+> > > I have issues with kstrto() not playing with simple and single numbers
+> > > (boolean is a special case, but still a number at the end).
+> >
+> > A dev_t is also a number in the end.
 > 
-> Fix that by starting the kernel range only at GUARD_HOLE_END_ADDR.
+> My point (when I added single) is 1:1 map. dev_t is not.
+
+I don't agree. The mapping is quite similar, the only difference is that
+you cannot write 47:11 in C source code to get an instance of dev_t.
+(But you can write MKDEV(47, 11) which is close but IMHO unsuitable for
+the sysfs interface.)
+
+Other than that it's just that kstrtoul does
+"49283083" -> 10111100000000000000001011 while kstrtodev_t does
+"47:11" -> 10111100000000000000001011.
+
+(nitpick: it's both not 1:1 as "0x2f0000b" maps to the same as "49283083",
+but ...)
+
+> > > In b) case, add to the commit message how many potential _existing_
+> > > users may be converted to this.
+> >
+> > <sarcasm>Will use 9f6158946987a5ce3f16da097d18f240a89db417 as a good
+> > example how to do that.</sarcasm>
 > 
-> Fixes: 2ae27137b2db89 ("x86: mm: convert dump_pagetables to use walk_page_range")
-> Reported-by: Julien Grall <julien@xen.org>
-> Signed-off-by: Juergen Gross <jgross@suse.com>
+> I didn't get it. There are _existing_ users in the kernel for that
+> functionality, At least two are using it right now.
 
-I can confirm the crash has now disappeared:
+Yeah, this was just me being grumpy about "add to the commit message how
+many potential _existing_ users may be converted". See the output of
 
-Tested-by: Julien Grall <julien@xen.org>
+	git grep '\<int_pow\>' 9f6158946987a5ce3f16da097d18f240a89db417^
 
-Cheers,
+.
+
+> > [...]
+> > I think what is needed here to satisfy us both is a set of functions like:
+> >
+> >         int buftoul(const char *buf, char **endp, unsigned long *result)
+> >
+> > which does proper range checking (by not consuming chars that are too
+> > much) and still provides an endp pointer that allows to make use of this
+> > function to parse types that are represented by more than a plain
+> > integer.
+> 
+> Yeah, https://xkcd.com/927/.
+
+With the difference that if we introduce a new standard we can
+effectively kill the older ones. And that you now work towards
+undeprecating simple_str* seems to confirm that we don't have the one
+standard to rule them all yet.
+
+=====
+
+So, I'm trying to summarize the things we agree about and our
+differences to maybe help finding an agreement. Trying to be objective
+until the ==== below.
+
+I think we agree about:
+
+ - The dev_t specification provided by a user via sysfs should be parsed
+   in a strict way.
+
+ - A helper that takes a string as argument and yields a dev_t or an
+   error is wanted.
+
+The points we don't agree about yet are:
+
+ a) naming of the function
+    Uwe: It fits well into kstrto*(), so kstrtodev_t()
+    Andy: It doesn't fit and feels like a layer violation
+
+ b) Where to put the function
+    Uwe: Put it into a global place for others to find
+    Andy: Put it near the (for now) single user.
+    (not sure this is really your position here)
+
+ c) Helpers used to implement the str-to-dev_t helper
+    Uwe: calling the already existing _parse_integer twice is fine
+    Andy: let's create a helper that parses two integers with a given
+          separator
+
+====
+
+I don't feel very strong about b), and could live with putting it near
+the led trigger until a new user appears. Concerning a) I still think it
+should have a name that should be obvious enough that a potential new
+user finds it. And given that kstrto* already contains functions
+converting strings to a given type this feels right for me. Andy
+didn't suggest a definitive name, only string_* namespace. This is quite
+crowded, the best representatives are probably the ones declared in
+include/linux/string_helpers.h.
+
+I looked a bit around for potential users of str-to-dev_t and
+parse-two-integers. I found none for str-to-dev_t and only
+dname_to_vma_addr() for the parse-two-integers helper. (But for
+parse-two-integers the problem might be that I missed some as I don't
+have a good idea how to grep for these.)
+
+dname_to_vma_addr() takes a string in format "%lx-%lx", interprets the
+numbers as base16 without 0x prefix and leading zeros and doesn't accept
+a trailing \n. Sounds like a quest for someone being really motivated to
+cover both (i.e. dname_to_vma_addr() and str-to-dev_t) in a single
+versatile function.
+
+Another way out would be to not take a dev_t from user-space to
+determine the tty, but a name and use tty_dev_name_to_number() to get
+the dev_t. (Which would add a second user to this globally exported
+function. (The only other user is in staging.) :-)
+
+I don't know how we can find an agreement, maybe we'd need some input
+by someone else? There are quite some people who get this mail, maybe
+someone read 'til here and cares enough to comment?
+
+Best regards
+Uwe
 
 -- 
-Julien Grall
+Pengutronix e.K.                           | Uwe Kleine-König            |
+Industrial Linux Solutions                 | https://www.pengutronix.de/ |
