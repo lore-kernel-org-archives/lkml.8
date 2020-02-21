@@ -2,138 +2,160 @@ Return-Path: <SRS0=1210=4J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9A690C35646
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 18:42:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5BFECC35646
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 18:42:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 70DD8208E4
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 18:42:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3407C208E4
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 18:42:43 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="lYmXDNa0"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="hCV5wWMM"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729542AbgBUSmg (ORCPT
+        id S1729615AbgBUSmm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Feb 2020 13:42:36 -0500
-Received: from mail-lj1-f196.google.com ([209.85.208.196]:46770 "EHLO
-        mail-lj1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726150AbgBUSmf (ORCPT
+        Fri, 21 Feb 2020 13:42:42 -0500
+Received: from mail-pg1-f194.google.com ([209.85.215.194]:40824 "EHLO
+        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726150AbgBUSml (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Feb 2020 13:42:35 -0500
-Received: by mail-lj1-f196.google.com with SMTP id x14so3184239ljd.13;
-        Fri, 21 Feb 2020 10:42:33 -0800 (PST)
+        Fri, 21 Feb 2020 13:42:41 -0500
+Received: by mail-pg1-f194.google.com with SMTP id z7so1407176pgk.7
+        for <linux-kernel@vger.kernel.org>; Fri, 21 Feb 2020 10:42:40 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=uxWqAKH0hMLsDN81qJeO9ImscElDpY2jN3fTSj4y32U=;
-        b=lYmXDNa0FPwfYKQ711T2/bwN6XnaLTXXtmeBrqym+hsYRnFLHsYGWfQDuEU/Auioma
-         njUTHlTMGxK8VBgNdS2pdSFyKhKti5CApNH5cBcxv6XJyY5tXtyq7t+9OEWHRhcEgCoy
-         VRZkWxsjFLt53du5yxpJ/ymM6U/mF90jyU+XphWM9ueR2zSiGBWFZztWi9AMo0JI9Gd2
-         HH44rxfzE4hRXiQ1UrQtZjUY+eBKfH2dCCDpetMrevtSofatQcrHshyzdHr2w3pqNEfD
-         sq1Yb6/AImLDgFBerYNuK9TE+B0I3SKx1niKYwXBh0ToEcWpY1T++xVr2YE3Oj69EQVF
-         e2KQ==
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=/zFjPXs4Y0NII72nGSRDk19t/a2aSWdxIBmz8i14jj8=;
+        b=hCV5wWMM4cj4NHSEYugwASyRMDbDo8/O1XzigZpry9yvw78/0/WW0Zb/+PByjS+dnS
+         t39vasXj+xV1yHSE5KV+Xg0cfO2Sh4INtkPkmpucjn6/cXEqrtlimCp6n6sEJ9UD9HQK
+         9+RCkL9Bk6a166KPk86lHBeTL5ZnN6W+l3Lt/VmwoKdM/Amn8yACwR6D3ArLlzj+wceT
+         8RX1nmyINH2kFfdrrhn3gBMqlirmWfIpji+GYK7I3GEelOiJ/2fb6BMG+Uu/h/5WFl7z
+         EMJ60wbsOd5mb5AqH/XDNafeGkYZ9BZP9EMQTkCX3JZvQDa4Yx0MXubWmu/hWJ6pIhLu
+         1Vjg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=uxWqAKH0hMLsDN81qJeO9ImscElDpY2jN3fTSj4y32U=;
-        b=ZOpKDXdg16sEF+s5Muv9TudyeYoKjHeHJqKfGC6+hGLv6wcbGNMDGi5yT6L6kxbBw5
-         oNukJq1nvQdOYDmtyqP7A4mlzz2L94EajDfixCmAlokg0cZv22KyvTJf0tKEacXbTj+p
-         emUhTtcwEUJTngnbdwX9tQmbzlrIHK2CKUafLOO873A9eX6G6mdH39SLY1QBxr0FYiSC
-         LYykftv8xspHcyFQyU4dMV8ZJma/uxDa44Q0ELm9PX3STKiBz2xI67+ejDSamGY6A3LS
-         Es8rypGJoxmS8JUiimzPfjsZNm3VL/am1Cl5bD6rFIUGdw2Bg6CtyTiWVvtc3IYz+Lim
-         1CRw==
-X-Gm-Message-State: APjAAAUXe5Gvt+zsRPGROzA0sIw5gkNCLmLztcHAGUZPJWGTEuUuFYWN
-        GMPQMD0QoJBoFKFkB5z8mV0HJc7N
-X-Google-Smtp-Source: APXvYqxyZh+UjK4x0WMgy3frQUZXJ18F6shiNpJcJyS0EQkx8EMh1AS7oSHNf95niqFOL4p0WRcAUQ==
-X-Received: by 2002:a2e:9a93:: with SMTP id p19mr22973592lji.177.1582310551964;
-        Fri, 21 Feb 2020 10:42:31 -0800 (PST)
-Received: from [192.168.2.145] (79-139-233-37.dynamic.spd-mgts.ru. [79.139.233.37])
-        by smtp.googlemail.com with ESMTPSA id x29sm2386819lfg.45.2020.02.21.10.42.30
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 21 Feb 2020 10:42:31 -0800 (PST)
-Subject: Re: [PATCH v9 05/17] ARM: tegra: Propagate error from
- tegra_idle_lp2_last()
-To:     Daniel Lezcano <daniel.lezcano@linaro.org>
-Cc:     Thierry Reding <thierry.reding@gmail.com>,
-        Jonathan Hunter <jonathanh@nvidia.com>,
-        Peter De Schrijver <pdeschrijver@nvidia.com>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        =?UTF-8?B?TWljaGHFgiBNaXJvc8WCYXc=?= <mirq-linux@rere.qmqm.pl>,
-        Jasper Korten <jja2000@gmail.com>,
-        David Heidelberg <david@ixit.cz>,
-        Peter Geis <pgwipeout@gmail.com>, linux-pm@vger.kernel.org,
-        linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20200212235134.12638-1-digetx@gmail.com>
- <20200212235134.12638-6-digetx@gmail.com> <20200221151612.GJ10516@linaro.org>
- <1a8c81ab-6f6a-8221-6a4e-c080ba595836@gmail.com>
- <20200221174033.GV10516@linaro.org>
-From:   Dmitry Osipenko <digetx@gmail.com>
-Message-ID: <535bff1a-cb38-a36e-4c8e-1e656618588e@gmail.com>
-Date:   Fri, 21 Feb 2020 21:42:30 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.3.0
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=/zFjPXs4Y0NII72nGSRDk19t/a2aSWdxIBmz8i14jj8=;
+        b=qvdfUQuVZmP/BYwIbcZZT3WeTkmSbUZ98RNcKLWVNh1DD+GIeFH3j/dBdBi1oqeC5V
+         uDXwQk6NR/TKoBj8LtnwwHkKogZCvq8WgjPgdEsdC/qJnPc6Y8mxfwldbYkry6L2gQFJ
+         z7LcGBH0f+6ouGoY4CSWzdrySq6hObMSBSkl3EBUzDWfAUuYli5PjhXDYQSGeyoqlLMp
+         uRgGia+QtsX7YQgxoJ8f/gh46K+3ux9oqeczaEcTBGnagk3quz+jYxOGmeZJjLSwYc9g
+         ZMQqgmy7p+e74KaI8Vhf7tpu+w4YOUE3D22uAb8u5Qus9w1fFaZlcsOrd3f/8jhowSyJ
+         XICw==
+X-Gm-Message-State: APjAAAXPVWgii0B6agVAYZawl0gEU+aUQ0Piwe81uQiW9orMSlsTKvjw
+        7ra0qkmoQyH/WctWkhSnyDvZKw==
+X-Google-Smtp-Source: APXvYqwFclKSbXXs14coB+cqHxC3U5IbNr0OkYond0+G3XM8i02Nr2HaYjczAmI5EBskNHRghc+wiQ==
+X-Received: by 2002:a63:fe4d:: with SMTP id x13mr38950714pgj.147.1582310559562;
+        Fri, 21 Feb 2020 10:42:39 -0800 (PST)
+Received: from xps15 (S0106002369de4dac.cg.shawcable.net. [68.147.8.254])
+        by smtp.gmail.com with ESMTPSA id x28sm3181371pgc.83.2020.02.21.10.42.37
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 21 Feb 2020 10:42:38 -0800 (PST)
+Date:   Fri, 21 Feb 2020 11:42:36 -0700
+From:   Mathieu Poirier <mathieu.poirier@linaro.org>
+To:     peng.fan@nxp.com
+Cc:     ohad@wizery.com, bjorn.andersson@linaro.org, robh+dt@kernel.org,
+        shawnguo@kernel.org, s.hauer@pengutronix.de, kernel@pengutronix.de,
+        festevam@gmail.com, linux-imx@nxp.com,
+        linux-remoteproc@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 3/9] remoteproc: add support to skip firmware load when
+ recovery
+Message-ID: <20200221184236.GA10368@xps15>
+References: <1582097265-20170-1-git-send-email-peng.fan@nxp.com>
+ <1582097265-20170-4-git-send-email-peng.fan@nxp.com>
 MIME-Version: 1.0
-In-Reply-To: <20200221174033.GV10516@linaro.org>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1582097265-20170-4-git-send-email-peng.fan@nxp.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-21.02.2020 20:40, Daniel Lezcano пишет:
-> On Fri, Feb 21, 2020 at 08:21:41PM +0300, Dmitry Osipenko wrote:
->> 21.02.2020 18:16, Daniel Lezcano пишет:
->>> On Thu, Feb 13, 2020 at 02:51:22AM +0300, Dmitry Osipenko wrote:
->>>> Technically cpu_suspend() may fail and it's never good to lose information
->>>> about failure. For example things like cpuidle core could correctly sample
->>>> idling time in the case of failure.
->>>>
->>>> Acked-by: Peter De Schrijver <pdeschrijver@nvidia.com>
->>>> Tested-by: Peter Geis <pgwipeout@gmail.com>
->>>> Tested-by: Jasper Korten <jja2000@gmail.com>
->>>> Tested-by: David Heidelberg <david@ixit.cz>
->>>> Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
->>>> ---
->>>
->>> [ ... ]
->>>
->>>>  	cpu_cluster_pm_enter();
->>>>  	suspend_cpu_complex();
->>>>  
->>>> -	cpu_suspend(PHYS_OFFSET - PAGE_OFFSET, &tegra_sleep_cpu);
->>>> +	err = cpu_suspend(PHYS_OFFSET - PAGE_OFFSET, &tegra_sleep_cpu);
->>>>  
->>>>  	/*
->>>>  	 * Resume L2 cache if it wasn't re-enabled early during resume,
->>>> @@ -208,6 +210,8 @@ void tegra_idle_lp2_last(void)
->>>>  
->>>>  	restore_cpu_complex();
->>>
->>> If the cpu_suspend fails, does restore_cpu_complex() need to be called ?
->>
->> Yes, because suspend_cpu_complex() didn't fail. I don't see any reason
->> why restore_cpu_complex() shouldn't be called, please clarify yours thought.
+Hi Peng,
+
+On Wed, Feb 19, 2020 at 03:27:39PM +0800, peng.fan@nxp.com wrote:
+> From: Peng Fan <peng.fan@nxp.com>
 > 
-> If the suspend fails, the power down does not happen, thus the logic is not
-> lost and then it not necessary to restore something which has not been lost.
+> Remote processor such as M4 inside i.MX8QXP is not handled by Linux
+> when it is configured to run inside its own hardware partition by
+> system control unit(SCU). So even remote processor crash reset, it is
+> handled by SCU, not linux. To such case, firmware load should be
+> ignored, So introduce skip_fw_load_recovery and platform driver
+> should set it if needed.
+
+For now I will not comment on the code - I just need clarifications on the
+scenario.
+
+In the specific case you are trying to address here, I understand that when the
+M4 crashes, the SCU will recognize that and reload the MCU firmware. Does the
+SCU also start the MCU or is that left to the remoteproc subsystem?
+
+Thanks,
+Mathieu
+
 > 
-> I don't know the hardware details, so that may be partially correct.
-
-At quick glance, the restore_cpu_complex() is only used for restoring
-the GIC's state on Tegra.
-
-I don't think it's really worth the effort to handle
-restore_cpu_complex() specially in a case of the error condition because
-the chance that the error will ever happen is very small and restoring
-the cluster's state won't cause any trouble in that case.
-
-Let's keep this patch as-is for simplicity :)
+> Signed-off-by: Peng Fan <peng.fan@nxp.com>
+> ---
+>  drivers/remoteproc/remoteproc_core.c | 19 +++++++++++--------
+>  include/linux/remoteproc.h           |  1 +
+>  2 files changed, 12 insertions(+), 8 deletions(-)
+> 
+> diff --git a/drivers/remoteproc/remoteproc_core.c b/drivers/remoteproc/remoteproc_core.c
+> index 876b5420a32b..ca310e3582bf 100644
+> --- a/drivers/remoteproc/remoteproc_core.c
+> +++ b/drivers/remoteproc/remoteproc_core.c
+> @@ -1678,20 +1678,23 @@ int rproc_trigger_recovery(struct rproc *rproc)
+>  	if (ret)
+>  		goto unlock_mutex;
+>  
+> -	/* generate coredump */
+> -	rproc_coredump(rproc);
+> +	if (!rproc->skip_fw_load_recovery) {
+> +		/* generate coredump */
+> +		rproc_coredump(rproc);
+>  
+> -	/* load firmware */
+> -	ret = request_firmware(&firmware_p, rproc->firmware, dev);
+> -	if (ret < 0) {
+> -		dev_err(dev, "request_firmware failed: %d\n", ret);
+> -		goto unlock_mutex;
+> +		/* load firmware */
+> +		ret = request_firmware(&firmware_p, rproc->firmware, dev);
+> +		if (ret < 0) {
+> +			dev_err(dev, "request_firmware failed: %d\n", ret);
+> +			goto unlock_mutex;
+> +		}
+>  	}
+>  
+>  	/* boot the remote processor up again */
+>  	ret = rproc_start(rproc, firmware_p);
+>  
+> -	release_firmware(firmware_p);
+> +	if (!rproc->skip_fw_load_recovery)
+> +		release_firmware(firmware_p);
+>  
+>  unlock_mutex:
+>  	mutex_unlock(&rproc->lock);
+> diff --git a/include/linux/remoteproc.h b/include/linux/remoteproc.h
+> index 4fd5bedab4fa..fe6ee253b385 100644
+> --- a/include/linux/remoteproc.h
+> +++ b/include/linux/remoteproc.h
+> @@ -514,6 +514,7 @@ struct rproc {
+>  	bool has_iommu;
+>  	bool auto_boot;
+>  	bool skip_fw_load;
+> +	bool skip_fw_load_recovery;
+>  	struct list_head dump_segments;
+>  	int nb_vdev;
+>  };
+> -- 
+> 2.16.4
+> 
