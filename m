@@ -4,52 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6C514C35641
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 07:54:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1F018C35641
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 07:54:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 43AAC20578
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 07:54:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DB72624673
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 07:54:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582271678;
-	bh=3wGW2BrunnOgr3U/ABE1pDq4qPc9Y4WepmDP45PXgNs=;
+	s=default; t=1582271682;
+	bh=XF+uKzWVjCkasEVsHuILsvLeJGCAQ0To9bSluYuOIk4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=sqgUpr/ViIvVMaUuKLl1b+Z1/mnvFjDsPkI0SjKdtSqaCGOOngIKF/gpCvpUcsmmr
-	 vL0RU1qut8zFmL6ToT0pWWuPlUVa6YbbHLXxGhDI3I1X7Hw7sHIG1SZ1O9twpBRMCO
-	 Wc74uCwj6Y1UMAIQlbX0/Tx3cQaYqHxJIJTN00tA=
+	b=m4dcN22qPfpXUoo7Dy4v5N5Ys5j4jO+Kwo1fNSok/RfJUiqVWz7hEurIEEUHRYxyp
+	 I5EgTMY0XM0JegAr4G3f8kAqY6gyHHz8lyfgOtbf1bEI5cXWULdi2obo+T7fj+Hpv7
+	 T6hDf07IrG6U5SMCxd1eS42xAAQKASUNR8f5Qfm4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730268AbgBUHyg (ORCPT
+        id S1729615AbgBUHyk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Feb 2020 02:54:36 -0500
-Received: from mail.kernel.org ([198.145.29.99]:53150 "EHLO mail.kernel.org"
+        Fri, 21 Feb 2020 02:54:40 -0500
+Received: from mail.kernel.org ([198.145.29.99]:53214 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728982AbgBUHye (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Feb 2020 02:54:34 -0500
+        id S1730261AbgBUHyg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 21 Feb 2020 02:54:36 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1B73420801;
-        Fri, 21 Feb 2020 07:54:32 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9939C24656;
+        Fri, 21 Feb 2020 07:54:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1582271673;
-        bh=3wGW2BrunnOgr3U/ABE1pDq4qPc9Y4WepmDP45PXgNs=;
+        s=default; t=1582271676;
+        bh=XF+uKzWVjCkasEVsHuILsvLeJGCAQ0To9bSluYuOIk4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ZRFA/JsEmfsAe394jOTZlqCMki/oGjoMzWvf0f6ByHptMbYbfe+TI1S5uA4iMGiuN
-         I56msRjAJOZtjsxhYJx19/ru1b/FHYnqPnuTViBhdkNlY9WSx7/5PrJWiFJbQMtIl7
-         eq3QIhrgh/V0OIR7sYfIQIxwG1crsjU7OOErTnZI=
+        b=op9O5d0ehflcdwWPA8WwjoAC5O2PbTCkCZL087Nh0FsSKXWw4UMtHxYiAXu9SIJYq
+         gyrcXkWCLLH1Ah65loPF5Mqze6AXVyvsrg5JvI0iC44WI/3kTenEOaHfOapOXDza5y
+         6z0/EDUKSAl9+ba8ojM5mlSzR3k8/7tGJWZMmj18=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Reto Schneider <reto.schneider@husqvarnagroup.com>,
-        Stefan Roese <sr@denx.de>, Paul Burton <paul.burton@mips.com>,
-        Paul Burton <paulburton@kernel.org>,
-        linux-mips@vger.kernel.org, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.5 255/399] MIPS: ralink: dts: gardena_smart_gateway_mt7688: Limit UART1
-Date:   Fri, 21 Feb 2020 08:39:40 +0100
-Message-Id: <20200221072427.201790516@linuxfoundation.org>
+        stable@vger.kernel.org, Dan Carpenter <dan.carpenter@oracle.com>,
+        Ben Skeggs <bskeggs@redhat.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.5 256/399] drm/nouveau/secboot/gm20b: initialize pointer in gm20b_secboot_new()
+Date:   Fri, 21 Feb 2020 08:39:41 +0100
+Message-Id: <20200221072427.298985153@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200221072402.315346745@linuxfoundation.org>
 References: <20200221072402.315346745@linuxfoundation.org>
@@ -62,38 +60,46 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Reto Schneider <reto.schneider@husqvarnagroup.com>
+From: Dan Carpenter <dan.carpenter@oracle.com>
 
-[ Upstream commit e8c192011c920517e5578d51c7aff0ecadd25de3 ]
+[ Upstream commit 3613a9bea95a1470dd42e4ed1cc7d86ebe0a2dc0 ]
 
-The radio module asserts CTS when its RX buffer has 10 bytes left.
-Putting just 8 instead of 16 bytes into the UART1 TX buffer on the Linux
-side ensures to not overflow the RX buffer on the radio module side.
+We accidentally set "psb" which is a no-op instead of "*psb" so it
+generates a static checker warning.  We should probably set it before
+the first error return so that it's always initialized.
 
-Signed-off-by: Reto Schneider <reto.schneider@husqvarnagroup.com>
-Signed-off-by: Stefan Roese <sr@denx.de>
-Cc: Paul Burton <paul.burton@mips.com>
-Signed-off-by: Paul Burton <paulburton@kernel.org>
-Cc: linux-mips@vger.kernel.org
+Fixes: 923f1bd27bf1 ("drm/nouveau/secboot/gm20b: add secure boot support")
+Signed-off-by: Dan Carpenter <dan.carpenter@oracle.com>
+Signed-off-by: Ben Skeggs <bskeggs@redhat.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/mips/boot/dts/ralink/gardena_smart_gateway_mt7688.dts | 3 +++
- 1 file changed, 3 insertions(+)
+ drivers/gpu/drm/nouveau/nvkm/subdev/secboot/gm20b.c | 5 ++---
+ 1 file changed, 2 insertions(+), 3 deletions(-)
 
-diff --git a/arch/mips/boot/dts/ralink/gardena_smart_gateway_mt7688.dts b/arch/mips/boot/dts/ralink/gardena_smart_gateway_mt7688.dts
-index aa5caaa311047..aad9a8a8669b4 100644
---- a/arch/mips/boot/dts/ralink/gardena_smart_gateway_mt7688.dts
-+++ b/arch/mips/boot/dts/ralink/gardena_smart_gateway_mt7688.dts
-@@ -177,6 +177,9 @@
- 	pinctrl-names = "default";
- 	pinctrl-0 = <&pinmux_i2s_gpio>;		/* GPIO0..3 */
+diff --git a/drivers/gpu/drm/nouveau/nvkm/subdev/secboot/gm20b.c b/drivers/gpu/drm/nouveau/nvkm/subdev/secboot/gm20b.c
+index df8b919dcf09b..ace6fefba4280 100644
+--- a/drivers/gpu/drm/nouveau/nvkm/subdev/secboot/gm20b.c
++++ b/drivers/gpu/drm/nouveau/nvkm/subdev/secboot/gm20b.c
+@@ -108,6 +108,7 @@ gm20b_secboot_new(struct nvkm_device *device, int index,
+ 	struct gm200_secboot *gsb;
+ 	struct nvkm_acr *acr;
  
-+	fifo-size = <8>;
-+	tx-threshold = <8>;
-+
- 	rts-gpios = <&gpio 1 GPIO_ACTIVE_LOW>;
- 	cts-gpios = <&gpio 2 GPIO_ACTIVE_LOW>;
- };
++	*psb = NULL;
+ 	acr = acr_r352_new(BIT(NVKM_SECBOOT_FALCON_FECS) |
+ 			   BIT(NVKM_SECBOOT_FALCON_PMU));
+ 	if (IS_ERR(acr))
+@@ -116,10 +117,8 @@ gm20b_secboot_new(struct nvkm_device *device, int index,
+ 	acr->optional_falcons = BIT(NVKM_SECBOOT_FALCON_PMU);
+ 
+ 	gsb = kzalloc(sizeof(*gsb), GFP_KERNEL);
+-	if (!gsb) {
+-		psb = NULL;
++	if (!gsb)
+ 		return -ENOMEM;
+-	}
+ 	*psb = &gsb->base;
+ 
+ 	ret = nvkm_secboot_ctor(&gm20b_secboot, acr, device, index, &gsb->base);
 -- 
 2.20.1
 
