@@ -7,47 +7,46 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8345CC35641
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 07:57:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A335FC35641
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 07:57:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4B5D9206ED
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 07:57:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6AD6D2073A
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 07:57:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582271837;
-	bh=KtHUM5HyImmGo6KestKDTwrLLid3F9tW3NA7FWlzLew=;
+	s=default; t=1582271844;
+	bh=KsMoq13yFF3jKXmzWDfs5ZlxQI1DDIftiFOworhaawU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=rm4LWnAlBP/DPb753ed9r0m9gpQG8jIeoTE7yn6yM20uuYBEjHK+OiTjSiw76e5Yx
-	 nCc70FtRISpcwfFpNI19gIEqjskdf5jfI8FLCE1mqyEc5t+i8KIFlP3zMePiXaeHfs
-	 4csc/6lMxOfjX7qolSqz1DDDotz4/I0synrl/QiI=
+	b=I3iUgd2WaXG86bIZJZRrzuTigOo4PGbjYowpoAe6hiI3B8/z/v65d4N74xEywfEPI
+	 Vk5JtHjSP5HjoSFcAAaVZKDxaiWrcCA8ei7A28CdTrUVrOQwVIMa3Elok4MgCgTRrK
+	 eOOFP2dFcVbJsqGcUL9b5tSwFzLo191JTS1bmRYw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730293AbgBUH5Q (ORCPT
+        id S1730607AbgBUH5W (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Feb 2020 02:57:16 -0500
-Received: from mail.kernel.org ([198.145.29.99]:56722 "EHLO mail.kernel.org"
+        Fri, 21 Feb 2020 02:57:22 -0500
+Received: from mail.kernel.org ([198.145.29.99]:56846 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729897AbgBUH5O (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Feb 2020 02:57:14 -0500
+        id S1729897AbgBUH5T (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 21 Feb 2020 02:57:19 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6F2C8206ED;
-        Fri, 21 Feb 2020 07:57:12 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 59226222C4;
+        Fri, 21 Feb 2020 07:57:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1582271832;
-        bh=KtHUM5HyImmGo6KestKDTwrLLid3F9tW3NA7FWlzLew=;
+        s=default; t=1582271838;
+        bh=KsMoq13yFF3jKXmzWDfs5ZlxQI1DDIftiFOworhaawU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=d5+HVXx4o1Gzya03F53825UQZnw4YtkZg0uZEj+rpIRQygg/4W/EXu0bJHWb3sOb0
-         +0+QWAyB3/ULBX5Dtcc5KGttMSmbDNMj7uF0Fo+A2Sk0QECoNBobx3782YQOKp85iU
-         YdegIWRqCzuzO4YcV8qF/Pn+PPly7C55zRdel1lc=
+        b=Mm9qvgh2UIfhg7N6gGTCQJ3flkywjI/IvTKhR5lFxWdS/P79cFrvIDEeFGoiJkJqk
+         ppW1CDDoMWRhG0AHF2Am/Mdp2hI52Ybu2rkCetacbmRq1ngjnbF1/fBr7aSyKARxMJ
+         xjSh7XzD4SbZ4cK6eWUzJoXnQVqTftdPk30+zHe0=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, kbuild test robot <lkp@intel.com>,
-        Chanwoo Choi <cw00.choi@samsung.com>,
+        stable@vger.kernel.org, Leon Romanovsky <leonro@mellanox.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.5 278/399] PM / devfreq: Add debugfs support with devfreq_summary file
-Date:   Fri, 21 Feb 2020 08:40:03 +0100
-Message-Id: <20200221072429.075862459@linuxfoundation.org>
+Subject: [PATCH 5.5 280/399] RDMA/mlx5: Dont fake udata for kernel path
+Date:   Fri, 21 Feb 2020 08:40:05 +0100
+Message-Id: <20200221072429.228909098@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200221072402.315346745@linuxfoundation.org>
 References: <20200221072402.315346745@linuxfoundation.org>
@@ -60,171 +59,167 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Chanwoo Choi <cw00.choi@samsung.com>
+From: Leon Romanovsky <leonro@mellanox.com>
 
-[ Upstream commit 490a421bc575d1bf391a6ad5b582dcfbd0037724 ]
+[ Upstream commit 4835709176e8ccf6561abc9f5c405293e008095f ]
 
-Add debugfs interface to provide debugging information of devfreq device.
-It contains 'devfreq_summary' entry to show the summary of registered
-devfreq devices as following and the additional debugfs file will be added.
-- /sys/kernel/debug/devfreq/devfreq_summary
+Kernel paths must not set udata and provide NULL pointer,
+instead of faking zeroed udata struct.
 
-[Detailed description of each field of 'devfreq_summary' debugfs file]
-- dev_name	: Device name of h/w
-- dev		: Device name made by devfreq core
-- parent_dev	: If devfreq device uses the passive governor,
-		  show parent devfreq device name. Otherwise, show 'null'.
-- governor	: Devfreq governor name
-- polling_ms	: If devfreq device uses the simple_ondemand governor,
-		  polling_ms is necessary for the period. (unit: millisecond)
-- cur_freq_Hz	: Current frequency (unit: Hz)
-- min_freq_Hz	: Minimum frequency (unit: Hz)
-- max_freq_Hz	: Maximum frequency (unit: Hz)
-
-[For example on Exynos5422-based Odroid-XU3 board]
-$ cat /sys/kernel/debug/devfreq/devfreq_summary
-dev_name                       dev        parent_dev governor        polling_ms  cur_freq_Hz  min_freq_Hz  max_freq_Hz
------------------------------- ---------- ---------- --------------- ---------- ------------ ------------ ------------
-10c20000.memory-controller     devfreq0   null       simple_ondemand          0    165000000    165000000    825000000
-soc:bus_wcore                  devfreq1   null       simple_ondemand         50    532000000     88700000    532000000
-soc:bus_noc                    devfreq2   devfreq1   passive                  0    111000000     66600000    111000000
-soc:bus_fsys_apb               devfreq3   devfreq1   passive                  0    222000000    111000000    222000000
-soc:bus_fsys                   devfreq4   devfreq1   passive                  0    200000000     75000000    200000000
-soc:bus_fsys2                  devfreq5   devfreq1   passive                  0    200000000     75000000    200000000
-soc:bus_mfc                    devfreq6   devfreq1   passive                  0    333000000     83250000    333000000
-soc:bus_gen                    devfreq7   devfreq1   passive                  0    266000000     88700000    266000000
-soc:bus_peri                   devfreq8   devfreq1   passive                  0     66600000     66600000     66600000
-soc:bus_g2d                    devfreq9   devfreq1   passive                  0    333000000     83250000    333000000
-soc:bus_g2d_acp                devfreq10  devfreq1   passive                  0    266000000     66500000    266000000
-soc:bus_jpeg                   devfreq11  devfreq1   passive                  0    300000000     75000000    300000000
-soc:bus_jpeg_apb               devfreq12  devfreq1   passive                  0    166500000     83250000    166500000
-soc:bus_disp1_fimd             devfreq13  devfreq1   passive                  0    200000000    120000000    200000000
-soc:bus_disp1                  devfreq14  devfreq1   passive                  0    300000000    120000000    300000000
-soc:bus_gscl_scaler            devfreq15  devfreq1   passive                  0    300000000    150000000    300000000
-soc:bus_mscl                   devfreq16  devfreq1   passive                  0    666000000     84000000    666000000
-
-[lkp: Reported the build error]
-Reported-by: kbuild test robot <lkp@intel.com>
-Signed-off-by: Chanwoo Choi <cw00.choi@samsung.com>
+Signed-off-by: Leon Romanovsky <leonro@mellanox.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/devfreq/devfreq.c | 82 +++++++++++++++++++++++++++++++++++++++
- 1 file changed, 82 insertions(+)
+ drivers/infiniband/hw/mlx5/main.c | 34 +++++++++++++++----------------
+ 1 file changed, 16 insertions(+), 18 deletions(-)
 
-diff --git a/drivers/devfreq/devfreq.c b/drivers/devfreq/devfreq.c
-index 554d155106a5f..e99f082d15df5 100644
---- a/drivers/devfreq/devfreq.c
-+++ b/drivers/devfreq/devfreq.c
-@@ -10,6 +10,7 @@
- #include <linux/kernel.h>
- #include <linux/kmod.h>
- #include <linux/sched.h>
-+#include <linux/debugfs.h>
- #include <linux/errno.h>
- #include <linux/err.h>
- #include <linux/init.h>
-@@ -33,6 +34,7 @@
- #define HZ_PER_KHZ	1000
- 
- static struct class *devfreq_class;
-+static struct dentry *devfreq_debugfs;
- 
- /*
-  * devfreq core provides delayed work based load monitoring helper
-@@ -1614,6 +1616,81 @@ static struct attribute *devfreq_attrs[] = {
- };
- ATTRIBUTE_GROUPS(devfreq);
- 
-+/**
-+ * devfreq_summary_show() - Show the summary of the devfreq devices
-+ * @s:		seq_file instance to show the summary of devfreq devices
-+ * @data:	not used
-+ *
-+ * Show the summary of the devfreq devices via 'devfreq_summary' debugfs file.
-+ * It helps that user can know the detailed information of the devfreq devices.
-+ *
-+ * Return 0 always because it shows the information without any data change.
-+ */
-+static int devfreq_summary_show(struct seq_file *s, void *data)
-+{
-+	struct devfreq *devfreq;
-+	struct devfreq *p_devfreq = NULL;
-+	unsigned long cur_freq, min_freq, max_freq;
-+	unsigned int polling_ms;
-+
-+	seq_printf(s, "%-30s %-10s %-10s %-15s %10s %12s %12s %12s\n",
-+			"dev_name",
-+			"dev",
-+			"parent_dev",
-+			"governor",
-+			"polling_ms",
-+			"cur_freq_Hz",
-+			"min_freq_Hz",
-+			"max_freq_Hz");
-+	seq_printf(s, "%30s %10s %10s %15s %10s %12s %12s %12s\n",
-+			"------------------------------",
-+			"----------",
-+			"----------",
-+			"---------------",
-+			"----------",
-+			"------------",
-+			"------------",
-+			"------------");
-+
-+	mutex_lock(&devfreq_list_lock);
-+
-+	list_for_each_entry_reverse(devfreq, &devfreq_list, node) {
-+#if IS_ENABLED(CONFIG_DEVFREQ_GOV_PASSIVE)
-+		if (!strncmp(devfreq->governor_name, DEVFREQ_GOV_PASSIVE,
-+							DEVFREQ_NAME_LEN)) {
-+			struct devfreq_passive_data *data = devfreq->data;
-+
-+			if (data)
-+				p_devfreq = data->parent;
-+		} else {
-+			p_devfreq = NULL;
-+		}
-+#endif
-+
-+		mutex_lock(&devfreq->lock);
-+		cur_freq = devfreq->previous_freq,
-+		get_freq_range(devfreq, &min_freq, &max_freq);
-+		polling_ms = devfreq->profile->polling_ms,
-+		mutex_unlock(&devfreq->lock);
-+
-+		seq_printf(s,
-+			"%-30s %-10s %-10s %-15s %10d %12ld %12ld %12ld\n",
-+			dev_name(devfreq->dev.parent),
-+			dev_name(&devfreq->dev),
-+			p_devfreq ? dev_name(&p_devfreq->dev) : "null",
-+			devfreq->governor_name,
-+			polling_ms,
-+			cur_freq,
-+			min_freq,
-+			max_freq);
-+	}
-+
-+	mutex_unlock(&devfreq_list_lock);
-+
-+	return 0;
-+}
-+DEFINE_SHOW_ATTRIBUTE(devfreq_summary);
-+
- static int __init devfreq_init(void)
+diff --git a/drivers/infiniband/hw/mlx5/main.c b/drivers/infiniband/hw/mlx5/main.c
+index 997cbfe4b90ce..760630c7aae71 100644
+--- a/drivers/infiniband/hw/mlx5/main.c
++++ b/drivers/infiniband/hw/mlx5/main.c
+@@ -815,6 +815,7 @@ static int mlx5_ib_query_device(struct ib_device *ibdev,
+ 				struct ib_device_attr *props,
+ 				struct ib_udata *uhw)
  {
- 	devfreq_class = class_create(THIS_MODULE, "devfreq");
-@@ -1630,6 +1707,11 @@ static int __init devfreq_init(void)
- 	}
- 	devfreq_class->dev_groups = devfreq_groups;
++	size_t uhw_outlen = (uhw) ? uhw->outlen : 0;
+ 	struct mlx5_ib_dev *dev = to_mdev(ibdev);
+ 	struct mlx5_core_dev *mdev = dev->mdev;
+ 	int err = -ENOMEM;
+@@ -828,12 +829,12 @@ static int mlx5_ib_query_device(struct ib_device *ibdev,
+ 	u64 max_tso;
  
-+	devfreq_debugfs = debugfs_create_dir("devfreq", NULL);
-+	debugfs_create_file("devfreq_summary", 0444,
-+				devfreq_debugfs, NULL,
-+				&devfreq_summary_fops);
-+
- 	return 0;
- }
- subsys_initcall(devfreq_init);
+ 	resp_len = sizeof(resp.comp_mask) + sizeof(resp.response_length);
+-	if (uhw->outlen && uhw->outlen < resp_len)
++	if (uhw_outlen && uhw_outlen < resp_len)
+ 		return -EINVAL;
+ 
+ 	resp.response_length = resp_len;
+ 
+-	if (uhw->inlen && !ib_is_udata_cleared(uhw, 0, uhw->inlen))
++	if (uhw && uhw->inlen && !ib_is_udata_cleared(uhw, 0, uhw->inlen))
+ 		return -EINVAL;
+ 
+ 	memset(props, 0, sizeof(*props));
+@@ -897,7 +898,7 @@ static int mlx5_ib_query_device(struct ib_device *ibdev,
+ 			props->raw_packet_caps |=
+ 				IB_RAW_PACKET_CAP_CVLAN_STRIPPING;
+ 
+-		if (field_avail(typeof(resp), tso_caps, uhw->outlen)) {
++		if (field_avail(typeof(resp), tso_caps, uhw_outlen)) {
+ 			max_tso = MLX5_CAP_ETH(mdev, max_lso_cap);
+ 			if (max_tso) {
+ 				resp.tso_caps.max_tso = 1 << max_tso;
+@@ -907,7 +908,7 @@ static int mlx5_ib_query_device(struct ib_device *ibdev,
+ 			}
+ 		}
+ 
+-		if (field_avail(typeof(resp), rss_caps, uhw->outlen)) {
++		if (field_avail(typeof(resp), rss_caps, uhw_outlen)) {
+ 			resp.rss_caps.rx_hash_function =
+ 						MLX5_RX_HASH_FUNC_TOEPLITZ;
+ 			resp.rss_caps.rx_hash_fields_mask =
+@@ -927,9 +928,9 @@ static int mlx5_ib_query_device(struct ib_device *ibdev,
+ 			resp.response_length += sizeof(resp.rss_caps);
+ 		}
+ 	} else {
+-		if (field_avail(typeof(resp), tso_caps, uhw->outlen))
++		if (field_avail(typeof(resp), tso_caps, uhw_outlen))
+ 			resp.response_length += sizeof(resp.tso_caps);
+-		if (field_avail(typeof(resp), rss_caps, uhw->outlen))
++		if (field_avail(typeof(resp), rss_caps, uhw_outlen))
+ 			resp.response_length += sizeof(resp.rss_caps);
+ 	}
+ 
+@@ -1054,7 +1055,7 @@ static int mlx5_ib_query_device(struct ib_device *ibdev,
+ 						MLX5_MAX_CQ_PERIOD;
+ 	}
+ 
+-	if (field_avail(typeof(resp), cqe_comp_caps, uhw->outlen)) {
++	if (field_avail(typeof(resp), cqe_comp_caps, uhw_outlen)) {
+ 		resp.response_length += sizeof(resp.cqe_comp_caps);
+ 
+ 		if (MLX5_CAP_GEN(dev->mdev, cqe_compression)) {
+@@ -1072,7 +1073,7 @@ static int mlx5_ib_query_device(struct ib_device *ibdev,
+ 		}
+ 	}
+ 
+-	if (field_avail(typeof(resp), packet_pacing_caps, uhw->outlen) &&
++	if (field_avail(typeof(resp), packet_pacing_caps, uhw_outlen) &&
+ 	    raw_support) {
+ 		if (MLX5_CAP_QOS(mdev, packet_pacing) &&
+ 		    MLX5_CAP_GEN(mdev, qos)) {
+@@ -1091,7 +1092,7 @@ static int mlx5_ib_query_device(struct ib_device *ibdev,
+ 	}
+ 
+ 	if (field_avail(typeof(resp), mlx5_ib_support_multi_pkt_send_wqes,
+-			uhw->outlen)) {
++			uhw_outlen)) {
+ 		if (MLX5_CAP_ETH(mdev, multi_pkt_send_wqe))
+ 			resp.mlx5_ib_support_multi_pkt_send_wqes =
+ 				MLX5_IB_ALLOW_MPW;
+@@ -1104,7 +1105,7 @@ static int mlx5_ib_query_device(struct ib_device *ibdev,
+ 			sizeof(resp.mlx5_ib_support_multi_pkt_send_wqes);
+ 	}
+ 
+-	if (field_avail(typeof(resp), flags, uhw->outlen)) {
++	if (field_avail(typeof(resp), flags, uhw_outlen)) {
+ 		resp.response_length += sizeof(resp.flags);
+ 
+ 		if (MLX5_CAP_GEN(mdev, cqe_compression_128))
+@@ -1120,8 +1121,7 @@ static int mlx5_ib_query_device(struct ib_device *ibdev,
+ 		resp.flags |= MLX5_IB_QUERY_DEV_RESP_FLAGS_SCAT2CQE_DCT;
+ 	}
+ 
+-	if (field_avail(typeof(resp), sw_parsing_caps,
+-			uhw->outlen)) {
++	if (field_avail(typeof(resp), sw_parsing_caps, uhw_outlen)) {
+ 		resp.response_length += sizeof(resp.sw_parsing_caps);
+ 		if (MLX5_CAP_ETH(mdev, swp)) {
+ 			resp.sw_parsing_caps.sw_parsing_offloads |=
+@@ -1141,7 +1141,7 @@ static int mlx5_ib_query_device(struct ib_device *ibdev,
+ 		}
+ 	}
+ 
+-	if (field_avail(typeof(resp), striding_rq_caps, uhw->outlen) &&
++	if (field_avail(typeof(resp), striding_rq_caps, uhw_outlen) &&
+ 	    raw_support) {
+ 		resp.response_length += sizeof(resp.striding_rq_caps);
+ 		if (MLX5_CAP_GEN(mdev, striding_rq)) {
+@@ -1164,8 +1164,7 @@ static int mlx5_ib_query_device(struct ib_device *ibdev,
+ 		}
+ 	}
+ 
+-	if (field_avail(typeof(resp), tunnel_offloads_caps,
+-			uhw->outlen)) {
++	if (field_avail(typeof(resp), tunnel_offloads_caps, uhw_outlen)) {
+ 		resp.response_length += sizeof(resp.tunnel_offloads_caps);
+ 		if (MLX5_CAP_ETH(mdev, tunnel_stateless_vxlan))
+ 			resp.tunnel_offloads_caps |=
+@@ -1186,7 +1185,7 @@ static int mlx5_ib_query_device(struct ib_device *ibdev,
+ 				MLX5_IB_TUNNELED_OFFLOADS_MPLS_UDP;
+ 	}
+ 
+-	if (uhw->outlen) {
++	if (uhw_outlen) {
+ 		err = ib_copy_to_udata(uhw, &resp, resp.response_length);
+ 
+ 		if (err)
+@@ -4771,7 +4770,6 @@ static int __get_port_caps(struct mlx5_ib_dev *dev, u8 port)
+ 	struct ib_device_attr *dprops = NULL;
+ 	struct ib_port_attr *pprops = NULL;
+ 	int err = -ENOMEM;
+-	struct ib_udata uhw = {.inlen = 0, .outlen = 0};
+ 
+ 	pprops = kzalloc(sizeof(*pprops), GFP_KERNEL);
+ 	if (!pprops)
+@@ -4781,7 +4779,7 @@ static int __get_port_caps(struct mlx5_ib_dev *dev, u8 port)
+ 	if (!dprops)
+ 		goto out;
+ 
+-	err = mlx5_ib_query_device(&dev->ib_dev, dprops, &uhw);
++	err = mlx5_ib_query_device(&dev->ib_dev, dprops, NULL);
+ 	if (err) {
+ 		mlx5_ib_warn(dev, "query_device failed %d\n", err);
+ 		goto out;
 -- 
 2.20.1
 
