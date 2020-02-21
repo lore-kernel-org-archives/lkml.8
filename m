@@ -2,165 +2,116 @@ Return-Path: <SRS0=1210=4J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2F245C35646
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 16:56:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4EA82C35657
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 16:58:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F256F208C4
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 16:56:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 249BF208C4
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 16:58:18 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="IHVHZNzz"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="EMEkTU0q"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727989AbgBUQ44 (ORCPT
+        id S1727709AbgBUQ6R (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Feb 2020 11:56:56 -0500
-Received: from mail-lf1-f65.google.com ([209.85.167.65]:44000 "EHLO
-        mail-lf1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725995AbgBUQ44 (ORCPT
+        Fri, 21 Feb 2020 11:58:17 -0500
+Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:27830 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726150AbgBUQ6Q (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Feb 2020 11:56:56 -0500
-Received: by mail-lf1-f65.google.com with SMTP id s23so1975938lfs.10;
-        Fri, 21 Feb 2020 08:56:54 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=Fwegg2HlpK4JF2aVbulA8/ftyIkohgE1V4kH8GxtBTQ=;
-        b=IHVHZNzzf0h39DqUgOalVDx2Pu+ZXDeN6kdQ/YgaTnYu4QDzYWh120ep9v/CFboKMn
-         n/4cOaZB5yVKfPdqM/LL3xKMVIHpSwX5rJZPWu7St5yzEPgHHaZK3VEMti5MpP3j7N5V
-         LPJ2wpgTgAW5TglsqgCYQU5MRo/1Y3Is/jkSFye7gO2gXwHBXKpmbYcVm49rq2+fy2WV
-         2u8xbgAS3VlDA+WFb+1tcRfmxHJnOsl6CWfYolsYAlyNFWvrBLw+l3lE5cch+VwCglqD
-         /hMM03vZUCSBGwp5MIl2jWKrty3VwNZOiCOPg+OOgUS2vc9A4LUkXSYD3+I59OkBZrsw
-         pjCQ==
+        Fri, 21 Feb 2020 11:58:16 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1582304294;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=p7XbHrCaOSwrBpqaeeYKNxlSBdnjl6OZnbi6u5hXQjU=;
+        b=EMEkTU0qiWe9uQdLUD+MoUPIklGzc2E5g1LhnD33o0lljD1Ecq/nJIfS+iXkhOPGLdfCUx
+        ATzbZqv9WdYYSo3BW+zp2kKdPtJ5SOLlQwk4nrWag8CDYeAz/yahqOS2DQORT/j3ZYcFFb
+        l6vhQyu1YzML7926LYX7W8QM+r8E/bg=
+Received: from mail-wm1-f69.google.com (mail-wm1-f69.google.com
+ [209.85.128.69]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-236-OjTbVB6iM-2wZJAt4nmYmA-1; Fri, 21 Feb 2020 11:58:08 -0500
+X-MC-Unique: OjTbVB6iM-2wZJAt4nmYmA-1
+Received: by mail-wm1-f69.google.com with SMTP id b8so2055116wmj.0
+        for <linux-kernel@vger.kernel.org>; Fri, 21 Feb 2020 08:58:07 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:subject:to:cc:references:from:message-id:date
          :user-agent:mime-version:in-reply-to:content-language
          :content-transfer-encoding;
-        bh=Fwegg2HlpK4JF2aVbulA8/ftyIkohgE1V4kH8GxtBTQ=;
-        b=lbncgQHbtQ5JB4uzoSJzAAJ9JAWAuOPl0icho8V4NIenJ9Bhx5ryN8/oo2YyCS1h+b
-         HLfmPIv3eUauy7VB3HaIORlQQqS1UFib8hV0QYoA58LUJpNC7QkeaGUGoIgWTgS2eG8P
-         zvm4CBCXT3n7VSOJNOBHAqzGYHiUuCIDjd5VAeKm9/vaLS1nVV/lPORsCJ4XhEnz7Gxe
-         WKVV5YZR2qavHTqwSimT8C8+0g0T0sEfeuGEtXIieDiPWXkVF9p9peHF1gPxOEmvBR50
-         8w2C4I/5UNGDPRkdvUvl3n7zJ75NJgrlTE7s7rTiHrTZ2+5c9KGm0tpYdQL0tP6hbHoP
-         F4+g==
-X-Gm-Message-State: APjAAAUtvIVH4LCnGfgXpTzwaR8IwXKt7M0zxz7aha/jo6bGlpdn391H
-        30Ab9lMhzC4jKzEeP5OYJE46FcYp
-X-Google-Smtp-Source: APXvYqz1KcC8BVNZ2zdpxRkUqxE5VF2zYg0axagGhwMxvk27L/dzX50vdNsq5s0e6tdgX+XYfcTvAg==
-X-Received: by 2002:ac2:52a5:: with SMTP id r5mr20491810lfm.19.1582304213465;
-        Fri, 21 Feb 2020 08:56:53 -0800 (PST)
-Received: from [192.168.2.145] (79-139-233-37.dynamic.spd-mgts.ru. [79.139.233.37])
-        by smtp.googlemail.com with ESMTPSA id n3sm1957554lfk.61.2020.02.21.08.56.52
+        bh=p7XbHrCaOSwrBpqaeeYKNxlSBdnjl6OZnbi6u5hXQjU=;
+        b=UcpE4fpEWe5f5mBSxGZBb/hoSl0JA/I4ihp1BnwZwKxBD83pMEt/jBrSsLfB5s4hP7
+         J0kpdKD+oXHEdwFZl6+yxB4Fb9Ojv4SGlaW03XrpSxR4GjfjmPUJXxVDaJoKUWOeaEoY
+         c2qsiABRTKdWPbbRlju3PW+/XxZsNGsORmM00gig7/NqBCptidjnuPkgYo+BD69pifp9
+         L7WPaH+j2udfcDltSeaz1gJNkXFRirN6zfZteyXVMblM3AYaSx+U24XSV/0C9Yi96Gio
+         EgOqSaovwW1FuQiGurFVcOexm9zjl6HCrwKYZ5b5ZeL3gACL3i4qpuJSVqdc59WdQSDd
+         90kg==
+X-Gm-Message-State: APjAAAVKvu8Mv1KKUoIDU6DDRGM24a8crX85o57P4ZsrfI6UuZWGqn5g
+        ItX94tGcDH7FGeGbXPQ+cslx+lVb0Ezd9gpe89zp3JB70iZcV9LBMXdOAShLS1UI83wgCqx3G9Z
+        clN5ICfvtk0E6XQ6pBDo7uuhi
+X-Received: by 2002:a1c:6a16:: with SMTP id f22mr4689108wmc.53.1582304286616;
+        Fri, 21 Feb 2020 08:58:06 -0800 (PST)
+X-Google-Smtp-Source: APXvYqzx8SYVdFspf+9GbrjK1CHBzdPkEu/p7HgFD9HSQD4u8DmNh/L0Ceyu9qjuA96m3QzgfpFyXA==
+X-Received: by 2002:a1c:6a16:: with SMTP id f22mr4689097wmc.53.1582304286341;
+        Fri, 21 Feb 2020 08:58:06 -0800 (PST)
+Received: from [192.168.178.40] ([151.20.135.128])
+        by smtp.gmail.com with ESMTPSA id h205sm4700577wmf.25.2020.02.21.08.58.05
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 21 Feb 2020 08:56:52 -0800 (PST)
-Subject: Re: [PATCH v9 09/17] arm: tegra20: cpuidle: Handle case where
- secondary CPU hangs on entering LP2
-To:     Daniel Lezcano <daniel.lezcano@linaro.org>
-Cc:     Thierry Reding <thierry.reding@gmail.com>,
-        Jonathan Hunter <jonathanh@nvidia.com>,
-        Peter De Schrijver <pdeschrijver@nvidia.com>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        =?UTF-8?B?TWljaGHFgiBNaXJvc8WCYXc=?= <mirq-linux@rere.qmqm.pl>,
-        Jasper Korten <jja2000@gmail.com>,
-        David Heidelberg <david@ixit.cz>,
-        Peter Geis <pgwipeout@gmail.com>, linux-pm@vger.kernel.org,
-        linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20200212235134.12638-1-digetx@gmail.com>
- <20200212235134.12638-10-digetx@gmail.com>
- <20200221154318.GO10516@linaro.org>
-From:   Dmitry Osipenko <digetx@gmail.com>
-Message-ID: <239a2b66-8da8-2e6c-d19d-9ed207ad0a64@gmail.com>
-Date:   Fri, 21 Feb 2020 19:56:51 +0300
+        Fri, 21 Feb 2020 08:58:05 -0800 (PST)
+Subject: Re: [PATCH][resend] KVM: fix error handling in svm_cpu_init
+To:     linmiaohe <linmiaohe@huawei.com>,
+        "Li,Rongqing" <lirongqing@baidu.com>
+Cc:     Liran Alon <liran.alon@oracle.com>,
+        "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "x86@kernel.org" <x86@kernel.org>,
+        "vkuznets@redhat.com" <vkuznets@redhat.com>
+References: <b7a41c2ec0e644119180ba61d10ab4b9@huawei.com>
+From:   Paolo Bonzini <pbonzini@redhat.com>
+Message-ID: <e77238c5-94a6-0695-b49a-6ce6f4ccab70@redhat.com>
+Date:   Fri, 21 Feb 2020 17:58:05 +0100
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.3.0
+ Thunderbird/68.1.1
 MIME-Version: 1.0
-In-Reply-To: <20200221154318.GO10516@linaro.org>
-Content-Type: text/plain; charset=utf-8
+In-Reply-To: <b7a41c2ec0e644119180ba61d10ab4b9@huawei.com>
+Content-Type: text/plain; charset=windows-1252
 Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello Daniel,
-
-21.02.2020 18:43, Daniel Lezcano пишет:
-> On Thu, Feb 13, 2020 at 02:51:26AM +0300, Dmitry Osipenko wrote:
->> It is possible that something may go wrong with the secondary CPU, in that
->> case it is much nicer to get a dump of the flow-controller state before
->> hanging machine.
+On 20/02/20 09:40, linmiaohe wrote:
+> Li,Rongqing <lirongqing@baidu.com> writes:
+>>> Hi,
+>>> Li RongQing <lirongqing@baidu.com> writes:
+>>>>
+>>>> sd->save_area should be freed in error path
+>>> Oh, it's strange. This is already fixed in my previous patch : [PATCH v2] KVM:
+>>> SVM: Fix potential memory leak in svm_cpu_init().
+>>> And Vitaly and Liran gave me Reviewed-by tags and Paolo queued it one 
+>>> month ago. But I can't found it in master or queue branch. There might 
+>>> be something wrong. :(
 >>
->> Acked-by: Peter De Schrijver <pdeschrijver@nvidia.com>
->> Tested-by: Peter Geis <pgwipeout@gmail.com>
->> Tested-by: Jasper Korten <jja2000@gmail.com>
->> Tested-by: David Heidelberg <david@ixit.cz>
->> Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
->> ---
->>  arch/arm/mach-tegra/cpuidle-tegra20.c | 47 +++++++++++++++++++++++++--
->>  1 file changed, 45 insertions(+), 2 deletions(-)
+>> In fact, I send this patch 2019/02/, and get Reviewed-by,  but did not queue
 >>
->> diff --git a/arch/arm/mach-tegra/cpuidle-tegra20.c b/arch/arm/mach-tegra/cpuidle-tegra20.c
->> index 9672c619f4bc..bcc158b72e67 100644
->> --- a/arch/arm/mach-tegra/cpuidle-tegra20.c
->> +++ b/arch/arm/mach-tegra/cpuidle-tegra20.c
->> @@ -83,14 +83,57 @@ static inline void tegra20_wake_cpu1_from_reset(void)
->>  }
->>  #endif
->>  
->> +static void tegra20_report_cpus_state(void)
->> +{
->> +	unsigned long cpu, lcpu, csr;
->> +
->> +	for_each_cpu(lcpu, cpu_possible_mask) {
->> +		cpu = cpu_logical_map(lcpu);
->> +		csr = flowctrl_read_cpu_csr(cpu);
->> +
->> +		pr_err("cpu%lu: online=%d flowctrl_csr=0x%08lx\n",
->> +		       cpu, cpu_online(lcpu), csr);
->> +	}
->> +}
->> +
->> +static int tegra20_wait_for_secondary_cpu_parking(void)
->> +{
->> +	unsigned int retries = 3;
->> +
->> +	while (retries--) {
->> +		ktime_t timeout = ktime_add_ms(ktime_get(), 500);
+>> https://patchwork.kernel.org/patch/10853973/
+>>
+>> and resend it 2019/07
+>>
+>> https://patchwork.kernel.org/patch/11032081/
+>>
 > 
-> Oops I missed this one. Do not use ktime_get() in this code path, use jiffies.
+> Oh, it's really a pit. And in this case, we can get rid of the var r as '-ENOMEM' is actually the only possible outcome here, as
+> suggested by Vitaly, which looks like this: https://lkml.org/lkml/2020/1/15/933
 
-Could you please explain what benefits jiffies have over the ktime_get()?
+I queued your patch again, sorry to both of you.
 
->> +
->> +		/*
->> +		 * The primary CPU0 core shall wait for the secondaries
->> +		 * shutdown in order to power-off CPU's cluster safely.
->> +		 * The timeout value depends on the current CPU frequency,
->> +		 * it takes about 40-150us  in average and over 1000us in
->> +		 * a worst case scenario.
->> +		 */
->> +		do {
->> +			if (tegra_cpu_rail_off_ready())
->> +				return 0;
->> +
->> +		} while (ktime_before(ktime_get(), timeout));
-> 
-> So this loop will aggresively call tegra_cpu_rail_off_ready() and retry 3
-> times. The tegra_cpu_rail_off_ready() function can be called thoushand of times
-> here but the function will hang 1.5s :/
-> 
-> I suggest something like:
-> 
-> 	while (retries--i && !tegra_cpu_rail_off_ready()) 
-> 		udelay(100);
-> 
-> So <retries> calls to tegra_cpu_rail_off_ready() and 100us x <retries> maximum
-> impact.
-But udelay() also results into CPU spinning in a busy-loop, and thus,
-what's the difference?
+Paolo
+
