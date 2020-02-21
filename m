@@ -5,48 +5,48 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DF456C35640
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 08:17:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9CDA9C35640
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 08:17:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B64362468A
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 08:17:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 64B352468C
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 08:17:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582273059;
-	bh=oV/UsLSxyowXVzCG/KQ85u86d31rb/nhCliSN1mNDfg=;
+	s=default; t=1582273064;
+	bh=k+XzV/W9UPSf5JZG4LsaLccqrAu0LZ7Ag9WTLrAZBPE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=1L+khxXSg9AedqnXZ87w8j9mDlGbaelYyL3MTlq/QyVNmmWs10kqj4vKPiAG7oGin
-	 nNTtzgLjizWS0UlVJvk7BmiHp7wVZ4bc3IHzUla9PV3BIfEFv89bzVKUAvLboo6W8x
-	 CRXAuw41B7k2fE7MuGe2qZjPD86g0k90f4KSOLe8=
+	b=uuoAVcTNC43MKjiz64swZIjZGvg4qqY9UhkGE7fROONUTHOEQz8oF7BzEJyOLetur
+	 3t64iKzEfqgyNxct1KaC+zAHpRDZ2fUduaC9zxbV7XdGTYZyp60rZu2VNf0HZnJkTj
+	 seVvoHSD4YUgF+rWb6koFQqpnUEvYU9931IfpvqE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733267AbgBUIRi (ORCPT
+        id S2387712AbgBUIRm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Feb 2020 03:17:38 -0500
-Received: from mail.kernel.org ([198.145.29.99]:55116 "EHLO mail.kernel.org"
+        Fri, 21 Feb 2020 03:17:42 -0500
+Received: from mail.kernel.org ([198.145.29.99]:55192 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387686AbgBUIRg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Feb 2020 03:17:36 -0500
+        id S2387686AbgBUIRj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 21 Feb 2020 03:17:39 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 605302468A;
-        Fri, 21 Feb 2020 08:17:35 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E41CC24690;
+        Fri, 21 Feb 2020 08:17:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1582273055;
-        bh=oV/UsLSxyowXVzCG/KQ85u86d31rb/nhCliSN1mNDfg=;
+        s=default; t=1582273058;
+        bh=k+XzV/W9UPSf5JZG4LsaLccqrAu0LZ7Ag9WTLrAZBPE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=l4EtN3CQLOzV+C3v6X3d9sW1k9r+C4nsEdGYViGjp+tFtfMJoNq7JGeqOayG+924I
-         0TMqolERiGBZ3P7UCjs/uvSUZvnZVTyzHahhrL2U98eIGJBfsaFHMG0kUNWlsxeZ3X
-         cVMlCyZ2yBLvC3C/Y13wip/GiWqJM/w0VSrAf7sw=
+        b=kcS6FeJBSlFALfKaRw+P8iXX2pzOHKGN/TFRstCzvAeYhZQEmaRf66mHCTXBZVMrZ
+         3vw5HRqW17ASQCjOTaZFkzrDRpqxA3hQn4no4g6FSGeZAAs0Z3uHAy9lnDDKN8VIqv
+         iNBhV6GmYJ6lzSEwCLj4oKzAPD9GQix4tse794fI=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, "David S. Miller" <davem@davemloft.net>,
+        stable@vger.kernel.org, Jia-Ju Bai <baijiaju1990@gmail.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 030/191] sparc: Add .exit.data section.
-Date:   Fri, 21 Feb 2020 08:40:03 +0100
-Message-Id: <20200221072254.868590844@linuxfoundation.org>
+Subject: [PATCH 4.19 031/191] uio: fix a sleep-in-atomic-context bug in uio_dmem_genirq_irqcontrol()
+Date:   Fri, 21 Feb 2020 08:40:04 +0100
+Message-Id: <20200221072254.985632417@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200221072250.732482588@linuxfoundation.org>
 References: <20200221072250.732482588@linuxfoundation.org>
@@ -59,41 +59,54 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: David S. Miller <davem@davemloft.net>
+From: Jia-Ju Bai <baijiaju1990@gmail.com>
 
-[ Upstream commit 548f0b9a5f4cffa0cecf62eb12aa8db682e4eee6 ]
+[ Upstream commit b74351287d4bd90636c3f48bc188c2f53824c2d4 ]
 
-This fixes build errors of all sorts.
+The driver may sleep while holding a spinlock.
+The function call path (from bottom to top) in Linux 4.19 is:
 
-Also, emit .exit.text unconditionally.
+kernel/irq/manage.c, 523:
+	synchronize_irq in disable_irq
+drivers/uio/uio_dmem_genirq.c, 140:
+	disable_irq in uio_dmem_genirq_irqcontrol
+drivers/uio/uio_dmem_genirq.c, 134:
+	_raw_spin_lock_irqsave in uio_dmem_genirq_irqcontrol
 
-Signed-off-by: David S. Miller <davem@davemloft.net>
+synchronize_irq() can sleep at runtime.
+
+To fix this bug, disable_irq() is called without holding the spinlock.
+
+This bug is found by a static analysis tool STCheck written by myself.
+
+Signed-off-by: Jia-Ju Bai <baijiaju1990@gmail.com>
+Link: https://lore.kernel.org/r/20191218094405.6009-1-baijiaju1990@gmail.com
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/sparc/kernel/vmlinux.lds.S | 6 ++++--
+ drivers/uio/uio_dmem_genirq.c | 6 ++++--
  1 file changed, 4 insertions(+), 2 deletions(-)
 
-diff --git a/arch/sparc/kernel/vmlinux.lds.S b/arch/sparc/kernel/vmlinux.lds.S
-index 61afd787bd0c7..59b6df13ddead 100644
---- a/arch/sparc/kernel/vmlinux.lds.S
-+++ b/arch/sparc/kernel/vmlinux.lds.S
-@@ -172,12 +172,14 @@ SECTIONS
+diff --git a/drivers/uio/uio_dmem_genirq.c b/drivers/uio/uio_dmem_genirq.c
+index e1134a4d97f3f..a00b4aee6c799 100644
+--- a/drivers/uio/uio_dmem_genirq.c
++++ b/drivers/uio/uio_dmem_genirq.c
+@@ -135,11 +135,13 @@ static int uio_dmem_genirq_irqcontrol(struct uio_info *dev_info, s32 irq_on)
+ 	if (irq_on) {
+ 		if (test_and_clear_bit(0, &priv->flags))
+ 			enable_irq(dev_info->irq);
++		spin_unlock_irqrestore(&priv->lock, flags);
+ 	} else {
+-		if (!test_and_set_bit(0, &priv->flags))
++		if (!test_and_set_bit(0, &priv->flags)) {
++			spin_unlock_irqrestore(&priv->lock, flags);
+ 			disable_irq(dev_info->irq);
++		}
  	}
- 	PERCPU_SECTION(SMP_CACHE_BYTES)
+-	spin_unlock_irqrestore(&priv->lock, flags);
  
--#ifdef CONFIG_JUMP_LABEL
- 	. = ALIGN(PAGE_SIZE);
- 	.exit.text : {
- 		EXIT_TEXT
- 	}
--#endif
-+
-+	.exit.data : {
-+		EXIT_DATA
-+	}
- 
- 	. = ALIGN(PAGE_SIZE);
- 	__init_end = .;
+ 	return 0;
+ }
 -- 
 2.20.1
 
