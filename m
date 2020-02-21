@@ -7,48 +7,48 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C185CC35640
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 08:12:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3471AC35641
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 08:12:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9747624673
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 08:12:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EE9AD24673
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 08:12:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582272771;
-	bh=Pp4ZrR/m1W7SeYzzjTvC8bs5kKe2Stp9EV7keNr9wpQ=;
+	s=default; t=1582272774;
+	bh=qgXInRCOrnBs55A2/zS0szRQNvhB0rfj8Etl8C/D+6o=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=vKkdNcZa5eUxNKyWKuyDSziuD8YpssfpTM3dGFbPzS0jGK/ePylQ2kL6AEudRjtvk
-	 P0/7e11Zkb/VPCpkw5VK48P8WR1hJbDXWIOIfZuT+W3KcTGCEgamp/TGoPqQr/mVdz
-	 nGf8FAHLrjK81WkVn/Jru7u68VHDLa0sbacE2Kx0=
+	b=EY9cKz4G1mQbntiyhjhnd039Y1OMzfRpSVwV62Px0dIH8jTASs+UIrv9o9cbJrmiM
+	 Jviy6OQTtDSCn7ktCZKbuIMBAogkU8AsB7ZbpbiLymNj9JRLvDr1dwr+gPNsc/EIqo
+	 zwFH78Nic16geYn5tywzd2ILq/QkTO0rGL6RvIr0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732911AbgBUIMu (ORCPT
+        id S1732918AbgBUIMx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Feb 2020 03:12:50 -0500
-Received: from mail.kernel.org ([198.145.29.99]:48658 "EHLO mail.kernel.org"
+        Fri, 21 Feb 2020 03:12:53 -0500
+Received: from mail.kernel.org ([198.145.29.99]:48730 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732454AbgBUIMs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Feb 2020 03:12:48 -0500
+        id S1732376AbgBUIMv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 21 Feb 2020 03:12:51 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C681520722;
-        Fri, 21 Feb 2020 08:12:46 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0F30920722;
+        Fri, 21 Feb 2020 08:12:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1582272767;
-        bh=Pp4ZrR/m1W7SeYzzjTvC8bs5kKe2Stp9EV7keNr9wpQ=;
+        s=default; t=1582272770;
+        bh=qgXInRCOrnBs55A2/zS0szRQNvhB0rfj8Etl8C/D+6o=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=UuKNl82hUzWQQN/pzSVtXj8J9FVdlRrae/8PAu35X/6HDgV6oS7Axo7Aqtd5iXCnf
-         2U3j+YBjCI0PSe7bYlkt4wF/bRwf42z68YjlKL6BrK10f33JyGDdMYW1KceP7a2Y8x
-         15EjTNvUdp699MjJWRkEgt1KH34lIpo7KH8kEPME=
+        b=Bs2YTprKoaHHzW1WIc5TpJ8E1EPFDxOpEj1viZ1QLNUFoN2pBjAEHTNhv7OzXcaID
+         4gXhXIx/Miqr5ahPf3Lnskosi4Tgfn/eIhcz3P8pqmadPo8fM9Jr/szvTZGBX1g3uo
+         gdG4oYyKvUxFsY58iB97X4HWsgd+6v+9wxgOaA6E=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Brandon Maier <brandon.maier@rockwellcollins.com>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        stable@vger.kernel.org, Dmitry Osipenko <digetx@gmail.com>,
+        Enric Balletbo i Serra <enric.balletbo@collabora.com>,
+        Mark Brown <broonie@kernel.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 268/344] remoteproc: Initialize rproc_class before use
-Date:   Fri, 21 Feb 2020 08:41:07 +0100
-Message-Id: <20200221072414.023220704@linuxfoundation.org>
+Subject: [PATCH 5.4 269/344] regulator: core: Fix exported symbols to the exported GPL version
+Date:   Fri, 21 Feb 2020 08:41:08 +0100
+Message-Id: <20200221072414.123109620@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200221072349.335551332@linuxfoundation.org>
 References: <20200221072349.335551332@linuxfoundation.org>
@@ -61,71 +61,47 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Brandon Maier <brandon.maier@rockwellcollins.com>
+From: Enric Balletbo i Serra <enric.balletbo@collabora.com>
 
-[ Upstream commit a8f40111d184098cd2b3dc0c7170c42250a5fa09 ]
+[ Upstream commit 3d7610e8da993539346dce6f7c909fd3d56bf4d5 ]
 
-The remoteproc_core and remoteproc drivers all initialize with module_init().
-However remoteproc drivers need the rproc_class during their probe. If one of
-the remoteproc drivers runs init and gets through probe before
-remoteproc_init() runs, a NULL pointer access of rproc_class's `glue_dirs`
-spinlock occurs.
+Change the exported symbols introduced by commit e9153311491da
+("regulator: vctrl-regulator: Avoid deadlock getting and setting the voltage")
+from EXPORT_SYMBOL() to EXPORT_SYMBOL_GPL(), like is used for all the core
+parts.
 
-> Unable to handle kernel NULL pointer dereference at virtual address 000000dc
-> pgd = c0004000
-> [000000dc] *pgd=00000000
-> Internal error: Oops: 5 [#1] PREEMPT ARM
-> Modules linked in:
-> CPU: 0 PID: 1 Comm: swapper Tainted: G        W       4.14.106-rt56 #1
-> Hardware name: Generic OMAP36xx (Flattened Device Tree)
-> task: c6050000 task.stack: c604a000
-> PC is at rt_spin_lock+0x40/0x6c
-> LR is at rt_spin_lock+0x28/0x6c
-> pc : [<c0523c90>]    lr : [<c0523c78>]    psr: 60000013
-> sp : c604bdc0  ip : 00000000  fp : 00000000
-> r10: 00000000  r9 : c61c7c10  r8 : c6269c20
-> r7 : c0905888  r6 : c6269c20  r5 : 00000000  r4 : 000000d4
-> r3 : 000000dc  r2 : c6050000  r1 : 00000002  r0 : 000000d4
-> Flags: nZCv  IRQs on  FIQs on  Mode SVC_32  ISA ARM  Segment none
-...
-> [<c0523c90>] (rt_spin_lock) from [<c03b65a4>] (get_device_parent+0x54/0x17c)
-> [<c03b65a4>] (get_device_parent) from [<c03b6bec>] (device_add+0xe0/0x5b4)
-> [<c03b6bec>] (device_add) from [<c042adf4>] (rproc_add+0x18/0xd8)
-> [<c042adf4>] (rproc_add) from [<c01110e4>] (my_rproc_probe+0x158/0x204)
-> [<c01110e4>] (my_rproc_probe) from [<c03bb6b8>] (platform_drv_probe+0x34/0x70)
-> [<c03bb6b8>] (platform_drv_probe) from [<c03b9dd4>] (driver_probe_device+0x2c8/0x420)
-> [<c03b9dd4>] (driver_probe_device) from [<c03ba02c>] (__driver_attach+0x100/0x11c)
-> [<c03ba02c>] (__driver_attach) from [<c03b7d08>] (bus_for_each_dev+0x7c/0xc0)
-> [<c03b7d08>] (bus_for_each_dev) from [<c03b910c>] (bus_add_driver+0x1cc/0x264)
-> [<c03b910c>] (bus_add_driver) from [<c03ba714>] (driver_register+0x78/0xf8)
-> [<c03ba714>] (driver_register) from [<c010181c>] (do_one_initcall+0x100/0x190)
-> [<c010181c>] (do_one_initcall) from [<c0800de8>] (kernel_init_freeable+0x130/0x1d0)
-> [<c0800de8>] (kernel_init_freeable) from [<c051eee8>] (kernel_init+0x8/0x114)
-> [<c051eee8>] (kernel_init) from [<c01175b0>] (ret_from_fork+0x14/0x24)
-> Code: e2843008 e3c2203f f5d3f000 e5922010 (e193cf9f)
-> ---[ end trace 0000000000000002 ]---
-
-Signed-off-by: Brandon Maier <brandon.maier@rockwellcollins.com>
-Link: https://lore.kernel.org/r/20190530225223.136420-1-brandon.maier@rockwellcollins.com
-Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
+Fixes: e9153311491da ("regulator: vctrl-regulator: Avoid deadlock getting and setting the voltage")
+Reported-by: Dmitry Osipenko <digetx@gmail.com>
+Signed-off-by: Enric Balletbo i Serra <enric.balletbo@collabora.com>
+Link: https://lore.kernel.org/r/20200120123921.1204339-1-enric.balletbo@collabora.com
+Signed-off-by: Mark Brown <broonie@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/remoteproc/remoteproc_core.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/regulator/core.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/remoteproc/remoteproc_core.c b/drivers/remoteproc/remoteproc_core.c
-index 3c5fbbbfb0f17..b542debbc6f03 100644
---- a/drivers/remoteproc/remoteproc_core.c
-+++ b/drivers/remoteproc/remoteproc_core.c
-@@ -2224,7 +2224,7 @@ static int __init remoteproc_init(void)
- 
- 	return 0;
+diff --git a/drivers/regulator/core.c b/drivers/regulator/core.c
+index c6fa0f4451aeb..0011bdc15afbb 100644
+--- a/drivers/regulator/core.c
++++ b/drivers/regulator/core.c
+@@ -3462,7 +3462,7 @@ int regulator_set_voltage_rdev(struct regulator_dev *rdev, int min_uV,
+ out:
+ 	return ret;
  }
--module_init(remoteproc_init);
-+subsys_initcall(remoteproc_init);
+-EXPORT_SYMBOL(regulator_set_voltage_rdev);
++EXPORT_SYMBOL_GPL(regulator_set_voltage_rdev);
  
- static void __exit remoteproc_exit(void)
- {
+ static int regulator_limit_voltage_step(struct regulator_dev *rdev,
+ 					int *current_uV, int *min_uV)
+@@ -4027,7 +4027,7 @@ int regulator_get_voltage_rdev(struct regulator_dev *rdev)
+ 		return ret;
+ 	return ret - rdev->constraints->uV_offset;
+ }
+-EXPORT_SYMBOL(regulator_get_voltage_rdev);
++EXPORT_SYMBOL_GPL(regulator_get_voltage_rdev);
+ 
+ /**
+  * regulator_get_voltage - get regulator output voltage
 -- 
 2.20.1
 
