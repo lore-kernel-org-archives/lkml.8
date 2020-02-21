@@ -2,193 +2,385 @@ Return-Path: <SRS0=1210=4J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	UNWANTED_LANGUAGE_BODY,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7630CC35653
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 11:39:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 52F70C35646
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 11:39:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3DE6F222C4
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 11:39:06 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582285146;
-	bh=3VbA/6IynnwAPZnk3kedddXUiGueUIj2LdQ/mwiF/xo=;
-	h=Date:From:To:Cc:Subject:List-ID:From;
-	b=mSr40/791w7KmfWb0pVZYBvc//EigMIjIoKHEGc2bpFAa2fPpoMh5NgstY8t8ynmK
-	 pMjcvjH/cJmzZVTiYE3Xg/P7wTIsDrC8L84ftKPnVncxogjd8/v5CwMCjD+VnFkIvv
-	 2FWvJ55Ra/bt3wBLT+k7KPvfo+XrOOCdaca1b314=
+	by mail.kernel.org (Postfix) with ESMTP id 1332024650
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 11:39:33 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="pEYMtsuu"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727794AbgBULjE (ORCPT
+        id S1727836AbgBULjb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Feb 2020 06:39:04 -0500
-Received: from mail.kernel.org ([198.145.29.99]:41606 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726934AbgBULjE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Feb 2020 06:39:04 -0500
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id EE26B222C4;
-        Fri, 21 Feb 2020 11:39:02 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1582285143;
-        bh=3VbA/6IynnwAPZnk3kedddXUiGueUIj2LdQ/mwiF/xo=;
-        h=Date:From:To:Cc:Subject:From;
-        b=MuRnZAq2frRfCGDw1SSCqIaE5VYoHhEUEVLvtXQ24hfaEOfbO3/gZHraQLv4XLC+R
-         /hbxT45o1EWL+WxZzV4In8c4M9SRNHiuQ4GG7+aYeWfF6jTDnK3fO1GpkAdLpRHDZW
-         t/SrSdKvBUaoc48jTTJKhkZLx/tGJD21DwlvKmHE=
-Date:   Fri, 21 Feb 2020 12:39:01 +0100
-From:   Greg KH <gregkh@linuxfoundation.org>
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        linux-kernel@vger.kernel.org, linux-usb@vger.kernel.org
-Subject: [GIT PULL] USB/Thunderbolt fixes for 5.6-rc3
-Message-ID: <20200221113901.GA114136@kroah.com>
+        Fri, 21 Feb 2020 06:39:31 -0500
+Received: from lelv0143.ext.ti.com ([198.47.23.248]:40420 "EHLO
+        lelv0143.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726395AbgBULjb (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 21 Feb 2020 06:39:31 -0500
+Received: from lelv0265.itg.ti.com ([10.180.67.224])
+        by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id 01LBdPmA047298;
+        Fri, 21 Feb 2020 05:39:25 -0600
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1582285165;
+        bh=Wp9yZZ7soOUUEPSzWV6+OWbcx9kzM0BEUtBdRi3sqcU=;
+        h=Subject:To:CC:References:From:Date:In-Reply-To;
+        b=pEYMtsuu6fctx/WUdWq/MixgG1HeRH5zs946P69VH0RkZRejLZ04z7pjcQhNPlJNi
+         JkuxOxbgHy5kTwamc2Z7UAwOCvOYscXUe3ekWqLYtlJTbbYZAiwsQ9zAk1RzHbf5LY
+         NjS8w+pkMmi0z302tP8OfNaX4MF94H2YuaSR9vA0=
+Received: from DFLE114.ent.ti.com (dfle114.ent.ti.com [10.64.6.35])
+        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 01LBdPME097363
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Fri, 21 Feb 2020 05:39:25 -0600
+Received: from DFLE114.ent.ti.com (10.64.6.35) by DFLE114.ent.ti.com
+ (10.64.6.35) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Fri, 21
+ Feb 2020 05:39:25 -0600
+Received: from lelv0326.itg.ti.com (10.180.67.84) by DFLE114.ent.ti.com
+ (10.64.6.35) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
+ Frontend Transport; Fri, 21 Feb 2020 05:39:25 -0600
+Received: from [10.24.69.159] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id 01LBdMA9075782;
+        Fri, 21 Feb 2020 05:39:23 -0600
+Subject: Re: [PATCH] PCI: dwc: pci-dra7xx: Fix MSI IRQ handling
+To:     Vignesh Raghavendra <vigneshr@ti.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+CC:     Andrew Murray <andrew.murray@arm.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        <linux-omap@vger.kernel.org>, <linux-pci@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>
+References: <20200124163650.4457-1-vigneshr@ti.com>
+From:   Kishon Vijay Abraham I <kishon@ti.com>
+Message-ID: <abdd33fa-be45-9d2e-bf27-91e8c02be6ae@ti.com>
+Date:   Fri, 21 Feb 2020 17:13:04 +0530
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.2
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+In-Reply-To: <20200124163650.4457-1-vigneshr@ti.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The following changes since commit bb6d3fb354c5ee8d6bde2d576eb7220ea09862b9:
 
-  Linux 5.6-rc1 (2020-02-09 16:08:48 -0800)
+On 24/01/20 10:06 pm, Vignesh Raghavendra wrote:
+> Due an issue with PCIe wrapper around DWC PCIe IP on dra7xx, driver
+> needs to ensure that there are no pending MSI IRQ vector set (i.e
+> PCIE_MSI_INTR0_STATUS reads 0 at least once) before exiting IRQ handler.
+> Else, the dra7xx PCIe wrapper will not register new MSI IRQs even though
+> PCIE_MSI_INTR0_STATUS shows IRQs are pending.
+> 
+> Therefore its no longer possible to use default IRQ handler provided by
+> DWC library. So, add irqchip implementation inside pci-dra7xx.c and
+> install new MSI IRQ handler to handle above errata.
+> 
+> This fixes a bug, where PCIe wifi cards with 4 DMA queues like Intel
+> 8260 used to throw following error and stall during ping/iperf3 tests.
+> 
+> [   97.776310] iwlwifi 0000:01:00.0: Queue 9 stuck for 2500 ms.
+> 
+> Signed-off-by: Vignesh Raghavendra <vigneshr@ti.com>
+> ---
+> Based on discussions here: https://www.spinics.net/lists/linux-pci/msg70462.html
 
-are available in the Git repository at:
+This also fixed an issue I observed in NVMe card.
 
-  git://git.kernel.org/pub/scm/linux/kernel/git/gregkh/usb.git tags/usb-5.6-rc3
-
-for you to fetch changes up to 8b978be8d067f58b29cbbf0579e88bb4a2d4350a:
-
-  Merge tag 'thunderbolt-fix-for-v5.6-rc3' of git://git.kernel.org/pub/scm/linux/kernel/git/westeri/thunderbolt into usb-linus (2020-02-18 19:39:29 +0100)
-
-----------------------------------------------------------------
-USB fixes for 5.6-rc3
-
-Here are a number of small USB driver fixes for 5.6-rc3.
-
-Included in here are:
-  - MAINTAINER file updates
-  - USB gadget driver fixes
-  - usb core quirk additions and fixes for regressions
-  - xhci driver fixes
-  - usb serial driver id additions and fixes
-  - thunderbolt bugfix
-
-Thunderbolt patches come in through here now that USB4 is really
-thunderbolt.
-
-All of these have been in linux-next for a while with no reported
-issues.
-
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
-----------------------------------------------------------------
-Alan Stern (1):
-      USB: hub: Don't record a connect-change event during reset-resume
-
-Andy Shevchenko (2):
-      MAINTAINERS: Sort entries in database for USB TYPEC
-      MAINTAINERS: Sort entries in database for THUNDERBOLT
-
-Anurag Kumar Vulisha (1):
-      usb: dwc3: gadget: Check for IOC/LST bit in TRB->ctrl fields
-
-Colin Ian King (2):
-      usb: dwc3: debug: fix string position formatting mixup with ret and len
-      usb: dwc3: debug: fix string position formatting mixup with ret and len
-
-Dan Carpenter (1):
-      USB: serial: ir-usb: Silence harmless uninitialized variable warning
-
-Dmitry Osipenko (1):
-      usb: phy: tegra: Add clarifying comments about the shared registers
-
-EJ Hsu (1):
-      usb: uas: fix a plug & unplug racing
-
-Greg Kroah-Hartman (7):
-      Revert "xhci: Fix memory leak when caching protocol extended capability PSI tables"
-      USB: misc: iowarrior: add support for 2 OEMed devices
-      USB: misc: iowarrior: add support for the 28 and 28L devices
-      Merge tag 'usb-serial-5.6-rc2' of https://git.kernel.org/.../johan/usb-serial into usb-linus
-      Merge tag 'fixes-for-v5.6-rc1' of git://git.kernel.org/.../balbi/usb into usb-linus
-      USB: misc: iowarrior: add support for the 100 device
-      Merge tag 'thunderbolt-fix-for-v5.6-rc3' of git://git.kernel.org/.../westeri/thunderbolt into usb-linus
-
-Hardik Gajjar (1):
-      USB: hub: Fix the broken detection of USB3 device in SMSC hub
-
-Jack Pham (2):
-      usb: gadget: composite: Fix bMaxPower for SuperSpeedPlus
-      usb: gadget: composite: Support more than 500mA MaxPower
-
-Johan Hovold (4):
-      USB: serial: ch341: fix receiver regression
-      USB: core: add endpoint-blacklist quirk
-      USB: quirks: blacklist duplicate ep on Sound Devices USBPre2
-      USB: core: clean up endpoint-descriptor parsing
-
-John Keeping (1):
-      usb: gadget: u_audio: Fix high-speed max packet size
-
-Lars-Peter Clausen (1):
-      usb: gadget: ffs: ffs_aio_cancel(): Save/restore IRQ flags
-
-Mathias Nyman (5):
-      xhci: Force Maximum Packet size for Full-speed bulk devices to valid range.
-      xhci: Fix memory leak when caching protocol extended capability PSI tables
-      xhci: fix runtime pm enabling for quirky Intel hosts
-      xhci: apply XHCI_PME_STUCK_QUIRK to Intel Comet Lake platforms
-      xhci: Fix memory leak when caching protocol extended capability PSI tables - take 2
-
-Michal Simek (1):
-      usb: gadget: udc-xilinx: Fix xudc_stop() kernel-doc format
-
-Mika Westerberg (1):
-      thunderbolt: Prevent crash if non-active NVMem file is read
-
-Minas Harutyunyan (2):
-      usb: dwc2: Fix in ISOC request length checking
-      usb: dwc2: Fix SET/CLEAR_FEATURE and GET_STATUS flows
-
-Peter Chen (1):
-      usb: charger: assign specific number for enum value
-
-Richard Dodd (1):
-      USB: Fix novation SourceControl XL after suspend
-
-Sergey Organov (1):
-      usb: gadget: serial: fix Tx stall after buffer overflow
-
- MAINTAINERS                            | 20 +++++-----
- drivers/thunderbolt/switch.c           |  7 ++++
- drivers/usb/core/config.c              | 31 +++++++++------
- drivers/usb/core/hub.c                 | 20 +++++++---
- drivers/usb/core/hub.h                 |  1 +
- drivers/usb/core/quirks.c              | 40 +++++++++++++++++++
- drivers/usb/core/usb.h                 |  3 ++
- drivers/usb/dwc2/gadget.c              | 40 +++++++++++--------
- drivers/usb/dwc3/debug.h               | 39 +++++++------------
- drivers/usb/dwc3/gadget.c              |  3 +-
- drivers/usb/gadget/composite.c         | 30 +++++++++-----
- drivers/usb/gadget/function/f_fs.c     |  5 ++-
- drivers/usb/gadget/function/u_audio.c  | 10 ++---
- drivers/usb/gadget/function/u_serial.c |  4 +-
- drivers/usb/gadget/udc/udc-xilinx.c    |  1 -
- drivers/usb/host/xhci-hub.c            | 25 ++++++++----
- drivers/usb/host/xhci-mem.c            | 71 ++++++++++++++++++++++------------
- drivers/usb/host/xhci-pci.c            | 10 +++--
- drivers/usb/host/xhci.h                | 14 +++++--
- drivers/usb/misc/iowarrior.c           | 31 ++++++++++++++-
- drivers/usb/phy/phy-tegra-usb.c        |  8 ++++
- drivers/usb/serial/ch341.c             | 10 +++++
- drivers/usb/serial/ir-usb.c            |  2 +-
- drivers/usb/storage/uas.c              | 23 ++++++++++-
- include/linux/usb/quirks.h             |  3 ++
- include/uapi/linux/usb/charger.h       | 16 ++++----
- 26 files changed, 327 insertions(+), 140 deletions(-)
+FWIW:
+Acked-by: Kishon Vijay Abraham I <kishon@ti.com>
+Tested-by: Kishon Vijay Abraham I <kishon@ti.com>
+> 
+>  drivers/pci/controller/dwc/pci-dra7xx.c | 227 ++++++++++++++++++++----
+>  1 file changed, 189 insertions(+), 38 deletions(-)
+> 
+> diff --git a/drivers/pci/controller/dwc/pci-dra7xx.c b/drivers/pci/controller/dwc/pci-dra7xx.c
+> index 9bf7fa99b103..07f242539ce9 100644
+> --- a/drivers/pci/controller/dwc/pci-dra7xx.c
+> +++ b/drivers/pci/controller/dwc/pci-dra7xx.c
+> @@ -215,10 +215,6 @@ static int dra7xx_pcie_host_init(struct pcie_port *pp)
+>  	return 0;
+>  }
+>  
+> -static const struct dw_pcie_host_ops dra7xx_pcie_host_ops = {
+> -	.host_init = dra7xx_pcie_host_init,
+> -};
+> -
+>  static int dra7xx_pcie_intx_map(struct irq_domain *domain, unsigned int irq,
+>  				irq_hw_number_t hwirq)
+>  {
+> @@ -233,43 +229,69 @@ static const struct irq_domain_ops intx_domain_ops = {
+>  	.xlate = pci_irqd_intx_xlate,
+>  };
+>  
+> -static int dra7xx_pcie_init_irq_domain(struct pcie_port *pp)
+> +static int dra7xx_pcie_handle_msi_irq(struct pcie_port *pp)
+>  {
+>  	struct dw_pcie *pci = to_dw_pcie_from_pp(pp);
+> -	struct device *dev = pci->dev;
+> -	struct dra7xx_pcie *dra7xx = to_dra7xx_pcie(pci);
+> -	struct device_node *node = dev->of_node;
+> -	struct device_node *pcie_intc_node =  of_get_next_child(node, NULL);
+> -
+> -	if (!pcie_intc_node) {
+> -		dev_err(dev, "No PCIe Intc node found\n");
+> -		return -ENODEV;
+> -	}
+> -
+> -	dra7xx->irq_domain = irq_domain_add_linear(pcie_intc_node, PCI_NUM_INTX,
+> -						   &intx_domain_ops, pp);
+> -	of_node_put(pcie_intc_node);
+> -	if (!dra7xx->irq_domain) {
+> -		dev_err(dev, "Failed to get a INTx IRQ domain\n");
+> -		return -ENODEV;
+> +	int i, pos, irq;
+> +	unsigned long val;
+> +	u32 status, num_ctrls;
+> +	int ret = 0;
+> +
+> +	num_ctrls = pp->num_vectors / MAX_MSI_IRQS_PER_CTRL;
+> +
+> +	for (i = 0; i < num_ctrls; i++) {
+> +		status = dw_pcie_readl_dbi(pci, PCIE_MSI_INTR0_STATUS +
+> +					   (i * MSI_REG_CTRL_BLOCK_SIZE));
+> +		if (!status)
+> +			continue;
+> +
+> +		ret = 1;
+> +		val = status;
+> +		pos = 0;
+> +		while ((pos = find_next_bit(&val, MAX_MSI_IRQS_PER_CTRL,
+> +					    pos)) != MAX_MSI_IRQS_PER_CTRL) {
+> +			irq = irq_find_mapping(pp->irq_domain,
+> +					       (i * MAX_MSI_IRQS_PER_CTRL) +
+> +					       pos);
+> +			generic_handle_irq(irq);
+> +			pos++;
+> +		}
+>  	}
+>  
+> -	return 0;
+> +	return ret;
+>  }
+>  
+> -static irqreturn_t dra7xx_pcie_msi_irq_handler(int irq, void *arg)
+> +static void dra7xx_pcie_msi_irq_handler(struct irq_desc *desc)
+>  {
+> -	struct dra7xx_pcie *dra7xx = arg;
+> -	struct dw_pcie *pci = dra7xx->pci;
+> -	struct pcie_port *pp = &pci->pp;
+> +	struct irq_chip *chip = irq_desc_get_chip(desc);
+> +	struct dra7xx_pcie *dra7xx;
+> +	struct dw_pcie *pci;
+> +	struct pcie_port *pp;
+>  	unsigned long reg;
+>  	u32 virq, bit;
+> +	int count = 0;
+> +
+> +	chained_irq_enter(chip, desc);
+> +
+> +	pp = irq_desc_get_handler_data(desc);
+> +	pci = to_dw_pcie_from_pp(pp);
+> +	dra7xx = to_dra7xx_pcie(pci);
+>  
+>  	reg = dra7xx_pcie_readl(dra7xx, PCIECTRL_DRA7XX_CONF_IRQSTATUS_MSI);
+> +	dra7xx_pcie_writel(dra7xx, PCIECTRL_DRA7XX_CONF_IRQSTATUS_MSI, reg);
+>  
+>  	switch (reg) {
+>  	case MSI:
+> -		dw_handle_msi_irq(pp);
+> +		/**
+> +		 * Need to make sure all MSI status bits read 0 before
+> +		 * exiting. Else, new MSI IRQs are not registered by the
+> +		 * wrapper. Have an upperbound for the loop and exit the
+> +		 * IRQ in case of IRQ flood to avoid locking up system
+> +		 * in interrupt context.
+> +		 */
+> +		while (dra7xx_pcie_handle_msi_irq(pp) && count < 1000)
+> +			count++;
+> +
+>  		break;
+>  	case INTA:
+>  	case INTB:
+> @@ -283,9 +305,7 @@ static irqreturn_t dra7xx_pcie_msi_irq_handler(int irq, void *arg)
+>  		break;
+>  	}
+>  
+> -	dra7xx_pcie_writel(dra7xx, PCIECTRL_DRA7XX_CONF_IRQSTATUS_MSI, reg);
+> -
+> -	return IRQ_HANDLED;
+> +	chained_irq_exit(chip, desc);
+>  }
+>  
+>  static irqreturn_t dra7xx_pcie_irq_handler(int irq, void *arg)
+> @@ -347,6 +367,145 @@ static irqreturn_t dra7xx_pcie_irq_handler(int irq, void *arg)
+>  	return IRQ_HANDLED;
+>  }
+>  
+> +static int dra7xx_pcie_init_irq_domain(struct pcie_port *pp)
+> +{
+> +	struct dw_pcie *pci = to_dw_pcie_from_pp(pp);
+> +	struct device *dev = pci->dev;
+> +	struct dra7xx_pcie *dra7xx = to_dra7xx_pcie(pci);
+> +	struct device_node *node = dev->of_node;
+> +	struct device_node *pcie_intc_node =  of_get_next_child(node, NULL);
+> +
+> +	if (!pcie_intc_node) {
+> +		dev_err(dev, "No PCIe Intc node found\n");
+> +		return -ENODEV;
+> +	}
+> +
+> +	irq_set_chained_handler_and_data(pp->irq, dra7xx_pcie_msi_irq_handler,
+> +					 pp);
+> +	dra7xx->irq_domain = irq_domain_add_linear(pcie_intc_node, PCI_NUM_INTX,
+> +						   &intx_domain_ops, pp);
+> +	of_node_put(pcie_intc_node);
+> +	if (!dra7xx->irq_domain) {
+> +		dev_err(dev, "Failed to get a INTx IRQ domain\n");
+> +		return -ENODEV;
+> +	}
+> +
+> +	return 0;
+> +}
+> +
+> +static void dra7xx_pcie_setup_msi_msg(struct irq_data *d, struct msi_msg *msg)
+> +{
+> +	struct pcie_port *pp = irq_data_get_irq_chip_data(d);
+> +	struct dw_pcie *pci = to_dw_pcie_from_pp(pp);
+> +	u64 msi_target;
+> +
+> +	msi_target = (u64)pp->msi_data;
+> +
+> +	msg->address_lo = lower_32_bits(msi_target);
+> +	msg->address_hi = upper_32_bits(msi_target);
+> +
+> +	msg->data = d->hwirq;
+> +
+> +	dev_dbg(pci->dev, "msi#%d address_hi %#x address_lo %#x\n",
+> +		(int)d->hwirq, msg->address_hi, msg->address_lo);
+> +}
+> +
+> +static int dra7xx_pcie_msi_set_affinity(struct irq_data *d,
+> +					const struct cpumask *mask,
+> +					bool force)
+> +{
+> +	return -EINVAL;
+> +}
+> +
+> +static void dra7xx_pcie_bottom_mask(struct irq_data *d)
+> +{
+> +	struct pcie_port *pp = irq_data_get_irq_chip_data(d);
+> +	struct dw_pcie *pci = to_dw_pcie_from_pp(pp);
+> +	unsigned int res, bit, ctrl;
+> +	unsigned long flags;
+> +
+> +	raw_spin_lock_irqsave(&pp->lock, flags);
+> +
+> +	ctrl = d->hwirq / MAX_MSI_IRQS_PER_CTRL;
+> +	res = ctrl * MSI_REG_CTRL_BLOCK_SIZE;
+> +	bit = d->hwirq % MAX_MSI_IRQS_PER_CTRL;
+> +
+> +	pp->irq_mask[ctrl] |= BIT(bit);
+> +	dw_pcie_writel_dbi(pci, PCIE_MSI_INTR0_MASK + res,
+> +			   pp->irq_mask[ctrl]);
+> +
+> +	raw_spin_unlock_irqrestore(&pp->lock, flags);
+> +}
+> +
+> +static void dra7xx_pcie_bottom_unmask(struct irq_data *d)
+> +{
+> +	struct pcie_port *pp = irq_data_get_irq_chip_data(d);
+> +	struct dw_pcie *pci = to_dw_pcie_from_pp(pp);
+> +	unsigned int res, bit, ctrl;
+> +	unsigned long flags;
+> +
+> +	raw_spin_lock_irqsave(&pp->lock, flags);
+> +
+> +	ctrl = d->hwirq / MAX_MSI_IRQS_PER_CTRL;
+> +	res = ctrl * MSI_REG_CTRL_BLOCK_SIZE;
+> +	bit = d->hwirq % MAX_MSI_IRQS_PER_CTRL;
+> +
+> +	pp->irq_mask[ctrl] &= ~BIT(bit);
+> +	dw_pcie_writel_dbi(pci, PCIE_MSI_INTR0_MASK + res,
+> +			   pp->irq_mask[ctrl]);
+> +
+> +	raw_spin_unlock_irqrestore(&pp->lock, flags);
+> +}
+> +
+> +static void dra7xx_pcie_bottom_ack(struct irq_data *d)
+> +{
+> +	struct pcie_port *pp  = irq_data_get_irq_chip_data(d);
+> +	struct dw_pcie *pci = to_dw_pcie_from_pp(pp);
+> +	unsigned int res, bit, ctrl;
+> +
+> +	ctrl = d->hwirq / MAX_MSI_IRQS_PER_CTRL;
+> +	res = ctrl * MSI_REG_CTRL_BLOCK_SIZE;
+> +	bit = d->hwirq % MAX_MSI_IRQS_PER_CTRL;
+> +
+> +	dw_pcie_writel_dbi(pci, PCIE_MSI_INTR0_STATUS + res, BIT(bit));
+> +}
+> +
+> +static struct irq_chip dra7xx_pci_msi_bottom_irq_chip = {
+> +	.name = "DRA7XX-PCI-MSI",
+> +	.irq_ack = dra7xx_pcie_bottom_ack,
+> +	.irq_compose_msi_msg = dra7xx_pcie_setup_msi_msg,
+> +	.irq_set_affinity = dra7xx_pcie_msi_set_affinity,
+> +	.irq_mask = dra7xx_pcie_bottom_mask,
+> +	.irq_unmask = dra7xx_pcie_bottom_unmask,
+> +};
+> +
+> +static int dra7xx_pcie_msi_host_init(struct pcie_port *pp)
+> +{
+> +	struct dw_pcie *pci = to_dw_pcie_from_pp(pp);
+> +	u32 ctrl, num_ctrls;
+> +
+> +	pp->msi_irq_chip = &dra7xx_pci_msi_bottom_irq_chip;
+> +
+> +	num_ctrls = pp->num_vectors / MAX_MSI_IRQS_PER_CTRL;
+> +	/* Initialize IRQ Status array */
+> +	for (ctrl = 0; ctrl < num_ctrls; ctrl++) {
+> +		pp->irq_mask[ctrl] = ~0;
+> +		dw_pcie_writel_dbi(pci, PCIE_MSI_INTR0_MASK +
+> +				    (ctrl * MSI_REG_CTRL_BLOCK_SIZE),
+> +				    pp->irq_mask[ctrl]);
+> +		dw_pcie_writel_dbi(pci, PCIE_MSI_INTR0_ENABLE +
+> +				    (ctrl * MSI_REG_CTRL_BLOCK_SIZE),
+> +				    ~0);
+> +	}
+> +
+> +	return dw_pcie_allocate_domains(pp);
+> +}
+> +
+> +static const struct dw_pcie_host_ops dra7xx_pcie_host_ops = {
+> +	.host_init = dra7xx_pcie_host_init,
+> +	.msi_host_init = dra7xx_pcie_msi_host_init,
+> +};
+> +
+>  static void dra7xx_pcie_ep_init(struct dw_pcie_ep *ep)
+>  {
+>  	struct dw_pcie *pci = to_dw_pcie_from_ep(ep);
+> @@ -467,14 +626,6 @@ static int __init dra7xx_add_pcie_port(struct dra7xx_pcie *dra7xx,
+>  		return pp->irq;
+>  	}
+>  
+> -	ret = devm_request_irq(dev, pp->irq, dra7xx_pcie_msi_irq_handler,
+> -			       IRQF_SHARED | IRQF_NO_THREAD,
+> -			       "dra7-pcie-msi",	dra7xx);
+> -	if (ret) {
+> -		dev_err(dev, "failed to request irq\n");
+> -		return ret;
+> -	}
+> -
+>  	ret = dra7xx_pcie_init_irq_domain(pp);
+>  	if (ret < 0)
+>  		return ret;
+> 
