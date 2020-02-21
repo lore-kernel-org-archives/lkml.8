@@ -2,138 +2,138 @@ Return-Path: <SRS0=1210=4J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4FA6FC35666
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 21:21:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 75468C3566F
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 21:21:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2A8E42072C
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 21:21:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4AFDD206EF
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 21:21:35 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="RX+9MTfv"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727635AbgBUVVW (ORCPT
+        id S1728363AbgBUVVe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Feb 2020 16:21:22 -0500
-Received: from asavdk3.altibox.net ([109.247.116.14]:46920 "EHLO
-        asavdk3.altibox.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726707AbgBUVVW (ORCPT
+        Fri, 21 Feb 2020 16:21:34 -0500
+Received: from mail-qk1-f193.google.com ([209.85.222.193]:33796 "EHLO
+        mail-qk1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726707AbgBUVVd (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Feb 2020 16:21:22 -0500
-Received: from ravnborg.org (unknown [158.248.194.18])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by asavdk3.altibox.net (Postfix) with ESMTPS id 6670620083;
-        Fri, 21 Feb 2020 22:21:19 +0100 (CET)
-Date:   Fri, 21 Feb 2020 22:21:18 +0100
-From:   Sam Ravnborg <sam@ravnborg.org>
-To:     Kevin Tang <kevin3.tang@gmail.com>
-Cc:     airlied@linux.ie, daniel@ffwll.ch, robh+dt@kernel.org,
-        mark.rutland@arm.com, orsonzhai@gmail.com,
-        dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org,
-        zhang.lyra@gmail.com, baolin.wang@linaro.org
-Subject: Re: [PATCH RFC v3 1/6] dt-bindings: display: add Unisoc's drm master
- bindings
-Message-ID: <20200221212118.GC3456@ravnborg.org>
-References: <1582271336-3708-1-git-send-email-kevin3.tang@gmail.com>
- <1582271336-3708-2-git-send-email-kevin3.tang@gmail.com>
+        Fri, 21 Feb 2020 16:21:33 -0500
+Received: by mail-qk1-f193.google.com with SMTP id c20so3245756qkm.1;
+        Fri, 21 Feb 2020 13:21:33 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=sender:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=ElrgyGt3aPABV2nXv5o0YBnfRSrXqTbK+erUkIwFAlc=;
+        b=RX+9MTfvMFTXoGCzukIKGNwP2i+7FGJ23hyyBesjzXr5Tz/g9keibb8Z7GBrOQMXoo
+         OkcePZpYO0hWV2HKgSQAc11KNB+6aAM74aT9zp24RE6ST3DtrwjXFJNWL8FV4k+/w8v/
+         h0Ef0eL+bnCDLG/ZeGkqCdg22fovFAaAGPB7HTlxNk2MNLe9Wb5qlT1iOqTP8c5poxJa
+         C3bt+rtEjnHvPd82Oy+G9SmJelfh1YCZCzFxKaiW+/xIccyPBLFBqgHp0bprl7Yk9Yj7
+         4XZTSIgcAx70MrcgWvZICt3vckfs3Xi+O/v+hb46Y8jml6Ly8qF2+aT16e2XjhRN9pIb
+         jaVg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:from:to:cc:subject:date:message-id
+         :mime-version:content-transfer-encoding;
+        bh=ElrgyGt3aPABV2nXv5o0YBnfRSrXqTbK+erUkIwFAlc=;
+        b=Xdks59MzqBy7palm20ZLSBcyzWbPVcg7JmagzOSXntRP8Kt4bUUeHYdw2hoizYOXLr
+         m7eC/Evyzlsr8UQoZHCBuWeQ7PR6Ph+R/oh5/8iy0XoLhfPIX3i1VbS4joeqnHSz//mM
+         d3M+BuG8ljaTZGApD5f+yE39Ad3VUw3bJwsKogjI61IRIlmEoUyD19sMqoQHtoF70LaL
+         nyXR0iT1b9KK4Er7ydzxiDj3dzGDDz9A2miSXEY0Ws13j7iorCBV0CyW3LTIFJ5r2Ss2
+         14TF45B9SvW6+hUisYqKU2G9ZJMzTbcxAkg7HxrpF5CXdIAkqHssm590waqirZPd/0HE
+         lHkg==
+X-Gm-Message-State: APjAAAUAgFySl/iOUiMSwNxpLXh7/lVk0NUCFvQnp3SYq8x/hg2ambHh
+        fgScYfmoeYuh3/bhqYxI89mf60eO5Yk=
+X-Google-Smtp-Source: APXvYqyONOj5SX1/vq3sFT1ak6bHSUAp9rVWLFpOVTNJwIcCfloQ+VTcEC7uGk7pC1mRji5VqD/T2A==
+X-Received: by 2002:ae9:e206:: with SMTP id c6mr35012453qkc.454.1582320092516;
+        Fri, 21 Feb 2020 13:21:32 -0800 (PST)
+Received: from planxty.redhat.com (rdwyon0600w-lp130-03-64-231-46-127.dsl.bell.ca. [64.231.46.127])
+        by smtp.gmail.com with ESMTPSA id o21sm2038829qki.56.2020.02.21.13.21.31
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 21 Feb 2020 13:21:32 -0800 (PST)
+From:   John Kacur <jkacur@redhat.com>
+To:     rt-users <linux-rt-users@vger.kernel.org>,
+        lkml <linux-kernel@vger.kernel.org>
+Cc:     Clark Williams <williams@redhat.com>,
+        John Kacur <jkacur@redhat.com>
+Subject: [ANNOUNCE] rt-tests-1.7
+Date:   Fri, 21 Feb 2020 16:21:20 -0500
+Message-Id: <20200221212120.14841-1-jkacur@redhat.com>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1582271336-3708-2-git-send-email-kevin3.tang@gmail.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
-X-CMAE-Score: 0
-X-CMAE-Analysis: v=2.3 cv=eMA9ckh1 c=1 sm=1 tr=0
-        a=UWs3HLbX/2nnQ3s7vZ42gw==:117 a=UWs3HLbX/2nnQ3s7vZ42gw==:17
-        a=jpOVt7BSZ2e4Z31A5e1TngXxSK0=:19 a=kj9zAlcOel0A:10 a=icsG72s9AAAA:8
-        a=pGLkceISAAAA:8 a=KKAkSRfTAAAA:8 a=gEfo2CItAAAA:8 a=VwQbUJbxAAAA:8
-        a=7CQSdrXTAAAA:8 a=crxGqJoGa4JPo5xfP4sA:9 a=58J9oS6OoW3ROaZk:21
-        a=itk5MRJ4zDJvAorz:21 a=CjuIK1q_8ugA:10 a=T89tl0cgrjxRNoSN2Dv0:22
-        a=cvBusfyB2V15izCimMoJ:22 a=sptkURWiP4Gy88Gu7hUp:22
-        a=AjGcO6oz07-iQ99wixmX:22 a=a-qgeE7W1pNrGK8U0ZQC:22
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Kevin.
+- Fixes to queuelat script
+- Little fixes to options and man pages of various programs in the suite
+- Fixes / changes to the new snapshot feature
+- New script get_cyclictest_snapshot to use the snapshot feature
 
-On Fri, Feb 21, 2020 at 03:48:51PM +0800, Kevin Tang wrote:
-> From: Kevin Tang <kevin.tang@unisoc.com>
-> 
-> The Unisoc DRM master device is a virtual device needed to list all
-> DPU devices or other display interface nodes that comprise the
-> graphics subsystem
-> 
-> Cc: Orson Zhai <orsonzhai@gmail.com>
-> Cc: Baolin Wang <baolin.wang@linaro.org>
-> Cc: Chunyan Zhang <zhang.lyra@gmail.com>
-> Signed-off-by: Kevin Tang <kevin.tang@unisoc.com>
-> ---
->  .../devicetree/bindings/display/sprd/drm.yaml      | 38 ++++++++++++++++++++++
->  1 file changed, 38 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/display/sprd/drm.yaml
-> 
-> diff --git a/Documentation/devicetree/bindings/display/sprd/drm.yaml b/Documentation/devicetree/bindings/display/sprd/drm.yaml
-> new file mode 100644
-> index 0000000..1614ca6
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/display/sprd/drm.yaml
-> @@ -0,0 +1,38 @@
-> +# SPDX-License-Identifier: GPL-2.0
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/display/sprd/drm.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> +
-> +title: Unisoc DRM master device
-> +
-> +maintainers:
-> +  - David Airlie <airlied@linux.ie>
-> +  - Daniel Vetter <daniel@ffwll.ch>
-> +  - Rob Herring <robh+dt@kernel.org>
-> +  - Mark Rutland <mark.rutland@arm.com>
+The snapshot feature gets a snapshot of a running cyclictest instance.
+Imagine you are running one or multiple instances of cyclictest on a
+large machine, perhaps with the -q option so that you would only get
+output at the very end, this feature allows you to see the status so far
+without halting cyclictest.
 
-Rob is king of a super-maintainer.
-He should not be listed unless he has special
-relations to sprd.
-David + Daniel - likewise. Unless they are closely related to sprd drop
-them.
+Clone
+git://git.kernel.org/pub/scm/utils/rt-tests/rt-tests.git
+https://git.kernel.org/pub/scm/utils/rt-tests/rt-tests.git
+https://kernel.googlesource.com/pub/scm/utils/rt-tests/rt-tests.git
 
-> +
-> +description: |
-> +  The Unisoc DRM master device is a virtual device needed to list all
-> +  DPU devices or other display interface nodes that comprise the
-> +  graphics subsystem.
+Branch: unstable/devel/latest
 
-I wonder why you name it "Unisoc" when all other places references sprd.
+Tag: v1.7
 
+Tarballs are available here:
+https://kernel.org/pub/linux/utils/rt-tests
 
-> +
-> +properties:
-> +  compatible:
-> +    const: sprd,display-subsystem
-> +
-> +  ports:
-> +    description:
-> +      Should contain a list of phandles pointing to display interface port
-> +      of DPU devices.
-> +
-> +required:
-> +  - compatible
-> +  - ports
-So you want to force the driver to support ports - and no panel
-referenced directly?
+Older version tarballs are available here:
+https://kernel.org/pub/linux/utils/rt-tests/older
 
-> +
-> +examples:
-> +  - |
-> +    display-subsystem {
-> +        compatible = "sprd,display-subsystem";
-> +        ports = <&dpu_out>;
-> +    };
-> \ No newline at end of file
-Please fix.
+John Kacur (14):
+  rt-tests: queuelat: Assume queuelat is in the path
+  rt-tests: cyclicdeadline: Add a simple manpage for cyclicdeadline
+  rt-tests: pi_stress: Add short options to usage message
+  rt-tests: pi_stress: Sync man page with help
+  rt-tests: queuelat: get_cpuinfo_mhz.sh highest value
+  rt-tests: determine_maximum_mpps.sh: Fix quoting and other shell issue
+  rt-tests: ptsematest: Update man page and add -h option
+  rt-tests: queuelat: Fixes to man page and display_help
+  rt-tests: svsematest: Display help with an error message for -h
+  rt-tests: Use a distinct shm file for each cyclictest instance
+  rt-tests: cyclictest: truncate shm files to zero when USR2 received
+  rt-tests: Add the get_cyclictest_snapshot.py utility
+  rt-tests: Add get_cyclictest_snapshot to Makefile
+  rt-tests: Makefile - update version
 
-	Sam
+Kurt Kanzenbach (1):
+  make: Make man page compression configurable
+
+ Makefile                                  | 77 +++++++++++++++++------
+ src/cyclictest/cyclictest.c               | 25 +++++---
+ src/cyclictest/get_cyclictest_snapshot.py | 76 ++++++++++++++++++++++
+ src/pi_tests/pi_stress.8                  |  9 +--
+ src/pi_tests/pi_stress.c                  | 34 +++++-----
+ src/ptsematest/ptsematest.8               |  3 +
+ src/ptsematest/ptsematest.c               | 10 +--
+ src/queuelat/determine_maximum_mpps.sh    | 75 +++++++++++-----------
+ src/queuelat/get_cpuinfo_mhz.sh           |  5 +-
+ src/queuelat/queuelat.8                   |  4 +-
+ src/queuelat/queuelat.c                   | 22 ++++---
+ src/sched_deadline/cyclicdeadline.8       | 53 ++++++++++++++++
+ src/svsematest/svsematest.c               |  3 +-
+ 13 files changed, 291 insertions(+), 105 deletions(-)
+ create mode 100755 src/cyclictest/get_cyclictest_snapshot.py
+ create mode 100644 src/sched_deadline/cyclicdeadline.8
+
+-- 
+2.20.1
+
