@@ -7,57 +7,50 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2A098C35641
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 08:44:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B8962C35641
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 08:44:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EE8E3206DB
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 08:44:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8C2EB206ED
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 08:44:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582274670;
-	bh=6tbLCWnpf1qdG/ZfEExJsIDCvHtX8M011tK0lJqgro0=;
+	s=default; t=1582274679;
+	bh=rj39OSYrqoqu/gv7Js1ahDXPfUHMssE9lIG6TbNNZN8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=mkrtrwAEwtY2d5mAU0dhC1NTp592/UwTYrF3meKtKs64gtgUdrOAijTj0IS4uNQYs
-	 tLOiyQTi4rO8/KSJqr6B65VVQ6PyFApBGvKPefWykratw015y+brVWzTFpNCekHZHi
-	 8J4b22Tg06C5kUP6OpIO8YBkauV4tYIGoKFWeYXk=
+	b=vLVw3SPRWbqN40eZQgKh5T8Suuabb29UJXLSeXdXSikCqgDwP4RdH46PgfTP8dd6u
+	 HMEXv82G64HGMdKkqvVcR4Hhbr8dbaMHwPQ0DxK6CqZeA3p51teKO5ZUFyEL3DQFYz
+	 76FRjrH+U4H4nuArKRBdkJupMoQMMJJjKuMC9ylI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731591AbgBUIo3 (ORCPT
+        id S1732087AbgBUIoh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Feb 2020 03:44:29 -0500
-Received: from mail.kernel.org ([198.145.29.99]:50220 "EHLO mail.kernel.org"
+        Fri, 21 Feb 2020 03:44:37 -0500
+Received: from mail.kernel.org ([198.145.29.99]:49932 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729267AbgBUHwY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Feb 2020 02:52:24 -0500
+        id S1729162AbgBUHwL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 21 Feb 2020 02:52:11 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1E6B120578;
-        Fri, 21 Feb 2020 07:52:23 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 70FEF20578;
+        Fri, 21 Feb 2020 07:52:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1582271543;
-        bh=6tbLCWnpf1qdG/ZfEExJsIDCvHtX8M011tK0lJqgro0=;
+        s=default; t=1582271530;
+        bh=rj39OSYrqoqu/gv7Js1ahDXPfUHMssE9lIG6TbNNZN8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=TADtCVr4qZ5qCSaQyEQjkVnVu/W6+KP3EIFA5QnEU8D3LeXRP0tpPeDRpUETtJnR3
-         vxd7X1+VO3j4w91wl/m6+ULJ4xqPpc36djBKBPH+kNOEiM6RZNUKAlCjVfTdKpMUcc
-         E/0n+BJq7nnkOTXpN13sM6IgrBwigSxzA6oxz52k=
+        b=yK/KBuRDCg2vTZTJygn+Y3+ok+B0CpUuXK4I1wTm9pKPVzatr7oMoNi+d7hk+M1B0
+         R53n39icfIwbHPrx7NubL8W1U19JDaY0fv7qdzPqCUNh5cXUWjDcggAZtrw+t+7AEi
+         vwBqp1+fODOjiWSk1YA6Q3o7CgtzRh0Q09FTIcis=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org,
-        Andrey Zhizhikin <andrey.zhizhikin@leica-geosystems.com>,
-        Petr Mladek <pmladek@suse.com>, Jiri Olsa <jolsa@kernel.org>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Andrii Nakryiko <andriin@fb.com>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Kefeng Wang <wangkefeng.wang@huawei.com>,
-        Martin KaFai Lau <kafai@fb.com>,
-        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
-        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
-        bpf@vger.kernel.org, netdev@vger.kernel.org,
-        Arnaldo Carvalho de Melo <acme@redhat.com>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Niklas Cassel <niklas.cassel@linaro.org>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Niklas Cassel <nks@flawful.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.5 207/399] tools lib api fs: Fix gcc9 stringop-truncation compilation error
-Date:   Fri, 21 Feb 2020 08:38:52 +0100
-Message-Id: <20200221072423.010626148@linuxfoundation.org>
+Subject: [PATCH 5.5 202/399] clk: Use parent node pointer during registration if necessary
+Date:   Fri, 21 Feb 2020 08:38:47 +0100
+Message-Id: <20200221072422.473897235@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200221072402.315346745@linuxfoundation.org>
 References: <20200221072402.315346745@linuxfoundation.org>
@@ -70,64 +63,91 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Andrey Zhizhikin <andrey.z@gmail.com>
+From: Stephen Boyd <sboyd@kernel.org>
 
-[ Upstream commit 6794200fa3c9c3e6759dae099145f23e4310f4f7 ]
+[ Upstream commit 9011f92622e5ef2d075f45e5fa818776d4feb8c0 ]
 
-GCC9 introduced string hardening mechanisms, which exhibits the error
-during fs api compilation:
+Sometimes clk drivers are attached to devices which are children of a
+parent device that is connected to a node in DT. This happens when
+devices are MFD-ish and the parent device driver mostly registers child
+devices to match against drivers placed in their respective subsystem
+directories like drivers/clk, drivers/regulator, etc. When the clk
+driver calls clk_register() with a device pointer, that struct device
+pointer won't have a device_node associated with it because it was
+created purely in software as a way to partition logic to a subsystem.
 
-error: '__builtin_strncpy' specified bound 4096 equals destination size
-[-Werror=stringop-truncation]
+This causes problems for the way we find parent clks for the clks
+registered by these child devices because we look at the registering
+device's device_node pointer to lookup 'clocks' and 'clock-names'
+properties. Let's use the parent device's device_node pointer if the
+registering device doesn't have a device_node but the parent does. This
+simplifies clk registration code by avoiding the need to assign some
+device_node to the device registering the clk.
 
-This comes when the length of copy passed to strncpy is is equal to
-destination size, which could potentially lead to buffer overflow.
-
-There is a need to mitigate this potential issue by limiting the size of
-destination by 1 and explicitly terminate the destination with NULL.
-
-Signed-off-by: Andrey Zhizhikin <andrey.zhizhikin@leica-geosystems.com>
-Reviewed-by: Petr Mladek <pmladek@suse.com>
-Acked-by: Jiri Olsa <jolsa@kernel.org>
-Cc: Alexei Starovoitov <ast@kernel.org>
-Cc: Andrii Nakryiko <andriin@fb.com>
-Cc: Daniel Borkmann <daniel@iogearbox.net>
-Cc: Kefeng Wang <wangkefeng.wang@huawei.com>
-Cc: Martin KaFai Lau <kafai@fb.com>
-Cc: Petr Mladek <pmladek@suse.com>
-Cc: Sergey Senozhatsky <sergey.senozhatsky@gmail.com>
-Cc: Song Liu <songliubraving@fb.com>
-Cc: Yonghong Song <yhs@fb.com>
-Cc: bpf@vger.kernel.org
-Cc: netdev@vger.kernel.org
-Link: http://lore.kernel.org/lkml/20191211080109.18765-1-andrey.zhizhikin@leica-geosystems.com
-Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+Cc: Bjorn Andersson <bjorn.andersson@linaro.org>
+Reported-by: Niklas Cassel <niklas.cassel@linaro.org>
+Signed-off-by: Stephen Boyd <sboyd@kernel.org>
+Link: https://lkml.kernel.org/r/20191230190455.141339-1-sboyd@kernel.org
+[sboyd@kernel.org: Fixup kernel-doc notation]
+Reviewed-by: Niklas Cassel <nks@flawful.org>
+Reviewed-by: Bjorn Andersson <bjorn.andersson@linaro.org>
+Tested-by: Bjorn Andersson <bjorn.andersson@linaro.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- tools/lib/api/fs/fs.c | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+ drivers/clk/clk.c | 27 +++++++++++++++++++++++++--
+ 1 file changed, 25 insertions(+), 2 deletions(-)
 
-diff --git a/tools/lib/api/fs/fs.c b/tools/lib/api/fs/fs.c
-index 11b3885e833ed..027b18f7ed8cf 100644
---- a/tools/lib/api/fs/fs.c
-+++ b/tools/lib/api/fs/fs.c
-@@ -210,6 +210,7 @@ static bool fs__env_override(struct fs *fs)
- 	size_t name_len = strlen(fs->name);
- 	/* name + "_PATH" + '\0' */
- 	char upper_name[name_len + 5 + 1];
-+
- 	memcpy(upper_name, fs->name, name_len);
- 	mem_toupper(upper_name, name_len);
- 	strcpy(&upper_name[name_len], "_PATH");
-@@ -219,7 +220,8 @@ static bool fs__env_override(struct fs *fs)
- 		return false;
- 
- 	fs->found = true;
--	strncpy(fs->path, override_path, sizeof(fs->path));
-+	strncpy(fs->path, override_path, sizeof(fs->path) - 1);
-+	fs->path[sizeof(fs->path) - 1] = '\0';
- 	return true;
+diff --git a/drivers/clk/clk.c b/drivers/clk/clk.c
+index 53585cfc4b9ba..66f056ac4c156 100644
+--- a/drivers/clk/clk.c
++++ b/drivers/clk/clk.c
+@@ -3736,6 +3736,28 @@ fail_out:
+ 	return ERR_PTR(ret);
  }
+ 
++/**
++ * dev_or_parent_of_node() - Get device node of @dev or @dev's parent
++ * @dev: Device to get device node of
++ *
++ * Return: device node pointer of @dev, or the device node pointer of
++ * @dev->parent if dev doesn't have a device node, or NULL if neither
++ * @dev or @dev->parent have a device node.
++ */
++static struct device_node *dev_or_parent_of_node(struct device *dev)
++{
++	struct device_node *np;
++
++	if (!dev)
++		return NULL;
++
++	np = dev_of_node(dev);
++	if (!np)
++		np = dev_of_node(dev->parent);
++
++	return np;
++}
++
+ /**
+  * clk_register - allocate a new clock, register it and return an opaque cookie
+  * @dev: device that is registering this clock
+@@ -3751,7 +3773,7 @@ fail_out:
+  */
+ struct clk *clk_register(struct device *dev, struct clk_hw *hw)
+ {
+-	return __clk_register(dev, dev_of_node(dev), hw);
++	return __clk_register(dev, dev_or_parent_of_node(dev), hw);
+ }
+ EXPORT_SYMBOL_GPL(clk_register);
+ 
+@@ -3767,7 +3789,8 @@ EXPORT_SYMBOL_GPL(clk_register);
+  */
+ int clk_hw_register(struct device *dev, struct clk_hw *hw)
+ {
+-	return PTR_ERR_OR_ZERO(__clk_register(dev, dev_of_node(dev), hw));
++	return PTR_ERR_OR_ZERO(__clk_register(dev, dev_or_parent_of_node(dev),
++			       hw));
+ }
+ EXPORT_SYMBOL_GPL(clk_hw_register);
  
 -- 
 2.20.1
