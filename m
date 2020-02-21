@@ -5,50 +5,49 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 51125C35641
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 08:12:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0233DC35641
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 08:12:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 28AE824670
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 08:12:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BBCA324680
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 08:12:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582272733;
-	bh=NqIaCISv0custzYG3ZF/Mwy0/q42AlFdhqKe2fNSo9I=;
+	s=default; t=1582272735;
+	bh=+Rv2mcBG+tM8uETzSGed8+ZUKb3xzwLhZrMdg0JEZHM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=qft853gjubSDqHBFswPADiL+vxTOfoEcDkDo7pfwSookjhXncjqITA5t04SJl1CEb
-	 V57bPEQZKzpZy4lK+3ZER3IdgRYb/e1USuroAn7bNMvES2XuDMX4GQjfZqlQWKTUCF
-	 nfgY7Fenu7s4UGshW850AwsfLx5Bjd2LzOp3/DZo=
+	b=fV21ZBxy6C2M3NDS3xrInK/pZlhtAGo8KfKMq67wBbIqxtbejNSoN2l+UmlNj8zTa
+	 o5nTicA+2RS+f49DWxRZ2OA1aSmM40sVD+xmxSuebsaD1DeNsskGwVClwWx/evd1ul
+	 b4gO8HlpAURMb0Ze3+2AM9h44E9ag68ofn5sJN2k=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731824AbgBUIML (ORCPT
+        id S1732807AbgBUIMO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Feb 2020 03:12:11 -0500
-Received: from mail.kernel.org ([198.145.29.99]:47814 "EHLO mail.kernel.org"
+        Fri, 21 Feb 2020 03:12:14 -0500
+Received: from mail.kernel.org ([198.145.29.99]:47880 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732795AbgBUIMI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Feb 2020 03:12:08 -0500
+        id S1732797AbgBUIML (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 21 Feb 2020 03:12:11 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4301724670;
-        Fri, 21 Feb 2020 08:12:07 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id BFBF120722;
+        Fri, 21 Feb 2020 08:12:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1582272727;
-        bh=NqIaCISv0custzYG3ZF/Mwy0/q42AlFdhqKe2fNSo9I=;
+        s=default; t=1582272730;
+        bh=+Rv2mcBG+tM8uETzSGed8+ZUKb3xzwLhZrMdg0JEZHM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ZWEAmpmwdyN9NO0PbOQ+kDlztM7gPQEnY6tU0eobOasKT8Hfaz37z/MxuZowrjJeu
-         guVXwLDAzNYxDC46oPoAYVJTpaG+g6k86fhtwtWuwHb4jIxr63JLQm6SYyw10YBQKz
-         ahiB8ojcY7FJByXGLPPrOKc0fegyno3upPcZgTUc=
+        b=RV2R1LVesroau5Airm+pfJGjYTuU8acWe++xxXMwEvSJBhsjbPsBHxnptLGsVx+3u
+         flETYa/3SmQ2oS6s1DyKLeggji6W7ItGGuZhHXcYHjQ1wkuL8en5i8WzPrj2o95EGu
+         l0unC46y0fpI7UtVvfYGm69OoY1e2EOXAZw3eHh8=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Zeng Tao <prime.zeng@hisilicon.com>,
-        Valentin Schneider <valentin.schneider@arm.com>,
+        stable@vger.kernel.org, Kim Phillips <kim.phillips@amd.com>,
         "Peter Zijlstra (Intel)" <peterz@infradead.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 251/344] sched/topology: Assert non-NUMA topology masks dont (partially) overlap
-Date:   Fri, 21 Feb 2020 08:40:50 +0100
-Message-Id: <20200221072412.285106414@linuxfoundation.org>
+Subject: [PATCH 5.4 252/344] perf/x86/amd: Constrain Large Increment per Cycle events
+Date:   Fri, 21 Feb 2020 08:40:51 +0100
+Message-Id: <20200221072412.395970009@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200221072349.335551332@linuxfoundation.org>
 References: <20200221072349.335551332@linuxfoundation.org>
@@ -61,138 +60,202 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Valentin Schneider <valentin.schneider@arm.com>
+From: Kim Phillips <kim.phillips@amd.com>
 
-[ Upstream commit ccf74128d66ce937876184ad55db2e0276af08d3 ]
+[ Upstream commit 471af006a747f1c535c8a8c6c0973c320fe01b22 ]
 
-topology.c::get_group() relies on the assumption that non-NUMA domains do
-not partially overlap. Zeng Tao pointed out in [1] that such topology
-descriptions, while completely bogus, can end up being exposed to the
-scheduler.
+AMD Family 17h processors and above gain support for Large Increment
+per Cycle events.  Unfortunately there is no CPUID or equivalent bit
+that indicates whether the feature exists or not, so we continue to
+determine eligibility based on a CPU family number comparison.
 
-In his example (8 CPUs, 2-node system), we end up with:
-  MC span for CPU3 == 3-7
-  MC span for CPU4 == 4-7
+For Large Increment per Cycle events, we add a f17h-and-compatibles
+get_event_constraints_f17h() that returns an even counter bitmask:
+Large Increment per Cycle events can only be placed on PMCs 0, 2,
+and 4 out of the currently available 0-5.  The only currently
+public event that requires this feature to report valid counts
+is PMCx003 "Retired SSE/AVX Operations".
 
-The first pass through get_group(3, sdd@MC) will result in the following
-sched_group list:
+Note that the CPU family logic in amd_core_pmu_init() is changed
+so as to be able to selectively add initialization for features
+available in ranges of backward-compatible CPU families.  This
+Large Increment per Cycle feature is expected to be retained
+in future families.
 
-  3 -> 4 -> 5 -> 6 -> 7
-  ^                  /
-   `----------------'
+A side-effect of assigning a new get_constraints function for f17h
+disables calling the old (prior to f15h) amd_get_event_constraints
+implementation left enabled by commit e40ed1542dd7 ("perf/x86: Add perf
+support for AMD family-17h processors"), which is no longer
+necessary since those North Bridge event codes are obsoleted.
 
-And a later pass through get_group(4, sdd@MC) will "corrupt" that to:
+Also fix a spelling mistake whilst in the area (calulating ->
+calculating).
 
-  3 -> 4 -> 5 -> 6 -> 7
-       ^             /
-	`-----------'
-
-which will completely break things like 'while (sg != sd->groups)' when
-using CPU3's base sched_domain.
-
-There already are some architecture-specific checks in place such as
-x86/kernel/smpboot.c::topology.sane(), but this is something we can detect
-in the core scheduler, so it seems worthwhile to do so.
-
-Warn and abort the construction of the sched domains if such a broken
-topology description is detected. Note that this is somewhat
-expensive (O(t.c²), 't' non-NUMA topology levels and 'c' CPUs) and could be
-gated under SCHED_DEBUG if deemed necessary.
-
-Testing
-=======
-
-Dietmar managed to reproduce this using the following qemu incantation:
-
-  $ qemu-system-aarch64 -kernel ./Image -hda ./qemu-image-aarch64.img \
-  -append 'root=/dev/vda console=ttyAMA0 loglevel=8 sched_debug' -smp \
-  cores=8 --nographic -m 512 -cpu cortex-a53 -machine virt -numa \
-  node,cpus=0-2,nodeid=0 -numa node,cpus=3-7,nodeid=1
-
-alongside the following drivers/base/arch_topology.c hack (AIUI wouldn't be
-needed if '-smp cores=X, sockets=Y' would work with qemu):
-
-8<---
-@@ -465,6 +465,9 @@ void update_siblings_masks(unsigned int cpuid)
- 		if (cpuid_topo->package_id != cpu_topo->package_id)
- 			continue;
-
-+		if ((cpu < 4 && cpuid > 3) || (cpu > 3 && cpuid < 4))
-+			continue;
-+
- 		cpumask_set_cpu(cpuid, &cpu_topo->core_sibling);
- 		cpumask_set_cpu(cpu, &cpuid_topo->core_sibling);
-
-8<---
-
-[1]: https://lkml.kernel.org/r/1577088979-8545-1-git-send-email-prime.zeng@hisilicon.com
-
-Reported-by: Zeng Tao <prime.zeng@hisilicon.com>
-Signed-off-by: Valentin Schneider <valentin.schneider@arm.com>
+Fixes: e40ed1542dd7 ("perf/x86: Add perf support for AMD family-17h processors")
+Signed-off-by: Kim Phillips <kim.phillips@amd.com>
 Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-Link: https://lkml.kernel.org/r/20200115160915.22575-1-valentin.schneider@arm.com
+Link: https://lkml.kernel.org/r/20191114183720.19887-2-kim.phillips@amd.com
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- kernel/sched/topology.c | 39 +++++++++++++++++++++++++++++++++++++++
- 1 file changed, 39 insertions(+)
+ arch/x86/events/amd/core.c   | 91 ++++++++++++++++++++++++------------
+ arch/x86/events/perf_event.h |  2 +
+ 2 files changed, 63 insertions(+), 30 deletions(-)
 
-diff --git a/kernel/sched/topology.c b/kernel/sched/topology.c
-index 49b835f1305f8..1fa1e13a59446 100644
---- a/kernel/sched/topology.c
-+++ b/kernel/sched/topology.c
-@@ -1882,6 +1882,42 @@ static struct sched_domain *build_sched_domain(struct sched_domain_topology_leve
- 	return sd;
+diff --git a/arch/x86/events/amd/core.c b/arch/x86/events/amd/core.c
+index beffafd7dcc3f..3ea8056148d84 100644
+--- a/arch/x86/events/amd/core.c
++++ b/arch/x86/events/amd/core.c
+@@ -302,6 +302,25 @@ static inline int amd_pmu_addr_offset(int index, bool eventsel)
+ 	return offset;
  }
  
 +/*
-+ * Ensure topology masks are sane, i.e. there are no conflicts (overlaps) for
-+ * any two given CPUs at this (non-NUMA) topology level.
++ * AMD64 events are detected based on their event codes.
 + */
-+static bool topology_span_sane(struct sched_domain_topology_level *tl,
-+			      const struct cpumask *cpu_map, int cpu)
++static inline unsigned int amd_get_event_code(struct hw_perf_event *hwc)
 +{
-+	int i;
-+
-+	/* NUMA levels are allowed to overlap */
-+	if (tl->flags & SDTL_OVERLAP)
-+		return true;
-+
-+	/*
-+	 * Non-NUMA levels cannot partially overlap - they must be either
-+	 * completely equal or completely disjoint. Otherwise we can end up
-+	 * breaking the sched_group lists - i.e. a later get_group() pass
-+	 * breaks the linking done for an earlier span.
-+	 */
-+	for_each_cpu(i, cpu_map) {
-+		if (i == cpu)
-+			continue;
-+		/*
-+		 * We should 'and' all those masks with 'cpu_map' to exactly
-+		 * match the topology we're about to build, but that can only
-+		 * remove CPUs, which only lessens our ability to detect
-+		 * overlaps
-+		 */
-+		if (!cpumask_equal(tl->mask(cpu), tl->mask(i)) &&
-+		    cpumask_intersects(tl->mask(cpu), tl->mask(i)))
-+			return false;
-+	}
-+
-+	return true;
++	return ((hwc->config >> 24) & 0x0f00) | (hwc->config & 0x00ff);
 +}
 +
- /*
-  * Find the sched_domain_topology_level where all CPU capacities are visible
-  * for all CPUs.
-@@ -1978,6 +2014,9 @@ build_sched_domains(const struct cpumask *cpu_map, struct sched_domain_attr *att
- 				has_asym = true;
- 			}
- 
-+			if (WARN_ON(!topology_span_sane(tl, cpu_map, i)))
-+				goto error;
++static inline bool amd_is_pair_event_code(struct hw_perf_event *hwc)
++{
++	if (!(x86_pmu.flags & PMU_FL_PAIR))
++		return false;
 +
- 			sd = build_sched_domain(tl, cpu_map, attr, sd, dflags, i);
++	switch (amd_get_event_code(hwc)) {
++	case 0x003:	return true;	/* Retired SSE/AVX FLOPs */
++	default:	return false;
++	}
++}
++
+ static int amd_core_hw_config(struct perf_event *event)
+ {
+ 	if (event->attr.exclude_host && event->attr.exclude_guest)
+@@ -320,14 +339,6 @@ static int amd_core_hw_config(struct perf_event *event)
+ 	return 0;
+ }
  
- 			if (tl == sched_domain_topology)
+-/*
+- * AMD64 events are detected based on their event codes.
+- */
+-static inline unsigned int amd_get_event_code(struct hw_perf_event *hwc)
+-{
+-	return ((hwc->config >> 24) & 0x0f00) | (hwc->config & 0x00ff);
+-}
+-
+ static inline int amd_is_nb_event(struct hw_perf_event *hwc)
+ {
+ 	return (hwc->config & 0xe0) == 0xe0;
+@@ -865,6 +876,20 @@ amd_get_event_constraints_f15h(struct cpu_hw_events *cpuc, int idx,
+ 	}
+ }
+ 
++static struct event_constraint pair_constraint;
++
++static struct event_constraint *
++amd_get_event_constraints_f17h(struct cpu_hw_events *cpuc, int idx,
++			       struct perf_event *event)
++{
++	struct hw_perf_event *hwc = &event->hw;
++
++	if (amd_is_pair_event_code(hwc))
++		return &pair_constraint;
++
++	return &unconstrained;
++}
++
+ static ssize_t amd_event_sysfs_show(char *page, u64 config)
+ {
+ 	u64 event = (config & ARCH_PERFMON_EVENTSEL_EVENT) |
+@@ -908,33 +933,15 @@ static __initconst const struct x86_pmu amd_pmu = {
+ 
+ static int __init amd_core_pmu_init(void)
+ {
++	u64 even_ctr_mask = 0ULL;
++	int i;
++
+ 	if (!boot_cpu_has(X86_FEATURE_PERFCTR_CORE))
+ 		return 0;
+ 
+-	/* Avoid calulating the value each time in the NMI handler */
++	/* Avoid calculating the value each time in the NMI handler */
+ 	perf_nmi_window = msecs_to_jiffies(100);
+ 
+-	switch (boot_cpu_data.x86) {
+-	case 0x15:
+-		pr_cont("Fam15h ");
+-		x86_pmu.get_event_constraints = amd_get_event_constraints_f15h;
+-		break;
+-	case 0x17:
+-		pr_cont("Fam17h ");
+-		/*
+-		 * In family 17h, there are no event constraints in the PMC hardware.
+-		 * We fallback to using default amd_get_event_constraints.
+-		 */
+-		break;
+-	case 0x18:
+-		pr_cont("Fam18h ");
+-		/* Using default amd_get_event_constraints. */
+-		break;
+-	default:
+-		pr_err("core perfctr but no constraints; unknown hardware!\n");
+-		return -ENODEV;
+-	}
+-
+ 	/*
+ 	 * If core performance counter extensions exists, we must use
+ 	 * MSR_F15H_PERF_CTL/MSR_F15H_PERF_CTR msrs. See also
+@@ -949,6 +956,30 @@ static int __init amd_core_pmu_init(void)
+ 	 */
+ 	x86_pmu.amd_nb_constraints = 0;
+ 
++	if (boot_cpu_data.x86 == 0x15) {
++		pr_cont("Fam15h ");
++		x86_pmu.get_event_constraints = amd_get_event_constraints_f15h;
++	}
++	if (boot_cpu_data.x86 >= 0x17) {
++		pr_cont("Fam17h+ ");
++		/*
++		 * Family 17h and compatibles have constraints for Large
++		 * Increment per Cycle events: they may only be assigned an
++		 * even numbered counter that has a consecutive adjacent odd
++		 * numbered counter following it.
++		 */
++		for (i = 0; i < x86_pmu.num_counters - 1; i += 2)
++			even_ctr_mask |= 1 << i;
++
++		pair_constraint = (struct event_constraint)
++				    __EVENT_CONSTRAINT(0, even_ctr_mask, 0,
++				    x86_pmu.num_counters / 2, 0,
++				    PERF_X86_EVENT_PAIR);
++
++		x86_pmu.get_event_constraints = amd_get_event_constraints_f17h;
++		x86_pmu.flags |= PMU_FL_PAIR;
++	}
++
+ 	pr_cont("core perfctr, ");
+ 	return 0;
+ }
+diff --git a/arch/x86/events/perf_event.h b/arch/x86/events/perf_event.h
+index ecacfbf4ebc12..0ed910237c4d8 100644
+--- a/arch/x86/events/perf_event.h
++++ b/arch/x86/events/perf_event.h
+@@ -77,6 +77,7 @@ static inline bool constraint_match(struct event_constraint *c, u64 ecode)
+ #define PERF_X86_EVENT_AUTO_RELOAD	0x0200 /* use PEBS auto-reload */
+ #define PERF_X86_EVENT_LARGE_PEBS	0x0400 /* use large PEBS */
+ #define PERF_X86_EVENT_PEBS_VIA_PT	0x0800 /* use PT buffer for PEBS */
++#define PERF_X86_EVENT_PAIR		0x1000 /* Large Increment per Cycle */
+ 
+ struct amd_nb {
+ 	int nb_id;  /* NorthBridge id */
+@@ -735,6 +736,7 @@ do {									\
+ #define PMU_FL_EXCL_ENABLED	0x8 /* exclusive counter active */
+ #define PMU_FL_PEBS_ALL		0x10 /* all events are valid PEBS events */
+ #define PMU_FL_TFA		0x20 /* deal with TSX force abort */
++#define PMU_FL_PAIR		0x40 /* merge counters for large incr. events */
+ 
+ #define EVENT_VAR(_id)  event_attr_##_id
+ #define EVENT_PTR(_id) &event_attr_##_id.attr.attr
 -- 
 2.20.1
 
