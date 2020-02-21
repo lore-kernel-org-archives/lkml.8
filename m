@@ -2,97 +2,155 @@ Return-Path: <SRS0=1210=4J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E466BC35647
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 13:11:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A4FF5C35647
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 13:12:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AD24A24650
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 13:11:51 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582290711;
-	bh=jNY4bnNY/Z3DsEGdGY9Cp0GBQ0q0ns36gFzk+USyEOE=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=Sl9ShTDlP9UzcY5oXk3De2HAxmTFDQqx8couorXbxqkIZrMF7XHvJNcDmxE1kPNdT
-	 2ysV/clkik7xXV5QOh7qgv+PmfTAIo2W846b+EErSQD+hrhiiLOpItRP0bTpQZNwfZ
-	 krWeyGus4zqQxCXX4KJw2oHjzjwlfs8eS+Pl+tnY=
+	by mail.kernel.org (Postfix) with ESMTP id 765D12073A
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 13:12:34 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="eib3Jfwy"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728460AbgBUNLu (ORCPT
+        id S1728477AbgBUNMd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Feb 2020 08:11:50 -0500
-Received: from mail.kernel.org ([198.145.29.99]:43226 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727699AbgBUNLu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Feb 2020 08:11:50 -0500
-Received: from archlinux (cpc149474-cmbg20-2-0-cust94.5-4.cable.virginm.net [82.4.196.95])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0D3E42073A;
-        Fri, 21 Feb 2020 13:11:48 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1582290709;
-        bh=jNY4bnNY/Z3DsEGdGY9Cp0GBQ0q0ns36gFzk+USyEOE=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=zpJWwd/HmS2+FNKa65UCLMQSxXWKlDNXFqidEvAq9wKNBVastvhIow+a305zcRMb7
-         C2NsXOfgBE+C2SMT7Dgh+a++MKM9W5avvfXSLlmV/VRWlVvq8b4mS6ax/g96cj846s
-         wHd5HvrACnfzRlPJv3NHZe6+hRA/7mZ5swbMFQtE=
-Date:   Fri, 21 Feb 2020 13:11:46 +0000
-From:   Jonathan Cameron <jic23@kernel.org>
-To:     Alexandru Ardelean <alexandru.ardelean@analog.com>
-Cc:     <linux-iio@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH 1/3] iio: imu: adis: add doc-string for 'adis' struct
-Message-ID: <20200221131146.2213e8e1@archlinux>
-In-Reply-To: <20200221114943.2056-1-alexandru.ardelean@analog.com>
-References: <20200221114943.2056-1-alexandru.ardelean@analog.com>
-X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        Fri, 21 Feb 2020 08:12:33 -0500
+Received: from mail-wm1-f65.google.com ([209.85.128.65]:39885 "EHLO
+        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727053AbgBUNMd (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 21 Feb 2020 08:12:33 -0500
+Received: by mail-wm1-f65.google.com with SMTP id c84so1797264wme.4
+        for <linux-kernel@vger.kernel.org>; Fri, 21 Feb 2020 05:12:31 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to
+         :user-agent;
+        bh=a/KavHLvvULXfL2VP34j+gxXqKWZ5d3n9oQaqLdPQv4=;
+        b=eib3Jfwyj+tZtw0Vz5eRWnOQiMb9kRoD6q2gN2p55T9aS3rgoCUuv4jkOzgSy6JAgQ
+         LEjM/7bJFu5XAMFaMvFkgF8XI6h8ICSPxck1TJrj6R8L0TLPzxasmiTqaRBEuJSE492o
+         xUPyAD7jB/fuLzt6Z6u8a/djHUo7qip9vuLowvh5OaxbICooz75RPYWXY584WFX80Hsq
+         UecpvDo6HfzMYfFJjPppbxEhywhbLPSsEWUgzWENhmVwerLyCsfebJ75YhAi0BV6oT34
+         gcEUPT4zy5xBisJiKhATgcWrOM/bv0x40XtU3oXOP8d4vAUNTTge4+2/pCIL965PidD5
+         SzyA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to:user-agent;
+        bh=a/KavHLvvULXfL2VP34j+gxXqKWZ5d3n9oQaqLdPQv4=;
+        b=ls1AlIN1xKY9W+2C3KAWPPzxdPlHxve8gbsjcD1V62G4CFcm29ouznH/5MkpYXvdTV
+         RYjyMcHgOLZBHhsjmUFqBSRMTt4jvB8phkK6MqcY/r2Cwhnr11h716wzXswDCgvFG3cc
+         LXI5OtgwdmbdOABBO8H08P4ckxZrYc9uo3W2PYuYJRutGVo5HBbuj3cL6S1QwErGGKzV
+         Qdovv9Axb24/2KbfkYc1CYxY+CEkb/6zYDEsd2hGtevhrnwdi5SnusR6Uf+6NDlxk09O
+         1LUGsQU15QWXR0lC58vSWiw1tgVx8njorUKY/aXEGHIzBmGMVL8D8DetySLLYauah4Nz
+         6dFA==
+X-Gm-Message-State: APjAAAU/8IUgk2VT53P+NQ+6sqFGLRufpC0WNMF1cXbNUx7bNRoLAMM7
+        5gy+XWs2i2ypxZhxQ8E0RO9Y/Q==
+X-Google-Smtp-Source: APXvYqx5emu1fdVAd6Tj3p81RSkBc6Mf5Yyr0nrkLGXMlG0khLLYOloIT2vAb1bEk0+GwUGFpzZSvQ==
+X-Received: by 2002:a1c:4e02:: with SMTP id g2mr3929356wmh.131.1582290750388;
+        Fri, 21 Feb 2020 05:12:30 -0800 (PST)
+Received: from linaro.org ([2a01:e34:ed2f:f020:2dfb:b5ce:9043:4adb])
+        by smtp.gmail.com with ESMTPSA id c15sm3881537wrt.1.2020.02.21.05.12.28
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Fri, 21 Feb 2020 05:12:29 -0800 (PST)
+Date:   Fri, 21 Feb 2020 14:12:26 +0100
+From:   Daniel Lezcano <daniel.lezcano@linaro.org>
+To:     Anson Huang <anson.huang@nxp.com>
+Cc:     "robh+dt@kernel.org" <robh+dt@kernel.org>,
+        "mark.rutland@arm.com" <mark.rutland@arm.com>,
+        "shawnguo@kernel.org" <shawnguo@kernel.org>,
+        "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>,
+        "kernel@pengutronix.de" <kernel@pengutronix.de>,
+        "festevam@gmail.com" <festevam@gmail.com>,
+        "catalin.marinas@arm.com" <catalin.marinas@arm.com>,
+        "will@kernel.org" <will@kernel.org>,
+        "rui.zhang@intel.com" <rui.zhang@intel.com>,
+        "amit.kucheria@verdurent.com" <amit.kucheria@verdurent.com>,
+        Aisheng Dong <aisheng.dong@nxp.com>,
+        "linux@roeck-us.net" <linux@roeck-us.net>,
+        "srinivas.kandagatla@linaro.org" <srinivas.kandagatla@linaro.org>,
+        "krzk@kernel.org" <krzk@kernel.org>,
+        Andy Duan <fugang.duan@nxp.com>, Peng Fan <peng.fan@nxp.com>,
+        Daniel Baluta <daniel.baluta@nxp.com>,
+        "bjorn.andersson@linaro.org" <bjorn.andersson@linaro.org>,
+        "olof@lixom.net" <olof@lixom.net>,
+        "dinguyen@kernel.org" <dinguyen@kernel.org>,
+        Leonard Crestez <leonard.crestez@nxp.com>,
+        "marcin.juszkiewicz@linaro.org" <marcin.juszkiewicz@linaro.org>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>,
+        dl-linux-imx <linux-imx@nxp.com>
+Subject: Re: [PATCH V15 RESEND 2/5] thermal: of-thermal: add API for getting
+ sensor ID from DT
+Message-ID: <20200221131226.GE10516@linaro.org>
+References: <1582161028-2844-1-git-send-email-Anson.Huang@nxp.com>
+ <1582161028-2844-2-git-send-email-Anson.Huang@nxp.com>
+ <20200221091112.GA10516@linaro.org>
+ <DB3PR0402MB39161BB726FE5413F30F0263F5120@DB3PR0402MB3916.eurprd04.prod.outlook.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <DB3PR0402MB39161BB726FE5413F30F0263F5120@DB3PR0402MB3916.eurprd04.prod.outlook.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 21 Feb 2020 13:49:41 +0200
-Alexandru Ardelean <alexandru.ardelean@analog.com> wrote:
-
-> This change adds a doc-string for the 'adis' struct. It details the fields
-> and their roles.
+On Fri, Feb 21, 2020 at 09:26:29AM +0000, Anson Huang wrote:
+> Hi, Daniel
 > 
-> Signed-off-by: Alexandru Ardelean <alexandru.ardelean@analog.com>
-> ---
->  include/linux/iio/imu/adis.h | 14 ++++++++++++++
->  1 file changed, 14 insertions(+)
+> > >   *       a valid .of_node, for the sensor node.
+> > > @@ -499,36 +546,22 @@ thermal_zone_of_sensor_register(struct device
+> > *dev, int sensor_id, void *data,
+> > >  	sensor_np = of_node_get(dev->of_node);
+> > >
+> > >  	for_each_available_child_of_node(np, child) {
+> > > -		struct of_phandle_args sensor_specs;
+> > >  		int ret, id;
+> > >
+> > >  		/* For now, thermal framework supports only 1 sensor per
+> > zone */
+> > > -		ret = of_parse_phandle_with_args(child, "thermal-sensors",
+> > > -						 "#thermal-sensor-cells",
+> > > -						 0, &sensor_specs);
+> > > +		ret = thermal_zone_of_get_sensor_id(child, sensor_np, &id);
+> > >  		if (ret)
+> > >  			continue;
+> > >
+> > > -		if (sensor_specs.args_count >= 1) {
+> > > -			id = sensor_specs.args[0];
+> > > -			WARN(sensor_specs.args_count > 1,
+> > > -			     "%pOFn: too many cells in sensor specifier %d\n",
+> > > -			     sensor_specs.np, sensor_specs.args_count);
+> > > -		} else {
+> > > -			id = 0;
+> > > -		}
+> > 
+> > Please take also the opportunity to factor out the function
+> > thermal_zone_of_sensor_register().
 > 
-> diff --git a/include/linux/iio/imu/adis.h b/include/linux/iio/imu/adis.h
-> index ac7cfd073804..0787a3aabd05 100644
-> --- a/include/linux/iio/imu/adis.h
-> +++ b/include/linux/iio/imu/adis.h
-> @@ -73,6 +73,20 @@ struct adis_data {
->  	bool has_paging;
->  };
->  
-> +/**
-> + * struct adis - ADIS device instance data
-> + * @spi: Reference to SPI device which owns this ADIS IIO device
-> + * @trig: IIO trigger object data
-> + * @data: ADIS chip variant specific data
-> + * @burst: ADIS burst transfer information
-> + * @state_lock: Lock used by the device to protect state
-> + * @msg: SPI message object
-> + * @xfer: SPI transfer objects to be used for a @msg
-> + * @current_page: Some ADIS devices have registers, this selects current page
-> + * @buffer: Data buffer for information read from the device
-> + * @tx: Cacheline aligned TX buffer for SPI transfers
-> + * @rx: Cacheline aligned RX buffer for SPI transfers
+> Sorry, I do NOT quite understand terms "factor out the function ...", could you please advise more detail?
 
-This last one isn't true.. 
+Never mind, I realized I puzzled myself with the changes in the series :)
 
-> + */
->  struct adis {
->  	struct spi_device	*spi;
->  	struct iio_trigger	*trig;
+Thanks
 
+  -- Daniel
+
+-- 
+
+ <http://www.linaro.org/> Linaro.org │ Open source software for ARM SoCs
+
+Follow Linaro:  <http://www.facebook.com/pages/Linaro> Facebook |
+<http://twitter.com/#!/linaroorg> Twitter |
+<http://www.linaro.org/linaro-blog/> Blog
