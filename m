@@ -7,47 +7,49 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 72A73C35642
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 08:36:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B8CFFC35641
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 08:36:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 409B020578
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 08:36:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8EEBB20578
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 08:36:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582274211;
-	bh=WuG/B6lmBEnh3GUKDiqWFqR3zitCFb14UJnbGdNR6mY=;
+	s=default; t=1582274214;
+	bh=xhY7BV3Ql3HJ94mAkEn0dm358OpGYEaUApGgi1BxkN4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=TrJTmZpwLALgfFoCJ/Lx6U5qmZ+169U7WhgnwXU/CHwrX+S/EJvw2B+cuzyhOux2H
-	 bvnztYmq+jUrR6OLN1J9M1z0Lx8BukylhrQr4tAspTQx5IBACHhToScmaNMritGHIm
-	 jffvKSDp2XCADRnzfrBwu5zfiLJSHQfiYxVuGj20=
+	b=PXMEaYZhtUv4uK/rAQw65YJ7DNGwq83bRjgLWTWND74J34em8EZ45LthFVr6Wz8tq
+	 vCjdojwpdQmc9xR3gqZ2FeS+CXQ8bWwktK30tLXev11obxRZEhUFYSSkfjB4cWrtGQ
+	 X4YaJSc15CQqPA0qLCdAwr9wm8c6RwoRkNIdXnac=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731568AbgBUIFv (ORCPT
+        id S1731863AbgBUIFq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Feb 2020 03:05:51 -0500
-Received: from mail.kernel.org ([198.145.29.99]:39268 "EHLO mail.kernel.org"
+        Fri, 21 Feb 2020 03:05:46 -0500
+Received: from mail.kernel.org ([198.145.29.99]:39156 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731852AbgBUIFl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Feb 2020 03:05:41 -0500
+        id S1731626AbgBUIFg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 21 Feb 2020 03:05:36 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6F40420801;
-        Fri, 21 Feb 2020 08:05:40 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7EC8320801;
+        Fri, 21 Feb 2020 08:05:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1582272340;
-        bh=WuG/B6lmBEnh3GUKDiqWFqR3zitCFb14UJnbGdNR6mY=;
+        s=default; t=1582272336;
+        bh=xhY7BV3Ql3HJ94mAkEn0dm358OpGYEaUApGgi1BxkN4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=oxVy9mriNRGHrATXWo7lY/VNtNuPXOU0GroOK3TmAI/8xIJVuhin76SuMHBVp26Lf
-         KhRTyxC4zUz0UW5KaARFpNIdYFNzHouRRgO9GwN0RPeb3jTjtccY66RYHn+f0B5Cem
-         bb/bvnmc9eaBGbvDLL007S/9Qtjo7zoJsUc9/Wo4=
+        b=Pw1Z9WHIndAUAZ4h0NchY9ZdMmZo3/MFP/qvQWs/9D9QzSpPG3w4WkL5xQlHd1Wvl
+         6zzcRvjOIJxnxN+81tp60YiuBJoLIGlv9KJqEhjRS0Sf34StrDtc/HdtZv1nodWkjY
+         XTNMwK7AivRZhYpsGMhVWbN73FcLb+yWXxu2c6Ow=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Chen Zhou <chenzhou10@huawei.com>,
-        Peng Ma <peng.ma@nxp.com>, Vinod Koul <vkoul@kernel.org>,
+        stable@vger.kernel.org,
+        =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= 
+        <u.kleine-koenig@pengutronix.de>,
+        Thierry Reding <thierry.reding@gmail.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 070/344] dmaengine: fsl-qdma: fix duplicated argument to &&
-Date:   Fri, 21 Feb 2020 08:37:49 +0100
-Message-Id: <20200221072355.353201379@linuxfoundation.org>
+Subject: [PATCH 5.4 068/344] pwm: omap-dmtimer: Simplify error handling
+Date:   Fri, 21 Feb 2020 08:37:47 +0100
+Message-Id: <20200221072355.178250233@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200221072349.335551332@linuxfoundation.org>
 References: <20200221072349.335551332@linuxfoundation.org>
@@ -60,39 +62,80 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Chen Zhou <chenzhou10@huawei.com>
+From: Uwe Kleine-König <u.kleine-koenig@pengutronix.de>
 
-[ Upstream commit 4b048178854da11656596d36a107577d66fd1e08 ]
+[ Upstream commit c4cf7aa57eb83b108d2d9c6c37c143388fee2a4d ]
 
-There is duplicated argument to && in function fsl_qdma_free_chan_resources,
-which looks like a typo, pointer fsl_queue->desc_pool also needs NULL check,
-fix it.
-Detected with coccinelle.
+Instead of doing error handling in the middle of ->probe(), move error
+handling and freeing the reference to timer to the end.
 
-Fixes: b092529e0aa0 ("dmaengine: fsl-qdma: Add qDMA controller driver for Layerscape SoCs")
-Signed-off-by: Chen Zhou <chenzhou10@huawei.com>
-Reviewed-by: Peng Ma <peng.ma@nxp.com>
-Tested-by: Peng Ma <peng.ma@nxp.com>
-Link: https://lore.kernel.org/r/20200120125843.34398-1-chenzhou10@huawei.com
-Signed-off-by: Vinod Koul <vkoul@kernel.org>
+This fixes a resource leak as dm_timer wasn't freed when allocating
+*omap failed.
+
+Implementation note: The put: label was never reached without a goto and
+ret being unequal to 0, so the removed return statement is fine.
+
+Fixes: 6604c6556db9 ("pwm: Add PWM driver for OMAP using dual-mode timers")
+Signed-off-by: Uwe Kleine-König <u.kleine-koenig@pengutronix.de>
+Signed-off-by: Thierry Reding <thierry.reding@gmail.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/dma/fsl-qdma.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/pwm/pwm-omap-dmtimer.c | 28 +++++++++++++++++++---------
+ 1 file changed, 19 insertions(+), 9 deletions(-)
 
-diff --git a/drivers/dma/fsl-qdma.c b/drivers/dma/fsl-qdma.c
-index 89792083d62c5..95cc0256b3878 100644
---- a/drivers/dma/fsl-qdma.c
-+++ b/drivers/dma/fsl-qdma.c
-@@ -304,7 +304,7 @@ static void fsl_qdma_free_chan_resources(struct dma_chan *chan)
+diff --git a/drivers/pwm/pwm-omap-dmtimer.c b/drivers/pwm/pwm-omap-dmtimer.c
+index 00772fc534906..6cfeb0e1cc679 100644
+--- a/drivers/pwm/pwm-omap-dmtimer.c
++++ b/drivers/pwm/pwm-omap-dmtimer.c
+@@ -298,15 +298,10 @@ static int pwm_omap_dmtimer_probe(struct platform_device *pdev)
+ 		goto put;
+ 	}
  
- 	vchan_dma_desc_free_list(&fsl_chan->vchan, &head);
+-put:
+-	of_node_put(timer);
+-	if (ret < 0)
+-		return ret;
+-
+ 	omap = devm_kzalloc(&pdev->dev, sizeof(*omap), GFP_KERNEL);
+ 	if (!omap) {
+-		pdata->free(dm_timer);
+-		return -ENOMEM;
++		ret = -ENOMEM;
++		goto err_alloc_omap;
+ 	}
  
--	if (!fsl_queue->comp_pool && !fsl_queue->comp_pool)
-+	if (!fsl_queue->comp_pool && !fsl_queue->desc_pool)
- 		return;
+ 	omap->pdata = pdata;
+@@ -339,13 +334,28 @@ put:
+ 	ret = pwmchip_add(&omap->chip);
+ 	if (ret < 0) {
+ 		dev_err(&pdev->dev, "failed to register PWM\n");
+-		omap->pdata->free(omap->dm_timer);
+-		return ret;
++		goto err_pwmchip_add;
+ 	}
  
- 	list_for_each_entry_safe(comp_temp, _comp_temp,
++	of_node_put(timer);
++
+ 	platform_set_drvdata(pdev, omap);
+ 
+ 	return 0;
++
++err_pwmchip_add:
++
++	/*
++	 * *omap is allocated using devm_kzalloc,
++	 * so no free necessary here
++	 */
++err_alloc_omap:
++
++	pdata->free(dm_timer);
++put:
++	of_node_put(timer);
++
++	return ret;
+ }
+ 
+ static int pwm_omap_dmtimer_remove(struct platform_device *pdev)
 -- 
 2.20.1
 
