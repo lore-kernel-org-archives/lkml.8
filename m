@@ -7,48 +7,48 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D59D2C35640
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 08:44:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B3684C35641
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 08:44:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9C9A3206DB
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 08:44:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 80B5E206DB
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 08:44:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582274644;
-	bh=mHCqROaKJ7SzNg5MXZjS44KD2tpZdsshpaEXfJi5wlA=;
+	s=default; t=1582274652;
+	bh=dQlmWmfJYqyzHqxjP0GJKiHLOyZv9MPDy5qO2NfH+s8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ng5+ud9Y/1q1yeVnxlVSDAIYQFUOfs4FDfzpbbZvD/yykIDxndFKxGGpajG/WFCew
-	 T1ZS5C8r4OHkuNO0v1ckI5A6BRSIQn7ftwBVTwVzAbUKlGcXAjNvBh3hPIskhTBQb5
-	 vOdX7o9YEg8Kn1PgSLBL48ckzl0h+xkNHfJwH1fE=
+	b=PfAXX2CN/VmwwH+HdHQ7NU88sNP7P3UQZQ14Qg2W1oFlZf0aCExe8BrWAoeTRGUtI
+	 8we6GKoe3t4AeAQNfec2mFASlPAw1KqydkhR2ki42JCEyYm5W/fxhtUiJ/8fg78XQ3
+	 plbmaR3qzysUvA1mGFjbqWc9BAw94WnsWaWxKAP0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730161AbgBUIoD (ORCPT
+        id S1729787AbgBUHwm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Feb 2020 03:44:03 -0500
-Received: from mail.kernel.org ([198.145.29.99]:50866 "EHLO mail.kernel.org"
+        Fri, 21 Feb 2020 02:52:42 -0500
+Received: from mail.kernel.org ([198.145.29.99]:50568 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729611AbgBUHwu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Feb 2020 02:52:50 -0500
+        id S1729934AbgBUHwj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 21 Feb 2020 02:52:39 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 80FFC24653;
-        Fri, 21 Feb 2020 07:52:49 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 18C2820578;
+        Fri, 21 Feb 2020 07:52:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1582271570;
-        bh=mHCqROaKJ7SzNg5MXZjS44KD2tpZdsshpaEXfJi5wlA=;
+        s=default; t=1582271558;
+        bh=dQlmWmfJYqyzHqxjP0GJKiHLOyZv9MPDy5qO2NfH+s8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=tj2iPiwNZDUdmdGV5ao2uFr5TpjivoV1MmR/WI0o0Ej0syh0pdKMPIIpebFD6h5IL
-         mlYh3cVdHvnn/bQpykq0WzYMiv5+l5hWS4KsyVszVhhZ50b1osZSpSjnBME0P/DKYV
-         TkeV/ZEGazrTblcWo3dmoIXwD+k8V+M1zj4JYYOw=
+        b=V/uMzDUnSbGGB0CwpLkr3G7Iy8skrNMkXXhaS2JGEmwGyCdiXfCqVJyziFfqm10tS
+         Yhsym+6rX/fPEeShg5ELf53vjpPrnwbJhPNeEloXuKNl4Ra4OOX/fpS8AE/asC7DUg
+         D1pNaqllHy7M7lleLBODbO0nepkL4yxzucgX9x94=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Wenpeng Liang <liangwenpeng@huawei.com>,
-        Weihang Li <liweihang@huawei.com>,
-        Jason Gunthorpe <jgg@mellanox.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.5 216/399] RDMA/hns: Avoid printing address of mtt page
-Date:   Fri, 21 Feb 2020 08:39:01 +0100
-Message-Id: <20200221072424.003409153@linuxfoundation.org>
+        stable@vger.kernel.org, Jacob Pan <jacob.jun.pan@linux.intel.com>,
+        Eric Auger <eric.auger@redhat.com>,
+        Lu Baolu <baolu.lu@linux.intel.com>,
+        Joerg Roedel <jroedel@suse.de>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.5 212/399] iommu/vt-d: Match CPU and IOMMU paging mode
+Date:   Fri, 21 Feb 2020 08:38:57 +0100
+Message-Id: <20200221072423.596495876@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200221072402.315346745@linuxfoundation.org>
 References: <20200221072402.315346745@linuxfoundation.org>
@@ -61,36 +61,55 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Wenpeng Liang <liangwenpeng@huawei.com>
+From: Jacob Pan <jacob.jun.pan@linux.intel.com>
 
-[ Upstream commit eca44507c3e908b7362696a4d6a11d90371334c6 ]
+[ Upstream commit 79db7e1b4cf2a006f556099c13de3b12970fc6e3 ]
 
-Address of a page shouldn't be printed in case of security issues.
+When setting up first level page tables for sharing with CPU, we need
+to ensure IOMMU can support no less than the levels supported by the
+CPU.
 
-Link: https://lore.kernel.org/r/1578313276-29080-2-git-send-email-liweihang@huawei.com
-Signed-off-by: Wenpeng Liang <liangwenpeng@huawei.com>
-Signed-off-by: Weihang Li <liweihang@huawei.com>
-Signed-off-by: Jason Gunthorpe <jgg@mellanox.com>
+It is not adequate, as in the current code, to set up 5-level paging
+in PASID entry First Level Paging Mode(FLPM) solely based on CPU.
+
+Currently, intel_pasid_setup_first_level() is only used by native SVM
+code which already checks paging mode matches. However, future use of
+this helper function may not be limited to native SVM.
+https://lkml.org/lkml/2019/11/18/1037
+
+Fixes: 437f35e1cd4c8 ("iommu/vt-d: Add first level page table interface")
+Signed-off-by: Jacob Pan <jacob.jun.pan@linux.intel.com>
+Reviewed-by: Eric Auger <eric.auger@redhat.com>
+Signed-off-by: Lu Baolu <baolu.lu@linux.intel.com>
+Signed-off-by: Joerg Roedel <jroedel@suse.de>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/infiniband/hw/hns/hns_roce_mr.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ drivers/iommu/intel-pasid.c | 12 ++++++++++--
+ 1 file changed, 10 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/infiniband/hw/hns/hns_roce_mr.c b/drivers/infiniband/hw/hns/hns_roce_mr.c
-index 9ad19170c3f97..95765560c1cfb 100644
---- a/drivers/infiniband/hw/hns/hns_roce_mr.c
-+++ b/drivers/infiniband/hw/hns/hns_roce_mr.c
-@@ -1064,8 +1064,8 @@ int hns_roce_ib_umem_write_mtt(struct hns_roce_dev *hr_dev,
- 		if (!(npage % (1 << (mtt->page_shift - PAGE_SHIFT)))) {
- 			if (page_addr & ((1 << mtt->page_shift) - 1)) {
- 				dev_err(dev,
--					"page_addr 0x%llx is not page_shift %d alignment!\n",
--					page_addr, mtt->page_shift);
-+					"page_addr is not page_shift %d alignment!\n",
-+					mtt->page_shift);
- 				ret = -EINVAL;
- 				goto out;
- 			}
+diff --git a/drivers/iommu/intel-pasid.c b/drivers/iommu/intel-pasid.c
+index 040a445be3009..e7cb0b8a73327 100644
+--- a/drivers/iommu/intel-pasid.c
++++ b/drivers/iommu/intel-pasid.c
+@@ -499,8 +499,16 @@ int intel_pasid_setup_first_level(struct intel_iommu *iommu,
+ 	}
+ 
+ #ifdef CONFIG_X86
+-	if (cpu_feature_enabled(X86_FEATURE_LA57))
+-		pasid_set_flpm(pte, 1);
++	/* Both CPU and IOMMU paging mode need to match */
++	if (cpu_feature_enabled(X86_FEATURE_LA57)) {
++		if (cap_5lp_support(iommu->cap)) {
++			pasid_set_flpm(pte, 1);
++		} else {
++			pr_err("VT-d has no 5-level paging support for CPU\n");
++			pasid_clear_entry(pte);
++			return -EINVAL;
++		}
++	}
+ #endif /* CONFIG_X86 */
+ 
+ 	pasid_set_domain_id(pte, did);
 -- 
 2.20.1
 
