@@ -2,55 +2,51 @@ Return-Path: <SRS0=1210=4J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNWANTED_LANGUAGE_BODY,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 25808C35641
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 08:14:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4D262C35642
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 08:14:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id ED18D24687
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 08:14:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2436924681
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 08:14:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582272885;
-	bh=j5+g+RQG+8iUqfhHmGbPWGjRcRjG8CzYFVOGHpcaMTw=;
+	s=default; t=1582272887;
+	bh=vaK5QLAbHaoGjjiAE8dsHHEguWhG8eVINS0uUsivSg0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=EMws1tnyRioY8ikXYC8ZbxRO6k96T6F7W3a8QtpnKgCAWvqU7sVaWDe7lBjS/wzkg
-	 H6JerGfU2EFGP/KLu4tea7ot4k0PoaJ6NNsASRNwKV/SoiUp90lGskmqvUK9KJNksD
-	 QpXnJL350ewneMYL8z4VgX+B10PgcC56x6Up2/mw=
+	b=plDu8DpA6DJkq1TdwguleeL4h8iA8cYvKGYmIvJqM3dPa/YZAcE0y7IIucZT69j0g
+	 Sdv9uGmsjBXzbR9kZfi1ve05YSTVxii5Bbzlgn+cBsVZnzAtlWVhlvm+h42i2b6PLQ
+	 n3OBuXxO5dpr619e1bDno6QBffRwgxA+rtLlYDns=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733219AbgBUIOn (ORCPT
+        id S1733224AbgBUIOq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Feb 2020 03:14:43 -0500
-Received: from mail.kernel.org ([198.145.29.99]:51218 "EHLO mail.kernel.org"
+        Fri, 21 Feb 2020 03:14:46 -0500
+Received: from mail.kernel.org ([198.145.29.99]:51296 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1733213AbgBUIOj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Feb 2020 03:14:39 -0500
+        id S1732492AbgBUIOm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 21 Feb 2020 03:14:42 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9B21420578;
-        Fri, 21 Feb 2020 08:14:38 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id AB38A20722;
+        Fri, 21 Feb 2020 08:14:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1582272879;
-        bh=j5+g+RQG+8iUqfhHmGbPWGjRcRjG8CzYFVOGHpcaMTw=;
+        s=default; t=1582272882;
+        bh=vaK5QLAbHaoGjjiAE8dsHHEguWhG8eVINS0uUsivSg0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=h4LTdY8KDmEN7pdqVQGNanROLSBVF2bKqsIE3hYhplN5lLboYWcWrtLuwSJLkmT4e
-         iO/fgUX40V0nsfFFMVMnshs3u5omS+8/vcs+G1+AMsxG8UeyyT8sdUnEWbe/fD7nMO
-         OLYl+49lgwLUt+wo/hcBzDU0ykTqB+gCrsEAIYGk=
+        b=eZm1DSkas7DaR+NOzJZmotVgtil32swtr8gtiz7TYNLUptsLb7wBfXFoDmsfD8IrK
+         sNYK/spIHCjEQ+2Jx0/XcOefJi7X4gzlMTtr+WBH2czqcdafj5BH0FO2Tp24qIYokb
+         fOB7LgMNUIlCq0F9gaTNvOY0MNcJJdniDTQl/YE0=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Lorenz Bauer <lmb@cloudflare.com>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Jakub Sitnicki <jakub@cloudflare.com>,
-        Martin KaFai Lau <kafai@fb.com>,
-        John Fastabend <john.fastabend@gmail.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 292/344] selftests: bpf: Reset global state between reuseport test runs
-Date:   Fri, 21 Feb 2020 08:41:31 +0100
-Message-Id: <20200221072416.378047685@linuxfoundation.org>
+        stable@vger.kernel.org, Marc Zyngier <maz@kernel.org>,
+        Heyi Guo <guoheyi@huawei.com>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.4 310/344] irqchip/gic-v3: Only provision redistributors that are enabled in ACPI
+Date:   Fri, 21 Feb 2020 08:41:49 +0100
+Message-Id: <20200221072418.171289758@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200221072349.335551332@linuxfoundation.org>
 References: <20200221072349.335551332@linuxfoundation.org>
@@ -63,62 +59,68 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Lorenz Bauer <lmb@cloudflare.com>
+From: Marc Zyngier <maz@kernel.org>
 
-[ Upstream commit 51bad0f05616c43d6d34b0a19bcc9bdab8e8fb39 ]
+[ Upstream commit 926b5dfa6b8dc666ff398044af6906b156e1d949 ]
 
-Currently, there is a lot of false positives if a single reuseport test
-fails. This is because expected_results and the result map are not cleared.
+We currently allocate redistributor region structures for
+individual redistributors when ACPI doesn't present us with
+compact MMIO regions covering multiple redistributors.
 
-Zero both after individual test runs, which fixes the mentioned false
-positives.
+It turns out that we allocate these structures even when
+the redistributor is flagged as disabled by ACPI. It works
+fine until someone actually tries to tarse one of these
+structures, and access the corresponding MMIO region.
 
-Fixes: 91134d849a0e ("bpf: Test BPF_PROG_TYPE_SK_REUSEPORT")
-Signed-off-by: Lorenz Bauer <lmb@cloudflare.com>
-Signed-off-by: Daniel Borkmann <daniel@iogearbox.net>
-Reviewed-by: Jakub Sitnicki <jakub@cloudflare.com>
-Acked-by: Martin KaFai Lau <kafai@fb.com>
-Acked-by: John Fastabend <john.fastabend@gmail.com>
-Link: https://lore.kernel.org/bpf/20200124112754.19664-5-lmb@cloudflare.com
+Instead, track the number of enabled redistributors, and
+only allocate what is required. This makes sure that there
+is no invalid data to misuse.
+
+Signed-off-by: Marc Zyngier <maz@kernel.org>
+Reported-by: Heyi Guo <guoheyi@huawei.com>
+Tested-by: Heyi Guo <guoheyi@huawei.com>
+Link: https://lore.kernel.org/r/20191216062745.63397-1-guoheyi@huawei.com
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- .../selftests/bpf/test_select_reuseport.c        | 16 ++++++++++++++--
- 1 file changed, 14 insertions(+), 2 deletions(-)
+ drivers/irqchip/irq-gic-v3.c | 9 +++++++--
+ 1 file changed, 7 insertions(+), 2 deletions(-)
 
-diff --git a/tools/testing/selftests/bpf/test_select_reuseport.c b/tools/testing/selftests/bpf/test_select_reuseport.c
-index 7566c13eb51a7..079d0f5a29091 100644
---- a/tools/testing/selftests/bpf/test_select_reuseport.c
-+++ b/tools/testing/selftests/bpf/test_select_reuseport.c
-@@ -30,7 +30,7 @@
- #define REUSEPORT_ARRAY_SIZE 32
- 
- static int result_map, tmp_index_ovr_map, linum_map, data_check_map;
--static enum result expected_results[NR_RESULTS];
-+static __u32 expected_results[NR_RESULTS];
- static int sk_fds[REUSEPORT_ARRAY_SIZE];
- static int reuseport_array, outer_map;
- static int select_by_skb_data_prog;
-@@ -662,7 +662,19 @@ static void setup_per_test(int type, unsigned short family, bool inany)
- 
- static void cleanup_per_test(void)
- {
--	int i, err;
-+	int i, err, zero = 0;
-+
-+	memset(expected_results, 0, sizeof(expected_results));
-+
-+	for (i = 0; i < NR_RESULTS; i++) {
-+		err = bpf_map_update_elem(result_map, &i, &zero, BPF_ANY);
-+		RET_IF(err, "reset elem in result_map",
-+		       "i:%u err:%d errno:%d\n", i, err, errno);
+diff --git a/drivers/irqchip/irq-gic-v3.c b/drivers/irqchip/irq-gic-v3.c
+index 1edc99335a946..446603efbc90b 100644
+--- a/drivers/irqchip/irq-gic-v3.c
++++ b/drivers/irqchip/irq-gic-v3.c
+@@ -1801,6 +1801,7 @@ static struct
+ 	struct redist_region *redist_regs;
+ 	u32 nr_redist_regions;
+ 	bool single_redist;
++	int enabled_rdists;
+ 	u32 maint_irq;
+ 	int maint_irq_mode;
+ 	phys_addr_t vcpu_base;
+@@ -1895,8 +1896,10 @@ static int __init gic_acpi_match_gicc(union acpi_subtable_headers *header,
+ 	 * If GICC is enabled and has valid gicr base address, then it means
+ 	 * GICR base is presented via GICC
+ 	 */
+-	if ((gicc->flags & ACPI_MADT_ENABLED) && gicc->gicr_base_address)
++	if ((gicc->flags & ACPI_MADT_ENABLED) && gicc->gicr_base_address) {
++		acpi_data.enabled_rdists++;
+ 		return 0;
 +	}
-+
-+	err = bpf_map_update_elem(linum_map, &zero, &zero, BPF_ANY);
-+	RET_IF(err, "reset line number in linum_map", "err:%d errno:%d\n",
-+	       err, errno);
  
- 	for (i = 0; i < REUSEPORT_ARRAY_SIZE; i++)
- 		close(sk_fds[i]);
+ 	/*
+ 	 * It's perfectly valid firmware can pass disabled GICC entry, driver
+@@ -1926,8 +1929,10 @@ static int __init gic_acpi_count_gicr_regions(void)
+ 
+ 	count = acpi_table_parse_madt(ACPI_MADT_TYPE_GENERIC_INTERRUPT,
+ 				      gic_acpi_match_gicc, 0);
+-	if (count > 0)
++	if (count > 0) {
+ 		acpi_data.single_redist = true;
++		count = acpi_data.enabled_rdists;
++	}
+ 
+ 	return count;
+ }
 -- 
 2.20.1
 
