@@ -2,334 +2,169 @@ Return-Path: <SRS0=1210=4J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C1722C35641
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 23:34:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 80D23C35641
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 23:37:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6D55F2072C
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 23:34:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 45DA120722
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 23:37:56 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=hansenpartnership.com header.i=@hansenpartnership.com header.b="YXFllx4C";
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=hansenpartnership.com header.i=@hansenpartnership.com header.b="YXFllx4C"
+	dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b="BTbJ9DV5"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729599AbgBUXec (ORCPT
+        id S1729612AbgBUXhx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Feb 2020 18:34:32 -0500
-Received: from bedivere.hansenpartnership.com ([66.63.167.143]:51090 "EHLO
-        bedivere.hansenpartnership.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726802AbgBUXeb (ORCPT
+        Fri, 21 Feb 2020 18:37:53 -0500
+Received: from mail-pf1-f194.google.com ([209.85.210.194]:45801 "EHLO
+        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729100AbgBUXhx (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Feb 2020 18:34:31 -0500
-Received: from localhost (localhost [127.0.0.1])
-        by bedivere.hansenpartnership.com (Postfix) with ESMTP id 514248EE3D5;
-        Fri, 21 Feb 2020 15:34:31 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=hansenpartnership.com;
-        s=20151216; t=1582328071;
-        bh=QjTWCrNNRKTh3nBDLldTHJSH4oMOdX2jLr9tgHrHUXg=;
-        h=Subject:From:To:Cc:Date:From;
-        b=YXFllx4Cwghk/lbKVX6j0UcEeceu4hjPB6m0jnoMpqWxJL9I8RfxfkZQdFCk6fVFa
-         9gK/7aWgyIYjoQRwQpIsEQ8CH4s4Q2MvlpWXCApNrbGilB6E6Bx+Y9bq6LccSy0NOp
-         MkwzHDpka+Tk97Q6eTvXeifilh4z00FmQ5JN21J0=
-Received: from bedivere.hansenpartnership.com ([127.0.0.1])
-        by localhost (bedivere.hansenpartnership.com [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id cdVUbEkUFqsL; Fri, 21 Feb 2020 15:34:31 -0800 (PST)
-Received: from jarvis.ext.hansenpartnership.com (jarvis.ext.hansenpartnership.com [153.66.160.226])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by bedivere.hansenpartnership.com (Postfix) with ESMTPSA id E02F18EE180;
-        Fri, 21 Feb 2020 15:34:30 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=hansenpartnership.com;
-        s=20151216; t=1582328071;
-        bh=QjTWCrNNRKTh3nBDLldTHJSH4oMOdX2jLr9tgHrHUXg=;
-        h=Subject:From:To:Cc:Date:From;
-        b=YXFllx4Cwghk/lbKVX6j0UcEeceu4hjPB6m0jnoMpqWxJL9I8RfxfkZQdFCk6fVFa
-         9gK/7aWgyIYjoQRwQpIsEQ8CH4s4Q2MvlpWXCApNrbGilB6E6Bx+Y9bq6LccSy0NOp
-         MkwzHDpka+Tk97Q6eTvXeifilh4z00FmQ5JN21J0=
-Message-ID: <1582328069.3692.13.camel@HansenPartnership.com>
-Subject: [GIT PULL] SCSI fixes for 5.6-rc2
-From:   James Bottomley <James.Bottomley@HansenPartnership.com>
-To:     Andrew Morton <akpm@linux-foundation.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     linux-scsi <linux-scsi@vger.kernel.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>
-Date:   Fri, 21 Feb 2020 15:34:29 -0800
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.26.6 
-Mime-Version: 1.0
-Content-Transfer-Encoding: 7bit
+        Fri, 21 Feb 2020 18:37:53 -0500
+Received: by mail-pf1-f194.google.com with SMTP id 2so2069765pfg.12
+        for <linux-kernel@vger.kernel.org>; Fri, 21 Feb 2020 15:37:52 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=broadcom.com; s=google;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-transfer-encoding:content-language;
+        bh=U8GTXDQYqxVMWeiE3CeM22iOXjrDkwUgtcNqh51keqY=;
+        b=BTbJ9DV5UnhS6c59epTpH7XTEnU2oooXg+g6bAhjUyVbujp1zj/9TaRU8cj0TPZwd3
+         CG8U0vdI5gFnoJTHTJLwe669yrJzuJv13qa3AVL8dmiMh5v19I5goaubVFzUpLjj3wTs
+         7lQz+6WG62x4T5Z+CFsJPY2Ds6kbuZLZW2JXM=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-transfer-encoding
+         :content-language;
+        bh=U8GTXDQYqxVMWeiE3CeM22iOXjrDkwUgtcNqh51keqY=;
+        b=ILvBN3SPiaQPjPPagR4V8vl25p26nakMvO0Io/WsTWVb36tpZn6XsNKyBGBZnd22v/
+         dlbgY1YxbjyL7lbHkEbC7M0Pi8KLfLhiSVqiYc+muQ04q7KluAraJT0COcP3fn8L4osM
+         nhgU3Yl34ywvRNsa3T1AGRpsCFciTCWVZ7dUx8wW1pgAQ6C+dmCl3nEKrO3C76LzNMJh
+         UhqmBkpFbn6/IYIbQsSTnWS5bzVTeCWeoM2Yt6BmpNa38oW0Q+YZDqcIG0nPEM1UhLQZ
+         q9GlmDswiUUHqzMMxcdRb9YbSPBLM5Q+2ZDavI9Ey7CjAjFqXR+FBRASDKBiIoOu2/Qh
+         vJ9A==
+X-Gm-Message-State: APjAAAV7rHvj1MjRIdjZ0PPB4afzSkueWbacDInVKw5xqrHz0MzjkE7W
+        jXl2bDK+p5eZjpBCjIPBnwIBOA==
+X-Google-Smtp-Source: APXvYqzSKwENjp8Zc5/+UeGf1chfHFs+nHCsMZqHL9BYW/wJmsDWoBM6WNV9QMdjdezOfrljgme5xQ==
+X-Received: by 2002:a63:3c08:: with SMTP id j8mr40832260pga.223.1582328272147;
+        Fri, 21 Feb 2020 15:37:52 -0800 (PST)
+Received: from [10.136.13.65] ([192.19.228.250])
+        by smtp.gmail.com with ESMTPSA id u23sm3891110pfm.29.2020.02.21.15.37.48
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 21 Feb 2020 15:37:51 -0800 (PST)
+Subject: Re: [PATCH 2/7] firmware: add offset to request_firmware_into_buf
+To:     Arnd Bergmann <arnd@arndb.de>
+Cc:     Luis Chamberlain <mcgrof@kernel.org>, Takashi Iwai <tiwai@suse.de>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        David Brown <david.brown@linaro.org>,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        Shuah Khan <shuah@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Shuah Khan <skhan@linuxfoundation.org>,
+        "Rafael J . Wysocki" <rafael@kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
+        Linux FS-devel Mailing List <linux-fsdevel@vger.kernel.org>,
+        BCM Kernel Feedback <bcm-kernel-feedback-list@broadcom.com>,
+        Olof Johansson <olof@lixom.net>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Dan Carpenter <dan.carpenter@oracle.com>,
+        Colin Ian King <colin.king@canonical.com>,
+        Kees Cook <keescook@chromium.org>,
+        "open list:KERNEL SELFTEST FRAMEWORK" 
+        <linux-kselftest@vger.kernel.org>
+References: <20190822192451.5983-1-scott.branden@broadcom.com>
+ <20190822192451.5983-3-scott.branden@broadcom.com>
+ <s5hef1crybq.wl-tiwai@suse.de>
+ <10461fcf-9eca-32b6-0f9d-23c63b3f3442@broadcom.com>
+ <s5hr258j6ln.wl-tiwai@suse.de>
+ <93b8285a-e5eb-d4a4-545d-426bbbeb8008@broadcom.com>
+ <s5ho90byhnv.wl-tiwai@suse.de>
+ <b440f372-45be-c06c-94a1-44ae6b1e7eb8@broadcom.com>
+ <s5hwoeyj3i5.wl-tiwai@suse.de> <20191011133120.GP16384@42.do-not-panic.com>
+ <e65a3ba1-d064-96fe-077e-59bf8ffff377@broadcom.com>
+ <CAK8P3a2NJurg_hxVbWYZwJVhYM5-xjWt12Kh0DdyfTGqQPrPAQ@mail.gmail.com>
+From:   Scott Branden <scott.branden@broadcom.com>
+Message-ID: <3731a882-8784-b957-7628-49edfa9683e7@broadcom.com>
+Date:   Fri, 21 Feb 2020 15:37:47 -0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.1
+MIME-Version: 1.0
+In-Reply-To: <CAK8P3a2NJurg_hxVbWYZwJVhYM5-xjWt12Kh0DdyfTGqQPrPAQ@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8bit
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Four non-core fixes.  Two are reverts of target fixes which turned out
-to have unwanted side effects, one is a revert of an RDMA fix with the
-same problem and the final one fixes an incorrect warning about memory
-allocation failures in megaraid_sas (the driver actually reduces the
-allocation size until it succeeds).
+Hi Arnd,
 
-The patch is available here:
+On 2020-02-21 12:44 a.m., Arnd Bergmann wrote:
+> On Fri, Feb 21, 2020 at 1:11 AM Scott Branden
+> <scott.branden@broadcom.com> wrote:
+>> On 2019-10-11 6:31 a.m., Luis Chamberlain wrote:
+>>> On Tue, Aug 27, 2019 at 12:40:02PM +0200, Takashi Iwai wrote:
+>>>> On Mon, 26 Aug 2019 19:24:22 +0200,
+>>>> Scott Branden wrote:
+>>>>> I will admit I am not familiar with every subtlety of PCI
+>>>>> accesses. Any comments to the Valkyrie driver in this patch series are
+>>>>> appreciated.
+>>>>> But not all drivers need to work on all architectures. I can add a
+>>>>> depends on x86 64bit architectures to the driver to limit it to such.
+>>>> But it's an individual board on PCIe, and should work no matter which
+>>>> architecture is?  Or is this really exclusive to x86?
+>>> Poke Scott.
+>> Yes, this is exclusive to x86.
+>> In particular, 64-bit x86 server class machines with PCIe gen3 support.
+>> There is no reason for these PCIe boards to run in other lower end
+>> machines or architectures.
+> It doesn't really matter that much what you expect your customers to
+> do with your product, or what works a particular machine today, drivers
+> should generally be written in a portable manner anyway and use
+> the documented APIs. memcpy() into an __iomem pointer is not
+> portable and while it probably works on any x86 machine today, please
+> just don't do it. If you use 'sparse' to check your code, that would normally
+> result in an address space warning, unless you add __force and a
+> long comment explaining why you cannot just use memcpy_to_io()
+> instead. At that point, you are already better off usingn memcpy_to_io() ;-)
+>
+>          Arnd
+I am a not performing a memcpy at all right now.
+I am calling a request_firmware_into_buf call and do not need to make a 
+copy.
+This function eventually calls kernel_read_file, which then makes at 
+indirect call in __vfs_read to perform the read to memory.
+ From there I am lost as to what operation happens to achieve this.
+The read function would need to detect the buf is in io space and 
+perform the necessary operation.
+Anyone with any knowledge on how to make this read to io space would be 
+appreciated?
 
-git://git.kernel.org/pub/scm/linux/kernel/git/jejb/scsi.git scsi-fixes
+ssize_t __vfs_read(struct file *file, char __user *buf, size_t count,
+            loff_t *pos)
+{
+     if (file->f_op->read)
+         return file->f_op->read(file, buf, count, pos);
+     else if (file->f_op->read_iter)
+         return new_sync_read(file, buf, count, pos);
+     else
+         return -EINVAL;
+}
 
-The short changelog is:
+ssize_t kernel_read(struct file *file, void *buf, size_t count, loff_t *pos)
+{
+     mm_segment_t old_fs;
+     ssize_t result;
 
-Bart Van Assche (3):
-      scsi: Revert "target: iscsi: Wait for all commands to finish before freeing a session"
-      scsi: Revert "RDMA/isert: Fix a recently introduced regression related to logout"
-      scsi: Revert "target/core: Inline transport_lun_remove_cmd()"
+     old_fs = get_fs();
+     set_fs(KERNEL_DS);
+     /* The cast to a user pointer is valid due to the set_fs() */
+     result = vfs_read(file, (void __user *)buf, count, pos);
+     set_fs(old_fs);
+     return result;
+}
 
-Tomas Henzl (1):
-      scsi: megaraid_sas: silence a warning
-
-And the diffstat:
-
- drivers/infiniband/ulp/isert/ib_isert.c     | 12 +++++++++++
- drivers/scsi/megaraid/megaraid_sas_fusion.c |  5 +++--
- drivers/target/iscsi/iscsi_target.c         | 16 +++++----------
- drivers/target/target_core_transport.c      | 31 ++++++++++++++++++++++++++---
- include/scsi/iscsi_proto.h                  |  1 -
- 5 files changed, 48 insertions(+), 17 deletions(-)
-
-With full diff below.
-
-James
-
----
-
-diff --git a/drivers/infiniband/ulp/isert/ib_isert.c b/drivers/infiniband/ulp/isert/ib_isert.c
-index b273e421e910..a1a035270cab 100644
---- a/drivers/infiniband/ulp/isert/ib_isert.c
-+++ b/drivers/infiniband/ulp/isert/ib_isert.c
-@@ -2575,6 +2575,17 @@ isert_wait4logout(struct isert_conn *isert_conn)
- 	}
- }
- 
-+static void
-+isert_wait4cmds(struct iscsi_conn *conn)
-+{
-+	isert_info("iscsi_conn %p\n", conn);
-+
-+	if (conn->sess) {
-+		target_sess_cmd_list_set_waiting(conn->sess->se_sess);
-+		target_wait_for_sess_cmds(conn->sess->se_sess);
-+	}
-+}
-+
- /**
-  * isert_put_unsol_pending_cmds() - Drop commands waiting for
-  *     unsolicitate dataout
-@@ -2622,6 +2633,7 @@ static void isert_wait_conn(struct iscsi_conn *conn)
- 
- 	ib_drain_qp(isert_conn->qp);
- 	isert_put_unsol_pending_cmds(conn);
-+	isert_wait4cmds(conn);
- 	isert_wait4logout(isert_conn);
- 
- 	queue_work(isert_release_wq, &isert_conn->release_work);
-diff --git a/drivers/scsi/megaraid/megaraid_sas_fusion.c b/drivers/scsi/megaraid/megaraid_sas_fusion.c
-index f3b36fd0a0eb..b2ad96564484 100644
---- a/drivers/scsi/megaraid/megaraid_sas_fusion.c
-+++ b/drivers/scsi/megaraid/megaraid_sas_fusion.c
-@@ -623,7 +623,8 @@ megasas_alloc_request_fusion(struct megasas_instance *instance)
- 
- 	fusion->io_request_frames =
- 			dma_pool_alloc(fusion->io_request_frames_pool,
--				GFP_KERNEL, &fusion->io_request_frames_phys);
-+				GFP_KERNEL | __GFP_NOWARN,
-+				&fusion->io_request_frames_phys);
- 	if (!fusion->io_request_frames) {
- 		if (instance->max_fw_cmds >= (MEGASAS_REDUCE_QD_COUNT * 2)) {
- 			instance->max_fw_cmds -= MEGASAS_REDUCE_QD_COUNT;
-@@ -661,7 +662,7 @@ megasas_alloc_request_fusion(struct megasas_instance *instance)
- 
- 		fusion->io_request_frames =
- 			dma_pool_alloc(fusion->io_request_frames_pool,
--				       GFP_KERNEL,
-+				       GFP_KERNEL | __GFP_NOWARN,
- 				       &fusion->io_request_frames_phys);
- 
- 		if (!fusion->io_request_frames) {
-diff --git a/drivers/target/iscsi/iscsi_target.c b/drivers/target/iscsi/iscsi_target.c
-index b94ed4e30770..09e55ea0bf5d 100644
---- a/drivers/target/iscsi/iscsi_target.c
-+++ b/drivers/target/iscsi/iscsi_target.c
-@@ -1165,9 +1165,7 @@ int iscsit_setup_scsi_cmd(struct iscsi_conn *conn, struct iscsi_cmd *cmd,
- 		hdr->cmdsn, be32_to_cpu(hdr->data_length), payload_length,
- 		conn->cid);
- 
--	if (target_get_sess_cmd(&cmd->se_cmd, true) < 0)
--		return iscsit_add_reject_cmd(cmd,
--				ISCSI_REASON_WAITING_FOR_LOGOUT, buf);
-+	target_get_sess_cmd(&cmd->se_cmd, true);
- 
- 	cmd->sense_reason = transport_lookup_cmd_lun(&cmd->se_cmd,
- 						     scsilun_to_int(&hdr->lun));
-@@ -2004,9 +2002,7 @@ iscsit_handle_task_mgt_cmd(struct iscsi_conn *conn, struct iscsi_cmd *cmd,
- 			      conn->sess->se_sess, 0, DMA_NONE,
- 			      TCM_SIMPLE_TAG, cmd->sense_buffer + 2);
- 
--	if (target_get_sess_cmd(&cmd->se_cmd, true) < 0)
--		return iscsit_add_reject_cmd(cmd,
--				ISCSI_REASON_WAITING_FOR_LOGOUT, buf);
-+	target_get_sess_cmd(&cmd->se_cmd, true);
- 
- 	/*
- 	 * TASK_REASSIGN for ERL=2 / connection stays inside of
-@@ -4149,6 +4145,9 @@ int iscsit_close_connection(
- 	iscsit_stop_nopin_response_timer(conn);
- 	iscsit_stop_nopin_timer(conn);
- 
-+	if (conn->conn_transport->iscsit_wait_conn)
-+		conn->conn_transport->iscsit_wait_conn(conn);
-+
- 	/*
- 	 * During Connection recovery drop unacknowledged out of order
- 	 * commands for this connection, and prepare the other commands
-@@ -4231,11 +4230,6 @@ int iscsit_close_connection(
- 	 * must wait until they have completed.
- 	 */
- 	iscsit_check_conn_usage_count(conn);
--	target_sess_cmd_list_set_waiting(sess->se_sess);
--	target_wait_for_sess_cmds(sess->se_sess);
--
--	if (conn->conn_transport->iscsit_wait_conn)
--		conn->conn_transport->iscsit_wait_conn(conn);
- 
- 	ahash_request_free(conn->conn_tx_hash);
- 	if (conn->conn_rx_hash) {
-diff --git a/drivers/target/target_core_transport.c b/drivers/target/target_core_transport.c
-index ea482d4b1f00..0ae9e60fc4d5 100644
---- a/drivers/target/target_core_transport.c
-+++ b/drivers/target/target_core_transport.c
-@@ -666,6 +666,11 @@ static int transport_cmd_check_stop_to_fabric(struct se_cmd *cmd)
- 
- 	target_remove_from_state_list(cmd);
- 
-+	/*
-+	 * Clear struct se_cmd->se_lun before the handoff to FE.
-+	 */
-+	cmd->se_lun = NULL;
-+
- 	spin_lock_irqsave(&cmd->t_state_lock, flags);
- 	/*
- 	 * Determine if frontend context caller is requesting the stopping of
-@@ -693,6 +698,17 @@ static int transport_cmd_check_stop_to_fabric(struct se_cmd *cmd)
- 	return cmd->se_tfo->check_stop_free(cmd);
- }
- 
-+static void transport_lun_remove_cmd(struct se_cmd *cmd)
-+{
-+	struct se_lun *lun = cmd->se_lun;
-+
-+	if (!lun)
-+		return;
-+
-+	if (cmpxchg(&cmd->lun_ref_active, true, false))
-+		percpu_ref_put(&lun->lun_ref);
-+}
-+
- static void target_complete_failure_work(struct work_struct *work)
- {
- 	struct se_cmd *cmd = container_of(work, struct se_cmd, work);
-@@ -783,6 +799,8 @@ static void target_handle_abort(struct se_cmd *cmd)
- 
- 	WARN_ON_ONCE(kref_read(&cmd->cmd_kref) == 0);
- 
-+	transport_lun_remove_cmd(cmd);
-+
- 	transport_cmd_check_stop_to_fabric(cmd);
- }
- 
-@@ -1708,6 +1726,7 @@ static void target_complete_tmr_failure(struct work_struct *work)
- 	se_cmd->se_tmr_req->response = TMR_LUN_DOES_NOT_EXIST;
- 	se_cmd->se_tfo->queue_tm_rsp(se_cmd);
- 
-+	transport_lun_remove_cmd(se_cmd);
- 	transport_cmd_check_stop_to_fabric(se_cmd);
- }
- 
-@@ -1898,6 +1917,7 @@ void transport_generic_request_failure(struct se_cmd *cmd,
- 		goto queue_full;
- 
- check_stop:
-+	transport_lun_remove_cmd(cmd);
- 	transport_cmd_check_stop_to_fabric(cmd);
- 	return;
- 
-@@ -2195,6 +2215,7 @@ static void transport_complete_qf(struct se_cmd *cmd)
- 		transport_handle_queue_full(cmd, cmd->se_dev, ret, false);
- 		return;
- 	}
-+	transport_lun_remove_cmd(cmd);
- 	transport_cmd_check_stop_to_fabric(cmd);
- }
- 
-@@ -2289,6 +2310,7 @@ static void target_complete_ok_work(struct work_struct *work)
- 		if (ret)
- 			goto queue_full;
- 
-+		transport_lun_remove_cmd(cmd);
- 		transport_cmd_check_stop_to_fabric(cmd);
- 		return;
- 	}
-@@ -2314,6 +2336,7 @@ static void target_complete_ok_work(struct work_struct *work)
- 			if (ret)
- 				goto queue_full;
- 
-+			transport_lun_remove_cmd(cmd);
- 			transport_cmd_check_stop_to_fabric(cmd);
- 			return;
- 		}
-@@ -2349,6 +2372,7 @@ static void target_complete_ok_work(struct work_struct *work)
- 			if (ret)
- 				goto queue_full;
- 
-+			transport_lun_remove_cmd(cmd);
- 			transport_cmd_check_stop_to_fabric(cmd);
- 			return;
- 		}
-@@ -2384,6 +2408,7 @@ static void target_complete_ok_work(struct work_struct *work)
- 		break;
- 	}
- 
-+	transport_lun_remove_cmd(cmd);
- 	transport_cmd_check_stop_to_fabric(cmd);
- 	return;
- 
-@@ -2710,6 +2735,9 @@ int transport_generic_free_cmd(struct se_cmd *cmd, int wait_for_tasks)
- 		 */
- 		if (cmd->state_active)
- 			target_remove_from_state_list(cmd);
-+
-+		if (cmd->se_lun)
-+			transport_lun_remove_cmd(cmd);
- 	}
- 	if (aborted)
- 		cmd->free_compl = &compl;
-@@ -2781,9 +2809,6 @@ static void target_release_cmd_kref(struct kref *kref)
- 	struct completion *abrt_compl = se_cmd->abrt_compl;
- 	unsigned long flags;
- 
--	if (se_cmd->lun_ref_active)
--		percpu_ref_put(&se_cmd->se_lun->lun_ref);
--
- 	if (se_sess) {
- 		spin_lock_irqsave(&se_sess->sess_cmd_lock, flags);
- 		list_del_init(&se_cmd->se_cmd_list);
-diff --git a/include/scsi/iscsi_proto.h b/include/scsi/iscsi_proto.h
-index 533f56733ba8..b71b5c4f418c 100644
---- a/include/scsi/iscsi_proto.h
-+++ b/include/scsi/iscsi_proto.h
-@@ -627,7 +627,6 @@ struct iscsi_reject {
- #define ISCSI_REASON_BOOKMARK_INVALID	9
- #define ISCSI_REASON_BOOKMARK_NO_RESOURCES	10
- #define ISCSI_REASON_NEGOTIATION_RESET	11
--#define ISCSI_REASON_WAITING_FOR_LOGOUT	12
- 
- /* Max. number of Key=Value pairs in a text message */
- #define MAX_KEY_VALUE_PAIRS	8192
