@@ -2,129 +2,318 @@ Return-Path: <SRS0=1210=4J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B97BAC35640
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 06:07:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 46D9CC35641
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 06:08:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8B40F222C4
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 06:07:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 10EA1208C4
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 06:08:40 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=brainfault-org.20150623.gappssmtp.com header.i=@brainfault-org.20150623.gappssmtp.com header.b="aUcK9oUn"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726331AbgBUGHj (ORCPT
+        id S1726853AbgBUGIj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Feb 2020 01:07:39 -0500
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:40112 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725973AbgBUGHi (ORCPT
+        Fri, 21 Feb 2020 01:08:39 -0500
+Received: from mail-wr1-f65.google.com ([209.85.221.65]:46889 "EHLO
+        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725800AbgBUGIi (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Feb 2020 01:07:38 -0500
-Received: from pps.filterd (m0098399.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 01L5wqGd059081
-        for <linux-kernel@vger.kernel.org>; Fri, 21 Feb 2020 01:07:37 -0500
-Received: from e06smtp04.uk.ibm.com (e06smtp04.uk.ibm.com [195.75.94.100])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2y9ytr7r1u-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Fri, 21 Feb 2020 01:07:37 -0500
-Received: from localhost
-        by e06smtp04.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-kernel@vger.kernel.org> from <ajd@linux.ibm.com>;
-        Fri, 21 Feb 2020 06:07:34 -0000
-Received: from b06avi18626390.portsmouth.uk.ibm.com (9.149.26.192)
-        by e06smtp04.uk.ibm.com (192.168.101.134) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Fri, 21 Feb 2020 06:07:26 -0000
-Received: from d06av22.portsmouth.uk.ibm.com (d06av22.portsmouth.uk.ibm.com [9.149.105.58])
-        by b06avi18626390.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 01L65EUA45089158
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Fri, 21 Feb 2020 06:05:14 GMT
-Received: from d06av22.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 7F3E04C04E;
-        Fri, 21 Feb 2020 06:06:10 +0000 (GMT)
-Received: from d06av22.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 28CB64C04A;
-        Fri, 21 Feb 2020 06:06:10 +0000 (GMT)
-Received: from ozlabs.au.ibm.com (unknown [9.192.253.14])
-        by d06av22.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Fri, 21 Feb 2020 06:06:10 +0000 (GMT)
-Received: from [10.61.2.125] (haven.au.ibm.com [9.192.254.114])
-        (using TLSv1.2 with cipher DHE-RSA-AES128-SHA (128/128 bits))
-        (No client certificate requested)
-        by ozlabs.au.ibm.com (Postfix) with ESMTPSA id 6ECA0A0209;
-        Fri, 21 Feb 2020 17:06:05 +1100 (AEDT)
-Subject: Re: [PATCH v3 04/27] ocxl: Remove unnecessary externs
-To:     "Alastair D'Silva" <alastair@au1.ibm.com>, alastair@d-silva.org
-Cc:     "Aneesh Kumar K . V" <aneesh.kumar@linux.ibm.com>,
-        "Oliver O'Halloran" <oohall@gmail.com>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Paul Mackerras <paulus@samba.org>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Frederic Barrat <fbarrat@linux.ibm.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Vishal Verma <vishal.l.verma@intel.com>,
-        Dave Jiang <dave.jiang@intel.com>,
-        Ira Weiny <ira.weiny@intel.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        Rob Herring <robh@kernel.org>,
-        Anton Blanchard <anton@ozlabs.org>,
-        Krzysztof Kozlowski <krzk@kernel.org>,
-        Mahesh Salgaonkar <mahesh@linux.vnet.ibm.com>,
-        Madhavan Srinivasan <maddy@linux.vnet.ibm.com>,
-        =?UTF-8?Q?C=c3=a9dric_Le_Goater?= <clg@kaod.org>,
-        Anju T Sudhakar <anju@linux.vnet.ibm.com>,
-        Hari Bathini <hbathini@linux.ibm.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Greg Kurz <groug@kaod.org>,
-        Nicholas Piggin <npiggin@gmail.com>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        Alexey Kardashevskiy <aik@ozlabs.ru>,
-        linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
-        linux-nvdimm@lists.01.org, linux-mm@kvack.org
-References: <20200221032720.33893-1-alastair@au1.ibm.com>
- <20200221032720.33893-5-alastair@au1.ibm.com>
-From:   Andrew Donnellan <ajd@linux.ibm.com>
-Date:   Fri, 21 Feb 2020 17:06:07 +1100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.5.0
+        Fri, 21 Feb 2020 01:08:38 -0500
+Received: by mail-wr1-f65.google.com with SMTP id z7so599434wrl.13
+        for <linux-kernel@vger.kernel.org>; Thu, 20 Feb 2020 22:08:35 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=brainfault-org.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=+DwU++sw/f/4B9UKmm6rljMvzT1XBNTBLFmYj+swUEY=;
+        b=aUcK9oUnzDGT60usz5spz3Oz0Mcvchlr9eMvEhnAgtw8EG62aF7dtl5EkgWeilflBX
+         rC7TePMZcJiysCoxGuVco6D4dPQq80fNY27yXiKfJ3fAXQUD0/5RRT+XyFGKPGKPpB1B
+         F52qZXlZ6xTacT/wncc82kXoiiUbMmJDVC1STWOz02cHjhi8MY/lkvF8okMJW8MPZ7Z4
+         1/PpsN9J8IiTZ/Qw2maiUTjex6IKMxUqt9DyCxp1n2MtQGSX9GUhvIaCaOhhtJ9NohId
+         pcJJd2J5B6Mf6z/Jb//NzN8p8exseENhYamH9HCKbht8k+4GTiwgIDByBb6RC0iwO59g
+         1bDw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=+DwU++sw/f/4B9UKmm6rljMvzT1XBNTBLFmYj+swUEY=;
+        b=sZ2H9qA9fk0ZO9g7rkHS6MPROrLtH6PnwxeP+x0XHCaKLmkMTGOFR1GU1dRzugO/Ri
+         NzyWjUWRMZeJrp3KFOyyJ8ipofFKlKCeZMHyTiwcAJC++ddW0vVpBwidKoHm1XCKZkXH
+         xY3+sjqryxO/rIEPEYFdw6K+IsERH6YkDq6gE83djjuMtDojgns8KZGI4N8MqQTdd95i
+         13OF+KmUqqOOoSBCysIjr29Ii7U4AiZdHlyBhcA2atPSZUKRi3DhwPjmxYBVf/KS1sTO
+         elx5HWsLD7Y/2pLgjl3/uMZ9fB96cYoviDiNnuaKqKg/jthqGLG19IKHvaDR3vIGJrhU
+         JKhQ==
+X-Gm-Message-State: APjAAAUXMD7X/opP4WKgb1CId8m9cdHu6LKsiqtF9+xxf8dSnxartqNg
+        gXuM7idWrclcGTJApZr1EL2gmPwCW5zjS2CnUPOgIg==
+X-Google-Smtp-Source: APXvYqwYnrubGCG0L4SdLafq/eZ899kGAxRATDt74gFr2KZrbgTY1qGOQNNE8wFqcb1QlGgfKk0iUBDqRU4XljSJTh0=
+X-Received: by 2002:a5d:5345:: with SMTP id t5mr49673354wrv.0.1582265314802;
+ Thu, 20 Feb 2020 22:08:34 -0800 (PST)
 MIME-Version: 1.0
-In-Reply-To: <20200221032720.33893-5-alastair@au1.ibm.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-TM-AS-GCONF: 00
-x-cbid: 20022106-0016-0000-0000-000002E8D837
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 20022106-0017-0000-0000-0000334BF766
-Message-Id: <6254550d-0803-1f2d-7507-84670c26fe34@linux.ibm.com>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.572
- definitions=2020-02-21_01:2020-02-19,2020-02-21 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- suspectscore=0 clxscore=1011 mlxlogscore=649 mlxscore=0 adultscore=0
- lowpriorityscore=0 malwarescore=0 spamscore=0 impostorscore=0 phishscore=0
- bulkscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2001150001 definitions=main-2002210041
+References: <20200221004413.12869-1-atish.patra@wdc.com> <20200221004413.12869-11-atish.patra@wdc.com>
+In-Reply-To: <20200221004413.12869-11-atish.patra@wdc.com>
+From:   Anup Patel <anup@brainfault.org>
+Date:   Fri, 21 Feb 2020 11:38:23 +0530
+Message-ID: <CAAhSdy14p3fKueV0wedt+9+9VfdML0O_oTB-zkb=B2M5F3MdHg@mail.gmail.com>
+Subject: Re: [PATCH v9 10/12] RISC-V: Add supported for ordered booting method
+ using HSM
+To:     Atish Patra <atish.patra@wdc.com>
+Cc:     "linux-kernel@vger.kernel.org List" <linux-kernel@vger.kernel.org>,
+        Albert Ou <aou@eecs.berkeley.edu>,
+        Borislav Petkov <bp@suse.de>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        "Eric W. Biederman" <ebiederm@xmission.com>,
+        Geert Uytterhoeven <geert@linux-m68k.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Heiko Carstens <heiko.carstens@de.ibm.com>,
+        Jason Cooper <jason@lakedaemon.net>,
+        Kees Cook <keescook@chromium.org>,
+        linux-riscv <linux-riscv@lists.infradead.org>,
+        Mao Han <han_mao@c-sky.com>, Marc Zyngier <maz@kernel.org>,
+        Mike Rapoport <rppt@linux.ibm.com>,
+        Nick Hu <nickhu@andestech.com>,
+        Palmer Dabbelt <palmer@dabbelt.com>,
+        Paul Walmsley <paul.walmsley@sifive.com>,
+        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Vincent Chen <vincent.chen@sifive.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 21/2/20 2:26 pm, Alastair D'Silva wrote:
-> From: Alastair D'Silva <alastair@d-silva.org>
-> 
-> Function declarations don't need externs, remove the existing ones
-> so they are consistent with newer code
-> 
-> Signed-off-by: Alastair D'Silva <alastair@d-silva.org>
+On Fri, Feb 21, 2020 at 6:14 AM Atish Patra <atish.patra@wdc.com> wrote:
+>
+> Currently, all harts have to jump Linux in RISC-V. This complicates the
+> multi-stage boot process as every transient stage also has to ensure all
+> harts enter to that stage and jump to Linux afterwards. It also obstructs
+> a clean Kexec implementation.
+>
+> SBI HSM extension provides alternate solutions where only a single hart
+> need to boot and enter Linux. The booting hart can bring up secondary
+> harts one by one afterwards.
+>
+> Add SBI HSM based cpu_ops that implements an ordered booting method in
+> RISC-V. This change is also backward compatible with older firmware not
+> implementing HSM extension. If a latest kernel is used with older
+> firmware, it will continue to use the default spinning booting method.
+>
+> Signed-off-by: Atish Patra <atish.patra@wdc.com>
+> ---
+>  arch/riscv/kernel/Makefile      |  3 ++
+>  arch/riscv/kernel/cpu_ops.c     | 10 +++-
+>  arch/riscv/kernel/cpu_ops_sbi.c | 81 +++++++++++++++++++++++++++++++++
+>  arch/riscv/kernel/head.S        | 26 +++++++++++
+>  arch/riscv/kernel/smpboot.c     |  2 +-
+>  arch/riscv/kernel/traps.c       |  2 +-
+>  6 files changed, 121 insertions(+), 3 deletions(-)
+>  create mode 100644 arch/riscv/kernel/cpu_ops_sbi.c
+>
+> diff --git a/arch/riscv/kernel/Makefile b/arch/riscv/kernel/Makefile
+> index f81a6ff88005..a0be34b96846 100644
+> --- a/arch/riscv/kernel/Makefile
+> +++ b/arch/riscv/kernel/Makefile
+> @@ -44,5 +44,8 @@ obj-$(CONFIG_PERF_EVENTS)     += perf_event.o
+>  obj-$(CONFIG_PERF_EVENTS)      += perf_callchain.o
+>  obj-$(CONFIG_HAVE_PERF_REGS)   += perf_regs.o
+>  obj-$(CONFIG_RISCV_SBI)                += sbi.o
+> +ifeq ($(CONFIG_RISCV_SBI), y)
+> +obj-$(CONFIG_SMP) += cpu_ops_sbi.o
+> +endif
+>
+>  clean:
+> diff --git a/arch/riscv/kernel/cpu_ops.c b/arch/riscv/kernel/cpu_ops.c
+> index e950ae5bee9c..afa90f711a2b 100644
+> --- a/arch/riscv/kernel/cpu_ops.c
+> +++ b/arch/riscv/kernel/cpu_ops.c
+> @@ -18,6 +18,7 @@ const struct cpu_operations *cpu_ops[NR_CPUS] __ro_after_init;
+>  void *__cpu_up_stack_pointer[NR_CPUS];
+>  void *__cpu_up_task_pointer[NR_CPUS];
+>
+> +extern const struct cpu_operations cpu_ops_sbi;
+>  extern const struct cpu_operations cpu_ops_spinwait;
+>
+>  void cpu_update_secondary_bootdata(unsigned int cpuid,
+> @@ -34,5 +35,12 @@ void cpu_update_secondary_bootdata(unsigned int cpuid,
+>
+>  void __init cpu_set_ops(int cpuid)
+>  {
+> -       cpu_ops[cpuid] = &cpu_ops_spinwait;
+> +#if IS_ENABLED(CONFIG_RISCV_SBI)
+> +       if (sbi_probe_extension(SBI_EXT_HSM) > 0) {
+> +               if (!cpuid)
+> +                       pr_info("SBI v0.2 HSM extension detected\n");
+> +               cpu_ops[cpuid] = &cpu_ops_sbi;
+> +       } else
+> +#endif
+> +               cpu_ops[cpuid] = &cpu_ops_spinwait;
+>  }
+> diff --git a/arch/riscv/kernel/cpu_ops_sbi.c b/arch/riscv/kernel/cpu_ops_sbi.c
+> new file mode 100644
+> index 000000000000..70d02dfe0ab8
+> --- /dev/null
+> +++ b/arch/riscv/kernel/cpu_ops_sbi.c
+> @@ -0,0 +1,81 @@
+> +// SPDX-License-Identifier: GPL-2.0-only
+> +/*
+> + * HSM extension and cpu_ops implementation.
+> + *
+> + * Copyright (c) 2020 Western Digital Corporation or its affiliates.
+> + */
+> +
+> +#include <linux/init.h>
+> +#include <linux/mm.h>
+> +#include <asm/cpu_ops.h>
+> +#include <asm/sbi.h>
+> +#include <asm/smp.h>
+> +
+> +extern char secondary_start_sbi[];
+> +const struct cpu_operations cpu_ops_sbi;
+> +
+> +static int sbi_hsm_hart_start(unsigned long hartid, unsigned long saddr,
+> +                      unsigned long priv)
+> +{
+> +       struct sbiret ret;
+> +
+> +       ret = sbi_ecall(SBI_EXT_HSM, SBI_EXT_HSM_HART_START,
+> +                             hartid, saddr, priv, 0, 0, 0);
+> +       if (ret.error)
+> +               return sbi_err_map_linux_errno(ret.error);
+> +       else
+> +               return 0;
+> +}
+> +
+> +#ifdef CONFIG_HOTPLUG_CPU
+> +static int sbi_hsm_hart_stop(void)
+> +{
+> +       struct sbiret ret;
+> +
+> +       ret = sbi_ecall(SBI_EXT_HSM, SBI_EXT_HSM_HART_STOP, 0, 0, 0, 0, 0, 0);
+> +
+> +       if (ret.error)
+> +               return sbi_err_map_linux_errno(ret.error);
+> +       else
+> +               return 0;
+> +}
+> +
+> +static int sbi_hsm_hart_get_status(unsigned long hartid)
+> +{
+> +       struct sbiret ret;
+> +
+> +       ret = sbi_ecall(SBI_EXT_HSM, SBI_EXT_HSM_HART_STATUS,
+> +                             hartid, 0, 0, 0, 0, 0);
+> +       if (ret.error)
+> +               return sbi_err_map_linux_errno(ret.error);
+> +       else
+> +               return ret.value;
+> +}
+> +#endif
+> +
+> +static int sbi_cpu_start(unsigned int cpuid, struct task_struct *tidle)
+> +{
+> +       int rc;
+> +       unsigned long boot_addr = __pa_symbol(secondary_start_sbi);
+> +       int hartid = cpuid_to_hartid_map(cpuid);
+> +
+> +       cpu_update_secondary_bootdata(cpuid, tidle);
+> +       rc = sbi_hsm_hart_start(hartid, boot_addr, 0);
+> +
+> +       return rc;
+> +}
+> +
+> +static int sbi_cpu_prepare(unsigned int cpuid)
+> +{
+> +       if (!cpu_ops_sbi.cpu_start) {
+> +               pr_err("cpu start method not defined for CPU [%d]\n", cpuid);
+> +               return -ENODEV;
+> +       }
+> +       return 0;
+> +}
+> +
+> +const struct cpu_operations cpu_ops_sbi = {
+> +       .name           = "sbi",
+> +       .cpu_prepare    = sbi_cpu_prepare,
+> +       .cpu_start      = sbi_cpu_start,
+> +};
+> diff --git a/arch/riscv/kernel/head.S b/arch/riscv/kernel/head.S
+> index b85376d84098..ac5b0e0a02f6 100644
+> --- a/arch/riscv/kernel/head.S
+> +++ b/arch/riscv/kernel/head.S
+> @@ -99,11 +99,37 @@ relocate:
+>         ret
+>  #endif /* CONFIG_MMU */
+>  #ifdef CONFIG_SMP
+> +       .global secondary_start_sbi
+> +secondary_start_sbi:
+> +       /* Mask all interrupts */
+> +       csrw CSR_IE, zero
+> +       csrw CSR_IP, zero
+> +
+> +       /* Load the global pointer */
+> +       .option push
+> +       .option norelax
+> +               la gp, __global_pointer$
+> +       .option pop
+> +
+> +       /*
+> +        * Disable FPU to detect illegal usage of
+> +        * floating point in kernel space
+> +        */
+> +       li t0, SR_FS
+> +       csrc CSR_STATUS, t0
+> +
+>         /* Set trap vector to spin forever to help debug */
+>         la a3, .Lsecondary_park
+>         csrw CSR_TVEC, a3
+>
+>         slli a3, a0, LGREG
+> +       la a4, __cpu_up_stack_pointer
+> +       la a5, __cpu_up_task_pointer
+> +       add a4, a3, a4
+> +       add a5, a3, a5
+> +       REG_L sp, (a4)
+> +       REG_L tp, (a5)
+> +
+>         .global secondary_start_common
+>  secondary_start_common:
+>
+> diff --git a/arch/riscv/kernel/smpboot.c b/arch/riscv/kernel/smpboot.c
+> index e89396a2a1af..4e9922790f6e 100644
+> --- a/arch/riscv/kernel/smpboot.c
+> +++ b/arch/riscv/kernel/smpboot.c
+> @@ -143,7 +143,7 @@ void __init smp_cpus_done(unsigned int max_cpus)
+>  /*
+>   * C entry point for a secondary processor.
+>   */
+> -asmlinkage __visible void __init smp_callin(void)
+> +asmlinkage __visible void smp_callin(void)
+>  {
+>         struct mm_struct *mm = &init_mm;
+>
+> diff --git a/arch/riscv/kernel/traps.c b/arch/riscv/kernel/traps.c
+> index ffb3d94bf0cc..8e13ad45ccaa 100644
+> --- a/arch/riscv/kernel/traps.c
+> +++ b/arch/riscv/kernel/traps.c
+> @@ -147,7 +147,7 @@ int is_valid_bugaddr(unsigned long pc)
+>  }
+>  #endif /* CONFIG_GENERIC_BUG */
+>
+> -void __init trap_init(void)
+> +void trap_init(void)
+>  {
+>         /*
+>          * Set sup0 scratch register to 0, indicating to exception vector
+> --
+> 2.25.0
+>
 
-Acked-by: Andrew Donnellan <ajd@linux.ibm.com>
+Looks good to me.
 
+Reviewed-by: Anup Patel <anup@brainfault.org>
 
--- 
-Andrew Donnellan              OzLabs, ADL Canberra
-ajd@linux.ibm.com             IBM Australia Limited
-
+Regards,
+Anup
