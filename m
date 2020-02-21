@@ -2,106 +2,169 @@ Return-Path: <SRS0=1210=4J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1D511C35646
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 19:19:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 84150C3565B
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 19:21:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E4DE724656
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 19:19:42 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582312783;
-	bh=6f9lYdnJe9KYcpTY5q/+JDf+8eEEbcDguNteOooTnzI=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=KdmBlis5WotmAp1wnVszQy308XvV08rDEWyppQHFw1uPkE0NK6nv6MjuovB0LsJ1Q
-	 tNyGiuAPbY7bqMykAiyo63Qz2jxNZ3JjQNeL6FAnalut/bBGZeKPPQOt+/uAnpgLUN
-	 +MDPGrAmiUthyi9CugCJloPowRzUAXfICV6DKHyw=
+	by mail.kernel.org (Postfix) with ESMTP id 5BDC2207FD
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 19:21:01 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=fb.com header.i=@fb.com header.b="TavbpvOL"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729757AbgBUTTl (ORCPT
+        id S1729738AbgBUTVA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Feb 2020 14:19:41 -0500
-Received: from mail-lf1-f68.google.com ([209.85.167.68]:45586 "EHLO
-        mail-lf1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729648AbgBUTTl (ORCPT
+        Fri, 21 Feb 2020 14:21:00 -0500
+Received: from mx0a-00082601.pphosted.com ([67.231.145.42]:22788 "EHLO
+        mx0a-00082601.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1729533AbgBUTU7 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Feb 2020 14:19:41 -0500
-Received: by mail-lf1-f68.google.com with SMTP id z5so2249961lfd.12
-        for <linux-kernel@vger.kernel.org>; Fri, 21 Feb 2020 11:19:40 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linux-foundation.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=fFUjPnLNK/wofno2JMZpXV7vXMx2oIijpSJUiltCnRQ=;
-        b=B3G2KKEUhlVgVK344fmGjze/ZrUx1gRELcUjzX2MZk6dt5sHBy9TVpnr6DOZcTqRzr
-         2b4WojyPXm2dR1cT/troSmXekZ+1QzSmhIlwp+EKOYuEQbWpMFC3phurjv1HKDUFX9Bk
-         Um8J439MwjhswJRC48fABzZqJqvUhocgFGCf8=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=fFUjPnLNK/wofno2JMZpXV7vXMx2oIijpSJUiltCnRQ=;
-        b=ipFstfwyCEzTEnDi+Y8iXYHxwfXAfmfxj7F/LA2CK/Rw21W8UpF/i97huJyx432SU1
-         35xV3tuEpe5l5pmPiWA9S9XyGJUkG3FAgyThsrKePuC1w2DJck8xHRWEQJW9tZdQq7hi
-         JSl4t9+axfRlDnd2U+KgfaUfHd+qcqWZ9G+dK8surN03Z3JP0lmP1WE5+wDohZpYT80g
-         hD/vRMAlJ6DCYUjtbm53VpSLc1bCPcy0D7S0PZe1swZrMFZD32qOz2o/b5Sj8OviEQRb
-         OPTnK6NBGLvUZLJnaxL/uHkbWk5FALnPY18iPqhjUAtNzQVeZ6jiK2o/qaU/yZWZ3WCP
-         EHbg==
-X-Gm-Message-State: APjAAAVOY17EDSMuat5Dekb3BHu0Jj9NSopl4vBVB2cV8OOvCmJR2mNl
-        GVRAwWetANN6tbE7Nlz0ijJlFV4s7ok=
-X-Google-Smtp-Source: APXvYqyZGm4VvflxjCMn1aQ86XeV5vieRr+X+RsX2Q16rw1J+HqJ9B1YINUfjBoX0yBNEzijidb9wQ==
-X-Received: by 2002:a19:7b0a:: with SMTP id w10mr20691195lfc.90.1582312779259;
-        Fri, 21 Feb 2020 11:19:39 -0800 (PST)
-Received: from mail-lj1-f172.google.com (mail-lj1-f172.google.com. [209.85.208.172])
-        by smtp.gmail.com with ESMTPSA id 23sm2167322ljw.31.2020.02.21.11.19.38
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 21 Feb 2020 11:19:38 -0800 (PST)
-Received: by mail-lj1-f172.google.com with SMTP id q8so3310083ljj.11
-        for <linux-kernel@vger.kernel.org>; Fri, 21 Feb 2020 11:19:38 -0800 (PST)
-X-Received: by 2002:a2e:461a:: with SMTP id t26mr22705661lja.204.1582312777962;
- Fri, 21 Feb 2020 11:19:37 -0800 (PST)
+        Fri, 21 Feb 2020 14:20:59 -0500
+Received: from pps.filterd (m0044012.ppops.net [127.0.0.1])
+        by mx0a-00082601.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 01LJKo12023468
+        for <linux-kernel@vger.kernel.org>; Fri, 21 Feb 2020 11:20:58 -0800
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.com; h=from : to : cc : subject
+ : date : message-id : mime-version : content-type; s=facebook;
+ bh=oSUqE3CPa7fT0s8lzoQooeoYfSz0kynevewb7clFdNY=;
+ b=TavbpvOLHjAAi5v63YCL5mVcfJSUIJlyTMF9Rvnss1uIW7KLsXapaaToMGnxoKQd+pNu
+ CxVfeyEcUvIn4MGN/KpmrUisCTbkKHiFKYk3OG4cx1RNeOFa1j+EI45C0eFtdd6V8F63
+ +0jnMzRGtNQtDK9dgK610Njv2nEK/Bs3LhQ= 
+Received: from mail.thefacebook.com ([163.114.132.120])
+        by mx0a-00082601.pphosted.com with ESMTP id 2y9y9nnxpx-9
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Fri, 21 Feb 2020 11:20:58 -0800
+Received: from intmgw002.41.prn1.facebook.com (2620:10d:c085:108::4) by
+ mail.thefacebook.com (2620:10d:c085:21d::6) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.1779.2; Fri, 21 Feb 2020 11:20:44 -0800
+Received: by devvm2643.prn2.facebook.com (Postfix, from userid 111017)
+        id 4F35E240CB8E1; Fri, 21 Feb 2020 11:20:43 -0800 (PST)
+Smtp-Origin-Hostprefix: devvm
+From:   Roman Gushchin <guro@fb.com>
+Smtp-Origin-Hostname: devvm2643.prn2.facebook.com
+To:     <linux-fsdevel@vger.kernel.org>, <linux-ext4@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>
+CC:     Alexander Viro <viro@zeniv.linux.org.uk>,
+        Andreas Dilger <adilger.kernel@dilger.ca>,
+        Roman Gushchin <guro@fb.com>,
+        Andrew Perepechko <andrew.perepechko@seagate.com>,
+        Theodore Ts'o <tytso@mit.edu>, Gioh Kim <gioh.kim@lge.com>,
+        Jan Kara <jack@suse.cz>
+Smtp-Origin-Cluster: prn2c23
+Subject: [PATCH] ext4: use non-movable memory for superblock readahead
+Date:   Fri, 21 Feb 2020 11:20:35 -0800
+Message-ID: <20200221192035.180546-1-guro@fb.com>
+X-Mailer: git-send-email 2.17.1
+X-FB-Internal: Safe
 MIME-Version: 1.0
-References: <20200221111138.GX14897@hirez.programming.kicks-ass.net>
-In-Reply-To: <20200221111138.GX14897@hirez.programming.kicks-ass.net>
-From:   Linus Torvalds <torvalds@linux-foundation.org>
-Date:   Fri, 21 Feb 2020 11:19:22 -0800
-X-Gmail-Original-Message-ID: <CAHk-=wi4uO+Djqr4Jc1TnCofwxUTuXHtgkgwnVX86q06UGV6DA@mail.gmail.com>
-Message-ID: <CAHk-=wi4uO+Djqr4Jc1TnCofwxUTuXHtgkgwnVX86q06UGV6DA@mail.gmail.com>
-Subject: Re: [PATCH] mm/tlb: Fix use_mm() vs TLB invalidate
-To:     Peter Zijlstra <peterz@infradead.org>
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Andy Lutomirski <luto@amacapital.net>,
-        Jens Axboe <axboe@kernel.dk>,
-        Kees Cook <keescook@chromium.org>,
-        Jann Horn <jannh@google.com>, Will Deacon <will@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.572
+ definitions=2020-02-21_06:2020-02-21,2020-02-21 signatures=0
+X-Proofpoint-Spam-Details: rule=fb_default_notspam policy=fb_default score=0 phishscore=0
+ priorityscore=1501 lowpriorityscore=0 suspectscore=0 malwarescore=0
+ mlxlogscore=829 adultscore=0 bulkscore=0 spamscore=0 impostorscore=0
+ mlxscore=0 clxscore=1015 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2001150001 definitions=main-2002210147
+X-FB-Internal: deliver
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Feb 21, 2020 at 3:11 AM Peter Zijlstra <peterz@infradead.org> wrote:
->
-> +       BUG_ON(!(tsk->flags & PF_KTHREAD));
-> +       BUG_ON(tsk->mm != NULL);
+Since commit a8ac900b8163 ("ext4: use non-movable memory for the
+superblock") buffers for ext4 superblock were allocated using
+the sb_bread_unmovable() helper which allocated buffer heads
+out of non-movable memory blocks. It was necessarily to not block
+page migrations and do not cause cma allocation failures.
 
-Stop this craziness.
+However commit 85c8f176a611 ("ext4: preload block group descriptors")
+broke this by introducing pre-reading of the ext4 superblock.
+The problem is that __breadahead() is using __getblk() underneath,
+which allocates buffer heads out of movable memory.
 
-There is absolutely ZERO excuse for this kind of garbage.
+It resulted in page migration failures I've seen on a machine
+with an ext4 partition and a preallocated cma area.
 
-Making this a BUG_ON() will just cause all the possible debugging info
-to be thrown away and lost, and you often have a dead machine.
+Fix this by introducing sb_breadahead_unmovable() and
+__breadahead_gfp() helpers which use non-movable memory for buffer
+head allocations and use them for the ext4 superblock readahead.
 
-For absolutely no good reason.
+Fixes: 85c8f176a611 ("ext4: preload block group descriptors")
+Signed-off-by: Roman Gushchin <guro@fb.com>
+Cc: Andrew Perepechko <andrew.perepechko@seagate.com>
+Cc: Theodore Ts'o <tytso@mit.edu>
+Cc: Gioh Kim <gioh.kim@lge.com>
+Cc: Jan Kara <jack@suse.cz>
+---
+ fs/buffer.c                 | 11 +++++++++++
+ fs/ext4/super.c             |  2 +-
+ include/linux/buffer_head.h |  8 ++++++++
+ 3 files changed, 20 insertions(+), 1 deletion(-)
 
-Make it a WARN_ON_ONCE(). If it triggers, everything works the way it
-always did, but we get notified.
+diff --git a/fs/buffer.c b/fs/buffer.c
+index 4299e100a05b..25462edd920e 100644
+--- a/fs/buffer.c
++++ b/fs/buffer.c
+@@ -1414,6 +1414,17 @@ void __breadahead(struct block_device *bdev, sector_t block, unsigned size)
+ }
+ EXPORT_SYMBOL(__breadahead);
+ 
++void __breadahead_gfp(struct block_device *bdev, sector_t block, unsigned size,
++		      gfp_t gfp)
++{
++	struct buffer_head *bh = __getblk_gfp(bdev, block, size, gfp);
++	if (likely(bh)) {
++		ll_rw_block(REQ_OP_READ, REQ_RAHEAD, 1, &bh);
++		brelse(bh);
++	}
++}
++EXPORT_SYMBOL(__breadahead_gfp);
++
+ /**
+  *  __bread_gfp() - reads a specified block and returns the bh
+  *  @bdev: the block_device to read from
+diff --git a/fs/ext4/super.c b/fs/ext4/super.c
+index 3a401f930bca..6a10f7d44719 100644
+--- a/fs/ext4/super.c
++++ b/fs/ext4/super.c
+@@ -4321,7 +4321,7 @@ static int ext4_fill_super(struct super_block *sb, void *data, int silent)
+ 	/* Pre-read the descriptors into the buffer cache */
+ 	for (i = 0; i < db_count; i++) {
+ 		block = descriptor_loc(sb, logical_sb_block, i);
+-		sb_breadahead(sb, block);
++		sb_breadahead_unmovable(sb, block);
+ 	}
+ 
+ 	for (i = 0; i < db_count; i++) {
+diff --git a/include/linux/buffer_head.h b/include/linux/buffer_head.h
+index 7b73ef7f902d..b56cc825f64d 100644
+--- a/include/linux/buffer_head.h
++++ b/include/linux/buffer_head.h
+@@ -189,6 +189,8 @@ struct buffer_head *__getblk_gfp(struct block_device *bdev, sector_t block,
+ void __brelse(struct buffer_head *);
+ void __bforget(struct buffer_head *);
+ void __breadahead(struct block_device *, sector_t block, unsigned int size);
++void __breadahead_gfp(struct block_device *, sector_t block, unsigned int size,
++		  gfp_t gfp);
+ struct buffer_head *__bread_gfp(struct block_device *,
+ 				sector_t block, unsigned size, gfp_t gfp);
+ void invalidate_bh_lrus(void);
+@@ -319,6 +321,12 @@ sb_breadahead(struct super_block *sb, sector_t block)
+ 	__breadahead(sb->s_bdev, block, sb->s_blocksize);
+ }
+ 
++static inline void
++sb_breadahead_unmovable(struct super_block *sb, sector_t block)
++{
++	__breadahead_gfp(sb->s_bdev, block, sb->s_blocksize, 0);
++}
++
+ static inline struct buffer_head *
+ sb_getblk(struct super_block *sb, sector_t block)
+ {
+-- 
+2.24.1
 
-Stop with the stupid crazy BUG_ON() crap already. It is actively _bad_
-for debugging.
-
-              Linus
