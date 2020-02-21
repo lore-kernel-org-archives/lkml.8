@@ -2,109 +2,127 @@ Return-Path: <SRS0=1210=4J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 77EF6C35642
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 08:25:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 25B19C35641
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 08:25:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 586AF246A8
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 08:25:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F12022469D
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 08:25:41 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1582273542;
+	bh=WKeqSySH9aIG09sch9PE7HMHhM0Qp6oU8B87iJeSRZo=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=mCb52CxCWQnJtlHcNZTIqWwzSCi/Rol1nNuLwxsmZ8kyLokBD5XzoMHbNWlZC3ocZ
+	 LAczfQWu2bcQtKwXjcrl1e7LgfR4PdKk5PMEfvk4ZR/i87oy6ZEiJPAzoPPVowtP2o
+	 Osfh1j8qZt5Y2dyXPSS8Gv8tA7ZgA/gmQ0Zidlv4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388822AbgBUIZh (ORCPT
+        id S2388767AbgBUIZM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Feb 2020 03:25:37 -0500
-Received: from mail1.bemta25.messagelabs.com ([195.245.230.66]:58144 "EHLO
-        mail1.bemta25.messagelabs.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S2388779AbgBUIZR (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Feb 2020 03:25:17 -0500
-Received: from [100.112.198.146] (using TLSv1.2 with cipher DHE-RSA-AES256-GCM-SHA384 (256 bits))
-        by server-2.bemta.az-b.eu-west-1.aws.symcld.net id 97/DA-44550-AE39F4E5; Fri, 21 Feb 2020 08:25:14 +0000
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFnrHIsWRWlGSWpSXmKPExsVy8MN7Xd1Xk/3
-  jDKZtlbKYc76FxWL+kXOsFocXvWC0aF68ns3i/tejjBY3P31jtbi8aw6bRfvG2awWS69fZLJ4
-  /6mTyaJ17xF2i/97drBb/Nw1j8Xi9sTJjA58HmvmrWH02LLyJpPHzll32T02repk87hzbQ+bx
-  /65a9g9+v8aeHzeJBfAEcWamZeUX5HAmrHoRTdzwQf2isuXJrI3ML5m7WLk4hASWMsosXvZLe
-  YuRg4gp1Ji3k2hLkZODl4BU4ndX6+wgthsAjoSj2auZwKxWQRUJQ49v84CYgsLWEpsabnHCDJ
-  HROAks0Tnva8sIA6zwDRGiT0fDzNDTBKUODnzCVgHs4CExMEXL8DiQgJaEufWrGKcwMg9C0nZ
-  LCRlCxiZVjFaJBVlpmeU5CZm5ugaGhjoGhoa6RpamukaGpvrJVbpJumlluqWpxaX6BrqJZYX6
-  xVX5ibnpOjlpZZsYgQGfUrBkc4djL/XvNc7xCjJwaQkyqvY5x8nxJeUn1KZkVicEV9UmpNafI
-  hRhoNDSYL32QSgnGBRanpqRVpmDjACYdISHDxKIryOvUBp3uKCxNzizHSI1ClGXY7r7/cuZRZ
-  iycvPS5US522dBFQkAFKUUZoHNwKWDC4xykoJ8zIyMDAI8RSkFuVmlqDKv2IU52BUEub9MRFo
-  Ck9mXgncpldARzABHfFe2AfkiJJEhJRUA1MHn8fM4xI328QO6/TO+z+zM9DHfsV1yxWzNuTPW
-  84i9yKj9PIckZfsm0+k8/98e9n1lIrTOpm64AO7rHiff2s2u724Qv+jYc7sgpCOmzw341/L+E
-  zpEkx0da57Uzj/RHHMVtVmabZewX0+cmp/s79MYZ1kFbl+pYeFbMOFnub6yVlm0xZL26jlizI
-  4lc77/mMbU2tZ7ayF1hPvmyV9ieBTkbF9x5+vGOIwYY9jkrlPZm7hhLYbkTO1Tje8a51fMmeu
-  8DulS/1VPE3196dPDmKKF/fu/fkwV6BOYoHQ2zTfHfyGjHPZ41JZO4IMSnZuso3ZsEnnf7be6
-  u4JGx+sic1ckstybGPWn5ee2QHflViKMxINtZiLihMBB91GJ4EDAAA=
-X-Env-Sender: roy.im.opensource@diasemi.com
-X-Msg-Ref: server-15.tower-288.messagelabs.com!1582273513!731327!2
-X-Originating-IP: [193.240.239.45]
-X-SYMC-ESS-Client-Auth: outbound-route-from=pass
-X-StarScan-Received: 
-X-StarScan-Version: 9.44.25; banners=-,-,-
-X-VirusChecked: Checked
-Received: (qmail 22386 invoked from network); 21 Feb 2020 08:25:14 -0000
-Received: from unknown (HELO NB-EX-CASHUB01.diasemi.com) (193.240.239.45)
-  by server-15.tower-288.messagelabs.com with ECDHE-RSA-AES256-SHA384 encrypted SMTP; 21 Feb 2020 08:25:14 -0000
-Received: from krsrvapps-03.diasemi.com (10.95.17.51) by
- NB-EX-CASHUB01.diasemi.com (10.1.16.140) with Microsoft SMTP Server id
- 14.3.468.0; Fri, 21 Feb 2020 09:25:13 +0100
-Received: by krsrvapps-03.diasemi.com (Postfix, from userid 22266)      id
- 7701813F671; Fri, 21 Feb 2020 17:25:11 +0900 (KST)
-Message-ID: <cover.1582270025.git.Roy.Im@diasemi.com>
-From:   Roy Im <roy.im.opensource@diasemi.com>
-Date:   Fri, 21 Feb 2020 16:27:05 +0900
-Subject: [PATCH V9 0/3]  da7280: haptic driver submission
-To:     "David S. Miller" <davem@davemloft.net>,
-        Uwe Kleine-Koenig <u.kleine-koenig@pengutronix.de>,
-        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-        Greg KH <gregkh@linuxfoundation.org>,
-        Lee Jones <lee.jones@linaro.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
-        Maximilian Luz <luzmaximilian@gmail.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Rob Herring <robh@kernel.org>,
-        Thierry Reding <thierry.reding@gmail.com>
-CC:     Support Opensource <support.opensource@diasemi.com>,
-        <devicetree@vger.kernel.org>, <linux-input@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>
+        Fri, 21 Feb 2020 03:25:12 -0500
+Received: from mail.kernel.org ([198.145.29.99]:37724 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2388298AbgBUIZD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 21 Feb 2020 03:25:03 -0500
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5D5F22467D;
+        Fri, 21 Feb 2020 08:25:02 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1582273502;
+        bh=WKeqSySH9aIG09sch9PE7HMHhM0Qp6oU8B87iJeSRZo=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=MFAwPYSiy2cm4+O3aeKkVgXJ2ko3iB5nldaBqQm02GnBefxCKI+tSW+YfeB/Bn6jf
+         0pQAnLMeQdsRdjpbIH/6wepwit4kgt1dP2ZgFtrmnVeCzI3lRJd+0DbI7R1beZQ3OW
+         Bs85ED1Fz233mbkUuNy17XEFLwh0WVU7/jtMkTe0=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org, Marc Zyngier <maz@kernel.org>,
+        Heyi Guo <guoheyi@huawei.com>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.19 171/191] irqchip/gic-v3: Only provision redistributors that are enabled in ACPI
+Date:   Fri, 21 Feb 2020 08:42:24 +0100
+Message-Id: <20200221072311.203366597@linuxfoundation.org>
+X-Mailer: git-send-email 2.25.1
+In-Reply-To: <20200221072250.732482588@linuxfoundation.org>
+References: <20200221072250.732482588@linuxfoundation.org>
+User-Agent: quilt/0.66
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This patch adds support for the Dialog DA7280 Haptic driver IC.
+From: Marc Zyngier <maz@kernel.org>
 
-In this patch set the following is provided:
+[ Upstream commit 926b5dfa6b8dc666ff398044af6906b156e1d949 ]
 
-[PATCH V9 1/3] MAINTAINERS file update for DA7280
-[PATCH V9 2/3] DA7280 DT Binding
-[PATCH V9 3/3] DA7280 Driver
+We currently allocate redistributor region structures for
+individual redistributors when ACPI doesn't present us with
+compact MMIO regions covering multiple redistributors.
 
-This patch applies against linux-next and v5.5
+It turns out that we allocate these structures even when
+the redistributor is flagged as disabled by ACPI. It works
+fine until someone actually tries to tarse one of these
+structures, and access the corresponding MMIO region.
 
-Thank you,
-Roy Im, Dialog Semiconductor Ltd.
+Instead, track the number of enabled redistributors, and
+only allocate what is required. This makes sure that there
+is no invalid data to misuse.
 
-Roy Im (3):
-  MAINTAINERS: da7280 updates to the Dialog Semiconductor search terms
-  dt-bindings: input: Add document bindings for DA7280
-  Input: new da7280 haptic driver
+Signed-off-by: Marc Zyngier <maz@kernel.org>
+Reported-by: Heyi Guo <guoheyi@huawei.com>
+Tested-by: Heyi Guo <guoheyi@huawei.com>
+Link: https://lore.kernel.org/r/20191216062745.63397-1-guoheyi@huawei.com
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ drivers/irqchip/irq-gic-v3.c | 9 +++++++--
+ 1 file changed, 7 insertions(+), 2 deletions(-)
 
- .../devicetree/bindings/input/dlg,da7280.txt       |  109 ++
- MAINTAINERS                                        |    2 +
- drivers/input/misc/Kconfig                         |   13 +
- drivers/input/misc/Makefile                        |    1 +
- drivers/input/misc/da7280.c                        | 1880 ++++++++++++++++++++
- 5 files changed, 2005 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/input/dlg,da7280.txt
- create mode 100644 drivers/input/misc/da7280.c
-
+diff --git a/drivers/irqchip/irq-gic-v3.c b/drivers/irqchip/irq-gic-v3.c
+index d5912f1ec8848..ac888d7a0b00a 100644
+--- a/drivers/irqchip/irq-gic-v3.c
++++ b/drivers/irqchip/irq-gic-v3.c
+@@ -1347,6 +1347,7 @@ static struct
+ 	struct redist_region *redist_regs;
+ 	u32 nr_redist_regions;
+ 	bool single_redist;
++	int enabled_rdists;
+ 	u32 maint_irq;
+ 	int maint_irq_mode;
+ 	phys_addr_t vcpu_base;
+@@ -1441,8 +1442,10 @@ static int __init gic_acpi_match_gicc(struct acpi_subtable_header *header,
+ 	 * If GICC is enabled and has valid gicr base address, then it means
+ 	 * GICR base is presented via GICC
+ 	 */
+-	if ((gicc->flags & ACPI_MADT_ENABLED) && gicc->gicr_base_address)
++	if ((gicc->flags & ACPI_MADT_ENABLED) && gicc->gicr_base_address) {
++		acpi_data.enabled_rdists++;
+ 		return 0;
++	}
+ 
+ 	/*
+ 	 * It's perfectly valid firmware can pass disabled GICC entry, driver
+@@ -1472,8 +1475,10 @@ static int __init gic_acpi_count_gicr_regions(void)
+ 
+ 	count = acpi_table_parse_madt(ACPI_MADT_TYPE_GENERIC_INTERRUPT,
+ 				      gic_acpi_match_gicc, 0);
+-	if (count > 0)
++	if (count > 0) {
+ 		acpi_data.single_redist = true;
++		count = acpi_data.enabled_rdists;
++	}
+ 
+ 	return count;
+ }
 -- 
-end-of-patch for PATCH V9
+2.20.1
+
+
 
