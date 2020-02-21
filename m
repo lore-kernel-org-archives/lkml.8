@@ -2,102 +2,397 @@ Return-Path: <SRS0=1210=4J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-12.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 83707C35646
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 17:14:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CAFEAC35657
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 17:15:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 59AEC20722
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 17:14:14 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="X1VJsO2t"
+	by mail.kernel.org (Postfix) with ESMTP id 8E16120722
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 17:15:23 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1582305323;
+	bh=2aAu4ZYkbbEaYs1vYE3tQLdD/ibKIoJfNZ0dRhJwviM=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:List-ID:From;
+	b=F45dY8/ljDdVOGHdtZjZDzSzWbDPW3a+ygzzYUhzPoGc61jbwmiDuIXuBF9AlvMxl
+	 KCKDDdCdj39uTEiInWfXyXSFjxYzLq6BMxrH4u+w5DbY4b6vOY1OfAFl35f/liznBH
+	 BWnIwS5jQ9gIxnJ53vQEzAmD74lpNdpWcIC0lHgE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728413AbgBURON (ORCPT
+        id S1728103AbgBURPW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Feb 2020 12:14:13 -0500
-Received: from us-smtp-2.mimecast.com ([205.139.110.61]:34119 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1727469AbgBUROL (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Feb 2020 12:14:11 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1582305250;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=43kfDTCiVzkWMTtQLFuPZFiW+eHoPSitQf9eB3dJ7to=;
-        b=X1VJsO2tnv/tUAxmR7UH4U27r5TIOgSTGmPN7qW8R3b9d1avEQTJAEIKkpK9jOUGvwoONv
-        Fjff3lHQaPY3wTMtp5nWo1ZkWBLt4tG7ctw6eJu4iSRLq1T43x5LHOLyFoWff1CZbrQFcg
-        qKQGldg4RJVkCL8NlrEHuOPmK5apPhw=
-Received: from mail-wm1-f72.google.com (mail-wm1-f72.google.com
- [209.85.128.72]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-280-j592UB-IMZS5-npAwwfjaQ-1; Fri, 21 Feb 2020 12:14:08 -0500
-X-MC-Unique: j592UB-IMZS5-npAwwfjaQ-1
-Received: by mail-wm1-f72.google.com with SMTP id y7so837285wmd.4
-        for <linux-kernel@vger.kernel.org>; Fri, 21 Feb 2020 09:14:08 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=43kfDTCiVzkWMTtQLFuPZFiW+eHoPSitQf9eB3dJ7to=;
-        b=DOc9TmXxnEfPfpCk/FLm13uorrUVtWLFywUkPJKeRbA2vTJimM0rt3tsmE4RvvL2dd
-         DSsNsgfSF9hegPm01PmT9976gBQWA+GeEhVc2OlwNVlE44n7wks1aVwFzhpumgi6GsBH
-         jAipzsEeWoIZkv7XDDzMrBPsiiL0STKQXmQVkK0XlttWTGVk33tL/AQamuNnwuo0ToqF
-         Cv7Ems3mKOXhRW6WiN/sD2kKskbDwV9SKrkRN80GkuD9x7ks41Yc2UAhQU1CQNvEJSyC
-         Nz+pSyUeB4erOmrqxMmhm4Irjunvj3QzP8k2cj+1QI0kZGieQXON6y7oHtd014f69K7F
-         ELpg==
-X-Gm-Message-State: APjAAAVsKIhsHRwTVr/FwtXgr76yEubNJV83kLwDXyY+24XyKVka6+y4
-        FsogyiytqtQtLxwjsKl+pSc6NPJ8DPjuW5GEh1fROtv91nt3AN+4AYMvJsuzVYPf7iCEpDAePVz
-        D/MCIqPON1FNZjEEPvzgpSVOz
-X-Received: by 2002:a05:600c:21c5:: with SMTP id x5mr5050279wmj.72.1582305246965;
-        Fri, 21 Feb 2020 09:14:06 -0800 (PST)
-X-Google-Smtp-Source: APXvYqzqrTrGHNJy+4GBDeTRch/681B16eH9c4fXOpHFasnECSyy6jW57hTfGuNbgVq4rg8sjDeKQw==
-X-Received: by 2002:a05:600c:21c5:: with SMTP id x5mr5050254wmj.72.1582305246694;
-        Fri, 21 Feb 2020 09:14:06 -0800 (PST)
-Received: from [192.168.178.40] ([151.20.135.128])
-        by smtp.gmail.com with ESMTPSA id x6sm4423401wmi.44.2020.02.21.09.14.05
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 21 Feb 2020 09:14:06 -0800 (PST)
-Subject: Re: [PATCH v2 3/3] KVM: x86: Move #PF retry tracking variables into
- emulation context
-To:     Sean Christopherson <sean.j.christopherson@intel.com>
-Cc:     Vitaly Kuznetsov <vkuznets@redhat.com>,
-        Wanpeng Li <wanpengli@tencent.com>,
-        Jim Mattson <jmattson@google.com>,
-        Joerg Roedel <joro@8bytes.org>, kvm@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-References: <20200218230310.29410-1-sean.j.christopherson@intel.com>
- <20200218230310.29410-4-sean.j.christopherson@intel.com>
- <40c8d560-1a5d-d592-5682-720980ca3dd9@redhat.com>
- <20200219151644.GB15888@linux.intel.com>
-From:   Paolo Bonzini <pbonzini@redhat.com>
-Message-ID: <d5626891-82f6-0a0c-401c-89a901a8455d@redhat.com>
-Date:   Fri, 21 Feb 2020 18:14:03 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.1.1
-MIME-Version: 1.0
-In-Reply-To: <20200219151644.GB15888@linux.intel.com>
-Content-Type: text/plain; charset=windows-1252
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+        Fri, 21 Feb 2020 12:15:22 -0500
+Received: from foss.arm.com ([217.140.110.172]:44094 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726408AbgBURPW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 21 Feb 2020 12:15:22 -0500
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id B989730E;
+        Fri, 21 Feb 2020 09:15:20 -0800 (PST)
+Received: from localhost (unknown [10.37.6.21])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 2DCCB3F68F;
+        Fri, 21 Feb 2020 09:15:20 -0800 (PST)
+Date:   Fri, 21 Feb 2020 17:15:18 +0000
+From:   Mark Brown <broonie@kernel.org>
+To:     Jerome Brunet <jbrunet@baylibre.com>
+Cc:     alsa-devel@alsa-project.org, devicetree@vger.kernel.org,
+        Kevin Hilman <khilman@baylibre.com>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        linux-amlogic@lists.infradead.org, linux-kernel@vger.kernel.org,
+        Mark Brown <broonie@kernel.org>
+Subject: Applied "ASoC: meson: g12a: add internal DAC glue driver" to the asoc tree
+In-Reply-To:  <20200221153607.1585499-3-jbrunet@baylibre.com>
+Message-Id:  <applied-20200221153607.1585499-3-jbrunet@baylibre.com>
+X-Patchwork-Hint: ignore
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 19/02/20 16:16, Sean Christopherson wrote:
-> The easy solution to that is to move retry_instruction() into emulate.c.
-> That would also allow making x86_page_table_writing_insn() static.  All
-> other functions invoked from retry_instruction() are exposed via kvm_host.h.
+The patch
 
-emulate.c is supposed to invoke no (or almost no) function outside the
-ctxt->ops struct.  In particular, retry_instruction() invokes
-kvm_mmu_gva_to_gpa_write and kvm_mmu_unprotect_page.
+   ASoC: meson: g12a: add internal DAC glue driver
 
-Paolo
+has been applied to the asoc tree at
+
+   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/sound.git 
+
+All being well this means that it will be integrated into the linux-next
+tree (usually sometime in the next 24 hours) and sent to Linus during
+the next merge window (or sooner if it is a bug fix), however if
+problems are discovered then the patch may be dropped or reverted.  
+
+You may get further e-mails resulting from automated or manual testing
+and review of the tree, please engage with people reporting problems and
+send followup patches addressing any issues that are reported if needed.
+
+If any updates are required or you are submitting further changes they
+should be sent as incremental updates against current git, existing
+patches will not be replaced.
+
+Please add any relevant lists and maintainers to the CCs when replying
+to this mail.
+
+Thanks,
+Mark
+
+From af2618a2eee8531e134c42194143c2f4faef94ba Mon Sep 17 00:00:00 2001
+From: Jerome Brunet <jbrunet@baylibre.com>
+Date: Fri, 21 Feb 2020 16:36:06 +0100
+Subject: [PATCH] ASoC: meson: g12a: add internal DAC glue driver
+
+Add support for the internal audio DAC glue found on the Amlogic g12a
+and sm1 SoC families. This allows to connect the TDM outputs of the SoC
+to the internal t9015 audio DAC.
+
+Signed-off-by: Jerome Brunet <jbrunet@baylibre.com>
+Link: https://lore.kernel.org/r/20200221153607.1585499-3-jbrunet@baylibre.com
+Signed-off-by: Mark Brown <broonie@kernel.org>
+---
+ sound/soc/meson/Kconfig         |   9 ++
+ sound/soc/meson/Makefile        |   2 +
+ sound/soc/meson/g12a-toacodec.c | 252 ++++++++++++++++++++++++++++++++
+ 3 files changed, 263 insertions(+)
+ create mode 100644 sound/soc/meson/g12a-toacodec.c
+
+diff --git a/sound/soc/meson/Kconfig b/sound/soc/meson/Kconfig
+index d27e9180b453..8b6295283989 100644
+--- a/sound/soc/meson/Kconfig
++++ b/sound/soc/meson/Kconfig
+@@ -109,6 +109,15 @@ config SND_MESON_GX_SOUND_CARD
+ 	help
+ 	  Select Y or M to add support for the GXBB/GXL SoC sound card
+ 
++config SND_MESON_G12A_TOACODEC
++	tristate "Amlogic G12A To Internal DAC Control Support"
++	select SND_MESON_CODEC_GLUE
++	select REGMAP_MMIO
++	imply SND_SOC_MESON_T9015
++	help
++	  Select Y or M to add support for the internal audio DAC on the
++	  g12a SoC family
++
+ config SND_MESON_G12A_TOHDMITX
+ 	tristate "Amlogic G12A To HDMI TX Control Support"
+ 	select REGMAP_MMIO
+diff --git a/sound/soc/meson/Makefile b/sound/soc/meson/Makefile
+index 3c9d48846816..e446bc980481 100644
+--- a/sound/soc/meson/Makefile
++++ b/sound/soc/meson/Makefile
+@@ -22,6 +22,7 @@ snd-soc-meson-axg-pdm-objs := axg-pdm.o
+ snd-soc-meson-card-utils-objs := meson-card-utils.o
+ snd-soc-meson-codec-glue-objs := meson-codec-glue.o
+ snd-soc-meson-gx-sound-card-objs := gx-card.o
++snd-soc-meson-g12a-toacodec-objs := g12a-toacodec.o
+ snd-soc-meson-g12a-tohdmitx-objs := g12a-tohdmitx.o
+ snd-soc-meson-t9015-objs := t9015.o
+ 
+@@ -40,5 +41,6 @@ obj-$(CONFIG_SND_MESON_AXG_PDM) += snd-soc-meson-axg-pdm.o
+ obj-$(CONFIG_SND_MESON_CARD_UTILS) += snd-soc-meson-card-utils.o
+ obj-$(CONFIG_SND_MESON_CODEC_GLUE) += snd-soc-meson-codec-glue.o
+ obj-$(CONFIG_SND_MESON_GX_SOUND_CARD) += snd-soc-meson-gx-sound-card.o
++obj-$(CONFIG_SND_MESON_G12A_TOACODEC) += snd-soc-meson-g12a-toacodec.o
+ obj-$(CONFIG_SND_MESON_G12A_TOHDMITX) += snd-soc-meson-g12a-tohdmitx.o
+ obj-$(CONFIG_SND_SOC_MESON_T9015) += snd-soc-meson-t9015.o
+diff --git a/sound/soc/meson/g12a-toacodec.c b/sound/soc/meson/g12a-toacodec.c
+new file mode 100644
+index 000000000000..9339fabccb79
+--- /dev/null
++++ b/sound/soc/meson/g12a-toacodec.c
+@@ -0,0 +1,252 @@
++// SPDX-License-Identifier: GPL-2.0
++//
++// Copyright (c) 2020 BayLibre, SAS.
++// Author: Jerome Brunet <jbrunet@baylibre.com>
++
++#include <linux/bitfield.h>
++#include <linux/clk.h>
++#include <linux/module.h>
++#include <sound/pcm_params.h>
++#include <linux/regmap.h>
++#include <linux/regulator/consumer.h>
++#include <linux/reset.h>
++#include <sound/soc.h>
++#include <sound/soc-dai.h>
++
++#include <dt-bindings/sound/meson-g12a-toacodec.h>
++#include "axg-tdm.h"
++#include "meson-codec-glue.h"
++
++#define G12A_TOACODEC_DRV_NAME "g12a-toacodec"
++
++#define TOACODEC_CTRL0			0x0
++#define  CTRL0_ENABLE_SHIFT		31
++#define  CTRL0_DAT_SEL_SHIFT		14
++#define  CTRL0_DAT_SEL			(0x3 << CTRL0_DAT_SEL_SHIFT)
++#define  CTRL0_LANE_SEL			12
++#define  CTRL0_LRCLK_SEL		GENMASK(9, 8)
++#define  CTRL0_BLK_CAP_INV		BIT(7)
++#define  CTRL0_BCLK_O_INV		BIT(6)
++#define  CTRL0_BCLK_SEL			GENMASK(5, 4)
++#define  CTRL0_MCLK_SEL			GENMASK(2, 0)
++
++#define TOACODEC_OUT_CHMAX		2
++
++static const char * const g12a_toacodec_mux_texts[] = {
++	"I2S A", "I2S B", "I2S C",
++};
++
++static int g12a_toacodec_mux_put_enum(struct snd_kcontrol *kcontrol,
++				      struct snd_ctl_elem_value *ucontrol)
++{
++	struct snd_soc_component *component =
++		snd_soc_dapm_kcontrol_component(kcontrol);
++	struct snd_soc_dapm_context *dapm =
++		snd_soc_dapm_kcontrol_dapm(kcontrol);
++	struct soc_enum *e = (struct soc_enum *)kcontrol->private_value;
++	unsigned int mux, changed;
++
++	mux = snd_soc_enum_item_to_val(e, ucontrol->value.enumerated.item[0]);
++	changed = snd_soc_component_test_bits(component, e->reg,
++					      CTRL0_DAT_SEL,
++					      FIELD_PREP(CTRL0_DAT_SEL, mux));
++
++	if (!changed)
++		return 0;
++
++	/* Force disconnect of the mux while updating */
++	snd_soc_dapm_mux_update_power(dapm, kcontrol, 0, NULL, NULL);
++
++	snd_soc_component_update_bits(component, e->reg,
++				      CTRL0_DAT_SEL |
++				      CTRL0_LRCLK_SEL |
++				      CTRL0_BCLK_SEL,
++				      FIELD_PREP(CTRL0_DAT_SEL, mux) |
++				      FIELD_PREP(CTRL0_LRCLK_SEL, mux) |
++				      FIELD_PREP(CTRL0_BCLK_SEL, mux));
++
++	/*
++	 * FIXME:
++	 * On this soc, the glue gets the MCLK directly from the clock
++	 * controller instead of going the through the TDM interface.
++	 *
++	 * Here we assume interface A uses clock A, etc ... While it is
++	 * true for now, it could be different. Instead the glue should
++	 * find out the clock used by the interface and select the same
++	 * source. For that, we will need regmap backed clock mux which
++	 * is a work in progress
++	 */
++	snd_soc_component_update_bits(component, e->reg,
++				      CTRL0_MCLK_SEL,
++				      FIELD_PREP(CTRL0_MCLK_SEL, mux));
++
++	snd_soc_dapm_mux_update_power(dapm, kcontrol, mux, e, NULL);
++
++	return 0;
++}
++
++static SOC_ENUM_SINGLE_DECL(g12a_toacodec_mux_enum, TOACODEC_CTRL0,
++			    CTRL0_DAT_SEL_SHIFT,
++			    g12a_toacodec_mux_texts);
++
++static const struct snd_kcontrol_new g12a_toacodec_mux =
++	SOC_DAPM_ENUM_EXT("Source", g12a_toacodec_mux_enum,
++			  snd_soc_dapm_get_enum_double,
++			  g12a_toacodec_mux_put_enum);
++
++static const struct snd_kcontrol_new g12a_toacodec_out_enable =
++	SOC_DAPM_SINGLE_AUTODISABLE("Switch", TOACODEC_CTRL0,
++				    CTRL0_ENABLE_SHIFT, 1, 0);
++
++static const struct snd_soc_dapm_widget g12a_toacodec_widgets[] = {
++	SND_SOC_DAPM_MUX("SRC", SND_SOC_NOPM, 0, 0,
++			 &g12a_toacodec_mux),
++	SND_SOC_DAPM_SWITCH("OUT EN", SND_SOC_NOPM, 0, 0,
++			    &g12a_toacodec_out_enable),
++};
++
++static int g12a_toacodec_input_hw_params(struct snd_pcm_substream *substream,
++					 struct snd_pcm_hw_params *params,
++					 struct snd_soc_dai *dai)
++{
++	struct meson_codec_glue_input *data;
++	int ret;
++
++	ret = meson_codec_glue_input_hw_params(substream, params, dai);
++	if (ret)
++		return ret;
++
++	/* The glue will provide 1 lane out of the 4 to the output */
++	data = meson_codec_glue_input_get_data(dai);
++	data->params.channels_min = min_t(unsigned int, TOACODEC_OUT_CHMAX,
++					data->params.channels_min);
++	data->params.channels_max = min_t(unsigned int, TOACODEC_OUT_CHMAX,
++					data->params.channels_max);
++
++	return 0;
++}
++
++static const struct snd_soc_dai_ops g12a_toacodec_input_ops = {
++	.hw_params	= g12a_toacodec_input_hw_params,
++	.set_fmt	= meson_codec_glue_input_set_fmt,
++};
++
++static const struct snd_soc_dai_ops g12a_toacodec_output_ops = {
++	.startup	= meson_codec_glue_output_startup,
++};
++
++#define TOACODEC_STREAM(xname, xsuffix, xchmax)			\
++{								\
++	.stream_name	= xname " " xsuffix,			\
++	.channels_min	= 1,					\
++	.channels_max	= (xchmax),				\
++	.rate_min       = 5512,					\
++	.rate_max	= 192000,				\
++	.formats	= AXG_TDM_FORMATS,			\
++}
++
++#define TOACODEC_INPUT(xname, xid) {					\
++	.name = xname,							\
++	.id = (xid),							\
++	.playback = TOACODEC_STREAM(xname, "Playback", 8),		\
++	.ops = &g12a_toacodec_input_ops,				\
++	.probe = meson_codec_glue_input_dai_probe,			\
++	.remove = meson_codec_glue_input_dai_remove,			\
++}
++
++#define TOACODEC_OUTPUT(xname, xid) {					\
++	.name = xname,							\
++	.id = (xid),							\
++	.capture = TOACODEC_STREAM(xname, "Capture", TOACODEC_OUT_CHMAX), \
++	.ops = &g12a_toacodec_output_ops,				\
++}
++
++static struct snd_soc_dai_driver g12a_toacodec_dai_drv[] = {
++	TOACODEC_INPUT("IN A", TOACODEC_IN_A),
++	TOACODEC_INPUT("IN B", TOACODEC_IN_B),
++	TOACODEC_INPUT("IN C", TOACODEC_IN_C),
++	TOACODEC_OUTPUT("OUT", TOACODEC_OUT),
++};
++
++static int g12a_toacodec_component_probe(struct snd_soc_component *c)
++{
++	/* Initialize the static clock parameters */
++	return snd_soc_component_write(c, TOACODEC_CTRL0,
++				       CTRL0_BLK_CAP_INV);
++}
++
++static const struct snd_soc_dapm_route g12a_toacodec_routes[] = {
++	{ "SRC", "I2S A", "IN A Playback" },
++	{ "SRC", "I2S B", "IN B Playback" },
++	{ "SRC", "I2S C", "IN C Playback" },
++	{ "OUT EN", "Switch", "SRC" },
++	{ "OUT Capture", NULL, "OUT EN" },
++};
++
++static const struct snd_kcontrol_new g12a_toacodec_controls[] = {
++	SOC_SINGLE("Lane Select", TOACODEC_CTRL0, CTRL0_LANE_SEL, 3, 0),
++};
++
++static const struct snd_soc_component_driver g12a_toacodec_component_drv = {
++	.probe			= g12a_toacodec_component_probe,
++	.controls		= g12a_toacodec_controls,
++	.num_controls		= ARRAY_SIZE(g12a_toacodec_controls),
++	.dapm_widgets		= g12a_toacodec_widgets,
++	.num_dapm_widgets	= ARRAY_SIZE(g12a_toacodec_widgets),
++	.dapm_routes		= g12a_toacodec_routes,
++	.num_dapm_routes	= ARRAY_SIZE(g12a_toacodec_routes),
++	.endianness		= 1,
++	.non_legacy_dai_naming	= 1,
++};
++
++static const struct regmap_config g12a_toacodec_regmap_cfg = {
++	.reg_bits	= 32,
++	.val_bits	= 32,
++	.reg_stride	= 4,
++};
++
++static const struct of_device_id g12a_toacodec_of_match[] = {
++	{ .compatible = "amlogic,g12a-toacodec", },
++	{}
++};
++MODULE_DEVICE_TABLE(of, g12a_toacodec_of_match);
++
++static int g12a_toacodec_probe(struct platform_device *pdev)
++{
++	struct device *dev = &pdev->dev;
++	void __iomem *regs;
++	struct regmap *map;
++	int ret;
++
++	ret = device_reset(dev);
++	if (ret)
++		return ret;
++
++	regs = devm_platform_ioremap_resource(pdev, 0);
++	if (IS_ERR(regs))
++		return PTR_ERR(regs);
++
++	map = devm_regmap_init_mmio(dev, regs, &g12a_toacodec_regmap_cfg);
++	if (IS_ERR(map)) {
++		dev_err(dev, "failed to init regmap: %ld\n",
++			PTR_ERR(map));
++		return PTR_ERR(map);
++	}
++
++	return devm_snd_soc_register_component(dev,
++			&g12a_toacodec_component_drv, g12a_toacodec_dai_drv,
++			ARRAY_SIZE(g12a_toacodec_dai_drv));
++}
++
++static struct platform_driver g12a_toacodec_pdrv = {
++	.driver = {
++		.name = G12A_TOACODEC_DRV_NAME,
++		.of_match_table = g12a_toacodec_of_match,
++	},
++	.probe = g12a_toacodec_probe,
++};
++module_platform_driver(g12a_toacodec_pdrv);
++
++MODULE_AUTHOR("Jerome Brunet <jbrunet@baylibre.com>");
++MODULE_DESCRIPTION("Amlogic G12a To Internal DAC Codec Driver");
++MODULE_LICENSE("GPL v2");
+-- 
+2.20.1
 
