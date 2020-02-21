@@ -2,132 +2,119 @@ Return-Path: <SRS0=1210=4J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B1CFFC35646
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 15:58:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B3789C35656
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 15:59:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 80D11206EF
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 15:58:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 85DC2206EF
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 15:59:05 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=embeddedor.com header.i=@embeddedor.com header.b="MhnS4Z2A"
+	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="Euuq+vh1"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729363AbgBUP6H (ORCPT
+        id S1729067AbgBUP7E (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Feb 2020 10:58:07 -0500
-Received: from gateway36.websitewelcome.com ([192.185.185.36]:34345 "EHLO
-        gateway36.websitewelcome.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1729253AbgBUP6H (ORCPT
+        Fri, 21 Feb 2020 10:59:04 -0500
+Received: from mx07-00178001.pphosted.com ([62.209.51.94]:49777 "EHLO
+        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1728684AbgBUP7D (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Feb 2020 10:58:07 -0500
-X-Greylist: delayed 1273 seconds by postgrey-1.27 at vger.kernel.org; Fri, 21 Feb 2020 10:58:06 EST
-Received: from cm17.websitewelcome.com (cm17.websitewelcome.com [100.42.49.20])
-        by gateway36.websitewelcome.com (Postfix) with ESMTP id 0E5C1411E8F77
-        for <linux-kernel@vger.kernel.org>; Fri, 21 Feb 2020 08:51:24 -0600 (CST)
-Received: from gator4166.hostgator.com ([108.167.133.22])
-        by cmsmtp with SMTP
-        id 5AMFjW3gvAGTX5AMFjgRL5; Fri, 21 Feb 2020 09:36:51 -0600
-X-Authority-Reason: nr=8
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=embeddedor.com; s=default; h=Content-Type:MIME-Version:Message-ID:Subject:
-        Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
-        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
-        :Resent-Message-ID:In-Reply-To:References:List-Id:List-Help:List-Unsubscribe:
-        List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=qy3VUhSFQbR/QODX65I3k6L3DnhrN3vMmE0x2nhKRIU=; b=MhnS4Z2AijH+e+0WEBKcZI53yQ
-        OhHGC9GjJK6Gp9S/9Rnxe0J0aDHzBMNOPqA2VOg3dK8RpNc+hyzmpGZuMJ86PlP045V9Iimu/HsZs
-        5spFwbcvxGwQ0cPPHwxvgyOOxLQcrc9zYZ9EeVihj+DPfzQIpAm7tCjni3PGh1AF3qnLgxcv40x75
-        TO5hPEs0n2AsoSdxKP/N7mWP2bCoJmtv7ATzktjoD+M3OpTbUqLwehvrvGSaKAU91AbnedziVDIJQ
-        rJ5JKgS/10Iux9IZK7o1NNiyVJxIZp48dFTR4YLFPKOMeP0xpd4rV9OiLFih42mkGCYjM+ep+nnuv
-        fw/2l55w==;
-Received: from [200.68.140.54] (port=52670 helo=embeddedor)
-        by gator4166.hostgator.com with esmtpa (Exim 4.92)
-        (envelope-from <gustavo@embeddedor.com>)
-        id 1j5AME-003kyv-Fz; Fri, 21 Feb 2020 09:36:50 -0600
-Date:   Fri, 21 Feb 2020 09:39:35 -0600
-From:   "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-To:     Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>
-Cc:     linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-Subject: [PATCH] firmware: qcom_scm: Replace zero-length array with
- flexible-array member
-Message-ID: <20200221153935.GA3313@embeddedor>
+        Fri, 21 Feb 2020 10:59:03 -0500
+Received: from pps.filterd (m0046037.ppops.net [127.0.0.1])
+        by mx07-00178001.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 01LFiJfe029798;
+        Fri, 21 Feb 2020 16:58:44 +0100
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=subject : to : cc :
+ references : from : message-id : date : mime-version : in-reply-to :
+ content-type : content-transfer-encoding; s=STMicroelectronics;
+ bh=q7m0eWQuKU+1f/Hc3O6mTWcHzdCj7QRgHso723d9XGs=;
+ b=Euuq+vh1udcasMYA2o1zPDWwzgMu9mv5bfzyIn88vggmaGewnrpTUwhnCwwGrdPqIIZD
+ GCg5H/MYu1732s2elAaqiu+3IaIyWw0h2zEy5nobAL+hBqGBGiJ+PDShKlivPGG5pYWK
+ AHmu3XNHCAqS0pzBqtwTvfaR16Gh9PRd0dkB61cqAZAApNp0nILnnfiGu2h/0Xs6kS0F
+ meqmiH0PBe69DVjW7tE2XlKaRtIzMcO4fcdV7Li/1QJwhSOTPWsP/t0UeYWGBLemVgJf
+ x6+P1wDolnEzoMXxAdwglMUcUOItcZjhsU3nc3WP8zBxaF5/LZbOu82Fd1G+tFwefLDq RA== 
+Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
+        by mx07-00178001.pphosted.com with ESMTP id 2y8ub1r41d-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Fri, 21 Feb 2020 16:58:44 +0100
+Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
+        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id 0275710002A;
+        Fri, 21 Feb 2020 16:58:44 +0100 (CET)
+Received: from Webmail-eu.st.com (sfhdag3node2.st.com [10.75.127.8])
+        by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id DF8EC2BC7CD;
+        Fri, 21 Feb 2020 16:58:43 +0100 (CET)
+Received: from lmecxl0912.lme.st.com (10.75.127.46) by SFHDAG3NODE2.st.com
+ (10.75.127.8) with Microsoft SMTP Server (TLS) id 15.0.1347.2; Fri, 21 Feb
+ 2020 16:58:42 +0100
+Subject: Re: [PATCH v3 0/4] STM32 early console
+To:     Erwan Le Ray <erwan.leray@st.com>,
+        Russell King <linux@armlinux.org.uk>,
+        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Olof Johansson <olof@lixom.net>
+CC:     <linux-arm-kernel@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>,
+        <linux-stm32@st-md-mailman.stormreply.com>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        Geert Uytterhoeven <geert+renesas@glider.be>,
+        Nathan Huckleberry <nhuck15@gmail.com>,
+        Gerald Baeza <gerald.baeza@st.com>,
+        Clement Peron <peron.clem@gmail.com>,
+        Fabrice Gasnier <fabrice.gasnier@st.com>
+References: <20200203140425.26579-1-erwan.leray@st.com>
+From:   Alexandre Torgue <alexandre.torgue@st.com>
+Message-ID: <609b5744-cc1e-8ada-fe14-6cc199c0a91d@st.com>
+Date:   Fri, 21 Feb 2020 16:58:42 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-User-Agent: Mutt/1.9.4 (2018-02-28)
-X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
-X-AntiAbuse: Primary Hostname - gator4166.hostgator.com
-X-AntiAbuse: Original Domain - vger.kernel.org
-X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
-X-AntiAbuse: Sender Address Domain - embeddedor.com
-X-BWhitelist: no
-X-Source-IP: 200.68.140.54
-X-Source-L: No
-X-Exim-ID: 1j5AME-003kyv-Fz
-X-Source: 
-X-Source-Args: 
-X-Source-Dir: 
-X-Source-Sender: (embeddedor) [200.68.140.54]:52670
-X-Source-Auth: gustavo@embeddedor.com
-X-Email-Count: 25
-X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
-X-Local-Domain: yes
+In-Reply-To: <20200203140425.26579-1-erwan.leray@st.com>
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.75.127.46]
+X-ClientProxiedBy: SFHDAG4NODE2.st.com (10.75.127.11) To SFHDAG3NODE2.st.com
+ (10.75.127.8)
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.572
+ definitions=2020-02-21_05:2020-02-21,2020-02-21 signatures=0
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The current codebase makes use of the zero-length array language
-extension to the C90 standard, but the preferred mechanism to declare
-variable-length types such as these ones is a flexible array member[1][2],
-introduced in C99:
+Hi
 
-struct foo {
-        int stuff;
-        struct boo array[];
-};
+On 2/3/20 3:04 PM, Erwan Le Ray wrote:
+> Add UART instance configuration to STM32 F4 and F7 early console.
+> Add STM32 H7 and MP1 early console support.
+> 
+> Changes in v3:
+> - fix a missing condition for STM32MP1
+>    
+> Changes in v2:
+> - split "[PATCH] ARM: debug: stm32: add UART early console configuration"
+>    into separate patches as suggested by Clement into [1]
+> 
+> [1] https://lkml.org/lkml/2019/4/10/199
+> 
+> Erwan Le Ray (4):
+>    ARM: debug: stm32: add UART early console configuration for STM32F4
+>    ARM: debug: stm32: add UART early console configuration for STM32F7
+>    ARM: debug: stm32: add UART early console support for STM32H7
+>    ARM: debug: stm32: add UART early console support for STM32MP1
+> 
+>   arch/arm/Kconfig.debug         | 42 +++++++++++++++++++++++++++++-----
+>   arch/arm/include/debug/stm32.S |  9 ++++----
+>   2 files changed, 40 insertions(+), 11 deletions(-)
+> 
 
-By making use of the mechanism above, we will get a compiler warning
-in case the flexible array does not occur last in the structure, which
-will help us prevent some kind of undefined behavior bugs from being
-inadvertently introduced[3] to the codebase from now on.
+Acked-by: Alexandre TORGUE <alexandre.torgue@st.com>
 
-Also, notice that, dynamic memory allocations won't be affected by
-this change:
+Russel, Arnd, Olof, Linus
+Do I have to take this series in my next PR ? or you'll ?
 
-"Flexible array members have incomplete type, and so the sizeof operator
-may not be applied. As a quirk of the original implementation of
-zero-length arrays, sizeof evaluates to zero."[1]
-
-This issue was found with the help of Coccinelle.
-
-[1] https://gcc.gnu.org/onlinedocs/gcc/Zero-Length.html
-[2] https://github.com/KSPP/linux/issues/21
-[3] commit 76497732932f ("cxgb3/l2t: Fix undefined behaviour")
-
-Signed-off-by: Gustavo A. R. Silva <gustavo@embeddedor.com>
----
- drivers/firmware/qcom_scm-legacy.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/drivers/firmware/qcom_scm-legacy.c b/drivers/firmware/qcom_scm-legacy.c
-index 8532e7c78ef7..eba6b60bfb61 100644
---- a/drivers/firmware/qcom_scm-legacy.c
-+++ b/drivers/firmware/qcom_scm-legacy.c
-@@ -56,7 +56,7 @@ struct scm_legacy_command {
- 	__le32 buf_offset;
- 	__le32 resp_hdr_offset;
- 	__le32 id;
--	__le32 buf[0];
-+	__le32 buf[];
- };
- 
- /**
--- 
-2.25.0
-
+Thanks
+alex
