@@ -2,83 +2,96 @@ Return-Path: <SRS0=1210=4J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 74AE5C35656
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 14:52:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EE584C35656
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 14:52:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4AEA2206EF
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 14:52:08 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="vFT4Hm/p"
+	by mail.kernel.org (Postfix) with ESMTP id BDE47206DB
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 14:52:19 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728938AbgBUOwG (ORCPT
+        id S1728981AbgBUOwS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Feb 2020 09:52:06 -0500
-Received: from mail-lj1-f194.google.com ([209.85.208.194]:42487 "EHLO
-        mail-lj1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727315AbgBUOwG (ORCPT
+        Fri, 21 Feb 2020 09:52:18 -0500
+Received: from metis.ext.pengutronix.de ([85.220.165.71]:43573 "EHLO
+        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727315AbgBUOwS (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Feb 2020 09:52:06 -0500
-Received: by mail-lj1-f194.google.com with SMTP id d10so2450540ljl.9
-        for <linux-kernel@vger.kernel.org>; Fri, 21 Feb 2020 06:52:04 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=kUcPV2GCgbBShPmu+5wSCUq/MqsCE/eLeOt+CIDiVPc=;
-        b=vFT4Hm/pk+T31nHv2shjLkufUz5Cr/t0N65CkFaj/Sizr5KyWlSV/Y8NA29qzs6vOh
-         MeVM4rhiT7mGF/U9J0cFGfXC4E+d2qDAqZPdYyf3uUynt73NzlS/NfnoX5pYZ10Z9ITQ
-         ErD0g67fAiDOSPP9VMlWTsyy0a9280MN8Tm8hUR1x6d71hPtomD5X6gDhYgRAXbkOIHu
-         Rg4Z4vTZiQ3yXiMJVD5hNBWS1qYz5mpz2jE7BGQ/Xx8jI98IwwOvwvuNjp1N9YZS3oXu
-         XOiP1934f3BQwQA6RTyPXSzx/zD74LqVWX10WsS1osnxtwklXTAqiMZivGo9dEFEuTrr
-         fg+g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=kUcPV2GCgbBShPmu+5wSCUq/MqsCE/eLeOt+CIDiVPc=;
-        b=RFvZ/vVywTrFl3+gRn2/HtfeOgckMDCOs/kyeYzLdnFMgeYpJrC4+1BV1XldAGuogJ
-         oR9w32T4AQpuBV4bt96R4cfjLyH/61Q5miH4PQWfXVcq8ENGkjJFS15JIhRUI46b8pcq
-         PvY5AEueodZ65BKSFQSM6bNgO6ITd+MEVaZ72dx+c2/AYf0HKVo8N4seHNL3jGPZQGTC
-         L3uhYDr+ipBbKGYA/KMQYrIhvVkDU++AOiPi+JLqWSwjHcTNXwqVeP6MVEOVOM7CmGJi
-         Tx2v52Yw35sFbotZuWPKLQtkqe9Z6ZO9hjDewiDjbkm/xdSiHiI6FuUZsS7L7KRbtsqR
-         a+FA==
-X-Gm-Message-State: APjAAAVZnwncja4rdE2FcZMrAq8hxnJzD/VB62WiuzSwFxsyxFU0NWXi
-        Ce/C+R3bN91NLOq5B/dpm2u2wwVCyLShzHgTBGeEJA==
-X-Google-Smtp-Source: APXvYqx7QzoUceGSUDS+UZI/PhAOHRPUfSUKows5za0erhmg+mfzJVs2uibGsDolvZSJht6gDa/ARZoYGCtEGtkDG/0=
-X-Received: by 2002:a2e:81c3:: with SMTP id s3mr21788556ljg.168.1582296723350;
- Fri, 21 Feb 2020 06:52:03 -0800 (PST)
+        Fri, 21 Feb 2020 09:52:18 -0500
+Received: from pty.hi.pengutronix.de ([2001:67c:670:100:1d::c5])
+        by metis.ext.pengutronix.de with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1j59eZ-0000J6-Uu; Fri, 21 Feb 2020 15:51:43 +0100
+Received: from ukl by pty.hi.pengutronix.de with local (Exim 4.89)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1j59eX-0003X7-KU; Fri, 21 Feb 2020 15:51:41 +0100
+Date:   Fri, 21 Feb 2020 15:51:41 +0100
+From:   Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
+        <u.kleine-koenig@pengutronix.de>
+To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Cc:     Petr Mladek <pmladek@suse.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
+        linux-kernel@vger.kernel.org,
+        Rasmus Villemoes <linux@rasmusvillemoes.dk>
+Subject: Re: [PATCH v1] lib/vsprintf: update comment about
+ simple_strto<foo>() functions
+Message-ID: <20200221145141.pchim24oht7nxfir@pengutronix.de>
+References: <20200221085723.42469-1-andriy.shevchenko@linux.intel.com>
 MIME-Version: 1.0
-References: <20200219094702.6463-1-brgl@bgdev.pl>
-In-Reply-To: <20200219094702.6463-1-brgl@bgdev.pl>
-From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Fri, 21 Feb 2020 15:51:52 +0100
-Message-ID: <CACRpkdZxBcrXFMWDXddUGdQQku_FpdoojSq8-VBGjHHShWn0mA@mail.gmail.com>
-Subject: Re: [PATCH] gpiolib: use gpiochip_get_desc() where applicable
-To:     Bartosz Golaszewski <brgl@bgdev.pl>
-Cc:     "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200221085723.42469-1-andriy.shevchenko@linux.intel.com>
+User-Agent: NeoMutt/20170113 (1.7.2)
+X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c5
+X-SA-Exim-Mail-From: ukl@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Feb 19, 2020 at 10:47 AM Bartosz Golaszewski <brgl@bgdev.pl> wrote:
+Hello,
 
-> From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
->
-> Whenever retrieving a descriptor from a gpiochip: use the provided
-> helper which checks for errors.
->
-> Signed-off-by: Bartosz Golaszewski <bgolaszewski@baylibre.com>
+On Fri, Feb 21, 2020 at 10:57:23AM +0200, Andy Shevchenko wrote:
+> The commit 885e68e8b7b1 ("kernel.h: update comment about simple_strto<foo>()
+> functions") updated a comment regard to simple_strto<foo>() functions, but
+> missed similar change in the vsprintf.c module.
+> 
+> Update comments in vsprintf.c as well for simple_strto<foo>() functions.
+> 
+> Reported-by: Uwe Kleine-König <u.kleine-koenig@pengutronix.de>
+> Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+> ---
+>  lib/vsprintf.c | 8 ++++----
+>  1 file changed, 4 insertions(+), 4 deletions(-)
+> 
+> diff --git a/lib/vsprintf.c b/lib/vsprintf.c
+> index 7c488a1ce318..d5641a217685 100644
+> --- a/lib/vsprintf.c
+> +++ b/lib/vsprintf.c
+> @@ -58,7 +58,7 @@
+>   * @endp: A pointer to the end of the parsed string will be placed here
+>   * @base: The number base to use
+>   *
+> - * This function is obsolete. Please use kstrtoull instead.
+> + * This function has caveats. Please use kstrtoull instead.
+>   */
 
-Patch applied!
+I wonder if we instead want to create a set of functions that is
+versatile enough to cover kstrtoull and simple_strtoull. i.e. fix the
+rounding problems (that are the caveats, right?) and as calling
+convention use an errorvalued int return + an output-parameter of the
+corresponding type.
 
-Yours,
-Linus Walleij
+Best regards
+Uwe
+
+-- 
+Pengutronix e.K.                           | Uwe Kleine-König            |
+Industrial Linux Solutions                 | https://www.pengutronix.de/ |
