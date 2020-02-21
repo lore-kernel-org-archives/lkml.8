@@ -6,25 +6,25 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 63B53C3565B
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 18:19:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 76376C3565B
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 18:19:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 39A7F222C4
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 18:19:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5437E222C4
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 18:19:07 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729407AbgBUSTD (ORCPT
+        id S1729454AbgBUSTG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Feb 2020 13:19:03 -0500
-Received: from foss.arm.com ([217.140.110.172]:45342 "EHLO foss.arm.com"
+        Fri, 21 Feb 2020 13:19:06 -0500
+Received: from foss.arm.com ([217.140.110.172]:45354 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725947AbgBUSTC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Feb 2020 13:19:02 -0500
+        id S1729397AbgBUSTD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 21 Feb 2020 13:19:03 -0500
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id C808831B;
-        Fri, 21 Feb 2020 10:19:01 -0800 (PST)
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 8A300FEC;
+        Fri, 21 Feb 2020 10:19:03 -0800 (PST)
 Received: from e119884-lin.cambridge.arm.com (e119884-lin.cambridge.arm.com [10.1.196.72])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 42DF23F6CF;
-        Fri, 21 Feb 2020 10:19:00 -0800 (PST)
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 068653F6CF;
+        Fri, 21 Feb 2020 10:19:01 -0800 (PST)
 From:   Vincenzo Frascino <vincenzo.frascino@arm.com>
 To:     linux-arch@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
         linux-kernel@vger.kernel.org
@@ -32,9 +32,9 @@ Cc:     catalin.marinas@arm.com, will.deacon@arm.com,
         linux@armlinux.org.uk, tglx@linutronix.de, luto@kernel.org,
         m.szyprowski@samsung.com, Mark.Rutland@arm.com, maz@kernel.org,
         vincenzo.frascino@arm.com
-Subject: [PATCH v2 1/3] arm: clocksource: Add VDSO default clockmode
-Date:   Fri, 21 Feb 2020 18:18:47 +0000
-Message-Id: <20200221181849.40351-2-vincenzo.frascino@arm.com>
+Subject: [PATCH v2 2/3] arm64: clocksource: Add VDSO default clockmode
+Date:   Fri, 21 Feb 2020 18:18:48 +0000
+Message-Id: <20200221181849.40351-3-vincenzo.frascino@arm.com>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200221181849.40351-1-vincenzo.frascino@arm.com>
 References: <20200221181849.40351-1-vincenzo.frascino@arm.com>
@@ -45,53 +45,29 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The arm_arch_timer requires that VDSO_CLOCKMODE_ARCHTIMER to be
-defined to compile correctly. On arm the vDSO can be disabled and when
-this is the case the compilation ends prematurely with an error.
-
 Define VDSO_CLOCKMODE_ARCH_DEFAULT to represent the default vDSO
 clockmode for arm_arch_timer.
 
-Cc: Russell King <linux@armlinux.org.uk>
+The change to arm_arch_timer will be in the next patch of this
+series.
+
+Cc: Catalin Marinas <catalin.marinas@arm.com>
+Cc: Will Deacon <will.deacon@arm.com>
 Cc: Thomas Gleixner <tglx@linutronix.de>
 Signed-off-by: Vincenzo Frascino <vincenzo.frascino@arm.com>
 ---
- arch/arm/Kconfig                   |  1 +
- arch/arm/include/asm/clocksource.h | 10 ++++++++++
- 2 files changed, 11 insertions(+)
+ arch/arm64/include/asm/clocksource.h | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/arch/arm/Kconfig b/arch/arm/Kconfig
-index 03bbfc312fe7..97864aabc2a6 100644
---- a/arch/arm/Kconfig
-+++ b/arch/arm/Kconfig
-@@ -3,6 +3,7 @@ config ARM
- 	bool
- 	default y
- 	select ARCH_32BIT_OFF_T
-+	select ARCH_CLOCKSOURCE_DATA
- 	select ARCH_HAS_BINFMT_FLAT
- 	select ARCH_HAS_DEBUG_VIRTUAL if MMU
- 	select ARCH_HAS_DEVMEM_IS_ALLOWED
-diff --git a/arch/arm/include/asm/clocksource.h b/arch/arm/include/asm/clocksource.h
-index 73beb7f131de..3f7812d5764f 100644
---- a/arch/arm/include/asm/clocksource.h
-+++ b/arch/arm/include/asm/clocksource.h
-@@ -1,7 +1,17 @@
- #ifndef _ASM_CLOCKSOURCE_H
- #define _ASM_CLOCKSOURCE_H
+diff --git a/arch/arm64/include/asm/clocksource.h b/arch/arm64/include/asm/clocksource.h
+index eb82e9d95c5d..36a2cca213ae 100644
+--- a/arch/arm64/include/asm/clocksource.h
++++ b/arch/arm64/include/asm/clocksource.h
+@@ -4,5 +4,6 @@
  
-+struct arch_clocksource_data {
-+	/* Empty on purpose */
-+};
-+
-+#ifdef CONFIG_GENERIC_GETTIMEOFDAY
  #define VDSO_ARCH_CLOCKMODES	\
  	VDSO_CLOCKMODE_ARCHTIMER
 +#define VDSO_CLOCKMODE_ARCH_DEFAULT	VDSO_CLOCKMODE_ARCHTIMER
-+#else
-+/* The define below is required because on arm the VDSOs can be disabled */
-+#define VDSO_CLOCKMODE_ARCH_DEFAULT	VDSO_CLOCKMODE_NONE
-+#endif
  
  #endif
 -- 
