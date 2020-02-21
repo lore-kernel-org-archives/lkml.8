@@ -2,137 +2,112 @@ Return-Path: <SRS0=1210=4J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B5B9DC3566F
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 20:17:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6BEFBC35666
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 20:19:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 821712064C
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 20:17:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4146D24650
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 20:19:36 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=microsoft.com header.i=@microsoft.com header.b="S0zW8Wjh"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="uEcpgNIx"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727346AbgBUURi (ORCPT
+        id S1727515AbgBUUTf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Feb 2020 15:17:38 -0500
-Received: from mail-eopbgr1300135.outbound.protection.outlook.com ([40.107.130.135]:54592
-        "EHLO APC01-HK2-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726683AbgBUURh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Feb 2020 15:17:37 -0500
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=J5PXGp2L/y2v2rZxLVAZh5Z3gx0HY0sQXUExDn1YC5TWWy/TxfUoVECrQS492/ET2ADIUhKfOn47BQIme9XNCgvAx5Ims7w1HoUuv3hh8gDAtnbXBTi5OaQITCguQ05/2RzDdyPBOoit7flOFoJqMW6JUdhV7Srox6iNyDAPUlT47jHFCc50fNkYa7L4p6PqO2WWCYILCW95YmtDu/UoaAMJO9b5CBkaiqDRv/LG7v/Qj/miFQz4iimTLKlY3slvYZlOZkk53WMDZG1DmvoadvklGNsvlWLRxFk3lMwHc+KKNBfXtAuYOdsy3bLw5Rd4hiaoGuNBcNscpygoMnXs5Q==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=nFbyesmyoIJ0fQqCx4h6y6Y8fHL39vGTNpu9E0gi/5E=;
- b=SdHDMbTEKo9BSnhb0QfHb1foQaHN3vpa/IKKMbxODRrmTsLFSRSwPpvP9d/DaC7eypvZkBU1Ur+V4nZeLQtQOtGI7gjAlBsYxaNcQa61TuzM33ekjiyHLCQcbh9qcPcDtEnpl67y+bVDOhie4ipZ4j95npPY924KXy8PGQLf+wAmjyKmp/hmhpIfn0m6nBwWSeyy3MdlyYBb40EgJ63wGwXXpQT/S7k/Gp4JqV6NF8mXomSEUzHNy5dcQCjnpJeeQTCFC2JOjn6EZspwG06Kg7GmxYqioWhcM6LcLgXyULb1vTt5eYbseo9AqbGkaVmNtMvs7A0uVFp9KkKJXXBxyg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=microsoft.com; dmarc=pass action=none
- header.from=microsoft.com; dkim=pass header.d=microsoft.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=nFbyesmyoIJ0fQqCx4h6y6Y8fHL39vGTNpu9E0gi/5E=;
- b=S0zW8WjhJye+tyEhHggt5LiKpqE9aTEyzNpQfrO16lBe2/GYIE9UHt5cQVT63hffGiQJbKwSzaXNmm8Aq/t04uCSDjmBK3n5PZhy/jjf1X55bOtSbH7H7A9QZZ8Y/LHTNo+2EaGYs82EnT5KIqCkZiTZ6UC70zhbAOoBYBJjP6Y=
-Received: from HK0P153MB0148.APCP153.PROD.OUTLOOK.COM (52.133.156.139) by
- HK0P153MB0259.APCP153.PROD.OUTLOOK.COM (52.132.236.12) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2772.4; Fri, 21 Feb 2020 20:17:29 +0000
-Received: from HK0P153MB0148.APCP153.PROD.OUTLOOK.COM
- ([fe80::a02a:44fa:5f1:dd74]) by HK0P153MB0148.APCP153.PROD.OUTLOOK.COM
- ([fe80::a02a:44fa:5f1:dd74%2]) with mapi id 15.20.2772.009; Fri, 21 Feb 2020
- 20:17:28 +0000
-From:   Dexuan Cui <decui@microsoft.com>
-To:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-CC:     KY Srinivasan <kys@microsoft.com>,
-        Haiyang Zhang <haiyangz@microsoft.com>,
-        Stephen Hemminger <sthemmin@microsoft.com>,
-        "sashal@kernel.org" <sashal@kernel.org>,
-        "bhelgaas@google.com" <bhelgaas@google.com>,
-        "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
-        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Michael Kelley <mikelley@microsoft.com>,
-        Sasha Levin <Alexander.Levin@microsoft.com>
-Subject: RE: [PATCH] PCI: hv: Use kfree(hbus) in hv_pci_probe()'s error
- handling path
-Thread-Topic: [PATCH] PCI: hv: Use kfree(hbus) in hv_pci_probe()'s error
- handling path
-Thread-Index: AQHV6MTTYxxTTdKrHUimkreM9jFb+KgmFYKw
-Date:   Fri, 21 Feb 2020 20:17:28 +0000
-Message-ID: <HK0P153MB014824764A8F7310502291C3BF120@HK0P153MB0148.APCP153.PROD.OUTLOOK.COM>
-References: <1578350351-129783-1-git-send-email-decui@microsoft.com>
- <20200221144003.GD15440@e121166-lin.cambridge.arm.com>
-In-Reply-To: <20200221144003.GD15440@e121166-lin.cambridge.arm.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-msip_labels: MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Enabled=True;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SiteId=72f988bf-86f1-41af-91ab-2d7cd011db47;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Owner=decui@microsoft.com;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SetDate=2020-02-21T20:17:26.4167793Z;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Name=General;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Application=Microsoft Azure
- Information Protection;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ActionId=e05456d8-ca32-4dfc-a11c-32be868d8b4c;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Extended_MSFT_Method=Automatic
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=decui@microsoft.com; 
-x-originating-ip: [2001:4898:80e8:9:44ce:5ee7:dfaf:44c6]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-ht: Tenant
-x-ms-office365-filtering-correlation-id: ff8b8168-fba2-4216-cae6-08d7b70b130f
-x-ms-traffictypediagnostic: HK0P153MB0259:|HK0P153MB0259:
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <HK0P153MB02595DF50C1B38F6EC1DE061BF120@HK0P153MB0259.APCP153.PROD.OUTLOOK.COM>
-x-ms-oob-tlc-oobclassifiers: OLM:7691;
-x-forefront-prvs: 0320B28BE1
-x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(4636009)(376002)(136003)(366004)(39860400002)(346002)(396003)(189003)(199004)(107886003)(478600001)(4744005)(4326008)(55016002)(66446008)(6506007)(54906003)(8990500004)(66946007)(66476007)(5660300002)(316002)(66556008)(76116006)(64756008)(9686003)(52536014)(8676002)(81166006)(7696005)(8936002)(33656002)(81156014)(186003)(6916009)(86362001)(2906002)(71200400001)(10290500003);DIR:OUT;SFP:1102;SCL:1;SRVR:HK0P153MB0259;H:HK0P153MB0148.APCP153.PROD.OUTLOOK.COM;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
-received-spf: None (protection.outlook.com: microsoft.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: 3GLj/Ivn0+dmTLfywiL6bYIP2Bpt7GtoZEy7Xv1Ap17Wx+CRhFO/Syh7djGP44pFjy8f+EHABccFLQQcgoNi8EUrbfl4MwHxxF3bn86h2GcmfzpJx504ZSKlM3exUKpYx+ZoO6rNNAGUZR+cAvff8zA0GrJdUFJczxd0qNa2NeDSLcB2riH4Vs2s3dhKejIUJNuBmanHejOsTXe3Nl7QQBm98JGstkoxvuxPIjBSTAYOGtwzhNmSwJsADfUGL43myZlcx3crHHXO/tjgUfP3TL6tcWqPmOZ1VgLNsjwO1g6e7cxhrgJGuYITjDN3F8Zb7klW78tvpLMYbKkodl1KiANj1MwfSsLwLRtOZrWFEQGUEem/SSck8eGOQd8hux8l7T9eLmb6gH8QcW+9+PTCrOZmPsnHM2uWP6kXpmctqb4oXC3zmPLrVSvp650p9KiV
-x-ms-exchange-antispam-messagedata: MKO3sTCnCfnPsZ3Ma7yml5CMFEI0tlH6lV/W1HYoD7ZlYk7EViObIpD/evSULijx7sVlAMBtPw1EEQMswoDlZxH1DUdDIutzMBROFv1jnh1eRilERLgQcD7+CSknFoa/WLTDL3yrT4oR5VSbpO+h9IrWwi+b7UfolbTwEPtjwpxOKCHHAVz0K3WmHVCUlFIIkqhQb5BbFw4YQ4zmunm6IA==
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+        Fri, 21 Feb 2020 15:19:35 -0500
+Received: from mail-ot1-f68.google.com ([209.85.210.68]:34058 "EHLO
+        mail-ot1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726725AbgBUUTe (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 21 Feb 2020 15:19:34 -0500
+Received: by mail-ot1-f68.google.com with SMTP id j16so3198239otl.1
+        for <linux-kernel@vger.kernel.org>; Fri, 21 Feb 2020 12:19:34 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=OfpZw+eQB6iSYwMvRBzJaMRaqdbsGid5gEGpxbg9sSM=;
+        b=uEcpgNIxyzARyyktOQSbbTIs3P/w6TgKfs9rTrYnQfUyOtw+Y/jWrbLk7GkpTw92F7
+         YHwCKs5T5uF+WI5VOd8W3VJSXefpdWblnH2gBQoZnI+NHI3YMXR7Z3urY25D/8f0kt+5
+         ettm551MbN+59D/LxW/SLaMiPedHQ9kOlXA3X8v3r5noGfJwngzmXCWszw3mqnCjIzvo
+         r7Z6FaMc9KsSbykj/UPyzOLNB2wYbJqvXWsCv08JWsILT0TMm+92HS6wbrXIHvqew/Kd
+         4mh4l1iYel1wAbHtHlNBjxSVzH58UCi+aOlqSAai7VkXTKw6DzwAqSLjD83fek6LJzR4
+         Swfw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=OfpZw+eQB6iSYwMvRBzJaMRaqdbsGid5gEGpxbg9sSM=;
+        b=PiYvK7jWde7GVBcXZfIv5uKm3qH30Vvqcp3ae2m/lJCYTgb1B4L+alET+g8DqL63en
+         eP4S32XDF4n2mVC3a6xTjCxFl2V5jK4NqI9jAIDSS3hyeutyiKSpJC4qJtj0vOoWdvvW
+         KHB8U9GHytyzEIerqCDRRX8/th01wFnqZz7JJUxISQTXgjGF5jHPwvqHKKDK8AbcRd3j
+         l1u9rCNwsivD4osO92te1MT1cnkmrIQCXyBghALpKMw2A9TY2G9WcUoyJx/cgqA/3fM8
+         DI2PqYdYNZFaGoZfrVICPuzCQRQ+OIzbu5AJxi3h8XmVk01CP4IHwjcb9sv3c+8R25aZ
+         l1rA==
+X-Gm-Message-State: APjAAAX0NLYdxaYjq2RZv20j0IiIBivUO8La4+gQF3YztauRAC/UTvyt
+        K1nWYfojebPd3CIDdOKoQtuqDTDxBEJ0ejdvW7KLEA==
+X-Google-Smtp-Source: APXvYqyx/RGSX2qyoU/QNIJeZF7dI+U24Dxth1TtmWp8pOZPVerHNA8pMkzSW7LFvniRoOIoJ5G9d1IhZP3X8SA4R3Y=
+X-Received: by 2002:a9d:518b:: with SMTP id y11mr28357211otg.349.1582316373221;
+ Fri, 21 Feb 2020 12:19:33 -0800 (PST)
 MIME-Version: 1.0
-X-OriginatorOrg: microsoft.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: ff8b8168-fba2-4216-cae6-08d7b70b130f
-X-MS-Exchange-CrossTenant-originalarrivaltime: 21 Feb 2020 20:17:28.4382
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 72f988bf-86f1-41af-91ab-2d7cd011db47
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: I8IuJkXoph3AlFexd7ApdHcO0d4cIQu8H7dCqqcozwwckeSceoxvtrdC1RZ5H68NPTE8qRoN7dyOJDsxr4+zuw==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: HK0P153MB0259
+References: <20200211213128.73302-1-almasrymina@google.com>
+ <20200211151906.637d1703e4756066583b89da@linux-foundation.org>
+ <CAHS8izPUFQWq3PzhhRzp7u11173_-cmRkNuQWEswS51Xz6ZM0Q@mail.gmail.com> <20200219130648.83e6810848774c6fd649c445@linux-foundation.org>
+In-Reply-To: <20200219130648.83e6810848774c6fd649c445@linux-foundation.org>
+From:   Mina Almasry <almasrymina@google.com>
+Date:   Fri, 21 Feb 2020 12:19:22 -0800
+Message-ID: <CAHS8izPB1vwuZVFha+5_ca9gKC7UceDdJFJZe9eb-T43a6GF8A@mail.gmail.com>
+Subject: Re: [PATCH v12 1/9] hugetlb_cgroup: Add hugetlb_cgroup reservation counter
+To:     Andrew Morton <akpm@linux-foundation.org>
+Cc:     Mike Kravetz <mike.kravetz@oracle.com>, shuah <shuah@kernel.org>,
+        David Rientjes <rientjes@google.com>,
+        Shakeel Butt <shakeelb@google.com>,
+        Greg Thelen <gthelen@google.com>,
+        open list <linux-kernel@vger.kernel.org>, linux-mm@kvack.org,
+        linux-kselftest@vger.kernel.org, cgroups@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-> From: linux-hyperv-owner@vger.kernel.org
-> <linux-hyperv-owner@vger.kernel.org> On Behalf Of Lorenzo Pieralisi
-> Sent: Friday, February 21, 2020 6:40 AM
->=20
-> On Mon, Jan 06, 2020 at 02:39:11PM -0800, Dexuan Cui wrote:
-> > Now that we use kzalloc() to allocate the hbus buffer, we should use
-> > kfree() in the error path as well.
+On Wed, Feb 19, 2020 at 1:06 PM Andrew Morton <akpm@linux-foundation.org> wrote:
+>
+> On Wed, 19 Feb 2020 11:05:41 -0800 Mina Almasry <almasrymina@google.com> wrote:
+>
+> > On Tue, Feb 11, 2020 at 3:19 PM Andrew Morton <akpm@linux-foundation.org> wrote:
+> > >
+> > > On Tue, 11 Feb 2020 13:31:20 -0800 Mina Almasry <almasrymina@google.com> wrote:
+> > >
+> > > > These counters will track hugetlb reservations rather than hugetlb
+> > > > memory faulted in. This patch only adds the counter, following patches
+> > > > add the charging and uncharging of the counter.
+> > >
+> > > We're still pretty thin on review here, but as it's v12 and Mike
+> > > appears to be signed up to look at this work, I'll add them to -next to
+> > > help move things forward.
+> > >
 > >
-> > Also remove the type casting, since it's unnecessary in C.
->=20
-> Two unrelated logical changes -> two patches please, I know it is
-> tempting but it is important to split logical changes into separate
-> patches.
->=20
-> Thanks,
-> Lorenzo
+> > Hi Andrew,
+> >
+> > Since the patches were merged into -next there have been build fixes
+> > and test fixes and some review comments. Would you like me to submit
+> > *new* patches to address these, or would you like me to squash the
+> > fixes into my existing patch series and submit another iteration of
+> > the patch series?
+>
+> What you did worked OK ;)
+>
+> Please check the end result next time I release a kernel.
 
-Ok, will post 2 separate patches shortly.
+Hey Andrew,
 
-Thanks,
--- Dexuan
+Thanks for taking in the patset and fixes. Only pending change in the
+latest -next tree is this one:
+https://lore.kernel.org/linux-mm/20200219233610.13808-1-almasrymina@google.com/
+
+It's reviewed by Mike here:
+https://lore.kernel.org/linux-mm/a0d7b8e1-cb43-3b43-68c3-55631f2ce199@oracle.com/
