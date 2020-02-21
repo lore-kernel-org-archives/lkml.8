@@ -2,135 +2,155 @@ Return-Path: <SRS0=1210=4J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 76289C35641
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 05:28:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 892BDC35640
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 05:35:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 43804208C4
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 05:28:01 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="iR/Hnhsw"
+	by mail.kernel.org (Postfix) with ESMTP id 69D2F222C4
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 05:35:22 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726410AbgBUF2A (ORCPT
+        id S1726331AbgBUFfU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Feb 2020 00:28:00 -0500
-Received: from mail-lf1-f66.google.com ([209.85.167.66]:40158 "EHLO
-        mail-lf1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725800AbgBUF2A (ORCPT
+        Fri, 21 Feb 2020 00:35:20 -0500
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:57074 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726100AbgBUFfT (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Feb 2020 00:28:00 -0500
-Received: by mail-lf1-f66.google.com with SMTP id c23so555859lfi.7;
-        Thu, 20 Feb 2020 21:27:58 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=53gVHOVv+aazLVffnAnZapThLxuxSIM6yvCzFavsnfo=;
-        b=iR/HnhswRBJL0Eb1YhkshQ71r8WZae6s4qyPXEHFu1b3G/BwJGgfoTZEN/7NbiTeVY
-         wJcjGcaRiLLkplm0dxXtJtMKSRd4S+h5thVN0BJ6pzca7M+/D/UoVd7ueUSDNxKbuih2
-         cx7eRCAaMXE6p97TXrl2RtHyvO87oraaNkt7CuF773rqooTm+EMV2zStQXm5dkmGwPQP
-         tEa4is0Oc6e0xGlVo7YO+5hutXKoTwxlUZzlHXz720uWKTaBVTI8iJKnZC5jIuEJbBaS
-         js5XdhRE5VDOCWHwlA4G3FtMaj3izXanmukoI0P0aOnBBHCSDSoHUUfBluGYl6OWOgn8
-         NdEQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=53gVHOVv+aazLVffnAnZapThLxuxSIM6yvCzFavsnfo=;
-        b=bMjgUz/cLtwZbMJ6gMIWGsfB7b2kRslfjC2ASNNOmSByb7ppJCbTBSxtsB05jlh9Hb
-         6RuNLGbAzQvb2+dHso7ahr3Sr+wP3y9GSbdmcRgsqNYZ3I86BXG2QHSg2OXKo85/Hgc2
-         G4t/q9gOhBc3Hpf/1p3umNM9t2xDqH7XN04+19oX6pN96LaKk2jiFRjt4kqH+OKBQ0R6
-         E+XiS7uKRUte8yX6vWI1u9BIOsdlToYkRMSJ7WF5mNi86NKgy6cO8lhNz49ggZDVlDhr
-         tZVU0tt6Xde3wFp0SJgzwF+kfPB1nlxvwnG+AzcsXcnI2jvbGb6jig1tYI1ld6/efaz1
-         UUlA==
-X-Gm-Message-State: APjAAAWT3eXDNKjr2dekf5bbImVVZHOQBanY5KLYTlWcryZsSC04zEpg
-        IWYAOgPq4QlhJg3AstLJMLs=
-X-Google-Smtp-Source: APXvYqyiPLAcLmfgNz8dfxXwbYBLTptG6VXSzZJ+C7dVJ8PZhJq6nscU8y34IZsubI8W7nKWqe2djA==
-X-Received: by 2002:ac2:44a7:: with SMTP id c7mr7647289lfm.32.1582262877961;
-        Thu, 20 Feb 2020 21:27:57 -0800 (PST)
-Received: from [192.168.2.145] (79-139-233-37.dynamic.spd-mgts.ru. [79.139.233.37])
-        by smtp.googlemail.com with ESMTPSA id f16sm876606ljn.17.2020.02.20.21.27.56
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 20 Feb 2020 21:27:57 -0800 (PST)
-Subject: Re: [PATCH v3 02/10] ASoC: tegra: add support for CIF programming
-To:     Sameer Pujar <spujar@nvidia.com>, perex@perex.cz, tiwai@suse.com,
-        robh+dt@kernel.org
-Cc:     broonie@kernel.org, lgirdwood@gmail.com, thierry.reding@gmail.com,
-        jonathanh@nvidia.com, alsa-devel@alsa-project.org,
-        devicetree@vger.kernel.org, linux-tegra@vger.kernel.org,
-        linux-kernel@vger.kernel.org, sharadg@nvidia.com,
-        mkumard@nvidia.com, viswanathl@nvidia.com, rlokhande@nvidia.com,
-        dramesh@nvidia.com, atalambedu@nvidia.com
-References: <1582180492-25297-1-git-send-email-spujar@nvidia.com>
- <1582180492-25297-3-git-send-email-spujar@nvidia.com>
-From:   Dmitry Osipenko <digetx@gmail.com>
-Message-ID: <8c39dbe9-a2b9-62e8-3a26-32cc747d0e60@gmail.com>
-Date:   Fri, 21 Feb 2020 08:27:55 +0300
+        Fri, 21 Feb 2020 00:35:19 -0500
+Received: from pps.filterd (m0098416.ppops.net [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 01L5P5Rx067632
+        for <linux-kernel@vger.kernel.org>; Fri, 21 Feb 2020 00:35:18 -0500
+Received: from e06smtp01.uk.ibm.com (e06smtp01.uk.ibm.com [195.75.94.97])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 2y8ubxm2mm-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Fri, 21 Feb 2020 00:35:18 -0500
+Received: from localhost
+        by e06smtp01.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-kernel@vger.kernel.org> from <ajd@linux.ibm.com>;
+        Fri, 21 Feb 2020 05:35:16 -0000
+Received: from b06avi18878370.portsmouth.uk.ibm.com (9.149.26.194)
+        by e06smtp01.uk.ibm.com (192.168.101.131) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Fri, 21 Feb 2020 05:35:08 -0000
+Received: from d06av21.portsmouth.uk.ibm.com (d06av21.portsmouth.uk.ibm.com [9.149.105.232])
+        by b06avi18878370.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 01L5Z73035062270
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Fri, 21 Feb 2020 05:35:07 GMT
+Received: from d06av21.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 8858A5204E;
+        Fri, 21 Feb 2020 05:35:07 +0000 (GMT)
+Received: from ozlabs.au.ibm.com (unknown [9.192.253.14])
+        by d06av21.portsmouth.uk.ibm.com (Postfix) with ESMTP id 3A62452057;
+        Fri, 21 Feb 2020 05:35:07 +0000 (GMT)
+Received: from [10.61.2.125] (haven.au.ibm.com [9.192.254.114])
+        (using TLSv1.2 with cipher DHE-RSA-AES128-SHA (128/128 bits))
+        (No client certificate requested)
+        by ozlabs.au.ibm.com (Postfix) with ESMTPSA id 7FFC2A0209;
+        Fri, 21 Feb 2020 16:35:02 +1100 (AEDT)
+Subject: Re: [PATCH v3 27/27] MAINTAINERS: Add myself & nvdimm/ocxl to ocxl
+To:     "Alastair D'Silva" <alastair@au1.ibm.com>, alastair@d-silva.org
+Cc:     "Aneesh Kumar K . V" <aneesh.kumar@linux.ibm.com>,
+        "Oliver O'Halloran" <oohall@gmail.com>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Paul Mackerras <paulus@samba.org>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Frederic Barrat <fbarrat@linux.ibm.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Vishal Verma <vishal.l.verma@intel.com>,
+        Dave Jiang <dave.jiang@intel.com>,
+        Ira Weiny <ira.weiny@intel.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        Rob Herring <robh@kernel.org>,
+        Anton Blanchard <anton@ozlabs.org>,
+        Krzysztof Kozlowski <krzk@kernel.org>,
+        Mahesh Salgaonkar <mahesh@linux.vnet.ibm.com>,
+        Madhavan Srinivasan <maddy@linux.vnet.ibm.com>,
+        =?UTF-8?Q?C=c3=a9dric_Le_Goater?= <clg@kaod.org>,
+        Anju T Sudhakar <anju@linux.vnet.ibm.com>,
+        Hari Bathini <hbathini@linux.ibm.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Greg Kurz <groug@kaod.org>,
+        Nicholas Piggin <npiggin@gmail.com>,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        Alexey Kardashevskiy <aik@ozlabs.ru>,
+        linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
+        linux-nvdimm@lists.01.org, linux-mm@kvack.org
+References: <20200221032720.33893-1-alastair@au1.ibm.com>
+ <20200221032720.33893-28-alastair@au1.ibm.com>
+From:   Andrew Donnellan <ajd@linux.ibm.com>
+Date:   Fri, 21 Feb 2020 16:35:01 +1100
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.3.0
+ Thunderbird/68.5.0
 MIME-Version: 1.0
-In-Reply-To: <1582180492-25297-3-git-send-email-spujar@nvidia.com>
-Content-Type: text/plain; charset=utf-8
+In-Reply-To: <20200221032720.33893-28-alastair@au1.ibm.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7bit
+X-TM-AS-GCONF: 00
+x-cbid: 20022105-4275-0000-0000-000003A40507
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 20022105-4276-0000-0000-000038B8133F
+Message-Id: <1df3e93b-74da-850b-ba21-881b2e34a2da@linux.ibm.com>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.572
+ definitions=2020-02-20_19:2020-02-19,2020-02-20 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxscore=0 bulkscore=0
+ lowpriorityscore=0 spamscore=0 suspectscore=0 mlxlogscore=835
+ clxscore=1015 malwarescore=0 adultscore=0 impostorscore=0 phishscore=0
+ priorityscore=1501 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2001150001 definitions=main-2002210035
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-20.02.2020 09:34, Sameer Pujar пишет:
-> Audio Client Interface (CIF) is a proprietary interface employed to route
-> audio samples through Audio Hub (AHUB) components by inter connecting the
-> various modules.
+On 21/2/20 2:27 pm, Alastair D'Silva wrote:
+> From: Alastair D'Silva <alastair@d-silva.org>
 > 
-> This patch exports an inline function tegra_set_cif() which can be used,
-> for now, to program CIF on Tegra210 and later Tegra generations. Later it
-> can be extended to include helpers for legacy chips as well.
+> The OpenCAPI Persistent Memory driver will be maintained as part ofi
+> the ppc tree.
 > 
-> Signed-off-by: Sameer Pujar <spujar@nvidia.com>
+> I'm also adding myself as an author of the driver & contributor to
+> the generic ocxl driver.
+> 
+> Signed-off-by: Alastair D'Silva <alastair@d-silva.org>
+
+You need to update the title of this patch :)
+
 > ---
->  sound/soc/tegra/tegra_cif.h | 63 +++++++++++++++++++++++++++++++++++++++++++++
->  1 file changed, 63 insertions(+)
->  create mode 100644 sound/soc/tegra/tegra_cif.h
+>   MAINTAINERS | 3 +++
+>   1 file changed, 3 insertions(+)
 > 
-> diff --git a/sound/soc/tegra/tegra_cif.h b/sound/soc/tegra/tegra_cif.h
-> new file mode 100644
-> index 0000000..ecc0850
-> --- /dev/null
-> +++ b/sound/soc/tegra/tegra_cif.h
-> @@ -0,0 +1,63 @@
-> +/* SPDX-License-Identifier: GPL-2.0-only */
-> +/*
-> + * tegra_cif.h - TEGRA Audio CIF Programming
-> + *
-> + * Copyright (c) 2020 NVIDIA CORPORATION.  All rights reserved.
-> + *
-> + */
-> +
-> +#ifndef __TEGRA_CIF_H__
-> +#define __TEGRA_CIF_H__
+> diff --git a/MAINTAINERS b/MAINTAINERS
+> index f8670989ec91..3fb9a9f576a7 100644
+> --- a/MAINTAINERS
+> +++ b/MAINTAINERS
+> @@ -12064,13 +12064,16 @@ F:	tools/objtool/
+>   OCXL (Open Coherent Accelerator Processor Interface OpenCAPI) DRIVER
+>   M:	Frederic Barrat <fbarrat@linux.ibm.com>
+>   M:	Andrew Donnellan <ajd@linux.ibm.com>
+> +M:	Alastair D'Silva <alastair@d-silva.org>
+>   L:	linuxppc-dev@lists.ozlabs.org
+>   S:	Supported
+>   F:	arch/powerpc/platforms/powernv/ocxl.c
+> +F:	arch/powerpc/platforms/powernv/pmem/*
+>   F:	arch/powerpc/include/asm/pnv-ocxl.h
+>   F:	drivers/misc/ocxl/
+>   F:	include/misc/ocxl*
+>   F:	include/uapi/misc/ocxl.h
+> +F:	include/uapi/nvdimm/ocxl-pmem.h
+>   F:	Documentation/userspace-api/accelerators/ocxl.rst
 
-For completeness here should be:
+Should this be part of the ocxl entry or a separate entry? I guess I 
+don't care too much either way.
 
-#include <linux/regmap.h>
+-- 
+Andrew Donnellan              OzLabs, ADL Canberra
+ajd@linux.ibm.com             IBM Australia Limited
 
-...
-> +static inline void tegra_set_cif(struct regmap *regmap, unsigned int reg,
-> +				 struct tegra_cif_conf *conf)
-> +{
-...
-> +	regmap_update_bits(regmap, reg, TEGRA_ACIF_UPDATE_MASK, value);
-> +}
-> +
-> +#endif
-> 
-
-Otherwise:
-
-Reviewed-by: Dmitry Osipenko <digetx@gmail.com>
