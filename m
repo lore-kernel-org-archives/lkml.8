@@ -7,47 +7,46 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 40E1EC35640
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 08:12:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 937E3C35641
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 08:12:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0DDBC24650
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 08:12:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 66F4B24650
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 08:12:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582272752;
-	bh=XF+uKzWVjCkasEVsHuILsvLeJGCAQ0To9bSluYuOIk4=;
+	s=default; t=1582272755;
+	bh=38p9MvRGjy//9Vx20f5bGwTQYOMD8UNHHMDJnca5RVU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=bGGP9uJoiQN9mRxCydb/TBlXZ8owPr2y4CQkvtkjcX9uKBCiRsKi+QB6CYJcVwJfe
-	 sZAf75SYtGPmyLTAMUYhDV4UYLlQDjvKvz2WrVZLluWPmQdlrE7BbV2hEQUHCcxxC9
-	 gSo2bD74KmHEH84yviFn4DiCQtARSb8FORf0+D60=
+	b=m8KSFOP21O1JMZQB3hy+ymtR5cIcPUcIaoX1gLx3PnM6Rx807qo1cZUU1GEE8fK+P
+	 V6kMfVxYCOFb4Owde8i+ssFdxVk84tUFKj5WxdkG+e1vuw4XCYIPMATd386sVYRXL1
+	 2SQJTGLMRWhonY9ItA0HIlHdC0AzbeH9FFBNRBs4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732862AbgBUIMa (ORCPT
+        id S1732874AbgBUIMe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Feb 2020 03:12:30 -0500
-Received: from mail.kernel.org ([198.145.29.99]:48298 "EHLO mail.kernel.org"
+        Fri, 21 Feb 2020 03:12:34 -0500
+Received: from mail.kernel.org ([198.145.29.99]:48340 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732852AbgBUIM3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Feb 2020 03:12:29 -0500
+        id S1732852AbgBUIMb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 21 Feb 2020 03:12:31 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1229D24650;
-        Fri, 21 Feb 2020 08:12:27 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9980B20722;
+        Fri, 21 Feb 2020 08:12:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1582272748;
-        bh=XF+uKzWVjCkasEVsHuILsvLeJGCAQ0To9bSluYuOIk4=;
+        s=default; t=1582272751;
+        bh=38p9MvRGjy//9Vx20f5bGwTQYOMD8UNHHMDJnca5RVU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=vdo6LmH1McQIXlag6UPoGVC8T4B/K+pzgf35q0Iq443satfOJThYFijGBAU68f5BJ
-         xdv+XlVsPNehN28Iu6sxwzGj88JTHHfA1wQtkip7405SX0z7k4vQ0p7lK4XNCbsPkH
-         WVVwVTgMMpIFDb4B9fLLgW2IkXPizrU9YbzkEuqY=
+        b=bTdDNGj9vOAHOcjdq7JWaZDln577nOYZGzWuDGQUSMq3mb4Ccj2DXTyu3hazInoQE
+         ZqkT4TbDTKHzCwMyBKV5vHEOqfnPt2X4cNCccBHEmyRM5I2b1CpLPOkI7i1Oo2qwn/
+         Rjvs4cA9Ws9QzeVJid7gSMUkJiFNULYB+b18OghI=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Dan Carpenter <dan.carpenter@oracle.com>,
-        Ben Skeggs <bskeggs@redhat.com>,
+        stable@vger.kernel.org, Ben Skeggs <bskeggs@redhat.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 223/344] drm/nouveau/secboot/gm20b: initialize pointer in gm20b_secboot_new()
-Date:   Fri, 21 Feb 2020 08:40:22 +0100
-Message-Id: <20200221072409.465402995@linuxfoundation.org>
+Subject: [PATCH 5.4 224/344] drm/nouveau/gr/gk20a,gm200-: add terminators to method lists read from fw
+Date:   Fri, 21 Feb 2020 08:40:23 +0100
+Message-Id: <20200221072409.554784817@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200221072349.335551332@linuxfoundation.org>
 References: <20200221072349.335551332@linuxfoundation.org>
@@ -60,46 +59,73 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Dan Carpenter <dan.carpenter@oracle.com>
+From: Ben Skeggs <bskeggs@redhat.com>
 
-[ Upstream commit 3613a9bea95a1470dd42e4ed1cc7d86ebe0a2dc0 ]
+[ Upstream commit 7adc77aa0e11f25b0e762859219c70852cd8d56f ]
 
-We accidentally set "psb" which is a no-op instead of "*psb" so it
-generates a static checker warning.  We should probably set it before
-the first error return so that it's always initialized.
+Method init is typically ordered by class in the FW image as ThreeD,
+TwoD, Compute.
 
-Fixes: 923f1bd27bf1 ("drm/nouveau/secboot/gm20b: add secure boot support")
-Signed-off-by: Dan Carpenter <dan.carpenter@oracle.com>
+Due to a bug in parsing the FW into our internal format, we've been
+accidentally sending Twod + Compute methods to the ThreeD class, as
+well as Compute methods to the TwoD class - oops.
+
 Signed-off-by: Ben Skeggs <bskeggs@redhat.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/gpu/drm/nouveau/nvkm/subdev/secboot/gm20b.c | 5 ++---
- 1 file changed, 2 insertions(+), 3 deletions(-)
+ .../gpu/drm/nouveau/nvkm/engine/gr/gk20a.c    | 21 ++++++++++---------
+ 1 file changed, 11 insertions(+), 10 deletions(-)
 
-diff --git a/drivers/gpu/drm/nouveau/nvkm/subdev/secboot/gm20b.c b/drivers/gpu/drm/nouveau/nvkm/subdev/secboot/gm20b.c
-index df8b919dcf09b..ace6fefba4280 100644
---- a/drivers/gpu/drm/nouveau/nvkm/subdev/secboot/gm20b.c
-+++ b/drivers/gpu/drm/nouveau/nvkm/subdev/secboot/gm20b.c
-@@ -108,6 +108,7 @@ gm20b_secboot_new(struct nvkm_device *device, int index,
- 	struct gm200_secboot *gsb;
- 	struct nvkm_acr *acr;
+diff --git a/drivers/gpu/drm/nouveau/nvkm/engine/gr/gk20a.c b/drivers/gpu/drm/nouveau/nvkm/engine/gr/gk20a.c
+index 500cb08dd6080..b57ab5cea9a10 100644
+--- a/drivers/gpu/drm/nouveau/nvkm/engine/gr/gk20a.c
++++ b/drivers/gpu/drm/nouveau/nvkm/engine/gr/gk20a.c
+@@ -143,23 +143,24 @@ gk20a_gr_av_to_method(struct gf100_gr *gr, const char *fw_name,
  
-+	*psb = NULL;
- 	acr = acr_r352_new(BIT(NVKM_SECBOOT_FALCON_FECS) |
- 			   BIT(NVKM_SECBOOT_FALCON_PMU));
- 	if (IS_ERR(acr))
-@@ -116,10 +117,8 @@ gm20b_secboot_new(struct nvkm_device *device, int index,
- 	acr->optional_falcons = BIT(NVKM_SECBOOT_FALCON_PMU);
+ 	nent = (fuc.size / sizeof(struct gk20a_fw_av));
  
- 	gsb = kzalloc(sizeof(*gsb), GFP_KERNEL);
--	if (!gsb) {
--		psb = NULL;
-+	if (!gsb)
- 		return -ENOMEM;
--	}
- 	*psb = &gsb->base;
+-	pack = vzalloc((sizeof(*pack) * max_classes) +
+-		       (sizeof(*init) * (nent + 1)));
++	pack = vzalloc((sizeof(*pack) * (max_classes + 1)) +
++		       (sizeof(*init) * (nent + max_classes + 1)));
+ 	if (!pack) {
+ 		ret = -ENOMEM;
+ 		goto end;
+ 	}
  
- 	ret = nvkm_secboot_ctor(&gm20b_secboot, acr, device, index, &gsb->base);
+-	init = (void *)(pack + max_classes);
++	init = (void *)(pack + max_classes + 1);
+ 
+-	for (i = 0; i < nent; i++) {
+-		struct gf100_gr_init *ent = &init[i];
++	for (i = 0; i < nent; i++, init++) {
+ 		struct gk20a_fw_av *av = &((struct gk20a_fw_av *)fuc.data)[i];
+ 		u32 class = av->addr & 0xffff;
+ 		u32 addr = (av->addr & 0xffff0000) >> 14;
+ 
+ 		if (prevclass != class) {
+-			pack[classidx].init = ent;
++			if (prevclass) /* Add terminator to the method list. */
++				init++;
++			pack[classidx].init = init;
+ 			pack[classidx].type = class;
+ 			prevclass = class;
+ 			if (++classidx >= max_classes) {
+@@ -169,10 +170,10 @@ gk20a_gr_av_to_method(struct gf100_gr *gr, const char *fw_name,
+ 			}
+ 		}
+ 
+-		ent->addr = addr;
+-		ent->data = av->data;
+-		ent->count = 1;
+-		ent->pitch = 1;
++		init->addr = addr;
++		init->data = av->data;
++		init->count = 1;
++		init->pitch = 1;
+ 	}
+ 
+ 	*ppack = pack;
 -- 
 2.20.1
 
