@@ -2,166 +2,133 @@ Return-Path: <SRS0=1210=4J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2169DC35646
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 15:48:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 22D07C35646
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 15:48:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DE43C206E2
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 15:48:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EDE81206E2
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 15:48:47 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="BRL12zNh"
+	dkim=pass (2048-bit key) header.d=bgdev-pl.20150623.gappssmtp.com header.i=@bgdev-pl.20150623.gappssmtp.com header.b="bc468FVj"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728723AbgBUPsa (ORCPT
+        id S1728895AbgBUPsq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Feb 2020 10:48:30 -0500
-Received: from us-smtp-1.mimecast.com ([207.211.31.81]:49516 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1728103AbgBUPsa (ORCPT
+        Fri, 21 Feb 2020 10:48:46 -0500
+Received: from mail-wm1-f67.google.com ([209.85.128.67]:54243 "EHLO
+        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728177AbgBUPsq (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Feb 2020 10:48:30 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1582300109;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=nMuXYm/rPXTbSbIyT257TjmGAho8shid8dR0IC6/tX8=;
-        b=BRL12zNhBUbBlEmsB7jtiZ4SRb8DKEfBp8VStdEePZlYi8ofpcXb0iQLFlDYT7fXLGMLFn
-        I/Fkly87QJEuqkhi9QTylWXSjrm/l6PebOiAengxXy1iJBOVeCLp03IahFYXowCaE6pJQl
-        XIPuQ/H+FfoKm1yjV4jpQVgIWu6eNpU=
-Received: from mail-qv1-f70.google.com (mail-qv1-f70.google.com
- [209.85.219.70]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-273-A3WJsJVNMiKaRq9bIB9yvQ-1; Fri, 21 Feb 2020 10:48:27 -0500
-X-MC-Unique: A3WJsJVNMiKaRq9bIB9yvQ-1
-Received: by mail-qv1-f70.google.com with SMTP id r9so1612359qvs.19
-        for <linux-kernel@vger.kernel.org>; Fri, 21 Feb 2020 07:48:27 -0800 (PST)
+        Fri, 21 Feb 2020 10:48:46 -0500
+Received: by mail-wm1-f67.google.com with SMTP id s10so2272799wmh.3
+        for <linux-kernel@vger.kernel.org>; Fri, 21 Feb 2020 07:48:44 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=bgdev-pl.20150623.gappssmtp.com; s=20150623;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=LeI4uUAherKB7oCfyMKmC8mC9Xr3shtEsETnkdo6NKY=;
+        b=bc468FVjR0O2HzM4iW+Zet93uxru6fygwMokZnjsN4Z3+QauJeJgq3arXlVh56HWeZ
+         A5uIl36pE23TiUBNM7b9+bDJ85xe4zJtG+NoFQvuOXFPFp6oigTsxBosuCYShHjrDvzg
+         BcrOE7FV91S71wNKkhx6+2Rt2tD13s1SHZdHRfrdfNJALCTcoWsNhaK4BKGx95WoW65T
+         v82GGJ2l5ITDblA9SU5pJylgyjR0f9nsQYgtBDXc+oAtYKtOxKXTn8Lwi+b3hIDzXrT0
+         cS0CcEMHwqM3MJHCig0urM4lO3tc1/Oxa+RTBMuDvDS6of7qDUssIFruEBY2l4BzWH94
+         azxA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=nMuXYm/rPXTbSbIyT257TjmGAho8shid8dR0IC6/tX8=;
-        b=Sp6K/Ic81aT9KX78nLmDLRWk+ib64prRwE8l96nLMq9NHjrVKwbov+P77Ne1FM6pfN
-         we9jCJfPANcAa/YEjxbMKf+EA5W+vLmEn5gEtYYWLrTsPQ5VizhtQ1vM57YRwk/1MWO3
-         k8dweqQUoqP4DI+2Delctoadc3Zc4Kec9PvKzfiH6UFfllzRA92jkeDho9WQKAjfS+lR
-         vx4kaPB3x38wWt1g/NHiLTuTeg7kGCfVqBhzsqTaf0mbM0ht74F25BHSpsQRHCYPSxOP
-         j8eaUeq11HqNNwhGteAdG3oNIx2Pynzs+fH60zyTuQP7h0pETn1WG56XbtBJaxqdwVt3
-         zicg==
-X-Gm-Message-State: APjAAAVZFCKqCqqefJYRQ3GLK5KnZLiIFGmKKhhWGkO/LYiftrYEjDuR
-        Zgv43rnfCXiwYgQ+NfJzNhFlJF68/8JP7JwcMQvKbv7JpC9t6dKTk6OxuklE40lU1vviqng+lAa
-        56sfc7RtxZ9O7+Yju4gIFdsnx
-X-Received: by 2002:a05:620a:1326:: with SMTP id p6mr13887729qkj.50.1582300107004;
-        Fri, 21 Feb 2020 07:48:27 -0800 (PST)
-X-Google-Smtp-Source: APXvYqzZ5r0+jwSBeRkygk9EFdnmUIJfdBlfp8mfZ4GFs+3IU6OZoA6wUKcAnfNUKef1wSipRN9KMw==
-X-Received: by 2002:a05:620a:1326:: with SMTP id p6mr13887707qkj.50.1582300106779;
-        Fri, 21 Feb 2020 07:48:26 -0800 (PST)
-Received: from redhat.com (bzq-109-67-14-209.red.bezeqint.net. [109.67.14.209])
-        by smtp.gmail.com with ESMTPSA id o55sm1770202qtf.46.2020.02.21.07.48.19
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=LeI4uUAherKB7oCfyMKmC8mC9Xr3shtEsETnkdo6NKY=;
+        b=Eo+da3NWO8Dkj5cthOaFdu1UbSDvxFGyaylPCMOsmJihemDzPEpNU6wLF8sDukAq1u
+         eS6t0wlPuZYMKM3ssCrVQ7M/1FAyNW2UqrrCIS/OIX8LwEq0vHFI+6CFo8dWbLHuSp93
+         96iUGVeT0f/6Cam0NYK4rUiUdS3fTlkQ+Xth3wJ+L0zzQt0KM8YSs1opC/YF7DOJhKI+
+         zKjvvrbXnySHPPtdZQVYAzO89qGLN+sEE/wlqWXFnOcqjBkTzL6F6j2kaCPSxuXbuEsy
+         kUbmNHWQ1xFNX/RuwwKf8vYuMfyOIYLjnUeJteKCNwQ8oVmuis0twq2E5kteQ/bXVx2J
+         SOAQ==
+X-Gm-Message-State: APjAAAV38usQFCJE9GqUNalnRV3zv27mWaCd+2ERthDrgFgD/z8JGJxq
+        jjQOq3wAj7NTwRV9WPIbaV5dlAQkt04=
+X-Google-Smtp-Source: APXvYqxsLHrfDYzPsFWvn6is40yGLcNWGK+wdV+4cbAuhPNyi72AV/LyUrw6n6gSPS65K5YTI6GjRA==
+X-Received: by 2002:a1c:a1c3:: with SMTP id k186mr4502020wme.179.1582300124029;
+        Fri, 21 Feb 2020 07:48:44 -0800 (PST)
+Received: from localhost.localdomain (lfbn-nic-1-65-232.w2-15.abo.wanadoo.fr. [2.15.156.232])
+        by smtp.gmail.com with ESMTPSA id h10sm4267947wml.18.2020.02.21.07.48.39
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 21 Feb 2020 07:48:25 -0800 (PST)
-Date:   Fri, 21 Feb 2020 10:48:15 -0500
-From:   "Michael S. Tsirkin" <mst@redhat.com>
-To:     Halil Pasic <pasic@linux.ibm.com>
-Cc:     David Gibson <david@gibson.dropbear.id.au>,
-        Christoph Hellwig <hch@lst.de>,
-        Christian Borntraeger <borntraeger@de.ibm.com>,
-        Jason Wang <jasowang@redhat.com>,
-        Marek Szyprowski <m.szyprowski@samsung.com>,
-        Robin Murphy <robin.murphy@arm.com>,
-        linux-s390@vger.kernel.org,
-        virtualization@lists.linux-foundation.org,
-        linux-kernel@vger.kernel.org, iommu@lists.linux-foundation.org,
-        Janosch Frank <frankja@linux.ibm.com>,
-        Viktor Mihajlovski <mihajlov@linux.ibm.com>,
-        Cornelia Huck <cohuck@redhat.com>,
-        Ram Pai <linuxram@us.ibm.com>,
-        Thiago Jung Bauermann <bauerman@linux.ibm.com>,
-        "Lendacky, Thomas" <Thomas.Lendacky@amd.com>,
-        Michael Mueller <mimu@linux.ibm.com>
-Subject: Re: [PATCH 1/2] mm: move force_dma_unencrypted() to mem_encrypt.h
-Message-ID: <20200221104724-mutt-send-email-mst@kernel.org>
-References: <20200220160606.53156-1-pasic@linux.ibm.com>
- <20200220160606.53156-2-pasic@linux.ibm.com>
- <20200220161146.GA12709@lst.de>
- <4369f099-e4e4-4a58-b38b-642cf53ccca6@de.ibm.com>
- <20200220163135.GA13192@lst.de>
- <20200221032727.GC2298@umbus.fritz.box>
- <20200221140639.54928efe.pasic@linux.ibm.com>
+        Fri, 21 Feb 2020 07:48:43 -0800 (PST)
+From:   Bartosz Golaszewski <brgl@bgdev.pl>
+To:     Linus Walleij <linus.walleij@linaro.org>,
+        Srinivas Kandagatla <srinivas.kandagatla@linaro.org>,
+        Khouloud Touil <ktouil@baylibre.com>,
+        Geert Uytterhoeven <geert@linux-m68k.org>
+Cc:     linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Subject: [PATCH v5 0/5] nvmem/gpio: fix resource management
+Date:   Fri, 21 Feb 2020 16:48:32 +0100
+Message-Id: <20200221154837.18845-1-brgl@bgdev.pl>
+X-Mailer: git-send-email 2.25.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200221140639.54928efe.pasic@linux.ibm.com>
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Feb 21, 2020 at 02:06:39PM +0100, Halil Pasic wrote:
-> On Fri, 21 Feb 2020 14:27:27 +1100
-> David Gibson <david@gibson.dropbear.id.au> wrote:
-> 
-> > On Thu, Feb 20, 2020 at 05:31:35PM +0100, Christoph Hellwig wrote:
-> > > On Thu, Feb 20, 2020 at 05:23:20PM +0100, Christian Borntraeger wrote:
-> > > > >From a users perspective it makes absolutely perfect sense to use the
-> > > > bounce buffers when they are NEEDED. 
-> > > > Forcing the user to specify iommu_platform just because you need bounce buffers
-> > > > really feels wrong. And obviously we have a severe performance issue
-> > > > because of the indirections.
-> > > 
-> > > The point is that the user should not have to specify iommu_platform.
-> > > We need to make sure any new hypervisor (especially one that might require
-> > > bounce buffering) always sets it,
-> > 
-> > So, I have draft qemu patches which enable iommu_platform by default.
-> > But that's really because of other problems with !iommu_platform, not
-> > anything to do with bounce buffering or secure VMs.
-> > 
-> > The thing is that the hypervisor *doesn't* require bounce buffering.
-> > In the POWER (and maybe s390 as well) models for Secure VMs, it's the
-> > *guest*'s choice to enter secure mode, so the hypervisor has no reason
-> > to know whether the guest needs bounce buffering.  As far as the
-> > hypervisor and qemu are concerned that's a guest internal detail, it
-> > just expects to get addresses it can access whether those are GPAs
-> > (iommu_platform=off) or IOVAs (iommu_platform=on).
-> 
-> I very much agree!
-> 
-> > 
-> > > as was a rather bogus legacy hack
-> > 
-> > It was certainly a bad idea, but it was a bad idea that went into a
-> > public spec and has been widely deployed for many years.  We can't
-> > just pretend it didn't happen and move on.
-> > 
-> > Turning iommu_platform=on by default breaks old guests, some of which
-> > we still care about.  We can't (automatically) do it only for guests
-> > that need bounce buffering, because the hypervisor doesn't know that
-> > ahead of time.
-> 
-> Turning iommu_platform=on for virtio-ccw makes no sense whatsover,
-> because for CCW I/O there is no such thing as IOMMU and the addresses
-> are always physical addresses.
+From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
 
-Fix the name then. The spec calls is ACCESS_PLATFORM now, which
-makes much more sense.
+Hi Srinivas,
 
-> > 
-> > > that isn't extensibe for cases that for example require bounce buffering.
-> > 
-> > In fact bounce buffering isn't really the issue from the hypervisor
-> > (or spec's) point of view.  It's the fact that not all of guest memory
-> > is accessible to the hypervisor.  Bounce buffering is just one way the
-> > guest might deal with that.
-> > 
-> 
-> Agreed.
-> 
-> Regards,
-> Halil
-> 
-> 
-> 
+sorry for the lack of proper QA last time. This time the code is tested
+on real HW (Beagle Bone Black with an ACME cape) including the error
+path.
 
+--
+
+This series addresses a couple problems with memory management in nvmem
+core.
+
+First we fix a memory leak introduced in this release cycle. Next we extend
+the GPIO framework to use reference counting for GPIO descriptors. We then
+use it to fix the resource management problem with the write-protect pin.
+
+While the memory leak with wp-gpios is now in mainline - I'm not sure how
+to go about applying the kref patch. This is theoretically a new feature
+but it's also the cleanest way of fixing the problem.
+
+v1 -> v2:
+- make gpiod_ref() helper return
+- reorganize the series for easier merging
+- fix another memory leak
+
+v2 -> v3:
+- drop incorrect patches
+- add a patch adding a comment about resource management
+- extend the GPIO kref patch: only increment the reference count if the
+  descriptor is associated with a requested line
+
+v3 -> v4:
+- fixed the return value in error path in nvmem_register()
+- dropped patches already applied to the nvmem tree
+- dropped the patch adding the comment about resource management
+
+v4 -> v5:
+- don't reference nvmem once it's freed
+- add GPIO descriptor validation in gpiod_ref()
+
+Bartosz Golaszewski (4):
+  nvmem: fix memory leak in error path
+  gpiolib: provide VALIDATE_DESC_PTR() macro
+  gpiolib: use kref in gpio_desc
+  nvmem: increase the reference count of a gpio passed over config
+
+Khouloud Touil (1):
+  nvmem: release the write-protect pin
+
+ drivers/gpio/gpiolib.c        | 46 ++++++++++++++++++++++++++++++++---
+ drivers/gpio/gpiolib.h        |  1 +
+ drivers/nvmem/core.c          | 11 ++++++---
+ include/linux/gpio/consumer.h |  1 +
+ 4 files changed, 52 insertions(+), 7 deletions(-)
+
+-- 
+2.25.0
 
