@@ -2,79 +2,81 @@ Return-Path: <SRS0=1210=4J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2C9F6C35657
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 17:11:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 82A35C35646
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 17:11:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 04FF9222C4
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 17:11:40 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="LKDxhjnJ"
+	by mail.kernel.org (Postfix) with ESMTP id 5A7DD20722
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 17:11:50 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728331AbgBURLi (ORCPT
+        id S1728310AbgBURLt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Feb 2020 12:11:38 -0500
-Received: from us-smtp-2.mimecast.com ([207.211.31.81]:33167 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1727469AbgBURLi (ORCPT
+        Fri, 21 Feb 2020 12:11:49 -0500
+Received: from 7.mo4.mail-out.ovh.net ([178.33.253.54]:51657 "EHLO
+        7.mo4.mail-out.ovh.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727020AbgBURLs (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Feb 2020 12:11:38 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1582305097;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=oey+jiBKGtn4SGos1yizbcranLQ5vYUebcQ+ncI0qRE=;
-        b=LKDxhjnJZ3j+js7Vz5QQ+Wdc2noWDtkTY/88hyMbux2IkbjCF9Gf4OorO7l53PvH9qgGdU
-        jcj7KYlbh2Xv/2C968rnFSLeze037E64cE0w6nGxwZK92EhXVZapHiExDOYhxcv3qrmwjT
-        HV/3cN9OFflVU6b0tCdRQfmfHJFQ9p0=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-267-jvkJ_iX-OzyYb5WiRMdggg-1; Fri, 21 Feb 2020 12:11:35 -0500
-X-MC-Unique: jvkJ_iX-OzyYb5WiRMdggg-1
-Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id A2EEF8017CC;
-        Fri, 21 Feb 2020 17:11:33 +0000 (UTC)
-Received: from warthog.procyon.org.uk (ovpn-122-163.rdu2.redhat.com [10.10.122.163])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 10D3A8ECFD;
-        Fri, 21 Feb 2020 17:11:31 +0000 (UTC)
-Organization: Red Hat UK Ltd. Registered Address: Red Hat UK Ltd, Amberley
-        Place, 107-111 Peascod Street, Windsor, Berkshire, SI4 1TE, United
-        Kingdom.
-        Registered in England and Wales under Company Registration No. 3798903
-From:   David Howells <dhowells@redhat.com>
-In-Reply-To: <CAG48ez2vzgVgJw7-WKa1GbyLw2nJGvAnS21w=gHV02rUNheYFw@mail.gmail.com>
-References: <CAG48ez2vzgVgJw7-WKa1GbyLw2nJGvAnS21w=gHV02rUNheYFw@mail.gmail.com> <158204549488.3299825.3783690177353088425.stgit@warthog.procyon.org.uk> <158204561120.3299825.5242636508455859327.stgit@warthog.procyon.org.uk> <CAG48ez2B2J_3-+EjR20ukRu3noPnAccZsOTaea0jtKK4=+bkhQ@mail.gmail.com> <1897788.1582295034@warthog.procyon.org.uk> <CAG48ez2nFks+yN1Kp4TZisso+rjvv_4UW0FTo8iFUd4Qyq1qDw@mail.gmail.com> <2031798.1582302800@warthog.procyon.org.uk>
-To:     Jann Horn <jannh@google.com>
-Cc:     dhowells@redhat.com, Al Viro <viro@zeniv.linux.org.uk>,
-        raven@themaw.net, Miklos Szeredi <mszeredi@redhat.com>,
-        Christian Brauner <christian@brauner.io>,
-        Linux API <linux-api@vger.kernel.org>,
-        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
-        kernel list <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH 15/19] vfs: Add superblock notifications [ver #16]
+        Fri, 21 Feb 2020 12:11:48 -0500
+Received: from player157.ha.ovh.net (unknown [10.110.208.160])
+        by mo4.mail-out.ovh.net (Postfix) with ESMTP id 0018A227833
+        for <linux-kernel@vger.kernel.org>; Fri, 21 Feb 2020 17:55:39 +0100 (CET)
+Received: from sk2.org (82-65-25-201.subs.proxad.net [82.65.25.201])
+        (Authenticated sender: steve@sk2.org)
+        by player157.ha.ovh.net (Postfix) with ESMTPSA id B88B6FA5BCB3;
+        Fri, 21 Feb 2020 16:55:32 +0000 (UTC)
+From:   Stephen Kitt <steve@sk2.org>
+To:     Jonathan Corbet <corbet@lwn.net>, Ingo Molnar <mingo@redhat.com>,
+        Thomas Gleixner <tglx@linutronix.de>, x86@kernel.org,
+        linux-doc@vger.kernel.org
+Cc:     linux-kernel@vger.kernel.org, Stephen Kitt <steve@sk2.org>
+Subject: [PATCH] docs: sysctl/kernel: document acpi_video_flags
+Date:   Fri, 21 Feb 2020 17:55:02 +0100
+Message-Id: <20200221165502.31770-1-steve@sk2.org>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-ID: <2125808.1582305091.1@warthog.procyon.org.uk>
-Date:   Fri, 21 Feb 2020 17:11:31 +0000
-Message-ID: <2125809.1582305091@warthog.procyon.org.uk>
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
+Content-Transfer-Encoding: 8bit
+X-Ovh-Tracer-Id: 831758559125065093
+X-VR-SPAMSTATE: OK
+X-VR-SPAMSCORE: -100
+X-VR-SPAMCAUSE: gggruggvucftvghtrhhoucdtuddrgedugedrkeeggdelhecutefuodetggdotefrodftvfcurfhrohhfihhlvgemucfqggfjpdevjffgvefmvefgnecuuegrihhlohhuthemucehtddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenucfjughrpefhvffufffkofgggfestdekredtredttdenucfhrhhomhepufhtvghphhgvnhcumfhithhtuceoshhtvghvvgesshhkvddrohhrgheqnecukfhppedtrddtrddtrddtpdekvddrieehrddvhedrvddtudenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepmhhouggvpehsmhhtphdqohhuthdphhgvlhhopehplhgrhigvrhduheejrdhhrgdrohhvhhdrnhgvthdpihhnvghtpedtrddtrddtrddtpdhmrghilhhfrhhomhepshhtvghvvgesshhkvddrohhrghdprhgtphhtthhopehlihhnuhigqdhkvghrnhgvlhesvhhgvghrrdhkvghrnhgvlhdrohhrgh
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Jann Horn <jannh@google.com> wrote:
+Based on the implementation in arch/x86/kernel/acpi/sleep.c, in
+particular the acpi_sleep_setup() function.
 
-> If another thread concurrently runs close(watch_fd)
+Signed-off-by: Stephen Kitt <steve@sk2.org>
+---
+ Documentation/admin-guide/sysctl/kernel.rst | 11 +++++++++--
+ 1 file changed, 9 insertions(+), 2 deletions(-)
 
-Fair point.  We have the watch queue pinned, but watch_queue_clear() is called
-before the ref is released.
-
-David
+diff --git a/Documentation/admin-guide/sysctl/kernel.rst b/Documentation/admin-guide/sysctl/kernel.rst
+index 534781ba3eac..1c48ab4bfe30 100644
+--- a/Documentation/admin-guide/sysctl/kernel.rst
++++ b/Documentation/admin-guide/sysctl/kernel.rst
+@@ -54,8 +54,15 @@ free space valid for 30 seconds.
+ acpi_video_flags
+ ================
+ 
+-See Documentation/kernel/power/video.txt, it allows mode of video boot
+-to be set during run time.
++See :doc:`/power/video`. This allows the video resume mode to be set,
++in a similar fashion to the ``acpi_sleep`` kernel parameter, by
++combining the following values:
++
++= =======
++1 s3_bios
++2 s3_mode
++4 s3_beep
++= =======
+ 
+ 
+ auto_msgmni
+-- 
+2.20.1
 
