@@ -2,101 +2,114 @@ Return-Path: <SRS0=1210=4J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 56DCAC35646
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 14:27:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 92A9EC35657
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 14:28:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2BBB2222C4
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 14:27:54 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582295274;
-	bh=OHkc41Ewzlq6yQkTtkKDt/JRxgXyYlL7UsaHQsVwVwQ=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=oh1DvQcbiAaVO32INwo4QMeC29DRAu9PCtDC4Dx7zStoz23oleRe8WuzIEqXlTywG
-	 T8J/+BYMI3/PSxHm2PsdAC9IGWabw6YIPViQKn7vyv32/tnewEd5UDTrl582pTItDn
-	 wszyM0QDepiCBppJUuB6hnBCN8EKIkPm1RKDvb10=
+	by mail.kernel.org (Postfix) with ESMTP id 61B5724650
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 14:28:20 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="YxyjHCnK"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728656AbgBUO1x (ORCPT
+        id S1728798AbgBUO2T (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Feb 2020 09:27:53 -0500
-Received: from mail.kernel.org ([198.145.29.99]:45474 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727096AbgBUO1w (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Feb 2020 09:27:52 -0500
-Received: from devnote2 (NE2965lan1.rev.em-net.ne.jp [210.141.244.193])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 31F8E208C4;
-        Fri, 21 Feb 2020 14:27:49 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1582295272;
-        bh=OHkc41Ewzlq6yQkTtkKDt/JRxgXyYlL7UsaHQsVwVwQ=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=UQtMMLuKKo/t/cAEesylrkbofSEiztAfZDQSeuzIJtqjrd5UXpwFb2XXYwu7m2c6b
-         xfp7biZEpr9LuxDDBXehsh77kDdTYzzEmURcY/KIubmS42ZJ8l12c0nb0mTdzwihif
-         yWpt/F81vGUF0pkCJ6nKrwHagNj14JUWEYHIg6hU=
-Date:   Fri, 21 Feb 2020 23:27:46 +0900
-From:   Masami Hiramatsu <mhiramat@kernel.org>
-To:     Will Deacon <will@kernel.org>
-Cc:     linux-kernel@vger.kernel.org, kernel-team@android.com,
-        akpm@linux-foundation.org,
-        "K . Prasad" <prasad@linux.vnet.ibm.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Frederic Weisbecker <frederic@kernel.org>,
-        Christoph Hellwig <hch@lst.de>,
-        Quentin Perret <qperret@google.com>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Masami Hiramatsu <mhiramat@kernel.org>
-Subject: Re: [PATCH 0/3] Unexport kallsyms_lookup_name() and
- kallsyms_on_each_symbol()
-Message-Id: <20200221232746.6eb84111a0d385bed71613ff@kernel.org>
-In-Reply-To: <20200221114404.14641-1-will@kernel.org>
-References: <20200221114404.14641-1-will@kernel.org>
-X-Mailer: Sylpheed 3.5.1 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
-Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+        Fri, 21 Feb 2020 09:28:19 -0500
+Received: from mail-pj1-f67.google.com ([209.85.216.67]:32907 "EHLO
+        mail-pj1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727096AbgBUO2R (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 21 Feb 2020 09:28:17 -0500
+Received: by mail-pj1-f67.google.com with SMTP id m7so2256034pjs.0;
+        Fri, 21 Feb 2020 06:28:17 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=sender:subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=b07MWTn4cm5EQDnXMvps62Xb+DMWIEbzB/N2nZP5EJc=;
+        b=YxyjHCnKvD+YTlSVeD2WndCNtWCgtNBt3DoWN2SY3iTVE0tVoHI4cETnpNKHgZ6zZv
+         IiY97qUXT4cBsNlONXv2XM1sH7E24Gylxc2TNmbAv1i9GunXTBIQ8EU8AM7pYZbM+xpf
+         dFEoz+Cl7Kjqsq9ABsGyyo8cafmZxbRJ5wwvrGqwKuXOy5AAm9lZP5Y1o1ib8Mkl4T4/
+         tdbu94mhT0NASbb713Vp3YKZT6HQTpc9MpXQbFtJAv5JbR3+zx7bvf1arCW7oK0Kquf/
+         yHmzcT3q5kM9keK603WNadGKLdg0PJA27U1OJDAdvAdUbDyQn8ON+O2ctUrAcE0unTPo
+         4EMg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:subject:to:cc:references:from:message-id
+         :date:user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=b07MWTn4cm5EQDnXMvps62Xb+DMWIEbzB/N2nZP5EJc=;
+        b=Zqd6yZl6s/mH35aeKS0CrpS73SuEXoL/v2H6fbMRua2K4maV+rqzSRABPbyVrl8DrY
+         JnE9tzjzx5MCU4TSH46/SdKJUTOZL3N+wOXxloawSQxCssh/WEjyLi2oELiQ7WxY+CaT
+         lkBkbhiy8BF+6XWTsqTVpeOMost11AFIpygouwEvylcFZppuIh7MdTjR7VbShPnEWfnr
+         jMC0cu8K0IL2Du+zzfREeMnwAHCOctj8/gC0uMNfbx+XtrMgP1JmlchCP/dp3wB+SP2q
+         4hwlnKbOmXL6GjLeg3uHcMAlm19soNvWVZ2Joag+2BIEjjr84GwXvqmMIbYnJfSRIfbE
+         PtUQ==
+X-Gm-Message-State: APjAAAUu08v9VBZsGRtzrkrtRAjQE1zshUlyk9hc0zJKJg8gcNsBBPrF
+        U/IRDWMqmls8lw7dJaNzvFQ7CUCu
+X-Google-Smtp-Source: APXvYqzAXQTHNbdbQHNiXtkaONDUCcFbsbpalG9qfDUodFeWGInCtGpHbOlNkclGQ/tzE1OxpHmrtg==
+X-Received: by 2002:a17:902:b215:: with SMTP id t21mr36597410plr.190.1582295296551;
+        Fri, 21 Feb 2020 06:28:16 -0800 (PST)
+Received: from server.roeck-us.net ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
+        by smtp.gmail.com with ESMTPSA id f81sm3069725pfa.118.2020.02.21.06.28.15
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 21 Feb 2020 06:28:15 -0800 (PST)
+Subject: Re: [PATCH 5.4 000/344] 5.4.22-stable review
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-kernel@vger.kernel.org
+Cc:     torvalds@linux-foundation.org, akpm@linux-foundation.org,
+        shuah@kernel.org, patches@kernelci.org,
+        ben.hutchings@codethink.co.uk, lkft-triage@lists.linaro.org,
+        stable@vger.kernel.org
+References: <20200221072349.335551332@linuxfoundation.org>
+From:   Guenter Roeck <linux@roeck-us.net>
+Message-ID: <4e8cb265-4745-4249-45e4-86bd84f068ed@roeck-us.net>
+Date:   Fri, 21 Feb 2020 06:28:14 -0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.1
+MIME-Version: 1.0
+In-Reply-To: <20200221072349.335551332@linuxfoundation.org>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
 Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Will,
-
-On Fri, 21 Feb 2020 11:44:01 +0000
-Will Deacon <will@kernel.org> wrote:
-
-> Hi folks,
+On 2/20/20 11:36 PM, Greg Kroah-Hartman wrote:
+> This is the start of the stable review cycle for the 5.4.22 release.
+> There are 344 patches in this series, all will be posted as a response
+> to this one.  If anyone has any issues with these being applied, please
+> let me know.
 > 
-> Despite having just a single modular in-tree user that I could spot,
-> kallsyms_lookup_name() is exported to modules and provides a mechanism
-> for out-of-tree modules to access and invoke arbitrary, non-exported
-> kernel symbols when kallsyms is enabled.
+> Responses should be made by Sun, 23 Feb 2020 07:19:49 +0000.
+> Anything received after that time might be too late.
 > 
-> This patch series fixes up that one user and unexports the symbol along
-> with kallsyms_on_each_symbol(), since that could also be abused in a
-> similar manner.
 
-What kind of issue would you like to fix with this?
-There are many ways to find (estimate) symbol address, especially, if
-the programmer already has the symbol map, it is *very* easy to find
-the target symbol address even from one exported symbol (the distance
-of 2 symbols doesn't change.) If not, they can use kprobes to find
-their required symbol address. If they have a time, they can use
-snprintf("%pF") to search symbol.
+As already reported:
 
-So, for me, this series just make it hard for casual developers (but
-maybe they will find the answer on any technical Q&A site soon).
+Build reference: v5.4.21-345-gbae6e9bf73af
+gcc version: arm-linux-gnueabi-gcc (GCC) 9.2.0
 
-Hmm, are there other good way to detect such bad-manner out-of-tree
-module and reject them? What about decoding them and monitor their
-all call instructions? 
+Building arm:allmodconfig ... failed
+Building arm:omap2plus_defconfig ... failed
+--------------
+Error log:
+arch/arm/mach-omap2/pdata-quirks.c:27:10: fatal error: linux/platform_data/ti-prm.h: No such file or directory
 
-Thank you,
+Also:
 
--- 
-Masami Hiramatsu <mhiramat@kernel.org>
+Building powerpc:defconfig ... failed
+Building powerpc:mpc83xx_defconfig ... failed
+--------------
+Error log:
+drivers/rtc/rtc-ds1307.c:1570:21: error: variable 'regmap_config' has initializer but incomplete type
+
+as well as various follow-up errors.
+
+The second problem affects both v5.4.y and v5.5.y.
+
+Guenter
