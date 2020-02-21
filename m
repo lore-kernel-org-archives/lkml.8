@@ -5,49 +5,49 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5635CC35641
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 08:05:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E8492C35640
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 08:05:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 29EFF2073A
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 08:05:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B4F4020801
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 08:05:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582272320;
-	bh=bIUhgvbENbjbfeGT1NXqOge+ohLg9lrTyqs72y8flXg=;
+	s=default; t=1582272323;
+	bh=vwGKyhXHR/VC6+b9YGNFulZZs4DD0OXFatVpw++SAo0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=GlDTjBL45GupVbrojmZbkgUwl/FpgoKr3aNRSfxBRcIN2oDdD53jtZSvf7reHveAC
-	 uBfLSXNn1Dm1FomUPVGcnY7SQemkaw5S4/AB2xkSWtdozrym4plNf7ludhl5frD5zm
-	 JCRGCXpVrvI2MR7DPc9z7IdbyfVoezc4NdzZqU4Y=
+	b=y6GMIbuDt1m7cGo5UoU2B+lkKz0mKHPJmj4yYxA2O6f8WIUgjnVcj/vdmWT7nZ8iK
+	 YdjZgjMsHTuX/qSejjJQMv2KlR72vh8NYrPFCZ6LX6vFRggn1fBYpxcxv/PNHPhxbP
+	 fjs6jwa+f7HYthdr84TRaarkq9sHTjgdvUlhBTgo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731789AbgBUIFT (ORCPT
+        id S1731807AbgBUIFW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Feb 2020 03:05:19 -0500
-Received: from mail.kernel.org ([198.145.29.99]:38666 "EHLO mail.kernel.org"
+        Fri, 21 Feb 2020 03:05:22 -0500
+Received: from mail.kernel.org ([198.145.29.99]:38728 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731775AbgBUIFQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Feb 2020 03:05:16 -0500
+        id S1731615AbgBUIFS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 21 Feb 2020 03:05:18 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 755552073A;
-        Fri, 21 Feb 2020 08:05:14 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 174FC222C4;
+        Fri, 21 Feb 2020 08:05:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1582272314;
-        bh=bIUhgvbENbjbfeGT1NXqOge+ohLg9lrTyqs72y8flXg=;
+        s=default; t=1582272317;
+        bh=vwGKyhXHR/VC6+b9YGNFulZZs4DD0OXFatVpw++SAo0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=PZNGp7AYoaUJVAKcZAQP1tB5Pf7gVZm/vy/0/IbPLH0Nb3qozxdyvLJfvORgGhUux
-         NMX2RbAiT9pP9fYFZxcYhNsInPJ5b5tkJ8MR6qQR4BW899QH+MWa8ITI+irkkRbvOQ
-         4Dkyf7rWhfblp1iD4X49brUDovp+/0DVtdsY6cso=
+        b=sZNDAvL6o2LwDUZa4m/KELyP/RBi/DmKgfMlB8vwaTWoFBGJw81b3A3MaXziA8Zs+
+         o6TBLOr4pH5P7I1kE3ea70bCbPdyWXIROLDWqNqo9qgG0ARebix2Q/xFyHizr536De
+         gb3Lw1MzbbOd7z7EtExDy9hOrknZdCIBiy8rRHKk=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, yu kuai <yukuai3@huawei.com>,
-        Alex Deucher <alexander.deucher@amd.com>,
+        stable@vger.kernel.org, Wen Gong <wgong@codeaurora.org>,
+        Kalle Valo <kvalo@codeaurora.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 095/344] drm/amdgpu: remove 4 set but not used variable in amdgpu_atombios_get_connector_info_from_object_table
-Date:   Fri, 21 Feb 2020 08:38:14 +0100
-Message-Id: <20200221072357.586354847@linuxfoundation.org>
+Subject: [PATCH 5.4 096/344] ath10k: correct the tlv len of ath10k_wmi_tlv_op_gen_config_pno_start
+Date:   Fri, 21 Feb 2020 08:38:15 +0100
+Message-Id: <20200221072357.671708900@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200221072349.335551332@linuxfoundation.org>
 References: <20200221072349.335551332@linuxfoundation.org>
@@ -60,72 +60,51 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: yu kuai <yukuai3@huawei.com>
+From: Wen Gong <wgong@codeaurora.org>
 
-[ Upstream commit bae028e3e521e8cb8caf2cc16a455ce4c55f2332 ]
+[ Upstream commit e01cc82c4d1ec3bddcbb7cd991cf5dc0131ed9a1 ]
 
-Fixes gcc '-Wunused-but-set-variable' warning:
+the tlv len is set to the total len of the wmi cmd, it will trigger
+firmware crash, correct the tlv len.
 
-drivers/gpu/drm/amd/amdgpu/amdgpu_atombios.c: In function
-'amdgpu_atombios_get_connector_info_from_object_table':
-drivers/gpu/drm/amd/amdgpu/amdgpu_atombios.c:376:26: warning: variable
-'grph_obj_num' set but not used [-Wunused-but-set-variable]
-drivers/gpu/drm/amd/amdgpu/amdgpu_atombios.c:376:13: warning: variable
-'grph_obj_id' set but not used [-Wunused-but-set-variable]
-drivers/gpu/drm/amd/amdgpu/amdgpu_atombios.c:341:37: warning: variable
-'con_obj_type' set but not used [-Wunused-but-set-variable]
-drivers/gpu/drm/amd/amdgpu/amdgpu_atombios.c:341:24: warning: variable
-'con_obj_num' set but not used [-Wunused-but-set-variable]
+Tested with QCA6174 SDIO with firmware
+WLAN.RMH.4.4.1-00017-QCARMSWP-1 and QCA6174
+PCIE with firmware WLAN.RM.4.4.1-00110-QCARMSWPZ-1.
 
-They are never used, so can be removed.
-
-Fixes: d38ceaf99ed0 ("drm/amdgpu: add core driver (v4)")
-Signed-off-by: yu kuai <yukuai3@huawei.com>
-Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
+Fixes: ce834e280f2f875 ("ath10k: support NET_DETECT WoWLAN feature")
+Signed-off-by: Wen Gong <wgong@codeaurora.org>
+Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/gpu/drm/amd/amdgpu/amdgpu_atombios.c | 19 ++-----------------
- 1 file changed, 2 insertions(+), 17 deletions(-)
+ drivers/net/wireless/ath/ath10k/wmi-tlv.c | 5 ++++-
+ 1 file changed, 4 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/gpu/drm/amd/amdgpu/amdgpu_atombios.c b/drivers/gpu/drm/amd/amdgpu/amdgpu_atombios.c
-index 1c9d40f97a9b2..f2f40f05fa5c7 100644
---- a/drivers/gpu/drm/amd/amdgpu/amdgpu_atombios.c
-+++ b/drivers/gpu/drm/amd/amdgpu/amdgpu_atombios.c
-@@ -338,17 +338,9 @@ bool amdgpu_atombios_get_connector_info_from_object_table(struct amdgpu_device *
- 		path_size += le16_to_cpu(path->usSize);
+diff --git a/drivers/net/wireless/ath/ath10k/wmi-tlv.c b/drivers/net/wireless/ath/ath10k/wmi-tlv.c
+index 4d5d10c010645..eb0c963d9fd51 100644
+--- a/drivers/net/wireless/ath/ath10k/wmi-tlv.c
++++ b/drivers/net/wireless/ath/ath10k/wmi-tlv.c
+@@ -3650,6 +3650,7 @@ ath10k_wmi_tlv_op_gen_config_pno_start(struct ath10k *ar,
+ 	struct wmi_tlv *tlv;
+ 	struct sk_buff *skb;
+ 	__le32 *channel_list;
++	u16 tlv_len;
+ 	size_t len;
+ 	void *ptr;
+ 	u32 i;
+@@ -3707,10 +3708,12 @@ ath10k_wmi_tlv_op_gen_config_pno_start(struct ath10k *ar,
+ 	/* nlo_configured_parameters(nlo_list) */
+ 	cmd->no_of_ssids = __cpu_to_le32(min_t(u8, pno->uc_networks_count,
+ 					       WMI_NLO_MAX_SSIDS));
++	tlv_len = __le32_to_cpu(cmd->no_of_ssids) *
++		sizeof(struct nlo_configured_parameters);
  
- 		if (device_support & le16_to_cpu(path->usDeviceTag)) {
--			uint8_t con_obj_id, con_obj_num, con_obj_type;
--
--			con_obj_id =
-+			uint8_t con_obj_id =
- 			    (le16_to_cpu(path->usConnObjectId) & OBJECT_ID_MASK)
- 			    >> OBJECT_ID_SHIFT;
--			con_obj_num =
--			    (le16_to_cpu(path->usConnObjectId) & ENUM_ID_MASK)
--			    >> ENUM_ID_SHIFT;
--			con_obj_type =
--			    (le16_to_cpu(path->usConnObjectId) &
--			     OBJECT_TYPE_MASK) >> OBJECT_TYPE_SHIFT;
+ 	tlv = ptr;
+ 	tlv->tag = __cpu_to_le16(WMI_TLV_TAG_ARRAY_STRUCT);
+-	tlv->len = __cpu_to_le16(len);
++	tlv->len = __cpu_to_le16(tlv_len);
  
- 			/* Skip TV/CV support */
- 			if ((le16_to_cpu(path->usDeviceTag) ==
-@@ -373,14 +365,7 @@ bool amdgpu_atombios_get_connector_info_from_object_table(struct amdgpu_device *
- 			router.ddc_valid = false;
- 			router.cd_valid = false;
- 			for (j = 0; j < ((le16_to_cpu(path->usSize) - 8) / 2); j++) {
--				uint8_t grph_obj_id, grph_obj_num, grph_obj_type;
--
--				grph_obj_id =
--				    (le16_to_cpu(path->usGraphicObjIds[j]) &
--				     OBJECT_ID_MASK) >> OBJECT_ID_SHIFT;
--				grph_obj_num =
--				    (le16_to_cpu(path->usGraphicObjIds[j]) &
--				     ENUM_ID_MASK) >> ENUM_ID_SHIFT;
-+				uint8_t grph_obj_type=
- 				grph_obj_type =
- 				    (le16_to_cpu(path->usGraphicObjIds[j]) &
- 				     OBJECT_TYPE_MASK) >> OBJECT_TYPE_SHIFT;
+ 	ptr += sizeof(*tlv);
+ 	nlo_list = ptr;
 -- 
 2.20.1
 
