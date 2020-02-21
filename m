@@ -2,121 +2,158 @@ Return-Path: <SRS0=1210=4J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CDDEDC11D00
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 01:53:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9DFC1C11D00
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 01:53:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A1E3A24672
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 01:53:43 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582250023;
-	bh=kxnBMkPQlpPktAVe+rlFZ9ldhcYK8N2luly8CBV3iC8=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=DJOByNhDnZUTGJf500D4AQ4EWTpvUNwTa68kBat/Y988fca+NMEhGv/PlV9CvV8Jb
-	 9MHkEc+e/jDloOikQzIvtiA1YD/e7nvfNMNUtiV6DUTPAvJ2l+LOPStqBlK66cmHh3
-	 TVyHUuRYlUE5HpSAVHAhxi+XXLummovIQkUage3Y=
+	by mail.kernel.org (Postfix) with ESMTP id 729742465D
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 01:53:49 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="IcfdLuIy"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729667AbgBUBxm (ORCPT
+        id S1729694AbgBUBxr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Feb 2020 20:53:42 -0500
-Received: from mail.kernel.org ([198.145.29.99]:57384 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729629AbgBUBxj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Feb 2020 20:53:39 -0500
-Received: from quaco.ghostprotocols.net (unknown [179.97.37.151])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B7211206E2;
-        Fri, 21 Feb 2020 01:53:34 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1582250019;
-        bh=kxnBMkPQlpPktAVe+rlFZ9ldhcYK8N2luly8CBV3iC8=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=zVvhI6PcinajTRSoYMb3YJrVyX/4nT+k57baYRahrW/SSvbY2soMTu6UeUGFH/H6v
-         EylSJW8KmPxmc2TRupD1wkQc1Rq+settujf+oKxrOp+8+cIH+QCrHzOwXJ9cblvD+y
-         +vS6bK7uylbCU5Y9GD+CBF6ddwPH8+3PDSzah+cY=
-From:   Arnaldo Carvalho de Melo <acme@kernel.org>
-To:     Ingo Molnar <mingo@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>
-Cc:     Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>,
-        Clark Williams <williams@redhat.com>,
-        linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
-        Wei Li <liwei391@huawei.com>, Leo Yan <leo.yan@linaro.org>,
-        Mathieu Poirier <mathieu.poirier@linaro.org>,
-        Jiri Olsa <jolsa@redhat.com>,
-        Tan Xiaojun <tanxiaojun@huawei.com>, stable@vger.kernel.org,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        Arnaldo Carvalho de Melo <acme@redhat.com>
-Subject: [PATCH 5/8] perf cs-etm: Fix endless record after being terminated
-Date:   Thu, 20 Feb 2020 22:53:07 -0300
-Message-Id: <20200221015310.16914-6-acme@kernel.org>
-X-Mailer: git-send-email 2.21.1
-In-Reply-To: <20200221015310.16914-1-acme@kernel.org>
-References: <20200221015310.16914-1-acme@kernel.org>
+        Thu, 20 Feb 2020 20:53:47 -0500
+Received: from hqnvemgate25.nvidia.com ([216.228.121.64]:6695 "EHLO
+        hqnvemgate25.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729676AbgBUBxp (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 20 Feb 2020 20:53:45 -0500
+Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate25.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5e4f38060000>; Thu, 20 Feb 2020 17:53:10 -0800
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate101.nvidia.com (PGP Universal service);
+  Thu, 20 Feb 2020 17:53:43 -0800
+X-PGP-Universal: processed;
+        by hqpgpgate101.nvidia.com on Thu, 20 Feb 2020 17:53:43 -0800
+Received: from [10.110.48.28] (10.124.1.5) by HQMAIL107.nvidia.com
+ (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Fri, 21 Feb
+ 2020 01:53:43 +0000
+Subject: Re: [PATCH] mm/page_alloc: increase default min_free_kbytes bound
+To:     Joel Savitz <jsavitz@redhat.com>, <linux-kernel@vger.kernel.org>
+CC:     Andrew Morton <akpm@linux-foundation.org>,
+        Rafael Aquini <aquini@redhat.com>, <linux-mm@kvack.org>
+References: <20200220150103.5183-1-jsavitz@redhat.com>
+From:   John Hubbard <jhubbard@nvidia.com>
+X-Nvconfidentiality: public
+Message-ID: <4778f04b-7ff0-0648-1ff9-dd02c79f45ea@nvidia.com>
+Date:   Thu, 20 Feb 2020 17:53:42 -0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.5.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200220150103.5183-1-jsavitz@redhat.com>
+X-Originating-IP: [10.124.1.5]
+X-ClientProxiedBy: HQMAIL111.nvidia.com (172.20.187.18) To
+ HQMAIL107.nvidia.com (172.20.187.13)
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1582249990; bh=ZgqXP5uwpGcW0RceBT61zrwGEA5iC5CnbKuv9h2cRIU=;
+        h=X-PGP-Universal:Subject:To:CC:References:From:X-Nvconfidentiality:
+         Message-ID:Date:User-Agent:MIME-Version:In-Reply-To:
+         X-Originating-IP:X-ClientProxiedBy:Content-Type:Content-Language:
+         Content-Transfer-Encoding;
+        b=IcfdLuIyghaknA70cfsOuxsWbfNUyaGVDOj3dFHpp+X7LvYA46mp7IKBegdJ0kAFj
+         m105kyXVSvq1qyACSdc8vA2Ucq+k4SAEYvDRLqnScKUNpRGHAwgwaADoYaB3xuK/LR
+         weEtSggSSo5i/xZC7EmcivrIwwAT/tgwiQnIyFmHK3m35RN61TLkDpmku6lY5BecYf
+         vSYpzkW0huWld4MgPZq5bt7V2kKI8OgAaM5aLoUr6YYgmYynatnsbeeRvjCdv2agHd
+         2JZ5DFAG/f3DM3bZmAaO32LOpifLnGQitjo8oxI+DI6sa/KYVPjWCGnXI2ee2qZ0Zp
+         0Sh0njGNLEUdQ==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Wei Li <liwei391@huawei.com>
+On 2/20/20 7:01 AM, Joel Savitz wrote:
+> 
+> Currently, the vm.min_free_kbytes sysctl value is capped at a hardcoded
+> 64M in init_per_zone_wmark_min (unless it is overridden by khugepaged
+> initialization).
+> 
+> This value has not been modified since 2005, and enterprise-grade
+> systems now frequently have hundreds of GB of RAM and multiple 10, 40,
+> or even 100 GB NICs. We have seen page allocation failures on heavily
+> loaded systems related to NIC drivers. These issues were resolved by an
+> increase to vm.min_free_kbytes.
+> 
+> This patch increases the hardcoded value by a factor of 4 as a temporary
+> solution.
+> 
+> Further work to make the calculation of vm.min_free_kbytes more
+> consistent throughout the kernel would be desirable.
+> 
+> As an example of the inconsistency of the current method, this value is
+> recalculated by init_per_zone_wmark_min() in the case of memory hotplug
+> which will override the value set by set_recommended_min_free_kbytes()
+> called during khugepaged initialization even if khugepaged remains
+> enabled, however an on/off toggle of khugepaged will then recalculate
+> and set the value via set_recommended_min_free_kbytes().
+> 
+> Signed-off-by: Joel Savitz <jsavitz@redhat.com>
+> ---
+>  mm/page_alloc.c | 4 ++--
+>  1 file changed, 2 insertions(+), 2 deletions(-)
+> 
+> diff --git a/mm/page_alloc.c b/mm/page_alloc.c
+> index 3c4eb750a199..32cbfb13e958 100644
+> --- a/mm/page_alloc.c
+> +++ b/mm/page_alloc.c
+> @@ -7867,8 +7867,8 @@ int __meminit init_per_zone_wmark_min(void)
+>  		min_free_kbytes = new_min_free_kbytes;
+>  		if (min_free_kbytes < 128)
+>  			min_free_kbytes = 128;
+> -		if (min_free_kbytes > 65536)
+> -			min_free_kbytes = 65536;
+> +		if (min_free_kbytes > 262144)
+> +			min_free_kbytes = 262144;
 
-In __cmd_record(), when receiving SIGINT(ctrl + c), a 'done' flag will
-be set and the event list will be disabled by evlist__disable() once.
 
-While in auxtrace_record.read_finish(), the related events will be
-enabled again, if they are continuous, the recording seems to be
-endless.
+Would it be any better to at least use symbols, instead of numbers, in the
+routine? Like this:
 
-If the cs_etm event is disabled, we don't enable it again here.
-
-Note: This patch is NOT tested since i don't have such a machine with
-coresight feature, but the code seems buggy same as arm-spe and
-intel-pt.
-
-Tester notes:
-
-Thanks for looping, Adrian.  Applied this patch and tested with
-CoreSight on juno board, it works well.
-
-Signed-off-by: Wei Li <liwei391@huawei.com>
-Reviewed-by: Leo Yan <leo.yan@linaro.org>
-Reviewed-by: Mathieu Poirier <mathieu.poirier@linaro.org>
-Tested-by: Leo Yan <leo.yan@linaro.org>
-Cc: Jiri Olsa <jolsa@redhat.com>
-Cc: Tan Xiaojun <tanxiaojun@huawei.com>
-Cc: stable@vger.kernel.org # 5.4+
-Link: http://lore.kernel.org/lkml/20200214132654.20395-4-adrian.hunter@intel.com
-[ahunter: removed redundant 'else' after 'return']
-Signed-off-by: Adrian Hunter <adrian.hunter@intel.com>
-Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
----
- tools/perf/arch/arm/util/cs-etm.c | 5 ++++-
- 1 file changed, 4 insertions(+), 1 deletion(-)
-
-diff --git a/tools/perf/arch/arm/util/cs-etm.c b/tools/perf/arch/arm/util/cs-etm.c
-index 2898cfdf8fe1..60141c3007a9 100644
---- a/tools/perf/arch/arm/util/cs-etm.c
-+++ b/tools/perf/arch/arm/util/cs-etm.c
-@@ -865,9 +865,12 @@ static int cs_etm_read_finish(struct auxtrace_record *itr, int idx)
- 	struct evsel *evsel;
+diff --git a/mm/page_alloc.c b/mm/page_alloc.c
+index 3c4eb750a199..e705636bb644 100644
+--- a/mm/page_alloc.c
++++ b/mm/page_alloc.c
+@@ -149,6 +149,9 @@ DEFINE_STATIC_KEY_FALSE(init_on_free);
+ #endif
+ EXPORT_SYMBOL(init_on_free);
  
- 	evlist__for_each_entry(ptr->evlist, evsel) {
--		if (evsel->core.attr.type == ptr->cs_etm_pmu->type)
-+		if (evsel->core.attr.type == ptr->cs_etm_pmu->type) {
-+			if (evsel->disabled)
-+				return 0;
- 			return perf_evlist__enable_event_idx(ptr->evlist,
- 							     evsel, idx);
-+		}
- 	}
++static const int MIN_FREE_KBYTES_LOWER_LIMIT = 128;
++static const int MIN_FREE_KBYTES_UPPER_LIMIT = 262144;
++
+ static int __init early_init_on_alloc(char *buf)
+ {
+        int ret;
+@@ -7865,10 +7868,10 @@ int __meminit init_per_zone_wmark_min(void)
  
- 	return -EINVAL;
+        if (new_min_free_kbytes > user_min_free_kbytes) {
+                min_free_kbytes = new_min_free_kbytes;
+-               if (min_free_kbytes < 128)
+-                       min_free_kbytes = 128;
+-               if (min_free_kbytes > 65536)
+-                       min_free_kbytes = 65536;
++               if (min_free_kbytes < MIN_FREE_KBYTES_LOWER_LIMIT)
++                       min_free_kbytes = MIN_FREE_KBYTES_LOWER_LIMIT;
++               if (min_free_kbytes > MIN_FREE_KBYTES_UPPER_LIMIT)
++                       min_free_kbytes = MIN_FREE_KBYTES_UPPER_LIMIT;
+        } else {
+                pr_warn("min_free_kbytes is not updated to %d because user defined value %d is preferred\n",
+                                new_min_free_kbytes, user_min_free_kbytes);
+
+
+thanks,
 -- 
-2.21.1
+John Hubbard
+NVIDIA
 
+
+>  	} else {
+>  		pr_warn("min_free_kbytes is not updated to %d because user defined value %d is preferred\n",
+>  				new_min_free_kbytes, user_min_free_kbytes);
+> 
