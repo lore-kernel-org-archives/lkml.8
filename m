@@ -2,56 +2,57 @@ Return-Path: <SRS0=1210=4J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 258F8C11D00
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 03:29:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9F8AFC11D00
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 03:29:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EDB94222C4
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 03:29:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7607220716
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 03:29:32 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729927AbgBUD32 (ORCPT
+        id S1729917AbgBUD31 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Feb 2020 22:29:28 -0500
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:54260 "EHLO
-        mx0b-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1729612AbgBUD2V (ORCPT
+        Thu, 20 Feb 2020 22:29:27 -0500
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:8446 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1729703AbgBUD2V (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Thu, 20 Feb 2020 22:28:21 -0500
-Received: from pps.filterd (m0127361.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 01L3K7oi028508
+Received: from pps.filterd (m0098399.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 01L3KkLI087222
         for <linux-kernel@vger.kernel.org>; Thu, 20 Feb 2020 22:28:20 -0500
-Received: from e06smtp05.uk.ibm.com (e06smtp05.uk.ibm.com [195.75.94.101])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2y92xf23he-1
+Received: from e06smtp02.uk.ibm.com (e06smtp02.uk.ibm.com [195.75.94.98])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2y9ytr45d8-1
         (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
         for <linux-kernel@vger.kernel.org>; Thu, 20 Feb 2020 22:28:20 -0500
 Received: from localhost
-        by e06smtp05.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        by e06smtp02.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
         for <linux-kernel@vger.kernel.org> from <alastair@au1.ibm.com>;
-        Fri, 21 Feb 2020 03:28:16 -0000
-Received: from b06cxnps4074.portsmouth.uk.ibm.com (9.149.109.196)
-        by e06smtp05.uk.ibm.com (192.168.101.135) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        Fri, 21 Feb 2020 03:28:17 -0000
+Received: from b06cxnps3075.portsmouth.uk.ibm.com (9.149.109.195)
+        by e06smtp02.uk.ibm.com (192.168.101.132) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
         (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Fri, 21 Feb 2020 03:28:08 -0000
-Received: from b06wcsmtp001.portsmouth.uk.ibm.com (b06wcsmtp001.portsmouth.uk.ibm.com [9.149.105.160])
-        by b06cxnps4074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 01L3S7Xw51314800
+        Fri, 21 Feb 2020 03:28:10 -0000
+Received: from d06av26.portsmouth.uk.ibm.com (d06av26.portsmouth.uk.ibm.com [9.149.105.62])
+        by b06cxnps3075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 01L3S9Kg59768916
         (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Fri, 21 Feb 2020 03:28:07 GMT
-Received: from b06wcsmtp001.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id BADFCA405C;
-        Fri, 21 Feb 2020 03:28:07 +0000 (GMT)
-Received: from b06wcsmtp001.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 1E1F6A4054;
-        Fri, 21 Feb 2020 03:28:07 +0000 (GMT)
+        Fri, 21 Feb 2020 03:28:09 GMT
+Received: from d06av26.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 928ADAE045;
+        Fri, 21 Feb 2020 03:28:09 +0000 (GMT)
+Received: from d06av26.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id E7655AE051;
+        Fri, 21 Feb 2020 03:28:08 +0000 (GMT)
 Received: from ozlabs.au.ibm.com (unknown [9.192.253.14])
-        by b06wcsmtp001.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Fri, 21 Feb 2020 03:28:07 +0000 (GMT)
+        by d06av26.portsmouth.uk.ibm.com (Postfix) with ESMTP;
+        Fri, 21 Feb 2020 03:28:08 +0000 (GMT)
 Received: from adsilva.ozlabs.ibm.com (haven.au.ibm.com [9.192.254.114])
         (using TLSv1.2 with cipher AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by ozlabs.au.ibm.com (Postfix) with ESMTPSA id 82291A0209;
+        by ozlabs.au.ibm.com (Postfix) with ESMTPSA id EEA46A03B7;
         Fri, 21 Feb 2020 14:28:02 +1100 (AEDT)
 From:   "Alastair D'Silva" <alastair@au1.ibm.com>
 To:     alastair@d-silva.org
@@ -86,22 +87,24 @@ Cc:     "Aneesh Kumar K . V" <aneesh.kumar@linux.ibm.com>,
         Alexey Kardashevskiy <aik@ozlabs.ru>,
         linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
         linux-nvdimm@lists.01.org, linux-mm@kvack.org
-Subject: [PATCH v3 00/27] Add support for OpenCAPI Persistent Memory devices
-Date:   Fri, 21 Feb 2020 14:26:53 +1100
+Subject: [PATCH v3 07/27] ocxl: Add functions to map/unmap LPC memory
+Date:   Fri, 21 Feb 2020 14:27:00 +1100
 X-Mailer: git-send-email 2.24.1
+In-Reply-To: <20200221032720.33893-1-alastair@au1.ibm.com>
+References: <20200221032720.33893-1-alastair@au1.ibm.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-TM-AS-GCONF: 00
-x-cbid: 20022103-0020-0000-0000-000003AC220E
+x-cbid: 20022103-0008-0000-0000-00000354F599
 X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 20022103-0021-0000-0000-000022042A30
-Message-Id: <20200221032720.33893-1-alastair@au1.ibm.com>
+x-cbparentid: 20022103-0009-0000-0000-00004A76073A
+Message-Id: <20200221032720.33893-8-alastair@au1.ibm.com>
 X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.572
  definitions=2020-02-20_19:2020-02-19,2020-02-20 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxscore=0 adultscore=0
- clxscore=1015 lowpriorityscore=0 phishscore=0 bulkscore=0 spamscore=0
- suspectscore=1 malwarescore=0 priorityscore=1501 impostorscore=0
- mlxlogscore=999 classifier=spam adjust=0 reason=mlx scancount=1
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ suspectscore=1 clxscore=1015 mlxlogscore=799 mlxscore=0 adultscore=0
+ lowpriorityscore=0 malwarescore=0 spamscore=0 impostorscore=0 phishscore=0
+ bulkscore=0 classifier=spam adjust=0 reason=mlx scancount=1
  engine=8.12.0-2001150001 definitions=main-2002210020
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
@@ -110,77 +113,130 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Alastair D'Silva <alastair@d-silva.org>
 
-This series adds support for OpenCAPI Persistent Memory devices, exposing
-them as nvdimms so that we can make use of the existing infrastructure.
+Add functions to map/unmap LPC memory
 
-Alastair D'Silva (27):
-  powerpc: Add OPAL calls for LPC memory alloc/release
-  mm/memory_hotplug: Allow check_hotplug_memory_addressable to be called
-    from drivers
-  powerpc: Map & release OpenCAPI LPC memory
-  ocxl: Remove unnecessary externs
-  ocxl: Address kernel doc errors & warnings
-  ocxl: Tally up the LPC memory on a link & allow it to be mapped
-  ocxl: Add functions to map/unmap LPC memory
-  ocxl: Emit a log message showing how much LPC memory was detected
-  ocxl: Save the device serial number in ocxl_fn
-  powerpc: Add driver for OpenCAPI Persistent Memory
-  powerpc: Enable the OpenCAPI Persistent Memory driver for
-    powernv_defconfig
-  powerpc/powernv/pmem: Add register addresses & status values to the
-    header
-  powerpc/powernv/pmem: Read the capability registers & wait for device
-    ready
-  powerpc/powernv/pmem: Add support for Admin commands
-  powerpc/powernv/pmem: Add support for near storage commands
-  powerpc/powernv/pmem: Register a character device for userspace to
-    interact with
-  powerpc/powernv/pmem: Implement the Read Error Log command
-  powerpc/powernv/pmem: Add controller dump IOCTLs
-  powerpc/powernv/pmem: Add an IOCTL to report controller statistics
-  powerpc/powernv/pmem: Forward events to userspace
-  powerpc/powernv/pmem: Add an IOCTL to request controller health & perf
-    data
-  powerpc/powernv/pmem: Implement the heartbeat command
-  powerpc/powernv/pmem: Add debug IOCTLs
-  powerpc/powernv/pmem: Expose SMART data via ndctl
-  powerpc/powernv/pmem: Expose the serial number in sysfs
-  powerpc/powernv/pmem: Expose the firmware version in sysfs
-  MAINTAINERS: Add myself & nvdimm/ocxl to ocxl
+Signed-off-by: Alastair D'Silva <alastair@d-silva.org>
+---
+ drivers/misc/ocxl/core.c          | 51 +++++++++++++++++++++++++++++++
+ drivers/misc/ocxl/ocxl_internal.h |  3 ++
+ include/misc/ocxl.h               | 21 +++++++++++++
+ 3 files changed, 75 insertions(+)
 
- MAINTAINERS                                   |    3 +
- arch/powerpc/configs/powernv_defconfig        |    5 +
- arch/powerpc/include/asm/opal-api.h           |    2 +
- arch/powerpc/include/asm/opal.h               |    3 +
- arch/powerpc/include/asm/pnv-ocxl.h           |   40 +-
- arch/powerpc/platforms/powernv/Kconfig        |    3 +
- arch/powerpc/platforms/powernv/Makefile       |    1 +
- arch/powerpc/platforms/powernv/ocxl.c         |   43 +
- arch/powerpc/platforms/powernv/opal-call.c    |    2 +
- arch/powerpc/platforms/powernv/pmem/Kconfig   |   21 +
- arch/powerpc/platforms/powernv/pmem/Makefile  |    7 +
- arch/powerpc/platforms/powernv/pmem/ocxl.c    | 1991 +++++++++++++++++
- .../platforms/powernv/pmem/ocxl_internal.c    |  213 ++
- .../platforms/powernv/pmem/ocxl_internal.h    |  254 +++
- .../platforms/powernv/pmem/ocxl_sysfs.c       |   46 +
- drivers/misc/ocxl/config.c                    |   74 +-
- drivers/misc/ocxl/core.c                      |   61 +
- drivers/misc/ocxl/link.c                      |   53 +
- drivers/misc/ocxl/ocxl_internal.h             |   45 +-
- include/linux/memory_hotplug.h                |    5 +
- include/misc/ocxl.h                           |  122 +-
- include/uapi/linux/ndctl.h                    |    1 +
- include/uapi/nvdimm/ocxl-pmem.h               |  127 ++
- mm/memory_hotplug.c                           |    4 +-
- 24 files changed, 3029 insertions(+), 97 deletions(-)
- create mode 100644 arch/powerpc/platforms/powernv/pmem/Kconfig
- create mode 100644 arch/powerpc/platforms/powernv/pmem/Makefile
- create mode 100644 arch/powerpc/platforms/powernv/pmem/ocxl.c
- create mode 100644 arch/powerpc/platforms/powernv/pmem/ocxl_internal.c
- create mode 100644 arch/powerpc/platforms/powernv/pmem/ocxl_internal.h
- create mode 100644 arch/powerpc/platforms/powernv/pmem/ocxl_sysfs.c
- create mode 100644 include/uapi/nvdimm/ocxl-pmem.h
-
+diff --git a/drivers/misc/ocxl/core.c b/drivers/misc/ocxl/core.c
+index 2531c6cf19a0..75ff14e3882a 100644
+--- a/drivers/misc/ocxl/core.c
++++ b/drivers/misc/ocxl/core.c
+@@ -210,6 +210,56 @@ static void unmap_mmio_areas(struct ocxl_afu *afu)
+ 	release_fn_bar(afu->fn, afu->config.global_mmio_bar);
+ }
+ 
++int ocxl_afu_map_lpc_mem(struct ocxl_afu *afu)
++{
++	struct pci_dev *dev = to_pci_dev(afu->fn->dev.parent);
++
++	if ((afu->config.lpc_mem_size + afu->config.special_purpose_mem_size) == 0)
++		return 0;
++
++	afu->lpc_base_addr = ocxl_link_lpc_map(afu->fn->link, dev);
++	if (afu->lpc_base_addr == 0)
++		return -EINVAL;
++
++	if (afu->config.lpc_mem_size > 0) {
++		afu->lpc_res.start = afu->lpc_base_addr + afu->config.lpc_mem_offset;
++		afu->lpc_res.end = afu->lpc_res.start + afu->config.lpc_mem_size - 1;
++	}
++
++	if (afu->config.special_purpose_mem_size > 0) {
++		afu->special_purpose_res.start = afu->lpc_base_addr +
++						 afu->config.special_purpose_mem_offset;
++		afu->special_purpose_res.end = afu->special_purpose_res.start +
++					       afu->config.special_purpose_mem_size - 1;
++	}
++
++	return 0;
++}
++EXPORT_SYMBOL_GPL(ocxl_afu_map_lpc_mem);
++
++struct resource *ocxl_afu_lpc_mem(struct ocxl_afu *afu)
++{
++	return &afu->lpc_res;
++}
++EXPORT_SYMBOL_GPL(ocxl_afu_lpc_mem);
++
++static void unmap_lpc_mem(struct ocxl_afu *afu)
++{
++	struct pci_dev *dev = to_pci_dev(afu->fn->dev.parent);
++
++	if (afu->lpc_res.start || afu->special_purpose_res.start) {
++		void *link = afu->fn->link;
++
++		// only release the link when the the last consumer calls release
++		ocxl_link_lpc_release(link, dev);
++
++		afu->lpc_res.start = 0;
++		afu->lpc_res.end = 0;
++		afu->special_purpose_res.start = 0;
++		afu->special_purpose_res.end = 0;
++	}
++}
++
+ static int configure_afu(struct ocxl_afu *afu, u8 afu_idx, struct pci_dev *dev)
+ {
+ 	int rc;
+@@ -251,6 +301,7 @@ static int configure_afu(struct ocxl_afu *afu, u8 afu_idx, struct pci_dev *dev)
+ 
+ static void deconfigure_afu(struct ocxl_afu *afu)
+ {
++	unmap_lpc_mem(afu);
+ 	unmap_mmio_areas(afu);
+ 	reclaim_afu_pasid(afu);
+ 	reclaim_afu_actag(afu);
+diff --git a/drivers/misc/ocxl/ocxl_internal.h b/drivers/misc/ocxl/ocxl_internal.h
+index d0c8c4838f42..ce0cac1da416 100644
+--- a/drivers/misc/ocxl/ocxl_internal.h
++++ b/drivers/misc/ocxl/ocxl_internal.h
+@@ -52,6 +52,9 @@ struct ocxl_afu {
+ 	void __iomem *global_mmio_ptr;
+ 	u64 pp_mmio_start;
+ 	void *private;
++	u64 lpc_base_addr; /* Covers both LPC & special purpose memory */
++	struct resource lpc_res;
++	struct resource special_purpose_res;
+ };
+ 
+ enum ocxl_context_status {
+diff --git a/include/misc/ocxl.h b/include/misc/ocxl.h
+index 357ef1aadbc0..d8b0b4d46bfb 100644
+--- a/include/misc/ocxl.h
++++ b/include/misc/ocxl.h
+@@ -203,6 +203,27 @@ int ocxl_irq_set_handler(struct ocxl_context *ctx, int irq_id,
+ 
+ // AFU Metadata
+ 
++/**
++ * ocxl_afu_map_lpc_mem() - Map the LPC system & special purpose memory for an AFU
++ * Do not call this during device discovery, as there may me multiple
++ * devices on a link, and the memory is mapped for the whole link, not
++ * just one device. It should only be called after all devices have
++ * registered their memory on the link.
++ *
++ * @afu: The AFU that has the LPC memory to map
++ *
++ * Returns 0 on success, negative on failure
++ */
++int ocxl_afu_map_lpc_mem(struct ocxl_afu *afu);
++
++/**
++ * ocxl_afu_lpc_mem() - Get the physical address range of LPC memory for an AFU
++ * @afu: The AFU associated with the LPC memory
++ *
++ * Returns a pointer to the resource struct for the physical address range
++ */
++struct resource *ocxl_afu_lpc_mem(struct ocxl_afu *afu);
++
+ /**
+  * ocxl_afu_config() - Get a pointer to the config for an AFU
+  * @afu: a pointer to the AFU to get the config for
 -- 
 2.24.1
 
