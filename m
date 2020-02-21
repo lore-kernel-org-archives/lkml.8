@@ -2,42 +2,45 @@ Return-Path: <SRS0=1210=4J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CF2CBC35669
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 21:25:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C5DE0C35669
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 21:25:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A05F7207FD
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 21:25:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 99922207FD
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 21:25:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582320317;
-	bh=+XroxI3EJiMSxkRKHu1Xniyh64pp6vnvlxd5aw4FSeI=;
-	h=From:To:Subject:Date:List-ID:From;
-	b=QJlnzrWGPOCd62QrIItOPfF+rXk0aW7yT5KeA+VFC2XQ2ylhOiLZN9w7gzFkS+VNv
-	 L4sWfAri3jBCGbWPIKsu7Mg9b4/wWHW3vc/NM6TQ2/FII4noKPuv7JWpzNHeHKja4R
-	 KzqV9UX2pOc35SFU94dnfAhzg6abxZibAljIeN+M=
+	s=default; t=1582320322;
+	bh=tO7cRQjKEB4q9bUJsNF2pCQeYGZBUa7kmT640jbVpIY=;
+	h=From:To:Subject:Date:In-Reply-To:References:In-Reply-To:
+	 References:List-ID:From;
+	b=rNDln7B0GRGPEZKXcXYBkjFvqOL2ceJsoMCAKCHXS4HC3KQ7Y6Hd/sBzlrWUfsppX
+	 zQM+hsO0yfrVMp6clsFJrlxF5OdT1K1oUbSlPMh9y1qZ4lsksD2w0nO/DXjVSBrzt5
+	 CdCRlTLBkmATzk9Vz40XZnDmS5kx5wiIwWcZYiCY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728624AbgBUVZQ (ORCPT
+        id S1728923AbgBUVZU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Feb 2020 16:25:16 -0500
-Received: from mail.kernel.org ([198.145.29.99]:38964 "EHLO mail.kernel.org"
+        Fri, 21 Feb 2020 16:25:20 -0500
+Received: from mail.kernel.org ([198.145.29.99]:38978 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726683AbgBUVZP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Feb 2020 16:25:15 -0500
+        id S1728351AbgBUVZQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 21 Feb 2020 16:25:16 -0500
 Received: from localhost.localdomain (c-98-220-238-81.hsd1.il.comcast.net [98.220.238.81])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 59195206EF;
-        Fri, 21 Feb 2020 21:25:14 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4D3AA24650;
+        Fri, 21 Feb 2020 21:25:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1582320315;
-        bh=+XroxI3EJiMSxkRKHu1Xniyh64pp6vnvlxd5aw4FSeI=;
-        h=From:To:Subject:Date:From;
-        b=MKRIl7DAFUtGhujFLG+R/NORW+MyxUJsYvtRkAFj5K9jZHO+u9jV/nhjHPOrJgYyg
-         AdSIBFr5547SDWR5LWQaG2+YHndKeVSyeqSBlPn3VGoTiWB0DgapN69MwST5AGeXPh
-         T2rmdDRPVbOjUz3NmwuzK4fT779k+RSW2L1OiK9c=
+        s=default; t=1582320316;
+        bh=tO7cRQjKEB4q9bUJsNF2pCQeYGZBUa7kmT640jbVpIY=;
+        h=From:To:Subject:Date:In-Reply-To:References:In-Reply-To:
+         References:From;
+        b=bsmdGu/qvwQz+4FyGO7NULsGV5yfozGYy8ejmTY4NMOgE1Q1r0imqtp2XP2IDkGcj
+         /koKPSxw/XAofmq26z/vpeywZC+1I+0E0hInwRV401+18hxwD7UMOixHoZzZioQk83
+         KciDBk9Hkq9jqEg/ivamr9kc0qtgWUzPeTPnubrw=
 From:   zanussi@kernel.org
 To:     LKML <linux-kernel@vger.kernel.org>,
         linux-rt-users <linux-rt-users@vger.kernel.org>,
@@ -48,130 +51,97 @@ To:     LKML <linux-kernel@vger.kernel.org>,
         Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
         Daniel Wagner <wagi@monom.org>,
         Tom Zanussi <zanussi@kernel.org>
-Subject: [PATCH RT 00/25] Linux v4.14.170-rt75-rc1
-Date:   Fri, 21 Feb 2020 15:24:28 -0600
-Message-Id: <cover.1582320278.git.zanussi@kernel.org>
+Subject: [PATCH RT 01/25] Fix wrong-variable use in irq_set_affinity_notifier
+Date:   Fri, 21 Feb 2020 15:24:29 -0600
+Message-Id: <3c564c6520216babcb5ecbd9268bfd3d2e45492c.1582320278.git.zanussi@kernel.org>
 X-Mailer: git-send-email 2.14.1
-MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <cover.1582320278.git.zanussi@kernel.org>
+References: <cover.1582320278.git.zanussi@kernel.org>
+In-Reply-To: <cover.1582320278.git.zanussi@kernel.org>
+References: <cover.1582320278.git.zanussi@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Tom Zanussi <zanussi@kernel.org>
+From: Joe Korty <joe.korty@concurrent-rt.com>
 
-Dear RT Folks,
+v4.14.170-rt75-rc1 stable review patch.
+If anyone has any objections, please let me know.
 
-This is the RT stable review cycle of patch 4.14.170-rt75-rc1.
-
-Please scream at me if I messed something up. Please test the patches
-too.
-
-The -rc release will be uploaded to kernel.org and will be deleted
-when the final release is out. This is just a review release (or
-release candidate).
-
-The pre-releases will not be pushed to the git repository, only the
-final release is.
-
-If all goes well, this patch will be converted to the next main
-release on 2020-02-28.
-
-To build 4.14.170-rt75-rc1 directly, the following patches should be applied:
-
-  https://www.kernel.org/pub/linux/kernel/v4.x/linux-4.14.tar.xz
-
-  https://www.kernel.org/pub/linux/kernel/v4.x/patch-4.14.170.xz
-
-  https://www.kernel.org/pub/linux/kernel/projects/rt/4.14/patch-4.14.170-rt75-rc1.patch.xz
-
-You can also build from 4.14.170-rt74 by applying the incremental patch:
-
-  https://www.kernel.org/pub/linux/kernel/projects/rt/4.14/incr/patch-4.14.170-rt74-rt75-rc1.patch.xz
+-----------
 
 
-Enjoy,
+[ Fixes upstream commit 3e4242082f0384311f15ab9c93e2620268c6257f,
+  which erroneously switched old_notify->work to notify->work when
+  fixing a merge conflict ]
 
--- Tom
+4.14-rt: Fix wrong-variable use in irq_set_affinity_notifier.
 
+The bug was introduced in the 4.14-rt patch
 
-Joe Korty (1):
-  Fix wrong-variable use in irq_set_affinity_notifier
+   0461-genirq-Handle-missing-work_struct-in-irq_set_affinit.patch
 
-Julien Grall (1):
-  lib/ubsan: Don't seralize UBSAN report
+The symptom is a NULL pointer panic in the i40e driver on
+system shutdown.
 
-Juri Lelli (1):
-  sched/deadline: Ensure inactive_timer runs in hardirq context
+    Rebooting.
+    BUG: unable to handle kernel NULL pointer dereference at 0000000000000020
+    IP: __kthread_cancel_work_sync+0x12/0xa0
+    CPU: 15 PID: 6274 Comm: reboot Not tainted 4.14.155-rt70-RedHawk-8.0.2-prt-trace #1
+    task: ffff9ef0d1a58000 task.stack: ffffbe540c038000
+    RIP: 0010:__kthread_cancel_work_sync+0x12/0xa0
+    RSP: 0018:ffffbe540c03bbd8 EFLAGS: 00010296
+    RAX: 0000084000000020 RBX: 0000000000000000 RCX: 0000000000000034
+    RDX: 0000000000000000 RSI: 0000000000000000 RDI: 0000000000000008
+    RBP: ffffbe540c03bc00 R08: ffff9ee8ccdc3800 R09: ffff9ef0d8c0c000
+    R10: ffff9ef0d8c0c028 R11: 0000000000000040 R12: ffff9ee8ccdc3800
+    R13: 0000000000000000 R14: ffff9ee8ccdc3960 R15: 0000000000000074
+    FS:  00007ffff7fcf380(0000) GS:ffff9ef0ffdc0000(0000) knlGS:0000000000000000
+    CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+    CR2: 0000000000000020 CR3: 000000104b428003 CR4: 00000000005606e0
+    DR0: 00000000006040e0 DR1: 00000000006040e8 DR2: 00000000006040f0
+    DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000600
+    PKRU: 55555554
 
-Liu Haitao (1):
-  kmemleak: Change the lock of kmemleak_object to raw_spinlock_t
+    Call Trace:
+     kthread_cancel_work_sync+0xb/0x10
+     irq_set_affinity_notifier+0x8e/0xc0
+     i40e_vsi_free_irq+0xbc/0x230 [i40e]
+     i40e_vsi_close+0x24/0xa0 [i40e]
+     i40e_close+0x10/0x20 [i40e]
+     i40e_quiesce_vsi.part.40+0x30/0x40 [i40e]
+     i40e_pf_quiesce_all_vsi.isra.41+0x34/0x50 [i40e]
+     i40e_prep_for_reset+0x67/0x110 [i40e]
+     i40e_shutdown+0x39/0x220 [i40e]
+     pci_device_shutdown+0x2b/0x50
+     device_shutdown+0x147/0x1f0
+     kernel_restart_prepare+0x71/0x74
+     kernel_restart+0xd/0x4e
+     SyS_reboot.cold.1+0x9/0x34
+     do_syscall_64+0x7c/0x150
 
-Matt Fleming (1):
-  mm/memcontrol: Move misplaced local_unlock_irqrestore()
+4.19-rt and above do not have this problem due to a refactoring.
 
-Peter Zijlstra (1):
-  locking/rtmutex: Clean ->pi_blocked_on in the error case
+Signed-off-by: Joe Korty <Joe.Korty@concurrent-rt.com>
+Signed-off-by: Tom Zanussi <zanussi@kernel.org>
+---
+ kernel/irq/manage.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-Scott Wood (5):
-  sched: migrate_dis/enable: Use sleeping_lock…() to annotate sleeping
-    points
-  sched: __set_cpus_allowed_ptr: Check cpus_mask, not cpus_ptr
-  sched: Remove dead __migrate_disabled() check
-  sched: migrate disable: Protect cpus_ptr with lock
-  sched: migrate_enable: Use select_fallback_rq()
-
-Sebastian Andrzej Siewior (11):
-  x86: preempt: Check preemption level before looking at lazy-preempt
-  i2c: hix5hd2: Remove IRQF_ONESHOT
-  i2c: exynos5: Remove IRQF_ONESHOT
-  futex: Make the futex_hash_bucket spinlock_t again and bring back its
-    old state
-  Revert "ARM: Initialize split page table locks for vector page"
-  x86/fpu: Don't cache access to fpu_fpregs_owner_ctx
-  locking: Make spinlock_t and rwlock_t a RCU section on RT
-  userfaultfd: Use a seqlock instead of seqcount
-  kmemleak: Cosmetic changes
-  smp: Use smp_cond_func_t as type for the conditional function
-  locallock: Include header for the `current' macro
-
-Thomas Gleixner (1):
-  sched: Provide migrate_disable/enable() inlines
-
-Tom Zanussi (1):
-  Linux 4.14.170-rt75-rc1
-
-Waiman Long (1):
-  lib/smp_processor_id: Don't use cpumask_equal()
-
- arch/arm/kernel/process.c           |  24 ----
- arch/x86/include/asm/fpu/internal.h |   2 +-
- arch/x86/include/asm/preempt.h      |   2 +
- drivers/i2c/busses/i2c-exynos5.c    |   4 +-
- drivers/i2c/busses/i2c-hix5hd2.c    |   3 +-
- fs/userfaultfd.c                    |  12 +-
- include/linux/locallock.h           |   1 +
- include/linux/preempt.h             |  26 +++-
- include/linux/smp.h                 |   6 +-
- kernel/cpu.c                        |   2 +
- kernel/futex.c                      | 231 ++++++++++++++++++++----------------
- kernel/irq/manage.c                 |   2 +-
- kernel/locking/rtmutex.c            | 114 ++++++++++++++----
- kernel/locking/rtmutex_common.h     |   3 +
- kernel/locking/rwlock-rt.c          |   6 +
- kernel/sched/core.c                 |  43 +++----
- kernel/sched/deadline.c             |   4 +-
- kernel/smp.c                        |   5 +-
- kernel/up.c                         |   5 +-
- lib/smp_processor_id.c              |   2 +-
- lib/ubsan.c                         |  76 +++++-------
- localversion-rt                     |   2 +-
- mm/kmemleak.c                       |  90 +++++++-------
- mm/memcontrol.c                     |   2 +-
- 24 files changed, 370 insertions(+), 297 deletions(-)
-
+diff --git a/kernel/irq/manage.c b/kernel/irq/manage.c
+index 071691963f7b..12702d48aaa3 100644
+--- a/kernel/irq/manage.c
++++ b/kernel/irq/manage.c
+@@ -353,7 +353,7 @@ irq_set_affinity_notifier(unsigned int irq, struct irq_affinity_notify *notify)
+ 
+ 	if (old_notify) {
+ #ifdef CONFIG_PREEMPT_RT_BASE
+-		kthread_cancel_work_sync(&notify->work);
++		kthread_cancel_work_sync(&old_notify->work);
+ #else
+ 		cancel_work_sync(&old_notify->work);
+ #endif
 -- 
 2.14.1
 
