@@ -2,104 +2,102 @@ Return-Path: <SRS0=1210=4J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 40860C35646
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 12:19:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 35D06C35655
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 12:20:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0DAE4206EF
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 12:19:12 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=kraav.com header.i=@kraav.com header.b="UW9yvUDe";
-	dkim=pass (1024-bit key) header.d=kraav.com header.i=@kraav.com header.b="Y+/xdoNo"
+	by mail.kernel.org (Postfix) with ESMTP id 155D7206EF
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 12:20:03 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727973AbgBUMTK (ORCPT
+        id S1728048AbgBUMUB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Feb 2020 07:19:10 -0500
-Received: from mail-out.elkdata.ee ([185.7.252.64]:54224 "EHLO
-        mail-out.elkdata.ee" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726909AbgBUMTK (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Feb 2020 07:19:10 -0500
-X-Greylist: delayed 448 seconds by postgrey-1.27 at vger.kernel.org; Fri, 21 Feb 2020 07:19:08 EST
-Received: from mail-relay2.elkdata.ee (unknown [185.7.252.69])
-        by mail-out.elkdata.ee (Postfix) with ESMTP id 79CAC372A95;
-        Fri, 21 Feb 2020 14:11:38 +0200 (EET)
-Received: from mail-relay2.elkdata.ee (unknown [185.7.252.69])
-        by mail-relay2.elkdata.ee (Postfix) with ESMTP id 74F028309AA;
-        Fri, 21 Feb 2020 14:11:38 +0200 (EET)
-X-Virus-Scanned: amavisd-new at elkdata.ee
-Received: from mail-relay2.elkdata.ee ([185.7.252.69])
-        by mail-relay2.elkdata.ee (mail-relay2.elkdata.ee [185.7.252.69]) (amavisd-new, port 10024)
-        with ESMTP id Dv7M9TrqqmTv; Fri, 21 Feb 2020 14:11:36 +0200 (EET)
-Received: from mail.elkdata.ee (unknown [185.7.252.68])
-        by mail-relay2.elkdata.ee (Postfix) with ESMTP id 23BB88309AC;
-        Fri, 21 Feb 2020 14:11:36 +0200 (EET)
-Received: from mail.meie.biz (21-182-190-90.sta.estpak.ee [90.190.182.21])
-        (using TLSv1.2 with cipher ADH-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        (Authenticated sender: leho@jaanalind.ee)
-        by mail.elkdata.ee (Postfix) with ESMTPSA id 1926560BF52;
-        Fri, 21 Feb 2020 14:11:36 +0200 (EET)
-Received: by mail.meie.biz (Postfix, from userid 500)
-        id 004D3B7C6A4; Fri, 21 Feb 2020 14:11:35 +0200 (EET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kraav.com; s=mail;
-        t=1582287096; bh=233+khcaWZ9tc+fOJUrTd3ddqOMhHE2+qhQGuN3aNAQ=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To;
-        b=UW9yvUDehx6+hgJ8hn7C3g7CkIUDQXX+wFiPw4NZl4JxVDC5KEeKEgTpW5r9CdN1I
-         vvVxs1mWp/EcaAVhxI8t8FwvsSeyqBbP/r22IeZbsAZjmK0CKFUqDRPuPgyeBztocv
-         JU6PfccIGMZkX6xRZZI3xd//0RRqcyu8YHWO6qCY=
-Received: from papaya (papaya-vpn.meie.biz [192.168.48.157])
-        by mail.meie.biz (Postfix) with ESMTPSA id B1A03B7C69C;
-        Fri, 21 Feb 2020 14:11:35 +0200 (EET)
-Authentication-Results: mail.meie.biz; dmarc=fail (p=none dis=none) header.from=kraav.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kraav.com; s=mail;
-        t=1582287095; bh=233+khcaWZ9tc+fOJUrTd3ddqOMhHE2+qhQGuN3aNAQ=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To;
-        b=Y+/xdoNoetHFP/OmkiU8wXTTBx8klll0NqDNHDnTV5d3FdVOxam8VhhY15v7FQheB
-         0CGV7Fu0AQGWbpOw40gpUihxAO5OtQYfJR8EF01Rk44Irj2zcWO0hT/SCv/Ux5dCVg
-         4qs44UD+K8giTSQFOiu+XWEAuhNX7AK91Nf08ZiE=
-Received: (nullmailer pid 12685 invoked by uid 1000);
-        Fri, 21 Feb 2020 12:11:35 -0000
-Date:   Fri, 21 Feb 2020 14:11:35 +0200
-From:   Leho Kraav <leho@kraav.com>
-To:     "Jan Alexander Steffens (heftig)" <jan.steffens@gmail.com>
-Cc:     Johannes Berg <johannes.berg@intel.com>,
-        Emmanuel Grumbach <emmanuel.grumbach@intel.com>,
-        Luca Coelho <luciano.coelho@intel.com>,
-        Intel Linux Wireless <linuxwifi@intel.com>,
-        Kalle Valo <kvalo@codeaurora.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        linux-wireless@vger.kernel.org, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] iwlwifi: pcie: restore support for Killer Qu C0 NICs
-Message-ID: <20200221121135.GA9056@papaya>
-References: <20191224051639.6904-1-jan.steffens@gmail.com>
+        Fri, 21 Feb 2020 07:20:01 -0500
+Received: from foss.arm.com ([217.140.110.172]:38146 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727095AbgBUMUB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 21 Feb 2020 07:20:01 -0500
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id C9BBD30E;
+        Fri, 21 Feb 2020 04:20:00 -0800 (PST)
+Received: from e121166-lin.cambridge.arm.com (e121166-lin.cambridge.arm.com [10.1.196.255])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 7F5BA3F68F;
+        Fri, 21 Feb 2020 04:19:58 -0800 (PST)
+Date:   Fri, 21 Feb 2020 12:19:56 +0000
+From:   Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+To:     Zhiqiang Hou <Zhiqiang.Hou@nxp.com>
+Cc:     linux-pci@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        bhelgaas@google.com, robh+dt@kernel.org, andrew.murray@arm.com,
+        arnd@arndb.de, mark.rutland@arm.com, l.subrahmanya@mobiveil.co.in,
+        shawnguo@kernel.org, m.karthikeyan@mobiveil.co.in,
+        leoyang.li@nxp.com, catalin.marinas@arm.com, will.deacon@arm.com,
+        Mingkai.Hu@nxp.com, Minghuan.Lian@nxp.com, Xiaowei.Bao@nxp.com
+Subject: Re: [PATCHv10 00/13] PCI: Recode Mobiveil driver and add PCIe Gen4
+ driver for NXP Layerscape SoCs
+Message-ID: <20200221121956.GC12711@e121166-lin.cambridge.arm.com>
+References: <20200213040644.45858-1-Zhiqiang.Hou@nxp.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20191224051639.6904-1-jan.steffens@gmail.com>
-X-Bogosity: Unsure, tests=bogofilter, spamicity=0.500000, version=1.2.4
+In-Reply-To: <20200213040644.45858-1-Zhiqiang.Hou@nxp.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Dec 24, 2019 at 06:16:39AM +0100, Jan Alexander Steffens (heftig) wrote:
-> Commit 809805a820c6 ("iwlwifi: pcie: move some cfg mangling from
-> trans_pcie_alloc to probe") refactored the cfg mangling. Unfortunately,
-> in this process the lines which picked the right cfg for Killer Qu C0
-> NICs after C0 detection were lost. These lines were added by commit
-> b9500577d361 ("iwlwifi: pcie: handle switching killer Qu B0 NICs to
-> C0").
+On Thu, Feb 13, 2020 at 12:06:31PM +0800, Zhiqiang Hou wrote:
+> From: Hou Zhiqiang <Zhiqiang.Hou@nxp.com>
 > 
-> I suspect this is more of the "merge damage" which commit 7cded5658329
-> ("iwlwifi: pcie: fix merge damage on making QnJ exclusive") talks about.
+> This patch set is to recode the Mobiveil driver and add
+> PCIe support for NXP Layerscape series SoCs integrated
+> Mobiveil's PCIe Gen4 controller.
 > 
-> Restore the missing lines so the driver loads the right firmware for
-> these NICs.
+> Hou Zhiqiang (13):
+>   PCI: mobiveil: Introduce a new structure mobiveil_root_port
+>   PCI: mobiveil: Move the host initialization into a function
+>   PCI: mobiveil: Collect the interrupt related operations into a
+>     function
+>   PCI: mobiveil: Modularize the Mobiveil PCIe Host Bridge IP driver
+>   PCI: mobiveil: Add callback function for interrupt initialization
+>   PCI: mobiveil: Add callback function for link up check
+>   PCI: mobiveil: Allow mobiveil_host_init() to be used to re-init host
+>   PCI: mobiveil: Add 8-bit and 16-bit CSR register accessors
+>   PCI: mobiveil: Add Header Type field check
+>   dt-bindings: PCI: Add NXP Layerscape SoCs PCIe Gen4 controller
+>   PCI: mobiveil: Add PCIe Gen4 RC driver for NXP Layerscape SoCs
+>   arm64: dts: lx2160a: Add PCIe controller DT nodes
+>   arm64: defconfig: Enable CONFIG_PCIE_LAYERSCAPE_GEN4
+> 
+>  .../bindings/pci/layerscape-pcie-gen4.txt     |  52 ++
+>  MAINTAINERS                                   |  10 +-
+>  .../arm64/boot/dts/freescale/fsl-lx2160a.dtsi | 163 +++++
+>  arch/arm64/configs/defconfig                  |   1 +
+>  drivers/pci/controller/Kconfig                |  11 +-
+>  drivers/pci/controller/Makefile               |   2 +-
+>  drivers/pci/controller/mobiveil/Kconfig       |  33 +
+>  drivers/pci/controller/mobiveil/Makefile      |   5 +
+>  .../mobiveil/pcie-layerscape-gen4.c           | 267 +++++++++
+>  .../pcie-mobiveil-host.c}                     | 564 ++++--------------
+>  .../controller/mobiveil/pcie-mobiveil-plat.c  |  61 ++
+>  .../pci/controller/mobiveil/pcie-mobiveil.c   | 230 +++++++
+>  .../pci/controller/mobiveil/pcie-mobiveil.h   | 226 +++++++
+>  13 files changed, 1170 insertions(+), 455 deletions(-)
+>  create mode 100644 Documentation/devicetree/bindings/pci/layerscape-pcie-gen4.txt
+>  create mode 100644 drivers/pci/controller/mobiveil/Kconfig
+>  create mode 100644 drivers/pci/controller/mobiveil/Makefile
+>  create mode 100644 drivers/pci/controller/mobiveil/pcie-layerscape-gen4.c
+>  rename drivers/pci/controller/{pcie-mobiveil.c => mobiveil/pcie-mobiveil-host.c} (54%)
+>  create mode 100644 drivers/pci/controller/mobiveil/pcie-mobiveil-plat.c
+>  create mode 100644 drivers/pci/controller/mobiveil/pcie-mobiveil.c
+>  create mode 100644 drivers/pci/controller/mobiveil/pcie-mobiveil.h
 
-This seems real, as upgrading 5.5.0 -> 5.5.5 just broke my iwlwifi on XPS 7390.
-How come?
+I dropped the last two patches since they must be re-routed via arm-soc
+(defconfig update and dts), I tweaked most of commit logs and applied
+the series to pci/mobiveil, please check everything is in order.
+
+Thanks,
+Lorenzo
