@@ -2,111 +2,136 @@ Return-Path: <SRS0=1210=4J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 20FC8C35640
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 08:50:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 124B6C35641
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 08:50:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E634424670
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 08:50:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D758124670
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 08:50:38 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="ffv3OMEh"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="m1j4tHqe"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388877AbgBUIud (ORCPT
+        id S2388867AbgBUIud (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
         Fri, 21 Feb 2020 03:50:33 -0500
-Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:47070 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1731388AbgBUIuc (ORCPT
+Received: from mail27.static.mailgun.info ([104.130.122.27]:34683 "EHLO
+        mail27.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1730488AbgBUIuc (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Fri, 21 Feb 2020 03:50:32 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1582275031;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=EXWvx43O9g/ijJ52j/YuLCYIbjQQg+Dy1xNnaG2kadU=;
-        b=ffv3OMEhOl1ikMBkfvWep9kyYX7qQjxP4EJ5Vdkh4HtLcTg3FAH5MBLJHGT/FqNkm4ildw
-        a5cODwZmnv/T6hx82vMkacFeJaXPDpb5oF2Akpgr8nKHK36+vWq+bdYDaebw2dYepuAuC8
-        hx7ACIxuJaNXdaw6fHi1Ak6sEGNLx/Q=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-367-JRoNw5u6PxuSrSphnI0hbA-1; Fri, 21 Feb 2020 03:50:30 -0500
-X-MC-Unique: JRoNw5u6PxuSrSphnI0hbA-1
-Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1582275032; h=References: In-Reply-To: Message-Id: Date:
+ Subject: Cc: To: From: Sender;
+ bh=7b7itL5l6V/rBjzQ5OBUu9QenXsui5Azh6HozFoAP/E=; b=m1j4tHqehjf5PPe7snDTRAPH72o13/1nlPygHMzC9jmFyrw7p+2n6HHDnzf8JVDNbMrZEGm7
+ jfeom/IAl23++rSlPWBoGjyRB7R1lguiT6C5q/lhLwVTT1uFGSgSFuWyHchAWiOsMYnlPjGA
+ fTVOIsgAnA7BggV9fBONrLcK+bI=
+X-Mailgun-Sending-Ip: 104.130.122.27
+X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
+Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
+ by mxa.mailgun.org with ESMTP id 5e4f99d3.7f386704b570-smtp-out-n02;
+ Fri, 21 Feb 2020 08:50:27 -0000 (UTC)
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id 673DBC447A2; Fri, 21 Feb 2020 08:50:27 +0000 (UTC)
+Received: from mkshah-linux.qualcomm.com (blr-c-bdr-fw-01_GlobalNAT_AllZones-Outside.qualcomm.com [103.229.19.19])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 70707107ACC9;
-        Fri, 21 Feb 2020 08:50:27 +0000 (UTC)
-Received: from [10.72.13.208] (ovpn-13-208.pek2.redhat.com [10.72.13.208])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 87ECB5DD73;
-        Fri, 21 Feb 2020 08:50:11 +0000 (UTC)
-Subject: Re: [PATCH V4 5/5] vdpasim: vDPA device simulator
-To:     Harpreet Singh Anand <hanand@xilinx.com>,
-        "mst@redhat.com" <mst@redhat.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
-        "virtualization@lists.linux-foundation.org" 
-        <virtualization@lists.linux-foundation.org>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>
-Cc:     "tiwei.bie@intel.com" <tiwei.bie@intel.com>,
-        "jgg@mellanox.com" <jgg@mellanox.com>,
-        "maxime.coquelin@redhat.com" <maxime.coquelin@redhat.com>,
-        "cunming.liang@intel.com" <cunming.liang@intel.com>,
-        "zhihong.wang@intel.com" <zhihong.wang@intel.com>,
-        "rob.miller@broadcom.com" <rob.miller@broadcom.com>,
-        "xiao.w.wang@intel.com" <xiao.w.wang@intel.com>,
-        "haotian.wang@sifive.com" <haotian.wang@sifive.com>,
-        "lingshan.zhu@intel.com" <lingshan.zhu@intel.com>,
-        "eperezma@redhat.com" <eperezma@redhat.com>,
-        "lulu@redhat.com" <lulu@redhat.com>,
-        "parav@mellanox.com" <parav@mellanox.com>,
-        "kevin.tian@intel.com" <kevin.tian@intel.com>,
-        "stefanha@redhat.com" <stefanha@redhat.com>,
-        "rdunlap@infradead.org" <rdunlap@infradead.org>,
-        "hch@infradead.org" <hch@infradead.org>,
-        "aadam@redhat.com" <aadam@redhat.com>,
-        "jiri@mellanox.com" <jiri@mellanox.com>,
-        "shahafs@mellanox.com" <shahafs@mellanox.com>,
-        "mhabets@solarflare.com" <mhabets@solarflare.com>
-References: <20200220061141.29390-1-jasowang@redhat.com>
- <20200220061141.29390-6-jasowang@redhat.com>
- <BY5PR02MB637195ECE0879F5F7CB72CE3BB120@BY5PR02MB6371.namprd02.prod.outlook.com>
-From:   Jason Wang <jasowang@redhat.com>
-Message-ID: <2c0ad54d-c8bd-bb2e-5dff-ce79cf0d45b9@redhat.com>
-Date:   Fri, 21 Feb 2020 16:50:10 +0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
-MIME-Version: 1.0
-In-Reply-To: <BY5PR02MB637195ECE0879F5F7CB72CE3BB120@BY5PR02MB6371.namprd02.prod.outlook.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
-Content-Transfer-Encoding: quoted-printable
+        (Authenticated sender: mkshah)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 1DE64C433A2;
+        Fri, 21 Feb 2020 08:50:21 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 1DE64C433A2
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=mkshah@codeaurora.org
+From:   Maulik Shah <mkshah@codeaurora.org>
+To:     swboyd@chromium.org, mka@chromium.org, evgreen@chromium.org,
+        bjorn.andersson@linaro.org
+Cc:     linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+        agross@kernel.org, dianders@chromium.org, rnayak@codeaurora.org,
+        ilina@codeaurora.org, lsrao@codeaurora.org,
+        Mahesh Sivasubramanian <msivasub@codeaurora.org>,
+        devicetree@vger.kernel.org, Maulik Shah <mkshah@codeaurora.org>
+Subject: [PATCH v2 1/4] dt-bindings: Introduce soc sleep stats bindings for Qualcomm SoCs
+Date:   Fri, 21 Feb 2020 14:19:43 +0530
+Message-Id: <1582274986-17490-2-git-send-email-mkshah@codeaurora.org>
+X-Mailer: git-send-email 2.7.4
+In-Reply-To: <1582274986-17490-1-git-send-email-mkshah@codeaurora.org>
+References: <1582274986-17490-1-git-send-email-mkshah@codeaurora.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+From: Mahesh Sivasubramanian <msivasub@codeaurora.org>
 
-On 2020/2/21 =E4=B8=8B=E5=8D=884:33, Harpreet Singh Anand wrote:
-> +       ret =3D device_register(&vdpasim->dev);
-> +       if (ret)
-> +               goto err_init;
-> +
-> +       vdpasim->vdpa =3D vdpa_alloc_device(dev, dev, &vdpasim_net_conf=
-ig_ops);
-> +       if (ret)
-> +               goto err_vdpa;
->
-> [HSA] Incorrect checking of the return value of vdpa_alloc_device.
+Add device binding documentation for Qualcomm Technology Inc's (QTI)
+SoC sleep stats driver. The driver is used for displaying SoC sleep
+statistic maintained by Always On Processor or Resource Power Manager.
 
+Cc: devicetree@vger.kernel.org
+Signed-off-by: Mahesh Sivasubramanian <msivasub@codeaurora.org>
+Signed-off-by: Lina Iyer <ilina@codeaurora.org>
+Signed-off-by: Maulik Shah <mkshah@codeaurora.org>
+---
+ .../bindings/soc/qcom/soc-sleep-stats.yaml         | 47 ++++++++++++++++++++++
+ 1 file changed, 47 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/soc/qcom/soc-sleep-stats.yaml
 
-Yes, fixed.
-
-Thanks
-
+diff --git a/Documentation/devicetree/bindings/soc/qcom/soc-sleep-stats.yaml b/Documentation/devicetree/bindings/soc/qcom/soc-sleep-stats.yaml
+new file mode 100644
+index 00000000..50352a4
+--- /dev/null
++++ b/Documentation/devicetree/bindings/soc/qcom/soc-sleep-stats.yaml
+@@ -0,0 +1,47 @@
++# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/bindings/soc/qcom/soc-sleep-stats.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
++
++title: Qualcomm Technologies, Inc. (QTI) SoC sleep stats bindings
++
++maintainers:
++  - Maulik Shah <mkshah@codeaurora.org>
++  - Lina Iyer <ilina@codeaurora.org>
++
++description: |
++  Always On Processor/Resource Power Manager maintains statistics of the SoC
++  sleep modes involving powering down of the rails and oscillator clock.
++
++  Statistics includes SoC sleep mode type, number of times low power mode were
++  entered, time of last entry, time of last exit and accumulated sleep duration.
++  SoC sleep stats driver provides debugfs interface to show this information.
++
++properties:
++  compatible:
++    enum:
++      - qcom,rpmh-sleep-stats
++      - qcom,rpm-sleep-stats
++
++  reg:
++    maxItems: 1
++
++required:
++  - compatible
++  - reg
++
++examples:
++  # Example of rpmh sleep stats
++  - |
++    rpmh_sleep_stats: soc-sleep-stats@c3f0000 {
++      compatible = "qcom,rpmh-sleep-stats";
++      reg = <0 0xc3f0000 0 0x400>;
++    };
++  # Example of rpm sleep stats
++  - |
++    rpm_sleep_stats: soc-sleep-stats@4690000 {
++      compatible = "qcom,rpm-sleep-stats";
++      reg = <0 0x04690000 0 0x400>;
++    };
++...
+-- 
+QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member
+of Code Aurora Forum, hosted by The Linux Foundation
