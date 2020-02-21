@@ -2,195 +2,103 @@ Return-Path: <SRS0=1210=4J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 52713C35647
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 11:46:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BB81AC35647
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 11:47:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2409524650
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 11:46:56 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582285616;
-	bh=MmIVHTIib5XbmYmKegaqzUGhvG/1JpO2JkcKz1UU/iU=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=ousaXanrk5yRjhnL7JP4UmKWq+yfjR6cJPE8+5W6x9H4Qv2gNf9IdRuj4Yle9IlP3
-	 pucvi0euY3gCa3XLE7Sg3cJEYFW0TxYvXGzRcNzAJuXTcauMmuiQwtzAewODtPzyyW
-	 ADwf26dkXU6P3MuELthlsbUpakAaiEza45hQPD3Y=
+	by mail.kernel.org (Postfix) with ESMTP id 93EE924656
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 11:47:05 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727470AbgBULqy (ORCPT
+        id S1728062AbgBULrE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Feb 2020 06:46:54 -0500
-Received: from mail.kernel.org ([198.145.29.99]:43818 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726989AbgBULqy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Feb 2020 06:46:54 -0500
-Received: from disco-boy.misterjones.org (disco-boy.misterjones.org [51.254.78.96])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6054B222C4;
-        Fri, 21 Feb 2020 11:46:53 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1582285613;
-        bh=MmIVHTIib5XbmYmKegaqzUGhvG/1JpO2JkcKz1UU/iU=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=XZxYbPIGj/8mA6Nfr1J3xw+Zvf3fhEmi1joXpCEUhS5YqujDjjv+PYVcZ9gRRfdb1
-         1khysq58jXEigsFBPLX/Oin/BNF8m2o7gvoIx3t9mPJZwy2rgApci7LNJrFAzWB2jf
-         4zmhqz+egyzJhjVZ5LTI0qNac+kJ4mS4QIV/ySkQ=
-Received: from disco-boy.misterjones.org ([51.254.78.96] helo=www.loen.fr)
-        by disco-boy.misterjones.org with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.92)
-        (envelope-from <maz@kernel.org>)
-        id 1j56lf-0071gb-Ns; Fri, 21 Feb 2020 11:46:51 +0000
+        Fri, 21 Feb 2020 06:47:04 -0500
+Received: from mx0a-00128a01.pphosted.com ([148.163.135.77]:4668 "EHLO
+        mx0a-00128a01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726989AbgBULrD (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 21 Feb 2020 06:47:03 -0500
+Received: from pps.filterd (m0167089.ppops.net [127.0.0.1])
+        by mx0a-00128a01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 01LBiCPA018888;
+        Fri, 21 Feb 2020 06:47:02 -0500
+Received: from nwd2mta3.analog.com ([137.71.173.56])
+        by mx0a-00128a01.pphosted.com with ESMTP id 2y8ucu71aj-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Fri, 21 Feb 2020 06:47:01 -0500
+Received: from ASHBMBX8.ad.analog.com (ashbmbx8.ad.analog.com [10.64.17.5])
+        by nwd2mta3.analog.com (8.14.7/8.14.7) with ESMTP id 01LBl0uY029352
+        (version=TLSv1/SSLv3 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=FAIL);
+        Fri, 21 Feb 2020 06:47:00 -0500
+Received: from ASHBCASHYB4.ad.analog.com (10.64.17.132) by
+ ASHBMBX8.ad.analog.com (10.64.17.5) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.1779.2; Fri, 21 Feb 2020 06:47:00 -0500
+Received: from ASHBMBX9.ad.analog.com (10.64.17.10) by
+ ASHBCASHYB4.ad.analog.com (10.64.17.132) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.1779.2; Fri, 21 Feb 2020 06:46:59 -0500
+Received: from zeus.spd.analog.com (10.64.82.11) by ASHBMBX9.ad.analog.com
+ (10.64.17.10) with Microsoft SMTP Server id 15.1.1779.2 via Frontend
+ Transport; Fri, 21 Feb 2020 06:46:59 -0500
+Received: from saturn.ad.analog.com ([10.48.65.124])
+        by zeus.spd.analog.com (8.15.1/8.15.1) with ESMTP id 01LBku5N017142;
+        Fri, 21 Feb 2020 06:46:58 -0500
+From:   Alexandru Ardelean <alexandru.ardelean@analog.com>
+To:     <linux-iio@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+CC:     <jic23@kernel.org>,
+        Alexandru Ardelean <alexandru.ardelean@analog.com>
+Subject: [PATCH 2/3] iio: imu: adis: update 'adis_data' struct doc-string
+Date:   Fri, 21 Feb 2020 13:49:42 +0200
+Message-ID: <20200221114943.2056-2-alexandru.ardelean@analog.com>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20200221114943.2056-1-alexandru.ardelean@analog.com>
+References: <20200221114943.2056-1-alexandru.ardelean@analog.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII;
- format=flowed
-Content-Transfer-Encoding: 7bit
-Date:   Fri, 21 Feb 2020 11:46:51 +0000
-From:   Marc Zyngier <maz@kernel.org>
-To:     Michal Simek <michal.simek@xilinx.com>
-Cc:     linux-kernel@vger.kernel.org, monstr@monstr.eu, git@xilinx.com,
-        Stefan Asserhall <stefan.asserhall@xilinx.com>,
-        Jason Cooper <jason@lakedaemon.net>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        linux-arm-kernel@lists.infradead.org
-Subject: Re: [PATCH 3/3] irqchip: xilinx: Use handle_domain_irq()
-In-Reply-To: <49c5a093d7ba1f20930c7433ed632e7c9bc7a2cb.1581496793.git.michal.simek@xilinx.com>
-References: <cover.1581496793.git.michal.simek@xilinx.com>
- <49c5a093d7ba1f20930c7433ed632e7c9bc7a2cb.1581496793.git.michal.simek@xilinx.com>
-Message-ID: <f028666cf1b1af428ad0564c4f93688b@kernel.org>
-X-Sender: maz@kernel.org
-User-Agent: Roundcube Webmail/1.3.10
-X-SA-Exim-Connect-IP: 51.254.78.96
-X-SA-Exim-Rcpt-To: michal.simek@xilinx.com, linux-kernel@vger.kernel.org, monstr@monstr.eu, git@xilinx.com, stefan.asserhall@xilinx.com, jason@lakedaemon.net, tglx@linutronix.de, linux-arm-kernel@lists.infradead.org
-X-SA-Exim-Mail-From: maz@kernel.org
-X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
+Content-Transfer-Encoding: 7BIT
+Content-Type:   text/plain; charset=US-ASCII
+X-ADIRoutedOnPrem: True
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.572
+ definitions=2020-02-21_03:2020-02-19,2020-02-21 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 bulkscore=0 spamscore=0
+ suspectscore=0 mlxscore=0 clxscore=1015 phishscore=0 priorityscore=1501
+ mlxlogscore=999 lowpriorityscore=0 adultscore=0 malwarescore=0
+ impostorscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2001150001 definitions=main-2002210090
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2020-02-12 08:39, Michal Simek wrote:
-> Call generic domain specific irq handler which does the most of things
-> self. Also get rid of concurrent_irq counting which hasn't been 
-> exported
-> anywhere.
-> Based on this loop was also optimized by using do/while loop instead of
-> goto loop.
-> 
-> Signed-off-by: Michal Simek <michal.simek@xilinx.com>
-> Reviewed-by: Stefan Asserhall <stefan.asserhall@xilinx.com>
-> ---
-> 
->  arch/microblaze/Kconfig           |  1 +
->  arch/microblaze/kernel/irq.c      |  5 ----
->  drivers/irqchip/irq-xilinx-intc.c | 44 +++++++++++--------------------
->  3 files changed, 16 insertions(+), 34 deletions(-)
-> 
-> diff --git a/arch/microblaze/Kconfig b/arch/microblaze/Kconfig
-> index 3a314aa2efa1..242f58ec086b 100644
-> --- a/arch/microblaze/Kconfig
-> +++ b/arch/microblaze/Kconfig
-> @@ -48,6 +48,7 @@ config MICROBLAZE
->  	select MMU_GATHER_NO_RANGE if MMU
->  	select SPARSE_IRQ
->  	select GENERIC_IRQ_MULTI_HANDLER
-> +	select HANDLE_DOMAIN_IRQ
-> 
->  # Endianness selection
->  choice
-> diff --git a/arch/microblaze/kernel/irq.c 
-> b/arch/microblaze/kernel/irq.c
-> index 1f8cb4c4f74f..0b37dde60a1e 100644
-> --- a/arch/microblaze/kernel/irq.c
-> +++ b/arch/microblaze/kernel/irq.c
-> @@ -22,13 +22,8 @@
-> 
->  void __irq_entry do_IRQ(struct pt_regs *regs)
->  {
-> -	struct pt_regs *old_regs = set_irq_regs(regs);
->  	trace_hardirqs_off();
-> -
-> -	irq_enter();
->  	handle_arch_irq(regs);
-> -	irq_exit();
-> -	set_irq_regs(old_regs);
->  	trace_hardirqs_on();
->  }
-> 
-> diff --git a/drivers/irqchip/irq-xilinx-intc.c
-> b/drivers/irqchip/irq-xilinx-intc.c
-> index ad9e678c24ac..fa468e618762 100644
-> --- a/drivers/irqchip/irq-xilinx-intc.c
-> +++ b/drivers/irqchip/irq-xilinx-intc.c
-> @@ -125,20 +125,6 @@ static unsigned int xintc_get_irq_local(struct
-> xintc_irq_chip *irqc)
->  	return irq;
->  }
-> 
-> -static unsigned int xintc_get_irq(void)
-> -{
-> -	u32 hwirq;
-> -	unsigned int irq = -1;
-> -
-> -	hwirq = xintc_read(primary_intc, IVR);
-> -	if (hwirq != -1U)
-> -		irq = irq_find_mapping(primary_intc->root_domain, hwirq);
-> -
-> -	pr_debug("irq-xilinx: hwirq=%d, irq=%d\n", hwirq, irq);
-> -
-> -	return irq;
-> -}
-> -
->  static int xintc_map(struct irq_domain *d, unsigned int irq,
-> irq_hw_number_t hw)
->  {
->  	struct xintc_irq_chip *irqc = d->host_data;
-> @@ -178,23 +164,23 @@ static void xil_intc_irq_handler(struct irq_desc 
-> *desc)
->  	chained_irq_exit(chip, desc);
->  }
-> 
-> -static u32 concurrent_irq;
-> -
->  static void xil_intc_handle_irq(struct pt_regs *regs)
->  {
-> -	unsigned int irq;
-> -
-> -	irq = xintc_get_irq();
-> -next_irq:
-> -	BUG_ON(!irq);
-> -	generic_handle_irq(irq);
-> -
-> -	irq = xintc_get_irq();
-> -	if (irq != -1U) {
-> -		pr_debug("next irq: %d\n", irq);
-> -		++concurrent_irq;
-> -		goto next_irq;
-> -	}
-> +	u32 hwirq;
-> +	struct xintc_irq_chip *irqc = primary_intc;
-> +
-> +	do {
-> +		hwirq = xintc_read(irqc, IVR);
-> +		if (hwirq != -1U) {
-> +			int ret;
-> +
-> +			ret = handle_domain_irq(irqc->root_domain, hwirq, regs);
-> +			WARN_ONCE(ret, "Unhandled HWIRQ %d\n", hwirq);
-> +			continue;
-> +		}
-> +
-> +		break;
-> +	} while (1);
+The doc-string has been neglected over time.
+This change updates it with all the missing info.
 
-OK, so this what I suggested already. Just squash the two patches
-in one, there is no point in keeping them separate.
+Signed-off-by: Alexandru Ardelean <alexandru.ardelean@analog.com>
+---
+ include/linux/iio/imu/adis.h | 6 +++++-
+ 1 file changed, 5 insertions(+), 1 deletion(-)
 
-Thanks,
-
-         M.
+diff --git a/include/linux/iio/imu/adis.h b/include/linux/iio/imu/adis.h
+index 0787a3aabd05..11c915b61ae2 100644
+--- a/include/linux/iio/imu/adis.h
++++ b/include/linux/iio/imu/adis.h
+@@ -43,10 +43,14 @@ struct adis_timeout {
+  * @diag_stat_reg: Register address of the DIAG_STAT register
+  * @prod_id_reg: Register address of the PROD_ID register
+  * @prod_id: Product ID code that should be expected when reading @prod_id_reg
++ * @self_test_mask: Bitmask of supported self-test operations
+  * @self_test_reg: Register address to request self test command
++ * @self_test_no_autoclear: True if device's self-test needs clear of ctrl reg
+  * @status_error_msgs: Array of error messgaes
+- * @status_error_mask:
++ * @status_error_mask: Bitmask of errors supported by the device
+  * @timeouts: Chip specific delays
++ * @enable_irq: Hook for ADIS devices that have a special IRQ enable/disable
++ * @has_paging: True if ADIS device has paged registers
+  */
+ struct adis_data {
+ 	unsigned int read_delay;
 -- 
-Jazz is not dead. It just smells funny...
+2.20.1
+
