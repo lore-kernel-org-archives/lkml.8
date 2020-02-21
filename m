@@ -2,97 +2,138 @@ Return-Path: <SRS0=1210=4J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 93BA9C35656
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 15:01:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EF091C35656
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 15:03:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 735A724650
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 15:01:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CC5A324650
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 15:03:27 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728910AbgBUPBW (ORCPT
+        id S1728970AbgBUPD0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Feb 2020 10:01:22 -0500
-Received: from verein.lst.de ([213.95.11.211]:55906 "EHLO verein.lst.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728690AbgBUPBW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Feb 2020 10:01:22 -0500
-Received: by verein.lst.de (Postfix, from userid 2005)
-        id 3258468BFE; Fri, 21 Feb 2020 16:01:18 +0100 (CET)
-Date:   Fri, 21 Feb 2020 16:01:17 +0100
-From:   Torsten Duwe <duwe@lst.de>
-To:     Thomas Zimmermann <tzimmermann@suse.de>
-Cc:     Vasily Khoruzhick <anarsoul@gmail.com>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Thierry Reding <treding@nvidia.com>,
-        Jernej Skrabec <jernej.skrabec@siol.net>,
-        Jonas Karlman <jonas@kwiboo.se>,
-        David Airlie <airlied@linux.ie>,
-        Neil Armstrong <narmstrong@baylibre.com>,
-        linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org,
-        Andrzej Hajda <a.hajda@samsung.com>,
-        Sean Paul <seanpaul@chromium.org>,
-        Laurent Pinchart <Laurent.pinchart@ideasonboard.com>,
-        Maxime Ripard <maxime@cerno.tech>
-Subject: Re: [RESEND2][PATCH] drm/bridge: analogix-anx6345: Fix drm_dp_link
- helper removal
-Message-ID: <20200221150117.GA6928@lst.de>
-References: <20200221140455.8713068BFE@verein.lst.de> <b30435c7-95c5-e21e-ea05-cd3ada20d150@suse.de>
+        Fri, 21 Feb 2020 10:03:26 -0500
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:46096 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727315AbgBUPD0 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 21 Feb 2020 10:03:26 -0500
+Received: from pps.filterd (m0098404.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 01LEscNa128445;
+        Fri, 21 Feb 2020 10:03:19 -0500
+Received: from ppma03dal.us.ibm.com (b.bd.3ea9.ip4.static.sl-reverse.com [169.62.189.11])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2y9sbvkjv0-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Fri, 21 Feb 2020 10:03:18 -0500
+Received: from pps.filterd (ppma03dal.us.ibm.com [127.0.0.1])
+        by ppma03dal.us.ibm.com (8.16.0.27/8.16.0.27) with SMTP id 01LF0bt0002688;
+        Fri, 21 Feb 2020 15:03:18 GMT
+Received: from b03cxnp08027.gho.boulder.ibm.com (b03cxnp08027.gho.boulder.ibm.com [9.17.130.19])
+        by ppma03dal.us.ibm.com with ESMTP id 2y6897u8rs-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Fri, 21 Feb 2020 15:03:17 +0000
+Received: from b03ledav002.gho.boulder.ibm.com (b03ledav002.gho.boulder.ibm.com [9.17.130.233])
+        by b03cxnp08027.gho.boulder.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 01LF3GOB54067536
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Fri, 21 Feb 2020 15:03:16 GMT
+Received: from b03ledav002.gho.boulder.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 95F98136066;
+        Fri, 21 Feb 2020 15:03:16 +0000 (GMT)
+Received: from b03ledav002.gho.boulder.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 86245136065;
+        Fri, 21 Feb 2020 15:03:16 +0000 (GMT)
+Received: from localhost (unknown [9.41.179.160])
+        by b03ledav002.gho.boulder.ibm.com (Postfix) with ESMTP;
+        Fri, 21 Feb 2020 15:03:16 +0000 (GMT)
+From:   Nathan Lynch <nathanl@linux.ibm.com>
+To:     "Gautham R. Shenoy" <ego@linux.vnet.ibm.com>
+Cc:     linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Vaidyanathan Srinivasan <svaidy@linux.vnet.ibm.com>,
+        Kamalesh Babulal <kamalesh@linux.vnet.ibm.com>,
+        "Naveen N. Rao" <naveen.n.rao@linux.vnet.ibm.com>,
+        Tyrel Datwyler <tyreld@linux.ibm.com>
+Subject: Re: [PATCH v2 1/5] powerpc: Move idle_loop_prolog()/epilog() functions to header file
+In-Reply-To: <1582262314-8319-2-git-send-email-ego@linux.vnet.ibm.com>
+References: <1582262314-8319-1-git-send-email-ego@linux.vnet.ibm.com> <1582262314-8319-2-git-send-email-ego@linux.vnet.ibm.com>
+Date:   Fri, 21 Feb 2020 09:03:16 -0600
+Message-ID: <87lfowt22z.fsf@linux.ibm.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <b30435c7-95c5-e21e-ea05-cd3ada20d150@suse.de>
-User-Agent: Mutt/1.5.17 (2007-11-01)
+Content-Type: text/plain
+X-TM-AS-GCONF: 00
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.572
+ definitions=2020-02-21_04:2020-02-21,2020-02-21 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 spamscore=0 phishscore=0
+ mlxscore=0 malwarescore=0 bulkscore=0 mlxlogscore=999 impostorscore=0
+ priorityscore=1501 lowpriorityscore=0 adultscore=0 suspectscore=1
+ clxscore=1015 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2001150001 definitions=main-2002210115
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Feb 21, 2020 at 03:39:32PM +0100, Thomas Zimmermann wrote:
-> Hi Torsten
-> 
-> Am 21.02.20 um 15:04 schrieb Torsten Duwe:
-> > drm_dp_link_rate_to_bw_code and ...bw_code_to_link_rate simply divide by
-> > and multiply with 27000, respectively. Avoid an overflow in the u8 dpcd[0]
-> > and the multiply+divide alltogether.
-> > 
-> > fixes: e1cff82c1097bda2478 ("fix anx6345 compilation for v5.5")
-> 
-> You have to create the fixes tag and related cc tags with 'dim fixes',
-> available at [1]. For this patch, the output is
-> 
-> Fixes: e1cff82c1097 ("drm/bridge: fix anx6345 compilation for v5.5")
-> Cc: Torsten Duwe <duwe@suse.de>
-> Cc: Maxime Ripard <maxime@cerno.tech>
-> Cc: Torsten Duwe <duwe@lst.de>
-> Cc: Sam Ravnborg <sam@ravnborg.org>
-> Cc: Linus Walleij <linus.walleij@linaro.org>
-> Cc: Thomas Zimmermann <tzimmermann@suse.de>
-> Cc: Icenowy Zheng <icenowy@aosc.io>
-> Cc: Stephen Rothwell <sfr@canb.auug.org.au>
+"Gautham R. Shenoy" <ego@linux.vnet.ibm.com> writes:
 
-Ah, neat.
+> From: "Gautham R. Shenoy" <ego@linux.vnet.ibm.com>
+>
+> Currently prior to entering an idle state on a Linux Guest, the
+> pseries cpuidle driver implement an idle_loop_prolog() and
+> idle_loop_epilog() functions which ensure that idle_purr is correctly
+> computed, and the hypervisor is informed that the CPU cycles have been
+> donated.
+>
+> These prolog and epilog functions are also required in the default
+> idle call, i.e pseries_lpar_idle(). Hence move these accessor
+> functions to a common header file and call them from
+> pseries_lpar_idle(). Since the existing header files such as
+> asm/processor.h have enough clutter, create a new header file
+> asm/idle.h.
+>
+> Signed-off-by: Gautham R. Shenoy <ego@linux.vnet.ibm.com>
+> ---
+>  arch/powerpc/include/asm/idle.h        | 27 +++++++++++++++++++++++++++
+>  arch/powerpc/platforms/pseries/setup.c |  7 +++++--
+>  drivers/cpuidle/cpuidle-pseries.c      | 24 +-----------------------
+>  3 files changed, 33 insertions(+), 25 deletions(-)
+>  create mode 100644 arch/powerpc/include/asm/idle.h
+>
+> diff --git a/arch/powerpc/include/asm/idle.h b/arch/powerpc/include/asm/idle.h
+> new file mode 100644
+> index 0000000..f32a7d8
+> --- /dev/null
+> +++ b/arch/powerpc/include/asm/idle.h
+> @@ -0,0 +1,27 @@
+> +#ifndef _ASM_POWERPC_IDLE_H
+> +#define _ASM_POWERPC_IDLE_H
+> +#include <asm/runlatch.h>
+> +
+> +static inline void idle_loop_prolog(unsigned long *in_purr)
+> +{
+> +	ppc64_runlatch_off();
+> +	*in_purr = mfspr(SPRN_PURR);
+> +	/*
+> +	 * Indicate to the HV that we are idle. Now would be
+> +	 * a good time to find other work to dispatch.
+> +	 */
+> +	get_lppaca()->idle = 1;
+> +}
+> +
+> +static inline void idle_loop_epilog(unsigned long in_purr)
+> +{
+> +	u64 wait_cycles;
+> +
+> +	wait_cycles = be64_to_cpu(get_lppaca()->wait_state_cycles);
+> +	wait_cycles += mfspr(SPRN_PURR) - in_purr;
+> +	get_lppaca()->wait_state_cycles = cpu_to_be64(wait_cycles);
+> +	get_lppaca()->idle = 0;
+> +
+> +	ppc64_runlatch_on();
+> +}
+> +#endif
 
-> > Signed-off-by: Torsten Duwe <duwe@suse.de>
-> 
-> You signed off with your SUSE email address, but sent the mail from
-> lst.de. I don't know if it's strictly not allowed, but that's at least
-> confusing to the tools.
-
-From my understanding, it is legally correct. The work is owned by Suse,
-so I have to sign off as an employee, but I'm subscribed with the LST
-address, and I'd also like to see all replies there.
-
-> [1] https://gitlab.freedesktop.org/drm/maintainer-tools/
-
-I'll send an appropriate v2 once I get a review for it.
-
-Thanks!
-
-	Torsten
-
-
-
+Looks fine and correct as a cleanup, but asm/include/idle.h and
+idle_loop_prolog, idle_loop_epilog, strike me as too generic for
+pseries-specific code.
