@@ -2,173 +2,268 @@ Return-Path: <SRS0=1210=4J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 68303C35657
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 17:54:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 65928C35657
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 17:56:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 40A0920722
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 17:54:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 28BA320722
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 17:56:48 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="RNLpHMpz"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729355AbgBURyz (ORCPT
+        id S1726550AbgBUR4q (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Feb 2020 12:54:55 -0500
-Received: from muru.com ([72.249.23.125]:56764 "EHLO muru.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729269AbgBURyy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Feb 2020 12:54:54 -0500
-Received: from atomide.com (localhost [127.0.0.1])
-        by muru.com (Postfix) with ESMTPS id 711B0807E;
-        Fri, 21 Feb 2020 17:55:37 +0000 (UTC)
-Date:   Fri, 21 Feb 2020 09:54:49 -0800
-From:   Tony Lindgren <tony@atomide.com>
-To:     "Andrew F. Davis" <afd@ti.com>
-Cc:     kbuild-all@lists.01.org, linux-kernel@vger.kernel.org,
-        kbuild test robot <lkp@intel.com>,
-        linux-omap@vger.kernel.org, Aaro Koskinen <aaro.koskinen@iki.fi>,
-        Marc Zyngier <maz@kernel.org>,
-        linux-arm-kernel@lists.infradead.org,
-        Arnd Bergmann <arnd@arndb.de>, Rob Herring <robh@kernel.org>
-Subject: Re: omap-secure.c:undefined reference to `__arm_smccc_smc'
-Message-ID: <20200221175449.GZ37466@atomide.com>
-References: <20200220155429.GH37466@atomide.com>
- <55ddcd29-ed8b-529e-dd54-cbac5cf74e42@ti.com>
- <20200220162012.GI37466@atomide.com>
- <d7b685b6-16a2-3743-1786-a5240726ed9c@ti.com>
- <20200220163703.GK37466@atomide.com>
- <20200220171305.GL37466@atomide.com>
- <281e895b-720d-5bab-63cf-8b3e389dc767@ti.com>
- <20200220175744.GQ37466@atomide.com>
- <20200220181141.GR37466@atomide.com>
- <333dd36f-e760-64b3-9e0f-3a316df9ad10@ti.com>
+        Fri, 21 Feb 2020 12:56:46 -0500
+Received: from us-smtp-1.mimecast.com ([207.211.31.81]:33091 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725947AbgBUR4q (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 21 Feb 2020 12:56:46 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1582307805;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:
+         content-transfer-encoding:content-transfer-encoding;
+        bh=88Nxd/8ku9aw8ZzcS+9T+V3Q+Oha7xL17ZgefCeO0Ts=;
+        b=RNLpHMpzDpi4ErEQwHrwo/aAMbT0DYaBaT+zpVdZ7sGSSlyEfO3uPcqromTBJ0qdZovR2k
+        t8Pl3sLWriWQjemyt+VTey5cihWpjXDh+czrL9LZSX7Uwb9tCiSU4qohybILs8Wau6pEr+
+        vXnnAeaKl4Pg8LATcfnx3vu6IgP0SG0=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-1-kK2a9-HfNzq8c8Z5J2Azsg-1; Fri, 21 Feb 2020 12:56:39 -0500
+X-MC-Unique: kK2a9-HfNzq8c8Z5J2Azsg-1
+Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id C7B60107ACC9;
+        Fri, 21 Feb 2020 17:56:37 +0000 (UTC)
+Received: from agerstmayr-thinkpad.redhat.com (ovpn-204-47.brq.redhat.com [10.40.204.47])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id E4BE3790CF;
+        Fri, 21 Feb 2020 17:56:29 +0000 (UTC)
+From:   Andreas Gerstmayr <agerstmayr@redhat.com>
+To:     linux-kernel@vger.kernel.org
+Cc:     kabbott@redhat.com, skozina@redhat.com, mpetlan@redhat.com,
+        nathans@redhat.com, mgoodwin@redhat.com,
+        linux-perf-users@vger.kernel.org, bgregg@netflix.com,
+        mspier@netflix.com, Andreas Gerstmayr <agerstmayr@redhat.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@redhat.com>,
+        Namhyung Kim <namhyung@kernel.org>
+Subject: [RFC] perf script: add flamegraph.py script
+Date:   Fri, 21 Feb 2020 18:55:01 +0100
+Message-Id: <20200221175500.83774-1-agerstmayr@redhat.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <333dd36f-e760-64b3-9e0f-3a316df9ad10@ti.com>
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-* Andrew F. Davis <afd@ti.com> [200220 10:23]:
-> On 2/20/20 1:11 PM, Tony Lindgren wrote:
-> > * Tony Lindgren <tony@atomide.com> [200220 17:58]:
-> >> * Andrew F. Davis <afd@ti.com> [200220 17:39]:
-> >>> On 2/20/20 12:13 PM, Tony Lindgren wrote:
-> >>>> * Tony Lindgren <tony@atomide.com> [200220 16:37]:
-> >>>>> * Andrew F. Davis <afd@ti.com> [200220 16:24]:
-> >>>>>> On 2/20/20 11:20 AM, Tony Lindgren wrote:
-> >>>>>>> * Andrew F. Davis <afd@ti.com> [200220 16:04]:
-> >>>>>>>> On 2/20/20 10:54 AM, Tony Lindgren wrote:
-> >>>>>>>>> Andrew,
-> >>>>>>>>>
-> >>>>>>>>> * kbuild test robot <lkp@intel.com> [200213 10:27]:
-> >>>>>>>>>> tree:   https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git master
-> >>>>>>>>>> head:   0bf999f9c5e74c7ecf9dafb527146601e5c848b9
-> >>>>>>>>>> commit: c37baa06f8a970e4a533d41f7d33e5e57de5ad25 ARM: OMAP2+: Fix undefined reference to omap_secure_init
-> >>>>>>>>>> date:   3 weeks ago
-> >>>>>>>>>> config: arm-randconfig-a001-20200213 (attached as .config)
-> >>>>>>>>>> compiler: arm-linux-gnueabi-gcc (GCC) 7.5.0
-> >>>>>>>>>> reproduce:
-> >>>>>>>>>>         wget https://raw.githubusercontent.com/intel/lkp-tests/master/sbin/make.cross -O ~/bin/make.cross
-> >>>>>>>>>>         chmod +x ~/bin/make.cross
-> >>>>>>>>>>         git checkout c37baa06f8a970e4a533d41f7d33e5e57de5ad25
-> >>>>>>>>>>         # save the attached .config to linux build tree
-> >>>>>>>>>>         GCC_VERSION=7.5.0 make.cross ARCH=arm 
-> >>>>>>>>>>
-> >>>>>>>>>> If you fix the issue, kindly add following tag
-> >>>>>>>>>> Reported-by: kbuild test robot <lkp@intel.com>
-> >>>>>>>>>>
-> >>>>>>>>>> All errors (new ones prefixed by >>):
-> >>>>>>>>>>
-> >>>>>>>>>>    arch/arm/mach-omap2/omap-secure.o: In function `omap_smccc_smc':
-> >>>>>>>>>>>> omap-secure.c:(.text+0x94): undefined reference to `__arm_smccc_smc'
-> >>>>>>>>>
-> >>>>>>>>> Have you looked at this one? Looks like there's still an unhandled
-> >>>>>>>>> randconfig build case.
-> >>>>>>>>>
-> >>>>>>>>
-> >>>>>>>>
-> >>>>>>>> I've had a quick look, all the ARM config does:
-> >>>>>>>>
-> >>>>>>>> select HAVE_ARM_SMCCC if CPU_V7
-> >>>>>>>>
-> >>>>>>>> so I don't think this will happen in any real config, but if we want to
-> >>>>>>>> prevent randconfig issue this we could force ARCH_OMAP2PLUS to "depend"
-> >>>>>>>> on it.
-> >>>>>>>
-> >>>>>>> Seems to happen at least with omap2 only config where we don't have
-> >>>>>>> CPU_V7. Something like below seems to fix it.
-> >>>>>>>
-> >>>>>>> If that looks OK to you, I'll send out a proper fix.
-> >>>>>>>
-> >>>>>>
-> >>>>>>
-> >>>>>> This looks fine to me.
-> >>>>>>
-> >>>>>> A better later fix might be to later stub out the actual __arm_smccc_smc
-> >>>>>> in common code if CONFIG_HAVE_ARM_SMCCC is not set, so any platform will
-> >>>>>> get the fix.
-> >>>>>
-> >>>>> Yeah seems that might be better. Adding Aaro and Marc to Cc.
-> >>>>
-> >>>> But if we can in theory have some arm11 machine with smccc, then this
-> >>>> local ifdef below is probably the way to go.
-> >>>>
-> >>>
-> >>> If the machine has SMCCC then it will also have the
-> >>> CONFIG_HAVE_ARM_SMCCC set and so nothing would change.
-> >>
-> >> Hmm yeah good point.
-> > 
-> > So the patch below seems like the way to go then. Anybody have issues
-> > with the patch below?
-> > 
-> > Regards,
-> > 
-> > Tony
-> > 
-> > 8< -------------------------
-> > diff --git a/include/linux/arm-smccc.h b/include/linux/arm-smccc.h
-> > --- a/include/linux/arm-smccc.h
-> > +++ b/include/linux/arm-smccc.h
-> > @@ -121,6 +121,7 @@ struct arm_smccc_quirk {
-> >  	} state;
-> >  };
-> >  
-> > +#ifdef CONFIG_HAVE_ARM_SMCCC
-> >  /**
-> >   * __arm_smccc_smc() - make SMC calls
-> >   * @a0-a7: arguments passed in registers 0 to 7
-> > @@ -137,6 +138,14 @@ asmlinkage void __arm_smccc_smc(unsigned long a0, unsigned long a1,
-> >  			unsigned long a2, unsigned long a3, unsigned long a4,
-> >  			unsigned long a5, unsigned long a6, unsigned long a7,
-> >  			struct arm_smccc_res *res, struct arm_smccc_quirk *quirk);
-> > +#else
-> > +static inline void __arm_smccc_smc(unsigned long a0, unsigned long a1,
-> > +			unsigned long a2, unsigned long a3, unsigned long a4,
-> > +			unsigned long a5, unsigned long a6, unsigned long a7,
-> > +			struct arm_smccc_res *res, struct arm_smccc_quirk *quirk)
-> > +{
-> 
-> 
-> Maybe a warning? If you do not have SMC on your platform but are still
-> making SMC calls then something is broken and it looks like it would
-> fail silently here.
+This script works in tandem with d3-flame-graph to generate flame graphs
+from perf. It supports two output formats: JSON and HTML (the default).
+The HTML format will look for a standalone d3-flame-graph template file i=
+n
+/usr/share/d3-flame-graph/template.html and fill in the collected stacks.
 
-Actually I'll go back to the earlier local fix. With above changes,
-we now start getting uninitialized struct arm_smccc_res res warning
-in omap_smccc_smc(). And it's a bit unclear if and with what value
-a0 should be initialized. Probably should be SMCCC_RET_NOT_SUPPORTED,
-but that then requires moving defines around too. And if it turns
-out being version specific define, then we keep piling up more code.
+Usage:
 
-My guess is that it's only few SoCs that might have ARMv6 and v7
-both built, so it's not like we'd have to patch all over the place
-anyways.
+    perf script flamegraph -a -F 99 sleep 60
 
-Regards,
+Alternative usage:
 
-Tony
+    perf record -a -g -F 99 sleep 60
+    perf script report flamegraph
+
+Signed-off-by: Andreas Gerstmayr <agerstmayr@redhat.com>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: Ingo Molnar <mingo@redhat.com>
+Cc: Arnaldo Carvalho de Melo <acme@kernel.org>
+Cc: Mark Rutland <mark.rutland@arm.com>
+Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
+Cc: Jiri Olsa <jolsa@redhat.com>
+Cc: Namhyung Kim <namhyung@kernel.org>
+---
+
+I'm currently preparing packages for d3-flame-graph. For Fedora, the copr
+at
+https://copr.fedorainfracloud.org/coprs/agerstmayr/reviews/package/js-d3-=
+flame-graph/
+can be installed, or alternatively the prebuilt standalone d3-flame-graph
+template can be downloaded from
+https://raw.githubusercontent.com/andreasgerstmayr/specs/master/reviews/j=
+s-d3-flame-graph/template.html
+and moved into /usr/share/d3-flame-graph/template.html
+
+ .../perf/scripts/python/bin/flamegraph-record |   2 +
+ .../perf/scripts/python/bin/flamegraph-report |   3 +
+ tools/perf/scripts/python/flamegraph.py       | 117 ++++++++++++++++++
+ 3 files changed, 122 insertions(+)
+ create mode 100755 tools/perf/scripts/python/bin/flamegraph-record
+ create mode 100755 tools/perf/scripts/python/bin/flamegraph-report
+ create mode 100755 tools/perf/scripts/python/flamegraph.py
+
+diff --git a/tools/perf/scripts/python/bin/flamegraph-record b/tools/perf=
+/scripts/python/bin/flamegraph-record
+new file mode 100755
+index 000000000000..725d66e71570
+--- /dev/null
++++ b/tools/perf/scripts/python/bin/flamegraph-record
+@@ -0,0 +1,2 @@
++#!/usr/bin/sh
++perf record -g "$@"
+diff --git a/tools/perf/scripts/python/bin/flamegraph-report b/tools/perf=
+/scripts/python/bin/flamegraph-report
+new file mode 100755
+index 000000000000..b1a79afd903b
+--- /dev/null
++++ b/tools/perf/scripts/python/bin/flamegraph-report
+@@ -0,0 +1,3 @@
++#!/usr/bin/sh
++# description: create flame graphs
++perf script -s "$PERF_EXEC_PATH"/scripts/python/flamegraph.py -- "$@"
+diff --git a/tools/perf/scripts/python/flamegraph.py b/tools/perf/scripts=
+/python/flamegraph.py
+new file mode 100755
+index 000000000000..2e9139ef2c4a
+--- /dev/null
++++ b/tools/perf/scripts/python/flamegraph.py
+@@ -0,0 +1,117 @@
++# flamegraph.py - create flame graphs from perf samples
++# SPDX-License-Identifier: GPL-2.0
++#
++# Usage:
++#
++#  perf record -a -g -F 99 sleep 60
++#  perf script report flamegraph
++#
++# Combined data collection and flamegraph generation:
++#
++#  perf script flamegraph -a -F 99 sleep 60
++#
++# Written by Andreas Gerstmayr <agerstmayr@redhat.com>
++# Flame Graphs invented by Brendan Gregg <bgregg@netflix.com>
++# Works in tandem with d3-flame-graph by Martin Spier <mspier@netflix.co=
+m>
++
++import sys
++import os
++import argparse
++import json
++
++
++class Node:
++    def __init__(self, name, libtype=3D""):
++        self.name =3D name
++        self.libtype =3D libtype
++        self.value =3D 0
++        self.children =3D []
++
++
++class FlameGraphCLI:
++    def __init__(self, args):
++        self.args =3D args
++        self.stack =3D Node("root")
++
++        if self.args.format =3D=3D "html" and \
++                not os.path.isfile(self.args.template):
++            print(f"Flame Graph template '{self.args.template}' does not=
+ " +
++                  f"exist. Please install the d3-flame-graph package, " =
++
++                  f"specify an existing flame graph template " +
++                  f"(--template PATH) or another output format " +
++                  f"(--format FORMAT).", file=3Dsys.stderr)
++            sys.exit(1)
++
++    def find_or_create_node(self, node, name, dso):
++        libtype =3D "kernel" if dso =3D=3D "[kernel.kallsyms]" else ""
++        if name is None:
++            name =3D "[unknown]"
++
++        for child in node.children:
++            if child.name =3D=3D name and child.libtype =3D=3D libtype:
++                return child
++
++        child =3D Node(name, libtype)
++        node.children.append(child)
++        return child
++
++    def process_event(self, event):
++        node =3D self.find_or_create_node(self.stack, event["comm"], Non=
+e)
++        if "callchain" in event:
++            for entry in reversed(event['callchain']):
++                node =3D self.find_or_create_node(
++                    node, entry.get("sym", {}).get("name"), event.get("d=
+so"))
++        else:
++            node =3D self.find_or_create_node(
++                node, entry.get("symbol"), event.get("dso"))
++        node.value +=3D 1
++
++    def trace_end(self):
++        def encoder(x): return x.__dict__
++        json_str =3D json.dumps(self.stack, default=3Dencoder,
++                              indent=3Dself.args.indent)
++
++        if self.args.format =3D=3D "html":
++            try:
++                with open(self.args.template) as f:
++                    output_str =3D f.read().replace("/** @flamegraph_par=
+ams **/",
++                                                  json_str)
++            except IOError as e:
++                print(f"Error reading template file: {e}", file=3Dsys.st=
+derr)
++                sys.exit(1)
++            output_fn =3D self.args.output or "flamegraph.html"
++        else:
++            output_str =3D json_str
++            output_fn =3D self.args.output or "stacks.json"
++
++        if output_fn =3D=3D "-":
++            sys.stdout.write(output_str)
++        else:
++            try:
++                with open(output_fn, "w") as out:
++                    out.write(output_str)
++            except IOError as e:
++                print(f"Error writing output file: {e}", file=3Dsys.stde=
+rr)
++                sys.exit(1)
++
++
++if __name__ =3D=3D "__main__":
++    parser =3D argparse.ArgumentParser(description=3D"Create flame graph=
+s.")
++    parser.add_argument("-F", "--format",
++                        default=3D"html", choices=3D["json", "html"],
++                        help=3D"output file format")
++    parser.add_argument("-o", "--output",
++                        help=3D"output file name")
++    parser.add_argument("--indent",
++                        type=3Dint, help=3D"JSON indentation")
++    parser.add_argument("--template",
++                        default=3D"/usr/share/d3-flame-graph/template.ht=
+ml",
++                        help=3D"path to flamegraph HTML template")
++    parser.add_argument("-i", "--input",
++                        help=3Dargparse.SUPPRESS)
++
++    args =3D parser.parse_args()
++    cli =3D FlameGraphCLI(args)
++
++    process_event =3D cli.process_event
++    trace_end =3D cli.trace_end
+--=20
+2.24.1
+
