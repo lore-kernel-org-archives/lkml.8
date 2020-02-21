@@ -7,48 +7,47 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E4730C35641
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 07:55:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 65FE5C35642
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 07:55:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BBE1E20658
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 07:55:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2DA7420578
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 07:55:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582271757;
-	bh=tO4IK6qaQxYUSnNMvJsU3p6KHsQXd6nqqTonDg5LQMo=;
+	s=default; t=1582271759;
+	bh=PDMV9NL7oAVwioQiltJHDGJGsryMCmbpfpVrnmp6Hao=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=zbKzx3kmpQUxEqybu0fKwk5X1jvqa8NpyKgSvcLX4ikJT+qJ6UnjNAlu9hUgl9+bm
-	 /G4Dmvhj7Bwgfr30JXFYpDfIs3R32pX5Y4ijAxB+iZuWbcRMSNpYwhdr0+bjn13t75
-	 BJOnQP4SemFZs+hwm5CHz4r/8A6Y8ivDjm/3Afdk=
+	b=viMrMHpcTrlWmCBGqrZxrJGAB7pfHhcZI7gLn69MmFd48XHmagBhbJKd8dYFyGFfh
+	 5TeAzcLzu6Ig8ud8ZoL8yIrccgJjUdVDHWwzFWmx5O2YOiQvUgilBkaLlixN2lcrbb
+	 yoSXkCprv2E91wHgpWhdGndeRRMUEzlN32k3oxKE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730406AbgBUHzz (ORCPT
+        id S1730413AbgBUHz6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Feb 2020 02:55:55 -0500
-Received: from mail.kernel.org ([198.145.29.99]:55010 "EHLO mail.kernel.org"
+        Fri, 21 Feb 2020 02:55:58 -0500
+Received: from mail.kernel.org ([198.145.29.99]:55094 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730396AbgBUHzx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Feb 2020 02:55:53 -0500
+        id S1730396AbgBUHz4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 21 Feb 2020 02:55:56 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5933220578;
-        Fri, 21 Feb 2020 07:55:52 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7158C2073A;
+        Fri, 21 Feb 2020 07:55:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1582271752;
-        bh=tO4IK6qaQxYUSnNMvJsU3p6KHsQXd6nqqTonDg5LQMo=;
+        s=default; t=1582271755;
+        bh=PDMV9NL7oAVwioQiltJHDGJGsryMCmbpfpVrnmp6Hao=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=BqeVTRZvO1JExQHk+bmIAknu10zmiMvy6j8TawXO5+SGtdIR45hhD2Qe1VGF8Ot6o
-         F5s1SvF0njh/AI0AgJm/OLRU+4n3ZId74TnF5rEqE++svYVg0R0lklioVn7KFSF850
-         h2yVi/fAnrfPFulNL6c3n3liqENsQiY2VAD7y7bM=
+        b=fRhitN/uvFXRQHHhQ0XY9P9HAV7EjmFwQLNFz0KGo1qCoPSU/MTIV5mTgBhCK1MUs
+         5LFWqbtsoiTDdmfAjC3G5oTRzjzZD13UQ1Tgvl3/RsQC3PKIph2JvMF84x5dDEw44N
+         MNExgiIIT3P3UKk5ni04hF81DJoh+iLuzzVVaPUs=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Hulk Robot <hulkci@huawei.com>,
-        zhengbin <zhengbin13@huawei.com>,
-        Paul Mackerras <paulus@ozlabs.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.5 286/399] KVM: PPC: Remove set but not used variable ra, rs, rt
-Date:   Fri, 21 Feb 2020 08:40:11 +0100
-Message-Id: <20200221072429.676540281@linuxfoundation.org>
+        stable@vger.kernel.org, Suman Anna <s-anna@ti.com>,
+        Lokesh Vutla <lokeshvutla@ti.com>,
+        Tero Kristo <t-kristo@ti.com>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.5 287/399] arm64: dts: ti: k3-j721e-main: Add missing power-domains for smmu
+Date:   Fri, 21 Feb 2020 08:40:12 +0100
+Message-Id: <20200221072429.751482870@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200221072402.315346745@linuxfoundation.org>
 References: <20200221072402.315346745@linuxfoundation.org>
@@ -61,53 +60,35 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: zhengbin <zhengbin13@huawei.com>
+From: Lokesh Vutla <lokeshvutla@ti.com>
 
-[ Upstream commit 4de0a8355463e068e443b48eb5ae32370155368b ]
+[ Upstream commit 3f03a58b25753843ce9e4511e9e246c51bd11011 ]
 
-Fixes gcc '-Wunused-but-set-variable' warning:
+Add power-domains entry for smmu, so that the it is accessible as long
+as the driver is active. Without this device shutdown is throwing the
+below warning:
+"[   44.736348] arm-smmu-v3 36600000.smmu: failed to clear cr0"
 
-arch/powerpc/kvm/emulate_loadstore.c: In function kvmppc_emulate_loadstore:
-arch/powerpc/kvm/emulate_loadstore.c:87:6: warning: variable ra set but not used [-Wunused-but-set-variable]
-arch/powerpc/kvm/emulate_loadstore.c: In function kvmppc_emulate_loadstore:
-arch/powerpc/kvm/emulate_loadstore.c:87:10: warning: variable rs set but not used [-Wunused-but-set-variable]
-arch/powerpc/kvm/emulate_loadstore.c: In function kvmppc_emulate_loadstore:
-arch/powerpc/kvm/emulate_loadstore.c:87:14: warning: variable rt set but not used [-Wunused-but-set-variable]
-
-They are not used since commit 2b33cb585f94 ("KVM: PPC: Reimplement
-LOAD_FP/STORE_FP instruction mmio emulation with analyse_instr() input")
-
-Reported-by: Hulk Robot <hulkci@huawei.com>
-Signed-off-by: zhengbin <zhengbin13@huawei.com>
-Signed-off-by: Paul Mackerras <paulus@ozlabs.org>
+Reported-by: Suman Anna <s-anna@ti.com>
+Signed-off-by: Lokesh Vutla <lokeshvutla@ti.com>
+Signed-off-by: Tero Kristo <t-kristo@ti.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/powerpc/kvm/emulate_loadstore.c | 5 -----
- 1 file changed, 5 deletions(-)
+ arch/arm64/boot/dts/ti/k3-j721e-main.dtsi | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/arch/powerpc/kvm/emulate_loadstore.c b/arch/powerpc/kvm/emulate_loadstore.c
-index 2e496eb86e94a..1139bc56e0045 100644
---- a/arch/powerpc/kvm/emulate_loadstore.c
-+++ b/arch/powerpc/kvm/emulate_loadstore.c
-@@ -73,7 +73,6 @@ int kvmppc_emulate_loadstore(struct kvm_vcpu *vcpu)
- {
- 	struct kvm_run *run = vcpu->run;
- 	u32 inst;
--	int ra, rs, rt;
- 	enum emulation_result emulated = EMULATE_FAIL;
- 	int advance = 1;
- 	struct instruction_op op;
-@@ -85,10 +84,6 @@ int kvmppc_emulate_loadstore(struct kvm_vcpu *vcpu)
- 	if (emulated != EMULATE_DONE)
- 		return emulated;
- 
--	ra = get_ra(inst);
--	rs = get_rs(inst);
--	rt = get_rt(inst);
--
- 	vcpu->arch.mmio_vsx_copy_nums = 0;
- 	vcpu->arch.mmio_vsx_offset = 0;
- 	vcpu->arch.mmio_copy_type = KVMPPC_VSX_COPY_NONE;
+diff --git a/arch/arm64/boot/dts/ti/k3-j721e-main.dtsi b/arch/arm64/boot/dts/ti/k3-j721e-main.dtsi
+index 1e4c2b78d66d6..68d478af7a3e6 100644
+--- a/arch/arm64/boot/dts/ti/k3-j721e-main.dtsi
++++ b/arch/arm64/boot/dts/ti/k3-j721e-main.dtsi
+@@ -43,6 +43,7 @@
+ 	smmu0: smmu@36600000 {
+ 		compatible = "arm,smmu-v3";
+ 		reg = <0x0 0x36600000 0x0 0x100000>;
++		power-domains = <&k3_pds 229 TI_SCI_PD_EXCLUSIVE>;
+ 		interrupt-parent = <&gic500>;
+ 		interrupts = <GIC_SPI 772 IRQ_TYPE_EDGE_RISING>,
+ 			     <GIC_SPI 768 IRQ_TYPE_EDGE_RISING>;
 -- 
 2.20.1
 
