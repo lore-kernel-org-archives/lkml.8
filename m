@@ -7,53 +7,53 @@ X-Spam-Status: No, score=-7.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8CCA7C35665
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 19:51:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B23D5C35663
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 19:51:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 588C5207FD
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 19:51:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 83898208C4
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 19:51:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582314674;
-	bh=dj3CunnCp6cBgmquorl/y4Cqs0ZJNLl7zdr0vzTTpfM=;
+	s=default; t=1582314719;
+	bh=5GVO4BWWYkqAbWt/9/lmxhI4c0yr8DWwAfymhCasL/E=;
 	h=Subject:To:Cc:References:From:Date:In-Reply-To:List-ID:From;
-	b=0D0CUPEW2BOrjq8hM9ZcOUFQ+mLL9emKJhVCdMwSeS8MYbfLyJuiQxjYbL903SOyt
-	 Wp7w+xWkiAebskDWrfn0Uzf41GhCH2TcNz0CU/52hsQjLneQjB7r9fnVDuM9hqO8Uq
-	 wAuuOXGIPv7Y0gFJolkmv2q2/MjwFZ8c+QcJyAek=
+	b=mHT51Gtlj/GBGHlMjHILM/Lsqq5m8pw8sFNvpCDpkzUYv00SjocNf4KEpq2/OX7NO
+	 U2+MSGH0ADOLMmJQQeOPrIO2wOPENVFGMbBepIP5mftDxzu24f85shvO48ZGcNIozr
+	 eJD3jhKFiDMAc85ZODKL7sAKFPQIBCg0cGiRKhmo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727781AbgBUTvN (ORCPT
+        id S1727876AbgBUTv6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Feb 2020 14:51:13 -0500
-Received: from mail.kernel.org ([198.145.29.99]:43352 "EHLO mail.kernel.org"
+        Fri, 21 Feb 2020 14:51:58 -0500
+Received: from mail.kernel.org ([198.145.29.99]:43744 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726160AbgBUTvN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Feb 2020 14:51:13 -0500
+        id S1726443AbgBUTv6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 21 Feb 2020 14:51:58 -0500
 Received: from [192.168.1.112] (c-24-9-64-241.hsd1.co.comcast.net [24.9.64.241])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 124292072C;
-        Fri, 21 Feb 2020 19:51:12 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 03644207FD;
+        Fri, 21 Feb 2020 19:51:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1582314672;
-        bh=dj3CunnCp6cBgmquorl/y4Cqs0ZJNLl7zdr0vzTTpfM=;
+        s=default; t=1582314717;
+        bh=5GVO4BWWYkqAbWt/9/lmxhI4c0yr8DWwAfymhCasL/E=;
         h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
-        b=BLcqBstyBXN9Rk0OVrHvx7DoUDUMEPwnr5arWl14FdvQTdF/8lWH8L7O5913YDgk5
-         7AFK/TiUMSpsMcnSRjuihbrZmjQE1VnITBYqk2iIZYgojd2fFQM1ifAXOZlU50y9Kk
-         cUmAAfVD5u8IZx/ZcKSSsDzoTmH05i9AEqGXYcNY=
-Subject: Re: [PATCH 4.19 000/191] 4.19.106-stable review
+        b=u5uFT3TtqWVZeZk75hoICMkFcUlxZDYOF0LR66Ge5Aup9mhYlwmP6TiBTArhh89Pl
+         lw0M3Mg90ss10fdk8tLeqt5BMJtnLZP8IH5f3tL4iXQVucZOjXk629t2v1kvCba9Un
+         bWeu8eHJdNph55alathA6wP81CuCGm4qeNfhJD0k=
+Subject: Re: [PATCH 5.4 000/344] 5.4.22-stable review
 To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         linux-kernel@vger.kernel.org
 Cc:     torvalds@linux-foundation.org, akpm@linux-foundation.org,
         linux@roeck-us.net, patches@kernelci.org,
         ben.hutchings@codethink.co.uk, lkft-triage@lists.linaro.org,
         stable@vger.kernel.org, shuah <shuah@kernel.org>
-References: <20200221072250.732482588@linuxfoundation.org>
+References: <20200221072349.335551332@linuxfoundation.org>
 From:   shuah <shuah@kernel.org>
-Message-ID: <a4ffe98f-4e99-a562-c0ec-4a8ac5abb7c0@kernel.org>
-Date:   Fri, 21 Feb 2020 12:51:11 -0700
+Message-ID: <96422b04-aed2-cc9b-1fb8-23dded328e59@kernel.org>
+Date:   Fri, 21 Feb 2020 12:51:56 -0700
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
  Thunderbird/68.4.1
 MIME-Version: 1.0
-In-Reply-To: <20200221072250.732482588@linuxfoundation.org>
+In-Reply-To: <20200221072349.335551332@linuxfoundation.org>
 Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
@@ -62,9 +62,9 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2/21/20 12:39 AM, Greg Kroah-Hartman wrote:
-> This is the start of the stable review cycle for the 4.19.106 release.
-> There are 191 patches in this series, all will be posted as a response
+On 2/21/20 12:36 AM, Greg Kroah-Hartman wrote:
+> This is the start of the stable review cycle for the 5.4.22 release.
+> There are 344 patches in this series, all will be posted as a response
 > to this one.  If anyone has any issues with these being applied, please
 > let me know.
 > 
@@ -72,9 +72,9 @@ On 2/21/20 12:39 AM, Greg Kroah-Hartman wrote:
 > Anything received after that time might be too late.
 > 
 > The whole patch series can be found in one patch at:
-> 	https://www.kernel.org/pub/linux/kernel/v4.x/stable-review/patch-4.19.106-rc1.gz
+> 	https://www.kernel.org/pub/linux/kernel/v5.x/stable-review/patch-5.4.22-rc1.gz
 > or in the git tree and branch at:
-> 	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-4.19.y
+> 	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-5.4.y
 > and the diffstat can be found below.
 > 
 > thanks,
