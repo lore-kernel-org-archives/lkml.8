@@ -2,119 +2,115 @@ Return-Path: <SRS0=1210=4J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A48B7C11D24
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 00:30:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B1E5BC11D27
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 00:32:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7BE10206EF
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 00:30:38 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582245038;
-	bh=RZsb+19dMP9oyhRzEECPS41zLUkoUfU11TvMcCoXqUs=;
-	h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:List-ID:
-	 From;
-	b=T6OM7xvseeZWbdnDXcTNe3LM/w+ArEykQiaErew7sLqewmU9ifGF5ZhmrNo0hDV2c
-	 Gq+tXFKHGa/Gcc1rxpfAfeqh+6gcGDxtNBPkUBA6bUWLggPo8HMbvcldQgfqDJTY8W
-	 dgtGRkYecPL5Yb5yKnp8l3fKB3R8sfTlmU2EH7Tg=
+	by mail.kernel.org (Postfix) with ESMTP id 8824D20659
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 00:32:28 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=amacapital-net.20150623.gappssmtp.com header.i=@amacapital-net.20150623.gappssmtp.com header.b="L2xq9Vle"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729489AbgBUAah (ORCPT
+        id S1729475AbgBUAc1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Feb 2020 19:30:37 -0500
-Received: from mail.kernel.org ([198.145.29.99]:44620 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729365AbgBUAag (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Feb 2020 19:30:36 -0500
-Received: from paulmck-ThinkPad-P72.home (50-39-105-78.bvtn.or.frontiernet.net [50.39.105.78])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 10569206DB;
-        Fri, 21 Feb 2020 00:30:36 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1582245036;
-        bh=RZsb+19dMP9oyhRzEECPS41zLUkoUfU11TvMcCoXqUs=;
-        h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:From;
-        b=Cw5oSTJCfhTBGEVjDJmTunHLXAr0yUBqHRkROpyJKpP4LMdBhz8uh+6zer5s3n3WP
-         wqM5ewFpF00dibTnNlnx9W8qoEZNR8RQ1v1JD8OJi4yYvwQiviRQ0Mr1zQh/lAcWqm
-         Rbbc/e0HadMIp0lkwziSKo4FVe0slScon9oVscbU=
-Received: by paulmck-ThinkPad-P72.home (Postfix, from userid 1000)
-        id D47F335208E2; Thu, 20 Feb 2020 16:30:35 -0800 (PST)
-Date:   Thu, 20 Feb 2020 16:30:35 -0800
-From:   "Paul E. McKenney" <paulmck@kernel.org>
-To:     "Theodore Y. Ts'o" <tytso@mit.edu>
-Cc:     Uladzislau Rezki <urezki@gmail.com>,
-        Joel Fernandes <joel@joelfernandes.org>,
-        Ext4 Developers List <linux-ext4@vger.kernel.org>,
-        Suraj Jitindar Singh <surajjs@amazon.com>,
-        LKML <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH RFC] ext4: fix potential race between online resizing and
- write operations
-Message-ID: <20200221003035.GC2935@paulmck-ThinkPad-P72>
-Reply-To: paulmck@kernel.org
-References: <20200215233817.GA670792@mit.edu>
- <20200216121246.GG2935@paulmck-ThinkPad-P72>
- <20200217160827.GA5685@pc636>
- <20200217193314.GA12604@mit.edu>
- <20200218170857.GA28774@pc636>
- <20200220045233.GC476845@mit.edu>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200220045233.GC476845@mit.edu>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+        Thu, 20 Feb 2020 19:32:27 -0500
+Received: from mail-pf1-f196.google.com ([209.85.210.196]:32933 "EHLO
+        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729419AbgBUAc0 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 20 Feb 2020 19:32:26 -0500
+Received: by mail-pf1-f196.google.com with SMTP id n7so287033pfn.0
+        for <linux-kernel@vger.kernel.org>; Thu, 20 Feb 2020 16:32:26 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=amacapital-net.20150623.gappssmtp.com; s=20150623;
+        h=content-transfer-encoding:from:mime-version:subject:date:message-id
+         :references:cc:in-reply-to:to;
+        bh=z2DSekIXnkX9eU39ZMxeSaJ+Ey4ada2j/LjI3viMpe8=;
+        b=L2xq9Vle6jxp9WXJix/nJ1E6aNq25XGRDldBnE6uRfHPTKAZidzklN+ABPMmf6twdj
+         9iF+ezVYOWPSBqEKGBFsP667oRit4McJEgy0SnPH61oD5WigzY6ow9ds+A4YVkKCg71+
+         isZ9j8P++FFMlx1PqFw2gd5fAr2ryaDc1lybA8W/uuAZFCMG/J6CL3EM1K8nQ/sEMLMr
+         R4yNGXen8b9ERC8Inh1eMrA9zbbvEY7KBfc0E7lwgRjD71sZku0KLC5Wub0HyEN+1azo
+         A7y9Aq2fiHX8eP7WA9XiUVTh11d13PprbklWSMPwnVUjKJeB7br7pZScqcu/sxf5hmEZ
+         ZLsQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:content-transfer-encoding:from:mime-version
+         :subject:date:message-id:references:cc:in-reply-to:to;
+        bh=z2DSekIXnkX9eU39ZMxeSaJ+Ey4ada2j/LjI3viMpe8=;
+        b=mcD//FvrWezquY4OJm9uhg27Xg/i215toyFCaHLsdlDWB3FZn555cRU6d8MPan/s+G
+         j66bleDvcyXRpoHeZ6cLkqScXssNpp4Owxd7u1inuGIZ0D3rUdOcLdp1es1vAFxnN6Qm
+         fCQvG4L0uk+TDepBLz4BLrtuMcRArd6XhV7j7oMsdw22g3/wTeiRr//bUUhbLKsTn23W
+         LfDsAmS72DYDcfoxNWrVWxW7tE4P1Mz8sM1Rcf/gCMb0jLmzsjQuqfiffjMTV+q8ug4Z
+         QMAQftz8A9iGfw9j/ltw3beOw9EEM3at50+YWTSN2jMzAjuLvv7hDyi6IRuiLDWhQrpj
+         jLew==
+X-Gm-Message-State: APjAAAWVmlGbaVqRzJ3boQ2HOMK4ls7GC5dHtt017MM/nsU6RL7tIZyE
+        1k+ytyoiXAIg+EQ+pApo+C3S5g==
+X-Google-Smtp-Source: APXvYqw+4sLKln1oYdQ5ZrfvbhT1EDHvVbA/mNOVE6O5bdOhE1oFR/NW3nQfak7gZ3wI/2EWOdZ/fg==
+X-Received: by 2002:a63:9919:: with SMTP id d25mr35049553pge.22.1582245146084;
+        Thu, 20 Feb 2020 16:32:26 -0800 (PST)
+Received: from ?IPv6:2601:646:c200:1ef2:511c:ebc0:d124:b4a0? ([2601:646:c200:1ef2:511c:ebc0:d124:b4a0])
+        by smtp.gmail.com with ESMTPSA id f43sm540853pje.23.2020.02.20.16.32.24
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 20 Feb 2020 16:32:25 -0800 (PST)
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+From:   Andy Lutomirski <luto@amacapital.net>
+Mime-Version: 1.0 (1.0)
+Subject: Re: [PATCH v26 10/22] x86/sgx: Linux Enclave Driver
+Date:   Thu, 20 Feb 2020 16:32:22 -0800
+Message-Id: <6AE5891F-FC0D-4062-A6CA-01C78C2D5A1A@amacapital.net>
+References: <20200220221607.GB26618@linux.intel.com>
+Cc:     Sean Christopherson <sean.j.christopherson@intel.com>,
+        Jordan Hand <jorhand@linux.microsoft.com>,
+        linux-kernel@vger.kernel.org, x86@kernel.org,
+        linux-sgx@vger.kernel.org, akpm@linux-foundation.org,
+        dave.hansen@intel.com, nhorman@redhat.com, npmccallum@redhat.com,
+        haitao.huang@intel.com, andriy.shevchenko@linux.intel.com,
+        tglx@linutronix.de, kai.svahn@intel.com, bp@alien8.de,
+        josh@joshtriplett.org, luto@kernel.org, kai.huang@intel.com,
+        rientjes@google.com, cedric.xing@intel.com, puiterwijk@redhat.com,
+        linux-security-module@vger.kernel.org,
+        Suresh Siddha <suresh.b.siddha@intel.com>,
+        Haitao Huang <haitao.huang@linux.intel.com>
+In-Reply-To: <20200220221607.GB26618@linux.intel.com>
+To:     Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
+X-Mailer: iPhone Mail (17D50)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Feb 19, 2020 at 11:52:33PM -0500, Theodore Y. Ts'o wrote:
-> On Tue, Feb 18, 2020 at 06:08:57PM +0100, Uladzislau Rezki wrote:
-> > now it becomes possible to use it like: 
-> > 	...
-> > 	void *p = kvmalloc(PAGE_SIZE);
-> > 	kvfree_rcu(p);
-> > 	...
-> > also have a look at the example in the mm/list_lru.c diff.
-> 
-> I certainly like the interface, thanks!  I'm going to be pushing
-> patches to fix this using ext4_kvfree_array_rcu() since there are a
-> number of bugs in ext4's online resizing which appear to be hitting
-> multiple cloud providers (with reports from both AWS and GCP) and I
-> want something which can be easily backported to stable kernels.
-> 
-> But once kvfree_rcu() hits mainline, I'll switch ext4 to use it, since
-> your kvfree_rcu() is definitely more efficient than my expedient
-> jury-rig.
-> 
-> I don't feel entirely competent to review the implementation, but I do
-> have one question.  It looks like the rcutiny implementation of
-> kfree_call_rcu() isn't going to do the right thing with kvfree_rcu(p).
-> Am I missing something?
 
-Good catch!  I believe that rcu_reclaim_tiny() would need to do
-kvfree() instead of its current kfree().
 
-Vlad, anything I am missing here?
 
-							Thanx, Paul
+> On Feb 20, 2020, at 2:16 PM, Jarkko Sakkinen <jarkko.sakkinen@linux.intel.=
+com> wrote:
+>=20
+> =EF=BB=BFOn Thu, Feb 20, 2020 at 10:48:42AM -0800, Sean Christopherson wro=
+te:
+>> My biggest concern for allowing PROT_EXEC if RIE is that it would result
+>> in #PF(SGX) (#GP on Skylake) due to an EPCM violation if the enclave
+>> actually tried to execute from such a page.  This isn't a problem for the=
 
-> > diff --git a/include/linux/rcutiny.h b/include/linux/rcutiny.h
-> > index 045c28b71f4f..a12ecc1645fa 100644
-> > --- a/include/linux/rcutiny.h
-> > +++ b/include/linux/rcutiny.h
-> > @@ -34,7 +34,7 @@ static inline void synchronize_rcu_expedited(void)
-> >         synchronize_rcu();
-> >  }
-> > 
-> > -static inline void kfree_call_rcu(struct rcu_head *head, rcu_callback_t func)
-> > +static inline void kfree_call_rcu(struct rcu_head *head, rcu_callback_t func, void *ptr)
-> >  {
-> >         call_rcu(head, func);
-> >  }
-> 
-> Thanks,
-> 
-> 					- Ted
+>> kernel as the fault will be reported cleanly through the vDSO (or get
+>> delivered as a SIGSEGV if the enclave isn't entered through the vDSO), bu=
+t
+>> it's a bit weird for userspace as userspace will see the #PF(SGX) and
+>> likely assume the EPC was lost, e.g. silently restart the enclave instead=
+
+>> of logging an error that the enclave is broken.
+>=20
+> I think right way to fix the current implementation is to -EACCES mmap()
+> (and mprotect) when !!(current->personality & READ_IMPLIES_EXEC).
+>=20
+> This way supporting RIE can be reconsidered later on without any
+> potential ABI bottlenecks.
+>=20
+
+Sounds good to me.  I see no credible reason why anyone would use RIE and SG=
+X.
+
+> /Jarkko
