@@ -5,49 +5,53 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 15230C35642
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 08:36:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6D730C35641
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 08:36:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DA0EC206ED
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 08:36:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 43E9C206ED
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 08:36:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582274193;
-	bh=mD/81wOsSpiXRMLsMfU2sksf0W/6xASYrsz7X25q6NI=;
+	s=default; t=1582274203;
+	bh=e1O9gRId/5Nnkv0pkYMKzLfZnhFV6fUZqb3Gwk/Dgew=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=14WpIGdT/gePYCFDxNrOwbv94W3mvQbhByovpEpx34+0YFeH181MEgILfwiOj6qsw
-	 kUHNiM/TCMkLtELp9WjjnJFSADL7AAKKabQ5wAhTgq0IokPa4CR9pKeteQ36w3N0M5
-	 tIdfMJe0IkVBT6t7f5/Ipsv6CuAecy7hLkMWNaTU=
+	b=TSK60XVW8pBuCmgiKemTiamKazcbIRHdDZajd7/IX4w/zKsH1f4pEmAoG/Brs2O/q
+	 sqkcWrLKfp4S+5Q0jqHcsLacIDEGWXBc5r8Hg6tK1FAp4DPq4vfSBoGHN+zCl4dJpb
+	 7TRKD46lSSP2ipI7Z2WmiFbmQYlnt6vxANkKPkTU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732258AbgBUIgc (ORCPT
+        id S1732520AbgBUIgl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Feb 2020 03:36:32 -0500
-Received: from mail.kernel.org ([198.145.29.99]:40396 "EHLO mail.kernel.org"
+        Fri, 21 Feb 2020 03:36:41 -0500
+Received: from mail.kernel.org ([198.145.29.99]:39752 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731927AbgBUIG3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Feb 2020 03:06:29 -0500
+        id S1731552AbgBUIGG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 21 Feb 2020 03:06:06 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id CE9152465D;
-        Fri, 21 Feb 2020 08:06:28 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A01C72073A;
+        Fri, 21 Feb 2020 08:06:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1582272389;
-        bh=mD/81wOsSpiXRMLsMfU2sksf0W/6xASYrsz7X25q6NI=;
+        s=default; t=1582272366;
+        bh=e1O9gRId/5Nnkv0pkYMKzLfZnhFV6fUZqb3Gwk/Dgew=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=fIg9DYANMpqcRz/SWRQkYXiM4VdnPvwj9TffY7AkCCibR8zJTBi4Y3oiDLPMDxRPE
-         QS/xAcJ08Xi/yv3w2D8LELTog14eVtXR1uql9Yj16tZ/qoOj+eF7pq2n0Gp094wYvU
-         2/KeCCYKtl+MjK1ooNeE09i8mAm2cNghAU9Fkr6s=
+        b=FYbJiJrzpxep8fI0tp70YZCDv6b606O7pHVJXM70vkwUzj5EiSl2XgDVvjJHJFZXs
+         xlQdlPobPG99JCZ66uMeHsO9yBfkMGSgKy2d1KEH90nPV3fPvnwufJGXBP7/ocvCHf
+         Yj6rQToJkNcZuv76AamlnMfDWbgVPVyB/FvmJI8U=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Paul Cercueil <paul@crapouillou.net>,
-        Sam Ravnborg <sam@ravnborg.org>,
+        stable@vger.kernel.org, Chris Healy <cphealy@gmail.com>,
+        Lucas Stach <l.stach@pengutronix.de>,
+        Andrey Smirnov <andrew.smirnov@gmail.com>,
+        Shawn Guo <shawnguo@kernel.org>,
+        Fabio Estevam <festevam@gmail.com>,
+        linux-arm-kernel@lists.infradead.org,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 124/344] gpu/drm: ingenic: Avoid null pointer deference in plane atomic update
-Date:   Fri, 21 Feb 2020 08:38:43 +0100
-Message-Id: <20200221072400.127480914@linuxfoundation.org>
+Subject: [PATCH 5.4 116/344] ARM: dts: imx6: rdu2: Disable WP for USDHC2 and USDHC3
+Date:   Fri, 21 Feb 2020 08:38:35 +0100
+Message-Id: <20200221072359.422976479@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200221072349.335551332@linuxfoundation.org>
 References: <20200221072349.335551332@linuxfoundation.org>
@@ -60,53 +64,67 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Paul Cercueil <paul@crapouillou.net>
+From: Andrey Smirnov <andrew.smirnov@gmail.com>
 
-[ Upstream commit 354b051c5dcbeb35bbfd5d54161364fc7a75a58a ]
+[ Upstream commit cd58a174e58649426fb43d7456e5f7d7eab58af1 ]
 
-It is possible that there is no drm_framebuffer associated with a given
-plane state.
+RDU2 production units come with resistor connecting WP pin to
+correpsonding GPIO DNPed for both SD card slots. Drop any WP related
+configuration and mark both slots with "disable-wp".
 
-v2: Handle drm_plane->state which can be NULL too
-
-Signed-off-by: Paul Cercueil <paul@crapouillou.net>
-Link: https://patchwork.freedesktop.org/patch/msgid/20191210144142.33143-2-paul@crapouillou.net
-# *** extracted tags ***
-Acked-by: Sam Ravnborg <sam@ravnborg.org>
+Reported-by: Chris Healy <cphealy@gmail.com>
+Reviewed-by: Chris Healy <cphealy@gmail.com>
+Reviewed-by: Lucas Stach <l.stach@pengutronix.de>
+Signed-off-by: Andrey Smirnov <andrew.smirnov@gmail.com>
+Cc: Shawn Guo <shawnguo@kernel.org>
+Cc: Fabio Estevam <festevam@gmail.com>
+Cc: Lucas Stach <l.stach@pengutronix.de>
+Cc: linux-arm-kernel@lists.infradead.org
+Cc: linux-kernel@vger.kernel.org
+Signed-off-by: Shawn Guo <shawnguo@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/gpu/drm/ingenic/ingenic-drm.c | 16 ++++++++++------
- 1 file changed, 10 insertions(+), 6 deletions(-)
+ arch/arm/boot/dts/imx6qdl-zii-rdu2.dtsi | 6 ++----
+ 1 file changed, 2 insertions(+), 4 deletions(-)
 
-diff --git a/drivers/gpu/drm/ingenic/ingenic-drm.c b/drivers/gpu/drm/ingenic/ingenic-drm.c
-index 2e2ed653e9c6b..f156f245fdecf 100644
---- a/drivers/gpu/drm/ingenic/ingenic-drm.c
-+++ b/drivers/gpu/drm/ingenic/ingenic-drm.c
-@@ -371,14 +371,18 @@ static void ingenic_drm_plane_atomic_update(struct drm_plane *plane,
- 	struct ingenic_drm *priv = drm_plane_get_priv(plane);
- 	struct drm_plane_state *state = plane->state;
- 	unsigned int width, height, cpp;
-+	dma_addr_t addr;
+diff --git a/arch/arm/boot/dts/imx6qdl-zii-rdu2.dtsi b/arch/arm/boot/dts/imx6qdl-zii-rdu2.dtsi
+index 93be00a60c887..7b5c0e9b0fcff 100644
+--- a/arch/arm/boot/dts/imx6qdl-zii-rdu2.dtsi
++++ b/arch/arm/boot/dts/imx6qdl-zii-rdu2.dtsi
+@@ -627,7 +627,7 @@
+ 	pinctrl-0 = <&pinctrl_usdhc2>;
+ 	bus-width = <4>;
+ 	cd-gpios = <&gpio2 2 GPIO_ACTIVE_LOW>;
+-	wp-gpios = <&gpio2 3 GPIO_ACTIVE_HIGH>;
++	disable-wp;
+ 	vmmc-supply = <&reg_3p3v_sd>;
+ 	vqmmc-supply = <&reg_3p3v>;
+ 	no-1-8-v;
+@@ -640,7 +640,7 @@
+ 	pinctrl-0 = <&pinctrl_usdhc3>;
+ 	bus-width = <4>;
+ 	cd-gpios = <&gpio2 0 GPIO_ACTIVE_LOW>;
+-	wp-gpios = <&gpio2 1 GPIO_ACTIVE_HIGH>;
++	disable-wp;
+ 	vmmc-supply = <&reg_3p3v_sd>;
+ 	vqmmc-supply = <&reg_3p3v>;
+ 	no-1-8-v;
+@@ -1055,7 +1055,6 @@
+ 			MX6QDL_PAD_SD2_DAT1__SD2_DATA1		0x17059
+ 			MX6QDL_PAD_SD2_DAT2__SD2_DATA2		0x17059
+ 			MX6QDL_PAD_SD2_DAT3__SD2_DATA3		0x17059
+-			MX6QDL_PAD_NANDF_D3__GPIO2_IO03		0x40010040
+ 			MX6QDL_PAD_NANDF_D2__GPIO2_IO02		0x40010040
+ 		>;
+ 	};
+@@ -1068,7 +1067,6 @@
+ 			MX6QDL_PAD_SD3_DAT1__SD3_DATA1		0x17059
+ 			MX6QDL_PAD_SD3_DAT2__SD3_DATA2		0x17059
+ 			MX6QDL_PAD_SD3_DAT3__SD3_DATA3		0x17059
+-			MX6QDL_PAD_NANDF_D1__GPIO2_IO01		0x40010040
+ 			MX6QDL_PAD_NANDF_D0__GPIO2_IO00		0x40010040
  
--	width = state->crtc->state->adjusted_mode.hdisplay;
--	height = state->crtc->state->adjusted_mode.vdisplay;
--	cpp = state->fb->format->cpp[plane->index];
-+	if (state && state->fb) {
-+		addr = drm_fb_cma_get_gem_addr(state->fb, state, 0);
-+		width = state->crtc->state->adjusted_mode.hdisplay;
-+		height = state->crtc->state->adjusted_mode.vdisplay;
-+		cpp = state->fb->format->cpp[plane->index];
- 
--	priv->dma_hwdesc->addr = drm_fb_cma_get_gem_addr(state->fb, state, 0);
--	priv->dma_hwdesc->cmd = width * height * cpp / 4;
--	priv->dma_hwdesc->cmd |= JZ_LCD_CMD_EOF_IRQ;
-+		priv->dma_hwdesc->addr = addr;
-+		priv->dma_hwdesc->cmd = width * height * cpp / 4;
-+		priv->dma_hwdesc->cmd |= JZ_LCD_CMD_EOF_IRQ;
-+	}
- }
- 
- static void ingenic_drm_encoder_atomic_mode_set(struct drm_encoder *encoder,
+ 		>;
 -- 
 2.20.1
 
