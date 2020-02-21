@@ -4,55 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 83033C35641
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 08:22:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 58AC1C35640
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 08:22:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5683F24695
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 08:22:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2C7C624676
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 08:22:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582273351;
-	bh=8NIPlXE5fhwx6ut/fi8+s25a+Xp8Zth5z/XDUDUewjw=;
+	s=default; t=1582273356;
+	bh=3TZXsTWy+GWOyXb49qV/Qbo9WyB4oDNA5l7odcnIJfE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=X/hBXeQZHW/d5Mq8tPOl31FDWyUx440bqzH8LJEYTHciNbHNNi9ogT1uQUmU9DGQf
-	 BR+w0SSVWlM+1LgZkY5KKAnX+yAfWrY/qxYIRnuD9G0oeRb7TTqGcDoYmT/nmDwSbP
-	 K2LMVg3doQe/6gFtbzfyiXd+jqLOfn6A4yPsHipg=
+	b=HkwWcAmGFMSZdpc6iCf7madAwN5tiwxpgJArsEptoZTpOctlyiJWN5wkrMQPKz5BP
+	 UPGQPahIT1qr94DYalRXRs48gEAENVDDorBhNP/cJsQrYNnQcFqov2wMTAj5MtsoS9
+	 PZei8+dAdYs/JavuhwnZ9hHHu5jfgi7uy43KrhjU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388309AbgBUIW3 (ORCPT
+        id S2388328AbgBUIWe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Feb 2020 03:22:29 -0500
-Received: from mail.kernel.org ([198.145.29.99]:34022 "EHLO mail.kernel.org"
+        Fri, 21 Feb 2020 03:22:34 -0500
+Received: from mail.kernel.org ([198.145.29.99]:34182 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388299AbgBUIW1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Feb 2020 03:22:27 -0500
+        id S2388317AbgBUIWc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 21 Feb 2020 03:22:32 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8066724676;
-        Fri, 21 Feb 2020 08:22:25 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 246ED24672;
+        Fri, 21 Feb 2020 08:22:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1582273346;
-        bh=8NIPlXE5fhwx6ut/fi8+s25a+Xp8Zth5z/XDUDUewjw=;
+        s=default; t=1582273351;
+        bh=3TZXsTWy+GWOyXb49qV/Qbo9WyB4oDNA5l7odcnIJfE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=hlFrtRHMD1pxeQkpMH+r5MUHieKjpavNRPpZ4nQENI1e9D4ww9eLlKNpI3ulRCMCl
-         wJHZO/uIiqJZzeQ00zsFf7As8CCmY5MFVyW7ReBdfNZQjeYM6hUr/82c33lVSP8nBt
-         YZMjjA/qJWR+kKyS8fU41dt6y46q4nTKtyvfQPnc=
+        b=qVVl8XBXZ+rr7q61qBQYW3BYn/zVPxuKiRdh6Fl8ei5w+sQ6bMPDLF1ZhGC1uVagu
+         xF7TI7tRmi/NgA839KcR8RNG9/HRuks1ztU7XC3yklkU4oDOeQqAUGUH8jTboEm/TK
+         v8Dpc+gcZJpan6QdaeGOXraJ6b17aMdGK+mhAF9E=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Pankaj Bansal <pankaj.bansal@nxp.com>,
-        Hanjun Guo <guohanjun@huawei.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Will Deacon <will@kernel.org>,
-        Sudeep Holla <sudeep.holla@arm.com>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Robin Murphy <robin.murphy@arm.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 137/191] ACPI/IORT: Fix Number of IDs handling in iort_id_map()
-Date:   Fri, 21 Feb 2020 08:41:50 +0100
-Message-Id: <20200221072307.150803032@linuxfoundation.org>
+        stable@vger.kernel.org, Ard Biesheuvel <ardb@kernel.org>,
+        Ingo Molnar <mingo@kernel.org>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.19 139/191] x86/mm: Fix NX bit clearing issue in kernel_map_pages_in_pgd
+Date:   Fri, 21 Feb 2020 08:41:52 +0100
+Message-Id: <20200221072307.386508422@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200221072250.732482588@linuxfoundation.org>
 References: <20200221072250.732482588@linuxfoundation.org>
@@ -65,154 +59,59 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Hanjun Guo <guohanjun@huawei.com>
+From: Ard Biesheuvel <ardb@kernel.org>
 
-[ Upstream commit 3c23b83a88d00383e1d498cfa515249aa2fe0238 ]
+[ Upstream commit 75fbef0a8b6b4bb19b9a91b5214f846c2dc5139e ]
 
-The IORT specification [0] (Section 3, table 4, page 9) defines the
-'Number of IDs' as 'The number of IDs in the range minus one'.
+The following commit:
 
-However, the IORT ID mapping function iort_id_map() treats the 'Number
-of IDs' field as if it were the full IDs mapping count, with the
-following check in place to detect out of boundary input IDs:
+  15f003d20782 ("x86/mm/pat: Don't implicitly allow _PAGE_RW in kernel_map_pages_in_pgd()")
 
-InputID >= Input base + Number of IDs
+modified kernel_map_pages_in_pgd() to manage writable permissions
+of memory mappings in the EFI page table in a different way, but
+in the process, it removed the ability to clear NX attributes from
+read-only mappings, by clobbering the clear mask if _PAGE_RW is not
+being requested.
 
-This check is flawed in that it considers the 'Number of IDs' field as
-the full number of IDs mapping and disregards the 'minus one' from
-the IDs count.
+Failure to remove the NX attribute from read-only mappings is
+unlikely to be a security issue, but it does prevent us from
+tightening the permissions in the EFI page tables going forward,
+so let's fix it now.
 
-The correct check in iort_id_map() should be implemented as:
-
-InputID > Input base + Number of IDs
-
-this implements the specification correctly but unfortunately it breaks
-existing firmwares that erroneously set the 'Number of IDs' as the full
-IDs mapping count rather than IDs mapping count minus one.
-
-e.g.
-
-PCI hostbridge mapping entry 1:
-Input base:  0x1000
-ID Count:    0x100
-Output base: 0x1000
-Output reference: 0xC4  //ITS reference
-
-PCI hostbridge mapping entry 2:
-Input base:  0x1100
-ID Count:    0x100
-Output base: 0x2000
-Output reference: 0xD4  //ITS reference
-
-Two mapping entries which the second entry's Input base = the first
-entry's Input base + ID count, so for InputID 0x1100 and with the
-correct InputID check in place in iort_id_map() the kernel would map
-the InputID to ITS 0xC4 not 0xD4 as it would be expected.
-
-Therefore, to keep supporting existing flawed firmwares, introduce a
-workaround that instructs the kernel to use the old InputID range check
-logic in iort_id_map(), so that we can support both firmwares written
-with the flawed 'Number of IDs' logic and the correct one as defined in
-the specifications.
-
-[0]: http://infocenter.arm.com/help/topic/com.arm.doc.den0049d/DEN0049D_IO_Remapping_Table.pdf
-
-Reported-by: Pankaj Bansal <pankaj.bansal@nxp.com>
-Link: https://lore.kernel.org/linux-acpi/20191215203303.29811-1-pankaj.bansal@nxp.com/
-Signed-off-by: Hanjun Guo <guohanjun@huawei.com>
-Signed-off-by: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-Cc: Pankaj Bansal <pankaj.bansal@nxp.com>
-Cc: Will Deacon <will@kernel.org>
-Cc: Sudeep Holla <sudeep.holla@arm.com>
-Cc: Catalin Marinas <catalin.marinas@arm.com>
-Cc: Robin Murphy <robin.murphy@arm.com>
-Signed-off-by: Will Deacon <will@kernel.org>
+Fixes: 15f003d20782 ("x86/mm/pat: Don't implicitly allow _PAGE_RW in kernel_map_pages_in_pgd()
+Signed-off-by: Ard Biesheuvel <ardb@kernel.org>
+Signed-off-by: Ingo Molnar <mingo@kernel.org>
+Link: https://lore.kernel.org/r/20200113172245.27925-5-ardb@kernel.org
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/acpi/arm64/iort.c | 57 +++++++++++++++++++++++++++++++++++++--
- 1 file changed, 55 insertions(+), 2 deletions(-)
+ arch/x86/mm/pageattr.c | 8 +-------
+ 1 file changed, 1 insertion(+), 7 deletions(-)
 
-diff --git a/drivers/acpi/arm64/iort.c b/drivers/acpi/arm64/iort.c
-index e11b5da6f828f..7d86468300b78 100644
---- a/drivers/acpi/arm64/iort.c
-+++ b/drivers/acpi/arm64/iort.c
-@@ -306,6 +306,59 @@ out:
- 	return status;
- }
+diff --git a/arch/x86/mm/pageattr.c b/arch/x86/mm/pageattr.c
+index e2d4b25c7aa44..101f3ad0d6ad1 100644
+--- a/arch/x86/mm/pageattr.c
++++ b/arch/x86/mm/pageattr.c
+@@ -2126,19 +2126,13 @@ int kernel_map_pages_in_pgd(pgd_t *pgd, u64 pfn, unsigned long address,
+ 		.pgd = pgd,
+ 		.numpages = numpages,
+ 		.mask_set = __pgprot(0),
+-		.mask_clr = __pgprot(0),
++		.mask_clr = __pgprot(~page_flags & (_PAGE_NX|_PAGE_RW)),
+ 		.flags = 0,
+ 	};
  
-+struct iort_workaround_oem_info {
-+	char oem_id[ACPI_OEM_ID_SIZE + 1];
-+	char oem_table_id[ACPI_OEM_TABLE_ID_SIZE + 1];
-+	u32 oem_revision;
-+};
-+
-+static bool apply_id_count_workaround;
-+
-+static struct iort_workaround_oem_info wa_info[] __initdata = {
-+	{
-+		.oem_id		= "HISI  ",
-+		.oem_table_id	= "HIP07   ",
-+		.oem_revision	= 0,
-+	}, {
-+		.oem_id		= "HISI  ",
-+		.oem_table_id	= "HIP08   ",
-+		.oem_revision	= 0,
-+	}
-+};
-+
-+static void __init
-+iort_check_id_count_workaround(struct acpi_table_header *tbl)
-+{
-+	int i;
-+
-+	for (i = 0; i < ARRAY_SIZE(wa_info); i++) {
-+		if (!memcmp(wa_info[i].oem_id, tbl->oem_id, ACPI_OEM_ID_SIZE) &&
-+		    !memcmp(wa_info[i].oem_table_id, tbl->oem_table_id, ACPI_OEM_TABLE_ID_SIZE) &&
-+		    wa_info[i].oem_revision == tbl->oem_revision) {
-+			apply_id_count_workaround = true;
-+			pr_warn(FW_BUG "ID count for ID mapping entry is wrong, applying workaround\n");
-+			break;
-+		}
-+	}
-+}
-+
-+static inline u32 iort_get_map_max(struct acpi_iort_id_mapping *map)
-+{
-+	u32 map_max = map->input_base + map->id_count;
-+
-+	/*
-+	 * The IORT specification revision D (Section 3, table 4, page 9) says
-+	 * Number of IDs = The number of IDs in the range minus one, but the
-+	 * IORT code ignored the "minus one", and some firmware did that too,
-+	 * so apply a workaround here to keep compatible with both the spec
-+	 * compliant and non-spec compliant firmwares.
-+	 */
-+	if (apply_id_count_workaround)
-+		map_max--;
-+
-+	return map_max;
-+}
-+
- static int iort_id_map(struct acpi_iort_id_mapping *map, u8 type, u32 rid_in,
- 		       u32 *rid_out)
- {
-@@ -322,8 +375,7 @@ static int iort_id_map(struct acpi_iort_id_mapping *map, u8 type, u32 rid_in,
- 		return -ENXIO;
- 	}
+ 	if (!(__supported_pte_mask & _PAGE_NX))
+ 		goto out;
  
--	if (rid_in < map->input_base ||
--	    (rid_in >= map->input_base + map->id_count))
-+	if (rid_in < map->input_base || rid_in > iort_get_map_max(map))
- 		return -ENXIO;
+-	if (!(page_flags & _PAGE_NX))
+-		cpa.mask_clr = __pgprot(_PAGE_NX);
+-
+-	if (!(page_flags & _PAGE_RW))
+-		cpa.mask_clr = __pgprot(_PAGE_RW);
+-
+ 	if (!(page_flags & _PAGE_ENC))
+ 		cpa.mask_clr = pgprot_encrypted(cpa.mask_clr);
  
- 	*rid_out = map->output_base + (rid_in - map->input_base);
-@@ -1542,5 +1594,6 @@ void __init acpi_iort_init(void)
- 		return;
- 	}
- 
-+	iort_check_id_count_workaround(iort_table);
- 	iort_init_platform_devices();
- }
 -- 
 2.20.1
 
