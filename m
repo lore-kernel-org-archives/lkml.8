@@ -2,179 +2,90 @@ Return-Path: <SRS0=1210=4J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 334E7C35646
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 13:15:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E9DC5C35647
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 13:16:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F173C24650
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 13:15:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C09E52073A
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 13:16:10 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="a1XGhuig"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="TO6LxZ9G"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728607AbgBUNPh (ORCPT
+        id S1728630AbgBUNQJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Feb 2020 08:15:37 -0500
-Received: from mailout2.w1.samsung.com ([210.118.77.12]:49216 "EHLO
-        mailout2.w1.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728085AbgBUNPh (ORCPT
+        Fri, 21 Feb 2020 08:16:09 -0500
+Received: from mail27.static.mailgun.info ([104.130.122.27]:22183 "EHLO
+        mail27.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1728228AbgBUNQJ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Feb 2020 08:15:37 -0500
-Received: from eucas1p1.samsung.com (unknown [182.198.249.206])
-        by mailout2.w1.samsung.com (KnoxPortal) with ESMTP id 20200221131536euoutp025e5e36c046a50d9d3079d472ed144b2a~1bTkjaPf42721027210euoutp02U
-        for <linux-kernel@vger.kernel.org>; Fri, 21 Feb 2020 13:15:36 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout2.w1.samsung.com 20200221131536euoutp025e5e36c046a50d9d3079d472ed144b2a~1bTkjaPf42721027210euoutp02U
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-        s=mail20170921; t=1582290936;
-        bh=ggi36fcyGcRdCu1tgC2NKjFogu0IUBoC26Y0OLUUqxI=;
-        h=Subject:To:Cc:From:Date:In-Reply-To:References:From;
-        b=a1XGhuigPS97pxY6VlHrGBiWblH0bTcQM8BUv2v0JWJ7loSQDdnLPTtQyOY/cCBnV
-         VUPj6bu764jtyaBN0d0WNQd5ZdJqHe/j8Ok1ccnsBxnEiRh9lwTxhQ7mzFrDCJlAVF
-         9LOSj+0u3cStUEMe5z6cFUQkuGC+tqMojdk+ljHU=
-Received: from eusmges3new.samsung.com (unknown [203.254.199.245]) by
-        eucas1p1.samsung.com (KnoxPortal) with ESMTP id
-        20200221131536eucas1p1f3d5f62244c43ec509b9ea6f6b154798~1bTkVOvO12832228322eucas1p1K;
-        Fri, 21 Feb 2020 13:15:36 +0000 (GMT)
-Received: from eucas1p2.samsung.com ( [182.198.249.207]) by
-        eusmges3new.samsung.com (EUCPMTA) with SMTP id 82.B0.60698.7F7DF4E5; Fri, 21
-        Feb 2020 13:15:35 +0000 (GMT)
-Received: from eusmtrp2.samsung.com (unknown [182.198.249.139]) by
-        eucas1p2.samsung.com (KnoxPortal) with ESMTPA id
-        20200221131535eucas1p23a75f58c73a7352f616b24e668ed4a47~1bTj8Birj1495114951eucas1p25;
-        Fri, 21 Feb 2020 13:15:35 +0000 (GMT)
-Received: from eusmgms1.samsung.com (unknown [182.198.249.179]) by
-        eusmtrp2.samsung.com (KnoxPortal) with ESMTP id
-        20200221131535eusmtrp2f7d63ab8bbab7770247278f4e4cdcd85~1bTj7WOlx1394013940eusmtrp23;
-        Fri, 21 Feb 2020 13:15:35 +0000 (GMT)
-X-AuditID: cbfec7f5-a29ff7000001ed1a-e5-5e4fd7f7aa6e
-Received: from eusmtip1.samsung.com ( [203.254.199.221]) by
-        eusmgms1.samsung.com (EUCPMTA) with SMTP id CB.A7.08375.7F7DF4E5; Fri, 21
-        Feb 2020 13:15:35 +0000 (GMT)
-Received: from [106.120.51.15] (unknown [106.120.51.15]) by
-        eusmtip1.samsung.com (KnoxPortal) with ESMTPA id
-        20200221131535eusmtip14d786ee3dc9a56b4b0837b3371c12e12~1bTjj3QX81468414684eusmtip1n;
-        Fri, 21 Feb 2020 13:15:35 +0000 (GMT)
-Subject: Re: [PATCH] clocksource: Fix arm_arch_timer clockmode when vDSO
- disabled
-To:     Vincenzo Frascino <vincenzo.frascino@arm.com>,
-        linux-arch@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org
-Cc:     catalin.marinas@arm.com, will.deacon@arm.com,
-        linux@armlinux.org.uk, tglx@linutronix.de, luto@kernel.org
-From:   Marek Szyprowski <m.szyprowski@samsung.com>
-Message-ID: <c2ee91f1-2951-1fc4-d549-106d7b1798e7@samsung.com>
-Date:   Fri, 21 Feb 2020 14:15:34 +0100
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
-        Thunderbird/68.5.0
+        Fri, 21 Feb 2020 08:16:09 -0500
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1582290968; h=Message-ID: References: In-Reply-To: Subject:
+ Cc: To: From: Date: Content-Transfer-Encoding: Content-Type:
+ MIME-Version: Sender; bh=oTA36HHmGmniDobecPjLQVGncMTLqDHJo119ZiOygsk=;
+ b=TO6LxZ9G5LVNlOzVCV+64ns0DwDCuBRXIkb6BKnQ3VJiA1AbkGTeyvb05QmnOh3KB0XZPj4r
+ /G8joV+nxwRGw5T7gH0DjVolt4IjKun+jeaDku5ZrKECV4cO4k/dkSs5g+F6Xn33bLr1T/4S
+ zvyGA6751zfTDa/7c9bH8DGN1G8=
+X-Mailgun-Sending-Ip: 104.130.122.27
+X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
+Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
+ by mxa.mailgun.org with ESMTP id 5e4fd808.7eff649a8b20-smtp-out-n02;
+ Fri, 21 Feb 2020 13:15:52 -0000 (UTC)
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id B6752C4479D; Fri, 21 Feb 2020 13:15:51 +0000 (UTC)
+Received: from mail.codeaurora.org (localhost.localdomain [127.0.0.1])
+        (using TLSv1 with cipher ECDHE-RSA-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        (Authenticated sender: bgodavar)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 4C02FC43383;
+        Fri, 21 Feb 2020 13:15:51 +0000 (UTC)
 MIME-Version: 1.0
-In-Reply-To: <20200221130355.21373-1-vincenzo.frascino@arm.com>
-Content-Transfer-Encoding: 8bit
-Content-Language: en-US
-X-Brightmail-Tracker: H4sIAAAAAAAAA01SbUhTYRjl9d5td8vZdTN8srBaJRikiQpXTVMM2o9KKUII1JbeVHJTdtU0
-        giSxdElFtKwpJdP8WE5jptnAyFmbZk1TU7EP+1BEa4XZkFloblfLf+c5z3Pecw68BCZq5/gQ
-        GYocWqmQZUq4ArzN7OjbPT8Sl7Tn43Q49aO2DFElRjtOGb4Mc6hBYyWXMqk7ENVn1HOoFoMa
-        ozoWHTg1PduNR/OljXcakXRw+DUmNehKudLvVitP2lJzXjpn8I3nHhfsTaUzM/JoZWDUCUG6
-        dmEczx4S5VfdH8EKkW69CvEJIEPAVHeJ68Qish7BwlCsCgmW8S8EJa+63dhhDkG5egitKirf
-        TK4s6hD0lhoxdrAheGl+wFMhghCTR6G6S+nkvUj1svpyMXLyGKmARus650NcMghUNpXLWkhG
-        QZXhp8sAJ3eCVX8Tc+INZCJUNHTh7I0n9NyecGE+uQ9sao3rHiO3QFFrBcZibxibuOsKB+QL
-        HhQvNeFs6v3wfsq20kAMM5aHPBZvhqXHq4IiBJ+seh47lCEYvHBrRREB76wLXLaBPzQbA1k6
-        BhymRVcxID1g1ObJhvCA623lGEsLoeSiiL32A42l6Z9tZ/8Adg1JNGuqadbU0aypo/nvW4Vw
-        HfKmcxl5Gs0EK+gzAYxMzuQq0gJSsuQGtPyfehct9nb05M9JEyIJJHEXRpvjkkQcWR5TIDch
-        IDCJl9DP/XCSSJgqKzhLK7OSlbmZNGNCmwhc4i0M1k4nisg0WQ59mqazaeXq1o3g+xQirzjt
-        jUPJKfAsNHPsd4OOPMUMNzSPz+bqfCN4CYc4PsZQ/29uYVffem/lPDfVF92rq/DLH80zJ7cO
-        x9IO+kOC/Ui6+HNJZMJUWNaVDEuR+zaPAzOC8IbqSP25mH7j03mtWOqRj2+3q/QHH3V+rREf
-        C6ncqK+djJft6Bno0jr4EpxJlwXtwpSM7C9lmw8dSwMAAA==
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFjrFIsWRmVeSWpSXmKPExsVy+t/xu7rfr/vHGWz5r2TxflkPo0XHrq8s
-        FpseX2O1uLxrDpvFoal7GS3O71rLarF501Rmi73/frJYvPx4gsWB02PNvDWMHpevXWT22LSq
-        k83j3blz7B6bl9R7fN4kF8AWpWdTlF9akqqQkV9cYqsUbWhhpGdoaaFnZGKpZ2hsHmtlZKqk
-        b2eTkpqTWZZapG+XoJex6Nd9loIrQhULVl9nbmBcxd/FyMkhIWAiMefqUyYQW0hgKaNE159S
-        iLiMxMlpDawQtrDEn2tdbF2MXEA1rxkl9p45zdLFyMEhLBAssfhwEUiNiMBURokZRzRBbGaB
-        PInf01ezQNRPYpT4f+Ys2CA2AUOJrrcggzg5eAXsJBZs+sQIYrMIqEqcWzuNGcQWFYiVuDGz
-        gwmiRlDi5MwnLCA2p4C9xNupsxghFphJzNv8kBnClpdo3jobyhaXuPVkPtMERqFZSNpnIWmZ
-        haRlFpKWBYwsqxhFUkuLc9Nziw31ihNzi0vz0vWS83M3MQLjcduxn5t3MF7aGHyIUYCDUYmH
-        1+GYf5wQa2JZcWXuIUYJDmYlEV41Hr84Id6UxMqq1KL8+KLSnNTiQ4ymQM9NZJYSTc4Hpoq8
-        knhDU0NzC0tDc2NzYzMLJXHeDoGDMUIC6YklqdmpqQWpRTB9TBycUg2MGWGN3+oiSjR1mR7/
-        cY1X27tHZN+3wIl/3s3Osbo4K3Op6zX3lqOKroIHuGVzVnve8fmx3tu54rqCSUq+0zSh7W1L
-        HoYxJOXEOt5Qz3RhYq7R/XwwcpGwpOb+uBV71D/ENbjOjW/k4vzzJ/resnUVNa90qj50l0Ys
-        mXNc/vjNdaovPtQVTHqhxFKckWioxVxUnAgAtEmzz90CAAA=
-X-CMS-MailID: 20200221131535eucas1p23a75f58c73a7352f616b24e668ed4a47
-X-Msg-Generator: CA
-Content-Type: text/plain; charset="utf-8"
-X-RootMTR: 20200221130455eucas1p2aa4312aad606b53add889811d8e9fbc7
-X-EPHeader: CA
-CMS-TYPE: 201P
-X-CMS-RootMailID: 20200221130455eucas1p2aa4312aad606b53add889811d8e9fbc7
-References: <CGME20200221130455eucas1p2aa4312aad606b53add889811d8e9fbc7@eucas1p2.samsung.com>
-        <20200221130355.21373-1-vincenzo.frascino@arm.com>
+Content-Type: text/plain; charset=US-ASCII;
+ format=flowed
+Content-Transfer-Encoding: 7bit
+Date:   Fri, 21 Feb 2020 18:45:51 +0530
+From:   bgodavar@codeaurora.org
+List-Id: <linux-firmware.lore.kernel.org>
+To:     linux-firmware@kernel.org, jwboyer@kernel.org
+Cc:     mka@chromium.org, linux-kernel@vger.kernel.org,
+        linux-bluetooth@vger.kernel.org, hemantg@codeaurora.org,
+        linux-arm-msm@vger.kernel.org, gubbaven@codeaurora.org
+Subject: Re: Firmware files for QCA BT chip WCN3991.
+In-Reply-To: <3d3a530f11e6bc9a87573389d72ddd3c@codeaurora.org>
+References: <3d3a530f11e6bc9a87573389d72ddd3c@codeaurora.org>
+Message-ID: <b69f21863b936c2407d2e22dcd258013@codeaurora.org>
+X-Sender: bgodavar@codeaurora.org
+User-Agent: Roundcube Webmail/1.3.9
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
++ Josh boyer to pick the firmware
 
-On 21.02.2020 14:03, Vincenzo Frascino wrote:
-> The arm_arch_timer requires that VDSO_CLOCKMODE_ARCHTIMER to be
-> defined to compile correctly. On arm the vDSO can be disabled and when
-> this is the case the compilation ends prematurely with an error:
->
->   $ make ARCH=arm multi_v7_defconfig
->   $ ./scripts/config -d VDSO
->   $ make
->
-> drivers/clocksource/arm_arch_timer.c:73:44: error:
-> ‘VDSO_CLOCKMODE_ARCHTIMER’ undeclared here (not in a function)
->    static enum vdso_clock_mode vdso_default = VDSO_CLOCKMODE_ARCHTIMER;
->                                               ^
-> scripts/Makefile.build:267: recipe for target
-> 'drivers/clocksource/arm_arch_timer.o' failed
-> make[2]: *** [drivers/clocksource/arm_arch_timer.o] Error 1
-> make[2]: *** Waiting for unfinished jobs....
-> scripts/Makefile.build:505: recipe for target 'drivers/clocksource' failed
-> make[1]: *** [drivers/clocksource] Error 2
-> make[1]: *** Waiting for unfinished jobs....
-> Makefile:1683: recipe for target 'drivers' failed
-> make: *** [drivers] Error 2
->
-> Define VDSO_CLOCKMODE_ARCHTIMER as VDSO_CLOCKMODE_NONE when the vDSOs are
-> not enabled to address the issue.
->
-> Fixes: 5e3c6a312a09 ("ARM/arm64: vdso: Use common vdso clock mode storage")
-> Cc: Russell King <linux@armlinux.org.uk>
-> Cc: Thomas Gleixner <tglx@linutronix.de>
-> Reported-by: Marek Szyprowski <m.szyprowski@samsung.com>
-> Signed-off-by: Vincenzo Frascino <vincenzo.frascino@arm.com>
-
-Thanks, this fixes the issue.
-
-Tested-by: Marek Szyprowski <m.szyprowski@samsung.com>
-
-> ---
->   drivers/clocksource/arm_arch_timer.c | 5 +++++
->   1 file changed, 5 insertions(+)
->
-> diff --git a/drivers/clocksource/arm_arch_timer.c b/drivers/clocksource/arm_arch_timer.c
-> index ee2420d56f67..619839221f94 100644
-> --- a/drivers/clocksource/arm_arch_timer.c
-> +++ b/drivers/clocksource/arm_arch_timer.c
-> @@ -49,6 +49,11 @@
->   #define CNTV_TVAL	0x38
->   #define CNTV_CTL	0x3c
->   
-> +#ifndef CONFIG_GENERIC_GETTIMEOFDAY
-> +/* The define below is required because on arm the VDSOs can be disabled */
-> +#define VDSO_CLOCKMODE_ARCHTIMER	VDSO_CLOCKMODE_NONE
-> +#endif /* CONFIG_GENERIC_GETTIMEOFDAY */
-> +
->   static unsigned arch_timers_present __initdata;
->   
->   static void __iomem *arch_counter_base;
-
-Best regards
--- 
-Marek Szyprowski, PhD
-Samsung R&D Institute Poland
-
+On 2020-02-20 16:05, bgodavar@codeaurora.org wrote:
+> Hi,
+> 
+> The following changes since commit 
+> 54b017d06a44bfd9b4c2757cace6cc349afd5bf2:
+> 
+>   qca: Add firmware files for BT chip wcn3991. (2020-02-20 16:01:04 
+> +0530)
+> 
+> are available in the Git repository at:
+> 
+>   https://github.com/bgodavar/qca_bt_wcn3991.git
+> 
+> for you to fetch changes up to 
+> 54b017d06a44bfd9b4c2757cace6cc349afd5bf2:
+> 
+>   qca: Add firmware files for BT chip wcn3991. (2020-02-20 16:01:04 
+> +0530)
+> 
+> 
+> Regards
+> Balakrishna
