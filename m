@@ -2,123 +2,126 @@ Return-Path: <SRS0=1210=4J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-5.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0CB19C3565A
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 17:59:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D5C22C3565A
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 18:00:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D8E59222C4
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 17:59:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AAF9C222C4
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 18:00:29 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="F1AUvinj"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="t+zeW3mg"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729225AbgBUR7X (ORCPT
+        id S1728594AbgBUSA2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Feb 2020 12:59:23 -0500
-Received: from mail-yb1-f196.google.com ([209.85.219.196]:40266 "EHLO
-        mail-yb1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725995AbgBUR7X (ORCPT
+        Fri, 21 Feb 2020 13:00:28 -0500
+Received: from mail-pg1-f195.google.com ([209.85.215.195]:41753 "EHLO
+        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725947AbgBUSA2 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Feb 2020 12:59:23 -0500
-Received: by mail-yb1-f196.google.com with SMTP id f130so1506447ybc.7;
-        Fri, 21 Feb 2020 09:59:22 -0800 (PST)
+        Fri, 21 Feb 2020 13:00:28 -0500
+Received: by mail-pg1-f195.google.com with SMTP id 70so1345890pgf.8;
+        Fri, 21 Feb 2020 10:00:26 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=d+3XR2+xUaDuja2XE/EGJWyGmU2O7nDCNT8Z/xea85c=;
-        b=F1AUvinjYNfKfJKmXNWxwf0qr/7noCmBuxd9yZTjj2p7M1gaQ3dR09hEZsxJB7oz+n
-         wDpUcwKkBOzTX0ccVFa7tb0ZRA7ktCQ3Hmi5t178srD5vt1Ct6jfy9wcqMzP4wyC35Vj
-         pOY0BDk1zA1qPMKpppHGQDT/cuLhfjpU25EdjauYXmBm+1o0xdmkWNVX8v1+vuY4aaQX
-         fHgMlwAzb30PlGG6v+AoaqhtjeNxl41K+pSho98x7pRypPCNpYfk2JtiMuHNZsSRouvC
-         3/vY3RH4DfDQzxdPkuFlQMm80mKjZ18gzEe1eDLmw74JFhqZn9pkYnV3adwtACApxxh5
-         j4EA==
+        h=from:date:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=z+o5vmJ3WcD8niaaOHTfXdBCZlrojxir+QG2cCGfk6A=;
+        b=t+zeW3mgrebrV+iIT4eJHk1R4y+Z41nbR+wradhj0hqb96NV391lKQ68T6qY21u2Sx
+         oWHwkCU5+FqKAAj/4eISmcMUPtgjWvJvMEBmFQ6LZgvVT0VwSv9bl3Sy+V+Io7W1C7qM
+         Fx2n4W4xEaKJ056N6cMdP8Y59n6Xbii3AvMlTH86oZZ9M85e2+aK0/XtFKNJZPAekBdQ
+         WbM+XiiAlgCdbRoOh2+JXym7DCe4/MxyokCsO9GOz/OvjaPYH7CjmOs6sqWcFTEOUNSI
+         v8uKrVq6Q6hjmxMGCiImrSVQzxjA2aPCs9gtaIFJSUMF6uRDgfrRfxL8LX8+dBBZM2J0
+         NJOw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=d+3XR2+xUaDuja2XE/EGJWyGmU2O7nDCNT8Z/xea85c=;
-        b=TA34qpeBYjTdqt0Ws62QgdXGWdq/twOstNHFnyQKRNFMkBjdvxMP4X7b+XPL5niHwR
-         qvuNckE8Lhk5BVhXhN7hXZErUpg0mBQuIpXbTeJKLASDIrZJuFcJOUJfXBW2TRUu6Frk
-         Yglrds//WvpFLfVF/OxJhwC3UxWn3+G4xqTFUkHNrwWtPG1tL1GOR+hgdIaUAUoxOfkC
-         blXSTR7ytz1wZhDZxMAW9otYlckfdEf6PLodLLLUx2wr8kHJuZGW7Cisj9aCihCjPfJC
-         oatsUBi3hTmX+FyabXK/wN5KVjs+4ltI11SezaqJI+8c8jqAvhsurXVKOIte7CLkoNs4
-         uBVA==
-X-Gm-Message-State: APjAAAWxfTarJVk5QJt/MUjnWzR0XOXkNNrKlmykWho41wHYnHQ4ug9n
-        gJ1xran1y8mRhSw//vt+hLY=
-X-Google-Smtp-Source: APXvYqyRDEFYbQ44GKGTATKL9Tar5xfkSf51uMM1OQQ7v9ZzK60KhXCNbvIegj2noZq04+lADokbRQ==
-X-Received: by 2002:a25:8041:: with SMTP id a1mr35923492ybn.420.1582307962089;
-        Fri, 21 Feb 2020 09:59:22 -0800 (PST)
-Received: from [192.168.1.46] (c-73-88-245-53.hsd1.tn.comcast.net. [73.88.245.53])
-        by smtp.gmail.com with ESMTPSA id e131sm1424259ywb.81.2020.02.21.09.59.21
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Fri, 21 Feb 2020 09:59:21 -0800 (PST)
-Subject: Re: [RFC PATCH v2 4/4] script: make automatic dtb build info
- generation
-To:     Alexandre Torgue <alexandre.torgue@st.com>, robh+dt@kernel.org,
-        Masahiro Yamada <masahiroy@kernel.org>,
-        Michal Marek <michal.lkml@markovi.net>,
-        david@gibson.dropbear.id.au, sjg@chromium.org
-Cc:     devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-kbuild@vger.kernel.org, devicetree-compiler@vger.kernel.org,
-        Ian Lepore <ian@freebsd.org>
-References: <20200221161418.20225-1-alexandre.torgue@st.com>
- <20200221161418.20225-5-alexandre.torgue@st.com>
-From:   Frank Rowand <frowand.list@gmail.com>
-Message-ID: <cdeab1e4-9220-2f08-575d-15309caed14d@gmail.com>
-Date:   Fri, 21 Feb 2020 11:59:20 -0600
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        h=x-gm-message-state:from:date:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=z+o5vmJ3WcD8niaaOHTfXdBCZlrojxir+QG2cCGfk6A=;
+        b=kBhPHhyDo5qNMiJMRN9KWiXZQTCv+fxtoA8/1nPT6K7BYtI5EJRdCaq7KuqdfCb6cR
+         jjnqBOqjnuVbvHACFa7hrI2/lSYSdW+Ltj9kcL80PQH822h1nfXGL9yleWoBWpqyhXTx
+         F+HVr2/TkB6zOgl8xdoWMyMLBWosuzNGLqRhtB/fBKsvpXp6XsyQ5IHcD0uWYVuc4v4O
+         COS/PYHPCDCrULD/MuosRb8fJNTP4s5L5z2nAtEdLeM+s/ZcGJMvGfNvgHkrfSwcOgfw
+         NwxLLJsdqhHn/ho9Q/b0UDPSDNFXwvGT0i35wQbZAU8oxa8Kjyur/tmFXC1HBEcCLiIL
+         OofQ==
+X-Gm-Message-State: APjAAAVFwikEdDw+6NzA3NN3fEpJAXuOp5jV5eY1una2StodVcVCW64f
+        4DiL1YlS0tyLCfyuzj8cZg==
+X-Google-Smtp-Source: APXvYqxud//iAviYNHnubCd8GZQM6QC6ZR1Dnjwf1LjuLqxAB2/myqBOj/I9u3irWrI/sqnCHK5zdQ==
+X-Received: by 2002:a63:2cc9:: with SMTP id s192mr38389623pgs.441.1582308025998;
+        Fri, 21 Feb 2020 10:00:25 -0800 (PST)
+Received: from madhuparna-HP-Notebook ([2402:3a80:1ee0:fe5e:d03d:769b:c838:c146])
+        by smtp.gmail.com with ESMTPSA id p24sm3506364pff.69.2020.02.21.10.00.21
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Fri, 21 Feb 2020 10:00:25 -0800 (PST)
+From:   Madhuparna Bhowmik <madhuparnabhowmik10@gmail.com>
+X-Google-Original-From: Madhuparna Bhowmik <change_this_user_name@gmail.com>
+Date:   Fri, 21 Feb 2020 23:30:15 +0530
+To:     Jiri Pirko <jiri@resnulli.us>, y@madhuparna-HP-Notebook
+Cc:     Madhuparna Bhowmik <madhuparnabhowmik10@gmail.com>,
+        jiri@mellanox.com, davem@davemloft.net, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org, joel@joelfernandes.org,
+        frextrite@gmail.com,
+        linux-kernel-mentees@lists.linuxfoundation.org, paulmck@kernel.org
+Subject: Re: [PATCH] net: core: devlink.c: Use built-in RCU list checking
+Message-ID: <20200221180015.GA16779@madhuparna-HP-Notebook>
+References: <20200221165141.24630-1-madhuparnabhowmik10@gmail.com>
+ <20200221172008.GA2181@nanopsycho>
+ <20200221173533.GA13198@madhuparna-HP-Notebook>
+ <20200221175436.GB2181@nanopsycho>
 MIME-Version: 1.0
-In-Reply-To: <20200221161418.20225-5-alexandre.torgue@st.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200221175436.GB2181@nanopsycho>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2/21/20 10:14 AM, Alexandre Torgue wrote:
-> Append each "xxx.dtb.dts.tmp" file with "build-info" entry during dtb
-> build. It allows to get build information (date, source version, ...)
-> for each device tree without modify them manually.
+On Fri, Feb 21, 2020 at 06:54:36PM +0100, Jiri Pirko wrote:
+> Fri, Feb 21, 2020 at 06:35:34PM CET, madhuparnabhowmik10@gmail.com wrote:
+> >On Fri, Feb 21, 2020 at 06:20:08PM +0100, Jiri Pirko wrote:
+> >> Fri, Feb 21, 2020 at 05:51:41PM CET, madhuparnabhowmik10@gmail.com wrote:
+> >> >From: Madhuparna Bhowmik <madhuparnabhowmik10@gmail.com>
+> >> >
+> >> >list_for_each_entry_rcu() has built-in RCU and lock checking.
+> >> >
+> >> >Pass cond argument to list_for_each_entry_rcu() to silence
+> >> >false lockdep warning when CONFIG_PROVE_RCU_LIST is enabled
+> >> >by default.
+> >> >
+> >> >Signed-off-by: Madhuparna Bhowmik <madhuparnabhowmik10@gmail.com>
+> >> 
+> >> Reviewed-by: Jiri Pirko <jiri@mellanox.com>
+> >> 
+> >> Thanks.
+> >> 
+> >> However, there is a callpath where not devlink lock neither rcu read is
+> >> taken:
+> >> devlink_dpipe_table_register()->devlink_dpipe_table_find()
+> >>
+> >Hi,
+> >
+> >Yes I had noticed this, but I was not sure if there is some other lock
+> >which is being used.
+> >
+> >If yes, then can you please tell me which lock is held in this case,
+> >and I can add that condition as well to list_for_each_entry_rcu() usage.
+> >
+> >And if no lock or rcu_read_lock is held then may be we should
+> >use rcu_read_lock/unlock here.
+> >
+> >Let me know what you think about this.
 > 
-> Signed-off-by: Alexandre Torgue <alexandre.torgue@st.com>
-> 
-> diff --git a/scripts/Makefile.lib b/scripts/Makefile.lib
-> index a5af84ef4ffc..f084e78267b2 100644
-> --- a/scripts/Makefile.lib
-> +++ b/scripts/Makefile.lib
-> @@ -289,6 +289,7 @@ quiet_cmd_dtc = DTC     $@
->  cmd_dtc = mkdir -p $(dir ${dtc-tmp}) ; \
->  	$(DTB_GEN_INFO) $(src) ; \
->  	$(HOSTCC) -E $(dtc_cpp_flags) -x assembler-with-cpp -o $(dtc-tmp) $< ; \
-> +	$(DTB_GEN_INFO) $(src) $(dtc-tmp) ; \
->  	$(DTC) -O $(2) -o $@ -b 0 \
->  		$(addprefix -i,$(dir $<) $(DTC_INCLUDE)) $(DTC_FLAGS) \
->  		-d $(depfile).dtc.tmp $(dtc-tmp) ; \
-> diff --git a/scripts/gen_dtb_build_info.sh b/scripts/gen_dtb_build_info.sh
-> index 0cd8bd98e410..72f31e386787 100755
-> --- a/scripts/gen_dtb_build_info.sh
-> +++ b/scripts/gen_dtb_build_info.sh
-> @@ -6,5 +6,7 @@ set -o nounset
->  DTB_DIR=$1
->  DTB_COMPILE_BY=$(whoami | sed 's/\\/\\\\/')
->  DTB_INFO="From Linux $KERNELRELEASE by $DTB_COMPILE_BY the $(date).\0"
-> +DTS_FILE=$2
->  
-> -printf "$DTB_INFO" > "$DTB_DIR/dtb-build.txt"
-> +printf "$DTB_INFO" > "arch/arm/boot/dts/dtb-build.txt"
-> +echo "&{/} {build-info = /incbin/(\"dtb-build.txt\");};" >> $DTS_FILE
-> 
+> devlink->lock should be held since the beginning of
+> devlink_dpipe_table_register()
+>
+Alright, I will send a patch with this change soon.
+Thank you for the help.
 
-Whatever the correct version of this ends up being, it should be
-implemented as a single patch instead of patch 1/4 being modified
-by patch 4/4.
-
+Regards,
+Madhuparna
