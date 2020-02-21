@@ -2,111 +2,79 @@ Return-Path: <SRS0=1210=4J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A21ACC35646
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 17:10:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2C9F6C35657
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 17:11:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 78CA4222C4
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 17:10:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 04FF9222C4
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 17:11:40 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b="REgQwD+8"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="LKDxhjnJ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728373AbgBURKi (ORCPT
+        id S1728331AbgBURLi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Feb 2020 12:10:38 -0500
-Received: from pandora.armlinux.org.uk ([78.32.30.218]:51614 "EHLO
-        pandora.armlinux.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727469AbgBURKh (ORCPT
+        Fri, 21 Feb 2020 12:11:38 -0500
+Received: from us-smtp-2.mimecast.com ([207.211.31.81]:33167 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1727469AbgBURLi (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Feb 2020 12:10:37 -0500
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=armlinux.org.uk; s=pandora-2019; h=Sender:In-Reply-To:Content-Type:
-        MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=bp1lWcxGkXI1dOKZa2p+oi0pswujYwX0tBwQBCst0zM=; b=REgQwD+8Du6hBrxoBK+zFIs0Z
-        6A92OGFjwvYnNCRJJ4qpiWJuwucUoi9OHxhYoVQDQTqgVMyaLdK99gZoOtjJRNalWF75yRLvkGVrx
-        INHqGMXfpmgKCx6R82YcA0tWuC5c2i3Gq6M97zYis9unSS1TXNpFEWC36zXygXPLHbv2SQJGmJDmd
-        KvyqZZIlkf0TWJOJ8yKuJ+dKNLqFI2LVLkvRj1wRGfas03zBgiNIX56pOMgwo8RJPrpZ9XpuWF5QC
-        DJ2P8BGlVXy6JKxT8HFqs342ASPkC203Kc66tMqLZ746HkX28SgQ2NBwi7bw1sDQUIoQKdUuKpu3w
-        VaFWa05lQ==;
-Received: from shell.armlinux.org.uk ([2001:4d48:ad52:3201:5054:ff:fe00:4ec]:43400)
-        by pandora.armlinux.org.uk with esmtpsa (TLSv1.2:ECDHE-RSA-AES256-GCM-SHA384:256)
-        (Exim 4.90_1)
-        (envelope-from <linux@armlinux.org.uk>)
-        id 1j5Bop-0002S1-IA; Fri, 21 Feb 2020 17:10:27 +0000
-Received: from linux by shell.armlinux.org.uk with local (Exim 4.92)
-        (envelope-from <linux@shell.armlinux.org.uk>)
-        id 1j5Bom-0003fn-Jw; Fri, 21 Feb 2020 17:10:24 +0000
-Date:   Fri, 21 Feb 2020 17:10:24 +0000
-From:   Russell King - ARM Linux admin <linux@armlinux.org.uk>
-To:     Florian Fainelli <f.fainelli@gmail.com>
-Cc:     Alexandre Belloni <alexandre.belloni@bootlin.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Nicolas Ferre <nicolas.ferre@microchip.com>,
-        Antoine =?iso-8859-1?Q?T=E9nart?= <antoine.tenart@bootlin.com>,
-        netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org
-Subject: Re: [PATCH net] net: macb: Properly handle phylink on at91rm9200
-Message-ID: <20200221171024.GK25745@shell.armlinux.org.uk>
-References: <20200217104348.43164-1-alexandre.belloni@bootlin.com>
- <661c1e61-11c8-0c54-83a2-5e81674246e0@gmail.com>
+        Fri, 21 Feb 2020 12:11:38 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1582305097;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=oey+jiBKGtn4SGos1yizbcranLQ5vYUebcQ+ncI0qRE=;
+        b=LKDxhjnJZ3j+js7Vz5QQ+Wdc2noWDtkTY/88hyMbux2IkbjCF9Gf4OorO7l53PvH9qgGdU
+        jcj7KYlbh2Xv/2C968rnFSLeze037E64cE0w6nGxwZK92EhXVZapHiExDOYhxcv3qrmwjT
+        HV/3cN9OFflVU6b0tCdRQfmfHJFQ9p0=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-267-jvkJ_iX-OzyYb5WiRMdggg-1; Fri, 21 Feb 2020 12:11:35 -0500
+X-MC-Unique: jvkJ_iX-OzyYb5WiRMdggg-1
+Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id A2EEF8017CC;
+        Fri, 21 Feb 2020 17:11:33 +0000 (UTC)
+Received: from warthog.procyon.org.uk (ovpn-122-163.rdu2.redhat.com [10.10.122.163])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 10D3A8ECFD;
+        Fri, 21 Feb 2020 17:11:31 +0000 (UTC)
+Organization: Red Hat UK Ltd. Registered Address: Red Hat UK Ltd, Amberley
+        Place, 107-111 Peascod Street, Windsor, Berkshire, SI4 1TE, United
+        Kingdom.
+        Registered in England and Wales under Company Registration No. 3798903
+From:   David Howells <dhowells@redhat.com>
+In-Reply-To: <CAG48ez2vzgVgJw7-WKa1GbyLw2nJGvAnS21w=gHV02rUNheYFw@mail.gmail.com>
+References: <CAG48ez2vzgVgJw7-WKa1GbyLw2nJGvAnS21w=gHV02rUNheYFw@mail.gmail.com> <158204549488.3299825.3783690177353088425.stgit@warthog.procyon.org.uk> <158204561120.3299825.5242636508455859327.stgit@warthog.procyon.org.uk> <CAG48ez2B2J_3-+EjR20ukRu3noPnAccZsOTaea0jtKK4=+bkhQ@mail.gmail.com> <1897788.1582295034@warthog.procyon.org.uk> <CAG48ez2nFks+yN1Kp4TZisso+rjvv_4UW0FTo8iFUd4Qyq1qDw@mail.gmail.com> <2031798.1582302800@warthog.procyon.org.uk>
+To:     Jann Horn <jannh@google.com>
+Cc:     dhowells@redhat.com, Al Viro <viro@zeniv.linux.org.uk>,
+        raven@themaw.net, Miklos Szeredi <mszeredi@redhat.com>,
+        Christian Brauner <christian@brauner.io>,
+        Linux API <linux-api@vger.kernel.org>,
+        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
+        kernel list <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH 15/19] vfs: Add superblock notifications [ver #16]
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <661c1e61-11c8-0c54-83a2-5e81674246e0@gmail.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: text/plain; charset="us-ascii"
+Content-ID: <2125808.1582305091.1@warthog.procyon.org.uk>
+Date:   Fri, 21 Feb 2020 17:11:31 +0000
+Message-ID: <2125809.1582305091@warthog.procyon.org.uk>
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Feb 17, 2020 at 02:03:47PM -0800, Florian Fainelli wrote:
-> 
-> 
-> On 2/17/2020 2:43 AM, Alexandre Belloni wrote:
-> > at91ether_init was handling the phy mode and speed but since the switch to
-> > phylink, the NCFGR register got overwritten by macb_mac_config().
-> > 
-> > Add new phylink callbacks to handle emac and at91rm9200 properly.
-> > 
-> > Fixes: 7897b071ac3b ("net: macb: convert to phylink")
-> > Signed-off-by: Alexandre Belloni <alexandre.belloni@bootlin.com>
-> > ---
-> 
-> [snip]
-> 
-> > +static void at91ether_mac_link_up(struct phylink_config *config,
-> > +				  unsigned int mode,
-> > +				  phy_interface_t interface,
-> > +				  struct phy_device *phy)
-> > +{
-> > +	struct net_device *ndev = to_net_dev(config->dev);
-> > +	struct macb *bp = netdev_priv(ndev);
-> > +
-> > +	/* Enable Rx and Tx */
-> > +	macb_writel(bp, NCR, macb_readl(bp, NCR) | MACB_BIT(RE) | MACB_BIT(TE));
-> > +
-> > +	netif_tx_wake_all_queues(ndev);
-> 
-> So this happens to be copied from the mvpp2 driver, if this is a
-> requirement, should not this be moved to the phylink implementation
-> since it already manages the carrier? Those two drivers are the only
-> ones doing this.
+Jann Horn <jannh@google.com> wrote:
 
-Looking at mvneta, it does stuff with managing the queues itself, and
-I suspect adding that into phylink will mess that driver up.  Maybe
-someone with more knowledge can take a look.
+> If another thread concurrently runs close(watch_fd)
 
-But, IMHO, two drivers doing something is not grounds for moving it
-into higher layers.
+Fair point.  We have the watch queue pinned, but watch_queue_clear() is called
+before the ref is released.
 
--- 
-RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
-FTTC broadband for 0.8mile line in suburbia: sync at 12.1Mbps down 622kbps up
-According to speedtest.net: 11.9Mbps down 500kbps up
+David
+
