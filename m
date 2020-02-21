@@ -2,107 +2,87 @@ Return-Path: <SRS0=1210=4J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5FF94C11D24
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 00:52:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 99468C11D25
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 00:55:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 35E60206EF
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 00:52:29 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="Qa/xiybL"
+	by mail.kernel.org (Postfix) with ESMTP id 680A824650
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 00:55:42 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1582246542;
+	bh=vAQyARVfu9oqOzLyqVmfAikW+oYvYjWILRZBPPE0B5Y=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=tYZAEm8nIgcBYoQQtam1axRkZQx7v7lEk9kpZ7NGr6SrlcBsZziKFKanEctNDRJPu
+	 jetyBFFBWcXUtBy0qvvPzURl0P8pMWAdqZRhv+0pOm9mHmd+yU/EDx9h76ER+evKSF
+	 G4w/AhOdr3UZuZV90BJdmGI7vRGCEbZneI+EKD+Q=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729517AbgBUAw2 (ORCPT
+        id S1729504AbgBUAzl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Feb 2020 19:52:28 -0500
-Received: from userp2120.oracle.com ([156.151.31.85]:39284 "EHLO
-        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729365AbgBUAw1 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Feb 2020 19:52:27 -0500
-Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
-        by userp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 01L0mFqs130067;
-        Fri, 21 Feb 2020 00:52:20 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=subject : to : cc :
- references : from : message-id : date : mime-version : in-reply-to :
- content-type : content-transfer-encoding; s=corp-2020-01-29;
- bh=2MiF4dVUkc3MWcos/LfkCVZBhlj/IhF6lAwfrxFDkGk=;
- b=Qa/xiybLHd9cEcexFOZ9pJSEyObVBONrKnMXTPyepXmHtEcZ0bI8S2QysIO7RX225It1
- GV6xK+t8Os/XZwfWhTLbjC6Y4kkhaGDG/WWkfcGy4Prfan1HaRuVt2b0kdQmLopqCsmM
- jpTBHsFVTPUPxXj2f7xrUhrV2qCPNQi7mqZywiB1bbt4Uoe2Yc+YYxYxWq1+PAg1yz/g
- m1aaox0KZqCxqI32t4HD7dImClbktug79H6ia/EQsHGSGazTd3BNaO7pb/Pwtimq+OFP
- jyR/2voIMwtNuCNLAHav/1Da3gWJce50nOQjUvZf8zCL+9QGDNtHBmUridNFR37s0lCa xw== 
-Received: from userp3030.oracle.com (userp3030.oracle.com [156.151.31.80])
-        by userp2120.oracle.com with ESMTP id 2y8ud1ddep-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Fri, 21 Feb 2020 00:52:20 +0000
-Received: from pps.filterd (userp3030.oracle.com [127.0.0.1])
-        by userp3030.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 01L0m0ML055753;
-        Fri, 21 Feb 2020 00:52:19 GMT
-Received: from userv0122.oracle.com (userv0122.oracle.com [156.151.31.75])
-        by userp3030.oracle.com with ESMTP id 2y8ud7d62h-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Fri, 21 Feb 2020 00:52:19 +0000
-Received: from abhmp0006.oracle.com (abhmp0006.oracle.com [141.146.116.12])
-        by userv0122.oracle.com (8.14.4/8.14.4) with ESMTP id 01L0qILt004986;
-        Fri, 21 Feb 2020 00:52:18 GMT
-Received: from [192.168.1.206] (/71.63.128.209)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Thu, 20 Feb 2020 16:52:18 -0800
-Subject: Re: [PATCH v12 8/9] hugetlb_cgroup: Add hugetlb_cgroup reservation
- tests
-To:     Mina Almasry <almasrymina@google.com>
-Cc:     shuah@kernel.org, rientjes@google.com, shakeelb@google.com,
-        gthelen@google.com, akpm@linux-foundation.org,
-        linux-kernel@vger.kernel.org, linux-mm@kvack.org,
-        linux-kselftest@vger.kernel.org, cgroups@vger.kernel.org,
-        sandipan@linux.ibm.com
-References: <20200211213128.73302-1-almasrymina@google.com>
- <20200211213128.73302-8-almasrymina@google.com>
-From:   Mike Kravetz <mike.kravetz@oracle.com>
-Message-ID: <bfb05dfa-4b01-df19-9698-777cae2e78d2@oracle.com>
-Date:   Thu, 20 Feb 2020 16:52:16 -0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.1
-MIME-Version: 1.0
-In-Reply-To: <20200211213128.73302-8-almasrymina@google.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
+        Thu, 20 Feb 2020 19:55:41 -0500
+Received: from mail.kernel.org ([198.145.29.99]:50040 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729365AbgBUAzk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 20 Feb 2020 19:55:40 -0500
+Received: from X1 (nat-ab2241.sltdut.senawave.net [162.218.216.4])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id DE1D1206EF;
+        Fri, 21 Feb 2020 00:55:39 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1582246540;
+        bh=vAQyARVfu9oqOzLyqVmfAikW+oYvYjWILRZBPPE0B5Y=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=Dgccy3Rk/igP1hU3ILpjD5ruzaCS2eOXdWNPdQfYu+xig2CcOl9CHRGvorw3NkwTp
+         Gsq9FRE1D0iWE2sJ7Csk4Yc45w8KIV27VNU2m5cajIvERIpfOpZLMlz0NaTsNejmUf
+         DUDNXapGVQnks4mRAWFYn8I9tn3sNzHYdYN2WX5A=
+Date:   Thu, 20 Feb 2020 16:55:39 -0800
+From:   Andrew Morton <akpm@linux-foundation.org>
+To:     "Huang, Ying" <ying.huang@intel.com>
+Cc:     linux-mm@kvack.org, linux-kernel@vger.kernel.org,
+        Zi Yan <ziy@nvidia.com>,
+        "Kirill A . Shutemov" <kirill.shutemov@linux.intel.com>,
+        Andrea Arcangeli <aarcange@redhat.com>,
+        Michal Hocko <mhocko@kernel.org>,
+        Vlastimil Babka <vbabka@suse.cz>
+Subject: Re: [PATCH] mm: Fix possible PMD dirty bit lost in
+ set_pmd_migration_entry()
+Message-Id: <20200220165539.5082db4b3e97eee474b0dd5d@linux-foundation.org>
+In-Reply-To: <20200220075220.2327056-1-ying.huang@intel.com>
+References: <20200220075220.2327056-1-ying.huang@intel.com>
+X-Mailer: Sylpheed 3.5.1 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9537 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 phishscore=0 mlxlogscore=999 mlxscore=0
- adultscore=0 spamscore=0 suspectscore=0 malwarescore=0 bulkscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2001150001
- definitions=main-2002210003
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9537 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 lowpriorityscore=0 malwarescore=0
- suspectscore=0 bulkscore=0 spamscore=0 priorityscore=1501 phishscore=0
- impostorscore=0 mlxlogscore=999 clxscore=1011 adultscore=0 mlxscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2001150001
- definitions=main-2002210003
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2/11/20 1:31 PM, Mina Almasry wrote:
-> The tests use both shared and private mapped hugetlb memory, and
-> monitors the hugetlb usage counter as well as the hugetlb reservation
-> counter. They test different configurations such as hugetlb memory usage
-> via hugetlbfs, or MAP_HUGETLB, or shmget/shmat, and with and without
-> MAP_POPULATE.
-> 
-> Also add test for hugetlb reservation reparenting, since this is
-> a subtle issue.
-> 
-> Signed-off-by: Mina Almasry <almasrymina@google.com>
-> Cc: sandipan@linux.ibm.com
+On Thu, 20 Feb 2020 15:52:20 +0800 "Huang, Ying" <ying.huang@intel.com> wrote:
 
-Thanks for adding the tests.  At a high level, I do not see any issues.
+> From: Huang Ying <ying.huang@intel.com>
+> 
+> In set_pmd_migration_entry(), pmdp_invalidate() is used to change PMD
+> atomically.  But the PMD is read before that with an ordinary memory
+> reading.  If the THP (transparent huge page) is written between the
+> PMD reading and pmdp_invalidate(), the PMD dirty bit may be lost, and
+> cause data corruption.  The race window is quite small, but still
+> possible in theory, so need to be fixed.
+> 
+> The race is fixed via using the return value of pmdp_invalidate() to
+> get the original content of PMD, which is a read/modify/write atomic
+> operation.  So no THP writing can occur in between.
+> 
+> The race has been introduced when the THP migration support is added
+> in the commit 616b8371539a ("mm: thp: enable thp migration in generic
+> path").  But this fix depends on the commit d52605d7cb30 ("mm: do not
+> lose dirty and accessed bits in pmdp_invalidate()").  So it's easy to
+> be backported after v4.16.  But the race window is really small, so it
+> may be fine not to backport the fix at all.
 
-Acked-by: Mike Kravetz <mike.kravetz@oracle.com>
--- 
-Mike Kravetz
+Thanks.  I'm inclined to add a cc:stable to this one.  Silent data corruption is
+pretty serious.
+
