@@ -2,87 +2,93 @@ Return-Path: <SRS0=1210=4J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A2CD7C35657
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 14:15:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CE8E0C35646
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 14:16:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7AD902073A
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 14:15:15 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="t6Dtm2xo"
+	by mail.kernel.org (Postfix) with ESMTP id AF4BA206EF
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 14:16:01 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728880AbgBUOPO (ORCPT
+        id S1728425AbgBUOP7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Feb 2020 09:15:14 -0500
-Received: from mail-lf1-f65.google.com ([209.85.167.65]:33105 "EHLO
-        mail-lf1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728512AbgBUOPO (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Feb 2020 09:15:14 -0500
-Received: by mail-lf1-f65.google.com with SMTP id n25so1617733lfl.0
-        for <linux-kernel@vger.kernel.org>; Fri, 21 Feb 2020 06:15:12 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=AkDE61A38BuP/ygTbozBgf5MHpH9Vo95SRLvSWO439k=;
-        b=t6Dtm2xouaekc2EYrWLEiRUk9zuzsx/ycSUdwto1vsa8hH21/0n0fsS5EpTujeRKQY
-         8cObip8/t43obcYamNuVdIlHszzzCp5VGj6iyMSEieDfy/vR/lx5E6LccTtYZ83AOfyP
-         oZECnvFBM1fTQI9Hc933Gn3ZkAOWB0Exf7IQsnk3yy+tySMBmH1NCFPCdUsmF7AiPWXH
-         VKMqvJr6BsuzUCZxCOut1irILOrmr8G6HWBoZcUMvtJbz6e6OPfpV0CUqlZO9WuoScWy
-         Nt4NTixxcAszC3FBbeBToY0zMqja6JoruuxoS5PaAyrp82LcAs4KNPi7QOHqHXoKyOdB
-         Ap/Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=AkDE61A38BuP/ygTbozBgf5MHpH9Vo95SRLvSWO439k=;
-        b=NxpRkQs/tBsy+rhQJqlO+1H9jxfuEW3HX6eDLcwkOcAEdUgh0ZCBRQpJlG2+hzz0Vi
-         Nq+7oIDS33BxIttDdhuOmIrb3PfBW32Za98CNbeHNwdIkHQGWgx1oOoSYA9T24YAo89S
-         DzXYnIRgU6Xv8SnuebYJYEazLm0pAZaMMecGfT9xma6SE/ST6j+aPKH2zQzTMW0JGvKV
-         xYjyNCisYdWuaTP0SCCtco7BI6ank2KqXRBeoX56jsTYaEaxpPlc70Ea7aA2afGqdH0F
-         tieG1ir8VfI5Usgk+horKT1VDTduT+X8Jvn01//drBQ0zer/5xBbk2JkfNu2Dw53yAZU
-         953A==
-X-Gm-Message-State: APjAAAVjKmaLdmqXrcFxaRhgMW7bxgCo/w7VeisMCNmO4/5/DuldPgcm
-        mGpOK77BfN1wwd69Gw5fB1htevcq42UFCM+14Yni2A==
-X-Google-Smtp-Source: APXvYqzecyE8QpYi6cdaz/TQalK+k7VYi+YdD5LPqzgQdo1IqXlfsRa0zlv4Hf96qBf+2V4EYlojhnrFM8/XTBOXs04=
-X-Received: by 2002:a19:5e1d:: with SMTP id s29mr20122200lfb.21.1582294511956;
- Fri, 21 Feb 2020 06:15:11 -0800 (PST)
+        Fri, 21 Feb 2020 09:15:59 -0500
+Received: from foss.arm.com ([217.140.110.172]:40260 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728081AbgBUOP7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 21 Feb 2020 09:15:59 -0500
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 0766C1FB;
+        Fri, 21 Feb 2020 06:15:59 -0800 (PST)
+Received: from e121166-lin.cambridge.arm.com (e121166-lin.cambridge.arm.com [10.1.196.255])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 575C73F703;
+        Fri, 21 Feb 2020 06:15:58 -0800 (PST)
+Date:   Fri, 21 Feb 2020 14:15:53 +0000
+From:   Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+To:     Kunihiko Hayashi <hayashi.kunihiko@socionext.com>,
+        Kishon Vijay Abraham I <kishon@ti.com>
+Cc:     linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH RESEND] PCI: endpoint: Fix clearing start entry in
+ configfs
+Message-ID: <20200221141553.GA15440@e121166-lin.cambridge.arm.com>
+References: <1576844677-24933-1-git-send-email-hayashi.kunihiko@socionext.com>
 MIME-Version: 1.0
-References: <20200117213340.47714-1-samuel@sholland.org>
-In-Reply-To: <20200117213340.47714-1-samuel@sholland.org>
-From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Fri, 21 Feb 2020 15:15:01 +0100
-Message-ID: <CACRpkdYtmRWai8X4yAxNt57zT2eUyLdkDaYCmB=0BU62zAa81g@mail.gmail.com>
-Subject: Re: [PATCH 1/2] pinctrl: sunxi: Forward calls to irq_set_irq_wake
-To:     Samuel Holland <samuel@sholland.org>
-Cc:     Maxime Ripard <mripard@kernel.org>, Chen-Yu Tsai <wens@csie.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        linux-sunxi <linux-sunxi@googlegroups.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1576844677-24933-1-git-send-email-hayashi.kunihiko@socionext.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jan 17, 2020 at 10:33 PM Samuel Holland <samuel@sholland.org> wrote:
+On Fri, Dec 20, 2019 at 09:24:37PM +0900, Kunihiko Hayashi wrote:
+> The value of 'start' entry is no change whenever writing 0 to configfs.
+> So the endpoint that stopped once can't restart.
+> 
+> The following command lines are an example restarting endpoint and
+> reprogramming configurations after receiving bus-reset.
+> 
+>     echo 0 > controllers/66000000.pcie-ep/start
+>     rm controllers/66000000.pcie-ep/func1
+>     ln -s functions/pci_epf_test/func1 controllers/66000000.pcie-ep/
+>     echo 1 > controllers/66000000.pcie-ep/start
+> 
+> However, the first 'echo' can't set 0 to 'start', so the last 'echo' can't
+> restart endpoint.
 
-> The pinctrl irqchip may be connected to an irqchip that implements the
-> .irq_set_wake callback, such as the R_INTC on A31 and newer sunxi SoCs.
-> In order for GPIOs to be able to trigger wakeup, the IRQ from the
-> pinctrl to the upper irqchip must also be enabled for wakeup. Since the
-> kernel's IRQ core already manages the "wake_depth" of each IRQ, no
-> additional accounting is needed in the pinctrl driver.
->
-> Signed-off-by: Samuel Holland <samuel@sholland.org>
+I think your description is not correct - pci_epc_group->start is
+just used to check if an endpoint has been started or not (in
+pci_epc_epf_unlink() and that's a WARN_ON) but nonetheless this
+looks like a bug and ought to be fixed.
 
-Patch applied with Maxime's ACK.
+I need Kishon's ACK to proceed.
 
-Yours,
-Linus Walleij
+Thanks,
+Lorenzo
+
+> Fixes: d74679911610 ("PCI: endpoint: Introduce configfs entry for configuring EP functions")
+> Cc: Kishon Vijay Abraham I <kishon@ti.com>
+> Signed-off-by: Kunihiko Hayashi <hayashi.kunihiko@socionext.com>
+> ---
+>  drivers/pci/endpoint/pci-ep-cfs.c | 1 +
+>  1 file changed, 1 insertion(+)
+> 
+> diff --git a/drivers/pci/endpoint/pci-ep-cfs.c b/drivers/pci/endpoint/pci-ep-cfs.c
+> index d1288a0..4fead88 100644
+> --- a/drivers/pci/endpoint/pci-ep-cfs.c
+> +++ b/drivers/pci/endpoint/pci-ep-cfs.c
+> @@ -58,6 +58,7 @@ static ssize_t pci_epc_start_store(struct config_item *item, const char *page,
+>  
+>  	if (!start) {
+>  		pci_epc_stop(epc);
+> +		epc_group->start = 0;
+>  		return len;
+>  	}
+>  
+> -- 
+> 2.7.4
+> 
