@@ -2,54 +2,51 @@ Return-Path: <SRS0=1210=4J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B646EC35640
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 08:46:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CF8DBC35641
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 08:46:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8CE72206DB
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 08:46:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A3A34206DB
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 08:46:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582274767;
-	bh=wDgTXAYqrHF69lKyEGtAFpaIPFToVjWsBRScPMs0/Kg=;
+	s=default; t=1582274773;
+	bh=deNAJfb+HengsUnbWaZWDBpg7gTmWXmNHJ17KELUfr4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=TdzB4E/mIq15lLd7NcevbVWTsuhKAxl6xy9cHPr+MsLZ12cLxk5ZQDrUocHARLmFv
-	 5G9ZLbF9x9tNJBdIs5LmaTo3eXSkzr29+2b8XHRZ7GICanrgeBBplOfV17AsQQZlyq
-	 3dBicS8lnFwV+yjRFwjgqIL+4UwbKpPImIsQ1KcA=
+	b=xBm3MVw/e9MgYfXd0lRmvN9cvzOP8vTs/pRY+OcuKsPgrheQjG8B1Yjnj488YvcIT
+	 8agAC1a9b+uopPllAtEU0E0znhP91t+IaayMJpVc9xtgU8pn1+Qqi1Z9IlBSSnyFQL
+	 ZPvvKAXdTK7JrfkJSfXylkUB0dsGJeW7xRX6Pc7Y=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732324AbgBUIqG (ORCPT
+        id S1732390AbgBUIqM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Feb 2020 03:46:06 -0500
-Received: from mail.kernel.org ([198.145.29.99]:47416 "EHLO mail.kernel.org"
+        Fri, 21 Feb 2020 03:46:12 -0500
+Received: from mail.kernel.org ([198.145.29.99]:47224 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727312AbgBUHub (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Feb 2020 02:50:31 -0500
+        id S1729545AbgBUHuV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 21 Feb 2020 02:50:21 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 86F78208C4;
-        Fri, 21 Feb 2020 07:50:30 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1E1DC24656;
+        Fri, 21 Feb 2020 07:50:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1582271431;
-        bh=wDgTXAYqrHF69lKyEGtAFpaIPFToVjWsBRScPMs0/Kg=;
+        s=default; t=1582271420;
+        bh=deNAJfb+HengsUnbWaZWDBpg7gTmWXmNHJ17KELUfr4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=A+XaFLRkLOgKHaqI3okcsajCnuIjGNlihJ98ZUjCYA0PxRgbfowVDGqHrfj+9K/Wc
-         6OOnDdRkZvH6+P2Sf99tPBpJDOS12zgbyK7drN0MD23CIDzXLMEJB+3QBxwkixNYoe
-         0m5qnKEboi91s0fFtMnRFlqHQ9mPJRai21crhwQA=
+        b=DHpo0ZSRCUwDw2IqzpRQT1IcskFT5oyg5a2avqZiVoQotbbcKoASZUGFbttYw8GlA
+         uPDVYIKdLftzwdbyOY3B1NdROFPDEkZAfMoVvx3TH6kZ2cbQR73IaLnXw/5PXyLygb
+         g6PElscMdCCYGr6N01iS8Ou8iFUBjmJKAwfFwhic=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Elia Geretto <elia.f.geretto@gmail.com>,
-        Bob Moore <robert.moore@intel.com>,
-        Erik Kaneda <erik.kaneda@intel.com>,
-        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.5 164/399] ACPICA: Disassembler: create buffer fields in ACPI_PARSE_LOAD_PASS1
-Date:   Fri, 21 Feb 2020 08:38:09 +0100
-Message-Id: <20200221072418.537695074@linuxfoundation.org>
+        stable@vger.kernel.org, Masami Hiramatsu <mhiramat@kernel.org>,
+        Jessica Yu <jeyu@kernel.org>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.5 111/399] modules: lockdep: Suppress suspicious RCU usage warning
+Date:   Fri, 21 Feb 2020 08:37:16 +0100
+Message-Id: <20200221072413.235275688@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200221072402.315346745@linuxfoundation.org>
 References: <20200221072402.315346745@linuxfoundation.org>
@@ -62,84 +59,88 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Erik Kaneda <erik.kaneda@intel.com>
+From: Masami Hiramatsu <mhiramat@kernel.org>
 
-[ Upstream commit 5ddbd77181dfca61b16d2e2222382ea65637f1b9 ]
+[ Upstream commit bf08949cc8b98b7d1e20cfbba169a5938d42dae8 ]
 
-ACPICA commit 29cc8dbc5463a93625bed87d7550a8bed8913bf4
+While running kprobe module test, find_module_all() caused
+a suspicious RCU usage warning.
 
-create_buffer_field is a deferred op that is typically processed in
-load pass 2. However, disassembly of control method contents walk the
-parse tree with ACPI_PARSE_LOAD_PASS1 and AML_CREATE operators are
-processed in a later walk. This is a problem when there is a control
-method that has the same name as the AML_CREATE object. In this case,
-any use of the name segment will be detected as a method call rather
-than a reference to a buffer field. If this is detected as a method
-call, it can result in a mal-formed parse tree if the control methods
-have parameters.
+-----
+ =============================
+ WARNING: suspicious RCU usage
+ 5.4.0-next-20191202+ #63 Not tainted
+ -----------------------------
+ kernel/module.c:619 RCU-list traversed in non-reader section!!
 
-This change in processing AML_CREATE ops earlier solves this issue by
-inserting the named object in the ACPI namespace so that references
-to this name would be detected as a name string rather than a method
-call.
+ other info that might help us debug this:
 
-Link: https://github.com/acpica/acpica/commit/29cc8dbc
-Reported-by: Elia Geretto <elia.f.geretto@gmail.com>
-Tested-by: Elia Geretto <elia.f.geretto@gmail.com>
-Signed-off-by: Bob Moore <robert.moore@intel.com>
-Signed-off-by: Erik Kaneda <erik.kaneda@intel.com>
-Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+ rcu_scheduler_active = 2, debug_locks = 1
+ 1 lock held by rmmod/642:
+  #0: ffffffff8227da80 (module_mutex){+.+.}, at: __x64_sys_delete_module+0x9a/0x230
+
+ stack backtrace:
+ CPU: 0 PID: 642 Comm: rmmod Not tainted 5.4.0-next-20191202+ #63
+ Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS rel-1.12.1-0-ga5cab58e9a3f-prebuilt.qemu.org 04/01/2014
+ Call Trace:
+  dump_stack+0x71/0xa0
+  find_module_all+0xc1/0xd0
+  __x64_sys_delete_module+0xac/0x230
+  ? do_syscall_64+0x12/0x1f0
+  do_syscall_64+0x50/0x1f0
+  entry_SYSCALL_64_after_hwframe+0x49/0xbe
+ RIP: 0033:0x4b6d49
+-----
+
+This is because list_for_each_entry_rcu(modules) is called
+without rcu_read_lock(). This is safe because the module_mutex
+is locked.
+
+Pass lockdep_is_held(&module_mutex) to the list_for_each_entry_rcu()
+to suppress this warning, This also fixes similar issue in
+mod_find() and each_symbol_section().
+
+Signed-off-by: Masami Hiramatsu <mhiramat@kernel.org>
+Signed-off-by: Jessica Yu <jeyu@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/acpi/acpica/dsfield.c |  2 +-
- drivers/acpi/acpica/dswload.c | 21 +++++++++++++++++++++
- 2 files changed, 22 insertions(+), 1 deletion(-)
+ kernel/module.c | 9 ++++++---
+ 1 file changed, 6 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/acpi/acpica/dsfield.c b/drivers/acpi/acpica/dsfield.c
-index faa38a22263ad..ae713d746c8b8 100644
---- a/drivers/acpi/acpica/dsfield.c
-+++ b/drivers/acpi/acpica/dsfield.c
-@@ -243,7 +243,7 @@ cleanup:
-  * FUNCTION:    acpi_ds_get_field_names
-  *
-  * PARAMETERS:  info            - create_field info structure
-- *  `           walk_state      - Current method state
-+ *              walk_state      - Current method state
-  *              arg             - First parser arg for the field name list
-  *
-  * RETURN:      Status
-diff --git a/drivers/acpi/acpica/dswload.c b/drivers/acpi/acpica/dswload.c
-index c88fd31208a5b..4bcf15bf03ded 100644
---- a/drivers/acpi/acpica/dswload.c
-+++ b/drivers/acpi/acpica/dswload.c
-@@ -410,6 +410,27 @@ acpi_status acpi_ds_load1_end_op(struct acpi_walk_state *walk_state)
- 	ACPI_DEBUG_PRINT((ACPI_DB_DISPATCH, "Op=%p State=%p\n", op,
- 			  walk_state));
+diff --git a/kernel/module.c b/kernel/module.c
+index 8785e31c2dd0f..d83edc3a41a33 100644
+--- a/kernel/module.c
++++ b/kernel/module.c
+@@ -214,7 +214,8 @@ static struct module *mod_find(unsigned long addr)
+ {
+ 	struct module *mod;
  
-+	/*
-+	 * Disassembler: handle create field operators here.
-+	 *
-+	 * create_buffer_field is a deferred op that is typically processed in load
-+	 * pass 2. However, disassembly of control method contents walk the parse
-+	 * tree with ACPI_PARSE_LOAD_PASS1 and AML_CREATE operators are processed
-+	 * in a later walk. This is a problem when there is a control method that
-+	 * has the same name as the AML_CREATE object. In this case, any use of the
-+	 * name segment will be detected as a method call rather than a reference
-+	 * to a buffer field.
-+	 *
-+	 * This earlier creation during disassembly solves this issue by inserting
-+	 * the named object in the ACPI namespace so that references to this name
-+	 * would be a name string rather than a method call.
-+	 */
-+	if ((walk_state->parse_flags & ACPI_PARSE_DISASSEMBLE) &&
-+	    (walk_state->op_info->flags & AML_CREATE)) {
-+		status = acpi_ds_create_buffer_field(op, walk_state);
-+		return_ACPI_STATUS(status);
-+	}
-+
- 	/* We are only interested in opcodes that have an associated name */
+-	list_for_each_entry_rcu(mod, &modules, list) {
++	list_for_each_entry_rcu(mod, &modules, list,
++				lockdep_is_held(&module_mutex)) {
+ 		if (within_module(addr, mod))
+ 			return mod;
+ 	}
+@@ -448,7 +449,8 @@ bool each_symbol_section(bool (*fn)(const struct symsearch *arr,
+ 	if (each_symbol_in_section(arr, ARRAY_SIZE(arr), NULL, fn, data))
+ 		return true;
  
- 	if (!(walk_state->op_info->flags & (AML_NAMED | AML_FIELD))) {
+-	list_for_each_entry_rcu(mod, &modules, list) {
++	list_for_each_entry_rcu(mod, &modules, list,
++				lockdep_is_held(&module_mutex)) {
+ 		struct symsearch arr[] = {
+ 			{ mod->syms, mod->syms + mod->num_syms, mod->crcs,
+ 			  NOT_GPL_ONLY, false },
+@@ -616,7 +618,8 @@ static struct module *find_module_all(const char *name, size_t len,
+ 
+ 	module_assert_mutex_or_preempt();
+ 
+-	list_for_each_entry_rcu(mod, &modules, list) {
++	list_for_each_entry_rcu(mod, &modules, list,
++				lockdep_is_held(&module_mutex)) {
+ 		if (!even_unformed && mod->state == MODULE_STATE_UNFORMED)
+ 			continue;
+ 		if (strlen(mod->name) == len && !memcmp(mod->name, name, len))
 -- 
 2.20.1
 
