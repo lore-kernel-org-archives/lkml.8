@@ -2,223 +2,96 @@ Return-Path: <SRS0=1210=4J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8AD23C35641
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 08:41:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 92380C35641
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 08:41:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 626FD206ED
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 08:41:13 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="fICJukfY"
+	by mail.kernel.org (Postfix) with ESMTP id 66C43206DB
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 08:41:22 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1582274482;
+	bh=A3r53Ti4W7H0MZfUrZJ9EtnHYp8kTdo1d+21a3Ib3lc=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=wH6fcELVk/m3EnwAC5abEUWhkOmQow/sgXfboE6+B0M2BsZq4tklUJ6rNkSQ/14cp
+	 28riS2JCxiwoPkUFcM5NtSVhpHAwDHMTdUp+8BA7mUskkRm8IIkim8E/yxaWNz1Sfx
+	 pZOtlgz0nPLjmUK1SYySNHR7MY5r9fcw8WC0+xHA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731177AbgBUIlM (ORCPT
+        id S1731338AbgBUIlU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Feb 2020 03:41:12 -0500
-Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:50435 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1730683AbgBUH5x (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Feb 2020 02:57:53 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1582271872;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=qZ2vYX6aTEtYA+Rmtsl2PSnzUra/4wEX+6A+xs3OWnE=;
-        b=fICJukfYhcyMyFkOqBlQi6nnMvVXDkasO/fHBO4MvkX33xhY7jiPQbioiDX7/DQktAMZVy
-        L3sFBD3s/TTKuZ0NtGge89eKIL1o8fV1jQFNHw9YxruLPMQ/aQq6TnmWn5smQgWkbnxd9B
-        zU6S0yr0b6bUzkhn3IntLZjHwUlHZ/g=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-347-s328FKtIP_GiYZgic4bVwg-1; Fri, 21 Feb 2020 02:57:50 -0500
-X-MC-Unique: s328FKtIP_GiYZgic4bVwg-1
-Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        Fri, 21 Feb 2020 03:41:20 -0500
+Received: from mail.kernel.org ([198.145.29.99]:57334 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1730129AbgBUH5t (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 21 Feb 2020 02:57:49 -0500
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 89523107ACC5;
-        Fri, 21 Feb 2020 07:57:47 +0000 (UTC)
-Received: from [10.72.13.208] (ovpn-13-208.pek2.redhat.com [10.72.13.208])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id A094B8ECFD;
-        Fri, 21 Feb 2020 07:57:31 +0000 (UTC)
-Subject: Re: [PATCH V4 5/5] vdpasim: vDPA device simulator
-To:     Jason Gunthorpe <jgg@mellanox.com>
-Cc:     "mst@redhat.com" <mst@redhat.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
-        "virtualization@lists.linux-foundation.org" 
-        <virtualization@lists.linux-foundation.org>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-        "tiwei.bie@intel.com" <tiwei.bie@intel.com>,
-        "maxime.coquelin@redhat.com" <maxime.coquelin@redhat.com>,
-        "cunming.liang@intel.com" <cunming.liang@intel.com>,
-        "zhihong.wang@intel.com" <zhihong.wang@intel.com>,
-        "rob.miller@broadcom.com" <rob.miller@broadcom.com>,
-        "xiao.w.wang@intel.com" <xiao.w.wang@intel.com>,
-        "haotian.wang@sifive.com" <haotian.wang@sifive.com>,
-        "lingshan.zhu@intel.com" <lingshan.zhu@intel.com>,
-        "eperezma@redhat.com" <eperezma@redhat.com>,
-        "lulu@redhat.com" <lulu@redhat.com>,
-        Parav Pandit <parav@mellanox.com>,
-        "kevin.tian@intel.com" <kevin.tian@intel.com>,
-        "stefanha@redhat.com" <stefanha@redhat.com>,
-        "rdunlap@infradead.org" <rdunlap@infradead.org>,
-        "hch@infradead.org" <hch@infradead.org>,
-        "aadam@redhat.com" <aadam@redhat.com>,
-        Jiri Pirko <jiri@mellanox.com>,
-        Shahaf Shuler <shahafs@mellanox.com>,
-        "hanand@xilinx.com" <hanand@xilinx.com>,
-        "mhabets@solarflare.com" <mhabets@solarflare.com>
-References: <20200220061141.29390-1-jasowang@redhat.com>
- <20200220061141.29390-6-jasowang@redhat.com>
- <20200220151215.GU23930@mellanox.com>
-From:   Jason Wang <jasowang@redhat.com>
-Message-ID: <6c341a77-a297-b7c7-dea5-b3f7b920b1f3@redhat.com>
-Date:   Fri, 21 Feb 2020 15:57:29 +0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        by mail.kernel.org (Postfix) with ESMTPSA id DDC3F24656;
+        Fri, 21 Feb 2020 07:57:41 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1582271862;
+        bh=A3r53Ti4W7H0MZfUrZJ9EtnHYp8kTdo1d+21a3Ib3lc=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=GX8A7WtgLVlJ6Gd4OytZgr4qlD9D5WXzR+z1DEoFyCjxj0ZTEujaYrdso8aAstP3Q
+         FErGbPg9bJEbnpkHdHbpPvtdao55BnZx28/ZqNJrYzLFg90LpWMJyiE4FB4/VfnHT9
+         il7PhLIjjUWdXcOw81N28DAne/2d9PS/20gq0ZyU=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org, Olof Johansson <olof@lixom.net>,
+        Saeed Mahameed <saeedm@mellanox.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.5 327/399] net/mlx5e: Fix printk format warning
+Date:   Fri, 21 Feb 2020 08:40:52 +0100
+Message-Id: <20200221072433.015460603@linuxfoundation.org>
+X-Mailer: git-send-email 2.25.1
+In-Reply-To: <20200221072402.315346745@linuxfoundation.org>
+References: <20200221072402.315346745@linuxfoundation.org>
+User-Agent: quilt/0.66
 MIME-Version: 1.0
-In-Reply-To: <20200220151215.GU23930@mellanox.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+From: Olof Johansson <olof@lixom.net>
 
-On 2020/2/20 =E4=B8=8B=E5=8D=8811:12, Jason Gunthorpe wrote:
-> On Thu, Feb 20, 2020 at 02:11:41PM +0800, Jason Wang wrote:
->> +static void vdpasim_device_release(struct device *dev)
->> +{
->> +	struct vdpasim *vdpasim =3D dev_to_sim(dev);
->> +
->> +	cancel_work_sync(&vdpasim->work);
->> +	kfree(vdpasim->buffer);
->> +	vhost_iotlb_free(vdpasim->iommu);
->> +	kfree(vdpasim);
->> +}
->> +
->> +static struct vdpasim *vdpasim_create(void)
->> +{
->> +	struct virtio_net_config *config;
->> +	struct vhost_iotlb *iommu;
->> +	struct vdpasim *vdpasim;
->> +	struct device *dev;
->> +	void *buffer;
->> +	int ret =3D -ENOMEM;
->> +
->> +	iommu =3D vhost_iotlb_alloc(2048, 0);
->> +	if (!iommu)
->> +		goto err;
->> +
->> +	buffer =3D kmalloc(PAGE_SIZE, GFP_KERNEL);
->> +	if (!buffer)
->> +		goto err_buffer;
->> +
->> +	vdpasim =3D kzalloc(sizeof(*vdpasim), GFP_KERNEL);
->> +	if (!vdpasim)
->> +		goto err_alloc;
->> +
->> +	vdpasim->buffer =3D buffer;
->> +	vdpasim->iommu =3D iommu;
->> +
->> +	config =3D &vdpasim->config;
->> +	config->mtu =3D 1500;
->> +	config->status =3D VIRTIO_NET_S_LINK_UP;
->> +	eth_random_addr(config->mac);
->> +
->> +	INIT_WORK(&vdpasim->work, vdpasim_work);
->> +	spin_lock_init(&vdpasim->lock);
->> +
->> +	vringh_set_iotlb(&vdpasim->vqs[0].vring, vdpasim->iommu);
->> +	vringh_set_iotlb(&vdpasim->vqs[1].vring, vdpasim->iommu);
->> +
->> +	dev =3D &vdpasim->dev;
->> +	dev->release =3D vdpasim_device_release;
->> +	dev->coherent_dma_mask =3D DMA_BIT_MASK(64);
->> +	set_dma_ops(dev, &vdpasim_dma_ops);
->> +	dev_set_name(dev, "%s", VDPASIM_NAME);
->> +
->> +	ret =3D device_register(&vdpasim->dev);
->> +	if (ret)
->> +		goto err_init;
-> It is a bit weird to be creating this dummy parent, couldn't this be
-> done by just passing a NULL parent to vdpa_alloc_device, doing
-> set_dma_ops() on the vdpasim->vdpa->dev and setting dma_device to
-> vdpasim->vdpa->dev ?
+[ Upstream commit ca9c74ae9be5e78541c2058db9a754947a7d4a9b ]
+
+Use "%zu" for size_t. Seen on ARM allmodconfig:
+
+drivers/net/ethernet/mellanox/mlx5/core/wq.c: In function 'mlx5_wq_cyc_wqe_dump':
+include/linux/kern_levels.h:5:18: warning: format '%ld' expects argument of type 'long int', but argument 5 has type 'size_t' {aka 'unsigned int'} [-Wformat=]
+
+Fixes: 130c7b46c93d ("net/mlx5e: TX, Dump WQs wqe descriptors on CQE with error events")
+Signed-off-by: Olof Johansson <olof@lixom.net>
+Signed-off-by: Saeed Mahameed <saeedm@mellanox.com>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ drivers/net/ethernet/mellanox/mlx5/core/wq.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/drivers/net/ethernet/mellanox/mlx5/core/wq.c b/drivers/net/ethernet/mellanox/mlx5/core/wq.c
+index f2a0e72285bac..02f7e4a39578a 100644
+--- a/drivers/net/ethernet/mellanox/mlx5/core/wq.c
++++ b/drivers/net/ethernet/mellanox/mlx5/core/wq.c
+@@ -89,7 +89,7 @@ void mlx5_wq_cyc_wqe_dump(struct mlx5_wq_cyc *wq, u16 ix, u8 nstrides)
+ 	len = nstrides << wq->fbc.log_stride;
+ 	wqe = mlx5_wq_cyc_get_wqe(wq, ix);
+ 
+-	pr_info("WQE DUMP: WQ size %d WQ cur size %d, WQE index 0x%x, len: %ld\n",
++	pr_info("WQE DUMP: WQ size %d WQ cur size %d, WQE index 0x%x, len: %zu\n",
+ 		mlx5_wq_cyc_get_size(wq), wq->cur_sz, ix, len);
+ 	print_hex_dump(KERN_WARNING, "", DUMP_PREFIX_OFFSET, 16, 1, wqe, len, false);
+ }
+-- 
+2.20.1
 
 
-I think it works.
-
-
->> +	vdpasim->vdpa =3D vdpa_alloc_device(dev, dev, &vdpasim_net_config_op=
-s);
->> +	if (ret)
->> +		goto err_vdpa;
->> +	ret =3D vdpa_register_device(vdpasim->vdpa);
->> +	if (ret)
->> +		goto err_register;
->> +
->> +	return vdpasim;
->> +
->> +err_register:
->> +	put_device(&vdpasim->vdpa->dev);
->> +err_vdpa:
->> +	device_del(&vdpasim->dev);
->> +	goto err;
->> +err_init:
->> +	put_device(&vdpasim->dev);
->> +	goto err;
-> If you do the vdmasim alloc first, and immediately do
-> device_initialize() then all the failure paths can do put_device
-> instead of having this ugly goto unwind split. Just check for
-> vdpasim->iommu =3D=3D NULL during release.
-
-
-Yes, that looks simpler.
-
-
->
->> +static int __init vdpasim_dev_init(void)
->> +{
->> +	vdpasim_dev =3D vdpasim_create();
->> +
->> +	if (!IS_ERR(vdpasim_dev))
->> +		return 0;
->> +
->> +	return PTR_ERR(vdpasim_dev);
->> +}
->> +
->> +static int vdpasim_device_remove_cb(struct device *dev, void *data)
->> +{
->> +	struct vdpa_device *vdpa =3D dev_to_vdpa(dev);
->> +
->> +	vdpa_unregister_device(vdpa);
->> +
->> +	return 0;
->> +}
->> +
->> +static void __exit vdpasim_dev_exit(void)
->> +{
->> +	device_for_each_child(&vdpasim_dev->dev, NULL,
->> +			      vdpasim_device_remove_cb);
-> Why the loop? There is only one device, and it is in the global
-> varaible vdmasim_dev ?
-
-
-Not necessary but doesn't harm, will remove this.
-
-Thanks
-
-
->
-> Jason
->
 
