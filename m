@@ -4,49 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CB752C35640
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 07:46:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 909C0C35643
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 07:46:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9A48320801
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 07:46:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 66ADD208C4
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 07:46:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582271214;
-	bh=5pz5VyVlGIkxJd83Kh8BCjSgf0Ktw6Y4y60XftuSGmE=;
+	s=default; t=1582271218;
+	bh=a3QHIHNxFMx+bv/cC1wgJHLhkTnD8DsRADzbTKuOYRo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=hlw565GQdsYC+/LfUvBLCyLiLcU/lCtn5s2g9M1vwacMLCI69iWrlOU5YJROgc1eZ
-	 b4QV4gOhOHsNjewHtYCrWMcTMPaZLrVcKZgEFvDvN7T2t80fJ1/KTj0Y6dl7NlNqBE
-	 BmSVGyfQfo2icdePhy+UItnrEKomzxtH/de8sdxc=
+	b=AFVsqtUhEhomtIkxq2eUv7Rsy5gblKrdyj2x+xb9kSSbvicbsA/1U3SMCIiAqzcU9
+	 5efzd8SK6YPrLqi5Q9DN4OIu22z+DGq1/pfN5jJppivpvqRMdDqVWdlsvc38Drz7qc
+	 UiiFvRnlEA1S/2FxhNjUM7YI4U5C9cyPePFr+C/U=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728804AbgBUHqx (ORCPT
+        id S1728816AbgBUHq5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Feb 2020 02:46:53 -0500
-Received: from mail.kernel.org ([198.145.29.99]:42458 "EHLO mail.kernel.org"
+        Fri, 21 Feb 2020 02:46:57 -0500
+Received: from mail.kernel.org ([198.145.29.99]:42600 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728792AbgBUHqs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Feb 2020 02:46:48 -0500
+        id S1728792AbgBUHqy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 21 Feb 2020 02:46:54 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5A724207FD;
-        Fri, 21 Feb 2020 07:46:47 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 080DF207FD;
+        Fri, 21 Feb 2020 07:46:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1582271207;
-        bh=5pz5VyVlGIkxJd83Kh8BCjSgf0Ktw6Y4y60XftuSGmE=;
+        s=default; t=1582271213;
+        bh=a3QHIHNxFMx+bv/cC1wgJHLhkTnD8DsRADzbTKuOYRo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ws1GSnl8DssBSy5bi8+XSA1wkjZo/ck9wA5dsXtN1QT6/17a2K5L4EU/B/AhbVHut
-         orvbGMCBlFFoT7rUdCjPw5QWdQhQj7JXkb6oii4mzpFOxC9q6M967zXHOLYWeNPj9Z
-         vDGIceZ0iRDfIrZR6OM74MV1B9JwjPjRRFAQIVeI=
+        b=Z48Q5NCQJ1UkkHzeeUg5eSI/SVY2oC9mrOPOdbo3F4rIl/UhfoXIYQvUN5KWOe9yF
+         wTHOj1dlyLtZ37FDgk198OjSGm7e8pe6ieZsij9bLVubWs/qaSFZHNi00MigceGT2x
+         2eMYTf6qw83/06hfYJvFs9KJzvGrdpsFKtsRBqoI=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Eric Biggers <ebiggers@google.com>,
-        Theodore Tso <tytso@mit.edu>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.5 072/399] ext4: fix deadlock allocating bio_post_read_ctx from mempool
-Date:   Fri, 21 Feb 2020 08:36:37 +0100
-Message-Id: <20200221072409.361481698@linuxfoundation.org>
+        stable@vger.kernel.org, Oliver OHalloran <oohall@gmail.com>,
+        Alexey Kardashevskiy <aik@ozlabs.ru>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.5 082/399] powerpc/iov: Move VF pdev fixup into pcibios_fixup_iov()
+Date:   Fri, 21 Feb 2020 08:36:47 +0100
+Message-Id: <20200221072410.308097100@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200221072402.315346745@linuxfoundation.org>
 References: <20200221072402.315346745@linuxfoundation.org>
@@ -59,79 +61,121 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Eric Biggers <ebiggers@google.com>
+From: Oliver O'Halloran <oohall@gmail.com>
 
-[ Upstream commit 68e45330e341dad2d3a0a3f8ef2ec46a2a0a3bbc ]
+[ Upstream commit 965c94f309be58fbcc6c8d3e4f123376c5970d79 ]
 
-Without any form of coordination, any case where multiple allocations
-from the same mempool are needed at a time to make forward progress can
-deadlock under memory pressure.
+An ioda_pe for each VF is allocated in pnv_pci_sriov_enable() before
+the pci_dev for the VF is created. We need to set the pe->pdev pointer
+at some point after the pci_dev is created. Currently we do that in:
 
-This is the case for struct bio_post_read_ctx, as one can be allocated
-to decrypt a Merkle tree page during fsverity_verify_bio(), which itself
-is running from a post-read callback for a data bio which has its own
-struct bio_post_read_ctx.
+pcibios_bus_add_device()
+	pnv_pci_dma_dev_setup() (via phb->ops.dma_dev_setup)
+		/* fixup is done here */
+		pnv_pci_ioda_dma_dev_setup() (via pnv_phb->dma_dev_setup)
 
-Fix this by freeing the first bio_post_read_ctx before calling
-fsverity_verify_bio().  This works because verity (if enabled) is always
-the last post-read step.
+The fixup needs to be done before setting up DMA for for the VF's PE,
+but there's no real reason to delay it until this point. Move the
+fixup into pnv_pci_ioda_fixup_iov() so the ordering is:
 
-This deadlock can be reproduced by trying to read from an encrypted
-verity file after reducing NUM_PREALLOC_POST_READ_CTXS to 1 and patching
-mempool_alloc() to pretend that pool->alloc() always fails.
+	pcibios_add_device()
+		pnv_pci_ioda_fixup_iov() (via ppc_md.pcibios_fixup_sriov)
 
-Note that since NUM_PREALLOC_POST_READ_CTXS is actually 128, to actually
-hit this bug in practice would require reading from lots of encrypted
-verity files at the same time.  But it's theoretically possible, as N
-available objects isn't enough to guarantee forward progress when > N/2
-threads each need 2 objects at a time.
+	pcibios_bus_add_device()
+		...
 
-Fixes: 22cfe4b48ccb ("ext4: add fs-verity read support")
-Signed-off-by: Eric Biggers <ebiggers@google.com>
-Link: https://lore.kernel.org/r/20191231181222.47684-1-ebiggers@kernel.org
-Signed-off-by: Theodore Ts'o <tytso@mit.edu>
+This isn't strictly required, but it's a slightly more logical place
+to do the fixup and it simplifies pnv_pci_dma_dev_setup().
+
+Signed-off-by: Oliver O'Halloran <oohall@gmail.com>
+Reviewed-by: Alexey Kardashevskiy <aik@ozlabs.ru>
+Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
+Link: https://lore.kernel.org/r/20200110070207.439-4-oohall@gmail.com
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/ext4/readpage.c | 17 +++++++++++++++--
- 1 file changed, 15 insertions(+), 2 deletions(-)
+ arch/powerpc/platforms/powernv/pci-ioda.c | 29 +++++++++++++++++++----
+ arch/powerpc/platforms/powernv/pci.c      | 14 -----------
+ 2 files changed, 25 insertions(+), 18 deletions(-)
 
-diff --git a/fs/ext4/readpage.c b/fs/ext4/readpage.c
-index fef7755300c35..410c904cf59b9 100644
---- a/fs/ext4/readpage.c
-+++ b/fs/ext4/readpage.c
-@@ -57,6 +57,7 @@ enum bio_post_read_step {
- 	STEP_INITIAL = 0,
- 	STEP_DECRYPT,
- 	STEP_VERITY,
-+	STEP_MAX,
- };
+diff --git a/arch/powerpc/platforms/powernv/pci-ioda.c b/arch/powerpc/platforms/powernv/pci-ioda.c
+index 4374836b033b4..67e4628dd5274 100644
+--- a/arch/powerpc/platforms/powernv/pci-ioda.c
++++ b/arch/powerpc/platforms/powernv/pci-ioda.c
+@@ -2900,9 +2900,6 @@ static void pnv_pci_ioda_fixup_iov_resources(struct pci_dev *pdev)
+ 	struct pci_dn *pdn;
+ 	int mul, total_vfs;
  
- struct bio_post_read_ctx {
-@@ -106,10 +107,22 @@ static void verity_work(struct work_struct *work)
- {
- 	struct bio_post_read_ctx *ctx =
- 		container_of(work, struct bio_post_read_ctx, work);
-+	struct bio *bio = ctx->bio;
- 
--	fsverity_verify_bio(ctx->bio);
-+	/*
-+	 * fsverity_verify_bio() may call readpages() again, and although verity
-+	 * will be disabled for that, decryption may still be needed, causing
-+	 * another bio_post_read_ctx to be allocated.  So to guarantee that
-+	 * mempool_alloc() never deadlocks we must free the current ctx first.
-+	 * This is safe because verity is the last post-read step.
-+	 */
-+	BUILD_BUG_ON(STEP_VERITY + 1 != STEP_MAX);
-+	mempool_free(ctx, bio_post_read_ctx_pool);
-+	bio->bi_private = NULL;
- 
--	bio_post_read_processing(ctx);
-+	fsverity_verify_bio(bio);
-+
-+	__read_end_io(bio);
+-	if (!pdev->is_physfn || pci_dev_is_added(pdev))
+-		return;
+-
+ 	pdn = pci_get_pdn(pdev);
+ 	pdn->vfs_expanded = 0;
+ 	pdn->m64_single_mode = false;
+@@ -2977,6 +2974,30 @@ truncate_iov:
+ 		res->end = res->start - 1;
+ 	}
  }
++
++static void pnv_pci_ioda_fixup_iov(struct pci_dev *pdev)
++{
++	if (WARN_ON(pci_dev_is_added(pdev)))
++		return;
++
++	if (pdev->is_virtfn) {
++		struct pnv_ioda_pe *pe = pnv_ioda_get_pe(pdev);
++
++		/*
++		 * VF PEs are single-device PEs so their pdev pointer needs to
++		 * be set. The pdev doesn't exist when the PE is allocated (in
++		 * (pcibios_sriov_enable()) so we fix it up here.
++		 */
++		pe->pdev = pdev;
++		WARN_ON(!(pe->flags & PNV_IODA_PE_VF));
++	} else if (pdev->is_physfn) {
++		/*
++		 * For PFs adjust their allocated IOV resources to match what
++		 * the PHB can support using it's M64 BAR table.
++		 */
++		pnv_pci_ioda_fixup_iov_resources(pdev);
++	}
++}
+ #endif /* CONFIG_PCI_IOV */
  
- static void bio_post_read_processing(struct bio_post_read_ctx *ctx)
+ static void pnv_ioda_setup_pe_res(struct pnv_ioda_pe *pe,
+@@ -3873,7 +3894,7 @@ static void __init pnv_pci_init_ioda_phb(struct device_node *np,
+ 	ppc_md.pcibios_default_alignment = pnv_pci_default_alignment;
+ 
+ #ifdef CONFIG_PCI_IOV
+-	ppc_md.pcibios_fixup_sriov = pnv_pci_ioda_fixup_iov_resources;
++	ppc_md.pcibios_fixup_sriov = pnv_pci_ioda_fixup_iov;
+ 	ppc_md.pcibios_iov_resource_alignment = pnv_pci_iov_resource_alignment;
+ 	ppc_md.pcibios_sriov_enable = pnv_pcibios_sriov_enable;
+ 	ppc_md.pcibios_sriov_disable = pnv_pcibios_sriov_disable;
+diff --git a/arch/powerpc/platforms/powernv/pci.c b/arch/powerpc/platforms/powernv/pci.c
+index e8e58a2cccddf..8307e1f4086cb 100644
+--- a/arch/powerpc/platforms/powernv/pci.c
++++ b/arch/powerpc/platforms/powernv/pci.c
+@@ -814,20 +814,6 @@ void pnv_pci_dma_dev_setup(struct pci_dev *pdev)
+ {
+ 	struct pci_controller *hose = pci_bus_to_host(pdev->bus);
+ 	struct pnv_phb *phb = hose->private_data;
+-#ifdef CONFIG_PCI_IOV
+-	struct pnv_ioda_pe *pe;
+-
+-	/* Fix the VF pdn PE number */
+-	if (pdev->is_virtfn) {
+-		list_for_each_entry(pe, &phb->ioda.pe_list, list) {
+-			if (pe->rid == ((pdev->bus->number << 8) |
+-			    (pdev->devfn & 0xff))) {
+-				pe->pdev = pdev;
+-				break;
+-			}
+-		}
+-	}
+-#endif /* CONFIG_PCI_IOV */
+ 
+ 	if (phb && phb->dma_dev_setup)
+ 		phb->dma_dev_setup(phb, pdev);
 -- 
 2.20.1
 
