@@ -7,48 +7,48 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EFEBFC35641
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 07:50:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ADD5AC35641
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 07:50:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B5A02207FD
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 07:50:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8402D207FD
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 07:50:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582271431;
-	bh=YPGPEDMa2swDKgTCQRDKlLnyvqjdbgcYK9BNY5SuAws=;
+	s=default; t=1582271435;
+	bh=L39ewZIAQLtVWClce3+6QIzm4nk1mjYhAteFKAvrzdY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=sfILfjQfGVihLmeErt124FaqFSma46MoTYQWl5LbpZSu5Bf45U4xJuRyu90cb0j8t
-	 L0gRZko3FmPrUwCFIZwfyQ8Ncr21yqVaL1HuYCkera6obzzHFFBmO6Z+YKQn5EiR/D
-	 dQtrhdZHQ3/zvoAJu1YwbcQqi933fBPnb5Z+hYY4=
+	b=Xt1mQLUmPmex/UH5hBX2ke6fkzH2Ly2o7vxPcUDmuhdHK3bcK5dFkIrDr5qGEETU6
+	 sry3OPOV09vx04UwvG0ens896XIwaha6CKIEhmJfJgQSCBGMC0GfB6TQVn47Y5lqrB
+	 Is3GOzKi3vtpupIWSqnxviBdsGsR9Bf0ony/iOOA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728619AbgBUHua (ORCPT
+        id S1729064AbgBUHue (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Feb 2020 02:50:30 -0500
-Received: from mail.kernel.org ([198.145.29.99]:47340 "EHLO mail.kernel.org"
+        Fri, 21 Feb 2020 02:50:34 -0500
+Received: from mail.kernel.org ([198.145.29.99]:47364 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729037AbgBUHu0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Feb 2020 02:50:26 -0500
+        id S1728262AbgBUHu2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 21 Feb 2020 02:50:28 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 70351208C4;
-        Fri, 21 Feb 2020 07:50:25 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E486A207FD;
+        Fri, 21 Feb 2020 07:50:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1582271425;
-        bh=YPGPEDMa2swDKgTCQRDKlLnyvqjdbgcYK9BNY5SuAws=;
+        s=default; t=1582271428;
+        bh=L39ewZIAQLtVWClce3+6QIzm4nk1mjYhAteFKAvrzdY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=eLIOSXR1ZCNXN6qkDU/g7dmMWUFYbHy0Yzo3/2Iy9/fTp1gZMVKkv0PFgEmtT2QC6
-         nJaLCQspLiqWNS9OkWmNZ84RLWKiIq4nTQAFHX2Shmce1bJ8NwFCPVo6YMrjr3FAgB
-         0BBTBCLPorYSQaOcXP4Wa9OdOFcNoLasG+1ZRdRg=
+        b=RL5IlDzyA5s61lzslSA6k9sOy6/sMhPWvOBJS2zV1Zt7WWLLon27fRKRTHiIjvjgR
+         HMHYrRAMuR6kF3OmmPJddg9UHnRdrdjy6YUAYT9amFhB8922IdBUprMTO1XT2mXx+s
+         nYT/EsIL6svOmt/P4m39HFSZIxBcUNfEg3XKRGJQ=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Monk Liu <Monk.Liu@amd.com>,
-        Emily Deng <Emily.Deng@amd.com>,
-        Alex Deucher <alexander.deucher@amd.com>,
+        stable@vger.kernel.org, Jeffrey Hugo <jeffrey.l.hugo@gmail.com>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Stephen Boyd <sboyd@kernel.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.5 162/399] drm/amdgpu: fix KIQ ring test fail in TDR of SRIOV
-Date:   Fri, 21 Feb 2020 08:38:07 +0100
-Message-Id: <20200221072418.319253235@linuxfoundation.org>
+Subject: [PATCH 5.5 163/399] clk: qcom: smd: Add missing bimc clock
+Date:   Fri, 21 Feb 2020 08:38:08 +0100
+Message-Id: <20200221072418.446985310@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200221072402.315346745@linuxfoundation.org>
 References: <20200221072402.315346745@linuxfoundation.org>
@@ -61,44 +61,46 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Monk Liu <Monk.Liu@amd.com>
+From: Jeffrey Hugo <jeffrey.l.hugo@gmail.com>
 
-[ Upstream commit 5a7489a7e189ee2be889485f90c8cf24ea4b9a40 ]
+[ Upstream commit 87ec9adcca71801a44ddb311185b17df09839ab5 ]
 
-issues:
-MEC is ruined by the amdkfd_pre_reset after VF FLR done
+It turns out booting the modem is dependent on a bimc vote from Linux on
+msm8998.  To make the modem happy, add the bimc clock to rely on the
+default vote from rpmcc.  Once we have interconnect support, bimc should
+be controlled properly.
 
-fix:
-amdkfd_pre_reset() would ruin MEC after hypervisor finished the VF FLR,
-the correct sequence is do amdkfd_pre_reset before VF FLR but there is
-a limitation to block this sequence:
-if we do pre_reset() before VF FLR, it would go KIQ way to do register
-access and stuck there, because KIQ probably won't work by that time
-(e.g. you already made GFX hang)
-
-so the best way right now is to simply remove it.
-
-Signed-off-by: Monk Liu <Monk.Liu@amd.com>
-Reviewed-by: Emily Deng <Emily.Deng@amd.com>
-Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
+Fixes: 6131dc81211c ("clk: qcom: smd: Add support for MSM8998 rpm clocks")
+Signed-off-by: Jeffrey Hugo <jeffrey.l.hugo@gmail.com>
+Link: https://lkml.kernel.org/r/20191217165409.4919-1-jeffrey.l.hugo@gmail.com
+Reviewed-by: Bjorn Andersson <bjorn.andersson@linaro.org>
+Signed-off-by: Stephen Boyd <sboyd@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/gpu/drm/amd/amdgpu/amdgpu_device.c | 2 --
- 1 file changed, 2 deletions(-)
+ drivers/clk/qcom/clk-smd-rpm.c | 3 +++
+ 1 file changed, 3 insertions(+)
 
-diff --git a/drivers/gpu/drm/amd/amdgpu/amdgpu_device.c b/drivers/gpu/drm/amd/amdgpu/amdgpu_device.c
-index c17505fba9884..332b9c24a2cd0 100644
---- a/drivers/gpu/drm/amd/amdgpu/amdgpu_device.c
-+++ b/drivers/gpu/drm/amd/amdgpu/amdgpu_device.c
-@@ -3639,8 +3639,6 @@ static int amdgpu_device_reset_sriov(struct amdgpu_device *adev,
- 	if (r)
- 		return r;
+diff --git a/drivers/clk/qcom/clk-smd-rpm.c b/drivers/clk/qcom/clk-smd-rpm.c
+index 930fa4a4c52a8..e5c3db11bf26c 100644
+--- a/drivers/clk/qcom/clk-smd-rpm.c
++++ b/drivers/clk/qcom/clk-smd-rpm.c
+@@ -648,6 +648,7 @@ static const struct rpm_smd_clk_desc rpm_clk_qcs404 = {
+ };
  
--	amdgpu_amdkfd_pre_reset(adev);
--
- 	/* Resume IP prior to SMC */
- 	r = amdgpu_device_ip_reinit_early_sriov(adev);
- 	if (r)
+ /* msm8998 */
++DEFINE_CLK_SMD_RPM(msm8998, bimc_clk, bimc_a_clk, QCOM_SMD_RPM_MEM_CLK, 0);
+ DEFINE_CLK_SMD_RPM(msm8998, pcnoc_clk, pcnoc_a_clk, QCOM_SMD_RPM_BUS_CLK, 0);
+ DEFINE_CLK_SMD_RPM(msm8998, snoc_clk, snoc_a_clk, QCOM_SMD_RPM_BUS_CLK, 1);
+ DEFINE_CLK_SMD_RPM(msm8998, cnoc_clk, cnoc_a_clk, QCOM_SMD_RPM_BUS_CLK, 2);
+@@ -671,6 +672,8 @@ DEFINE_CLK_SMD_RPM_XO_BUFFER_PINCTRL(msm8998, rf_clk2_pin, rf_clk2_a_pin, 5);
+ DEFINE_CLK_SMD_RPM_XO_BUFFER(msm8998, rf_clk3, rf_clk3_a, 6);
+ DEFINE_CLK_SMD_RPM_XO_BUFFER_PINCTRL(msm8998, rf_clk3_pin, rf_clk3_a_pin, 6);
+ static struct clk_smd_rpm *msm8998_clks[] = {
++	[RPM_SMD_BIMC_CLK] = &msm8998_bimc_clk,
++	[RPM_SMD_BIMC_A_CLK] = &msm8998_bimc_a_clk,
+ 	[RPM_SMD_PCNOC_CLK] = &msm8998_pcnoc_clk,
+ 	[RPM_SMD_PCNOC_A_CLK] = &msm8998_pcnoc_a_clk,
+ 	[RPM_SMD_SNOC_CLK] = &msm8998_snoc_clk,
 -- 
 2.20.1
 
