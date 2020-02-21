@@ -2,118 +2,95 @@ Return-Path: <SRS0=1210=4J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E2A63C35641
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 08:35:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1BA67C35641
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 08:35:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C0FD220578
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 08:35:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DDDCD20578
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 08:35:23 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1582274124;
+	bh=LtILxJ9C95kXAEwVvle1sN+WabbIIbi0e8O6PJc8BpU=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=QldiiWgLnymRlI8vRBIqJQVTu66WBySBOVP6D/rolLUpRcVft6ti7Uhrqku/KJlCn
+	 I+DKZi/BRPpXU5PX7fbqnIQBYn4QdrjqjvsMAA+ox0kda2tnBXki+EDUgFFdaSzkDu
+	 GuDkmFETAm+5JVFEGxeMiOY9JOMZD47nj9wHShtM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732544AbgBUIfQ (ORCPT
+        id S1732859AbgBUIfX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Feb 2020 03:35:16 -0500
-Received: from mout.kundenserver.de ([212.227.126.134]:57359 "EHLO
-        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729703AbgBUIfN (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Feb 2020 03:35:13 -0500
-Received: from mail-qt1-f174.google.com ([209.85.160.174]) by
- mrelayeu.kundenserver.de (mreue011 [212.227.15.129]) with ESMTPSA (Nemesis)
- id 1Mbzdn-1ja00W1B5r-00dSWR; Fri, 21 Feb 2020 09:35:11 +0100
-Received: by mail-qt1-f174.google.com with SMTP id d9so707892qte.12;
-        Fri, 21 Feb 2020 00:35:10 -0800 (PST)
-X-Gm-Message-State: APjAAAXTd9Yo3qP11M/nKjS1oclRFXGQK78xdiuVvehz0Bo4Sf1yDBRR
-        kmGtcWFBJ46Pu/ZGhnxTz+ATQpXD3hLnj1bABS4=
-X-Google-Smtp-Source: APXvYqzMtKpji2kHcAwVfJDYkwxyhgoIO+eLhAK993sRWmxCI9kRi7QXQGVX8kksKrQac1lTZAK5TBBxLKggVruJ36Y=
-X-Received: by 2002:ac8:1977:: with SMTP id g52mr29831842qtk.18.1582274109872;
- Fri, 21 Feb 2020 00:35:09 -0800 (PST)
-MIME-Version: 1.0
-References: <20200220004825.23372-1-scott.branden@broadcom.com>
- <20200220004825.23372-6-scott.branden@broadcom.com> <20200220075045.GB3261162@kroah.com>
- <030219dc-539a-a2db-5ab2-1de7336a811c@broadcom.com>
-In-Reply-To: <030219dc-539a-a2db-5ab2-1de7336a811c@broadcom.com>
-From:   Arnd Bergmann <arnd@arndb.de>
-Date:   Fri, 21 Feb 2020 09:34:53 +0100
-X-Gmail-Original-Message-ID: <CAK8P3a1v7S4Ma67vRyfSY=v9z9bt9ZrftOYhgYvsECWXykGTJg@mail.gmail.com>
-Message-ID: <CAK8P3a1v7S4Ma67vRyfSY=v9z9bt9ZrftOYhgYvsECWXykGTJg@mail.gmail.com>
-Subject: Re: [PATCH v2 5/7] bcm-vk: add bcm_vk UAPI
-To:     Scott Branden <scott.branden@broadcom.com>
+        Fri, 21 Feb 2020 03:35:23 -0500
+Received: from mail.kernel.org ([198.145.29.99]:42086 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1731673AbgBUIHp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 21 Feb 2020 03:07:45 -0500
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id B199F20801;
+        Fri, 21 Feb 2020 08:07:44 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1582272465;
+        bh=LtILxJ9C95kXAEwVvle1sN+WabbIIbi0e8O6PJc8BpU=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=kdPdp8xo42ZN68ectdWb56Y6NfUVT0j/e/NelE8NWm5/2r0uXygXP8WmziitXhWNw
+         B6UgKQu6+/KkNJ0N314PKEinG1rdKGi8Ry/Eys2FgMIonWgldgqm5TWiuBck5IyKqH
+         FE/JiTjqwai6QnpihlyRerTuhcCKFRAduXx2cBGc=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Luis Chamberlain <mcgrof@kernel.org>,
-        David Brown <david.brown@linaro.org>,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        Shuah Khan <shuah@kernel.org>,
+        stable@vger.kernel.org, Jeffrey Hugo <jeffrey.l.hugo@gmail.com>,
         Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Shuah Khan <skhan@linuxfoundation.org>,
-        "Rafael J . Wysocki" <rafael@kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
-        Linux FS-devel Mailing List <linux-fsdevel@vger.kernel.org>,
-        BCM Kernel Feedback <bcm-kernel-feedback-list@broadcom.com>,
-        Olof Johansson <olof@lixom.net>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Dan Carpenter <dan.carpenter@oracle.com>,
-        Colin Ian King <colin.king@canonical.com>,
-        Kees Cook <keescook@chromium.org>,
-        Takashi Iwai <tiwai@suse.de>,
-        "open list:KERNEL SELFTEST FRAMEWORK" 
-        <linux-kselftest@vger.kernel.org>, Andy Gross <agross@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-X-Provags-ID: V03:K1:uKsCb7o+WwoRn2H66DIerL3UeOyZ5PMu17VhbxdEL4me0biPjB6
- o7WZmnQ0rrYrtZccp+dGHRstPYT/AL1SEm/3IYCsEAqVHCgMbQ4ksER5Jxxky8Jnoh51X2G
- /JnrA6gQfGsmJj8e1K4e9enaF7zgs4g/BCYaMmvJ3m+rCoMGhz2lndHIOExjZ86K2oepGhd
- JtCJNVmjLyn1iCoVpAc5w==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:Vx6+2EQVCCk=:3nyhniYPMKUTdjUW1WlS1X
- dizBB8ISTpfxLCiIjgNUDM13W0KZ67gyO2bh1Md9wdY/kVxGvwYn5gX55onS553yW1D/SV+Ic
- chWqDqJSktTofpps+FghQQa1v46eU7cKssNfN8Yc5x0PxCWaq+Dn/qfZO9DsbuQ8gyxIGaYZX
- vGVVHjT0SaIwbZR8VtUba1pNnpuJshQeY6oNsIEsbUL2lRa2xJZnzvD88GlgA5zM5Om437HEy
- gOaK0KA9PdAzgJOOWU90JqA1J6yt4lf74KKOKl1vCuAK94O3hnFO4F3R5G4SACx4G7udFL8ex
- GA7RPATiwpR4N1jVm2OiTuYBtfHBhc5GTADdJ5FvuoPhcku9U/0rb7kUh22ttL6NtwCWXZuAk
- tXw1kO4kCzWlqYg+iiTw8R4YCq46iHwDp/DUZk5OALtRfeEhaLhzi3F/xL8N1/gxCXoWTKA6g
- 6PpoBgcNI7fvKOcpty/X070DM/shiGQidrOO7rshPTPihkdG3cZS0zqwqq8mR96G2CYmYGPw6
- i9vo7npjwiZczbygEsU+NPQc5JqzPcfnJ6Eagw8FfOhKBlLUUIof6oR45sX8I6NHqevSwKJCd
- 4zcIVZ72l9Rq3yCMGY2sF0QJ/od3s04YZePgn/NksbpSbt1QLDCMweHqD6LI1q543KzCsvfp9
- bOpMBR7BXHdKcJ2lgZYXS5IiWXGGv6LiBx0GbTliLojyx0it0vRXHgAagHJx/HKaHdXGB/XJS
- NCA/yU0Pz+mb4mur480nqWi9BBWKph6RjCG4AG3QPdqHVluVN0h5FBMeycbQlbjO2/APQUko5
- 6umjBaVTqYwERcD6UZfHWF1CEOUkqNWlmw+YmOH0ZTKghgBdMU=
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.4 154/344] arm64: dts: qcom: db845c: Enable ath10k 8bit host-cap quirk
+Date:   Fri, 21 Feb 2020 08:39:13 +0100
+Message-Id: <20200221072402.804301653@linuxfoundation.org>
+X-Mailer: git-send-email 2.25.1
+In-Reply-To: <20200221072349.335551332@linuxfoundation.org>
+References: <20200221072349.335551332@linuxfoundation.org>
+User-Agent: quilt/0.66
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Feb 21, 2020 at 2:16 AM Scott Branden
-<scott.branden@broadcom.com> wrote:
+From: Bjorn Andersson <bjorn.andersson@linaro.org>
+
+[ Upstream commit 2e198c395a084ff3015d71896e35de049c40e3a4 ]
+
+The WiFi firmware used on db845c implements the 8bit host-capability
+message, so enable the quirk for this.
+
+Reviewed-by: Jeffrey Hugo <jeffrey.l.hugo@gmail.com>
+Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
+Link: https://lore.kernel.org/r/20191113232245.4039932-1-bjorn.andersson@linaro.org
+Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ arch/arm64/boot/dts/qcom/sdm845-db845c.dts | 2 ++
+ 1 file changed, 2 insertions(+)
+
+diff --git a/arch/arm64/boot/dts/qcom/sdm845-db845c.dts b/arch/arm64/boot/dts/qcom/sdm845-db845c.dts
+index f5a85caff1a39..751651a6cd819 100644
+--- a/arch/arm64/boot/dts/qcom/sdm845-db845c.dts
++++ b/arch/arm64/boot/dts/qcom/sdm845-db845c.dts
+@@ -517,6 +517,8 @@
+ 	vdd-1.8-xo-supply = <&vreg_l7a_1p8>;
+ 	vdd-1.3-rfa-supply = <&vreg_l17a_1p3>;
+ 	vdd-3.3-ch0-supply = <&vreg_l25a_3p3>;
++
++	qcom,snoc-host-cap-8bit-quirk;
+ };
+ 
+ /* PINCTRL - additions to nodes defined in sdm845.dtsi */
+-- 
+2.20.1
 
 
-> >> +struct vk_access {
-> >> +    __u8 barno;     /* BAR number to use */
-> >> +    __u8 type;      /* Type of access */
-> >> +#define VK_ACCESS_READ 0
-> >> +#define VK_ACCESS_WRITE 1
-> >> +    __u32 len;      /* length of data */
-> > Horrible padding issues, are you sure this all works properly?
-> Haven't had any issues.
-> >
-> >> +    __u64 offset;   /* offset in BAR */
-> >> +    __u32 *data;    /* where to read/write data to */
-> > Are you _SURE_ you want a pointer here?  How do you handle the compat
-> > issues with 32/64 user/kernel space?
-> Don't care about 32-bit user space for this driver.
-> I don't think there isn't even enough memory in such systems for the
-> number of streams of video buffers needed for transcoding.
-> This driver is only used in high end 64-bit x86 servers.
 
-Please see Documentation/core-api/ioctl.rst
-
-All ioctl interfaces should be written in a portable way that works with
-compat user space and avoids all padding in order to not leak kernel
-data into user space.
-
-If the driver is passing video buffers for transcoding, shouldn't the driver
-use the existing drivers/media interfaces for that? If it needs features
-that are not present there, they can probably be added.
-
-        Arnd
