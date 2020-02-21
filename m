@@ -7,47 +7,46 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 315A7C35641
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 08:03:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 783ACC35640
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 08:03:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EE7D82073A
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 08:03:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4A01E2073A
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 08:03:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582272218;
-	bh=dfBe6pGOa3MtzNF/br7Jv7bQkVvBqp+VpqCIZVOiRto=;
+	s=default; t=1582272221;
+	bh=di8khRlYDSskFUMn8Lp9Smww22MVmawjUEsgEdLehbA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=SdBBI1Uhx1ktI62GY8cqSoaFQxdo4zX/sm9ULjT5pEf81fD4f8Ng3K+YG6OOuWC8p
-	 YAxhkkbrMQmF83+xrgGIuIYTckxPohDEnvtY2z8ViPXSNQIuYPjmG5/jXOuOnWuZso
-	 zwLYw2MWgZfEU+lNFosqKqpua4l09acO7MjOy2eY=
+	b=hfidG3tNyUJhhNwjnghfrSbWybq/+thJfCQwJ3RPxZsrtRlVIpcOxANPl7mtJoLfw
+	 Z305efL42IpSw+tjyBwHUwCJMJRgWZKfxn1fErv/X8bvexF9FVNShMVrp4M18aB5NV
+	 YAb2SVM/9rEY+rC36M3oYuZdNHZzcGrbkuAD9vxg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731504AbgBUIDg (ORCPT
+        id S1731512AbgBUIDk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Feb 2020 03:03:36 -0500
-Received: from mail.kernel.org ([198.145.29.99]:36366 "EHLO mail.kernel.org"
+        Fri, 21 Feb 2020 03:03:40 -0500
+Received: from mail.kernel.org ([198.145.29.99]:36426 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731477AbgBUIDe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Feb 2020 03:03:34 -0500
+        id S1731382AbgBUIDh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 21 Feb 2020 03:03:37 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id AA2502073A;
-        Fri, 21 Feb 2020 08:03:33 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 33F8B2073A;
+        Fri, 21 Feb 2020 08:03:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1582272214;
-        bh=dfBe6pGOa3MtzNF/br7Jv7bQkVvBqp+VpqCIZVOiRto=;
+        s=default; t=1582272216;
+        bh=di8khRlYDSskFUMn8Lp9Smww22MVmawjUEsgEdLehbA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Bfq4QM5CeGLSHShqvlrlCBegAPG9legWcFThCIP5wtm2V3LK5aF06wK1Ayet5FCoX
-         afQwCH4kpqfDENP+YrpsGKWvXGM0UphXxnb8I0m8VFyHNuFVYyFhfLkiW900hPvBZD
-         JVqHSljBJPgoK8dx4CZqX4pbvK8kb9wT3Hj63oLI=
+        b=s4bmnBDoX6x6SL97l3DKFlrr4Bfs+KF3xdDPJ8GqAU2D06luuRsvAuy1nNitYawt0
+         LYfQHX2ETcx8IwrkEjse+a+bhG6BHbD9Jo/6qDpjkGjeHAflJxsYnlGs41V66pDEZP
+         tpJtf+2vZjdTARnP0psj+B6yrsVZebD/ptnogINU=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Colin Ian King <colin.king@canonical.com>,
-        Ben Skeggs <bskeggs@redhat.com>,
+        stable@vger.kernel.org, Rob Clark <robdclark@chromium.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 058/344] drm/nouveau/nouveau: fix incorrect sizeof on args.src an args.dst
-Date:   Fri, 21 Feb 2020 08:37:37 +0100
-Message-Id: <20200221072354.310599788@linuxfoundation.org>
+Subject: [PATCH 5.4 032/344] drm/msm/adreno: fix zap vs no-zap handling
+Date:   Fri, 21 Feb 2020 08:37:11 +0100
+Message-Id: <20200221072352.071700387@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200221072349.335551332@linuxfoundation.org>
 References: <20200221072349.335551332@linuxfoundation.org>
@@ -60,41 +59,84 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Colin Ian King <colin.king@canonical.com>
+From: Rob Clark <robdclark@chromium.org>
 
-[ Upstream commit f42e4b337b327b1336c978c4b5174990a25f68a0 ]
+[ Upstream commit 15ab987c423df561e0949d77fb5043921ae59956 ]
 
-The sizeof is currently on args.src and args.dst and should be on
-*args.src and *args.dst. Fortunately these sizes just so happen
-to be the same size so it worked, however, this should be fixed
-and it also cleans up static analysis warnings
+We can have two cases, when it comes to "zap" fw.  Either the fw
+requires zap fw to take the GPU out of secure mode at boot, or it does
+not and we can write RBBM_SECVID_TRUST_CNTL directly.  Previously we
+decided based on whether zap fw load succeeded, but this is not a great
+plan because:
 
-Addresses-Coverity: ("sizeof not portable")
-Fixes: f268307ec7c7 ("nouveau: simplify nouveau_dmem_migrate_vma")
-Signed-off-by: Colin Ian King <colin.king@canonical.com>
-Signed-off-by: Ben Skeggs <bskeggs@redhat.com>
+1) we could have zap fw in the filesystem on a device where it is not
+   required
+2) we could have the inverse case
+
+Instead, shift to deciding based on whether we have a 'zap-shader' node
+in dt.  In practice, there is only one device (currently) with upstream
+dt that does not use zap (cheza), and it already has a /delete-node/ for
+the zap-shader node.
+
+Fixes: abccb9fe3267 ("drm/msm/a6xx: Add zap shader load")
+Signed-off-by: Rob Clark <robdclark@chromium.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/gpu/drm/nouveau/nouveau_dmem.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ drivers/gpu/drm/msm/adreno/a5xx_gpu.c | 11 +++++++++--
+ drivers/gpu/drm/msm/adreno/a6xx_gpu.c | 11 +++++++++--
+ 2 files changed, 18 insertions(+), 4 deletions(-)
 
-diff --git a/drivers/gpu/drm/nouveau/nouveau_dmem.c b/drivers/gpu/drm/nouveau/nouveau_dmem.c
-index fa14399415965..0ad5d87b5a8e5 100644
---- a/drivers/gpu/drm/nouveau/nouveau_dmem.c
-+++ b/drivers/gpu/drm/nouveau/nouveau_dmem.c
-@@ -635,10 +635,10 @@ nouveau_dmem_migrate_vma(struct nouveau_drm *drm,
- 	unsigned long c, i;
- 	int ret = -ENOMEM;
+diff --git a/drivers/gpu/drm/msm/adreno/a5xx_gpu.c b/drivers/gpu/drm/msm/adreno/a5xx_gpu.c
+index e9c55d1d6c044..99cd6e62a9715 100644
+--- a/drivers/gpu/drm/msm/adreno/a5xx_gpu.c
++++ b/drivers/gpu/drm/msm/adreno/a5xx_gpu.c
+@@ -726,11 +726,18 @@ static int a5xx_hw_init(struct msm_gpu *gpu)
+ 		gpu->funcs->flush(gpu, gpu->rb[0]);
+ 		if (!a5xx_idle(gpu, gpu->rb[0]))
+ 			return -EINVAL;
+-	} else {
+-		/* Print a warning so if we die, we know why */
++	} else if (ret == -ENODEV) {
++		/*
++		 * This device does not use zap shader (but print a warning
++		 * just in case someone got their dt wrong.. hopefully they
++		 * have a debug UART to realize the error of their ways...
++		 * if you mess this up you are about to crash horribly)
++		 */
+ 		dev_warn_once(gpu->dev->dev,
+ 			"Zap shader not enabled - using SECVID_TRUST_CNTL instead\n");
+ 		gpu_write(gpu, REG_A5XX_RBBM_SECVID_TRUST_CNTL, 0x0);
++	} else {
++		return ret;
+ 	}
  
--	args.src = kcalloc(max, sizeof(args.src), GFP_KERNEL);
-+	args.src = kcalloc(max, sizeof(*args.src), GFP_KERNEL);
- 	if (!args.src)
- 		goto out;
--	args.dst = kcalloc(max, sizeof(args.dst), GFP_KERNEL);
-+	args.dst = kcalloc(max, sizeof(*args.dst), GFP_KERNEL);
- 	if (!args.dst)
- 		goto out_free_src;
+ 	/* Last step - yield the ringbuffer */
+diff --git a/drivers/gpu/drm/msm/adreno/a6xx_gpu.c b/drivers/gpu/drm/msm/adreno/a6xx_gpu.c
+index dc8ec2c94301b..686c34d706b0d 100644
+--- a/drivers/gpu/drm/msm/adreno/a6xx_gpu.c
++++ b/drivers/gpu/drm/msm/adreno/a6xx_gpu.c
+@@ -537,12 +537,19 @@ static int a6xx_hw_init(struct msm_gpu *gpu)
+ 		a6xx_flush(gpu, gpu->rb[0]);
+ 		if (!a6xx_idle(gpu, gpu->rb[0]))
+ 			return -EINVAL;
+-	} else {
+-		/* Print a warning so if we die, we know why */
++	} else if (ret == -ENODEV) {
++		/*
++		 * This device does not use zap shader (but print a warning
++		 * just in case someone got their dt wrong.. hopefully they
++		 * have a debug UART to realize the error of their ways...
++		 * if you mess this up you are about to crash horribly)
++		 */
+ 		dev_warn_once(gpu->dev->dev,
+ 			"Zap shader not enabled - using SECVID_TRUST_CNTL instead\n");
+ 		gpu_write(gpu, REG_A6XX_RBBM_SECVID_TRUST_CNTL, 0x0);
+ 		ret = 0;
++	} else {
++		return ret;
+ 	}
  
+ out:
 -- 
 2.20.1
 
