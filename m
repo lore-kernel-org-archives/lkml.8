@@ -5,49 +5,48 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B152AC35641
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 08:24:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9391FC35640
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 08:24:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7CE552467D
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 08:24:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6B7462467D
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 08:24:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582273462;
-	bh=zgVsgEnnXQ7LrYe7AE7KvemzilGGhK+OX2oKdOz0gEs=;
+	s=default; t=1582273464;
+	bh=Uh+F+K4G4VhwM0jMFoF67RQma0Fxf9NzqW3BVuHHRXk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=bVbTE3inQhb87lZbsdweJAr3dSo0Yf9rHI4/isANQt+m1TwPG1Kx7jExnu0uw9dpt
-	 /GAPP4hVuQABo3sllFIafr3OwPk1Vhc4wSqKXIux5Twg0BUYpKb4NupqguL5DNficG
-	 EuffHzwJWOxHLtAlUPiVif4atMDCMVurCFX/7Fi0=
+	b=ZROCahfW2W7yQ+TgQ6WYp/CEscc1YbC4nMhAM/puMLJNLj1yGyw463Ea6qbr8k5r1
+	 WJqSyMfFxtEupd9NZZGZbQb/mQpfd3ddW9jzc+4Ai5W13i0Vpmsm7prhpf0FBQ/s1f
+	 eRIEXI3b/QCzOLb1/Vrtn1xUSitsCA72VqwTtKxI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388642AbgBUIYU (ORCPT
+        id S1732728AbgBUIYW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Feb 2020 03:24:20 -0500
-Received: from mail.kernel.org ([198.145.29.99]:36706 "EHLO mail.kernel.org"
+        Fri, 21 Feb 2020 03:24:22 -0500
+Received: from mail.kernel.org ([198.145.29.99]:36774 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729774AbgBUIYS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Feb 2020 03:24:18 -0500
+        id S1729774AbgBUIYV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 21 Feb 2020 03:24:21 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A98AB2467D;
-        Fri, 21 Feb 2020 08:24:17 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 93201206ED;
+        Fri, 21 Feb 2020 08:24:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1582273458;
-        bh=zgVsgEnnXQ7LrYe7AE7KvemzilGGhK+OX2oKdOz0gEs=;
+        s=default; t=1582273461;
+        bh=Uh+F+K4G4VhwM0jMFoF67RQma0Fxf9NzqW3BVuHHRXk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=lGtJgY81QUfIxQPK2kBZCdxyvnoCKRQXf1zweD4boL0F49e8qYgj9O0md5mHBapaB
-         r4SnSjdj36vJ69OT0Sd4M/KVDQrsmqLCNmLh8v4HnmKixuOxPsitBiIck8WvqQSqkN
-         cj1rNgWnUKyHS9qEWNmtBIRtvSFOUu3uytG/DzpQ=
+        b=BiM65XVQWpFmRlm4O30S+ixV0NJofpW+2ElnigM/EsFOQgBo4o8nKokE37A6+n0GX
+         3NI9n88jakif6hJZH21yL85mZRkYz70OpZiYE2Ufa1ZNTZum5lqzin7BEk55SSpNZ/
+         P+wYAX6U6V/PtSqzxeOpNAGAGm/8kZ1IC8mYs5oQ=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, kbuild test robot <lkp@intel.com>,
-        Coly Li <colyli@suse.de>, Jens Axboe <axboe@kernel.dk>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 179/191] bcache: explicity type cast in bset_bkey_last()
-Date:   Fri, 21 Feb 2020 08:42:32 +0100
-Message-Id: <20200221072312.346674010@linuxfoundation.org>
+        stable@vger.kernel.org, Zenghui Yu <yuzenghui@huawei.com>,
+        Marc Zyngier <maz@kernel.org>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.19 180/191] irqchip/gic-v3-its: Reference to its_invall_cmd descriptor when building INVALL
+Date:   Fri, 21 Feb 2020 08:42:33 +0100
+Message-Id: <20200221072312.432680973@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200221072250.732482588@linuxfoundation.org>
 References: <20200221072250.732482588@linuxfoundation.org>
@@ -60,50 +59,37 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Coly Li <colyli@suse.de>
+From: Zenghui Yu <yuzenghui@huawei.com>
 
-[ Upstream commit 7c02b0055f774ed9afb6e1c7724f33bf148ffdc0 ]
+[ Upstream commit 107945227ac5d4c37911c7841b27c64b489ce9a9 ]
 
-In bset.h, macro bset_bkey_last() is defined as,
-    bkey_idx((struct bkey *) (i)->d, (i)->keys)
+It looks like an obvious mistake to use its_mapc_cmd descriptor when
+building the INVALL command block. It so far worked by luck because
+both its_mapc_cmd.col and its_invall_cmd.col sit at the same offset of
+the ITS command descriptor, but we should not rely on it.
 
-Parameter i can be variable type of data structure, the macro always
-works once the type of struct i has member 'd' and 'keys'.
-
-bset_bkey_last() is also used in macro csum_set() to calculate the
-checksum of a on-disk data structure. When csum_set() is used to
-calculate checksum of on-disk bcache super block, the parameter 'i'
-data type is struct cache_sb_disk. Inside struct cache_sb_disk (also in
-struct cache_sb) the member keys is __u16 type. But bkey_idx() expects
-unsigned int (a 32bit width), so there is problem when sending
-parameters via stack to call bkey_idx().
-
-Sparse tool from Intel 0day kbuild system reports this incompatible
-problem. bkey_idx() is part of user space API, so the simplest fix is
-to cast the (i)->keys to unsigned int type in macro bset_bkey_last().
-
-Reported-by: kbuild test robot <lkp@intel.com>
-Signed-off-by: Coly Li <colyli@suse.de>
-Signed-off-by: Jens Axboe <axboe@kernel.dk>
+Fixes: cc2d3216f53c ("irqchip: GICv3: ITS command queue")
+Signed-off-by: Zenghui Yu <yuzenghui@huawei.com>
+Signed-off-by: Marc Zyngier <maz@kernel.org>
+Link: https://lore.kernel.org/r/20191202071021.1251-1-yuzenghui@huawei.com
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/md/bcache/bset.h | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ drivers/irqchip/irq-gic-v3-its.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/md/bcache/bset.h b/drivers/md/bcache/bset.h
-index c71365e7c1fac..a50dcfda656f5 100644
---- a/drivers/md/bcache/bset.h
-+++ b/drivers/md/bcache/bset.h
-@@ -397,7 +397,8 @@ void bch_btree_keys_stats(struct btree_keys *b, struct bset_stats *state);
- 
- /* Bkey utility code */
- 
--#define bset_bkey_last(i)	bkey_idx((struct bkey *) (i)->d, (i)->keys)
-+#define bset_bkey_last(i)	bkey_idx((struct bkey *) (i)->d, \
-+					 (unsigned int)(i)->keys)
- 
- static inline struct bkey *bset_bkey_idx(struct bset *i, unsigned int idx)
+diff --git a/drivers/irqchip/irq-gic-v3-its.c b/drivers/irqchip/irq-gic-v3-its.c
+index 050d6e040128d..bf7b69449b438 100644
+--- a/drivers/irqchip/irq-gic-v3-its.c
++++ b/drivers/irqchip/irq-gic-v3-its.c
+@@ -578,7 +578,7 @@ static struct its_collection *its_build_invall_cmd(struct its_node *its,
+ 						   struct its_cmd_desc *desc)
  {
+ 	its_encode_cmd(cmd, GITS_CMD_INVALL);
+-	its_encode_collection(cmd, desc->its_mapc_cmd.col->col_id);
++	its_encode_collection(cmd, desc->its_invall_cmd.col->col_id);
+ 
+ 	its_fixup_cmd(cmd);
+ 
 -- 
 2.20.1
 
