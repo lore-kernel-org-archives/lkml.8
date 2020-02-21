@@ -2,96 +2,101 @@ Return-Path: <SRS0=1210=4J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E5631C35641
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 22:14:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9BFC1C35669
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 22:15:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AFF13207FD
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 22:14:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 70A15207FD
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 22:15:36 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="kGkAs4Nb"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="Gc7qTHn7"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727902AbgBUWOw (ORCPT
+        id S1728923AbgBUWPf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Feb 2020 17:14:52 -0500
-Received: from mail-pf1-f194.google.com ([209.85.210.194]:45435 "EHLO
-        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726725AbgBUWOw (ORCPT
+        Fri, 21 Feb 2020 17:15:35 -0500
+Received: from mail-pg1-f193.google.com ([209.85.215.193]:39126 "EHLO
+        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726725AbgBUWPe (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Feb 2020 17:14:52 -0500
-Received: by mail-pf1-f194.google.com with SMTP id 2so1969599pfg.12;
-        Fri, 21 Feb 2020 14:14:51 -0800 (PST)
+        Fri, 21 Feb 2020 17:15:34 -0500
+Received: by mail-pg1-f193.google.com with SMTP id j15so1685734pgm.6
+        for <linux-kernel@vger.kernel.org>; Fri, 21 Feb 2020 14:15:34 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
+        d=chromium.org; s=google;
         h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=W8KaZGmDosurwlNJD9BGtUyzNAa4jQOZ04o70/FjZgc=;
-        b=kGkAs4Nbpvsh0LSiFUur6Wb/TbQ7PlbWJAOcbz65Qdv1Uw+Vl3ItNQQMcq77KAYZtJ
-         m2urSGoIRXXmBgm7E9zWqbYRJ+5nnXrjCjuYwEMSV5irgIy80/nbHWZ2XU6OXDiBPYJv
-         szqdDyeVflofbn6119zAg2Af45wfFrvegUCV58BoK/8EFrO8aWmVrRGB0AEm3jHvnZwq
-         g1wiEIh+kkSJDiHR4tM7g/to6tuY6/ds7sh5OENeLGPrw7vXXN0mSnsFAVAAIUn5CXPR
-         b8xb4ji8dTq0+IsQw7wVgeeGwqWP+aZc8EV+CmH2yRI8/SyKIhiNvK3/B5nUMCwO2jKu
-         gxvg==
+         :content-disposition:in-reply-to;
+        bh=kXLJzM+fudX+dk2vxGD8qXAlS6NHJlq4l43rKFobmIY=;
+        b=Gc7qTHn74XmNFUGT18DRPr/JsTZZEH/R8iCK7yOVNokNvtxMq24mQGS/A3UBa734Oe
+         ok5JEGXxkAGI5niBWfu8iTF3dy3cbSvEQOUiHM5bk8+K/i1B54Ha/ZTIyDMIPNepANzS
+         2JlhVJ9Y4Q5Jos3/06GoKWW6fEoxhqP/wI0ck=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=W8KaZGmDosurwlNJD9BGtUyzNAa4jQOZ04o70/FjZgc=;
-        b=UAlkI0guNtddGYE8vWPPpuxWNEgm2EEaoMCcCxoSc3j0hwpb3804V3R7yQ30u+oDB1
-         /2RTY9rH6WaeyFr3yVsxypmZc8oCeDtzae49RCO+n6iWy2E5375I8Sy5vwVdnPATP4j3
-         kUII0A+1pLVHhOaQIO2j+qqUk3sJsIwkSnHf0P9kaltYhQW2plrke/CIgLZMZ7pSbMJD
-         tyyIMCD8h1vqYHm+ui72a9GMY2lvm1uCh/WI3SwDysRZ3fTMCgf5S8qaee/QhOMj4kQW
-         ukcPyC79dm3HXAxuH/TDB/a+XDWGbl6mnIP0S6k8Z22V0ky0blj1bTX8RKL9MrnEq8qT
-         sF1g==
-X-Gm-Message-State: APjAAAXJKqF7ec4m9+ScflebulMjoyT+GykfySusl0FZrg+443M8h1Jz
-        qI5LHYO8H2CNNGtkIHpVhUeNH4Xww5c=
-X-Google-Smtp-Source: APXvYqzuFzGOe6xFIcYN9MIIJZs1pHKUSIf83YFRjQMgSwSuWxPGqeqGheyj2Ocv0clngLUDLTvy9A==
-X-Received: by 2002:aa7:8805:: with SMTP id c5mr17210828pfo.142.1582323291138;
-        Fri, 21 Feb 2020 14:14:51 -0800 (PST)
-Received: from localhost (g183.222-224-185.ppp.wakwak.ne.jp. [222.224.185.183])
-        by smtp.gmail.com with ESMTPSA id h3sm4051033pfr.15.2020.02.21.14.14.49
+         :mime-version:content-disposition:in-reply-to;
+        bh=kXLJzM+fudX+dk2vxGD8qXAlS6NHJlq4l43rKFobmIY=;
+        b=B8+Q9cVbCFuiikRsR3lZrN5RRv6M2UoCuQTwoLklzC1wOEnMEsRO3n7HjSc23B/m9O
+         ufF6MoSrrStNq6Cdcx0oEMIyP3hglZzbAat+jW0saixQm5lDynN5AsBS8z7lfgwOsZm7
+         6LvYWiFCMUoMukYu5hhAqVGMtbOhurkT/1sGvaHqgbKRvPddfn5JlIHlnGalwf/SU2bw
+         TAmbOW9O1PR23Zn8Ih7kKSoolRtCKjvqdyIR76huHXGMwVq8/NqvYqrOOOs9kAE1cZz+
+         exD6l25hQJLh9AAGNpzH9xNxRAjOxKw8dsbHI+AuyP6HtszrYSeKE6iWIkOOOZcVGWbG
+         YR0Q==
+X-Gm-Message-State: APjAAAUdFbe5H+7eQEkXyFk5HNnxCxPiG2tKEb8EYaakRAGw9vRdlfnp
+        RKEHj8bxuzAVi7slvrx04IZwIA==
+X-Google-Smtp-Source: APXvYqw/4KMFiZHKgqWkcx8RiqfqgaEMBsI7aB5y+dpe0h7yWzHYitbJTEbwREjD5aqSPClkV4sogw==
+X-Received: by 2002:a62:36c2:: with SMTP id d185mr41244236pfa.203.1582323334247;
+        Fri, 21 Feb 2020 14:15:34 -0800 (PST)
+Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
+        by smtp.gmail.com with ESMTPSA id k2sm3477608pgk.84.2020.02.21.14.15.33
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 21 Feb 2020 14:14:50 -0800 (PST)
-Date:   Sat, 22 Feb 2020 07:14:47 +0900
-From:   Stafford Horne <shorne@gmail.com>
-To:     Christoph Hellwig <hch@lst.de>
-Cc:     Jonas Bonn <jonas@southpole.se>,
-        Stefan Kristiansson <stefan.kristiansson@saunalahti.fi>,
-        Marek Szyprowski <m.szyprowski@samsung.com>,
-        Robin Murphy <robin.murphy@arm.com>,
-        Will Deacon <will@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        openrisc@lists.librecores.org, iommu@lists.linux-foundation.org,
-        linux-arm-kernel@lists.infradead.org, linux-arch@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 2/2] openrisc: use the generic in-place uncached DMA
- allocator
-Message-ID: <20200221221447.GA7926@lianli.shorne-pla.net>
-References: <20200220170139.387354-1-hch@lst.de>
- <20200220170139.387354-3-hch@lst.de>
+        Fri, 21 Feb 2020 14:15:33 -0800 (PST)
+Date:   Fri, 21 Feb 2020 14:15:32 -0800
+From:   Kees Cook <keescook@chromium.org>
+To:     Thomas Gleixner <tglx@linutronix.de>
+Cc:     Vinicius Costa Gomes <vinicius.gomes@intel.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        David Miller <davem@davemloft.net>, bpf@vger.kernel.org,
+        netdev@vger.kernel.org, Alexei Starovoitov <ast@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Sebastian Sewior <bigeasy@linutronix.de>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Clark Williams <williams@redhat.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Juri Lelli <juri.lelli@redhat.com>,
+        Ingo Molnar <mingo@kernel.org>, Will Drewry <wad@chromium.org>,
+        Andy Lutomirski <luto@kernel.org>
+Subject: Re: [RFC patch 09/19] bpf: Use BPF_PROG_RUN_PIN_ON_CPU() at simple
+ call sites.
+Message-ID: <202002211415.4111F356A@keescook>
+References: <20200214133917.304937432@linutronix.de>
+ <20200214161503.804093748@linutronix.de>
+ <87a75ftkwu.fsf@linux.intel.com>
+ <875zg3q7cn.fsf@nanos.tec.linutronix.de>
+ <202002201616.21FA55E@keescook>
+ <87lfownip5.fsf@nanos.tec.linutronix.de>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200220170139.387354-3-hch@lst.de>
-User-Agent: Mutt/1.11.4 (2019-03-13)
+In-Reply-To: <87lfownip5.fsf@nanos.tec.linutronix.de>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Feb 20, 2020 at 09:01:39AM -0800, Christoph Hellwig wrote:
-> Switch openrisc to use the dma-direct allocator and just provide the
-> hooks for setting memory uncached or cached.
+On Fri, Feb 21, 2020 at 03:00:54PM +0100, Thomas Gleixner wrote:
+> Kees Cook <keescook@chromium.org> writes:
+> > They're technically independent, but they are related to each
+> > other. (i.e. order matters, process hierarchy matters, etc). There's no
+> > reason I can see that we can't switch CPUs between running them, though.
+> > (AIUI, nothing here would suddenly make these run in parallel, right?)
 > 
-> Signed-off-by: Christoph Hellwig <hch@lst.de>
+> Of course not. If we'd run the same thread on multiple CPUs in parallel
+> the ordering of your BPF programs would be the least of your worries.
 
-Reviewed-by: Stafford Horne <shorne@gmail.com>
+Right, okay, good. I just wanted to be extra sure. :)
 
-Also, I test booted openrisc with linux 5.5 + these patches.  Thanks for
-continuing to shrink my code base.
- 
+-- 
+Kees Cook
