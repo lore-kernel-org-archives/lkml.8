@@ -5,49 +5,51 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CA0F4C35644
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 07:53:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AD84EC35640
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 07:53:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9EF6224656
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 07:53:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8064124672
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 07:53:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582271599;
-	bh=uyTSEKzssiXTjw2/MDuQphK+UDTxkooeOKp7U8Y6QyY=;
+	s=default; t=1582271604;
+	bh=jVYFp27IYlp3P+pQhoPZiNWApMAwvhu5ynhhTe1sHjg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Ql2sY8l3icPtyrQ8pbg0k9sEIIxBomgQtbKcMTf15LaJ9zPMVY92pa5r5dQwWAsv6
-	 1UfT7ycyFmNMJf6pnEWNgx4dbz7EmsC5lr5B4848oOTM2oUPbreb4dIVmzzRUIqApA
-	 uNW+f2vAs+YU2FBuo/7CGDA6Av8nScsbS5T0/ASc=
+	b=KTceW+UJNqB0JXctaFpMqCGbvdcfnAnw3zS70bygqQY3xgGzdKnFU7XDTWa+zbPQh
+	 CxM+smM1GRtv3AQdjK0zZDmd3vn5SQl9jK3NOSBPUSIZDMhaDypJk14qlaij1xO//p
+	 YA1ntSSPEJ5bcgVhOAB1aJhoxS+37Pmv6GRWsn9U=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730040AbgBUHxR (ORCPT
+        id S1730055AbgBUHxW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Feb 2020 02:53:17 -0500
-Received: from mail.kernel.org ([198.145.29.99]:51402 "EHLO mail.kernel.org"
+        Fri, 21 Feb 2020 02:53:22 -0500
+Received: from mail.kernel.org ([198.145.29.99]:51548 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730014AbgBUHxO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Feb 2020 02:53:14 -0500
+        id S1727662AbgBUHxU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 21 Feb 2020 02:53:20 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3F92D24672;
-        Fri, 21 Feb 2020 07:53:13 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C39092073A;
+        Fri, 21 Feb 2020 07:53:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1582271593;
-        bh=uyTSEKzssiXTjw2/MDuQphK+UDTxkooeOKp7U8Y6QyY=;
+        s=default; t=1582271599;
+        bh=jVYFp27IYlp3P+pQhoPZiNWApMAwvhu5ynhhTe1sHjg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=xYV3ypphApIfE3voPqFeD9YDtOIA2sqPY06+eFjX2yWMeVd6MKwre2Ey9GE+WylCz
-         xScNDKEzc3ywKgKtvcItuZoNeXC8JZigWtM4usDfgRLRap5Lu7snMhY8Z7hAIYHRVl
-         AX1tW9jjU0tTi7n+f5FVfa5c/qxNeVOiW72+VVlw=
+        b=LR8/OiQXA++hJvL8RHVt1ow7zdNjYikWpnknjk/LoP+vSyUQDxsRdKz1J45xD0tjH
+         U1+4gvVtZzkmrlQ3lUAKhV/vE4uHhkGhOIfwPHEh3fY5gcgRsNXFqX0hQSYUqoQO2T
+         gX6EjK0VH+AiV5aGwKNinJ4kPxQSXNLRR8R749zU=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Yongqiang Niu <yongqiang.niu@mediatek.com>,
-        Hsin-Yi Wang <hsinyi@chromium.org>, CK Hu <ck.hu@mediatek.com>,
+        stable@vger.kernel.org, Kaike Wan <kaike.wan@intel.com>,
+        Mike Marciniszyn <mike.marciniszyn@intel.com>,
+        Dennis Dalessandro <dennis.dalessandro@intel.com>,
+        Jason Gunthorpe <jgg@mellanox.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.5 224/399] drm/mediatek: Add gamma property according to hardware capability
-Date:   Fri, 21 Feb 2020 08:39:09 +0100
-Message-Id: <20200221072424.720313608@linuxfoundation.org>
+Subject: [PATCH 5.5 226/399] IB/hfi1: Add software counter for ctxt0 seq drop
+Date:   Fri, 21 Feb 2020 08:39:11 +0100
+Message-Id: <20200221072424.874451525@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200221072402.315346745@linuxfoundation.org>
 References: <20200221072402.315346745@linuxfoundation.org>
@@ -60,58 +62,93 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Yongqiang Niu <yongqiang.niu@mediatek.com>
+From: Mike Marciniszyn <mike.marciniszyn@intel.com>
 
-[ Upstream commit 4cebc1de506fa753301266a5a23bb21bca52ad3a ]
+[ Upstream commit 5ffd048698ea5139743acd45e8ab388a683642b8 ]
 
-If there is no gamma function in the crtc
-display path, don't add gamma property
-for crtc
+All other code paths increment some form of drop counter.
 
-Fixes: 2f3f4dda747c ("drm/mediatek: Add gamma correction.")
-Signed-off-by: Yongqiang Niu <yongqiang.niu@mediatek.com>
-Signed-off-by: Hsin-Yi Wang <hsinyi@chromium.org>
-Signed-off-by: CK Hu <ck.hu@mediatek.com>
+This was missed in the original implementation.
+
+Fixes: 82c2611daaf0 ("staging/rdma/hfi1: Handle packets with invalid RHF on context 0")
+Link: https://lore.kernel.org/r/20200106134228.119356.96828.stgit@awfm-01.aw.intel.com
+Reviewed-by: Kaike Wan <kaike.wan@intel.com>
+Signed-off-by: Mike Marciniszyn <mike.marciniszyn@intel.com>
+Signed-off-by: Dennis Dalessandro <dennis.dalessandro@intel.com>
+Signed-off-by: Jason Gunthorpe <jgg@mellanox.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/gpu/drm/mediatek/mtk_drm_crtc.c | 10 ++++++++--
- 1 file changed, 8 insertions(+), 2 deletions(-)
+ drivers/infiniband/hw/hfi1/chip.c   | 10 ++++++++++
+ drivers/infiniband/hw/hfi1/chip.h   |  1 +
+ drivers/infiniband/hw/hfi1/driver.c |  1 +
+ drivers/infiniband/hw/hfi1/hfi.h    |  2 ++
+ 4 files changed, 14 insertions(+)
 
-diff --git a/drivers/gpu/drm/mediatek/mtk_drm_crtc.c b/drivers/gpu/drm/mediatek/mtk_drm_crtc.c
-index 4132cd114a037..c3f5111fd563f 100644
---- a/drivers/gpu/drm/mediatek/mtk_drm_crtc.c
-+++ b/drivers/gpu/drm/mediatek/mtk_drm_crtc.c
-@@ -641,6 +641,7 @@ int mtk_drm_crtc_create(struct drm_device *drm_dev,
- 	int pipe = priv->num_pipes;
+diff --git a/drivers/infiniband/hw/hfi1/chip.c b/drivers/infiniband/hw/hfi1/chip.c
+index 9b1fb84a3d45b..d5961918fe157 100644
+--- a/drivers/infiniband/hw/hfi1/chip.c
++++ b/drivers/infiniband/hw/hfi1/chip.c
+@@ -1685,6 +1685,14 @@ static u64 access_sw_pio_drain(const struct cntr_entry *entry,
+ 	return dd->verbs_dev.n_piodrain;
+ }
+ 
++static u64 access_sw_ctx0_seq_drop(const struct cntr_entry *entry,
++				   void *context, int vl, int mode, u64 data)
++{
++	struct hfi1_devdata *dd = context;
++
++	return dd->ctx0_seq_drop;
++}
++
+ static u64 access_sw_vtx_wait(const struct cntr_entry *entry,
+ 			      void *context, int vl, int mode, u64 data)
+ {
+@@ -4249,6 +4257,8 @@ static struct cntr_entry dev_cntrs[DEV_CNTR_LAST] = {
+ 			    access_sw_cpu_intr),
+ [C_SW_CPU_RCV_LIM] = CNTR_ELEM("RcvLimit", 0, 0, CNTR_NORMAL,
+ 			    access_sw_cpu_rcv_limit),
++[C_SW_CTX0_SEQ_DROP] = CNTR_ELEM("SeqDrop0", 0, 0, CNTR_NORMAL,
++			    access_sw_ctx0_seq_drop),
+ [C_SW_VTX_WAIT] = CNTR_ELEM("vTxWait", 0, 0, CNTR_NORMAL,
+ 			    access_sw_vtx_wait),
+ [C_SW_PIO_WAIT] = CNTR_ELEM("PioWait", 0, 0, CNTR_NORMAL,
+diff --git a/drivers/infiniband/hw/hfi1/chip.h b/drivers/infiniband/hw/hfi1/chip.h
+index 4ca5ac8d7e9e4..bfccd4ae07a72 100644
+--- a/drivers/infiniband/hw/hfi1/chip.h
++++ b/drivers/infiniband/hw/hfi1/chip.h
+@@ -926,6 +926,7 @@ enum {
+ 	C_DC_PG_STS_TX_MBE_CNT,
+ 	C_SW_CPU_INTR,
+ 	C_SW_CPU_RCV_LIM,
++	C_SW_CTX0_SEQ_DROP,
+ 	C_SW_VTX_WAIT,
+ 	C_SW_PIO_WAIT,
+ 	C_SW_PIO_DRAIN,
+diff --git a/drivers/infiniband/hw/hfi1/driver.c b/drivers/infiniband/hw/hfi1/driver.c
+index 01aa1f132f55e..941b465244abe 100644
+--- a/drivers/infiniband/hw/hfi1/driver.c
++++ b/drivers/infiniband/hw/hfi1/driver.c
+@@ -734,6 +734,7 @@ static noinline int skip_rcv_packet(struct hfi1_packet *packet, int thread)
+ {
  	int ret;
- 	int i;
-+	uint gamma_lut_size = 0;
  
- 	if (!path)
- 		return 0;
-@@ -691,6 +692,9 @@ int mtk_drm_crtc_create(struct drm_device *drm_dev,
- 		}
++	packet->rcd->dd->ctx0_seq_drop++;
+ 	/* Set up for the next packet */
+ 	packet->rhqoff += packet->rsize;
+ 	if (packet->rhqoff >= packet->maxcnt)
+diff --git a/drivers/infiniband/hw/hfi1/hfi.h b/drivers/infiniband/hw/hfi1/hfi.h
+index 27dea5e1e2017..9edfd3e56f61c 100644
+--- a/drivers/infiniband/hw/hfi1/hfi.h
++++ b/drivers/infiniband/hw/hfi1/hfi.h
+@@ -1153,6 +1153,8 @@ struct hfi1_devdata {
  
- 		mtk_crtc->ddp_comp[i] = comp;
+ 	char *boardname; /* human readable board info */
+ 
++	u64 ctx0_seq_drop;
 +
-+		if (comp->funcs && comp->funcs->gamma_set)
-+			gamma_lut_size = MTK_LUT_SIZE;
- 	}
- 
- 	for (i = 0; i < mtk_crtc->ddp_comp_nr; i++)
-@@ -711,8 +715,10 @@ int mtk_drm_crtc_create(struct drm_device *drm_dev,
- 				NULL, pipe);
- 	if (ret < 0)
- 		return ret;
--	drm_mode_crtc_set_gamma_size(&mtk_crtc->base, MTK_LUT_SIZE);
--	drm_crtc_enable_color_mgmt(&mtk_crtc->base, 0, false, MTK_LUT_SIZE);
-+
-+	if (gamma_lut_size)
-+		drm_mode_crtc_set_gamma_size(&mtk_crtc->base, gamma_lut_size);
-+	drm_crtc_enable_color_mgmt(&mtk_crtc->base, 0, false, gamma_lut_size);
- 	priv->num_pipes++;
- 
- 	return 0;
+ 	/* reset value */
+ 	u64 z_int_counter;
+ 	u64 z_rcv_limit;
 -- 
 2.20.1
 
