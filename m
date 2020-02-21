@@ -5,49 +5,51 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3E140C35640
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 08:03:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 18D61C35642
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 08:03:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 156BB2073A
+	by mail.kernel.org (Postfix) with ESMTP id DEEC820801
 	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 08:03:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582272189;
-	bh=dkb+6SBa4D8pK5Pl0N9HGRV0ODZeGJ8/tYb4qTMpYN4=;
+	s=default; t=1582272190;
+	bh=UePCY4BqtIvlghuVOYlkGyqEl9Oi9N2cZL5RSM9Ehrc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=vtiQCogWCDFihiKlKtsVj4/bR4Ae/kZ+Qv46DwTZ7qDQje4cM98LmiYVqPKgbO3KW
-	 Mh0d6mJdlWtrLfMws8BEYnJpOgc4rFtKk776neWmEdO4/d3bxYfOFb43+zOxxq7h3L
-	 4uEjzQ2m9vR6QSbGAMPmI0+ASD5xe6MP8LDwlwPs=
+	b=AkwtkAeUMYbnzkAdhDpasKbvQnz3URULyTGTxO3ON8GWYauPpjWGG0mDlNPcH2TYg
+	 uRYAHr+XmRqPFiMeEntUZt38ENf7qFQG4PnaKcblfn144WLFSB9yFv4OeprE2ZRsaT
+	 /e+PR1Fuoz9L/XwArKNFtHfa/eA6upRhPgaK/ex0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731417AbgBUIDH (ORCPT
+        id S1731288AbgBUIDF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Feb 2020 03:03:07 -0500
-Received: from mail.kernel.org ([198.145.29.99]:35734 "EHLO mail.kernel.org"
+        Fri, 21 Feb 2020 03:03:05 -0500
+Received: from mail.kernel.org ([198.145.29.99]:35688 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731133AbgBUIDD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Feb 2020 03:03:03 -0500
+        id S1731401AbgBUIDB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 21 Feb 2020 03:03:01 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 89BE1206ED;
-        Fri, 21 Feb 2020 08:03:02 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id ECAEB24673;
+        Fri, 21 Feb 2020 08:02:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1582272183;
-        bh=dkb+6SBa4D8pK5Pl0N9HGRV0ODZeGJ8/tYb4qTMpYN4=;
+        s=default; t=1582272180;
+        bh=UePCY4BqtIvlghuVOYlkGyqEl9Oi9N2cZL5RSM9Ehrc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=FweZktvK91WJ0kptGPOtGXI5XrgoCeavYVszC7bO20avngwszXFPRs4HGGfg+DNzH
-         srrJtcaeHnwvpoverOVutUyJeabahwRqp6qpB0fWu+8GuPwe4VyNVMT6iye8/+zo77
-         52s1GF49DujhLvpq8y/VBfZ+8Lgb4N3x0Inq7F6w=
+        b=Nuxq5CECqC+47gBXcJ3Ynv/BsZO/tb+62AxJH1taoLHltJ/Cdvd2q8Rtz4AryrR7b
+         odXBPIPZVFws8MD5rdU4p51ktAbVHJ7wETsCRWzAvaTbxTp+gL1yi0knPOJ7UfrgyO
+         P9W9qmlfTmRKumBOZ7R8I5CkDMUGwkHdxUx9V9ls=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Miroslav Benes <mbenes@suse.cz>,
-        YueHaibing <yuehaibing@huawei.com>, Jessica Yu <jeyu@kernel.org>,
+        stable@vger.kernel.org, Jia-Ju Bai <baijiaju1990@gmail.com>,
+        Fabien Dessenne <fabien.dessenne@st.com>,
+        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
+        Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 047/344] kernel/module: Fix memleak in module_add_modinfo_attrs()
-Date:   Fri, 21 Feb 2020 08:37:26 +0100
-Message-Id: <20200221072353.377532118@linuxfoundation.org>
+Subject: [PATCH 5.4 046/344] media: sti: bdisp: fix a possible sleep-in-atomic-context bug in bdisp_device_run()
+Date:   Fri, 21 Feb 2020 08:37:25 +0100
+Message-Id: <20200221072353.282095226@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200221072349.335551332@linuxfoundation.org>
 References: <20200221072349.335551332@linuxfoundation.org>
@@ -60,36 +62,57 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: YueHaibing <yuehaibing@huawei.com>
+From: Jia-Ju Bai <baijiaju1990@gmail.com>
 
-[ Upstream commit f6d061d617124abbd55396a3bc37b9bf7d33233c ]
+[ Upstream commit bb6d42061a05d71dd73f620582d9e09c8fbf7f5b ]
 
-In module_add_modinfo_attrs() if sysfs_create_file() fails
-on the first iteration of the loop (so i = 0), we forget to
-free the modinfo_attrs.
+The driver may sleep while holding a spinlock.
+The function call path (from bottom to top) in Linux 4.19 is:
 
-Fixes: bc6f2a757d52 ("kernel/module: Fix mem leak in module_add_modinfo_attrs")
-Reviewed-by: Miroslav Benes <mbenes@suse.cz>
-Signed-off-by: YueHaibing <yuehaibing@huawei.com>
-Signed-off-by: Jessica Yu <jeyu@kernel.org>
+drivers/media/platform/sti/bdisp/bdisp-hw.c, 385:
+    msleep in bdisp_hw_reset
+drivers/media/platform/sti/bdisp/bdisp-v4l2.c, 341:
+    bdisp_hw_reset in bdisp_device_run
+drivers/media/platform/sti/bdisp/bdisp-v4l2.c, 317:
+    _raw_spin_lock_irqsave in bdisp_device_run
+
+To fix this bug, msleep() is replaced with udelay().
+
+This bug is found by a static analysis tool STCheck written by myself.
+
+Signed-off-by: Jia-Ju Bai <baijiaju1990@gmail.com>
+Reviewed-by: Fabien Dessenne <fabien.dessenne@st.com>
+Signed-off-by: Hans Verkuil <hverkuil-cisco@xs4all.nl>
+Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- kernel/module.c | 2 ++
- 1 file changed, 2 insertions(+)
+ drivers/media/platform/sti/bdisp/bdisp-hw.c | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
-diff --git a/kernel/module.c b/kernel/module.c
-index cb09a5f37a5fc..9fb8fa22e16b3 100644
---- a/kernel/module.c
-+++ b/kernel/module.c
-@@ -1781,6 +1781,8 @@ static int module_add_modinfo_attrs(struct module *mod)
- error_out:
- 	if (i > 0)
- 		module_remove_modinfo_attrs(mod, --i);
-+	else
-+		kfree(mod->modinfo_attrs);
- 	return error;
- }
+diff --git a/drivers/media/platform/sti/bdisp/bdisp-hw.c b/drivers/media/platform/sti/bdisp/bdisp-hw.c
+index 4372abbb5950f..a74e9fd652389 100644
+--- a/drivers/media/platform/sti/bdisp/bdisp-hw.c
++++ b/drivers/media/platform/sti/bdisp/bdisp-hw.c
+@@ -14,8 +14,8 @@
+ #define MAX_SRC_WIDTH           2048
  
+ /* Reset & boot poll config */
+-#define POLL_RST_MAX            50
+-#define POLL_RST_DELAY_MS       20
++#define POLL_RST_MAX            500
++#define POLL_RST_DELAY_MS       2
+ 
+ enum bdisp_target_plan {
+ 	BDISP_RGB,
+@@ -382,7 +382,7 @@ int bdisp_hw_reset(struct bdisp_dev *bdisp)
+ 	for (i = 0; i < POLL_RST_MAX; i++) {
+ 		if (readl(bdisp->regs + BLT_STA1) & BLT_STA1_IDLE)
+ 			break;
+-		msleep(POLL_RST_DELAY_MS);
++		udelay(POLL_RST_DELAY_MS * 1000);
+ 	}
+ 	if (i == POLL_RST_MAX)
+ 		dev_err(bdisp->dev, "Reset timeout\n");
 -- 
 2.20.1
 
