@@ -7,48 +7,47 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6F781C35641
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 08:05:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3BDBBC35640
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 08:05:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 32EE22073A
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 08:05:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1277720801
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 08:05:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582272304;
-	bh=j10t5HO3W2ltOm3+De7grvLgQUA7DCKNukRC3XW6FKE=;
+	s=default; t=1582272307;
+	bh=JDVA4kPHn3/WHslHxrVCCMC6R0vLzrDqSzqYuvBaUyo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=iQUwicgACmXecEoE0xq8N6PBkEkix2e+fOPM5DVD7BINjIR4RQYd5j6fYwKT9IU08
-	 WuB5BPsSQTSiX0cB/xW2Hd4E5BKu7fha2p4tdBrY/k4oGLQDgHcvH4SCb62ED+4DWd
-	 9G8f7v2P8d1hdwQ13otEPMzBdjdu++HbKUcJgeyI=
+	b=y8D7cRpglCN5riF2CCm4rBTYcOaHP84RMmouKuA8vhzCNP2YaczFj6YWTfTXucCnJ
+	 u4BIBZIAnfKDFLKo7Qyv8UGdq/pRVmftwg0cU3aG/BJpXqYcyiPHan4i9G49mBhRS7
+	 kug9WBL3e5Y9F0Xbh+O5LWv8Tr1mVeOG4onFTjNE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731743AbgBUIFC (ORCPT
+        id S1731752AbgBUIFF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Feb 2020 03:05:02 -0500
-Received: from mail.kernel.org ([198.145.29.99]:38346 "EHLO mail.kernel.org"
+        Fri, 21 Feb 2020 03:05:05 -0500
+Received: from mail.kernel.org ([198.145.29.99]:38408 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731558AbgBUIE7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Feb 2020 03:04:59 -0500
+        id S1731261AbgBUIFC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 21 Feb 2020 03:05:02 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9ACD720801;
-        Fri, 21 Feb 2020 08:04:58 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 22EF824676;
+        Fri, 21 Feb 2020 08:05:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1582272299;
-        bh=j10t5HO3W2ltOm3+De7grvLgQUA7DCKNukRC3XW6FKE=;
+        s=default; t=1582272301;
+        bh=JDVA4kPHn3/WHslHxrVCCMC6R0vLzrDqSzqYuvBaUyo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=u3cpuX+qJE74+siZr9QuGeOs8xwcPflkv37Xl0Exc1D2JzPf57+fRccoB6WnpZgee
-         o2qqjeh3dWap+MSAVd7mffMnr5fQ5p4Jg+Anlajfh5u83rXudUmuqglsKBE9xmF53d
-         S8iQCgBol9ZufGWFTDKjGY/V23Dohk3IYgqIBqlE=
+        b=A+90EoNRAMY3YAFDYeVUO5UFsmR+pwB+B33+L/VgB1wOKKmS+yAgycJ1nuYRghM2i
+         QJlpxYT60N5Ke3KbIwqKOmXeNapwwU7l9fr2+R1ddkycybyIkzLhJsdC9CgmvCXg/u
+         wapWqw7biNqFCMOHkZddmJ9Ouwd9moARLitQhVi4=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Vincenzo Frascino <vincenzo.frascino@arm.com>,
-        Masahiro Yamada <masahiroy@kernel.org>,
+        stable@vger.kernel.org, Rajendra Nayak <rnayak@codeaurora.org>,
+        Stephen Boyd <sboyd@kernel.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 090/344] kconfig: fix broken dependency in randconfig-generated .config
-Date:   Fri, 21 Feb 2020 08:38:09 +0100
-Message-Id: <20200221072357.140165046@linuxfoundation.org>
+Subject: [PATCH 5.4 091/344] clk: qcom: Dont overwrite cfg in clk_rcg2_dfs_populate_freq()
+Date:   Fri, 21 Feb 2020 08:38:10 +0100
+Message-Id: <20200221072357.231206580@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200221072349.335551332@linuxfoundation.org>
 References: <20200221072349.335551332@linuxfoundation.org>
@@ -61,44 +60,58 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Masahiro Yamada <masahiroy@kernel.org>
+From: Stephen Boyd <sboyd@kernel.org>
 
-[ Upstream commit c8fb7d7e48d11520ad24808cfce7afb7b9c9f798 ]
+[ Upstream commit 21e157c62eeded8b1558a991b4820b761d48a730 ]
 
-Running randconfig on arm64 using KCONFIG_SEED=0x40C5E904 (e.g. on v5.5)
-produces the .config with CONFIG_EFI=y and CONFIG_CPU_BIG_ENDIAN=y,
-which does not meet the !CONFIG_CPU_BIG_ENDIAN dependency.
+The DFS frequency table logic overwrites 'cfg' while detecting the
+parent clk and then later on in clk_rcg2_dfs_populate_freq() we use that
+same variable to figure out the mode of the clk, either MND or not. Add
+a new variable to hold the parent clk bit so that 'cfg' is left
+untouched for use later.
 
-This is because the user choice for CONFIG_CPU_LITTLE_ENDIAN vs
-CONFIG_CPU_BIG_ENDIAN is set by randomize_choice_values() after the
-value of CONFIG_EFI is calculated.
+This fixes problems in detecting the supported frequencies for any clks
+in DFS mode.
 
-When this happens, the has_changed flag should be set.
-
-Currently, it takes the result from the last iteration. It should
-accumulate all the results of the loop.
-
-Fixes: 3b9a19e08960 ("kconfig: loop as long as we changed some symbols in randconfig")
-Reported-by: Vincenzo Frascino <vincenzo.frascino@arm.com>
-Signed-off-by: Masahiro Yamada <masahiroy@kernel.org>
+Fixes: cc4f6944d0e3 ("clk: qcom: Add support for RCG to register for DFS")
+Reported-by: Rajendra Nayak <rnayak@codeaurora.org>
+Signed-off-by: Stephen Boyd <sboyd@kernel.org>
+Link: https://lkml.kernel.org/r/20200128193329.45635-1-sboyd@kernel.org
+Tested-by: Rajendra Nayak <rnayak@codeaurora.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- scripts/kconfig/confdata.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/clk/qcom/clk-rcg2.c | 8 ++++----
+ 1 file changed, 4 insertions(+), 4 deletions(-)
 
-diff --git a/scripts/kconfig/confdata.c b/scripts/kconfig/confdata.c
-index 3569d2dec37ce..17298239e3633 100644
---- a/scripts/kconfig/confdata.c
-+++ b/scripts/kconfig/confdata.c
-@@ -1353,7 +1353,7 @@ bool conf_set_all_new_symbols(enum conf_def_mode mode)
+diff --git a/drivers/clk/qcom/clk-rcg2.c b/drivers/clk/qcom/clk-rcg2.c
+index 5a89ed88cc27a..5174222cbfab2 100644
+--- a/drivers/clk/qcom/clk-rcg2.c
++++ b/drivers/clk/qcom/clk-rcg2.c
+@@ -952,7 +952,7 @@ static void clk_rcg2_dfs_populate_freq(struct clk_hw *hw, unsigned int l,
+ 	struct clk_rcg2 *rcg = to_clk_rcg2(hw);
+ 	struct clk_hw *p;
+ 	unsigned long prate = 0;
+-	u32 val, mask, cfg, mode;
++	u32 val, mask, cfg, mode, src;
+ 	int i, num_parents;
  
- 		sym_calc_value(csym);
- 		if (mode == def_random)
--			has_changed = randomize_choice_values(csym);
-+			has_changed |= randomize_choice_values(csym);
- 		else {
- 			set_all_choice_values(csym);
- 			has_changed = true;
+ 	regmap_read(rcg->clkr.regmap, rcg->cmd_rcgr + SE_PERF_DFSR(l), &cfg);
+@@ -962,12 +962,12 @@ static void clk_rcg2_dfs_populate_freq(struct clk_hw *hw, unsigned int l,
+ 	if (cfg & mask)
+ 		f->pre_div = cfg & mask;
+ 
+-	cfg &= CFG_SRC_SEL_MASK;
+-	cfg >>= CFG_SRC_SEL_SHIFT;
++	src = cfg & CFG_SRC_SEL_MASK;
++	src >>= CFG_SRC_SEL_SHIFT;
+ 
+ 	num_parents = clk_hw_get_num_parents(hw);
+ 	for (i = 0; i < num_parents; i++) {
+-		if (cfg == rcg->parent_map[i].cfg) {
++		if (src == rcg->parent_map[i].cfg) {
+ 			f->src = rcg->parent_map[i].src;
+ 			p = clk_hw_get_parent_by_index(&rcg->clkr.hw, i);
+ 			prate = clk_hw_get_rate(p);
 -- 
 2.20.1
 
