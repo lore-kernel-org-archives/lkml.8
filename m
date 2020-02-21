@@ -2,147 +2,110 @@ Return-Path: <SRS0=1210=4J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,UNWANTED_LANGUAGE_BODY,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4D2B9C35655
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 12:07:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D3987C35656
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 12:12:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2DC2D207FD
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 12:07:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A77BC222C4
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 12:12:02 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="CS/oR3AB"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728198AbgBUMH1 (ORCPT
+        id S1727876AbgBUMMB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Feb 2020 07:07:27 -0500
-Received: from mx0a-00128a01.pphosted.com ([148.163.135.77]:4650 "EHLO
-        mx0a-00128a01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727053AbgBUMH0 (ORCPT
+        Fri, 21 Feb 2020 07:12:01 -0500
+Received: from mail-wr1-f67.google.com ([209.85.221.67]:46825 "EHLO
+        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726909AbgBUMMB (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Feb 2020 07:07:26 -0500
-Received: from pps.filterd (m0167088.ppops.net [127.0.0.1])
-        by mx0a-00128a01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 01LC0PKc028503;
-        Fri, 21 Feb 2020 07:07:25 -0500
-Received: from nwd2mta3.analog.com ([137.71.173.56])
-        by mx0a-00128a01.pphosted.com with ESMTP id 2y8uduq0k7-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Fri, 21 Feb 2020 07:07:24 -0500
-Received: from SCSQMBX10.ad.analog.com (scsqmbx10.ad.analog.com [10.77.17.5])
-        by nwd2mta3.analog.com (8.14.7/8.14.7) with ESMTP id 01LC7Nkk032415
-        (version=TLSv1/SSLv3 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=FAIL);
-        Fri, 21 Feb 2020 07:07:23 -0500
-Received: from SCSQCASHYB6.ad.analog.com (10.77.17.132) by
- SCSQMBX10.ad.analog.com (10.77.17.5) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.1779.2; Fri, 21 Feb 2020 04:07:21 -0800
-Received: from SCSQMBX10.ad.analog.com (10.77.17.5) by
- SCSQCASHYB6.ad.analog.com (10.77.17.132) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.1779.2; Fri, 21 Feb 2020 04:06:32 -0800
-Received: from zeus.spd.analog.com (10.64.82.11) by SCSQMBX10.ad.analog.com
- (10.77.17.5) with Microsoft SMTP Server id 15.1.1779.2 via Frontend
- Transport; Fri, 21 Feb 2020 04:07:21 -0800
-Received: from tachici-Precision-5530.ad.analog.com ([10.48.65.175])
-        by zeus.spd.analog.com (8.15.1/8.15.1) with ESMTP id 01LC7H1L018878;
-        Fri, 21 Feb 2020 07:07:18 -0500
-From:   Alexandru Tachici <alexandru.tachici@analog.com>
-To:     <linux-iio@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-CC:     <jic23@kernel.org>,
-        Alexandru Tachici <alexandru.tachici@analog.com>,
-        Alexandru Ardelean <alexandru.ardelean@analog.com>
-Subject: [PATCH v2] iio: industrialio-core: Fix debugfs read
-Date:   Fri, 21 Feb 2020 14:06:55 +0200
-Message-ID: <20200221120655.20252-1-alexandru.tachici@analog.com>
-X-Mailer: git-send-email 2.20.1
+        Fri, 21 Feb 2020 07:12:01 -0500
+Received: by mail-wr1-f67.google.com with SMTP id z7so1753460wrl.13
+        for <linux-kernel@vger.kernel.org>; Fri, 21 Feb 2020 04:11:59 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=hS96wgt/ER0zqCa5SCOVpu61bVnBbfmDRQTyUX2IrAg=;
+        b=CS/oR3ABVm90GOGwxlesbU5UaRDqDi4937vJIZTYLNgqFuONm21aZHfScF1yfn5sAO
+         xdxwA0HkcqUqTryI/sndrYYXkvoPVOAFhEEC3AzBENzt3TA3GfZ5pbXcjskloGHkCTpZ
+         a77kpInQpoS3R/nE1wh7iy1tE7R+PB8uZsyNSP/TNDZLndcmcCGV83fW63VZdCSbFDkb
+         dGQ/VBQeP6CBnmYAGuZN5H+5VLNTKx9sdLzMAjP/uMS0dgHQej5Z7MhJVnrhhgiIJJ78
+         QTReeJZnSZTQJRREy+l5X1Q9RwN4MNBQQw37iC78fTKYq6khyXtgU9FsErbddnK5PQ2+
+         ZUUw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=hS96wgt/ER0zqCa5SCOVpu61bVnBbfmDRQTyUX2IrAg=;
+        b=h2Q1HwnWcFx5SX3fsNt6JMGbSq7Nt3ZYJv3MnNMurBEvv8FRuHtwtxitAo7IwclHUi
+         aGMv3HvVZwdvKE2XUmwt9+6P0yHUqaTmWkKF5JFVKZs7jSxx4dOrW7C1/olK4lRUIquI
+         PhXD/eyKSseuso19McyVxQxMculI8ZV6a/VacjfaQL15g8brtwLoaR/E/nhOxwD7SOez
+         3HOy2FAbRpRupmJwnDmRF+SUani3SsjjYgAOYrah8/5SHDqNi0v9/VBeA0UqbMPoxFDH
+         8a3HD1+1tM4CxIeFwGVqHfoG15RT159olG1hSg7H5ybl6serInb4vAZM2hWJb32FgZiG
+         gLyA==
+X-Gm-Message-State: APjAAAXN42bRwSmNrCMCSKV1GXhAoPN3eXRYl1ufAK766/2vaqxm3qFZ
+        cZ2yG7WKgYxjxQHeFzMIxvIrh9pDsgk=
+X-Google-Smtp-Source: APXvYqwYh4N7wz2XscGcCwMNShVzzwC6C2HoeJjKHoDg8DxmO/DkVmrmpDieYviHEdy0nbFzFz8hSg==
+X-Received: by 2002:a05:6000:108b:: with SMTP id y11mr49634195wrw.187.1582287119261;
+        Fri, 21 Feb 2020 04:11:59 -0800 (PST)
+Received: from starbuck.baylibre.local (laubervilliers-658-1-213-31.w90-63.abo.wanadoo.fr. [90.63.244.31])
+        by smtp.googlemail.com with ESMTPSA id w22sm3553127wmk.34.2020.02.21.04.11.58
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 21 Feb 2020 04:11:58 -0800 (PST)
+From:   Jerome Brunet <jbrunet@baylibre.com>
+To:     Mark Brown <broonie@kernel.org>,
+        Liam Girdwood <lgirdwood@gmail.com>
+Cc:     Jerome Brunet <jbrunet@baylibre.com>, alsa-devel@alsa-project.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-amlogic@lists.infradead.org,
+        Kevin Hilman <khilman@baylibre.com>
+Subject: [PATCH] ASoC: meson: g12a: add tohdmitx reset
+Date:   Fri, 21 Feb 2020 13:11:46 +0100
+Message-Id: <20200221121146.1498427-1-jbrunet@baylibre.com>
+X-Mailer: git-send-email 2.24.1
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7BIT
-Content-Type:   text/plain; charset=US-ASCII
-X-ADIRoutedOnPrem: True
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.572
- definitions=2020-02-21_03:2020-02-19,2020-02-21 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 lowpriorityscore=0
- malwarescore=0 impostorscore=0 spamscore=0 suspectscore=0 mlxlogscore=841
- phishscore=0 mlxscore=0 priorityscore=1501 clxscore=1015 adultscore=0
- bulkscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2001150001 definitions=main-2002210093
+X-Patchwork-Bot: notify
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Currently iio_debugfs_read_reg calls debugfs_reg_access
-every time it is ran. Reading the same hardware register
-multiple times during the same reading of a debugfs file
-can cause unintended effects.
+Reset the g12a hdmi codec glue on probe. This ensure a sane startup state.
 
-For example for each: cat iio:device0/direct_reg_access
-the file_operations.read function will be called at least
-twice. First will return the full length of the string in
-bytes  and the second will return 0.
-
-This patch makes iio_debugfs_read_reg to call debugfs_reg_access
-only when the user's buffer position (*ppos) is 0. (meaning
-it is the beginning of a new reading of the debugfs file).
-
-Fixes: e553f182d55b ("staging: iio: core: Introduce debugfs support, add support for direct register access")
-Signed-off-by: Alexandru Ardelean <alexandru.ardelean@analog.com>
-Signed-off-by: Alexandru Tachici <alexandru.tachici@analog.com>
+Signed-off-by: Jerome Brunet <jbrunet@baylibre.com>
 ---
- drivers/iio/industrialio-core.c | 15 +++++++++++----
- include/linux/iio/iio.h         |  2 ++
- 2 files changed, 13 insertions(+), 4 deletions(-)
+ sound/soc/meson/g12a-tohdmitx.c | 6 ++++++
+ 1 file changed, 6 insertions(+)
 
-diff --git a/drivers/iio/industrialio-core.c b/drivers/iio/industrialio-core.c
-index 65ff0d067018..c4d5104934fc 100644
---- a/drivers/iio/industrialio-core.c
-+++ b/drivers/iio/industrialio-core.c
-@@ -301,11 +301,14 @@ static ssize_t iio_debugfs_read_reg(struct file *file, char __user *userbuf,
- 			      size_t count, loff_t *ppos)
- {
- 	struct iio_dev *indio_dev = file->private_data;
--	char buf[20];
- 	unsigned val = 0;
--	ssize_t len;
- 	int ret;
+diff --git a/sound/soc/meson/g12a-tohdmitx.c b/sound/soc/meson/g12a-tohdmitx.c
+index f8853f2fba08..9b2b59536ced 100644
+--- a/sound/soc/meson/g12a-tohdmitx.c
++++ b/sound/soc/meson/g12a-tohdmitx.c
+@@ -8,6 +8,7 @@
+ #include <linux/module.h>
+ #include <sound/pcm_params.h>
+ #include <linux/regmap.h>
++#include <linux/reset.h>
+ #include <sound/soc.h>
+ #include <sound/soc-dai.h>
  
-+	if (*ppos > 0)
-+		return simple_read_from_buffer(userbuf, count, ppos,
-+					       indio_dev->read_buf,
-+					       indio_dev->read_buf_len);
+@@ -245,6 +246,11 @@ static int g12a_tohdmitx_probe(struct platform_device *pdev)
+ 	struct device *dev = &pdev->dev;
+ 	void __iomem *regs;
+ 	struct regmap *map;
++	int ret;
 +
- 	ret = indio_dev->info->debugfs_reg_access(indio_dev,
- 						  indio_dev->cached_reg_addr,
- 						  0, &val);
-@@ -314,9 +317,13 @@ static ssize_t iio_debugfs_read_reg(struct file *file, char __user *userbuf,
- 		return ret;
- 	}
++	ret = device_reset(dev);
++	if (ret)
++		return ret;
  
--	len = snprintf(buf, sizeof(buf), "0x%X\n", val);
-+	indio_dev->read_buf_len = snprintf(indio_dev->read_buf,
-+					   sizeof(indio_dev->read_buf),
-+					   "0x%X\n", val);
- 
--	return simple_read_from_buffer(userbuf, count, ppos, buf, len);
-+	return simple_read_from_buffer(userbuf, count, ppos,
-+				       indio_dev->read_buf,
-+				       indio_dev->read_buf_len);
- }
- 
- static ssize_t iio_debugfs_write_reg(struct file *file,
-diff --git a/include/linux/iio/iio.h b/include/linux/iio/iio.h
-index 862ce0019eba..eed58ed2f368 100644
---- a/include/linux/iio/iio.h
-+++ b/include/linux/iio/iio.h
-@@ -568,6 +568,8 @@ struct iio_dev {
- #if defined(CONFIG_DEBUG_FS)
- 	struct dentry			*debugfs_dentry;
- 	unsigned			cached_reg_addr;
-+	char				read_buf[20];
-+	unsigned int			read_buf_len;
- #endif
- };
- 
+ 	regs = devm_platform_ioremap_resource(pdev, 0);
+ 	if (IS_ERR(regs))
 -- 
-2.20.1
+2.24.1
 
