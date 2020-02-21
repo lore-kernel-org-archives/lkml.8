@@ -2,59 +2,57 @@ Return-Path: <SRS0=1210=4J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B12EDC35640
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E8AF3C35642
 	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 07:43:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7CB04207FD
+	by mail.kernel.org (Postfix) with ESMTP id B12A520801
 	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 07:43:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
 	s=default; t=1582271025;
-	bh=eIloBTwvsOyWW6PIIMAVvNlfEXpQpxLEgnRLS+X0kNc=;
+	bh=gnFCA0YLoSCVotL7bGApUYDpuF8NUTKSgkzZLI+u9qg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=WJxm1WgH4IuwpK4t8P7vBBuoO6Rwxyx7r5LI7wmueaOk7lSGDXO/WwgPWTmoYn451
-	 NiZAm5tcEZniZGJlyMGPHhhA1jvtq36Adu0gFCJbJ8qsXzygMM+ToEvFIHzCThB3gb
-	 SPXGkcHa0yVR6eiZlCtPG2WsWSiNxBz58at/DGhs=
+	b=dK+ML7VoiuFU5JVfIMeCsiOk+ac9pP9O/8/kudg7IYxATBNndlLPV1cdqqCjZdrsD
+	 eYesvDx4psCZR1evIqA5oyc0m9EAt8F+uDrHibVpXxosV1FivPAKx3cz4T+EjuviLF
+	 aNZbYoslWYK0AtY2nllxRsNN/QWME7aiq+auH1e4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726694AbgBUHnl (ORCPT
+        id S1727015AbgBUHnn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Feb 2020 02:43:41 -0500
-Received: from mail.kernel.org ([198.145.29.99]:38086 "EHLO mail.kernel.org"
+        Fri, 21 Feb 2020 02:43:43 -0500
+Received: from mail.kernel.org ([198.145.29.99]:38120 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726045AbgBUHnk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Feb 2020 02:43:40 -0500
+        id S1726045AbgBUHnm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 21 Feb 2020 02:43:42 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1F281207FD;
-        Fri, 21 Feb 2020 07:43:37 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8E7C020801;
+        Fri, 21 Feb 2020 07:43:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1582271018;
-        bh=eIloBTwvsOyWW6PIIMAVvNlfEXpQpxLEgnRLS+X0kNc=;
+        s=default; t=1582271021;
+        bh=gnFCA0YLoSCVotL7bGApUYDpuF8NUTKSgkzZLI+u9qg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=uBrV2IEe9im65H1Huy/KtmJz+2WeczVwoSTSI/0B2KueaoIjlW/WIBCRGauWj230h
-         lK5lrqbPxLmB3K/jlpQ73IKV4DhbF1F3PQNgP+68qJ+R/oQcefuUYE291TxBmyk+vZ
-         HR87Wv12CGd6RnnfHh2FMiod6kdK2RvMq6KQ/l34=
+        b=zWvWYgTzt7gh2zT/M1JPcQCqweImff96AmmvCMqIcoeFK1XxF9F8BbTtxiTR3EtgO
+         qCPiXmuBsnxNqOEsr8Hx5GzQAfzwJeQvMjed/ncrKJiZ3mFd44DZ+zc7GfWy0nGDlQ
+         2dHU3R5fPkqQjhop2Mfcx9O13NrTRNoek0JXams0=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Stepan Horacek <shoracek@redhat.com>,
-        Paolo Abeni <pabeni@redhat.com>,
-        =?UTF-8?q?Toke=20H=C3=B8iland-J=C3=B8rgensen?= <toke@redhat.com>,
-        "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 5.5 001/399] core: Dont skip generic XDP program execution for cloned SKBs
-Date:   Fri, 21 Feb 2020 08:35:26 +0100
-Message-Id: <20200221072402.463752189@linuxfoundation.org>
+        stable@vger.kernel.org, Colin Ian King <colin.king@canonical.com>,
+        Maya Erez <merez@codeaurora.org>,
+        Kalle Valo <kvalo@codeaurora.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.5 010/399] wil6210: fix break that is never reached because of zeroing of a retry counter
+Date:   Fri, 21 Feb 2020 08:35:35 +0100
+Message-Id: <20200221072403.316856665@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200221072402.315346745@linuxfoundation.org>
 References: <20200221072402.315346745@linuxfoundation.org>
 User-Agent: quilt/0.66
-X-stable: review
-X-Patchwork-Hint: ignore
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
@@ -63,136 +61,50 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: "Toke Høiland-Jørgensen" <toke@redhat.com>
+From: Colin Ian King <colin.king@canonical.com>
 
-[ Upstream commit ad1e03b2b3d4430baaa109b77bc308dc73050de3 ]
+[ Upstream commit 5b1413f00b5beb9f5fed94e43ea0c497d5db9633 ]
 
-The current generic XDP handler skips execution of XDP programs entirely if
-an SKB is marked as cloned. This leads to some surprising behaviour, as
-packets can end up being cloned in various ways, which will make an XDP
-program not see all the traffic on an interface.
+There is a check on the retry counter invalid_buf_id_retry that is always
+false because invalid_buf_id_retry is initialized to zero on each iteration
+of a while-loop.  Fix this by initializing the retry counter before the
+while-loop starts.
 
-This was discovered by a simple test case where an XDP program that always
-returns XDP_DROP is installed on a veth device. When combining this with
-the Scapy packet sniffer (which uses an AF_PACKET) socket on the sending
-side, SKBs reliably end up in the cloned state, causing them to be passed
-through to the receiving interface instead of being dropped. A minimal
-reproducer script for this is included below.
-
-This patch fixed the issue by simply triggering the existing linearisation
-code for cloned SKBs instead of skipping the XDP program execution. This
-behaviour is in line with the behaviour of the native XDP implementation
-for the veth driver, which will reallocate and copy the SKB data if the SKB
-is marked as shared.
-
-Reproducer Python script (requires BCC and Scapy):
-
-from scapy.all import TCP, IP, Ether, sendp, sniff, AsyncSniffer, Raw, UDP
-from bcc import BPF
-import time, sys, subprocess, shlex
-
-SKB_MODE = (1 << 1)
-DRV_MODE = (1 << 2)
-PYTHON=sys.executable
-
-def client():
-    time.sleep(2)
-    # Sniffing on the sender causes skb_cloned() to be set
-    s = AsyncSniffer()
-    s.start()
-
-    for p in range(10):
-        sendp(Ether(dst="aa:aa:aa:aa:aa:aa", src="cc:cc:cc:cc:cc:cc")/IP()/UDP()/Raw("Test"),
-              verbose=False)
-        time.sleep(0.1)
-
-    s.stop()
-    return 0
-
-def server(mode):
-    prog = BPF(text="int dummy_drop(struct xdp_md *ctx) {return XDP_DROP;}")
-    func = prog.load_func("dummy_drop", BPF.XDP)
-    prog.attach_xdp("a_to_b", func, mode)
-
-    time.sleep(1)
-
-    s = sniff(iface="a_to_b", count=10, timeout=15)
-    if len(s):
-        print(f"Got {len(s)} packets - should have gotten 0")
-        return 1
-    else:
-        print("Got no packets - as expected")
-        return 0
-
-if len(sys.argv) < 2:
-    print(f"Usage: {sys.argv[0]} <skb|drv>")
-    sys.exit(1)
-
-if sys.argv[1] == "client":
-    sys.exit(client())
-elif sys.argv[1] == "server":
-    mode = SKB_MODE if sys.argv[2] == 'skb' else DRV_MODE
-    sys.exit(server(mode))
-else:
-    try:
-        mode = sys.argv[1]
-        if mode not in ('skb', 'drv'):
-            print(f"Usage: {sys.argv[0]} <skb|drv>")
-            sys.exit(1)
-        print(f"Running in {mode} mode")
-
-        for cmd in [
-                'ip netns add netns_a',
-                'ip netns add netns_b',
-                'ip -n netns_a link add a_to_b type veth peer name b_to_a netns netns_b',
-                # Disable ipv6 to make sure there's no address autoconf traffic
-                'ip netns exec netns_a sysctl -qw net.ipv6.conf.a_to_b.disable_ipv6=1',
-                'ip netns exec netns_b sysctl -qw net.ipv6.conf.b_to_a.disable_ipv6=1',
-                'ip -n netns_a link set dev a_to_b address aa:aa:aa:aa:aa:aa',
-                'ip -n netns_b link set dev b_to_a address cc:cc:cc:cc:cc:cc',
-                'ip -n netns_a link set dev a_to_b up',
-                'ip -n netns_b link set dev b_to_a up']:
-            subprocess.check_call(shlex.split(cmd))
-
-        server = subprocess.Popen(shlex.split(f"ip netns exec netns_a {PYTHON} {sys.argv[0]} server {mode}"))
-        client = subprocess.Popen(shlex.split(f"ip netns exec netns_b {PYTHON} {sys.argv[0]} client"))
-
-        client.wait()
-        server.wait()
-        sys.exit(server.returncode)
-
-    finally:
-        subprocess.run(shlex.split("ip netns delete netns_a"))
-        subprocess.run(shlex.split("ip netns delete netns_b"))
-
-Fixes: d445516966dc ("net: xdp: support xdp generic on virtual devices")
-Reported-by: Stepan Horacek <shoracek@redhat.com>
-Suggested-by: Paolo Abeni <pabeni@redhat.com>
-Signed-off-by: Toke HÃ¸iland-JÃ¸rgensen <toke@redhat.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Addresses-Coverity: ("Logically dead code")
+Fixes: b4a967b7d0f5 ("wil6210: reset buff id in status message after completion")
+Signed-off-by: Colin Ian King <colin.king@canonical.com>
+Reviewed-by: Maya Erez <merez@codeaurora.org>
+Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- net/core/dev.c |    4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ drivers/net/wireless/ath/wil6210/txrx_edma.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
---- a/net/core/dev.c
-+++ b/net/core/dev.c
-@@ -4477,14 +4477,14 @@ static u32 netif_receive_generic_xdp(str
- 	/* Reinjected packets coming from act_mirred or similar should
- 	 * not get XDP generic processing.
- 	 */
--	if (skb_cloned(skb) || skb_is_tc_redirected(skb))
-+	if (skb_is_tc_redirected(skb))
- 		return XDP_PASS;
+diff --git a/drivers/net/wireless/ath/wil6210/txrx_edma.c b/drivers/net/wireless/ath/wil6210/txrx_edma.c
+index 778b63be6a9a4..02548d40253c7 100644
+--- a/drivers/net/wireless/ath/wil6210/txrx_edma.c
++++ b/drivers/net/wireless/ath/wil6210/txrx_edma.c
+@@ -869,6 +869,7 @@ static struct sk_buff *wil_sring_reap_rx_edma(struct wil6210_priv *wil,
+ 	u8 data_offset;
+ 	struct wil_rx_status_extended *s;
+ 	u16 sring_idx = sring - wil->srings;
++	int invalid_buff_id_retry;
  
- 	/* XDP packets must be linear and must have sufficient headroom
- 	 * of XDP_PACKET_HEADROOM bytes. This is the guarantee that also
- 	 * native XDP provides, thus we need to do it here as well.
- 	 */
--	if (skb_is_nonlinear(skb) ||
-+	if (skb_cloned(skb) || skb_is_nonlinear(skb) ||
- 	    skb_headroom(skb) < XDP_PACKET_HEADROOM) {
- 		int hroom = XDP_PACKET_HEADROOM - skb_headroom(skb);
- 		int troom = skb->tail + skb->data_len - skb->end;
+ 	BUILD_BUG_ON(sizeof(struct wil_rx_status_extended) > sizeof(skb->cb));
+ 
+@@ -882,9 +883,9 @@ again:
+ 	/* Extract the buffer ID from the status message */
+ 	buff_id = le16_to_cpu(wil_rx_status_get_buff_id(msg));
+ 
++	invalid_buff_id_retry = 0;
+ 	while (!buff_id) {
+ 		struct wil_rx_status_extended *s;
+-		int invalid_buff_id_retry = 0;
+ 
+ 		wil_dbg_txrx(wil,
+ 			     "buff_id is not updated yet by HW, (swhead 0x%x)\n",
+-- 
+2.20.1
+
 
 
