@@ -7,57 +7,51 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DE853C11D24
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 01:53:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9D3A7C11D00
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 01:53:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B380E208E4
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 01:53:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6A2972467A
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 01:53:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582250036;
-	bh=Z3Io93RMyZjx9er7hNSV+YXVieGSX4hDxd7jJRnuQwA=;
+	s=default; t=1582250039;
+	bh=8pYWMpMHXaW4t1r1z4kxk51e/cZxhTXZJHIy5G18ELo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=eLtz41KkHiH25HEBJwpeEdt425nzENNbYB6wOgW75uGiKu6VqFkIwl3gpm5UIun8v
-	 dzDymwlR46cSZHu47+4DD2jxCSKu6MzIM7hOPD1IeLyaW3WVnsLP8qzRhrLzr4J4N4
-	 dQG1F2HtU3zb1ahn+B4BLdUJzB/ul8/dtAmT+/bw=
+	b=kHKx1nsvf2iZSg8o4LdLBQvovkA1OoixVpFMMez8CsZIKC7PmjKaLEkPfYCKaVRew
+	 fiTN+/nbN/wpOpMhFnsre0c6ztK5I6vg/e+b0Vs9d2A532z5NUcBHW38G5NRlyyMci
+	 FJeZ4Pd9uLQv14Ar5Gn2ieeLI8z9ZkMVMrXhgfjo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729741AbgBUBxz (ORCPT
+        id S1729712AbgBUBxu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Feb 2020 20:53:55 -0500
-Received: from mail.kernel.org ([198.145.29.99]:57798 "EHLO mail.kernel.org"
+        Thu, 20 Feb 2020 20:53:50 -0500
+Received: from mail.kernel.org ([198.145.29.99]:57486 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729727AbgBUBxx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Feb 2020 20:53:53 -0500
+        id S1729675AbgBUBxn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 20 Feb 2020 20:53:43 -0500
 Received: from quaco.ghostprotocols.net (unknown [179.97.37.151])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C90EC206E2;
-        Fri, 21 Feb 2020 01:53:47 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id DC43B24653;
+        Fri, 21 Feb 2020 01:53:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1582250032;
-        bh=Z3Io93RMyZjx9er7hNSV+YXVieGSX4hDxd7jJRnuQwA=;
+        s=default; t=1582250023;
+        bh=8pYWMpMHXaW4t1r1z4kxk51e/cZxhTXZJHIy5G18ELo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=vVBVmLLaWHTcffiGGAkFQ0aL1CbXn8fDBwBJLlvD9fZJGsuURNQH+qtEQl4qNhfNL
-         LI7/bE3Ymzo218bIHMDHaGCKeT2MS51FYaVMiokOvlpmpD8jruSrP4J0fHSuwTzJvZ
-         +5DbhmAu98NDmp3ZDfQUZBQp/FGclMhUz63PLs8k=
+        b=SbK8KaMbFYYfWEpvuND5NZCct58WUcTsKlfvWrE/BnVv9fqL30hRcBfMT+1U0fdxS
+         jHfthCkSmECV0E6yA8zbcAxm/muQQZp/i5NBQDTnYd/j3xM9o5+mHkuD6oLIodyCEz
+         yEsTSo1GByKa//PHFlMLfTv+vb6uXy6eZGjSqvhE=
 From:   Arnaldo Carvalho de Melo <acme@kernel.org>
 To:     Ingo Molnar <mingo@kernel.org>,
         Thomas Gleixner <tglx@linutronix.de>
 Cc:     Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>,
         Clark Williams <williams@redhat.com>,
         linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
-        Arnaldo Carvalho de Melo <acme@redhat.com>,
-        Stephen Rothwell <sfr@canb.auug.org.au>,
-        Ravi Bangoria <ravi.bangoria@linux.ibm.com>,
         Adrian Hunter <adrian.hunter@intel.com>,
-        Aleksa Sarai <cyphar@cyphar.com>,
-        Al Viro <viro@zeniv.linux.org.uk>,
-        Christian Brauner <christian.brauner@ubuntu.com>,
-        "Naveen N . Rao" <naveen.n.rao@linux.vnet.ibm.com>,
-        Nicholas Piggin <npiggin@gmail.com>,
-        Sargun Dhillon <sargun@sargun.me>
-Subject: [PATCH 8/8] perf arch powerpc: Sync powerpc syscall.tbl with the kernel sources
-Date:   Thu, 20 Feb 2020 22:53:10 -0300
-Message-Id: <20200221015310.16914-9-acme@kernel.org>
+        Wei Li <liwei391@huawei.com>, Jiri Olsa <jolsa@redhat.com>,
+        Tan Xiaojun <tanxiaojun@huawei.com>, stable@vger.kernel.org,
+        Arnaldo Carvalho de Melo <acme@redhat.com>
+Subject: [PATCH 6/8] perf arm-spe: Fix endless record after being terminated
+Date:   Thu, 20 Feb 2020 22:53:08 -0300
+Message-Id: <20200221015310.16914-7-acme@kernel.org>
 X-Mailer: git-send-email 2.21.1
 In-Reply-To: <20200221015310.16914-1-acme@kernel.org>
 References: <20200221015310.16914-1-acme@kernel.org>
@@ -68,50 +62,46 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Arnaldo Carvalho de Melo <acme@redhat.com>
+From: Adrian Hunter <adrian.hunter@intel.com>
 
-Copy over powerpc syscall.tbl to grab changes from the below commits
+In __cmd_record(), when receiving SIGINT(ctrl + c), a 'done' flag will
+be set and the event list will be disabled by evlist__disable() once.
 
-  fddb5d430ad9 ("open: introduce openat2(2) syscall")
-  9a2cef09c801 ("arch: wire up pidfd_getfd syscall")
+While in auxtrace_record.read_finish(), the related events will be
+enabled again, if they are continuous, the recording seems to be
+endless.
 
-Now 'perf trace' on powerpc will be able to map from those syscall
-strings to the right syscall numbers, i.e.
+If the event is disabled, don't enable it again here.
 
-  perf trace -e pidfd*
-
-Will include 'pidfd_getfd' as well as:
-
-  perf trace open*
-
-Will cover all 'open' variants.
-
-Reported-by: Stephen Rothwell <sfr@canb.auug.org.au>
-Reviewed-by: Ravi Bangoria <ravi.bangoria@linux.ibm.com>
-Cc: Adrian Hunter <adrian.hunter@intel.com>
-Cc: Aleksa Sarai <cyphar@cyphar.com>
-Cc: Al Viro <viro@zeniv.linux.org.uk>
-Cc: Christian Brauner <christian.brauner@ubuntu.com>
-Cc: Jiri Olsa <jolsa@kernel.org>
-Cc: Namhyung Kim <namhyung@kernel.org>
-Cc: Naveen N. Rao <naveen.n.rao@linux.vnet.ibm.com>
-Cc: Nicholas Piggin <npiggin@gmail.com>
-Cc: Sargun Dhillon <sargun@sargun.me>
+Based-on-patch-by: Wei Li <liwei391@huawei.com>
+Signed-off-by: Adrian Hunter <adrian.hunter@intel.com>
+Cc: Jiri Olsa <jolsa@redhat.com>
+Cc: Tan Xiaojun <tanxiaojun@huawei.com>
+Cc: stable@vger.kernel.org # 5.4+
+Link: http://lore.kernel.org/lkml/20200214132654.20395-5-adrian.hunter@intel.com
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/perf/arch/powerpc/entry/syscalls/syscall.tbl | 2 ++
- 1 file changed, 2 insertions(+)
+ tools/perf/arch/arm64/util/arm-spe.c | 5 ++++-
+ 1 file changed, 4 insertions(+), 1 deletion(-)
 
-diff --git a/tools/perf/arch/powerpc/entry/syscalls/syscall.tbl b/tools/perf/arch/powerpc/entry/syscalls/syscall.tbl
-index 43f736ed47f2..35b61bfc1b1a 100644
---- a/tools/perf/arch/powerpc/entry/syscalls/syscall.tbl
-+++ b/tools/perf/arch/powerpc/entry/syscalls/syscall.tbl
-@@ -517,3 +517,5 @@
- 433	common	fspick				sys_fspick
- 434	common	pidfd_open			sys_pidfd_open
- 435	nospu	clone3				ppc_clone3
-+437	common	openat2				sys_openat2
-+438	common	pidfd_getfd			sys_pidfd_getfd
+diff --git a/tools/perf/arch/arm64/util/arm-spe.c b/tools/perf/arch/arm64/util/arm-spe.c
+index eba6541ec0f1..1d993c27242b 100644
+--- a/tools/perf/arch/arm64/util/arm-spe.c
++++ b/tools/perf/arch/arm64/util/arm-spe.c
+@@ -165,9 +165,12 @@ static int arm_spe_read_finish(struct auxtrace_record *itr, int idx)
+ 	struct evsel *evsel;
+ 
+ 	evlist__for_each_entry(sper->evlist, evsel) {
+-		if (evsel->core.attr.type == sper->arm_spe_pmu->type)
++		if (evsel->core.attr.type == sper->arm_spe_pmu->type) {
++			if (evsel->disabled)
++				return 0;
+ 			return perf_evlist__enable_event_idx(sper->evlist,
+ 							     evsel, idx);
++		}
+ 	}
+ 	return -EINVAL;
+ }
 -- 
 2.21.1
 
