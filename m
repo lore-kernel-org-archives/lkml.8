@@ -4,50 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2AA76C35641
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 07:58:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3BA97C35642
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 07:58:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EF7D82073A
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 07:58:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0480E206ED
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 07:58:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582271916;
-	bh=avJYHk9+rm68xYfto9kc+SfaVmoDR3ZjTQltM8N55/w=;
+	s=default; t=1582271918;
+	bh=FSZNZhAOFhYYMThmr+oCAnsLgXdPEgdWYjoPiw6Ulfs=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Ict9wIFQhACMiea/fAed4yev7DRnSkZlw5aPxxesyO/4UgzFXF8HJDeWb2iZym7xP
-	 TDU+MEY77SG7Qrh5Spq1/2GnvpdjuLZFKZv3g7vScdTa+OmVJFd7wRF7bjqb9+g0hd
-	 XNQKwi4OgU95eybBiogKx92R24hGoA8kVVCBECnI=
+	b=1DJBaF7L13F1p7ojbsZq8gdIS87Srdb11bNMPlWrv1WAGvELX0qBjNAqYBbKQjI4r
+	 Ip2G7fvzioHBvhvC+MoDCwenSs9Uq4fh2nb706ygorW1nrIOkeFybR9eZpMFeiH5sm
+	 jXO/Qh7Ee3+JGb0v/8uE3XGcZXFGVbWk9vxlFjfQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730795AbgBUH6e (ORCPT
+        id S1730787AbgBUH6d (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Feb 2020 02:58:34 -0500
-Received: from mail.kernel.org ([198.145.29.99]:58336 "EHLO mail.kernel.org"
+        Fri, 21 Feb 2020 02:58:33 -0500
+Received: from mail.kernel.org ([198.145.29.99]:58288 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729326AbgBUH6a (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Feb 2020 02:58:30 -0500
+        id S1730776AbgBUH62 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 21 Feb 2020 02:58:28 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6D778206ED;
-        Fri, 21 Feb 2020 07:58:29 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id DB838206ED;
+        Fri, 21 Feb 2020 07:58:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1582271909;
-        bh=avJYHk9+rm68xYfto9kc+SfaVmoDR3ZjTQltM8N55/w=;
+        s=default; t=1582271907;
+        bh=FSZNZhAOFhYYMThmr+oCAnsLgXdPEgdWYjoPiw6Ulfs=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Bt0aCeNZM8APTueFCUyJVtkXdJCskYVvD7p2QFeLn6NZTE4aDnqiMk2+I8jbVJlEf
-         GBCBubc/IfTRVSXhn4e3cS9BXtqGBgqGYls4yX5JvAQYkplw4zTMqJPN/Ejzwkje2f
-         mgNZXcGl0Z0P2jIEWxxNLkxbQuYEbuzfH1i/kOXU=
+        b=v34Cg5drAv/RGS7/77AhPqIwS39Ay7+v7Frs802BNN5nXXt2NSyIdYbfTmaBeju22
+         9WYpxTsQCFU3fG6eDZgPZ0kiUEUZNwxxfcFhVJTom0HIsvw3qQPQiJ0Bc3MQXlfXmO
+         8gN6MJPbyDEMqb5lUedEkn98adpo26svcImhZDfs=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Ard Biesheuvel <ardb@kernel.org>,
-        Russell King <rmk+kernel@armlinux.org.uk>,
+        stable@vger.kernel.org, Masahiro Yamada <masahiroy@kernel.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.5 343/399] ARM: 8941/1: decompressor: enable CP15 barrier instructions in v7 cache setup code
-Date:   Fri, 21 Feb 2020 08:41:08 +0100
-Message-Id: <20200221072434.159323322@linuxfoundation.org>
+Subject: [PATCH 5.5 316/399] kbuild: use -S instead of -E for precise cc-option test in Kconfig
+Date:   Fri, 21 Feb 2020 08:40:41 +0100
+Message-Id: <20200221072432.144557510@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200221072402.315346745@linuxfoundation.org>
 References: <20200221072402.315346745@linuxfoundation.org>
@@ -60,79 +59,47 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Ard Biesheuvel <ard.biesheuvel@linaro.org>
+From: Masahiro Yamada <masahiroy@kernel.org>
 
-[ Upstream commit 8239fc7755fd3d410920006615abd0c7d653560f ]
+[ Upstream commit 3bed1b7b9d79ca40e41e3af130931a3225e951a3 ]
 
-Commit e17b1af96b2afc38e684aa2f1033387e2ed10029
+Currently, -E (stop after the preprocessing stage) is used to check
+whether the given compiler flag is supported.
 
-  "ARM: 8857/1: efi: enable CP15 DMB instructions before cleaning the cache"
+While it is faster than -S (or -c), it can be false-positive. You need
+to run the compilation proper to check the flag more precisely.
 
-added some explicit handling of the CP15BEN bit in the SCTLR system
-register, to ensure that CP15 barrier instructions are enabled, even
-if we enter the decompressor via the EFI stub.
+For example, -E and -S disagree about the support of
+"--param asan-instrument-allocas=1".
 
-However, as it turns out, there are other ways in which we may end up
-using CP15 barrier instructions without them being enabled. I.e., when
-the decompressor startup code skips the cache_on() initially, we end
-up calling cache_clean_flush() with the caches and MMU off, in which
-case the CP15BEN bit in SCTLR may not be programmed either. And in
-fact, cache_on() itself issues CP15 barrier instructions before actually
-enabling them by programming the new SCTLR value (and issuing an ISB)
+$ gcc -Werror --param asan-instrument-allocas=1 -E -x c /dev/null -o /dev/null
+$ echo $?
+0
 
-Since these routines are shared between v7 CPUs and older ones that
-implement the CPUID extension as well, using the ordinary v7 barrier
-instructions in this code is not possible, and so we should enable the
-CP15 ones explicitly before issuing them. Note that a v7 ISB is still
-required between programming the SCTLR register and using the CP15 barrier
-instructions, and we should take care to branch over it if the CP15BEN
-bit is already set, given that in that case, the CPU may not support it.
+$ gcc -Werror --param asan-instrument-allocas=1 -S -x c /dev/null -o /dev/null
+cc1: error: invalid --param name ‘asan-instrument-allocas’; did you mean ‘asan-instrument-writes’?
+$ echo $?
+1
 
-Signed-off-by: Ard Biesheuvel <ardb@kernel.org>
-Signed-off-by: Russell King <rmk+kernel@armlinux.org.uk>
+Signed-off-by: Masahiro Yamada <masahiroy@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm/boot/compressed/head.S | 13 +++++++++++++
- 1 file changed, 13 insertions(+)
+ scripts/Kconfig.include | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/arch/arm/boot/compressed/head.S b/arch/arm/boot/compressed/head.S
-index ead21e5f2b803..469a2b3b60c09 100644
---- a/arch/arm/boot/compressed/head.S
-+++ b/arch/arm/boot/compressed/head.S
-@@ -140,6 +140,17 @@
- #endif
- 		.endm
+diff --git a/scripts/Kconfig.include b/scripts/Kconfig.include
+index d4adfbe426903..bfb44b265a948 100644
+--- a/scripts/Kconfig.include
++++ b/scripts/Kconfig.include
+@@ -25,7 +25,7 @@ failure = $(if-success,$(1),n,y)
  
-+		.macro	enable_cp15_barriers, reg
-+		mrc	p15, 0, \reg, c1, c0, 0	@ read SCTLR
-+		tst	\reg, #(1 << 5)		@ CP15BEN bit set?
-+		bne	.L_\@
-+		orr	\reg, \reg, #(1 << 5)	@ CP15 barrier instructions
-+		mcr	p15, 0, \reg, c1, c0, 0	@ write SCTLR
-+ ARM(		.inst   0xf57ff06f		@ v7+ isb	)
-+ THUMB(		isb						)
-+.L_\@:
-+		.endm
-+
- 		.section ".start", "ax"
- /*
-  * sort out different calling conventions
-@@ -820,6 +831,7 @@ __armv4_mmu_cache_on:
- 		mov	pc, r12
+ # $(cc-option,<flag>)
+ # Return y if the compiler supports <flag>, n otherwise
+-cc-option = $(success,$(CC) -Werror $(CLANG_FLAGS) $(1) -E -x c /dev/null -o /dev/null)
++cc-option = $(success,$(CC) -Werror $(CLANG_FLAGS) $(1) -S -x c /dev/null -o /dev/null)
  
- __armv7_mmu_cache_on:
-+		enable_cp15_barriers	r11
- 		mov	r12, lr
- #ifdef CONFIG_MMU
- 		mrc	p15, 0, r11, c0, c1, 4	@ read ID_MMFR0
-@@ -1209,6 +1221,7 @@ __armv6_mmu_cache_flush:
- 		mov	pc, lr
- 
- __armv7_mmu_cache_flush:
-+		enable_cp15_barriers	r10
- 		tst	r4, #1
- 		bne	iflush
- 		mrc	p15, 0, r10, c0, c1, 5	@ read ID_MMFR1
+ # $(ld-option,<flag>)
+ # Return y if the linker supports <flag>, n otherwise
 -- 
 2.20.1
 
