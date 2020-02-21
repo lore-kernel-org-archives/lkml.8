@@ -2,54 +2,52 @@ Return-Path: <SRS0=1210=4J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UPPERCASE_50_75,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BEF97C35641
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 08:08:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 03C68C35640
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 08:08:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9241420722
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 08:08:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C60152465D
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 08:08:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582272506;
-	bh=xxCsjBFavE+Ep+35R27UtR9b/HJYcZ9FN9xkEQ429ok=;
+	s=default; t=1582272509;
+	bh=UjBXoZ4H2wamTacoyZSgR2hnuYrr6d0hyjeK4CZeaVo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=HZ1C7CBM7Dj4dzufG1OM1+BNQ7K4uj9AsUfWcWPRMTyoMjlzYp7fXddYMumSMMoM7
-	 KxwXL1cV4ntsOSroQSoyJusySOsgi3OUmy40GQFw94xQKtGE4SBq1JfkgDmEbpQ3em
-	 9P5JzxFlO6VcWgeGle0e05+J4OhgJO4lx1SoahW4=
+	b=uWGkM/tfHI9bMYQaJJjAxfO3TNryCIQNUcLdqqFNL64SQZU68NdzCuZZlGq3YQo+E
+	 3WNwxMAz7ZVfvJFLmACEsVwqJQacnVHbWHu2nghaapqDE01werkxC2Gva8evrOxMdV
+	 Z1HbbBHOfGzIwDG+gxIWd0p5VVLS4FsCSWMZaShs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732039AbgBUIIZ (ORCPT
+        id S1732210AbgBUII3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Feb 2020 03:08:25 -0500
-Received: from mail.kernel.org ([198.145.29.99]:42900 "EHLO mail.kernel.org"
+        Fri, 21 Feb 2020 03:08:29 -0500
+Received: from mail.kernel.org ([198.145.29.99]:42980 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732195AbgBUIIX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Feb 2020 03:08:23 -0500
+        id S1732202AbgBUII0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 21 Feb 2020 03:08:26 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id DD98720578;
-        Fri, 21 Feb 2020 08:08:21 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 42ED52465D;
+        Fri, 21 Feb 2020 08:08:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1582272502;
-        bh=xxCsjBFavE+Ep+35R27UtR9b/HJYcZ9FN9xkEQ429ok=;
+        s=default; t=1582272505;
+        bh=UjBXoZ4H2wamTacoyZSgR2hnuYrr6d0hyjeK4CZeaVo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=kkrtWdOxFj0G7kWU6h31ukYwgDqij8E4k/DsBDR8X021AK+53bYXTeFdGcaPHDzXs
-         V1/TOLCroKn0eKqVTLv933GLe5PLG3DbCIsztfI4gPtnmyd79Y0HqYCS3w8N72n5A5
-         FZTiWdLTsBQnNf4lEoqhXNpb9DrQTXgwxhb3Lomg=
+        b=H1he8YnOjuArmqw/n6nUzH3OvZmz0HbGzgd/ulUFGSwFwyi23uec5t6CCwsnpoJVi
+         7BT4G7s/qHuV30tPHlvdOztGdP9wEKPW4c0UWRPlkuQk1K9+FAmYVNi+Xu6jJFWdrR
+         cg5C3cw1JiiNIQvXGynOK+9bD9YdoBY4cXrIIiZE=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org,
-        =?UTF-8?q?Ville=20Syrj=C3=A4l=C3=A4?= 
-        <ville.syrjala@linux.intel.com>, Dave Airlie <airlied@redhat.com>,
-        Manasi Navare <manasi.d.navare@intel.com>,
+        Geert Uytterhoeven <geert+renesas@glider.be>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 167/344] drm/fbdev: Fallback to non tiled mode if all tiles not present
-Date:   Fri, 21 Feb 2020 08:39:26 +0100
-Message-Id: <20200221072404.041050356@linuxfoundation.org>
+Subject: [PATCH 5.4 168/344] pinctrl: sh-pfc: sh7269: Fix CAN function GPIOs
+Date:   Fri, 21 Feb 2020 08:39:27 +0100
+Message-Id: <20200221072404.146227816@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200221072349.335551332@linuxfoundation.org>
 References: <20200221072349.335551332@linuxfoundation.org>
@@ -62,164 +60,179 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Manasi Navare <manasi.d.navare@intel.com>
+From: Geert Uytterhoeven <geert+renesas@glider.be>
 
-[ Upstream commit f25c7a006cd1c07254780e3406e45cee4842b933 ]
+[ Upstream commit 02aeb2f21530c98fc3ca51028eda742a3fafbd9f ]
 
-In case of tiled displays, if we hotplug just one connector,
-fbcon currently just selects the preferred mode and if it is
-tiled mode then that becomes a problem if rest of the tiles are
-not present.
-So in the fbdev driver on hotplug when we probe the client modeset,
-if we dont find all the connectors for all tiles, then on a connector
-with one tile, just fallback to the first available non tiled mode
-to display over a single connector.
-On the hotplug of the consecutive tiled connectors, if the tiled mode
-no longer exists because of fbcon size limitation, then return
-no modes for consecutive tiles but retain the non tiled mode
-on the 0th tile.
-Use the same logic in case of connected boot case as well.
-This has been tested with Dell UP328K tiled monitor.
+pinmux_func_gpios[] contains a hole due to the missing function GPIO
+definition for the "CTX0&CTX1" signal, which is the logical "AND" of the
+first two CAN outputs.
 
-v2:
-* Set the modes on consecutive hotplugged tiles to no mode
-if tiled mode is pruned (Dave)
-v1:
-* Just handle the 1st connector hotplug case
-* v1 Reviewed-by: Dave Airlie <airlied@redhat.com>
+A closer look reveals other issues:
+  - Some functionality is available on alternative pins, but the
+    PINMUX_DATA() entries is using the wrong marks,
+  - Several configurations are missing.
 
-Suggested-by: Ville Syrjälä <ville.syrjala@linux.intel.com>
-Suggested-by: Dave Airlie <airlied@redhat.com>
-Cc: Ville Syrjälä <ville.syrjala@linux.intel.com>
-Cc: Dave Airlie <airlied@redhat.com>
-Signed-off-by: Manasi Navare <manasi.d.navare@intel.com>
-Reviewed-by: Dave Airlie <airlied@redhat.com>
-Link: https://patchwork.freedesktop.org/patch/msgid/20191113222952.9231-1-manasi.d.navare@intel.com
+Fix this by:
+  - Renaming CTX0CTX1CTX2_MARK, CRX0CRX1_PJ22_MARK, and
+    CRX0CRX1CRX2_PJ20_MARK to CTX0_CTX1_CTX2_MARK, CRX0_CRX1_PJ22_MARK,
+    resp. CRX0_CRX1_CRX2_PJ20_MARK for consistency with the
+    corresponding enum IDs,
+  - Adding all missing enum IDs and marks,
+  - Use the right (*_PJ2x) variants for alternative pins,
+  - Adding all missing configurations to pinmux_data[],
+  - Adding all missing function GPIO definitions to pinmux_func_gpios[].
+
+See SH7268 Group, SH7269 Group User’s Manual: Hardware, Rev. 2.00:
+  [1] Table 1.4 List of Pins
+  [2] Figure 23.29 Connection Example when Using Channels 0 and 1 as One
+      Channel (64 Mailboxes × 1 Channel) and Channel 2 as One Channel
+      (32 Mailboxes × 1 Channel),
+  [3] Figure 23.30 Connection Example when Using Channels 0, 1, and 2 as
+      One Channel (96 Mailboxes × 1 Channel),
+  [4] Table 48.3 Multiplexed Pins (Port B),
+  [5] Table 48.4 Multiplexed Pins (Port C),
+  [6] Table 48.10 Multiplexed Pins (Port J),
+  [7] Section 48.2.4 Port B Control Registers 0 to 5 (PBCR0 to PBCR5).
+
+Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
+Link: https://lore.kernel.org/r/20191218194812.12741-5-geert+renesas@glider.be
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/gpu/drm/drm_client_modeset.c | 72 ++++++++++++++++++++++++++++
- 1 file changed, 72 insertions(+)
+ arch/sh/include/cpu-sh2a/cpu/sh7269.h | 11 ++++++--
+ drivers/pinctrl/sh-pfc/pfc-sh7269.c   | 39 ++++++++++++++++++---------
+ 2 files changed, 36 insertions(+), 14 deletions(-)
 
-diff --git a/drivers/gpu/drm/drm_client_modeset.c b/drivers/gpu/drm/drm_client_modeset.c
-index c8922b7cac091..12e748b202d6f 100644
---- a/drivers/gpu/drm/drm_client_modeset.c
-+++ b/drivers/gpu/drm/drm_client_modeset.c
-@@ -114,6 +114,33 @@ drm_client_find_modeset(struct drm_client_dev *client, struct drm_crtc *crtc)
- 	return NULL;
- }
+diff --git a/arch/sh/include/cpu-sh2a/cpu/sh7269.h b/arch/sh/include/cpu-sh2a/cpu/sh7269.h
+index d516e5d488180..b887cc402b712 100644
+--- a/arch/sh/include/cpu-sh2a/cpu/sh7269.h
++++ b/arch/sh/include/cpu-sh2a/cpu/sh7269.h
+@@ -78,8 +78,15 @@ enum {
+ 	GPIO_FN_WDTOVF,
  
-+static struct drm_display_mode *
-+drm_connector_get_tiled_mode(struct drm_connector *connector)
-+{
-+	struct drm_display_mode *mode;
-+
-+	list_for_each_entry(mode, &connector->modes, head) {
-+		if (mode->hdisplay == connector->tile_h_size &&
-+		    mode->vdisplay == connector->tile_v_size)
-+			return mode;
-+	}
-+	return NULL;
-+}
-+
-+static struct drm_display_mode *
-+drm_connector_fallback_non_tiled_mode(struct drm_connector *connector)
-+{
-+	struct drm_display_mode *mode;
-+
-+	list_for_each_entry(mode, &connector->modes, head) {
-+		if (mode->hdisplay == connector->tile_h_size &&
-+		    mode->vdisplay == connector->tile_v_size)
-+			continue;
-+		return mode;
-+	}
-+	return NULL;
-+}
-+
- static struct drm_display_mode *
- drm_connector_has_preferred_mode(struct drm_connector *connector, int width, int height)
- {
-@@ -348,8 +375,15 @@ static bool drm_client_target_preferred(struct drm_connector **connectors,
- 	struct drm_connector *connector;
- 	u64 conn_configured = 0;
- 	int tile_pass = 0;
-+	int num_tiled_conns = 0;
- 	int i;
+ 	/* CAN */
+-	GPIO_FN_CTX1, GPIO_FN_CRX1, GPIO_FN_CTX0, GPIO_FN_CTX0_CTX1,
+-	GPIO_FN_CRX0, GPIO_FN_CRX0_CRX1, GPIO_FN_CRX0_CRX1_CRX2,
++	GPIO_FN_CTX2, GPIO_FN_CRX2,
++	GPIO_FN_CTX1, GPIO_FN_CRX1,
++	GPIO_FN_CTX0, GPIO_FN_CRX0,
++	GPIO_FN_CTX0_CTX1, GPIO_FN_CRX0_CRX1,
++	GPIO_FN_CTX0_CTX1_CTX2, GPIO_FN_CRX0_CRX1_CRX2,
++	GPIO_FN_CTX2_PJ21, GPIO_FN_CRX2_PJ20,
++	GPIO_FN_CTX1_PJ23, GPIO_FN_CRX1_PJ22,
++	GPIO_FN_CTX0_CTX1_PJ23, GPIO_FN_CRX0_CRX1_PJ22,
++	GPIO_FN_CTX0_CTX1_CTX2_PJ21, GPIO_FN_CRX0_CRX1_CRX2_PJ20,
  
-+	for (i = 0; i < connector_count; i++) {
-+		if (connectors[i]->has_tile &&
-+		    connectors[i]->status == connector_status_connected)
-+			num_tiled_conns++;
-+	}
-+
- retry:
- 	for (i = 0; i < connector_count; i++) {
- 		connector = connectors[i];
-@@ -399,6 +433,28 @@ retry:
- 			list_for_each_entry(modes[i], &connector->modes, head)
- 				break;
- 		}
-+		/*
-+		 * In case of tiled mode if all tiles not present fallback to
-+		 * first available non tiled mode.
-+		 * After all tiles are present, try to find the tiled mode
-+		 * for all and if tiled mode not present due to fbcon size
-+		 * limitations, use first non tiled mode only for
-+		 * tile 0,0 and set to no mode for all other tiles.
-+		 */
-+		if (connector->has_tile) {
-+			if (num_tiled_conns <
-+			    connector->num_h_tile * connector->num_v_tile ||
-+			    (connector->tile_h_loc == 0 &&
-+			     connector->tile_v_loc == 0 &&
-+			     !drm_connector_get_tiled_mode(connector))) {
-+				DRM_DEBUG_KMS("Falling back to non tiled mode on Connector %d\n",
-+					      connector->base.id);
-+				modes[i] = drm_connector_fallback_non_tiled_mode(connector);
-+			} else {
-+				modes[i] = drm_connector_get_tiled_mode(connector);
-+			}
-+		}
-+
- 		DRM_DEBUG_KMS("found mode %s\n", modes[i] ? modes[i]->name :
- 			  "none");
- 		conn_configured |= BIT_ULL(i);
-@@ -516,6 +572,7 @@ static bool drm_client_firmware_config(struct drm_client_dev *client,
- 	bool fallback = true, ret = true;
- 	int num_connectors_enabled = 0;
- 	int num_connectors_detected = 0;
-+	int num_tiled_conns = 0;
- 	struct drm_modeset_acquire_ctx ctx;
+ 	/* DMAC */
+ 	GPIO_FN_TEND0, GPIO_FN_DACK0, GPIO_FN_DREQ0,
+diff --git a/drivers/pinctrl/sh-pfc/pfc-sh7269.c b/drivers/pinctrl/sh-pfc/pfc-sh7269.c
+index 6cbb18ef77dc0..d20974a55d93a 100644
+--- a/drivers/pinctrl/sh-pfc/pfc-sh7269.c
++++ b/drivers/pinctrl/sh-pfc/pfc-sh7269.c
+@@ -737,13 +737,12 @@ enum {
+ 	CRX0_MARK, CTX0_MARK,
+ 	CRX1_MARK, CTX1_MARK,
+ 	CRX2_MARK, CTX2_MARK,
+-	CRX0_CRX1_MARK,
+-	CRX0_CRX1_CRX2_MARK,
+-	CTX0CTX1CTX2_MARK,
++	CRX0_CRX1_MARK, CTX0_CTX1_MARK,
++	CRX0_CRX1_CRX2_MARK, CTX0_CTX1_CTX2_MARK,
+ 	CRX1_PJ22_MARK, CTX1_PJ23_MARK,
+ 	CRX2_PJ20_MARK, CTX2_PJ21_MARK,
+-	CRX0CRX1_PJ22_MARK,
+-	CRX0CRX1CRX2_PJ20_MARK,
++	CRX0_CRX1_PJ22_MARK, CTX0_CTX1_PJ23_MARK,
++	CRX0_CRX1_CRX2_PJ20_MARK, CTX0_CTX1_CTX2_PJ21_MARK,
  
- 	if (!drm_drv_uses_atomic_modeset(dev))
-@@ -533,6 +590,11 @@ static bool drm_client_firmware_config(struct drm_client_dev *client,
- 	memcpy(save_enabled, enabled, count);
- 	mask = GENMASK(count - 1, 0);
- 	conn_configured = 0;
-+	for (i = 0; i < count; i++) {
-+		if (connectors[i]->has_tile &&
-+		    connectors[i]->status == connector_status_connected)
-+			num_tiled_conns++;
-+	}
- retry:
- 	conn_seq = conn_configured;
- 	for (i = 0; i < count; i++) {
-@@ -632,6 +694,16 @@ retry:
- 				      connector->name);
- 			modes[i] = &connector->state->crtc->mode;
- 		}
-+		/*
-+		 * In case of tiled modes, if all tiles are not present
-+		 * then fallback to a non tiled mode.
-+		 */
-+		if (connector->has_tile &&
-+		    num_tiled_conns < connector->num_h_tile * connector->num_v_tile) {
-+			DRM_DEBUG_KMS("Falling back to non tiled mode on Connector %d\n",
-+				      connector->base.id);
-+			modes[i] = drm_connector_fallback_non_tiled_mode(connector);
-+		}
- 		crtcs[i] = new_crtc;
+ 	/* VDC */
+ 	DV_CLK_MARK,
+@@ -821,6 +820,7 @@ static const u16 pinmux_data[] = {
+ 	PINMUX_DATA(CS3_MARK, PC8MD_001),
+ 	PINMUX_DATA(TXD7_MARK, PC8MD_010),
+ 	PINMUX_DATA(CTX1_MARK, PC8MD_011),
++	PINMUX_DATA(CTX0_CTX1_MARK, PC8MD_100),
  
- 		DRM_DEBUG_KMS("connector %s on [CRTC:%d:%s]: %dx%d%s\n",
+ 	PINMUX_DATA(PC7_DATA, PC7MD_000),
+ 	PINMUX_DATA(CKE_MARK, PC7MD_001),
+@@ -833,11 +833,12 @@ static const u16 pinmux_data[] = {
+ 	PINMUX_DATA(CAS_MARK, PC6MD_001),
+ 	PINMUX_DATA(SCK7_MARK, PC6MD_010),
+ 	PINMUX_DATA(CTX0_MARK, PC6MD_011),
++	PINMUX_DATA(CTX0_CTX1_CTX2_MARK, PC6MD_100),
+ 
+ 	PINMUX_DATA(PC5_DATA, PC5MD_000),
+ 	PINMUX_DATA(RAS_MARK, PC5MD_001),
+ 	PINMUX_DATA(CRX0_MARK, PC5MD_011),
+-	PINMUX_DATA(CTX0CTX1CTX2_MARK, PC5MD_100),
++	PINMUX_DATA(CTX0_CTX1_CTX2_MARK, PC5MD_100),
+ 	PINMUX_DATA(IRQ0_PC_MARK, PC5MD_101),
+ 
+ 	PINMUX_DATA(PC4_DATA, PC4MD_00),
+@@ -1289,30 +1290,32 @@ static const u16 pinmux_data[] = {
+ 	PINMUX_DATA(LCD_DATA23_PJ23_MARK, PJ23MD_010),
+ 	PINMUX_DATA(LCD_TCON6_MARK, PJ23MD_011),
+ 	PINMUX_DATA(IRQ3_PJ_MARK, PJ23MD_100),
+-	PINMUX_DATA(CTX1_MARK, PJ23MD_101),
++	PINMUX_DATA(CTX1_PJ23_MARK, PJ23MD_101),
++	PINMUX_DATA(CTX0_CTX1_PJ23_MARK, PJ23MD_110),
+ 
+ 	PINMUX_DATA(PJ22_DATA, PJ22MD_000),
+ 	PINMUX_DATA(DV_DATA22_MARK, PJ22MD_001),
+ 	PINMUX_DATA(LCD_DATA22_PJ22_MARK, PJ22MD_010),
+ 	PINMUX_DATA(LCD_TCON5_MARK, PJ22MD_011),
+ 	PINMUX_DATA(IRQ2_PJ_MARK, PJ22MD_100),
+-	PINMUX_DATA(CRX1_MARK, PJ22MD_101),
+-	PINMUX_DATA(CRX0_CRX1_MARK, PJ22MD_110),
++	PINMUX_DATA(CRX1_PJ22_MARK, PJ22MD_101),
++	PINMUX_DATA(CRX0_CRX1_PJ22_MARK, PJ22MD_110),
+ 
+ 	PINMUX_DATA(PJ21_DATA, PJ21MD_000),
+ 	PINMUX_DATA(DV_DATA21_MARK, PJ21MD_001),
+ 	PINMUX_DATA(LCD_DATA21_PJ21_MARK, PJ21MD_010),
+ 	PINMUX_DATA(LCD_TCON4_MARK, PJ21MD_011),
+ 	PINMUX_DATA(IRQ1_PJ_MARK, PJ21MD_100),
+-	PINMUX_DATA(CTX2_MARK, PJ21MD_101),
++	PINMUX_DATA(CTX2_PJ21_MARK, PJ21MD_101),
++	PINMUX_DATA(CTX0_CTX1_CTX2_PJ21_MARK, PJ21MD_110),
+ 
+ 	PINMUX_DATA(PJ20_DATA, PJ20MD_000),
+ 	PINMUX_DATA(DV_DATA20_MARK, PJ20MD_001),
+ 	PINMUX_DATA(LCD_DATA20_PJ20_MARK, PJ20MD_010),
+ 	PINMUX_DATA(LCD_TCON3_MARK, PJ20MD_011),
+ 	PINMUX_DATA(IRQ0_PJ_MARK, PJ20MD_100),
+-	PINMUX_DATA(CRX2_MARK, PJ20MD_101),
+-	PINMUX_DATA(CRX0CRX1CRX2_PJ20_MARK, PJ20MD_110),
++	PINMUX_DATA(CRX2_PJ20_MARK, PJ20MD_101),
++	PINMUX_DATA(CRX0_CRX1_CRX2_PJ20_MARK, PJ20MD_110),
+ 
+ 	PINMUX_DATA(PJ19_DATA, PJ19MD_000),
+ 	PINMUX_DATA(DV_DATA19_MARK, PJ19MD_001),
+@@ -1663,12 +1666,24 @@ static const struct pinmux_func pinmux_func_gpios[] = {
+ 	GPIO_FN(WDTOVF),
+ 
+ 	/* CAN */
++	GPIO_FN(CTX2),
++	GPIO_FN(CRX2),
+ 	GPIO_FN(CTX1),
+ 	GPIO_FN(CRX1),
+ 	GPIO_FN(CTX0),
+ 	GPIO_FN(CRX0),
++	GPIO_FN(CTX0_CTX1),
+ 	GPIO_FN(CRX0_CRX1),
++	GPIO_FN(CTX0_CTX1_CTX2),
+ 	GPIO_FN(CRX0_CRX1_CRX2),
++	GPIO_FN(CTX2_PJ21),
++	GPIO_FN(CRX2_PJ20),
++	GPIO_FN(CTX1_PJ23),
++	GPIO_FN(CRX1_PJ22),
++	GPIO_FN(CTX0_CTX1_PJ23),
++	GPIO_FN(CRX0_CRX1_PJ22),
++	GPIO_FN(CTX0_CTX1_CTX2_PJ21),
++	GPIO_FN(CRX0_CRX1_CRX2_PJ20),
+ 
+ 	/* DMAC */
+ 	GPIO_FN(TEND0),
 -- 
 2.20.1
 
