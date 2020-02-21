@@ -2,202 +2,468 @@ Return-Path: <SRS0=1210=4J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 98D75C11D00
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 03:30:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ADCC7C11D00
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 03:34:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 745E320716
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 03:30:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 76CFA20716
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 03:34:06 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729689AbgBUDaV (ORCPT
+        id S1729675AbgBUDeF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Feb 2020 22:30:21 -0500
-Received: from zeniv.linux.org.uk ([195.92.253.2]:45130 "EHLO
-        ZenIV.linux.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729280AbgBUDaV (ORCPT
+        Thu, 20 Feb 2020 22:34:05 -0500
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:7032 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727944AbgBUDeE (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Feb 2020 22:30:21 -0500
-Received: from viro by ZenIV.linux.org.uk with local (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1j4z16-00G8es-2v; Fri, 21 Feb 2020 03:30:16 +0000
-Date:   Fri, 21 Feb 2020 03:30:16 +0000
-From:   Al Viro <viro@zeniv.linux.org.uk>
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     linux-arch <linux-arch@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Arnd Bergmann <arnd@arndb.de>
-Subject: Re: [RFC] regset ->get() API
-Message-ID: <20200221033016.GV23230@ZenIV.linux.org.uk>
-References: <20200217183340.GI23230@ZenIV.linux.org.uk>
- <CAHk-=wivKU1eP8ir4q5xEwOV0hsomFz7DMtiAot__X2zU-yGog@mail.gmail.com>
- <20200220224707.GQ23230@ZenIV.linux.org.uk>
- <CAHk-=wiKs7Q2DbP6kk8JQksb0nhUvAs2wO5cNdWirNEc3CM-YQ@mail.gmail.com>
- <20200220232929.GU23230@ZenIV.linux.org.uk>
- <CAHk-=whdat=wfwKh5rF3MuCbTxhcFwaGqmdsCXXv=H=kDERTOw@mail.gmail.com>
+        Thu, 20 Feb 2020 22:34:04 -0500
+Received: from pps.filterd (m0098396.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 01L3V4Vg031095
+        for <linux-kernel@vger.kernel.org>; Thu, 20 Feb 2020 22:34:03 -0500
+Received: from e06smtp05.uk.ibm.com (e06smtp05.uk.ibm.com [195.75.94.101])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2y8uef6c8a-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Thu, 20 Feb 2020 22:33:59 -0500
+Received: from localhost
+        by e06smtp05.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-kernel@vger.kernel.org> from <alastair@au1.ibm.com>;
+        Fri, 21 Feb 2020 03:28:19 -0000
+Received: from b06avi18878370.portsmouth.uk.ibm.com (9.149.26.194)
+        by e06smtp05.uk.ibm.com (192.168.101.135) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Fri, 21 Feb 2020 03:28:12 -0000
+Received: from d06av22.portsmouth.uk.ibm.com (d06av22.portsmouth.uk.ibm.com [9.149.105.58])
+        by b06avi18878370.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 01L3SBXr31981876
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Fri, 21 Feb 2020 03:28:11 GMT
+Received: from d06av22.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 59E2A4C04A;
+        Fri, 21 Feb 2020 03:28:11 +0000 (GMT)
+Received: from d06av22.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id A9B2E4C040;
+        Fri, 21 Feb 2020 03:28:10 +0000 (GMT)
+Received: from ozlabs.au.ibm.com (unknown [9.192.253.14])
+        by d06av22.portsmouth.uk.ibm.com (Postfix) with ESMTP;
+        Fri, 21 Feb 2020 03:28:10 +0000 (GMT)
+Received: from adsilva.ozlabs.ibm.com (haven.au.ibm.com [9.192.254.114])
+        (using TLSv1.2 with cipher AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by ozlabs.au.ibm.com (Postfix) with ESMTPSA id B65B9A03E1;
+        Fri, 21 Feb 2020 14:28:03 +1100 (AEDT)
+From:   "Alastair D'Silva" <alastair@au1.ibm.com>
+To:     alastair@d-silva.org
+Cc:     "Aneesh Kumar K . V" <aneesh.kumar@linux.ibm.com>,
+        "Oliver O'Halloran" <oohall@gmail.com>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Paul Mackerras <paulus@samba.org>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Frederic Barrat <fbarrat@linux.ibm.com>,
+        Andrew Donnellan <ajd@linux.ibm.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Vishal Verma <vishal.l.verma@intel.com>,
+        Dave Jiang <dave.jiang@intel.com>,
+        Ira Weiny <ira.weiny@intel.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        Rob Herring <robh@kernel.org>,
+        Anton Blanchard <anton@ozlabs.org>,
+        Krzysztof Kozlowski <krzk@kernel.org>,
+        Mahesh Salgaonkar <mahesh@linux.vnet.ibm.com>,
+        Madhavan Srinivasan <maddy@linux.vnet.ibm.com>,
+        =?UTF-8?q?C=C3=A9dric=20Le=20Goater?= <clg@kaod.org>,
+        Anju T Sudhakar <anju@linux.vnet.ibm.com>,
+        Hari Bathini <hbathini@linux.ibm.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Greg Kurz <groug@kaod.org>,
+        Nicholas Piggin <npiggin@gmail.com>,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        Alexey Kardashevskiy <aik@ozlabs.ru>,
+        linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
+        linux-nvdimm@lists.01.org, linux-mm@kvack.org
+Subject: [PATCH v3 20/27] powerpc/powernv/pmem: Forward events to userspace
+Date:   Fri, 21 Feb 2020 14:27:13 +1100
+X-Mailer: git-send-email 2.24.1
+In-Reply-To: <20200221032720.33893-1-alastair@au1.ibm.com>
+References: <20200221032720.33893-1-alastair@au1.ibm.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAHk-=whdat=wfwKh5rF3MuCbTxhcFwaGqmdsCXXv=H=kDERTOw@mail.gmail.com>
+Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
+x-cbid: 20022103-0020-0000-0000-000003AC2213
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 20022103-0021-0000-0000-000022042A34
+Message-Id: <20200221032720.33893-21-alastair@au1.ibm.com>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.572
+ definitions=2020-02-20_19:2020-02-19,2020-02-20 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 spamscore=0
+ priorityscore=1501 mlxscore=0 adultscore=0 lowpriorityscore=0 bulkscore=0
+ impostorscore=0 phishscore=0 mlxlogscore=839 suspectscore=3 malwarescore=0
+ clxscore=1015 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2001150001 definitions=main-2002210021
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Feb 20, 2020 at 03:31:56PM -0800, Linus Torvalds wrote:
-> On Thu, Feb 20, 2020 at 3:29 PM Al Viro <viro@zeniv.linux.org.uk> wrote:
-> >
-> > We do know that caller does not want more than the value it has passed in
-> > 'size' argument, though.
-> 
-> Ok, fair enough. That's probably a good way to handle the "allocate in
-> the caller".
-> 
-> So then I have no issues with that approach.
+From: Alastair D'Silva <alastair@d-silva.org>
 
-Turns out that "nobody uses those for userland destinations after that" is not
-quite right - we have this:
-int copy_fpstate_to_sigframe(void __user *buf, void __user *buf_fx, int size)
-{
-        struct task_struct *tsk = current;
-        int ia32_fxstate = (buf != buf_fx);
-        int ret;
+Some of the interrupts that the card generates are better handled
+by the userspace daemon, in particular:
+Controller Hardware/Firmware Fatal
+Controller Dump Available
+Error Log available
 
-        ia32_fxstate &= (IS_ENABLED(CONFIG_X86_32) ||
-                         IS_ENABLED(CONFIG_IA32_EMULATION));
+This patch allows a userspace application to register an eventfd with
+the driver via SCM_IOCTL_EVENTFD to receive notifications of these
+interrupts.
 
-        if (!access_ok(buf, size))
-                return -EACCES;
+Userspace can then identify what events have occurred by calling
+SCM_IOCTL_EVENT_CHECK and checking against the SCM_IOCTL_EVENT_FOO
+masks.
 
-        if (!static_cpu_has(X86_FEATURE_FPU))
-                return fpregs_soft_get(current, NULL, 0,
-                        sizeof(struct user_i387_ia32_struct), NULL,
-                        (struct _fpstate_32 __user *) buf) ? -1 : 1;
+Signed-off-by: Alastair D'Silva <alastair@d-silva.org>
+---
+ arch/powerpc/platforms/powernv/pmem/ocxl.c    | 216 ++++++++++++++++++
+ .../platforms/powernv/pmem/ocxl_internal.h    |   5 +
+ include/uapi/nvdimm/ocxl-pmem.h               |  16 ++
+ 3 files changed, 237 insertions(+)
 
-... with fpregs_soft_get() behing the shared helper that does, in turn,
-call user_regset_copyout().  OTOH, _that_ sure as hell is "fill local
-variable, then copy_to_user()" case.
+diff --git a/arch/powerpc/platforms/powernv/pmem/ocxl.c b/arch/powerpc/platforms/powernv/pmem/ocxl.c
+index 009d4fd29e7d..e46696d3cc36 100644
+--- a/arch/powerpc/platforms/powernv/pmem/ocxl.c
++++ b/arch/powerpc/platforms/powernv/pmem/ocxl.c
+@@ -10,6 +10,7 @@
+ #include <misc/ocxl.h>
+ #include <linux/delay.h>
+ #include <linux/ndctl.h>
++#include <linux/eventfd.h>
+ #include <linux/fs.h>
+ #include <linux/mm_types.h>
+ #include <linux/memory_hotplug.h>
+@@ -335,11 +336,22 @@ static void free_ocxlpmem(struct ocxlpmem *ocxlpmem)
+ {
+ 	int rc;
+ 
++	// Disable doorbells
++	(void)ocxl_global_mmio_set64(ocxlpmem->ocxl_afu, GLOBAL_MMIO_CHIEC,
++				     OCXL_LITTLE_ENDIAN,
++				     GLOBAL_MMIO_CHI_ALL);
++
+ 	if (ocxlpmem->nvdimm_bus)
+ 		nvdimm_bus_unregister(ocxlpmem->nvdimm_bus);
+ 
+ 	free_minor(ocxlpmem);
+ 
++	if (ocxlpmem->irq_addr[1])
++		iounmap(ocxlpmem->irq_addr[1]);
++
++	if (ocxlpmem->irq_addr[0])
++		iounmap(ocxlpmem->irq_addr[0]);
++
+ 	if (ocxlpmem->cdev.owner)
+ 		cdev_del(&ocxlpmem->cdev);
+ 
+@@ -443,6 +455,11 @@ static int file_release(struct inode *inode, struct file *file)
+ {
+ 	struct ocxlpmem *ocxlpmem = file->private_data;
+ 
++	if (ocxlpmem->ev_ctx) {
++		eventfd_ctx_put(ocxlpmem->ev_ctx);
++		ocxlpmem->ev_ctx = NULL;
++	}
++
+ 	ocxlpmem_put(ocxlpmem);
+ 	return 0;
+ }
+@@ -938,6 +955,51 @@ static int ioctl_controller_stats(struct ocxlpmem *ocxlpmem,
+ 	return rc;
+ }
+ 
++static int ioctl_eventfd(struct ocxlpmem *ocxlpmem,
++		 struct ioctl_ocxl_pmem_eventfd __user *uarg)
++{
++	struct ioctl_ocxl_pmem_eventfd args;
++
++	if (copy_from_user(&args, uarg, sizeof(args)))
++		return -EFAULT;
++
++	if (ocxlpmem->ev_ctx)
++		return -EINVAL;
++
++	ocxlpmem->ev_ctx = eventfd_ctx_fdget(args.eventfd);
++	if (!ocxlpmem->ev_ctx)
++		return -EFAULT;
++
++	return 0;
++}
++
++static int ioctl_event_check(struct ocxlpmem *ocxlpmem, u64 __user *uarg)
++{
++	u64 val = 0;
++	int rc;
++	u64 chi = 0;
++
++	rc = ocxlpmem_chi(ocxlpmem, &chi);
++	if (rc < 0)
++		return rc;
++
++	if (chi & GLOBAL_MMIO_CHI_ELA)
++		val |= IOCTL_OCXL_PMEM_EVENT_ERROR_LOG_AVAILABLE;
++
++	if (chi & GLOBAL_MMIO_CHI_CDA)
++		val |= IOCTL_OCXL_PMEM_EVENT_CONTROLLER_DUMP_AVAILABLE;
++
++	if (chi & GLOBAL_MMIO_CHI_CFFS)
++		val |= IOCTL_OCXL_PMEM_EVENT_FIRMWARE_FATAL;
++
++	if (chi & GLOBAL_MMIO_CHI_CHFS)
++		val |= IOCTL_OCXL_PMEM_EVENT_HARDWARE_FATAL;
++
++	rc = copy_to_user((u64 __user *) uarg, &val, sizeof(val));
++
++	return rc;
++}
++
+ static long file_ioctl(struct file *file, unsigned int cmd, unsigned long args)
+ {
+ 	struct ocxlpmem *ocxlpmem = file->private_data;
+@@ -966,6 +1028,15 @@ static long file_ioctl(struct file *file, unsigned int cmd, unsigned long args)
+ 		rc = ioctl_controller_stats(ocxlpmem,
+ 					    (struct ioctl_ocxl_pmem_controller_stats __user *)args);
+ 		break;
++
++	case IOCTL_OCXL_PMEM_EVENTFD:
++		rc = ioctl_eventfd(ocxlpmem,
++				   (struct ioctl_ocxl_pmem_eventfd __user *)args);
++		break;
++
++	case IOCTL_OCXL_PMEM_EVENT_CHECK:
++		rc = ioctl_event_check(ocxlpmem, (u64 __user *)args);
++		break;
+ 	}
+ 
+ 	return rc;
+@@ -1107,6 +1178,146 @@ static void dump_error_log(struct ocxlpmem *ocxlpmem)
+ 	kfree(buf);
+ }
+ 
++static irqreturn_t imn0_handler(void *private)
++{
++	struct ocxlpmem *ocxlpmem = private;
++	u64 chi = 0;
++
++	(void)ocxlpmem_chi(ocxlpmem, &chi);
++
++	if (chi & GLOBAL_MMIO_CHI_ELA) {
++		dev_warn(&ocxlpmem->dev, "Error log is available\n");
++
++		if (ocxlpmem->ev_ctx)
++			eventfd_signal(ocxlpmem->ev_ctx, 1);
++	}
++
++	if (chi & GLOBAL_MMIO_CHI_CDA) {
++		dev_warn(&ocxlpmem->dev, "Controller dump is available\n");
++
++		if (ocxlpmem->ev_ctx)
++			eventfd_signal(ocxlpmem->ev_ctx, 1);
++	}
++
++
++	return IRQ_HANDLED;
++}
++
++static irqreturn_t imn1_handler(void *private)
++{
++	struct ocxlpmem *ocxlpmem = private;
++	u64 chi = 0;
++
++	(void)ocxlpmem_chi(ocxlpmem, &chi);
++
++	if (chi & (GLOBAL_MMIO_CHI_CFFS | GLOBAL_MMIO_CHI_CHFS)) {
++		dev_err(&ocxlpmem->dev,
++			"Controller status is fatal, chi=0x%llx, going offline\n", chi);
++
++		if (ocxlpmem->nvdimm_bus) {
++			nvdimm_bus_unregister(ocxlpmem->nvdimm_bus);
++			ocxlpmem->nvdimm_bus = NULL;
++		}
++
++		if (ocxlpmem->ev_ctx)
++			eventfd_signal(ocxlpmem->ev_ctx, 1);
++	}
++
++	return IRQ_HANDLED;
++}
++
++
++/**
++ * ocxlpmem_setup_irq() - Set up the IRQs for the OpenCAPI Persistent Memory device
++ * @ocxlpmem: the device metadata
++ * Return: 0 on success, negative on failure
++ */
++static int ocxlpmem_setup_irq(struct ocxlpmem *ocxlpmem)
++{
++	int rc;
++	u64 irq_addr;
++
++	rc = ocxl_afu_irq_alloc(ocxlpmem->ocxl_context, &ocxlpmem->irq_id[0]);
++	if (rc)
++		return rc;
++
++	rc = ocxl_irq_set_handler(ocxlpmem->ocxl_context, ocxlpmem->irq_id[0],
++				  imn0_handler, NULL, ocxlpmem);
++
++	irq_addr = ocxl_afu_irq_get_addr(ocxlpmem->ocxl_context, ocxlpmem->irq_id[0]);
++	if (!irq_addr)
++		return -EINVAL;
++
++	ocxlpmem->irq_addr[0] = ioremap(irq_addr, PAGE_SIZE);
++	if (!ocxlpmem->irq_addr[0])
++		return -EINVAL;
++
++	rc = ocxl_global_mmio_write64(ocxlpmem->ocxl_afu, GLOBAL_MMIO_IMA0_OHP,
++				      OCXL_LITTLE_ENDIAN,
++				      (u64)ocxlpmem->irq_addr[0]);
++	if (rc)
++		goto out_irq0;
++
++	rc = ocxl_global_mmio_write64(ocxlpmem->ocxl_afu, GLOBAL_MMIO_IMA0_CFP,
++				      OCXL_LITTLE_ENDIAN, 0);
++	if (rc)
++		goto out_irq0;
++
++	rc = ocxl_afu_irq_alloc(ocxlpmem->ocxl_context, &ocxlpmem->irq_id[1]);
++	if (rc)
++		goto out_irq0;
++
++
++	rc = ocxl_irq_set_handler(ocxlpmem->ocxl_context, ocxlpmem->irq_id[1],
++				  imn1_handler, NULL, ocxlpmem);
++	if (rc)
++		goto out_irq0;
++
++	irq_addr = ocxl_afu_irq_get_addr(ocxlpmem->ocxl_context, ocxlpmem->irq_id[1]);
++	if (!irq_addr) {
++		rc = -EFAULT;
++		goto out_irq0;
++	}
++
++	ocxlpmem->irq_addr[1] = ioremap(irq_addr, PAGE_SIZE);
++	if (!ocxlpmem->irq_addr[1]) {
++		rc = -EINVAL;
++		goto out_irq0;
++	}
++
++	rc = ocxl_global_mmio_write64(ocxlpmem->ocxl_afu, GLOBAL_MMIO_IMA1_OHP,
++				      OCXL_LITTLE_ENDIAN,
++				      (u64)ocxlpmem->irq_addr[1]);
++	if (rc)
++		goto out_irq1;
++
++	rc = ocxl_global_mmio_write64(ocxlpmem->ocxl_afu, GLOBAL_MMIO_IMA1_CFP,
++				      OCXL_LITTLE_ENDIAN, 0);
++	if (rc)
++		goto out_irq1;
++
++	// Enable doorbells
++	rc = ocxl_global_mmio_set64(ocxlpmem->ocxl_afu, GLOBAL_MMIO_CHIE,
++				    OCXL_LITTLE_ENDIAN,
++				    GLOBAL_MMIO_CHI_ELA | GLOBAL_MMIO_CHI_CDA |
++				    GLOBAL_MMIO_CHI_CFFS | GLOBAL_MMIO_CHI_CHFS |
++				    GLOBAL_MMIO_CHI_NSCRA);
++	if (rc)
++		goto out_irq1;
++
++	return 0;
++
++out_irq1:
++	iounmap(ocxlpmem->irq_addr[1]);
++	ocxlpmem->irq_addr[1] = NULL;
++
++out_irq0:
++	iounmap(ocxlpmem->irq_addr[0]);
++	ocxlpmem->irq_addr[0] = NULL;
++
++	return rc;
++}
++
+ /**
+  * probe_function0() - Set up function 0 for an OpenCAPI persistent memory device
+  * This is important as it enables templates higher than 0 across all other functions,
+@@ -1216,6 +1427,11 @@ static int probe(struct pci_dev *pdev, const struct pci_device_id *ent)
+ 		goto err;
+ 	}
+ 
++	if (ocxlpmem_setup_irq(ocxlpmem)) {
++		dev_err(&pdev->dev, "Could not set up OCXL IRQs\n");
++		goto err;
++	}
++
+ 	if (setup_command_metadata(ocxlpmem)) {
+ 		dev_err(&pdev->dev, "Could not read OCXL command matada\n");
+ 		goto err;
+diff --git a/arch/powerpc/platforms/powernv/pmem/ocxl_internal.h b/arch/powerpc/platforms/powernv/pmem/ocxl_internal.h
+index b953ee522ed4..927690f4888f 100644
+--- a/arch/powerpc/platforms/powernv/pmem/ocxl_internal.h
++++ b/arch/powerpc/platforms/powernv/pmem/ocxl_internal.h
+@@ -103,6 +103,10 @@ struct ocxlpmem {
+ 	struct pci_dev *pdev;
+ 	struct cdev cdev;
+ 	struct ocxl_fn *ocxl_fn;
++#define SCM_IRQ_COUNT 2
++	int irq_id[SCM_IRQ_COUNT];
++	struct dev_pagemap irq_pgmap[SCM_IRQ_COUNT];
++	void *irq_addr[SCM_IRQ_COUNT];
+ 	struct nd_interleave_set nd_set;
+ 	struct nvdimm_bus_descriptor bus_desc;
+ 	struct nvdimm_bus *nvdimm_bus;
+@@ -113,6 +117,7 @@ struct ocxlpmem {
+ 	struct command_metadata ns_command;
+ 	struct resource pmem_res;
+ 	struct nd_region *nd_region;
++	struct eventfd_ctx *ev_ctx;
+ 	char fw_version[8+1];
+ 	u32 timeouts[ADMIN_COMMAND_MAX+1];
+ 
+diff --git a/include/uapi/nvdimm/ocxl-pmem.h b/include/uapi/nvdimm/ocxl-pmem.h
+index add223aa2fdb..988eb0bc413d 100644
+--- a/include/uapi/nvdimm/ocxl-pmem.h
++++ b/include/uapi/nvdimm/ocxl-pmem.h
+@@ -66,6 +66,20 @@ struct ioctl_ocxl_pmem_controller_stats {
+ 	__u64 cache_write_latency; /* nanoseconds */
+ };
+ 
++struct ioctl_ocxl_pmem_eventfd {
++	__s32 eventfd;
++	__u32 reserved;
++};
++
++#ifndef BIT_ULL
++#define BIT_ULL(nr)	(1ULL << (nr))
++#endif
++
++#define IOCTL_OCXL_PMEM_EVENT_CONTROLLER_DUMP_AVAILABLE	BIT_ULL(0)
++#define IOCTL_OCXL_PMEM_EVENT_ERROR_LOG_AVAILABLE	BIT_ULL(1)
++#define IOCTL_OCXL_PMEM_EVENT_HARDWARE_FATAL		BIT_ULL(2)
++#define IOCTL_OCXL_PMEM_EVENT_FIRMWARE_FATAL		BIT_ULL(3)
++
+ /* ioctl numbers */
+ #define OCXL_PMEM_MAGIC 0x5C
+ /* SCM devices */
+@@ -74,5 +88,7 @@ struct ioctl_ocxl_pmem_controller_stats {
+ #define IOCTL_OCXL_PMEM_CONTROLLER_DUMP_DATA		_IOWR(OCXL_PMEM_MAGIC, 0x03, struct ioctl_ocxl_pmem_controller_dump_data)
+ #define IOCTL_OCXL_PMEM_CONTROLLER_DUMP_COMPLETE	_IO(OCXL_PMEM_MAGIC, 0x04)
+ #define IOCTL_OCXL_PMEM_CONTROLLER_STATS		_IO(OCXL_PMEM_MAGIC, 0x05)
++#define IOCTL_OCXL_PMEM_EVENTFD				_IOW(OCXL_PMEM_MAGIC, 0x06, struct ioctl_ocxl_pmem_eventfd)
++#define IOCTL_OCXL_PMEM_EVENT_CHECK			_IOR(OCXL_PMEM_MAGIC, 0x07, __u64)
+ 
+ #endif /* _UAPI_OCXL_SCM_H */
+-- 
+2.24.1
 
-Sigh...  Wish we had a quick way to do something along the lines of
-"find all callchains leading to <function> that would not come via
--><method>" - doing that manually stank to high heaven ;-/  And in
-cases like that nothing along the lines of "simulate a build" is
-practical - call chains are all over arch/*, and config-sensitive
-as well (32bit vs. 64bit is only beginning of that fun).  Thankfully,
-none of those involved token-pasting...
-
-Anyway, one observation that came out of that is that we might
-be better off with signature change done first; less boilerplate
-that way, contrary to what I expected.
-
-Alternatively, we could introduce a new method, with one-by-one
-conversion to it.  Hmm...
-	int (*get2)(struct task_struct *target,
-		    const struct user_regset *regset,
-		    struct membuf to);
-returning -E... on error and amount left unfilled on success, perhaps?
-That seems to generate decent code and is pretty easy on the instances,
-especially if membuf_write() et.al. are made to return to->left...
-Things like
-
-static int evr_get(struct task_struct *target, const struct user_regset *regset,
-                   struct membuf to)
-{
-        flush_spe_to_thread(target);
-
-        membuf_write(&to, &target->thread.evr, sizeof(target->thread.evr));
-
-        BUILD_BUG_ON(offsetof(struct thread_struct, acc) + sizeof(u64) !=
-                     offsetof(struct thread_struct, spefscr));
-
-        return membuf_write(&to, &target->thread.acc, sizeof(u64));
-}
-
-in place of current
-
-static int evr_get(struct task_struct *target, const struct user_regset *regset,
-                   unsigned int pos, unsigned int count,
-                   void *kbuf, void __user *ubuf)
-{
-        int ret;
-
-        flush_spe_to_thread(target);
-
-        ret = user_regset_copyout(&pos, &count, &kbuf, &ubuf,
-                                  &target->thread.evr,
-                                  0, sizeof(target->thread.evr));
-
-        BUILD_BUG_ON(offsetof(struct thread_struct, acc) + sizeof(u64) !=
-                     offsetof(struct thread_struct, spefscr));
-
-        if (!ret)
-                ret = user_regset_copyout(&pos, &count, &kbuf, &ubuf,
-                                          &target->thread.acc,
-                                          sizeof(target->thread.evr), -1);
-
-        return ret;
-}
-
-and
-
-static int vr_get(struct task_struct *target, const struct user_regset *regset,
-                  struct membuf to)
-{
-	union {
-		elf_vrreg_t reg;
-		u32 word;
-	} vrsave;
-
-        flush_altivec_to_thread(target);
-
-        BUILD_BUG_ON(offsetof(struct thread_vr_state, vscr) !=
-                     offsetof(struct thread_vr_state, vr[32]));
-
-        membuf_write(&to, &target->thread.vr_state, 33 * sizeof(vector128));
-	/*
-	 * Copy out only the low-order word of vrsave.
-	 */
-	memset(&vrsave, 0, sizeof(vrsave));
-	vrsave.word = target->thread.vrsave;
-
-	return membuf_write(&to, &vrsave, sizeof(vrsave);
-}
-
-instead of
-
-static int vr_get(struct task_struct *target, const struct user_regset *regset,
-                  unsigned int pos, unsigned int count,
-                  void *kbuf, void __user *ubuf)
-{
-        int ret;
-
-        flush_altivec_to_thread(target);
-
-        BUILD_BUG_ON(offsetof(struct thread_vr_state, vscr) !=
-                     offsetof(struct thread_vr_state, vr[32]));
-
-        ret = user_regset_copyout(&pos, &count, &kbuf, &ubuf,
-                                  &target->thread.vr_state, 0,
-                                  33 * sizeof(vector128));
-        if (!ret) {
-                /*
-                 * Copy out only the low-order word of vrsave.
-                 */
-                int start, end;
-                union {
-                        elf_vrreg_t reg;
-                        u32 word;
-                } vrsave;
-                memset(&vrsave, 0, sizeof(vrsave));
-
-                vrsave.word = target->thread.vrsave;
-
-                start = 33 * sizeof(vector128);
-                end = start + sizeof(vrsave);
-                ret = user_regset_copyout(&pos, &count, &kbuf, &ubuf, &vrsave,
-                                          start, end);
-        }
-
-        return ret;
-}
