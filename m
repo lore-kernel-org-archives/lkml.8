@@ -2,132 +2,95 @@ Return-Path: <SRS0=1210=4J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 06F63C35646
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 16:41:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 38842C35656
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 16:41:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DB7D924650
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 16:41:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1B02824650
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 16:41:31 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726710AbgBUQlN (ORCPT
+        id S1726934AbgBUQl3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Feb 2020 11:41:13 -0500
-Received: from mail-out.m-online.net ([212.18.0.10]:56838 "EHLO
-        mail-out.m-online.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725988AbgBUQlN (ORCPT
+        Fri, 21 Feb 2020 11:41:29 -0500
+Received: from iolanthe.rowland.org ([192.131.102.54]:54178 "HELO
+        iolanthe.rowland.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with SMTP id S1726758AbgBUQl3 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Feb 2020 11:41:13 -0500
-Received: from frontend01.mail.m-online.net (unknown [192.168.8.182])
-        by mail-out.m-online.net (Postfix) with ESMTP id 48PHK21SMHz1rd1Q;
-        Fri, 21 Feb 2020 17:41:10 +0100 (CET)
-Received: from localhost (dynscan1.mnet-online.de [192.168.6.70])
-        by mail.m-online.net (Postfix) with ESMTP id 48PHK20WlYz1r0bZ;
-        Fri, 21 Feb 2020 17:41:10 +0100 (CET)
-X-Virus-Scanned: amavisd-new at mnet-online.de
-Received: from mail.mnet-online.de ([192.168.8.182])
-        by localhost (dynscan1.mail.m-online.net [192.168.6.70]) (amavisd-new, port 10024)
-        with ESMTP id T2YKWe-QNZdI; Fri, 21 Feb 2020 17:41:08 +0100 (CET)
-X-Auth-Info: tPcD5NT6YuYT6cAPtv9wImntzVhf6GYyvo9WLMRjP8E=
-Received: from [127.0.0.1] (unknown [195.140.253.167])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.mnet-online.de (Postfix) with ESMTPSA;
-        Fri, 21 Feb 2020 17:41:08 +0100 (CET)
-Subject: Re: [PATCH v2 0/2] Add GPIO level-sensitive interrupt support
-To:     Alexandre Torgue <alexandre.torgue@st.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Jason Cooper <jason@lakedaemon.net>,
-        Marc Zyngier <marc.zyngier@arm.com>,
-        Linus Walleij <linus.walleij@linaro.org>
-Cc:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linux-gpio@vger.kernel.org
-References: <20200218131218.10789-1-alexandre.torgue@st.com>
- <b5a2dcab-06db-4863-ac5c-28f4ef0c5ac9@denx.de>
- <32e409e6-d475-802a-6a90-c8ba6c0cf6d5@st.com>
- <088e786c-511e-cf95-fc41-5343b8134407@denx.de>
- <d271f09b-6391-779a-b133-66bcdfbb0ec6@st.com>
- <38e7cf57-2f89-7615-0841-316355a9102f@denx.de>
- <66520848-f630-e210-aecb-96c8828605b7@st.com>
-From:   Marek Vasut <marex@denx.de>
-Message-ID: <faf55c81-e28f-20ed-ffdc-d20f00e3aefc@denx.de>
-Date:   Fri, 21 Feb 2020 17:41:07 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.2
+        Fri, 21 Feb 2020 11:41:29 -0500
+Received: (qmail 4340 invoked by uid 2102); 21 Feb 2020 11:41:28 -0500
+Received: from localhost (sendmail-bs@127.0.0.1)
+  by localhost with SMTP; 21 Feb 2020 11:41:28 -0500
+Date:   Fri, 21 Feb 2020 11:41:28 -0500 (EST)
+From:   Alan Stern <stern@rowland.harvard.edu>
+X-X-Sender: stern@iolanthe.rowland.org
+To:     syzbot <syzbot+55ae006e0a1feae5aeab@syzkaller.appspotmail.com>
+cc:     andreyknvl@google.com, <balbi@kernel.org>,
+        <chunfeng.yun@mediatek.com>, <gregkh@linuxfoundation.org>,
+        <linux-kernel@vger.kernel.org>, <linux-usb@vger.kernel.org>,
+        <syzkaller-bugs@googlegroups.com>
+Subject: Re: WARNING in dummy_free_request
+In-Reply-To: <000000000000058a87059f1882b9@google.com>
+Message-ID: <Pine.LNX.4.44L0.2002211138300.1488-100000@iolanthe.rowland.org>
 MIME-Version: 1.0
-In-Reply-To: <66520848-f630-e210-aecb-96c8828605b7@st.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: TEXT/PLAIN; charset=US-ASCII
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2/20/20 2:09 PM, Alexandre Torgue wrote:
-> Hi Marek
+On Fri, 21 Feb 2020, syzbot wrote:
 
-Hi,
-
-> On 2/19/20 6:24 PM, Marek Vasut wrote:
->> On 2/19/20 10:20 AM, Alexandre Torgue wrote:
->> Hi,
->> [...]
->>>>>>> This series adds the possibility to handle gpio interrupts on level.
->>>>>>>
->>>>>>> GPIO hardware block is directly linked to EXTI block but EXTI
->>>>>>> handles
->>>>>>> external interrupts only on edge. To be able to handle GPIO
->>>>>>> interrupt on
->>>>>>> level a "hack" is done in gpio irq chip: parent interrupt (exti irq
->>>>>>> chip)
->>>>>>> is retriggered following interrupt type and gpio line value.
->>>>>>>
->>>>>>> In exti irq chip, retrigger ops function is added.
->>>>>>
->>>>>> btw. this might be unrelated, but is it possible to have e.g. gpioC2
->>>>>> set
->>>>>> as trigger-level-low and gpioD2 set as trigger-edge-falling ? It
->>>>>> seems
->>>>>> 8eb2dfee9fb1 ("pinctrl: stm32: add lock mechanism for irqmux
->>>>>> selection")
->>>>>> prevents that.
->>>>>>
->>>>>
->>>>> No it's not possible. Each gpio line doesn't have a dedicated Exti
->>>>> line
->>>>> Each Exti line is muxing between gpio banks.
->>>>
->>>> OK, that confirms my assumption.
->>>>
->>>>> Mapping is done as following:
->>>>>
->>>>> EXTI0 = A0 or B0 or C0 .... or Z0 : selected by Mux
->>>>> EXTI1 = A1 or B1 or C1 ....or Z1 : selected by Mux
->>>>> EXTI2 = A2 or B2 or C2 ....or Z2 : selected by Mux
->>>>> ...
->>>>
->>>> Is it at least possible to have IRQs of the same type on the same exti
->>>> line? E.g. gpioA2 of trigger-edge-falling and gpioB2
->>>> trigger-edge-falling ?
->>>>
->>>
->>> Sorry I don't catch your point. If you already succeed to get gpioA2,
->>> then you will failed to get gpioB2 but looking at function call stack we
->>> could get an other issue.
->>
->> Considering the EXTI line limitations, I'd like to know what kind of IRQ
->> input configuration is allowed/valid and what kind of configuration is
->> not valid.
+> Hello,
 > 
-> As a mux is used to select which GPIO[A..Z]_X has to be mapped on exti_X
-> line, only one GPIO can be used on the EXTI line.
+> syzbot found the following crash on:
 > 
-> For example, on EXTI2 you could map either gpioa2 or gpiob2 or
-> ....gpioz2 but not gpioa2 and gpiob2 in the same time.
+> HEAD commit:    7f0cd6c7 usb: gadget: add raw-gadget interface
+> git tree:       https://github.com/google/kasan.git usb-fuzzer
+> console output: https://syzkaller.appspot.com/x/log.txt?x=17b58e5ee00000
+> kernel config:  https://syzkaller.appspot.com/x/.config?x=f10b12ae04e03319
+> dashboard link: https://syzkaller.appspot.com/bug?extid=55ae006e0a1feae5aeab
+> compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
+> 
+> Unfortunately, I don't have any reproducer for this crash yet.
+> 
+> IMPORTANT: if you fix the bug, please add the following tag to the commit:
+> Reported-by: syzbot+55ae006e0a1feae5aeab@syzkaller.appspotmail.com
+> 
+> ------------[ cut here ]------------
+> WARNING: CPU: 1 PID: 19332 at drivers/usb/gadget/udc/dummy_hcd.c:679 dummy_free_request+0x6c/0x80 drivers/usb/gadget/udc/dummy_hcd.c:679
+> Kernel panic - not syncing: panic_on_warn set ...
+> CPU: 1 PID: 19332 Comm: syz-executor.5 Not tainted 5.6.0-rc1-syzkaller #0
+> Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
+> Call Trace:
+>  __dump_stack lib/dump_stack.c:77 [inline]
+>  dump_stack+0xef/0x16e lib/dump_stack.c:118
+>  panic+0x2aa/0x6e1 kernel/panic.c:221
+>  __warn.cold+0x2f/0x30 kernel/panic.c:582
+>  report_bug+0x27b/0x2f0 lib/bug.c:195
+>  fixup_bug arch/x86/kernel/traps.c:174 [inline]
+>  fixup_bug arch/x86/kernel/traps.c:169 [inline]
+>  do_error_trap+0x12b/0x1e0 arch/x86/kernel/traps.c:267
+>  do_invalid_op+0x32/0x40 arch/x86/kernel/traps.c:286
+>  invalid_op+0x23/0x30 arch/x86/entry/entry_64.S:1027
+> RIP: 0010:dummy_free_request+0x6c/0x80 drivers/usb/gadget/udc/dummy_hcd.c:679
+> Code: c5 75 22 e8 26 06 96 fd 48 89 ef e8 3e 54 be fd 5b 5d e9 17 06 96 fd e8 12 06 96 fd 0f 0b 5b 5d e9 09 06 96 fd e8 04 06 96 fd <0f> 0b eb d5 48 89 ef e8 08 ae be fd eb c2 66 0f 1f 44 00 00 41 56
+> RSP: 0018:ffff8881c9eafdd8 EFLAGS: 00010016
+> RAX: 0000000000040000 RBX: ffff8881d0d5aa10 RCX: ffffc900012a0000
+> RDX: 000000000000012f RSI: ffffffff83a95c1c RDI: ffff8881d4d501c8
+> RBP: ffff8881d0d5aa00 R08: ffff8881d0f9b100 R09: ffffed103b666a84
+> R10: ffffed103b666a83 R11: ffff8881db33541b R12: 0000000000000212
+> R13: ffff8881ca832008 R14: 0000000000000000 R15: ffff8881ca832180
+>  raw_ioctl_ep_disable drivers/usb/gadget/legacy/raw_gadget.c:814 [inline]
+>  raw_ioctl+0x1281/0x19e0 drivers/usb/gadget/legacy/raw_gadget.c:1031
 
-Got it, thank you for the clarification.
+Andrey:
 
-Maybe that could be something to improve for MP2 :-)
+This could be a bug in your raw_gadget driver.  This particular WARN is
+triggered when a gadget driver tries to call usb_ep_free_request() for
+a request that is still in flight.
+
+Alan Stern
+
