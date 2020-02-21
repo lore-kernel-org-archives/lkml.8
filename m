@@ -7,48 +7,50 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2CAEEC35640
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 07:53:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C2BE4C35641
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 07:53:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0006324653
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 07:53:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 98B3A24653
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 07:53:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582271622;
-	bh=TR7zXGPKrRyVAFY0prVY1a+2it4hknv8ec1MtPqoews=;
+	s=default; t=1582271625;
+	bh=MpOLrtBpFCiszf4oe87gUXnv6QKAfqqQwxxRDU9gY+c=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=AATFhF2TGvrdbF3pyKI8J2BkNYAFHaxRnmyPvsMET/QGonMX/d/Q7azIw3Ls4U9bD
-	 4THyujxN4PoqsqDSo2IIMGxsOcREXMqXHVz+RD71K1HyFNAjtchVO/stuFdrkhdhFO
-	 lTCMAP0td16IwkY6FjkhWRPgo08kS88+vzUUw3AI=
+	b=LBtcMKSWRbMicPd3JA3i31q44pbezxps4i29PGK4CjiwjmmJ7MPQOM0Cx4pTPhx8U
+	 6/tg/0/m44CUzq6RJ0fA3fftrFNTz5SUtr1p10cL1G93O1YkV4nKMJH4V4ORSio+Ti
+	 lc5FYeKEoGlBAQQqDjgPima1E25zrl0SQ3hXas7U=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730145AbgBUHxk (ORCPT
+        id S1730151AbgBUHxo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Feb 2020 02:53:40 -0500
-Received: from mail.kernel.org ([198.145.29.99]:51986 "EHLO mail.kernel.org"
+        Fri, 21 Feb 2020 02:53:44 -0500
+Received: from mail.kernel.org ([198.145.29.99]:52058 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730125AbgBUHxh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Feb 2020 02:53:37 -0500
+        id S1730144AbgBUHxl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 21 Feb 2020 02:53:41 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B34A224653;
-        Fri, 21 Feb 2020 07:53:36 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 156EF2465D;
+        Fri, 21 Feb 2020 07:53:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1582271617;
-        bh=TR7zXGPKrRyVAFY0prVY1a+2it4hknv8ec1MtPqoews=;
+        s=default; t=1582271620;
+        bh=MpOLrtBpFCiszf4oe87gUXnv6QKAfqqQwxxRDU9gY+c=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=jr6bVFqvv1/D+O6vbPltiQK1y4Cu6LX+jg6dxIHXzVMETXO7dV1lg6O6ltkiFqhwB
-         8DCz/RjalCvzhN/NFaYPskSGa6k2vQ+EYDXBM15iuafpdhlzxHuyE2texzc6TCc7DO
-         691l86hMUVurm/0FXQv5MoTx8OzONzQBEpVP2ius=
+        b=0wLSxlcRjdT8zhhGu+3TEkjNHOMAkYm1SsUPqSqajWx3a3SKGpIESUJaPOidasM9C
+         FeVFRhbY7pkEwJbgfGps2NUcuqIsMNelpNkMdcSACdLw+lbaXbUfYoKzUe+Kub9Czt
+         WLCOv/JPHjv1EPVh8VM0CCINuT40UlshiL0SQq50=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Jonathan Lemon <jonathan.lemon@gmail.com>,
-        Andy Gospodarek <gospo@broadcom.com>,
-        "David S. Miller" <davem@davemloft.net>,
+        stable@vger.kernel.org, Peter Rosin <peda@axentia.se>,
+        Geert Uytterhoeven <geert@linux-m68k.org>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Matthew Wilcox <willy@infradead.org>,
+        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.5 232/399] bnxt: Detach page from page pool before sending up the stack
-Date:   Fri, 21 Feb 2020 08:39:17 +0100
-Message-Id: <20200221072425.313970278@linuxfoundation.org>
+Subject: [PATCH 5.5 197/399] fbdev: fix numbering of fbcon options
+Date:   Fri, 21 Feb 2020 08:38:42 +0100
+Message-Id: <20200221072421.968666513@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200221072402.315346745@linuxfoundation.org>
 References: <20200221072402.315346745@linuxfoundation.org>
@@ -61,36 +63,65 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jonathan Lemon <jonathan.lemon@gmail.com>
+From: Peter Rosin <peda@axentia.se>
 
-[ Upstream commit 3071c51783b39d6a676d02a9256c3b3f87804285 ]
+[ Upstream commit fd933c00ebe220060e66fb136a7050a242456566 ]
 
-When running in XDP mode, pages come from the page pool, and should
-be freed back to the same pool or specifically detached.  Currently,
-when the driver re-initializes, the page pool destruction is delayed
-forever since it thinks there are oustanding pages.
+Three shall be the number thou shalt count, and the number of the
+counting shall be three. Four shalt thou not count...
 
-Fixes: 322b87ca55f2 ("bnxt_en: add page_pool support")
-Signed-off-by: Jonathan Lemon <jonathan.lemon@gmail.com>
-Reviewed-by: Andy Gospodarek <gospo@broadcom.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+One! Two! Five!
+
+Fixes: efb985f6b265 ("[PATCH] fbcon: Console Rotation - Add framebuffer console documentation")
+Signed-off-by: Peter Rosin <peda@axentia.se>
+Reviewed-by: Geert Uytterhoeven <geert@linux-m68k.org>
+Cc: Jonathan Corbet <corbet@lwn.net>
+Cc: Matthew Wilcox <willy@infradead.org>
+Signed-off-by: Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
+Link: https://patchwork.freedesktop.org/patch/msgid/20190827110854.12574-2-peda@axentia.se
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/ethernet/broadcom/bnxt/bnxt.c | 1 +
- 1 file changed, 1 insertion(+)
+ Documentation/fb/fbcon.rst | 8 ++++----
+ 1 file changed, 4 insertions(+), 4 deletions(-)
 
-diff --git a/drivers/net/ethernet/broadcom/bnxt/bnxt.c b/drivers/net/ethernet/broadcom/bnxt/bnxt.c
-index 01b603c5e76ad..9d62200b6c335 100644
---- a/drivers/net/ethernet/broadcom/bnxt/bnxt.c
-+++ b/drivers/net/ethernet/broadcom/bnxt/bnxt.c
-@@ -944,6 +944,7 @@ static struct sk_buff *bnxt_rx_page_skb(struct bnxt *bp,
- 	dma_addr -= bp->rx_dma_offset;
- 	dma_unmap_page_attrs(&bp->pdev->dev, dma_addr, PAGE_SIZE, bp->rx_dir,
- 			     DMA_ATTR_WEAK_ORDERING);
-+	page_pool_release_page(rxr->page_pool, page);
+diff --git a/Documentation/fb/fbcon.rst b/Documentation/fb/fbcon.rst
+index ebca41785abea..65ba402551374 100644
+--- a/Documentation/fb/fbcon.rst
++++ b/Documentation/fb/fbcon.rst
+@@ -127,7 +127,7 @@ C. Boot options
+ 	is typically located on the same video card.  Thus, the consoles that
+ 	are controlled by the VGA console will be garbled.
  
- 	if (unlikely(!payload))
- 		payload = eth_get_headlen(bp->dev, data_ptr, len);
+-4. fbcon=rotate:<n>
++5. fbcon=rotate:<n>
+ 
+ 	This option changes the orientation angle of the console display. The
+ 	value 'n' accepts the following:
+@@ -152,21 +152,21 @@ C. Boot options
+ 	Actually, the underlying fb driver is totally ignorant of console
+ 	rotation.
+ 
+-5. fbcon=margin:<color>
++6. fbcon=margin:<color>
+ 
+ 	This option specifies the color of the margins. The margins are the
+ 	leftover area at the right and the bottom of the screen that are not
+ 	used by text. By default, this area will be black. The 'color' value
+ 	is an integer number that depends on the framebuffer driver being used.
+ 
+-6. fbcon=nodefer
++7. fbcon=nodefer
+ 
+ 	If the kernel is compiled with deferred fbcon takeover support, normally
+ 	the framebuffer contents, left in place by the firmware/bootloader, will
+ 	be preserved until there actually is some text is output to the console.
+ 	This option causes fbcon to bind immediately to the fbdev device.
+ 
+-7. fbcon=logo-pos:<location>
++8. fbcon=logo-pos:<location>
+ 
+ 	The only possible 'location' is 'center' (without quotes), and when
+ 	given, the bootup logo is moved from the default top-left corner
 -- 
 2.20.1
 
