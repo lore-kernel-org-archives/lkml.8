@@ -2,100 +2,199 @@ Return-Path: <SRS0=1210=4J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 69AC4C35669
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 20:01:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7F635C35666
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 20:02:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 44EF120722
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 20:01:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5BDAA20722
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 20:02:33 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727998AbgBUUA7 (ORCPT
+        id S1726823AbgBUUCc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Feb 2020 15:00:59 -0500
-Received: from mail-pg1-f193.google.com ([209.85.215.193]:40244 "EHLO
-        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726483AbgBUUA6 (ORCPT
+        Fri, 21 Feb 2020 15:02:32 -0500
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:58658 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726443AbgBUUCb (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Feb 2020 15:00:58 -0500
-Received: by mail-pg1-f193.google.com with SMTP id z7so1515084pgk.7
-        for <linux-kernel@vger.kernel.org>; Fri, 21 Feb 2020 12:00:58 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=pNlnTirvfiB7WYuVJDwmUBab2nwnkqDGWJI3ppaa8x4=;
-        b=lqKYWI0yd57fZnKZV27m0ZR7sZT9ChWBdjT9x/Q+O/3AvlvKwzBNDIxp0sRufSmWPZ
-         o+Y2s7U+JwhNI7/VhZl8+6/zuKsQN4v5gIOVAU6FAVDzcl7l2e+VSDwesRKKBQONulN0
-         0w2MAe/basBWN2X00/wQK4w+DOWcK2qiFy0OCcXhxvVozw3vPnucImIm+NtgyMrHDVt1
-         QSII7vkDQU0ikXIwxIu3UScocJA8DEBqaf4QSGOpxIhlNvkbAqQsawF2arRrCvPs7Jf8
-         4Ppqlqk6jp3E7xApkj8SnryZRBAWAmqWHkGOs2/xLqOIdJ2MnkaTa2h1oUiTfXjqwfh+
-         Xbsg==
-X-Gm-Message-State: APjAAAUTuo6ONztr9kzvmY/VR4NsxQdog+csk18iKiNczYuHfXxthwLg
-        eK5qqxGyNHxSvqxwyqDS+KsaLASlOrk=
-X-Google-Smtp-Source: APXvYqyDH+RnreMq6IQELcDHf3TG+giHPDTLYj++X9i8qmnDj85M589gPmQyJC0Wr3jodkDVJucX1w==
-X-Received: by 2002:aa7:9aa7:: with SMTP id x7mr37599786pfi.78.1582315257906;
-        Fri, 21 Feb 2020 12:00:57 -0800 (PST)
-Received: from sultan-book.localdomain ([2620:15c:f:fd00:d989:fbb1:a399:c92d])
-        by smtp.gmail.com with ESMTPSA id g7sm3853756pfq.33.2020.02.21.12.00.56
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 21 Feb 2020 12:00:57 -0800 (PST)
-Date:   Fri, 21 Feb 2020 12:00:54 -0800
-From:   Sultan Alsawaf <sultan@kerneltoast.com>
-To:     Ira Weiny <ira.weiny@intel.com>
-Cc:     Andrew Morton <akpm@linux-foundation.org>, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2] mm: Stop kswapd early when nothing's waiting for it
- to free pages
-Message-ID: <20200221200054.GA3851@sultan-book.localdomain>
-References: <20200219182522.1960-1-sultan@kerneltoast.com>
- <20200221043052.3305-1-sultan@kerneltoast.com>
- <20200221182201.GB4462@iweiny-DESK2.sc.intel.com>
+        Fri, 21 Feb 2020 15:02:31 -0500
+Received: from pps.filterd (m0098393.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 01LJsPjZ140298;
+        Fri, 21 Feb 2020 15:02:21 -0500
+Received: from pps.reinject (localhost [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2y8ubyss58-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Fri, 21 Feb 2020 15:02:21 -0500
+Received: from m0098393.ppops.net (m0098393.ppops.net [127.0.0.1])
+        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 01LJtWPp142574;
+        Fri, 21 Feb 2020 15:02:21 -0500
+Received: from ppma05wdc.us.ibm.com (1b.90.2fa9.ip4.static.sl-reverse.com [169.47.144.27])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2y8ubyss4a-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Fri, 21 Feb 2020 15:02:20 -0500
+Received: from pps.filterd (ppma05wdc.us.ibm.com [127.0.0.1])
+        by ppma05wdc.us.ibm.com (8.16.0.27/8.16.0.27) with SMTP id 01LK13bq014430;
+        Fri, 21 Feb 2020 20:02:19 GMT
+Received: from b03cxnp08026.gho.boulder.ibm.com (b03cxnp08026.gho.boulder.ibm.com [9.17.130.18])
+        by ppma05wdc.us.ibm.com with ESMTP id 2y6897fjvu-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Fri, 21 Feb 2020 20:02:19 +0000
+Received: from b03ledav003.gho.boulder.ibm.com (b03ledav003.gho.boulder.ibm.com [9.17.130.234])
+        by b03cxnp08026.gho.boulder.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 01LK2I5E30736660
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Fri, 21 Feb 2020 20:02:18 GMT
+Received: from b03ledav003.gho.boulder.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 703CB6A051;
+        Fri, 21 Feb 2020 20:02:18 +0000 (GMT)
+Received: from b03ledav003.gho.boulder.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 55CE46A04D;
+        Fri, 21 Feb 2020 20:02:18 +0000 (GMT)
+Received: from localhost (unknown [9.41.179.160])
+        by b03ledav003.gho.boulder.ibm.com (Postfix) with ESMTP;
+        Fri, 21 Feb 2020 20:02:18 +0000 (GMT)
+From:   Nathan Lynch <nathanl@linux.ibm.com>
+To:     Scott Cheloha <cheloha@linux.ibm.com>
+Cc:     Rick Lindsley <ricklind@linux.vnet.ibm.com>,
+        David Hildenbrand <david@redhat.com>,
+        Michal Suchanek <msuchanek@suse.com>,
+        Michal Hocko <mhocko@suse.com>,
+        Nathan Fontenont <ndfont@gmail.com>,
+        linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
+        Michael Ellerman <mpe@ellerman.id.au>
+Subject: Re: [PATCH v2 1/2] powerpc/drmem: accelerate memory_add_physaddr_to_nid() with LMB xarray
+In-Reply-To: <20200221172901.1596249-2-cheloha@linux.ibm.com>
+References: <20200128221113.17158-1-cheloha@linux.ibm.com> <20200221172901.1596249-2-cheloha@linux.ibm.com>
+Date:   Fri, 21 Feb 2020 14:02:18 -0600
+Message-ID: <87r1ynso8l.fsf@linux.ibm.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200221182201.GB4462@iweiny-DESK2.sc.intel.com>
+Content-Type: text/plain
+X-TM-AS-GCONF: 00
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.572
+ definitions=2020-02-21_07:2020-02-21,2020-02-21 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxscore=0 lowpriorityscore=0
+ phishscore=0 impostorscore=0 clxscore=1011 priorityscore=1501 bulkscore=0
+ suspectscore=1 malwarescore=0 mlxlogscore=999 spamscore=0 adultscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2001150001
+ definitions=main-2002210151
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Feb 21, 2020 at 10:22:02AM -0800, Ira Weiny wrote:
-> On Thu, Feb 20, 2020 at 08:30:52PM -0800, Sultan Alsawaf wrote:
-> > From: Sultan Alsawaf <sultan@kerneltoast.com>
+Hi Scott,
+
+Scott Cheloha <cheloha@linux.ibm.com> writes:
+> On PowerPC, memory_add_physaddr_to_nid() uses a linear search to find
+> an LMB matching the given address.  This scales very poorly when there
+> are many LMBs.  The poor scaling cripples drmem_init() during boot:
+> lmb_set_nid(), which calls memory_add_physaddr_to_nid(), is called for
+> each LMB.
+>
+> If we index each LMB in an xarray by its base address we can achieve
+> O(log n) search during memory_add_physaddr_to_nid(), which scales much
+> better.
+
+Is O(log n) correct? I had thought lookup complexity depends on the
+characteristics of the key.
+
+Repeating some points from my comments on v1 below.
+
+
+> +static int drmem_cache_lmb_for_lookup(struct drmem_lmb *lmb)
+
+This is called only from __init functions, so it should be __init as well.
+
+> +{
+> +	void *ret;
+> +
+> +	ret = xa_store(&drmem_lmb_xa_base_addr, lmb->base_addr, lmb,
+> +		       GFP_KERNEL);
+> +	if (xa_is_err(ret))
+> +		return xa_err(ret);
+> +
+> +	return 0;
+> +}
+
+[...]
+
+> @@ -364,6 +383,8 @@ static void __init init_drmem_v1_lmbs(const __be32 *prop)
 >  
-> [snip]
-> 
-> > @@ -4640,9 +4647,12 @@ __alloc_pages_slowpath(gfp_t gfp_mask, unsigned int order,
-> >  		goto retry;
-> >  	}
-> >  fail:
-> > -	warn_alloc(gfp_mask, ac->nodemask,
-> > -			"page allocation failure: order:%u", order);
-> >  got_pg:
-> 
-> I have no insight into if this is masking a deeper problem or if this fixes
-> something but doesn't the above result in 'fail' and 'got_pg' being the same
-> label?
-> 
-> Ira
-> 
-> > +	if (woke_kswapd)
-> > +		atomic_dec(&pgdat->kswapd_waiters);
-> > +	if (!page)
-> > +		warn_alloc(gfp_mask, ac->nodemask,
-> > +				"page allocation failure: order:%u", order);
-> >  	return page;
-> >  }
->   
-> [snip]
+>  	for_each_drmem_lmb(lmb) {
+>  		read_drconf_v1_cell(lmb, &prop);
+> +		if (drmem_cache_lmb_for_lookup(lmb) != 0)
+> +			return;
+>  		lmb_set_nid(lmb);
+>  	}
+>  }
+> @@ -411,6 +432,9 @@ static void __init init_drmem_v2_lmbs(const __be32 *prop)
+>  			lmb->aa_index = dr_cell.aa_index;
+>  			lmb->flags = dr_cell.flags;
+>  
+> +			if (drmem_cache_lmb_for_lookup(lmb) != 0)
+> +				return;
+> +
 
-Yes,. This was to reduce the patch delta for the initial submission so it's
-clearer what's going on; it can be altered of course to coalesce the labels into
-a single one. I typically produce my patches to upstream components to be as
-uninvasive as possible to aid in backporting and forward porting in case it's
-rejected and I want to keep it for myself.
+Failing to record an lmb in the cache shouldn't be cause for silently
+aborting this initialization. Future lookups against the caches (should
+the system even boot) may fail, but the drmem_lmbs will still be
+initialized correctly.
 
-Sultan
+I'd say just ignore (or perhaps log once) xa_store() failures as long as
+this code only runs at boot.
+
+
+> diff --git a/arch/powerpc/mm/numa.c b/arch/powerpc/mm/numa.c
+> index 3c7dec70cda0..0fd7963a991e 100644
+> --- a/arch/powerpc/mm/numa.c
+> +++ b/arch/powerpc/mm/numa.c
+> @@ -958,27 +958,18 @@ early_param("topology_updates", early_topology_updates);
+>  static int hot_add_drconf_scn_to_nid(unsigned long scn_addr)
+>  {
+>  	struct drmem_lmb *lmb;
+> -	unsigned long lmb_size;
+> -	int nid = NUMA_NO_NODE;
+> -
+> -	lmb_size = drmem_lmb_size();
+> -
+> -	for_each_drmem_lmb(lmb) {
+> -		/* skip this block if it is reserved or not assigned to
+> -		 * this partition */
+> -		if ((lmb->flags & DRCONF_MEM_RESERVED)
+> -		    || !(lmb->flags & DRCONF_MEM_ASSIGNED))
+> -			continue;
+> -
+> -		if ((scn_addr < lmb->base_addr)
+> -		    || (scn_addr >= (lmb->base_addr + lmb_size)))
+> -			continue;
+>  
+> -		nid = of_drconf_to_nid_single(lmb);
+> -		break;
+> -	}
+> +	lmb = drmem_find_lmb_by_base_addr(scn_addr);
+
+It occurs to me that the old behavior here will succeed in looking up a
+drmem_lmb if scn_addr is within it, while the new behavior is that the
+given address must match the starting address of the drmem_lmb. I think
+this is probably OK though?
+
+
+> +	if (lmb == NULL)
+> +		return NUMA_NO_NODE;
+> +	
+> +	/* can't use this block if it is reserved or not assigned to
+> +	 * this partition */
+> +	if ((lmb->flags & DRCONF_MEM_RESERVED)
+> +	    || !(lmb->flags & DRCONF_MEM_ASSIGNED))
+> +		return NUMA_NO_NODE;
+>  
+> -	return nid;
+> +	return of_drconf_to_nid_single(lmb);
+>  }
+
+Otherwise I have no concerns about the changes to
+hot_add_drconf_scn_to_nid.
+
+Other than the minor points I've made here, this looks like a tidy
+self-contained change to fix drmem initialization latency.
