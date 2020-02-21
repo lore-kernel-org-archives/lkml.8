@@ -2,220 +2,165 @@ Return-Path: <SRS0=1210=4J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0140EC35641
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 06:48:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3ED47C35641
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 06:48:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C293320722
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 06:48:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0427E20722
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 06:48:58 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=geanix.com header.i=@geanix.com header.b="f6uD2Qwq"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=embeddedor.com header.i=@embeddedor.com header.b="GTrF9K00"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727797AbgBUGsC (ORCPT
+        id S1726909AbgBUGs4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Feb 2020 01:48:02 -0500
-Received: from first.geanix.com ([116.203.34.67]:55440 "EHLO first.geanix.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726410AbgBUGsC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Feb 2020 01:48:02 -0500
-Received: from localhost (87-49-45-242-mobile.dk.customer.tdc.net [87.49.45.242])
-        by first.geanix.com (Postfix) with ESMTPSA id BA1EFAEB4D;
-        Fri, 21 Feb 2020 06:47:58 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=geanix.com; s=first;
-        t=1582267678; bh=C6ldIWGff5T8O4HfbemgNQNVmUkFjfJUuuR+sw4Z36I=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References;
-        b=f6uD2QwqPaGqlBPWb77tKNPtvgUki/99sA2qGfEsCVviAs3B69DuhQNNxzdhzzKfJ
-         cefu9iWzttf08ePuGff5VIZuVxRdFm7jDb+/SQxDeYWWMCWm85XfrLZ4bK6KWoMDWH
-         dvhvPqHwNqw9bjUsImIFl0KknSudsplJgr0NnUZUdrPkidqxz+FPoT3R80fF9qKLDU
-         Ul1r+hvgx68L9S3a4bQk4JuuAekDVN3y5bcDY3ASQmSMYedXr+6D1EogxEctfFTGnI
-         3WANSs4OjCwJ3ZuuR/x46OAwawFmBYW0AzOThx/7svC5T6yf1aoKqwo5dNg2TU/ArX
-         4fZshi2Bay9HA==
-From:   Esben Haabendal <esben@geanix.com>
-To:     netdev@vger.kernel.org
-Cc:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        Andrew Lunn <andrew@lunn.ch>,
-        "David S . Miller" <davem@davemloft.net>,
-        Michal Simek <michal.simek@xilinx.com>,
-        =?UTF-8?q?Petr=20=C5=A0tetiar?= <ynezz@true.cz>
-Subject: [PATCH net v2 4/4] net: ll_temac: Handle DMA halt condition caused by buffer underrun
-Date:   Fri, 21 Feb 2020 07:47:58 +0100
-Message-Id: <9d7cb658d37577895b9755a434eacba36a62f580.1582267079.git.esben@geanix.com>
-X-Mailer: git-send-email 2.25.0
-In-Reply-To: <cover.1582267079.git.esben@geanix.com>
-References: <cover.1582108989.git.esben@geanix.com> <cover.1582267079.git.esben@geanix.com>
+        Fri, 21 Feb 2020 01:48:56 -0500
+Received: from gateway23.websitewelcome.com ([192.185.50.141]:48485 "EHLO
+        gateway23.websitewelcome.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726201AbgBUGs4 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 21 Feb 2020 01:48:56 -0500
+Received: from cm14.websitewelcome.com (cm14.websitewelcome.com [100.42.49.7])
+        by gateway23.websitewelcome.com (Postfix) with ESMTP id A71161F0
+        for <linux-kernel@vger.kernel.org>; Fri, 21 Feb 2020 00:48:54 -0600 (CST)
+Received: from gator4166.hostgator.com ([108.167.133.22])
+        by cmsmtp with SMTP
+        id 527KjwnoQXVkQ527KjJCvr; Fri, 21 Feb 2020 00:48:54 -0600
+X-Authority-Reason: nr=8
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=embeddedor.com; s=default; h=Content-Transfer-Encoding:Content-Type:
+        In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:Subject:Sender
+        :Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
+        Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
+        List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+        bh=Nad0fubeYkDvfrUVkzt1lZoj+jY7cL/xLisjWoKQNWw=; b=GTrF9K002o9tKkf0NZBA3CDTkJ
+        rAMQScJrLM2rmrUJE2EWX2qte0DuRclflzkJpWTpTfNRdXLGRRwoOdjAa+EH4NsBBDAxQAacMN6bf
+        22xaPdY9BzkSt8BbEOcIvd/eqLgA9KRKOZor8yqPLBmFoptATnp7isDyGlAspbR+co7WRnr9aW9ks
+        3YFCXbg9bfrCwogYCV6TDAT8F2a49/r8CBop8sbrroNTS857/yKCdHoEa626Ju0v1iLa7arVRMSGt
+        Z5rjZFy4Dz4LUDNKyCkwu2t3OmVR21k8D9G/ErgLAli+DnkvA6XxMlTNlsfTRN6ZxZVPjqmbPyIOn
+        7JqcpwtA==;
+Received: from [200.68.141.13] (port=13612 helo=[192.168.43.131])
+        by gator4166.hostgator.com with esmtpsa (TLSv1.2:ECDHE-RSA-AES128-GCM-SHA256:128)
+        (Exim 4.92)
+        (envelope-from <gustavo@embeddedor.com>)
+        id 1j527K-003Olm-9P; Fri, 21 Feb 2020 00:48:54 -0600
+Subject: Re: linux-next: build warning in Linus' tree
+To:     Stephen Rothwell <sfr@canb.auug.org.au>
+Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Linux USB Mailing List <linux-usb@vger.kernel.org>
+References: <20200221143930.620f381e@canb.auug.org.au>
+From:   "Gustavo A. R. Silva" <gustavo@embeddedor.com>
+Autocrypt: addr=gustavo@embeddedor.com; keydata=
+ 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
+ VtSixD1uOgytAP7RWS474w==
+Message-ID: <786a4b98-207e-13e1-43fa-1c1b5f71346d@embeddedor.com>
+Date:   Fri, 21 Feb 2020 00:51:37 -0600
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.1
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200221143930.620f381e@canb.auug.org.au>
+Content-Type: text/plain; charset=windows-1252
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
+X-AntiAbuse: Primary Hostname - gator4166.hostgator.com
+X-AntiAbuse: Original Domain - vger.kernel.org
+X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
+X-AntiAbuse: Sender Address Domain - embeddedor.com
+X-BWhitelist: no
+X-Source-IP: 200.68.141.13
+X-Source-L: No
+X-Exim-ID: 1j527K-003Olm-9P
+X-Source: 
+X-Source-Args: 
+X-Source-Dir: 
+X-Source-Sender: ([192.168.43.131]) [200.68.141.13]:13612
+X-Source-Auth: gustavo@embeddedor.com
+X-Email-Count: 3
+X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
+X-Local-Domain: yes
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The SDMA engine used by TEMAC halts operation when it has finished
-processing of the last buffer descriptor in the buffer ring.
-Unfortunately, no interrupt event is generated when this happens,
-so we need to setup another mechanism to make sure DMA operation is
-restarted when enough buffers have been added to the ring.
 
-Fixes: 92744989533c ("net: add Xilinx ll_temac device driver")
-Signed-off-by: Esben Haabendal <esben@geanix.com>
----
- drivers/net/ethernet/xilinx/ll_temac.h      |  3 ++
- drivers/net/ethernet/xilinx/ll_temac_main.c | 58 +++++++++++++++++++--
- 2 files changed, 56 insertions(+), 5 deletions(-)
 
-diff --git a/drivers/net/ethernet/xilinx/ll_temac.h b/drivers/net/ethernet/xilinx/ll_temac.h
-index 99fe059e5c7f..53fb8141f1a6 100644
---- a/drivers/net/ethernet/xilinx/ll_temac.h
-+++ b/drivers/net/ethernet/xilinx/ll_temac.h
-@@ -380,6 +380,9 @@ struct temac_local {
- 	/* DMA channel control setup */
- 	u32 tx_chnl_ctrl;
- 	u32 rx_chnl_ctrl;
-+	u8 coalesce_count_rx;
-+
-+	struct delayed_work restart_work;
- };
- 
- /* Wrappers for temac_ior()/temac_iow() function pointers above */
-diff --git a/drivers/net/ethernet/xilinx/ll_temac_main.c b/drivers/net/ethernet/xilinx/ll_temac_main.c
-index 255207f2fd27..9461acec6f70 100644
---- a/drivers/net/ethernet/xilinx/ll_temac_main.c
-+++ b/drivers/net/ethernet/xilinx/ll_temac_main.c
-@@ -51,6 +51,7 @@
- #include <linux/ip.h>
- #include <linux/slab.h>
- #include <linux/interrupt.h>
-+#include <linux/workqueue.h>
- #include <linux/dma-mapping.h>
- #include <linux/processor.h>
- #include <linux/platform_data/xilinx-ll-temac.h>
-@@ -866,8 +867,11 @@ temac_start_xmit(struct sk_buff *skb, struct net_device *ndev)
- 	skb_dma_addr = dma_map_single(ndev->dev.parent, skb->data,
- 				      skb_headlen(skb), DMA_TO_DEVICE);
- 	cur_p->len = cpu_to_be32(skb_headlen(skb));
--	if (WARN_ON_ONCE(dma_mapping_error(ndev->dev.parent, skb_dma_addr)))
--		return NETDEV_TX_BUSY;
-+	if (WARN_ON_ONCE(dma_mapping_error(ndev->dev.parent, skb_dma_addr))) {
-+		dev_kfree_skb_any(skb);
-+		ndev->stats.tx_dropped++;
-+		return NETDEV_TX_OK;
-+	}
- 	cur_p->phys = cpu_to_be32(skb_dma_addr);
- 	ptr_to_txbd((void *)skb, cur_p);
- 
-@@ -897,7 +901,9 @@ temac_start_xmit(struct sk_buff *skb, struct net_device *ndev)
- 			dma_unmap_single(ndev->dev.parent,
- 					 be32_to_cpu(cur_p->phys),
- 					 skb_headlen(skb), DMA_TO_DEVICE);
--			return NETDEV_TX_BUSY;
-+			dev_kfree_skb_any(skb);
-+			ndev->stats.tx_dropped++;
-+			return NETDEV_TX_OK;
- 		}
- 		cur_p->phys = cpu_to_be32(skb_dma_addr);
- 		cur_p->len = cpu_to_be32(skb_frag_size(frag));
-@@ -920,6 +926,17 @@ temac_start_xmit(struct sk_buff *skb, struct net_device *ndev)
- 	return NETDEV_TX_OK;
- }
- 
-+static int ll_temac_recv_buffers_available(struct temac_local *lp)
-+{
-+	int available;
-+
-+	if (!lp->rx_skb[lp->rx_bd_ci])
-+		return 0;
-+	available = 1 + lp->rx_bd_tail - lp->rx_bd_ci;
-+	if (available <= 0)
-+		available += RX_BD_NUM;
-+	return available;
-+}
- 
- static void ll_temac_recv(struct net_device *ndev)
- {
-@@ -990,6 +1007,18 @@ static void ll_temac_recv(struct net_device *ndev)
- 			lp->rx_bd_ci = 0;
- 	} while (rx_bd != lp->rx_bd_tail);
- 
-+	/* DMA operations will halt when the last buffer descriptor is
-+	 * processed (ie. the one pointed to by RX_TAILDESC_PTR).
-+	 * When that happens, no more interrupt events will be
-+	 * generated.  No IRQ_COAL or IRQ_DLY, and not even an
-+	 * IRQ_ERR.  To avoid stalling, we schedule a delayed work
-+	 * when there is a potential risk of that happening.  The work
-+	 * will call this function, and thus re-schedule itself until
-+	 * enough buffers are available again.
-+	 */
-+	if (ll_temac_recv_buffers_available(lp) < lp->coalesce_count_rx)
-+		schedule_delayed_work(&lp->restart_work, HZ / 1000);
-+
- 	/* Allocate new buffers for those buffer descriptors that were
- 	 * passed to network stack.  Note that GFP_ATOMIC allocations
- 	 * can fail (e.g. when a larger burst of GFP_ATOMIC
-@@ -1045,6 +1074,18 @@ static void ll_temac_recv(struct net_device *ndev)
- 	spin_unlock_irqrestore(&lp->rx_lock, flags);
- }
- 
-+/* Function scheduled to ensure a restart in case of DMA halt
-+ * condition caused by running out of buffer descriptors.
-+ */
-+static void ll_temac_restart_work_func(struct work_struct *work)
-+{
-+	struct temac_local *lp = container_of(work, struct temac_local,
-+					      restart_work.work);
-+	struct net_device *ndev = lp->ndev;
-+
-+	ll_temac_recv(ndev);
-+}
-+
- static irqreturn_t ll_temac_tx_irq(int irq, void *_ndev)
- {
- 	struct net_device *ndev = _ndev;
-@@ -1137,6 +1178,8 @@ static int temac_stop(struct net_device *ndev)
- 
- 	dev_dbg(&ndev->dev, "temac_close()\n");
- 
-+	cancel_delayed_work_sync(&lp->restart_work);
-+
- 	free_irq(lp->tx_irq, ndev);
- 	free_irq(lp->rx_irq, ndev);
- 
-@@ -1258,6 +1301,7 @@ static int temac_probe(struct platform_device *pdev)
- 	lp->dev = &pdev->dev;
- 	lp->options = XTE_OPTION_DEFAULTS;
- 	spin_lock_init(&lp->rx_lock);
-+	INIT_DELAYED_WORK(&lp->restart_work, ll_temac_restart_work_func);
- 
- 	/* Setup mutex for synchronization of indirect register access */
- 	if (pdata) {
-@@ -1364,6 +1408,7 @@ static int temac_probe(struct platform_device *pdev)
- 		 */
- 		lp->tx_chnl_ctrl = 0x10220000;
- 		lp->rx_chnl_ctrl = 0xff070000;
-+		lp->coalesce_count_rx = 0x07;
- 
- 		/* Finished with the DMA node; drop the reference */
- 		of_node_put(dma_np);
-@@ -1395,11 +1440,14 @@ static int temac_probe(struct platform_device *pdev)
- 				(pdata->tx_irq_count << 16);
- 		else
- 			lp->tx_chnl_ctrl = 0x10220000;
--		if (pdata->rx_irq_timeout || pdata->rx_irq_count)
-+		if (pdata->rx_irq_timeout || pdata->rx_irq_count) {
- 			lp->rx_chnl_ctrl = (pdata->rx_irq_timeout << 24) |
- 				(pdata->rx_irq_count << 16);
--		else
-+			lp->coalesce_count_rx = pdata->rx_irq_count;
-+		} else {
- 			lp->rx_chnl_ctrl = 0xff070000;
-+			lp->coalesce_count_rx = 0x07;
-+		}
- 	}
- 
- 	/* Error handle returned DMA RX and TX interrupts */
--- 
-2.25.0
+On 2/20/20 21:39, Stephen Rothwell wrote:
+> Hi all,
+> 
+> For some time I have been getting the following warning from the powerpc
+> allyesconfig build:
+> 
+> drivers/usb/host/fhci-hcd.c: In function 'fhci_urb_enqueue':
+> drivers/usb/host/fhci-hcd.c:398:8: warning: this statement may fall through [-Wimplicit-fallthrough=]
+>   398 |   size = 2;
+>       |   ~~~~~^~~
+> drivers/usb/host/fhci-hcd.c:399:2: note: here
+>   399 |  case PIPE_BULK:
+>       |  ^~~~
+> 
+> Introduced by commit
+> 
+>   236dd4d18f29 ("USB: Driver for Freescale QUICC Engine USB Host Controller")
+> 
+> from 2009, but exposed only recently.
+> 
 
+Thanks for the report, Stephen. The following patch should fix that:
+
+https://lore.kernel.org/lkml/20200213085401.27862-1-linux@rasmusvillemoes.dk/
+
+Greg,
+
+I would just replace the two "Fixes" tags in the patch above with this one:
+
+Fixes: 236dd4d18f29 ("USB: Driver for Freescale QUICC Engine USB Host Controller")
+
+Thanks
+--
+Gustavo
