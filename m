@@ -7,46 +7,48 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E4B5BC35641
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 08:12:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 21FC0C35641
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 08:12:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AF0042467A
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 08:12:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EA0D524680
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 08:12:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582272720;
-	bh=AJXW1CMLWcubyoLjPolCPobZXlVMMU/nqykdf1BmEWE=;
+	s=default; t=1582272723;
+	bh=tO4IK6qaQxYUSnNMvJsU3p6KHsQXd6nqqTonDg5LQMo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=TgQAvXW+uhnljjbxv4hAStR1XAqgLLuokZhZYVEQHJnVAf7bqqmwbKj+5uQbSPYST
-	 vXYprPr7ocY4XgA2h/iyHyWIrXhoy2kZFtAlIgnD1mmaBoVnFUhs60VFhW15t/V9Sx
-	 bpVq/gTQOM8b3NWvgs7Hyvn5iSq4vn7JupwtwjWM=
+	b=viFX0x7n2uVdd2IIk+XeIXSBxOCHdFX7q42V3E893E0+rPCJ9P8d+HzIx+Ailmk7z
+	 NXAwobFlMcGCX9v8+sfZwG5T2AkvZ2hfjMsHwy1k6jqduRVWTcKiNf4+TBJQGIQVvn
+	 5u0gk+suKwQhvsglYikoUHolrty1uvKoTdqLb3LI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732771AbgBUIL7 (ORCPT
+        id S1732780AbgBUIMC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Feb 2020 03:11:59 -0500
-Received: from mail.kernel.org ([198.145.29.99]:47530 "EHLO mail.kernel.org"
+        Fri, 21 Feb 2020 03:12:02 -0500
+Received: from mail.kernel.org ([198.145.29.99]:47648 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732748AbgBUILy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Feb 2020 03:11:54 -0500
+        id S1732748AbgBUIMA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 21 Feb 2020 03:12:00 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B927824670;
-        Fri, 21 Feb 2020 08:11:53 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 80E2D24670;
+        Fri, 21 Feb 2020 08:11:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1582272714;
-        bh=AJXW1CMLWcubyoLjPolCPobZXlVMMU/nqykdf1BmEWE=;
+        s=default; t=1582272720;
+        bh=tO4IK6qaQxYUSnNMvJsU3p6KHsQXd6nqqTonDg5LQMo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=0KxZ4sKkbSR2hy9jlFx4tUd+bVlehGQHAs1Hr2BATda+G8O1tvnX2NtGv5uMSIWYn
-         TJaLHqG1S+Zr8vhNQ5XxuddoQAmTc4rjiU2m7kAECCNflylCVvS4ygQpB48HuPy/+c
-         5ZYnQ6vxVDrueRLJmEsjpyPS/UryPfADPHak5CQk=
+        b=fd8o92BOFIj7mV92FMhPwM0TWDadxEzaZcFogfmTmU3MbhkWXwNHLtVqba8M+7JI+
+         dZNn4nYS2/wHq+f7XDTgAqqmBdK2FvMJ3miHPKpwzWEKIFpRcdeUn3eonSaE9ElSKT
+         /z5nb7e0/NcfMDWrJCHeS+Ia666uCnFc7RowvFaY=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Wei Yongjun <weiyongjun1@huawei.com>,
-        Borislav Petkov <bp@suse.de>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 247/344] EDAC/sifive: Fix return value check in ecc_register()
-Date:   Fri, 21 Feb 2020 08:40:46 +0100
-Message-Id: <20200221072411.860524138@linuxfoundation.org>
+        stable@vger.kernel.org, Hulk Robot <hulkci@huawei.com>,
+        zhengbin <zhengbin13@huawei.com>,
+        Paul Mackerras <paulus@ozlabs.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.4 248/344] KVM: PPC: Remove set but not used variable ra, rs, rt
+Date:   Fri, 21 Feb 2020 08:40:47 +0100
+Message-Id: <20200221072411.973601352@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200221072349.335551332@linuxfoundation.org>
 References: <20200221072349.335551332@linuxfoundation.org>
@@ -59,38 +61,53 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Wei Yongjun <weiyongjun1@huawei.com>
+From: zhengbin <zhengbin13@huawei.com>
 
-[ Upstream commit 6cd18453b68942913fd3b1913b707646e544c2ac ]
+[ Upstream commit 4de0a8355463e068e443b48eb5ae32370155368b ]
 
-In case of error, the function edac_device_alloc_ctl_info() returns a
-NULL pointer, not ERR_PTR(). Replace the IS_ERR() test in the return
-value check with a NULL test.
+Fixes gcc '-Wunused-but-set-variable' warning:
 
-Fixes: 91abaeaaff35 ("EDAC/sifive: Add EDAC platform driver for SiFive SoCs")
-Signed-off-by: Wei Yongjun <weiyongjun1@huawei.com>
-Signed-off-by: Borislav Petkov <bp@suse.de>
-Link: https://lkml.kernel.org/r/20200115150303.112627-1-weiyongjun1@huawei.com
+arch/powerpc/kvm/emulate_loadstore.c: In function kvmppc_emulate_loadstore:
+arch/powerpc/kvm/emulate_loadstore.c:87:6: warning: variable ra set but not used [-Wunused-but-set-variable]
+arch/powerpc/kvm/emulate_loadstore.c: In function kvmppc_emulate_loadstore:
+arch/powerpc/kvm/emulate_loadstore.c:87:10: warning: variable rs set but not used [-Wunused-but-set-variable]
+arch/powerpc/kvm/emulate_loadstore.c: In function kvmppc_emulate_loadstore:
+arch/powerpc/kvm/emulate_loadstore.c:87:14: warning: variable rt set but not used [-Wunused-but-set-variable]
+
+They are not used since commit 2b33cb585f94 ("KVM: PPC: Reimplement
+LOAD_FP/STORE_FP instruction mmio emulation with analyse_instr() input")
+
+Reported-by: Hulk Robot <hulkci@huawei.com>
+Signed-off-by: zhengbin <zhengbin13@huawei.com>
+Signed-off-by: Paul Mackerras <paulus@ozlabs.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/edac/sifive_edac.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ arch/powerpc/kvm/emulate_loadstore.c | 5 -----
+ 1 file changed, 5 deletions(-)
 
-diff --git a/drivers/edac/sifive_edac.c b/drivers/edac/sifive_edac.c
-index 413cdb4a591db..bb9ceeaf29bf9 100644
---- a/drivers/edac/sifive_edac.c
-+++ b/drivers/edac/sifive_edac.c
-@@ -54,8 +54,8 @@ static int ecc_register(struct platform_device *pdev)
- 	p->dci = edac_device_alloc_ctl_info(0, "sifive_ecc", 1, "sifive_ecc",
- 					    1, 1, NULL, 0,
- 					    edac_device_alloc_index());
--	if (IS_ERR(p->dci))
--		return PTR_ERR(p->dci);
-+	if (!p->dci)
-+		return -ENOMEM;
+diff --git a/arch/powerpc/kvm/emulate_loadstore.c b/arch/powerpc/kvm/emulate_loadstore.c
+index 2e496eb86e94a..1139bc56e0045 100644
+--- a/arch/powerpc/kvm/emulate_loadstore.c
++++ b/arch/powerpc/kvm/emulate_loadstore.c
+@@ -73,7 +73,6 @@ int kvmppc_emulate_loadstore(struct kvm_vcpu *vcpu)
+ {
+ 	struct kvm_run *run = vcpu->run;
+ 	u32 inst;
+-	int ra, rs, rt;
+ 	enum emulation_result emulated = EMULATE_FAIL;
+ 	int advance = 1;
+ 	struct instruction_op op;
+@@ -85,10 +84,6 @@ int kvmppc_emulate_loadstore(struct kvm_vcpu *vcpu)
+ 	if (emulated != EMULATE_DONE)
+ 		return emulated;
  
- 	p->dci->dev = &pdev->dev;
- 	p->dci->mod_name = "Sifive ECC Manager";
+-	ra = get_ra(inst);
+-	rs = get_rs(inst);
+-	rt = get_rt(inst);
+-
+ 	vcpu->arch.mmio_vsx_copy_nums = 0;
+ 	vcpu->arch.mmio_vsx_offset = 0;
+ 	vcpu->arch.mmio_copy_type = KVMPPC_VSX_COPY_NONE;
 -- 
 2.20.1
 
