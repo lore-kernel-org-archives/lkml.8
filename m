@@ -4,50 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 767C7C35641
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 08:36:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BA8C8C35640
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 08:37:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4D80520578
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 08:36:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 835B020578
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 08:37:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582274217;
-	bh=wySVuzOAKsVfP2zWPLQgRaUCUUY7XFfw5EC5uuHR3qU=;
+	s=default; t=1582274222;
+	bh=j27L0uvNh+GXvHJve/VVwZnTA0Mp4pOfRumbA87sMpU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=WRQs1B9ti10X0WQLgtrp7R6he3zoBF/OX5RARFMODRvtXRdCBK0++wNuWtg29uZ8q
-	 W5CfVfrVtZ3dq9tBoeC9WFVDx4DtImpF1DnuzWQZsHd87YRMl1KgfkPvDXszGNlk+0
-	 vI0ELr5FjwWxXzMDQs+iBINmurK2CfFGnUfj/dE4=
+	b=tJtbiF8Jj2qHyEfvAQ7FbUFAFIVh1duurpIP8T8PJfjs5t8kd8/NTmdngumP+8Gew
+	 1FpPsjMF+mfVLa2KA4DtupmWljoIDY+oCEXRucmgl3M2SK6bM4Fr2TdnQnyD3JNmL1
+	 XSpFMCPzQHzsFORpW60lpF++dg589C8Ju1aZXyOA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732131AbgBUIg4 (ORCPT
+        id S1732599AbgBUIhB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Feb 2020 03:36:56 -0500
-Received: from mail.kernel.org ([198.145.29.99]:39352 "EHLO mail.kernel.org"
+        Fri, 21 Feb 2020 03:37:01 -0500
+Received: from mail.kernel.org ([198.145.29.99]:38924 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731492AbgBUIFo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Feb 2020 03:05:44 -0500
+        id S1731818AbgBUIFZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 21 Feb 2020 03:05:25 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 13749222C4;
-        Fri, 21 Feb 2020 08:05:42 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id DF60C20801;
+        Fri, 21 Feb 2020 08:05:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1582272343;
-        bh=wySVuzOAKsVfP2zWPLQgRaUCUUY7XFfw5EC5uuHR3qU=;
+        s=default; t=1582272325;
+        bh=j27L0uvNh+GXvHJve/VVwZnTA0Mp4pOfRumbA87sMpU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=GUxByzR1X1yXH0FoWJZ81OQ3U5DcLH61mFDfjHVD5pVWP65SNV0bbsPwSvRXu6FXa
-         TifsYVdpAKzbUviXK6m5FH+e68DVPegoMhhWAU+3JKUXhhhmbfYwgw4xVLBCufNjxq
-         cFraDjtdMNdLi+V/VI1bLqe694MrFHTup1Jp79eQ=
+        b=JX39ZVqhxZ9furNYtzEoSqL+z/A/3V6wCzZBHshQBoDQqU7glS6pXM/l1FYmGfm7F
+         s2Ueruyb5akKjYQ2RVUqXJ4i+YrGzb0bn2ql0wp8HqtpHvgw/oKsc7VBRCILNPNm3d
+         508W5CjGhL6KXlSVh50nPYAk5dmZwGFTOzQvwRtc=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Martin Schiller <ms@dev.tdt.de>,
-        "David S. Miller" <davem@davemloft.net>,
+        stable@vger.kernel.org, Robin Murphy <robin.murphy@arm.com>,
+        Heiko Stuebner <heiko@sntech.de>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 071/344] wan/hdlc_x25: fix skb handling
-Date:   Fri, 21 Feb 2020 08:37:50 +0100
-Message-Id: <20200221072355.441387749@linuxfoundation.org>
+Subject: [PATCH 5.4 099/344] arm64: dts: rockchip: Fix NanoPC-T4 cooling maps
+Date:   Fri, 21 Feb 2020 08:38:18 +0100
+Message-Id: <20200221072357.937889303@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200221072349.335551332@linuxfoundation.org>
 References: <20200221072349.335551332@linuxfoundation.org>
@@ -60,68 +60,64 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Martin Schiller <ms@dev.tdt.de>
+From: Robin Murphy <robin.murphy@arm.com>
 
-[ Upstream commit 953c4a08dfc9ffe763a8340ac10f459d6c6cc4eb ]
+[ Upstream commit a793e19c15f25a126138ac4ae9facf9204754af3 ]
 
-o call skb_reset_network_header() before hdlc->xmit()
- o change skb proto to HDLC (0x0019) before hdlc->xmit()
- o call dev_queue_xmit_nit() before hdlc->xmit()
+Although it appeared to follow logically from the bindings, apparently
+the thermal framework can't properly cope with a single cooling device
+being shared between multiple maps. The CPU zone is probably easier to
+overheat, so remove the references to the (optional) fan from the GPU
+cooling zone to avoid things getting confused. Hopefully GPU-intensive
+tasks will leak enough heat across to the CPU zone to still hit the
+fan trips before reaching critical GPU temperatures.
 
-This changes make it possible to trace (tcpdump) outgoing layer2
-(ETH_P_HDLC) packets
-
-Additionally call skb_reset_network_header() after each skb_push() /
-skb_pull().
-
-Signed-off-by: Martin Schiller <ms@dev.tdt.de>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Signed-off-by: Robin Murphy <robin.murphy@arm.com>
+Link: https://lore.kernel.org/r/5bb39f3115df1a487d717d3ae87e523b03749379.1573908197.git.robin.murphy@arm.com
+Signed-off-by: Heiko Stuebner <heiko@sntech.de>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/wan/hdlc_x25.c | 13 +++++++++++--
- 1 file changed, 11 insertions(+), 2 deletions(-)
+ .../boot/dts/rockchip/rk3399-nanopc-t4.dts    | 27 -------------------
+ 1 file changed, 27 deletions(-)
 
-diff --git a/drivers/net/wan/hdlc_x25.c b/drivers/net/wan/hdlc_x25.c
-index 5643675ff7241..bf78073ee7fd9 100644
---- a/drivers/net/wan/hdlc_x25.c
-+++ b/drivers/net/wan/hdlc_x25.c
-@@ -62,11 +62,12 @@ static int x25_data_indication(struct net_device *dev, struct sk_buff *skb)
- {
- 	unsigned char *ptr;
+diff --git a/arch/arm64/boot/dts/rockchip/rk3399-nanopc-t4.dts b/arch/arm64/boot/dts/rockchip/rk3399-nanopc-t4.dts
+index 2a127985ab171..d3ed8e5e770f1 100644
+--- a/arch/arm64/boot/dts/rockchip/rk3399-nanopc-t4.dts
++++ b/arch/arm64/boot/dts/rockchip/rk3399-nanopc-t4.dts
+@@ -94,33 +94,6 @@
+ 	};
+ };
  
--	skb_push(skb, 1);
+-&gpu_thermal {
+-	trips {
+-		gpu_warm: gpu_warm {
+-			temperature = <55000>;
+-			hysteresis = <2000>;
+-			type = "active";
+-		};
 -
- 	if (skb_cow(skb, 1))
- 		return NET_RX_DROP;
- 
-+	skb_push(skb, 1);
-+	skb_reset_network_header(skb);
-+
- 	ptr  = skb->data;
- 	*ptr = X25_IFACE_DATA;
- 
-@@ -79,6 +80,13 @@ static int x25_data_indication(struct net_device *dev, struct sk_buff *skb)
- static void x25_data_transmit(struct net_device *dev, struct sk_buff *skb)
- {
- 	hdlc_device *hdlc = dev_to_hdlc(dev);
-+
-+	skb_reset_network_header(skb);
-+	skb->protocol = hdlc_type_trans(skb, dev);
-+
-+	if (dev_nit_active(dev))
-+		dev_queue_xmit_nit(skb, dev);
-+
- 	hdlc->xmit(skb, dev); /* Ignore return value :-( */
- }
- 
-@@ -93,6 +101,7 @@ static netdev_tx_t x25_xmit(struct sk_buff *skb, struct net_device *dev)
- 	switch (skb->data[0]) {
- 	case X25_IFACE_DATA:	/* Data to be transmitted */
- 		skb_pull(skb, 1);
-+		skb_reset_network_header(skb);
- 		if ((result = lapb_data_request(dev, skb)) != LAPB_OK)
- 			dev_kfree_skb(skb);
- 		return NETDEV_TX_OK;
+-		gpu_hot: gpu_hot {
+-			temperature = <65000>;
+-			hysteresis = <2000>;
+-			type = "active";
+-		};
+-	};
+-	cooling-maps {
+-		map1 {
+-			trip = <&gpu_warm>;
+-			cooling-device = <&fan THERMAL_NO_LIMIT 1>;
+-		};
+-
+-		map2 {
+-			trip = <&gpu_hot>;
+-			cooling-device = <&fan 2 THERMAL_NO_LIMIT>;
+-		};
+-	};
+-};
+-
+ &pinctrl {
+ 	ir {
+ 		ir_rx: ir-rx {
 -- 
 2.20.1
 
