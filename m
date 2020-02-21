@@ -2,102 +2,120 @@ Return-Path: <SRS0=1210=4J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+X-Spam-Status: No, score=-5.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1B7B9C11D00
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 00:21:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CC52AC11D25
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 00:21:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E34A324654
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 00:21:16 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582244477;
-	bh=Hyd2ABFVo1kBeYwCK2oi93oNf6lC5RwcHhN2Ky8uVJY=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=s0KdDUSjxvtyUos2/Xme7TM+8O1q7KGOpsxvULS2sn/8CKD6VuiPcHlrLlavbkaPR
-	 qARkBoQLPz7Fl6iObfrSXnEfwkjVTt5LqcDZlNQv+KJ0exC2OBHES/jMWxRuNETem/
-	 Vp3UyU72QKyhUCzPVg4ayz+I88B2N/gqMbwfo1rg=
+	by mail.kernel.org (Postfix) with ESMTP id A253E24653
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 00:21:24 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="I6fAixvG"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729518AbgBUAVP (ORCPT
+        id S1729541AbgBUAVX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Feb 2020 19:21:15 -0500
-Received: from mail.kernel.org ([198.145.29.99]:41194 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729392AbgBUAVP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Feb 2020 19:21:15 -0500
-Received: from X1 (nat-ab2241.sltdut.senawave.net [162.218.216.4])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9989424654;
-        Fri, 21 Feb 2020 00:21:14 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1582244474;
-        bh=Hyd2ABFVo1kBeYwCK2oi93oNf6lC5RwcHhN2Ky8uVJY=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=vG91CCT7/IFH2MsfgsCkJYzC5fpIA20e7zIFoSDetbtBtuQnFZMeogQUutZe2fUqN
-         TsHMH/F8ME+CZrWtK9U+i1wMxaqlUimPg3rQ9m8t0k5jBVr0y2GK5fH9wlDrAm3sqi
-         oOIxHy8qghrpLnjgCXRgWHnHhBDc1/zyaEdjwLGU=
-Date:   Thu, 20 Feb 2020 16:21:14 -0800
-From:   Andrew Morton <akpm@linux-foundation.org>
-To:     Joe Perches <joe@perches.com>
-Cc:     linux-kernel@vger.kernel.org, clang-built-linux@googlegroups.com
-Subject: Re: [PATCH] cvt_fallthrough: A tool to convert /* fallthrough */
- comments to fallthrough;
-Message-Id: <20200220162114.138f976ae16a5e58e13a51ae@linux-foundation.org>
-In-Reply-To: <b56602fcf79f849e733e7b521bb0e17895d390fa.1582230379.git.joe@perches.com>
-References: <b56602fcf79f849e733e7b521bb0e17895d390fa.1582230379.git.joe@perches.com>
-X-Mailer: Sylpheed 3.5.1 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
-Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+        Thu, 20 Feb 2020 19:21:23 -0500
+Received: from bombadil.infradead.org ([198.137.202.133]:33250 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729392AbgBUAVX (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 20 Feb 2020 19:21:23 -0500
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
+        Content-Type:In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:
+        Subject:Sender:Reply-To:Content-ID:Content-Description;
+        bh=tMJ8YKxTeBtxTcT9+8gwag/FsvtT3wSn7stN9kvfG0Q=; b=I6fAixvGMEOmvfzzpJEepAfJtm
+        PXVdq7yCLQEEvy3t4ujzGyV7hIW+tgNWOV8C5gsgeQYhP6ptOwGo++BOf6tv10ZObHBITktO81YPa
+        4jTb5lEt5DXYFa/oiYiSp7rLSDtYv9RCg2hyZx+zX+bQ/SrQKlYio37lgRDJw1YECZxMGJfkoLMwR
+        CN/nFFlNnR7HtjwlPFeDw5VT4YPCJkAPkoD9d4K90iqtIkPIfypmhBbxTdEdhNu3K0GaPha8Nmgqp
+        yuh3hYYGgfpmN2VKO1HvdUWu2GBjyqBPghv3XIiekadWeA8GpLbHW3OafvDVigtMmp/mfiK4hAPQO
+        vAbEVGdQ==;
+Received: from [2601:1c0:6280:3f0::19c2]
+        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1j4w4H-0003FS-Sz; Fri, 21 Feb 2020 00:21:21 +0000
+Subject: Re: [PATCH v2 6/7] misc: bcm-vk: add Broadcom VK driver
+To:     Scott Branden <scott.branden@broadcom.com>,
+        Luis Chamberlain <mcgrof@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        David Brown <david.brown@linaro.org>,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        Shuah Khan <shuah@kernel.org>, bjorn.andersson@linaro.org,
+        Shuah Khan <skhan@linuxfoundation.org>,
+        Arnd Bergmann <arnd@arndb.de>
+Cc:     "Rafael J . Wysocki" <rafael@kernel.org>,
+        linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org,
+        BCM Kernel Feedback <bcm-kernel-feedback-list@broadcom.com>,
+        Olof Johansson <olof@lixom.net>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Dan Carpenter <dan.carpenter@oracle.com>,
+        Colin Ian King <colin.king@canonical.com>,
+        Kees Cook <keescook@chromium.org>,
+        Takashi Iwai <tiwai@suse.de>, linux-kselftest@vger.kernel.org,
+        Andy Gross <agross@kernel.org>,
+        Desmond Yan <desmond.yan@broadcom.com>,
+        James Hu <james.hu@broadcom.com>
+References: <20200220004825.23372-1-scott.branden@broadcom.com>
+ <20200220004825.23372-7-scott.branden@broadcom.com>
+ <827a4520-95ce-5264-90d9-ed730e5918e6@infradead.org>
+ <22c48aaf-21e2-56ab-3f40-e497a69cd936@broadcom.com>
+From:   Randy Dunlap <rdunlap@infradead.org>
+Message-ID: <bfbb883b-f222-922e-bdf0-3491af14e446@infradead.org>
+Date:   Thu, 20 Feb 2020 16:21:20 -0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.1
+MIME-Version: 1.0
+In-Reply-To: <22c48aaf-21e2-56ab-3f40-e497a69cd936@broadcom.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 20 Feb 2020 12:30:21 -0800 Joe Perches <joe@perches.com> wrote:
+On 2/20/20 4:06 PM, Scott Branden wrote:
+> Hi Randy,
+> 
+> On 2020-02-19 5:04 p.m., Randy Dunlap wrote:
+>> Hi,
+>>
+>> On 2/19/20 4:48 PM, Scott Branden wrote:
+>>> diff --git a/drivers/misc/bcm-vk/Kconfig b/drivers/misc/bcm-vk/Kconfig
+>>> new file mode 100644
+>>> index 000000000000..c75dfb89a38d
+>>> --- /dev/null
+>>> +++ b/drivers/misc/bcm-vk/Kconfig
+>>> @@ -0,0 +1,42 @@
+>>> +# SPDX-License-Identifier: GPL-2.0-only
+>>> +#
+>>> +# Broadcom VK device
+>>> +#
+>>> +config BCM_VK
+>>> +    tristate "Support for Broadcom VK Accelerators"
+>>> +    depends on PCI_MSI
+>>> +    default m
+>> Need to justify default m. Normally we don't add drivers as enabled unless
+>> they are required for basic (boot) operation.
+> Will remove default m as not needed to boot.  Interesting other offload engines misc/ocxl/Kconfig and misc/cxl/Kconfig have default m.
 
-> Convert /* fallthrough */ style comments to the pseudo-keyword fallthrough
-> to allow clang 10 and higher to work at finding missing fallthroughs too.
-> 
-> Requires a git repository and overwrites the input files.
-> 
-> Typical command use:
->     ./scripts/cvt_fallthrough.pl <path|file>
-> 
-> i.e.:
-> 
->    $ ./scripts/cvt_fallthrough.pl block
->      converts all files in block and its subdirectories
->    $ ./scripts/cvt_fallthrough.pl drivers/net/wireless/zydas/zd1201.c
->      converts a single file
-> 
-> A fallthrough comment with additional comments is converted akin to:
-> 
-> -		/* fall through - maybe userspace knows this conn_id. */
-> +		fallthrough;    /* maybe userspace knows this conn_id */
-> 
-> A fallthrough comment or fallthrough; between successive case statements
-> is deleted.
-> 
-> e.g.:
-> 
->     case FOO:
->     	/* fallthrough */ (or fallthrough;)
->     case BAR:
-> 
-> is converted to:
-> 
->     case FOO:
->     case BAR:
-> 
-> Signed-off-by: Joe Perches <joe@perches.com>
-> ---
->  scripts/cvt_fallthrough.pl | 215 +++++++++++++++++++++++++++++++++++++
+Thanks.
 
-Do we need this in the tree long-term?  Or is it a matters of "hey
-Linus, please run this" then something like add a checkpatch rule to
-catch future slipups?
+Uh, yes, that is interesting.  They both depend on PPC_POWERNV,
+which I know nothing about.
+
+>>> +    help
+>>> +      Select this option to enable support for Broadcom
+>>> +      VK Accelerators.  VK is used for performing
+>>> +      specific video offload processing.  This driver enables
+>>> +      userspace programs to access these accelerators via /dev/bcm-vk.N
+>>> +      devices.
+>>> +
+>>> +      If unsure, say N.
+
+-- 
+~Randy
 
