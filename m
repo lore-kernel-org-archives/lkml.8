@@ -2,108 +2,89 @@ Return-Path: <SRS0=1210=4J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 71188C35657
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 18:05:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 77337C35657
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 18:05:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4D7B820722
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 18:05:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4891420722
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 18:05:38 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="M2qRZDR0"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729597AbgBUSFF convert rfc822-to-8bit (ORCPT
+        id S1729312AbgBUSFh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Feb 2020 13:05:05 -0500
-Received: from mga01.intel.com ([192.55.52.88]:14812 "EHLO mga01.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725995AbgBUSFE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Feb 2020 13:05:04 -0500
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga007.jf.intel.com ([10.7.209.58])
-  by fmsmga101.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 21 Feb 2020 10:05:04 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.70,469,1574150400"; 
-   d="scan'208";a="225289409"
-Received: from orsmsx102.amr.corp.intel.com ([10.22.225.129])
-  by orsmga007.jf.intel.com with ESMTP; 21 Feb 2020 10:05:03 -0800
-Received: from orsmsx161.amr.corp.intel.com (10.22.240.84) by
- ORSMSX102.amr.corp.intel.com (10.22.225.129) with Microsoft SMTP Server (TLS)
- id 14.3.439.0; Fri, 21 Feb 2020 10:05:03 -0800
-Received: from orsmsx110.amr.corp.intel.com ([169.254.10.107]) by
- ORSMSX161.amr.corp.intel.com ([169.254.4.11]) with mapi id 14.03.0439.000;
- Fri, 21 Feb 2020 10:05:03 -0800
-From:   "Kleen, Andi" <andi.kleen@intel.com>
-To:     "Tang, Feng" <feng.tang@intel.com>,
-        Peter Zijlstra <peterz@infradead.org>
-CC:     "Chen, Rong A" <rong.a.chen@intel.com>,
-        Jiri Olsa <jolsa@redhat.com>, Ingo Molnar <mingo@kernel.org>,
-        Vince Weaver <vincent.weaver@maine.edu>,
-        Jiri Olsa <jolsa@kernel.org>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Arnaldo Carvalho de Melo <acme@redhat.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        "Naveen N. Rao" <naveen.n.rao@linux.vnet.ibm.com>,
-        Ravi Bangoria <ravi.bangoria@linux.ibm.com>,
-        Stephane Eranian <eranian@google.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        LKML <linux-kernel@vger.kernel.org>,
-        "lkp@lists.01.org" <lkp@lists.01.org>,
-        "Huang, Ying" <ying.huang@intel.com>
-Subject: RE: [LKP] Re: [perf/x86] 81ec3f3c4c: will-it-scale.per_process_ops
- -5.5% regression
-Thread-Topic: [LKP] Re: [perf/x86] 81ec3f3c4c: will-it-scale.per_process_ops
- -5.5% regression
-Thread-Index: AQHV6I1t87VLv9kiVEyQ9lHGZx1Mi6gl75j1
-Date:   Fri, 21 Feb 2020 18:05:02 +0000
-Message-ID: <E8ECBC65D0B2554DAD44EBE43059B3740F1EAC@ORSMSX110.amr.corp.intel.com>
-References: <20200205123216.GO12867@shao2-debian>
- <20200205125804.GM14879@hirez.programming.kicks-ass.net>,<20200221080325.GA67807@shbuild999.sh.intel.com>
-In-Reply-To: <20200221080325.GA67807@shbuild999.sh.intel.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-originating-ip: [10.3.86.139]
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 8BIT
+        Fri, 21 Feb 2020 13:05:37 -0500
+Received: from mail-pl1-f194.google.com ([209.85.214.194]:37395 "EHLO
+        mail-pl1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725995AbgBUSFg (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 21 Feb 2020 13:05:36 -0500
+Received: by mail-pl1-f194.google.com with SMTP id c23so1177019plz.4
+        for <linux-kernel@vger.kernel.org>; Fri, 21 Feb 2020 10:05:35 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=Vc/oNHZrVih+q2Wtn+OIaEagT0TK1906/KUzqovtsWk=;
+        b=M2qRZDR0w0N9TtAzvAhQVyBgCTUZsUJIVKjS0fJfLsSi2BD1Aiv3Z+5K//qXvLxSYo
+         g3CBX3z4HGbflblb3zaFb+c+wk5KD+vAjLflfdZN5mo2yVk3DBNSIYRQUL/0HoDK5epv
+         jJuqBDRt28YxlC4mUCUeiERSc54eTh37p3PVzzpHYUckHOf+Pn59L7jBWaD0ATFH2bNE
+         oeHRf39oYqxf3hx9ONMosK+9a7gg8cJXWLnupLhBfeDFbmuGebdanTmf/jEAJLKp46dp
+         Y/tFMmqR8UqvbBQc6AuB3F6Zs+mMTr0Nrr4UwuhH8ZvnTy8hGH7WL5N58YaOqfRWCXcT
+         x0xQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=Vc/oNHZrVih+q2Wtn+OIaEagT0TK1906/KUzqovtsWk=;
+        b=QRmeoVt57zRj4cn8UhWL8LjFFQaPO/s4MUtAXsYNCGn/ksHxu3K/j7hctKqoTmw1Pm
+         bfG4dxsHgyzWxp22DmU7hdudNKZ2qoeAQN5MRaLcSZ5/NaaEdVYm4aRAoyIImPx16Uwg
+         w2TOu3i8iO0At7qhcsUiWpi+44O6o0RU/zg/o1HuoqCGbuZ3eDxAjUSkGai858KxFr3A
+         Nl1CVMXjOHsPYSKZ/ljkp6dSb5mwynk/qQj3woZ7HI1aRykit8Dfn2ChYsiMWbOk4uK8
+         J8nCDdkDowR22zqZULSESO3S+viylgSBXtq4z1cFnNT2FkA8bmEYPp1WZcmNUQsmuuO0
+         remQ==
+X-Gm-Message-State: APjAAAV/DIiYhGEoRvO56WBA+UePZq7YDDYVTUETKblFQTuFXo/MbGDy
+        aqIYFq4efeU3K5tfW4Vs8e0=
+X-Google-Smtp-Source: APXvYqzf4h+MKzqKo6yp8to/XMq/SAEWHlDnmYGqE3oMTfdRBQiHu6uGRXaNXVbzCvPYKsR0f1UqIw==
+X-Received: by 2002:a17:90a:2223:: with SMTP id c32mr4700805pje.15.1582308335057;
+        Fri, 21 Feb 2020 10:05:35 -0800 (PST)
+Received: from workstation-portable ([103.87.57.170])
+        by smtp.gmail.com with ESMTPSA id 78sm901780pge.58.2020.02.21.10.05.31
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 21 Feb 2020 10:05:34 -0800 (PST)
+Date:   Fri, 21 Feb 2020 23:35:29 +0530
+From:   Amol Grover <frextrite@gmail.com>
+To:     David Miller <davem@davemloft.net>
+Cc:     edumazet@google.com, kuznet@ms2.inr.ac.ru, yoshfuji@linux-ipv6.org,
+        kuba@kernel.org, linux-kernel@vger.kernel.org,
+        linux-kernel-mentees@lists.linuxfoundation.org,
+        joel@joelfernandes.org, madhuparnabhowmik10@gmail.com,
+        paulmck@kernel.org
+Subject: Re: [PATCH] tcp: ipv4: Pass lockdep expression to RCU lists
+Message-ID: <20200221180529.GA3256@workstation-portable>
+References: <20200221152152.16685-1-frextrite@gmail.com>
+ <20200221.081958.1917105498519528151.davem@davemloft.net>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200221.081958.1917105498519528151.davem@davemloft.net>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Fri, Feb 21, 2020 at 08:19:58AM -0800, David Miller wrote:
+> 
+> netdev was not CC:'d on this patch, please resend with that fixed.
+> 
 
+Sorry for that. I've resend the patch.
 
->So likely, this commit changes the layout of the kernel text
->and data, 
+Thanks
+Amol
 
-It should be only data here. text changes all the time anyways,
-but data tends to be more stable.
-
-> which may trigger some cacheline level change. From
->the system map of the 2 kernels, a big trunk of symbol's address
->changes which follow the global "pmu",
-
-I wonder if it's the effect Andrew predicted a long time ago from
-using __read_mostly. If all the __read_mostlies are moved somewhere
-else the remaining read/write variables will get more sensitive to false sharing.
-
-A simple experiment would be to add a __cacheline_aligned to align it,
-and then add
-
-____cacheline_aligned char dummy[0]; 
-
-at the end to pad it to 64bytes.
-
-Or hopefully Jiri can figure it out from the C2C data.
-
->btw, we've seen similar case that an irrelevant commit changes
->the benchmark, like a hugetlb patch improves pagefault test on
->a platform that never uses hugetlb https://lkml.org/lkml/2020/1/14/150
-
-Yes we've had similar problems with the data segment before.
-
--Andi
+> Thank you.
