@@ -2,194 +2,156 @@ Return-Path: <SRS0=1210=4J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4538DC35642
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 09:22:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BB9E6C35641
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 09:22:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1309D2073A
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 09:22:24 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582276944;
-	bh=pjHNbG2oq138uQYds5DJIbJkvhz2l6NkNog/+t1q8Ec=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=T+JQth142K6BN1E5F+9PQEx7Zv6P3qV86clpkoiDDjFM5SYAlEi6PJRIxl6Xv1Qhd
-	 TWHRFzMAOq0A22EQ68zkkmA2AAQnKEJiL5BZ9SPCIbJM+6n2ZycUW2c9Le0CATKkAY
-	 1TxeWxSeOqLxg2joVxmDMt2299B8vP+gtKcrUa0I=
+	by mail.kernel.org (Postfix) with ESMTP id 85B8220722
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 09:22:33 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=citrix.com header.i=@citrix.com header.b="MFoYi+tE"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727743AbgBUJWX (ORCPT
+        id S1727933AbgBUJWc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Feb 2020 04:22:23 -0500
-Received: from mail.kernel.org ([198.145.29.99]:38452 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726244AbgBUJWW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Feb 2020 04:22:22 -0500
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 08DDD20722;
-        Fri, 21 Feb 2020 09:22:20 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1582276940;
-        bh=pjHNbG2oq138uQYds5DJIbJkvhz2l6NkNog/+t1q8Ec=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=HxDT8BRhztP2WTX3bgEvllGQp8+PDLoASLjfZ8HWWU07IYw0PXLTO0xQz0QbEbHNn
-         gUUoX8hmkk9yqi41YBvLcS3cD4XH7wCLjhrzYRIescdRlq6C5KJdluJrjiZjDX8hxG
-         0qjFvw7nx1jGT9Wlj74NJcrGyy0msCUCjjlnunGo=
-Date:   Fri, 21 Feb 2020 10:22:17 +0100
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     Scott Branden <scott.branden@broadcom.com>
-Cc:     Luis Chamberlain <mcgrof@kernel.org>,
-        David Brown <david.brown@linaro.org>,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        Shuah Khan <shuah@kernel.org>, bjorn.andersson@linaro.org,
-        Shuah Khan <skhan@linuxfoundation.org>,
-        Arnd Bergmann <arnd@arndb.de>,
-        "Rafael J . Wysocki" <rafael@kernel.org>,
-        linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org,
-        BCM Kernel Feedback <bcm-kernel-feedback-list@broadcom.com>,
-        Olof Johansson <olof@lixom.net>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Dan Carpenter <dan.carpenter@oracle.com>,
-        Colin Ian King <colin.king@canonical.com>,
-        Kees Cook <keescook@chromium.org>,
-        Takashi Iwai <tiwai@suse.de>, linux-kselftest@vger.kernel.org,
-        Andy Gross <agross@kernel.org>
-Subject: Re: [PATCH v2 5/7] bcm-vk: add bcm_vk UAPI
-Message-ID: <20200221092217.GA60193@kroah.com>
-References: <20200220004825.23372-1-scott.branden@broadcom.com>
- <20200220004825.23372-6-scott.branden@broadcom.com>
- <20200220075045.GB3261162@kroah.com>
- <030219dc-539a-a2db-5ab2-1de7336a811c@broadcom.com>
+        Fri, 21 Feb 2020 04:22:32 -0500
+Received: from esa4.hc3370-68.iphmx.com ([216.71.155.144]:43788 "EHLO
+        esa4.hc3370-68.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726244AbgBUJWb (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 21 Feb 2020 04:22:31 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
+  d=citrix.com; s=securemail; t=1582276950;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:content-transfer-encoding:in-reply-to;
+  bh=1o0dm0wP/9Dz9LlBZ6U1xeJE27JCYBLNrNyaJmSV7RA=;
+  b=MFoYi+tEl5BCR2wNmd5aWhFrnUXQDbqy9EzmBv+5Ij7a2pw+5LkAKqTj
+   yMl30d4+G1sbV3yQyvVXRX+8QwCBzC31Z+jjtbegpsndmqzOe6rOv7TUG
+   7nE42Yp91W0NmDeaoZoSdAWJULlCdPmhpfdMAR6T/QYJQlYWArAe/cLCh
+   0=;
+Authentication-Results: esa4.hc3370-68.iphmx.com; dkim=none (message not signed) header.i=none; spf=None smtp.pra=roger.pau@citrix.com; spf=Pass smtp.mailfrom=roger.pau@citrix.com; spf=None smtp.helo=postmaster@mail.citrix.com
+Received-SPF: None (esa4.hc3370-68.iphmx.com: no sender
+  authenticity information available from domain of
+  roger.pau@citrix.com) identity=pra; client-ip=162.221.158.21;
+  receiver=esa4.hc3370-68.iphmx.com;
+  envelope-from="roger.pau@citrix.com";
+  x-sender="roger.pau@citrix.com";
+  x-conformance=sidf_compatible
+Received-SPF: Pass (esa4.hc3370-68.iphmx.com: domain of
+  roger.pau@citrix.com designates 162.221.158.21 as permitted
+  sender) identity=mailfrom; client-ip=162.221.158.21;
+  receiver=esa4.hc3370-68.iphmx.com;
+  envelope-from="roger.pau@citrix.com";
+  x-sender="roger.pau@citrix.com";
+  x-conformance=sidf_compatible; x-record-type="v=spf1";
+  x-record-text="v=spf1 ip4:209.167.231.154 ip4:178.63.86.133
+  ip4:195.66.111.40/30 ip4:85.115.9.32/28 ip4:199.102.83.4
+  ip4:192.28.146.160 ip4:192.28.146.107 ip4:216.52.6.88
+  ip4:216.52.6.188 ip4:162.221.158.21 ip4:162.221.156.83
+  ip4:168.245.78.127 ~all"
+Received-SPF: None (esa4.hc3370-68.iphmx.com: no sender
+  authenticity information available from domain of
+  postmaster@mail.citrix.com) identity=helo;
+  client-ip=162.221.158.21; receiver=esa4.hc3370-68.iphmx.com;
+  envelope-from="roger.pau@citrix.com";
+  x-sender="postmaster@mail.citrix.com";
+  x-conformance=sidf_compatible
+IronPort-SDR: 2naM2fLXRcIEz8ci/DVJT0B1w7DqJ7CFF6pH3dGfAg8IDJnxKdg4pAIVGMLNM76zeD8JWQiYPu
+ aCowGjUBDV4/+Jj8d2GFJ4juB5ltAKhgt2ZeugZnWy0t88xKRc5q2rSJI1SB5tCEG1FWZ5nlZw
+ 0XpRIC+ckYLXsDK6/kM0cf6X8gOnCHMrrpTTVSe0V89LPhDLMpjyrXTuK2k0XFmXbmtzAWf1Tw
+ ayuQD7J/bhQRq21Khs7UiVOkrPP/IlfRq6ASzfvfe513kMpID3AZbDw7cSKFXRHGtJyy5X4TFQ
+ hfE=
+X-SBRS: 2.7
+X-MesageID: 13431188
+X-Ironport-Server: esa4.hc3370-68.iphmx.com
+X-Remote-IP: 162.221.158.21
+X-Policy: $RELAYED
+X-IronPort-AV: E=Sophos;i="5.70,467,1574139600"; 
+   d="scan'208";a="13431188"
+Date:   Fri, 21 Feb 2020 10:22:19 +0100
+From:   Roger Pau =?utf-8?B?TW9ubsOp?= <roger.pau@citrix.com>
+To:     "Durrant, Paul" <pdurrant@amazon.co.uk>
+CC:     "Agarwal, Anchal" <anchalag@amazon.com>,
+        "Valentin, Eduardo" <eduval@amazon.com>,
+        "len.brown@intel.com" <len.brown@intel.com>,
+        "peterz@infradead.org" <peterz@infradead.org>,
+        "benh@kernel.crashing.org" <benh@kernel.crashing.org>,
+        "x86@kernel.org" <x86@kernel.org>,
+        "linux-mm@kvack.org" <linux-mm@kvack.org>,
+        "pavel@ucw.cz" <pavel@ucw.cz>, "hpa@zytor.com" <hpa@zytor.com>,
+        "tglx@linutronix.de" <tglx@linutronix.de>,
+        "sstabellini@kernel.org" <sstabellini@kernel.org>,
+        "fllinden@amaozn.com" <fllinden@amaozn.com>,
+        "Kamata, Munehisa" <kamatam@amazon.com>,
+        "mingo@redhat.com" <mingo@redhat.com>,
+        "xen-devel@lists.xenproject.org" <xen-devel@lists.xenproject.org>,
+        "Singh, Balbir" <sblbir@amazon.com>,
+        "axboe@kernel.dk" <axboe@kernel.dk>,
+        "konrad.wilk@oracle.com" <konrad.wilk@oracle.com>,
+        "bp@alien8.de" <bp@alien8.de>,
+        "boris.ostrovsky@oracle.com" <boris.ostrovsky@oracle.com>,
+        "jgross@suse.com" <jgross@suse.com>,
+        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+        "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>,
+        "rjw@rjwysocki.net" <rjw@rjwysocki.net>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "vkuznets@redhat.com" <vkuznets@redhat.com>,
+        "davem@davemloft.net" <davem@davemloft.net>,
+        "Woodhouse, David" <dwmw@amazon.co.uk>
+Subject: Re: [Xen-devel] [RFC PATCH v3 06/12] xen-blkfront: add callbacks for
+ PM suspend and hibernation
+Message-ID: <20200221092219.GU4679@Air-de-Roger>
+References: <20200217100509.GE4679@Air-de-Roger>
+ <20200217230553.GA8100@dev-dsk-anchalag-2a-9c2d1d96.us-west-2.amazon.com>
+ <20200218091611.GN4679@Air-de-Roger>
+ <20200219180424.GA17584@dev-dsk-anchalag-2a-9c2d1d96.us-west-2.amazon.com>
+ <20200220083904.GI4679@Air-de-Roger>
+ <f986b845491b47cc8469d88e2e65e2a7@EX13D32EUC003.ant.amazon.com>
+ <20200220154507.GO4679@Air-de-Roger>
+ <c9662397256a4568a5cc7d70a84940e5@EX13D32EUC003.ant.amazon.com>
+ <20200220164839.GR4679@Air-de-Roger>
+ <e42fa35800f04b6f953e4af87f2c1a02@EX13D32EUC003.ant.amazon.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
+Content-Type: text/plain; charset="utf-8"
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <030219dc-539a-a2db-5ab2-1de7336a811c@broadcom.com>
+In-Reply-To: <e42fa35800f04b6f953e4af87f2c1a02@EX13D32EUC003.ant.amazon.com>
+X-ClientProxiedBy: AMSPEX02CAS01.citrite.net (10.69.22.112) To
+ AMSPEX02CL01.citrite.net (10.69.22.125)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Feb 20, 2020 at 05:15:58PM -0800, Scott Branden wrote:
-> Hi Greg,
+On Thu, Feb 20, 2020 at 05:01:52PM +0000, Durrant, Paul wrote:
+> > > Hopefully what I said above illustrates why it may not be 100% common.
+> > 
+> > Yes, that's fine. I don't expect it to be 100% common (as I guess
+> > that the hooks will have different prototypes), but I expect
+> > that routines can be shared, and that the approach taken can be the
+> > same.
+> > 
+> > For example one necessary difference will be that xenbus initiated
+> > suspend won't close the PV connection, in case suspension fails. On PM
+> > suspend you seem to always close the connection beforehand, so you
+> > will always have to re-negotiate on resume even if suspension failed.
+> > 
+> > What I'm mostly worried about is the different approach to ring
+> > draining. Ie: either xenbus is changed to freeze the queues and drain
+> > the shared rings, or PM uses the already existing logic of not
+> > flushing the rings an re-issuing in-flight requests on resume.
+> > 
 > 
-> Thanks for the review.  Comments inline.
-> 
-> On 2020-02-19 11:50 p.m., Greg Kroah-Hartman wrote:
-> > On Wed, Feb 19, 2020 at 04:48:23PM -0800, Scott Branden wrote:
-> > > Add user space api for bcm-vk driver.
-> > > 
-> > > Signed-off-by: Scott Branden <scott.branden@broadcom.com>
-> > > ---
-> > >   include/uapi/linux/misc/bcm_vk.h | 117 +++++++++++++++++++++++++++++++
-> > >   1 file changed, 117 insertions(+)
-> > >   create mode 100644 include/uapi/linux/misc/bcm_vk.h
-> > > 
-> > > diff --git a/include/uapi/linux/misc/bcm_vk.h b/include/uapi/linux/misc/bcm_vk.h
-> > > new file mode 100644
-> > > index 000000000000..56a2178e06f5
-> > > --- /dev/null
-> > > +++ b/include/uapi/linux/misc/bcm_vk.h
-> > > @@ -0,0 +1,117 @@
-> > > +/* SPDX-License-Identifier: ((GPL-2.0 WITH Linux-syscall-note) OR BSD-2-Clause) */
-> > > +/*
-> > > + * Copyright 2018-2020 Broadcom.
-> > > + */
-> > > +
-> > > +#ifndef __UAPI_LINUX_MISC_BCM_VK_H
-> > > +#define __UAPI_LINUX_MISC_BCM_VK_H
-> > > +
-> > > +#include <linux/ioctl.h>
-> > > +#include <linux/types.h>
-> > > +
-> > > +struct vk_image {
-> > > +	__u32 type;     /* Type of image */
-> > > +#define VK_IMAGE_TYPE_BOOT1 1 /* 1st stage (load to SRAM) */
-> > > +#define VK_IMAGE_TYPE_BOOT2 2 /* 2nd stage (load to DDR) */
-> > > +	char filename[64]; /* Filename of image */
-> > __u8?
-> I don't understand why char is not appropriate for a filename.
-> Would like to understand why __u8 is correct to use here vs. char.
+> Yes, that's needs consideration. I donâ€™t think the same semantic can be suitable for both. E.g. in a xen-suspend we need to freeze with as little processing as possible to avoid dirtying RAM late in the migration cycle, and we know that in-flight data can wait. But in a transition to S4 we need to make sure that at least all the in-flight blkif requests get completed, since they probably contain bits of the guest's memory image and that's not going to get saved any other way.
 
-Why is __u8 not correct?  It's the data type we use for ioctls.
+Thanks, that makes sense and something along this lines should be
+added to the commit message IMO.
 
-> > > +};
-> > > +
-> > > +/* default firmware images names */
-> > > +#define VK_BOOT1_DEF_VALKYRIE_FILENAME	"vk-boot1.bin"
-> > > +#define VK_BOOT2_DEF_VALKYRIE_FILENAME	"vk-boot2.bin"
-> > > +
-> > > +#define VK_BOOT1_DEF_VIPER_FILENAME	"vp-boot1.bin"
-> > > +#define VK_BOOT2_DEF_VIPER_FILENAME	"vp-boot2.bin"
-> > Why do these need to be in a uapi .h file?  Shouldn't they just be part
-> > of the normal MODULE_FIRMWARE() macro in the driver itself?
-> ioctl VK_IOCTL_LOAD_IMAGE passes in type of image to load and filename.
-> These are the default names used if the images are autoloaded by the driver.
+Wondering about S4, shouldn't we expect the queues to already be
+empty? As any subsystem that wanted to store something to disk should
+make sure requests have been successfully completed before
+suspending.
 
-Then put them in the driver, not in the user api file.
-
-> But if userspace app wishes to load (or reload) the default images then it
-> needs to know the name of the file to pass in ioctl.
-
-That's up to userspace.
-
-> I guess I could change the API at this point to lookup the default filename
-> if NULL filename passed into ioctl.
-
-Yes please.
-
-> > > +struct vk_access {
-> > > +	__u8 barno;     /* BAR number to use */
-> > > +	__u8 type;      /* Type of access */
-> > > +#define VK_ACCESS_READ 0
-> > > +#define VK_ACCESS_WRITE 1
-> > > +	__u32 len;      /* length of data */
-> > Horrible padding issues, are you sure this all works properly?
-> Haven't had any issues.
-
-Use pahole to see the holes you have in here and please fix that up.
-
-> > > +	__u64 offset;   /* offset in BAR */
-> > > +	__u32 *data;    /* where to read/write data to */
-> > Are you _SURE_ you want a pointer here?  How do you handle the compat
-> > issues with 32/64 user/kernel space?
-> Don't care about 32-bit user space for this driver.
-
-We all do, see the link that Arnd sent you.
-
-> I don't think there isn't even enough memory in such systems for the number
-> of streams of video buffers needed for transcoding.
-
-32bit systems have lots of memory.
-
-> This driver is only used in high end 64-bit x86 servers.
-
-For today, what about in 2 years?
-
-> But, VK_IOCTL_ACCESS_BAR can go away entirely if standard user space
-> approach already exists as you imply.
-
-Yes, please use that interface, as you should never duplicate existing
-functionality.
-
-> > > +};
-> > And isn't this just a normal PCI write thing?  Can't you do it from
-> > userspace using the existing userspace PCI accesses?  Why do you need a
-> > special ioctl for it?
-> This follows how pci_endpoint_test reads and writes BARS via ioctl.
-> It also abstracts the accesses all into the device node being opened.
-> 
-> I am not familiar with userspace PCI accesses.  Would this be through some
-> sys entries?
-
-Yes, it can read PCI config space that way, and if you use the uio
-interface, you can read PCI memory.
-
-thanks,
-
-greg k-h
+Thanks, Roger.
