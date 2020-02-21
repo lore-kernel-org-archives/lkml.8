@@ -5,48 +5,50 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4D452C35641
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 08:38:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ACE38C35640
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 08:38:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 15A3520578
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 08:38:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 81F9620578
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 08:38:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582274290;
-	bh=lF92hF88zHd33XQxLnxONLpWHtNulppo4iZqNdajo2M=;
+	s=default; t=1582274296;
+	bh=XVGy6iK7CadxPsP1+MFoAhGr6E5YoTKUWdF1RoQobYU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=1tYsDR+iTbxbkd+D+WMYclqDvUVgwjVSzt5AsTz1iMqW+xhZdbIBzKuBGe25yiEQO
-	 AuH76B4NA7eOmjNgDrhZUaeH8HqJytR0SM5BllXrGmHgnDU+AaXgAiyO08MHfvQWIy
-	 XluDHqUbimDy+Fcy9sXEYDVUK+6jUP0PacczUwD0=
+	b=iLXkF6QmqTJpmQH69YwisFCT906C/5p6GMFGir4YWWrGg+7Bwp7blOTFz+btiHkxJ
+	 xonxG5nd/Bu6WS31tDJhN3OOhpmV+slgzdxaxOCq8OFwHixVH7KqCu+GuPwWaShiDe
+	 W4Vy0wEf2TPjeidB83e5QzxbPPlgPyfYQ8h81eh8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731470AbgBUID3 (ORCPT
+        id S1729025AbgBUIDP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Feb 2020 03:03:29 -0500
-Received: from mail.kernel.org ([198.145.29.99]:36238 "EHLO mail.kernel.org"
+        Fri, 21 Feb 2020 03:03:15 -0500
+Received: from mail.kernel.org ([198.145.29.99]:35804 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731001AbgBUID1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Feb 2020 03:03:27 -0500
+        id S1731133AbgBUIDI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 21 Feb 2020 03:03:08 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 31B0A2465D;
-        Fri, 21 Feb 2020 08:03:26 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 87747206ED;
+        Fri, 21 Feb 2020 08:03:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1582272206;
-        bh=lF92hF88zHd33XQxLnxONLpWHtNulppo4iZqNdajo2M=;
+        s=default; t=1582272188;
+        bh=XVGy6iK7CadxPsP1+MFoAhGr6E5YoTKUWdF1RoQobYU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=otaDJvE2VSmfFgu7Jc60jYvs5hvIYOp7gR8LDCnG9iNcs3jYsVWWhIhHYNKnav4pR
-         MzqktORIv7jUbJ1E5hCz/NGxWBwzveCM05FpjvdnuoB3jor70H9rdjbXoGuD8NPTh6
-         QvnW4IVnhhhernNLGw1gARXKK5w2SqfABYZUJ8A4=
+        b=wUeT3dDr+JnOGsmfPR4OGFpDFvvDOfpunr1zujMKpP9f2e55MTtCEk5FUvcBAiIug
+         sUWDyJIe6VLRm+XpVZaWfsjIleVG7NP9Wwp8TPDdOZEp4+T8Rz+wQ2fOev6qrK6so0
+         sNnMvHYqAbtRlJc0ax2hptHeOiGu5A2se7Oa+70c=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Jia-Ju Bai <baijiaju1990@gmail.com>,
+        stable@vger.kernel.org,
+        Geert Uytterhoeven <geert+renesas@glider.be>,
+        =?UTF-8?q?Noralf=20Tr=C3=B8nnes?= <noralf@tronnes.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 055/344] uio: fix a sleep-in-atomic-context bug in uio_dmem_genirq_irqcontrol()
-Date:   Fri, 21 Feb 2020 08:37:34 +0100
-Message-Id: <20200221072354.062239864@linuxfoundation.org>
+Subject: [PATCH 5.4 031/344] drm/mipi_dbi: Fix off-by-one bugs in mipi_dbi_blank()
+Date:   Fri, 21 Feb 2020 08:37:10 +0100
+Message-Id: <20200221072351.967212900@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200221072349.335551332@linuxfoundation.org>
 References: <20200221072349.335551332@linuxfoundation.org>
@@ -59,54 +61,46 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jia-Ju Bai <baijiaju1990@gmail.com>
+From: Geert Uytterhoeven <geert+renesas@glider.be>
 
-[ Upstream commit b74351287d4bd90636c3f48bc188c2f53824c2d4 ]
+[ Upstream commit 2ce18249af5a28031b3f909cfafccc88ea966c9d ]
 
-The driver may sleep while holding a spinlock.
-The function call path (from bottom to top) in Linux 4.19 is:
+When configuring the frame memory window, the last column and row
+numbers are written to the column resp. page address registers.  These
+numbers are thus one less than the actual window width resp. height.
 
-kernel/irq/manage.c, 523:
-	synchronize_irq in disable_irq
-drivers/uio/uio_dmem_genirq.c, 140:
-	disable_irq in uio_dmem_genirq_irqcontrol
-drivers/uio/uio_dmem_genirq.c, 134:
-	_raw_spin_lock_irqsave in uio_dmem_genirq_irqcontrol
+While this is handled correctly in mipi_dbi_fb_dirty() since commit
+03ceb1c8dfd1e293 ("drm/tinydrm: Fix setting of the column/page end
+addresses."), it is not in mipi_dbi_blank().  The latter still forgets
+to subtract one when calculating the most significant bytes of the
+column and row numbers, thus programming wrong values when the display
+width or height is a multiple of 256.
 
-synchronize_irq() can sleep at runtime.
-
-To fix this bug, disable_irq() is called without holding the spinlock.
-
-This bug is found by a static analysis tool STCheck written by myself.
-
-Signed-off-by: Jia-Ju Bai <baijiaju1990@gmail.com>
-Link: https://lore.kernel.org/r/20191218094405.6009-1-baijiaju1990@gmail.com
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Fixes: 02dd95fe31693626 ("drm/tinydrm: Add MIPI DBI support")
+Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
+Signed-off-by: Noralf Trønnes <noralf@tronnes.org>
+Link: https://patchwork.freedesktop.org/patch/msgid/20191230130604.31006-1-geert+renesas@glider.be
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/uio/uio_dmem_genirq.c | 6 ++++--
- 1 file changed, 4 insertions(+), 2 deletions(-)
+ drivers/gpu/drm/drm_mipi_dbi.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/uio/uio_dmem_genirq.c b/drivers/uio/uio_dmem_genirq.c
-index ebcf1434e296d..44858f70f5f52 100644
---- a/drivers/uio/uio_dmem_genirq.c
-+++ b/drivers/uio/uio_dmem_genirq.c
-@@ -132,11 +132,13 @@ static int uio_dmem_genirq_irqcontrol(struct uio_info *dev_info, s32 irq_on)
- 	if (irq_on) {
- 		if (test_and_clear_bit(0, &priv->flags))
- 			enable_irq(dev_info->irq);
-+		spin_unlock_irqrestore(&priv->lock, flags);
- 	} else {
--		if (!test_and_set_bit(0, &priv->flags))
-+		if (!test_and_set_bit(0, &priv->flags)) {
-+			spin_unlock_irqrestore(&priv->lock, flags);
- 			disable_irq(dev_info->irq);
-+		}
- 	}
--	spin_unlock_irqrestore(&priv->lock, flags);
+diff --git a/drivers/gpu/drm/drm_mipi_dbi.c b/drivers/gpu/drm/drm_mipi_dbi.c
+index f8154316a3b0d..a05e64e3d80bb 100644
+--- a/drivers/gpu/drm/drm_mipi_dbi.c
++++ b/drivers/gpu/drm/drm_mipi_dbi.c
+@@ -367,9 +367,9 @@ static void mipi_dbi_blank(struct mipi_dbi_dev *dbidev)
+ 	memset(dbidev->tx_buf, 0, len);
  
- 	return 0;
- }
+ 	mipi_dbi_command(dbi, MIPI_DCS_SET_COLUMN_ADDRESS, 0, 0,
+-			 (width >> 8) & 0xFF, (width - 1) & 0xFF);
++			 ((width - 1) >> 8) & 0xFF, (width - 1) & 0xFF);
+ 	mipi_dbi_command(dbi, MIPI_DCS_SET_PAGE_ADDRESS, 0, 0,
+-			 (height >> 8) & 0xFF, (height - 1) & 0xFF);
++			 ((height - 1) >> 8) & 0xFF, (height - 1) & 0xFF);
+ 	mipi_dbi_command_buf(dbi, MIPI_DCS_WRITE_MEMORY_START,
+ 			     (u8 *)dbidev->tx_buf, len);
+ 
 -- 
 2.20.1
 
