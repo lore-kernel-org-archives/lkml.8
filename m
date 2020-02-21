@@ -5,50 +5,49 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1FBBEC35642
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 07:44:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 344A7C35641
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 07:44:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EB6A520801
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 07:44:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F07A5222C4
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 07:44:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582271066;
-	bh=m2QY89YMDTBv5LbPtFDrXsFu6fj+7Qh5AXzAdmpTi+o=;
+	s=default; t=1582271068;
+	bh=r7FkUelilDY8E2lxOEaBeUfq44C8QuYUFKAVBdViqps=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=tX+Xp4B45RLb7c2wQcgGJgUJECwJwmUm8IN5nEH5+qM2CMDFa4tCgCyGuZj1rOoqm
-	 7YadgkFAIOZaSyZUrbCcmkVSjjDV5V4HpA8vIQ27tYQasgAH/4MUmkZdZ7Rc4MqmdJ
-	 A1dSZZOqv9hQZhZQX7mcZEkujlU9saXx4q3oq7dc=
+	b=JH98kbwsz+y2Wy14mAYy7Y89d7BnC+ZkFiST+hac5ymP706KEXEroRT+nRioOBEjR
+	 +fqkxsfgOOG4XjqwLndFqRGrsgYyya2MNmxJJD5udUd8nIlsserLahQ2A06z5xJMmB
+	 yYndyj8ue5BnqVhTUtaxO7qB3w4BRk1lG126tEyI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727960AbgBUHoZ (ORCPT
+        id S1727984AbgBUHo0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Feb 2020 02:44:25 -0500
-Received: from mail.kernel.org ([198.145.29.99]:39016 "EHLO mail.kernel.org"
+        Fri, 21 Feb 2020 02:44:26 -0500
+Received: from mail.kernel.org ([198.145.29.99]:39062 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727851AbgBUHoV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Feb 2020 02:44:21 -0500
+        id S1727939AbgBUHoX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 21 Feb 2020 02:44:23 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5118320801;
-        Fri, 21 Feb 2020 07:44:20 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C13942465D;
+        Fri, 21 Feb 2020 07:44:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1582271060;
-        bh=m2QY89YMDTBv5LbPtFDrXsFu6fj+7Qh5AXzAdmpTi+o=;
+        s=default; t=1582271063;
+        bh=r7FkUelilDY8E2lxOEaBeUfq44C8QuYUFKAVBdViqps=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=d4lkq79SuWR8JOpsoiqsPQw+R+qd6H8TJoUSoP/y9ttC3LLzc38QT5cO8KRnUZ6wy
-         uLp00gXiEwn05Oh65MGKGdBCpjYbeJ1kwfy4JVts+iHiUAy1Pygwse88OdFWXYmxu/
-         mT+ohkBVWPoXIBYBEULxGEocIF1xrGABF9S6s4LY=
+        b=FjDg9EZ0PBSOrzdyArpSHP+hp/ZT9NxxGrrbQFpSU0WFXjjgpn7CawqFl0Ey7C4hU
+         XJFq69n13vdoYPQpgPG7jvU/YkqkxnNoUj0loyJN9YLzvxFCsteFVbJj7pXVZZZX3Q
+         G6cK4XNLqtU8i7R1KwSLzVhAWWU+QpNBP6YUIS4w=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Geert Uytterhoeven <geert+renesas@glider.be>,
-        Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.5 024/399] drm: rcar-du: Recognize "renesas,vsps" in addition to "vsps"
-Date:   Fri, 21 Feb 2020 08:35:49 +0100
-Message-Id: <20200221072404.720617938@linuxfoundation.org>
+        stable@vger.kernel.org, Wei Yongjun <weiyongjun1@huawei.com>,
+        Peter Ujfalusi <peter.ujfalusi@ti.com>,
+        Vinod Koul <vkoul@kernel.org>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.5 025/399] dmaengine: ti: edma: Fix error return code in edma_probe()
+Date:   Fri, 21 Feb 2020 08:35:50 +0100
+Message-Id: <20200221072404.804529594@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200221072402.315346745@linuxfoundation.org>
 References: <20200221072402.315346745@linuxfoundation.org>
@@ -61,72 +60,39 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Geert Uytterhoeven <geert+renesas@glider.be>
+From: Wei Yongjun <weiyongjun1@huawei.com>
 
-[ Upstream commit 7b627ce80fbd05885b27f711a5f9820f2b40749a ]
+[ Upstream commit d1fd03a35efc6285e43f4ef35ef04dbf2c9389c6 ]
 
-The Renesas-specific "vsps" property lacks a vendor prefix.
-Add a "renesas," prefix to comply with DT best practises.
-Retain backward compatibility with old DTBs by falling back to "vsps"
-when needed.
+Fix to return negative error code -ENOMEM from the error handling
+case instead of 0, as done elsewhere in this function.
 
-Fixes: 6d62ef3ac30be756 ("drm: rcar-du: Expose the VSP1 compositor through KMS planes")
-Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
-Reviewed-by: Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>
-Signed-off-by: Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>
+Fixes: 2a03c1314506 ("dmaengine: ti: edma: add missed operations")
+Signed-off-by: Wei Yongjun <weiyongjun1@huawei.com>
+Acked-by: Peter Ujfalusi <peter.ujfalusi@ti.com>
+Link: https://lore.kernel.org/r/20191212114622.127322-1-weiyongjun1@huawei.com
+Signed-off-by: Vinod Koul <vkoul@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/gpu/drm/rcar-du/rcar_du_kms.c | 17 ++++++++++++-----
- 1 file changed, 12 insertions(+), 5 deletions(-)
+ drivers/dma/ti/edma.c | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/gpu/drm/rcar-du/rcar_du_kms.c b/drivers/gpu/drm/rcar-du/rcar_du_kms.c
-index 0d59f390de19a..662d8075f4116 100644
---- a/drivers/gpu/drm/rcar-du/rcar_du_kms.c
-+++ b/drivers/gpu/drm/rcar-du/rcar_du_kms.c
-@@ -542,6 +542,7 @@ static int rcar_du_properties_init(struct rcar_du_device *rcdu)
- static int rcar_du_vsps_init(struct rcar_du_device *rcdu)
- {
- 	const struct device_node *np = rcdu->dev->of_node;
-+	const char *vsps_prop_name = "renesas,vsps";
- 	struct of_phandle_args args;
- 	struct {
- 		struct device_node *np;
-@@ -557,15 +558,21 @@ static int rcar_du_vsps_init(struct rcar_du_device *rcdu)
- 	 * entry contains a pointer to the VSP DT node and a bitmask of the
- 	 * connected DU CRTCs.
- 	 */
--	cells = of_property_count_u32_elems(np, "vsps") / rcdu->num_crtcs - 1;
-+	ret = of_property_count_u32_elems(np, vsps_prop_name);
-+	if (ret < 0) {
-+		/* Backward compatibility with old DTBs. */
-+		vsps_prop_name = "vsps";
-+		ret = of_property_count_u32_elems(np, vsps_prop_name);
+diff --git a/drivers/dma/ti/edma.c b/drivers/dma/ti/edma.c
+index 0628ee4bf1b41..03a7f647f7b2c 100644
+--- a/drivers/dma/ti/edma.c
++++ b/drivers/dma/ti/edma.c
+@@ -2342,8 +2342,10 @@ static int edma_probe(struct platform_device *pdev)
+ 	ecc->channels_mask = devm_kcalloc(dev,
+ 					   BITS_TO_LONGS(ecc->num_channels),
+ 					   sizeof(unsigned long), GFP_KERNEL);
+-	if (!ecc->slave_chans || !ecc->slot_inuse || !ecc->channels_mask)
++	if (!ecc->slave_chans || !ecc->slot_inuse || !ecc->channels_mask) {
++		ret = -ENOMEM;
+ 		goto err_disable_pm;
 +	}
-+	cells = ret / rcdu->num_crtcs - 1;
- 	if (cells > 1)
- 		return -EINVAL;
  
- 	for (i = 0; i < rcdu->num_crtcs; ++i) {
- 		unsigned int j;
- 
--		ret = of_parse_phandle_with_fixed_args(np, "vsps", cells, i,
--						       &args);
-+		ret = of_parse_phandle_with_fixed_args(np, vsps_prop_name,
-+						       cells, i, &args);
- 		if (ret < 0)
- 			goto error;
- 
-@@ -587,8 +594,8 @@ static int rcar_du_vsps_init(struct rcar_du_device *rcdu)
- 
- 		/*
- 		 * Store the VSP pointer and pipe index in the CRTC. If the
--		 * second cell of the 'vsps' specifier isn't present, default
--		 * to 0 to remain compatible with older DT bindings.
-+		 * second cell of the 'renesas,vsps' specifier isn't present,
-+		 * default to 0 to remain compatible with older DT bindings.
- 		 */
- 		rcdu->crtcs[i].vsp = &rcdu->vsps[j];
- 		rcdu->crtcs[i].vsp_pipe = cells >= 1 ? args.args[0] : 0;
+ 	/* Mark all channels available initially */
+ 	bitmap_fill(ecc->channels_mask, ecc->num_channels);
 -- 
 2.20.1
 
