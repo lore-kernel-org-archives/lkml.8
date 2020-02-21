@@ -7,49 +7,50 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 05C51C35641
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 07:45:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 21D70C35642
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 07:45:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C3738222C4
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 07:45:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EC6E124656
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 07:45:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582271146;
-	bh=CqNEsGGJ+joZE9+STxSSxsiHVjaZLJByQ0HUUaaZDEM=;
+	s=default; t=1582271149;
+	bh=vra5Iov8kMoiTcjt7/yz+FaHmHlIAp8cXCJ/a9dcOwc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Js7+fZHImwQe8B3k+z+8oV1y7k3amxu5XQ+kO2drVOnS1RT1mlAbU2OaujSHmpmZ/
-	 pMZ/nEvO/r5uZtUjZShZj6tAlYIN1q04ZHa3S0P4kWlJSSc712pfJ4Tt1u28DKU19L
-	 edd+zB8KBNLRA8LNvCjTP6MUti/x9ZjaVQWP9YRs=
+	b=RwkhR6eyYM6AdQZ3Cg0/bqrelUWUcuhqtSNEDbKDt3B/FusajEQj9SM7uHVsTJKC/
+	 PZDGzBrj3h0HCsJcDDyWlGKaRxPwxEite1C/fTbWgLt2Yn8ecOIzx4WuC7e5enqBg3
+	 NN8O/TrUFYyxf+UtLwD4yNFaAb40H0z9nJaosw1s=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728487AbgBUHpp (ORCPT
+        id S1728500AbgBUHpr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Feb 2020 02:45:45 -0500
-Received: from mail.kernel.org ([198.145.29.99]:40972 "EHLO mail.kernel.org"
+        Fri, 21 Feb 2020 02:45:47 -0500
+Received: from mail.kernel.org ([198.145.29.99]:41012 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727150AbgBUHpn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Feb 2020 02:45:43 -0500
+        id S1727867AbgBUHpq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 21 Feb 2020 02:45:46 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 66878222C4;
-        Fri, 21 Feb 2020 07:45:42 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E770020801;
+        Fri, 21 Feb 2020 07:45:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1582271142;
-        bh=CqNEsGGJ+joZE9+STxSSxsiHVjaZLJByQ0HUUaaZDEM=;
+        s=default; t=1582271145;
+        bh=vra5Iov8kMoiTcjt7/yz+FaHmHlIAp8cXCJ/a9dcOwc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Ug+D6qNRF7eKOxtO5r0IawzDKRze7s793fsIAQ5AAlGegkM49uyVllB+AT2vRM5hV
-         UbmN0fhsNQhx3elh4R2PIrs80WU5iul+IaQIKwW7kX4RSncctwCaHu9kEQgC+eQWL4
-         Wwmic9cK8MvjFL32OIAwvcvJNFqStemz7lgubuj8=
+        b=euKXpZe3i9hjCI/qxbCUDB2Tkp9FAPrYrxFQQGstrBdiGRe75FI5fcNeM2HOVZtxb
+         BdKB++069QtO9eIfU2pF2oAPJTWB5TFD+dIqiqfRVeTmUpr0cdbACmJ8yvGGFS/BjR
+         fYbDBnO3nuCp/13dGSKD9FLW64QJ2ttdQpXW7Fy0=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Hans de Goede <hdegoede@redhat.com>,
-        Mika Westerberg <mika.westerberg@linux.intel.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.5 055/399] pinctrl: baytrail: Do not clear IRQ flags on direct-irq enabled pins
-Date:   Fri, 21 Feb 2020 08:36:20 +0100
-Message-Id: <20200221072407.710474650@linuxfoundation.org>
+        stable@vger.kernel.org, Masami Hiramatsu <mhiramat@kernel.org>,
+        "Steven Rostedt (VMware)" <rostedt@goodmis.org>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Thomas Gleixner <tglx@linutronix.de>, bristot@redhat.com,
+        Ingo Molnar <mingo@kernel.org>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.5 056/399] kprobes: Fix optimize_kprobe()/unoptimize_kprobe() cancellation logic
+Date:   Fri, 21 Feb 2020 08:36:21 +0100
+Message-Id: <20200221072407.800426387@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200221072402.315346745@linuxfoundation.org>
 References: <20200221072402.315346745@linuxfoundation.org>
@@ -62,58 +63,165 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Hans de Goede <hdegoede@redhat.com>
+From: Masami Hiramatsu <mhiramat@kernel.org>
 
-[ Upstream commit a23680594da7a9e2696dbcf4f023e9273e2fa40b ]
+[ Upstream commit e4add247789e4ba5e08ad8256183ce2e211877d4 ]
 
-Suspending Goodix touchscreens requires changing the interrupt pin to
-output before sending them a power-down command. Followed by wiggling
-the interrupt pin to wake the device up, after which it is put back
-in input mode.
+optimize_kprobe() and unoptimize_kprobe() cancels if a given kprobe
+is on the optimizing_list or unoptimizing_list already. However, since
+the following commit:
 
-On Bay Trail devices with a Goodix touchscreen direct-irq mode is used
-in combination with listing the pin as a normal GpioIo resource.
+  f66c0447cca1 ("kprobes: Set unoptimized flag after unoptimizing code")
 
-This works fine, until the goodix driver gets rmmod-ed and then insmod-ed
-again. In this case byt_gpio_disable_free() calls
-byt_gpio_clear_triggering() which clears the IRQ flags and after that the
-(direct) IRQ no longer triggers.
+modified the update timing of the KPROBE_FLAG_OPTIMIZED, it doesn't
+work as expected anymore.
 
-This commit fixes this by adding a check for the BYT_DIRECT_IRQ_EN flag
-to byt_gpio_clear_triggering().
+The optimized_kprobe could be in the following states:
 
-Note that byt_gpio_clear_triggering() only gets called from
-byt_gpio_disable_free() for direct-irq enabled pins, as these are excluded
-from the irq_valid mask by byt_init_irq_valid_mask().
+- [optimizing]: Before inserting jump instruction
+  op.kp->flags has KPROBE_FLAG_OPTIMIZED and
+  op->list is not empty.
 
-Signed-off-by: Hans de Goede <hdegoede@redhat.com>
-Acked-by: Mika Westerberg <mika.westerberg@linux.intel.com>
-Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
-Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+- [optimized]: jump inserted
+  op.kp->flags has KPROBE_FLAG_OPTIMIZED and
+  op->list is empty.
+
+- [unoptimizing]: Before removing jump instruction (including unused
+  optprobe)
+  op.kp->flags has KPROBE_FLAG_OPTIMIZED and
+  op->list is not empty.
+
+- [unoptimized]: jump removed
+  op.kp->flags doesn't have KPROBE_FLAG_OPTIMIZED and
+  op->list is empty.
+
+Current code mis-expects [unoptimizing] state doesn't have
+KPROBE_FLAG_OPTIMIZED, and that can cause incorrect results.
+
+To fix this, introduce optprobe_queued_unopt() to distinguish [optimizing]
+and [unoptimizing] states and fixes the logic in optimize_kprobe() and
+unoptimize_kprobe().
+
+[ mingo: Cleaned up the changelog and the code a bit. ]
+
+Signed-off-by: Masami Hiramatsu <mhiramat@kernel.org>
+Reviewed-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
+Cc: Alexei Starovoitov <ast@kernel.org>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Cc: bristot@redhat.com
+Fixes: f66c0447cca1 ("kprobes: Set unoptimized flag after unoptimizing code")
+Link: https://lkml.kernel.org/r/157840814418.7181.13478003006386303481.stgit@devnote2
+Signed-off-by: Ingo Molnar <mingo@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/pinctrl/intel/pinctrl-baytrail.c | 8 +++++++-
- 1 file changed, 7 insertions(+), 1 deletion(-)
+ kernel/kprobes.c | 67 +++++++++++++++++++++++++++++++-----------------
+ 1 file changed, 43 insertions(+), 24 deletions(-)
 
-diff --git a/drivers/pinctrl/intel/pinctrl-baytrail.c b/drivers/pinctrl/intel/pinctrl-baytrail.c
-index 72ffd19448e50..ce9cf50121bd5 100644
---- a/drivers/pinctrl/intel/pinctrl-baytrail.c
-+++ b/drivers/pinctrl/intel/pinctrl-baytrail.c
-@@ -753,7 +753,13 @@ static void byt_gpio_clear_triggering(struct byt_gpio *vg, unsigned int offset)
- 
- 	raw_spin_lock_irqsave(&byt_lock, flags);
- 	value = readl(reg);
--	value &= ~(BYT_TRIG_POS | BYT_TRIG_NEG | BYT_TRIG_LVL);
-+
-+	/* Do not clear direct-irq enabled IRQs (from gpio_disable_free) */
-+	if (value & BYT_DIRECT_IRQ_EN)
-+		/* nothing to do */ ;
-+	else
-+		value &= ~(BYT_TRIG_POS | BYT_TRIG_NEG | BYT_TRIG_LVL);
-+
- 	writel(value, reg);
- 	raw_spin_unlock_irqrestore(&byt_lock, flags);
+diff --git a/kernel/kprobes.c b/kernel/kprobes.c
+index 53534aa258a60..fd81882f05210 100644
+--- a/kernel/kprobes.c
++++ b/kernel/kprobes.c
+@@ -610,6 +610,18 @@ void wait_for_kprobe_optimizer(void)
+ 	mutex_unlock(&kprobe_mutex);
  }
+ 
++static bool optprobe_queued_unopt(struct optimized_kprobe *op)
++{
++	struct optimized_kprobe *_op;
++
++	list_for_each_entry(_op, &unoptimizing_list, list) {
++		if (op == _op)
++			return true;
++	}
++
++	return false;
++}
++
+ /* Optimize kprobe if p is ready to be optimized */
+ static void optimize_kprobe(struct kprobe *p)
+ {
+@@ -631,17 +643,21 @@ static void optimize_kprobe(struct kprobe *p)
+ 		return;
+ 
+ 	/* Check if it is already optimized. */
+-	if (op->kp.flags & KPROBE_FLAG_OPTIMIZED)
++	if (op->kp.flags & KPROBE_FLAG_OPTIMIZED) {
++		if (optprobe_queued_unopt(op)) {
++			/* This is under unoptimizing. Just dequeue the probe */
++			list_del_init(&op->list);
++		}
+ 		return;
++	}
+ 	op->kp.flags |= KPROBE_FLAG_OPTIMIZED;
+ 
+-	if (!list_empty(&op->list))
+-		/* This is under unoptimizing. Just dequeue the probe */
+-		list_del_init(&op->list);
+-	else {
+-		list_add(&op->list, &optimizing_list);
+-		kick_kprobe_optimizer();
+-	}
++	/* On unoptimizing/optimizing_list, op must have OPTIMIZED flag */
++	if (WARN_ON_ONCE(!list_empty(&op->list)))
++		return;
++
++	list_add(&op->list, &optimizing_list);
++	kick_kprobe_optimizer();
+ }
+ 
+ /* Short cut to direct unoptimizing */
+@@ -662,31 +678,34 @@ static void unoptimize_kprobe(struct kprobe *p, bool force)
+ 		return; /* This is not an optprobe nor optimized */
+ 
+ 	op = container_of(p, struct optimized_kprobe, kp);
+-	if (!kprobe_optimized(p)) {
+-		/* Unoptimized or unoptimizing case */
+-		if (force && !list_empty(&op->list)) {
+-			/*
+-			 * Only if this is unoptimizing kprobe and forced,
+-			 * forcibly unoptimize it. (No need to unoptimize
+-			 * unoptimized kprobe again :)
+-			 */
+-			list_del_init(&op->list);
+-			force_unoptimize_kprobe(op);
+-		}
++	if (!kprobe_optimized(p))
+ 		return;
+-	}
+ 
+ 	op->kp.flags &= ~KPROBE_FLAG_OPTIMIZED;
+ 	if (!list_empty(&op->list)) {
+-		/* Dequeue from the optimization queue */
+-		list_del_init(&op->list);
++		if (optprobe_queued_unopt(op)) {
++			/* Queued in unoptimizing queue */
++			if (force) {
++				/*
++				 * Forcibly unoptimize the kprobe here, and queue it
++				 * in the freeing list for release afterwards.
++				 */
++				force_unoptimize_kprobe(op);
++				list_move(&op->list, &freeing_list);
++			}
++		} else {
++			/* Dequeue from the optimizing queue */
++			list_del_init(&op->list);
++			op->kp.flags &= ~KPROBE_FLAG_OPTIMIZED;
++		}
+ 		return;
+ 	}
++
+ 	/* Optimized kprobe case */
+-	if (force)
++	if (force) {
+ 		/* Forcibly update the code: this is a special case */
+ 		force_unoptimize_kprobe(op);
+-	else {
++	} else {
+ 		list_add(&op->list, &unoptimizing_list);
+ 		kick_kprobe_optimizer();
+ 	}
 -- 
 2.20.1
 
