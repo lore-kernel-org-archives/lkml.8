@@ -7,46 +7,53 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 80B22C35640
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 08:42:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F1354C35640
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 08:42:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 551E3206ED
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 08:42:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C86B420722
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 08:42:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582274538;
-	bh=MRoXizrDdNo5LVjqVL+dFy8VuIsDO+eoD/g3sbT6HT8=;
+	s=default; t=1582274545;
+	bh=5tGjCaR0U/4Sbp7vkRaZfh3f9+5qvqqeBO9WpmTPe1E=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=eA0WYR0gzl1L+KZznWfEFVEAfFQq/OSgzXdfAG6HkWUZ3kMy7PBz0xoscZPX85sYj
-	 CL8HwDvRlN910MLbkgEqK/SM11nUKpYvdlTgyqm5picnjv2fstYJrG/7U/iBFBGGaN
-	 GIhik5TVx83x3wofpRMrHxYrqoJbRDxo25wHx+94=
+	b=VSdD3YsVRF8V3PCQblGSnlynu1ZVlS1+/W/i7EmvSiTTsjs+C2frGmgjE0M7McWLx
+	 9Fy6SkGuo51jsfPKHy+nPNPyANfcrXy8xYtenJ75J/neWGzQvNsn9jyXzuaR5Qx22+
+	 4xIRTf9TsndxcR2dV/8N+PXQSIdMAPhEr3y46JSk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731959AbgBUImQ (ORCPT
+        id S1730311AbgBUHzZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Feb 2020 03:42:16 -0500
-Received: from mail.kernel.org ([198.145.29.99]:54540 "EHLO mail.kernel.org"
+        Fri, 21 Feb 2020 02:55:25 -0500
+Received: from mail.kernel.org ([198.145.29.99]:54272 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730336AbgBUHzd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Feb 2020 02:55:33 -0500
+        id S1729878AbgBUHzV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 21 Feb 2020 02:55:21 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C8D9520801;
-        Fri, 21 Feb 2020 07:55:31 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4C386222C4;
+        Fri, 21 Feb 2020 07:55:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1582271732;
-        bh=MRoXizrDdNo5LVjqVL+dFy8VuIsDO+eoD/g3sbT6HT8=;
+        s=default; t=1582271720;
+        bh=5tGjCaR0U/4Sbp7vkRaZfh3f9+5qvqqeBO9WpmTPe1E=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=mVXaD8ZKPXhEjflw8OMO430uTvK+WEGjVBBVlKI6BmadOCpAjZ4SHA4eAkUL4u/He
-         wJPV5eFGK1fAeXGoCgJ/StVm2+7NrKWyvG5FhNSMeK2TvukWoNUPDRGIZ97CC/zQEW
-         v4BiMBgamrXKhhbs+mUN2geoJV8xOzZM1wvfDrVU=
+        b=ygHF0y8Q+HJ0x0TnwU0udJJLuM7f83JRscktqh/Gx52B325bVgOGzuE6BM6Wg60l4
+         R/RnoQQ+UPfqaV7paknmJrB3ja4sCKUReS5akltDtXlsnEkKvwVn8vq1HJW3mUySQb
+         Ej+Zr5NxeAoHjXZ11n3/bluqW7U6GM9FFYtxzV6M=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Alexander Tsoy <alexander@tsoy.me>,
-        Takashi Iwai <tiwai@suse.de>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.5 240/399] ALSA: usb-audio: Add boot quirk for MOTU M Series
-Date:   Fri, 21 Feb 2020 08:39:25 +0100
-Message-Id: <20200221072425.892256060@linuxfoundation.org>
+        stable@vger.kernel.org, Alim Akhtar <alim.akhtar@samsung.com>,
+        Asutosh Das <asutoshd@codeaurora.org>,
+        Avri Altman <avri.altman@wdc.com>,
+        Bart Van Assche <bvanassche@acm.org>,
+        Bean Huo <beanhuo@micron.com>, Can Guo <cang@codeaurora.org>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Stanley Chu <stanley.chu@mediatek.com>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.5 272/399] scsi: ufs-mediatek: add apply_dev_quirks variant operation
+Date:   Fri, 21 Feb 2020 08:39:57 +0100
+Message-Id: <20200221072428.629053490@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200221072402.315346745@linuxfoundation.org>
 References: <20200221072402.315346745@linuxfoundation.org>
@@ -59,117 +66,66 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Alexander Tsoy <alexander@tsoy.me>
+From: Stanley Chu <stanley.chu@mediatek.com>
 
-[ Upstream commit 73ac9f5e5b43a5dbadb61f27dae7a971f7ec0d22 ]
+[ Upstream commit ea92c32bd336efba89c5b09cf609e6e26e963796 ]
 
-Add delay to make sure that audio urbs are not sent too early.
-Otherwise the device hangs. Windows driver makes ~2s delay, so use
-about the same time delay value.
+Add vendor-specific variant callback "apply_dev_quirks" to MediaTek UFS
+driver.
 
-snd_usb_apply_boot_quirk() is called 3 times for my MOTU M4, which
-is an overkill. Thus a quirk that is called only once is implemented.
-
-Also send two vendor-specific control messages before and after
-the delay. This behaviour is blindly copied from the Windows driver.
-
-Signed-off-by: Alexander Tsoy <alexander@tsoy.me>
-Link: https://lore.kernel.org/r/20200112102358.18085-1-alexander@tsoy.me
-Signed-off-by: Takashi Iwai <tiwai@suse.de>
+Cc: Alim Akhtar <alim.akhtar@samsung.com>
+Cc: Asutosh Das <asutoshd@codeaurora.org>
+Cc: Avri Altman <avri.altman@wdc.com>
+Cc: Bart Van Assche <bvanassche@acm.org>
+Cc: Bean Huo <beanhuo@micron.com>
+Cc: Can Guo <cang@codeaurora.org>
+Cc: Matthias Brugger <matthias.bgg@gmail.com>
+Link: https://lore.kernel.org/r/1578726707-6596-3-git-send-email-stanley.chu@mediatek.com
+Reviewed-by: Avri Altman <avri.altman@wdc.com>
+Reviewed-by: Bean Huo <beanhuo@micron.com>
+Signed-off-by: Stanley Chu <stanley.chu@mediatek.com>
+Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- sound/usb/card.c   |  4 ++++
- sound/usb/quirks.c | 38 ++++++++++++++++++++++++++++++++++++++
- sound/usb/quirks.h |  5 +++++
- 3 files changed, 47 insertions(+)
+ drivers/scsi/ufs/ufs-mediatek.c | 11 +++++++++++
+ 1 file changed, 11 insertions(+)
 
-diff --git a/sound/usb/card.c b/sound/usb/card.c
-index 9f743ebae615d..2f582ac7cf789 100644
---- a/sound/usb/card.c
-+++ b/sound/usb/card.c
-@@ -600,6 +600,10 @@ static int usb_audio_probe(struct usb_interface *intf,
- 		}
- 	}
- 	if (! chip) {
-+		err = snd_usb_apply_boot_quirk_once(dev, intf, quirk, id);
-+		if (err < 0)
-+			return err;
-+
- 		/* it's a fresh one.
- 		 * now look for an empty slot and create a new card instance
- 		 */
-diff --git a/sound/usb/quirks.c b/sound/usb/quirks.c
-index 1ed25b1d2a6a2..7448ab07bd363 100644
---- a/sound/usb/quirks.c
-+++ b/sound/usb/quirks.c
-@@ -1113,6 +1113,31 @@ free_buf:
- 	return err;
- }
+diff --git a/drivers/scsi/ufs/ufs-mediatek.c b/drivers/scsi/ufs/ufs-mediatek.c
+index 83e28edc3ac5b..8a21f49caf0d9 100644
+--- a/drivers/scsi/ufs/ufs-mediatek.c
++++ b/drivers/scsi/ufs/ufs-mediatek.c
+@@ -13,6 +13,7 @@
  
-+static int snd_usb_motu_m_series_boot_quirk(struct usb_device *dev)
-+{
-+	int ret;
-+
-+	if (snd_usb_pipe_sanity_check(dev, usb_sndctrlpipe(dev, 0)))
-+		return -EINVAL;
-+	ret = usb_control_msg(dev, usb_sndctrlpipe(dev, 0),
-+			      1, USB_TYPE_VENDOR | USB_RECIP_DEVICE,
-+			      0x0, 0, NULL, 0, 1000);
-+
-+	if (ret < 0)
-+		return ret;
-+
-+	msleep(2000);
-+
-+	ret = usb_control_msg(dev, usb_sndctrlpipe(dev, 0),
-+			      1, USB_TYPE_VENDOR | USB_RECIP_DEVICE,
-+			      0x20, 0, NULL, 0, 1000);
-+
-+	if (ret < 0)
-+		return ret;
-+
-+	return 0;
-+}
-+
- /*
-  * Setup quirks
-  */
-@@ -1297,6 +1322,19 @@ int snd_usb_apply_boot_quirk(struct usb_device *dev,
+ #include "ufshcd.h"
+ #include "ufshcd-pltfrm.h"
++#include "ufs_quirks.h"
+ #include "unipro.h"
+ #include "ufs-mediatek.h"
+ 
+@@ -289,6 +290,15 @@ static int ufs_mtk_resume(struct ufs_hba *hba, enum ufs_pm_op pm_op)
  	return 0;
  }
  
-+int snd_usb_apply_boot_quirk_once(struct usb_device *dev,
-+				  struct usb_interface *intf,
-+				  const struct snd_usb_audio_quirk *quirk,
-+				  unsigned int id)
++static int ufs_mtk_apply_dev_quirks(struct ufs_hba *hba,
++				    struct ufs_dev_desc *card)
 +{
-+	switch (id) {
-+	case USB_ID(0x07fd, 0x0008): /* MOTU M Series */
-+		return snd_usb_motu_m_series_boot_quirk(dev);
-+	}
++	if (card->wmanufacturerid == UFS_VENDOR_SAMSUNG)
++		ufshcd_dme_set(hba, UIC_ARG_MIB(PA_TACTIVATE), 6);
 +
 +	return 0;
 +}
 +
- /*
-  * check if the device uses big-endian samples
-  */
-diff --git a/sound/usb/quirks.h b/sound/usb/quirks.h
-index a80e0ddd07364..df0355843a4c1 100644
---- a/sound/usb/quirks.h
-+++ b/sound/usb/quirks.h
-@@ -20,6 +20,11 @@ int snd_usb_apply_boot_quirk(struct usb_device *dev,
- 			     const struct snd_usb_audio_quirk *quirk,
- 			     unsigned int usb_id);
- 
-+int snd_usb_apply_boot_quirk_once(struct usb_device *dev,
-+				  struct usb_interface *intf,
-+				  const struct snd_usb_audio_quirk *quirk,
-+				  unsigned int usb_id);
-+
- void snd_usb_set_format_quirk(struct snd_usb_substream *subs,
- 			      struct audioformat *fmt);
- 
+ /**
+  * struct ufs_hba_mtk_vops - UFS MTK specific variant operations
+  *
+@@ -301,6 +311,7 @@ static struct ufs_hba_variant_ops ufs_hba_mtk_vops = {
+ 	.setup_clocks        = ufs_mtk_setup_clocks,
+ 	.link_startup_notify = ufs_mtk_link_startup_notify,
+ 	.pwr_change_notify   = ufs_mtk_pwr_change_notify,
++	.apply_dev_quirks    = ufs_mtk_apply_dev_quirks,
+ 	.suspend             = ufs_mtk_suspend,
+ 	.resume              = ufs_mtk_resume,
+ };
 -- 
 2.20.1
 
