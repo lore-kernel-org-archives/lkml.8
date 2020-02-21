@@ -5,50 +5,49 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B3DDAC35641
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 08:14:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 973BDC35641
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 08:14:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 859B020722
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 08:14:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5D1FE20578
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 08:14:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582272875;
-	bh=6ba7hysJU/gD58jDN/JTv4StRHF+OsBhjNKhN1d0aKc=;
+	s=default; t=1582272877;
+	bh=/dNbojVtO2nJ5mDwyxW1lvQ+BYNWbSmSuinIw8T0NfI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Cs9+dPEQlVm1Y5iFtYX0sj0bnVv5ikYJeDXRWC8Le1CTPsiIvKwnD82jUMIOFlQ95
-	 6fhj00riOcG5qVM/W7r76I9NEKE0F6yjn+DCkFB3tls3P5eBBkoKSTh6dz5gLQ5Tz4
-	 I20P9vV4Yg6yKGPJYqaQHqDG4yqMS3mwROtFgr4M=
+	b=Uzce5gbGZFkGe4mPemIKjaKfPsxcZb3qI3a+io2jW0vXvi1Saxa/Tj7QF/dpGjcW7
+	 iAiU4idqM2qg1iG0lSSamdvQQOiBk4CsdUzLjp3jeirjwPiuHmLdu12vGi9g5gMkST
+	 VlT3uyklWXfcAFIGDqBZBQBjKGmT8Ynf1kwWNGFg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733202AbgBUIOe (ORCPT
+        id S1732766AbgBUIOg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Feb 2020 03:14:34 -0500
-Received: from mail.kernel.org ([198.145.29.99]:51012 "EHLO mail.kernel.org"
+        Fri, 21 Feb 2020 03:14:36 -0500
+Received: from mail.kernel.org ([198.145.29.99]:51084 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732511AbgBUIOc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Feb 2020 03:14:32 -0500
+        id S1733203AbgBUIOe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 21 Feb 2020 03:14:34 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id CFFEB24672;
-        Fri, 21 Feb 2020 08:14:30 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 638C624670;
+        Fri, 21 Feb 2020 08:14:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1582272871;
-        bh=6ba7hysJU/gD58jDN/JTv4StRHF+OsBhjNKhN1d0aKc=;
+        s=default; t=1582272873;
+        bh=/dNbojVtO2nJ5mDwyxW1lvQ+BYNWbSmSuinIw8T0NfI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=RmwXHB2SK/qwuV2vSUaraPefdDbKIaPX3ySu8FPxgH+aBwKKzvH7Ky/ckcdID5r05
-         tU5D1YdGRI0Dzuv14kOVAOyjz/YudmDcoEB3+fO1Lp2Y8fvMGMYeWFxEL/L67t0cZ+
-         1OkTdE7tPHTWT7ifdsHAdVj7+cqFioNZ6h2ChJRk=
+        b=P+KfnjYQilgF6rALjwlZcvL7JtQgVEuJvr+yyljOsP2Jx66T40D3tWhd+/eh5iSWn
+         +bjYj77q4EVLFqdrHdfDhS8uaJi2g3zTcw2wW+dFYpAygJJvLV+9ZHaXBvhKN8E41x
+         Z33rALIu/5xPHeZ5sjlw8FJw16yQaWHqHxWTefdc=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Xiubo Li <xiubli@redhat.com>,
-        Jeff Layton <jlayton@kernel.org>,
+        stable@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>,
         Ilya Dryomov <idryomov@gmail.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 307/344] ceph: check availability of mds cluster on mount after wait timeout
-Date:   Fri, 21 Feb 2020 08:41:46 +0100
-Message-Id: <20200221072417.848021492@linuxfoundation.org>
+Subject: [PATCH 5.4 308/344] rbd: work around -Wuninitialized warning
+Date:   Fri, 21 Feb 2020 08:41:47 +0100
+Message-Id: <20200221072417.950832158@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200221072349.335551332@linuxfoundation.org>
 References: <20200221072349.335551332@linuxfoundation.org>
@@ -61,57 +60,42 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Xiubo Li <xiubli@redhat.com>
+From: Arnd Bergmann <arnd@arndb.de>
 
-[ Upstream commit 97820058fb2831a4b203981fa2566ceaaa396103 ]
+[ Upstream commit a55e601b2f02df5db7070e9a37bd655c9c576a52 ]
 
-If all the MDS daemons are down for some reason, then the first mount
-attempt will fail with EIO after the mount request times out.  A mount
-attempt will also fail with EIO if all of the MDS's are laggy.
+gcc -O3 warns about a dummy variable that is passed
+down into rbd_img_fill_nodata without being initialized:
 
-This patch changes the code to return -EHOSTUNREACH in these situations
-and adds a pr_info error message to help the admin determine the cause.
+drivers/block/rbd.c: In function 'rbd_img_fill_nodata':
+drivers/block/rbd.c:2573:13: error: 'dummy' is used uninitialized in this function [-Werror=uninitialized]
+  fctx->iter = *fctx->pos;
 
-URL: https://tracker.ceph.com/issues/4386
-Signed-off-by: Xiubo Li <xiubli@redhat.com>
-Reviewed-by: Jeff Layton <jlayton@kernel.org>
+Since this is a dummy, I assume the warning is harmless, but
+it's better to initialize it anyway and avoid the warning.
+
+Fixes: mmtom ("init/Kconfig: enable -O3 for all arches")
+Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+Reviewed-by: Ilya Dryomov <idryomov@gmail.com>
 Signed-off-by: Ilya Dryomov <idryomov@gmail.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/ceph/mds_client.c | 3 +--
- fs/ceph/super.c      | 5 +++++
- 2 files changed, 6 insertions(+), 2 deletions(-)
+ drivers/block/rbd.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/fs/ceph/mds_client.c b/fs/ceph/mds_client.c
-index ee02a742fff57..8c1f04c3a684c 100644
---- a/fs/ceph/mds_client.c
-+++ b/fs/ceph/mds_client.c
-@@ -2552,8 +2552,7 @@ static void __do_request(struct ceph_mds_client *mdsc,
- 		if (!(mdsc->fsc->mount_options->flags &
- 		      CEPH_MOUNT_OPT_MOUNTWAIT) &&
- 		    !ceph_mdsmap_is_cluster_available(mdsc->mdsmap)) {
--			err = -ENOENT;
--			pr_info("probably no mds server is up\n");
-+			err = -EHOSTUNREACH;
- 			goto finish;
- 		}
- 	}
-diff --git a/fs/ceph/super.c b/fs/ceph/super.c
-index b47f43fc2d688..62fc7d46032e8 100644
---- a/fs/ceph/super.c
-+++ b/fs/ceph/super.c
-@@ -1137,6 +1137,11 @@ static struct dentry *ceph_mount(struct file_system_type *fs_type,
- 	return res;
- 
- out_splat:
-+	if (!ceph_mdsmap_is_cluster_available(fsc->mdsc->mdsmap)) {
-+		pr_info("No mds server is up or the cluster is laggy\n");
-+		err = -EHOSTUNREACH;
-+	}
-+
- 	ceph_mdsc_close_sessions(fsc->mdsc);
- 	deactivate_locked_super(sb);
- 	goto out_final;
+diff --git a/drivers/block/rbd.c b/drivers/block/rbd.c
+index 13527a0b4e448..a67315786db47 100644
+--- a/drivers/block/rbd.c
++++ b/drivers/block/rbd.c
+@@ -2739,7 +2739,7 @@ static int rbd_img_fill_nodata(struct rbd_img_request *img_req,
+ 			       u64 off, u64 len)
+ {
+ 	struct ceph_file_extent ex = { off, len };
+-	union rbd_img_fill_iter dummy;
++	union rbd_img_fill_iter dummy = {};
+ 	struct rbd_img_fill_ctx fctx = {
+ 		.pos_type = OBJ_REQUEST_NODATA,
+ 		.pos = &dummy,
 -- 
 2.20.1
 
