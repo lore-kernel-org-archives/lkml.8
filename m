@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3B9B6C35640
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 08:30:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9C6F6C35640
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 08:30:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0AA0920637
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 08:30:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7038620679
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 08:30:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582273810;
-	bh=Vu3XjvYbCgw86NCz8BhfJsyxkHdSDYwpHnwGfWUj6ss=;
+	s=default; t=1582273814;
+	bh=uiFWzuo/y1vx3D80IkrnHuinHjU+Bj+7CiDyhZhphNc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=YVWI0HGm/DpNw7gnNnPvOODJfAhMiEUCRtw3gEZDiig+W98afos4Y2axwtAGo6/7M
-	 FlTlvyaF9RyAXObZGXAyWzHjDVcoNHFsT0GEVXqMh8y8aanOoDMp/1wkAQdCpYT2+7
-	 /RWBkMccxUQ0JUI1f7IWFu4gLbCAGXe+Ogg8dD0Y=
+	b=uhFp8k7aJIG7FjgGs7vyBBNVqhWEcWlO8lYv7/EwNfZK0x1/LQ2gnjQstBLOtb7/p
+	 VjUqcag8liLE9tPlMSICsuixXmYSfLypW3z2ZtUAVeL4sarx/0n79uEkvqr40WJPWO
+	 hmDtBQ9K127kkC1VhnJ59wgjVfxtEf22ColXZUYY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387528AbgBUIQ2 (ORCPT
+        id S2388577AbgBUIaM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Feb 2020 03:16:28 -0500
-Received: from mail.kernel.org ([198.145.29.99]:53374 "EHLO mail.kernel.org"
+        Fri, 21 Feb 2020 03:30:12 -0500
+Received: from mail.kernel.org ([198.145.29.99]:53490 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1733045AbgBUIQU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Feb 2020 03:16:20 -0500
+        id S2387523AbgBUIQZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 21 Feb 2020 03:16:25 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9475E2468B;
-        Fri, 21 Feb 2020 08:16:19 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id F38E924689;
+        Fri, 21 Feb 2020 08:16:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1582272980;
-        bh=Vu3XjvYbCgw86NCz8BhfJsyxkHdSDYwpHnwGfWUj6ss=;
+        s=default; t=1582272985;
+        bh=uiFWzuo/y1vx3D80IkrnHuinHjU+Bj+7CiDyhZhphNc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=wWdcoMlpz5piHMPBQl8e9pyoqyqmhp+QVnybomxDHPDMUcrZM82REYIjTO3SUOfPk
-         Wkwrplwrg68DKbKgUXGhg8QcDRlI+W99daw/yc5SdOY73DRSnsbSPL7JAdSdz2rtp+
-         2Xuie21h67HYy/x1jlLjwjN9yIHETRuR0l2/lnaA=
+        b=raWKnFEP+XgfdJr/2ggqbYpv0aDEDbx60tY7qGIxdAwnvVr4GFirqVKCLLG2Glmph
+         muLpd1IeHTqHlLX1500GTX89jfCiW5EN+ihI+QVVKys+addZ5mifURFhj4L4ZmY8AM
+         YPHXDp9g5M6DMSejTB8pdQMZ1PEOK+aehhsRrRBs=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Evan Quan <evan.quan@amd.com>,
-        Alex Deucher <alexander.deucher@amd.com>,
+        stable@vger.kernel.org, Vasily Averin <vvs@virtuozzo.com>,
+        Mike Marshall <hubcap@omnibond.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 334/344] drm/amdgpu/smu10: fix smu10_get_clock_by_type_with_voltage
-Date:   Fri, 21 Feb 2020 08:42:13 +0100
-Message-Id: <20200221072420.723038777@linuxfoundation.org>
+Subject: [PATCH 5.4 336/344] help_next should increase position index
+Date:   Fri, 21 Feb 2020 08:42:15 +0100
+Message-Id: <20200221072420.936356526@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200221072349.335551332@linuxfoundation.org>
 References: <20200221072349.335551332@linuxfoundation.org>
@@ -60,39 +60,33 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Alex Deucher <alexander.deucher@amd.com>
+From: Vasily Averin <vvs@virtuozzo.com>
 
-[ Upstream commit 1064ad4aeef94f51ca230ac639a9e996fb7867a0 ]
+[ Upstream commit 9f198a2ac543eaaf47be275531ad5cbd50db3edf ]
 
-Cull out 0 clocks to avoid a warning in DC.
+if seq_file .next fuction does not change position index,
+read after some lseek can generate unexpected output.
 
-Bug: https://gitlab.freedesktop.org/drm/amd/issues/963
-Reviewed-by: Evan Quan <evan.quan@amd.com>
-Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
+https://bugzilla.kernel.org/show_bug.cgi?id=206283
+Signed-off-by: Vasily Averin <vvs@virtuozzo.com>
+Signed-off-by: Mike Marshall <hubcap@omnibond.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/gpu/drm/amd/powerplay/hwmgr/smu10_hwmgr.c | 8 +++++---
- 1 file changed, 5 insertions(+), 3 deletions(-)
+ fs/orangefs/orangefs-debugfs.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/drivers/gpu/drm/amd/powerplay/hwmgr/smu10_hwmgr.c b/drivers/gpu/drm/amd/powerplay/hwmgr/smu10_hwmgr.c
-index 627a42e8fd318..fed3fc4bb57a9 100644
---- a/drivers/gpu/drm/amd/powerplay/hwmgr/smu10_hwmgr.c
-+++ b/drivers/gpu/drm/amd/powerplay/hwmgr/smu10_hwmgr.c
-@@ -1080,9 +1080,11 @@ static int smu10_get_clock_by_type_with_voltage(struct pp_hwmgr *hwmgr,
+diff --git a/fs/orangefs/orangefs-debugfs.c b/fs/orangefs/orangefs-debugfs.c
+index 25543a966c486..29eaa45443727 100644
+--- a/fs/orangefs/orangefs-debugfs.c
++++ b/fs/orangefs/orangefs-debugfs.c
+@@ -273,6 +273,7 @@ static void *help_start(struct seq_file *m, loff_t *pos)
  
- 	clocks->num_levels = 0;
- 	for (i = 0; i < pclk_vol_table->count; i++) {
--		clocks->data[i].clocks_in_khz = pclk_vol_table->entries[i].clk  * 10;
--		clocks->data[i].voltage_in_mv = pclk_vol_table->entries[i].vol;
--		clocks->num_levels++;
-+		if (pclk_vol_table->entries[i].clk) {
-+			clocks->data[clocks->num_levels].clocks_in_khz = pclk_vol_table->entries[i].clk  * 10;
-+			clocks->data[clocks->num_levels].voltage_in_mv = pclk_vol_table->entries[i].vol;
-+			clocks->num_levels++;
-+		}
- 	}
+ static void *help_next(struct seq_file *m, void *v, loff_t *pos)
+ {
++	(*pos)++;
+ 	gossip_debug(GOSSIP_DEBUGFS_DEBUG, "help_next: start\n");
  
- 	return 0;
+ 	return NULL;
 -- 
 2.20.1
 
