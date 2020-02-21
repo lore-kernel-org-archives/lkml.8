@@ -2,27 +2,26 @@ Return-Path: <SRS0=1210=4J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNWANTED_LANGUAGE_BODY,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B2F9BC35667
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 19:53:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4EF83C35666
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 19:53:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8C53F20722
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 19:53:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2253E20722
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 19:53:32 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728480AbgBUTx1 (ORCPT
+        id S1728236AbgBUTxT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Feb 2020 14:53:27 -0500
-Received: from muru.com ([72.249.23.125]:56940 "EHLO muru.com"
+        Fri, 21 Feb 2020 14:53:19 -0500
+Received: from muru.com ([72.249.23.125]:56882 "EHLO muru.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728019AbgBUTxZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Feb 2020 14:53:25 -0500
+        id S1728028AbgBUTxN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 21 Feb 2020 14:53:13 -0500
 Received: from hillo.muru.com (localhost [127.0.0.1])
-        by muru.com (Postfix) with ESMTP id 5DCD8807E;
-        Fri, 21 Feb 2020 19:54:07 +0000 (UTC)
+        by muru.com (Postfix) with ESMTP id 42F958192;
+        Fri, 21 Feb 2020 19:53:57 +0000 (UTC)
 From:   Tony Lindgren <tony@atomide.com>
 To:     linux-omap@vger.kernel.org
 Cc:     "Andrew F . Davis" <afd@ti.com>, Dave Gerlach <d-gerlach@ti.com>,
@@ -36,9 +35,9 @@ Cc:     "Andrew F . Davis" <afd@ti.com>, Dave Gerlach <d-gerlach@ti.com>,
         Adam Ford <aford173@gmail.com>,
         =?UTF-8?q?Andr=C3=A9=20Hentschel?= <nerv@dawncrow.de>,
         "H. Nikolaus Schaller" <hns@goldelico.com>
-Subject: [PATCH 7/7] bus: ti-sysc: Handle module unlock quirk needed for some RTC
-Date:   Fri, 21 Feb 2020 11:52:56 -0800
-Message-Id: <20200221195256.54016-8-tony@atomide.com>
+Subject: [PATCH 3/7] ti-sysc: Improve reset to work with modules with no sysconfig
+Date:   Fri, 21 Feb 2020 11:52:52 -0800
+Message-Id: <20200221195256.54016-4-tony@atomide.com>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200221195256.54016-1-tony@atomide.com>
 References: <20200221195256.54016-1-tony@atomide.com>
@@ -49,187 +48,41 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The RTC modules on am3 and am4 need quirk handling to unlock and lock
-them for reset so let's add the quirk handling based on what we already
-have for legacy platform data. In later patches we will simply drop the
-RTC related platform data and the old quirk handling.
+At least display susbsystem (DSS) has modules with no sysconfig registers
+and rely on custom function for module reset handling. Let's make reset
+work with that too.
 
 Signed-off-by: Tony Lindgren <tony@atomide.com>
 ---
- drivers/bus/ti-sysc.c                 | 74 ++++++++++++++++++++++++---
- include/linux/platform_data/ti-sysc.h |  1 +
- 2 files changed, 69 insertions(+), 6 deletions(-)
+ drivers/bus/ti-sysc.c | 10 ++++++----
+ 1 file changed, 6 insertions(+), 4 deletions(-)
 
 diff --git a/drivers/bus/ti-sysc.c b/drivers/bus/ti-sysc.c
 --- a/drivers/bus/ti-sysc.c
 +++ b/drivers/bus/ti-sysc.c
-@@ -110,6 +110,8 @@ static const char * const clock_names[SYSC_MAX_CLOCKS] = {
-  * @reset_done_quirk: module specific reset done quirk
-  * @module_enable_quirk: module specific enable quirk
-  * @module_disable_quirk: module specific disable quirk
-+ * @module_unlock_quirk: module specific sysconfig unlock quirk
-+ * @module_lock_quirk: module specific sysconfig lock quirk
-  */
- struct sysc {
- 	struct device *dev;
-@@ -137,6 +139,8 @@ struct sysc {
- 	void (*reset_done_quirk)(struct sysc *sysc);
- 	void (*module_enable_quirk)(struct sysc *sysc);
- 	void (*module_disable_quirk)(struct sysc *sysc);
-+	void (*module_unlock_quirk)(struct sysc *sysc);
-+	void (*module_lock_quirk)(struct sysc *sysc);
- };
+@@ -1571,7 +1571,7 @@ static int sysc_reset(struct sysc *ddata)
+ 	sysc_offset = ddata->offsets[SYSC_SYSCONFIG];
+ 	syss_offset = ddata->offsets[SYSC_SYSSTATUS];
  
- static void sysc_parse_dts_quirks(struct sysc *ddata, struct device_node *np,
-@@ -896,6 +900,22 @@ static void sysc_show_registers(struct sysc *ddata)
- 		buf);
- }
+-	if (ddata->legacy_mode || sysc_offset < 0 ||
++	if (ddata->legacy_mode ||
+ 	    ddata->cap->regbits->srst_shift < 0 ||
+ 	    ddata->cfg.quirks & SYSC_QUIRK_NO_RESET_ON_INIT)
+ 		return 0;
+@@ -1586,9 +1586,11 @@ static int sysc_reset(struct sysc *ddata)
+ 	if (ddata->pre_reset_quirk)
+ 		ddata->pre_reset_quirk(ddata);
  
-+/**
-+ * sysc_write_sysconfig - handle sysconfig quirks for register write
-+ * @ddata: device driver data
-+ * @value: register value
-+ */
-+static void sysc_write_sysconfig(struct sysc *ddata, u32 value)
-+{
-+	if (ddata->module_unlock_quirk)
-+		ddata->module_unlock_quirk(ddata);
-+
-+	sysc_write(ddata, ddata->offsets[SYSC_SYSCONFIG], value);
-+
-+	if (ddata->module_lock_quirk)
-+		ddata->module_lock_quirk(ddata);
-+}
-+
- #define SYSC_IDLE_MASK	(SYSC_NR_IDLEMODES - 1)
- #define SYSC_CLOCACT_ICK	2
- 
-@@ -942,7 +962,7 @@ static int sysc_enable_module(struct device *dev)
- 
- 	reg &= ~(SYSC_IDLE_MASK << regbits->sidle_shift);
- 	reg |= best_mode << regbits->sidle_shift;
--	sysc_write(ddata, ddata->offsets[SYSC_SYSCONFIG], reg);
-+	sysc_write_sysconfig(ddata, reg);
- 
- set_midle:
- 	/* Set MIDLE mode */
-@@ -961,14 +981,14 @@ static int sysc_enable_module(struct device *dev)
- 
- 	reg &= ~(SYSC_IDLE_MASK << regbits->midle_shift);
- 	reg |= best_mode << regbits->midle_shift;
--	sysc_write(ddata, ddata->offsets[SYSC_SYSCONFIG], reg);
-+	sysc_write_sysconfig(ddata, reg);
- 
- set_autoidle:
- 	/* Autoidle bit must enabled separately if available */
- 	if (regbits->autoidle_shift >= 0 &&
- 	    ddata->cfg.sysc_val & BIT(regbits->autoidle_shift)) {
- 		reg |= 1 << regbits->autoidle_shift;
--		sysc_write(ddata, ddata->offsets[SYSC_SYSCONFIG], reg);
-+		sysc_write_sysconfig(ddata, reg);
- 	}
- 
- 	if (ddata->module_enable_quirk)
-@@ -1026,7 +1046,7 @@ static int sysc_disable_module(struct device *dev)
- 
- 	reg &= ~(SYSC_IDLE_MASK << regbits->midle_shift);
- 	reg |= best_mode << regbits->midle_shift;
--	sysc_write(ddata, ddata->offsets[SYSC_SYSCONFIG], reg);
-+	sysc_write_sysconfig(ddata, reg);
- 
- set_sidle:
- 	/* Set SIDLE mode */
-@@ -1049,7 +1069,7 @@ static int sysc_disable_module(struct device *dev)
- 	if (regbits->autoidle_shift >= 0 &&
- 	    ddata->cfg.sysc_val & BIT(regbits->autoidle_shift))
- 		reg |= 1 << regbits->autoidle_shift;
--	sysc_write(ddata, ddata->offsets[SYSC_SYSCONFIG], reg);
-+	sysc_write_sysconfig(ddata, reg);
- 
- 	return 0;
- }
-@@ -1301,6 +1321,8 @@ static const struct sysc_revision_quirk sysc_revision_quirks[] = {
- 	SYSC_QUIRK("gpu", 0x50000000, 0x14, -ENODEV, -ENODEV, 0x00010201, 0xffffffff, 0),
- 	SYSC_QUIRK("gpu", 0x50000000, 0xfe00, 0xfe10, -ENODEV, 0x40000000 , 0xffffffff,
- 		   SYSC_MODULE_QUIRK_SGX),
-+	SYSC_QUIRK("rtc", 0, 0x74, 0x78, -ENODEV, 0x4eb01908, 0xffff00f0,
-+		   SYSC_MODULE_QUIRK_RTC_UNLOCK),
- 	SYSC_QUIRK("usb_otg_hs", 0, 0x400, 0x404, 0x408, 0x00000050,
- 		   0xffffffff, SYSC_QUIRK_SWSUP_SIDLE | SYSC_QUIRK_SWSUP_MSTANDBY),
- 	SYSC_QUIRK("usb_otg_hs", 0, 0, 0x10, -ENODEV, 0x4ea2080d, 0xffffffff,
-@@ -1356,7 +1378,6 @@ static const struct sysc_revision_quirk sysc_revision_quirks[] = {
- 	SYSC_QUIRK("slimbus", 0, 0, 0x10, -ENODEV, 0x40002903, 0xffffffff, 0),
- 	SYSC_QUIRK("spinlock", 0, 0, 0x10, -ENODEV, 0x50020000, 0xffffffff, 0),
- 	SYSC_QUIRK("rng", 0, 0x1fe0, 0x1fe4, -ENODEV, 0x00000020, 0xffffffff, 0),
--	SYSC_QUIRK("rtc", 0, 0x74, 0x78, -ENODEV, 0x4eb01908, 0xffff00f0, 0),
- 	SYSC_QUIRK("timer32k", 0, 0, 0x4, -ENODEV, 0x00000060, 0xffffffff, 0),
- 	SYSC_QUIRK("usbhstll", 0, 0, 0x10, 0x14, 0x00000004, 0xffffffff, 0),
- 	SYSC_QUIRK("usbhstll", 0, 0, 0x10, 0x14, 0x00000008, 0xffffffff, 0),
-@@ -1478,6 +1499,40 @@ static void sysc_post_reset_quirk_i2c(struct sysc *ddata)
- 	sysc_clk_quirk_i2c(ddata, true);
- }
- 
-+/* RTC on am3 and 4 needs to be unlocked and locked for sysconfig */
-+static void sysc_quirk_rtc(struct sysc *ddata, bool lock)
-+{
-+	u32 val, kick0_val = 0, kick1_val = 0;
-+	unsigned long flags;
-+	int error;
-+
-+	if (!lock) {
-+		kick0_val = 0x83e70b13;
-+		kick1_val = 0x95a4f1e0;
+-	sysc_val = sysc_read_sysconfig(ddata);
+-	sysc_val |= sysc_mask;
+-	sysc_write(ddata, sysc_offset, sysc_val);
++	if (sysc_offset >= 0) {
++		sysc_val = sysc_read_sysconfig(ddata);
++		sysc_val |= sysc_mask;
++		sysc_write(ddata, sysc_offset, sysc_val);
 +	}
-+
-+	local_irq_save(flags);
-+	/* RTC_STATUS BUSY bit may stay active for 1/32768 seconds (~30 usec) */
-+	error = readl_poll_timeout(ddata->module_va + 0x44, val,
-+				   !(val & BIT(0)), 100, 50);
-+	if (error)
-+		dev_warn(ddata->dev, "rtc busy timeout\n");
-+	/* Now we have ~15 microseconds to read/write various registers */
-+	sysc_write(ddata, 0x6c, kick0_val);
-+	sysc_write(ddata, 0x70, kick1_val);
-+	local_irq_restore(flags);
-+}
-+
-+static void sysc_module_unlock_quirk_rtc(struct sysc *ddata)
-+{
-+	sysc_quirk_rtc(ddata, false);
-+}
-+
-+static void sysc_module_lock_quirk_rtc(struct sysc *ddata)
-+{
-+	sysc_quirk_rtc(ddata, true);
-+}
-+
- /* 36xx SGX needs a quirk for to bypass OCP IPG interrupt logic */
- static void sysc_module_enable_quirk_sgx(struct sysc *ddata)
- {
-@@ -1532,6 +1587,13 @@ static void sysc_init_module_quirks(struct sysc *ddata)
- 	if (ddata->cfg.quirks & SYSC_MODULE_QUIRK_AESS)
- 		ddata->module_enable_quirk = sysc_module_enable_quirk_aess;
  
-+	if (ddata->cfg.quirks & SYSC_MODULE_QUIRK_RTC_UNLOCK) {
-+		ddata->module_unlock_quirk = sysc_module_unlock_quirk_rtc;
-+		ddata->module_lock_quirk = sysc_module_lock_quirk_rtc;
-+
-+		return;
-+	}
-+
- 	if (ddata->cfg.quirks & SYSC_MODULE_QUIRK_SGX)
- 		ddata->module_enable_quirk = sysc_module_enable_quirk_sgx;
- 
-diff --git a/include/linux/platform_data/ti-sysc.h b/include/linux/platform_data/ti-sysc.h
---- a/include/linux/platform_data/ti-sysc.h
-+++ b/include/linux/platform_data/ti-sysc.h
-@@ -49,6 +49,7 @@ struct sysc_regbits {
- 	s8 emufree_shift;
- };
- 
-+#define SYSC_MODULE_QUIRK_RTC_UNLOCK	BIT(22)
- #define SYSC_QUIRK_CLKDM_NOAUTO		BIT(21)
- #define SYSC_QUIRK_FORCE_MSTANDBY	BIT(20)
- #define SYSC_MODULE_QUIRK_AESS		BIT(19)
+ 	if (ddata->cfg.srst_udelay)
+ 		usleep_range(ddata->cfg.srst_udelay,
 -- 
 2.25.1
