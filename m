@@ -7,46 +7,48 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 94A97C35640
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 08:20:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 638BDC35641
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 08:20:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5D20D24699
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 08:20:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 35C5524696
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 08:20:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582273220;
-	bh=4m5Ax5SklI3JOIQYc89IMKz0QnjxywsA7nA4DQgeOpU=;
+	s=default; t=1582273222;
+	bh=R8kP/lPwVPh2SHNxuUxq4sc7Ey3PQap5rwy06oOFQew=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=fVvUTMzPlJ2ezRIYp4EDQkJDev9RMbHOBw9OxQEBUQ+MtLWIEN0XEwP3B5rRGn4Pu
-	 CHOil4i09uTZ/ag2CxgMjSmWe1DMOKu+s79cAxMvoxJNlv/++IJp6Z3LAX26oFzBGG
-	 YPlE2DFDd0+GE6+FZNkAJL4WmR4D6vMcCXeePEec=
+	b=bKvDFqvlqMO9tAhWJBruc/XTkzcL+d78VZOOlxG5TJl+JRVPgw+f4kfBpjbupG1Gt
+	 ipkULo0y814a75jLd4gjUMYoojv5STiKwZ1EFmJBnpM3/YF40sqkQk6GG04fb+064x
+	 6xjcX9CQfu/E6BuYjkLtg78NKpB2CKV6DFAS0Z+0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388133AbgBUIUN (ORCPT
+        id S2388148AbgBUIUU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Feb 2020 03:20:13 -0500
-Received: from mail.kernel.org ([198.145.29.99]:58978 "EHLO mail.kernel.org"
+        Fri, 21 Feb 2020 03:20:20 -0500
+Received: from mail.kernel.org ([198.145.29.99]:59252 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387825AbgBUIUG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Feb 2020 03:20:06 -0500
+        id S2387693AbgBUIUQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 21 Feb 2020 03:20:16 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 05BF72469C;
-        Fri, 21 Feb 2020 08:20:04 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2588924691;
+        Fri, 21 Feb 2020 08:20:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1582273205;
-        bh=4m5Ax5SklI3JOIQYc89IMKz0QnjxywsA7nA4DQgeOpU=;
+        s=default; t=1582273215;
+        bh=R8kP/lPwVPh2SHNxuUxq4sc7Ey3PQap5rwy06oOFQew=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=UK/twnxnU0fmJ7AZEK4r7b+c6pd/ujoH+QwK7FTauIQU4cwb2CfrB40R2awqt7BYV
-         FQgaNuYDH1lStEMiX/d7gFExJNsaGSz13l85r0TJPy/smOHFdR9nbieAj+i21r4nFq
-         HaWqGSERLPJeZr5c9H1nBnzA2zWZ8eN31sj1uKMs=
+        b=v6xtTzmJyvReBT9XXHL3Ilk6LrAZ9MhoTKcuKvn+7t3Sbq/ZE3A3zegbssCYShh8S
+         TMPuY4qdbzraSR8njnqks2AqJMX9uvpnVl3yJl0nkwHNmpCMArAKVnRXHvK2yX9n6w
+         v5A+/kfzO+3IhPVAqhPHfDNosaZcsvxQTGrJ4JTE=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Bibby Hsieh <bibby.hsieh@mediatek.com>,
-        CK Hu <ck.hu@mediatek.com>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 083/191] drm/mediatek: handle events when enabling/disabling crtc
-Date:   Fri, 21 Feb 2020 08:40:56 +0100
-Message-Id: <20200221072301.172203051@linuxfoundation.org>
+        stable@vger.kernel.org, Douglas Anderson <dianders@chromium.org>,
+        Matthias Kaehlcke <mka@chromium.org>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.19 050/191] clk: qcom: rcg2: Dont crash if our parent cant be found; return an error
+Date:   Fri, 21 Feb 2020 08:40:23 +0100
+Message-Id: <20200221072257.624702762@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200221072250.732482588@linuxfoundation.org>
 References: <20200221072250.732482588@linuxfoundation.org>
@@ -59,49 +61,68 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Bibby Hsieh <bibby.hsieh@mediatek.com>
+From: Douglas Anderson <dianders@chromium.org>
 
-[ Upstream commit 411f5c1eacfebb1f6e40b653d29447cdfe7282aa ]
+[ Upstream commit 908b050114d8fefdddc57ec9fbc213c3690e7f5f ]
 
-The driver currently handles vblank events only when updating planes on
-an already enabled CRTC. The atomic update API however allows requesting
-an event when enabling or disabling a CRTC. This currently leads to
-event objects being leaked in the kernel and to events not being sent
-out. Fix it.
+When I got my clock parenting slightly wrong I ended up with a crash
+that looked like this:
 
-Signed-off-by: Bibby Hsieh <bibby.hsieh@mediatek.com>
-Signed-off-by: CK Hu <ck.hu@mediatek.com>
+  Unable to handle kernel NULL pointer dereference at virtual
+  address 0000000000000000
+  ...
+  pc : clk_hw_get_rate+0x14/0x44
+  ...
+  Call trace:
+   clk_hw_get_rate+0x14/0x44
+   _freq_tbl_determine_rate+0x94/0xfc
+   clk_rcg2_determine_rate+0x2c/0x38
+   clk_core_determine_round_nolock+0x4c/0x88
+   clk_core_round_rate_nolock+0x6c/0xa8
+   clk_core_round_rate_nolock+0x9c/0xa8
+   clk_core_set_rate_nolock+0x70/0x180
+   clk_set_rate+0x3c/0x6c
+   of_clk_set_defaults+0x254/0x360
+   platform_drv_probe+0x28/0xb0
+   really_probe+0x120/0x2dc
+   driver_probe_device+0x64/0xfc
+   device_driver_attach+0x4c/0x6c
+   __driver_attach+0xac/0xc0
+   bus_for_each_dev+0x84/0xcc
+   driver_attach+0x2c/0x38
+   bus_add_driver+0xfc/0x1d0
+   driver_register+0x64/0xf8
+   __platform_driver_register+0x4c/0x58
+   msm_drm_register+0x5c/0x60
+   ...
+
+It turned out that clk_hw_get_parent_by_index() was returning NULL and
+we weren't checking.  Let's check it so that we don't crash.
+
+Fixes: ac269395cdd8 ("clk: qcom: Convert to clk_hw based provider APIs")
+Signed-off-by: Douglas Anderson <dianders@chromium.org>
+Reviewed-by: Matthias Kaehlcke <mka@chromium.org>
+Link: https://lkml.kernel.org/r/20200203103049.v4.1.I7487325fe8e701a68a07d3be8a6a4b571eca9cfa@changeid
+Signed-off-by: Stephen Boyd <sboyd@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/gpu/drm/mediatek/mtk_drm_crtc.c | 8 ++++++++
- 1 file changed, 8 insertions(+)
+ drivers/clk/qcom/clk-rcg2.c | 3 +++
+ 1 file changed, 3 insertions(+)
 
-diff --git a/drivers/gpu/drm/mediatek/mtk_drm_crtc.c b/drivers/gpu/drm/mediatek/mtk_drm_crtc.c
-index 92ecb9bf982cf..b86ee7d25af36 100644
---- a/drivers/gpu/drm/mediatek/mtk_drm_crtc.c
-+++ b/drivers/gpu/drm/mediatek/mtk_drm_crtc.c
-@@ -308,6 +308,7 @@ err_pm_runtime_put:
- static void mtk_crtc_ddp_hw_fini(struct mtk_drm_crtc *mtk_crtc)
- {
- 	struct drm_device *drm = mtk_crtc->base.dev;
-+	struct drm_crtc *crtc = &mtk_crtc->base;
- 	int i;
+diff --git a/drivers/clk/qcom/clk-rcg2.c b/drivers/clk/qcom/clk-rcg2.c
+index 51b2388d80ac9..ee693e15d9ebc 100644
+--- a/drivers/clk/qcom/clk-rcg2.c
++++ b/drivers/clk/qcom/clk-rcg2.c
+@@ -203,6 +203,9 @@ static int _freq_tbl_determine_rate(struct clk_hw *hw, const struct freq_tbl *f,
  
- 	DRM_DEBUG_DRIVER("%s\n", __func__);
-@@ -329,6 +330,13 @@ static void mtk_crtc_ddp_hw_fini(struct mtk_drm_crtc *mtk_crtc)
- 	mtk_disp_mutex_unprepare(mtk_crtc->mutex);
- 
- 	pm_runtime_put(drm->dev);
+ 	clk_flags = clk_hw_get_flags(hw);
+ 	p = clk_hw_get_parent_by_index(hw, index);
++	if (!p)
++		return -EINVAL;
 +
-+	if (crtc->state->event && !crtc->state->active) {
-+		spin_lock_irq(&crtc->dev->event_lock);
-+		drm_crtc_send_vblank_event(crtc, crtc->state->event);
-+		crtc->state->event = NULL;
-+		spin_unlock_irq(&crtc->dev->event_lock);
-+	}
- }
- 
- static void mtk_crtc_ddp_config(struct drm_crtc *crtc)
+ 	if (clk_flags & CLK_SET_RATE_PARENT) {
+ 		rate = f->freq;
+ 		if (f->pre_div) {
 -- 
 2.20.1
 
