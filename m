@@ -2,129 +2,116 @@ Return-Path: <SRS0=1210=4J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9EDC6C35647
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 10:21:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A578FC35653
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 10:22:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7C7E2207FD
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 10:21:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7315124653
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 10:22:53 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1582280573;
+	bh=HKlbipbezigcjRV0JxrSd089dDGKVqPRmt5W9SS/rwA=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=e5Z8eGzbKBnw/ByGNrOeZQttDTSPdA6B52jhvRfaDd3z5hF7LN/qUI4vAalDi33qr
+	 nLbfsWUCJGSNTel8R1hbiUA/b+GjgcroncAWejkwb4TZqx+CfdQ1cW0SsQpEFiIpON
+	 qy668MGdY/kbKD4f/YpOk7I7dC3eQP9wbD+7aUg8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728798AbgBUKV5 (ORCPT
+        id S1728779AbgBUKWw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Feb 2020 05:21:57 -0500
-Received: from mga07.intel.com ([134.134.136.100]:47081 "EHLO mga07.intel.com"
+        Fri, 21 Feb 2020 05:22:52 -0500
+Received: from mail.kernel.org ([198.145.29.99]:53028 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728340AbgBUKV4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Feb 2020 05:21:56 -0500
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from fmsmga002.fm.intel.com ([10.253.24.26])
-  by orsmga105.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 21 Feb 2020 02:21:55 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.70,467,1574150400"; 
-   d="scan'208";a="269939696"
-Received: from smile.fi.intel.com (HELO smile) ([10.237.68.40])
-  by fmsmga002.fm.intel.com with ESMTP; 21 Feb 2020 02:21:52 -0800
-Received: from andy by smile with local (Exim 4.93)
-        (envelope-from <andriy.shevchenko@intel.com>)
-        id 1j55RS-003kYn-Iv; Fri, 21 Feb 2020 12:21:54 +0200
-Date:   Fri, 21 Feb 2020 12:21:54 +0200
-From:   Andy Shevchenko <andriy.shevchenko@intel.com>
-To:     Jesse Brandeburg <jesse.brandeburg@intel.com>
-Cc:     tglx@linutronix.de, mingo@redhat.com, bp@alien8.de, x86@kernel.org,
-        linux-kernel@vger.kernel.org, linux@rasmusvillemoes.dk,
-        dan.j.williams@intel.com, peterz@infradead.org
-Subject: Re: [PATCH v3 1/2] x86: fix bitops.h warning with a moved cast
-Message-ID: <20200221102154.GL10400@smile.fi.intel.com>
-References: <20200220232155.2123827-1-jesse.brandeburg@intel.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200220232155.2123827-1-jesse.brandeburg@intel.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+        id S1728301AbgBUKWv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 21 Feb 2020 05:22:51 -0500
+Received: from devnote2 (NE2965lan1.rev.em-net.ne.jp [210.141.244.193])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0524E222C4;
+        Fri, 21 Feb 2020 10:22:49 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1582280571;
+        bh=HKlbipbezigcjRV0JxrSd089dDGKVqPRmt5W9SS/rwA=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=dIKaeUmkqyv0XrtFca0m7PMwEsPvt5cnYgHwqASMDxfC9P4PFbgQGYm4TcgHt8fDB
+         Avw0QEQi+uzFSpgq9Q5PxWuLqm/9BsYyzjMHz0G4IQooWzAOVsajZMjm0ayWfSUe0g
+         3J4VOCOBV6jnO8oI64ROQky5H1rH1gFTIkbLx/AQ=
+Date:   Fri, 21 Feb 2020 19:22:47 +0900
+From:   Masami Hiramatsu <mhiramat@kernel.org>
+To:     Steven Rostedt <rostedt@goodmis.org>
+Cc:     Tom Zanussi <zanussi@kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] tracing: Have synthetic event test use
+ raw_smp_processor_id()
+Message-Id: <20200221192247.1b3f693f3023470b9f8a2068@kernel.org>
+In-Reply-To: <20200220215236.268b4990@oasis.local.home>
+References: <20200220162950.35162579@gandalf.local.home>
+        <1582236880.12738.5.camel@kernel.org>
+        <20200221092230.6ec9160d0ae135b14f29fd8c@kernel.org>
+        <20200220215236.268b4990@oasis.local.home>
+X-Mailer: Sylpheed 3.5.1 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Feb 20, 2020 at 03:21:54PM -0800, Jesse Brandeburg wrote:
-> Fix many sparse warnings when building with C=1.
-> 
-> When the kernel is compiled with C=1, there are lots of messages like:
->   arch/x86/include/asm/bitops.h:77:37: warning: cast truncates bits from constant value (ffffff7f becomes 7f)
-> 
-> CONST_MASK() is using a signed integer "1" to create the mask which
-> is later cast to (u8) when used. Move the cast to the definition and
-> clean up the calling sites to prevent sparse from warning.
-> 
-> The reason the warning was occurring is because certain bitmasks that
-> end with a mask next to a natural boundary like 7, 15, 23, 31, end up
-> with a mask like 0x7f, which then results in sign extension when doing
-> an invert (but I'm not a compiler expert). It was really only
-> "clear_bit" that was having problems, and it was only on bit checks next
-> to a byte boundary (top bit).
-> 
-> Verified with a test module (see next patch) and assembly inspection
-> that the patch doesn't introduce any change in generated code.
+On Thu, 20 Feb 2020 21:52:36 -0500
+Steven Rostedt <rostedt@goodmis.org> wrote:
 
-FWIW,
-Reviewed-by: Andy Shevchenko <andriy.shevchenko@intel.com>
+> On Fri, 21 Feb 2020 09:22:30 +0900
+> Masami Hiramatsu <mhiramat@kernel.org> wrote:
+> 
+> > On Thu, 20 Feb 2020 16:14:40 -0600
+> > Tom Zanussi <zanussi@kernel.org> wrote:
+> > 
+> > > Hi Steve,
+> > > 
+> > > On Thu, 2020-02-20 at 16:29 -0500, Steven Rostedt wrote:  
+> > > > From: "Steven Rostedt (VMware)" <rostedt@goodmis.org>
+> > > > 
+> > > > The test code that tests synthetic event creation pushes in as one of
+> > > > its
+> > > > test fields the current CPU using "smp_processor_id()". As this is
+> > > > just
+> > > > something to see if the value is correctly passed in, and the actual
+> > > > CPU
+> > > > used does not matter, use raw_smp_processor_id(), otherwise with
+> > > > debug
+> > > > preemption enabled, a warning happens as the smp_processor_id() is
+> > > > called
+> > > > without preemption enabled.
+> > > > 
+> > > > Signed-off-by: Steven Rostedt (VMware) <rostedt@goodmis.org>  
+> > > 
+> > > Makes sense - I guess it's simpler than Masami's and fine for this
+> > > purpose.
+> > > 
+> > > Reviewed-by: Tom Zanussi <zanussi@kernel.org>  
+> > 
+> > Hmm, can we reserve ring buffer on CPU1 and commit it on CPU2?
+> > Shouldn't we disable preemption between them?
+> > 
+> 
+> I don't think it matters. There's nothing that checks it. And if one
+> was concerned about the content of the CPU, one could always enable
+> scheduling events and see the task migrate.
 
-Thanks for fixing this, I have experienced tons of such messages.
+Ah, OK I confirmed that the preemption is disabled in ring_buffer_nest_start()
+so it should not happen.
 
-> Signed-off-by: Jesse Brandeburg <jesse.brandeburg@intel.com>
-> ---
-> v3: Clean up
-> the header file changes as per peterz.
+Reviewed-by: Masami Hiramatsu <mhiramat@kernel.org>
+
+Thank you!
+
 > 
-> v2: use correct CC: list
-> ---
->  arch/x86/include/asm/bitops.h | 6 +++---
->  1 file changed, 3 insertions(+), 3 deletions(-)
+> -- Steve
 > 
-> diff --git a/arch/x86/include/asm/bitops.h b/arch/x86/include/asm/bitops.h
-> index 062cdecb2f24..96ef19dcbde6 100644
-> --- a/arch/x86/include/asm/bitops.h
-> +++ b/arch/x86/include/asm/bitops.h
-> @@ -46,7 +46,7 @@
->   * a mask operation on a byte.
->   */
->  #define CONST_MASK_ADDR(nr, addr)	WBYTE_ADDR((void *)(addr) + ((nr)>>3))
-> -#define CONST_MASK(nr)			(1 << ((nr) & 7))
-> +#define CONST_MASK(nr)			((u8)1 << ((nr) & 7))
->  
->  static __always_inline void
->  arch_set_bit(long nr, volatile unsigned long *addr)
-> @@ -54,7 +54,7 @@ arch_set_bit(long nr, volatile unsigned long *addr)
->  	if (__builtin_constant_p(nr)) {
->  		asm volatile(LOCK_PREFIX "orb %1,%0"
->  			: CONST_MASK_ADDR(nr, addr)
-> -			: "iq" ((u8)CONST_MASK(nr))
-> +			: "iq" (CONST_MASK(nr))
->  			: "memory");
->  	} else {
->  		asm volatile(LOCK_PREFIX __ASM_SIZE(bts) " %1,%0"
-> @@ -74,7 +74,7 @@ arch_clear_bit(long nr, volatile unsigned long *addr)
->  	if (__builtin_constant_p(nr)) {
->  		asm volatile(LOCK_PREFIX "andb %1,%0"
->  			: CONST_MASK_ADDR(nr, addr)
-> -			: "iq" ((u8)~CONST_MASK(nr)));
-> +			: "iq" (0xff ^ CONST_MASK(nr)));
->  	} else {
->  		asm volatile(LOCK_PREFIX __ASM_SIZE(btr) " %1,%0"
->  			: : RLONG_ADDR(addr), "Ir" (nr) : "memory");
-> 
-> base-commit: ca7e1fd1026c5af6a533b4b5447e1d2f153e28f2
-> -- 
-> 2.24.1
-> 
+
 
 -- 
-With Best Regards,
-Andy Shevchenko
-
-
+Masami Hiramatsu <mhiramat@kernel.org>
