@@ -4,24 +4,24 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4EF83C35666
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 19:53:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C91C7C35666
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 19:53:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2253E20722
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 19:53:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A5E1A20722
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 19:53:36 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728236AbgBUTxT (ORCPT
+        id S1728542AbgBUTxe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Feb 2020 14:53:19 -0500
-Received: from muru.com ([72.249.23.125]:56882 "EHLO muru.com"
+        Fri, 21 Feb 2020 14:53:34 -0500
+Received: from muru.com ([72.249.23.125]:56902 "EHLO muru.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728028AbgBUTxN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Feb 2020 14:53:13 -0500
+        id S1728149AbgBUTxS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 21 Feb 2020 14:53:18 -0500
 Received: from hillo.muru.com (localhost [127.0.0.1])
-        by muru.com (Postfix) with ESMTP id 42F958192;
-        Fri, 21 Feb 2020 19:53:57 +0000 (UTC)
+        by muru.com (Postfix) with ESMTP id 4724A807E;
+        Fri, 21 Feb 2020 19:54:02 +0000 (UTC)
 From:   Tony Lindgren <tony@atomide.com>
 To:     linux-omap@vger.kernel.org
 Cc:     "Andrew F . Davis" <afd@ti.com>, Dave Gerlach <d-gerlach@ti.com>,
@@ -35,9 +35,9 @@ Cc:     "Andrew F . Davis" <afd@ti.com>, Dave Gerlach <d-gerlach@ti.com>,
         Adam Ford <aford173@gmail.com>,
         =?UTF-8?q?Andr=C3=A9=20Hentschel?= <nerv@dawncrow.de>,
         "H. Nikolaus Schaller" <hns@goldelico.com>
-Subject: [PATCH 3/7] ti-sysc: Improve reset to work with modules with no sysconfig
-Date:   Fri, 21 Feb 2020 11:52:52 -0800
-Message-Id: <20200221195256.54016-4-tony@atomide.com>
+Subject: [PATCH 5/7] bus: ti-sysc: Don't warn about legacy property for nested ti-sysc devices
+Date:   Fri, 21 Feb 2020 11:52:54 -0800
+Message-Id: <20200221195256.54016-6-tony@atomide.com>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200221195256.54016-1-tony@atomide.com>
 References: <20200221195256.54016-1-tony@atomide.com>
@@ -48,41 +48,25 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-At least display susbsystem (DSS) has modules with no sysconfig registers
-and rely on custom function for module reset handling. Let's make reset
-work with that too.
+In some cases we can have nested ti-sysc instances that may still use the
+legacy "ti,hwmods" property. Let's not warn if that's the case.
 
 Signed-off-by: Tony Lindgren <tony@atomide.com>
 ---
- drivers/bus/ti-sysc.c | 10 ++++++----
- 1 file changed, 6 insertions(+), 4 deletions(-)
+ drivers/bus/ti-sysc.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
 diff --git a/drivers/bus/ti-sysc.c b/drivers/bus/ti-sysc.c
 --- a/drivers/bus/ti-sysc.c
 +++ b/drivers/bus/ti-sysc.c
-@@ -1571,7 +1571,7 @@ static int sysc_reset(struct sysc *ddata)
- 	sysc_offset = ddata->offsets[SYSC_SYSCONFIG];
- 	syss_offset = ddata->offsets[SYSC_SYSSTATUS];
+@@ -624,7 +624,7 @@ static void sysc_check_one_child(struct sysc *ddata,
+ 	const char *name;
  
--	if (ddata->legacy_mode || sysc_offset < 0 ||
-+	if (ddata->legacy_mode ||
- 	    ddata->cap->regbits->srst_shift < 0 ||
- 	    ddata->cfg.quirks & SYSC_QUIRK_NO_RESET_ON_INIT)
- 		return 0;
-@@ -1586,9 +1586,11 @@ static int sysc_reset(struct sysc *ddata)
- 	if (ddata->pre_reset_quirk)
- 		ddata->pre_reset_quirk(ddata);
+ 	name = of_get_property(np, "ti,hwmods", NULL);
+-	if (name)
++	if (name && !of_device_is_compatible(np, "ti,sysc"))
+ 		dev_warn(ddata->dev, "really a child ti,hwmods property?");
  
--	sysc_val = sysc_read_sysconfig(ddata);
--	sysc_val |= sysc_mask;
--	sysc_write(ddata, sysc_offset, sysc_val);
-+	if (sysc_offset >= 0) {
-+		sysc_val = sysc_read_sysconfig(ddata);
-+		sysc_val |= sysc_mask;
-+		sysc_write(ddata, sysc_offset, sysc_val);
-+	}
- 
- 	if (ddata->cfg.srst_udelay)
- 		usleep_range(ddata->cfg.srst_udelay,
+ 	sysc_check_quirk_stdout(ddata, np);
 -- 
 2.25.1
