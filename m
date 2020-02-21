@@ -2,73 +2,160 @@ Return-Path: <SRS0=1210=4J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,UNWANTED_LANGUAGE_BODY,URIBL_BLOCKED,USER_AGENT_SANE_2
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C0C16C35646
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 16:29:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A3C13C35657
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 16:29:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 92F0020578
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 16:29:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7D98F208E4
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 16:29:35 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1582302575;
+	bh=bIv/Gy0try/2Ck0ORPZ1Orj2uFYFNPfi1/q/uWGc46A=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=JAuJVmftMXqephwWE/dP3MQ8Vy/EsruWps8xeJ0mDYrPxzsMw1+C5YKfNTFpP5RUp
+	 IEM+jhI16G8wegZcOSZ+93tfumtqZ2smjJbKPHuHgPhyYERHFGzYWLvMYcEsAv4WKH
+	 aEXbBeZpgxm776yV+R5UJcsAg6r9dhitfrGVkMs0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726691AbgBUQ3R (ORCPT
+        id S1726789AbgBUQ3e (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Feb 2020 11:29:17 -0500
-Received: from mga03.intel.com ([134.134.136.65]:17808 "EHLO mga03.intel.com"
+        Fri, 21 Feb 2020 11:29:34 -0500
+Received: from mail.kernel.org ([198.145.29.99]:37176 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726066AbgBUQ3Q (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Feb 2020 11:29:16 -0500
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from orsmga007.jf.intel.com ([10.7.209.58])
-  by orsmga103.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 21 Feb 2020 08:29:16 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.70,469,1574150400"; 
-   d="scan'208";a="225259898"
-Received: from sjchrist-coffee.jf.intel.com (HELO linux.intel.com) ([10.54.74.202])
-  by orsmga007.jf.intel.com with ESMTP; 21 Feb 2020 08:29:15 -0800
-Date:   Fri, 21 Feb 2020 08:29:15 -0800
-From:   Sean Christopherson <sean.j.christopherson@intel.com>
-To:     Vitaly Kuznetsov <vkuznets@redhat.com>
-Cc:     Paolo Bonzini <pbonzini@redhat.com>,
-        Wanpeng Li <wanpengli@tencent.com>,
-        Jim Mattson <jmattson@google.com>,
-        Joerg Roedel <joro@8bytes.org>, kvm@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 26/61] KVM: x86: Introduce cpuid_entry_{get,has}()
- accessors
-Message-ID: <20200221162915.GI12665@linux.intel.com>
-References: <20200201185218.24473-1-sean.j.christopherson@intel.com>
- <20200201185218.24473-27-sean.j.christopherson@intel.com>
- <875zg0q6f3.fsf@vitty.brq.redhat.com>
+        id S1726150AbgBUQ3d (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 21 Feb 2020 11:29:33 -0500
+Received: from archlinux (cpc149474-cmbg20-2-0-cust94.5-4.cable.virginm.net [82.4.196.95])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 159D620578;
+        Fri, 21 Feb 2020 16:29:31 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1582302572;
+        bh=bIv/Gy0try/2Ck0ORPZ1Orj2uFYFNPfi1/q/uWGc46A=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=N2Du/4sVBYICOmQahOIcWd9WCDUm9IKZNq0F02nT12xlRyNQwSePXONEfPjiFUTKe
+         m1HT6tp4wnwNyvsqtCUYAFxZR09bI/iNpmBlHC3/tHt1IPTq+Ia0ZtEzqh8uK4b1AJ
+         7NdowZNOaVC3vJaNm031XQTWnVhM1gbJTNO9SY7s=
+Date:   Fri, 21 Feb 2020 16:29:29 +0000
+From:   Jonathan Cameron <jic23@kernel.org>
+To:     Alexandru Ardelean <alexandru.ardelean@analog.com>
+Cc:     <linux-iio@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        Sergiu Cuciurean <sergiu.cuciurean@analog.com>
+Subject: Re: [PATCH v2] iio: amplifiers: ad8366: add support for HMC1119
+ Attenuator
+Message-ID: <20200221162929.41870ce9@archlinux>
+In-Reply-To: <20200221161826.21291-1-alexandru.ardelean@analog.com>
+References: <20200220092821.11050-1-sergiu.cuciurean@analog.com>
+        <20200221161826.21291-1-alexandru.ardelean@analog.com>
+X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <875zg0q6f3.fsf@vitty.brq.redhat.com>
-User-Agent: Mutt/1.5.24 (2015-08-30)
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Feb 21, 2020 at 04:57:52PM +0100, Vitaly Kuznetsov wrote:
-> Sean Christopherson <sean.j.christopherson@intel.com> writes:
+On Fri, 21 Feb 2020 18:18:26 +0200
+Alexandru Ardelean <alexandru.ardelean@analog.com> wrote:
+
+> From: Sergiu Cuciurean <sergiu.cuciurean@analog.com>
 > 
-> > @@ -119,6 +113,40 @@ static __always_inline u32 *guest_cpuid_get_register(struct kvm_vcpu *vcpu, unsi
-> >  	}
-> >  }
-> >  
-> > +static __always_inline u32 *cpuid_entry_get_reg(struct kvm_cpuid_entry2 *entry,
-> > +						unsigned x86_feature)
+> This change adds support for the HMC1119 Silicon Digial Attenuator. The
+> HMC1119 is a broadband, highly accurate, 7-bit digital attenuator,
+> operating from 0.1 GHz to 6.0 GHz with 31.5 dB attenuation control range
+> in 0.25 dB steps.
 > 
-> It is just me who dislikes bare 'unsigned'?
+> Link: https://www.analog.com/media/en/technical-documentation/data-sheets/hmc1119.pdf
+> 
+> Signed-off-by: Sergiu Cuciurean <sergiu.cuciurean@analog.com>
 
-I don't like it either.  I also don't like get yelled at by checkpatch.
+Applied, thanks.
 
-I used "unsigned" here and throughout to be consistent with the existing
-guest_cpuid_*() and x86_feature_cpuid() helpers in cpuid.h.
+Jonathan
 
-I will happily add a patch to change those to use "unsigned int" and
-then also use "unsigned int" for the cpuid_entry_*() code.
+> ---
+>  drivers/iio/amplifiers/ad8366.c | 17 +++++++++++++++++
+>  1 file changed, 17 insertions(+)
+> 
+> diff --git a/drivers/iio/amplifiers/ad8366.c b/drivers/iio/amplifiers/ad8366.c
+> index 95972ab60f42..62167b87caea 100644
+> --- a/drivers/iio/amplifiers/ad8366.c
+> +++ b/drivers/iio/amplifiers/ad8366.c
+> @@ -5,6 +5,7 @@
+>   *   AD8366 Dual-Digital Variable Gain Amplifier (VGA)
+>   *   ADA4961 BiCMOS RF Digital Gain Amplifier (DGA)
+>   *   ADL5240 Digitally controlled variable gain amplifier (VGA)
+> + *   HMC1119 0.25 dB LSB, 7-Bit, Silicon Digital Attenuator
+>   *
+>   * Copyright 2012-2019 Analog Devices Inc.
+>   */
+> @@ -27,6 +28,7 @@ enum ad8366_type {
+>  	ID_AD8366,
+>  	ID_ADA4961,
+>  	ID_ADL5240,
+> +	ID_HMC1119,
+>  };
+>  
+>  struct ad8366_info {
+> @@ -62,6 +64,10 @@ static struct ad8366_info ad8366_infos[] = {
+>  		.gain_min = -11500,
+>  		.gain_max = 20000,
+>  	},
+> +	[ID_HMC1119] = {
+> +		.gain_min = -31750,
+> +		.gain_max = 0,
+> +	},
+>  };
+>  
+>  static int ad8366_write(struct iio_dev *indio_dev,
+> @@ -84,6 +90,9 @@ static int ad8366_write(struct iio_dev *indio_dev,
+>  	case ID_ADL5240:
+>  		st->data[0] = (ch_a & 0x3F);
+>  		break;
+> +	case ID_HMC1119:
+> +		st->data[0] = ch_a;
+> +		break;
+>  	}
+>  
+>  	ret = spi_write(st->spi, st->data, indio_dev->num_channels);
+> @@ -118,6 +127,9 @@ static int ad8366_read_raw(struct iio_dev *indio_dev,
+>  		case ID_ADL5240:
+>  			gain = 20000 - 31500 + code * 500;
+>  			break;
+> +		case ID_HMC1119:
+> +			gain = -1 * code * 250;
+> +			break;
+>  		}
+>  
+>  		/* Values in dB */
+> @@ -164,6 +176,9 @@ static int ad8366_write_raw(struct iio_dev *indio_dev,
+>  	case ID_ADL5240:
+>  		code = ((gain - 500 - 20000) / 500) & 0x3F;
+>  		break;
+> +	case ID_HMC1119:
+> +		code = (abs(gain) / 250) & 0x7F;
+> +		break;
+>  	}
+>  
+>  	mutex_lock(&st->lock);
+> @@ -246,6 +261,7 @@ static int ad8366_probe(struct spi_device *spi)
+>  		break;
+>  	case ID_ADA4961:
+>  	case ID_ADL5240:
+> +	case ID_HMC1119:
+>  		st->reset_gpio = devm_gpiod_get(&spi->dev, "reset",
+>  			GPIOD_OUT_HIGH);
+>  		indio_dev->channels = ada4961_channels;
+> @@ -298,6 +314,7 @@ static const struct spi_device_id ad8366_id[] = {
+>  	{"ad8366",  ID_AD8366},
+>  	{"ada4961", ID_ADA4961},
+>  	{"adl5240", ID_ADL5240},
+> +	{"hmc1119", ID_HMC1119},
+>  	{}
+>  };
+>  MODULE_DEVICE_TABLE(spi, ad8366_id);
+
