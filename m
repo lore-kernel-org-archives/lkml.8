@@ -7,47 +7,48 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 42C05C35641
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 08:27:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C913FC35641
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 08:27:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0F3D72468A
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 08:27:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9CC8E24670
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 08:27:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582273623;
-	bh=nZ6V4uw3ZrXBLfZspGcx/9cmZIdgngtSWXyEIL1Y0As=;
+	s=default; t=1582273629;
+	bh=tUg751Affnoyn3FW3QZPYI49oz153hfQFyw6kq9w/7c=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=uqctW+b93q63RSWTOAdcPiYHzcVor2FtTg2BRuOMAojFufSjE+Rus2ROXbuw4LZqR
-	 k5s0Em8IxI8uo4pbGSs9ch1Dsn1+KBGqJEU/ty/lDRJpPrmnBveVRlL6GUjkqvTfLd
-	 4f5cAKIe4XVKri5fJb14YhwJ05Uggekaswo8hNdI=
+	b=lnAaKL1MobbUtb19ACzqTw5JnmiFgJCuaHfyQx5VDnaPpiaIqSn2rAVRreEOuceeJ
+	 YvyotfTdJ1dsrNLCY5FliqUkp4VWpFQhoquswXhT7BCa+FvdjXknAyl/s60+w/4f/b
+	 UCm7FfET51Co8SRbmsexlZya+wWPWh/Vgohhq4dU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388320AbgBUIWc (ORCPT
+        id S2388275AbgBUIWT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Feb 2020 03:22:32 -0500
-Received: from mail.kernel.org ([198.145.29.99]:34114 "EHLO mail.kernel.org"
+        Fri, 21 Feb 2020 03:22:19 -0500
+Received: from mail.kernel.org ([198.145.29.99]:33822 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388184AbgBUIW3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Feb 2020 03:22:29 -0500
+        id S2388038AbgBUIWP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 21 Feb 2020 03:22:15 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A3F662467D;
-        Fri, 21 Feb 2020 08:22:28 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id CBD5424673;
+        Fri, 21 Feb 2020 08:22:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1582273349;
-        bh=nZ6V4uw3ZrXBLfZspGcx/9cmZIdgngtSWXyEIL1Y0As=;
+        s=default; t=1582273335;
+        bh=tUg751Affnoyn3FW3QZPYI49oz153hfQFyw6kq9w/7c=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=teaghmC5fVjkc5wCDWvwRk5EqNPo9MwTH0/kvfBDlbdEgcK1+xbTsvWY8ojl573/J
-         CwfXhGOVgq6jrvoIB/SDchbR5k2gTa5W9rtFx9MBuCBOZexIoAN6Mfm611QCQI9Gg8
-         wYA+yAjWx1vvQCnJesUzWTdA6DGOoRG61Vqufcew=
+        b=vfG3vU2GIwfGshzYa6JUlYpF4b7KVSx5rhRVwg4unap1Q+nkxnKQJ9tgawE+Thu7G
+         LYyBkIhqTifISsWaUp26vp0qffscjXnJhYtt+miwipNn/ivs/16vMV+WD5y1XT+L8K
+         +M8wZ7POIyu8P+4myyjcvrnoJFHU+XlTC8IiaA0E=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Chao Yu <yuchao0@huawei.com>,
-        Jaegeuk Kim <jaegeuk@kernel.org>,
+        stable@vger.kernel.org, Icenowy Zheng <icenowy@aosc.io>,
+        Vasily Khoruzhick <anarsoul@gmail.com>,
+        Maxime Ripard <maxime@cerno.tech>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 138/191] f2fs: fix memleak of kobject
-Date:   Fri, 21 Feb 2020 08:41:51 +0100
-Message-Id: <20200221072307.261675924@linuxfoundation.org>
+Subject: [PATCH 4.19 094/191] clk: sunxi-ng: add mux and pll notifiers for A64 CPU clock
+Date:   Fri, 21 Feb 2020 08:41:07 +0100
+Message-Id: <20200221072302.330809496@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200221072250.732482588@linuxfoundation.org>
 References: <20200221072250.732482588@linuxfoundation.org>
@@ -60,52 +61,77 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Chao Yu <yuchao0@huawei.com>
+From: Icenowy Zheng <icenowy@aosc.io>
 
-[ Upstream commit fe396ad8e7526f059f7b8c7290d33a1b84adacab ]
+[ Upstream commit ec97faff743b398e21f74a54c81333f3390093aa ]
 
-If kobject_init_and_add() failed, caller needs to invoke kobject_put()
-to release kobject explicitly.
+The A64 PLL_CPU clock has the same instability if some factor changed
+without the PLL gated like other SoCs with sun6i-style CCU, e.g. A33,
+H3.
 
-Signed-off-by: Chao Yu <yuchao0@huawei.com>
-Signed-off-by: Jaegeuk Kim <jaegeuk@kernel.org>
+Add the mux and pll notifiers for A64 CPU clock to workaround the
+problem.
+
+Fixes: c6a0637460c2 ("clk: sunxi-ng: Add A64 clocks")
+Signed-off-by: Icenowy Zheng <icenowy@aosc.io>
+Signed-off-by: Vasily Khoruzhick <anarsoul@gmail.com>
+Signed-off-by: Maxime Ripard <maxime@cerno.tech>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/f2fs/sysfs.c | 11 ++++++++---
- 1 file changed, 8 insertions(+), 3 deletions(-)
+ drivers/clk/sunxi-ng/ccu-sun50i-a64.c | 28 ++++++++++++++++++++++++++-
+ 1 file changed, 27 insertions(+), 1 deletion(-)
 
-diff --git a/fs/f2fs/sysfs.c b/fs/f2fs/sysfs.c
-index b405548202d3b..9a59f49ba4050 100644
---- a/fs/f2fs/sysfs.c
-+++ b/fs/f2fs/sysfs.c
-@@ -658,10 +658,12 @@ int __init f2fs_init_sysfs(void)
+diff --git a/drivers/clk/sunxi-ng/ccu-sun50i-a64.c b/drivers/clk/sunxi-ng/ccu-sun50i-a64.c
+index dec4a130390a3..9ac6c299e0744 100644
+--- a/drivers/clk/sunxi-ng/ccu-sun50i-a64.c
++++ b/drivers/clk/sunxi-ng/ccu-sun50i-a64.c
+@@ -901,11 +901,26 @@ static const struct sunxi_ccu_desc sun50i_a64_ccu_desc = {
+ 	.num_resets	= ARRAY_SIZE(sun50i_a64_ccu_resets),
+ };
  
- 	ret = kobject_init_and_add(&f2fs_feat, &f2fs_feat_ktype,
- 				   NULL, "features");
--	if (ret)
-+	if (ret) {
-+		kobject_put(&f2fs_feat);
- 		kset_unregister(&f2fs_kset);
--	else
-+	} else {
- 		f2fs_proc_root = proc_mkdir("fs/f2fs", NULL);
-+	}
- 	return ret;
++static struct ccu_pll_nb sun50i_a64_pll_cpu_nb = {
++	.common	= &pll_cpux_clk.common,
++	/* copy from pll_cpux_clk */
++	.enable	= BIT(31),
++	.lock	= BIT(28),
++};
++
++static struct ccu_mux_nb sun50i_a64_cpu_nb = {
++	.common		= &cpux_clk.common,
++	.cm		= &cpux_clk.mux,
++	.delay_us	= 1, /* > 8 clock cycles at 24 MHz */
++	.bypass_index	= 1, /* index of 24 MHz oscillator */
++};
++
+ static int sun50i_a64_ccu_probe(struct platform_device *pdev)
+ {
+ 	struct resource *res;
+ 	void __iomem *reg;
+ 	u32 val;
++	int ret;
+ 
+ 	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+ 	reg = devm_ioremap_resource(&pdev->dev, res);
+@@ -919,7 +934,18 @@ static int sun50i_a64_ccu_probe(struct platform_device *pdev)
+ 
+ 	writel(0x515, reg + SUN50I_A64_PLL_MIPI_REG);
+ 
+-	return sunxi_ccu_probe(pdev->dev.of_node, reg, &sun50i_a64_ccu_desc);
++	ret = sunxi_ccu_probe(pdev->dev.of_node, reg, &sun50i_a64_ccu_desc);
++	if (ret)
++		return ret;
++
++	/* Gate then ungate PLL CPU after any rate changes */
++	ccu_pll_notifier_register(&sun50i_a64_pll_cpu_nb);
++
++	/* Reparent CPU during PLL CPU rate changes */
++	ccu_mux_notifier_register(pll_cpux_clk.common.hw.clk,
++				  &sun50i_a64_cpu_nb);
++
++	return 0;
  }
  
-@@ -682,8 +684,11 @@ int f2fs_register_sysfs(struct f2fs_sb_info *sbi)
- 	init_completion(&sbi->s_kobj_unregister);
- 	err = kobject_init_and_add(&sbi->s_kobj, &f2fs_sb_ktype, NULL,
- 				"%s", sb->s_id);
--	if (err)
-+	if (err) {
-+		kobject_put(&sbi->s_kobj);
-+		wait_for_completion(&sbi->s_kobj_unregister);
- 		return err;
-+	}
- 
- 	if (f2fs_proc_root)
- 		sbi->s_proc = proc_mkdir(sb->s_id, f2fs_proc_root);
+ static const struct of_device_id sun50i_a64_ccu_ids[] = {
 -- 
 2.20.1
 
