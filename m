@@ -5,49 +5,49 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 75559C35642
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 07:58:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EE50EC35640
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 07:58:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4CB942073A
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 07:58:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C10A7206ED
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 07:58:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582271884;
-	bh=sjVY1Z5Q4dyM/6xX10VTEQpm72RuUKhACVpanJEy6kw=;
+	s=default; t=1582271887;
+	bh=7GTzFRjxuS1PYuCP5jZ9FakEZ80lREG4UThrnZSeHJ8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Q0a3FnvUfrWrF/iEEvzUOLPqtPEy6ZU9TynofMYsaffCBCHrNjqfxLiRWx33ZyxzY
-	 EywCLp7ys25fXLom7eJRaiO64lZtDSClVg0RKEpg0D06z4Yl+GmEA4kQAOKOctg4gK
-	 8M+Xl4gW5ffgtSB8ZTdAFEAF8hs+sDaCGZPM2z+Q=
+	b=oA7G5bFDvpusuwopUHa2VrR0DCoGfXYKdyycneiYosb+qdJ9bck8em2W0KG3dJq+G
+	 I6DDivcU1tDrDhHw8qTnim8oNgjHeaYUmq+YUOGy7N8PJQfjTinKhTmqXySf17QQ6e
+	 CL0CO2lpVMAvH2AksEdVpFpT2exfjMD6sxQ2MnG4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730431AbgBUH6D (ORCPT
+        id S1730732AbgBUH6G (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Feb 2020 02:58:03 -0500
-Received: from mail.kernel.org ([198.145.29.99]:57706 "EHLO mail.kernel.org"
+        Fri, 21 Feb 2020 02:58:06 -0500
+Received: from mail.kernel.org ([198.145.29.99]:57776 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730551AbgBUH6B (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Feb 2020 02:58:01 -0500
+        id S1730036AbgBUH6D (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 21 Feb 2020 02:58:03 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 30B9620578;
-        Fri, 21 Feb 2020 07:58:00 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B63A820578;
+        Fri, 21 Feb 2020 07:58:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1582271880;
-        bh=sjVY1Z5Q4dyM/6xX10VTEQpm72RuUKhACVpanJEy6kw=;
+        s=default; t=1582271883;
+        bh=7GTzFRjxuS1PYuCP5jZ9FakEZ80lREG4UThrnZSeHJ8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=c7USGFYHk26hXVv1yHNvIjQHGvDhkvHJ1RRPESmEbeSFpDLGuYBhjvWO1zlJwoXuA
-         uC4xifnrpVGGpZB6uAxyAAEw/FhGnGejTquaQia1Wu4qM3uVzrdq3bDXg1ZZEUfg72
-         +wN0JLPSqOwF/ag1jONSz461qdGKMDLB8sNgzSkk=
+        b=yhRMmF4AkVtSmOuMKmvdxQyyq1gSrSwcXYcOr3ys+jXZAcEZcDfeG+whXKenGD1GW
+         0JqiTidyEepDm2gFpXtnML+4fN3lRsqwfCSPK8Ts0/5aeAQjf/pkzbC51eiuqWSFjX
+         3MTHxXIBNdAwvxOugfu6857TtX5l8Xg1z5tpVHB0=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Christoph Hellwig <hch@lst.de>,
-        Coly Li <colyli@suse.de>, Jens Axboe <axboe@kernel.dk>,
+        stable@vger.kernel.org, Coly Li <colyli@suse.de>,
+        Christoph Hellwig <hch@lst.de>, Jens Axboe <axboe@kernel.dk>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.5 333/399] bcache: rework error unwinding in register_bcache
-Date:   Fri, 21 Feb 2020 08:40:58 +0100
-Message-Id: <20200221072433.446073031@linuxfoundation.org>
+Subject: [PATCH 5.5 334/399] bcache: fix use-after-free in register_bcache()
+Date:   Fri, 21 Feb 2020 08:40:59 +0100
+Message-Id: <20200221072433.516792813@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200221072402.315346745@linuxfoundation.org>
 References: <20200221072402.315346745@linuxfoundation.org>
@@ -60,159 +60,50 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Christoph Hellwig <hch@lst.de>
+From: Coly Li <colyli@suse.de>
 
-[ Upstream commit 50246693f81fe887f4db78bf7089051d7f1894cc ]
+[ Upstream commit ae3cd299919af6eb670d5af0bc9d7ba14086bd8e ]
 
-Split the successful and error return path, and use one goto label for each
-resource to unwind.  This also fixes some small errors like leaking the
-module reference count in the reboot case (which seems entirely harmless)
-or printing the wrong warning messages for early failures.
+The patch "bcache: rework error unwinding in register_bcache" introduces
+a use-after-free regression in register_bcache(). Here are current code,
+	2510 out_free_path:
+	2511         kfree(path);
+	2512 out_module_put:
+	2513         module_put(THIS_MODULE);
+	2514 out:
+	2515         pr_info("error %s: %s", path, err);
+	2516         return ret;
+If some error happens and the above code path is executed, at line 2511
+path is released, but referenced at line 2515. Then KASAN reports a use-
+after-free error message.
 
-Signed-off-by: Christoph Hellwig <hch@lst.de>
+This patch changes line 2515 in the following way to fix the problem,
+	2515         pr_info("error %s: %s", path?path:"", err);
+
 Signed-off-by: Coly Li <colyli@suse.de>
+Cc: Christoph Hellwig <hch@lst.de>
 Signed-off-by: Jens Axboe <axboe@kernel.dk>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/md/bcache/super.c | 75 +++++++++++++++++++++++----------------
- 1 file changed, 45 insertions(+), 30 deletions(-)
+ drivers/md/bcache/super.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
 diff --git a/drivers/md/bcache/super.c b/drivers/md/bcache/super.c
-index a573ce1d85aae..bd2ae1d78fe15 100644
+index bd2ae1d78fe15..05cb94664efee 100644
 --- a/drivers/md/bcache/super.c
 +++ b/drivers/md/bcache/super.c
-@@ -2375,29 +2375,33 @@ static bool bch_is_open(struct block_device *bdev)
- static ssize_t register_bcache(struct kobject *k, struct kobj_attribute *attr,
- 			       const char *buffer, size_t size)
- {
--	ssize_t ret = -EINVAL;
--	const char *err = "cannot allocate memory";
--	char *path = NULL;
--	struct cache_sb *sb = NULL;
-+	const char *err;
-+	char *path;
-+	struct cache_sb *sb;
- 	struct block_device *bdev = NULL;
--	struct page *sb_page = NULL;
-+	struct page *sb_page;
-+	ssize_t ret;
- 
-+	ret = -EBUSY;
- 	if (!try_module_get(THIS_MODULE))
--		return -EBUSY;
-+		goto out;
- 
- 	/* For latest state of bcache_is_reboot */
- 	smp_mb();
- 	if (bcache_is_reboot)
--		return -EBUSY;
-+		goto out_module_put;
- 
-+	ret = -ENOMEM;
-+	err = "cannot allocate memory";
- 	path = kstrndup(buffer, size, GFP_KERNEL);
- 	if (!path)
--		goto err;
-+		goto out_module_put;
- 
- 	sb = kmalloc(sizeof(struct cache_sb), GFP_KERNEL);
- 	if (!sb)
--		goto err;
-+		goto out_free_path;
- 
-+	ret = -EINVAL;
- 	err = "failed to open device";
- 	bdev = blkdev_get_by_path(strim(path),
- 				  FMODE_READ|FMODE_WRITE|FMODE_EXCL,
-@@ -2414,57 +2418,68 @@ static ssize_t register_bcache(struct kobject *k, struct kobj_attribute *attr,
- 			if (!IS_ERR(bdev))
- 				bdput(bdev);
- 			if (attr == &ksysfs_register_quiet)
--				goto quiet_out;
-+				goto done;
- 		}
--		goto err;
-+		goto out_free_sb;
- 	}
- 
- 	err = "failed to set blocksize";
- 	if (set_blocksize(bdev, 4096))
--		goto err_close;
-+		goto out_blkdev_put;
- 
- 	err = read_super(sb, bdev, &sb_page);
- 	if (err)
--		goto err_close;
-+		goto out_blkdev_put;
- 
- 	err = "failed to register device";
- 	if (SB_IS_BDEV(sb)) {
- 		struct cached_dev *dc = kzalloc(sizeof(*dc), GFP_KERNEL);
- 
- 		if (!dc)
--			goto err_close;
-+			goto out_put_sb_page;
- 
- 		mutex_lock(&bch_register_lock);
- 		ret = register_bdev(sb, sb_page, bdev, dc);
- 		mutex_unlock(&bch_register_lock);
- 		/* blkdev_put() will be called in cached_dev_free() */
--		if (ret < 0)
--			goto err;
-+		if (ret < 0) {
-+			bdev = NULL;
-+			goto out_put_sb_page;
-+		}
- 	} else {
- 		struct cache *ca = kzalloc(sizeof(*ca), GFP_KERNEL);
- 
- 		if (!ca)
--			goto err_close;
-+			goto out_put_sb_page;
- 
- 		/* blkdev_put() will be called in bch_cache_release() */
--		if (register_cache(sb, sb_page, bdev, ca) != 0)
--			goto err;
-+		if (register_cache(sb, sb_page, bdev, ca) != 0) {
-+			bdev = NULL;
-+			goto out_put_sb_page;
-+		}
- 	}
--quiet_out:
--	ret = size;
--out:
--	if (sb_page)
--		put_page(sb_page);
-+
-+	put_page(sb_page);
-+done:
+@@ -2475,10 +2475,11 @@ out_free_sb:
  	kfree(sb);
+ out_free_path:
  	kfree(path);
++	path = NULL;
+ out_module_put:
  	module_put(THIS_MODULE);
--	return ret;
--
--err_close:
--	blkdev_put(bdev, FMODE_READ|FMODE_WRITE|FMODE_EXCL);
--err:
-+	return size;
-+
-+out_put_sb_page:
-+	put_page(sb_page);
-+out_blkdev_put:
-+	if (bdev)
-+		blkdev_put(bdev, FMODE_READ | FMODE_WRITE | FMODE_EXCL);
-+out_free_sb:
-+	kfree(sb);
-+out_free_path:
-+	kfree(path);
-+out_module_put:
-+	module_put(THIS_MODULE);
-+out:
- 	pr_info("error %s: %s", path, err);
--	goto out;
-+	return ret;
+ out:
+-	pr_info("error %s: %s", path, err);
++	pr_info("error %s: %s", path?path:"", err);
+ 	return ret;
  }
- 
  
 -- 
 2.20.1
