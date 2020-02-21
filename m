@@ -2,103 +2,88 @@ Return-Path: <SRS0=1210=4J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 58B08C35641
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 09:30:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0E629C35641
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 09:31:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E8DB220722
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 09:30:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D8B8620722
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 09:31:45 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="d5i5M1f3"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727259AbgBUJaC (ORCPT
+        id S1727470AbgBUJbo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Feb 2020 04:30:02 -0500
-Received: from foss.arm.com ([217.140.110.172]:34970 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726853AbgBUJaC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Feb 2020 04:30:02 -0500
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 6ED4B31B;
-        Fri, 21 Feb 2020 01:30:01 -0800 (PST)
-Received: from e107158-lin.cambridge.arm.com (e107158-lin.cambridge.arm.com [10.1.195.21])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 88FCD3F68F;
-        Fri, 21 Feb 2020 01:29:59 -0800 (PST)
-Date:   Fri, 21 Feb 2020 09:29:57 +0000
-From:   Qais Yousef <qais.yousef@arm.com>
-To:     chris hyser <chris.hyser@oracle.com>
-Cc:     Parth Shah <parth@linux.ibm.com>, vincent.guittot@linaro.org,
-        patrick.bellasi@matbug.net, valentin.schneider@arm.com,
-        dhaval.giani@oracle.com, dietmar.eggemann@arm.com,
-        linux-kernel@vger.kernel.org, peterz@infradead.org,
-        mingo@redhat.com, pavel@ucw.cz, qperret@qperret.net,
-        David.Laight@ACULAB.COM, pjt@google.com, tj@kernel.org
-Subject: Re: [PATCH v3 0/3] Introduce per-task latency_nice for scheduler
- hints
-Message-ID: <20200221092956.jpsfps2dgmhiu5vg@e107158-lin.cambridge.arm.com>
-References: <8ed0f40c-eeb4-c487-5420-a8eb185b5cdd@linux.ibm.com>
- <c7e5b9da-66a3-3d69-d7aa-0319de3aa736@oracle.com>
- <971909ed-d4e0-6afa-d20b-365ede5a195e@linux.ibm.com>
- <8e984496-e89b-d96c-d84e-2be7f0958ea4@oracle.com>
- <1e216d18-7ec0-4a0d-e124-b730d6e03e6f@oracle.com>
- <de5d8886-6f70-a3fa-8061-5877cd1d98f5@linux.ibm.com>
- <7429e0ae-41ff-e9c4-dd65-3ef1919f5f50@linux.ibm.com>
- <a332d633-7826-b85d-5d9f-5e34f9de084a@oracle.com>
- <20200220150343.dvweamfnk257pg7z@e107158-lin.cambridge.arm.com>
- <9bb1437b-3de0-b0ca-6319-6be903b0758d@oracle.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <9bb1437b-3de0-b0ca-6319-6be903b0758d@oracle.com>
-User-Agent: NeoMutt/20171215
+        Fri, 21 Feb 2020 04:31:44 -0500
+Received: from mail26.static.mailgun.info ([104.130.122.26]:22165 "EHLO
+        mail26.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726930AbgBUJbo (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 21 Feb 2020 04:31:44 -0500
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1582277503; h=Message-Id: Date: Subject: Cc: To: From:
+ Sender; bh=i8n52dio23fhyBvctmCgbH1eqA0EsTex5cCqVUZijW8=; b=d5i5M1f3tI9z5T8CLEnoxrVDYqBwUkFOCZmXgkcxBhNm3VItjDysrj6slyHNqL9yhh3exP1A
+ euHvUgttTUi3m9/1em3Tt0uJklpFhiTTelAQlVdI+rR8N3gBw/GBYU8vCuoGIVNZup0INdGi
+ QhSWm8Gu/UlndnhVcTBq0le8dCQ=
+X-Mailgun-Sending-Ip: 104.130.122.26
+X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
+Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
+ by mxa.mailgun.org with ESMTP id 5e4fa37e.7f0e2b0e9e30-smtp-out-n03;
+ Fri, 21 Feb 2020 09:31:42 -0000 (UTC)
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id 6D13EC433A2; Fri, 21 Feb 2020 09:31:41 +0000 (UTC)
+Received: from okukatla1-linux.qualcomm.com (blr-c-bdr-fw-01_GlobalNAT_AllZones-Outside.qualcomm.com [103.229.19.19])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: okukatla)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id C6FEBC43383;
+        Fri, 21 Feb 2020 09:31:36 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org C6FEBC43383
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=okukatla@codeaurora.org
+From:   Odelu Kukatla <okukatla@codeaurora.org>
+To:     georgi.djakov@linaro.org, daidavid1@codeaurora.org,
+        bjorn.andersson@linaro.org, evgreen@google.com
+Cc:     sboyd@kernel.org, ilina@codeaurora.org, seansw@qti.qualcomm.com,
+        elder@linaro.org, linux-kernel@vger.kernel.org,
+        linux-arm-msm@vger.kernel.org, linux-pm@vger.kernel.org,
+        linux-arm-msm-owner@vger.kernel.org,
+        Odelu Kukatla <okukatla@codeaurora.org>
+Subject: [V3, 0/3] Add SC7180 interconnect provider driver
+Date:   Fri, 21 Feb 2020 15:00:47 +0530
+Message-Id: <1582277450-27382-1-git-send-email-okukatla@codeaurora.org>
+X-Mailer: git-send-email 1.9.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 02/20/20 11:34, chris hyser wrote:
-> > > Whether called a hint or not, it is a trade-off to reduce latency of select
-> > > tasks at the expense of the throughput of the other tasks in the the system.
-> > 
-> > Does it actually affect the throughput of the other tasks? I thought this will
-> > allow the scheduler to reduce latencies, for instance, when selecting which cpu
-> > it should land on. I can't see how this could hurt other tasks.
-> 
-> This is why it is hard to argue about pure abstractions. The primary idea
-> mentioned so far for how these latencies are reduced is by short cutting the
-> brute-force search for something idle. If you don't find an idle cpu because
-> you didn't spend the time to look, then you pre-empted a task, possibly with
-> a large nice warm cache footprint that was cranking away on throughput. It
-> is ultimately going to be the usual latency vs throughput trade off. If
-> latency reduction were "free" we wouldn't need a per task attribute. We
-> would just do the reduction for all tasks, everywhere, all the time.
+Add driver to support scaling of the on-chip interconnects on
+the SC7180-based platforms.
 
-This could still happen without the latency nice bias. I'm not sure if this
-falls under DoS; maybe if you end up spawning a lot of task with high latency
-nice value, then you might end up cramming a lot of tasks on a small subset of
-CPUs. But then, shouldn't the logic that uses latency_nice try to handle this
-case anyway since it could be legit?
+Depends-on: Split SDM845 interconnect nodes and consolidate RPMh support
+Depends-on: Add device tree support for sc7180
 
-Not sure if this can be used by someone to trigger timing based attacks on
-another process.
+Odelu Kukatla (3):
+  dt-bindings: interconnect: Add Qualcomm SC7180 DT bindings
+  interconnect: qcom: Add SC7180 interconnect provider driver
+  dt-bindings: interconnect: Add Qualcomm SC7180 DT bindings
 
-I can't fully see the whole security implications, but regardless. I do agree
-it is prudent to not allow tasks to set their own latency_nice. Mainly because
-the meaning of this flag will be system dependent and I think Admins are the
-better ones to decide how to use this flag for the system they're running on.
-I don't think application writers should be able to tweak their tasks
-latency_nice value. Not if they can't get the right privilege at least.
+ .../bindings/interconnect/qcom,sc7180.yaml         |  85 +++
+ arch/arm64/boot/dts/qcom/sc7180.dtsi               |  95 +++
+ drivers/interconnect/qcom/Kconfig                  |  10 +
+ drivers/interconnect/qcom/Makefile                 |   2 +
+ drivers/interconnect/qcom/sc7180.c                 | 642 +++++++++++++++++++++
+ drivers/interconnect/qcom/sc7180.h                 | 149 +++++
+ include/dt-bindings/interconnect/qcom,sc7180.h     | 161 ++++++
+ 7 files changed, 1144 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/interconnect/qcom,sc7180.yaml
+ create mode 100644 drivers/interconnect/qcom/sc7180.c
+ create mode 100644 drivers/interconnect/qcom/sc7180.h
+ create mode 100644 include/dt-bindings/interconnect/qcom,sc7180.h
 
-> 
-> > 
-> > Can you expand on the scenario you have in mind please?
-> 
-> Hopefully, the above helps. It was my original plan to introduce this with a
-> data laden RFC on the topic, but I felt the need to respond to Parth
-> immediately. I'm not currently pushing any particular change.
-
-Thanks!
-
---
-Qais Yousef
+-- 
+The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
+a Linux Foundation Collaborative Project
