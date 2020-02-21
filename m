@@ -2,218 +2,157 @@ Return-Path: <SRS0=1210=4J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FSL_HELO_FAKE,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 43314C35646
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 17:50:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5711FC35657
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 17:52:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 11748206E2
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 17:50:31 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582307431;
-	bh=rz7YgSt+Rjoriz1tFNPaoOYCJcXR8Ft7UFBVsjnoP0o=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=X8QP3lQiEhY+xxKX+xhjSE/sy7CMuEIMasK4toJxUea/2nd5a3YH1ltrI7cILi0BG
-	 4QUAYZvIqSxEl06yU3uy1bjk2wLNPoirOnh0utfwsxIupBecDUkZMFawvgEkYza1nk
-	 s7GUsDCuFveqQ9OSvxK/lfXr0DvGfDCSfesKWeYo=
+	by mail.kernel.org (Postfix) with ESMTP id 2F72820722
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 17:52:38 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="T8rtdkXd"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728071AbgBURu3 (ORCPT
+        id S1728289AbgBURwh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Feb 2020 12:50:29 -0500
-Received: from mail-pl1-f195.google.com ([209.85.214.195]:41865 "EHLO
-        mail-pl1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725995AbgBURu3 (ORCPT
+        Fri, 21 Feb 2020 12:52:37 -0500
+Received: from mail-yb1-f195.google.com ([209.85.219.195]:35874 "EHLO
+        mail-yb1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725995AbgBURwg (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Feb 2020 12:50:29 -0500
-Received: by mail-pl1-f195.google.com with SMTP id t14so1153979plr.8
-        for <linux-kernel@vger.kernel.org>; Fri, 21 Feb 2020 09:50:28 -0800 (PST)
+        Fri, 21 Feb 2020 12:52:36 -0500
+Received: by mail-yb1-f195.google.com with SMTP id u26so1509684ybd.3;
+        Fri, 21 Feb 2020 09:52:36 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=sender:date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=BTYBxRjxL6j9jRa5am8wcAfH9hghQz4giKAxNHy2xK4=;
-        b=FzTSLxgkZT4cxDaHBStgUqU87ldVzo/bNsdhWZMxTdso97FTZfmxRDZzASr4GMAC5U
-         10aX+WUWPsbGFzeWKUukY2TcbDA+wPz8O0wuCuZrO1yBwIyh50cOW1NIMhtyJHJihGZj
-         TQdELxqazapE2l4nLK4UcgPEs4v86pzAUojGf5KPPZd15eMs9WGRXo6gV3htuLvA++yR
-         R5k+oU7oZmryU7dDL1blPrfAQpj/cGy5ozvZq87NOXC6LRYv/4aI6bT+hjNtPXybnVgt
-         xuA3Hl7h+/kr2VPQ2OXdBB4pcrrft++V0M0dvnsVo5J5SEA7Fu/ZraWTUPcN+BzwtUSu
-         GPWA==
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=pfOqpQDUaur2M6YY/gkICE0ETj9HGANxbXQFE0s27Qs=;
+        b=T8rtdkXd7pSann2Acm8dZHl0L8ucIUt34HX10/+FdzKbPO6vXXvd1qO+G4fGgMyGKD
+         Lez9AIuBpCxJnUHXzL/KXaHoe6Nk8TB6fRHO5ykztU2BqNTn2fBvE150o0/SZIM1nBsa
+         Un2WauQf+OnWf6o6hdqorjNO1nVtSPp/RKUhPVop1Kjb8GcV+fj/9UUiXNln2xpXVdEw
+         drqK2p5MolJ5p3w2SKYLkLBsSAcLCwbdMJCgfbbZOY8VMuV0W1eIRyJFkms6ZhYa7PNI
+         VBzbsQEIgQn5LaLuEq2ZEdCbjt1iP3T+DS8z6+JKT6PrwiCc7AWJVFeKbsdIohA23q+l
+         T24A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
-         :references:mime-version:content-disposition:in-reply-to:user-agent;
-        bh=BTYBxRjxL6j9jRa5am8wcAfH9hghQz4giKAxNHy2xK4=;
-        b=L/3Kv4dCZRuH+IMJeSYlvEaD7FJ4NDWbRfpgTowDTOVDGMHBxzulZRZVkfHtKdkfaF
-         XpKGWsITYHrKPD8daDjo2FitPfkB949Bszw/7+qIaV0xcgOHCsYbjElu+9RPN9LHg6yi
-         2DD4IGHlbtYg65vVk+djfXUBhPWORA7O4YUxX+Rk8UmaDb72sQ4mWLGYbvjF6efeiezf
-         faDxdYV+3MJF2JM1PTx1eTF3H5Eje1PIpw2VIP5XUAzBrz1GbcgJYeL8mtbdjC13As5N
-         IMXul57pqcjrFKp786oStEI16BCvmFtl+TcNeziIPJvzHaUVtn7SeA0ZtF0JKsbczEwp
-         LGOw==
-X-Gm-Message-State: APjAAAVc5j50QyOzzLzZSTmsxdma1hDAGLRhOApIK35iqxKSHwIExvnI
-        KA9eQa/4fFKOYaBEPheEOb0=
-X-Google-Smtp-Source: APXvYqxFGA8qOE0zV8w0G6DGlTadJbX7gGbhCdt+y+ZbsNrPZ8eNdi/7bpZfOZvHh0hccPyg8He0cg==
-X-Received: by 2002:a17:90a:e509:: with SMTP id t9mr4217996pjy.110.1582307427862;
-        Fri, 21 Feb 2020 09:50:27 -0800 (PST)
-Received: from google.com ([2620:15c:211:1:3e01:2939:5992:52da])
-        by smtp.gmail.com with ESMTPSA id c26sm3591866pfj.8.2020.02.21.09.50.26
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 21 Feb 2020 09:50:26 -0800 (PST)
-Date:   Fri, 21 Feb 2020 09:50:24 -0800
-From:   Minchan Kim <minchan@kernel.org>
-To:     Andrew Morton <akpm@linux-foundation.org>
-Cc:     linux-mm <linux-mm@kvack.org>, LKML <linux-kernel@vger.kernel.org>,
-        Jan Kara <jack@suse.cz>, Matthew Wilcox <willy@infradead.org>,
-        Josef Bacik <josef@toxicpanda.com>,
-        Johannes Weiner <hannes@cmpxchg.org>
-Subject: Re: [PATCH v2 2/2] mm: fix long time stall from mm_populate
-Message-ID: <20200221175024.GC226145@google.com>
-References: <20200214192951.29430-1-minchan@kernel.org>
- <20200214192951.29430-2-minchan@kernel.org>
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=pfOqpQDUaur2M6YY/gkICE0ETj9HGANxbXQFE0s27Qs=;
+        b=twUp8JxXjC+M/p8mjtCqpWyWyc/aMXS6PYCwXvLe4in1pA1zhiSp8g7uOuOX88BFz7
+         RYtFHm6R+HSVNd9CQQ1//U40Ge6tjbQLOE5JamPSKvjY2gnvg5GO4f+9YxGFgfLo8NgJ
+         ReH8m/aVusdF2JTnJhld3NA+Dduer6RQLIpkg8Difo0lmOCuG4EG55C0rpZQ73sym1gQ
+         CoTmG4MLVGHszUzV8M8VtErnhQ7pOB1mWszENZubxayBoORQtiyXy1X9V/5MripbxMAn
+         h8CrqQQ62fnbPy8tsPZ8KQqqEGMmT4b+YhT8ISAB185xbPAW1x8vm03NE9XslXO4gBSd
+         SNSA==
+X-Gm-Message-State: APjAAAXN6CohcDM8yn2STBJmn0tXNbWD8rhOXumQra9kvY7yj9h370TO
+        T25SlCOzNHAvGb9eyF8LdqQ=
+X-Google-Smtp-Source: APXvYqyJ0oww4/TUajF27cnTog03w0Ji7aBpRzBBVCKkuhgwDKSzTq1M2iEyeFbL2S7YRNA+Da6HoA==
+X-Received: by 2002:a25:99c3:: with SMTP id q3mr32471987ybo.323.1582307555679;
+        Fri, 21 Feb 2020 09:52:35 -0800 (PST)
+Received: from [192.168.1.46] (c-73-88-245-53.hsd1.tn.comcast.net. [73.88.245.53])
+        by smtp.gmail.com with ESMTPSA id i84sm1570680ywc.43.2020.02.21.09.52.34
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Fri, 21 Feb 2020 09:52:35 -0800 (PST)
+Subject: Re: [RFC PATCH v2 1/4] scripts: Add script to generate dtb build
+ information
+To:     Alexandre Torgue <alexandre.torgue@st.com>, robh+dt@kernel.org,
+        Masahiro Yamada <masahiroy@kernel.org>,
+        Michal Marek <michal.lkml@markovi.net>,
+        david@gibson.dropbear.id.au, sjg@chromium.org
+Cc:     devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-kbuild@vger.kernel.org, devicetree-compiler@vger.kernel.org,
+        Ian Lepore <ian@freebsd.org>
+References: <20200221161418.20225-1-alexandre.torgue@st.com>
+ <20200221161418.20225-2-alexandre.torgue@st.com>
+From:   Frank Rowand <frowand.list@gmail.com>
+Message-ID: <592e41a4-6115-474e-b6ce-eeb82f858a78@gmail.com>
+Date:   Fri, 21 Feb 2020 11:52:34 -0600
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200214192951.29430-2-minchan@kernel.org>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20200221161418.20225-2-alexandre.torgue@st.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Bumping up.
+On 2/21/20 10:14 AM, Alexandre Torgue wrote:
+> This commit adds a new script to create a file (in dts file directory) with
+> some information (date, Linux version, user). This file could then be used
+> to populate "build-info" property in every dts file that would use this
+> build information:
+> 
+> Example:
+> 
+> / {
+> 	...
+> 	build-info = /incbin/("dtb-build.txt");
 
-On Fri, Feb 14, 2020 at 11:29:51AM -0800, Minchan Kim wrote:
-> Basically, fault handler releases mmap_sem before requesting readahead
-> and then it is supposed to retry lookup the page from page cache with
-> FAULT_FLAG_TRIED so that it avoids the live lock of infinite retry.
+s/.txt/.dtsi/
+
+and same wherever the file name is used.
+
+
+> 	...
+> };
 > 
-> However, what happens if the fault handler find a page from page
-> cache and the page has readahead marker but are waiting under
-> writeback? Plus one more condition, it happens under mm_populate
-> which repeats faulting unless it encounters error. So let's assemble
-> conditions below.
+> Signed-off-by: Alexandre Torgue <alexandre.torgue@st.com>
 > 
->        CPU 1                                                        CPU 2
-> 
-> - first loop
->     mm_populate
->      for ()
->        ..
->        ret = populate_vma_page_range
->          __get_user_pages
->            faultin_page
->              handle_mm_fault
->                filemap_fault
->                  do_async_mmap_readahead
->                    if (PageReadahead(pageA))
->                      maybe_unlock_mmap_for_io
->                        up_read(mmap_sem)
-> 					                    shrink_page_list
->                                                               pageout
->                                                                 SetPageReclaim(=SetPageReadahead)(pageA)
->                                                                 writepage
->                                                                   SetPageWriteback(pageA)
-> 
->                      page_cache_async_readahead()
-> 		       ClearPageReadahead(pageA)
->                  do_async_mmap_readahead
-> 		 lock_page_maybe_drop_mmap
-> 		   goto out_retry
-> 
-> 					                    the pageA is reclaimed
-> 							    and new pageB is populated to the file offset
-> 							    and finally has become PG_readahead
-> 
-> - second loop
-> 
-> 	  __get_user_pages
->            faultin_page
->              handle_mm_fault
->                filemap_fault
->                  do_async_mmap_readahead
->                    if (PageReadahead(pageB))
->                      maybe_unlock_mmap_for_io
->                        up_read(mmap_sem)
-> 					                    shrink_page_list
->                                                               pageout
->                                                                 SetPageReclaim(=SetPageReadahead)(pageB)
->                                                                 writepage
->                                                                   SetPageWriteback(pageB)
-> 
->                      page_cache_async_readahead()
-> 		       ClearPageReadahead(pageB)
->                  do_async_mmap_readahead
-> 		 lock_page_maybe_drop_mmap
-> 		   goto out_retry
-> 
-> It could be repeated forever so it's livelock. without involving reclaim,
-> it could happens if ra_pages become zero by fadvise/other threads who
-> have same fd one doing randome while the other one is sequential
-> because page_cache_async_readahead has following condition check like
-> PageWriteback and ra_pages are never synchrnized with fadvise and
-> shrink_readahead_size_eio from other threads.
-> 
-> void page_cache_async_readahead(struct address_space *mapping,
->                            unsigned long req_size)
-> {
->         /* no read-ahead */
->         if (!ra->ra_pages)
->                 return;
-> 
-> Thus, we need to limit fault retry from mm_populate like page
-> fault handler.
-> 
-> Fixes: 6b4c9f446981 ("filemap: drop the mmap_sem for all blocking operations")
-> Reviewed-by: Jan Kara <jack@suse.cz>
-> Signed-off-by: Minchan Kim <minchan@kernel.org>
-> ---
->  mm/gup.c | 11 ++++++++---
->  1 file changed, 8 insertions(+), 3 deletions(-)
-> 
-> diff --git a/mm/gup.c b/mm/gup.c
-> index 1b521e0ac1de..6f6548c63ad5 100644
-> --- a/mm/gup.c
-> +++ b/mm/gup.c
-> @@ -1133,7 +1133,7 @@ static __always_inline long __get_user_pages_locked(struct task_struct *tsk,
->   *
->   * This takes care of mlocking the pages too if VM_LOCKED is set.
->   *
-> - * return 0 on success, negative error code on error.
-> + * return number of pages pinned on success, negative error code on error.
->   *
->   * vma->vm_mm->mmap_sem must be held.
->   *
-> @@ -1196,6 +1196,7 @@ int __mm_populate(unsigned long start, unsigned long len, int ignore_errors)
->  	struct vm_area_struct *vma = NULL;
->  	int locked = 0;
->  	long ret = 0;
-> +	bool tried = false;
+> diff --git a/scripts/Makefile.lib b/scripts/Makefile.lib
+> index bae62549e3d2..a5af84ef4ffc 100644
+> --- a/scripts/Makefile.lib
+> +++ b/scripts/Makefile.lib
+> @@ -246,6 +246,7 @@ quiet_cmd_gzip = GZIP    $@
+>  # DTC
+>  # ---------------------------------------------------------------------------
+>  DTC ?= $(objtree)/scripts/dtc/dtc
+> +DTB_GEN_INFO ?= $(objtree)/scripts/gen_dtb_build_info.sh
 >  
->  	end = start + len;
+>  # Disable noisy checks by default
+>  ifeq ($(findstring 1,$(KBUILD_EXTRA_WARN)),)
+> @@ -286,6 +287,7 @@ $(obj)/%.dtb.S: $(obj)/%.dtb FORCE
 >  
-> @@ -1226,14 +1227,18 @@ int __mm_populate(unsigned long start, unsigned long len, int ignore_errors)
->  		 * double checks the vma flags, so that it won't mlock pages
->  		 * if the vma was already munlocked.
->  		 */
-> -		ret = populate_vma_page_range(vma, nstart, nend, &locked);
-> +		ret = populate_vma_page_range(vma, nstart, nend,
-> +						tried ? NULL : &locked);
->  		if (ret < 0) {
->  			if (ignore_errors) {
->  				ret = 0;
->  				continue;	/* continue at next VMA */
->  			}
->  			break;
-> -		}
-> +		} else if (ret == 0)
-> +			tried = true;
-> +		else
-> +			tried = false;
->  		nend = nstart + ret * PAGE_SIZE;
->  		ret = 0;
->  	}
-> -- 
-> 2.25.0.265.gbab2e86ba0-goog
+>  quiet_cmd_dtc = DTC     $@
+>  cmd_dtc = mkdir -p $(dir ${dtc-tmp}) ; \
+> +	$(DTB_GEN_INFO) $(src) ; \
+>  	$(HOSTCC) -E $(dtc_cpp_flags) -x assembler-with-cpp -o $(dtc-tmp) $< ; \
+>  	$(DTC) -O $(2) -o $@ -b 0 \
+>  		$(addprefix -i,$(dir $<) $(DTC_INCLUDE)) $(DTC_FLAGS) \
+> diff --git a/scripts/gen_dtb_build_info.sh b/scripts/gen_dtb_build_info.sh
+> new file mode 100755
+> index 000000000000..0cd8bd98e410
+> --- /dev/null
+> +++ b/scripts/gen_dtb_build_info.sh
+> @@ -0,0 +1,10 @@
+> +#!/bin/bash
+> +# SPDX-License-Identifier: GPL-2.0
+> +
+> +set -o nounset
+> +
+> +DTB_DIR=$1
+> +DTB_COMPILE_BY=$(whoami | sed 's/\\/\\\\/')
+> +DTB_INFO="From Linux $KERNELRELEASE by $DTB_COMPILE_BY the $(date).\0"
+
+I would remove the filler words "From", "by", "the", and the trailing
+period ('.').
+
+<bikeshed>
+You might consider using a format more like the Linux
+kernel version line, which puts parenthesis around the
+compiled by info.
+</bikeshed>
+
+-Frank
+
+> +
+> +printf "$DTB_INFO" > "$DTB_DIR/dtb-build.txt"
 > 
+
