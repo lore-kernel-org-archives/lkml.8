@@ -2,233 +2,134 @@ Return-Path: <SRS0=1210=4J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5E0FBC3566F
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 23:49:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EF293C35669
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 23:52:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2A71220722
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 23:49:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C76512073A
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 23:52:35 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=yahoo.com header.i=@yahoo.com header.b="E9SYyB1U"
+	dkim=pass (1024-bit key) header.d=rasmusvillemoes.dk header.i=@rasmusvillemoes.dk header.b="TzE0OKRd"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729708AbgBUXtR (ORCPT
+        id S1729682AbgBUXwe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Feb 2020 18:49:17 -0500
-Received: from sonic315-27.consmr.mail.ne1.yahoo.com ([66.163.190.153]:42012
-        "EHLO sonic315-27.consmr.mail.ne1.yahoo.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1729173AbgBUXtR (ORCPT
+        Fri, 21 Feb 2020 18:52:34 -0500
+Received: from mail-lj1-f196.google.com ([209.85.208.196]:34436 "EHLO
+        mail-lj1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726802AbgBUXwe (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Feb 2020 18:49:17 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=yahoo.com; s=s2048; t=1582328956; bh=hiIld5BAHgqSS+vqeh3I7L0eO05YzsmcsTHBOGfaPAE=; h=Subject:To:Cc:References:From:Date:In-Reply-To:From:Subject; b=E9SYyB1UX+/6Mam7eXOmM22a/2c8UBND5r42ZreUu5etomnrxvyVAZf1XNgFUlQ+J4KRskDRI7bF0J3PPsEIeIZAmLaf6SACu+t46z5Tr5/6+h98ZKwi9xDqdlw7YypbdbT1HKBdJFEEZw+AiNuv7tbrxqMEW0SoZffH6cfKihUYKVlp+114+ZFURWSmoi13dptm794qe+sEgwBf0rBraU7WT8TMQRKwr+3CrRRnUIby1PTSf1NM8ju9xjCNVQ7BzE6gV037Inxl3Qbhd3k47IpqQrCZB0CBR03cYp1sEvjy71hH//l/wCHkkHH1EmdedfyI5ZwH9Zi5tXpybAR+iQ==
-X-YMail-OSG: oFfEH5sVM1mMMEgsPmbYSXzPOxLjYyeFkEi1dCyGT9uOyE2URwMxZDVXOCJ9yMT
- 1Z0zCYm93EoDeQYsufK2adPjSb0hewcrx6Oie1JxB0XZP0U3rI31sdezqKfBsezveuaWoLdbmw6s
- wP9oqvwjbTLbvx0Xya2tHFl87cWFv6Z6JIYbu_yl6uoKscDQzaS20OwrCsZ9bkCP2nPT4DGliqH4
- RLPjqTif1Bq9Av2a29KIXJEBKAnaCafMpSkvWXZwjqiUfUG0E4tluAjPIFgxkJzigeT9a0f69iSf
- 5Kdydp6OJMz9rcBneO2R1DvwZv.npww7zJ40Im.8vULzLHlrvNod1_6Xkdrm2GCIoBLvFvEO1xny
- iNgUEgHDou60GIKzQTlQfvgRanPLbjIZPp5Vfyn4t64v7BweYzot3PZwSEGmO1SbYXgFpq7XL_6q
- z0M4V.3oE9t8oUL6rCNe36JmcTm7miPnIIcK0xjU54fyp2VBUQd.yguNbC7x00ockxU7jbRfdF9t
- EPFyldre_LLE7BgoQ7i7Hd7cO4xMd8zNzmqgZz90ExksA2V8OQlrk9Um26n7yYCnhrq1yDTj8Oaj
- f2S8vdqRrXYNUsjZs4gd7EmT6lwO4vZVKzp3jCLPT28RXPhQKWqye_3KVMjuTRBzeaAl2JEz8hwk
- FClY293g3OCKO2J_hTPz1CGEo5yUrv4rqDtnuzu7FlvkytuvXpf3wpLDQIQX5UBuJ9ORsH4T98OD
- 8wdLMcC_JEreWUWKKhzc6y6GCJKyk4Jr4uzfx.7Mnk7Ymc1fh1w3F2R3yPOqZi4uahcRZAUGal15
- zqYIQzR3edFfVEdfJKDasw8Ulj5T03cSqnJmDREeCkRizgt_IbsjVinew_berrq.CiIT9Oin4f1Z
- LQbK1kmotOTIHeDb6n6i1fxGEu1tXGWz2.SEPbgt_qmznSg8sTk09fOCDZZw0Rchk9zyT1q5TDoA
- AmUqNn1I8433l6htP_fx7azMTa3cvgzPoapKYlUQ_6FCfTZPGPnbfX7ryk7BNc6TlImtXyd5i.3e
- Lc.z53XZTYzpXuiEabGnqTyu0F.uqlVXsPMeWW5kjclsfuwRp0W7urhN_pmKC1bE1tA10voz.8UT
- tongEUKim49aiga72v2_VlomYBtr4X5BGP6m9LoacfmZsmJ8x6us0tx0mdYMIdwDwAAD2.TJkzk1
- .lTg0K3m6BG0tjfNb9TMwQ3OO6mQte12gJ5j0y9mB4FStuoG9tTe6lJIEtsY5h9PR3R9re_8.u5e
- mQim4USdBz6Bz.odHqjYjemuuZtxX2kHDELp3T1wgNkDXZFtSm2HasdzxEjReVXPS3ENY9f8EA7U
- Jop6fB6mnx7x59eorpmz47vjpNEgtm8qqxumlab5pc4vQwCLMBTMRjPB15z4ktQG4VrWObkIdPP0
- S2UG0dpiziSPW_UY8VQwmfkfPKfb5eXswNLHMGVBIcGhlA7FqSFrfWESvZ8sNBLkM6jDtSto3SRn
- YYv_Q6jDp9Bg95Jo-
-Received: from sonic.gate.mail.ne1.yahoo.com by sonic315.consmr.mail.ne1.yahoo.com with HTTP; Fri, 21 Feb 2020 23:49:16 +0000
-Received: by smtp408.mail.bf1.yahoo.com (Oath Hermes SMTP Server) with ESMTPA ID bddf1118258f0c0d46f9104e490f4fc7;
-          Fri, 21 Feb 2020 23:49:11 +0000 (UTC)
-Subject: Re: [PATCH bpf-next v4 0/8] MAC and Audit policy using eBPF (KRSI)
-To:     KP Singh <kpsingh@chromium.org>
-Cc:     Linux Security Module list 
-        <linux-security-module@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>, bpf <bpf@vger.kernel.org>,
-        James Morris <jmorris@namei.org>,
+        Fri, 21 Feb 2020 18:52:34 -0500
+Received: by mail-lj1-f196.google.com with SMTP id x7so3991535ljc.1
+        for <linux-kernel@vger.kernel.org>; Fri, 21 Feb 2020 15:52:31 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=rasmusvillemoes.dk; s=google;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=37taAW5B0H3QnMxnoDwbwTmsfR9PUSHDmfFTksmg34c=;
+        b=TzE0OKRdyDVakmN5Ccv9lK426rKmJdfiIDBA3K1rysdgeI1zaNlWZ8EIYQ9z2qYTtl
+         lknCCU7X/eUoCSUG+Mgf+jyy9vuaJP9nEeESL9aOcRHKq6Z9ifnU7T2vUlDoPFeU7Bia
+         ORmXZHrp9L3EYUn3BOMtl3FiK39IGn32u8i04=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=37taAW5B0H3QnMxnoDwbwTmsfR9PUSHDmfFTksmg34c=;
+        b=bptcP2FQyHxMwi7KUOIbZTOJ3JekEvala0Xi1x5CI6C/MDW6erCAjjzjte8ObRfVCc
+         yH0l53UkskvuOn8s0IulqVVzhFoxRrAu+AJAwPMr8EBAjM3QukJeGPiPHLw3v1YTwhG/
+         zm0LYX5SjSGVP7N0pI4Ns2LaFo9ZZhp3l47oygRcL4KlVaRBtuQd2VR/rUWknFtR65Py
+         zTBdh/YmJRDkkOTshduTQQSTjDHFMH91C9iLzKVEjfdsGUMbZV8RUqJ1NyCcqUNgUXD+
+         f/n2w7Es+US8ItrGIwbJ67INQ/ck5Kl4AcgCPsfdBxZDgtap+AaR78RNlwpKKpaQYorY
+         bAwQ==
+X-Gm-Message-State: APjAAAU2F0tPa5FhhIAZ8gSh/jeHSG3Ax6y+l61AM+dEEeZfVfOaAEc4
+        bXoKV2cnugOd70/Z3UhYnMufWjyGln01UpGJ
+X-Google-Smtp-Source: APXvYqwLB2N/GjtMztU31UKgh5A06Jxv1Qnwd1X7Th9MuPWCFH9qjT6wtz+briWNa2l39TLMrhfD7Q==
+X-Received: by 2002:a2e:2201:: with SMTP id i1mr23457116lji.110.1582329150369;
+        Fri, 21 Feb 2020 15:52:30 -0800 (PST)
+Received: from [192.168.1.149] (ip-5-186-115-35.cgn.fibianet.dk. [5.186.115.35])
+        by smtp.gmail.com with ESMTPSA id m14sm2281645lfk.7.2020.02.21.15.52.28
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 21 Feb 2020 15:52:29 -0800 (PST)
+Subject: Re: [PATCH] vsprintf: sanely handle NULL passed to %pe
+To:     Petr Mladek <pmladek@suse.com>, Ilya Dryomov <idryomov@gmail.com>
+Cc:     Steven Rostedt <rostedt@goodmis.org>,
+        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Jonathan Corbet <corbet@lwn.net>,
         Kees Cook <keescook@chromium.org>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Casey Schaufler <casey@schaufler-ca.com>
-References: <20200221230933.GA23663@chromium.org>
-From:   Casey Schaufler <casey@schaufler-ca.com>
-Autocrypt: addr=casey@schaufler-ca.com; keydata=
- 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
- abzjfg==
-Message-ID: <e713d259-fe7f-0b4b-f3bb-30919f6b1f12@schaufler-ca.com>
-Date:   Fri, 21 Feb 2020 15:49:09 -0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.5.0
+        "Tobin C . Harding" <me@tobin.cc>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Linux Documentation List <linux-doc@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>
+References: <CAHk-=wjEd-gZ1g52kgi_g8gq-QCF2E01TkQd5Hmj4W5aThLw3A@mail.gmail.com>
+ <20200219082155.6787-1-linux@rasmusvillemoes.dk>
+ <CAOi1vP-4=QCSZ2A89g1po2p=6n_g09SXUCa0_r2SBJm2greRmw@mail.gmail.com>
+ <0fef2a1f-9391-43a9-32d5-2788ae96c529@rasmusvillemoes.dk>
+ <20200219134826.qqdhy2z67ubsnr2m@pathway.suse.cz>
+ <5459eb50-48e2-2fd9-3560-0bc921e3678c@rasmusvillemoes.dk>
+ <20200219144558.2jbawr52qb63vysq@pathway.suse.cz>
+ <bcfb2f94-e7a8-0860-86e3-9fc866d98742@rasmusvillemoes.dk>
+ <20200220125707.hbcox3xgevpezq4l@pathway.suse.cz>
+ <CAOi1vP8E_DL7y=STP5-vbe_Wf5PZRiXWGTNV3rN96i4N2R3zUQ@mail.gmail.com>
+ <20200221130506.mly26uycxpdjl6oz@pathway.suse.cz>
+From:   Rasmus Villemoes <linux@rasmusvillemoes.dk>
+Message-ID: <cec0c65b-5b5d-6268-dae0-1d4088baab76@rasmusvillemoes.dk>
+Date:   Sat, 22 Feb 2020 00:52:27 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.1
 MIME-Version: 1.0
-In-Reply-To: <20200221230933.GA23663@chromium.org>
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <20200221130506.mly26uycxpdjl6oz@pathway.suse.cz>
+Content-Type: text/plain; charset=windows-1252
 Content-Language: en-US
-X-Mailer: WebService/1.1.15199 hermes Apache-HttpAsyncClient/4.1.4 (Java/1.8.0_241)
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2/21/2020 3:09 PM, KP Singh wrote:
-> Thanks Casey,
->
-> I appreciate your quick responses!
->
-> On 21-Feb 14:31, Casey Schaufler wrote:
->> On 2/21/2020 11:41 AM, KP Singh wrote:
->>> On 21-Feb 11:19, Casey Schaufler wrote:
->>>> On 2/20/2020 9:52 AM, KP Singh wrote:
->>>>> From: KP Singh <kpsingh@google.com>
->>>> Again, apologies for the CC list trimming.
->>>>
->>>>> # v3 -> v4
->>>>>
->>>>>   https://lkml.org/lkml/2020/1/23/515
->>>>>
->>>>> * Moved away from allocating a separate security_hook_heads and add=
-ing a
->>>>>   new special case for arch_prepare_bpf_trampoline to using BPF fex=
-it
->>>>>   trampolines called from the right place in the LSM hook and toggl=
-ed by
->>>>>   static keys based on the discussion in:
->>>>>
->>>>>     https://lore.kernel.org/bpf/CAG48ez25mW+_oCxgCtbiGMX07g_ph79UOJ=
-a07h=3Do_6B6+Q-u5g@mail.gmail.com/
->>>>>
->>>>> * Since the code does not deal with security_hook_heads anymore, it=
- goes
->>>>>   from "being a BPF LSM" to "BPF program attachment to LSM hooks".
-> [...]
->
->>>> likely harmful.
->>> We will be happy to document each of the macros in detail. Do note a
->>> few things here:
->>>
->>> * There is really nothing magical about them though,
->>
->> +#define LSM_HOOK_void(NAME, ...) \
->> +	noinline void bpf_lsm_##NAME(__VA_ARGS__) {}
->> +
->> +#include <linux/lsm_hook_names.h>
->> +#undef LSM_HOOK
->>
->> I haven't seen anything this ... novel ... in a very long time.
-> This is not "novel", it's a fairly common pattern followed in tracing:
->
-> For example, the TRACE_INCLUDE macro which is used for tracepoints:
->
-> =C2=A0 include/trace/define_trace.h
->
-> and used in:
->
-> =C2=A0 * include/trace/bpf_probe.h
->
-> =C2=A0 =C2=A0 https://github.com/torvalds/linux/blob/master/include/tra=
-ce/bpf_probe.h#L110
->
-> =C2=A0 * include/trace/perf.h
->
-> =C2=A0 =C2=A0 https://github.com/torvalds/linux/blob/master/include/tra=
-ce/perf.h#L90
->
-> =C2=A0 * include/trace/trace_events.h
->
->     https://github.com/torvalds/linux/blob/master/include/trace/trace_e=
-vents.h#L402
+On 21/02/2020 14.05, Petr Mladek wrote:
+> On Thu 2020-02-20 16:02:48, Ilya Dryomov wrote:
 
-I can't say I care for that, either, and it's a simpler case.
+>> I would like to see it in 5.6, so that it is backported to 5.4 and 5.5.
+> 
+> OK, it would make sense to make the patch minimalist to make it
+> easier for backporting.
+> 
+> 
+>> Please note that I sent v2 of my patch ("[PATCH v2] vsprintf: don't
+>> obfuscate NULL and error pointers"), fixing null_pointer() and adding
+>> error_pointer() test cases, which conflicts with this restructure.
+> 
+> IMHO, v2 creates even more mess in print tests that would need
+> to be fixed later.
+> 
+> If we agree to have a minimalist patch for backport
+> then I suggest to take v1. We could clean up and update
+> tests later.
+> 
+> Rasmus, others, is anyone against this approach (v1 first,
+> tests later)?
 
->> I see why you want to do this, but you're tying the two sets
->> of code together unnaturally. When (not if) the two sets diverge
->> you're going to be introducing another clever way to deal with
-> I don't fully understand what "two sets diverge means" here. All the
-> BPF headers need is the name, return type and the args. This is the
-> same information which is needed by the call_{int, void}_hooks and the
-> LSM declarataions (i.e. security_hook_heads and
-> security_list_options).
+Sorry to be that guy, but yes, I'm against changing the behavior of
+vsnprintf() without at least some test(s) added to the test suite - the
+lack of machine-checked documentation in the form of tests is what led
+to that regression in the first place.
 
-As you've noticed, not all the interfaces can use call_{int,void}_hooks.
-If you've been following the stacking efforts, you'll see that increasing=
-=2E
+But I agree that there's no point adding another helper function and
+muddying the test suite even more (especially as the name error_pointer
+is too close to the name errptr() I chose a few months back for the %pe).
 
-At some point I anticipate a BPF hook that needs different information
-than the LSM hook. That's been discussed, too. Asserting that it will
-never happen does not make me comfortable.
+So how about
 
->> the special case.
->>
->> It's not that I don't understand what you're doing. It's that
->> I don't like what you're doing. Explanation doesn't make me like
->> it better.
-> As I have previously said, we will be happy to (and have already)
-> updated our approach based on the consensus we arrive at here.
+- remove the now stale test_hashed("%p", NULL); from null_pointer()
+- add tests of "%p", NULL and "%p", ERR_PTR(-123) to plain()
 
-Not to put too fine a point on it, but I have raised the same
-objection - that you should use the infrastructure as it is -
-each time. I do not see consensus, I see you plowing ahead with
-the direction you've chosen in spite of the significant objection.
+and we save testing the "%px" case for when we figure out a good name
+for a helper for that (explicit_pointer? pointer_as_hex?)
 
->  The
-> best outcome would be to not sacrifice performance as the LSM hooks
-> are called from various performance critical code-paths.
+?
 
-Then help me tune the infrastructure to be better in those cases.
-
-> It would be great to know the maintainers' (BPF and Security)
-> perspective on this as well.
-
-Many eyes and all that, but the BPF maintainers haven't been working
-with the LSM infrastructure and won't be familiar with its quirks.
-
-
+Rasmus
