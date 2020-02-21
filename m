@@ -2,129 +2,113 @@ Return-Path: <SRS0=1210=4J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9B12CC35657
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 17:28:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C0E04C35657
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 17:28:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 70C95208E4
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 17:28:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9988A208E4
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 17:28:28 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="L+otHOqg"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=kemnade.info header.i=@kemnade.info header.b="KnJtV3zB"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728385AbgBUR2N (ORCPT
+        id S1728699AbgBUR21 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Feb 2020 12:28:13 -0500
-Received: from us-smtp-2.mimecast.com ([205.139.110.61]:59807 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1725957AbgBUR2N (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Feb 2020 12:28:13 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1582306092;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=M7Mf64hpMBasfDiIU6phFS9p20JIfzD0ekOkjx1qN/c=;
-        b=L+otHOqgc7Fo7+oTEo/f8mcvILbnkDrkwossMNLwkgN6wh7fcaVOND3JrF96qEt4uc/MDL
-        gpMMoRbIkRmSnh6j95o/mnTEIgs3BjXPngHbP5LV8AkHcqeuqAVAjYKsInAowMRP2+uvni
-        jfKygZZZeXi8n97k3SdRiIypQmlXkz8=
-Received: from mail-wm1-f70.google.com (mail-wm1-f70.google.com
- [209.85.128.70]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-24-3XlxiK6wPUy4h6Lf0RK8UQ-1; Fri, 21 Feb 2020 12:28:10 -0500
-X-MC-Unique: 3XlxiK6wPUy4h6Lf0RK8UQ-1
-Received: by mail-wm1-f70.google.com with SMTP id p2so850718wma.3
-        for <linux-kernel@vger.kernel.org>; Fri, 21 Feb 2020 09:28:10 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=M7Mf64hpMBasfDiIU6phFS9p20JIfzD0ekOkjx1qN/c=;
-        b=ZI6gwy38Cx7H394dxyq6o91hCeizZbiXXEm+6AA6RbWUfEidTEV/6bJl9hBieiEJVP
-         z7j4eSSYruaED7NPyzOnHACM6Ys+RxiKqg+VWYrSn2a1IvV+6PYwYe788fcfBDAhtTyC
-         v8CMxlA42XU4lqvZHlx3KE00Hfp5UyYXN03i+LMxcTnpBlnpLll6FQ6yHFGoWYJSk0ab
-         tJr3Irpf9OmPaACRdfUBl7PWqc+WMIPM0uDNsUxAQZN2S7gohmZa8QX0zMyGCNkHZtQZ
-         i0oz9a+ixrUkm5JTrxOr5xlhjLP/GqCcWyeGDrI7T1Nc4euwuC1t/+KFrUq4rNLzLNLp
-         41Jg==
-X-Gm-Message-State: APjAAAVLrMDMgfznO8WlSoJgjHIRCLTbc/5CByRW40K/jeopI8ZvmZdC
-        h+wft+coKoWZC9FIe008abFITwuCYZmMFPAUYPtl4u766XzZQL0dClqimTNiLsaCdL0IZhvsi6H
-        OIh2oCdiESKpYktasBD/CHOFo
-X-Received: by 2002:a05:6000:1289:: with SMTP id f9mr47748930wrx.381.1582306089245;
-        Fri, 21 Feb 2020 09:28:09 -0800 (PST)
-X-Google-Smtp-Source: APXvYqz2hwqrWQ+Xv4wufLWVs/IPNmmZxQDAPd6VAd7ervfhXQWz6yUUfUoV8VyMG6OR3LrEZSYNsg==
-X-Received: by 2002:a05:6000:1289:: with SMTP id f9mr47748917wrx.381.1582306089024;
-        Fri, 21 Feb 2020 09:28:09 -0800 (PST)
-Received: from [192.168.178.40] ([151.20.135.128])
-        by smtp.gmail.com with ESMTPSA id g19sm4602188wmh.36.2020.02.21.09.28.08
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 21 Feb 2020 09:28:08 -0800 (PST)
-Subject: Re: [PATCH 04/10] KVM: VMX: Fold vpid_sync_vcpu_{single,global}()
- into vpid_sync_context()
-To:     Sean Christopherson <sean.j.christopherson@intel.com>,
-        Vitaly Kuznetsov <vkuznets@redhat.com>
-Cc:     Wanpeng Li <wanpengli@tencent.com>,
-        Jim Mattson <jmattson@google.com>,
-        Joerg Roedel <joro@8bytes.org>, kvm@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-References: <20200220204356.8837-1-sean.j.christopherson@intel.com>
- <20200220204356.8837-5-sean.j.christopherson@intel.com>
- <87zhdcrrdk.fsf@vitty.brq.redhat.com>
- <20200221153244.GD12665@linux.intel.com>
-From:   Paolo Bonzini <pbonzini@redhat.com>
-Message-ID: <c117f11a-bd57-2929-d5bc-47f4eaffe279@redhat.com>
-Date:   Fri, 21 Feb 2020 18:28:07 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.1.1
+        Fri, 21 Feb 2020 12:28:27 -0500
+Received: from mail.andi.de1.cc ([85.214.55.253]:45934 "EHLO mail.andi.de1.cc"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728072AbgBUR20 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 21 Feb 2020 12:28:26 -0500
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=kemnade.info; s=20180802; h=Content-Type:MIME-Version:References:
+        In-Reply-To:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=RdODmHvydoNs/1kRxAwgLkbkKaSgefTaK09DDj4UNmo=; b=KnJtV3zBNHFdalbcFgT3kTppf
+        yc9gX4IIJuOYCpMmQ3OBtZWpGO22pglxzH4D5svTkYDjKbVRFv10wqQI8IAcMlpgyKRL+pKyjav8c
+        irGHiu0M0hligxSbLgBcvdj3GAdZoeXig1JIs4CkD95vnA/cTflf10uoxPl2DL6IlczwM=;
+Received: from p200300ccff0c3400e2cec3fffe93fc31.dip0.t-ipconnect.de ([2003:cc:ff0c:3400:e2ce:c3ff:fe93:fc31] helo=eeepc)
+        by mail.andi.de1.cc with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.89)
+        (envelope-from <andreas@kemnade.info>)
+        id 1j5C66-0003pi-OB; Fri, 21 Feb 2020 18:28:19 +0100
+Received: from localhost ([::1])
+        by localhost with esmtp (Exim 4.92)
+        (envelope-from <andreas@kemnade.info>)
+        id 1j5C65-0008Be-Uh; Fri, 21 Feb 2020 18:28:18 +0100
+Date:   Fri, 21 Feb 2020 18:27:27 +0100
+From:   Andreas Kemnade <andreas@kemnade.info>
+To:     Jonathan Cameron <jic23@kernel.org>
+Cc:     knaack.h@gmx.de, lars@metafoo.de, pmeerw@pmeerw.net,
+        lee.jones@linaro.org, b.galvani@gmail.com,
+        linus.walleij@linaro.org, linux-kernel@vger.kernel.org,
+        linux-iio@vger.kernel.org, phh@phh.me, stefan@agner.ch,
+        letux-kernel@openphoenux.org, martin.blumenstingl@googlemail.com
+Subject: Re: [PATCH v3 2/4] iio: adc: rn5t618: Add ADC driver for
+ RN5T618/RC5T619
+Message-ID: <20200221182727.0089e8dc@kemnade.info>
+In-Reply-To: <20200221130733.240f0d6d@archlinux>
+References: <20200218061725.22420-1-andreas@kemnade.info>
+        <20200218061725.22420-3-andreas@kemnade.info>
+        <20200221130733.240f0d6d@archlinux>
+X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; i686-pc-linux-gnu)
 MIME-Version: 1.0
-In-Reply-To: <20200221153244.GD12665@linux.intel.com>
-Content-Type: text/plain; charset=windows-1252
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: multipart/signed; micalg=pgp-sha256;
+ boundary="Sig_/bJVrdX=C51NqZmw7j0KRrxX"; protocol="application/pgp-signature"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 21/02/20 16:32, Sean Christopherson wrote:
->> In the original code it's only vpid_sync_vcpu_single() which has 'vpid
->> == 0' check, vpid_sync_vcpu_global() doesn't have it. So in the
->> hypothetical situation when cpu_has_vmx_invvpid_single() is false AND
->> we've e.g. exhausted our VPID space and allocate_vpid() returned zero,
->> the new code just won't do anything while the old one would've done
->> __invvpid(VMX_VPID_EXTENT_ALL_CONTEXT, 0, 0), right?
-> Ah rats.  I lost track of that functional change between making the commit
-> and writing the changelog.
-> 
-> I'll spin a v2 to rewrite the changelog, and maybe add the "vpid == 0"
-> check in a separate patch.
-> 
+--Sig_/bJVrdX=C51NqZmw7j0KRrxX
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-What about this:
+On Fri, 21 Feb 2020 13:07:33 +0000
+Jonathan Cameron <jic23@kernel.org> wrote:
 
-diff --git a/arch/x86/kvm/vmx/ops.h b/arch/x86/kvm/vmx/ops.h
-index eb6adc77a55d..2ab88984b22f 100644
---- a/arch/x86/kvm/vmx/ops.h
-+++ b/arch/x86/kvm/vmx/ops.h
-@@ -255,13 +255,10 @@ static inline void __invept(unsigned long ext, u64 eptp, gpa_t gpa)
- 
- static inline void vpid_sync_context(int vpid)
- {
--	if (vpid == 0)
--		return;
--
--	if (cpu_has_vmx_invvpid_single())
--		__invvpid(VMX_VPID_EXTENT_SINGLE_CONTEXT, vpid, 0);
--	else
-+	if (!cpu_has_vmx_invvpid_single())
- 		__invvpid(VMX_VPID_EXTENT_ALL_CONTEXT, 0, 0);
-+	else if (vpid != 0)
-+		__invvpid(VMX_VPID_EXTENT_SINGLE_CONTEXT, vpid, 0);
- }
- 
- static inline void vpid_sync_vcpu_addr(int vpid, gva_t addr)
+> On Tue, 18 Feb 2020 07:17:23 +0100
+> Andreas Kemnade <andreas@kemnade.info> wrote:
+>=20
+> > Both chips have an A/D converter capable of measuring
+> > things like VBAT, VUSB and analog inputs.
+> >=20
+> > Signed-off-by: Andreas Kemnade <andreas@kemnade.info> =20
+> One trivial comment inline.  Looks good to me and I'm assuming
+> this will got through the mfd tree.
+>=20
+> Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+>=20
+ok, I will send a v4 with that return line fixed and the RFC patches droppe=
+d,
+since nobody seems to have time to test them.
 
+Regards,
+Andreas
+
+--Sig_/bJVrdX=C51NqZmw7j0KRrxX
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAEBCAAdFiEEPIWxmAFyOaBcwCpFl4jFM1s/ye8FAl5QEwAACgkQl4jFM1s/
+ye+9JRAAre3NDSBVb2y2l1lMlJimeh0lLUy58IwPuJysp1ijoXCcNIGM3OxrANTL
+G9B5IF9OrB0hWRQ0eTeotgzyNPMqJlrNCRIu4QDwplWSIaXO0MEfta/BZ26vQxc7
+nnJORKwZCVTgWNuFJAULGwkthA3Z/mzB/t1NlpzgkCrWux2OOaSZCNYBgWZcNaza
+Hp3U0RQyLKh9RedhZ6/M4FrSSq7bnaLewC2J922VLJhEPNCKm//75XFmf59Rnlo+
+LRFAbB+s+OFURv2uMx4NfUiX/nPswbXWoHqhZ/gnXeHAh4gbEL3UsUhT49K6eLzO
++MN+j+ah9+Xkk4Zuq/0KO8r2FDiBjagw0ACJpH2ihX7AwYBCnibftrtcxoBHAtNI
+afgas+RdWZlKPIb9NgPM+W95sEZ5jNYeGcx3tn/BLT6ajvIzIND0HV6bIus7ev+g
+N9qr8UWSPl9VVUMyAQ7JTqMjWvnwX3uiunYa8iX5Wt3KV8KybExmD/km0X/3MFPE
++NY4rR3lhdNKl/jloxIXzChOILkgQihKLovKQg6HWBNRTM7iNSgFtibzkOQI/l5H
+rPX58GNKzxwyzp4xnJAsA16QdA8VJpgYsgAQz5GZ5iJQXMBQPaGxeQuCUCqOeXU9
+k0mw/NwFBwFiDeZGknDDBNbVY5LbykTlCVg4Ka+Lq1Ku72sUNlE=
+=GhBR
+-----END PGP SIGNATURE-----
+
+--Sig_/bJVrdX=C51NqZmw7j0KRrxX--
