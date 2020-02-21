@@ -2,107 +2,202 @@ Return-Path: <SRS0=1210=4J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4DF9EC11D24
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 02:18:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 08CA3C11D24
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 02:19:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 26D8F206EF
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 02:18:02 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Y9/zM3RM"
+	by mail.kernel.org (Postfix) with ESMTP id DB398206EF
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 02:19:21 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729415AbgBUCSB (ORCPT
+        id S1729548AbgBUCTU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Feb 2020 21:18:01 -0500
-Received: from mail-pf1-f195.google.com ([209.85.210.195]:45102 "EHLO
-        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728992AbgBUCSB (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Feb 2020 21:18:01 -0500
-Received: by mail-pf1-f195.google.com with SMTP id 2so376204pfg.12;
-        Thu, 20 Feb 2020 18:18:00 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=aInQ+bV7EjLbwOn5yuSwAB2aHiKLYjiz5SbjsgDviAY=;
-        b=Y9/zM3RMZGOGTJSxfuAMkGqEyNBqNlCEzUVmFk3K84KZUXDsfCMepHCF58vstGFBKB
-         y61eklmJ5eDxwqDpmi+ucrwJadzGnUCt8ZucXxbxoVjpupv48FwGegfMjBeKhijgIZKG
-         HYR7CjCNFapmynIWoJ7n/jAPG+UjgfUOjuVuw9YGCySO5ohewwPom0UXT7eDvpD1cQ3O
-         WpWPF8YRXW1KqKGyo/SnHRMZfmUJKYSGFUa86KbPQi42TuGu6evc/z6u6EKaVLrwi9Y7
-         BXJnSBvX6iVJnYYt7c25N85IpClOo5QrwCJNSHaMqx02cm7ZLWxEo+BrQeKTa8CE3KB6
-         WBug==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=aInQ+bV7EjLbwOn5yuSwAB2aHiKLYjiz5SbjsgDviAY=;
-        b=XTZ7sbjn03IY+qPuOw3XbeuijXmVoFZNeyyffF2XJcezc4OSWZC0Ng9VWNRQkUKsuF
-         IxcGlOaIOCrOXmL0ceC4j2UF+oT474bJ1U6hB+vEC1GsnpgS79Qy8XV/Sn8QA5iO2y6R
-         C0LzHtMt1mWKLkCwzEbksdwh75AR+4W0DKqpAfErriKlcdUsfIxDRQq/hNuNtxczn2oy
-         UpEawEXNOQv4VmYmSaHwXh48ZmyE2QdHzO46Y4CAdwVrC+m5JKqhTixbn+husE5ehbff
-         +e2Lix8B178tGw6BFmN9Kr26gwXO3+3BrxLE2AFBTjvl+isPTizYk7wtHXDhY622tqpM
-         4xJA==
-X-Gm-Message-State: APjAAAVtURvHre3Pd9ov0w4kSxAkv+NnB9MxRI2xERIcvDW8AiHrBk9a
-        sGmaPrdqheskwEFdLX+9rks=
-X-Google-Smtp-Source: APXvYqw7sbSpit71nmXnqudgKI725O3kLqAZxewMC1o2xGr1TWmrCEhJZzOoQ7ak89Bs5Y7hhh01pQ==
-X-Received: by 2002:a63:650:: with SMTP id 77mr35068014pgg.102.1582251480255;
-        Thu, 20 Feb 2020 18:18:00 -0800 (PST)
-Received: from ast-mbp ([2620:10d:c090:500::5:f03d])
-        by smtp.gmail.com with ESMTPSA id z4sm867510pfn.42.2020.02.20.18.17.58
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 20 Feb 2020 18:17:59 -0800 (PST)
-Date:   Thu, 20 Feb 2020 18:17:57 -0800
-From:   Alexei Starovoitov <alexei.starovoitov@gmail.com>
-To:     KP Singh <kpsingh@chromium.org>
-Cc:     linux-kernel@vger.kernel.org, bpf@vger.kernel.org,
-        linux-security-module@vger.kernel.org,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        James Morris <jmorris@namei.org>,
-        Kees Cook <keescook@chromium.org>,
-        Jann Horn <jannh@google.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Subject: Re: [PATCH bpf-next v4 5/8] bpf: lsm: Implement attach, detach and
- execution
-Message-ID: <20200221021755.3z7ifyyeh6seo3zs@ast-mbp>
-References: <20200220175250.10795-1-kpsingh@chromium.org>
- <20200220175250.10795-6-kpsingh@chromium.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200220175250.10795-6-kpsingh@chromium.org>
-User-Agent: NeoMutt/20180223
+        Thu, 20 Feb 2020 21:19:20 -0500
+Received: from inva020.nxp.com ([92.121.34.13]:34892 "EHLO inva020.nxp.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728992AbgBUCTU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 20 Feb 2020 21:19:20 -0500
+Received: from inva020.nxp.com (localhost [127.0.0.1])
+        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id 7F5EB1A6558;
+        Fri, 21 Feb 2020 03:19:17 +0100 (CET)
+Received: from invc005.ap-rdc01.nxp.com (invc005.ap-rdc01.nxp.com [165.114.16.14])
+        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id 14D6E1A652F;
+        Fri, 21 Feb 2020 03:19:12 +0100 (CET)
+Received: from localhost.localdomain (shlinux2.ap.freescale.net [10.192.224.44])
+        by invc005.ap-rdc01.nxp.com (Postfix) with ESMTP id 87476402A0;
+        Fri, 21 Feb 2020 10:19:05 +0800 (SGT)
+From:   Anson Huang <Anson.Huang@nxp.com>
+To:     robh+dt@kernel.org, mark.rutland@arm.com, shawnguo@kernel.org,
+        s.hauer@pengutronix.de, kernel@pengutronix.de, festevam@gmail.com,
+        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org
+Cc:     Linux-imx@nxp.com
+Subject: [PATCH] ARM: dts: imx: make wdog node name generic
+Date:   Fri, 21 Feb 2020 10:13:20 +0800
+Message-Id: <1582251200-15562-1-git-send-email-Anson.Huang@nxp.com>
+X-Mailer: git-send-email 2.7.4
+X-Virus-Scanned: ClamAV using ClamSMTP
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Feb 20, 2020 at 06:52:47PM +0100, KP Singh wrote:
-> +
-> +	/* This is the first program to be attached to the LSM hook, the hook
-> +	 * needs to be enabled.
-> +	 */
-> +	if (prog->type == BPF_PROG_TYPE_LSM && tr->progs_cnt[kind] == 1)
-> +		err = bpf_lsm_set_enabled(prog->aux->attach_func_name, true);
->  out:
->  	mutex_unlock(&tr->mutex);
->  	return err;
-> @@ -336,7 +348,11 @@ int bpf_trampoline_unlink_prog(struct bpf_prog *prog)
->  	}
->  	hlist_del(&prog->aux->tramp_hlist);
->  	tr->progs_cnt[kind]--;
-> -	err = bpf_trampoline_update(prog->aux->trampoline);
-> +	err = bpf_trampoline_update(prog);
-> +
-> +	/* There are no more LSM programs, the hook should be disabled */
-> +	if (prog->type == BPF_PROG_TYPE_LSM && tr->progs_cnt[kind] == 0)
-> +		err = bpf_lsm_set_enabled(prog->aux->attach_func_name, false);
+Node name should be generic, use "watchdog" instead of "wdog" for
+wdog nodes.
 
-Overall looks good, but I don't think above logic works.
-Consider lsm being attached, then fexit, then lsm detached, then fexit detached.
-Both are kind==fexit and static_key stays enabled.
+Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
+---
+ arch/arm/boot/dts/imx6qdl.dtsi | 4 ++--
+ arch/arm/boot/dts/imx6sl.dtsi  | 4 ++--
+ arch/arm/boot/dts/imx6sx.dtsi  | 6 +++---
+ arch/arm/boot/dts/imx6ul.dtsi  | 6 +++---
+ arch/arm/boot/dts/imx7s.dtsi   | 8 ++++----
+ 5 files changed, 14 insertions(+), 14 deletions(-)
+
+diff --git a/arch/arm/boot/dts/imx6qdl.dtsi b/arch/arm/boot/dts/imx6qdl.dtsi
+index 97c0a85..886ab81 100644
+--- a/arch/arm/boot/dts/imx6qdl.dtsi
++++ b/arch/arm/boot/dts/imx6qdl.dtsi
+@@ -669,14 +669,14 @@
+ 				status = "disabled";
+ 			};
+ 
+-			wdog1: wdog@20bc000 {
++			wdog1: watchdog@20bc000 {
+ 				compatible = "fsl,imx6q-wdt", "fsl,imx21-wdt";
+ 				reg = <0x020bc000 0x4000>;
+ 				interrupts = <0 80 IRQ_TYPE_LEVEL_HIGH>;
+ 				clocks = <&clks IMX6QDL_CLK_IPG>;
+ 			};
+ 
+-			wdog2: wdog@20c0000 {
++			wdog2: watchdog@20c0000 {
+ 				compatible = "fsl,imx6q-wdt", "fsl,imx21-wdt";
+ 				reg = <0x020c0000 0x4000>;
+ 				interrupts = <0 81 IRQ_TYPE_LEVEL_HIGH>;
+diff --git a/arch/arm/boot/dts/imx6sl.dtsi b/arch/arm/boot/dts/imx6sl.dtsi
+index ea889f7..db626b2 100644
+--- a/arch/arm/boot/dts/imx6sl.dtsi
++++ b/arch/arm/boot/dts/imx6sl.dtsi
+@@ -499,14 +499,14 @@
+ 				status = "disabled";
+ 			};
+ 
+-			wdog1: wdog@20bc000 {
++			wdog1: watchdog@20bc000 {
+ 				compatible = "fsl,imx6sl-wdt", "fsl,imx21-wdt";
+ 				reg = <0x020bc000 0x4000>;
+ 				interrupts = <0 80 IRQ_TYPE_LEVEL_HIGH>;
+ 				clocks = <&clks IMX6SL_CLK_IPG>;
+ 			};
+ 
+-			wdog2: wdog@20c0000 {
++			wdog2: watchdog@20c0000 {
+ 				compatible = "fsl,imx6sl-wdt", "fsl,imx21-wdt";
+ 				reg = <0x020c0000 0x4000>;
+ 				interrupts = <0 81 IRQ_TYPE_LEVEL_HIGH>;
+diff --git a/arch/arm/boot/dts/imx6sx.dtsi b/arch/arm/boot/dts/imx6sx.dtsi
+index 1198117..6db9ca09 100644
+--- a/arch/arm/boot/dts/imx6sx.dtsi
++++ b/arch/arm/boot/dts/imx6sx.dtsi
+@@ -567,14 +567,14 @@
+ 				status = "disabled";
+ 			};
+ 
+-			wdog1: wdog@20bc000 {
++			wdog1: watchdog@20bc000 {
+ 				compatible = "fsl,imx6sx-wdt", "fsl,imx21-wdt";
+ 				reg = <0x020bc000 0x4000>;
+ 				interrupts = <GIC_SPI 80 IRQ_TYPE_LEVEL_HIGH>;
+ 				clocks = <&clks IMX6SX_CLK_IPG>;
+ 			};
+ 
+-			wdog2: wdog@20c0000 {
++			wdog2: watchdog@20c0000 {
+ 				compatible = "fsl,imx6sx-wdt", "fsl,imx21-wdt";
+ 				reg = <0x020c0000 0x4000>;
+ 				interrupts = <GIC_SPI 81 IRQ_TYPE_LEVEL_HIGH>;
+@@ -1289,7 +1289,7 @@
+ 				status = "disabled";
+ 			};
+ 
+-			wdog3: wdog@2288000 {
++			wdog3: watchdog@2288000 {
+ 				compatible = "fsl,imx6sx-wdt", "fsl,imx21-wdt";
+ 				reg = <0x02288000 0x4000>;
+ 				interrupts = <GIC_SPI 11 IRQ_TYPE_LEVEL_HIGH>;
+diff --git a/arch/arm/boot/dts/imx6ul.dtsi b/arch/arm/boot/dts/imx6ul.dtsi
+index 30cce35..e1807e9 100644
+--- a/arch/arm/boot/dts/imx6ul.dtsi
++++ b/arch/arm/boot/dts/imx6ul.dtsi
+@@ -531,14 +531,14 @@
+ 				status = "disabled";
+ 			};
+ 
+-			wdog1: wdog@20bc000 {
++			wdog1: watchdog@20bc000 {
+ 				compatible = "fsl,imx6ul-wdt", "fsl,imx21-wdt";
+ 				reg = <0x020bc000 0x4000>;
+ 				interrupts = <GIC_SPI 80 IRQ_TYPE_LEVEL_HIGH>;
+ 				clocks = <&clks IMX6UL_CLK_WDOG1>;
+ 			};
+ 
+-			wdog2: wdog@20c0000 {
++			wdog2: watchdog@20c0000 {
+ 				compatible = "fsl,imx6ul-wdt", "fsl,imx21-wdt";
+ 				reg = <0x020c0000 0x4000>;
+ 				interrupts = <GIC_SPI 81 IRQ_TYPE_LEVEL_HIGH>;
+@@ -1007,7 +1007,7 @@
+ 				status = "disabled";
+ 			};
+ 
+-			wdog3: wdog@21e4000 {
++			wdog3: watchdog@21e4000 {
+ 				compatible = "fsl,imx6ul-wdt", "fsl,imx21-wdt";
+ 				reg = <0x021e4000 0x4000>;
+ 				interrupts = <GIC_SPI 11 IRQ_TYPE_LEVEL_HIGH>;
+diff --git a/arch/arm/boot/dts/imx7s.dtsi b/arch/arm/boot/dts/imx7s.dtsi
+index 1ac5045..196bbd6 100644
+--- a/arch/arm/boot/dts/imx7s.dtsi
++++ b/arch/arm/boot/dts/imx7s.dtsi
+@@ -406,14 +406,14 @@
+ 				gpio-ranges = <&iomuxc 0 139 16>;
+ 			};
+ 
+-			wdog1: wdog@30280000 {
++			wdog1: watchdog@30280000 {
+ 				compatible = "fsl,imx7d-wdt", "fsl,imx21-wdt";
+ 				reg = <0x30280000 0x10000>;
+ 				interrupts = <GIC_SPI 78 IRQ_TYPE_LEVEL_HIGH>;
+ 				clocks = <&clks IMX7D_WDOG1_ROOT_CLK>;
+ 			};
+ 
+-			wdog2: wdog@30290000 {
++			wdog2: watchdog@30290000 {
+ 				compatible = "fsl,imx7d-wdt", "fsl,imx21-wdt";
+ 				reg = <0x30290000 0x10000>;
+ 				interrupts = <GIC_SPI 79 IRQ_TYPE_LEVEL_HIGH>;
+@@ -421,7 +421,7 @@
+ 				status = "disabled";
+ 			};
+ 
+-			wdog3: wdog@302a0000 {
++			wdog3: watchdog@302a0000 {
+ 				compatible = "fsl,imx7d-wdt", "fsl,imx21-wdt";
+ 				reg = <0x302a0000 0x10000>;
+ 				interrupts = <GIC_SPI 10 IRQ_TYPE_LEVEL_HIGH>;
+@@ -429,7 +429,7 @@
+ 				status = "disabled";
+ 			};
+ 
+-			wdog4: wdog@302b0000 {
++			wdog4: watchdog@302b0000 {
+ 				compatible = "fsl,imx7d-wdt", "fsl,imx21-wdt";
+ 				reg = <0x302b0000 0x10000>;
+ 				interrupts = <GIC_SPI 109 IRQ_TYPE_LEVEL_HIGH>;
+-- 
+2.7.4
+
