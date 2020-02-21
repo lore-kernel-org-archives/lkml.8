@@ -2,106 +2,157 @@ Return-Path: <SRS0=1210=4J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3F49AC35657
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 17:36:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A32E8C35657
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 17:36:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 10151206E2
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 17:36:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 77DF1222C4
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 17:36:59 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="kXo0h9Gt"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="v7aJNSIG"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727799AbgBURgy (ORCPT
+        id S1728105AbgBURg6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Feb 2020 12:36:54 -0500
-Received: from mail-oi1-f182.google.com ([209.85.167.182]:42716 "EHLO
-        mail-oi1-f182.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726342AbgBURgx (ORCPT
+        Fri, 21 Feb 2020 12:36:58 -0500
+Received: from mail-wr1-f67.google.com ([209.85.221.67]:33704 "EHLO
+        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726342AbgBURg4 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Feb 2020 12:36:53 -0500
-Received: by mail-oi1-f182.google.com with SMTP id j132so2344006oih.9
-        for <linux-kernel@vger.kernel.org>; Fri, 21 Feb 2020 09:36:53 -0800 (PST)
+        Fri, 21 Feb 2020 12:36:56 -0500
+Received: by mail-wr1-f67.google.com with SMTP id u6so2973321wrt.0
+        for <linux-kernel@vger.kernel.org>; Fri, 21 Feb 2020 09:36:54 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=NTRXYuQ87dvDK9Oz1vWAuaYjsHn0ZemoE8V0xwoz7H0=;
-        b=kXo0h9Gt5NHWtGfZV9IH1vFOGRutjzEa7R2/xU2oUsHRonvAFyHjnro0dqamOexF8z
-         EsiyWR8yFFWMoONokEhG6mOxxYHiJ+iQPuhmpWKiW32liSjm4QrviswEFzhWBSeLEE5w
-         eRujlRgEzoM8eNA+CYFUf2UGSflgLO+Emz02CqJyfadQZotnXRkCQ+l2cGQbdxuRBYyc
-         C8peDwALRlJaHoSjbBAPenvadCC2o2QvOz8CgNr/fTkxiHagEkqE9jDB4/15IuoNRLAZ
-         6z66cy/jd2dxId0AXTVmEfjV3d/4ynIY1vQdorg5LDEUuZqqy6Hu7T8FDaxBieccmRE6
-         muzA==
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to
+         :user-agent;
+        bh=cOA4oxIDLNEOCBal0R/IP5RYlFODdDSxtRHckIrqeJ4=;
+        b=v7aJNSIG55RSpI+kvJoPYDGiihHOWpIdfAyG0hdY2APIVnqzV4JL7uODkwTZO90JO/
+         P6A/dDva78t/fzWksSqCAkLBnDkTDvgArP22dQeyhh/pG+YxC4x15gWBAuRTuCW/FEuW
+         6qCLIgPdjJDiQZKIa3QXg08OsfVXvZrxuxhH4IjdtwD7PBQEy6JHok7agRWQkxhE1lh4
+         QhXw3bFHaeEedQ+tSQum/WljvqNTSCrCK8+E0wMrCwSheQ/1RDjX5fITEP0rNa5V7zZZ
+         8sZ2uhOUKIFQrveh/rE3Ilbjl7dqicc5MggCJDFv/w/c7kcUVYjtSp7a0RyhoHsTqQWm
+         16rg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=NTRXYuQ87dvDK9Oz1vWAuaYjsHn0ZemoE8V0xwoz7H0=;
-        b=CdjpV5PtMnQ6WMS6NetsMgKepWf91usPHdvALzIoaFFvFnuYi49p01Jp3HfHhdEFz6
-         CTugfJ/vM+Fp1Sh6W6LUyHejVemPSTkRtYBKtgc8xntyqxDfZK5qYHuixEXkPjx+db2r
-         RuSGK0xlPZsO3ush1vxjZdKx7rr8+jVqlICs+1KkAvKaq596kuUTH2r+/6XwIWP13fpd
-         QeG1OUPQuH8PUIpHyDqCEbaRAjvIwa7kM4m/fjlD1aJ5TpLeoMkoRNyeDZ/808PS0trR
-         getcDlmAt3hSb0uiqSu1aBsgLajS7O9hw47j4/OlPW0GJTBdjsUGACwuW1inUI9JbSPy
-         13Aw==
-X-Gm-Message-State: APjAAAVW//VH3iZzyhLHjJ20xTccFITFhbw4hb1c5kJyRd+MgyUrhaSq
-        sMFbEpyl1aG6noet6rgnr4RfDAv4+zW3e8A801R0dA==
-X-Google-Smtp-Source: APXvYqxCoOJQzNGFh4S6Wf2LwznGZ2gPK7NTphumYq3n31yOSzlLD/AyHuWWgTne7kL2s4mbyiQCCgUXnQwWQXZ8d/8=
-X-Received: by 2002:aca:d954:: with SMTP id q81mr2902469oig.157.1582306612529;
- Fri, 21 Feb 2020 09:36:52 -0800 (PST)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to:user-agent;
+        bh=cOA4oxIDLNEOCBal0R/IP5RYlFODdDSxtRHckIrqeJ4=;
+        b=Ewb6GaURHiaekLyOS6E+Iio1IUiJHltsfw5OzUNsSFH5JIg51Td5NAH4tE57zer/V2
+         K38C5Z+yzF/yixrFmw+kfuB99wnR2zz8k+5HY0V6/rPwp6mITkRiDhRjb9xukfvqNaDR
+         B4DKeS8A7Qnmx693VMzT1+7GJ47huztPiU6RpUPN1jpIAOUya0AezBg6pfrWwChguDHb
+         SssXEyZ/AsyVswmCSjgyPzJaInG/WJ1DVCQSrHQmASvOfgJni2munCuciEs+Rc727KtX
+         ZsCRAHnMfCn24o63brpeu9Aa4oKA5eVo3+fhwwPN+gdpsMJCkVzc/cyzmbE3Vg3mgf8J
+         QKUQ==
+X-Gm-Message-State: APjAAAUrtAJ/EnLTKwLFoDg4ETby2lKpLfuYNQNIONPyGSG5DynVZAzW
+        NVkmk47dirr/w2449SiCRRBj0Q==
+X-Google-Smtp-Source: APXvYqwm/yZN8q2d2aAZWNRq65dvNIZQip29PxGIJMjGNqoIHX2PoeqOaYKt1kazZ2ydG5WVCENWIA==
+X-Received: by 2002:a5d:40d1:: with SMTP id b17mr47847596wrq.93.1582306613174;
+        Fri, 21 Feb 2020 09:36:53 -0800 (PST)
+Received: from linaro.org ([2a01:e34:ed2f:f020:903b:a048:f296:e3ae])
+        by smtp.gmail.com with ESMTPSA id c74sm4916248wmd.26.2020.02.21.09.36.51
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Fri, 21 Feb 2020 09:36:52 -0800 (PST)
+Date:   Fri, 21 Feb 2020 18:36:50 +0100
+From:   Daniel Lezcano <daniel.lezcano@linaro.org>
+To:     Dmitry Osipenko <digetx@gmail.com>
+Cc:     Thierry Reding <thierry.reding@gmail.com>,
+        Jonathan Hunter <jonathanh@nvidia.com>,
+        Peter De Schrijver <pdeschrijver@nvidia.com>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        =?utf-8?B?TWljaGHFgiBNaXJvc8WCYXc=?= <mirq-linux@rere.qmqm.pl>,
+        Jasper Korten <jja2000@gmail.com>,
+        David Heidelberg <david@ixit.cz>,
+        Peter Geis <pgwipeout@gmail.com>, linux-pm@vger.kernel.org,
+        linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v9 09/17] arm: tegra20: cpuidle: Handle case where
+ secondary CPU hangs on entering LP2
+Message-ID: <20200221173649.GU10516@linaro.org>
+References: <20200212235134.12638-1-digetx@gmail.com>
+ <20200212235134.12638-10-digetx@gmail.com>
+ <20200221154318.GO10516@linaro.org>
+ <239a2b66-8da8-2e6c-d19d-9ed207ad0a64@gmail.com>
 MIME-Version: 1.0
-References: <158204549488.3299825.3783690177353088425.stgit@warthog.procyon.org.uk>
- <158204559631.3299825.5358385352169781990.stgit@warthog.procyon.org.uk>
- <CAG48ez3ZMg4O5US3n=p1CYK-2AAgLRY+pjnUXp2p5hdwbjCRSA@mail.gmail.com>
- <1808070.1582287889@warthog.procyon.org.uk> <CAG48ez0+_kO_YL6iO9uA+HjjnHRVHVD-bFq0C=ZLeaGtTMss5A@mail.gmail.com>
- <2113718.1582304782@warthog.procyon.org.uk>
-In-Reply-To: <2113718.1582304782@warthog.procyon.org.uk>
-From:   Jann Horn <jannh@google.com>
-Date:   Fri, 21 Feb 2020 18:36:26 +0100
-Message-ID: <CAG48ez14CHMjZS8vCp6h6FnLvcFQq8oy_9JPCd=5qZ52X6w12Q@mail.gmail.com>
-Subject: seq_lock and lockdep_is_held() assertions
-To:     David Howells <dhowells@redhat.com>,
-        John Stultz <john.stultz@linaro.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>, Will Deacon <will@kernel.org>
-Cc:     Al Viro <viro@zeniv.linux.org.uk>, raven@themaw.net,
-        Miklos Szeredi <mszeredi@redhat.com>,
-        Christian Brauner <christian@brauner.io>,
-        Linux API <linux-api@vger.kernel.org>,
-        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
-        kernel list <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <239a2b66-8da8-2e6c-d19d-9ed207ad0a64@gmail.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-adding some locking folks to the thread...
+On Fri, Feb 21, 2020 at 07:56:51PM +0300, Dmitry Osipenko wrote:
+> Hello Daniel,
+> 
+> 21.02.2020 18:43, Daniel Lezcano пишет:
+> > On Thu, Feb 13, 2020 at 02:51:26AM +0300, Dmitry Osipenko wrote:
+> >> It is possible that something may go wrong with the secondary CPU, in that
+> >> case it is much nicer to get a dump of the flow-controller state before
+> >> hanging machine.
+> >>
+> >> Acked-by: Peter De Schrijver <pdeschrijver@nvidia.com>
+> >> Tested-by: Peter Geis <pgwipeout@gmail.com>
+> >> Tested-by: Jasper Korten <jja2000@gmail.com>
+> >> Tested-by: David Heidelberg <david@ixit.cz>
+> >> Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
+> >> ---
 
-On Fri, Feb 21, 2020 at 6:06 PM David Howells <dhowells@redhat.com> wrote:
-> Jann Horn <jannh@google.com> wrote:
-> > On Fri, Feb 21, 2020 at 1:24 PM David Howells <dhowells@redhat.com> wrote:
-> > > What's the best way to write a lockdep assertion?
-> > >
-> > >         BUG_ON(!lockdep_is_held(lock));
-> >
-> > lockdep_assert_held(lock) is the normal way, I think - that will
-> > WARN() if lockdep is enabled and the lock is not held.
->
-> Okay.  But what's the best way with a seqlock_t?  It has two dep maps in it.
-> Do I just ignore the one attached to the spinlock?
+[ ... ]
 
-Uuuh... very good question. Looking at how the seqlock_t helpers use
-the dep map of the seqlock, I don't think lockdep asserts work for
-asserting that you're in the read side of a seqlock?
+> >> +static int tegra20_wait_for_secondary_cpu_parking(void)
+> >> +{
+> >> +	unsigned int retries = 3;
+> >> +
+> >> +	while (retries--) {
+> >> +		ktime_t timeout = ktime_add_ms(ktime_get(), 500);
+> > 
+> > Oops I missed this one. Do not use ktime_get() in this code path, use jiffies.
+> 
+> Could you please explain what benefits jiffies have over the ktime_get()?
 
-read_seqbegin_or_lock() -> read_seqbegin() -> read_seqcount_begin() ->
-seqcount_lockdep_reader_access() does seqcount_acquire_read() (which
-maps to lock_acquire_shared_recursive()), but immediately following
-that calls seqcount_release() (which maps to lock_release())?
+ktime_get() is very slow, jiffies is updated every tick.
 
-So I think lockdep won't consider you to be holding any locks after
-read_seqbegin_or_lock() if the lock wasn't taken?
+> >> +
+> >> +		/*
+> >> +		 * The primary CPU0 core shall wait for the secondaries
+> >> +		 * shutdown in order to power-off CPU's cluster safely.
+> >> +		 * The timeout value depends on the current CPU frequency,
+> >> +		 * it takes about 40-150us  in average and over 1000us in
+> >> +		 * a worst case scenario.
+> >> +		 */
+> >> +		do {
+> >> +			if (tegra_cpu_rail_off_ready())
+> >> +				return 0;
+> >> +
+> >> +		} while (ktime_before(ktime_get(), timeout));
+> > 
+> > So this loop will aggresively call tegra_cpu_rail_off_ready() and retry 3
+> > times. The tegra_cpu_rail_off_ready() function can be called thoushand of times
+> > here but the function will hang 1.5s :/
+> > 
+> > I suggest something like:
+> > 
+> > 	while (retries--i && !tegra_cpu_rail_off_ready()) 
+> > 		udelay(100);
+> > 
+> > So <retries> calls to tegra_cpu_rail_off_ready() and 100us x <retries> maximum
+> > impact.
+> But udelay() also results into CPU spinning in a busy-loop, and thus,
+> what's the difference?
+
+busy looping instead of register reads with all the hardware things involved behind.
+
+-- 
+
+ <http://www.linaro.org/> Linaro.org │ Open source software for ARM SoCs
+
+Follow Linaro:  <http://www.facebook.com/pages/Linaro> Facebook |
+<http://twitter.com/#!/linaroorg> Twitter |
+<http://www.linaro.org/linaro-blog/> Blog
