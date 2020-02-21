@@ -2,91 +2,143 @@ Return-Path: <SRS0=1210=4J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C5116C35646
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 19:10:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 12B1AC35646
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 19:10:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9A47724653
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 19:10:22 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582312222;
-	bh=UuhNfeKn532RnvokafaA9jeGYJ66WH3o9jZo/Sjed50=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=E5UYbi1QG97PfLEj2gO5gNuJud5+a6z6iCJe71GiE88sxvmkXYXAr00jSBsg2D3j8
-	 Dy5FDQcwri1BnE2lSHllkIL9EpqDhk37KUoJk2zsVm1R3IOXoxsQfZFVIEv5xpfb0y
-	 xYu94OvKWv1Smv37HjGuE4ZFkAJkljxd8WJzGpXY=
+	by mail.kernel.org (Postfix) with ESMTP id DD707206E2
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 19:10:32 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="SAH5OMkF"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729667AbgBUTKV (ORCPT
+        id S1729725AbgBUTKb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Feb 2020 14:10:21 -0500
-Received: from mail.kernel.org ([198.145.29.99]:50212 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726423AbgBUTKU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Feb 2020 14:10:20 -0500
-Received: from mail-wm1-f54.google.com (mail-wm1-f54.google.com [209.85.128.54])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 885A92467B
-        for <linux-kernel@vger.kernel.org>; Fri, 21 Feb 2020 19:10:19 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1582312219;
-        bh=UuhNfeKn532RnvokafaA9jeGYJ66WH3o9jZo/Sjed50=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=unz4oQ/7TC92dKV3E0jiYOZiHhYJwj5JnpZtdvdxLN6WVtKs+E76VPQmoRGOP/0Ls
-         59ic49hwmZqs++ykC3FqdUHu56Y5/LYC6KpGweH979p8VnXYGlwI7NvrIYIiRo8Z/g
-         H97jnDAcgVZ7FyaD4D3EMcDoi/um2epByqJPS1pY=
-Received: by mail-wm1-f54.google.com with SMTP id t23so2892486wmi.1
-        for <linux-kernel@vger.kernel.org>; Fri, 21 Feb 2020 11:10:19 -0800 (PST)
-X-Gm-Message-State: APjAAAUIsWxfKpXfKYEe66nEdpx6q0o6fHP/DoEI/jPfPpyUT8oi8pOL
-        Fi++Pkin4LX9NhQUh4JlR68+yOap6S0AThFqi7Apyg==
-X-Google-Smtp-Source: APXvYqyspFB2iIO50J3tDK8jOj0B1Z8Z06Wn6TefE3AoSD02hOu3MzrfXq42HPjiRp9ZzEARqYhZvwJ9X+EVJ8Ba6xc=
-X-Received: by 2002:a1c:b0c3:: with SMTP id z186mr5163664wme.36.1582312217931;
- Fri, 21 Feb 2020 11:10:17 -0800 (PST)
+        Fri, 21 Feb 2020 14:10:31 -0500
+Received: from mail-lf1-f66.google.com ([209.85.167.66]:39644 "EHLO
+        mail-lf1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726423AbgBUTKa (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 21 Feb 2020 14:10:30 -0500
+Received: by mail-lf1-f66.google.com with SMTP id n30so1454537lfh.6;
+        Fri, 21 Feb 2020 11:10:29 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=uHowV/ER1jV7ml5qvZrVFJn7AemGPNZYwVliqP36QYw=;
+        b=SAH5OMkFdGtk9oHkzbLJJSKQHgvWzmI5RBWbYve752WF8/tFhfeI9SbMFTIdQ9uL0d
+         Vq4e3QKNAU1W5HY98vc7UPHefXsWyaCIz8lagxtqFagm0BIP38CZVrimQf1exDv2dUiw
+         BcKWKMK4doKxk+uEeJVq27eCXdk+nm+np7FAOv0bA5ZHCycUI/ytmCSHKoJtLm0VkpnD
+         NyWg4wP0EJ+wu74uhjb09FKgknSNbl1nXopX9TBmOiGL9eTnhz4wK3YDcv5Gj0jcEbP3
+         aqZY4egBl5+k4moWSFkQDYQ+m/ymsjsqriAZ1Cqe+q/5cRbP0GSEKQXZOVQsIXQeTtvd
+         UznA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=uHowV/ER1jV7ml5qvZrVFJn7AemGPNZYwVliqP36QYw=;
+        b=QdHN1xzItVz8Z5lRSQ+VNArDuB9QfrAg71G6QnR5y4SG67/fFjukIjp/4cl60Bdhva
+         DYYMF03W3j7bp3Q9xeBLn1OwwOl+7wt2qU7PbDPENlTWcRRG5X3ndvgz4NKVL5dhiKqV
+         lw8r1uE4vnk8XRk0cS7Cyvo/pP+eZolsSor6ctLOvDZnWUia57FIu5R0C6eW92Ykaxkx
+         53LwmWgBkbnEWEfGI6hr9z7e6fcFzU47p6NuY9BURL1mzqkcGEIsJWT+tn4qrLFlBMoG
+         N4e81VrOQhIdCmBgUumjQ3ex1MhZgSv2rJgNa6bocqJuXOEayYGg/WIl9pPN1JKnm1+F
+         Vp4A==
+X-Gm-Message-State: APjAAAVOLmA7gOAnnLazDJWHzBUNZP2+5Cyh3NqKJMuG3HjcI6FNQm72
+        vYUwq/dX8LunS/SliAYGt77kbfj+
+X-Google-Smtp-Source: APXvYqwVeTJz9to9o2SyGyf5HKQIVsBCVpweTnyOA4imSqj4VBG64NQCimLgX0A2FCDHa3XYJUq+DQ==
+X-Received: by 2002:ac2:5ec3:: with SMTP id d3mr21058392lfq.176.1582312228058;
+        Fri, 21 Feb 2020 11:10:28 -0800 (PST)
+Received: from [192.168.2.145] (79-139-233-37.dynamic.spd-mgts.ru. [79.139.233.37])
+        by smtp.googlemail.com with ESMTPSA id p26sm2120131lfh.64.2020.02.21.11.10.26
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 21 Feb 2020 11:10:27 -0800 (PST)
+Subject: Re: [PATCH for 5.6 v2] tty: serial: tegra: Handle RX transfer in PIO
+ mode if DMA wasn't started
+To:     Jon Hunter <jonathanh@nvidia.com>, Jiri Slaby <jslaby@suse.cz>,
+        Laxman Dewangan <ldewangan@nvidia.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Thierry Reding <thierry.reding@gmail.com>
+Cc:     linux-serial@vger.kernel.org, linux-tegra@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+References: <20200209164415.9632-1-digetx@gmail.com>
+ <15b01f79-007d-09bb-03be-050c009ceff6@suse.cz>
+ <4d9a2352-6daa-4dcc-376b-175b1398ff6a@gmail.com>
+ <01397ba1-a738-257a-adb1-84cdcba68a57@nvidia.com>
+From:   Dmitry Osipenko <digetx@gmail.com>
+Message-ID: <008a54e3-3585-2f73-a4cb-198fd2fa725a@gmail.com>
+Date:   Fri, 21 Feb 2020 22:10:26 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.3.0
 MIME-Version: 1.0
-References: <20200221133416.777099322@infradead.org> <20200221134215.385886177@infradead.org>
-In-Reply-To: <20200221134215.385886177@infradead.org>
-From:   Andy Lutomirski <luto@kernel.org>
-Date:   Fri, 21 Feb 2020 11:10:05 -0800
-X-Gmail-Original-Message-ID: <CALCETrWmnkrHi1FYFLvj5G7SrmN+BrwLgKyt=NBtd-EOoRyeSQ@mail.gmail.com>
-Message-ID: <CALCETrWmnkrHi1FYFLvj5G7SrmN+BrwLgKyt=NBtd-EOoRyeSQ@mail.gmail.com>
-Subject: Re: [PATCH v4 06/27] x86/doublefault: Remove memmove() call
-To:     Peter Zijlstra <peterz@infradead.org>
-Cc:     LKML <linux-kernel@vger.kernel.org>,
-        linux-arch <linux-arch@vger.kernel.org>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Ingo Molnar <mingo@kernel.org>,
-        Joel Fernandes <joel@joelfernandes.org>,
-        Greg KH <gregkh@linuxfoundation.org>, gustavo@embeddedor.com,
-        Thomas Gleixner <tglx@linutronix.de>, paulmck@kernel.org,
-        Josh Triplett <josh@joshtriplett.org>,
-        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-        Lai Jiangshan <jiangshanlai@gmail.com>,
-        Andrew Lutomirski <luto@kernel.org>,
-        Tony Luck <tony.luck@intel.com>,
-        Frederic Weisbecker <frederic@kernel.org>,
-        Dan Carpenter <dan.carpenter@oracle.com>,
-        Masami Hiramatsu <mhiramat@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <01397ba1-a738-257a-adb1-84cdcba68a57@nvidia.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Feb 21, 2020 at 5:50 AM Peter Zijlstra <peterz@infradead.org> wrote:
->
-> Use of memmove() in #DF is problematic when you consider tracing and
-> other instrumentation.
->
-> Remove the memmove() call and simply write out what need doing; Boris
-> argues the ranges should not overlap.
->
-> Survives selftests/x86, specifically sigreturn_64.
->
-> (Andy ?!)
+19.02.2020 17:38, Jon Hunter пишет:
+> 
+> On 19/02/2020 12:25, Dmitry Osipenko wrote:
+>> 17.02.2020 10:37, Jiri Slaby пишет:
+>>> On 09. 02. 20, 17:44, Dmitry Osipenko wrote:
+>>>> It is possible to get an instant RX timeout or end-of-transfer interrupt
+>>>> before RX DMA was started, if transaction is less than 16 bytes. Transfer
+>>>> should be handled in PIO mode in this case because DMA can't handle it.
+>>>> This patch brings back the original behaviour of the driver that was
+>>>> changed by accident by a previous commit, it fixes occasional Bluetooth HW
+>>>> initialization failures which I started to notice recently.
+>>>>
+>>>> Fixes: d5e3fadb7012 ("tty: serial: tegra: Activate RX DMA transfer by request")
+>>>> Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
+>>>> ---
+>>>>
+>>>> Changelog:
+>>>>
+>>>> v2: - Corrected commit's title by adding the accidentally missed "tegra: "
+>>>>       to the prefix.
+>>>>
+>>>>  drivers/tty/serial/serial-tegra.c | 35 ++++++++++++++-----------------
+>>>>  1 file changed, 16 insertions(+), 19 deletions(-)
+>>>>
+>>>> diff --git a/drivers/tty/serial/serial-tegra.c b/drivers/tty/serial/serial-tegra.c
+>>>> index 33034b852a51..8de8bac9c6c7 100644
+>>>> --- a/drivers/tty/serial/serial-tegra.c
+>>>> +++ b/drivers/tty/serial/serial-tegra.c
+>>>> @@ -692,11 +692,22 @@ static void tegra_uart_copy_rx_to_tty(struct tegra_uart_port *tup,
+>>>>  				   count, DMA_TO_DEVICE);
+>>>>  }
+>>>>  
+>>>> +static void do_handle_rx_pio(struct tegra_uart_port *tup)
+>>>> +{
+>>>> +	struct tty_struct *tty = tty_port_tty_get(&tup->uport.state->port);
+>>>> +	struct tty_port *port = &tup->uport.state->port;
+>>>> +
+>>>> +	tegra_uart_handle_rx_pio(tup, port);
+>>>> +	if (tty) {
+>>>
+>>> What's the tty good for here, actually?
+>>>
+>>>> +		tty_flip_buffer_push(port);
+>>>> +		tty_kref_put(tty);
+>>>> +	}
+>>>> +}
+>>
+>> I'm not really a TTY expert..
+>>
+>> Jon, maybe you have any clue whether TTY could disappear while port is
+>> opened?
+> 
+> Nothing specific that I am aware of. The function tty_kref_get() appears
+> to check that the tty pointer is valid and so it would seem logical to
+> check here as well. But happy to be corrected :-)
 
-Acked-by: Andy Lutomirski <luto@kernel.org>
-
-Even ignoring the tracing issue, I think this is nicer than the original code.
+Okay, thanks.
