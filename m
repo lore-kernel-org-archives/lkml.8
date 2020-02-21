@@ -2,166 +2,97 @@ Return-Path: <SRS0=1210=4J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B7660C35655
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 13:02:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CE4A9C35647
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 13:04:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8EF3C24650
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 13:02:35 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582290155;
-	bh=+xThR+azD9P2PWAejGynVSIEcWpxJ01pdUUIs8XZVyQ=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=s7PbgnFRqHWm2Pkq211qW8+MSRIoJaQF5tootmVFFxYrtXrR0icrb7CvzDqN0bqDL
-	 Znp/q83Wo08nuuo6xd96wJ12NQUjwHErDMxdzjHYMdH64fPh2VChVUVq8/vsGdD1RO
-	 epC/otDcagz+LZo6w90DejW36RH8sWmsrBBfX7BM=
+	by mail.kernel.org (Postfix) with ESMTP id 9F95E24650
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 13:04:55 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728405AbgBUNCe (ORCPT
+        id S1728462AbgBUNEy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Feb 2020 08:02:34 -0500
-Received: from mail.kernel.org ([198.145.29.99]:38412 "EHLO mail.kernel.org"
+        Fri, 21 Feb 2020 08:04:54 -0500
+Received: from foss.arm.com ([217.140.110.172]:38838 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727876AbgBUNCd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Feb 2020 08:02:33 -0500
-Received: from archlinux (cpc149474-cmbg20-2-0-cust94.5-4.cable.virginm.net [82.4.196.95])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3944A206EF;
-        Fri, 21 Feb 2020 13:02:31 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1582290153;
-        bh=+xThR+azD9P2PWAejGynVSIEcWpxJ01pdUUIs8XZVyQ=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=DbjAK8q5Dm9NlzmJd7h9GddT6Axyzs8xTlD19xIrpPu/fEwWKHCBW08DCqDLl6CFp
-         q1kdk8vujsgwhzRK6p4wVVa1GVNTRO+Jwnaeeabb8PoUYQYkDqtV04nNVSk6iEMCkS
-         o1JPk42oqmPoXOvBakWKryxfeQXZgIx9BBzF9vQ4=
-Date:   Fri, 21 Feb 2020 13:02:28 +0000
-From:   Jonathan Cameron <jic23@kernel.org>
-To:     Daniel Junho <djunho@gmail.com>
-Cc:     knaack.h@gmx.de, lars@metafoo.de, pmeerw@pmeerw.net,
-        robh+dt@kernel.org, mark.rutland@arm.com,
-        linux-iio@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, lkcamp@lists.libreplanetbr.org,
-        michael.hennerich@analog.com, patrick.vasseur@c-s.fr,
-        alexandru.Ardelean@analog.com
-Subject: Re: [PATCH v2] dt-bindings: iio: adc: ad7923: Add binding
- documentation for AD7928
-Message-ID: <20200221130228.3428c44a@archlinux>
-In-Reply-To: <20200218110647.24758-1-djunho@padtec.com.br>
-References: <20200218110647.24758-1-djunho@padtec.com.br>
-X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        id S1728330AbgBUNEx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 21 Feb 2020 08:04:53 -0500
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 8903530E;
+        Fri, 21 Feb 2020 05:04:53 -0800 (PST)
+Received: from e119884-lin.cambridge.arm.com (e119884-lin.cambridge.arm.com [10.1.196.72])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 388F73F703;
+        Fri, 21 Feb 2020 05:04:52 -0800 (PST)
+From:   Vincenzo Frascino <vincenzo.frascino@arm.com>
+To:     linux-arch@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org
+Cc:     catalin.marinas@arm.com, will.deacon@arm.com,
+        linux@armlinux.org.uk, tglx@linutronix.de, luto@kernel.org,
+        m.szyprowski@samsung.com, vincenzo.frascino@arm.com
+Subject: [PATCH] clocksource: Fix arm_arch_timer clockmode when vDSO disabled
+Date:   Fri, 21 Feb 2020 13:03:55 +0000
+Message-Id: <20200221130355.21373-1-vincenzo.frascino@arm.com>
+X-Mailer: git-send-email 2.25.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 18 Feb 2020 08:06:47 -0300
-Daniel Junho <djunho@gmail.com> wrote:
+The arm_arch_timer requires that VDSO_CLOCKMODE_ARCHTIMER to be
+defined to compile correctly. On arm the vDSO can be disabled and when
+this is the case the compilation ends prematurely with an error:
 
-> From: Daniel Junho <djunho@gmail.com>
-> 
-> This patch add device tree binding documentation for AD7923 adc in YAML
-> format.
-> 
-> Signed-off-by: Daniel Junho <djunho@gmail.com>
+ $ make ARCH=arm multi_v7_defconfig
+ $ ./scripts/config -d VDSO
+ $ make
 
-One thing inline. I'll fix up when applying.
+drivers/clocksource/arm_arch_timer.c:73:44: error:
+‘VDSO_CLOCKMODE_ARCHTIMER’ undeclared here (not in a function)
+  static enum vdso_clock_mode vdso_default = VDSO_CLOCKMODE_ARCHTIMER;
+                                             ^
+scripts/Makefile.build:267: recipe for target
+'drivers/clocksource/arm_arch_timer.o' failed
+make[2]: *** [drivers/clocksource/arm_arch_timer.o] Error 1
+make[2]: *** Waiting for unfinished jobs....
+scripts/Makefile.build:505: recipe for target 'drivers/clocksource' failed
+make[1]: *** [drivers/clocksource] Error 2
+make[1]: *** Waiting for unfinished jobs....
+Makefile:1683: recipe for target 'drivers' failed
+make: *** [drivers] Error 2
 
-Applied to the togreg branch of iio.git and pushed out as testing for
-the autobuilders to play with it.
+Define VDSO_CLOCKMODE_ARCHTIMER as VDSO_CLOCKMODE_NONE when the vDSOs are
+not enabled to address the issue.
 
-Thanks,
+Fixes: 5e3c6a312a09 ("ARM/arm64: vdso: Use common vdso clock mode storage")
+Cc: Russell King <linux@armlinux.org.uk>
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Reported-by: Marek Szyprowski <m.szyprowski@samsung.com>
+Signed-off-by: Vincenzo Frascino <vincenzo.frascino@arm.com>
+---
+ drivers/clocksource/arm_arch_timer.c | 5 +++++
+ 1 file changed, 5 insertions(+)
 
-Jonathan
-
-> ---
-> Changes in v2:
-> - Fix the license header to "GPL-2.0-only OR BSD-2-Clause";
-> - Change the Michael Hennerich email.
-> 
->  .../bindings/iio/adc/adi,ad7923.yaml          | 65 +++++++++++++++++++
->  1 file changed, 65 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/iio/adc/adi,ad7923.yaml
-> 
-> diff --git a/Documentation/devicetree/bindings/iio/adc/adi,ad7923.yaml b/Documentation/devicetree/bindings/iio/adc/adi,ad7923.yaml
-> new file mode 100644
-> index 000000000000..e293df9442cd
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/iio/adc/adi,ad7923.yaml
-> @@ -0,0 +1,65 @@
-> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/iio/adc/adi,ad7923.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> +
-> +title: Analog Devices AD7923 and similars with 4 and 8 Channel ADCs.
-> +
-> +maintainers:
-> +  - Michael Hennerich <michael.hennerich@analog.com>"
-
-Some left over quotes at the end of each line..
-
-> +  - Patrick Vasseur <patrick.vasseur@c-s.fr>"
-> +
-> +description: |
-> +  Analog Devices AD7904, AD7914, AD7923, AD7924 4 Channel ADCs, and AD7908,
-> +   AD7918, AD7928 8 Channels ADCs.
-> +
-> +  Specifications about the part can be found at:
-> +    https://www.analog.com/media/en/technical-documentation/data-sheets/AD7923.pdf
-> +    https://www.analog.com/media/en/technical-documentation/data-sheets/AD7904_7914_7924.pdf
-> +    https://www.analog.com/media/en/technical-documentation/data-sheets/AD7908_7918_7928.pdf
-> +
-> +properties:
-> +  compatible:
-> +    enum:
-> +      - adi,ad7904
-> +      - adi,ad7914
-> +      - adi,ad7923
-> +      - adi,ad7924
-> +      - adi,ad7908
-> +      - adi,ad7918
-> +      - adi,ad7928
-> +
-> +  reg:
-> +    maxItems: 1
-> +
-> +  refin-supply:
-> +    description: |
-> +      The regulator supply for ADC reference voltage.
-> +
-> +  '#address-cells':
-> +    const: 1
-> +
-> +  '#size-cells':
-> +    const: 0
-> +
-> +required:
-> +  - compatible
-> +  - reg
-> +
-> +examples:
-> +  - |
-> +    spi {
-> +      #address-cells = <1>;
-> +      #size-cells = <0>;
-> +
-> +      ad7928: adc@0 {
-> +        compatible = "adi,ad7928";
-> +        reg = <0>;
-> +        spi-max-frequency = <25000000>;
-> +        refin-supply = <&adc_vref>;
-> +
-> +        #address-cells = <1>;
-> +        #size-cells = <0>;
-> +      };
-> +    };
+diff --git a/drivers/clocksource/arm_arch_timer.c b/drivers/clocksource/arm_arch_timer.c
+index ee2420d56f67..619839221f94 100644
+--- a/drivers/clocksource/arm_arch_timer.c
++++ b/drivers/clocksource/arm_arch_timer.c
+@@ -49,6 +49,11 @@
+ #define CNTV_TVAL	0x38
+ #define CNTV_CTL	0x3c
+ 
++#ifndef CONFIG_GENERIC_GETTIMEOFDAY
++/* The define below is required because on arm the VDSOs can be disabled */
++#define VDSO_CLOCKMODE_ARCHTIMER	VDSO_CLOCKMODE_NONE
++#endif /* CONFIG_GENERIC_GETTIMEOFDAY */
++
+ static unsigned arch_timers_present __initdata;
+ 
+ static void __iomem *arch_counter_base;
+-- 
+2.25.0
 
