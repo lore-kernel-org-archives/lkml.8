@@ -2,116 +2,126 @@ Return-Path: <SRS0=1210=4J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MSGID_FROM_MTA_HEADER,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EFD5CC35646
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 16:32:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EEDC8C35656
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 16:32:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BE137208E4
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 16:32:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C715324656
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 16:32:19 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=silabs.onmicrosoft.com header.i=@silabs.onmicrosoft.com header.b="GM+69Gs8"
+	dkim=pass (2048-bit key) header.d=lca.pw header.i=@lca.pw header.b="GjE6IBB7"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727881AbgBUQcG (ORCPT
+        id S1727930AbgBUQcS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Feb 2020 11:32:06 -0500
-Received: from mail-dm6nam12on2046.outbound.protection.outlook.com ([40.107.243.46]:6208
-        "EHLO NAM12-DM6-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726710AbgBUQcG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Feb 2020 11:32:06 -0500
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=bUFUoKX5BXvfrTilKzmHC7UvJ/osY0FNtorEbhAODDIUqfC0L2f5opR1fcQ0Dg/mWlNOUZRK6SgLsxppPMgjsNvP5EzBj1oRcLR/gG49KcHfJu2sMuis8SDYXzlBHyU3sF+veknT3++HER/Et+zD/UkRz9Nh7iOjz/Xfr4XsoyXMSOYyhQIzVUBOEwnkZCU8895hp3CO3457zhWzjktOjug7GOWqd8TCPqbq/OzbawiV36IyUUywkbhJjPoCg2W0g41VvLG08Ir3zVdfaj/HDYjv5qZsHgMAbY3Tl9lJC3qjEdxI9BB9qxMiqniu7jVgKu2wAjrl7yK08na8dg2IcQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=f1d7SU74WxrWjz+LQ+cB0iMwuNx0+QLq05WnJof3gRI=;
- b=TRT3y3kRl22hxovnFUn03+3qrdhCJUVwyoPllOgZRGuMehfa90MI85YPdMvhDMfpW0j/9syXX05U9PFH0m7iAtgd4ONnvVL7U7Gj1i/m1kxqO/MLTqAMMseTfamwKxvgm/6S+SK2/seX+HW+twZiaFNefu2SzMgjG+9mhbAaNI7CtXvk9EDtyB4KlOwUhWHD51gDyc1NYQZp2q5WdzhQaCeAC3UywdmvAfICe3SrQXjo3jq2vDpHrpfQZS4DIkYs8dyD1IhOU1RKuvGhcRpueyJ3lhG7q58sa6jtyhZnifhdO5kGVWZlVDgN8R7NOAtNq5quFb2SovLe/ynFChIviw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=silabs.com; dmarc=pass action=none header.from=silabs.com;
- dkim=pass header.d=silabs.com; arc=none
+        Fri, 21 Feb 2020 11:32:18 -0500
+Received: from mail-qt1-f194.google.com ([209.85.160.194]:37435 "EHLO
+        mail-qt1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726710AbgBUQcS (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 21 Feb 2020 11:32:18 -0500
+Received: by mail-qt1-f194.google.com with SMTP id w47so1681327qtk.4
+        for <linux-kernel@vger.kernel.org>; Fri, 21 Feb 2020 08:32:17 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=silabs.onmicrosoft.com; s=selector2-silabs-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=f1d7SU74WxrWjz+LQ+cB0iMwuNx0+QLq05WnJof3gRI=;
- b=GM+69Gs8zbYLsJvAsp0q6evNV65k0aRimMjIgptn1hyvR4sKN9pzDnFbqRg/vWLEmI5FuWPcccJxiH/+VYVQc5oMA96n/q7Dh+Yf6m9iOloe1dcX7ueQr3YXS1+t76mNCQqjpGEi5XlTWybBvROIXwhT4ffFY/MC2sHNgwfpQ0g=
-Authentication-Results: spf=none (sender IP is )
- smtp.mailfrom=Jerome.Pouiller@silabs.com; 
-Received: from MN2PR11MB4063.namprd11.prod.outlook.com (2603:10b6:208:13f::22)
- by MN2PR11MB4351.namprd11.prod.outlook.com (2603:10b6:208:193::31) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2750.17; Fri, 21 Feb
- 2020 16:32:03 +0000
-Received: from MN2PR11MB4063.namprd11.prod.outlook.com
- ([fe80::ade4:5702:1c8b:a2b3]) by MN2PR11MB4063.namprd11.prod.outlook.com
- ([fe80::ade4:5702:1c8b:a2b3%7]) with mapi id 15.20.2729.033; Fri, 21 Feb 2020
- 16:32:02 +0000
-From:   Jerome Pouiller <Jerome.Pouiller@silabs.com>
-To:     linux-mmc@vger.kernel.org, Ulf Hansson <ulf.hansson@linaro.org>
-Cc:     linux-kernel@vger.kernel.org,
-        =?UTF-8?q?J=C3=A9r=C3=B4me=20Pouiller?= 
-        <jerome.pouiller@silabs.com>
-Subject: [PATCH v2] mmc: core: Fix indentation
-Date:   Fri, 21 Feb 2020 17:31:47 +0100
-Message-Id: <20200221163147.608677-1-Jerome.Pouiller@silabs.com>
-X-Mailer: git-send-email 2.25.1
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: base64
-X-ClientProxiedBy: PR0P264CA0047.FRAP264.PROD.OUTLOOK.COM
- (2603:10a6:100:1::35) To MN2PR11MB4063.namprd11.prod.outlook.com
- (2603:10b6:208:13f::22)
-MIME-Version: 1.0
-Received: from pc-42.silabs.com (37.71.187.125) by PR0P264CA0047.FRAP264.PROD.OUTLOOK.COM (2603:10a6:100:1::35) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2750.18 via Frontend Transport; Fri, 21 Feb 2020 16:32:01 +0000
-X-Mailer: git-send-email 2.25.1
-X-Originating-IP: [37.71.187.125]
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id: 1f92253c-5bc6-4fbc-4f10-08d7b6eb94a4
-X-MS-TrafficTypeDiagnostic: MN2PR11MB4351:
-X-MS-Exchange-Transport-Forked: True
-X-Microsoft-Antispam-PRVS: <MN2PR11MB435127A53537880437C8724693120@MN2PR11MB4351.namprd11.prod.outlook.com>
-X-MS-Oob-TLC-OOBClassifiers: OLM:1303;
-X-Forefront-PRVS: 0320B28BE1
-X-Forefront-Antispam-Report: SFV:NSPM;SFS:(10009020)(136003)(366004)(376002)(396003)(346002)(39850400004)(199004)(189003)(66946007)(86362001)(8936002)(4326008)(478600001)(81166006)(1076003)(81156014)(66556008)(16526019)(2906002)(107886003)(66476007)(186003)(26005)(8676002)(6916009)(316002)(956004)(5660300002)(6666004)(36756003)(6486002)(2616005)(52116002)(7696005);DIR:OUT;SFP:1101;SCL:1;SRVR:MN2PR11MB4351;H:MN2PR11MB4063.namprd11.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
-Received-SPF: None (protection.outlook.com: silabs.com does not designate
- permitted sender hosts)
-X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: 95MnRCPAlpYxBD6onASDlpIq9/++OsVROe13KPIstYCHORsRVkynsuBeoQ14ntlOiQOxQN3McVsZbmerE2Ks+DHCzVp2+yhyeXQh/oNvhNVz0eI71fYXl7mCLwqKmctCCh8nuramBB9/AkIwbTKU/d/x7EK7v7COkJhBNx5usU3luKTCLDPp2d8ESTWntxmsq/BpCyhfcY0PB16M9ARywMz7gBY5ebmKj9IJpPxd3Vu8F9fc/gUGcpfNL+C/+gI0hReH8hiPnEq3l84m4EPvBR/LA6YjCijqoSFU1nXfp4GeQ5i6tewBvKJ4tp3jr4aMeJokUFYOz/UkD+oRHvLbDYnlwj6RTuBZ65TMZcxSVnZX1GFmp4wonxBtZ7JXp9QIY6GOS/I2GRV4/qs7Z5jfibtf+mTGlKPqQ0CHVjJQxNvfMbrXFP3Bb4FFEtVA5/G1
-X-MS-Exchange-AntiSpam-MessageData: 52QnGQHyqBTyJucdbCBxNVObq6tizMoIT6e9VDZ7w9F51+hsvTQ9dJcoSqsl9600/Smbva/xTMAqkw/n9A1TNoWO3quaSztMFUArN/SbGk1xvdHR+lR+9gA+Lazhuf29awVyyM2To94K7oA/ae1/Mg==
-X-OriginatorOrg: silabs.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 1f92253c-5bc6-4fbc-4f10-08d7b6eb94a4
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 21 Feb 2020 16:32:02.6788
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 54dbd822-5231-4b20-944d-6f4abcd541fb
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: 0C1Gn6OZd8wZun2H8VB2stglc7x8QYfX/imb9AXZ8lNTbXqZPbpeZdc4NlB70DWrO/12vSR5ipX+0TPxwoOPxQ==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: MN2PR11MB4351
+        d=lca.pw; s=google;
+        h=from:to:cc:subject:date:message-id;
+        bh=cXaywPD3pmPwWnHt9EIorfvYHMu3YxvGW8+pLbCFwtk=;
+        b=GjE6IBB7kSgDFur2+gmu+w75yQ3pWKdgsUjmEmlwKmJfX6D990u2ssMpUcXUQAk1N0
+         yAPdZnlTQZjoQZEuNF28ws2q0MzoIVYmjD8aALGeBsrLZlx2b6SQv4tS3NVrxWpwVliW
+         g1Nm+9DxSG5OnUOlWsneQ25K/w3cDHuwyoPeLt4vF8k7dSb4BIs7EiHO2yQbdybynOSG
+         VAmSW4jCrBHPECZG3u3+3157/iR1uW67/mi5ZjCHaexiJYH3QfKEPQB3WU2SwrN63Rj1
+         19AWocC6uBZ2ehtZ9F8qy5DamGSSyn5iARwEvjd1bZsbWyD13lJsE9Ad31C0lg14QBk9
+         cVRQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=cXaywPD3pmPwWnHt9EIorfvYHMu3YxvGW8+pLbCFwtk=;
+        b=X4hr1I2dYH1Nq6yiiKWNDjIYuxxNaLRB2W7BQcTP5KON8z1ggz7iDVAds1LVj0IkTb
+         IOv79r2q0fwah4VDMudG/EcId0qMIOebGL9v27IUcfXosUBtQLhiduQA/cUtLtRk6Fhq
+         KSMOboS9ZF+aJsKv/LwvH+CF8t/j0BukC5NuwOuAKYAJ7NBRAOVDcaVRS/x0c9g86yM2
+         D+un96O//g4KJJq3lcXiHYNmMNtzhENUARLhcAJw20nuO1k9ERiTv8bJx4NsZ+h5/42d
+         oVuqgUTHx4szOwL73oTadq8ZRBrBzAlMbcbHKaNx1WIxfQLoYY10SzZdtcpYXbpW6sYn
+         z3hA==
+X-Gm-Message-State: APjAAAXo2v+nsPJkrsRUJtl7OE9XHIJGTp6B+Q+TNOxuDCPsG7N/y837
+        0NwIMOwo/fykEKKnzq4FvYwkxSk8Sqo=
+X-Google-Smtp-Source: APXvYqzRT1G6f354xFAjVBF8mWhm3/fdyFxLMea7bS4t8zw6nXncb5AdQwv3Bi6DSKNKYvq7y+43qQ==
+X-Received: by 2002:aed:3203:: with SMTP id y3mr33387658qtd.23.1582302737400;
+        Fri, 21 Feb 2020 08:32:17 -0800 (PST)
+Received: from qcai.nay.com (nat-pool-bos-t.redhat.com. [66.187.233.206])
+        by smtp.gmail.com with ESMTPSA id u12sm1748006qke.67.2020.02.21.08.32.16
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Fri, 21 Feb 2020 08:32:16 -0800 (PST)
+From:   Qian Cai <cai@lca.pw>
+To:     akpm@linux-foundation.org
+Cc:     elver@google.com, linux-mm@kvack.org, linux-kernel@vger.kernel.org,
+        Qian Cai <cai@lca.pw>
+Subject: [PATCH] percpu_counter: fix a data race at vm_committed_as
+Date:   Fri, 21 Feb 2020 11:32:04 -0500
+Message-Id: <1582302724-2804-1-git-send-email-cai@lca.pw>
+X-Mailer: git-send-email 1.8.3.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-RnJvbTogSsOpcsO0bWUgUG91aWxsZXIgPGplcm9tZS5wb3VpbGxlckBzaWxhYnMuY29tPgoKc2Rp
-b19zaW5nbGVfaXJxX3NldCgpIHdhcyBpbmRlbnRlZCB3aXRoIGEgbWl4IG9mIHRhYnMgYW5kIHNw
-YWNlcy4KClNpZ25lZC1vZmYtYnk6IErDqXLDtG1lIFBvdWlsbGVyIDxqZXJvbWUucG91aWxsZXJA
-c2lsYWJzLmNvbT4KLS0tCnYyOgogIC0gQWxzbyBhZGQgYnJhY2VzIGFyb3VuZiBmb3IgbG9vcCAo
-c3VnZ2VzdGVkIGJ5IEpvZSkKCiBkcml2ZXJzL21tYy9jb3JlL3NkaW9faXJxLmMgfCAxNSArKysr
-KysrKy0tLS0tLS0KIDEgZmlsZSBjaGFuZ2VkLCA4IGluc2VydGlvbnMoKyksIDcgZGVsZXRpb25z
-KC0pCgpkaWZmIC0tZ2l0IGEvZHJpdmVycy9tbWMvY29yZS9zZGlvX2lycS5jIGIvZHJpdmVycy9t
-bWMvY29yZS9zZGlvX2lycS5jCmluZGV4IDkwMDg3MTA3M2JkNy4uM2ZmZTRmZjQ5YWE3IDEwMDY0
-NAotLS0gYS9kcml2ZXJzL21tYy9jb3JlL3NkaW9faXJxLmMKKysrIGIvZHJpdmVycy9tbWMvY29y
-ZS9zZGlvX2lycS5jCkBAIC0yNzYsMTQgKzI3NiwxNSBAQCBzdGF0aWMgdm9pZCBzZGlvX3Npbmds
-ZV9pcnFfc2V0KHN0cnVjdCBtbWNfY2FyZCAqY2FyZCkKIAogCWNhcmQtPnNkaW9fc2luZ2xlX2ly
-cSA9IE5VTEw7CiAJaWYgKChjYXJkLT5ob3N0LT5jYXBzICYgTU1DX0NBUF9TRElPX0lSUSkgJiYK
-LQkgICAgY2FyZC0+aG9zdC0+c2Rpb19pcnFzID09IDEpCisJICAgIGNhcmQtPmhvc3QtPnNkaW9f
-aXJxcyA9PSAxKSB7CiAJCWZvciAoaSA9IDA7IGkgPCBjYXJkLT5zZGlvX2Z1bmNzOyBpKyspIHsK
-LQkJICAgICAgIGZ1bmMgPSBjYXJkLT5zZGlvX2Z1bmNbaV07Ci0JCSAgICAgICBpZiAoZnVuYyAm
-JiBmdW5jLT5pcnFfaGFuZGxlcikgewotCQkJICAgICAgIGNhcmQtPnNkaW9fc2luZ2xlX2lycSA9
-IGZ1bmM7Ci0JCQkgICAgICAgYnJlYWs7Ci0JCSAgICAgICB9Ci0JICAgICAgIH0KKwkJCWZ1bmMg
-PSBjYXJkLT5zZGlvX2Z1bmNbaV07CisJCQlpZiAoZnVuYyAmJiBmdW5jLT5pcnFfaGFuZGxlcikg
-eworCQkJCWNhcmQtPnNkaW9fc2luZ2xlX2lycSA9IGZ1bmM7CisJCQkJYnJlYWs7CisJCQl9CisJ
-CX0KKwl9CiB9CiAKIC8qKgotLSAKMi4yNS4xCgo=
+"vm_committed_as.count" could be accessed concurrently as reported by
+KCSAN,
+
+ BUG: KCSAN: data-race in __vm_enough_memory / percpu_counter_add_batch
+
+ write to 0xffffffff9451c538 of 8 bytes by task 65879 on cpu 35:
+  percpu_counter_add_batch+0x83/0xd0
+  percpu_counter_add_batch at lib/percpu_counter.c:91
+  __vm_enough_memory+0xb9/0x260
+  dup_mm+0x3a4/0x8f0
+  copy_process+0x2458/0x3240
+  _do_fork+0xaa/0x9f0
+  __do_sys_clone+0x125/0x160
+  __x64_sys_clone+0x70/0x90
+  do_syscall_64+0x91/0xb05
+  entry_SYSCALL_64_after_hwframe+0x49/0xbe
+
+ read to 0xffffffff9451c538 of 8 bytes by task 66773 on cpu 19:
+  __vm_enough_memory+0x199/0x260
+  percpu_counter_read_positive at include/linux/percpu_counter.h:81
+  (inlined by) __vm_enough_memory at mm/util.c:839
+  mmap_region+0x1b2/0xa10
+  do_mmap+0x45c/0x700
+  vm_mmap_pgoff+0xc0/0x130
+  ksys_mmap_pgoff+0x6e/0x300
+  __x64_sys_mmap+0x33/0x40
+  do_syscall_64+0x91/0xb05
+  entry_SYSCALL_64_after_hwframe+0x49/0xbe
+
+The read is outside percpu_counter::lock critical section which results
+in a data race. Fix it by adding a READ_ONCE() in
+percpu_counter_read_positive() which could also service as the existing
+compiler memory barrier.
+
+Signed-off-by: Qian Cai <cai@lca.pw>
+---
+ include/linux/percpu_counter.h | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/include/linux/percpu_counter.h b/include/linux/percpu_counter.h
+index 4f052496cdfd..0a4f54dd4737 100644
+--- a/include/linux/percpu_counter.h
++++ b/include/linux/percpu_counter.h
+@@ -78,9 +78,9 @@ static inline s64 percpu_counter_read(struct percpu_counter *fbc)
+  */
+ static inline s64 percpu_counter_read_positive(struct percpu_counter *fbc)
+ {
+-	s64 ret = fbc->count;
++	/* Prevent reloads of fbc->count */
++	s64 ret = READ_ONCE(fbc->count);
+ 
+-	barrier();		/* Prevent reloads of fbc->count */
+ 	if (ret >= 0)
+ 		return ret;
+ 	return 0;
+-- 
+1.8.3.1
+
