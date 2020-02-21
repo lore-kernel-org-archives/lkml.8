@@ -5,50 +5,49 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E9EBEC35641
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 08:33:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A5387C35640
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 08:33:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C2FB520578
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 08:33:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6ECF920578
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 08:33:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582274013;
-	bh=tRYepbfaD7Zd5Bn6ptVzfWced5IDJEWaxH48PkLZIew=;
+	s=default; t=1582274018;
+	bh=ab0ALA7QeyFFt8xfeX1sv16lhosGZFNhWcq5ie5xykg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Z21a5Wzviu7YCGCNwWEHDZJU63sAGMPTKKm9cXXE8wobL4yb+ItwqFK+qiU51l7ta
-	 zTbQUcdpyqJOyECBpOd6s+dQcqFmVm2r6MYQkI33QhtqCRXqQbLXzo3NJwNStJgQtQ
-	 7ssH1NqGvfRJ1522JMrEZ0sbj9Wra6D+9der9Mdo=
+	b=A/nI8UqAv3huZvG21qnPrqkV4/eZOL4LtBXv1WgkDKwLLu3NTISLzbgf8TyNIq/tl
+	 eFMxqAM5Mkow2kLCESqaUR/GScxfItWZZ5zWCrD964T7D5d4rti+N0+pOFn9ibKSMm
+	 z/Sx4zlofg2W8uSsAT4JWxbduYzEzEl7i14aFuLI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732573AbgBUIKk (ORCPT
+        id S1732137AbgBUIK3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Feb 2020 03:10:40 -0500
-Received: from mail.kernel.org ([198.145.29.99]:45840 "EHLO mail.kernel.org"
+        Fri, 21 Feb 2020 03:10:29 -0500
+Received: from mail.kernel.org ([198.145.29.99]:45640 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727872AbgBUIKf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Feb 2020 03:10:35 -0500
+        id S1732322AbgBUIK0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 21 Feb 2020 03:10:26 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B300320578;
-        Fri, 21 Feb 2020 08:10:34 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 59B8A20722;
+        Fri, 21 Feb 2020 08:10:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1582272635;
-        bh=tRYepbfaD7Zd5Bn6ptVzfWced5IDJEWaxH48PkLZIew=;
+        s=default; t=1582272624;
+        bh=ab0ALA7QeyFFt8xfeX1sv16lhosGZFNhWcq5ie5xykg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Llt9TMgMVAw6aGRJixyQ1t9fc8LtwC1o5psdkxrT31gax4yRQ0MOoIHGloJH3DFgq
-         gH9pWXljCRj0TrHioFrVWYC2kZkl2L7b7Xo8a3XnClFLMRqvuB6NKQJlziu4wd6S/B
-         gvVY1EwKhK940fGjQTUTm7ZGiZuX1JqInFykvCSY=
+        b=DIiK+6LEdtN8olsT1rJYyqVVC4gOUJVVXJ5U4MN8WTVLnBXz5NgaDkdm2JUJaKSY2
+         IuGzoBITV0olEvv6FEx9yGjNgxAS+VWYiiV1bGi22ZlHEfkcrGvR5Ogy/eUcseIJtr
+         K8AO68vL6L/8o44+KlLjOgP/v9tP+f+752hDSy8M=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Derek Kiernan <derek.kiernan@xilinx.com>,
-        Dragan Cvetic <dragan.cvetic@xilinx.com>,
-        Luc Van Oostenryck <luc.vanoostenryck@gmail.com>,
+        stable@vger.kernel.org, Zhengyuan Liu <liuzhengyuan@kylinos.cn>,
+        Song Liu <songliubraving@fb.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 216/344] misc: xilinx_sdfec: fix xsdfec_poll()s return type
-Date:   Fri, 21 Feb 2020 08:40:15 +0100
-Message-Id: <20200221072408.808349955@linuxfoundation.org>
+Subject: [PATCH 5.4 212/344] raid6/test: fix a compilation warning
+Date:   Fri, 21 Feb 2020 08:40:11 +0100
+Message-Id: <20200221072408.444783593@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200221072349.335551332@linuxfoundation.org>
 References: <20200221072349.335551332@linuxfoundation.org>
@@ -61,62 +60,57 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Luc Van Oostenryck <luc.vanoostenryck@gmail.com>
+From: Zhengyuan Liu <liuzhengyuan@kylinos.cn>
 
-[ Upstream commit fa4e7fc1386078edcfddd8848cb0374f4af74fe7 ]
+[ Upstream commit 5e5ac01c2b8802921fee680518a986011cb59820 ]
 
-xsdfec_poll() is defined as returning 'unsigned int' but the
-.poll method is declared as returning '__poll_t', a bitwise type.
+The compilation warning is redefination showed as following:
 
-Fix this by using the proper return type and using the EPOLL
-constants instead of the POLL ones, as required for __poll_t.
+        In file included from tables.c:2:
+        ../../../include/linux/export.h:180: warning: "EXPORT_SYMBOL" redefined
+         #define EXPORT_SYMBOL(sym)  __EXPORT_SYMBOL(sym, "")
 
-CC: Derek Kiernan <derek.kiernan@xilinx.com>
-CC: Dragan Cvetic <dragan.cvetic@xilinx.com>
-Signed-off-by: Luc Van Oostenryck <luc.vanoostenryck@gmail.com>
-Acked-by: Dragan Cvetic <dragan.cvetic@xilinx.com>
-Link: https://lore.kernel.org/r/20191209213655.57985-1-luc.vanoostenryck@gmail.com
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+        In file included from tables.c:1:
+        ../../../include/linux/raid/pq.h:61: note: this is the location of the previous definition
+         #define EXPORT_SYMBOL(sym)
+
+Fixes: 69a94abb82ee ("export.h, genksyms: do not make genksyms calculate CRC of trimmed symbols")
+Signed-off-by: Zhengyuan Liu <liuzhengyuan@kylinos.cn>
+Signed-off-by: Song Liu <songliubraving@fb.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/misc/xilinx_sdfec.c | 10 +++++-----
- 1 file changed, 5 insertions(+), 5 deletions(-)
+ include/linux/raid/pq.h | 2 ++
+ lib/raid6/mktables.c    | 2 +-
+ 2 files changed, 3 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/misc/xilinx_sdfec.c b/drivers/misc/xilinx_sdfec.c
-index 11835969e9828..48ba7e02bed72 100644
---- a/drivers/misc/xilinx_sdfec.c
-+++ b/drivers/misc/xilinx_sdfec.c
-@@ -1025,25 +1025,25 @@ static long xsdfec_dev_compat_ioctl(struct file *file, unsigned int cmd,
- }
- #endif
+diff --git a/include/linux/raid/pq.h b/include/linux/raid/pq.h
+index 0b6e7ad9cd2a8..e0ddb47f44020 100644
+--- a/include/linux/raid/pq.h
++++ b/include/linux/raid/pq.h
+@@ -58,7 +58,9 @@ extern const char raid6_empty_zero_page[PAGE_SIZE];
+ #define enable_kernel_altivec()
+ #define disable_kernel_altivec()
  
--static unsigned int xsdfec_poll(struct file *file, poll_table *wait)
-+static __poll_t xsdfec_poll(struct file *file, poll_table *wait)
- {
--	unsigned int mask = 0;
-+	__poll_t mask = 0;
- 	struct xsdfec_dev *xsdfec;
++#undef	EXPORT_SYMBOL
+ #define EXPORT_SYMBOL(sym)
++#undef	EXPORT_SYMBOL_GPL
+ #define EXPORT_SYMBOL_GPL(sym)
+ #define MODULE_LICENSE(licence)
+ #define MODULE_DESCRIPTION(desc)
+diff --git a/lib/raid6/mktables.c b/lib/raid6/mktables.c
+index 9c485df1308fb..f02e10fa62381 100644
+--- a/lib/raid6/mktables.c
++++ b/lib/raid6/mktables.c
+@@ -56,8 +56,8 @@ int main(int argc, char *argv[])
+ 	uint8_t v;
+ 	uint8_t exptbl[256], invtbl[256];
  
- 	xsdfec = container_of(file->private_data, struct xsdfec_dev, miscdev);
+-	printf("#include <linux/raid/pq.h>\n");
+ 	printf("#include <linux/export.h>\n");
++	printf("#include <linux/raid/pq.h>\n");
  
- 	if (!xsdfec)
--		return POLLNVAL | POLLHUP;
-+		return EPOLLNVAL | EPOLLHUP;
- 
- 	poll_wait(file, &xsdfec->waitq, wait);
- 
- 	/* XSDFEC ISR detected an error */
- 	spin_lock_irqsave(&xsdfec->error_data_lock, xsdfec->flags);
- 	if (xsdfec->state_updated)
--		mask |= POLLIN | POLLPRI;
-+		mask |= EPOLLIN | EPOLLPRI;
- 
- 	if (xsdfec->stats_updated)
--		mask |= POLLIN | POLLRDNORM;
-+		mask |= EPOLLIN | EPOLLRDNORM;
- 	spin_unlock_irqrestore(&xsdfec->error_data_lock, xsdfec->flags);
- 
- 	return mask;
+ 	/* Compute multiplication table */
+ 	printf("\nconst u8  __attribute__((aligned(256)))\n"
 -- 
 2.20.1
 
