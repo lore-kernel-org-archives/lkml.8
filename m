@@ -5,50 +5,49 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 81C2DC35642
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 08:40:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EC344C35641
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 08:40:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 59AB320722
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 08:40:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B5C0E20722
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 08:40:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582274453;
-	bh=1cIvgbQumL/bZuCtORG9WNL/02NREKUgNOvzr9i7L+c=;
+	s=default; t=1582274455;
+	bh=twJQEWCQ37vDII3xieELM8sc2WqfXhyOgkp6OAROLMA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=w4m+xTcA+WXstBFOL382c+kYRQ3wLo5Tr1coyaBfHHApBJXIQDmk4v+bnzq4KQ+D8
-	 JagawxnTM1BU8NTq09YJzyYPB191AIOHadYxDyKYL779hu1ruvfxoWRsKLV6xriaAe
-	 rc8yf/n4op0xnlWv12Rlswc3ieXL3acsSW/sTwRI=
+	b=B1Vtbm5of37xL9PutwP1CXc8MoxydOd1p2NLdObfyz+Kz4N/MAniaYHwCO9blNbEW
+	 jrB+Whuip1X2JeCaUdTmdHIRDmyseM3WKXkB1z/cPvpoLFGFCtp8ETTPXedGfiVx9A
+	 pK6gd8ndgUI6sdgD8BHrejiYNxbAXTZoRr0KFMuA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730748AbgBUH6R (ORCPT
+        id S1731713AbgBUIky (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Feb 2020 02:58:17 -0500
-Received: from mail.kernel.org ([198.145.29.99]:57970 "EHLO mail.kernel.org"
+        Fri, 21 Feb 2020 03:40:54 -0500
+Received: from mail.kernel.org ([198.145.29.99]:58118 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730565AbgBUH6N (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Feb 2020 02:58:13 -0500
+        id S1730454AbgBUH6U (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 21 Feb 2020 02:58:20 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 57528206ED;
-        Fri, 21 Feb 2020 07:58:11 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 83D08206ED;
+        Fri, 21 Feb 2020 07:58:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1582271891;
-        bh=1cIvgbQumL/bZuCtORG9WNL/02NREKUgNOvzr9i7L+c=;
+        s=default; t=1582271900;
+        bh=twJQEWCQ37vDII3xieELM8sc2WqfXhyOgkp6OAROLMA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Sha8DEcsWzZadR5vKKSJy+Qf5X7RhEwpLbP5hsAPEBpH/9tvgNBv+LL1qhJ5YmNHr
-         yAvKKCwXXEBhaYYAFpSv9+tXTSndPCpw6URK3JPrm7ceWblQp3Ixg+4rkwkmmm2+0Q
-         E2H+IfrLvF7m29AfhJbmJlLG1qYSFMAvnkZQFFF0=
+        b=aRoarab2fr8j6iRAM+B91nenDV4ktA7ArMWE3/8uxg1JZk1RDQ3fnD/mkEbiNq+S7
+         p7KjmsWWOBM0hh7oyp2TjJvhqcwq3eNR9dY+CRmCoHVW8a6g3cuj6ieSu7HMc0svOW
+         BupFw4DIh8RxDI/0VBUsuIc4KLN9KLFuQz+WW3jc=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Douglas Anderson <dianders@chromium.org>,
-        Stephen Boyd <swboyd@chromium.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
+        stable@vger.kernel.org, "zhangyi (F)" <yi.zhang@huawei.com>,
+        Jan Kara <jack@suse.cz>, Theodore Tso <tytso@mit.edu>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.5 337/399] alarmtimer: Make alarmtimer platform device child of RTC device
-Date:   Fri, 21 Feb 2020 08:41:02 +0100
-Message-Id: <20200221072433.728072958@linuxfoundation.org>
+Subject: [PATCH 5.5 340/399] jbd2: make sure ESHUTDOWN to be recorded in the journal superblock
+Date:   Fri, 21 Feb 2020 08:41:05 +0100
+Message-Id: <20200221072433.940512555@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200221072402.315346745@linuxfoundation.org>
 References: <20200221072402.315346745@linuxfoundation.org>
@@ -61,100 +60,41 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Stephen Boyd <swboyd@chromium.org>
+From: zhangyi (F) <yi.zhang@huawei.com>
 
-[ Upstream commit c79108bd19a8490315847e0c95ac6526fcd8e770 ]
+[ Upstream commit 0e98c084a21177ef136149c6a293b3d1eb33ff92 ]
 
-The alarmtimer_suspend() function will fail if an RTC device is on a bus
-such as SPI or i2c and that RTC device registers and probes after
-alarmtimer_init() registers and probes the 'alarmtimer' platform device.
+Commit fb7c02445c49 ("ext4: pass -ESHUTDOWN code to jbd2 layer") want
+to allow jbd2 layer to distinguish shutdown journal abort from other
+error cases. So the ESHUTDOWN should be taken precedence over any other
+errno which has already been recoded after EXT4_FLAGS_SHUTDOWN is set,
+but it only update errno in the journal suoerblock now if the old errno
+is 0.
 
-This is because system wide suspend suspends devices in the reverse order
-of their probe. When alarmtimer_suspend() attempts to program the RTC for a
-wakeup it will try to program an RTC device on a bus that has already been
-suspended.
-
-Move the alarmtimer device registration to happen when the RTC which is
-used for wakeup is registered. Register the 'alarmtimer' platform device as
-a child of the RTC device too, so that it can be guaranteed that the RTC
-device won't be suspended when alarmtimer_suspend() is called.
-
-Reported-by: Douglas Anderson <dianders@chromium.org>
-Signed-off-by: Stephen Boyd <swboyd@chromium.org>
-Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-Reviewed-by: Douglas Anderson <dianders@chromium.org>
-Link: https://lore.kernel.org/r/20200124055849.154411-2-swboyd@chromium.org
+Fixes: fb7c02445c49 ("ext4: pass -ESHUTDOWN code to jbd2 layer")
+Signed-off-by: zhangyi (F) <yi.zhang@huawei.com>
+Reviewed-by: Jan Kara <jack@suse.cz>
+Link: https://lore.kernel.org/r/20191204124614.45424-4-yi.zhang@huawei.com
+Signed-off-by: Theodore Ts'o <tytso@mit.edu>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- kernel/time/alarmtimer.c | 20 +++++++++-----------
- 1 file changed, 9 insertions(+), 11 deletions(-)
+ fs/jbd2/journal.c | 3 +--
+ 1 file changed, 1 insertion(+), 2 deletions(-)
 
-diff --git a/kernel/time/alarmtimer.c b/kernel/time/alarmtimer.c
-index 4b11f0309eee4..b97401f6bc232 100644
---- a/kernel/time/alarmtimer.c
-+++ b/kernel/time/alarmtimer.c
-@@ -88,6 +88,7 @@ static int alarmtimer_rtc_add_device(struct device *dev,
- 	unsigned long flags;
- 	struct rtc_device *rtc = to_rtc_device(dev);
- 	struct wakeup_source *__ws;
-+	struct platform_device *pdev;
- 	int ret = 0;
+diff --git a/fs/jbd2/journal.c b/fs/jbd2/journal.c
+index 8479e84159675..0b4280fcad91d 100644
+--- a/fs/jbd2/journal.c
++++ b/fs/jbd2/journal.c
+@@ -2147,8 +2147,7 @@ static void __journal_abort_soft (journal_t *journal, int errno)
  
- 	if (rtcdev)
-@@ -99,9 +100,11 @@ static int alarmtimer_rtc_add_device(struct device *dev,
- 		return -1;
- 
- 	__ws = wakeup_source_register(dev, "alarmtimer");
-+	pdev = platform_device_register_data(dev, "alarmtimer",
-+					     PLATFORM_DEVID_AUTO, NULL, 0);
- 
- 	spin_lock_irqsave(&rtcdev_lock, flags);
--	if (!rtcdev) {
-+	if (__ws && !IS_ERR(pdev) && !rtcdev) {
- 		if (!try_module_get(rtc->owner)) {
- 			ret = -1;
- 			goto unlock;
-@@ -112,10 +115,14 @@ static int alarmtimer_rtc_add_device(struct device *dev,
- 		get_device(dev);
- 		ws = __ws;
- 		__ws = NULL;
-+		pdev = NULL;
-+	} else {
-+		ret = -1;
+ 	if (journal->j_flags & JBD2_ABORT) {
+ 		write_unlock(&journal->j_state_lock);
+-		if (!old_errno && old_errno != -ESHUTDOWN &&
+-		    errno == -ESHUTDOWN)
++		if (old_errno != -ESHUTDOWN && errno == -ESHUTDOWN)
+ 			jbd2_journal_update_sb_errno(journal);
+ 		return;
  	}
- unlock:
- 	spin_unlock_irqrestore(&rtcdev_lock, flags);
- 
-+	platform_device_unregister(pdev);
- 	wakeup_source_unregister(__ws);
- 
- 	return ret;
-@@ -876,8 +883,7 @@ static struct platform_driver alarmtimer_driver = {
-  */
- static int __init alarmtimer_init(void)
- {
--	struct platform_device *pdev;
--	int error = 0;
-+	int error;
- 	int i;
- 
- 	alarmtimer_rtc_timer_init();
-@@ -900,15 +906,7 @@ static int __init alarmtimer_init(void)
- 	if (error)
- 		goto out_if;
- 
--	pdev = platform_device_register_simple("alarmtimer", -1, NULL, 0);
--	if (IS_ERR(pdev)) {
--		error = PTR_ERR(pdev);
--		goto out_drv;
--	}
- 	return 0;
--
--out_drv:
--	platform_driver_unregister(&alarmtimer_driver);
- out_if:
- 	alarmtimer_rtc_interface_remove();
- 	return error;
 -- 
 2.20.1
 
