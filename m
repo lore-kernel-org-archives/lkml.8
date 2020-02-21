@@ -2,142 +2,124 @@ Return-Path: <SRS0=1210=4J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.4 required=3.0 tests=FROM_LOCAL_HEX,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0A127C35657
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 16:28:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DDCF3C35646
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 16:28:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D0C0F208E4
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 16:28:10 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=gmx.net header.i=@gmx.net header.b="kP8Rz3AF"
+	by mail.kernel.org (Postfix) with ESMTP id B892020578
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 16:28:15 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727362AbgBUQ2J (ORCPT
+        id S1727469AbgBUQ2O (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Feb 2020 11:28:09 -0500
-Received: from mout.gmx.net ([212.227.17.20]:45247 "EHLO mout.gmx.net"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726562AbgBUQ2I (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Feb 2020 11:28:08 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gmx.net;
-        s=badeba3b8450; t=1582302487;
-        bh=iZ4Md3zA+8TD9x9QKRbjlp2m/9bXeZixQfkesgDAkac=;
-        h=X-UI-Sender-Class:Date:From:To:Cc:Subject:References:In-Reply-To;
-        b=kP8Rz3AFpQWFFc8jVcaS5Oty5aD3KwMU7qCkFd8KsLVfoCiQsoiylxPN1eylRQGtt
-         uH7+yP7hT3E0TVNsxQrlKxwNYXTsLf+QO/FLcVJ5MUycHNIPr4MLEz0g+Q6VssB1Mx
-         l7jVfZWb+7lPtkL7qxsDbbjAzth69wwojeu8jc8I=
-X-UI-Sender-Class: 01bb95c1-4bf8-414a-932a-4f6e2808ef9c
-Received: from longitude ([5.146.194.18]) by mail.gmx.com (mrgmx104
- [212.227.17.168]) with ESMTPSA (Nemesis) id 1MLi8m-1ineBs3qV6-00HbeR; Fri, 21
- Feb 2020 17:22:49 +0100
-Date:   Fri, 21 Feb 2020 17:22:48 +0100
-From:   Jonathan =?utf-8?Q?Neusch=C3=A4fer?= <j.neuschaefer@gmx.net>
-To:     Tudor.Ambarus@microchip.com
-Cc:     j.neuschaefer@gmx.net, linux-mtd@lists.infradead.org,
-        miquel.raynal@bootlin.com, richard@nod.at, vigneshr@ti.com,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] mtd: spi-nor: Simplify loop in spi_nor_read_id()
-Message-ID: <20200221162248.GG2031@latitude>
-References: <20200218151034.24744-1-j.neuschaefer@gmx.net>
- <5604429.rq6fcmI4QA@localhost.localdomain>
+        Fri, 21 Feb 2020 11:28:14 -0500
+Received: from mail-il1-f200.google.com ([209.85.166.200]:47035 "EHLO
+        mail-il1-f200.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726562AbgBUQ2N (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 21 Feb 2020 11:28:13 -0500
+Received: by mail-il1-f200.google.com with SMTP id a2so3083067ill.13
+        for <linux-kernel@vger.kernel.org>; Fri, 21 Feb 2020 08:28:13 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
+        bh=clMuMR1V6dPqJJgttVDjf+CRSehGwrdG14coctzN2nA=;
+        b=rshZ53dapKQ0rjFz4P8+PlZbaVrt0aKqd0kPJkXsSp3PSeNII1r/fBzjSpmaSyIZhk
+         g1NIjAv6EskWTwm04KtAXuizbS/kfqoKOwk5uaCbUJVcpV3VOXOdTAOqt97r1K77p8gH
+         pWVf4us1TTeLOCK0duD4VigapYwHButv5k8Sqi2fzMtlSuQvbijhAqQ8seF51BAPyK14
+         cPwr2Bd3RL38+J843xsS/Bi0JC2TI3YVFg1XIOrj3wy1+uTPHumo5xr/m8nUnvc29l7E
+         tjJF9xVum9nSVJlT8EVleSIk0t7kl1t1ifnU1MC7ksfiRbfAuyrg896Hp/xJ7ketxp0I
+         Ilzg==
+X-Gm-Message-State: APjAAAXL3JGSP72PtDd49Q47AzeSCZ5tuEA8OdgDw+7x/PU2lcU3gDqi
+        5Qhr0/v2ybqqL+WJiGrBIdmELyJ9B1X9AagOzUwsnmxWkMJX
+X-Google-Smtp-Source: APXvYqxeAN2Stw2KSkWN7JtuTAFv/VmE/7chW5sxDvwiFbTW38qELfJNf+bPw2kVxobx1ZwtWm0zJipQcQqkLd1/ulBSZx9ymVzQ
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="fwqqG+mf3f7vyBCB"
-Content-Disposition: inline
-In-Reply-To: <5604429.rq6fcmI4QA@localhost.localdomain>
-User-Agent: Mutt/1.10.1 (2018-07-13)
-X-Provags-ID: V03:K1:gwSw2P5bp5MrtvsX8GS9o9bSpULoPgmp11M6pF4Ku/78sHNr/JF
- P2ZE2CgtSpDSByK32+K/Xl1AXHZ1z9NWFvGLzuNSiVcyAd9Y6ZWwau6U2FdCWHrYdpK4LeS
- h/fL0T/MLF7am+a4r9xNNJQoAQKKEB/B1it4sskPOA7CkN8qHtjfiNaRwjUeTs5/38WfwW4
- oVj7uMyay+CK1E0jX0PUg==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:mQo1k0k4lkM=:a0bAAEnBvVQZpUHT08Rag4
- m5xXvWsjB5VfXhkttzLkexJ1F3EeQGkYvCQ5fXQ64vNfpfXPv7prXbrgjSpDn6YB//h9kZgUV
- gGYOxaEuxw1pbifuH1BFsfDbWmF3leuo/nT+iSXAsykT2zyaPfmdy/pnuGQHMe+M79+5COqYO
- lUdtbcZMPqjaZGzfVBE28CizA7X+2lZV/PZ/oVoP07OtQP1LWIRN0zAlZvZ82RdRf6CG/n3cY
- 0eCV2iJ5h0NCgAOTAFq3rRlZQH8mmWv+rw7sawJt/7UYz1CHBF2lLVJyh/NlKnVp8ABTJgTDH
- I63uFZoqYerDQOAiHHPyIw7k2Sztg7i5G1RMSo/C1hiSuD6rSXeAvLfxDsMK+j9bNpC2yThu5
- Z8THfA37lYBEqsk6HCa9wmJLm6PATj3XqT+wSRlZeKbMTPuau9to/tolRXm/KiaW0lG2idWch
- QYiIV36cEWVSpfwnlfF/Z9l4alj0wbWvbWe88s7MIQ25xE3xCqtQRJzCpKb91UxX0TJrLhTP3
- j2ziBeYsrMEdt1dy7ggy4FbhCXRdan4kntqUKc/ZolqcQwX9EyUUFGBCzgZUFiG+/iDS6hrr7
- Dv83MMKOzK+3ZP7W02xbYmBYshAviuCEGqgGhOi2TQLdYoCOATVf1JInNuABKdK9plAqYC/F8
- bx+JIUPyBi3w9KNKbKGKudq1U+hMM1QPJan4DUSGb3QQMHzPwnlZJVfF0heUAJsad6ipfb6qY
- zZZ/Bjtwy6awYeGwQb3GSUTtxGnRmQXu2NCqPn0ZGN78WW1xakVfEbCGBB1wTG8Eop/O1QrCB
- 7XY6ihOBsV9Wr3fL9+MYj/uAGgJx0AgXUp4Yffb0TLNfqOnTT99dje2Z6mnGwpaV7LIwrPQhT
- kJ6QziYd9xNoKH6i5+rLVYdF/OPP5z/B27nDM2Cl5l6H/CZi41tN/3GAnw/wX0z34cmpFIQFP
- N3YtvX6OOkHZriCqEwOsM40mf+Qmdxn4yRtvFYxRUAILrvTSxzRVog90p5TmleXU1qWpnpsCq
- mZP6KT9GOMd0pM8T6ReuxmaHP6rgSHQR4uATX80J2zUU8RC/Gg+dgDW2lVGfiYfphyWa20sGK
- fgc2/nCIRM7T22ifRg4EmOJ+8TuS0gJD8xFxY95Veqy8QDcvD+uNhFK+Z1SXtDippr+S3de7l
- 5fUUq3FjTDXgm55wLHBWKndhQGFSPRpibIM4/BSjvrvKLfE66HPXMvFx1wAnOYEYfbJJWB03e
- iEsQeMbKKP00qvnHw
+X-Received: by 2002:a02:84ee:: with SMTP id f101mr33988890jai.7.1582302492982;
+ Fri, 21 Feb 2020 08:28:12 -0800 (PST)
+Date:   Fri, 21 Feb 2020 08:28:12 -0800
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <000000000000058a87059f1882b9@google.com>
+Subject: WARNING in dummy_free_request
+From:   syzbot <syzbot+55ae006e0a1feae5aeab@syzkaller.appspotmail.com>
+To:     andreyknvl@google.com, balbi@kernel.org, chunfeng.yun@mediatek.com,
+        gregkh@linuxfoundation.org, linux-kernel@vger.kernel.org,
+        linux-usb@vger.kernel.org, stern@rowland.harvard.edu,
+        syzkaller-bugs@googlegroups.com
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Hello,
 
---fwqqG+mf3f7vyBCB
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+syzbot found the following crash on:
 
-On Wed, Feb 19, 2020 at 08:06:08AM +0000, Tudor.Ambarus@microchip.com wrote:
-[...]
-> >  static const struct flash_info *spi_nor_read_id(struct spi_nor *nor)
-> >  {
-> > -       int                     tmp;
-> > +       int                     tmp, i;
->=20
-> while cleaning this function, would you rename tmp with ret?
+HEAD commit:    7f0cd6c7 usb: gadget: add raw-gadget interface
+git tree:       https://github.com/google/kasan.git usb-fuzzer
+console output: https://syzkaller.appspot.com/x/log.txt?x=17b58e5ee00000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=f10b12ae04e03319
+dashboard link: https://syzkaller.appspot.com/bug?extid=55ae006e0a1feae5aeab
+compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
 
-Good idea, I'll do that in v2.
+Unfortunately, I don't have any reproducer for this crash yet.
 
-> >         u8                      *id =3D nor->bouncebuf;
->=20
-> and please drop this tab between u8 and *id
+IMPORTANT: if you fix the bug, please add the following tag to the commit:
+Reported-by: syzbot+55ae006e0a1feae5aeab@syzkaller.appspotmail.com
 
-The same with the other variables in this functions? They have tabs
-between the type and the pointer star / name as well.
+------------[ cut here ]------------
+WARNING: CPU: 1 PID: 19332 at drivers/usb/gadget/udc/dummy_hcd.c:679 dummy_free_request+0x6c/0x80 drivers/usb/gadget/udc/dummy_hcd.c:679
+Kernel panic - not syncing: panic_on_warn set ...
+CPU: 1 PID: 19332 Comm: syz-executor.5 Not tainted 5.6.0-rc1-syzkaller #0
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
+Call Trace:
+ __dump_stack lib/dump_stack.c:77 [inline]
+ dump_stack+0xef/0x16e lib/dump_stack.c:118
+ panic+0x2aa/0x6e1 kernel/panic.c:221
+ __warn.cold+0x2f/0x30 kernel/panic.c:582
+ report_bug+0x27b/0x2f0 lib/bug.c:195
+ fixup_bug arch/x86/kernel/traps.c:174 [inline]
+ fixup_bug arch/x86/kernel/traps.c:169 [inline]
+ do_error_trap+0x12b/0x1e0 arch/x86/kernel/traps.c:267
+ do_invalid_op+0x32/0x40 arch/x86/kernel/traps.c:286
+ invalid_op+0x23/0x30 arch/x86/entry/entry_64.S:1027
+RIP: 0010:dummy_free_request+0x6c/0x80 drivers/usb/gadget/udc/dummy_hcd.c:679
+Code: c5 75 22 e8 26 06 96 fd 48 89 ef e8 3e 54 be fd 5b 5d e9 17 06 96 fd e8 12 06 96 fd 0f 0b 5b 5d e9 09 06 96 fd e8 04 06 96 fd <0f> 0b eb d5 48 89 ef e8 08 ae be fd eb c2 66 0f 1f 44 00 00 41 56
+RSP: 0018:ffff8881c9eafdd8 EFLAGS: 00010016
+RAX: 0000000000040000 RBX: ffff8881d0d5aa10 RCX: ffffc900012a0000
+RDX: 000000000000012f RSI: ffffffff83a95c1c RDI: ffff8881d4d501c8
+RBP: ffff8881d0d5aa00 R08: ffff8881d0f9b100 R09: ffffed103b666a84
+R10: ffffed103b666a83 R11: ffff8881db33541b R12: 0000000000000212
+R13: ffff8881ca832008 R14: 0000000000000000 R15: ffff8881ca832180
+ raw_ioctl_ep_disable drivers/usb/gadget/legacy/raw_gadget.c:814 [inline]
+ raw_ioctl+0x1281/0x19e0 drivers/usb/gadget/legacy/raw_gadget.c:1031
+ vfs_ioctl fs/ioctl.c:47 [inline]
+ ksys_ioctl+0x11a/0x180 fs/ioctl.c:763
+ __do_sys_ioctl fs/ioctl.c:772 [inline]
+ __se_sys_ioctl fs/ioctl.c:770 [inline]
+ __x64_sys_ioctl+0x6f/0xb0 fs/ioctl.c:770
+ do_syscall_64+0xb6/0x5a0 arch/x86/entry/common.c:294
+ entry_SYSCALL_64_after_hwframe+0x49/0xbe
+RIP: 0033:0x45c537
+Code: 48 83 c4 08 48 89 d8 5b 5d c3 66 0f 1f 84 00 00 00 00 00 48 89 e8 48 f7 d8 48 39 c3 0f 92 c0 eb 92 66 90 b8 10 00 00 00 0f 05 <48> 3d 01 f0 ff ff 0f 83 0d b8 fb ff c3 66 2e 0f 1f 84 00 00 00 00
+RSP: 002b:00007f5040518388 EFLAGS: 00000246 ORIG_RAX: 0000000000000010
+RAX: ffffffffffffffda RBX: 0000000000000001 RCX: 000000000045c537
+RDX: 0000000000000000 RSI: 0000000040045506 RDI: 0000000000000006
+RBP: 0000000000000006 R08: 0000000000405f0f R09: 0000000000000001
+R10: 0000000000000000 R11: 0000000000000246 R12: 0000000000c80508
+R13: 00000000000004e8 R14: 0000000000000002 R15: 0000000000000000
+Shutting down cpus with NMI
+Kernel Offset: disabled
+Rebooting in 86400 seconds..
 
->=20
-> >         const struct flash_info *info;
->=20
-> Also, IMO, the definition of variables should be done with the focus of=
-=20
-> avoiding stack padding. With this in mind, I would first define the point=
-ers=20
-> and then the ints and smaller types. But there are others than prefer def=
-ining=20
-> the variables in a tree/reverse-tree way, depending of the length of the =
-line.=20
-> There's no agreement on this, either way if fine, do as you prefer.
 
-I have no preference here. I think I'll keep it as is for now.
+---
+This bug is generated by a bot. It may contain errors.
+See https://goo.gl/tpsmEJ for more information about syzbot.
+syzbot engineers can be reached at syzkaller@googlegroups.com.
 
-
-Thanks for the review,
-Jonathan Neusch=C3=A4fer
-
---fwqqG+mf3f7vyBCB
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCgAdFiEEvHAHGBBjQPVy+qvDCDBEmo7zX9sFAl5QA8sACgkQCDBEmo7z
-X9uH2Q//fzyLMsrdTB+uonzF2+F5EOdbALvPPFFgkuf08zQK5s/IVEXafKly3MDb
-aBxj7lBRRADOjT4+UBTVRUr2ouB1VRw4oF1+qy6Oz0Uwcz7UrnSAmq6MezY12Gqp
-wdfsOem2psiVOVEnAyeLbyFFTaBYqtX+GYc7Jyo3yfYh08iJ/ryFAPyppgahsQfv
-D7j13FFrkOuOEJ/PjWUYIedD9NvTCuUb9EJrgRdGB/PzQtnvdRh2bPnEaNe6HZMs
-xwOptqK8El9+RFT/PyXi7W/fxvTw2UxEYOZexUoJQL8OOb2w2kqz4VD1B7wZ5Vgw
-nI2TIghlZ7k2PB2FC9Lsg+IakSvkkDsvCKqzM4B3fIKkJOiE8TDTxHZoo5CVH3B+
-A5GdvJGc0gdfV2GuF9QxigGTx2C178jsQBmrT8f8i8pK8507ZSbx7MXfypF6X0Ax
-gD0L5etKeJthGfDxc1sjywz/UEKF1kawXf5wVFhOHlZgruoePr7+RSna3iqgRAd1
-QTx714TzBeeSBbTp9BINQnDb5FTgKgMQPCHKYlLjAsMgImEJ787AtlOyHhIAbPaq
-dh46BHs5SlTei1js7/mEZTY/WaAQkzNP/Q5mUnCu//lN2HkfDM6hD/yWMT9Xrtz6
-QlRksCjxSVihsH8ojX98SphmCWOng1kAvL5MTGZHx0rfheUMf6Q=
-=ZS6o
------END PGP SIGNATURE-----
-
---fwqqG+mf3f7vyBCB--
+syzbot will keep track of this bug report. See:
+https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
