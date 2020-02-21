@@ -2,124 +2,122 @@ Return-Path: <SRS0=1210=4J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3EA91C11D24
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 00:28:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BBD7EC11D25
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 00:30:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 16BD02465D
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 00:28:17 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582244897;
-	bh=iy0LlJf0YHN6ZiB0CWT2PCAoHpieaL2qiC0LKqJ6REI=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=KAzNkiy1+4nw+RWVv+wgyRtpU+wsougxJH0GpwJNXBEq4cSuXO9S+2J+GaYWpJ3Jj
-	 I213HZjGs3ZZHx5Qdue3KDRdFl4oMp7Ucam5tFlhOA4A2nqPw/jrU6s0F+jPEGqwxd
-	 fYdx1mguCa5B379jFPwpxtF9b/YLXHZWPkYuzv1M=
+	by mail.kernel.org (Postfix) with ESMTP id 9C7C4206DB
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 00:30:09 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729479AbgBUA2P (ORCPT
+        id S1729461AbgBUAaI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Feb 2020 19:28:15 -0500
-Received: from mail.kernel.org ([198.145.29.99]:43458 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729413AbgBUA2P (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Feb 2020 19:28:15 -0500
-Received: from X1 (nat-ab2241.sltdut.senawave.net [162.218.216.4])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2E0E0206DB;
-        Fri, 21 Feb 2020 00:28:14 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1582244894;
-        bh=iy0LlJf0YHN6ZiB0CWT2PCAoHpieaL2qiC0LKqJ6REI=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=qXQ/8DH62yQvvP+ax4QYdXSpzMD5FkJ2DlWZDkJKgFg8dybzdwDhQwZsD9md/tPjD
-         17v/H6SMbm/TbAi6jT0/0YUTYrsQ/O8vp5l8HO5qA7JxT2e5ID4FhAYVuQonqCfxC3
-         t5P3D5LiwKfs4u2qShYXa40c00d9UCQ4ULRHbxyA=
-Date:   Thu, 20 Feb 2020 16:28:13 -0800
-From:   Andrew Morton <akpm@linux-foundation.org>
-To:     Mina Almasry <almasrymina@google.com>
-Cc:     Mike Kravetz <mike.kravetz@oracle.com>, shuah <shuah@kernel.org>,
-        David Rientjes <rientjes@google.com>,
-        Shakeel Butt <shakeelb@google.com>,
-        Greg Thelen <gthelen@google.com>,
-        open list <linux-kernel@vger.kernel.org>,
-        Linux-MM <linux-mm@kvack.org>, linux-kselftest@vger.kernel.org,
-        cgroups@vger.kernel.org
-Subject: Re: [PATCH v12 1/9] hugetlb_cgroup: Add hugetlb_cgroup reservation
- counter
-Message-Id: <20200220162813.aea8a14fe050473b73440323@linux-foundation.org>
-In-Reply-To: <CAHS8izN_FJektipBwiLsCO8ysMTM7k=CR_k3OV7+_y0ZbrGw+A@mail.gmail.com>
-References: <20200211213128.73302-1-almasrymina@google.com>
-        <20200211151906.637d1703e4756066583b89da@linux-foundation.org>
-        <CAHS8izPUFQWq3PzhhRzp7u11173_-cmRkNuQWEswS51Xz6ZM0Q@mail.gmail.com>
-        <20200219130648.83e6810848774c6fd649c445@linux-foundation.org>
-        <CAHS8izN_FJektipBwiLsCO8ysMTM7k=CR_k3OV7+_y0ZbrGw+A@mail.gmail.com>
-X-Mailer: Sylpheed 3.5.1 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
-Mime-Version: 1.0
+        Thu, 20 Feb 2020 19:30:08 -0500
+Received: from relmlor2.renesas.com ([210.160.252.172]:48561 "EHLO
+        relmlie6.idc.renesas.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1729365AbgBUAaI (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 20 Feb 2020 19:30:08 -0500
+Date:   21 Feb 2020 09:30:04 +0900
+X-IronPort-AV: E=Sophos;i="5.70,466,1574089200"; 
+   d="scan'208";a="39642237"
+Received: from unknown (HELO relmlir5.idc.renesas.com) ([10.200.68.151])
+  by relmlie6.idc.renesas.com with ESMTP; 21 Feb 2020 09:30:04 +0900
+Received: from mercury.renesas.com (unknown [10.166.252.133])
+        by relmlir5.idc.renesas.com (Postfix) with ESMTP id 3F324400C0A8;
+        Fri, 21 Feb 2020 09:30:04 +0900 (JST)
+Message-ID: <87tv3ksryd.wl-kuninori.morimoto.gx@renesas.com>
+From:   Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>
+To:     Rob Herring <robh@kernel.org>
+Cc:     Liam Girdwood <lgirdwood@gmail.com>,
+        Mark Brown <broonie@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Linux-ALSA <alsa-devel@alsa-project.org>,
+        devicetree@vger.kernel.org,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v2] ASoC: dt-bindings: renesas,rsnd: switch to yaml base Documentation
+In-Reply-To: <CAL_Jsq+VEQj9Nkyo_85RM3Ku1-D73_ot5BTAjidnJzJv7r1_Sw@mail.gmail.com>
+References: <87d0ahzr9d.wl-kuninori.morimoto.gx@renesas.com>
+        <20200219161732.GB25095@bogus>
+        <874kvmt355.wl-kuninori.morimoto.gx@renesas.com>
+        <CAL_Jsq+VEQj9Nkyo_85RM3Ku1-D73_ot5BTAjidnJzJv7r1_Sw@mail.gmail.com>
+User-Agent: Wanderlust/2.15.9 Emacs/25.2 Mule/6.0
+MIME-Version: 1.0 (generated by SEMI-EPG 1.14.7 - "Harue")
 Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 20 Feb 2020 11:22:58 -0800 Mina Almasry <almasrymina@google.com> wrote:
 
-> On Wed, Feb 19, 2020 at 1:06 PM Andrew Morton <akpm@linux-foundation.org> wrote:
+Hi Rob
+
+Thank you for your feedback
+
+> > This needs clock array. Like this
 > >
-> > On Wed, 19 Feb 2020 11:05:41 -0800 Mina Almasry <almasrymina@google.com> wrote:
-> >
-> > > On Tue, Feb 11, 2020 at 3:19 PM Andrew Morton <akpm@linux-foundation.org> wrote:
-> > > >
-> > > > On Tue, 11 Feb 2020 13:31:20 -0800 Mina Almasry <almasrymina@google.com> wrote:
-> > > >
-> > > > > These counters will track hugetlb reservations rather than hugetlb
-> > > > > memory faulted in. This patch only adds the counter, following patches
-> > > > > add the charging and uncharging of the counter.
-> > > >
-> > > > We're still pretty thin on review here, but as it's v12 and Mike
-> > > > appears to be signed up to look at this work, I'll add them to -next to
-> > > > help move things forward.
-> > > >
+> >         clock-frequency = <12288000 11289600>;
+> 
+> Sorry, but the type is already defined in the spec. You'll still get
+> warnings from the common schema and you can't override that here.
+> 
+> Not sure what to suggest. Leave it with a fixme or move to
+> assigned-clocks-rates instead?
+
+As you know, I'm not familiar with yaml base Documentation :/
+I want leave it as your fixme if possible.
+
+> > > > +  # For multi OF-graph
+> > > > +  ports:
+> > > > +    description: multi OF-Graph subnode
+> > > > +    type: object
+> > > > +    patternProperties:
+> > > > +      "port(@.*)?":
+(snip)
+> > > > +        $ref: "#properties/port"
 > > >
-> > > Hi Andrew,
-> > >
-> > > Since the patches were merged into -next there have been build fixes
-> > > and test fixes and some review comments. Would you like me to submit
-> > > *new* patches to address these, or would you like me to squash the
-> > > fixes into my existing patch series and submit another iteration of
-> > > the patch series?
+> > > Would be more simple to just always have 'ports'.
 > >
-> > What you did worked OK ;)
-> >
-> > Please check the end result next time I release a kernel.
+> > Having "ports" or "port" are case-by-case, not always.
 > 
-> Thanks Andrew! Things definitely moved along after the patchseries got
-> into -next :D
+> Why?
 > 
-> By my count I think all my patches outside of the tests patch have
-> been acked or reviewed. When you have a chance I have a couple of
-> questions:
+> This:
 > 
-> 1. For the non-tests patch, anything pending on those preventing
-> eventual submission to linus's tree?
-> 2. For the tests patch, I only have a Tested-by from Sandipan. Is that
-> good enough? If the worst comes to worst and I don't get a review on
-> that patch I would rather (if possible) that 'tests' patch can be
-> dropped while I nag folks for a review, rather than block submission
-> of the entire patch series. I ask because it's been out for review for
-> some time and it's the one I got least discussion on so I'm not sure
-> I'll have a review by the time it's needed.
+> port {};
 > 
+> and this:
+> 
+> ports {
+>   port {};
+> };
+> 
+> Are treated the same. It's perfectly valid to have 'ports' with a single port.
 
-It all looks pretty good and I expect we can get everything into
-5.7-rc1, unless some issues pop up.
+Yeah, if it needs only 1 port.
+If I'm not misunderstanding, We are using it as
 
-It's unclear to me whether
-http://lkml.kernel.org/r/CAHS8izOTipknnYaKz=FdzL-7yW-Z61ck1yPnYWixyMSJuTUYLQ@mail.gmail.com
-was going to result in an update?
+	ports {
+		port@0 {
+			endpoint {}
+		};
+		port@1 {
+			endpoint {}
+		};
+		....
+	};
 
+or simply
 
+	port {
+			endpoint {}
+	};
+
+And here, sometimes, "port" and "endpoint" both need "reg".
+
+Thank you for your help !!
+Best regards
+---
+Kuninori Morimoto
