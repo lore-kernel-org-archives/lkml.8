@@ -5,51 +5,50 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C292BC35643
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 07:53:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 77205C35642
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 07:53:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9826424650
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 07:53:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3DAD52465D
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 07:53:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582271589;
-	bh=RAbthy+G2lB0nNHDZTr4dUxOkTT5aKM66BXOrQ6RQ/Q=;
+	s=default; t=1582271593;
+	bh=fKgzkNovUzgTf8pbQsgdrFyVGaFJHfBMFNKzV/qWmos=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=sbv35uK6Tj6gfHdxMyweqFRHH6bDpCvEqCDiJTiJsB4vtsSB2P2mWRGgNDSeS+y6p
-	 CYwOfTucKzRZrYQRDbNGC5yHjpD3mh95BaBWFJy/Ro+L4HqWCfjf+bkMhPW95Xj447
-	 KuMN6tiu3OHIMGG+LoLFyHPDRXgnluMoBPPRbzq4=
+	b=e9KzexJeHDT5KknEHapu9F2KsNMBXY2JkQSW+ZiCBpcS6XMd4XnPyMYvDqAouY2K2
+	 gzKZAtdHrFThnW7b1Jl9MnNQ/WQYU+g1QJcQFhYL9QFh4BrD+rHU4iGKa3Fa8FxaJl
+	 g1pmFrKsV28RSsmQsGFszMuQyEm4p1ikg+IpSbt4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730018AbgBUHxI (ORCPT
+        id S1728690AbgBUHxM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Feb 2020 02:53:08 -0500
-Received: from mail.kernel.org ([198.145.29.99]:51182 "EHLO mail.kernel.org"
+        Fri, 21 Feb 2020 02:53:12 -0500
+Received: from mail.kernel.org ([198.145.29.99]:51228 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730003AbgBUHxF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Feb 2020 02:53:05 -0500
+        id S1730014AbgBUHxI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 21 Feb 2020 02:53:08 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E66F624650;
-        Fri, 21 Feb 2020 07:53:04 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6B94D24656;
+        Fri, 21 Feb 2020 07:53:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1582271585;
-        bh=RAbthy+G2lB0nNHDZTr4dUxOkTT5aKM66BXOrQ6RQ/Q=;
+        s=default; t=1582271587;
+        bh=fKgzkNovUzgTf8pbQsgdrFyVGaFJHfBMFNKzV/qWmos=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Vw0CMVXmlpvCrcZAFJ1FfI/8aTEkNiucJDiPmnMF9uVOChnfNDrdvEkAEuPtwgwOC
-         bcXw5Z4eLSYHfbgU4eP9fed0ng+d4VSc5AgubjpkdqmRCI8WAwj2udced626NFUmHj
-         x4AV7zn/vKr4ar8RNByBIqmA+ANHjWLRhRT8175c=
+        b=13sxEQOeoQ4GpYdur1HmnzhmQcHKWCeC4Omld5UHEIQH9lr5cIhLIrExA61yacqbM
+         hgorPA4KukISXeYUD/96Aixvr68fXVUCbXvlS3FeBuCQ+43djI1rWH+C5F+tqMeEeR
+         N+Reh9+lfFC4++VDE8vq8gke9dCV5iO46oNmlbJQ=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Kunihiko Hayashi <hayashi.kunihiko@socionext.com>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        Philipp Zabel <p.zabel@pengutronix.de>,
+        stable@vger.kernel.org, Dan Carpenter <dan.carpenter@oracle.com>,
+        =?UTF-8?q?Michal=20Koutn=C3=BD?= <mkoutny@suse.com>,
+        Shuah Khan <skhan@linuxfoundation.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.5 195/399] reset: uniphier: Add SCSSI reset control for each channel
-Date:   Fri, 21 Feb 2020 08:38:40 +0100
-Message-Id: <20200221072421.782916269@linuxfoundation.org>
+Subject: [PATCH 5.5 222/399] selftests: Uninitialized variable in test_cgcore_proc_migration()
+Date:   Fri, 21 Feb 2020 08:39:07 +0100
+Message-Id: <20200221072424.558967249@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200221072402.315346745@linuxfoundation.org>
 References: <20200221072402.315346745@linuxfoundation.org>
@@ -62,60 +61,34 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Kunihiko Hayashi <hayashi.kunihiko@socionext.com>
+From: Dan Carpenter <dan.carpenter@oracle.com>
 
-[ Upstream commit f4aec227e985e31d2fdc5608daf48e3de19157b7 ]
+[ Upstream commit 192c197cbca599321de95a4cf15c2fa0681140d3 ]
 
-SCSSI has reset controls for each channel in the SoCs newer than Pro4,
-so this adds missing reset controls for channel 1, 2 and 3. And more, this
-moves MCSSI reset ID after SCSSI.
+The "c_threads" variable is used in the error handling code before it
+has been initialized
 
-Fixes: 6b39fd590aeb ("reset: uniphier: add reset control support for SPI")
-Signed-off-by: Kunihiko Hayashi <hayashi.kunihiko@socionext.com>
-Acked-by: Masahiro Yamada <yamada.masahiro@socionext.com>
-Signed-off-by: Philipp Zabel <p.zabel@pengutronix.de>
+Fixes: 11318989c381 ("selftests: cgroup: Add task migration tests")
+Signed-off-by: Dan Carpenter <dan.carpenter@oracle.com>
+Acked-by: Michal Koutný <mkoutny@suse.com>
+Signed-off-by: Shuah Khan <skhan@linuxfoundation.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/reset/reset-uniphier.c | 13 ++++++++-----
- 1 file changed, 8 insertions(+), 5 deletions(-)
+ tools/testing/selftests/cgroup/test_core.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/reset/reset-uniphier.c b/drivers/reset/reset-uniphier.c
-index 74e589f5dd6a6..279e535bf5d80 100644
---- a/drivers/reset/reset-uniphier.c
-+++ b/drivers/reset/reset-uniphier.c
-@@ -193,8 +193,8 @@ static const struct uniphier_reset_data uniphier_pro5_sd_reset_data[] = {
- #define UNIPHIER_PERI_RESET_FI2C(id, ch)		\
- 	UNIPHIER_RESETX((id), 0x114, 24 + (ch))
- 
--#define UNIPHIER_PERI_RESET_SCSSI(id)			\
--	UNIPHIER_RESETX((id), 0x110, 17)
-+#define UNIPHIER_PERI_RESET_SCSSI(id, ch)		\
-+	UNIPHIER_RESETX((id), 0x110, 17 + (ch))
- 
- #define UNIPHIER_PERI_RESET_MCSSI(id)			\
- 	UNIPHIER_RESETX((id), 0x114, 14)
-@@ -209,7 +209,7 @@ static const struct uniphier_reset_data uniphier_ld4_peri_reset_data[] = {
- 	UNIPHIER_PERI_RESET_I2C(6, 2),
- 	UNIPHIER_PERI_RESET_I2C(7, 3),
- 	UNIPHIER_PERI_RESET_I2C(8, 4),
--	UNIPHIER_PERI_RESET_SCSSI(11),
-+	UNIPHIER_PERI_RESET_SCSSI(11, 0),
- 	UNIPHIER_RESET_END,
- };
- 
-@@ -225,8 +225,11 @@ static const struct uniphier_reset_data uniphier_pro4_peri_reset_data[] = {
- 	UNIPHIER_PERI_RESET_FI2C(8, 4),
- 	UNIPHIER_PERI_RESET_FI2C(9, 5),
- 	UNIPHIER_PERI_RESET_FI2C(10, 6),
--	UNIPHIER_PERI_RESET_SCSSI(11),
--	UNIPHIER_PERI_RESET_MCSSI(12),
-+	UNIPHIER_PERI_RESET_SCSSI(11, 0),
-+	UNIPHIER_PERI_RESET_SCSSI(12, 1),
-+	UNIPHIER_PERI_RESET_SCSSI(13, 2),
-+	UNIPHIER_PERI_RESET_SCSSI(14, 3),
-+	UNIPHIER_PERI_RESET_MCSSI(15),
- 	UNIPHIER_RESET_END,
- };
+diff --git a/tools/testing/selftests/cgroup/test_core.c b/tools/testing/selftests/cgroup/test_core.c
+index c5ca669feb2bd..e19ce940cd6a2 100644
+--- a/tools/testing/selftests/cgroup/test_core.c
++++ b/tools/testing/selftests/cgroup/test_core.c
+@@ -369,7 +369,7 @@ static void *dummy_thread_fn(void *arg)
+ static int test_cgcore_proc_migration(const char *root)
+ {
+ 	int ret = KSFT_FAIL;
+-	int t, c_threads, n_threads = 13;
++	int t, c_threads = 0, n_threads = 13;
+ 	char *src = NULL, *dst = NULL;
+ 	pthread_t threads[n_threads];
  
 -- 
 2.20.1
