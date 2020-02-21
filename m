@@ -2,138 +2,145 @@ Return-Path: <SRS0=1210=4J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 75468C3566F
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 21:21:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A438EC35666
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 21:23:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4AFDD206EF
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 21:21:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7769C206EF
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 21:23:42 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="RX+9MTfv"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="c9HY3eS5"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728363AbgBUVVe (ORCPT
+        id S1728312AbgBUVXl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Feb 2020 16:21:34 -0500
-Received: from mail-qk1-f193.google.com ([209.85.222.193]:33796 "EHLO
-        mail-qk1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726707AbgBUVVd (ORCPT
+        Fri, 21 Feb 2020 16:23:41 -0500
+Received: from mail-ed1-f68.google.com ([209.85.208.68]:38389 "EHLO
+        mail-ed1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726707AbgBUVXl (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Feb 2020 16:21:33 -0500
-Received: by mail-qk1-f193.google.com with SMTP id c20so3245756qkm.1;
-        Fri, 21 Feb 2020 13:21:33 -0800 (PST)
+        Fri, 21 Feb 2020 16:23:41 -0500
+Received: by mail-ed1-f68.google.com with SMTP id p23so4080121edr.5
+        for <linux-kernel@vger.kernel.org>; Fri, 21 Feb 2020 13:23:40 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=ElrgyGt3aPABV2nXv5o0YBnfRSrXqTbK+erUkIwFAlc=;
-        b=RX+9MTfvMFTXoGCzukIKGNwP2i+7FGJ23hyyBesjzXr5Tz/g9keibb8Z7GBrOQMXoo
-         OkcePZpYO0hWV2HKgSQAc11KNB+6aAM74aT9zp24RE6ST3DtrwjXFJNWL8FV4k+/w8v/
-         h0Ef0eL+bnCDLG/ZeGkqCdg22fovFAaAGPB7HTlxNk2MNLe9Wb5qlT1iOqTP8c5poxJa
-         C3bt+rtEjnHvPd82Oy+G9SmJelfh1YCZCzFxKaiW+/xIccyPBLFBqgHp0bprl7Yk9Yj7
-         4XZTSIgcAx70MrcgWvZICt3vckfs3Xi+O/v+hb46Y8jml6Ly8qF2+aT16e2XjhRN9pIb
-         jaVg==
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=z0UtmZPeT56XfWRuDUA7oBTkz9ZjiDJ1oBCH4qpkMQ0=;
+        b=c9HY3eS5WKljqU/p0tZYMuxAzdtRfJ6HN3lf2Wth3vfg4DT06ipl3CpoYJRP77uD7r
+         ZrtMXzZHQgfyam/bMlnj2W60j8GclkUygHSQjUADqT946pzosXTD1dJh82qL+LTOw1Fi
+         dP6IFmFaje/wVpl/eCfKFYB08Chn0tSAtcWvx6jDL9j5NW5hDR+VjWNtm2Lg5dWPRQVg
+         h8G89ykiTz67ZWe+fGESVdqaOOvVJSDQagR267ej413Uo3+0Qs81VhF8M1kKr5mZnxQd
+         577ztcTKhVNda4GZSR2F0mssWbccIPQ7xR94If4FnjrwlB6c76NDY0FWu700lk566xAb
+         kQrg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:from:to:cc:subject:date:message-id
-         :mime-version:content-transfer-encoding;
-        bh=ElrgyGt3aPABV2nXv5o0YBnfRSrXqTbK+erUkIwFAlc=;
-        b=Xdks59MzqBy7palm20ZLSBcyzWbPVcg7JmagzOSXntRP8Kt4bUUeHYdw2hoizYOXLr
-         m7eC/Evyzlsr8UQoZHCBuWeQ7PR6Ph+R/oh5/8iy0XoLhfPIX3i1VbS4joeqnHSz//mM
-         d3M+BuG8ljaTZGApD5f+yE39Ad3VUw3bJwsKogjI61IRIlmEoUyD19sMqoQHtoF70LaL
-         nyXR0iT1b9KK4Er7ydzxiDj3dzGDDz9A2miSXEY0Ws13j7iorCBV0CyW3LTIFJ5r2Ss2
-         14TF45B9SvW6+hUisYqKU2G9ZJMzTbcxAkg7HxrpF5CXdIAkqHssm590waqirZPd/0HE
-         lHkg==
-X-Gm-Message-State: APjAAAUAgFySl/iOUiMSwNxpLXh7/lVk0NUCFvQnp3SYq8x/hg2ambHh
-        fgScYfmoeYuh3/bhqYxI89mf60eO5Yk=
-X-Google-Smtp-Source: APXvYqyONOj5SX1/vq3sFT1ak6bHSUAp9rVWLFpOVTNJwIcCfloQ+VTcEC7uGk7pC1mRji5VqD/T2A==
-X-Received: by 2002:ae9:e206:: with SMTP id c6mr35012453qkc.454.1582320092516;
-        Fri, 21 Feb 2020 13:21:32 -0800 (PST)
-Received: from planxty.redhat.com (rdwyon0600w-lp130-03-64-231-46-127.dsl.bell.ca. [64.231.46.127])
-        by smtp.gmail.com with ESMTPSA id o21sm2038829qki.56.2020.02.21.13.21.31
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 21 Feb 2020 13:21:32 -0800 (PST)
-From:   John Kacur <jkacur@redhat.com>
-To:     rt-users <linux-rt-users@vger.kernel.org>,
-        lkml <linux-kernel@vger.kernel.org>
-Cc:     Clark Williams <williams@redhat.com>,
-        John Kacur <jkacur@redhat.com>
-Subject: [ANNOUNCE] rt-tests-1.7
-Date:   Fri, 21 Feb 2020 16:21:20 -0500
-Message-Id: <20200221212120.14841-1-jkacur@redhat.com>
-X-Mailer: git-send-email 2.20.1
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=z0UtmZPeT56XfWRuDUA7oBTkz9ZjiDJ1oBCH4qpkMQ0=;
+        b=fW2SSHsph0qxzE/m1APyBGeIYpGFikpxzjcUrFvgDrDWFTCrzhMOnf7HT7r7VctEYU
+         D8lJP6wC6N0V+wKr3xRjwSkhi/Xuf3Bv/+9u+HNs4Q9Cql0z8C/SXr8pIc7pBW9gwzQ1
+         LJW3IwqkvnMnKyboUmv4ws5vua6elv/ggOy0IsaqLlxiqwz267HBMcKvHF+HDFY94XoE
+         FXPrJNR41ij+zN3ZWdwYrJQHSRuhsEAknLj7HvY/UlJRB2ElWWivSZmEP2K/Ofr++nUB
+         //K7KG+7jdiZ6c9RaKGnw3dQIvs0e+TJJe3lohpHbEiR46FGTtf65VJfCVNvK0wfFhH1
+         4UgQ==
+X-Gm-Message-State: APjAAAXaGC5V2Vkn3ssYiBhfbNJvpg/DcUP+CjSflD3/muKQ23WPprVW
+        wlB7ocUemj+0WXYsK2k+0uGdvh24VecTBjT2BRw24A==
+X-Google-Smtp-Source: APXvYqwRQIBcr5CH9sUElhkH/yr2SEu6/zsQCZ+7UgJu6FAczAr934WWIgw2zSXEAOYZfchsJ1JQoY8Ls4xd3TR7g3s=
+X-Received: by 2002:a50:fd15:: with SMTP id i21mr35541410eds.12.1582320219090;
+ Fri, 21 Feb 2020 13:23:39 -0800 (PST)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20200218005659.91318-1-lrizzo@google.com> <20200218165529.39e761c4be828285cc060279@kernel.org>
+ <CAMOZA0L14CjA97UHj7V1tPuOtesrUykYPj3_vgbF3JQWS3bcaw@mail.gmail.com> <20200218205025.4047cf0506f56b18f9a989c4@kernel.org>
+In-Reply-To: <20200218205025.4047cf0506f56b18f9a989c4@kernel.org>
+From:   Luigi Rizzo <lrizzo@google.com>
+Date:   Fri, 21 Feb 2020 13:23:28 -0800
+Message-ID: <CAMOZA0LyOUsByh02ue=NH0g=UCtLVC9EX4OGx+9MbWeLOHm34A@mail.gmail.com>
+Subject: Re: [PATCH v3] kretprobe: percpu support
+To:     Masami Hiramatsu <mhiramat@kernel.org>
+Cc:     linux-kernel@vger.kernel.org, naveen.n.rao@linux.ibm.com,
+        anil.s.keshavamurthy@intel.com, David Miller <davem@davemloft.net>,
+        gregkh@linuxfoundation.org, Ingo Molnar <mingo@kernel.org>,
+        Steven Rostedt <rostedt@goodmis.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-- Fixes to queuelat script
-- Little fixes to options and man pages of various programs in the suite
-- Fixes / changes to the new snapshot feature
-- New script get_cyclictest_snapshot to use the snapshot feature
+On Tue, Feb 18, 2020 at 3:50 AM Masami Hiramatsu <mhiramat@kernel.org> wrote:
+>
+> On Tue, 18 Feb 2020 01:39:40 -0800
+> Luigi Rizzo <lrizzo@google.com> wrote:
+>
+> > On Mon, Feb 17, 2020 at 11:55 PM Masami Hiramatsu <mhiramat@kernel.org> wrote:
+> > >
+> > > Hi Luigi,
+> > >
+> > > On Mon, 17 Feb 2020 16:56:59 -0800
+> > > Luigi Rizzo <lrizzo@google.com> wrote:
+> > >
+> > > > kretprobe uses a list protected by a single lock to allocate a
+> > > > kretprobe_instance in pre_handler_kretprobe(). This works poorly with
+> > > > concurrent calls.
+> > >
+> > > Yes, there are several potential performance issue and the recycle
+> > > instance is one of them. However, I think this spinlock is not so racy,
+> > > but noisy (especially on many core machine) right?
+> >
+> > correct, it is especially painful on 2+ sockets and many-core systems
+> > when attaching kretprobes on otherwise uncontended paths.
+> >
+> > >
+> > > Racy lock is the kretprobe_hash_lock(), I would like to replace it
+> > > with ftrace's per-task shadow stack. But that will be available
+> > > only if CONFIG_FUNCTION_GRAPH_TRACER=y (and instance has no own
+> > > payload).
+> > >
+> > > > This patch offers a simplified fix: the percpu_instance flag indicates
+> > > > that we allocate one instance per CPU, and the allocation is contention
+> > > > free, but we allow only have one pending entry per CPU (this could be
+> > > > extended to a small constant number without much trouble).
+> > >
+> > > OK, the percpu instance idea is good to me, and I think it should be
+> > > default option. Unless user specifies the number of instances, it should
+> > > choose percpu instance by default.
+> >
+> > That was my initial implementation, which would not even need the
+> > percpu_instance
+> > flag in struct kretprobe. However, I felt that changing the default
+> > would have subtle
+> > side effects (e.g., only one outstanding call per CPU) so I thought it
+> > would be better
+> > to leave the default unchanged and make the flag explicit.
+> >
+> > > Moreover, this makes things a bit complicated, can you add per-cpu
+> > > instance array? If it is there, we can remove the old recycle rp insn
+> > > code.
+> >
+> > Can you clarify what you mean by "per-cpu instance array" ?
+> > Do you mean allowing multiple outstanding entries per cpu?
+>
+> Yes, either allocating it on percpu area or allocating arraies
+> on percpu pointer is OK. e.g.
+>
+>         instance_size = sizeof(*rp->pcpu) + rp->data_size;
+>         rp->pcpu = __alloc_percpu(instance_size * array_size,
+>                                   __alignof__(*rp->pcpu));
+>
+> And we will search free ri on the percpu array by checking ri->rp == NULL.
 
-The snapshot feature gets a snapshot of a running cyclictest instance.
-Imagine you are running one or multiple instances of cyclictest on a
-large machine, perhaps with the -q option so that you would only get
-output at the very end, this feature allows you to see the status so far
-without halting cyclictest.
+I have posted a v4 patch with the refactoring you suggested, but
+still defaulting to non percpu allocation, and only one entry per cpu.
+The former to avoid potential regressions, the latter because I worry
+that the search in the array may incur several cache misses especially
+if the traced function is allowed to block or the caller can migrate.
+(Maybe I am over cautious, but I want to measure that cost first;
+once that is clear perhaps we can move forward with another patch
+that defaults to percpu and removes the reclaim code).
 
-Clone
-git://git.kernel.org/pub/scm/utils/rt-tests/rt-tests.git
-https://git.kernel.org/pub/scm/utils/rt-tests/rt-tests.git
-https://kernel.googlesource.com/pub/scm/utils/rt-tests/rt-tests.git
-
-Branch: unstable/devel/latest
-
-Tag: v1.7
-
-Tarballs are available here:
-https://kernel.org/pub/linux/utils/rt-tests
-
-Older version tarballs are available here:
-https://kernel.org/pub/linux/utils/rt-tests/older
-
-John Kacur (14):
-  rt-tests: queuelat: Assume queuelat is in the path
-  rt-tests: cyclicdeadline: Add a simple manpage for cyclicdeadline
-  rt-tests: pi_stress: Add short options to usage message
-  rt-tests: pi_stress: Sync man page with help
-  rt-tests: queuelat: get_cpuinfo_mhz.sh highest value
-  rt-tests: determine_maximum_mpps.sh: Fix quoting and other shell issue
-  rt-tests: ptsematest: Update man page and add -h option
-  rt-tests: queuelat: Fixes to man page and display_help
-  rt-tests: svsematest: Display help with an error message for -h
-  rt-tests: Use a distinct shm file for each cyclictest instance
-  rt-tests: cyclictest: truncate shm files to zero when USR2 received
-  rt-tests: Add the get_cyclictest_snapshot.py utility
-  rt-tests: Add get_cyclictest_snapshot to Makefile
-  rt-tests: Makefile - update version
-
-Kurt Kanzenbach (1):
-  make: Make man page compression configurable
-
- Makefile                                  | 77 +++++++++++++++++------
- src/cyclictest/cyclictest.c               | 25 +++++---
- src/cyclictest/get_cyclictest_snapshot.py | 76 ++++++++++++++++++++++
- src/pi_tests/pi_stress.8                  |  9 +--
- src/pi_tests/pi_stress.c                  | 34 +++++-----
- src/ptsematest/ptsematest.8               |  3 +
- src/ptsematest/ptsematest.c               | 10 +--
- src/queuelat/determine_maximum_mpps.sh    | 75 +++++++++++-----------
- src/queuelat/get_cpuinfo_mhz.sh           |  5 +-
- src/queuelat/queuelat.8                   |  4 +-
- src/queuelat/queuelat.c                   | 22 ++++---
- src/sched_deadline/cyclicdeadline.8       | 53 ++++++++++++++++
- src/svsematest/svsematest.c               |  3 +-
- 13 files changed, 291 insertions(+), 105 deletions(-)
- create mode 100755 src/cyclictest/get_cyclictest_snapshot.py
- create mode 100644 src/sched_deadline/cyclicdeadline.8
-
--- 
-2.20.1
-
+cheers
+luigi
