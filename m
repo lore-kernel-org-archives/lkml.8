@@ -2,120 +2,88 @@ Return-Path: <SRS0=1210=4J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_2 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A81FDC35653
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 10:23:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9C753C35647
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 10:24:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7FE08207FD
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 10:23:38 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="u3AJW8nL"
+	by mail.kernel.org (Postfix) with ESMTP id 67811222C4
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 10:24:25 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1582280665;
+	bh=4eMYs7KLiD72Bm0LL7jMLy8vANd+p7TFOfu9aQGi7vc=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=hHayPKjqEsq122T5lDHhk47xPeBU1U0U62EnqZSLBUTLidVA+GGok6ywdklqzDt3Z
+	 LmtNs1n8zkZ3XVUyFz4AQyE8zxhxGnASJPf03F37jw5Snt2WtDW/RzEfLQtS5V+fAp
+	 z0TjZRdzEvxdc63GYuzRJEBkJizfsenpEs8nURYQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728722AbgBUKXh (ORCPT
+        id S1728768AbgBUKYY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Feb 2020 05:23:37 -0500
-Received: from mailgw02.mediatek.com ([210.61.82.184]:22070 "EHLO
-        mailgw02.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726989AbgBUKXg (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Feb 2020 05:23:36 -0500
-X-UUID: 6798f4fe02bf40f89f3db807883827f0-20200221
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
-        h=Content-Transfer-Encoding:MIME-Version:Content-Type:References:In-Reply-To:Date:CC:To:From:Subject:Message-ID; bh=9GF943aZdupXgIlWbr1tM9dp52aP/OtDRXFu16nBKsU=;
-        b=u3AJW8nLcjG4YYRvG+aYOWurkYxWQrMb9Q6bFv2Edoq+9llIMsJn3ZjZP1011vNZw8o8HfizgaiksK29NQHvWSrBXZmQSCiaGDUxvmDf4rt8TseCiGDJ/AwhFqr4hx7pBArZk9p0VLI8Mue2K47ZgRYPcIjcWiACtcBsR/g1h+Q=;
-X-UUID: 6798f4fe02bf40f89f3db807883827f0-20200221
-Received: from mtkcas08.mediatek.inc [(172.21.101.126)] by mailgw02.mediatek.com
-        (envelope-from <macpaul.lin@mediatek.com>)
-        (Cellopoint E-mail Firewall v4.1.10 Build 0809 with TLS)
-        with ESMTP id 339315032; Fri, 21 Feb 2020 18:23:30 +0800
-Received: from mtkcas07.mediatek.inc (172.21.101.84) by
- mtkmbs08n2.mediatek.inc (172.21.101.56) with Microsoft SMTP Server (TLS) id
- 15.0.1395.4; Fri, 21 Feb 2020 18:22:46 +0800
-Received: from [172.21.77.33] (172.21.77.33) by mtkcas07.mediatek.inc
- (172.21.101.73) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
- Transport; Fri, 21 Feb 2020 18:22:44 +0800
-Message-ID: <1582280608.19053.27.camel@mtkswgap22>
-Subject: Re: [PATCH v7 0/7] Add basic SoC support for mt6765
-From:   Macpaul Lin <macpaul.lin@mediatek.com>
-To:     Stephen Boyd <sboyd@kernel.org>
-CC:     Matthias Brugger <matthias.bgg@gmail.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Mediatek WSD Upstream <wsd_upstream@mediatek.com>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Michael Turquette <mturquette@baylibre.com>,
-        Loda Chou <loda.chou@mediatek.com>,
-        "Fabien Parent" <fparent@baylibre.com>,
-        Mars Cheng <mars.cheng@mediatek.com>,
-        "Will Deacon" <will@kernel.org>, <linux-clk@vger.kernel.org>,
-        Ryder Lee <Ryder.Lee@mediatek.com>,
-        Weiyi Lu <weiyi.lu@mediatek.com>,
-        Evan Green <evgreen@chromium.org>,
-        Yong Wu <yong.wu@mediatek.com>,
-        Chunfeng Yun <chunfeng.yun@mediatek.com>,
-        mtk01761 <wendell.lin@mediatek.com>,
-        Owen Chen <owen.chen@mediatek.com>,
-        <devicetree@vger.kernel.org>, Joerg Roedel <jroedel@suse.de>,
-        Marc Zyngier <marc.zyngier@arm.com>,
-        Sean Wang <Sean.Wang@mediatek.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        <linux-mediatek@lists.infradead.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        CC Hwang <cc.hwang@mediatek.com>,
-        <linux-kernel@vger.kernel.org>, Shawn Guo <shawnguo@kernel.org>
-Date:   Fri, 21 Feb 2020 18:23:28 +0800
-In-Reply-To: <158213769281.184098.14491216159423631295@swboyd.mtv.corp.google.com>
-References: <1581067250-12744-1-git-send-email-macpaul.lin@mediatek.com>
-         <158155109134.184098.10100489231587620578@swboyd.mtv.corp.google.com>
-         <bf5e1a64-1aaa-e1e0-00bf-c0e750dd27ed@gmail.com>
-         <1581999138.19053.21.camel@mtkswgap22>
-         <2c6728a5-7789-4ca2-a173-67df57fe5f1e@gmail.com>
-         <158213769281.184098.14491216159423631295@swboyd.mtv.corp.google.com>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.2.3-0ubuntu6 
-MIME-Version: 1.0
-X-TM-SNTS-SMTP: FDD232F52A5E189BADF5D5BF6B5B255DDCAC9D3340344A6748231A437ADA98A62000:8
-X-MTK:  N
-Content-Transfer-Encoding: base64
+        Fri, 21 Feb 2020 05:24:24 -0500
+Received: from mail.kernel.org ([198.145.29.99]:53240 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728294AbgBUKYX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 21 Feb 2020 05:24:23 -0500
+Received: from devnote2 (NE2965lan1.rev.em-net.ne.jp [210.141.244.193])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 71A02207FD;
+        Fri, 21 Feb 2020 10:24:21 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1582280663;
+        bh=4eMYs7KLiD72Bm0LL7jMLy8vANd+p7TFOfu9aQGi7vc=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=nSdKaMGMDNwFGw+q/0EGzr1b0O2Ui4Ei9Nkx+5KVEvGNXpU5fbG7ZI4bECR1LiFVh
+         o2ZDhUwMyRoWHshGS0NvPzVLsaGfjFpZqk9lmolkCRm4bIthzC8T1hn2TJOhB1NYHi
+         9+ME1WGttWiRzgoA+zyxdWvKSsN9f60F+ksktcCM=
+Date:   Fri, 21 Feb 2020 19:24:19 +0900
+From:   Masami Hiramatsu <mhiramat@kernel.org>
+To:     Steven Rostedt <rostedt@goodmis.org>
+Cc:     Tom Zanussi <zanussi@kernel.org>, artem.bityutskiy@linux.intel.com,
+        linux-kernel@vger.kernel.org, linux-rt-users@vger.kernel.org
+Subject: Re: [PATCH 1/2] tracing: Fix synth event test to avoid using
+ smp_processor_id()
+Message-Id: <20200221192419.ce690df36a60d46da5d6d866@kernel.org>
+In-Reply-To: <20200220174801.2b793ae1@gandalf.local.home>
+References: <158193313870.8868.10793333111731425487.stgit@devnote2>
+        <158193314931.8868.11386672578933699881.stgit@devnote2>
+        <20200220174801.2b793ae1@gandalf.local.home>
+X-Mailer: Sylpheed 3.5.1 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-UXVvdGluZyBNYXR0aGlhcyBCcnVnZ2VyIGFuZCBTdGVwaGVuIEJveWQgd3JvdGU6DQo+IFF1b3Rp
-bmcgTWF0dGhpYXMgQnJ1Z2dlciAoMjAyMC0wMi0xOCAwODo0NTo0MikNCj4gPiANCj4gPiBPbiAx
-OC8wMi8yMDIwIDA1OjEyLCBNYWNwYXVsIExpbiB3cm90ZToNCj4gPiA+IE9uIFNhdCwgMjAyMC0w
-Mi0xNSBhdCAwMjo0NyArMDEwMCwgTWF0dGhpYXMgQnJ1Z2dlciB3cm90ZToNCj4gPiA+IA0KPiA+
-ID4gSGkgU3RlcGhlbiwNCj4gPiA+IA0KPiA+ID4+IEhpIFN0ZXBoZW4sDQo+ID4gPj4NCj4gPiA+
-PiBPbiAxMy8wMi8yMDIwIDAwOjQ0LCBTdGVwaGVuIEJveWQgd3JvdGU6DQo+ID4gPj4+IFF1b3Rp
-bmcgTWFjcGF1bCBMaW4gKDIwMjAtMDItMDcgMDE6MjA6NDMpDQo+ID4gPj4+PiBUaGlzIHBhdGNo
-IGFkZHMgYmFzaWMgU29DIHN1cHBvcnQgZm9yIE1lZGlhdGVrJ3MgbmV3IDgtY29yZSBTb0MsDQo+
-ID4gPj4+PiBNVDY3NjUsIHdoaWNoIGlzIG1haW5seSBmb3Igc21hcnRwaG9uZSBhcHBsaWNhdGlv
-bi4NCj4gPiA+Pj4NCj4gPiA+Pj4gQ2xvY2sgcGF0Y2hlcyBsb29rIE9LIHRvIG1lLiBDYW4geW91
-IHJlc2VuZCB0aGVtIHdpdGhvdXQgdGhlIGRlZmNvbmZpZw0KPiA+ID4+PiBhbmQgZHRzIHBhdGNo
-ZXMgYW5kIGFkZHJlc3MgTWF0dGhpYXMnIHF1ZXN0aW9uPw0KPiA+ID4+Pg0KPiA+ID4+DQo+ID4g
-Pj4gSSdtIG5vdCBzdXJlIGlmIEkgdW5kZXJzdGFuZCB5b3UuIERvIHlvdSBwcmVmZXIgdG8gaGF2
-ZSBqdXN0IHRoZSBjbG9jayBwYXJ0cw0KPiA+ID4+IHNlbmQgYXMgYW4gaW5kZXBlbmRlbnQgdmVy
-c2lvbiBzbyB0aGF0IHlvdSBjYW4gZWFzaWVyIGFwcGx5IHRoZSBwYXRjaGVzIHRvIHlvdXINCj4g
-PiA+PiB0cmVlPw0KPiA+ID4+DQo+ID4gPj4gUGF0Y2ggMiwgNSwgNiBhbmQgNyBzaG91bGQgZ28g
-dGhyb3VnaCBteSB0cmVlLg0KPiA+ID4+IFNvIGRvIHlvdSB3YW50IGEgc2VyaWVzIHdpdGggcGF0
-Y2hlcyAxLCAzIGFuZCA0Pw0KPiA+ID4+DQo+ID4gPj4gUmVnYXJkcywNCj4gPiA+PiBNYXR0aGlh
-cw0KPiA+ID4gDQo+ID4gPiBZdXAsIEkndmUgZ290IGEgbGl0dGxlIGJpdCBjb25mdXNlZCwgdG9v
-Lg0KPiA+ID4gU2hvdWxkIEkgc2VwYXJhdGUgYW5kIHJlc2VuZCB0aGVzZSBwYXRjaGVzIGludG8g
-MiBwYXRjaCBzZXRzPw0KPiA+ID4gVGhlIDFzdCBwYXRjaCBzZXQgaW5jbHVkZXMgIzEsICMzLCBh
-bmQgIzQ/DQo+ID4gPiBBbmQgdGhlIG90aGVyIGluY2x1ZGVzICMyLCAjNSwgIzYsIGFuZCAjNz8N
-Cj4gPiA+IA0KPiA+IA0KPiA+IFllcyBwbGVhc2UgZG8gc28uIEkgdGhpbmsgdGhhdCdzIHdoYXQg
-U3RlcGhlbiByZWZlcnJlZCB0by4NCj4gPiANCj4gDQo+IElmIHRob3NlIGFyZSB0aGUgb25lcyB0
-aGF0IGFyZW4ndCBkdHMgb3IgZGVmY29uZmlnIHBhdGNoZXMgc291bmRzIGdvb2QNCj4gdG8gbWUu
-DQoNCkhlcmUgY29tZXMgdGhlIHNwaWx0IHBhdGNoIHNldHMuDQoxLiBbTmV3XSBBZGQgYmFzaWMg
-Y2xvY2sgc3VwcG9ydCBmb3IgbXQ2NzY1Lg0KICBodHRwczovL3BhdGNod29yay5rZXJuZWwub3Jn
-L2NvdmVyLzExMzk1OTk3Lw0KMi4gW1BBVENIIHY4XSBBZGQgYmFzaWMgU29DIHN1cHBvcnQgZm9y
-IG10Njc2NQ0KICBodHRwczovL3BhdGNod29yay5rZXJuZWwub3JnL3BhdGNoLzExMzk2MDE5Lw0K
-ICBCdXQgaXQncyBhIGxpdHRsZSBiaXQgc3RyYW5nZSBJIGNhbm5vdCBmaW5kIHBhdGNoIHY4J3Mg
-Y292ZXItbGV0dGVyDQogIGluIHBhdGNod29yay4gT25seSByZWNvcmRzIHdoaWNoIHBhdGNoZXMg
-aGFzIGJlZW4gdGFrZW4gZnJvbSB2Ny4NCiAgSWYgcmVzZW5kIGNvdmVyLWxldHRlciBpcyByZXF1
-aXJlZCBwbGVhc2UgbGV0IG1lIGtub3cuDQoNClJlZ2FyZHMsDQpNYWNwYXVsIExpbg0K
+On Thu, 20 Feb 2020 17:48:01 -0500
+Steven Rostedt <rostedt@goodmis.org> wrote:
 
+> On Mon, 17 Feb 2020 18:52:29 +0900
+> Masami Hiramatsu <mhiramat@kernel.org> wrote:
+> 
+> > Since smp_processor_id() requires irq-disabled or preempt-disabled,
+> > synth event generation test module made some warnings. To prevent
+> > that, use get_cpu()/put_cpu() instead of smp_processor_id().
+> > 
+> > Signed-off-by: Masami Hiramatsu <mhiramat@kernel.org>
+> > ---
+> >  kernel/trace/synth_event_gen_test.c |   23 +++++++++++++++++------
+> >  1 file changed, 17 insertions(+), 6 deletions(-)
+> >
+> 
+> I just noticed this patch, after applying my version that just uses the
+> raw_smp_processor_id(). We don't really care what CPU it is do we?
+> 
+> I didn't want a test to muck with preemption disabling and all that fun.
+
+OK, I confirmed that the ring_buffer_nest_start() ensures the preempt
+disabled. So just using raw_smp_processor_id() is good to me.
+
+Thank you,
+
+-- 
+Masami Hiramatsu <mhiramat@kernel.org>
