@@ -7,46 +7,48 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4ED6FC35640
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 08:10:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6805FC35641
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 08:10:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 22EC92067D
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 08:10:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 39DC12067D
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 08:10:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582272644;
-	bh=hVrg8rRe/pnLXFS4sp1Q4wJtlR5vsf1nCybQKCaUqxU=;
+	s=default; t=1582272646;
+	bh=AQZv439aPs3a3pzVfoFsckJvPrDHpgNa6VOlnBmXrqI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Fqv8O1IJg3HM8X/zyPVOAiLKfxI7GPVWN7sJEsjZUhzvzvdQ6ci94Z2ixgbNW0ORT
-	 kbgU0ajhqiemXIB9MZtNnzsQOe6JTjduNPqZen3MHyUvh5xjND7uU1N4cuTv4YzwYo
-	 aP+BihkFGBE8jx5YOMnOrCKGE3SsgB4N4S3FHzd0=
+	b=ygzMZRcvzrAysMWMJ8Cm3vZ5sL9QRBdl1550hPkrHGfra5HOKCWDzTRA5AxF79ZeI
+	 dEsgNcZXYY97OXJz73aOeTsu/1NJnA++iZXDvuPKjKIqZuY+/HioZM6NtxKz6xUp2J
+	 BkLpRoYVgDGsOf1xOR9jxGqXCKzbuSNuBTFwzGCE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732579AbgBUIKn (ORCPT
+        id S1732585AbgBUIKp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Feb 2020 03:10:43 -0500
-Received: from mail.kernel.org ([198.145.29.99]:45874 "EHLO mail.kernel.org"
+        Fri, 21 Feb 2020 03:10:45 -0500
+Received: from mail.kernel.org ([198.145.29.99]:45940 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732547AbgBUIKi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Feb 2020 03:10:38 -0500
+        id S1727872AbgBUIKl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 21 Feb 2020 03:10:41 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2B38020722;
-        Fri, 21 Feb 2020 08:10:37 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7BFD820578;
+        Fri, 21 Feb 2020 08:10:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1582272637;
-        bh=hVrg8rRe/pnLXFS4sp1Q4wJtlR5vsf1nCybQKCaUqxU=;
+        s=default; t=1582272640;
+        bh=AQZv439aPs3a3pzVfoFsckJvPrDHpgNa6VOlnBmXrqI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=hEVWGOM2AUMVdNfDusYy9MXEXwZ+9vgE9W/CJWmP1y/jx0LxwoRY8GuasuQacxsqj
-         zbqMnp69k/2eG5XL44TZAhDC4qVXCEav/KzLIkUmWRLT2C5N8zelqPDE4dkbwA0ony
-         bHarKbChbdp7xjaI7Vhs+hwKW6JVB+33V6CEwBm8=
+        b=H1XG7gshdvbg1LZ1bW73IIv2w4ta4bHjOJ3DqBD3dyowl+Br1aiHe/LKC2WAbwqjx
+         W6a64BUSzxbLZXt5A+Wh7JowaiOLLlhCChrcn5gJ88KmAYjnjByftT43HNEq0JjwP7
+         DhGfjmYaXjpJBjjgpnJKo8urMFsCJwJ3IwFQ5Wuc=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>,
+        stable@vger.kernel.org, Jason Ekstrand <jason@jlekstrand.net>,
+        Hans de Goede <hdegoede@redhat.com>,
+        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 217/344] visorbus: fix uninitialized variable access
-Date:   Fri, 21 Feb 2020 08:40:16 +0100
-Message-Id: <20200221072408.908857899@linuxfoundation.org>
+Subject: [PATCH 5.4 184/344] ACPI: button: Add DMI quirk for Razer Blade Stealth 13 late 2019 lid switch
+Date:   Fri, 21 Feb 2020 08:39:43 +0100
+Message-Id: <20200221072405.733307500@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200221072349.335551332@linuxfoundation.org>
 References: <20200221072349.335551332@linuxfoundation.org>
@@ -59,58 +61,45 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Arnd Bergmann <arnd@arndb.de>
+From: Jason Ekstrand <jason@jlekstrand.net>
 
-[ Upstream commit caf82f727e69b647f09d57a1fc56e69d22a5f483 ]
+[ Upstream commit 0528904926aab19bffb2068879aa44db166c6d5f ]
 
-The setup_crash_devices_work_queue function only partially initializes
-the message it sends to chipset_init, leading to undefined behavior:
+Running evemu-record on the lid switch event shows that the lid reports
+the first "close" but then never reports an "open".  This causes systemd
+to continuously re-suspend the laptop every 30s.  Resetting the _LID to
+"open" fixes the issue.
 
-drivers/visorbus/visorchipset.c: In function 'setup_crash_devices_work_queue':
-drivers/visorbus/visorchipset.c:333:6: error: '((unsigned char*)&msg.hdr.flags)[0]' is used uninitialized in this function [-Werror=uninitialized]
-  if (inmsg->hdr.flags.response_expected)
-
-Set up the entire structure, zero-initializing the 'response_expected'
-flag.
-
-This was apparently found by the patch that added the -O3 build option
-in Kconfig.
-
-Fixes: 12e364b9f08a ("staging: visorchipset driver to provide registration and other services")
-Signed-off-by: Arnd Bergmann <arnd@arndb.de>
-Link: https://lore.kernel.org/r/20200107202950.782951-1-arnd@arndb.de
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Signed-off-by: Jason Ekstrand <jason@jlekstrand.net>
+Reviewed-by: Hans de Goede <hdegoede@redhat.com>
+Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/visorbus/visorchipset.c | 11 +++++++----
- 1 file changed, 7 insertions(+), 4 deletions(-)
+ drivers/acpi/button.c | 11 +++++++++++
+ 1 file changed, 11 insertions(+)
 
-diff --git a/drivers/visorbus/visorchipset.c b/drivers/visorbus/visorchipset.c
-index ca752b8f495fa..cb1eb7e05f871 100644
---- a/drivers/visorbus/visorchipset.c
-+++ b/drivers/visorbus/visorchipset.c
-@@ -1210,14 +1210,17 @@ static void setup_crash_devices_work_queue(struct work_struct *work)
- {
- 	struct controlvm_message local_crash_bus_msg;
- 	struct controlvm_message local_crash_dev_msg;
--	struct controlvm_message msg;
-+	struct controlvm_message msg = {
-+		.hdr.id = CONTROLVM_CHIPSET_INIT,
-+		.cmd.init_chipset = {
-+			.bus_count = 23,
-+			.switch_count = 0,
+diff --git a/drivers/acpi/button.c b/drivers/acpi/button.c
+index ce93a355bd1c8..985afc62da82a 100644
+--- a/drivers/acpi/button.c
++++ b/drivers/acpi/button.c
+@@ -89,6 +89,17 @@ static const struct dmi_system_id lid_blacklst[] = {
+ 		},
+ 		.driver_data = (void *)(long)ACPI_BUTTON_LID_INIT_OPEN,
+ 	},
++	{
++		/*
++		 * Razer Blade Stealth 13 late 2019, notification of the LID device
++		 * only happens on close, not on open and _LID always returns closed.
++		 */
++		.matches = {
++			DMI_MATCH(DMI_SYS_VENDOR, "Razer"),
++			DMI_MATCH(DMI_PRODUCT_NAME, "Razer Blade Stealth 13 Late 2019"),
 +		},
-+	};
- 	u32 local_crash_msg_offset;
- 	u16 local_crash_msg_count;
++		.driver_data = (void *)(long)ACPI_BUTTON_LID_INIT_OPEN,
++	},
+ 	{}
+ };
  
- 	/* send init chipset msg */
--	msg.hdr.id = CONTROLVM_CHIPSET_INIT;
--	msg.cmd.init_chipset.bus_count = 23;
--	msg.cmd.init_chipset.switch_count = 0;
- 	chipset_init(&msg);
- 	/* get saved message count */
- 	if (visorchannel_read(chipset_dev->controlvm_channel,
 -- 
 2.20.1
 
