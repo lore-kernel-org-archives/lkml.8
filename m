@@ -2,114 +2,173 @@ Return-Path: <SRS0=1210=4J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1495CC35646
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 17:54:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 68303C35657
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 17:54:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DD7F720722
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 17:54:40 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=resnulli-us.20150623.gappssmtp.com header.i=@resnulli-us.20150623.gappssmtp.com header.b="HMPZ83NG"
+	by mail.kernel.org (Postfix) with ESMTP id 40A0920722
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 17:54:56 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727966AbgBURyj (ORCPT
+        id S1729355AbgBURyz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Feb 2020 12:54:39 -0500
-Received: from mail-wm1-f65.google.com ([209.85.128.65]:55695 "EHLO
-        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725947AbgBURyj (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Feb 2020 12:54:39 -0500
-Received: by mail-wm1-f65.google.com with SMTP id q9so2656498wmj.5
-        for <linux-kernel@vger.kernel.org>; Fri, 21 Feb 2020 09:54:38 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=resnulli-us.20150623.gappssmtp.com; s=20150623;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=xIoPJC89gVWFrNtFw0AHmOeVBRfBncDtaR7CYLx5/Dg=;
-        b=HMPZ83NG9rwiQMFLrYVIV0XarG2yWBarAaYn0Or5vkNGo0gR6DPadrWYKJedIyWa/F
-         VDgnkJ6P4JpsRgH8kGhl+10HQHX6TSvl9GyowzdP8yYq70W6phN5Cb63/hOdgQbcu6Tx
-         YkdLfWx0HxrDj7fkgtG0WSO1onF1bWSHeJ8XdRiJqqE+rm1yLbOB6tSj6slBfjHUJA81
-         ner9fe3wnAZCTC0/zTIXmNjLemvcjc0X77JXFfVN7cVJTwWQRgTCKw03OS58T4dQocCW
-         OeqSWb+7aDsP0Bs+Azg4p85XZFNxPPM2WOX1NIg1ifNOQJRCrbbB/KUDp5Vkv4iw39hB
-         wIsQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=xIoPJC89gVWFrNtFw0AHmOeVBRfBncDtaR7CYLx5/Dg=;
-        b=q0+erXVVwziiVaQp5EUkBxKICTyp81DYMEUppRcgy2Nai6dpdfMqkN4GgbD7xiYmcK
-         dsQF6r07bSd/Z6PAI/p8KTWfGKj+6YTfQ+DNDR9V6C/oH3hQUs6YGDvoQRwOnK0y1qXZ
-         0w++AA6W1zQGrUw0JrwM2t+otcHNgiUznS2mDID4XdfjRRXr415kTYNYOHo9EPnOWm5A
-         4M00jV+FGhgvERYJnHnQdO7Vf7e4TKwjw8YxqFgNKDPiKMxEQ1UPnN7WMejHrGgQ005w
-         qhh/wsNKKJcRPzQtjdBIKMWF/BaEtHju+VlZZ2PjcItW8Ld9nl1bZtuKDT1V+OwH+hZ7
-         UgpA==
-X-Gm-Message-State: APjAAAU4DU2n1zMsQdsqkP6DsgwRJo8bEWqmTLF8oH5KVCMR+sNbKRqh
-        GlsOjwxh1QsmRZ4BKSwU/dtMlA==
-X-Google-Smtp-Source: APXvYqyDP0cz6luS0Fl6H3aL1bf+0QT5FEG4EgdaFEKW3zTlqWaHiJiVlOY6fjWQWE7rSFcxzNOAMA==
-X-Received: by 2002:a05:600c:21c4:: with SMTP id x4mr5079128wmj.147.1582307677644;
-        Fri, 21 Feb 2020 09:54:37 -0800 (PST)
-Received: from localhost (ip-89-177-130-96.net.upcbroadband.cz. [89.177.130.96])
-        by smtp.gmail.com with ESMTPSA id j5sm4914621wrw.24.2020.02.21.09.54.36
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 21 Feb 2020 09:54:37 -0800 (PST)
-Date:   Fri, 21 Feb 2020 18:54:36 +0100
-From:   Jiri Pirko <jiri@resnulli.us>
-To:     Madhuparna Bhowmik <madhuparnabhowmik10@gmail.com>
-Cc:     jiri@mellanox.com, davem@davemloft.net, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org, joel@joelfernandes.org,
-        frextrite@gmail.com,
-        linux-kernel-mentees@lists.linuxfoundation.org, paulmck@kernel.org
-Subject: Re: [PATCH] net: core: devlink.c: Use built-in RCU list checking
-Message-ID: <20200221175436.GB2181@nanopsycho>
-References: <20200221165141.24630-1-madhuparnabhowmik10@gmail.com>
- <20200221172008.GA2181@nanopsycho>
- <20200221173533.GA13198@madhuparna-HP-Notebook>
+        Fri, 21 Feb 2020 12:54:55 -0500
+Received: from muru.com ([72.249.23.125]:56764 "EHLO muru.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729269AbgBURyy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 21 Feb 2020 12:54:54 -0500
+Received: from atomide.com (localhost [127.0.0.1])
+        by muru.com (Postfix) with ESMTPS id 711B0807E;
+        Fri, 21 Feb 2020 17:55:37 +0000 (UTC)
+Date:   Fri, 21 Feb 2020 09:54:49 -0800
+From:   Tony Lindgren <tony@atomide.com>
+To:     "Andrew F. Davis" <afd@ti.com>
+Cc:     kbuild-all@lists.01.org, linux-kernel@vger.kernel.org,
+        kbuild test robot <lkp@intel.com>,
+        linux-omap@vger.kernel.org, Aaro Koskinen <aaro.koskinen@iki.fi>,
+        Marc Zyngier <maz@kernel.org>,
+        linux-arm-kernel@lists.infradead.org,
+        Arnd Bergmann <arnd@arndb.de>, Rob Herring <robh@kernel.org>
+Subject: Re: omap-secure.c:undefined reference to `__arm_smccc_smc'
+Message-ID: <20200221175449.GZ37466@atomide.com>
+References: <20200220155429.GH37466@atomide.com>
+ <55ddcd29-ed8b-529e-dd54-cbac5cf74e42@ti.com>
+ <20200220162012.GI37466@atomide.com>
+ <d7b685b6-16a2-3743-1786-a5240726ed9c@ti.com>
+ <20200220163703.GK37466@atomide.com>
+ <20200220171305.GL37466@atomide.com>
+ <281e895b-720d-5bab-63cf-8b3e389dc767@ti.com>
+ <20200220175744.GQ37466@atomide.com>
+ <20200220181141.GR37466@atomide.com>
+ <333dd36f-e760-64b3-9e0f-3a316df9ad10@ti.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200221173533.GA13198@madhuparna-HP-Notebook>
+In-Reply-To: <333dd36f-e760-64b3-9e0f-3a316df9ad10@ti.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Fri, Feb 21, 2020 at 06:35:34PM CET, madhuparnabhowmik10@gmail.com wrote:
->On Fri, Feb 21, 2020 at 06:20:08PM +0100, Jiri Pirko wrote:
->> Fri, Feb 21, 2020 at 05:51:41PM CET, madhuparnabhowmik10@gmail.com wrote:
->> >From: Madhuparna Bhowmik <madhuparnabhowmik10@gmail.com>
->> >
->> >list_for_each_entry_rcu() has built-in RCU and lock checking.
->> >
->> >Pass cond argument to list_for_each_entry_rcu() to silence
->> >false lockdep warning when CONFIG_PROVE_RCU_LIST is enabled
->> >by default.
->> >
->> >Signed-off-by: Madhuparna Bhowmik <madhuparnabhowmik10@gmail.com>
->> 
->> Reviewed-by: Jiri Pirko <jiri@mellanox.com>
->> 
->> Thanks.
->> 
->> However, there is a callpath where not devlink lock neither rcu read is
->> taken:
->> devlink_dpipe_table_register()->devlink_dpipe_table_find()
->>
->Hi,
->
->Yes I had noticed this, but I was not sure if there is some other lock
->which is being used.
->
->If yes, then can you please tell me which lock is held in this case,
->and I can add that condition as well to list_for_each_entry_rcu() usage.
->
->And if no lock or rcu_read_lock is held then may be we should
->use rcu_read_lock/unlock here.
->
->Let me know what you think about this.
+* Andrew F. Davis <afd@ti.com> [200220 10:23]:
+> On 2/20/20 1:11 PM, Tony Lindgren wrote:
+> > * Tony Lindgren <tony@atomide.com> [200220 17:58]:
+> >> * Andrew F. Davis <afd@ti.com> [200220 17:39]:
+> >>> On 2/20/20 12:13 PM, Tony Lindgren wrote:
+> >>>> * Tony Lindgren <tony@atomide.com> [200220 16:37]:
+> >>>>> * Andrew F. Davis <afd@ti.com> [200220 16:24]:
+> >>>>>> On 2/20/20 11:20 AM, Tony Lindgren wrote:
+> >>>>>>> * Andrew F. Davis <afd@ti.com> [200220 16:04]:
+> >>>>>>>> On 2/20/20 10:54 AM, Tony Lindgren wrote:
+> >>>>>>>>> Andrew,
+> >>>>>>>>>
+> >>>>>>>>> * kbuild test robot <lkp@intel.com> [200213 10:27]:
+> >>>>>>>>>> tree:   https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git master
+> >>>>>>>>>> head:   0bf999f9c5e74c7ecf9dafb527146601e5c848b9
+> >>>>>>>>>> commit: c37baa06f8a970e4a533d41f7d33e5e57de5ad25 ARM: OMAP2+: Fix undefined reference to omap_secure_init
+> >>>>>>>>>> date:   3 weeks ago
+> >>>>>>>>>> config: arm-randconfig-a001-20200213 (attached as .config)
+> >>>>>>>>>> compiler: arm-linux-gnueabi-gcc (GCC) 7.5.0
+> >>>>>>>>>> reproduce:
+> >>>>>>>>>>         wget https://raw.githubusercontent.com/intel/lkp-tests/master/sbin/make.cross -O ~/bin/make.cross
+> >>>>>>>>>>         chmod +x ~/bin/make.cross
+> >>>>>>>>>>         git checkout c37baa06f8a970e4a533d41f7d33e5e57de5ad25
+> >>>>>>>>>>         # save the attached .config to linux build tree
+> >>>>>>>>>>         GCC_VERSION=7.5.0 make.cross ARCH=arm 
+> >>>>>>>>>>
+> >>>>>>>>>> If you fix the issue, kindly add following tag
+> >>>>>>>>>> Reported-by: kbuild test robot <lkp@intel.com>
+> >>>>>>>>>>
+> >>>>>>>>>> All errors (new ones prefixed by >>):
+> >>>>>>>>>>
+> >>>>>>>>>>    arch/arm/mach-omap2/omap-secure.o: In function `omap_smccc_smc':
+> >>>>>>>>>>>> omap-secure.c:(.text+0x94): undefined reference to `__arm_smccc_smc'
+> >>>>>>>>>
+> >>>>>>>>> Have you looked at this one? Looks like there's still an unhandled
+> >>>>>>>>> randconfig build case.
+> >>>>>>>>>
+> >>>>>>>>
+> >>>>>>>>
+> >>>>>>>> I've had a quick look, all the ARM config does:
+> >>>>>>>>
+> >>>>>>>> select HAVE_ARM_SMCCC if CPU_V7
+> >>>>>>>>
+> >>>>>>>> so I don't think this will happen in any real config, but if we want to
+> >>>>>>>> prevent randconfig issue this we could force ARCH_OMAP2PLUS to "depend"
+> >>>>>>>> on it.
+> >>>>>>>
+> >>>>>>> Seems to happen at least with omap2 only config where we don't have
+> >>>>>>> CPU_V7. Something like below seems to fix it.
+> >>>>>>>
+> >>>>>>> If that looks OK to you, I'll send out a proper fix.
+> >>>>>>>
+> >>>>>>
+> >>>>>>
+> >>>>>> This looks fine to me.
+> >>>>>>
+> >>>>>> A better later fix might be to later stub out the actual __arm_smccc_smc
+> >>>>>> in common code if CONFIG_HAVE_ARM_SMCCC is not set, so any platform will
+> >>>>>> get the fix.
+> >>>>>
+> >>>>> Yeah seems that might be better. Adding Aaro and Marc to Cc.
+> >>>>
+> >>>> But if we can in theory have some arm11 machine with smccc, then this
+> >>>> local ifdef below is probably the way to go.
+> >>>>
+> >>>
+> >>> If the machine has SMCCC then it will also have the
+> >>> CONFIG_HAVE_ARM_SMCCC set and so nothing would change.
+> >>
+> >> Hmm yeah good point.
+> > 
+> > So the patch below seems like the way to go then. Anybody have issues
+> > with the patch below?
+> > 
+> > Regards,
+> > 
+> > Tony
+> > 
+> > 8< -------------------------
+> > diff --git a/include/linux/arm-smccc.h b/include/linux/arm-smccc.h
+> > --- a/include/linux/arm-smccc.h
+> > +++ b/include/linux/arm-smccc.h
+> > @@ -121,6 +121,7 @@ struct arm_smccc_quirk {
+> >  	} state;
+> >  };
+> >  
+> > +#ifdef CONFIG_HAVE_ARM_SMCCC
+> >  /**
+> >   * __arm_smccc_smc() - make SMC calls
+> >   * @a0-a7: arguments passed in registers 0 to 7
+> > @@ -137,6 +138,14 @@ asmlinkage void __arm_smccc_smc(unsigned long a0, unsigned long a1,
+> >  			unsigned long a2, unsigned long a3, unsigned long a4,
+> >  			unsigned long a5, unsigned long a6, unsigned long a7,
+> >  			struct arm_smccc_res *res, struct arm_smccc_quirk *quirk);
+> > +#else
+> > +static inline void __arm_smccc_smc(unsigned long a0, unsigned long a1,
+> > +			unsigned long a2, unsigned long a3, unsigned long a4,
+> > +			unsigned long a5, unsigned long a6, unsigned long a7,
+> > +			struct arm_smccc_res *res, struct arm_smccc_quirk *quirk)
+> > +{
+> 
+> 
+> Maybe a warning? If you do not have SMC on your platform but are still
+> making SMC calls then something is broken and it looks like it would
+> fail silently here.
 
-devlink->lock should be held since the beginning of
-devlink_dpipe_table_register()
+Actually I'll go back to the earlier local fix. With above changes,
+we now start getting uninitialized struct arm_smccc_res res warning
+in omap_smccc_smc(). And it's a bit unclear if and with what value
+a0 should be initialized. Probably should be SMCCC_RET_NOT_SUPPORTED,
+but that then requires moving defines around too. And if it turns
+out being version specific define, then we keep piling up more code.
 
+My guess is that it's only few SoCs that might have ARMv6 and v7
+both built, so it's not like we'd have to patch all over the place
+anyways.
+
+Regards,
+
+Tony
