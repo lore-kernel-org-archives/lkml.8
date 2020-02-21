@@ -2,211 +2,136 @@ Return-Path: <SRS0=1210=4J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MIME_BASE64_TEXT,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_GIT
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 445DBC35640
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 09:52:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4A95AC35640
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 09:52:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1FB0B206EF
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 09:52:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 21D69206EF
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 09:52:37 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="MDZToudB"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728359AbgBUJw2 (ORCPT
+        id S1728445AbgBUJwg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Feb 2020 04:52:28 -0500
-Received: from foss.arm.com ([217.140.110.172]:35372 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726989AbgBUJw1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Feb 2020 04:52:27 -0500
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id F04D131B;
-        Fri, 21 Feb 2020 01:52:26 -0800 (PST)
-Received: from e121166-lin.cambridge.arm.com (e121166-lin.cambridge.arm.com [10.1.196.255])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id A0FC13F68F;
-        Fri, 21 Feb 2020 01:52:25 -0800 (PST)
-Date:   Fri, 21 Feb 2020 09:52:23 +0000
-From:   Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     linux-kernel@vger.kernel.org, stable@vger.kernel.org,
-        Pankaj Bansal <pankaj.bansal@nxp.com>,
-        Hanjun Guo <guohanjun@huawei.com>,
-        Will Deacon <will@kernel.org>,
-        Sudeep Holla <sudeep.holla@arm.com>,
+        Fri, 21 Feb 2020 04:52:36 -0500
+Received: from mailgw02.mediatek.com ([210.61.82.184]:23893 "EHLO
+        mailgw02.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726989AbgBUJwf (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 21 Feb 2020 04:52:35 -0500
+X-UUID: 2e534da1a58c42bda6f01e4e9cc0387f-20200221
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
+        h=Content-Transfer-Encoding:Content-Type:MIME-Version:Message-ID:Date:Subject:CC:To:From; bh=d/WFlzDa3S2eOt2IkKMzp95187HzPikccPGAx6OY+ks=;
+        b=MDZToudBH8ip+Ztx5jNMegXDvOZNGAMvN2YSA9j7SdkhRJA9toKJyYU091jbnDz6+3yP6cNlVwJtPsKicJWXzb4O55PPaVCnZtN/ztpJCfVf0DdMR7N4kNm545HiUcexjsajfF1U1lCZ4mfdvBpW1SHGkBnZjqGIvymKT/7rNto=;
+X-UUID: 2e534da1a58c42bda6f01e4e9cc0387f-20200221
+Received: from mtkcas07.mediatek.inc [(172.21.101.84)] by mailgw02.mediatek.com
+        (envelope-from <macpaul.lin@mediatek.com>)
+        (Cellopoint E-mail Firewall v4.1.10 Build 0809 with TLS)
+        with ESMTP id 946751563; Fri, 21 Feb 2020 17:52:31 +0800
+Received: from mtkcas08.mediatek.inc (172.21.101.126) by
+ mtkmbs07n2.mediatek.inc (172.21.101.141) with Microsoft SMTP Server (TLS) id
+ 15.0.1395.4; Fri, 21 Feb 2020 17:51:43 +0800
+Received: from mtkswgap22.mediatek.inc (172.21.77.33) by mtkcas08.mediatek.inc
+ (172.21.101.73) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
+ Transport; Fri, 21 Feb 2020 17:52:59 +0800
+From:   Macpaul Lin <macpaul.lin@mediatek.com>
+To:     Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
         Catalin Marinas <catalin.marinas@arm.com>,
-        Robin Murphy <robin.murphy@arm.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: Re: [PATCH 4.19 137/191] ACPI/IORT: Fix Number of IDs handling in
- iort_id_map()
-Message-ID: <20200221095223.GC29220@e121166-lin.cambridge.arm.com>
-References: <20200221072250.732482588@linuxfoundation.org>
- <20200221072307.150803032@linuxfoundation.org>
+        Will Deacon <will@kernel.org>,
+        Michael Turquette <mturquette@baylibre.com>,
+        Stephen Boyd <sboyd@kernel.org>,
+        mtk01761 <wendell.lin@mediatek.com>,
+        Fabien Parent <fparent@baylibre.com>,
+        Weiyi Lu <weiyi.lu@mediatek.com>,
+        Mars Cheng <mars.cheng@mediatek.com>,
+        Sean Wang <Sean.Wang@mediatek.com>,
+        Macpaul Lin <macpaul.lin@mediatek.com>,
+        Owen Chen <owen.chen@mediatek.com>,
+        Chunfeng Yun <chunfeng.yun@mediatek.com>,
+        Evan Green <evgreen@chromium.org>,
+        Yong Wu <yong.wu@mediatek.com>, Joerg Roedel <jroedel@suse.de>,
+        Shawn Guo <shawnguo@kernel.org>,
+        Marc Zyngier <marc.zyngier@arm.com>,
+        Ryder Lee <Ryder.Lee@mediatek.com>,
+        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-mediatek@lists.infradead.org>, <linux-clk@vger.kernel.org>
+CC:     Mediatek WSD Upstream <wsd_upstream@mediatek.com>,
+        CC Hwang <cc.hwang@mediatek.com>,
+        Loda Chou <loda.chou@mediatek.com>
+Subject: [PATCH 0/5] Add basic clock support for mt6765
+Date:   Fri, 21 Feb 2020 17:52:17 +0800
+Message-ID: <1582278742-1626-1-git-send-email-macpaul.lin@mediatek.com>
+X-Mailer: git-send-email 1.7.9.5
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200221072307.150803032@linuxfoundation.org>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+Content-Type: text/plain
+X-MTK:  N
+Content-Transfer-Encoding: base64
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Feb 21, 2020 at 08:41:50AM +0100, Greg Kroah-Hartman wrote:
-> From: Hanjun Guo <guohanjun@huawei.com>
-> 
-> [ Upstream commit 3c23b83a88d00383e1d498cfa515249aa2fe0238 ]
+VGhpcyBwYXRjaCBzZXQgYWRkcyBiYXNpYyBjbG9jayBzdXBwb3J0IGZvciBNZWRpYXRlaydzIG5l
+dyA4LWNvcmUgU29DLA0KTVQ2NzY1LCB3aGljaCBpcyBtYWlubHkgZm9yIHNtYXJ0cGhvbmUgYXBw
+bGljYXRpb24uIFdoaWNoIGhhcyBiZWVuDQpzcGxpdCBmcm9tIHByZXZpb3VzIHBhdGNoIHNldCB2
+NzogQWRkIGJhc2ljIFNvQyBzdXBwb3J0IGZvciBtdDY3NjUuDQoNCiAgaHR0cHM6Ly9wYXRjaHdv
+cmsua2VybmVsLm9yZy9jb3Zlci8xMTM3MDEwNS8NCg0KQ2hhbmdlcyBpbiB0aGlzIHBhdGNoIHNl
+dDoNCjEuIFRha2UgcGF0Y2hlcyAjMSwgIzMsICM0IGZyb20gb3JpZ2luIHBhdGNoIHNldC4NCiAg
+LSBbdjcsMS83XSBkdC1iaW5kaW5nczogY2xvY2s6IG1lZGlhdGVrOiBkb2N1bWVudCBjbGsgYmlu
+ZGluZ3MgZm9yDQogICAgTWVkaWF0ZWsgTVQ2NzY1IFNvQw0KICAtIFt2NywzLzddIGNsazogbWVk
+aWF0ZWs6IGFkZCBtdDY3NjUgY2xvY2sgSURzDQogIC0gW3Y3LDQvN10gY2xrOiBtZWRpYXRlazog
+QWRkIE1UNjc2NSBjbG9jayBzdXBwb3J0DQoyLiBTcGxpdCBvcmlnaW4gcGF0Y2ggIzEgaW50byAz
+IHBhdGNoZXM6DQogIC0gW1BBVENIIDEvNV0gZHQtYmluZGluZ3M6IGNsb2NrOiBtZWRpYXRlazog
+ZG9jdW1lbnQgY2xrIGJpbmRpbmdzIGZvcg0KICAgIE1lZGlhdGVrIE1UNjc2NSBTb0MNCiAgLSBb
+UEFUQ0ggMi81XSBkdC1iaW5kaW5nczogY2xvY2s6IG1lZGlhdGVrOiBkb2N1bWVudCBjbGsgYmlu
+ZGluZ3MNCiAgICBtaXBpMGEgZm9yIE1lZGlhdGVrIE1UNjc2NSBTb0MNCiAgLSBbUEFUQ0ggMy81
+XSBkdC1iaW5kaW5nczogY2xvY2s6IG1lZGlhdGVrOiBkb2N1bWVudCBjbGsgYmluZGluZ3MgDQog
+ICAgdmNvZGVjc3lzIGZvciBNZWRpYXRlayBNVDY3NjUgU29DDQoNCk1hY3BhdWwgTGluICgzKToN
+CiAgZHQtYmluZGluZ3M6IGNsb2NrOiBtZWRpYXRlazogZG9jdW1lbnQgY2xrIGJpbmRpbmdzIGZv
+ciBNZWRpYXRlaw0KICAgIE1UNjc2NSBTb0MNCiAgZHQtYmluZGluZ3M6IGNsb2NrOiBtZWRpYXRl
+azogZG9jdW1lbnQgY2xrIGJpbmRpbmdzIG1pcGkwYSBmb3INCiAgICBNZWRpYXRlayBNVDY3NjUg
+U29DDQogIGR0LWJpbmRpbmdzOiBjbG9jazogbWVkaWF0ZWs6IGRvY3VtZW50IGNsayBiaW5kaW5n
+cyB2Y29kZWNzeXMgZm9yDQogICAgTWVkaWF0ZWsgTVQ2NzY1IFNvQw0KDQpNYXJzIENoZW5nICgx
+KToNCiAgY2xrOiBtZWRpYXRlazogYWRkIG10Njc2NSBjbG9jayBJRHMNCg0KT3dlbiBDaGVuICgx
+KToNCiAgY2xrOiBtZWRpYXRlazogQWRkIE1UNjc2NSBjbG9jayBzdXBwb3J0DQoNCiAuLi4vYXJt
+L21lZGlhdGVrL21lZGlhdGVrLGFwbWl4ZWRzeXMudHh0ICAgICAgfCAgIDEgKw0KIC4uLi9iaW5k
+aW5ncy9hcm0vbWVkaWF0ZWsvbWVkaWF0ZWssYXVkc3lzLnR4dCB8ICAgMSArDQogLi4uL2JpbmRp
+bmdzL2FybS9tZWRpYXRlay9tZWRpYXRlayxjYW1zeXMudHh0IHwgICAxICsNCiAuLi4vYmluZGlu
+Z3MvYXJtL21lZGlhdGVrL21lZGlhdGVrLGltZ3N5cy50eHQgfCAgIDEgKw0KIC4uLi9hcm0vbWVk
+aWF0ZWsvbWVkaWF0ZWssaW5mcmFjZmcudHh0ICAgICAgICB8ICAgMSArDQogLi4uL2JpbmRpbmdz
+L2FybS9tZWRpYXRlay9tZWRpYXRlayxtaXBpMGEudHh0IHwgIDI4ICsNCiAuLi4vYmluZGluZ3Mv
+YXJtL21lZGlhdGVrL21lZGlhdGVrLG1tc3lzLnR4dCAgfCAgIDEgKw0KIC4uLi9hcm0vbWVkaWF0
+ZWsvbWVkaWF0ZWsscGVyaWNmZy50eHQgICAgICAgICB8ICAgMSArDQogLi4uL2FybS9tZWRpYXRl
+ay9tZWRpYXRlayx0b3Bja2dlbi50eHQgICAgICAgIHwgICAxICsNCiAuLi4vYXJtL21lZGlhdGVr
+L21lZGlhdGVrLHZjb2RlY3N5cy50eHQgICAgICAgfCAgMjcgKw0KIGRyaXZlcnMvY2xrL21lZGlh
+dGVrL0tjb25maWcgICAgICAgICAgICAgICAgICB8ICA4NiArKw0KIGRyaXZlcnMvY2xrL21lZGlh
+dGVrL01ha2VmaWxlICAgICAgICAgICAgICAgICB8ICAgNyArDQogZHJpdmVycy9jbGsvbWVkaWF0
+ZWsvY2xrLW10Njc2NS1hdWRpby5jICAgICAgIHwgMTAwICsrDQogZHJpdmVycy9jbGsvbWVkaWF0
+ZWsvY2xrLW10Njc2NS1jYW0uYyAgICAgICAgIHwgIDc0ICsrDQogZHJpdmVycy9jbGsvbWVkaWF0
+ZWsvY2xrLW10Njc2NS1pbWcuYyAgICAgICAgIHwgIDcwICsrDQogZHJpdmVycy9jbGsvbWVkaWF0
+ZWsvY2xrLW10Njc2NS1taXBpMGEuYyAgICAgIHwgIDY4ICsrDQogZHJpdmVycy9jbGsvbWVkaWF0
+ZWsvY2xrLW10Njc2NS1tbS5jICAgICAgICAgIHwgIDk2ICsrDQogZHJpdmVycy9jbGsvbWVkaWF0
+ZWsvY2xrLW10Njc2NS12Y29kZWMuYyAgICAgIHwgIDcwICsrDQogZHJpdmVycy9jbGsvbWVkaWF0
+ZWsvY2xrLW10Njc2NS5jICAgICAgICAgICAgIHwgOTUyICsrKysrKysrKysrKysrKysrKw0KIGlu
+Y2x1ZGUvZHQtYmluZGluZ3MvY2xvY2svbXQ2NzY1LWNsay5oICAgICAgICB8IDMxMyArKysrKysN
+CiAyMCBmaWxlcyBjaGFuZ2VkLCAxODk5IGluc2VydGlvbnMoKykNCiBjcmVhdGUgbW9kZSAxMDA2
+NDQgRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2FybS9tZWRpYXRlay9tZWRpYXRl
+ayxtaXBpMGEudHh0DQogY3JlYXRlIG1vZGUgMTAwNjQ0IERvY3VtZW50YXRpb24vZGV2aWNldHJl
+ZS9iaW5kaW5ncy9hcm0vbWVkaWF0ZWsvbWVkaWF0ZWssdmNvZGVjc3lzLnR4dA0KIGNyZWF0ZSBt
+b2RlIDEwMDY0NCBkcml2ZXJzL2Nsay9tZWRpYXRlay9jbGstbXQ2NzY1LWF1ZGlvLmMNCiBjcmVh
+dGUgbW9kZSAxMDA2NDQgZHJpdmVycy9jbGsvbWVkaWF0ZWsvY2xrLW10Njc2NS1jYW0uYw0KIGNy
+ZWF0ZSBtb2RlIDEwMDY0NCBkcml2ZXJzL2Nsay9tZWRpYXRlay9jbGstbXQ2NzY1LWltZy5jDQog
+Y3JlYXRlIG1vZGUgMTAwNjQ0IGRyaXZlcnMvY2xrL21lZGlhdGVrL2Nsay1tdDY3NjUtbWlwaTBh
+LmMNCiBjcmVhdGUgbW9kZSAxMDA2NDQgZHJpdmVycy9jbGsvbWVkaWF0ZWsvY2xrLW10Njc2NS1t
+bS5jDQogY3JlYXRlIG1vZGUgMTAwNjQ0IGRyaXZlcnMvY2xrL21lZGlhdGVrL2Nsay1tdDY3NjUt
+dmNvZGVjLmMNCiBjcmVhdGUgbW9kZSAxMDA2NDQgZHJpdmVycy9jbGsvbWVkaWF0ZWsvY2xrLW10
+Njc2NS5jDQogY3JlYXRlIG1vZGUgMTAwNjQ0IGluY2x1ZGUvZHQtYmluZGluZ3MvY2xvY2svbXQ2
+NzY1LWNsay5oDQoNCi0tIA0KMi4xOC4wDQo=
 
-Please drop this patch from the stable queue, thanks.
-
-Lorenzo
-
-> The IORT specification [0] (Section 3, table 4, page 9) defines the
-> 'Number of IDs' as 'The number of IDs in the range minus one'.
-> 
-> However, the IORT ID mapping function iort_id_map() treats the 'Number
-> of IDs' field as if it were the full IDs mapping count, with the
-> following check in place to detect out of boundary input IDs:
-> 
-> InputID >= Input base + Number of IDs
-> 
-> This check is flawed in that it considers the 'Number of IDs' field as
-> the full number of IDs mapping and disregards the 'minus one' from
-> the IDs count.
-> 
-> The correct check in iort_id_map() should be implemented as:
-> 
-> InputID > Input base + Number of IDs
-> 
-> this implements the specification correctly but unfortunately it breaks
-> existing firmwares that erroneously set the 'Number of IDs' as the full
-> IDs mapping count rather than IDs mapping count minus one.
-> 
-> e.g.
-> 
-> PCI hostbridge mapping entry 1:
-> Input base:  0x1000
-> ID Count:    0x100
-> Output base: 0x1000
-> Output reference: 0xC4  //ITS reference
-> 
-> PCI hostbridge mapping entry 2:
-> Input base:  0x1100
-> ID Count:    0x100
-> Output base: 0x2000
-> Output reference: 0xD4  //ITS reference
-> 
-> Two mapping entries which the second entry's Input base = the first
-> entry's Input base + ID count, so for InputID 0x1100 and with the
-> correct InputID check in place in iort_id_map() the kernel would map
-> the InputID to ITS 0xC4 not 0xD4 as it would be expected.
-> 
-> Therefore, to keep supporting existing flawed firmwares, introduce a
-> workaround that instructs the kernel to use the old InputID range check
-> logic in iort_id_map(), so that we can support both firmwares written
-> with the flawed 'Number of IDs' logic and the correct one as defined in
-> the specifications.
-> 
-> [0]: http://infocenter.arm.com/help/topic/com.arm.doc.den0049d/DEN0049D_IO_Remapping_Table.pdf
-> 
-> Reported-by: Pankaj Bansal <pankaj.bansal@nxp.com>
-> Link: https://lore.kernel.org/linux-acpi/20191215203303.29811-1-pankaj.bansal@nxp.com/
-> Signed-off-by: Hanjun Guo <guohanjun@huawei.com>
-> Signed-off-by: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-> Cc: Pankaj Bansal <pankaj.bansal@nxp.com>
-> Cc: Will Deacon <will@kernel.org>
-> Cc: Sudeep Holla <sudeep.holla@arm.com>
-> Cc: Catalin Marinas <catalin.marinas@arm.com>
-> Cc: Robin Murphy <robin.murphy@arm.com>
-> Signed-off-by: Will Deacon <will@kernel.org>
-> Signed-off-by: Sasha Levin <sashal@kernel.org>
-> ---
->  drivers/acpi/arm64/iort.c | 57 +++++++++++++++++++++++++++++++++++++--
->  1 file changed, 55 insertions(+), 2 deletions(-)
-> 
-> diff --git a/drivers/acpi/arm64/iort.c b/drivers/acpi/arm64/iort.c
-> index e11b5da6f828f..7d86468300b78 100644
-> --- a/drivers/acpi/arm64/iort.c
-> +++ b/drivers/acpi/arm64/iort.c
-> @@ -306,6 +306,59 @@ out:
->  	return status;
->  }
->  
-> +struct iort_workaround_oem_info {
-> +	char oem_id[ACPI_OEM_ID_SIZE + 1];
-> +	char oem_table_id[ACPI_OEM_TABLE_ID_SIZE + 1];
-> +	u32 oem_revision;
-> +};
-> +
-> +static bool apply_id_count_workaround;
-> +
-> +static struct iort_workaround_oem_info wa_info[] __initdata = {
-> +	{
-> +		.oem_id		= "HISI  ",
-> +		.oem_table_id	= "HIP07   ",
-> +		.oem_revision	= 0,
-> +	}, {
-> +		.oem_id		= "HISI  ",
-> +		.oem_table_id	= "HIP08   ",
-> +		.oem_revision	= 0,
-> +	}
-> +};
-> +
-> +static void __init
-> +iort_check_id_count_workaround(struct acpi_table_header *tbl)
-> +{
-> +	int i;
-> +
-> +	for (i = 0; i < ARRAY_SIZE(wa_info); i++) {
-> +		if (!memcmp(wa_info[i].oem_id, tbl->oem_id, ACPI_OEM_ID_SIZE) &&
-> +		    !memcmp(wa_info[i].oem_table_id, tbl->oem_table_id, ACPI_OEM_TABLE_ID_SIZE) &&
-> +		    wa_info[i].oem_revision == tbl->oem_revision) {
-> +			apply_id_count_workaround = true;
-> +			pr_warn(FW_BUG "ID count for ID mapping entry is wrong, applying workaround\n");
-> +			break;
-> +		}
-> +	}
-> +}
-> +
-> +static inline u32 iort_get_map_max(struct acpi_iort_id_mapping *map)
-> +{
-> +	u32 map_max = map->input_base + map->id_count;
-> +
-> +	/*
-> +	 * The IORT specification revision D (Section 3, table 4, page 9) says
-> +	 * Number of IDs = The number of IDs in the range minus one, but the
-> +	 * IORT code ignored the "minus one", and some firmware did that too,
-> +	 * so apply a workaround here to keep compatible with both the spec
-> +	 * compliant and non-spec compliant firmwares.
-> +	 */
-> +	if (apply_id_count_workaround)
-> +		map_max--;
-> +
-> +	return map_max;
-> +}
-> +
->  static int iort_id_map(struct acpi_iort_id_mapping *map, u8 type, u32 rid_in,
->  		       u32 *rid_out)
->  {
-> @@ -322,8 +375,7 @@ static int iort_id_map(struct acpi_iort_id_mapping *map, u8 type, u32 rid_in,
->  		return -ENXIO;
->  	}
->  
-> -	if (rid_in < map->input_base ||
-> -	    (rid_in >= map->input_base + map->id_count))
-> +	if (rid_in < map->input_base || rid_in > iort_get_map_max(map))
->  		return -ENXIO;
->  
->  	*rid_out = map->output_base + (rid_in - map->input_base);
-> @@ -1542,5 +1594,6 @@ void __init acpi_iort_init(void)
->  		return;
->  	}
->  
-> +	iort_check_id_count_workaround(iort_table);
->  	iort_init_platform_devices();
->  }
-> -- 
-> 2.20.1
-> 
-> 
-> 
