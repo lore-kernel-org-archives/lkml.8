@@ -7,46 +7,45 @@ X-Spam-Status: No, score=-13.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 422BCC35647
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 11:39:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 904E1C35647
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 11:40:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 153FD24650
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 11:39:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 63C8324650
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 11:40:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582285196;
-	bh=f4ezhykKHcP/SWrvI48MdWlXIkNcS65/Djgm3IMolHs=;
+	s=default; t=1582285216;
+	bh=0BteZ3cvD0FiYJiJlkZtpdTnBefQoYZkoo1WGUR0x5g=;
 	h=Date:From:To:Cc:Subject:List-ID:From;
-	b=Ag2mlO4MlEXdxQOIl8Pg4Ne07m+UXxRbFbCGm1HnIY+5+rpI+0kfcG5ERMYTbRSt0
-	 4e6XL6q7lO/k4mbYAGXlklWmv+Cynn5qtzwxlJRaslANlgYAY30DrdYXOBoXCDhoeI
-	 p9DBLCiYXYge1RuhuIqOu8VcWHVC5sXCpW7dHyHw=
+	b=v5dDGwr2T2Nwpdro35Eh4heFkFQUP2ikpaNC94ehf7C5ECmPrmCV+/3D26JprU5kL
+	 7l6K6uudEIL9rn54hHDxV84iucTQXn59XdMFlyMdNBCt5DyTFyJQSu5MKXuBOj4en5
+	 hiyqr94VNl6CzVSxxOwOvB5Xo7kPvS1nTOIk0dGI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727940AbgBULjz (ORCPT
+        id S1727973AbgBULkP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Feb 2020 06:39:55 -0500
-Received: from mail.kernel.org ([198.145.29.99]:41926 "EHLO mail.kernel.org"
+        Fri, 21 Feb 2020 06:40:15 -0500
+Received: from mail.kernel.org ([198.145.29.99]:42050 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726395AbgBULjy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Feb 2020 06:39:54 -0500
+        id S1727053AbgBULkP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 21 Feb 2020 06:40:15 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E02C5222C4;
-        Fri, 21 Feb 2020 11:39:53 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D88DA222C4;
+        Fri, 21 Feb 2020 11:40:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1582285194;
-        bh=f4ezhykKHcP/SWrvI48MdWlXIkNcS65/Djgm3IMolHs=;
+        s=default; t=1582285214;
+        bh=0BteZ3cvD0FiYJiJlkZtpdTnBefQoYZkoo1WGUR0x5g=;
         h=Date:From:To:Cc:Subject:From;
-        b=XpQ1mAzlntRYGnrUF68ySE4KCPEBC/+uYg9yNfYw0VOmbL1dPBqT/mBlvFrR9M8sP
-         rlUioMTfnMh4AauwauGJ49vou9YyvQAMsY9pu4Yu2ZBNXjPbgPHmKyA0UJUesgMSrI
-         Y9ispbtswT0u+acLFe/43qxtPwnlwexsXTYPorKs=
-Date:   Fri, 21 Feb 2020 12:39:52 +0100
+        b=UNcv92s/g5i0DMnz1EQ4tFgY0XJeQvxF4lHxtoT2ce2qSjWdsPuP39zE1bAbchgB2
+         orLZEl40LLAoDyai1KJZgUp3u8UqGD4yD6SfVMFVEFPuUQjCLFU5OFFwOqhhOx8umV
+         dmHA0pQbVT0ebKnsMAHpRA89CbLdHe+Fm9Bk8Vw4=
+Date:   Fri, 21 Feb 2020 12:40:12 +0100
 From:   Greg KH <gregkh@linuxfoundation.org>
-To:     Linus Torvalds <torvalds@linux-foundation.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Stephen Rothwell <sfr@canb.auug.org.au>
-Cc:     devel@linuxdriverproject.org, linux-kernel@vger.kernel.org
-Subject: [GIT PULL] Staging driver fixes for 5.6-rc3
-Message-ID: <20200221113952.GA114312@kroah.com>
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        Arnd Bergmann <arnd@arndb.de>, linux-kernel@vger.kernel.org
+Subject: [GIT PULL] Char/Misc driver fixes for 5.6-rc3
+Message-ID: <20200221114012.GA114392@kroah.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
@@ -61,66 +60,62 @@ The following changes since commit bb6d3fb354c5ee8d6bde2d576eb7220ea09862b9:
 
 are available in the Git repository at:
 
-  git://git.kernel.org/pub/scm/linux/kernel/git/gregkh/staging.git tags/staging-5.6-rc3
+  git://git.kernel.org/pub/scm/linux/kernel/git/gregkh/char-misc.git tags/char-misc-5.6-rc3
 
-for you to fetch changes up to 9a4556bd8f23209c29f152e6a930b6a893b0fc81:
+for you to fetch changes up to 74ba569a15a08b988bc059ad515980f51e85be79:
 
-  staging: rtl8723bs: Remove unneeded goto statements (2020-02-10 10:32:38 -0800)
+  Merge tag 'misc-habanalabs-fixes-2020-02-11' of git://people.freedesktop.org/~gabbayo/linux into char-misc-linus (2020-02-17 11:58:16 +0100)
 
 ----------------------------------------------------------------
-Staging driver fixes for 5.6-rc3
+Char/Misc fixes for 5.6-rc3
 
-Here are some small staging driver fixes for 5.6-rc3, along with the
-removal of an unused/unneeded driver as well.
+Here are some small char/misc driver fixes for 5.6-rc3.
 
-The android vsoc driver is not needed anymore by anyone, so it was
-removed.
+Also included in here are some updates for some documentation files that
+I seem to be maintaining these days.
 
-The other driver fixes are:
-	- ashmem bugfixes
-	- greybus audio driver bugfix
-	- wireless driver bugfixes and tiny cleanups to error paths
+The driver fixes are:
+  - small fixes for the habanalabs driver
+  - fsi driver bugfix
 
-All of these have been in linux-next for a while now with no reported
+All of these have been in linux-next for a while with no reported
 issues.
 
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ----------------------------------------------------------------
-Alistair Delva (1):
-      staging: android: Delete the 'vsoc' driver
+Bartosz Golaszewski (1):
+      MAINTAINERS: remove unnecessary ':' characters
 
-Colin Ian King (1):
-      staging: rtl8723bs: fix copy of overlapping memory
+Brendan Higgins (1):
+      fsi: aspeed: add unspecified HAS_IOMEM dependency
 
-Dan Carpenter (1):
-      staging: greybus: use after free in gb_audio_manager_remove_all()
+Grant Likely (1):
+      Documentation/process: Add Arm contact for embargoed HW issues
 
-Larry Finger (6):
-      staging: rtl8188eu: Fix potential security hole
-      staging: rtl8723bs: Fix potential security hole
-      staging: rtl8188eu: Fix potential overuse of kernel memory
-      staging: rtl8723bs: Fix potential overuse of kernel memory
-      staging: rtl8188eu: Remove some unneeded goto statements
-      staging: rtl8723bs: Remove unneeded goto statements
+Greg Kroah-Hartman (3):
+      embargoed-hardware-issues: drop Amazon contact as the email address now bounces
+      COPYING: state that all contributions really are covered by this file
+      Merge tag 'misc-habanalabs-fixes-2020-02-11' of git://people.freedesktop.org/~gabbayo/linux into char-misc-linus
 
-Malcolm Priestley (1):
-      staging: vt6656: fix sign of rx_dbm to bb_pre_ed_rssi.
+James Morris (1):
+      Documentation/process: Change Microsoft contact for embargoed hardware issues
 
-Suren Baghdasaryan (1):
-      staging: android: ashmem: Disallow ashmem memory from being remapped
+Oded Gabbay (2):
+      habanalabs: halt the engines before hard-reset
+      habanalabs: patched cb equals user cb in device memset
 
- drivers/staging/android/Kconfig                |    8 -
- drivers/staging/android/Makefile               |    1 -
- drivers/staging/android/TODO                   |    9 -
- drivers/staging/android/ashmem.c               |   28 +
- drivers/staging/android/uapi/vsoc_shm.h        |  295 ------
- drivers/staging/android/vsoc.c                 | 1149 ------------------------
- drivers/staging/greybus/audio_manager.c        |    2 +-
- drivers/staging/rtl8188eu/os_dep/ioctl_linux.c |   40 +-
- drivers/staging/rtl8723bs/hal/rtl8723bs_xmit.c |    5 +-
- drivers/staging/rtl8723bs/os_dep/ioctl_linux.c |   47 +-
- drivers/staging/vt6656/dpc.c                   |    2 +-
- 11 files changed, 56 insertions(+), 1530 deletions(-)
- delete mode 100644 drivers/staging/android/uapi/vsoc_shm.h
- delete mode 100644 drivers/staging/android/vsoc.c
+Omer Shpigelman (1):
+      habanalabs: do not halt CoreSight during hard reset
+
+Tyler Hicks (1):
+      Documentation/process: Swap out the ambassador for Canonical
+
+ COPYING                                            |  2 +
+ .../process/embargoed-hardware-issues.rst          |  8 ++--
+ .../zh_CN/process/embargoed-hardware-issues.rst    |  2 +-
+ MAINTAINERS                                        | 22 +++++------
+ drivers/fsi/Kconfig                                |  1 +
+ drivers/misc/habanalabs/device.c                   |  5 ++-
+ drivers/misc/habanalabs/goya/goya.c                | 44 +++++++++++++++++++++-
+ 7 files changed, 65 insertions(+), 19 deletions(-)
