@@ -4,126 +4,111 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2E944C35666
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 19:55:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D0360C35666
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 19:57:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0675B20722
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 19:55:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A057720658
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 19:57:06 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="x5u940o4"
+	dkim=pass (2048-bit key) header.d=es-iitr-ac-in.20150623.gappssmtp.com header.i=@es-iitr-ac-in.20150623.gappssmtp.com header.b="PEKn2MBc"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726823AbgBUTzz (ORCPT
+        id S1727352AbgBUT5F (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Feb 2020 14:55:55 -0500
-Received: from mail-wr1-f68.google.com ([209.85.221.68]:44294 "EHLO
-        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726483AbgBUTzz (ORCPT
+        Fri, 21 Feb 2020 14:57:05 -0500
+Received: from mail-pf1-f195.google.com ([209.85.210.195]:33647 "EHLO
+        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726483AbgBUT5F (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Feb 2020 14:55:55 -0500
-Received: by mail-wr1-f68.google.com with SMTP id m16so3336520wrx.11
-        for <linux-kernel@vger.kernel.org>; Fri, 21 Feb 2020 11:55:53 -0800 (PST)
+        Fri, 21 Feb 2020 14:57:05 -0500
+Received: by mail-pf1-f195.google.com with SMTP id n7so1806719pfn.0
+        for <linux-kernel@vger.kernel.org>; Fri, 21 Feb 2020 11:57:00 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=/RkItNieDgV0spCBrAvgEKW6jVdvnCXvHYuZAXnr8OA=;
-        b=x5u940o4PeMZz2zVQ/GgLDPvzLJ6lEY39zGpB6qUtCALbWWKmQaVV3Y3/YnyXXOW4q
-         wz98PZAHt6fk9wghSdnefuCgGUaxGVKrVYqf2hxKyBzO77vsiPIlqBDmrDh7XNgoFFok
-         W8k1IeN+CgHIlCXZMyBtbWARspburRc0CAe3AtIO78A3BNELLFeh/r22R9UZja2npkHR
-         KLCC0KryrADvmUm8J5b7HXXWJpeWRK+jMDJn7C1cE+TxpqUfpevGO5EKtWObGYp+97Si
-         daBjhDePFtR5sLz4BDDshyr+KTaS+pqcYssnMGixj3kj/VhFvMLeFfKHBvbLqcCSlsbW
-         UOkQ==
+        d=es-iitr-ac-in.20150623.gappssmtp.com; s=20150623;
+        h=date:from:to:subject:message-id:mime-version:content-disposition
+         :user-agent;
+        bh=btdpP75zyRVNd2zdgzUEwBQJP+VyfWPJzrchDwkOdOs=;
+        b=PEKn2MBcmvOEnkpWiIbdjv9ZxqEbvv+hAMODBy0nzIAv4StveA+VGLTeX2JDlTFEJp
+         tdcNhIA+M1Nwm3hEkKkVeDapbpCcNaSrHKuMod09Ej5rITU1adajdij1pqlZmVx6EBXW
+         XTq2YspggUFvNn91B6mYvitzYdXAxxYC71zP2AKUql8n6+wROY/qu9O6X4LSv2gUcnpa
+         +0RZ8xM8AriE5vZgEyNnHmHJjsDRAjqb7dg0Vo4c//+95R+IaT/Dl9GQtEL7I/RraezV
+         nE4xMHTV6ZhGG5KkmN7W51vDD9/utKvHatkX0CHIh/mYu7r0cYaA3Mgk2D1gEfFCSP9R
+         fbbg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=/RkItNieDgV0spCBrAvgEKW6jVdvnCXvHYuZAXnr8OA=;
-        b=NM2hrTMBdqc6FepDqp9mz+afKuY9pdjfmhPM/haynCenD153PD/tB33CJ57SOyETk2
-         tGmQaEsnikTX8AUaT758TI0oWmawnsffrRHzGLw30ACnJ1gSyoBEIpmeIIz6lHMgx6fH
-         iQskUeuMR6e2FJfacUKDVzx8iqGorwep35Jfvlaqj7M0vn1uvo5b8Bjzc9EHk2a0TxW3
-         7lBtBzb1GscQFFX/5secV6rHPTJlCj6WNCgK3t5oyQp5f0248g9P9xR4qIB3G6CSYqpo
-         1QBaXq4xCe5njMdDsxhRforJQUhbzpYE+D0I9asGXFGyHWF+JlH4xsPPRw8tx75Qe7Lt
-         80nQ==
-X-Gm-Message-State: APjAAAWf/eCuLGfKb5Z4R1suCqVbiTrXLGzMhkPpWkULL4YFX/11R+Br
-        nr8Uer1lwmUv6ByWOmePaHbhjg==
-X-Google-Smtp-Source: APXvYqzuKtU50Hh3qFOFhMh2kC8UV6DBRqImeOmDnHM6EvrvnQ2IZngIOzQKoWMqRuLAwslEHRLoXA==
-X-Received: by 2002:a5d:4acb:: with SMTP id y11mr21913792wrs.111.1582314952493;
-        Fri, 21 Feb 2020 11:55:52 -0800 (PST)
-Received: from Red ([2a01:cb1d:3d5:a100:2e56:dcff:fed2:c6d6])
-        by smtp.googlemail.com with ESMTPSA id y12sm5130730wmj.6.2020.02.21.11.55.51
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 21 Feb 2020 11:55:51 -0800 (PST)
-Date:   Fri, 21 Feb 2020 20:55:49 +0100
-From:   LABBE Corentin <clabbe@baylibre.com>
-To:     Eric Biggers <ebiggers@kernel.org>
-Cc:     catalin.marinas@arm.com, davem@davemloft.net,
-        herbert@gondor.apana.org.au, will@kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-crypto@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-sunxi@googlegroups.com
-Subject: Re: [PATCH] crypto: arm64: CE: implement export/import
-Message-ID: <20200221195549.GA29499@Red>
-References: <1582128037-18644-1-git-send-email-clabbe@baylibre.com>
- <20200219181654.GB2312@sol.localdomain>
+        h=x-gm-message-state:date:from:to:subject:message-id:mime-version
+         :content-disposition:user-agent;
+        bh=btdpP75zyRVNd2zdgzUEwBQJP+VyfWPJzrchDwkOdOs=;
+        b=giEZ18yy/3ZwjWBU8AvECuGbmdFpvYvWPopOuVaJ5DTwjDHmDGXGaR9hbklsqDXKRA
+         XsNRp81+AlgB+OkRA37Bz/PDfNAMJjjNoARL7/GIn53+1ZMiPnIjpoWWzwCCWvBJVXGT
+         G6GEVS5GEQ4jYK6e24pEVF1+aASzIQpLWIb+Wue0S10Dmqxxp8YZpQsAhvD3ZmoTkQC9
+         mUKw3Jx6sorP1/TFS6Z6DsafG0/o+BQg6R98TNUSXAXX/Z5TAm9d4g8LZOLm1UhB0uvE
+         MxJm3f35ygQhnw2amZiK/LIDVZEZMKhTNCJf2JKmxWf/IldpDvuoLK4G6K+0yEBuLwWK
+         acQg==
+X-Gm-Message-State: APjAAAUuGy1aoGVZV/x5TMcc9/bEdX1kPlqUpjwvh/LOKoazJaKQycOX
+        3jh6thVx7jfZvtCYf44ymaeLUsdTNFoQw/O5
+X-Google-Smtp-Source: APXvYqyuzt+qh+/9qPz7Xo4v2MMC+7vbZxDZI/rp3+7oRsDVJjoc9KxF/5d1CXRa9xg4vob5FiB3Tg==
+X-Received: by 2002:a63:487:: with SMTP id 129mr39862540pge.193.1582315019992;
+        Fri, 21 Feb 2020 11:56:59 -0800 (PST)
+Received: from kaaira-HP-Pavilion-Notebook ([103.37.201.178])
+        by smtp.gmail.com with ESMTPSA id x28sm3274324pgc.83.2020.02.21.11.56.55
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Fri, 21 Feb 2020 11:56:59 -0800 (PST)
+Date:   Sat, 22 Feb 2020 01:26:49 +0530
+From:   Kaaira Gupta <kgupta@es.iitr.ac.in>
+To:     Manish Chopra <manishc@marvell.com>, GR-Linux-NIC-Dev@marvell.com,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        netdev@vger.kernel.org, devel@driverdev.osuosl.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH] staging: qlge: add braces around macro arguments
+Message-ID: <20200221195649.GA18450@kaaira-HP-Pavilion-Notebook>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200219181654.GB2312@sol.localdomain>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Feb 19, 2020 at 10:16:54AM -0800, Eric Biggers wrote:
-> On Wed, Feb 19, 2020 at 04:00:37PM +0000, Corentin Labbe wrote:
-> > When an ahash algorithm fallback to another ahash and that fallback is
-> > shaXXX-CE, doing export/import lead to error like this:
-> > alg: ahash: sha1-sun8i-ce export() overran state buffer on test vector 0, cfg=\"import/export\"
-> > 
-> > This is due to the descsize of shaxxx-ce larger than struct shaxxx_state off by an u32.
-> > For fixing this, let's implement export/import which rip the finalize
-> > variant instead of using generic export/import.
-> > 
-> > Signed-off-by: Corentin Labbe <clabbe@baylibre.com>
-> > ---
-> >  arch/arm64/crypto/sha1-ce-glue.c | 20 ++++++++++++++++++++
-> >  arch/arm64/crypto/sha2-ce-glue.c | 23 +++++++++++++++++++++++
-> >  2 files changed, 43 insertions(+)
-> > 
-> > diff --git a/arch/arm64/crypto/sha1-ce-glue.c b/arch/arm64/crypto/sha1-ce-glue.c
-> > index 63c875d3314b..dc44d48415cd 100644
-> > --- a/arch/arm64/crypto/sha1-ce-glue.c
-> > +++ b/arch/arm64/crypto/sha1-ce-glue.c
-> > @@ -91,12 +91,32 @@ static int sha1_ce_final(struct shash_desc *desc, u8 *out)
-> >  	return sha1_base_finish(desc, out);
-> >  }
-> >  
-> > +static int sha1_ce_export(struct shash_desc *desc, void *out)
-> > +{
-> > +	struct sha1_ce_state *sctx = shash_desc_ctx(desc);
-> > +
-> > +	memcpy(out, sctx, sizeof(struct sha1_state));
-> > +	return 0;
-> > +}
-> > +
-> > +static int sha1_ce_import(struct shash_desc *desc, const void *in)
-> > +{
-> > +	struct sha1_ce_state *sctx = shash_desc_ctx(desc);
-> > +
-> > +	memcpy(sctx, in, sizeof(struct sha1_state));
-> > +	sctx->finalize = 0;
-> > +	return 0;
-> > +}
-> 
-> Can you use '&sctx->sst' instead of 'sctx' so that we aren't relying on the
-> 'struct sha1_state' being located at the beginning of the struct?
-> 
-> Likewise for SHA-2.
+Fix checkpatch.pl warnings of adding braces around macro arguments to
+prevent precedence issues by adding braces in qlge_dbg.c
 
-Yes, I will do that, it is better.
-thanks
+Signed-off-by: Kaaira Gupta <kgupta@es.iitr.ac.in>
+---
+ drivers/staging/qlge/qlge_dbg.c | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
-Regards
+diff --git a/drivers/staging/qlge/qlge_dbg.c b/drivers/staging/qlge/qlge_dbg.c
+index 8cf39615c520..c7af2548d119 100644
+--- a/drivers/staging/qlge/qlge_dbg.c
++++ b/drivers/staging/qlge/qlge_dbg.c
+@@ -1525,7 +1525,7 @@ void ql_dump_regs(struct ql_adapter *qdev)
+ #ifdef QL_STAT_DUMP
+ 
+ #define DUMP_STAT(qdev, stat)	\
+-	pr_err("%s = %ld\n", #stat, (unsigned long)qdev->nic_stats.stat)
++	pr_err("%s = %ld\n", #stat, (unsigned long)(qdev)->nic_stats.stat)
+ 
+ void ql_dump_stat(struct ql_adapter *qdev)
+ {
+@@ -1578,12 +1578,12 @@ void ql_dump_stat(struct ql_adapter *qdev)
+ #ifdef QL_DEV_DUMP
+ 
+ #define DUMP_QDEV_FIELD(qdev, type, field)		\
+-	pr_err("qdev->%-24s = " type "\n", #field, qdev->field)
++	pr_err("qdev->%-24s = " type "\n", #field, (qdev)->(field))
+ #define DUMP_QDEV_DMA_FIELD(qdev, field)		\
+ 	pr_err("qdev->%-24s = %llx\n", #field, (unsigned long long)qdev->field)
+ #define DUMP_QDEV_ARRAY(qdev, type, array, index, field) \
+ 	pr_err("%s[%d].%s = " type "\n",		 \
+-	       #array, index, #field, qdev->array[index].field);
++	       #array, index, #field, (qdev)->array[index].field);
+ void ql_dump_qdev(struct ql_adapter *qdev)
+ {
+ 	int i;
+-- 
+2.17.1
+
