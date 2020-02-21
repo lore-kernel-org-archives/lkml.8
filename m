@@ -2,163 +2,100 @@ Return-Path: <SRS0=1210=4J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,UNWANTED_LANGUAGE_BODY,URIBL_BLOCKED
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B4CFAC35647
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 10:41:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6A851C35647
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 10:43:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8A60B24650
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 10:41:30 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="YfODzCNo"
+	by mail.kernel.org (Postfix) with ESMTP id 48BFC20722
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 10:43:21 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727887AbgBUKl3 (ORCPT
+        id S1727448AbgBUKnU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Feb 2020 05:41:29 -0500
-Received: from mail-wr1-f66.google.com ([209.85.221.66]:43095 "EHLO
-        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726976AbgBUKl2 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Feb 2020 05:41:28 -0500
-Received: by mail-wr1-f66.google.com with SMTP id r11so1434545wrq.10
-        for <linux-kernel@vger.kernel.org>; Fri, 21 Feb 2020 02:41:27 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
-        h=references:user-agent:from:to:cc:subject:in-reply-to:date
-         :message-id:mime-version;
-        bh=vbdL14wqd+TXUD1iwQ6ZI35nUpnOaOq+sk6GuqOnbiE=;
-        b=YfODzCNoQjL+RoLE6G4sgkjuvQVwbC1wGb/3uuoOAX+cZ+vm57ycU5Sc+QVisCixDa
-         r/040sq+Uk40zYsNSm7wFoNnJHRoPnIhcpT1S7SEwyrPUvhwNbdZ9P+8GT4CZx42KErf
-         X9XrtzP9Pg+SjqKYBE2T1DlSTsPVowfyOnrVzh6L1Fl/cRoaEg4WnnUw4g2y+CCSAR41
-         fbyyJzg6sNZhmzCRl3w5DcbOLuyjgmkBmnsKjGHOznHgXteWEQfSQdGXhUMAKira8Fnq
-         HP/hvYn7UA6H+yJAhTy8ytah0Mvmfm/7L0P3DOr3Msnxh+hB9A0/E8Q4pNJqPf3MLVMa
-         8XtQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:references:user-agent:from:to:cc:subject
-         :in-reply-to:date:message-id:mime-version;
-        bh=vbdL14wqd+TXUD1iwQ6ZI35nUpnOaOq+sk6GuqOnbiE=;
-        b=QUiAbOzQ0N96fb04Tydt9RDpAnwhsfnp2pQd+NDwd0P4XVN2WWGilVcuONlM8qNX4X
-         Ggsvcz7RAVj4FFDppfTZIR5UpD1DpPpR/lyYQxQaEfVRS+QbY+S/McFcG1lqejfyvg2x
-         B0+43btF94VMGAC9LbmpzUpnxUw3YJhEmGZvCDIdCIZjOjrEN0IG2fUkiWweHWAxoVnS
-         1RNbtWy7lT7sobU2P2PQ6Q8hme9gE+EdrT05k9o7qcpHvMLebM/cLd2E7OxkMX61NrtG
-         WSB0IhcVNVLlf6Z95yj66j+0/0wkJdmvgdn8Gk5NSET4vSKiLIizTI6RGH7a6AoVS0qz
-         YG4A==
-X-Gm-Message-State: APjAAAXop0TJuwGDYC2n8m20JR7ggAvmRwLW4N7yxBlYcFpPtgDUZkJu
-        XrX8RZnotZiF7PFU7E5GEe17mg==
-X-Google-Smtp-Source: APXvYqyoHnkyxs6lUkgFkTdeB46dWH5MVKdPDqMKHGWBBWrmCgoMEtbFZmYRbm2shz9WS4nVuZDt2Q==
-X-Received: by 2002:a5d:6284:: with SMTP id k4mr49219802wru.398.1582281686837;
-        Fri, 21 Feb 2020 02:41:26 -0800 (PST)
-Received: from localhost (laubervilliers-658-1-213-31.w90-63.abo.wanadoo.fr. [90.63.244.31])
-        by smtp.gmail.com with ESMTPSA id b67sm3501249wmc.38.2020.02.21.02.41.26
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 21 Feb 2020 02:41:26 -0800 (PST)
-References: <20200220205711.77953-1-martin.blumenstingl@googlemail.com> <20200220205711.77953-3-martin.blumenstingl@googlemail.com>
-User-agent: mu4e 1.3.3; emacs 26.3
-From:   Jerome Brunet <jbrunet@baylibre.com>
-To:     Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
-        broonie@kernel.org, robh+dt@kernel.org, mark.rutland@arm.com,
-        alsa-devel@alsa-project.org, devicetree@vger.kernel.org,
-        linux-amlogic@lists.infradead.org
-Cc:     lgirdwood@gmail.com, perex@perex.cz, tiwai@suse.com,
-        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
-Subject: Re: [PATCH 2/3] ASoC: meson: aiu: introduce a struct for platform specific information
-In-reply-to: <20200220205711.77953-3-martin.blumenstingl@googlemail.com>
-Date:   Fri, 21 Feb 2020 11:41:25 +0100
-Message-ID: <1jsgj42pey.fsf@starbuckisacylon.baylibre.com>
-MIME-Version: 1.0
-Content-Type: text/plain
+        Fri, 21 Feb 2020 05:43:20 -0500
+Received: from smtp21.cstnet.cn ([159.226.251.21]:54566 "EHLO cstnet.cn"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726934AbgBUKnT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 21 Feb 2020 05:43:19 -0500
+Received: from ubuntu.localdomain (unknown [183.131.110.113])
+        by APP-01 (Coremail) with SMTP id qwCowACHrGI3tE9eWnK+BA--.21533S2;
+        Fri, 21 Feb 2020 18:43:07 +0800 (CST)
+From:   Xu Wang <vulab@iscas.ac.cn>
+To:     stf_xl@wp.pl, kvalo@codeaurora.org, davem@davemloft.net
+Cc:     linux-wireless@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH] iwlegacy: Remove unneeded variable ret
+Date:   Fri, 21 Feb 2020 18:43:03 +0800
+Message-Id: <20200221104303.3901-1-vulab@iscas.ac.cn>
+X-Mailer: git-send-email 2.17.1
+X-CM-TRANSID: qwCowACHrGI3tE9eWnK+BA--.21533S2
+X-Coremail-Antispam: 1UD129KBjvJXoWxJr43KFW5GFWxXF1fAr4Dtwb_yoW8Xr4kpF
+        4UurZFkw4YgF4DGaykAa9ayFs8Z3W7JrZrGa9akw1ruF9rJr1F9r40qFyYy3yF9rWDXF1a
+        9F4jyrWfCrn8JrDanT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+        9KBjDU0xBIdaVrnRJUUUymb7Iv0xC_Kw4lb4IE77IF4wAFF20E14v26r1j6r4UM7CY07I2
+        0VC2zVCF04k26cxKx2IYs7xG6rWj6s0DM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rw
+        A2F7IY1VAKz4vEj48ve4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Gr0_Xr1l84ACjcxK6xII
+        jxv20xvEc7CjxVAFwI0_Gr0_Cr1l84ACjcxK6I8E87Iv67AKxVWxJr0_GcWl84ACjcxK6I
+        8E87Iv6xkF7I0E14v26rxl6s0DM2AIxVAIcxkEcVAq07x20xvEncxIr21l5I8CrVACY4xI
+        64kE6c02F40Ex7xfMcIj6xIIjxv20xvE14v26r126r1DMcIj6I8E87Iv67AKxVW8Jr0_Cr
+        1UMcvjeVCFs4IE7xkEbVWUJVW8JwACjcxG0xvY0x0EwIxGrwCF04k20xvY0x0EwIxGrwCF
+        x2IqxVCFs4IE7xkEbVWUJVW8JwC20s026c02F40E14v26r1j6r18MI8I3I0E7480Y4vE14
+        v26r106r1rMI8E67AF67kF1VAFwI0_JF0_Jw1lIxkGc2Ij64vIr41lIxAIcVC0I7IYx2IY
+        67AKxVWUJVWUCwCI42IY6xIIjxv20xvEc7CjxVAFwI0_Jr0_Gr1lIxAIcVCF04k26cxKx2
+        IYs7xG6rWUJVWrZr1UMIIF0xvEx4A2jsIE14v26r1j6r4UMIIF0xvEx4A2jsIEc7CjxVAF
+        wI0_Gr0_Gr1UYxBIdaVFxhVjvjDU0xZFpf9x07bY0PhUUUUU=
+X-Originating-IP: [183.131.110.113]
+X-CM-SenderInfo: pyxotu46lvutnvoduhdfq/1tbiDAMNA1z4ixYqcgAEsk
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Remove unneeded variable ret used to store return value.
 
-On Thu 20 Feb 2020 at 21:57, Martin Blumenstingl <martin.blumenstingl@googlemail.com> wrote:
+Signed-off-by: Xu Wang <vulab@iscas.ac.cn>
+---
+ drivers/net/wireless/intel/iwlegacy/3945-mac.c | 4 +---
+ drivers/net/wireless/intel/iwlegacy/4965.c     | 3 +--
+ 2 files changed, 2 insertions(+), 5 deletions(-)
 
-> Introduce a struct aiu_platform_data to make the driver aware of
-> platform specific information. Convert the existing check for the
-> internal stereo audio codec (only available on GXL) to this new struct.
-> Support for the 32-bit SoCs will need this as well because the
-> AIU_CLK_CTRL_MORE register doesn't have the I2S divider bits (and we
-> need to use the I2S divider from AIU_CLK_CTRL instead).
->
-> Signed-off-by: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
-
-Reviewed-by: Jerome Brunet <jbrunet@baylibre.com>
-
-> ---
->  sound/soc/meson/aiu.c | 19 ++++++++++++++++---
->  sound/soc/meson/aiu.h |  5 +++++
->  2 files changed, 21 insertions(+), 3 deletions(-)
->
-> diff --git a/sound/soc/meson/aiu.c b/sound/soc/meson/aiu.c
-> index d3e2d40e9562..38209312a8c3 100644
-> --- a/sound/soc/meson/aiu.c
-> +++ b/sound/soc/meson/aiu.c
-> @@ -273,6 +273,11 @@ static int aiu_probe(struct platform_device *pdev)
->  	aiu = devm_kzalloc(dev, sizeof(*aiu), GFP_KERNEL);
->  	if (!aiu)
->  		return -ENOMEM;
-> +
-> +	aiu->platform = device_get_match_data(dev);
-> +	if (!aiu->platform)
-> +		return -ENODEV;
-> +
->  	platform_set_drvdata(pdev, aiu);
->  
->  	ret = device_reset(dev);
-> @@ -322,7 +327,7 @@ static int aiu_probe(struct platform_device *pdev)
->  	}
->  
->  	/* Register the internal dac control component on gxl */
-> -	if (of_device_is_compatible(dev->of_node, "amlogic,aiu-gxl")) {
-> +	if (aiu->platform->has_acodec) {
->  		ret = aiu_acodec_ctrl_register_component(dev);
->  		if (ret) {
->  			dev_err(dev,
-> @@ -344,9 +349,17 @@ static int aiu_remove(struct platform_device *pdev)
->  	return 0;
->  }
->  
-> +static const struct aiu_platform_data aiu_gxbb_pdata = {
-> +	.has_acodec = false,
-> +};
-> +
-> +static const struct aiu_platform_data aiu_gxl_pdata = {
-> +	.has_acodec = true,
-> +};
-> +
->  static const struct of_device_id aiu_of_match[] = {
-> -	{ .compatible = "amlogic,aiu-gxbb", },
-> -	{ .compatible = "amlogic,aiu-gxl", },
-> +	{ .compatible = "amlogic,aiu-gxbb", .data = &aiu_gxbb_pdata },
-> +	{ .compatible = "amlogic,aiu-gxl", .data = &aiu_gxl_pdata },
->  	{}
->  };
->  MODULE_DEVICE_TABLE(of, aiu_of_match);
-> diff --git a/sound/soc/meson/aiu.h b/sound/soc/meson/aiu.h
-> index 06a968c55728..ab003638d5e5 100644
-> --- a/sound/soc/meson/aiu.h
-> +++ b/sound/soc/meson/aiu.h
-> @@ -27,11 +27,16 @@ struct aiu_interface {
->  	int irq;
->  };
->  
-> +struct aiu_platform_data {
-> +	bool has_acodec;
-> +};
-> +
->  struct aiu {
->  	struct clk *pclk;
->  	struct clk *spdif_mclk;
->  	struct aiu_interface i2s;
->  	struct aiu_interface spdif;
-> +	const struct aiu_platform_data *platform;
->  };
->  
->  #define AIU_FORMATS (SNDRV_PCM_FMTBIT_S16_LE |	\
+diff --git a/drivers/net/wireless/intel/iwlegacy/3945-mac.c b/drivers/net/wireless/intel/iwlegacy/3945-mac.c
+index 206b43b9dff8..9167c3d2711d 100644
+--- a/drivers/net/wireless/intel/iwlegacy/3945-mac.c
++++ b/drivers/net/wireless/intel/iwlegacy/3945-mac.c
+@@ -228,9 +228,7 @@ il3945_set_dynamic_key(struct il_priv *il, struct ieee80211_key_conf *keyconf,
+ static int
+ il3945_remove_static_key(struct il_priv *il)
+ {
+-	int ret = -EOPNOTSUPP;
+-
+-	return ret;
++	return -EOPNOTSUPP;
+ }
+ 
+ static int
+diff --git a/drivers/net/wireless/intel/iwlegacy/4965.c b/drivers/net/wireless/intel/iwlegacy/4965.c
+index 34d0579132ce..fc8fa5818de7 100644
+--- a/drivers/net/wireless/intel/iwlegacy/4965.c
++++ b/drivers/net/wireless/intel/iwlegacy/4965.c
+@@ -416,7 +416,6 @@ il4965_set_ucode_ptrs(struct il_priv *il)
+ {
+ 	dma_addr_t pinst;
+ 	dma_addr_t pdata;
+-	int ret = 0;
+ 
+ 	/* bits 35:4 for 4965 */
+ 	pinst = il->ucode_code.p_addr >> 4;
+@@ -433,7 +432,7 @@ il4965_set_ucode_ptrs(struct il_priv *il)
+ 		   il->ucode_code.len | BSM_DRAM_INST_LOAD);
+ 	D_INFO("Runtime uCode pointers are set.\n");
+ 
+-	return ret;
++	return 0;
+ }
+ 
+ /**
+-- 
+2.17.1
 
