@@ -7,46 +7,48 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 61B44C35641
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 08:10:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 85298C35640
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 08:10:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3876B20801
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 08:10:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4D9F720578
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 08:10:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582272624;
-	bh=BlyZgi+6germn7b178kclvtcqUaI2MCoFVztag4gb0s=;
+	s=default; t=1582272626;
+	bh=abcxH2FDkY67ywKz9OWa3xtvSrEUbS2mzMluiL1bXfE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=riDqS5eCGJeVG9sGpukZvUKuQL7ibH1u/sGln1w60iLNuMJGUjARIakkX2/1LPYW3
-	 ZxZfm6xio1U6swJJsiKt6MFblnL0283yDUMzpAnZr6S0RZz+EU9+bT9/mDcG0AoJc7
-	 /p6U80xMqQli40X7Kv8J/OEukc4evuWVTf4Ez95Y=
+	b=G2lhGHTbqtaXzfvJxDRBLt80F4X8PU7wEk4haGT3xex8Uk3DcnExdSKfQk5s34aUd
+	 9K6TygzwNWedxdDJqv874z2tbtIdLUyPL8Ob6c3SWagwApAAI8nOwZ0bPZEdAVd3e2
+	 g1vkk1EIofVLR9IJiZX9fommOPgxTRHRc1EB4elo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732016AbgBUIKX (ORCPT
+        id S1732527AbgBUIKY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Feb 2020 03:10:23 -0500
-Received: from mail.kernel.org ([198.145.29.99]:45528 "EHLO mail.kernel.org"
+        Fri, 21 Feb 2020 03:10:24 -0500
+Received: from mail.kernel.org ([198.145.29.99]:45584 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732140AbgBUIKU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Feb 2020 03:10:20 -0500
+        id S1732515AbgBUIKX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 21 Feb 2020 03:10:23 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 63F0420578;
-        Fri, 21 Feb 2020 08:10:19 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id CB5BE24670;
+        Fri, 21 Feb 2020 08:10:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1582272619;
-        bh=BlyZgi+6germn7b178kclvtcqUaI2MCoFVztag4gb0s=;
+        s=default; t=1582272622;
+        bh=abcxH2FDkY67ywKz9OWa3xtvSrEUbS2mzMluiL1bXfE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=pl+dphr2edyUThQk4GyQ0v6ZMkHBRcCiydxOcdNGkkBr/ojSOGYtGJN73baCNEthI
-         JbPtjAHAw+H1bFopE9NFUYFRcjek2aXL5zApcBMrT8RKAKdZzYBquGiygQbJzKzvOI
-         cUIW+yJMGkzGFEsMpd6hC5HVEOdLOq2le3Mq9lSE=
+        b=bANEdDXm1B0XcKoBx+A7ilU7ha0Np8YsIpoD0T8VVNJHJEUd39LttEDU9O1Mw74Ly
+         aweqdissU0H1t1qrIEiSfqBomAqmjxd6PyB6CV5UMjvzqc8/pB3NFIEiFYz4umG8pi
+         EE+ovWB7RDlO8tXp1y9wFy9c5u8BUngpHQub4UMM=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Alexander Tsoy <alexander@tsoy.me>,
-        Takashi Iwai <tiwai@suse.de>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 210/344] ALSA: usb-audio: Add boot quirk for MOTU M Series
-Date:   Fri, 21 Feb 2020 08:40:09 +0100
-Message-Id: <20200221072408.241908892@linuxfoundation.org>
+        stable@vger.kernel.org, Hulk Robot <hulkci@huawei.com>,
+        Chen Zhou <chenzhou10@huawei.com>,
+        Mark Brown <broonie@kernel.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.4 211/344] ASoC: atmel: fix build error with CONFIG_SND_ATMEL_SOC_DMA=m
+Date:   Fri, 21 Feb 2020 08:40:10 +0100
+Message-Id: <20200221072408.342066313@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200221072349.335551332@linuxfoundation.org>
 References: <20200221072349.335551332@linuxfoundation.org>
@@ -59,117 +61,41 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Alexander Tsoy <alexander@tsoy.me>
+From: Chen Zhou <chenzhou10@huawei.com>
 
-[ Upstream commit 73ac9f5e5b43a5dbadb61f27dae7a971f7ec0d22 ]
+[ Upstream commit 8fea78029f5e6ed734ae1957bef23cfda1af4354 ]
 
-Add delay to make sure that audio urbs are not sent too early.
-Otherwise the device hangs. Windows driver makes ~2s delay, so use
-about the same time delay value.
+If CONFIG_SND_ATMEL_SOC_DMA=m, build error:
 
-snd_usb_apply_boot_quirk() is called 3 times for my MOTU M4, which
-is an overkill. Thus a quirk that is called only once is implemented.
+sound/soc/atmel/atmel_ssc_dai.o: In function `atmel_ssc_set_audio':
+(.text+0x7cd): undefined reference to `atmel_pcm_dma_platform_register'
 
-Also send two vendor-specific control messages before and after
-the delay. This behaviour is blindly copied from the Windows driver.
+Function atmel_pcm_dma_platform_register is defined under
+CONFIG SND_ATMEL_SOC_DMA, so select SND_ATMEL_SOC_DMA in
+CONFIG SND_ATMEL_SOC_SSC, same to CONFIG_SND_ATMEL_SOC_PDC.
 
-Signed-off-by: Alexander Tsoy <alexander@tsoy.me>
-Link: https://lore.kernel.org/r/20200112102358.18085-1-alexander@tsoy.me
-Signed-off-by: Takashi Iwai <tiwai@suse.de>
+Reported-by: Hulk Robot <hulkci@huawei.com>
+Signed-off-by: Chen Zhou <chenzhou10@huawei.com>
+Link: https://lore.kernel.org/r/20200113133242.144550-1-chenzhou10@huawei.com
+Signed-off-by: Mark Brown <broonie@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- sound/usb/card.c   |  4 ++++
- sound/usb/quirks.c | 38 ++++++++++++++++++++++++++++++++++++++
- sound/usb/quirks.h |  5 +++++
- 3 files changed, 47 insertions(+)
+ sound/soc/atmel/Kconfig | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/sound/usb/card.c b/sound/usb/card.c
-index db91dc76cc915..e6a618a239948 100644
---- a/sound/usb/card.c
-+++ b/sound/usb/card.c
-@@ -597,6 +597,10 @@ static int usb_audio_probe(struct usb_interface *intf,
- 		}
- 	}
- 	if (! chip) {
-+		err = snd_usb_apply_boot_quirk_once(dev, intf, quirk, id);
-+		if (err < 0)
-+			return err;
-+
- 		/* it's a fresh one.
- 		 * now look for an empty slot and create a new card instance
- 		 */
-diff --git a/sound/usb/quirks.c b/sound/usb/quirks.c
-index 1ed25b1d2a6a2..7448ab07bd363 100644
---- a/sound/usb/quirks.c
-+++ b/sound/usb/quirks.c
-@@ -1113,6 +1113,31 @@ free_buf:
- 	return err;
- }
+diff --git a/sound/soc/atmel/Kconfig b/sound/soc/atmel/Kconfig
+index f118c229ed829..d1dc8e6366dcb 100644
+--- a/sound/soc/atmel/Kconfig
++++ b/sound/soc/atmel/Kconfig
+@@ -19,6 +19,8 @@ config SND_ATMEL_SOC_DMA
  
-+static int snd_usb_motu_m_series_boot_quirk(struct usb_device *dev)
-+{
-+	int ret;
-+
-+	if (snd_usb_pipe_sanity_check(dev, usb_sndctrlpipe(dev, 0)))
-+		return -EINVAL;
-+	ret = usb_control_msg(dev, usb_sndctrlpipe(dev, 0),
-+			      1, USB_TYPE_VENDOR | USB_RECIP_DEVICE,
-+			      0x0, 0, NULL, 0, 1000);
-+
-+	if (ret < 0)
-+		return ret;
-+
-+	msleep(2000);
-+
-+	ret = usb_control_msg(dev, usb_sndctrlpipe(dev, 0),
-+			      1, USB_TYPE_VENDOR | USB_RECIP_DEVICE,
-+			      0x20, 0, NULL, 0, 1000);
-+
-+	if (ret < 0)
-+		return ret;
-+
-+	return 0;
-+}
-+
- /*
-  * Setup quirks
-  */
-@@ -1297,6 +1322,19 @@ int snd_usb_apply_boot_quirk(struct usb_device *dev,
- 	return 0;
- }
+ config SND_ATMEL_SOC_SSC
+ 	tristate
++	select SND_ATMEL_SOC_DMA
++	select SND_ATMEL_SOC_PDC
  
-+int snd_usb_apply_boot_quirk_once(struct usb_device *dev,
-+				  struct usb_interface *intf,
-+				  const struct snd_usb_audio_quirk *quirk,
-+				  unsigned int id)
-+{
-+	switch (id) {
-+	case USB_ID(0x07fd, 0x0008): /* MOTU M Series */
-+		return snd_usb_motu_m_series_boot_quirk(dev);
-+	}
-+
-+	return 0;
-+}
-+
- /*
-  * check if the device uses big-endian samples
-  */
-diff --git a/sound/usb/quirks.h b/sound/usb/quirks.h
-index a80e0ddd07364..df0355843a4c1 100644
---- a/sound/usb/quirks.h
-+++ b/sound/usb/quirks.h
-@@ -20,6 +20,11 @@ int snd_usb_apply_boot_quirk(struct usb_device *dev,
- 			     const struct snd_usb_audio_quirk *quirk,
- 			     unsigned int usb_id);
- 
-+int snd_usb_apply_boot_quirk_once(struct usb_device *dev,
-+				  struct usb_interface *intf,
-+				  const struct snd_usb_audio_quirk *quirk,
-+				  unsigned int usb_id);
-+
- void snd_usb_set_format_quirk(struct snd_usb_substream *subs,
- 			      struct audioformat *fmt);
- 
+ config SND_ATMEL_SOC_SSC_PDC
+ 	tristate "SoC PCM DAI support for AT91 SSC controller using PDC"
 -- 
 2.20.1
 
