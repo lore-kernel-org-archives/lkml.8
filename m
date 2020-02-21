@@ -2,185 +2,164 @@ Return-Path: <SRS0=1210=4J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FAKE_REPLY_C,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 45A24C11D28
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 05:19:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 153F1C11D27
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 05:21:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 275B3208E4
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 05:19:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DFEB8222C4
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 05:21:50 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1582262510;
+	bh=k+xWkXE9GanKA1I/TU4Il80HQEcFWT0VW7It7YnO+zk=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:List-ID:From;
+	b=N3dqDPgoAIVo0bnRDjkt8G1TsL1HUHVc2LdxbQzUgDFefLVibC04rMOFD9kuDUcdq
+	 LMa2qC11IAlk57kb4/nuwSKP2iQqBZ4V2Elu45BDVz4nc53jFVqobtTI8ocPv7NULw
+	 83eaAK0OvIcDkY4r+CLGpAJJOoRnmVg25kKUT33Y=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729630AbgBUFTN (ORCPT
+        id S1726287AbgBUFVt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Feb 2020 00:19:13 -0500
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:22404 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726315AbgBUFS7 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Feb 2020 00:18:59 -0500
-Received: from pps.filterd (m0098394.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 01L5F70p027702;
-        Fri, 21 Feb 2020 00:18:50 -0500
-Received: from ppma02dal.us.ibm.com (a.bd.3ea9.ip4.static.sl-reverse.com [169.62.189.10])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2y8ubvy1m5-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Fri, 21 Feb 2020 00:18:50 -0500
-Received: from pps.filterd (ppma02dal.us.ibm.com [127.0.0.1])
-        by ppma02dal.us.ibm.com (8.16.0.27/8.16.0.27) with SMTP id 01L5IfZ6007495;
-        Fri, 21 Feb 2020 05:18:49 GMT
-Received: from b03cxnp07029.gho.boulder.ibm.com (b03cxnp07029.gho.boulder.ibm.com [9.17.130.16])
-        by ppma02dal.us.ibm.com with ESMTP id 2y6897eywm-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Fri, 21 Feb 2020 05:18:49 +0000
-Received: from b03ledav005.gho.boulder.ibm.com (b03ledav005.gho.boulder.ibm.com [9.17.130.236])
-        by b03cxnp07029.gho.boulder.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 01L5Imt450004300
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Fri, 21 Feb 2020 05:18:48 GMT
-Received: from b03ledav005.gho.boulder.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 5FBD7BE04F;
-        Fri, 21 Feb 2020 05:18:48 +0000 (GMT)
-Received: from b03ledav005.gho.boulder.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 15B1EBE053;
-        Fri, 21 Feb 2020 05:18:47 +0000 (GMT)
-Received: from sofia.ibm.com (unknown [9.124.31.110])
-        by b03ledav005.gho.boulder.ibm.com (Postfix) with ESMTP;
-        Fri, 21 Feb 2020 05:18:47 +0000 (GMT)
-Received: by sofia.ibm.com (Postfix, from userid 1000)
-        id 2CDD92E3ACD; Fri, 21 Feb 2020 10:48:44 +0530 (IST)
-From:   "Gautham R. Shenoy" <ego@linux.vnet.ibm.com>
-To:     Nathan Lynch <nathanl@linux.ibm.com>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Vaidyanathan Srinivasan <svaidy@linux.vnet.ibm.com>,
-        Kamalesh Babulal <kamalesh@linux.vnet.ibm.com>,
-        "Naveen N. Rao" <naveen.n.rao@linux.vnet.ibm.com>,
-        Tyrel Datwyler <tyreld@linux.ibm.com>
-Cc:     linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org,
-        "Gautham R. Shenoy" <ego@linux.vnet.ibm.com>
-Subject: [PATCH v2 3/5] powerpc/pseries: Account for SPURR ticks on idle CPUs
-Date:   Fri, 21 Feb 2020 10:48:32 +0530
-Message-Id: <1582262314-8319-4-git-send-email-ego@linux.vnet.ibm.com>
-X-Mailer: git-send-email 1.8.3.1
-In-Reply-To: <1582262314-8319-1-git-send-email-ego@linux.vnet.ibm.com>
-References: <1582262314-8319-1-git-send-email-ego@linux.vnet.ibm.com>
-X-TM-AS-GCONF: 00
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.572
- definitions=2020-02-20_19:2020-02-19,2020-02-20 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 impostorscore=0 phishscore=0
- spamscore=0 priorityscore=1501 mlxlogscore=999 bulkscore=0 malwarescore=0
- lowpriorityscore=0 clxscore=1015 adultscore=0 mlxscore=0 suspectscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2001150001
- definitions=main-2002210035
+        Fri, 21 Feb 2020 00:21:49 -0500
+Received: from mail.kernel.org ([198.145.29.99]:50150 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725800AbgBUFVt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 21 Feb 2020 00:21:49 -0500
+Received: from localhost (c-98-207-104-244.hsd1.ca.comcast.net [98.207.104.244])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7BD0D208C4;
+        Fri, 21 Feb 2020 05:21:48 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1582262508;
+        bh=k+xWkXE9GanKA1I/TU4Il80HQEcFWT0VW7It7YnO+zk=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:From;
+        b=rZFfbt3Ind5n5SyHSLZN3GqLiBN5qUpHq45nLTBbtrWN4pYOamrXosFr3rLw5C/H3
+         KXTCjKCkEVfNrc3FHCGrEZdoEj4qiNosTJKLYEpodgKj5VoLN/LxWXvyGg7shdIyqf
+         2OguAs98pfUFkh7ppaynQ/11UWTr64XVMtVAZPTc=
+Date:   Thu, 20 Feb 2020 23:21:47 -0600
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     Stuart Hayes <stuart.w.hayes@gmail.com>
+Cc:     Austin Bolen <austin_bolen@dell.com>, keith.busch@intel.com,
+        Alexandru Gagniuc <mr.nuke.me@gmail.com>,
+        "Rafael J . Wysocki" <rafael.j.wysocki@intel.com>,
+        Mika Westerberg <mika.westerberg@linux.intel.com>,
+        Andy Shevchenko <andy.shevchenko@gmail.com>,
+        "Gustavo A . R . Silva" <gustavo@embeddedor.com>,
+        Sinan Kaya <okaya@kernel.org>,
+        Oza Pawandeep <poza@codeaurora.org>, linux-pci@vger.kernel.org,
+        linux-kernel@vger.kernel.org, lukas@wunner.de
+Subject: Re: [PATCH v4 3/3] PCI: pciehp: Add dmi table for in-band presence
+ disabled
+Message-ID: <20200221052147.GA154040@google.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191025190047.38130-4-stuart.w.hayes@gmail.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: "Gautham R. Shenoy" <ego@linux.vnet.ibm.com>
+On Fri, Oct 25, 2019 at 03:00:47PM -0400, Stuart Hayes wrote:
+> Some systems have in-band presence detection disabled for hot-plug PCI
+> slots, but do not report this in the slot capabilities 2 (SLTCAP2) register.
 
-On Pseries LPARs, to calculate utilization, we need to know the
-[S]PURR ticks when the CPUs were busy or idle.
+This doesn't seem quite accurate to me.  PCI_EXP_SLTCAP2_IBPD does not
+actually tell us whether in-band presence detection is disabled.  It
+only tells us whether it *can* be disabled.
 
-Via idle_loop_prolog(), idle_loop_epilog(), we track the idle PURR
-ticks in the VPA variable "wait_state_cycles". This patch extends the
-support to account for the idle SPURR ticks. It also provides an
-accessor function to accurately reads idle SPURR ticks.
+I think I know what you mean, but this text suggests that
+PCI_EXP_SLTCAP2_IBPD not being set is the defect, and I don't think it
+is.  IIUC, even if PCI_EXP_SLTCAP2_IBPD were set,
+PCI_EXP_SLTCTL_IBPD_DISABLE would have no effect because in-band
+presence detect just isn't supported at all regardless of how we set
+PCI_EXP_SLTCTL_IBPD_DISABLE.
 
-Signed-off-by: Gautham R. Shenoy <ego@linux.vnet.ibm.com>
----
- arch/powerpc/include/asm/idle.h        | 33 +++++++++++++++++++++++++++++++++
- arch/powerpc/platforms/pseries/setup.c |  2 ++
- 2 files changed, 35 insertions(+)
+> On these systems, presence detect can become active well after the link is
+> reported to be active, which can cause the slots to be disabled after a
+> device is connected.
+> 
+> Add a dmi table to flag these systems as having in-band presence disabled.
+> 
+> Signed-off-by: Stuart Hayes <stuart.w.hayes@gmail.com>
+> ---
+> v4
+>   add comment to dmi table
+> 
+>  drivers/pci/hotplug/pciehp_hpc.c | 22 ++++++++++++++++++++++
+>  1 file changed, 22 insertions(+)
+> 
+> diff --git a/drivers/pci/hotplug/pciehp_hpc.c b/drivers/pci/hotplug/pciehp_hpc.c
+> index 02d95ab27a12..9541735bd0aa 100644
+> --- a/drivers/pci/hotplug/pciehp_hpc.c
+> +++ b/drivers/pci/hotplug/pciehp_hpc.c
+> @@ -14,6 +14,7 @@
+>  
+>  #define dev_fmt(fmt) "pciehp: " fmt
+>  
+> +#include <linux/dmi.h>
+>  #include <linux/kernel.h>
+>  #include <linux/types.h>
+>  #include <linux/jiffies.h>
+> @@ -26,6 +27,24 @@
+>  #include "../pci.h"
+>  #include "pciehp.h"
+>  
+> +static const struct dmi_system_id inband_presence_disabled_dmi_table[] = {
+> +	/*
+> +	 * Match all Dell systems, as some Dell systems have inband
+> +	 * presence disabled on NVMe slots (but don't support the bit to
 
-diff --git a/arch/powerpc/include/asm/idle.h b/arch/powerpc/include/asm/idle.h
-index 126a217..db82fc1 100644
---- a/arch/powerpc/include/asm/idle.h
-+++ b/arch/powerpc/include/asm/idle.h
-@@ -2,13 +2,20 @@
- #define _ASM_POWERPC_IDLE_H
- #include <asm/runlatch.h>
- 
-+DECLARE_PER_CPU(u64, idle_spurr_cycles);
- DECLARE_PER_CPU(u64, idle_entry_purr_snap);
-+DECLARE_PER_CPU(u64, idle_entry_spurr_snap);
- 
- static inline void snapshot_purr_idle_entry(void)
- {
- 	*this_cpu_ptr(&idle_entry_purr_snap) = mfspr(SPRN_PURR);
- }
- 
-+static inline void snapshot_spurr_idle_entry(void)
-+{
-+	*this_cpu_ptr(&idle_entry_spurr_snap) = mfspr(SPRN_SPURR);
-+}
-+
- static inline void update_idle_purr_accounting(void)
- {
- 	u64 wait_cycles;
-@@ -19,10 +26,19 @@ static inline void update_idle_purr_accounting(void)
- 	get_lppaca()->wait_state_cycles = cpu_to_be64(wait_cycles);
- }
- 
-+static inline void update_idle_spurr_accounting(void)
-+{
-+	u64 *idle_spurr_cycles_ptr = this_cpu_ptr(&idle_spurr_cycles);
-+	u64 in_spurr = *this_cpu_ptr(&idle_entry_spurr_snap);
-+
-+	*idle_spurr_cycles_ptr += mfspr(SPRN_SPURR) - in_spurr;
-+}
-+
- static inline void idle_loop_prolog(void)
- {
- 	ppc64_runlatch_off();
- 	snapshot_purr_idle_entry();
-+	snapshot_spurr_idle_entry();
- 	/*
- 	 * Indicate to the HV that we are idle. Now would be
- 	 * a good time to find other work to dispatch.
-@@ -33,6 +49,7 @@ static inline void idle_loop_prolog(void)
- static inline void idle_loop_epilog(void)
- {
- 	update_idle_purr_accounting();
-+	update_idle_spurr_accounting();
- 	get_lppaca()->idle = 0;
- 	ppc64_runlatch_on();
- }
-@@ -52,4 +69,20 @@ static inline u64 read_this_idle_purr(void)
- 
- 	return be64_to_cpu(get_lppaca()->wait_state_cycles);
- }
-+
-+static inline u64 read_this_idle_spurr(void)
-+{
-+	/*
-+	 * If we are reading from an idle context, update the
-+	 * idle-spurr cycles corresponding to the last idle period.
-+	 * Since the idle context is not yet over, take a fresh
-+	 * snapshot of the idle-spurr.
-+	 */
-+	if (get_lppaca()->idle == 1) {
-+		update_idle_spurr_accounting();
-+		snapshot_spurr_idle_entry();
-+	}
-+
-+	return *this_cpu_ptr(&idle_spurr_cycles);
-+}
- #endif
-diff --git a/arch/powerpc/platforms/pseries/setup.c b/arch/powerpc/platforms/pseries/setup.c
-index e9f2cefa..5ef5c82 100644
---- a/arch/powerpc/platforms/pseries/setup.c
-+++ b/arch/powerpc/platforms/pseries/setup.c
-@@ -318,7 +318,9 @@ static int alloc_dispatch_log_kmem_cache(void)
- }
- machine_early_initcall(pseries, alloc_dispatch_log_kmem_cache);
- 
-+DEFINE_PER_CPU(u64, idle_spurr_cycles);
- DEFINE_PER_CPU(u64, idle_entry_purr_snap);
-+DEFINE_PER_CPU(u64, idle_entry_spurr_snap);
- static void pseries_lpar_idle(void)
- {
- 	/*
--- 
-1.9.4
+Is there something that restricts these slots to being used only for
+NVMe?  If not, I'd rather simply say that some Root Ports don't
+support in-band presence detect.  You say it's "disabled", which
+suggests that it could be *enabled*.  But I have the impression that
+it's actually just not supported at all (or maybe it's disabled by the
+BIOS via some non-architected mechanism).
 
+> +	 * report it). Setting inband presence disabled should have no
+> +	 * negative effect, except on broken hotplug slots that never
+> +	 * assert presence detect--and those will still work, they will
+> +	 * just have a bit of extra delay before being probed.
+> +	 */
+> +	{
+> +		.ident = "Dell System",
+> +		.matches = {
+> +			DMI_MATCH(DMI_OEM_STRING, "Dell System"),
+> +		},
+> +	},
+> +	{}
+> +};
+> +
+>  static inline struct pci_dev *ctrl_dev(struct controller *ctrl)
+>  {
+>  	return ctrl->pcie->port;
+> @@ -895,6 +914,9 @@ struct controller *pcie_init(struct pcie_device *dev)
+>  		ctrl->inband_presence_disabled = 1;
+>  	}
+>  
+> +	if (dmi_first_match(inband_presence_disabled_dmi_table))
+> +		ctrl->inband_presence_disabled = 1;
+
+This doesn't seem quite right: the DMI table should only apply to
+built-in ports, not to ports on plugin cards.
+
+If we plug in a switch with hotplug-capable downstream ports, and
+those ports do not advertise PCI_EXP_SLTCAP2_IBPD, I think this code
+sets "inband_presence_disabled" for those ports even though it is not
+disabled.
+
+IIUC, that will make this plugin card behave differently in a Dell
+system than it will in other systems, and that doesn't seem right to
+me.
+
+>  	/*
+>  	 * If empty slot's power status is on, turn power off.  The IRQ isn't
+>  	 * requested yet, so avoid triggering a notification with this command.
+> -- 
+> 2.18.1
+> 
