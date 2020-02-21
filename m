@@ -7,47 +7,48 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CAC94C35641
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 08:04:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 59263C35640
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 08:04:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9603920801
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 08:04:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 24E902467A
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 08:04:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582272284;
-	bh=KBb0SdUC0ZXoTdzjUeomddn5cDalwKuc/F+moiwCcbc=;
+	s=default; t=1582272287;
+	bh=Bder6H6v+8vZj+HHIqzkVKXYCG1a6QBzUr2WFqJFoAc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=pe8UL7p4BoRTsjgXCLRY4KillIUVBfEcaWY/tWUIazues4hQJWpyEYipdz8FxQ671
-	 OIEetpp8+0lS4WcE7M1FH1Z3NaHj6oPBL+IRAhFOmQ3gb4Nu+Sejn1JG9ddPKpfaH8
-	 QHi8jhSqOiTE4nyQdDiUawouaDVd/5hb92cKKUtw=
+	b=u0hhRW+DptiBJ3+Mi1geOzlAX53tuRLuuZqwnlWVXUcXeJjKunRbE4fLbMBbP5egX
+	 DxIzuxD0HlaEkVtAWpddZPTT3+BVNOx72fIrdVUdhJF58JDboUH/8jVvsWhJxXoG8m
+	 tVve7sdRCKXAfipO78avAUEOC5l0G3uYHCOU6488=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731696AbgBUIEn (ORCPT
+        id S1731703AbgBUIEq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Feb 2020 03:04:43 -0500
-Received: from mail.kernel.org ([198.145.29.99]:37900 "EHLO mail.kernel.org"
+        Fri, 21 Feb 2020 03:04:46 -0500
+Received: from mail.kernel.org ([198.145.29.99]:37960 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731686AbgBUIEl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Feb 2020 03:04:41 -0500
+        id S1731034AbgBUIEo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 21 Feb 2020 03:04:44 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 883962073A;
-        Fri, 21 Feb 2020 08:04:40 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0D34B2073A;
+        Fri, 21 Feb 2020 08:04:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1582272281;
-        bh=KBb0SdUC0ZXoTdzjUeomddn5cDalwKuc/F+moiwCcbc=;
+        s=default; t=1582272283;
+        bh=Bder6H6v+8vZj+HHIqzkVKXYCG1a6QBzUr2WFqJFoAc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=TDtdU6FNsONUXtFX0yMJ2ibEvWc7qNRlyTDrFW6u6yBr3rIX1qIgumGGoMnbufT0g
-         HhJ2yxK5XUi+t6u3Dsz37u85sZuqrhtzpkBB/pE0It0g97RDIXVCR4OsQXa02WkK78
-         zizVHXStgYUYEsmZRe1vOfzTBlJ9MJhERHTUYjY8=
+        b=2Z6FZTR20ixC6LJHAP5FOE6pujLIk/zCvtMYNYfBjm9TeOCbYgvFV2cek84ACX+Ew
+         oRKw/YsHZAvWQahXL8q+WFu+u4n/ZkV09FTmvJw9Spmzk35nnbN63fy/ATGw0Yueo1
+         jreSXwT2M9PHw0m1eSxqi53WEBJAuFz33qKmM2v0=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Grygorii Strashko <grygorii.strashko@ti.com>,
-        Tero Kristo <t-kristo@ti.com>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 066/344] clk: ti: dra7: fix parent for gmac_clkctrl
-Date:   Fri, 21 Feb 2020 08:37:45 +0100
-Message-Id: <20200221072355.002137552@linuxfoundation.org>
+        stable@vger.kernel.org, Masami Hiramatsu <mhiramat@kernel.org>,
+        Tom Zanussi <zanussi@kernel.org>,
+        "Steven Rostedt (VMware)" <rostedt@goodmis.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.4 084/344] tracing: Simplify assignment parsing for hist triggers
+Date:   Fri, 21 Feb 2020 08:38:03 +0100
+Message-Id: <20200221072356.603328366@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200221072349.335551332@linuxfoundation.org>
 References: <20200221072349.335551332@linuxfoundation.org>
@@ -60,35 +61,191 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Grygorii Strashko <grygorii.strashko@ti.com>
+From: Tom Zanussi <zanussi@kernel.org>
 
-[ Upstream commit 69e300283796dae7e8c2e6acdabcd31336c0c93e ]
+[ Upstream commit b527b638fd63ba791dc90a0a6e9a3035b10df52b ]
 
-The parent clk for gmac clk ctrl has to be gmac_main_clk (125MHz) instead
-of dpll_gmac_ck (1GHz). This is caused incorrect CPSW MDIO operation.
-Hence, fix it.
+In the process of adding better error messages for sorting, I realized
+that strsep was being used incorrectly and some of the error paths I
+was expecting to be hit weren't and just fell through to the common
+invalid key error case.
 
-Fixes: dffa9051d546 ('clk: ti: dra7: add new clkctrl data')
-Signed-off-by: Grygorii Strashko <grygorii.strashko@ti.com>
-Signed-off-by: Tero Kristo <t-kristo@ti.com>
+It also became obvious that for keyword assignments, it wasn't
+necessary to save the full assignment and reparse it later, and having
+a common empty-assignment check would also make more sense in terms of
+error processing.
+
+Change the code to fix these problems and simplify it for new error
+message changes in a subsequent patch.
+
+Link: http://lkml.kernel.org/r/1c3ef0b6655deaf345f6faee2584a0298ac2d743.1561743018.git.zanussi@kernel.org
+
+Fixes: e62347d24534 ("tracing: Add hist trigger support for user-defined sorting ('sort=' param)")
+Fixes: 7ef224d1d0e3 ("tracing: Add 'hist' event trigger command")
+Fixes: a4072fe85ba3 ("tracing: Add a clock attribute for hist triggers")
+Reported-by: Masami Hiramatsu <mhiramat@kernel.org>
+Reviewed-by: Masami Hiramatsu <mhiramat@kernel.org>
+Signed-off-by: Tom Zanussi <zanussi@kernel.org>
+Signed-off-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/clk/ti/clk-7xx.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ kernel/trace/trace_events_hist.c | 70 ++++++++++++--------------------
+ 1 file changed, 27 insertions(+), 43 deletions(-)
 
-diff --git a/drivers/clk/ti/clk-7xx.c b/drivers/clk/ti/clk-7xx.c
-index 9dd6185a4b4e2..66e4b2b9ec600 100644
---- a/drivers/clk/ti/clk-7xx.c
-+++ b/drivers/clk/ti/clk-7xx.c
-@@ -405,7 +405,7 @@ static const struct omap_clkctrl_bit_data dra7_gmac_bit_data[] __initconst = {
- };
+diff --git a/kernel/trace/trace_events_hist.c b/kernel/trace/trace_events_hist.c
+index 4be7fc84d6b6a..a31be3fce3e8e 100644
+--- a/kernel/trace/trace_events_hist.c
++++ b/kernel/trace/trace_events_hist.c
+@@ -2037,12 +2037,6 @@ static int parse_map_size(char *str)
+ 	unsigned long size, map_bits;
+ 	int ret;
  
- static const struct omap_clkctrl_reg_data dra7_gmac_clkctrl_regs[] __initconst = {
--	{ DRA7_GMAC_GMAC_CLKCTRL, dra7_gmac_bit_data, CLKF_SW_SUP, "dpll_gmac_ck" },
-+	{ DRA7_GMAC_GMAC_CLKCTRL, dra7_gmac_bit_data, CLKF_SW_SUP, "gmac_main_clk" },
- 	{ 0 },
- };
+-	strsep(&str, "=");
+-	if (!str) {
+-		ret = -EINVAL;
+-		goto out;
+-	}
+-
+ 	ret = kstrtoul(str, 0, &size);
+ 	if (ret)
+ 		goto out;
+@@ -2102,25 +2096,25 @@ static int parse_action(char *str, struct hist_trigger_attrs *attrs)
+ static int parse_assignment(struct trace_array *tr,
+ 			    char *str, struct hist_trigger_attrs *attrs)
+ {
+-	int ret = 0;
++	int len, ret = 0;
  
+-	if ((str_has_prefix(str, "key=")) ||
+-	    (str_has_prefix(str, "keys="))) {
+-		attrs->keys_str = kstrdup(str, GFP_KERNEL);
++	if ((len = str_has_prefix(str, "key=")) ||
++	    (len = str_has_prefix(str, "keys="))) {
++		attrs->keys_str = kstrdup(str + len, GFP_KERNEL);
+ 		if (!attrs->keys_str) {
+ 			ret = -ENOMEM;
+ 			goto out;
+ 		}
+-	} else if ((str_has_prefix(str, "val=")) ||
+-		   (str_has_prefix(str, "vals=")) ||
+-		   (str_has_prefix(str, "values="))) {
+-		attrs->vals_str = kstrdup(str, GFP_KERNEL);
++	} else if ((len = str_has_prefix(str, "val=")) ||
++		   (len = str_has_prefix(str, "vals=")) ||
++		   (len = str_has_prefix(str, "values="))) {
++		attrs->vals_str = kstrdup(str + len, GFP_KERNEL);
+ 		if (!attrs->vals_str) {
+ 			ret = -ENOMEM;
+ 			goto out;
+ 		}
+-	} else if (str_has_prefix(str, "sort=")) {
+-		attrs->sort_key_str = kstrdup(str, GFP_KERNEL);
++	} else if ((len = str_has_prefix(str, "sort="))) {
++		attrs->sort_key_str = kstrdup(str + len, GFP_KERNEL);
+ 		if (!attrs->sort_key_str) {
+ 			ret = -ENOMEM;
+ 			goto out;
+@@ -2131,12 +2125,8 @@ static int parse_assignment(struct trace_array *tr,
+ 			ret = -ENOMEM;
+ 			goto out;
+ 		}
+-	} else if (str_has_prefix(str, "clock=")) {
+-		strsep(&str, "=");
+-		if (!str) {
+-			ret = -EINVAL;
+-			goto out;
+-		}
++	} else if ((len = str_has_prefix(str, "clock="))) {
++		str += len;
+ 
+ 		str = strstrip(str);
+ 		attrs->clock = kstrdup(str, GFP_KERNEL);
+@@ -2144,8 +2134,8 @@ static int parse_assignment(struct trace_array *tr,
+ 			ret = -ENOMEM;
+ 			goto out;
+ 		}
+-	} else if (str_has_prefix(str, "size=")) {
+-		int map_bits = parse_map_size(str);
++	} else if ((len = str_has_prefix(str, "size="))) {
++		int map_bits = parse_map_size(str + len);
+ 
+ 		if (map_bits < 0) {
+ 			ret = map_bits;
+@@ -2185,8 +2175,14 @@ parse_hist_trigger_attrs(struct trace_array *tr, char *trigger_str)
+ 
+ 	while (trigger_str) {
+ 		char *str = strsep(&trigger_str, ":");
++		char *rhs;
+ 
+-		if (strchr(str, '=')) {
++		rhs = strchr(str, '=');
++		if (rhs) {
++			if (!strlen(++rhs)) {
++				ret = -EINVAL;
++				goto free;
++			}
+ 			ret = parse_assignment(tr, str, attrs);
+ 			if (ret)
+ 				goto free;
+@@ -4559,10 +4555,6 @@ static int create_val_fields(struct hist_trigger_data *hist_data,
+ 	if (!fields_str)
+ 		goto out;
+ 
+-	strsep(&fields_str, "=");
+-	if (!fields_str)
+-		goto out;
+-
+ 	for (i = 0, j = 1; i < TRACING_MAP_VALS_MAX &&
+ 		     j < TRACING_MAP_VALS_MAX; i++) {
+ 		field_str = strsep(&fields_str, ",");
+@@ -4657,10 +4649,6 @@ static int create_key_fields(struct hist_trigger_data *hist_data,
+ 	if (!fields_str)
+ 		goto out;
+ 
+-	strsep(&fields_str, "=");
+-	if (!fields_str)
+-		goto out;
+-
+ 	for (i = n_vals; i < n_vals + TRACING_MAP_KEYS_MAX; i++) {
+ 		field_str = strsep(&fields_str, ",");
+ 		if (!field_str)
+@@ -4818,12 +4806,6 @@ static int create_sort_keys(struct hist_trigger_data *hist_data)
+ 	if (!fields_str)
+ 		goto out;
+ 
+-	strsep(&fields_str, "=");
+-	if (!fields_str) {
+-		ret = -EINVAL;
+-		goto out;
+-	}
+-
+ 	for (i = 0; i < TRACING_MAP_SORT_KEYS_MAX; i++) {
+ 		struct hist_field *hist_field;
+ 		char *field_str, *field_name;
+@@ -4832,9 +4814,11 @@ static int create_sort_keys(struct hist_trigger_data *hist_data)
+ 		sort_key = &hist_data->sort_keys[i];
+ 
+ 		field_str = strsep(&fields_str, ",");
+-		if (!field_str) {
+-			if (i == 0)
+-				ret = -EINVAL;
++		if (!field_str)
++			break;
++
++		if (!*field_str) {
++			ret = -EINVAL;
+ 			break;
+ 		}
+ 
+@@ -4844,7 +4828,7 @@ static int create_sort_keys(struct hist_trigger_data *hist_data)
+ 		}
+ 
+ 		field_name = strsep(&field_str, ".");
+-		if (!field_name) {
++		if (!field_name || !*field_name) {
+ 			ret = -EINVAL;
+ 			break;
+ 		}
 -- 
 2.20.1
 
