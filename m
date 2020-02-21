@@ -2,132 +2,98 @@ Return-Path: <SRS0=1210=4J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 05398C11D25
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 02:48:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8EE6AC11D25
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 02:51:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CD5C224654
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 02:48:48 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="lGad9Ixy"
+	by mail.kernel.org (Postfix) with ESMTP id 71C10206EF
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 02:51:53 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729620AbgBUCsr (ORCPT
+        id S1729516AbgBUCvw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Feb 2020 21:48:47 -0500
-Received: from hqnvemgate25.nvidia.com ([216.228.121.64]:9369 "EHLO
-        hqnvemgate25.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729259AbgBUCsr (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Feb 2020 21:48:47 -0500
-Received: from hqpgpgate102.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate25.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5e4f44ed0000>; Thu, 20 Feb 2020 18:48:13 -0800
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate102.nvidia.com (PGP Universal service);
-  Thu, 20 Feb 2020 18:48:46 -0800
-X-PGP-Universal: processed;
-        by hqpgpgate102.nvidia.com on Thu, 20 Feb 2020 18:48:46 -0800
-Received: from [10.110.48.28] (10.124.1.5) by HQMAIL107.nvidia.com
- (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Fri, 21 Feb
- 2020 02:48:46 +0000
-Subject: Re: [PATCH v7 08/24] mm: Remove 'page_offset' from readahead loop
-To:     Matthew Wilcox <willy@infradead.org>,
-        <linux-fsdevel@vger.kernel.org>
-CC:     <linux-mm@kvack.org>, <linux-kernel@vger.kernel.org>,
-        <linux-btrfs@vger.kernel.org>, <linux-erofs@lists.ozlabs.org>,
-        <linux-ext4@vger.kernel.org>,
-        <linux-f2fs-devel@lists.sourceforge.net>,
-        <cluster-devel@redhat.com>, <ocfs2-devel@oss.oracle.com>,
-        <linux-xfs@vger.kernel.org>
-References: <20200219210103.32400-1-willy@infradead.org>
- <20200219210103.32400-9-willy@infradead.org>
-X-Nvconfidentiality: public
-From:   John Hubbard <jhubbard@nvidia.com>
-Message-ID: <f4b720f3-9084-e767-8983-2b6c3d1b9c5a@nvidia.com>
-Date:   Thu, 20 Feb 2020 18:48:45 -0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.5.0
-MIME-Version: 1.0
-In-Reply-To: <20200219210103.32400-9-willy@infradead.org>
-X-Originating-IP: [10.124.1.5]
-X-ClientProxiedBy: HQMAIL111.nvidia.com (172.20.187.18) To
- HQMAIL107.nvidia.com (172.20.187.13)
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1582253293; bh=gmfdyhcpJt+pBNU3bTcP5EePBtsYdA7QQljwhD15aZ8=;
-        h=X-PGP-Universal:Subject:To:CC:References:X-Nvconfidentiality:From:
-         Message-ID:Date:User-Agent:MIME-Version:In-Reply-To:
-         X-Originating-IP:X-ClientProxiedBy:Content-Type:Content-Language:
-         Content-Transfer-Encoding;
-        b=lGad9Ixy041U0MYecQt0DfT6SncKVN2EOLZ29mYRvVDtt2aq6TqrxPJR8TMuJSaad
-         Sf0lEeaQzvox+v3yW0OUuzvdFwxSDyG9lbjTxWRUsSvRhWgXl4PGmx8w1zH0v3/Anz
-         7OGjxiCcNgwAqYNikq07yTd+FWj7rotnm2RxO6BeKmwoAyu72NsTjt/Aws/jl1+VDb
-         gidPLdBL3rFobDzVrAM0BRsGLnZvwIVNpIFkbSxWq3GXQUnGvaG5/Oa4b3gvDJqRV4
-         dhZygTiRiM9cZ/T8pikRs94s6xAWpKSZwdHCDaH9VF4Fk4VBE06sR4tyTxoAMcKxEH
-         57AfR8UVRKKKA==
+        Thu, 20 Feb 2020 21:51:52 -0500
+Received: from inva021.nxp.com ([92.121.34.21]:35744 "EHLO inva021.nxp.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729259AbgBUCvv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 20 Feb 2020 21:51:51 -0500
+Received: from inva021.nxp.com (localhost [127.0.0.1])
+        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id 36614201892;
+        Fri, 21 Feb 2020 03:51:50 +0100 (CET)
+Received: from invc005.ap-rdc01.nxp.com (invc005.ap-rdc01.nxp.com [165.114.16.14])
+        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id EF55D2018DC;
+        Fri, 21 Feb 2020 03:51:44 +0100 (CET)
+Received: from localhost.localdomain (shlinux2.ap.freescale.net [10.192.224.44])
+        by invc005.ap-rdc01.nxp.com (Postfix) with ESMTP id DB9B3402E3;
+        Fri, 21 Feb 2020 10:51:38 +0800 (SGT)
+From:   Anson Huang <Anson.Huang@nxp.com>
+To:     robh+dt@kernel.org, mark.rutland@arm.com, shawnguo@kernel.org,
+        s.hauer@pengutronix.de, kernel@pengutronix.de, festevam@gmail.com,
+        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org
+Cc:     Linux-imx@nxp.com
+Subject: [PATCH] ARM: dts: imx: Align ocotp node name
+Date:   Fri, 21 Feb 2020 10:45:53 +0800
+Message-Id: <1582253153-22053-1-git-send-email-Anson.Huang@nxp.com>
+X-Mailer: git-send-email 2.7.4
+X-Virus-Scanned: ClamAV using ClamSMTP
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2/19/20 1:00 PM, Matthew Wilcox wrote:
-> From: "Matthew Wilcox (Oracle)" <willy@infradead.org>
-> 
-> Replace the page_offset variable with 'index + i'.
-> 
-> Signed-off-by: Matthew Wilcox (Oracle) <willy@infradead.org>
-> ---
->  mm/readahead.c | 8 +++-----
->  1 file changed, 3 insertions(+), 5 deletions(-)
-> 
-> diff --git a/mm/readahead.c b/mm/readahead.c
-> index 8a25fc7e2bf2..83df5c061d33 100644
-> --- a/mm/readahead.c
-> +++ b/mm/readahead.c
-> @@ -181,12 +181,10 @@ void __do_page_cache_readahead(struct address_space *mapping,
->  	 * Preallocate as many pages as we will need.
->  	 */
->  	for (i = 0; i < nr_to_read; i++) {
-> -		pgoff_t page_offset = index + i;
+Node name should be generic, use "ocotp-ctrl" instead of "ocotp"
+for all i.MX6 SoCs.
 
+Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
+---
+ arch/arm/boot/dts/imx6qdl.dtsi | 2 +-
+ arch/arm/boot/dts/imx6sl.dtsi  | 2 +-
+ arch/arm/boot/dts/imx6sx.dtsi  | 2 +-
+ 3 files changed, 3 insertions(+), 3 deletions(-)
 
-ha, the naming mismatch I complained about in an earlier patch gets deleted
-here, so we're good after all. :)
-
-Looks good,
-
-    Reviewed-by: John Hubbard <jhubbard@nvidia.com>
-
-
-thanks,
+diff --git a/arch/arm/boot/dts/imx6qdl.dtsi b/arch/arm/boot/dts/imx6qdl.dtsi
+index 886ab81..70fb8b5 100644
+--- a/arch/arm/boot/dts/imx6qdl.dtsi
++++ b/arch/arm/boot/dts/imx6qdl.dtsi
+@@ -1161,7 +1161,7 @@
+ 				status = "disabled";
+ 			};
+ 
+-			ocotp: ocotp@21bc000 {
++			ocotp: ocotp-ctrl@21bc000 {
+ 				compatible = "fsl,imx6q-ocotp", "syscon";
+ 				reg = <0x021bc000 0x4000>;
+ 				clocks = <&clks IMX6QDL_CLK_IIM>;
+diff --git a/arch/arm/boot/dts/imx6sl.dtsi b/arch/arm/boot/dts/imx6sl.dtsi
+index db626b2..c8ec46f 100644
+--- a/arch/arm/boot/dts/imx6sl.dtsi
++++ b/arch/arm/boot/dts/imx6sl.dtsi
+@@ -949,7 +949,7 @@
+ 				status = "disabled";
+ 			};
+ 
+-			ocotp: ocotp@21bc000 {
++			ocotp: ocotp-ctrl@21bc000 {
+ 				compatible = "fsl,imx6sl-ocotp", "syscon";
+ 				reg = <0x021bc000 0x4000>;
+ 				clocks = <&clks IMX6SL_CLK_OCOTP>;
+diff --git a/arch/arm/boot/dts/imx6sx.dtsi b/arch/arm/boot/dts/imx6sx.dtsi
+index 6db9ca09..e47d346 100644
+--- a/arch/arm/boot/dts/imx6sx.dtsi
++++ b/arch/arm/boot/dts/imx6sx.dtsi
+@@ -1051,7 +1051,7 @@
+ 				status = "disabled";
+ 			};
+ 
+-			ocotp: ocotp@21bc000 {
++			ocotp: ocotp-ctrl@21bc000 {
+ 				#address-cells = <1>;
+ 				#size-cells = <1>;
+ 				compatible = "fsl,imx6sx-ocotp", "syscon";
 -- 
-John Hubbard
-NVIDIA
-
-> -
-> -		if (page_offset > end_index)
-> +		if (index + i > end_index)
->  			break;
->  
-> -		page = xa_load(&mapping->i_pages, page_offset);
-> +		page = xa_load(&mapping->i_pages, index + i);
->  		if (page && !xa_is_value(page)) {
->  			/*
->  			 * Page already present?  Kick off the current batch of
-> @@ -200,7 +198,7 @@ void __do_page_cache_readahead(struct address_space *mapping,
->  		page = __page_cache_alloc(gfp_mask);
->  		if (!page)
->  			break;
-> -		page->index = page_offset;
-> +		page->index = index + i;
->  		list_add(&page->lru, &page_pool);
->  		if (i == nr_to_read - lookahead_size)
->  			SetPageReadahead(page);
-> 
-
+2.7.4
 
