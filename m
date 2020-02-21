@@ -2,114 +2,134 @@ Return-Path: <SRS0=1210=4J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 848F4C35640
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 09:20:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2E6C2C35642
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 09:21:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 62A2C20679
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 09:20:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0C71D20722
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 09:21:41 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727833AbgBUJUB convert rfc822-to-8bit (ORCPT
+        id S1727352AbgBUJVj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Feb 2020 04:20:01 -0500
-Received: from mail.fireflyinternet.com ([77.68.26.236]:61353 "EHLO
-        fireflyinternet.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726244AbgBUJUA (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Feb 2020 04:20:00 -0500
-X-Default-Received-SPF: pass (skip=forwardok (res=PASS)) x-ip-name=78.156.65.138;
-Received: from localhost (unverified [78.156.65.138]) 
-        by fireflyinternet.com (Firefly Internet (M1)) with ESMTP (TLS) id 20298788-1500050 
-        for multiple; Fri, 21 Feb 2020 09:19:51 +0000
-Content-Type: text/plain; charset="utf-8"
+        Fri, 21 Feb 2020 04:21:39 -0500
+Received: from mx2.suse.de ([195.135.220.15]:48518 "EHLO mx2.suse.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726244AbgBUJVi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 21 Feb 2020 04:21:38 -0500
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx2.suse.de (Postfix) with ESMTP id 65871AE5C;
+        Fri, 21 Feb 2020 09:21:36 +0000 (UTC)
+Subject: Re: [PATCH RESEND 2/2] scsi: libfc: drop extra rport reference in
+ fc_rport_create()
+To:     Igor Druzhinin <igor.druzhinin@citrix.com>,
+        fcoe-devel@open-fcoe.org, linux-scsi@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Cc:     jejb@linux.ibm.com, martin.petersen@oracle.com
+References: <1579013000-14570-1-git-send-email-igor.druzhinin@citrix.com>
+ <1579013000-14570-3-git-send-email-igor.druzhinin@citrix.com>
+From:   Hannes Reinecke <hare@suse.de>
+Openpgp: preference=signencrypt
+Autocrypt: addr=hare@suse.de; prefer-encrypt=mutual; keydata=
+ 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
+ azzYF4VRJsdl+d0MCaSy8mUh
+Message-ID: <cdaf7362-b0dd-de99-b7ec-318b60b85192@suse.de>
+Date:   Fri, 21 Feb 2020 10:21:36 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.2
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8BIT
-To:     "Rafael J. Wysocki" <rjw@rjwysocki.net>
-From:   Chris Wilson <chris@chris-wilson.co.uk>
-In-Reply-To: <4974198.mf5Me8BlfX@kreacher>
-Cc:     linux-kernel@vger.kernel.org,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
-        Linux PM <linux-pm@vger.kernel.org>,
-        Linux ACPI <linux-acpi@vger.kernel.org>
-References: <CAHk-=wgqwiBLGvwTqU2kJEPNmafPpPe_K0XgBU-A58M+mkwpgQ@mail.gmail.com>
- <158197497594.2449.9692451182044632969@skylake-alporthouse-com>
- <10791544.HYfhKnFLvn@kreacher> <4974198.mf5Me8BlfX@kreacher>
-Message-ID: <158227678951.3099.15076882205129643027@skylake-alporthouse-com>
-User-Agent: alot/0.6
-Subject: Re: Linux 5.6-rc2
-Date:   Fri, 21 Feb 2020 09:19:49 +0000
+In-Reply-To: <1579013000-14570-3-git-send-email-igor.druzhinin@citrix.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Quoting Rafael J. Wysocki (2020-02-21 00:46:18)
-> On Thursday, February 20, 2020 11:41:22 PM CET Rafael J. Wysocki wrote:
-> > On Monday, February 17, 2020 10:29:35 PM CET Chris Wilson wrote:
-> > > Quoting Linus Torvalds (2020-02-17 21:20:27)
-> > > > On Mon, Feb 17, 2020 at 8:22 AM Chris Wilson <chris@chris-wilson.co.uk> wrote:
-> > > > >
-> > > > > Quoting Linus Torvalds (2020-02-16 21:32:32)
-> > > > > > Rafael J. Wysocki (4):
-> > > > > >       ACPI: EC: Fix flushing of pending work
-> > > > > >       ACPI: PM: s2idle: Avoid possible race related to the EC GPE
-> > > > > >       ACPICA: Introduce acpi_any_gpe_status_set()
-> > > > > >       ACPI: PM: s2idle: Prevent spurious SCIs from waking up the system
-> > > > >
-> > > > > Our S0 testing broke on all platforms, so we've reverted
-> > > > > e3728b50cd9b ("ACPI: PM: s2idle: Avoid possible race related to the EC GPE")
-> > > > > fdde0ff8590b ("ACPI: PM: s2idle: Prevent spurious SCIs from waking up the system")
-> > > > >
-> > > > > There wasn't much in the logs, for example,
-> > > > > https://intel-gfx-ci.01.org/tree/drm-tip/IGT_5445/fi-kbl-7500u/igt@gem_exec_suspend@basic-s0.html
-> > > > 
-> > > > So the machine suspends, but never comes back?
-> > > > 
-> > > > Do you need to revert both for it to work for you? Or is the revert of
-> > > > fdde0ff8590b just to avoid the conflict?
-> > > 
-> > > fdde0ff85 was just to avoid conflicts.
-> > >  
-> > > > I'm assuming you bisected this, and the bisect indicated e3728b50cd9b,
-> > > > and then to revert it you reverted the other commit too..
-> > > 
-> > > Lucky guess based on diff rc1..rc2. Bisect was going to be painful, but
-> > > could be done if this is not enough clue for Rafael.
-> > 
-> > Sorry for the delayed response, was away.
-> > 
-> > I'm guessing that you are using rtcwake for wakeup, in which case reverting
-> > fdde0ff85 alone should unbreak it.
-> > 
-> > Can you please double check that?
+On 1/14/20 3:43 PM, Igor Druzhinin wrote:
+> The callers of this function seem to assume the reference is not taken
+> in case rport already exists. This results in one extra reference taken
+> on each rport re-discovery that will eventually get to inability to
+> free rport structure on port removal.
 > 
-> And below is a patch that should fix it if I'm not mistaken (verified on my
-> system where I was able to reproduce the issue), so it would suffice to test
-> this one on top of the -rc2.
-
-Correct on both accounts. Reverting fdde0ff85 alone was enough, and
-replacing the reverts with the suggested patch works.
-
+> Signed-off-by: Igor Druzhinin <igor.druzhinin@citrix.com>
 > ---
-> From: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
-> Subject: [PATCH] ACPI: PM: s2idle: Check fixed wakeup events in acpi_s2idle_wake()
+>  drivers/scsi/libfc/fc_rport.c | 4 +++-
+>  1 file changed, 3 insertions(+), 1 deletion(-)
 > 
-> Commit fdde0ff8590b ("ACPI: PM: s2idle: Prevent spurious SCIs from
-> waking up the system") overlooked the fact that fixed events can wake
-> up the system too and broke RTC wakeup from suspend-to-idle as a
-> result.
+> diff --git a/drivers/scsi/libfc/fc_rport.c b/drivers/scsi/libfc/fc_rport.c
+> index da6e97d..a43f9dd 100644
+> --- a/drivers/scsi/libfc/fc_rport.c
+> +++ b/drivers/scsi/libfc/fc_rport.c
+> @@ -133,8 +133,10 @@ struct fc_rport_priv *fc_rport_create(struct fc_lport *lport, u32 port_id)
+>  	lockdep_assert_held(&lport->disc.disc_mutex);
+>  
+>  	rdata = fc_rport_lookup(lport, port_id);
+> -	if (rdata)
+> +	if (rdata) {
+> +		kref_put(&rdata->kref, fc_rport_destroy);
+>  		return rdata;
+> +	}
+>  
+>  	if (lport->rport_priv_size > 0)
+>  		rport_priv_size = lport->rport_priv_size;
 > 
-> Fix this issue by checking the fixed events in acpi_s2idle_wake() in
-> addition to checking wakeup GPEs and break out of the suspend-to-idle
-> loop if the status bits of any enabled fixed events are set then.
-> 
-> Fixes: fdde0ff8590b ("ACPI: PM: s2idle: Prevent spurious SCIs from waking up the system")
-> Reported-by: Chris Wilson <chris@chris-wilson.co.uk>
-> Cc: 5.4+ <stable@vger.kernel.org> # 5.4+
-> Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
-Tested-by: Chris Wilson <chris@chris-wilson.co.uk>
--Chris
+NAK.
+The caller _does_ assume that a reference is taken once
+fc_rport_create() returns non-NULL.
+And the caller is responsible to drop the reference once 'rdatat' isn't
+used anymore.
+Any other usage is an error, but should be fixed in the caller, not here.
+
+Cheers,
+
+Hannes
+-- 
+Dr. Hannes Reinecke		           Kernel Storage Architect
+hare@suse.de			                  +49 911 74053 688
+SUSE Software Solutions Germany GmbH, Maxfeldstr. 5, 90409 Nürnberg
+HRB 36809 (AG Nürnberg), GF: Felix Imendörffer
