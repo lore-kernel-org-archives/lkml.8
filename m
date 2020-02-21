@@ -2,85 +2,70 @@ Return-Path: <SRS0=1210=4J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E5A52C35646
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 14:16:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C6822C35646
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 14:17:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B962F20722
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 14:16:07 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="NHFJssvv"
+	by mail.kernel.org (Postfix) with ESMTP id 99F7B206EF
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 14:17:03 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728668AbgBUOQG (ORCPT
+        id S1728723AbgBUORC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Feb 2020 09:16:06 -0500
-Received: from mail-lj1-f194.google.com ([209.85.208.194]:46606 "EHLO
-        mail-lj1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728326AbgBUOQF (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Feb 2020 09:16:05 -0500
-Received: by mail-lj1-f194.google.com with SMTP id x14so2302851ljd.13
-        for <linux-kernel@vger.kernel.org>; Fri, 21 Feb 2020 06:16:03 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=9bkxUVE/BaGEsePvJG94FHSx4HKNwzho1ZimVG4ZU7U=;
-        b=NHFJssvv1/a6TfSVnJMOtNTzSVZKMxcb+si901Fg2lUVauvB20CGGqCqJGgoe+1e1g
-         Lbj4ou8rjIPF9xv9DKAYH90jZ+mObOp0rIjvZ7Dg9ySiio4iaK/btk0x2htCZeXbtCIs
-         s/6iqp5Gry2+Cn6zijm95lF/j4t7ZzDSE8o0BWPX8/4eSxMP10r0KunPtjnJkN+cxZLS
-         hrO4qp8YYuGoiQqOtGRt/oBkz38Qo3VLeSWUeTdL0KgCXOFPncrLa26IHW488Fp/bAVV
-         JyVPUu8OgRqzn7esCc+CO76f3ej/1vpiQrHunvANngKpIiFP9V0rPnMltKixXQJd4lQO
-         EcCg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=9bkxUVE/BaGEsePvJG94FHSx4HKNwzho1ZimVG4ZU7U=;
-        b=KFhN1iyAMGndErrjFFV9rn6FbqMyaOLjIo2VjxGl/TLPAlC60SEfFu/wAF3Gp92CZt
-         vOEHZNZ/lbi8uJafpZ6SYt2hAFlsg9Omsq2JGtnPlxqhRSJKwJtVS2tCPu5KqNgUYTBV
-         yJuOw+dPJeO2aTYI+gl9D78k8bfxV4HnlxqsGVbEF7UQZT3cezR+yLBh6Oqv+5L0kwhi
-         cJR1o91jE04qlARZYIe09bR4CCmxsNDTXn4+VicKA3Dw1YJy7BNXxqhxShyd94WGqe90
-         bYJbjFtJqBKYN/8TgqGSTswz052EkPZdWjFdLnlWml0w5KfQQ1H6xzT43jyEJRzvdelQ
-         2Z1Q==
-X-Gm-Message-State: APjAAAXzsaioLTu14taajVynpi1RekfX0UzFYoz7smn+uVNWDW2q15q8
-        qPqaKRNY4XXSeIMuhgzYbBZOcQP3M7tI2R/Qw2L9jw==
-X-Google-Smtp-Source: APXvYqyMEW7xOoeU5aAqEunqkJEjZidoADakWQrFSuJrs2CPUv7HagGQ0QOJnoIk9QZdE7SPDJb+a06x21oCDVibGj4=
-X-Received: by 2002:a2e:7d0c:: with SMTP id y12mr23122512ljc.39.1582294562607;
- Fri, 21 Feb 2020 06:16:02 -0800 (PST)
+        Fri, 21 Feb 2020 09:17:02 -0500
+Received: from verein.lst.de ([213.95.11.211]:55676 "EHLO verein.lst.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728326AbgBUORC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 21 Feb 2020 09:17:02 -0500
+Received: by verein.lst.de (Postfix, from userid 2407)
+        id 36BC968BFE; Fri, 21 Feb 2020 15:16:57 +0100 (CET)
+Date:   Fri, 21 Feb 2020 15:16:56 +0100
+From:   Christoph Hellwig <hch@lst.de>
+To:     Robin Murphy <robin.murphy@arm.com>
+Cc:     Christoph Hellwig <hch@lst.de>, Jonas Bonn <jonas@southpole.se>,
+        Stefan Kristiansson <stefan.kristiansson@saunalahti.fi>,
+        Stafford Horne <shorne@gmail.com>,
+        Marek Szyprowski <m.szyprowski@samsung.com>,
+        Will Deacon <will@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        openrisc@lists.librecores.org, iommu@lists.linux-foundation.org,
+        linux-arm-kernel@lists.infradead.org, linux-arch@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 1/2] dma-mapping: support setting memory uncached in
+ place
+Message-ID: <20200221141656.GF6968@lst.de>
+References: <20200220170139.387354-1-hch@lst.de> <20200220170139.387354-2-hch@lst.de> <502fa745-ddad-f91b-52bc-52edecf8fdbc@arm.com>
 MIME-Version: 1.0
-References: <20200117213340.47714-1-samuel@sholland.org> <20200117213340.47714-2-samuel@sholland.org>
-In-Reply-To: <20200117213340.47714-2-samuel@sholland.org>
-From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Fri, 21 Feb 2020 15:15:51 +0100
-Message-ID: <CACRpkdajokCMpJ98yfFp-s23jG96wO_N9R2ZXvXB+hU6XMs=ng@mail.gmail.com>
-Subject: Re: [PATCH 2/2] pinctrl: sunxi: Mask non-wakeup IRQs on suspend
-To:     Samuel Holland <samuel@sholland.org>
-Cc:     Maxime Ripard <mripard@kernel.org>, Chen-Yu Tsai <wens@csie.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        linux-sunxi <linux-sunxi@googlegroups.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <502fa745-ddad-f91b-52bc-52edecf8fdbc@arm.com>
+User-Agent: Mutt/1.5.17 (2007-11-01)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jan 17, 2020 at 10:33 PM Samuel Holland <samuel@sholland.org> wrote:
-
-> The pin controller hardware does not distinguish IRQs intended for
-> wakeup from other IRQs, so we must mask non-wakeup IRQs in software to
-> prevent inadvertent wakeups. This is accomplished at the irqchip level
-> via the IRQCHIP_MASK_ON_SUSPEND flag.
+On Thu, Feb 20, 2020 at 05:21:35PM +0000, Robin Murphy wrote:
+>> @@ -196,10 +192,15 @@ void *dma_direct_alloc_pages(struct device *dev, size_t size,
+>>     	memset(ret, 0, size);
+>>   -	if (IS_ENABLED(CONFIG_ARCH_HAS_UNCACHED_SEGMENT) &&
+>> -	    dma_alloc_need_uncached(dev, attrs)) {
+>> +	if (dma_alloc_need_uncached(dev, attrs)) {
+>>   		arch_dma_prep_coherent(page, size);
+>> -		ret = uncached_kernel_address(ret);
+>> +
+>> +		if (IS_ENABLED(CONFIG_ARCH_HAS_DMA_SET_UNCACHED)) {
+>> +			if (!arch_dma_set_uncached(ret, size))
+>> +				goto out_free_pages;
+>> +		} else if (IS_ENABLED(CONFIG_ARCH_HAS_UNCACHED_SEGMENT)) {
+>> +			ret = uncached_kernel_address(ret);
 >
-> Signed-off-by: Samuel Holland <samuel@sholland.org>
+> Hmm, would we actually need to keep ARCH_HAS_UNCACHED_SEGMENT? If 
+> arch_dma_set_uncached() returned void*/ERR_PTR instead, then it could work 
+> for both cases (with arch_dma_clear_uncached() being a no-op for segments).
 
-Patch applied.
-
-Yours,
-Linus Walleij
+Yes, I think so.  I was a little worried about what to do with
+cached_kernel_address() in that scheme, but it turns out with the recent
+round of dma-direct cleanup that is actually entirely unused now.
