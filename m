@@ -2,137 +2,131 @@ Return-Path: <SRS0=1210=4J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9D41AC35640
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 09:33:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 947F1C35644
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 09:34:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6F9DC2073A
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 09:33:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6C3A320722
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 09:34:48 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="P6O8skGY"
+	dkim=pass (1024-bit key) header.d=walle.cc header.i=@walle.cc header.b="KmGNlDaQ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728137AbgBUJdH (ORCPT
+        id S1727794AbgBUJer (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Feb 2020 04:33:07 -0500
-Received: from mail26.static.mailgun.info ([104.130.122.26]:22165 "EHLO
-        mail26.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727036AbgBUJdG (ORCPT
+        Fri, 21 Feb 2020 04:34:47 -0500
+Received: from ssl.serverraum.org ([176.9.125.105]:44453 "EHLO
+        ssl.serverraum.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726984AbgBUJer (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Feb 2020 04:33:06 -0500
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1582277586; h=Content-Transfer-Encoding: Content-Type:
- In-Reply-To: MIME-Version: Date: Message-ID: From: References: Cc: To:
- Subject: Sender; bh=YXNMIm4ZOZ9CnParaqb7qbfYy1/tzl8hkD+zHYO7eI0=; b=P6O8skGYkSnPko1d+kB4gyRIWATHQAU0HaQUDRRxiZHNN+7q1viktDxHbE2PyC2i2vjPfWeH
- ZH8FG/IN4fYbZoq3IZS/XaQmpklPYEDlnIcbe7XkxuGUtR1vq0Ia9XbbyrOV8Akfa2c0mw1k
- 7ZBNrz4Km/kTFNw7TMzBmBVrdLg=
-X-Mailgun-Sending-Ip: 104.130.122.26
-X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
-Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
- by mxa.mailgun.org with ESMTP id 5e4fa3c9.7fe23163c768-smtp-out-n02;
- Fri, 21 Feb 2020 09:32:57 -0000 (UTC)
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id D0C29C433A2; Fri, 21 Feb 2020 09:32:56 +0000 (UTC)
-Received: from [10.206.13.37] (blr-c-bdr-fw-01_GlobalNAT_AllZones-Outside.qualcomm.com [103.229.19.19])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        Fri, 21 Feb 2020 04:34:47 -0500
+Received: from ssl.serverraum.org (web.serverraum.org [172.16.0.2])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        (Authenticated sender: mkshah)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 7D745C43383;
-        Fri, 21 Feb 2020 09:32:52 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 7D745C43383
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=mkshah@codeaurora.org
-Subject: Re: [PATCH v5 1/7] drivers: qcom: rpmh: fix macro to accept NULL
- argument
-To:     Matthias Kaehlcke <mka@chromium.org>
-Cc:     swboyd@chromium.org, evgreen@chromium.org,
-        bjorn.andersson@linaro.org, linux-kernel@vger.kernel.org,
-        linux-arm-msm@vger.kernel.org, agross@kernel.org,
-        dianders@chromium.org, rnayak@codeaurora.org, ilina@codeaurora.org,
-        lsrao@codeaurora.org
-References: <1582108810-21263-1-git-send-email-mkshah@codeaurora.org>
- <1582108810-21263-2-git-send-email-mkshah@codeaurora.org>
- <20200220193105.GB24720@google.com>
-From:   Maulik Shah <mkshah@codeaurora.org>
-Message-ID: <dbec4ecb-403a-3bfe-0404-9d212cdfeaab@codeaurora.org>
-Date:   Fri, 21 Feb 2020 15:02:50 +0530
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.5.0
+        by ssl.serverraum.org (Postfix) with ESMTPSA id C90A023D18;
+        Fri, 21 Feb 2020 10:34:43 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=walle.cc; s=mail2016061301;
+        t=1582277684;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=Snop1RpX2rRCwWvJOlE+k0QPMCh/eFbh+WZC0GsS4uA=;
+        b=KmGNlDaQ0PxdmjCYZnUUKedfMyyTcUd1gXD7yIRoHmxoX8UnGY0zb8lm/piMWP+VR63s+Q
+        xDwYHFxwJHy9ZFrwvVkKljKvR6iTMLBWGm73MzpxQ7dvFMbKyX8tHOeOi7EYExgDLXEGCm
+        m1eae/F2FAQ5vFJE9UpYBMB+T+cGQ+g=
 MIME-Version: 1.0
-In-Reply-To: <20200220193105.GB24720@google.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Type: text/plain; charset=US-ASCII;
+ format=flowed
 Content-Transfer-Encoding: 7bit
-Content-Language: en-GB
+Date:   Fri, 21 Feb 2020 10:34:43 +0100
+From:   Michael Walle <michael@walle.cc>
+To:     Peng Fan <peng.fan@nxp.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     linux-serial@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Shawn Guo <shawnguo@kernel.org>, Leo Li <leoyang.li@nxp.com>,
+        Jiri Slaby <jslaby@suse.com>, Yuan Yao <yao.yuan@nxp.com>,
+        Vabhav Sharma <vabhav.sharma@nxp.com>
+Subject: Re: [PATCH 1/7] Revert "tty: serial: fsl_lpuart: drop
+ EARLYCON_DECLARE"
+In-Reply-To: <AM0PR04MB44817308EA80EBEDC0338E6D88120@AM0PR04MB4481.eurprd04.prod.outlook.com>
+References: <20200220174334.23322-1-michael@walle.cc>
+ <AM0PR04MB44817308EA80EBEDC0338E6D88120@AM0PR04MB4481.eurprd04.prod.outlook.com>
+Message-ID: <51db0e6ba10b4b32dab207e0df8ef0d8@walle.cc>
+X-Sender: michael@walle.cc
+User-Agent: Roundcube Webmail/1.3.10
+X-Spamd-Bar: +
+X-Rspamd-Server: web
+X-Rspamd-Queue-Id: C90A023D18
+X-Spamd-Result: default: False [1.40 / 15.00];
+         FROM_HAS_DN(0.00)[];
+         TO_DN_SOME(0.00)[];
+         TO_MATCH_ENVRCPT_ALL(0.00)[];
+         TAGGED_RCPT(0.00)[dt];
+         MIME_GOOD(-0.10)[text/plain];
+         DKIM_SIGNED(0.00)[];
+         RCPT_COUNT_TWELVE(0.00)[13];
+         NEURAL_HAM(-0.00)[-0.601];
+         RCVD_COUNT_ZERO(0.00)[0];
+         FROM_EQ_ENVFROM(0.00)[];
+         MIME_TRACE(0.00)[0:+];
+         MID_RHS_MATCH_FROM(0.00)[];
+         SUSPICIOUS_RECIPS(1.50)[]
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Hi,
 
-On 2/21/2020 1:01 AM, Matthias Kaehlcke wrote:
-> Hi Maulik,
->
-> this patch and '[v5,2/7] drivers: qcom: rpmh: remove rpmh_flush
-> export' already landed in the QCOM tree (in the branch 'drivers-for-5.7'):
->
-> d5e205079c34a drivers: qcom: rpmh: remove rpmh_flush export
-> aff9cc0847a58 drivers: qcom: rpmh: fix macro to accept NULL argument
->
-> Please rebase your working tree and stop sending these.
->
-> Thanks
->
-> Matthias
+Am 2020-02-21 02:30, schrieb Peng Fan:
+>> Subject: [PATCH 1/7] Revert "tty: serial: fsl_lpuart: drop 
+>> EARLYCON_DECLARE"
+>> 
+>> This reverts commit a659652f6169240a5818cb244b280c5a362ef5a4.
+>> 
+>> This broke the earlycon on LS1021A processors because the order of the
+>> earlycon_setup() functions were changed. Before the commit the normal
+>> lpuart32_early_console_setup() was called. After the commit the
+>> lpuart32_imx_early_console_setup() is called instead.
+> 
+> How do you pass earlycon args to kernel?
 
-Hi Matthias
+earlycon=lpuart32,mmio32be,0x2950000,115200
 
-Rebased and updated in v6.
+please note that there are two possible declarations: (1) an OF/ACPI 
+based
+earlycon, eg just "earlycon" on the bootargs and (2) an elaborate one 
+where
+you can give the offset and access method yourself, eg. the one from 
+above.
 
-Thanks,
+(1) will still work even with the EARLYCON_DECLARE() removed. But (2) 
+will
+search through all possible
+   OF_DELARE_EARLYCON(lpuart32,..)
+   EARLYCON_DECLARE(lpuart32,..)
 
-Maulik
+and doesn't take the compatible into account. So which setup function is
+actually called depends on (a) the order of the OF_DECLARE_EARLYCON() 
+and
+EARLYCON_DECLARE() statements and (b) on the compiler (thats just a
+guess!). For me, the order in which it will actually end up in the
+__earlycon_table is reversed, eg. the last one is called. So now that
+you've removed the EARLYCON_DECLARE() the last one is the imx setup
+function which will add the reg offset and doesn't work on LS1021A.
 
->
-> On Wed, Feb 19, 2020 at 04:10:04PM +0530, Maulik Shah wrote:
->> Device argument matches with dev variable declared in RPMH message.
->> Compiler reports error when the argument is NULL since the argument
->> matches the name of the property. Rename dev argument to device to
->> fix this.
->>
->> Signed-off-by: Maulik Shah <mkshah@codeaurora.org>
->> Reviewed-by: Stephen Boyd <swboyd@chromium.org>
->> ---
->>   drivers/soc/qcom/rpmh.c | 4 ++--
->>   1 file changed, 2 insertions(+), 2 deletions(-)
->>
->> diff --git a/drivers/soc/qcom/rpmh.c b/drivers/soc/qcom/rpmh.c
->> index 035091f..3a4579d 100644
->> --- a/drivers/soc/qcom/rpmh.c
->> +++ b/drivers/soc/qcom/rpmh.c
->> @@ -23,7 +23,7 @@
->>   
->>   #define RPMH_TIMEOUT_MS			msecs_to_jiffies(10000)
->>   
->> -#define DEFINE_RPMH_MSG_ONSTACK(dev, s, q, name)	\
->> +#define DEFINE_RPMH_MSG_ONSTACK(device, s, q, name)	\
->>   	struct rpmh_request name = {			\
->>   		.msg = {				\
->>   			.state = s,			\
->> @@ -33,7 +33,7 @@
->>   		},					\
->>   		.cmd = { { 0 } },			\
->>   		.completion = q,			\
->> -		.dev = dev,				\
->> +		.dev = device,				\
->>   		.needs_free = false,				\
->>   	}
->>   
->> -- 
->> QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member
->> of Code Aurora Forum, hosted by The Linux Foundation
+I've proposed a fix of the underlying problem [1]. But that fix also 
+requires
+the EARLYCON_DECLARE() in this driver.
 
--- 
-QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum, hosted by The Linux Foundation
+
+-michael
+
+[1] 
+https://lore.kernel.org/linux-serial/20200220174607.24285-1-michael@walle.cc/
