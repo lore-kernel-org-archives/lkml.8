@@ -7,49 +7,49 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 23332C35640
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 08:47:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1744AC35642
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 08:47:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E6904206DB
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 08:47:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DF2EF2071E
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 08:47:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582274869;
-	bh=5wSt0wIPpairgOjqX2Ote1SXc2lETYQtdfc1fuGY1FM=;
+	s=default; t=1582274870;
+	bh=viIBm9b3VhN1DKXhLg9bkTkhgxwWO6/AiWhtmjD5vHo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=eOTSVsB+Jw1zcZ8DhOW39AB5r6xzV+0BOAM1j+6GAL9jK6/DfLW+65Sy9TwKY19NJ
-	 2USUMFPWI3FarwPJ4X09eFGCVDqL4FfuLhgno47fyV2W/u3zO4IJdJl00m/YYDW0E9
-	 Shl2jDwDFnUeDE751wNkwWSQnKB1/YvVHgoX7e54=
+	b=Wf806J/jXcPk3tt0/q5IjeC3I3VU5ho+dcIRIcZ47+7ZrTfmDtQhmBT5N7pAzvQyR
+	 wgBEybqCmQslgKjL3Bss8XyBl9ilhEzt6aBohj+WfhvOqYfYn1T+13K9brcsnUZADn
+	 pSdluJ6uDA/R3lSN2Fqh15YdtLfHqN54+tV7gJqQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729028AbgBUHsH (ORCPT
+        id S1729003AbgBUHsC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Feb 2020 02:48:07 -0500
-Received: from mail.kernel.org ([198.145.29.99]:44056 "EHLO mail.kernel.org"
+        Fri, 21 Feb 2020 02:48:02 -0500
+Received: from mail.kernel.org ([198.145.29.99]:43954 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727903AbgBUHsE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Feb 2020 02:48:04 -0500
+        id S1728678AbgBUHr7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 21 Feb 2020 02:47:59 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 734C9207FD;
-        Fri, 21 Feb 2020 07:48:03 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E13D6208C4;
+        Fri, 21 Feb 2020 07:47:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1582271283;
-        bh=5wSt0wIPpairgOjqX2Ote1SXc2lETYQtdfc1fuGY1FM=;
+        s=default; t=1582271278;
+        bh=viIBm9b3VhN1DKXhLg9bkTkhgxwWO6/AiWhtmjD5vHo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=GgWnqk/HdkO67T6hWPov9TAZEul4f5pzop8ACg2x1BtdCxJ24Al5NnCXtjp1Fc3ZN
-         0WYgTGsZNWxikdPBMuBcq/tNgsjA1ujRCrOn4iJbcpW6C05T+JiEuRML+hTwdCabJ1
-         LcqrbknFMl+f7sF6rrQXZ46XOYRtu7GJHCL2fmGw=
+        b=ADO9yyexnFvAes95NrUGY/aRemdq3FnPYt5gIGL18fKr3mi1QjFjuQBB9jrudkhoz
+         mIMierxaji/5S9yMD9FSkK/fWxx8qMeKwq971KSKRU3i4ffBrN9APFqdBAKJmYmj4J
+         zpQsPduzGaQ3oKbvGBQjJekrf6f/FYcbUWzyQSYU=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Chris Wilson <chris@chris-wilson.co.uk>,
-        Harry Wentland <harry.wentland@amd.com>,
-        Jean Delvare <jdelvare@suse.de>,
+        stable@vger.kernel.org, Eric Yang <Eric.Yang2@amd.com>,
+        Tony Cheng <Tony.Cheng@amd.com>,
+        Bhawanpreet Lakha <Bhawanpreet.Lakha@amd.com>,
         Alex Deucher <alexander.deucher@amd.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.5 106/399] drm/amdgpu/dm: Do not throw an error for a display with no audio
-Date:   Fri, 21 Feb 2020 08:37:11 +0100
-Message-Id: <20200221072412.729892969@linuxfoundation.org>
+Subject: [PATCH 5.5 104/399] drm/amd/display: Renoir chroma viewport WA
+Date:   Fri, 21 Feb 2020 08:37:09 +0100
+Message-Id: <20200221072412.531999562@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200221072402.315346745@linuxfoundation.org>
 References: <20200221072402.315346745@linuxfoundation.org>
@@ -62,39 +62,139 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Chris Wilson <chris@chris-wilson.co.uk>
+From: Eric Yang <Eric.Yang2@amd.com>
 
-[ Upstream commit 852a91d627e9ce849d68df9d3f5336689003bdc7 ]
+[ Upstream commit 1cad8ff7ecc6b70a062b8e8b74a0cd08c928341d ]
 
-An old display with no audio may not have an EDID with a CEA block, or
-it may simply be too old to support audio. This is not a driver error,
-so don't flag it as such.
+[Why]
+For unknown reason, immediate flip with host VM translation on NV12
+surface will underflow on last row of PTE.
 
-Bugzilla: https://bugs.freedesktop.org/show_bug.cgi?id=112140
-Signed-off-by: Chris Wilson <chris@chris-wilson.co.uk>
-Cc: Harry Wentland <harry.wentland@amd.com>
-Cc: Jean Delvare <jdelvare@suse.de>
-Cc: Alex Deucher <alexander.deucher@amd.com>
-Reviewed-by: Harry Wentland <harry.wentland@amd.com>
+[How]
+Hack chroma viewport height to make fetch one more row of PTE.
+Note that this will cause hubp underflow on all video underlay
+cases, but the underflow is not user visible since it is in
+blank region.
+
+Signed-off-by: Eric Yang <Eric.Yang2@amd.com>
+Reviewed-by: Tony Cheng <Tony.Cheng@amd.com>
+Acked-by: Bhawanpreet Lakha <Bhawanpreet.Lakha@amd.com>
 Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm_helpers.c | 2 --
- 1 file changed, 2 deletions(-)
+ drivers/gpu/drm/amd/display/dc/dc.h           |  2 +
+ .../gpu/drm/amd/display/dc/dcn21/dcn21_hubp.c | 65 ++++++++++++++++++-
+ .../drm/amd/display/dc/dcn21/dcn21_resource.c |  1 +
+ 3 files changed, 67 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm_helpers.c b/drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm_helpers.c
-index 0b401dfbe98a9..34f483ac36ca4 100644
---- a/drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm_helpers.c
-+++ b/drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm_helpers.c
-@@ -97,8 +97,6 @@ enum dc_edid_status dm_helpers_parse_edid_caps(
- 			(struct edid *) edid->raw_edid);
+diff --git a/drivers/gpu/drm/amd/display/dc/dc.h b/drivers/gpu/drm/amd/display/dc/dc.h
+index 0416a17b0897c..320f4eeebf84c 100644
+--- a/drivers/gpu/drm/amd/display/dc/dc.h
++++ b/drivers/gpu/drm/amd/display/dc/dc.h
+@@ -417,6 +417,8 @@ struct dc_debug_options {
+ 	bool cm_in_bypass;
+ #endif
+ 	int force_clock_mode;/*every mode change.*/
++
++	bool nv12_iflip_vm_wa;
+ };
  
- 	sad_count = drm_edid_to_sad((struct edid *) edid->raw_edid, &sads);
--	if (sad_count < 0)
--		DRM_ERROR("Couldn't read SADs: %d\n", sad_count);
- 	if (sad_count <= 0)
- 		return result;
+ struct dc_debug_data {
+diff --git a/drivers/gpu/drm/amd/display/dc/dcn21/dcn21_hubp.c b/drivers/gpu/drm/amd/display/dc/dcn21/dcn21_hubp.c
+index 2f5a5867e6749..1ddd6ae221558 100644
+--- a/drivers/gpu/drm/amd/display/dc/dcn21/dcn21_hubp.c
++++ b/drivers/gpu/drm/amd/display/dc/dcn21/dcn21_hubp.c
+@@ -164,6 +164,69 @@ static void hubp21_setup(
  
+ }
+ 
++void hubp21_set_viewport(
++	struct hubp *hubp,
++	const struct rect *viewport,
++	const struct rect *viewport_c)
++{
++	struct dcn21_hubp *hubp21 = TO_DCN21_HUBP(hubp);
++	int patched_viewport_height = 0;
++	struct dc_debug_options *debug = &hubp->ctx->dc->debug;
++
++	REG_SET_2(DCSURF_PRI_VIEWPORT_DIMENSION, 0,
++		  PRI_VIEWPORT_WIDTH, viewport->width,
++		  PRI_VIEWPORT_HEIGHT, viewport->height);
++
++	REG_SET_2(DCSURF_PRI_VIEWPORT_START, 0,
++		  PRI_VIEWPORT_X_START, viewport->x,
++		  PRI_VIEWPORT_Y_START, viewport->y);
++
++	/*for stereo*/
++	REG_SET_2(DCSURF_SEC_VIEWPORT_DIMENSION, 0,
++		  SEC_VIEWPORT_WIDTH, viewport->width,
++		  SEC_VIEWPORT_HEIGHT, viewport->height);
++
++	REG_SET_2(DCSURF_SEC_VIEWPORT_START, 0,
++		  SEC_VIEWPORT_X_START, viewport->x,
++		  SEC_VIEWPORT_Y_START, viewport->y);
++
++	/*
++	 *	Work around for underflow issue with NV12 + rIOMMU translation
++	 *	+ immediate flip. This will cause hubp underflow, but will not
++	 *	be user visible since underflow is in blank region
++	 */
++	patched_viewport_height = viewport_c->height;
++	if (viewport_c->height != 0 && debug->nv12_iflip_vm_wa) {
++		int pte_row_height = 0;
++		int pte_rows = 0;
++
++		REG_GET(DCHUBP_REQ_SIZE_CONFIG,
++			PTE_ROW_HEIGHT_LINEAR, &pte_row_height);
++
++		pte_row_height = 1 << (pte_row_height + 3);
++		pte_rows = (viewport_c->height + pte_row_height - 1) / pte_row_height;
++		patched_viewport_height = pte_rows * pte_row_height + 3;
++	}
++
++
++	/* DC supports NV12 only at the moment */
++	REG_SET_2(DCSURF_PRI_VIEWPORT_DIMENSION_C, 0,
++		  PRI_VIEWPORT_WIDTH_C, viewport_c->width,
++		  PRI_VIEWPORT_HEIGHT_C, patched_viewport_height);
++
++	REG_SET_2(DCSURF_PRI_VIEWPORT_START_C, 0,
++		  PRI_VIEWPORT_X_START_C, viewport_c->x,
++		  PRI_VIEWPORT_Y_START_C, viewport_c->y);
++
++	REG_SET_2(DCSURF_SEC_VIEWPORT_DIMENSION_C, 0,
++		  SEC_VIEWPORT_WIDTH_C, viewport_c->width,
++		  SEC_VIEWPORT_HEIGHT_C, patched_viewport_height);
++
++	REG_SET_2(DCSURF_SEC_VIEWPORT_START_C, 0,
++		  SEC_VIEWPORT_X_START_C, viewport_c->x,
++		  SEC_VIEWPORT_Y_START_C, viewport_c->y);
++}
++
+ void hubp21_set_vm_system_aperture_settings(struct hubp *hubp,
+ 		struct vm_system_aperture_param *apt)
+ {
+@@ -211,7 +274,7 @@ static struct hubp_funcs dcn21_hubp_funcs = {
+ 	.hubp_set_vm_system_aperture_settings = hubp21_set_vm_system_aperture_settings,
+ 	.set_blank = hubp1_set_blank,
+ 	.dcc_control = hubp1_dcc_control,
+-	.mem_program_viewport = min_set_viewport,
++	.mem_program_viewport = hubp21_set_viewport,
+ 	.set_cursor_attributes	= hubp2_cursor_set_attributes,
+ 	.set_cursor_position	= hubp1_cursor_set_position,
+ 	.hubp_clk_cntl = hubp1_clk_cntl,
+diff --git a/drivers/gpu/drm/amd/display/dc/dcn21/dcn21_resource.c b/drivers/gpu/drm/amd/display/dc/dcn21/dcn21_resource.c
+index b29b2c99a564e..fe0ed4c09ad0a 100644
+--- a/drivers/gpu/drm/amd/display/dc/dcn21/dcn21_resource.c
++++ b/drivers/gpu/drm/amd/display/dc/dcn21/dcn21_resource.c
+@@ -847,6 +847,7 @@ static const struct dc_debug_options debug_defaults_drv = {
+ 		.scl_reset_length10 = true,
+ 		.sanity_checks = true,
+ 		.disable_48mhz_pwrdwn = false,
++		.nv12_iflip_vm_wa = true
+ };
+ 
+ static const struct dc_debug_options debug_defaults_diags = {
 -- 
 2.20.1
 
