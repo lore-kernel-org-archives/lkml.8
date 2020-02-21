@@ -2,94 +2,112 @@ Return-Path: <SRS0=1210=4J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 11F7CC35640
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 08:30:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 02DDFC35640
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 08:30:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C0E0E20637
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 08:30:32 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582273832;
-	bh=9AF6/sUnNmSe60shTp1e7QrFtjUm1sgv4Xy+8yP9Cpk=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=oTN/YWICj6LdlCe0Tejds+N9RT0WkeWs6KRP/DBDFoiIjtKFtG/svKO1vm12z+qOK
-	 wOV71aib0HlLeHWqZkWkbKytVxV3wrfAyd5AmszMuLty5yNaRcotAgw2HF8exn48/2
-	 ChY4l5f/sd6vHqnVOIKJlZ0WHrY3GX8A5B5FRiEk=
+	by mail.kernel.org (Postfix) with ESMTP id CF76E20679
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 08:30:35 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="DghcjZaQ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388413AbgBUIac (ORCPT
+        id S2388839AbgBUIae (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
+        Fri, 21 Feb 2020 03:30:34 -0500
+Received: from lelv0142.ext.ti.com ([198.47.23.249]:57696 "EHLO
+        lelv0142.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2388010AbgBUIac (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
         Fri, 21 Feb 2020 03:30:32 -0500
-Received: from mail.kernel.org ([198.145.29.99]:52850 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387450AbgBUIP4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Feb 2020 03:15:56 -0500
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E888324670;
-        Fri, 21 Feb 2020 08:15:55 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1582272956;
-        bh=9AF6/sUnNmSe60shTp1e7QrFtjUm1sgv4Xy+8yP9Cpk=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=uhj21BBQv3tn7rnwAtbRp+wjxKdrN0RkScVd1sFsaVFMo/Lyf81SxUiTwcMvW7CxN
-         cAndr2l/On5ujObg4IfvL/dB5WCmhIMGDVIsOzLgiLiLRoyPekF/RpD0mMcHlvZB7I
-         37z0wEUOAxKOHTiyimWK/o91dnCDF3KYt2ISmgZE=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, "Michael S. Tsirkin" <mst@redhat.com>,
-        David Hildenbrand <david@redhat.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 339/344] virtio_balloon: prevent pfn array overflow
-Date:   Fri, 21 Feb 2020 08:42:18 +0100
-Message-Id: <20200221072421.231089464@linuxfoundation.org>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20200221072349.335551332@linuxfoundation.org>
-References: <20200221072349.335551332@linuxfoundation.org>
-User-Agent: quilt/0.66
+Received: from lelv0265.itg.ti.com ([10.180.67.224])
+        by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id 01L8UBTi015091;
+        Fri, 21 Feb 2020 02:30:11 -0600
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1582273811;
+        bh=+GwlT/Yat0yhSuALWos65geLATvxwiVl9nMI6ZThU74=;
+        h=Subject:To:CC:References:From:Date:In-Reply-To;
+        b=DghcjZaQsPfTbKfnW/1UJ7PRfuWJ+c78eU1tqmFIwTARL8D3YzAwWvMkKNdkYCFIi
+         1CX8KZmbKFisJ4b4RetAzP2XHCypsnQVCIkHkvtXm3S7sFP9Rn0hqyLvfnk7VDW9Ia
+         Xe6Cl4sojFoR1i3HHMeA6X9uI3Tn53vK3Rulj7Ik=
+Received: from DFLE114.ent.ti.com (dfle114.ent.ti.com [10.64.6.35])
+        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 01L8UBXA075825
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Fri, 21 Feb 2020 02:30:11 -0600
+Received: from DFLE109.ent.ti.com (10.64.6.30) by DFLE114.ent.ti.com
+ (10.64.6.35) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Fri, 21
+ Feb 2020 02:30:11 -0600
+Received: from fllv0040.itg.ti.com (10.64.41.20) by DFLE109.ent.ti.com
+ (10.64.6.30) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
+ Frontend Transport; Fri, 21 Feb 2020 02:30:11 -0600
+Received: from [172.24.190.4] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by fllv0040.itg.ti.com (8.15.2/8.15.2) with ESMTP id 01L8U6eo107119;
+        Fri, 21 Feb 2020 02:30:07 -0600
+Subject: Re: [PATCH v2 1/3] dt-bindings: m_can: Add Documentation for
+ transceiver regulator
+To:     Rob Herring <robh@kernel.org>
+CC:     <linux-arm-kernel@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <netdev@vger.kernel.org>, <linux-can@vger.kernel.org>,
+        <broonie@kernel.org>, <lgirdwood@gmail.com>,
+        <catalin.marinas@arm.com>, <mark.rutland@arm.com>,
+        <mkl@pengutronix.de>, <wg@grandegger.com>,
+        <sriram.dash@samsung.com>, <dmurphy@ti.com>
+References: <20200217142836.23702-1-faiz_abbas@ti.com>
+ <20200217142836.23702-2-faiz_abbas@ti.com> <20200219203529.GA21085@bogus>
+From:   Faiz Abbas <faiz_abbas@ti.com>
+Message-ID: <a987bcd7-ca1c-dfda-72f3-cd2004a87ea5@ti.com>
+Date:   Fri, 21 Feb 2020 14:01:46 +0530
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200219203529.GA21085@bogus>
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Michael S. Tsirkin <mst@redhat.com>
+Hi Rob,
 
-[ Upstream commit 6e9826e77249355c09db6ba41cd3f84e89f4b614 ]
+On 20/02/20 2:05 am, Rob Herring wrote:
+> On Mon, Feb 17, 2020 at 07:58:34PM +0530, Faiz Abbas wrote:
+>> Some CAN transceivers have a standby line that needs to be asserted
+>> before they can be used. Model this GPIO lines as an optional
+>> fixed-regulator node. Document bindings for the same.
+>>
+>> Signed-off-by: Faiz Abbas <faiz_abbas@ti.com>
+>> ---
+>>  Documentation/devicetree/bindings/net/can/m_can.txt | 3 +++
+>>  1 file changed, 3 insertions(+)
+> 
+> This has moved to DT schema in my tree, so please adjust it and resend.
 
-Make sure, at build time, that pfn array is big enough to hold a single
-page.  It happens to be true since the PAGE_SHIFT value at the moment is
-20, which is 1M - exactly 256 4K balloon pages.
+Ok.
+> 
+>> diff --git a/Documentation/devicetree/bindings/net/can/m_can.txt b/Documentation/devicetree/bindings/net/can/m_can.txt
+>> index ed614383af9c..f17e2a5207dc 100644
+>> --- a/Documentation/devicetree/bindings/net/can/m_can.txt
+>> +++ b/Documentation/devicetree/bindings/net/can/m_can.txt
+>> @@ -48,6 +48,9 @@ Optional Subnode:
+>>  			  that can be used for CAN/CAN-FD modes. See
+>>  			  Documentation/devicetree/bindings/net/can/can-transceiver.txt
+>>  			  for details.
+>> +
+>> +- xceiver-supply: Regulator that powers the CAN transceiver.
+> 
+> The supply for a transceiver should go in the transceiver node.
+> 
 
-Signed-off-by: Michael S. Tsirkin <mst@redhat.com>
-Reviewed-by: David Hildenbrand <david@redhat.com>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- drivers/virtio/virtio_balloon.c | 2 ++
- 1 file changed, 2 insertions(+)
+Marc, while I have you here, do you agree with this?
 
-diff --git a/drivers/virtio/virtio_balloon.c b/drivers/virtio/virtio_balloon.c
-index c962d9b370c69..d2c4eb9efd70b 100644
---- a/drivers/virtio/virtio_balloon.c
-+++ b/drivers/virtio/virtio_balloon.c
-@@ -157,6 +157,8 @@ static void set_page_pfns(struct virtio_balloon *vb,
- {
- 	unsigned int i;
- 
-+	BUILD_BUG_ON(VIRTIO_BALLOON_PAGES_PER_PAGE > VIRTIO_BALLOON_ARRAY_PFNS_MAX);
-+
- 	/*
- 	 * Set balloon pfns pointing at this page.
- 	 * Note that the first pfn points at start of the page.
--- 
-2.20.1
-
-
-
+Thanks,
+Faiz
