@@ -2,91 +2,118 @@ Return-Path: <SRS0=1210=4J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1,USER_IN_DEF_DKIM_WL autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C7A2AC11D25
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 00:11:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5ED28C11D27
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 00:11:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9DFD52071E
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 00:11:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3491C222C4
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 00:11:17 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="Gqbbv60b"
+	dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b="OR4qbGMZ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729435AbgBUALG (ORCPT
+        id S1729462AbgBUALQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Feb 2020 19:11:06 -0500
-Received: from linux.microsoft.com ([13.77.154.182]:43026 "EHLO
-        linux.microsoft.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729373AbgBUALF (ORCPT
+        Thu, 20 Feb 2020 19:11:16 -0500
+Received: from mail-wr1-f66.google.com ([209.85.221.66]:37704 "EHLO
+        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729417AbgBUALP (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Feb 2020 19:11:05 -0500
-Received: from [10.131.86.135] (unknown [131.107.147.135])
-        by linux.microsoft.com (Postfix) with ESMTPSA id BF7BB2007690;
-        Thu, 20 Feb 2020 16:11:04 -0800 (PST)
-DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com BF7BB2007690
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
-        s=default; t=1582243864;
-        bh=zorJuQNXMnYkPB8Xz0B94YjuA01qeWQy1dyOh6tP+f8=;
-        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
-        b=Gqbbv60bmqz+5F6mV/kCW3gQZGu3DycmYrYLu8NMF+ZHg4LfwU14I/TTaZKt2yHJK
-         qvlueHIQyEPAkSW+rKdO9Uxo1MXtzS5rI8gxvOKqp0qt1eantpqZaiLAqKmy20yLRv
-         mHenMROitS8e5qUS0mN4zJi8tgUR3TtD4JvjaDLk=
-Subject: Re: [PATCH v26 10/22] x86/sgx: Linux Enclave Driver
-To:     Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>,
-        Sean Christopherson <sean.j.christopherson@intel.com>
-Cc:     linux-kernel@vger.kernel.org, x86@kernel.org,
-        linux-sgx@vger.kernel.org, akpm@linux-foundation.org,
-        dave.hansen@intel.com, nhorman@redhat.com, npmccallum@redhat.com,
-        haitao.huang@intel.com, andriy.shevchenko@linux.intel.com,
-        tglx@linutronix.de, kai.svahn@intel.com, bp@alien8.de,
-        josh@joshtriplett.org, luto@kernel.org, kai.huang@intel.com,
-        rientjes@google.com, cedric.xing@intel.com, puiterwijk@redhat.com,
-        linux-security-module@vger.kernel.org,
-        Suresh Siddha <suresh.b.siddha@intel.com>,
-        Haitao Huang <haitao.huang@linux.intel.com>
-References: <20200209212609.7928-1-jarkko.sakkinen@linux.intel.com>
- <20200209212609.7928-11-jarkko.sakkinen@linux.intel.com>
- <15074c16-4832-456d-dd12-af8548e46d6d@linux.microsoft.com>
- <20200220181345.GD3972@linux.intel.com>
- <7738b3cf-fb32-5306-5740-59974444e327@linux.microsoft.com>
- <20200220184842.GE3972@linux.intel.com>
- <20200220221607.GB26618@linux.intel.com>
-From:   Jordan Hand <jorhand@linux.microsoft.com>
-Message-ID: <2c077197-a8a7-feac-58ea-e901c92fb58b@linux.microsoft.com>
-Date:   Thu, 20 Feb 2020 16:11:04 -0800
+        Thu, 20 Feb 2020 19:11:15 -0500
+Received: by mail-wr1-f66.google.com with SMTP id w15so52214wru.4
+        for <linux-kernel@vger.kernel.org>; Thu, 20 Feb 2020 16:11:13 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=broadcom.com; s=google;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-transfer-encoding:content-language;
+        bh=wXSbqjr+PXHQhEGWLVIbHnU0mAYhDxXp177C2dXLvkw=;
+        b=OR4qbGMZ3kSLXHwlfMWDnVjvxT0c/b5fmtDsqdt6bhn6yadSOJmNHGjqCWZm2yVRAO
+         ed/pScZ8+lYgnYH+P/9lFgMRmFo+EmDPQWLLyTUT3CJO+a8D2eeHF7rdlZaG1BnbIa9D
+         tNOFC7Kt+sV47VYFwmPjmlJ/tZzxGLf0wgzqQ=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-transfer-encoding
+         :content-language;
+        bh=wXSbqjr+PXHQhEGWLVIbHnU0mAYhDxXp177C2dXLvkw=;
+        b=nCInsOlP3uwjhykHIUEcVIPAogr3lueAxDKMwMcd1Ohi/BPErCGYNxr2Va/poi9oo7
+         XW9J0adLB2Qkq2gn8MP+9DlQk8cOUEpwn+T7bmfh1O7SbAoayzIlAObN1yXJYEqJiL7u
+         8mrjYnQ7UHENGv+OFTq3CZFK60Q67Q0CpptG+dG5K/oG7b34WHclDJ3iQS00vz++d4u6
+         2NwAIq7VM1EW62xINWQLK8WuD2zKd/NWqLbKsVJEFWqSYOpoBVfq5DhoGfArJHLW8rZW
+         aK0bJKUPUtDzjaxzfx/QOa9dYt91b8aQNmqE8mdx/SFd1dbG8L/JOMW7GScAPy8X5ZSN
+         e8rg==
+X-Gm-Message-State: APjAAAUwrnHMgPZB4TKlMzTyhgms+0FcJaCPRCy+Sm/+GWtf1GfSIf0B
+        W0Op8KtRABjZnybHmUWBTntZ1A==
+X-Google-Smtp-Source: APXvYqyZNpXUITw974Gj1d7jmXjJf2j4kz6bDP4xvQnH/etFM/nRGojeEXJirHn2sJxv9V2yWs/+Pw==
+X-Received: by 2002:a5d:510f:: with SMTP id s15mr44375580wrt.408.1582243873022;
+        Thu, 20 Feb 2020 16:11:13 -0800 (PST)
+Received: from [10.136.13.65] ([192.19.228.250])
+        by smtp.gmail.com with ESMTPSA id q9sm1553085wrx.18.2020.02.20.16.11.08
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 20 Feb 2020 16:11:12 -0800 (PST)
+Subject: Re: [PATCH 2/7] firmware: add offset to request_firmware_into_buf
+To:     Luis Chamberlain <mcgrof@kernel.org>, Takashi Iwai <tiwai@suse.de>
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        David Brown <david.brown@linaro.org>,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        Shuah Khan <shuah@kernel.org>, bjorn.andersson@linaro.org,
+        Shuah Khan <skhan@linuxfoundation.org>,
+        Arnd Bergmann <arnd@arndb.de>,
+        "Rafael J . Wysocki" <rafael@kernel.org>,
+        linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org,
+        BCM Kernel Feedback <bcm-kernel-feedback-list@broadcom.com>,
+        Olof Johansson <olof@lixom.net>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Dan Carpenter <dan.carpenter@oracle.com>,
+        Colin Ian King <colin.king@canonical.com>,
+        Kees Cook <keescook@chromium.org>,
+        linux-kselftest@vger.kernel.org
+References: <20190822192451.5983-1-scott.branden@broadcom.com>
+ <20190822192451.5983-3-scott.branden@broadcom.com>
+ <s5hef1crybq.wl-tiwai@suse.de>
+ <10461fcf-9eca-32b6-0f9d-23c63b3f3442@broadcom.com>
+ <s5hr258j6ln.wl-tiwai@suse.de>
+ <93b8285a-e5eb-d4a4-545d-426bbbeb8008@broadcom.com>
+ <s5ho90byhnv.wl-tiwai@suse.de>
+ <b440f372-45be-c06c-94a1-44ae6b1e7eb8@broadcom.com>
+ <s5hwoeyj3i5.wl-tiwai@suse.de> <20191011133120.GP16384@42.do-not-panic.com>
+From:   Scott Branden <scott.branden@broadcom.com>
+Message-ID: <e65a3ba1-d064-96fe-077e-59bf8ffff377@broadcom.com>
+Date:   Thu, 20 Feb 2020 16:11:06 -0800
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
  Thunderbird/68.4.1
 MIME-Version: 1.0
-In-Reply-To: <20200220221607.GB26618@linux.intel.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
+In-Reply-To: <20191011133120.GP16384@42.do-not-panic.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Transfer-Encoding: 7bit
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2/20/20 2:16 PM, Jarkko Sakkinen wrote:
-> On Thu, Feb 20, 2020 at 10:48:42AM -0800, Sean Christopherson wrote:
->> My biggest concern for allowing PROT_EXEC if RIE is that it would result
->> in #PF(SGX) (#GP on Skylake) due to an EPCM violation if the enclave
->> actually tried to execute from such a page.  This isn't a problem for the
->> kernel as the fault will be reported cleanly through the vDSO (or get
->> delivered as a SIGSEGV if the enclave isn't entered through the vDSO), but
->> it's a bit weird for userspace as userspace will see the #PF(SGX) and
->> likely assume the EPC was lost, e.g. silently restart the enclave instead
->> of logging an error that the enclave is broken.
-> 
-> I think right way to fix the current implementation is to -EACCES mmap()
-> (and mprotect) when !!(current->personality & READ_IMPLIES_EXEC).
-> 
 
-I agree. It still means userspace code with an executable stack can't
-mmap/mprotect enclave pages and request PROT_READ but the check you've
-proposed would more consistently enforce this which is easier to
-understand from userspace perspective.
 
--Jordan
+On 2019-10-11 6:31 a.m., Luis Chamberlain wrote:
+> On Tue, Aug 27, 2019 at 12:40:02PM +0200, Takashi Iwai wrote:
+>> On Mon, 26 Aug 2019 19:24:22 +0200,
+>> Scott Branden wrote:
+>>> I will admit I am not familiar with every subtlety of PCI
+>>> accesses. Any comments to the Valkyrie driver in this patch series are
+>>> appreciated.
+>>> But not all drivers need to work on all architectures. I can add a
+>>> depends on x86 64bit architectures to the driver to limit it to such.
+>> But it's an individual board on PCIe, and should work no matter which
+>> architecture is?  Or is this really exclusive to x86?
+> Poke Scott.
+>
+>    Luis
+Yes, this is exclusive to x86.
+In particular, 64-bit x86 server class machines with PCIe gen3 support.
+There is no reason for these PCIe boards to run in other lower end 
+machines or architectures.
+
