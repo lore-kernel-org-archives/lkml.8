@@ -7,145 +7,237 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 523D6C11D25
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 02:12:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D8731C11D24
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 02:15:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 298C3206EF
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 02:12:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A6EAB20722
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 02:15:02 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nifty.com header.i=@nifty.com header.b="bP5C+o1t"
+	dkim=pass (2048-bit key) header.d=nifty.com header.i=@nifty.com header.b="W79fBiY0"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729609AbgBUCMa (ORCPT
+        id S1729371AbgBUCPB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Feb 2020 21:12:30 -0500
-Received: from conuserg-12.nifty.com ([210.131.2.79]:24230 "EHLO
-        conuserg-12.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729259AbgBUCM3 (ORCPT
+        Thu, 20 Feb 2020 21:15:01 -0500
+Received: from conuserg-09.nifty.com ([210.131.2.76]:52381 "EHLO
+        conuserg-09.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729027AbgBUCPB (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Feb 2020 21:12:29 -0500
+        Thu, 20 Feb 2020 21:15:01 -0500
 Received: from localhost.localdomain (p14092-ipngnfx01kyoto.kyoto.ocn.ne.jp [153.142.97.92]) (authenticated)
-        by conuserg-12.nifty.com with ESMTP id 01L2BcSM007985;
-        Fri, 21 Feb 2020 11:11:38 +0900
-DKIM-Filter: OpenDKIM Filter v2.10.3 conuserg-12.nifty.com 01L2BcSM007985
+        by conuserg-09.nifty.com with ESMTP id 01L2EQ0T006571;
+        Fri, 21 Feb 2020 11:14:26 +0900
+DKIM-Filter: OpenDKIM Filter v2.10.3 conuserg-09.nifty.com 01L2EQ0T006571
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
-        s=dec2015msa; t=1582251099;
-        bh=S6KuamcJ1OBT86PX3D7Tj8TPgwjtQvO9qJMRN7CA9Sg=;
+        s=dec2015msa; t=1582251267;
+        bh=nhUaYgDkD6DXIYyAxnxU4xube6qtkglOc80oVkt1PIk=;
         h=From:To:Cc:Subject:Date:From;
-        b=bP5C+o1tC+E9hv5J5syDpuFvhBqNpknB2WyJ2baKXHhcmVRh8GDmanjoZMpOBICj1
-         Ox9d+M4ZoGw/UDKDaXlwh3sco0vjv0qP4UES/N+BqBz2+2Svj1OtjVBGv8RFpbzxcC
-         0v8qtsDzHCf1LzijftYYXUqocPNu/b3PZ2LYJxyT9RExIh+Ud1cipy807XIIp9wqeE
-         aNDG8CEs34N7buyci33PMVFul+CE20sY5dSbraNjTikAuktwQ3gTEZ0IRq7UohLs/x
-         gUovN9s7BtNvCm7J1IBrdGxuT8VlB5YhJlN4Va1b4r0ocUAGlPAwJ5DOyEjjSNFUTK
-         IvhAM71WAHlow==
+        b=W79fBiY0/kNsekXh7d3jt4wdtM4zpP4ruH15pDBZlx3da9ZBKFCKS744d1KELnA/H
+         LIH8BHQUmHV4O3Le4aykxUkyocZBkjtgszlCfVNXhD1chNTl/LUCMBauekkIxIVClM
+         tI16W1g3xGNZnv8wSCoDDl2uYWQpeZVpVOMryFyS1VFDITkXoHX4iQ1nb+Lc++XQLu
+         2LixvbQbRKjd7AIiRdPqFCOZcCebIu+gzDyxRhlOdaZJ03kPkxSB/ZjwxUbbARb9SK
+         vUFXmcBvYAbA3K51PKg9plRznRd1KfgsnxgKusZBhkr7I09AH6+Zqwc3FczC5oZpbY
+         ehE17aOEaKxHg==
 X-Nifty-SrcIP: [153.142.97.92]
 From:   Masahiro Yamada <yamada.masahiro@socionext.com>
 To:     devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>
 Cc:     Frank Rowand <frowand.list@gmail.com>,
         Masahiro Yamada <yamada.masahiro@socionext.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         Mark Rutland <mark.rutland@arm.com>,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linux-serial@vger.kernel.org
-Subject: [PATCH] dt-bindings: serial: Convert UniPhier UART to json-schema
-Date:   Fri, 21 Feb 2020 11:11:36 +0900
-Message-Id: <20200221021137.19443-1-yamada.masahiro@socionext.com>
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: [PATCH] dt-bindings: bus: Convert UniPhier System Bus to json-schema
+Date:   Fri, 21 Feb 2020 11:14:24 +0900
+Message-Id: <20200221021424.20414-1-yamada.masahiro@socionext.com>
 X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Convert the UniPhier UART binding to DT schema format.
+Convert the UniPhier System Bus controller binding to DT schema format.
 
 Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
 ---
 
- .../serial/socionext,uniphier-uart.yaml       | 46 +++++++++++++++++++
- .../bindings/serial/uniphier-uart.txt         | 22 ---------
- 2 files changed, 46 insertions(+), 22 deletions(-)
- create mode 100644 Documentation/devicetree/bindings/serial/socionext,uniphier-uart.yaml
- delete mode 100644 Documentation/devicetree/bindings/serial/uniphier-uart.txt
+ .../bus/socionext,uniphier-system-bus.yaml    | 96 +++++++++++++++++++
+ .../bindings/bus/uniphier-system-bus.txt      | 66 -------------
+ 2 files changed, 96 insertions(+), 66 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/bus/socionext,uniphier-system-bus.yaml
+ delete mode 100644 Documentation/devicetree/bindings/bus/uniphier-system-bus.txt
 
-diff --git a/Documentation/devicetree/bindings/serial/socionext,uniphier-uart.yaml b/Documentation/devicetree/bindings/serial/socionext,uniphier-uart.yaml
+diff --git a/Documentation/devicetree/bindings/bus/socionext,uniphier-system-bus.yaml b/Documentation/devicetree/bindings/bus/socionext,uniphier-system-bus.yaml
 new file mode 100644
-index 000000000000..09a30300850c
+index 000000000000..ada3b1266c08
 --- /dev/null
-+++ b/Documentation/devicetree/bindings/serial/socionext,uniphier-uart.yaml
-@@ -0,0 +1,46 @@
++++ b/Documentation/devicetree/bindings/bus/socionext,uniphier-system-bus.yaml
+@@ -0,0 +1,96 @@
 +# SPDX-License-Identifier: GPL-2.0-only OR BSD-2-Clause
 +%YAML 1.2
 +---
-+$id: http://devicetree.org/schemas/serial/socionext,uniphier-uart.yaml#
++$id: http://devicetree.org/schemas/bus/socionext,uniphier-system-bus.yaml#
 +$schema: http://devicetree.org/meta-schemas/core.yaml#
 +
-+title: UniPhier UART controller
++title: UniPhier System Bus
++
++description: |
++  The UniPhier System Bus is an external bus that connects on-board devices to
++  the UniPhier SoC. It is a simple (semi-)parallel bus with address, data, and
++  some control signals. It supports up to 8 banks (chip selects).
++
++  Before any access to the bus, the bus controller must be configured; the bus
++  controller registers provide the control for the translation from the offset
++  within each bank to the CPU-viewed address. The needed setup includes the
++  base address, the size of each bank. Optionally, some timing parameters can
++  be optimized for faster bus access.
 +
 +maintainers:
 +  - Masahiro Yamada <yamada.masahiro@socionext.com>
 +
 +properties:
 +  compatible:
-+    const: socionext,uniphier-uart
++    const: socionext,uniphier-system-bus
 +
 +  reg:
 +    maxItems: 1
 +
-+  interrupts:
-+    maxItems: 1
++  "#address-cells":
++    description: |
++      The first cell is the bank number (chip select).
++      The second cell is the address offset within the bank.
++    const: 2
 +
-+  clocks:
-+    minItems: 1
++  "#size-cells":
++    const: 1
 +
-+  auto-flow-control:
-+    description: enable automatic flow control support.
-+    $ref: /schemas/types.yaml#/definitions/flag
++  ranges:
++    description: |
++      Provide address translation from the System Bus to the parent bus.
++
++      Note:
++      The address region(s) that can be assigned for the System Bus is
++      implementation defined. Some SoCs can use 0x00000000-0x0fffffff and
++      0x40000000-0x4fffffff, while other SoCs only 0x40000000-0x4fffffff.
++      There might be additional limitations depending on SoCs and the boot mode.
++      The address translation is arbitrary as long as the banks are assigned in
++      the supported address space with the required alignment and they do not
++      overlap one another.
++
++      For example, it is possible to map:
++        bank 0 to 0x42000000-0x43ffffff, bank 5 to 0x46000000-0x46ffffff
++      It is also possible to map:
++        bank 0 to 0x48000000-0x49ffffff, bank 5 to 0x44000000-0x44ffffff
++      There is no reason to stick to a particular translation mapping, but the
++      "ranges" property should provide a "reasonable" default that is known to
++      work. The software should initialize the bus controller according to it.
 +
 +required:
 +  - compatible
 +  - reg
-+  - interrupts
-+  - clocks
++  - "#address-cells"
++  - "#size-cells"
++  - ranges
 +
 +examples:
 +  - |
-+    aliases {
-+        serial0 = &serial0;
-+    };
++    // In this example,
++    // - the Ethernet device is connected at the offset 0x01f00000 of CS1 and
++    //   mapped to 0x43f00000 of the parent bus.
++    // - the UART device is connected at the offset 0x00200000 of CS5 and
++    //   mapped to 0x46200000 of the parent bus.
 +
-+    serial0: serial@54006800 {
-+        compatible = "socionext,uniphier-uart";
-+        reg = <0x54006800 0x40>;
-+        interrupts = <0 33 4>;
-+        clocks = <&uart_clk>;
++    system-bus {
++        compatible = "socionext,uniphier-system-bus";
++        reg = <0x58c00000 0x400>;
++        #address-cells = <2>;
++        #size-cells = <1>;
++        ranges = <1 0x00000000 0x42000000 0x02000000>,
++                 <5 0x00000000 0x46000000 0x01000000>;
++
++        ethernet@1,01f00000 {
++            compatible = "smsc,lan9115";
++            reg = <1 0x01f00000 0x1000>;
++            interrupts = <0 48 4>
++            phy-mode = "mii";
++        };
++
++        uart@5,00200000 {
++            compatible = "ns16550a";
++            reg = <5 0x00200000 0x20>;
++            interrupts = <0 49 4>
++            clock-frequency = <12288000>;
++        };
 +    };
-diff --git a/Documentation/devicetree/bindings/serial/uniphier-uart.txt b/Documentation/devicetree/bindings/serial/uniphier-uart.txt
+diff --git a/Documentation/devicetree/bindings/bus/uniphier-system-bus.txt b/Documentation/devicetree/bindings/bus/uniphier-system-bus.txt
 deleted file mode 100644
-index 7a1bf02bb869..000000000000
---- a/Documentation/devicetree/bindings/serial/uniphier-uart.txt
+index 68ef80afff16..000000000000
+--- a/Documentation/devicetree/bindings/bus/uniphier-system-bus.txt
 +++ /dev/null
-@@ -1,22 +0,0 @@
--UniPhier UART controller
+@@ -1,66 +0,0 @@
+-UniPhier System Bus
+-
+-The UniPhier System Bus is an external bus that connects on-board devices to
+-the UniPhier SoC.  It is a simple (semi-)parallel bus with address, data, and
+-some control signals.  It supports up to 8 banks (chip selects).
+-
+-Before any access to the bus, the bus controller must be configured; the bus
+-controller registers provide the control for the translation from the offset
+-within each bank to the CPU-viewed address.  The needed setup includes the base
+-address, the size of each bank.  Optionally, some timing parameters can be
+-optimized for faster bus access.
 -
 -Required properties:
--- compatible: should be "socionext,uniphier-uart".
--- reg: offset and length of the register set for the device.
--- interrupts: a single interrupt specifier.
--- clocks: phandle to the input clock.
+-- compatible: should be "socionext,uniphier-system-bus".
+-- reg: offset and length of the register set for the bus controller device.
+-- #address-cells: should be 2.  The first cell is the bank number (chip select).
+-  The second cell is the address offset within the bank.
+-- #size-cells: should be 1.
+-- ranges: should provide a proper address translation from the System Bus to
+-  the parent bus.
 -
--Optional properties:
---auto-flow-control: enable automatic flow control support.
+-Note:
+-The address region(s) that can be assigned for the System Bus is implementation
+-defined.  Some SoCs can use 0x00000000-0x0fffffff and 0x40000000-0x4fffffff,
+-while other SoCs can only use 0x40000000-0x4fffffff.  There might be additional
+-limitations depending on SoCs and the boot mode.  The address translation is
+-arbitrary as long as the banks are assigned in the supported address space with
+-the required alignment and they do not overlap one another.
+-For example, it is possible to map:
+-  bank 0 to 0x42000000-0x43ffffff, bank 5 to 0x46000000-0x46ffffff
+-It is also possible to map:
+-  bank 0 to 0x48000000-0x49ffffff, bank 5 to 0x44000000-0x44ffffff
+-There is no reason to stick to a particular translation mapping, but the
+-"ranges" property should provide a "reasonable" default that is known to work.
+-The software should initialize the bus controller according to it.
 -
 -Example:
--	aliases {
--		serial0 = &serial0;
+-
+-	system-bus {
+-		compatible = "socionext,uniphier-system-bus";
+-		reg = <0x58c00000 0x400>;
+-		#address-cells = <2>;
+-		#size-cells = <1>;
+-		ranges = <1 0x00000000 0x42000000 0x02000000
+-			  5 0x00000000 0x46000000 0x01000000>;
+-
+-		ethernet@1,01f00000 {
+-			compatible = "smsc,lan9115";
+-			reg = <1 0x01f00000 0x1000>;
+-			interrupts = <0 48 4>
+-			phy-mode = "mii";
+-		};
+-
+-		uart@5,00200000 {
+-			compatible = "ns16550a";
+-			reg = <5 0x00200000 0x20>;
+-			interrupts = <0 49 4>
+-			clock-frequency = <12288000>;
+-		};
 -	};
 -
--	serial0: serial@54006800 {
--		compatible = "socionext,uniphier-uart";
--		reg = <0x54006800 0x40>;
--		interrupts = <0 33 4>;
--		clocks = <&uart_clk>;
--	};
+-In this example,
+- - the Ethernet device is connected at the offset 0x01f00000 of CS1 and
+-   mapped to 0x43f00000 of the parent bus.
+- - the UART device is connected at the offset 0x00200000 of CS5 and
+-   mapped to 0x46200000 of the parent bus.
 -- 
 2.17.1
 
