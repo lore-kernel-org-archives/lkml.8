@@ -2,64 +2,101 @@ Return-Path: <SRS0=1210=4J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4DB92C35656
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 16:41:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9C3B8C35656
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 16:42:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2B19C24650
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 16:41:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7386124650
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 16:42:01 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Doowzri/"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727152AbgBUQlz (ORCPT
+        id S1726408AbgBUQmA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Feb 2020 11:41:55 -0500
-Received: from verein.lst.de ([213.95.11.211]:56431 "EHLO verein.lst.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726408AbgBUQlz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Feb 2020 11:41:55 -0500
-Received: by verein.lst.de (Postfix, from userid 2407)
-        id 8193268BFE; Fri, 21 Feb 2020 17:41:51 +0100 (CET)
-Date:   Fri, 21 Feb 2020 17:41:51 +0100
-From:   Christoph Hellwig <hch@lst.de>
-To:     "Michael S. Tsirkin" <mst@redhat.com>
-Cc:     Halil Pasic <pasic@linux.ibm.com>,
-        Jason Wang <jasowang@redhat.com>,
-        Marek Szyprowski <m.szyprowski@samsung.com>,
-        Robin Murphy <robin.murphy@arm.com>,
-        Christoph Hellwig <hch@lst.de>, linux-s390@vger.kernel.org,
-        virtualization@lists.linux-foundation.org,
-        linux-kernel@vger.kernel.org, iommu@lists.linux-foundation.org,
-        Christian Borntraeger <borntraeger@de.ibm.com>,
-        Janosch Frank <frankja@linux.ibm.com>,
-        Viktor Mihajlovski <mihajlov@linux.ibm.com>,
-        Cornelia Huck <cohuck@redhat.com>,
-        Ram Pai <linuxram@us.ibm.com>,
-        Thiago Jung Bauermann <bauerman@linux.ibm.com>,
-        David Gibson <david@gibson.dropbear.id.au>,
-        "Lendacky, Thomas" <Thomas.Lendacky@amd.com>,
-        Michael Mueller <mimu@linux.ibm.com>
-Subject: Re: [PATCH 0/2] virtio: decouple protected guest RAM form
- VIRTIO_F_IOMMU_PLATFORM
-Message-ID: <20200221164151.GD10054@lst.de>
-References: <20200220160606.53156-1-pasic@linux.ibm.com> <20200220163055-mutt-send-email-mst@kernel.org>
+        Fri, 21 Feb 2020 11:42:00 -0500
+Received: from mail-ot1-f68.google.com ([209.85.210.68]:39584 "EHLO
+        mail-ot1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727206AbgBUQl6 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 21 Feb 2020 11:41:58 -0500
+Received: by mail-ot1-f68.google.com with SMTP id 77so2545307oty.6
+        for <linux-kernel@vger.kernel.org>; Fri, 21 Feb 2020 08:41:58 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=W8MzCk9OwOPa97vO2O05j0c9kWBLJAm/QkTzXLv8BeU=;
+        b=Doowzri/qjWvN5enbBTfhnuLRHkk4kje0+PTPJj+PR3X4oDZn7sF3iriUqDNqR8/PI
+         OOnksEMCeYJc7svg25ckcRLmo1MHTk3uYWuiFjMOU0iBUvIVwFbuqfTa32hzgWGms6tY
+         IyqkduEYw2LZv7swLMlyARmx1plXfqmA+FLzhnY+ipmXD4+ozrCxMB4Y9GhH3MRKPlMd
+         BeVFozsTd2kF6x9oNde7HiVC74A3wPSjqGINyRkEX4H1uIyEboe2MHlOjhFv6XAd+f62
+         e+k7csSsznEVOEJ3be54MVHd6vIU4Iv1dItJt1txTk2PsdBjP8fn5svlevyrAON5jjNH
+         YWaA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=W8MzCk9OwOPa97vO2O05j0c9kWBLJAm/QkTzXLv8BeU=;
+        b=YAYD80mLJT5NFOwCnyEznlCN2rsM5TGYw682rXFOoQ+5lSgO8sz0h555Qkt1tZqm6F
+         CoxuFEMsy/rfYAMbkLrtIfOdv4CkiSSaSY8EcJuMEaZHfwIgEcmntPrDCl2AEnKLDH29
+         8SX9LdmGVBH8RrQWjlZN9HJMwWZsU4ns/ygmlLmFBfLBvoo+sZTsYGk3qCr7MEzf5mct
+         tHY9uG1KF0viwZPOEiOYzoB2GpJUbXXmw0r4CVhzRPejaC9hH8Byk1PB7gp+lU42P+NR
+         qM00AoePICLAzBG0da705SDL0iQQIjYoaWc8SCiDhMV3RJCBnF+UuB4yN7gKjEvx4SXM
+         CjKw==
+X-Gm-Message-State: APjAAAUxRVIWgYDqNG9w+q4H7aPdAqxIQFZmrYawEATlrzeQ1c/x+SwW
+        RplB0WQ9/Qz2tZnrW8y14SuQxiQWDiFfWU43xXQJdA==
+X-Google-Smtp-Source: APXvYqx0HGLTCbdTjv0nDBX10uWCVZSgjBknBgULwUuOc07vU8ZgOAq0qvlJewVmC7Wi5NEAW1+GZDssTDFqVlAh0uw=
+X-Received: by 2002:a9d:5e8b:: with SMTP id f11mr15510368otl.110.1582303317466;
+ Fri, 21 Feb 2020 08:41:57 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200220163055-mutt-send-email-mst@kernel.org>
-User-Agent: Mutt/1.5.17 (2007-11-01)
+References: <158204549488.3299825.3783690177353088425.stgit@warthog.procyon.org.uk>
+ <158204561120.3299825.5242636508455859327.stgit@warthog.procyon.org.uk>
+ <CAG48ez2B2J_3-+EjR20ukRu3noPnAccZsOTaea0jtKK4=+bkhQ@mail.gmail.com>
+ <1897788.1582295034@warthog.procyon.org.uk> <CAG48ez2nFks+yN1Kp4TZisso+rjvv_4UW0FTo8iFUd4Qyq1qDw@mail.gmail.com>
+ <2031798.1582302800@warthog.procyon.org.uk>
+In-Reply-To: <2031798.1582302800@warthog.procyon.org.uk>
+From:   Jann Horn <jannh@google.com>
+Date:   Fri, 21 Feb 2020 17:41:31 +0100
+Message-ID: <CAG48ez2vzgVgJw7-WKa1GbyLw2nJGvAnS21w=gHV02rUNheYFw@mail.gmail.com>
+Subject: Re: [PATCH 15/19] vfs: Add superblock notifications [ver #16]
+To:     David Howells <dhowells@redhat.com>
+Cc:     Al Viro <viro@zeniv.linux.org.uk>, raven@themaw.net,
+        Miklos Szeredi <mszeredi@redhat.com>,
+        Christian Brauner <christian@brauner.io>,
+        Linux API <linux-api@vger.kernel.org>,
+        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
+        kernel list <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Feb 20, 2020 at 04:33:35PM -0500, Michael S. Tsirkin wrote:
-> So it sounds like a host issue: the emulation of s390 unnecessarily complicated.
-> Working around it by the guest looks wrong ...
+On Fri, Feb 21, 2020 at 5:33 PM David Howells <dhowells@redhat.com> wrote:
+> Jann Horn <jannh@google.com> wrote:
+>
+> > (And as in the other case, the s->s_count increment will probably have
+> > to be moved above the add_watch_to_object(), unless you hold the
+> > sb_lock around it?)
+>
+> It shouldn't matter as I'm holding s->s_umount across the add and increment.
+> That prevents the watch from being removed: watch_sb() would have to get the
+> lock first to do that.  It also deactivate_locked_super() from removing all
+> the watchers.
 
-Yes.  If your host (and I don't care if you split hypervisor, ultravisor
-and megavisor out in your implementation) wants to support a VM
-architecture where the host can't access all guest memory you need to
-ensure the DMA API is used.  Extra points for simply always setting the
-flag and thus future proofing the scheme.
+Can't the same thing I already pointed out on "[PATCH 13/19] vfs: Add
+a mount-notification facility [ver #16]" also happen here?
+
+If another thread concurrently runs close(watch_fd) before the
+spin_lock(&sb_lock), pipe_release -> put_pipe_info -> free_pipe_info
+-> watch_queue_clear will run, correct? And then watch_queue_clear()
+will find the watch that we've just created and call its
+->release_watch() handler, which causes put_super(), potentially
+dropping the refcount to zero? And then stuff will blow up.
+
+> I can move it before, but I probably have to drop s_umount before I can call
+> put_super().
