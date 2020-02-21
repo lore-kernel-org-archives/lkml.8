@@ -7,50 +7,47 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D6C89C35641
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 08:13:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 729DDC35641
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 08:13:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id ABD5420578
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 08:13:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4817A24670
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 08:13:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582272788;
-	bh=xR3TCnZhgPJN93bqdEvo5BwP1dB3RHfGLzJ+ceAVSPg=;
+	s=default; t=1582272793;
+	bh=ELlkIfK1/ej71TQAufGUncCZGSmrKBDD0FiRlst3Jtk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=m7kXmJgBR+nU9nnKH7mZCoHzgvD4jU4MLrYZsPs9zSfpdEgxXl6hp512X4p9j0qZc
-	 59TxRPDnhUmYSHManD/PJHPMUdeSf736iX+ZfNswOjdUyLQ3cyLSEOseVi8AWNxkHS
-	 cygo7b4pggjLhhvljITZFupj6UrbGUZHq211Ah14=
+	b=uqzxBpg9Y19gpQQpDBQOUoEoe2kuekU5U8BDYI64jiyzSauirOmi/D5AfuVr0ZEBT
+	 gR97HQtbkpf9QiNU5i2F7F0OP2Up87ffXJbkcJfwtc0EnEhkug8htxo1r2dJak0ViP
+	 qZztrdYbML1xk+psvCD4zsRAO9UHH3QtnkVw6ju8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732953AbgBUINH (ORCPT
+        id S1732971AbgBUINM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Feb 2020 03:13:07 -0500
-Received: from mail.kernel.org ([198.145.29.99]:49066 "EHLO mail.kernel.org"
+        Fri, 21 Feb 2020 03:13:12 -0500
+Received: from mail.kernel.org ([198.145.29.99]:49192 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732943AbgBUINE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Feb 2020 03:13:04 -0500
+        id S1732956AbgBUINK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 21 Feb 2020 03:13:10 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 12C7320722;
-        Fri, 21 Feb 2020 08:13:03 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2926620722;
+        Fri, 21 Feb 2020 08:13:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1582272784;
-        bh=xR3TCnZhgPJN93bqdEvo5BwP1dB3RHfGLzJ+ceAVSPg=;
+        s=default; t=1582272789;
+        bh=ELlkIfK1/ej71TQAufGUncCZGSmrKBDD0FiRlst3Jtk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=vOK6eeXPu0So8KVaAxJrm4olxWvvL9lbaF/dpYW1NdnkzSShE5LMT1QM0hBb4mOBE
-         fVIneWNsLENCL5OcSJ8EZY9BAFwDVHTyQRBzHgi257EG8wDQkbjipfh5bcDgX23Zo7
-         qR7QKMjmxliz7gqVrNJ7SDJCL7T+QRTe/6vUkvSw=
+        b=eA7jzuuIUjxpvG6aMoNgTv2uNQUlqry+mpxa61+mhblzHEbR8dmC9oD3SynG4E7C+
+         d0yJFHFDey7jq7leHBXLn74MgABbnxQBVuTLhmBvw6GWvspeonIu5B0SgOHQA2Gdss
+         5W7b8RtvE7Ghi4HjpNPzAXg5HAFM8o9NNXRbSYmo=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Shile Zhang <shile.zhang@linux.alibaba.com>,
-        Josh Poimboeuf <jpoimboe@redhat.com>,
-        Ingo Molnar <mingo@kernel.org>,
-        Kamalesh Babulal <kamalesh@linux.vnet.ibm.com>,
+        stable@vger.kernel.org, Heiko Carstens <heiko.carstens@de.ibm.com>,
+        Vasily Gorbik <gor@linux.ibm.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 274/344] objtool: Fix ARCH=x86_64 build error
-Date:   Fri, 21 Feb 2020 08:41:13 +0100
-Message-Id: <20200221072414.609965291@linuxfoundation.org>
+Subject: [PATCH 5.4 276/344] s390: adjust -mpacked-stack support check for clang 10
+Date:   Fri, 21 Feb 2020 08:41:15 +0100
+Message-Id: <20200221072414.810177821@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200221072349.335551332@linuxfoundation.org>
 References: <20200221072349.335551332@linuxfoundation.org>
@@ -63,61 +60,47 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Shile Zhang <shile.zhang@linux.alibaba.com>
+From: Vasily Gorbik <gor@linux.ibm.com>
 
-[ Upstream commit 8580bed7e751e6d4f17881e059daf3cb37ba4717 ]
+[ Upstream commit 253b3c4b2920e07ce9e2b18800b9b65245e2fafa ]
 
-Building objtool with ARCH=x86_64 fails with:
+clang 10 introduces -mpacked-stack compiler option implementation. At the
+same time currently it does not support a combination of -mpacked-stack
+and -mbackchain. This leads to the following build error:
 
-   $make ARCH=x86_64 -C tools/objtool
-   ...
-     CC       arch/x86/decode.o
-   arch/x86/decode.c:10:22: fatal error: asm/insn.h: No such file or directory
-    #include <asm/insn.h>
-                         ^
-   compilation terminated.
-   mv: cannot stat ‘arch/x86/.decode.o.tmp’: No such file or directory
-   make[2]: *** [arch/x86/decode.o] Error 1
-   ...
+clang: error: unsupported option '-mpacked-stack with -mbackchain' for
+target 's390x-ibm-linux'
 
-The root cause is that the command-line variable 'ARCH' cannot be
-overridden.  It can be replaced by 'SRCARCH', which is defined in
-'tools/scripts/Makefile.arch'.
+If/when clang adds support for a combination of -mpacked-stack and
+-mbackchain it would also require -msoft-float (like gcc does). According
+to Ulrich Weigand "stack slot assigned to the kernel backchain overlaps
+the stack slot assigned to the FPR varargs (both are required to be
+placed immediately after the saved r15 slot if present)."
 
-Signed-off-by: Shile Zhang <shile.zhang@linux.alibaba.com>
-Signed-off-by: Josh Poimboeuf <jpoimboe@redhat.com>
-Signed-off-by: Ingo Molnar <mingo@kernel.org>
-Reviewed-by: Kamalesh Babulal <kamalesh@linux.vnet.ibm.com>
-Link: https://lore.kernel.org/r/d5d11370ae116df6c653493acd300ec3d7f5e925.1579543924.git.jpoimboe@redhat.com
+Extend -mpacked-stack compiler option support check to include all 3
+options -mpacked-stack -mbackchain -msoft-float which must present to
+support -mpacked-stack with -mbackchain.
+
+Acked-by: Heiko Carstens <heiko.carstens@de.ibm.com>
+Signed-off-by: Vasily Gorbik <gor@linux.ibm.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- tools/objtool/Makefile | 6 +-----
- 1 file changed, 1 insertion(+), 5 deletions(-)
+ arch/s390/Makefile | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/tools/objtool/Makefile b/tools/objtool/Makefile
-index d2a19b0bc05aa..ee08aeff30a19 100644
---- a/tools/objtool/Makefile
-+++ b/tools/objtool/Makefile
-@@ -2,10 +2,6 @@
- include ../scripts/Makefile.include
- include ../scripts/Makefile.arch
+diff --git a/arch/s390/Makefile b/arch/s390/Makefile
+index 478b645b20ddb..9ce1baeac2b25 100644
+--- a/arch/s390/Makefile
++++ b/arch/s390/Makefile
+@@ -69,7 +69,7 @@ cflags-y += -Wa,-I$(srctree)/arch/$(ARCH)/include
+ #
+ cflags-$(CONFIG_FRAME_POINTER) += -fno-optimize-sibling-calls
  
--ifeq ($(ARCH),x86_64)
--ARCH := x86
--endif
--
- # always use the host compiler
- HOSTAR	?= ar
- HOSTCC	?= gcc
-@@ -33,7 +29,7 @@ all: $(OBJTOOL)
- 
- INCLUDES := -I$(srctree)/tools/include \
- 	    -I$(srctree)/tools/arch/$(HOSTARCH)/include/uapi \
--	    -I$(srctree)/tools/arch/$(ARCH)/include
-+	    -I$(srctree)/tools/arch/$(SRCARCH)/include
- WARNINGS := $(EXTRA_WARNINGS) -Wno-switch-default -Wno-switch-enum -Wno-packed
- CFLAGS   := -Werror $(WARNINGS) $(KBUILD_HOSTCFLAGS) -g $(INCLUDES) $(LIBELF_FLAGS)
- LDFLAGS  += $(LIBELF_LIBS) $(LIBSUBCMD) $(KBUILD_HOSTLDFLAGS)
+-ifeq ($(call cc-option-yn,-mpacked-stack),y)
++ifeq ($(call cc-option-yn,-mpacked-stack -mbackchain -msoft-float),y)
+ cflags-$(CONFIG_PACK_STACK)  += -mpacked-stack -D__PACK_STACK
+ aflags-$(CONFIG_PACK_STACK)  += -D__PACK_STACK
+ endif
 -- 
 2.20.1
 
