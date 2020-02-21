@@ -2,53 +2,53 @@ Return-Path: <SRS0=1210=4J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-14.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B54D5C35640
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 07:50:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C3321C35640
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 07:50:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 87F76207FD
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 07:50:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8B19720578
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 07:50:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582271440;
-	bh=9jKTml5Ut7aNjGGWZVXQ6XT7y0ifxxAgeEEzRnZBi68=;
+	s=default; t=1582271444;
+	bh=S3JQ2UnbkSepe0YPKZPgiY0Z/Igmz5BB5w122SddXJ8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=qBzfLAFt55ah6jLEJ7QIHSaJ9WyJe97+MacYCDAlPNlMpCnC0u+OE7SL83CE6QVE2
-	 DZfoz9XM+LkRa6oJ4C5zWo5rtD9N8seoB5aR4vwIF5KouVDngFUDPHMYsYGt/4Gdoh
-	 BrBHRyDXtFNU8XOYc2ITeK31YjdGzrJeD87qbhhc=
+	b=dS0xlOiIpLJZgabC6kyW33zOCs150ictBlLqY9v4c6cfa3UVYR0y3aHNa8g53JQ4f
+	 Urjsq6kIw40VobKaSLMjlsiDQ1Fur8LMT5+wqkNbdOb/ty/pXjYrCGRtiEKY/VyJil
+	 oTL1IU+PmSjeLt8mgTjeFJVUcXj04ccBW3g2oFRs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729583AbgBUHuj (ORCPT
+        id S1728859AbgBUHul (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Feb 2020 02:50:39 -0500
-Received: from mail.kernel.org ([198.145.29.99]:47544 "EHLO mail.kernel.org"
+        Fri, 21 Feb 2020 02:50:41 -0500
+Received: from mail.kernel.org ([198.145.29.99]:47608 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729576AbgBUHuh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Feb 2020 02:50:37 -0500
+        id S1729580AbgBUHuj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 21 Feb 2020 02:50:39 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9910E208C4;
-        Fri, 21 Feb 2020 07:50:35 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 12E2D207FD;
+        Fri, 21 Feb 2020 07:50:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1582271436;
-        bh=9jKTml5Ut7aNjGGWZVXQ6XT7y0ifxxAgeEEzRnZBi68=;
+        s=default; t=1582271438;
+        bh=S3JQ2UnbkSepe0YPKZPgiY0Z/Igmz5BB5w122SddXJ8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=OVNYsBfrLL2yS5fiaoiypi7zQN9+qTRWLl+QopkxUx5wqyQCxSXuR4+CzQR1CWX6Z
-         fsKZCo7+nSzAY9/pT3yxUJ7KEB/CXEmTXvKQ9WTvqyfk0S1Bz45eRkbAli+1WLPnUK
-         3XGsX0MNSfYhjf/ZiFPtqmfdWXKf6wFQ0Bj4tECo=
+        b=ISPl/IxdA9DwCAYvGHer30ATJR/uMF/n7eRB6lZS3Nyos6Zp+XLgKEW1gF+RtOBm1
+         IZ7MdQd5S2nrt+CIniaNDcTlWFzsH/GlhjHCwvL5OK75b75LUh8iA0i1aZl0I7FeH7
+         5T98F557I9exh8KI92e9N5B52GDLDoerA+ayJ4AA=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Alim Akhtar <alim.akhtar@samsung.com>,
-        Bean Huo <beanhuo@micron.com>, Can Guo <cang@codeaurora.org>,
+        stable@vger.kernel.org,
+        Nathan Chancellor <natechancellor@gmail.com>,
         "Martin K. Petersen" <martin.petersen@oracle.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.5 166/399] scsi: ufs: Complete pending requests in host reset and restore path
-Date:   Fri, 21 Feb 2020 08:38:11 +0100
-Message-Id: <20200221072418.756532005@linuxfoundation.org>
+Subject: [PATCH 5.5 167/399] scsi: aic7xxx: Adjust indentation in ahc_find_syncrate
+Date:   Fri, 21 Feb 2020 08:38:12 +0100
+Message-Id: <20200221072418.878328078@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200221072402.315346745@linuxfoundation.org>
 References: <20200221072402.315346745@linuxfoundation.org>
@@ -61,120 +61,52 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Can Guo <cang@codeaurora.org>
+From: Nathan Chancellor <natechancellor@gmail.com>
 
-[ Upstream commit 2df74b6985b51e77756e2e8faa16c45ca3ba53c5 ]
+[ Upstream commit 4dbc96ad65c45cdd4e895ed7ae4c151b780790c5 ]
 
-In UFS host reset and restore path, before probe, we stop and start the
-host controller once. After host controller is stopped, the pending
-requests, if any, are cleared from the doorbell, but no completion IRQ
-would be raised due to the hba is stopped.  These pending requests shall be
-completed along with the first NOP_OUT command (as it is the first command
-which can raise a transfer completion IRQ) sent during probe.  Since the
-OCSs of these pending requests are not SUCCESS (because they are not yet
-literally finished), their UPIUs shall be dumped. When there are multiple
-pending requests, the UPIU dump can be overwhelming and may lead to
-stability issues because it is in atomic context.  Therefore, before probe,
-complete these pending requests right after host controller is stopped and
-silence the UPIU dump from them.
+Clang warns:
 
-Link: https://lore.kernel.org/r/1574751214-8321-5-git-send-email-cang@qti.qualcomm.com
-Reviewed-by: Alim Akhtar <alim.akhtar@samsung.com>
-Reviewed-by: Bean Huo <beanhuo@micron.com>
-Tested-by: Bean Huo <beanhuo@micron.com>
-Signed-off-by: Can Guo <cang@codeaurora.org>
+../drivers/scsi/aic7xxx/aic7xxx_core.c:2317:5: warning: misleading
+indentation; statement is not part of the previous 'if'
+[-Wmisleading-indentation]
+                        if ((syncrate->sxfr_u2 & ST_SXFR) != 0)
+                        ^
+../drivers/scsi/aic7xxx/aic7xxx_core.c:2310:4: note: previous statement
+is here
+                        if (syncrate == &ahc_syncrates[maxsync])
+                        ^
+1 warning generated.
+
+This warning occurs because there is a space amongst the tabs on this
+line. Remove it so that the indentation is consistent with the Linux kernel
+coding style and clang no longer warns.
+
+This has been a problem since the beginning of git history hence no fixes
+tag.
+
+Link: https://github.com/ClangBuiltLinux/linux/issues/817
+Link: https://lore.kernel.org/r/20191218014220.52746-1-natechancellor@gmail.com
+Signed-off-by: Nathan Chancellor <natechancellor@gmail.com>
 Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/scsi/ufs/ufshcd.c | 24 ++++++++++--------------
- drivers/scsi/ufs/ufshcd.h |  2 ++
- 2 files changed, 12 insertions(+), 14 deletions(-)
+ drivers/scsi/aic7xxx/aic7xxx_core.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/scsi/ufs/ufshcd.c b/drivers/scsi/ufs/ufshcd.c
-index 3fbf9ea16c64e..7d8300c9a0148 100644
---- a/drivers/scsi/ufs/ufshcd.c
-+++ b/drivers/scsi/ufs/ufshcd.c
-@@ -4799,7 +4799,7 @@ ufshcd_transfer_rsp_status(struct ufs_hba *hba, struct ufshcd_lrb *lrbp)
- 		break;
- 	} /* end of switch */
- 
--	if (host_byte(result) != DID_OK)
-+	if ((host_byte(result) != DID_OK) && !hba->silence_err_logs)
- 		ufshcd_print_trs(hba, 1 << lrbp->task_tag, true);
- 	return result;
- }
-@@ -5351,8 +5351,8 @@ static void ufshcd_err_handler(struct work_struct *work)
- 
- 	/*
- 	 * if host reset is required then skip clearing the pending
--	 * transfers forcefully because they will automatically get
--	 * cleared after link startup.
-+	 * transfers forcefully because they will get cleared during
-+	 * host reset and restore
- 	 */
- 	if (needs_reset)
- 		goto skip_pending_xfer_clear;
-@@ -6282,9 +6282,15 @@ static int ufshcd_host_reset_and_restore(struct ufs_hba *hba)
- 	int err;
- 	unsigned long flags;
- 
--	/* Reset the host controller */
-+	/*
-+	 * Stop the host controller and complete the requests
-+	 * cleared by h/w
-+	 */
- 	spin_lock_irqsave(hba->host->host_lock, flags);
- 	ufshcd_hba_stop(hba, false);
-+	hba->silence_err_logs = true;
-+	ufshcd_complete_requests(hba);
-+	hba->silence_err_logs = false;
- 	spin_unlock_irqrestore(hba->host->host_lock, flags);
- 
- 	/* scale up clocks to max frequency before full reinitialization */
-@@ -6318,7 +6324,6 @@ out:
- static int ufshcd_reset_and_restore(struct ufs_hba *hba)
- {
- 	int err = 0;
--	unsigned long flags;
- 	int retries = MAX_HOST_RESET_RETRIES;
- 
- 	do {
-@@ -6328,15 +6333,6 @@ static int ufshcd_reset_and_restore(struct ufs_hba *hba)
- 		err = ufshcd_host_reset_and_restore(hba);
- 	} while (err && --retries);
- 
--	/*
--	 * After reset the door-bell might be cleared, complete
--	 * outstanding requests in s/w here.
--	 */
--	spin_lock_irqsave(hba->host->host_lock, flags);
--	ufshcd_transfer_req_compl(hba);
--	ufshcd_tmc_handler(hba);
--	spin_unlock_irqrestore(hba->host->host_lock, flags);
--
- 	return err;
- }
- 
-diff --git a/drivers/scsi/ufs/ufshcd.h b/drivers/scsi/ufs/ufshcd.h
-index 2740f6941ec69..2e59f9d8ab89e 100644
---- a/drivers/scsi/ufs/ufshcd.h
-+++ b/drivers/scsi/ufs/ufshcd.h
-@@ -513,6 +513,7 @@ struct ufs_stats {
-  * @uic_error: UFS interconnect layer error status
-  * @saved_err: sticky error mask
-  * @saved_uic_err: sticky UIC error mask
-+ * @silence_err_logs: flag to silence error logs
-  * @dev_cmd: ufs device management command information
-  * @last_dme_cmd_tstamp: time stamp of the last completed DME command
-  * @auto_bkops_enabled: to track whether bkops is enabled in device
-@@ -670,6 +671,7 @@ struct ufs_hba {
- 	u32 saved_err;
- 	u32 saved_uic_err;
- 	struct ufs_stats ufs_stats;
-+	bool silence_err_logs;
- 
- 	/* Device management request data */
- 	struct ufs_dev_cmd dev_cmd;
+diff --git a/drivers/scsi/aic7xxx/aic7xxx_core.c b/drivers/scsi/aic7xxx/aic7xxx_core.c
+index a9d40d3b90efc..4190a025381a5 100644
+--- a/drivers/scsi/aic7xxx/aic7xxx_core.c
++++ b/drivers/scsi/aic7xxx/aic7xxx_core.c
+@@ -2314,7 +2314,7 @@ ahc_find_syncrate(struct ahc_softc *ahc, u_int *period,
+ 			 * At some speeds, we only support
+ 			 * ST transfers.
+ 			 */
+-		 	if ((syncrate->sxfr_u2 & ST_SXFR) != 0)
++			if ((syncrate->sxfr_u2 & ST_SXFR) != 0)
+ 				*ppr_options &= ~MSG_EXT_PPR_DT_REQ;
+ 			break;
+ 		}
 -- 
 2.20.1
 
