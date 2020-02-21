@@ -7,40 +7,40 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 46B66C35669
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 21:26:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 15F04C3566F
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 21:26:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1971A2465D
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 21:26:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E0E252465D
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 21:26:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582320363;
-	bh=L4UR3M1l22WWoKaD+AUUdwfvaMUZeDKgXjxjx9Cw+S0=;
+	s=default; t=1582320367;
+	bh=uW3tfUlR4IC1gt95wVGRNkZwAxUbH/UJHPnIk28PIYo=;
 	h=From:To:Subject:Date:In-Reply-To:References:In-Reply-To:
 	 References:List-ID:From;
-	b=hDIbZopVXrAlZYc1vWWDXEDva7//OLqvRmlLq2427q3QJ1jInVw+wxMyfKSDJiYug
-	 ey2hdDwRIyu6YNCK17nCISbrGQYPP9Jigx9wMwSfTIhdtk5x/YF2HQHXexVMFs9meL
-	 nsoh3uu2S7fdyQIexRBFi4i5kxavMR3cDzhvoe8Y=
+	b=miXWJR0xE9Vw/BikT4S8W5Vyu6ms4yVim4ihXzilrmC19bCNjEpBE6CcHu6r3hSPE
+	 BllPV7ouC/OGT2v8ZnRAVS4/Lxlpo6J4GWAlHsbHtp3Ca+l/X+Wnw1/Ex/5mkCHOPC
+	 ggz2IUT8+/8bjKsXr72fBHtJDnkJ9h21o0HHqrQg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729800AbgBUV0B (ORCPT
+        id S1729655AbgBUVZh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Feb 2020 16:26:01 -0500
-Received: from mail.kernel.org ([198.145.29.99]:39498 "EHLO mail.kernel.org"
+        Fri, 21 Feb 2020 16:25:37 -0500
+Received: from mail.kernel.org ([198.145.29.99]:39388 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729683AbgBUVZj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Feb 2020 16:25:39 -0500
+        id S1729599AbgBUVZe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 21 Feb 2020 16:25:34 -0500
 Received: from localhost.localdomain (c-98-220-238-81.hsd1.il.comcast.net [98.220.238.81])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 02F7F24696;
-        Fri, 21 Feb 2020 21:25:37 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id F1B192468C;
+        Fri, 21 Feb 2020 21:25:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1582320338;
-        bh=L4UR3M1l22WWoKaD+AUUdwfvaMUZeDKgXjxjx9Cw+S0=;
+        s=default; t=1582320333;
+        bh=uW3tfUlR4IC1gt95wVGRNkZwAxUbH/UJHPnIk28PIYo=;
         h=From:To:Subject:Date:In-Reply-To:References:In-Reply-To:
          References:From;
-        b=wn140VYUwVHcWa5FXdNsp1yF7kYClQ7J7VBmrhNR/PyV2gkGysSjeU66mXYNRCukY
-         WkTultJOAV/hQm/262GLzz4z4/45VvCNXscJCGx2KHegY5I/PTg9fFv7lHgCkk2L9y
-         7o0GfNstZpNETej41HufCVRp8+57iaZ6Z4UvqW3Q=
+        b=TCnwDtU5tuAUa2J6/tovhTcWZziCvRkKAITd6zsleuKVAHBezHAjQxTqwv/hQ/J1L
+         qjqJCj1w/dapVD//F4ngQPjL/xs7nrAhMO+a06MbkEwlDMvtTR/oRfxKrnS/3jFpDp
+         a8f3zmqNfmoOMIpo+AZqPjv2jP/pd3/53B/9GExw=
 From:   zanussi@kernel.org
 To:     LKML <linux-kernel@vger.kernel.org>,
         linux-rt-users <linux-rt-users@vger.kernel.org>,
@@ -51,9 +51,9 @@ To:     LKML <linux-kernel@vger.kernel.org>,
         Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
         Daniel Wagner <wagi@monom.org>,
         Tom Zanussi <zanussi@kernel.org>
-Subject: [PATCH RT 24/25] sched: Provide migrate_disable/enable() inlines
-Date:   Fri, 21 Feb 2020 15:24:52 -0600
-Message-Id: <5e82e4f7f3bc60945e64b2ee8ac429d6c5b51838.1582320278.git.zanussi@kernel.org>
+Subject: [PATCH RT 19/25] userfaultfd: Use a seqlock instead of seqcount
+Date:   Fri, 21 Feb 2020 15:24:47 -0600
+Message-Id: <889f5b989b28eb7b29f21092432948cd12d97c48.1582320278.git.zanussi@kernel.org>
 X-Mailer: git-send-email 2.14.1
 In-Reply-To: <cover.1582320278.git.zanussi@kernel.org>
 References: <cover.1582320278.git.zanussi@kernel.org>
@@ -64,7 +64,7 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Thomas Gleixner <tglx@linutronix.de>
+From: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
 
 v4.14.170-rt75-rc1 stable review patch.
 If anyone has any objections, please let me know.
@@ -72,79 +72,77 @@ If anyone has any objections, please let me know.
 -----------
 
 
-[ Upstream commit 87d447be4100447b42229cce5e9b33c7915871eb ]
+[ Upstream commit dc952a564d02997330654be9628bbe97ba2a05d3 ]
 
-Currently code which solely needs to prevent migration of a task uses
-preempt_disable()/enable() pairs. This is the only reliable way to do so as
-setting the task affinity to a single CPU can be undone by a setaffinity
-operation from a different task/process. It's also significantly faster.
+On RT write_seqcount_begin() disables preemption which leads to warning
+in add_wait_queue() while the spinlock_t is acquired.
+The waitqueue can't be converted to swait_queue because
+userfaultfd_wake_function() is used as a custom wake function.
 
-RT provides a seperate migrate_disable/enable() mechanism which does not
-disable preemption to achieve the semantic requirements of a (almost) fully
-preemptible kernel.
+Use seqlock instead seqcount to avoid the preempt_disable() section
+during add_wait_queue().
 
-As it is unclear from looking at a given code path whether the intention is
-to disable preemption or migration, introduce migrate_disable/enable()
-inline functions which can be used to annotate code which merely needs to
-disable migration. Map them to preempt_disable/enable() for now. The RT
-substitution will be provided later.
-
-Code which is annotated that way documents that it has no requirement to
-protect against reentrancy of a preempting task. Either this is not
-required at all or the call sites are already serialized by other means.
-
-Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-Cc: Ingo Molnar <mingo@kernel.org>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Juri Lelli <juri.lelli@redhat.com>
-Cc: Vincent Guittot <vincent.guittot@linaro.org>
-Cc: Dietmar Eggemann <dietmar.eggemann@arm.com>
-Cc: Steven Rostedt <rostedt@goodmis.org>
-Cc: Ben Segall <bsegall@google.com>
-Cc: Mel Gorman <mgorman@suse.de>
+Cc: stable-rt@vger.kernel.org
 Signed-off-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
 Signed-off-by: Tom Zanussi <zanussi@kernel.org>
 ---
- include/linux/preempt.h | 26 ++++++++++++++++++++++++--
- 1 file changed, 24 insertions(+), 2 deletions(-)
+ fs/userfaultfd.c | 12 ++++++------
+ 1 file changed, 6 insertions(+), 6 deletions(-)
 
-diff --git a/include/linux/preempt.h b/include/linux/preempt.h
-index 6728662a81e8..2e15fbc01eda 100644
---- a/include/linux/preempt.h
-+++ b/include/linux/preempt.h
-@@ -241,8 +241,30 @@ static inline int __migrate_disabled(struct task_struct *p)
+diff --git a/fs/userfaultfd.c b/fs/userfaultfd.c
+index e2b2196fd942..71886a8e8f71 100644
+--- a/fs/userfaultfd.c
++++ b/fs/userfaultfd.c
+@@ -51,7 +51,7 @@ struct userfaultfd_ctx {
+ 	/* waitqueue head for events */
+ 	wait_queue_head_t event_wqh;
+ 	/* a refile sequence protected by fault_pending_wqh lock */
+-	struct seqcount refile_seq;
++	seqlock_t refile_seq;
+ 	/* pseudo fd refcounting */
+ 	atomic_t refcount;
+ 	/* userfaultfd syscall flags */
+@@ -1047,7 +1047,7 @@ static ssize_t userfaultfd_ctx_read(struct userfaultfd_ctx *ctx, int no_wait,
+ 			 * waitqueue could become empty if this is the
+ 			 * only userfault.
+ 			 */
+-			write_seqcount_begin(&ctx->refile_seq);
++			write_seqlock(&ctx->refile_seq);
+ 
+ 			/*
+ 			 * The fault_pending_wqh.lock prevents the uwq
+@@ -1073,7 +1073,7 @@ static ssize_t userfaultfd_ctx_read(struct userfaultfd_ctx *ctx, int no_wait,
+ 			list_del(&uwq->wq.entry);
+ 			__add_wait_queue(&ctx->fault_wqh, &uwq->wq);
+ 
+-			write_seqcount_end(&ctx->refile_seq);
++			write_sequnlock(&ctx->refile_seq);
+ 
+ 			/* careful to always initialize msg if ret == 0 */
+ 			*msg = uwq->msg;
+@@ -1246,11 +1246,11 @@ static __always_inline void wake_userfault(struct userfaultfd_ctx *ctx,
+ 	 * sure we've userfaults to wake.
+ 	 */
+ 	do {
+-		seq = read_seqcount_begin(&ctx->refile_seq);
++		seq = read_seqbegin(&ctx->refile_seq);
+ 		need_wakeup = waitqueue_active(&ctx->fault_pending_wqh) ||
+ 			waitqueue_active(&ctx->fault_wqh);
+ 		cond_resched();
+-	} while (read_seqcount_retry(&ctx->refile_seq, seq));
++	} while (read_seqretry(&ctx->refile_seq, seq));
+ 	if (need_wakeup)
+ 		__wake_userfault(ctx, range);
+ }
+@@ -1915,7 +1915,7 @@ static void init_once_userfaultfd_ctx(void *mem)
+ 	init_waitqueue_head(&ctx->fault_wqh);
+ 	init_waitqueue_head(&ctx->event_wqh);
+ 	init_waitqueue_head(&ctx->fd_wqh);
+-	seqcount_init(&ctx->refile_seq);
++	seqlock_init(&ctx->refile_seq);
  }
  
- #else
--#define migrate_disable()		preempt_disable()
--#define migrate_enable()		preempt_enable()
-+/**
-+ * migrate_disable - Prevent migration of the current task
-+ *
-+ * Maps to preempt_disable() which also disables preemption. Use
-+ * migrate_disable() to annotate that the intent is to prevent migration
-+ * but not necessarily preemption.
-+ *
-+ * Can be invoked nested like preempt_disable() and needs the corresponding
-+ * number of migrate_enable() invocations.
-+ */
-+#define migrate_disable()	preempt_disable()
-+
-+/**
-+ * migrate_enable - Allow migration of the current task
-+ *
-+ * Counterpart to migrate_disable().
-+ *
-+ * As migrate_disable() can be invoked nested only the uttermost invocation
-+ * reenables migration.
-+ *
-+ * Currently mapped to preempt_enable().
-+ */
-+#define migrate_enable()	preempt_enable()
-+
- static inline int __migrate_disabled(struct task_struct *p)
- {
- 	return 0;
+ /**
 -- 
 2.14.1
 
