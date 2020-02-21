@@ -5,49 +5,51 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 92380C35641
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 08:41:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 12EB6C35640
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 08:41:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 66C43206DB
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 08:41:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DBA8D206DB
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 08:41:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582274482;
-	bh=A3r53Ti4W7H0MZfUrZJ9EtnHYp8kTdo1d+21a3Ib3lc=;
+	s=default; t=1582274484;
+	bh=wV0lBlScGsvZs+a12E4IqKgnQqyNxyfFky+kMRcA+SA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=wH6fcELVk/m3EnwAC5abEUWhkOmQow/sgXfboE6+B0M2BsZq4tklUJ6rNkSQ/14cp
-	 28riS2JCxiwoPkUFcM5NtSVhpHAwDHMTdUp+8BA7mUskkRm8IIkim8E/yxaWNz1Sfx
-	 pZOtlgz0nPLjmUK1SYySNHR7MY5r9fcw8WC0+xHA=
+	b=XjkXK7YibTgRk/X0POIiD170Bb95TD8vPYbwCygJedzwH5L0sprCIb6nizN60+0vS
+	 QrwDEt3PqnL6CVIeh1ToaBrbQ6p15gzRyi3j7Z8xDcMUNzYA6LBPCe+E7MDa6mf+9g
+	 kbxsAlv3rKMv6aFgoRDdSbHfRBIKJSy5au4go9c0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731338AbgBUIlU (ORCPT
+        id S1730773AbgBUIlX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Feb 2020 03:41:20 -0500
-Received: from mail.kernel.org ([198.145.29.99]:57334 "EHLO mail.kernel.org"
+        Fri, 21 Feb 2020 03:41:23 -0500
+Received: from mail.kernel.org ([198.145.29.99]:57462 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730129AbgBUH5t (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1729037AbgBUH5t (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Fri, 21 Feb 2020 02:57:49 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id DDC3F24656;
-        Fri, 21 Feb 2020 07:57:41 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9354B20578;
+        Fri, 21 Feb 2020 07:57:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1582271862;
-        bh=A3r53Ti4W7H0MZfUrZJ9EtnHYp8kTdo1d+21a3Ib3lc=;
+        s=default; t=1582271868;
+        bh=wV0lBlScGsvZs+a12E4IqKgnQqyNxyfFky+kMRcA+SA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=GX8A7WtgLVlJ6Gd4OytZgr4qlD9D5WXzR+z1DEoFyCjxj0ZTEujaYrdso8aAstP3Q
-         FErGbPg9bJEbnpkHdHbpPvtdao55BnZx28/ZqNJrYzLFg90LpWMJyiE4FB4/VfnHT9
-         il7PhLIjjUWdXcOw81N28DAne/2d9PS/20gq0ZyU=
+        b=iLF6+YbtYMqmCD3P+FwxMBuao4a3n0gnf/ZbX6VgTT28JajWGD1pPphQ9SxqOhOU5
+         Y+fsVQBXD3oNFmG5OG0ow7hpn80RMHJ7BQ+YfmyIYYFpFoB3GIeM4aeBbrcZKiw4Ez
+         KMxP4MJpKuMdOrmiNbrpXxV380u6D0AGdC6kqG1I=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Olof Johansson <olof@lixom.net>,
-        Saeed Mahameed <saeedm@mellanox.com>,
+        stable@vger.kernel.org,
+        Sergey Zakharchenko <szakharchenko@digital-loggers.com>,
+        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+        Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.5 327/399] net/mlx5e: Fix printk format warning
-Date:   Fri, 21 Feb 2020 08:40:52 +0100
-Message-Id: <20200221072433.015460603@linuxfoundation.org>
+Subject: [PATCH 5.5 329/399] media: uvcvideo: Add a quirk to force GEO GC6500 Camera bits-per-pixel value
+Date:   Fri, 21 Feb 2020 08:40:54 +0100
+Message-Id: <20200221072433.157164784@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200221072402.315346745@linuxfoundation.org>
 References: <20200221072402.315346745@linuxfoundation.org>
@@ -60,36 +62,82 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Olof Johansson <olof@lixom.net>
+From: Sergey Zakharchenko <szakharchenko@digital-loggers.com>
 
-[ Upstream commit ca9c74ae9be5e78541c2058db9a754947a7d4a9b ]
+[ Upstream commit 1dd2e8f942574e2be18374ebb81751082d8d467c ]
 
-Use "%zu" for size_t. Seen on ARM allmodconfig:
+This device does not function correctly in raw mode in kernel
+versions validating buffer sizes in bulk mode. It erroneously
+announces 16 bits per pixel instead of 12 for NV12 format, so it
+needs this quirk to fix computed frame size and avoid legitimate
+frames getting discarded.
 
-drivers/net/ethernet/mellanox/mlx5/core/wq.c: In function 'mlx5_wq_cyc_wqe_dump':
-include/linux/kern_levels.h:5:18: warning: format '%ld' expects argument of type 'long int', but argument 5 has type 'size_t' {aka 'unsigned int'} [-Wformat=]
+[Move info and div variables to local scope]
 
-Fixes: 130c7b46c93d ("net/mlx5e: TX, Dump WQs wqe descriptors on CQE with error events")
-Signed-off-by: Olof Johansson <olof@lixom.net>
-Signed-off-by: Saeed Mahameed <saeedm@mellanox.com>
+Signed-off-by: Sergey Zakharchenko <szakharchenko@digital-loggers.com>
+Signed-off-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/ethernet/mellanox/mlx5/core/wq.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/media/usb/uvc/uvc_driver.c | 25 +++++++++++++++++++++++++
+ drivers/media/usb/uvc/uvcvideo.h   |  1 +
+ 2 files changed, 26 insertions(+)
 
-diff --git a/drivers/net/ethernet/mellanox/mlx5/core/wq.c b/drivers/net/ethernet/mellanox/mlx5/core/wq.c
-index f2a0e72285bac..02f7e4a39578a 100644
---- a/drivers/net/ethernet/mellanox/mlx5/core/wq.c
-+++ b/drivers/net/ethernet/mellanox/mlx5/core/wq.c
-@@ -89,7 +89,7 @@ void mlx5_wq_cyc_wqe_dump(struct mlx5_wq_cyc *wq, u16 ix, u8 nstrides)
- 	len = nstrides << wq->fbc.log_stride;
- 	wqe = mlx5_wq_cyc_get_wqe(wq, ix);
+diff --git a/drivers/media/usb/uvc/uvc_driver.c b/drivers/media/usb/uvc/uvc_driver.c
+index 2b688cc39bb81..99883550375e9 100644
+--- a/drivers/media/usb/uvc/uvc_driver.c
++++ b/drivers/media/usb/uvc/uvc_driver.c
+@@ -497,6 +497,22 @@ static int uvc_parse_format(struct uvc_device *dev,
+ 			}
+ 		}
  
--	pr_info("WQE DUMP: WQ size %d WQ cur size %d, WQE index 0x%x, len: %ld\n",
-+	pr_info("WQE DUMP: WQ size %d WQ cur size %d, WQE index 0x%x, len: %zu\n",
- 		mlx5_wq_cyc_get_size(wq), wq->cur_sz, ix, len);
- 	print_hex_dump(KERN_WARNING, "", DUMP_PREFIX_OFFSET, 16, 1, wqe, len, false);
- }
++		/* Some devices report bpp that doesn't match the format. */
++		if (dev->quirks & UVC_QUIRK_FORCE_BPP) {
++			const struct v4l2_format_info *info =
++				v4l2_format_info(format->fcc);
++
++			if (info) {
++				unsigned int div = info->hdiv * info->vdiv;
++
++				n = info->bpp[0] * div;
++				for (i = 1; i < info->comp_planes; i++)
++					n += info->bpp[i];
++
++				format->bpp = DIV_ROUND_UP(8 * n, div);
++			}
++		}
++
+ 		if (buffer[2] == UVC_VS_FORMAT_UNCOMPRESSED) {
+ 			ftype = UVC_VS_FRAME_UNCOMPRESSED;
+ 		} else {
+@@ -2874,6 +2890,15 @@ static const struct usb_device_id uvc_ids[] = {
+ 	  .bInterfaceSubClass	= 1,
+ 	  .bInterfaceProtocol	= 0,
+ 	  .driver_info		= (kernel_ulong_t)&uvc_quirk_force_y8 },
++	/* GEO Semiconductor GC6500 */
++	{ .match_flags		= USB_DEVICE_ID_MATCH_DEVICE
++				| USB_DEVICE_ID_MATCH_INT_INFO,
++	  .idVendor		= 0x29fe,
++	  .idProduct		= 0x4d53,
++	  .bInterfaceClass	= USB_CLASS_VIDEO,
++	  .bInterfaceSubClass	= 1,
++	  .bInterfaceProtocol	= 0,
++	  .driver_info		= UVC_INFO_QUIRK(UVC_QUIRK_FORCE_BPP) },
+ 	/* Intel RealSense D4M */
+ 	{ .match_flags		= USB_DEVICE_ID_MATCH_DEVICE
+ 				| USB_DEVICE_ID_MATCH_INT_INFO,
+diff --git a/drivers/media/usb/uvc/uvcvideo.h b/drivers/media/usb/uvc/uvcvideo.h
+index f773dc5d802cd..6ab972c643e37 100644
+--- a/drivers/media/usb/uvc/uvcvideo.h
++++ b/drivers/media/usb/uvc/uvcvideo.h
+@@ -198,6 +198,7 @@
+ #define UVC_QUIRK_RESTRICT_FRAME_RATE	0x00000200
+ #define UVC_QUIRK_RESTORE_CTRLS_ON_INIT	0x00000400
+ #define UVC_QUIRK_FORCE_Y8		0x00000800
++#define UVC_QUIRK_FORCE_BPP		0x00001000
+ 
+ /* Format flags */
+ #define UVC_FMT_FLAG_COMPRESSED		0x00000001
 -- 
 2.20.1
 
