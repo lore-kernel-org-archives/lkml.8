@@ -7,47 +7,51 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B7549C35641
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 07:55:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 127F3C35641
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 07:55:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8793C2465D
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 07:55:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DC89024670
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 07:55:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582271736;
-	bh=JvWkGWu+zJTSt92/+C6IwYRDtjcfu7RIC81rjcj5734=;
+	s=default; t=1582271738;
+	bh=J12BU6v6skinvk/5A45oPZq3RlG0T1+MQhN1yxEUabk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=okVi15icXDunGFUL5ay25jQiVfi4/ahynhZjQNXUf0s0tCeSn8W/OVvGUwGOjnJOc
-	 rOHMx1Mz3wrOwgnDVZej9XNfJtGmBrRXK6B3igD/TpBUOyI633M4hJURZpauH4HMHC
-	 JK3Vzej3jZClB9gakgHRV7yxhQ9u/ehGC00qAacY=
+	b=1rN2A7lTEnE4h6b6PPdH6Vzln9wtkBiS+OrFkZrIPmU7e2461VNXp04QCwDCF0aO8
+	 Nx7MQnrptI6k63LYmuhqJFsZuF7DU6DSQAaXoW2PNQRhao7hBBLT3CH1h+0AT1SRBf
+	 m6pcWuBr3/nHr/psjYuGW/9zpt5r9UyPuMl6vvqw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730350AbgBUHzf (ORCPT
+        id S1730358AbgBUHzh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Feb 2020 02:55:35 -0500
-Received: from mail.kernel.org ([198.145.29.99]:54462 "EHLO mail.kernel.org"
+        Fri, 21 Feb 2020 02:55:37 -0500
+Received: from mail.kernel.org ([198.145.29.99]:54592 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730326AbgBUHza (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Feb 2020 02:55:30 -0500
+        id S1730326AbgBUHzf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 21 Feb 2020 02:55:35 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 96B1420801;
-        Fri, 21 Feb 2020 07:55:28 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4852C222C4;
+        Fri, 21 Feb 2020 07:55:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1582271729;
-        bh=JvWkGWu+zJTSt92/+C6IwYRDtjcfu7RIC81rjcj5734=;
+        s=default; t=1582271734;
+        bh=J12BU6v6skinvk/5A45oPZq3RlG0T1+MQhN1yxEUabk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=o+NxD0StxLkCwKVmrt+LWPwSGRC2AiTrN0LeQ/S4clDVoVnC+cp6Jfyi51IgELyyy
-         2XIKz1MX5/2Dvb5Bwxu1fszywMY8zgf6luog97fDIeyIdD6Hu5O03AAhFTf97NL3q7
-         N+nTKEB4HA7Txd8pS45AenTCJKhzkIjMx/kIVCys=
+        b=Igu85J2ZVC8jQDVOMtvergSNzYcQzhBBHnPAXB4K1eEXxLl5rHFzQvhzhlfUCD/qN
+         t1+kVw7qzbh2G0IpVVgFZFKjbl7wbZAvnWpdUULpPtkvYWQSKKvwz32/tBBhJnGOQl
+         1O5o3VmB2MdVt7/st0TBJ7/LgO9r1zTkd06oyfjU=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Johan Jonker <jbx6244@gmail.com>,
-        Heiko Stuebner <heiko@sntech.de>,
+        stable@vger.kernel.org, Paul Burton <paulburton@kernel.org>,
+        Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>,
+        Mark Brown <broonie@kernel.org>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        Jaroslav Kysela <perex@perex.cz>,
+        Takashi Iwai <tiwai@suse.com>, alsa-devel@alsa-project.org,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.5 239/399] ARM: dts: rockchip: add reg property to brcmf sub node for rk3188-bqedison2qc
-Date:   Fri, 21 Feb 2020 08:39:24 +0100
-Message-Id: <20200221072425.821373824@linuxfoundation.org>
+Subject: [PATCH 5.5 241/399] ASoC: txx9: Remove unused rtd variable
+Date:   Fri, 21 Feb 2020 08:39:26 +0100
+Message-Id: <20200221072425.963014211@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200221072402.315346745@linuxfoundation.org>
 References: <20200221072402.315346745@linuxfoundation.org>
@@ -60,45 +64,50 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Johan Jonker <jbx6244@gmail.com>
+From: Paul Burton <paulburton@kernel.org>
 
-[ Upstream commit cf206bca178cd5b5a436494b2e0cea75295944f4 ]
+[ Upstream commit ec0f6a4c4a987aa20b2e77e0db2ae555276e45e6 ]
 
-An experimental test with the command below gives this error:
-rk3188-bqedison2qc.dt.yaml: dwmmc@10218000: wifi@1:
-'reg' is a required property
+Commit a857e073ffc6 ("ASoC: txx9: txx9aclc: remove snd_pcm_ops") removed
+the last use of the rtd variable but didn't remove its definition,
+leading to the following warning/error for MIPS rbtx49xx_defconfig
+builds:
 
-So fix this by adding a reg property to the brcmf sub node.
-Also add #address-cells and #size-cells to prevent more warnings.
+sound/soc/txx9/txx9aclc.c: In function 'txx9aclc_pcm_hw_params':
+sound/soc/txx9/txx9aclc.c:54:30: error: unused variable 'rtd'
+    [-Werror=unused-variable]
+  struct snd_soc_pcm_runtime *rtd = snd_pcm_substream_chip(substream);
+                              ^~~
 
-make ARCH=arm dtbs_check
-DT_SCHEMA_FILES=Documentation/devicetree/bindings/mmc/rockchip-dw-mshc.yaml
+Resolve this by removing the unused variable.
 
-Signed-off-by: Johan Jonker <jbx6244@gmail.com>
-Link: https://lore.kernel.org/r/20200110134420.11280-1-jbx6244@gmail.com
-Signed-off-by: Heiko Stuebner <heiko@sntech.de>
+Signed-off-by: Paul Burton <paulburton@kernel.org>
+Fixes: a857e073ffc6 ("ASoC: txx9: txx9aclc: remove snd_pcm_ops")
+Cc: Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>
+Cc: Mark Brown <broonie@kernel.org>
+Cc: Liam Girdwood <lgirdwood@gmail.com>
+Cc: Jaroslav Kysela <perex@perex.cz>
+Cc: Takashi Iwai <tiwai@suse.com>
+Cc: alsa-devel@alsa-project.org
+Link: https://lore.kernel.org/r/20200109191422.334516-1-paulburton@kernel.org
+Signed-off-by: Mark Brown <broonie@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm/boot/dts/rk3188-bqedison2qc.dts | 3 +++
- 1 file changed, 3 insertions(+)
+ sound/soc/txx9/txx9aclc.c | 1 -
+ 1 file changed, 1 deletion(-)
 
-diff --git a/arch/arm/boot/dts/rk3188-bqedison2qc.dts b/arch/arm/boot/dts/rk3188-bqedison2qc.dts
-index c8b62bbd6a4a4..ad1afd403052a 100644
---- a/arch/arm/boot/dts/rk3188-bqedison2qc.dts
-+++ b/arch/arm/boot/dts/rk3188-bqedison2qc.dts
-@@ -466,9 +466,12 @@
- 	pinctrl-names = "default";
- 	pinctrl-0 = <&sd1_clk>, <&sd1_cmd>, <&sd1_bus4>;
- 	vmmcq-supply = <&vccio_wl>;
-+	#address-cells = <1>;
-+	#size-cells = <0>;
- 	status = "okay";
- 
- 	brcmf: wifi@1 {
-+		reg = <1>;
- 		compatible = "brcm,bcm4329-fmac";
- 		interrupt-parent = <&gpio3>;
- 		interrupts = <RK_PD2 GPIO_ACTIVE_HIGH>;
+diff --git a/sound/soc/txx9/txx9aclc.c b/sound/soc/txx9/txx9aclc.c
+index 33c78d33e5a1d..9a55926ebf07b 100644
+--- a/sound/soc/txx9/txx9aclc.c
++++ b/sound/soc/txx9/txx9aclc.c
+@@ -51,7 +51,6 @@ static int txx9aclc_pcm_hw_params(struct snd_soc_component *component,
+ 				  struct snd_pcm_substream *substream,
+ 				  struct snd_pcm_hw_params *params)
+ {
+-	struct snd_soc_pcm_runtime *rtd = snd_pcm_substream_chip(substream);
+ 	struct snd_pcm_runtime *runtime = substream->runtime;
+ 	struct txx9aclc_dmadata *dmadata = runtime->private_data;
+ 	int ret;
 -- 
 2.20.1
 
