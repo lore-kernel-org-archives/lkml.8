@@ -7,47 +7,48 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0233DC35641
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 08:12:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 11F5AC35640
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 08:12:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BBCA324680
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 08:12:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C789B20578
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 08:12:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582272735;
-	bh=+Rv2mcBG+tM8uETzSGed8+ZUKb3xzwLhZrMdg0JEZHM=;
+	s=default; t=1582272741;
+	bh=HETN9lzhT4lP6BoRdKhMd9UfEPjojCOaxXyYfT0N564=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=fV21ZBxy6C2M3NDS3xrInK/pZlhtAGo8KfKMq67wBbIqxtbejNSoN2l+UmlNj8zTa
-	 o5nTicA+2RS+f49DWxRZ2OA1aSmM40sVD+xmxSuebsaD1DeNsskGwVClwWx/evd1ul
-	 b4gO8HlpAURMb0Ze3+2AM9h44E9ag68ofn5sJN2k=
+	b=QK9YajapocFTFUh1RVzi8iZwT0817MsQ4cWMyvzdOyWKhe1uDCgsb6Ty50omoo70t
+	 6/NwJ2dFzxpo3qq2eL9EbtCT9NDk1LiAP7/U5GaNdhdctvJlo3hLvVXKwovA5vV4Bn
+	 BjIf+a1bm3JmcRwEdw4T6U4tdFMT1Vot7zV2TgOY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732807AbgBUIMO (ORCPT
+        id S1732826AbgBUIMU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Feb 2020 03:12:14 -0500
-Received: from mail.kernel.org ([198.145.29.99]:47880 "EHLO mail.kernel.org"
+        Fri, 21 Feb 2020 03:12:20 -0500
+Received: from mail.kernel.org ([198.145.29.99]:48048 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732797AbgBUIML (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Feb 2020 03:12:11 -0500
+        id S1732812AbgBUIMS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 21 Feb 2020 03:12:18 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id BFBF120722;
-        Fri, 21 Feb 2020 08:12:09 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 773902467A;
+        Fri, 21 Feb 2020 08:12:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1582272730;
-        bh=+Rv2mcBG+tM8uETzSGed8+ZUKb3xzwLhZrMdg0JEZHM=;
+        s=default; t=1582272737;
+        bh=HETN9lzhT4lP6BoRdKhMd9UfEPjojCOaxXyYfT0N564=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=RV2R1LVesroau5Airm+pfJGjYTuU8acWe++xxXMwEvSJBhsjbPsBHxnptLGsVx+3u
-         flETYa/3SmQ2oS6s1DyKLeggji6W7ItGGuZhHXcYHjQ1wkuL8en5i8WzPrj2o95EGu
-         l0unC46y0fpI7UtVvfYGm69OoY1e2EOXAZw3eHh8=
+        b=sStYyiCq13KXNjLjEnsGDKkmNMlWFRmNjLBgCwrTD/Ot8ZEfQSD1UbHni+vypcRIi
+         WxduTft4ku1F8HNoQr/EAgeitrk2C/ZDuv6cUfo3Eyi4QRVcOQ53QUANmwusz2ctO+
+         t/uLpvtwq73vr7Jo909XiOZpkk/gvOH4UX4HwuY8=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Kim Phillips <kim.phillips@amd.com>,
-        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
+        stable@vger.kernel.org, Qian Cai <cai@lca.pw>,
+        Marco Elver <elver@google.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 252/344] perf/x86/amd: Constrain Large Increment per Cycle events
-Date:   Fri, 21 Feb 2020 08:40:51 +0100
-Message-Id: <20200221072412.395970009@linuxfoundation.org>
+Subject: [PATCH 5.4 255/344] debugobjects: Fix various data races
+Date:   Fri, 21 Feb 2020 08:40:54 +0100
+Message-Id: <20200221072412.710716074@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200221072349.335551332@linuxfoundation.org>
 References: <20200221072349.335551332@linuxfoundation.org>
@@ -60,202 +61,236 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Kim Phillips <kim.phillips@amd.com>
+From: Marco Elver <elver@google.com>
 
-[ Upstream commit 471af006a747f1c535c8a8c6c0973c320fe01b22 ]
+[ Upstream commit 35fd7a637c42bb54ba4608f4d40ae6e55fc88781 ]
 
-AMD Family 17h processors and above gain support for Large Increment
-per Cycle events.  Unfortunately there is no CPUID or equivalent bit
-that indicates whether the feature exists or not, so we continue to
-determine eligibility based on a CPU family number comparison.
+The counters obj_pool_free, and obj_nr_tofree, and the flag obj_freeing are
+read locklessly outside the pool_lock critical sections. If read with plain
+accesses, this would result in data races.
 
-For Large Increment per Cycle events, we add a f17h-and-compatibles
-get_event_constraints_f17h() that returns an even counter bitmask:
-Large Increment per Cycle events can only be placed on PMCs 0, 2,
-and 4 out of the currently available 0-5.  The only currently
-public event that requires this feature to report valid counts
-is PMCx003 "Retired SSE/AVX Operations".
+This is addressed as follows:
 
-Note that the CPU family logic in amd_core_pmu_init() is changed
-so as to be able to selectively add initialization for features
-available in ranges of backward-compatible CPU families.  This
-Large Increment per Cycle feature is expected to be retained
-in future families.
+ * reads outside critical sections become READ_ONCE()s (pairing with
+   WRITE_ONCE()s added);
 
-A side-effect of assigning a new get_constraints function for f17h
-disables calling the old (prior to f15h) amd_get_event_constraints
-implementation left enabled by commit e40ed1542dd7 ("perf/x86: Add perf
-support for AMD family-17h processors"), which is no longer
-necessary since those North Bridge event codes are obsoleted.
+ * writes become WRITE_ONCE()s (pairing with READ_ONCE()s added); since
+   writes happen inside critical sections, only the write and not the read
+   of RMWs needs to be atomic, thus WRITE_ONCE(var, var +/- X) is
+   sufficient.
 
-Also fix a spelling mistake whilst in the area (calulating ->
-calculating).
+The data races were reported by KCSAN:
 
-Fixes: e40ed1542dd7 ("perf/x86: Add perf support for AMD family-17h processors")
-Signed-off-by: Kim Phillips <kim.phillips@amd.com>
-Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-Link: https://lkml.kernel.org/r/20191114183720.19887-2-kim.phillips@amd.com
+  BUG: KCSAN: data-race in __free_object / fill_pool
+
+  write to 0xffffffff8beb04f8 of 4 bytes by interrupt on cpu 1:
+   __free_object+0x1ee/0x8e0 lib/debugobjects.c:404
+   __debug_check_no_obj_freed+0x199/0x330 lib/debugobjects.c:969
+   debug_check_no_obj_freed+0x3c/0x44 lib/debugobjects.c:994
+   slab_free_hook mm/slub.c:1422 [inline]
+
+  read to 0xffffffff8beb04f8 of 4 bytes by task 1 on cpu 2:
+   fill_pool+0x3d/0x520 lib/debugobjects.c:135
+   __debug_object_init+0x3c/0x810 lib/debugobjects.c:536
+   debug_object_init lib/debugobjects.c:591 [inline]
+   debug_object_activate+0x228/0x320 lib/debugobjects.c:677
+   debug_rcu_head_queue kernel/rcu/rcu.h:176 [inline]
+
+  BUG: KCSAN: data-race in __debug_object_init / fill_pool
+
+  read to 0xffffffff8beb04f8 of 4 bytes by task 10 on cpu 6:
+   fill_pool+0x3d/0x520 lib/debugobjects.c:135
+   __debug_object_init+0x3c/0x810 lib/debugobjects.c:536
+   debug_object_init_on_stack+0x39/0x50 lib/debugobjects.c:606
+   init_timer_on_stack_key kernel/time/timer.c:742 [inline]
+
+  write to 0xffffffff8beb04f8 of 4 bytes by task 1 on cpu 3:
+   alloc_object lib/debugobjects.c:258 [inline]
+   __debug_object_init+0x717/0x810 lib/debugobjects.c:544
+   debug_object_init lib/debugobjects.c:591 [inline]
+   debug_object_activate+0x228/0x320 lib/debugobjects.c:677
+   debug_rcu_head_queue kernel/rcu/rcu.h:176 [inline]
+
+  BUG: KCSAN: data-race in free_obj_work / free_object
+
+  read to 0xffffffff9140c190 of 4 bytes by task 10 on cpu 6:
+   free_object+0x4b/0xd0 lib/debugobjects.c:426
+   debug_object_free+0x190/0x210 lib/debugobjects.c:824
+   destroy_timer_on_stack kernel/time/timer.c:749 [inline]
+
+  write to 0xffffffff9140c190 of 4 bytes by task 93 on cpu 1:
+   free_obj_work+0x24f/0x480 lib/debugobjects.c:313
+   process_one_work+0x454/0x8d0 kernel/workqueue.c:2264
+   worker_thread+0x9a/0x780 kernel/workqueue.c:2410
+
+Reported-by: Qian Cai <cai@lca.pw>
+Signed-off-by: Marco Elver <elver@google.com>
+Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+Link: https://lore.kernel.org/r/20200116185529.11026-1-elver@google.com
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/x86/events/amd/core.c   | 91 ++++++++++++++++++++++++------------
- arch/x86/events/perf_event.h |  2 +
- 2 files changed, 63 insertions(+), 30 deletions(-)
+ lib/debugobjects.c | 46 +++++++++++++++++++++++++---------------------
+ 1 file changed, 25 insertions(+), 21 deletions(-)
 
-diff --git a/arch/x86/events/amd/core.c b/arch/x86/events/amd/core.c
-index beffafd7dcc3f..3ea8056148d84 100644
---- a/arch/x86/events/amd/core.c
-+++ b/arch/x86/events/amd/core.c
-@@ -302,6 +302,25 @@ static inline int amd_pmu_addr_offset(int index, bool eventsel)
- 	return offset;
- }
+diff --git a/lib/debugobjects.c b/lib/debugobjects.c
+index 61261195f5b60..48054dbf1b51f 100644
+--- a/lib/debugobjects.c
++++ b/lib/debugobjects.c
+@@ -132,14 +132,18 @@ static void fill_pool(void)
+ 	struct debug_obj *obj;
+ 	unsigned long flags;
  
-+/*
-+ * AMD64 events are detected based on their event codes.
-+ */
-+static inline unsigned int amd_get_event_code(struct hw_perf_event *hwc)
-+{
-+	return ((hwc->config >> 24) & 0x0f00) | (hwc->config & 0x00ff);
-+}
-+
-+static inline bool amd_is_pair_event_code(struct hw_perf_event *hwc)
-+{
-+	if (!(x86_pmu.flags & PMU_FL_PAIR))
-+		return false;
-+
-+	switch (amd_get_event_code(hwc)) {
-+	case 0x003:	return true;	/* Retired SSE/AVX FLOPs */
-+	default:	return false;
-+	}
-+}
-+
- static int amd_core_hw_config(struct perf_event *event)
- {
- 	if (event->attr.exclude_host && event->attr.exclude_guest)
-@@ -320,14 +339,6 @@ static int amd_core_hw_config(struct perf_event *event)
- 	return 0;
- }
+-	if (likely(obj_pool_free >= debug_objects_pool_min_level))
++	if (likely(READ_ONCE(obj_pool_free) >= debug_objects_pool_min_level))
+ 		return;
  
--/*
-- * AMD64 events are detected based on their event codes.
-- */
--static inline unsigned int amd_get_event_code(struct hw_perf_event *hwc)
--{
--	return ((hwc->config >> 24) & 0x0f00) | (hwc->config & 0x00ff);
--}
--
- static inline int amd_is_nb_event(struct hw_perf_event *hwc)
- {
- 	return (hwc->config & 0xe0) == 0xe0;
-@@ -865,6 +876,20 @@ amd_get_event_constraints_f15h(struct cpu_hw_events *cpuc, int idx,
- 	}
- }
- 
-+static struct event_constraint pair_constraint;
-+
-+static struct event_constraint *
-+amd_get_event_constraints_f17h(struct cpu_hw_events *cpuc, int idx,
-+			       struct perf_event *event)
-+{
-+	struct hw_perf_event *hwc = &event->hw;
-+
-+	if (amd_is_pair_event_code(hwc))
-+		return &pair_constraint;
-+
-+	return &unconstrained;
-+}
-+
- static ssize_t amd_event_sysfs_show(char *page, u64 config)
- {
- 	u64 event = (config & ARCH_PERFMON_EVENTSEL_EVENT) |
-@@ -908,33 +933,15 @@ static __initconst const struct x86_pmu amd_pmu = {
- 
- static int __init amd_core_pmu_init(void)
- {
-+	u64 even_ctr_mask = 0ULL;
-+	int i;
-+
- 	if (!boot_cpu_has(X86_FEATURE_PERFCTR_CORE))
- 		return 0;
- 
--	/* Avoid calulating the value each time in the NMI handler */
-+	/* Avoid calculating the value each time in the NMI handler */
- 	perf_nmi_window = msecs_to_jiffies(100);
- 
--	switch (boot_cpu_data.x86) {
--	case 0x15:
--		pr_cont("Fam15h ");
--		x86_pmu.get_event_constraints = amd_get_event_constraints_f15h;
--		break;
--	case 0x17:
--		pr_cont("Fam17h ");
--		/*
--		 * In family 17h, there are no event constraints in the PMC hardware.
--		 * We fallback to using default amd_get_event_constraints.
--		 */
--		break;
--	case 0x18:
--		pr_cont("Fam18h ");
--		/* Using default amd_get_event_constraints. */
--		break;
--	default:
--		pr_err("core perfctr but no constraints; unknown hardware!\n");
--		return -ENODEV;
--	}
--
  	/*
- 	 * If core performance counter extensions exists, we must use
- 	 * MSR_F15H_PERF_CTL/MSR_F15H_PERF_CTR msrs. See also
-@@ -949,6 +956,30 @@ static int __init amd_core_pmu_init(void)
+ 	 * Reuse objs from the global free list; they will be reinitialized
+ 	 * when allocating.
++	 *
++	 * Both obj_nr_tofree and obj_pool_free are checked locklessly; the
++	 * READ_ONCE()s pair with the WRITE_ONCE()s in pool_lock critical
++	 * sections.
  	 */
- 	x86_pmu.amd_nb_constraints = 0;
+-	while (obj_nr_tofree && (obj_pool_free < obj_pool_min_free)) {
++	while (READ_ONCE(obj_nr_tofree) && (READ_ONCE(obj_pool_free) < obj_pool_min_free)) {
+ 		raw_spin_lock_irqsave(&pool_lock, flags);
+ 		/*
+ 		 * Recheck with the lock held as the worker thread might have
+@@ -148,9 +152,9 @@ static void fill_pool(void)
+ 		while (obj_nr_tofree && (obj_pool_free < obj_pool_min_free)) {
+ 			obj = hlist_entry(obj_to_free.first, typeof(*obj), node);
+ 			hlist_del(&obj->node);
+-			obj_nr_tofree--;
++			WRITE_ONCE(obj_nr_tofree, obj_nr_tofree - 1);
+ 			hlist_add_head(&obj->node, &obj_pool);
+-			obj_pool_free++;
++			WRITE_ONCE(obj_pool_free, obj_pool_free + 1);
+ 		}
+ 		raw_spin_unlock_irqrestore(&pool_lock, flags);
+ 	}
+@@ -158,7 +162,7 @@ static void fill_pool(void)
+ 	if (unlikely(!obj_cache))
+ 		return;
  
-+	if (boot_cpu_data.x86 == 0x15) {
-+		pr_cont("Fam15h ");
-+		x86_pmu.get_event_constraints = amd_get_event_constraints_f15h;
-+	}
-+	if (boot_cpu_data.x86 >= 0x17) {
-+		pr_cont("Fam17h+ ");
-+		/*
-+		 * Family 17h and compatibles have constraints for Large
-+		 * Increment per Cycle events: they may only be assigned an
-+		 * even numbered counter that has a consecutive adjacent odd
-+		 * numbered counter following it.
-+		 */
-+		for (i = 0; i < x86_pmu.num_counters - 1; i += 2)
-+			even_ctr_mask |= 1 << i;
-+
-+		pair_constraint = (struct event_constraint)
-+				    __EVENT_CONSTRAINT(0, even_ctr_mask, 0,
-+				    x86_pmu.num_counters / 2, 0,
-+				    PERF_X86_EVENT_PAIR);
-+
-+		x86_pmu.get_event_constraints = amd_get_event_constraints_f17h;
-+		x86_pmu.flags |= PMU_FL_PAIR;
-+	}
-+
- 	pr_cont("core perfctr, ");
+-	while (obj_pool_free < debug_objects_pool_min_level) {
++	while (READ_ONCE(obj_pool_free) < debug_objects_pool_min_level) {
+ 		struct debug_obj *new[ODEBUG_BATCH_SIZE];
+ 		int cnt;
+ 
+@@ -174,7 +178,7 @@ static void fill_pool(void)
+ 		while (cnt) {
+ 			hlist_add_head(&new[--cnt]->node, &obj_pool);
+ 			debug_objects_allocated++;
+-			obj_pool_free++;
++			WRITE_ONCE(obj_pool_free, obj_pool_free + 1);
+ 		}
+ 		raw_spin_unlock_irqrestore(&pool_lock, flags);
+ 	}
+@@ -236,7 +240,7 @@ alloc_object(void *addr, struct debug_bucket *b, struct debug_obj_descr *descr)
+ 	obj = __alloc_object(&obj_pool);
+ 	if (obj) {
+ 		obj_pool_used++;
+-		obj_pool_free--;
++		WRITE_ONCE(obj_pool_free, obj_pool_free - 1);
+ 
+ 		/*
+ 		 * Looking ahead, allocate one batch of debug objects and
+@@ -255,7 +259,7 @@ alloc_object(void *addr, struct debug_bucket *b, struct debug_obj_descr *descr)
+ 					       &percpu_pool->free_objs);
+ 				percpu_pool->obj_free++;
+ 				obj_pool_used++;
+-				obj_pool_free--;
++				WRITE_ONCE(obj_pool_free, obj_pool_free - 1);
+ 			}
+ 		}
+ 
+@@ -309,8 +313,8 @@ static void free_obj_work(struct work_struct *work)
+ 		obj = hlist_entry(obj_to_free.first, typeof(*obj), node);
+ 		hlist_del(&obj->node);
+ 		hlist_add_head(&obj->node, &obj_pool);
+-		obj_pool_free++;
+-		obj_nr_tofree--;
++		WRITE_ONCE(obj_pool_free, obj_pool_free + 1);
++		WRITE_ONCE(obj_nr_tofree, obj_nr_tofree - 1);
+ 	}
+ 	raw_spin_unlock_irqrestore(&pool_lock, flags);
+ 	return;
+@@ -324,7 +328,7 @@ free_objs:
+ 	if (obj_nr_tofree) {
+ 		hlist_move_list(&obj_to_free, &tofree);
+ 		debug_objects_freed += obj_nr_tofree;
+-		obj_nr_tofree = 0;
++		WRITE_ONCE(obj_nr_tofree, 0);
+ 	}
+ 	raw_spin_unlock_irqrestore(&pool_lock, flags);
+ 
+@@ -375,10 +379,10 @@ free_to_obj_pool:
+ 	obj_pool_used--;
+ 
+ 	if (work) {
+-		obj_nr_tofree++;
++		WRITE_ONCE(obj_nr_tofree, obj_nr_tofree + 1);
+ 		hlist_add_head(&obj->node, &obj_to_free);
+ 		if (lookahead_count) {
+-			obj_nr_tofree += lookahead_count;
++			WRITE_ONCE(obj_nr_tofree, obj_nr_tofree + lookahead_count);
+ 			obj_pool_used -= lookahead_count;
+ 			while (lookahead_count) {
+ 				hlist_add_head(&objs[--lookahead_count]->node,
+@@ -396,15 +400,15 @@ free_to_obj_pool:
+ 			for (i = 0; i < ODEBUG_BATCH_SIZE; i++) {
+ 				obj = __alloc_object(&obj_pool);
+ 				hlist_add_head(&obj->node, &obj_to_free);
+-				obj_pool_free--;
+-				obj_nr_tofree++;
++				WRITE_ONCE(obj_pool_free, obj_pool_free - 1);
++				WRITE_ONCE(obj_nr_tofree, obj_nr_tofree + 1);
+ 			}
+ 		}
+ 	} else {
+-		obj_pool_free++;
++		WRITE_ONCE(obj_pool_free, obj_pool_free + 1);
+ 		hlist_add_head(&obj->node, &obj_pool);
+ 		if (lookahead_count) {
+-			obj_pool_free += lookahead_count;
++			WRITE_ONCE(obj_pool_free, obj_pool_free + lookahead_count);
+ 			obj_pool_used -= lookahead_count;
+ 			while (lookahead_count) {
+ 				hlist_add_head(&objs[--lookahead_count]->node,
+@@ -423,7 +427,7 @@ free_to_obj_pool:
+ static void free_object(struct debug_obj *obj)
+ {
+ 	__free_object(obj);
+-	if (!obj_freeing && obj_nr_tofree) {
++	if (!READ_ONCE(obj_freeing) && READ_ONCE(obj_nr_tofree)) {
+ 		WRITE_ONCE(obj_freeing, true);
+ 		schedule_delayed_work(&debug_obj_work, ODEBUG_FREE_WORK_DELAY);
+ 	}
+@@ -982,7 +986,7 @@ repeat:
+ 		debug_objects_maxchecked = objs_checked;
+ 
+ 	/* Schedule work to actually kmem_cache_free() objects */
+-	if (!obj_freeing && obj_nr_tofree) {
++	if (!READ_ONCE(obj_freeing) && READ_ONCE(obj_nr_tofree)) {
+ 		WRITE_ONCE(obj_freeing, true);
+ 		schedule_delayed_work(&debug_obj_work, ODEBUG_FREE_WORK_DELAY);
+ 	}
+@@ -1008,12 +1012,12 @@ static int debug_stats_show(struct seq_file *m, void *v)
+ 	seq_printf(m, "max_checked   :%d\n", debug_objects_maxchecked);
+ 	seq_printf(m, "warnings      :%d\n", debug_objects_warnings);
+ 	seq_printf(m, "fixups        :%d\n", debug_objects_fixups);
+-	seq_printf(m, "pool_free     :%d\n", obj_pool_free + obj_percpu_free);
++	seq_printf(m, "pool_free     :%d\n", READ_ONCE(obj_pool_free) + obj_percpu_free);
+ 	seq_printf(m, "pool_pcp_free :%d\n", obj_percpu_free);
+ 	seq_printf(m, "pool_min_free :%d\n", obj_pool_min_free);
+ 	seq_printf(m, "pool_used     :%d\n", obj_pool_used - obj_percpu_free);
+ 	seq_printf(m, "pool_max_used :%d\n", obj_pool_max_used);
+-	seq_printf(m, "on_free_list  :%d\n", obj_nr_tofree);
++	seq_printf(m, "on_free_list  :%d\n", READ_ONCE(obj_nr_tofree));
+ 	seq_printf(m, "objs_allocated:%d\n", debug_objects_allocated);
+ 	seq_printf(m, "objs_freed    :%d\n", debug_objects_freed);
  	return 0;
- }
-diff --git a/arch/x86/events/perf_event.h b/arch/x86/events/perf_event.h
-index ecacfbf4ebc12..0ed910237c4d8 100644
---- a/arch/x86/events/perf_event.h
-+++ b/arch/x86/events/perf_event.h
-@@ -77,6 +77,7 @@ static inline bool constraint_match(struct event_constraint *c, u64 ecode)
- #define PERF_X86_EVENT_AUTO_RELOAD	0x0200 /* use PEBS auto-reload */
- #define PERF_X86_EVENT_LARGE_PEBS	0x0400 /* use large PEBS */
- #define PERF_X86_EVENT_PEBS_VIA_PT	0x0800 /* use PT buffer for PEBS */
-+#define PERF_X86_EVENT_PAIR		0x1000 /* Large Increment per Cycle */
- 
- struct amd_nb {
- 	int nb_id;  /* NorthBridge id */
-@@ -735,6 +736,7 @@ do {									\
- #define PMU_FL_EXCL_ENABLED	0x8 /* exclusive counter active */
- #define PMU_FL_PEBS_ALL		0x10 /* all events are valid PEBS events */
- #define PMU_FL_TFA		0x20 /* deal with TSX force abort */
-+#define PMU_FL_PAIR		0x40 /* merge counters for large incr. events */
- 
- #define EVENT_VAR(_id)  event_attr_##_id
- #define EVENT_PTR(_id) &event_attr_##_id.attr.attr
 -- 
 2.20.1
 
