@@ -2,271 +2,301 @@ Return-Path: <SRS0=1210=4J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B6A82C35657
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 18:04:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3C36BC35657
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 18:04:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8581620722
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 18:04:05 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="ea1h8MAe"
+	by mail.kernel.org (Postfix) with ESMTP id F1CED20722
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 18:04:11 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1582308252;
+	bh=mXnaDVrDa0H08eTqkdBOYOsj0UbNHDIU+zLEAq32p2g=;
+	h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:List-ID:
+	 From;
+	b=fSJ3x30cfaCK0NlxWas1Q9nPP0/Akz4A2sEEzizIX6eTCxHKsSWbUWXkFzRdF0mUG
+	 vftrHYQYSWrxGV7YaeuRKDJTUKz7j7W0fQsKD0iCJZxZ7l1IM97B2pft7LbEJDegFb
+	 YuITHVCtjFZgid45OAm8FSrIygbSrKsyh3T1LPk0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729712AbgBUSEE (ORCPT
+        id S1729723AbgBUSEL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Feb 2020 13:04:04 -0500
-Received: from us-smtp-2.mimecast.com ([205.139.110.61]:41550 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1729410AbgBUSEC (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Feb 2020 13:04:02 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1582308242;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=6e7juawIP/zL59IMIF30gPw4Bj4cdFlhPJg2pMQYiR4=;
-        b=ea1h8MAe+s8jVGTmQbTE0kfIWRc0xuwBnMtGYTGFcwq5AswYKDxEraX9aOHK+0PmGTetRD
-        BRx4NFQ1lLTct7U0hQ+Uq3IEvGEAFhXEwFB81KGpqsK7v5LSPJ2V7h18X8qmdLF8YDV6Mt
-        FWUkwVoHini0OrFUN+PSgyB3hWbNNvY=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-208-VT2Tsl3MPzKqsmOXmlRfGQ-1; Fri, 21 Feb 2020 13:04:00 -0500
-X-MC-Unique: VT2Tsl3MPzKqsmOXmlRfGQ-1
-Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        Fri, 21 Feb 2020 13:04:11 -0500
+Received: from mail.kernel.org ([198.145.29.99]:56298 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728105AbgBUSEJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 21 Feb 2020 13:04:09 -0500
+Received: from paulmck-ThinkPad-P72.home (50-39-105-78.bvtn.or.frontiernet.net [50.39.105.78])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id A11DD18A8C80;
-        Fri, 21 Feb 2020 18:03:58 +0000 (UTC)
-Received: from warthog.procyon.org.uk (ovpn-122-163.rdu2.redhat.com [10.10.122.163])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id BDFC65D9E2;
-        Fri, 21 Feb 2020 18:03:56 +0000 (UTC)
-Organization: Red Hat UK Ltd. Registered Address: Red Hat UK Ltd, Amberley
-        Place, 107-111 Peascod Street, Windsor, Berkshire, SI4 1TE, United
-        Kingdom.
-        Registered in England and Wales under Company Registration No. 3798903
-Subject: [PATCH 16/17] fsinfo: Add example support for Ext4 [ver #17]
-From:   David Howells <dhowells@redhat.com>
-To:     viro@zeniv.linux.org.uk
-Cc:     dhowells@redhat.com, raven@themaw.net, mszeredi@redhat.com,
-        christian@brauner.io, jannh@google.com, darrick.wong@oracle.com,
-        linux-api@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Date:   Fri, 21 Feb 2020 18:03:56 +0000
-Message-ID: <158230823604.2185128.8555422827729144419.stgit@warthog.procyon.org.uk>
-In-Reply-To: <158230810644.2185128.16726948836367716086.stgit@warthog.procyon.org.uk>
-References: <158230810644.2185128.16726948836367716086.stgit@warthog.procyon.org.uk>
-User-Agent: StGit/0.21
+        by mail.kernel.org (Postfix) with ESMTPSA id BD48620722;
+        Fri, 21 Feb 2020 18:04:08 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1582308248;
+        bh=mXnaDVrDa0H08eTqkdBOYOsj0UbNHDIU+zLEAq32p2g=;
+        h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:From;
+        b=e+l+jIv8luboMTTergQOtjwzMj68X7aPhleWnD6QYT6KYuWZ6YQYyrpMi0Pin1GfV
+         F9zQgUNtuSNMvSC7LUMOW/uL0zE1HAVdgJyNhfQTCg3vSuTsA1CZa5vQfYZ5MEerfY
+         fJX3j380RI6Tkx5iYJPd5eUghmF8JbvvTRa1zfZM=
+Received: by paulmck-ThinkPad-P72.home (Postfix, from userid 1000)
+        id 9797B3521EAE; Fri, 21 Feb 2020 10:04:08 -0800 (PST)
+Date:   Fri, 21 Feb 2020 10:04:08 -0800
+From:   "Paul E. McKenney" <paulmck@kernel.org>
+To:     Marco Elver <elver@google.com>
+Cc:     Qian Cai <cai@lca.pw>, Andrey Konovalov <andreyknvl@google.com>,
+        Alexander Potapenko <glider@google.com>,
+        Dmitry Vyukov <dvyukov@google.com>,
+        kasan-dev <kasan-dev@googlegroups.com>,
+        LKML <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] kcsan: Add option for verbose reporting
+Message-ID: <20200221180408.GI2935@paulmck-ThinkPad-P72>
+Reply-To: paulmck@kernel.org
+References: <20200219151531.161515-1-elver@google.com>
+ <1582305008.7365.111.camel@lca.pw>
+ <CANpmjNMG4nZYLi+wFR-R_ifq1+u-YfC7b68iucCRWNd4M==vrw@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CANpmjNMG4nZYLi+wFR-R_ifq1+u-YfC7b68iucCRWNd4M==vrw@mail.gmail.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add the ability to list some Ext4 volume timestamps as an example.
+On Fri, Feb 21, 2020 at 06:58:36PM +0100, Marco Elver wrote:
+> On Fri, 21 Feb 2020 at 18:10, Qian Cai <cai@lca.pw> wrote:
+> >
+> > On Wed, 2020-02-19 at 16:15 +0100, Marco Elver wrote:
+> > > Adds CONFIG_KCSAN_VERBOSE to optionally enable more verbose reports.
+> > > Currently information about the reporting task's held locks and IRQ
+> > > trace events are shown, if they are enabled.
+> >
+> > Well, there is a report. I don't understand why it said there is no lock held in
+> > the writer, but clearly there is this right after in
+> > jbd2_journal_commit_transaction(),
+> >
+> >  spin_unlock(&jh->b_state_lock);
+> 
+> This is sort of expected right now.  In the comment that adds this
+> feature, it also has a comment for the "other thread" (in this case
+> the writer):
+> 
+> /*
+> * Showing held locks for a running task is unreliable, so just
+> * skip this. The printed locks are very likely inconsistent,
+> * since the stack trace was obtained when the actual race
+> * occurred and the task has since continued execution. Since we
+> * cannot display the below information from the racing thread,
+> * but must print it all from the watcher thread, bail out.
+> * Note: Even if the task is not running, there is a chance that
+> * the locks held may be inconsistent.
+> */
+> 
+> Hmm, I suppose I could try harder and make this reliable by stalling
+> the other task if this option is on. Let me give that a try.
 
-Signed-off-by: David Howells <dhowells@redhat.com>
-cc: linux-ext4@vger.kernel.org
----
+And here I thought that I was just being unlucky when I never saw any
+locks held.  ;-)
 
- fs/ext4/Makefile            |    1 +
- fs/ext4/ext4.h              |    6 ++++++
- fs/ext4/fsinfo.c            |   45 +++++++++++++++++++++++++++++++++++++++++++
- fs/ext4/super.c             |    3 +++
- include/uapi/linux/fsinfo.h |   16 +++++++++++++++
- samples/vfs/test-fsinfo.c   |   35 +++++++++++++++++++++++++++++++++
- 6 files changed, 106 insertions(+)
- create mode 100644 fs/ext4/fsinfo.c
+							Thanx, Paul
 
-diff --git a/fs/ext4/Makefile b/fs/ext4/Makefile
-index 4ccb3c9189d8..71d5b460c7c7 100644
---- a/fs/ext4/Makefile
-+++ b/fs/ext4/Makefile
-@@ -16,3 +16,4 @@ ext4-$(CONFIG_EXT4_FS_SECURITY)		+= xattr_security.o
- ext4-inode-test-objs			+= inode-test.o
- obj-$(CONFIG_EXT4_KUNIT_TESTS)		+= ext4-inode-test.o
- ext4-$(CONFIG_FS_VERITY)		+= verity.o
-+ext4-$(CONFIG_FSINFO)			+= fsinfo.o
-diff --git a/fs/ext4/ext4.h b/fs/ext4/ext4.h
-index 9a2ee2428ecc..461968a87cd6 100644
---- a/fs/ext4/ext4.h
-+++ b/fs/ext4/ext4.h
-@@ -42,6 +42,7 @@
- 
- #include <linux/fscrypt.h>
- #include <linux/fsverity.h>
-+#include <linux/fsinfo.h>
- 
- #include <linux/compiler.h>
- 
-@@ -3166,6 +3167,11 @@ extern const struct inode_operations ext4_file_inode_operations;
- extern const struct file_operations ext4_file_operations;
- extern loff_t ext4_llseek(struct file *file, loff_t offset, int origin);
- 
-+/* fsinfo.c */
-+#ifdef CONFIG_FSINFO
-+extern int ext4_fsinfo(struct path *path, struct fsinfo_context *ctx);
-+#endif
-+
- /* inline.c */
- extern int ext4_get_max_inline_size(struct inode *inode);
- extern int ext4_find_inline_data_nolock(struct inode *inode);
-diff --git a/fs/ext4/fsinfo.c b/fs/ext4/fsinfo.c
-new file mode 100644
-index 000000000000..785f82a74dc9
---- /dev/null
-+++ b/fs/ext4/fsinfo.c
-@@ -0,0 +1,45 @@
-+// SPDX-License-Identifier: GPL-2.0
-+/* Filesystem information for ext4
-+ *
-+ * Copyright (C) 2020 Red Hat, Inc. All Rights Reserved.
-+ * Written by David Howells (dhowells@redhat.com)
-+ */
-+
-+#include <linux/mount.h>
-+#include "ext4.h"
-+
-+static int ext4_fsinfo_get_volume_name(struct path *path, struct fsinfo_context *ctx)
-+{
-+	const struct ext4_sb_info *sbi = EXT4_SB(path->mnt->mnt_sb);
-+	const struct ext4_super_block *es = sbi->s_es;
-+
-+	memcpy(ctx->buffer, es->s_volume_name, sizeof(es->s_volume_name));
-+	return strlen(ctx->buffer);
-+}
-+
-+static int ext4_fsinfo_get_timestamps(struct path *path, struct fsinfo_context *ctx)
-+{
-+	const struct ext4_sb_info *sbi = EXT4_SB(path->mnt->mnt_sb);
-+	const struct ext4_super_block *es = sbi->s_es;
-+	struct fsinfo_ext4_timestamps *ts = ctx->buffer;
-+
-+#define Z(R,S) R = S | (((u64)S##_hi) << 32)
-+	Z(ts->mkfs_time,	es->s_mkfs_time);
-+	Z(ts->mount_time,	es->s_mtime);
-+	Z(ts->write_time,	es->s_wtime);
-+	Z(ts->last_check_time,	es->s_lastcheck);
-+	Z(ts->first_error_time,	es->s_first_error_time);
-+	Z(ts->last_error_time,	es->s_last_error_time);
-+	return sizeof(*ts);
-+}
-+
-+static const struct fsinfo_attribute ext4_fsinfo_attributes[] = {
-+	FSINFO_STRING	(FSINFO_ATTR_VOLUME_NAME,	ext4_fsinfo_get_volume_name),
-+	FSINFO_VSTRUCT	(FSINFO_ATTR_EXT4_TIMESTAMPS,	ext4_fsinfo_get_timestamps),
-+	{}
-+};
-+
-+int ext4_fsinfo(struct path *path, struct fsinfo_context *ctx)
-+{
-+	return fsinfo_get_attribute(path, ctx, ext4_fsinfo_attributes);
-+}
-diff --git a/fs/ext4/super.c b/fs/ext4/super.c
-index 8434217549b3..02b4df073c4b 100644
---- a/fs/ext4/super.c
-+++ b/fs/ext4/super.c
-@@ -1477,6 +1477,9 @@ static const struct super_operations ext4_sops = {
- 	.freeze_fs	= ext4_freeze,
- 	.unfreeze_fs	= ext4_unfreeze,
- 	.statfs		= ext4_statfs,
-+#ifdef CONFIG_FSINFO
-+	.fsinfo		= ext4_fsinfo,
-+#endif
- 	.remount_fs	= ext4_remount,
- 	.show_options	= ext4_show_options,
- #ifdef CONFIG_QUOTA
-diff --git a/include/uapi/linux/fsinfo.h b/include/uapi/linux/fsinfo.h
-index a587b6f9847c..6a8a7a8e4910 100644
---- a/include/uapi/linux/fsinfo.h
-+++ b/include/uapi/linux/fsinfo.h
-@@ -37,6 +37,8 @@
- #define FSINFO_ATTR_AFS_SERVER_NAME	0x301	/* Name of the Nth server (string) */
- #define FSINFO_ATTR_AFS_SERVER_ADDRESSES 0x302	/* List of addresses of the Nth server */
- 
-+#define FSINFO_ATTR_EXT4_TIMESTAMPS	0x400	/* Ext4 superblock timestamps */
-+
- /*
-  * Optional fsinfo() parameter structure.
-  *
-@@ -313,4 +315,18 @@ struct fsinfo_afs_server_address {
- 
- #define FSINFO_ATTR_AFS_SERVER_ADDRESSES__STRUCT struct fsinfo_afs_server_address
- 
-+/*
-+ * Information struct for fsinfo(FSINFO_ATTR_EXT4_TIMESTAMPS).
-+ */
-+struct fsinfo_ext4_timestamps {
-+	__u64		mkfs_time;
-+	__u64		mount_time;
-+	__u64		write_time;
-+	__u64		last_check_time;
-+	__u64		first_error_time;
-+	__u64		last_error_time;
-+};
-+
-+#define FSINFO_ATTR_EXT4_TIMESTAMPS__STRUCT struct fsinfo_ext4_timestamps
-+
- #endif /* _UAPI_LINUX_FSINFO_H */
-diff --git a/samples/vfs/test-fsinfo.c b/samples/vfs/test-fsinfo.c
-index f0dc90fdd49d..df8d2449fc22 100644
---- a/samples/vfs/test-fsinfo.c
-+++ b/samples/vfs/test-fsinfo.c
-@@ -357,6 +357,40 @@ static void dump_afs_fsinfo_server_address(void *reply, unsigned int size)
- 	printf("family=%u\n", ss->ss_family);
- }
- 
-+static char *dump_ext4_time(char *buffer, time_t tim)
-+{
-+	struct tm tm;
-+	int len;
-+
-+	if (tim == 0)
-+		return "-";
-+
-+	if (!localtime_r(&tim, &tm)) {
-+		perror("localtime_r");
-+		exit(1);
-+	}
-+	len = strftime(buffer, 100, "%F %T", &tm);
-+	if (len == 0) {
-+		perror("strftime");
-+		exit(1);
-+	}
-+	return buffer;
-+}
-+
-+static void dump_ext4_fsinfo_timestamps(void *reply, unsigned int size)
-+{
-+	struct fsinfo_ext4_timestamps *r = reply;
-+	char buffer[100];
-+
-+	printf("\n");
-+	printf("\tmkfs    : %s\n", dump_ext4_time(buffer, r->mkfs_time));
-+	printf("\tmount   : %s\n", dump_ext4_time(buffer, r->mount_time));
-+	printf("\twrite   : %s\n", dump_ext4_time(buffer, r->write_time));
-+	printf("\tfsck    : %s\n", dump_ext4_time(buffer, r->last_check_time));
-+	printf("\t1st-err : %s\n", dump_ext4_time(buffer, r->first_error_time));
-+	printf("\tlast-err: %s\n", dump_ext4_time(buffer, r->last_error_time));
-+}
-+
- static void dump_string(void *reply, unsigned int size)
- {
- 	char *s = reply, *p;
-@@ -433,6 +467,7 @@ static const struct fsinfo_attribute fsinfo_attributes[] = {
- 	FSINFO_STRING	(FSINFO_ATTR_AFS_CELL_NAME,	afs_cell_name),
- 	FSINFO_STRING	(FSINFO_ATTR_AFS_SERVER_NAME,	afs_server_name),
- 	FSINFO_LIST_N	(FSINFO_ATTR_AFS_SERVER_ADDRESSES, afs_fsinfo_server_address),
-+	FSINFO_VSTRUCT	(FSINFO_ATTR_EXT4_TIMESTAMPS,	ext4_fsinfo_timestamps),
- 	{}
- };
- 
-
-
+> Thanks,
+> -- Marco
+> 
+> 
+> > [ 2268.021382][T25724] BUG: KCSAN: data-race in __jbd2_journal_refile_buffer
+> > [jbd2] / jbd2_write_access_granted [jbd2]
+> > [ 2268.031888][T25724]
+> > [ 2268.034099][T25724] write to 0xffff99f9b1bd0e30 of 8 bytes by task 25721 on
+> > cpu 70:
+> > [ 2268.041842][T25724]  __jbd2_journal_refile_buffer+0xdd/0x210 [jbd2]
+> > __jbd2_journal_refile_buffer at fs/jbd2/transaction.c:2569
+> > [ 2268.048181][T25724]  jbd2_journal_commit_transaction+0x2d15/0x3f20 [jbd2]
+> > (inlined by) jbd2_journal_commit_transaction at fs/jbd2/commit.c:1033
+> > [ 2268.055042][T25724]  kjournald2+0x13b/0x450 [jbd2]
+> > [ 2268.059876][T25724]  kthread+0x1cd/0x1f0
+> > [ 2268.063835][T25724]  ret_from_fork+0x27/0x50
+> > [ 2268.068143][T25724]
+> > [ 2268.070348][T25724] no locks held by jbd2/loop0-8/25721.
+> > [ 2268.075699][T25724] irq event stamp: 77604
+> > [ 2268.079830][T25724] hardirqs last  enabled at (77603): [<ffffffff986da853>]
+> > _raw_spin_unlock_irqrestore+0x53/0x60
+> > [ 2268.090166][T25724] hardirqs last disabled at (77604): [<ffffffff986d0841>]
+> > __schedule+0x181/0xa50
+> > [ 2268.099192][T25724] softirqs last  enabled at (76092): [<ffffffff98a0034c>]
+> > __do_softirq+0x34c/0x57c
+> > [ 2268.108392][T25724] softirqs last disabled at (76005): [<ffffffff97cc67a2>]
+> > irq_exit+0xa2/0xc0
+> > [ 2268.117062][T25724]
+> > [ 2268.119269][T25724] read to 0xffff99f9b1bd0e30 of 8 bytes by task 25724 on
+> > cpu 68:
+> > [ 2268.126916][T25724]  jbd2_write_access_granted+0x1b2/0x250 [jbd2]
+> > jbd2_write_access_granted at fs/jbd2/transaction.c:1155
+> > [ 2268.133086][T25724]  jbd2_journal_get_write_access+0x2c/0x60 [jbd2]
+> > [ 2268.139492][T25724]  __ext4_journal_get_write_access+0x50/0x90 [ext4]
+> > [ 2268.146076][T25724]  ext4_mb_mark_diskspace_used+0x158/0x620 [ext4]
+> > [ 2268.152507][T25724]  ext4_mb_new_blocks+0x54f/0xca0 [ext4]
+> > [ 2268.158125][T25724]  ext4_ind_map_blocks+0xc79/0x1b40 [ext4]
+> > [ 2268.163923][T25724]  ext4_map_blocks+0x3b4/0x950 [ext4]
+> > [ 2268.169284][T25724]  _ext4_get_block+0xfc/0x270 [ext4]
+> > [ 2268.174556][T25724]  ext4_get_block+0x3b/0x50 [ext4]
+> > [ 2268.179566][T25724]  __block_write_begin_int+0x22e/0xae0
+> > [ 2268.184921][T25724]  __block_write_begin+0x39/0x50
+> > [ 2268.189842][T25724]  ext4_write_begin+0x388/0xb50 [ext4]
+> > [ 2268.195195][T25724]  generic_perform_write+0x15d/0x290
+> > [ 2268.200467][T25724]  ext4_buffered_write_iter+0x11f/0x210 [ext4]
+> > [ 2268.206612][T25724]  ext4_file_write_iter+0xce/0x9e0 [ext4]
+> > [ 2268.212228][T25724]  new_sync_write+0x29c/0x3b0
+> > [ 2268.216794][T25724]  __vfs_write+0x92/0xa0
+> > [ 2268.220924][T25724]  vfs_write+0x103/0x260
+> > [ 2268.225052][T25724]  ksys_write+0x9d/0x130
+> > [ 2268.229182][T25724]  __x64_sys_write+0x4c/0x60
+> > [ 2268.233666][T25724]  do_syscall_64+0x91/0xb05
+> > [ 2268.238058][T25724]  entry_SYSCALL_64_after_hwframe+0x49/0xbe
+> > [ 2268.243846][T25724]
+> > [ 2268.246056][T25724] 5 locks held by fsync04/25724:
+> > [ 2268.250880][T25724]  #0: ffff99f9911093f8 (sb_writers#13){.+.+}, at:
+> > vfs_write+0x21c/0x260
+> > [ 2268.259211][T25724]  #1: ffff99f9db4c0348 (&sb->s_type-
+> > >i_mutex_key#15){+.+.}, at: ext4_buffered_write_iter+0x65/0x210 [ext4]
+> > [ 2268.270693][T25724]  #2: ffff99f5e7dfcf58 (jbd2_handle){++++}, at:
+> > start_this_handle+0x1c1/0x9d0 [jbd2]
+> > [ 2268.280180][T25724]  #3: ffff99f9db4c0168 (&ei->i_data_sem){++++}, at:
+> > ext4_map_blocks+0x176/0x950 [ext4]
+> > [ 2268.289913][T25724]  #4: ffffffff99086b40 (rcu_read_lock){....}, at:
+> > jbd2_write_access_granted+0x4e/0x250 [jbd2]
+> > [ 2268.300187][T25724] irq event stamp: 1407125
+> > [ 2268.304496][T25724] hardirqs last  enabled at (1407125): [<ffffffff980da9b7>]
+> > __find_get_block+0x107/0x790
+> > [ 2268.314218][T25724] hardirqs last disabled at (1407124): [<ffffffff980da8f9>]
+> > __find_get_block+0x49/0x790
+> > [ 2268.323856][T25724] softirqs last  enabled at (1405528): [<ffffffff98a0034c>]
+> > __do_softirq+0x34c/0x57c
+> > [ 2268.333229][T25724] softirqs last disabled at (1405521): [<ffffffff97cc67a2>]
+> > irq_exit+0xa2/0xc0
+> > [ 2268.342075][T25724]
+> > [ 2268.344282][T25724] Reported by Kernel Concurrency Sanitizer on:
+> > [ 2268.350339][T25724] CPU: 68 PID: 25724 Comm: fsync04 Tainted:
+> > G             L    5.6.0-rc2-next-20200221+ #7
+> > [ 2268.360234][T25724] Hardware name: HPE ProLiant DL385 Gen10/ProLiant DL385
+> > Gen10, BIOS A40 07/10/2019
+> >
+> > >
+> > > Signed-off-by: Marco Elver <elver@google.com>
+> > > Suggested-by: Qian Cai <cai@lca.pw>
+> > > ---
+> > >  kernel/kcsan/report.c | 48 +++++++++++++++++++++++++++++++++++++++++++
+> > >  lib/Kconfig.kcsan     | 13 ++++++++++++
+> > >  2 files changed, 61 insertions(+)
+> > >
+> > > diff --git a/kernel/kcsan/report.c b/kernel/kcsan/report.c
+> > > index 11c791b886f3c..f14becb6f1537 100644
+> > > --- a/kernel/kcsan/report.c
+> > > +++ b/kernel/kcsan/report.c
+> > > @@ -1,10 +1,12 @@
+> > >  // SPDX-License-Identifier: GPL-2.0
+> > >
+> > > +#include <linux/debug_locks.h>
+> > >  #include <linux/jiffies.h>
+> > >  #include <linux/kernel.h>
+> > >  #include <linux/lockdep.h>
+> > >  #include <linux/preempt.h>
+> > >  #include <linux/printk.h>
+> > > +#include <linux/rcupdate.h>
+> > >  #include <linux/sched.h>
+> > >  #include <linux/spinlock.h>
+> > >  #include <linux/stacktrace.h>
+> > > @@ -245,6 +247,29 @@ static int sym_strcmp(void *addr1, void *addr2)
+> > >       return strncmp(buf1, buf2, sizeof(buf1));
+> > >  }
+> > >
+> > > +static void print_verbose_info(struct task_struct *task)
+> > > +{
+> > > +     if (!task)
+> > > +             return;
+> > > +
+> > > +     if (task != current && task->state == TASK_RUNNING)
+> > > +             /*
+> > > +              * Showing held locks for a running task is unreliable, so just
+> > > +              * skip this. The printed locks are very likely inconsistent,
+> > > +              * since the stack trace was obtained when the actual race
+> > > +              * occurred and the task has since continued execution. Since we
+> > > +              * cannot display the below information from the racing thread,
+> > > +              * but must print it all from the watcher thread, bail out.
+> > > +              * Note: Even if the task is not running, there is a chance that
+> > > +              * the locks held may be inconsistent.
+> > > +              */
+> > > +             return;
+> > > +
+> > > +     pr_err("\n");
+> > > +     debug_show_held_locks(task);
+> > > +     print_irqtrace_events(task);
+> > > +}
+> > > +
+> > >  /*
+> > >   * Returns true if a report was generated, false otherwise.
+> > >   */
+> > > @@ -319,6 +344,26 @@ static bool print_report(const volatile void *ptr, size_t size, int access_type,
+> > >                                 other_info.num_stack_entries - other_skipnr,
+> > >                                 0);
+> > >
+> > > +             if (IS_ENABLED(CONFIG_KCSAN_VERBOSE) && other_info.task_pid != -1) {
+> > > +                     struct task_struct *other_task;
+> > > +
+> > > +                     /*
+> > > +                      * Rather than passing @current from the other task via
+> > > +                      * @other_info, obtain task_struct here. The problem
+> > > +                      * with passing @current via @other_info is that, we
+> > > +                      * would have to get_task_struct/put_task_struct, and if
+> > > +                      * we race with a task being released, we would have to
+> > > +                      * release it in release_report(). This may result in
+> > > +                      * deadlock if we want to use KCSAN on the allocators.
+> > > +                      * Instead, make this best-effort, and if the task was
+> > > +                      * already released, we just do not print anything here.
+> > > +                      */
+> > > +                     rcu_read_lock();
+> > > +                     other_task = find_task_by_pid_ns(other_info.task_pid, &init_pid_ns);
+> > > +                     print_verbose_info(other_task);
+> > > +                     rcu_read_unlock();
+> > > +             }
+> > > +
+> > >               pr_err("\n");
+> > >               pr_err("%s to 0x%px of %zu bytes by %s on cpu %i:\n",
+> > >                      get_access_type(access_type), ptr, size,
+> > > @@ -340,6 +385,9 @@ static bool print_report(const volatile void *ptr, size_t size, int access_type,
+> > >       stack_trace_print(stack_entries + skipnr, num_stack_entries - skipnr,
+> > >                         0);
+> > >
+> > > +     if (IS_ENABLED(CONFIG_KCSAN_VERBOSE))
+> > > +             print_verbose_info(current);
+> > > +
+> > >       /* Print report footer. */
+> > >       pr_err("\n");
+> > >       pr_err("Reported by Kernel Concurrency Sanitizer on:\n");
+> > > diff --git a/lib/Kconfig.kcsan b/lib/Kconfig.kcsan
+> > > index f0b791143c6ab..ba9268076cfbc 100644
+> > > --- a/lib/Kconfig.kcsan
+> > > +++ b/lib/Kconfig.kcsan
+> > > @@ -20,6 +20,19 @@ menuconfig KCSAN
+> > >
+> > >  if KCSAN
+> > >
+> > > +config KCSAN_VERBOSE
+> > > +     bool "Show verbose reports with more information about system state"
+> > > +     depends on PROVE_LOCKING
+> > > +     help
+> > > +       If enabled, reports show more information about the system state that
+> > > +       may help better analyze and debug races. This includes held locks and
+> > > +       IRQ trace events.
+> > > +
+> > > +       While this option should generally be benign, we call into more
+> > > +       external functions on report generation; if a race report is
+> > > +       generated from any one of them, system stability may suffer due to
+> > > +       deadlocks or recursion.  If in doubt, say N.
+> > > +
+> > >  config KCSAN_DEBUG
+> > >       bool "Debugging of KCSAN internals"
+> > >
