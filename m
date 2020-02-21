@@ -2,68 +2,70 @@ Return-Path: <SRS0=1210=4J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 53FDFC35647
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 12:00:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 42A2BC35647
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 12:02:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 30EAF24650
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 12:00:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 16871222C4
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 12:02:18 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728075AbgBUMAT (ORCPT
+        id S1727998AbgBUMCR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Feb 2020 07:00:19 -0500
-Received: from mx2.suse.de ([195.135.220.15]:38958 "EHLO mx2.suse.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727053AbgBUMAS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Feb 2020 07:00:18 -0500
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx2.suse.de (Postfix) with ESMTP id 9004EAF2B;
-        Fri, 21 Feb 2020 12:00:16 +0000 (UTC)
-Received: by ds.suse.cz (Postfix, from userid 10065)
-        id B113FDA70E; Fri, 21 Feb 2020 12:59:58 +0100 (CET)
-Date:   Fri, 21 Feb 2020 12:59:58 +0100
-From:   David Sterba <dsterba@suse.cz>
-To:     Matthew Wilcox <willy@infradead.org>
-Cc:     dsterba@suse.cz, linux-fsdevel@vger.kernel.org, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org, linux-btrfs@vger.kernel.org,
-        linux-erofs@lists.ozlabs.org, linux-ext4@vger.kernel.org,
-        linux-f2fs-devel@lists.sourceforge.net, cluster-devel@redhat.com,
-        ocfs2-devel@oss.oracle.com, linux-xfs@vger.kernel.org
-Subject: Re: [PATCH v7 00/23] Change readahead API
-Message-ID: <20200221115957.GE2902@twin.jikos.cz>
-Reply-To: dsterba@suse.cz
-Mail-Followup-To: dsterba@suse.cz, Matthew Wilcox <willy@infradead.org>,
-        linux-fsdevel@vger.kernel.org, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org, linux-btrfs@vger.kernel.org,
-        linux-erofs@lists.ozlabs.org, linux-ext4@vger.kernel.org,
-        linux-f2fs-devel@lists.sourceforge.net, cluster-devel@redhat.com,
-        ocfs2-devel@oss.oracle.com, linux-xfs@vger.kernel.org
-References: <20200219210103.32400-1-willy@infradead.org>
- <20200220175400.GB2902@twin.jikos.cz>
- <20200220223909.GB24185@bombadil.infradead.org>
+        Fri, 21 Feb 2020 07:02:17 -0500
+Received: from s3.sipsolutions.net ([144.76.43.62]:58304 "EHLO
+        sipsolutions.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726410AbgBUMCQ (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 21 Feb 2020 07:02:16 -0500
+Received: by sipsolutions.net with esmtpsa (TLS1.3:ECDHE_SECP256R1__RSA_PSS_RSAE_SHA256__AES_256_GCM:256)
+        (Exim 4.93)
+        (envelope-from <johannes@sipsolutions.net>)
+        id 1j570O-00FBK8-Bv; Fri, 21 Feb 2020 13:02:04 +0100
+Message-ID: <bc10669e0572d69d22ee7ca67a19c7d03bacd6ed.camel@sipsolutions.net>
+Subject: Re: [PATCH 09/10] cfg80211: align documentation style of
+ ieee80211_iface_combination
+From:   Johannes Berg <johannes@sipsolutions.net>
+To:     Jerome Pouiller <Jerome.Pouiller@silabs.com>,
+        linux-wireless@vger.kernel.org
+Cc:     netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Jakub Kicinski <kuba@kernel.org>,
+        "David S . Miller" <davem@davemloft.net>
+Date:   Fri, 21 Feb 2020 13:02:03 +0100
+In-Reply-To: <20200221115604.594035-9-Jerome.Pouiller@silabs.com>
+References: <20200221115604.594035-1-Jerome.Pouiller@silabs.com>
+         <20200221115604.594035-9-Jerome.Pouiller@silabs.com>
+Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.34.2 (3.34.2-1.fc31) 
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200220223909.GB24185@bombadil.infradead.org>
-User-Agent: Mutt/1.5.23.1-rc1 (2014-03-12)
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Feb 20, 2020 at 02:39:09PM -0800, Matthew Wilcox wrote:
-> > >  - Now passes an xfstests run on ext4!
-> > 
-> > On btrfs it still chokes on the first test btrfs/001, with the following
-> > warning, the test is stuck there.
+On Fri, 2020-02-21 at 12:56 +0100, Jerome Pouiller wrote:
 > 
-> Thanks.  The warning actually wasn't the problem, but it did need to
-> be addressed.  I got a test system up & running with btrfs, and it's
-> currently on generic/027 with the following patch:
+> + *	intervals:
+> + *	    * = 0: all beacon intervals for different interface must be same.
+> + *	    * > 0: any beacon interval for the interface part of this
+> + *	      combination AND GCD of all beacon intervals from beaconing
+> + *	      interfaces of this combination must be greater or equal to this
+> + *	      value.
 
-Thanks, with the fix applied the first 10 tests passed, I'll let the
-testsuite finish and let you know if ther are more warnings and such.
+Hmm. I have a feeling I actually split this one out because
+
+> -	 * = 0
+> -	 *   all beacon intervals for different interface must be same.
+> -	 * > 0
+> -	 *   any beacon interval for the interface part of this combination AND
+> -	 *   GCD of all beacon intervals from beaconing interfaces of this
+> -	 *   combination must be greater or equal to this value.
+
+This generates the nicer output, not with bullets but as a definition
+list or something.
+
+johannes
+
