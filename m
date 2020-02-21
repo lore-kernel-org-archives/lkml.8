@@ -4,51 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 93639C35641
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 07:54:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 08F7BC35640
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 07:54:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 65EBE24672
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 07:54:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C4CB020801
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 07:54:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582271688;
-	bh=dUG8hZXnoAlkAXWnwLJJ7XWo2AfBZ7T/u6rOHU/eIoY=;
+	s=default; t=1582271690;
+	bh=sMUNR4yGWZ+2fKyLeI7Zo66jkrR7W2W8hwkVr/geNGk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=CyNzKno5wQLLYcq5o/0qNVMY1e/2V12cDbEpR66NJKEE1LNUe2oWgCU+bCljET5x+
-	 NeT6YTspyoeDu/g+E44Ub8qgKVlqffW2PquYjtjPpQOSKaE670RqY3kMagZamSFssm
-	 k313jDWI7xgPXCAK8QYgPFG9upTt/GeNM1O702fo=
+	b=dqiqg9LJ1QiAkesgmcrz5Nyo9CRBcIZH2nfhQvp7Kclnx3c9fuGxky02OSVxSQuN8
+	 nM5f7OZQ5yQTLxGZpxRd/XtytuazC9DnxCkCJOglb4WDR/7ahICm3R+aS0SW+OZLvE
+	 FJDCYVD7GvE47QABm1Pb7WCYYsb2p/mN1/kefLOQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730275AbgBUHyq (ORCPT
+        id S1728174AbgBUHyt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Feb 2020 02:54:46 -0500
-Received: from mail.kernel.org ([198.145.29.99]:53370 "EHLO mail.kernel.org"
+        Fri, 21 Feb 2020 02:54:49 -0500
+Received: from mail.kernel.org ([198.145.29.99]:53432 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728602AbgBUHyo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Feb 2020 02:54:44 -0500
+        id S1730276AbgBUHyr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 21 Feb 2020 02:54:47 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id BA74D222C4;
-        Fri, 21 Feb 2020 07:54:43 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 36C1324676;
+        Fri, 21 Feb 2020 07:54:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1582271684;
-        bh=dUG8hZXnoAlkAXWnwLJJ7XWo2AfBZ7T/u6rOHU/eIoY=;
+        s=default; t=1582271686;
+        bh=sMUNR4yGWZ+2fKyLeI7Zo66jkrR7W2W8hwkVr/geNGk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=xr714oesJ80ixMsV5GFDRRP8S0iJloPbYXouck5Cg0dkAJHxXuiwOQBKua/SaomKO
-         2yemLczqKdPCj2KvgTgSC6SnsaLcVK34HW3vQ1uKBzZsAxuZ0W6FXNwV0u2zEKczx6
-         iHMOgU3PHalm1WKEYGezvJwTuVH54/t91qQoB3wE=
+        b=n0IiAfve+7T5algfYlUmvkJ1VJ7C1YPhVAvAJFqwS1o8I+/0OJROw8OL5LtA7njcz
+         ia7lSuZH96gZX6lD/gdh8u9jzXURWfyUkMz6y7ep0E1RkkVgNaggr5GHQ9UbuLpcPv
+         5vG6LiAhO1sRvkygZ4v3G1iYLzAFsThEy3WbP16k=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Hulk Robot <hulkci@huawei.com>,
-        YueHaibing <yuehaibing@huawei.com>,
-        Ben Skeggs <bskeggs@redhat.com>,
+        stable@vger.kernel.org, Ben Skeggs <bskeggs@redhat.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.5 259/399] drm/nouveau/drm/ttm: Remove set but not used variable mem
-Date:   Fri, 21 Feb 2020 08:39:44 +0100
-Message-Id: <20200221072427.595783530@linuxfoundation.org>
+Subject: [PATCH 5.5 260/399] drm/nouveau/fault/gv100-: fix memory leak on module unload
+Date:   Fri, 21 Feb 2020 08:39:45 +0100
+Message-Id: <20200221072427.692811190@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200221072402.315346745@linuxfoundation.org>
 References: <20200221072402.315346745@linuxfoundation.org>
@@ -61,56 +59,28 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: YueHaibing <yuehaibing@huawei.com>
+From: Ben Skeggs <bskeggs@redhat.com>
 
-[ Upstream commit 2e4534a22794746b11a794b2229b8d58797eccce ]
+[ Upstream commit 633cc9beeb6f9b5fa2f17a2a9d0e2790cb6c3de7 ]
 
-drivers/gpu/drm/nouveau/nouveau_ttm.c: In function nouveau_vram_manager_new:
-drivers/gpu/drm/nouveau/nouveau_ttm.c:66:22: warning: variable mem set but not used [-Wunused-but-set-variable]
-drivers/gpu/drm/nouveau/nouveau_ttm.c: In function nouveau_gart_manager_new:
-drivers/gpu/drm/nouveau/nouveau_ttm.c:106:22: warning: variable mem set but not used [-Wunused-but-set-variable]
-
-They are not used any more, so remove it.
-
-Reported-by: Hulk Robot <hulkci@huawei.com>
-Signed-off-by: YueHaibing <yuehaibing@huawei.com>
 Signed-off-by: Ben Skeggs <bskeggs@redhat.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/gpu/drm/nouveau/nouveau_ttm.c | 4 ----
- 1 file changed, 4 deletions(-)
+ drivers/gpu/drm/nouveau/nvkm/subdev/fault/base.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/drivers/gpu/drm/nouveau/nouveau_ttm.c b/drivers/gpu/drm/nouveau/nouveau_ttm.c
-index 77a0c6ad3cef5..7ca0a24985327 100644
---- a/drivers/gpu/drm/nouveau/nouveau_ttm.c
-+++ b/drivers/gpu/drm/nouveau/nouveau_ttm.c
-@@ -63,14 +63,12 @@ nouveau_vram_manager_new(struct ttm_mem_type_manager *man,
- {
- 	struct nouveau_bo *nvbo = nouveau_bo(bo);
- 	struct nouveau_drm *drm = nouveau_bdev(bo->bdev);
--	struct nouveau_mem *mem;
- 	int ret;
+diff --git a/drivers/gpu/drm/nouveau/nvkm/subdev/fault/base.c b/drivers/gpu/drm/nouveau/nvkm/subdev/fault/base.c
+index ca251560d3e09..bb4a4266897c3 100644
+--- a/drivers/gpu/drm/nouveau/nvkm/subdev/fault/base.c
++++ b/drivers/gpu/drm/nouveau/nvkm/subdev/fault/base.c
+@@ -146,6 +146,7 @@ nvkm_fault_dtor(struct nvkm_subdev *subdev)
+ 	struct nvkm_fault *fault = nvkm_fault(subdev);
+ 	int i;
  
- 	if (drm->client.device.info.ram_size == 0)
- 		return -ENOMEM;
++	nvkm_notify_fini(&fault->nrpfb);
+ 	nvkm_event_fini(&fault->event);
  
- 	ret = nouveau_mem_new(&drm->master, nvbo->kind, nvbo->comp, reg);
--	mem = nouveau_mem(reg);
- 	if (ret)
- 		return ret;
- 
-@@ -103,11 +101,9 @@ nouveau_gart_manager_new(struct ttm_mem_type_manager *man,
- {
- 	struct nouveau_bo *nvbo = nouveau_bo(bo);
- 	struct nouveau_drm *drm = nouveau_bdev(bo->bdev);
--	struct nouveau_mem *mem;
- 	int ret;
- 
- 	ret = nouveau_mem_new(&drm->master, nvbo->kind, nvbo->comp, reg);
--	mem = nouveau_mem(reg);
- 	if (ret)
- 		return ret;
- 
+ 	for (i = 0; i < fault->buffer_nr; i++) {
 -- 
 2.20.1
 
