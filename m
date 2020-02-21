@@ -2,141 +2,121 @@ Return-Path: <SRS0=1210=4J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 07328C35657
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 14:34:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1DDBFC35657
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 14:35:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D20D624650
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 14:34:13 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="DUMUWH+o"
+	by mail.kernel.org (Postfix) with ESMTP id F1A53222C4
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 14:35:30 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728842AbgBUOeM (ORCPT
+        id S1728835AbgBUOf3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Feb 2020 09:34:12 -0500
-Received: from mail-lj1-f194.google.com ([209.85.208.194]:37767 "EHLO
-        mail-lj1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728765AbgBUOeM (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Feb 2020 09:34:12 -0500
-Received: by mail-lj1-f194.google.com with SMTP id q23so2414816ljm.4
-        for <linux-kernel@vger.kernel.org>; Fri, 21 Feb 2020 06:34:10 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=qE1ZprvNAQZEaedKCgeg3ifr2lhMX5FFSbIkCacp4Kw=;
-        b=DUMUWH+o5xdEn4HR/SntOIZf6pWK2WCRJo9GDytRJlf/wRrfthg3iixysSl789z7QV
-         cWt75Jm8nDTe+v9ctDDtSdF0l5ln3hu7YnDUgIww04Q1jOLT3LlEJY5Np7xnnDm12q22
-         zMtcwL6aW4EdhmjVpuhoKoluw2mZk8ZlFiPs7NXZpmM1yCzC0wVB0BH1b3EG4rqRqa9C
-         pYVGdEP1BZ1xifOB1yzVdKi9iSVyJh2LWc8OsI88wTr7ivb3LyFWFFC5WkJlQ9bnDKOI
-         Tv60UO/1LRXTVVXr8nBzNDWO6d8+PQniSdcEiO/19AcFYSeICRQ7COilyc6YYMi1QnPa
-         y2iQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=qE1ZprvNAQZEaedKCgeg3ifr2lhMX5FFSbIkCacp4Kw=;
-        b=fhRuhrtrhb9SnzhGY3lZ0i0TZWMhkRld8k9/nTgmksUT43k+dWjsTpo9LeQi0chJpi
-         ZLZmU7jweDru80GhnBC30C82JTPOF2d17qAsqnMdVWqMdagA7vPZ9IvXcEHnv7tG5SmS
-         uHNKecNlQ3MXqRemgicEjip9OohUUaf2iS/LKLSdtQBw4Mih6M3W3kU+L+jjLPjYKngg
-         3xXI06EL1Wi/+9gXlN25g9TvX/cUD2oGEpNvgM5JtX02uIBWwjsFVvkMfAGvgsDRaQGL
-         +JHdOxNF0rgSPkhMeSLadPHIqladP79yPvNfe1vNYFOwsV5pwugpTYEmGcHeDbMDZ4S9
-         a0QA==
-X-Gm-Message-State: APjAAAWuRAEIYTeXgySFotQhZRdkHKxENeyg2tqXc4EHBp1D7GINOwu0
-        UbV9qBa0ENvPraJioFsY5SELLhN7uEep8yMetuAZK/mSfrj5rw==
-X-Google-Smtp-Source: APXvYqw4oSVVlShPCelo7IGnTIlbPgsMGxvB5xli1PlMp8bLrG3RvR3Haq1OJ5idjUHugDKxC+iAjv/NG+M/2+LLAR0=
-X-Received: by 2002:a2e:81c3:: with SMTP id s3mr21749572ljg.168.1582295649418;
- Fri, 21 Feb 2020 06:34:09 -0800 (PST)
+        Fri, 21 Feb 2020 09:35:29 -0500
+Received: from foss.arm.com ([217.140.110.172]:40708 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727096AbgBUOf3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 21 Feb 2020 09:35:29 -0500
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 8DFE81FB;
+        Fri, 21 Feb 2020 06:35:28 -0800 (PST)
+Received: from e121166-lin.cambridge.arm.com (e121166-lin.cambridge.arm.com [10.1.196.255])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 553413F703;
+        Fri, 21 Feb 2020 06:35:27 -0800 (PST)
+Date:   Fri, 21 Feb 2020 14:35:25 +0000
+From:   Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+To:     Marc Gonzalez <marc.w.gonzalez@free.fr>
+Cc:     Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Stanimir Varbanov <svarbanov@mm-sol.com>,
+        Andrew Murray <andrew.murray@arm.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        linux-arm-msm@vger.kernel.org, linux-pci@vger.kernel.org,
+        linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Subject: Re: [PATCH v2] PCI: qcom: Fix the fixup of PCI_VENDOR_ID_QCOM
+Message-ID: <20200221143525.GC15440@e121166-lin.cambridge.arm.com>
+References: <20191227012717.78965-1-bjorn.andersson@linaro.org>
+ <9e5ee7e8-aa63-e82c-8135-acc77b476c87@mm-sol.com>
+ <38acf5fc-85aa-7090-e666-97a1281e9905@free.fr>
+ <20191229024547.GH3755841@builder>
+ <9c7d69cc-29e7-07c5-1e93-e9fdadf370a6@free.fr>
 MIME-Version: 1.0
-References: <1581921111-24172-1-git-send-email-chun-hung.wu@mediatek.com> <1581921111-24172-2-git-send-email-chun-hung.wu@mediatek.com>
-In-Reply-To: <1581921111-24172-2-git-send-email-chun-hung.wu@mediatek.com>
-From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Fri, 21 Feb 2020 15:33:58 +0100
-Message-ID: <CACRpkdauCe-zAcsO5q_79+Ux_a2=bktA5UqKjWs4XdBJZ3wWeg@mail.gmail.com>
-Subject: Re: [PATCH 1/4] [1/4] mmc: core: expose MMC_CAP2_CQE* to dt
-To:     Chun-Hung Wu <chun-hung.wu@mediatek.com>
-Cc:     Chaotian Jing <chaotian.jing@mediatek.com>,
-        Ulf Hansson <ulf.hansson@linaro.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Pavel Machek <pavel@ucw.cz>,
-        Kate Stewart <kstewart@linuxfoundation.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
-        Pan Bian <bianpan2016@163.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Allison Randal <allison@lohutok.net>,
-        Mathieu Malaterre <malat@debian.org>,
-        Stanley Chu <stanley.chu@mediatek.com>,
-        Kuohong Wang <kuohong.wang@mediatek.com>,
-        kernel-team@android.com,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        linux-mmc <linux-mmc@vger.kernel.org>,
-        "moderated list:ARM/Mediatek SoC support" 
-        <linux-mediatek@lists.infradead.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>, wsd_upstream@mediatek.com,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <9c7d69cc-29e7-07c5-1e93-e9fdadf370a6@free.fr>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Feb 17, 2020 at 7:32 AM Chun-Hung Wu <chun-hung.wu@mediatek.com> wrote:
+On Mon, Dec 30, 2019 at 09:25:28PM +0100, Marc Gonzalez wrote:
+> On 29/12/2019 03:45, Bjorn Andersson wrote:
+> 
+> > On Sat 28 Dec 07:41 PST 2019, Marc Gonzalez wrote:
+> > 
+> >> On 27/12/2019 09:51, Stanimir Varbanov wrote:
+> >>
+> >>> On 12/27/19 3:27 AM, Bjorn Andersson wrote:
+> >>>
+> >>>> There exists non-bridge PCIe devices with PCI_VENDOR_ID_QCOM, so limit
+> >>>> the fixup to only affect the relevant PCIe bridges.
+> >>>>
+> >>>> Cc: stable@vger.kernel.org
+> >>>> Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
+> >>>> ---
+> >>>>
+> >>>> Stan, I picked up all the suggested device id's from the previous thread and
+> >>>> added 0x1000 for QCS404. I looked at creating platform specific defines in
+> >>>> pci_ids.h, but SDM845 has both 106 and 107... Please let me know if you would
+> >>>> prefer that I do this anyway.
+> >>>
+> >>> Looks good,
+> >>>
+> >>> Acked-by: Stanimir Varbanov <svarbanov@mm-sol.com>
+> >>>
+> >>>>  drivers/pci/controller/dwc/pcie-qcom.c | 8 +++++++-
+> >>>>  1 file changed, 7 insertions(+), 1 deletion(-)
+> >>>>
+> >>>> diff --git a/drivers/pci/controller/dwc/pcie-qcom.c b/drivers/pci/controller/dwc/pcie-qcom.c
+> >>>> index 5ea527a6bd9f..138e1a2d21cc 100644
+> >>>> --- a/drivers/pci/controller/dwc/pcie-qcom.c
+> >>>> +++ b/drivers/pci/controller/dwc/pcie-qcom.c
+> >>>> @@ -1439,7 +1439,13 @@ static void qcom_fixup_class(struct pci_dev *dev)
+> >>>>  {
+> >>>>  	dev->class = PCI_CLASS_BRIDGE_PCI << 8;
+> >>>>  }
+> >>>> -DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_QCOM, PCI_ANY_ID, qcom_fixup_class);
+> >>>> +DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_QCOM, 0x0101, qcom_fixup_class);
+> >>>> +DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_QCOM, 0x0104, qcom_fixup_class);
+> >>>> +DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_QCOM, 0x0106, qcom_fixup_class);
+> >>>> +DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_QCOM, 0x0107, qcom_fixup_class);
+> >>>> +DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_QCOM, 0x0302, qcom_fixup_class);
+> >>>> +DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_QCOM, 0x1000, qcom_fixup_class);
+> >>>> +DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_QCOM, 0x1001, qcom_fixup_class);
+> >>
+> >> Hrmmm... still not CCed on the patch,
+> > 
+> > You are Cc'ed on the patch, but as usual your mail server responds "451
+> > too many errors from your ip" and throw my emails away.
+> > 
+> >> and still don't think the fixup is required(?) for 0x106 and 0x107.
+> >>
+> > 
+> > I re-read your reply in my v1 thread. So we know that 0x104 doesn't need
+> > the fixup, so presumably only 0x101 needs the fixup?
+> 
+> I apologize for the tone of my reply. I did not mean to sound
+> so snarky.
+> 
+> All I can say is that, if I remember correctly, the fixup was
+> not necessary on apq8098 (0x0105) and it was probably not
+> required on msm8996 and sdm845. For older platforms, all bets
+> are off.
 
-> Expose MMC_CAP2_CQE and MMC_CAP2_CQE_DCMD
-> to host->caps2 if
-> 1. "supports-cqe" is defined in dt and
-> 2. "disable-cqe-dcmd" is not defined in dt.
->
-> ---
->  drivers/mmc/core/host.c | 8 ++++++++
->  1 file changed, 8 insertions(+)
->
-> diff --git a/drivers/mmc/core/host.c b/drivers/mmc/core/host.c
-> index 105b7a7..efb0dbe 100644
-> --- a/drivers/mmc/core/host.c
-> +++ b/drivers/mmc/core/host.c
-> @@ -319,6 +319,14 @@ int mmc_of_parse(struct mmc_host *host)
->                 host->caps2 |= MMC_CAP2_NO_SD;
->         if (device_property_read_bool(dev, "no-mmc"))
->                 host->caps2 |= MMC_CAP2_NO_MMC;
-> +       if (device_property_read_bool(dev, "supports-cqe"))
-> +               host->caps2 |= MMC_CAP2_CQE;
+How are we proceeding with this patch then ?
 
-I don't understand why this is even a DT property as it should
-be clear from the hosts compatible whether it supports CQE or
-not. But it's too late to do anything about that I suppose, and
-I just assume there is something I don't understand here.
-
-> +       /* Must be after "supports-cqe" check */
-> +       if (!device_property_read_bool(dev, "disable-cqe-dcmd")) {
-> +               if (host->caps2 & MMC_CAP2_CQE)
-> +                       host->caps2 |= MMC_CAP2_CQE_DCMD;
-> +       }
-
-This is the right place to do this I suppose. Disabling CQE
-selectively is something you might wanna do for debugging.
-Acked-by: Linus Walleij <linus.walleij@linaro.org>
-
-I see that some drivers are already parsing this DT property
-on their own, should we follow up with patches so that these:
-
-$ git grep 'supports-cqe'
-drivers/mmc/host/sdhci-brcmstb.c:       if
-(device_property_read_bool(&pdev->dev, "supports-cqe")) {
-drivers/mmc/host/sdhci-msm.c:   if (of_property_read_bool(node, "supports-cqe"))
-drivers/mmc/host/sdhci-tegra.c: if
-(device_property_read_bool(host->mmc->parent, "supports-cqe"))
-
-Make use of the central parsing instead?
-
-Yours,
-Linus Walleij
+Thanks,
+Lorenzo
