@@ -2,130 +2,148 @@ Return-Path: <SRS0=1210=4J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5D414C35646
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 16:13:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 63D7AC35656
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 16:13:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 30FC82073A
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 16:13:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 337FC222C4
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 16:13:56 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="eJbIrsJY"
+	dkim=pass (2048-bit key) header.d=efficios.com header.i=@efficios.com header.b="Gys2M1rU"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728846AbgBUQMz (ORCPT
+        id S1729264AbgBUQNy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Feb 2020 11:12:55 -0500
-Received: from mx07-00178001.pphosted.com ([62.209.51.94]:55331 "EHLO
-        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727039AbgBUQMu (ORCPT
+        Fri, 21 Feb 2020 11:13:54 -0500
+Received: from mail.efficios.com ([167.114.26.124]:58648 "EHLO
+        mail.efficios.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727095AbgBUQNy (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Feb 2020 11:12:50 -0500
-Received: from pps.filterd (m0046037.ppops.net [127.0.0.1])
-        by mx07-00178001.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 01LG83M6008257;
-        Fri, 21 Feb 2020 17:12:23 +0100
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=from : to : cc : subject
- : date : message-id : in-reply-to : references : mime-version :
- content-type; s=STMicroelectronics;
- bh=84l2b91e/di7VUflYudfHEI8dwDeDuErqQcawADT30M=;
- b=eJbIrsJYUQ2ZOSZ/PQkd/4nlZgrFvcK9JbFCrGcLZhnboFdyJRziUg7iyQc/HMnD+7+4
- tiHe0B7gRQx4wom954tO7ehuk3/I0lBeqZpnHCL8I76+LB3J1ldZx0ngZlGj3eQMaTNr
- XhCroGu8re8Q1j99sPeMQCjjYI/nc06ebb/snLCaYtRZ/oph6tKZjBoEMGQyaj0z92nd
- 4nQuKbBAR27di/pTockDqlr5UUsLyOO8GG9oET+q5pXKHknUl0K01US6ZNnpBifinSTr
- AVR/7zS0EafkNjYfKTNY1BsuUjW8sFgKy9evj+ECNZWZMZEYnmXqpd3GpKF3SiGvFTOJ ew== 
-Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
-        by mx07-00178001.pphosted.com with ESMTP id 2y8ub1r63v-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Fri, 21 Feb 2020 17:12:23 +0100
-Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
-        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id A96F310002A;
-        Fri, 21 Feb 2020 17:12:20 +0100 (CET)
-Received: from Webmail-eu.st.com (sfhdag3node2.st.com [10.75.127.8])
-        by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id 9C53E2BE24B;
-        Fri, 21 Feb 2020 17:12:20 +0100 (CET)
-Received: from localhost (10.75.127.48) by SFHDAG3NODE2.st.com (10.75.127.8)
- with Microsoft SMTP Server (TLS) id 15.0.1347.2; Fri, 21 Feb 2020 17:12:19
- +0100
-From:   Alexandre Torgue <alexandre.torgue@st.com>
-To:     <robh+dt@kernel.org>, Frank Rowand <frowand.list@gmail.com>,
-        Masahiro Yamada <masahiroy@kernel.org>,
-        Michal Marek <michal.lkml@markovi.net>,
-        <david@gibson.dropbear.id.au>, <sjg@chromium.org>
-CC:     <devicetree@vger.kernel.org>,
-        Alexandre Torgue <alexandre.torgue@st.com>,
-        <linux-kernel@vger.kernel.org>, <linux-kbuild@vger.kernel.org>,
-        <devicetree-compiler@vger.kernel.org>, Ian Lepore <ian@freebsd.org>
-Subject: [RFC PATCH v2 1/4] scripts: Add script to generate dtb build information
-Date:   Fri, 21 Feb 2020 17:12:14 +0100
-Message-ID: <20200221161217.20069-2-alexandre.torgue@st.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20200221161217.20069-1-alexandre.torgue@st.com>
-References: <20200221161217.20069-1-alexandre.torgue@st.com>
+        Fri, 21 Feb 2020 11:13:54 -0500
+Received: from localhost (localhost [127.0.0.1])
+        by mail.efficios.com (Postfix) with ESMTP id 34059260BCE;
+        Fri, 21 Feb 2020 11:13:53 -0500 (EST)
+Received: from mail.efficios.com ([127.0.0.1])
+        by localhost (mail03.efficios.com [127.0.0.1]) (amavisd-new, port 10032)
+        with ESMTP id c7vZusTWutJP; Fri, 21 Feb 2020 11:13:52 -0500 (EST)
+Received: from localhost (localhost [127.0.0.1])
+        by mail.efficios.com (Postfix) with ESMTP id C6C87260D14;
+        Fri, 21 Feb 2020 11:13:52 -0500 (EST)
+DKIM-Filter: OpenDKIM Filter v2.10.3 mail.efficios.com C6C87260D14
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=efficios.com;
+        s=default; t=1582301632;
+        bh=i4/JFZqxh7npdYYNKOpTF3g1l9o9iVzv8QM5fojaOrI=;
+        h=Date:From:To:Message-ID:MIME-Version;
+        b=Gys2M1rU74CRMa9I8KyccloZP+O06an3jwOZPqUTluNw2w6+o4WyspM9OUPjmLwpQ
+         Y3aojss2NXEjuVtHpW71dxAgp2QRL5gdON7VJ3ZxPHnqUXz7fHLKg2GlCmOXIec7Eu
+         tOgo2xfMyVtvJzRnoSZE7y7w17RplS2PY/AFPMkZcc0Gm5h8ZK3/11RPOcVX8xFeaC
+         8UuLsbSr3eDAGxR5DVuRaTiDfQek1UI2brAe0q/Ns9qlUoseknspPnbNwNtGSUZxFa
+         2dJlf+VtN1RlTq/GZrUapPAo0WWt35iGNJCdmON8CqVs0TgqybA3GeIXQbrGFh8kTd
+         RGTfvOlB7Z3Rg==
+X-Virus-Scanned: amavisd-new at efficios.com
+Received: from mail.efficios.com ([127.0.0.1])
+        by localhost (mail03.efficios.com [127.0.0.1]) (amavisd-new, port 10026)
+        with ESMTP id rcUUqSBRNBlP; Fri, 21 Feb 2020 11:13:52 -0500 (EST)
+Received: from mail03.efficios.com (mail03.efficios.com [167.114.26.124])
+        by mail.efficios.com (Postfix) with ESMTP id B686C260A45;
+        Fri, 21 Feb 2020 11:13:52 -0500 (EST)
+Date:   Fri, 21 Feb 2020 11:13:52 -0500 (EST)
+From:   Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
+To:     "Joel Fernandes, Google" <joel@joelfernandes.org>
+Cc:     Chris Kennelly <ckennelly@google.com>,
+        Paul Turner <pjt@google.com>,
+        Florian Weimer <fweimer@redhat.com>,
+        Carlos O'Donell <codonell@redhat.com>,
+        libc-alpha <libc-alpha@sourceware.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        paulmck <paulmck@kernel.org>, Boqun Feng <boqun.feng@gmail.com>,
+        Brian Geffon <bgeffon@google.com>
+Message-ID: <1683022606.3452.1582301632640.JavaMail.zimbra@efficios.com>
+In-Reply-To: <20200221154923.GC194360@google.com>
+References: <1503467992.2999.1582234410317.JavaMail.zimbra@efficios.com> <20200221154923.GC194360@google.com>
+Subject: Re: Rseq registration: Google tcmalloc vs glibc
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.75.127.48]
-X-ClientProxiedBy: SFHDAG8NODE3.st.com (10.75.127.24) To SFHDAG3NODE2.st.com
- (10.75.127.8)
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.572
- definitions=2020-02-21_05:2020-02-21,2020-02-21 signatures=0
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [167.114.26.124]
+X-Mailer: Zimbra 8.8.15_GA_3901 (ZimbraWebClient - FF72 (Linux)/8.8.15_GA_3895)
+Thread-Topic: Rseq registration: Google tcmalloc vs glibc
+Thread-Index: ZF/e9TUM/XBemxf1rZL3jaL+y7b4Yw==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This commit adds a new script to create a file (in dts file directory) with
-some information (date, Linux version, user). This file could then be used
-to populate "build-info" property in every dts file that would use this
-build information:
+----- On Feb 21, 2020, at 10:49 AM, Joel Fernandes, Google joel@joelfernandes.org wrote:
 
-Example:
+[...]
+>> 
+>> 3) Use the  __rseq_abi TLS cpu_id field to know whether Rseq has been
+>> registered.
+>> 
+>> - Current protocol in the most recent glibc integration patch set.
+>> - Not supported yet by Linux kernel rseq selftests,
+>> - Not supported yet by tcmalloc,
+>> 
+>> Use the per-thread state to figure out whether each thread need to register
+>> Rseq individually.
+>> 
+>> Works for integration between a library which exists for the entire lifetime
+>> of the executable (e.g. glibc) and other libraries. However, it does not
+>> allow a set of libraries which are dlopen'd/dlclose'd to co-exist without
+>> having a library like glibc handling the registration present.
+> 
+> Mathieu, could you share more details about why during dlopen/close
+> libraries we cannot use the same __rseq_abi TLS to detect that rseq was
+> registered?
 
-/ {
-	...
-	build-info = /incbin/("dtb-build.txt");
-	...
-};
+Sure,
 
-Signed-off-by: Alexandre Torgue <alexandre.torgue@st.com>
+A library which is only loaded and never closed during the execution of the
+program can let the kernel implicitly unregister rseq at thread exit. For
+the dlopen/dlclose use-case, we need to be able to explicitly unregister
+each thread's __rseq_abi which sit in a library which is going to be
+dlclose'd. 
 
-diff --git a/scripts/Makefile.lib b/scripts/Makefile.lib
-index bae62549e3d2..a5af84ef4ffc 100644
---- a/scripts/Makefile.lib
-+++ b/scripts/Makefile.lib
-@@ -246,6 +246,7 @@ quiet_cmd_gzip = GZIP    $@
- # DTC
- # ---------------------------------------------------------------------------
- DTC ?= $(objtree)/scripts/dtc/dtc
-+DTB_GEN_INFO ?= $(objtree)/scripts/gen_dtb_build_info.sh
- 
- # Disable noisy checks by default
- ifeq ($(findstring 1,$(KBUILD_EXTRA_WARN)),)
-@@ -286,6 +287,7 @@ $(obj)/%.dtb.S: $(obj)/%.dtb FORCE
- 
- quiet_cmd_dtc = DTC     $@
- cmd_dtc = mkdir -p $(dir ${dtc-tmp}) ; \
-+	$(DTB_GEN_INFO) $(src) ; \
- 	$(HOSTCC) -E $(dtc_cpp_flags) -x assembler-with-cpp -o $(dtc-tmp) $< ; \
- 	$(DTC) -O $(2) -o $@ -b 0 \
- 		$(addprefix -i,$(dir $<) $(DTC_INCLUDE)) $(DTC_FLAGS) \
-diff --git a/scripts/gen_dtb_build_info.sh b/scripts/gen_dtb_build_info.sh
-new file mode 100755
-index 000000000000..0cd8bd98e410
---- /dev/null
-+++ b/scripts/gen_dtb_build_info.sh
-@@ -0,0 +1,10 @@
-+#!/bin/bash
-+# SPDX-License-Identifier: GPL-2.0
-+
-+set -o nounset
-+
-+DTB_DIR=$1
-+DTB_COMPILE_BY=$(whoami | sed 's/\\/\\\\/')
-+DTB_INFO="From Linux $KERNELRELEASE by $DTB_COMPILE_BY the $(date).\0"
-+
-+printf "$DTB_INFO" > "$DTB_DIR/dtb-build.txt"
+The issue is that __rseq_abi.cpu_id does not track any reference counting
+of rseq user libraries, which becomes an issue if we have many of those
+libraries around with different life-time.
+
+As an example scenario, let's suppose we have a single-threaded application
+which does the following:
+
+main()
+  dlopen(liba)
+    -> liba's constructor observes uninitialized __rseq_abi.cpu_id, thus
+       performs rseq registration
+  dlopen(libb)
+    -> libb's constructor observes that rseq is already registered.
+
+  dlclose(libb)
+    -> libb's destructor unregisters rseq.
+
+  -> at this point, liba is still loaded, and would still expect rseq to
+     be registered. But unfortunately rseq has been unregistered by libb.
+
+  dlclose(liba)
+    -> rseq is already unregistered, which is unexpected.
+
+The TLS __rseq_refcount solves this by tracking the number of users of
+rseq for the thread, so rseq is only unregistered when the very last user
+decrements the reference count.
+
+As soon as there is at least one library taking care of registering rseq
+for the entire thread's duration (e.g. glibc), and that this library
+guarantees to never be dlclose'd, the __rseq_refcount becomes unneeded.
+
+Thanks,
+
+Mathieu
+
 -- 
-2.17.1
-
+Mathieu Desnoyers
+EfficiOS Inc.
+http://www.efficios.com
