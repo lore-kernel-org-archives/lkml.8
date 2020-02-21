@@ -2,194 +2,106 @@ Return-Path: <SRS0=1210=4J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0BBDAC35657
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 15:33:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A83DAC35656
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 15:34:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CC46E2073A
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 15:33:03 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="NEud9/7F"
+	by mail.kernel.org (Postfix) with ESMTP id 896FF2073A
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 15:34:00 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729137AbgBUPdC (ORCPT
+        id S1728299AbgBUPd7 convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Feb 2020 10:33:02 -0500
-Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:38106 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1729055AbgBUPdB (ORCPT
+        Fri, 21 Feb 2020 10:33:59 -0500
+Received: from eu-smtp-delivery-151.mimecast.com ([207.82.80.151]:56745 "EHLO
+        eu-smtp-delivery-151.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727312AbgBUPd7 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Feb 2020 10:33:01 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1582299179;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=PsBV6/KbvwCxicQByPJEUo2GVyBDVRqp1i+UcpJa+e0=;
-        b=NEud9/7FsuO5oPYQS8Fii7kYLdA77SKqKkVn2f5oS8BnZZc4AS17yNbM8kU7Q4s9nhyQ67
-        LZt2cowYZR9QdxzQtWz0e++ZvxZIFZytVPc8IPTmfncptR5PdlvNAesHAFOgdxeD13mHZB
-        S0qyCtbsKl1HDPTXTSYwC8ZO1Yn0J3w=
-Received: from mail-wr1-f70.google.com (mail-wr1-f70.google.com
- [209.85.221.70]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-44--e7hKLkAOxyFbGzUZ5Dbjw-1; Fri, 21 Feb 2020 10:32:58 -0500
-X-MC-Unique: -e7hKLkAOxyFbGzUZ5Dbjw-1
-Received: by mail-wr1-f70.google.com with SMTP id s13so1161182wrb.21
-        for <linux-kernel@vger.kernel.org>; Fri, 21 Feb 2020 07:32:57 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:in-reply-to:references:date
-         :message-id:mime-version;
-        bh=PsBV6/KbvwCxicQByPJEUo2GVyBDVRqp1i+UcpJa+e0=;
-        b=LLz84RrGUsn/ZgvIt9bgUin/Fp6PNlgaqLTRwMrwdeIZpXvGjTMc/9JwYSeLAjYbOl
-         v3feNn/UkSzyKFft+LI7pY3GhmM73E7gQ8ZVxzSFsandT66825J0s49Jxe6eyigxUY+1
-         8+qGSgxShXQDYIStzypc5ffQIL/H0QceLbyFgmOwj1MrbWy4HVsFx8SoMRwqSdfxcJ/m
-         SMABMYlqSvrb+oVaIpbs6wluoTvhu6eHUFdHc2BQXSwDyPvUd6EYs30u9C30NT4qS1hi
-         hiN/rQ6r7/JZTnWN3kdlJxqqCfLlTn6TcTiMCcnbtJf7n6+xtEfZf5ePRm+EfXyZm7Ih
-         c15g==
-X-Gm-Message-State: APjAAAUBVb8lMTVF/lQODpR5Q9oMaDN/UfZ2kj/kcNIZNb2UH6AD+pXO
-        ZtYP5UE3vVJqK21VC4lW0NwMRaQ5xN3Pm7Hb0UQhXWDjmHroSUChP+vEuyjPFW3TLIk3y8Nkmuz
-        ZSg8B1AO1+s83nnYG95MW8rad
-X-Received: by 2002:adf:f44a:: with SMTP id f10mr51287323wrp.16.1582299176721;
-        Fri, 21 Feb 2020 07:32:56 -0800 (PST)
-X-Google-Smtp-Source: APXvYqzn1MYAtU3Eno+cnYlGWFX4Wfkgii6olk3cU22QAmG/lqfnIfAuKi/wJjXZQBAiVU/X/bklNA==
-X-Received: by 2002:adf:f44a:: with SMTP id f10mr51287299wrp.16.1582299176461;
-        Fri, 21 Feb 2020 07:32:56 -0800 (PST)
-Received: from vitty.brq.redhat.com (nat-pool-brq-t.redhat.com. [213.175.37.10])
-        by smtp.gmail.com with ESMTPSA id o2sm4019446wmh.46.2020.02.21.07.32.55
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 21 Feb 2020 07:32:55 -0800 (PST)
-From:   Vitaly Kuznetsov <vkuznets@redhat.com>
-To:     Sean Christopherson <sean.j.christopherson@intel.com>
-Cc:     Paolo Bonzini <pbonzini@redhat.com>,
-        Wanpeng Li <wanpengli@tencent.com>,
-        Jim Mattson <jmattson@google.com>,
-        Joerg Roedel <joro@8bytes.org>, kvm@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 21/61] KVM: x86: Use supported_xcr0 to detect MPX support
-In-Reply-To: <20200201185218.24473-22-sean.j.christopherson@intel.com>
-References: <20200201185218.24473-1-sean.j.christopherson@intel.com> <20200201185218.24473-22-sean.j.christopherson@intel.com>
-Date:   Fri, 21 Feb 2020 16:32:55 +0100
-Message-ID: <87k14gq7ko.fsf@vitty.brq.redhat.com>
+        Fri, 21 Feb 2020 10:33:59 -0500
+Received: from AcuMS.aculab.com (156.67.243.126 [156.67.243.126]) (Using
+ TLS) by relay.mimecast.com with ESMTP id
+ uk-mta-214-eMyEWOzeMhKDhmybp4jdXw-1; Fri, 21 Feb 2020 15:33:54 +0000
+Received: from AcuMS.Aculab.com (fd9f:af1c:a25b:0:43c:695e:880f:8750) by
+ AcuMS.aculab.com (fd9f:af1c:a25b:0:43c:695e:880f:8750) with Microsoft SMTP
+ Server (TLS) id 15.0.1347.2; Fri, 21 Feb 2020 15:33:53 +0000
+Received: from AcuMS.Aculab.com ([fe80::43c:695e:880f:8750]) by
+ AcuMS.aculab.com ([fe80::43c:695e:880f:8750%12]) with mapi id 15.00.1347.000;
+ Fri, 21 Feb 2020 15:33:53 +0000
+From:   David Laight <David.Laight@ACULAB.COM>
+To:     'Jesse Brandeburg' <jesse.brandeburg@intel.com>,
+        "tglx@linutronix.de" <tglx@linutronix.de>,
+        "mingo@redhat.com" <mingo@redhat.com>,
+        "bp@alien8.de" <bp@alien8.de>
+CC:     "x86@kernel.org" <x86@kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux@rasmusvillemoes.dk" <linux@rasmusvillemoes.dk>,
+        "andriy.shevchenko@intel.com" <andriy.shevchenko@intel.com>,
+        "dan.j.williams@intel.com" <dan.j.williams@intel.com>,
+        "peterz@infradead.org" <peterz@infradead.org>
+Subject: RE: [PATCH v3 1/2] x86: fix bitops.h warning with a moved cast
+Thread-Topic: [PATCH v3 1/2] x86: fix bitops.h warning with a moved cast
+Thread-Index: AQHV6EScwamYP56GlUmFigARI6lhOqglx7RQ
+Date:   Fri, 21 Feb 2020 15:33:53 +0000
+Message-ID: <ca95b4325c8c44258672b7822ab4d16b@AcuMS.aculab.com>
+References: <20200220232155.2123827-1-jesse.brandeburg@intel.com>
+In-Reply-To: <20200220232155.2123827-1-jesse.brandeburg@intel.com>
+Accept-Language: en-GB, en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-ms-exchange-transport-fromentityheader: Hosted
+x-originating-ip: [10.202.205.107]
 MIME-Version: 1.0
-Content-Type: text/plain
+X-MC-Unique: eMyEWOzeMhKDhmybp4jdXw-1
+X-Mimecast-Spam-Score: 0
+X-Mimecast-Originator: aculab.com
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8BIT
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Sean Christopherson <sean.j.christopherson@intel.com> writes:
+From: Jesse Brandeburg
+> Fix many sparse warnings when building with C=1.
+> 
+> When the kernel is compiled with C=1, there are lots of messages like:
+>   arch/x86/include/asm/bitops.h:77:37: warning: cast truncates bits from constant value (ffffff7f
+> becomes 7f)
+> 
+> CONST_MASK() is using a signed integer "1" to create the mask which
+> is later cast to (u8) when used. Move the cast to the definition and
+> clean up the calling sites to prevent sparse from warning.
+> 
+> The reason the warning was occurring is because certain bitmasks that
+> end with a mask next to a natural boundary like 7, 15, 23, 31, end up
+> with a mask like 0x7f, which then results in sign extension when doing
+> an invert (but I'm not a compiler expert). It was really only
+> "clear_bit" that was having problems, and it was only on bit checks next
+> to a byte boundary (top bit).
+> 
+> Verified with a test module (see next patch) and assembly inspection
+> that the patch doesn't introduce any change in generated code.
+...
+> diff --git a/arch/x86/include/asm/bitops.h b/arch/x86/include/asm/bitops.h
+> index 062cdecb2f24..96ef19dcbde6 100644
+> --- a/arch/x86/include/asm/bitops.h
+> +++ b/arch/x86/include/asm/bitops.h
+...
+> @@ -74,7 +74,7 @@ arch_clear_bit(long nr, volatile unsigned long *addr)
+>  	if (__builtin_constant_p(nr)) {
+>  		asm volatile(LOCK_PREFIX "andb %1,%0"
+>  			: CONST_MASK_ADDR(nr, addr)
+> -			: "iq" ((u8)~CONST_MASK(nr)));
+> +			: "iq" (0xff ^ CONST_MASK(nr)));
 
-> Query supported_xcr0 when checking for MPX support instead of invoking
-> ->mpx_supported() and drop ->mpx_supported() as kvm_mpx_supported() was
-> its last user.  Rename vmx_mpx_supported() to cpu_has_vmx_mpx() to
-> better align with VMX/VMCS nomenclature.
->
-> Modify VMX's adjustment of xcr0 to call cpus_has_vmx_mpx() (renamed from
-> vmx_mpx_supported()) directly to avoid reading supported_xcr0 before
-> it's fully configured.
->
-> No functional change intended.
->
-> Signed-off-by: Sean Christopherson <sean.j.christopherson@intel.com>
-> ---
->  arch/x86/include/asm/kvm_host.h | 2 +-
->  arch/x86/kvm/cpuid.c            | 3 +--
->  arch/x86/kvm/svm.c              | 6 ------
->  arch/x86/kvm/vmx/capabilities.h | 2 +-
->  arch/x86/kvm/vmx/vmx.c          | 3 +--
->  5 files changed, 4 insertions(+), 12 deletions(-)
->
-> diff --git a/arch/x86/include/asm/kvm_host.h b/arch/x86/include/asm/kvm_host.h
-> index 77d206a93658..85f0d96cfeb2 100644
-> --- a/arch/x86/include/asm/kvm_host.h
-> +++ b/arch/x86/include/asm/kvm_host.h
-> @@ -1163,7 +1163,7 @@ struct kvm_x86_ops {
->  			       enum x86_intercept_stage stage);
->  	void (*handle_exit_irqoff)(struct kvm_vcpu *vcpu,
->  		enum exit_fastpath_completion *exit_fastpath);
-> -	bool (*mpx_supported)(void);
-> +
->  	bool (*xsaves_supported)(void);
->  	bool (*umip_emulated)(void);
->  	bool (*pt_supported)(void);
-> diff --git a/arch/x86/kvm/cpuid.c b/arch/x86/kvm/cpuid.c
-> index b9763eb711cb..84006cc4007c 100644
-> --- a/arch/x86/kvm/cpuid.c
-> +++ b/arch/x86/kvm/cpuid.c
-> @@ -47,8 +47,7 @@ static u32 xstate_required_size(u64 xstate_bv, bool compacted)
->  
->  bool kvm_mpx_supported(void)
->  {
-> -	return ((host_xcr0 & (XFEATURE_MASK_BNDREGS | XFEATURE_MASK_BNDCSR))
-> -		 && kvm_x86_ops->mpx_supported());
-> +	return supported_xcr0 & (XFEATURE_MASK_BNDREGS | XFEATURE_MASK_BNDCSR);
->  }
->  EXPORT_SYMBOL_GPL(kvm_mpx_supported);
->  
-> diff --git a/arch/x86/kvm/svm.c b/arch/x86/kvm/svm.c
-> index af096c4f9c5f..3c7ddaff405d 100644
-> --- a/arch/x86/kvm/svm.c
-> +++ b/arch/x86/kvm/svm.c
-> @@ -6082,11 +6082,6 @@ static bool svm_invpcid_supported(void)
->  	return false;
->  }
->  
-> -static bool svm_mpx_supported(void)
-> -{
-> -	return false;
-> -}
-> -
->  static bool svm_xsaves_supported(void)
->  {
->  	return boot_cpu_has(X86_FEATURE_XSAVES);
-> @@ -7468,7 +7463,6 @@ static struct kvm_x86_ops svm_x86_ops __ro_after_init = {
->  
->  	.rdtscp_supported = svm_rdtscp_supported,
->  	.invpcid_supported = svm_invpcid_supported,
-> -	.mpx_supported = svm_mpx_supported,
->  	.xsaves_supported = svm_xsaves_supported,
->  	.umip_emulated = svm_umip_emulated,
->  	.pt_supported = svm_pt_supported,
-> diff --git a/arch/x86/kvm/vmx/capabilities.h b/arch/x86/kvm/vmx/capabilities.h
-> index 1a6a99382e94..0a0b1494a934 100644
-> --- a/arch/x86/kvm/vmx/capabilities.h
-> +++ b/arch/x86/kvm/vmx/capabilities.h
-> @@ -100,7 +100,7 @@ static inline bool cpu_has_load_perf_global_ctrl(void)
->  	       (vmcs_config.vmexit_ctrl & VM_EXIT_LOAD_IA32_PERF_GLOBAL_CTRL);
->  }
->  
-> -static inline bool vmx_mpx_supported(void)
-> +static inline bool cpu_has_vmx_mpx(void)
->  {
->  	return (vmcs_config.vmexit_ctrl & VM_EXIT_CLEAR_BNDCFGS) &&
->  		(vmcs_config.vmentry_ctrl & VM_ENTRY_LOAD_BNDCFGS);
-> diff --git a/arch/x86/kvm/vmx/vmx.c b/arch/x86/kvm/vmx/vmx.c
-> index 32a84ec15064..98fd651f7f7e 100644
-> --- a/arch/x86/kvm/vmx/vmx.c
-> +++ b/arch/x86/kvm/vmx/vmx.c
-> @@ -7590,7 +7590,7 @@ static __init int hardware_setup(void)
->  		WARN_ONCE(host_bndcfgs, "KVM: BNDCFGS in host will be lost");
->  	}
->  
-> -	if (!kvm_mpx_supported())
-> +	if (!cpu_has_vmx_mpx())
->  		supported_xcr0 &= ~(XFEATURE_MASK_BNDREGS |
->  				    XFEATURE_MASK_BNDCSR);
->  
-> @@ -7857,7 +7857,6 @@ static struct kvm_x86_ops vmx_x86_ops __ro_after_init = {
->  
->  	.check_intercept = vmx_check_intercept,
->  	.handle_exit_irqoff = vmx_handle_exit_irqoff,
-> -	.mpx_supported = vmx_mpx_supported,
->  	.xsaves_supported = vmx_xsaves_supported,
->  	.umip_emulated = vmx_umip_emulated,
->  	.pt_supported = vmx_pt_supported,
+IMHO (CONST_MASK(nr) ^ 0xff) is better.
 
-Reviewed-by: Vitaly Kuznetsov <vkuznets@redhat.com>
+	David
 
--- 
-Vitaly
+-
+Registered Address Lakeside, Bramley Road, Mount Farm, Milton Keynes, MK1 1PT, UK
+Registration No: 1397386 (Wales)
 
