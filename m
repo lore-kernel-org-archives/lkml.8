@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B5083C35640
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 07:48:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8306FC35640
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 07:48:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7B61E20801
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 07:48:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4BA9A207FD
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 07:48:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582271306;
-	bh=WuG/B6lmBEnh3GUKDiqWFqR3zitCFb14UJnbGdNR6mY=;
+	s=default; t=1582271311;
+	bh=n2JVUqLD6dZ9KQSNGJH4Pva7c4CMFDtj28KH4mVguYo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=l5X7Kyw7VUk05iweZ+62lG2kSyFH7qrA2+CmjDEdRgDscS3s2xaNGPqHZBfc+nj7G
-	 jLxWi6wAHgoG1bfLGysUCeCGmv8A9lb3Mf+3urusgJG4j4eOnXDw/yOBjV2jDfu4Yb
-	 a9uq82gr5Z2Fpa05yJvTr3Iez2RD2NuwBl3f5gvs=
+	b=AeRb5u6BNweXf8JNzeN7kt6nsx8yjOTZvBYdGXRpTigz+td72bvDde36jdAKXo0qh
+	 Mz0+5tSYeIGy7HGzXhW4MwUZRsdiPBT2nhCK2crKvngUB9sPoaTt470LhYd2vuP4fr
+	 0JaDSJmb500nUPX3yp6Am4i4mWMfFkkuEJDM9qW4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729077AbgBUHsZ (ORCPT
+        id S1729094AbgBUHsa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Feb 2020 02:48:25 -0500
-Received: from mail.kernel.org ([198.145.29.99]:44426 "EHLO mail.kernel.org"
+        Fri, 21 Feb 2020 02:48:30 -0500
+Received: from mail.kernel.org ([198.145.29.99]:44550 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728802AbgBUHsW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Feb 2020 02:48:22 -0500
+        id S1729082AbgBUHs2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 21 Feb 2020 02:48:28 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9F5A3208C4;
-        Fri, 21 Feb 2020 07:48:21 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2247A207FD;
+        Fri, 21 Feb 2020 07:48:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1582271302;
-        bh=WuG/B6lmBEnh3GUKDiqWFqR3zitCFb14UJnbGdNR6mY=;
+        s=default; t=1582271307;
+        bh=n2JVUqLD6dZ9KQSNGJH4Pva7c4CMFDtj28KH4mVguYo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ABq4XPmMJrmmkldNV8BIXegucB9I7hYmgZ8o36A+kA0dvfIG0L+VgyQJpKdMz7pom
-         qJVKXFPXZ1AeW42Ukf6jzwlAtBfvliSezZpBl50+qv6xJBLdZd61mjUHUuwMBYPt6j
-         mQHnu8DeDHTgi+vdd6NLid53r8sEJYkT3TyBFp/s=
+        b=hi6QdrHMhV3U9mRlUrSkDgYNS0P4sxrAUYOmbs5+nyakTDQIrIYYZO7KJfTbV37+k
+         F7w1eiomuNya4Yh0PPJGcj0heQPYXqwL4+XJHgdQQJQhntFFNmVrQ1M6RC3HIORgZE
+         l9LWtN46wQ4NsKpc5Bai4CqZH7TxYS+GzqEG7zH4=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Chen Zhou <chenzhou10@huawei.com>,
-        Peng Ma <peng.ma@nxp.com>, Vinod Koul <vkoul@kernel.org>,
+        stable@vger.kernel.org, Marc Zyngier <maz@kernel.org>,
+        Zenghui Yu <yuzenghui@huawei.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.5 077/399] dmaengine: fsl-qdma: fix duplicated argument to &&
-Date:   Fri, 21 Feb 2020 08:36:42 +0100
-Message-Id: <20200221072409.832659794@linuxfoundation.org>
+Subject: [PATCH 5.5 079/399] irqchip/gic-v3-its: Fix get_vlpi_map() breakage with doorbells
+Date:   Fri, 21 Feb 2020 08:36:44 +0100
+Message-Id: <20200221072410.026921716@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200221072402.315346745@linuxfoundation.org>
 References: <20200221072402.315346745@linuxfoundation.org>
@@ -60,39 +60,53 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Chen Zhou <chenzhou10@huawei.com>
+From: Marc Zyngier <maz@kernel.org>
 
-[ Upstream commit 4b048178854da11656596d36a107577d66fd1e08 ]
+[ Upstream commit 093bf439fee0d40ade7e309c1288b409cdc3b38f ]
 
-There is duplicated argument to && in function fsl_qdma_free_chan_resources,
-which looks like a typo, pointer fsl_queue->desc_pool also needs NULL check,
-fix it.
-Detected with coccinelle.
+When updating an LPI configuration, get_vlpi_map() may be passed a
+irq_data structure relative to an ITS domain (the normal case) or one
+that is relative to the core GICv3 domain in the case of a GICv4
+doorbell.
 
-Fixes: b092529e0aa0 ("dmaengine: fsl-qdma: Add qDMA controller driver for Layerscape SoCs")
-Signed-off-by: Chen Zhou <chenzhou10@huawei.com>
-Reviewed-by: Peng Ma <peng.ma@nxp.com>
-Tested-by: Peng Ma <peng.ma@nxp.com>
-Link: https://lore.kernel.org/r/20200120125843.34398-1-chenzhou10@huawei.com
-Signed-off-by: Vinod Koul <vkoul@kernel.org>
+In the latter case, special care must be take not to dereference
+the irq_chip data as an its_dev structure, as that isn't what is
+stored there. Instead, check *first* whether the IRQ is forwarded
+to a vcpu, and only then try to obtain the vlpi mapping.
+
+Fixes: c1d4d5cd203c ("irqchip/gic-v3-its: Add its_vlpi_map helpers")
+Signed-off-by: Marc Zyngier <maz@kernel.org>
+Reported-by: Zenghui Yu <yuzenghui@huawei.com>
+Link: https://lore.kernel.org/r/20200122085609.658-1-yuzenghui@huawei.com
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/dma/fsl-qdma.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/irqchip/irq-gic-v3-its.c | 11 ++++++-----
+ 1 file changed, 6 insertions(+), 5 deletions(-)
 
-diff --git a/drivers/dma/fsl-qdma.c b/drivers/dma/fsl-qdma.c
-index 89792083d62c5..95cc0256b3878 100644
---- a/drivers/dma/fsl-qdma.c
-+++ b/drivers/dma/fsl-qdma.c
-@@ -304,7 +304,7 @@ static void fsl_qdma_free_chan_resources(struct dma_chan *chan)
+diff --git a/drivers/irqchip/irq-gic-v3-its.c b/drivers/irqchip/irq-gic-v3-its.c
+index e05673bcd52bd..b704214390c0f 100644
+--- a/drivers/irqchip/irq-gic-v3-its.c
++++ b/drivers/irqchip/irq-gic-v3-its.c
+@@ -1170,13 +1170,14 @@ static void its_send_vclear(struct its_device *dev, u32 event_id)
+  */
+ static struct its_vlpi_map *get_vlpi_map(struct irq_data *d)
+ {
+-	struct its_device *its_dev = irq_data_get_irq_chip_data(d);
+-	u32 event = its_get_event_id(d);
++	if (irqd_is_forwarded_to_vcpu(d)) {
++		struct its_device *its_dev = irq_data_get_irq_chip_data(d);
++		u32 event = its_get_event_id(d);
  
- 	vchan_dma_desc_free_list(&fsl_chan->vchan, &head);
+-	if (!irqd_is_forwarded_to_vcpu(d))
+-		return NULL;
++		return dev_event_to_vlpi_map(its_dev, event);
++	}
  
--	if (!fsl_queue->comp_pool && !fsl_queue->comp_pool)
-+	if (!fsl_queue->comp_pool && !fsl_queue->desc_pool)
- 		return;
+-	return dev_event_to_vlpi_map(its_dev, event);
++	return NULL;
+ }
  
- 	list_for_each_entry_safe(comp_temp, _comp_temp,
+ static void lpi_write_config(struct irq_data *d, u8 clr, u8 set)
 -- 
 2.20.1
 
