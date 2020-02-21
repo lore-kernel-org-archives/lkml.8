@@ -2,135 +2,124 @@ Return-Path: <SRS0=1210=4J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AF5B2C11D25
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 00:27:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3EA91C11D24
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 00:28:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 85A6B206EF
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 00:27:23 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Mk0CLeyD"
+	by mail.kernel.org (Postfix) with ESMTP id 16BD02465D
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 00:28:17 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1582244897;
+	bh=iy0LlJf0YHN6ZiB0CWT2PCAoHpieaL2qiC0LKqJ6REI=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=KAzNkiy1+4nw+RWVv+wgyRtpU+wsougxJH0GpwJNXBEq4cSuXO9S+2J+GaYWpJ3Jj
+	 I213HZjGs3ZZHx5Qdue3KDRdFl4oMp7Ucam5tFlhOA4A2nqPw/jrU6s0F+jPEGqwxd
+	 fYdx1mguCa5B379jFPwpxtF9b/YLXHZWPkYuzv1M=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729486AbgBUA1W (ORCPT
+        id S1729479AbgBUA2P (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Feb 2020 19:27:22 -0500
-Received: from mail-pf1-f195.google.com ([209.85.210.195]:40882 "EHLO
-        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729413AbgBUA1V (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Feb 2020 19:27:21 -0500
-Received: by mail-pf1-f195.google.com with SMTP id b185so261108pfb.7;
-        Thu, 20 Feb 2020 16:27:20 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=vlf9e8PCxMy8eGHAA66JnCJwWWqoU2+bIGR18Xk5wUE=;
-        b=Mk0CLeyDzct1sX63axT7hMDuzVKps8CcPRH1gOBCgnC7dn6oGylada1Aq+d2q80tY0
-         IsrTO0zoWHUIkV7J+5At6YZmXgmlXtk7b3/Atb4YkT3gjxHVOJD4X11a9gW3J9xogMmC
-         yZBgYo6tX7Y4rEeYV94pJ3gMaQvTCMue/PkSOzNkDi3wVYc0Imdo+gDWx9lys6yorXP2
-         d6/f8BRHjs4lhqKHRWX2KYa9vABy7PeVZWqGP83q3chVv32+JaUjuUhP7LbrHgI0eWz2
-         lb7i9Cbef+4fPYScbvO2rLsq4RJVaRPY/sle1TzfSAEKVlNCVpgcPl4xE/r0AtBWBNaB
-         ZYDA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=vlf9e8PCxMy8eGHAA66JnCJwWWqoU2+bIGR18Xk5wUE=;
-        b=Nk2/ybu+6izzY2zR5NHxdKXrcY2xuFVkg/68YqGlgpZBqvXEMVvFFK8pI2gHMVFUkT
-         Bv3dOg5Z2ThENioVD6Xu/jL5HI1m3qqH1J0z9YKW3NwYGUJPD8bb25lx/9OTNMPdmxkS
-         rPgrzZwBjAbEJ3KOH1t7x8zc83m+IJT3gEud1KYNGDgYzZs8b7kbDWzpO4ZtA9+FLvHS
-         Dt8/npKCguk8+6i1NLamh00e8G4bz00GFJJVaUlvlx5bk4uWuoPhxYTdK2pYO2kIOEeP
-         5lT5iRbL0Z5DmRWyFqMmM+gSaviaYgwuNbCGtVQYKZM/JnHl7p0+BJb79nCWX2hfJZaf
-         Jnmw==
-X-Gm-Message-State: APjAAAVp/hKqhosmzIJv/F1HFUdn7kb4wyB3WXoFU6hn/8W/bjGlc0JR
-        2IomjlgCAdZjwkDH4JWmalk=
-X-Google-Smtp-Source: APXvYqyeVIYTi7VwppjFDqFRf+PGuo3qQ+FGi2uyU11/sFnMcwObMpN+4M+7gA1IAJ8rt9kz3zp3MA==
-X-Received: by 2002:a62:1883:: with SMTP id 125mr33901467pfy.166.1582244839582;
-        Thu, 20 Feb 2020 16:27:19 -0800 (PST)
-Received: from taoren-ubuntu-R90MNF91 ([2620:10d:c090:500::6:8f30])
-        by smtp.gmail.com with ESMTPSA id fh24sm535479pjb.24.2020.02.20.16.27.18
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Thu, 20 Feb 2020 16:27:19 -0800 (PST)
-Date:   Thu, 20 Feb 2020 16:27:16 -0800
-From:   Tao Ren <rentao.bupt@gmail.com>
-To:     Felipe Balbi <balbi@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Joel Stanley <joel@jms.id.au>,
-        Andrew Jeffery <andrew@aj.id.au>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Chunfeng Yun <chunfeng.yun@mediatek.com>,
-        Colin Ian King <colin.king@canonical.com>,
-        Stephen Boyd <swboyd@chromium.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>, linux-usb@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        linux-aspeed@lists.ozlabs.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, openbmc@lists.ozlabs.org,
-        taoren@fb.com
-Subject: Re: [PATCH v3 0/5] aspeed-g6: enable usb support
-Message-ID: <20200221002715.GC7815@taoren-ubuntu-R90MNF91>
-References: <20200218031315.562-1-rentao.bupt@gmail.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200218031315.562-1-rentao.bupt@gmail.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+        Thu, 20 Feb 2020 19:28:15 -0500
+Received: from mail.kernel.org ([198.145.29.99]:43458 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729413AbgBUA2P (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 20 Feb 2020 19:28:15 -0500
+Received: from X1 (nat-ab2241.sltdut.senawave.net [162.218.216.4])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2E0E0206DB;
+        Fri, 21 Feb 2020 00:28:14 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1582244894;
+        bh=iy0LlJf0YHN6ZiB0CWT2PCAoHpieaL2qiC0LKqJ6REI=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=qXQ/8DH62yQvvP+ax4QYdXSpzMD5FkJ2DlWZDkJKgFg8dybzdwDhQwZsD9md/tPjD
+         17v/H6SMbm/TbAi6jT0/0YUTYrsQ/O8vp5l8HO5qA7JxT2e5ID4FhAYVuQonqCfxC3
+         t5P3D5LiwKfs4u2qShYXa40c00d9UCQ4ULRHbxyA=
+Date:   Thu, 20 Feb 2020 16:28:13 -0800
+From:   Andrew Morton <akpm@linux-foundation.org>
+To:     Mina Almasry <almasrymina@google.com>
+Cc:     Mike Kravetz <mike.kravetz@oracle.com>, shuah <shuah@kernel.org>,
+        David Rientjes <rientjes@google.com>,
+        Shakeel Butt <shakeelb@google.com>,
+        Greg Thelen <gthelen@google.com>,
+        open list <linux-kernel@vger.kernel.org>,
+        Linux-MM <linux-mm@kvack.org>, linux-kselftest@vger.kernel.org,
+        cgroups@vger.kernel.org
+Subject: Re: [PATCH v12 1/9] hugetlb_cgroup: Add hugetlb_cgroup reservation
+ counter
+Message-Id: <20200220162813.aea8a14fe050473b73440323@linux-foundation.org>
+In-Reply-To: <CAHS8izN_FJektipBwiLsCO8ysMTM7k=CR_k3OV7+_y0ZbrGw+A@mail.gmail.com>
+References: <20200211213128.73302-1-almasrymina@google.com>
+        <20200211151906.637d1703e4756066583b89da@linux-foundation.org>
+        <CAHS8izPUFQWq3PzhhRzp7u11173_-cmRkNuQWEswS51Xz6ZM0Q@mail.gmail.com>
+        <20200219130648.83e6810848774c6fd649c445@linux-foundation.org>
+        <CAHS8izN_FJektipBwiLsCO8ysMTM7k=CR_k3OV7+_y0ZbrGw+A@mail.gmail.com>
+X-Mailer: Sylpheed 3.5.1 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Ben,
+On Thu, 20 Feb 2020 11:22:58 -0800 Mina Almasry <almasrymina@google.com> wrote:
 
-Could you provide some comments on this patch series while I'm working on
-the other patch set (for vhub descriptors and DT binding document)?
+> On Wed, Feb 19, 2020 at 1:06 PM Andrew Morton <akpm@linux-foundation.org> wrote:
+> >
+> > On Wed, 19 Feb 2020 11:05:41 -0800 Mina Almasry <almasrymina@google.com> wrote:
+> >
+> > > On Tue, Feb 11, 2020 at 3:19 PM Andrew Morton <akpm@linux-foundation.org> wrote:
+> > > >
+> > > > On Tue, 11 Feb 2020 13:31:20 -0800 Mina Almasry <almasrymina@google.com> wrote:
+> > > >
+> > > > > These counters will track hugetlb reservations rather than hugetlb
+> > > > > memory faulted in. This patch only adds the counter, following patches
+> > > > > add the charging and uncharging of the counter.
+> > > >
+> > > > We're still pretty thin on review here, but as it's v12 and Mike
+> > > > appears to be signed up to look at this work, I'll add them to -next to
+> > > > help move things forward.
+> > > >
+> > >
+> > > Hi Andrew,
+> > >
+> > > Since the patches were merged into -next there have been build fixes
+> > > and test fixes and some review comments. Would you like me to submit
+> > > *new* patches to address these, or would you like me to squash the
+> > > fixes into my existing patch series and submit another iteration of
+> > > the patch series?
+> >
+> > What you did worked OK ;)
+> >
+> > Please check the end result next time I release a kernel.
+> 
+> Thanks Andrew! Things definitely moved along after the patchseries got
+> into -next :D
+> 
+> By my count I think all my patches outside of the tests patch have
+> been acked or reviewed. When you have a chance I have a couple of
+> questions:
+> 
+> 1. For the non-tests patch, anything pending on those preventing
+> eventual submission to linus's tree?
+> 2. For the tests patch, I only have a Tested-by from Sandipan. Is that
+> good enough? If the worst comes to worst and I don't get a review on
+> that patch I would rather (if possible) that 'tests' patch can be
+> dropped while I nag folks for a review, rather than block submission
+> of the entire patch series. I ask because it's been out for review for
+> some time and it's the one I got least discussion on so I'm not sure
+> I'll have a review by the time it's needed.
+> 
+
+It all looks pretty good and I expect we can get everything into
+5.7-rc1, unless some issues pop up.
+
+It's unclear to me whether
+http://lkml.kernel.org/r/CAHS8izOTipknnYaKz=FdzL-7yW-Z61ck1yPnYWixyMSJuTUYLQ@mail.gmail.com
+was going to result in an update?
 
 
-Cheers,
-
-Tao
-
-On Mon, Feb 17, 2020 at 07:13:10PM -0800, rentao.bupt@gmail.com wrote:
-> From: Tao Ren <rentao.bupt@gmail.com>
-> 
-> The patch series aims at enabling USB Host and Gadget support on AST2600
-> platforms.
-> 
-> Patch #1 replaces hardcoded vhub port/endpoint number with device tree
-> properties, so that it's more convenient to add support for ast2600-vhub
-> which provides more downstream ports and endpoints.
-> 
-> Patch #2 enables ast2600 support in aspeed-vhub usb gadget driver.
-> 
-> Patch #3 adds USB devices and according pin groups in aspeed-g6 dtsi.
-> 
-> Patch #4 and #5 add vhub port/endpoint properties into aspeed-g4 and
-> aspeed-g5 dtsi.
-> 
-> Tao Ren (5):
->   usb: gadget: aspeed: read vhub properties from device tree
->   usb: gadget: aspeed: add ast2600 vhub support
->   ARM: dts: aspeed-g6: add usb functions
->   ARM: dts: aspeed-g5: add vhub port and endpoint properties
->   ARM: dts: aspeed-g4: add vhub port and endpoint properties
-> 
->  arch/arm/boot/dts/aspeed-g4.dtsi           |  2 +
->  arch/arm/boot/dts/aspeed-g5.dtsi           |  2 +
->  arch/arm/boot/dts/aspeed-g6-pinctrl.dtsi   | 25 +++++++
->  arch/arm/boot/dts/aspeed-g6.dtsi           | 45 ++++++++++++
->  drivers/usb/gadget/udc/aspeed-vhub/Kconfig |  4 +-
->  drivers/usb/gadget/udc/aspeed-vhub/core.c  | 79 +++++++++++++++-------
->  drivers/usb/gadget/udc/aspeed-vhub/dev.c   | 30 +++++---
->  drivers/usb/gadget/udc/aspeed-vhub/epn.c   |  4 +-
->  drivers/usb/gadget/udc/aspeed-vhub/hub.c   | 26 ++++---
->  drivers/usb/gadget/udc/aspeed-vhub/vhub.h  | 23 +++----
->  10 files changed, 178 insertions(+), 62 deletions(-)
-> 
-> -- 
-> 2.17.1
-> 
