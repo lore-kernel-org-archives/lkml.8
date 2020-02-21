@@ -2,169 +2,101 @@ Return-Path: <SRS0=1210=4J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 80D23C35641
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CC336C3566F
 	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 23:37:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 45DA120722
+	by mail.kernel.org (Postfix) with ESMTP id A3D5520722
 	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 23:37:56 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b="BTbJ9DV5"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729612AbgBUXhx (ORCPT
+        id S1729669AbgBUXhz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
+        Fri, 21 Feb 2020 18:37:55 -0500
+Received: from mga17.intel.com ([192.55.52.151]:33763 "EHLO mga17.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729535AbgBUXhx (ORCPT <rfc822;Linux-kernel@vger.kernel.org>);
         Fri, 21 Feb 2020 18:37:53 -0500
-Received: from mail-pf1-f194.google.com ([209.85.210.194]:45801 "EHLO
-        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729100AbgBUXhx (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Feb 2020 18:37:53 -0500
-Received: by mail-pf1-f194.google.com with SMTP id 2so2069765pfg.12
-        for <linux-kernel@vger.kernel.org>; Fri, 21 Feb 2020 15:37:52 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=broadcom.com; s=google;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-transfer-encoding:content-language;
-        bh=U8GTXDQYqxVMWeiE3CeM22iOXjrDkwUgtcNqh51keqY=;
-        b=BTbJ9DV5UnhS6c59epTpH7XTEnU2oooXg+g6bAhjUyVbujp1zj/9TaRU8cj0TPZwd3
-         CG8U0vdI5gFnoJTHTJLwe669yrJzuJv13qa3AVL8dmiMh5v19I5goaubVFzUpLjj3wTs
-         7lQz+6WG62x4T5Z+CFsJPY2Ds6kbuZLZW2JXM=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-transfer-encoding
-         :content-language;
-        bh=U8GTXDQYqxVMWeiE3CeM22iOXjrDkwUgtcNqh51keqY=;
-        b=ILvBN3SPiaQPjPPagR4V8vl25p26nakMvO0Io/WsTWVb36tpZn6XsNKyBGBZnd22v/
-         dlbgY1YxbjyL7lbHkEbC7M0Pi8KLfLhiSVqiYc+muQ04q7KluAraJT0COcP3fn8L4osM
-         nhgU3Yl34ywvRNsa3T1AGRpsCFciTCWVZ7dUx8wW1pgAQ6C+dmCl3nEKrO3C76LzNMJh
-         UhqmBkpFbn6/IYIbQsSTnWS5bzVTeCWeoM2Yt6BmpNa38oW0Q+YZDqcIG0nPEM1UhLQZ
-         q9GlmDswiUUHqzMMxcdRb9YbSPBLM5Q+2ZDavI9Ey7CjAjFqXR+FBRASDKBiIoOu2/Qh
-         vJ9A==
-X-Gm-Message-State: APjAAAV7rHvj1MjRIdjZ0PPB4afzSkueWbacDInVKw5xqrHz0MzjkE7W
-        jXl2bDK+p5eZjpBCjIPBnwIBOA==
-X-Google-Smtp-Source: APXvYqzSKwENjp8Zc5/+UeGf1chfHFs+nHCsMZqHL9BYW/wJmsDWoBM6WNV9QMdjdezOfrljgme5xQ==
-X-Received: by 2002:a63:3c08:: with SMTP id j8mr40832260pga.223.1582328272147;
-        Fri, 21 Feb 2020 15:37:52 -0800 (PST)
-Received: from [10.136.13.65] ([192.19.228.250])
-        by smtp.gmail.com with ESMTPSA id u23sm3891110pfm.29.2020.02.21.15.37.48
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 21 Feb 2020 15:37:51 -0800 (PST)
-Subject: Re: [PATCH 2/7] firmware: add offset to request_firmware_into_buf
-To:     Arnd Bergmann <arnd@arndb.de>
-Cc:     Luis Chamberlain <mcgrof@kernel.org>, Takashi Iwai <tiwai@suse.de>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        David Brown <david.brown@linaro.org>,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        Shuah Khan <shuah@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Shuah Khan <skhan@linuxfoundation.org>,
-        "Rafael J . Wysocki" <rafael@kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
-        Linux FS-devel Mailing List <linux-fsdevel@vger.kernel.org>,
-        BCM Kernel Feedback <bcm-kernel-feedback-list@broadcom.com>,
-        Olof Johansson <olof@lixom.net>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Dan Carpenter <dan.carpenter@oracle.com>,
-        Colin Ian King <colin.king@canonical.com>,
-        Kees Cook <keescook@chromium.org>,
-        "open list:KERNEL SELFTEST FRAMEWORK" 
-        <linux-kselftest@vger.kernel.org>
-References: <20190822192451.5983-1-scott.branden@broadcom.com>
- <20190822192451.5983-3-scott.branden@broadcom.com>
- <s5hef1crybq.wl-tiwai@suse.de>
- <10461fcf-9eca-32b6-0f9d-23c63b3f3442@broadcom.com>
- <s5hr258j6ln.wl-tiwai@suse.de>
- <93b8285a-e5eb-d4a4-545d-426bbbeb8008@broadcom.com>
- <s5ho90byhnv.wl-tiwai@suse.de>
- <b440f372-45be-c06c-94a1-44ae6b1e7eb8@broadcom.com>
- <s5hwoeyj3i5.wl-tiwai@suse.de> <20191011133120.GP16384@42.do-not-panic.com>
- <e65a3ba1-d064-96fe-077e-59bf8ffff377@broadcom.com>
- <CAK8P3a2NJurg_hxVbWYZwJVhYM5-xjWt12Kh0DdyfTGqQPrPAQ@mail.gmail.com>
-From:   Scott Branden <scott.branden@broadcom.com>
-Message-ID: <3731a882-8784-b957-7628-49edfa9683e7@broadcom.com>
-Date:   Fri, 21 Feb 2020 15:37:47 -0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.1
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga005.jf.intel.com ([10.7.209.41])
+  by fmsmga107.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 21 Feb 2020 15:37:53 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.70,470,1574150400"; 
+   d="scan'208";a="409286033"
+Received: from yjin15-mobl1.ccr.corp.intel.com (HELO [10.254.209.190]) ([10.254.209.190])
+  by orsmga005.jf.intel.com with ESMTP; 21 Feb 2020 15:37:50 -0800
+Subject: Re: [PATCH v2 2/2] perf annotate: Support interactive annotation of
+ code without symbols
+To:     Jiri Olsa <jolsa@redhat.com>
+Cc:     acme@kernel.org, jolsa@kernel.org, peterz@infradead.org,
+        mingo@redhat.com, alexander.shishkin@linux.intel.com,
+        Linux-kernel@vger.kernel.org, ak@linux.intel.com,
+        kan.liang@intel.com, yao.jin@intel.com
+References: <20200221024608.1847-1-yao.jin@linux.intel.com>
+ <20200221024608.1847-3-yao.jin@linux.intel.com>
+ <20200221144531.GA657629@krava>
+From:   "Jin, Yao" <yao.jin@linux.intel.com>
+Message-ID: <6bb8c073-4a10-8e49-05dc-819b671a875d@linux.intel.com>
+Date:   Sat, 22 Feb 2020 07:37:49 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.5.0
 MIME-Version: 1.0
-In-Reply-To: <CAK8P3a2NJurg_hxVbWYZwJVhYM5-xjWt12Kh0DdyfTGqQPrPAQ@mail.gmail.com>
+In-Reply-To: <20200221144531.GA657629@krava>
 Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
 Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Arnd,
 
-On 2020-02-21 12:44 a.m., Arnd Bergmann wrote:
-> On Fri, Feb 21, 2020 at 1:11 AM Scott Branden
-> <scott.branden@broadcom.com> wrote:
->> On 2019-10-11 6:31 a.m., Luis Chamberlain wrote:
->>> On Tue, Aug 27, 2019 at 12:40:02PM +0200, Takashi Iwai wrote:
->>>> On Mon, 26 Aug 2019 19:24:22 +0200,
->>>> Scott Branden wrote:
->>>>> I will admit I am not familiar with every subtlety of PCI
->>>>> accesses. Any comments to the Valkyrie driver in this patch series are
->>>>> appreciated.
->>>>> But not all drivers need to work on all architectures. I can add a
->>>>> depends on x86 64bit architectures to the driver to limit it to such.
->>>> But it's an individual board on PCIe, and should work no matter which
->>>> architecture is?  Or is this really exclusive to x86?
->>> Poke Scott.
->> Yes, this is exclusive to x86.
->> In particular, 64-bit x86 server class machines with PCIe gen3 support.
->> There is no reason for these PCIe boards to run in other lower end
->> machines or architectures.
-> It doesn't really matter that much what you expect your customers to
-> do with your product, or what works a particular machine today, drivers
-> should generally be written in a portable manner anyway and use
-> the documented APIs. memcpy() into an __iomem pointer is not
-> portable and while it probably works on any x86 machine today, please
-> just don't do it. If you use 'sparse' to check your code, that would normally
-> result in an address space warning, unless you add __force and a
-> long comment explaining why you cannot just use memcpy_to_io()
-> instead. At that point, you are already better off usingn memcpy_to_io() ;-)
->
->          Arnd
-I am a not performing a memcpy at all right now.
-I am calling a request_firmware_into_buf call and do not need to make a 
-copy.
-This function eventually calls kernel_read_file, which then makes at 
-indirect call in __vfs_read to perform the read to memory.
- From there I am lost as to what operation happens to achieve this.
-The read function would need to detect the buf is in io space and 
-perform the necessary operation.
-Anyone with any knowledge on how to make this read to io space would be 
-appreciated?
 
-ssize_t __vfs_read(struct file *file, char __user *buf, size_t count,
-            loff_t *pos)
-{
-     if (file->f_op->read)
-         return file->f_op->read(file, buf, count, pos);
-     else if (file->f_op->read_iter)
-         return new_sync_read(file, buf, count, pos);
-     else
-         return -EINVAL;
-}
+On 2/21/2020 10:45 PM, Jiri Olsa wrote:
+> On Fri, Feb 21, 2020 at 10:46:08AM +0800, Jin Yao wrote:
+> 
+> SNIP
+> 
+>>
+>> Signed-off-by: Jin Yao <yao.jin@linux.intel.com>
+>> ---
+>>   tools/perf/ui/browsers/hists.c | 51 +++++++++++++++++++++++++++++-----
+>>   tools/perf/util/annotate.h     |  2 ++
+>>   2 files changed, 46 insertions(+), 7 deletions(-)
+>>
+>> diff --git a/tools/perf/ui/browsers/hists.c b/tools/perf/ui/browsers/hists.c
+>> index f36dee499320..5144528b2931 100644
+>> --- a/tools/perf/ui/browsers/hists.c
+>> +++ b/tools/perf/ui/browsers/hists.c
+>> @@ -2465,13 +2465,47 @@ do_annotate(struct hist_browser *browser, struct popup_action *act)
+>>   	return 0;
+>>   }
+>>   
+>> +static struct symbol *new_annotate_sym(u64 addr, struct map *map,
+>> +				       struct annotation_options *opts)
+>> +{
+>> +	struct symbol *sym;
+>> +	struct annotated_source *src;
+>> +	char name[64];
+>> +
+>> +	snprintf(name, sizeof(name), "%-#.*lx", BITS_PER_LONG / 4, addr);
+>> +
+>> +	sym = symbol__new(addr,
+>> +			  opts->annotate_dummy_len ?
+>> +			  opts->annotate_dummy_len : ANNOTATION_DUMMY_LEN,
+> 
+> I can't see annotate_dummy_len being set anywhere..
+> 
 
-ssize_t kernel_read(struct file *file, void *buf, size_t count, loff_t *pos)
-{
-     mm_segment_t old_fs;
-     ssize_t result;
+Yes, annotate_dummy_len is not set in this patch. Currently we just use 
+the default value. While maybe in future we will provide a perf report 
+option or set it in perf config. Now I just leave an interface here.
 
-     old_fs = get_fs();
-     set_fs(KERNEL_DS);
-     /* The cast to a user pointer is valid due to the set_fs() */
-     result = vfs_read(file, (void __user *)buf, count, pos);
-     set_fs(old_fs);
-     return result;
-}
+Thanks
+Jin Yao
 
+> jirka
+> 
