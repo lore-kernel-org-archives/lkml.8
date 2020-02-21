@@ -4,50 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 58ABEC35641
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 07:59:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 06320C35640
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 07:59:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2135524650
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 07:59:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CAE08222C4
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 07:59:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582271963;
-	bh=sysEa46Yz0+Q77T04gaS8Khuim8g/xr/Jf5pGs2Miq0=;
+	s=default; t=1582271964;
+	bh=o+o0M9tu1mUFpsW0wcJx7bRm3a8dmU2NUuterE4EqvM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=T9yLgzxe//XHr4P9BgkoLoXKBE3QPXHJF2cnF0h1wRSq8Ha8AcnSHqZe5/MDU07+3
-	 kAfcJ519FtzqNWZsGzQbXD7HHfUrdzT+Q45P6JmLfFUK6ve5m9Y1JPUlDv8DK8jIZ9
-	 J2dkGkwlqNVAIehDLpS/ZzLh5hNL/33Fs1i2DRl4=
+	b=uSk2QPEOUreBmiNingwbUFg/s2wnR1373ABAxShCnGzeEF87lDkVRxXX8IrHIdJ1U
+	 pzPhFSl31d28m1gu3jiwR2glsFm+3hyJ45HNqsvR0YfDRciiCxKAhmYXboeAMH8EUZ
+	 jfUGUws9Z+m5g6QFejr48J5ZnOKEYjn24WeowoGo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730574AbgBUH7V (ORCPT
+        id S1730089AbgBUH7X (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Feb 2020 02:59:21 -0500
-Received: from mail.kernel.org ([198.145.29.99]:59318 "EHLO mail.kernel.org"
+        Fri, 21 Feb 2020 02:59:23 -0500
+Received: from mail.kernel.org ([198.145.29.99]:59352 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730738AbgBUH7S (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Feb 2020 02:59:18 -0500
+        id S1730896AbgBUH7U (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 21 Feb 2020 02:59:20 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id BB41E2465D;
-        Fri, 21 Feb 2020 07:59:16 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2AEB620578;
+        Fri, 21 Feb 2020 07:59:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1582271957;
-        bh=sysEa46Yz0+Q77T04gaS8Khuim8g/xr/Jf5pGs2Miq0=;
+        s=default; t=1582271959;
+        bh=o+o0M9tu1mUFpsW0wcJx7bRm3a8dmU2NUuterE4EqvM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=NLmONyA0EfsXegiPNfKGlWxT21XKwuT+wooe6FAR5T37Le63pCiWUpjAsLKsQFlHG
-         PboywBz3hWauFl8LpVjkdzoRUQAwP18YwUx9dGjNWZnWyvFxqKCpmohZGZEZG0fWuV
-         JrXl7H5JvPQHWEZnfy8FXN+OXfZOwtHEngrWBCz4=
+        b=OsmV/0zFe2hoTaAPt6zOhoZD0cpadN2C6gKWD+r+VDVwxgOiGsN6y2DZLah9qtYHB
+         +T6eul0znHRA4m/pRygRmR3K9/Q0AVIde8X2qV04G+gtgkOHPwu/5ZOFLkv+s0umnh
+         XQxD0CyCI8FNLDeAfa0I7Hh3sQ97QJgP4re4zSfc=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org, Vasily Averin <vvs@virtuozzo.com>,
         "Steven Rostedt (VMware)" <rostedt@goodmis.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.5 363/399] ftrace: fpid_next() should increase position index
-Date:   Fri, 21 Feb 2020 08:41:28 +0100
-Message-Id: <20200221072435.967534118@linuxfoundation.org>
+Subject: [PATCH 5.5 364/399] trigger_next should increase position index
+Date:   Fri, 21 Feb 2020 08:41:29 +0100
+Message-Id: <20200221072436.038385515@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200221072402.315346745@linuxfoundation.org>
 References: <20200221072402.315346745@linuxfoundation.org>
@@ -62,57 +62,58 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Vasily Averin <vvs@virtuozzo.com>
 
-[ Upstream commit e4075e8bdffd93a9b6d6e1d52fabedceeca5a91b ]
+[ Upstream commit 6722b23e7a2ace078344064a9735fb73e554e9ef ]
 
 if seq_file .next fuction does not change position index,
 read after some lseek can generate unexpected output.
 
 Without patch:
- # dd bs=4 skip=1 if=/sys/kernel/tracing/set_ftrace_pid
- dd: /sys/kernel/tracing/set_ftrace_pid: cannot skip to specified offset
- id
- no pid
- 2+1 records in
- 2+1 records out
- 10 bytes copied, 0.000213285 s, 46.9 kB/s
+ # dd bs=30 skip=1 if=/sys/kernel/tracing/events/sched/sched_switch/trigger
+ dd: /sys/kernel/tracing/events/sched/sched_switch/trigger: cannot skip to specified offset
+ n traceoff snapshot stacktrace enable_event disable_event enable_hist disable_hist hist
+ # Available triggers:
+ # traceon traceoff snapshot stacktrace enable_event disable_event enable_hist disable_hist hist
+ 6+1 records in
+ 6+1 records out
+ 206 bytes copied, 0.00027916 s, 738 kB/s
 
-Notice the "id" followed by "no pid".
+Notice the printing of "# Available triggers:..." after the line.
 
 With the patch:
- # dd bs=4 skip=1 if=/sys/kernel/tracing/set_ftrace_pid
- dd: /sys/kernel/tracing/set_ftrace_pid: cannot skip to specified offset
- id
- 0+1 records in
- 0+1 records out
- 3 bytes copied, 0.000202112 s, 14.8 kB/s
+ # dd bs=30 skip=1 if=/sys/kernel/tracing/events/sched/sched_switch/trigger
+ dd: /sys/kernel/tracing/events/sched/sched_switch/trigger: cannot skip to specified offset
+ n traceoff snapshot stacktrace enable_event disable_event enable_hist disable_hist hist
+ 2+1 records in
+ 2+1 records out
+ 88 bytes copied, 0.000526867 s, 167 kB/s
 
-Notice that it only prints "id" and not the "no pid" afterward.
+It only prints the end of the file, and does not restart.
 
-Link: http://lkml.kernel.org/r/4f87c6ad-f114-30bb-8506-c32274ce2992@virtuozzo.com
+Link: http://lkml.kernel.org/r/3c35ee24-dd3a-8119-9c19-552ed253388a@virtuozzo.com
 
 https://bugzilla.kernel.org/show_bug.cgi?id=206283
 Signed-off-by: Vasily Averin <vvs@virtuozzo.com>
 Signed-off-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- kernel/trace/ftrace.c | 5 +++--
+ kernel/trace/trace_events_trigger.c | 5 +++--
  1 file changed, 3 insertions(+), 2 deletions(-)
 
-diff --git a/kernel/trace/ftrace.c b/kernel/trace/ftrace.c
-index 3581bd96d6eb3..ddb47a0af854b 100644
---- a/kernel/trace/ftrace.c
-+++ b/kernel/trace/ftrace.c
-@@ -7038,9 +7038,10 @@ static void *fpid_next(struct seq_file *m, void *v, loff_t *pos)
- 	struct trace_array *tr = m->private;
- 	struct trace_pid_list *pid_list = rcu_dereference_sched(tr->function_pids);
+diff --git a/kernel/trace/trace_events_trigger.c b/kernel/trace/trace_events_trigger.c
+index 40106fff06a48..287d77eae59b3 100644
+--- a/kernel/trace/trace_events_trigger.c
++++ b/kernel/trace/trace_events_trigger.c
+@@ -116,9 +116,10 @@ static void *trigger_next(struct seq_file *m, void *t, loff_t *pos)
+ {
+ 	struct trace_event_file *event_file = event_file_data(m->private);
  
--	if (v == FTRACE_NO_PIDS)
-+	if (v == FTRACE_NO_PIDS) {
+-	if (t == SHOW_AVAILABLE_TRIGGERS)
++	if (t == SHOW_AVAILABLE_TRIGGERS) {
 +		(*pos)++;
  		return NULL;
 -
 +	}
- 	return trace_pid_next(pid_list, v, pos);
+ 	return seq_list_next(t, &event_file->triggers, pos);
  }
  
 -- 
