@@ -5,49 +5,49 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 16BA5C35640
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 08:23:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 33719C35642
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 08:23:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DE6C12469C
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 08:23:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F3B6624676
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 08:23:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582273404;
-	bh=vI7lV6bJSwFrfUSOqObJPGooulJ3EqcRpdA8ruW/WNQ=;
+	s=default; t=1582273407;
+	bh=FZr1vJbLWvUVdAmTXPwpL+bR07vhRqlrUYW3GBOLOlQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=12ia6WeSxwReh+tTnHNUGH3WuVEYD4HE20zvpEX9h+vHLdHL3ah25GkVufyuELKzD
-	 jO3hs3FSSDijrv8OzpCN75dnLK6y2VG0YU6utJDzNHbGcOZfuOdaZ1csEEbf2Hc7bb
-	 VU5JM538xGBtzBXlafmqMV/WF7uoMQBdJHHtM0+Y=
+	b=uXemGqqD+cVuu+6svgu6PTKNW3Z2EyXE+RwGkqWWry6NNbkVlFTebgBctUqg8tq0g
+	 foUPiQVoY3ipsAxdXVCS7uxALdLuWiernG2OrLvv/oWNhBoX0tz/b1EqHB5ScE1uOP
+	 FXTiZ/8nP29xap6ktzu7BgRhXPK6iIoUmhTwg/cw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388468AbgBUIXW (ORCPT
+        id S2388085AbgBUIXZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Feb 2020 03:23:22 -0500
-Received: from mail.kernel.org ([198.145.29.99]:35310 "EHLO mail.kernel.org"
+        Fri, 21 Feb 2020 03:23:25 -0500
+Received: from mail.kernel.org ([198.145.29.99]:35390 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388457AbgBUIXT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Feb 2020 03:23:19 -0500
+        id S2388466AbgBUIXW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 21 Feb 2020 03:23:22 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 52BA224676;
-        Fri, 21 Feb 2020 08:23:18 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id ABAC924676;
+        Fri, 21 Feb 2020 08:23:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1582273398;
-        bh=vI7lV6bJSwFrfUSOqObJPGooulJ3EqcRpdA8ruW/WNQ=;
+        s=default; t=1582273402;
+        bh=FZr1vJbLWvUVdAmTXPwpL+bR07vhRqlrUYW3GBOLOlQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=PGkpiLLRN0eAB8QP55wOzXd92M+4LN33VDOoVV0QGEcqGa2YkkmmL909iYplK2Pho
-         QoMxKIUMoIOO4d+3gbvz7iwdtshZ9qr5DBLu5Niph/7KRZDuKicnq9qeB31YHs2hL5
-         WKAfy3HfHpw4jFhOWUxbuDK69YPYtLY/Z5yuyYdM=
+        b=OCPix5A5JgE5Lp8IZrSxx0VvDSsXZ0WD7qHLrBTgF9Fy3TvvM4enyWF964t1GqqtH
+         b70IkfHYAJIkUDcrjxOMABFUFUNS2dzmItle4iFelcfceBI6W78jA2a7fGOccWXheD
+         LQbPioWAPfHO5AFPNbnPNxlej4U29SHOlCysblZA=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Pavel Machek <pavel@ucw.cz>,
-        Tony Lindgren <tony@atomide.com>, Bin Liu <b-liu@ti.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 129/191] usb: musb: omap2430: Get rid of musb .set_vbus for omap2430 glue
-Date:   Fri, 21 Feb 2020 08:41:42 +0100
-Message-Id: <20200221072306.356901772@linuxfoundation.org>
+        stable@vger.kernel.org,
+        =?UTF-8?q?Peter=20Gro=C3=9Fe?= <pegro@friiks.de>,
+        Takashi Iwai <tiwai@suse.de>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.19 156/191] ALSA: hda - Add docking station support for Lenovo Thinkpad T420s
+Date:   Fri, 21 Feb 2020 08:42:09 +0100
+Message-Id: <20200221072309.407409911@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200221072250.732482588@linuxfoundation.org>
 References: <20200221072250.732482588@linuxfoundation.org>
@@ -60,54 +60,33 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Tony Lindgren <tony@atomide.com>
+From: Peter Große <pegro@friiks.de>
 
-[ Upstream commit 91b6dec32e5c25fbdbb564d1e5af23764ec17ef1 ]
+[ Upstream commit ef7d84caa5928b40b1c93a26dbe5a3f12737c6ab ]
 
-We currently have musb_set_vbus() called from two different paths. Mostly
-it gets called from the USB PHY via omap_musb_set_mailbox(), but in some
-cases it can get also called from musb_stage0_irq() rather via .set_vbus:
+Lenovo Thinkpad T420s uses the same codec as T420, so apply the
+same quirk to enable audio output on a docking station.
 
-(musb_set_host [musb_hdrc])
-(omap2430_musb_set_vbus [omap2430])
-(musb_stage0_irq [musb_hdrc])
-(musb_interrupt [musb_hdrc])
-(omap2430_musb_interrupt [omap2430])
-
-This is racy and will not work with introducing generic helper functions
-for musb_set_host() and musb_set_peripheral(). We want to get rid of the
-busy loops in favor of usleep_range().
-
-Let's just get rid of .set_vbus for omap2430 glue layer and let the PHY
-code handle VBUS with musb_set_vbus(). Note that in the follow-up patch
-we can completely remove omap2430_musb_set_vbus(), but let's do it in a
-separate patch as this change may actually turn out to be needed as a
-fix.
-
-Reported-by: Pavel Machek <pavel@ucw.cz>
-Acked-by: Pavel Machek <pavel@ucw.cz>
-Signed-off-by: Tony Lindgren <tony@atomide.com>
-Signed-off-by: Bin Liu <b-liu@ti.com>
-Link: https://lore.kernel.org/r/20200115132547.364-5-b-liu@ti.com
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Signed-off-by: Peter Große <pegro@friiks.de>
+Link: https://lore.kernel.org/r/20200122180106.9351-1-pegro@friiks.de
+Signed-off-by: Takashi Iwai <tiwai@suse.de>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/usb/musb/omap2430.c | 2 --
- 1 file changed, 2 deletions(-)
+ sound/pci/hda/patch_conexant.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/drivers/usb/musb/omap2430.c b/drivers/usb/musb/omap2430.c
-index b1dd81fb5f55e..24e622c056383 100644
---- a/drivers/usb/musb/omap2430.c
-+++ b/drivers/usb/musb/omap2430.c
-@@ -361,8 +361,6 @@ static const struct musb_platform_ops omap2430_ops = {
- 	.init		= omap2430_musb_init,
- 	.exit		= omap2430_musb_exit,
- 
--	.set_vbus	= omap2430_musb_set_vbus,
--
- 	.enable		= omap2430_musb_enable,
- 	.disable	= omap2430_musb_disable,
- 
+diff --git a/sound/pci/hda/patch_conexant.c b/sound/pci/hda/patch_conexant.c
+index 5500dd437b44d..78bb96263bc27 100644
+--- a/sound/pci/hda/patch_conexant.c
++++ b/sound/pci/hda/patch_conexant.c
+@@ -935,6 +935,7 @@ static const struct snd_pci_quirk cxt5066_fixups[] = {
+ 	SND_PCI_QUIRK(0x17aa, 0x215f, "Lenovo T510", CXT_PINCFG_LENOVO_TP410),
+ 	SND_PCI_QUIRK(0x17aa, 0x21ce, "Lenovo T420", CXT_PINCFG_LENOVO_TP410),
+ 	SND_PCI_QUIRK(0x17aa, 0x21cf, "Lenovo T520", CXT_PINCFG_LENOVO_TP410),
++	SND_PCI_QUIRK(0x17aa, 0x21d2, "Lenovo T420s", CXT_PINCFG_LENOVO_TP410),
+ 	SND_PCI_QUIRK(0x17aa, 0x21da, "Lenovo X220", CXT_PINCFG_LENOVO_TP410),
+ 	SND_PCI_QUIRK(0x17aa, 0x21db, "Lenovo X220-tablet", CXT_PINCFG_LENOVO_TP410),
+ 	SND_PCI_QUIRK(0x17aa, 0x38af, "Lenovo IdeaPad Z560", CXT_FIXUP_MUTE_LED_EAPD),
 -- 
 2.20.1
 
