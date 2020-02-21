@@ -5,51 +5,52 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4D6E4C35641
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 08:03:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A304CC35641
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 08:03:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 24CBD20801
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 08:03:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6B2E720801
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 08:03:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582272235;
-	bh=ERfQ3eAbohrmh759MhxBh8l+4EKx0sFujaFwkM2jL3g=;
+	s=default; t=1582272239;
+	bh=N/eg8j7+/VQQpWPilvFEU0iKw1etYKG95foZ33uOEK4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=yQycE9pYrzboxHM4cpOzeiAxgVMia87qeAOOFUJFUuIulqDN4c397kIxCz90yuz0m
-	 3r/1OfwtiSWQotIrtyOQgHlIs98+Yo5iq/NhTd7K01kA+rBSWMpGDeorESXJyEvde9
-	 tXzb+zAsqkbJs52ibd7mlIw3vMlu/VAmH3Uxf+EY=
+	b=pIYks8Q3P5S6ivdp7kxmxrUiViohuKQQLTkCPeKjvsxUb4a6OB9r+ZWdr/TZGZRJJ
+	 24iSo5pGeH2EbeAfGzx+alTAH2w1sI4lOAexvww7u6xee6gb+bhOtif2osTkh1GYDn
+	 nHDsyiOE1OXCBHBHOiTuwVy54WqvfcJAHOVtqpAY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730022AbgBUIDx (ORCPT
+        id S1731563AbgBUID6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Feb 2020 03:03:53 -0500
-Received: from mail.kernel.org ([198.145.29.99]:36710 "EHLO mail.kernel.org"
+        Fri, 21 Feb 2020 03:03:58 -0500
+Received: from mail.kernel.org ([198.145.29.99]:36758 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731537AbgBUIDv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Feb 2020 03:03:51 -0500
+        id S1731543AbgBUIDx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 21 Feb 2020 03:03:53 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 015EC2465D;
-        Fri, 21 Feb 2020 08:03:49 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id AA5682467C;
+        Fri, 21 Feb 2020 08:03:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1582272230;
-        bh=ERfQ3eAbohrmh759MhxBh8l+4EKx0sFujaFwkM2jL3g=;
+        s=default; t=1582272233;
+        bh=N/eg8j7+/VQQpWPilvFEU0iKw1etYKG95foZ33uOEK4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=xAJUNPvjyepQcRSuVwDijriz5vRRQwxhWfLro7IwRVchdQZWY5NCThiTeMogczHpA
-         oT6nuPMBLpN1ysvEBQZKmXpsjC4EOu0BnTNznthHoyyOEOiemoBhuP9oUyudiTewMO
-         vwCBdNufLDO0U4VnHTwplAokxk8nQTYhQBuQSzqg=
+        b=KUiwoIvwlxDwLIUiWv+1tdaZeG22BJXRxQfLfwxMFtTWAn0WBhQ2IiGOYwFKJiOsp
+         IdBer1WWqW1Fh/AyOVRSnpNU4s4jfWYNAhNV3/P9z6qtRO/IQXsnC0rNexPMIkWAPf
+         5IuucuQGGdfHGM5VXQLNkHOxJoFCs+HCU0rNawmo=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Siddhesh Poyarekar <siddhesh@gotplt.org>,
-        Masami Hiramatsu <masami.hiramatsu@linaro.org>,
-        Tim Bird <tim.bird@sony.com>,
-        Shuah Khan <skhan@linuxfoundation.org>,
+        stable@vger.kernel.org,
+        Christophe JAILLET <christophe.jaillet@wanadoo.fr>,
+        Lubomir Rintel <lkundrak@v3.sk>,
+        YueHaibing <yuehaibing@huawei.com>,
+        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 063/344] kselftest: Minimise dependency of get_size on C library interfaces
-Date:   Fri, 21 Feb 2020 08:37:42 +0100
-Message-Id: <20200221072354.747927111@linuxfoundation.org>
+Subject: [PATCH 5.4 033/344] pxa168fb: Fix the function used to release some memory in an error handling path
+Date:   Fri, 21 Feb 2020 08:37:12 +0100
+Message-Id: <20200221072352.152898170@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200221072349.335551332@linuxfoundation.org>
 References: <20200221072349.335551332@linuxfoundation.org>
@@ -62,111 +63,54 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Siddhesh Poyarekar <siddhesh@gotplt.org>
+From: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
 
-[ Upstream commit 6b64a650f0b2ae3940698f401732988699eecf7a ]
+[ Upstream commit 3c911fe799d1c338d94b78e7182ad452c37af897 ]
 
-It was observed[1] on arm64 that __builtin_strlen led to an infinite
-loop in the get_size selftest.  This is because __builtin_strlen (and
-other builtins) may sometimes result in a call to the C library
-function.  The C library implementation of strlen uses an IFUNC
-resolver to load the most efficient strlen implementation for the
-underlying machine and hence has a PLT indirection even for static
-binaries.  Because this binary avoids the C library startup routines,
-the PLT initialization never happens and hence the program gets stuck
-in an infinite loop.
+In the probe function, some resources are allocated using 'dma_alloc_wc()',
+they should be released with 'dma_free_wc()', not 'dma_free_coherent()'.
 
-On x86_64 the __builtin_strlen just happens to expand inline and avoid
-the call but that is not always guaranteed.
+We already use 'dma_free_wc()' in the remove function, but not in the
+error handling path of the probe function.
 
-Further, while testing on x86_64 (Fedora 31), it was observed that the
-test also failed with a segfault inside write() because the generated
-code for the write function in glibc seems to access TLS before the
-syscall (probably due to the cancellation point check) and fails
-because TLS is not initialised.
+Also, remove a useless 'PAGE_ALIGN()'. 'info->fix.smem_len' is already
+PAGE_ALIGNed.
 
-To mitigate these problems, this patch reduces the interface with the
-C library to just the syscall function.  The syscall function still
-sets errno on failure, which is undesirable but for now it only
-affects cases where syscalls fail.
-
-[1] https://bugs.linaro.org/show_bug.cgi?id=5479
-
-Signed-off-by: Siddhesh Poyarekar <siddhesh@gotplt.org>
-Reported-by: Masami Hiramatsu <masami.hiramatsu@linaro.org>
-Tested-by: Masami Hiramatsu <masami.hiramatsu@linaro.org>
-Reviewed-by: Tim Bird <tim.bird@sony.com>
-Signed-off-by: Shuah Khan <skhan@linuxfoundation.org>
+Fixes: 638772c7553f ("fb: add support of LCD display controller on pxa168/910 (base layer)")
+Signed-off-by: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+Reviewed-by: Lubomir Rintel <lkundrak@v3.sk>
+CC: YueHaibing <yuehaibing@huawei.com>
+Signed-off-by: Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
+Link: https://patchwork.freedesktop.org/patch/msgid/20190831100024.3248-1-christophe.jaillet@wanadoo.fr
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- tools/testing/selftests/size/get_size.c | 24 ++++++++++++++++++------
- 1 file changed, 18 insertions(+), 6 deletions(-)
+ drivers/video/fbdev/pxa168fb.c | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
-diff --git a/tools/testing/selftests/size/get_size.c b/tools/testing/selftests/size/get_size.c
-index 2ad45b9443550..2980b1a63366b 100644
---- a/tools/testing/selftests/size/get_size.c
-+++ b/tools/testing/selftests/size/get_size.c
-@@ -11,23 +11,35 @@
-  * own execution.  It also attempts to have as few dependencies
-  * on kernel features as possible.
-  *
-- * It should be statically linked, with startup libs avoided.
-- * It uses no library calls, and only the following 3 syscalls:
-+ * It should be statically linked, with startup libs avoided.  It uses
-+ * no library calls except the syscall() function for the following 3
-+ * syscalls:
-  *   sysinfo(), write(), and _exit()
-  *
-  * For output, it avoids printf (which in some C libraries
-  * has large external dependencies) by  implementing it's own
-  * number output and print routines, and using __builtin_strlen()
-+ *
-+ * The test may crash if any of the above syscalls fails because in some
-+ * libc implementations (e.g. the GNU C Library) errno is saved in
-+ * thread-local storage, which does not get initialized due to avoiding
-+ * startup libs.
-  */
+diff --git a/drivers/video/fbdev/pxa168fb.c b/drivers/video/fbdev/pxa168fb.c
+index 1410f476e135d..1fc50fc0694bc 100644
+--- a/drivers/video/fbdev/pxa168fb.c
++++ b/drivers/video/fbdev/pxa168fb.c
+@@ -766,8 +766,8 @@ failed_free_cmap:
+ failed_free_clk:
+ 	clk_disable_unprepare(fbi->clk);
+ failed_free_fbmem:
+-	dma_free_coherent(fbi->dev, info->fix.smem_len,
+-			info->screen_base, fbi->fb_start_dma);
++	dma_free_wc(fbi->dev, info->fix.smem_len,
++		    info->screen_base, fbi->fb_start_dma);
+ failed_free_info:
+ 	kfree(info);
  
- #include <sys/sysinfo.h>
- #include <unistd.h>
-+#include <sys/syscall.h>
+@@ -801,7 +801,7 @@ static int pxa168fb_remove(struct platform_device *pdev)
  
- #define STDOUT_FILENO 1
+ 	irq = platform_get_irq(pdev, 0);
  
- static int print(const char *s)
- {
--	return write(STDOUT_FILENO, s, __builtin_strlen(s));
-+	size_t len = 0;
-+
-+	while (s[len] != '\0')
-+		len++;
-+
-+	return syscall(SYS_write, STDOUT_FILENO, s, len);
- }
+-	dma_free_wc(fbi->dev, PAGE_ALIGN(info->fix.smem_len),
++	dma_free_wc(fbi->dev, info->fix.smem_len,
+ 		    info->screen_base, info->fix.smem_start);
  
- static inline char *num_to_str(unsigned long num, char *buf, int len)
-@@ -79,12 +91,12 @@ void _start(void)
- 	print("TAP version 13\n");
- 	print("# Testing system size.\n");
- 
--	ccode = sysinfo(&info);
-+	ccode = syscall(SYS_sysinfo, &info);
- 	if (ccode < 0) {
- 		print("not ok 1");
- 		print(test_name);
- 		print(" ---\n reason: \"could not get sysinfo\"\n ...\n");
--		_exit(ccode);
-+		syscall(SYS_exit, ccode);
- 	}
- 	print("ok 1");
- 	print(test_name);
-@@ -100,5 +112,5 @@ void _start(void)
- 	print(" ...\n");
- 	print("1..1\n");
- 
--	_exit(0);
-+	syscall(SYS_exit, 0);
- }
+ 	clk_disable_unprepare(fbi->clk);
 -- 
 2.20.1
 
