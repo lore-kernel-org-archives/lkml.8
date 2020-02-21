@@ -2,77 +2,102 @@ Return-Path: <SRS0=1210=4J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3414CC35658
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 17:26:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AF4E7C35657
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 17:26:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 15145208E4
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 17:26:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 91378208E4
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 17:26:37 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728550AbgBUR0W (ORCPT
+        id S1728684AbgBUR0g (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Feb 2020 12:26:22 -0500
-Received: from mga17.intel.com ([192.55.52.151]:8972 "EHLO mga17.intel.com"
+        Fri, 21 Feb 2020 12:26:36 -0500
+Received: from muru.com ([72.249.23.125]:56738 "EHLO muru.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728103AbgBUR0W (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Feb 2020 12:26:22 -0500
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga002.fm.intel.com ([10.253.24.26])
-  by fmsmga107.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 21 Feb 2020 09:26:22 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.70,469,1574150400"; 
-   d="scan'208";a="270058658"
-Received: from unknown (HELO linuxpc.iind.intel.com) ([10.223.107.129])
-  by fmsmga002.fm.intel.com with ESMTP; 21 Feb 2020 09:26:20 -0800
-From:   Sumeet Pawnikar <sumeet.r.pawnikar@intel.com>
-To:     linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        rui.zhang@intel.com, srinivas.pandruvada@linux.intel.com
-Cc:     sumeet.r.pawnikar@intel.com
-Subject: [PATCH] thermal: int340x: processor_thermal: Add Tiger Lake support
-Date:   Fri, 21 Feb 2020 23:02:39 +0530
-Message-Id: <1582306359-17846-1-git-send-email-sumeet.r.pawnikar@intel.com>
-X-Mailer: git-send-email 1.7.9.5
+        id S1728103AbgBUR0f (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 21 Feb 2020 12:26:35 -0500
+Received: from atomide.com (localhost [127.0.0.1])
+        by muru.com (Postfix) with ESMTPS id 90018807E;
+        Fri, 21 Feb 2020 17:27:19 +0000 (UTC)
+Date:   Fri, 21 Feb 2020 09:26:31 -0800
+From:   Tony Lindgren <tony@atomide.com>
+To:     "Andrew F. Davis" <afd@ti.com>
+Cc:     kbuild-all@lists.01.org, linux-kernel@vger.kernel.org,
+        kbuild test robot <lkp@intel.com>,
+        linux-omap@vger.kernel.org, Aaro Koskinen <aaro.koskinen@iki.fi>,
+        Marc Zyngier <maz@kernel.org>,
+        linux-arm-kernel@lists.infradead.org,
+        Arnd Bergmann <arnd@arndb.de>, Rob Herring <robh@kernel.org>
+Subject: Re: omap-secure.c:undefined reference to `__arm_smccc_smc'
+Message-ID: <20200221172631.GY37466@atomide.com>
+References: <20200220155429.GH37466@atomide.com>
+ <55ddcd29-ed8b-529e-dd54-cbac5cf74e42@ti.com>
+ <20200220162012.GI37466@atomide.com>
+ <d7b685b6-16a2-3743-1786-a5240726ed9c@ti.com>
+ <20200220163703.GK37466@atomide.com>
+ <20200220171305.GL37466@atomide.com>
+ <281e895b-720d-5bab-63cf-8b3e389dc767@ti.com>
+ <20200220175744.GQ37466@atomide.com>
+ <20200220181141.GR37466@atomide.com>
+ <333dd36f-e760-64b3-9e0f-3a316df9ad10@ti.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <333dd36f-e760-64b3-9e0f-3a316df9ad10@ti.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Added new PCI id for Tiger Lake processor thermal device
-along with MMIO RAPL support.
+* Andrew F. Davis <afd@ti.com> [200220 10:23]:
+> On 2/20/20 1:11 PM, Tony Lindgren wrote:
+> > * Tony Lindgren <tony@atomide.com> [200220 17:58]:
+> >> * Andrew F. Davis <afd@ti.com> [200220 17:39]:
+> >>> If the machine has SMCCC then it will also have the
+> >>> CONFIG_HAVE_ARM_SMCCC set and so nothing would change.
+> >>
+> >> Hmm yeah good point.
+> > 
+> > So the patch below seems like the way to go then. Anybody have issues
+> > with the patch below?
+> > 
+> > Regards,
+> > 
+> > Tony
+> > 
+> > 8< -------------------------
+> > diff --git a/include/linux/arm-smccc.h b/include/linux/arm-smccc.h
+> > --- a/include/linux/arm-smccc.h
+> > +++ b/include/linux/arm-smccc.h
+> > @@ -121,6 +121,7 @@ struct arm_smccc_quirk {
+> >  	} state;
+> >  };
+> >  
+> > +#ifdef CONFIG_HAVE_ARM_SMCCC
+> >  /**
+> >   * __arm_smccc_smc() - make SMC calls
+> >   * @a0-a7: arguments passed in registers 0 to 7
+> > @@ -137,6 +138,14 @@ asmlinkage void __arm_smccc_smc(unsigned long a0, unsigned long a1,
+> >  			unsigned long a2, unsigned long a3, unsigned long a4,
+> >  			unsigned long a5, unsigned long a6, unsigned long a7,
+> >  			struct arm_smccc_res *res, struct arm_smccc_quirk *quirk);
+> > +#else
+> > +static inline void __arm_smccc_smc(unsigned long a0, unsigned long a1,
+> > +			unsigned long a2, unsigned long a3, unsigned long a4,
+> > +			unsigned long a5, unsigned long a6, unsigned long a7,
+> > +			struct arm_smccc_res *res, struct arm_smccc_quirk *quirk)
+> > +{
+> 
+> 
+> Maybe a warning? If you do not have SMC on your platform but are still
+> making SMC calls then something is broken and it looks like it would
+> fail silently here.
 
-Signed-off-by: Sumeet Pawnikar <sumeet.r.pawnikar@intel.com>
----
- .../int340x_thermal/processor_thermal_device.c     |    5 +++++
- 1 file changed, 5 insertions(+)
+OK I'll add that and send out a  proper patch.
 
-diff --git a/drivers/thermal/intel/int340x_thermal/processor_thermal_device.c b/drivers/thermal/intel/int340x_thermal/processor_thermal_device.c
-index b1fd345..11cab67 100644
---- a/drivers/thermal/intel/int340x_thermal/processor_thermal_device.c
-+++ b/drivers/thermal/intel/int340x_thermal/processor_thermal_device.c
-@@ -45,6 +45,9 @@
- /* JasperLake thermal reporting device */
- #define PCI_DEVICE_ID_PROC_JSL_THERMAL	0x4503
- 
-+/* TigerLake thermal reporting device */
-+#define PCI_DEVICE_ID_PROC_TGL_THERMAL	0x9A03
-+
- #define DRV_NAME "proc_thermal"
- 
- struct power_config {
-@@ -728,6 +731,8 @@ static int proc_thermal_resume(struct device *dev)
- 	{ PCI_DEVICE(PCI_VENDOR_ID_INTEL, PCI_DEVICE_ID_PROC_ICL_THERMAL),
- 		.driver_data = (kernel_ulong_t)&rapl_mmio_hsw, },
- 	{ PCI_DEVICE(PCI_VENDOR_ID_INTEL, PCI_DEVICE_ID_PROC_JSL_THERMAL)},
-+	{ PCI_DEVICE(PCI_VENDOR_ID_INTEL, PCI_DEVICE_ID_PROC_TGL_THERMAL)},
-+		.driver_data = (kernel_ulong_t)&rapl_mmio_hsw, },
- 	{ 0, },
- };
- 
--- 
-1.7.9.5
+Thanks,
 
+Tony
