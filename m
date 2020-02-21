@@ -5,50 +5,50 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 056E0C35641
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 08:21:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B150EC35640
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 08:21:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CCD6B2467E
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 08:21:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8A11E20578
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 08:21:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582273289;
-	bh=c6WsqgM0toEDjDTqgMLb6H87/t1l/eCisEHAE0NR3Ok=;
+	s=default; t=1582273294;
+	bh=7d2HlSTu28tCyC8lFDF6nFQvL3dmP8YskVis4QaibWI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=JvD2lHhfuXA/mhddC/4jQDRz6dhgsbmYF/NndSPER322gqCkVBYqUMPrD1FF8RpxU
-	 UAH9SC6f5xUeIp6VlXu/XZV5VFYGSonIFrd1unDY6qGXeRMOAvBrR2p07sHQpdfPO7
-	 aywFDWqV6Ixx0Acz+gl7zIGV6HU2viqUUioR2zvQ=
+	b=jkHQHOd9JKTRJDBuvz/u8Qu3Kg7Lc10c6wo7GOmqDo9t5ZONgWc6AxEli+aYaj/2Q
+	 MgdyskdgAZU7j9Pg3KOiN0kp/IuX14dWUCNVENbU0I0P9DVzxMu2JT4e6DSDH04hHe
+	 3pJ7128TVoO5TERlaroEWNx9JOgHy+W7164JfPzQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388073AbgBUIV2 (ORCPT
+        id S2388079AbgBUIVc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Feb 2020 03:21:28 -0500
-Received: from mail.kernel.org ([198.145.29.99]:60796 "EHLO mail.kernel.org"
+        Fri, 21 Feb 2020 03:21:32 -0500
+Received: from mail.kernel.org ([198.145.29.99]:60884 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730612AbgBUIVV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Feb 2020 03:21:21 -0500
+        id S2387873AbgBUIVZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 21 Feb 2020 03:21:25 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 894BC20578;
-        Fri, 21 Feb 2020 08:21:20 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D8408222C4;
+        Fri, 21 Feb 2020 08:21:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1582273281;
-        bh=c6WsqgM0toEDjDTqgMLb6H87/t1l/eCisEHAE0NR3Ok=;
+        s=default; t=1582273284;
+        bh=7d2HlSTu28tCyC8lFDF6nFQvL3dmP8YskVis4QaibWI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=JaID2hRELOJZwv6NHo3VdvY9poPr8hh5y5n9RaNELl77OsDhPI31U7PX1cqS+z1nU
-         Sq9POQ31xcoKPRJEX03jV6aa0jyC2erhkzCwA2Mf+c7s3ms+qWNGWYfN+AhVQITd7A
-         eL93Z84e+8X0uhCWmZUGwkNytELR9Sk0xbl06EH0=
+        b=htKwdQjNRWtynoSLVn38+Qjz0xRRCF4U7B3QjWP/eZwONIKsPNWXl9U8Zyqhilbf7
+         s9UzPnEBEx2ZpWeml8MoSK+nWBaHTJlrONXj6sHABopdTjIcnHl2++x77pLLhe7OdK
+         /eG7TU+IheKYB6e9KKjGH4iuJ3jRIZ2PWuxVaqgI=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Changbin Du <changbin.du@gmail.com>,
-        Borislav Petkov <bp@suse.de>,
-        Thomas Gleixner <tglx@linutronix.de>,
+        stable@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Jakub Kicinski <kuba@kernel.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 112/191] x86/nmi: Remove irq_work from the long duration NMI handler
-Date:   Fri, 21 Feb 2020 08:41:25 +0100
-Message-Id: <20200221072304.373890261@linuxfoundation.org>
+Subject: [PATCH 4.19 113/191] wan: ixp4xx_hss: fix compile-testing on 64-bit
+Date:   Fri, 21 Feb 2020 08:41:26 +0100
+Message-Id: <20200221072304.486072294@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200221072250.732482588@linuxfoundation.org>
 References: <20200221072250.732482588@linuxfoundation.org>
@@ -61,98 +61,53 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Changbin Du <changbin.du@gmail.com>
+From: Arnd Bergmann <arnd@arndb.de>
 
-[ Upstream commit 248ed51048c40d36728e70914e38bffd7821da57 ]
+[ Upstream commit 504c28c853ec5c626900b914b5833daf0581a344 ]
 
-First, printk() is NMI-context safe now since the safe printk() has been
-implemented and it already has an irq_work to make NMI-context safe.
+Change the driver to use portable integer types to avoid
+warnings during compile testing:
 
-Second, this NMI irq_work actually does not work if a NMI handler causes
-panic by watchdog timeout. It has no chance to run in such case, while
-the safe printk() will flush its per-cpu buffers before panicking.
+drivers/net/wan/ixp4xx_hss.c:863:21: error: cast to 'u32 *' (aka 'unsigned int *') from smaller integer type 'int' [-Werror,-Wint-to-pointer-cast]
+        memcpy_swab32(mem, (u32 *)((int)skb->data & ~3), bytes / 4);
+                           ^
+drivers/net/wan/ixp4xx_hss.c:979:12: error: incompatible pointer types passing 'u32 *' (aka 'unsigned int *') to parameter of type 'dma_addr_t *' (aka 'unsigned long long *') [-Werror,-Wincompatible-pointer-types]
+                                              &port->desc_tab_phys)))
+                                              ^~~~~~~~~~~~~~~~~~~~
+include/linux/dmapool.h:27:20: note: passing argument to parameter 'handle' here
+                     dma_addr_t *handle);
+                                 ^
 
-While at it, repurpose the irq_work callback into a function which
-concentrates the NMI duration checking and makes the code easier to
-follow.
-
- [ bp: Massage. ]
-
-Signed-off-by: Changbin Du <changbin.du@gmail.com>
-Signed-off-by: Borislav Petkov <bp@suse.de>
-Acked-by: Thomas Gleixner <tglx@linutronix.de>
-Link: https://lkml.kernel.org/r/20200111125427.15662-1-changbin.du@gmail.com
+Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
+Signed-off-by: Jakub Kicinski <kuba@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/x86/include/asm/nmi.h |  1 -
- arch/x86/kernel/nmi.c      | 20 +++++++++-----------
- 2 files changed, 9 insertions(+), 12 deletions(-)
+ drivers/net/wan/ixp4xx_hss.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/arch/x86/include/asm/nmi.h b/arch/x86/include/asm/nmi.h
-index 75ded1d13d98d..9d5d949e662e1 100644
---- a/arch/x86/include/asm/nmi.h
-+++ b/arch/x86/include/asm/nmi.h
-@@ -41,7 +41,6 @@ struct nmiaction {
- 	struct list_head	list;
- 	nmi_handler_t		handler;
- 	u64			max_duration;
--	struct irq_work		irq_work;
- 	unsigned long		flags;
- 	const char		*name;
- };
-diff --git a/arch/x86/kernel/nmi.c b/arch/x86/kernel/nmi.c
-index 086cf1d1d71d8..0f8b9b900b0e7 100644
---- a/arch/x86/kernel/nmi.c
-+++ b/arch/x86/kernel/nmi.c
-@@ -102,18 +102,22 @@ static int __init nmi_warning_debugfs(void)
- }
- fs_initcall(nmi_warning_debugfs);
- 
--static void nmi_max_handler(struct irq_work *w)
-+static void nmi_check_duration(struct nmiaction *action, u64 duration)
- {
--	struct nmiaction *a = container_of(w, struct nmiaction, irq_work);
-+	u64 whole_msecs = READ_ONCE(action->max_duration);
- 	int remainder_ns, decimal_msecs;
--	u64 whole_msecs = READ_ONCE(a->max_duration);
-+
-+	if (duration < nmi_longest_ns || duration < action->max_duration)
-+		return;
-+
-+	action->max_duration = duration;
- 
- 	remainder_ns = do_div(whole_msecs, (1000 * 1000));
- 	decimal_msecs = remainder_ns / 1000;
- 
- 	printk_ratelimited(KERN_INFO
- 		"INFO: NMI handler (%ps) took too long to run: %lld.%03d msecs\n",
--		a->handler, whole_msecs, decimal_msecs);
-+		action->handler, whole_msecs, decimal_msecs);
- }
- 
- static int nmi_handle(unsigned int type, struct pt_regs *regs)
-@@ -140,11 +144,7 @@ static int nmi_handle(unsigned int type, struct pt_regs *regs)
- 		delta = sched_clock() - delta;
- 		trace_nmi_handler(a->handler, (int)delta, thishandled);
- 
--		if (delta < nmi_longest_ns || delta < a->max_duration)
--			continue;
--
--		a->max_duration = delta;
--		irq_work_queue(&a->irq_work);
-+		nmi_check_duration(a, delta);
+diff --git a/drivers/net/wan/ixp4xx_hss.c b/drivers/net/wan/ixp4xx_hss.c
+index 6a505c26a3e74..a269ed63d90f7 100644
+--- a/drivers/net/wan/ixp4xx_hss.c
++++ b/drivers/net/wan/ixp4xx_hss.c
+@@ -261,7 +261,7 @@ struct port {
+ 	struct hss_plat_info *plat;
+ 	buffer_t *rx_buff_tab[RX_DESCS], *tx_buff_tab[TX_DESCS];
+ 	struct desc *desc_tab;	/* coherent */
+-	u32 desc_tab_phys;
++	dma_addr_t desc_tab_phys;
+ 	unsigned int id;
+ 	unsigned int clock_type, clock_rate, loopback;
+ 	unsigned int initialized, carrier;
+@@ -861,7 +861,7 @@ static int hss_hdlc_xmit(struct sk_buff *skb, struct net_device *dev)
+ 		dev->stats.tx_dropped++;
+ 		return NETDEV_TX_OK;
  	}
+-	memcpy_swab32(mem, (u32 *)((int)skb->data & ~3), bytes / 4);
++	memcpy_swab32(mem, (u32 *)((uintptr_t)skb->data & ~3), bytes / 4);
+ 	dev_kfree_skb(skb);
+ #endif
  
- 	rcu_read_unlock();
-@@ -162,8 +162,6 @@ int __register_nmi_handler(unsigned int type, struct nmiaction *action)
- 	if (!action->handler)
- 		return -EINVAL;
- 
--	init_irq_work(&action->irq_work, nmi_max_handler);
--
- 	raw_spin_lock_irqsave(&desc->lock, flags);
- 
- 	/*
 -- 
 2.20.1
 
