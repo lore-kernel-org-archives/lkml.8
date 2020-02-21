@@ -5,49 +5,50 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7B01BC35640
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 07:52:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3B511C35641
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 07:52:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 444442073A
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 07:52:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0BDC420801
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 07:52:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582271550;
-	bh=IL0DlRLZwPFnTOfxoGC0+a/kYVgGNy0nkZp7u869IZc=;
+	s=default; t=1582271553;
+	bh=yU3/HvfUjHjQ53JRdVWT8WNLGIo0vYw31AjxgZcgicY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=0Mudqf2LacRSRHfSsoJEfhA2mN71OP25gjdWDDE7U5o46ScWNQgYyLaAqlgGeSI4h
-	 1z7KAMVO4aHD47cLKMo21jzXIZaY6nHEAu7xvkECUpp0RoAWZ2iiAO7EX1HiTyml1I
-	 xIrcEvXPvRtFHpAFgnlN4F6XaT0GIVbtYdwpSS/8=
+	b=CcLy1HT8/U9Ox+JB5tnMGXdTInxy3pycuRoGeBM9AYXOPScea7Z6bU1wK9ls/VcPM
+	 aYRYWsLahZFRWR9I+xfhp52TckJGdBPJdFODrmRPqQULyVp+rNF0ifm9oASep/AOBs
+	 +XnrdybFXnBqQ78BlgfbfrCSW1s3P17+1yVsU7vQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729907AbgBUHw2 (ORCPT
+        id S1729696AbgBUHwb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Feb 2020 02:52:28 -0500
-Received: from mail.kernel.org ([198.145.29.99]:50282 "EHLO mail.kernel.org"
+        Fri, 21 Feb 2020 02:52:31 -0500
+Received: from mail.kernel.org ([198.145.29.99]:50352 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729554AbgBUHw0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Feb 2020 02:52:26 -0500
+        id S1729755AbgBUHw3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 21 Feb 2020 02:52:29 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8F4E32073A;
-        Fri, 21 Feb 2020 07:52:25 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 14B432073A;
+        Fri, 21 Feb 2020 07:52:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1582271546;
-        bh=IL0DlRLZwPFnTOfxoGC0+a/kYVgGNy0nkZp7u869IZc=;
+        s=default; t=1582271548;
+        bh=yU3/HvfUjHjQ53JRdVWT8WNLGIo0vYw31AjxgZcgicY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=f4zHvXotIhYOZorkCQ6nahR53+sE0xT88S0z6kaDEmmft4mnpdxEjaeJ7SfOuU3XQ
-         e5u0RVDWHNA3IxIBTvob1EC2aYWwVWPV88+P2GtagnH2LCsn8b2VUhWl9jwwSFqxoB
-         Gg+LQ4QuhoyKXX/kAhbM/3xNLEGaIJjomilrSAEc=
+        b=s10bYFfsILumYawezrFzGUiIbAPtQS9eWSRhixntcenmWt9bwYSE5NforiwfJmG6l
+         O3ELP0zoy91wEnJsYIodEBsBdwfhpK5lYGTf8104sM6/VdQcHiMsjVZKj+g4HWLx4i
+         8fpJw4e9Sb//MKIr3E3sGrbPJ3ScQhL5E+8lsz3I=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Alexey Kardashevskiy <aik@ozlabs.ru>,
-        Alex Williamson <alex.williamson@redhat.com>,
+        stable@vger.kernel.org, Sam McNally <sammc@chromium.org>,
+        Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>,
+        Mark Brown <broonie@kernel.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.5 208/399] vfio/spapr/nvlink2: Skip unpinning pages on error exit
-Date:   Fri, 21 Feb 2020 08:38:53 +0100
-Message-Id: <20200221072423.130034911@linuxfoundation.org>
+Subject: [PATCH 5.5 209/399] ASoC: Intel: sof_rt5682: Ignore the speaker amp when there isnt one.
+Date:   Fri, 21 Feb 2020 08:38:54 +0100
+Message-Id: <20200221072423.264139200@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200221072402.315346745@linuxfoundation.org>
 References: <20200221072402.315346745@linuxfoundation.org>
@@ -60,47 +61,69 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Alexey Kardashevskiy <aik@ozlabs.ru>
+From: Sam McNally <sammc@chromium.org>
 
-[ Upstream commit 338b4e10f939a71194d8ecef7ece205a942cec05 ]
+[ Upstream commit d4b74e218a8d0d6cf58e546627ab9d4d4f2645ab ]
 
-The nvlink2 subdriver for IBM Witherspoon machines preregisters
-GPU memory in the IOMMI API so KVM TCE code can map this memory
-for DMA as well. This is done by mm_iommu_newdev() called from
-vfio_pci_nvgpu_regops::mmap.
+Some members of the Google_Hatch family include a rt5682 jack codec, but
+no speaker amplifier. This uses the same driver (sof_rt5682) as a
+combination of rt5682 jack codec and max98357a speaker amplifier. Within
+the sof_rt5682 driver, these cases are not currently distinguishable,
+relying on a DMI quirk to decide the configuration. This causes an
+incorrect configuration when only the rt5682 is present on a
+Google_Hatch device.
 
-In an unlikely event of failure the data->mem remains NULL and
-since mm_iommu_put() (which unregisters the region and unpins memory
-if that was regular memory) does not expect mem=NULL, it should not be
-called.
+For CML, the jack codec is used as the primary key when matching,
+with a possible speaker amplifier described in quirk_data. The two cases
+of interest are the second and third 10EC5682 entries in
+snd_soc_acpi_intel_cml_machines[]. The second entry matches the
+combination of rt5682 and max98357a, resulting in the quirk_data field
+in the snd_soc_acpi_mach being non-null, pointing at
+max98357a_spk_codecs, the snd_soc_acpi_codecs for the matched speaker
+amplifier. The third entry matches just the rt5682, resulting in a null
+quirk_data.
 
-This adds a check to only call mm_iommu_put() for a valid data->mem.
+The sof_rt5682 driver's DMI data matching identifies that a speaker
+amplifier is present for all Google_Hatch family devices. Detect cases
+where there is no speaker amplifier by checking for a null quirk_data in
+the snd_soc_acpi_mach and remove the speaker amplifier bit in that case.
 
-Fixes: 7f92891778df ("vfio_pci: Add NVIDIA GV100GL [Tesla V100 SXM2] subdriver")
-Signed-off-by: Alexey Kardashevskiy <aik@ozlabs.ru>
-Signed-off-by: Alex Williamson <alex.williamson@redhat.com>
+Signed-off-by: Sam McNally <sammc@chromium.org>
+Acked-by: Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
+Link: https://lore.kernel.org/r/20200103124921.v3.1.Ib87c4a7fbb3fc818ea12198e291b87dc2d5bc8c2@changeid
+Signed-off-by: Mark Brown <broonie@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/vfio/pci/vfio_pci_nvlink2.c | 6 ++++--
- 1 file changed, 4 insertions(+), 2 deletions(-)
+ sound/soc/intel/boards/sof_rt5682.c | 9 ++++++++-
+ 1 file changed, 8 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/vfio/pci/vfio_pci_nvlink2.c b/drivers/vfio/pci/vfio_pci_nvlink2.c
-index f2983f0f84bea..3f5f8198a6bb1 100644
---- a/drivers/vfio/pci/vfio_pci_nvlink2.c
-+++ b/drivers/vfio/pci/vfio_pci_nvlink2.c
-@@ -97,8 +97,10 @@ static void vfio_pci_nvgpu_release(struct vfio_pci_device *vdev,
+diff --git a/sound/soc/intel/boards/sof_rt5682.c b/sound/soc/intel/boards/sof_rt5682.c
+index ad8a2b4bc7092..8a13231dee15d 100644
+--- a/sound/soc/intel/boards/sof_rt5682.c
++++ b/sound/soc/intel/boards/sof_rt5682.c
+@@ -603,6 +603,14 @@ static int sof_audio_probe(struct platform_device *pdev)
  
- 	/* If there were any mappings at all... */
- 	if (data->mm) {
--		ret = mm_iommu_put(data->mm, data->mem);
--		WARN_ON(ret);
-+		if (data->mem) {
-+			ret = mm_iommu_put(data->mm, data->mem);
-+			WARN_ON(ret);
-+		}
+ 	dmi_check_system(sof_rt5682_quirk_table);
  
- 		mmdrop(data->mm);
- 	}
++	mach = (&pdev->dev)->platform_data;
++
++	/* A speaker amp might not be present when the quirk claims one is.
++	 * Detect this via whether the machine driver match includes quirk_data.
++	 */
++	if ((sof_rt5682_quirk & SOF_SPEAKER_AMP_PRESENT) && !mach->quirk_data)
++		sof_rt5682_quirk &= ~SOF_SPEAKER_AMP_PRESENT;
++
+ 	if (soc_intel_is_byt() || soc_intel_is_cht()) {
+ 		is_legacy_cpu = 1;
+ 		dmic_be_num = 0;
+@@ -663,7 +671,6 @@ static int sof_audio_probe(struct platform_device *pdev)
+ 	INIT_LIST_HEAD(&ctx->hdmi_pcm_list);
+ 
+ 	sof_audio_card_rt5682.dev = &pdev->dev;
+-	mach = (&pdev->dev)->platform_data;
+ 
+ 	/* set platform name for each dailink */
+ 	ret = snd_soc_fixup_dai_links_platform_name(&sof_audio_card_rt5682,
 -- 
 2.20.1
 
