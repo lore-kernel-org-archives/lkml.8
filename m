@@ -5,49 +5,49 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0431EC35640
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 07:55:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C7AD1C35640
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 07:55:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CC77F2073A
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 07:55:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 94D4B2073A
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 07:55:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582271704;
-	bh=Oq3imaSnvk3qp2sKFwj8TW2fh3DxiGumyaDniiv4fZE=;
+	s=default; t=1582271707;
+	bh=S8L5RthTJ+fg8I4Qt4oWmfh6Upifu+P+RmgF9/5QYys=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ovmxHNq14qRg2D+9VfjsF3AgDtzmtBNZZohSlR4gqDLmnQkQiC3rgdU8MxNBP8d0U
-	 pfrh7l+8ZB7VOWho1KjHEAisIU3q4UtIqrsGAWnDYlUfBPoU+Jl35jZ1ADcpbqfTEV
-	 cEztOAmu4qan7HZHu4k56dUhfSUXrxSWwl2njtg4=
+	b=J12buyVAiW38N3BGegd7QjBVdNeFi/XajKx6akNWRSYzgl17DmOLgoZnXC20Ufq4e
+	 tP9Iv5M73lBbes2IIi3ubOy9V6NI1wziC++gQ0iKUzsjAlvUFrTcRa60xLA9ukHxtQ
+	 MHXbQhHU1jVrXd9OMZ739ll0MZwqUJqzIo2Sxmgk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729600AbgBUHzC (ORCPT
+        id S1729416AbgBUHzG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Feb 2020 02:55:02 -0500
-Received: from mail.kernel.org ([198.145.29.99]:53690 "EHLO mail.kernel.org"
+        Fri, 21 Feb 2020 02:55:06 -0500
+Received: from mail.kernel.org ([198.145.29.99]:53774 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728481AbgBUHzA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Feb 2020 02:55:00 -0500
+        id S1729608AbgBUHzD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 21 Feb 2020 02:55:03 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 270F120801;
-        Fri, 21 Feb 2020 07:54:58 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5B07F20801;
+        Fri, 21 Feb 2020 07:55:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1582271699;
-        bh=Oq3imaSnvk3qp2sKFwj8TW2fh3DxiGumyaDniiv4fZE=;
+        s=default; t=1582271702;
+        bh=S8L5RthTJ+fg8I4Qt4oWmfh6Upifu+P+RmgF9/5QYys=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=PuEQXcSxml92JdRlkoyGXqXPVEwG04a8WLLvoe6/8kBBNF/6MjtW6C5LkFFzM6aPP
-         A+g4hpUei4XYvL8sUorvgOHO0cOEdg65ggKMDaxXpsjVuw6W3WBH9Su1N/3clKPuuB
-         W/xgk1PDp9N9uhkTgBF+echw5wsPdwb+ncJxfwFE=
+        b=2sEd22wYMQV/Bhan/PCsg7se5JXMWgOOLao4PTsK3pYP0olKZ8v795ls1XGe2wR0N
+         lYMigMigfFlojVhQp/grM5bysPMDV5lduJKYASb8m2Pni8XLWz3QjHk+mJq25YI92O
+         udMm/AonfYfU43IQ4hFmTyAvGIyj8Qeix1UZfcGg=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Joakim Zhang <qiangqing.zhang@nxp.com>,
-        Leonard Crestez <leonard.crestez@nxp.com>,
-        Will Deacon <will@kernel.org>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.5 264/399] perf/imx_ddr: Fix cpu hotplug state cleanup
-Date:   Fri, 21 Feb 2020 08:39:49 +0100
-Message-Id: <20200221072428.021218139@linuxfoundation.org>
+        stable@vger.kernel.org, Pavel Machek <pavel@ucw.cz>,
+        Tony Lindgren <tony@atomide.com>, Bin Liu <b-liu@ti.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.5 265/399] usb: musb: omap2430: Get rid of musb .set_vbus for omap2430 glue
+Date:   Fri, 21 Feb 2020 08:39:50 +0100
+Message-Id: <20200221072428.097685216@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200221072402.315346745@linuxfoundation.org>
 References: <20200221072402.315346745@linuxfoundation.org>
@@ -60,77 +60,54 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Leonard Crestez <leonard.crestez@nxp.com>
+From: Tony Lindgren <tony@atomide.com>
 
-[ Upstream commit 9ee68b314e9aa63ed11b98beb8a68810b8234dcf ]
+[ Upstream commit 91b6dec32e5c25fbdbb564d1e5af23764ec17ef1 ]
 
-This driver allocates a dynamic cpu hotplug state but never releases it.
-If reloaded in a loop it will quickly trigger a WARN message:
+We currently have musb_set_vbus() called from two different paths. Mostly
+it gets called from the USB PHY via omap_musb_set_mailbox(), but in some
+cases it can get also called from musb_stage0_irq() rather via .set_vbus:
 
-	"No more dynamic states available for CPU hotplug"
+(musb_set_host [musb_hdrc])
+(omap2430_musb_set_vbus [omap2430])
+(musb_stage0_irq [musb_hdrc])
+(musb_interrupt [musb_hdrc])
+(omap2430_musb_interrupt [omap2430])
 
-Fix by calling cpuhp_remove_multi_state on remove like several other
-perf pmu drivers.
+This is racy and will not work with introducing generic helper functions
+for musb_set_host() and musb_set_peripheral(). We want to get rid of the
+busy loops in favor of usleep_range().
 
-Also fix the cleanup logic on probe error paths: add the missing
-cpuhp_remove_multi_state call and properly check the return value from
-cpuhp_state_add_instant_nocalls.
+Let's just get rid of .set_vbus for omap2430 glue layer and let the PHY
+code handle VBUS with musb_set_vbus(). Note that in the follow-up patch
+we can completely remove omap2430_musb_set_vbus(), but let's do it in a
+separate patch as this change may actually turn out to be needed as a
+fix.
 
-Fixes: 9a66d36cc7ac ("drivers/perf: imx_ddr: Add DDR performance counter support to perf")
-Acked-by: Joakim Zhang <qiangqing.zhang@nxp.com>
-Signed-off-by: Leonard Crestez <leonard.crestez@nxp.com>
-Signed-off-by: Will Deacon <will@kernel.org>
+Reported-by: Pavel Machek <pavel@ucw.cz>
+Acked-by: Pavel Machek <pavel@ucw.cz>
+Signed-off-by: Tony Lindgren <tony@atomide.com>
+Signed-off-by: Bin Liu <b-liu@ti.com>
+Link: https://lore.kernel.org/r/20200115132547.364-5-b-liu@ti.com
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/perf/fsl_imx8_ddr_perf.c | 16 +++++++++++-----
- 1 file changed, 11 insertions(+), 5 deletions(-)
+ drivers/usb/musb/omap2430.c | 2 --
+ 1 file changed, 2 deletions(-)
 
-diff --git a/drivers/perf/fsl_imx8_ddr_perf.c b/drivers/perf/fsl_imx8_ddr_perf.c
-index 55083c67b2bb0..95dca2cb52650 100644
---- a/drivers/perf/fsl_imx8_ddr_perf.c
-+++ b/drivers/perf/fsl_imx8_ddr_perf.c
-@@ -633,13 +633,17 @@ static int ddr_perf_probe(struct platform_device *pdev)
+diff --git a/drivers/usb/musb/omap2430.c b/drivers/usb/musb/omap2430.c
+index a3d2fef677468..5c93226e0e20a 100644
+--- a/drivers/usb/musb/omap2430.c
++++ b/drivers/usb/musb/omap2430.c
+@@ -361,8 +361,6 @@ static const struct musb_platform_ops omap2430_ops = {
+ 	.init		= omap2430_musb_init,
+ 	.exit		= omap2430_musb_exit,
  
- 	if (ret < 0) {
- 		dev_err(&pdev->dev, "cpuhp_setup_state_multi failed\n");
--		goto ddr_perf_err;
-+		goto cpuhp_state_err;
- 	}
- 
- 	pmu->cpuhp_state = ret;
- 
- 	/* Register the pmu instance for cpu hotplug */
--	cpuhp_state_add_instance_nocalls(pmu->cpuhp_state, &pmu->node);
-+	ret = cpuhp_state_add_instance_nocalls(pmu->cpuhp_state, &pmu->node);
-+	if (ret) {
-+		dev_err(&pdev->dev, "Error %d registering hotplug\n", ret);
-+		goto cpuhp_instance_err;
-+	}
- 
- 	/* Request irq */
- 	irq = of_irq_get(np, 0);
-@@ -673,9 +677,10 @@ static int ddr_perf_probe(struct platform_device *pdev)
- 	return 0;
- 
- ddr_perf_err:
--	if (pmu->cpuhp_state)
--		cpuhp_state_remove_instance_nocalls(pmu->cpuhp_state, &pmu->node);
+-	.set_vbus	= omap2430_musb_set_vbus,
 -
-+	cpuhp_state_remove_instance_nocalls(pmu->cpuhp_state, &pmu->node);
-+cpuhp_instance_err:
-+	cpuhp_remove_multi_state(pmu->cpuhp_state);
-+cpuhp_state_err:
- 	ida_simple_remove(&ddr_ida, pmu->id);
- 	dev_warn(&pdev->dev, "i.MX8 DDR Perf PMU failed (%d), disabled\n", ret);
- 	return ret;
-@@ -686,6 +691,7 @@ static int ddr_perf_remove(struct platform_device *pdev)
- 	struct ddr_pmu *pmu = platform_get_drvdata(pdev);
+ 	.enable		= omap2430_musb_enable,
+ 	.disable	= omap2430_musb_disable,
  
- 	cpuhp_state_remove_instance_nocalls(pmu->cpuhp_state, &pmu->node);
-+	cpuhp_remove_multi_state(pmu->cpuhp_state);
- 	irq_set_affinity_hint(pmu->irq, NULL);
- 
- 	perf_pmu_unregister(&pmu->pmu);
 -- 
 2.20.1
 
