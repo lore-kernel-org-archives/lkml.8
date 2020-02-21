@@ -2,115 +2,309 @@ Return-Path: <SRS0=1210=4J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,UNWANTED_LANGUAGE_BODY,URIBL_BLOCKED autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B1E5BC11D27
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 00:32:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8653AC11D00
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 00:33:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8824D20659
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 00:32:28 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=amacapital-net.20150623.gappssmtp.com header.i=@amacapital-net.20150623.gappssmtp.com header.b="L2xq9Vle"
+	by mail.kernel.org (Postfix) with ESMTP id 51D1520659
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 00:33:04 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1582245184;
+	bh=do51DJymz7Opt+kTxNA4qT//co6leIpBdp88tjmooMQ=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=eKw5ANWhWGsGVTqtG/So324h9I+Krts/aAsVgliNSqQZeJlQckwozjun8Vpp+c7rr
+	 1y6V+UyjeQrxpulcIpmZ4VdtiVEeI6fyS2CjmArD67HOERkV8NL60m2R3qB0xVSEnP
+	 Xs6glweIUp2sxY8s95pDWrdApVTtJpVEeXYdmc2M=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729475AbgBUAc1 (ORCPT
+        id S1729502AbgBUAdD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Feb 2020 19:32:27 -0500
-Received: from mail-pf1-f196.google.com ([209.85.210.196]:32933 "EHLO
-        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729419AbgBUAc0 (ORCPT
+        Thu, 20 Feb 2020 19:33:03 -0500
+Received: from mail-pj1-f66.google.com ([209.85.216.66]:35253 "EHLO
+        mail-pj1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729446AbgBUAdC (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Feb 2020 19:32:26 -0500
-Received: by mail-pf1-f196.google.com with SMTP id n7so287033pfn.0
-        for <linux-kernel@vger.kernel.org>; Thu, 20 Feb 2020 16:32:26 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=amacapital-net.20150623.gappssmtp.com; s=20150623;
-        h=content-transfer-encoding:from:mime-version:subject:date:message-id
-         :references:cc:in-reply-to:to;
-        bh=z2DSekIXnkX9eU39ZMxeSaJ+Ey4ada2j/LjI3viMpe8=;
-        b=L2xq9Vle6jxp9WXJix/nJ1E6aNq25XGRDldBnE6uRfHPTKAZidzklN+ABPMmf6twdj
-         9iF+ezVYOWPSBqEKGBFsP667oRit4McJEgy0SnPH61oD5WigzY6ow9ds+A4YVkKCg71+
-         isZ9j8P++FFMlx1PqFw2gd5fAr2ryaDc1lybA8W/uuAZFCMG/J6CL3EM1K8nQ/sEMLMr
-         R4yNGXen8b9ERC8Inh1eMrA9zbbvEY7KBfc0E7lwgRjD71sZku0KLC5Wub0HyEN+1azo
-         A7y9Aq2fiHX8eP7WA9XiUVTh11d13PprbklWSMPwnVUjKJeB7br7pZScqcu/sxf5hmEZ
-         ZLsQ==
+        Thu, 20 Feb 2020 19:33:02 -0500
+Received: by mail-pj1-f66.google.com with SMTP id q39so243416pjc.0;
+        Thu, 20 Feb 2020 16:33:01 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:content-transfer-encoding:from:mime-version
-         :subject:date:message-id:references:cc:in-reply-to:to;
-        bh=z2DSekIXnkX9eU39ZMxeSaJ+Ey4ada2j/LjI3viMpe8=;
-        b=mcD//FvrWezquY4OJm9uhg27Xg/i215toyFCaHLsdlDWB3FZn555cRU6d8MPan/s+G
-         j66bleDvcyXRpoHeZ6cLkqScXssNpp4Owxd7u1inuGIZ0D3rUdOcLdp1es1vAFxnN6Qm
-         fCQvG4L0uk+TDepBLz4BLrtuMcRArd6XhV7j7oMsdw22g3/wTeiRr//bUUhbLKsTn23W
-         LfDsAmS72DYDcfoxNWrVWxW7tE4P1Mz8sM1Rcf/gCMb0jLmzsjQuqfiffjMTV+q8ug4Z
-         QMAQftz8A9iGfw9j/ltw3beOw9EEM3at50+YWTSN2jMzAjuLvv7hDyi6IRuiLDWhQrpj
-         jLew==
-X-Gm-Message-State: APjAAAWVmlGbaVqRzJ3boQ2HOMK4ls7GC5dHtt017MM/nsU6RL7tIZyE
-        1k+ytyoiXAIg+EQ+pApo+C3S5g==
-X-Google-Smtp-Source: APXvYqw+4sLKln1oYdQ5ZrfvbhT1EDHvVbA/mNOVE6O5bdOhE1oFR/NW3nQfak7gZ3wI/2EWOdZ/fg==
-X-Received: by 2002:a63:9919:: with SMTP id d25mr35049553pge.22.1582245146084;
-        Thu, 20 Feb 2020 16:32:26 -0800 (PST)
-Received: from ?IPv6:2601:646:c200:1ef2:511c:ebc0:d124:b4a0? ([2601:646:c200:1ef2:511c:ebc0:d124:b4a0])
-        by smtp.gmail.com with ESMTPSA id f43sm540853pje.23.2020.02.20.16.32.24
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 20 Feb 2020 16:32:25 -0800 (PST)
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-From:   Andy Lutomirski <luto@amacapital.net>
-Mime-Version: 1.0 (1.0)
-Subject: Re: [PATCH v26 10/22] x86/sgx: Linux Enclave Driver
-Date:   Thu, 20 Feb 2020 16:32:22 -0800
-Message-Id: <6AE5891F-FC0D-4062-A6CA-01C78C2D5A1A@amacapital.net>
-References: <20200220221607.GB26618@linux.intel.com>
-Cc:     Sean Christopherson <sean.j.christopherson@intel.com>,
-        Jordan Hand <jorhand@linux.microsoft.com>,
-        linux-kernel@vger.kernel.org, x86@kernel.org,
-        linux-sgx@vger.kernel.org, akpm@linux-foundation.org,
-        dave.hansen@intel.com, nhorman@redhat.com, npmccallum@redhat.com,
-        haitao.huang@intel.com, andriy.shevchenko@linux.intel.com,
-        tglx@linutronix.de, kai.svahn@intel.com, bp@alien8.de,
-        josh@joshtriplett.org, luto@kernel.org, kai.huang@intel.com,
-        rientjes@google.com, cedric.xing@intel.com, puiterwijk@redhat.com,
-        linux-security-module@vger.kernel.org,
-        Suresh Siddha <suresh.b.siddha@intel.com>,
-        Haitao Huang <haitao.huang@linux.intel.com>
-In-Reply-To: <20200220221607.GB26618@linux.intel.com>
-To:     Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
-X-Mailer: iPhone Mail (17D50)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=y8BN+kSCv2FUdtwL62CSiaNgJJkkdpFvO+uWjGuBmHM=;
+        b=iTk2fchckhS+Kr9b90eZMNLgHji+v562n6ihHbWFMhQ4CsoODsUXyR8FrPO55DvJXu
+         VEs81Qhhn7iS7PcAF1o9rwfbG9XhrYpfkjG/Mm/lkd4lSUe6mLY5ihPyG+eoUjZFpVjy
+         tTh7+Ul/OYgxf2aWY75x7cxthx09a7y6FbHPnwidTA3JE2kWDoIhFfQULG6KXydWh1U/
+         YW2N7MoLANe4mTzcQdtUlcEPAgbZyTkzwDwgkYt1snpRE/IWgAC9AKd9mdiOJKkuoXpS
+         7O3YAbzuxtetly+TaINiqS6S8CsOZTEglqONRcKiLr7V2K1QZgZwSynplziWd4mJeYTg
+         4thQ==
+X-Gm-Message-State: APjAAAV+f6zzf/xPT6mlhajcxVjvYuwDIEU7WRk8HZa4btLmYhbOFAYh
+        tNhVY2K+RYjOkoxp5Blho0FVI474bPIEPA==
+X-Google-Smtp-Source: APXvYqwG2OAf1rldEH76VLfp2UBU7wjXBnmhiyRB1S997d/3OUm83yILPJfwsiklZz4Zp2NOQPBMig==
+X-Received: by 2002:a17:902:8ec6:: with SMTP id x6mr32492291plo.247.1582245180417;
+        Thu, 20 Feb 2020 16:33:00 -0800 (PST)
+Received: from localhost ([2601:647:5b00:710:ffa7:88dc:9c39:76d9])
+        by smtp.gmail.com with ESMTPSA id i3sm726075pfg.94.2020.02.20.16.32.58
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 20 Feb 2020 16:32:59 -0800 (PST)
+Date:   Thu, 20 Feb 2020 16:32:58 -0800
+From:   Moritz Fischer <mdf@kernel.org>
+To:     Xu Yilun <yilun.xu@intel.com>
+Cc:     mdf@kernel.org, linux-fpga@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Wu Hao <hao.wu@intel.com>
+Subject: Re: [PATCH] fpga: dfl: support multiple opens on feature device node.
+Message-ID: <20200221003258.GA2670@epycbox.lan>
+References: <1574054441-1568-1-git-send-email-yilun.xu@intel.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1574054441-1568-1-git-send-email-yilun.xu@intel.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Hi Xu,
 
+On Mon, Nov 18, 2019 at 01:20:41PM +0800, Xu Yilun wrote:
+> Each DFL functional block, e.g. AFU (Accelerated Function Unit) and FME
+> (FPGA Management Engine), could implement more than one function within
+> its region, but current driver only allows one user application to access
+> it by exclusive open on device node. So this is not convenient and
+> flexible for userspace applications, as they have to combine lots of
+> different functions into one single application.
+> 
+> This patch removes the limitation here to allow multiple opens to each
+> feature device node for AFU and FME from userspace applications. If user
+> still needs exclusive access to these device node, O_EXCL flag must be
+> issued together with open.
+> 
+> Signed-off-by: Wu Hao <hao.wu@intel.com>
+> Signed-off-by: Xu Yilun <yilun.xu@intel.com>
+> ---
+>  drivers/fpga/dfl-afu-main.c | 26 +++++++++++++++-----------
+>  drivers/fpga/dfl-fme-main.c | 19 ++++++++++++-------
+>  drivers/fpga/dfl.c          | 15 +++++++++++++--
+>  drivers/fpga/dfl.h          | 35 +++++++++++++++++++++++++++--------
+>  4 files changed, 67 insertions(+), 28 deletions(-)
+> 
+> diff --git a/drivers/fpga/dfl-afu-main.c b/drivers/fpga/dfl-afu-main.c
+> index e4a34dc..c6e0e07 100644
+> --- a/drivers/fpga/dfl-afu-main.c
+> +++ b/drivers/fpga/dfl-afu-main.c
+> @@ -561,14 +561,16 @@ static int afu_open(struct inode *inode, struct file *filp)
+>  	if (WARN_ON(!pdata))
+>  		return -ENODEV;
+>  
+> -	ret = dfl_feature_dev_use_begin(pdata);
+> -	if (ret)
+> -		return ret;
+> -
+> -	dev_dbg(&fdev->dev, "Device File Open\n");
+> -	filp->private_data = fdev;
+> +	mutex_lock(&pdata->lock);
+> +	ret = dfl_feature_dev_use_begin(pdata, filp->f_flags & O_EXCL);
+> +	if (!ret) {
+> +		dev_dbg(&fdev->dev, "Device File Opened %d Times\n",
+> +			dfl_feature_dev_use_count(pdata));
+> +		filp->private_data = fdev;
+> +	}
+> +	mutex_unlock(&pdata->lock);
+>  
+> -	return 0;
+> +	return ret;
+>  }
+>  
+>  static int afu_release(struct inode *inode, struct file *filp)
+> @@ -581,12 +583,14 @@ static int afu_release(struct inode *inode, struct file *filp)
+>  	pdata = dev_get_platdata(&pdev->dev);
+>  
+>  	mutex_lock(&pdata->lock);
+> -	__port_reset(pdev);
+> -	afu_dma_region_destroy(pdata);
+> -	mutex_unlock(&pdata->lock);
+> -
+>  	dfl_feature_dev_use_end(pdata);
+>  
+> +	if (!dfl_feature_dev_use_count(pdata)) {
+> +		__port_reset(pdev);
+> +		afu_dma_region_destroy(pdata);
+> +	}
+> +	mutex_unlock(&pdata->lock);
+> +
+>  	return 0;
+>  }
+>  
+> diff --git a/drivers/fpga/dfl-fme-main.c b/drivers/fpga/dfl-fme-main.c
+> index 7c930e6..fda8623 100644
+> --- a/drivers/fpga/dfl-fme-main.c
+> +++ b/drivers/fpga/dfl-fme-main.c
+> @@ -600,14 +600,16 @@ static int fme_open(struct inode *inode, struct file *filp)
+>  	if (WARN_ON(!pdata))
+>  		return -ENODEV;
+>  
+> -	ret = dfl_feature_dev_use_begin(pdata);
+> -	if (ret)
+> -		return ret;
+> -
+> -	dev_dbg(&fdev->dev, "Device File Open\n");
+> -	filp->private_data = pdata;
+> +	mutex_lock(&pdata->lock);
+> +	ret = dfl_feature_dev_use_begin(pdata, filp->f_flags & O_EXCL);
+> +	if (!ret) {
+> +		dev_dbg(&fdev->dev, "Device File Opened %d Times\n",
+> +			dfl_feature_dev_use_count(pdata));
+> +		filp->private_data = pdata;
+> +	}
+> +	mutex_unlock(&pdata->lock);
+>  
+> -	return 0;
+> +	return ret;
+>  }
+>  
+>  static int fme_release(struct inode *inode, struct file *filp)
+> @@ -616,7 +618,10 @@ static int fme_release(struct inode *inode, struct file *filp)
+>  	struct platform_device *pdev = pdata->dev;
+>  
+>  	dev_dbg(&pdev->dev, "Device File Release\n");
+> +
+> +	mutex_lock(&pdata->lock);
+>  	dfl_feature_dev_use_end(pdata);
+> +	mutex_unlock(&pdata->lock);
+>  
+>  	return 0;
+>  }
+> diff --git a/drivers/fpga/dfl.c b/drivers/fpga/dfl.c
+> index 96a2b82..9909948 100644
+> --- a/drivers/fpga/dfl.c
+> +++ b/drivers/fpga/dfl.c
+> @@ -1079,6 +1079,7 @@ static int __init dfl_fpga_init(void)
+>   */
+>  int dfl_fpga_cdev_release_port(struct dfl_fpga_cdev *cdev, int port_id)
+>  {
+> +	struct dfl_feature_platform_data *pdata;
+>  	struct platform_device *port_pdev;
+>  	int ret = -ENODEV;
+>  
+> @@ -1093,7 +1094,11 @@ int dfl_fpga_cdev_release_port(struct dfl_fpga_cdev *cdev, int port_id)
+>  		goto put_dev_exit;
+>  	}
+>  
+> -	ret = dfl_feature_dev_use_begin(dev_get_platdata(&port_pdev->dev));
+> +	pdata = dev_get_platdata(&port_pdev->dev);
+> +
+> +	mutex_lock(&pdata->lock);
+> +	ret = dfl_feature_dev_use_begin(pdata, true);
+> +	mutex_unlock(&pdata->lock);
+>  	if (ret)
+>  		goto put_dev_exit;
+>  
+> @@ -1120,6 +1125,7 @@ EXPORT_SYMBOL_GPL(dfl_fpga_cdev_release_port);
+>   */
+>  int dfl_fpga_cdev_assign_port(struct dfl_fpga_cdev *cdev, int port_id)
+>  {
+> +	struct dfl_feature_platform_data *pdata;
+>  	struct platform_device *port_pdev;
+>  	int ret = -ENODEV;
+>  
+> @@ -1138,7 +1144,12 @@ int dfl_fpga_cdev_assign_port(struct dfl_fpga_cdev *cdev, int port_id)
+>  	if (ret)
+>  		goto put_dev_exit;
+>  
+> -	dfl_feature_dev_use_end(dev_get_platdata(&port_pdev->dev));
+> +	pdata = dev_get_platdata(&port_pdev->dev);
+> +
+> +	mutex_lock(&pdata->lock);
+> +	dfl_feature_dev_use_end(pdata);
+> +	mutex_unlock(&pdata->lock);
+> +
+>  	cdev->released_port_num--;
+>  put_dev_exit:
+>  	put_device(&port_pdev->dev);
+> diff --git a/drivers/fpga/dfl.h b/drivers/fpga/dfl.h
+> index 9f0e656..4a9a33c 100644
+> --- a/drivers/fpga/dfl.h
+> +++ b/drivers/fpga/dfl.h
+> @@ -205,8 +205,6 @@ struct dfl_feature {
+>  	const struct dfl_feature_ops *ops;
+>  };
+>  
+> -#define DEV_STATUS_IN_USE	0
+> -
+>  #define FEATURE_DEV_ID_UNUSED	(-1)
+>  
+>  /**
+> @@ -219,8 +217,9 @@ struct dfl_feature {
+>   * @dfl_cdev: ptr to container device.
+>   * @id: id used for this feature device.
+>   * @disable_count: count for port disable.
+> + * @excl_open: set on feature device exclusive open.
+> + * @open_count: count for feature device open.
+>   * @num: number for sub features.
+> - * @dev_status: dev status (e.g. DEV_STATUS_IN_USE).
+>   * @private: ptr to feature dev private data.
+>   * @features: sub features of this feature dev.
+>   */
+> @@ -232,26 +231,46 @@ struct dfl_feature_platform_data {
+>  	struct dfl_fpga_cdev *dfl_cdev;
+>  	int id;
+>  	unsigned int disable_count;
+> -	unsigned long dev_status;
+> +	bool excl_open;
+> +	int open_count;
+>  	void *private;
+>  	int num;
+>  	struct dfl_feature features[0];
+>  };
+>  
+>  static inline
+> -int dfl_feature_dev_use_begin(struct dfl_feature_platform_data *pdata)
+> +int dfl_feature_dev_use_begin(struct dfl_feature_platform_data *pdata,
+> +			      bool excl)
+>  {
+> -	/* Test and set IN_USE flags to ensure file is exclusively used */
+> -	if (test_and_set_bit_lock(DEV_STATUS_IN_USE, &pdata->dev_status))
+> +	if (pdata->excl_open)
+>  		return -EBUSY;
+>  
+> +	if (excl) {
+> +		if (pdata->open_count)
+> +			return -EBUSY;
+> +
+> +		pdata->excl_open = true;
+> +	}
+> +	pdata->open_count++;
+> +
+>  	return 0;
+>  }
+>  
+>  static inline
+>  void dfl_feature_dev_use_end(struct dfl_feature_platform_data *pdata)
+>  {
+> -	clear_bit_unlock(DEV_STATUS_IN_USE, &pdata->dev_status);
+> +	pdata->excl_open = false;
+> +
+> +	if (WARN_ON(pdata->open_count <= 0))
+> +		return;
+> +
+> +	pdata->open_count--;
+> +}
+> +
+> +static inline
+> +int dfl_feature_dev_use_count(struct dfl_feature_platform_data *pdata)
+> +{
+> +	return pdata->open_count;
+>  }
+>  
+>  static inline
+> -- 
+> 2.7.4
+> 
 
+Applied to for-next.
 
-> On Feb 20, 2020, at 2:16 PM, Jarkko Sakkinen <jarkko.sakkinen@linux.intel.=
-com> wrote:
->=20
-> =EF=BB=BFOn Thu, Feb 20, 2020 at 10:48:42AM -0800, Sean Christopherson wro=
-te:
->> My biggest concern for allowing PROT_EXEC if RIE is that it would result
->> in #PF(SGX) (#GP on Skylake) due to an EPCM violation if the enclave
->> actually tried to execute from such a page.  This isn't a problem for the=
-
->> kernel as the fault will be reported cleanly through the vDSO (or get
->> delivered as a SIGSEGV if the enclave isn't entered through the vDSO), bu=
-t
->> it's a bit weird for userspace as userspace will see the #PF(SGX) and
->> likely assume the EPC was lost, e.g. silently restart the enclave instead=
-
->> of logging an error that the enclave is broken.
->=20
-> I think right way to fix the current implementation is to -EACCES mmap()
-> (and mprotect) when !!(current->personality & READ_IMPLIES_EXEC).
->=20
-> This way supporting RIE can be reconsidered later on without any
-> potential ABI bottlenecks.
->=20
-
-Sounds good to me.  I see no credible reason why anyone would use RIE and SG=
-X.
-
-> /Jarkko
+Thanks,
+Moritz
