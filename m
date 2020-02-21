@@ -2,172 +2,143 @@ Return-Path: <SRS0=1210=4J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-17.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT,
+	USER_IN_DEF_DKIM_WL autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1BCACC35669
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 19:58:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 70922C35669
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 19:59:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D85B620722
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 19:58:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 47C4120722
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 19:59:35 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b="BoVA7xvQ"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="v6Kq5LL0"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727695AbgBUT6G (ORCPT
+        id S1726878AbgBUT7e (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Feb 2020 14:58:06 -0500
-Received: from smtp-fw-9101.amazon.com ([207.171.184.25]:48777 "EHLO
-        smtp-fw-9101.amazon.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726483AbgBUT6G (ORCPT
+        Fri, 21 Feb 2020 14:59:34 -0500
+Received: from mail-yb1-f202.google.com ([209.85.219.202]:35988 "EHLO
+        mail-yb1-f202.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726443AbgBUT7d (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Feb 2020 14:58:06 -0500
+        Fri, 21 Feb 2020 14:59:33 -0500
+Received: by mail-yb1-f202.google.com with SMTP id m62so2498835ybc.3
+        for <linux-kernel@vger.kernel.org>; Fri, 21 Feb 2020 11:59:31 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
-  t=1582315084; x=1613851084;
-  h=from:to:cc:subject:date:message-id:references:
-   in-reply-to:content-id:content-transfer-encoding:
-   mime-version;
-  bh=u+7kFKKPhq+1vK4+KLq33Sk5wZvcAQTu0WYQ2aP+hKQ=;
-  b=BoVA7xvQXFhLkTev9asiN5wXvUrkexPIMm1rES/iUpK9t3rmBJea02E5
-   KpgswuLSsHTyRXwfcgqituXJU7GwNF0jdN7LqcxTHRMdx/3/RfsSjHpvR
-   TtpeGPrt3Q/4duC4eRoJ9PMfw+wCdTqxN+V5kT4uYJ0wWe3P/MvEdqwzm
-   I=;
-IronPort-SDR: NySSqsmMlNAN7JSErdo14vzi6n/8roDopuiugHD31C7o3+XXkxYNa/lLJawlnruF6iM7CPjU6Z
- pTHXaivF5KQg==
-X-IronPort-AV: E=Sophos;i="5.70,469,1574121600"; 
-   d="scan'208";a="18394499"
-Received: from sea32-co-svc-lb4-vlan3.sea.corp.amazon.com (HELO email-inbound-relay-2b-c7131dcf.us-west-2.amazon.com) ([10.47.23.38])
-  by smtp-border-fw-out-9101.sea19.amazon.com with ESMTP; 21 Feb 2020 19:58:02 +0000
-Received: from EX13MTAUWC001.ant.amazon.com (pdx4-ws-svc-p6-lb7-vlan2.pdx.amazon.com [10.170.41.162])
-        by email-inbound-relay-2b-c7131dcf.us-west-2.amazon.com (Postfix) with ESMTPS id 80197A29F7;
-        Fri, 21 Feb 2020 19:58:02 +0000 (UTC)
-Received: from EX13D30UWC003.ant.amazon.com (10.43.162.122) by
- EX13MTAUWC001.ant.amazon.com (10.43.162.135) with Microsoft SMTP Server (TLS)
- id 15.0.1367.3; Fri, 21 Feb 2020 19:58:01 +0000
-Received: from EX13D30UWC001.ant.amazon.com (10.43.162.128) by
- EX13D30UWC003.ant.amazon.com (10.43.162.122) with Microsoft SMTP Server (TLS)
- id 15.0.1367.3; Fri, 21 Feb 2020 19:58:01 +0000
-Received: from EX13D30UWC001.ant.amazon.com ([10.43.162.128]) by
- EX13D30UWC001.ant.amazon.com ([10.43.162.128]) with mapi id 15.00.1367.000;
- Fri, 21 Feb 2020 19:58:01 +0000
-From:   "Jitindar SIngh, Suraj" <surajjs@amazon.com>
-To:     "cai@lca.pw" <cai@lca.pw>
-CC:     "adilger.kernel@dilger.ca" <adilger.kernel@dilger.ca>,
-        "linux-ext4@vger.kernel.org" <linux-ext4@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "paulmck@kernel.org" <paulmck@kernel.org>,
-        "tytso@mit.edu" <tytso@mit.edu>
-Subject: Re: null-ptr-deref due to "ext4: fix potential race between online
- resizing and write operations"
-Thread-Topic: null-ptr-deref due to "ext4: fix potential race between online
- resizing and write operations"
-Thread-Index: AQHV6L+odjQxl+/4SEaue/VH8TFG/6gmEPAA
-Date:   Fri, 21 Feb 2020 19:58:01 +0000
-Message-ID: <d6ca935e3c70f275ec669fae8984b11f383baa1f.camel@amazon.com>
-References: <1582293736.7365.109.camel@lca.pw>
-In-Reply-To: <1582293736.7365.109.camel@lca.pw>
-Accept-Language: en-AU, en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-ms-exchange-messagesentrepresentingtype: 1
-x-ms-exchange-transport-fromentityheader: Hosted
-x-originating-ip: [10.43.162.53]
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <ACB3C7F264A4934092F5809921D0A7DB@amazon.com>
-Content-Transfer-Encoding: base64
-MIME-Version: 1.0
+        d=google.com; s=20161025;
+        h=date:message-id:mime-version:subject:from:to:cc;
+        bh=RAIlg0f7zdLpk9f1Byl/cwdgiwxUwp6aSHTCC3RY/oM=;
+        b=v6Kq5LL08ClIooNXUY3nDPFgWPI70VdsrwNaD3pbavipoxOiOoJyBhjmpWp2d+htUB
+         m12EesD8fukKMUJgNl4xdfmT5c4OuYOuWvovtiV/dIcx06EuCYYHAaYKg+UbNAUEEzSM
+         ONFjph/fYxjmElgTODoeSFzmqW+oSCSmZ8ZawNY1iqbXHr5bruclTHeD11A4dQjQfXGw
+         49pd1mMKkQG1ID5JtkSlnlZlPqYRvQTiR9HOKLRd7gC03H5pOmZPXoCOy0yDYXMIiDm1
+         da5HxInP1D2BW9gLZlZZGSQYD0BGCRoO0uuaIEUAEBJfFHICupfExZrs6Xfln9y7SURv
+         PJrg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:message-id:mime-version:subject:from:to:cc;
+        bh=RAIlg0f7zdLpk9f1Byl/cwdgiwxUwp6aSHTCC3RY/oM=;
+        b=icDpAnEi6hDjkFTZuKBEJvcH5C0HGNBTV6GUqN0ggPngoUklNhunF7SQgYFIzzFEtj
+         llcMwE8C570UXnzVTmZnDzwLHnujj/6FsNMdnJHVy1sIGk8lk7mQxhYLDViZ/JQFStKy
+         t/9fCaYhJyHBPueoxQdrjWziIkWhEH/hudWGLq+JlajXdnBe826TZcQBL2BQAqbknMGH
+         m/xCAMRQNP1P/Dgh8Hxpxx1xzhT2pOnCK+Ks1d06Rjlz++B6Q5Ojdp/i+TGHoxQa+zmN
+         I3wgBnQD47W/luahgF/db+HRl2GyFdS01EEDsaZkBYKaBcTqMPD8YMKWDZuD/k3vGOQz
+         xb/w==
+X-Gm-Message-State: APjAAAWA3ANp7oinVHOihjBah2aDNOojNJswfBX+9IwA5uTS2lFQA2k1
+        +wgKAqS+BLsedJ4WhWUQ75wr5Zvt39Xpxg==
+X-Google-Smtp-Source: APXvYqxjnxy+eZRYTRVN8mAGrdTES2zjvK9Gx/bLaPZ5OB6bYfhHJPW6A8a13wzgYYHT2Kphl/2XA9Pmpmnu2Q==
+X-Received: by 2002:a0d:c905:: with SMTP id l5mr29812030ywd.44.1582315171205;
+ Fri, 21 Feb 2020 11:59:31 -0800 (PST)
+Date:   Fri, 21 Feb 2020 11:59:19 -0800
+Message-Id: <20200221195919.186576-1-shakeelb@google.com>
+Mime-Version: 1.0
+X-Mailer: git-send-email 2.25.0.265.gbab2e86ba0-goog
+Subject: [PATCH] memcg: css_tryget_online cleanups
+From:   Shakeel Butt <shakeelb@google.com>
+To:     Johannes Weiner <hannes@cmpxchg.org>, Roman Gushchin <guro@fb.com>
+Cc:     Michal Hocko <mhocko@kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>, linux-mm@kvack.org,
+        cgroups@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Shakeel Butt <shakeelb@google.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-T24gRnJpLCAyMDIwLTAyLTIxIGF0IDA5OjAyIC0wNTAwLCBRaWFuIENhaSB3cm90ZToNCj4gUmV2
-ZXJ0ZWQgdGhlIGxpbnV4LW5leHQgY29tbWl0IGMyMGJhYzliZjgyYyAoImV4dDQ6IGZpeCBwb3Rl
-bnRpYWwNCj4gcmFjZSBiZXR3ZWVuDQo+IHNfZmxleF9ncm91cHMgb25saW5lIHJlc2l6aW5nIGFu
-ZCBhY2Nlc3MiKSBmaXhlZCB0aGUgY3Jhc2ggYmVsb3cNCj4gKHdpdGggbGluZQ0KPiBudW1iZXJz
-KSwNCg0KR29vZCBjYXRjaCwgdGhpcyBpcyBhIGJ1ZyB3aGVyZSB0aGUgZGVyZWZlcmVuY2Ugb2Yg
-dGhlIGFycmF5DQpzX2ZsZXhfZ3JvdXBzIG5lZWRzIHRvIGhhcHBlbiBhZnRlciB0aGUgImlmIChm
-bGV4X3NpemUgPiAxKSIgaWYNCnN0YXRlbWVudCBpbiBmcy9leHQ0L2lhbGxvYy5jOjM3Mw0KDQo+
-IA0KPiBzdHJ1Y3QgZmxleF9ncm91cHMgKmZsZXhfZ3JvdXAgPSBzYmlfYXJyYXlfcmN1X2RlcmVm
-KEVYVDRfU0Ioc2IpLA0KPiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgIHNfZmxleF9ncm91cHMsDQo+IGcpOw0KPiANCj4gWyAgNTc1LjkyNDUyN11b
-VDEzMTgzXSBMVFA6IHN0YXJ0aW5nIGZhbm90aWZ5MTMNCj4gWyAgNTc2LjAxMDU1NF1bVDMxODM1
-XSAvZGV2L3plcm86IENhbid0IG9wZW4gYmxvY2tkZXYNCj4gWyAgNTc2Ljg2NzM5Ml1bVDMxODM1
-XSBFWFQ0LWZzIChsb29wMCk6IG1vdW50aW5nIGV4dDMgZmlsZSBzeXN0ZW0NCj4gdXNpbmcgdGhl
-IGV4dDQNCj4gc3Vic3lzdGVtDQo+IFsgIDU3Ni45MTk2MDRdW1QzMTgzNV0gRVhUNC1mcyAobG9v
-cDApOiBtb3VudGVkIGZpbGVzeXN0ZW0gd2l0aA0KPiBvcmRlcmVkIGRhdGENCj4gbW9kZS4gT3B0
-czogKG51bGwpDQo+IFsgIDU3Ni45MjAxMTJdW1QzMTgzNV0gZXh0MyBmaWxlc3lzdGVtIGJlaW5n
-IG1vdW50ZWQgYXQgL3RtcC9sdHAtDQo+IFpNT05WR2xnd2kvbzBBMFJFL21udHBvaW50IHN1cHBv
-cnRzIHRpbWVzdGFtcHMgdW50aWwgMjAzOA0KPiAoMHg3ZmZmZmZmZikNCj4gWyAgNTc2Ljk0ODUw
-MV1bVDMxODU0XSBCVUc6IEtlcm5lbCBOVUxMIHBvaW50ZXIgZGVyZWZlcmVuY2Ugb24gcmVhZA0K
-PiBhdA0KPiAweDAwMDAwMDcwDQo+IFsgIDU3Ni45NDg1NTBdW1QzMTg1NF0gRmF1bHRpbmcgaW5z
-dHJ1Y3Rpb24gYWRkcmVzczoNCj4gMHhjMDA4MDAwMDEwNTAxYmZjDQo+IFsgIDU3Ni45NDg1NzNd
-W1QzMTg1NF0gT29wczogS2VybmVsIGFjY2VzcyBvZiBiYWQgYXJlYSwgc2lnOiAxMSBbIzFdDQo+
-IFsgIDU3Ni45NDg1NzVdWyAgICBDMl0gaXJxIGV2ZW50IHN0YW1wOiAxMDcwNzMzMTINCj4gWyAg
-NTc2Ljk0ODU4M11bICAgIEMyXSBoYXJkaXJxcyBsYXN0ICBlbmFibGVkIGF0ICgxMDcwNzMzMTIp
-Og0KPiBbPGMwMDAwMDAwMDA5OWExNzQ+XSBfcmF3X3NwaW5fdW5sb2NrX2lycXJlc3RvcmUrMHg5
-NC8weGQwDQo+IFsgIDU3Ni45NDg1OTVdW1QzMTg1NF0gTEUgUEFHRV9TSVpFPTY0SyBNTVU9UmFk
-aXggU01QIE5SX0NQVVM9MjU2DQo+IERFQlVHX1BBR0VBTExPQyBOVU1BIFBvd2VyTlYNCj4gWyAg
-NTc2Ljk0ODU5OF1bVDMxODU0XSBNb2R1bGVzIGxpbmtlZCBpbjogYnJkIGV4dDQgY3JjMTYgbWJj
-YWNoZSBqYmQyDQo+IGxvb3ANCj4gaXBfdGFibGVzIHhfdGFibGVzIHhmcyBzZF9tb2QgYm54Mngg
-YWhjaSBsaWJhaGNpIG1kaW8gbGliYXRhIHRnMw0KPiBsaWJwaHkNCj4gZmlybXdhcmVfY2xhc3Mg
-ZG1fbWlycm9yIGRtX3JlZ2lvbl9oYXNoIGRtX2xvZyBkbV9tb2QNCj4gWyAgNTc2Ljk0ODYxNF1b
-ICAgIEMyXSBoYXJkaXJxcyBsYXN0IGRpc2FibGVkIGF0ICgxMDcwNzMzMTEpOg0KPiBbPGMwMDAw
-MDAwMDA5OTllMGM+XSBfcmF3X3NwaW5fbG9ja19pcnFzYXZlKzB4M2MvMHhhMA0KPiBbICA1NzYu
-OTQ4NjQ2XVtUMzE4NTRdIENQVTogNTIgUElEOiAzMTg1NCBDb21tOiBmYW5vdGlmeTEzIE5vdA0K
-PiB0YWludGVkIDUuNi4wLQ0KPiByYzItbmV4dC0yMDIwMDIyMSAjNw0KPiBbICA1NzYuOTQ4Njg5
-XVsgICAgQzJdIHNvZnRpcnFzIGxhc3QgIGVuYWJsZWQgYXQgKDEwNzA3MzI5Nik6DQo+IFs8YzAw
-MDAwMDAwMDExM2IzYz5dIGlycV9lbnRlcisweDhjLzB4YzANCj4gWyAgNTc2Ljk0ODY5M11bICAg
-IEMyXSBzb2Z0aXJxcyBsYXN0IGRpc2FibGVkIGF0ICgxMDcwNzMyOTcpOg0KPiBbPGMwMDAwMDAw
-MDAxMTNjZGM+XSBpcnFfZXhpdCsweDE2Yy8weDFkMA0KPiBbICA1NzYuOTQ4NzU0XVtUMzE4NTRd
-IE5JUDogIGMwMDgwMDAwMTA1MDFiZmMgTFI6IGMwMDgwMDAwMTA1MDFkOTQNCj4gQ1RSOg0KPiBj
-MDAwMDAwMDAwMWYxZTMwDQo+IFsgIDU3Ni45NDg3NThdW1QzMTg1NF0gUkVHUzogYzAwMDAwMTI5
-ZjU2ZjcwMCBUUkFQOiAwMzAwICAgTm90DQo+IHRhaW50ZWQgICg1LjYuMC0NCj4gcmMyLW5leHQt
-MjAyMDAyMjEpDQo+IFsgIDU3Ni45NDg5NDVdW1QzMTg1NF0gTVNSOiAgOTAwMDAwMDAwMDAwOTAz
-Mw0KPiA8U0YsSFYsRUUsTUUsSVIsRFIsUkksTEU+ICBDUjoNCj4gMjQwMDQyMjQgIFhFUjogMjAw
-NDAwMDANCj4gWyAgNTc2Ljk0ODk4Ml1bVDMxODU0XSBDRkFSOiBjMDA4MDAwMDEwNTAxZDljIERB
-UjogMDAwMDAwMDAwMDAwMDA3MA0KPiBEU0lTUjoNCj4gNDAwMDAwMDAgSVJRTUFTSzogMCANCj4g
-WyAgNTc2Ljk0ODk4Ml1bVDMxODU0XSBHUFIwMDogYzAwODAwMDAxMDUwMWQ5NCBjMDAwMDAxMjlm
-NTZmOTkwDQo+IGMwMDgwMDAwMTA1YzE2MDANCj4gMDAwMDAwMDAwMDAwMDAwMSANCj4gWyAgNTc2
-Ljk0ODk4Ml1bVDMxODU0XSBHUFIwNDogYzAwMDAwMDAwMTUxMDgwOCAwMDAwMDAwMDAwMDAwMDA4
-DQo+IDAwMDAwMDAwMDVjZjBjYTINCj4gZmZmZmZmZmU1Y2E5ODU1OCANCj4gWyAgNTc2Ljk0ODk4
-Ml1bVDMxODU0XSBHUFIwODogMDAwMDAwMDAwMDAwMDAwMSAwMDAwMDAwMDAwMDAwMDcwDQo+IDAw
-MDAwMDAwMDAwMDAwMDANCj4gYzAwODAwMDAxMDU3YjY5MCANCj4gWyAgNTc2Ljk0ODk4Ml1bVDMx
-ODU0XSBHUFIxMjogYzAwMDAwMDAwMDFmMWUzMCBjMDAwMDAxZmZmZmQ1NjAwDQo+IDAwMDAwMDAw
-MDAwMDAwMGUNCj4gMDAwMDAwMDAwMDAwMDdmZiANCj4gWyAgNTc2Ljk0ODk4Ml1bVDMxODU0XSBH
-UFIxNjogYzAwMDAwMTI5ZjU2ZmEyMCAwMDAwMDAwMDAwMDBmZmY1DQo+IDAwMDAwMDAwMDAwMDAw
-MDENCj4gMDAwMDAwMDAwMDAwMWRiYyANCj4gWyAgNTc2Ljk0ODk4Ml1bVDMxODU0XSBHUFIyMDog
-MDAwMDAwMDAwMDAwMDAwMCAwMDAwMDAwMDAwMDAwMDJlDQo+IDAwMDAwMDAwMDAwMDA4MDANCj4g
-MDAwMDAwMDAwMDAwMDAyMCANCj4gWyAgNTc2Ljk0ODk4Ml1bVDMxODU0XSBHUFIyNDogMDAwMDAw
-MDAwMDAwMDAwZSAwMDAwMDAwMDAwMDAwMDAwDQo+IDAwMDAwMDAwMDAwMDAwMDANCj4gYzAwMDAw
-MDAwMTUxMDgwOCANCj4gWyAgNTc2Ljk0ODk4Ml1bVDMxODU0XSBHUFIyODogYzAwMDAwMTIwNmI4
-ZDAwMCBjMDA4MDAwMDEwNWQ4MjI3DQo+IGMwMDAwMDEyOWY1NmZhMjANCj4gMDAwMDAwMDAwMDAw
-MDAwMSANCj4gWyAgNTc2Ljk0OTIwMF1bVDMxODU0XSBOSVAgW2MwMDgwMDAwMTA1MDFiZmNdDQo+
-IGdldF9vcmxvdl9zdGF0cysweDExNC8weDM5MCBbZXh0NF0NCj4gZ2V0X29ybG92X3N0YXRzIGF0
-IGZzL2V4dDQvaWFsbG9jLmM6MzczIChkaXNjcmltaW5hdG9yIDExKQ0KPiBbICA1NzYuOTQ5MjMy
-XVtUMzE4NTRdIExSIFtjMDA4MDAwMDEwNTAxZDk0XQ0KPiBnZXRfb3Jsb3Zfc3RhdHMrMHgyYWMv
-MHgzOTAgW2V4dDRdDQo+IFsgIDU3Ni45NDkyNDNdW1QzMTg1NF0gQ2FsbCBUcmFjZToNCj4gWyAg
-NTc2Ljk0OTI2MF1bVDMxODU0XSBbYzAwMDAwMTI5ZjU2Zjk5MF0gW2MwMDgwMDAwMTA1MDFkOTRd
-DQo+IGdldF9vcmxvdl9zdGF0cysweDJhYy8weDM5MCBbZXh0NF0gKHVucmVsaWFibGUpDQo+IGdl
-dF9vcmxvdl9zdGF0cyBhdCBmcy9leHQ0L2lhbGxvYy5jOjM3MyAoZGlzY3JpbWluYXRvciAxMSkN
-Cj4gWyAgNTc2Ljk0OTMwMV1bVDMxODU0XSBbYzAwMDAwMTI5ZjU2ZjlmMF0gW2MwMDgwMDAwMTA1
-MDIzMWNdDQo+IGZpbmRfZ3JvdXBfb3Jsb3YrMHg0YTQvMHg2YjAgW2V4dDRdDQo+IGZpbmRfZ3Jv
-dXBfb3Jsb3YgYXQgZnMvZXh0NC9pYWxsb2MuYzo0NjcNCj4gWyAgNTc2Ljk0OTMzNF1bVDMxODU0
-XSBbYzAwMDAwMTI5ZjU2ZmFlMF0gW2MwMDgwMDAwMTA1MDU1YzhdDQo+IF9fZXh0NF9uZXdfaW5v
-ZGUrMHgxNDUwLzB4MjNjMCBbZXh0NF0NCj4gWyAgNTc2Ljk0OTM2N11bVDMxODU0XSBbYzAwMDAw
-MTI5ZjU2ZmM1MF0gW2MwMDgwMDAwMTA1NDdmMmNdDQo+IGV4dDRfbWtkaXIrMHgxMDQvMHg1OTAg
-W2V4dDRdDQo+IFsgIDU3Ni45NDkzOTldW1QzMTg1NF0gW2MwMDAwMDEyOWY1NmZkNjBdIFtjMDAw
-MDAwMDAwNGNiYzY0XQ0KPiB2ZnNfbWtkaXIrMHgxMTQvMHgyMTANCj4gWyAgNTc2Ljk0OTQzMl1b
-VDMxODU0XSBbYzAwMDAwMTI5ZjU2ZmRhMF0gW2MwMDAwMDAwMDA0ZDFhNzBdDQo+IGRvX21rZGly
-YXQrMHhiMC8weDFhMA0KPiBbICA1NzYuOTQ5NDU0XVtUMzE4NTRdIFtjMDAwMDAxMjlmNTZmZTIw
-XSBbYzAwMDAwMDAwMDAwYjM3OF0NCj4gc3lzdGVtX2NhbGwrMHg1Yy8weDY4DQo+IFsgIDU3Ni45
-NDk0NjVdW1QzMTg1NF0gSW5zdHJ1Y3Rpb24gZHVtcDoNCj4gWyAgNTc2Ljk0OTQ3M11bVDMxODU0
-XSAzYzYyMDAwMCBlODYzODczMCA3ZjQ0ZDM3OCAzODYzMDA2OCA0ODA3OGNjZA0KPiBlODQxMDAx
-OA0KPiA2MDAwMDAwMCA2MDAwMDAwMCANCj4gWyAgNTc2Ljk0OTQ5N11bVDMxODU0XSA2MDAwMDAw
-MCA3MzQ5MDAwMSA0MTgyMDE5YyA3YjA5MWYyNCA8N2Y1OTQ4MmE+DQo+IDQ4MDdhMGQxDQo+IGU4
-NDEwMDE4IDJmYTMwMDAwIA0KPiBbICA1NzYuOTQ5NTIyXVtUMzE4NTRdIC0tLVsgZW5kIHRyYWNl
-IGRlNGFjYjI5ZTBkNzc5MWMgXS0tLQ0KPiBbICA1NzcuMjAwNTczXVtUMzE4NTRdIA0KPiBbICA1
-NzguMjAwNjUyXVtUMzE4NTRdIEtlcm5lbCBwYW5pYyAtIG5vdCBzeW5jaW5nOiBGYXRhbCBleGNl
-cHRpb24NCj4gWyAgNTc5DQo=
+Currently multiple locations in memcg code, css_tryget_online() is being
+used. However it doesn't matter whether the cgroup is online for the
+callers. Online used to matter when we had reparenting on offlining and
+we needed a way to prevent new ones from showing up.
+
+The failure case for couple of these css_tryget_online usage is to
+fallback to root_mem_cgroup which kind of make bypassing the memcg
+limits possible for some workloads. For example creating an inotify
+group in a subcontainer and then deleting that container after moving the
+process to a different container will make all the event objects
+allocated for that group to the root_mem_cgroup. So, using
+css_tryget_online() is dangerous for such cases.
+
+Two locations still use the online version. The swapin of offlined
+memcg's pages and the memcg kmem cache creation. The kmem cache indeed
+needs the online version as the kernel does the reparenting of memcg
+kmem caches. For the swapin case, it has been left for later as the
+fallback is not really that concerning.
+
+Signed-off-by: Shakeel Butt <shakeelb@google.com>
+---
+ mm/memcontrol.c | 14 +++++++++-----
+ 1 file changed, 9 insertions(+), 5 deletions(-)
+
+diff --git a/mm/memcontrol.c b/mm/memcontrol.c
+index 63bb6a2aab81..75fa8123909e 100644
+--- a/mm/memcontrol.c
++++ b/mm/memcontrol.c
+@@ -656,7 +656,7 @@ __mem_cgroup_largest_soft_limit_node(struct mem_cgroup_tree_per_node *mctz)
+ 	 */
+ 	__mem_cgroup_remove_exceeded(mz, mctz);
+ 	if (!soft_limit_excess(mz->memcg) ||
+-	    !css_tryget_online(&mz->memcg->css))
++	    !css_tryget(&mz->memcg->css))
+ 		goto retry;
+ done:
+ 	return mz;
+@@ -962,7 +962,8 @@ struct mem_cgroup *get_mem_cgroup_from_page(struct page *page)
+ 		return NULL;
+ 
+ 	rcu_read_lock();
+-	if (!memcg || !css_tryget_online(&memcg->css))
++	/* Page should not get uncharged and freed memcg under us. */
++	if (!memcg || WARN_ON(!css_tryget(&memcg->css)))
+ 		memcg = root_mem_cgroup;
+ 	rcu_read_unlock();
+ 	return memcg;
+@@ -975,10 +976,13 @@ EXPORT_SYMBOL(get_mem_cgroup_from_page);
+ static __always_inline struct mem_cgroup *get_mem_cgroup_from_current(void)
+ {
+ 	if (unlikely(current->active_memcg)) {
+-		struct mem_cgroup *memcg = root_mem_cgroup;
++		struct mem_cgroup *memcg;
+ 
+ 		rcu_read_lock();
+-		if (css_tryget_online(&current->active_memcg->css))
++		/* current->active_memcg must hold a ref. */
++		if (WARN_ON(!css_tryget(&current->active_memcg->css)))
++			memcg = root_mem_cgroup;
++		else
+ 			memcg = current->active_memcg;
+ 		rcu_read_unlock();
+ 		return memcg;
+@@ -6703,7 +6707,7 @@ void mem_cgroup_sk_alloc(struct sock *sk)
+ 		goto out;
+ 	if (!cgroup_subsys_on_dfl(memory_cgrp_subsys) && !memcg->tcpmem_active)
+ 		goto out;
+-	if (css_tryget_online(&memcg->css))
++	if (css_tryget(&memcg->css))
+ 		sk->sk_memcg = memcg;
+ out:
+ 	rcu_read_unlock();
+-- 
+2.25.0.265.gbab2e86ba0-goog
+
