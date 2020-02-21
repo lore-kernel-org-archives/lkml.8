@@ -5,50 +5,51 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 899BFC35640
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 07:56:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 664D7C35642
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 07:56:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 556DA206ED
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 07:56:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 331BF20801
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 07:56:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582271787;
-	bh=HETN9lzhT4lP6BoRdKhMd9UfEPjojCOaxXyYfT0N564=;
+	s=default; t=1582271792;
+	bh=Vu0ngAKoMRzMfbfs/lL5eeluUpFL9hTnSNWHivquHeU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=XqOHbgmJqRn4/UoJSjtilcV9qdBIW6XieMFpDBYtKn57x+d83j7TlF/xXOT1LTKZ4
-	 1Lv9S6n45UoJMRXvi970WR1HSpcPgGUfvhX0UHuh082h6btRdOi8JuPzByLzWlghlT
-	 LeuLXzaMiRAgFj6tZ/WncYMZOOfMdSCSfDQoRfE0=
+	b=ZBAR63ASUJQTiSs/c/IDuk7pn5k6QKFu9kuxyy4X+2a2mAMlEebaGtKuwzHvoNpMO
+	 7TlkPXqVcynOQT8cWLtRt76kdho6q1La2qSxsZBgMI+c/XSy7PNFh1M0gtE2i4Wo6a
+	 BkzrTASGnigSz+fdT6xxKUQItpWF3QJMTP7BRQVE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730469AbgBUH40 (ORCPT
+        id S1730478AbgBUH4b (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Feb 2020 02:56:26 -0500
-Received: from mail.kernel.org ([198.145.29.99]:55600 "EHLO mail.kernel.org"
+        Fri, 21 Feb 2020 02:56:31 -0500
+Received: from mail.kernel.org ([198.145.29.99]:55754 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730457AbgBUH4U (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Feb 2020 02:56:20 -0500
+        id S1730255AbgBUH4Z (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 21 Feb 2020 02:56:25 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 07A1020578;
-        Fri, 21 Feb 2020 07:56:18 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id AADA220801;
+        Fri, 21 Feb 2020 07:56:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1582271779;
-        bh=HETN9lzhT4lP6BoRdKhMd9UfEPjojCOaxXyYfT0N564=;
+        s=default; t=1582271785;
+        bh=Vu0ngAKoMRzMfbfs/lL5eeluUpFL9hTnSNWHivquHeU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=E+4LWrPVimaYCjindCl5Sl9NZ3QfFYoQuZpeu6CbKBh/3Tj/MSDjMsW0I6Rg8QT82
-         NZ68gq7RfOhzFyZgStPmnEyf5n2NXrSQkNS5aRjd+aRJ/V436wZp+mchRIyiv5AwPs
-         18KLvZI93vT+HbAWWMmW33hDEnNb+8Am4rS0mzDo=
+        b=UTlGvLyWhZ1QbLVBq3IWH8uilGKyemRdDXM9HehVfmxHpm6yZP4T4EKOebNdOtJKX
+         M5xnfE1tQWFpDfUQqmjQEniLBc6EWf3asJa1ZgHS6s+J9RtE1hH7Q246nJ5G9oQPum
+         uvuoG79RELPYVHdDfJprWLVwLCHUsqcYbepj1ysA=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Qian Cai <cai@lca.pw>,
-        Marco Elver <elver@google.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
+        stable@vger.kernel.org,
+        Cezary Rojewski <cezary.rojewski@intel.com>,
+        Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>,
+        Mark Brown <broonie@kernel.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.5 295/399] debugobjects: Fix various data races
-Date:   Fri, 21 Feb 2020 08:40:20 +0100
-Message-Id: <20200221072430.429006860@linuxfoundation.org>
+Subject: [PATCH 5.5 297/399] ASoC: SOF: Intel: hda: Fix SKL dai count
+Date:   Fri, 21 Feb 2020 08:40:22 +0100
+Message-Id: <20200221072430.618451088@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200221072402.315346745@linuxfoundation.org>
 References: <20200221072402.315346745@linuxfoundation.org>
@@ -61,236 +62,37 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Marco Elver <elver@google.com>
+From: Cezary Rojewski <cezary.rojewski@intel.com>
 
-[ Upstream commit 35fd7a637c42bb54ba4608f4d40ae6e55fc88781 ]
+[ Upstream commit a6947c9d86bcfd61b758b5693eba58defe7fd2ae ]
 
-The counters obj_pool_free, and obj_nr_tofree, and the flag obj_freeing are
-read locklessly outside the pool_lock critical sections. If read with plain
-accesses, this would result in data races.
+With fourth pin added for iDisp for skl_dai, update SOF_SKL_DAI_NUM to
+account for the change. Without this, dais from the bottom of the list
+are skipped. In current state that's the case for 'Alt Analog CPU DAI'.
 
-This is addressed as follows:
-
- * reads outside critical sections become READ_ONCE()s (pairing with
-   WRITE_ONCE()s added);
-
- * writes become WRITE_ONCE()s (pairing with READ_ONCE()s added); since
-   writes happen inside critical sections, only the write and not the read
-   of RMWs needs to be atomic, thus WRITE_ONCE(var, var +/- X) is
-   sufficient.
-
-The data races were reported by KCSAN:
-
-  BUG: KCSAN: data-race in __free_object / fill_pool
-
-  write to 0xffffffff8beb04f8 of 4 bytes by interrupt on cpu 1:
-   __free_object+0x1ee/0x8e0 lib/debugobjects.c:404
-   __debug_check_no_obj_freed+0x199/0x330 lib/debugobjects.c:969
-   debug_check_no_obj_freed+0x3c/0x44 lib/debugobjects.c:994
-   slab_free_hook mm/slub.c:1422 [inline]
-
-  read to 0xffffffff8beb04f8 of 4 bytes by task 1 on cpu 2:
-   fill_pool+0x3d/0x520 lib/debugobjects.c:135
-   __debug_object_init+0x3c/0x810 lib/debugobjects.c:536
-   debug_object_init lib/debugobjects.c:591 [inline]
-   debug_object_activate+0x228/0x320 lib/debugobjects.c:677
-   debug_rcu_head_queue kernel/rcu/rcu.h:176 [inline]
-
-  BUG: KCSAN: data-race in __debug_object_init / fill_pool
-
-  read to 0xffffffff8beb04f8 of 4 bytes by task 10 on cpu 6:
-   fill_pool+0x3d/0x520 lib/debugobjects.c:135
-   __debug_object_init+0x3c/0x810 lib/debugobjects.c:536
-   debug_object_init_on_stack+0x39/0x50 lib/debugobjects.c:606
-   init_timer_on_stack_key kernel/time/timer.c:742 [inline]
-
-  write to 0xffffffff8beb04f8 of 4 bytes by task 1 on cpu 3:
-   alloc_object lib/debugobjects.c:258 [inline]
-   __debug_object_init+0x717/0x810 lib/debugobjects.c:544
-   debug_object_init lib/debugobjects.c:591 [inline]
-   debug_object_activate+0x228/0x320 lib/debugobjects.c:677
-   debug_rcu_head_queue kernel/rcu/rcu.h:176 [inline]
-
-  BUG: KCSAN: data-race in free_obj_work / free_object
-
-  read to 0xffffffff9140c190 of 4 bytes by task 10 on cpu 6:
-   free_object+0x4b/0xd0 lib/debugobjects.c:426
-   debug_object_free+0x190/0x210 lib/debugobjects.c:824
-   destroy_timer_on_stack kernel/time/timer.c:749 [inline]
-
-  write to 0xffffffff9140c190 of 4 bytes by task 93 on cpu 1:
-   free_obj_work+0x24f/0x480 lib/debugobjects.c:313
-   process_one_work+0x454/0x8d0 kernel/workqueue.c:2264
-   worker_thread+0x9a/0x780 kernel/workqueue.c:2410
-
-Reported-by: Qian Cai <cai@lca.pw>
-Signed-off-by: Marco Elver <elver@google.com>
-Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-Link: https://lore.kernel.org/r/20200116185529.11026-1-elver@google.com
+Fixes: ac42b142cd76 ("ASoC: SOF: Intel: hda: Add iDisp4 DAI")
+Signed-off-by: Cezary Rojewski <cezary.rojewski@intel.com>
+Reviewed-by: Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
+Link: https://lore.kernel.org/r/20200113114054.9716-1-cezary.rojewski@intel.com
+Signed-off-by: Mark Brown <broonie@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- lib/debugobjects.c | 46 +++++++++++++++++++++++++---------------------
- 1 file changed, 25 insertions(+), 21 deletions(-)
+ sound/soc/sof/intel/hda.h | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/lib/debugobjects.c b/lib/debugobjects.c
-index 61261195f5b60..48054dbf1b51f 100644
---- a/lib/debugobjects.c
-+++ b/lib/debugobjects.c
-@@ -132,14 +132,18 @@ static void fill_pool(void)
- 	struct debug_obj *obj;
- 	unsigned long flags;
+diff --git a/sound/soc/sof/intel/hda.h b/sound/soc/sof/intel/hda.h
+index 63df888dddb6c..de0115294c74e 100644
+--- a/sound/soc/sof/intel/hda.h
++++ b/sound/soc/sof/intel/hda.h
+@@ -348,7 +348,7 @@
  
--	if (likely(obj_pool_free >= debug_objects_pool_min_level))
-+	if (likely(READ_ONCE(obj_pool_free) >= debug_objects_pool_min_level))
- 		return;
- 
- 	/*
- 	 * Reuse objs from the global free list; they will be reinitialized
- 	 * when allocating.
-+	 *
-+	 * Both obj_nr_tofree and obj_pool_free are checked locklessly; the
-+	 * READ_ONCE()s pair with the WRITE_ONCE()s in pool_lock critical
-+	 * sections.
- 	 */
--	while (obj_nr_tofree && (obj_pool_free < obj_pool_min_free)) {
-+	while (READ_ONCE(obj_nr_tofree) && (READ_ONCE(obj_pool_free) < obj_pool_min_free)) {
- 		raw_spin_lock_irqsave(&pool_lock, flags);
- 		/*
- 		 * Recheck with the lock held as the worker thread might have
-@@ -148,9 +152,9 @@ static void fill_pool(void)
- 		while (obj_nr_tofree && (obj_pool_free < obj_pool_min_free)) {
- 			obj = hlist_entry(obj_to_free.first, typeof(*obj), node);
- 			hlist_del(&obj->node);
--			obj_nr_tofree--;
-+			WRITE_ONCE(obj_nr_tofree, obj_nr_tofree - 1);
- 			hlist_add_head(&obj->node, &obj_pool);
--			obj_pool_free++;
-+			WRITE_ONCE(obj_pool_free, obj_pool_free + 1);
- 		}
- 		raw_spin_unlock_irqrestore(&pool_lock, flags);
- 	}
-@@ -158,7 +162,7 @@ static void fill_pool(void)
- 	if (unlikely(!obj_cache))
- 		return;
- 
--	while (obj_pool_free < debug_objects_pool_min_level) {
-+	while (READ_ONCE(obj_pool_free) < debug_objects_pool_min_level) {
- 		struct debug_obj *new[ODEBUG_BATCH_SIZE];
- 		int cnt;
- 
-@@ -174,7 +178,7 @@ static void fill_pool(void)
- 		while (cnt) {
- 			hlist_add_head(&new[--cnt]->node, &obj_pool);
- 			debug_objects_allocated++;
--			obj_pool_free++;
-+			WRITE_ONCE(obj_pool_free, obj_pool_free + 1);
- 		}
- 		raw_spin_unlock_irqrestore(&pool_lock, flags);
- 	}
-@@ -236,7 +240,7 @@ alloc_object(void *addr, struct debug_bucket *b, struct debug_obj_descr *descr)
- 	obj = __alloc_object(&obj_pool);
- 	if (obj) {
- 		obj_pool_used++;
--		obj_pool_free--;
-+		WRITE_ONCE(obj_pool_free, obj_pool_free - 1);
- 
- 		/*
- 		 * Looking ahead, allocate one batch of debug objects and
-@@ -255,7 +259,7 @@ alloc_object(void *addr, struct debug_bucket *b, struct debug_obj_descr *descr)
- 					       &percpu_pool->free_objs);
- 				percpu_pool->obj_free++;
- 				obj_pool_used++;
--				obj_pool_free--;
-+				WRITE_ONCE(obj_pool_free, obj_pool_free - 1);
- 			}
- 		}
- 
-@@ -309,8 +313,8 @@ static void free_obj_work(struct work_struct *work)
- 		obj = hlist_entry(obj_to_free.first, typeof(*obj), node);
- 		hlist_del(&obj->node);
- 		hlist_add_head(&obj->node, &obj_pool);
--		obj_pool_free++;
--		obj_nr_tofree--;
-+		WRITE_ONCE(obj_pool_free, obj_pool_free + 1);
-+		WRITE_ONCE(obj_nr_tofree, obj_nr_tofree - 1);
- 	}
- 	raw_spin_unlock_irqrestore(&pool_lock, flags);
- 	return;
-@@ -324,7 +328,7 @@ free_objs:
- 	if (obj_nr_tofree) {
- 		hlist_move_list(&obj_to_free, &tofree);
- 		debug_objects_freed += obj_nr_tofree;
--		obj_nr_tofree = 0;
-+		WRITE_ONCE(obj_nr_tofree, 0);
- 	}
- 	raw_spin_unlock_irqrestore(&pool_lock, flags);
- 
-@@ -375,10 +379,10 @@ free_to_obj_pool:
- 	obj_pool_used--;
- 
- 	if (work) {
--		obj_nr_tofree++;
-+		WRITE_ONCE(obj_nr_tofree, obj_nr_tofree + 1);
- 		hlist_add_head(&obj->node, &obj_to_free);
- 		if (lookahead_count) {
--			obj_nr_tofree += lookahead_count;
-+			WRITE_ONCE(obj_nr_tofree, obj_nr_tofree + lookahead_count);
- 			obj_pool_used -= lookahead_count;
- 			while (lookahead_count) {
- 				hlist_add_head(&objs[--lookahead_count]->node,
-@@ -396,15 +400,15 @@ free_to_obj_pool:
- 			for (i = 0; i < ODEBUG_BATCH_SIZE; i++) {
- 				obj = __alloc_object(&obj_pool);
- 				hlist_add_head(&obj->node, &obj_to_free);
--				obj_pool_free--;
--				obj_nr_tofree++;
-+				WRITE_ONCE(obj_pool_free, obj_pool_free - 1);
-+				WRITE_ONCE(obj_nr_tofree, obj_nr_tofree + 1);
- 			}
- 		}
- 	} else {
--		obj_pool_free++;
-+		WRITE_ONCE(obj_pool_free, obj_pool_free + 1);
- 		hlist_add_head(&obj->node, &obj_pool);
- 		if (lookahead_count) {
--			obj_pool_free += lookahead_count;
-+			WRITE_ONCE(obj_pool_free, obj_pool_free + lookahead_count);
- 			obj_pool_used -= lookahead_count;
- 			while (lookahead_count) {
- 				hlist_add_head(&objs[--lookahead_count]->node,
-@@ -423,7 +427,7 @@ free_to_obj_pool:
- static void free_object(struct debug_obj *obj)
- {
- 	__free_object(obj);
--	if (!obj_freeing && obj_nr_tofree) {
-+	if (!READ_ONCE(obj_freeing) && READ_ONCE(obj_nr_tofree)) {
- 		WRITE_ONCE(obj_freeing, true);
- 		schedule_delayed_work(&debug_obj_work, ODEBUG_FREE_WORK_DELAY);
- 	}
-@@ -982,7 +986,7 @@ repeat:
- 		debug_objects_maxchecked = objs_checked;
- 
- 	/* Schedule work to actually kmem_cache_free() objects */
--	if (!obj_freeing && obj_nr_tofree) {
-+	if (!READ_ONCE(obj_freeing) && READ_ONCE(obj_nr_tofree)) {
- 		WRITE_ONCE(obj_freeing, true);
- 		schedule_delayed_work(&debug_obj_work, ODEBUG_FREE_WORK_DELAY);
- 	}
-@@ -1008,12 +1012,12 @@ static int debug_stats_show(struct seq_file *m, void *v)
- 	seq_printf(m, "max_checked   :%d\n", debug_objects_maxchecked);
- 	seq_printf(m, "warnings      :%d\n", debug_objects_warnings);
- 	seq_printf(m, "fixups        :%d\n", debug_objects_fixups);
--	seq_printf(m, "pool_free     :%d\n", obj_pool_free + obj_percpu_free);
-+	seq_printf(m, "pool_free     :%d\n", READ_ONCE(obj_pool_free) + obj_percpu_free);
- 	seq_printf(m, "pool_pcp_free :%d\n", obj_percpu_free);
- 	seq_printf(m, "pool_min_free :%d\n", obj_pool_min_free);
- 	seq_printf(m, "pool_used     :%d\n", obj_pool_used - obj_percpu_free);
- 	seq_printf(m, "pool_max_used :%d\n", obj_pool_max_used);
--	seq_printf(m, "on_free_list  :%d\n", obj_nr_tofree);
-+	seq_printf(m, "on_free_list  :%d\n", READ_ONCE(obj_nr_tofree));
- 	seq_printf(m, "objs_allocated:%d\n", debug_objects_allocated);
- 	seq_printf(m, "objs_freed    :%d\n", debug_objects_freed);
- 	return 0;
+ /* Number of DAIs */
+ #if IS_ENABLED(CONFIG_SND_SOC_SOF_HDA)
+-#define SOF_SKL_NUM_DAIS		14
++#define SOF_SKL_NUM_DAIS		15
+ #else
+ #define SOF_SKL_NUM_DAIS		8
+ #endif
 -- 
 2.20.1
 
