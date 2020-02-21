@@ -2,156 +2,220 @@ Return-Path: <SRS0=1210=4J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4FF70C35641
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 08:31:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 80E4DC35643
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 08:31:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2649520637
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 08:31:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 585F720637
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 08:31:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582273903;
-	bh=LQpL70j41yHihpZBbpvoHeSzMS5MnRoF3jE4khH+cqg=;
+	s=default; t=1582273904;
+	bh=rnx7Ggz4AoJzIVWIKtQRb/wV81Ljlb8nmprGeQWWiKM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=KvFxpHqTtqPTpfJbFIWwkqFExWIoEr7xQy8+j0dCunXMrMnUGKb4Hf4QTsq8lpeXH
-	 ID4PVlJ3y10K6zBGTrgkKPRuriatz22JLemrIsxRFrzGmqvugFdCDTo6rcCa/BVWzk
-	 q6MuuuNmXogwIJY1VQu3beB683nCqu8mLLIaCObk=
+	b=PjaCy1o8xbvAyBtvEW5QoQUnsFud0mFbX42xvP3c4j+pUHjes0PSinjvHyyjNupq4
+	 Vox/qrw4w5Fu+DVsZrtNDGamFc93y5+86x4gCht/cOFCP66U5mAGOy8fbTitbCrRZD
+	 2Y84KWdR32Cp2ZIWzvqTwNLWLeLqmQwf6+xKBYdg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733067AbgBUINu (ORCPT
+        id S1733057AbgBUINs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Feb 2020 03:13:50 -0500
-Received: from mail.kernel.org ([198.145.29.99]:50066 "EHLO mail.kernel.org"
+        Fri, 21 Feb 2020 03:13:48 -0500
+Received: from mail.kernel.org ([198.145.29.99]:50046 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732447AbgBUINr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Feb 2020 03:13:47 -0500
-Received: from localhost.localdomain (NE2965lan1.rev.em-net.ne.jp [210.141.244.193])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        id S1733050AbgBUINq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 21 Feb 2020 03:13:46 -0500
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7BEF72467A;
-        Fri, 21 Feb 2020 08:13:44 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B492124650;
+        Fri, 21 Feb 2020 08:13:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
         s=default; t=1582272826;
-        bh=LQpL70j41yHihpZBbpvoHeSzMS5MnRoF3jE4khH+cqg=;
+        bh=rnx7Ggz4AoJzIVWIKtQRb/wV81Ljlb8nmprGeQWWiKM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Mc4be+IPmDpTPUMR4nWhxD/txDc+qnnKilhsSJGH+14PGPIv9LKca/ReZGW7vB+Ph
-         DTSQJtezspEvXjyL5nkzN248MHicuFy/Dl5ZPNA1XMr6SoN6YwuSIwXxLGf6qnGFrD
-         vFn/AC+5b5GSYMKM3komguwv47rlz2Tkxoh7/+ak=
-From:   Masami Hiramatsu <mhiramat@kernel.org>
-To:     Steven Rostedt <rostedt@goodmis.org>
-Cc:     Geert Uytterhoeven <geert@linux-m68k.org>,
-        Borislav Petkov <bp@alien8.de>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Ingo Molnar <mingo@kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>
-Subject: [PATCH v3 1/2] bootconfig: Prohibit re-defining value on same key
-Date:   Fri, 21 Feb 2020 17:13:42 +0900
-Message-Id: <158227282199.12842.10110929876059658601.stgit@devnote2>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <158227281198.12842.8478910651170568606.stgit@devnote2>
-References: <158227281198.12842.8478910651170568606.stgit@devnote2>
-User-Agent: StGit/0.17.1-dirty
+        b=OSuibr2+XfYz/8Eh9H1I8E8Bly9NJlU9jFLWGhPP8jgY6n2gsKGHVGacQQhzxUE8u
+         R31Mm3b+dyFvlID1fSmr1iVs4SlKzV/S0PzR1o5bWzXT74RpM5AMsqP6fqq9QV1tN/
+         +MR5mennAGYxmVjvv2VU2/myH1++D4UI8mQ0x6R4=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org, Christoph Hellwig <hch@lst.de>,
+        Coly Li <colyli@suse.de>, Jens Axboe <axboe@kernel.dk>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.4 288/344] bcache: rework error unwinding in register_bcache
+Date:   Fri, 21 Feb 2020 08:41:27 +0100
+Message-Id: <20200221072415.983628889@linuxfoundation.org>
+X-Mailer: git-send-email 2.25.1
+In-Reply-To: <20200221072349.335551332@linuxfoundation.org>
+References: <20200221072349.335551332@linuxfoundation.org>
+User-Agent: quilt/0.66
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Currently, bootconfig adds new value on the existing key
-to the tail of an array. But this looks a bit confusing
-because admin can rewrite original value in same config
-file easily.
+From: Christoph Hellwig <hch@lst.de>
 
-This rejects following value re-definition.
+[ Upstream commit 50246693f81fe887f4db78bf7089051d7f1894cc ]
 
-  key = value1
-  ...
-  key = value2
+Split the successful and error return path, and use one goto label for each
+resource to unwind.  This also fixes some small errors like leaking the
+module reference count in the reboot case (which seems entirely harmless)
+or printing the wrong warning messages for early failures.
 
-You should rewrite value1 to value2 in this case.
-
-Signed-off-by: Masami Hiramatsu <mhiramat@kernel.org>
+Signed-off-by: Christoph Hellwig <hch@lst.de>
+Signed-off-by: Coly Li <colyli@suse.de>
+Signed-off-by: Jens Axboe <axboe@kernel.dk>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- Documentation/admin-guide/bootconfig.rst   |   11 ++++++++++-
- lib/bootconfig.c                           |   13 ++++++++-----
- tools/bootconfig/samples/bad-samekey.bconf |    6 ++++++
- 3 files changed, 24 insertions(+), 6 deletions(-)
- create mode 100644 tools/bootconfig/samples/bad-samekey.bconf
+ drivers/md/bcache/super.c | 75 +++++++++++++++++++++++----------------
+ 1 file changed, 45 insertions(+), 30 deletions(-)
 
-diff --git a/Documentation/admin-guide/bootconfig.rst b/Documentation/admin-guide/bootconfig.rst
-index dfeffa73dca3..9ee7650b7817 100644
---- a/Documentation/admin-guide/bootconfig.rst
-+++ b/Documentation/admin-guide/bootconfig.rst
-@@ -62,7 +62,16 @@ Or more shorter, written as following::
- In both styles, same key words are automatically merged when parsing it
- at boot time. So you can append similar trees or key-values.
- 
--Note that a sub-key and a value can not co-exist under a parent key.
-+Same-key Values
-+---------------
-+
-+It is prohibited that two or more values or arraies share a same-key.
-+For example,::
-+
-+ foo = bar, baz
-+ foo = qux  # !ERROR! we can not re-define same key
-+
-+Also, a sub-key and a value can not co-exist under a parent key.
- For example, following config is NOT allowed.::
- 
-  foo = value1
-diff --git a/lib/bootconfig.c b/lib/bootconfig.c
-index 54ac623ca781..2ef304db31f2 100644
---- a/lib/bootconfig.c
-+++ b/lib/bootconfig.c
-@@ -581,7 +581,7 @@ static int __init __xbc_parse_keys(char *k)
- static int __init xbc_parse_kv(char **k, char *v)
+diff --git a/drivers/md/bcache/super.c b/drivers/md/bcache/super.c
+index b86cf72033401..86f7e09d31516 100644
+--- a/drivers/md/bcache/super.c
++++ b/drivers/md/bcache/super.c
+@@ -2372,29 +2372,33 @@ static bool bch_is_open(struct block_device *bdev)
+ static ssize_t register_bcache(struct kobject *k, struct kobj_attribute *attr,
+ 			       const char *buffer, size_t size)
  {
- 	struct xbc_node *prev_parent = last_parent;
--	struct xbc_node *node, *child;
-+	struct xbc_node *child;
- 	char *next;
- 	int c, ret;
+-	ssize_t ret = -EINVAL;
+-	const char *err = "cannot allocate memory";
+-	char *path = NULL;
+-	struct cache_sb *sb = NULL;
++	const char *err;
++	char *path;
++	struct cache_sb *sb;
+ 	struct block_device *bdev = NULL;
+-	struct page *sb_page = NULL;
++	struct page *sb_page;
++	ssize_t ret;
  
-@@ -590,15 +590,18 @@ static int __init xbc_parse_kv(char **k, char *v)
- 		return ret;
++	ret = -EBUSY;
+ 	if (!try_module_get(THIS_MODULE))
+-		return -EBUSY;
++		goto out;
  
- 	child = xbc_node_get_child(last_parent);
--	if (child && xbc_node_is_key(child))
--		return xbc_parse_error("Value is mixed with subkey", v);
-+	if (child) {
-+		if (xbc_node_is_key(child))
-+			return xbc_parse_error("Value is mixed with subkey", v);
-+		else
-+			return xbc_parse_error("Value is redefined", v);
-+	}
+ 	/* For latest state of bcache_is_reboot */
+ 	smp_mb();
+ 	if (bcache_is_reboot)
+-		return -EBUSY;
++		goto out_module_put;
  
- 	c = __xbc_parse_value(&v, &next);
- 	if (c < 0)
- 		return c;
++	ret = -ENOMEM;
++	err = "cannot allocate memory";
+ 	path = kstrndup(buffer, size, GFP_KERNEL);
+ 	if (!path)
+-		goto err;
++		goto out_module_put;
  
--	node = xbc_add_sibling(v, XBC_VALUE);
--	if (!node)
-+	if (!xbc_add_sibling(v, XBC_VALUE))
- 		return -ENOMEM;
+ 	sb = kmalloc(sizeof(struct cache_sb), GFP_KERNEL);
+ 	if (!sb)
+-		goto err;
++		goto out_free_path;
  
- 	if (c == ',') {	/* Array */
-diff --git a/tools/bootconfig/samples/bad-samekey.bconf b/tools/bootconfig/samples/bad-samekey.bconf
-new file mode 100644
-index 000000000000..e8d983a4563c
---- /dev/null
-+++ b/tools/bootconfig/samples/bad-samekey.bconf
-@@ -0,0 +1,6 @@
-+# Same key value is not allowed
-+key {
-+	foo = value
-+	bar = value2
-+}
-+key.foo = value
++	ret = -EINVAL;
+ 	err = "failed to open device";
+ 	bdev = blkdev_get_by_path(strim(path),
+ 				  FMODE_READ|FMODE_WRITE|FMODE_EXCL,
+@@ -2411,57 +2415,68 @@ static ssize_t register_bcache(struct kobject *k, struct kobj_attribute *attr,
+ 			if (!IS_ERR(bdev))
+ 				bdput(bdev);
+ 			if (attr == &ksysfs_register_quiet)
+-				goto quiet_out;
++				goto done;
+ 		}
+-		goto err;
++		goto out_free_sb;
+ 	}
+ 
+ 	err = "failed to set blocksize";
+ 	if (set_blocksize(bdev, 4096))
+-		goto err_close;
++		goto out_blkdev_put;
+ 
+ 	err = read_super(sb, bdev, &sb_page);
+ 	if (err)
+-		goto err_close;
++		goto out_blkdev_put;
+ 
+ 	err = "failed to register device";
+ 	if (SB_IS_BDEV(sb)) {
+ 		struct cached_dev *dc = kzalloc(sizeof(*dc), GFP_KERNEL);
+ 
+ 		if (!dc)
+-			goto err_close;
++			goto out_put_sb_page;
+ 
+ 		mutex_lock(&bch_register_lock);
+ 		ret = register_bdev(sb, sb_page, bdev, dc);
+ 		mutex_unlock(&bch_register_lock);
+ 		/* blkdev_put() will be called in cached_dev_free() */
+-		if (ret < 0)
+-			goto err;
++		if (ret < 0) {
++			bdev = NULL;
++			goto out_put_sb_page;
++		}
+ 	} else {
+ 		struct cache *ca = kzalloc(sizeof(*ca), GFP_KERNEL);
+ 
+ 		if (!ca)
+-			goto err_close;
++			goto out_put_sb_page;
+ 
+ 		/* blkdev_put() will be called in bch_cache_release() */
+-		if (register_cache(sb, sb_page, bdev, ca) != 0)
+-			goto err;
++		if (register_cache(sb, sb_page, bdev, ca) != 0) {
++			bdev = NULL;
++			goto out_put_sb_page;
++		}
+ 	}
+-quiet_out:
+-	ret = size;
+-out:
+-	if (sb_page)
+-		put_page(sb_page);
++
++	put_page(sb_page);
++done:
+ 	kfree(sb);
+ 	kfree(path);
+ 	module_put(THIS_MODULE);
+-	return ret;
+-
+-err_close:
+-	blkdev_put(bdev, FMODE_READ|FMODE_WRITE|FMODE_EXCL);
+-err:
++	return size;
++
++out_put_sb_page:
++	put_page(sb_page);
++out_blkdev_put:
++	if (bdev)
++		blkdev_put(bdev, FMODE_READ | FMODE_WRITE | FMODE_EXCL);
++out_free_sb:
++	kfree(sb);
++out_free_path:
++	kfree(path);
++out_module_put:
++	module_put(THIS_MODULE);
++out:
+ 	pr_info("error %s: %s", path, err);
+-	goto out;
++	return ret;
+ }
+ 
+ 
+-- 
+2.20.1
+
+
 
