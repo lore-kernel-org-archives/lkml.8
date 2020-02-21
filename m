@@ -7,46 +7,46 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D3ABAC35641
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 08:28:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D0F80C35641
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 08:28:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AABE220637
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 08:28:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9CF2F20679
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 08:28:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582273691;
-	bh=09CLZHhNHNyqqmnT9B63fYO3RiBBKa0IUbToH8AhA4g=;
+	s=default; t=1582273696;
+	bh=sRSHDjt1zfYM/QXsil6XobwK6csvrwRtCUObDsVdiHU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=yw50i54lF67Lqudf9m7BzxzdQ6gr6WLca/a9Uywm8bHdmSFRhSrzpbeDMGRp3c4lo
-	 ZUlwhRb8dUfmSWKl61QEB5OIARA+q1N1tIs+WgM7GkcP27bjOhFPI6MJ8BJjSeI/Uo
-	 Qkf/6M2NZVFFPLHT4y1ltcp8ccTvL9W9Wdj+PSkY=
+	b=uBYnW7j1Mb/KStbO7Lz8T5I53cTaPdOpVV0p2+IexhcDclYc5NgOSkVQvtMoSuRZN
+	 fbdDw2KuYQXUIpiKJguMvoUT0FzNzfdfnxZnwPgvLByMNXZxnJQU+Tgm3IWV0D0eJ9
+	 OFLD4cVyr9Lm5bhwlK64oysmzeKMecQgNBHOGWYo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732423AbgBUIUj (ORCPT
+        id S2388772AbgBUI2O (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Feb 2020 03:20:39 -0500
-Received: from mail.kernel.org ([198.145.29.99]:59640 "EHLO mail.kernel.org"
+        Fri, 21 Feb 2020 03:28:14 -0500
+Received: from mail.kernel.org ([198.145.29.99]:59784 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732116AbgBUIUc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Feb 2020 03:20:32 -0500
+        id S1732385AbgBUIUh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 21 Feb 2020 03:20:37 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D63B524695;
-        Fri, 21 Feb 2020 08:20:31 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0BA7A2469E;
+        Fri, 21 Feb 2020 08:20:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1582273232;
-        bh=09CLZHhNHNyqqmnT9B63fYO3RiBBKa0IUbToH8AhA4g=;
+        s=default; t=1582273237;
+        bh=sRSHDjt1zfYM/QXsil6XobwK6csvrwRtCUObDsVdiHU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=cAXrq9VO2x3ZIUGJ5oHaQeNYVuANjxb5mACo1xhi3taMGpdbRZqlooBkN3alY/78U
-         STFQZ7BNW/EV3y1FrKlw1Dzml56WnQ15tvu1llxoQAqPhc2oSUa6nXwV7O4VXOKuGj
-         OLaOrhBqKzfePUUYp43alLwZLz3M5LUyHW7OCopI=
+        b=rTIIaRBYFNJXf/yrO4yi0rpdX02+bSEwv9sSrU6EyZiEsys5KIWfkIqwn17w/+wd/
+         qWZbTT8I6JGzhp/GXxESrgT5rQ1Dbaw5kPCR+fSgvbxldtwnTTEASw6T7o7/UBGTjl
+         iROkXKkUhWObvjNJSMWvySdCznuKVayE2eXrS/f8=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org, Takashi Iwai <tiwai@suse.de>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 095/191] ALSA: sh: Fix unused variable warnings
-Date:   Fri, 21 Feb 2020 08:41:08 +0100
-Message-Id: <20200221072302.561535967@linuxfoundation.org>
+Subject: [PATCH 4.19 097/191] ALSA: sh: Fix compile warning wrt const
+Date:   Fri, 21 Feb 2020 08:41:10 +0100
+Message-Id: <20200221072302.830601727@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200221072250.732482588@linuxfoundation.org>
 References: <20200221072250.732482588@linuxfoundation.org>
@@ -61,50 +61,37 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Takashi Iwai <tiwai@suse.de>
 
-[ Upstream commit 5da116f164ce265e397b8f59af5c39e4a61d61a5 ]
+[ Upstream commit f1dd4795b1523fbca7ab4344dd5a8bb439cc770d ]
 
-Remove unused variables that are left over after the conversion of new
-PCM ops:
-  sound/sh/sh_dac_audio.c:166:26: warning: unused variable 'runtime'
-  sound/sh/sh_dac_audio.c:186:26: warning: unused variable 'runtime'
-  sound/sh/sh_dac_audio.c:205:26: warning: unused variable 'runtime'
+A long-standing compile warning was seen during build test:
+  sound/sh/aica.c: In function 'load_aica_firmware':
+  sound/sh/aica.c:521:25: warning: passing argument 2 of 'spu_memload' discards 'const' qualifier from pointer target type [-Wdiscarded-qualifiers]
 
-Fixes: 1cc2f8ba0b3e ("ALSA: sh: Convert to the new PCM ops")
-Link: https://lore.kernel.org/r/20200104110057.13875-1-tiwai@suse.de
+Fixes: 198de43d758c ("[ALSA] Add ALSA support for the SEGA Dreamcast PCM device")
+Link: https://lore.kernel.org/r/20200105144823.29547-69-tiwai@suse.de
 Signed-off-by: Takashi Iwai <tiwai@suse.de>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- sound/sh/sh_dac_audio.c | 3 ---
- 1 file changed, 3 deletions(-)
+ sound/sh/aica.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/sound/sh/sh_dac_audio.c b/sound/sh/sh_dac_audio.c
-index 834b2574786f5..6251b5e1b64a2 100644
---- a/sound/sh/sh_dac_audio.c
-+++ b/sound/sh/sh_dac_audio.c
-@@ -190,7 +190,6 @@ static int snd_sh_dac_pcm_copy(struct snd_pcm_substream *substream,
- {
- 	/* channel is not used (interleaved data) */
- 	struct snd_sh_dac *chip = snd_pcm_substream_chip(substream);
--	struct snd_pcm_runtime *runtime = substream->runtime;
+diff --git a/sound/sh/aica.c b/sound/sh/aica.c
+index ad3f71358486a..69ac44b335602 100644
+--- a/sound/sh/aica.c
++++ b/sound/sh/aica.c
+@@ -117,10 +117,10 @@ static void spu_memset(u32 toi, u32 what, int length)
+ }
  
- 	if (copy_from_user_toio(chip->data_buffer + pos, src, count))
- 		return -EFAULT;
-@@ -210,7 +209,6 @@ static int snd_sh_dac_pcm_copy_kernel(struct snd_pcm_substream *substream,
+ /* spu_memload - write to SPU address space */
+-static void spu_memload(u32 toi, void *from, int length)
++static void spu_memload(u32 toi, const void *from, int length)
  {
- 	/* channel is not used (interleaved data) */
- 	struct snd_sh_dac *chip = snd_pcm_substream_chip(substream);
--	struct snd_pcm_runtime *runtime = substream->runtime;
- 
- 	memcpy_toio(chip->data_buffer + pos, src, count);
- 	chip->buffer_end = chip->data_buffer + pos + count;
-@@ -229,7 +227,6 @@ static int snd_sh_dac_pcm_silence(struct snd_pcm_substream *substream,
- {
- 	/* channel is not used (interleaved data) */
- 	struct snd_sh_dac *chip = snd_pcm_substream_chip(substream);
--	struct snd_pcm_runtime *runtime = substream->runtime;
- 
- 	memset_io(chip->data_buffer + pos, 0, count);
- 	chip->buffer_end = chip->data_buffer + pos + count;
+ 	unsigned long flags;
+-	u32 *froml = from;
++	const u32 *froml = from;
+ 	u32 __iomem *to = (u32 __iomem *) (SPU_MEMORY_BASE + toi);
+ 	int i;
+ 	u32 val;
 -- 
 2.20.1
 
