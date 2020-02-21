@@ -2,161 +2,901 @@ Return-Path: <SRS0=1210=4J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 32BB8C35647
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 12:43:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 88C16C35656
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 12:44:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E80D82073A
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 12:43:26 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=toradex.com header.i=@toradex.com header.b="iYDhN99d"
+	by mail.kernel.org (Postfix) with ESMTP id 41C7D24653
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 12:44:29 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1582289069;
+	bh=EzMFvnTbwJYRDJ8USbV10LmkEcG6eSi7Xkl89vBvWLw=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=Za34wV0O6wD/ABjNHU9sfUiehvFtDSPFk2mtrDaScymVLIrLtgIAW/oe/08owfqZ8
+	 thxBb9LY61EYLJ1b5WyjMfJ3YczhJTX023mjhGQ5RPF4QgtJTkHBIyxvExLOL93oGA
+	 PP9fIn3LvJxSBPzQT/pIsYuYTZR+kgjuwFWfk7ac=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728249AbgBUMnZ (ORCPT
+        id S1728274AbgBUMo2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Feb 2020 07:43:25 -0500
-Received: from mail-db8eur05on2112.outbound.protection.outlook.com ([40.107.20.112]:50560
-        "EHLO EUR05-DB8-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727137AbgBUMnZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Feb 2020 07:43:25 -0500
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=NM5XacJHoFKMGkxxXdFiQzpYOQ8Zlgy6kjs/WGlnuRUQF0rMfF1I9fHIOXR5ORSBgd69tEBtsVUpGanE/jGXYLRSERKV34JSVx9iBooa1AxGH8odch+UJ57mZTVI3q9s2PhV8GhFpC0TXeaKXo1TicGJXQZ8amAti9URq6w70ltaQ2yY6p5uYK+BkxZJsat5OH2L1b2B61HqbKVb7Pvfe0XbQhp2IdA4qJ07KZWAmjRq99PmomZ3E2FuwuJF89jomI2XfZFAJmtKH0R1GO4RdT1EbUCtEAw/d+2lUCRz+c3DEbOvu/dRZKhP7Zf6k36rGPOv2ylZEEC/y2n22P8awg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=3jjQQnwoXgoOJTOhj5JaAmWSQqs74qwS0z7zf4lcT30=;
- b=ElCu/hcdcTgUq7jmH51A5PQ44L3BoHlsHuv6V9x454unM7lZ3pC9haFaPvaEUsyYkHhZnVYRWhLjJfp4dGHPSM6dRbe8eT0HBXWXCCb5w6ccTpYSh8D+4phJktZE+hY8JsH0j6sIcoXNkaK7Gv5edJDVHo0DQgTwtm6LZrWtmYoaTFJu6/UIOR++d/Kn+X+D2SEnzwN4m9VupIy4wEeTJ8qOwyjXAg73PgS8FaQJYJWWz7xYnN+FFI0fkvk6KttvQ69aesHUIuX5Eyl5+X+mgZIR7MG8tyuq/awXhueb587RmmoRWLjpaOQBW9okFNrWFiP73xxQw8CE0YUlke4E9A==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=toradex.com; dmarc=pass action=none header.from=toradex.com;
- dkim=pass header.d=toradex.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=toradex.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=3jjQQnwoXgoOJTOhj5JaAmWSQqs74qwS0z7zf4lcT30=;
- b=iYDhN99debFP3gUrjtSnVqpVbajxTNLya6Z4jB7e2xPGLHpoKAv03oGRyaYOov3GfV3Y7qzwJ2noLmYptf8Xo5Bnb9cM79uvfHsR8rKzjwV05pPfiwz8wqQx5OfXru6Bh7szOJ0TBzsj8oHPKp6Xjn4Vm2ADZHmZOnd5+awZ3ss=
-Received: from VI1PR05MB3279.eurprd05.prod.outlook.com (10.170.238.24) by
- VI1PR05MB5293.eurprd05.prod.outlook.com (20.178.10.161) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2729.22; Fri, 21 Feb 2020 12:43:21 +0000
-Received: from VI1PR05MB3279.eurprd05.prod.outlook.com
- ([fe80::c14f:4592:515f:6e52]) by VI1PR05MB3279.eurprd05.prod.outlook.com
- ([fe80::c14f:4592:515f:6e52%7]) with mapi id 15.20.2729.033; Fri, 21 Feb 2020
- 12:43:21 +0000
-Received: from mail-qv1-f49.google.com (209.85.219.49) by MN2PR01CA0005.prod.exchangelabs.com (2603:10b6:208:10c::18) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2750.18 via Frontend Transport; Fri, 21 Feb 2020 12:43:20 +0000
-Received: by mail-qv1-f49.google.com with SMTP id dc14so901520qvb.9;        Fri, 21 Feb 2020 04:43:20 -0800 (PST)
-From:   Oleksandr Suvorov <oleksandr.suvorov@toradex.com>
-To:     Mark Brown <broonie@kernel.org>
-CC:     "linux-spi@vger.kernel.org" <linux-spi@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Marcel Ziswiler <marcel.ziswiler@toradex.com>,
-        Igor Opanyuk <igor.opanyuk@toradex.com>,
-        Philippe Schenker <philippe.schenker@toradex.com>
-Subject: Re: [PATCH 2/2] spi: spidev: fix a max speed setting
-Thread-Topic: [PATCH 2/2] spi: spidev: fix a max speed setting
-Thread-Index: AQHV5/eyaAawrcInZ0K6xjw9t46TKKgkavCAgAEuCwA=
-Date:   Fri, 21 Feb 2020 12:43:20 +0000
-Message-ID: <CAGgjyvGQ3edNcBUUpcBmTaaNcYA3yvx19m+6MVyKMWgWPVabKQ@mail.gmail.com>
-References: <20200220141143.3902922-1-oleksandr.suvorov@toradex.com>
- <20200220141143.3902922-3-oleksandr.suvorov@toradex.com>
- <20200220184201.GE3926@sirena.org.uk>
-In-Reply-To: <20200220184201.GE3926@sirena.org.uk>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-clientproxiedby: MN2PR01CA0005.prod.exchangelabs.com (2603:10b6:208:10c::18)
- To VI1PR05MB3279.eurprd05.prod.outlook.com (2603:10a6:802:1c::24)
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=oleksandr.suvorov@toradex.com; 
-x-ms-exchange-messagesentrepresentingtype: 1
-x-gm-message-state: APjAAAVbcpPlAq5qohv0NxwVxLRlq+k7pCULNOVWJ44swAmmBVl1cbK0
-        C1ap3NrtzY5OBn6ngfIRrmvCeVFGNAv3QMp3ChQ=
-x-google-smtp-source: APXvYqyOxswAGfQkBDx/uNztdcp7pODg4kMi2X/YzILLjBU3w9CQPr/D0dBqvpU+BbwcOFcGENpots/B/MPsTUQ3kR0=
-x-received: by 2002:a05:6214:1253:: with SMTP id
- q19mr29816072qvv.75.1582288996029; Fri, 21 Feb 2020 04:43:16 -0800 (PST)
-x-gmail-original-message-id: <CAGgjyvGQ3edNcBUUpcBmTaaNcYA3yvx19m+6MVyKMWgWPVabKQ@mail.gmail.com>
-x-originating-ip: [209.85.219.49]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 8e339085-a0cb-4e75-465a-08d7b6cba186
-x-ms-traffictypediagnostic: VI1PR05MB5293:
-x-microsoft-antispam-prvs: <VI1PR05MB5293F447B4AE418D42E61EC3F9120@VI1PR05MB5293.eurprd05.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:1923;
-x-forefront-prvs: 0320B28BE1
-x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(4636009)(366004)(136003)(346002)(376002)(396003)(39850400004)(189003)(199004)(450100002)(8936002)(2906002)(54906003)(55446002)(64756008)(71200400001)(53546011)(478600001)(55236004)(26005)(66556008)(66476007)(66446008)(52116002)(8676002)(42186006)(4326008)(6862004)(81156014)(81166006)(9686003)(44832011)(86362001)(5660300002)(186003)(316002)(66946007)(107886003)(67856001);DIR:OUT;SFP:1102;SCL:1;SRVR:VI1PR05MB5293;H:VI1PR05MB3279.eurprd05.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
-received-spf: None (protection.outlook.com: toradex.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: vf7hj3i/98yKUMLLL2YTIn3VdNbS/5nODKg115giAuAaAApNowdK1FK2OdU6SK7oxjn8Xp2B3IcMDYbPLP3r4HOoM29YnX5AQH6qohgRuxHZAQo4WNtSZuxkqKU+u2sc5ZY0MsOas0ZIniSw0Eh4fBc4ReqhrguOepNrgsfKmyc0BA5SdufdISAoRrrkaCYmsECoydFtjKzyGPaEV5E+E/tTX0wQNzgoUNxEJQ0NMBPeuHgnbR0dzIYqqUSuCmPvHomSb0EcMVOzVzXGFtz8fAmsxINHiv13hV5BOhNQGn37GnSQou139KnuqAcz4Oq6uLTfDw4wEEwgBnUHp6bjpPiPAsIHPJlZ6VMUL96CBeprK/wGtcQoWcx67yEZ2Pj3g0yvr+jVMNTUtPp3YNizWkTyf04kUasRHDH7M4BNJHKbF0gvKU7RxdkdLa+oEq49+JXooNTE8TpzeKaZD/vV8KTtzAAbad2WY9Ps858MQEnqyI61Xa2YpnL61gVEnpbS
-x-ms-exchange-antispam-messagedata: WYaApfq5CILskdoNw0gW4l05CAC+WIyfNw/9EcBO0liyL5yimVugrvtHzxg89oer0iU9klG3sgvzuYPS6ycK5pbrgSn0hdKr61s5fc6Tms1X6vH8rSuvywkp7eR+nxezPWWrvTagq9OujJtslDbIhA==
-x-ms-exchange-transport-forked: True
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <6BD65D70FEA0414785663F93A5CC5F7B@eurprd05.prod.outlook.com>
-Content-Transfer-Encoding: base64
+        Fri, 21 Feb 2020 07:44:28 -0500
+Received: from mail.kernel.org ([198.145.29.99]:35706 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727137AbgBUMo2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 21 Feb 2020 07:44:28 -0500
+Received: from archlinux (cpc149474-cmbg20-2-0-cust94.5-4.cable.virginm.net [82.4.196.95])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id DF2462073A;
+        Fri, 21 Feb 2020 12:44:24 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1582289066;
+        bh=EzMFvnTbwJYRDJ8USbV10LmkEcG6eSi7Xkl89vBvWLw=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=YaRB35xRGeBYrEgZE26BBCppP/PoarcsnlmgamDaBTDlHw9R2dna7XuQCFbW0vZTJ
+         LzsKBAR38npb04vAwwBcUbRnKLRvk4bwosPG5wg0i1UgpYsV9SSyITtvvLpHU4UIxV
+         IEo+sq9jQCi4BumtE/hW8LExKPcmXsw2OIc2b2sk=
+Date:   Fri, 21 Feb 2020 12:44:21 +0000
+From:   Jonathan Cameron <jic23@kernel.org>
+To:     Alexandru Ardelean <alexandru.ardelean@analog.com>
+Cc:     <linux-kernel@vger.kernel.org>, <linux-iio@vger.kernel.org>,
+        <devicetree@vger.kernel.org>, <robh+dt@kernel.org>,
+        Michael Hennerich <michael.hennerich@analog.com>,
+        Lars-Peter Clausen <lars@metafoo.de>
+Subject: Re: [PATCH 2/5] iio: adc: axi-adc: add support for AXI ADC IP core
+Message-ID: <20200221124421.0fabdeb0@archlinux>
+In-Reply-To: <20200220150317.1864-2-alexandru.ardelean@analog.com>
+References: <20200220150317.1864-1-alexandru.ardelean@analog.com>
+        <20200220150317.1864-2-alexandru.ardelean@analog.com>
+X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-X-OriginatorOrg: toradex.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 8e339085-a0cb-4e75-465a-08d7b6cba186
-X-MS-Exchange-CrossTenant-originalarrivaltime: 21 Feb 2020 12:43:20.3450
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: d9995866-0d9b-4251-8315-093f062abab4
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: ezS1lJksCO4MZNVfEmBBHvmq9PVYeNL1xvJDlYvDxlbZhj9UjFkLQB0bCibL/tLxcdZWuzja5IreNY8D3kosnb4pw/9pfsyXie8GFqmNKPs=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR05MB5293
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-SGkgTWFyaywNCg0KT24gVGh1LCBGZWIgMjAsIDIwMjAgYXQgODo0MiBQTSBNYXJrIEJyb3duIDxi
-cm9vbmllQGtlcm5lbC5vcmc+IHdyb3RlOg0KPg0KPiBPbiBUaHUsIEZlYiAyMCwgMjAyMCBhdCAw
-MjoxMTo1MVBNICswMDAwLCBPbGVrc2FuZHIgU3V2b3JvdiB3cm90ZToNCj4gPiBTUElfSU9DX1dS
-X01BWF9TUEVFRF9IWiBjb21tYW5kIGFsd2F5cyBzZXRzIHNwaS0+bWF4X3NwZWVkX2h6DQo+ID4g
-dGhlIGluaXRpYWwgdmFsdWUgY29tZSBmcm9tIERULg0KPg0KPiBUaGlzIGlzIGludGVudGlvbmFs
-LiAgSXQncyBkb2luZyBhIGNhbGwgdG8gc3BpX3NldHVwKCkgdGhlbiByZXN0b3JpbmcNCj4gdGhl
-IG9yaWdpbmFsIHZhbHVlLCB0aGUgZ29hbCBiZWluZyBqdXN0IHRvIHJ1biBzcGlfc2V0dXAoKSB3
-aXRoIHRoZSBuZXcNCj4gdmFsdWUgLSBpdCdzIG5vdCByZWFsbHkgYSBnb29kIGlkZWEgdG8gY2hh
-bmdlIHRoZSBtYXhpbXVtIHNwZWVkIGluIHRoZQ0KPiBmaXJzdCBwbGFjZS4NCg0KTm93IEkgc2Vl
-IGl0Lg0KPg0KPiA+IEl0IGxlYWRzIHRvIHNldCBhIHdyb25nIG1heCBzcGVlZCB3aXRoIElPQ1RM
-IGNhbGwuDQo+IEluIHdoYXQgd2F5IGRvZXMgaXQgbGVhZCB0byB0aGUgd3Jvbmcgc3BlZWQgYmVp
-bmcgc2V0Pw0KDQpBZnRlciBhbGwsIEkgcmV2aWV3ZWQgdGhlIGNvZGUgYW5kIGZvdW5kIG91dCB0
-aGF0IHRoZSBwcm9ibGVtIGlzIG5vdA0KaW4gc3BpZGV2X2lvY3RsLA0KdGhlIHByb2JsZW0gaXMg
-aW4gc3BpZGV2X21lc3NhZ2UoKSdzIGRlYnVnIG1lc3NhZ2UgOikNClRoZSByZWFsIGNvZGUgaXMg
-b2s6DQoNCmRyaXZlcnMvc3BpL3NwaWRldi5jOiBzcGlkZXZfbWVzc2FnZSgpOg0KLi4uDQogICAg
-ICAgICAgICAgICAgIGtfdG1wLT5zcGVlZF9oeiA9IHVfdG1wLT5zcGVlZF9oejsNCiAgICAgICAg
-ICAgICAgICAgaWYgKCFrX3RtcC0+c3BlZWRfaHopDQogICAgICAgICAgICAgICAgICAgICAgICBr
-X3RtcC0+c3BlZWRfaHogPSBzcGlkZXYtPnNwZWVkX2h6Ow0KLi4uDQoNCmJ1dCB0aGUgZGVidWcg
-bWVzc2FnZSB0YWtlcyB3cm9uZyB2YWx1ZToNCmRyaXZlcnMvc3BpL3NwaWRldi5jOiBzcGlkZXZf
-bWVzc2FnZSgpOg0KLi4uDQogICAgICAgICAgICAgIGRldl9pbmZvKCZzcGlkZXYtPnNwaS0+ZGV2
-LA0KICAgICAgICAgICAgICAgICAgICAgICIgIHhmZXIgbGVuICV1ICVzJXMlcyVkYml0cyAldSB1
-c2VjICV1SHoNCihzcGVlZF9oej0lZCBtYXhfc3BlZWRfaHo9JWQpXG4iLA0KICAgICAgICAgICAg
-ICAgICAgICAgICAgdV90bXAtPmxlbiwNCiAgICAgICAgICAgICAgICAgICAgICAgIHVfdG1wLT5y
-eF9idWYgPyAicnggIiA6ICIiLA0KICAgICAgICAgICAgICAgICAgICAgICAgdV90bXAtPnR4X2J1
-ZiA/ICJ0eCAiIDogIiIsDQogICAgICAgICAgICAgICAgICAgICAgICB1X3RtcC0+Y3NfY2hhbmdl
-ID8gImNzICIgOiAiIiwNCiAgICAgICAgICAgICAgICAgICAgICAgIHVfdG1wLT5iaXRzX3Blcl93
-b3JkID8gOiBzcGlkZXYtPnNwaS0+Yml0c19wZXJfd29yZCwNCiAgICAgICAgICAgICAgICAgICAg
-ICAgIHVfdG1wLT5kZWxheV91c2VjcywNCj4+PiAgICAgICAgICAgICAgICAgICAgICAgIHVfdG1w
-LT5zcGVlZF9oeiA/IDogc3BpZGV2LT5zcGktPm1heF9zcGVlZF9oeik7DQouLi4NCkl0IGxlYWRz
-IHRvIGRlYnVnIG1lc3NhZ2VzIGxpa2U6DQoNClsgMTIyNy41MTI4MDZdIHNwaWRldiBzcGkwLjA6
-IHNldHVwIG1vZGUgMCwgMzIgYml0cy93LCAxMDAwMDAwIEh6IG1heCAtLT4gMA0KWyAxMjI3LjU0
-MTc0OV0gc3BpZGV2IHNwaTAuMDogICB4ZmVyIGxlbiA0MDk2IHR4IDMyYml0cyAwIHVzZWMgMTAw
-MDAwMDBIeg0KLi4NClsgMTIyNy42MTYxNjVdIHNwaWRldiBzcGkwLjA6IHNldHVwIG1vZGUgMCwg
-MzIgYml0cy93LCAyMDAwMDAwIEh6IG1heCAtLT4gMA0KWyAxMjI3LjY0NTA5NV0gc3BpZGV2IHNw
-aTAuMDogICB4ZmVyIGxlbiA0MDk2IHR4IDMyYml0cyAwIHVzZWMgMTAwMDAwMDBIeg0KLi4uDQpb
-IDEyMjcuNzAyNzE0XSBzcGlkZXYgc3BpMC4wOiBzZXR1cCBtb2RlIDAsIDMyIGJpdHMvdywgMjAw
-MDAwMDAgSHogbWF4IC0tPiAwDQpbIDEyMjcuNzMxODAxXSBzcGlkZXYgc3BpMC4wOiAgIHhmZXIg
-bGVuIDQwOTYgdHggMzJiaXRzIDAgdXNlYyAxMDAwMDAwMEh6DQouLi4NClNvIGlmIG9uZSBwYXNz
-ZXMgdGhlIG1lc3NhZ2UgKHVzaW5nIGlvY3RsIGluc3RlYWQgb2Ygd3JpdGUgdG8gZmQpIHdpdGgN
-CmVtcHR5IHNwZWVkX2h6LA0KdGhlIGRlYnVnIG1lc3NhZ2UgdGVsbHMgdGhlIHdyb25nIHJlYWwg
-c3BlZWQuIEl0IGZvcmNlZCBtZSB0byB0aGluayBpbg0KdGhlIHdyb25nIGRpcmVjdGlvbi4NCg0K
-PiA+IEZpeCB0aGUgbG9naWMgb2YgYSBtYXggc3BlZWQgYXNzaWdubWVudC4NCj4NCj4gSWYgdGhl
-IGV4cGVjdGF0aW9uIGlzIHRoYXQgdGhlIGRlZmF1bHQgc3BlZWQgc2hvdWxkIGJlIGNoYW5nZWQg
-Zm9yIHRoZQ0KPiBkZXZpY2UgdGhpcyBzaG91bGQgYmUgaGFuZGxlZCBhdCB0aGUgc3BpZGV2IGxl
-dmVsIHJhdGhlciB0aGFuIGluIHRoZQ0KPiBjb3JlLg0KDQpBZ3JlZS4gSSBmaXhlZCB0aGUgd3Jv
-bmcgcGxhY2UgOikNCkknbGwgcmVwbGFjZSB0aGlzIHBhdGNoIHdpdGggYmV0dGVyIG9uZS4NCg0K
-VGhhbnghDQoNCi0tIA0KQmVzdCByZWdhcmRzDQpPbGVrc2FuZHIgU3V2b3Jvdg0KDQpUb3JhZGV4
-IEFHDQpBbHRzYWdlbnN0cmFzc2UgNSB8IDYwNDggSG9ydy9MdXplcm4gfCBTd2l0emVybGFuZCB8
-IFQ6ICs0MSA0MSA1MDANCjQ4MDAgKG1haW4gbGluZSkNCg==
+On Thu, 20 Feb 2020 17:03:14 +0200
+Alexandru Ardelean <alexandru.ardelean@analog.com> wrote:
+
+> From: Michael Hennerich <michael.hennerich@analog.com>
+> 
+> This change adds support for the Analog Devices Generic AXI ADC IP core.
+> The IP core is used for interfacing with analog-to-digital (ADC) converters
+> that require either a high-speed serial interface (JESD204B/C) or a source
+> synchronous parallel interface (LVDS/CMOS).
+> 
+> Usually, some other interface type (i.e SPI) is used as a control interface
+> for the actual ADC, while the IP core (controlled via this driver), will
+> interface to the data-lines of the ADC and handle  the streaming of data
+> into memory via DMA.
+> 
+> Because of this, the AXI ADC driver needs the other SPI-ADC driver to
+> register with it. The SPI-ADC needs to be register via the SPI framework,
+> while the AXI ADC registers as a platform driver. The two cannot be ordered
+> in a hierarchy as both drivers have their own registers, and trying to
+> organize this [in a hierarchy becomes] problematic when trying to map
+> memory/registers.
+> 
+> There are some modes where the AXI ADC can operate as standalone ADC, but
+> those will be implemented at a later point in time.
+> 
+> Link: https://wiki.analog.com/resources/fpga/docs/axi_adc_ip
+> 
+> Signed-off-by: Michael Hennerich <michael.hennerich@analog.com>
+> Signed-off-by: Lars-Peter Clausen <lars@metafoo.de>
+> Signed-off-by: Alexandru Ardelean <alexandru.ardelean@analog.com>
+
+In general looks good to me.  A few specific comments inline.
+
+Thanks,
+
+Jonathan
+
+> ---
+>  drivers/iio/adc/Kconfig         |  20 +
+>  drivers/iio/adc/Makefile        |   1 +
+>  drivers/iio/adc/axi-adc.c       | 622 ++++++++++++++++++++++++++++++++
+>  include/linux/iio/adc/axi-adc.h |  79 ++++
+>  4 files changed, 722 insertions(+)
+>  create mode 100644 drivers/iio/adc/axi-adc.c
+>  create mode 100644 include/linux/iio/adc/axi-adc.h
+> 
+> diff --git a/drivers/iio/adc/Kconfig b/drivers/iio/adc/Kconfig
+> index f4da821c4022..6cd48a256122 100644
+> --- a/drivers/iio/adc/Kconfig
+> +++ b/drivers/iio/adc/Kconfig
+> @@ -282,6 +282,26 @@ config AT91_SAMA5D2_ADC
+>  	  To compile this driver as a module, choose M here: the module will be
+>  	  called at91-sama5d2_adc.
+>  
+> +config AXI_ADC
+> +	tristate "Analog Devices Generic AXI ADC IP core driver"
+> +	select IIO_BUFFER
+> +	select IIO_BUFFER_HW_CONSUMER
+> +	select IIO_BUFFER_DMAENGINE
+> +	help
+> +	  Say yes here to build support for Analog Devices Generic
+> +	  AXI ADC IP core. The IP core is used for interfacing with
+> +	  analog-to-digital (ADC) converters that require either a high-speed
+> +	  serial interface (JESD204B/C) or a source synchronous parallel
+> +	  interface (LVDS/CMOS).
+> +	  Typically (for such devices) SPI will be used for configuration only,
+> +	  while this IP core handles the streaming of data into memory via DMA.
+> +
+> +	  Link: https://wiki.analog.com/resources/fpga/docs/axi_adc_ip
+> +	  If unsure, say N (but it's safe to say "Y").
+> +
+> +	  To compile this driver as a module, choose M here: the
+> +	  module will be called axi-adc.
+> +
+>  config AXP20X_ADC
+>  	tristate "X-Powers AXP20X and AXP22X ADC driver"
+>  	depends on MFD_AXP20X
+> diff --git a/drivers/iio/adc/Makefile b/drivers/iio/adc/Makefile
+> index 8462455b4228..e14fabd53246 100644
+> --- a/drivers/iio/adc/Makefile
+> +++ b/drivers/iio/adc/Makefile
+> @@ -29,6 +29,7 @@ obj-$(CONFIG_AD799X) += ad799x.o
+>  obj-$(CONFIG_ASPEED_ADC) += aspeed_adc.o
+>  obj-$(CONFIG_AT91_ADC) += at91_adc.o
+>  obj-$(CONFIG_AT91_SAMA5D2_ADC) += at91-sama5d2_adc.o
+> +obj-$(CONFIG_AXI_ADC) += axi-adc.o
+>  obj-$(CONFIG_AXP20X_ADC) += axp20x_adc.o
+>  obj-$(CONFIG_AXP288_ADC) += axp288_adc.o
+>  obj-$(CONFIG_BCM_IPROC_ADC) += bcm_iproc_adc.o
+> diff --git a/drivers/iio/adc/axi-adc.c b/drivers/iio/adc/axi-adc.c
+> new file mode 100644
+> index 000000000000..9ddd64fdab2d
+> --- /dev/null
+> +++ b/drivers/iio/adc/axi-adc.c
+
+I suspect this may not be the only AXI based ADC interface in the
+world.   As such, prefix with adi-axi perhaps.
+
+> @@ -0,0 +1,622 @@
+> +// SPDX-License-Identifier: GPL-2.0-only
+> +/*
+> + * Analog Devices Generic AXI ADC IP core
+> + * Link: https://wiki.analog.com/resources/fpga/docs/axi_adc_ip
+> + *
+> + * Copyright 2012-2020 Analog Devices Inc.
+> + */
+> +
+> +#include <linux/bitfield.h>
+> +#include <linux/clk.h>
+> +#include <linux/io.h>
+> +#include <linux/delay.h>
+> +#include <linux/module.h>
+> +#include <linux/platform_device.h>
+> +#include <linux/slab.h>
+> +
+> +#include <linux/iio/iio.h>
+> +#include <linux/iio/sysfs.h>
+> +#include <linux/iio/buffer.h>
+> +#include <linux/iio/buffer-dmaengine.h>
+> +
+> +#include <linux/fpga/adi-axi-common.h>
+> +#include <linux/iio/adc/axi-adc.h>
+> +
+> +/**
+> + * Register definitions:
+> + *   https://wiki.analog.com/resources/fpga/docs/axi_adc_ip#register_map
+> + */
+> +
+> +#define AXI_ADC_UPPER16_MSK		GENMASK(31, 16)
+> +#define AXI_ADC_UPPER16_SET(x)		FIELD_PREP(AXI_ADC_UPPER16_MSK, x)
+> +#define AXI_ADC_UPPER16_GET(x)		FIELD_GET(AXI_ADC_UPPER16_MSK, x)
+> +
+> +#define AXI_ADC_LOWER16_MSK		GENMASK(15, 0)
+> +#define AXI_ADC_LOWER16_SET(x)		FIELD_PREP(AXI_ADC_UPPER16_MSK, x)
+> +#define AXI_ADC_LOWER16_GET(x)		FIELD_GET(AXI_ADC_LOWER16_MSK, x)
+> +
+> +/* ADC controls */
+> +
+> +#define AXI_ADC_REG_RSTN			0x0040
+> +#define   AXI_ADC_MMCM_RSTN			BIT(1)
+> +#define   AXI_ADC_RSTN				BIT(0)
+> +
+> +#define AXI_ADC_REG_CNTRL			0x0044
+> +#define   AXI_ADC_R1_MODE			BIT(2)
+> +#define   AXI_ADC_DDR_EDGESEL			BIT(1)
+> +#define   AXI_ADC_PIN_MODE			BIT(0)
+> +
+> +#define AXI_ADC_REG_CLK_FREQ			0x0054
+> +#define AXI_ADC_REG_CLK_RATIO			0x0058
+> +
+> +#define AXI_ADC_REG_STATUS			0x005C
+> +#define   AXI_ADC_MUX_PN_ERR			BIT(3)
+> +#define   AXI_ADC_MUX_PN_OOS			BIT(2)
+> +#define   AXI_ADC_MUX_OVER_RANGE		BIT(1)
+> +#define   AXI_ADC_STATUS			BIT(0)
+> +
+> +#define AXI_ADC_REG_DRP_CNTRL			0x0070
+> +#define   AXI_ADC_DRP_SEL			BIT(29)
+> +#define   AXI_ADC_DRP_RWN			BIT(28)
+> +#define   AXI_ADC_DRP_ADDRESS_MSK		GENMASK(27, 16)
+> +#define   AXI_ADC_DRP_ADDRESS_SET(x)		\
+> +		FIELD_PREP(AXI_ADC_DRP_ADDRESS_MSK, x)
+> +#define   AXI_ADC_DRP_ADDRESS_GET(x)		\
+> +		FIELD_GET(AXI_ADC_DRP_ADDRESS_MSK, x)
+> +#define   AXI_ADC_DRP_WDATA_SET			AXI_ADC_LOWER16_SET
+> +#define   AXI_ADC_DRP_WDATA_GET			AXI_ADC_LOWER16_GET
+> +
+> +#define AXI_REG_DRP_STATUS			0x0074
+> +#define   AXI_ADC_DRP_STATUS			BIT(16)
+> +#define   AXI_ADC_DRP_RDATA_SET			AXI_ADC_LOWER16_SET
+> +#define   AXI_ADC_DRP_RDATA_GET			AXI_ADC_LOWER16_GET
+> +
+> +#define AXI_ADC_REG_DMA_STATUS			0x0088
+> +#define   AXI_ADC_DMA_OVF			BIT(2)
+> +#define   AXI_ADC_DMA_UNF			BIT(1)
+> +#define   AXI_ADC_DMA_STATUS			BIT(0)
+> +
+> +#define ADI_REG_DMA_BUSWIDTH			0x008C
+> +#define AXI_ADC_REG_GP_CONTROL			0x00BC
+> +#define AXI_ADC_REG_ADC_DP_DISABLE		0x00C0
+> +
+> +/* ADC Channel controls */
+> +
+> +#define AXI_ADC_REG_CHAN_CNTRL(c)		(0x0400 + (c) * 0x40)
+> +#define   AXI_ADC_PN_SEL			BIT(10)
+> +#define   AXI_ADC_IQCOR_ENB			BIT(9)
+> +#define   AXI_ADC_DCFILT_ENB			BIT(8)
+> +#define   AXI_ADC_FORMAT_SIGNEXT		BIT(6)
+> +#define   AXI_ADC_FORMAT_TYPE			BIT(5)
+> +#define   AXI_ADC_FORMAT_ENABLE			BIT(4)
+> +#define   AXI_ADC_PN23_TYPE			BIT(1)
+> +#define   AXI_ADC_ENABLE			BIT(0)
+> +
+> +#define AXI_ADC_REG_CHAN_STATUS(c)		(0x0404 + (c) * 0x40)
+> +#define   AXI_ADC_PN_ERR			BIT(2)
+> +#define   AXI_ADC_PN_OOS			BIT(1)
+> +#define   AXI_ADC_OVER_RANGE			BIT(0)
+> +
+> +#define AXI_ADC_REG_CHAN_CNTRL_1(c)		(0x0410 + (c) * 0x40)
+> +#define   AXI_ADC_DCFILT_OFFSET_MSK		AXI_ADC_UPPER16_MSK
+> +#define   AXI_ADC_DCFILT_OFFSET_SET		AXI_ADC_UPPER16_SET
+> +#define   AXI_ADC_DCFILT_OFFSET_GET		AXI_ADC_UPPER16_GET
+> +#define   AXI_ADC_DCFILT_COEFF_MSK		AXI_ADC_LOWER16_MSK
+> +#define   AXI_ADC_DCFILT_COEFF_SET		AXI_ADC_LOWER16_SET
+> +#define   AXI_ADC_DCFILT_COEFF_GET		AXI_ADC_LOWER16_GET
+> +
+> +#define AXI_ADC_REG_CHAN_CNTRL_2(c)		(0x0414 + (c) * 0x40)
+> +#define   AXI_ADC_IQCOR_COEFF_1_MSK		AXI_ADC_UPPER16_MSK
+> +#define   AXI_ADC_IQCOR_COEFF_1_SET		AXI_ADC_UPPER16_SET
+> +#define   AXI_ADC_IQCOR_COEFF_1_GET		AXI_ADC_UPPER16_GET
+> +#define   AXI_ADC_IQCOR_COEFF_2_MSK		AXI_ADC_LOWER16_MSK
+> +#define   AXI_ADC_IQCOR_COEFF_2_SET		AXI_ADC_LOWER16_SET
+> +#define   AXI_ADC_IQCOR_COEFF_2_GET		AXI_ADC_LOWER16_GET
+> +
+> +/*  format is 1.1.14 (sign, integer and fractional bits) */
+> +#define AXI_ADC_IQCOR_INT_1			0x4000UL
+> +#define AXI_ADC_IQCOR_SIGN_BIT			BIT(15)
+> +/* The constant below is (2 * PI * 0x4000), where 0x4000 is AXI_ADC_IQCOR_INT_1 */
+> +#define AXI_ADC_2_X_PI_X_INT_1			102944ULL
+> +
+> +#define AXI_ADC_REG_CHAN_CNTRL_3(c)		(0x0418 + (c) * 0x40)
+> +#define   AXI_ADC_ADC_PN_SEL_MSK		AXI_ADC_UPPER16_MSK
+> +#define   AXI_ADC_ADC_PN_SEL_SET		AXI_ADC_UPPER16_SET
+> +#define   AXI_ADC_ADC_PN_SEL_GET		AXI_ADC_UPPER16_GET
+> +#define   AXI_ADC_ADC_DATA_SEL_MSK		AXI_ADC_LOWER16_MSK
+> +#define   AXI_ADC_ADC_DATA_SEL_SET		AXI_ADC_LOWER16_SET
+> +#define   AXI_ADC_ADC_DATA_SEL_GET		AXI_ADC_LOWER16_GET
+> +
+> +#define AXI_ADC_REG_CHAN_USR_CNTRL_2(c)		(0x0424 + (c) * 0x40)
+> +#define   AXI_ADC_USR_DECIMATION_M_MSK		AXI_ADC_UPPER16_MSK
+> +#define   AXI_ADC_USR_DECIMATION_M_SET		AXI_ADC_UPPER16_SET
+> +#define   AXI_ADC_USR_DECIMATION_M_GET		AXI_ADC_UPPER16_GET
+> +#define   AXI_ADC_USR_DECIMATION_N_MSK		AXI_ADC_LOWER16_MSK
+> +#define   AXI_ADC_USR_DECIMATION_N_SET		AXI_ADC_LOWER16_SET
+> +#define   AXI_ADC_USR_DECIMATION_N_GET		AXI_ADC_LOWER16_GET
+> +
+> +/* debugfs direct register access */
+> +#define DEBUGFS_DRA_PCORE_REG_MAGIC		BIT(31)
+> +
+> +struct axi_adc_core_info {
+> +	unsigned int			version;
+> +};
+> +
+> +struct axi_adc_state {
+> +	struct mutex			lock;
+> +
+> +	struct axi_adc_client		*client;
+> +	void __iomem			*regs;
+> +	unsigned int			regs_size;
+> +};
+> +
+> +struct axi_adc_client {
+> +	struct list_head		entry;
+> +	struct axi_adc_conv		conv;
+> +	struct axi_adc_state		*state;
+> +	struct device			*dev;
+> +	const struct axi_adc_core_info	*info;
+> +};
+> +
+> +static LIST_HEAD(axi_adc_registered_clients);
+> +static DEFINE_MUTEX(axi_adc_registered_clients_lock);
+> +
+> +static struct axi_adc_client *axi_adc_conv_to_client(struct axi_adc_conv *conv)
+> +{
+> +	if (!conv)
+> +		return NULL;
+> +	return container_of(conv, struct axi_adc_client, conv);
+> +}
+> +
+> +void *axi_adc_conv_priv(struct axi_adc_conv *conv)
+> +{
+> +	struct axi_adc_client *cl = axi_adc_conv_to_client(conv);
+> +
+> +	if (!cl)
+> +		return NULL;
+> +
+> +	return (char *)cl + ALIGN(sizeof(struct axi_adc_client), IIO_ALIGN);
+> +}
+> +EXPORT_SYMBOL_GPL(axi_adc_conv_priv);
+> +
+> +static void axi_adc_write(struct axi_adc_state *st, unsigned int reg,
+> +			  unsigned int val)
+> +{
+> +	iowrite32(val, st->regs + reg);
+> +}
+> +
+> +static unsigned int axi_adc_read(struct axi_adc_state *st, unsigned int reg)
+> +{
+> +	return ioread32(st->regs + reg);
+> +}
+> +
+> +static int axi_adc_config_dma_buffer(struct device *dev,
+> +				     struct iio_dev *indio_dev)
+> +{
+> +	struct iio_buffer *buffer;
+> +	const char *dma_name;
+> +
+> +	if (!device_property_present(dev, "dmas"))
+> +		return 0;
+> +
+> +	if (device_property_read_string(dev, "dma-names", &dma_name))
+> +		dma_name = "rx";
+> +
+> +	buffer = devm_iio_dmaengine_buffer_alloc(indio_dev->dev.parent,
+> +						 dma_name);
+> +	if (IS_ERR(buffer))
+> +		return PTR_ERR(buffer);
+> +
+> +	indio_dev->modes |= INDIO_BUFFER_HARDWARE;
+> +	iio_device_attach_buffer(indio_dev, buffer);
+> +
+> +	return 0;
+> +}
+> +
+> +static int axi_adc_read_raw(struct iio_dev *indio_dev,
+> +			   struct iio_chan_spec const *chan,
+> +			   int *val, int *val2, long mask)
+> +{
+> +	struct axi_adc_state *st = iio_priv(indio_dev);
+> +	struct axi_adc_conv *conv = &st->client->conv;
+> +
+> +	switch (mask) {
+> +	case IIO_CHAN_INFO_SAMP_FREQ:
+> +		/* fall-through */
+> +	default:
+> +		if (!conv->read_raw)
+> +			return -ENOSYS;
+> +
+> +		return conv->read_raw(conv, chan, val, val2, mask);
+> +	}
+> +
+> +	return -EINVAL;
+> +}
+> +
+> +static int axi_adc_write_raw(struct iio_dev *indio_dev,
+> +			     struct iio_chan_spec const *chan,
+> +			     int val, int val2, long mask)
+> +{
+> +	struct axi_adc_state *st = iio_priv(indio_dev);
+> +	struct axi_adc_conv *conv = &st->client->conv;
+> +
+> +	switch (mask) {
+> +	case IIO_CHAN_INFO_SAMP_FREQ:
+> +		/* fall-through */
+
+Umm.  Got to ask. If you only have one option and a default, why have
+the option? Or indeed the switch statement at all..
+
+> +	default:
+> +		if (!conv->write_raw)
+> +			return -ENOSYS;
+> +
+> +		return conv->write_raw(conv, chan, val, val2, mask);
+> +	}
+> +}
+> +
+> +static int axi_adc_update_scan_mode(struct iio_dev *indio_dev,
+> +				    const unsigned long *scan_mask)
+> +{
+> +	struct axi_adc_state *st = iio_priv(indio_dev);
+> +	struct axi_adc_conv *conv = &st->client->conv;
+> +	unsigned int i, ctrl;
+> +
+> +	for (i = 0; i < conv->chip_info->num_channels; i++) {
+> +		ctrl = axi_adc_read(st, AXI_ADC_REG_CHAN_CNTRL(i));
+> +
+> +		if (test_bit(i, scan_mask))
+> +			ctrl |= AXI_ADC_ENABLE;
+> +		else
+> +			ctrl &= ~AXI_ADC_ENABLE;
+> +
+> +		axi_adc_write(st, AXI_ADC_REG_CHAN_CNTRL(i), ctrl);
+> +	}
+> +
+> +	return 0;
+> +}
+> +
+> +struct axi_adc_conv *axi_adc_conv_register(struct device *dev, int sizeof_priv)
+> +{
+> +	struct axi_adc_client *cl;
+> +	size_t alloc_size;
+> +
+> +	alloc_size = sizeof(struct axi_adc_client);
+> +	if (sizeof_priv) {
+> +		alloc_size = ALIGN(alloc_size, IIO_ALIGN);
+> +		alloc_size += sizeof_priv;
+> +	}
+> +	alloc_size += IIO_ALIGN - 1;
+> +
+> +	cl = kzalloc(alloc_size, GFP_KERNEL);
+> +	if (!cl)
+> +		return ERR_PTR(-ENOMEM);
+> +
+> +	mutex_lock(&axi_adc_registered_clients_lock);
+> +
+> +	get_device(dev);
+> +	cl->dev = dev;
+> +
+> +	list_add_tail(&cl->entry, &axi_adc_registered_clients);
+> +
+> +	mutex_unlock(&axi_adc_registered_clients_lock);
+> +
+> +	return &cl->conv;
+> +}
+> +EXPORT_SYMBOL_GPL(axi_adc_conv_register);
+> +
+> +void axi_adc_conv_unregister(struct axi_adc_conv *conv)
+> +{
+> +	struct axi_adc_client *cl = axi_adc_conv_to_client(conv);
+> +
+> +	if (!cl)
+> +		return;
+> +
+> +	mutex_lock(&axi_adc_registered_clients_lock);
+> +
+> +	put_device(cl->dev);
+> +	list_del(&cl->entry);
+> +	kfree(cl);
+> +
+> +	mutex_unlock(&axi_adc_registered_clients_lock);
+> +}
+> +EXPORT_SYMBOL(axi_adc_conv_unregister);
+
+You could avoid exporting the non devm versions to encourage people
+to only use the managed ones.
+
+> +
+> +static void devm_axi_adc_conv_release(struct device *dev, void *res)
+> +{
+> +	axi_adc_conv_unregister(*(struct axi_adc_conv **)res);
+> +}
+> +
+> +static int devm_axi_adc_conv_match(struct device *dev, void *res, void *data)
+> +{
+> +	struct axi_adc_conv **r = res;
+> +
+> +	return *r == data;
+> +}
+> +
+> +struct axi_adc_conv *devm_axi_adc_conv_register(struct device *dev,
+> +						int sizeof_priv)
+> +{
+> +	struct axi_adc_conv **ptr, *conv;
+> +
+> +	ptr = devres_alloc(devm_axi_adc_conv_release, sizeof(*ptr),
+> +			   GFP_KERNEL);
+> +	if (!ptr)
+> +		return ERR_PTR(-ENOMEM);
+> +
+> +	conv = axi_adc_conv_register(dev, sizeof_priv);
+> +	if (IS_ERR(conv)) {
+> +		devres_free(ptr);
+> +		return ERR_CAST(conv);
+> +	}
+> +
+> +	*ptr = conv;
+> +	devres_add(dev, ptr);
+> +
+> +	return conv;
+> +}
+> +EXPORT_SYMBOL_GPL(devm_axi_adc_conv_register);
+> +
+> +void devm_axi_adc_conv_unregister(struct device *dev,
+> +				  struct axi_adc_conv *conv)
+Note that there is no 'need' to provide devm unregister functions
+if it is unlikely a driver will actually use them.
+
+May well be better to clean the ones in here out until we
+actually need them.  If nothing else having them may encourage
+bad driver architecture.
+
+hohum.  I should probably just remove the ones in the IIO core
+that never get used as well...
+
+devm_iio_device_unregister for example.
+
+> +{
+> +	int rc;
+> +
+> +	rc = devres_release(dev, devm_axi_adc_conv_release,
+> +			    devm_axi_adc_conv_match, conv);
+> +	WARN_ON(rc);
+> +}
+> +EXPORT_SYMBOL_GPL(devm_axi_adc_conv_unregister);
+> +
+> +static ssize_t in_voltage_scale_available_show(struct device *dev,
+> +					       struct device_attribute *attr,
+> +					       char *buf)
+> +{
+> +	struct iio_dev *indio_dev = dev_to_iio_dev(dev);
+> +	struct axi_adc_state *st = iio_priv(indio_dev);
+> +	struct axi_adc_conv *conv = &st->client->conv;
+> +	size_t len = 0;
+> +	int i;
+> +
+> +	if (!conv->chip_info->num_scales) {
+> +		buf[0] = '\n';
+> +		return 1;
+> +	}
+> +
+> +	for (i = 0; i < conv->chip_info->num_scales; i++) {
+> +		const unsigned int *s = conv->chip_info->scale_table[i];
+> +
+> +		len += scnprintf(buf + len, PAGE_SIZE - len,
+> +				 "%u.%06u ", s[0], s[1]);
+> +	}
+> +	buf[len - 1] = '\n';
+> +
+> +	return len;
+> +}
+> +
+> +static IIO_DEVICE_ATTR_RO(in_voltage_scale_available, 0);
+> +
+> +static struct attribute *axi_adc_attributes[] = {
+> +	&iio_dev_attr_in_voltage_scale_available.dev_attr.attr,
+> +	NULL,
+> +};
+> +
+> +static const struct attribute_group axi_adc_attribute_group = {
+> +	.attrs = axi_adc_attributes,
+> +};
+> +
+> +static const struct iio_info axi_adc_info = {
+> +	.read_raw = &axi_adc_read_raw,
+> +	.write_raw = &axi_adc_write_raw,
+> +	.attrs = &axi_adc_attribute_group,
+> +	.update_scan_mode = &axi_adc_update_scan_mode,
+> +};
+> +
+> +static const struct axi_adc_core_info axi_adc_10_0_a_info = {
+> +	.version = ADI_AXI_PCORE_VER(10, 0, 'a'),
+> +};
+> +
+> +/* Match table for of_platform binding */
+> +static const struct of_device_id axi_adc_of_match[] = {
+> +	{ .compatible = "adi,axi-adc-10.0.a", .data = &axi_adc_10_0_a_info },
+> +	{ /* end of list */ },
+> +};
+> +MODULE_DEVICE_TABLE(of, axi_adc_of_match);
+> +
+> +struct axi_adc_client *axi_adc_attach_client(struct device *dev)
+> +{
+> +	const struct of_device_id *id;
+> +	struct axi_adc_client *cl;
+> +	struct device_node *cln;
+> +
+> +	if (!dev->of_node) {
+> +		dev_err(dev, "DT node is null\n");
+> +		return ERR_PTR(-ENODEV);
+> +	}
+> +
+> +	id = of_match_node(axi_adc_of_match, dev->of_node);
+> +	if (!id)
+> +		return ERR_PTR(-ENODEV);
+> +
+> +	cln = of_parse_phandle(dev->of_node, "axi-adc-client", 0);
+> +	if (!cln) {
+> +		dev_err(dev, "No 'axi-adc-client' node defined\n");
+> +		return ERR_PTR(-ENODEV);
+> +	}
+> +
+> +	mutex_lock(&axi_adc_registered_clients_lock);
+> +
+> +	list_for_each_entry(cl, &axi_adc_registered_clients, entry) {
+> +		if (!cl->dev)
+> +			continue;
+> +		if (cl->dev->of_node == cln) {
+> +			if (!try_module_get(dev->driver->owner)) {
+> +				mutex_unlock(&axi_adc_registered_clients_lock);
+> +				return ERR_PTR(-ENODEV);
+> +			}
+> +			get_device(dev);
+> +			cl->info = id->data;
+> +			mutex_unlock(&axi_adc_registered_clients_lock);
+> +			return cl;
+> +		}
+> +	}
+> +
+> +	mutex_unlock(&axi_adc_registered_clients_lock);
+> +
+> +	return ERR_PTR(-EPROBE_DEFER);
+> +}
+> +
+> +static int axi_adc_setup_channels(struct device *dev, struct axi_adc_state *st)
+> +{
+> +	struct axi_adc_conv *conv = conv = &st->client->conv;
+> +	unsigned int val;
+> +	int i, ret;
+> +
+> +	if (conv->preenable_setup) {
+> +		ret = conv->preenable_setup(conv);
+> +		if (ret)
+> +			return ret;
+> +	}
+> +
+> +	for (i = 0; i < conv->chip_info->num_channels; i++) {
+> +		if (i & 1)
+> +			val = AXI_ADC_IQCOR_COEFF_2_SET(AXI_ADC_IQCOR_INT_1);
+> +		else
+> +			val = AXI_ADC_IQCOR_COEFF_1_SET(AXI_ADC_IQCOR_INT_1);
+> +		axi_adc_write(st, AXI_ADC_REG_CHAN_CNTRL_2(i), val);
+> +
+> +		axi_adc_write(st, AXI_ADC_REG_CHAN_CNTRL(i),
+> +			      AXI_ADC_FORMAT_SIGNEXT | AXI_ADC_FORMAT_ENABLE |
+> +			      AXI_ADC_IQCOR_ENB | AXI_ADC_ENABLE);
+> +	}
+> +
+> +	return 0;
+> +}
+> +
+> +static int axi_adc_alloc_channels(struct iio_dev *indio_dev,
+> +				  struct axi_adc_conv *conv)
+> +{
+> +	unsigned int i, num = conv->chip_info->num_channels;
+> +	struct device *dev = indio_dev->dev.parent;
+> +	struct iio_chan_spec *channels;
+> +
+> +	channels = devm_kcalloc(dev, num, sizeof(*channels), GFP_KERNEL);
+> +	if (!channels)
+> +		return -ENOMEM;
+> +
+> +	for (i = 0; i < conv->chip_info->num_channels; i++)
+> +		channels[i] = conv->chip_info->channels->iio_chan;
+> +
+> +	indio_dev->num_channels = num;
+> +	indio_dev->channels = channels;
+> +
+> +	return 0;
+> +}
+> +
+> +struct axi_adc_cleanup_data {
+> +	struct axi_adc_state	*st;
+> +	struct axi_adc_client	*cl;
+> +};
+
+Doesn't seem to be used.
+
+> +
+> +static void axi_adc_cleanup(void *data)
+> +{
+> +	struct axi_adc_client *cl = data;
+> +
+> +	put_device(cl->dev);
+> +	module_put(cl->dev->driver->owner);
+> +}
+> +
+> +static int axi_adc_probe(struct platform_device *pdev)
+> +{
+> +	struct axi_adc_conv *conv;
+> +	struct iio_dev *indio_dev;
+> +	struct axi_adc_client *cl;
+> +	struct axi_adc_state *st;
+> +	struct resource *mem;
+> +	unsigned int ver;
+> +	int ret;
+> +
+> +	cl = axi_adc_attach_client(&pdev->dev);
+> +	if (IS_ERR(cl))
+> +		return PTR_ERR(cl);
+> +
+> +	indio_dev = devm_iio_device_alloc(&pdev->dev, sizeof(*st));
+> +	if (indio_dev == NULL)
+> +		return -ENOMEM;
+> +
+> +	st = iio_priv(indio_dev);
+> +	st->client = cl;
+> +	cl->state = st;
+> +	mutex_init(&st->lock);
+> +
+> +	ret = devm_add_action_or_reset(&pdev->dev, axi_adc_cleanup, cl);
+
+This is unwinding things in axi_adc_attach_client, so should be
+called immediately after that, not with the iio device allocation
+in between.
+
+> +	if (ret)
+> +		return ret;
+> +
+> +	mem = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+> +	st->regs_size = resource_size(mem);
+> +	st->regs = devm_ioremap_resource(&pdev->dev, mem);
+
+Can we use devm_platform_ioremap_resource here?
+We grab regs_size but don't seem to use it.
+
+
+> +	if (IS_ERR(st->regs))
+> +		return PTR_ERR(st->regs);
+> +
+> +	conv = &st->client->conv;
+> +
+> +	/* Reset HDL Core */
+> +	axi_adc_write(st, AXI_ADC_REG_RSTN, 0);
+> +	mdelay(10);
+> +	axi_adc_write(st, AXI_ADC_REG_RSTN, AXI_ADC_MMCM_RSTN);
+> +	mdelay(10);
+> +	axi_adc_write(st, AXI_ADC_REG_RSTN, AXI_ADC_RSTN | AXI_ADC_MMCM_RSTN);
+> +
+> +	ver = axi_adc_read(st, ADI_AXI_REG_VERSION);
+> +
+> +	if (cl->info->version > ver) {
+> +		dev_err(&pdev->dev,
+> +			"IP core version is too old. Expected %d.%.2d.%c, Reported %d.%.2d.%c\n",
+> +			ADI_AXI_PCORE_VER_MAJOR(cl->info->version),
+> +			ADI_AXI_PCORE_VER_MINOR(cl->info->version),
+> +			ADI_AXI_PCORE_VER_PATCH(cl->info->version),
+> +			ADI_AXI_PCORE_VER_MAJOR(ver),
+> +			ADI_AXI_PCORE_VER_MINOR(ver),
+> +			ADI_AXI_PCORE_VER_PATCH(ver));
+> +		return -ENODEV;
+> +	}
+> +
+> +	indio_dev->info = &axi_adc_info;
+> +	indio_dev->dev.parent = &pdev->dev;
+> +	indio_dev->name = pdev->dev.of_node->name;
+> +	indio_dev->modes = INDIO_DIRECT_MODE;
+> +
+> +	ret = axi_adc_alloc_channels(indio_dev, conv);
+> +	if (ret)
+> +		return ret;
+> +
+> +	ret = axi_adc_config_dma_buffer(&pdev->dev, indio_dev);
+> +	if (ret)
+> +		return ret;
+> +
+> +	ret = axi_adc_setup_channels(&pdev->dev, st);
+> +	if (ret)
+> +		return ret;
+> +
+> +	ret = devm_iio_device_register(&pdev->dev, indio_dev);
+> +	if (ret)
+> +		return ret;
+> +
+> +	dev_info(&pdev->dev, "AXI ADC IP core (%d.%.2d.%c) probed\n",
+> +		ADI_AXI_PCORE_VER_MAJOR(ver),
+> +		ADI_AXI_PCORE_VER_MINOR(ver),
+> +		ADI_AXI_PCORE_VER_PATCH(ver));
+> +
+> +	return 0;
+> +}
+> +
+> +static struct platform_driver axi_adc_driver = {
+> +	.driver = {
+> +		.name = KBUILD_MODNAME,
+> +		.of_match_table = axi_adc_of_match,
+> +	},
+> +	.probe = axi_adc_probe,
+> +};
+> +
+> +module_platform_driver(axi_adc_driver);
+> +
+> +MODULE_AUTHOR("Michael Hennerich <michael.hennerich@analog.com>");
+> +MODULE_DESCRIPTION("Analog Devices Generic AXI ADC IP core driver");
+> +MODULE_LICENSE("GPL v2");
+> diff --git a/include/linux/iio/adc/axi-adc.h b/include/linux/iio/adc/axi-adc.h
+> new file mode 100644
+> index 000000000000..d367c442dc52
+> --- /dev/null
+> +++ b/include/linux/iio/adc/axi-adc.h
+> @@ -0,0 +1,79 @@
+> +/* SPDX-License-Identifier: GPL-2.0 */
+> +/*
+> + * Analog Devices Generic AXI ADC IP core driver/library
+> + * Link: https://wiki.analog.com/resources/fpga/docs/axi_adc_ip
+> + *
+> + * Copyright 2012-2020 Analog Devices Inc.
+> + */
+> +#ifndef __AXI_ADC_H__
+> +#define __AXI_ADC_H__
+> +
+> +struct device;
+> +
+> +/**
+> + * struct axi_adc_chan_spec - AXI ADC channel wrapper
+> + *			      maps IIO channel data with AXI ADC specifics
+> + * @iio_chan		IIO channel specification
+> + * @num_lanes		Number of lanes per channel
+> + */
+> +struct axi_adc_chan_spec {
+> +	struct iio_chan_spec		iio_chan;
+> +	unsigned int			num_lanes;
+> +};
+> +
+> +/**
+> + * struct axi_adc_chip_info - Chip specific information
+> + * @name		Chip name
+> + * @id			Chip ID (usually product ID)
+> + * @channels		Channel specifications of type @struct axi_adc_chan_spec
+> + * @num_channels	Number of @channels
+> + * @scale_table		Supported scales by the chip; tuples of 2 ints
+> + * @num_scales		Number of scales in the table
+> + * @max_rate		Maximum sampling rate supported by the device
+> + */
+> +struct axi_adc_chip_info {
+> +	const char			*name;
+> +	unsigned int			id;
+> +
+> +	const struct axi_adc_chan_spec	*channels;
+> +	unsigned int			num_channels;
+> +
+> +	const unsigned int		(*scale_table)[2];
+> +	int				num_scales;
+> +
+> +	unsigned long			max_rate;
+> +};
+> +
+> +/**
+> + * struct axi_adc_conv - data of the ADC attached to the AXI ADC
+> + * @chip_info		chip info details for the client ADC
+> + * @preenable_setup	op to run in the client before enabling the AXI ADC
+> + * @read_raw		IIO read_raw hook for the client ADC
+> + * @write_raw		IIO write_raw hook for the client ADC
+> + */
+> +struct axi_adc_conv {
+> +	const struct axi_adc_chip_info		*chip_info;
+> +
+> +	int (*preenable_setup)(struct axi_adc_conv *conv);
+> +	int (*reg_access)(struct axi_adc_conv *conv, unsigned int reg,
+> +			  unsigned int writeval, unsigned int *readval);
+> +	int (*read_raw)(struct axi_adc_conv *conv,
+> +			struct iio_chan_spec const *chan,
+> +			int *val, int *val2, long mask);
+> +	int (*write_raw)(struct axi_adc_conv *conv,
+> +			 struct iio_chan_spec const *chan,
+> +			 int val, int val2, long mask);
+> +};
+> +
+> +struct axi_adc_conv *axi_adc_conv_register(struct device *dev,
+> +					   int sizeof_priv);
+> +void axi_adc_conv_unregister(struct axi_adc_conv *conv);
+> +
+> +struct axi_adc_conv *devm_axi_adc_conv_register(struct device *dev,
+> +						int sizeof_priv);
+> +void devm_axi_adc_conv_unregister(struct device *dev,
+> +				  struct axi_adc_conv *conv);
+> +
+> +void *axi_adc_conv_priv(struct axi_adc_conv *conv);
+> +
+> +#endif
+
