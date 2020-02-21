@@ -7,53 +7,51 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 578FCC35642
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 07:59:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1462EC35641
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 07:59:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2584124672
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 07:59:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D101420801
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 07:59:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582271981;
-	bh=QVEEUsNykoxoJV/rcjs1Ck1EsfaIaK8e3nYPnbFEbPU=;
+	s=default; t=1582271984;
+	bh=mXyGHYPh6/1oUrgz+oAwhP1+dXUpSXvKWEMnzTEpH5o=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=mNSxWyLAqdktPGvOSvAEHktCPQfw50vndGojcViboT0DjwSU9NzHN15f+TdHK8Mt9
-	 9vdTY2skx0a/HzKDgPOFcFRoSzaUOVexz3rZJJp5j+z2NSR9CInUJcJx5LPRR5wlrf
-	 reSsthUFde21WQK7ybBI/bYJZ1vQ+LkEGbe6RygI=
+	b=0TqrW32MVsbSjl8YLZSAlbXG/mXOXMQCkuqBuCK71+fViEd4ibKaVH4VjjObspcU/
+	 7+LQAiiHnucvF4BknFD7aRQ6BrKAy6PjbWElUocTfcdbMGezrGDfjWi9efHvi7RPZv
+	 E2T2nyQTC0jySTp5fxcVyudt/hPkVMeqpRLfP64o=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730945AbgBUH7j (ORCPT
+        id S1730954AbgBUH7n (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Feb 2020 02:59:39 -0500
-Received: from mail.kernel.org ([198.145.29.99]:59724 "EHLO mail.kernel.org"
+        Fri, 21 Feb 2020 02:59:43 -0500
+Received: from mail.kernel.org ([198.145.29.99]:59842 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730921AbgBUH7h (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Feb 2020 02:59:37 -0500
+        id S1730776AbgBUH7m (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 21 Feb 2020 02:59:42 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id BE97D222C4;
-        Fri, 21 Feb 2020 07:59:35 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id DA58120801;
+        Fri, 21 Feb 2020 07:59:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1582271976;
-        bh=QVEEUsNykoxoJV/rcjs1Ck1EsfaIaK8e3nYPnbFEbPU=;
+        s=default; t=1582271981;
+        bh=mXyGHYPh6/1oUrgz+oAwhP1+dXUpSXvKWEMnzTEpH5o=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=H1Buj6Hz+6rvNTb3Pf7LBp2H77plnndKC2tDQxLgMKvRHw0MtytDSb4yL2hvJ2+Rw
-         wBbini/Ou6+oA8F0cg2CyctQojMXMuEe3D4WVSpvVXed+9ai19+ZPDJDkv7uz5AdUR
-         PHA7HQfN20GlAkmz6CINyGPTmgju/tgbKQFQFR4I=
+        b=IhH+x0vETkmPHSRhvTbBlW3bNx4lm+Vc7CxzOI9BBlp+VXxPSN61e1Vqwd/7GaTJ6
+         RcGgiGkZFKvPQAQ28+RkaELch/Hu5GXzbrkt1IqsWWK9OSPjrvNk1j/RY4fnka3v5c
+         lONRXDbZObV6hANNrCYlwmyrFCsLneYeJGK+62hA=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Yan Wang <wangyan122@huawei.com>,
-        Jun Piao <piaojun@huawei.com>, Mark Fasheh <mark@fasheh.com>,
-        Joel Becker <jlbec@evilplan.org>,
-        Junxiao Bi <junxiao.bi@oracle.com>,
-        Joseph Qi <jiangqi903@gmail.com>,
-        Changwei Ge <gechangwei@live.cn>, Gang He <ghe@suse.com>,
+        stable@vger.kernel.org, Yunfeng Ye <yeyunfeng@huawei.com>,
+        zhengbin <zhengbin13@huawei.com>,
+        Hu Shiyuan <hushiyuan@huawei.com>,
+        Feilong Lin <linfeilong@huawei.com>, Jan Kara <jack@suse.cz>,
         Andrew Morton <akpm@linux-foundation.org>,
         Linus Torvalds <torvalds@linux-foundation.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.5 370/399] ocfs2: fix a NULL pointer dereference when call ocfs2_update_inode_fsync_trans()
-Date:   Fri, 21 Feb 2020 08:41:35 +0100
-Message-Id: <20200221072436.471194208@linuxfoundation.org>
+Subject: [PATCH 5.5 372/399] reiserfs: prevent NULL pointer dereference in reiserfs_insert_item()
+Date:   Fri, 21 Feb 2020 08:41:37 +0100
+Message-Id: <20200221072436.610032826@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200221072402.315346745@linuxfoundation.org>
 References: <20200221072402.315346745@linuxfoundation.org>
@@ -66,137 +64,42 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: wangyan <wangyan122@huawei.com>
+From: Yunfeng Ye <yeyunfeng@huawei.com>
 
-[ Upstream commit 9f16ca48fc818a17de8be1f75d08e7f4addc4497 ]
+[ Upstream commit aacee5446a2a1aa35d0a49dab289552578657fb4 ]
 
-I found a NULL pointer dereference in ocfs2_update_inode_fsync_trans(),
-handle->h_transaction may be NULL in this situation:
+The variable inode may be NULL in reiserfs_insert_item(), but there is
+no check before accessing the member of inode.
 
-ocfs2_file_write_iter
-  ->__generic_file_write_iter
-      ->generic_perform_write
-        ->ocfs2_write_begin
-          ->ocfs2_write_begin_nolock
-            ->ocfs2_write_cluster_by_desc
-              ->ocfs2_write_cluster
-                ->ocfs2_mark_extent_written
-                  ->ocfs2_change_extent_flag
-                    ->ocfs2_split_extent
-                      ->ocfs2_try_to_merge_extent
-                        ->ocfs2_extend_rotate_transaction
-                          ->ocfs2_extend_trans
-                            ->jbd2_journal_restart
-                              ->jbd2__journal_restart
-                                // handle->h_transaction is NULL here
-                                ->handle->h_transaction = NULL;
-                                ->start_this_handle
-                                  /* journal aborted due to storage
-                                     network disconnection, return error */
-                                  ->return -EROFS;
-                         /* line 3806 in ocfs2_try_to_merge_extent (),
-                            it will ignore ret error. */
-                        ->ret = 0;
-        ->...
-        ->ocfs2_write_end
-          ->ocfs2_write_end_nolock
-            ->ocfs2_update_inode_fsync_trans
-              // NULL pointer dereference
-              ->oi->i_sync_tid = handle->h_transaction->t_tid;
+Fix this by adding NULL pointer check before calling reiserfs_debug().
 
-The information of NULL pointer dereference as follows:
-    JBD2: Detected IO errors while flushing file data on dm-11-45
-    Aborting journal on device dm-11-45.
-    JBD2: Error -5 detected when updating journal superblock for dm-11-45.
-    (dd,22081,3):ocfs2_extend_trans:474 ERROR: status = -30
-    (dd,22081,3):ocfs2_try_to_merge_extent:3877 ERROR: status = -30
-    Unable to handle kernel NULL pointer dereference at
-    virtual address 0000000000000008
-    Mem abort info:
-      ESR = 0x96000004
-      Exception class = DABT (current EL), IL = 32 bits
-      SET = 0, FnV = 0
-      EA = 0, S1PTW = 0
-    Data abort info:
-      ISV = 0, ISS = 0x00000004
-      CM = 0, WnR = 0
-    user pgtable: 4k pages, 48-bit VAs, pgdp = 00000000e74e1338
-    [0000000000000008] pgd=0000000000000000
-    Internal error: Oops: 96000004 [#1] SMP
-    Process dd (pid: 22081, stack limit = 0x00000000584f35a9)
-    CPU: 3 PID: 22081 Comm: dd Kdump: loaded
-    Hardware name: Huawei TaiShan 2280 V2/BC82AMDD, BIOS 0.98 08/25/2019
-    pstate: 60400009 (nZCv daif +PAN -UAO)
-    pc : ocfs2_write_end_nolock+0x2b8/0x550 [ocfs2]
-    lr : ocfs2_write_end_nolock+0x2a0/0x550 [ocfs2]
-    sp : ffff0000459fba70
-    x29: ffff0000459fba70 x28: 0000000000000000
-    x27: ffff807ccf7f1000 x26: 0000000000000001
-    x25: ffff807bdff57970 x24: ffff807caf1d4000
-    x23: ffff807cc79e9000 x22: 0000000000001000
-    x21: 000000006c6cd000 x20: ffff0000091d9000
-    x19: ffff807ccb239db0 x18: ffffffffffffffff
-    x17: 000000000000000e x16: 0000000000000007
-    x15: ffff807c5e15bd78 x14: 0000000000000000
-    x13: 0000000000000000 x12: 0000000000000000
-    x11: 0000000000000000 x10: 0000000000000001
-    x9 : 0000000000000228 x8 : 000000000000000c
-    x7 : 0000000000000fff x6 : ffff807a308ed6b0
-    x5 : ffff7e01f10967c0 x4 : 0000000000000018
-    x3 : d0bc661572445600 x2 : 0000000000000000
-    x1 : 000000001b2e0200 x0 : 0000000000000000
-    Call trace:
-     ocfs2_write_end_nolock+0x2b8/0x550 [ocfs2]
-     ocfs2_write_end+0x4c/0x80 [ocfs2]
-     generic_perform_write+0x108/0x1a8
-     __generic_file_write_iter+0x158/0x1c8
-     ocfs2_file_write_iter+0x668/0x950 [ocfs2]
-     __vfs_write+0x11c/0x190
-     vfs_write+0xac/0x1c0
-     ksys_write+0x6c/0xd8
-     __arm64_sys_write+0x24/0x30
-     el0_svc_common+0x78/0x130
-     el0_svc_handler+0x38/0x78
-     el0_svc+0x8/0xc
-
-To prevent NULL pointer dereference in this situation, we use
-is_handle_aborted() before using handle->h_transaction->t_tid.
-
-Link: http://lkml.kernel.org/r/03e750ab-9ade-83aa-b000-b9e81e34e539@huawei.com
-Signed-off-by: Yan Wang <wangyan122@huawei.com>
-Reviewed-by: Jun Piao <piaojun@huawei.com>
-Cc: Mark Fasheh <mark@fasheh.com>
-Cc: Joel Becker <jlbec@evilplan.org>
-Cc: Junxiao Bi <junxiao.bi@oracle.com>
-Cc: Joseph Qi <jiangqi903@gmail.com>
-Cc: Changwei Ge <gechangwei@live.cn>
-Cc: Gang He <ghe@suse.com>
+Link: http://lkml.kernel.org/r/79c5135d-ff25-1cc9-4e99-9f572b88cc00@huawei.com
+Signed-off-by: Yunfeng Ye <yeyunfeng@huawei.com>
+Cc: zhengbin <zhengbin13@huawei.com>
+Cc: Hu Shiyuan <hushiyuan@huawei.com>
+Cc: Feilong Lin <linfeilong@huawei.com>
+Cc: Jan Kara <jack@suse.cz>
 Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
 Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/ocfs2/journal.h | 8 +++++---
- 1 file changed, 5 insertions(+), 3 deletions(-)
+ fs/reiserfs/stree.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/fs/ocfs2/journal.h b/fs/ocfs2/journal.h
-index 3103ba7f97a28..bfe611ed1b1d7 100644
---- a/fs/ocfs2/journal.h
-+++ b/fs/ocfs2/journal.h
-@@ -597,9 +597,11 @@ static inline void ocfs2_update_inode_fsync_trans(handle_t *handle,
- {
- 	struct ocfs2_inode_info *oi = OCFS2_I(inode);
- 
--	oi->i_sync_tid = handle->h_transaction->t_tid;
--	if (datasync)
--		oi->i_datasync_tid = handle->h_transaction->t_tid;
-+	if (!is_handle_aborted(handle)) {
-+		oi->i_sync_tid = handle->h_transaction->t_tid;
-+		if (datasync)
-+			oi->i_datasync_tid = handle->h_transaction->t_tid;
-+	}
- }
- 
- #endif /* OCFS2_JOURNAL_H */
+diff --git a/fs/reiserfs/stree.c b/fs/reiserfs/stree.c
+index da9ebe33882b7..bb4973aefbb18 100644
+--- a/fs/reiserfs/stree.c
++++ b/fs/reiserfs/stree.c
+@@ -2246,7 +2246,8 @@ error_out:
+ 	/* also releases the path */
+ 	unfix_nodes(&s_ins_balance);
+ #ifdef REISERQUOTA_DEBUG
+-	reiserfs_debug(th->t_super, REISERFS_DEBUG_CODE,
++	if (inode)
++		reiserfs_debug(th->t_super, REISERFS_DEBUG_CODE,
+ 		       "reiserquota insert_item(): freeing %u id=%u type=%c",
+ 		       quota_bytes, inode->i_uid, head2type(ih));
+ #endif
 -- 
 2.20.1
 
