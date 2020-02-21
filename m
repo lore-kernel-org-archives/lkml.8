@@ -2,87 +2,123 @@ Return-Path: <SRS0=1210=4J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2988FC35656
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 14:23:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4297EC35656
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 14:24:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F1D55222C4
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 14:23:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 19306208C4
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 14:24:03 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="T8W0bEvE"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="HR2+2PNt"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728918AbgBUOXV (ORCPT
+        id S1728922AbgBUOYB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Feb 2020 09:23:21 -0500
-Received: from mail-lj1-f196.google.com ([209.85.208.196]:37902 "EHLO
-        mail-lj1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728264AbgBUOXV (ORCPT
+        Fri, 21 Feb 2020 09:24:01 -0500
+Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:56141 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1728392AbgBUOYB (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Feb 2020 09:23:21 -0500
-Received: by mail-lj1-f196.google.com with SMTP id w1so2366848ljh.5
-        for <linux-kernel@vger.kernel.org>; Fri, 21 Feb 2020 06:23:20 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=5pQ13GX0tuFUs+LeyyUqLOlQKF1+pypsoV9dprzWCgw=;
-        b=T8W0bEvEUBvwhJnzJxRqtW4kYOHvC9fA5NvmB/OAhDJ91/8vorpAOYioPwOh/bJadR
-         1juaFW71eCJyITq8p1nkE8E7obrlc8W7NGMhuI2jsdTo4vzRJ90+3vCfXvCbNGLE06wR
-         1mHe+nNRu5HEa0BWRjLn2Z91ipsjVkLW62xxluu2TWLU6o4icSQsZbgVpDY7TYtMLsrD
-         S2Xeoe0Pj/783babZ6LHnwZIblBVKgbojdydPChjrgCzDzYuCvKvK4QldxMtNaKN5Y26
-         u5InaKczJe3RMx5fKZUHVEfeXcPWAcVoejbuCNAJ+TXmEI3ULmxNT0g7r7TCGxQ7cMP0
-         LTTg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=5pQ13GX0tuFUs+LeyyUqLOlQKF1+pypsoV9dprzWCgw=;
-        b=BrmzwsLZY0+Q3oyYrBLfJIfCo+Bi+q1OF7oo78ey0qqZY9l1+/mpfnp0mLzcbNv+y2
-         7Qgm78USeIVLYRn8aVqsVgeowonyvUmbpl7o/I8PYXlG+pVHOx3UN9KGfjtZswRICirJ
-         b8S3nlHuVwpTRvA8/QEcjqP5LnADYHfKW776gIbsswIOgSe4BJmShCzthw8LT49Xo4WA
-         NAvbuEdx7Y4WZmSFYoIBXCNHicmlN7IfjtqlUiM5HLAWvNoELfnMscMJbCrlSUM6V0az
-         cJ8s8wGiHoMiGkGQE6IKpKzip8Mm+8zpGjsvrfORK0F5f/Gv8Na7XIcA2XBFjFzTB2si
-         xIog==
-X-Gm-Message-State: APjAAAWniUEv7plW6XQAp0gGhdv7jUDGQ8NHTQl0Up4p8+A+ViC21X/p
-        qMJox/WUTsa8v+bA7WAYocbUJt5mTBZnooMd2Pq32A==
-X-Google-Smtp-Source: APXvYqxXDosZW7eRkrxFvuk01sLi+6GdV9QpEgYDMq13ocnx8GkH+EweUEtb0BNdh+5hShtTWdFJKjHA45sWUfquawE=
-X-Received: by 2002:a2e:7d0c:: with SMTP id y12mr23140766ljc.39.1582294999444;
- Fri, 21 Feb 2020 06:23:19 -0800 (PST)
+        Fri, 21 Feb 2020 09:24:01 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1582295040;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=c8mWqxlRjMqzWv3h3wuv1G8u9oII3zP+jyI9+XnLcJA=;
+        b=HR2+2PNt7ChpqxRVT0QC6isaDDjOcejMK69/XW7Y7Soo4lkjqgNIX+DehWrJ6orfJm3rUt
+        WZnCE8Yb358XKbwBCSo/z9818lph/gNENv5tRs/2OirLRZMvwGkPdYXl1ryf2i60FwvHMB
+        LK99pTUUsX+aAHFwTPSdEuX0VtULCrg=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-295-K3W4URiHOyKQlUHyroESXw-1; Fri, 21 Feb 2020 09:23:58 -0500
+X-MC-Unique: K3W4URiHOyKQlUHyroESXw-1
+Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 086AF8010EB;
+        Fri, 21 Feb 2020 14:23:57 +0000 (UTC)
+Received: from warthog.procyon.org.uk (ovpn-122-163.rdu2.redhat.com [10.10.122.163])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 6B95A60BE0;
+        Fri, 21 Feb 2020 14:23:55 +0000 (UTC)
+Organization: Red Hat UK Ltd. Registered Address: Red Hat UK Ltd, Amberley
+        Place, 107-111 Peascod Street, Windsor, Berkshire, SI4 1TE, United
+        Kingdom.
+        Registered in England and Wales under Company Registration No. 3798903
+From:   David Howells <dhowells@redhat.com>
+In-Reply-To: <CAG48ez2B2J_3-+EjR20ukRu3noPnAccZsOTaea0jtKK4=+bkhQ@mail.gmail.com>
+References: <CAG48ez2B2J_3-+EjR20ukRu3noPnAccZsOTaea0jtKK4=+bkhQ@mail.gmail.com> <158204549488.3299825.3783690177353088425.stgit@warthog.procyon.org.uk> <158204561120.3299825.5242636508455859327.stgit@warthog.procyon.org.uk>
+To:     Jann Horn <jannh@google.com>
+Cc:     dhowells@redhat.com, Al Viro <viro@zeniv.linux.org.uk>,
+        raven@themaw.net, Miklos Szeredi <mszeredi@redhat.com>,
+        Christian Brauner <christian@brauner.io>,
+        Linux API <linux-api@vger.kernel.org>,
+        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
+        kernel list <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH 15/19] vfs: Add superblock notifications [ver #16]
 MIME-Version: 1.0
-References: <20200217004416.lhbl7rzvaf5q4fbz@shreyas_biamp.biamp.com>
-In-Reply-To: <20200217004416.lhbl7rzvaf5q4fbz@shreyas_biamp.biamp.com>
-From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Fri, 21 Feb 2020 15:23:08 +0100
-Message-ID: <CACRpkdbkQVEm9n6wrJqSMNFSbqGkmi6eFU-=xc9Vui+4RXkMog@mail.gmail.com>
-Subject: Re: [PATCH V5] mfd: da9062: add support for interrupt polarity
- defined in device tree
-To:     Shreyas Joshi <shreyas.joshi@biamp.com>
-Cc:     Lee Jones <lee.jones@linaro.org>,
-        Support Opensource <Support.Opensource@diasemi.com>,
-        shreyasjoshi15@gmail.com,
-        Adam Thomson <Adam.Thomson.Opensource@diasemi.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset="us-ascii"
+Content-ID: <1897787.1582295034.1@warthog.procyon.org.uk>
+Date:   Fri, 21 Feb 2020 14:23:54 +0000
+Message-ID: <1897788.1582295034@warthog.procyon.org.uk>
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Feb 17, 2020 at 1:44 AM Shreyas Joshi <shreyas.joshi@biamp.com> wrote:
+Jann Horn <jannh@google.com> wrote:
 
-> The da9062 interrupt handler cannot necessarily be low active.
-> Add a function to configure the interrupt type based on what is defined in the device tree.
-> The allowable interrupt type is either low or high level trigger.
->
-> Signed-off-by: Shreyas Joshi <shreyas.joshi@biamp.com>
+> > +               if (!s->s_watchers) {
+> 
+> READ_ONCE() ?
 
-This is how I imagine it must work and how I implemented this
-kind of stuff in the past.
-Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
+I'm not sure it matters.  It can only be set once, and the next time we read
+it we're inside the lock.  And at this point, I don't actually dereference it,
+and if it's non-NULL, it's not going to change.
 
-Yours,
-Linus Walleij
+> > +                       ret = add_watch_to_object(watch, s->s_watchers);
+> > +                       if (ret == 0) {
+> > +                               spin_lock(&sb_lock);
+> > +                               s->s_count++;
+> > +                               spin_unlock(&sb_lock);
+> 
+> Where is the corresponding decrement of s->s_count? I'm guessing that
+> it should be in the ->release_watch() handler, except that there isn't
+> one...
+
+Um.  Good question.  I think this should do the job:
+
+	static void sb_release_watch(struct watch *watch)
+	{
+		put_super(watch->private);
+	}
+
+And this then has to be set later:
+
+	init_watch_list(wlist, sb_release_watch);
+
+> > +       } else {
+> > +               ret = -EBADSLT;
+> > +               if (READ_ONCE(s->s_watchers)) {
+> 
+> (Nit: I don't get why you do a lockless check here before taking the
+> lock - it'd be more straightforward to take the lock first, and it's
+> not like you want to optimize for the case where someone calls
+> sys_watch_sb() with invalid arguments...)
+
+Fair enough.  I'll remove it.
+
+> > +#ifdef CONFIG_SB_NOTIFICATIONS
+> > +       if (unlikely(s->s_watchers)) {
+> 
+> READ_ONCE() ?
+
+Shouldn't matter.  It's only read once and then a decision is made on it
+immediately thereafter.  And if it's non-NULL, the value cannot change
+thereafter.
+
+David
+
