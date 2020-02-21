@@ -2,155 +2,211 @@ Return-Path: <SRS0=1210=4J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_2 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A4FF5C35647
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 13:12:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BF414C35647
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 13:12:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 765D12073A
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 13:12:34 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="eib3Jfwy"
+	by mail.kernel.org (Postfix) with ESMTP id 955752073A
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 13:12:43 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728477AbgBUNMd (ORCPT
+        id S1728528AbgBUNMm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Feb 2020 08:12:33 -0500
-Received: from mail-wm1-f65.google.com ([209.85.128.65]:39885 "EHLO
-        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727053AbgBUNMd (ORCPT
+        Fri, 21 Feb 2020 08:12:42 -0500
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:23768 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1728177AbgBUNMm (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Feb 2020 08:12:33 -0500
-Received: by mail-wm1-f65.google.com with SMTP id c84so1797264wme.4
-        for <linux-kernel@vger.kernel.org>; Fri, 21 Feb 2020 05:12:31 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to
-         :user-agent;
-        bh=a/KavHLvvULXfL2VP34j+gxXqKWZ5d3n9oQaqLdPQv4=;
-        b=eib3Jfwyj+tZtw0Vz5eRWnOQiMb9kRoD6q2gN2p55T9aS3rgoCUuv4jkOzgSy6JAgQ
-         LEjM/7bJFu5XAMFaMvFkgF8XI6h8ICSPxck1TJrj6R8L0TLPzxasmiTqaRBEuJSE492o
-         xUPyAD7jB/fuLzt6Z6u8a/djHUo7qip9vuLowvh5OaxbICooz75RPYWXY584WFX80Hsq
-         UecpvDo6HfzMYfFJjPppbxEhywhbLPSsEWUgzWENhmVwerLyCsfebJ75YhAi0BV6oT34
-         gcEUPT4zy5xBisJiKhATgcWrOM/bv0x40XtU3oXOP8d4vAUNTTge4+2/pCIL965PidD5
-         SzyA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to:user-agent;
-        bh=a/KavHLvvULXfL2VP34j+gxXqKWZ5d3n9oQaqLdPQv4=;
-        b=ls1AlIN1xKY9W+2C3KAWPPzxdPlHxve8gbsjcD1V62G4CFcm29ouznH/5MkpYXvdTV
-         RYjyMcHgOLZBHhsjmUFqBSRMTt4jvB8phkK6MqcY/r2Cwhnr11h716wzXswDCgvFG3cc
-         LXI5OtgwdmbdOABBO8H08P4ckxZrYc9uo3W2PYuYJRutGVo5HBbuj3cL6S1QwErGGKzV
-         Qdovv9Axb24/2KbfkYc1CYxY+CEkb/6zYDEsd2hGtevhrnwdi5SnusR6Uf+6NDlxk09O
-         1LUGsQU15QWXR0lC58vSWiw1tgVx8njorUKY/aXEGHIzBmGMVL8D8DetySLLYauah4Nz
-         6dFA==
-X-Gm-Message-State: APjAAAU/8IUgk2VT53P+NQ+6sqFGLRufpC0WNMF1cXbNUx7bNRoLAMM7
-        5gy+XWs2i2ypxZhxQ8E0RO9Y/Q==
-X-Google-Smtp-Source: APXvYqx5emu1fdVAd6Tj3p81RSkBc6Mf5Yyr0nrkLGXMlG0khLLYOloIT2vAb1bEk0+GwUGFpzZSvQ==
-X-Received: by 2002:a1c:4e02:: with SMTP id g2mr3929356wmh.131.1582290750388;
-        Fri, 21 Feb 2020 05:12:30 -0800 (PST)
-Received: from linaro.org ([2a01:e34:ed2f:f020:2dfb:b5ce:9043:4adb])
-        by smtp.gmail.com with ESMTPSA id c15sm3881537wrt.1.2020.02.21.05.12.28
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Fri, 21 Feb 2020 05:12:29 -0800 (PST)
-Date:   Fri, 21 Feb 2020 14:12:26 +0100
-From:   Daniel Lezcano <daniel.lezcano@linaro.org>
-To:     Anson Huang <anson.huang@nxp.com>
-Cc:     "robh+dt@kernel.org" <robh+dt@kernel.org>,
-        "mark.rutland@arm.com" <mark.rutland@arm.com>,
-        "shawnguo@kernel.org" <shawnguo@kernel.org>,
-        "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>,
-        "kernel@pengutronix.de" <kernel@pengutronix.de>,
-        "festevam@gmail.com" <festevam@gmail.com>,
-        "catalin.marinas@arm.com" <catalin.marinas@arm.com>,
-        "will@kernel.org" <will@kernel.org>,
-        "rui.zhang@intel.com" <rui.zhang@intel.com>,
-        "amit.kucheria@verdurent.com" <amit.kucheria@verdurent.com>,
-        Aisheng Dong <aisheng.dong@nxp.com>,
-        "linux@roeck-us.net" <linux@roeck-us.net>,
-        "srinivas.kandagatla@linaro.org" <srinivas.kandagatla@linaro.org>,
-        "krzk@kernel.org" <krzk@kernel.org>,
-        Andy Duan <fugang.duan@nxp.com>, Peng Fan <peng.fan@nxp.com>,
-        Daniel Baluta <daniel.baluta@nxp.com>,
-        "bjorn.andersson@linaro.org" <bjorn.andersson@linaro.org>,
-        "olof@lixom.net" <olof@lixom.net>,
-        "dinguyen@kernel.org" <dinguyen@kernel.org>,
-        Leonard Crestez <leonard.crestez@nxp.com>,
-        "marcin.juszkiewicz@linaro.org" <marcin.juszkiewicz@linaro.org>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>,
-        dl-linux-imx <linux-imx@nxp.com>
-Subject: Re: [PATCH V15 RESEND 2/5] thermal: of-thermal: add API for getting
- sensor ID from DT
-Message-ID: <20200221131226.GE10516@linaro.org>
-References: <1582161028-2844-1-git-send-email-Anson.Huang@nxp.com>
- <1582161028-2844-2-git-send-email-Anson.Huang@nxp.com>
- <20200221091112.GA10516@linaro.org>
- <DB3PR0402MB39161BB726FE5413F30F0263F5120@DB3PR0402MB3916.eurprd04.prod.outlook.com>
+        Fri, 21 Feb 2020 08:12:42 -0500
+Received: from pps.filterd (m0098417.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 01LDAm64079185
+        for <linux-kernel@vger.kernel.org>; Fri, 21 Feb 2020 08:12:40 -0500
+Received: from e06smtp03.uk.ibm.com (e06smtp03.uk.ibm.com [195.75.94.99])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2y8ubr0xfe-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Fri, 21 Feb 2020 08:12:40 -0500
+Received: from localhost
+        by e06smtp03.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-kernel@vger.kernel.org> from <pasic@linux.ibm.com>;
+        Fri, 21 Feb 2020 13:12:38 -0000
+Received: from b06cxnps4076.portsmouth.uk.ibm.com (9.149.109.198)
+        by e06smtp03.uk.ibm.com (192.168.101.133) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Fri, 21 Feb 2020 13:12:34 -0000
+Received: from d06av25.portsmouth.uk.ibm.com (d06av25.portsmouth.uk.ibm.com [9.149.105.61])
+        by b06cxnps4076.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 01LDCWSN42467504
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Fri, 21 Feb 2020 13:12:32 GMT
+Received: from d06av25.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 7841B11C04C;
+        Fri, 21 Feb 2020 13:12:32 +0000 (GMT)
+Received: from d06av25.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id EF8AB11C04A;
+        Fri, 21 Feb 2020 13:12:31 +0000 (GMT)
+Received: from oc2783563651 (unknown [9.152.224.149])
+        by d06av25.portsmouth.uk.ibm.com (Postfix) with ESMTP;
+        Fri, 21 Feb 2020 13:12:31 +0000 (GMT)
+Date:   Fri, 21 Feb 2020 14:12:30 +0100
+From:   Halil Pasic <pasic@linux.ibm.com>
+To:     "Michael S. Tsirkin" <mst@redhat.com>
+Cc:     Jason Wang <jasowang@redhat.com>,
+        Marek Szyprowski <m.szyprowski@samsung.com>,
+        Robin Murphy <robin.murphy@arm.com>,
+        Christoph Hellwig <hch@lst.de>, linux-s390@vger.kernel.org,
+        virtualization@lists.linux-foundation.org,
+        linux-kernel@vger.kernel.org, iommu@lists.linux-foundation.org,
+        Christian Borntraeger <borntraeger@de.ibm.com>,
+        Janosch Frank <frankja@linux.ibm.com>,
+        Viktor Mihajlovski <mihajlov@linux.ibm.com>,
+        Cornelia Huck <cohuck@redhat.com>,
+        Ram Pai <linuxram@us.ibm.com>,
+        Thiago Jung Bauermann <bauerman@linux.ibm.com>,
+        David Gibson <david@gibson.dropbear.id.au>,
+        "Lendacky, Thomas" <Thomas.Lendacky@amd.com>,
+        Michael Mueller <mimu@linux.ibm.com>
+Subject: Re: [PATCH 2/2] virtio: let virtio use DMA API when guest RAM is
+ protected
+In-Reply-To: <20200220154904-mutt-send-email-mst@kernel.org>
+References: <20200220160606.53156-1-pasic@linux.ibm.com>
+        <20200220160606.53156-3-pasic@linux.ibm.com>
+        <20200220154904-mutt-send-email-mst@kernel.org>
+Organization: IBM
+X-Mailer: Claws Mail 3.11.1 (GTK+ 2.24.31; x86_64-redhat-linux-gnu)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <DB3PR0402MB39161BB726FE5413F30F0263F5120@DB3PR0402MB3916.eurprd04.prod.outlook.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+X-TM-AS-GCONF: 00
+x-cbid: 20022113-0012-0000-0000-00000388FC69
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 20022113-0013-0000-0000-000021C59639
+Message-Id: <20200221141230.13eebc35.pasic@linux.ibm.com>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.572
+ definitions=2020-02-21_03:2020-02-19,2020-02-21 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 adultscore=0 clxscore=1015
+ priorityscore=1501 suspectscore=0 spamscore=0 bulkscore=0 impostorscore=0
+ mlxlogscore=999 lowpriorityscore=0 malwarescore=0 phishscore=0 mlxscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2001150001
+ definitions=main-2002210101
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Feb 21, 2020 at 09:26:29AM +0000, Anson Huang wrote:
-> Hi, Daniel
-> 
-> > >   *       a valid .of_node, for the sensor node.
-> > > @@ -499,36 +546,22 @@ thermal_zone_of_sensor_register(struct device
-> > *dev, int sensor_id, void *data,
-> > >  	sensor_np = of_node_get(dev->of_node);
-> > >
-> > >  	for_each_available_child_of_node(np, child) {
-> > > -		struct of_phandle_args sensor_specs;
-> > >  		int ret, id;
-> > >
-> > >  		/* For now, thermal framework supports only 1 sensor per
-> > zone */
-> > > -		ret = of_parse_phandle_with_args(child, "thermal-sensors",
-> > > -						 "#thermal-sensor-cells",
-> > > -						 0, &sensor_specs);
-> > > +		ret = thermal_zone_of_get_sensor_id(child, sensor_np, &id);
-> > >  		if (ret)
-> > >  			continue;
-> > >
-> > > -		if (sensor_specs.args_count >= 1) {
-> > > -			id = sensor_specs.args[0];
-> > > -			WARN(sensor_specs.args_count > 1,
-> > > -			     "%pOFn: too many cells in sensor specifier %d\n",
-> > > -			     sensor_specs.np, sensor_specs.args_count);
-> > > -		} else {
-> > > -			id = 0;
-> > > -		}
+On Thu, 20 Feb 2020 15:55:14 -0500
+"Michael S. Tsirkin" <mst@redhat.com> wrote:
+
+> On Thu, Feb 20, 2020 at 05:06:06PM +0100, Halil Pasic wrote:
+> > Currently the advanced guest memory protection technologies (AMD SEV,
+> > powerpc secure guest technology and s390 Protected VMs) abuse the
+> > VIRTIO_F_IOMMU_PLATFORM flag to make virtio core use the DMA API, which
+> > is in turn necessary, to make IO work with guest memory protection.
 > > 
-> > Please take also the opportunity to factor out the function
-> > thermal_zone_of_sensor_register().
+> > But VIRTIO_F_IOMMU_PLATFORM a.k.a. VIRTIO_F_ACCESS_PLATFORM is really a
+> > different beast: with virtio devices whose implementation runs on an SMP
+> > CPU we are still fine with doing all the usual optimizations, it is just
+> > that we need to make sure that the memory protection mechanism does not
+> > get in the way. The VIRTIO_F_ACCESS_PLATFORM mandates more work on the
+> > side of the guest (and possibly he host side as well) than we actually
+> > need.
+> > 
+> > An additional benefit of teaching the guest to make the right decision
+> > (and use DMA API) on it's own is: removing the need, to mandate special
+> > VM configuration for guests that may run with protection. This is
+> > especially interesting for s390 as VIRTIO_F_IOMMU_PLATFORM pushes all
+> > the virtio control structures into the first 2G of guest memory:
+> > something we don't necessarily want to do per-default.
+> > 
+> > Signed-off-by: Halil Pasic <pasic@linux.ibm.com>
+> > Tested-by: Ram Pai <linuxram@us.ibm.com>
+> > Tested-by: Michael Mueller <mimu@linux.ibm.com>
 > 
-> Sorry, I do NOT quite understand terms "factor out the function ...", could you please advise more detail?
+> This might work for you but it's fragile, since without
+> VIRTIO_F_ACCESS_PLATFORM hypervisor assumes it gets
+> GPA's, not DMA addresses.
+> 
 
-Never mind, I realized I puzzled myself with the changes in the series :)
+Thanks for your constructive approach. I do want the hypervisor to
+assume it gets GPA's. My train of thought was that the guys that need
+to use IOVA's that are not GPA's when force_dma_unencrypted() will have
+to to specify VIRTIO_F_ACCESS_PLATFORM (at the device) anyway, because
+otherwise it won't work. But I see your point: in case of a
+mis-configuration and provided the DMA API returns IOVA's one could end
+up trying to touch wrong memory locations. But this should be similar to
+what would happen if DMA ops are not used, and memory is not made accessible.
 
-Thanks
+> 
+> 
+> IOW this looks like another iteration of:
+> 
+> 	virtio: Support encrypted memory on powerpc secure guests
+> 
+> which I was under the impression was abandoned as unnecessary.
 
-  -- Daniel
+Unnecessary for powerpc because they do normal PCI. In the context of
+CCW there are only guest physical addresses (CCW I/O has no concept of
+IOMMU or IOVAs).
 
--- 
+> 
+> 
+> To summarize, the necessary conditions for a hack along these lines
+> (using DMA API without VIRTIO_F_ACCESS_PLATFORM) are that we detect that:
+> 
+>   - secure guest mode is enabled - so we know that since we don't share
+>     most memory regular virtio code won't
+>     work, even though the buggy hypervisor didn't set VIRTIO_F_ACCESS_PLATFORM
 
- <http://www.linaro.org/> Linaro.org │ Open source software for ARM SoCs
+force_dma_unencrypted(&vdev->dev) is IMHO exactly about this.
 
-Follow Linaro:  <http://www.facebook.com/pages/Linaro> Facebook |
-<http://twitter.com/#!/linaroorg> Twitter |
-<http://www.linaro.org/linaro-blog/> Blog
+>   - DMA API is giving us addresses that are actually also physical
+>     addresses
+
+In case of s390 this is given. I talked with the power people before
+posting this, and they ensured me they can are willing to deal with
+this. I was hoping to talk abut this with the AMD SEV people here (hence
+the cc).
+
+>   - Hypervisor is buggy and didn't enable VIRTIO_F_ACCESS_PLATFORM
+> 
+
+I don't get this point. The argument where the hypervisor is buggy is a
+bit hard to follow for me. If hypervisor is buggy we have already lost
+anyway most of the time, or?
+ 
+> I don't see how this patch does this.
+
+I do get your point. I don't know of a good way to check that DMA API
+is giving us addresses that are actually physical addresses, and the
+situation you describe definitely has some risk to it.
+
+Let me comment on other ideas that came up. I would be very happy to go
+with the best one. Thank you very much.
+
+Regards,
+Halil
+
+> 
+> 
+> > ---
+> >  drivers/virtio/virtio_ring.c | 3 +++
+> >  1 file changed, 3 insertions(+)
+> > 
+> > diff --git a/drivers/virtio/virtio_ring.c b/drivers/virtio/virtio_ring.c
+> > index 867c7ebd3f10..fafc8f924955 100644
+> > --- a/drivers/virtio/virtio_ring.c
+> > +++ b/drivers/virtio/virtio_ring.c
+> > @@ -243,6 +243,9 @@ static bool vring_use_dma_api(struct virtio_device *vdev)
+> >  	if (!virtio_has_iommu_quirk(vdev))
+> >  		return true;
+> >  
+> > +	if (force_dma_unencrypted(&vdev->dev))
+> > +		return true;
+> > +
+> >  	/* Otherwise, we are left to guess. */
+> >  	/*
+> >  	 * In theory, it's possible to have a buggy QEMU-supposed
+> > -- 
+> > 2.17.1
+> 
+
