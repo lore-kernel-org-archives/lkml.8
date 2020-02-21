@@ -7,49 +7,46 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6BF52C35641
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 08:43:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EB603C35640
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 08:43:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 431C5222C4
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 08:43:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C15DD222C4
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 08:43:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582274614;
-	bh=6j1K92uXQHGUNZx44H0eiABCvbiGImXRdsQbp3X8P6A=;
+	s=default; t=1582274621;
+	bh=JDf7PQti/bDgDc8YDS6Y6Ao2ql2nqK2+/wsQZo2wlDs=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=oKg+19w0prvnkqHXR7//sjTGXm+d8QQIC6rY8F1cVid9jL9a+KxMEv3qErRi4/SuT
-	 IUPWb7pe9FYU3NyYv7xZXQGWNOkWt3GTqBovzw6Rlr9/vpHA9lh6rYafaIuifET+sn
-	 87wLlKjJQYcMy2Eq5xJZC+ypWnMiPxWLJ2TGxaC0=
+	b=vuN3Tjbg4J1Ghj6NFudlVYtqZ6G17LZvcZ/82MPFRQE5Cyxnda+WldXvbEc2eafHh
+	 zl17ahWFF7BQ2lbwrVjizFxcT3Wl7TVK/znQ74CeW93vpZw/ur7DtMTz5SqQUsgTuh
+	 uy4sOSPsqYQ91fH5T6js55TKGKhYhx0hi6e2uHFA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729924AbgBUHxh (ORCPT
+        id S1728438AbgBUHxU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Feb 2020 02:53:37 -0500
-Received: from mail.kernel.org ([198.145.29.99]:51832 "EHLO mail.kernel.org"
+        Fri, 21 Feb 2020 02:53:20 -0500
+Received: from mail.kernel.org ([198.145.29.99]:51492 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729337AbgBUHxd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Feb 2020 02:53:33 -0500
+        id S1730035AbgBUHxR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 21 Feb 2020 02:53:17 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 61EAD2465D;
-        Fri, 21 Feb 2020 07:53:31 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4DDFF24650;
+        Fri, 21 Feb 2020 07:53:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1582271611;
-        bh=6j1K92uXQHGUNZx44H0eiABCvbiGImXRdsQbp3X8P6A=;
+        s=default; t=1582271596;
+        bh=JDf7PQti/bDgDc8YDS6Y6Ao2ql2nqK2+/wsQZo2wlDs=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Xn8jmPn1MEhpos4bca0VKzERWXQ/J8fYjte8gDmz/O4+w1BqhLdoTssuMzC9wLoSL
-         YATxcvBIKf45UBUE2vMvhHvzmwZrl1m1u0KpkSyv9jK2v39Cee4q+wmhvQuH/nfpmB
-         +CkKzTZQc8NmgJ2oJW/oqpY1uIKF5Lm2r/M+58Mo=
+        b=P/XLTzX999qMCqXnrYr0NA1RfEJL9gDxrrG0HJvYH0bEeROTCC++VWJMVbwUEgrxT
+         ziMn1q4w5b1QfCZgSu1RhI3A2AGPhQcRw8t6VToBh8ANhPvHz2jNr9dePT17hfqLON
+         8siF27XnSJCCKeAd37x/mrsLc4+Nx3RGWi+ZhHKY=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Philipp Zabel <p.zabel@pengutronix.de>,
-        Marco Felsch <m.felsch@pengutronix.de>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+        stable@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.5 231/399] Input: edt-ft5x06 - work around first register access error
-Date:   Fri, 21 Feb 2020 08:39:16 +0100
-Message-Id: <20200221072425.239736964@linuxfoundation.org>
+Subject: [PATCH 5.5 225/399] staging: rtl8188: avoid excessive stack usage
+Date:   Fri, 21 Feb 2020 08:39:10 +0100
+Message-Id: <20200221072424.798097071@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200221072402.315346745@linuxfoundation.org>
 References: <20200221072402.315346745@linuxfoundation.org>
@@ -62,53 +59,72 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Philipp Zabel <p.zabel@pengutronix.de>
+From: Arnd Bergmann <arnd@arndb.de>
 
-[ Upstream commit e112324cc0422c046f1cf54c56f333d34fa20885 ]
+[ Upstream commit c497ae2077c055b85c1bf04f3d182a84bd8f365b ]
 
-The EP0700MLP1 returns bogus data on the first register read access
-(reading the threshold parameter from register 0x00):
+The rtl8188 copy of the os_dep support code causes a
+warning about a very significant stack usage in the translate_scan()
+function:
 
-    edt_ft5x06 2-0038: crc error: 0xfc expected, got 0x40
+drivers/staging/rtl8188eu/os_dep/ioctl_linux.c: In function 'translate_scan':
+drivers/staging/rtl8188eu/os_dep/ioctl_linux.c:306:1: error: the frame size of 1560 bytes is larger than 1400 bytes [-Werror=frame-larger-than=]
 
-It ignores writes until then. This patch adds a dummy read after which
-the number of sensors and parameter read/writes work correctly.
+Use the same trick as in the rtl8723bs copy of the same function, and
+allocate it dynamically.
 
-Signed-off-by: Philipp Zabel <p.zabel@pengutronix.de>
-Signed-off-by: Marco Felsch <m.felsch@pengutronix.de>
-Tested-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Signed-off-by: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+Link: https://lore.kernel.org/r/20200104214832.558198-1-arnd@arndb.de
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/input/touchscreen/edt-ft5x06.c | 7 +++++++
- 1 file changed, 7 insertions(+)
+ drivers/staging/rtl8188eu/os_dep/ioctl_linux.c | 9 ++++++---
+ 1 file changed, 6 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/input/touchscreen/edt-ft5x06.c b/drivers/input/touchscreen/edt-ft5x06.c
-index d61731c0037d1..b87b1e074f624 100644
---- a/drivers/input/touchscreen/edt-ft5x06.c
-+++ b/drivers/input/touchscreen/edt-ft5x06.c
-@@ -1050,6 +1050,7 @@ static int edt_ft5x06_ts_probe(struct i2c_client *client,
- {
- 	const struct edt_i2c_chip_data *chip_data;
- 	struct edt_ft5x06_ts_data *tsdata;
-+	u8 buf[2] = { 0xfc, 0x00 };
- 	struct input_dev *input;
- 	unsigned long irq_flags;
- 	int error;
-@@ -1140,6 +1141,12 @@ static int edt_ft5x06_ts_probe(struct i2c_client *client,
- 		return error;
+diff --git a/drivers/staging/rtl8188eu/os_dep/ioctl_linux.c b/drivers/staging/rtl8188eu/os_dep/ioctl_linux.c
+index 710c33fd49658..47f4cc6a19a9a 100644
+--- a/drivers/staging/rtl8188eu/os_dep/ioctl_linux.c
++++ b/drivers/staging/rtl8188eu/os_dep/ioctl_linux.c
+@@ -222,18 +222,21 @@ static char *translate_scan(struct adapter *padapter,
+ 
+ 	/* parsing WPA/WPA2 IE */
+ 	{
+-		u8 buf[MAX_WPA_IE_LEN];
++		u8 *buf;
+ 		u8 wpa_ie[255], rsn_ie[255];
+ 		u16 wpa_len = 0, rsn_len = 0;
+ 		u8 *p;
+ 
++		buf = kzalloc(MAX_WPA_IE_LEN, GFP_ATOMIC);
++		if (!buf)
++			return start;
++
+ 		rtw_get_sec_ie(pnetwork->network.ies, pnetwork->network.ie_length, rsn_ie, &rsn_len, wpa_ie, &wpa_len);
+ 		RT_TRACE(_module_rtl871x_mlme_c_, _drv_info_, ("rtw_wx_get_scan: ssid =%s\n", pnetwork->network.ssid.ssid));
+ 		RT_TRACE(_module_rtl871x_mlme_c_, _drv_info_, ("rtw_wx_get_scan: wpa_len =%d rsn_len =%d\n", wpa_len, rsn_len));
+ 
+ 		if (wpa_len > 0) {
+ 			p = buf;
+-			memset(buf, 0, MAX_WPA_IE_LEN);
+ 			p += sprintf(p, "wpa_ie=");
+ 			for (i = 0; i < wpa_len; i++)
+ 				p += sprintf(p, "%02x", wpa_ie[i]);
+@@ -250,7 +253,6 @@ static char *translate_scan(struct adapter *padapter,
+ 		}
+ 		if (rsn_len > 0) {
+ 			p = buf;
+-			memset(buf, 0, MAX_WPA_IE_LEN);
+ 			p += sprintf(p, "rsn_ie=");
+ 			for (i = 0; i < rsn_len; i++)
+ 				p += sprintf(p, "%02x", rsn_ie[i]);
+@@ -264,6 +266,7 @@ static char *translate_scan(struct adapter *padapter,
+ 			iwe.u.data.length = rsn_len;
+ 			start = iwe_stream_add_point(info, start, stop, &iwe, rsn_ie);
+ 		}
++		kfree(buf);
  	}
  
-+	/*
-+	 * Dummy read access. EP0700MLP1 returns bogus data on the first
-+	 * register read access and ignores writes.
-+	 */
-+	edt_ft5x06_ts_readwrite(tsdata->client, 2, buf, 2, buf);
-+
- 	edt_ft5x06_ts_set_regs(tsdata);
- 	edt_ft5x06_ts_get_defaults(&client->dev, tsdata);
- 	edt_ft5x06_ts_get_parameters(tsdata);
+ 	{/* parsing WPS IE */
 -- 
 2.20.1
 
