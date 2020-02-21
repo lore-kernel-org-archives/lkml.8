@@ -5,51 +5,59 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9BE28C35641
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 08:33:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B661FC35641
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 08:33:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 732FA20578
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 08:33:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8960620578
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 08:33:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582274000;
-	bh=wIqsMrdKLb+D/TuHlWfbWthZCsYzOhhbmcyKf/OfsBY=;
+	s=default; t=1582274003;
+	bh=+PkrT4iG1T7Rl6JWmdEM27E+WQtpZRSY2P7dpNAA9Wc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=SOUpCmQERnYpjjC2geNkVwZTLOW9iZ2vAym6vdWgMvOlpsbA4ltQbh3e3x5t/QBzj
-	 0tOsQMYC3o6jME1MUulmLLqTfCsaO2X65gibFpj0U4dBxYS8kOkbKsB0Uiw2AIuMBM
-	 tnK4vobGzA3NS82ApvMnl3g2R2iNtTQFk6eMMNu8=
+	b=XC7O7UPtCadh2jfxYlgTxG3O+RbXQK9dTsj2r1XJUoCItaUTiJssEbn5Vo6qhQVnC
+	 jU9i1Cu4chUyJjh57QDYyR5WF6TS9rMtvh3QJJ3DnttQGV4oKNuRCm1IHQx0WNEHND
+	 nNe64RWv0Sxy6psZfrrd+kstqtdWJ5zsv2p2g7q8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732614AbgBUIK5 (ORCPT
+        id S2387427AbgBUIdW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Feb 2020 03:10:57 -0500
-Received: from mail.kernel.org ([198.145.29.99]:46176 "EHLO mail.kernel.org"
+        Fri, 21 Feb 2020 03:33:22 -0500
+Received: from mail.kernel.org ([198.145.29.99]:46300 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732072AbgBUIKw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Feb 2020 03:10:52 -0500
+        id S1732609AbgBUIK5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 21 Feb 2020 03:10:57 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 391FB2067D;
-        Fri, 21 Feb 2020 08:10:51 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1065B24670;
+        Fri, 21 Feb 2020 08:10:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1582272651;
-        bh=wIqsMrdKLb+D/TuHlWfbWthZCsYzOhhbmcyKf/OfsBY=;
+        s=default; t=1582272656;
+        bh=+PkrT4iG1T7Rl6JWmdEM27E+WQtpZRSY2P7dpNAA9Wc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=RLs1G5MCf1AkWRCsND5gMuH1BkwciGreu8a97CMHEo/OFiqwvZuGgoNpsfmk0RXDN
-         pp7Q8BGvnw+P21vW1tfO4B1317+10OJoj+Aynk0xKr3lS1NYr+jSuFZsZxp/iEUJk3
-         i2SNjIDYFGxt1koeE88/ylN17yu/JJmHpzZID5vY=
+        b=h9NY6pwJsWssOo7ZL2obh4z6lzfcGxZxiKfoCMKRal5doga/49MaoIU4823gD4e1A
+         bVR7WeM+b0Ke39RSQRlUFl8UWRv9gzVCOZ3WRpFpTe6wb5U+9iX0WofIWsD+W2n2U0
+         GB8cMlMLPWdxQ0vg2XmdpYaSGSp79zc+8vozjRi0=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org,
-        Adhemerval Zanella <adhemerval.zanella@linaro.org>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Saeed Mahameed <saeedm@mellanox.com>,
+        Andrey Zhizhikin <andrey.zhizhikin@leica-geosystems.com>,
+        Petr Mladek <pmladek@suse.com>, Jiri Olsa <jolsa@kernel.org>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Andrii Nakryiko <andriin@fb.com>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Kefeng Wang <wangkefeng.wang@huawei.com>,
+        Martin KaFai Lau <kafai@fb.com>,
+        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
+        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
+        bpf@vger.kernel.org, netdev@vger.kernel.org,
+        Arnaldo Carvalho de Melo <acme@redhat.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 188/344] mlx5: work around high stack usage with gcc
-Date:   Fri, 21 Feb 2020 08:39:47 +0100
-Message-Id: <20200221072406.110358619@linuxfoundation.org>
+Subject: [PATCH 5.4 180/344] tools lib api fs: Fix gcc9 stringop-truncation compilation error
+Date:   Fri, 21 Feb 2020 08:39:39 +0100
+Message-Id: <20200221072405.326779624@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200221072349.335551332@linuxfoundation.org>
 References: <20200221072349.335551332@linuxfoundation.org>
@@ -62,44 +70,65 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Arnd Bergmann <arnd@arndb.de>
+From: Andrey Zhizhikin <andrey.z@gmail.com>
 
-[ Upstream commit 42ae1a5c76691928ed217c7e40269db27f5225e9 ]
+[ Upstream commit 6794200fa3c9c3e6759dae099145f23e4310f4f7 ]
 
-In some configurations, gcc tries too hard to optimize this code:
+GCC9 introduced string hardening mechanisms, which exhibits the error
+during fs api compilation:
 
-drivers/net/ethernet/mellanox/mlx5/core/en_stats.c: In function 'mlx5e_grp_sw_update_stats':
-drivers/net/ethernet/mellanox/mlx5/core/en_stats.c:302:1: error: the frame size of 1336 bytes is larger than 1024 bytes [-Werror=frame-larger-than=]
+error: '__builtin_strncpy' specified bound 4096 equals destination size
+[-Werror=stringop-truncation]
 
-As was stated in the bug report, the reason is that gcc runs into a corner
-case in the register allocator that is rather hard to fix in a good way.
+This comes when the length of copy passed to strncpy is is equal to
+destination size, which could potentially lead to buffer overflow.
 
-As there is an easy way to work around it, just add a comment and the
-barrier that stops gcc from trying to overoptimize the function.
+There is a need to mitigate this potential issue by limiting the size of
+destination by 1 and explicitly terminate the destination with NULL.
 
-Link: https://gcc.gnu.org/bugzilla/show_bug.cgi?id=92657
-Cc: Adhemerval Zanella <adhemerval.zanella@linaro.org>
-Signed-off-by: Arnd Bergmann <arnd@arndb.de>
-Signed-off-by: Saeed Mahameed <saeedm@mellanox.com>
+Signed-off-by: Andrey Zhizhikin <andrey.zhizhikin@leica-geosystems.com>
+Reviewed-by: Petr Mladek <pmladek@suse.com>
+Acked-by: Jiri Olsa <jolsa@kernel.org>
+Cc: Alexei Starovoitov <ast@kernel.org>
+Cc: Andrii Nakryiko <andriin@fb.com>
+Cc: Daniel Borkmann <daniel@iogearbox.net>
+Cc: Kefeng Wang <wangkefeng.wang@huawei.com>
+Cc: Martin KaFai Lau <kafai@fb.com>
+Cc: Petr Mladek <pmladek@suse.com>
+Cc: Sergey Senozhatsky <sergey.senozhatsky@gmail.com>
+Cc: Song Liu <songliubraving@fb.com>
+Cc: Yonghong Song <yhs@fb.com>
+Cc: bpf@vger.kernel.org
+Cc: netdev@vger.kernel.org
+Link: http://lore.kernel.org/lkml/20191211080109.18765-1-andrey.zhizhikin@leica-geosystems.com
+Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/ethernet/mellanox/mlx5/core/en_stats.c | 3 +++
- 1 file changed, 3 insertions(+)
+ tools/lib/api/fs/fs.c | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/net/ethernet/mellanox/mlx5/core/en_stats.c b/drivers/net/ethernet/mellanox/mlx5/core/en_stats.c
-index 9f09253f9f466..a05158472ed11 100644
---- a/drivers/net/ethernet/mellanox/mlx5/core/en_stats.c
-+++ b/drivers/net/ethernet/mellanox/mlx5/core/en_stats.c
-@@ -297,6 +297,9 @@ static void mlx5e_grp_sw_update_stats(struct mlx5e_priv *priv)
- 			s->tx_tls_drop_bypass_req   += sq_stats->tls_drop_bypass_req;
- #endif
- 			s->tx_cqes		+= sq_stats->cqes;
+diff --git a/tools/lib/api/fs/fs.c b/tools/lib/api/fs/fs.c
+index 7aba8243a0e7c..bd021a0eeef8c 100644
+--- a/tools/lib/api/fs/fs.c
++++ b/tools/lib/api/fs/fs.c
+@@ -210,6 +210,7 @@ static bool fs__env_override(struct fs *fs)
+ 	size_t name_len = strlen(fs->name);
+ 	/* name + "_PATH" + '\0' */
+ 	char upper_name[name_len + 5 + 1];
 +
-+			/* https://gcc.gnu.org/bugzilla/show_bug.cgi?id=92657 */
-+			barrier();
- 		}
- 	}
+ 	memcpy(upper_name, fs->name, name_len);
+ 	mem_toupper(upper_name, name_len);
+ 	strcpy(&upper_name[name_len], "_PATH");
+@@ -219,7 +220,8 @@ static bool fs__env_override(struct fs *fs)
+ 		return false;
+ 
+ 	fs->found = true;
+-	strncpy(fs->path, override_path, sizeof(fs->path));
++	strncpy(fs->path, override_path, sizeof(fs->path) - 1);
++	fs->path[sizeof(fs->path) - 1] = '\0';
+ 	return true;
  }
+ 
 -- 
 2.20.1
 
