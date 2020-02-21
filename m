@@ -2,220 +2,441 @@ Return-Path: <SRS0=1210=4J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3E3C9C35669
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 21:11:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5CF80C35669
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 21:16:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0BC842072C
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 21:11:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1BF68207FD
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 21:16:58 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="POnk8QFI"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="X+F3ZE3h"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728571AbgBUVLP (ORCPT
+        id S1728102AbgBUVQx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Feb 2020 16:11:15 -0500
-Received: from mail-wr1-f67.google.com ([209.85.221.67]:40497 "EHLO
-        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726878AbgBUVLO (ORCPT
+        Fri, 21 Feb 2020 16:16:53 -0500
+Received: from mail-pj1-f68.google.com ([209.85.216.68]:35838 "EHLO
+        mail-pj1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726683AbgBUVQw (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Feb 2020 16:11:14 -0500
-Received: by mail-wr1-f67.google.com with SMTP id t3so3535696wru.7
-        for <linux-kernel@vger.kernel.org>; Fri, 21 Feb 2020 13:11:13 -0800 (PST)
+        Fri, 21 Feb 2020 16:16:52 -0500
+Received: by mail-pj1-f68.google.com with SMTP id q39so1327081pjc.0
+        for <linux-kernel@vger.kernel.org>; Fri, 21 Feb 2020 13:16:50 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
-        h=subject:to:cc:references:from:autocrypt:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=eoib6VSmCt5DwlrTc59QJpXIU4OX5DiKcXLWXQvmCw8=;
-        b=POnk8QFI/12VxvomAgZZ8RbC+3TcsgX8gefwnxsHXzjhth/O2Y8g+59GPKvkqEODRr
-         Va/uCJUJMS72IqAGGbf4XkMddfTtng3U0aquGTl2UuFQ8wU3ylQYyxvqBIP0ZExzDLEf
-         qnPr8yMmxUmOiG/y2jFdEa2+F/edyyc+IXzEzSYCIa1zScKtUq5tvp1sIXJvS8ua62MD
-         7trrKqzh8iCIGqNJm2F6OADHgSZNFOChnXs1SNbTvb97G2ROaVXCIOCHy6/oF9WZE7WV
-         H6poxFii/P0QwZCsUfsxmXeuOZ5F8qx5lGZ/2mtqHhcwjih1qzVAUAlobNMkd7zEkl+o
-         5shA==
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=jbWjcCeJ+tMsJ37H+v4wCDC++6PlNXZq8kBvXslPfN4=;
+        b=X+F3ZE3hbunhDZmTf0XuTehr8+T2eymaP89vqHqLM9LwMJ/bvw9HT1TfnRuCp8rXJF
+         T78t4x9pMEE4gqOH44YiYKiZ6pYZON1PYBEt/4yXUGkZ86GIrwi6qel3QVW0mCVztdE5
+         Vf/8uLx4WCt/3H1fGVHDcLl8cWHqqdO7gw7jPjagYgv6yzCAFOPM5R25J+QXDU8m6MIz
+         0SzXOZHOiMO1LNpa02ZHOXNFfwr5OKUXe6LXgNOh7X/Qeg4KtcmNO48kByg39euyTejJ
+         X9/EU8bRi0AgFhTEA/o0NDnfHl7y76VqVK+Htnu7jSg0ouUsS2xuKw0YiUFq6msD5opp
+         13NA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:autocrypt
-         :message-id:date:user-agent:mime-version:in-reply-to
-         :content-language:content-transfer-encoding;
-        bh=eoib6VSmCt5DwlrTc59QJpXIU4OX5DiKcXLWXQvmCw8=;
-        b=B9H8NXEPCwiqMVBRIV5Qyrg7hFdSMnGwczrsF57l2i7b0HgpcOovGw2GvryOdTXlxK
-         0PhYyb/xjXeyKjAOGPtAinqi3CrmzVXxVPkgYC/Niii5dZZObtPtOOFEPAqmmHx8mkoe
-         EwZ6LOBcFyvYtpPXrbog4T0pbGqyknR78Hgov/+q6M9/SiT0fkGhWtYnL36QD9CKaLcg
-         yhNAGo89sj1nGGrIeqjA0eifnrtlYaTwcA4qX8L4XmNchSTVJn4vm6ufEN2wXX7JQXwJ
-         TjuyKS6YVCaDuxgpAI3zxmN31HKW3h+ja1WqBcX3Mt18OVOo5OILPyz3+F5PHyjsYv11
-         l3LA==
-X-Gm-Message-State: APjAAAWTOFmqmD2ir1da6XvsvHd8WeZkyvExGnU3qVq5edUgPx8gVH4a
-        VGhV5+gh5TVSkN/wjnj5DXCmlauFXrw=
-X-Google-Smtp-Source: APXvYqxIoa7Wi24XKCebmkw3SKmXKCfhC1+HVcWAUe7JhDO0t0s499j7ZtQgWjrop3nw6LqgWd29Cg==
-X-Received: by 2002:adf:dd8a:: with SMTP id x10mr52840489wrl.117.1582319472447;
-        Fri, 21 Feb 2020 13:11:12 -0800 (PST)
-Received: from ?IPv6:2a01:e34:ed2f:f020:903b:a048:f296:e3ae? ([2a01:e34:ed2f:f020:903b:a048:f296:e3ae])
-        by smtp.googlemail.com with ESMTPSA id l2sm5260361wme.1.2020.02.21.13.11.11
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 21 Feb 2020 13:11:11 -0800 (PST)
-Subject: Re: [PATCH v9 09/17] arm: tegra20: cpuidle: Handle case where
- secondary CPU hangs on entering LP2
-To:     Dmitry Osipenko <digetx@gmail.com>
-Cc:     Thierry Reding <thierry.reding@gmail.com>,
-        Jonathan Hunter <jonathanh@nvidia.com>,
-        Peter De Schrijver <pdeschrijver@nvidia.com>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        =?UTF-8?B?TWljaGHFgiBNaXJvc8WCYXc=?= <mirq-linux@rere.qmqm.pl>,
-        Jasper Korten <jja2000@gmail.com>,
-        David Heidelberg <david@ixit.cz>,
-        Peter Geis <pgwipeout@gmail.com>, linux-pm@vger.kernel.org,
-        linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20200212235134.12638-1-digetx@gmail.com>
- <20200212235134.12638-10-digetx@gmail.com>
- <20200221154318.GO10516@linaro.org>
- <239a2b66-8da8-2e6c-d19d-9ed207ad0a64@gmail.com>
- <20200221173649.GU10516@linaro.org>
- <b51f3f6b-8287-5ce8-fcaa-77cbab507618@gmail.com>
- <f27481cf-ca5e-df47-932b-fcb4713f0d78@linaro.org>
- <50a8fb7c-f497-2234-c0b0-560aec1c5691@gmail.com>
- <21e3cc35-cc6b-5452-da93-bdaac43716c5@linaro.org>
- <c13aa8f9-092b-55ca-742e-17db0184649b@gmail.com>
-From:   Daniel Lezcano <daniel.lezcano@linaro.org>
-Autocrypt: addr=daniel.lezcano@linaro.org; prefer-encrypt=mutual; keydata=
- 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
-Message-ID: <f27e7974-f102-f9dc-6b48-9814b88465bf@linaro.org>
-Date:   Fri, 21 Feb 2020 22:11:10 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.1
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=jbWjcCeJ+tMsJ37H+v4wCDC++6PlNXZq8kBvXslPfN4=;
+        b=k41p2okphre9EjykfffOWYIrHmAH4rJXGfnzQ3HlZq0ivmYO7/CTZUg8pXbg+n2VnJ
+         VvVDk4ju1QcncqrwfVbKAz37UIab/KTERaBvFd587fs0mQv4i9Eohd9f8SO7jEMJKCm3
+         Mqfw6aLYsbhiggl6mTuNCbjL2ZzFlp7cOpLKwekB9Wn/W7Kx4uq3RwSUyac+7AQUFHrj
+         TmLZGnvCqK+uL1oifYgV9VPxbnBI9Xuirq3f4RnJYFBHNyYHnbDcCNQGnlVvXuRNM262
+         6H64ZbJVd6fPLDOiJrOA0xQMoREcu9xa4iBMRJrA8mgTXbdOWcou95j3CQk3GLuRS1JG
+         SkjQ==
+X-Gm-Message-State: APjAAAXaKyQm3rTIW6AkYG+34/WfON26oCYG7ubHJvGDjduBpVfgaJAV
+        BOfvxRcMLJK3mbCx2GA1Qi7tkMXiZUo=
+X-Google-Smtp-Source: APXvYqyvpohp5Lwua3UpWk1U7OsOu9P1jPfqEvBnFOsRxZ8SULDy58bOHnFgSH6gf/9akXUCoJgEcQ==
+X-Received: by 2002:a17:90a:fb87:: with SMTP id cp7mr5304844pjb.56.1582319809893;
+        Fri, 21 Feb 2020 13:16:49 -0800 (PST)
+Received: from xps15 (S0106002369de4dac.cg.shawcable.net. [68.147.8.254])
+        by smtp.gmail.com with ESMTPSA id c26sm3879574pfj.8.2020.02.21.13.16.47
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 21 Feb 2020 13:16:48 -0800 (PST)
+Date:   Fri, 21 Feb 2020 14:16:46 -0700
+From:   Mathieu Poirier <mathieu.poirier@linaro.org>
+To:     peng.fan@nxp.com
+Cc:     ohad@wizery.com, bjorn.andersson@linaro.org, robh+dt@kernel.org,
+        shawnguo@kernel.org, s.hauer@pengutronix.de, kernel@pengutronix.de,
+        festevam@gmail.com, linux-imx@nxp.com,
+        linux-remoteproc@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 4/9] remoteproc: imx_rproc: surport early booted remote
+ processor
+Message-ID: <20200221211646.GB10368@xps15>
+References: <1582097265-20170-1-git-send-email-peng.fan@nxp.com>
+ <1582097265-20170-5-git-send-email-peng.fan@nxp.com>
 MIME-Version: 1.0
-In-Reply-To: <c13aa8f9-092b-55ca-742e-17db0184649b@gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1582097265-20170-5-git-send-email-peng.fan@nxp.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 21/02/2020 21:54, Dmitry Osipenko wrote:
-> 21.02.2020 23:48, Daniel Lezcano пишет:
->> On 21/02/2020 21:21, Dmitry Osipenko wrote:
->>> 21.02.2020 23:02, Daniel Lezcano пишет:
->>
->> [ ... ]
->>
->>>>>>>>> +
->>>>>>>>> +		/*
->>>>>>>>> +		 * The primary CPU0 core shall wait for the secondaries
->>>>>>>>> +		 * shutdown in order to power-off CPU's cluster safely.
->>>>>>>>> +		 * The timeout value depends on the current CPU frequency,
->>>>>>>>> +		 * it takes about 40-150us  in average and over 1000us in
->>>>>>>>> +		 * a worst case scenario.
->>>>>>>>> +		 */
->>>>>>>>> +		do {
->>>>>>>>> +			if (tegra_cpu_rail_off_ready())
->>>>>>>>> +				return 0;
->>>>>>>>> +
->>>>>>>>> +		} while (ktime_before(ktime_get(), timeout));
->>>>>>>>
->>>>>>>> So this loop will aggresively call tegra_cpu_rail_off_ready() and retry 3
->>>>>>>> times. The tegra_cpu_rail_off_ready() function can be called thoushand of times
->>>>>>>> here but the function will hang 1.5s :/
->>>>>>>>
->>>>>>>> I suggest something like:
->>>>>>>>
->>>>>>>> 	while (retries--i && !tegra_cpu_rail_off_ready()) 
->>>>>>>> 		udelay(100);
->>>>>>>>
->>>>>>>> So <retries> calls to tegra_cpu_rail_off_ready() and 100us x <retries> maximum
->>>>>>>> impact.
->>>>>>> But udelay() also results into CPU spinning in a busy-loop, and thus,
->>>>>>> what's the difference?
->>>>>>
->>>>>> busy looping instead of register reads with all the hardware things involved behind.
->>>>>
->>>>> Please notice that this code runs only on an older Cortex-A9/A15, which
->>>>> doesn't support WFE for the delaying, and thus, CPU always busy-loops
->>>>> inside udelay().
->>>>>
->>>>> What about if I'll add cpu_relax() to the loop? Do you think it it could
->>>>> have any positive effect?
->>>>
->>>> I think udelay() has a call to cpu_relax().
->>>
->>> Yes, my point is that udelay() doesn't bring much benefit for us here
->>> because:
->>>
->>> 1. we want to enter into power-gated state as quick as possible and
->>> udelay() just adds an unnecessary delay
->>>
->>> 2. udelay() spins in a busy-loop until delay is expired, just like we're
->>> doing it in this function already
->>
->> In this case why not remove ktime_get() and increase the number of retries?
+On Wed, Feb 19, 2020 at 03:27:40PM +0800, peng.fan@nxp.com wrote:
+> From: Peng Fan <peng.fan@nxp.com>
 > 
-> Because the busy-loop performance depends on CPU's frequency, so we
-> can't rely on a bare number of the retries.
+> When remote processor is booted by bootloader, Linux need to
+> ignore firmware loading, and ignore remote processor start/stop
+> related hardware operations. what should do is to need to handle
+> memory-regions and resource table.
+> 
+> Add a src_started entry to check whether Cortex-M4 is started for i.MX7D
+> and i.MX6SX.
+> 
+> Signed-off-by: Peng Fan <peng.fan@nxp.com>
+> ---
+>  drivers/remoteproc/imx_rproc.c | 240 +++++++++++++++++++++++++++++++++++++----
+>  1 file changed, 220 insertions(+), 20 deletions(-)
+> 
+> diff --git a/drivers/remoteproc/imx_rproc.c b/drivers/remoteproc/imx_rproc.c
+> index 3e72b6f38d4b..b9fabe269fd2 100644
+> --- a/drivers/remoteproc/imx_rproc.c
+> +++ b/drivers/remoteproc/imx_rproc.c
+> @@ -74,6 +74,7 @@ struct imx_rproc_dcfg {
+>  	u32				src_mask;
+>  	u32				src_start;
+>  	u32				src_stop;
+> +	u32				src_started;
+>  	const struct imx_rproc_att	*att;
+>  	size_t				att_size;
+>  };
+> @@ -85,6 +86,7 @@ struct imx_rproc {
+>  	const struct imx_rproc_dcfg	*dcfg;
+>  	struct imx_rproc_mem		mem[IMX7D_RPROC_MEM_MAX];
+>  	struct clk			*clk;
+> +	bool				early_boot;
+>  };
+>  
+>  static const struct imx_rproc_att imx_rproc_att_imx7d[] = {
+> @@ -142,6 +144,7 @@ static const struct imx_rproc_dcfg imx_rproc_cfg_imx7d = {
+>  	.src_mask	= IMX7D_M4_RST_MASK,
+>  	.src_start	= IMX7D_M4_START,
+>  	.src_stop	= IMX7D_M4_STOP,
+> +	.src_started	= IMX7D_ENABLE_M4,
+>  	.att		= imx_rproc_att_imx7d,
+>  	.att_size	= ARRAY_SIZE(imx_rproc_att_imx7d),
+>  };
+> @@ -151,6 +154,7 @@ static const struct imx_rproc_dcfg imx_rproc_cfg_imx6sx = {
+>  	.src_mask	= IMX6SX_M4_RST_MASK,
+>  	.src_start	= IMX6SX_M4_START,
+>  	.src_stop	= IMX6SX_M4_STOP,
+> +	.src_started	= IMX6SX_ENABLE_M4,
+>  	.att		= imx_rproc_att_imx6sx,
+>  	.att_size	= ARRAY_SIZE(imx_rproc_att_imx6sx),
+>  };
+> @@ -162,6 +166,9 @@ static int imx_rproc_start(struct rproc *rproc)
+>  	struct device *dev = priv->dev;
+>  	int ret;
+>  
+> +	if (priv->early_boot)
+> +		return 0;
+> +
+>  	ret = regmap_update_bits(priv->regmap, dcfg->src_reg,
+>  				 dcfg->src_mask, dcfg->src_start);
+>  	if (ret)
+> @@ -177,6 +184,9 @@ static int imx_rproc_stop(struct rproc *rproc)
+>  	struct device *dev = priv->dev;
+>  	int ret;
+>  
+> +	if (priv->early_boot)
+> +		return 0;
+> +
+>  	ret = regmap_update_bits(priv->regmap, dcfg->src_reg,
+>  				 dcfg->src_mask, dcfg->src_stop);
+>  	if (ret)
+> @@ -240,10 +250,167 @@ static void *imx_rproc_da_to_va(struct rproc *rproc, u64 da, int len)
+>  	return va;
+>  }
+>  
+> +static int imx_rproc_elf_load_segments(struct rproc *rproc,
+> +				       const struct firmware *fw)
+> +{
+> +	struct imx_rproc *priv = rproc->priv;
+> +
+> +	if (!priv->early_boot)
+> +		return rproc_elf_load_segments(rproc, fw);
+> +
+> +	return 0;
+> +}
+> +
+> +static int imx_rproc_mem_alloc(struct rproc *rproc,
+> +			       struct rproc_mem_entry *mem)
+> +{
+> +	struct device *dev = rproc->dev.parent;
+> +	void *va;
+> +
+> +	dev_dbg(dev, "map memory: %p+%x\n", &mem->dma, mem->len);
+> +	va = ioremap_wc(mem->dma, mem->len);
+> +	if (IS_ERR_OR_NULL(va)) {
+> +		dev_err(dev, "Unable to map memory region: %p+%x\n",
+> +			&mem->dma, mem->len);
+> +		return -ENOMEM;
+> +	}
+> +
+> +	/* Update memory entry va */
+> +	mem->va = va;
+> +
+> +	return 0;
+> +}
+> +
+> +static int imx_rproc_mem_release(struct rproc *rproc,
+> +				 struct rproc_mem_entry *mem)
+> +{
+> +	dev_dbg(rproc->dev.parent, "unmap memory: %pa\n", &mem->dma);
+> +	iounmap(mem->va);
+> +
+> +	return 0;
+> +}
+> +
+> +static int imx_rproc_parse_fw(struct rproc *rproc, const struct firmware *fw)
+> +{
+> +	struct imx_rproc *priv = rproc->priv;
+> +	struct resource_table *resource_table;
+> +	struct device_node *np = priv->dev->of_node;
+> +	struct of_phandle_iterator it;
+> +	struct rproc_mem_entry *mem;
+> +	struct reserved_mem *rmem;
+> +	int index = 0;
+> +	int elems;
+> +	int ret;
+> +	u64 da;
+> +
+> +	if (!priv->early_boot)
+> +		return rproc_elf_load_rsc_table(rproc, fw);
 
-Why not if computed in the worst case scenario?
+Once again I will concentrate on the scenario rather than making comments on the
+code.
 
-Anyway, I'll let you give a try.
+If I understand correctly if the AP is responsible for loading the firmware and
+starting the MCU, the ELF image contains a resource table that describes all the
+memory areas and vdev needed.
 
--- 
- <http://www.linaro.org/> Linaro.org │ Open source software for ARM SoCs
+Otherwise the MCU firmware that is preloaded by the boot loader or the SCU
+does _not_ have a resource table and as such specifics need to be coming from
+the DT.  
 
-Follow Linaro:  <http://www.facebook.com/pages/Linaro> Facebook |
-<http://twitter.com/#!/linaroorg> Twitter |
-<http://www.linaro.org/linaro-blog/> Blog
+Is my assesment correct?
 
+> +
+> +	/* Register associated reserved memory regions */
+> +	of_phandle_iterator_init(&it, np, "memory-region", NULL, 0);
+> +	while (of_phandle_iterator_next(&it) == 0) {
+> +		rmem = of_reserved_mem_lookup(it.node);
+> +		if (!rmem) {
+> +			dev_err(priv->dev, "unable to acquire memory-region\n");
+> +			return -EINVAL;
+> +		}
+> +
+> +		/* No need to translate pa to da */
+> +		da = rmem->base;
+> +
+> +		if (strcmp(it.node->name, "vdev0buffer")) {
+> +			/* Register memory region */
+> +			mem = rproc_mem_entry_init(priv->dev, NULL,
+> +						   (dma_addr_t)rmem->base,
+> +						   rmem->size, da,
+> +						   imx_rproc_mem_alloc,
+> +						   imx_rproc_mem_release,
+> +						   it.node->name);
+> +
+> +			if (mem)
+> +				rproc_coredump_add_segment(rproc, da,
+> +							   rmem->size);
+> +		} else {
+> +			/* Register reserved memory for vdev buffer alloc */
+> +			mem = rproc_of_resm_mem_entry_init(priv->dev, index,
+> +							   rmem->size,
+> +							   rmem->base,
+> +							   it.node->name);
+> +		}
+> +
+> +		if (!mem)
+> +			return -ENOMEM;
+> +
+> +		rproc_add_carveout(rproc, mem);
+> +		index++;
+> +	}
+> +
+> +	/*Parse device tree to get resource table */
+> +	elems = of_property_count_u32_elems(np, "rsrc-table");
+> +	if (elems < 0) {
+> +		dev_err(&rproc->dev, "no rsrc-table\n");
+> +		return elems;
+> +	}
+> +
+> +	resource_table = kzalloc(elems * sizeof(u32), GFP_KERNEL);
+> +	if (!resource_table)
+> +		return PTR_ERR(resource_table);
+> +
+> +	ret = of_property_read_u32_array(np, "rsrc-table",
+> +					 (u32 *)resource_table, elems);
+> +	if (ret)
+> +		return ret;
+> +
+> +	rproc->cached_table = resource_table;
+> +	rproc->table_ptr = resource_table;
+> +	rproc->table_sz = elems * sizeof(u32);
+> +
+> +	return 0;
+> +}
+> +
+> +static struct resource_table *
+> +imx_rproc_elf_find_loaded_rsc_table(struct rproc *rproc,
+> +				    const struct firmware *fw)
+> +{
+> +	struct imx_rproc *priv = rproc->priv;
+> +
+> +	if (!priv->early_boot)
+> +		return rproc_elf_find_loaded_rsc_table(rproc, fw);
+> +
+> +	return NULL;
+> +}
+> +
+> +static int imx_rproc_elf_sanity_check(struct rproc *rproc,
+> +				      const struct firmware *fw)
+> +{
+> +	struct imx_rproc *priv = rproc->priv;
+> +
+> +	if (!priv->early_boot)
+> +		return rproc_elf_sanity_check(rproc, fw);
+> +
+> +	return 0;
+> +}
+> +
+> +static u32 imx_rproc_elf_get_boot_addr(struct rproc *rproc,
+> +				       const struct firmware *fw)
+> +{
+> +	struct imx_rproc *priv = rproc->priv;
+> +
+> +	if (!priv->early_boot)
+> +		return rproc_elf_get_boot_addr(rproc, fw);
+> +
+> +	return 0;
+> +}
+> +
+>  static const struct rproc_ops imx_rproc_ops = {
+>  	.start		= imx_rproc_start,
+>  	.stop		= imx_rproc_stop,
+>  	.da_to_va       = imx_rproc_da_to_va,
+> +	.load		= imx_rproc_elf_load_segments,
+> +	.parse_fw	= imx_rproc_parse_fw,
+> +	.find_loaded_rsc_table = imx_rproc_elf_find_loaded_rsc_table,
+> +	.sanity_check	= imx_rproc_elf_sanity_check,
+> +	.get_boot_addr	= imx_rproc_elf_get_boot_addr,
+>  };
+>  
+>  static int imx_rproc_addr_init(struct imx_rproc *priv,
+> @@ -309,6 +476,31 @@ static int imx_rproc_addr_init(struct imx_rproc *priv,
+>  	return 0;
+>  }
+>  
+> +static int imx_rproc_configure_mode(struct imx_rproc *priv)
+> +{
+> +	const struct imx_rproc_dcfg *dcfg = priv->dcfg;
+> +	struct device *dev = priv->dev;
+> +	int ret;
+> +	u32 val;
+> +
+> +	if (of_get_property(dev->of_node, "early-booted", NULL)) {
+> +		priv->early_boot = true;
+> +	} else {
+> +		ret = regmap_read(priv->regmap, dcfg->src_reg, &val);
+> +		if (ret) {
+> +			dev_err(dev, "Failed to read src\n");
+> +			return ret;
+> +		}
+> +
+> +		priv->early_boot = !!(val & dcfg->src_started);
+> +	}
+> +
+> +	if (priv->early_boot)
+> +		priv->rproc->skip_fw_load = true;
+> +
+> +	return 0;
+> +}
+> +
+>  static int imx_rproc_probe(struct platform_device *pdev)
+>  {
+>  	struct device *dev = &pdev->dev;
+> @@ -347,27 +539,33 @@ static int imx_rproc_probe(struct platform_device *pdev)
+>  
+>  	dev_set_drvdata(dev, rproc);
+>  
+> -	ret = imx_rproc_addr_init(priv, pdev);
+> -	if (ret) {
+> -		dev_err(dev, "failed on imx_rproc_addr_init\n");
+> +	ret = imx_rproc_configure_mode(priv);
+> +	if (ret)
+>  		goto err_put_rproc;
+> -	}
+>  
+> -	priv->clk = devm_clk_get(dev, NULL);
+> -	if (IS_ERR(priv->clk)) {
+> -		dev_err(dev, "Failed to get clock\n");
+> -		ret = PTR_ERR(priv->clk);
+> -		goto err_put_rproc;
+> -	}
+> +	if (!priv->early_boot) {
+> +		ret = imx_rproc_addr_init(priv, pdev);
+> +		if (ret) {
+> +			dev_err(dev, "failed on imx_rproc_addr_init\n");
+> +			goto err_put_rproc;
+> +		}
+>  
+> -	/*
+> -	 * clk for M4 block including memory. Should be
+> -	 * enabled before .start for FW transfer.
+> -	 */
+> -	ret = clk_prepare_enable(priv->clk);
+> -	if (ret) {
+> -		dev_err(&rproc->dev, "Failed to enable clock\n");
+> -		goto err_put_rproc;
+> +		priv->clk = devm_clk_get(dev, NULL);
+> +		if (IS_ERR(priv->clk)) {
+> +			dev_err(dev, "Failed to get clock\n");
+> +			ret = PTR_ERR(priv->clk);
+> +			goto err_put_rproc;
+> +		}
+> +
+> +		/*
+> +		 * clk for M4 block including memory. Should be
+> +		 * enabled before .start for FW transfer.
+> +		 */
+> +		ret = clk_prepare_enable(priv->clk);
+> +		if (ret) {
+> +			dev_err(&rproc->dev, "Failed to enable clock\n");
+> +			goto err_put_rproc;
+> +		}
+>  	}
+>  
+>  	ret = rproc_add(rproc);
+> @@ -379,7 +577,8 @@ static int imx_rproc_probe(struct platform_device *pdev)
+>  	return 0;
+>  
+>  err_put_clk:
+> -	clk_disable_unprepare(priv->clk);
+> +	if (!priv->early_boot)
+> +		clk_disable_unprepare(priv->clk);
+>  err_put_rproc:
+>  	rproc_free(rproc);
+>  
+> @@ -391,7 +590,8 @@ static int imx_rproc_remove(struct platform_device *pdev)
+>  	struct rproc *rproc = platform_get_drvdata(pdev);
+>  	struct imx_rproc *priv = rproc->priv;
+>  
+> -	clk_disable_unprepare(priv->clk);
+> +	if (!priv->early_boot)
+> +		clk_disable_unprepare(priv->clk);
+>  	rproc_del(rproc);
+>  	rproc_free(rproc);
+>  
+> -- 
+> 2.16.4
+> 
