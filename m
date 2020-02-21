@@ -7,49 +7,51 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8F8F7C35640
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 07:47:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F236CC35641
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 07:47:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 62129222C4
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 07:47:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CA2A0208C4
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 07:47:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582271245;
-	bh=j5FNwqbiDd3zQGbUoiAPV81bz+Jo7tUnvf567ZMQT54=;
+	s=default; t=1582271248;
+	bh=v9kgbTRLSbsOE/FA6v/8+h7+wnByHJqRW7CwIyvCXio=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=tCpGRL0vfC3Nm+9jP431x12cSf71jikUU2z+GhEwC5Q5SoHoYYn/2hwk7MwgZ50WN
-	 M5tVV/+0Tv2eaADjrixzBlLqWu7oxrPsvKsy216HKEvuDroEASAQVoh1v4vVMtcDkB
-	 0hYdgDsEpt2OzHtyUggevqc25CzU4EE5tq+m5pc8=
+	b=Ld/6SaH2zykK7yj62yjxjfuFb+XGUGb2s0ibggp3eZrtNfRF/+T/xvsZM4qr4Fz5G
+	 0c1QW5e2AEVGqvVhIqQXa4D6zb8/Q+EiSOVy8xY98EVoyBoGT3JC9Kl8TqOYOBgzgu
+	 /J4L6XelmBON1AL4rq8toSdUaFXQ6nb6zebQrb8Q=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728908AbgBUHrX (ORCPT
+        id S1728085AbgBUHr1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Feb 2020 02:47:23 -0500
-Received: from mail.kernel.org ([198.145.29.99]:42934 "EHLO mail.kernel.org"
+        Fri, 21 Feb 2020 02:47:27 -0500
+Received: from mail.kernel.org ([198.145.29.99]:43178 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728258AbgBUHrJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Feb 2020 02:47:09 -0500
+        id S1728901AbgBUHrX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 21 Feb 2020 02:47:23 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B618024673;
-        Fri, 21 Feb 2020 07:47:08 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 287F2222C4;
+        Fri, 21 Feb 2020 07:47:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1582271229;
-        bh=j5FNwqbiDd3zQGbUoiAPV81bz+Jo7tUnvf567ZMQT54=;
+        s=default; t=1582271242;
+        bh=v9kgbTRLSbsOE/FA6v/8+h7+wnByHJqRW7CwIyvCXio=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=y0hw9TGNjHHkOel62rS5KwV3JA2CZhsFr1vP/hcpQLSQsR7d0UqQxYL4HTfVV86Yx
-         +t5f159w8iP3w+HrRect//1Uajp1uHechkq+V7vrgTwfcACZk4xqykznLBiSumSejH
-         iBwD+Bi2vk17BLjLzRufZF0bBEXPz+RQyu6i00/A=
+        b=WZLrCG6HVhkcxIjdlGz/Q9zpkkyEUxuBxh64TYcycG7mQ4f0VJEAitQxQtvXco3aR
+         VhzRl1a7Sv97aAJRBf1d/aLBMqwLFSacBvnFiqM2xhKUw1nJwiYdg5eUwvpPi2+/UJ
+         fibyoG/KDkDf5LnQQ49H411ezwEkvxLBjeWkXR/8=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Ping-Ke Shih <pkshih@realtek.com>,
-        Yan-Hsuan Chuang <yhchuang@realtek.com>,
-        Chris Chiu <chiu@endlessm.com>,
-        Kalle Valo <kvalo@codeaurora.org>,
+        stable@vger.kernel.org, Louis Li <Ching-shih.Li@amd.com>,
+        Wenjing Liu <Wenjing.Liu@amd.com>,
+        Hersen Wu <hersenxs.wu@amd.com>,
+        Eric Yang <Eric.Yang2@amd.com>,
+        Harry Wentland <harry.wentland@amd.com>,
+        Alex Deucher <alexander.deucher@amd.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.5 088/399] rtw88: fix rate mask for 1SS chip
-Date:   Fri, 21 Feb 2020 08:36:53 +0100
-Message-Id: <20200221072410.889008864@linuxfoundation.org>
+Subject: [PATCH 5.5 092/399] drm/amd/display: Retrain dongles when SINK_COUNT becomes non-zero
+Date:   Fri, 21 Feb 2020 08:36:57 +0100
+Message-Id: <20200221072411.287157032@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200221072402.315346745@linuxfoundation.org>
 References: <20200221072402.315346745@linuxfoundation.org>
@@ -62,66 +64,69 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Ping-Ke Shih <pkshih@realtek.com>
+From: Harry Wentland <harry.wentland@amd.com>
 
-[ Upstream commit 35a68fa5f96a80797e11b6952a47c5a84939a7bf ]
+[ Upstream commit 3eb6d7aca53d81ce888624f09cd44dc0302161e8 ]
 
-The rate mask is used to tell firmware the supported rate depends on
-negotiation. We loop 2 times for all VHT/HT 2SS rate mask first, and then
-only keep the part according to chip's NSS.
+[WHY]
+Two years ago the patch referenced by the Fixes tag stopped running
+dp_verify_link_cap_with_retries during DP detection when the reason
+for the detection was a short-pulse interrupt. This effectively meant
+that we were no longer doing the verify_link_cap training on active
+dongles when their SINK_COUNT changed from 0 to 1.
 
-This commit fixes the logic error of '&' operations for VHT/HT rate, and
-we should run this logic before adding legacy rate.
+A year ago this was partly remedied with:
+commit 80adaebd2d41 ("drm/amd/display: Don't skip link training for empty dongle")
 
-To access HT MCS map, index 0/1 represent MCS 0-7/8-15 respectively. Use
-NL80211_BAND_xxx is incorrect, so fix it as well.
+This made sure that we trained the dongle on initial hotplug (without
+connected downstream devices).
 
-Signed-off-by: Ping-Ke Shih <pkshih@realtek.com>
-Signed-off-by: Yan-Hsuan Chuang <yhchuang@realtek.com>
-Reviewed-by: Chris Chiu <chiu@endlessm.com>
-Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
+This is all fine and dandy if it weren't for the fact that there are
+some dongles on the market that don't like link training when SINK_COUNT
+is 0 These dongles will in fact indicate a SINK_COUNT of 0 immediately
+after hotplug, even when a downstream device is connected, and then
+trigger a shortpulse interrupt indicating a SINK_COUNT change to 1.
+
+In order to play nicely we will need our policy to not link train an
+active DP dongle when SINK_COUNT is 0 but ensure we train it when the
+SINK_COUNT changes to 1.
+
+[HOW]
+Call dp_verify_link_cap_with_retries on detection even when the detection
+is triggered from a short pulse interrupt.
+
+With this change we can also revert this commit which we'll do in a separate
+follow-up change:
+commit 80adaebd2d41 ("drm/amd/display: Don't skip link training for empty dongle")
+
+Fixes: 0301ccbaf67d ("drm/amd/display: DP Compliance 400.1.1 failure")
+Suggested-by: Louis Li <Ching-shih.Li@amd.com>
+Tested-by: Louis Li <Ching-shih.Li@amd.com>
+Cc: Wenjing Liu <Wenjing.Liu@amd.com>
+Cc: Hersen Wu <hersenxs.wu@amd.com>
+Cc: Eric Yang <Eric.Yang2@amd.com>
+Reviewed-by: Wenjing Liu <Wenjing.Liu@amd.com>
+Signed-off-by: Harry Wentland <harry.wentland@amd.com>
+Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/wireless/realtek/rtw88/main.c | 12 +++++-------
- 1 file changed, 5 insertions(+), 7 deletions(-)
+ drivers/gpu/drm/amd/display/dc/core/dc_link.c | 3 +--
+ 1 file changed, 1 insertion(+), 2 deletions(-)
 
-diff --git a/drivers/net/wireless/realtek/rtw88/main.c b/drivers/net/wireless/realtek/rtw88/main.c
-index ae61415e16654..f369ddca953af 100644
---- a/drivers/net/wireless/realtek/rtw88/main.c
-+++ b/drivers/net/wireless/realtek/rtw88/main.c
-@@ -706,8 +706,8 @@ void rtw_update_sta_info(struct rtw_dev *rtwdev, struct rtw_sta_info *si)
- 		if (sta->vht_cap.cap & IEEE80211_VHT_CAP_SHORT_GI_80)
- 			is_support_sgi = true;
- 	} else if (sta->ht_cap.ht_supported) {
--		ra_mask |= (sta->ht_cap.mcs.rx_mask[NL80211_BAND_5GHZ] << 20) |
--			   (sta->ht_cap.mcs.rx_mask[NL80211_BAND_2GHZ] << 12);
-+		ra_mask |= (sta->ht_cap.mcs.rx_mask[1] << 20) |
-+			   (sta->ht_cap.mcs.rx_mask[0] << 12);
- 		if (sta->ht_cap.cap & IEEE80211_HT_CAP_RX_STBC)
- 			stbc_en = HT_STBC_EN;
- 		if (sta->ht_cap.cap & IEEE80211_HT_CAP_LDPC_CODING)
-@@ -717,6 +717,9 @@ void rtw_update_sta_info(struct rtw_dev *rtwdev, struct rtw_sta_info *si)
- 			is_support_sgi = true;
- 	}
+diff --git a/drivers/gpu/drm/amd/display/dc/core/dc_link.c b/drivers/gpu/drm/amd/display/dc/core/dc_link.c
+index 4619f94f0ac78..70846ae7d854d 100644
+--- a/drivers/gpu/drm/amd/display/dc/core/dc_link.c
++++ b/drivers/gpu/drm/amd/display/dc/core/dc_link.c
+@@ -968,8 +968,7 @@ static bool dc_link_detect_helper(struct dc_link *link,
+ 			same_edid = is_same_edid(&prev_sink->dc_edid, &sink->dc_edid);
  
-+	if (efuse->hw_cap.nss == 1)
-+		ra_mask &= RA_MASK_VHT_RATES_1SS | RA_MASK_HT_RATES_1SS;
-+
- 	if (hal->current_band_type == RTW_BAND_5G) {
- 		ra_mask |= (u64)sta->supp_rates[NL80211_BAND_5GHZ] << 4;
- 		if (sta->vht_cap.vht_supported) {
-@@ -750,11 +753,6 @@ void rtw_update_sta_info(struct rtw_dev *rtwdev, struct rtw_sta_info *si)
- 		wireless_set = 0;
- 	}
- 
--	if (efuse->hw_cap.nss == 1) {
--		ra_mask &= RA_MASK_VHT_RATES_1SS;
--		ra_mask &= RA_MASK_HT_RATES_1SS;
--	}
--
- 	switch (sta->bandwidth) {
- 	case IEEE80211_STA_RX_BW_80:
- 		bw_mode = RTW_CHANNEL_WIDTH_80;
+ 		if (link->connector_signal == SIGNAL_TYPE_DISPLAY_PORT &&
+-			sink_caps.transaction_type == DDC_TRANSACTION_TYPE_I2C_OVER_AUX &&
+-			reason != DETECT_REASON_HPDRX) {
++			sink_caps.transaction_type == DDC_TRANSACTION_TYPE_I2C_OVER_AUX) {
+ 			/*
+ 			 * TODO debug why Dell 2413 doesn't like
+ 			 *  two link trainings
 -- 
 2.20.1
 
