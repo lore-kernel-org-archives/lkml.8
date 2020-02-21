@@ -7,48 +7,47 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A98F8C35640
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 07:59:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C4AFBC35640
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 07:59:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7F7B5222C4
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 07:59:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 94B7D24670
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 07:59:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582271972;
-	bh=9QBWaElHKC0zBpOGCtZQxcNbGjkEOVXoSNV7W+soaiU=;
+	s=default; t=1582271974;
+	bh=p1BD/3vga0HznWfeYY31jHKkRLD5Q/e2+NDXdLmUEBA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=zb1a/Vj0WEosOwx1fzQXfB8ePwjYPwmJ8m2B+90AXRCGiFNc9VmJ0C/B65Dto+IEm
-	 s/N15eYNsQkx/6rq55sqRE/IHXE7CW9cAZyXpsF8ouIqB+xpFd2dNp0NZLaxdFMGeS
-	 64llm6k4N9px9P7lZ7W9FUArFh6f6QehoiqQUX30=
+	b=cm+eG0JQk4+IIAnWq9sCecRoDFVFBQJPwzkTUDgE6jWeMGPgSicd5orRVwm+CqbNP
+	 3GfcvYx+MWlPLWikxGARLiftEK3P+/yf0yEZIbsYdcGmstdpNZ+oth/bO4x+aXnzRo
+	 cZtu7KvTeThQPZ1IZWtbm9AgbUbOakj1uJfPUgYU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730922AbgBUH7b (ORCPT
+        id S1730929AbgBUH7d (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Feb 2020 02:59:31 -0500
-Received: from mail.kernel.org ([198.145.29.99]:59480 "EHLO mail.kernel.org"
+        Fri, 21 Feb 2020 02:59:33 -0500
+Received: from mail.kernel.org ([198.145.29.99]:59590 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730911AbgBUH70 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Feb 2020 02:59:26 -0500
+        id S1730921AbgBUH7b (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 21 Feb 2020 02:59:31 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B704B206ED;
-        Fri, 21 Feb 2020 07:59:24 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 64FCF206ED;
+        Fri, 21 Feb 2020 07:59:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1582271965;
-        bh=9QBWaElHKC0zBpOGCtZQxcNbGjkEOVXoSNV7W+soaiU=;
+        s=default; t=1582271970;
+        bh=p1BD/3vga0HznWfeYY31jHKkRLD5Q/e2+NDXdLmUEBA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=F2nVL/pXAou6XBRfxIT8YA8MYqVtQ3Cekj8X7pTnHwPMBi4tDgz4mJW4vBShoQkE/
-         IfWk/eQgxDzAJr3IMmFaibj9c8d8nkYV6Kb4Thi8gxs2m75f4wZQ7lQLD4dgXiqLuY
-         jjlzeHfGro1bw3fQAfPDgOK0clJSoW4LYlEQsqZs=
+        b=wy6LyMxbYqz5spSUZs742/Db0uKVqMgZ68TI55q07joaFI7+1tQlT+RiyejMMW2q9
+         mlY9crVhW9nFhU9Ycud3md9VQf3zMMmMzToxZGFn4g/hxrvqyuKzG0rhNhoTak3Ir2
+         +tmoGEO9wE17FnJTWnunwHtuBBlymItvBpn0dbCo=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Stephen Rothwell <sfr@canb.auug.org.au>,
-        Alexandre Ghiti <alex@ghiti.fr>,
-        Michael Ellerman <mpe@ellerman.id.au>,
+        stable@vger.kernel.org, Tom Zanussi <zanussi@kernel.org>,
+        "Steven Rostedt (VMware)" <rostedt@goodmis.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.5 366/399] powerpc: Do not consider weak unresolved symbol relocations as bad
-Date:   Fri, 21 Feb 2020 08:41:31 +0100
-Message-Id: <20200221072436.184102682@linuxfoundation.org>
+Subject: [PATCH 5.5 368/399] tracing: Fix now invalid var_ref_vals assumption in trace action
+Date:   Fri, 21 Feb 2020 08:41:33 +0100
+Message-Id: <20200221072436.329313560@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200221072402.315346745@linuxfoundation.org>
 References: <20200221072402.315346745@linuxfoundation.org>
@@ -61,103 +60,173 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Alexandre Ghiti <alex@ghiti.fr>
+From: Tom Zanussi <zanussi@kernel.org>
 
-[ Upstream commit 43e76cd368fbb67e767da5363ffeaa3989993c8c ]
+[ Upstream commit d380dcde9a07ca5de4805dee11f58a98ec0ad6ff ]
 
-Commit 8580ac9404f6 ("bpf: Process in-kernel BTF") introduced two weak
-symbols that may be unresolved at link time which result in an absolute
-relocation to 0. relocs_check.sh emits the following warning:
+The patch 'tracing: Fix histogram code when expression has same var as
+value' added code to return an existing variable reference when
+creating a new variable reference, which resulted in var_ref_vals
+slots being reused instead of being duplicated.
 
-"WARNING: 2 bad relocations
-c000000001a41478 R_PPC64_ADDR64    _binary__btf_vmlinux_bin_start
-c000000001a41480 R_PPC64_ADDR64    _binary__btf_vmlinux_bin_end"
+The implementation of the trace action assumes that the end of the
+var_ref_vals array starting at action_data.var_ref_idx corresponds to
+the values that will be assigned to the trace params. The patch
+mentioned above invalidates that assumption, which means that each
+param needs to explicitly specify its index into var_ref_vals.
 
-whereas those relocations are legitimate even for a relocatable kernel
-compiled with -pie option.
+This fix changes action_data.var_ref_idx to an array of var ref
+indexes to account for that.
 
-relocs_check.sh already excluded some weak unresolved symbols explicitly:
-remove those hardcoded symbols and add some logic that parses the symbols
-using nm, retrieves all the weak unresolved symbols and excludes those from
-the list of the potential bad relocations.
+Link: https://lore.kernel.org/r/1580335695.6220.8.camel@kernel.org
 
-Reported-by: Stephen Rothwell <sfr@canb.auug.org.au>
-Signed-off-by: Alexandre Ghiti <alex@ghiti.fr>
-Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
-Link: https://lore.kernel.org/r/20200118170335.21440-1-alex@ghiti.fr
+Fixes: 8bcebc77e85f ("tracing: Fix histogram code when expression has same var as value")
+Signed-off-by: Tom Zanussi <zanussi@kernel.org>
+Signed-off-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/powerpc/Makefile.postlink     |  4 ++--
- arch/powerpc/tools/relocs_check.sh | 20 ++++++++++++--------
- 2 files changed, 14 insertions(+), 10 deletions(-)
+ kernel/trace/trace_events_hist.c | 53 +++++++++++++++++++++++---------
+ 1 file changed, 38 insertions(+), 15 deletions(-)
 
-diff --git a/arch/powerpc/Makefile.postlink b/arch/powerpc/Makefile.postlink
-index 134f12f89b92b..2268396ff4bba 100644
---- a/arch/powerpc/Makefile.postlink
-+++ b/arch/powerpc/Makefile.postlink
-@@ -17,11 +17,11 @@ quiet_cmd_head_check = CHKHEAD $@
- quiet_cmd_relocs_check = CHKREL  $@
- ifdef CONFIG_PPC_BOOK3S_64
-       cmd_relocs_check =						\
--	$(CONFIG_SHELL) $(srctree)/arch/powerpc/tools/relocs_check.sh "$(OBJDUMP)" "$@" ; \
-+	$(CONFIG_SHELL) $(srctree)/arch/powerpc/tools/relocs_check.sh "$(OBJDUMP)" "$(NM)" "$@" ; \
- 	$(BASH) $(srctree)/arch/powerpc/tools/unrel_branch_check.sh "$(OBJDUMP)" "$@"
- else
-       cmd_relocs_check =						\
--	$(CONFIG_SHELL) $(srctree)/arch/powerpc/tools/relocs_check.sh "$(OBJDUMP)" "$@"
-+	$(CONFIG_SHELL) $(srctree)/arch/powerpc/tools/relocs_check.sh "$(OBJDUMP)" "$(NM)" "$@"
- endif
+diff --git a/kernel/trace/trace_events_hist.c b/kernel/trace/trace_events_hist.c
+index 48f9075e4fa18..e10585ef00e15 100644
+--- a/kernel/trace/trace_events_hist.c
++++ b/kernel/trace/trace_events_hist.c
+@@ -470,11 +470,12 @@ struct action_data {
+ 	 * When a histogram trigger is hit, the values of any
+ 	 * references to variables, including variables being passed
+ 	 * as parameters to synthetic events, are collected into a
+-	 * var_ref_vals array.  This var_ref_idx is the index of the
+-	 * first param in the array to be passed to the synthetic
+-	 * event invocation.
++	 * var_ref_vals array.  This var_ref_idx array is an array of
++	 * indices into the var_ref_vals array, one for each synthetic
++	 * event param, and is passed to the synthetic event
++	 * invocation.
+ 	 */
+-	unsigned int		var_ref_idx;
++	unsigned int		var_ref_idx[TRACING_MAP_VARS_MAX];
+ 	struct synth_event	*synth_event;
+ 	bool			use_trace_keyword;
+ 	char			*synth_event_name;
+@@ -875,14 +876,14 @@ static struct trace_event_functions synth_event_funcs = {
  
- # `@true` prevents complaint when there is nothing to be done
-diff --git a/arch/powerpc/tools/relocs_check.sh b/arch/powerpc/tools/relocs_check.sh
-index 7b9fe0a567cf3..014e00e74d2b6 100755
---- a/arch/powerpc/tools/relocs_check.sh
-+++ b/arch/powerpc/tools/relocs_check.sh
-@@ -10,14 +10,21 @@
- # based on relocs_check.pl
- # Copyright © 2009 IBM Corporation
+ static notrace void trace_event_raw_event_synth(void *__data,
+ 						u64 *var_ref_vals,
+-						unsigned int var_ref_idx)
++						unsigned int *var_ref_idx)
+ {
+ 	struct trace_event_file *trace_file = __data;
+ 	struct synth_trace_event *entry;
+ 	struct trace_event_buffer fbuffer;
+ 	struct ring_buffer *buffer;
+ 	struct synth_event *event;
+-	unsigned int i, n_u64;
++	unsigned int i, n_u64, val_idx;
+ 	int fields_size = 0;
  
--if [ $# -lt 2 ]; then
--	echo "$0 [path to objdump] [path to vmlinux]" 1>&2
-+if [ $# -lt 3 ]; then
-+	echo "$0 [path to objdump] [path to nm] [path to vmlinux]" 1>&2
- 	exit 1
- fi
+ 	event = trace_file->event_call->data;
+@@ -905,15 +906,16 @@ static notrace void trace_event_raw_event_synth(void *__data,
+ 		goto out;
  
--# Have Kbuild supply the path to objdump so we handle cross compilation.
-+# Have Kbuild supply the path to objdump and nm so we handle cross compilation.
- objdump="$1"
--vmlinux="$2"
-+nm="$2"
-+vmlinux="$3"
+ 	for (i = 0, n_u64 = 0; i < event->n_fields; i++) {
++		val_idx = var_ref_idx[i];
+ 		if (event->fields[i]->is_string) {
+-			char *str_val = (char *)(long)var_ref_vals[var_ref_idx + i];
++			char *str_val = (char *)(long)var_ref_vals[val_idx];
+ 			char *str_field = (char *)&entry->fields[n_u64];
+ 
+ 			strscpy(str_field, str_val, STR_VAR_LEN_MAX);
+ 			n_u64 += STR_VAR_LEN_MAX / sizeof(u64);
+ 		} else {
+ 			struct synth_field *field = event->fields[i];
+-			u64 val = var_ref_vals[var_ref_idx + i];
++			u64 val = var_ref_vals[val_idx];
+ 
+ 			switch (field->size) {
+ 			case 1:
+@@ -1113,10 +1115,10 @@ static struct tracepoint *alloc_synth_tracepoint(char *name)
+ }
+ 
+ typedef void (*synth_probe_func_t) (void *__data, u64 *var_ref_vals,
+-				    unsigned int var_ref_idx);
++				    unsigned int *var_ref_idx);
+ 
+ static inline void trace_synth(struct synth_event *event, u64 *var_ref_vals,
+-			       unsigned int var_ref_idx)
++			       unsigned int *var_ref_idx)
+ {
+ 	struct tracepoint *tp = event->tp;
+ 
+@@ -2651,6 +2653,22 @@ static int init_var_ref(struct hist_field *ref_field,
+ 	goto out;
+ }
+ 
++static int find_var_ref_idx(struct hist_trigger_data *hist_data,
++			    struct hist_field *var_field)
++{
++	struct hist_field *ref_field;
++	int i;
 +
-+# Remove from the bad relocations those that match an undefined weak symbol
-+# which will result in an absolute relocation to 0.
-+# Weak unresolved symbols are of that form in nm output:
-+# "                  w _binary__btf_vmlinux_bin_end"
-+undef_weak_symbols=$($nm "$vmlinux" | awk '$1 ~ /w/ { print $2 }')
++	for (i = 0; i < hist_data->n_var_refs; i++) {
++		ref_field = hist_data->var_refs[i];
++		if (ref_field->var.idx == var_field->var.idx &&
++		    ref_field->var.hist_data == var_field->hist_data)
++			return i;
++	}
++
++	return -ENOENT;
++}
++
+ /**
+  * create_var_ref - Create a variable reference and attach it to trigger
+  * @hist_data: The trigger that will be referencing the variable
+@@ -4224,11 +4242,11 @@ static int trace_action_create(struct hist_trigger_data *hist_data,
+ 	struct trace_array *tr = hist_data->event_file->tr;
+ 	char *event_name, *param, *system = NULL;
+ 	struct hist_field *hist_field, *var_ref;
+-	unsigned int i, var_ref_idx;
++	unsigned int i;
+ 	unsigned int field_pos = 0;
+ 	struct synth_event *event;
+ 	char *synth_event_name;
+-	int ret = 0;
++	int var_ref_idx, ret = 0;
  
- bad_relocs=$(
- $objdump -R "$vmlinux" |
-@@ -26,8 +33,6 @@ $objdump -R "$vmlinux" |
- 	# These relocations are okay
- 	# On PPC64:
- 	#	R_PPC64_RELATIVE, R_PPC64_NONE
--	#	R_PPC64_ADDR64 mach_<name>
--	#	R_PPC64_ADDR64 __crc_<name>
- 	# On PPC:
- 	#	R_PPC_RELATIVE, R_PPC_ADDR16_HI,
- 	#	R_PPC_ADDR16_HA,R_PPC_ADDR16_LO,
-@@ -39,8 +44,7 @@ R_PPC_ADDR16_HI
- R_PPC_ADDR16_HA
- R_PPC_RELATIVE
- R_PPC_NONE' |
--	grep -E -v '\<R_PPC64_ADDR64[[:space:]]+mach_' |
--	grep -E -v '\<R_PPC64_ADDR64[[:space:]]+__crc_'
-+	([ "$undef_weak_symbols" ] && grep -F -w -v "$undef_weak_symbols" || cat)
- )
+ 	lockdep_assert_held(&event_mutex);
  
- if [ -z "$bad_relocs" ]; then
+@@ -4245,8 +4263,6 @@ static int trace_action_create(struct hist_trigger_data *hist_data,
+ 
+ 	event->ref++;
+ 
+-	var_ref_idx = hist_data->n_var_refs;
+-
+ 	for (i = 0; i < data->n_params; i++) {
+ 		char *p;
+ 
+@@ -4295,6 +4311,14 @@ static int trace_action_create(struct hist_trigger_data *hist_data,
+ 				goto err;
+ 			}
+ 
++			var_ref_idx = find_var_ref_idx(hist_data, var_ref);
++			if (WARN_ON(var_ref_idx < 0)) {
++				ret = var_ref_idx;
++				goto err;
++			}
++
++			data->var_ref_idx[i] = var_ref_idx;
++
+ 			field_pos++;
+ 			kfree(p);
+ 			continue;
+@@ -4313,7 +4337,6 @@ static int trace_action_create(struct hist_trigger_data *hist_data,
+ 	}
+ 
+ 	data->synth_event = event;
+-	data->var_ref_idx = var_ref_idx;
+  out:
+ 	return ret;
+  err:
 -- 
 2.20.1
 
