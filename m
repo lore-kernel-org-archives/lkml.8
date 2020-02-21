@@ -2,107 +2,85 @@ Return-Path: <SRS0=1210=4J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 63AE8C35640
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 08:57:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1EC22C35641
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 09:04:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 42F7C2067D
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 08:57:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F1B48206E2
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 09:04:58 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387777AbgBUI53 (ORCPT
+        id S1727277AbgBUJE4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Feb 2020 03:57:29 -0500
-Received: from mga12.intel.com ([192.55.52.136]:24941 "EHLO mga12.intel.com"
+        Fri, 21 Feb 2020 04:04:56 -0500
+Received: from mx2.suse.de ([195.135.220.15]:36002 "EHLO mx2.suse.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728063AbgBUI52 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Feb 2020 03:57:28 -0500
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga005.jf.intel.com ([10.7.209.41])
-  by fmsmga106.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 21 Feb 2020 00:57:27 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.70,467,1574150400"; 
-   d="scan'208";a="409077690"
-Received: from black.fi.intel.com ([10.237.72.28])
-  by orsmga005.jf.intel.com with ESMTP; 21 Feb 2020 00:57:25 -0800
-Received: by black.fi.intel.com (Postfix, from userid 1003)
-        id 222F194; Fri, 21 Feb 2020 10:57:23 +0200 (EET)
-From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To:     Petr Mladek <pmladek@suse.com>,
+        id S1727025AbgBUJEy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 21 Feb 2020 04:04:54 -0500
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx2.suse.de (Postfix) with ESMTP id 6BB1DAD08;
+        Fri, 21 Feb 2020 09:04:52 +0000 (UTC)
+Date:   Fri, 21 Feb 2020 09:04:48 +0000
+From:   Mel Gorman <mgorman@suse.de>
+To:     Valentin Schneider <valentin.schneider@arm.com>
+Cc:     Vincent Guittot <vincent.guittot@linaro.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Juri Lelli <juri.lelli@redhat.com>,
+        Dietmar Eggemann <dietmar.eggemann@arm.com>,
         Steven Rostedt <rostedt@goodmis.org>,
-        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
-        linux-kernel@vger.kernel.org,
-        Rasmus Villemoes <linux@rasmusvillemoes.dk>
-Cc:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= 
-        <u.kleine-koenig@pengutronix.de>
-Subject: [PATCH v1] lib/vsprintf: update comment about simple_strto<foo>() functions
-Date:   Fri, 21 Feb 2020 10:57:23 +0200
-Message-Id: <20200221085723.42469-1-andriy.shevchenko@linux.intel.com>
-X-Mailer: git-send-email 2.25.0
+        Ben Segall <bsegall@google.com>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        Phil Auld <pauld@redhat.com>, Parth Shah <parth@linux.ibm.com>,
+        Hillf Danton <hdanton@sina.com>
+Subject: Re: [PATCH v3 4/5] sched/pelt: Add a new runnable average signal
+Message-ID: <20200221090448.GQ3420@suse.de>
+References: <20200214152729.6059-5-vincent.guittot@linaro.org>
+ <20200219125513.8953-1-vincent.guittot@linaro.org>
+ <9fe822fc-c311-2b97-ae14-b9269dd99f1e@arm.com>
+ <CAKfTPtD4kz07hikCuU2_cm67ntruopN9CdJEP+fg5L4_N=qEgg@mail.gmail.com>
+ <d9f78b94-2455-e000-82bd-c00cfb9bbc8e@arm.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=iso-8859-15
+Content-Disposition: inline
+In-Reply-To: <d9f78b94-2455-e000-82bd-c00cfb9bbc8e@arm.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The commit 885e68e8b7b1 ("kernel.h: update comment about simple_strto<foo>()
-functions") updated a comment regard to simple_strto<foo>() functions, but
-missed similar change in the vsprintf.c module.
+On Thu, Feb 20, 2020 at 04:11:18PM +0000, Valentin Schneider wrote:
+> On 20/02/2020 14:36, Vincent Guittot wrote:
+> > I agree that setting by default to SCHED_CAPACITY_SCALE is too much
+> > for little core.
+> > The problem for little core can be fixed by using the cpu capacity instead
+> > 
+> 
+> So that's indeed better for big.LITTLE & co. Any reason however for not
+> aligning with the initialization of util_avg ?
+> 
+> With the default MC imbalance_pct (117), it takes 875 utilization to make
+> a single CPU group (with 1024 capacity) overloaded (group_is_overloaded()).
+> For a completely idle CPU, that means forking at least 3 tasks (512 + 256 +
+> 128 util_avg)
+> 
+> With your change, it only takes 2 tasks. I know I'm being nitpicky here, but
+> I feel like those should be aligned, unless we have a proper argument against
+> it - in which case this should also appear in the changelog with so far only
+> mentions issues with util_avg migration, not the fork time initialization.
+> 
 
-Update comments in vsprintf.c as well for simple_strto<foo>() functions.
+So, what is the way forward here? Should this patch be modified now,
+a patch be placed on top or go with what we have for the moment that
+works for symmetric CPUs and deal with the asym case later?
 
-Reported-by: Uwe Kleine-König <u.kleine-koenig@pengutronix.de>
-Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
----
- lib/vsprintf.c | 8 ++++----
- 1 file changed, 4 insertions(+), 4 deletions(-)
+I do not have any asym systems at all so I've no means of checking
+whether there is a problem or not.
 
-diff --git a/lib/vsprintf.c b/lib/vsprintf.c
-index 7c488a1ce318..d5641a217685 100644
---- a/lib/vsprintf.c
-+++ b/lib/vsprintf.c
-@@ -58,7 +58,7 @@
-  * @endp: A pointer to the end of the parsed string will be placed here
-  * @base: The number base to use
-  *
-- * This function is obsolete. Please use kstrtoull instead.
-+ * This function has caveats. Please use kstrtoull instead.
-  */
- unsigned long long simple_strtoull(const char *cp, char **endp, unsigned int base)
- {
-@@ -83,7 +83,7 @@ EXPORT_SYMBOL(simple_strtoull);
-  * @endp: A pointer to the end of the parsed string will be placed here
-  * @base: The number base to use
-  *
-- * This function is obsolete. Please use kstrtoul instead.
-+ * This function has caveats. Please use kstrtoul instead.
-  */
- unsigned long simple_strtoul(const char *cp, char **endp, unsigned int base)
- {
-@@ -97,7 +97,7 @@ EXPORT_SYMBOL(simple_strtoul);
-  * @endp: A pointer to the end of the parsed string will be placed here
-  * @base: The number base to use
-  *
-- * This function is obsolete. Please use kstrtol instead.
-+ * This function has caveats. Please use kstrtol instead.
-  */
- long simple_strtol(const char *cp, char **endp, unsigned int base)
- {
-@@ -114,7 +114,7 @@ EXPORT_SYMBOL(simple_strtol);
-  * @endp: A pointer to the end of the parsed string will be placed here
-  * @base: The number base to use
-  *
-- * This function is obsolete. Please use kstrtoll instead.
-+ * This function has caveats. Please use kstrtoll instead.
-  */
- long long simple_strtoll(const char *cp, char **endp, unsigned int base)
- {
 -- 
-2.25.0
-
+Mel Gorman
+SUSE Labs
