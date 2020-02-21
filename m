@@ -2,53 +2,52 @@ Return-Path: <SRS0=1210=4J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 03558C35641
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 08:02:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EE67AC35641
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 08:02:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CF842206ED
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 08:02:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C1190206ED
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 08:02:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582272139;
-	bh=j5siQxU3CtnwoLv2VJUw/ONOpHa/1/a4tsF38Xsi8AI=;
+	s=default; t=1582272144;
+	bh=9BwBJac7NVNb19LFJDio4pQeE/QC+ki3xzkjll2pn9U=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=FhosfdqOOBRR9brsFG9MLFyKzFWwUH9yAGuLEp32xqXSwnNBaNc24HX/qHaP+3La0
-	 sxdq7vMrQTkcG6TvawZEcjns7ApSiTFt0jJijLcM6a+RjnLeLX26OrK8y9O1JSw9br
-	 OUFJ8uHKS1wBLNqtnL2ijNq8mvyJWRn1zLKwG/j4=
+	b=h1h7hm6nnHNGjb1mdbcIf1g2zf3PRCBugiMrG2AMOswJJk/gkRZgLatCqJIHU18Jd
+	 cBIxAl1pkxWHZs8j0diBH9SHQQxZzlYmu6H2M83O0+7wFNOjtnaomkf7iscc9KcLPO
+	 fYQaTUsNDfVxpvbGjCh1FK43PoRAdLOl6nNws/rM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730949AbgBUICS (ORCPT
+        id S1731348AbgBUICX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Feb 2020 03:02:18 -0500
-Received: from mail.kernel.org ([198.145.29.99]:34676 "EHLO mail.kernel.org"
+        Fri, 21 Feb 2020 03:02:23 -0500
+Received: from mail.kernel.org ([198.145.29.99]:34780 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730723AbgBUICO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Feb 2020 03:02:14 -0500
+        id S1731330AbgBUICU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 21 Feb 2020 03:02:20 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2BBD6206ED;
-        Fri, 21 Feb 2020 08:02:13 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 246BC20801;
+        Fri, 21 Feb 2020 08:02:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1582272133;
-        bh=j5siQxU3CtnwoLv2VJUw/ONOpHa/1/a4tsF38Xsi8AI=;
+        s=default; t=1582272139;
+        bh=9BwBJac7NVNb19LFJDio4pQeE/QC+ki3xzkjll2pn9U=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=zzhk3cGaH+R+IdRGkVhf9eYnFdrCoWoXAP3c9moMJ2UBTnbkAxQpa1a0XZeHmp8vy
-         boM7VEmnXPdQG7MJopsmmeSUYbsYInCMw2uhUC7gh2WFvpqYqe6CCSWyWtNZJxfhRx
-         H0AqsB54Kl+yznOlZcluU68+bitDgPeaT0Oe7HnA=
+        b=O0/99TY1PEAWZPpC5XBqjVXgkmxXXGxTqVQWqi8eK+bmxrLLo9xq14fKfVmtI/Zg1
+         tFgp9zJIaQj1VXDm3h2i6UTiU7WQAL76c0nRq3g6aQ2Kkb9gHsX0vLK/9mS3cetEmg
+         DPa4XrnEc2jcNdtFgIMvhTFnpNvIhYZMnMKbS7og=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Vladimir Oltean <olteanv@gmail.com>,
-        Richard Cochran <richardcochran@gmail.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 028/344] gianfar: Fix TX timestamping with a stacked DSA driver
-Date:   Fri, 21 Feb 2020 08:37:07 +0100
-Message-Id: <20200221072351.723562191@linuxfoundation.org>
+        stable@vger.kernel.org, Per Forlin <perfn@axis.com>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        "David S. Miller" <davem@davemloft.net>
+Subject: [PATCH 5.4 004/344] net: dsa: tag_qca: Make sure there is headroom for tag
+Date:   Fri, 21 Feb 2020 08:36:43 +0100
+Message-Id: <20200221072349.705361409@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200221072349.335551332@linuxfoundation.org>
 References: <20200221072349.335551332@linuxfoundation.org>
@@ -61,89 +60,33 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Vladimir Oltean <olteanv@gmail.com>
+From: Per Forlin <per.forlin@axis.com>
 
-[ Upstream commit c26a2c2ddc0115eb088873f5c309cf46b982f522 ]
+[ Upstream commit 04fb91243a853dbde216d829c79d9632e52aa8d9 ]
 
-The driver wrongly assumes that it is the only entity that can set the
-SKBTX_IN_PROGRESS bit of the current skb. Therefore, in the
-gfar_clean_tx_ring function, where the TX timestamp is collected if
-necessary, the aforementioned bit is used to discriminate whether or not
-the TX timestamp should be delivered to the socket's error queue.
+Passing tag size to skb_cow_head will make sure
+there is enough headroom for the tag data.
+This change does not introduce any overhead in case there
+is already available headroom for tag.
 
-But a stacked driver such as a DSA switch can also set the
-SKBTX_IN_PROGRESS bit, which is actually exactly what it should do in
-order to denote that the hardware timestamping process is undergoing.
-
-Therefore, gianfar would misinterpret the "in progress" bit as being its
-own, and deliver a second skb clone in the socket's error queue,
-completely throwing off a PTP process which is not expecting to receive
-it, _even though_ TX timestamping is not enabled for gianfar.
-
-There have been discussions [0] as to whether non-MAC drivers need or
-not to set SKBTX_IN_PROGRESS at all (whose purpose is to avoid sending 2
-timestamps, a sw and a hw one, to applications which only expect one).
-But as of this patch, there are at least 2 PTP drivers that would break
-in conjunction with gianfar: the sja1105 DSA switch and the felix
-switch, by way of its ocelot core driver.
-
-So regardless of that conclusion, fix the gianfar driver to not do stuff
-based on flags set by others and not intended for it.
-
-[0]: https://www.spinics.net/lists/netdev/msg619699.html
-
-Fixes: f0ee7acfcdd4 ("gianfar: Add hardware TX timestamping support")
-Signed-off-by: Vladimir Oltean <olteanv@gmail.com>
-Acked-by: Richard Cochran <richardcochran@gmail.com>
+Signed-off-by: Per Forlin <perfn@axis.com>
+Reviewed-by: Florian Fainelli <f.fainelli@gmail.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- drivers/net/ethernet/freescale/gianfar.c | 10 +++++++---
- 1 file changed, 7 insertions(+), 3 deletions(-)
+ net/dsa/tag_qca.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/net/ethernet/freescale/gianfar.c b/drivers/net/ethernet/freescale/gianfar.c
-index 51ad86417cb13..2580bcd850253 100644
---- a/drivers/net/ethernet/freescale/gianfar.c
-+++ b/drivers/net/ethernet/freescale/gianfar.c
-@@ -2204,13 +2204,17 @@ static void gfar_clean_tx_ring(struct gfar_priv_tx_q *tx_queue)
- 	skb_dirtytx = tx_queue->skb_dirtytx;
+--- a/net/dsa/tag_qca.c
++++ b/net/dsa/tag_qca.c
+@@ -33,7 +33,7 @@ static struct sk_buff *qca_tag_xmit(stru
+ 	struct dsa_port *dp = dsa_slave_to_port(dev);
+ 	u16 *phdr, hdr;
  
- 	while ((skb = tx_queue->tx_skbuff[skb_dirtytx])) {
-+		bool do_tstamp;
-+
-+		do_tstamp = (skb_shinfo(skb)->tx_flags & SKBTX_HW_TSTAMP) &&
-+			    priv->hwts_tx_en;
+-	if (skb_cow_head(skb, 0) < 0)
++	if (skb_cow_head(skb, QCA_HDR_LEN) < 0)
+ 		return NULL;
  
- 		frags = skb_shinfo(skb)->nr_frags;
- 
- 		/* When time stamping, one additional TxBD must be freed.
- 		 * Also, we need to dma_unmap_single() the TxPAL.
- 		 */
--		if (unlikely(skb_shinfo(skb)->tx_flags & SKBTX_IN_PROGRESS))
-+		if (unlikely(do_tstamp))
- 			nr_txbds = frags + 2;
- 		else
- 			nr_txbds = frags + 1;
-@@ -2224,7 +2228,7 @@ static void gfar_clean_tx_ring(struct gfar_priv_tx_q *tx_queue)
- 		    (lstatus & BD_LENGTH_MASK))
- 			break;
- 
--		if (unlikely(skb_shinfo(skb)->tx_flags & SKBTX_IN_PROGRESS)) {
-+		if (unlikely(do_tstamp)) {
- 			next = next_txbd(bdp, base, tx_ring_size);
- 			buflen = be16_to_cpu(next->length) +
- 				 GMAC_FCB_LEN + GMAC_TXPAL_LEN;
-@@ -2234,7 +2238,7 @@ static void gfar_clean_tx_ring(struct gfar_priv_tx_q *tx_queue)
- 		dma_unmap_single(priv->dev, be32_to_cpu(bdp->bufPtr),
- 				 buflen, DMA_TO_DEVICE);
- 
--		if (unlikely(skb_shinfo(skb)->tx_flags & SKBTX_IN_PROGRESS)) {
-+		if (unlikely(do_tstamp)) {
- 			struct skb_shared_hwtstamps shhwtstamps;
- 			u64 *ns = (u64 *)(((uintptr_t)skb->data + 0x10) &
- 					  ~0x7UL);
--- 
-2.20.1
-
+ 	skb_push(skb, QCA_HDR_LEN);
 
 
