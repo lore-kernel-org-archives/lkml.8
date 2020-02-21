@@ -2,111 +2,209 @@ Return-Path: <SRS0=1210=4J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8E1DEC35666
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 20:47:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E3065C35666
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 20:49:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 64FB1206EF
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 20:47:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A914D206EF
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 20:49:02 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="AuYSHn6m"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="T52oE2jm"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728135AbgBUUrC (ORCPT
+        id S1728144AbgBUUtB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Feb 2020 15:47:02 -0500
-Received: from mail-pf1-f196.google.com ([209.85.210.196]:38228 "EHLO
-        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726747AbgBUUrC (ORCPT
+        Fri, 21 Feb 2020 15:49:01 -0500
+Received: from mail-wm1-f68.google.com ([209.85.128.68]:36184 "EHLO
+        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726878AbgBUUtB (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Feb 2020 15:47:02 -0500
-Received: by mail-pf1-f196.google.com with SMTP id x185so1864910pfc.5;
-        Fri, 21 Feb 2020 12:47:01 -0800 (PST)
+        Fri, 21 Feb 2020 15:49:01 -0500
+Received: by mail-wm1-f68.google.com with SMTP id p17so3277560wma.1
+        for <linux-kernel@vger.kernel.org>; Fri, 21 Feb 2020 12:48:59 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=82wXbaKxRFjsoQQsO8QepB6AihqwY3AEJl7r9u0kpGw=;
-        b=AuYSHn6mP7IaxfUclYudxXEWRdwuTZLXOSYwBCCQUceCrLM5fqU4As4Rt/q+NUsO1k
-         qgDZXU1etfABOXuFfZ6QFrMjNZIUA0BwKT7Ukoi3C4hp5ebskEnKvgKxy9mK+NxdAJZ5
-         cJAcTHggDlceqrWd9Xgkk0uF20RGm2kabLgmR8BAFeS7n3X/kpVcnUbUN3jsdRxrSdm6
-         qKC3N9Au8cXYCltWUYsgFqiieAoLp+rKe8FcRdS29jg/CXXXE21YFl5kJ3/DWk6ULvn+
-         jKjUbbXouX0UMz44Dd2qa1BAqGDDgwCQU4PKPaGaC/e551I4RycTskcwwPXSVb/C4Ko7
-         izCw==
+        d=linaro.org; s=google;
+        h=subject:to:cc:references:from:autocrypt:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=KPj3sOpu0+HOby7nkRmHdqnlPkopY0WG1+4o7adp97Y=;
+        b=T52oE2jmedGz9N+qNizC5i2LTDmtERO4J9SFkUhG/oB6IPuoB18TZ0WVDM5pO3kVLe
+         H09O2/yOdY61/E0lKD67IQg+3g9mN0vfiLXNllxcT6pzRgTlWOMLgOk4QKYz6D2xm5Qt
+         0toN2Q9JTqmXJ4ktDxhG64r3ZDDy26JWGHYzcIWF+2XWr0Sj0MGCbPdm6+Zn5GNk1m2a
+         +9TOrr3uGQyvIgGHjUJBVH+LHTH3W9Xo7da1+omqvbYAdqQAp3Cm9gt4tMtqgW6zqi8n
+         pHuoK08yr6diDOxVcv3v7nN8umlvi4+02rAeRqVbs7GxlEuC/25H3VGsFt3f72xPrBfF
+         wKbQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
-         :references:mime-version:content-disposition:in-reply-to:user-agent;
-        bh=82wXbaKxRFjsoQQsO8QepB6AihqwY3AEJl7r9u0kpGw=;
-        b=BCMKznhacKOk/+zEy66Ct419A0nli0XDpJb030g7FQ8nu61JK/2gexXwdXG3SfjET9
-         OCUAbeQNyKwK+Zn1S1MT6EoMMii+9QReYBs2xoSIVUAHt4g/x1boPfmZSY2HvAJsX/Xn
-         34trs9Rpt9lT226WiAJDxqA8JuK9b+efgapqJNbWU7cnZ7ljq/QmJvKAGc1x+cmLGKdo
-         5pvwQj+qWXvxKW13a9b+dYF1EsdY8emDHmemdak8jA3ZvbiAN5NCGIMKFesI+bg0YENb
-         Bg3TwNRN28CgjVL7AQ/72u9CDerXZycWxZCq8NgrkSUxIbJ1Zc6FfLuizUATLP9bIn35
-         rFRg==
-X-Gm-Message-State: APjAAAVLfcUjav4/4Tts1b+p5KTPMwLt7X7gfduQuPZf3C27BHOXLFgR
-        /mOpwVQBGEmTQs7LqzVwSY4=
-X-Google-Smtp-Source: APXvYqwAbHoXgv/y42qNumObTpDSMx/5xWOVAecfBhM/FdD2ExFfWZv09tikVXilfBaCIuSFByMblg==
-X-Received: by 2002:a63:6383:: with SMTP id x125mr37208834pgb.409.1582318021317;
-        Fri, 21 Feb 2020 12:47:01 -0800 (PST)
-Received: from localhost ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
-        by smtp.gmail.com with ESMTPSA id w189sm3770262pfw.157.2020.02.21.12.46.59
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Fri, 21 Feb 2020 12:47:00 -0800 (PST)
-Date:   Fri, 21 Feb 2020 12:46:58 -0800
-From:   Guenter Roeck <linux@roeck-us.net>
-To:     Julius Werner <jwerner@chromium.org>
-Cc:     Xingyu Chen <xingyu.chen@amlogic.com>,
-        Evan Benn <evanbenn@chromium.org>,
-        Rob Herring <robh@kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>, devicetree@vger.kernel.org,
-        "David S. Miller" <davem@davemloft.net>,
-        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
-        Wim Van Sebroeck <wim@linux-watchdog.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        linux-watchdog@vger.kernel.org,
-        Jianxin Pan <jianxin.pan@amlogic.com>,
-        Yonghui Yu <yonghui.yu@amlogic.com>
-Subject: Re: [PATCH 1/2] dt-bindings: watchdog: Add arm,smc-wdt watchdog
- arm,smc-wdt compatible
-Message-ID: <20200221204658.GA6074@roeck-us.net>
-References: <20200214062637.216209-1-evanbenn@chromium.org>
- <20200214172512.1.I02ebc5b8743b1a71e0e15f68ea77e506d4e6f840@changeid>
- <20200219223046.GA16537@bogus>
- <CAODwPW8JspiUtyU4CC95w9rbNRyUF-Aeb9TuPm1PzmP6u=y1EA@mail.gmail.com>
- <20200219232005.GA9737@roeck-us.net>
- <CAKz_xw2hvHL=a4s37dmuCTWDbxefQFR3rfcaNiWYJY4T+jqabA@mail.gmail.com>
- <e42320b8-266f-0b0e-b20b-b72228510e81@amlogic.com>
- <CAODwPW94KX46PzSrf_uuEFPKudXor=26d=g3Qta5veRfxmMDUA@mail.gmail.com>
+        h=x-gm-message-state:subject:to:cc:references:from:autocrypt
+         :message-id:date:user-agent:mime-version:in-reply-to
+         :content-language:content-transfer-encoding;
+        bh=KPj3sOpu0+HOby7nkRmHdqnlPkopY0WG1+4o7adp97Y=;
+        b=ka7Z6xVBgyGdBdeQo+vc4ZzTna7f3VpbO/IOYlVHam1sPNYuVAE1JPAw7d0m/S4uwh
+         lqWnY+RGiDc5A7p2rMIafxpc4p+KFqZVX/GHSkKeglsO3RNwVMdEPsOwfpQr+pSuhjze
+         LYToRjvYp/MP09SJDIb7NxOWm/Y9tF0RVBpn1tkLmEs0UpviccQXvfPwEuaraOu+L6ff
+         kVn9vRT/0pGI67VrTqGj20Mw+b4cfgvtp41U9fBrQXjKPoTzXx663yE8UcuX7iiDzBpL
+         GwjMjz2ElIRKpcd6cUXzx2xvV21xBW3vltk9o2p28sjPGVnRoCIyc3I4RuKaserSd+Sw
+         dX5Q==
+X-Gm-Message-State: APjAAAXahfY+o+Wo3lTQkOeqydVY/hrkjqYC7geXReyc6RrKneOMRcCC
+        6bGBavlx0ADFuTwL2GRXvA9hvRwOt9w=
+X-Google-Smtp-Source: APXvYqwLEaYR+b3gSSws6RL6g0By5122418sCJ+S1+SZ0Yats1cK0ECqQTcl1gxvyFjpeS3iHjXMPw==
+X-Received: by 2002:a1c:a9c7:: with SMTP id s190mr5369150wme.97.1582318137938;
+        Fri, 21 Feb 2020 12:48:57 -0800 (PST)
+Received: from ?IPv6:2a01:e34:ed2f:f020:903b:a048:f296:e3ae? ([2a01:e34:ed2f:f020:903b:a048:f296:e3ae])
+        by smtp.googlemail.com with ESMTPSA id c9sm5522721wrq.44.2020.02.21.12.48.56
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 21 Feb 2020 12:48:57 -0800 (PST)
+Subject: Re: [PATCH v9 09/17] arm: tegra20: cpuidle: Handle case where
+ secondary CPU hangs on entering LP2
+To:     Dmitry Osipenko <digetx@gmail.com>
+Cc:     Thierry Reding <thierry.reding@gmail.com>,
+        Jonathan Hunter <jonathanh@nvidia.com>,
+        Peter De Schrijver <pdeschrijver@nvidia.com>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        =?UTF-8?B?TWljaGHFgiBNaXJvc8WCYXc=?= <mirq-linux@rere.qmqm.pl>,
+        Jasper Korten <jja2000@gmail.com>,
+        David Heidelberg <david@ixit.cz>,
+        Peter Geis <pgwipeout@gmail.com>, linux-pm@vger.kernel.org,
+        linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20200212235134.12638-1-digetx@gmail.com>
+ <20200212235134.12638-10-digetx@gmail.com>
+ <20200221154318.GO10516@linaro.org>
+ <239a2b66-8da8-2e6c-d19d-9ed207ad0a64@gmail.com>
+ <20200221173649.GU10516@linaro.org>
+ <b51f3f6b-8287-5ce8-fcaa-77cbab507618@gmail.com>
+ <f27481cf-ca5e-df47-932b-fcb4713f0d78@linaro.org>
+ <50a8fb7c-f497-2234-c0b0-560aec1c5691@gmail.com>
+From:   Daniel Lezcano <daniel.lezcano@linaro.org>
+Autocrypt: addr=daniel.lezcano@linaro.org; prefer-encrypt=mutual; keydata=
+ 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
+Message-ID: <21e3cc35-cc6b-5452-da93-bdaac43716c5@linaro.org>
+Date:   Fri, 21 Feb 2020 21:48:56 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAODwPW94KX46PzSrf_uuEFPKudXor=26d=g3Qta5veRfxmMDUA@mail.gmail.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+In-Reply-To: <50a8fb7c-f497-2234-c0b0-560aec1c5691@gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Feb 21, 2020 at 11:41:47AM -0800, Julius Werner wrote:
-> > Because the ATF does not define standard wdt index, each vendor defines
-> > its own index.
-> > So I don't think that the current driver[0] can fully cover my usecases.
+On 21/02/2020 21:21, Dmitry Osipenko wrote:
+> 21.02.2020 23:02, Daniel Lezcano пишет:
+
+[ ... ]
+
+>>>>>>> +
+>>>>>>> +		/*
+>>>>>>> +		 * The primary CPU0 core shall wait for the secondaries
+>>>>>>> +		 * shutdown in order to power-off CPU's cluster safely.
+>>>>>>> +		 * The timeout value depends on the current CPU frequency,
+>>>>>>> +		 * it takes about 40-150us  in average and over 1000us in
+>>>>>>> +		 * a worst case scenario.
+>>>>>>> +		 */
+>>>>>>> +		do {
+>>>>>>> +			if (tegra_cpu_rail_off_ready())
+>>>>>>> +				return 0;
+>>>>>>> +
+>>>>>>> +		} while (ktime_before(ktime_get(), timeout));
+>>>>>>
+>>>>>> So this loop will aggresively call tegra_cpu_rail_off_ready() and retry 3
+>>>>>> times. The tegra_cpu_rail_off_ready() function can be called thoushand of times
+>>>>>> here but the function will hang 1.5s :/
+>>>>>>
+>>>>>> I suggest something like:
+>>>>>>
+>>>>>> 	while (retries--i && !tegra_cpu_rail_off_ready()) 
+>>>>>> 		udelay(100);
+>>>>>>
+>>>>>> So <retries> calls to tegra_cpu_rail_off_ready() and 100us x <retries> maximum
+>>>>>> impact.
+>>>>> But udelay() also results into CPU spinning in a busy-loop, and thus,
+>>>>> what's the difference?
+>>>>
+>>>> busy looping instead of register reads with all the hardware things involved behind.
+>>>
+>>> Please notice that this code runs only on an older Cortex-A9/A15, which
+>>> doesn't support WFE for the delaying, and thus, CPU always busy-loops
+>>> inside udelay().
+>>>
+>>> What about if I'll add cpu_relax() to the loop? Do you think it it could
+>>> have any positive effect?
+>>
+>> I think udelay() has a call to cpu_relax().
 > 
-> I think the best way to solve this would be to put the SMC function ID
-> as another field into the device tree, so that multiple vendors could
-> share the same driver even if their firmware interface uses a
-> different SMC. But they still have to implement the same API for that
-> SMC, of course, not sure if the Meson driver is suitable for that (but
-> if it is then I think merging those drivers would be a good idea).
+> Yes, my point is that udelay() doesn't bring much benefit for us here
+> because:
+> 
+> 1. we want to enter into power-gated state as quick as possible and
+> udelay() just adds an unnecessary delay
+> 
+> 2. udelay() spins in a busy-loop until delay is expired, just like we're
+> doing it in this function already
 
-More common would be to have a single driver and multiple compatible
-strings. The driver would then pick the SMC function ID from the compatible
-string. After all, we'd not only need the SMC function ID; parameters
-are also different.
+In this case why not remove ktime_get() and increase the number of retries?
 
-Guenter
+-- 
+ <http://www.linaro.org/> Linaro.org │ Open source software for ARM SoCs
+
+Follow Linaro:  <http://www.facebook.com/pages/Linaro> Facebook |
+<http://twitter.com/#!/linaroorg> Twitter |
+<http://www.linaro.org/linaro-blog/> Blog
+
