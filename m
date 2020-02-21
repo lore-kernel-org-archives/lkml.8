@@ -2,321 +2,138 @@ Return-Path: <SRS0=1210=4J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1DB0BC11D29
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 03:40:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9D2D5C11D24
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 03:42:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D6C9D208C4
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 03:40:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 702B4208C4
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 03:42:18 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nifty.com header.i=@nifty.com header.b="sKSyyk3M"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="NnDOGv1L"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729743AbgBUDke (ORCPT
+        id S1729721AbgBUDmR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Feb 2020 22:40:34 -0500
-Received: from conuserg-09.nifty.com ([210.131.2.76]:61081 "EHLO
-        conuserg-09.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727944AbgBUDke (ORCPT
+        Thu, 20 Feb 2020 22:42:17 -0500
+Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:42246 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1729630AbgBUDmQ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Feb 2020 22:40:34 -0500
-Received: from localhost.localdomain (p14092-ipngnfx01kyoto.kyoto.ocn.ne.jp [153.142.97.92]) (authenticated)
-        by conuserg-09.nifty.com with ESMTP id 01L3cSHA001563;
-        Fri, 21 Feb 2020 12:38:28 +0900
-DKIM-Filter: OpenDKIM Filter v2.10.3 conuserg-09.nifty.com 01L3cSHA001563
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
-        s=dec2015msa; t=1582256309;
-        bh=9fN7Ow7rqVeONqx0lv47MnGX/K8QzO8kQz42Q/AlqEY=;
-        h=From:To:Cc:Subject:Date:From;
-        b=sKSyyk3MdpVI9hgmbZBZCbe8knOjzRwkd1aM5Aq3/pCEL1TZ0qJl4sa8awPcFMNAY
-         OcFY4tgqfqmKSR5mXwGVw5nJvyAlC1Vbf2cs6bAKDLoPc0nM/ghXSxt8LKL31nHPXk
-         lpbmK06RWoeuNYWXUP5LAvJTaxODD9WgnydAlv8tilS8VhULiSHJMspbqGCat2unk9
-         Q3CI4xcLlv36JjuI2SDwvvx8KYzS5hMrCRCVxps2/bZ/tlEGtVgXGWnq3i9YwbwlBy
-         tIJRVz0+OlzL79B2fxIYNriSjWmo32SdG5jgo3eN+p0GCCqSvcCGI1qYVWF31Aw/Sy
-         Cu94nMTizwgYw==
-X-Nifty-SrcIP: [153.142.97.92]
-From:   Masahiro Yamada <yamada.masahiro@socionext.com>
-To:     devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>
-Cc:     Frank Rowand <frowand.list@gmail.com>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        Piotr Sroka <piotrs@cadence.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Ulf Hansson <ulf.hansson@linaro.org>,
-        linux-kernel@vger.kernel.org, linux-mmc@vger.kernel.org
-Subject: [PATCH] dt-bindings: mmc: Convert Cadence SD/SDIO/eMMC controller to json-schema
-Date:   Fri, 21 Feb 2020 12:38:19 +0900
-Message-Id: <20200221033819.2966-1-yamada.masahiro@socionext.com>
-X-Mailer: git-send-email 2.17.1
+        Thu, 20 Feb 2020 22:42:16 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1582256535;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=a9R0CosE6GfsLGrjcvEZLtqtG2P/xZ2EzhZiapF0r40=;
+        b=NnDOGv1LEM4FSXHrp/MzpuMq3pUC8D84cHeMdWO46mFJkCqDGrCNF8P8shSREeXtwyiE3U
+        M7IcB3WKR8RQzLb0C4tLi9CFKjBR6d/6EgMGEnQWgTx6C4luKpsrSLB5e8KgNp+07iRTCJ
+        05F8WRFTXlLJBQF1uKJ8bhKRlLj8Tjo=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-87-StAG8-9rMQ-MWoQGwwCsyQ-1; Thu, 20 Feb 2020 22:42:11 -0500
+X-MC-Unique: StAG8-9rMQ-MWoQGwwCsyQ-1
+Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 6E8ECDBA3;
+        Fri, 21 Feb 2020 03:42:08 +0000 (UTC)
+Received: from [10.72.13.208] (ovpn-13-208.pek2.redhat.com [10.72.13.208])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 71D391001281;
+        Fri, 21 Feb 2020 03:41:59 +0000 (UTC)
+Subject: Re: [PATCH 2/2] virtio: let virtio use DMA API when guest RAM is
+ protected
+To:     David Gibson <david@gibson.dropbear.id.au>,
+        Christoph Hellwig <hch@lst.de>
+Cc:     Halil Pasic <pasic@linux.ibm.com>,
+        "Michael S. Tsirkin" <mst@redhat.com>,
+        Marek Szyprowski <m.szyprowski@samsung.com>,
+        Robin Murphy <robin.murphy@arm.com>,
+        linux-s390@vger.kernel.org,
+        virtualization@lists.linux-foundation.org,
+        linux-kernel@vger.kernel.org, iommu@lists.linux-foundation.org,
+        Christian Borntraeger <borntraeger@de.ibm.com>,
+        Janosch Frank <frankja@linux.ibm.com>,
+        Viktor Mihajlovski <mihajlov@linux.ibm.com>,
+        Cornelia Huck <cohuck@redhat.com>,
+        Ram Pai <linuxram@us.ibm.com>,
+        Thiago Jung Bauermann <bauerman@linux.ibm.com>,
+        "Lendacky, Thomas" <Thomas.Lendacky@amd.com>,
+        Michael Mueller <mimu@linux.ibm.com>
+References: <20200220160606.53156-1-pasic@linux.ibm.com>
+ <20200220160606.53156-3-pasic@linux.ibm.com> <20200220161309.GB12709@lst.de>
+ <20200221025915.GB2298@umbus.fritz.box>
+From:   Jason Wang <jasowang@redhat.com>
+Message-ID: <8194d502-07d8-b798-a2b5-606a8c05b895@redhat.com>
+Date:   Fri, 21 Feb 2020 11:41:57 +0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
+MIME-Version: 1.0
+In-Reply-To: <20200221025915.GB2298@umbus.fritz.box>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Language: en-US
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Convert the Cadence SD/SDIO/eMMC host controller IP (a.k.a. SD4HC)
-binding to DT schema format.
 
-Socionext UniPhier ARM 64-bit SoCs are integrated with this IP.
+On 2020/2/21 =E4=B8=8A=E5=8D=8810:59, David Gibson wrote:
+> On Thu, Feb 20, 2020 at 05:13:09PM +0100, Christoph Hellwig wrote:
+>> On Thu, Feb 20, 2020 at 05:06:06PM +0100, Halil Pasic wrote:
+>>> diff --git a/drivers/virtio/virtio_ring.c b/drivers/virtio/virtio_rin=
+g.c
+>>> index 867c7ebd3f10..fafc8f924955 100644
+>>> --- a/drivers/virtio/virtio_ring.c
+>>> +++ b/drivers/virtio/virtio_ring.c
+>>> @@ -243,6 +243,9 @@ static bool vring_use_dma_api(struct virtio_devic=
+e *vdev)
+>>>   	if (!virtio_has_iommu_quirk(vdev))
+>>>   		return true;
+>>>  =20
+>>> +	if (force_dma_unencrypted(&vdev->dev))
+>>> +		return true;
+>> Hell no.  This is a detail of the platform DMA direct implementation.
+>> Drivers have no business looking at this flag, and virtio finally need=
+s
+>> to be fixed to use the DMA API properly for everything but legacy devi=
+ces.
+> So, this patch definitely isn't right as it stands, but I'm struggling
+> to understand what it is you're saying is the right way.
+>
+> By "legacy devices" I assume you mean pre-virtio-1.0 devices, that
+> lack the F_VERSION_1 feature flag.  Is that right?  Because I don't
+> see how being a legacy device or not relates to use of the DMA API.
+>
+> I *think* what you are suggesting here is that virtio devices that
+> have !F_IOMMU_PLATFORM should have their dma_ops set up so that the
+> DMA API treats IOVA=3D=3DPA, which will satisfy what the device expects=
+.
 
-Cc: Piotr Sroka <piotrs@cadence.com>
-Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
----
 
-I wanted to kept some precious comments, which apply to multiple
-properties.
+Can this work for swiotlb?
 
-I do not think 'description:' is a good fit for this.
-
-I was searching for a way to insert a comment line that does not
-affect the schema.
-
-The $comment did not work. I just use '#', which is YAML comment.
-If there is a better way, please let me know.
+Thanks
 
 
- .../devicetree/bindings/mmc/cdns,sdhci.yaml   | 143 ++++++++++++++++++
- .../devicetree/bindings/mmc/sdhci-cadence.txt |  80 ----------
- 2 files changed, 143 insertions(+), 80 deletions(-)
- create mode 100644 Documentation/devicetree/bindings/mmc/cdns,sdhci.yaml
- delete mode 100644 Documentation/devicetree/bindings/mmc/sdhci-cadence.txt
-
-diff --git a/Documentation/devicetree/bindings/mmc/cdns,sdhci.yaml b/Documentation/devicetree/bindings/mmc/cdns,sdhci.yaml
-new file mode 100644
-index 000000000000..caf765721eb2
---- /dev/null
-+++ b/Documentation/devicetree/bindings/mmc/cdns,sdhci.yaml
-@@ -0,0 +1,143 @@
-+# SPDX-License-Identifier: GPL-2.0-only OR BSD-2-Clause
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/mmc/cdns,sdhci.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title: Cadence SD/SDIO/eMMC Host Controller (SD4HC)
-+
-+maintainers:
-+  - Masahiro Yamada <yamada.masahiro@socionext.com>
-+  - Piotr Sroka <piotrs@cadence.com>
-+
-+allOf:
-+  - $ref: mmc-controller.yaml
-+
-+properties:
-+  compatible:
-+    items:
-+      - enum:
-+         - socionext,uniphier-sd4hc
-+      - const: cdns,sd4hc
-+
-+  reg:
-+    maxItems: 1
-+
-+  interrupts:
-+    maxItems: 1
-+
-+  clocks:
-+    maxItems: 1
-+
-+  # PHY DLL input delays:
-+  # They are used to delay the data valid window, and align the window to
-+  # sampling clock. The delay starts from 5ns (for delay parameter equal to 0)
-+  # and it is increased by 2.5ns in each step.
-+
-+  cdns,phy-input-delay-sd-highspeed:
-+    description: Value of the delay in the input path for SD high-speed timing
-+    allOf:
-+      - $ref: "/schemas/types.yaml#/definitions/uint32"
-+      - minimum: 0
-+      - maximum: 0x1f
-+
-+  cdns,phy-input-delay-legacy:
-+    description: Value of the delay in the input path for legacy timing
-+    allOf:
-+      - $ref: "/schemas/types.yaml#/definitions/uint32"
-+      - minimum: 0
-+      - maximum: 0x1f
-+
-+  cdns,phy-input-delay-sd-uhs-sdr12:
-+    description: Value of the delay in the input path for SD UHS SDR12 timing
-+    allOf:
-+      - $ref: "/schemas/types.yaml#/definitions/uint32"
-+      - minimum: 0
-+      - maximum: 0x1f
-+
-+  cdns,phy-input-delay-sd-uhs-sdr25:
-+    description: Value of the delay in the input path for SD UHS SDR25 timing
-+    allOf:
-+      - $ref: "/schemas/types.yaml#/definitions/uint32"
-+      - minimum: 0
-+      - maximum: 0x1f
-+
-+  cdns,phy-input-delay-sd-uhs-sdr50:
-+    description: Value of the delay in the input path for SD UHS SDR50 timing
-+    allOf:
-+      - $ref: "/schemas/types.yaml#/definitions/uint32"
-+      - minimum: 0
-+      - maximum: 0x1f
-+
-+  cdns,phy-input-delay-sd-uhs-ddr50:
-+    description: Value of the delay in the input path for SD UHS DDR50 timing
-+    allOf:
-+      - $ref: "/schemas/types.yaml#/definitions/uint32"
-+      - minimum: 0
-+      - maximum: 0x1f
-+
-+  cdns,phy-input-delay-mmc-highspeed:
-+    description: Value of the delay in the input path for MMC high-speed timing
-+    allOf:
-+      - $ref: "/schemas/types.yaml#/definitions/uint32"
-+      - minimum: 0
-+      - maximum: 0x1f
-+
-+  cdns,phy-input-delay-mmc-ddr:
-+    description: Value of the delay in the input path for eMMC high-speed DDR timing
-+    allOf:
-+      - $ref: "/schemas/types.yaml#/definitions/uint32"
-+      - minimum: 0
-+      - maximum: 0x1f
-+
-+  # PHY DLL clock delays:
-+  # Each delay property represents the fraction of the clock period.
-+  # The approximate delay value will be
-+  # (<delay property value>/128)*sdmclk_clock_period.
-+
-+  cdns,phy-dll-delay-sdclk:
-+    description: |
-+      Value of the delay introduced on the sdclk output for all modes except
-+      HS200, HS400 and HS400_ES.
-+    allOf:
-+      - $ref: "/schemas/types.yaml#/definitions/uint32"
-+      - minimum: 0
-+      - maximum: 0x7f
-+
-+  cdns,phy-dll-delay-sdclk-hsmmc:
-+    description: |
-+      Value of the delay introduced on the sdclk output for HS200, HS400 and
-+      HS400_ES speed modes.
-+    allOf:
-+      - $ref: "/schemas/types.yaml#/definitions/uint32"
-+      - minimum: 0
-+      - maximum: 0x7f
-+
-+  cdns,phy-dll-delay-strobe:
-+    description: |
-+      Value of the delay introduced on the dat_strobe input used in
-+      HS400 / HS400_ES speed modes.
-+    allOf:
-+      - $ref: "/schemas/types.yaml#/definitions/uint32"
-+      - minimum: 0
-+      - maximum: 0x7f
-+
-+required:
-+  - compatible
-+  - reg
-+  - interrupts
-+  - clocks
-+
-+examples:
-+  - |
-+    emmc: sdhci@5a000000 {
-+        compatible = "socionext,uniphier-sd4hc", "cdns,sd4hc";
-+        reg = <0x5a000000 0x400>;
-+        interrupts = <0 78 4>;
-+        clocks = <&clk 4>;
-+        bus-width = <8>;
-+        mmc-ddr-1_8v;
-+        mmc-hs200-1_8v;
-+        mmc-hs400-1_8v;
-+        cdns,phy-dll-delay-sdclk = <0>;
-+    };
-diff --git a/Documentation/devicetree/bindings/mmc/sdhci-cadence.txt b/Documentation/devicetree/bindings/mmc/sdhci-cadence.txt
-deleted file mode 100644
-index fa423c277853..000000000000
---- a/Documentation/devicetree/bindings/mmc/sdhci-cadence.txt
-+++ /dev/null
-@@ -1,80 +0,0 @@
--* Cadence SD/SDIO/eMMC Host Controller
--
--Required properties:
--- compatible: should be one of the following:
--    "cdns,sd4hc"               - default of the IP
--    "socionext,uniphier-sd4hc" - for Socionext UniPhier SoCs
--- reg: offset and length of the register set for the device.
--- interrupts: a single interrupt specifier.
--- clocks: phandle to the input clock.
--
--Optional properties:
--For eMMC configuration, supported speed modes are not indicated by the SDHCI
--Capabilities Register.  Instead, the following properties should be specified
--if supported.  See mmc.txt for details.
--- mmc-ddr-1_8v
--- mmc-ddr-1_2v
--- mmc-hs200-1_8v
--- mmc-hs200-1_2v
--- mmc-hs400-1_8v
--- mmc-hs400-1_2v
--
--Some PHY delays can be configured by following properties.
--PHY DLL input delays:
--They are used to delay the data valid window, and align the window
--to sampling clock. The delay starts from 5ns (for delay parameter equal to 0)
--and it is increased by 2.5ns in each step.
--- cdns,phy-input-delay-sd-highspeed:
--  Value of the delay in the input path for SD high-speed timing
--  Valid range = [0:0x1F].
--- cdns,phy-input-delay-legacy:
--  Value of the delay in the input path for legacy timing
--  Valid range = [0:0x1F].
--- cdns,phy-input-delay-sd-uhs-sdr12:
--  Value of the delay in the input path for SD UHS SDR12 timing
--  Valid range = [0:0x1F].
--- cdns,phy-input-delay-sd-uhs-sdr25:
--  Value of the delay in the input path for SD UHS SDR25 timing
--  Valid range = [0:0x1F].
--- cdns,phy-input-delay-sd-uhs-sdr50:
--  Value of the delay in the input path for SD UHS SDR50 timing
--  Valid range = [0:0x1F].
--- cdns,phy-input-delay-sd-uhs-ddr50:
--  Value of the delay in the input path for SD UHS DDR50 timing
--  Valid range = [0:0x1F].
--- cdns,phy-input-delay-mmc-highspeed:
--  Value of the delay in the input path for MMC high-speed timing
--  Valid range = [0:0x1F].
--- cdns,phy-input-delay-mmc-ddr:
--  Value of the delay in the input path for eMMC high-speed DDR timing
--  Valid range = [0:0x1F].
--
--PHY DLL clock delays:
--Each delay property represents the fraction of the clock period.
--The approximate delay value will be
--(<delay property value>/128)*sdmclk_clock_period.
--- cdns,phy-dll-delay-sdclk:
--  Value of the delay introduced on the sdclk output
--  for all modes except HS200, HS400 and HS400_ES.
--  Valid range = [0:0x7F].
--- cdns,phy-dll-delay-sdclk-hsmmc:
--  Value of the delay introduced on the sdclk output
--  for HS200, HS400 and HS400_ES speed modes.
--  Valid range = [0:0x7F].
--- cdns,phy-dll-delay-strobe:
--  Value of the delay introduced on the dat_strobe input
--  used in HS400 / HS400_ES speed modes.
--  Valid range = [0:0x7F].
--
--Example:
--	emmc: sdhci@5a000000 {
--		compatible = "socionext,uniphier-sd4hc", "cdns,sd4hc";
--		reg = <0x5a000000 0x400>;
--		interrupts = <0 78 4>;
--		clocks = <&clk 4>;
--		bus-width = <8>;
--		mmc-ddr-1_8v;
--		mmc-hs200-1_8v;
--		mmc-hs400-1_8v;
--		cdns,phy-dll-delay-sdclk = <0>;
--	};
--- 
-2.17.1
+> Then the virtio driver can use the DMA API the same way for both
+> F_IOMMU_PLATFORM and !F_IOMMU_PLATFORM devices.
+>
+> But if that works for !F_IOMMU_PLATFORM_DEVICES+F_VERSION_1 devices,
+> then AFAICT it will work equally well for legacy devices.
+>
+> Using the DMA API for *everything* in virtio, legacy or not, seems
+> like a reasonable approach to me.  But, AFAICT, that does require the
+> DMA layer to have some kind of explicit call to turn on this
+> behaviour, which the virtio driver would call during initializsation.
+> I don't think we can do it 100% within the DMA layer, because only the
+> driver can reasonably know when a device has this weird non-standard
+> DMA behaviour.
+>
 
