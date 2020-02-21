@@ -6,45 +6,45 @@ X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
 	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 00CD0C35647
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 13:50:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 85043C35646
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 13:50:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CADC4208C4
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 13:50:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4FCCF24650
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 13:50:48 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="O/PpAFrM"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="XpDT/kCM"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728891AbgBUNum (ORCPT
+        id S1728928AbgBUNuq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Feb 2020 08:50:42 -0500
-Received: from merlin.infradead.org ([205.233.59.134]:45540 "EHLO
+        Fri, 21 Feb 2020 08:50:46 -0500
+Received: from merlin.infradead.org ([205.233.59.134]:45614 "EHLO
         merlin.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728841AbgBUNuk (ORCPT
+        with ESMTP id S1728897AbgBUNuo (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Feb 2020 08:50:40 -0500
+        Fri, 21 Feb 2020 08:50:44 -0500
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
         d=infradead.org; s=merlin.20170209; h=Content-Type:MIME-Version:References:
         Subject:Cc:To:From:Date:Message-Id:Sender:Reply-To:Content-Transfer-Encoding:
         Content-ID:Content-Description:In-Reply-To;
-        bh=SKWUMBjFXunYZktv3+PwsTSKyH9hFj1H3mSFlJw71rk=; b=O/PpAFrMCSLa6/ZWKy82GufWPu
-        yg2jaXTm6OaoPCGOw8Pv9uwwWGnn0YapFAWHIPisIplZZaKEPIVe3XuIekUKy9thKTI4mSFt80xfT
-        LdsxNORHiMMOZDNP7l+fGoziLk5kRJZBxXJR/LPLpQiw5u5ok4BF8htn7gKQSJON/2sMV/H7coN6K
-        6uRP+0V82wdNmmyQL8NFrEXmlbFARdfU6G7KT/QMpanZns1UUpwVkHLChXdoxAJlyoCR+fTo+zvW+
-        avDX4fijN0KzQvq7qw/Wtp5EIa3afNRb51Twger/reBbBvkhGv8pxZyGTQ4pre9BuM8uBX8WFmw+x
-        SNWSEHaA==;
+        bh=eg1eQJ//SprCAwF+hza1bycJo6HO/QF3v0sPZ8+K7tU=; b=XpDT/kCMxj9tTvG6igVCsumJHI
+        kyA08iFApmHLjaKPXYi8IwWXUsdZhpE4AOPPJiKNABnjKv+JKnb96v7snGT0WghcwGwOhpVvUYbEx
+        pIsmYdobsP/Z/BMjIFPWzxowqCB8TTJWStci0GA5IyEf+1PopQS5d+cMCaqdZxqru+YOjhJVJGwee
+        uXfWO2g3qv7iGmUuf3ILUCPS4b/69Uo30h4GKYBJ9IU2kf+PJEAsOUiQ0LOivK+vuDzegXHwma0jf
+        HiJ/0aNDdrMkrg3WgRjLRAZ31D6cLcw7P3Bidh80Hm4L4MIquVeVSFdRIoPwfn+825NPn9DuKn+o5
+        pGllJQag==;
 Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
         by merlin.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1j58gw-0006VH-IG; Fri, 21 Feb 2020 13:50:06 +0000
+        id 1j58gx-0006VK-0N; Fri, 21 Feb 2020 13:50:07 +0000
 Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (Client did not present a certificate)
-        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 8906930783F;
+        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id D4106307962;
         Fri, 21 Feb 2020 14:48:08 +0100 (CET)
 Received: by hirez.programming.kicks-ass.net (Postfix, from userid 0)
-        id 3B01829D740B7; Fri, 21 Feb 2020 14:50:01 +0100 (CET)
-Message-Id: <20200221134216.690116768@infradead.org>
+        id BE12329B59041; Fri, 21 Feb 2020 14:50:00 +0100 (CET)
+Message-Id: <20200221134215.443368893@infradead.org>
 User-Agent: quilt/0.65
-Date:   Fri, 21 Feb 2020 14:34:40 +0100
+Date:   Fri, 21 Feb 2020 14:34:23 +0100
 From:   Peter Zijlstra <peterz@infradead.org>
 To:     linux-kernel@vger.kernel.org, linux-arch@vger.kernel.org,
         rostedt@goodmis.org
@@ -54,7 +54,7 @@ Cc:     peterz@infradead.org, mingo@kernel.org, joel@joelfernandes.org,
         mathieu.desnoyers@efficios.com, jiangshanlai@gmail.com,
         luto@kernel.org, tony.luck@intel.com, frederic@kernel.org,
         dan.carpenter@oracle.com, mhiramat@kernel.org
-Subject: [PATCH v4 24/27] x86/int3: Avoid atomic instrumentation
+Subject: [PATCH v4 07/27] rcu: Make RCU IRQ enter/exit functions rely on in_nmi()
 References: <20200221133416.777099322@infradead.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -63,40 +63,150 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Use arch_atomic_*() and READ_ONCE_NOCHECK() to ensure nothing untoward
-creeps in and ruins things.
+From: Paul E. McKenney <paulmck@kernel.org>
 
-That is; this is the INT3 text poke handler, strictly limit the code
-that runs in it, lest we inadvertenly hit yet another INT3.
+The rcu_nmi_enter_common() and rcu_nmi_exit_common() functions take an
+"irq" parameter that indicates whether these functions are invoked from
+an irq handler (irq==true) or an NMI handler (irq==false).  However,
+recent changes have applied notrace to a few critical functions such
+that rcu_nmi_enter_common() and rcu_nmi_exit_common() many now rely
+on in_nmi().  Note that in_nmi() works no differently than before,
+but rather that tracing is now prohibited in code regions where in_nmi()
+would incorrectly report NMI state.
 
-Reported-by: Thomas Gleixner <tglx@linutronix.de>
+This commit therefore removes the "irq" parameter and inlines
+rcu_nmi_enter_common() and rcu_nmi_exit_common() into rcu_nmi_enter()
+and rcu_nmi_exit(), respectively.
+
+Signed-off-by: Paul E. McKenney <paulmck@kernel.org>
 Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
 ---
- arch/x86/kernel/alternative.c |    6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+ kernel/rcu/tree.c |   45 ++++++++++++++-------------------------------
+ 1 file changed, 14 insertions(+), 31 deletions(-)
 
---- a/arch/x86/kernel/alternative.c
-+++ b/arch/x86/kernel/alternative.c
-@@ -960,9 +960,9 @@ static struct bp_patching_desc *bp_desc;
- static __always_inline
- struct bp_patching_desc *try_get_desc(struct bp_patching_desc **descp)
- {
--	struct bp_patching_desc *desc = READ_ONCE(*descp); /* rcu_dereference */
-+	struct bp_patching_desc *desc = READ_ONCE_NOCHECK(*descp); /* rcu_dereference */
+--- a/kernel/rcu/tree.c
++++ b/kernel/rcu/tree.c
+@@ -614,16 +614,18 @@ void rcu_user_enter(void)
+ }
+ #endif /* CONFIG_NO_HZ_FULL */
  
--	if (!desc || !atomic_inc_not_zero(&desc->refs))
-+	if (!desc || !arch_atomic_inc_not_zero(&desc->refs))
- 		return NULL;
- 
- 	return desc;
-@@ -971,7 +971,7 @@ struct bp_patching_desc *try_get_desc(st
- static __always_inline void put_desc(struct bp_patching_desc *desc)
+-/*
++/**
++ * rcu_nmi_exit - inform RCU of exit from NMI context
++ *
+  * If we are returning from the outermost NMI handler that interrupted an
+  * RCU-idle period, update rdp->dynticks and rdp->dynticks_nmi_nesting
+  * to let the RCU grace-period handling know that the CPU is back to
+  * being RCU-idle.
+  *
+- * If you add or remove a call to rcu_nmi_exit_common(), be sure to test
++ * If you add or remove a call to rcu_nmi_exit(), be sure to test
+  * with CONFIG_RCU_EQS_DEBUG=y.
+  */
+-static __always_inline void rcu_nmi_exit_common(bool irq)
++void rcu_nmi_exit(void)
  {
- 	smp_mb__before_atomic();
--	atomic_dec(&desc->refs);
-+	arch_atomic_dec(&desc->refs);
+ 	struct rcu_data *rdp = this_cpu_ptr(&rcu_data);
+ 
+@@ -651,27 +653,16 @@ static __always_inline void rcu_nmi_exit
+ 	trace_rcu_dyntick(TPS("Startirq"), rdp->dynticks_nmi_nesting, 0, atomic_read(&rdp->dynticks));
+ 	WRITE_ONCE(rdp->dynticks_nmi_nesting, 0); /* Avoid store tearing. */
+ 
+-	if (irq)
++	if (!in_nmi())
+ 		rcu_prepare_for_idle();
+ 
+ 	rcu_dynticks_eqs_enter();
+ 
+-	if (irq)
++	if (!in_nmi())
+ 		rcu_dynticks_task_enter();
  }
  
- static __always_inline void *text_poke_addr(struct text_poke_loc *tp)
+ /**
+- * rcu_nmi_exit - inform RCU of exit from NMI context
+- *
+- * If you add or remove a call to rcu_nmi_exit(), be sure to test
+- * with CONFIG_RCU_EQS_DEBUG=y.
+- */
+-void rcu_nmi_exit(void)
+-{
+-	rcu_nmi_exit_common(false);
+-}
+-
+-/**
+  * rcu_irq_exit - inform RCU that current CPU is exiting irq towards idle
+  *
+  * Exit from an interrupt handler, which might possibly result in entering
+@@ -693,7 +684,7 @@ void rcu_nmi_exit(void)
+ void rcu_irq_exit(void)
+ {
+ 	lockdep_assert_irqs_disabled();
+-	rcu_nmi_exit_common(true);
++	rcu_nmi_exit();
+ }
+ 
+ /*
+@@ -777,7 +768,7 @@ void rcu_user_exit(void)
+ #endif /* CONFIG_NO_HZ_FULL */
+ 
+ /**
+- * rcu_nmi_enter_common - inform RCU of entry to NMI context
++ * rcu_nmi_enter - inform RCU of entry to NMI context
+  * @irq: Is this call from rcu_irq_enter?
+  *
+  * If the CPU was idle from RCU's viewpoint, update rdp->dynticks and
+@@ -786,10 +777,10 @@ void rcu_user_exit(void)
+  * long as the nesting level does not overflow an int.  (You will probably
+  * run out of stack space first.)
+  *
+- * If you add or remove a call to rcu_nmi_enter_common(), be sure to test
++ * If you add or remove a call to rcu_nmi_enter(), be sure to test
+  * with CONFIG_RCU_EQS_DEBUG=y.
+  */
+-static __always_inline void rcu_nmi_enter_common(bool irq)
++void rcu_nmi_enter(void)
+ {
+ 	long incby = 2;
+ 	struct rcu_data *rdp = this_cpu_ptr(&rcu_data);
+@@ -807,12 +798,12 @@ static __always_inline void rcu_nmi_ente
+ 	 */
+ 	if (rcu_dynticks_curr_cpu_in_eqs()) {
+ 
+-		if (irq)
++		if (!in_nmi())
+ 			rcu_dynticks_task_exit();
+ 
+ 		rcu_dynticks_eqs_exit();
+ 
+-		if (irq)
++		if (!in_nmi())
+ 			rcu_cleanup_after_idle();
+ 
+ 		incby = 1;
+@@ -834,14 +825,6 @@ static __always_inline void rcu_nmi_ente
+ 		   rdp->dynticks_nmi_nesting + incby);
+ 	barrier();
+ }
+-
+-/**
+- * rcu_nmi_enter - inform RCU of entry to NMI context
+- */
+-void rcu_nmi_enter(void)
+-{
+-	rcu_nmi_enter_common(false);
+-}
+ NOKPROBE_SYMBOL(rcu_nmi_enter);
+ 
+ /**
+@@ -869,7 +852,7 @@ NOKPROBE_SYMBOL(rcu_nmi_enter);
+ void rcu_irq_enter(void)
+ {
+ 	lockdep_assert_irqs_disabled();
+-	rcu_nmi_enter_common(true);
++	rcu_nmi_enter();
+ }
+ 
+ /*
 
 
