@@ -2,194 +2,108 @@ Return-Path: <SRS0=1210=4J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DEF04C35646
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 10:53:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4248BC35647
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 10:58:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B5B2920659
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 10:53:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 16B462073A
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 10:58:15 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="H1wPemHm"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727787AbgBUKxS (ORCPT
+        id S1727352AbgBUK6M (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Feb 2020 05:53:18 -0500
-Received: from metis.ext.pengutronix.de ([85.220.165.71]:45385 "EHLO
-        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726100AbgBUKxS (ORCPT
+        Fri, 21 Feb 2020 05:58:12 -0500
+Received: from bombadil.infradead.org ([198.137.202.133]:42590 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727034AbgBUK6M (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Feb 2020 05:53:18 -0500
-Received: from pty.hi.pengutronix.de ([2001:67c:670:100:1d::c5])
-        by metis.ext.pengutronix.de with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1j55vl-0007RY-NN; Fri, 21 Feb 2020 11:53:13 +0100
-Received: from ukl by pty.hi.pengutronix.de with local (Exim 4.89)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1j55vk-0002Kq-1Q; Fri, 21 Feb 2020 11:53:12 +0100
-Date:   Fri, 21 Feb 2020 11:53:12 +0100
-From:   Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
-        <u.kleine-koenig@pengutronix.de>
-To:     Andy Shevchenko <andy.shevchenko@gmail.com>
-Cc:     Pengutronix Kernel Team <kernel@pengutronix.de>,
-        "open list:SERIAL DRIVERS" <linux-serial@vger.kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Jacek Anaszewski <jacek.anaszewski@gmail.com>,
-        Pavel Machek <pavel@ucw.cz>, Jiri Slaby <jslaby@suse.com>,
-        Linux LED Subsystem <linux-leds@vger.kernel.org>,
-        Dan Murphy <dmurphy@ti.com>
-Subject: Re: [PATCH v6 1/4] lib: new helper kstrtodev_t()
-Message-ID: <20200221105311.qxy3q7sf5owze2na@pengutronix.de>
-References: <20200213091600.554-1-uwe@kleine-koenig.org>
- <20200213091600.554-2-uwe@kleine-koenig.org>
- <CAHp75VcStj5sE3f0uK2deOWC=ojfx-z1fbrh6Lu6jAor9F9PgA@mail.gmail.com>
- <20200220074901.ohcrisjgd26555ya@pengutronix.de>
- <CAHp75VcxXWputX1y90t8f-c0a3dw2CHU6=ebQ+o6e8Z1GymiDw@mail.gmail.com>
- <20200220105718.eoevd3kb63zzrotu@pengutronix.de>
- <CAHp75Vd3KN81qxOWJQ7v=GimSLtVymur_iPsf91pka1STc1nfA@mail.gmail.com>
- <20200220140101.frlxklnv6x3uhzow@pengutronix.de>
- <CAHp75VdD5rJMBqH-YwGKuM5EHUXxeGAon6TfPwq_YxWGzkdrtQ@mail.gmail.com>
+        Fri, 21 Feb 2020 05:58:12 -0500
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
+        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=mN2ry1gqY7iOMcWFX6PDe/yjH041nighn7Vq+N4RRho=; b=H1wPemHmzR69jODR1q5tMyaExP
+        csN9+Fz/Qp/t7ylh5ctVYkQQxo6+Tnrlz0YcL3S2+RiwHRJXxqm6ONIVZrVtVSI5WXolNN8MJFXcZ
+        TeiZne17kmeufh8+/NxgaiJKvUdnrWvZq6VvtmMg1SgCitrRYHo6gaSj3FWXv5oittIu39WYS43/x
+        iWONuayzK5JCgiD640AFTogd6fW1rbCh1CK9JmHJtBx379EDQPvKP7BgfI0qV0+Hg48cUtKxG9otZ
+        8V4I651dB49/+Hwls+Vi12u4lH4ZTsgJ+o5VIIG556die7xcP5ycgaXQs9coEL2SjoJLvPOj9PWaP
+        A+mc8xCQ==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
+        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1j560R-0006OA-9n; Fri, 21 Feb 2020 10:58:03 +0000
+Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (Client did not present a certificate)
+        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id D3B1930008D;
+        Fri, 21 Feb 2020 11:56:07 +0100 (CET)
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id 025BC2014E22A; Fri, 21 Feb 2020 11:58:00 +0100 (CET)
+Date:   Fri, 21 Feb 2020 11:58:00 +0100
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     Feng Tang <feng.tang@intel.com>
+Cc:     kernel test robot <rong.a.chen@intel.com>,
+        Jiri Olsa <jolsa@redhat.com>, Ingo Molnar <mingo@kernel.org>,
+        Vince Weaver <vincent.weaver@maine.edu>,
+        Jiri Olsa <jolsa@kernel.org>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Arnaldo Carvalho de Melo <acme@redhat.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        "Naveen N. Rao" <naveen.n.rao@linux.vnet.ibm.com>,
+        Ravi Bangoria <ravi.bangoria@linux.ibm.com>,
+        Stephane Eranian <eranian@google.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        LKML <linux-kernel@vger.kernel.org>, lkp@lists.01.org,
+        andi.kleen@intel.com, ying.huang@intel.com
+Subject: Re: [LKP] Re: [perf/x86] 81ec3f3c4c: will-it-scale.per_process_ops
+ -5.5% regression
+Message-ID: <20200221105800.GF18400@hirez.programming.kicks-ass.net>
+References: <20200205123216.GO12867@shao2-debian>
+ <20200205125804.GM14879@hirez.programming.kicks-ass.net>
+ <20200221080325.GA67807@shbuild999.sh.intel.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAHp75VdD5rJMBqH-YwGKuM5EHUXxeGAon6TfPwq_YxWGzkdrtQ@mail.gmail.com>
-User-Agent: NeoMutt/20170113 (1.7.2)
-X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c5
-X-SA-Exim-Mail-From: ukl@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
+In-Reply-To: <20200221080325.GA67807@shbuild999.sh.intel.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello Andy,
+On Fri, Feb 21, 2020 at 04:03:25PM +0800, Feng Tang wrote:
 
-On Fri, Feb 21, 2020 at 10:42:29AM +0200, Andy Shevchenko wrote:
-> On Thu, Feb 20, 2020 at 4:01 PM Uwe Kleine-König
-> <u.kleine-koenig@pengutronix.de> wrote:
-> > > > Also I don't understand yet, what you want me to do.
-> > >
-> > > I have issues with kstrto() not playing with simple and single numbers
-> > > (boolean is a special case, but still a number at the end).
-> >
-> > A dev_t is also a number in the end.
+> We checked more on this. We run 14 times test for it, and the
+> results are consistent about the 5.5% degradation, and we
+> run the same test on several other platforms, whose test results
+> are also consistent, though there are no such -5.5% seen.
+
+> So likely, this commit changes the layout of the kernel text
+> and data, which may trigger some cacheline level change. From
+> the system map of the 2 kernels, a big trunk of symbol's address
+> changes which follow the global "pmu",
 > 
-> My point (when I added single) is 1:1 map. dev_t is not.
-
-I don't agree. The mapping is quite similar, the only difference is that
-you cannot write 47:11 in C source code to get an instance of dev_t.
-(But you can write MKDEV(47, 11) which is close but IMHO unsuitable for
-the sysfs interface.)
-
-Other than that it's just that kstrtoul does
-"49283083" -> 10111100000000000000001011 while kstrtodev_t does
-"47:11" -> 10111100000000000000001011.
-
-(nitpick: it's both not 1:1 as "0x2f0000b" maps to the same as "49283083",
-but ...)
-
-> > > In b) case, add to the commit message how many potential _existing_
-> > > users may be converted to this.
-> >
-> > <sarcasm>Will use 9f6158946987a5ce3f16da097d18f240a89db417 as a good
-> > example how to do that.</sarcasm>
+> 5.0-rc6-systemap:
 > 
-> I didn't get it. There are _existing_ users in the kernel for that
-> functionality, At least two are using it right now.
-
-Yeah, this was just me being grumpy about "add to the commit message how
-many potential _existing_ users may be converted". See the output of
-
-	git grep '\<int_pow\>' 9f6158946987a5ce3f16da097d18f240a89db417^
-
-.
-
-> > [...]
-> > I think what is needed here to satisfy us both is a set of functions like:
-> >
-> >         int buftoul(const char *buf, char **endp, unsigned long *result)
-> >
-> > which does proper range checking (by not consuming chars that are too
-> > much) and still provides an endp pointer that allows to make use of this
-> > function to parse types that are represented by more than a plain
-> > integer.
+> ffffffff8221d000 d pmu
+> ffffffff8221d100 d pmc_reserve_mutex
+> ffffffff8221d120 d amd_f15_PMC53
+> ffffffff8221d160 d amd_f15_PMC50
 > 
-> Yeah, https://xkcd.com/927/.
+> 5.0-rc6+pmu-change-systemap:
+> 
+> ffffffff8221d000 d pmu
+> ffffffff8221d120 d pmc_reserve_mutex
+> ffffffff8221d140 d amd_f15_PMC53
+> ffffffff8221d180 d amd_f15_PMC50
+> 
+> But we can hardly identify which exact symbol is responsible
+> for the change, as too many symbols are offseted. 
 
-With the difference that if we introduce a new standard we can
-effectively kill the older ones. And that you now work towards
-undeprecating simple_str* seems to confirm that we don't have the one
-standard to rule them all yet.
+*groan*, that's horrible.
 
-=====
-
-So, I'm trying to summarize the things we agree about and our
-differences to maybe help finding an agreement. Trying to be objective
-until the ==== below.
-
-I think we agree about:
-
- - The dev_t specification provided by a user via sysfs should be parsed
-   in a strict way.
-
- - A helper that takes a string as argument and yields a dev_t or an
-   error is wanted.
-
-The points we don't agree about yet are:
-
- a) naming of the function
-    Uwe: It fits well into kstrto*(), so kstrtodev_t()
-    Andy: It doesn't fit and feels like a layer violation
-
- b) Where to put the function
-    Uwe: Put it into a global place for others to find
-    Andy: Put it near the (for now) single user.
-    (not sure this is really your position here)
-
- c) Helpers used to implement the str-to-dev_t helper
-    Uwe: calling the already existing _parse_integer twice is fine
-    Andy: let's create a helper that parses two integers with a given
-          separator
-
-====
-
-I don't feel very strong about b), and could live with putting it near
-the led trigger until a new user appears. Concerning a) I still think it
-should have a name that should be obvious enough that a potential new
-user finds it. And given that kstrto* already contains functions
-converting strings to a given type this feels right for me. Andy
-didn't suggest a definitive name, only string_* namespace. This is quite
-crowded, the best representatives are probably the ones declared in
-include/linux/string_helpers.h.
-
-I looked a bit around for potential users of str-to-dev_t and
-parse-two-integers. I found none for str-to-dev_t and only
-dname_to_vma_addr() for the parse-two-integers helper. (But for
-parse-two-integers the problem might be that I missed some as I don't
-have a good idea how to grep for these.)
-
-dname_to_vma_addr() takes a string in format "%lx-%lx", interprets the
-numbers as base16 without 0x prefix and leading zeros and doesn't accept
-a trailing \n. Sounds like a quest for someone being really motivated to
-cover both (i.e. dname_to_vma_addr() and str-to-dev_t) in a single
-versatile function.
-
-Another way out would be to not take a dev_t from user-space to
-determine the tty, but a name and use tty_dev_name_to_number() to get
-the dev_t. (Which would add a second user to this globally exported
-function. (The only other user is in staging.) :-)
-
-I don't know how we can find an agreement, maybe we'd need some input
-by someone else? There are quite some people who get this mail, maybe
-someone read 'til here and cares enough to comment?
-
-Best regards
-Uwe
-
--- 
-Pengutronix e.K.                           | Uwe Kleine-König            |
-Industrial Linux Solutions                 | https://www.pengutronix.de/ |
+Thanks for digging into this.
