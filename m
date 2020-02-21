@@ -7,48 +7,47 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3D8DBC35642
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 08:46:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 07376C35640
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 08:47:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 11A2D20722
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 08:46:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D010820722
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 08:47:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582274815;
-	bh=Z+YSjqjpzc7rQw4bo2wzZnOWNDIeIgJkYMzUDWpteo8=;
+	s=default; t=1582274821;
+	bh=Ximt0gbK7xTVxkrTv+3W+qrzUdNxPeqPaVwbPCy6Kys=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=SB130lTkxqwYEdcrdZ0JIn+jYGAT1KJHYypCrWuBGYyceWpyhlAO5aC2r1svJKKPD
-	 52HRuaEYPXw5BSN7VbafnSRY0CU+0euSaBvHvXUeuAMp4HPtDYrC9/ShYuhMErRn0l
-	 AuCQ/Bs3xGZvK2uEvimu8sS4jKvM1exiT0fq8iYs=
+	b=033Dm0YISzrU6km0t6LLHw5X1EWGUPcYdJAVk5T6b2+igFFQk6EVFUsNbYd4gH9+h
+	 NjR9K3T1a3I86gjkb4byv2OnXyFYhkWaDmQwx+S44Miy4p6C0Ofs6MASXfvNkYcS2J
+	 QCPf6ucBMB0s5t3KEJrTvefOE2l9Dh82gZ2zc23w=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732625AbgBUIqx (ORCPT
+        id S1732692AbgBUIrA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Feb 2020 03:46:53 -0500
-Received: from mail.kernel.org ([198.145.29.99]:45878 "EHLO mail.kernel.org"
+        Fri, 21 Feb 2020 03:47:00 -0500
+Received: from mail.kernel.org ([198.145.29.99]:45654 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728198AbgBUHtY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Feb 2020 02:49:24 -0500
+        id S1729237AbgBUHtQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 21 Feb 2020 02:49:16 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E952C208C4;
-        Fri, 21 Feb 2020 07:49:22 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C5396207FD;
+        Fri, 21 Feb 2020 07:49:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1582271363;
-        bh=Z+YSjqjpzc7rQw4bo2wzZnOWNDIeIgJkYMzUDWpteo8=;
+        s=default; t=1582271355;
+        bh=Ximt0gbK7xTVxkrTv+3W+qrzUdNxPeqPaVwbPCy6Kys=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=URqjOFw4Zxweu4dBV8DSv6A+Mi4MOlfcNqNq+NA1X47OFSv+iuOOP+1GBs1HTulx2
-         FKihIWa/L9yp6Gn+5nh/eTWuyNT1vUlK6xyrPYzq4DlAYI5n7bBCHuxb7Bqh2SWvBM
-         49Cc6egFKBgXKMeW7QHMK/BFpGIJc5evX7Qp9zDM=
+        b=InbvHrwTxK2PpgGvd7Zp04bnIIfoVgvcZsLELPYg39QloQy5uQdjnQM6U41QexiU/
+         7dwKk0MdGSAwEr5Dmg+bXkPAipdBqvxG+vs25U6UL/3wTEndsw2+AVYccDVh7qrusB
+         h60elWvaPm/PfwEqjiOEMFgx/3/8o2ZvPq14O8yU=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Daniel Drake <drake@endlessm.com>,
+        stable@vger.kernel.org, Wei Liu <wei.liu@kernel.org>,
         Bjorn Helgaas <bhelgaas@google.com>,
-        Mika Westerberg <mika.westerberg@linux.intel.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.5 137/399] PCI: Increase D3 delay for AMD Ryzen5/7 XHCI controllers
-Date:   Fri, 21 Feb 2020 08:37:42 +0100
-Message-Id: <20200221072415.792531597@linuxfoundation.org>
+Subject: [PATCH 5.5 134/399] PCI: iproc: Apply quirk_paxc_bridge() for module as well as built-in
+Date:   Fri, 21 Feb 2020 08:37:39 +0100
+Message-Id: <20200221072415.487294106@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200221072402.315346745@linuxfoundation.org>
 References: <20200221072402.315346745@linuxfoundation.org>
@@ -61,67 +60,103 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Daniel Drake <drake@endlessm.com>
+From: Wei Liu <wei.liu@kernel.org>
 
-[ Upstream commit 3030df209aa8cf831b9963829bd9f94900ee8032 ]
+[ Upstream commit 574f29036fce385e28617547955dd6911d375025 ]
 
-On Asus UX434DA (AMD Ryzen7 3700U) and Asus X512DK (AMD Ryzen5 3500U), the
-XHCI controller fails to resume from runtime suspend or s2idle, and USB
-becomes unusable from that point.
+Previously quirk_paxc_bridge() was applied when the iproc driver was
+built-in, but not when it was compiled as a module.
 
-  xhci_hcd 0000:03:00.4: Refused to change power state, currently in D3
-  xhci_hcd 0000:03:00.4: enabling device (0000 -> 0002)
-  xhci_hcd 0000:03:00.4: WARN: xHC restore state timeout
-  xhci_hcd 0000:03:00.4: PCI post-resume error -110!
-  xhci_hcd 0000:03:00.4: HC died; cleaning up
+This happened because it was under #ifdef CONFIG_PCIE_IPROC_PLATFORM:
+PCIE_IPROC_PLATFORM=y causes CONFIG_PCIE_IPROC_PLATFORM to be defined, but
+PCIE_IPROC_PLATFORM=m causes CONFIG_PCIE_IPROC_PLATFORM_MODULE to be
+defined.
 
-During suspend, a transition to D3cold is attempted, however the affected
-platforms do not seem to cut the power to the PCI device when in this
-state, so the device stays in D3hot.
+Move quirk_paxc_bridge() to pcie-iproc.c and drop the #ifdef so the quirk
+is always applied, whether iproc is built-in or a module.
 
-Upon resume, the D3hot-to-D0 transition is successful only if the D3 delay
-is increased to 20ms. The transition failure does not appear to be
-detectable as a CRS condition. Add a PCI quirk to increase the delay on the
-affected hardware.
-
-Link: https://bugzilla.kernel.org/show_bug.cgi?id=205587
-Link: http://lkml.kernel.org/r/CAD8Lp47Vh69gQjROYG69=waJgL7hs1PwnLonL9+27S_TcRhixA@mail.gmail.com
-Link: https://lore.kernel.org/r/20191127053836.31624-2-drake@endlessm.com
-Signed-off-by: Daniel Drake <drake@endlessm.com>
+[bhelgaas: commit log, move to pcie-iproc.c, not pcie-iproc-platform.c]
+Link: https://lore.kernel.org/r/20191211174511.89713-1-wei.liu@kernel.org
+Signed-off-by: Wei Liu <wei.liu@kernel.org>
 Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
-Reviewed-by: Mika Westerberg <mika.westerberg@linux.intel.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/pci/quirks.c | 16 ++++++++++++++++
- 1 file changed, 16 insertions(+)
+ drivers/pci/controller/pcie-iproc.c | 24 ++++++++++++++++++++++++
+ drivers/pci/quirks.c                | 26 --------------------------
+ 2 files changed, 24 insertions(+), 26 deletions(-)
 
+diff --git a/drivers/pci/controller/pcie-iproc.c b/drivers/pci/controller/pcie-iproc.c
+index 0a468c73bae38..8c7f875acf7fa 100644
+--- a/drivers/pci/controller/pcie-iproc.c
++++ b/drivers/pci/controller/pcie-iproc.c
+@@ -1588,6 +1588,30 @@ DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_BROADCOM, 0xd802,
+ DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_BROADCOM, 0xd804,
+ 			quirk_paxc_disable_msi_parsing);
+ 
++static void quirk_paxc_bridge(struct pci_dev *pdev)
++{
++	/*
++	 * The PCI config space is shared with the PAXC root port and the first
++	 * Ethernet device.  So, we need to workaround this by telling the PCI
++	 * code that the bridge is not an Ethernet device.
++	 */
++	if (pdev->hdr_type == PCI_HEADER_TYPE_BRIDGE)
++		pdev->class = PCI_CLASS_BRIDGE_PCI << 8;
++
++	/*
++	 * MPSS is not being set properly (as it is currently 0).  This is
++	 * because that area of the PCI config space is hard coded to zero, and
++	 * is not modifiable by firmware.  Set this to 2 (e.g., 512 byte MPS)
++	 * so that the MPS can be set to the real max value.
++	 */
++	pdev->pcie_mpss = 2;
++}
++DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_BROADCOM, 0x16cd, quirk_paxc_bridge);
++DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_BROADCOM, 0x16f0, quirk_paxc_bridge);
++DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_BROADCOM, 0xd750, quirk_paxc_bridge);
++DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_BROADCOM, 0xd802, quirk_paxc_bridge);
++DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_BROADCOM, 0xd804, quirk_paxc_bridge);
++
+ MODULE_AUTHOR("Ray Jui <rjui@broadcom.com>");
+ MODULE_DESCRIPTION("Broadcom iPROC PCIe common driver");
+ MODULE_LICENSE("GPL v2");
 diff --git a/drivers/pci/quirks.c b/drivers/pci/quirks.c
-index 27008edce1a24..c0b7aa4dc0f51 100644
+index fbeb9f73ef280..5cd6a77ddefff 100644
 --- a/drivers/pci/quirks.c
 +++ b/drivers/pci/quirks.c
-@@ -1889,6 +1889,22 @@ static void quirk_radeon_pm(struct pci_dev *dev)
- }
- DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_ATI, 0x6741, quirk_radeon_pm);
+@@ -2381,32 +2381,6 @@ DECLARE_PCI_FIXUP_ENABLE(PCI_VENDOR_ID_BROADCOM,
+ 			 PCI_DEVICE_ID_TIGON3_5719,
+ 			 quirk_brcm_5719_limit_mrrs);
  
-+/*
-+ * Ryzen5/7 XHCI controllers fail upon resume from runtime suspend or s2idle.
-+ * https://bugzilla.kernel.org/show_bug.cgi?id=205587
-+ *
-+ * The kernel attempts to transition these devices to D3cold, but that seems
-+ * to be ineffective on the platforms in question; the PCI device appears to
-+ * remain on in D3hot state. The D3hot-to-D0 transition then requires an
-+ * extended delay in order to succeed.
-+ */
-+static void quirk_ryzen_xhci_d3hot(struct pci_dev *dev)
-+{
-+	quirk_d3hot_delay(dev, 20);
-+}
-+DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_AMD, 0x15e0, quirk_ryzen_xhci_d3hot);
-+DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_AMD, 0x15e1, quirk_ryzen_xhci_d3hot);
-+
- #ifdef CONFIG_X86_IO_APIC
- static int dmi_disable_ioapicreroute(const struct dmi_system_id *d)
- {
+-#ifdef CONFIG_PCIE_IPROC_PLATFORM
+-static void quirk_paxc_bridge(struct pci_dev *pdev)
+-{
+-	/*
+-	 * The PCI config space is shared with the PAXC root port and the first
+-	 * Ethernet device.  So, we need to workaround this by telling the PCI
+-	 * code that the bridge is not an Ethernet device.
+-	 */
+-	if (pdev->hdr_type == PCI_HEADER_TYPE_BRIDGE)
+-		pdev->class = PCI_CLASS_BRIDGE_PCI << 8;
+-
+-	/*
+-	 * MPSS is not being set properly (as it is currently 0).  This is
+-	 * because that area of the PCI config space is hard coded to zero, and
+-	 * is not modifiable by firmware.  Set this to 2 (e.g., 512 byte MPS)
+-	 * so that the MPS can be set to the real max value.
+-	 */
+-	pdev->pcie_mpss = 2;
+-}
+-DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_BROADCOM, 0x16cd, quirk_paxc_bridge);
+-DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_BROADCOM, 0x16f0, quirk_paxc_bridge);
+-DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_BROADCOM, 0xd750, quirk_paxc_bridge);
+-DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_BROADCOM, 0xd802, quirk_paxc_bridge);
+-DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_BROADCOM, 0xd804, quirk_paxc_bridge);
+-#endif
+-
+ /*
+  * Originally in EDAC sources for i82875P: Intel tells BIOS developers to
+  * hide device 6 which configures the overflow device access containing the
 -- 
 2.20.1
 
