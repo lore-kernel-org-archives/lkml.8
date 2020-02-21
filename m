@@ -2,157 +2,113 @@ Return-Path: <SRS0=1210=4J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.3 required=3.0 tests=DKIM_ADSP_CUSTOM_MED,
-	DKIM_INVALID,DKIM_SIGNED,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BB3E4C35657
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 14:32:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ABAF6C35656
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 14:32:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8F1BB24653
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 14:32:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 81D3424650
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 14:32:26 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="RSS8G86A"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="DWp3YZG8"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728991AbgBUOcL (ORCPT
+        id S1727315AbgBUOcZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Feb 2020 09:32:11 -0500
-Received: from mail-wm1-f66.google.com ([209.85.128.66]:38963 "EHLO
-        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727851AbgBUOcK (ORCPT
+        Fri, 21 Feb 2020 09:32:25 -0500
+Received: from mail-vs1-f68.google.com ([209.85.217.68]:33214 "EHLO
+        mail-vs1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728436AbgBUOcZ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Feb 2020 09:32:10 -0500
-Received: by mail-wm1-f66.google.com with SMTP id c84so2123590wme.4;
-        Fri, 21 Feb 2020 06:32:08 -0800 (PST)
+        Fri, 21 Feb 2020 09:32:25 -0500
+Received: by mail-vs1-f68.google.com with SMTP id n27so1338008vsa.0
+        for <linux-kernel@vger.kernel.org>; Fri, 21 Feb 2020 06:32:24 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=kGlgDo9M9XGHB0o0rwRFWRiv//bvSK3bYB5+0sd515M=;
-        b=RSS8G86A2iOHXIt+m5SYMDSTduj+VJhaaT16v/AYbp3oc0PYHHR7O/KhHKrh/yyD2l
-         IMxPtwG09XK/ateKXoQpKTjzLjgUeRYv2uugUkO2njJC2PZvzvTrj2XRXhS+JfA4yRmT
-         D8TjJjSel09swB47hxOgbk7f7cyLPKPEcgYP5lppkhYRQQms71JrWfLUyiqxHpMYNedL
-         ECwH7pYc14kQ6r7Zd2REhZ6eLcmMQ3W7JacPE1zJ/yVRyHJ083mhA6gqhwk6fj2m/itR
-         ZsX7hTdRWwhIzU8U/phcSHdilQsqmrroddIaLwdJij4vAPvWUuOpH6g0sVPjWfELq4UV
-         raww==
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=+T/nTWLVypJORJXCwa4ga2EPqUEuusIhThd5QwEDQx8=;
+        b=DWp3YZG8XfF7W2prVBJFn5HThD5MWoDpKktRNcwWcpCqIKD8lelQAFToMLxIa0olSE
+         vBsASDg+j005oqdt0G1etW5BGqLH3l2UgNQFOsZ4XfNzgkNg5g1bQZznAjREwP4wmsig
+         m8tjoAiLNpMK9CFQzF42YuwT1D93Xk+aGBztwPDfmWPwYuLge7pNAOzhzx3N6v/+tpqu
+         +2LRnCCXR8DrRCRJH6BhBT0zX0Zn4lFjD4EOteoj0lMY7s4fsaAv6dCxHYnfPp9He/kp
+         zwStf447IOANO9O15VrzRk0q+8GIHFppzGinr0DEUgrNxJnj+3VgHax1qA4N13D/vR5j
+         ttTA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=kGlgDo9M9XGHB0o0rwRFWRiv//bvSK3bYB5+0sd515M=;
-        b=rQWhMBW6SqSDYhwq96YOnjr5TOsqwNYnOkxLgNtG4jhTaWd6NV6aWpVWU6QRuiaCeA
-         Klomzk95JqSMPyf8rhY/GZorhn+I/L/O3JbBUmrtADDYp3+geGY/TYo7hzK5BMGog3EI
-         8FFaoHCi04l+U57w02EWmw3BMv+YGx8Uh1X2bqtxMARzVGUoawUYTQ2BffuPgvxGorS6
-         WsShezaPcfzuODJPxvAzfgGqlZTnh1r42ndProotL890oOSSO3Nd6AQLKskwwhaj3QRI
-         vlUjCRD2858ZPJgb0SOqgdSENmxSdnVBbpgwxE+X6/twO+YpzZX3tUv43eDlkprhfOY5
-         VX6Q==
-X-Gm-Message-State: APjAAAWNz3/huEirgK8n2mQCLQEX2ZjnW+NVg7FPAanShALJEPed8uOH
-        OeboqClw+VsPL2tFDpeQOnJ1OqWQKiY=
-X-Google-Smtp-Source: APXvYqz8aEgYoUhbOHE6PpkLL/zuy243O+yjkamkO4hz8v9eZB0TUbtgcfvuxOlmM0MojBai/11wfQ==
-X-Received: by 2002:a05:600c:21c5:: with SMTP id x5mr4381037wmj.72.1582295527411;
-        Fri, 21 Feb 2020 06:32:07 -0800 (PST)
-Received: from Ansuel-XPS.localdomain (93-39-149-95.ip76.fastwebnet.it. [93.39.149.95])
-        by smtp.googlemail.com with ESMTPSA id y185sm4291290wmg.2.2020.02.21.06.32.05
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 21 Feb 2020 06:32:06 -0800 (PST)
-From:   Ansuel Smith <ansuelsmth@gmail.com>
-Cc:     Ansuel Smith <ansuelsmth@gmail.com>,
-        Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Andrew Lunn <andrew@lunn.ch>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        Heiner Kallweit <hkallweit1@gmail.com>,
-        Russell King <linux@armlinux.org.uk>,
-        linux-arm-msm@vger.kernel.org, netdev@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH v5 2/2] Documentation: devictree: Add ipq806x mdio bindings
-Date:   Fri, 21 Feb 2020 15:31:51 +0100
-Message-Id: <20200221143153.21186-2-ansuelsmth@gmail.com>
-X-Mailer: git-send-email 2.25.0
-In-Reply-To: <20200221143153.21186-1-ansuelsmth@gmail.com>
-References: <20200221143153.21186-1-ansuelsmth@gmail.com>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=+T/nTWLVypJORJXCwa4ga2EPqUEuusIhThd5QwEDQx8=;
+        b=c5G8ovqkvt8on4s68FGmE13N33PsFcCWlf2RfiegBhjm9nsQ4lySI8GyoLFxGpb9IE
+         nkEHvoZtnEcWBAbQhtQnSKx0WD/Pj1uX871UV1gktpQIcuH0JS/yqVXcsyBrYN8A1Do7
+         VuAtP6f4ZeSNuJNMGaVandbw+N1IpAxBHG+w0Ym3KcxgLozfsXiD/Eu2pNstN60CclqH
+         znTnqCSMxuDGHtZSR0HU0/texDf0BHkqXy5lql6CAg7W66YX6w2xnIDsWgygVG6POn1H
+         OWy9dCyOKC3wLc8DwDv20GJ5WuurKFbHis9C4hiZ03etOXE0NwfB7vhuCl0M1Q21qrH3
+         6avQ==
+X-Gm-Message-State: APjAAAVMIZNbCVoI6wOdPih+IVqu/Mnt3AAR7Rt2joKJo1+0nHXv9BHW
+        14rxFYQCmMjaONMlwpRY2BSaDHxGYNdmaG/qDfHlsrDa
+X-Google-Smtp-Source: APXvYqwLbEtXvUZZ7ZM9CPw45EAOE34hAzqT0GbPWeSsCuzxil/wD30auUF1dvD2oftm+PT4KM4ou9K4GK6TZgakSws=
+X-Received: by 2002:a67:5e45:: with SMTP id s66mr20602876vsb.200.1582295543699;
+ Fri, 21 Feb 2020 06:32:23 -0800 (PST)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-To:     unlisted-recipients:; (no To-header on input)
+References: <98ce471185f037fce57520763621590588766381.1582161803.git.baolin.wang7@gmail.com>
+In-Reply-To: <98ce471185f037fce57520763621590588766381.1582161803.git.baolin.wang7@gmail.com>
+From:   Ulf Hansson <ulf.hansson@linaro.org>
+Date:   Fri, 21 Feb 2020 15:31:47 +0100
+Message-ID: <CAPDyKFrKe9vRpx6mKze98oM50Ux3JnHa-_2GL3PXdU=c_M1uZg@mail.gmail.com>
+Subject: Re: [PATCH] mmc: host: hsq: Add missing MODULE_LICENSE() and MODULE_DESCRIPTION()
+To:     Baolin Wang <baolin.wang7@gmail.com>
+Cc:     Arnd Bergmann <arnd@arndb.de>,
+        Stephen Rothwell <sfr@canb.auug.org.au>,
+        "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add documentations for ipq806x mdio driver.
+On Thu, 20 Feb 2020 at 02:31, Baolin Wang <baolin.wang7@gmail.com> wrote:
+>
+> Add missing MODULE_LICENSE() and MODULE_DESCRIPTION() in hsq driver to
+> fix below warning when compiling the hsq as a module.
+>
+> "WARNING: modpost: missing MODULE_LICENSE() in drivers/mmc/host/mmc_hsq.o".
+>
+> Fixes: eb1814dd49d5 ("mmc: Add MMC host software queue support")
+> Reported-by: Stephen Rothwell <sfr@canb.auug.org.au>
+> Signed-off-by: Baolin Wang <baolin.wang7@gmail.com>
 
-Signed-off-by: Ansuel Smith <ansuelsmth@gmail.com>
----
- .../bindings/net/qcom,ipq8064-mdio.yaml       | 55 +++++++++++++++++++
- 1 file changed, 55 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/net/qcom,ipq8064-mdio.yaml
+Applied for next, thanks!
 
-diff --git a/Documentation/devicetree/bindings/net/qcom,ipq8064-mdio.yaml b/Documentation/devicetree/bindings/net/qcom,ipq8064-mdio.yaml
-new file mode 100644
-index 000000000000..d2254a5ff2ad
---- /dev/null
-+++ b/Documentation/devicetree/bindings/net/qcom,ipq8064-mdio.yaml
-@@ -0,0 +1,55 @@
-+# SPDX-License-Identifier: GPL-2.0-or-later
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/net/qcom,ipq8064-mdio.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title: Qualcomm ipq806x MDIO bus controller
-+
-+maintainers:
-+  - Ansuel Smith <ansuelsmth@gmail.com>
-+
-+description: |+
-+  The ipq806x soc have a MDIO dedicated controller that is
-+  used to comunicate with the gmac phy conntected.
-+  Child nodes of this MDIO bus controller node are standard
-+  Ethernet PHY device nodes as described in
-+  Documentation/devicetree/bindings/net/phy.txt
-+
-+allOf:
-+  - $ref: "mdio.yaml#"
-+
-+properties:
-+  compatible:
-+    const: qcom,ipq8064-mdio
-+  reg:
-+    maxItems: 1
-+    description: address and length of the register set for the device
-+  clocks:
-+    maxItems: 1
-+    description: A reference to the clock supplying the MDIO bus controller
-+
-+required:
-+  - compatible
-+  - reg
-+  - clocks
-+  - "#address-cells"
-+  - "#size-cells"
-+
-+examples:
-+  - |
-+    mdio0: mdio@37000000 {
-+        #address-cells = <1>;
-+        #size-cells = <0>;
-+
-+        compatible = "qcom,ipq8064-mdio", "syscon";
-+        reg = <0x37000000 0x200000>;
-+        resets = <&gcc GMAC_CORE1_RESET>;
-+        reset-names = "stmmaceth";
-+        clocks = <&gcc GMAC_CORE1_CLK>;
-+
-+        switch@10 {
-+            compatible = "qca,qca8337";
-+            ...
-+        }
-+    };
--- 
-2.25.0
+Kind regards
+Uffe
 
+> ---
+>  drivers/mmc/host/mmc_hsq.c |    4 ++++
+>  1 file changed, 4 insertions(+)
+>
+> diff --git a/drivers/mmc/host/mmc_hsq.c b/drivers/mmc/host/mmc_hsq.c
+> index 2011988..59d2776 100644
+> --- a/drivers/mmc/host/mmc_hsq.c
+> +++ b/drivers/mmc/host/mmc_hsq.c
+> @@ -8,6 +8,7 @@
+>
+>  #include <linux/mmc/card.h>
+>  #include <linux/mmc/host.h>
+> +#include <linux/module.h>
+>
+>  #include "mmc_hsq.h"
+>
+> @@ -341,3 +342,6 @@ int mmc_hsq_resume(struct mmc_host *mmc)
+>         return mmc_hsq_enable(mmc, NULL);
+>  }
+>  EXPORT_SYMBOL_GPL(mmc_hsq_resume);
+> +
+> +MODULE_DESCRIPTION("MMC Host Software Queue support");
+> +MODULE_LICENSE("GPL v2");
+> --
+> 1.7.9.5
+>
