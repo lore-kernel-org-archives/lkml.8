@@ -4,50 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AFCE9C35641
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 08:40:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6C818C35642
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 08:40:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 829442073A
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 08:40:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3671820578
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 08:40:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582274431;
-	bh=SsNL5MnR4n7Jo/4O0AhUOyWnChUJgbvbffrPq0oW3sA=;
+	s=default; t=1582274436;
+	bh=WgQL7+GbhR6kljUvHY2XQ7tGW6A7NHb7v1vA6LNW3yg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=xMsHFdUFUMU67CYGaSv0ldq80efTiS04iRYboxXqjAITh1PqjNi5v1fyf1yEKgb9/
-	 G9Ceuw6uDY6Orfwo2KacGakhIvuWVK4v40egSd3jKOv2HpQUqxdGgpxXO169LhXuB6
-	 ujldMsVgTO1ULIK+Kx2IBbEJUs0Itkcz6FafMxaY=
+	b=kCt3jc2VzNfJYnJadlCUB+uduejnoIIMmoy+z7h0ZNu78Imu7TtAM8ZG6e6DZQnHV
+	 dbbkRpT8E9jR782Cn10SuQ9PR5vUFiihA96FIiCdMLiSzcljkPD/oT2VGSxy37fXTV
+	 QYvNde1I1i5NX0OZrpMC9s1pWjYViCG7oCCFx/Yg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731433AbgBUIka (ORCPT
+        id S1730221AbgBUH6w (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Feb 2020 03:40:30 -0500
-Received: from mail.kernel.org ([198.145.29.99]:59016 "EHLO mail.kernel.org"
+        Fri, 21 Feb 2020 02:58:52 -0500
+Received: from mail.kernel.org ([198.145.29.99]:58722 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730376AbgBUH7C (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Feb 2020 02:59:02 -0500
+        id S1730821AbgBUH6t (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 21 Feb 2020 02:58:49 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0CBF8206ED;
-        Fri, 21 Feb 2020 07:59:00 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D41022073A;
+        Fri, 21 Feb 2020 07:58:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1582271941;
-        bh=SsNL5MnR4n7Jo/4O0AhUOyWnChUJgbvbffrPq0oW3sA=;
+        s=default; t=1582271928;
+        bh=WgQL7+GbhR6kljUvHY2XQ7tGW6A7NHb7v1vA6LNW3yg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=JHlE/Q7mdKhYzwfWyfIsLHAAlGmW6cNehGoIx2m76CnsoB0klhganHtTK8eV1A87r
-         fFjnDVHPUFMeHTuShMnve6XEiv8++IV17GB4LI3ASm+H46aYWAGmpo/Gx1Udd/R5Mt
-         aoq7Qn1IJy6AND+mR4QbuV8a5olgbZgpz+CASiQQ=
+        b=EiriTJ37SQr9y239Kmx7OY/7ipVVHqFZSXC0+84VJ9gTB0F6i0fmDWc0Rf+yKpM7m
+         KjZV4AoMZSxFCWK6eltiXOtu/5OkcuB5SA+dl3pm9rWlSj1mZjd9cfPLFgEyaV8XeA
+         bTEnbbSvpJy6kYQOo48cyTl+6IurR4+7R89t1cLE=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Heiko Carstens <heiko.carstens@de.ibm.com>,
-        Vasily Gorbik <gor@linux.ibm.com>,
+        stable@vger.kernel.org, "Paulo Alcantara (SUSE)" <pc@cjr.nz>,
+        Martijn de Gouw <martijn.de.gouw@prodrive-technologies.com>,
+        Steve French <stfrench@microsoft.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.5 319/399] s390: adjust -mpacked-stack support check for clang 10
-Date:   Fri, 21 Feb 2020 08:40:44 +0100
-Message-Id: <20200221072432.406329018@linuxfoundation.org>
+Subject: [PATCH 5.5 350/399] cifs: Fix mount options set in automount
+Date:   Fri, 21 Feb 2020 08:41:15 +0100
+Message-Id: <20200221072435.111290869@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200221072402.315346745@linuxfoundation.org>
 References: <20200221072402.315346745@linuxfoundation.org>
@@ -60,47 +61,213 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Vasily Gorbik <gor@linux.ibm.com>
+From: Paulo Alcantara (SUSE) <pc@cjr.nz>
 
-[ Upstream commit 253b3c4b2920e07ce9e2b18800b9b65245e2fafa ]
+[ Upstream commit 5739375ee4230980166807d347cc21c305532bbc ]
 
-clang 10 introduces -mpacked-stack compiler option implementation. At the
-same time currently it does not support a combination of -mpacked-stack
-and -mbackchain. This leads to the following build error:
+Starting from 4a367dc04435, we must set the mount options based on the
+DFS full path rather than the resolved target, that is, cifs_mount()
+will be responsible for resolving the DFS link (cached) as well as
+performing failover to any other targets in the referral.
 
-clang: error: unsupported option '-mpacked-stack with -mbackchain' for
-target 's390x-ibm-linux'
-
-If/when clang adds support for a combination of -mpacked-stack and
--mbackchain it would also require -msoft-float (like gcc does). According
-to Ulrich Weigand "stack slot assigned to the kernel backchain overlaps
-the stack slot assigned to the FPR varargs (both are required to be
-placed immediately after the saved r15 slot if present)."
-
-Extend -mpacked-stack compiler option support check to include all 3
-options -mpacked-stack -mbackchain -msoft-float which must present to
-support -mpacked-stack with -mbackchain.
-
-Acked-by: Heiko Carstens <heiko.carstens@de.ibm.com>
-Signed-off-by: Vasily Gorbik <gor@linux.ibm.com>
+Signed-off-by: Paulo Alcantara (SUSE) <pc@cjr.nz>
+Reported-by: Martijn de Gouw <martijn.de.gouw@prodrive-technologies.com>
+Fixes: 4a367dc04435 ("cifs: Add support for failover in cifs_mount()")
+Link: https://lore.kernel.org/linux-cifs/39643d7d-2abb-14d3-ced6-c394fab9a777@prodrive-technologies.com
+Tested-by: Martijn de Gouw <martijn.de.gouw@prodrive-technologies.com>
+Signed-off-by: Steve French <stfrench@microsoft.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/s390/Makefile | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ fs/cifs/cifs_dfs_ref.c | 97 +++++++++++++++++++-----------------------
+ 1 file changed, 43 insertions(+), 54 deletions(-)
 
-diff --git a/arch/s390/Makefile b/arch/s390/Makefile
-index ba8556bb0fb15..e0e3a465bbfd6 100644
---- a/arch/s390/Makefile
-+++ b/arch/s390/Makefile
-@@ -69,7 +69,7 @@ cflags-y += -Wa,-I$(srctree)/arch/$(ARCH)/include
- #
- cflags-$(CONFIG_FRAME_POINTER) += -fno-optimize-sibling-calls
+diff --git a/fs/cifs/cifs_dfs_ref.c b/fs/cifs/cifs_dfs_ref.c
+index 41957b82d7960..606f26d862dc1 100644
+--- a/fs/cifs/cifs_dfs_ref.c
++++ b/fs/cifs/cifs_dfs_ref.c
+@@ -120,17 +120,17 @@ cifs_build_devname(char *nodename, const char *prepath)
  
--ifeq ($(call cc-option-yn,-mpacked-stack),y)
-+ifeq ($(call cc-option-yn,-mpacked-stack -mbackchain -msoft-float),y)
- cflags-$(CONFIG_PACK_STACK)  += -mpacked-stack -D__PACK_STACK
- aflags-$(CONFIG_PACK_STACK)  += -D__PACK_STACK
- endif
+ 
+ /**
+- * cifs_compose_mount_options	-	creates mount options for refferral
++ * cifs_compose_mount_options	-	creates mount options for referral
+  * @sb_mountdata:	parent/root DFS mount options (template)
+  * @fullpath:		full path in UNC format
+- * @ref:		server's referral
++ * @ref:		optional server's referral
+  * @devname:		optional pointer for saving device name
+  *
+  * creates mount options for submount based on template options sb_mountdata
+  * and replacing unc,ip,prefixpath options with ones we've got form ref_unc.
+  *
+  * Returns: pointer to new mount options or ERR_PTR.
+- * Caller is responcible for freeing retunrned value if it is not error.
++ * Caller is responsible for freeing returned value if it is not error.
+  */
+ char *cifs_compose_mount_options(const char *sb_mountdata,
+ 				   const char *fullpath,
+@@ -150,18 +150,27 @@ char *cifs_compose_mount_options(const char *sb_mountdata,
+ 	if (sb_mountdata == NULL)
+ 		return ERR_PTR(-EINVAL);
+ 
+-	if (strlen(fullpath) - ref->path_consumed) {
+-		prepath = fullpath + ref->path_consumed;
+-		/* skip initial delimiter */
+-		if (*prepath == '/' || *prepath == '\\')
+-			prepath++;
+-	}
++	if (ref) {
++		if (strlen(fullpath) - ref->path_consumed) {
++			prepath = fullpath + ref->path_consumed;
++			/* skip initial delimiter */
++			if (*prepath == '/' || *prepath == '\\')
++				prepath++;
++		}
+ 
+-	name = cifs_build_devname(ref->node_name, prepath);
+-	if (IS_ERR(name)) {
+-		rc = PTR_ERR(name);
+-		name = NULL;
+-		goto compose_mount_options_err;
++		name = cifs_build_devname(ref->node_name, prepath);
++		if (IS_ERR(name)) {
++			rc = PTR_ERR(name);
++			name = NULL;
++			goto compose_mount_options_err;
++		}
++	} else {
++		name = cifs_build_devname((char *)fullpath, NULL);
++		if (IS_ERR(name)) {
++			rc = PTR_ERR(name);
++			name = NULL;
++			goto compose_mount_options_err;
++		}
+ 	}
+ 
+ 	rc = dns_resolve_server_name_to_ip(name, &srvIP);
+@@ -225,6 +234,8 @@ char *cifs_compose_mount_options(const char *sb_mountdata,
+ 
+ 	if (devname)
+ 		*devname = name;
++	else
++		kfree(name);
+ 
+ 	/*cifs_dbg(FYI, "%s: parent mountdata: %s\n", __func__, sb_mountdata);*/
+ 	/*cifs_dbg(FYI, "%s: submount mountdata: %s\n", __func__, mountdata );*/
+@@ -241,23 +252,23 @@ compose_mount_options_err:
+ }
+ 
+ /**
+- * cifs_dfs_do_refmount - mounts specified path using provided refferal
++ * cifs_dfs_do_mount - mounts specified path using DFS full path
++ *
++ * Always pass down @fullpath to smb3_do_mount() so we can use the root server
++ * to perform failover in case we failed to connect to the first target in the
++ * referral.
++ *
+  * @cifs_sb:		parent/root superblock
+  * @fullpath:		full path in UNC format
+- * @ref:		server's referral
+  */
+-static struct vfsmount *cifs_dfs_do_refmount(struct dentry *mntpt,
+-		struct cifs_sb_info *cifs_sb,
+-		const char *fullpath, const struct dfs_info3_param *ref)
++static struct vfsmount *cifs_dfs_do_mount(struct dentry *mntpt,
++					  struct cifs_sb_info *cifs_sb,
++					  const char *fullpath)
+ {
+ 	struct vfsmount *mnt;
+ 	char *mountdata;
+ 	char *devname;
+ 
+-	/*
+-	 * Always pass down the DFS full path to smb3_do_mount() so we
+-	 * can use it later for failover.
+-	 */
+ 	devname = kstrndup(fullpath, strlen(fullpath), GFP_KERNEL);
+ 	if (!devname)
+ 		return ERR_PTR(-ENOMEM);
+@@ -266,7 +277,7 @@ static struct vfsmount *cifs_dfs_do_refmount(struct dentry *mntpt,
+ 
+ 	/* strip first '\' from fullpath */
+ 	mountdata = cifs_compose_mount_options(cifs_sb->mountdata,
+-					       fullpath + 1, ref, NULL);
++					       fullpath + 1, NULL, NULL);
+ 	if (IS_ERR(mountdata)) {
+ 		kfree(devname);
+ 		return (struct vfsmount *)mountdata;
+@@ -278,28 +289,16 @@ static struct vfsmount *cifs_dfs_do_refmount(struct dentry *mntpt,
+ 	return mnt;
+ }
+ 
+-static void dump_referral(const struct dfs_info3_param *ref)
+-{
+-	cifs_dbg(FYI, "DFS: ref path: %s\n", ref->path_name);
+-	cifs_dbg(FYI, "DFS: node path: %s\n", ref->node_name);
+-	cifs_dbg(FYI, "DFS: fl: %d, srv_type: %d\n",
+-		 ref->flags, ref->server_type);
+-	cifs_dbg(FYI, "DFS: ref_flags: %d, path_consumed: %d\n",
+-		 ref->ref_flag, ref->path_consumed);
+-}
+-
+ /*
+  * Create a vfsmount that we can automount
+  */
+ static struct vfsmount *cifs_dfs_do_automount(struct dentry *mntpt)
+ {
+-	struct dfs_info3_param referral = {0};
+ 	struct cifs_sb_info *cifs_sb;
+ 	struct cifs_ses *ses;
+ 	struct cifs_tcon *tcon;
+ 	char *full_path, *root_path;
+ 	unsigned int xid;
+-	int len;
+ 	int rc;
+ 	struct vfsmount *mnt;
+ 
+@@ -357,7 +356,7 @@ static struct vfsmount *cifs_dfs_do_automount(struct dentry *mntpt)
+ 	if (!rc) {
+ 		rc = dfs_cache_find(xid, ses, cifs_sb->local_nls,
+ 				    cifs_remap(cifs_sb), full_path + 1,
+-				    &referral, NULL);
++				    NULL, NULL);
+ 	}
+ 
+ 	free_xid(xid);
+@@ -366,26 +365,16 @@ static struct vfsmount *cifs_dfs_do_automount(struct dentry *mntpt)
+ 		mnt = ERR_PTR(rc);
+ 		goto free_root_path;
+ 	}
+-
+-	dump_referral(&referral);
+-
+-	len = strlen(referral.node_name);
+-	if (len < 2) {
+-		cifs_dbg(VFS, "%s: Net Address path too short: %s\n",
+-			 __func__, referral.node_name);
+-		mnt = ERR_PTR(-EINVAL);
+-		goto free_dfs_ref;
+-	}
+ 	/*
+-	 * cifs_mount() will retry every available node server in case
+-	 * of failures.
++	 * OK - we were able to get and cache a referral for @full_path.
++	 *
++	 * Now, pass it down to cifs_mount() and it will retry every available
++	 * node server in case of failures - no need to do it here.
+ 	 */
+-	mnt = cifs_dfs_do_refmount(mntpt, cifs_sb, full_path, &referral);
+-	cifs_dbg(FYI, "%s: cifs_dfs_do_refmount:%s , mnt:%p\n", __func__,
+-		 referral.node_name, mnt);
++	mnt = cifs_dfs_do_mount(mntpt, cifs_sb, full_path);
++	cifs_dbg(FYI, "%s: cifs_dfs_do_mount:%s , mnt:%p\n", __func__,
++		 full_path + 1, mnt);
+ 
+-free_dfs_ref:
+-	free_dfs_info_param(&referral);
+ free_root_path:
+ 	kfree(root_path);
+ free_full_path:
 -- 
 2.20.1
 
