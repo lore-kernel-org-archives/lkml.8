@@ -2,318 +2,127 @@ Return-Path: <SRS0=1210=4J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 46D9CC35641
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 06:08:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0F2FFC35641
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 06:08:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 10EA1208C4
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 06:08:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D88B2208C4
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 06:08:49 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=brainfault-org.20150623.gappssmtp.com header.i=@brainfault-org.20150623.gappssmtp.com header.b="aUcK9oUn"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="bmK1U1D9"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726853AbgBUGIj (ORCPT
+        id S1726989AbgBUGIt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Feb 2020 01:08:39 -0500
-Received: from mail-wr1-f65.google.com ([209.85.221.65]:46889 "EHLO
-        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725800AbgBUGIi (ORCPT
+        Fri, 21 Feb 2020 01:08:49 -0500
+Received: from mail-lf1-f66.google.com ([209.85.167.66]:34584 "EHLO
+        mail-lf1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725800AbgBUGIs (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Feb 2020 01:08:38 -0500
-Received: by mail-wr1-f65.google.com with SMTP id z7so599434wrl.13
-        for <linux-kernel@vger.kernel.org>; Thu, 20 Feb 2020 22:08:35 -0800 (PST)
+        Fri, 21 Feb 2020 01:08:48 -0500
+Received: by mail-lf1-f66.google.com with SMTP id l18so632033lfc.1;
+        Thu, 20 Feb 2020 22:08:47 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=brainfault-org.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=+DwU++sw/f/4B9UKmm6rljMvzT1XBNTBLFmYj+swUEY=;
-        b=aUcK9oUnzDGT60usz5spz3Oz0Mcvchlr9eMvEhnAgtw8EG62aF7dtl5EkgWeilflBX
-         rC7TePMZcJiysCoxGuVco6D4dPQq80fNY27yXiKfJ3fAXQUD0/5RRT+XyFGKPGKPpB1B
-         F52qZXlZ6xTacT/wncc82kXoiiUbMmJDVC1STWOz02cHjhi8MY/lkvF8okMJW8MPZ7Z4
-         1/PpsN9J8IiTZ/Qw2maiUTjex6IKMxUqt9DyCxp1n2MtQGSX9GUhvIaCaOhhtJ9NohId
-         pcJJd2J5B6Mf6z/Jb//NzN8p8exseENhYamH9HCKbht8k+4GTiwgIDByBb6RC0iwO59g
-         1bDw==
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=1vjAsiVJu0Xf8moFlCsGCMAJaKUjfw7ZDgAxe/OTIBI=;
+        b=bmK1U1D9Co0bNdjfb+Z8qyJSGQPOYJ/YlJsmmQjLdyG+mc3GEI8QcnmDPDClvjSrlV
+         qIWAZdaZF9lG5TNbsWT2bUyhgKw03sCn86fEovTL6AO3LS25lrytfgvN1zI8vyn0kOPb
+         F8IDkLuzkoq82LcLcxsx2xVx+xR+cGhfPIfNtErtqS1DAQP3ZPS7bkMiVK/sJ0IdsE3R
+         ZZWOWzcyi73Wrv6dC1C/aJ7D+J/C9dy7sXF2KgZymprTP95BFiXvVGsUUPa5dcf1AhHR
+         Yvo8pvgGZ4VmWvRRHjEtHKND73qL9kig8EMj8GZ6KWa4ra1qyQILj/zoueL3KoKwMuHN
+         EZTg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=+DwU++sw/f/4B9UKmm6rljMvzT1XBNTBLFmYj+swUEY=;
-        b=sZ2H9qA9fk0ZO9g7rkHS6MPROrLtH6PnwxeP+x0XHCaKLmkMTGOFR1GU1dRzugO/Ri
-         NzyWjUWRMZeJrp3KFOyyJ8ipofFKlKCeZMHyTiwcAJC++ddW0vVpBwidKoHm1XCKZkXH
-         xY3+sjqryxO/rIEPEYFdw6K+IsERH6YkDq6gE83djjuMtDojgns8KZGI4N8MqQTdd95i
-         13OF+KmUqqOOoSBCysIjr29Ii7U4AiZdHlyBhcA2atPSZUKRi3DhwPjmxYBVf/KS1sTO
-         elx5HWsLD7Y/2pLgjl3/uMZ9fB96cYoviDiNnuaKqKg/jthqGLG19IKHvaDR3vIGJrhU
-         JKhQ==
-X-Gm-Message-State: APjAAAUXMD7X/opP4WKgb1CId8m9cdHu6LKsiqtF9+xxf8dSnxartqNg
-        gXuM7idWrclcGTJApZr1EL2gmPwCW5zjS2CnUPOgIg==
-X-Google-Smtp-Source: APXvYqwYnrubGCG0L4SdLafq/eZ899kGAxRATDt74gFr2KZrbgTY1qGOQNNE8wFqcb1QlGgfKk0iUBDqRU4XljSJTh0=
-X-Received: by 2002:a5d:5345:: with SMTP id t5mr49673354wrv.0.1582265314802;
- Thu, 20 Feb 2020 22:08:34 -0800 (PST)
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=1vjAsiVJu0Xf8moFlCsGCMAJaKUjfw7ZDgAxe/OTIBI=;
+        b=F7Yp6VjP6rY+A5YXTcCoqs7ZCB10AqxSttEJtpw+z1WgtG3Y9Vu/xJJafpCt8wj66D
+         znGTd2jFhGSV4bhW7aLlUSqGX3TnWLZtelo69gaP0wS+736KKiHkjDGs3K+DshwnTc7e
+         0uGQOcGOJ8tFmy33/jHw1SiC5pkpYHl+KpijskBU0YRBwo1ixLbhqwROEge3bpmQnVh6
+         h0MY6Vn7f3SXmIMj7Wl9kHMLyJKFTYQFdzO8ORbGFKdtEEueWgkxLgQzXKzEdYtIPLqZ
+         IpO5JznVhyO1eIsrdBq3je7HVXxd8gTTuee94GQumCrNvIkhcGQDNFyg7nTqPgiqjhIs
+         OWCg==
+X-Gm-Message-State: APjAAAXaLUXVyBElW4RLg+tTCN9YyhoNoE5uuCnx5ol7m02VvE7p4kkc
+        0nVRgPRaxkJguFVn6jIa6Jg=
+X-Google-Smtp-Source: APXvYqzDj/Q/sNBvdjs+fIyINcfoBTt6Aby1wfLyTGnlgZfFHhDa0HRT97+rsnLll7pN6lDNn26++Q==
+X-Received: by 2002:a19:6509:: with SMTP id z9mr18447794lfb.97.1582265326236;
+        Thu, 20 Feb 2020 22:08:46 -0800 (PST)
+Received: from [192.168.2.145] (79-139-233-37.dynamic.spd-mgts.ru. [79.139.233.37])
+        by smtp.googlemail.com with ESMTPSA id a10sm970539lfr.94.2020.02.20.22.08.44
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 20 Feb 2020 22:08:45 -0800 (PST)
+Subject: Re: [PATCH v3 07/10] ASoC: tegra: add Tegra210 based ADMAIF driver
+To:     Sameer Pujar <spujar@nvidia.com>, perex@perex.cz, tiwai@suse.com,
+        robh+dt@kernel.org
+Cc:     broonie@kernel.org, lgirdwood@gmail.com, thierry.reding@gmail.com,
+        jonathanh@nvidia.com, alsa-devel@alsa-project.org,
+        devicetree@vger.kernel.org, linux-tegra@vger.kernel.org,
+        linux-kernel@vger.kernel.org, sharadg@nvidia.com,
+        mkumard@nvidia.com, viswanathl@nvidia.com, rlokhande@nvidia.com,
+        dramesh@nvidia.com, atalambedu@nvidia.com
+References: <1582180492-25297-1-git-send-email-spujar@nvidia.com>
+ <1582180492-25297-8-git-send-email-spujar@nvidia.com>
+From:   Dmitry Osipenko <digetx@gmail.com>
+Message-ID: <e6114203-57d1-bc74-f786-c2246ccb4341@gmail.com>
+Date:   Fri, 21 Feb 2020 09:08:44 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.3.0
 MIME-Version: 1.0
-References: <20200221004413.12869-1-atish.patra@wdc.com> <20200221004413.12869-11-atish.patra@wdc.com>
-In-Reply-To: <20200221004413.12869-11-atish.patra@wdc.com>
-From:   Anup Patel <anup@brainfault.org>
-Date:   Fri, 21 Feb 2020 11:38:23 +0530
-Message-ID: <CAAhSdy14p3fKueV0wedt+9+9VfdML0O_oTB-zkb=B2M5F3MdHg@mail.gmail.com>
-Subject: Re: [PATCH v9 10/12] RISC-V: Add supported for ordered booting method
- using HSM
-To:     Atish Patra <atish.patra@wdc.com>
-Cc:     "linux-kernel@vger.kernel.org List" <linux-kernel@vger.kernel.org>,
-        Albert Ou <aou@eecs.berkeley.edu>,
-        Borislav Petkov <bp@suse.de>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>,
-        "Eric W. Biederman" <ebiederm@xmission.com>,
-        Geert Uytterhoeven <geert@linux-m68k.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Heiko Carstens <heiko.carstens@de.ibm.com>,
-        Jason Cooper <jason@lakedaemon.net>,
-        Kees Cook <keescook@chromium.org>,
-        linux-riscv <linux-riscv@lists.infradead.org>,
-        Mao Han <han_mao@c-sky.com>, Marc Zyngier <maz@kernel.org>,
-        Mike Rapoport <rppt@linux.ibm.com>,
-        Nick Hu <nickhu@andestech.com>,
-        Palmer Dabbelt <palmer@dabbelt.com>,
-        Paul Walmsley <paul.walmsley@sifive.com>,
-        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Vincent Chen <vincent.chen@sifive.com>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <1582180492-25297-8-git-send-email-spujar@nvidia.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Feb 21, 2020 at 6:14 AM Atish Patra <atish.patra@wdc.com> wrote:
->
-> Currently, all harts have to jump Linux in RISC-V. This complicates the
-> multi-stage boot process as every transient stage also has to ensure all
-> harts enter to that stage and jump to Linux afterwards. It also obstructs
-> a clean Kexec implementation.
->
-> SBI HSM extension provides alternate solutions where only a single hart
-> need to boot and enter Linux. The booting hart can bring up secondary
-> harts one by one afterwards.
->
-> Add SBI HSM based cpu_ops that implements an ordered booting method in
-> RISC-V. This change is also backward compatible with older firmware not
-> implementing HSM extension. If a latest kernel is used with older
-> firmware, it will continue to use the default spinning booting method.
->
-> Signed-off-by: Atish Patra <atish.patra@wdc.com>
+20.02.2020 09:34, Sameer Pujar пишет:
+> ADMAIF is the interface between ADMA and AHUB. Each ADMA channel that
+> sends/receives data to/from AHUB must intreface through an ADMAIF channel.
+> ADMA channel sending data to AHUB pairs with an ADMAIF Tx channel and
+> similarly ADMA channel receiving data from AHUB pairs with an ADMAIF Rx
+> channel. Buffer size is configuranle for each ADMAIF channel, but currently
+> SW uses default values.
+> 
+> This patch registers ADMAIF driver with ASoC framework. The component
+> driver exposes DAPM widgets, routes and kcontrols for the device. The DAI
+> driver exposes ADMAIF interfaces, which can be used to connect different
+> components in the ASoC layer. Makefile and Kconfig support is added to
+> allow to build the driver. The ADMAIF device can be enabled in the DT via
+> "nvidia,tegra210-admaif" compatible binding.
+> 
+> Tegra PCM driver is updated to expose required PCM interfaces and
+> snd_pcm_ops callbacks.
+> 
+> Signed-off-by: Sameer Pujar <spujar@nvidia.com>
 > ---
->  arch/riscv/kernel/Makefile      |  3 ++
->  arch/riscv/kernel/cpu_ops.c     | 10 +++-
->  arch/riscv/kernel/cpu_ops_sbi.c | 81 +++++++++++++++++++++++++++++++++
->  arch/riscv/kernel/head.S        | 26 +++++++++++
->  arch/riscv/kernel/smpboot.c     |  2 +-
->  arch/riscv/kernel/traps.c       |  2 +-
->  6 files changed, 121 insertions(+), 3 deletions(-)
->  create mode 100644 arch/riscv/kernel/cpu_ops_sbi.c
->
-> diff --git a/arch/riscv/kernel/Makefile b/arch/riscv/kernel/Makefile
-> index f81a6ff88005..a0be34b96846 100644
-> --- a/arch/riscv/kernel/Makefile
-> +++ b/arch/riscv/kernel/Makefile
-> @@ -44,5 +44,8 @@ obj-$(CONFIG_PERF_EVENTS)     += perf_event.o
->  obj-$(CONFIG_PERF_EVENTS)      += perf_callchain.o
->  obj-$(CONFIG_HAVE_PERF_REGS)   += perf_regs.o
->  obj-$(CONFIG_RISCV_SBI)                += sbi.o
-> +ifeq ($(CONFIG_RISCV_SBI), y)
-> +obj-$(CONFIG_SMP) += cpu_ops_sbi.o
-> +endif
->
->  clean:
-> diff --git a/arch/riscv/kernel/cpu_ops.c b/arch/riscv/kernel/cpu_ops.c
-> index e950ae5bee9c..afa90f711a2b 100644
-> --- a/arch/riscv/kernel/cpu_ops.c
-> +++ b/arch/riscv/kernel/cpu_ops.c
-> @@ -18,6 +18,7 @@ const struct cpu_operations *cpu_ops[NR_CPUS] __ro_after_init;
->  void *__cpu_up_stack_pointer[NR_CPUS];
->  void *__cpu_up_task_pointer[NR_CPUS];
->
-> +extern const struct cpu_operations cpu_ops_sbi;
->  extern const struct cpu_operations cpu_ops_spinwait;
->
->  void cpu_update_secondary_bootdata(unsigned int cpuid,
-> @@ -34,5 +35,12 @@ void cpu_update_secondary_bootdata(unsigned int cpuid,
->
->  void __init cpu_set_ops(int cpuid)
->  {
-> -       cpu_ops[cpuid] = &cpu_ops_spinwait;
-> +#if IS_ENABLED(CONFIG_RISCV_SBI)
-> +       if (sbi_probe_extension(SBI_EXT_HSM) > 0) {
-> +               if (!cpuid)
-> +                       pr_info("SBI v0.2 HSM extension detected\n");
-> +               cpu_ops[cpuid] = &cpu_ops_sbi;
-> +       } else
-> +#endif
-> +               cpu_ops[cpuid] = &cpu_ops_spinwait;
->  }
-> diff --git a/arch/riscv/kernel/cpu_ops_sbi.c b/arch/riscv/kernel/cpu_ops_sbi.c
-> new file mode 100644
-> index 000000000000..70d02dfe0ab8
-> --- /dev/null
-> +++ b/arch/riscv/kernel/cpu_ops_sbi.c
-> @@ -0,0 +1,81 @@
-> +// SPDX-License-Identifier: GPL-2.0-only
-> +/*
-> + * HSM extension and cpu_ops implementation.
-> + *
-> + * Copyright (c) 2020 Western Digital Corporation or its affiliates.
-> + */
-> +
-> +#include <linux/init.h>
-> +#include <linux/mm.h>
-> +#include <asm/cpu_ops.h>
-> +#include <asm/sbi.h>
-> +#include <asm/smp.h>
-> +
-> +extern char secondary_start_sbi[];
-> +const struct cpu_operations cpu_ops_sbi;
-> +
-> +static int sbi_hsm_hart_start(unsigned long hartid, unsigned long saddr,
-> +                      unsigned long priv)
-> +{
-> +       struct sbiret ret;
-> +
-> +       ret = sbi_ecall(SBI_EXT_HSM, SBI_EXT_HSM_HART_START,
-> +                             hartid, saddr, priv, 0, 0, 0);
-> +       if (ret.error)
-> +               return sbi_err_map_linux_errno(ret.error);
-> +       else
-> +               return 0;
-> +}
-> +
-> +#ifdef CONFIG_HOTPLUG_CPU
-> +static int sbi_hsm_hart_stop(void)
-> +{
-> +       struct sbiret ret;
-> +
-> +       ret = sbi_ecall(SBI_EXT_HSM, SBI_EXT_HSM_HART_STOP, 0, 0, 0, 0, 0, 0);
-> +
-> +       if (ret.error)
-> +               return sbi_err_map_linux_errno(ret.error);
-> +       else
-> +               return 0;
-> +}
-> +
-> +static int sbi_hsm_hart_get_status(unsigned long hartid)
-> +{
-> +       struct sbiret ret;
-> +
-> +       ret = sbi_ecall(SBI_EXT_HSM, SBI_EXT_HSM_HART_STATUS,
-> +                             hartid, 0, 0, 0, 0, 0);
-> +       if (ret.error)
-> +               return sbi_err_map_linux_errno(ret.error);
-> +       else
-> +               return ret.value;
-> +}
-> +#endif
-> +
-> +static int sbi_cpu_start(unsigned int cpuid, struct task_struct *tidle)
-> +{
-> +       int rc;
-> +       unsigned long boot_addr = __pa_symbol(secondary_start_sbi);
-> +       int hartid = cpuid_to_hartid_map(cpuid);
-> +
-> +       cpu_update_secondary_bootdata(cpuid, tidle);
-> +       rc = sbi_hsm_hart_start(hartid, boot_addr, 0);
-> +
-> +       return rc;
-> +}
-> +
-> +static int sbi_cpu_prepare(unsigned int cpuid)
-> +{
-> +       if (!cpu_ops_sbi.cpu_start) {
-> +               pr_err("cpu start method not defined for CPU [%d]\n", cpuid);
-> +               return -ENODEV;
-> +       }
-> +       return 0;
-> +}
-> +
-> +const struct cpu_operations cpu_ops_sbi = {
-> +       .name           = "sbi",
-> +       .cpu_prepare    = sbi_cpu_prepare,
-> +       .cpu_start      = sbi_cpu_start,
-> +};
-> diff --git a/arch/riscv/kernel/head.S b/arch/riscv/kernel/head.S
-> index b85376d84098..ac5b0e0a02f6 100644
-> --- a/arch/riscv/kernel/head.S
-> +++ b/arch/riscv/kernel/head.S
-> @@ -99,11 +99,37 @@ relocate:
->         ret
->  #endif /* CONFIG_MMU */
->  #ifdef CONFIG_SMP
-> +       .global secondary_start_sbi
-> +secondary_start_sbi:
-> +       /* Mask all interrupts */
-> +       csrw CSR_IE, zero
-> +       csrw CSR_IP, zero
-> +
-> +       /* Load the global pointer */
-> +       .option push
-> +       .option norelax
-> +               la gp, __global_pointer$
-> +       .option pop
-> +
-> +       /*
-> +        * Disable FPU to detect illegal usage of
-> +        * floating point in kernel space
-> +        */
-> +       li t0, SR_FS
-> +       csrc CSR_STATUS, t0
-> +
->         /* Set trap vector to spin forever to help debug */
->         la a3, .Lsecondary_park
->         csrw CSR_TVEC, a3
->
->         slli a3, a0, LGREG
-> +       la a4, __cpu_up_stack_pointer
-> +       la a5, __cpu_up_task_pointer
-> +       add a4, a3, a4
-> +       add a5, a3, a5
-> +       REG_L sp, (a4)
-> +       REG_L tp, (a5)
-> +
->         .global secondary_start_common
->  secondary_start_common:
->
-> diff --git a/arch/riscv/kernel/smpboot.c b/arch/riscv/kernel/smpboot.c
-> index e89396a2a1af..4e9922790f6e 100644
-> --- a/arch/riscv/kernel/smpboot.c
-> +++ b/arch/riscv/kernel/smpboot.c
-> @@ -143,7 +143,7 @@ void __init smp_cpus_done(unsigned int max_cpus)
->  /*
->   * C entry point for a secondary processor.
->   */
-> -asmlinkage __visible void __init smp_callin(void)
-> +asmlinkage __visible void smp_callin(void)
->  {
->         struct mm_struct *mm = &init_mm;
->
-> diff --git a/arch/riscv/kernel/traps.c b/arch/riscv/kernel/traps.c
-> index ffb3d94bf0cc..8e13ad45ccaa 100644
-> --- a/arch/riscv/kernel/traps.c
-> +++ b/arch/riscv/kernel/traps.c
-> @@ -147,7 +147,7 @@ int is_valid_bugaddr(unsigned long pc)
->  }
->  #endif /* CONFIG_GENERIC_BUG */
->
-> -void __init trap_init(void)
-> +void trap_init(void)
->  {
->         /*
->          * Set sup0 scratch register to 0, indicating to exception vector
-> --
-> 2.25.0
->
+...
+> +int tegra_pcm_construct(struct snd_soc_component *component,
+> +			struct snd_soc_pcm_runtime *rtd);
+> +void tegra_pcm_destruct(struct snd_soc_component *component,
+> +			struct snd_pcm *pcm);
+> +int tegra_pcm_open(struct snd_soc_component *component,
+> +		   struct snd_pcm_substream *substream);
+> +int tegra_pcm_close(struct snd_soc_component *component,
+> +		    struct snd_pcm_substream *substream);
+> +int tegra_pcm_hw_params(struct snd_soc_component *component,
+> +			struct snd_pcm_substream *substream,
+> +			struct snd_pcm_hw_params *params);
+> +int tegra_pcm_hw_free(struct snd_soc_component *component,
+> +		      struct snd_pcm_substream *substream);
+> +int tegra_pcm_mmap(struct snd_soc_component *component,
+> +		   struct snd_pcm_substream *substream,
+> +		   struct vm_area_struct *vma);
 
-Looks good to me.
+> +int tegra_pcm_trigger(struct snd_soc_component *component,
+> +		      struct snd_pcm_substream *substream, int cmd);
 
-Reviewed-by: Anup Patel <anup@brainfault.org>
-
-Regards,
-Anup
+Looks like this function doesn't exist.
