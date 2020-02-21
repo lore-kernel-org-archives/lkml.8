@@ -5,50 +5,51 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C913FC35641
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 08:27:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F043AC35640
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 08:27:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9CC8E24670
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 08:27:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C779420637
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 08:27:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582273629;
-	bh=tUg751Affnoyn3FW3QZPYI49oz153hfQFyw6kq9w/7c=;
+	s=default; t=1582273637;
+	bh=UpZvJzYBeiSR3mvF3VSpvjTTs9IvGaU4AIbik5XnVTo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=lnAaKL1MobbUtb19ACzqTw5JnmiFgJCuaHfyQx5VDnaPpiaIqSn2rAVRreEOuceeJ
-	 YvyotfTdJ1dsrNLCY5FliqUkp4VWpFQhoquswXhT7BCa+FvdjXknAyl/s60+w/4f/b
-	 UCm7FfET51Co8SRbmsexlZya+wWPWh/Vgohhq4dU=
+	b=MITt7S6ghJpLDmHMq4RSfJDM549bvuiJ1CKRVBr29LeNRnwlQnR9asCegbtBzWlu+
+	 YqvlmhpteSXiIFF8+Eu7dDYNc1WSU0UV8WBhp0wATxgon/vbR6N+/GaVmwDK/JB46q
+	 I8jU5OFwBBCTBH918lcP8JyEL6HR6EKJiqNv7X3k=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388275AbgBUIWT (ORCPT
+        id S2388512AbgBUI1Q (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Feb 2020 03:22:19 -0500
-Received: from mail.kernel.org ([198.145.29.99]:33822 "EHLO mail.kernel.org"
+        Fri, 21 Feb 2020 03:27:16 -0500
+Received: from mail.kernel.org ([198.145.29.99]:33704 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388038AbgBUIWP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Feb 2020 03:22:15 -0500
+        id S1732311AbgBUIWK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 21 Feb 2020 03:22:10 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id CBD5424673;
-        Fri, 21 Feb 2020 08:22:14 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id CC94724673;
+        Fri, 21 Feb 2020 08:22:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1582273335;
-        bh=tUg751Affnoyn3FW3QZPYI49oz153hfQFyw6kq9w/7c=;
+        s=default; t=1582273330;
+        bh=UpZvJzYBeiSR3mvF3VSpvjTTs9IvGaU4AIbik5XnVTo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=vfG3vU2GIwfGshzYa6JUlYpF4b7KVSx5rhRVwg4unap1Q+nkxnKQJ9tgawE+Thu7G
-         LYyBkIhqTifISsWaUp26vp0qffscjXnJhYtt+miwipNn/ivs/16vMV+WD5y1XT+L8K
-         +M8wZ7POIyu8P+4myyjcvrnoJFHU+XlTC8IiaA0E=
+        b=OzNevrBizFGpT9gQfFciBA9ChL5oPxRRSfp11Kl5B5q31Bm7wsJqYVzRVXDgHPRWg
+         Lv33nbfMOe78DJvuQY9dvBrMGEIWwlmOvYPUDeV4h4H2ADUn3kVMaE8jrmqfvBriX5
+         I0Mq61Wn9ih2Mt8mUHvNzldsdvrZfPsmZ6rLAIYQ=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Icenowy Zheng <icenowy@aosc.io>,
-        Vasily Khoruzhick <anarsoul@gmail.com>,
-        Maxime Ripard <maxime@cerno.tech>,
+        stable@vger.kernel.org,
+        Kunihiko Hayashi <hayashi.kunihiko@socionext.com>,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        Philipp Zabel <p.zabel@pengutronix.de>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 094/191] clk: sunxi-ng: add mux and pll notifiers for A64 CPU clock
-Date:   Fri, 21 Feb 2020 08:41:07 +0100
-Message-Id: <20200221072302.330809496@linuxfoundation.org>
+Subject: [PATCH 4.19 092/191] reset: uniphier: Add SCSSI reset control for each channel
+Date:   Fri, 21 Feb 2020 08:41:05 +0100
+Message-Id: <20200221072302.071631536@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200221072250.732482588@linuxfoundation.org>
 References: <20200221072250.732482588@linuxfoundation.org>
@@ -61,77 +62,61 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Icenowy Zheng <icenowy@aosc.io>
+From: Kunihiko Hayashi <hayashi.kunihiko@socionext.com>
 
-[ Upstream commit ec97faff743b398e21f74a54c81333f3390093aa ]
+[ Upstream commit f4aec227e985e31d2fdc5608daf48e3de19157b7 ]
 
-The A64 PLL_CPU clock has the same instability if some factor changed
-without the PLL gated like other SoCs with sun6i-style CCU, e.g. A33,
-H3.
+SCSSI has reset controls for each channel in the SoCs newer than Pro4,
+so this adds missing reset controls for channel 1, 2 and 3. And more, this
+moves MCSSI reset ID after SCSSI.
 
-Add the mux and pll notifiers for A64 CPU clock to workaround the
-problem.
-
-Fixes: c6a0637460c2 ("clk: sunxi-ng: Add A64 clocks")
-Signed-off-by: Icenowy Zheng <icenowy@aosc.io>
-Signed-off-by: Vasily Khoruzhick <anarsoul@gmail.com>
-Signed-off-by: Maxime Ripard <maxime@cerno.tech>
+Fixes: 6b39fd590aeb ("reset: uniphier: add reset control support for SPI")
+Signed-off-by: Kunihiko Hayashi <hayashi.kunihiko@socionext.com>
+Acked-by: Masahiro Yamada <yamada.masahiro@socionext.com>
+Signed-off-by: Philipp Zabel <p.zabel@pengutronix.de>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/clk/sunxi-ng/ccu-sun50i-a64.c | 28 ++++++++++++++++++++++++++-
- 1 file changed, 27 insertions(+), 1 deletion(-)
+ drivers/reset/reset-uniphier.c | 13 ++++++++-----
+ 1 file changed, 8 insertions(+), 5 deletions(-)
 
-diff --git a/drivers/clk/sunxi-ng/ccu-sun50i-a64.c b/drivers/clk/sunxi-ng/ccu-sun50i-a64.c
-index dec4a130390a3..9ac6c299e0744 100644
---- a/drivers/clk/sunxi-ng/ccu-sun50i-a64.c
-+++ b/drivers/clk/sunxi-ng/ccu-sun50i-a64.c
-@@ -901,11 +901,26 @@ static const struct sunxi_ccu_desc sun50i_a64_ccu_desc = {
- 	.num_resets	= ARRAY_SIZE(sun50i_a64_ccu_resets),
+diff --git a/drivers/reset/reset-uniphier.c b/drivers/reset/reset-uniphier.c
+index 5605745663ae0..adbecb2c7cd3a 100644
+--- a/drivers/reset/reset-uniphier.c
++++ b/drivers/reset/reset-uniphier.c
+@@ -202,8 +202,8 @@ static const struct uniphier_reset_data uniphier_pro5_sd_reset_data[] = {
+ #define UNIPHIER_PERI_RESET_FI2C(id, ch)		\
+ 	UNIPHIER_RESETX((id), 0x114, 24 + (ch))
+ 
+-#define UNIPHIER_PERI_RESET_SCSSI(id)			\
+-	UNIPHIER_RESETX((id), 0x110, 17)
++#define UNIPHIER_PERI_RESET_SCSSI(id, ch)		\
++	UNIPHIER_RESETX((id), 0x110, 17 + (ch))
+ 
+ #define UNIPHIER_PERI_RESET_MCSSI(id)			\
+ 	UNIPHIER_RESETX((id), 0x114, 14)
+@@ -218,7 +218,7 @@ static const struct uniphier_reset_data uniphier_ld4_peri_reset_data[] = {
+ 	UNIPHIER_PERI_RESET_I2C(6, 2),
+ 	UNIPHIER_PERI_RESET_I2C(7, 3),
+ 	UNIPHIER_PERI_RESET_I2C(8, 4),
+-	UNIPHIER_PERI_RESET_SCSSI(11),
++	UNIPHIER_PERI_RESET_SCSSI(11, 0),
+ 	UNIPHIER_RESET_END,
  };
  
-+static struct ccu_pll_nb sun50i_a64_pll_cpu_nb = {
-+	.common	= &pll_cpux_clk.common,
-+	/* copy from pll_cpux_clk */
-+	.enable	= BIT(31),
-+	.lock	= BIT(28),
-+};
-+
-+static struct ccu_mux_nb sun50i_a64_cpu_nb = {
-+	.common		= &cpux_clk.common,
-+	.cm		= &cpux_clk.mux,
-+	.delay_us	= 1, /* > 8 clock cycles at 24 MHz */
-+	.bypass_index	= 1, /* index of 24 MHz oscillator */
-+};
-+
- static int sun50i_a64_ccu_probe(struct platform_device *pdev)
- {
- 	struct resource *res;
- 	void __iomem *reg;
- 	u32 val;
-+	int ret;
+@@ -234,8 +234,11 @@ static const struct uniphier_reset_data uniphier_pro4_peri_reset_data[] = {
+ 	UNIPHIER_PERI_RESET_FI2C(8, 4),
+ 	UNIPHIER_PERI_RESET_FI2C(9, 5),
+ 	UNIPHIER_PERI_RESET_FI2C(10, 6),
+-	UNIPHIER_PERI_RESET_SCSSI(11),
+-	UNIPHIER_PERI_RESET_MCSSI(12),
++	UNIPHIER_PERI_RESET_SCSSI(11, 0),
++	UNIPHIER_PERI_RESET_SCSSI(12, 1),
++	UNIPHIER_PERI_RESET_SCSSI(13, 2),
++	UNIPHIER_PERI_RESET_SCSSI(14, 3),
++	UNIPHIER_PERI_RESET_MCSSI(15),
+ 	UNIPHIER_RESET_END,
+ };
  
- 	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
- 	reg = devm_ioremap_resource(&pdev->dev, res);
-@@ -919,7 +934,18 @@ static int sun50i_a64_ccu_probe(struct platform_device *pdev)
- 
- 	writel(0x515, reg + SUN50I_A64_PLL_MIPI_REG);
- 
--	return sunxi_ccu_probe(pdev->dev.of_node, reg, &sun50i_a64_ccu_desc);
-+	ret = sunxi_ccu_probe(pdev->dev.of_node, reg, &sun50i_a64_ccu_desc);
-+	if (ret)
-+		return ret;
-+
-+	/* Gate then ungate PLL CPU after any rate changes */
-+	ccu_pll_notifier_register(&sun50i_a64_pll_cpu_nb);
-+
-+	/* Reparent CPU during PLL CPU rate changes */
-+	ccu_mux_notifier_register(pll_cpux_clk.common.hw.clk,
-+				  &sun50i_a64_cpu_nb);
-+
-+	return 0;
- }
- 
- static const struct of_device_id sun50i_a64_ccu_ids[] = {
 -- 
 2.20.1
 
