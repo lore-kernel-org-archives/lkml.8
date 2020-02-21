@@ -4,51 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 69DB0C35642
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9E2ACC35644
 	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 07:43:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3858F207FD
+	by mail.kernel.org (Postfix) with ESMTP id 6ADFA24650
 	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 07:43:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
 	s=default; t=1582271039;
-	bh=4qMPwk3Z+A8sUjt+dx/THCCgEBKZVpubcsBJndD38Pg=;
+	bh=hOuaW7/hKWZaEBAmeRmZWycGWtxt52azLEnrtlhg/2E=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=cN0aiN96bZEmTxObpcNS+pGm36jRbqBhWhmQgErHiPor2gVYi1SSLpuAbEyqxj0eE
-	 7nx/FTt7FEtuO8N9nSYk/Qvgwpad7Ux0iGT1cwTzSFGIwr08N1SBn/7cz2iE8lbuAJ
-	 fzriCPJPRMyp8CrpyOA6TjMcoEtb0KjLNzhPNt5k=
+	b=gI7H2hE0mUsBgzBRkWwM9WpKwciOSaI6gG5xIqN0iyBdEe70IUDeC9xcZMnwIkNW+
+	 VItgUJkyiID/iQ8VdqofutmnVHoGWRUpYjhLMKBFRs9h9SV8N+3DU8Q5rarCTApV60
+	 SvwfNT2JNBa3w7i/3PLH52VIgAoatSPLZ9HZSRmg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727152AbgBUHns (ORCPT
+        id S1727259AbgBUHnv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Feb 2020 02:43:48 -0500
-Received: from mail.kernel.org ([198.145.29.99]:38274 "EHLO mail.kernel.org"
+        Fri, 21 Feb 2020 02:43:51 -0500
+Received: from mail.kernel.org ([198.145.29.99]:38296 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727034AbgBUHnr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Feb 2020 02:43:47 -0500
+        id S1727034AbgBUHnv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 21 Feb 2020 02:43:51 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2FB0A20801;
-        Fri, 21 Feb 2020 07:43:46 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A8979207FD;
+        Fri, 21 Feb 2020 07:43:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1582271026;
-        bh=4qMPwk3Z+A8sUjt+dx/THCCgEBKZVpubcsBJndD38Pg=;
+        s=default; t=1582271029;
+        bh=hOuaW7/hKWZaEBAmeRmZWycGWtxt52azLEnrtlhg/2E=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=zo4QZkysVNH71PM/4iKvTHKIMtIT0ZVIw8syNepjmYYuQ96r/Huiy8tpbkHduYt5X
-         wFdZdXbik4P8C+RpomRz8dtlciTjfwKrUeyvL0vmPXZLQttKjVOrgjAX5Rb0bSIxLK
-         nJFt3Gbygar78KDSgnSIDuG4Ek0GCq5tfmEYDyBE=
+        b=E2TKuZvPga34Z1fdal4QTgo6fIQH8NPZ/38ydtHl+khbq3dxxtu3Gg9HPFuBwhPLt
+         /OJaBJK+HkFBf7K0yvU1oJqpfxNZr+8MD+WUsN5dYcsvKVz2TrEiA3UPm4gX89kViW
+         bMPObAsM2zg1+eEuQx52vYWx961iN2DSCrLiT1EQ=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Markus Elfring <elfring@users.sourceforge.net>,
-        Gerd Hoffmann <kraxel@redhat.com>,
+        stable@vger.kernel.org, Dan Carpenter <dan.carpenter@oracle.com>,
+        "J. Bruce Fields" <bfields@redhat.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.5 012/399] drm/qxl: Complete exception handling in qxl_device_init()
-Date:   Fri, 21 Feb 2020 08:35:37 +0100
-Message-Id: <20200221072403.503267690@linuxfoundation.org>
+Subject: [PATCH 5.5 013/399] nfsd4: avoid NULL deference on strange COPY compounds
+Date:   Fri, 21 Feb 2020 08:35:38 +0100
+Message-Id: <20200221072403.604900959@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200221072402.315346745@linuxfoundation.org>
 References: <20200221072402.315346745@linuxfoundation.org>
@@ -61,44 +60,52 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Markus Elfring <elfring@users.sourceforge.net>
+From: J. Bruce Fields <bfields@redhat.com>
 
-[ Upstream commit dbe3ad61dcebc49fe3efca70a0f752a95b4600f2 ]
+[ Upstream commit d781e3df710745fbbaee4eb07fd5b64331a1b175 ]
 
-A coccicheck run provided information like the following.
+With cross-server COPY we've introduced the possibility that the current
+or saved filehandle might not have fh_dentry/fh_export filled in, but we
+missed a place that assumed it was.  I think this could be triggered by
+a compound like:
 
-drivers/gpu/drm/qxl/qxl_kms.c:295:1-7: ERROR: missing iounmap;
-ioremap on line 178 and execution via conditional on line 185
+	PUTFH(foreign filehandle)
+	GETATTR
+	SAVEFH
+	COPY
 
-Generated by: scripts/coccinelle/free/iounmap.cocci
+First, check_if_stalefh_allowed sets no_verify on the first (PUTFH) op.
+Then op_func = nfsd4_putfh runs and leaves current_fh->fh_export NULL.
+need_wrongsec_check returns true, since this PUTFH has OP_IS_PUTFH_LIKE
+set and GETATTR does not have OP_HANDLES_WRONGSEC set.
 
-A jump target was specified in an if branch. The corresponding function
-call did not release the desired system resource then.
-Thus use the label “rom_unmap” instead to fix the exception handling
-for this function implementation.
+We should probably also consider tightening the checks in
+check_if_stalefh_allowed and double-checking that we don't assume the
+filehandle is verified elsewhere in the compound.  But I think this
+fixes the immediate issue.
 
-Fixes: 5043348a4969ae1661c008efe929abd0d76e3792 ("drm: qxl: Fix error handling at qxl_device_init")
-Signed-off-by: Markus Elfring <elfring@users.sourceforge.net>
-Link: http://patchwork.freedesktop.org/patch/msgid/5e5ef9c4-4d85-3c93-cf28-42cfcb5b0649@web.de
-Signed-off-by: Gerd Hoffmann <kraxel@redhat.com>
+Reported-by: Dan Carpenter <dan.carpenter@oracle.com>
+Fixes: 4e48f1cccab3 "NFSD: allow inter server COPY to have... "
+Signed-off-by: J. Bruce Fields <bfields@redhat.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/gpu/drm/qxl/qxl_kms.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ fs/nfsd/nfs4proc.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/gpu/drm/qxl/qxl_kms.c b/drivers/gpu/drm/qxl/qxl_kms.c
-index 611cbe7aee690..bfc1631093e9b 100644
---- a/drivers/gpu/drm/qxl/qxl_kms.c
-+++ b/drivers/gpu/drm/qxl/qxl_kms.c
-@@ -184,7 +184,7 @@ int qxl_device_init(struct qxl_device *qdev,
+diff --git a/fs/nfsd/nfs4proc.c b/fs/nfsd/nfs4proc.c
+index 4798667af647c..4d1d0bf8e385f 100644
+--- a/fs/nfsd/nfs4proc.c
++++ b/fs/nfsd/nfs4proc.c
+@@ -2025,7 +2025,8 @@ nfsd4_proc_compound(struct svc_rqst *rqstp)
+ 			if (op->opdesc->op_flags & OP_CLEAR_STATEID)
+ 				clear_current_stateid(cstate);
  
- 	if (!qxl_check_device(qdev)) {
- 		r = -ENODEV;
--		goto surface_mapping_free;
-+		goto rom_unmap;
- 	}
- 
- 	r = qxl_bo_init(qdev);
+-			if (need_wrongsec_check(rqstp))
++			if (current_fh->fh_export &&
++					need_wrongsec_check(rqstp))
+ 				op->status = check_nfsd_access(current_fh->fh_export, rqstp);
+ 		}
+ encode_op:
 -- 
 2.20.1
 
