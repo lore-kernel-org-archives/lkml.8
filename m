@@ -4,49 +4,52 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7C19DC35640
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 08:09:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2CEDDC35641
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 08:09:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4E2D620578
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 08:09:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F396320578
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 08:09:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582272581;
-	bh=MbEn1xsiecBHlEcfQ+/H06d3+Z5GOAlA6hjb+80w+C4=;
+	s=default; t=1582272587;
+	bh=svw8xPOemPN0qH7Qt/yMw0dgsEA8HxYiz8O0LRHebgc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=dwSpSwzl1r/DZWzzY3tsfIO+w3MzVAyMe2GCCcBVYjk+kMzxmDGxc1szmWqeCoaOg
-	 pYWaTB1Jghxm6BLh5Xkiq4mNG28Ti/kxHemuMf2xNKH8oJnVbJGOAqZt/d5EpVIjTX
-	 4m31ddVq6camYnmtXcJU+p59LVQESFY10gl1L8V8=
+	b=MSY9+igf+4Ety3GzNp3VZbQLnENO+tgWzImg9CE02QGOXbGJgJAcV6IqmSxy5g7W1
+	 yrcYbXFCNz3TSfKPpa+wuPrFNOsah7+0SRYpFsnf/KflDLh+6zR6bSLV1xnZfn/nKT
+	 RITd7YkAAZv5eEvU3yxnkYWEEH05qCU6X2NSKP1s=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732399AbgBUIJk (ORCPT
+        id S1732415AbgBUIJq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Feb 2020 03:09:40 -0500
-Received: from mail.kernel.org ([198.145.29.99]:44576 "EHLO mail.kernel.org"
+        Fri, 21 Feb 2020 03:09:46 -0500
+Received: from mail.kernel.org ([198.145.29.99]:44644 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732386AbgBUIJh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Feb 2020 03:09:37 -0500
+        id S1732396AbgBUIJl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 21 Feb 2020 03:09:41 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0AF6220722;
-        Fri, 21 Feb 2020 08:09:36 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8393320722;
+        Fri, 21 Feb 2020 08:09:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1582272577;
-        bh=MbEn1xsiecBHlEcfQ+/H06d3+Z5GOAlA6hjb+80w+C4=;
+        s=default; t=1582272580;
+        bh=svw8xPOemPN0qH7Qt/yMw0dgsEA8HxYiz8O0LRHebgc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=DufPxxIpHWgaK6MN1TxIMvbrm3qo0z/EnfCC+s2rJG1+ek0vnfcaBTlZ59Qcoq1xK
-         pxPDCtu4h0QBD0FZlRPXPI696wcyYNLpcYwvHKAuuYjUR1fj4iiXxonvykms146Ztg
-         v19dqtWl6kaDR1KMOY7IIxhjmn7xNma/TS9VAJpI=
+        b=zIrLGNjUo6VZ8JyB697OXxEuX7i2IlzFs/C64ZAT3gr8fz/pAMmk/dUuZehmyZXGI
+         MzAFFlJhg1OCs/agu9pFQK0ajcZKt7ERH4SPjPOz66v2cv4kkTrTTl7MtuycCnSb/8
+         ikH9zPzx6kr5lCP+jCyzunR5zLk/7rQRPMs10L70=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>,
+        stable@vger.kernel.org, Kaike Wan <kaike.wan@intel.com>,
+        Mike Marciniszyn <mike.marciniszyn@intel.com>,
+        Dennis Dalessandro <dennis.dalessandro@intel.com>,
+        Jason Gunthorpe <jgg@mellanox.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 196/344] staging: rtl8188: avoid excessive stack usage
-Date:   Fri, 21 Feb 2020 08:39:55 +0100
-Message-Id: <20200221072406.868659383@linuxfoundation.org>
+Subject: [PATCH 5.4 197/344] IB/hfi1: Add software counter for ctxt0 seq drop
+Date:   Fri, 21 Feb 2020 08:39:56 +0100
+Message-Id: <20200221072406.957473578@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200221072349.335551332@linuxfoundation.org>
 References: <20200221072349.335551332@linuxfoundation.org>
@@ -59,72 +62,93 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Arnd Bergmann <arnd@arndb.de>
+From: Mike Marciniszyn <mike.marciniszyn@intel.com>
 
-[ Upstream commit c497ae2077c055b85c1bf04f3d182a84bd8f365b ]
+[ Upstream commit 5ffd048698ea5139743acd45e8ab388a683642b8 ]
 
-The rtl8188 copy of the os_dep support code causes a
-warning about a very significant stack usage in the translate_scan()
-function:
+All other code paths increment some form of drop counter.
 
-drivers/staging/rtl8188eu/os_dep/ioctl_linux.c: In function 'translate_scan':
-drivers/staging/rtl8188eu/os_dep/ioctl_linux.c:306:1: error: the frame size of 1560 bytes is larger than 1400 bytes [-Werror=frame-larger-than=]
+This was missed in the original implementation.
 
-Use the same trick as in the rtl8723bs copy of the same function, and
-allocate it dynamically.
-
-Signed-off-by: Arnd Bergmann <arnd@arndb.de>
-Link: https://lore.kernel.org/r/20200104214832.558198-1-arnd@arndb.de
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Fixes: 82c2611daaf0 ("staging/rdma/hfi1: Handle packets with invalid RHF on context 0")
+Link: https://lore.kernel.org/r/20200106134228.119356.96828.stgit@awfm-01.aw.intel.com
+Reviewed-by: Kaike Wan <kaike.wan@intel.com>
+Signed-off-by: Mike Marciniszyn <mike.marciniszyn@intel.com>
+Signed-off-by: Dennis Dalessandro <dennis.dalessandro@intel.com>
+Signed-off-by: Jason Gunthorpe <jgg@mellanox.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/staging/rtl8188eu/os_dep/ioctl_linux.c | 9 ++++++---
- 1 file changed, 6 insertions(+), 3 deletions(-)
+ drivers/infiniband/hw/hfi1/chip.c   | 10 ++++++++++
+ drivers/infiniband/hw/hfi1/chip.h   |  1 +
+ drivers/infiniband/hw/hfi1/driver.c |  1 +
+ drivers/infiniband/hw/hfi1/hfi.h    |  2 ++
+ 4 files changed, 14 insertions(+)
 
-diff --git a/drivers/staging/rtl8188eu/os_dep/ioctl_linux.c b/drivers/staging/rtl8188eu/os_dep/ioctl_linux.c
-index ec5835d1aa8ce..9f0418ee75284 100644
---- a/drivers/staging/rtl8188eu/os_dep/ioctl_linux.c
-+++ b/drivers/staging/rtl8188eu/os_dep/ioctl_linux.c
-@@ -229,18 +229,21 @@ static char *translate_scan(struct adapter *padapter,
+diff --git a/drivers/infiniband/hw/hfi1/chip.c b/drivers/infiniband/hw/hfi1/chip.c
+index 9b1fb84a3d45b..d5961918fe157 100644
+--- a/drivers/infiniband/hw/hfi1/chip.c
++++ b/drivers/infiniband/hw/hfi1/chip.c
+@@ -1685,6 +1685,14 @@ static u64 access_sw_pio_drain(const struct cntr_entry *entry,
+ 	return dd->verbs_dev.n_piodrain;
+ }
  
- 	/* parsing WPA/WPA2 IE */
- 	{
--		u8 buf[MAX_WPA_IE_LEN];
-+		u8 *buf;
- 		u8 wpa_ie[255], rsn_ie[255];
- 		u16 wpa_len = 0, rsn_len = 0;
- 		u8 *p;
- 
-+		buf = kzalloc(MAX_WPA_IE_LEN, GFP_ATOMIC);
-+		if (!buf)
-+			return start;
++static u64 access_sw_ctx0_seq_drop(const struct cntr_entry *entry,
++				   void *context, int vl, int mode, u64 data)
++{
++	struct hfi1_devdata *dd = context;
 +
- 		rtw_get_sec_ie(pnetwork->network.ies, pnetwork->network.ie_length, rsn_ie, &rsn_len, wpa_ie, &wpa_len);
- 		RT_TRACE(_module_rtl871x_mlme_c_, _drv_info_, ("rtw_wx_get_scan: ssid =%s\n", pnetwork->network.ssid.ssid));
- 		RT_TRACE(_module_rtl871x_mlme_c_, _drv_info_, ("rtw_wx_get_scan: wpa_len =%d rsn_len =%d\n", wpa_len, rsn_len));
++	return dd->ctx0_seq_drop;
++}
++
+ static u64 access_sw_vtx_wait(const struct cntr_entry *entry,
+ 			      void *context, int vl, int mode, u64 data)
+ {
+@@ -4249,6 +4257,8 @@ static struct cntr_entry dev_cntrs[DEV_CNTR_LAST] = {
+ 			    access_sw_cpu_intr),
+ [C_SW_CPU_RCV_LIM] = CNTR_ELEM("RcvLimit", 0, 0, CNTR_NORMAL,
+ 			    access_sw_cpu_rcv_limit),
++[C_SW_CTX0_SEQ_DROP] = CNTR_ELEM("SeqDrop0", 0, 0, CNTR_NORMAL,
++			    access_sw_ctx0_seq_drop),
+ [C_SW_VTX_WAIT] = CNTR_ELEM("vTxWait", 0, 0, CNTR_NORMAL,
+ 			    access_sw_vtx_wait),
+ [C_SW_PIO_WAIT] = CNTR_ELEM("PioWait", 0, 0, CNTR_NORMAL,
+diff --git a/drivers/infiniband/hw/hfi1/chip.h b/drivers/infiniband/hw/hfi1/chip.h
+index 4ca5ac8d7e9e4..bfccd4ae07a72 100644
+--- a/drivers/infiniband/hw/hfi1/chip.h
++++ b/drivers/infiniband/hw/hfi1/chip.h
+@@ -926,6 +926,7 @@ enum {
+ 	C_DC_PG_STS_TX_MBE_CNT,
+ 	C_SW_CPU_INTR,
+ 	C_SW_CPU_RCV_LIM,
++	C_SW_CTX0_SEQ_DROP,
+ 	C_SW_VTX_WAIT,
+ 	C_SW_PIO_WAIT,
+ 	C_SW_PIO_DRAIN,
+diff --git a/drivers/infiniband/hw/hfi1/driver.c b/drivers/infiniband/hw/hfi1/driver.c
+index 01aa1f132f55e..941b465244abe 100644
+--- a/drivers/infiniband/hw/hfi1/driver.c
++++ b/drivers/infiniband/hw/hfi1/driver.c
+@@ -734,6 +734,7 @@ static noinline int skip_rcv_packet(struct hfi1_packet *packet, int thread)
+ {
+ 	int ret;
  
- 		if (wpa_len > 0) {
- 			p = buf;
--			memset(buf, 0, MAX_WPA_IE_LEN);
- 			p += sprintf(p, "wpa_ie=");
- 			for (i = 0; i < wpa_len; i++)
- 				p += sprintf(p, "%02x", wpa_ie[i]);
-@@ -257,7 +260,6 @@ static char *translate_scan(struct adapter *padapter,
- 		}
- 		if (rsn_len > 0) {
- 			p = buf;
--			memset(buf, 0, MAX_WPA_IE_LEN);
- 			p += sprintf(p, "rsn_ie=");
- 			for (i = 0; i < rsn_len; i++)
- 				p += sprintf(p, "%02x", rsn_ie[i]);
-@@ -271,6 +273,7 @@ static char *translate_scan(struct adapter *padapter,
- 			iwe.u.data.length = rsn_len;
- 			start = iwe_stream_add_point(info, start, stop, &iwe, rsn_ie);
- 		}
-+		kfree(buf);
- 	}
++	packet->rcd->dd->ctx0_seq_drop++;
+ 	/* Set up for the next packet */
+ 	packet->rhqoff += packet->rsize;
+ 	if (packet->rhqoff >= packet->maxcnt)
+diff --git a/drivers/infiniband/hw/hfi1/hfi.h b/drivers/infiniband/hw/hfi1/hfi.h
+index 1af94650bd840..b79931cc74abe 100644
+--- a/drivers/infiniband/hw/hfi1/hfi.h
++++ b/drivers/infiniband/hw/hfi1/hfi.h
+@@ -1153,6 +1153,8 @@ struct hfi1_devdata {
  
- 	{/* parsing WPS IE */
+ 	char *boardname; /* human readable board info */
+ 
++	u64 ctx0_seq_drop;
++
+ 	/* reset value */
+ 	u64 z_int_counter;
+ 	u64 z_rcv_limit;
 -- 
 2.20.1
 
