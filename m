@@ -7,48 +7,48 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F169FC35642
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 08:02:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 328F1C35643
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 08:02:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C2F5724650
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 08:02:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 045AA24650
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 08:02:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582272165;
-	bh=3mMW9xAzJDDMfYwE+KOeTghpU9ATN3hhSY+NwNKGAbo=;
+	s=default; t=1582272167;
+	bh=rFOELsaO4yvZI6+IqnVAnJzFvKetvArBL8zQbNS0zxA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Y6kWBYZsEvE9Vqi5XEB+MHMLg0zevw49RJ+fQ7Y88vVVdu742sAFROYg0Hv/R/t4F
-	 CgZ8x7YHsAA743VsHW8+LACy7n+uaAGk3io0jrPcauVAsOIYQe1bEL0sjOOkNkISM1
-	 s/Ux52P1EkKyF4ztRU2fh3uWVTblGKLIhDrl+glo=
+	b=x9dDlzQAIToGhYtX/oi9wYm4/ZW2PZs+E+q9GiiRxltEecXsPKPvY369WXeq2tSRx
+	 i8kcdwgSFYKjLXOQhRGxGMJz/vTttAh995omF46q5QzTJUftVvjnylZbMZ3n5ZhT14
+	 G77mtlBuDihxsaghs+ryCioCVFhl0ZqehnmZbIbA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731217AbgBUICo (ORCPT
+        id S1731226AbgBUICl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Feb 2020 03:02:44 -0500
-Received: from mail.kernel.org ([198.145.29.99]:35198 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730143AbgBUICl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Fri, 21 Feb 2020 03:02:41 -0500
+Received: from mail.kernel.org ([198.145.29.99]:35160 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1730046AbgBUICj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 21 Feb 2020 03:02:39 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 48C5B222C4;
-        Fri, 21 Feb 2020 08:02:40 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id BB08720801;
+        Fri, 21 Feb 2020 08:02:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1582272160;
-        bh=3mMW9xAzJDDMfYwE+KOeTghpU9ATN3hhSY+NwNKGAbo=;
+        s=default; t=1582272158;
+        bh=rFOELsaO4yvZI6+IqnVAnJzFvKetvArBL8zQbNS0zxA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=NUDKNbo4eIYLopGAkbY9gj1z7+g8eTW5zTJ5rMZZPt+18Bx10w5Q6eCJGCagqWnQw
-         GNlHbFEBPkbK7OaEhcwDpbUp2yn/Ajr3yrcPdhxmMfSDh3pmfG6UlRYYrZ9HBnS2oD
-         nQ4cLXMASkiQpzBvZbySFg4mzxC6S7IQLZeNd3Nk=
+        b=YLfh4iy4SAD/Ky6G63PjI/HZNBMUNbxV5mmqmAbY5EkUhxhAcRTyy+jzKMykk8ZZm
+         VYJ8aLvjIeJTFrcusGd1OheoYdVP9XNMBPCV/eLvNZE7scO7Q2jc8tpG/usTl4y+Cc
+         /YcqDkIIslbEWPuTmPMmXJWet/7ew9K/YzBRzJq4=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Eugen Hristev <eugen.hristev@microchip.com>,
-        Stephen Boyd <sboyd@kernel.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 039/344] clk: at91: sam9x60: fix programmable clock prescaler
-Date:   Fri, 21 Feb 2020 08:37:18 +0100
-Message-Id: <20200221072352.670318776@linuxfoundation.org>
+        stable@vger.kernel.org, Steven Rostedt <rostedt@goodmis.org>,
+        John Ogness <john.ogness@linutronix.de>,
+        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
+        Petr Mladek <pmladek@suse.com>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.4 030/344] printk: fix exclusive_console replaying
+Date:   Fri, 21 Feb 2020 08:37:09 +0100
+Message-Id: <20200221072351.886120922@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200221072349.335551332@linuxfoundation.org>
 References: <20200221072349.335551332@linuxfoundation.org>
@@ -61,39 +61,56 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Eugen Hristev <eugen.hristev@microchip.com>
+From: John Ogness <john.ogness@linutronix.de>
 
-[ Upstream commit 66d9f5214c9ba1c151478f99520b6817302d50dc ]
+[ Upstream commit def97da136515cb289a14729292c193e0a93bc64 ]
 
-The prescaler works as parent rate divided by (PRES + 1) (is_pres_direct == 1)
-It does not work in the way of parent rate shifted to the right by (PRES + 1),
-which means division by 2^(PRES + 1) (is_pres_direct == 0)
-Thus is_pres_direct must be enabled for this SoC, to make the right computation.
-This field was added in
-commit 45b06682113b ("clk: at91: fix programmable clock for sama5d2")
-SAM9X60 has the same field as SAMA5D2 in the PCK
+Commit f92b070f2dc8 ("printk: Do not miss new messages when replaying
+the log") introduced a new variable @exclusive_console_stop_seq to
+store when an exclusive console should stop printing. It should be
+set to the @console_seq value at registration. However, @console_seq
+is previously set to @syslog_seq so that the exclusive console knows
+where to begin. This results in the exclusive console immediately
+reactivating all the other consoles and thus repeating the messages
+for those consoles.
 
-Fixes: 01e2113de9a5 ("clk: at91: add sam9x60 pmc driver")
-Signed-off-by: Eugen Hristev <eugen.hristev@microchip.com>
-Link: https://lkml.kernel.org/r/1575977088-16781-1-git-send-email-eugen.hristev@microchip.com
-Signed-off-by: Stephen Boyd <sboyd@kernel.org>
+Set @console_seq after @exclusive_console_stop_seq has stored the
+current @console_seq value.
+
+Fixes: f92b070f2dc8 ("printk: Do not miss new messages when replaying the log")
+Link: http://lkml.kernel.org/r/20191219115322.31160-1-john.ogness@linutronix.de
+Cc: Steven Rostedt <rostedt@goodmis.org>
+Cc: linux-kernel@vger.kernel.org
+Signed-off-by: John Ogness <john.ogness@linutronix.de>
+Acked-by: Sergey Senozhatsky <sergey.senozhatsky@gmail.com>
+Signed-off-by: Petr Mladek <pmladek@suse.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/clk/at91/sam9x60.c | 1 +
- 1 file changed, 1 insertion(+)
+ kernel/printk/printk.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/clk/at91/sam9x60.c b/drivers/clk/at91/sam9x60.c
-index 86238d5ecb4da..77398aefeb6db 100644
---- a/drivers/clk/at91/sam9x60.c
-+++ b/drivers/clk/at91/sam9x60.c
-@@ -47,6 +47,7 @@ static const struct clk_programmable_layout sam9x60_programmable_layout = {
- 	.pres_shift = 8,
- 	.css_mask = 0x1f,
- 	.have_slck_mck = 0,
-+	.is_pres_direct = 1,
- };
- 
- static const struct clk_pcr_layout sam9x60_pcr_layout = {
+diff --git a/kernel/printk/printk.c b/kernel/printk/printk.c
+index ca65327a6de8c..c0a5b56aea4e8 100644
+--- a/kernel/printk/printk.c
++++ b/kernel/printk/printk.c
+@@ -2770,8 +2770,6 @@ void register_console(struct console *newcon)
+ 		 * for us.
+ 		 */
+ 		logbuf_lock_irqsave(flags);
+-		console_seq = syslog_seq;
+-		console_idx = syslog_idx;
+ 		/*
+ 		 * We're about to replay the log buffer.  Only do this to the
+ 		 * just-registered console to avoid excessive message spam to
+@@ -2783,6 +2781,8 @@ void register_console(struct console *newcon)
+ 		 */
+ 		exclusive_console = newcon;
+ 		exclusive_console_stop_seq = console_seq;
++		console_seq = syslog_seq;
++		console_idx = syslog_idx;
+ 		logbuf_unlock_irqrestore(flags);
+ 	}
+ 	console_unlock();
 -- 
 2.20.1
 
