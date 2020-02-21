@@ -5,40 +5,40 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9DEF9C35640
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 08:04:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 08DDDC35640
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 08:04:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6A40624683
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 08:04:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CFDE820801
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 08:04:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582272247;
-	bh=uTLnBEJERTGry/cuDv6VzwuoL0a2YHXZt5HbDHNk0wA=;
+	s=default; t=1582272250;
+	bh=5bJSGcisAMQ6ge9lH5Vmo9G0UmVONpbBRcpK/946w5k=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=dLayeo2UxAalmlEye/lK8detyqOGiPP4+sAZu3V4x2tvTxz6LeE/NxghZ5m6lntRb
-	 pj1g/jUpWUHfXNr0m4Jmdu31ELjTSNjetDsu4cex57BJwsnfb7okHRVqj1lvBa/ZhP
-	 +iFfaLJcLG+EA+gVIA6oUmZiS1C5zcz8LbFTtrlk=
+	b=MQLlCPrmgmLGrNrcdJQRLmaeibbl61iPAPerSdmOr2aAU/w4xemrzOFS88hlT0eCW
+	 KiPV5XCPUsl4fm3Dcu5tz1M2SyKuL5t7ODkbQtupU/4QonkS+1Unvqjn7I97a55JaW
+	 nEeG28TPA0xMwGYnhuYANa9CeHu9OGUXulwu8ug0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731584AbgBUIEG (ORCPT
+        id S1731594AbgBUIEJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Feb 2020 03:04:06 -0500
-Received: from mail.kernel.org ([198.145.29.99]:36998 "EHLO mail.kernel.org"
+        Fri, 21 Feb 2020 03:04:09 -0500
+Received: from mail.kernel.org ([198.145.29.99]:37078 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731578AbgBUIEE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Feb 2020 03:04:04 -0500
+        id S1731578AbgBUIEH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 21 Feb 2020 03:04:07 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C410C20801;
-        Fri, 21 Feb 2020 08:04:02 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8A09524670;
+        Fri, 21 Feb 2020 08:04:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1582272243;
-        bh=uTLnBEJERTGry/cuDv6VzwuoL0a2YHXZt5HbDHNk0wA=;
+        s=default; t=1582272246;
+        bh=5bJSGcisAMQ6ge9lH5Vmo9G0UmVONpbBRcpK/946w5k=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=rNVdrYtAZh7R9w7UVFTPg0RqyMY2wfH7kY6eoweFNRf1hJ3qndW9NCKIcKdsMOxKQ
-         kidg2cDOD4rt/YILJf2c2yL42miKTTd/x5cGhkCdeGJfDO2Nr+NsPwMdg011Lj+OYf
-         SbxWT19yfW6c+XI8iNill9K8327f5lZLJPWfHFtU=
+        b=PF5hhTjmxIb2zXagHAi1cKdWff0hO3uNrFVJE97YxME0kAJup8c02zBIb4ArY/8J6
+         vKRXYgVuBEq+w7nfn3DryIKgJ+rBRIV1Eo9Mc+F1CZtgWfYFwutxde0Fmx8awwDbQx
+         dHSVl8+jazf+ln8TzwKOEQRxq5lEF8HEJbUWSs28=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
@@ -47,9 +47,9 @@ Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         Sakari Ailus <sakari.ailus@linux.intel.com>,
         Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 037/344] media: sun4i-csi: Fix data sampling polarity handling
-Date:   Fri, 21 Feb 2020 08:37:16 +0100
-Message-Id: <20200221072352.510854002@linuxfoundation.org>
+Subject: [PATCH 5.4 038/344] media: sun4i-csi: Fix [HV]sync polarity handling
+Date:   Fri, 21 Feb 2020 08:37:17 +0100
+Message-Id: <20200221072352.592017424@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200221072349.335551332@linuxfoundation.org>
 References: <20200221072349.335551332@linuxfoundation.org>
@@ -64,16 +64,19 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Chen-Yu Tsai <wens@csie.org>
 
-[ Upstream commit cf9e6d5dbdd56ef2aa72f28c806711c4293c8848 ]
+[ Upstream commit 1948dcf0f928b8bcdca57ca3fba8545ba380fc29 ]
 
-The CLK_POL field specifies whether data is sampled on the falling or
-rising edge of PCLK, not whether the data lines are active high or low.
-Evidence of this can be found in the timing diagram labeled "horizontal
-size setting and pixel clock timing".
+The Allwinner camera sensor interface has a different definition of
+[HV]sync. While the timing diagram uses the names HSYNC and VSYNC,
+the note following the diagram and register names use HREF and VREF.
+Combined they imply the hardware uses either [HV]REF or inverted
+[HV]SYNC. There are also registers to set horizontal skip lengths
+in pixels and vertical skip lengths in lines, also known as back
+porches.
 
-Fix the setting by checking the correct flag, V4L2_MBUS_PCLK_SAMPLE_RISING.
-While at it, reorder the three polarity flag checks so HSYNC and VSYNC
-are grouped together.
+Fix the polarity handling by using the opposite polarity flag for
+the checks. Also rename `[hv]sync_pol` to `[hv]ref_pol` to better
+match the hardware register description.
 
 Fixes: 577bbf23b758 ("media: sunxi: Add A10 CSI driver")
 Signed-off-by: Chen-Yu Tsai <wens@csie.org>
@@ -82,23 +85,64 @@ Signed-off-by: Sakari Ailus <sakari.ailus@linux.intel.com>
 Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/media/platform/sunxi/sun4i-csi/sun4i_dma.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ .../media/platform/sunxi/sun4i-csi/sun4i_csi.h |  4 ++--
+ .../media/platform/sunxi/sun4i-csi/sun4i_dma.c | 18 +++++++++++++-----
+ 2 files changed, 15 insertions(+), 7 deletions(-)
 
+diff --git a/drivers/media/platform/sunxi/sun4i-csi/sun4i_csi.h b/drivers/media/platform/sunxi/sun4i-csi/sun4i_csi.h
+index 001c8bde006ce..88d39b3554c4b 100644
+--- a/drivers/media/platform/sunxi/sun4i-csi/sun4i_csi.h
++++ b/drivers/media/platform/sunxi/sun4i-csi/sun4i_csi.h
+@@ -22,8 +22,8 @@
+ #define CSI_CFG_INPUT_FMT(fmt)			((fmt) << 20)
+ #define CSI_CFG_OUTPUT_FMT(fmt)			((fmt) << 16)
+ #define CSI_CFG_YUV_DATA_SEQ(seq)		((seq) << 8)
+-#define CSI_CFG_VSYNC_POL(pol)			((pol) << 2)
+-#define CSI_CFG_HSYNC_POL(pol)			((pol) << 1)
++#define CSI_CFG_VREF_POL(pol)			((pol) << 2)
++#define CSI_CFG_HREF_POL(pol)			((pol) << 1)
+ #define CSI_CFG_PCLK_POL(pol)			((pol) << 0)
+ 
+ #define CSI_CPT_CTRL_REG		0x08
 diff --git a/drivers/media/platform/sunxi/sun4i-csi/sun4i_dma.c b/drivers/media/platform/sunxi/sun4i-csi/sun4i_dma.c
-index d6979e11a67b2..8b567d0f019bf 100644
+index 8b567d0f019bf..78fa1c535ac64 100644
 --- a/drivers/media/platform/sunxi/sun4i-csi/sun4i_dma.c
 +++ b/drivers/media/platform/sunxi/sun4i-csi/sun4i_dma.c
-@@ -279,8 +279,8 @@ static int sun4i_csi_start_streaming(struct vb2_queue *vq, unsigned int count)
+@@ -228,7 +228,7 @@ static int sun4i_csi_start_streaming(struct vb2_queue *vq, unsigned int count)
+ 	struct sun4i_csi *csi = vb2_get_drv_priv(vq);
+ 	struct v4l2_fwnode_bus_parallel *bus = &csi->bus;
+ 	const struct sun4i_csi_format *csi_fmt;
+-	unsigned long hsync_pol, pclk_pol, vsync_pol;
++	unsigned long href_pol, pclk_pol, vref_pol;
+ 	unsigned long flags;
+ 	unsigned int i;
+ 	int ret;
+@@ -278,13 +278,21 @@ static int sun4i_csi_start_streaming(struct vb2_queue *vq, unsigned int count)
+ 	writel(CSI_WIN_CTRL_H_ACTIVE(csi->fmt.height),
  	       csi->regs + CSI_WIN_CTRL_H_REG);
  
- 	hsync_pol = !!(bus->flags & V4L2_MBUS_HSYNC_ACTIVE_HIGH);
--	pclk_pol = !!(bus->flags & V4L2_MBUS_DATA_ACTIVE_HIGH);
- 	vsync_pol = !!(bus->flags & V4L2_MBUS_VSYNC_ACTIVE_HIGH);
-+	pclk_pol = !!(bus->flags & V4L2_MBUS_PCLK_SAMPLE_RISING);
+-	hsync_pol = !!(bus->flags & V4L2_MBUS_HSYNC_ACTIVE_HIGH);
+-	vsync_pol = !!(bus->flags & V4L2_MBUS_VSYNC_ACTIVE_HIGH);
++	/*
++	 * This hardware uses [HV]REF instead of [HV]SYNC. Based on the
++	 * provided timing diagrams in the manual, positive polarity
++	 * equals active high [HV]REF.
++	 *
++	 * When the back porch is 0, [HV]REF is more or less equivalent
++	 * to [HV]SYNC inverted.
++	 */
++	href_pol = !!(bus->flags & V4L2_MBUS_HSYNC_ACTIVE_LOW);
++	vref_pol = !!(bus->flags & V4L2_MBUS_VSYNC_ACTIVE_LOW);
+ 	pclk_pol = !!(bus->flags & V4L2_MBUS_PCLK_SAMPLE_RISING);
  	writel(CSI_CFG_INPUT_FMT(csi_fmt->input) |
  	       CSI_CFG_OUTPUT_FMT(csi_fmt->output) |
- 	       CSI_CFG_VSYNC_POL(vsync_pol) |
+-	       CSI_CFG_VSYNC_POL(vsync_pol) |
+-	       CSI_CFG_HSYNC_POL(hsync_pol) |
++	       CSI_CFG_VREF_POL(vref_pol) |
++	       CSI_CFG_HREF_POL(href_pol) |
+ 	       CSI_CFG_PCLK_POL(pclk_pol),
+ 	       csi->regs + CSI_CFG_REG);
+ 
 -- 
 2.20.1
 
