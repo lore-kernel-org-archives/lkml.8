@@ -7,47 +7,54 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C4AFBC35640
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 07:59:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 09EFCC35641
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 07:59:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 94B7D24670
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 07:59:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C7E1724670
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 07:59:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582271974;
-	bh=p1BD/3vga0HznWfeYY31jHKkRLD5Q/e2+NDXdLmUEBA=;
+	s=default; t=1582271978;
+	bh=L/7k3m7ujjUJpg6AZQAv5OmhaIa7hFweHAdzA6ZUDXQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=cm+eG0JQk4+IIAnWq9sCecRoDFVFBQJPwzkTUDgE6jWeMGPgSicd5orRVwm+CqbNP
-	 3GfcvYx+MWlPLWikxGARLiftEK3P+/yf0yEZIbsYdcGmstdpNZ+oth/bO4x+aXnzRo
-	 cZtu7KvTeThQPZ1IZWtbm9AgbUbOakj1uJfPUgYU=
+	b=glK+WfHJ/pJdgE35oLfGoYZiGDwISO31aHRO/iV1YiU2xXDzDLnLDIbCnZmiSzs68
+	 N/2BUJfzS15WDhRRWAPsJdfO8FtJqd+vNk2ustgEUqpk7TVJpTTJZFQ+6lw/iu7vyl
+	 745/hqwMpRbzpWdZsXCrTVsgBkmyweufoNZi4PQg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730929AbgBUH7d (ORCPT
+        id S1730937AbgBUH7h (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Feb 2020 02:59:33 -0500
-Received: from mail.kernel.org ([198.145.29.99]:59590 "EHLO mail.kernel.org"
+        Fri, 21 Feb 2020 02:59:37 -0500
+Received: from mail.kernel.org ([198.145.29.99]:59648 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730921AbgBUH7b (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Feb 2020 02:59:31 -0500
+        id S1730932AbgBUH7f (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 21 Feb 2020 02:59:35 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 64FCF206ED;
-        Fri, 21 Feb 2020 07:59:30 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6F69924650;
+        Fri, 21 Feb 2020 07:59:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1582271970;
-        bh=p1BD/3vga0HznWfeYY31jHKkRLD5Q/e2+NDXdLmUEBA=;
+        s=default; t=1582271973;
+        bh=L/7k3m7ujjUJpg6AZQAv5OmhaIa7hFweHAdzA6ZUDXQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=wy6LyMxbYqz5spSUZs742/Db0uKVqMgZ68TI55q07joaFI7+1tQlT+RiyejMMW2q9
-         mlY9crVhW9nFhU9Ycud3md9VQf3zMMmMzToxZGFn4g/hxrvqyuKzG0rhNhoTak3Ir2
-         +tmoGEO9wE17FnJTWnunwHtuBBlymItvBpn0dbCo=
+        b=h2I2XZ8AYUaQwp7mH3T6bJlNSH6YkXgJ/p4jnSlmgWfm+7WFz0HDk+1jU9L19gLlZ
+         syRzErVKm8P6fPNdVv1oPndAGgDsD+k0NYuQYSki4MzXQ1fqTDn590nzYxTHgfiuAi
+         C4uP0/C9AS2QomtzjqOM9jbaxI9QEb63785XHtgM=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Tom Zanussi <zanussi@kernel.org>,
-        "Steven Rostedt (VMware)" <rostedt@goodmis.org>,
+        stable@vger.kernel.org, Masahiro Yamada <masahiroy@kernel.org>,
+        Gang He <ghe@suse.com>, Mark Fasheh <mark@fasheh.com>,
+        Joel Becker <jlbec@evilplan.org>,
+        Junxiao Bi <junxiao.bi@oracle.com>,
+        Joseph Qi <jiangqi903@gmail.com>,
+        Changwei Ge <gechangwei@live.cn>,
+        Jun Piao <piaojun@huawei.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.5 368/399] tracing: Fix now invalid var_ref_vals assumption in trace action
-Date:   Fri, 21 Feb 2020 08:41:33 +0100
-Message-Id: <20200221072436.329313560@linuxfoundation.org>
+Subject: [PATCH 5.5 369/399] ocfs2: make local header paths relative to C files
+Date:   Fri, 21 Feb 2020 08:41:34 +0100
+Message-Id: <20200221072436.402379790@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200221072402.315346745@linuxfoundation.org>
 References: <20200221072402.315346745@linuxfoundation.org>
@@ -60,173 +67,338 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Tom Zanussi <zanussi@kernel.org>
+From: Masahiro Yamada <masahiroy@kernel.org>
 
-[ Upstream commit d380dcde9a07ca5de4805dee11f58a98ec0ad6ff ]
+[ Upstream commit ca322fb6030956c2337fbf1c1beeb08c5dd5c943 ]
 
-The patch 'tracing: Fix histogram code when expression has same var as
-value' added code to return an existing variable reference when
-creating a new variable reference, which resulted in var_ref_vals
-slots being reused instead of being duplicated.
+Gang He reports the failure of building fs/ocfs2/ as an external module
+of the kernel installed on the system:
 
-The implementation of the trace action assumes that the end of the
-var_ref_vals array starting at action_data.var_ref_idx corresponds to
-the values that will be assigned to the trace params. The patch
-mentioned above invalidates that assumption, which means that each
-param needs to explicitly specify its index into var_ref_vals.
+ $ cd fs/ocfs2
+ $ make -C /lib/modules/`uname -r`/build M=`pwd` modules
 
-This fix changes action_data.var_ref_idx to an array of var ref
-indexes to account for that.
+If you want to make it work reliably, I'd recommend to remove ccflags-y
+from the Makefiles, and to make header paths relative to the C files.  I
+think this is the correct usage of the #include "..." directive.
 
-Link: https://lore.kernel.org/r/1580335695.6220.8.camel@kernel.org
-
-Fixes: 8bcebc77e85f ("tracing: Fix histogram code when expression has same var as value")
-Signed-off-by: Tom Zanussi <zanussi@kernel.org>
-Signed-off-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
+Link: http://lkml.kernel.org/r/20191227022950.14804-1-ghe@suse.com
+Signed-off-by: Masahiro Yamada <masahiroy@kernel.org>
+Signed-off-by: Gang He <ghe@suse.com>
+Reported-by: Gang He <ghe@suse.com>
+Reviewed-by: Gang He <ghe@suse.com>
+Cc: Mark Fasheh <mark@fasheh.com>
+Cc: Joel Becker <jlbec@evilplan.org>
+Cc: Junxiao Bi <junxiao.bi@oracle.com>
+Cc: Joseph Qi <jiangqi903@gmail.com>
+Cc: Changwei Ge <gechangwei@live.cn>
+Cc: Jun Piao <piaojun@huawei.com>
+Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
+Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- kernel/trace/trace_events_hist.c | 53 +++++++++++++++++++++++---------
- 1 file changed, 38 insertions(+), 15 deletions(-)
+ fs/ocfs2/dlm/Makefile      | 2 --
+ fs/ocfs2/dlm/dlmast.c      | 8 ++++----
+ fs/ocfs2/dlm/dlmconvert.c  | 8 ++++----
+ fs/ocfs2/dlm/dlmdebug.c    | 8 ++++----
+ fs/ocfs2/dlm/dlmdomain.c   | 8 ++++----
+ fs/ocfs2/dlm/dlmlock.c     | 8 ++++----
+ fs/ocfs2/dlm/dlmmaster.c   | 8 ++++----
+ fs/ocfs2/dlm/dlmrecovery.c | 8 ++++----
+ fs/ocfs2/dlm/dlmthread.c   | 8 ++++----
+ fs/ocfs2/dlm/dlmunlock.c   | 8 ++++----
+ fs/ocfs2/dlmfs/Makefile    | 2 --
+ fs/ocfs2/dlmfs/dlmfs.c     | 4 ++--
+ fs/ocfs2/dlmfs/userdlm.c   | 6 +++---
+ 13 files changed, 41 insertions(+), 45 deletions(-)
 
-diff --git a/kernel/trace/trace_events_hist.c b/kernel/trace/trace_events_hist.c
-index 48f9075e4fa18..e10585ef00e15 100644
---- a/kernel/trace/trace_events_hist.c
-+++ b/kernel/trace/trace_events_hist.c
-@@ -470,11 +470,12 @@ struct action_data {
- 	 * When a histogram trigger is hit, the values of any
- 	 * references to variables, including variables being passed
- 	 * as parameters to synthetic events, are collected into a
--	 * var_ref_vals array.  This var_ref_idx is the index of the
--	 * first param in the array to be passed to the synthetic
--	 * event invocation.
-+	 * var_ref_vals array.  This var_ref_idx array is an array of
-+	 * indices into the var_ref_vals array, one for each synthetic
-+	 * event param, and is passed to the synthetic event
-+	 * invocation.
- 	 */
--	unsigned int		var_ref_idx;
-+	unsigned int		var_ref_idx[TRACING_MAP_VARS_MAX];
- 	struct synth_event	*synth_event;
- 	bool			use_trace_keyword;
- 	char			*synth_event_name;
-@@ -875,14 +876,14 @@ static struct trace_event_functions synth_event_funcs = {
- 
- static notrace void trace_event_raw_event_synth(void *__data,
- 						u64 *var_ref_vals,
--						unsigned int var_ref_idx)
-+						unsigned int *var_ref_idx)
- {
- 	struct trace_event_file *trace_file = __data;
- 	struct synth_trace_event *entry;
- 	struct trace_event_buffer fbuffer;
- 	struct ring_buffer *buffer;
- 	struct synth_event *event;
--	unsigned int i, n_u64;
-+	unsigned int i, n_u64, val_idx;
- 	int fields_size = 0;
- 
- 	event = trace_file->event_call->data;
-@@ -905,15 +906,16 @@ static notrace void trace_event_raw_event_synth(void *__data,
- 		goto out;
- 
- 	for (i = 0, n_u64 = 0; i < event->n_fields; i++) {
-+		val_idx = var_ref_idx[i];
- 		if (event->fields[i]->is_string) {
--			char *str_val = (char *)(long)var_ref_vals[var_ref_idx + i];
-+			char *str_val = (char *)(long)var_ref_vals[val_idx];
- 			char *str_field = (char *)&entry->fields[n_u64];
- 
- 			strscpy(str_field, str_val, STR_VAR_LEN_MAX);
- 			n_u64 += STR_VAR_LEN_MAX / sizeof(u64);
- 		} else {
- 			struct synth_field *field = event->fields[i];
--			u64 val = var_ref_vals[var_ref_idx + i];
-+			u64 val = var_ref_vals[val_idx];
- 
- 			switch (field->size) {
- 			case 1:
-@@ -1113,10 +1115,10 @@ static struct tracepoint *alloc_synth_tracepoint(char *name)
- }
- 
- typedef void (*synth_probe_func_t) (void *__data, u64 *var_ref_vals,
--				    unsigned int var_ref_idx);
-+				    unsigned int *var_ref_idx);
- 
- static inline void trace_synth(struct synth_event *event, u64 *var_ref_vals,
--			       unsigned int var_ref_idx)
-+			       unsigned int *var_ref_idx)
- {
- 	struct tracepoint *tp = event->tp;
- 
-@@ -2651,6 +2653,22 @@ static int init_var_ref(struct hist_field *ref_field,
- 	goto out;
- }
- 
-+static int find_var_ref_idx(struct hist_trigger_data *hist_data,
-+			    struct hist_field *var_field)
-+{
-+	struct hist_field *ref_field;
-+	int i;
-+
-+	for (i = 0; i < hist_data->n_var_refs; i++) {
-+		ref_field = hist_data->var_refs[i];
-+		if (ref_field->var.idx == var_field->var.idx &&
-+		    ref_field->var.hist_data == var_field->hist_data)
-+			return i;
-+	}
-+
-+	return -ENOENT;
-+}
-+
- /**
-  * create_var_ref - Create a variable reference and attach it to trigger
-  * @hist_data: The trigger that will be referencing the variable
-@@ -4224,11 +4242,11 @@ static int trace_action_create(struct hist_trigger_data *hist_data,
- 	struct trace_array *tr = hist_data->event_file->tr;
- 	char *event_name, *param, *system = NULL;
- 	struct hist_field *hist_field, *var_ref;
--	unsigned int i, var_ref_idx;
-+	unsigned int i;
- 	unsigned int field_pos = 0;
- 	struct synth_event *event;
- 	char *synth_event_name;
--	int ret = 0;
-+	int var_ref_idx, ret = 0;
- 
- 	lockdep_assert_held(&event_mutex);
- 
-@@ -4245,8 +4263,6 @@ static int trace_action_create(struct hist_trigger_data *hist_data,
- 
- 	event->ref++;
- 
--	var_ref_idx = hist_data->n_var_refs;
+diff --git a/fs/ocfs2/dlm/Makefile b/fs/ocfs2/dlm/Makefile
+index 38b2243727763..5e700b45d32d2 100644
+--- a/fs/ocfs2/dlm/Makefile
++++ b/fs/ocfs2/dlm/Makefile
+@@ -1,6 +1,4 @@
+ # SPDX-License-Identifier: GPL-2.0-only
+-ccflags-y := -I $(srctree)/$(src)/..
 -
- 	for (i = 0; i < data->n_params; i++) {
- 		char *p;
+ obj-$(CONFIG_OCFS2_FS_O2CB) += ocfs2_dlm.o
  
-@@ -4295,6 +4311,14 @@ static int trace_action_create(struct hist_trigger_data *hist_data,
- 				goto err;
- 			}
+ ocfs2_dlm-objs := dlmdomain.o dlmdebug.o dlmthread.o dlmrecovery.o \
+diff --git a/fs/ocfs2/dlm/dlmast.c b/fs/ocfs2/dlm/dlmast.c
+index 4de89af96abf0..6abaded3ff6bd 100644
+--- a/fs/ocfs2/dlm/dlmast.c
++++ b/fs/ocfs2/dlm/dlmast.c
+@@ -23,15 +23,15 @@
+ #include <linux/spinlock.h>
  
-+			var_ref_idx = find_var_ref_idx(hist_data, var_ref);
-+			if (WARN_ON(var_ref_idx < 0)) {
-+				ret = var_ref_idx;
-+				goto err;
-+			}
-+
-+			data->var_ref_idx[i] = var_ref_idx;
-+
- 			field_pos++;
- 			kfree(p);
- 			continue;
-@@ -4313,7 +4337,6 @@ static int trace_action_create(struct hist_trigger_data *hist_data,
- 	}
  
- 	data->synth_event = event;
--	data->var_ref_idx = var_ref_idx;
-  out:
- 	return ret;
-  err:
+-#include "cluster/heartbeat.h"
+-#include "cluster/nodemanager.h"
+-#include "cluster/tcp.h"
++#include "../cluster/heartbeat.h"
++#include "../cluster/nodemanager.h"
++#include "../cluster/tcp.h"
+ 
+ #include "dlmapi.h"
+ #include "dlmcommon.h"
+ 
+ #define MLOG_MASK_PREFIX ML_DLM
+-#include "cluster/masklog.h"
++#include "../cluster/masklog.h"
+ 
+ static void dlm_update_lvb(struct dlm_ctxt *dlm, struct dlm_lock_resource *res,
+ 			   struct dlm_lock *lock);
+diff --git a/fs/ocfs2/dlm/dlmconvert.c b/fs/ocfs2/dlm/dlmconvert.c
+index 965f45dbe17bf..6051edc33aefa 100644
+--- a/fs/ocfs2/dlm/dlmconvert.c
++++ b/fs/ocfs2/dlm/dlmconvert.c
+@@ -23,9 +23,9 @@
+ #include <linux/spinlock.h>
+ 
+ 
+-#include "cluster/heartbeat.h"
+-#include "cluster/nodemanager.h"
+-#include "cluster/tcp.h"
++#include "../cluster/heartbeat.h"
++#include "../cluster/nodemanager.h"
++#include "../cluster/tcp.h"
+ 
+ #include "dlmapi.h"
+ #include "dlmcommon.h"
+@@ -33,7 +33,7 @@
+ #include "dlmconvert.h"
+ 
+ #define MLOG_MASK_PREFIX ML_DLM
+-#include "cluster/masklog.h"
++#include "../cluster/masklog.h"
+ 
+ /* NOTE: __dlmconvert_master is the only function in here that
+  * needs a spinlock held on entry (res->spinlock) and it is the
+diff --git a/fs/ocfs2/dlm/dlmdebug.c b/fs/ocfs2/dlm/dlmdebug.c
+index 4d0b452012b25..c5c6efba7b5e2 100644
+--- a/fs/ocfs2/dlm/dlmdebug.c
++++ b/fs/ocfs2/dlm/dlmdebug.c
+@@ -17,9 +17,9 @@
+ #include <linux/debugfs.h>
+ #include <linux/export.h>
+ 
+-#include "cluster/heartbeat.h"
+-#include "cluster/nodemanager.h"
+-#include "cluster/tcp.h"
++#include "../cluster/heartbeat.h"
++#include "../cluster/nodemanager.h"
++#include "../cluster/tcp.h"
+ 
+ #include "dlmapi.h"
+ #include "dlmcommon.h"
+@@ -27,7 +27,7 @@
+ #include "dlmdebug.h"
+ 
+ #define MLOG_MASK_PREFIX ML_DLM
+-#include "cluster/masklog.h"
++#include "../cluster/masklog.h"
+ 
+ static int stringify_lockname(const char *lockname, int locklen, char *buf,
+ 			      int len);
+diff --git a/fs/ocfs2/dlm/dlmdomain.c b/fs/ocfs2/dlm/dlmdomain.c
+index ee6f459f97706..357cfc702ce36 100644
+--- a/fs/ocfs2/dlm/dlmdomain.c
++++ b/fs/ocfs2/dlm/dlmdomain.c
+@@ -20,9 +20,9 @@
+ #include <linux/debugfs.h>
+ #include <linux/sched/signal.h>
+ 
+-#include "cluster/heartbeat.h"
+-#include "cluster/nodemanager.h"
+-#include "cluster/tcp.h"
++#include "../cluster/heartbeat.h"
++#include "../cluster/nodemanager.h"
++#include "../cluster/tcp.h"
+ 
+ #include "dlmapi.h"
+ #include "dlmcommon.h"
+@@ -30,7 +30,7 @@
+ #include "dlmdebug.h"
+ 
+ #define MLOG_MASK_PREFIX (ML_DLM|ML_DLM_DOMAIN)
+-#include "cluster/masklog.h"
++#include "../cluster/masklog.h"
+ 
+ /*
+  * ocfs2 node maps are array of long int, which limits to send them freely
+diff --git a/fs/ocfs2/dlm/dlmlock.c b/fs/ocfs2/dlm/dlmlock.c
+index baff087f38632..83f0760e4fbaa 100644
+--- a/fs/ocfs2/dlm/dlmlock.c
++++ b/fs/ocfs2/dlm/dlmlock.c
+@@ -25,9 +25,9 @@
+ #include <linux/delay.h>
+ 
+ 
+-#include "cluster/heartbeat.h"
+-#include "cluster/nodemanager.h"
+-#include "cluster/tcp.h"
++#include "../cluster/heartbeat.h"
++#include "../cluster/nodemanager.h"
++#include "../cluster/tcp.h"
+ 
+ #include "dlmapi.h"
+ #include "dlmcommon.h"
+@@ -35,7 +35,7 @@
+ #include "dlmconvert.h"
+ 
+ #define MLOG_MASK_PREFIX ML_DLM
+-#include "cluster/masklog.h"
++#include "../cluster/masklog.h"
+ 
+ static struct kmem_cache *dlm_lock_cache;
+ 
+diff --git a/fs/ocfs2/dlm/dlmmaster.c b/fs/ocfs2/dlm/dlmmaster.c
+index 74b768ca1cd88..c9d7037b6793c 100644
+--- a/fs/ocfs2/dlm/dlmmaster.c
++++ b/fs/ocfs2/dlm/dlmmaster.c
+@@ -25,9 +25,9 @@
+ #include <linux/delay.h>
+ 
+ 
+-#include "cluster/heartbeat.h"
+-#include "cluster/nodemanager.h"
+-#include "cluster/tcp.h"
++#include "../cluster/heartbeat.h"
++#include "../cluster/nodemanager.h"
++#include "../cluster/tcp.h"
+ 
+ #include "dlmapi.h"
+ #include "dlmcommon.h"
+@@ -35,7 +35,7 @@
+ #include "dlmdebug.h"
+ 
+ #define MLOG_MASK_PREFIX (ML_DLM|ML_DLM_MASTER)
+-#include "cluster/masklog.h"
++#include "../cluster/masklog.h"
+ 
+ static void dlm_mle_node_down(struct dlm_ctxt *dlm,
+ 			      struct dlm_master_list_entry *mle,
+diff --git a/fs/ocfs2/dlm/dlmrecovery.c b/fs/ocfs2/dlm/dlmrecovery.c
+index 064ce5bbc3f6c..bcaaca5112d6e 100644
+--- a/fs/ocfs2/dlm/dlmrecovery.c
++++ b/fs/ocfs2/dlm/dlmrecovery.c
+@@ -26,16 +26,16 @@
+ #include <linux/delay.h>
+ 
+ 
+-#include "cluster/heartbeat.h"
+-#include "cluster/nodemanager.h"
+-#include "cluster/tcp.h"
++#include "../cluster/heartbeat.h"
++#include "../cluster/nodemanager.h"
++#include "../cluster/tcp.h"
+ 
+ #include "dlmapi.h"
+ #include "dlmcommon.h"
+ #include "dlmdomain.h"
+ 
+ #define MLOG_MASK_PREFIX (ML_DLM|ML_DLM_RECOVERY)
+-#include "cluster/masklog.h"
++#include "../cluster/masklog.h"
+ 
+ static void dlm_do_local_recovery_cleanup(struct dlm_ctxt *dlm, u8 dead_node);
+ 
+diff --git a/fs/ocfs2/dlm/dlmthread.c b/fs/ocfs2/dlm/dlmthread.c
+index 61c51c268460a..fd40c17cd0225 100644
+--- a/fs/ocfs2/dlm/dlmthread.c
++++ b/fs/ocfs2/dlm/dlmthread.c
+@@ -25,16 +25,16 @@
+ #include <linux/delay.h>
+ 
+ 
+-#include "cluster/heartbeat.h"
+-#include "cluster/nodemanager.h"
+-#include "cluster/tcp.h"
++#include "../cluster/heartbeat.h"
++#include "../cluster/nodemanager.h"
++#include "../cluster/tcp.h"
+ 
+ #include "dlmapi.h"
+ #include "dlmcommon.h"
+ #include "dlmdomain.h"
+ 
+ #define MLOG_MASK_PREFIX (ML_DLM|ML_DLM_THREAD)
+-#include "cluster/masklog.h"
++#include "../cluster/masklog.h"
+ 
+ static int dlm_thread(void *data);
+ static void dlm_flush_asts(struct dlm_ctxt *dlm);
+diff --git a/fs/ocfs2/dlm/dlmunlock.c b/fs/ocfs2/dlm/dlmunlock.c
+index 3883633e82eb9..dcb17ca8ae74d 100644
+--- a/fs/ocfs2/dlm/dlmunlock.c
++++ b/fs/ocfs2/dlm/dlmunlock.c
+@@ -23,15 +23,15 @@
+ #include <linux/spinlock.h>
+ #include <linux/delay.h>
+ 
+-#include "cluster/heartbeat.h"
+-#include "cluster/nodemanager.h"
+-#include "cluster/tcp.h"
++#include "../cluster/heartbeat.h"
++#include "../cluster/nodemanager.h"
++#include "../cluster/tcp.h"
+ 
+ #include "dlmapi.h"
+ #include "dlmcommon.h"
+ 
+ #define MLOG_MASK_PREFIX ML_DLM
+-#include "cluster/masklog.h"
++#include "../cluster/masklog.h"
+ 
+ #define DLM_UNLOCK_FREE_LOCK           0x00000001
+ #define DLM_UNLOCK_CALL_AST            0x00000002
+diff --git a/fs/ocfs2/dlmfs/Makefile b/fs/ocfs2/dlmfs/Makefile
+index a9874e441bd4a..c7895f65be0ea 100644
+--- a/fs/ocfs2/dlmfs/Makefile
++++ b/fs/ocfs2/dlmfs/Makefile
+@@ -1,6 +1,4 @@
+ # SPDX-License-Identifier: GPL-2.0-only
+-ccflags-y := -I $(srctree)/$(src)/..
+-
+ obj-$(CONFIG_OCFS2_FS) += ocfs2_dlmfs.o
+ 
+ ocfs2_dlmfs-objs := userdlm.o dlmfs.o
+diff --git a/fs/ocfs2/dlmfs/dlmfs.c b/fs/ocfs2/dlmfs/dlmfs.c
+index 4f1668c81e1f1..8e4f1ace467c1 100644
+--- a/fs/ocfs2/dlmfs/dlmfs.c
++++ b/fs/ocfs2/dlmfs/dlmfs.c
+@@ -33,11 +33,11 @@
+ 
+ #include <linux/uaccess.h>
+ 
+-#include "stackglue.h"
++#include "../stackglue.h"
+ #include "userdlm.h"
+ 
+ #define MLOG_MASK_PREFIX ML_DLMFS
+-#include "cluster/masklog.h"
++#include "../cluster/masklog.h"
+ 
+ 
+ static const struct super_operations dlmfs_ops;
+diff --git a/fs/ocfs2/dlmfs/userdlm.c b/fs/ocfs2/dlmfs/userdlm.c
+index 525b14ddfba50..3df5be25bfb1f 100644
+--- a/fs/ocfs2/dlmfs/userdlm.c
++++ b/fs/ocfs2/dlmfs/userdlm.c
+@@ -21,12 +21,12 @@
+ #include <linux/types.h>
+ #include <linux/crc32.h>
+ 
+-#include "ocfs2_lockingver.h"
+-#include "stackglue.h"
++#include "../ocfs2_lockingver.h"
++#include "../stackglue.h"
+ #include "userdlm.h"
+ 
+ #define MLOG_MASK_PREFIX ML_DLMFS
+-#include "cluster/masklog.h"
++#include "../cluster/masklog.h"
+ 
+ 
+ static inline struct user_lock_res *user_lksb_to_lock_res(struct ocfs2_dlm_lksb *lksb)
 -- 
 2.20.1
 
