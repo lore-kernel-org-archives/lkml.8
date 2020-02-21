@@ -2,55 +2,52 @@ Return-Path: <SRS0=1210=4J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 49AE3C35642
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 08:36:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 15230C35642
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 08:36:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1F58F206ED
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 08:36:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DA0EC206ED
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 08:36:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582274187;
-	bh=JgJdL0BFnsR0Jb/1/9CkhRAzvlV9Y2mCo/X46u5JkZ4=;
+	s=default; t=1582274193;
+	bh=mD/81wOsSpiXRMLsMfU2sksf0W/6xASYrsz7X25q6NI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=TkC2xb7wfJaKaZPupaaobmioqHLEEWyqTKvGh6beEFjG7G+xZ0MhxfyUtv2LrS2HF
-	 zgRRRqtumrVEWbZ5TFiUGTFza5yuOmygh15K9nVJ1OSkg7o0j3Cfs4h8tHjOriJi93
-	 hRWDOobmuwGcSJhMd7aUEBhsdz/SB01CAmPSY35I=
+	b=14WpIGdT/gePYCFDxNrOwbv94W3mvQbhByovpEpx34+0YFeH181MEgILfwiOj6qsw
+	 kUHNiM/TCMkLtELp9WjjnJFSADL7AAKKabQ5wAhTgq0IokPa4CR9pKeteQ36w3N0M5
+	 tIdfMJe0IkVBT6t7f5/Ipsv6CuAecy7hLkMWNaTU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387555AbgBUIgU (ORCPT
+        id S1732258AbgBUIgc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Feb 2020 03:36:20 -0500
-Received: from mail.kernel.org ([198.145.29.99]:40498 "EHLO mail.kernel.org"
+        Fri, 21 Feb 2020 03:36:32 -0500
+Received: from mail.kernel.org ([198.145.29.99]:40396 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731959AbgBUIGf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Feb 2020 03:06:35 -0500
+        id S1731927AbgBUIG3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 21 Feb 2020 03:06:29 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D523F24670;
-        Fri, 21 Feb 2020 08:06:33 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id CE9152465D;
+        Fri, 21 Feb 2020 08:06:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1582272394;
-        bh=JgJdL0BFnsR0Jb/1/9CkhRAzvlV9Y2mCo/X46u5JkZ4=;
+        s=default; t=1582272389;
+        bh=mD/81wOsSpiXRMLsMfU2sksf0W/6xASYrsz7X25q6NI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=lMJn3afyS2iKOnvpHcRMgb28UsiEF7SgayGSMQdg3HTjJvNYfGPQsxLsEpE+LEVb5
-         bkvT+0RJzskSWQyp5Z4PH1/3HHXiJ3Ett/AVZmvlD8m7xoRwFCy5xr9xER9lHxts+B
-         iToS1ttKXl2SQSWhpIYu9Qm+MWFenxxxnH+hnnYs=
+        b=fIg9DYANMpqcRz/SWRQkYXiM4VdnPvwj9TffY7AkCCibR8zJTBi4Y3oiDLPMDxRPE
+         QS/xAcJ08Xi/yv3w2D8LELTog14eVtXR1uql9Yj16tZ/qoOj+eF7pq2n0Gp094wYvU
+         2/KeCCYKtl+MjK1ooNeE09i8mAm2cNghAU9Fkr6s=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Ezequiel Garcia <ezequiel@collabora.com>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        Nathan Chancellor <natechancellor@gmail.com>,
-        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
-        Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
+        stable@vger.kernel.org, Paul Cercueil <paul@crapouillou.net>,
+        Sam Ravnborg <sam@ravnborg.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 126/344] media: v4l2-device.h: Explicitly compare grp{id,mask} to zero in v4l2_device macros
-Date:   Fri, 21 Feb 2020 08:38:45 +0100
-Message-Id: <20200221072400.306485974@linuxfoundation.org>
+Subject: [PATCH 5.4 124/344] gpu/drm: ingenic: Avoid null pointer deference in plane atomic update
+Date:   Fri, 21 Feb 2020 08:38:43 +0100
+Message-Id: <20200221072400.127480914@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200221072349.335551332@linuxfoundation.org>
 References: <20200221072349.335551332@linuxfoundation.org>
@@ -63,91 +60,53 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Nathan Chancellor <natechancellor@gmail.com>
+From: Paul Cercueil <paul@crapouillou.net>
 
-[ Upstream commit afb34781620274236bd9fc9246e22f6963ef5262 ]
+[ Upstream commit 354b051c5dcbeb35bbfd5d54161364fc7a75a58a ]
 
-When building with Clang + -Wtautological-constant-compare, several of
-the ivtv and cx18 drivers warn along the lines of:
+It is possible that there is no drm_framebuffer associated with a given
+plane state.
 
- drivers/media/pci/cx18/cx18-driver.c:1005:21: warning: converting the
- result of '<<' to a boolean always evaluates to true
- [-Wtautological-constant-compare]
-                         cx18_call_hw(cx, CX18_HW_GPIO_RESET_CTRL,
-                                         ^
- drivers/media/pci/cx18/cx18-cards.h:18:37: note: expanded from macro
- 'CX18_HW_GPIO_RESET_CTRL'
- #define CX18_HW_GPIO_RESET_CTRL         (1 << 6)
-                                           ^
- 1 warning generated.
+v2: Handle drm_plane->state which can be NULL too
 
-This warning happens because the shift operation is implicitly converted
-to a boolean in v4l2_device_mask_call_all before being negated. This can
-be solved by just comparing the mask result to 0 explicitly so that
-there is no boolean conversion. The ultimate goal is to enable
--Wtautological-compare globally because there are several subwarnings
-that would be helpful to have.
-
-For visual consistency and avoidance of these warnings in the future,
-all of the implicitly boolean conversions in the v4l2_device macros
-are converted to explicit ones as well.
-
-Link: https://github.com/ClangBuiltLinux/linux/issues/752
-
-Reviewed-by: Ezequiel Garcia <ezequiel@collabora.com>
-Reviewed-by: Nick Desaulniers <ndesaulniers@google.com>
-Signed-off-by: Nathan Chancellor <natechancellor@gmail.com>
-Signed-off-by: Hans Verkuil <hverkuil-cisco@xs4all.nl>
-Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
+Signed-off-by: Paul Cercueil <paul@crapouillou.net>
+Link: https://patchwork.freedesktop.org/patch/msgid/20191210144142.33143-2-paul@crapouillou.net
+# *** extracted tags ***
+Acked-by: Sam Ravnborg <sam@ravnborg.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- include/media/v4l2-device.h | 12 ++++++------
- 1 file changed, 6 insertions(+), 6 deletions(-)
+ drivers/gpu/drm/ingenic/ingenic-drm.c | 16 ++++++++++------
+ 1 file changed, 10 insertions(+), 6 deletions(-)
 
-diff --git a/include/media/v4l2-device.h b/include/media/v4l2-device.h
-index e0b8f2602670d..a0e93f0ef62a1 100644
---- a/include/media/v4l2-device.h
-+++ b/include/media/v4l2-device.h
-@@ -371,7 +371,7 @@ static inline bool v4l2_device_supports_requests(struct v4l2_device *v4l2_dev)
- 		struct v4l2_subdev *__sd;				\
- 									\
- 		__v4l2_device_call_subdevs_p(v4l2_dev, __sd,		\
--			!(grpid) || __sd->grp_id == (grpid), o, f ,	\
-+			(grpid) == 0 || __sd->grp_id == (grpid), o, f ,	\
- 			##args);					\
- 	} while (0)
+diff --git a/drivers/gpu/drm/ingenic/ingenic-drm.c b/drivers/gpu/drm/ingenic/ingenic-drm.c
+index 2e2ed653e9c6b..f156f245fdecf 100644
+--- a/drivers/gpu/drm/ingenic/ingenic-drm.c
++++ b/drivers/gpu/drm/ingenic/ingenic-drm.c
+@@ -371,14 +371,18 @@ static void ingenic_drm_plane_atomic_update(struct drm_plane *plane,
+ 	struct ingenic_drm *priv = drm_plane_get_priv(plane);
+ 	struct drm_plane_state *state = plane->state;
+ 	unsigned int width, height, cpp;
++	dma_addr_t addr;
  
-@@ -403,7 +403,7 @@ static inline bool v4l2_device_supports_requests(struct v4l2_device *v4l2_dev)
- ({									\
- 	struct v4l2_subdev *__sd;					\
- 	__v4l2_device_call_subdevs_until_err_p(v4l2_dev, __sd,		\
--			!(grpid) || __sd->grp_id == (grpid), o, f ,	\
-+			(grpid) == 0 || __sd->grp_id == (grpid), o, f ,	\
- 			##args);					\
- })
+-	width = state->crtc->state->adjusted_mode.hdisplay;
+-	height = state->crtc->state->adjusted_mode.vdisplay;
+-	cpp = state->fb->format->cpp[plane->index];
++	if (state && state->fb) {
++		addr = drm_fb_cma_get_gem_addr(state->fb, state, 0);
++		width = state->crtc->state->adjusted_mode.hdisplay;
++		height = state->crtc->state->adjusted_mode.vdisplay;
++		cpp = state->fb->format->cpp[plane->index];
  
-@@ -431,8 +431,8 @@ static inline bool v4l2_device_supports_requests(struct v4l2_device *v4l2_dev)
- 		struct v4l2_subdev *__sd;				\
- 									\
- 		__v4l2_device_call_subdevs_p(v4l2_dev, __sd,		\
--			!(grpmsk) || (__sd->grp_id & (grpmsk)), o, f ,	\
--			##args);					\
-+			(grpmsk) == 0 || (__sd->grp_id & (grpmsk)), o,	\
-+			f , ##args);					\
- 	} while (0)
+-	priv->dma_hwdesc->addr = drm_fb_cma_get_gem_addr(state->fb, state, 0);
+-	priv->dma_hwdesc->cmd = width * height * cpp / 4;
+-	priv->dma_hwdesc->cmd |= JZ_LCD_CMD_EOF_IRQ;
++		priv->dma_hwdesc->addr = addr;
++		priv->dma_hwdesc->cmd = width * height * cpp / 4;
++		priv->dma_hwdesc->cmd |= JZ_LCD_CMD_EOF_IRQ;
++	}
+ }
  
- /**
-@@ -462,8 +462,8 @@ static inline bool v4l2_device_supports_requests(struct v4l2_device *v4l2_dev)
- ({									\
- 	struct v4l2_subdev *__sd;					\
- 	__v4l2_device_call_subdevs_until_err_p(v4l2_dev, __sd,		\
--			!(grpmsk) || (__sd->grp_id & (grpmsk)), o, f ,	\
--			##args);					\
-+			(grpmsk) == 0 || (__sd->grp_id & (grpmsk)), o,	\
-+			f , ##args);					\
- })
- 
- 
+ static void ingenic_drm_encoder_atomic_mode_set(struct drm_encoder *encoder,
 -- 
 2.20.1
 
