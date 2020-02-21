@@ -7,49 +7,49 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2DD49C35640
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 08:04:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5A174C35640
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 08:04:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 035762465D
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 08:04:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 309E424670
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 08:04:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582272273;
-	bh=a/JbiaU6A10GtmsEI/rx+V/8XXumfKNN7zGs8yipPCQ=;
+	s=default; t=1582272276;
+	bh=kwYS4IJqe/CCzOFwvS5e6qcl5rOhH6tgd+nA24huEr8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=dabdfdtigXhIjsJVeGnQh/iTE35iXdd7n3+freCZ/koCPsFuMpFidSR9B8CNWrv0k
-	 nkRk8VqmTmfodqxD73f23j9T0CKnj+mCiUunsopKcjltzWygG39CTjF/p1nfHsv113
-	 fbUkP9AWfl6Tu4JZ41wv/TcrhsVSvavlTfguvsuE=
+	b=14UnBnoi532Zu9BwGRhMZGQHEeMt4aThH5mzJTWoDqJ5tn4bAhoMS/q6lqpnU26O5
+	 6rp/TUQRjWgunn/S/mEBXhVwYC63WFSmLB/IMfkhTns4MdN4MxT4R82l6Q+hD/bvvP
+	 4gFTTGETHANwmVmJ0ThXKGVlCxeTmf53CMYHGw1M=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729689AbgBUIEc (ORCPT
+        id S1731669AbgBUIEf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Feb 2020 03:04:32 -0500
-Received: from mail.kernel.org ([198.145.29.99]:37610 "EHLO mail.kernel.org"
+        Fri, 21 Feb 2020 03:04:35 -0500
+Received: from mail.kernel.org ([198.145.29.99]:37664 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731649AbgBUIEa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Feb 2020 03:04:30 -0500
+        id S1731649AbgBUIEc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 21 Feb 2020 03:04:32 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 496B72465D;
-        Fri, 21 Feb 2020 08:04:29 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C714F24656;
+        Fri, 21 Feb 2020 08:04:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1582272269;
-        bh=a/JbiaU6A10GtmsEI/rx+V/8XXumfKNN7zGs8yipPCQ=;
+        s=default; t=1582272272;
+        bh=kwYS4IJqe/CCzOFwvS5e6qcl5rOhH6tgd+nA24huEr8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=DsQdeY14O8vsI9hcoTs95ziCYhDRrwb2qyfDnmlxTuIDyz0y5jawgfFz6TtmI2JYo
-         cBqfoT/uzY0cxZrRF7hIOHiBrlJEpiS2F4jPY0vScdPcXs+HDfWzpVxMz1IFCWFj47
-         2liec6uh+P32coxYZ/qdDGtfDE4hTOuMzSFI6Epc=
+        b=NC8+yWotBW0fGWnveJULYJKilA2Ei101N65v3K6AFQRs3MoR0Lns7+RYrrugQ0Ayb
+         UXRhJkCKMYHijBakT3dpzingHvTGzmFvCxc9wK/M7TfG6bcyIlL+084Qb77dnJYXL4
+         Tk8U/UX+aCWeCRLNPaa/Ia9yFQm5L1bT2ZZ/xfCw=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org,
-        Jean-Philippe Brucker <jean-philippe@linaro.org>,
-        Arend van Spriel <arend.vanspriel@broadcom.com>,
-        Kalle Valo <kvalo@codeaurora.org>,
+        Matthieu Baerts <matthieu.baerts@tessares.net>,
+        Kees Cook <keescook@chromium.org>,
+        Shuah Khan <skhan@linuxfoundation.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 080/344] brcmfmac: sdio: Fix OOB interrupt initialization on brcm43362
-Date:   Fri, 21 Feb 2020 08:37:59 +0100
-Message-Id: <20200221072356.237166482@linuxfoundation.org>
+Subject: [PATCH 5.4 081/344] selftests: settings: tests can be in subsubdirs
+Date:   Fri, 21 Feb 2020 08:38:00 +0100
+Message-Id: <20200221072356.324661870@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200221072349.335551332@linuxfoundation.org>
 References: <20200221072349.335551332@linuxfoundation.org>
@@ -62,65 +62,58 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jean-Philippe Brucker <jean-philippe@linaro.org>
+From: Matthieu Baerts <matthieu.baerts@tessares.net>
 
-[ Upstream commit 8c8e60fb86a90a30721bbd797f58f96b3980dcc1 ]
+[ Upstream commit ac87813d4372f4c005264acbe3b7f00c1dee37c4 ]
 
-Commit 262f2b53f679 ("brcmfmac: call brcmf_attach() just before calling
-brcmf_bus_started()") changed the initialization order of the brcmfmac
-SDIO driver. Unfortunately since brcmf_sdiod_intr_register() is now
-called before the sdiodev->bus_if initialization, it reads the wrong
-chip ID and fails to initialize the GPIO on brcm43362. Thus the chip
-cannot send interrupts and fails to probe:
+Commit 852c8cbf34d3 ("selftests/kselftest/runner.sh: Add 45 second
+timeout per test") adds support for a new per-test-directory "settings"
+file. But this only works for tests not in a sub-subdirectories, e.g.
 
-[   12.517023] brcmfmac: brcmf_sdio_bus_rxctl: resumed on timeout
-[   12.531214] ieee80211 phy0: brcmf_bus_started: failed: -110
-[   12.536976] ieee80211 phy0: brcmf_attach: dongle is not responding: err=-110
-[   12.566467] brcmfmac: brcmf_sdio_firmware_callback: brcmf_attach failed
+ - tools/testing/selftests/rtc (rtc) is OK,
+ - tools/testing/selftests/net/mptcp (net/mptcp) is not.
 
-Initialize the bus interface earlier to ensure that
-brcmf_sdiod_intr_register() properly sets up the OOB interrupt.
+We have to increase the timeout for net/mptcp tests which are not
+upstreamed yet but this fix is valid for other tests if they need to add
+a "settings" file, see the full list with:
 
-BugLink: https://bugs.debian.org/cgi-bin/bugreport.cgi?bug=908438
-Fixes: 262f2b53f679 ("brcmfmac: call brcmf_attach() just before calling brcmf_bus_started()")
-Signed-off-by: Jean-Philippe Brucker <jean-philippe@linaro.org>
-Reviewed-by: Arend van Spriel <arend.vanspriel@broadcom.com>
-Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
+  tools/testing/selftests/*/*/**/Makefile
+
+Note that this patch changes the text header message printed at the end
+of the execution but this text is modified only for the tests that are
+in sub-subdirectories, e.g.
+
+  ok 1 selftests: net/mptcp: mptcp_connect.sh
+
+Before we had:
+
+  ok 1 selftests: mptcp: mptcp_connect.sh
+
+But showing the full target name is probably better, just in case a
+subsubdir has the same name as another one in another subdirectory.
+
+Fixes: 852c8cbf34d3 (selftests/kselftest/runner.sh: Add 45 second timeout per test)
+Signed-off-by: Matthieu Baerts <matthieu.baerts@tessares.net>
+Reviewed-by: Kees Cook <keescook@chromium.org>
+Signed-off-by: Shuah Khan <skhan@linuxfoundation.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- .../net/wireless/broadcom/brcm80211/brcmfmac/sdio.c  | 12 ++++++------
- 1 file changed, 6 insertions(+), 6 deletions(-)
+ tools/testing/selftests/kselftest/runner.sh | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/net/wireless/broadcom/brcm80211/brcmfmac/sdio.c b/drivers/net/wireless/broadcom/brcm80211/brcmfmac/sdio.c
-index 1dea0178832ea..a935993a3c514 100644
---- a/drivers/net/wireless/broadcom/brcm80211/brcmfmac/sdio.c
-+++ b/drivers/net/wireless/broadcom/brcm80211/brcmfmac/sdio.c
-@@ -4226,6 +4226,12 @@ static void brcmf_sdio_firmware_callback(struct device *dev, int err,
- 	}
- 
- 	if (err == 0) {
-+		/* Assign bus interface call back */
-+		sdiod->bus_if->dev = sdiod->dev;
-+		sdiod->bus_if->ops = &brcmf_sdio_bus_ops;
-+		sdiod->bus_if->chip = bus->ci->chip;
-+		sdiod->bus_if->chiprev = bus->ci->chiprev;
-+
- 		/* Allow full data communication using DPC from now on. */
- 		brcmf_sdiod_change_state(bus->sdiodev, BRCMF_SDIOD_DATA);
- 
-@@ -4242,12 +4248,6 @@ static void brcmf_sdio_firmware_callback(struct device *dev, int err,
- 
- 	sdio_release_host(sdiod->func1);
- 
--	/* Assign bus interface call back */
--	sdiod->bus_if->dev = sdiod->dev;
--	sdiod->bus_if->ops = &brcmf_sdio_bus_ops;
--	sdiod->bus_if->chip = bus->ci->chip;
--	sdiod->bus_if->chiprev = bus->ci->chiprev;
--
- 	err = brcmf_alloc(sdiod->dev, sdiod->settings);
- 	if (err) {
- 		brcmf_err("brcmf_alloc failed\n");
+diff --git a/tools/testing/selftests/kselftest/runner.sh b/tools/testing/selftests/kselftest/runner.sh
+index a8d20cbb711cf..e84d901f85672 100644
+--- a/tools/testing/selftests/kselftest/runner.sh
++++ b/tools/testing/selftests/kselftest/runner.sh
+@@ -91,7 +91,7 @@ run_one()
+ run_many()
+ {
+ 	echo "TAP version 13"
+-	DIR=$(basename "$PWD")
++	DIR="${PWD#${BASE_DIR}/}"
+ 	test_num=0
+ 	total=$(echo "$@" | wc -w)
+ 	echo "1..$total"
 -- 
 2.20.1
 
