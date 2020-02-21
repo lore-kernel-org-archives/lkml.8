@@ -7,47 +7,50 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D7191C35640
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 08:42:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9BB3BC35641
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 08:42:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AD552206DB
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 08:42:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6F1A0206ED
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 08:42:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582274521;
-	bh=ipx4Td6141LujbD+iqs7ftTylfFP+MA6LuFhN97F7WA=;
+	s=default; t=1582274532;
+	bh=cF0AFVHw8PPABmHKwcOZG09O4STfsB3xpXfX9/LrqXg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=JKxuP4sFfggPFQCM3qeD89box8QhMKOEd0eaZNLIueazapkDSB5Hdr4A9ktEjcRA6
-	 HnBULudoA4wdqsNWdvgcTpsFFEflo+5M0md96PR7sBPN2KZujzc+GJ7gHTSrIlJeqU
-	 byBYk9WqS0YTCPqDQYNGl8piiGx8Nk6SZx+gm8DQ=
+	b=yRacDfRHhgP82uAY0T2tVqOqdtpOWWzveq3O7KIpZGoixW0GPJXs/JkcBrjzhAzla
+	 vo0GL+TyH34gqaJS0h+YHMfAM9PyDThT3uqpAbLr4IU792y1l0RZpWKAw+abvPUOIv
+	 yq9OhrjNzfpRTXxTs+lWagamYVRYuqx3hLsC+694=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731905AbgBUImA (ORCPT
+        id S1731927AbgBUImK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Feb 2020 03:42:00 -0500
-Received: from mail.kernel.org ([198.145.29.99]:55300 "EHLO mail.kernel.org"
+        Fri, 21 Feb 2020 03:42:10 -0500
+Received: from mail.kernel.org ([198.145.29.99]:54820 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730426AbgBUH4G (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Feb 2020 02:56:06 -0500
+        id S1730369AbgBUHzp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 21 Feb 2020 02:55:45 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A551220658;
-        Fri, 21 Feb 2020 07:56:05 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 69973206ED;
+        Fri, 21 Feb 2020 07:55:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1582271766;
-        bh=ipx4Td6141LujbD+iqs7ftTylfFP+MA6LuFhN97F7WA=;
+        s=default; t=1582271744;
+        bh=cF0AFVHw8PPABmHKwcOZG09O4STfsB3xpXfX9/LrqXg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=V9/KPDWw6imE+o89L73B4P7qg7JkiYztMRVdmqACbAElz6yeI6gsj/XB2068h5FYv
-         YiCJZ0Bw9bChohzNqFx1nIV+Hem2yjddVR1DfNPGvaH4of1U+zIsJeeX1YaYoJtCWz
-         fEu3tlNTA0lPf9u3q3uL1+eOvgrYWCZrOI4lGzjA=
+        b=VsvmV4x69Bc9+rjQTfnGZysWVHyhpzTUq+cYTNt5aIoK9crJUB0Nxdn6AlOtzrmmr
+         uJbh67yWD6ViXYTEar++sg+xYHDvahTwqGOjgJHQXS4PkmQCcNgG/89z8DqUVFU6D2
+         TrkEIEJw5UHx44DoixDO0uXcseSJwovjyKocGigA=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Robert Richter <rrichter@marvell.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
+        stable@vger.kernel.org, Jun Lei <Jun.Lei@amd.com>,
+        Anthony Koo <Anthony.Koo@amd.com>,
+        Harry Wentland <harry.wentland@amd.com>,
+        Rodrigo Siqueira <Rodrigo.Siqueira@amd.com>,
+        Alex Deucher <alexander.deucher@amd.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.5 291/399] watchdog/softlockup: Enforce that timestamp is valid on boot
-Date:   Fri, 21 Feb 2020 08:40:16 +0100
-Message-Id: <20200221072430.092296274@linuxfoundation.org>
+Subject: [PATCH 5.5 283/399] drm/amd/display: fixup DML dependencies
+Date:   Fri, 21 Feb 2020 08:40:08 +0100
+Message-Id: <20200221072429.453137058@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200221072402.315346745@linuxfoundation.org>
 References: <20200221072402.315346745@linuxfoundation.org>
@@ -60,79 +63,60 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Thomas Gleixner <tglx@linutronix.de>
+From: Jun Lei <Jun.Lei@amd.com>
 
-[ Upstream commit 11e31f608b499f044f24b20be73f1dcab3e43f8a ]
+[ Upstream commit 34ad0230062c39cdcba564d16d122c0fb467a7d6 ]
 
-Robert reported that during boot the watchdog timestamp is set to 0 for one
-second which is the indicator for a watchdog reset.
+[why]
+Need to fix DML portability issues to enable SW unit testing around DML
 
-The reason for this is that the timestamp is in seconds and the time is
-taken from sched clock and divided by ~1e9. sched clock starts at 0 which
-means that for the first second during boot the watchdog timestamp is 0,
-i.e. reset.
+[how]
+Move calcs into dc include folder since multiple components reference it
+Remove relative paths to external dependencies
 
-Use ULONG_MAX as the reset indicator value so the watchdog works correctly
-right from the start. ULONG_MAX would only conflict with a real timestamp
-if the system reaches an uptime of 136 years on 32bit and almost eternity
-on 64bit.
-
-Reported-by: Robert Richter <rrichter@marvell.com>
-Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-Link: https://lore.kernel.org/r/87o8v3uuzl.fsf@nanos.tec.linutronix.de
+Signed-off-by: Jun Lei <Jun.Lei@amd.com>
+Reviewed-by: Anthony Koo <Anthony.Koo@amd.com>
+Acked-by: Harry Wentland <harry.wentland@amd.com>
+Acked-by: Rodrigo Siqueira <Rodrigo.Siqueira@amd.com>
+Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- kernel/watchdog.c | 10 ++++++----
- 1 file changed, 6 insertions(+), 4 deletions(-)
+ drivers/gpu/drm/amd/display/dc/dml/dml_common_defs.c          | 2 +-
+ drivers/gpu/drm/amd/display/dc/dml/dml_inline_defs.h          | 2 +-
+ drivers/gpu/drm/amd/display/dc/{calcs => inc}/dcn_calc_math.h | 0
+ 3 files changed, 2 insertions(+), 2 deletions(-)
+ rename drivers/gpu/drm/amd/display/dc/{calcs => inc}/dcn_calc_math.h (100%)
 
-diff --git a/kernel/watchdog.c b/kernel/watchdog.c
-index f41334ef09713..cbd3cf503c904 100644
---- a/kernel/watchdog.c
-+++ b/kernel/watchdog.c
-@@ -161,6 +161,8 @@ static void lockup_detector_update_enable(void)
+diff --git a/drivers/gpu/drm/amd/display/dc/dml/dml_common_defs.c b/drivers/gpu/drm/amd/display/dc/dml/dml_common_defs.c
+index b953b02a15121..723af0b2dda04 100644
+--- a/drivers/gpu/drm/amd/display/dc/dml/dml_common_defs.c
++++ b/drivers/gpu/drm/amd/display/dc/dml/dml_common_defs.c
+@@ -24,7 +24,7 @@
+  */
  
- #ifdef CONFIG_SOFTLOCKUP_DETECTOR
+ #include "dml_common_defs.h"
+-#include "../calcs/dcn_calc_math.h"
++#include "dcn_calc_math.h"
  
-+#define SOFTLOCKUP_RESET	ULONG_MAX
-+
- /* Global variables, exported for sysctl */
- unsigned int __read_mostly softlockup_panic =
- 			CONFIG_BOOTPARAM_SOFTLOCKUP_PANIC_VALUE;
-@@ -274,7 +276,7 @@ notrace void touch_softlockup_watchdog_sched(void)
- 	 * Preemption can be enabled.  It doesn't matter which CPU's timestamp
- 	 * gets zeroed here, so use the raw_ operation.
- 	 */
--	raw_cpu_write(watchdog_touch_ts, 0);
-+	raw_cpu_write(watchdog_touch_ts, SOFTLOCKUP_RESET);
- }
+ #include "dml_inline_defs.h"
  
- notrace void touch_softlockup_watchdog(void)
-@@ -298,14 +300,14 @@ void touch_all_softlockup_watchdogs(void)
- 	 * the softlockup check.
- 	 */
- 	for_each_cpu(cpu, &watchdog_allowed_mask)
--		per_cpu(watchdog_touch_ts, cpu) = 0;
-+		per_cpu(watchdog_touch_ts, cpu) = SOFTLOCKUP_RESET;
- 	wq_watchdog_touch(-1);
- }
+diff --git a/drivers/gpu/drm/amd/display/dc/dml/dml_inline_defs.h b/drivers/gpu/drm/amd/display/dc/dml/dml_inline_defs.h
+index eca140da13d82..ded71ea82413d 100644
+--- a/drivers/gpu/drm/amd/display/dc/dml/dml_inline_defs.h
++++ b/drivers/gpu/drm/amd/display/dc/dml/dml_inline_defs.h
+@@ -27,7 +27,7 @@
+ #define __DML_INLINE_DEFS_H__
  
- void touch_softlockup_watchdog_sync(void)
- {
- 	__this_cpu_write(softlockup_touch_sync, true);
--	__this_cpu_write(watchdog_touch_ts, 0);
-+	__this_cpu_write(watchdog_touch_ts, SOFTLOCKUP_RESET);
- }
+ #include "dml_common_defs.h"
+-#include "../calcs/dcn_calc_math.h"
++#include "dcn_calc_math.h"
+ #include "dml_logger.h"
  
- static int is_softlockup(unsigned long touch_ts)
-@@ -383,7 +385,7 @@ static enum hrtimer_restart watchdog_timer_fn(struct hrtimer *hrtimer)
- 	/* .. and repeat */
- 	hrtimer_forward_now(hrtimer, ns_to_ktime(sample_period));
- 
--	if (touch_ts == 0) {
-+	if (touch_ts == SOFTLOCKUP_RESET) {
- 		if (unlikely(__this_cpu_read(softlockup_touch_sync))) {
- 			/*
- 			 * If the time stamp was touched atomically
+ static inline double dml_min(double a, double b)
+diff --git a/drivers/gpu/drm/amd/display/dc/calcs/dcn_calc_math.h b/drivers/gpu/drm/amd/display/dc/inc/dcn_calc_math.h
+similarity index 100%
+rename from drivers/gpu/drm/amd/display/dc/calcs/dcn_calc_math.h
+rename to drivers/gpu/drm/amd/display/dc/inc/dcn_calc_math.h
 -- 
 2.20.1
 
