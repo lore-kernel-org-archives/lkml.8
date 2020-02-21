@@ -4,52 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0AC1DC35640
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 07:46:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CB752C35640
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 07:46:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D3AA9207FD
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 07:46:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9A48320801
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 07:46:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582271211;
-	bh=JqQmPfLAZJXhisUZizc6HtTiGx32zdBvxS/MOj0sltw=;
+	s=default; t=1582271214;
+	bh=5pz5VyVlGIkxJd83Kh8BCjSgf0Ktw6Y4y60XftuSGmE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ak7bwNTZu/rwCi0KEZqJw+MsPFYGOp/phL4/5o6paWJlzfeSMqDWOotVy/MBWo+EB
-	 0J2H8mewHTwmjT+9zDpJ07RMytcAja56hR8hsHDe7PPfAAdjUMmNDR95ifYr35UOgG
-	 6oNYiRgq4ZCofQEJkoVHY1iCqhFSr1CiI0UpGzT0=
+	b=hlw565GQdsYC+/LfUvBLCyLiLcU/lCtn5s2g9M1vwacMLCI69iWrlOU5YJROgc1eZ
+	 b4QV4gOhOHsNjewHtYCrWMcTMPaZLrVcKZgEFvDvN7T2t80fJ1/KTj0Y6dl7NlNqBE
+	 BmSVGyfQfo2icdePhy+UItnrEKomzxtH/de8sdxc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728798AbgBUHqt (ORCPT
+        id S1728804AbgBUHqx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Feb 2020 02:46:49 -0500
-Received: from mail.kernel.org ([198.145.29.99]:42392 "EHLO mail.kernel.org"
+        Fri, 21 Feb 2020 02:46:53 -0500
+Received: from mail.kernel.org ([198.145.29.99]:42458 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728779AbgBUHqp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Feb 2020 02:46:45 -0500
+        id S1728792AbgBUHqs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 21 Feb 2020 02:46:48 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2D773222C4;
-        Fri, 21 Feb 2020 07:46:44 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5A724207FD;
+        Fri, 21 Feb 2020 07:46:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1582271204;
-        bh=JqQmPfLAZJXhisUZizc6HtTiGx32zdBvxS/MOj0sltw=;
+        s=default; t=1582271207;
+        bh=5pz5VyVlGIkxJd83Kh8BCjSgf0Ktw6Y4y60XftuSGmE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=SJejF+TXCWh8SSMJoNU0TUOWEGwNgi/Rrdo2uYnqyc6CgraJuf3QxO1MI3IbD3CmX
-         d7sDRh4pBtFsNXGng9QuWnPxhNY3nXmZqz36z9z7Xx8NbTahOF9fMIs22TevY3Bd/3
-         KSUoGaOBnakykI06Ks2q+3xqQSs21bGrBBvvuTuo=
+        b=ws1GSnl8DssBSy5bi8+XSA1wkjZo/ck9wA5dsXtN1QT6/17a2K5L4EU/B/AhbVHut
+         orvbGMCBlFFoT7rUdCjPw5QWdQhQj7JXkb6oii4mzpFOxC9q6M967zXHOLYWeNPj9Z
+         vDGIceZ0iRDfIrZR6OM74MV1B9JwjPjRRFAQIVeI=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Jan Kara <jack@suse.cz>,
-        Matthew Bobrowski <mbobrowski@mbobrowski.org>,
-        Joseph Qi <joseph.qi@linux.alibaba.com>,
-        Ritesh Harjani <riteshh@linux.ibm.com>,
+        stable@vger.kernel.org, Eric Biggers <ebiggers@google.com>,
         Theodore Tso <tytso@mit.edu>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.5 031/399] ext4: fix ext4_dax_read/write inode locking sequence for IOCB_NOWAIT
-Date:   Fri, 21 Feb 2020 08:35:56 +0100
-Message-Id: <20200221072405.381988654@linuxfoundation.org>
+Subject: [PATCH 5.5 072/399] ext4: fix deadlock allocating bio_post_read_ctx from mempool
+Date:   Fri, 21 Feb 2020 08:36:37 +0100
+Message-Id: <20200221072409.361481698@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200221072402.315346745@linuxfoundation.org>
 References: <20200221072402.315346745@linuxfoundation.org>
@@ -62,57 +59,79 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Ritesh Harjani <riteshh@linux.ibm.com>
+From: Eric Biggers <ebiggers@google.com>
 
-[ Upstream commit f629afe3369e9885fd6e9cc7a4f514b6a65cf9e9 ]
+[ Upstream commit 68e45330e341dad2d3a0a3f8ef2ec46a2a0a3bbc ]
 
-Apparently our current rwsem code doesn't like doing the trylock, then
-lock for real scheme.  So change our dax read/write methods to just do the
-trylock for the RWF_NOWAIT case.
-This seems to fix AIM7 regression in some scalable filesystems upto ~25%
-in some cases. Claimed in commit 942491c9e6d6 ("xfs: fix AIM7 regression")
+Without any form of coordination, any case where multiple allocations
+from the same mempool are needed at a time to make forward progress can
+deadlock under memory pressure.
 
-Reviewed-by: Jan Kara <jack@suse.cz>
-Reviewed-by: Matthew Bobrowski <mbobrowski@mbobrowski.org>
-Tested-by: Joseph Qi <joseph.qi@linux.alibaba.com>
-Signed-off-by: Ritesh Harjani <riteshh@linux.ibm.com>
-Link: https://lore.kernel.org/r/20191212055557.11151-2-riteshh@linux.ibm.com
+This is the case for struct bio_post_read_ctx, as one can be allocated
+to decrypt a Merkle tree page during fsverity_verify_bio(), which itself
+is running from a post-read callback for a data bio which has its own
+struct bio_post_read_ctx.
+
+Fix this by freeing the first bio_post_read_ctx before calling
+fsverity_verify_bio().  This works because verity (if enabled) is always
+the last post-read step.
+
+This deadlock can be reproduced by trying to read from an encrypted
+verity file after reducing NUM_PREALLOC_POST_READ_CTXS to 1 and patching
+mempool_alloc() to pretend that pool->alloc() always fails.
+
+Note that since NUM_PREALLOC_POST_READ_CTXS is actually 128, to actually
+hit this bug in practice would require reading from lots of encrypted
+verity files at the same time.  But it's theoretically possible, as N
+available objects isn't enough to guarantee forward progress when > N/2
+threads each need 2 objects at a time.
+
+Fixes: 22cfe4b48ccb ("ext4: add fs-verity read support")
+Signed-off-by: Eric Biggers <ebiggers@google.com>
+Link: https://lore.kernel.org/r/20191231181222.47684-1-ebiggers@kernel.org
 Signed-off-by: Theodore Ts'o <tytso@mit.edu>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/ext4/file.c | 10 ++++++----
- 1 file changed, 6 insertions(+), 4 deletions(-)
+ fs/ext4/readpage.c | 17 +++++++++++++++--
+ 1 file changed, 15 insertions(+), 2 deletions(-)
 
-diff --git a/fs/ext4/file.c b/fs/ext4/file.c
-index 6a7293a5cda2d..977ac58dc718d 100644
---- a/fs/ext4/file.c
-+++ b/fs/ext4/file.c
-@@ -88,9 +88,10 @@ static ssize_t ext4_dax_read_iter(struct kiocb *iocb, struct iov_iter *to)
- 	struct inode *inode = file_inode(iocb->ki_filp);
- 	ssize_t ret;
+diff --git a/fs/ext4/readpage.c b/fs/ext4/readpage.c
+index fef7755300c35..410c904cf59b9 100644
+--- a/fs/ext4/readpage.c
++++ b/fs/ext4/readpage.c
+@@ -57,6 +57,7 @@ enum bio_post_read_step {
+ 	STEP_INITIAL = 0,
+ 	STEP_DECRYPT,
+ 	STEP_VERITY,
++	STEP_MAX,
+ };
  
--	if (!inode_trylock_shared(inode)) {
--		if (iocb->ki_flags & IOCB_NOWAIT)
-+	if (iocb->ki_flags & IOCB_NOWAIT) {
-+		if (!inode_trylock_shared(inode))
- 			return -EAGAIN;
-+	} else {
- 		inode_lock_shared(inode);
- 	}
- 	/*
-@@ -487,9 +488,10 @@ ext4_dax_write_iter(struct kiocb *iocb, struct iov_iter *from)
- 	bool extend = false;
- 	struct inode *inode = file_inode(iocb->ki_filp);
+ struct bio_post_read_ctx {
+@@ -106,10 +107,22 @@ static void verity_work(struct work_struct *work)
+ {
+ 	struct bio_post_read_ctx *ctx =
+ 		container_of(work, struct bio_post_read_ctx, work);
++	struct bio *bio = ctx->bio;
  
--	if (!inode_trylock(inode)) {
--		if (iocb->ki_flags & IOCB_NOWAIT)
-+	if (iocb->ki_flags & IOCB_NOWAIT) {
-+		if (!inode_trylock(inode))
- 			return -EAGAIN;
-+	} else {
- 		inode_lock(inode);
- 	}
+-	fsverity_verify_bio(ctx->bio);
++	/*
++	 * fsverity_verify_bio() may call readpages() again, and although verity
++	 * will be disabled for that, decryption may still be needed, causing
++	 * another bio_post_read_ctx to be allocated.  So to guarantee that
++	 * mempool_alloc() never deadlocks we must free the current ctx first.
++	 * This is safe because verity is the last post-read step.
++	 */
++	BUILD_BUG_ON(STEP_VERITY + 1 != STEP_MAX);
++	mempool_free(ctx, bio_post_read_ctx_pool);
++	bio->bi_private = NULL;
  
+-	bio_post_read_processing(ctx);
++	fsverity_verify_bio(bio);
++
++	__read_end_io(bio);
+ }
+ 
+ static void bio_post_read_processing(struct bio_post_read_ctx *ctx)
 -- 
 2.20.1
 
