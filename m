@@ -2,56 +2,59 @@ Return-Path: <SRS0=1210=4J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4DF9BC35642
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 08:01:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7484FC35642
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 08:01:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 12A4020801
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 08:01:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4B44C24650
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 08:01:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582272084;
-	bh=0yf6ce4sDrBOesE1j8wafwtcfGWYWuH7tZjl7vWwWFs=;
+	s=default; t=1582272087;
+	bh=iDQyywFR+dChoJUBor0d1LE6DJzQ1gIxwq0QVn6i2Ds=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=pELE/yoDr9+WNgBPQ2CzBCu4jrygWj0skftww0x+31folcxcQZG4edm79ib9cZTbO
-	 UpU+CI3bNLyO6BzrBizBlrIQyx7jb/0QKYU7ejeh3W7j8oMq1teh4FMK5eQ4XNie9o
-	 L5n/aGbz47ePEAXGxRk7o6UXlUqrE4BDvF382In0=
+	b=JhQHKK3fdGSHGJgecw4MUVwMdOz7aac8kodJyAOm51zQIilp67esChVlYO8Fs9Gx4
+	 flgI6Jd9r7xZjyvCIX92HwDcJ3eS/glW/klcrXnIbtSwuw+Lz//J6ssTuCa+zwFKUC
+	 Ok0hrM35ATnwQEdIrOshFfjAMToI3rdJjDa1/sdk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731195AbgBUIBW (ORCPT
+        id S1731198AbgBUIBZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Feb 2020 03:01:22 -0500
-Received: from mail.kernel.org ([198.145.29.99]:33570 "EHLO mail.kernel.org"
+        Fri, 21 Feb 2020 03:01:25 -0500
+Received: from mail.kernel.org ([198.145.29.99]:33630 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731024AbgBUIBR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Feb 2020 03:01:17 -0500
+        id S1731189AbgBUIBV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 21 Feb 2020 03:01:21 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C8E592073A;
-        Fri, 21 Feb 2020 08:01:16 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id F2C6E24656;
+        Fri, 21 Feb 2020 08:01:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1582272077;
-        bh=0yf6ce4sDrBOesE1j8wafwtcfGWYWuH7tZjl7vWwWFs=;
+        s=default; t=1582272080;
+        bh=iDQyywFR+dChoJUBor0d1LE6DJzQ1gIxwq0QVn6i2Ds=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ImkZpzxJspaB5ieOOs0GoFlH9baWE2BjBVc/cvhcxP5QEvtkOyxqtvY7thKRNxd3w
-         9PPXtll6dhYxqtmy16hefQulu4+QOtC37eSzVb4snsgWSgm3FMH7h15J2dN5GsukMU
-         PJ0rDIVCuDWQloEhqH4/uknp9cYJshuuORO7uIRc=
+        b=AQPH6w/Q7jVWqhGM22v3iWAfYblGQ86XV7FHtRJ081Wb0hhtyeTWUdglJXBv3MYEd
+         ahemLSFD3PYfSe+KYlq7nt7PNSHmzemb39iuarxDNBEx3VFAeEaUbn0S6NraybzG1I
+         AsZFbPmwcnuen4Dpsf5ehIm5udd0fCHyhIoOSt5c=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, "Michael S. Tsirkin" <mst@redhat.com>,
-        David Hildenbrand <david@redhat.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.5 393/399] virtio_balloon: prevent pfn array overflow
-Date:   Fri, 21 Feb 2020 08:41:58 +0100
-Message-Id: <20200221072438.118804855@linuxfoundation.org>
+        stable@vger.kernel.org, Stepan Horacek <shoracek@redhat.com>,
+        Paolo Abeni <pabeni@redhat.com>,
+        =?UTF-8?q?Toke=20H=C3=B8iland-J=C3=B8rgensen?= <toke@redhat.com>,
+        "David S. Miller" <davem@davemloft.net>
+Subject: [PATCH 5.4 001/344] core: Dont skip generic XDP program execution for cloned SKBs
+Date:   Fri, 21 Feb 2020 08:36:40 +0100
+Message-Id: <20200221072349.461654816@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20200221072402.315346745@linuxfoundation.org>
-References: <20200221072402.315346745@linuxfoundation.org>
+In-Reply-To: <20200221072349.335551332@linuxfoundation.org>
+References: <20200221072349.335551332@linuxfoundation.org>
 User-Agent: quilt/0.66
+X-stable: review
+X-Patchwork-Hint: ignore
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
@@ -60,36 +63,136 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Michael S. Tsirkin <mst@redhat.com>
+From: "Toke Høiland-Jørgensen" <toke@redhat.com>
 
-[ Upstream commit 6e9826e77249355c09db6ba41cd3f84e89f4b614 ]
+[ Upstream commit ad1e03b2b3d4430baaa109b77bc308dc73050de3 ]
 
-Make sure, at build time, that pfn array is big enough to hold a single
-page.  It happens to be true since the PAGE_SHIFT value at the moment is
-20, which is 1M - exactly 256 4K balloon pages.
+The current generic XDP handler skips execution of XDP programs entirely if
+an SKB is marked as cloned. This leads to some surprising behaviour, as
+packets can end up being cloned in various ways, which will make an XDP
+program not see all the traffic on an interface.
 
-Signed-off-by: Michael S. Tsirkin <mst@redhat.com>
-Reviewed-by: David Hildenbrand <david@redhat.com>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+This was discovered by a simple test case where an XDP program that always
+returns XDP_DROP is installed on a veth device. When combining this with
+the Scapy packet sniffer (which uses an AF_PACKET) socket on the sending
+side, SKBs reliably end up in the cloned state, causing them to be passed
+through to the receiving interface instead of being dropped. A minimal
+reproducer script for this is included below.
+
+This patch fixed the issue by simply triggering the existing linearisation
+code for cloned SKBs instead of skipping the XDP program execution. This
+behaviour is in line with the behaviour of the native XDP implementation
+for the veth driver, which will reallocate and copy the SKB data if the SKB
+is marked as shared.
+
+Reproducer Python script (requires BCC and Scapy):
+
+from scapy.all import TCP, IP, Ether, sendp, sniff, AsyncSniffer, Raw, UDP
+from bcc import BPF
+import time, sys, subprocess, shlex
+
+SKB_MODE = (1 << 1)
+DRV_MODE = (1 << 2)
+PYTHON=sys.executable
+
+def client():
+    time.sleep(2)
+    # Sniffing on the sender causes skb_cloned() to be set
+    s = AsyncSniffer()
+    s.start()
+
+    for p in range(10):
+        sendp(Ether(dst="aa:aa:aa:aa:aa:aa", src="cc:cc:cc:cc:cc:cc")/IP()/UDP()/Raw("Test"),
+              verbose=False)
+        time.sleep(0.1)
+
+    s.stop()
+    return 0
+
+def server(mode):
+    prog = BPF(text="int dummy_drop(struct xdp_md *ctx) {return XDP_DROP;}")
+    func = prog.load_func("dummy_drop", BPF.XDP)
+    prog.attach_xdp("a_to_b", func, mode)
+
+    time.sleep(1)
+
+    s = sniff(iface="a_to_b", count=10, timeout=15)
+    if len(s):
+        print(f"Got {len(s)} packets - should have gotten 0")
+        return 1
+    else:
+        print("Got no packets - as expected")
+        return 0
+
+if len(sys.argv) < 2:
+    print(f"Usage: {sys.argv[0]} <skb|drv>")
+    sys.exit(1)
+
+if sys.argv[1] == "client":
+    sys.exit(client())
+elif sys.argv[1] == "server":
+    mode = SKB_MODE if sys.argv[2] == 'skb' else DRV_MODE
+    sys.exit(server(mode))
+else:
+    try:
+        mode = sys.argv[1]
+        if mode not in ('skb', 'drv'):
+            print(f"Usage: {sys.argv[0]} <skb|drv>")
+            sys.exit(1)
+        print(f"Running in {mode} mode")
+
+        for cmd in [
+                'ip netns add netns_a',
+                'ip netns add netns_b',
+                'ip -n netns_a link add a_to_b type veth peer name b_to_a netns netns_b',
+                # Disable ipv6 to make sure there's no address autoconf traffic
+                'ip netns exec netns_a sysctl -qw net.ipv6.conf.a_to_b.disable_ipv6=1',
+                'ip netns exec netns_b sysctl -qw net.ipv6.conf.b_to_a.disable_ipv6=1',
+                'ip -n netns_a link set dev a_to_b address aa:aa:aa:aa:aa:aa',
+                'ip -n netns_b link set dev b_to_a address cc:cc:cc:cc:cc:cc',
+                'ip -n netns_a link set dev a_to_b up',
+                'ip -n netns_b link set dev b_to_a up']:
+            subprocess.check_call(shlex.split(cmd))
+
+        server = subprocess.Popen(shlex.split(f"ip netns exec netns_a {PYTHON} {sys.argv[0]} server {mode}"))
+        client = subprocess.Popen(shlex.split(f"ip netns exec netns_b {PYTHON} {sys.argv[0]} client"))
+
+        client.wait()
+        server.wait()
+        sys.exit(server.returncode)
+
+    finally:
+        subprocess.run(shlex.split("ip netns delete netns_a"))
+        subprocess.run(shlex.split("ip netns delete netns_b"))
+
+Fixes: d445516966dc ("net: xdp: support xdp generic on virtual devices")
+Reported-by: Stepan Horacek <shoracek@redhat.com>
+Suggested-by: Paolo Abeni <pabeni@redhat.com>
+Signed-off-by: Toke HÃ¸iland-JÃ¸rgensen <toke@redhat.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- drivers/virtio/virtio_balloon.c | 2 ++
- 1 file changed, 2 insertions(+)
+ net/core/dev.c |    4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/virtio/virtio_balloon.c b/drivers/virtio/virtio_balloon.c
-index 7e5d84caeb940..7bfe365d93720 100644
---- a/drivers/virtio/virtio_balloon.c
-+++ b/drivers/virtio/virtio_balloon.c
-@@ -158,6 +158,8 @@ static void set_page_pfns(struct virtio_balloon *vb,
- {
- 	unsigned int i;
+--- a/net/core/dev.c
++++ b/net/core/dev.c
+@@ -4256,14 +4256,14 @@ static u32 netif_receive_generic_xdp(str
+ 	/* Reinjected packets coming from act_mirred or similar should
+ 	 * not get XDP generic processing.
+ 	 */
+-	if (skb_cloned(skb) || skb_is_tc_redirected(skb))
++	if (skb_is_tc_redirected(skb))
+ 		return XDP_PASS;
  
-+	BUILD_BUG_ON(VIRTIO_BALLOON_PAGES_PER_PAGE > VIRTIO_BALLOON_ARRAY_PFNS_MAX);
-+
- 	/*
- 	 * Set balloon pfns pointing at this page.
- 	 * Note that the first pfn points at start of the page.
--- 
-2.20.1
-
+ 	/* XDP packets must be linear and must have sufficient headroom
+ 	 * of XDP_PACKET_HEADROOM bytes. This is the guarantee that also
+ 	 * native XDP provides, thus we need to do it here as well.
+ 	 */
+-	if (skb_is_nonlinear(skb) ||
++	if (skb_cloned(skb) || skb_is_nonlinear(skb) ||
+ 	    skb_headroom(skb) < XDP_PACKET_HEADROOM) {
+ 		int hroom = XDP_PACKET_HEADROOM - skb_headroom(skb);
+ 		int troom = skb->tail + skb->data_len - skb->end;
 
 
