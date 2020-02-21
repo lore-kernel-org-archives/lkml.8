@@ -7,48 +7,47 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3FAC1C35640
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 07:59:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 639DCC35640
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 07:59:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 11A5B2465D
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 07:59:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2E87B222C4
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 07:59:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582271956;
-	bh=2o1WWQoBMGzmDpPyFqcjlSZ5s7gYYUk7TLywGJkq9G4=;
+	s=default; t=1582271959;
+	bh=4aonCssWYdstuScFHWHex3lRsbsWzswOK1XgUJWXPzA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=f/qSR3J21vEWs29mTTZg0uMH1I4lyr3Q8WNNnCileyj5SfCiD6r/XMPQJ1io3buE4
-	 yjWSfdclbuDadv4yIfo0g9bO4LH1zFRJ6rsBRaivop/sM+Hxxtsu7lWSSQyJhbAncr
-	 S7etgXld4ONqcBNZVIg7e0rR8D6VaykzQqtCnGkE=
+	b=meTpeGdszNVYR8Rw9OHK6Pp7voW17XMbmfIueraHEpWD12R4w42rUJ7vTRHE2Zr9X
+	 d1HU/S26XmNS5z3rs83mMkeQQgKWsqjs7jhzBYjzDso3T7aiVnEeb/K1hXcwwfUuFT
+	 ekIK4DkKnnUUA495dBgK6dwLbkbPmsnrNCgoDMzM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730885AbgBUH7O (ORCPT
+        id S1730893AbgBUH7S (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Feb 2020 02:59:14 -0500
-Received: from mail.kernel.org ([198.145.29.99]:59246 "EHLO mail.kernel.org"
+        Fri, 21 Feb 2020 02:59:18 -0500
+Received: from mail.kernel.org ([198.145.29.99]:59272 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730873AbgBUH7M (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Feb 2020 02:59:12 -0500
+        id S1730873AbgBUH7P (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 21 Feb 2020 02:59:15 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A9EA2222C4;
-        Fri, 21 Feb 2020 07:59:11 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2D2D620578;
+        Fri, 21 Feb 2020 07:59:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1582271952;
-        bh=2o1WWQoBMGzmDpPyFqcjlSZ5s7gYYUk7TLywGJkq9G4=;
+        s=default; t=1582271954;
+        bh=4aonCssWYdstuScFHWHex3lRsbsWzswOK1XgUJWXPzA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=kmJ4speWHWN7K+3DVpgRr5I/epIzWE0xg54FDOCLKPii9JJFbHSRywMFgIX2aF8Pj
-         A9B3giQfnY5ZTBGGeXYbRgCB8uIAjS3XojmPgB+dmDSgq8JZ7kDL4siJxm1vOrv/La
-         ygaqS1z0jOG2K7vIwc7QKXrU6ca989ZtKePl/Kr0=
+        b=rbo4wvdplNdLmL2j4FBc9dRTw22rFDm215JViWFT2pZgC++s01wVYgwaKsJNaICsk
+         rjJXEcNZadCo9Qr5wxRk0hcbbs/s3tKwinu/qpGr1FNNlBOeCHL78V2A0kuIXheCzx
+         5c/lTX6fR1+tb8YhPwDIh0Dr5dI81MCAJO6umYf0=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, John Garry <john.garry@huawei.com>,
-        Marc Zyngier <maz@kernel.org>,
-        Hanjun Guo <guohanjun@huawei.com>,
+        stable@vger.kernel.org, Christophe Leroy <christophe.leroy@c-s.fr>,
+        Michael Ellerman <mpe@ellerman.id.au>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.5 313/399] irqchip/mbigen: Set driver .suppress_bind_attrs to avoid remove problems
-Date:   Fri, 21 Feb 2020 08:40:38 +0100
-Message-Id: <20200221072431.913711177@linuxfoundation.org>
+Subject: [PATCH 5.5 354/399] powerpc/mm: Dont log user reads to 0xffffffff
+Date:   Fri, 21 Feb 2020 08:41:19 +0100
+Message-Id: <20200221072435.333365196@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200221072402.315346745@linuxfoundation.org>
 References: <20200221072402.315346745@linuxfoundation.org>
@@ -61,124 +60,41 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: John Garry <john.garry@huawei.com>
+From: Christophe Leroy <christophe.leroy@c-s.fr>
 
-[ Upstream commit d6152e6ec9e2171280436f7b31a571509b9287e1 ]
+[ Upstream commit 0f9aee0cb9da7db7d96f63cfa2dc5e4f1bffeb87 ]
 
-The following crash can be seen for setting
-CONFIG_DEBUG_TEST_DRIVER_REMOVE=y for DT FW (which some people still use):
+Running vdsotest leaves many times the following log:
 
-Hisilicon MBIGEN-V2 60080000.interrupt-controller: Failed to create mbi-gen irqdomain
-Hisilicon MBIGEN-V2: probe of 60080000.interrupt-controller failed with error -12
+  [   79.629901] vdsotest[396]: User access of kernel address (ffffffff) - exploit attempt? (uid: 0)
 
-[...]
+A pointer set to (-1) is likely a programming error similar to
+a NULL pointer and is not worth logging as an exploit attempt.
 
-Unable to handle kernel paging request at virtual address 0000000000005008
- Mem abort info:
-   ESR = 0x96000004
-   EC = 0x25: DABT (current EL), IL = 32 bits
-   SET = 0, FnV = 0
-   EA = 0, S1PTW = 0
- Data abort info:
-   ISV = 0, ISS = 0x00000004
-   CM = 0, WnR = 0
- user pgtable: 4k pages, 48-bit VAs, pgdp=0000041fb9990000
- [0000000000005008] pgd=0000000000000000
- Internal error: Oops: 96000004 [#1] PREEMPT SMP
- Modules linked in:
- CPU: 7 PID: 1 Comm: swapper/0 Not tainted 5.5.0-rc6-00002-g3fc42638a506-dirty #1622
- Hardware name: Huawei Taishan 2280 /D05, BIOS Hisilicon D05 IT21 Nemo 2.0 RC0 04/18/2018
- pstate: 40000085 (nZcv daIf -PAN -UAO)
- pc : mbigen_set_type+0x38/0x60
- lr : __irq_set_trigger+0x6c/0x188
- sp : ffff800014b4b400
- x29: ffff800014b4b400 x28: 0000000000000007
- x27: 0000000000000000 x26: 0000000000000000
- x25: ffff041fd83bd0d4 x24: ffff041fd83bd188
- x23: 0000000000000000 x22: ffff80001193ce00
- x21: 0000000000000004 x20: 0000000000000000
- x19: ffff041fd83bd000 x18: ffffffffffffffff
- x17: 0000000000000000 x16: 0000000000000000
- x15: ffff8000119098c8 x14: ffff041fb94ec91c
- x13: ffff041fb94ec1a1 x12: 0000000000000030
- x11: 0101010101010101 x10: 0000000000000040
- x9 : 0000000000000000 x8 : ffff041fb98c6680
- x7 : ffff800014b4b380 x6 : ffff041fd81636c8
- x5 : 0000000000000000 x4 : 000000000000025f
- x3 : 0000000000005000 x2 : 0000000000005008
- x1 : 0000000000000004 x0 : 0000000080000000
- Call trace:
-  mbigen_set_type+0x38/0x60
-  __setup_irq+0x744/0x900
-  request_threaded_irq+0xe0/0x198
-  pcie_pme_probe+0x98/0x118
-  pcie_port_probe_service+0x38/0x78
-  really_probe+0xa0/0x3e0
-  driver_probe_device+0x58/0x100
-  __device_attach_driver+0x90/0xb0
-  bus_for_each_drv+0x64/0xc8
-  __device_attach+0xd8/0x138
-  device_initial_probe+0x10/0x18
-  bus_probe_device+0x90/0x98
-  device_add+0x4c4/0x770
-  device_register+0x1c/0x28
-  pcie_port_device_register+0x1e4/0x4f0
-  pcie_portdrv_probe+0x34/0xd8
-  local_pci_probe+0x3c/0xa0
-  pci_device_probe+0x128/0x1c0
-  really_probe+0xa0/0x3e0
-  driver_probe_device+0x58/0x100
-  __device_attach_driver+0x90/0xb0
-  bus_for_each_drv+0x64/0xc8
-  __device_attach+0xd8/0x138
-  device_attach+0x10/0x18
-  pci_bus_add_device+0x4c/0xb8
-  pci_bus_add_devices+0x38/0x88
-  pci_host_probe+0x3c/0xc0
-  pci_host_common_probe+0xf0/0x208
-  hisi_pcie_almost_ecam_probe+0x24/0x30
-  platform_drv_probe+0x50/0xa0
-  really_probe+0xa0/0x3e0
-  driver_probe_device+0x58/0x100
-  device_driver_attach+0x6c/0x90
-  __driver_attach+0x84/0xc8
-  bus_for_each_dev+0x74/0xc8
-  driver_attach+0x20/0x28
-  bus_add_driver+0x148/0x1f0
-  driver_register+0x60/0x110
-  __platform_driver_register+0x40/0x48
-  hisi_pcie_almost_ecam_driver_init+0x1c/0x24
+Don't log user accesses to 0xffffffff.
 
-The specific problem here is that the mbigen driver real probe has failed
-as the mbigen_of_create_domain()->of_platform_device_create() call fails,
-the reason for that being that we never destroyed the platform device
-created during the remove test dry run and there is some conflict.
-
-Since we generally would never want to unbind this driver, and to save
-adding a driver tear down path for that, just set the driver
-.suppress_bind_attrs member to avoid this possibility.
-
-Signed-off-by: John Garry <john.garry@huawei.com>
-Signed-off-by: Marc Zyngier <maz@kernel.org>
-Reviewed-by: Hanjun Guo <guohanjun@huawei.com>
-Link: https://lore.kernel.org/r/1579196323-180137-1-git-send-email-john.garry@huawei.com
+Signed-off-by: Christophe Leroy <christophe.leroy@c-s.fr>
+Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
+Link: https://lore.kernel.org/r/0728849e826ba16f1fbd6fa7f5c6cc87bd64e097.1577087627.git.christophe.leroy@c-s.fr
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/irqchip/irq-mbigen.c | 1 +
- 1 file changed, 1 insertion(+)
+ arch/powerpc/mm/fault.c | 3 +++
+ 1 file changed, 3 insertions(+)
 
-diff --git a/drivers/irqchip/irq-mbigen.c b/drivers/irqchip/irq-mbigen.c
-index 3f09f658e8e29..6b566bba263bd 100644
---- a/drivers/irqchip/irq-mbigen.c
-+++ b/drivers/irqchip/irq-mbigen.c
-@@ -374,6 +374,7 @@ static struct platform_driver mbigen_platform_driver = {
- 		.name		= "Hisilicon MBIGEN-V2",
- 		.of_match_table	= mbigen_of_match,
- 		.acpi_match_table = ACPI_PTR(mbigen_acpi_match),
-+		.suppress_bind_attrs = true,
- 	},
- 	.probe			= mbigen_device_probe,
- };
+diff --git a/arch/powerpc/mm/fault.c b/arch/powerpc/mm/fault.c
+index 1baeb045f7f4b..e083a9f67f701 100644
+--- a/arch/powerpc/mm/fault.c
++++ b/arch/powerpc/mm/fault.c
+@@ -354,6 +354,9 @@ static void sanity_check_fault(bool is_write, bool is_user,
+ 	 * Userspace trying to access kernel address, we get PROTFAULT for that.
+ 	 */
+ 	if (is_user && address >= TASK_SIZE) {
++		if ((long)address == -1)
++			return;
++
+ 		pr_crit_ratelimited("%s[%d]: User access of kernel address (%lx) - exploit attempt? (uid: %d)\n",
+ 				   current->comm, current->pid, address,
+ 				   from_kuid(&init_user_ns, current_uid()));
 -- 
 2.20.1
 
