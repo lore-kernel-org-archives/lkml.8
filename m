@@ -2,280 +2,375 @@ Return-Path: <SRS0=1210=4J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_2
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3815EC35646
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 17:10:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A574AC35657
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 17:10:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EDDF120722
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 17:10:13 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=lca.pw header.i=@lca.pw header.b="hQnbm4bv"
+	by mail.kernel.org (Postfix) with ESMTP id 70AD024653
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 17:10:28 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728103AbgBURKM (ORCPT
+        id S1728268AbgBURK0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Feb 2020 12:10:12 -0500
-Received: from mail-qk1-f196.google.com ([209.85.222.196]:34705 "EHLO
-        mail-qk1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726408AbgBURKM (ORCPT
+        Fri, 21 Feb 2020 12:10:26 -0500
+Received: from bhuna.collabora.co.uk ([46.235.227.227]:60022 "EHLO
+        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726408AbgBURK0 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Feb 2020 12:10:12 -0500
-Received: by mail-qk1-f196.google.com with SMTP id c20so2493180qkm.1
-        for <linux-kernel@vger.kernel.org>; Fri, 21 Feb 2020 09:10:11 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=lca.pw; s=google;
-        h=message-id:subject:from:to:cc:date:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=gL/kI9VlGkNvzMfzmc7dKStrYuJZuzj9czJ6UkMUDSw=;
-        b=hQnbm4bvPj/8KwZxCy4xnI5Jiq2xd0eO7tnVuE+mZt3Y6ny5WGl5XAnVRa/kyz/CAc
-         kYoSXdEzR2tlxIfb0qIeZip7nPAIvQSkurUB0I2PZqpsiI5G381887tq0Oj0pkHWCmkI
-         y89jbPtiIuO9qHSubtu6J77b9/Hi0du3KhAA/S6LTAT6pk85vfriN6sWJtsCzaPvJwI+
-         IYgG3cuorr392xFSccQqbBRNJmfQm9//mBER3pncenCZW6w8bTv8kFZj5JE+roSX1IFg
-         iyVi14thTMxG6HBk4re079w58AZKmuW+PDRCpTKsZQGqLDh3Tny7NrfXxpe6l0o3ZJf1
-         DUkg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:message-id:subject:from:to:cc:date:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=gL/kI9VlGkNvzMfzmc7dKStrYuJZuzj9czJ6UkMUDSw=;
-        b=ZR3w8vxNFHsVehm3ET+0izzZqHssw8N41ugZkCy1GdfvL5kYexGeSLB3Ud6RiTXHLX
-         egsiewtdkm+l2MDfsVSBju+jLXkso27Uot0fHF+1mquDpplP3eBoV/Vy0+Yf6agLayt/
-         VW1rUzUSehpzOG0FH1qf0gmHw+GumKP2tuS3B3yLFtLNyI03KxqeZW76FcIaSVQnydhy
-         8QYOy78k48SwdzIROzB8SwnvpOvIJER/TB4RcLrxqDpubq4/gM52D2kvS/x8gKWT2BTJ
-         Gwg2k+isjAqmvuwBkq8s3olUDSmh4CbZALHV0cBBCepCBuwRUR5a5R9zwfR6txoisKjE
-         OcVw==
-X-Gm-Message-State: APjAAAUeYGW54bvZEMmL4hGFD8K/jwd5HhcdoyFprd/2Hkdg0egP8ogB
-        tLfowVHjD/DDSLjLnrPLGXoNGA==
-X-Google-Smtp-Source: APXvYqyQ4uvzqNzwsp8oGQxg0ieef9/jivwkEYxQxVIMvsd0JDosQFqtvwHapRXAKh2pfUTJ62AwdQ==
-X-Received: by 2002:a37:4c81:: with SMTP id z123mr33909677qka.320.1582305010998;
-        Fri, 21 Feb 2020 09:10:10 -0800 (PST)
-Received: from dhcp-41-57.bos.redhat.com (nat-pool-bos-t.redhat.com. [66.187.233.206])
-        by smtp.gmail.com with ESMTPSA id 65sm1797385qtc.4.2020.02.21.09.10.09
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Fri, 21 Feb 2020 09:10:10 -0800 (PST)
-Message-ID: <1582305008.7365.111.camel@lca.pw>
-Subject: Re: [PATCH] kcsan: Add option for verbose reporting
-From:   Qian Cai <cai@lca.pw>
-To:     Marco Elver <elver@google.com>
-Cc:     paulmck@kernel.org, andreyknvl@google.com, glider@google.com,
-        dvyukov@google.com, kasan-dev@googlegroups.com,
-        linux-kernel@vger.kernel.org
-Date:   Fri, 21 Feb 2020 12:10:08 -0500
-In-Reply-To: <20200219151531.161515-1-elver@google.com>
-References: <20200219151531.161515-1-elver@google.com>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.22.6 (3.22.6-10.el7) 
-Mime-Version: 1.0
-Content-Transfer-Encoding: 8bit
+        Fri, 21 Feb 2020 12:10:26 -0500
+Received: from [127.0.0.1] (localhost [127.0.0.1])
+        (Authenticated sender: eballetbo)
+        with ESMTPSA id 3E36728EB45
+Subject: Re: [PATCH v8 0/6] arm/arm64: mediatek: Fix mmsys device probing
+To:     Matthias Brugger <mbrugger@suse.com>, CK Hu <ck.hu@mediatek.com>
+Cc:     mark.rutland@arm.com, Kate Stewart <kstewart@linuxfoundation.org>,
+        Minghsiu Tsai <minghsiu.tsai@mediatek.com>,
+        Andrew-CT Chen <andrew-ct.chen@mediatek.com>, airlied@linux.ie,
+        mturquette@baylibre.com, dri-devel@lists.freedesktop.org,
+        Richard Fontana <rfontana@redhat.com>,
+        laurent.pinchart@ideasonboard.com, ulrich.hecht+renesas@gmail.com,
+        Collabora Kernel ML <kernel@collabora.com>,
+        linux-clk@vger.kernel.org, Nicolas Boichat <drinkcat@chromium.org>,
+        Weiyi Lu <weiyi.lu@mediatek.com>,
+        Krzysztof Kozlowski <krzk@kernel.org>, wens@csie.org,
+        Allison Randal <allison@lohutok.net>,
+        mtk01761 <wendell.lin@mediatek.com>,
+        Owen Chen <owen.chen@mediatek.com>,
+        linux-media@vger.kernel.org, devicetree@vger.kernel.org,
+        p.zabel@pengutronix.de, frank-w@public-files.de,
+        Seiya Wang <seiya.wang@mediatek.com>, sean.wang@mediatek.com,
+        Houlong Wei <houlong.wei@mediatek.com>, robh+dt@kernel.org,
+        linux-mediatek@lists.infradead.org, hsinyi@chromium.org,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        linux-arm-kernel@lists.infradead.org,
+        Fabien Parent <fparent@baylibre.com>, sboyd@kernel.org,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        rdunlap@infradead.org, linux-kernel@vger.kernel.org,
+        Daniel Vetter <daniel@ffwll.ch>, matthias.bgg@kernel.org
+References: <20200220172147.919996-1-enric.balletbo@collabora.com>
+ <1582259996.1846.7.camel@mtksdaap41>
+ <7a87b486-1622-7f27-f5af-427b94a14c00@collabora.com>
+ <1582277229.25992.9.camel@mtksdaap41>
+ <1393a8c5-065f-cccb-2563-8b159c951d4b@suse.com>
+ <1582283518.5889.10.camel@mtksdaap41>
+ <6deab0a4-44a6-a15f-ac01-374f818b267c@collabora.com>
+ <6eb9da70-9a0c-27fc-6c31-3ac62ede5a35@suse.com>
+From:   Enric Balletbo i Serra <enric.balletbo@collabora.com>
+Message-ID: <d9ad35c0-57df-ebb2-67e8-4aae55dd2fcb@collabora.com>
+Date:   Fri, 21 Feb 2020 18:10:17 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.5.0
+MIME-Version: 1.0
+In-Reply-To: <6eb9da70-9a0c-27fc-6c31-3ac62ede5a35@suse.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 2020-02-19 at 16:15 +0100, Marco Elver wrote:
-> Adds CONFIG_KCSAN_VERBOSE to optionally enable more verbose reports.
-> Currently information about the reporting task's held locks and IRQ
-> trace events are shown, if they are enabled.
+Hi,
 
-Well, there is a report. I don't understand why it said there is no lock held in
-the writer, but clearly there is this right after in
-jbd2_journal_commit_transaction(),
-
- spin_unlock(&jh->b_state_lock);
-
-[ 2268.021382][T25724] BUG: KCSAN: data-race in __jbd2_journal_refile_buffer
-[jbd2] / jbd2_write_access_granted [jbd2]
-[ 2268.031888][T25724] 
-[ 2268.034099][T25724] write to 0xffff99f9b1bd0e30 of 8 bytes by task 25721 on
-cpu 70:
-[ 2268.041842][T25724]  __jbd2_journal_refile_buffer+0xdd/0x210 [jbd2]
-__jbd2_journal_refile_buffer at fs/jbd2/transaction.c:2569
-[ 2268.048181][T25724]  jbd2_journal_commit_transaction+0x2d15/0x3f20 [jbd2]
-(inlined by) jbd2_journal_commit_transaction at fs/jbd2/commit.c:1033
-[ 2268.055042][T25724]  kjournald2+0x13b/0x450 [jbd2]
-[ 2268.059876][T25724]  kthread+0x1cd/0x1f0
-[ 2268.063835][T25724]  ret_from_fork+0x27/0x50
-[ 2268.068143][T25724] 
-[ 2268.070348][T25724] no locks held by jbd2/loop0-8/25721.
-[ 2268.075699][T25724] irq event stamp: 77604
-[ 2268.079830][T25724] hardirqs last  enabled at (77603): [<ffffffff986da853>]
-_raw_spin_unlock_irqrestore+0x53/0x60
-[ 2268.090166][T25724] hardirqs last disabled at (77604): [<ffffffff986d0841>]
-__schedule+0x181/0xa50
-[ 2268.099192][T25724] softirqs last  enabled at (76092): [<ffffffff98a0034c>]
-__do_softirq+0x34c/0x57c
-[ 2268.108392][T25724] softirqs last disabled at (76005): [<ffffffff97cc67a2>]
-irq_exit+0xa2/0xc0
-[ 2268.117062][T25724] 
-[ 2268.119269][T25724] read to 0xffff99f9b1bd0e30 of 8 bytes by task 25724 on
-cpu 68:
-[ 2268.126916][T25724]  jbd2_write_access_granted+0x1b2/0x250 [jbd2]
-jbd2_write_access_granted at fs/jbd2/transaction.c:1155
-[ 2268.133086][T25724]  jbd2_journal_get_write_access+0x2c/0x60 [jbd2]
-[ 2268.139492][T25724]  __ext4_journal_get_write_access+0x50/0x90 [ext4]
-[ 2268.146076][T25724]  ext4_mb_mark_diskspace_used+0x158/0x620 [ext4]
-[ 2268.152507][T25724]  ext4_mb_new_blocks+0x54f/0xca0 [ext4]
-[ 2268.158125][T25724]  ext4_ind_map_blocks+0xc79/0x1b40 [ext4]
-[ 2268.163923][T25724]  ext4_map_blocks+0x3b4/0x950 [ext4]
-[ 2268.169284][T25724]  _ext4_get_block+0xfc/0x270 [ext4]
-[ 2268.174556][T25724]  ext4_get_block+0x3b/0x50 [ext4]
-[ 2268.179566][T25724]  __block_write_begin_int+0x22e/0xae0
-[ 2268.184921][T25724]  __block_write_begin+0x39/0x50
-[ 2268.189842][T25724]  ext4_write_begin+0x388/0xb50 [ext4]
-[ 2268.195195][T25724]  generic_perform_write+0x15d/0x290
-[ 2268.200467][T25724]  ext4_buffered_write_iter+0x11f/0x210 [ext4]
-[ 2268.206612][T25724]  ext4_file_write_iter+0xce/0x9e0 [ext4]
-[ 2268.212228][T25724]  new_sync_write+0x29c/0x3b0
-[ 2268.216794][T25724]  __vfs_write+0x92/0xa0
-[ 2268.220924][T25724]  vfs_write+0x103/0x260
-[ 2268.225052][T25724]  ksys_write+0x9d/0x130
-[ 2268.229182][T25724]  __x64_sys_write+0x4c/0x60
-[ 2268.233666][T25724]  do_syscall_64+0x91/0xb05
-[ 2268.238058][T25724]  entry_SYSCALL_64_after_hwframe+0x49/0xbe
-[ 2268.243846][T25724] 
-[ 2268.246056][T25724] 5 locks held by fsync04/25724:
-[ 2268.250880][T25724]  #0: ffff99f9911093f8 (sb_writers#13){.+.+}, at:
-vfs_write+0x21c/0x260
-[ 2268.259211][T25724]  #1: ffff99f9db4c0348 (&sb->s_type-
->i_mutex_key#15){+.+.}, at: ext4_buffered_write_iter+0x65/0x210 [ext4]
-[ 2268.270693][T25724]  #2: ffff99f5e7dfcf58 (jbd2_handle){++++}, at:
-start_this_handle+0x1c1/0x9d0 [jbd2]
-[ 2268.280180][T25724]  #3: ffff99f9db4c0168 (&ei->i_data_sem){++++}, at:
-ext4_map_blocks+0x176/0x950 [ext4]
-[ 2268.289913][T25724]  #4: ffffffff99086b40 (rcu_read_lock){....}, at:
-jbd2_write_access_granted+0x4e/0x250 [jbd2]
-[ 2268.300187][T25724] irq event stamp: 1407125
-[ 2268.304496][T25724] hardirqs last  enabled at (1407125): [<ffffffff980da9b7>]
-__find_get_block+0x107/0x790
-[ 2268.314218][T25724] hardirqs last disabled at (1407124): [<ffffffff980da8f9>]
-__find_get_block+0x49/0x790
-[ 2268.323856][T25724] softirqs last  enabled at (1405528): [<ffffffff98a0034c>]
-__do_softirq+0x34c/0x57c
-[ 2268.333229][T25724] softirqs last disabled at (1405521): [<ffffffff97cc67a2>]
-irq_exit+0xa2/0xc0
-[ 2268.342075][T25724] 
-[ 2268.344282][T25724] Reported by Kernel Concurrency Sanitizer on:
-[ 2268.350339][T25724] CPU: 68 PID: 25724 Comm: fsync04 Tainted:
-G             L    5.6.0-rc2-next-20200221+ #7
-[ 2268.360234][T25724] Hardware name: HPE ProLiant DL385 Gen10/ProLiant DL385
-Gen10, BIOS A40 07/10/2019
-
+On 21/2/20 12:53, Matthias Brugger wrote:
 > 
-> Signed-off-by: Marco Elver <elver@google.com>
-> Suggested-by: Qian Cai <cai@lca.pw>
-> ---
->  kernel/kcsan/report.c | 48 +++++++++++++++++++++++++++++++++++++++++++
->  lib/Kconfig.kcsan     | 13 ++++++++++++
->  2 files changed, 61 insertions(+)
 > 
-> diff --git a/kernel/kcsan/report.c b/kernel/kcsan/report.c
-> index 11c791b886f3c..f14becb6f1537 100644
-> --- a/kernel/kcsan/report.c
-> +++ b/kernel/kcsan/report.c
-> @@ -1,10 +1,12 @@
->  // SPDX-License-Identifier: GPL-2.0
->  
-> +#include <linux/debug_locks.h>
->  #include <linux/jiffies.h>
->  #include <linux/kernel.h>
->  #include <linux/lockdep.h>
->  #include <linux/preempt.h>
->  #include <linux/printk.h>
-> +#include <linux/rcupdate.h>
->  #include <linux/sched.h>
->  #include <linux/spinlock.h>
->  #include <linux/stacktrace.h>
-> @@ -245,6 +247,29 @@ static int sym_strcmp(void *addr1, void *addr2)
->  	return strncmp(buf1, buf2, sizeof(buf1));
->  }
->  
-> +static void print_verbose_info(struct task_struct *task)
-> +{
-> +	if (!task)
-> +		return;
-> +
-> +	if (task != current && task->state == TASK_RUNNING)
-> +		/*
-> +		 * Showing held locks for a running task is unreliable, so just
-> +		 * skip this. The printed locks are very likely inconsistent,
-> +		 * since the stack trace was obtained when the actual race
-> +		 * occurred and the task has since continued execution. Since we
-> +		 * cannot display the below information from the racing thread,
-> +		 * but must print it all from the watcher thread, bail out.
-> +		 * Note: Even if the task is not running, there is a chance that
-> +		 * the locks held may be inconsistent.
-> +		 */
-> +		return;
-> +
-> +	pr_err("\n");
-> +	debug_show_held_locks(task);
-> +	print_irqtrace_events(task);
-> +}
-> +
->  /*
->   * Returns true if a report was generated, false otherwise.
->   */
-> @@ -319,6 +344,26 @@ static bool print_report(const volatile void *ptr, size_t size, int access_type,
->  				  other_info.num_stack_entries - other_skipnr,
->  				  0);
->  
-> +		if (IS_ENABLED(CONFIG_KCSAN_VERBOSE) && other_info.task_pid != -1) {
-> +			struct task_struct *other_task;
-> +
-> +			/*
-> +			 * Rather than passing @current from the other task via
-> +			 * @other_info, obtain task_struct here. The problem
-> +			 * with passing @current via @other_info is that, we
-> +			 * would have to get_task_struct/put_task_struct, and if
-> +			 * we race with a task being released, we would have to
-> +			 * release it in release_report(). This may result in
-> +			 * deadlock if we want to use KCSAN on the allocators.
-> +			 * Instead, make this best-effort, and if the task was
-> +			 * already released, we just do not print anything here.
-> +			 */
-> +			rcu_read_lock();
-> +			other_task = find_task_by_pid_ns(other_info.task_pid, &init_pid_ns);
-> +			print_verbose_info(other_task);
-> +			rcu_read_unlock();
-> +		}
-> +
->  		pr_err("\n");
->  		pr_err("%s to 0x%px of %zu bytes by %s on cpu %i:\n",
->  		       get_access_type(access_type), ptr, size,
-> @@ -340,6 +385,9 @@ static bool print_report(const volatile void *ptr, size_t size, int access_type,
->  	stack_trace_print(stack_entries + skipnr, num_stack_entries - skipnr,
->  			  0);
->  
-> +	if (IS_ENABLED(CONFIG_KCSAN_VERBOSE))
-> +		print_verbose_info(current);
-> +
->  	/* Print report footer. */
->  	pr_err("\n");
->  	pr_err("Reported by Kernel Concurrency Sanitizer on:\n");
-> diff --git a/lib/Kconfig.kcsan b/lib/Kconfig.kcsan
-> index f0b791143c6ab..ba9268076cfbc 100644
-> --- a/lib/Kconfig.kcsan
-> +++ b/lib/Kconfig.kcsan
-> @@ -20,6 +20,19 @@ menuconfig KCSAN
->  
->  if KCSAN
->  
-> +config KCSAN_VERBOSE
-> +	bool "Show verbose reports with more information about system state"
-> +	depends on PROVE_LOCKING
-> +	help
-> +	  If enabled, reports show more information about the system state that
-> +	  may help better analyze and debug races. This includes held locks and
-> +	  IRQ trace events.
-> +
-> +	  While this option should generally be benign, we call into more
-> +	  external functions on report generation; if a race report is
-> +	  generated from any one of them, system stability may suffer due to
-> +	  deadlocks or recursion.  If in doubt, say N.
-> +
->  config KCSAN_DEBUG
->  	bool "Debugging of KCSAN internals"
->  
+> On 21/02/2020 12:37, Enric Balletbo i Serra wrote:
+>> Hi CK and Matthias,
+>>
+>> On 21/2/20 12:11, CK Hu wrote:
+>>> Hi, Matthias:
+>>>
+>>> On Fri, 2020-02-21 at 11:24 +0100, Matthias Brugger wrote:
+>>>>
+>>>> On 21/02/2020 10:27, CK Hu wrote:
+>>>>> Hi, Enric:
+>>>>>
+>>>>> On Fri, 2020-02-21 at 09:56 +0100, Enric Balletbo i Serra wrote:
+>>>>>> Hi CK,
+>>>>>>
+>>>>>> Thanks for your quick answer.
+>>>>>>
+>>>>>> On 21/2/20 5:39, CK Hu wrote:
+>>>>>>> Hi, Enric:
+>>>>>>>
+>>>>>>> On Thu, 2020-02-20 at 18:21 +0100, Enric Balletbo i Serra wrote:
+>>>>>>>> Dear all,
+>>>>>>>>
+>>>>>>>> Those patches are intended to solve an old standing issue on some
+>>>>>>>> Mediatek devices (mt8173, mt2701 and mt2712) in a slightly different way
+>>>>>>>> to the precedent series.
+>>>>>>>>
+>>>>>>>> Up to now both drivers, clock and drm are probed with the same device tree
+>>>>>>>> compatible. But only the first driver get probed, which in effect breaks
+>>>>>>>> graphics on those devices.
+>>>>>>>>
+>>>>>>>> The version eight of the series tries to solve the problem with a
+>>>>>>>> different approach than the previous series but similar to how is solved
+>>>>>>>> on other Mediatek devices.
+>>>>>>>>
+>>>>>>>> The MMSYS (Multimedia subsystem) in Mediatek SoCs has some registers to
+>>>>>>>> control clock gates (which is used in the clk driver) and some registers
+>>>>>>>> to set the routing and enable the differnet blocks of the display
+>>>>>>>> and MDP (Media Data Path) subsystem. On this series the clk driver is
+>>>>>>>> not a pure clock controller but a system controller that can provide
+>>>>>>>> access to the shared registers between the different drivers that need
+>>>>>>>> it (mediatek-drm and mediatek-mdp). And the biggest change is, that in
+>>>>>>>> this version, clk driver is the entry point (parent) which will trigger
+>>>>>>>> the probe of the corresponding mediatek-drm driver and pass its MMSYS
+>>>>>>>> platform data for display configuration.
+>>>>>>>
+>>>>>>> When mmsys is a system controller, I prefer to place mmsys in
+>>>>>>> drivers/soc/mediatek, and it share registers for clock, display, and mdp
+>>>>>>> driver. This means the probe function is placed in
+>>>>>>> drivers/soc/mediatek ,its display clock function, mdp clock function are
+>>>>>>> placed in drivers/clk, display routing are placed in drivers/gpu/drm,
+>>>>>>> and mdp routing are placed in dirvers/video.
+>>>>>>>
+>>>>>>
+>>>>>> I understand what you mean but I am not sure this makes the code clearer and
+>>>>>> useful. The driver in drivers/soc/mediatek will be a simple dummy implementation
+>>>>>> of a "simple-mfd" device (a driver that simply matches with
+>>>>>> "mediatek,mt8173-mmsys" and instantiates the "clk-mt8173-mm" and the
+>>>>>> "mediatek-drm" driver (note that mediatek-mdp" is already instantiated via
+>>>>>> device-tree).
+>>>>>>
+>>>>>
+>>>>> It's clear that mmsys is neither a pure clock controller nor a pure
+>>>>> routing controller for display and mdp. 
+>>>>>
+>>>>>> It'd be nice had a proper device-tree with a "simple-mfd" for mmsys from the
+>>>>>> beginning representing how really hardwware is, but I think that, change this
+>>>>>> now, will break backward compatibility.
+>>>>>
+>>>>> Maybe this is a solution. Current device tree would work only on old
+>>>>> kernel version with a bug, so this mean there is no any device tree
+>>>>> works on kernel version without bug. Why do we compatible with such
+>>>>> device tree?
+>>>>>
+>>>>
+>>
+>> So the only reason why current DT worked at some point is because there was a
+>> kernel bug?
+>>
+> 
+> I'd say you can call it a kernel bug:
+> https://patchwork.kernel.org/patch/10367877/#22078767
+> 
+> 
+>> If that's the case I think we shouldn't worry about break DT compatibility (I'm
+>> sorry for those that having a buggy kernel makes display working)
+>>
+>>>> The idea behind this is, that the device-tree could be passed by some boot
+>>>> firmware, so that the OS do not care about it. For this we need a stable DTS as
+>>>> otherwise newer kernel with older FW would break.
+>>>>
+>>>> DTS is supposed to be just a different description of the HW like ACPI. So it
+>>>> has to be compatible (newer kernel with older DTS and if possible vice versa).
+>>>
+>>> In my view, there is no FW (except some bug-inside FW) which works on
+>>> this dts, so this dts is in a initial state. I think the compatibility
+>>> is based on that dts correctly describe the HW. If we find this dts does
+>>> not correctly describe the HW and it's in a initial state, should we
+>>> still make it compatible?
+>>>
+>>
+>> In this case I think we don't need to worry about buggy kernels, the only thing
+>> that we need to take in consideration is that mmsys is instantiated on both (the
+>> old DT and the new DT), we shouldn't expect display working (because never
+>> worked, right?)
+>>
+>> With that in mind, I agree that is a good opportunity to fix properly the HW
+>> topology.
+>>
+>> What thing that worries me is that I see this pattern on all Mediatek SoCs, does
+>> this mean that display was never well supported for Mediatek SoCs?
+>>
+> 
+> That's exactly the case. Actually there were some patches for mt762x (can't
+> remember if mt7623 or mt7622) whcih got pushed back, because we would need to
+> fix the mmsys problem first.
+> 
+> Ok, so if we come to the conclusion that this actually only worked because of a
+> bug, then we can remodel the whole thing.
+> In this case, I think the best would be to do what CK proposed:
+> https://patchwork.kernel.org/patch/11381201/#23158169
+> 
+> Making everything below 0x14000000 a subdevice of mmsys (mdp, ovl, rdma, you
+> name it).
+> 
+
+
+I see the MMSYS space as config registers to route the different ports in the
+drm and video subsystem, so, as phandle of the display (drivers/gpur/drm) and
+video (drivers/video) subsystem. What about something like this?
+
+mmsys: syscon@14000000 {
+	compatible = "mediatek,mt8173-mmsys", "syscon";
+	reg = <0 0x14000000 0 0x1000>;
+	power-domains = <&scpsys MT8173_POWER_DOMAIN_MM>;
+	assigned-clocks = <&topckgen CLK_TOP_MM_SEL>;
+	assigned-clock-rates = <400000000>;
+	#clock-cells = <1>;
+};
+
+Basically is what we have with
+
+* [PATCH v8 4/6] clk: mediatek: mt8173: Switch MMSYS to platform driver
+
+And
+
+display-subsystem {
+	compatible = "mediatek,display-subsystem";
+	mediatek,mmsys = <&mmsys>; /* phandle to the routing config registers */
+	ports = <&ovl0>, <&ovl1>, < ... >
+}
+
+We are introducing a new compatible that is not describing hardware but how
+hardware is grouped, which I think is fine.
+
+The mediatek-drm driver will need a bit of rework but not much I guess.
+
+What is still not clear to me is the mdp part because doesn't seem to have an
+entry point like the display part, instead it uses one port as entry point.
+
+	mdp_rdma0: rdma@14001000 {
+		compatible = "mediatek,mt8173-mdp-rdma",
+			     "mediatek,mt8173-mdp";
+
+AFAICS that driver is not touching MMSYS config registers to route the mdp path,
+only is getting the clocks, but I assume it will do in the future. In such case,
+maybe we could do something similar to the display-subsystem node?
+
+Regards,
+ Enric
+
+
+> Regards,
+> Matthias
+> 
+>> Thanks.
+>>
+>>> If you have better solution, just let's forget this.
+>>>
+>>> Regards,
+>>> CK
+>>>
+>>>>
+>>>> Regards,
+>>>> Matthias
+>>>>
+>>>>> Regards,
+>>>>> CK
+>>>>>
+>>>>>>
+>>>>>> IMHO I think that considering the clk driver as entry point is fine, but this is
+>>>>>> something that the clock maintainers should decide.
+>>>>>>
+>>>>>> Also note that this is not only a MT8173 problem I am seeing the same problem on
+>>>>>> all other Mediatek SoCs.
+>>>>>>
+>>>>>> Thanks.
+>>>>>>
+>>>>>>> Regards,
+>>>>>>> CK
+>>>>>>>
+>>>>>>>>
+>>>>>>>> All this series was tested on the Acer R13 Chromebook only.
+>>>>>>>>
+>>>>>>>> For reference, here are the links to the old discussions:
+>>>>>>>>
+>>>>>>>> * v7: https://patchwork.kernel.org/project/linux-mediatek/list/?series=241217
+>>>>>>>> * v6: https://patchwork.kernel.org/project/linux-mediatek/list/?series=213219
+>>>>>>>> * v5: https://patchwork.kernel.org/project/linux-mediatek/list/?series=44063
+>>>>>>>> * v4:
+>>>>>>>>   * https://patchwork.kernel.org/patch/10530871/
+>>>>>>>>   * https://patchwork.kernel.org/patch/10530883/
+>>>>>>>>   * https://patchwork.kernel.org/patch/10530885/
+>>>>>>>>   * https://patchwork.kernel.org/patch/10530911/
+>>>>>>>>   * https://patchwork.kernel.org/patch/10530913/
+>>>>>>>> * v3:
+>>>>>>>>   * https://patchwork.kernel.org/patch/10367857/
+>>>>>>>>   * https://patchwork.kernel.org/patch/10367861/
+>>>>>>>>   * https://patchwork.kernel.org/patch/10367877/
+>>>>>>>>   * https://patchwork.kernel.org/patch/10367875/
+>>>>>>>>   * https://patchwork.kernel.org/patch/10367885/
+>>>>>>>>   * https://patchwork.kernel.org/patch/10367883/
+>>>>>>>>   * https://patchwork.kernel.org/patch/10367889/
+>>>>>>>>   * https://patchwork.kernel.org/patch/10367907/
+>>>>>>>>   * https://patchwork.kernel.org/patch/10367909/
+>>>>>>>>   * https://patchwork.kernel.org/patch/10367905/
+>>>>>>>> * v2: No relevant discussion, see v3
+>>>>>>>> * v1:
+>>>>>>>>   * https://patchwork.kernel.org/patch/10016497/
+>>>>>>>>   * https://patchwork.kernel.org/patch/10016499/
+>>>>>>>>   * https://patchwork.kernel.org/patch/10016505/
+>>>>>>>>   * https://patchwork.kernel.org/patch/10016507/
+>>>>>>>>
+>>>>>>>> Best regards,
+>>>>>>>>  Enric
+>>>>>>>>
+>>>>>>>> Changes in v8:
+>>>>>>>> - Be a builtin_platform_driver like other mediatek mmsys drivers.
+>>>>>>>> - New patches introduced in this series.
+>>>>>>>>
+>>>>>>>> Changes in v7:
+>>>>>>>> - Add R-by from CK
+>>>>>>>> - Add R-by from CK
+>>>>>>>> - Fix check of return value of of_clk_get
+>>>>>>>> - Fix identation
+>>>>>>>> - Free clk_data->clks as well
+>>>>>>>> - Get rid of private data structure
+>>>>>>>>
+>>>>>>>> Enric Balletbo i Serra (2):
+>>>>>>>>   drm/mediatek: Move MMSYS configuration to include/linux/platform_data
+>>>>>>>>   clk/drm: mediatek: Fix mediatek-drm device probing
+>>>>>>>>
+>>>>>>>> Matthias Brugger (4):
+>>>>>>>>   drm/mediatek: Use regmap for register access
+>>>>>>>>   drm/mediatek: Omit warning on probe defers
+>>>>>>>>   media: mtk-mdp: Check return value of of_clk_get
+>>>>>>>>   clk: mediatek: mt8173: Switch MMSYS to platform driver
+>>>>>>>>
+>>>>>>>>  drivers/clk/mediatek/Kconfig                  |   6 +
+>>>>>>>>  drivers/clk/mediatek/Makefile                 |   1 +
+>>>>>>>>  drivers/clk/mediatek/clk-mt2701-mm.c          |  30 +++
+>>>>>>>>  drivers/clk/mediatek/clk-mt2712-mm.c          |  44 +++++
+>>>>>>>>  drivers/clk/mediatek/clk-mt8173-mm.c          | 172 ++++++++++++++++++
+>>>>>>>>  drivers/clk/mediatek/clk-mt8173.c             | 104 -----------
+>>>>>>>>  drivers/gpu/drm/mediatek/mtk_disp_color.c     |   5 +-
+>>>>>>>>  drivers/gpu/drm/mediatek/mtk_disp_ovl.c       |   5 +-
+>>>>>>>>  drivers/gpu/drm/mediatek/mtk_disp_rdma.c      |   5 +-
+>>>>>>>>  drivers/gpu/drm/mediatek/mtk_dpi.c            |  12 +-
+>>>>>>>>  drivers/gpu/drm/mediatek/mtk_drm_crtc.c       |   4 +-
+>>>>>>>>  drivers/gpu/drm/mediatek/mtk_drm_ddp.c        |  53 +++---
+>>>>>>>>  drivers/gpu/drm/mediatek/mtk_drm_ddp.h        |   4 +-
+>>>>>>>>  drivers/gpu/drm/mediatek/mtk_drm_ddp_comp.h   |  56 +-----
+>>>>>>>>  drivers/gpu/drm/mediatek/mtk_drm_drv.c        | 113 +-----------
+>>>>>>>>  drivers/gpu/drm/mediatek/mtk_drm_drv.h        |  13 +-
+>>>>>>>>  drivers/gpu/drm/mediatek/mtk_dsi.c            |   8 +-
+>>>>>>>>  drivers/gpu/drm/mediatek/mtk_hdmi.c           |   4 +-
+>>>>>>>>  drivers/media/platform/mtk-mdp/mtk_mdp_comp.c |   6 +
+>>>>>>>>  include/linux/platform_data/mtk_mmsys.h       |  73 ++++++++
+>>>>>>>>  20 files changed, 401 insertions(+), 317 deletions(-)
+>>>>>>>>  create mode 100644 drivers/clk/mediatek/clk-mt8173-mm.c
+>>>>>>>>  create mode 100644 include/linux/platform_data/mtk_mmsys.h
+>>>>>>>>
+>>>>>>>
+>>>>>>
+>>>>>> _______________________________________________
+>>>>>> Linux-mediatek mailing list
+>>>>>> Linux-mediatek@lists.infradead.org
+>>>>>> http://lists.infradead.org/mailman/listinfo/linux-mediatek
+>>>>>
+>>>>
+>>>> _______________________________________________
+>>>> Linux-mediatek mailing list
+>>>> Linux-mediatek@lists.infradead.org
+>>>> http://lists.infradead.org/mailman/listinfo/linux-mediatek
+>>>
+> 
