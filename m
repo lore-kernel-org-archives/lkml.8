@@ -7,48 +7,47 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A85CBC35640
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 08:05:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AAAF5C35642
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 08:05:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7F8592073A
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 08:05:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 728E824670
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 08:05:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582272313;
-	bh=BvI1Wvm5Gi7agi+XZRfqk2PKyoFwI1R06nXhT/Qs+S8=;
+	s=default; t=1582272315;
+	bh=Qt8Et4Nmv72ffbqegZAEOEqYIFv83EAW38M0+ZpuCtQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=yRLdweXmYLJcnCbzsp6ik+17cHgddNoLqO0bMP3J6ccs80V3A4yk9XO/lP7r9IG3f
-	 /Ko1MTPtnCu6Ppm5gy7ZW8+gcwBdH1doIvkWrdZJN1e3YWRLSp4S3IHhVzHrUVsWIH
-	 WelzKtWf+bO5AVBsvX/Bf/XSBeHgZyZ5WmRhiB+Y=
+	b=ijKqmf/7v2UP+amA1V/JtU3YVkKaRnpHrxnUDbq0K+GwyrxCI7uJd4PH3KNj9fKNg
+	 UXu16w5UcqRdO0nCNJw14B+y0jk7mkHCUgSLrV3oSg5AQX/Bjps2speKnDE8Tpao45
+	 tyd1M1HIU47BgU8ezW+PK9+EtLxkezAsiweoZvuU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731279AbgBUIFI (ORCPT
+        id S1731771AbgBUIFO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Feb 2020 03:05:08 -0500
-Received: from mail.kernel.org ([198.145.29.99]:38466 "EHLO mail.kernel.org"
+        Fri, 21 Feb 2020 03:05:14 -0500
+Received: from mail.kernel.org ([198.145.29.99]:38538 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731748AbgBUIFF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Feb 2020 03:05:05 -0500
+        id S1731768AbgBUIFK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 21 Feb 2020 03:05:10 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5E70224670;
-        Fri, 21 Feb 2020 08:05:04 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 582392073A;
+        Fri, 21 Feb 2020 08:05:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1582272304;
-        bh=BvI1Wvm5Gi7agi+XZRfqk2PKyoFwI1R06nXhT/Qs+S8=;
+        s=default; t=1582272309;
+        bh=Qt8Et4Nmv72ffbqegZAEOEqYIFv83EAW38M0+ZpuCtQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=N+IA/FIviTZlfp5k+Y3sGO2W0MuBk4V0JindT1MWoFwg19P3i9qgscPv5Rriy+Kdd
-         FVUaYwojNzKFQk17sA11NvZlYe4u2ajbghh2iiLREXJsBRmmApez2C5CK38nSk/qyA
-         Kf8QZ/IGON+ulU6WSNrfF5zgc73n3OCxMiTGriSQ=
+        b=TPwIE65MOrqiTM0KQWGbX6i/7+1UB2Jcw6+soP8o6+WILBL2Esy6dAhfL0f7SldiR
+         Ibq+cjIvcEaB2G16/ivPAko6HLxByK90p/wB/AI2g4kqMwEOpNdoep4ci8ZV4vpNSX
+         1jLPvfITVObqaOJidc7EyW9i4zHMOaoUTHz8CTTY=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Douglas Anderson <dianders@chromium.org>,
-        Matthias Kaehlcke <mka@chromium.org>,
-        Stephen Boyd <sboyd@kernel.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 092/344] clk: qcom: rcg2: Dont crash if our parent cant be found; return an error
-Date:   Fri, 21 Feb 2020 08:38:11 +0100
-Message-Id: <20200221072357.319340100@linuxfoundation.org>
+        stable@vger.kernel.org, Christopher Head <chead@chead.ca>,
+        Arvind Sankar <nivedita@alum.mit.edu>,
+        Borislav Petkov <bp@suse.de>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.4 067/344] x86/sysfb: Fix check for bad VRAM size
+Date:   Fri, 21 Feb 2020 08:37:46 +0100
+Message-Id: <20200221072355.090036361@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200221072349.335551332@linuxfoundation.org>
 References: <20200221072349.335551332@linuxfoundation.org>
@@ -61,68 +60,48 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Douglas Anderson <dianders@chromium.org>
+From: Arvind Sankar <nivedita@alum.mit.edu>
 
-[ Upstream commit 908b050114d8fefdddc57ec9fbc213c3690e7f5f ]
+[ Upstream commit dacc9092336be20b01642afe1a51720b31f60369 ]
 
-When I got my clock parenting slightly wrong I ended up with a crash
-that looked like this:
+When checking whether the reported lfb_size makes sense, the height
+* stride result is page-aligned before seeing whether it exceeds the
+reported size.
 
-  Unable to handle kernel NULL pointer dereference at virtual
-  address 0000000000000000
-  ...
-  pc : clk_hw_get_rate+0x14/0x44
-  ...
-  Call trace:
-   clk_hw_get_rate+0x14/0x44
-   _freq_tbl_determine_rate+0x94/0xfc
-   clk_rcg2_determine_rate+0x2c/0x38
-   clk_core_determine_round_nolock+0x4c/0x88
-   clk_core_round_rate_nolock+0x6c/0xa8
-   clk_core_round_rate_nolock+0x9c/0xa8
-   clk_core_set_rate_nolock+0x70/0x180
-   clk_set_rate+0x3c/0x6c
-   of_clk_set_defaults+0x254/0x360
-   platform_drv_probe+0x28/0xb0
-   really_probe+0x120/0x2dc
-   driver_probe_device+0x64/0xfc
-   device_driver_attach+0x4c/0x6c
-   __driver_attach+0xac/0xc0
-   bus_for_each_dev+0x84/0xcc
-   driver_attach+0x2c/0x38
-   bus_add_driver+0xfc/0x1d0
-   driver_register+0x64/0xf8
-   __platform_driver_register+0x4c/0x58
-   msm_drm_register+0x5c/0x60
-   ...
+This doesn't work if height * stride is not an exact number of pages.
+For example, as reported in the kernel bugzilla below, an 800x600x32 EFI
+framebuffer gets skipped because of this.
 
-It turned out that clk_hw_get_parent_by_index() was returning NULL and
-we weren't checking.  Let's check it so that we don't crash.
+Move the PAGE_ALIGN to after the check vs size.
 
-Fixes: ac269395cdd8 ("clk: qcom: Convert to clk_hw based provider APIs")
-Signed-off-by: Douglas Anderson <dianders@chromium.org>
-Reviewed-by: Matthias Kaehlcke <mka@chromium.org>
-Link: https://lkml.kernel.org/r/20200203103049.v4.1.I7487325fe8e701a68a07d3be8a6a4b571eca9cfa@changeid
-Signed-off-by: Stephen Boyd <sboyd@kernel.org>
+Reported-by: Christopher Head <chead@chead.ca>
+Tested-by: Christopher Head <chead@chead.ca>
+Signed-off-by: Arvind Sankar <nivedita@alum.mit.edu>
+Signed-off-by: Borislav Petkov <bp@suse.de>
+Link: https://bugzilla.kernel.org/show_bug.cgi?id=206051
+Link: https://lkml.kernel.org/r/20200107230410.2291947-1-nivedita@alum.mit.edu
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/clk/qcom/clk-rcg2.c | 3 +++
- 1 file changed, 3 insertions(+)
+ arch/x86/kernel/sysfb_simplefb.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/clk/qcom/clk-rcg2.c b/drivers/clk/qcom/clk-rcg2.c
-index 5174222cbfab2..a88101480e337 100644
---- a/drivers/clk/qcom/clk-rcg2.c
-+++ b/drivers/clk/qcom/clk-rcg2.c
-@@ -217,6 +217,9 @@ static int _freq_tbl_determine_rate(struct clk_hw *hw, const struct freq_tbl *f,
+diff --git a/arch/x86/kernel/sysfb_simplefb.c b/arch/x86/kernel/sysfb_simplefb.c
+index 01f0e2263b86b..298fc1edd9c95 100644
+--- a/arch/x86/kernel/sysfb_simplefb.c
++++ b/arch/x86/kernel/sysfb_simplefb.c
+@@ -90,11 +90,11 @@ __init int create_simplefb(const struct screen_info *si,
+ 	if (si->orig_video_isVGA == VIDEO_TYPE_VLFB)
+ 		size <<= 16;
+ 	length = mode->height * mode->stride;
+-	length = PAGE_ALIGN(length);
+ 	if (length > size) {
+ 		printk(KERN_WARNING "sysfb: VRAM smaller than advertised\n");
+ 		return -EINVAL;
+ 	}
++	length = PAGE_ALIGN(length);
  
- 	clk_flags = clk_hw_get_flags(hw);
- 	p = clk_hw_get_parent_by_index(hw, index);
-+	if (!p)
-+		return -EINVAL;
-+
- 	if (clk_flags & CLK_SET_RATE_PARENT) {
- 		rate = f->freq;
- 		if (f->pre_div) {
+ 	/* setup IORESOURCE_MEM as framebuffer memory */
+ 	memset(&res, 0, sizeof(res));
 -- 
 2.20.1
 
