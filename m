@@ -2,296 +2,104 @@ Return-Path: <SRS0=1210=4J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D61EEC35656
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 15:44:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 67B98C35656
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 15:44:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9EF96206E2
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 15:44:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 38CB924673
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 15:44:16 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="W901Intc"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="a5RX33mA"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729172AbgBUPoH (ORCPT
+        id S1729210AbgBUPoP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Feb 2020 10:44:07 -0500
-Received: from us-smtp-1.mimecast.com ([207.211.31.81]:55277 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1728235AbgBUPoG (ORCPT
+        Fri, 21 Feb 2020 10:44:15 -0500
+Received: from mail-wm1-f68.google.com ([209.85.128.68]:33270 "EHLO
+        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729181AbgBUPoO (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Feb 2020 10:44:06 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1582299845;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:
-         content-transfer-encoding:content-transfer-encoding;
-        bh=au5w5k7HxBHqjH5cZQKFsvOJIbXWXe9r1KGkl1Ke4uY=;
-        b=W901IntcAt51t/z4q6CrVKFAuDaBT1M/TxItx7c6HugoHX2626H9SgwHY7+HfylYIVRV3/
-        Kw+3r8MOJhDcX3i+Pa34GbJlhGOERXtQPOj3zEIGzriqNazD9y1vG/Gr+ki5DCSXKoe9W0
-        dBEQ5RUMzED8wap9x06ICdAKDjXcakI=
-Received: from mail-wm1-f70.google.com (mail-wm1-f70.google.com
- [209.85.128.70]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-409-Yt3bO1aLO7SGUS3-ezkQ6g-1; Fri, 21 Feb 2020 10:44:04 -0500
-X-MC-Unique: Yt3bO1aLO7SGUS3-ezkQ6g-1
-Received: by mail-wm1-f70.google.com with SMTP id d4so732915wmd.7
-        for <linux-kernel@vger.kernel.org>; Fri, 21 Feb 2020 07:44:03 -0800 (PST)
+        Fri, 21 Feb 2020 10:44:14 -0500
+Received: by mail-wm1-f68.google.com with SMTP id m10so5454510wmc.0
+        for <linux-kernel@vger.kernel.org>; Fri, 21 Feb 2020 07:44:13 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=2hlS8uh302ck8d7C7CZX+ehT/azcPcgkvr5+mGQ69YQ=;
+        b=a5RX33mAffMVrIDgMTaztmSD+eWGJlZaEKzfTDHcULYB45n9pX1a0hDlHVLSjVHi92
+         BcnwA1WjQbsvMjRZZzg4lIOlJ6HJEtNbk4WGnIm7tZwTUOVgjaKk8EQibqLXzfBCqo/c
+         0I6id7eHku1rJ7heOghiXletnT0STJwoD7225/TjDKZhiUe/zfag5sAJ1N27HjL37VXJ
+         Aoise+ais0A3HJZ3uJsHnV6BXq7FcL3ru+KDeIq2Do+xrbDfI0/X+I8P8dNRhdOMaX8z
+         99/sR1guvCs2DtPptnkbZ/5jyF+sjSr+X0/VjiORi4xOYUK4IEJY8AVcHBpZyuRD6dHw
+         1JnA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=au5w5k7HxBHqjH5cZQKFsvOJIbXWXe9r1KGkl1Ke4uY=;
-        b=PRrVV2iqJvHlo919On1ZGq/2oWvsESFUnhUOu80nLPvkaTwTjIWUPtymbdN27xMmUl
-         fnJbmmy/ceTmJ7PVR+B6Vx/suhNTSS0gj5bU2Gmk7bwcgrz4CTVML/9SKsvty8lWSiTh
-         mFhXf34ELm/mTHi5PEjW+rgKe3PHWMtU3JB0xOmouWANQ1yhTT5Hvdn/kNDemmN6rgcM
-         M/t8ojXtxJ2bLxs9bb6xv9Hj2tqwAtcU9oLNAd0IFSqJu08AQx6j3kjrOGfqPIKH7Db5
-         6JVhY3E2UmklehNhdlA42IrcV8uSRtk2+d2m7e+8OZIhOUKlsQUspN2dR9Hn4s2Q39BA
-         D+iQ==
-X-Gm-Message-State: APjAAAWIMqZzP59Ti49xIVEodcjT6ca+2cqV35rtrV2JqrAQW2F7vsFS
-        N+vZFC09bcu56rwpeBzsc60RFN5aaIw4PYLdOBL1EYey7DXqBhKGHMNKOuErK3AR0kAtH1nV+RN
-        CLmljnala2KrBxgDAds1HpT/c
-X-Received: by 2002:adf:cd92:: with SMTP id q18mr48502653wrj.261.1582299842704;
-        Fri, 21 Feb 2020 07:44:02 -0800 (PST)
-X-Google-Smtp-Source: APXvYqzFbR8YpdMkB2LZ7XzQfd990NVbaWIbX6cjjg8jokRX93gXdIpYyctYMtN2MnduFH2I7b1DNw==
-X-Received: by 2002:adf:cd92:: with SMTP id q18mr48502636wrj.261.1582299842449;
-        Fri, 21 Feb 2020 07:44:02 -0800 (PST)
-Received: from steredhat.redhat.com (host209-4-dynamic.27-79-r.retail.telecomitalia.it. [79.27.4.209])
-        by smtp.gmail.com with ESMTPSA id s1sm4297072wro.66.2020.02.21.07.44.01
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 21 Feb 2020 07:44:01 -0800 (PST)
-From:   Stefano Garzarella <sgarzare@redhat.com>
-To:     Jens Axboe <axboe@kernel.dk>
-Cc:     io-uring@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH liburing] test: add sq-poll-kthread test case
-Date:   Fri, 21 Feb 2020 16:44:00 +0100
-Message-Id: <20200221154400.207213-1-sgarzare@redhat.com>
-X-Mailer: git-send-email 2.24.1
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=2hlS8uh302ck8d7C7CZX+ehT/azcPcgkvr5+mGQ69YQ=;
+        b=KpVNV17N2yTiwzZhB98JMmDd/moEBIez9SnwWLvQuX1l/7ATna2QrIPfElWxofvSAW
+         VrY4q+CoKEvcc1Zt7lDQPm/lmeWYsDG6yQvHbw8NUUyaG8zpTYugtmnaNdRVU69S1SGp
+         +U2rsM8D41muKEnWDB1fJCpQRUPmmUTMWtFmZi3tng3iwtqGJN0njbJNQ7KEa4PUX6D0
+         ebwb8T8vJp+paskgajQPu/Bq/y8QwRoPyKMunEZgUQaNmqVMkvkIe7rTwbjF4I5zIcC3
+         GbkCCUyWKHm3NJyw+2+NVS4bhECyiECrzBezTBNrNyOTjff7BIJTsTwbST6BrUWTPt+a
+         dwYw==
+X-Gm-Message-State: APjAAAWmUIdeKzGrj8gaINwJu5x4dmy5X9IYeXtB13kwY68GWMt+RPVm
+        DgQMIrm22EFX8A20LEIqR0evuw==
+X-Google-Smtp-Source: APXvYqw3MpYXm74zDyUvYS1IEClp/DjjD7sjq6g9gEA1iHcMzwd87lVu7ETDNrlzQjko/voWzgE8Ew==
+X-Received: by 2002:a05:600c:290e:: with SMTP id i14mr4539761wmd.139.1582299852664;
+        Fri, 21 Feb 2020 07:44:12 -0800 (PST)
+Received: from linaro.org ([2a01:e34:ed2f:f020:903b:a048:f296:e3ae])
+        by smtp.gmail.com with ESMTPSA id s15sm4362854wrp.4.2020.02.21.07.44.11
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Fri, 21 Feb 2020 07:44:11 -0800 (PST)
+Date:   Fri, 21 Feb 2020 16:44:09 +0100
+From:   Daniel Lezcano <daniel.lezcano@linaro.org>
+To:     Dmitry Osipenko <digetx@gmail.com>
+Cc:     Thierry Reding <thierry.reding@gmail.com>,
+        Jonathan Hunter <jonathanh@nvidia.com>,
+        Peter De Schrijver <pdeschrijver@nvidia.com>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        =?utf-8?B?TWljaGHFgiBNaXJvc8WCYXc=?= <mirq-linux@rere.qmqm.pl>,
+        Jasper Korten <jja2000@gmail.com>,
+        David Heidelberg <david@ixit.cz>,
+        Peter Geis <pgwipeout@gmail.com>, linux-pm@vger.kernel.org,
+        linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v9 12/17] cpuidle: Refactor and move out NVIDIA Tegra20
+ driver into drivers/cpuidle
+Message-ID: <20200221154409.GP10516@linaro.org>
+References: <20200212235134.12638-1-digetx@gmail.com>
+ <20200212235134.12638-13-digetx@gmail.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200212235134.12638-13-digetx@gmail.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-sq-poll-kthread tests if the 'io_uring-sq' kthread is stopped
-when the userspace process ended with or without closing the
-io_uring fd.
+On Thu, Feb 13, 2020 at 02:51:29AM +0300, Dmitry Osipenko wrote:
+> The driver's code is refactored in a way that will make it easy to
+> support Tegra30/114/124 SoCs by this unified driver later on. The
+> current functionality is equal to the old Tegra20 driver, only the
+> code's structure changed a tad. This is also a proper platform driver
+> now.
+> 
+> Acked-by: Peter De Schrijver <pdeschrijver@nvidia.com>
+> Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
+> ---
+>  arch/arm/mach-tegra/Makefile          |   3 -
+>  arch/arm/mach-tegra/cpuidle-tegra20.c | 216 --------------------
+>  arch/arm/mach-tegra/cpuidle.c         |  14 +-
+>  arch/arm/mach-tegra/cpuidle.h         |   4 -
+>  drivers/cpuidle/Kconfig.arm           |   8 +
+>  drivers/cpuidle/Makefile              |   1 +
+>  drivers/cpuidle/cpuidle-tegra.c       | 277 ++++++++++++++++++++++++++
 
-Signed-off-by: Stefano Garzarella <sgarzare@redhat.com>
----
- .gitignore             |   1 +
- test/Makefile          |   4 +-
- test/sq-poll-kthread.c | 165 +++++++++++++++++++++++++++++++++++++++++
- 3 files changed, 168 insertions(+), 2 deletions(-)
- create mode 100644 test/sq-poll-kthread.c
-
-diff --git a/.gitignore b/.gitignore
-index 1ab4075..9f85a5f 100644
---- a/.gitignore
-+++ b/.gitignore
-@@ -75,6 +75,7 @@
- /test/short-read
- /test/socket-rw
- /test/sq-full
-+/test/sq-poll-kthread
- /test/sq-space_left
- /test/statx
- /test/stdout
-diff --git a/test/Makefile b/test/Makefile
-index cf91011..09c7aa2 100644
---- a/test/Makefile
-+++ b/test/Makefile
-@@ -20,7 +20,7 @@ all_targets += poll poll-cancel ring-leak fsync io_uring_setup io_uring_register
- 		connect 7ad0e4b2f83c-test submit-reuse fallocate open-close \
- 		file-update statx accept-reuse poll-v-poll fadvise madvise \
- 		short-read openat2 probe shared-wq personality eventfd \
--		send_recv eventfd-ring across-fork
-+		send_recv eventfd-ring across-fork sq-poll-kthread
- 
- include ../Makefile.quiet
- 
-@@ -47,7 +47,7 @@ test_srcs := poll.c poll-cancel.c ring-leak.c fsync.c io_uring_setup.c \
- 	7ad0e4b2f83c-test.c submit-reuse.c fallocate.c open-close.c \
- 	file-update.c statx.c accept-reuse.c poll-v-poll.c fadvise.c \
- 	madvise.c short-read.c openat2.c probe.c shared-wq.c \
--	personality.c eventfd.c eventfd-ring.c across-fork.c
-+	personality.c eventfd.c eventfd-ring.c across-fork.c sq-poll-kthread.c
- 
- test_objs := $(patsubst %.c,%.ol,$(test_srcs))
- 
-diff --git a/test/sq-poll-kthread.c b/test/sq-poll-kthread.c
-new file mode 100644
-index 0000000..d53605c
---- /dev/null
-+++ b/test/sq-poll-kthread.c
-@@ -0,0 +1,165 @@
-+/*
-+ * Description: test if io_uring SQ poll kthread is stopped when the userspace
-+ *              process ended with or without closing the io_uring fd
-+ *
-+ */
-+#include <errno.h>
-+#include <fcntl.h>
-+#include <stdio.h>
-+#include <unistd.h>
-+#include <pthread.h>
-+#include <stdbool.h>
-+#include <stdlib.h>
-+#include <string.h>
-+#include <signal.h>
-+#include <sys/poll.h>
-+#include <sys/wait.h>
-+#include <sys/epoll.h>
-+
-+#include "liburing.h"
-+
-+#define SQ_THREAD_IDLE  2000
-+#define BUF_SIZE        128
-+#define KTHREAD_NAME    "io_uring-sq"
-+
-+enum {
-+	TEST_OK = 0,
-+	TEST_SKIPPED = 1,
-+	TEST_FAILED = 2,
-+};
-+
-+static int do_test_sq_poll_kthread_stopped(bool do_exit)
-+{
-+	int ret = 0, pipe1[2];
-+	struct io_uring_params param;
-+	struct io_uring ring;
-+	struct io_uring_sqe *sqe;
-+	struct io_uring_cqe *cqe;
-+	uint8_t buf[BUF_SIZE];
-+	struct iovec iov;
-+
-+	if (geteuid()) {
-+		fprintf(stderr, "sqpoll requires root!\n");
-+		return TEST_SKIPPED;
-+	}
-+
-+	if (pipe(pipe1) != 0) {
-+		perror("pipe");
-+		return TEST_FAILED;
-+	}
-+
-+	memset(&param, 0, sizeof(param));
-+
-+	param.flags |= IORING_SETUP_SQPOLL;
-+	param.sq_thread_idle = SQ_THREAD_IDLE;
-+
-+	ret = io_uring_queue_init_params(16, &ring, &param);
-+	if (ret) {
-+		fprintf(stderr, "ring setup failed\n");
-+		ret = TEST_FAILED;
-+		goto err_pipe;
-+	}
-+
-+	ret = io_uring_register_files(&ring, &pipe1[1], 1);
-+	if (ret) {
-+		fprintf(stderr, "file reg failed: %d\n", ret);
-+		ret = TEST_FAILED;
-+		goto err_uring;
-+	}
-+
-+	iov.iov_base = buf;
-+	iov.iov_len = BUF_SIZE;
-+
-+	sqe = io_uring_get_sqe(&ring);
-+	if (!sqe) {
-+		fprintf(stderr, "io_uring_get_sqe failed\n");
-+		ret = TEST_FAILED;
-+		goto err_uring;
-+	}
-+
-+	io_uring_prep_writev(sqe, 0, &iov, 1, 0);
-+	sqe->flags |= IOSQE_FIXED_FILE;
-+
-+	ret = io_uring_submit(&ring);
-+	if (ret < 0) {
-+		fprintf(stderr, "io_uring_submit failed - ret: %d\n",
-+			ret);
-+		ret = TEST_FAILED;
-+		goto err_uring;
-+	}
-+
-+	ret = io_uring_wait_cqe(&ring, &cqe);
-+	if (ret < 0) {
-+		fprintf(stderr, "io_uring_wait_cqe - ret: %d\n",
-+			ret);
-+		ret = TEST_FAILED;
-+		goto err_uring;
-+	}
-+
-+	if (cqe->res != BUF_SIZE) {
-+		fprintf(stderr, "unexpected cqe->res %d [expected %d]\n",
-+			cqe->res, BUF_SIZE);
-+		ret = TEST_FAILED;
-+		goto err_uring;
-+
-+	}
-+
-+	io_uring_cqe_seen(&ring, cqe);
-+
-+	ret = TEST_OK;
-+
-+err_uring:
-+	if (do_exit)
-+		io_uring_queue_exit(&ring);
-+err_pipe:
-+	close(pipe1[0]);
-+	close(pipe1[1]);
-+
-+	return ret;
-+}
-+
-+int test_sq_poll_kthread_stopped(bool do_exit) {
-+	pid_t pid;
-+	int status = 0;
-+
-+	pid = fork();
-+
-+	if (pid == 0) {
-+		int ret = do_test_sq_poll_kthread_stopped(do_exit);
-+		exit(ret);
-+	}
-+
-+	pid = wait(&status);
-+	if (status != 0)
-+		return WEXITSTATUS(status);
-+
-+	if (system("ps --ppid 2 | grep " KTHREAD_NAME) == 0) {
-+		fprintf(stderr, "%s kthread still running!\n", KTHREAD_NAME);
-+		return TEST_FAILED;
-+	}
-+
-+	return 0;
-+}
-+
-+int main(int argc, char *argv[])
-+{
-+	int ret;
-+
-+	ret = test_sq_poll_kthread_stopped(true);
-+	if (ret == TEST_SKIPPED) {
-+		printf("test_sq_poll_kthread_stopped_exit: skipped\n");
-+	} else if (ret == TEST_FAILED) {
-+		fprintf(stderr, "test_sq_poll_kthread_stopped_exit failed\n");
-+		return ret;
-+	}
-+
-+	ret = test_sq_poll_kthread_stopped(false);
-+	if (ret == TEST_SKIPPED) {
-+		printf("test_sq_poll_kthread_stopped_noexit: skipped\n");
-+	} else if (ret == TEST_FAILED) {
-+		fprintf(stderr, "test_sq_poll_kthread_stopped_noexit failed\n");
-+		return ret;
-+	}
-+
-+	return 0;
-+}
--- 
-2.24.1
+Is it possible to use -M option here to make the review easier?
 
