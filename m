@@ -7,40 +7,40 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 49337C35666
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 21:25:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 96161C35669
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 21:25:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 17D7224691
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 21:25:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6802720637
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 21:25:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582320335;
-	bh=ErSXUHeYK0f2Fj/VgiRkVyhrdKK30DcgL1yKKZH0grA=;
+	s=default; t=1582320345;
+	bh=FBWGjyXidMULYGa15uWHx+4ZyipPXjJ6LzI1BAff1CU=;
 	h=From:To:Subject:Date:In-Reply-To:References:In-Reply-To:
 	 References:List-ID:From;
-	b=AYElASIM1UYigyTkwuKbKfSDgEWJe/x9K0sYuqVN6UmAGQnv7ihqSSixrUCKT1L6B
-	 Da62MoB2l5cL5BIZEVmZFj3VAGSMbdDrk6Tc85efuH9mpmkFw2szMf7vcwPf3U7nJF
-	 kAEjHEPK9fvabfknxTR/q9Fzul2xAh0+xGAx1w48=
+	b=PTt2fEhWZ+0egkv7tI0Ubo+lntjWr0g18ppNvBuxEQWAjnom2PexEPl5sL6NlWl7f
+	 Rv/trCR/n6Myzp8u1vz9BCsLSSdXMIGtMsVychDgTNeJAEmFDNEKlCuDSSnK6yQaLv
+	 sqCqSZ4XxhpuK2CPdaFnMIgq6rVJ4OeZaE9XaTso=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729595AbgBUVZd (ORCPT
+        id S1729742AbgBUVZo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Feb 2020 16:25:33 -0500
-Received: from mail.kernel.org ([198.145.29.99]:39314 "EHLO mail.kernel.org"
+        Fri, 21 Feb 2020 16:25:44 -0500
+Received: from mail.kernel.org ([198.145.29.99]:39372 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729503AbgBUVZb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Feb 2020 16:25:31 -0500
+        id S1729626AbgBUVZg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 21 Feb 2020 16:25:36 -0500
 Received: from localhost.localdomain (c-98-220-238-81.hsd1.il.comcast.net [98.220.238.81])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 29C0B208C4;
-        Fri, 21 Feb 2020 21:25:30 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E297524690;
+        Fri, 21 Feb 2020 21:25:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1582320330;
-        bh=ErSXUHeYK0f2Fj/VgiRkVyhrdKK30DcgL1yKKZH0grA=;
+        s=default; t=1582320335;
+        bh=FBWGjyXidMULYGa15uWHx+4ZyipPXjJ6LzI1BAff1CU=;
         h=From:To:Subject:Date:In-Reply-To:References:In-Reply-To:
          References:From;
-        b=jWb5E3zrjxUMUJpScEqkK0cHtoxfHjrTJLWSUJ950BEdHeadjVu6kBihgxz7ut5aD
-         JRLOBf115VMb7sxNA7y1P4uOijijrl41NIgGaXjmSqfr32ArqZNtwg2nWrqc67XL39
-         ZaVpU1RjykH65crDq30L3LL/py6YQlP8lTc28ge4=
+        b=0Jn+Y/b6tr5Zbo+LHBLKSr7m+AGlpT8IhMck6v8DfKF1v22F/AWuhIo5ELBdellgm
+         +ZK9uFcc6avja1mwcs4yUBHpAs66ZhliUZZxq9bAEpdBHaNaHnhYdAaib3aAOCCMNE
+         YeTRPEc3ZJZCPLvB76xL5rl1sx2hchimajfP+bSs=
 From:   zanussi@kernel.org
 To:     LKML <linux-kernel@vger.kernel.org>,
         linux-rt-users <linux-rt-users@vger.kernel.org>,
@@ -51,9 +51,9 @@ To:     LKML <linux-kernel@vger.kernel.org>,
         Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
         Daniel Wagner <wagi@monom.org>,
         Tom Zanussi <zanussi@kernel.org>
-Subject: [PATCH RT 16/25] Revert "ARM: Initialize split page table locks for vector page"
-Date:   Fri, 21 Feb 2020 15:24:44 -0600
-Message-Id: <0862e594250ce236c9e324e7fc3ff1eee44925b2.1582320278.git.zanussi@kernel.org>
+Subject: [PATCH RT 21/25] smp: Use smp_cond_func_t as type for the conditional function
+Date:   Fri, 21 Feb 2020 15:24:49 -0600
+Message-Id: <c7bd8ba713f3e67bf77ea6847ab85ab47f8168a2.1582320278.git.zanussi@kernel.org>
 X-Mailer: git-send-email 2.14.1
 In-Reply-To: <cover.1582320278.git.zanussi@kernel.org>
 References: <cover.1582320278.git.zanussi@kernel.org>
@@ -72,83 +72,80 @@ If anyone has any objections, please let me know.
 -----------
 
 
-[ Upstream commit 247074c44d8c3e619dfde6404a52295d8d671d38 ]
+[ Upstream commit 0c2799d2b9cd2e314298c68b81fbdc478f552ad4 ]
 
-I'm dropping this patch, with its original description:
-
-|ARM: Initialize split page table locks for vector page
-|
-|Without this patch, ARM can not use SPLIT_PTLOCK_CPUS if
-|PREEMPT_RT_FULL=y because vectors_user_mapping() creates a
-|VM_ALWAYSDUMP mapping of the vector page (address 0xffff0000), but no
-|ptl->lock has been allocated for the page.  An attempt to coredump
-|that page will result in a kernel NULL pointer dereference when
-|follow_page() attempts to lock the page.
-|
-|The call tree to the NULL pointer dereference is:
-|
-|   do_notify_resume()
-|      get_signal_to_deliver()
-|         do_coredump()
-|            elf_core_dump()
-|               get_dump_page()
-|                  __get_user_pages()
-|                     follow_page()
-|                        pte_offset_map_lock() <----- a #define
-|                           ...
-|                              rt_spin_lock()
-|
-|The underlying problem is exposed by mm-shrink-the-page-frame-to-rt-size.patch.
-
-The patch named mm-shrink-the-page-frame-to-rt-size.patch was dropped
-from the RT queue once the SPLIT_PTLOCK_CPUS feature (in a slightly
-different shape) went upstream (somewhere between v3.12 and v3.14).
-
-I can see that the patch still allocates a lock which wasn't there
-before. However I can't trigger a kernel oops like described in the
-patch by triggering a coredump.
+Use a typdef for the conditional function instead defining it each time in
+the function prototype.
 
 Signed-off-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
 Signed-off-by: Tom Zanussi <zanussi@kernel.org>
----
- arch/arm/kernel/process.c | 24 ------------------------
- 1 file changed, 24 deletions(-)
 
-diff --git a/arch/arm/kernel/process.c b/arch/arm/kernel/process.c
-index cf4e1452d4b4..d96714e1858c 100644
---- a/arch/arm/kernel/process.c
-+++ b/arch/arm/kernel/process.c
-@@ -325,30 +325,6 @@ unsigned long arch_randomize_brk(struct mm_struct *mm)
- }
+ Conflicts:
+	include/linux/smp.h
+	kernel/smp.c
+	kernel/up.c
+---
+ include/linux/smp.h | 6 +++---
+ kernel/smp.c        | 5 ++---
+ kernel/up.c         | 5 ++---
+ 3 files changed, 7 insertions(+), 9 deletions(-)
+
+diff --git a/include/linux/smp.h b/include/linux/smp.h
+index 5801e516ba63..af05a63e4c06 100644
+--- a/include/linux/smp.h
++++ b/include/linux/smp.h
+@@ -15,6 +15,7 @@
+ #include <linux/llist.h>
  
- #ifdef CONFIG_MMU
--/*
-- * CONFIG_SPLIT_PTLOCK_CPUS results in a page->ptl lock.  If the lock is not
-- * initialized by pgtable_page_ctor() then a coredump of the vector page will
-- * fail.
-- */
--static int __init vectors_user_mapping_init_page(void)
--{
--	struct page *page;
--	unsigned long addr = 0xffff0000;
--	pgd_t *pgd;
--	pud_t *pud;
--	pmd_t *pmd;
--
--	pgd = pgd_offset_k(addr);
--	pud = pud_offset(pgd, addr);
--	pmd = pmd_offset(pud, addr);
--	page = pmd_page(*(pmd));
--
--	pgtable_page_ctor(page);
--
--	return 0;
--}
--late_initcall(vectors_user_mapping_init_page);
--
- #ifdef CONFIG_KUSER_HELPERS
- /*
-  * The vectors page is always readable from user space for the
+ typedef void (*smp_call_func_t)(void *info);
++typedef bool (*smp_cond_func_t)(int cpu, void *info);
+ struct __call_single_data {
+ 	struct llist_node llist;
+ 	smp_call_func_t func;
+@@ -49,9 +50,8 @@ void on_each_cpu_mask(const struct cpumask *mask, smp_call_func_t func,
+  * cond_func returns a positive value. This may include the local
+  * processor.
+  */
+-void on_each_cpu_cond(bool (*cond_func)(int cpu, void *info),
+-		smp_call_func_t func, void *info, bool wait,
+-		gfp_t gfp_flags);
++void on_each_cpu_cond(smp_cond_func_t cond_func, smp_call_func_t func,
++		      void *info, bool wait, gfp_t gfp_flags);
+ 
+ int smp_call_function_single_async(int cpu, call_single_data_t *csd);
+ 
+diff --git a/kernel/smp.c b/kernel/smp.c
+index c94dd85c8d41..00fbb6aa948a 100644
+--- a/kernel/smp.c
++++ b/kernel/smp.c
+@@ -667,9 +667,8 @@ EXPORT_SYMBOL(on_each_cpu_mask);
+  * You must not call this function with disabled interrupts or
+  * from a hardware interrupt handler or from a bottom half handler.
+  */
+-void on_each_cpu_cond(bool (*cond_func)(int cpu, void *info),
+-			smp_call_func_t func, void *info, bool wait,
+-			gfp_t gfp_flags)
++void on_each_cpu_cond(smp_cond_func_t cond_func, smp_call_func_t func,
++		      void *info, bool wait, gfp_t gfp_flags)
+ {
+ 	cpumask_var_t cpus;
+ 	int cpu, ret;
+diff --git a/kernel/up.c b/kernel/up.c
+index 42c46bf3e0a5..a0276ba75270 100644
+--- a/kernel/up.c
++++ b/kernel/up.c
+@@ -68,9 +68,8 @@ EXPORT_SYMBOL(on_each_cpu_mask);
+  * Preemption is disabled here to make sure the cond_func is called under the
+  * same condtions in UP and SMP.
+  */
+-void on_each_cpu_cond(bool (*cond_func)(int cpu, void *info),
+-		      smp_call_func_t func, void *info, bool wait,
+-		      gfp_t gfp_flags)
++void on_each_cpu_cond(smp_cond_func_t cond_func, smp_call_func_t func,
++		      void *info, bool wait, gfp_t gfp_flags)
+ {
+ 	unsigned long flags;
+ 
 -- 
 2.14.1
 
