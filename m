@@ -7,49 +7,49 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 20717C35641
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 08:00:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B47AFC35641
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 08:00:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E1F4E20801
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 08:00:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 801842073A
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 08:00:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582272039;
-	bh=vCOwDC4HiMKfA9asIcQGpE8w0AH9BpB7uecmviq9Qsc=;
+	s=default; t=1582272044;
+	bh=z0rNwAgT4RhdH7E/PP6WgAWT6eALymRlsnU1oUbYAkw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=DXGH7ZUxRlEnX8jMTsqvT3LYqU/XxDj5nTRG2tznp9hLP5/poLZULOFDPt95QCWI3
-	 2gCqwkR8KJCYnBvBkdcnv1bqhSoIUd2B2uRtegEeFZhH3Hb0qIlFOJPeIOV4A/o1x4
-	 53UPzM0ncb5BvV3U2xRAhj212uvx2A/cVP7v6+14=
+	b=l0l/HrApDshSbBRXYqujae9lbM7747PhjRP4Y6/Uf0z0ahScWXg0qPFV96DWKPCXC
+	 za7rAHLPCA5rYELFXjsptQYXwTyzWylEvCIs6lrTkxuWVJiR5Oqv+iqk0W3BSpIlP7
+	 uvGogUOVkm+ECny6pOIS/vTKW8TGvnjbt/wJAPUo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731093AbgBUIAh (ORCPT
+        id S1731108AbgBUIAm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Feb 2020 03:00:37 -0500
-Received: from mail.kernel.org ([198.145.29.99]:32792 "EHLO mail.kernel.org"
+        Fri, 21 Feb 2020 03:00:42 -0500
+Received: from mail.kernel.org ([198.145.29.99]:32894 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731083AbgBUIAg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Feb 2020 03:00:36 -0500
+        id S1731100AbgBUIAk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 21 Feb 2020 03:00:40 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 26B6F206ED;
-        Fri, 21 Feb 2020 08:00:35 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1DC3C222C4;
+        Fri, 21 Feb 2020 08:00:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1582272035;
-        bh=vCOwDC4HiMKfA9asIcQGpE8w0AH9BpB7uecmviq9Qsc=;
+        s=default; t=1582272040;
+        bh=z0rNwAgT4RhdH7E/PP6WgAWT6eALymRlsnU1oUbYAkw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=oc555iWMlm83sUjlvAONGDMOemnJzzH70SK7UARQPdrVK+i32xZ/W5OQARVQXT0VW
-         U7SadToKB2pdrjBw5wvrxKdEhuGb/4z83jL9fYhbsrDbmfz9xCebEfrsLyBieBvEWw
-         TikUBnY0pMBQ190M965dCJIzjxBU2FuundeXVISw=
+        b=m3+w8DCUZNrrmoV2ibE/1wKPjONbE7ydVr90nQh6Hbn1CxBRVFhywEAeEXBBxKMA8
+         xQwgu1+AL3LdBcdbzvEjpwKEQi40p9Ucoi1cQ5KMVX35vP1fXm4rPsyXU69/ot0K0u
+         jilldGstHffPTxQ3+WsMpdR4vgXO7vMDP/e0pf9E=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Maciej Fijalkowski <maciej.fijalkowski@intel.com>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        =?UTF-8?q?Bj=C3=B6rn=20T=C3=B6pel?= <bjorn.topel@intel.com>,
+        stable@vger.kernel.org, Steve French <stfrench@microsoft.com>,
+        Oleg Kravtsov <oleg@tuxera.com>,
+        Ronnie Sahlberg <lsahlber@redhat.com>,
+        Pavel Shilovsky <pshilov@microsoft.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.5 390/399] i40e: Relax i40e_xsk_wakeups return value when PF is busy
-Date:   Fri, 21 Feb 2020 08:41:55 +0100
-Message-Id: <20200221072437.894914775@linuxfoundation.org>
+Subject: [PATCH 5.5 392/399] cifs: log warning message (once) if out of disk space
+Date:   Fri, 21 Feb 2020 08:41:57 +0100
+Message-Id: <20200221072438.042478510@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200221072402.315346745@linuxfoundation.org>
 References: <20200221072402.315346745@linuxfoundation.org>
@@ -62,37 +62,40 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Maciej Fijalkowski <maciej.fijalkowski@intel.com>
+From: Steve French <stfrench@microsoft.com>
 
-[ Upstream commit c77e9f09143822623dd71a0fdc84331129e97c3a ]
+[ Upstream commit d6fd41905ec577851734623fb905b1763801f5ef ]
 
-Return -EAGAIN instead of -ENETDOWN to provide a slightly milder
-information to user space so that an application will know to retry the
-syscall when __I40E_CONFIG_BUSY bit is set on pf->state.
+We ran into a confusing problem where an application wasn't checking
+return code on close and so user didn't realize that the application
+ran out of disk space.  log a warning message (once) in these
+cases. For example:
 
-Fixes: b3873a5be757 ("net/i40e: Fix concurrency issues between config flow and XSK")
-Signed-off-by: Maciej Fijalkowski <maciej.fijalkowski@intel.com>
-Signed-off-by: Daniel Borkmann <daniel@iogearbox.net>
-Acked-by: Björn Töpel <bjorn.topel@intel.com>
-Link: https://lore.kernel.org/bpf/20200205045834.56795-2-maciej.fijalkowski@intel.com
+  [ 8407.391909] Out of space writing to \\oleg-server\small-share
+
+Signed-off-by: Steve French <stfrench@microsoft.com>
+Reported-by: Oleg Kravtsov <oleg@tuxera.com>
+Reviewed-by: Ronnie Sahlberg <lsahlber@redhat.com>
+Reviewed-by: Pavel Shilovsky <pshilov@microsoft.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/ethernet/intel/i40e/i40e_xsk.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ fs/cifs/smb2pdu.c | 3 +++
+ 1 file changed, 3 insertions(+)
 
-diff --git a/drivers/net/ethernet/intel/i40e/i40e_xsk.c b/drivers/net/ethernet/intel/i40e/i40e_xsk.c
-index f73cd917c44f7..3156de786d955 100644
---- a/drivers/net/ethernet/intel/i40e/i40e_xsk.c
-+++ b/drivers/net/ethernet/intel/i40e/i40e_xsk.c
-@@ -791,7 +791,7 @@ int i40e_xsk_wakeup(struct net_device *dev, u32 queue_id, u32 flags)
- 	struct i40e_ring *ring;
- 
- 	if (test_bit(__I40E_CONFIG_BUSY, pf->state))
--		return -ENETDOWN;
-+		return -EAGAIN;
- 
- 	if (test_bit(__I40E_VSI_DOWN, vsi->state))
- 		return -ENETDOWN;
+diff --git a/fs/cifs/smb2pdu.c b/fs/cifs/smb2pdu.c
+index 0a3b37abc5e12..6c9497c18f0b8 100644
+--- a/fs/cifs/smb2pdu.c
++++ b/fs/cifs/smb2pdu.c
+@@ -4029,6 +4029,9 @@ smb2_writev_callback(struct mid_q_entry *mid)
+ 				     wdata->cfile->fid.persistent_fid,
+ 				     tcon->tid, tcon->ses->Suid, wdata->offset,
+ 				     wdata->bytes, wdata->result);
++		if (wdata->result == -ENOSPC)
++			printk_once(KERN_WARNING "Out of space writing to %s\n",
++				    tcon->treeName);
+ 	} else
+ 		trace_smb3_write_done(0 /* no xid */,
+ 				      wdata->cfile->fid.persistent_fid,
 -- 
 2.20.1
 
