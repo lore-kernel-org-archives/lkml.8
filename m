@@ -5,48 +5,49 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CF8DBC35641
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 08:46:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F1D3FC35640
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 08:46:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A3A34206DB
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 08:46:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C01DD206DB
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 08:46:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582274773;
-	bh=deNAJfb+HengsUnbWaZWDBpg7gTmWXmNHJ17KELUfr4=;
+	s=default; t=1582274788;
+	bh=k3VHynw8rDv6gnu2039yCPRNdfOZ1y2P1trvZkmC6Ss=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=xBm3MVw/e9MgYfXd0lRmvN9cvzOP8vTs/pRY+OcuKsPgrheQjG8B1Yjnj488YvcIT
-	 8agAC1a9b+uopPllAtEU0E0znhP91t+IaayMJpVc9xtgU8pn1+Qqi1Z9IlBSSnyFQL
-	 ZPvvKAXdTK7JrfkJSfXylkUB0dsGJeW7xRX6Pc7Y=
+	b=B8q8dJmoici/yVYHVOcFmivkKs9AC3cR0HvsQ2BOKHqUE71YngAQHkIOp66doXb9l
+	 7aHSIsXEUIJeaw3NlV6gdbQHRslH/OZBsS450HG+XvROkffyrRr/EprkL6ZQNhIAPV
+	 mOyPZARQjIxodvba9cfo8XihGwI/YQPLBRvAd9MQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732390AbgBUIqM (ORCPT
+        id S1731437AbgBUIq1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Feb 2020 03:46:12 -0500
-Received: from mail.kernel.org ([198.145.29.99]:47224 "EHLO mail.kernel.org"
+        Fri, 21 Feb 2020 03:46:27 -0500
+Received: from mail.kernel.org ([198.145.29.99]:46342 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729545AbgBUHuV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Feb 2020 02:50:21 -0500
+        id S1728008AbgBUHtp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 21 Feb 2020 02:49:45 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1E1DC24656;
-        Fri, 21 Feb 2020 07:50:19 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0C72620801;
+        Fri, 21 Feb 2020 07:49:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1582271420;
-        bh=deNAJfb+HengsUnbWaZWDBpg7gTmWXmNHJ17KELUfr4=;
+        s=default; t=1582271384;
+        bh=k3VHynw8rDv6gnu2039yCPRNdfOZ1y2P1trvZkmC6Ss=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=DHpo0ZSRCUwDw2IqzpRQT1IcskFT5oyg5a2avqZiVoQotbbcKoASZUGFbttYw8GlA
-         uPDVYIKdLftzwdbyOY3B1NdROFPDEkZAfMoVvx3TH6kZ2cbQR73IaLnXw/5PXyLygb
-         g6PElscMdCCYGr6N01iS8Ou8iFUBjmJKAwfFwhic=
+        b=DgoQAkujKIf9uD8MQnANNCwqw06px9sG+feGsWYP+yMYgtgx3XP5tycUkAQTb7ah7
+         T8rcig7cMYQQ7tlyyVtdZ/daE2RVAshR/0QSKlg2mDbP9Ow0kXdLflFcl2Qu4Da27S
+         lcqoTWuo51HGAsxrnlht61tcX/SUeqxb3jqZVYdg=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Masami Hiramatsu <mhiramat@kernel.org>,
-        Jessica Yu <jeyu@kernel.org>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.5 111/399] modules: lockdep: Suppress suspicious RCU usage warning
-Date:   Fri, 21 Feb 2020 08:37:16 +0100
-Message-Id: <20200221072413.235275688@linuxfoundation.org>
+        stable@vger.kernel.org, Heiner Kallweit <hkallweit1@gmail.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.5 144/399] r8169: check that Realtek PHY driver module is loaded
+Date:   Fri, 21 Feb 2020 08:37:49 +0100
+Message-Id: <20200221072416.495118208@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200221072402.315346745@linuxfoundation.org>
 References: <20200221072402.315346745@linuxfoundation.org>
@@ -59,88 +60,45 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Masami Hiramatsu <mhiramat@kernel.org>
+From: Heiner Kallweit <hkallweit1@gmail.com>
 
-[ Upstream commit bf08949cc8b98b7d1e20cfbba169a5938d42dae8 ]
+[ Upstream commit f325937735498afb054a0195291bbf68d0b60be5 ]
 
-While running kprobe module test, find_module_all() caused
-a suspicious RCU usage warning.
+Some users complained about problems with r8169 and it turned out that
+the generic PHY driver was used instead instead of the dedicated one.
+In all cases reason was that r8169.ko was in initramfs, but realtek.ko
+not. Manually adding realtek.ko to initramfs fixed the issues.
+Root cause seems to be that tools like dracut and genkernel don't
+consider softdeps. Add a check for loaded Realtek PHY driver module
+and provide the user with a hint if it's not loaded.
 
------
- =============================
- WARNING: suspicious RCU usage
- 5.4.0-next-20191202+ #63 Not tainted
- -----------------------------
- kernel/module.c:619 RCU-list traversed in non-reader section!!
-
- other info that might help us debug this:
-
- rcu_scheduler_active = 2, debug_locks = 1
- 1 lock held by rmmod/642:
-  #0: ffffffff8227da80 (module_mutex){+.+.}, at: __x64_sys_delete_module+0x9a/0x230
-
- stack backtrace:
- CPU: 0 PID: 642 Comm: rmmod Not tainted 5.4.0-next-20191202+ #63
- Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS rel-1.12.1-0-ga5cab58e9a3f-prebuilt.qemu.org 04/01/2014
- Call Trace:
-  dump_stack+0x71/0xa0
-  find_module_all+0xc1/0xd0
-  __x64_sys_delete_module+0xac/0x230
-  ? do_syscall_64+0x12/0x1f0
-  do_syscall_64+0x50/0x1f0
-  entry_SYSCALL_64_after_hwframe+0x49/0xbe
- RIP: 0033:0x4b6d49
------
-
-This is because list_for_each_entry_rcu(modules) is called
-without rcu_read_lock(). This is safe because the module_mutex
-is locked.
-
-Pass lockdep_is_held(&module_mutex) to the list_for_each_entry_rcu()
-to suppress this warning, This also fixes similar issue in
-mod_find() and each_symbol_section().
-
-Signed-off-by: Masami Hiramatsu <mhiramat@kernel.org>
-Signed-off-by: Jessica Yu <jeyu@kernel.org>
+Signed-off-by: Heiner Kallweit <hkallweit1@gmail.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- kernel/module.c | 9 ++++++---
- 1 file changed, 6 insertions(+), 3 deletions(-)
+ drivers/net/ethernet/realtek/r8169_main.c | 9 +++++++++
+ 1 file changed, 9 insertions(+)
 
-diff --git a/kernel/module.c b/kernel/module.c
-index 8785e31c2dd0f..d83edc3a41a33 100644
---- a/kernel/module.c
-+++ b/kernel/module.c
-@@ -214,7 +214,8 @@ static struct module *mod_find(unsigned long addr)
- {
- 	struct module *mod;
+diff --git a/drivers/net/ethernet/realtek/r8169_main.c b/drivers/net/ethernet/realtek/r8169_main.c
+index 92a590154bb9f..2d2d22f86dc6f 100644
+--- a/drivers/net/ethernet/realtek/r8169_main.c
++++ b/drivers/net/ethernet/realtek/r8169_main.c
+@@ -6831,6 +6831,15 @@ static int rtl_init_one(struct pci_dev *pdev, const struct pci_device_id *ent)
+ 	int chipset, region;
+ 	int jumbo_max, rc;
  
--	list_for_each_entry_rcu(mod, &modules, list) {
-+	list_for_each_entry_rcu(mod, &modules, list,
-+				lockdep_is_held(&module_mutex)) {
- 		if (within_module(addr, mod))
- 			return mod;
- 	}
-@@ -448,7 +449,8 @@ bool each_symbol_section(bool (*fn)(const struct symsearch *arr,
- 	if (each_symbol_in_section(arr, ARRAY_SIZE(arr), NULL, fn, data))
- 		return true;
- 
--	list_for_each_entry_rcu(mod, &modules, list) {
-+	list_for_each_entry_rcu(mod, &modules, list,
-+				lockdep_is_held(&module_mutex)) {
- 		struct symsearch arr[] = {
- 			{ mod->syms, mod->syms + mod->num_syms, mod->crcs,
- 			  NOT_GPL_ONLY, false },
-@@ -616,7 +618,8 @@ static struct module *find_module_all(const char *name, size_t len,
- 
- 	module_assert_mutex_or_preempt();
- 
--	list_for_each_entry_rcu(mod, &modules, list) {
-+	list_for_each_entry_rcu(mod, &modules, list,
-+				lockdep_is_held(&module_mutex)) {
- 		if (!even_unformed && mod->state == MODULE_STATE_UNFORMED)
- 			continue;
- 		if (strlen(mod->name) == len && !memcmp(mod->name, name, len))
++	/* Some tools for creating an initramfs don't consider softdeps, then
++	 * r8169.ko may be in initramfs, but realtek.ko not. Then the generic
++	 * PHY driver is used that doesn't work with most chip versions.
++	 */
++	if (!driver_find("RTL8201CP Ethernet", &mdio_bus_type)) {
++		dev_err(&pdev->dev, "realtek.ko not loaded, maybe it needs to be added to initramfs?\n");
++		return -ENOENT;
++	}
++
+ 	dev = devm_alloc_etherdev(&pdev->dev, sizeof (*tp));
+ 	if (!dev)
+ 		return -ENOMEM;
 -- 
 2.20.1
 
