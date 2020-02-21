@@ -4,50 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 15397C35643
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 08:03:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8EBECC35640
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 08:03:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DB0D024650
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 08:03:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 62B812467A
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 08:03:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582272223;
-	bh=IN9g0QVSJw1Ko04U/o5oXCUMcEqF0UvHQNwT1l5gu9M=;
+	s=default; t=1582272225;
+	bh=zbK5P6bE+5w9JpZDIVeW4d4YCT86HCfVE6Z0vyzn7KM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=YE2H8y0fXAgCn4NLpcTp52TO4a645etz3gnZZAo4caYSJT6z/qbXPNP4vauf7Mquv
-	 R4m/Lb/ScS6KBlZvIbbCWA7W7krSitXlQteNlkcmRl0JpWVUBp71jUqm578vO7OlS1
-	 fswylSMEscOkCv/BLtNknI83VWO240pGP5vW8T14=
+	b=jcORrmjZ1xzyYC+T3nFOulIhNxIdots0IMPmmnwC47FCwUKWRrftUZlJKkGrKrozK
+	 mvg4K4JXDOVYNpdwu4Fa0mVHr073SmCKf63S1xJQ36xPuobLKFhZsPFNWGvnQ6cGNp
+	 uP8Z4jzhcLFoQ/+Q1UHSPuljAC4NiMS1Tquyl3to=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731519AbgBUIDn (ORCPT
+        id S1731225AbgBUIDo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Feb 2020 03:03:43 -0500
-Received: from mail.kernel.org ([198.145.29.99]:36476 "EHLO mail.kernel.org"
+        Fri, 21 Feb 2020 03:03:44 -0500
+Received: from mail.kernel.org ([198.145.29.99]:36532 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731506AbgBUIDj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Feb 2020 03:03:39 -0500
+        id S1731017AbgBUIDm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 21 Feb 2020 03:03:42 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A468B2073A;
-        Fri, 21 Feb 2020 08:03:38 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9DAFD2465D;
+        Fri, 21 Feb 2020 08:03:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1582272219;
-        bh=IN9g0QVSJw1Ko04U/o5oXCUMcEqF0UvHQNwT1l5gu9M=;
+        s=default; t=1582272222;
+        bh=zbK5P6bE+5w9JpZDIVeW4d4YCT86HCfVE6Z0vyzn7KM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=iL77YhhpKjS4LWfIMPGZw0zr4NsP5Db83amoGEjQCpmRTpC04wp03kwGDpj5Rkt4/
-         3iJ5f5ZMrSyvAuOrF2b7TJ5IKf1Z51OS/A/H6n0rSzKL3N+I2dvXKwSBtr15gcxcCK
-         S2GiydVUjDtYjHRy31CFBdFVkpo4sJSKttdK3ELk=
+        b=um/spOWrLxyY67IaPRe9yEdK8a67ss124j37fODWk/z16vIGVSoXRrR9mae41p3K0
+         Uo7g0DPyA/hFo4fE1W8i5uAwbYmqz6vxknNpZaOZo8+xND5odzDXLSS5BwrE6gfW9L
+         6d6SrrdhMxbKeV2IBob6PgUJ9wOX8B+xlUzIFVsY=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Jia-Ju Bai <baijiaju1990@gmail.com>,
+        stable@vger.kernel.org, Minas Harutyunyan <hminas@synopsys.com>,
+        John Keeping <john@metanate.com>,
         Felipe Balbi <balbi@kernel.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 059/344] usb: gadget: udc: fix possible sleep-in-atomic-context bugs in gr_probe()
-Date:   Fri, 21 Feb 2020 08:37:38 +0100
-Message-Id: <20200221072354.393277008@linuxfoundation.org>
+Subject: [PATCH 5.4 060/344] usb: dwc2: Fix IN FIFO allocation
+Date:   Fri, 21 Feb 2020 08:37:39 +0100
+Message-Id: <20200221072354.476227772@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200221072349.335551332@linuxfoundation.org>
 References: <20200221072349.335551332@linuxfoundation.org>
@@ -60,108 +61,82 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jia-Ju Bai <baijiaju1990@gmail.com>
+From: John Keeping <john@metanate.com>
 
-[ Upstream commit 9c1ed62ae0690dfe5d5e31d8f70e70a95cb48e52 ]
+[ Upstream commit 644139f8b64d818f6345351455f14471510879a5 ]
 
-The driver may sleep while holding a spinlock.
-The function call path (from bottom to top) in Linux 4.19 is:
+On chips with fewer FIFOs than endpoints (for example RK3288 which has 9
+endpoints, but only 6 which are cabable of input), the DPTXFSIZN
+registers above the FIFO count may return invalid values.
 
-drivers/usb/gadget/udc/core.c, 1175:
-	kzalloc(GFP_KERNEL) in usb_add_gadget_udc_release
-drivers/usb/gadget/udc/core.c, 1272:
-	usb_add_gadget_udc_release in usb_add_gadget_udc
-drivers/usb/gadget/udc/gr_udc.c, 2186:
-	usb_add_gadget_udc in gr_probe
-drivers/usb/gadget/udc/gr_udc.c, 2183:
-	spin_lock in gr_probe
+With logging added on startup, I see:
 
-drivers/usb/gadget/udc/core.c, 1195:
-	mutex_lock in usb_add_gadget_udc_release
-drivers/usb/gadget/udc/core.c, 1272:
-	usb_add_gadget_udc_release in usb_add_gadget_udc
-drivers/usb/gadget/udc/gr_udc.c, 2186:
-	usb_add_gadget_udc in gr_probe
-drivers/usb/gadget/udc/gr_udc.c, 2183:
-	spin_lock in gr_probe
+	dwc2 ff580000.usb: dwc2_hsotg_init_fifo: ep=1 sz=256
+	dwc2 ff580000.usb: dwc2_hsotg_init_fifo: ep=2 sz=128
+	dwc2 ff580000.usb: dwc2_hsotg_init_fifo: ep=3 sz=128
+	dwc2 ff580000.usb: dwc2_hsotg_init_fifo: ep=4 sz=64
+	dwc2 ff580000.usb: dwc2_hsotg_init_fifo: ep=5 sz=64
+	dwc2 ff580000.usb: dwc2_hsotg_init_fifo: ep=6 sz=32
+	dwc2 ff580000.usb: dwc2_hsotg_init_fifo: ep=7 sz=0
+	dwc2 ff580000.usb: dwc2_hsotg_init_fifo: ep=8 sz=0
+	dwc2 ff580000.usb: dwc2_hsotg_init_fifo: ep=9 sz=0
+	dwc2 ff580000.usb: dwc2_hsotg_init_fifo: ep=10 sz=0
+	dwc2 ff580000.usb: dwc2_hsotg_init_fifo: ep=11 sz=0
+	dwc2 ff580000.usb: dwc2_hsotg_init_fifo: ep=12 sz=0
+	dwc2 ff580000.usb: dwc2_hsotg_init_fifo: ep=13 sz=0
+	dwc2 ff580000.usb: dwc2_hsotg_init_fifo: ep=14 sz=0
+	dwc2 ff580000.usb: dwc2_hsotg_init_fifo: ep=15 sz=0
 
-drivers/usb/gadget/udc/gr_udc.c, 212:
-	debugfs_create_file in gr_probe
-drivers/usb/gadget/udc/gr_udc.c, 2197:
-	gr_dfs_create in gr_probe
-drivers/usb/gadget/udc/gr_udc.c, 2183:
-    spin_lock in gr_probe
+but:
 
-drivers/usb/gadget/udc/gr_udc.c, 2114:
-	devm_request_threaded_irq in gr_request_irq
-drivers/usb/gadget/udc/gr_udc.c, 2202:
-	gr_request_irq in gr_probe
-drivers/usb/gadget/udc/gr_udc.c, 2183:
-    spin_lock in gr_probe
+	# cat /sys/kernel/debug/ff580000.usb/fifo
+	Non-periodic FIFOs:
+	RXFIFO: Size 275
+	NPTXFIFO: Size 16, Start 0x00000113
 
-kzalloc(GFP_KERNEL), mutex_lock(), debugfs_create_file() and
-devm_request_threaded_irq() can sleep at runtime.
+	Periodic TXFIFOs:
+		DPTXFIFO 1: Size 256, Start 0x00000123
+		DPTXFIFO 2: Size 128, Start 0x00000223
+		DPTXFIFO 3: Size 128, Start 0x000002a3
+		DPTXFIFO 4: Size 64, Start 0x00000323
+		DPTXFIFO 5: Size 64, Start 0x00000363
+		DPTXFIFO 6: Size 32, Start 0x000003a3
+		DPTXFIFO 7: Size 0, Start 0x000003e3
+		DPTXFIFO 8: Size 0, Start 0x000003a3
+		DPTXFIFO 9: Size 256, Start 0x00000123
 
-To fix these possible bugs, usb_add_gadget_udc(), gr_dfs_create() and
-gr_request_irq() are called without handling the spinlock.
+so it seems that FIFO 9 is mirroring FIFO 1.
 
-These bugs are found by a static analysis tool STCheck written by myself.
+Fix the allocation by using the FIFO count instead of the endpoint count
+when selecting a FIFO for an endpoint.
 
-Signed-off-by: Jia-Ju Bai <baijiaju1990@gmail.com>
+Acked-by: Minas Harutyunyan <hminas@synopsys.com>
+Signed-off-by: John Keeping <john@metanate.com>
 Signed-off-by: Felipe Balbi <balbi@kernel.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/usb/gadget/udc/gr_udc.c | 16 +++++++++-------
- 1 file changed, 9 insertions(+), 7 deletions(-)
+ drivers/usb/dwc2/gadget.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/usb/gadget/udc/gr_udc.c b/drivers/usb/gadget/udc/gr_udc.c
-index 7a0e9a58c2d84..116d386472efe 100644
---- a/drivers/usb/gadget/udc/gr_udc.c
-+++ b/drivers/usb/gadget/udc/gr_udc.c
-@@ -2176,8 +2176,6 @@ static int gr_probe(struct platform_device *pdev)
- 		return -ENOMEM;
- 	}
+diff --git a/drivers/usb/dwc2/gadget.c b/drivers/usb/dwc2/gadget.c
+index 6be10e496e105..a9133773b89e4 100644
+--- a/drivers/usb/dwc2/gadget.c
++++ b/drivers/usb/dwc2/gadget.c
+@@ -4056,11 +4056,12 @@ static int dwc2_hsotg_ep_enable(struct usb_ep *ep,
+ 	 * a unique tx-fifo even if it is non-periodic.
+ 	 */
+ 	if (dir_in && hsotg->dedicated_fifos) {
++		unsigned fifo_count = dwc2_hsotg_tx_fifo_count(hsotg);
+ 		u32 fifo_index = 0;
+ 		u32 fifo_size = UINT_MAX;
  
--	spin_lock(&dev->lock);
--
- 	/* Inside lock so that no gadget can use this udc until probe is done */
- 	retval = usb_add_gadget_udc(dev->dev, &dev->gadget);
- 	if (retval) {
-@@ -2186,15 +2184,21 @@ static int gr_probe(struct platform_device *pdev)
- 	}
- 	dev->added = 1;
- 
-+	spin_lock(&dev->lock);
-+
- 	retval = gr_udc_init(dev);
--	if (retval)
-+	if (retval) {
-+		spin_unlock(&dev->lock);
- 		goto out;
--
--	gr_dfs_create(dev);
-+	}
- 
- 	/* Clear all interrupt enables that might be left on since last boot */
- 	gr_disable_interrupts_and_pullup(dev);
- 
-+	spin_unlock(&dev->lock);
-+
-+	gr_dfs_create(dev);
-+
- 	retval = gr_request_irq(dev, dev->irq);
- 	if (retval) {
- 		dev_err(dev->dev, "Failed to request irq %d\n", dev->irq);
-@@ -2223,8 +2227,6 @@ static int gr_probe(struct platform_device *pdev)
- 		dev_info(dev->dev, "regs: %p, irq %d\n", dev->regs, dev->irq);
- 
- out:
--	spin_unlock(&dev->lock);
--
- 	if (retval)
- 		gr_remove(pdev);
- 
+ 		size = hs_ep->ep.maxpacket * hs_ep->mc;
+-		for (i = 1; i < hsotg->num_of_eps; ++i) {
++		for (i = 1; i <= fifo_count; ++i) {
+ 			if (hsotg->fifo_map & (1 << i))
+ 				continue;
+ 			val = dwc2_readl(hsotg, DPTXFSIZN(i));
 -- 
 2.20.1
 
