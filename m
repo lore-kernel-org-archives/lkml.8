@@ -2,107 +2,100 @@ Return-Path: <SRS0=1210=4J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D7E15C35669
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 20:25:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 81840C35666
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 20:27:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AB78A2072C
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 20:25:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3B34D2072C
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 20:27:36 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="XymCjwuo"
+	dkim=pass (1024-bit key) header.d=megous.com header.i=@megous.com header.b="ABTKps/f"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727912AbgBUUZi (ORCPT
+        id S1727699AbgBUU1f (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Feb 2020 15:25:38 -0500
-Received: from bombadil.infradead.org ([198.137.202.133]:40262 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726483AbgBUUZi (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Feb 2020 15:25:38 -0500
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
-        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=2Hcbu7VsxhWQs9BO+Aja19os7FBfjIizSEAD/jxIKN0=; b=XymCjwuobjJepMla2WyDSnMt82
-        wHklJoYIVwXJDYArgHkEAeiwB4P66pWfl36CylzFP2URQWLAV4B/ZdP4OAyWOpmXyOgQGsuPS6rmZ
-        K6G7OPKgX9plbs8TCyW12z+dDj+avbXAQVwfJyKsFpqZxPmkTTnIHyJT8C4OgCWKmueBA9s6+Dfqr
-        SC5giFO0TnAgTN7bA6cxnefE5kYnIbYOLEw5JMAnnMtYsa+nPr4L3tpt7RnuSEaOPlLj3g+7z5+Id
-        71lWOqBNaPM23qR3Ot1KJpr7ggBkoRZmbxgCm5lmu7bktPd/pb9s4ZqjttRh4wlrIPuNdGUnI02oz
-        qKa7tWUA==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
-        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1j5ErK-0003Ys-C8; Fri, 21 Feb 2020 20:25:14 +0000
-Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (Client did not present a certificate)
-        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 9DEBC300478;
-        Fri, 21 Feb 2020 21:23:18 +0100 (CET)
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id 6B1F7209DB0F7; Fri, 21 Feb 2020 21:25:11 +0100 (CET)
-Date:   Fri, 21 Feb 2020 21:25:11 +0100
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     Steven Rostedt <rostedt@goodmis.org>
-Cc:     linux-kernel@vger.kernel.org, linux-arch@vger.kernel.org,
-        mingo@kernel.org, joel@joelfernandes.org,
-        gregkh@linuxfoundation.org, gustavo@embeddedor.com,
-        tglx@linutronix.de, paulmck@kernel.org, josh@joshtriplett.org,
-        mathieu.desnoyers@efficios.com, jiangshanlai@gmail.com,
-        luto@kernel.org, tony.luck@intel.com, frederic@kernel.org,
-        dan.carpenter@oracle.com, mhiramat@kernel.org
-Subject: Re: [PATCH v4 01/27] lockdep: Teach lockdep about "USED" <- "IN-NMI"
- inversions
-Message-ID: <20200221202511.GB14897@hirez.programming.kicks-ass.net>
-References: <20200221133416.777099322@infradead.org>
- <20200221134215.090538203@infradead.org>
- <20200221100855.2f9bec3a@gandalf.local.home>
+        Fri, 21 Feb 2020 15:27:35 -0500
+Received: from vps.xff.cz ([195.181.215.36]:50506 "EHLO vps.xff.cz"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726483AbgBUU1e (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 21 Feb 2020 15:27:34 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=megous.com; s=mail;
+        t=1582316852; bh=RT7hM71ofWAX5CWLAn+N0ibzSMqxRV062cMgGpFPdEY=;
+        h=From:To:Cc:Subject:Date:From;
+        b=ABTKps/fZEowbJ4P6ipUZh7IvHdAL18b1qHi7B9xvjA4dew8ntVZu250Lsyfvr7Um
+         F3VIve3NlowLIq2TDPW1LS3K1cRKaNc/Enw9SsV0fHDml+4XAAWJfjNeZt5xx18L2b
+         ElDeR1wr1KktD7WUMc+b3zv4HMZnPUzs6MIS5Z0s=
+From:   Ondrej Jirman <megous@megous.com>
+To:     linux-sunxi@googlegroups.com
+Cc:     Ondrej Jirman <megous@megous.com>, Chen-Yu Tsai <wens@csie.org>,
+        Maxime Ripard <mripard@kernel.org>,
+        Samuel Holland <samuel@sholland.org>,
+        Stephen Boyd <swboyd@chromium.org>,
+        linux-arm-kernel@lists.infradead.org (moderated list:ARM/Allwinner
+        sunXi SoC support), linux-kernel@vger.kernel.org (open list)
+Subject: [PATCH v2] bus: sunxi-rsb: Return correct data when mixing 16-bit and 8-bit reads
+Date:   Fri, 21 Feb 2020 21:27:26 +0100
+Message-Id: <20200221202728.1583768-1-megous@megous.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200221100855.2f9bec3a@gandalf.local.home>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Feb 21, 2020 at 10:08:55AM -0500, Steven Rostedt wrote:
-> On Fri, 21 Feb 2020 14:34:17 +0100
-> Peter Zijlstra <peterz@infradead.org> wrote:
-> 
-> > --- a/kernel/locking/lockdep.c
-> > +++ b/kernel/locking/lockdep.c
-> > @@ -379,13 +379,13 @@ void lockdep_init_task(struct task_struc
-> >  
-> >  void lockdep_off(void)
-> >  {
-> > -	current->lockdep_recursion++;
-> > +	current->lockdep_recursion += BIT(16);
-> >  }
-> >  EXPORT_SYMBOL(lockdep_off);
-> >  
-> >  void lockdep_on(void)
-> >  {
-> > -	current->lockdep_recursion--;
-> > +	current->lockdep_recursion -= BIT(16);
-> >  }
-> >  EXPORT_SYMBOL(lockdep_on);
-> >  
-> 
-> > +
-> > +static bool lockdep_nmi(void)
-> > +{
-> > +	if (current->lockdep_recursion & 0xFFFF)
-> 
-> Nitpick, but the association with bit 16 and this mask really should be
-> defined as a macro somewhere and not have hard coded numbers.
+When doing a 16-bit read that returns data in the MSB byte, the
+RSB_DATA register will keep the MSB byte unchanged when doing
+the following 8-bit read. sunxi_rsb_read() will then return
+a result that contains high byte from 16-bit read mixed with
+the 8-bit result.
 
-Right, I suppose I can do something like:
+The consequence is that after this happens the PMIC's regmap will
+look like this: (0x33 is the high byte from the 16-bit read)
 
-#define LOCKDEP_RECURSION_BITS	16
-#define LOCKDEP_OFF (1U << LOCKDEP_RECURSION_BITS)
-#define LOCKDEP_RECURSION_MASK (LOCKDEP_OFF - 1)
+% cat /sys/kernel/debug/regmap/sunxi-rsb-3a3/registers
+00: 33
+01: 33
+02: 33
+03: 33
+04: 33
+05: 33
+06: 33
+07: 33
+08: 33
+09: 33
+0a: 33
+0b: 33
+0c: 33
+0d: 33
+0e: 33
+[snip]
 
+Fix this by masking the result of the read with the correct mask
+based on the size of the read. There are no 16-bit users in the
+mainline kernel, so this doesn't need to get into the stable tree.
+
+Signed-off-by: Ondrej Jirman <megous@megous.com>
+Acked-by: Chen-Yu Tsai <wens@csie.org>
+---
+ drivers/bus/sunxi-rsb.c | 1 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/drivers/bus/sunxi-rsb.c b/drivers/bus/sunxi-rsb.c
+index b8043b58568ac..8ab6a3865f569 100644
+--- a/drivers/bus/sunxi-rsb.c
++++ b/drivers/bus/sunxi-rsb.c
+@@ -345,7 +349,7 @@ static int sunxi_rsb_read(struct sunxi_rsb *rsb, u8 rtaddr, u8 addr,
+ 	if (ret)
+ 		goto unlock;
+ 
+-	*buf = readl(rsb->regs + RSB_DATA);
++	*buf = readl(rsb->regs + RSB_DATA) & GENMASK(len * 8 - 1, 0);
+ 
+ unlock:
+ 	mutex_unlock(&rsb->lock);
+-- 
+2.25.1
 
