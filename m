@@ -2,174 +2,123 @@ Return-Path: <SRS0=1210=4J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MIME_BASE64_TEXT,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
+	UNWANTED_LANGUAGE_BODY,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4B90BC35647
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 11:31:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 40DE1C35646
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 11:31:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 23FAA208C4
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 11:31:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0F26F222C4
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 11:31:26 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="NnLryxhD"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727448AbgBULbC (ORCPT
+        id S1727887AbgBULbY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Feb 2020 06:31:02 -0500
-Received: from mga01.intel.com ([192.55.52.88]:53292 "EHLO mga01.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726100AbgBULbC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Feb 2020 06:31:02 -0500
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from orsmga008.jf.intel.com ([10.7.209.65])
-  by fmsmga101.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 21 Feb 2020 03:31:01 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.70,468,1574150400"; 
-   d="scan'208";a="229824548"
-Received: from stinkbox.fi.intel.com (HELO stinkbox) ([10.237.72.174])
-  by orsmga008.jf.intel.com with SMTP; 21 Feb 2020 03:30:58 -0800
-Received: by stinkbox (sSMTP sendmail emulation); Fri, 21 Feb 2020 13:30:57 +0200
-Date:   Fri, 21 Feb 2020 13:30:57 +0200
-From:   Ville =?iso-8859-1?Q?Syrj=E4l=E4?= <ville.syrjala@linux.intel.com>
-To:     Kees Cook <keescook@chromium.org>
-Cc:     Jani Nikula <jani.nikula@linux.intel.com>,
-        Joonas Lahtinen <joonas.lahtinen@linux.intel.com>,
-        Rodrigo Vivi <rodrigo.vivi@intel.com>,
-        intel-gfx@lists.freedesktop.org,
-        Alexander Potapenko <glider@google.com>,
-        linux-kernel@vger.kernel.org
-Subject: Re: [Intel-gfx] [PATCH v2] drm/i915: Distribute switch variables for
- initialization
-Message-ID: <20200221113057.GL13686@intel.com>
-References: <202002201602.92CADF7D@keescook>
+        Fri, 21 Feb 2020 06:31:24 -0500
+Received: from mailgw02.mediatek.com ([1.203.163.81]:44920 "EHLO
+        mailgw02.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1728018AbgBULbY (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 21 Feb 2020 06:31:24 -0500
+X-UUID: 930a4b4ddf6244fcb9076d480a603978-20200221
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
+        h=Content-Transfer-Encoding:Content-Type:MIME-Version:References:In-Reply-To:Message-ID:Date:Subject:CC:To:From; bh=EXe7y+o2d7iRqWPavTvifj5buUeUDoNRZjUZQ38OTRs=;
+        b=NnLryxhD7hWPE9mnEDLPB+C6iqEmL1G+JR2DwT07Nw1nOSILg87GT0/B0GrXYFVumR4I65f9HxR45hlIJo8mVE1YvLeV6cN1ExpxJ7lUiBRh6RQznltIlwnCEroWVAvUNgToKHH+RdMh/hQt9/bhWiy7SUVZklEzzBLQj/RwaeI=;
+X-UUID: 930a4b4ddf6244fcb9076d480a603978-20200221
+Received: from mtkcas36.mediatek.inc [(172.27.4.253)] by mailgw02.mediatek.com
+        (envelope-from <jitao.shi@mediatek.com>)
+        (mailgw01.mediatek.com ESMTP with TLS)
+        with ESMTP id 1200173710; Fri, 21 Feb 2020 19:28:39 +0800
+Received: from MTKCAS36.mediatek.inc (172.27.4.186) by MTKMBS33DR.mediatek.inc
+ (172.27.6.106) with Microsoft SMTP Server (TLS) id 15.0.1395.4; Fri, 21 Feb
+ 2020 19:24:02 +0800
+Received: from mszsdclx1018.gcn.mediatek.inc (10.16.6.18) by
+ MTKCAS36.mediatek.inc (172.27.4.170) with Microsoft SMTP Server id
+ 15.0.1395.4 via Frontend Transport; Fri, 21 Feb 2020 19:27:37 +0800
+From:   Jitao Shi <jitao.shi@mediatek.com>
+To:     Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        David Airlie <airlied@linux.ie>,
+        <dri-devel@lists.freedesktop.org>, <linux-kernel@vger.kernel.org>
+CC:     <linux-mediatek@lists.infradead.org>, <devicetree@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <srv_heupstream@mediatek.com>, <yingjoe.chen@mediatek.com>,
+        <eddie.huang@mediatek.com>, <cawa.cheng@mediatek.com>,
+        <bibby.hsieh@mediatek.com>, <ck.hu@mediatek.com>,
+        <stonea168@163.com>, <huijuan.xie@mediatek.com>,
+        Jitao Shi <jitao.shi@mediatek.com>
+Subject: [PATCH v6 4/4] drm/mediatek: set dpi pin mode to gpio low to avoid leakage current
+Date:   Fri, 21 Feb 2020 19:28:28 +0800
+Message-ID: <20200221112828.55837-5-jitao.shi@mediatek.com>
+X-Mailer: git-send-email 2.21.0
+In-Reply-To: <20200221112828.55837-1-jitao.shi@mediatek.com>
+References: <20200221112828.55837-1-jitao.shi@mediatek.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <202002201602.92CADF7D@keescook>
-X-Patchwork-Hint: comment
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: text/plain
+X-TM-SNTS-SMTP: 9A8E6822595FF18CCA96293E9D8AAB0CAD367449040DC0B45EFD2AD7116372492000:8
+X-MTK:  N
+Content-Transfer-Encoding: base64
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Feb 20, 2020 at 04:05:17PM -0800, Kees Cook wrote:
-> Variables declared in a switch statement before any case statements
-> cannot be automatically initialized with compiler instrumentation (as
-> they are not part of any execution flow). With GCC's proposed automatic
-> stack variable initialization feature, this triggers a warning (and they
-> don't get initialized). Clang's automatic stack variable initialization
-> (via CONFIG_INIT_STACK_ALL=y) doesn't throw a warning, but it also
-> doesn't initialize such variables[1]. Note that these warnings (or silent
-> skipping) happen before the dead-store elimination optimization phase,
-> so even when the automatic initializations are later elided in favor of
-> direct initializations, the warnings remain.
-> 
-> To avoid these problems, move such variables into the "case" where
-> they're used or lift them up into the main function body.
-> 
-> drivers/gpu/drm/i915/display/intel_display.c: In function ‘check_digital_port_conflicts’:
-> drivers/gpu/drm/i915/display/intel_display.c:12963:17: warning: statement will never be executed [-Wswitch-unreachable]
-> 12963 |    unsigned int port_mask;
->       |                 ^~~~~~~~~
-> 
-> drivers/gpu/drm/i915/intel_pm.c: In function ‘vlv_get_fifo_size’:
-> drivers/gpu/drm/i915/intel_pm.c:474:7: warning: statement will never be executed [-Wswitch-unreachable]
->   474 |   u32 dsparb, dsparb2, dsparb3;
->       |       ^~~~~~
-> drivers/gpu/drm/i915/intel_pm.c: In function ‘vlv_atomic_update_fifo’:
-> drivers/gpu/drm/i915/intel_pm.c:1997:7: warning: statement will never be executed [-Wswitch-unreachable]
->  1997 |   u32 dsparb, dsparb2, dsparb3;
->       |       ^~~~~~
-> 
-> [1] https://bugs.llvm.org/show_bug.cgi?id=44916
-> 
-> Signed-off-by: Kees Cook <keescook@chromium.org>
-> ---
-> v2: remove port_mask entirely (Ville Syrjälä)
-> v1: https://lore.kernel.org/lkml/20200220062258.68854-1-keescook@chromium.org
-> ---
->  drivers/gpu/drm/i915/display/intel_display.c | 7 ++-----
->  drivers/gpu/drm/i915/intel_pm.c              | 4 ++--
->  2 files changed, 4 insertions(+), 7 deletions(-)
-> 
-> diff --git a/drivers/gpu/drm/i915/display/intel_display.c b/drivers/gpu/drm/i915/display/intel_display.c
-> index 064dd99bbc49..5f8c61932e82 100644
-> --- a/drivers/gpu/drm/i915/display/intel_display.c
-> +++ b/drivers/gpu/drm/i915/display/intel_display.c
-> @@ -12960,7 +12960,6 @@ static bool check_digital_port_conflicts(struct intel_atomic_state *state)
->  		WARN_ON(!connector_state->crtc);
->  
->  		switch (encoder->type) {
-> -			unsigned int port_mask;
->  		case INTEL_OUTPUT_DDI:
->  			if (WARN_ON(!HAS_DDI(to_i915(dev))))
->  				break;
-> @@ -12968,13 +12967,11 @@ static bool check_digital_port_conflicts(struct intel_atomic_state *state)
->  		case INTEL_OUTPUT_DP:
->  		case INTEL_OUTPUT_HDMI:
->  		case INTEL_OUTPUT_EDP:
-> -			port_mask = 1 << encoder->port;
-> -
->  			/* the same port mustn't appear more than once */
-> -			if (used_ports & port_mask)
-> +			if (used_ports & BIT(encoder->port))
->  				ret = false;
->  
-> -			used_ports |= port_mask;
-> +			used_ports |= BIT(encoder->port);
+UHVsbCBkcGkgcGlucyBsb3cgd2hlbiBkcGkgaGFzIG5vdGhpbmcgdG8gZGlzcGxheS4gQW92aWQg
+bGVha2FnZQ0KY3VycmVudCBmcm9tIHNvbWUgZHBpIHBpbnMgKEhzeW5jIFZzeW5jIERFIC4uLiAp
+Lg0KDQpTb21lIGNoaXBzIGhhdmUgZHBpIHBpbnMsIGJ1dCB0aGVyZSBhcmUgc29tZSBjaGlwIGRv
+bid0IGhhdmUgcGlucy4NClNvIHRoaXMgZnVuY3Rpb24gaXMgY29udHJvbGxlZCBieSBkZXZpY2Ug
+dHJlZS4NCg0KU2lnbmVkLW9mZi1ieTogSml0YW8gU2hpIDxqaXRhby5zaGlAbWVkaWF0ZWsuY29t
+Pg0KLS0tDQogZHJpdmVycy9ncHUvZHJtL21lZGlhdGVrL210a19kcGkuYyB8IDM3ICsrKysrKysr
+KysrKysrKysrKysrKysrKysrKysrKw0KIDEgZmlsZSBjaGFuZ2VkLCAzNyBpbnNlcnRpb25zKCsp
+DQoNCmRpZmYgLS1naXQgYS9kcml2ZXJzL2dwdS9kcm0vbWVkaWF0ZWsvbXRrX2RwaS5jIGIvZHJp
+dmVycy9ncHUvZHJtL21lZGlhdGVrL210a19kcGkuYw0KaW5kZXggZTFhMzMyNTRkZmJlLi40MTcx
+MmU1YTcyMWEgMTAwNjQ0DQotLS0gYS9kcml2ZXJzL2dwdS9kcm0vbWVkaWF0ZWsvbXRrX2RwaS5j
+DQorKysgYi9kcml2ZXJzL2dwdS9kcm0vbWVkaWF0ZWsvbXRrX2RwaS5jDQpAQCAtMTAsNyArMTAs
+OSBAQA0KICNpbmNsdWRlIDxsaW51eC9rZXJuZWwuaD4NCiAjaW5jbHVkZSA8bGludXgvb2YuaD4N
+CiAjaW5jbHVkZSA8bGludXgvb2ZfZGV2aWNlLmg+DQorI2luY2x1ZGUgPGxpbnV4L29mX2dwaW8u
+aD4NCiAjaW5jbHVkZSA8bGludXgvb2ZfZ3JhcGguaD4NCisjaW5jbHVkZSA8bGludXgvcGluY3Ry
+bC9jb25zdW1lci5oPg0KICNpbmNsdWRlIDxsaW51eC9wbGF0Zm9ybV9kZXZpY2UuaD4NCiAjaW5j
+bHVkZSA8bGludXgvdHlwZXMuaD4NCiANCkBAIC03NCw4ICs3NiwxMiBAQCBzdHJ1Y3QgbXRrX2Rw
+aSB7DQogCWVudW0gbXRrX2RwaV9vdXRfeWNfbWFwIHljX21hcDsNCiAJZW51bSBtdGtfZHBpX291
+dF9iaXRfbnVtIGJpdF9udW07DQogCWVudW0gbXRrX2RwaV9vdXRfY2hhbm5lbF9zd2FwIGNoYW5u
+ZWxfc3dhcDsNCisJc3RydWN0IHBpbmN0cmwgKnBpbmN0cmw7DQorCXN0cnVjdCBwaW5jdHJsX3N0
+YXRlICpwaW5zX2dwaW87DQorCXN0cnVjdCBwaW5jdHJsX3N0YXRlICpwaW5zX2RwaTsNCiAJaW50
+IHJlZmNvdW50Ow0KIAlib29sIGR1YWxfZWRnZTsNCisJYm9vbCBkcGlfcGluX2N0cmw7DQogfTsN
+CiANCiBzdGF0aWMgaW5saW5lIHN0cnVjdCBtdGtfZHBpICptdGtfZHBpX2Zyb21fZW5jb2Rlcihz
+dHJ1Y3QgZHJtX2VuY29kZXIgKmUpDQpAQCAtMzg3LDYgKzM5Myw5IEBAIHN0YXRpYyB2b2lkIG10
+a19kcGlfcG93ZXJfb2ZmKHN0cnVjdCBtdGtfZHBpICpkcGkpDQogCWlmICgtLWRwaS0+cmVmY291
+bnQgIT0gMCkNCiAJCXJldHVybjsNCiANCisJaWYgKGRwaS0+ZHBpX3Bpbl9jdHJsKQ0KKwkJcGlu
+Y3RybF9zZWxlY3Rfc3RhdGUoZHBpLT5waW5jdHJsLCBkcGktPnBpbnNfZ3Bpbyk7DQorDQogCW10
+a19kcGlfZGlzYWJsZShkcGkpOw0KIAljbGtfZGlzYWJsZV91bnByZXBhcmUoZHBpLT5waXhlbF9j
+bGspOw0KIAljbGtfZGlzYWJsZV91bnByZXBhcmUoZHBpLT5lbmdpbmVfY2xrKTsNCkBAIC00MTEs
+NiArNDIwLDkgQEAgc3RhdGljIGludCBtdGtfZHBpX3Bvd2VyX29uKHN0cnVjdCBtdGtfZHBpICpk
+cGkpDQogCQlnb3RvIGVycl9waXhlbDsNCiAJfQ0KIA0KKwlpZiAoZHBpLT5kcGlfcGluX2N0cmwp
+DQorCQlwaW5jdHJsX3NlbGVjdF9zdGF0ZShkcGktPnBpbmN0cmwsIGRwaS0+cGluc19kcGkpOw0K
+Kw0KIAltdGtfZHBpX2VuYWJsZShkcGkpOw0KIAlyZXR1cm4gMDsNCiANCkBAIC03MTYsNiArNzI4
+LDMxIEBAIHN0YXRpYyBpbnQgbXRrX2RwaV9wcm9iZShzdHJ1Y3QgcGxhdGZvcm1fZGV2aWNlICpw
+ZGV2KQ0KIAlkcGktPmRldiA9IGRldjsNCiAJZHBpLT5jb25mID0gKHN0cnVjdCBtdGtfZHBpX2Nv
+bmYgKilvZl9kZXZpY2VfZ2V0X21hdGNoX2RhdGEoZGV2KTsNCiAJZHBpLT5kdWFsX2VkZ2UgPSBv
+Zl9wcm9wZXJ0eV9yZWFkX2Jvb2woZGV2LT5vZl9ub2RlLCAiZHBpX2R1YWxfZWRnZSIpOw0KKwlk
+cGktPmRwaV9waW5fY3RybCA9IG9mX3Byb3BlcnR5X3JlYWRfYm9vbChkZXYtPm9mX25vZGUsDQor
+CQkJCQkJICAiZHBpX3Bpbl9tb2RlX3N3YXAiKTsNCisNCisJaWYgKGRwaS0+ZHBpX3Bpbl9jdHJs
+KSB7DQorCQlkcGktPnBpbmN0cmwgPSBkZXZtX3BpbmN0cmxfZ2V0KCZwZGV2LT5kZXYpOw0KKwkJ
+aWYgKElTX0VSUihkcGktPnBpbmN0cmwpKSB7DQorCQkJZGV2X2VycigmcGRldi0+ZGV2LCAiQ2Fu
+bm90IGZpbmQgcGluY3RybCFcbiIpOw0KKwkJCXJldHVybiBQVFJfRVJSKGRwaS0+cGluY3RybCk7
+DQorCQl9DQorDQorCQlkcGktPnBpbnNfZ3BpbyA9IHBpbmN0cmxfbG9va3VwX3N0YXRlKGRwaS0+
+cGluY3RybCwNCisJCQkJCQkgICAgICAiZ3Bpb21vZGUiKTsNCisJCWlmIChJU19FUlIoZHBpLT5w
+aW5zX2dwaW8pKSB7DQorCQkJZGV2X2VycigmcGRldi0+ZGV2LCAiQ2Fubm90IGZpbmQgcGluY3Ry
+bCBncGlvbW9kZSFcbiIpOw0KKwkJCXJldHVybiBQVFJfRVJSKGRwaS0+cGluc19ncGlvKTsNCisJ
+CX0NCisNCisJCXBpbmN0cmxfc2VsZWN0X3N0YXRlKGRwaS0+cGluY3RybCwgZHBpLT5waW5zX2dw
+aW8pOw0KKw0KKwkJZHBpLT5waW5zX2RwaSA9IHBpbmN0cmxfbG9va3VwX3N0YXRlKGRwaS0+cGlu
+Y3RybCwgImRwaW1vZGUiKTsNCisJCWlmIChJU19FUlIoZHBpLT5waW5zX2RwaSkpIHsNCisJCQlk
+ZXZfZXJyKCZwZGV2LT5kZXYsICJDYW5ub3QgZmluZCBwaW5jdHJsIGRwaW1vZGUhXG4iKTsNCisJ
+CQlyZXR1cm4gUFRSX0VSUihkcGktPnBpbnNfZHBpKTsNCisJCX0NCisJfQ0KIA0KIAltZW0gPSBw
+bGF0Zm9ybV9nZXRfcmVzb3VyY2UocGRldiwgSU9SRVNPVVJDRV9NRU0sIDApOw0KIAlkcGktPnJl
+Z3MgPSBkZXZtX2lvcmVtYXBfcmVzb3VyY2UoZGV2LCBtZW0pOw0KLS0gDQoyLjIxLjANCg==
 
-Thanks. Looks good.
-
-Reviewed-by: Ville Syrjälä <ville.syrjala@linux.intel.com>
-
->  			break;
->  		case INTEL_OUTPUT_DP_MST:
->  			used_mst_ports |=
-> diff --git a/drivers/gpu/drm/i915/intel_pm.c b/drivers/gpu/drm/i915/intel_pm.c
-> index bd2d30ecc030..17d8833787c4 100644
-> --- a/drivers/gpu/drm/i915/intel_pm.c
-> +++ b/drivers/gpu/drm/i915/intel_pm.c
-> @@ -469,9 +469,9 @@ static void vlv_get_fifo_size(struct intel_crtc_state *crtc_state)
->  	struct vlv_fifo_state *fifo_state = &crtc_state->wm.vlv.fifo_state;
->  	enum pipe pipe = crtc->pipe;
->  	int sprite0_start, sprite1_start;
-> +	u32 dsparb, dsparb2, dsparb3;
->  
->  	switch (pipe) {
-> -		u32 dsparb, dsparb2, dsparb3;
->  	case PIPE_A:
->  		dsparb = I915_READ(DSPARB);
->  		dsparb2 = I915_READ(DSPARB2);
-> @@ -1969,6 +1969,7 @@ static void vlv_atomic_update_fifo(struct intel_atomic_state *state,
->  	const struct vlv_fifo_state *fifo_state =
->  		&crtc_state->wm.vlv.fifo_state;
->  	int sprite0_start, sprite1_start, fifo_size;
-> +	u32 dsparb, dsparb2, dsparb3;
->  
->  	if (!crtc_state->fifo_changed)
->  		return;
-> @@ -1994,7 +1995,6 @@ static void vlv_atomic_update_fifo(struct intel_atomic_state *state,
->  	spin_lock(&uncore->lock);
->  
->  	switch (crtc->pipe) {
-> -		u32 dsparb, dsparb2, dsparb3;
->  	case PIPE_A:
->  		dsparb = intel_uncore_read_fw(uncore, DSPARB);
->  		dsparb2 = intel_uncore_read_fw(uncore, DSPARB2);
-> -- 
-> 2.20.1
-> 
-> 
-> -- 
-> Kees Cook
-> _______________________________________________
-> Intel-gfx mailing list
-> Intel-gfx@lists.freedesktop.org
-> https://lists.freedesktop.org/mailman/listinfo/intel-gfx
-
--- 
-Ville Syrjälä
-Intel
