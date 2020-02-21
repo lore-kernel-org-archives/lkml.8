@@ -8,131 +8,113 @@ X-Spam-Status: No, score=-5.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 429B9C35658
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 17:21:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2CFDEC35658
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 17:21:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 194A120722
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 17:21:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 00B79208E4
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 17:21:47 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="O2/SIg7l"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="YqUIX4hG"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728289AbgBURVA (ORCPT
+        id S1728356AbgBURVq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Feb 2020 12:21:00 -0500
-Received: from mail-yb1-f195.google.com ([209.85.219.195]:38904 "EHLO
-        mail-yb1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726198AbgBURU7 (ORCPT
+        Fri, 21 Feb 2020 12:21:46 -0500
+Received: from mail-lj1-f193.google.com ([209.85.208.193]:37308 "EHLO
+        mail-lj1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725957AbgBURVp (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Feb 2020 12:20:59 -0500
-Received: by mail-yb1-f195.google.com with SMTP id v12so1453069ybi.5;
-        Fri, 21 Feb 2020 09:20:59 -0800 (PST)
+        Fri, 21 Feb 2020 12:21:45 -0500
+Received: by mail-lj1-f193.google.com with SMTP id q23so2985355ljm.4;
+        Fri, 21 Feb 2020 09:21:44 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=subject:to:cc:references:from:message-id:date:user-agent
          :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=IWVlgYAJf77FUNFo3/GoZgBj7JaoEHC4YwQbTnJvbbc=;
-        b=O2/SIg7l0/i5PbP4X5bVieM9HRmU9hfDvouoosrMYOossZA4EyT5dE/t+LsWCQnUeW
-         8mZbom/4oUeT1QMZPE0a8M5re6u9/XxzZHyMJewYMwKs+nWJbv/G44pfNCzD7LfCYTZV
-         6APUhf3rXva0+NHi+1/eYjTGU20lXmjPgtz78XrJFxXMQgryVwsnrBSKoVLu2kDWBroJ
-         QuIkrlvMzqCc1ZCJmgjfPUHIOxBY7ILAZ6dbeCEdudlQ4BJ5J5gdsCVBbx0WtGtUx7Lq
-         gtyfLuRUIUcr8H626+8YYIea6ctJOItRgmfhfvnHUVcDICue1KP5iN33iwQQtxa965OT
-         gUHQ==
+        bh=CvuDNKeU+rm8KnyVI1BSRu9KN4IH3E88OS8OkYP5kyk=;
+        b=YqUIX4hGeh7FgBk8jDQIZ0IqyxE+MpJm0f9cyOc39FhuYRtHnOf9GvTJQie2n2+Xt+
+         1lthSU+yZyR+jNBoTe2Esi4/tI6j5dy1o0+B9EIxJb8rxv01bltfLkvyY6y4O7cPA+vb
+         Yy4auUM2+P0juteh25Q33Lja8fG3y6EGqlgeEK+rFYtPKV/q04Gd0h0AYns/13g85r3k
+         jGrPg/KBNITyA3VFZYENd/jBfj9bLZ6/GnFuY4u7v7TkNwLHYk3zSNGZHbiilg0ygUKo
+         AWa63MTdlXiO5Xmfzu3DoJ6BeWJSO8cOX5Z+RAyhGrX26Nz5jFOtCY5NugxWCA2bcLCQ
+         Z26A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:subject:to:cc:references:from:message-id:date
          :user-agent:mime-version:in-reply-to:content-language
          :content-transfer-encoding;
-        bh=IWVlgYAJf77FUNFo3/GoZgBj7JaoEHC4YwQbTnJvbbc=;
-        b=NpNT50LZT+kb0uFcgmKIuxBy1UaBnqoFta3A6PVfbTdAmTunj4TP863ntFaeUMO4G8
-         GU9DOOa7BHE9b0cTRSPxboiLRQAadfzAt6+O+QToIPdvv3PAUUtA4AMGrLtSoBa7feTZ
-         Z6Wvw91C5M1CGwRf7rbs+pb6lUqXcROpkDvmPhCzEygXJBuHaRWnglv9oO8bI0Pe+203
-         7Jaz+CXCChUg3+0OaznsaNNDPvgtHE41IAfiuTbzCUL0MEZsSQpIvPagcivgr6zfVdx4
-         NhJsCNrtqxAgKqF3tnTknPoDnl2cN0926zjxX7e05igxTbwSWS14LV5dwv5nw8uE4jZA
-         IitQ==
-X-Gm-Message-State: APjAAAWUstZrmnJ2rE9evyQpQv7IfevYdZOqReUkqKoB4abEt+ZG0rDx
-        myLjN1zuUBky6pUlbkLBJIs=
-X-Google-Smtp-Source: APXvYqyxmw+5hIn9x8XNU+OdTvUPMMG4/1DpfpgIXHun2JCbsH+bBhK1YGyWv6rE/4E1+7rg1kiVSg==
-X-Received: by 2002:a25:b9c8:: with SMTP id y8mr31348517ybj.369.1582305658699;
-        Fri, 21 Feb 2020 09:20:58 -0800 (PST)
-Received: from [192.168.1.46] (c-73-88-245-53.hsd1.tn.comcast.net. [73.88.245.53])
-        by smtp.gmail.com with ESMTPSA id s68sm1539521ywg.69.2020.02.21.09.20.57
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Fri, 21 Feb 2020 09:20:58 -0800 (PST)
-Subject: Re: [PATCH v2 1/2] gpio: of: Extract of_gpiochip_add_hog()
-To:     Linus Walleij <linus.walleij@linaro.org>,
-        Geert Uytterhoeven <geert+renesas@glider.be>,
-        Rob Herring <robh+dt@kernel.org>
-Cc:     Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Pantelis Antoniou <pantelis.antoniou@konsulko.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Peter Ujfalusi <peter.ujfalusi@ti.com>,
-        Chris Brandt <chris.brandt@renesas.com>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-References: <20200220130149.26283-1-geert+renesas@glider.be>
- <20200220130149.26283-2-geert+renesas@glider.be>
- <CACRpkdbgsR1n1qj3HmQWcEjeDdN85N1Mw8kLOUAeDjESW36MDg@mail.gmail.com>
- <d2b87102-fdf3-f22f-8477-5b2105d9583b@gmail.com>
-From:   Frank Rowand <frowand.list@gmail.com>
-Message-ID: <3d56743a-ffb2-4f26-dfb0-b8430f0a4583@gmail.com>
-Date:   Fri, 21 Feb 2020 11:20:57 -0600
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        bh=CvuDNKeU+rm8KnyVI1BSRu9KN4IH3E88OS8OkYP5kyk=;
+        b=fvMUzPNGj+2PPoZm0vnqtzE2GCZa1sc3UuJyin7aYUcJS4k0dSkSnddelX4Uz7Jihc
+         eBMtmXRB3AGvZihildxKxbqiCb1glUQSmGQ7Ska6Xw4lBO05VjhLjBvJ2Pq6ay0OOdwF
+         4reO0pJqRhegtTyLsMwhJH7TxrOc713+nRGS6oWHoC/OHfXVwwylzkV7dfd9VP+NLyL0
+         ndPFyXrkfcrOjEthqNn1Fq9pdCEtEzCgbJ/9zvYWUtbdnl3UNxvNX18mmHkYlC6jmsf+
+         JFo7Y6KrmpIXyQ3ZCPQEeDXlOZetNiMM1L4bRMnHTTXXSWu25UMAeXjt/F1yBGTwxKhi
+         yKCQ==
+X-Gm-Message-State: APjAAAWBCtzGF8ybpBkaetNfIVzXF33opN6XnCAif2FFhf1eOrRJ/0JD
+        fgvfyUS79rCIbCgmqPoDVSPTFdPw
+X-Google-Smtp-Source: APXvYqzXSlsPKgeqTvfnRB49wQ13cU988V03irwGQqoCiDEwv3LJdYl+Ah74AiBQ2RqzqGLZwL2Z2w==
+X-Received: by 2002:a2e:a361:: with SMTP id i1mr22254567ljn.29.1582305703125;
+        Fri, 21 Feb 2020 09:21:43 -0800 (PST)
+Received: from [192.168.2.145] (79-139-233-37.dynamic.spd-mgts.ru. [79.139.233.37])
+        by smtp.googlemail.com with ESMTPSA id b17sm1984588lfp.15.2020.02.21.09.21.41
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 21 Feb 2020 09:21:42 -0800 (PST)
+Subject: Re: [PATCH v9 05/17] ARM: tegra: Propagate error from
+ tegra_idle_lp2_last()
+To:     Daniel Lezcano <daniel.lezcano@linaro.org>
+Cc:     Thierry Reding <thierry.reding@gmail.com>,
+        Jonathan Hunter <jonathanh@nvidia.com>,
+        Peter De Schrijver <pdeschrijver@nvidia.com>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        =?UTF-8?B?TWljaGHFgiBNaXJvc8WCYXc=?= <mirq-linux@rere.qmqm.pl>,
+        Jasper Korten <jja2000@gmail.com>,
+        David Heidelberg <david@ixit.cz>,
+        Peter Geis <pgwipeout@gmail.com>, linux-pm@vger.kernel.org,
+        linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20200212235134.12638-1-digetx@gmail.com>
+ <20200212235134.12638-6-digetx@gmail.com> <20200221151612.GJ10516@linaro.org>
+From:   Dmitry Osipenko <digetx@gmail.com>
+Message-ID: <1a8c81ab-6f6a-8221-6a4e-c080ba595836@gmail.com>
+Date:   Fri, 21 Feb 2020 20:21:41 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.3.0
 MIME-Version: 1.0
-In-Reply-To: <d2b87102-fdf3-f22f-8477-5b2105d9583b@gmail.com>
+In-Reply-To: <20200221151612.GJ10516@linaro.org>
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2/21/20 11:18 AM, Frank Rowand wrote:
-> Hi Linus, Rob,
-> 
-> On 2/21/20 10:08 AM, Linus Walleij wrote:
->> On Thu, Feb 20, 2020 at 2:01 PM Geert Uytterhoeven
->> <geert+renesas@glider.be> wrote:
+21.02.2020 18:16, Daniel Lezcano пишет:
+> On Thu, Feb 13, 2020 at 02:51:22AM +0300, Dmitry Osipenko wrote:
+>> Technically cpu_suspend() may fail and it's never good to lose information
+>> about failure. For example things like cpuidle core could correctly sample
+>> idling time in the case of failure.
 >>
->>> Extract the code to add all GPIO hogs of a gpio-hog node into its own
->>> function, so it can be reused.
->>>
->>> Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
->>> ---
->>> v2:
->>>   - No changes.
->>
->> Patch applied with Frank's Review tag.
+>> Acked-by: Peter De Schrijver <pdeschrijver@nvidia.com>
+>> Tested-by: Peter Geis <pgwipeout@gmail.com>
+>> Tested-by: Jasper Korten <jja2000@gmail.com>
+>> Tested-by: David Heidelberg <david@ixit.cz>
+>> Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
+>> ---
 > 
-> I created a devicetree unittest to show the problem that Geert's patches
-> fix.
-
-I left out the link to my patch series:
-
-   https://lore.kernel.org/linux-devicetree/1582224021-12827-1-git-send-email-frowand.list@gmail.com/
-
-   [PATCH v2 0/2] of: unittest: add overlay gpio test to catch gpio hog problem
-
--Frank
-
+> [ ... ]
 > 
-> I would prefer to have my unittest patch series applied somewhere,
-> immediately followed by Geert's patch series.  This way, after
-> applying my series, a test fail is reported, then after Geert's
-> series is applied, the test fail becomes a test pass.
+>>  	cpu_cluster_pm_enter();
+>>  	suspend_cpu_complex();
+>>  
+>> -	cpu_suspend(PHYS_OFFSET - PAGE_OFFSET, &tegra_sleep_cpu);
+>> +	err = cpu_suspend(PHYS_OFFSET - PAGE_OFFSET, &tegra_sleep_cpu);
+>>  
+>>  	/*
+>>  	 * Resume L2 cache if it wasn't re-enabled early during resume,
+>> @@ -208,6 +210,8 @@ void tegra_idle_lp2_last(void)
+>>  
+>>  	restore_cpu_complex();
 > 
-> Can you coordinate with Rob to accept both series either via
-> your tree or Rob's tree?
-> 
-> -Frank
-> 
->>
->> Yours,
->> Linus Walleij
->>
-> 
+> If the cpu_suspend fails, does restore_cpu_complex() need to be called ?
 
+Yes, because suspend_cpu_complex() didn't fail. I don't see any reason
+why restore_cpu_complex() shouldn't be called, please clarify yours thought.
