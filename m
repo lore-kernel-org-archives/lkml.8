@@ -2,340 +2,279 @@ Return-Path: <SRS0=1210=4J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4D91EC11D24
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 03:16:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B01BEC11D00
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 03:20:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 219C7222C4
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 03:16:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7D40D20722
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 03:20:06 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="j8lnjXCI"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729750AbgBUDQn (ORCPT
+        id S1729638AbgBUDUF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Feb 2020 22:16:43 -0500
-Received: from mx2.suse.de ([195.135.220.15]:59654 "EHLO mx2.suse.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729721AbgBUDQk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Feb 2020 22:16:40 -0500
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx2.suse.de (Postfix) with ESMTP id 28A52ADA3;
-        Fri, 21 Feb 2020 03:16:37 +0000 (UTC)
-From:   Michal Rostecki <mrostecki@opensuse.org>
-To:     bpf@vger.kernel.org
-Cc:     Michal Rostecki <mrostecki@opensuse.org>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Martin KaFai Lau <kafai@fb.com>,
-        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
-        Andrii Nakryiko <andriin@fb.com>,
-        Quentin Monnet <quentin.monnet@netronome.com>,
-        Jakub Kicinski <kuba@kernel.org>, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Shuah Khan <shuah@kernel.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        Jesper Dangaard Brouer <hawk@kernel.org>,
-        John Fastabend <john.fastabend@gmail.com>,
-        linux-kselftest@vger.kernel.org (open list:KERNEL SELFTEST FRAMEWORK)
-Subject: [PATCH bpf-next v2 5/5] selftests/bpf: Add test for "bpftool feature" command
-Date:   Fri, 21 Feb 2020 04:17:00 +0100
-Message-Id: <20200221031702.25292-6-mrostecki@opensuse.org>
-X-Mailer: git-send-email 2.25.0
-In-Reply-To: <20200221031702.25292-1-mrostecki@opensuse.org>
-References: <20200221031702.25292-1-mrostecki@opensuse.org>
+        Thu, 20 Feb 2020 22:20:05 -0500
+Received: from hqnvemgate24.nvidia.com ([216.228.121.143]:19121 "EHLO
+        hqnvemgate24.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727488AbgBUDUF (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 20 Feb 2020 22:20:05 -0500
+Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate24.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5e4f4c170000>; Thu, 20 Feb 2020 19:18:47 -0800
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate101.nvidia.com (PGP Universal service);
+  Thu, 20 Feb 2020 19:20:00 -0800
+X-PGP-Universal: processed;
+        by hqpgpgate101.nvidia.com on Thu, 20 Feb 2020 19:20:00 -0800
+Received: from [10.110.48.28] (10.124.1.5) by HQMAIL107.nvidia.com
+ (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Fri, 21 Feb
+ 2020 03:19:58 +0000
+Subject: Re: [PATCH v7 09/24] mm: Put readahead pages in cache earlier
+To:     Matthew Wilcox <willy@infradead.org>,
+        <linux-fsdevel@vger.kernel.org>
+CC:     <linux-mm@kvack.org>, <linux-kernel@vger.kernel.org>,
+        <linux-btrfs@vger.kernel.org>, <linux-erofs@lists.ozlabs.org>,
+        <linux-ext4@vger.kernel.org>,
+        <linux-f2fs-devel@lists.sourceforge.net>,
+        <cluster-devel@redhat.com>, <ocfs2-devel@oss.oracle.com>,
+        <linux-xfs@vger.kernel.org>
+References: <20200219210103.32400-1-willy@infradead.org>
+ <20200219210103.32400-10-willy@infradead.org>
+X-Nvconfidentiality: public
+From:   John Hubbard <jhubbard@nvidia.com>
+Message-ID: <5691442b-56c7-7b0d-d91b-275be52abb42@nvidia.com>
+Date:   Thu, 20 Feb 2020 19:19:58 -0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.5.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200219210103.32400-10-willy@infradead.org>
+X-Originating-IP: [10.124.1.5]
+X-ClientProxiedBy: HQMAIL111.nvidia.com (172.20.187.18) To
+ HQMAIL107.nvidia.com (172.20.187.13)
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1582255127; bh=d9GO24BnJ9chVyb7bjDvehilb1nYQfQG1WbFa23HlCQ=;
+        h=X-PGP-Universal:Subject:To:CC:References:X-Nvconfidentiality:From:
+         Message-ID:Date:User-Agent:MIME-Version:In-Reply-To:
+         X-Originating-IP:X-ClientProxiedBy:Content-Type:Content-Language:
+         Content-Transfer-Encoding;
+        b=j8lnjXCIkqwMrXJaVVDslJxTWLAnUGO/CaWyqjQLudoTMm3i9Zx3OqJhlyB9Yyhq+
+         utkP6BZFbavm1AmbhdA+XFIXY5d3Kj33MMh1p8Uk0onLlle+ytW3uHn9sEhzomIheI
+         Se+a2E+KXmhwvFtDc9hHRwsk8PVOBI1/XGSQWpesFfsXpMZEAeJylOzpozmk9xhzFj
+         MZfu8A1bf4E5H4WCdDcjNC/yj/pHtBcxhV2Pb4lZVU17ufmzgkLLLQQ309cKct9ZkV
+         TVR///Pi86EMvWedrYrq49dcDa3rkvkyTy76J1dRBqQ1zbotcoI7AyAadLWkOyAg8u
+         OWp28i0wa/20A==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add Python module with tests for "bpftool feature" command, which mainly
-wheck whether the "full" option is working properly.
+On 2/19/20 1:00 PM, Matthew Wilcox wrote:
+> From: "Matthew Wilcox (Oracle)" <willy@infradead.org>
+> 
+> When populating the page cache for readahead, mappings that use
+> ->readpages must populate the page cache themselves as the pages are
+> passed on a linked list which would normally be used for the page cache's
+> LRU.  For mappings that use ->readpage or the upcoming ->readahead method,
+> we can put the pages into the page cache as soon as they're allocated,
+> which solves a race between readahead and direct IO.  It also lets us
+> remove the gfp argument from read_pages().
+> 
+> Use the new readahead_page() API to implement the repeated calls to
+> ->readpage(), just like most filesystems will.  This iterator also
+> supports huge pages, even though none of the filesystems have been
+> converted to use them yet.
+> 
+> Signed-off-by: Matthew Wilcox (Oracle) <willy@infradead.org>
+> ---
+>  include/linux/pagemap.h | 20 +++++++++++++++++
+>  mm/readahead.c          | 48 +++++++++++++++++++++++++----------------
+>  2 files changed, 49 insertions(+), 19 deletions(-)
+> 
+> diff --git a/include/linux/pagemap.h b/include/linux/pagemap.h
+> index 55fcea0249e6..4989d330fada 100644
+> --- a/include/linux/pagemap.h
+> +++ b/include/linux/pagemap.h
+> @@ -647,8 +647,28 @@ struct readahead_control {
+>  /* private: use the readahead_* accessors instead */
+>  	pgoff_t _index;
+>  	unsigned int _nr_pages;
+> +	unsigned int _batch_count;
+>  };
+>  
+> +static inline struct page *readahead_page(struct readahead_control *rac)
+> +{
+> +	struct page *page;
+> +
+> +	BUG_ON(rac->_batch_count > rac->_nr_pages);
+> +	rac->_nr_pages -= rac->_batch_count;
+> +	rac->_index += rac->_batch_count;
+> +	rac->_batch_count = 0;
 
-Signed-off-by: Michal Rostecki <mrostecki@opensuse.org>
----
- tools/testing/selftests/.gitignore          |   5 +-
- tools/testing/selftests/bpf/Makefile        |   3 +-
- tools/testing/selftests/bpf/test_bpftool.py | 228 ++++++++++++++++++++
- tools/testing/selftests/bpf/test_bpftool.sh |   5 +
- 4 files changed, 239 insertions(+), 2 deletions(-)
- create mode 100644 tools/testing/selftests/bpf/test_bpftool.py
- create mode 100755 tools/testing/selftests/bpf/test_bpftool.sh
 
-diff --git a/tools/testing/selftests/.gitignore b/tools/testing/selftests/.gitignore
-index 61df01cdf0b2..304fdf1a21dc 100644
---- a/tools/testing/selftests/.gitignore
-+++ b/tools/testing/selftests/.gitignore
-@@ -3,4 +3,7 @@ gpiogpio-hammer
- gpioinclude/
- gpiolsgpio
- tpm2/SpaceTest.log
--tpm2/*.pyc
-+
-+# Python bytecode and cache
-+__pycache__/
-+*.py[cod]
-diff --git a/tools/testing/selftests/bpf/Makefile b/tools/testing/selftests/bpf/Makefile
-index 257a1aaaa37d..e7d822259c50 100644
---- a/tools/testing/selftests/bpf/Makefile
-+++ b/tools/testing/selftests/bpf/Makefile
-@@ -62,7 +62,8 @@ TEST_PROGS := test_kmod.sh \
- 	test_tc_tunnel.sh \
- 	test_tc_edt.sh \
- 	test_xdping.sh \
--	test_bpftool_build.sh
-+	test_bpftool_build.sh \
-+	test_bpftool.sh
- 
- TEST_PROGS_EXTENDED := with_addr.sh \
- 	with_tunnels.sh \
-diff --git a/tools/testing/selftests/bpf/test_bpftool.py b/tools/testing/selftests/bpf/test_bpftool.py
-new file mode 100644
-index 000000000000..7f545feaec98
---- /dev/null
-+++ b/tools/testing/selftests/bpf/test_bpftool.py
-@@ -0,0 +1,228 @@
-+# Copyright (c) 2020 SUSE LLC.
-+#
-+# This software is licensed under the GNU General License Version 2,
-+# June 1991 as shown in the file COPYING in the top-level directory of this
-+# source tree.
-+#
-+# THE COPYRIGHT HOLDERS AND/OR OTHER PARTIES PROVIDE THE PROGRAM "AS IS"
-+# WITHOUT WARRANTY OF ANY KIND, EITHER EXPRESSED OR IMPLIED, INCLUDING,
-+# BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS
-+# FOR A PARTICULAR PURPOSE. THE ENTIRE RISK AS TO THE QUALITY AND PERFORMANCE
-+# OF THE PROGRAM IS WITH YOU. SHOULD THE PROGRAM PROVE DEFECTIVE, YOU ASSUME
-+# THE COST OF ALL NECESSARY SERVICING, REPAIR OR CORRECTION.
-+
-+import collections
-+import functools
-+import json
-+import os
-+import socket
-+import subprocess
-+import unittest
-+
-+
-+# Add the source tree of bpftool and /usr/local/sbin to PATH
-+cur_dir = os.path.dirname(os.path.realpath(__file__))
-+bpftool_dir = os.path.abspath(os.path.join(cur_dir, "..", "..", "..", "..",
-+                                           "tools", "bpf", "bpftool"))
-+os.environ["PATH"] = bpftool_dir + ":/usr/local/sbin:" + os.environ["PATH"]
-+
-+# Probe sections
-+SECTION_SYSTEM_CONFIG_PATTERN = b"Scanning system configuration..."
-+SECTION_SYSCALL_CONFIG_PATTERN = b"Scanning system call availability..."
-+SECTION_PROGRAM_TYPES_PATTERN = b"Scanning eBPF program types..."
-+SECTION_MAP_TYPES_PATTERN = b"Scanning eBPF map types..."
-+SECTION_HELPERS_PATTERN = b"Scanning eBPF helper functions..."
-+SECTION_MISC_PATTERN = b"Scanning miscellaneous eBPF features..."
-+
-+
-+class IfaceNotFoundError(Exception):
-+    pass
-+
-+
-+class UnprivilegedUserError(Exception):
-+    pass
-+
-+
-+def _bpftool(args, json=True):
-+    _args = ["bpftool"]
-+    if json:
-+        _args.append("-j")
-+    _args.extend(args)
-+
-+    res = subprocess.run(_args, capture_output=True)
-+    return res.stdout
-+
-+
-+def bpftool(args):
-+    return _bpftool(args, json=False)
-+
-+
-+def bpftool_json(args):
-+    res = _bpftool(args)
-+    return json.loads(res)
-+
-+
-+def get_default_iface():
-+    for iface in socket.if_nameindex():
-+        if iface[1] != "lo":
-+            return iface[1]
-+    raise IfaceNotFoundError("Could not find any network interface to probe")
-+
-+
-+def default_iface(f):
-+    @functools.wraps(f)
-+    def wrapper(*args, **kwargs):
-+        iface = get_default_iface()
-+        return f(*args, iface, **kwargs)
-+    return wrapper
-+
-+
-+class TestBpftool(unittest.TestCase):
-+    @classmethod
-+    def setUpClass(cls):
-+        if os.getuid() != 0:
-+            raise UnprivilegedUserError("This test suite eeeds root privileges")
-+
-+    def _assert_pattern_not_in_dict(self, dct, pattern, check_keys=False):
-+        """Check if all string values inside dictionary do not containe the
-+        given pattern.
-+        """
-+        for key, value in dct.items():
-+            if check_keys:
-+                self.assertNotIn(pattern, key)
-+            if isinstance(value, dict):
-+                self._assert_pattern_not_in_dict(value, pattern,
-+                                                 check_keys=True)
-+            elif isinstance(value, str):
-+                self.assertNotIn(pattern, value)
-+
-+    @default_iface
-+    def test_feature_dev(self, iface):
-+        expected_patterns = [
-+            SECTION_SYSCALL_CONFIG_PATTERN,
-+            SECTION_PROGRAM_TYPES_PATTERN,
-+            SECTION_MAP_TYPES_PATTERN,
-+            SECTION_HELPERS_PATTERN,
-+            SECTION_MISC_PATTERN,
-+        ]
-+        unexpected_patterns = [
-+            b"bpf_trace_printk",
-+            b"bpf_probe_write_user",
-+        ]
-+
-+        res = bpftool(["feature", "probe", "dev", iface])
-+        for pattern in expected_patterns:
-+            self.assertIn(pattern, res)
-+        for pattern in unexpected_patterns:
-+            self.assertNotIn(pattern, res)
-+
-+    @default_iface
-+    def test_feature_dev_json(self, iface):
-+        expected_keys = [
-+            "syscall_config",
-+            "program_types",
-+            "map_types",
-+            "helpers",
-+            "misc",
-+        ]
-+        unexpected_values = [
-+            "bpf_trace_printk",
-+            "bpf_probe_write_user",
-+        ]
-+
-+        res = bpftool_json(["feature", "probe", "dev", iface])
-+        self.assertCountEqual(res.keys(), expected_keys)
-+        for value in unexpected_values:
-+            self._assert_pattern_not_in_dict(res, value)
-+
-+    def test_feature_kernel(self):
-+        expected_patterns = [
-+            SECTION_SYSTEM_CONFIG_PATTERN,
-+            SECTION_SYSCALL_CONFIG_PATTERN,
-+            SECTION_PROGRAM_TYPES_PATTERN,
-+            SECTION_MAP_TYPES_PATTERN,
-+            SECTION_HELPERS_PATTERN,
-+            SECTION_MISC_PATTERN,
-+        ]
-+        unexpected_patterns = [
-+            b"bpf_trace_printk",
-+            b"bpf_probe_write_user",
-+        ]
-+
-+        res_default1 = bpftool(["feature"])
-+        res_default2 = bpftool(["feature", "probe"])
-+        res = bpftool(["feature", "probe", "kernel"])
-+
-+        for pattern in expected_patterns:
-+            self.assertIn(pattern, res_default1)
-+            self.assertIn(pattern, res_default2)
-+            self.assertIn(pattern, res)
-+        for pattern in unexpected_patterns:
-+            self.assertNotIn(pattern, res_default1)
-+            self.assertNotIn(pattern, res_default2)
-+            self.assertNotIn(pattern, res)
-+
-+    def test_feature_kernel_full(self):
-+        expected_patterns = [
-+            SECTION_SYSTEM_CONFIG_PATTERN,
-+            SECTION_SYSCALL_CONFIG_PATTERN,
-+            SECTION_PROGRAM_TYPES_PATTERN,
-+            SECTION_MAP_TYPES_PATTERN,
-+            SECTION_HELPERS_PATTERN,
-+            SECTION_MISC_PATTERN,
-+            b"bpf_trace_printk",
-+            b"bpf_probe_write_user",
-+        ]
-+
-+        res_default = bpftool(["feature", "probe", "full"])
-+        res = bpftool(["feature", "probe", "kernel", "full"])
-+
-+        for pattern in expected_patterns:
-+            self.assertIn(pattern, res_default)
-+            self.assertIn(pattern, res)
-+
-+    def test_feature_kernel_json(self):
-+        expected_keys = [
-+            "system_config",
-+            "syscall_config",
-+            "program_types",
-+            "map_types",
-+            "helpers",
-+            "misc",
-+        ]
-+        unexpected_values = [
-+            "bpf_trace_printk",
-+            "bpf_probe_write_user",
-+        ]
-+
-+        res_default1 = bpftool_json(["feature"])
-+        self.assertCountEqual(res_default1.keys(), expected_keys)
-+        for value in unexpected_values:
-+            self._assert_pattern_not_in_dict(res_default1, value)
-+
-+        res_default2 = bpftool_json(["feature", "probe"])
-+        self.assertCountEqual(res_default2.keys(), expected_keys)
-+        for value in unexpected_values:
-+            self._assert_pattern_not_in_dict(res_default2, value)
-+
-+        res = bpftool_json(["feature", "probe", "kernel"])
-+        self.assertCountEqual(res.keys(), expected_keys)
-+        for value in unexpected_values:
-+            self._assert_pattern_not_in_dict(res, value)
-+
-+    def test_feature_macros(self):
-+        expected_patterns = [
-+            b"/\*\*\* System call availability \*\*\*/",
-+            b"#define HAVE_BPF_SYSCALL",
-+            b"/\*\*\* eBPF program types \*\*\*/",
-+            b"#define HAVE.*PROG_TYPE",
-+            b"/\*\*\* eBPF map types \*\*\*/",
-+            b"#define HAVE.*MAP_TYPE",
-+            b"/\*\*\* eBPF helper functions \*\*\*/",
-+            b"#define HAVE.*HELPER",
-+            b"/\*\*\* eBPF misc features \*\*\*/",
-+        ]
-+
-+        res = bpftool(["feature", "probe", "macros"])
-+        for pattern in expected_patterns:
-+            self.assertRegex(res, pattern)
-diff --git a/tools/testing/selftests/bpf/test_bpftool.sh b/tools/testing/selftests/bpf/test_bpftool.sh
-new file mode 100755
-index 000000000000..66690778e36d
---- /dev/null
-+++ b/tools/testing/selftests/bpf/test_bpftool.sh
-@@ -0,0 +1,5 @@
-+#!/bin/bash
-+# SPDX-License-Identifier: GPL-2.0
-+# Copyright (c) 2020 SUSE LLC.
-+
-+python3 -m unittest -v test_bpftool.TestBpftool
+Is it intentional, to set rac->_batch_count twice (here, and below)? The
+only reason I can see is if a caller needs to use ->_batch_count in the
+"return NULL" case, which doesn't seem to come up...
+
+
+> +
+> +	if (!rac->_nr_pages)
+> +		return NULL;
+> +
+> +	page = xa_load(&rac->mapping->i_pages, rac->_index);
+> +	VM_BUG_ON_PAGE(!PageLocked(page), page);
+> +	rac->_batch_count = hpage_nr_pages(page);
+> +
+> +	return page;
+> +}
+> +
+>  /* The number of pages in this readahead block */
+>  static inline unsigned int readahead_count(struct readahead_control *rac)
+>  {
+> diff --git a/mm/readahead.c b/mm/readahead.c
+> index 83df5c061d33..aaa209559ba2 100644
+> --- a/mm/readahead.c
+> +++ b/mm/readahead.c
+> @@ -113,15 +113,14 @@ int read_cache_pages(struct address_space *mapping, struct list_head *pages,
+>  
+>  EXPORT_SYMBOL(read_cache_pages);
+>  
+> -static void read_pages(struct readahead_control *rac, struct list_head *pages,
+> -		gfp_t gfp)
+> +static void read_pages(struct readahead_control *rac, struct list_head *pages)
+>  {
+>  	const struct address_space_operations *aops = rac->mapping->a_ops;
+> +	struct page *page;
+>  	struct blk_plug plug;
+> -	unsigned page_idx;
+>  
+>  	if (!readahead_count(rac))
+> -		return;
+> +		goto out;
+>  
+>  	blk_start_plug(&plug);
+>  
+> @@ -130,23 +129,23 @@ static void read_pages(struct readahead_control *rac, struct list_head *pages,
+>  				readahead_count(rac));
+>  		/* Clean up the remaining pages */
+>  		put_pages_list(pages);
+> -		goto out;
+> -	}
+> -
+> -	for (page_idx = 0; page_idx < readahead_count(rac); page_idx++) {
+> -		struct page *page = lru_to_page(pages);
+> -		list_del(&page->lru);
+> -		if (!add_to_page_cache_lru(page, rac->mapping, page->index,
+> -				gfp))
+> +		rac->_index += rac->_nr_pages;
+> +		rac->_nr_pages = 0;
+> +	} else {
+> +		while ((page = readahead_page(rac))) {
+>  			aops->readpage(rac->file, page);
+> -		put_page(page);
+> +			put_page(page);
+> +		}
+>  	}
+>  
+> -out:
+>  	blk_finish_plug(&plug);
+>  
+>  	BUG_ON(!list_empty(pages));
+> -	rac->_nr_pages = 0;
+> +	BUG_ON(readahead_count(rac));
+> +
+> +out:
+> +	/* If we were called due to a conflicting page, skip over it */
+
+
+Tiny documentation nit: What if we were *not* called due to a conflicting page? 
+(And what is a "conflicting page", in this context, btw?) The next line unconditionally 
+moves the index ahead, so the "if" part of the comment really confuses me.
+
+
+> +	rac->_index++;
+>  }
+>  
+>  /*
+> @@ -165,9 +164,11 @@ void __do_page_cache_readahead(struct address_space *mapping,
+>  	LIST_HEAD(page_pool);
+>  	loff_t isize = i_size_read(inode);
+>  	gfp_t gfp_mask = readahead_gfp_mask(mapping);
+> +	bool use_list = mapping->a_ops->readpages;
+>  	struct readahead_control rac = {
+>  		.mapping = mapping,
+>  		.file = filp,
+> +		._index = index,
+>  		._nr_pages = 0,
+>  	};
+>  	unsigned long i;
+> @@ -184,6 +185,8 @@ void __do_page_cache_readahead(struct address_space *mapping,
+>  		if (index + i > end_index)
+>  			break;
+>  
+> +		BUG_ON(index + i != rac._index + rac._nr_pages);
+> +
+>  		page = xa_load(&mapping->i_pages, index + i);
+>  		if (page && !xa_is_value(page)) {
+>  			/*
+> @@ -191,15 +194,22 @@ void __do_page_cache_readahead(struct address_space *mapping,
+>  			 * contiguous pages before continuing with the next
+>  			 * batch.
+>  			 */
+> -			read_pages(&rac, &page_pool, gfp_mask);
+> +			read_pages(&rac, &page_pool);
+>  			continue;
+>  		}
+>  
+>  		page = __page_cache_alloc(gfp_mask);
+>  		if (!page)
+>  			break;
+> -		page->index = index + i;
+> -		list_add(&page->lru, &page_pool);
+> +		if (use_list) {
+> +			page->index = index + i;
+> +			list_add(&page->lru, &page_pool);
+> +		} else if (add_to_page_cache_lru(page, mapping, index + i,
+> +					gfp_mask) < 0) {
+
+
+I still think you'll want to compare against !=0, rather than < 0, here.
+
+
+> +			put_page(page);
+> +			read_pages(&rac, &page_pool);
+
+
+Doing a read_pages() in the error case is because...actually, I'm not sure yet.
+Why do we do this? Effectively it's a retry?
+
+
+> +			continue;
+> +		}
+>  		if (i == nr_to_read - lookahead_size)
+>  			SetPageReadahead(page);
+>  		rac._nr_pages++;
+> @@ -210,7 +220,7 @@ void __do_page_cache_readahead(struct address_space *mapping,
+>  	 * uptodate then the caller will launch readpage again, and
+>  	 * will then handle the error.
+>  	 */
+> -	read_pages(&rac, &page_pool, gfp_mask);
+> +	read_pages(&rac, &page_pool);
+>  }
+>  
+>  /*
+> 
+
+Didn't spot any actual errors, just mainly my own questions here. :)
+
+
+thanks,
 -- 
-2.25.0
-
+John Hubbard
+NVIDIA
