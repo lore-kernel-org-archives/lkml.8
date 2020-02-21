@@ -5,49 +5,53 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 44FFDC35641
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 08:06:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 88121C35642
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 08:06:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1BF3620578
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 08:06:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5228B24656
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 08:06:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582272374;
-	bh=D6q+W0uw71RZQXApkieYo4qW7HwpywQhRGI3KCCb+3o=;
+	s=default; t=1582272378;
+	bh=kJWdcJPvZE287SU5CAesXG1gRxh01xitM8yvtMiSSGw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=r304Hixk21v2Imj522Tlqp01IO0ABcFsrPtanHr2jBlaq4vD/TqbdmQKYsT+1k6oB
-	 Wh8pyITvNew1lS5xaRz7G9FA8plJnI8TneXlggqZ7iRtUUPYfajzBFA6lMerKfxXwR
-	 GYIRVwhjSCOh3wm5l3R3Hi1nBsNTv+4qtCuKGCVM=
+	b=XwARLo3Mwz75E7vAXdRepKXTS1kZnmoFQYP33kVFrPNefUQ1eo9TDqXtDmQAvq45U
+	 QMrGwEb2ZSrui9m//3FOf4oagepeduzu/E+7fVOyZ49Ij28z9RFWCa+aLgyE55/Bdr
+	 WH67v1qUwP3uJhjuFUNpHeMWJHlgRf7SbMDy0RfQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731920AbgBUIGM (ORCPT
+        id S1731925AbgBUIGQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Feb 2020 03:06:12 -0500
-Received: from mail.kernel.org ([198.145.29.99]:39654 "EHLO mail.kernel.org"
+        Fri, 21 Feb 2020 03:06:16 -0500
+Received: from mail.kernel.org ([198.145.29.99]:39816 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731531AbgBUIGC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Feb 2020 03:06:02 -0500
+        id S1731910AbgBUIGJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 21 Feb 2020 03:06:09 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id ED1D620801;
-        Fri, 21 Feb 2020 08:05:59 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 255AA20578;
+        Fri, 21 Feb 2020 08:06:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1582272360;
-        bh=D6q+W0uw71RZQXApkieYo4qW7HwpywQhRGI3KCCb+3o=;
+        s=default; t=1582272368;
+        bh=kJWdcJPvZE287SU5CAesXG1gRxh01xitM8yvtMiSSGw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Tb+XovJ/3e1pSDY8em0G8teI660cC8UzQVAeqWwDrHznVcSPMFqmZkr4A8K07nT8b
-         SgYBhX7dOY1SPVckjAokfupJOzlwPZPKUsRaYZDU+bAt3X804Da3bbbkf9X+L2xnqI
-         of1mYFDPw0E/oY+USYzmWSZIV+zYc/HRhGRcbx3A=
+        b=BAG/iDVdjqS1YCwK53rjEKDE3Z/Yr0/JBYS4wiKF1df39XEBB0UUQ5okFmAGZd+yZ
+         q0t+miFpOZ500hjMSUgwYwb5nZJBcgrFwNgMbxkbC8fovA6PsA1+CtZ455rLqIg377
+         SDrPFHznmO1l9WL1JCG9oPO5m6lfmVYHBw/SEjD4=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Abel Vesa <abel.vesa@nxp.com>,
+        stable@vger.kernel.org, Chris Healy <cphealy@gmail.com>,
+        Lucas Stach <l.stach@pengutronix.de>,
+        Andrey Smirnov <andrew.smirnov@gmail.com>,
         Shawn Guo <shawnguo@kernel.org>,
+        Fabio Estevam <festevam@gmail.com>,
+        linux-arm-kernel@lists.infradead.org,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 114/344] clk: imx: Add correct failure handling for clk based helpers
-Date:   Fri, 21 Feb 2020 08:38:33 +0100
-Message-Id: <20200221072359.249701774@linuxfoundation.org>
+Subject: [PATCH 5.4 117/344] ARM: dts: imx6: rdu2: Limit USBH1 to Full Speed
+Date:   Fri, 21 Feb 2020 08:38:36 +0100
+Message-Id: <20200221072359.524645578@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200221072349.335551332@linuxfoundation.org>
 References: <20200221072349.335551332@linuxfoundation.org>
@@ -60,107 +64,41 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Abel Vesa <abel.vesa@nxp.com>
+From: Andrey Smirnov <andrew.smirnov@gmail.com>
 
-[ Upstream commit f60f1c62c3188fcca945581e35e3440ee3fdcc95 ]
+[ Upstream commit 6bb1e09c4c375db29770444f689f35f5cbe696bc ]
 
-If the clk_hw based API returns an error, trying to return the clk from
-hw will end up in a NULL pointer dereference. So adding the to_clk
-checker and using it inside every clk based macro helper we handle that
-case correctly.
+Cabling used to connect devices to USBH1 on RDU2 does not meet USB
+spec cable quality and cable length requirements to operate at High
+Speed, so limit the port to Full Speed only.
 
-This to_clk is also temporary and will go away along with the clk based
-macro helpers once there is no user that need them anymore.
-
-Signed-off-by: Abel Vesa <abel.vesa@nxp.com>
+Reported-by: Chris Healy <cphealy@gmail.com>
+Reviewed-by: Chris Healy <cphealy@gmail.com>
+Reviewed-by: Lucas Stach <l.stach@pengutronix.de>
+Signed-off-by: Andrey Smirnov <andrew.smirnov@gmail.com>
+Cc: Shawn Guo <shawnguo@kernel.org>
+Cc: Fabio Estevam <festevam@gmail.com>
+Cc: Lucas Stach <l.stach@pengutronix.de>
+Cc: linux-arm-kernel@lists.infradead.org
+Cc: linux-kernel@vger.kernel.org
 Signed-off-by: Shawn Guo <shawnguo@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/clk/imx/clk.h | 37 ++++++++++++++++++++++---------------
- 1 file changed, 22 insertions(+), 15 deletions(-)
+ arch/arm/boot/dts/imx6qdl-zii-rdu2.dtsi | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/drivers/clk/imx/clk.h b/drivers/clk/imx/clk.h
-index f7a389a50401a..6fe64ff8ffa12 100644
---- a/drivers/clk/imx/clk.h
-+++ b/drivers/clk/imx/clk.h
-@@ -51,48 +51,48 @@ struct imx_pll14xx_clk {
+diff --git a/arch/arm/boot/dts/imx6qdl-zii-rdu2.dtsi b/arch/arm/boot/dts/imx6qdl-zii-rdu2.dtsi
+index 7b5c0e9b0fcff..a66c4fac6baf0 100644
+--- a/arch/arm/boot/dts/imx6qdl-zii-rdu2.dtsi
++++ b/arch/arm/boot/dts/imx6qdl-zii-rdu2.dtsi
+@@ -774,6 +774,7 @@
+ &usbh1 {
+ 	vbus-supply = <&reg_5p0v_main>;
+ 	disable-over-current;
++	maximum-speed = "full-speed";
+ 	status = "okay";
  };
  
- #define imx_clk_cpu(name, parent_name, div, mux, pll, step) \
--	imx_clk_hw_cpu(name, parent_name, div, mux, pll, step)->clk
-+	to_clk(imx_clk_hw_cpu(name, parent_name, div, mux, pll, step))
- 
- #define clk_register_gate2(dev, name, parent_name, flags, reg, bit_idx, \
- 				cgr_val, clk_gate_flags, lock, share_count) \
--	clk_hw_register_gate2(dev, name, parent_name, flags, reg, bit_idx, \
--				cgr_val, clk_gate_flags, lock, share_count)->clk
-+	to_clk(clk_hw_register_gate2(dev, name, parent_name, flags, reg, bit_idx, \
-+				cgr_val, clk_gate_flags, lock, share_count))
- 
- #define imx_clk_pllv3(type, name, parent_name, base, div_mask) \
--	imx_clk_hw_pllv3(type, name, parent_name, base, div_mask)->clk
-+	to_clk(imx_clk_hw_pllv3(type, name, parent_name, base, div_mask))
- 
- #define imx_clk_pfd(name, parent_name, reg, idx) \
--	imx_clk_hw_pfd(name, parent_name, reg, idx)->clk
-+	to_clk(imx_clk_hw_pfd(name, parent_name, reg, idx))
- 
- #define imx_clk_gate_exclusive(name, parent, reg, shift, exclusive_mask) \
--	imx_clk_hw_gate_exclusive(name, parent, reg, shift, exclusive_mask)->clk
-+	to_clk(imx_clk_hw_gate_exclusive(name, parent, reg, shift, exclusive_mask))
- 
- #define imx_clk_fixed_factor(name, parent, mult, div) \
--	imx_clk_hw_fixed_factor(name, parent, mult, div)->clk
-+	to_clk(imx_clk_hw_fixed_factor(name, parent, mult, div))
- 
- #define imx_clk_divider2(name, parent, reg, shift, width) \
--	imx_clk_hw_divider2(name, parent, reg, shift, width)->clk
-+	to_clk(imx_clk_hw_divider2(name, parent, reg, shift, width))
- 
- #define imx_clk_gate_dis(name, parent, reg, shift) \
--	imx_clk_hw_gate_dis(name, parent, reg, shift)->clk
-+	to_clk(imx_clk_hw_gate_dis(name, parent, reg, shift))
- 
- #define imx_clk_gate2(name, parent, reg, shift) \
--	imx_clk_hw_gate2(name, parent, reg, shift)->clk
-+	to_clk(imx_clk_hw_gate2(name, parent, reg, shift))
- 
- #define imx_clk_gate2_flags(name, parent, reg, shift, flags) \
--	imx_clk_hw_gate2_flags(name, parent, reg, shift, flags)->clk
-+	to_clk(imx_clk_hw_gate2_flags(name, parent, reg, shift, flags))
- 
- #define imx_clk_gate2_shared2(name, parent, reg, shift, share_count) \
--	imx_clk_hw_gate2_shared2(name, parent, reg, shift, share_count)->clk
-+	to_clk(imx_clk_hw_gate2_shared2(name, parent, reg, shift, share_count))
- 
- #define imx_clk_gate3(name, parent, reg, shift) \
--	imx_clk_hw_gate3(name, parent, reg, shift)->clk
-+	to_clk(imx_clk_hw_gate3(name, parent, reg, shift))
- 
- #define imx_clk_gate4(name, parent, reg, shift) \
--	imx_clk_hw_gate4(name, parent, reg, shift)->clk
-+	to_clk(imx_clk_hw_gate4(name, parent, reg, shift))
- 
- #define imx_clk_mux(name, reg, shift, width, parents, num_parents) \
--	imx_clk_hw_mux(name, reg, shift, width, parents, num_parents)->clk
-+	to_clk(imx_clk_hw_mux(name, reg, shift, width, parents, num_parents))
- 
- struct clk *imx_clk_pll14xx(const char *name, const char *parent_name,
- 		 void __iomem *base, const struct imx_pll14xx_clk *pll_clk);
-@@ -195,6 +195,13 @@ struct clk_hw *imx_clk_hw_fixup_mux(const char *name, void __iomem *reg,
- 			      u8 shift, u8 width, const char * const *parents,
- 			      int num_parents, void (*fixup)(u32 *val));
- 
-+static inline struct clk *to_clk(struct clk_hw *hw)
-+{
-+	if (IS_ERR_OR_NULL(hw))
-+		return ERR_CAST(hw);
-+	return hw->clk;
-+}
-+
- static inline struct clk *imx_clk_fixed(const char *name, int rate)
- {
- 	return clk_register_fixed_rate(NULL, name, NULL, 0, rate);
 -- 
 2.20.1
 
