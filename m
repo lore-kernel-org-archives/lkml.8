@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 81321C35640
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 07:56:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2E56CC35641
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 07:56:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 57B43222C4
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 07:56:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EB46B20578
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 07:56:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582271816;
-	bh=tKutHQzqUEtlGwZgT4t3m5DF0mw5khkEEf3otkXuA88=;
+	s=default; t=1582271819;
+	bh=pLqWsJQGIs+4qcANymREjBjxFeOyl45gGvkYi5cjcRw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=XzQ9VeiUmIvWJXtPD8o6q3D1UxMgIa12opYuV2GFMdHm2kvJgQ5C+WRmeft2qseYb
-	 YYsEJPBiRVIDdVEX0X/fo35kCfsfBRs/Pl4BRcXURb57cOPmWnaEX7at+L+6iqwy3J
-	 S7NMwktYupFdqH9L/UeNF2b8uV+OKJLDKDHue2vQ=
+	b=NVeBCjZnP4X75L5Ri0TintcxIzL7Zf8cRXNFY92xnxinTpqcfRQQccLLbvDSmjrHm
+	 1qokHbaBeDEumADK6fZK9yX9+IzyRYqdmCB57IrGSsO6ChjnYHtEOvJ3y3W/GRXQZw
+	 GTUvMyJ3iqpNThtL6bmVD8H7268++Hy49hYSOdPc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730541AbgBUH4x (ORCPT
+        id S1730377AbgBUH46 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Feb 2020 02:56:53 -0500
-Received: from mail.kernel.org ([198.145.29.99]:56274 "EHLO mail.kernel.org"
+        Fri, 21 Feb 2020 02:56:58 -0500
+Received: from mail.kernel.org ([198.145.29.99]:56356 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730525AbgBUH4t (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Feb 2020 02:56:49 -0500
+        id S1730544AbgBUH4y (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 21 Feb 2020 02:56:54 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7025D2073A;
-        Fri, 21 Feb 2020 07:56:48 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6C6AD2073A;
+        Fri, 21 Feb 2020 07:56:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1582271808;
-        bh=tKutHQzqUEtlGwZgT4t3m5DF0mw5khkEEf3otkXuA88=;
+        s=default; t=1582271813;
+        bh=pLqWsJQGIs+4qcANymREjBjxFeOyl45gGvkYi5cjcRw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=QwVNwUPOgdAA/zZZdXpympait/nwWTANyMzcd5JewEoOE7xxQUc1LSnpB2bqp0+dS
-         eZ+nbMpaHuhk4vxxmQZ3cEBLbEC0lFMICFjGa6dl23AnVUelTw+mCNCh8I4EyHqoH1
-         tblN6EWlVlPBDFlz1jCAKH2Z+0OqQfpXvXEUWrmQ=
+        b=AINJ/UtRWxSLPePLTtyCCPfzQ31LXJLjlF1rxPr3JfwYKzGmyv6x9vMWBHY2AGG5C
+         sHeEQaSEVn7PJwuqFdknXj57HGsZ9Aw8IfNciyKR+YfUBWG6sViqCIviNzIq/oEjQW
+         YU5rqDGqREoulE9YTGFBViXe+bBU1SCsUIfOadrA=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Dan Carpenter <dan.carpenter@oracle.com>,
-        "David S. Miller" <davem@davemloft.net>,
+        stable@vger.kernel.org, Johannes Thumshirn <jth@kernel.org>,
+        David Sterba <dsterba@suse.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.5 305/399] ide: serverworks: potential overflow in svwks_set_pio_mode()
-Date:   Fri, 21 Feb 2020 08:40:30 +0100
-Message-Id: <20200221072431.285761712@linuxfoundation.org>
+Subject: [PATCH 5.5 307/399] btrfs: fix possible NULL-pointer dereference in integrity checks
+Date:   Fri, 21 Feb 2020 08:40:32 +0100
+Message-Id: <20200221072431.450470792@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200221072402.315346745@linuxfoundation.org>
 References: <20200221072402.315346745@linuxfoundation.org>
@@ -60,43 +60,49 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Dan Carpenter <dan.carpenter@oracle.com>
+From: Johannes Thumshirn <jth@kernel.org>
 
-[ Upstream commit ce1f31b4c0b9551dd51874dd5364654ed4ca13ae ]
+[ Upstream commit 3dbd351df42109902fbcebf27104149226a4fcd9 ]
 
-The "drive->dn" variable is a u8 controlled by root.
+A user reports a possible NULL-pointer dereference in
+btrfsic_process_superblock(). We are assigning state->fs_info to a local
+fs_info variable and afterwards checking for the presence of state.
 
-Signed-off-by: Dan Carpenter <dan.carpenter@oracle.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+While we would BUG_ON() a NULL state anyways, we can also just remove
+the local fs_info copy, as fs_info is only used once as the first
+argument for btrfs_num_copies(). There we can just pass in
+state->fs_info as well.
+
+Bugzilla: https://bugzilla.kernel.org/show_bug.cgi?id=205003
+Signed-off-by: Johannes Thumshirn <jth@kernel.org>
+Reviewed-by: David Sterba <dsterba@suse.com>
+Signed-off-by: David Sterba <dsterba@suse.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/ide/serverworks.c | 6 ++++++
- 1 file changed, 6 insertions(+)
+ fs/btrfs/check-integrity.c | 3 +--
+ 1 file changed, 1 insertion(+), 2 deletions(-)
 
-diff --git a/drivers/ide/serverworks.c b/drivers/ide/serverworks.c
-index ac6fc3fffa0de..458e72e034b09 100644
---- a/drivers/ide/serverworks.c
-+++ b/drivers/ide/serverworks.c
-@@ -115,6 +115,9 @@ static void svwks_set_pio_mode(ide_hwif_t *hwif, ide_drive_t *drive)
- 	struct pci_dev *dev = to_pci_dev(hwif->dev);
- 	const u8 pio = drive->pio_mode - XFER_PIO_0;
+diff --git a/fs/btrfs/check-integrity.c b/fs/btrfs/check-integrity.c
+index 0b52ab4cb9649..72c70f59fc605 100644
+--- a/fs/btrfs/check-integrity.c
++++ b/fs/btrfs/check-integrity.c
+@@ -629,7 +629,6 @@ static struct btrfsic_dev_state *btrfsic_dev_state_hashtable_lookup(dev_t dev,
+ static int btrfsic_process_superblock(struct btrfsic_state *state,
+ 				      struct btrfs_fs_devices *fs_devices)
+ {
+-	struct btrfs_fs_info *fs_info = state->fs_info;
+ 	struct btrfs_super_block *selected_super;
+ 	struct list_head *dev_head = &fs_devices->devices;
+ 	struct btrfs_device *device;
+@@ -700,7 +699,7 @@ static int btrfsic_process_superblock(struct btrfsic_state *state,
+ 			break;
+ 		}
  
-+	if (drive->dn >= ARRAY_SIZE(drive_pci))
-+		return;
-+
- 	pci_write_config_byte(dev, drive_pci[drive->dn], pio_modes[pio]);
- 
- 	if (svwks_csb_check(dev)) {
-@@ -141,6 +144,9 @@ static void svwks_set_dma_mode(ide_hwif_t *hwif, ide_drive_t *drive)
- 
- 	u8 ultra_enable	 = 0, ultra_timing = 0, dma_timing = 0;
- 
-+	if (drive->dn >= ARRAY_SIZE(drive_pci2))
-+		return;
-+
- 	pci_read_config_byte(dev, (0x56|hwif->channel), &ultra_timing);
- 	pci_read_config_byte(dev, 0x54, &ultra_enable);
- 
+-		num_copies = btrfs_num_copies(fs_info, next_bytenr,
++		num_copies = btrfs_num_copies(state->fs_info, next_bytenr,
+ 					      state->metablock_size);
+ 		if (state->print_mask & BTRFSIC_PRINT_MASK_NUM_COPIES)
+ 			pr_info("num_copies(log_bytenr=%llu) = %d\n",
 -- 
 2.20.1
 
