@@ -5,49 +5,49 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CB140C35641
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 08:22:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DA783C35640
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 08:22:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A142B24697
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 08:22:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B02352469C
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 08:22:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582273362;
-	bh=2+cmvOTfjefLg7z9K6NEbzvp0YsZpeIAhXSEBWBCpx8=;
+	s=default; t=1582273364;
+	bh=rjrhQW09Vso9tajVY7leCL9tNge/xnc21nLf2tfe578=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=IqBdPUHqZP2DJKoqJO0Lr4NGpm/u5LoKrdcfKSAI4dx3VquhVu1jMcJQtH3anPPk4
-	 SowfVEoXzS7AXA5kXbBzwvuJEYxjvdHsZ5dLbZtUi2HmPqJek2lmdBk3/HH9dgSo8b
-	 mkNKuk2fuOFQN8YRbcIef7fth/PPaDzMH+wNftmM=
+	b=vJQKPrF3WBLhpeBUzTR65detNVK0pv12MpiGeFLqQQrDUtZu+2VYMJYAijq9iK0cC
+	 jKibLBEx1TXgy+QbEY7yh4ciGuGz6hz/Oo+dObpinD7YkLrFfIusAmIHh3/e/VKx2F
+	 yB58ZlWursDh5PAEu7D8sl3qOMJJEwuqDWElzwtc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388354AbgBUIWl (ORCPT
+        id S2388360AbgBUIWn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Feb 2020 03:22:41 -0500
-Received: from mail.kernel.org ([198.145.29.99]:34270 "EHLO mail.kernel.org"
+        Fri, 21 Feb 2020 03:22:43 -0500
+Received: from mail.kernel.org ([198.145.29.99]:34324 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388334AbgBUIWh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Feb 2020 03:22:37 -0500
+        id S2388343AbgBUIWk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 21 Feb 2020 03:22:40 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B92772467D;
-        Fri, 21 Feb 2020 08:22:36 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3CA782467D;
+        Fri, 21 Feb 2020 08:22:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1582273357;
-        bh=2+cmvOTfjefLg7z9K6NEbzvp0YsZpeIAhXSEBWBCpx8=;
+        s=default; t=1582273359;
+        bh=rjrhQW09Vso9tajVY7leCL9tNge/xnc21nLf2tfe578=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=XklDQV6UFWI9aAd33JBIUkpF9ii30QEJHAIZNAU/vqk3IeVv6GyJRWHx1y7BXUDLL
-         9CP6ovsM/D4P2MUw1nnNx/Ar6ik1QMescLnBIJd/r+y1wsl5GBqJjU8nSjuZSRDLoI
-         m+kF0qSCqInAbyieQqYA8Kzq3BgHUHgjdj53WsQg=
+        b=qf6AY+0V9YVE/qIdl/dSTcOVOErmJoH9f/OFJx8EGVbqzktNEfBlJYAugt5jqMIwz
+         1JjOxL93eeCuGxW7bDGQird/fwqdmlMGgHebM9EtxTWQVFW9delfBjjCGWFq7D6J3B
+         tOh2RUFlTYPFE1M7JCBacTkKGtp0gguOxVv+JKa0=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org, Dan Carpenter <dan.carpenter@oracle.com>,
         "David S. Miller" <davem@davemloft.net>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 141/191] cmd64x: potential buffer overflow in cmd64x_program_timings()
-Date:   Fri, 21 Feb 2020 08:41:54 +0100
-Message-Id: <20200221072307.595664535@linuxfoundation.org>
+Subject: [PATCH 4.19 142/191] ide: serverworks: potential overflow in svwks_set_pio_mode()
+Date:   Fri, 21 Feb 2020 08:41:55 +0100
+Message-Id: <20200221072307.706109376@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200221072250.732482588@linuxfoundation.org>
 References: <20200221072250.732482588@linuxfoundation.org>
@@ -62,32 +62,41 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Dan Carpenter <dan.carpenter@oracle.com>
 
-[ Upstream commit 117fcc3053606d8db5cef8821dca15022ae578bb ]
+[ Upstream commit ce1f31b4c0b9551dd51874dd5364654ed4ca13ae ]
 
-The "drive->dn" value is a u8 and it is controlled by root only, but
-it could be out of bounds here so let's check.
+The "drive->dn" variable is a u8 controlled by root.
 
 Signed-off-by: Dan Carpenter <dan.carpenter@oracle.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/ide/cmd64x.c | 3 +++
- 1 file changed, 3 insertions(+)
+ drivers/ide/serverworks.c | 6 ++++++
+ 1 file changed, 6 insertions(+)
 
-diff --git a/drivers/ide/cmd64x.c b/drivers/ide/cmd64x.c
-index b127ed60c7336..9dde8390da09b 100644
---- a/drivers/ide/cmd64x.c
-+++ b/drivers/ide/cmd64x.c
-@@ -65,6 +65,9 @@ static void cmd64x_program_timings(ide_drive_t *drive, u8 mode)
- 	struct ide_timing t;
- 	u8 arttim = 0;
+diff --git a/drivers/ide/serverworks.c b/drivers/ide/serverworks.c
+index a97affca18abe..0f57d45484d1d 100644
+--- a/drivers/ide/serverworks.c
++++ b/drivers/ide/serverworks.c
+@@ -114,6 +114,9 @@ static void svwks_set_pio_mode(ide_hwif_t *hwif, ide_drive_t *drive)
+ 	struct pci_dev *dev = to_pci_dev(hwif->dev);
+ 	const u8 pio = drive->pio_mode - XFER_PIO_0;
  
-+	if (drive->dn >= ARRAY_SIZE(drwtim_regs))
++	if (drive->dn >= ARRAY_SIZE(drive_pci))
 +		return;
 +
- 	ide_timing_compute(drive, mode, &t, T, 0);
+ 	pci_write_config_byte(dev, drive_pci[drive->dn], pio_modes[pio]);
  
- 	/*
+ 	if (svwks_csb_check(dev)) {
+@@ -140,6 +143,9 @@ static void svwks_set_dma_mode(ide_hwif_t *hwif, ide_drive_t *drive)
+ 
+ 	u8 ultra_enable	 = 0, ultra_timing = 0, dma_timing = 0;
+ 
++	if (drive->dn >= ARRAY_SIZE(drive_pci2))
++		return;
++
+ 	pci_read_config_byte(dev, (0x56|hwif->channel), &ultra_timing);
+ 	pci_read_config_byte(dev, 0x54, &ultra_enable);
+ 
 -- 
 2.20.1
 
