@@ -5,49 +5,51 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 86B09C35640
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 08:18:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 806FAC35640
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 08:18:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 57B8124689
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 08:18:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 499C924689
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 08:18:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582273120;
-	bh=5Fhczh3d5ACBAPgBle5laQq97KcyH5Y4JkPUrNJoFDc=;
+	s=default; t=1582273122;
+	bh=VolOWGt8Y6RcvUk2MXjC8VbXcBD/ECMXJzfRWU78h58=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=S6Rk/Hpx+ihTk+UvJp/UsA7J02dE7gKHbeRdsIHfOt97HV2gbNozAcnt4Clgf2+r5
-	 yDwiDmlR/jUI8yRynnGcw7xYyHkY3g74oHEUIJ1STswSYeVcpWeuvPPj32NWPQlll2
-	 DjRoc+PlQhF/fyHONm5lanQcwWqKwcZlwbp7uQsw=
+	b=nrDe/WFGnPqoBIAcPgbTlZeDm2GSCZmzFJQxoJO4L6OvJ28H+jj2gYxxYtFUgN8JG
+	 YXNMi3jhE8vC3fp+IsQEtALDA+Gs9Y77MMjGJtgj7j6eeMzc6Vvz45QPw59NXS9Q1N
+	 gVNca+HEnfudZttpXAV7XwBDVLJLaN9TSTKYMilw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387591AbgBUISi (ORCPT
+        id S2387879AbgBUISk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Feb 2020 03:18:38 -0500
-Received: from mail.kernel.org ([198.145.29.99]:56586 "EHLO mail.kernel.org"
+        Fri, 21 Feb 2020 03:18:40 -0500
+Received: from mail.kernel.org ([198.145.29.99]:56664 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732908AbgBUISf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Feb 2020 03:18:35 -0500
+        id S2387868AbgBUISj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 21 Feb 2020 03:18:39 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7743D24692;
-        Fri, 21 Feb 2020 08:18:34 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id DC16424682;
+        Fri, 21 Feb 2020 08:18:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1582273114;
-        bh=5Fhczh3d5ACBAPgBle5laQq97KcyH5Y4JkPUrNJoFDc=;
+        s=default; t=1582273118;
+        bh=VolOWGt8Y6RcvUk2MXjC8VbXcBD/ECMXJzfRWU78h58=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=SPbJwOJTph4bQDHiMmEOq1btOV44i9l3hN9jN3X3UtZqVRequ3UMnZAEnzpfzBxIk
-         vDbfabf/CvSEKt5Y78JSRMcYnlmj4vcU1GlRBR7uvqyGDTBk2skEqACPfYwuK6vKwH
-         ZuIyzO+tInAj1UKcCvwdtLuZ1lFAUCQ9WkYzE2MM=
+        b=AbP8TlaHmWI1igKKrAPUEags0VsJX8ZFsYOxefHB8+QpmIcexnRQG6WSWuDkHnLau
+         Bf5VFf8aZCMQTG8AJ+MtziAdbFvycWCLPeFI4gSXm6MXMHo4zKWRp1W3B9xs6umJCO
+         DJbkUidN9SRSD0rK2MzU0wq2alYwhN6jvi08s6QY=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Rakesh Pillai <pillair@codeaurora.org>,
-        Kalle Valo <kvalo@codeaurora.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 045/191] ath10k: Correct the DMA direction for management tx buffers
-Date:   Fri, 21 Feb 2020 08:40:18 +0100
-Message-Id: <20200221072257.210433413@linuxfoundation.org>
+        stable@vger.kernel.org, Qiang Zhao <qiang.zhao@nxp.com>,
+        Timur Tabi <timur@kernel.org>,
+        Rasmus Villemoes <linux@rasmusvillemoes.dk>,
+        "David S. Miller" <davem@davemloft.net>,
+        Li Yang <leoyang.li@nxp.com>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.19 054/191] net/wan/fsl_ucc_hdlc: reject muram offsets above 64K
+Date:   Fri, 21 Feb 2020 08:40:27 +0100
+Message-Id: <20200221072258.020610945@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200221072250.732482588@linuxfoundation.org>
 References: <20200221072250.732482588@linuxfoundation.org>
@@ -60,55 +62,42 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Rakesh Pillai <pillair@codeaurora.org>
+From: Rasmus Villemoes <linux@rasmusvillemoes.dk>
 
-[ Upstream commit 6ba8b3b6bd772f575f7736c8fd893c6981fcce16 ]
+[ Upstream commit 148587a59f6b85831695e0497d9dd1af5f0495af ]
 
-The management packets, send to firmware via WMI, are
-mapped using the direction DMA_TO_DEVICE. Currently in
-case of wmi cleanup, these buffers are being unmapped
-using an incorrect DMA direction. This can cause unwanted
-behavior when the host driver is handling a restart
-of the wlan firmware.
+Qiang Zhao points out that these offsets get written to 16-bit
+registers, and there are some QE platforms with more than 64K
+muram. So it is possible that qe_muram_alloc() gives us an allocation
+that can't actually be used by the hardware, so detect and reject
+that.
 
-We might see a trace like below
-
-[<ffffff8008098b18>] __dma_inv_area+0x28/0x58
-[<ffffff8001176734>] ath10k_wmi_mgmt_tx_clean_up_pending+0x60/0xb0 [ath10k_core]
-[<ffffff80088c7c50>] idr_for_each+0x78/0xe4
-[<ffffff80011766a4>] ath10k_wmi_detach+0x4c/0x7c [ath10k_core]
-[<ffffff8001163d7c>] ath10k_core_stop+0x58/0x68 [ath10k_core]
-[<ffffff800114fb74>] ath10k_halt+0xec/0x13c [ath10k_core]
-[<ffffff8001165110>] ath10k_core_restart+0x11c/0x1a8 [ath10k_core]
-[<ffffff80080c36bc>] process_one_work+0x16c/0x31c
-
-Fix the incorrect DMA direction during the wmi
-management tx buffer cleanup.
-
-Tested HW: WCN3990
-Tested FW: WLAN.HL.3.1-00784-QCAHLSWMTPLZ-1
-
-Fixes: dc405152bb6 ("ath10k: handle mgmt tx completion event")
-Signed-off-by: Rakesh Pillai <pillair@codeaurora.org>
-Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
+Reported-by: Qiang Zhao <qiang.zhao@nxp.com>
+Reviewed-by: Timur Tabi <timur@kernel.org>
+Signed-off-by: Rasmus Villemoes <linux@rasmusvillemoes.dk>
+Acked-by: David S. Miller <davem@davemloft.net>
+Signed-off-by: Li Yang <leoyang.li@nxp.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/wireless/ath/ath10k/wmi.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/net/wan/fsl_ucc_hdlc.c | 5 +++++
+ 1 file changed, 5 insertions(+)
 
-diff --git a/drivers/net/wireless/ath/ath10k/wmi.c b/drivers/net/wireless/ath/ath10k/wmi.c
-index 0f6ff7a78e49d..3372dfa0deccf 100644
---- a/drivers/net/wireless/ath/ath10k/wmi.c
-+++ b/drivers/net/wireless/ath/ath10k/wmi.c
-@@ -9193,7 +9193,7 @@ static int ath10k_wmi_mgmt_tx_clean_up_pending(int msdu_id, void *ptr,
+diff --git a/drivers/net/wan/fsl_ucc_hdlc.c b/drivers/net/wan/fsl_ucc_hdlc.c
+index daeab33f623e7..9ab04ef532f34 100644
+--- a/drivers/net/wan/fsl_ucc_hdlc.c
++++ b/drivers/net/wan/fsl_ucc_hdlc.c
+@@ -242,6 +242,11 @@ static int uhdlc_init(struct ucc_hdlc_private *priv)
+ 		ret = -ENOMEM;
+ 		goto free_riptr;
+ 	}
++	if (riptr != (u16)riptr || tiptr != (u16)tiptr) {
++		dev_err(priv->dev, "MURAM allocation out of addressable range\n");
++		ret = -ENOMEM;
++		goto free_tiptr;
++	}
  
- 	msdu = pkt_addr->vaddr;
- 	dma_unmap_single(ar->dev, pkt_addr->paddr,
--			 msdu->len, DMA_FROM_DEVICE);
-+			 msdu->len, DMA_TO_DEVICE);
- 	ieee80211_free_txskb(ar->hw, msdu);
- 
- 	return 0;
+ 	/* Set RIPTR, TIPTR */
+ 	iowrite16be(riptr, &priv->ucc_pram->riptr);
 -- 
 2.20.1
 
