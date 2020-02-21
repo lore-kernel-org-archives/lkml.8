@@ -5,50 +5,48 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CA6C9C35641
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 08:16:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 27285C35640
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 08:16:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A201C2468D
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 08:16:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CE0F924689
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 08:16:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582272977;
-	bh=bsY2Ez2fjYKqL4INXHo6t0AnfkI2oIAHfv+cfuoZhC0=;
+	s=default; t=1582272979;
+	bh=nO1lbYzeUI/0cN40Lb8FauXfvU/NcVzMBGSp7aObBl0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=O2VVscosC1zhwVjz7JiNIuCkPY0Iqq7ADC13Ow4JANduEDDUufLZhrD6kqfbewTaA
-	 BlDosdTzuW9uAi0eSVKNsFMr/LZRUwb3qz3iIDxdto9+CI1bjm3yeT523bYDpQ4zDk
-	 M/7l36aGJ2+Fw/xekFr1DDn27XBwTjNb5lk/OiA0=
+	b=jIcydlxvIDIjyNflFcpCXXgEVyNWWE9iYlpTNeo5q1WZT9vjLOlGfr/O7/4S/YbiL
+	 RLcvEQHa46YBOZ7YX25LAnAciaiktAvk7FINn6fm9YCJoFOmMYCdWxzfviMwIMGy+F
+	 WxWOVxpoTjPCOCKMJ7cmKSiCjlsvAxFM7lk3PuJc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387506AbgBUIQQ (ORCPT
+        id S2387498AbgBUIQP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Feb 2020 03:16:16 -0500
-Received: from mail.kernel.org ([198.145.29.99]:53202 "EHLO mail.kernel.org"
+        Fri, 21 Feb 2020 03:16:15 -0500
+Received: from mail.kernel.org ([198.145.29.99]:53140 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1733018AbgBUIQN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Feb 2020 03:16:13 -0500
+        id S2387489AbgBUIQK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 21 Feb 2020 03:16:10 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B35F42467B;
-        Fri, 21 Feb 2020 08:16:11 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 34E9F2467B;
+        Fri, 21 Feb 2020 08:16:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1582272972;
-        bh=bsY2Ez2fjYKqL4INXHo6t0AnfkI2oIAHfv+cfuoZhC0=;
+        s=default; t=1582272969;
+        bh=nO1lbYzeUI/0cN40Lb8FauXfvU/NcVzMBGSp7aObBl0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=iMccs9dGdZWg+TXqxa6aKc/VJdpObIVD3/1MBLqq90BQJTVx9yxJunkVOmL5hqvUF
-         VXDn6jp5PrXvGqBrP+WpZcgJueS6EwpZnbrX35e2t6gvd3S6l9V8xvaiPfe2jK1xJX
-         s8+x5Acn6ognwdzAejDYiojAbKYjOxOWzSWWrJ10=
+        b=zQxyDFZrMleRnfnuV4xF3jhMstt3Lc0MWV1h8X1bE6me0g/zcJnkMzSSAUmye6qr2
+         7zjevxgEufcUbd8WdlVRKG1Ly1Jt0onyV2DISLSKcvZBtGtctKDTnixGFQ95uUsqR9
+         pUiUxCnvufnYZMvRM2kQCzMhstLS7YQhN62sdUFM=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Shubhrajyoti Datta <shubhrajyoti.datta@xilinx.com>,
-        Michal Simek <michal.simek@xilinx.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 331/344] microblaze: Prevent the overflow of the start
-Date:   Fri, 21 Feb 2020 08:42:10 +0100
-Message-Id: <20200221072420.385857623@linuxfoundation.org>
+        stable@vger.kernel.org, Coly Li <colyli@suse.de>,
+        Jens Axboe <axboe@kernel.dk>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.4 344/344] bcache: properly initialize path and err in register_bcache()
+Date:   Fri, 21 Feb 2020 08:42:23 +0100
+Message-Id: <20200221072421.728892150@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200221072349.335551332@linuxfoundation.org>
 References: <20200221072349.335551332@linuxfoundation.org>
@@ -61,34 +59,57 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Shubhrajyoti Datta <shubhrajyoti.datta@xilinx.com>
+From: Coly Li <colyli@suse.de>
 
-[ Upstream commit 061d2c1d593076424c910cb1b64ecdb5c9a6923f ]
+[ Upstream commit 29cda393bcaad160c4bf3676ddd99855adafc72f ]
 
-In case the start + cache size is more than the max int the
-start overflows.
-Prevent the same.
+Patch "bcache: rework error unwinding in register_bcache" from
+Christoph Hellwig changes the local variables 'path' and 'err'
+in undefined initial state. If the code in register_bcache() jumps
+to label 'out:' or 'out_module_put:' by goto, these two variables
+might be reference with undefined value by the following line,
 
-Signed-off-by: Shubhrajyoti Datta <shubhrajyoti.datta@xilinx.com>
-Signed-off-by: Michal Simek <michal.simek@xilinx.com>
+	out_module_put:
+	        module_put(THIS_MODULE);
+	out:
+	        pr_info("error %s: %s", path, err);
+	        return ret;
+
+Therefore this patch initializes these two local variables properly
+in register_bcache() to avoid such issue.
+
+Signed-off-by: Coly Li <colyli@suse.de>
+Signed-off-by: Jens Axboe <axboe@kernel.dk>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/microblaze/kernel/cpu/cache.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ drivers/md/bcache/super.c | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
-diff --git a/arch/microblaze/kernel/cpu/cache.c b/arch/microblaze/kernel/cpu/cache.c
-index 0bde47e4fa694..dcba53803fa5f 100644
---- a/arch/microblaze/kernel/cpu/cache.c
-+++ b/arch/microblaze/kernel/cpu/cache.c
-@@ -92,7 +92,8 @@ static inline void __disable_dcache_nomsr(void)
- #define CACHE_LOOP_LIMITS(start, end, cache_line_length, cache_size)	\
- do {									\
- 	int align = ~(cache_line_length - 1);				\
--	end = min(start + cache_size, end);				\
-+	if (start <  UINT_MAX - cache_size)				\
-+		end = min(start + cache_size, end);			\
- 	start &= align;							\
- } while (0)
+diff --git a/drivers/md/bcache/super.c b/drivers/md/bcache/super.c
+index 485ebc2b2144c..658b0f4a01f56 100644
+--- a/drivers/md/bcache/super.c
++++ b/drivers/md/bcache/super.c
+@@ -2373,18 +2373,20 @@ static ssize_t register_bcache(struct kobject *k, struct kobj_attribute *attr,
+ 			       const char *buffer, size_t size)
+ {
+ 	const char *err;
+-	char *path;
++	char *path = NULL;
+ 	struct cache_sb *sb;
+ 	struct block_device *bdev = NULL;
+ 	struct page *sb_page;
+ 	ssize_t ret;
+ 
+ 	ret = -EBUSY;
++	err = "failed to reference bcache module";
+ 	if (!try_module_get(THIS_MODULE))
+ 		goto out;
+ 
+ 	/* For latest state of bcache_is_reboot */
+ 	smp_mb();
++	err = "bcache is in reboot";
+ 	if (bcache_is_reboot)
+ 		goto out_module_put;
  
 -- 
 2.20.1
