@@ -2,26 +2,27 @@ Return-Path: <SRS0=1210=4J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	UNWANTED_LANGUAGE_BODY,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2BC27C35666
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 19:53:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A5A3BC35669
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 19:53:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E8CA320722
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 19:53:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7755420722
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 19:53:24 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728326AbgBUTxV (ORCPT
+        id S1728387AbgBUTxX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Feb 2020 14:53:21 -0500
-Received: from muru.com ([72.249.23.125]:56890 "EHLO muru.com"
+        Fri, 21 Feb 2020 14:53:23 -0500
+Received: from muru.com ([72.249.23.125]:56926 "EHLO muru.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728019AbgBUTxQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Feb 2020 14:53:16 -0500
+        id S1728019AbgBUTxV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 21 Feb 2020 14:53:21 -0500
 Received: from hillo.muru.com (localhost [127.0.0.1])
-        by muru.com (Postfix) with ESMTP id 603EA81C2;
-        Fri, 21 Feb 2020 19:53:59 +0000 (UTC)
+        by muru.com (Postfix) with ESMTP id 4EF8E814A;
+        Fri, 21 Feb 2020 19:54:04 +0000 (UTC)
 From:   Tony Lindgren <tony@atomide.com>
 To:     linux-omap@vger.kernel.org
 Cc:     "Andrew F . Davis" <afd@ti.com>, Dave Gerlach <d-gerlach@ti.com>,
@@ -34,235 +35,330 @@ Cc:     "Andrew F . Davis" <afd@ti.com>, Dave Gerlach <d-gerlach@ti.com>,
         linux-arm-kernel@lists.infradead.org,
         Adam Ford <aford173@gmail.com>,
         =?UTF-8?q?Andr=C3=A9=20Hentschel?= <nerv@dawncrow.de>,
-        "H. Nikolaus Schaller" <hns@goldelico.com>
-Subject: [PATCH 4/7] bus: ti-sysc: Consider non-existing registers too when matching quirks
-Date:   Fri, 21 Feb 2020 11:52:53 -0800
-Message-Id: <20200221195256.54016-5-tony@atomide.com>
+        "H . Nikolaus Schaller" <hns@goldelico.com>
+Subject: [PATCH 6/7] bus: ti-sysc: Implement SoC revision handling
+Date:   Fri, 21 Feb 2020 11:52:55 -0800
+Message-Id: <20200221195256.54016-7-tony@atomide.com>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200221195256.54016-1-tony@atomide.com>
 References: <20200221195256.54016-1-tony@atomide.com>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-We are currently setting -1 for non-existing sysconfig related registers
-for quirks, but setting -ENODEV elsewhere. And for matching the quirks,
-we're now just ignoring the non-existing registers. This will cause issues
-with misdetecting DSS registers as the hardware revision numbers can have
-duplicates.
+We need to know SoC type and features for cases where the same SoC
+may be installed in various versions on the same board and would need
+a separate dts file otherwise for the different variants.
 
-To avoid this, let's standardize on using -ENODEV also for the quirks
-instead of -1. That way we can always just test for a match without adding
-any more complicated logic.
+For example, am3703 is pin compatible with omap3630, but has sgx and
+iva accelerators disabled. We must not try to access the sgx or iva
+module registers on am3703, and need to set the unavailable devices
+disabled early.
 
+Let's also detect omap3430 as that is needed for display subsystem
+(DSS) reset later on, and GP vs EMU or HS devices. Further SoC
+specific disabled device detection can be added as needed, such as
+dra71x vs dra76x rtc and usb4.
+
+Cc: Adam Ford <aford173@gmail.com>
+Cc: André Hentschel <nerv@dawncrow.de>
+Cc: H. Nikolaus Schaller <hns@goldelico.com>
+Cc: Keerthy <j-keerthy@ti.com>
 Signed-off-by: Tony Lindgren <tony@atomide.com>
 ---
- drivers/bus/ti-sysc.c | 120 ++++++++++++++++++++----------------------
- 1 file changed, 57 insertions(+), 63 deletions(-)
+ arch/arm/mach-omap2/pdata-quirks.c    |   6 +
+ drivers/bus/ti-sysc.c                 | 194 +++++++++++++++++++++++++-
+ include/linux/platform_data/ti-sysc.h |   1 +
+ 3 files changed, 200 insertions(+), 1 deletion(-)
 
+diff --git a/arch/arm/mach-omap2/pdata-quirks.c b/arch/arm/mach-omap2/pdata-quirks.c
+--- a/arch/arm/mach-omap2/pdata-quirks.c
++++ b/arch/arm/mach-omap2/pdata-quirks.c
+@@ -397,10 +397,16 @@ static int ti_sysc_shutdown_module(struct device *dev,
+ 	return omap_hwmod_shutdown(cookie->data);
+ }
+ 
++static bool ti_sysc_soc_type_gp(void)
++{
++	return omap_type() == OMAP2_DEVICE_TYPE_GP;
++}
++
+ static struct of_dev_auxdata omap_auxdata_lookup[];
+ 
+ static struct ti_sysc_platform_data ti_sysc_pdata = {
+ 	.auxdata = omap_auxdata_lookup,
++	.soc_type_gp = ti_sysc_soc_type_gp,
+ 	.init_clockdomain = ti_sysc_clkdm_init,
+ 	.clkdm_deny_idle = ti_sysc_clkdm_deny_idle,
+ 	.clkdm_allow_idle = ti_sysc_clkdm_allow_idle,
 diff --git a/drivers/bus/ti-sysc.c b/drivers/bus/ti-sysc.c
 --- a/drivers/bus/ti-sysc.c
 +++ b/drivers/bus/ti-sysc.c
-@@ -1216,16 +1216,16 @@ static const struct sysc_revision_quirk sysc_revision_quirks[] = {
- 		   SYSC_QUIRK_LEGACY_IDLE | SYSC_QUIRK_OPT_CLKS_IN_RESET),
- 	SYSC_QUIRK("sham", 0, 0x100, 0x110, 0x114, 0x40000c03, 0xffffffff,
- 		   SYSC_QUIRK_LEGACY_IDLE),
--	SYSC_QUIRK("smartreflex", 0, -1, 0x24, -1, 0x00000000, 0xffffffff,
-+	SYSC_QUIRK("smartreflex", 0, -ENODEV, 0x24, -ENODEV, 0x00000000, 0xffffffff,
- 		   SYSC_QUIRK_LEGACY_IDLE),
--	SYSC_QUIRK("smartreflex", 0, -1, 0x38, -1, 0x00000000, 0xffffffff,
-+	SYSC_QUIRK("smartreflex", 0, -ENODEV, 0x38, -ENODEV, 0x00000000, 0xffffffff,
- 		   SYSC_QUIRK_LEGACY_IDLE),
- 	SYSC_QUIRK("timer", 0, 0, 0x10, 0x14, 0x00000015, 0xffffffff,
- 		   0),
- 	/* Some timers on omap4 and later */
--	SYSC_QUIRK("timer", 0, 0, 0x10, -1, 0x50002100, 0xffffffff,
-+	SYSC_QUIRK("timer", 0, 0, 0x10, -ENODEV, 0x50002100, 0xffffffff,
- 		   0),
--	SYSC_QUIRK("timer", 0, 0, 0x10, -1, 0x4fff1301, 0xffff00ff,
-+	SYSC_QUIRK("timer", 0, 0, 0x10, -ENODEV, 0x4fff1301, 0xffff00ff,
- 		   0),
- 	SYSC_QUIRK("uart", 0, 0x50, 0x54, 0x58, 0x00000046, 0xffffffff,
- 		   SYSC_QUIRK_SWSUP_SIDLE | SYSC_QUIRK_LEGACY_IDLE),
-@@ -1238,18 +1238,18 @@ static const struct sysc_revision_quirk sysc_revision_quirks[] = {
- 		   SYSC_QUIRK_SWSUP_SIDLE_ACT | SYSC_QUIRK_LEGACY_IDLE),
+@@ -7,6 +7,7 @@
+ #include <linux/clk.h>
+ #include <linux/clkdev.h>
+ #include <linux/delay.h>
++#include <linux/list.h>
+ #include <linux/module.h>
+ #include <linux/platform_device.h>
+ #include <linux/pm_domain.h>
+@@ -15,15 +16,47 @@
+ #include <linux/of_address.h>
+ #include <linux/of_platform.h>
+ #include <linux/slab.h>
++#include <linux/sys_soc.h>
+ #include <linux/iopoll.h>
  
- 	/* Quirks that need to be set based on the module address */
--	SYSC_QUIRK("mcpdm", 0x40132000, 0, 0x10, -1, 0x50000800, 0xffffffff,
-+	SYSC_QUIRK("mcpdm", 0x40132000, 0, 0x10, -ENODEV, 0x50000800, 0xffffffff,
- 		   SYSC_QUIRK_EXT_OPT_CLOCK | SYSC_QUIRK_NO_RESET_ON_INIT |
- 		   SYSC_QUIRK_SWSUP_SIDLE),
+ #include <linux/platform_data/ti-sysc.h>
  
- 	/* Quirks that need to be set based on detected module */
--	SYSC_QUIRK("aess", 0, 0, 0x10, -1, 0x40000000, 0xffffffff,
-+	SYSC_QUIRK("aess", 0, 0, 0x10, -ENODEV, 0x40000000, 0xffffffff,
- 		   SYSC_MODULE_QUIRK_AESS),
--	SYSC_QUIRK("dcan", 0x48480000, 0x20, -1, -1, 0xa3170504, 0xffffffff,
-+	SYSC_QUIRK("dcan", 0x48480000, 0x20, -ENODEV, -ENODEV, 0xa3170504, 0xffffffff,
- 		   SYSC_QUIRK_CLKDM_NOAUTO),
--	SYSC_QUIRK("dwc3", 0x48880000, 0, 0x10, -1, 0x500a0200, 0xffffffff,
-+	SYSC_QUIRK("dwc3", 0x48880000, 0, 0x10, -ENODEV, 0x500a0200, 0xffffffff,
- 		   SYSC_QUIRK_CLKDM_NOAUTO),
--	SYSC_QUIRK("dwc3", 0x488c0000, 0, 0x10, -1, 0x500a0200, 0xffffffff,
-+	SYSC_QUIRK("dwc3", 0x488c0000, 0, 0x10, -ENODEV, 0x500a0200, 0xffffffff,
- 		   SYSC_QUIRK_CLKDM_NOAUTO),
- 	SYSC_QUIRK("hdq1w", 0, 0, 0x14, 0x18, 0x00000006, 0xffffffff,
- 		   SYSC_MODULE_QUIRK_HDQ1W),
-@@ -1263,12 +1263,12 @@ static const struct sysc_revision_quirk sysc_revision_quirks[] = {
- 		   SYSC_MODULE_QUIRK_I2C),
- 	SYSC_QUIRK("i2c", 0, 0, 0x10, 0x90, 0x5040000a, 0xfffff0f0,
- 		   SYSC_MODULE_QUIRK_I2C),
--	SYSC_QUIRK("gpu", 0x50000000, 0x14, -1, -1, 0x00010201, 0xffffffff, 0),
--	SYSC_QUIRK("gpu", 0x50000000, 0xfe00, 0xfe10, -1, 0x40000000 , 0xffffffff,
-+	SYSC_QUIRK("gpu", 0x50000000, 0x14, -ENODEV, -ENODEV, 0x00010201, 0xffffffff, 0),
-+	SYSC_QUIRK("gpu", 0x50000000, 0xfe00, 0xfe10, -ENODEV, 0x40000000 , 0xffffffff,
- 		   SYSC_MODULE_QUIRK_SGX),
- 	SYSC_QUIRK("usb_otg_hs", 0, 0x400, 0x404, 0x408, 0x00000050,
- 		   0xffffffff, SYSC_QUIRK_SWSUP_SIDLE | SYSC_QUIRK_SWSUP_MSTANDBY),
--	SYSC_QUIRK("usb_otg_hs", 0, 0, 0x10, -1, 0x4ea2080d, 0xffffffff,
-+	SYSC_QUIRK("usb_otg_hs", 0, 0, 0x10, -ENODEV, 0x4ea2080d, 0xffffffff,
- 		   SYSC_QUIRK_SWSUP_SIDLE | SYSC_QUIRK_SWSUP_MSTANDBY),
- 	SYSC_QUIRK("wdt", 0, 0, 0x10, 0x14, 0x502a0500, 0xfffff0f0,
- 		   SYSC_MODULE_QUIRK_WDT),
-@@ -1277,57 +1277,57 @@ static const struct sysc_revision_quirk sysc_revision_quirks[] = {
- 		   SYSC_MODULE_QUIRK_WDT | SYSC_QUIRK_SWSUP_SIDLE),
+ #include <dt-bindings/bus/ti-sysc.h>
  
- #ifdef DEBUG
--	SYSC_QUIRK("adc", 0, 0, 0x10, -1, 0x47300001, 0xffffffff, 0),
--	SYSC_QUIRK("atl", 0, 0, -1, -1, 0x0a070100, 0xffffffff, 0),
--	SYSC_QUIRK("cm", 0, 0, -1, -1, 0x40000301, 0xffffffff, 0),
--	SYSC_QUIRK("control", 0, 0, 0x10, -1, 0x40000900, 0xffffffff, 0),
-+	SYSC_QUIRK("adc", 0, 0, 0x10, -ENODEV, 0x47300001, 0xffffffff, 0),
-+	SYSC_QUIRK("atl", 0, 0, -ENODEV, -ENODEV, 0x0a070100, 0xffffffff, 0),
-+	SYSC_QUIRK("cm", 0, 0, -ENODEV, -ENODEV, 0x40000301, 0xffffffff, 0),
-+	SYSC_QUIRK("control", 0, 0, 0x10, -ENODEV, 0x40000900, 0xffffffff, 0),
- 	SYSC_QUIRK("cpgmac", 0, 0x1200, 0x1208, 0x1204, 0x4edb1902,
- 		   0xffff00f0, 0),
--	SYSC_QUIRK("dcan", 0, 0x20, -1, -1, 0xa3170504, 0xffffffff, 0),
--	SYSC_QUIRK("dcan", 0, 0x20, -1, -1, 0x4edb1902, 0xffffffff, 0),
--	SYSC_QUIRK("dmic", 0, 0, 0x10, -1, 0x50010000, 0xffffffff, 0),
--	SYSC_QUIRK("dwc3", 0, 0, 0x10, -1, 0x500a0200, 0xffffffff, 0),
-+	SYSC_QUIRK("dcan", 0, 0x20, -ENODEV, -ENODEV, 0xa3170504, 0xffffffff, 0),
-+	SYSC_QUIRK("dcan", 0, 0x20, -ENODEV, -ENODEV, 0x4edb1902, 0xffffffff, 0),
-+	SYSC_QUIRK("dmic", 0, 0, 0x10, -ENODEV, 0x50010000, 0xffffffff, 0),
-+	SYSC_QUIRK("dwc3", 0, 0, 0x10, -ENODEV, 0x500a0200, 0xffffffff, 0),
- 	SYSC_QUIRK("d2d", 0x4a0b6000, 0, 0x10, 0x14, 0x00000010, 0xffffffff, 0),
- 	SYSC_QUIRK("d2d", 0x4a0cd000, 0, 0x10, 0x14, 0x00000010, 0xffffffff, 0),
--	SYSC_QUIRK("epwmss", 0, 0, 0x4, -1, 0x47400001, 0xffffffff, 0),
--	SYSC_QUIRK("gpu", 0, 0x1fc00, 0x1fc10, -1, 0, 0, 0),
--	SYSC_QUIRK("gpu", 0, 0xfe00, 0xfe10, -1, 0x40000000 , 0xffffffff, 0),
-+	SYSC_QUIRK("epwmss", 0, 0, 0x4, -ENODEV, 0x47400001, 0xffffffff, 0),
-+	SYSC_QUIRK("gpu", 0, 0x1fc00, 0x1fc10, -ENODEV, 0, 0, 0),
-+	SYSC_QUIRK("gpu", 0, 0xfe00, 0xfe10, -ENODEV, 0x40000000 , 0xffffffff, 0),
- 	SYSC_QUIRK("hsi", 0, 0, 0x10, 0x14, 0x50043101, 0xffffffff, 0),
--	SYSC_QUIRK("iss", 0, 0, 0x10, -1, 0x40000101, 0xffffffff, 0),
--	SYSC_QUIRK("lcdc", 0, 0, 0x54, -1, 0x4f201000, 0xffffffff, 0),
--	SYSC_QUIRK("mcasp", 0, 0, 0x4, -1, 0x44306302, 0xffffffff, 0),
--	SYSC_QUIRK("mcasp", 0, 0, 0x4, -1, 0x44307b02, 0xffffffff, 0),
--	SYSC_QUIRK("mcbsp", 0, -1, 0x8c, -1, 0, 0, 0),
--	SYSC_QUIRK("mcspi", 0, 0, 0x10, -1, 0x40300a0b, 0xffff00ff, 0),
-+	SYSC_QUIRK("iss", 0, 0, 0x10, -ENODEV, 0x40000101, 0xffffffff, 0),
-+	SYSC_QUIRK("lcdc", 0, 0, 0x54, -ENODEV, 0x4f201000, 0xffffffff, 0),
-+	SYSC_QUIRK("mcasp", 0, 0, 0x4, -ENODEV, 0x44306302, 0xffffffff, 0),
-+	SYSC_QUIRK("mcasp", 0, 0, 0x4, -ENODEV, 0x44307b02, 0xffffffff, 0),
-+	SYSC_QUIRK("mcbsp", 0, -ENODEV, 0x8c, -ENODEV, 0, 0, 0),
-+	SYSC_QUIRK("mcspi", 0, 0, 0x10, -ENODEV, 0x40300a0b, 0xffff00ff, 0),
- 	SYSC_QUIRK("mcspi", 0, 0, 0x110, 0x114, 0x40300a0b, 0xffffffff, 0),
--	SYSC_QUIRK("mailbox", 0, 0, 0x10, -1, 0x00000400, 0xffffffff, 0),
--	SYSC_QUIRK("m3", 0, 0, -1, -1, 0x5f580105, 0x0fff0f00, 0),
-+	SYSC_QUIRK("mailbox", 0, 0, 0x10, -ENODEV, 0x00000400, 0xffffffff, 0),
-+	SYSC_QUIRK("m3", 0, 0, -ENODEV, -ENODEV, 0x5f580105, 0x0fff0f00, 0),
- 	SYSC_QUIRK("ocp2scp", 0, 0, 0x10, 0x14, 0x50060005, 0xfffffff0, 0),
--	SYSC_QUIRK("ocp2scp", 0, 0, -1, -1, 0x50060007, 0xffffffff, 0),
--	SYSC_QUIRK("padconf", 0, 0, 0x10, -1, 0x4fff0800, 0xffffffff, 0),
--	SYSC_QUIRK("padconf", 0, 0, -1, -1, 0x40001100, 0xffffffff, 0),
--	SYSC_QUIRK("prcm", 0, 0, -1, -1, 0x40000100, 0xffffffff, 0),
--	SYSC_QUIRK("prcm", 0, 0, -1, -1, 0x00004102, 0xffffffff, 0),
--	SYSC_QUIRK("prcm", 0, 0, -1, -1, 0x40000400, 0xffffffff, 0),
--	SYSC_QUIRK("scm", 0, 0, 0x10, -1, 0x40000900, 0xffffffff, 0),
--	SYSC_QUIRK("scm", 0, 0, -1, -1, 0x4e8b0100, 0xffffffff, 0),
--	SYSC_QUIRK("scm", 0, 0, -1, -1, 0x4f000100, 0xffffffff, 0),
--	SYSC_QUIRK("scm", 0, 0, -1, -1, 0x40000900, 0xffffffff, 0),
--	SYSC_QUIRK("scrm", 0, 0, -1, -1, 0x00000010, 0xffffffff, 0),
--	SYSC_QUIRK("sdio", 0, 0, 0x10, -1, 0x40202301, 0xffff0ff0, 0),
-+	SYSC_QUIRK("ocp2scp", 0, 0, -ENODEV, -ENODEV, 0x50060007, 0xffffffff, 0),
-+	SYSC_QUIRK("padconf", 0, 0, 0x10, -ENODEV, 0x4fff0800, 0xffffffff, 0),
-+	SYSC_QUIRK("padconf", 0, 0, -ENODEV, -ENODEV, 0x40001100, 0xffffffff, 0),
-+	SYSC_QUIRK("prcm", 0, 0, -ENODEV, -ENODEV, 0x40000100, 0xffffffff, 0),
-+	SYSC_QUIRK("prcm", 0, 0, -ENODEV, -ENODEV, 0x00004102, 0xffffffff, 0),
-+	SYSC_QUIRK("prcm", 0, 0, -ENODEV, -ENODEV, 0x40000400, 0xffffffff, 0),
-+	SYSC_QUIRK("scm", 0, 0, 0x10, -ENODEV, 0x40000900, 0xffffffff, 0),
-+	SYSC_QUIRK("scm", 0, 0, -ENODEV, -ENODEV, 0x4e8b0100, 0xffffffff, 0),
-+	SYSC_QUIRK("scm", 0, 0, -ENODEV, -ENODEV, 0x4f000100, 0xffffffff, 0),
-+	SYSC_QUIRK("scm", 0, 0, -ENODEV, -ENODEV, 0x40000900, 0xffffffff, 0),
-+	SYSC_QUIRK("scrm", 0, 0, -ENODEV, -ENODEV, 0x00000010, 0xffffffff, 0),
-+	SYSC_QUIRK("sdio", 0, 0, 0x10, -ENODEV, 0x40202301, 0xffff0ff0, 0),
- 	SYSC_QUIRK("sdio", 0, 0x2fc, 0x110, 0x114, 0x31010000, 0xffffffff, 0),
- 	SYSC_QUIRK("sdma", 0, 0, 0x2c, 0x28, 0x00010900, 0xffffffff, 0),
--	SYSC_QUIRK("slimbus", 0, 0, 0x10, -1, 0x40000902, 0xffffffff, 0),
--	SYSC_QUIRK("slimbus", 0, 0, 0x10, -1, 0x40002903, 0xffffffff, 0),
--	SYSC_QUIRK("spinlock", 0, 0, 0x10, -1, 0x50020000, 0xffffffff, 0),
--	SYSC_QUIRK("rng", 0, 0x1fe0, 0x1fe4, -1, 0x00000020, 0xffffffff, 0),
--	SYSC_QUIRK("rtc", 0, 0x74, 0x78, -1, 0x4eb01908, 0xffff00f0, 0),
--	SYSC_QUIRK("timer32k", 0, 0, 0x4, -1, 0x00000060, 0xffffffff, 0),
-+	SYSC_QUIRK("slimbus", 0, 0, 0x10, -ENODEV, 0x40000902, 0xffffffff, 0),
-+	SYSC_QUIRK("slimbus", 0, 0, 0x10, -ENODEV, 0x40002903, 0xffffffff, 0),
-+	SYSC_QUIRK("spinlock", 0, 0, 0x10, -ENODEV, 0x50020000, 0xffffffff, 0),
-+	SYSC_QUIRK("rng", 0, 0x1fe0, 0x1fe4, -ENODEV, 0x00000020, 0xffffffff, 0),
-+	SYSC_QUIRK("rtc", 0, 0x74, 0x78, -ENODEV, 0x4eb01908, 0xffff00f0, 0),
-+	SYSC_QUIRK("timer32k", 0, 0, 0x4, -ENODEV, 0x00000060, 0xffffffff, 0),
- 	SYSC_QUIRK("usbhstll", 0, 0, 0x10, 0x14, 0x00000004, 0xffffffff, 0),
- 	SYSC_QUIRK("usbhstll", 0, 0, 0x10, 0x14, 0x00000008, 0xffffffff, 0),
- 	SYSC_QUIRK("usb_host_hs", 0, 0, 0x10, 0x14, 0x50700100, 0xffffffff, 0),
--	SYSC_QUIRK("usb_host_hs", 0, 0, 0x10, -1, 0x50700101, 0xffffffff, 0),
--	SYSC_QUIRK("vfpe", 0, 0, 0x104, -1, 0x4d001200, 0xffffffff, 0),
-+	SYSC_QUIRK("usb_host_hs", 0, 0, 0x10, -ENODEV, 0x50700101, 0xffffffff, 0),
-+	SYSC_QUIRK("vfpe", 0, 0, 0x104, -ENODEV, 0x4d001200, 0xffffffff, 0),
- #endif
++#define DIS_ISP		BIT(2)
++#define DIS_IVA		BIT(1)
++#define DIS_SGX		BIT(0)
++
++#define SOC_FLAG(match, flag)	{ .machine = match, .data = (void *)(flag), }
++
+ #define MAX_MODULE_SOFTRESET_WAIT		10000
+ 
+-static const char * const reg_names[] = { "rev", "sysc", "syss", };
++enum sysc_soc {
++	SOC_UNKNOWN,
++	SOC_2420,
++	SOC_2430,
++	SOC_3430,
++	SOC_3630,
++	SOC_4430,
++	SOC_4460,
++	SOC_4470,
++	SOC_5430,
++	SOC_AM3,
++	SOC_AM4,
++	SOC_DRA7,
++};
++
++struct sysc_address {
++	unsigned long base;
++	struct list_head node;
++};
++
++struct sysc_soc_info {
++	unsigned long general_purpose:1;
++	enum sysc_soc soc;
++	struct mutex list_lock;			/* disabled modules list lock */
++	struct list_head disabled_modules;
++};
+ 
+ enum sysc_clocks {
+ 	SYSC_FCK,
+@@ -39,6 +72,8 @@ enum sysc_clocks {
+ 	SYSC_MAX_CLOCKS,
  };
  
-@@ -1349,16 +1349,13 @@ static void sysc_init_early_quirks(struct sysc *ddata)
- 		if (q->base != ddata->module_pa)
- 			continue;
++static struct sysc_soc_info *sysc_soc;
++static const char * const reg_names[] = { "rev", "sysc", "syss", };
+ static const char * const clock_names[SYSC_MAX_CLOCKS] = {
+ 	"fck", "ick", "opt0", "opt1", "opt2", "opt3", "opt4",
+ 	"opt5", "opt6", "opt7",
+@@ -2382,6 +2417,154 @@ static void ti_sysc_idle(struct work_struct *work)
+ 		pm_runtime_put_sync(ddata->dev);
+ }
  
--		if (q->rev_offset >= 0 &&
--		    q->rev_offset != ddata->offsets[SYSC_REVISION])
-+		if (q->rev_offset != ddata->offsets[SYSC_REVISION])
- 			continue;
++/*
++ * SoC model and features detection. Only needed for SoCs that need
++ * special handling for quirks, no need to list others.
++ */
++static const struct soc_device_attribute sysc_soc_match[] = {
++	SOC_FLAG("OMAP242*", SOC_2420),
++	SOC_FLAG("OMAP243*", SOC_2430),
++	SOC_FLAG("OMAP3[45]*", SOC_3430),
++	SOC_FLAG("OMAP3[67]*", SOC_3630),
++	SOC_FLAG("OMAP443*", SOC_4430),
++	SOC_FLAG("OMAP446*", SOC_4460),
++	SOC_FLAG("OMAP447*", SOC_4470),
++	SOC_FLAG("OMAP54*", SOC_5430),
++	SOC_FLAG("AM433", SOC_AM3),
++	SOC_FLAG("AM43*", SOC_AM4),
++	SOC_FLAG("DRA7*", SOC_DRA7),
++
++	{ /* sentinel */ },
++};
++
++/*
++ * List of SoCs variants with disabled features. By default we assume all
++ * devices in the device tree are available so no need to list those SoCs.
++ */
++static const struct soc_device_attribute sysc_soc_feat_match[] = {
++	/* OMAP3430/3530 and AM3517 variants with some accelerators disabled */
++	SOC_FLAG("AM3505", DIS_SGX),
++	SOC_FLAG("OMAP3525", DIS_SGX),
++	SOC_FLAG("OMAP3515", DIS_IVA | DIS_SGX),
++	SOC_FLAG("OMAP3503", DIS_ISP | DIS_IVA | DIS_SGX),
++
++	/* OMAP3630/DM3730 variants with some accelerators disabled */
++	SOC_FLAG("AM3703", DIS_IVA | DIS_SGX),
++	SOC_FLAG("DM3725", DIS_SGX),
++	SOC_FLAG("OMAP3611", DIS_ISP | DIS_IVA | DIS_SGX),
++	SOC_FLAG("OMAP3615/AM3715", DIS_IVA),
++	SOC_FLAG("OMAP3621", DIS_ISP),
++
++	{ /* sentinel */ },
++};
++
++static int sysc_add_disabled(unsigned long base)
++{
++	struct sysc_address *disabled_module;
++
++	disabled_module = kzalloc(sizeof(*disabled_module), GFP_KERNEL);
++	if (!disabled_module)
++		return -ENOMEM;
++
++	disabled_module->base = base;
++
++	mutex_lock(&sysc_soc->list_lock);
++	list_add(&disabled_module->node, &sysc_soc->disabled_modules);
++	mutex_unlock(&sysc_soc->list_lock);
++
++	return 0;
++}
++
++/*
++ * One time init to detect the booted SoC and disable unavailable features.
++ * Note that we initialize static data shared across all ti-sysc instances
++ * so ddata is only used for SoC type. This can be called from module_init
++ * once we no longer need to rely on platform data.
++ */
++static int sysc_init_soc(struct sysc *ddata)
++{
++	const struct soc_device_attribute *match;
++	struct ti_sysc_platform_data *pdata;
++	unsigned long features = 0;
++
++	if (sysc_soc)
++		return 0;
++
++	sysc_soc = kzalloc(sizeof(*sysc_soc), GFP_KERNEL);
++	if (!sysc_soc)
++		return -ENOMEM;
++
++	mutex_init(&sysc_soc->list_lock);
++	INIT_LIST_HEAD(&sysc_soc->disabled_modules);
++	sysc_soc->general_purpose = true;
++
++	pdata = dev_get_platdata(ddata->dev);
++	if (pdata && pdata->soc_type_gp)
++		sysc_soc->general_purpose = pdata->soc_type_gp();
++
++	match = soc_device_match(sysc_soc_match);
++	if (match && match->data)
++		sysc_soc->soc = (int)match->data;
++
++	match = soc_device_match(sysc_soc_feat_match);
++	if (!match)
++		return 0;
++
++	if (match->data)
++		features = (unsigned long)match->data;
++
++	/*
++	 * Add disabled devices to the list based on the module base.
++	 * Note that this must be done before we attempt to access the
++	 * device and have module revision checks working.
++	 */
++	if (features & DIS_ISP)
++		sysc_add_disabled(0x480bd400);
++	if (features & DIS_IVA)
++		sysc_add_disabled(0x5d000000);
++	if (features & DIS_SGX)
++		sysc_add_disabled(0x50000000);
++
++	return 0;
++}
++
++static void sysc_cleanup_soc(void)
++{
++	struct sysc_address *disabled_module;
++	struct list_head *pos, *tmp;
++
++	if (!sysc_soc)
++		return;
++
++	mutex_lock(&sysc_soc->list_lock);
++	list_for_each_safe(pos, tmp, &sysc_soc->disabled_modules) {
++		disabled_module = list_entry(pos, struct sysc_address, node);
++		list_del(pos);
++		kfree(disabled_module);
++	}
++	mutex_unlock(&sysc_soc->list_lock);
++}
++
++static int sysc_check_disabled_devices(struct sysc *ddata)
++{
++	struct sysc_address *disabled_module;
++	struct list_head *pos;
++	int error = 0;
++
++	mutex_lock(&sysc_soc->list_lock);
++	list_for_each(pos, &sysc_soc->disabled_modules) {
++		disabled_module = list_entry(pos, struct sysc_address, node);
++		if (ddata->module_pa == disabled_module->base) {
++			dev_dbg(ddata->dev, "module disabled for this SoC\n");
++			error = -ENODEV;
++			break;
++		}
++	}
++	mutex_unlock(&sysc_soc->list_lock);
++
++	return error;
++}
++
+ static const struct of_device_id sysc_match_table[] = {
+ 	{ .compatible = "simple-bus", },
+ 	{ /* sentinel */ },
+@@ -2400,6 +2583,10 @@ static int sysc_probe(struct platform_device *pdev)
+ 	ddata->dev = &pdev->dev;
+ 	platform_set_drvdata(pdev, ddata);
  
--		if (q->sysc_offset >= 0 &&
--		    q->sysc_offset != ddata->offsets[SYSC_SYSCONFIG])
-+		if (q->sysc_offset != ddata->offsets[SYSC_SYSCONFIG])
- 			continue;
++	error = sysc_init_soc(ddata);
++	if (error)
++		return error;
++
+ 	error = sysc_init_match(ddata);
+ 	if (error)
+ 		return error;
+@@ -2430,6 +2617,10 @@ static int sysc_probe(struct platform_device *pdev)
  
--		if (q->syss_offset >= 0 &&
--		    q->syss_offset != ddata->offsets[SYSC_SYSSTATUS])
-+		if (q->syss_offset != ddata->offsets[SYSC_SYSSTATUS])
- 			continue;
+ 	sysc_init_early_quirks(ddata);
  
- 		ddata->name = q->name;
-@@ -1378,16 +1375,13 @@ static void sysc_init_revision_quirks(struct sysc *ddata)
- 		if (q->base && q->base != ddata->module_pa)
- 			continue;
++	error = sysc_check_disabled_devices(ddata);
++	if (error)
++		return error;
++
+ 	error = sysc_get_clocks(ddata);
+ 	if (error)
+ 		return error;
+@@ -2560,6 +2751,7 @@ static void __exit sysc_exit(void)
+ {
+ 	bus_unregister_notifier(&platform_bus_type, &sysc_nb);
+ 	platform_driver_unregister(&sysc_driver);
++	sysc_cleanup_soc();
+ }
+ module_exit(sysc_exit);
  
--		if (q->rev_offset >= 0 &&
--		    q->rev_offset != ddata->offsets[SYSC_REVISION])
-+		if (q->rev_offset != ddata->offsets[SYSC_REVISION])
- 			continue;
+diff --git a/include/linux/platform_data/ti-sysc.h b/include/linux/platform_data/ti-sysc.h
+--- a/include/linux/platform_data/ti-sysc.h
++++ b/include/linux/platform_data/ti-sysc.h
+@@ -141,6 +141,7 @@ struct clk;
  
--		if (q->sysc_offset >= 0 &&
--		    q->sysc_offset != ddata->offsets[SYSC_SYSCONFIG])
-+		if (q->sysc_offset != ddata->offsets[SYSC_SYSCONFIG])
- 			continue;
- 
--		if (q->syss_offset >= 0 &&
--		    q->syss_offset != ddata->offsets[SYSC_SYSSTATUS])
-+		if (q->syss_offset != ddata->offsets[SYSC_SYSSTATUS])
- 			continue;
- 
- 		if (q->revision == ddata->revision ||
+ struct ti_sysc_platform_data {
+ 	struct of_dev_auxdata *auxdata;
++	bool (*soc_type_gp)(void);
+ 	int (*init_clockdomain)(struct device *dev, struct clk *fck,
+ 				struct clk *ick, struct ti_sysc_cookie *cookie);
+ 	void (*clkdm_deny_idle)(struct device *dev,
 -- 
 2.25.1
