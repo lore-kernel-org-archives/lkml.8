@@ -7,49 +7,48 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AC800C35644
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 08:41:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 790BDC35640
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 08:41:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 81B26206DB
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 08:41:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4D511206DB
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 08:41:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582274495;
-	bh=y2KdCYZvWSq0h8YAq2s31CMB/GuJJswO/YD0CnIzWXQ=;
+	s=default; t=1582274499;
+	bh=nVj7nRN/y57cRavWIX1nbC+647lSGkrubQeT0m+Ut4M=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=nqop9zq+ia+nden10fUoqIWdeuTE/KVm44s4x7ovQqm/WiDTepIKojYEJ/XCIisbn
-	 BVIY6XFLld5gi36In5iGiSzu2LHR7dnlwVU4e08er7RGaqe7C+c6zRyY+SmT8DB6Uk
-	 2BwPYe5djNsKCLrJCEQ6mAhVyhZGTXaf6KO0JnT4=
+	b=tOblagKruXv8iHwN5fezCue+xEfwO14yMwzsvVeEtxVy2pY5/Hb+LpKXPT2F+VcrD
+	 AE4WNh0g3eu73jOHa/00tCdSl8uoAy2i6/QLDGtTkw6QiiPHN+7er5ggpUJGfkxzMR
+	 2Jp0Jj8lD0i8I/d2N78eCqM4A7OSOLzLWMJvyq+M=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730278AbgBUH44 (ORCPT
+        id S1731266AbgBUIlh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Feb 2020 02:56:56 -0500
-Received: from mail.kernel.org ([198.145.29.99]:56296 "EHLO mail.kernel.org"
+        Fri, 21 Feb 2020 03:41:37 -0500
+Received: from mail.kernel.org ([198.145.29.99]:56420 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730370AbgBUH4w (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Feb 2020 02:56:52 -0500
+        id S1730389AbgBUH44 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 21 Feb 2020 02:56:56 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E6F7920578;
-        Fri, 21 Feb 2020 07:56:50 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0696720578;
+        Fri, 21 Feb 2020 07:56:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1582271811;
-        bh=y2KdCYZvWSq0h8YAq2s31CMB/GuJJswO/YD0CnIzWXQ=;
+        s=default; t=1582271816;
+        bh=nVj7nRN/y57cRavWIX1nbC+647lSGkrubQeT0m+Ut4M=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=bsWkmGaEt+MEpMarvMfD78CoD/qH2HLoI6okP9/WfiQa5+6d6ADK01z4+UZ+mmOP2
-         B15eXXxEz+bBjagcEbCxQlQQ+p0KfYCVm/oPOE/WZCZ1/tqROSHpz1fIJcb8YYfq/l
-         rCuHdExpI7hoYX5Tbxf58Fe6o40jCeQ+6MvIjI/A=
+        b=eMQK2vRvkuY5E/n6h25SYFNIV8qeEynnZwA/jFEw5maTslAl/o0vgOMzskm3p91ZN
+         F4kCbLpM9qYyATKQoi+M2cJeksjuCHExUigMmCHTH3hfTzN7PVlCuz6ir5Kx3g4sJC
+         it85Do3welgxc7AW5i0kmnXVZHFwK0ndTbNaP1uU=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, yu kuai <yukuai3@huawei.com>,
-        =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= 
-        <u.kleine-koenig@pengutronix.de>,
-        Thierry Reding <thierry.reding@gmail.com>,
+        stable@vger.kernel.org, Dan Carpenter <dan.carpenter@oracle.com>,
+        Josef Bacik <josef@toxicpanda.com>,
+        David Sterba <dsterba@suse.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.5 306/399] pwm: Remove set but not set variable pwm
-Date:   Fri, 21 Feb 2020 08:40:31 +0100
-Message-Id: <20200221072431.363511352@linuxfoundation.org>
+Subject: [PATCH 5.5 308/399] btrfs: safely advance counter when looking up bio csums
+Date:   Fri, 21 Feb 2020 08:40:33 +0100
+Message-Id: <20200221072431.530297023@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200221072402.315346745@linuxfoundation.org>
 References: <20200221072402.315346745@linuxfoundation.org>
@@ -62,46 +61,51 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: yu kuai <yukuai3@huawei.com>
+From: David Sterba <dsterba@suse.com>
 
-[ Upstream commit 9871abffc81048e20f02e15d6aa4558a44ad53ea ]
+[ Upstream commit 4babad10198fa73fe73239d02c2e99e3333f5f5c ]
 
-Fixes gcc '-Wunused-but-set-variable' warning:
+Dan's smatch tool reports
 
-	drivers/pwm/pwm-pca9685.c: In function ‘pca9685_pwm_gpio_free’:
-	drivers/pwm/pwm-pca9685.c:162:21: warning: variable ‘pwm’ set but not used [-Wunused-but-set-variable]
+  fs/btrfs/file-item.c:295 btrfs_lookup_bio_sums()
+  warn: should this be 'count == -1'
 
-It is never used, and so can be removed. In that case, hold and release
-the lock 'pca->lock' can be removed since nothing will be done between
-them.
+which points to the while (count--) loop. With count == 0 the check
+itself could decrement it to -1. There's a WARN_ON a few lines below
+that has never been seen in practice though.
 
-Fixes: e926b12c611c ("pwm: Clear chip_data in pwm_put()")
-Signed-off-by: yu kuai <yukuai3@huawei.com>
-Acked-by: Uwe Kleine-König <u.kleine-koenig@pengutronix.de>
-Signed-off-by: Thierry Reding <thierry.reding@gmail.com>
+It turns out that the value of page_bytes_left matches the count (by
+sectorsize multiples). The loop never reaches the state where count
+would go to -1, because page_bytes_left == 0 is found first and this
+breaks out.
+
+For clarity, use only plain check on count (and only for positive
+value), decrement safely inside the loop. Any other discrepancy after
+the whole bio list processing should be reported by the exising
+WARN_ON_ONCE as well.
+
+Reported-by: Dan Carpenter <dan.carpenter@oracle.com>
+Reviewed-by: Josef Bacik <josef@toxicpanda.com>
+Signed-off-by: David Sterba <dsterba@suse.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/pwm/pwm-pca9685.c | 4 ----
- 1 file changed, 4 deletions(-)
+ fs/btrfs/file-item.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/pwm/pwm-pca9685.c b/drivers/pwm/pwm-pca9685.c
-index 168684b02ebce..b07bdca3d510d 100644
---- a/drivers/pwm/pwm-pca9685.c
-+++ b/drivers/pwm/pwm-pca9685.c
-@@ -159,13 +159,9 @@ static void pca9685_pwm_gpio_set(struct gpio_chip *gpio, unsigned int offset,
- static void pca9685_pwm_gpio_free(struct gpio_chip *gpio, unsigned int offset)
- {
- 	struct pca9685 *pca = gpiochip_get_data(gpio);
--	struct pwm_device *pwm;
- 
- 	pca9685_pwm_gpio_set(gpio, offset, 0);
- 	pm_runtime_put(pca->chip.dev);
--	mutex_lock(&pca->lock);
--	pwm = &pca->chip.pwms[offset];
--	mutex_unlock(&pca->lock);
- }
- 
- static int pca9685_pwm_gpio_get_direction(struct gpio_chip *chip,
+diff --git a/fs/btrfs/file-item.c b/fs/btrfs/file-item.c
+index b1bfdc5c1387a..6f18333e83c33 100644
+--- a/fs/btrfs/file-item.c
++++ b/fs/btrfs/file-item.c
+@@ -274,7 +274,8 @@ found:
+ 		csum += count * csum_size;
+ 		nblocks -= count;
+ next:
+-		while (count--) {
++		while (count > 0) {
++			count--;
+ 			disk_bytenr += fs_info->sectorsize;
+ 			offset += fs_info->sectorsize;
+ 			page_bytes_left -= fs_info->sectorsize;
 -- 
 2.20.1
 
