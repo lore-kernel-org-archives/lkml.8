@@ -7,47 +7,49 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 80E4DC35643
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 08:31:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7F37BC35641
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 08:31:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 585F720637
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 08:31:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 525DA20637
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 08:31:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582273904;
-	bh=rnx7Ggz4AoJzIVWIKtQRb/wV81Ljlb8nmprGeQWWiKM=;
+	s=default; t=1582273911;
+	bh=sr4AxBpVkrWKUM0/W5gOFoSBI4JuE8Ie0711+bXurxQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=PjaCy1o8xbvAyBtvEW5QoQUnsFud0mFbX42xvP3c4j+pUHjes0PSinjvHyyjNupq4
-	 Vox/qrw4w5Fu+DVsZrtNDGamFc93y5+86x4gCht/cOFCP66U5mAGOy8fbTitbCrRZD
-	 2Y84KWdR32Cp2ZIWzvqTwNLWLeLqmQwf6+xKBYdg=
+	b=Bb6LxAC5+qOEndtaeHmI55BFLe49n0cApeevsfJkRPb1vPSltLsiEXHC4Yy62w1RA
+	 4aFZzGwnC3soNbMb94+WlSAgPrPQXmhwKZiY38fcQ+2izAsw1PKsQvapw0szAQ4JF4
+	 gNZDu2y8h7zumXeuy61eqB9ZQdw1CUU60d3OrkWE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733057AbgBUINs (ORCPT
+        id S2387824AbgBUIbt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Feb 2020 03:13:48 -0500
-Received: from mail.kernel.org ([198.145.29.99]:50046 "EHLO mail.kernel.org"
+        Fri, 21 Feb 2020 03:31:49 -0500
+Received: from mail.kernel.org ([198.145.29.99]:49816 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1733050AbgBUINq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Feb 2020 03:13:46 -0500
+        id S1732431AbgBUINi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 21 Feb 2020 03:13:38 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B492124650;
-        Fri, 21 Feb 2020 08:13:45 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 728BB20578;
+        Fri, 21 Feb 2020 08:13:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1582272826;
-        bh=rnx7Ggz4AoJzIVWIKtQRb/wV81Ljlb8nmprGeQWWiKM=;
+        s=default; t=1582272817;
+        bh=sr4AxBpVkrWKUM0/W5gOFoSBI4JuE8Ie0711+bXurxQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=OSuibr2+XfYz/8Eh9H1I8E8Bly9NJlU9jFLWGhPP8jgY6n2gsKGHVGacQQhzxUE8u
-         R31Mm3b+dyFvlID1fSmr1iVs4SlKzV/S0PzR1o5bWzXT74RpM5AMsqP6fqq9QV1tN/
-         +MR5mennAGYxmVjvv2VU2/myH1++D4UI8mQ0x6R4=
+        b=Etv5rHspdy0bRjh2XM2N8vTEQAjVH9IrqFKLN37DXLAiY2I+hkYqSlaw6ywgCv8dH
+         8oGvNcQLw0XhnK+iOkcpHxJO3G3yHHRITdWxzdmScTXwrqVyHMXGfz1fSSvyov9uRn
+         UJoJH5lBWHMdDW8Vy6ffzIyaFDFBk3MUlHuRpWpY=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Christoph Hellwig <hch@lst.de>,
-        Coly Li <colyli@suse.de>, Jens Axboe <axboe@kernel.dk>,
+        stable@vger.kernel.org, Su Yue <Damenly_Su@gmx.com>,
+        Josef Bacik <josef@toxicpanda.com>,
+        Nikolay Borisov <nborisov@suse.com>,
+        David Sterba <dsterba@suse.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 288/344] bcache: rework error unwinding in register_bcache
-Date:   Fri, 21 Feb 2020 08:41:27 +0100
-Message-Id: <20200221072415.983628889@linuxfoundation.org>
+Subject: [PATCH 5.4 286/344] btrfs: Fix split-brain handling when changing FSID to metadata uuid
+Date:   Fri, 21 Feb 2020 08:41:25 +0100
+Message-Id: <20200221072415.767517771@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200221072349.335551332@linuxfoundation.org>
 References: <20200221072349.335551332@linuxfoundation.org>
@@ -60,160 +62,106 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Christoph Hellwig <hch@lst.de>
+From: Nikolay Borisov <nborisov@suse.com>
 
-[ Upstream commit 50246693f81fe887f4db78bf7089051d7f1894cc ]
+[ Upstream commit 1362089d2ad7e20d16371b39d3c11990d4ec23e4 ]
 
-Split the successful and error return path, and use one goto label for each
-resource to unwind.  This also fixes some small errors like leaking the
-module reference count in the reboot case (which seems entirely harmless)
-or printing the wrong warning messages for early failures.
+Current code doesn't correctly handle the situation which arises when
+a file system that has METADATA_UUID_INCOMPAT flag set and has its FSID
+changed to the one in metadata uuid. This causes the incompat flag to
+disappear.
 
-Signed-off-by: Christoph Hellwig <hch@lst.de>
-Signed-off-by: Coly Li <colyli@suse.de>
-Signed-off-by: Jens Axboe <axboe@kernel.dk>
+In case of a power failure we could end up in a situation where part of
+the disks in a multi-disk filesystem are correctly reverted to
+METADATA_UUID_INCOMPAT flag unset state, while others have
+METADATA_UUID_INCOMPAT set and CHANGING_FSID_V2_IN_PROGRESS.
+
+This patch corrects the behavior required to handle the case where a
+disk of the second type is scanned first, creating the necessary
+btrfs_fs_devices. Subsequently, when a disk which has already completed
+the transition is scanned it should overwrite the data in
+btrfs_fs_devices.
+
+Reported-by: Su Yue <Damenly_Su@gmx.com>
+Reviewed-by: Josef Bacik <josef@toxicpanda.com>
+Signed-off-by: Nikolay Borisov <nborisov@suse.com>
+Reviewed-by: David Sterba <dsterba@suse.com>
+Signed-off-by: David Sterba <dsterba@suse.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/md/bcache/super.c | 75 +++++++++++++++++++++++----------------
- 1 file changed, 45 insertions(+), 30 deletions(-)
+ fs/btrfs/volumes.c | 42 ++++++++++++++++++++++++++++++++++++++----
+ 1 file changed, 38 insertions(+), 4 deletions(-)
 
-diff --git a/drivers/md/bcache/super.c b/drivers/md/bcache/super.c
-index b86cf72033401..86f7e09d31516 100644
---- a/drivers/md/bcache/super.c
-+++ b/drivers/md/bcache/super.c
-@@ -2372,29 +2372,33 @@ static bool bch_is_open(struct block_device *bdev)
- static ssize_t register_bcache(struct kobject *k, struct kobj_attribute *attr,
- 			       const char *buffer, size_t size)
- {
--	ssize_t ret = -EINVAL;
--	const char *err = "cannot allocate memory";
--	char *path = NULL;
--	struct cache_sb *sb = NULL;
-+	const char *err;
-+	char *path;
-+	struct cache_sb *sb;
- 	struct block_device *bdev = NULL;
--	struct page *sb_page = NULL;
-+	struct page *sb_page;
-+	ssize_t ret;
+diff --git a/fs/btrfs/volumes.c b/fs/btrfs/volumes.c
+index 9ab3ae5df3005..3e64f49c394b8 100644
+--- a/fs/btrfs/volumes.c
++++ b/fs/btrfs/volumes.c
+@@ -907,6 +907,32 @@ static struct btrfs_fs_devices *find_fsid_changed(
  
-+	ret = -EBUSY;
- 	if (!try_module_get(THIS_MODULE))
--		return -EBUSY;
-+		goto out;
- 
- 	/* For latest state of bcache_is_reboot */
- 	smp_mb();
- 	if (bcache_is_reboot)
--		return -EBUSY;
-+		goto out_module_put;
- 
-+	ret = -ENOMEM;
-+	err = "cannot allocate memory";
- 	path = kstrndup(buffer, size, GFP_KERNEL);
- 	if (!path)
--		goto err;
-+		goto out_module_put;
- 
- 	sb = kmalloc(sizeof(struct cache_sb), GFP_KERNEL);
- 	if (!sb)
--		goto err;
-+		goto out_free_path;
- 
-+	ret = -EINVAL;
- 	err = "failed to open device";
- 	bdev = blkdev_get_by_path(strim(path),
- 				  FMODE_READ|FMODE_WRITE|FMODE_EXCL,
-@@ -2411,57 +2415,68 @@ static ssize_t register_bcache(struct kobject *k, struct kobj_attribute *attr,
- 			if (!IS_ERR(bdev))
- 				bdput(bdev);
- 			if (attr == &ksysfs_register_quiet)
--				goto quiet_out;
-+				goto done;
- 		}
--		goto err;
-+		goto out_free_sb;
- 	}
- 
- 	err = "failed to set blocksize";
- 	if (set_blocksize(bdev, 4096))
--		goto err_close;
-+		goto out_blkdev_put;
- 
- 	err = read_super(sb, bdev, &sb_page);
- 	if (err)
--		goto err_close;
-+		goto out_blkdev_put;
- 
- 	err = "failed to register device";
- 	if (SB_IS_BDEV(sb)) {
- 		struct cached_dev *dc = kzalloc(sizeof(*dc), GFP_KERNEL);
- 
- 		if (!dc)
--			goto err_close;
-+			goto out_put_sb_page;
- 
- 		mutex_lock(&bch_register_lock);
- 		ret = register_bdev(sb, sb_page, bdev, dc);
- 		mutex_unlock(&bch_register_lock);
- 		/* blkdev_put() will be called in cached_dev_free() */
--		if (ret < 0)
--			goto err;
-+		if (ret < 0) {
-+			bdev = NULL;
-+			goto out_put_sb_page;
-+		}
- 	} else {
- 		struct cache *ca = kzalloc(sizeof(*ca), GFP_KERNEL);
- 
- 		if (!ca)
--			goto err_close;
-+			goto out_put_sb_page;
- 
- 		/* blkdev_put() will be called in bch_cache_release() */
--		if (register_cache(sb, sb_page, bdev, ca) != 0)
--			goto err;
-+		if (register_cache(sb, sb_page, bdev, ca) != 0) {
-+			bdev = NULL;
-+			goto out_put_sb_page;
-+		}
- 	}
--quiet_out:
--	ret = size;
--out:
--	if (sb_page)
--		put_page(sb_page);
-+
-+	put_page(sb_page);
-+done:
- 	kfree(sb);
- 	kfree(path);
- 	module_put(THIS_MODULE);
--	return ret;
--
--err_close:
--	blkdev_put(bdev, FMODE_READ|FMODE_WRITE|FMODE_EXCL);
--err:
-+	return size;
-+
-+out_put_sb_page:
-+	put_page(sb_page);
-+out_blkdev_put:
-+	if (bdev)
-+		blkdev_put(bdev, FMODE_READ | FMODE_WRITE | FMODE_EXCL);
-+out_free_sb:
-+	kfree(sb);
-+out_free_path:
-+	kfree(path);
-+out_module_put:
-+	module_put(THIS_MODULE);
-+out:
- 	pr_info("error %s: %s", path, err);
--	goto out;
-+	return ret;
+ 	return NULL;
  }
++
++static struct btrfs_fs_devices *find_fsid_reverted_metadata(
++				struct btrfs_super_block *disk_super)
++{
++	struct btrfs_fs_devices *fs_devices;
++
++	/*
++	 * Handle the case where the scanned device is part of an fs whose last
++	 * metadata UUID change reverted it to the original FSID. At the same
++	 * time * fs_devices was first created by another constitutent device
++	 * which didn't fully observe the operation. This results in an
++	 * btrfs_fs_devices created with metadata/fsid different AND
++	 * btrfs_fs_devices::fsid_change set AND the metadata_uuid of the
++	 * fs_devices equal to the FSID of the disk.
++	 */
++	list_for_each_entry(fs_devices, &fs_uuids, fs_list) {
++		if (memcmp(fs_devices->fsid, fs_devices->metadata_uuid,
++			   BTRFS_FSID_SIZE) != 0 &&
++		    memcmp(fs_devices->metadata_uuid, disk_super->fsid,
++			   BTRFS_FSID_SIZE) == 0 &&
++		    fs_devices->fsid_change)
++			return fs_devices;
++	}
++
++	return NULL;
++}
+ /*
+  * Add new device to list of registered devices
+  *
+@@ -946,7 +972,9 @@ static noinline struct btrfs_device *device_list_add(const char *path,
+ 		fs_devices = find_fsid(disk_super->fsid,
+ 				       disk_super->metadata_uuid);
+ 	} else {
+-		fs_devices = find_fsid(disk_super->fsid, NULL);
++		fs_devices = find_fsid_reverted_metadata(disk_super);
++		if (!fs_devices)
++			fs_devices = find_fsid(disk_super->fsid, NULL);
+ 	}
  
  
+@@ -976,12 +1004,18 @@ static noinline struct btrfs_device *device_list_add(const char *path,
+ 		 * a device which had the CHANGING_FSID_V2 flag then replace the
+ 		 * metadata_uuid/fsid values of the fs_devices.
+ 		 */
+-		if (has_metadata_uuid && fs_devices->fsid_change &&
++		if (fs_devices->fsid_change &&
+ 		    found_transid > fs_devices->latest_generation) {
+ 			memcpy(fs_devices->fsid, disk_super->fsid,
+ 					BTRFS_FSID_SIZE);
+-			memcpy(fs_devices->metadata_uuid,
+-					disk_super->metadata_uuid, BTRFS_FSID_SIZE);
++
++			if (has_metadata_uuid)
++				memcpy(fs_devices->metadata_uuid,
++				       disk_super->metadata_uuid,
++				       BTRFS_FSID_SIZE);
++			else
++				memcpy(fs_devices->metadata_uuid,
++				       disk_super->fsid, BTRFS_FSID_SIZE);
+ 
+ 			fs_devices->fsid_change = false;
+ 		}
 -- 
 2.20.1
 
