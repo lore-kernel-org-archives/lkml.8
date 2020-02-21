@@ -5,50 +5,51 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ACE38C35640
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 08:38:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 358EAC35640
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 08:38:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 81F9620578
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 08:38:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 06739206ED
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 08:38:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582274296;
-	bh=XVGy6iK7CadxPsP1+MFoAhGr6E5YoTKUWdF1RoQobYU=;
+	s=default; t=1582274301;
+	bh=Ptu6GMFRDrGb22Ao6q2UrifXKbK8uk5mZ/S7nJG3Xkg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=iLXkF6QmqTJpmQH69YwisFCT906C/5p6GMFGir4YWWrGg+7Bwp7blOTFz+btiHkxJ
-	 xonxG5nd/Bu6WS31tDJhN3OOhpmV+slgzdxaxOCq8OFwHixVH7KqCu+GuPwWaShiDe
-	 W4Vy0wEf2TPjeidB83e5QzxbPPlgPyfYQ8h81eh8=
+	b=KYhOkdkFDz7uJQgeBnIHu+GYH/isVy+6VdfLgJuk/lAUwrYNp6CHcbDgsgRxClPZs
+	 5tx3FXzzeh2UdG8fxMtDQsb8/ErB3kuN2n2biOrgBNhO12ar/YXSF5veZZMkZgYoD2
+	 QnJ+ob5RQkAE5XXVr7UiQSistgtQf0iGafhVCRaM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729025AbgBUIDP (ORCPT
+        id S1731894AbgBUIiT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Feb 2020 03:03:15 -0500
-Received: from mail.kernel.org ([198.145.29.99]:35804 "EHLO mail.kernel.org"
+        Fri, 21 Feb 2020 03:38:19 -0500
+Received: from mail.kernel.org ([198.145.29.99]:35898 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731133AbgBUIDI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Feb 2020 03:03:08 -0500
+        id S1731422AbgBUIDL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 21 Feb 2020 03:03:11 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 87747206ED;
-        Fri, 21 Feb 2020 08:03:07 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 202D22465D;
+        Fri, 21 Feb 2020 08:03:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1582272188;
-        bh=XVGy6iK7CadxPsP1+MFoAhGr6E5YoTKUWdF1RoQobYU=;
+        s=default; t=1582272190;
+        bh=Ptu6GMFRDrGb22Ao6q2UrifXKbK8uk5mZ/S7nJG3Xkg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=wUeT3dDr+JnOGsmfPR4OGFpDFvvDOfpunr1zujMKpP9f2e55MTtCEk5FUvcBAiIug
-         sUWDyJIe6VLRm+XpVZaWfsjIleVG7NP9Wwp8TPDdOZEp4+T8Rz+wQ2fOev6qrK6so0
-         sNnMvHYqAbtRlJc0ax2hptHeOiGu5A2se7Oa+70c=
+        b=Fc9LmMvIqzEblBPCWzDmioZZW3pjd/EH33sCadqm9t/Jlv1zTNc9ohPzQFmZdYL/3
+         KFOZlBjdKW6swvcwpQRQs6ijCIi3dtsISPpCXBsuEdrwRAynzClAMS9N66anB7n1XJ
+         Uq35souBC5JWalbDBiGFqbcVUecRiNOW8YpA3L1s=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Geert Uytterhoeven <geert+renesas@glider.be>,
-        =?UTF-8?q?Noralf=20Tr=C3=B8nnes?= <noralf@tronnes.org>,
+        stable@vger.kernel.org, Hans de Goede <hdegoede@redhat.com>,
+        Mika Westerberg <mika.westerberg@linux.intel.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 031/344] drm/mipi_dbi: Fix off-by-one bugs in mipi_dbi_blank()
-Date:   Fri, 21 Feb 2020 08:37:10 +0100
-Message-Id: <20200221072351.967212900@linuxfoundation.org>
+Subject: [PATCH 5.4 049/344] pinctrl: baytrail: Do not clear IRQ flags on direct-irq enabled pins
+Date:   Fri, 21 Feb 2020 08:37:28 +0100
+Message-Id: <20200221072353.537145973@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200221072349.335551332@linuxfoundation.org>
 References: <20200221072349.335551332@linuxfoundation.org>
@@ -61,46 +62,58 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Geert Uytterhoeven <geert+renesas@glider.be>
+From: Hans de Goede <hdegoede@redhat.com>
 
-[ Upstream commit 2ce18249af5a28031b3f909cfafccc88ea966c9d ]
+[ Upstream commit a23680594da7a9e2696dbcf4f023e9273e2fa40b ]
 
-When configuring the frame memory window, the last column and row
-numbers are written to the column resp. page address registers.  These
-numbers are thus one less than the actual window width resp. height.
+Suspending Goodix touchscreens requires changing the interrupt pin to
+output before sending them a power-down command. Followed by wiggling
+the interrupt pin to wake the device up, after which it is put back
+in input mode.
 
-While this is handled correctly in mipi_dbi_fb_dirty() since commit
-03ceb1c8dfd1e293 ("drm/tinydrm: Fix setting of the column/page end
-addresses."), it is not in mipi_dbi_blank().  The latter still forgets
-to subtract one when calculating the most significant bytes of the
-column and row numbers, thus programming wrong values when the display
-width or height is a multiple of 256.
+On Bay Trail devices with a Goodix touchscreen direct-irq mode is used
+in combination with listing the pin as a normal GpioIo resource.
 
-Fixes: 02dd95fe31693626 ("drm/tinydrm: Add MIPI DBI support")
-Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
-Signed-off-by: Noralf Trønnes <noralf@tronnes.org>
-Link: https://patchwork.freedesktop.org/patch/msgid/20191230130604.31006-1-geert+renesas@glider.be
+This works fine, until the goodix driver gets rmmod-ed and then insmod-ed
+again. In this case byt_gpio_disable_free() calls
+byt_gpio_clear_triggering() which clears the IRQ flags and after that the
+(direct) IRQ no longer triggers.
+
+This commit fixes this by adding a check for the BYT_DIRECT_IRQ_EN flag
+to byt_gpio_clear_triggering().
+
+Note that byt_gpio_clear_triggering() only gets called from
+byt_gpio_disable_free() for direct-irq enabled pins, as these are excluded
+from the irq_valid mask by byt_init_irq_valid_mask().
+
+Signed-off-by: Hans de Goede <hdegoede@redhat.com>
+Acked-by: Mika Westerberg <mika.westerberg@linux.intel.com>
+Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
+Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/gpu/drm/drm_mipi_dbi.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ drivers/pinctrl/intel/pinctrl-baytrail.c | 8 +++++++-
+ 1 file changed, 7 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/gpu/drm/drm_mipi_dbi.c b/drivers/gpu/drm/drm_mipi_dbi.c
-index f8154316a3b0d..a05e64e3d80bb 100644
---- a/drivers/gpu/drm/drm_mipi_dbi.c
-+++ b/drivers/gpu/drm/drm_mipi_dbi.c
-@@ -367,9 +367,9 @@ static void mipi_dbi_blank(struct mipi_dbi_dev *dbidev)
- 	memset(dbidev->tx_buf, 0, len);
+diff --git a/drivers/pinctrl/intel/pinctrl-baytrail.c b/drivers/pinctrl/intel/pinctrl-baytrail.c
+index 7d658e6627e7a..606fe216f902a 100644
+--- a/drivers/pinctrl/intel/pinctrl-baytrail.c
++++ b/drivers/pinctrl/intel/pinctrl-baytrail.c
+@@ -752,7 +752,13 @@ static void byt_gpio_clear_triggering(struct byt_gpio *vg, unsigned int offset)
  
- 	mipi_dbi_command(dbi, MIPI_DCS_SET_COLUMN_ADDRESS, 0, 0,
--			 (width >> 8) & 0xFF, (width - 1) & 0xFF);
-+			 ((width - 1) >> 8) & 0xFF, (width - 1) & 0xFF);
- 	mipi_dbi_command(dbi, MIPI_DCS_SET_PAGE_ADDRESS, 0, 0,
--			 (height >> 8) & 0xFF, (height - 1) & 0xFF);
-+			 ((height - 1) >> 8) & 0xFF, (height - 1) & 0xFF);
- 	mipi_dbi_command_buf(dbi, MIPI_DCS_WRITE_MEMORY_START,
- 			     (u8 *)dbidev->tx_buf, len);
- 
+ 	raw_spin_lock_irqsave(&byt_lock, flags);
+ 	value = readl(reg);
+-	value &= ~(BYT_TRIG_POS | BYT_TRIG_NEG | BYT_TRIG_LVL);
++
++	/* Do not clear direct-irq enabled IRQs (from gpio_disable_free) */
++	if (value & BYT_DIRECT_IRQ_EN)
++		/* nothing to do */ ;
++	else
++		value &= ~(BYT_TRIG_POS | BYT_TRIG_NEG | BYT_TRIG_LVL);
++
+ 	writel(value, reg);
+ 	raw_spin_unlock_irqrestore(&byt_lock, flags);
+ }
 -- 
 2.20.1
 
