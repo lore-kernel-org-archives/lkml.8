@@ -2,156 +2,127 @@ Return-Path: <SRS0=1210=4J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 75514C35640
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 09:07:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CFE76C35640
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 09:08:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 472F620679
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 09:07:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A091220679
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 09:08:53 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="clLQ6l6T"
+	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="MHq30fHL"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727797AbgBUJHL (ORCPT
+        id S1728049AbgBUJIw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Feb 2020 04:07:11 -0500
-Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:20781 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1727629AbgBUJHL (ORCPT
+        Fri, 21 Feb 2020 04:08:52 -0500
+Received: from mail-wm1-f65.google.com ([209.85.128.65]:35536 "EHLO
+        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727426AbgBUJIv (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Feb 2020 04:07:11 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1582276029;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=GREwfrgxkk1HbO+SZaRpjMMVBwgQQJRkF803U5Z9C54=;
-        b=clLQ6l6Tr8GG4aVn4CDeGiYvneqFOjvjKL5nahXLPoMUsgTWIOQkMmFQzhifry8nfG+Cao
-        /UOoL0vGN9jkWlKREiOf4+VsXW/4grj6jRqSo0I9kp2PB8cwGM3jSUx2lqSmZDCFdGDP9z
-        ilCwVQ5Pfcc/0xzrgrRGeNhXzqhj7UA=
-Received: from mail-qv1-f72.google.com (mail-qv1-f72.google.com
- [209.85.219.72]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-302-x6k32M7WOVWOg9Nm-d5hjw-1; Fri, 21 Feb 2020 04:07:07 -0500
-X-MC-Unique: x6k32M7WOVWOg9Nm-d5hjw-1
-Received: by mail-qv1-f72.google.com with SMTP id p3so916169qvt.9
-        for <linux-kernel@vger.kernel.org>; Fri, 21 Feb 2020 01:07:07 -0800 (PST)
+        Fri, 21 Feb 2020 04:08:51 -0500
+Received: by mail-wm1-f65.google.com with SMTP id b17so855626wmb.0
+        for <linux-kernel@vger.kernel.org>; Fri, 21 Feb 2020 01:08:49 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=3kb32uRYkhezIHBTmj+5SdLW5ETiBbDtA9WwDv9jFqg=;
+        b=MHq30fHLCK1yAJBfIiqeZy2r0lRKlMQNNi0H+yiAO1uObLJy/V8lgFd0bW7GRlbdZA
+         pVm+zKouDVsFeYirga2GLz6wxiIIIXU73yRTJnQWpy3+2jzqpfvbRD0GzW1r6Kfwahhq
+         9em/BTeVTo9+SWaF0nC8xs4UoEhcx2w7NhKWVJpP77auP3klD1qQPWIwj1tSXmIRUmPp
+         rRm7bqD8lP+V5f8+tZn6Iy7XDqtZJXzu3n1VCNq0Nyq+cSXoXbaCPtApVhwnN2UFx/8a
+         8Pk7xV8Me2jOJ+nIvyIBR0AVtt5DEm/ZQQhklA60Qwjfv4CEyIeXbYS/rSRF5eBX9XZP
+         0wQw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=GREwfrgxkk1HbO+SZaRpjMMVBwgQQJRkF803U5Z9C54=;
-        b=UGJaxlszWYRHGP0nc/qWcHbppke+5F6U0szu/XIYEtPmxCHBxRc62V7nbKSlFGbxTF
-         o2R5Cz3EcH1GddZcvwyBFY5+C9pqhb4q7DK30xwtZMVyMGyDN5pMcY9iIp/XHTvqmvaT
-         uVUP0EHF5ARZuZssVZ4ut8UfEtWEWFhOQ3JFfbhfDXw93xlvWkQtEOty3Je1PJurMhAi
-         7SweoHhLRZMCMf2KqYInLhgXvYnI4BOnQPvgQG8KAWWyJSyNq7amMw5u0IxD0D0QFgYd
-         UYjZjqaGxXMnqZsKllIHWRbvRCcn/g+SJBp+uQebwbh2P62yDdaW4VpF0ppARrgzplYt
-         9+rw==
-X-Gm-Message-State: APjAAAWNNBZ2+PioCJh3O4hXrwSmbdtpk8/WViIG+0ZLE5Q8t50VL6w+
-        Plo3+8VSlee5UcaDQa94rGofuZvh7D0VhSKl5Liwix3/xJDYxytQuP5YJfbQhVZyyLqUeQ5dKP1
-        SWJak74HwJGEn8PLB7Tp9LA05
-X-Received: by 2002:a37:a4cf:: with SMTP id n198mr1543819qke.194.1582276026622;
-        Fri, 21 Feb 2020 01:07:06 -0800 (PST)
-X-Google-Smtp-Source: APXvYqx1yfT9Eg0qzuzZet7xGSWjuarIHmnyu/s75tE6f74fiWaY7L+P44sC2l0CgRisg/MBESaIGg==
-X-Received: by 2002:a37:a4cf:: with SMTP id n198mr1543800qke.194.1582276026376;
-        Fri, 21 Feb 2020 01:07:06 -0800 (PST)
-Received: from redhat.com (bzq-109-67-14-209.red.bezeqint.net. [109.67.14.209])
-        by smtp.gmail.com with ESMTPSA id w1sm1262373qtk.31.2020.02.21.01.07.03
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=3kb32uRYkhezIHBTmj+5SdLW5ETiBbDtA9WwDv9jFqg=;
+        b=grFQGNY8Xm9cIwkkVRGoGxnfSiWHbC6axlv/quRWzdl7H4fNxVSpI9Mys8H8UAjZUW
+         fnqEh3CETfHSu0fXdy1k+Q5VAeCZdjdinELKdppU9tLNMncXwEJ2uZj2VIK2cBKLzSVn
+         H6e2q8NaCJTJIPE/gt2Qoh0vJHYEXdNa28V6ytW3wQaN0jC5SUJr9ZN5Dvyx3M9CRA08
+         TiPFTGm/x3kyeMGcDJO6/Z2ItHG33AZQ71SbBBgdL1cbt+paQ2us/TpG5JNtxdUFcb8W
+         zave8CXL3IaNL1/nBLD9freKina6EHlAoAB4IzwKo9DbR7245/ZgWwXo+ic6XjG+kyVW
+         JEBQ==
+X-Gm-Message-State: APjAAAX8mUZtLgdedJf5OIvsypOOLnvbI83sAU8eeDpZY60z0s1ANXyE
+        pWYrhZlfL1DDXusoqY1odmm0Dg==
+X-Google-Smtp-Source: APXvYqyASv2VhtyTE+GbLI9Iyxv1oYm6p8uGHIxc63RjQjtV3HCvpFF/TwD2nkmX9SvFBq2eEeVOoQ==
+X-Received: by 2002:a05:600c:414e:: with SMTP id h14mr2419247wmm.179.1582276128899;
+        Fri, 21 Feb 2020 01:08:48 -0800 (PST)
+Received: from bender.baylibre.local ([2a01:e35:2ec0:82b0:4ca8:b25b:98e4:858])
+        by smtp.gmail.com with ESMTPSA id h5sm3173288wmf.8.2020.02.21.01.08.47
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 21 Feb 2020 01:07:05 -0800 (PST)
-Date:   Fri, 21 Feb 2020 04:07:00 -0500
-From:   "Michael S. Tsirkin" <mst@redhat.com>
-To:     Alexander Duyck <alexander.duyck@gmail.com>
-Cc:     Yang Shi <yang.shi@linux.alibaba.com>,
-        David Hildenbrand <david@redhat.com>,
-        Hugh Dickins <hughd@google.com>,
-        "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>,
-        Andrea Arcangeli <aarcange@redhat.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        linux-mm <linux-mm@kvack.org>,
-        LKML <linux-kernel@vger.kernel.org>
-Subject: Re: [v2 PATCH] mm: shmem: allow split THP when truncating THP
- partially
-Message-ID: <20200221040237-mutt-send-email-mst@kernel.org>
-References: <1575420174-19171-1-git-send-email-yang.shi@linux.alibaba.com>
- <CAKgT0UdHhZznoS0kMdacCqgc=sFXj1Djmpd-DbPvAmyrhJq6CA@mail.gmail.com>
+        Fri, 21 Feb 2020 01:08:48 -0800 (PST)
+From:   Neil Armstrong <narmstrong@baylibre.com>
+To:     daniel@ffwll.ch, dri-devel@lists.freedesktop.org
+Cc:     Neil Armstrong <narmstrong@baylibre.com>,
+        linux-amlogic@lists.infradead.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: [PATCH 0/4] drm/meson: add support for Amlogic Video FBC
+Date:   Fri, 21 Feb 2020 10:08:41 +0100
+Message-Id: <20200221090845.7397-1-narmstrong@baylibre.com>
+X-Mailer: git-send-email 2.22.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAKgT0UdHhZznoS0kMdacCqgc=sFXj1Djmpd-DbPvAmyrhJq6CA@mail.gmail.com>
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Feb 20, 2020 at 10:16:54AM -0800, Alexander Duyck wrote:
-> On Tue, Dec 3, 2019 at 4:43 PM Yang Shi <yang.shi@linux.alibaba.com> wrote:
-> >
-> > Currently when truncating shmem file, if the range is partial of THP
-> > (start or end is in the middle of THP), the pages actually will just get
-> > cleared rather than being freed unless the range cover the whole THP.
-> > Even though all the subpages are truncated (randomly or sequentially),
-> > the THP may still be kept in page cache.  This might be fine for some
-> > usecases which prefer preserving THP.
-> >
-> > But, when doing balloon inflation in QEMU, QEMU actually does hole punch
-> > or MADV_DONTNEED in base page size granulairty if hugetlbfs is not used.
-> > So, when using shmem THP as memory backend QEMU inflation actually doesn't
-> > work as expected since it doesn't free memory.  But, the inflation
-> > usecase really needs get the memory freed.  Anonymous THP will not get
-> > freed right away too but it will be freed eventually when all subpages are
-> > unmapped, but shmem THP would still stay in page cache.
-> >
-> > Split THP right away when doing partial hole punch, and if split fails
-> > just clear the page so that read to the hole punched area would return
-> > zero.
-> >
-> > Cc: Hugh Dickins <hughd@google.com>
-> > Cc: Kirill A. Shutemov <kirill.shutemov@linux.intel.com>
-> > Cc: Andrea Arcangeli <aarcange@redhat.com>
-> > Signed-off-by: Yang Shi <yang.shi@linux.alibaba.com>
-> 
-> One question I would have is if this is really the desired behavior we
-> are looking for?
-> 
-> By proactively splitting the THP you are likely going to see a
-> performance regression with the virtio-balloon driver enabled in QEMU.
-> I would suspect the response to that would be to update the QEMU code
-> to  identify the page size of the shared memory ramblock. At that
-> point I suspect it would start behaving the same as how it currently
-> handles anonymous memory, and the work done here would essentially
-> have been wasted other than triggering the desire to resolve this in
-> QEMU to avoid a performance regression.
-> 
-> The code for inflating a the balloon in virtio-balloon in QEMU can be
-> found here:
-> https://github.com/qemu/qemu/blob/master/hw/virtio/virtio-balloon.c#L66
-> 
-> If there is a way for us to just populate the value obtained via
-> qemu_ram_pagesize with the THP page size instead of leaving it at 4K,
-> which is the size I am assuming it is at since you indicated that it
-> is just freeing the base page size, then we could address the same
-> issue and likely get the desired outcome of freeing the entire THP
-> page when it is no longer used.
-> 
-> - Alex
+Amlogic uses a proprietary lossless image compression protocol and format
+for their hardware video codec accelerators, either video decoders or
+video input encoders.
 
-Well that would be racy right? It could be THP when you call
-the function, by the time you try to free it, it's already
-split up ...
+It considerably reduces memory bandwidth while writing and reading
+frames in memory.
 
+The underlying storage is considered to be 3 components, 8bit or 10-bit
+per component, YCbCr 420, single plane :
+- DRM_FORMAT_YUV420_8BIT
+- DRM_FORMAT_YUV420_10BIT
 
-Two more points:
+This modifier will be notably added to DMA-BUF frames imported from the V4L2
+Amlogic VDEC decoder.
 
-1. we can probably teach QEMU to always use the pbp
-machinery - will be helpful to reduce number of madvise calls too.
+At least two options are supported :
+- Scatter mode: the buffer is filled with a IOMMU scatter table referring
+  to the encoder current memory layout. This mode if more efficient in terms
+  of memory allocation but frames are not dumpable and only valid during until
+  the buffer is freed and back in control of the encoder
+- Memory saving: when the pixel bpp is 8b, the size of the superblock can
+  be reduced, thus saving memory.
 
-2. Something we should do is teach balloon to
-inflate using address/length pairs instead of PFNs.
-This way we can pass a full THP in one go.
+This serie adds the missing register, updated the FBC decoder registers
+content to be committed by the crtc code.
+
+The Amlogic FBC has been tested with compressed content from the Amlogic
+HW VP9 decoder on S905X (GXL), S905D2 (G12A) and S905X3 (SM1) in 8bit
+(Scatter+Mem Saving on G12A/SM1, Mem Saving on GXL) and 10bit
+(Scatter on G12A/SM1, default on GXL).
+
+It's expected to work as-is on GXM and G12B SoCs.
+
+Changes since v1 at [1]:
+- s/VD1_AXI_SEL_AFB/VD1_AXI_SEL_AFBC/ into meson_registers.h
+
+[1] https://patchwork.freedesktop.org/series/73722/#rev1
+
+Neil Armstrong (4):
+  drm/fourcc: Add modifier definitions for describing Amlogic Video
+    Framebuffer Compression
+  drm/meson: add Amlogic Video FBC registers
+  drm/meson: overlay: setup overlay for Amlogic FBC
+  drm/meson: crtc: handle commit of Amlogic FBC frames
+
+ drivers/gpu/drm/meson/meson_crtc.c      | 118 ++++++++---
+ drivers/gpu/drm/meson/meson_drv.h       |  16 ++
+ drivers/gpu/drm/meson/meson_overlay.c   | 257 +++++++++++++++++++++++-
+ drivers/gpu/drm/meson/meson_registers.h |  22 ++
+ include/uapi/drm/drm_fourcc.h           |  56 ++++++
+ 5 files changed, 431 insertions(+), 38 deletions(-)
 
 -- 
-MST
+2.22.0
 
