@@ -2,175 +2,102 @@ Return-Path: <SRS0=1210=4J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 45E93C35646
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 11:18:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0AB11C35647
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 11:27:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 06C38207FD
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 11:18:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D52E82073A
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 11:27:25 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=analog.onmicrosoft.com header.i=@analog.onmicrosoft.com header.b="tI8UK/kH"
+	dkim=pass (2048-bit key) header.d=isovalent-com.20150623.gappssmtp.com header.i=@isovalent-com.20150623.gappssmtp.com header.b="Rlb6YHpD"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727213AbgBULSK (ORCPT
+        id S1727163AbgBUL1Y (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Feb 2020 06:18:10 -0500
-Received: from mx0a-00128a01.pphosted.com ([148.163.135.77]:14550 "EHLO
-        mx0a-00128a01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726940AbgBULSJ (ORCPT
+        Fri, 21 Feb 2020 06:27:24 -0500
+Received: from mail-wr1-f65.google.com ([209.85.221.65]:45792 "EHLO
+        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726100AbgBUL1Y (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Feb 2020 06:18:09 -0500
-Received: from pps.filterd (m0167088.ppops.net [127.0.0.1])
-        by mx0a-00128a01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 01LBEFUJ030995;
-        Fri, 21 Feb 2020 06:18:08 -0500
-Received: from nam04-co1-obe.outbound.protection.outlook.com (mail-co1nam04lp2056.outbound.protection.outlook.com [104.47.45.56])
-        by mx0a-00128a01.pphosted.com with ESMTP id 2y8udupvx7-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Fri, 21 Feb 2020 06:18:08 -0500
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=RDAWnek6xTRlEHQ5NdgPmptA2Ok7OkOK6pwrKjHIoXy5ODDw1wPAziZS+A5nZtWnimOvWOEOvX+uDI/U0G/UAwrC0AaD+F/ROMcKHK9K6IQjpMFKr+FHfFFDCyuCc5pTvDySptCh2mndu9CW0+nxeX//yqjqr6EUSTHTYgyN+NMmxsLFV2258AvIsmQAqBGwEWS5RRpgCU3MyOJ//oFAfkX11XzaQqI/ZHu7/2ZN8aeRvPMGrXH1bTcbnnMx0veT/9bsEJF9wC72VqwRvoqxcPTzmfGB+ALVoaIIQKh1fMszzA9r8iRt9jZMbAB7e10DPgAa9RTaGg9pX3Dif3br3w==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=je1Fx+Q5gNhFaq1tJkCmc5ugKu4ov0TOu53HrbokNVA=;
- b=RQWGUpUVQYnG0j83SJ18Mqm38UC8cOJShEiAdGq8aN+H1ww6g0q6xXp8VcyeaUt0fuA2YJsE811g6fZTqvmCb7TV4ds0nYyprQvfSH9zxSBP2MKaVEvm56lNDpzPzCkKVCZi1bF+xMh3O/q1HIrU3YZRJ2v8hUJbsjUC02wm3+jNcaFFLiLmEZze5+6hZc9iaXXVqo4LZ0qAApeIh06XgWYsCK6kvHw4tL3iuvZvkUPNkm8sKZTUTjvtl50nkInLDHix11YUyuEgN8pcLI3aNewmfznW/EKp8lrXc5jldlCFQZyQlqsSB1KXl9mZjNZbYbg3Es9+muaFRlJPC8ZSbg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=analog.com; dmarc=pass action=none header.from=analog.com;
- dkim=pass header.d=analog.com; arc=none
+        Fri, 21 Feb 2020 06:27:24 -0500
+Received: by mail-wr1-f65.google.com with SMTP id g3so1608084wrs.12
+        for <linux-kernel@vger.kernel.org>; Fri, 21 Feb 2020 03:27:21 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=analog.onmicrosoft.com; s=selector2-analog-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=je1Fx+Q5gNhFaq1tJkCmc5ugKu4ov0TOu53HrbokNVA=;
- b=tI8UK/kH9NFJMMFaZoCoohl05l6HhVVbIJzYydiV2JFPoPc6E1vmtuwjlm+fTZ/MYUasK7rzzZEXjrMjKcFHqXt4ftMWh0nrdjeKjxUXbBonONfQuKorhAPAPELxzzPHZXhij9zrAvnw9yedSE/zhRKqUx8jX8j9KkrEUdB1od4=
-Received: from CH2PR03MB5192.namprd03.prod.outlook.com (2603:10b6:610:90::24)
- by CH2PR03MB5158.namprd03.prod.outlook.com (2603:10b6:610:92::15) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2750.21; Fri, 21 Feb
- 2020 11:18:05 +0000
-Received: from CH2PR03MB5192.namprd03.prod.outlook.com
- ([fe80::edf0:3922:83f0:3056]) by CH2PR03MB5192.namprd03.prod.outlook.com
- ([fe80::edf0:3922:83f0:3056%4]) with mapi id 15.20.2729.033; Fri, 21 Feb 2020
- 11:18:05 +0000
-From:   "Ardelean, Alexandru" <alexandru.Ardelean@analog.com>
-To:     "Tachici, Alexandru" <Alexandru.Tachici@analog.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-iio@vger.kernel.org" <linux-iio@vger.kernel.org>
-CC:     "jic23@kernel.org" <jic23@kernel.org>
-Subject: Re: [PATCH] iio: industrialio-core: Fix debugfs read
-Thread-Topic: [PATCH] iio: industrialio-core: Fix debugfs read
-Thread-Index: AQHV6BBVR51maDTUhUeI3C33r6amoKglgdcA
-Date:   Fri, 21 Feb 2020 11:18:05 +0000
-Message-ID: <a5c223ebd8a00b7509fb95bdf884b556e5d22546.camel@analog.com>
-References: <20200220170726.9580-1-alexandru.tachici@analog.com>
-In-Reply-To: <20200220170726.9580-1-alexandru.tachici@analog.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-originating-ip: [137.71.226.54]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-ht: Tenant
-x-ms-office365-filtering-correlation-id: 43d9769e-f881-4abe-bcc8-08d7b6bfb901
-x-ms-traffictypediagnostic: CH2PR03MB5158:
-x-ld-processed: eaa689b4-8f87-40e0-9c6f-7228de4d754a,ExtAddr
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <CH2PR03MB5158D91C65B0640DD124D7C7F9120@CH2PR03MB5158.namprd03.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:7691;
-x-forefront-prvs: 0320B28BE1
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(346002)(39860400002)(136003)(376002)(396003)(366004)(199004)(189003)(478600001)(76116006)(91956017)(81156014)(8676002)(8936002)(110136005)(6486002)(4326008)(6512007)(36756003)(316002)(71200400001)(26005)(186003)(5660300002)(2616005)(6506007)(86362001)(66446008)(64756008)(66946007)(66476007)(66556008)(2906002)(81166006);DIR:OUT;SFP:1101;SCL:1;SRVR:CH2PR03MB5158;H:CH2PR03MB5192.namprd03.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
-received-spf: None (protection.outlook.com: analog.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: XHdBgt+3vS8h4SB2Ryw2W5LY4foBfVWDn7rvoNQyMW8RhfX8/KTEcz+asGW5xaqzcqU8pcloLahtyfBX7UCb2qjQB+WlnubdcVrqrUuRznl+N59A/+X/XvxG5bmJg1KlFEos4fVhUcexnnV7vTrIeo9c0KsCrNg/DP4EnSt9sCA6pY7l6MhDWrCooIsMYzbrf5fb2wNkn7G77X/zHr3EpRMtTTWAzDQIP3ixDJZqV/AVf6vHDYVdsRfDzszT7uXkDDW4TS53COiwgQuMm60YDFUOFvLZJTrdDFNUpbtGZ6kswuP9vpUoWhIucu01GB4BAyLXstnbkHlmqFxFBW58cOWJAJ/6COj1lVq34TdoqI46Hg7XBgvf3K1svSplv4isEsd8DXUIuPPYnCYCD1PIdJAvhWkKVMZ51E5A0daY28THYVALfl4KSbjM2IJYx6rI
-x-ms-exchange-antispam-messagedata: 3dGPZfspq2ZA+57uZvqbgNo/3CSeO92bt7CaKzhuWKJFoBspS1D/1v1s90ql680eR6YUPCkzZY1Y4gzPMqxGa4ND7CyiKaLUwMyL8wkK+fzOEZ5efr2CDrbhIlUGvi5GHE5/q+/heYk+6f7Dzy/LEg==
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <9B7A7F4C669C9F4A8FC641E36AB4DB2B@namprd03.prod.outlook.com>
-Content-Transfer-Encoding: base64
+        d=isovalent-com.20150623.gappssmtp.com; s=20150623;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=Ho6wZMX8qLHipLihEaU5SCXs4HqK1+rvVl2GBlxkV28=;
+        b=Rlb6YHpDPsOHCT/5Aq+PoY+c+yfNFB3uMTnFGqhvRhPm/D5NrdKzM2J4yQZgdKqvmx
+         R3mnvee3YG//8uDOK6/gczMozK6zfg7E/WaLz1cTmuQA1EjTlNw+gnZVC8kRrK4hoX8O
+         zQbdVR2pLVrnL8k6j6S2Q9RAaef0UQNxFqRGWx6Emo3FwOQUhNoXB5MbNebYDQ+n6jRP
+         nToI6ez0LqEUnco25hj/dxmMpLh9JlG50ygHNaC4JWxAsnVW47V1MAXRpzpNVjz+QlaG
+         oPHGFpzAi02xmB2wYd9gVJwG0LXWot9zDHJ9VvSz9hwf2DEUlAage1mxQbjNvaSyjMuz
+         bSOQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=Ho6wZMX8qLHipLihEaU5SCXs4HqK1+rvVl2GBlxkV28=;
+        b=bg0qFtdAEG1AD7pfzBAWjHNdu4jJ7f5PrA+7xr+KnpYNFKWvYtvnkGWRllwes7Edi0
+         PivONJTb3E15Dy4VFDQH+YUPhc7IATtkFwTIzRram75gnLsUC4lxQw295XLnjASjUyn8
+         JX1eNU6dId6NmaGFVGR6WW3Ccc84E1fk6wxmVN+/koNYIVcGkeLxaTvNnKJIx56xjAuN
+         QRNuwpHMvQTasq6GsOnZDcmBTgHH7TXXlyf2hH7O1CBJkn8eaJj9CYf//4ga37bTDDVr
+         CfTJrOUX8sTfBFdmHQgj9MjbJsEScv9uVGxSk7Yip5FFsemuJsmyR3txxPIU8y/GzdXd
+         TlNg==
+X-Gm-Message-State: APjAAAWAcwooe8E957cKEIFbvUZRhThja+nW1WAcOc9s4kPjeMbhUY8q
+        k+xfBMbc9EVmG3THg6vJwjw89w==
+X-Google-Smtp-Source: APXvYqylZ7Vhu0XF5ow5n1qsv1lD6lrch6MbYz9kBc0cMwAxD5rPbQ8q+Hj1YgY+26WTbyqFs1usTQ==
+X-Received: by 2002:a5d:474d:: with SMTP id o13mr47350622wrs.309.1582284440977;
+        Fri, 21 Feb 2020 03:27:20 -0800 (PST)
+Received: from [192.168.1.23] ([91.143.66.155])
+        by smtp.gmail.com with ESMTPSA id v15sm3768573wrf.7.2020.02.21.03.27.19
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 21 Feb 2020 03:27:20 -0800 (PST)
+Subject: Re: [PATCH bpf-next v2 1/5] bpftool: Move out sections to separate
+ functions
+To:     Michal Rostecki <mrostecki@opensuse.org>, bpf@vger.kernel.org
+Cc:     Alexei Starovoitov <ast@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Martin KaFai Lau <kafai@fb.com>,
+        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
+        Andrii Nakryiko <andriin@fb.com>,
+        Quentin Monnet <quentin.monnet@netronome.com>,
+        Jakub Kicinski <kuba@kernel.org>, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Shuah Khan <shuah@kernel.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        Jesper Dangaard Brouer <hawk@kernel.org>,
+        John Fastabend <john.fastabend@gmail.com>,
+        "open list:KERNEL SELFTEST FRAMEWORK" 
+        <linux-kselftest@vger.kernel.org>
+References: <20200221031702.25292-1-mrostecki@opensuse.org>
+ <20200221031702.25292-2-mrostecki@opensuse.org>
+From:   Quentin Monnet <quentin@isovalent.com>
+Message-ID: <ba4bf99d-9047-15b6-09b1-d8e7e0d1feef@isovalent.com>
+Date:   Fri, 21 Feb 2020 11:27:18 +0000
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.5.0
 MIME-Version: 1.0
-X-OriginatorOrg: analog.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 43d9769e-f881-4abe-bcc8-08d7b6bfb901
-X-MS-Exchange-CrossTenant-originalarrivaltime: 21 Feb 2020 11:18:05.4036
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: eaa689b4-8f87-40e0-9c6f-7228de4d754a
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: oIetWHvys2Emcc2dpEuWSgfYQA+TPHfRnCA3aBVurxCelPB0oK16lJhANPzChTY6WhgPoMn0C1RPrJIHFpVlZNG5Zt7Dingu7LQ2aw8Sn8o=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: CH2PR03MB5158
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.572
- definitions=2020-02-21_03:2020-02-19,2020-02-21 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 lowpriorityscore=0
- malwarescore=0 impostorscore=0 spamscore=0 suspectscore=0 mlxlogscore=999
- phishscore=0 mlxscore=0 priorityscore=1501 clxscore=1015 adultscore=0
- bulkscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2001150001 definitions=main-2002210085
+In-Reply-To: <20200221031702.25292-2-mrostecki@opensuse.org>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-GB
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-T24gVGh1LCAyMDIwLTAyLTIwIGF0IDE5OjA3ICswMjAwLCBBbGV4YW5kcnUgVGFjaGljaSB3cm90
-ZToNCj4gW0V4dGVybmFsXQ0KPiANCj4gQ3VycmVudGx5IGlpb19kZWJ1Z2ZzX3JlYWRfcmVnIGNh
-bGxzIGRlYnVnZnNfcmVnX2FjY2Vzcw0KPiBldmVyeSB0aW1lIGl0IGlzIHJhbi4gUmVhZGluZyB0
-aGUgc2FtZSBoYXJkd2FyZSByZWdpc3Rlcg0KPiBtdWx0aXBsZSB0aW1lcyBkdXJpbmcgdGhlIHNh
-bWUgcmVhZGluZyBvZiBhIGRlYnVnZnMgZmlsZQ0KPiBjYW4gY2F1c2UgdW5pbnRlbmRlZCBlZmZl
-Y3RzLg0KPiANCj4gRm9yIGV4YW1wbGUgZm9yIGVhY2g6IGNhdCBpaW86ZGV2aWNlMC9kaXJlY3Rf
-cmVnX2FjY2Vzcw0KPiB0aGUgZmlsZV9vcGVyYXRpb25zLnJlYWQgZnVuY3Rpb24gd2lsbCBiZSBj
-YWxsZWQgYXQgbGVhc3QNCj4gdHdpY2UuIEZpcnN0IHdpbGwgcmV0dXJuIHRoZSBmdWxsIGxlbmd0
-aCBvZiB0aGUgc3RyaW5nIGluDQo+IGJ5dGVzICBhbmQgdGhlIHNlY29uZCB3aWxsIHJldHVybiAw
-Lg0KPiANCj4gVGhpcyBwYXRjaCBtYWtlcyBpaW9fZGVidWdmc19yZWFkX3JlZyB0byBjYWxsIGRl
-YnVnZnNfcmVnX2FjY2Vzcw0KPiBvbmx5IHdoZW4gdGhlIHVzZXIncyBidWZmZXIgcG9zaXRpb24g
-KCpwcG9zKSBpcyAwLiAobWVhbmluZw0KPiBpdCBpcyB0aGUgYmVnaW5uaW5nIG9mIGEgbmV3IHJl
-YWRpbmcgb2YgdGhlIGRlYnVnZnMgZmlsZSkuDQo+IA0KPiBGaXhlczogZTU1M2YxODJkNTViICgi
-c3RhZ2luZzogaWlvOiBjb3JlOiBJbnRyb2R1Y2UgZGVidWdmcyBzdXBwb3J0LCBhZGQNCj4gc3Vw
-cG9ydCBmb3IgZGlyZWN0IHJlZ2lzdGVyIGFjY2VzcyIpDQo+IFNpZ25lZC1vZmYtYnk6IEFsZXhh
-bmRydSBUYWNoaWNpIDxhbGV4YW5kcnUudGFjaGljaUBhbmFsb2cuY29tPg0KPiAtLS0NCj4gIGRy
-aXZlcnMvaWlvL2luZHVzdHJpYWxpby1jb3JlLmMgfCAzNCArKysrKysrKysrKysrKysrKysrKysr
-Ky0tLS0tLS0tLS0NCj4gIGluY2x1ZGUvbGludXgvaWlvL2lpby5oICAgICAgICAgfCAgMiArKw0K
-PiAgMiBmaWxlcyBjaGFuZ2VkLCAyNiBpbnNlcnRpb25zKCspLCAxMCBkZWxldGlvbnMoLSkNCj4g
-DQo+IGRpZmYgLS1naXQgYS9kcml2ZXJzL2lpby9pbmR1c3RyaWFsaW8tY29yZS5jIGIvZHJpdmVy
-cy9paW8vaW5kdXN0cmlhbGlvLWNvcmUuYw0KPiBpbmRleCA2NWZmMGQwNjcwMTguLjYzN2NlYTE0
-YWZkYiAxMDA2NDQNCj4gLS0tIGEvZHJpdmVycy9paW8vaW5kdXN0cmlhbGlvLWNvcmUuYw0KPiAr
-KysgYi9kcml2ZXJzL2lpby9pbmR1c3RyaWFsaW8tY29yZS5jDQo+IEBAIC0yOTcsMjYgKzI5Nyw0
-MCBAQCBzdGF0aWMgdm9pZCBfX2V4aXQgaWlvX2V4aXQodm9pZCkNCj4gIH0NCj4gIA0KPiAgI2lm
-IGRlZmluZWQoQ09ORklHX0RFQlVHX0ZTKQ0KPiAtc3RhdGljIHNzaXplX3QgaWlvX2RlYnVnZnNf
-cmVhZF9yZWcoc3RydWN0IGZpbGUgKmZpbGUsIGNoYXIgX191c2VyICp1c2VyYnVmLA0KPiAtCQkJ
-ICAgICAgc2l6ZV90IGNvdW50LCBsb2ZmX3QgKnBwb3MpDQo+ICtzdGF0aWMgaW50IGlpb19kZWJ1
-Z2ZzX2dldF9yZWdfc3RyaW5nKHN0cnVjdCBpaW9fZGV2ICppbmRpb19kZXYpDQo+ICB7DQo+IC0J
-c3RydWN0IGlpb19kZXYgKmluZGlvX2RldiA9IGZpbGUtPnByaXZhdGVfZGF0YTsNCj4gLQljaGFy
-IGJ1ZlsyMF07DQo+ICsJY29uc3Qgc3RydWN0IGlpb19pbmZvICppbmZvID0gaW5kaW9fZGV2LT5p
-bmZvOw0KPiAgCXVuc2lnbmVkIHZhbCA9IDA7DQo+IC0Jc3NpemVfdCBsZW47DQo+ICAJaW50IHJl
-dDsNCj4gIA0KPiAtCXJldCA9IGluZGlvX2Rldi0+aW5mby0+ZGVidWdmc19yZWdfYWNjZXNzKGlu
-ZGlvX2RldiwNCj4gLQkJCQkJCSAgaW5kaW9fZGV2LT5jYWNoZWRfcmVnX2FkZHIsDQo+IC0JCQkJ
-CQkgIDAsICZ2YWwpOw0KPiArCXJldCA9IGluZm8tPmRlYnVnZnNfcmVnX2FjY2VzcyhpbmRpb19k
-ZXYsIGluZGlvX2Rldi0+Y2FjaGVkX3JlZ19hZGRyLA0KPiArCQkJCSAgICAgICAwLCAmdmFsKTsN
-Cj4gIAlpZiAocmV0KSB7DQo+ICAJCWRldl9lcnIoaW5kaW9fZGV2LT5kZXYucGFyZW50LCAiJXM6
-IHJlYWQgZmFpbGVkXG4iLCBfX2Z1bmNfXyk7DQo+ICAJCXJldHVybiByZXQ7DQo+ICAJfQ0KPiAr
-CWluZGlvX2Rldi0+cmVhZF9idWZfbGVuID0gc25wcmludGYoaW5kaW9fZGV2LT5yZWFkX2J1ZiwN
-Cj4gKwkJCQkJICAgc2l6ZW9mKGluZGlvX2Rldi0+cmVhZF9idWYpLA0KPiArCQkJCQkgICAiMHgl
-WFxuIiwgdmFsKTsNCj4gKwlyZXR1cm4gMDsNCj4gK30NCj4gIA0KPiAtCWxlbiA9IHNucHJpbnRm
-KGJ1Ziwgc2l6ZW9mKGJ1ZiksICIweCVYXG4iLCB2YWwpOw0KPiArc3RhdGljIHNzaXplX3QgaWlv
-X2RlYnVnZnNfcmVhZF9yZWcoc3RydWN0IGZpbGUgKmZpbGUsIGNoYXIgX191c2VyICp1c2VyYnVm
-LA0KPiArCQkJCSAgICBzaXplX3QgY291bnQsIGxvZmZfdCAqcHBvcykNCj4gK3sNCj4gKwlzdHJ1
-Y3QgaWlvX2RldiAqaW5kaW9fZGV2ID0gZmlsZS0+cHJpdmF0ZV9kYXRhOw0KPiArCWxvZmZfdCBw
-b3MgPSAqcHBvczsNCj4gKwlpbnQgcmV0Ow0KPiArDQo+ICsJaWYgKHBvcyA9PSAwKSB7DQo+ICsJ
-CXJldCA9IGlpb19kZWJ1Z2ZzX2dldF9yZWdfc3RyaW5nKGluZGlvX2Rldik7DQo+ICsJCWlmIChy
-ZXQpDQo+ICsJCQlyZXR1cm4gcmV0Ow0KPiArCX0NCj4gIA0KPiAtCXJldHVybiBzaW1wbGVfcmVh
-ZF9mcm9tX2J1ZmZlcih1c2VyYnVmLCBjb3VudCwgcHBvcywgYnVmLCBsZW4pOw0KDQpJJ20gd29u
-ZGVyaW5nIG5vdywgaWYgaXQgd291bGQgYmUgc3VmZmljaWVudCBoZXJlIHRvIGp1c3QgZG86DQoN
-CmlmIChsZW4gPT0gc2ltcGxlX3JlYWRfZnJvbV9idWZmZXIodXNlcmJ1ZiwgY291bnQsIHBwb3Ms
-IGJ1ZiwgbGVuKSkNCiAgICByZXR1cm4gMDsNCg0KDQo+ICsJcmV0dXJuIHNpbXBsZV9yZWFkX2Zy
-b21fYnVmZmVyKHVzZXJidWYsIGNvdW50LCBwcG9zLA0KPiArCQkJCSAgICAgICBpbmRpb19kZXYt
-PnJlYWRfYnVmLA0KPiArCQkJCSAgICAgICBpbmRpb19kZXYtPnJlYWRfYnVmX2xlbik7DQo+ICB9
-DQo+ICANCj4gIHN0YXRpYyBzc2l6ZV90IGlpb19kZWJ1Z2ZzX3dyaXRlX3JlZyhzdHJ1Y3QgZmls
-ZSAqZmlsZSwNCj4gZGlmZiAtLWdpdCBhL2luY2x1ZGUvbGludXgvaWlvL2lpby5oIGIvaW5jbHVk
-ZS9saW51eC9paW8vaWlvLmgNCj4gaW5kZXggODYyY2UwMDE5ZWJhLi5lZWQ1OGVkMmYzNjggMTAw
-NjQ0DQo+IC0tLSBhL2luY2x1ZGUvbGludXgvaWlvL2lpby5oDQo+ICsrKyBiL2luY2x1ZGUvbGlu
-dXgvaWlvL2lpby5oDQo+IEBAIC01NjgsNiArNTY4LDggQEAgc3RydWN0IGlpb19kZXYgew0KPiAg
-I2lmIGRlZmluZWQoQ09ORklHX0RFQlVHX0ZTKQ0KPiAgCXN0cnVjdCBkZW50cnkJCQkqZGVidWdm
-c19kZW50cnk7DQo+ICAJdW5zaWduZWQJCQljYWNoZWRfcmVnX2FkZHI7DQo+ICsJY2hhcgkJCQly
-ZWFkX2J1ZlsyMF07DQo+ICsJdW5zaWduZWQgaW50CQkJcmVhZF9idWZfbGVuOw0KPiAgI2VuZGlm
-DQo+ICB9Ow0KPiAgDQo=
+2020-02-21 04:16 UTC+0100 ~ Michal Rostecki <mrostecki@opensuse.org>
+> Remove all calls of print_end_then_start_section function and for loops
+> out from the do_probe function. Instead, provide separate functions for
+> each section (like i.e. section_helpers) which are called in do_probe.
+> This change is motivated by better readability.
+> 
+> Signed-off-by: Michal Rostecki <mrostecki@opensuse.org>
+
+Thanks!
+
+Reviewed-by: Quentin Monnet <quentin@isovalent.com>
