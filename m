@@ -2,115 +2,143 @@ Return-Path: <SRS0=1210=4J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A3677C35647
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 13:38:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E2805C35647
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 13:39:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7A515222C4
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 13:38:09 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582292289;
-	bh=xwZtYdVGm1YdaKV8BKeiJhwK+7maJ+h8QKPM8JBtYqQ=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=gWaWLpQJV6mD/QGVYSGQeTcfkryctp7tiyqQatRicmTd5Z2qv2x4b4D/8r691wEdP
-	 PS7diaZAHHynYX7X+ZZ90Q38hplkrqD/rf/AhvNMyRE0OwWMdDVV2VvJ15CDy9Rl7D
-	 c1U36rh3nem+HNYITPMA57XwDIth4etQ+jOCCevE=
+	by mail.kernel.org (Postfix) with ESMTP id B7677208C4
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 13:39:58 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Vyg4b1yl"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728396AbgBUNiI (ORCPT
+        id S1728081AbgBUNj5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Feb 2020 08:38:08 -0500
-Received: from foss.arm.com ([217.140.110.172]:39538 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728085AbgBUNiH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Feb 2020 08:38:07 -0500
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 1539630E;
-        Fri, 21 Feb 2020 05:38:06 -0800 (PST)
-Received: from localhost (unknown [10.37.6.21])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 24D5D3F703;
-        Fri, 21 Feb 2020 05:38:05 -0800 (PST)
-Date:   Fri, 21 Feb 2020 13:38:03 +0000
-From:   Mark Brown <broonie@kernel.org>
-To:     Sameer Pujar <spujar@nvidia.com>
-Cc:     perex@perex.cz, tiwai@suse.com, robh+dt@kernel.org,
-        lgirdwood@gmail.com, thierry.reding@gmail.com,
-        jonathanh@nvidia.com, digetx@gmail.com,
-        alsa-devel@alsa-project.org, devicetree@vger.kernel.org,
-        linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org,
-        sharadg@nvidia.com, mkumard@nvidia.com, viswanathl@nvidia.com,
-        rlokhande@nvidia.com, dramesh@nvidia.com, atalambedu@nvidia.com
-Subject: Re: [PATCH v3 05/10] ASoC: tegra: add Tegra210 based AHUB driver
-Message-ID: <20200221133803.GF5546@sirena.org.uk>
-References: <1582180492-25297-1-git-send-email-spujar@nvidia.com>
- <1582180492-25297-6-git-send-email-spujar@nvidia.com>
+        Fri, 21 Feb 2020 08:39:57 -0500
+Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:46968 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1727039AbgBUNj4 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 21 Feb 2020 08:39:56 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1582292396;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=HVK/xgaNWuLk79HGiCMg7vGaUeaBKpy3vV1cOoNHUbo=;
+        b=Vyg4b1ylD6ngFD4zjodg3iRsY1MTdErrh8LxTKVuFouMVuHxIS+X80bHxgEUJbSQR8CSlF
+        k3hd71JYMk9CtKQfhaoC9qF3hPlrT/lGYFrP7Z3Rb/CC3kuCHfl5f3xO7rbebjeKqg00Au
+        t9QLtip4eIt3HJ4Vk1rTc2dR2L4u68M=
+Received: from mail-wm1-f69.google.com (mail-wm1-f69.google.com
+ [209.85.128.69]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-102-MtEq419RNs26p7jqXvs5zw-1; Fri, 21 Feb 2020 08:39:54 -0500
+X-MC-Unique: MtEq419RNs26p7jqXvs5zw-1
+Received: by mail-wm1-f69.google.com with SMTP id p2so619000wmi.8
+        for <linux-kernel@vger.kernel.org>; Fri, 21 Feb 2020 05:39:54 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:in-reply-to:references:date
+         :message-id:mime-version;
+        bh=HVK/xgaNWuLk79HGiCMg7vGaUeaBKpy3vV1cOoNHUbo=;
+        b=IDgcNPsq2nfCL7GbdpjH2fN3Re+tsQ67lT/J35H9le2eVGy8JHo5ElOoeCDI8PCN2m
+         boW+Mt4Ddg9/ZhisdRZbik0gUaTkyQo4nTQSDNN3z/VlcDJ+g7uQpYfUo+hVusDqLSdz
+         cZKzxSAQMjDvLPGLkdqOSF6W+bhNYb37ke6WGO2NGn4k5nzrJrCT+KEjPKAx8SWIYAIN
+         GkC//JI7oFKvkOQ3jv59h0rJOVBd+ads7deG3p8W+e7HuTWeSHda2sqkmtuxd+kc5TkO
+         SiyGGXFXDbm96QqI4nNGP1yx/PXRhNQbEH+auqJ36tTjtycoykYeKaSTsxEus2YjSX+W
+         7KGw==
+X-Gm-Message-State: APjAAAX/0eTOTUajAqRPTeHGrU7aWHpTJmU95FAenNRisBolOfVP8vRz
+        Mt3+0Zh+sy2EQHttxS0m95BwJ9gPtFYvScxwOBVnVSAnh/pdGd+e1ySrJuqS1Ih/rG3ckTJmxaj
+        Tv9j3D0hVqzlhZAHVMrubBVMx
+X-Received: by 2002:a05:600c:224a:: with SMTP id a10mr3980078wmm.143.1582292393000;
+        Fri, 21 Feb 2020 05:39:53 -0800 (PST)
+X-Google-Smtp-Source: APXvYqweFS40c6w6buHNjWyY/RUC5Ssm8VeFlafDjUQ1BIIViezUuUq9RDSemCDXg7Eh/GSmKzbIgg==
+X-Received: by 2002:a05:600c:224a:: with SMTP id a10mr3980059wmm.143.1582292392740;
+        Fri, 21 Feb 2020 05:39:52 -0800 (PST)
+Received: from vitty.brq.redhat.com (nat-pool-brq-t.redhat.com. [213.175.37.10])
+        by smtp.gmail.com with ESMTPSA id q3sm3619639wmj.38.2020.02.21.05.39.51
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 21 Feb 2020 05:39:52 -0800 (PST)
+From:   Vitaly Kuznetsov <vkuznets@redhat.com>
+To:     Sean Christopherson <sean.j.christopherson@intel.com>
+Cc:     Paolo Bonzini <pbonzini@redhat.com>,
+        Wanpeng Li <wanpengli@tencent.com>,
+        Jim Mattson <jmattson@google.com>,
+        Joerg Roedel <joro@8bytes.org>, kvm@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 04/10] KVM: VMX: Fold vpid_sync_vcpu_{single,global}() into vpid_sync_context()
+In-Reply-To: <20200220204356.8837-5-sean.j.christopherson@intel.com>
+References: <20200220204356.8837-1-sean.j.christopherson@intel.com> <20200220204356.8837-5-sean.j.christopherson@intel.com>
+Date:   Fri, 21 Feb 2020 14:39:51 +0100
+Message-ID: <87zhdcrrdk.fsf@vitty.brq.redhat.com>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="p8PhoBjPxaQXD0vg"
-Content-Disposition: inline
-In-Reply-To: <1582180492-25297-6-git-send-email-spujar@nvidia.com>
-X-Cookie: Dead? No excuse for laying off work.
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Sean Christopherson <sean.j.christopherson@intel.com> writes:
 
---p8PhoBjPxaQXD0vg
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+> Fold vpid_sync_vcpu_global() and vpid_sync_vcpu_single() into their sole
+> caller.  KVM should always prefer the single variant, i.e. the only
+> reason to use the global variant is if the CPU doesn't support
+> invalidating a single VPID, which is the entire purpose of wrapping the
+> calls with vpid_sync_context().
+>
+> No functional change intended.
+>
+> Signed-off-by: Sean Christopherson <sean.j.christopherson@intel.com>
+> ---
+>  arch/x86/kvm/vmx/ops.h | 16 ++--------------
+>  1 file changed, 2 insertions(+), 14 deletions(-)
+>
+> diff --git a/arch/x86/kvm/vmx/ops.h b/arch/x86/kvm/vmx/ops.h
+> index 612df1bdb26b..eb6adc77a55d 100644
+> --- a/arch/x86/kvm/vmx/ops.h
+> +++ b/arch/x86/kvm/vmx/ops.h
+> @@ -253,29 +253,17 @@ static inline void __invept(unsigned long ext, u64 eptp, gpa_t gpa)
+>  	vmx_asm2(invept, "r"(ext), "m"(operand), ext, eptp, gpa);
+>  }
+>  
+> -static inline void vpid_sync_vcpu_single(int vpid)
+> +static inline void vpid_sync_context(int vpid)
+>  {
+>  	if (vpid == 0)
+>  		return;
+>  
+>  	if (cpu_has_vmx_invvpid_single())
+>  		__invvpid(VMX_VPID_EXTENT_SINGLE_CONTEXT, vpid, 0);
+> -}
+> -
+> -static inline void vpid_sync_vcpu_global(void)
+> -{
+> -	if (cpu_has_vmx_invvpid_global())
+> +	else
+>  		__invvpid(VMX_VPID_EXTENT_ALL_CONTEXT, 0, 0);
+>  }
+>  
+> -static inline void vpid_sync_context(int vpid)
+> -{
+> -	if (cpu_has_vmx_invvpid_single())
+> -		vpid_sync_vcpu_single(vpid);
+> -	else
+> -		vpid_sync_vcpu_global();
+> -}
+> -
+>  static inline void vpid_sync_vcpu_addr(int vpid, gva_t addr)
+>  {
+>  	if (vpid == 0)
 
-On Thu, Feb 20, 2020 at 12:04:47PM +0530, Sameer Pujar wrote:
+In the original code it's only vpid_sync_vcpu_single() which has 'vpid
+== 0' check, vpid_sync_vcpu_global() doesn't have it. So in the
+hypothetical situation when cpu_has_vmx_invvpid_single() is false AND
+we've e.g. exhausted our VPID space and allocate_vpid() returned zero,
+the new code just won't do anything while the old one would've done
+__invvpid(VMX_VPID_EXTENT_ALL_CONTEXT, 0, 0), right?
 
-> The Audio Hub (AHUB) comprises a collection of hardware accelerators for
-> audio pre/post-processing and a programmable full crossbar (XBAR) for
-> routing audio data across these accelerators in time and in parallel.
-> AHUB supports multiple interfaces to I2S, DSPK, DMIC etc., XBAR is a
-> switch used to configure or modify audio routing between HW accelerators
-> present inside AHUB.
->=20
-> This patch registers AHUB component with ASoC framework. The component
-> driver exposes DAPM widgets, routes and kcontrols for the device. The DAI
-> driver exposes AHUB interfaces, which can be used to connect different
-> components in the ASoC layer. Currently the driver takes care of XBAR
-> programming to allow audio data flow through various clients of the AHUB.
+-- 
+Vitaly
 
-The current way to represent complex digitial routing inside SoCs is to
-use DPCM, this is not great and causes a bunch of problems with the
-framework but it's at least consistent between SoCs and is less visible
-to the ABI than this is.  Ideally what we'd be doing is propagating
-digital configuration along audio paths like we do for analog with DAPM,
-Morimoto-san has done a lot of the groundwork for doing that with
-converting everything to components but nobody has worked on that yet.
-Your stuff looks a lot more like this than it does DPCM at the minute
-but it completely sidesteps the digital configuration part of things
-without trying to integrate with the framework which isn't great.
-
-I'm really not thrilled about the idea of just hacking around the side
-of things like this is doing, the ideal thing would be starting the work
-on the framework to propagate digital configuration - I *think* you can
-get away with only a subset of the problem here (just copying
-configuration straight through) since this looks like it's just straight
-point to point links with little in the way of DSP.  If not DPCM would
-be the way to go I think.
-
---p8PhoBjPxaQXD0vg
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl5P3ToACgkQJNaLcl1U
-h9Dwzwf/advF/uesEAwOfyBFgKsZU2OvOfZNWh3z/hn0WbNlr6NtvLRDYEOjdsbA
-1cWkU2QWhi1rmf+aeWuOOXLwfJ69OczEeEmo0PODUMrWFNFfWGhnyyo7vGU5MP0S
-lHxiqyUhlU4SQJDNuHKhUZigSKEcwH1ofxGTk4SS43VGvG4KrQIZrIZeuWkYcdzN
-Py+JpKWnpqDPAs19Rqe9jNUY2qFnF0V7VT5zZKMnXEVwHSjlHqzMHH/maokSugYa
-ftNy9GuN7MKL18zAZ7DKDqljpUOPnRfnoiys4qq1LYXXey7e5nbFpOdihRBU5XQS
-csloEVBpHZgw77kXeOmlE5dbWwlsQw==
-=c0+G
------END PGP SIGNATURE-----
-
---p8PhoBjPxaQXD0vg--
