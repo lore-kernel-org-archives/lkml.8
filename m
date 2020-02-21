@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ED41AC35641
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 08:14:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A7A37C35641
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 08:14:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B69112467E
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 08:14:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7D6022467E
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 08:14:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582272850;
-	bh=bJwMejCJ7wfSrKEAorwvGbjuKx8HNWXqhXK5lwq8Rxs=;
+	s=default; t=1582272855;
+	bh=KmtZZPuEoHO4gyd2nmECJTZBKi3nPgjlr6C/KvSZc3c=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Fhd3yRixe2RBC/ztLz1Z7Cf61x8gr7LYSYXJvOM2VWXYX4F1oMlQS96D+Qua5qLrL
-	 RmeM17Yk34eaxbmqZHh2kCumYpmaekqMnFLOvGW1XteffDhDyi3hpOVXV4BBTx1Ot+
-	 mOW+66JngSSvmJJ75w5gk84P4FKzOFVCMahj4m/o=
+	b=AKiFNsLetHML09e1LoZRtqeeRBSh0FQR5TvQsAMmmkpLRybWURE2iS2vR37c6AIct
+	 QmPSd2lY5ZUG3F2XIewSk75EG9gRsp8HPdTUyuZoRVvhWZGXQh91M2iLfSv0H1HBaU
+	 l0wJlBEdyeAps+xKcCKTOGS/ytiv8bNFdNFibzOQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733134AbgBUIOJ (ORCPT
+        id S1733148AbgBUIOO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Feb 2020 03:14:09 -0500
-Received: from mail.kernel.org ([198.145.29.99]:50524 "EHLO mail.kernel.org"
+        Fri, 21 Feb 2020 03:14:14 -0500
+Received: from mail.kernel.org ([198.145.29.99]:50646 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732691AbgBUIOH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Feb 2020 03:14:07 -0500
+        id S1732857AbgBUION (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 21 Feb 2020 03:14:13 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id CA4CD24650;
-        Fri, 21 Feb 2020 08:14:06 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 80AEA24680;
+        Fri, 21 Feb 2020 08:14:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1582272847;
-        bh=bJwMejCJ7wfSrKEAorwvGbjuKx8HNWXqhXK5lwq8Rxs=;
+        s=default; t=1582272852;
+        bh=KmtZZPuEoHO4gyd2nmECJTZBKi3nPgjlr6C/KvSZc3c=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=x9tLduMSsjjYGexEYph16t1rQ4+/VWoHCUg5Xpc2YW2q78U5kWlUxT4xs1dWyMHnM
-         Ro27KHFkr4gG0xAqsCvV6dcg6jF1JCnPHhm9NpSq02njgblJ30ecBGA0RmZDOc+fa3
-         wgXn+haOMQSBXy1MWu+xbORYOoBG7tCMnU9SuPUg=
+        b=Fk/s1JDzdirQOzBwsCVtf6/t7r0BUTJfYIYAq3cmrP7ZNoNBTnNNneo6lgBc5Zb85
+         YGo9G7qJZf1eh6LeLnWxZXQJpazjEyxVvGwrZ3FL9XKWo0rmp7Cy6PYghWvU6AXBqV
+         X750dATlmOhMsI1AHUZTCoCAemHPZj1PADXQs9Dg=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Chao Yu <yuchao0@huawei.com>,
-        Jaegeuk Kim <jaegeuk@kernel.org>,
+        stable@vger.kernel.org, Yan-Hsuan Chuang <yhchuang@realtek.com>,
+        Kalle Valo <kvalo@codeaurora.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 258/344] f2fs: fix memleak of kobject
-Date:   Fri, 21 Feb 2020 08:40:57 +0100
-Message-Id: <20200221072413.025017432@linuxfoundation.org>
+Subject: [PATCH 5.4 300/344] rtw88: fix potential NULL skb access in TX ISR
+Date:   Fri, 21 Feb 2020 08:41:39 +0100
+Message-Id: <20200221072417.143055591@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200221072349.335551332@linuxfoundation.org>
 References: <20200221072349.335551332@linuxfoundation.org>
@@ -60,52 +60,41 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Chao Yu <yuchao0@huawei.com>
+From: Yan-Hsuan Chuang <yhchuang@realtek.com>
 
-[ Upstream commit fe396ad8e7526f059f7b8c7290d33a1b84adacab ]
+[ Upstream commit f4f84ff8377d4cedf18317747bc407b2cf657d0f ]
 
-If kobject_init_and_add() failed, caller needs to invoke kobject_put()
-to release kobject explicitly.
+Sometimes the TX queue may be empty and we could possible
+dequeue a NULL pointer, crash the kernel. If the skb is NULL
+then there is nothing to do, just leave the ISR.
 
-Signed-off-by: Chao Yu <yuchao0@huawei.com>
-Signed-off-by: Jaegeuk Kim <jaegeuk@kernel.org>
+And the TX queue should not be empty here, so print an error
+to see if there is anything wrong for DMA ring.
+
+Fixes: e3037485c68e ("rtw88: new Realtek 802.11ac driver")
+Signed-off-by: Yan-Hsuan Chuang <yhchuang@realtek.com>
+Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/f2fs/sysfs.c | 11 ++++++++---
- 1 file changed, 8 insertions(+), 3 deletions(-)
+ drivers/net/wireless/realtek/rtw88/pci.c | 5 +++++
+ 1 file changed, 5 insertions(+)
 
-diff --git a/fs/f2fs/sysfs.c b/fs/f2fs/sysfs.c
-index 8544c0ab7b32b..170934430d7d7 100644
---- a/fs/f2fs/sysfs.c
-+++ b/fs/f2fs/sysfs.c
-@@ -729,10 +729,12 @@ int __init f2fs_init_sysfs(void)
+diff --git a/drivers/net/wireless/realtek/rtw88/pci.c b/drivers/net/wireless/realtek/rtw88/pci.c
+index d90928be663b9..77a2bdee50fa7 100644
+--- a/drivers/net/wireless/realtek/rtw88/pci.c
++++ b/drivers/net/wireless/realtek/rtw88/pci.c
+@@ -762,6 +762,11 @@ static void rtw_pci_tx_isr(struct rtw_dev *rtwdev, struct rtw_pci *rtwpci,
  
- 	ret = kobject_init_and_add(&f2fs_feat, &f2fs_feat_ktype,
- 				   NULL, "features");
--	if (ret)
-+	if (ret) {
-+		kobject_put(&f2fs_feat);
- 		kset_unregister(&f2fs_kset);
--	else
-+	} else {
- 		f2fs_proc_root = proc_mkdir("fs/f2fs", NULL);
-+	}
- 	return ret;
- }
- 
-@@ -753,8 +755,11 @@ int f2fs_register_sysfs(struct f2fs_sb_info *sbi)
- 	init_completion(&sbi->s_kobj_unregister);
- 	err = kobject_init_and_add(&sbi->s_kobj, &f2fs_sb_ktype, NULL,
- 				"%s", sb->s_id);
--	if (err)
-+	if (err) {
-+		kobject_put(&sbi->s_kobj);
-+		wait_for_completion(&sbi->s_kobj_unregister);
- 		return err;
-+	}
- 
- 	if (f2fs_proc_root)
- 		sbi->s_proc = proc_mkdir(sb->s_id, f2fs_proc_root);
+ 	while (count--) {
+ 		skb = skb_dequeue(&ring->queue);
++		if (!skb) {
++			rtw_err(rtwdev, "failed to dequeue %d skb TX queue %d, BD=0x%08x, rp %d -> %d\n",
++				count, hw_queue, bd_idx, ring->r.rp, cur_rp);
++			break;
++		}
+ 		tx_data = rtw_pci_get_tx_data(skb);
+ 		pci_unmap_single(rtwpci->pdev, tx_data->dma, skb->len,
+ 				 PCI_DMA_TODEVICE);
 -- 
 2.20.1
 
