@@ -2,204 +2,173 @@ Return-Path: <SRS0=1210=4J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.4 required=3.0 tests=FROM_LOCAL_HEX,
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
 	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D441DC3565B
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 18:58:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8CB94C3565B
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 18:58:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A21CB2071E
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 18:58:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5A8B42071E
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 18:58:45 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=cmpxchg-org.20150623.gappssmtp.com header.i=@cmpxchg-org.20150623.gappssmtp.com header.b="JNcMF1Tj"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729689AbgBUS6N (ORCPT
+        id S1729704AbgBUS6o (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Feb 2020 13:58:13 -0500
-Received: from mail-il1-f198.google.com ([209.85.166.198]:35237 "EHLO
-        mail-il1-f198.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729397AbgBUS6N (ORCPT
+        Fri, 21 Feb 2020 13:58:44 -0500
+Received: from mail-pf1-f196.google.com ([209.85.210.196]:34373 "EHLO
+        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729355AbgBUS6n (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Feb 2020 13:58:13 -0500
-Received: by mail-il1-f198.google.com with SMTP id h18so3519122ilc.2
-        for <linux-kernel@vger.kernel.org>; Fri, 21 Feb 2020 10:58:12 -0800 (PST)
+        Fri, 21 Feb 2020 13:58:43 -0500
+Received: by mail-pf1-f196.google.com with SMTP id i6so1714824pfc.1
+        for <linux-kernel@vger.kernel.org>; Fri, 21 Feb 2020 10:58:43 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=cmpxchg-org.20150623.gappssmtp.com; s=20150623;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to;
+        bh=X7YUq5od3M/2TN7ugJSsAL6lYQ9XwqefEDuKdD1PqAs=;
+        b=JNcMF1TjdTarFup/EM8aDwnWuLH7JKMWtkRBV5PEvy6I11QbX9XV9KabcTJwlFsfw8
+         9Mr36EBYX5+iDFB4slTWF2XJcOssDO8Nvrvo6lIxxSqK1tMXigmetsyqBAhgthsN7Vk+
+         TmL7rEVZElRAYyeueFB9I+Xo0NBdkFO310ycJcMKTYwGg3OI//YYJqoXBhJ27f0P/OOq
+         Zatjps8RSeTWtkagG8iXf73fOkNNiMNoUp2w413Z3sFEmkjizzvq9GbwLUafA0v/5D+0
+         Dvs2bD5w356Iti/lU8nFJCMMH6hXuWhBDe3VGT6oDofIuwwoAArYnqgwsXKskSvy8Ndc
+         N39Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
-        bh=RSR+XBpx2umkfeEIUMi7Fdb2MSEsJ/pg1NVQPzIoIEY=;
-        b=b5JHdflrZy/fy+L8j3JoavEHBo0/Rz4znU/O9kXddoQ9l2BzPuUvt/lLMUL96qk7Ok
-         gPRipbBRjaIMUg148HGscZHz/5BskOmfngCYGcBJBNPMqZ7Q+M/L+QtgHh0UCuogqjks
-         Ln91f35u1LoCmCIY4+OZCGeapIUQ0UPd7T0jQv9l3ccvUH4etSGCaSnUKhu1dVypCKRN
-         pO/aa/B5fF3uUOhvzg5GDTEb8zN4JcQtDcMV4WSKS97wg8O/+3EG4af8AQ7KqZjqic0o
-         /5M/klWJZCQjyMpsjnyWKEaxgAAzMpoEwHHnSFOA0d5z1tVAeSsSVvJsEsL6Lk1uXuWE
-         H0oQ==
-X-Gm-Message-State: APjAAAUOfSIZQyy8ZOfQDN7TiIdQ67fP0kt1gcqNyHEj4wazStvkPTSZ
-        FYqqnZgqvL6iEzQlDiGKK1eH3lv2+/ZWHpUFCnVokKxzF+d2
-X-Google-Smtp-Source: APXvYqw9Gl03DdWuZ6TXedr4GmEaD/Z5gdcl8pUeZRZ57LaCt9kP8YY1xkIIZkUoqsSv8BSmhN8sKm0W0/zIeh7xsSJOcapmoIWw
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to;
+        bh=X7YUq5od3M/2TN7ugJSsAL6lYQ9XwqefEDuKdD1PqAs=;
+        b=XE1+udd9TE5FIwh6zBLIrMUsnRMWRa+1kSvSi88deuyjOh2td91vI3DeWXvD+IEZOY
+         2f6unfSpN1CFsLtgoY0k+LFa9GF5Lpltime96uKhVAcXqYEIng/eDoki0ODhVRoY4aYR
+         tXZoW7H3GorID9Omfoa09NS0JuVmqmZP1lbamjoboaZXjez9S2/zadiNxMqhNQEo39/l
+         4piAJXO3SgCaKJ8OLeQRK/5UU+SM7Owi28AwbncBNg6TcFEqRBgZnjgMeqFi+1N8P5z5
+         0WKvwuCxHwdcvLR7TMJL5zQJZ8GnZjmcrfY7I1VsHd0IqQpbx6dhrnXhqRJwJ0N+De+s
+         n5yQ==
+X-Gm-Message-State: APjAAAVE4ubxGo9xfYaEGdPl5vrAlVs2mFhOhaUtAhSWGeVmyyNljf1i
+        1e8qT0geqqHgUOoPXpu0C5dBSg==
+X-Google-Smtp-Source: APXvYqwjk5taAXZOALpF3n1rQRg3DSlji7oMI2Z3TQIxfofQHUo4NLtnoALcVYUGAO3xx8A3M+WcqA==
+X-Received: by 2002:a62:820c:: with SMTP id w12mr16904143pfd.92.1582311522637;
+        Fri, 21 Feb 2020 10:58:42 -0800 (PST)
+Received: from localhost ([2620:10d:c090:180::d660])
+        by smtp.gmail.com with ESMTPSA id x65sm3715325pfb.171.2020.02.21.10.58.41
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 21 Feb 2020 10:58:41 -0800 (PST)
+Date:   Fri, 21 Feb 2020 13:58:39 -0500
+From:   Johannes Weiner <hannes@cmpxchg.org>
+To:     Michal =?iso-8859-1?Q?Koutn=FD?= <mkoutny@suse.com>
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        Roman Gushchin <guro@fb.com>, Michal Hocko <mhocko@suse.com>,
+        Tejun Heo <tj@kernel.org>, linux-mm@kvack.org,
+        cgroups@vger.kernel.org, linux-kernel@vger.kernel.org,
+        kernel-team@fb.com
+Subject: Re: [PATCH v2 3/3] mm: memcontrol: recursive memory.low protection
+Message-ID: <20200221185839.GB70967@cmpxchg.org>
+References: <20191219200718.15696-1-hannes@cmpxchg.org>
+ <20191219200718.15696-4-hannes@cmpxchg.org>
+ <20200221171256.GB23476@blackbody.suse.cz>
 MIME-Version: 1.0
-X-Received: by 2002:a05:6638:149:: with SMTP id y9mr33571077jao.132.1582311492218;
- Fri, 21 Feb 2020 10:58:12 -0800 (PST)
-Date:   Fri, 21 Feb 2020 10:58:12 -0800
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <0000000000006af836059f1a9aa5@google.com>
-Subject: KASAN: use-after-free Read in get_work_pool_id
-From:   syzbot <syzbot+1024a649601aa4214ff6@syzkaller.appspotmail.com>
-To:     gregkh@linuxfoundation.org, jslaby@suse.com,
-        linux-kernel@vger.kernel.org, syzkaller-bugs@googlegroups.com
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200221171256.GB23476@blackbody.suse.cz>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello,
+On Fri, Feb 21, 2020 at 06:12:56PM +0100, Michal Koutný wrote:
+> On Thu, Dec 19, 2019 at 03:07:18PM -0500, Johannes Weiner <hannes@cmpxchg.org> wrote:
+> > Unfortunately, this limitation makes it impossible to protect an
+> > entire subtree from another without forcing the user to make explicit
+> > protection allocations all the way to the leaf cgroups - something
+> > that is highly undesirable in real life scenarios.
+> I see that the jobs in descedant cgroups don't know (or care) what
+> protection is above them and hence the implicit distribution is sensible
+> here.
+> 
+> However, the protection your case requires can already be reached thanks
+> to the the hierachical capping and overcommit normalization -- you can
+> set memory.low to "max" at all the non-caring descendants.
+> IIUC, that is the same as setting zeroes (after your patch) and relying
+> on the recursive distribution of unused protection -- or is there a
+> mistake in my reasonineg?
 
-syzbot found the following crash on:
+That is correct, but it comes with major problems. We did in fact try
+exactly this as a workaround in our fleet, but had to revert and
+develop the patch we are discussing now instead.
 
-HEAD commit:    11a48a5a Linux 5.6-rc2
-git tree:       upstream
-console output: https://syzkaller.appspot.com/x/log.txt?x=16554ee6e00000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=b1248cc89e4dba4
-dashboard link: https://syzkaller.appspot.com/bug?extid=1024a649601aa4214ff6
-compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
-syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=112d5aa1e00000
-C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=16f739d9e00000
+The reason is this: max isn't a "don't care" value. It's just a high
+number with actual meaning in the configuration, and that interferes
+when you try to compose it with other settings, such as limits.
 
-Bisection is inconclusive: the bug happens on the oldest tested release.
+Here is a configuration we actually use in practice:
 
-bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=10cbc36ee00000
-final crash:    https://syzkaller.appspot.com/x/report.txt?x=12cbc36ee00000
-console output: https://syzkaller.appspot.com/x/log.txt?x=14cbc36ee00000
+                workload.slice (memory.low=20G)
+                /                      \
+              job (max=12G, low=10G)    job2 (max=12G, low=10G)
+             /   \
+           task logger
 
-IMPORTANT: if you fix the bug, please add the following tag to the commit:
-Reported-by: syzbot+1024a649601aa4214ff6@syzkaller.appspotmail.com
+The idea is that we want to mostly protect the workload from other
+stuff running in the system (low=20G), but we also want to catch a job
+when it goes wild, to ensure reproducibility in testing regardless of
+how loaded the host otherwise is (max=12G).
 
-==================================================================
-BUG: KASAN: use-after-free in atomic64_read include/asm-generic/atomic-instrumented.h:836 [inline]
-BUG: KASAN: use-after-free in atomic_long_read include/asm-generic/atomic-long.h:28 [inline]
-BUG: KASAN: use-after-free in get_work_pool_id+0x1c/0xe0 kernel/workqueue.c:732
-Read of size 8 at addr ffff8880a2d36008 by task syz-executor507/9562
+When you set task's and logger's memory.low to "max" or 10G or any
+bogus number like this, a limit reclaim in job treats this as origin
+protection and tries hard to avoid reclaiming anything in either of
+the two cgroups. memory.events::low skyrockets even though no intended
+protection was violated, we'll have reclaim latencies (especially when
+there are a few dying cgroups accumluated in subtree).
 
-CPU: 1 PID: 9562 Comm: syz-executor507 Not tainted 5.6.0-rc2-syzkaller #0
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
-Call Trace:
- __dump_stack lib/dump_stack.c:77 [inline]
- dump_stack+0x197/0x210 lib/dump_stack.c:118
- print_address_description.constprop.0.cold+0xd4/0x30b mm/kasan/report.c:374
- __kasan_report.cold+0x1b/0x32 mm/kasan/report.c:506
- kasan_report+0x12/0x20 mm/kasan/common.c:641
- check_memory_region_inline mm/kasan/generic.c:185 [inline]
- check_memory_region+0x134/0x1a0 mm/kasan/generic.c:192
- __kasan_check_read+0x11/0x20 mm/kasan/common.c:95
- atomic64_read include/asm-generic/atomic-instrumented.h:836 [inline]
- atomic_long_read include/asm-generic/atomic-long.h:28 [inline]
- get_work_pool_id+0x1c/0xe0 kernel/workqueue.c:732
- mark_work_canceling kernel/workqueue.c:743 [inline]
- __cancel_work_timer+0xfa/0x540 kernel/workqueue.c:3120
- cancel_work_sync+0x18/0x20 kernel/workqueue.c:3164
- tty_buffer_cancel_work+0x16/0x20 drivers/tty/tty_buffer.c:613
- release_tty+0x261/0x470 drivers/tty/tty_io.c:1520
- tty_release_struct+0x3c/0x50 drivers/tty/tty_io.c:1629
- tty_release+0xbcb/0xe90 drivers/tty/tty_io.c:1789
- __fput+0x2ff/0x890 fs/file_table.c:280
- ____fput+0x16/0x20 fs/file_table.c:313
- task_work_run+0x145/0x1c0 kernel/task_work.c:113
- exit_task_work include/linux/task_work.h:22 [inline]
- do_exit+0xba9/0x2f50 kernel/exit.c:801
- do_group_exit+0x135/0x360 kernel/exit.c:899
- __do_sys_exit_group kernel/exit.c:910 [inline]
- __se_sys_exit_group kernel/exit.c:908 [inline]
- __x64_sys_exit_group+0x44/0x50 kernel/exit.c:908
- do_syscall_64+0xfa/0x790 arch/x86/entry/common.c:294
- entry_SYSCALL_64_after_hwframe+0x49/0xbe
-RIP: 0033:0x43ff38
-Code: Bad RIP value.
-RSP: 002b:00007fff706d7d78 EFLAGS: 00000246 ORIG_RAX: 00000000000000e7
-RAX: ffffffffffffffda RBX: 0000000000000000 RCX: 000000000043ff38
-RDX: 0000000000000000 RSI: 000000000000003c RDI: 0000000000000000
-RBP: 00000000004bf950 R08: 00000000000000e7 R09: ffffffffffffffd0
-R10: 0000000000000000 R11: 0000000000000246 R12: 0000000000000001
-R13: 00000000006d2180 R14: 0000000000000000 R15: 0000000000000000
+So we had to undo this setting because of workload performance and
+problems with monitoring workload health (the bogus low events).
 
-Allocated by task 9562:
- save_stack+0x23/0x90 mm/kasan/common.c:72
- set_track mm/kasan/common.c:80 [inline]
- __kasan_kmalloc mm/kasan/common.c:515 [inline]
- __kasan_kmalloc.constprop.0+0xcf/0xe0 mm/kasan/common.c:488
- kasan_kmalloc+0x9/0x10 mm/kasan/common.c:529
- kmem_cache_alloc_trace+0x158/0x790 mm/slab.c:3551
- kmalloc include/linux/slab.h:555 [inline]
- kzalloc include/linux/slab.h:669 [inline]
- vc_allocate drivers/tty/vt/vt.c:1085 [inline]
- vc_allocate+0x1fc/0x760 drivers/tty/vt/vt.c:1066
- con_install+0x52/0x410 drivers/tty/vt/vt.c:3229
- tty_driver_install_tty drivers/tty/tty_io.c:1228 [inline]
- tty_init_dev drivers/tty/tty_io.c:1341 [inline]
- tty_init_dev+0xf9/0x470 drivers/tty/tty_io.c:1318
- tty_open_by_driver drivers/tty/tty_io.c:1987 [inline]
- tty_open+0x4a5/0xbb0 drivers/tty/tty_io.c:2035
- chrdev_open+0x245/0x6b0 fs/char_dev.c:414
- do_dentry_open+0x4e6/0x1380 fs/open.c:797
- vfs_open+0xa0/0xd0 fs/open.c:914
- do_last fs/namei.c:3490 [inline]
- path_openat+0x12ee/0x3490 fs/namei.c:3607
- do_filp_open+0x192/0x260 fs/namei.c:3637
- do_sys_openat2+0x5eb/0x7e0 fs/open.c:1149
- do_sys_open+0xf2/0x180 fs/open.c:1165
- ksys_open include/linux/syscalls.h:1386 [inline]
- __do_sys_open fs/open.c:1171 [inline]
- __se_sys_open fs/open.c:1169 [inline]
- __x64_sys_open+0x7e/0xc0 fs/open.c:1169
- do_syscall_64+0xfa/0x790 arch/x86/entry/common.c:294
- entry_SYSCALL_64_after_hwframe+0x49/0xbe
+The secondary problem with requiring explicit downward propagation is
+that you may want to protect all jobs on the host from system
+management software, as a very high-level host configuration. But a
+random job that gets scheduled on a host, that lives in a delegated
+cgroup and namespace, and creates its own nested tree of cgroups to
+manage stuff - that job can't possibly *know* about the top-level host
+protection that lies beyond the delegation point and outside its own
+namespace, and that it needs to propagate protection against rpm
+upgrades into its own leaf groups for each tasklet and component.
 
-Freed by task 9566:
- save_stack+0x23/0x90 mm/kasan/common.c:72
- set_track mm/kasan/common.c:80 [inline]
- kasan_set_free_info mm/kasan/common.c:337 [inline]
- __kasan_slab_free+0x102/0x150 mm/kasan/common.c:476
- kasan_slab_free+0xe/0x10 mm/kasan/common.c:485
- __cache_free mm/slab.c:3426 [inline]
- kfree+0x10a/0x2c0 mm/slab.c:3757
- vt_disallocate_all+0x2bd/0x3e0 drivers/tty/vt/vt_ioctl.c:323
- vt_ioctl+0xc38/0x26d0 drivers/tty/vt/vt_ioctl.c:816
- tty_ioctl+0xa37/0x14f0 drivers/tty/tty_io.c:2660
- vfs_ioctl fs/ioctl.c:47 [inline]
- ksys_ioctl+0x123/0x180 fs/ioctl.c:763
- __do_sys_ioctl fs/ioctl.c:772 [inline]
- __se_sys_ioctl fs/ioctl.c:770 [inline]
- __x64_sys_ioctl+0x73/0xb0 fs/ioctl.c:770
- do_syscall_64+0xfa/0x790 arch/x86/entry/common.c:294
- entry_SYSCALL_64_after_hwframe+0x49/0xbe
+Again, in practice we have found this to be totally unmanageable and
+routinely first forgot and then had trouble hacking the propagation
+into random jobs that create their own groups.
 
-The buggy address belongs to the object at ffff8880a2d36000
- which belongs to the cache kmalloc-2k of size 2048
-The buggy address is located 8 bytes inside of
- 2048-byte region [ffff8880a2d36000, ffff8880a2d36800)
-The buggy address belongs to the page:
-page:ffffea00028b4d80 refcount:1 mapcount:0 mapping:ffff8880aa400e00 index:0x0
-flags: 0xfffe0000000200(slab)
-raw: 00fffe0000000200 ffffea00028bcbc8 ffffea0002915c88 ffff8880aa400e00
-raw: 0000000000000000 ffff8880a2d36000 0000000100000001 0000000000000000
-page dumped because: kasan: bad access detected
+[ And these job subgroups don't even use their *own* memory.low
+  prioritization between siblings yet - god knows how you would
+  integrate that with the values that you may inherit from higher
+  level ancestors. ]
 
-Memory state around the buggy address:
- ffff8880a2d35f00: 00 fc fc 00 00 00 00 00 fc fc 00 00 00 00 00 fc
- ffff8880a2d35f80: fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc
->ffff8880a2d36000: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
-                      ^
- ffff8880a2d36080: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
- ffff8880a2d36100: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
-==================================================================
+And when you add new hardware configurations, you cannot just make a
+top-level change in the host config, you have to update all the job
+specs of workloads running in the fleet.
 
+My patch brings memory configuration in line with other cgroup2
+controllers. You can make a high-level decision to prioritize one
+subtree over another, just like a top-level weight assignment in CPU
+or IO, and then you can delegate the subtree to a different entity
+that doesn't need to be aware of and reflect that decision all the way
+down the tree in its own settings.
 
----
-This bug is generated by a bot. It may contain errors.
-See https://goo.gl/tpsmEJ for more information about syzbot.
-syzbot engineers can be reached at syzkaller@googlegroups.com.
+And of course can compose it properly with limits.
 
-syzbot will keep track of this bug report. See:
-https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
-For information about bisection process see: https://goo.gl/tpsmEJ#bisection
-syzbot can test patches for this bug, for details see:
-https://goo.gl/tpsmEJ#testing-patches
+> So in my view, the recursive distribution doesn't bring anything new,
+> however, its new semantics of memory.low doesn't allow turning the
+> protection off in a protected subtree (delegating the decision to
+> distribute protection within parent bounds is IMO a valid use case).
+
+I've made the case why it's not a supported usecase, and why it is a
+meaningless configuration in practice due to the way other controllers
+already behave.
+
+I think at this point in the discussion, the only thing I can do is
+remind you that the behavior I'm introducing is gated behind a mount
+option that nobody is forced to enable if they insist on disagreeing
+against all evidence to the contrary.
