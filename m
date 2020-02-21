@@ -2,117 +2,108 @@ Return-Path: <SRS0=1210=4J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1F682C35646
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 15:36:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 91BFCC35646
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 15:36:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E220124650
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 15:36:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 687012073A
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 15:36:18 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="QV8ETSo2"
+	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="lzzPLOpa"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728777AbgBUPgG (ORCPT
+        id S1728858AbgBUPgR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Feb 2020 10:36:06 -0500
-Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:57191 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1728186AbgBUPgG (ORCPT
+        Fri, 21 Feb 2020 10:36:17 -0500
+Received: from mail-wm1-f68.google.com ([209.85.128.68]:33704 "EHLO
+        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728235AbgBUPgQ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Feb 2020 10:36:06 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1582299364;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=oOToEHS8ihajx9JSHSORZaVCnP2phBIkFva4hj6D5cY=;
-        b=QV8ETSo2NF3mXqmW1yYuKExJ9hj5wCd2P4UMO0s0vls1moUog6vPciGcy2PVRxXD6VIAiK
-        ubfw4iVc2Ntjmj8FTDDdY0+Mtz6tG/Or3jR9/KyHXeSE3VxxnWThory/F19TJ73gmt7nak
-        LBaM3+marJoQR4HLkoDHnqL/UODKQ7U=
-Received: from mail-wr1-f69.google.com (mail-wr1-f69.google.com
- [209.85.221.69]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-313-O4u3L0xnMxWWEtwuSESEcw-1; Fri, 21 Feb 2020 10:36:03 -0500
-X-MC-Unique: O4u3L0xnMxWWEtwuSESEcw-1
-Received: by mail-wr1-f69.google.com with SMTP id a12so1167969wrn.19
-        for <linux-kernel@vger.kernel.org>; Fri, 21 Feb 2020 07:36:02 -0800 (PST)
+        Fri, 21 Feb 2020 10:36:16 -0500
+Received: by mail-wm1-f68.google.com with SMTP id m10so5439340wmc.0
+        for <linux-kernel@vger.kernel.org>; Fri, 21 Feb 2020 07:36:14 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=UNHEwFigMTNc7YIRkUZl+5v4Xtz4VgLarV7EC/Mxw3I=;
+        b=lzzPLOpa00IdY058idG1naAWzavEyCoj9ZAwXmLXwzaop7ZYtD6FCA7/Tf+u9wizE2
+         +QxpIzWLnPu+dVn5KZNt1nAGYXhZ4ztaqy8mL/My88k0srIG6rRqr0alTBwdFVXMNmuH
+         vEwKcvHsq8xwJTW5yyOZ+9QZ58aW+16RkHwKPgNUTU+oMh3S9hjGqkcB+mV1w6Cv3BZT
+         8vT8pg8d6Y2vduJCtbT3ZWNlw5adXT1EyCNVG9oXVLxSmlsgFSnrfR5KWSK92AtNmzEn
+         qIo4lSIdYXBLXURdlh6n41O0Q8QD8BPrtCNl/3BW0RmY9seoAerFYelvoS3oFAfpFOa+
+         Rk0A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:in-reply-to:references:date
-         :message-id:mime-version;
-        bh=oOToEHS8ihajx9JSHSORZaVCnP2phBIkFva4hj6D5cY=;
-        b=amATMN4DJ4irlKgfmaCgjfbj6lyy3+7UyHgIs5wFIrPeg6kJFRqWOz6hu0FO1fCgbM
-         9hfveUpWmYvFjpX/6TjLLEtMulL+2WvTdNCR5+qCP88StkKIW3XgIzZYEbOUcGel7uIk
-         Ai2Dh8NmnT1wizz4lcwqmbnLbi6PaX0FYRWMpPhdQc8J0+qOWBaxKfAtOS8TeWx7LeKC
-         i6B1uCJ2KyQ5MyFotyzM+o8bIUNRzgIhzxcmL05asfbpXOObAY59TMBH/cLs21JfKq9s
-         qTNwtLrdyX+ic9VpXO+vAiWXUu81JmOnJXedvmt6s32jI5m7XC0LmvSP4KAc4dzLNCCR
-         7/mg==
-X-Gm-Message-State: APjAAAVHopZvWqqiKe2eejzcwpKk9fHHOi6TkAR9Xqv8sUSxOWpQAF4y
-        GrwfaZJq4QqHU0YSgssXMFn2On3dgb0sbRyNJiUMxWthc4l0aMsnqM4YpRTSJMkavKwHMNSvTbx
-        0F4rOz4aFrP8z1tSHp+rzmUbf
-X-Received: by 2002:a5d:4d4a:: with SMTP id a10mr51994288wru.220.1582299361668;
-        Fri, 21 Feb 2020 07:36:01 -0800 (PST)
-X-Google-Smtp-Source: APXvYqxEUtM+sR0YQOKEdCKvF0CFcEBjKZHAFpG0mki6xtVyPaCiKifi4wmUC/gBy9khmvLU/IPTwQ==
-X-Received: by 2002:a5d:4d4a:: with SMTP id a10mr51994269wru.220.1582299361468;
-        Fri, 21 Feb 2020 07:36:01 -0800 (PST)
-Received: from vitty.brq.redhat.com (nat-pool-brq-t.redhat.com. [213.175.37.10])
-        by smtp.gmail.com with ESMTPSA id o15sm4581585wra.83.2020.02.21.07.36.00
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=UNHEwFigMTNc7YIRkUZl+5v4Xtz4VgLarV7EC/Mxw3I=;
+        b=LRdLWDttdCqDhBH9jrLYQ6LEItppPBF29G0+4rSYLqBDSmQDWpcvCRF56hxMyXs/5n
+         WRxQWFcH5DAJI0gCXWOrCQM9vGIKilukvhZMxePcfOmOC9vRsmhP8vY0EqQIJnKuwwXv
+         ef90izSMjaYex480cxf9oP2PuuWFkbZ6s+1taujByunWs4Ls3IJ4N4leIVTs3Skgu+7q
+         Q1da6V7cCByTPRvxth9PomywDqr8mWZbRp/24sihca5n3JYg1XwLmrwVylSsHWBD7Mrx
+         L7I6cBrxCM8Gv4ZeZVhED4a63uZA1eHknPygRGoQLQY8ryCXFg6jZETrX8ELN/DFahP8
+         KNTA==
+X-Gm-Message-State: APjAAAUdLQpwyyLE9KCFwbN6sEnyoMce1zpbTw4KsTzhwPOH7RhVDwG8
+        BypT8sugZ5cFm16cn3IlGSYD7Q==
+X-Google-Smtp-Source: APXvYqyCqkZR3zDNG4VAxXvdw9Zekulra1RORCfv3lpKLj9dzld+yh6yJQE1+skfazo6TA4dUBZmJQ==
+X-Received: by 2002:a7b:c183:: with SMTP id y3mr4286552wmi.45.1582299374128;
+        Fri, 21 Feb 2020 07:36:14 -0800 (PST)
+Received: from localhost.localdomain (cag06-3-82-243-161-21.fbx.proxad.net. [82.243.161.21])
+        by smtp.googlemail.com with ESMTPSA id z25sm4198782wmf.14.2020.02.21.07.36.12
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 21 Feb 2020 07:36:00 -0800 (PST)
-From:   Vitaly Kuznetsov <vkuznets@redhat.com>
-To:     Sean Christopherson <sean.j.christopherson@intel.com>
-Cc:     Paolo Bonzini <pbonzini@redhat.com>,
-        Wanpeng Li <wanpengli@tencent.com>,
-        Jim Mattson <jmattson@google.com>,
-        Joerg Roedel <joro@8bytes.org>, kvm@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 23/61] KVM: x86: Clear output regs for CPUID 0x14 if PT isn't exposed to guest
-In-Reply-To: <20200201185218.24473-24-sean.j.christopherson@intel.com>
-References: <20200201185218.24473-1-sean.j.christopherson@intel.com> <20200201185218.24473-24-sean.j.christopherson@intel.com>
-Date:   Fri, 21 Feb 2020 16:36:00 +0100
-Message-ID: <87eeuoq7fj.fsf@vitty.brq.redhat.com>
+        Fri, 21 Feb 2020 07:36:13 -0800 (PST)
+From:   Jerome Brunet <jbrunet@baylibre.com>
+To:     Mark Brown <broonie@kernel.org>,
+        Liam Girdwood <lgirdwood@gmail.com>
+Cc:     Jerome Brunet <jbrunet@baylibre.com>, alsa-devel@alsa-project.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-amlogic@lists.infradead.org,
+        Kevin Hilman <khilman@baylibre.com>
+Subject: [PATCH v2 0/3] ASoC: meson: g12a: add internal audio DAC support
+Date:   Fri, 21 Feb 2020 16:36:04 +0100
+Message-Id: <20200221153607.1585499-1-jbrunet@baylibre.com>
+X-Mailer: git-send-email 2.24.1
 MIME-Version: 1.0
-Content-Type: text/plain
+X-Patchwork-Bot: notify
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Sean Christopherson <sean.j.christopherson@intel.com> writes:
+Like the gxl, the Amlogic g12a and sm1 SoC families have a t9015 internal
+audio DAC. On these more recent SoCs, any of the 3 TDM outputs can be
+routed to the internal DAC. This routing is done by a small glue device
+called 'toacodec'. This patchset adds support for it.
 
-> Clear the output regs for the main CPUID 0x14 leaf (index=0) if Intel PT
-> isn't exposed to the guest.  Leaf 0x14 enumerates Intel PT capabilities
-> and should return zeroes if PT is not supported.  Incorrectly reporting
-> PT capabilities is essentially a cosmetic error, i.e. doesn't negatively
-> affect any known userspace/kernel, as the existence of PT itself is
-> correctly enumerated via CPUID 0x7.
->
-> Signed-off-by: Sean Christopherson <sean.j.christopherson@intel.com>
-> ---
->  arch/x86/kvm/cpuid.c | 4 +++-
->  1 file changed, 3 insertions(+), 1 deletion(-)
->
-> diff --git a/arch/x86/kvm/cpuid.c b/arch/x86/kvm/cpuid.c
-> index d3c93b94abc3..056faf27b14b 100644
-> --- a/arch/x86/kvm/cpuid.c
-> +++ b/arch/x86/kvm/cpuid.c
-> @@ -663,8 +663,10 @@ static inline int __do_cpuid_func(struct kvm_cpuid_array *array, u32 function)
->  		break;
->  	/* Intel PT */
->  	case 0x14:
-> -		if (!f_intel_pt)
-> +		if (!f_intel_pt) {
-> +			entry->eax = entry->ebx = entry->ecx = entry->edx = 0;
->  			break;
-> +		}
->  
->  		for (i = 1, max_idx = entry->eax; i <= max_idx; ++i) {
->  			if (!do_host_cpuid(array, function, i))
+This was tested on the amlogic reference design g12a-u200.
 
-Reviewed-by: Vitaly Kuznetsov <vkuznets@redhat.com>
+Changes since v1 [0]:
+ * Fixup patch 2 which was left in an intermediate state
+   after rebasing, missing part of the changes.
+   Thanks to Sergey Bolshakov for reporting it.
+
+[0]: https://lore.kernel.org/r/20200221122242.1500093-1-jbrunet@baylibre.com
+
+Jerome Brunet (3):
+  ASoC: meson: g12a: add toacodec dt-binding documentation
+  ASoC: meson: g12a: add internal DAC glue driver
+  ASoC: meson: axg-card: add toacodec support
+
+ .../bindings/sound/amlogic,g12a-toacodec.yaml |  51 ++++
+ .../dt-bindings/sound/meson-g12a-toacodec.h   |  10 +
+ sound/soc/meson/Kconfig                       |   9 +
+ sound/soc/meson/Makefile                      |   2 +
+ sound/soc/meson/axg-card.c                    |   3 +-
+ sound/soc/meson/g12a-toacodec.c               | 252 ++++++++++++++++++
+ 6 files changed, 326 insertions(+), 1 deletion(-)
+ create mode 100644 Documentation/devicetree/bindings/sound/amlogic,g12a-toacodec.yaml
+ create mode 100644 include/dt-bindings/sound/meson-g12a-toacodec.h
+ create mode 100644 sound/soc/meson/g12a-toacodec.c
 
 -- 
-Vitaly
+2.24.1
 
