@@ -2,199 +2,244 @@ Return-Path: <SRS0=1210=4J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no
+X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7F635C35666
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 20:02:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E981AC35666
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 20:02:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5BDAA20722
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 20:02:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A46C120722
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 20:02:38 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="vf90FXYn"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726823AbgBUUCc (ORCPT
+        id S1728028AbgBUUCh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Feb 2020 15:02:32 -0500
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:58658 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726443AbgBUUCb (ORCPT
+        Fri, 21 Feb 2020 15:02:37 -0500
+Received: from mail-wr1-f68.google.com ([209.85.221.68]:35910 "EHLO
+        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727277AbgBUUCf (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Feb 2020 15:02:31 -0500
-Received: from pps.filterd (m0098393.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 01LJsPjZ140298;
-        Fri, 21 Feb 2020 15:02:21 -0500
-Received: from pps.reinject (localhost [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2y8ubyss58-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Fri, 21 Feb 2020 15:02:21 -0500
-Received: from m0098393.ppops.net (m0098393.ppops.net [127.0.0.1])
-        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 01LJtWPp142574;
-        Fri, 21 Feb 2020 15:02:21 -0500
-Received: from ppma05wdc.us.ibm.com (1b.90.2fa9.ip4.static.sl-reverse.com [169.47.144.27])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2y8ubyss4a-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Fri, 21 Feb 2020 15:02:20 -0500
-Received: from pps.filterd (ppma05wdc.us.ibm.com [127.0.0.1])
-        by ppma05wdc.us.ibm.com (8.16.0.27/8.16.0.27) with SMTP id 01LK13bq014430;
-        Fri, 21 Feb 2020 20:02:19 GMT
-Received: from b03cxnp08026.gho.boulder.ibm.com (b03cxnp08026.gho.boulder.ibm.com [9.17.130.18])
-        by ppma05wdc.us.ibm.com with ESMTP id 2y6897fjvu-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Fri, 21 Feb 2020 20:02:19 +0000
-Received: from b03ledav003.gho.boulder.ibm.com (b03ledav003.gho.boulder.ibm.com [9.17.130.234])
-        by b03cxnp08026.gho.boulder.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 01LK2I5E30736660
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Fri, 21 Feb 2020 20:02:18 GMT
-Received: from b03ledav003.gho.boulder.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 703CB6A051;
-        Fri, 21 Feb 2020 20:02:18 +0000 (GMT)
-Received: from b03ledav003.gho.boulder.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 55CE46A04D;
-        Fri, 21 Feb 2020 20:02:18 +0000 (GMT)
-Received: from localhost (unknown [9.41.179.160])
-        by b03ledav003.gho.boulder.ibm.com (Postfix) with ESMTP;
-        Fri, 21 Feb 2020 20:02:18 +0000 (GMT)
-From:   Nathan Lynch <nathanl@linux.ibm.com>
-To:     Scott Cheloha <cheloha@linux.ibm.com>
-Cc:     Rick Lindsley <ricklind@linux.vnet.ibm.com>,
-        David Hildenbrand <david@redhat.com>,
-        Michal Suchanek <msuchanek@suse.com>,
-        Michal Hocko <mhocko@suse.com>,
-        Nathan Fontenont <ndfont@gmail.com>,
-        linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
-        Michael Ellerman <mpe@ellerman.id.au>
-Subject: Re: [PATCH v2 1/2] powerpc/drmem: accelerate memory_add_physaddr_to_nid() with LMB xarray
-In-Reply-To: <20200221172901.1596249-2-cheloha@linux.ibm.com>
-References: <20200128221113.17158-1-cheloha@linux.ibm.com> <20200221172901.1596249-2-cheloha@linux.ibm.com>
-Date:   Fri, 21 Feb 2020 14:02:18 -0600
-Message-ID: <87r1ynso8l.fsf@linux.ibm.com>
+        Fri, 21 Feb 2020 15:02:35 -0500
+Received: by mail-wr1-f68.google.com with SMTP id z3so3384952wru.3
+        for <linux-kernel@vger.kernel.org>; Fri, 21 Feb 2020 12:02:33 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=subject:to:cc:references:from:autocrypt:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=QMFSTlTPjLBfSui6L2zdxg1P34hDUVJ2NwPge2oTR74=;
+        b=vf90FXYn61hSrHYOIAzw2IilQDxYKsi0UVJF8a3GVZ33EF7XGSS/KvBLBZqXV7+pF+
+         n88DAFHD05ztPkH0RjhsdMR9m9nMX0nHVUlCEYdSFIAJkpYXN8l+dhi9X0sPUWreWPKN
+         uUP+GfatS9TdIkFYnlhp7XXFwXGDUe3/xB8av/WJcdyDtngteCEjixnOaQ9A7tVhujJk
+         j02r4yOFXgaFTVj4ReiWrFXRyh/ZyvBqXQbEKTbNEWh2RPI/OLL82UklfPsNH+4lg2wv
+         pmGq5cRBkqq575X+a4LRVfy6cxGSfF/WfYuiC1xwfwnApQxxbX0NtM1IQIyAe6mdPh5B
+         dF9A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:autocrypt
+         :message-id:date:user-agent:mime-version:in-reply-to
+         :content-language:content-transfer-encoding;
+        bh=QMFSTlTPjLBfSui6L2zdxg1P34hDUVJ2NwPge2oTR74=;
+        b=cZhO4OOV6hwM1D4tQHMbFy6gtji/ZlLXNH3GFezdTwxk+rOJOw46Gj+MkmVd2MPMpP
+         OpOHYMzVeDq2tWfYlLTZdYBlZfvOveiJMsmI/BPrShG2hEFuV/kpXU3bqFF1yjFidk5J
+         xPu4zpPQGmzjAX1R64SJoPl1hTCrdcgJ0iJh9l7fQjPiCeUh3f/Hs/zE4R3J4L+u6RBZ
+         ZBiov6y0Cm+/JAIw93x3GN5tza2pVFl9baYoxAZquvjmT0CL0cliump++eunOuTRc/gS
+         RiqjeQKtWYnfcA/8sLP1yKaVcbM5aMKl+Milxhb0Dgg/eUwehkFAq7ejndVuxWwBvFrV
+         YGpg==
+X-Gm-Message-State: APjAAAUFrmyBX9X/r8XGpXLsaczamHGwbTIaCswOk966pOG3FaJuTFkr
+        Qf94UlroYLuVWvG6/fZPFWDgYQUeGx8=
+X-Google-Smtp-Source: APXvYqxdVnOssSKqDR/d+Vg12u3Rv/ituklkALgVEaR4PW1C2gXHCP3q5AVQOl4z5G19SaNiDojvwA==
+X-Received: by 2002:a5d:62d1:: with SMTP id o17mr51667342wrv.9.1582315352290;
+        Fri, 21 Feb 2020 12:02:32 -0800 (PST)
+Received: from ?IPv6:2a01:e34:ed2f:f020:903b:a048:f296:e3ae? ([2a01:e34:ed2f:f020:903b:a048:f296:e3ae])
+        by smtp.googlemail.com with ESMTPSA id o77sm5483841wme.34.2020.02.21.12.02.30
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 21 Feb 2020 12:02:31 -0800 (PST)
+Subject: Re: [PATCH v9 09/17] arm: tegra20: cpuidle: Handle case where
+ secondary CPU hangs on entering LP2
+To:     Dmitry Osipenko <digetx@gmail.com>
+Cc:     Thierry Reding <thierry.reding@gmail.com>,
+        Jonathan Hunter <jonathanh@nvidia.com>,
+        Peter De Schrijver <pdeschrijver@nvidia.com>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        =?UTF-8?B?TWljaGHFgiBNaXJvc8WCYXc=?= <mirq-linux@rere.qmqm.pl>,
+        Jasper Korten <jja2000@gmail.com>,
+        David Heidelberg <david@ixit.cz>,
+        Peter Geis <pgwipeout@gmail.com>, linux-pm@vger.kernel.org,
+        linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20200212235134.12638-1-digetx@gmail.com>
+ <20200212235134.12638-10-digetx@gmail.com>
+ <20200221154318.GO10516@linaro.org>
+ <239a2b66-8da8-2e6c-d19d-9ed207ad0a64@gmail.com>
+ <20200221173649.GU10516@linaro.org>
+ <b51f3f6b-8287-5ce8-fcaa-77cbab507618@gmail.com>
+From:   Daniel Lezcano <daniel.lezcano@linaro.org>
+Autocrypt: addr=daniel.lezcano@linaro.org; prefer-encrypt=mutual; keydata=
+ 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
+Message-ID: <f27481cf-ca5e-df47-932b-fcb4713f0d78@linaro.org>
+Date:   Fri, 21 Feb 2020 21:02:30 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.1
 MIME-Version: 1.0
-Content-Type: text/plain
-X-TM-AS-GCONF: 00
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.572
- definitions=2020-02-21_07:2020-02-21,2020-02-21 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxscore=0 lowpriorityscore=0
- phishscore=0 impostorscore=0 clxscore=1011 priorityscore=1501 bulkscore=0
- suspectscore=1 malwarescore=0 mlxlogscore=999 spamscore=0 adultscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2001150001
- definitions=main-2002210151
+In-Reply-To: <b51f3f6b-8287-5ce8-fcaa-77cbab507618@gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Scott,
+On 21/02/2020 19:19, Dmitry Osipenko wrote:
+> 21.02.2020 20:36, Daniel Lezcano пишет:
+>> On Fri, Feb 21, 2020 at 07:56:51PM +0300, Dmitry Osipenko wrote:
+>>> Hello Daniel,
+>>>
+>>> 21.02.2020 18:43, Daniel Lezcano пишет:
+>>>> On Thu, Feb 13, 2020 at 02:51:26AM +0300, Dmitry Osipenko wrote:
+>>>>> It is possible that something may go wrong with the secondary CPU, in that
+>>>>> case it is much nicer to get a dump of the flow-controller state before
+>>>>> hanging machine.
+>>>>>
+>>>>> Acked-by: Peter De Schrijver <pdeschrijver@nvidia.com>
+>>>>> Tested-by: Peter Geis <pgwipeout@gmail.com>
+>>>>> Tested-by: Jasper Korten <jja2000@gmail.com>
+>>>>> Tested-by: David Heidelberg <david@ixit.cz>
+>>>>> Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
+>>>>> ---
+>>
+>> [ ... ]
+>>
+>>>>> +static int tegra20_wait_for_secondary_cpu_parking(void)
+>>>>> +{
+>>>>> +	unsigned int retries = 3;
+>>>>> +
+>>>>> +	while (retries--) {
+>>>>> +		ktime_t timeout = ktime_add_ms(ktime_get(), 500);
+>>>>
+>>>> Oops I missed this one. Do not use ktime_get() in this code path, use jiffies.
+>>>
+>>> Could you please explain what benefits jiffies have over the ktime_get()?
+>>
+>> ktime_get() is very slow, jiffies is updated every tick.
+> 
+> But how jiffies are supposed to be updated if interrupts are disabled?
 
-Scott Cheloha <cheloha@linux.ibm.com> writes:
-> On PowerPC, memory_add_physaddr_to_nid() uses a linear search to find
-> an LMB matching the given address.  This scales very poorly when there
-> are many LMBs.  The poor scaling cripples drmem_init() during boot:
-> lmb_set_nid(), which calls memory_add_physaddr_to_nid(), is called for
-> each LMB.
->
-> If we index each LMB in an xarray by its base address we can achieve
-> O(log n) search during memory_add_physaddr_to_nid(), which scales much
-> better.
+Yeah, other cpus must not be idle in this.
 
-Is O(log n) correct? I had thought lookup complexity depends on the
-characteristics of the key.
+> Aren't jiffies actually slower than ktime_get() because jiffies are
+> updating every 10/1ms (depending on CONFIG_HZ)?
 
-Repeating some points from my comments on v1 below.
+They are no slower, they have a lower resolution which is 10ms or 4ms.
 
+Given the 500ms timeout, it is fine.
 
-> +static int drmem_cache_lmb_for_lookup(struct drmem_lmb *lmb)
+> We're kinda interesting here in getting into deep-idling state as quick
+> as possible. I was checking how much time takes the busy-loop below and
+> it takes ~40-150us in average, which is good enough.
 
-This is called only from __init functions, so it should be __init as well.
+ktime_get() gets a seq lock and it is very slow.
 
-> +{
-> +	void *ret;
-> +
-> +	ret = xa_store(&drmem_lmb_xa_base_addr, lmb->base_addr, lmb,
-> +		       GFP_KERNEL);
-> +	if (xa_is_err(ret))
-> +		return xa_err(ret);
-> +
-> +	return 0;
-> +}
+>>>>> +
+>>>>> +		/*
+>>>>> +		 * The primary CPU0 core shall wait for the secondaries
+>>>>> +		 * shutdown in order to power-off CPU's cluster safely.
+>>>>> +		 * The timeout value depends on the current CPU frequency,
+>>>>> +		 * it takes about 40-150us  in average and over 1000us in
+>>>>> +		 * a worst case scenario.
+>>>>> +		 */
+>>>>> +		do {
+>>>>> +			if (tegra_cpu_rail_off_ready())
+>>>>> +				return 0;
+>>>>> +
+>>>>> +		} while (ktime_before(ktime_get(), timeout));
+>>>>
+>>>> So this loop will aggresively call tegra_cpu_rail_off_ready() and retry 3
+>>>> times. The tegra_cpu_rail_off_ready() function can be called thoushand of times
+>>>> here but the function will hang 1.5s :/
+>>>>
+>>>> I suggest something like:
+>>>>
+>>>> 	while (retries--i && !tegra_cpu_rail_off_ready()) 
+>>>> 		udelay(100);
+>>>>
+>>>> So <retries> calls to tegra_cpu_rail_off_ready() and 100us x <retries> maximum
+>>>> impact.
+>>> But udelay() also results into CPU spinning in a busy-loop, and thus,
+>>> what's the difference?
+>>
+>> busy looping instead of register reads with all the hardware things involved behind.
+> 
+> Please notice that this code runs only on an older Cortex-A9/A15, which
+> doesn't support WFE for the delaying, and thus, CPU always busy-loops
+> inside udelay().
+> 
+> What about if I'll add cpu_relax() to the loop? Do you think it it could
+> have any positive effect?
 
-[...]
-
-> @@ -364,6 +383,8 @@ static void __init init_drmem_v1_lmbs(const __be32 *prop)
->  
->  	for_each_drmem_lmb(lmb) {
->  		read_drconf_v1_cell(lmb, &prop);
-> +		if (drmem_cache_lmb_for_lookup(lmb) != 0)
-> +			return;
->  		lmb_set_nid(lmb);
->  	}
->  }
-> @@ -411,6 +432,9 @@ static void __init init_drmem_v2_lmbs(const __be32 *prop)
->  			lmb->aa_index = dr_cell.aa_index;
->  			lmb->flags = dr_cell.flags;
->  
-> +			if (drmem_cache_lmb_for_lookup(lmb) != 0)
-> +				return;
-> +
-
-Failing to record an lmb in the cache shouldn't be cause for silently
-aborting this initialization. Future lookups against the caches (should
-the system even boot) may fail, but the drmem_lmbs will still be
-initialized correctly.
-
-I'd say just ignore (or perhaps log once) xa_store() failures as long as
-this code only runs at boot.
-
-
-> diff --git a/arch/powerpc/mm/numa.c b/arch/powerpc/mm/numa.c
-> index 3c7dec70cda0..0fd7963a991e 100644
-> --- a/arch/powerpc/mm/numa.c
-> +++ b/arch/powerpc/mm/numa.c
-> @@ -958,27 +958,18 @@ early_param("topology_updates", early_topology_updates);
->  static int hot_add_drconf_scn_to_nid(unsigned long scn_addr)
->  {
->  	struct drmem_lmb *lmb;
-> -	unsigned long lmb_size;
-> -	int nid = NUMA_NO_NODE;
-> -
-> -	lmb_size = drmem_lmb_size();
-> -
-> -	for_each_drmem_lmb(lmb) {
-> -		/* skip this block if it is reserved or not assigned to
-> -		 * this partition */
-> -		if ((lmb->flags & DRCONF_MEM_RESERVED)
-> -		    || !(lmb->flags & DRCONF_MEM_ASSIGNED))
-> -			continue;
-> -
-> -		if ((scn_addr < lmb->base_addr)
-> -		    || (scn_addr >= (lmb->base_addr + lmb_size)))
-> -			continue;
->  
-> -		nid = of_drconf_to_nid_single(lmb);
-> -		break;
-> -	}
-> +	lmb = drmem_find_lmb_by_base_addr(scn_addr);
-
-It occurs to me that the old behavior here will succeed in looking up a
-drmem_lmb if scn_addr is within it, while the new behavior is that the
-given address must match the starting address of the drmem_lmb. I think
-this is probably OK though?
+I think udelay() has a call to cpu_relax().
 
 
-> +	if (lmb == NULL)
-> +		return NUMA_NO_NODE;
-> +	
-> +	/* can't use this block if it is reserved or not assigned to
-> +	 * this partition */
-> +	if ((lmb->flags & DRCONF_MEM_RESERVED)
-> +	    || !(lmb->flags & DRCONF_MEM_ASSIGNED))
-> +		return NUMA_NO_NODE;
->  
-> -	return nid;
-> +	return of_drconf_to_nid_single(lmb);
->  }
 
-Otherwise I have no concerns about the changes to
-hot_add_drconf_scn_to_nid.
 
-Other than the minor points I've made here, this looks like a tidy
-self-contained change to fix drmem initialization latency.
+-- 
+ <http://www.linaro.org/> Linaro.org │ Open source software for ARM SoCs
+
+Follow Linaro:  <http://www.facebook.com/pages/Linaro> Facebook |
+<http://twitter.com/#!/linaroorg> Twitter |
+<http://www.linaro.org/linaro-blog/> Blog
+
