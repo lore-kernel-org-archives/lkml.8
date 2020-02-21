@@ -7,58 +7,59 @@ X-Spam-Status: No, score=-17.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT,
 	USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A8ED5C35640
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 08:45:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7A9C3C35642
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 08:45:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 72EAE206EF
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 08:45:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5203324650
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 08:45:49 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="HnA22rj1"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="PpD0YIFQ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729617AbgBUHuw (ORCPT
+        id S1730545AbgBUIpr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Feb 2020 02:50:52 -0500
-Received: from mail-pf1-f201.google.com ([209.85.210.201]:43938 "EHLO
-        mail-pf1-f201.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729605AbgBUHur (ORCPT
+        Fri, 21 Feb 2020 03:45:47 -0500
+Received: from mail-pj1-f74.google.com ([209.85.216.74]:44657 "EHLO
+        mail-pj1-f74.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729613AbgBUHuv (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Feb 2020 02:50:47 -0500
-Received: by mail-pf1-f201.google.com with SMTP id x199so786302pfc.10
-        for <linux-kernel@vger.kernel.org>; Thu, 20 Feb 2020 23:50:47 -0800 (PST)
+        Fri, 21 Feb 2020 02:50:51 -0500
+Received: by mail-pj1-f74.google.com with SMTP id c31so512631pje.9
+        for <linux-kernel@vger.kernel.org>; Thu, 20 Feb 2020 23:50:50 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=google.com; s=20161025;
         h=date:in-reply-to:message-id:mime-version:references:subject:from:to
          :cc;
-        bh=TmMGk/2HBR1UCtTSik3KGPjlUzxkj3b3kzWXZC6WT9Q=;
-        b=HnA22rj1dxnIqlA9T0G3M9hI7Ol0tPKBHB3zgMhpLpfKsZh8/7rGFL+VpJhCzde6Nu
-         KcE1Q8zAzVUc/5Pm34mVfvY0+9krjUAjkpmGtkonB048819Z48M+YWQacJJ340JKu+ue
-         x7jFulnQWyRBstsM4STMH8HFqMQwRJgZGycic6yiIPk4zOOgqYt0OF7JY3fIDkeE9ay/
-         vBGfyigOc4ICKdyI0inEGExZ9v733oWf1prfVUKJKrLGnDN1LlbIQUr/hv2jbk7vkLpX
-         cpO/cJXDixOMfE035fqyXvCsGbWDCU/ZBudmXUOPchl1J32YneGL6Hynb3WxV2w1p7ZF
-         amcg==
+        bh=kdc4/GnqQPZSDbeLZD4M7jzkDGk/HjdnvHVdHj4Ph1s=;
+        b=PpD0YIFQSiCN6/cJEmqaMhNsOaqoM1d0SGbkSAwumb3ksIASRK5XXky8vX5TIdhpm4
+         /bDdgSmB6qTiSar/CGLibKdbb+lUsbwPazA+iQqEzHUxBeBQBUBfP/6dIevtAtvuHvkL
+         CZd1RWIuD/dJpBwNl5IY6vZXWeaWdIFV90y6B1Q3JF+zZ7k962WuaixETt4WnZU1Aduz
+         RAMFYRIosDRR6ChxzXE+DrNutlEbV2ju2ya+KW3PcJpetbQSHW3ze1pi5CdclE5autEB
+         YncQn+IIRKcF/mj6RyAxriVHOW6gmVKxMvcZXjg2ti/9g1KGaB0YmHnbdQ00KDKDIx9i
+         QbBA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:in-reply-to:message-id:mime-version
          :references:subject:from:to:cc;
-        bh=TmMGk/2HBR1UCtTSik3KGPjlUzxkj3b3kzWXZC6WT9Q=;
-        b=bDIC5icCd1ipu6RIDQfFSNw1S/+AbTLlvYCALJTTbXeNxfCPVfkqb4MqVB55fEWCCJ
-         AAGFwqdwXf9OjOWAKhP4cYNniBeCLzvIpzEXulbdw2HQyGF1FRKYHpOhZcL+TfXvcnVq
-         K/1Jn8UB16o9qFNqSNDrjFQREo81Ys2Q4Ri54Jtw4Meih/PaapIzRg/PRVacBQO9pncT
-         TjGDxhGGsSGQcOriPpS8cWhUWTfW88OIFaCbiKQwUh0okrusww1D3ituHv9bQkKQ5sEF
-         Ke8jKzXte8baU8bqc1ZpCSBsQeZLSaMBWOEDKSqZI+/STjdzix3BbXSW8vzyt+ha+Tsk
-         Cynw==
-X-Gm-Message-State: APjAAAWzr7nIR2U51aU/kQHBmF4mpK4FvffK3gsP8D3Q+x4FzA6G4lEY
-        +2zjXy5Q1Hq0taLaiPv5G1BYMbAOflDF7Fo=
-X-Google-Smtp-Source: APXvYqwt26QxPKqFuPdNRe/xB5a2LF+NSPwWWlHVhdOULpbO8o8NeieDv3STiJzdiNCnYZDbmc/xqiEqVNxQlLQ=
-X-Received: by 2002:a63:5a11:: with SMTP id o17mr37742004pgb.60.1582271446721;
- Thu, 20 Feb 2020 23:50:46 -0800 (PST)
-Date:   Thu, 20 Feb 2020 23:50:35 -0800
+        bh=kdc4/GnqQPZSDbeLZD4M7jzkDGk/HjdnvHVdHj4Ph1s=;
+        b=jhHUKtfEhQKWRVHsBcO/AI8sZyl3MIY3juHvdDk7vaHn4s+ZhXY3rPUk7fz6Q9uQXO
+         /iG7nZcCXt9D/JJcqAHoAS711XiJNQWRT52Q5JA2JAxG3nqc3vFs3AqIultAJ0KyD9S2
+         NYEctVBuJq2R6XzzAkk9puu86Y1c7/cFxjJHXZkFX5gb/RiJcmvi69sFW0KKf2X1LNdg
+         QVDfDzSw660xe0MyhYK3eLscudSRd0ViPnJ/CQjBS/ilb9sDsc9wzUzYu8K7FawWLp+u
+         yccxHAPrC35LJxFfKEzGrckSe+hYbtJdwp5fAJQwDG1Hda1fFIPHql/lY1sJWLP0sHVu
+         ePNA==
+X-Gm-Message-State: APjAAAW0joZ7wtiUW7M3L/KqMn0GHebW3Gtm13UEN4GZrMrHWHHHjyhq
+        /kWe5kp9LQlvFRUVComvZaeIKXQGY3xsPRY=
+X-Google-Smtp-Source: APXvYqzX1iAQ0imJq9JjSnyOkJDF3o4y8ej3cF2kW91EygZYqxE5N1B5FAuwvLiwaHz9hDTaJ1N6Yn2H1pJK6nI=
+X-Received: by 2002:a63:505b:: with SMTP id q27mr37081699pgl.39.1582271449861;
+ Thu, 20 Feb 2020 23:50:49 -0800 (PST)
+Date:   Thu, 20 Feb 2020 23:50:36 -0800
 In-Reply-To: <20200221075036.181885-1-saravanak@google.com>
-Message-Id: <20200221075036.181885-3-saravanak@google.com>
+Message-Id: <20200221075036.181885-4-saravanak@google.com>
 Mime-Version: 1.0
 References: <20200221075036.181885-1-saravanak@google.com>
 X-Mailer: git-send-email 2.25.0.265.gbab2e86ba0-goog
-Subject: [PATCH v1 2/3] driver core: Add dev_has_sync_state()
+Subject: [PATCH v1 3/3] driver core: Skip unnecessary work when device doesn't
+ have sync_state()
 From:   Saravana Kannan <saravanak@google.com>
 To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         "Rafael J. Wysocki" <rafael@kernel.org>
@@ -70,36 +71,36 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add an API to check if a device has sync_state support in its driver or
-bus.
+A bunch of busy work is done for devices that don't have sync_state()
+support. Stop doing the busy work.
 
 Signed-off-by: Saravana Kannan <saravanak@google.com>
 ---
- include/linux/device.h | 11 +++++++++++
- 1 file changed, 11 insertions(+)
+ drivers/base/core.c | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
-diff --git a/include/linux/device.h b/include/linux/device.h
-index 0cd7c647c16c..fa04dfd22bbc 100644
---- a/include/linux/device.h
-+++ b/include/linux/device.h
-@@ -798,6 +798,17 @@ static inline struct device_node *dev_of_node(struct device *dev)
- 	return dev->of_node;
+diff --git a/drivers/base/core.c b/drivers/base/core.c
+index 3306d5ae92a6..1ecd69d26837 100644
+--- a/drivers/base/core.c
++++ b/drivers/base/core.c
+@@ -718,6 +718,8 @@ static void __device_links_queue_sync_state(struct device *dev,
+ {
+ 	struct device_link *link;
+ 
++	if (!dev_has_sync_state(dev))
++		return;
+ 	if (dev->state_synced)
+ 		return;
+ 
+@@ -819,7 +821,7 @@ late_initcall(sync_state_resume_initcall);
+ 
+ static void __device_links_supplier_defer_sync(struct device *sup)
+ {
+-	if (list_empty(&sup->links.defer_sync))
++	if (list_empty(&sup->links.defer_sync) && dev_has_sync_state(dev))
+ 		list_add_tail(&sup->links.defer_sync, &deferred_sync);
  }
  
-+static inline bool dev_has_sync_state(struct device *dev)
-+{
-+	if (!dev)
-+		return false;
-+	if (dev->driver && dev->driver->sync_state)
-+		return true;
-+	if (dev->bus && dev->bus->sync_state)
-+		return true;
-+	return false;
-+}
-+
- /*
-  * High level routines for use by the bus drivers
-  */
 -- 
 2.25.0.265.gbab2e86ba0-goog
 
