@@ -5,49 +5,49 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8B501C35641
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 08:33:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B470AC35640
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 08:33:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 55C8F24673
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 08:33:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8B6172067D
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 08:33:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582273992;
-	bh=LXbfIfF8CgqKhgJwGP25Eq5JnnzHgEojWUNMKLKkmb4=;
+	s=default; t=1582273994;
+	bh=+fwgImkEezDVmS4t4jTfRR0PxOi7aPqrYXalgbjRkDY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=jt3ixTMFWyx+rx9RR8xBBWhChmKGAD8F2yCTJytAlevHZW9WkJq/G5W8VD0oCM6xK
-	 hq9quVjsUlNHydRSk3Gej/2sqko5j55G63GlIJyYbSRl35E6sTCaVsm/YVi32XJ/Ub
-	 y1PsPDzLaXJhSnnCVdwvLt/RyR4lyFX966v/5zjw=
+	b=zBam0iAvDf4QvId5ggj8F/O7t6hUZOIkjnomYYC87rd+Rw1JcCt7QbqyxPbWJ4fK7
+	 ie9EwgSSYZZNjfF58DVb4SXFw6e+kirj+K9knJ+CNQCeeOPv1zQIMFRenoafTMEXEm
+	 oNJlvrD/n+Tgi1YPy6wFvMCGlxO1+Cg36pqMKtg4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732636AbgBUILD (ORCPT
+        id S1733175AbgBUIdM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Feb 2020 03:11:03 -0500
-Received: from mail.kernel.org ([198.145.29.99]:46370 "EHLO mail.kernel.org"
+        Fri, 21 Feb 2020 03:33:12 -0500
+Received: from mail.kernel.org ([198.145.29.99]:46566 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732621AbgBUIK7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Feb 2020 03:10:59 -0500
+        id S1732295AbgBUILK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 21 Feb 2020 03:11:10 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8FFA820578;
-        Fri, 21 Feb 2020 08:10:58 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A140920578;
+        Fri, 21 Feb 2020 08:11:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1582272659;
-        bh=LXbfIfF8CgqKhgJwGP25Eq5JnnzHgEojWUNMKLKkmb4=;
+        s=default; t=1582272670;
+        bh=+fwgImkEezDVmS4t4jTfRR0PxOi7aPqrYXalgbjRkDY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=n8RLSQp8KhcBklpRbRukqffoWIklpIgtRYc4vSb4GzvWlPxqvdKrzx8QIAteJ03SG
-         fHGP1fojJSUQVCL23f+KrOPc4ELhvrWvtuUdvb1iiLcD/1795/THU743eU23mfjKF9
-         9ZguMKFjA6hKzE1mtZfga+s1xxLLdBXQLOw6XY64=
+        b=IO5BzaCIvS6RmR0VFFJEX/lJOuxifqXFOTzuJq8FLUn67VdV0Wcv/jJlY0FrnToIs
+         nciy/y9v81FkMejQ/n2CUkLjlTddTggLK3WN1kGnVqn+Px3R7DVHOOUVfYYWWzjr/B
+         aiBMcC7AkBJdLDlGWf0wOKg7YI9bLVKW8SQKm7Ww=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Geert Uytterhoeven <geert+renesas@glider.be>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 219/344] driver core: Print device when resources present in really_probe()
-Date:   Fri, 21 Feb 2020 08:40:18 +0100
-Message-Id: <20200221072409.091220143@linuxfoundation.org>
+        stable@vger.kernel.org, Joakim Zhang <qiangqing.zhang@nxp.com>,
+        Leonard Crestez <leonard.crestez@nxp.com>,
+        Will Deacon <will@kernel.org>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.4 231/344] perf/imx_ddr: Fix cpu hotplug state cleanup
+Date:   Fri, 21 Feb 2020 08:40:30 +0100
+Message-Id: <20200221072410.239585109@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200221072349.335551332@linuxfoundation.org>
 References: <20200221072349.335551332@linuxfoundation.org>
@@ -60,43 +60,77 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Geert Uytterhoeven <geert+renesas@glider.be>
+From: Leonard Crestez <leonard.crestez@nxp.com>
 
-[ Upstream commit 7c35e699c88bd60734277b26962783c60e04b494 ]
+[ Upstream commit 9ee68b314e9aa63ed11b98beb8a68810b8234dcf ]
 
-If a device already has devres items attached before probing, a warning
-backtrace is printed.  However, this backtrace does not reveal the
-offending device, leaving the user uninformed.  Furthermore, using
-WARN_ON() causes systems with panic-on-warn to reboot.
+This driver allocates a dynamic cpu hotplug state but never releases it.
+If reloaded in a loop it will quickly trigger a WARN message:
 
-Fix this by replacing the WARN_ON() by a dev_crit() message.
-Abort probing the device, to prevent doing more damage to the device's
-resources.
+	"No more dynamic states available for CPU hotplug"
 
-Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
-Link: https://lore.kernel.org/r/20191206132219.28908-1-geert+renesas@glider.be
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Fix by calling cpuhp_remove_multi_state on remove like several other
+perf pmu drivers.
+
+Also fix the cleanup logic on probe error paths: add the missing
+cpuhp_remove_multi_state call and properly check the return value from
+cpuhp_state_add_instant_nocalls.
+
+Fixes: 9a66d36cc7ac ("drivers/perf: imx_ddr: Add DDR performance counter support to perf")
+Acked-by: Joakim Zhang <qiangqing.zhang@nxp.com>
+Signed-off-by: Leonard Crestez <leonard.crestez@nxp.com>
+Signed-off-by: Will Deacon <will@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/base/dd.c | 5 ++++-
- 1 file changed, 4 insertions(+), 1 deletion(-)
+ drivers/perf/fsl_imx8_ddr_perf.c | 16 +++++++++++-----
+ 1 file changed, 11 insertions(+), 5 deletions(-)
 
-diff --git a/drivers/base/dd.c b/drivers/base/dd.c
-index d811e60610d33..b25bcab2a26bd 100644
---- a/drivers/base/dd.c
-+++ b/drivers/base/dd.c
-@@ -516,7 +516,10 @@ static int really_probe(struct device *dev, struct device_driver *drv)
- 	atomic_inc(&probe_count);
- 	pr_debug("bus: '%s': %s: probing driver %s with device %s\n",
- 		 drv->bus->name, __func__, drv->name, dev_name(dev));
--	WARN_ON(!list_empty(&dev->devres_head));
-+	if (!list_empty(&dev->devres_head)) {
-+		dev_crit(dev, "Resources present before probing\n");
-+		return -EBUSY;
+diff --git a/drivers/perf/fsl_imx8_ddr_perf.c b/drivers/perf/fsl_imx8_ddr_perf.c
+index 2a3966d059e70..0e51baa48b149 100644
+--- a/drivers/perf/fsl_imx8_ddr_perf.c
++++ b/drivers/perf/fsl_imx8_ddr_perf.c
+@@ -572,13 +572,17 @@ static int ddr_perf_probe(struct platform_device *pdev)
+ 
+ 	if (ret < 0) {
+ 		dev_err(&pdev->dev, "cpuhp_setup_state_multi failed\n");
+-		goto ddr_perf_err;
++		goto cpuhp_state_err;
+ 	}
+ 
+ 	pmu->cpuhp_state = ret;
+ 
+ 	/* Register the pmu instance for cpu hotplug */
+-	cpuhp_state_add_instance_nocalls(pmu->cpuhp_state, &pmu->node);
++	ret = cpuhp_state_add_instance_nocalls(pmu->cpuhp_state, &pmu->node);
++	if (ret) {
++		dev_err(&pdev->dev, "Error %d registering hotplug\n", ret);
++		goto cpuhp_instance_err;
 +	}
  
- re_probe:
- 	dev->driver = drv;
+ 	/* Request irq */
+ 	irq = of_irq_get(np, 0);
+@@ -612,9 +616,10 @@ static int ddr_perf_probe(struct platform_device *pdev)
+ 	return 0;
+ 
+ ddr_perf_err:
+-	if (pmu->cpuhp_state)
+-		cpuhp_state_remove_instance_nocalls(pmu->cpuhp_state, &pmu->node);
+-
++	cpuhp_state_remove_instance_nocalls(pmu->cpuhp_state, &pmu->node);
++cpuhp_instance_err:
++	cpuhp_remove_multi_state(pmu->cpuhp_state);
++cpuhp_state_err:
+ 	ida_simple_remove(&ddr_ida, pmu->id);
+ 	dev_warn(&pdev->dev, "i.MX8 DDR Perf PMU failed (%d), disabled\n", ret);
+ 	return ret;
+@@ -625,6 +630,7 @@ static int ddr_perf_remove(struct platform_device *pdev)
+ 	struct ddr_pmu *pmu = platform_get_drvdata(pdev);
+ 
+ 	cpuhp_state_remove_instance_nocalls(pmu->cpuhp_state, &pmu->node);
++	cpuhp_remove_multi_state(pmu->cpuhp_state);
+ 	irq_set_affinity_hint(pmu->irq, NULL);
+ 
+ 	perf_pmu_unregister(&pmu->pmu);
 -- 
 2.20.1
 
