@@ -7,47 +7,52 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5F5DBC35641
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 07:56:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 065FBC35641
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 07:56:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 35C1C20578
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 07:56:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C81B82465D
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 07:56:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582271777;
-	bh=7cQc4SRp6iphGymWqLpNl7n+Za/QHc3wM/3uBQapzDQ=;
+	s=default; t=1582271781;
+	bh=wEovUnVAJ3olaZoXD7wRRiPJz8vfxqM6vpopy8X8Pq8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=JHXzsEZLJxc7e/h3PjJI9UW4PALdTov6S2Q1oyE1WFzkZliXFPZmAj9RrV+SjL+u+
-	 n4+0t0GsckKzqv6Y9Vs1iUqFWZsTyGqNwyRjU/KARgd9GM7XKjAtF9wR4igswLBJBH
-	 vShn5D7UXXD2ZbJaD1G6oYYShMajDhLUEqNxTgFk=
+	b=paQVR3V6iIqadnInKlL/l0/+mQAYhW5u1qW0jPf2jdyIn/WkYMqGv1OM/ThP7bQDA
+	 L5mj/3xGz7NCOriem2YVDxMQpdnYMl34/uOdovG313ZC+nc8YjSPoUhNz9ha6a6re4
+	 FdGihWD+xBiymLucCZQeUbzeJ1VvDKPeOTUHfpIg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730286AbgBUH4P (ORCPT
+        id S1730456AbgBUH4U (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Feb 2020 02:56:15 -0500
-Received: from mail.kernel.org ([198.145.29.99]:55416 "EHLO mail.kernel.org"
+        Fri, 21 Feb 2020 02:56:20 -0500
+Received: from mail.kernel.org ([198.145.29.99]:55478 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730439AbgBUH4M (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Feb 2020 02:56:12 -0500
+        id S1730447AbgBUH4O (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 21 Feb 2020 02:56:14 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B1CFD222C4;
-        Fri, 21 Feb 2020 07:56:10 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5EA8020578;
+        Fri, 21 Feb 2020 07:56:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1582271771;
-        bh=7cQc4SRp6iphGymWqLpNl7n+Za/QHc3wM/3uBQapzDQ=;
+        s=default; t=1582271773;
+        bh=wEovUnVAJ3olaZoXD7wRRiPJz8vfxqM6vpopy8X8Pq8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=YwB3IcRYnIgBuSxUozpzvNygj5HB6rVkG7sW1yKvSbTNDprj3QsHE+QU1wxRidWsf
-         +DSLH6Zi00gUvg1Wx/TsjgIkGNovQrXB3hmsVvkgMPGs/WSUnGHB0Bm0Y8ezmbkecG
-         MZp8avVCSdHfGyQaZUbZ5AgSVF2imBDCV4jBdX94=
+        b=KqCogJoH492OFNhjxksuwYk+6MqJg5vD0U3vTN6Zn1lyA1/9jN+K7zSI5yy+Vr8G5
+         JrzmP21/662grOo+IVBov593LLnDf9JHQk9x3a50hkQdF3nD0wvpwZsd5+R90Pa8Dr
+         ho4qEQCdKOsl3zCWBGQrCfosPL90LCoMhgNWgNPw=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Zaibo Xu <xuzaibo@huawei.com>,
-        Herbert Xu <herbert@gondor.apana.org.au>,
+        stable@vger.kernel.org, Pankaj Bansal <pankaj.bansal@nxp.com>,
+        Hanjun Guo <guohanjun@huawei.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Will Deacon <will@kernel.org>,
+        Sudeep Holla <sudeep.holla@arm.com>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Robin Murphy <robin.murphy@arm.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.5 275/399] crypto: hisilicon - Bugfixed tfm leak
-Date:   Fri, 21 Feb 2020 08:40:00 +0100
-Message-Id: <20200221072428.849850793@linuxfoundation.org>
+Subject: [PATCH 5.5 293/399] ACPI/IORT: Fix Number of IDs handling in iort_id_map()
+Date:   Fri, 21 Feb 2020 08:40:18 +0100
+Message-Id: <20200221072430.253096930@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200221072402.315346745@linuxfoundation.org>
 References: <20200221072402.315346745@linuxfoundation.org>
@@ -60,81 +65,154 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Zaibo Xu <xuzaibo@huawei.com>
+From: Hanjun Guo <guohanjun@huawei.com>
 
-[ Upstream commit dfee9955abc7ec9364413d16316181322cf44f2f ]
+[ Upstream commit 3c23b83a88d00383e1d498cfa515249aa2fe0238 ]
 
-1.Fixed the bug of software tfm leakage.
-2.Update HW error log message.
+The IORT specification [0] (Section 3, table 4, page 9) defines the
+'Number of IDs' as 'The number of IDs in the range minus one'.
 
-Signed-off-by: Zaibo Xu <xuzaibo@huawei.com>
-Signed-off-by: Herbert Xu <herbert@gondor.apana.org.au>
+However, the IORT ID mapping function iort_id_map() treats the 'Number
+of IDs' field as if it were the full IDs mapping count, with the
+following check in place to detect out of boundary input IDs:
+
+InputID >= Input base + Number of IDs
+
+This check is flawed in that it considers the 'Number of IDs' field as
+the full number of IDs mapping and disregards the 'minus one' from
+the IDs count.
+
+The correct check in iort_id_map() should be implemented as:
+
+InputID > Input base + Number of IDs
+
+this implements the specification correctly but unfortunately it breaks
+existing firmwares that erroneously set the 'Number of IDs' as the full
+IDs mapping count rather than IDs mapping count minus one.
+
+e.g.
+
+PCI hostbridge mapping entry 1:
+Input base:  0x1000
+ID Count:    0x100
+Output base: 0x1000
+Output reference: 0xC4  //ITS reference
+
+PCI hostbridge mapping entry 2:
+Input base:  0x1100
+ID Count:    0x100
+Output base: 0x2000
+Output reference: 0xD4  //ITS reference
+
+Two mapping entries which the second entry's Input base = the first
+entry's Input base + ID count, so for InputID 0x1100 and with the
+correct InputID check in place in iort_id_map() the kernel would map
+the InputID to ITS 0xC4 not 0xD4 as it would be expected.
+
+Therefore, to keep supporting existing flawed firmwares, introduce a
+workaround that instructs the kernel to use the old InputID range check
+logic in iort_id_map(), so that we can support both firmwares written
+with the flawed 'Number of IDs' logic and the correct one as defined in
+the specifications.
+
+[0]: http://infocenter.arm.com/help/topic/com.arm.doc.den0049d/DEN0049D_IO_Remapping_Table.pdf
+
+Reported-by: Pankaj Bansal <pankaj.bansal@nxp.com>
+Link: https://lore.kernel.org/linux-acpi/20191215203303.29811-1-pankaj.bansal@nxp.com/
+Signed-off-by: Hanjun Guo <guohanjun@huawei.com>
+Signed-off-by: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+Cc: Pankaj Bansal <pankaj.bansal@nxp.com>
+Cc: Will Deacon <will@kernel.org>
+Cc: Sudeep Holla <sudeep.holla@arm.com>
+Cc: Catalin Marinas <catalin.marinas@arm.com>
+Cc: Robin Murphy <robin.murphy@arm.com>
+Signed-off-by: Will Deacon <will@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/crypto/hisilicon/hpre/hpre_crypto.c |  7 +++++-
- drivers/crypto/hisilicon/hpre/hpre_main.c   | 24 ++++++++++-----------
- 2 files changed, 18 insertions(+), 13 deletions(-)
+ drivers/acpi/arm64/iort.c | 57 +++++++++++++++++++++++++++++++++++++--
+ 1 file changed, 55 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/crypto/hisilicon/hpre/hpre_crypto.c b/drivers/crypto/hisilicon/hpre/hpre_crypto.c
-index 98f037e6ea3e4..d8b015266ee49 100644
---- a/drivers/crypto/hisilicon/hpre/hpre_crypto.c
-+++ b/drivers/crypto/hisilicon/hpre/hpre_crypto.c
-@@ -1043,6 +1043,7 @@ static unsigned int hpre_rsa_max_size(struct crypto_akcipher *tfm)
- static int hpre_rsa_init_tfm(struct crypto_akcipher *tfm)
- {
- 	struct hpre_ctx *ctx = akcipher_tfm_ctx(tfm);
-+	int ret;
- 
- 	ctx->rsa.soft_tfm = crypto_alloc_akcipher("rsa-generic", 0, 0);
- 	if (IS_ERR(ctx->rsa.soft_tfm)) {
-@@ -1050,7 +1051,11 @@ static int hpre_rsa_init_tfm(struct crypto_akcipher *tfm)
- 		return PTR_ERR(ctx->rsa.soft_tfm);
- 	}
- 
--	return hpre_ctx_init(ctx);
-+	ret = hpre_ctx_init(ctx);
-+	if (ret)
-+		crypto_free_akcipher(ctx->rsa.soft_tfm);
-+
-+	return ret;
+diff --git a/drivers/acpi/arm64/iort.c b/drivers/acpi/arm64/iort.c
+index 33f71983e0017..6078064684c6c 100644
+--- a/drivers/acpi/arm64/iort.c
++++ b/drivers/acpi/arm64/iort.c
+@@ -298,6 +298,59 @@ out:
+ 	return status;
  }
  
- static void hpre_rsa_exit_tfm(struct crypto_akcipher *tfm)
-diff --git a/drivers/crypto/hisilicon/hpre/hpre_main.c b/drivers/crypto/hisilicon/hpre/hpre_main.c
-index 34e0424410bfc..0c98c37e39f4a 100644
---- a/drivers/crypto/hisilicon/hpre/hpre_main.c
-+++ b/drivers/crypto/hisilicon/hpre/hpre_main.c
-@@ -106,18 +106,18 @@ static const char * const hpre_debug_file_name[] = {
- };
++struct iort_workaround_oem_info {
++	char oem_id[ACPI_OEM_ID_SIZE + 1];
++	char oem_table_id[ACPI_OEM_TABLE_ID_SIZE + 1];
++	u32 oem_revision;
++};
++
++static bool apply_id_count_workaround;
++
++static struct iort_workaround_oem_info wa_info[] __initdata = {
++	{
++		.oem_id		= "HISI  ",
++		.oem_table_id	= "HIP07   ",
++		.oem_revision	= 0,
++	}, {
++		.oem_id		= "HISI  ",
++		.oem_table_id	= "HIP08   ",
++		.oem_revision	= 0,
++	}
++};
++
++static void __init
++iort_check_id_count_workaround(struct acpi_table_header *tbl)
++{
++	int i;
++
++	for (i = 0; i < ARRAY_SIZE(wa_info); i++) {
++		if (!memcmp(wa_info[i].oem_id, tbl->oem_id, ACPI_OEM_ID_SIZE) &&
++		    !memcmp(wa_info[i].oem_table_id, tbl->oem_table_id, ACPI_OEM_TABLE_ID_SIZE) &&
++		    wa_info[i].oem_revision == tbl->oem_revision) {
++			apply_id_count_workaround = true;
++			pr_warn(FW_BUG "ID count for ID mapping entry is wrong, applying workaround\n");
++			break;
++		}
++	}
++}
++
++static inline u32 iort_get_map_max(struct acpi_iort_id_mapping *map)
++{
++	u32 map_max = map->input_base + map->id_count;
++
++	/*
++	 * The IORT specification revision D (Section 3, table 4, page 9) says
++	 * Number of IDs = The number of IDs in the range minus one, but the
++	 * IORT code ignored the "minus one", and some firmware did that too,
++	 * so apply a workaround here to keep compatible with both the spec
++	 * compliant and non-spec compliant firmwares.
++	 */
++	if (apply_id_count_workaround)
++		map_max--;
++
++	return map_max;
++}
++
+ static int iort_id_map(struct acpi_iort_id_mapping *map, u8 type, u32 rid_in,
+ 		       u32 *rid_out)
+ {
+@@ -314,8 +367,7 @@ static int iort_id_map(struct acpi_iort_id_mapping *map, u8 type, u32 rid_in,
+ 		return -ENXIO;
+ 	}
  
- static const struct hpre_hw_error hpre_hw_errors[] = {
--	{ .int_msk = BIT(0), .msg = "hpre_ecc_1bitt_err" },
--	{ .int_msk = BIT(1), .msg = "hpre_ecc_2bit_err" },
--	{ .int_msk = BIT(2), .msg = "hpre_data_wr_err" },
--	{ .int_msk = BIT(3), .msg = "hpre_data_rd_err" },
--	{ .int_msk = BIT(4), .msg = "hpre_bd_rd_err" },
--	{ .int_msk = BIT(5), .msg = "hpre_ooo_2bit_ecc_err" },
--	{ .int_msk = BIT(6), .msg = "hpre_cltr1_htbt_tm_out_err" },
--	{ .int_msk = BIT(7), .msg = "hpre_cltr2_htbt_tm_out_err" },
--	{ .int_msk = BIT(8), .msg = "hpre_cltr3_htbt_tm_out_err" },
--	{ .int_msk = BIT(9), .msg = "hpre_cltr4_htbt_tm_out_err" },
--	{ .int_msk = GENMASK(15, 10), .msg = "hpre_ooo_rdrsp_err" },
--	{ .int_msk = GENMASK(21, 16), .msg = "hpre_ooo_wrrsp_err" },
-+	{ .int_msk = BIT(0), .msg = "core_ecc_1bit_err_int_set" },
-+	{ .int_msk = BIT(1), .msg = "core_ecc_2bit_err_int_set" },
-+	{ .int_msk = BIT(2), .msg = "dat_wb_poison_int_set" },
-+	{ .int_msk = BIT(3), .msg = "dat_rd_poison_int_set" },
-+	{ .int_msk = BIT(4), .msg = "bd_rd_poison_int_set" },
-+	{ .int_msk = BIT(5), .msg = "ooo_ecc_2bit_err_int_set" },
-+	{ .int_msk = BIT(6), .msg = "cluster1_shb_timeout_int_set" },
-+	{ .int_msk = BIT(7), .msg = "cluster2_shb_timeout_int_set" },
-+	{ .int_msk = BIT(8), .msg = "cluster3_shb_timeout_int_set" },
-+	{ .int_msk = BIT(9), .msg = "cluster4_shb_timeout_int_set" },
-+	{ .int_msk = GENMASK(15, 10), .msg = "ooo_rdrsp_err_int_set" },
-+	{ .int_msk = GENMASK(21, 16), .msg = "ooo_wrrsp_err_int_set" },
- 	{ /* sentinel */ }
- };
+-	if (rid_in < map->input_base ||
+-	    (rid_in >= map->input_base + map->id_count))
++	if (rid_in < map->input_base || rid_in > iort_get_map_max(map))
+ 		return -ENXIO;
  
+ 	*rid_out = map->output_base + (rid_in - map->input_base);
+@@ -1631,5 +1683,6 @@ void __init acpi_iort_init(void)
+ 		return;
+ 	}
+ 
++	iort_check_id_count_workaround(iort_table);
+ 	iort_init_platform_devices();
+ }
 -- 
 2.20.1
 
