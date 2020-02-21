@@ -2,130 +2,302 @@ Return-Path: <SRS0=1210=4J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.3 required=3.0 tests=DKIM_ADSP_CUSTOM_MED,
+	DKIM_INVALID,DKIM_SIGNED,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 375C5C35647
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 13:29:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CAD4EC35657
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 13:29:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0885E2073A
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 13:29:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 986692073A
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 13:29:35 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="bc2yIIOE"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="D4a+fs+x"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728656AbgBUN3E (ORCPT
+        id S1728659AbgBUN3e (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Feb 2020 08:29:04 -0500
-Received: from mail-lf1-f66.google.com ([209.85.167.66]:39587 "EHLO
-        mail-lf1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728395AbgBUN3E (ORCPT
+        Fri, 21 Feb 2020 08:29:34 -0500
+Received: from mail-wr1-f65.google.com ([209.85.221.65]:36842 "EHLO
+        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728255AbgBUN3e (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Feb 2020 08:29:04 -0500
-Received: by mail-lf1-f66.google.com with SMTP id n30so682117lfh.6
-        for <linux-kernel@vger.kernel.org>; Fri, 21 Feb 2020 05:29:03 -0800 (PST)
+        Fri, 21 Feb 2020 08:29:34 -0500
+Received: by mail-wr1-f65.google.com with SMTP id z3so2085071wru.3;
+        Fri, 21 Feb 2020 05:29:31 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=8NATODsU2yjaJrA6FSD/IewEgDQ5Oohivlua/nWpA3M=;
-        b=bc2yIIOE7wkIMGyad4qn7bu3AxsOsBLEg/0ViMXFg9Kh7TOjkbFUDYIs0QeUD0iIL1
-         1Yvsd0l0+eAr4LXVLoNWPWZykKEcqax4lX4vAnjjxcfHpFWIlt5nvNYq3UWU6J4SELQt
-         RT5AoqFu//UZMeRDl4djtYxzARROJ7qbdlDDzzX0UGlAgLOzTXm5cWafJix/CsMSPy6V
-         EWZOwjXlPnvc0/O9dgp/Qz9l9GKmcGmHWpzgWxDI3QvimNKpUeea6JBC/46YJhoCV+tP
-         4/kLtCFOjBqMGHEFaId1fbX8fEXNk38H8WiOHG+/bxZSPw7RXo4x1Rq9upkwCtUGyhPO
-         LsHQ==
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=dL6DkN/eyJeAcyORY4ediiEbEPh4coH4SMwDInRe1/k=;
+        b=D4a+fs+xcSBTPsk7mZHHMfHPe6C5Ij7tTO9DuQP2Gqc0GTyBxxzjn1FvtSPA1qvhOo
+         2xaCmAXlWRvEYo/dBURhzRcE855YJBgmZ+7Y9gdUC7xTsY/C8HfDKAfqB56Ed5LslGDu
+         kAiWrL1jY/uTvjrIJv8R/q+gxSSE5+xgq2yHJUrXXKt9n6RDf3JpsHl/C50iX+7TerZS
+         rsPyi2Ef/d97qTZ5kT9QHU3lJwrKOYVkNjPdoB9kD0wofbwf/vsdd0t4gBkuZC9zdGpD
+         XDbZES0JWol/TyzHS4WTQ6M44ZEXDzhsJ+xoyScTNHDSBTHvnZT0u3Ccjks9dwg8p4Xf
+         0ARQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=8NATODsU2yjaJrA6FSD/IewEgDQ5Oohivlua/nWpA3M=;
-        b=Lnsq6J4I3AhXTsVVBa/uq83wi8ZKBw3Sx19iIgpxKugzrIRjzIDJ2HX5tAN6uqOzJs
-         AmCuIlKu6dN6kcuQbn/harz+/z/N+9D7T6Qy4lC+b1/M3hNNbO9ibbBtWtuc4o05juUx
-         zloatY3PceyB7x7/9CiHMnzmsVOtJeLYedZdhT/ScD0zyhn1amlvUGLpp2WU/TWlq2J5
-         c/ZtY/olSjBok1jtkxGfAWBnKQwywRolwHdf9RWC5lHqCnYhSSpPviZPiZUCVTZo/81k
-         KtS9f7xnCmh+1sq3i31GM8DbCXYDJrBbTHXldkH7pnIe882UAWwGaw/9yskcK5g+eKEU
-         M5zA==
-X-Gm-Message-State: APjAAAWGGs/WbbPLg+FpOalPsp6paKkkzn2iVJoUEbdsdmVQc4z/OsnF
-        RYZ/M1utz8efE3kAMXDyCJ+8CSqmxCoqntnIrNkZyA==
-X-Google-Smtp-Source: APXvYqyb+M2CIaNBeAgYY8KsqoMswRx7p6cPD+rt9zsxw7Toqetk2C0psjthf2j5Haq8E/EaKKB7j/fr+s5PNStqi+Y=
-X-Received: by 2002:ac2:52a3:: with SMTP id r3mr19896983lfm.189.1582291742525;
- Fri, 21 Feb 2020 05:29:02 -0800 (PST)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=dL6DkN/eyJeAcyORY4ediiEbEPh4coH4SMwDInRe1/k=;
+        b=iaHErlHQtbx5ljBc0zhLwj3o8dJHBvrgoDNW1LQN10s3Xfeso/QBgYgNgEsccfOWeT
+         OoaYeaDEXzbIFYAjngKedDnsA4YIpnZ+KmwM4E4oXxNsK6iOnwr/FhaLQCckK2OSFtZ8
+         usvBo3229A1USJl6x1EJ7gnFP28K56nMRWLbLwFZDYFWaqvSPqavTz+ByqZTDQ3ypIMg
+         kyz4mBDl8RBfC4q5KMFdStbsLLCJP6+oa70SwhYrCBIaVDP7YyevgM9kRcCPF6LtsssT
+         RM+hKlSinT8As9htbuVoDFGdiCfWX9w+vmIRAHDI39im8VT5W1ILulMKyKCJLLA2DNhT
+         nRFQ==
+X-Gm-Message-State: APjAAAWvDZLEhT9JrITTsdrHIGUTwNlqYH38lxiQ6AcuJ2++QEL5gVtQ
+        k8YeQbhDSEiYPiV4NJUuY1U=
+X-Google-Smtp-Source: APXvYqyt0UiPpZZB/VmC8uuK7JIRQSBPQjnH8YikrAsf6JDVlqKkNimiGgfkNwdzOH/rZOXIGxkEoA==
+X-Received: by 2002:adf:df0e:: with SMTP id y14mr46895517wrl.377.1582291770378;
+        Fri, 21 Feb 2020 05:29:30 -0800 (PST)
+Received: from Ansuel-XPS.localdomain (93-39-149-95.ip76.fastwebnet.it. [93.39.149.95])
+        by smtp.googlemail.com with ESMTPSA id h5sm4172178wmf.8.2020.02.21.05.29.29
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 21 Feb 2020 05:29:29 -0800 (PST)
+From:   Ansuel Smith <ansuelsmth@gmail.com>
+Cc:     Ansuel Smith <ansuelsmth@gmail.com>,
+        Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Andrew Lunn <andrew@lunn.ch>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Heiner Kallweit <hkallweit1@gmail.com>,
+        Russell King <linux@armlinux.org.uk>,
+        linux-arm-msm@vger.kernel.org, netdev@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH v4 1/2] net: mdio: add ipq8064 mdio driver
+Date:   Fri, 21 Feb 2020 14:28:31 +0100
+Message-Id: <20200221132834.20719-1-ansuelsmth@gmail.com>
+X-Mailer: git-send-email 2.25.0
 MIME-Version: 1.0
-References: <20200214152729.6059-5-vincent.guittot@linaro.org>
- <20200219125513.8953-1-vincent.guittot@linaro.org> <9fe822fc-c311-2b97-ae14-b9269dd99f1e@arm.com>
- <CAKfTPtD4kz07hikCuU2_cm67ntruopN9CdJEP+fg5L4_N=qEgg@mail.gmail.com>
- <d9f78b94-2455-e000-82bd-c00cfb9bbc8e@arm.com> <20200221090448.GQ3420@suse.de>
- <CAKfTPtAgyGrYaiUEm-MjLxH+pSYMnk4LFJ+_ogJ=cWVvaHMnsg@mail.gmail.com> <20200221104018.GR3420@suse.de>
-In-Reply-To: <20200221104018.GR3420@suse.de>
-From:   Vincent Guittot <vincent.guittot@linaro.org>
-Date:   Fri, 21 Feb 2020 14:28:50 +0100
-Message-ID: <CAKfTPtC+sfkZgSzWdYqtHoZu4a8-LF+qsKYAvZ+DHJyOqh-Rqg@mail.gmail.com>
-Subject: Re: [PATCH v3 4/5] sched/pelt: Add a new runnable average signal
-To:     Mel Gorman <mgorman@suse.de>
-Cc:     Valentin Schneider <valentin.schneider@arm.com>,
-        Ingo Molnar <mingo@redhat.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Juri Lelli <juri.lelli@redhat.com>,
-        Dietmar Eggemann <dietmar.eggemann@arm.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Ben Segall <bsegall@google.com>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        Phil Auld <pauld@redhat.com>, Parth Shah <parth@linux.ibm.com>,
-        Hillf Danton <hdanton@sina.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
+To:     unlisted-recipients:; (no To-header on input)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 21 Feb 2020 at 11:40, Mel Gorman <mgorman@suse.de> wrote:
->
-> On Fri, Feb 21, 2020 at 10:25:27AM +0100, Vincent Guittot wrote:
-> > On Fri, 21 Feb 2020 at 10:04, Mel Gorman <mgorman@suse.de> wrote:
-> > >
-> > > On Thu, Feb 20, 2020 at 04:11:18PM +0000, Valentin Schneider wrote:
-> > > > On 20/02/2020 14:36, Vincent Guittot wrote:
-> > > > > I agree that setting by default to SCHED_CAPACITY_SCALE is too much
-> > > > > for little core.
-> > > > > The problem for little core can be fixed by using the cpu capacity instead
-> > > > >
-> > > >
-> > > > So that's indeed better for big.LITTLE & co. Any reason however for not
-> > > > aligning with the initialization of util_avg ?
-> > > >
-> > > > With the default MC imbalance_pct (117), it takes 875 utilization to make
-> > > > a single CPU group (with 1024 capacity) overloaded (group_is_overloaded()).
-> > > > For a completely idle CPU, that means forking at least 3 tasks (512 + 256 +
-> > > > 128 util_avg)
-> > > >
-> > > > With your change, it only takes 2 tasks. I know I'm being nitpicky here, but
-> > > > I feel like those should be aligned, unless we have a proper argument against
-> > > > it - in which case this should also appear in the changelog with so far only
-> > > > mentions issues with util_avg migration, not the fork time initialization.
-> > > >
-> > >
-> > > So, what is the way forward here? Should this patch be modified now,
-> > > a patch be placed on top or go with what we have for the moment that
-> > > works for symmetric CPUs and deal with the asym case later?
-> > >
-> > > I do not have any asym systems at all so I've no means of checking
-> > > whether there is a problem or not.
-> >
-> > I'm going to send a new version at least for patch 4 and 5 using
-> > cpu_scale as initial value and fixing update_sg_wakeup_stats()
-> >
->
-> No problem. FWIW, when I see them, I'll slot them in and rerun the tests
-> as the previous results will be invalidated. Obviously the asym case will
+Currently ipq806x soc use generi bitbang driver to
+comunicate with the gmac ethernet interface.
+Add a dedicated driver created by chunkeey to fix this.
 
-I have just sent the new version.
-Thanks for testing
+Christian Lamparter <chunkeey@gmail.com>
+Signed-off-by: Ansuel Smith <ansuelsmth@gmail.com>
+---
+ drivers/net/phy/Kconfig        |   8 ++
+ drivers/net/phy/Makefile       |   1 +
+ drivers/net/phy/mdio-ipq8064.c | 166 +++++++++++++++++++++++++++++++++
+ 3 files changed, 175 insertions(+)
+ create mode 100644 drivers/net/phy/mdio-ipq8064.c
 
-> not be tested by me but I imagine you or Valentin have that covered.
->
-> Thanks.
->
-> --
-> Mel Gorman
-> SUSE Labs
+diff --git a/drivers/net/phy/Kconfig b/drivers/net/phy/Kconfig
+index 9dabe03a668c..ec2a5493a7e8 100644
+--- a/drivers/net/phy/Kconfig
++++ b/drivers/net/phy/Kconfig
+@@ -157,6 +157,14 @@ config MDIO_I2C
+ 
+ 	  This is library mode.
+ 
++config MDIO_IPQ8064
++	tristate "Qualcomm IPQ8064 MDIO interface support"
++	depends on HAS_IOMEM && OF_MDIO
++	depends on MFD_SYSCON
++	help
++	  This driver supports the MDIO interface found in the network
++	  interface units of the IPQ8064 SoC
++
+ config MDIO_MOXART
+ 	tristate "MOXA ART MDIO interface support"
+ 	depends on ARCH_MOXART || COMPILE_TEST
+diff --git a/drivers/net/phy/Makefile b/drivers/net/phy/Makefile
+index fe5badf13b65..8f02bd2089f3 100644
+--- a/drivers/net/phy/Makefile
++++ b/drivers/net/phy/Makefile
+@@ -36,6 +36,7 @@ obj-$(CONFIG_MDIO_CAVIUM)	+= mdio-cavium.o
+ obj-$(CONFIG_MDIO_GPIO)		+= mdio-gpio.o
+ obj-$(CONFIG_MDIO_HISI_FEMAC)	+= mdio-hisi-femac.o
+ obj-$(CONFIG_MDIO_I2C)		+= mdio-i2c.o
++obj-$(CONFIG_MDIO_IPQ8064)	+= mdio-ipq8064.o
+ obj-$(CONFIG_MDIO_MOXART)	+= mdio-moxart.o
+ obj-$(CONFIG_MDIO_MSCC_MIIM)	+= mdio-mscc-miim.o
+ obj-$(CONFIG_MDIO_OCTEON)	+= mdio-octeon.o
+diff --git a/drivers/net/phy/mdio-ipq8064.c b/drivers/net/phy/mdio-ipq8064.c
+new file mode 100644
+index 000000000000..fd856b798194
+--- /dev/null
++++ b/drivers/net/phy/mdio-ipq8064.c
+@@ -0,0 +1,166 @@
++// SPDX-License-Identifier: GPL-2.0
++//
++// Qualcomm IPQ8064 MDIO interface driver
++//
++// Copyright (C) 2019 Christian Lamparter <chunkeey@gmail.com>
++
++#include <linux/delay.h>
++#include <linux/kernel.h>
++#include <linux/module.h>
++#include <linux/regmap.h>
++#include <linux/of_mdio.h>
++#include <linux/phy.h>
++#include <linux/platform_device.h>
++#include <linux/mfd/syscon.h>
++
++/* MII address register definitions */
++#define MII_ADDR_REG_ADDR                       0x10
++#define MII_BUSY                                BIT(0)
++#define MII_WRITE                               BIT(1)
++#define MII_CLKRANGE_60_100M                    (0 << 2)
++#define MII_CLKRANGE_100_150M                   (1 << 2)
++#define MII_CLKRANGE_20_35M                     (2 << 2)
++#define MII_CLKRANGE_35_60M                     (3 << 2)
++#define MII_CLKRANGE_150_250M                   (4 << 2)
++#define MII_CLKRANGE_250_300M                   (5 << 2)
++#define MII_CLKRANGE_MASK			GENMASK(4, 2)
++#define MII_REG_SHIFT				6
++#define MII_REG_MASK				GENMASK(10, 6)
++#define MII_ADDR_SHIFT				11
++#define MII_ADDR_MASK				GENMASK(15, 11)
++
++#define MII_DATA_REG_ADDR                       0x14
++
++#define MII_MDIO_DELAY                          (1000)
++#define MII_MDIO_RETRY                          (10)
++
++struct ipq8064_mdio {
++	struct regmap *base; /* NSS_GMAC0_BASE */
++};
++
++static int
++ipq8064_mdio_wait_busy(struct ipq8064_mdio *priv)
++{
++	u32 busy;
++
++	return regmap_read_poll_timeout(priv->base, MII_ADDR_REG_ADDR, busy,
++				   !(busy & MII_BUSY), MII_MDIO_DELAY,
++				   MII_MDIO_RETRY * USEC_PER_MSEC);
++}
++
++static int
++ipq8064_mdio_read(struct mii_bus *bus, int phy_addr, int reg_offset)
++{
++	struct ipq8064_mdio *priv = bus->priv;
++	u32 miiaddr = MII_BUSY | MII_CLKRANGE_250_300M;
++	u32 ret_val;
++	int err;
++
++	/* Reject clause 45 */
++	if (reg_offset & MII_ADDR_C45)
++		return -EOPNOTSUPP;
++
++	miiaddr |= ((phy_addr << MII_ADDR_SHIFT) & MII_ADDR_MASK) |
++		   ((reg_offset << MII_REG_SHIFT) & MII_REG_MASK);
++
++	regmap_write(priv->base, MII_ADDR_REG_ADDR, miiaddr);
++	usleep_range(10, 20);
++
++	err = ipq8064_mdio_wait_busy(priv);
++	if (err)
++		return err;
++
++	regmap_read(priv->base, MII_DATA_REG_ADDR, &ret_val);
++	return (int)ret_val;
++}
++
++static int
++ipq8064_mdio_write(struct mii_bus *bus, int phy_addr, int reg_offset, u16 data)
++{
++	struct ipq8064_mdio *priv = bus->priv;
++	u32 miiaddr = MII_WRITE | MII_BUSY | MII_CLKRANGE_250_300M;
++
++	/* Reject clause 45 */
++	if (reg_offset & MII_ADDR_C45)
++		return -EOPNOTSUPP;
++
++	regmap_write(priv->base, MII_DATA_REG_ADDR, data);
++
++	miiaddr |= ((phy_addr << MII_ADDR_SHIFT) & MII_ADDR_MASK) |
++		   ((reg_offset << MII_REG_SHIFT) & MII_REG_MASK);
++
++	regmap_write(priv->base, MII_ADDR_REG_ADDR, miiaddr);
++	usleep_range(10, 20);
++
++	return ipq8064_mdio_wait_busy(priv);
++}
++
++static int
++ipq8064_mdio_probe(struct platform_device *pdev)
++{
++	struct device_node *np = pdev->dev.of_node;
++	struct ipq8064_mdio *priv;
++	struct mii_bus *bus;
++	int ret;
++
++	bus = devm_mdiobus_alloc_size(&pdev->dev, sizeof(*priv));
++	if (!bus)
++		return -ENOMEM;
++
++	bus->name = "ipq8064_mdio_bus";
++	bus->read = ipq8064_mdio_read;
++	bus->write = ipq8064_mdio_write;
++	snprintf(bus->id, MII_BUS_ID_SIZE, "%s-mii", dev_name(&pdev->dev));
++	bus->parent = &pdev->dev;
++
++	priv = bus->priv;
++	priv->base = syscon_node_to_regmap(np);
++	if (IS_ERR(priv->base) && priv->base != ERR_PTR(-EPROBE_DEFER))
++		priv->base = syscon_regmap_lookup_by_phandle(np, "master");
++
++	if (priv->base == ERR_PTR(-EPROBE_DEFER)) {
++		return -EPROBE_DEFER;
++	} else if (IS_ERR(priv->base)) {
++		dev_err(&pdev->dev, "error getting syscon regmap, error=%ld\n",
++			PTR_ERR(priv->base));
++		return PTR_ERR(priv->base);
++	}
++
++	ret = of_mdiobus_register(bus, np);
++	if (ret)
++		return ret;
++
++	platform_set_drvdata(pdev, bus);
++	return 0;
++}
++
++static int
++ipq8064_mdio_remove(struct platform_device *pdev)
++{
++	struct mii_bus *bus = platform_get_drvdata(pdev);
++
++	mdiobus_unregister(bus);
++
++	return 0;
++}
++
++static const struct of_device_id ipq8064_mdio_dt_ids[] = {
++	{ .compatible = "qcom,ipq8064-mdio" },
++	{ }
++};
++MODULE_DEVICE_TABLE(of, ipq8064_mdio_dt_ids);
++
++static struct platform_driver ipq8064_mdio_driver = {
++	.probe = ipq8064_mdio_probe,
++	.remove = ipq8064_mdio_remove,
++	.driver = {
++		.name = "ipq8064-mdio",
++		.of_match_table = ipq8064_mdio_dt_ids,
++	},
++};
++
++module_platform_driver(ipq8064_mdio_driver);
++
++MODULE_DESCRIPTION("Qualcomm IPQ8064 MDIO interface driver");
++MODULE_AUTHOR("Christian Lamparter <chunkeey@gmail.com>");
++MODULE_LICENSE("GPL");
+-- 
+2.25.0
+
