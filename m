@@ -2,129 +2,86 @@ Return-Path: <SRS0=1210=4J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ACA79C35646
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 14:21:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 279C3C35646
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 14:21:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 84EA4206EF
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 14:21:22 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582294882;
-	bh=1zpYu1SWYzsuX4cYaFE2Wol7UHn8SagFeA2CAEbPRzc=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:List-ID:From;
-	b=Tslq6wIIrKalWPSnNwGwh0tcxjwMZvga2wxpMy4qJlPhDX7jggw24NxF/iSwIehpZ
-	 uw7gVLq14aCCZQIi9R6lFK78gCy3OldmHIc0cYQHKl5hM9QOVJsrPQ5HeVcfzBIcC7
-	 5Oyfj1/wE+blLB04lpMSTDYXVg5ie1GK5GaJGcY0=
+	by mail.kernel.org (Postfix) with ESMTP id F1BDF208C4
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 14:21:47 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="zsnxq6A6"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728913AbgBUOVV (ORCPT
+        id S1728924AbgBUOVq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Feb 2020 09:21:21 -0500
-Received: from foss.arm.com ([217.140.110.172]:40460 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727851AbgBUOVU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Feb 2020 09:21:20 -0500
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 1652C101E;
-        Fri, 21 Feb 2020 06:21:20 -0800 (PST)
-Received: from localhost (unknown [10.37.6.21])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 8143A3F703;
-        Fri, 21 Feb 2020 06:21:19 -0800 (PST)
-Date:   Fri, 21 Feb 2020 14:21:17 +0000
-From:   Mark Brown <broonie@kernel.org>
-To:     Yuji Sasaki <sasakiy@chromium.org>
-Cc:     Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-spi@vger.kernel.org, Mark Brown <broonie@kernel.org>,
-        Vinod Koul <vkoul@kernel.org>,
-        Yuji sasaki <sasakiy@chromium.org>
-Subject: Applied "spi: qup: call spi_qup_pm_resume_runtime before suspending" to the spi tree
-In-Reply-To: <20200214074340.2286170-1-vkoul@kernel.org>
-Message-Id: <applied-20200214074340.2286170-1-vkoul@kernel.org>
-X-Patchwork-Hint: ignore
+        Fri, 21 Feb 2020 09:21:46 -0500
+Received: from mail-lf1-f65.google.com ([209.85.167.65]:43405 "EHLO
+        mail-lf1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728392AbgBUOVp (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 21 Feb 2020 09:21:45 -0500
+Received: by mail-lf1-f65.google.com with SMTP id s23so1600044lfs.10
+        for <linux-kernel@vger.kernel.org>; Fri, 21 Feb 2020 06:21:43 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=LzKEMSRm7aMhbsD4FLHQVZNBKfPqY5ZNIMagLE7b27A=;
+        b=zsnxq6A6AvCzyiGsP5PWzf+udVD1jQS/2saJCH+nR88fIRw0unQSUP++Rkfd5sfrf3
+         63Odo9vcMh/eXewq38ibkJ1zAQ2XWX6dpxB0JJcPabvSmgDjJRC5Kou7PPy1Y3opByhh
+         KSkTfPDsfmJB7xZ3BMmTpBKdQdz89FNs56yBrqtEQKqZY6vbtZWVPk/o8YuLpInm92zK
+         dqqaq61KzXrF7vBNf6jnMFIX0Sxnwqi5aFvV7T4nAtFd9Lf37IL2QKH3yC7R5ZlOo9KZ
+         9hhyJZtlyOTLlKFquzaoF4vwjdgdZZVrqiCHqBBKYBYpRAAedbT45Vu3fc79G6DiNgPM
+         4sYQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=LzKEMSRm7aMhbsD4FLHQVZNBKfPqY5ZNIMagLE7b27A=;
+        b=dr9FiS0SsUqzsA3XZCSqTq/zEEjEGbZlhfnVaKfpnrpX5AyuD7yUfO0JVmtbPfmiLI
+         8yxPyePb5xEBTl6T0sZL4b+fRbi5M8qko59RPYd1K1PNoJIJYWimc8t2Atrzree9AZ9u
+         QY0jAQyIFepLGDh/BZqZRYO4UyBUYzK6hVnVXW/WDA6RziYBDlTxlsNviol3OMiNpqMt
+         UzTjypadcE7f72bAx6EiJESp4wpR68CwONrpF4vJvFwLLlpiSudRDvNMGUj6qSrGltpH
+         b0A+mJLsKgRA9trlJgyDVj8Y2THfQqqfoI7jeEQhvgDU9SoaTUfzqb/CI0a/NokJqN2b
+         tTfg==
+X-Gm-Message-State: APjAAAWYYHs89Iv3wlULj/zuAC7UlmJuFIS0SSTkbOBM6MCYbSZ83dj5
+        XrI+89tFvLhRKcexDR869YSvLF1wR0QRt0jBTIoFhw==
+X-Google-Smtp-Source: APXvYqyW4oBegi1hgs7WkmxGYjpV5GzFLky4el1v6dyD6KVQEdFEh3C2ql6oeVhPQ5VbCKKZC+kBcUpA3K20qa7gUd0=
+X-Received: by 2002:ac2:44a5:: with SMTP id c5mr8132945lfm.4.1582294903260;
+ Fri, 21 Feb 2020 06:21:43 -0800 (PST)
+MIME-Version: 1.0
+References: <1581851828-3493-1-git-send-email-zhouyanjie@wanyeetech.com> <1581851828-3493-3-git-send-email-zhouyanjie@wanyeetech.com>
+In-Reply-To: <1581851828-3493-3-git-send-email-zhouyanjie@wanyeetech.com>
+From:   Linus Walleij <linus.walleij@linaro.org>
+Date:   Fri, 21 Feb 2020 15:21:31 +0100
+Message-ID: <CACRpkdbvc=HtaFnWHOhD=HquNCpbL04-6tTZ8yqwHBQcK+8tHw@mail.gmail.com>
+Subject: Re: [PATCH] pinctrl: Ingenic: Add missing parts for X1830.
+To:     =?UTF-8?B?5ZGo55Cw5p2wIChaaG91IFlhbmppZSk=?= 
+        <zhouyanjie@wanyeetech.com>
+Cc:     linux-mips@vger.kernel.org,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Paul Cercueil <paul@crapouillou.net>, sernia.zhou@foxmail.com,
+        zhenwenjin@gmail.com, dongsheng.qiu@ingenic.com
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The patch
+On Sun, Feb 16, 2020 at 12:17 PM =E5=91=A8=E7=90=B0=E6=9D=B0 (Zhou Yanjie)
+<zhouyanjie@wanyeetech.com> wrote:
 
-   spi: qup: call spi_qup_pm_resume_runtime before suspending
+> Add lcd pinctrl driver for X1830.
+>
+> Signed-off-by: =E5=91=A8=E7=90=B0=E6=9D=B0 (Zhou Yanjie) <zhouyanjie@wany=
+eetech.com>
 
-has been applied to the spi tree at
+Patch applied.
 
-   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/spi.git for-5.6
-
-All being well this means that it will be integrated into the linux-next
-tree (usually sometime in the next 24 hours) and sent to Linus during
-the next merge window (or sooner if it is a bug fix), however if
-problems are discovered then the patch may be dropped or reverted.  
-
-You may get further e-mails resulting from automated or manual testing
-and review of the tree, please engage with people reporting problems and
-send followup patches addressing any issues that are reported if needed.
-
-If any updates are required or you are submitting further changes they
-should be sent as incremental updates against current git, existing
-patches will not be replaced.
-
-Please add any relevant lists and maintainers to the CCs when replying
-to this mail.
-
-Thanks,
-Mark
-
-From 136b5cd2e2f97581ae560cff0db2a3b5369112da Mon Sep 17 00:00:00 2001
-From: Yuji Sasaki <sasakiy@chromium.org>
-Date: Fri, 14 Feb 2020 13:13:40 +0530
-Subject: [PATCH] spi: qup: call spi_qup_pm_resume_runtime before suspending
-
-spi_qup_suspend() will cause synchronous external abort when
-runtime suspend is enabled and applied, as it tries to
-access SPI controller register while clock is already disabled
-in spi_qup_pm_suspend_runtime().
-
-Signed-off-by: Yuji sasaki <sasakiy@chromium.org>
-Signed-off-by: Vinod Koul <vkoul@kernel.org>
-Link: https://lore.kernel.org/r/20200214074340.2286170-1-vkoul@kernel.org
-Signed-off-by: Mark Brown <broonie@kernel.org>
----
- drivers/spi/spi-qup.c | 11 +++++++----
- 1 file changed, 7 insertions(+), 4 deletions(-)
-
-diff --git a/drivers/spi/spi-qup.c b/drivers/spi/spi-qup.c
-index dd3434a407ea..a364b99497e2 100644
---- a/drivers/spi/spi-qup.c
-+++ b/drivers/spi/spi-qup.c
-@@ -1217,6 +1217,11 @@ static int spi_qup_suspend(struct device *device)
- 	struct spi_qup *controller = spi_master_get_devdata(master);
- 	int ret;
- 
-+	if (pm_runtime_suspended(device)) {
-+		ret = spi_qup_pm_resume_runtime(device);
-+		if (ret)
-+			return ret;
-+	}
- 	ret = spi_master_suspend(master);
- 	if (ret)
- 		return ret;
-@@ -1225,10 +1230,8 @@ static int spi_qup_suspend(struct device *device)
- 	if (ret)
- 		return ret;
- 
--	if (!pm_runtime_suspended(device)) {
--		clk_disable_unprepare(controller->cclk);
--		clk_disable_unprepare(controller->iclk);
--	}
-+	clk_disable_unprepare(controller->cclk);
-+	clk_disable_unprepare(controller->iclk);
- 	return 0;
- }
- 
--- 
-2.20.1
-
+Yours,
+Linus Walleij
