@@ -2,141 +2,106 @@ Return-Path: <SRS0=1210=4J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2693BC35657
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 17:36:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3F49AC35657
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 17:36:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EDCB4208E4
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 17:36:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 10151206E2
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 17:36:56 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="I7JCJhFZ"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="kXo0h9Gt"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726829AbgBURgT (ORCPT
+        id S1727799AbgBURgy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Feb 2020 12:36:19 -0500
-Received: from mail-pj1-f65.google.com ([209.85.216.65]:37524 "EHLO
-        mail-pj1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726342AbgBURgT (ORCPT
+        Fri, 21 Feb 2020 12:36:54 -0500
+Received: from mail-oi1-f182.google.com ([209.85.167.182]:42716 "EHLO
+        mail-oi1-f182.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726342AbgBURgx (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Feb 2020 12:36:19 -0500
-Received: by mail-pj1-f65.google.com with SMTP id m13so1060279pjb.2;
-        Fri, 21 Feb 2020 09:36:18 -0800 (PST)
+        Fri, 21 Feb 2020 12:36:53 -0500
+Received: by mail-oi1-f182.google.com with SMTP id j132so2344006oih.9
+        for <linux-kernel@vger.kernel.org>; Fri, 21 Feb 2020 09:36:53 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:date:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=xCuUVG8i9sUDnafZb9V7mQjHX9/dckJtwGg3rmaaHo4=;
-        b=I7JCJhFZz8SRs2jNQKKGxgwzmYk7nx4qwqEm8xoUGhzbEX+jz77yNShT8//TUNew7o
-         m9B2eLslNGYfGQ2F335wUDgqaUROFv6w8orB6SPR2bL80icZ6IVgKkbAHw/OZP9m0W42
-         jJqOp8HalM194W7hG3xcHHTwJcZko+ncvfVT5MDko2o3akKrx3F2KNPPghDsPPu9NGvQ
-         oj85orP2I77EIa0H3YQq71kOdC+jULP1NmHTZN/Fm2lgda/i7xjO+iwgfxDY5+Gu0gfP
-         BZjn0BMzUEWVqzP3qGhtYJg/72AvYi60eYSO7NNZxmb+gqgGNoFeppczIl2n2chtkzzA
-         UPag==
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=NTRXYuQ87dvDK9Oz1vWAuaYjsHn0ZemoE8V0xwoz7H0=;
+        b=kXo0h9Gt5NHWtGfZV9IH1vFOGRutjzEa7R2/xU2oUsHRonvAFyHjnro0dqamOexF8z
+         EsiyWR8yFFWMoONokEhG6mOxxYHiJ+iQPuhmpWKiW32liSjm4QrviswEFzhWBSeLEE5w
+         eRujlRgEzoM8eNA+CYFUf2UGSflgLO+Emz02CqJyfadQZotnXRkCQ+l2cGQbdxuRBYyc
+         C8peDwALRlJaHoSjbBAPenvadCC2o2QvOz8CgNr/fTkxiHagEkqE9jDB4/15IuoNRLAZ
+         6z66cy/jd2dxId0AXTVmEfjV3d/4ynIY1vQdorg5LDEUuZqqy6Hu7T8FDaxBieccmRE6
+         muzA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:date:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=xCuUVG8i9sUDnafZb9V7mQjHX9/dckJtwGg3rmaaHo4=;
-        b=svwfsmAN6hxv2Xdch4/9S6q9YV1Iyr9m7IwKeMZIJhy64QVtGqb88jyHL7eC70pdfd
-         ct6EQ9WKxCaDBTmGPVargjzLZjHdXprZPRHFpaJvdChrXh5AJ/4PgkkheF7nqJadu5In
-         Zr+b3SK0sjyHd2WAN2bUeKQAek5i35lCTCY+oGwwmXN5KHih8kJ8jncii2pjGaOT++tw
-         K4388clMRN2O2+UeHL8CpYy+Zhl7QU/ZtqBfu2Ona2PCidj8EGKnGwMMmO7j/F8ZMD6s
-         0H+ZF/JvceTmHhGne0I3wr5gHCfaR1nuybcQ0eTNUz14PmsE5VT2P5cQPxZFAYxEnKyG
-         tQ3A==
-X-Gm-Message-State: APjAAAXQ9cBoE4ttnfqH/EF/XuFw6g05hxU3Z/kS9AwIAng/Uy8XLx3e
-        Ypj4dEOtgOdZj7l4XB3WLA==
-X-Google-Smtp-Source: APXvYqyViuIGu2NMjKXfV2oi5e71Y2nv4Ub8Ajrnm77/jV9pFx3oWcpx0XVU8lPi+Cpf68UC7E4Sjg==
-X-Received: by 2002:a17:90a:c084:: with SMTP id o4mr4192690pjs.35.1582306578445;
-        Fri, 21 Feb 2020 09:36:18 -0800 (PST)
-Received: from madhuparna-HP-Notebook ([2402:3a80:1ee0:fe5e:d03d:769b:c838:c146])
-        by smtp.gmail.com with ESMTPSA id l15sm3044096pgi.31.2020.02.21.09.35.54
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Fri, 21 Feb 2020 09:36:17 -0800 (PST)
-From:   Madhuparna Bhowmik <madhuparnabhowmik10@gmail.com>
-X-Google-Original-From: Madhuparna Bhowmik <change_this_user_name@gmail.com>
-Date:   Fri, 21 Feb 2020 23:05:34 +0530
-To:     Jiri Pirko <jiri@resnulli.us>
-Cc:     madhuparnabhowmik10@gmail.com, jiri@mellanox.com,
-        davem@davemloft.net, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org, joel@joelfernandes.org,
-        frextrite@gmail.com,
-        linux-kernel-mentees@lists.linuxfoundation.org, paulmck@kernel.org
-Subject: Re: [PATCH] net: core: devlink.c: Use built-in RCU list checking
-Message-ID: <20200221173533.GA13198@madhuparna-HP-Notebook>
-References: <20200221165141.24630-1-madhuparnabhowmik10@gmail.com>
- <20200221172008.GA2181@nanopsycho>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=NTRXYuQ87dvDK9Oz1vWAuaYjsHn0ZemoE8V0xwoz7H0=;
+        b=CdjpV5PtMnQ6WMS6NetsMgKepWf91usPHdvALzIoaFFvFnuYi49p01Jp3HfHhdEFz6
+         CTugfJ/vM+Fp1Sh6W6LUyHejVemPSTkRtYBKtgc8xntyqxDfZK5qYHuixEXkPjx+db2r
+         RuSGK0xlPZsO3ush1vxjZdKx7rr8+jVqlICs+1KkAvKaq596kuUTH2r+/6XwIWP13fpd
+         QeG1OUPQuH8PUIpHyDqCEbaRAjvIwa7kM4m/fjlD1aJ5TpLeoMkoRNyeDZ/808PS0trR
+         getcDlmAt3hSb0uiqSu1aBsgLajS7O9hw47j4/OlPW0GJTBdjsUGACwuW1inUI9JbSPy
+         13Aw==
+X-Gm-Message-State: APjAAAVW//VH3iZzyhLHjJ20xTccFITFhbw4hb1c5kJyRd+MgyUrhaSq
+        sMFbEpyl1aG6noet6rgnr4RfDAv4+zW3e8A801R0dA==
+X-Google-Smtp-Source: APXvYqxCoOJQzNGFh4S6Wf2LwznGZ2gPK7NTphumYq3n31yOSzlLD/AyHuWWgTne7kL2s4mbyiQCCgUXnQwWQXZ8d/8=
+X-Received: by 2002:aca:d954:: with SMTP id q81mr2902469oig.157.1582306612529;
+ Fri, 21 Feb 2020 09:36:52 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200221172008.GA2181@nanopsycho>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+References: <158204549488.3299825.3783690177353088425.stgit@warthog.procyon.org.uk>
+ <158204559631.3299825.5358385352169781990.stgit@warthog.procyon.org.uk>
+ <CAG48ez3ZMg4O5US3n=p1CYK-2AAgLRY+pjnUXp2p5hdwbjCRSA@mail.gmail.com>
+ <1808070.1582287889@warthog.procyon.org.uk> <CAG48ez0+_kO_YL6iO9uA+HjjnHRVHVD-bFq0C=ZLeaGtTMss5A@mail.gmail.com>
+ <2113718.1582304782@warthog.procyon.org.uk>
+In-Reply-To: <2113718.1582304782@warthog.procyon.org.uk>
+From:   Jann Horn <jannh@google.com>
+Date:   Fri, 21 Feb 2020 18:36:26 +0100
+Message-ID: <CAG48ez14CHMjZS8vCp6h6FnLvcFQq8oy_9JPCd=5qZ52X6w12Q@mail.gmail.com>
+Subject: seq_lock and lockdep_is_held() assertions
+To:     David Howells <dhowells@redhat.com>,
+        John Stultz <john.stultz@linaro.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>, Will Deacon <will@kernel.org>
+Cc:     Al Viro <viro@zeniv.linux.org.uk>, raven@themaw.net,
+        Miklos Szeredi <mszeredi@redhat.com>,
+        Christian Brauner <christian@brauner.io>,
+        Linux API <linux-api@vger.kernel.org>,
+        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
+        kernel list <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Feb 21, 2020 at 06:20:08PM +0100, Jiri Pirko wrote:
-> Fri, Feb 21, 2020 at 05:51:41PM CET, madhuparnabhowmik10@gmail.com wrote:
-> >From: Madhuparna Bhowmik <madhuparnabhowmik10@gmail.com>
+adding some locking folks to the thread...
+
+On Fri, Feb 21, 2020 at 6:06 PM David Howells <dhowells@redhat.com> wrote:
+> Jann Horn <jannh@google.com> wrote:
+> > On Fri, Feb 21, 2020 at 1:24 PM David Howells <dhowells@redhat.com> wrote:
+> > > What's the best way to write a lockdep assertion?
+> > >
+> > >         BUG_ON(!lockdep_is_held(lock));
 > >
-> >list_for_each_entry_rcu() has built-in RCU and lock checking.
-> >
-> >Pass cond argument to list_for_each_entry_rcu() to silence
-> >false lockdep warning when CONFIG_PROVE_RCU_LIST is enabled
-> >by default.
-> >
-> >Signed-off-by: Madhuparna Bhowmik <madhuparnabhowmik10@gmail.com>
-> 
-> Reviewed-by: Jiri Pirko <jiri@mellanox.com>
-> 
-> Thanks.
-> 
-> However, there is a callpath where not devlink lock neither rcu read is
-> taken:
-> devlink_dpipe_table_register()->devlink_dpipe_table_find()
+> > lockdep_assert_held(lock) is the normal way, I think - that will
+> > WARN() if lockdep is enabled and the lock is not held.
 >
-Hi,
+> Okay.  But what's the best way with a seqlock_t?  It has two dep maps in it.
+> Do I just ignore the one attached to the spinlock?
 
-Yes I had noticed this, but I was not sure if there is some other lock
-which is being used.
+Uuuh... very good question. Looking at how the seqlock_t helpers use
+the dep map of the seqlock, I don't think lockdep asserts work for
+asserting that you're in the read side of a seqlock?
 
-If yes, then can you please tell me which lock is held in this case,
-and I can add that condition as well to list_for_each_entry_rcu() usage.
+read_seqbegin_or_lock() -> read_seqbegin() -> read_seqcount_begin() ->
+seqcount_lockdep_reader_access() does seqcount_acquire_read() (which
+maps to lock_acquire_shared_recursive()), but immediately following
+that calls seqcount_release() (which maps to lock_release())?
 
-And if no lock or rcu_read_lock is held then may be we should
-use rcu_read_lock/unlock here.
-
-Let me know what you think about this.
-
-Thank you,
-Madhuparna
-
-> I guess that was not the trace you were seeing, right?
-> 
-> 
-> >---
-> > net/core/devlink.c | 3 ++-
-> > 1 file changed, 2 insertions(+), 1 deletion(-)
-> >
-> >diff --git a/net/core/devlink.c b/net/core/devlink.c
-> >index 4c63c9a4c09e..3e8c94155d93 100644
-> >--- a/net/core/devlink.c
-> >+++ b/net/core/devlink.c
-> >@@ -2107,7 +2107,8 @@ devlink_dpipe_table_find(struct list_head *dpipe_tables,
-> > {
-> > 	struct devlink_dpipe_table *table;
-> > 
-> >-	list_for_each_entry_rcu(table, dpipe_tables, list) {
-> >+	list_for_each_entry_rcu(table, dpipe_tables, list,
-> >+				lockdep_is_held(&devlink->lock)) {
-> > 		if (!strcmp(table->name, table_name))
-> > 			return table;
-> > 	}
-> >-- 
-> >2.17.1
-> >
+So I think lockdep won't consider you to be holding any locks after
+read_seqbegin_or_lock() if the lock wasn't taken?
