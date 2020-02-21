@@ -2,173 +2,202 @@ Return-Path: <SRS0=1210=4J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4D10DC11D00
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 03:29:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 98D75C11D00
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 03:30:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2202420716
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 03:29:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 745E320716
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 03:30:22 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729947AbgBUD3p (ORCPT
+        id S1729689AbgBUDaV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Feb 2020 22:29:45 -0500
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:30590 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1729608AbgBUD3o (ORCPT
+        Thu, 20 Feb 2020 22:30:21 -0500
+Received: from zeniv.linux.org.uk ([195.92.253.2]:45130 "EHLO
+        ZenIV.linux.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729280AbgBUDaV (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Feb 2020 22:29:44 -0500
-Received: from pps.filterd (m0098420.ppops.net [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 01L3TgQe150578
-        for <linux-kernel@vger.kernel.org>; Thu, 20 Feb 2020 22:29:43 -0500
-Received: from e06smtp05.uk.ibm.com (e06smtp05.uk.ibm.com [195.75.94.101])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 2y8ubu7vhk-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Thu, 20 Feb 2020 22:29:42 -0500
-Received: from localhost
-        by e06smtp05.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-kernel@vger.kernel.org> from <alastair@au1.ibm.com>;
-        Fri, 21 Feb 2020 03:29:32 -0000
-Received: from b06cxnps4074.portsmouth.uk.ibm.com (9.149.109.196)
-        by e06smtp05.uk.ibm.com (192.168.101.135) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Fri, 21 Feb 2020 03:29:26 -0000
-Received: from d06av26.portsmouth.uk.ibm.com (d06av26.portsmouth.uk.ibm.com [9.149.105.62])
-        by b06cxnps4074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 01L3SAFD49086646
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Fri, 21 Feb 2020 03:28:11 GMT
-Received: from d06av26.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id D8936AE04D;
-        Fri, 21 Feb 2020 03:28:10 +0000 (GMT)
-Received: from d06av26.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 32941AE045;
-        Fri, 21 Feb 2020 03:28:10 +0000 (GMT)
-Received: from ozlabs.au.ibm.com (unknown [9.192.253.14])
-        by d06av26.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Fri, 21 Feb 2020 03:28:10 +0000 (GMT)
-Received: from adsilva.ozlabs.ibm.com (haven.au.ibm.com [9.192.254.114])
-        (using TLSv1.2 with cipher AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by ozlabs.au.ibm.com (Postfix) with ESMTPSA id CA2C4A03E2;
-        Fri, 21 Feb 2020 14:28:03 +1100 (AEDT)
-From:   "Alastair D'Silva" <alastair@au1.ibm.com>
-To:     alastair@d-silva.org
-Cc:     "Aneesh Kumar K . V" <aneesh.kumar@linux.ibm.com>,
-        "Oliver O'Halloran" <oohall@gmail.com>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Paul Mackerras <paulus@samba.org>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Frederic Barrat <fbarrat@linux.ibm.com>,
-        Andrew Donnellan <ajd@linux.ibm.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Vishal Verma <vishal.l.verma@intel.com>,
-        Dave Jiang <dave.jiang@intel.com>,
-        Ira Weiny <ira.weiny@intel.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        Rob Herring <robh@kernel.org>,
-        Anton Blanchard <anton@ozlabs.org>,
-        Krzysztof Kozlowski <krzk@kernel.org>,
-        Mahesh Salgaonkar <mahesh@linux.vnet.ibm.com>,
-        Madhavan Srinivasan <maddy@linux.vnet.ibm.com>,
-        =?UTF-8?q?C=C3=A9dric=20Le=20Goater?= <clg@kaod.org>,
-        Anju T Sudhakar <anju@linux.vnet.ibm.com>,
-        Hari Bathini <hbathini@linux.ibm.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Greg Kurz <groug@kaod.org>,
-        Nicholas Piggin <npiggin@gmail.com>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        Alexey Kardashevskiy <aik@ozlabs.ru>,
-        linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
-        linux-nvdimm@lists.01.org, linux-mm@kvack.org
-Subject: [PATCH v3 21/27] powerpc/powernv/pmem: Add an IOCTL to request controller health & perf data
-Date:   Fri, 21 Feb 2020 14:27:14 +1100
-X-Mailer: git-send-email 2.24.1
-In-Reply-To: <20200221032720.33893-1-alastair@au1.ibm.com>
-References: <20200221032720.33893-1-alastair@au1.ibm.com>
+        Thu, 20 Feb 2020 22:30:21 -0500
+Received: from viro by ZenIV.linux.org.uk with local (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1j4z16-00G8es-2v; Fri, 21 Feb 2020 03:30:16 +0000
+Date:   Fri, 21 Feb 2020 03:30:16 +0000
+From:   Al Viro <viro@zeniv.linux.org.uk>
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     linux-arch <linux-arch@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Arnd Bergmann <arnd@arndb.de>
+Subject: Re: [RFC] regset ->get() API
+Message-ID: <20200221033016.GV23230@ZenIV.linux.org.uk>
+References: <20200217183340.GI23230@ZenIV.linux.org.uk>
+ <CAHk-=wivKU1eP8ir4q5xEwOV0hsomFz7DMtiAot__X2zU-yGog@mail.gmail.com>
+ <20200220224707.GQ23230@ZenIV.linux.org.uk>
+ <CAHk-=wiKs7Q2DbP6kk8JQksb0nhUvAs2wO5cNdWirNEc3CM-YQ@mail.gmail.com>
+ <20200220232929.GU23230@ZenIV.linux.org.uk>
+ <CAHk-=whdat=wfwKh5rF3MuCbTxhcFwaGqmdsCXXv=H=kDERTOw@mail.gmail.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-x-cbid: 20022103-0020-0000-0000-000003AC221B
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 20022103-0021-0000-0000-000022042A3E
-Message-Id: <20200221032720.33893-22-alastair@au1.ibm.com>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.572
- definitions=2020-02-20_19:2020-02-19,2020-02-20 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 malwarescore=0
- lowpriorityscore=0 clxscore=1015 adultscore=0 bulkscore=0
- priorityscore=1501 mlxscore=0 impostorscore=0 suspectscore=1 spamscore=0
- mlxlogscore=622 phishscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.12.0-2001150001 definitions=main-2002210021
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAHk-=whdat=wfwKh5rF3MuCbTxhcFwaGqmdsCXXv=H=kDERTOw@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Alastair D'Silva <alastair@d-silva.org>
+On Thu, Feb 20, 2020 at 03:31:56PM -0800, Linus Torvalds wrote:
+> On Thu, Feb 20, 2020 at 3:29 PM Al Viro <viro@zeniv.linux.org.uk> wrote:
+> >
+> > We do know that caller does not want more than the value it has passed in
+> > 'size' argument, though.
+> 
+> Ok, fair enough. That's probably a good way to handle the "allocate in
+> the caller".
+> 
+> So then I have no issues with that approach.
 
-When health & performance data is requested from the controller,
-it responds with an error log containing the requested information.
+Turns out that "nobody uses those for userland destinations after that" is not
+quite right - we have this:
+int copy_fpstate_to_sigframe(void __user *buf, void __user *buf_fx, int size)
+{
+        struct task_struct *tsk = current;
+        int ia32_fxstate = (buf != buf_fx);
+        int ret;
 
-This patch allows the request to me issued via an IOCTL.
+        ia32_fxstate &= (IS_ENABLED(CONFIG_X86_32) ||
+                         IS_ENABLED(CONFIG_IA32_EMULATION));
 
-Signed-off-by: Alastair D'Silva <alastair@d-silva.org>
----
- arch/powerpc/platforms/powernv/pmem/ocxl.c | 16 ++++++++++++++++
- include/uapi/nvdimm/ocxl-pmem.h            |  1 +
- 2 files changed, 17 insertions(+)
+        if (!access_ok(buf, size))
+                return -EACCES;
 
-diff --git a/arch/powerpc/platforms/powernv/pmem/ocxl.c b/arch/powerpc/platforms/powernv/pmem/ocxl.c
-index e46696d3cc36..081883a8247a 100644
---- a/arch/powerpc/platforms/powernv/pmem/ocxl.c
-+++ b/arch/powerpc/platforms/powernv/pmem/ocxl.c
-@@ -1000,6 +1000,18 @@ static int ioctl_event_check(struct ocxlpmem *ocxlpmem, u64 __user *uarg)
- 	return rc;
- }
- 
-+/**
-+ * req_controller_health_perf() - Request controller health & performance data
-+ * @ocxlpmem: the device metadata
-+ * Return: 0 on success, negative on failure
-+ */
-+int req_controller_health_perf(struct ocxlpmem *ocxlpmem)
-+{
-+	return ocxl_global_mmio_set64(ocxlpmem->ocxl_afu, GLOBAL_MMIO_HCI,
-+				      OCXL_LITTLE_ENDIAN,
-+				      GLOBAL_MMIO_HCI_REQ_HEALTH_PERF);
-+}
-+
- static long file_ioctl(struct file *file, unsigned int cmd, unsigned long args)
- {
- 	struct ocxlpmem *ocxlpmem = file->private_data;
-@@ -1037,6 +1049,10 @@ static long file_ioctl(struct file *file, unsigned int cmd, unsigned long args)
- 	case IOCTL_OCXL_PMEM_EVENT_CHECK:
- 		rc = ioctl_event_check(ocxlpmem, (u64 __user *)args);
- 		break;
-+
-+	case IOCTL_OCXL_PMEM_REQUEST_HEALTH:
-+		rc = req_controller_health_perf(ocxlpmem);
-+		break;
- 	}
- 
- 	return rc;
-diff --git a/include/uapi/nvdimm/ocxl-pmem.h b/include/uapi/nvdimm/ocxl-pmem.h
-index 988eb0bc413d..0d03abb44001 100644
---- a/include/uapi/nvdimm/ocxl-pmem.h
-+++ b/include/uapi/nvdimm/ocxl-pmem.h
-@@ -90,5 +90,6 @@ struct ioctl_ocxl_pmem_eventfd {
- #define IOCTL_OCXL_PMEM_CONTROLLER_STATS		_IO(OCXL_PMEM_MAGIC, 0x05)
- #define IOCTL_OCXL_PMEM_EVENTFD				_IOW(OCXL_PMEM_MAGIC, 0x06, struct ioctl_ocxl_pmem_eventfd)
- #define IOCTL_OCXL_PMEM_EVENT_CHECK			_IOR(OCXL_PMEM_MAGIC, 0x07, __u64)
-+#define IOCTL_OCXL_PMEM_REQUEST_HEALTH			_IO(OCXL_PMEM_MAGIC, 0x08)
- 
- #endif /* _UAPI_OCXL_SCM_H */
--- 
-2.24.1
+        if (!static_cpu_has(X86_FEATURE_FPU))
+                return fpregs_soft_get(current, NULL, 0,
+                        sizeof(struct user_i387_ia32_struct), NULL,
+                        (struct _fpstate_32 __user *) buf) ? -1 : 1;
 
+... with fpregs_soft_get() behing the shared helper that does, in turn,
+call user_regset_copyout().  OTOH, _that_ sure as hell is "fill local
+variable, then copy_to_user()" case.
+
+Sigh...  Wish we had a quick way to do something along the lines of
+"find all callchains leading to <function> that would not come via
+-><method>" - doing that manually stank to high heaven ;-/  And in
+cases like that nothing along the lines of "simulate a build" is
+practical - call chains are all over arch/*, and config-sensitive
+as well (32bit vs. 64bit is only beginning of that fun).  Thankfully,
+none of those involved token-pasting...
+
+Anyway, one observation that came out of that is that we might
+be better off with signature change done first; less boilerplate
+that way, contrary to what I expected.
+
+Alternatively, we could introduce a new method, with one-by-one
+conversion to it.  Hmm...
+	int (*get2)(struct task_struct *target,
+		    const struct user_regset *regset,
+		    struct membuf to);
+returning -E... on error and amount left unfilled on success, perhaps?
+That seems to generate decent code and is pretty easy on the instances,
+especially if membuf_write() et.al. are made to return to->left...
+Things like
+
+static int evr_get(struct task_struct *target, const struct user_regset *regset,
+                   struct membuf to)
+{
+        flush_spe_to_thread(target);
+
+        membuf_write(&to, &target->thread.evr, sizeof(target->thread.evr));
+
+        BUILD_BUG_ON(offsetof(struct thread_struct, acc) + sizeof(u64) !=
+                     offsetof(struct thread_struct, spefscr));
+
+        return membuf_write(&to, &target->thread.acc, sizeof(u64));
+}
+
+in place of current
+
+static int evr_get(struct task_struct *target, const struct user_regset *regset,
+                   unsigned int pos, unsigned int count,
+                   void *kbuf, void __user *ubuf)
+{
+        int ret;
+
+        flush_spe_to_thread(target);
+
+        ret = user_regset_copyout(&pos, &count, &kbuf, &ubuf,
+                                  &target->thread.evr,
+                                  0, sizeof(target->thread.evr));
+
+        BUILD_BUG_ON(offsetof(struct thread_struct, acc) + sizeof(u64) !=
+                     offsetof(struct thread_struct, spefscr));
+
+        if (!ret)
+                ret = user_regset_copyout(&pos, &count, &kbuf, &ubuf,
+                                          &target->thread.acc,
+                                          sizeof(target->thread.evr), -1);
+
+        return ret;
+}
+
+and
+
+static int vr_get(struct task_struct *target, const struct user_regset *regset,
+                  struct membuf to)
+{
+	union {
+		elf_vrreg_t reg;
+		u32 word;
+	} vrsave;
+
+        flush_altivec_to_thread(target);
+
+        BUILD_BUG_ON(offsetof(struct thread_vr_state, vscr) !=
+                     offsetof(struct thread_vr_state, vr[32]));
+
+        membuf_write(&to, &target->thread.vr_state, 33 * sizeof(vector128));
+	/*
+	 * Copy out only the low-order word of vrsave.
+	 */
+	memset(&vrsave, 0, sizeof(vrsave));
+	vrsave.word = target->thread.vrsave;
+
+	return membuf_write(&to, &vrsave, sizeof(vrsave);
+}
+
+instead of
+
+static int vr_get(struct task_struct *target, const struct user_regset *regset,
+                  unsigned int pos, unsigned int count,
+                  void *kbuf, void __user *ubuf)
+{
+        int ret;
+
+        flush_altivec_to_thread(target);
+
+        BUILD_BUG_ON(offsetof(struct thread_vr_state, vscr) !=
+                     offsetof(struct thread_vr_state, vr[32]));
+
+        ret = user_regset_copyout(&pos, &count, &kbuf, &ubuf,
+                                  &target->thread.vr_state, 0,
+                                  33 * sizeof(vector128));
+        if (!ret) {
+                /*
+                 * Copy out only the low-order word of vrsave.
+                 */
+                int start, end;
+                union {
+                        elf_vrreg_t reg;
+                        u32 word;
+                } vrsave;
+                memset(&vrsave, 0, sizeof(vrsave));
+
+                vrsave.word = target->thread.vrsave;
+
+                start = 33 * sizeof(vector128);
+                end = start + sizeof(vrsave);
+                ret = user_regset_copyout(&pos, &count, &kbuf, &ubuf, &vrsave,
+                                          start, end);
+        }
+
+        return ret;
+}
