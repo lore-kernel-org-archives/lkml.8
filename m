@@ -2,190 +2,278 @@ Return-Path: <SRS0=1210=4J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5AE71C11D24
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 00:42:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 57E7EC11D24
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 00:42:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 36EDE208E4
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 00:42:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1FBDC208E4
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 00:42:29 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=flygoat.com header.i=jiaxun.yang@flygoat.com header.b="PIMCrVwc"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729738AbgBUAmX (ORCPT
+        id S1729750AbgBUAm2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Feb 2020 19:42:23 -0500
-Received: from mga04.intel.com ([192.55.52.120]:14516 "EHLO mga04.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729612AbgBUAlo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Feb 2020 19:41:44 -0500
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga004.fm.intel.com ([10.253.24.48])
-  by fmsmga104.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 20 Feb 2020 16:41:43 -0800
-X-IronPort-AV: E=Sophos;i="5.70,466,1574150400"; 
-   d="scan'208";a="259459605"
-Received: from iweiny-desk2.sc.intel.com (HELO localhost) ([10.3.52.157])
-  by fmsmga004-auth.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 20 Feb 2020 16:41:43 -0800
-From:   ira.weiny@intel.com
-To:     linux-kernel@vger.kernel.org
-Cc:     Ira Weiny <ira.weiny@intel.com>,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        "Darrick J. Wong" <darrick.wong@oracle.com>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Dave Chinner <david@fromorbit.com>,
-        Christoph Hellwig <hch@lst.de>,
-        "Theodore Y. Ts'o" <tytso@mit.edu>, Jan Kara <jack@suse.cz>,
-        linux-ext4@vger.kernel.org, linux-xfs@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org
-Subject: [PATCH V4 08/13] fs: Prevent DAX state change if file is mmap'ed
-Date:   Thu, 20 Feb 2020 16:41:29 -0800
-Message-Id: <20200221004134.30599-9-ira.weiny@intel.com>
-X-Mailer: git-send-email 2.21.0
-In-Reply-To: <20200221004134.30599-1-ira.weiny@intel.com>
-References: <20200221004134.30599-1-ira.weiny@intel.com>
+        Thu, 20 Feb 2020 19:42:28 -0500
+Received: from sender3-op-o12.zoho.com.cn ([124.251.121.243]:17809 "EHLO
+        sender3-op-o12.zoho.com.cn" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1729739AbgBUAm0 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 20 Feb 2020 19:42:26 -0500
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1582245723;
+        s=mail; d=flygoat.com; i=jiaxun.yang@flygoat.com;
+        h=Date:From:To:Cc:Message-ID:In-Reply-To:References:Subject:MIME-Version:Content-Type:Content-Transfer-Encoding;
+        bh=nQkhWD0vzRMeJaAuRM8hbcXEG7NWeiBqW3cYe1zDt/w=;
+        b=PIMCrVwciVoB4eQxbm/LMi18sPJJpckNt7uAQDGpBIY2EqG2FfJy/r6w/MVYm52N
+        fPw4iV3F9T7unkNWUR4BOWi2Bgcm2+JNo31/AH4O0sOENpwog72Hlj99QuERzbdoeDA
+        Uw6wUq96CL5jffIRphngF7jfBKG8HDenwW7gukVc=
+Received: from mail.baihui.com by mx.zoho.com.cn
+        with SMTP id 1582245721005355.3785947856163; Fri, 21 Feb 2020 08:42:01 +0800 (CST)
+Date:   Fri, 21 Feb 2020 08:42:01 +0800
+From:   Jiaxun Yang <jiaxun.yang@flygoat.com>
+To:     "John Garry" <john.garry@huawei.com>
+Cc:     "xuwei (O)" <xuwei5@huawei.com>, "bhelgaas" <bhelgaas@google.com>,
+        "andyshevchenko" <andy.shevchenko@gmail.com>,
+        "Arnd Bergmann" <arnd@arndb.de>,
+        "linux-kernel" <linux-kernel@vger.kernel.org>,
+        "Linux Mips" <linux-mips@vger.kernel.org>
+Message-ID: <1706531b3a8.108e582396993.7792774458896054798@flygoat.com>
+In-Reply-To: <6c49e5e0-b6f2-fe23-caec-4742c3d1d3a0@huawei.com>
+References: <1705dbe62ce.10ae800394772.9222265269135747883@flygoat.com>
+ <5E4E55F7.70800@hisilicon.com>
+ <e3ddd7de-54b2-bdba-2233-6ace40072430@huawei.com>
+ <17062738bc0.c380503c6222.6801557833645076299@flygoat.com>
+ <1ebf4461-eb37-ff58-1faf-dd24d83f85cf@huawei.com>
+ <170632822e1.12fede49a6919.5706082545515934736@flygoat.com>
+ <e54a9936-5cf3-777d-3e91-58d2be96bf1c@huawei.com> <6c49e5e0-b6f2-fe23-caec-4742c3d1d3a0@huawei.com>
+Subject: Re: Questions about logic_pio
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+X-Priority: Medium
+User-Agent: ZohoCN Mail
+X-Mailer: ZohoCN Mail
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Ira Weiny <ira.weiny@intel.com>
+ ---- =E5=9C=A8 =E6=98=9F=E6=9C=9F=E4=BA=94, 2020-02-21 02:32:39 John Garry=
+ <john.garry@huawei.com> =E6=92=B0=E5=86=99 ----
+ > On 20/02/2020 17:39, John Garry wrote:
+ > > On 20/02/2020 15:12, Jiaxun Yang wrote:
+ > >>
+ > >>   ---- =E5=9C=A8 =E6=98=9F=E6=9C=9F=E5=9B=9B, 2020-02-20 22:23:57 Joh=
+n Garry=20
+ > >> <john.garry@huawei.com> =E6=92=B0=E5=86=99 ----
+ > >>   > > Also Cc MIPS list to check other's opinions.
+ > >>   > >
+ > >>   > > Hi John.
+ > >>   > >
+ > >>   >
+ > >>   > Hi Jiaxun Yang,
+ > >>   >
+ > >>   > > Thanks for your kind explanation, however, I think this way is
+ > >>   > > violating how I/O ports supposed to work, at least in MIPS worl=
+d.
+ > >>   >
+ > >>   > For a bit more history, please understand that the core PCI code =
+was
+ > >>   > managing non-native IO port space in the same way before we added=
+ the
+ > >>   > logic PIO framework. The only real functional change here was tha=
+t we
+ > >>   > introduced the indirect-io region within the IO port space, under
+ > >>   > CONFIG_INDIRECT_PIO.
+ > >>
+ > >> I'm going to do more investigation. Thanks.
+ > >>
+ > >>   >
+ > >>   > >
+ > >>   > >   > >>
+ > >>   > >   > >> After dig into logic pio logic, I found that logic pio i=
+s=20
+ > >> trying to "allocate" an io_start
+ > >>   > >   > >> for MMIO ranges, the allocation starts from 0x0. And=20
+ > >> later the io_start is used to calculate
+ > >>   > >   > >> cpu_address.  In my opinion, for direct MMIO access,=20
+ > >> logic_pio address should always
+ > >>   > >   > >> equal to hw address,
+ > >>   > >   >
+ > >>   > >   > I'm not sure what you mean by simply the hw address.
+ > >>   > >   >
+ > >>   > >
+ > >>   > > I meant  hw_start should always equal to io_start.
+ > >>   > >
+ > >>   > >
+ > >>   > > MIPS have their own wrapped inl/outl functions,
+ > >>   >
+ > >>   > Can you please point me to these? I could not find them in arch/m=
+ips
+ > >>
+ > >> They are built by __BUILD_IOPORT_PFX(bus, bwlq, type) macro.
+ > >> Just using mips_io_port_base + offset to handle inl/outl, the same wa=
+y=20
+ > >> PCI_IOBASE.
+ > >=20
+ > > Right, so I had a glance through the code and mips has it own manageme=
+nt=20
+ > > of this IO port space. And, like you say, mips_io_port_base is=20
+ > > equivalent to PCI_IOBASE.
+ > >=20
+ > >>
+ > >>   >
+ > >>   > I will also note that arch/mips/include/asm/io.h does not include
+ > >>   > asm-generic io.h today
+ > >>
+ > >> Yes, and I'm attempting to take advantage of asm-generic.
+ > >=20
+ > > I just don't think it's as simple as saying we want to take advantage =
+of=20
+ > > asm-generic. asm-generic io.h includes logic_pio.h, which uses logical=
+=20
+ > > PIO to manage IO port space and relies on PIO_IOBASE. This is=20
+ > > incompatible with having some other framework - like mips_io_port_base=
+ -=20
+ > > managing IO port space at the same time.
+ > >=20
+ > > The core PCI code relies on logical PIO to manage IO port space for wh=
+en=20
+ > > PCI_IOBASE is defined.
+ > >=20
+ > >>
+ > >>   >
+ > >>   > doing the samething with
+ > >>   > > PCI_IOBASE enabled one. I was just trying to use PCI_IOBASE=20
+ > >> instead.
+ > >>   > >
+ > >>   > > Originally, the I/O ports layout seems like this:
+ > >>   > >
+ > >>   > > 00000020-00000021 : pic1
+ > >>   > > 00000060-0000006f : i8042
+ > >>   > > 00000070-00000077 : rtc0
+ > >>   > > 000000a0-000000a1 : pic2
+ > >>   > > 00000170-00000177 : pata_atiixp
+ > >>   > > 000001f0-000001f7 : pata_atiixp
+ > >>   > > 00000376-00000376 : pata_atiixp
+ > >>   > > 000003f6-000003f6 : pata_atiixp
+ > >>   > > 00000800-000008ff : acpi
+ > >>   > > 00001000-00001008 : piix4_smbus
+ > >>   > > 00004000-0003ffff : pci io space
+ > >>   > >    00004000-00004fff : PCI Bus 0000:01
+ > >>   > >      00004000-000040ff : 0000:01:05.0
+ > >>   > >    00005000-00005fff : PCI Bus 0000:03
+ > >>   > >      00005000-0000501f : 0000:03:00.0
+ > >>   > >
+ > >>   > > But with PCI_IOBASE defined, I got this:
+ > >>   > >
+ > >>   > > host bridge /bus@10000000/pci@10000000 ranges:
+ > >>   > >        MEM 0x0040000000..0x007fffffff -> 0x0040000000
+ > >>   > >         IO 0x0000004000..0x0000007fff -> 0x0000004000
+ > >>   > > resource collision: [io  0x0000-0x3fff] conflicts with pic1 [io=
+ =20
+ > >> 0x0020-0x0021]
+ > >>   > >
+ > >>   > > Because io_start was allocated to 0x0 by Logic PIO.
+ > >>   > >
+ > >>   > > There are a lot of devices that have fixed ioports thanks to=20
+ > >> x86's legacy.
+ > >>   >
+ > >>   > Well, yes, I'm not so surprised.
+ > >>   >
+ > >>   > So if MIPS does not have native IO port access, then surely you n=
+eed
+ > >>   > some host bridge to translate host CPU MMIO accesses to port I/O
+ > >>   > accesses, right? Where are these CPU addresses defined?
+ > >>
+ > >> It is defined by the variable mips_io_port_base.
+ > >>
+ > >>   >
+ > >>   > > For example, in my hardware, ioports for RTC, PIC, I8042 are=20
+ > >> unmoveable,
+ > >>   > > and they can't be managed by logic pio subsystem. > Also, the=
+=20
+ > >> PCI Hostbridge got implied by DeviceTree that it's I/O range
+ > >>   > > started from 0x4000 in bus side
+ > >>   >
+ > >>   > which bus is this?
+ > >>
+ > >> They're all located under "ISA Range".  Just an MMIO range that will=
+=20
+ > >> resend
+ > >> the request to ISA I/O. --ioports for both PCI and some legacy device=
+s.
+ > >>
+ > >> In that range, base + 0x0000 to 0x4000 is preserved for PIO devices=
+=20
+ > >> (e.g.) I8259
+ > >> and base + 0x4000 to MMIO_LIMIT are for PCI devices under host bridge=
+.
+ > >> For the host bridge, ioports it can decode starts from 0x4000.
+ > >>
+ > >> My intentional behavior is that when I'm specifying in dts that the I=
+O=20
+ > >> Range of PCI host
+ > >> bridge is 0x4000 to 0x7fff, it would request the IO_RESOURCE start=20
+ > >> from 0x4000
+ > >> to 0x7fff, also tell the host driver to decode  0x4000 to 0x7fff in I=
+O=20
+ > >> BAR, And let the drivers
+ > >> access 0x4000 to 0x7fff via inl/outl, rather than allocate from PIO=
+=20
+ > >> 0x0 to 0x3fff.
+ > >>
+ > >>   >
+ > >>   > , but then, Logic PIO remapped to PCI_IOBASE + 0x0.
+ > >>   > > The real address should be PCI_IOBASE + 0x4000,
+ > >>   >
+ > >>   > You seem to be using two methods to manage IO port space, and the=
+y=20
+ > >> seem
+ > >>   > to be conflicting.
+ > >>
+ > >> So... Are there any way to handle these unmoveable devices in logic=
+=20
+ > >> pio world?
+ > >=20
+ > > When you say that they are unmovable, they are at a fixed address on=
+=20
+ > > this "ISA Range", right? If so, yes, you should be able to handle it i=
+n=20
+ > > logical PIO. You just need to deal with translating logical PIO=20
+ > > addresses to ISA bus addresses. We do this very thing in our LPC drive=
+r=20
+ > > - see drivers/bus/hisi_lpc.c
+ >=20
+ > I will add this may not cover your need, as you probably cannot deal=20
+ > with any logical PIO <-> ISA translation without modifying the device=20
+ > driver. For this, we may need to reserve the first 0x4000 in logical PIO=
+=20
+ > space for this sort of legacy host.
 
-Page faults need to ensure the inode DAX configuration is correct and
-consistent with the vmf information at the time of the fault.  There is
-no easy way to ensure the vmf information is correct if a DAX change is
-in progress.  Furthermore, there is no good use case to require changing
-DAX configs while the file is mmap'ed.
+Hi,
 
-Track mmap's of the file and fail the DAX change if the file is mmap'ed.
+After thinking twice, I realized that the most convenient way for me is
+adding an option to get rid of the mess of logic PIO. MIPS system is emulat=
+ing
+x86's behavior, while logic PIO isn't designed for such platform.
 
-Signed-off-by: Ira Weiny <ira.weiny@intel.com>
+Or probably I need a variation of Logic PIO, which leave MMIO space AS-IS
+(not try to reallocate it) but still preserving higher 0x4000 for indirect =
+access.
 
----
-Changes from V2:
-
-	move 'i_mapped' to struct address_space and rename mmap_count
-	Add inode_has_mappings() helper for FS's
-	Change reference to "mode" to "state"
----
-Changes from V3:
-	Fix htmldoc error from the kbuild test robot.
-	Reported-by: kbuild test robot <lkp@intel.com>
-	Rebase cleanups
----
- fs/inode.c         |  1 +
- fs/xfs/xfs_ioctl.c |  9 +++++++++
- include/linux/fs.h |  7 +++++++
- mm/mmap.c          | 19 +++++++++++++++++--
- 4 files changed, 34 insertions(+), 2 deletions(-)
-
-diff --git a/fs/inode.c b/fs/inode.c
-index 6e4f1cc872f2..613a045075bd 100644
---- a/fs/inode.c
-+++ b/fs/inode.c
-@@ -372,6 +372,7 @@ static void __address_space_init_once(struct address_space *mapping)
- 	INIT_LIST_HEAD(&mapping->private_list);
- 	spin_lock_init(&mapping->private_lock);
- 	mapping->i_mmap = RB_ROOT_CACHED;
-+	atomic64_set(&mapping->mmap_count, 0);
- }
- 
- void address_space_init_once(struct address_space *mapping)
-diff --git a/fs/xfs/xfs_ioctl.c b/fs/xfs/xfs_ioctl.c
-index 25e12ce85075..498fae2ef9f6 100644
---- a/fs/xfs/xfs_ioctl.c
-+++ b/fs/xfs/xfs_ioctl.c
-@@ -1207,6 +1207,15 @@ xfs_ioctl_setattr_dax_invalidate(
- 
- 	/* lock, flush and invalidate mapping in preparation for flag change */
- 	xfs_ilock(ip, XFS_MMAPLOCK_EXCL | XFS_IOLOCK_EXCL);
-+
-+	/*
-+	 * If there is a mapping in place we must remain in our current state.
-+	 */
-+	if (inode_has_mappings(inode)) {
-+		error = -EBUSY;
-+		goto out_unlock;
-+	}
-+
- 	error = filemap_write_and_wait(inode->i_mapping);
- 	if (error)
- 		goto out_unlock;
-diff --git a/include/linux/fs.h b/include/linux/fs.h
-index ad0f2368031b..971fb011d0f0 100644
---- a/include/linux/fs.h
-+++ b/include/linux/fs.h
-@@ -438,6 +438,7 @@ int pagecache_write_end(struct file *, struct address_space *mapping,
-  * @nr_thps: Number of THPs in the pagecache (non-shmem only).
-  * @i_mmap: Tree of private and shared mappings.
-  * @i_mmap_rwsem: Protects @i_mmap and @i_mmap_writable.
-+ * @mmap_count: The number of times this AS has been mmap'ed
-  * @nrpages: Number of page entries, protected by the i_pages lock.
-  * @nrexceptional: Shadow or DAX entries, protected by the i_pages lock.
-  * @writeback_index: Writeback starts here.
-@@ -459,6 +460,7 @@ struct address_space {
- #endif
- 	struct rb_root_cached	i_mmap;
- 	struct rw_semaphore	i_mmap_rwsem;
-+	atomic64_t              mmap_count;
- 	unsigned long		nrpages;
- 	unsigned long		nrexceptional;
- 	pgoff_t			writeback_index;
-@@ -1939,6 +1941,11 @@ static inline void inode_aops_up_write(struct inode *inode)
- #define inode_aops_up_write(inode) do { (void)(inode); } while (0)
- #endif /* CONFIG_FS_DAX */
- 
-+static inline bool inode_has_mappings(struct inode *inode)
-+{
-+	return (atomic64_read(&inode->i_mapping->mmap_count) != 0);
-+}
-+
- static inline ssize_t call_read_iter(struct file *file, struct kiocb *kio,
- 				     struct iov_iter *iter)
- {
-diff --git a/mm/mmap.c b/mm/mmap.c
-index 7cc2562b99fd..6bb16a0996b5 100644
---- a/mm/mmap.c
-+++ b/mm/mmap.c
-@@ -171,12 +171,17 @@ void unlink_file_vma(struct vm_area_struct *vma)
- static struct vm_area_struct *remove_vma(struct vm_area_struct *vma)
- {
- 	struct vm_area_struct *next = vma->vm_next;
-+	struct file *f = vma->vm_file;
- 
- 	might_sleep();
- 	if (vma->vm_ops && vma->vm_ops->close)
- 		vma->vm_ops->close(vma);
--	if (vma->vm_file)
--		fput(vma->vm_file);
-+	if (f) {
-+		struct inode *inode = file_inode(f);
-+		if (inode)
-+			atomic64_dec(&inode->i_mapping->mmap_count);
-+		fput(f);
-+	}
- 	mpol_put(vma_policy(vma));
- 	vm_area_free(vma);
- 	return next;
-@@ -1830,6 +1835,16 @@ unsigned long mmap_region(struct file *file, unsigned long addr,
- 
- 	vma_set_page_prot(vma);
- 
-+	/*
-+	 * Track if there is mapping in place such that a state change
-+	 * does not occur on a file which is mapped
-+	 */
-+	if (file) {
-+		struct inode		*inode = file_inode(file);
-+
-+		atomic64_inc(&inode->i_mapping->mmap_count);
-+	}
-+
- 	return addr;
- 
- unmap_and_free_vma:
--- 
-2.21.0
+Thanks a lot!
+ >=20
+ > That would not be a bad thing - see=20
+ > https://lore.kernel.org/linux-pci/1560262374-67875-1-git-send-email-john=
+.garry@huawei.com/
+ >=20
+ >=20
+ > >=20
+ > > This driver deals with legacy IO ports where we need to bitbang=20
+ > > accesses, i.e. we don't support MMIO for this.
+ > >>
+ >=20
 
