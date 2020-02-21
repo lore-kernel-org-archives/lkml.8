@@ -2,105 +2,69 @@ Return-Path: <SRS0=1210=4J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EC393C35644
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 08:45:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A8D80C35641
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 08:45:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AC5BB206DB
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 08:45:01 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582274701;
-	bh=FeVeP2QrTofO92o0TauoC1+AnElbMUclhsKtMYNT+MA=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=LE0v9L3IDmpA0jlM408XkdIGPwDpQ+vKwm+n/nzvb09SCn+xOzoBHOKq8XWE5DyN8
-	 TAnaZT3/0J8VLRR0dUFdwefCCBhtidZSzLpQFFgzrmbJIn6vojUIx6LYEelp1QhH3J
-	 sff1Cg/0uZkU0rcecJZYJB8GSQ3tVfeuzXSHJc4M=
+	by mail.kernel.org (Postfix) with ESMTP id 83FC0206DB
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 08:45:06 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729766AbgBUHve (ORCPT
+        id S1732163AbgBUIpE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Feb 2020 02:51:34 -0500
-Received: from mail.kernel.org ([198.145.29.99]:48826 "EHLO mail.kernel.org"
+        Fri, 21 Feb 2020 03:45:04 -0500
+Received: from inva021.nxp.com ([92.121.34.21]:60604 "EHLO inva021.nxp.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729751AbgBUHv3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Feb 2020 02:51:29 -0500
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2FACA20578;
-        Fri, 21 Feb 2020 07:51:28 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1582271488;
-        bh=FeVeP2QrTofO92o0TauoC1+AnElbMUclhsKtMYNT+MA=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=g/Bii7RZ1qqNHYvrWFiMpLPXck+UHj8TIuEESSnO6B+oguWWE1YMD+pjignz+j5Ww
-         unKDlUVa7co0v4wuo52yQG9Lyd/mZVYnZ6d3ZBpkxZPYixIbwIoLqSL7yk1uCqL64h
-         j0Hd1m6MejICEzurRuiz13UyyMXugJHuhp13Xrz0=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Hulk Robot <hulkci@huawei.com>,
-        YueHaibing <yuehaibing@huawei.com>,
-        Stephen Boyd <sboyd@kernel.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.5 184/399] clk: bm1800: Remove set but not used variable fref
-Date:   Fri, 21 Feb 2020 08:38:29 +0100
-Message-Id: <20200221072420.677883011@linuxfoundation.org>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20200221072402.315346745@linuxfoundation.org>
-References: <20200221072402.315346745@linuxfoundation.org>
-User-Agent: quilt/0.66
-MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+        id S1729762AbgBUHvd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 21 Feb 2020 02:51:33 -0500
+Received: from inva021.nxp.com (localhost [127.0.0.1])
+        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id 63C7F206D67;
+        Fri, 21 Feb 2020 08:51:31 +0100 (CET)
+Received: from invc005.ap-rdc01.nxp.com (invc005.ap-rdc01.nxp.com [165.114.16.14])
+        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id 24676206D6C;
+        Fri, 21 Feb 2020 08:51:26 +0100 (CET)
+Received: from localhost.localdomain (shlinux2.ap.freescale.net [10.192.224.44])
+        by invc005.ap-rdc01.nxp.com (Postfix) with ESMTP id 8EE1040246;
+        Fri, 21 Feb 2020 15:51:19 +0800 (SGT)
+From:   Anson Huang <Anson.Huang@nxp.com>
+To:     thierry.reding@gmail.com, u.kleine-koenig@pengutronix.de,
+        shawnguo@kernel.org, s.hauer@pengutronix.de, kernel@pengutronix.de,
+        festevam@gmail.com, linux-pwm@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Cc:     Linux-imx@nxp.com
+Subject: [PATCH 3/3] pwm: mxs: Remove unused include of of_address.h
+Date:   Fri, 21 Feb 2020 15:45:29 +0800
+Message-Id: <1582271129-13589-3-git-send-email-Anson.Huang@nxp.com>
+X-Mailer: git-send-email 2.7.4
+In-Reply-To: <1582271129-13589-1-git-send-email-Anson.Huang@nxp.com>
+References: <1582271129-13589-1-git-send-email-Anson.Huang@nxp.com>
+X-Virus-Scanned: ClamAV using ClamSMTP
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: YueHaibing <yuehaibing@huawei.com>
+There is nothing in use from of_address.h, remove it.
 
-[ Upstream commit 59ef4da4e4084d323dd4c3aa4b2fc64ce9e25625 ]
-
-Fixes gcc '-Wunused-but-set-variable' warning:
-
-drivers/clk/clk-bm1880.c: In function 'bm1880_pll_rate_calc':
-drivers/clk/clk-bm1880.c:477:13: warning:
- variable 'fref' set but not used [-Wunused-but-set-variable]
-
-It is never used, so remove it.
-
-Reported-by: Hulk Robot <hulkci@huawei.com>
-Signed-off-by: YueHaibing <yuehaibing@huawei.com>
-Link: https://lkml.kernel.org/r/20191129033534.188257-1-yuehaibing@huawei.com
-Signed-off-by: Stephen Boyd <sboyd@kernel.org>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
 ---
- drivers/clk/clk-bm1880.c | 3 +--
- 1 file changed, 1 insertion(+), 2 deletions(-)
+ drivers/pwm/pwm-mxs.c | 1 -
+ 1 file changed, 1 deletion(-)
 
-diff --git a/drivers/clk/clk-bm1880.c b/drivers/clk/clk-bm1880.c
-index 4cd175afce9b1..e6d6599d310a1 100644
---- a/drivers/clk/clk-bm1880.c
-+++ b/drivers/clk/clk-bm1880.c
-@@ -474,11 +474,10 @@ static struct bm1880_composite_clock bm1880_composite_clks[] = {
- static unsigned long bm1880_pll_rate_calc(u32 regval, unsigned long parent_rate)
- {
- 	u64 numerator;
--	u32 fbdiv, fref, refdiv;
-+	u32 fbdiv, refdiv;
- 	u32 postdiv1, postdiv2, denominator;
- 
- 	fbdiv = (regval >> 16) & 0xfff;
--	fref = parent_rate;
- 	refdiv = regval & 0x1f;
- 	postdiv1 = (regval >> 8) & 0x7;
- 	postdiv2 = (regval >> 12) & 0x7;
+diff --git a/drivers/pwm/pwm-mxs.c b/drivers/pwm/pwm-mxs.c
+index f2e57fc..7ce6169 100644
+--- a/drivers/pwm/pwm-mxs.c
++++ b/drivers/pwm/pwm-mxs.c
+@@ -9,7 +9,6 @@
+ #include <linux/kernel.h>
+ #include <linux/module.h>
+ #include <linux/of.h>
+-#include <linux/of_address.h>
+ #include <linux/platform_device.h>
+ #include <linux/pwm.h>
+ #include <linux/slab.h>
 -- 
-2.20.1
-
-
+2.7.4
 
