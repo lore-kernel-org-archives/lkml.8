@@ -5,51 +5,50 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 26017C35641
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 08:08:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D49F4C35641
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 08:08:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EDEFD20801
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 08:08:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AC7F720801
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 08:08:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582272514;
-	bh=RAbthy+G2lB0nNHDZTr4dUxOkTT5aKM66BXOrQ6RQ/Q=;
+	s=default; t=1582272516;
+	bh=L39ewZIAQLtVWClce3+6QIzm4nk1mjYhAteFKAvrzdY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=gIJ0zzUeHsk29S6XlN5sTbSUC+b+BRAvSzjCfL3tuu9y03TVnSCbojUu6BczxlkAe
-	 J1zoWFpyHbE3pKqp1K4W9KhNWaoUL5XRmiTE8aKqdO6Cl/r/53AWlL0tKAfLsfWMeq
-	 AHHaeyNzLFE5YZzAjuG7BrdxyKK/c+LzhusRiPJg=
+	b=oERdI/GSxx0lxo4ALKhLqPbCmK221Iatij2sgtY/h8ylrEI34MK0lr7LtrMrsBvEv
+	 xxf6Q6tRIlqM/zt40Ow4st0CatbGSAKRXR2gBS3DJ4VD2yRPvygrqPrpU0+81fbHKf
+	 6WjdciGGbkfMmQaiMqhecgfu2L0vTaECyMHWQr4o=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732213AbgBUIIc (ORCPT
+        id S1732220AbgBUIIf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Feb 2020 03:08:32 -0500
-Received: from mail.kernel.org ([198.145.29.99]:43032 "EHLO mail.kernel.org"
+        Fri, 21 Feb 2020 03:08:35 -0500
+Received: from mail.kernel.org ([198.145.29.99]:43106 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732205AbgBUII3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Feb 2020 03:08:29 -0500
+        id S1732202AbgBUIIb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 21 Feb 2020 03:08:31 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C9E7420722;
-        Fri, 21 Feb 2020 08:08:27 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0A1A420722;
+        Fri, 21 Feb 2020 08:08:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1582272508;
-        bh=RAbthy+G2lB0nNHDZTr4dUxOkTT5aKM66BXOrQ6RQ/Q=;
+        s=default; t=1582272511;
+        bh=L39ewZIAQLtVWClce3+6QIzm4nk1mjYhAteFKAvrzdY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=V3H4glbqQEtgQtPuI4mai+VQIs/BnY7WyYCwRJ4YVvb3AJqGDJOIjaImSMniJ0HC6
-         jeK6yez4pp3cqo6SPw85EmCNo+VjUgJETFlzYp0UzHwcCKJcJVON/DtygPacWhHYF3
-         x//6c2Fgmdo66PXFqeAXgQDujDbfL9T6nxpdA3yg=
+        b=hV2HmgfMLPhNqtpwCiIXsA1FzunjOQL2ETbuFYs0lKuc11fvc+Ab85Jq6Yktv1ISm
+         CQMIfyMylgs1Dx2GpLKBDGh/wkVjNKYhI6cv5OFRK72DPFFCgyI3sTigavXd8RI0vJ
+         yRO+k0hwhRXRLvJRhKSX/CuoyQXV7iWMHHvrhNOE=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Kunihiko Hayashi <hayashi.kunihiko@socionext.com>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        Philipp Zabel <p.zabel@pengutronix.de>,
+        stable@vger.kernel.org, Jeffrey Hugo <jeffrey.l.hugo@gmail.com>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Stephen Boyd <sboyd@kernel.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 169/344] reset: uniphier: Add SCSSI reset control for each channel
-Date:   Fri, 21 Feb 2020 08:39:28 +0100
-Message-Id: <20200221072404.229926105@linuxfoundation.org>
+Subject: [PATCH 5.4 143/344] clk: qcom: smd: Add missing bimc clock
+Date:   Fri, 21 Feb 2020 08:39:02 +0100
+Message-Id: <20200221072401.799866342@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200221072349.335551332@linuxfoundation.org>
 References: <20200221072349.335551332@linuxfoundation.org>
@@ -62,61 +61,46 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Kunihiko Hayashi <hayashi.kunihiko@socionext.com>
+From: Jeffrey Hugo <jeffrey.l.hugo@gmail.com>
 
-[ Upstream commit f4aec227e985e31d2fdc5608daf48e3de19157b7 ]
+[ Upstream commit 87ec9adcca71801a44ddb311185b17df09839ab5 ]
 
-SCSSI has reset controls for each channel in the SoCs newer than Pro4,
-so this adds missing reset controls for channel 1, 2 and 3. And more, this
-moves MCSSI reset ID after SCSSI.
+It turns out booting the modem is dependent on a bimc vote from Linux on
+msm8998.  To make the modem happy, add the bimc clock to rely on the
+default vote from rpmcc.  Once we have interconnect support, bimc should
+be controlled properly.
 
-Fixes: 6b39fd590aeb ("reset: uniphier: add reset control support for SPI")
-Signed-off-by: Kunihiko Hayashi <hayashi.kunihiko@socionext.com>
-Acked-by: Masahiro Yamada <yamada.masahiro@socionext.com>
-Signed-off-by: Philipp Zabel <p.zabel@pengutronix.de>
+Fixes: 6131dc81211c ("clk: qcom: smd: Add support for MSM8998 rpm clocks")
+Signed-off-by: Jeffrey Hugo <jeffrey.l.hugo@gmail.com>
+Link: https://lkml.kernel.org/r/20191217165409.4919-1-jeffrey.l.hugo@gmail.com
+Reviewed-by: Bjorn Andersson <bjorn.andersson@linaro.org>
+Signed-off-by: Stephen Boyd <sboyd@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/reset/reset-uniphier.c | 13 ++++++++-----
- 1 file changed, 8 insertions(+), 5 deletions(-)
+ drivers/clk/qcom/clk-smd-rpm.c | 3 +++
+ 1 file changed, 3 insertions(+)
 
-diff --git a/drivers/reset/reset-uniphier.c b/drivers/reset/reset-uniphier.c
-index 74e589f5dd6a6..279e535bf5d80 100644
---- a/drivers/reset/reset-uniphier.c
-+++ b/drivers/reset/reset-uniphier.c
-@@ -193,8 +193,8 @@ static const struct uniphier_reset_data uniphier_pro5_sd_reset_data[] = {
- #define UNIPHIER_PERI_RESET_FI2C(id, ch)		\
- 	UNIPHIER_RESETX((id), 0x114, 24 + (ch))
- 
--#define UNIPHIER_PERI_RESET_SCSSI(id)			\
--	UNIPHIER_RESETX((id), 0x110, 17)
-+#define UNIPHIER_PERI_RESET_SCSSI(id, ch)		\
-+	UNIPHIER_RESETX((id), 0x110, 17 + (ch))
- 
- #define UNIPHIER_PERI_RESET_MCSSI(id)			\
- 	UNIPHIER_RESETX((id), 0x114, 14)
-@@ -209,7 +209,7 @@ static const struct uniphier_reset_data uniphier_ld4_peri_reset_data[] = {
- 	UNIPHIER_PERI_RESET_I2C(6, 2),
- 	UNIPHIER_PERI_RESET_I2C(7, 3),
- 	UNIPHIER_PERI_RESET_I2C(8, 4),
--	UNIPHIER_PERI_RESET_SCSSI(11),
-+	UNIPHIER_PERI_RESET_SCSSI(11, 0),
- 	UNIPHIER_RESET_END,
+diff --git a/drivers/clk/qcom/clk-smd-rpm.c b/drivers/clk/qcom/clk-smd-rpm.c
+index 930fa4a4c52a8..e5c3db11bf26c 100644
+--- a/drivers/clk/qcom/clk-smd-rpm.c
++++ b/drivers/clk/qcom/clk-smd-rpm.c
+@@ -648,6 +648,7 @@ static const struct rpm_smd_clk_desc rpm_clk_qcs404 = {
  };
  
-@@ -225,8 +225,11 @@ static const struct uniphier_reset_data uniphier_pro4_peri_reset_data[] = {
- 	UNIPHIER_PERI_RESET_FI2C(8, 4),
- 	UNIPHIER_PERI_RESET_FI2C(9, 5),
- 	UNIPHIER_PERI_RESET_FI2C(10, 6),
--	UNIPHIER_PERI_RESET_SCSSI(11),
--	UNIPHIER_PERI_RESET_MCSSI(12),
-+	UNIPHIER_PERI_RESET_SCSSI(11, 0),
-+	UNIPHIER_PERI_RESET_SCSSI(12, 1),
-+	UNIPHIER_PERI_RESET_SCSSI(13, 2),
-+	UNIPHIER_PERI_RESET_SCSSI(14, 3),
-+	UNIPHIER_PERI_RESET_MCSSI(15),
- 	UNIPHIER_RESET_END,
- };
- 
+ /* msm8998 */
++DEFINE_CLK_SMD_RPM(msm8998, bimc_clk, bimc_a_clk, QCOM_SMD_RPM_MEM_CLK, 0);
+ DEFINE_CLK_SMD_RPM(msm8998, pcnoc_clk, pcnoc_a_clk, QCOM_SMD_RPM_BUS_CLK, 0);
+ DEFINE_CLK_SMD_RPM(msm8998, snoc_clk, snoc_a_clk, QCOM_SMD_RPM_BUS_CLK, 1);
+ DEFINE_CLK_SMD_RPM(msm8998, cnoc_clk, cnoc_a_clk, QCOM_SMD_RPM_BUS_CLK, 2);
+@@ -671,6 +672,8 @@ DEFINE_CLK_SMD_RPM_XO_BUFFER_PINCTRL(msm8998, rf_clk2_pin, rf_clk2_a_pin, 5);
+ DEFINE_CLK_SMD_RPM_XO_BUFFER(msm8998, rf_clk3, rf_clk3_a, 6);
+ DEFINE_CLK_SMD_RPM_XO_BUFFER_PINCTRL(msm8998, rf_clk3_pin, rf_clk3_a_pin, 6);
+ static struct clk_smd_rpm *msm8998_clks[] = {
++	[RPM_SMD_BIMC_CLK] = &msm8998_bimc_clk,
++	[RPM_SMD_BIMC_A_CLK] = &msm8998_bimc_a_clk,
+ 	[RPM_SMD_PCNOC_CLK] = &msm8998_pcnoc_clk,
+ 	[RPM_SMD_PCNOC_A_CLK] = &msm8998_pcnoc_a_clk,
+ 	[RPM_SMD_SNOC_CLK] = &msm8998_snoc_clk,
 -- 
 2.20.1
 
