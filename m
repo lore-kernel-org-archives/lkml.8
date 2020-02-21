@@ -4,50 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 97E49C35642
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 08:04:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5E341C35641
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 08:04:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6F993222C4
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 08:04:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 31BC624670
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 08:04:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582272252;
-	bh=9gELkEKIqQTEF6M71cntxk0dzqeNLlTlfil80CPMXSY=;
+	s=default; t=1582272256;
+	bh=jwaeIp2MEMtqr9PJUVmeKPM5rbDAUa0EDOJ3hWpd4tw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=wwMlnzKRNyTLEuancbvRTGUledPvWvKN54PbtQXNY0Y5ky4kxFNxnToQ2fUlZQ8tS
-	 S85SvwNUO8WTBrMOsXxxbeqR1WU3xyaoIf5gNvTas5JMbRAsH68qEokMEaiwkRvAsl
-	 jJY4FmT1huv/vNrGwrIEX4uBJ7LlHYH2cb2E3t/8=
+	b=TT5SCXQgpwDd0Pc4uqzRCtAxIudkExSfEU078A0pvw6WpwF1IyBikpA6By7EqVd+E
+	 5uB/Td/QmjrMoW39KJy09n+qbZiETNvWh5bh8y+/0N4f7cUpf31RBSlJgwBdRLVaQ7
+	 hckvZNPiZz2oRB+Cqu8I1bxbuoNNdwYGmRA7P6NU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731603AbgBUIEL (ORCPT
+        id S1731132AbgBUIEO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Feb 2020 03:04:11 -0500
-Received: from mail.kernel.org ([198.145.29.99]:37132 "EHLO mail.kernel.org"
+        Fri, 21 Feb 2020 03:04:14 -0500
+Received: from mail.kernel.org ([198.145.29.99]:37202 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731588AbgBUIEJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Feb 2020 03:04:09 -0500
+        id S1731588AbgBUIEM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 21 Feb 2020 03:04:12 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0A1A7222C4;
-        Fri, 21 Feb 2020 08:04:07 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4E99620801;
+        Fri, 21 Feb 2020 08:04:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1582272248;
-        bh=9gELkEKIqQTEF6M71cntxk0dzqeNLlTlfil80CPMXSY=;
+        s=default; t=1582272251;
+        bh=jwaeIp2MEMtqr9PJUVmeKPM5rbDAUa0EDOJ3hWpd4tw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=I58xc00WFCQY6WCZqkDJeB8bzDjDmW+cUzGEEOQ+IWjEAm+kuLXfCDFfwlJNJ7TKC
-         DWOJdU4itYRbj266UqZsw6rUEwyA/V1uExP2YjqyhH/IjOs9/L+UnGI3p+ttAeMPvT
-         3uS5ucgS4kc0tPGxVb7huYJE6Oz0O3kCPYbD77sc=
+        b=QuxzJrWIWV1pXUzBjENVM3YSzpO6Y9jMsVC97o9mostEOSV6Mr5wr+9FoDIZjBmw9
+         WyyC/RkzJI2eKCJcy+y8wb5zOU/zgrxasT+TNgB8eMFJeX7NaUJL0Ey6+ynM4AZDV+
+         jwmaz9F7Mver2zEgGOCdBl2LjlqWe7IWRpI/bfCc=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Geert Uytterhoeven <geert+renesas@glider.be>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 029/344] pinctrl: sh-pfc: sh7264: Fix CAN function GPIOs
-Date:   Fri, 21 Feb 2020 08:37:08 +0100
-Message-Id: <20200221072351.805260024@linuxfoundation.org>
+        stable@vger.kernel.org, Eric Biggers <ebiggers@google.com>,
+        Theodore Tso <tytso@mit.edu>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.4 065/344] ext4: fix deadlock allocating bio_post_read_ctx from mempool
+Date:   Fri, 21 Feb 2020 08:37:44 +0100
+Message-Id: <20200221072354.916782225@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200221072349.335551332@linuxfoundation.org>
 References: <20200221072349.335551332@linuxfoundation.org>
@@ -60,92 +59,79 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Geert Uytterhoeven <geert+renesas@glider.be>
+From: Eric Biggers <ebiggers@google.com>
 
-[ Upstream commit 55b1cb1f03ad5eea39897d0c74035e02deddcff2 ]
+[ Upstream commit 68e45330e341dad2d3a0a3f8ef2ec46a2a0a3bbc ]
 
-pinmux_func_gpios[] contains a hole due to the missing function GPIO
-definition for the "CTX0&CTX1" signal, which is the logical "AND" of the
-two CAN outputs.
+Without any form of coordination, any case where multiple allocations
+from the same mempool are needed at a time to make forward progress can
+deadlock under memory pressure.
 
-Fix this by:
-  - Renaming CRX0_CRX1_MARK to CTX0_CTX1_MARK, as PJ2MD[2:0]=010
-    configures the combined "CTX0&CTX1" output signal,
-  - Renaming CRX0X1_MARK to CRX0_CRX1_MARK, as PJ3MD[1:0]=10 configures
-    the shared "CRX0/CRX1" input signal, which is fed to both CAN
-    inputs,
-  - Adding the missing function GPIO definition for "CTX0&CTX1" to
-    pinmux_func_gpios[],
-  - Moving all CAN enums next to each other.
+This is the case for struct bio_post_read_ctx, as one can be allocated
+to decrypt a Merkle tree page during fsverity_verify_bio(), which itself
+is running from a post-read callback for a data bio which has its own
+struct bio_post_read_ctx.
 
-See SH7262 Group, SH7264 Group User's Manual: Hardware, Rev. 4.00:
-  [1] Figure 1.2 (3) (Pin Assignment for the SH7264 Group (1-Mbyte
-      Version),
-  [2] Figure 1.2 (4) Pin Assignment for the SH7264 Group (640-Kbyte
-      Version,
-  [3] Table 1.4 List of Pins,
-  [4] Figure 20.29 Connection Example when Using This Module as 1-Channel
-      Module (64 Mailboxes x 1 Channel),
-  [5] Table 32.10 Multiplexed Pins (Port J),
-  [6] Section 32.2.30 (3) Port J Control Register 0 (PJCR0).
+Fix this by freeing the first bio_post_read_ctx before calling
+fsverity_verify_bio().  This works because verity (if enabled) is always
+the last post-read step.
 
-Note that the last 2 disagree about PJ2MD[2:0], which is probably the
-root cause of this bug.  But considering [4], "CTx0&CTx1" in [5] must
-be correct, and "CRx0&CRx1" in [6] must be wrong.
+This deadlock can be reproduced by trying to read from an encrypted
+verity file after reducing NUM_PREALLOC_POST_READ_CTXS to 1 and patching
+mempool_alloc() to pretend that pool->alloc() always fails.
 
-Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
-Link: https://lore.kernel.org/r/20191218194812.12741-4-geert+renesas@glider.be
+Note that since NUM_PREALLOC_POST_READ_CTXS is actually 128, to actually
+hit this bug in practice would require reading from lots of encrypted
+verity files at the same time.  But it's theoretically possible, as N
+available objects isn't enough to guarantee forward progress when > N/2
+threads each need 2 objects at a time.
+
+Fixes: 22cfe4b48ccb ("ext4: add fs-verity read support")
+Signed-off-by: Eric Biggers <ebiggers@google.com>
+Link: https://lore.kernel.org/r/20191231181222.47684-1-ebiggers@kernel.org
+Signed-off-by: Theodore Ts'o <tytso@mit.edu>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/pinctrl/sh-pfc/pfc-sh7264.c | 9 ++++-----
- 1 file changed, 4 insertions(+), 5 deletions(-)
+ fs/ext4/readpage.c | 17 +++++++++++++++--
+ 1 file changed, 15 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/pinctrl/sh-pfc/pfc-sh7264.c b/drivers/pinctrl/sh-pfc/pfc-sh7264.c
-index 4a95867deb8af..5a026601d4f9a 100644
---- a/drivers/pinctrl/sh-pfc/pfc-sh7264.c
-+++ b/drivers/pinctrl/sh-pfc/pfc-sh7264.c
-@@ -497,17 +497,15 @@ enum {
- 	SD_WP_MARK, SD_CLK_MARK, SD_CMD_MARK,
- 	CRX0_MARK, CRX1_MARK,
- 	CTX0_MARK, CTX1_MARK,
-+	CRX0_CRX1_MARK, CTX0_CTX1_MARK,
+diff --git a/fs/ext4/readpage.c b/fs/ext4/readpage.c
+index a30b203fa461c..a5f55fece9b04 100644
+--- a/fs/ext4/readpage.c
++++ b/fs/ext4/readpage.c
+@@ -57,6 +57,7 @@ enum bio_post_read_step {
+ 	STEP_INITIAL = 0,
+ 	STEP_DECRYPT,
+ 	STEP_VERITY,
++	STEP_MAX,
+ };
  
- 	PWM1A_MARK, PWM1B_MARK, PWM1C_MARK, PWM1D_MARK,
- 	PWM1E_MARK, PWM1F_MARK, PWM1G_MARK, PWM1H_MARK,
- 	PWM2A_MARK, PWM2B_MARK, PWM2C_MARK, PWM2D_MARK,
- 	PWM2E_MARK, PWM2F_MARK, PWM2G_MARK, PWM2H_MARK,
- 	IERXD_MARK, IETXD_MARK,
--	CRX0_CRX1_MARK,
- 	WDTOVF_MARK,
+ struct bio_post_read_ctx {
+@@ -106,10 +107,22 @@ static void verity_work(struct work_struct *work)
+ {
+ 	struct bio_post_read_ctx *ctx =
+ 		container_of(work, struct bio_post_read_ctx, work);
++	struct bio *bio = ctx->bio;
  
--	CRX0X1_MARK,
--
- 	/* DMAC */
- 	TEND0_MARK, DACK0_MARK, DREQ0_MARK,
- 	TEND1_MARK, DACK1_MARK, DREQ1_MARK,
-@@ -995,12 +993,12 @@ static const u16 pinmux_data[] = {
+-	fsverity_verify_bio(ctx->bio);
++	/*
++	 * fsverity_verify_bio() may call readpages() again, and although verity
++	 * will be disabled for that, decryption may still be needed, causing
++	 * another bio_post_read_ctx to be allocated.  So to guarantee that
++	 * mempool_alloc() never deadlocks we must free the current ctx first.
++	 * This is safe because verity is the last post-read step.
++	 */
++	BUILD_BUG_ON(STEP_VERITY + 1 != STEP_MAX);
++	mempool_free(ctx, bio_post_read_ctx_pool);
++	bio->bi_private = NULL;
  
- 	PINMUX_DATA(PJ3_DATA, PJ3MD_00),
- 	PINMUX_DATA(CRX1_MARK, PJ3MD_01),
--	PINMUX_DATA(CRX0X1_MARK, PJ3MD_10),
-+	PINMUX_DATA(CRX0_CRX1_MARK, PJ3MD_10),
- 	PINMUX_DATA(IRQ1_PJ_MARK, PJ3MD_11),
+-	bio_post_read_processing(ctx);
++	fsverity_verify_bio(bio);
++
++	__read_end_io(bio);
+ }
  
- 	PINMUX_DATA(PJ2_DATA, PJ2MD_000),
- 	PINMUX_DATA(CTX1_MARK, PJ2MD_001),
--	PINMUX_DATA(CRX0_CRX1_MARK, PJ2MD_010),
-+	PINMUX_DATA(CTX0_CTX1_MARK, PJ2MD_010),
- 	PINMUX_DATA(CS2_MARK, PJ2MD_011),
- 	PINMUX_DATA(SCK0_MARK, PJ2MD_100),
- 	PINMUX_DATA(LCD_M_DISP_MARK, PJ2MD_101),
-@@ -1245,6 +1243,7 @@ static const struct pinmux_func pinmux_func_gpios[] = {
- 	GPIO_FN(CTX1),
- 	GPIO_FN(CRX1),
- 	GPIO_FN(CTX0),
-+	GPIO_FN(CTX0_CTX1),
- 	GPIO_FN(CRX0),
- 	GPIO_FN(CRX0_CRX1),
- 
+ static void bio_post_read_processing(struct bio_post_read_ctx *ctx)
 -- 
 2.20.1
 
