@@ -7,48 +7,47 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8249DC35640
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 08:37:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2FA50C35640
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 08:38:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 58854206ED
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 08:37:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0643120578
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 08:38:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582274270;
-	bh=GcUOOjd60xaF7XZi3XOX5Tnm4Z0NAaWg+JkTfzDyX/A=;
+	s=default; t=1582274282;
+	bh=zHTUh5PHMgFWU1edZPn6wQntKg1Dv1p7HKF4+eFYTeo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=t3ArGiX7EXH9JdMcKW2fE4ZwPBV9134hyVe/rLWkCJrIqJk/R3DXoJzoxYabI2eLu
-	 r6+bEcpOQbRz+tm35uCEmoOUbMNgI+yCuU9CXhdygYOlScIUSFOS1JpD1dlSxUD1zv
-	 is828hxWNGYEQ036b6CpPaIX/+gxW4TCU/dcnyrg=
+	b=mXkJgTmDv6yHhsRpxzdE/rskgQrUih43dqH3tfiPxbAUm00BYr1/UYJN2YWMCcVl9
+	 wvsW+F9D5M0403lmxQ9vbnn08XzsWC3Doxwb8f09ICqxGCcmEy90qOCeKaQ34t4B8S
+	 JaGPAkOtte8eWIZL/wj8+AgzPGs6Coa3jgnTZglk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731555AbgBUID5 (ORCPT
+        id S1731488AbgBUIDc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Feb 2020 03:03:57 -0500
-Received: from mail.kernel.org ([198.145.29.99]:36836 "EHLO mail.kernel.org"
+        Fri, 21 Feb 2020 03:03:32 -0500
+Received: from mail.kernel.org ([198.145.29.99]:36288 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730280AbgBUID4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Feb 2020 03:03:56 -0500
+        id S1731469AbgBUID3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 21 Feb 2020 03:03:29 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2B68D24656;
-        Fri, 21 Feb 2020 08:03:55 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id AF906222C4;
+        Fri, 21 Feb 2020 08:03:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1582272235;
-        bh=GcUOOjd60xaF7XZi3XOX5Tnm4Z0NAaWg+JkTfzDyX/A=;
+        s=default; t=1582272209;
+        bh=zHTUh5PHMgFWU1edZPn6wQntKg1Dv1p7HKF4+eFYTeo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=EP4o6RUcgRjqjzIL5S9EdlKKwWPAMVHAbgTsmWkrJ/8o5UcOAkVCtV7qvECwAt6By
-         wNOouKIsIxX6ynoWqcHiHyFdQw9ER6zmANopIKY3RPviDC4o//jVrB47tVb2rnLT1K
-         pM5mCeL1NTE1AstZiUXjwPVxuF1UEAxBXxQxGqho=
+        b=ZlChRam1iI5epj+4gs6+Cyx/SDW/elb7LsCFZj44zdF61qZDs4kwQpzkSZeLlGtiO
+         fenbpLwTK6ydUoWFH4YIGD2lUHX5mJwbMJJdHRYqDPBKG6JpXLFlI22gZY64ueR1Dq
+         lzVXCaUUkuxIPFGbAJ7RsuVH2VHjPJ1JTWxX+wPk=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Adam Ford <aford173@gmail.com>,
-        Sakari Ailus <sakari.ailus@linux.intel.com>,
-        Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
+        stable@vger.kernel.org, Tiecheng Zhou <Tiecheng.Zhou@amd.com>,
+        Alex Deucher <alexander.deucher@amd.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 034/344] media: ov5640: Fix check for PLL1 exceeding max allowed rate
-Date:   Fri, 21 Feb 2020 08:37:13 +0100
-Message-Id: <20200221072352.237731382@linuxfoundation.org>
+Subject: [PATCH 5.4 056/344] drm/amdgpu/sriov: workaround on rev_id for Navi12 under sriov
+Date:   Fri, 21 Feb 2020 08:37:35 +0100
+Message-Id: <20200221072354.149936285@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200221072349.335551332@linuxfoundation.org>
 References: <20200221072349.335551332@linuxfoundation.org>
@@ -61,40 +60,42 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Adam Ford <aford173@gmail.com>
+From: Tiecheng Zhou <Tiecheng.Zhou@amd.com>
 
-[ Upstream commit 2e3df204f9af42a47823ee955c08950373417420 ]
+[ Upstream commit df5e984c8bd414561c320d6cbbb66d53abf4c7e2 ]
 
-The variable _rate is by ov5640_compute_sys_clk() which returns
-zero if the PLL exceeds 1GHz.  Unfortunately, the check to see
-if the max PLL1 output is checking 'rate' and not '_rate' and
-'rate' does not ever appear to be 0.
+guest vm gets 0xffffffff when reading RCC_DEV0_EPF0_STRAP0,
+as a consequence, the rev_id and external_rev_id are wrong.
 
-This patch changes the check against the returned value of
-'_rate' to determine if the PLL1 output exceeds 1GHz.
+workaround it by hardcoding the rev_id to 0, which is the default value.
 
-Fixes: aa2882481cad ("media: ov5640: Adjust the clock based on the expected rate")
-Signed-off-by: Adam Ford <aford173@gmail.com>
-Signed-off-by: Sakari Ailus <sakari.ailus@linux.intel.com>
-Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
+v2. add comment in the code
+
+Signed-off-by: Tiecheng Zhou <Tiecheng.Zhou@amd.com>
+Reviewed-by: Alex Deucher <alexander.deucher@amd.com>
+Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/media/i2c/ov5640.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/gpu/drm/amd/amdgpu/nv.c | 6 ++++++
+ 1 file changed, 6 insertions(+)
 
-diff --git a/drivers/media/i2c/ov5640.c b/drivers/media/i2c/ov5640.c
-index 18dd2d717088b..a398ea81e422b 100644
---- a/drivers/media/i2c/ov5640.c
-+++ b/drivers/media/i2c/ov5640.c
-@@ -874,7 +874,7 @@ static unsigned long ov5640_calc_sys_clk(struct ov5640_dev *sensor,
- 			 * We have reached the maximum allowed PLL1 output,
- 			 * increase sysdiv.
- 			 */
--			if (!rate)
-+			if (!_rate)
- 				break;
- 
- 			/*
+diff --git a/drivers/gpu/drm/amd/amdgpu/nv.c b/drivers/gpu/drm/amd/amdgpu/nv.c
+index de9b995b65b1a..2d780820ba00e 100644
+--- a/drivers/gpu/drm/amd/amdgpu/nv.c
++++ b/drivers/gpu/drm/amd/amdgpu/nv.c
+@@ -660,6 +660,12 @@ static int nv_common_early_init(void *handle)
+ 		adev->pg_flags = AMD_PG_SUPPORT_VCN |
+ 			AMD_PG_SUPPORT_VCN_DPG |
+ 			AMD_PG_SUPPORT_ATHUB;
++		/* guest vm gets 0xffffffff when reading RCC_DEV0_EPF0_STRAP0,
++		 * as a consequence, the rev_id and external_rev_id are wrong.
++		 * workaround it by hardcoding rev_id to 0 (default value).
++		 */
++		if (amdgpu_sriov_vf(adev))
++			adev->rev_id = 0;
+ 		adev->external_rev_id = adev->rev_id + 0xa;
+ 		break;
+ 	default:
 -- 
 2.20.1
 
