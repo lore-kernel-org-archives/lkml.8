@@ -2,131 +2,188 @@ Return-Path: <SRS0=1210=4J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	UNWANTED_LANGUAGE_BODY autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6C1D5C35656
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 16:48:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CDCAEC35656
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 16:50:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3CA012067D
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 16:48:46 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=flygoat.com header.i=jiaxun.yang@flygoat.com header.b="IStQf0pT"
+	by mail.kernel.org (Postfix) with ESMTP id ABD802067D
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 16:50:23 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727636AbgBUQsp (ORCPT
+        id S1727329AbgBUQuW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Feb 2020 11:48:45 -0500
-Received: from sender3-op-o12.zoho.com.cn ([124.251.121.243]:17811 "EHLO
-        sender3-op-o12.zoho.com.cn" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726387AbgBUQso (ORCPT
+        Fri, 21 Feb 2020 11:50:22 -0500
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:51002 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1725995AbgBUQuW (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Feb 2020 11:48:44 -0500
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1582303665;
-        s=mail; d=flygoat.com; i=jiaxun.yang@flygoat.com;
-        h=Date:In-Reply-To:References:MIME-Version:Content-Type:Content-Transfer-Encoding:Subject:To:CC:From:Message-ID;
-        bh=+5iSFkto5lD3XI8WPHwTtnFf14s4AHqOXFojmaY+UCs=;
-        b=IStQf0pTzFKTmnXGIQfMKQurB4UDBwnC8ONX0+EZ5e3n59UCQZPEkCbp+f+jdnXY
-        yxjgFGLFDFCs1Hb2d3bR0Rx2pB7wP/OLYaiwuc9N1iNp9VzSErv5UdaAA48ZjJ5YMgO
-        /aqspSqhdUMpwO5t4dwcWCVzgz/Lwt4IuNWzV9RE=
-Received: from [26.26.26.1] (183.156.46.156 [183.156.46.156]) by mx.zoho.com.cn
-        with SMTPS id 1582303661935135.86216680534437; Sat, 22 Feb 2020 00:47:41 +0800 (CST)
-Date:   Sat, 22 Feb 2020 00:47:39 +0800
-User-Agent: K-9 Mail for Android
-In-Reply-To: <65fffffa-2c74-aa09-7fdb-29a7200d7ac4@huawei.com>
-References: <1705dbe62ce.10ae800394772.9222265269135747883@flygoat.com> <5E4E55F7.70800@hisilicon.com> <e3ddd7de-54b2-bdba-2233-6ace40072430@huawei.com> <17062738bc0.c380503c6222.6801557833645076299@flygoat.com> <1ebf4461-eb37-ff58-1faf-dd24d83f85cf@huawei.com> <170632822e1.12fede49a6919.5706082545515934736@flygoat.com> <e54a9936-5cf3-777d-3e91-58d2be96bf1c@huawei.com> <6c49e5e0-b6f2-fe23-caec-4742c3d1d3a0@huawei.com> <1706531b3a8.108e582396993.7792774458896054798@flygoat.com> <65fffffa-2c74-aa09-7fdb-29a7200d7ac4@huawei.com>
+        Fri, 21 Feb 2020 11:50:22 -0500
+Received: from pps.filterd (m0098417.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 01LGnGEu061540;
+        Fri, 21 Feb 2020 11:50:14 -0500
+Received: from ppma02wdc.us.ibm.com (aa.5b.37a9.ip4.static.sl-reverse.com [169.55.91.170])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2y8ubr85t0-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Fri, 21 Feb 2020 11:50:14 -0500
+Received: from pps.filterd (ppma02wdc.us.ibm.com [127.0.0.1])
+        by ppma02wdc.us.ibm.com (8.16.0.27/8.16.0.27) with SMTP id 01LGnvN9019789;
+        Fri, 21 Feb 2020 16:50:13 GMT
+Received: from b01cxnp23034.gho.pok.ibm.com (b01cxnp23034.gho.pok.ibm.com [9.57.198.29])
+        by ppma02wdc.us.ibm.com with ESMTP id 2y68976cmk-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Fri, 21 Feb 2020 16:50:13 +0000
+Received: from b01ledav001.gho.pok.ibm.com (b01ledav001.gho.pok.ibm.com [9.57.199.106])
+        by b01cxnp23034.gho.pok.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 01LGoDpv48628042
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Fri, 21 Feb 2020 16:50:13 GMT
+Received: from b01ledav001.gho.pok.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id E8FDC2805C;
+        Fri, 21 Feb 2020 16:50:12 +0000 (GMT)
+Received: from b01ledav001.gho.pok.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id C4E4B28059;
+        Fri, 21 Feb 2020 16:50:12 +0000 (GMT)
+Received: from localhost (unknown [9.41.179.160])
+        by b01ledav001.gho.pok.ibm.com (Postfix) with ESMTP;
+        Fri, 21 Feb 2020 16:50:12 +0000 (GMT)
+From:   Nathan Lynch <nathanl@linux.ibm.com>
+To:     "Gautham R. Shenoy" <ego@linux.vnet.ibm.com>
+Cc:     linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Vaidyanathan Srinivasan <svaidy@linux.vnet.ibm.com>,
+        Kamalesh Babulal <kamalesh@linux.vnet.ibm.com>,
+        "Naveen N. Rao" <naveen.n.rao@linux.vnet.ibm.com>,
+        Tyrel Datwyler <tyreld@linux.ibm.com>
+Subject: Re: [PATCH v2 4/5] powerpc/sysfs: Show idle_purr and idle_spurr for every CPU
+In-Reply-To: <1582262314-8319-5-git-send-email-ego@linux.vnet.ibm.com>
+References: <1582262314-8319-1-git-send-email-ego@linux.vnet.ibm.com> <1582262314-8319-5-git-send-email-ego@linux.vnet.ibm.com>
+Date:   Fri, 21 Feb 2020 10:50:12 -0600
+Message-ID: <87eeunubp7.fsf@linux.ibm.com>
 MIME-Version: 1.0
-Content-Type: text/plain;
- charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-Subject: Re: Questions about logic_pio
-To:     John Garry <john.garry@huawei.com>
-CC:     "xuwei (O)" <xuwei5@huawei.com>, bhelgaas <bhelgaas@google.com>,
-        andyshevchenko <andy.shevchenko@gmail.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        Linux Mips <linux-mips@vger.kernel.org>
-From:   Jiaxun Yang <jiaxun.yang@flygoat.com>
-Message-ID: <A9B4BEC2-546B-4524-A107-E6049A08BBE0@flygoat.com>
-X-ZohoCNMailClient: External
+Content-Type: text/plain
+X-TM-AS-GCONF: 00
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.572
+ definitions=2020-02-21_05:2020-02-21,2020-02-21 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 adultscore=0 clxscore=1015
+ priorityscore=1501 suspectscore=2 spamscore=0 bulkscore=0 impostorscore=0
+ mlxlogscore=939 lowpriorityscore=0 malwarescore=0 phishscore=0 mlxscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2001150001
+ definitions=main-2002210127
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+"Gautham R. Shenoy" <ego@linux.vnet.ibm.com> writes:
+> diff --git a/arch/powerpc/kernel/sysfs.c b/arch/powerpc/kernel/sysfs.c
+> index 80a676d..5b4b450 100644
+> --- a/arch/powerpc/kernel/sysfs.c
+> +++ b/arch/powerpc/kernel/sysfs.c
+> @@ -19,6 +19,7 @@
+>  #include <asm/smp.h>
+>  #include <asm/pmc.h>
+>  #include <asm/firmware.h>
+> +#include <asm/idle.h>
+>  #include <asm/svm.h>
+>  
+>  #include "cacheinfo.h"
+> @@ -733,6 +734,42 @@ static void create_svm_file(void)
+>  }
+>  #endif /* CONFIG_PPC_SVM */
+>  
+> +static void read_idle_purr(void *val)
+> +{
+> +	u64 *ret = (u64 *)val;
+
+No cast from void* needed.
 
 
-=E4=BA=8E 2020=E5=B9=B42=E6=9C=8821=E6=97=A5 GMT+08:00 =E4=B8=8B=E5=8D=887=
-:49:45, John Garry <john=2Egarry@huawei=2Ecom> =E5=86=99=E5=88=B0:
->On 21/02/2020 00:42, Jiaxun Yang wrote:
->>   >
->>   > I will add this may not cover your need, as you probably cannot
->deal
->>   > with any logical PIO <-> ISA translation without modifying the
->device
->>   > driver=2E For this, we may need to reserve the first 0x4000 in
->logical PIO
->>   > space for this sort of legacy host=2E
->>=20
->> Hi,
->>=20
->> After thinking twice, I realized that the most convenient way for me
->is
->> adding an option to get rid of the mess of logic PIO=2E MIPS system is
->emulating
->> x86's behavior, while logic PIO isn't designed for such platform=2E
->
->It was designed for archs which define PCI_IOBASE for PCI MMIO-based or
->
->IndirectIO-based IO port access=2E
->
->>=20
->> Or probably I need a variation of Logic PIO, which leave MMIO space
->AS-IS
->> (not try to reallocate it)
->
->That does not work if add a PCI host with MMIO-based IO port regions=20
->into the mix=2E
->
->It only so happens today that for mips you have a single MMIO-based IO=20
->port region, and you have IO port base for that region conveniently @=20
->0x0=2E Then your drivers can have fixed IO port addresses=2E
+> +
+> +	*ret = read_this_idle_purr();
+> +}
+> +
+> +static ssize_t idle_purr_show(struct device *dev,
+> +			      struct device_attribute *attr, char *buf)
+> +{
+> +	struct cpu *cpu = container_of(dev, struct cpu, dev);
+> +	u64 val;
+> +
+> +	smp_call_function_single(cpu->dev.id, read_idle_purr, &val, 1);
+> +	return sprintf(buf, "%llx\n", val);
+> +}
+> +static DEVICE_ATTR(idle_purr, 0400, idle_purr_show, NULL);
+> +
+> +static void read_idle_spurr(void *val)
+> +{
+> +	u64 *ret = (u64 *)val;
+> +
+> +	*ret = read_this_idle_spurr();
+> +}
+> +
+> +static ssize_t idle_spurr_show(struct device *dev,
+> +			       struct device_attribute *attr, char *buf)
+> +{
+> +	struct cpu *cpu = container_of(dev, struct cpu, dev);
+> +	u64 val;
+> +
+> +	smp_call_function_single(cpu->dev.id, read_idle_spurr, &val, 1);
+> +	return sprintf(buf, "%llx\n", val);
+> +}
+> +static DEVICE_ATTR(idle_spurr, 0400, idle_spurr_show, NULL);
 
-In MIPS, PCI Host Bridge share PIO region with legacy devices=2E
+It's regrettable that we have to wake up potentially idle CPUs in order
+to derive correct idle statistics for them, but I suppose the main user
+(lparstat) of these interfaces already is causing this to happen by
+polling the existing per-cpu purr and spurr attributes.
 
-Probably the better solution is to add a kind of logic pio region called F=
-IXED_MMIO,
-so we can occupy some low ioports for these fixed devices at boot time=2E
+So now lparstat will incur at minimum four syscalls and four IPIs per
+CPU per polling interval -- one for each of purr, spurr, idle_purr and
+idle_spurr. Correct?
 
-A ISA bridge node in DeviceTree can be used
-to express this region=2E
+At some point it's going to make sense to batch sampling of remote CPUs'
+SPRs.
 
-I'm going to work on this and try to make a RFC patch later=2E
 
-Thanks for your help again!
->
->For dealing with multiple MMIO-based IO ports regions - which is the=20
->case for PCI host bridges - then you need to map those MMIO-based IO=20
->port regions to different regions in IO port space=2E
->
->> but still preserving higher 0x4000 for indirect access=2E
->
->Then there is no space for PCI MMIO-based IO ports=2E
+>  static int register_cpu_online(unsigned int cpu)
+>  {
+>  	struct cpu *c = &per_cpu(cpu_devices, cpu);
+> @@ -794,10 +831,15 @@ static int register_cpu_online(unsigned int cpu)
+>  		if (!firmware_has_feature(FW_FEATURE_LPAR))
+>  			add_write_permission_dev_attr(&dev_attr_purr);
+>  		device_create_file(s, &dev_attr_purr);
+> +		if (firmware_has_feature(FW_FEATURE_LPAR))
+> +			device_create_file(s, &dev_attr_idle_purr);
+>  	}
+>  
+> -	if (cpu_has_feature(CPU_FTR_SPURR))
+> +	if (cpu_has_feature(CPU_FTR_SPURR)) {
+>  		device_create_file(s, &dev_attr_spurr);
+> +		if (firmware_has_feature(FW_FEATURE_LPAR))
+> +			device_create_file(s, &dev_attr_idle_spurr);
+> +	}
+>  
+>  	if (cpu_has_feature(CPU_FTR_DSCR))
+>  		device_create_file(s, &dev_attr_dscr);
+> @@ -879,11 +921,17 @@ static int unregister_cpu_online(unsigned int cpu)
+>  	if (cpu_has_feature(CPU_FTR_MMCRA))
+>  		device_remove_file(s, &dev_attr_mmcra);
+>  
+> -	if (cpu_has_feature(CPU_FTR_PURR))
+> +	if (cpu_has_feature(CPU_FTR_PURR)) {
+>  		device_remove_file(s, &dev_attr_purr);
+> +		if (firmware_has_feature(FW_FEATURE_LPAR))
+> +			device_remove_file(s, &dev_attr_idle_purr);
+> +	}
+>  
+> -	if (cpu_has_feature(CPU_FTR_SPURR))
+> +	if (cpu_has_feature(CPU_FTR_SPURR)) {
+>  		device_remove_file(s, &dev_attr_spurr);
+> +		if (firmware_has_feature(FW_FEATURE_LPAR))
+> +			device_remove_file(s, &dev_attr_idle_spurr);
+> +	}
+>  
+>  	if (cpu_has_feature(CPU_FTR_DSCR))
+>  		device_remove_file(s, &dev_attr_dscr);
 
-Well, it can be higher or lower, whatever=2E
-
->
->>=20
->> Thanks a lot!
->>   >
->>   > That would not be a bad thing - see
->> =20
->>https://lore=2Ekernel=2Eorg/linux-pci/1560262374-67875-1-git-send-email-=
-john=2Egarry@huawei=2Ecom/
->>   >
->>   >
->>   > >
->>   > > This driver deals with legacy IO ports where we need to bitbang
-
---=20
-Jiaxun Yang
+The cpu register/unregister stuff here looks correct.
