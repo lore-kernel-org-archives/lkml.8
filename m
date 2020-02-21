@@ -7,47 +7,48 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 55E72C35640
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 08:48:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 151CEC35641
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 08:48:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1DFAF2071E
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 08:48:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DFD5D2071E
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 08:48:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582274898;
-	bh=bnoGaRoBD2hyStehWg8KD7v12K1AJXgloD4rRnFFQ/c=;
+	s=default; t=1582274900;
+	bh=YHz7O6G/jmkaVCvMuEpPsNeQD/iCyedN0ScyPG8tI5s=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Ssh85hdFSlC66YC5dg7exV3suloDUqj0XeRfgJA9PbzUYiJHijzerx8GxXF/E8ntq
-	 FXyslCdn6U2yGlsFmshrlpzFSamEGc9WcXqzz7aAEH3yOlnINaaq6kh0ea0N1BKKAy
-	 eLBlpzanixSClydLyWIIWt3tEJQ0emOOZQIX5Imw=
+	b=MAKjUM4qLWHM0u8yKAtga6rf6fvUZ8ODnuXDrTkJcb6Ef9MKNld6nW2/uQhuybXuT
+	 d84mECViSQIfw1tigWVhSZw8gZp0YlxEgnUU1uw3hJrlRoWuj63IjO2eUaGrC0T7IW
+	 kDnis7YzNVRHcnboCCy/uBhp8sCtYNJN5l8aXPUw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728882AbgBUHrT (ORCPT
+        id S1728860AbgBUHrJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Feb 2020 02:47:19 -0500
-Received: from mail.kernel.org ([198.145.29.99]:43092 "EHLO mail.kernel.org"
+        Fri, 21 Feb 2020 02:47:09 -0500
+Received: from mail.kernel.org ([198.145.29.99]:42766 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728169AbgBUHrR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Feb 2020 02:47:17 -0500
+        id S1728829AbgBUHrC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 21 Feb 2020 02:47:02 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A2D38222C4;
-        Fri, 21 Feb 2020 07:47:16 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 35A5524676;
+        Fri, 21 Feb 2020 07:47:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1582271237;
-        bh=bnoGaRoBD2hyStehWg8KD7v12K1AJXgloD4rRnFFQ/c=;
+        s=default; t=1582271221;
+        bh=YHz7O6G/jmkaVCvMuEpPsNeQD/iCyedN0ScyPG8tI5s=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=NrWbPFqd4W/KRVQEd5M1WIJ7gvL8TdM5ZwsiJtDUHcY6sw6UPfH2RrW1gNl8XECSK
-         RIfZBU/9ZrBzpBfHFMm8RrG8YEF+yEUX8p0rCYwfeCotjC6abxArjr+96tXqe++8ss
-         04M7rTOdbD71sDUI2Gv4s1Qsbf6KwuZjSpulLTM8=
+        b=TNysK6CfZxjRTIM3lkvUxMnOlLkVA2YYGCGGHVsXRbxG7HqnCp4lYr85+b8CMExQ6
+         5o21D+RVDjecB6iv3KlRw/ngGuLcF86uJargXyWzg6ryRfWTXUs7U5nT7wvTTcefBq
+         zjyVi8PKu50Ro4UN7lirxjMqk6eSVLQLjhEYr3Qw=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org,
-        Grygorii Strashko <grygorii.strashko@ti.com>,
-        Tero Kristo <t-kristo@ti.com>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.5 073/399] clk: ti: dra7: fix parent for gmac_clkctrl
-Date:   Fri, 21 Feb 2020 08:36:38 +0100
-Message-Id: <20200221072409.455658570@linuxfoundation.org>
+        Vincenzo Frascino <vincenzo.frascino@arm.com>,
+        Russell King <rmk+kernel@armlinux.org.uk>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.5 085/399] ARM: 8952/1: Disable kmemleak on XIP kernels
+Date:   Fri, 21 Feb 2020 08:36:50 +0100
+Message-Id: <20200221072410.601248586@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200221072402.315346745@linuxfoundation.org>
 References: <20200221072402.315346745@linuxfoundation.org>
@@ -60,35 +61,52 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Grygorii Strashko <grygorii.strashko@ti.com>
+From: Vincenzo Frascino <vincenzo.frascino@arm.com>
 
-[ Upstream commit 69e300283796dae7e8c2e6acdabcd31336c0c93e ]
+[ Upstream commit bc420c6ceefbb86cbbc8c00061bd779c17fa6997 ]
 
-The parent clk for gmac clk ctrl has to be gmac_main_clk (125MHz) instead
-of dpll_gmac_ck (1GHz). This is caused incorrect CPSW MDIO operation.
-Hence, fix it.
+Kmemleak relies on specific symbols to register the read only data
+during init (e.g. __start_ro_after_init).
+Trying to build an XIP kernel on arm results in the linking error
+reported below because when this option is selected read only data
+after init are not allowed since .data is read only (.rodata).
 
-Fixes: dffa9051d546 ('clk: ti: dra7: add new clkctrl data')
-Signed-off-by: Grygorii Strashko <grygorii.strashko@ti.com>
-Signed-off-by: Tero Kristo <t-kristo@ti.com>
+  arm-linux-gnueabihf-ld: mm/kmemleak.o: in function `kmemleak_init':
+  kmemleak.c:(.init.text+0x148): undefined reference to `__end_ro_after_init'
+  arm-linux-gnueabihf-ld: kmemleak.c:(.init.text+0x14c):
+     undefined reference to `__end_ro_after_init'
+  arm-linux-gnueabihf-ld: kmemleak.c:(.init.text+0x150):
+     undefined reference to `__start_ro_after_init'
+  arm-linux-gnueabihf-ld: kmemleak.c:(.init.text+0x156):
+     undefined reference to `__start_ro_after_init'
+  arm-linux-gnueabihf-ld: kmemleak.c:(.init.text+0x162):
+     undefined reference to `__start_ro_after_init'
+  arm-linux-gnueabihf-ld: kmemleak.c:(.init.text+0x16a):
+     undefined reference to `__start_ro_after_init'
+  linux/Makefile:1078: recipe for target 'vmlinux' failed
+
+Fix the issue enabling kmemleak only on non XIP kernels.
+
+Signed-off-by: Vincenzo Frascino <vincenzo.frascino@arm.com>
+Signed-off-by: Russell King <rmk+kernel@armlinux.org.uk>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/clk/ti/clk-7xx.c | 2 +-
+ arch/arm/Kconfig | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/clk/ti/clk-7xx.c b/drivers/clk/ti/clk-7xx.c
-index 5f46782cebeb2..b656ba2abcf7e 100644
---- a/drivers/clk/ti/clk-7xx.c
-+++ b/drivers/clk/ti/clk-7xx.c
-@@ -405,7 +405,7 @@ static const struct omap_clkctrl_bit_data dra7_gmac_bit_data[] __initconst = {
- };
- 
- static const struct omap_clkctrl_reg_data dra7_gmac_clkctrl_regs[] __initconst = {
--	{ DRA7_GMAC_GMAC_CLKCTRL, dra7_gmac_bit_data, CLKF_SW_SUP, "dpll_gmac_ck" },
-+	{ DRA7_GMAC_GMAC_CLKCTRL, dra7_gmac_bit_data, CLKF_SW_SUP, "gmac_main_clk" },
- 	{ 0 },
- };
- 
+diff --git a/arch/arm/Kconfig b/arch/arm/Kconfig
+index 96dab76da3b39..2c3a9fd05f571 100644
+--- a/arch/arm/Kconfig
++++ b/arch/arm/Kconfig
+@@ -74,7 +74,7 @@ config ARM
+ 	select HAVE_CONTEXT_TRACKING
+ 	select HAVE_COPY_THREAD_TLS
+ 	select HAVE_C_RECORDMCOUNT
+-	select HAVE_DEBUG_KMEMLEAK
++	select HAVE_DEBUG_KMEMLEAK if !XIP_KERNEL
+ 	select HAVE_DMA_CONTIGUOUS if MMU
+ 	select HAVE_DYNAMIC_FTRACE if !XIP_KERNEL && !CPU_ENDIAN_BE32 && MMU
+ 	select HAVE_DYNAMIC_FTRACE_WITH_REGS if HAVE_DYNAMIC_FTRACE
 -- 
 2.20.1
 
