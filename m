@@ -5,50 +5,49 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4AE39C35641
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 08:27:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B2C5EC35641
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 08:27:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 19BD324681
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 08:27:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5D02324681
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 08:27:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582273663;
-	bh=3kbU4PpQCtspoH5V5Ms/X/D2pQJR9+ziZQiWMj764e8=;
+	s=default; t=1582273669;
+	bh=gPxlp4Q153bbUxomQbbVWstHM7c/0MR9rk3K5NF5G9w=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=EYWX4VkAs8r2wzNr9O3Bo8V6y075Hl5phRA1NWSnwHylFyRxmwsJqlO9k16zL0t97
-	 HUbhOGgJHYO+iUCxeNOy79k5wtT6pEBedCIGqCvlNNHHM9xEgKXnfkKrO+G6ToCUUk
-	 8Ke3XAQA7XhVK27mdk1WpCRCFUEArIUfyMRygsQM=
+	b=MBPVQN8mgYoGWwKsiMOgZvxR8Ewhfuq7iVIPH3CEWAeutpQBkHSQj2EM7aOyzjFVI
+	 MxRJJzPOvBCgJrWHlRN68TpYvELiLaGxElgAlmfqky7MLtH1UIqqAK//Zw/9lL6/w2
+	 UyrEa9YmGZ+6bPK+6iSoiyYwyQ/o7SMyicUEhHqY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388653AbgBUI1l (ORCPT
+        id S2388675AbgBUI1s (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Feb 2020 03:27:41 -0500
-Received: from mail.kernel.org ([198.145.29.99]:60950 "EHLO mail.kernel.org"
+        Fri, 21 Feb 2020 03:27:48 -0500
+Received: from mail.kernel.org ([198.145.29.99]:60502 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730807AbgBUIV1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Feb 2020 03:21:27 -0500
+        id S2388230AbgBUIVJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 21 Feb 2020 03:21:09 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6D145222C4;
-        Fri, 21 Feb 2020 08:21:26 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 11F6B24650;
+        Fri, 21 Feb 2020 08:21:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1582273286;
-        bh=3kbU4PpQCtspoH5V5Ms/X/D2pQJR9+ziZQiWMj764e8=;
+        s=default; t=1582273269;
+        bh=gPxlp4Q153bbUxomQbbVWstHM7c/0MR9rk3K5NF5G9w=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=PGzVEzlQ92jr5rSb7WR1lkWOV+R/ljd5Iz6WgzUZtVO0Yp7EUENEOmNaidh6aPZfR
-         YX4pL6whB/Vud8dVsw12rENfQMnxMPIQJtrargcaqQ0G3o/MyEAa+xRfUWnqou5K6d
-         AS97oTkrpIYulsTteA5s0qRvUKRok0hocibeE5wA=
+        b=jb78vYdPRiEcml6LYWYWUY6BhKAp4gGeTW7DAkCk2MmGZiuKKY/UwlXI0adXjjznR
+         FA2wiiaY97pFl4LJLEaw2tYcmOQf6S2alqZrfdqh/czWToBaOlY4l40uih1Yx12M9P
+         QLz4b49qrOUJAUqJkld1C4BgB8wfMoMOOUw6uylc=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Hulk Robot <hulkci@huawei.com>,
-        Chen Zhou <chenzhou10@huawei.com>,
-        Mark Brown <broonie@kernel.org>,
+        stable@vger.kernel.org, Dmitry Osipenko <digetx@gmail.com>,
+        Thierry Reding <treding@nvidia.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 114/191] ASoC: atmel: fix build error with CONFIG_SND_ATMEL_SOC_DMA=m
-Date:   Fri, 21 Feb 2020 08:41:27 +0100
-Message-Id: <20200221072304.590894861@linuxfoundation.org>
+Subject: [PATCH 4.19 108/191] soc/tegra: fuse: Correct straps address for older Tegra124 device trees
+Date:   Fri, 21 Feb 2020 08:41:21 +0100
+Message-Id: <20200221072303.879083184@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200221072250.732482588@linuxfoundation.org>
 References: <20200221072250.732482588@linuxfoundation.org>
@@ -61,41 +60,35 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Chen Zhou <chenzhou10@huawei.com>
+From: Dmitry Osipenko <digetx@gmail.com>
 
-[ Upstream commit 8fea78029f5e6ed734ae1957bef23cfda1af4354 ]
+[ Upstream commit 2d9ea1934f8ef0dfb862d103389562cc28b4fc03 ]
 
-If CONFIG_SND_ATMEL_SOC_DMA=m, build error:
+Trying to read out Chip ID before APBMISC registers are mapped won't
+succeed, in a result Tegra124 gets a wrong address for the HW straps
+register if machine uses an old outdated device tree.
 
-sound/soc/atmel/atmel_ssc_dai.o: In function `atmel_ssc_set_audio':
-(.text+0x7cd): undefined reference to `atmel_pcm_dma_platform_register'
-
-Function atmel_pcm_dma_platform_register is defined under
-CONFIG SND_ATMEL_SOC_DMA, so select SND_ATMEL_SOC_DMA in
-CONFIG SND_ATMEL_SOC_SSC, same to CONFIG_SND_ATMEL_SOC_PDC.
-
-Reported-by: Hulk Robot <hulkci@huawei.com>
-Signed-off-by: Chen Zhou <chenzhou10@huawei.com>
-Link: https://lore.kernel.org/r/20200113133242.144550-1-chenzhou10@huawei.com
-Signed-off-by: Mark Brown <broonie@kernel.org>
+Fixes: 297c4f3dcbff ("soc/tegra: fuse: Restrict legacy code to 32-bit ARM")
+Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
+Signed-off-by: Thierry Reding <treding@nvidia.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- sound/soc/atmel/Kconfig | 2 ++
- 1 file changed, 2 insertions(+)
+ drivers/soc/tegra/fuse/tegra-apbmisc.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/sound/soc/atmel/Kconfig b/sound/soc/atmel/Kconfig
-index 64b784e96f844..dad778e5884bd 100644
---- a/sound/soc/atmel/Kconfig
-+++ b/sound/soc/atmel/Kconfig
-@@ -25,6 +25,8 @@ config SND_ATMEL_SOC_DMA
+diff --git a/drivers/soc/tegra/fuse/tegra-apbmisc.c b/drivers/soc/tegra/fuse/tegra-apbmisc.c
+index e5a4d8f98b10e..d1cbb0fe1691a 100644
+--- a/drivers/soc/tegra/fuse/tegra-apbmisc.c
++++ b/drivers/soc/tegra/fuse/tegra-apbmisc.c
+@@ -135,7 +135,7 @@ void __init tegra_init_apbmisc(void)
+ 			apbmisc.flags = IORESOURCE_MEM;
  
- config SND_ATMEL_SOC_SSC_DMA
- 	tristate
-+	select SND_ATMEL_SOC_DMA
-+	select SND_ATMEL_SOC_PDC
- 
- config SND_ATMEL_SOC_SSC
- 	tristate
+ 			/* strapping options */
+-			if (tegra_get_chip_id() == TEGRA124) {
++			if (of_machine_is_compatible("nvidia,tegra124")) {
+ 				straps.start = 0x7000e864;
+ 				straps.end = 0x7000e867;
+ 			} else {
 -- 
 2.20.1
 
