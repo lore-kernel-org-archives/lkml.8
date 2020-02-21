@@ -2,59 +2,56 @@ Return-Path: <SRS0=1210=4J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7484FC35642
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 08:01:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 13605C35640
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 08:01:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4B44C24650
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 08:01:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DC739222C4
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 08:01:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582272087;
-	bh=iDQyywFR+dChoJUBor0d1LE6DJzQ1gIxwq0QVn6i2Ds=;
+	s=default; t=1582272093;
+	bh=UYqKx2O8ccgfc2BEmoOMtLzRV0341XwG6c3PzYFulew=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=JhQHKK3fdGSHGJgecw4MUVwMdOz7aac8kodJyAOm51zQIilp67esChVlYO8Fs9Gx4
-	 flgI6Jd9r7xZjyvCIX92HwDcJ3eS/glW/klcrXnIbtSwuw+Lz//J6ssTuCa+zwFKUC
-	 Ok0hrM35ATnwQEdIrOshFfjAMToI3rdJjDa1/sdk=
+	b=dOXojGi2UiT+WV4ArfZXYxt/arw/Ks6S1Exc9ayERNC25EJcVxl0L69adCozSdGm1
+	 cKijgl+k3CzHAXGvcJeEryYQXjmvqyv1hR5FRbaqgIQob0wI6+k92Ls71hGFWO1ukZ
+	 m78zWr9eebkue3dcZzvlwujkj3exiwNDEAKfinik=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731198AbgBUIBZ (ORCPT
+        id S1731220AbgBUIBc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Feb 2020 03:01:25 -0500
-Received: from mail.kernel.org ([198.145.29.99]:33630 "EHLO mail.kernel.org"
+        Fri, 21 Feb 2020 03:01:32 -0500
+Received: from mail.kernel.org ([198.145.29.99]:33810 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731189AbgBUIBV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Feb 2020 03:01:21 -0500
+        id S1731211AbgBUIBa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 21 Feb 2020 03:01:30 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id F2C6E24656;
-        Fri, 21 Feb 2020 08:01:19 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 03CC224650;
+        Fri, 21 Feb 2020 08:01:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1582272080;
-        bh=iDQyywFR+dChoJUBor0d1LE6DJzQ1gIxwq0QVn6i2Ds=;
+        s=default; t=1582272090;
+        bh=UYqKx2O8ccgfc2BEmoOMtLzRV0341XwG6c3PzYFulew=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=AQPH6w/Q7jVWqhGM22v3iWAfYblGQ86XV7FHtRJ081Wb0hhtyeTWUdglJXBv3MYEd
-         ahemLSFD3PYfSe+KYlq7nt7PNSHmzemb39iuarxDNBEx3VFAeEaUbn0S6NraybzG1I
-         AsZFbPmwcnuen4Dpsf5ehIm5udd0fCHyhIoOSt5c=
+        b=H1G3Y6obPmZmuy0U18fryAC3MLUZvdzjygBRPRUM7Fuubrb32LwxfIr59SWXlm9rM
+         24fc5G6QkGUaaNIEB75YVkOHFNvrDzsSBUhZDuq4R0wzHEG5DeCjZfjRPJwDoi7Moh
+         eBzv7P1uIi6rvVbYcYwo+or7vD+FjUBmDwtXLCjE=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Stepan Horacek <shoracek@redhat.com>,
-        Paolo Abeni <pabeni@redhat.com>,
-        =?UTF-8?q?Toke=20H=C3=B8iland-J=C3=B8rgensen?= <toke@redhat.com>,
-        "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 5.4 001/344] core: Dont skip generic XDP program execution for cloned SKBs
-Date:   Fri, 21 Feb 2020 08:36:40 +0100
-Message-Id: <20200221072349.461654816@linuxfoundation.org>
+        stable@vger.kernel.org, Neeraj Upadhyay <neeraju@codeaurora.org>,
+        "Paul E. McKenney" <paulmck@kernel.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.4 013/344] rcu: Fix missed wakeup of exp_wq waiters
+Date:   Fri, 21 Feb 2020 08:36:52 +0100
+Message-Id: <20200221072350.452224944@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200221072349.335551332@linuxfoundation.org>
 References: <20200221072349.335551332@linuxfoundation.org>
 User-Agent: quilt/0.66
-X-stable: review
-X-Patchwork-Hint: ignore
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
@@ -63,136 +60,102 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: "Toke Høiland-Jørgensen" <toke@redhat.com>
+From: Neeraj Upadhyay <neeraju@codeaurora.org>
 
-[ Upstream commit ad1e03b2b3d4430baaa109b77bc308dc73050de3 ]
+[ Upstream commit fd6bc19d7676a060a171d1cf3dcbf6fd797eb05f ]
 
-The current generic XDP handler skips execution of XDP programs entirely if
-an SKB is marked as cloned. This leads to some surprising behaviour, as
-packets can end up being cloned in various ways, which will make an XDP
-program not see all the traffic on an interface.
+Tasks waiting within exp_funnel_lock() for an expedited grace period to
+elapse can be starved due to the following sequence of events:
 
-This was discovered by a simple test case where an XDP program that always
-returns XDP_DROP is installed on a veth device. When combining this with
-the Scapy packet sniffer (which uses an AF_PACKET) socket on the sending
-side, SKBs reliably end up in the cloned state, causing them to be passed
-through to the receiving interface instead of being dropped. A minimal
-reproducer script for this is included below.
+1.	Tasks A and B both attempt to start an expedited grace
+	period at about the same time.	This grace period will have
+	completed when the lower four bits of the rcu_state structure's
+	->expedited_sequence field are 0b'0100', for example, when the
+	initial value of this counter is zero.	Task A wins, and thus
+	does the actual work of starting the grace period, including
+	acquiring the rcu_state structure's .exp_mutex and sets the
+	counter to 0b'0001'.
 
-This patch fixed the issue by simply triggering the existing linearisation
-code for cloned SKBs instead of skipping the XDP program execution. This
-behaviour is in line with the behaviour of the native XDP implementation
-for the veth driver, which will reallocate and copy the SKB data if the SKB
-is marked as shared.
+2.	Because task B lost the race to start the grace period, it
+	waits on ->expedited_sequence to reach 0b'0100' inside of
+	exp_funnel_lock(). This task therefore blocks on the rcu_node
+	structure's ->exp_wq[1] field, keeping in mind that the
+	end-of-grace-period value of ->expedited_sequence (0b'0100')
+	is shifted down two bits before indexing the ->exp_wq[] field.
 
-Reproducer Python script (requires BCC and Scapy):
+3.	Task C attempts to start another expedited grace period,
+	but blocks on ->exp_mutex, which is still held by Task A.
 
-from scapy.all import TCP, IP, Ether, sendp, sniff, AsyncSniffer, Raw, UDP
-from bcc import BPF
-import time, sys, subprocess, shlex
+4.	The aforementioned expedited grace period completes, so that
+	->expedited_sequence now has the value 0b'0100'.  A kworker task
+	therefore acquires the rcu_state structure's ->exp_wake_mutex
+	and starts awakening any tasks waiting for this grace period.
 
-SKB_MODE = (1 << 1)
-DRV_MODE = (1 << 2)
-PYTHON=sys.executable
+5.	One of the first tasks awakened happens to be Task A.  Task A
+	therefore releases the rcu_state structure's ->exp_mutex,
+	which allows Task C to start the next expedited grace period,
+	which causes the lower four bits of the rcu_state structure's
+	->expedited_sequence field to become 0b'0101'.
 
-def client():
-    time.sleep(2)
-    # Sniffing on the sender causes skb_cloned() to be set
-    s = AsyncSniffer()
-    s.start()
+6.	Task C's expedited grace period completes, so that the lower four
+	bits of the rcu_state structure's ->expedited_sequence field now
+	become 0b'1000'.
 
-    for p in range(10):
-        sendp(Ether(dst="aa:aa:aa:aa:aa:aa", src="cc:cc:cc:cc:cc:cc")/IP()/UDP()/Raw("Test"),
-              verbose=False)
-        time.sleep(0.1)
+7.	The kworker task from step 4 above continues its wakeups.
+	Unfortunately, the wake_up_all() refetches the rcu_state
+	structure's .expedited_sequence field:
 
-    s.stop()
-    return 0
+	wake_up_all(&rnp->exp_wq[rcu_seq_ctr(rcu_state.expedited_sequence) & 0x3]);
 
-def server(mode):
-    prog = BPF(text="int dummy_drop(struct xdp_md *ctx) {return XDP_DROP;}")
-    func = prog.load_func("dummy_drop", BPF.XDP)
-    prog.attach_xdp("a_to_b", func, mode)
+	This results in the wakeup being applied to the rcu_node
+	structure's ->exp_wq[2] field, which is unfortunate given that
+	Task B is instead waiting on ->exp_wq[1].
 
-    time.sleep(1)
+On a busy system, no harm is done (or at least no permanent harm is done).
+Some later expedited grace period will redo the wakeup.  But on a quiet
+system, such as many embedded systems, it might be a good long time before
+there was another expedited grace period.  On such embedded systems,
+this situation could therefore result in a system hang.
 
-    s = sniff(iface="a_to_b", count=10, timeout=15)
-    if len(s):
-        print(f"Got {len(s)} packets - should have gotten 0")
-        return 1
-    else:
-        print("Got no packets - as expected")
-        return 0
+This issue manifested as DPM device timeout during suspend (which
+usually qualifies as a quiet time) due to a SCSI device being stuck in
+_synchronize_rcu_expedited(), with the following stack trace:
 
-if len(sys.argv) < 2:
-    print(f"Usage: {sys.argv[0]} <skb|drv>")
-    sys.exit(1)
+	schedule()
+	synchronize_rcu_expedited()
+	synchronize_rcu()
+	scsi_device_quiesce()
+	scsi_bus_suspend()
+	dpm_run_callback()
+	__device_suspend()
 
-if sys.argv[1] == "client":
-    sys.exit(client())
-elif sys.argv[1] == "server":
-    mode = SKB_MODE if sys.argv[2] == 'skb' else DRV_MODE
-    sys.exit(server(mode))
-else:
-    try:
-        mode = sys.argv[1]
-        if mode not in ('skb', 'drv'):
-            print(f"Usage: {sys.argv[0]} <skb|drv>")
-            sys.exit(1)
-        print(f"Running in {mode} mode")
+This commit therefore prevents such delays, timeouts, and hangs by
+making rcu_exp_wait_wake() use its "s" argument consistently instead of
+refetching from rcu_state.expedited_sequence.
 
-        for cmd in [
-                'ip netns add netns_a',
-                'ip netns add netns_b',
-                'ip -n netns_a link add a_to_b type veth peer name b_to_a netns netns_b',
-                # Disable ipv6 to make sure there's no address autoconf traffic
-                'ip netns exec netns_a sysctl -qw net.ipv6.conf.a_to_b.disable_ipv6=1',
-                'ip netns exec netns_b sysctl -qw net.ipv6.conf.b_to_a.disable_ipv6=1',
-                'ip -n netns_a link set dev a_to_b address aa:aa:aa:aa:aa:aa',
-                'ip -n netns_b link set dev b_to_a address cc:cc:cc:cc:cc:cc',
-                'ip -n netns_a link set dev a_to_b up',
-                'ip -n netns_b link set dev b_to_a up']:
-            subprocess.check_call(shlex.split(cmd))
-
-        server = subprocess.Popen(shlex.split(f"ip netns exec netns_a {PYTHON} {sys.argv[0]} server {mode}"))
-        client = subprocess.Popen(shlex.split(f"ip netns exec netns_b {PYTHON} {sys.argv[0]} client"))
-
-        client.wait()
-        server.wait()
-        sys.exit(server.returncode)
-
-    finally:
-        subprocess.run(shlex.split("ip netns delete netns_a"))
-        subprocess.run(shlex.split("ip netns delete netns_b"))
-
-Fixes: d445516966dc ("net: xdp: support xdp generic on virtual devices")
-Reported-by: Stepan Horacek <shoracek@redhat.com>
-Suggested-by: Paolo Abeni <pabeni@redhat.com>
-Signed-off-by: Toke HÃ¸iland-JÃ¸rgensen <toke@redhat.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Fixes: 3b5f668e715b ("rcu: Overlap wakeups with next expedited grace period")
+Signed-off-by: Neeraj Upadhyay <neeraju@codeaurora.org>
+Signed-off-by: Paul E. McKenney <paulmck@kernel.org>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- net/core/dev.c |    4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ kernel/rcu/tree_exp.h | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/net/core/dev.c
-+++ b/net/core/dev.c
-@@ -4256,14 +4256,14 @@ static u32 netif_receive_generic_xdp(str
- 	/* Reinjected packets coming from act_mirred or similar should
- 	 * not get XDP generic processing.
- 	 */
--	if (skb_cloned(skb) || skb_is_tc_redirected(skb))
-+	if (skb_is_tc_redirected(skb))
- 		return XDP_PASS;
- 
- 	/* XDP packets must be linear and must have sufficient headroom
- 	 * of XDP_PACKET_HEADROOM bytes. This is the guarantee that also
- 	 * native XDP provides, thus we need to do it here as well.
- 	 */
--	if (skb_is_nonlinear(skb) ||
-+	if (skb_cloned(skb) || skb_is_nonlinear(skb) ||
- 	    skb_headroom(skb) < XDP_PACKET_HEADROOM) {
- 		int hroom = XDP_PACKET_HEADROOM - skb_headroom(skb);
- 		int troom = skb->tail + skb->data_len - skb->end;
+diff --git a/kernel/rcu/tree_exp.h b/kernel/rcu/tree_exp.h
+index 69c5aa64fcfd6..f504ac8317797 100644
+--- a/kernel/rcu/tree_exp.h
++++ b/kernel/rcu/tree_exp.h
+@@ -558,7 +558,7 @@ static void rcu_exp_wait_wake(unsigned long s)
+ 			spin_unlock(&rnp->exp_lock);
+ 		}
+ 		smp_mb(); /* All above changes before wakeup. */
+-		wake_up_all(&rnp->exp_wq[rcu_seq_ctr(rcu_state.expedited_sequence) & 0x3]);
++		wake_up_all(&rnp->exp_wq[rcu_seq_ctr(s) & 0x3]);
+ 	}
+ 	trace_rcu_exp_grace_period(rcu_state.name, s, TPS("endwake"));
+ 	mutex_unlock(&rcu_state.exp_wake_mutex);
+-- 
+2.20.1
+
 
 
