@@ -2,52 +2,53 @@ Return-Path: <SRS0=1210=4J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6402AC35640
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 08:07:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 77906C35641
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 08:07:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2CE182073A
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 08:07:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4EC0A20722
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 08:07:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582272424;
-	bh=Xdz5g+eobi2ZEQdasmCypMVgaHUhILG5k0/pdY3tblI=;
+	s=default; t=1582272428;
+	bh=sHMiD2s6qCYL0fQzvhMv7F2WRvsDG09B1rN0XDLI99Y=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=XdeDf7XVXpe6acaKv1VtRv2hF0P6c1KIe5VaD3i0I4KJ8C33MonYnjk9P447ec2f4
-	 x+KNMWufF+VrpIVmS59L9UQ2GFnyjnkALqt3EJ3ncQ2z0+WMgzIAVYQfk0kplah1yl
-	 5mZ47nQHHdecfha4nKKuKKwOcTQC9WcQGUUw95hE=
+	b=VvLnqm7BJ1nZz5qLndZe5CazCgdXxdb8z2fAPS2AedxYXnhvDdXJzliCnP3x1Q0bM
+	 Xf+RxGa18KpQoKNDpeexxS2gzA61k1OKFw8mJ0zJCP7SZoi4DAtLY4k6N77L1hEEDx
+	 Cj+GVwZkSLrKJK9KVRwhjqUEzsBzT2nTDKribA4s=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731477AbgBUIHC (ORCPT
+        id S1732027AbgBUIHH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Feb 2020 03:07:02 -0500
-Received: from mail.kernel.org ([198.145.29.99]:41014 "EHLO mail.kernel.org"
+        Fri, 21 Feb 2020 03:07:07 -0500
+Received: from mail.kernel.org ([198.145.29.99]:41110 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731880AbgBUIG7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Feb 2020 03:06:59 -0500
+        id S1731714AbgBUIHD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 21 Feb 2020 03:07:03 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B6F0D20578;
-        Fri, 21 Feb 2020 08:06:57 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D463520722;
+        Fri, 21 Feb 2020 08:07:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1582272418;
-        bh=Xdz5g+eobi2ZEQdasmCypMVgaHUhILG5k0/pdY3tblI=;
+        s=default; t=1582272423;
+        bh=sHMiD2s6qCYL0fQzvhMv7F2WRvsDG09B1rN0XDLI99Y=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=e0M15LmYlGU8r22BMWlH0Edn4d5ibRvgK7ZGekzdJJBae1hdnxQD+6340hfSESgZd
-         fqFxmQDPsZE3vK/jUXRauK0YK3B1s/z9HukFNY42izOq7eFRm6Xp+ls4gU+AK+JYxh
-         lDO5Xx7V+avKK5YTpNn8mlOgqEgQtl6xIzlXtkVk=
+        b=T3X1Yaao3dlkUitOzMeS2gxtjGr0zbKT5WZhsGkacXyYR76+/LmHE6LjFfM5SVsaf
+         AfPTn2xuVSHl2G0EiEU2+EpvWDbTXjW1fEhEEJisQ9UbLu/lsk94NW1M7/2UdnB666
+         Mt6OMwzTDPK+28s4TGbNddF+82iFMOnZuWfGRusw=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Nathan Chancellor <natechancellor@gmail.com>,
-        Takashi Iwai <tiwai@suse.de>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 134/344] ALSA: usx2y: Adjust indentation in snd_usX2Y_hwdep_dsp_status
-Date:   Fri, 21 Feb 2020 08:38:53 +0100
-Message-Id: <20200221072401.013059337@linuxfoundation.org>
+        stable@vger.kernel.org, James Sewart <jamessewart@arista.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Logan Gunthorpe <logang@deltatee.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.4 136/344] PCI: Add DMA alias quirk for PLX PEX NTB
+Date:   Fri, 21 Feb 2020 08:38:55 +0100
+Message-Id: <20200221072401.183770270@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200221072349.335551332@linuxfoundation.org>
 References: <20200221072349.335551332@linuxfoundation.org>
@@ -60,49 +61,52 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Nathan Chancellor <natechancellor@gmail.com>
+From: James Sewart <jamessewart@arista.com>
 
-[ Upstream commit df4654bd6e42125d9b85ce3a26eaca2935290b98 ]
+[ Upstream commit 7b90dfc4873b87c468cc6046538f46a531c1d785 ]
 
-Clang warns:
+The PLX PEX NTB forwards DMA transactions using Requester IDs that don't
+exist as PCI devices.  The devfn for a transaction is used as an index into
+a lookup table storing the origin of a transaction on the other side of the
+bridge.
 
-../sound/usb/usx2y/usX2Yhwdep.c:122:3: warning: misleading indentation;
-statement is not part of the previous 'if' [-Wmisleading-indentation]
-        info->version = USX2Y_DRIVER_VERSION;
-        ^
-../sound/usb/usx2y/usX2Yhwdep.c:120:2: note: previous statement is here
-        if (us428->chip_status & USX2Y_STAT_CHIP_INIT)
-        ^
-1 warning generated.
+Alias all possible devfns to the NTB device so that any transaction coming
+in is governed by the mappings for the NTB.
 
-This warning occurs because there is a space before the tab on this
-line. Remove it so that the indentation is consistent with the Linux
-kernel coding style and clang no longer warns.
-
-This was introduced before the beginning of git history so no fixes tag.
-
-Link: https://github.com/ClangBuiltLinux/linux/issues/831
-Signed-off-by: Nathan Chancellor <natechancellor@gmail.com>
-Link: https://lore.kernel.org/r/20191218034257.54535-1-natechancellor@gmail.com
-Signed-off-by: Takashi Iwai <tiwai@suse.de>
+Signed-off-by: James Sewart <jamessewart@arista.com>
+Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
+Reviewed-by: Logan Gunthorpe <logang@deltatee.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- sound/usb/usx2y/usX2Yhwdep.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/pci/quirks.c | 15 +++++++++++++++
+ 1 file changed, 15 insertions(+)
 
-diff --git a/sound/usb/usx2y/usX2Yhwdep.c b/sound/usb/usx2y/usX2Yhwdep.c
-index d1caa8ed9e681..9985fc139487b 100644
---- a/sound/usb/usx2y/usX2Yhwdep.c
-+++ b/sound/usb/usx2y/usX2Yhwdep.c
-@@ -119,7 +119,7 @@ static int snd_usX2Y_hwdep_dsp_status(struct snd_hwdep *hw,
- 	info->num_dsps = 2;		// 0: Prepad Data, 1: FPGA Code
- 	if (us428->chip_status & USX2Y_STAT_CHIP_INIT)
- 		info->chip_ready = 1;
-- 	info->version = USX2Y_DRIVER_VERSION; 
-+	info->version = USX2Y_DRIVER_VERSION;
- 	return 0;
- }
+diff --git a/drivers/pci/quirks.c b/drivers/pci/quirks.c
+index 67a9ad3734d18..2fdceaab73072 100644
+--- a/drivers/pci/quirks.c
++++ b/drivers/pci/quirks.c
+@@ -5352,6 +5352,21 @@ SWITCHTEC_QUIRK(0x8574);  /* PFXI 64XG3 */
+ SWITCHTEC_QUIRK(0x8575);  /* PFXI 80XG3 */
+ SWITCHTEC_QUIRK(0x8576);  /* PFXI 96XG3 */
  
++/*
++ * The PLX NTB uses devfn proxy IDs to move TLPs between NT endpoints.
++ * These IDs are used to forward responses to the originator on the other
++ * side of the NTB.  Alias all possible IDs to the NTB to permit access when
++ * the IOMMU is turned on.
++ */
++static void quirk_plx_ntb_dma_alias(struct pci_dev *pdev)
++{
++	pci_info(pdev, "Setting PLX NTB proxy ID aliases\n");
++	/* PLX NTB may use all 256 devfns */
++	pci_add_dma_alias(pdev, 0, 256);
++}
++DECLARE_PCI_FIXUP_HEADER(PCI_VENDOR_ID_PLX, 0x87b0, quirk_plx_ntb_dma_alias);
++DECLARE_PCI_FIXUP_HEADER(PCI_VENDOR_ID_PLX, 0x87b1, quirk_plx_ntb_dma_alias);
++
+ /*
+  * On Lenovo Thinkpad P50 SKUs with a Nvidia Quadro M1000M, the BIOS does
+  * not always reset the secondary Nvidia GPU between reboots if the system
 -- 
 2.20.1
 
