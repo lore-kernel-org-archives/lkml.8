@@ -2,162 +2,140 @@ Return-Path: <SRS0=1210=4J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,UNWANTED_LANGUAGE_BODY,URIBL_BLOCKED,USER_AGENT_SANE_2
+X-Spam-Status: No, score=-10.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8980BC35646
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 15:32:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E2ADDC35658
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 15:32:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5F91D2073A
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 15:32:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BAB532073A
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 15:32:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582299134;
-	bh=UfuVbClZVSx0qFISnoFOSwyIOrb5otA2TZO/yhNa6Uk=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=N77b14p5Xzprr37BVvapBKTbWcqSRjaBL3pbabTO/DBjYXPsvFeUviZ8i86mJQ0Ot
-	 FIwNY6qdjZ6epn3kFjzMB+5L4iwuVeWOcEBuLoUjw4kmt0+ZBS3E6YFUkwpSwVew8z
-	 0ruZmvqZOP7Bic0V62ySH4PAx+F1Ys9jVrzH/nnU=
+	s=default; t=1582299140;
+	bh=LtQtdYpi0xdtEi4kNUUpmNMz7z7vsWWRX5Zunzwdmhc=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=q/qIKvfX3PWpb/wWvrVjbk+RrcNcTP1K+nB7UrGaJ6ajyXRpDLdfljBXYEUe39YY7
+	 Ri62s1mtScqcXD5MwCnSGKulZHz1rUWWn8Arj/A0L+oJ5HerNFTQzsF8mkNh05WCOl
+	 flHQMfcc9CVdJOO3kuTqIQU3NNjHC8/L228ZIvB8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728550AbgBUPcN (ORCPT
+        id S1728804AbgBUPcT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Feb 2020 10:32:13 -0500
-Received: from mail.kernel.org ([198.145.29.99]:56038 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727053AbgBUPcN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Feb 2020 10:32:13 -0500
-Received: from archlinux (cpc149474-cmbg20-2-0-cust94.5-4.cable.virginm.net [82.4.196.95])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3FF752073A;
-        Fri, 21 Feb 2020 15:32:11 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1582299131;
-        bh=UfuVbClZVSx0qFISnoFOSwyIOrb5otA2TZO/yhNa6Uk=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=CWrhu4z0ZBpYccjZ8/pXxXVDmmNSZcqcSoGtWyGQ7VFTWP6iCruUxv81YEPFwSzO1
-         +s5tYpD+cUV+b2XYt/9rHI8J/m4wfVARnDKTBErefe3JG4nfVRIWNYO2WdGT0NdT9I
-         xhwc+HFwOtkNTgDvK2OM6w3+exyhMm4bvAVug3Yc=
-Date:   Fri, 21 Feb 2020 15:32:02 +0000
-From:   Jonathan Cameron <jic23@kernel.org>
-To:     Sergiu <sergiu.cuciurean@analog.com>
-Cc:     <linux-iio@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] iio: amplifiers: ad8366: add support for HMC1119
- Attenuator
-Message-ID: <20200221153202.00cc62da@archlinux>
-In-Reply-To: <20200220092821.11050-1-sergiu.cuciurean@analog.com>
-References: <20200220092821.11050-1-sergiu.cuciurean@analog.com>
-X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        Fri, 21 Feb 2020 10:32:19 -0500
+Received: from mail-ot1-f65.google.com ([209.85.210.65]:39774 "EHLO
+        mail-ot1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727053AbgBUPcS (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 21 Feb 2020 10:32:18 -0500
+Received: by mail-ot1-f65.google.com with SMTP id 77so2327196oty.6;
+        Fri, 21 Feb 2020 07:32:18 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=5jRzIkWfQ+0gox1TYbOKZYWDKTNe51R7eEKfAaND2e8=;
+        b=EwglTzWDYHi5zUI0G73egd4M8WlMq3bTf6ltjxwAhfwj0yGP2OQra9rJ/T28QVtQcF
+         VuLxYSannvQna2hi5P14PtkBHxph2sznltyrZqcAMS+swFY02tYpZEq9ezMzZQxQBaLz
+         YhBGldvZtk1mLwRrKnd+D2Td72Jr6D5lG+eDMv0Iv3me1ck5dWhwtmD8dZgjcZlRqrut
+         7cm3y91tdzTj9/WoxYLlHTkGjsf/PUxmuURJ60K3P30u7PabB5oKSBj/Q6wBWaD8j7Lj
+         tV+h3B6dwD1O9NLdi0uFieY4rOd2m6IYzW1m6bKd7vh0Kf2G58B2vPnJ/tDV+5yc7MdL
+         sLfQ==
+X-Gm-Message-State: APjAAAWGJ6+FxRtS2tsO1TB6zAaQy7MvqN6sBg4MFYZmAhqqy+zm088S
+        w77myMc3OGIYntQLqKV56w==
+X-Google-Smtp-Source: APXvYqyIi7otPk4YqJ66riR/MI9UiSp8vpqQOhiJlly3+GQnLyt8fa9IB1l62IViMdRSA1KiKTCn5w==
+X-Received: by 2002:a9d:6f0a:: with SMTP id n10mr29655564otq.54.1582299137818;
+        Fri, 21 Feb 2020 07:32:17 -0800 (PST)
+Received: from rob-hp-laptop (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
+        by smtp.gmail.com with ESMTPSA id t9sm1108521otm.76.2020.02.21.07.32.16
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 21 Feb 2020 07:32:16 -0800 (PST)
+Received: (nullmailer pid 14335 invoked by uid 1000);
+        Fri, 21 Feb 2020 15:32:15 -0000
+Date:   Fri, 21 Feb 2020 09:32:15 -0600
+From:   Rob Herring <robh@kernel.org>
+To:     Masahiro Yamada <yamada.masahiro@socionext.com>
+Cc:     devicetree@vger.kernel.org, Frank Rowand <frowand.list@gmail.com>,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        linux-arm-kernel@lists.infradead.org, linux-gpio@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 2/3] dt-bindings: gpio: Convert UniPhier GPIO to
+ json-schema
+Message-ID: <20200221153215.GA9815@bogus>
+References: <20200221021002.18795-1-yamada.masahiro@socionext.com>
+ <20200221021002.18795-2-yamada.masahiro@socionext.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200221021002.18795-2-yamada.masahiro@socionext.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 20 Feb 2020 11:28:21 +0200
-Sergiu <sergiu.cuciurean@analog.com> wrote:
-
-> This change adds support for the HMC1119 Silicon Digial Attenuator. The
-> HMC1119 is a broadband, highly accurate, 7-bit digital attenuator,
-> operating from 0.1 GHz to 6.0 GHz with 31.5 dB attenuation control range
-> in 0.25 dB steps.
+On Fri, 21 Feb 2020 11:10:01 +0900, Masahiro Yamada wrote:
+> Convert the UniPhier GPIO controller binding to DT schema format.
 > 
-> Link: https://www.analog.com/media/en/technical-documentation/data-sheets/hmc1119.pdf
+> I omitted the 'gpio-ranges' property because it is defined in the
+> dt-schema project (/schemas/gpio/gpio.yaml).
 > 
-> Signed-off-by: Sergiu <sergiu.cuciurean@analog.com>
-
-Sign offs need to be full names, and match the from of the email.
-See the Developer Certificate of Origin stuff in Documentation/process/submitting patches.
-
-Otherwise the patch looks fine to me.
-
-Thanks,
-
-Jonathan
-
-
+> As of writing, the 'gpio-ranges-group-names' is not defined in that
+> file despite it is a common property described in
+> Documentation/devicetree/bindings/gpio/gpio.txt
+> So, I defined it in this schema.
+> 
+> Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
 > ---
->  drivers/iio/amplifiers/ad8366.c | 17 +++++++++++++++++
->  1 file changed, 17 insertions(+)
 > 
-> diff --git a/drivers/iio/amplifiers/ad8366.c b/drivers/iio/amplifiers/ad8366.c
-> index 95972ab60f42..62167b87caea 100644
-> --- a/drivers/iio/amplifiers/ad8366.c
-> +++ b/drivers/iio/amplifiers/ad8366.c
-> @@ -5,6 +5,7 @@
->   *   AD8366 Dual-Digital Variable Gain Amplifier (VGA)
->   *   ADA4961 BiCMOS RF Digital Gain Amplifier (DGA)
->   *   ADL5240 Digitally controlled variable gain amplifier (VGA)
-> + *   HMC1119 0.25 dB LSB, 7-Bit, Silicon Digital Attenuator
->   *
->   * Copyright 2012-2019 Analog Devices Inc.
->   */
-> @@ -27,6 +28,7 @@ enum ad8366_type {
->  	ID_AD8366,
->  	ID_ADA4961,
->  	ID_ADL5240,
-> +	ID_HMC1119,
->  };
->  
->  struct ad8366_info {
-> @@ -62,6 +64,10 @@ static struct ad8366_info ad8366_infos[] = {
->  		.gain_min = -11500,
->  		.gain_max = 20000,
->  	},
-> +	[ID_HMC1119] = {
-> +		.gain_min = -31750,
-> +		.gain_max = 0,
-> +	},
->  };
->  
->  static int ad8366_write(struct iio_dev *indio_dev,
-> @@ -84,6 +90,9 @@ static int ad8366_write(struct iio_dev *indio_dev,
->  	case ID_ADL5240:
->  		st->data[0] = (ch_a & 0x3F);
->  		break;
-> +	case ID_HMC1119:
-> +		st->data[0] = ch_a;
-> +		break;
->  	}
->  
->  	ret = spi_write(st->spi, st->data, indio_dev->num_channels);
-> @@ -118,6 +127,9 @@ static int ad8366_read_raw(struct iio_dev *indio_dev,
->  		case ID_ADL5240:
->  			gain = 20000 - 31500 + code * 500;
->  			break;
-> +		case ID_HMC1119:
-> +			gain = -1 * code * 250;
-> +			break;
->  		}
->  
->  		/* Values in dB */
-> @@ -164,6 +176,9 @@ static int ad8366_write_raw(struct iio_dev *indio_dev,
->  	case ID_ADL5240:
->  		code = ((gain - 500 - 20000) / 500) & 0x3F;
->  		break;
-> +	case ID_HMC1119:
-> +		code = (abs(gain) / 250) & 0x7F;
-> +		break;
->  	}
->  
->  	mutex_lock(&st->lock);
-> @@ -246,6 +261,7 @@ static int ad8366_probe(struct spi_device *spi)
->  		break;
->  	case ID_ADA4961:
->  	case ID_ADL5240:
-> +	case ID_HMC1119:
->  		st->reset_gpio = devm_gpiod_get(&spi->dev, "reset",
->  			GPIOD_OUT_HIGH);
->  		indio_dev->channels = ada4961_channels;
-> @@ -298,6 +314,7 @@ static const struct spi_device_id ad8366_id[] = {
->  	{"ad8366",  ID_AD8366},
->  	{"ada4961", ID_ADA4961},
->  	{"adl5240", ID_ADL5240},
-> +	{"hmc1119", ID_HMC1119},
->  	{}
->  };
->  MODULE_DEVICE_TABLE(spi, ad8366_id);
+> I have a question about the range about 'ngpio'.
+> 
+>   ngpios:
+>     minimum: 0
+>     maximum: 512
+> 
+> The 'ngpio' property is already defined as 'uint32' in the dt-schema tool:
+> https://github.com/robherring/dt-schema/blob/master/schemas/gpio/gpio.yaml#L20
+> 
+> 'uint32' is unsigned, so 'minimum: 0' looks too obvious.
+> 
+> I cannot omit the minimum because minimum and maximum depend on each other.
+> I just put a sensible number, 512, in maximum.
+> 
+> If this range is entirely unneeded, I will delete it.
 
+This property is generally for when you can have some number less 
+than a maximum number implied by the compatible string. 
+
+If there is really no max (e.g. 2^32 - 1 is valid), then just do 
+'ngpios: true'
+
+> 
+> 
+>  .../bindings/gpio/gpio-uniphier.txt           | 51 -----------
+>  .../gpio/socionext,uniphier-gpio.yaml         | 89 +++++++++++++++++++
+>  MAINTAINERS                                   |  2 +-
+>  3 files changed, 90 insertions(+), 52 deletions(-)
+>  delete mode 100644 Documentation/devicetree/bindings/gpio/gpio-uniphier.txt
+>  create mode 100644 Documentation/devicetree/bindings/gpio/socionext,uniphier-gpio.yaml
+> 
+
+My bot found errors running 'make dt_binding_check' on your patch:
+
+Documentation/devicetree/bindings/display/simple-framebuffer.example.dts:21.16-37.11: Warning (chosen_node_is_root): /example-0/chosen: chosen node must be at root node
+Error: Documentation/devicetree/bindings/gpio/socionext,uniphier-gpio.example.dts:38.34-35 syntax error
+FATAL ERROR: Unable to parse input tree
+scripts/Makefile.lib:300: recipe for target 'Documentation/devicetree/bindings/gpio/socionext,uniphier-gpio.example.dt.yaml' failed
+make[1]: *** [Documentation/devicetree/bindings/gpio/socionext,uniphier-gpio.example.dt.yaml] Error 1
+Makefile:1263: recipe for target 'dt_binding_check' failed
+make: *** [dt_binding_check] Error 2
+
+See https://patchwork.ozlabs.org/patch/1241747
+Please check and re-submit.
