@@ -5,49 +5,48 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F3268C35641
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 07:54:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2EC13C35640
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 07:54:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BB7CC24653
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 07:54:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F29B624653
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 07:54:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582271671;
-	bh=+rAfQc5HdLOMIL4uUKimOeM2WHF8AZu9IucVD2BUBUs=;
+	s=default; t=1582271675;
+	bh=h62/Q1MOMGNxLFikIqAhIvarrw+FE87HvYaIQdp5x5A=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=NcmAVHxDcrzP8DrP5w6wy4ZaGfdb2avVjn775fZmhJlCAOZJMU6qIsIhA12tR1+v5
-	 2NzW3VxwrM2xST4JFhpnww4l72Cvs1lMz0s9IHFhFMQPUdT+O3e+1ixDviF1NDcNic
-	 UOh7codHP1X6FTUXUaBl2VIe0SQwkyqkmlBxpiE0=
+	b=TY/0CvOt5g6DDsBRB85JI47Bk5XKuJeQAKdSQMh6mu362dpAdyq1DPqxPY92NuOyy
+	 g91muLnsJ5WWGSLJWouMvXzc6a9s2bxWM6Aa01fAjPFwkm8ihiL0EJWXbIWogQdMQ6
+	 4I8XZtQCr0uSCY+3DJxHLu1j2nMjYv0Ua/1I4S/U=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730072AbgBUHya (ORCPT
+        id S1730264AbgBUHyd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Feb 2020 02:54:30 -0500
-Received: from mail.kernel.org ([198.145.29.99]:53040 "EHLO mail.kernel.org"
+        Fri, 21 Feb 2020 02:54:33 -0500
+Received: from mail.kernel.org ([198.145.29.99]:53092 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730250AbgBUHy2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Feb 2020 02:54:28 -0500
+        id S1730261AbgBUHyb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 21 Feb 2020 02:54:31 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 513C020578;
-        Fri, 21 Feb 2020 07:54:27 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D1C3220801;
+        Fri, 21 Feb 2020 07:54:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1582271667;
-        bh=+rAfQc5HdLOMIL4uUKimOeM2WHF8AZu9IucVD2BUBUs=;
+        s=default; t=1582271670;
+        bh=h62/Q1MOMGNxLFikIqAhIvarrw+FE87HvYaIQdp5x5A=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=RCidh2rVIpu4tCyUA+/gNU0rUuPQTH+LtJFd01CsU2JpLisL2vOZPsQwZvZwpMNgV
-         +MFoqbZbaW2c7pP8qogR37Ny8+v+DbB+kHld9CjfB9isAhZEMqT9vzdALFfT+XvRUR
-         gdIbtx7npnElhC87li1DAeRNq+bsGNdz7xdU+ggM=
+        b=TdhdxD37XuhuB80ofA8cj2f5Jt7trDuWyVb7HapnfD8KH5l2+yRFOnJNgn/QaDnkf
+         2cP95SFPs8n4BDTapbZG6rDaVR8MapJb+4lHYoyGq+0ug1FODJUqg+KJBtETLDCg1C
+         1GThGnu0alG48NLVkp9KYYSSsuw74v+AtpC+4kYY=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Daniel Borkmann <daniel@iogearbox.net>,
-        Li RongQing <lirongqing@baidu.com>,
+        stable@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.5 253/399] bpf: Return -EBADRQC for invalid map type in __bpf_tx_xdp_map
-Date:   Fri, 21 Feb 2020 08:39:38 +0100
-Message-Id: <20200221072427.015149476@linuxfoundation.org>
+Subject: [PATCH 5.5 254/399] vme: bridges: reduce stack usage
+Date:   Fri, 21 Feb 2020 08:39:39 +0100
+Message-Id: <20200221072427.102196934@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200221072402.315346745@linuxfoundation.org>
 References: <20200221072402.315346745@linuxfoundation.org>
@@ -60,43 +59,108 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Li RongQing <lirongqing@baidu.com>
+From: Arnd Bergmann <arnd@arndb.de>
 
-[ Upstream commit 0a29275b6300f39f78a87f2038bbfe5bdbaeca47 ]
+[ Upstream commit 7483e7a939c074d887450ef1c4d9ccc5909405f8 ]
 
-A negative value should be returned if map->map_type is invalid
-although that is impossible now, but if we run into such situation
-in future, then xdpbuff could be leaked.
+With CONFIG_CC_OPTIMIZE_FOR_PERFORMANCE_O3, the stack usage in vme_fake
+grows above the warning limit:
 
-Daniel Borkmann suggested:
+drivers/vme/bridges/vme_fake.c: In function 'fake_master_read':
+drivers/vme/bridges/vme_fake.c:610:1: error: the frame size of 1160 bytes is larger than 1024 bytes [-Werror=frame-larger-than=]
+drivers/vme/bridges/vme_fake.c: In function 'fake_master_write':
+drivers/vme/bridges/vme_fake.c:797:1: error: the frame size of 1160 bytes is larger than 1024 bytes [-Werror=frame-larger-than=]
 
--EBADRQC should be returned to stay consistent with generic XDP
-for the tracepoint output and not to be confused with -EOPNOTSUPP
-from other locations like dev_map_enqueue() when ndo_xdp_xmit is
-missing and such.
+The problem is that in some configurations, each call to
+fake_vmereadX() puts another variable on the stack.
 
-Suggested-by: Daniel Borkmann <daniel@iogearbox.net>
-Signed-off-by: Li RongQing <lirongqing@baidu.com>
-Signed-off-by: Daniel Borkmann <daniel@iogearbox.net>
-Link: https://lore.kernel.org/bpf/1578618277-18085-1-git-send-email-lirongqing@baidu.com
+Reduce the amount of inlining to get back to the previous state,
+with no function using more than 200 bytes each.
+
+Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+Link: https://lore.kernel.org/r/20200107200610.3482901-1-arnd@arndb.de
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- net/core/filter.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/vme/bridges/vme_fake.c | 30 ++++++++++++++++++------------
+ 1 file changed, 18 insertions(+), 12 deletions(-)
 
-diff --git a/net/core/filter.c b/net/core/filter.c
-index 538f6a735a19f..f797b1599c92f 100644
---- a/net/core/filter.c
-+++ b/net/core/filter.c
-@@ -3543,7 +3543,7 @@ static int __bpf_tx_xdp_map(struct net_device *dev_rx, void *fwd,
- 		return err;
+diff --git a/drivers/vme/bridges/vme_fake.c b/drivers/vme/bridges/vme_fake.c
+index 3208a4409e44e..6a1bc284f297c 100644
+--- a/drivers/vme/bridges/vme_fake.c
++++ b/drivers/vme/bridges/vme_fake.c
+@@ -414,8 +414,9 @@ static void fake_lm_check(struct fake_driver *bridge, unsigned long long addr,
  	}
- 	default:
--		break;
-+		return -EBADRQC;
- 	}
- 	return 0;
  }
+ 
+-static u8 fake_vmeread8(struct fake_driver *bridge, unsigned long long addr,
+-		u32 aspace, u32 cycle)
++static noinline_for_stack u8 fake_vmeread8(struct fake_driver *bridge,
++					   unsigned long long addr,
++					   u32 aspace, u32 cycle)
+ {
+ 	u8 retval = 0xff;
+ 	int i;
+@@ -446,8 +447,9 @@ static u8 fake_vmeread8(struct fake_driver *bridge, unsigned long long addr,
+ 	return retval;
+ }
+ 
+-static u16 fake_vmeread16(struct fake_driver *bridge, unsigned long long addr,
+-		u32 aspace, u32 cycle)
++static noinline_for_stack u16 fake_vmeread16(struct fake_driver *bridge,
++					     unsigned long long addr,
++					     u32 aspace, u32 cycle)
+ {
+ 	u16 retval = 0xffff;
+ 	int i;
+@@ -478,8 +480,9 @@ static u16 fake_vmeread16(struct fake_driver *bridge, unsigned long long addr,
+ 	return retval;
+ }
+ 
+-static u32 fake_vmeread32(struct fake_driver *bridge, unsigned long long addr,
+-		u32 aspace, u32 cycle)
++static noinline_for_stack u32 fake_vmeread32(struct fake_driver *bridge,
++					     unsigned long long addr,
++					     u32 aspace, u32 cycle)
+ {
+ 	u32 retval = 0xffffffff;
+ 	int i;
+@@ -609,8 +612,9 @@ out:
+ 	return retval;
+ }
+ 
+-static void fake_vmewrite8(struct fake_driver *bridge, u8 *buf,
+-			   unsigned long long addr, u32 aspace, u32 cycle)
++static noinline_for_stack void fake_vmewrite8(struct fake_driver *bridge,
++					      u8 *buf, unsigned long long addr,
++					      u32 aspace, u32 cycle)
+ {
+ 	int i;
+ 	unsigned long long start, end, offset;
+@@ -639,8 +643,9 @@ static void fake_vmewrite8(struct fake_driver *bridge, u8 *buf,
+ 
+ }
+ 
+-static void fake_vmewrite16(struct fake_driver *bridge, u16 *buf,
+-			    unsigned long long addr, u32 aspace, u32 cycle)
++static noinline_for_stack void fake_vmewrite16(struct fake_driver *bridge,
++					       u16 *buf, unsigned long long addr,
++					       u32 aspace, u32 cycle)
+ {
+ 	int i;
+ 	unsigned long long start, end, offset;
+@@ -669,8 +674,9 @@ static void fake_vmewrite16(struct fake_driver *bridge, u16 *buf,
+ 
+ }
+ 
+-static void fake_vmewrite32(struct fake_driver *bridge, u32 *buf,
+-			    unsigned long long addr, u32 aspace, u32 cycle)
++static noinline_for_stack void fake_vmewrite32(struct fake_driver *bridge,
++					       u32 *buf, unsigned long long addr,
++					       u32 aspace, u32 cycle)
+ {
+ 	int i;
+ 	unsigned long long start, end, offset;
 -- 
 2.20.1
 
