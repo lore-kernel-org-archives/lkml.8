@@ -2,130 +2,241 @@ Return-Path: <SRS0=1210=4J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 84443C35656
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 15:45:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3B4FDC35646
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 15:45:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 57A0624650
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 15:45:00 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582299900;
-	bh=48BvdhEQtUJU8+6OGE8cEsvGVyAAiBApYV9aIFVank0=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=c4eE9L19IWLlLSlrbfdSnxZqR2lYB107ocX+aBz9+g78gUtlqCW4ec9Cg4p8N54Ny
-	 8akvyx+Ijcvzir+ghhXfeInBM2XeiEkLnLf4LDm6hoDKKwZDTWesmqxnBCjtcpkBlI
-	 VW6ZFG3gj9SlXP4fa+ejYj5Y5klBTyfuU/UIdpjg=
+	by mail.kernel.org (Postfix) with ESMTP id 041F7206E2
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 15:45:11 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="JzNdVxLn"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728815AbgBUPo7 (ORCPT
+        id S1729242AbgBUPpK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Feb 2020 10:44:59 -0500
-Received: from mail.kernel.org ([198.145.29.99]:37932 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728299AbgBUPo6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Feb 2020 10:44:58 -0500
-Received: from mail-wm1-f50.google.com (mail-wm1-f50.google.com [209.85.128.50])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B2EBC206E2
-        for <linux-kernel@vger.kernel.org>; Fri, 21 Feb 2020 15:44:57 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1582299898;
-        bh=48BvdhEQtUJU8+6OGE8cEsvGVyAAiBApYV9aIFVank0=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=EeetZYvCiRffEBrR3vT2K7sU04weXZLuuKpi/lSjnx858FiAS8Vuw5I21HOLAMJav
-         V6v5Ik2uyu3LOuJIvFJCG41DwAhNvAa8DVH2Vpw1BtGiNeCsC6yHm+NeeXWSOX89Xg
-         WNOFMnRpBOvnsYjFnkheYpBZB1XIrgbvhylxC5Uw=
-Received: by mail-wm1-f50.google.com with SMTP id p9so2264690wmc.2
-        for <linux-kernel@vger.kernel.org>; Fri, 21 Feb 2020 07:44:57 -0800 (PST)
-X-Gm-Message-State: APjAAAUwcTWjUuVU7alau2ubJJ6zEbyIm43wQ/Uqqd3biaNMC3FKZUIW
-        8gHBD+88XvnG8YyvTGophjFY3x0H8Te7Xzw0iZlU1g==
-X-Google-Smtp-Source: APXvYqxzVHxjianXZjn/dPOJ4coC5k84JaxX22gy7hY+6Ilv2pBdV7pd1dPSP/HhLDtWoyZe+gt8xKr0YvD2FW5TBY8=
-X-Received: by 2002:a05:600c:248:: with SMTP id 8mr4493608wmj.1.1582299896175;
- Fri, 21 Feb 2020 07:44:56 -0800 (PST)
+        Fri, 21 Feb 2020 10:45:10 -0500
+Received: from mail-ot1-f67.google.com ([209.85.210.67]:44025 "EHLO
+        mail-ot1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728901AbgBUPpJ (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 21 Feb 2020 10:45:09 -0500
+Received: by mail-ot1-f67.google.com with SMTP id p8so2342509oth.10
+        for <linux-kernel@vger.kernel.org>; Fri, 21 Feb 2020 07:45:09 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=xJ76dbWV6Hrpq8Mu8XFunPpoSbtEI2f1hLA0MqTSFAE=;
+        b=JzNdVxLni+3SIL2B/dHNs+BXwlg8fEdeJYKxG8y/us3rYjNRsugH7zyLEd9y+Q0dvH
+         tNEshKmvFe7pxySNVCK8VhNUQe/Cx9XyIGyCkUmv4+/QN+gQ58q9dcDeQwZhrfFplCqk
+         r+1Tdz66GI0I7nksiWq0efA8qc01QUEnEA7O5B6RN+ttv9R+QUoXbDBSHhQaVgrfeesd
+         oqTpwgM56jgYBo7KxyXJtkFs9ehZsX3BI0efQDxJeZingRxFpl4oUmbJBXh4MI5et4AR
+         qfkVDpZoQCNwmfjnR3QfL86jD3RhcBEgIVSQfq96BwotoB+dEPi0UfgOpsBjGtwqH9g4
+         ewHQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=xJ76dbWV6Hrpq8Mu8XFunPpoSbtEI2f1hLA0MqTSFAE=;
+        b=Bg0ElD5BjDazIUay0ZRP7U7o5r1BKmnlIb7mlVNTA9PJX9Ph90ZBfc9yKX7OZng9/v
+         257YDyBJWURb8zNeiLifD9HBTy98s0SbABMR3qYawOGIbTVdR6radTNi6KhKgdX3d+3S
+         csVDuxLQDIKUpM73/X9IDr8tExv6z3kpjfoGW4a/iZBWbTI/uGtW08cqoeW2nbK62BUU
+         ZFLT4eWi0dKu3E2T3lLkj3hrjQW9D8iA/M7DzIltjW//hECXJy9zKHLBNOn5mHjVviVa
+         B02txnAvcDGbNpWOtN3/FdPnQ3BvtaWeSno7vJW6r33w7ifExQEs4I8I6pIeUl4uehmK
+         epjg==
+X-Gm-Message-State: APjAAAWCuHqG7PFnxv1FdchQjxmGeMAYu09vpTwHvmV5Z/nE57lawb4w
+        l5ePQyU/B/UPC25WDcNZgj9fp7L38I+klg5wvCzr3w==
+X-Google-Smtp-Source: APXvYqz2te/dx3ohJwq4+vB3zeo3H6S/EgzaXYjYFXFzW3w2cr3qRHngMP32q64gLaLs4czHjOVSArdnDURQ/VZz1WA=
+X-Received: by 2002:a05:6830:1219:: with SMTP id r25mr4451562otp.180.1582299908280;
+ Fri, 21 Feb 2020 07:45:08 -0800 (PST)
 MIME-Version: 1.0
-References: <20200221152430.GA20788@embeddedor>
-In-Reply-To: <20200221152430.GA20788@embeddedor>
-From:   Ard Biesheuvel <ardb@kernel.org>
-Date:   Fri, 21 Feb 2020 16:44:43 +0100
-X-Gmail-Original-Message-ID: <CAKv+Gu9wZ1PjDVQmFPaoxwyDZRYev2LAXr5vBkBGAstdf-5W7w@mail.gmail.com>
-Message-ID: <CAKv+Gu9wZ1PjDVQmFPaoxwyDZRYev2LAXr5vBkBGAstdf-5W7w@mail.gmail.com>
-Subject: Re: [PATCH] efi/apple-properties: Replace zero-length array with
- flexible-array member
-To:     "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-Cc:     linux-efi <linux-efi@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+References: <158204549488.3299825.3783690177353088425.stgit@warthog.procyon.org.uk>
+ <158204561120.3299825.5242636508455859327.stgit@warthog.procyon.org.uk>
+ <CAG48ez2B2J_3-+EjR20ukRu3noPnAccZsOTaea0jtKK4=+bkhQ@mail.gmail.com> <1897788.1582295034@warthog.procyon.org.uk>
+In-Reply-To: <1897788.1582295034@warthog.procyon.org.uk>
+From:   Jann Horn <jannh@google.com>
+Date:   Fri, 21 Feb 2020 16:44:42 +0100
+Message-ID: <CAG48ez2nFks+yN1Kp4TZisso+rjvv_4UW0FTo8iFUd4Qyq1qDw@mail.gmail.com>
+Subject: Re: [PATCH 15/19] vfs: Add superblock notifications [ver #16]
+To:     David Howells <dhowells@redhat.com>
+Cc:     Al Viro <viro@zeniv.linux.org.uk>, raven@themaw.net,
+        Miklos Szeredi <mszeredi@redhat.com>,
+        Christian Brauner <christian@brauner.io>,
+        Linux API <linux-api@vger.kernel.org>,
+        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
+        kernel list <linux-kernel@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 21 Feb 2020 at 16:41, Gustavo A. R. Silva
-<gustavo@embeddedor.com> wrote:
+On Fri, Feb 21, 2020 at 3:24 PM David Howells <dhowells@redhat.com> wrote:
 >
-> The current codebase makes use of the zero-length array language
-> extension to the C90 standard, but the preferred mechanism to declare
-> variable-length types such as these ones is a flexible array member[1][2],
-> introduced in C99:
+> Jann Horn <jannh@google.com> wrote:
 >
-> struct foo {
->         int stuff;
->         struct boo array[];
-> };
+> > > +               if (!s->s_watchers) {
+> >
+> > READ_ONCE() ?
 >
-> By making use of the mechanism above, we will get a compiler warning
-> in case the flexible array does not occur last in the structure, which
-> will help us prevent some kind of undefined behavior bugs from being
-> inadvertently introduced[3] to the codebase from now on.
->
-> Also, notice that, dynamic memory allocations won't be affected by
-> this change:
->
-> "Flexible array members have incomplete type, and so the sizeof operator
-> may not be applied. As a quirk of the original implementation of
-> zero-length arrays, sizeof evaluates to zero."[1]
->
-> This issue was found with the help of Coccinelle.
->
-> [1] https://gcc.gnu.org/onlinedocs/gcc/Zero-Length.html
-> [2] https://github.com/KSPP/linux/issues/21
-> [3] commit 76497732932f ("cxgb3/l2t: Fix undefined behaviour")
->
-> Signed-off-by: Gustavo A. R. Silva <gustavo@embeddedor.com>
+> I'm not sure it matters.  It can only be set once, and the next time we read
+> it we're inside the lock.  And at this point, I don't actually dereference it,
+> and if it's non-NULL, it's not going to change.
 
-Please don't send duplicates. I already queued this in efi/next, and
-responded accordingly.
+I'd really like these READ_ONCE() things to be *anywhere* the value
+can concurrently change, for two reasons:
 
-> ---
->  drivers/firmware/efi/apple-properties.c | 4 ++--
->  1 file changed, 2 insertions(+), 2 deletions(-)
+First, it tells the reader "keep in mind that this value may
+concurrently change in some way, don't just assume that it'll stay the
+same".
+
+But also, it tells the compiler that if it generates multiple loads
+here and assumes that they return the same value, *really* bad stuff
+may happen. GCC has some really fun behavior when compiling a switch()
+on a value that might change concurrently without using READ_ONCE():
+It sometimes generates multiple loads, where the first load is used to
+test whether the value is in a specific range and then the second load
+is used for actually indexing into a table of jump destinations. If
+the value is concurrently mutated from an in-bounds value to an
+out-of-bounds value, this code will load a jump destination from
+random out-of-bounds memory.
+
+An example:
+
+$ cat gcc-jump.c
+int blah(int *x, int y) {
+  switch (*x) {
+    case 0: return y+1;
+    case 1: return y*2;
+    case 2: return y-3;
+    case 3: return y^1;
+    case 4: return y+6;
+    case 5: return y-5;
+    case 6: return y|1;
+    case 7: return y&4;
+    case 8: return y|5;
+    case 9: return y-3;
+    case 10: return y&8;
+    case 11: return y|9;
+    default: return y;
+  }
+}
+$ gcc-9 -O2 -c -o gcc-jump.o gcc-jump.c
+$ objdump -dr gcc-jump.o
+[...]
+0000000000000000 <blah>:
+   0: 83 3f 0b              cmpl   $0xb,(%rdi)
+   3: 0f 87 00 00 00 00    ja     9 <blah+0x9>
+5: R_X86_64_PC32 .text.unlikely-0x4
+   9: 8b 07                mov    (%rdi),%eax
+   b: 48 8d 15 00 00 00 00 lea    0x0(%rip),%rdx        # 12 <blah+0x12>
+e: R_X86_64_PC32 .rodata-0x4
+  12: 48 63 04 82          movslq (%rdx,%rax,4),%rax
+  16: 48 01 d0              add    %rdx,%rax
+  19: ff e0                jmpq   *%rax
+[...]
+
+
+Or if you want to see a full example that actually crashes:
+
+$ cat gcc-jump-crash.c
+#include <pthread.h>
+
+int mutating_number;
+
+__attribute__((noinline)) int blah(int *x, int y) {
+  switch (*x) {
+    case 0: return y+1;
+    case 1: return y*2;
+    case 2: return y-3;
+    case 3: return y^1;
+    case 4: return y+6;
+    case 5: return y-5;
+    case 6: return y|1;
+    case 7: return y&4;
+    case 8: return y|5;
+    case 9: return y-3;
+    case 10: return y&8;
+    case 11: return y|9;
+    default: return y;
+  }
+}
+
+int blah_num;
+void *thread_fn(void *dummy) {
+  while (1) {
+    blah_num = blah(&mutating_number, blah_num);
+  }
+}
+
+int main(void) {
+  pthread_t thread;
+  pthread_create(&thread, NULL, thread_fn, NULL);
+  while (1) {
+    *(volatile int *)&mutating_number = 1;
+    *(volatile int *)&mutating_number = 100000000;
+  }
+}
+$ gcc-9 -O2 -pthread -o gcc-jump-crash gcc-jump-crash.c -ggdb -Wall
+$ gdb ./gcc-jump-crash
+[...]
+(gdb) run
+[...]
+Thread 2 "gcc-jump-crash" received signal SIGSEGV, Segmentation fault.
+[Switching to Thread 0x7ffff7db6700 (LWP 33237)]
+0x00005555555551a2 in blah (x=0x555555558034 <mutating_number>, y=0)
+at gcc-jump-crash.c:6
+6   switch (*x) {
+(gdb) x/10i blah
+   0x555555555190 <blah>: cmp    DWORD PTR [rdi],0xb
+   0x555555555193 <blah+3>: ja     0x555555555050 <blah+4294966976>
+   0x555555555199 <blah+9>: mov    eax,DWORD PTR [rdi]
+   0x55555555519b <blah+11>: lea    rdx,[rip+0xe62]        # 0x555555556004
+=> 0x5555555551a2 <blah+18>: movsxd rax,DWORD PTR [rdx+rax*4]
+   0x5555555551a6 <blah+22>: add    rax,rdx
+   0x5555555551a9 <blah+25>: jmp    rax
+   0x5555555551ab <blah+27>: nop    DWORD PTR [rax+rax*1+0x0]
+   0x5555555551b0 <blah+32>: lea    eax,[rsi-0x3]
+   0x5555555551b3 <blah+35>: ret
+(gdb)
+
+
+Here's a presentation from Felix Wilhelm, a security researcher who
+managed to find a case in the Xen hypervisor where a switch() on a
+value in shared memory was exploitable to compromise the hypervisor
+from inside a guest (see slides 35 and following):
+<https://www.blackhat.com/docs/us-16/materials/us-16-Wilhelm-Xenpwn-Breaking-Paravirtualized-Devices.pdf>
+
+I realize that a compiler is extremely unlikely to make such an
+optimization decision for a simple "if (!a->b)" branch; but still, I
+would prefer to have READ_ONCE() everywhere where it is semantically
+required, not just everywhere where you can think of a concrete
+compiler optimization that will break stuff.
+
+> > > +                       ret = add_watch_to_object(watch, s->s_watchers);
+> > > +                       if (ret == 0) {
+> > > +                               spin_lock(&sb_lock);
+> > > +                               s->s_count++;
+> > > +                               spin_unlock(&sb_lock);
+> >
+> > Where is the corresponding decrement of s->s_count? I'm guessing that
+> > it should be in the ->release_watch() handler, except that there isn't
+> > one...
 >
-> diff --git a/drivers/firmware/efi/apple-properties.c b/drivers/firmware/efi/apple-properties.c
-> index 5ccf39986a14..084942846f4d 100644
-> --- a/drivers/firmware/efi/apple-properties.c
-> +++ b/drivers/firmware/efi/apple-properties.c
-> @@ -31,7 +31,7 @@ __setup("dump_apple_properties", dump_properties_enable);
->  struct dev_header {
->         u32 len;
->         u32 prop_count;
-> -       struct efi_dev_path path[0];
-> +       struct efi_dev_path path[];
->         /*
->          * followed by key/value pairs, each key and value preceded by u32 len,
->          * len includes itself, value may be empty (in which case its len is 4)
-> @@ -42,7 +42,7 @@ struct properties_header {
->         u32 len;
->         u32 version;
->         u32 dev_count;
-> -       struct dev_header dev_header[0];
-> +       struct dev_header dev_header[];
->  };
+> Um.  Good question.  I think this should do the job:
 >
->  static void __init unmarshal_key_value_pairs(struct dev_header *dev_header,
-> --
-> 2.25.0
+>         static void sb_release_watch(struct watch *watch)
+>         {
+>                 put_super(watch->private);
+>         }
 >
+> And this then has to be set later:
+>
+>         init_watch_list(wlist, sb_release_watch);
+
+(And as in the other case, the s->s_count increment will probably have
+to be moved above the add_watch_to_object(), unless you hold the
+sb_lock around it?)
