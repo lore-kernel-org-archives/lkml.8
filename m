@@ -2,58 +2,59 @@ Return-Path: <SRS0=1210=4J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ACBECC35640
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 08:30:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 58A05C35641
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 08:30:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7E62A20637
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 08:30:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2FAA720637
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 08:30:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582273803;
-	bh=Q7eAQjp9GAiJ/dGofjdEh5xK+sfrtDdEUMzVTFqX9cc=;
+	s=default; t=1582273804;
+	bh=xNiQ8u3f0bGj5vPAZU3XA6kdB7LnIAJHOYgY2fB7wbg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=1xDVV/XouQOAGMvfh6WqDNmjICZ7tuqBT39cNlWYbg0G/LAO1o25n2p71sTb5ERrS
-	 Z8tCJxxrtlGiRvPWv5QaNn4NOT94+rlJpGR1R6jykyRvzM48x9sqML0GjWOooicLoJ
-	 OkBNPx9s13ghlb01+I/kocgzIU27bzuTmA2avNVw=
+	b=UMNFV2axtbctlpcsXD2kmtF0vHKxP3qQdFFuHjqAL+Mbv7G6dTSF4ikNK20wxSEIw
+	 tv13OZTzD0tFfKrYRsWoM7q4dD6t049MHoGpytFNMkbzpCu5P3bLbooqA4uO0/Aq3q
+	 lufDzY7HmFoE02JQnSA9W9Xm5We+FFEuRsJRR2No=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388661AbgBUIaB (ORCPT
+        id S2388541AbgBUI37 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Feb 2020 03:30:01 -0500
-Received: from mail.kernel.org ([198.145.29.99]:53678 "EHLO mail.kernel.org"
+        Fri, 21 Feb 2020 03:29:59 -0500
+Received: from mail.kernel.org ([198.145.29.99]:53734 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387534AbgBUIQf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Feb 2020 03:16:35 -0500
+        id S1732786AbgBUIQh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 21 Feb 2020 03:16:37 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1325A24689;
-        Fri, 21 Feb 2020 08:16:33 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8F4D424670;
+        Fri, 21 Feb 2020 08:16:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1582272994;
-        bh=Q7eAQjp9GAiJ/dGofjdEh5xK+sfrtDdEUMzVTFqX9cc=;
+        s=default; t=1582272997;
+        bh=xNiQ8u3f0bGj5vPAZU3XA6kdB7LnIAJHOYgY2fB7wbg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=iXiUwd8PTwjkon9o5tebYjzMG7AmHIrTUkA8m0ISv4lC1EWM9yzWonNKM50GlaX3E
-         hHj5aAoWCf04nzg+GDYCUl2p8piHJ3IXTFQ2zUP/9m5DOoA5fYWQG0DkX7or93cK7g
-         j965VvR+hSJaEtFZoqNmAByu6D4u+Eu/LwChaOUk=
+        b=hc93f2su8Oh3La95SjN5G9lZRCW0zNIdbAlrymU82TQScyV5QDxkFgxsMrc5Mq13K
+         mDMVDySoRq9FSGZOh+yrxt51XRzpuGgEILLAVDNQKW6JHTF6ZK56V/+mVuJ5gU55Sg
+         5XLfV+HtZxODsVZcuQbe0ZhxnY1cH+eIfUYZ20uI=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Andrei Otcheretianski <andrei.otcheretianski@intel.com>,
-        Luca Coelho <luciano.coelho@intel.com>,
-        Kalle Valo <kvalo@codeaurora.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 329/344] iwlwifi: mvm: Check the sta is not NULL in iwl_mvm_cfg_he_sta()
-Date:   Fri, 21 Feb 2020 08:42:08 +0100
-Message-Id: <20200221072420.156263943@linuxfoundation.org>
+        stable@vger.kernel.org, Stepan Horacek <shoracek@redhat.com>,
+        Paolo Abeni <pabeni@redhat.com>,
+        =?UTF-8?q?Toke=20H=C3=B8iland-J=C3=B8rgensen?= <toke@redhat.com>,
+        "David S. Miller" <davem@davemloft.net>
+Subject: [PATCH 4.19 001/191] core: Dont skip generic XDP program execution for cloned SKBs
+Date:   Fri, 21 Feb 2020 08:39:34 +0100
+Message-Id: <20200221072250.916265264@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20200221072349.335551332@linuxfoundation.org>
-References: <20200221072349.335551332@linuxfoundation.org>
+In-Reply-To: <20200221072250.732482588@linuxfoundation.org>
+References: <20200221072250.732482588@linuxfoundation.org>
 User-Agent: quilt/0.66
+X-stable: review
+X-Patchwork-Hint: ignore
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
@@ -62,77 +63,136 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Andrei Otcheretianski <andrei.otcheretianski@intel.com>
+From: "Toke Høiland-Jørgensen" <toke@redhat.com>
 
-[ Upstream commit 12d47f0ea5e0aa63f19ba618da55a7c67850ca10 ]
+[ Upstream commit ad1e03b2b3d4430baaa109b77bc308dc73050de3 ]
 
-Fix a kernel panic by checking that the sta is not NULL.
-This could happen during a reconfig flow, as mac80211 moves the sta
-between all the states without really checking if the previous state was
-successfully set. So, if for some reason we failed to add back the
-station, subsequent calls to sta_state() callback will be done when the
-station is NULL. This would result in a following panic:
+The current generic XDP handler skips execution of XDP programs entirely if
+an SKB is marked as cloned. This leads to some surprising behaviour, as
+packets can end up being cloned in various ways, which will make an XDP
+program not see all the traffic on an interface.
 
-BUG: unable to handle kernel NULL pointer dereference at
-0000000000000040
-IP: iwl_mvm_cfg_he_sta+0xfc/0x690 [iwlmvm]
-[..]
-Call Trace:
- iwl_mvm_mac_sta_state+0x629/0x6f0 [iwlmvm]
- drv_sta_state+0xf4/0x950 [mac80211]
- ieee80211_reconfig+0xa12/0x2180 [mac80211]
- ieee80211_restart_work+0xbb/0xe0 [mac80211]
- process_one_work+0x1e2/0x610
- worker_thread+0x4d/0x3e0
-[..]
+This was discovered by a simple test case where an XDP program that always
+returns XDP_DROP is installed on a veth device. When combining this with
+the Scapy packet sniffer (which uses an AF_PACKET) socket on the sending
+side, SKBs reliably end up in the cloned state, causing them to be passed
+through to the receiving interface instead of being dropped. A minimal
+reproducer script for this is included below.
 
-Signed-off-by: Andrei Otcheretianski <andrei.otcheretianski@intel.com>
-Signed-off-by: Luca Coelho <luciano.coelho@intel.com>
-Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+This patch fixed the issue by simply triggering the existing linearisation
+code for cloned SKBs instead of skipping the XDP program execution. This
+behaviour is in line with the behaviour of the native XDP implementation
+for the veth driver, which will reallocate and copy the SKB data if the SKB
+is marked as shared.
+
+Reproducer Python script (requires BCC and Scapy):
+
+from scapy.all import TCP, IP, Ether, sendp, sniff, AsyncSniffer, Raw, UDP
+from bcc import BPF
+import time, sys, subprocess, shlex
+
+SKB_MODE = (1 << 1)
+DRV_MODE = (1 << 2)
+PYTHON=sys.executable
+
+def client():
+    time.sleep(2)
+    # Sniffing on the sender causes skb_cloned() to be set
+    s = AsyncSniffer()
+    s.start()
+
+    for p in range(10):
+        sendp(Ether(dst="aa:aa:aa:aa:aa:aa", src="cc:cc:cc:cc:cc:cc")/IP()/UDP()/Raw("Test"),
+              verbose=False)
+        time.sleep(0.1)
+
+    s.stop()
+    return 0
+
+def server(mode):
+    prog = BPF(text="int dummy_drop(struct xdp_md *ctx) {return XDP_DROP;}")
+    func = prog.load_func("dummy_drop", BPF.XDP)
+    prog.attach_xdp("a_to_b", func, mode)
+
+    time.sleep(1)
+
+    s = sniff(iface="a_to_b", count=10, timeout=15)
+    if len(s):
+        print(f"Got {len(s)} packets - should have gotten 0")
+        return 1
+    else:
+        print("Got no packets - as expected")
+        return 0
+
+if len(sys.argv) < 2:
+    print(f"Usage: {sys.argv[0]} <skb|drv>")
+    sys.exit(1)
+
+if sys.argv[1] == "client":
+    sys.exit(client())
+elif sys.argv[1] == "server":
+    mode = SKB_MODE if sys.argv[2] == 'skb' else DRV_MODE
+    sys.exit(server(mode))
+else:
+    try:
+        mode = sys.argv[1]
+        if mode not in ('skb', 'drv'):
+            print(f"Usage: {sys.argv[0]} <skb|drv>")
+            sys.exit(1)
+        print(f"Running in {mode} mode")
+
+        for cmd in [
+                'ip netns add netns_a',
+                'ip netns add netns_b',
+                'ip -n netns_a link add a_to_b type veth peer name b_to_a netns netns_b',
+                # Disable ipv6 to make sure there's no address autoconf traffic
+                'ip netns exec netns_a sysctl -qw net.ipv6.conf.a_to_b.disable_ipv6=1',
+                'ip netns exec netns_b sysctl -qw net.ipv6.conf.b_to_a.disable_ipv6=1',
+                'ip -n netns_a link set dev a_to_b address aa:aa:aa:aa:aa:aa',
+                'ip -n netns_b link set dev b_to_a address cc:cc:cc:cc:cc:cc',
+                'ip -n netns_a link set dev a_to_b up',
+                'ip -n netns_b link set dev b_to_a up']:
+            subprocess.check_call(shlex.split(cmd))
+
+        server = subprocess.Popen(shlex.split(f"ip netns exec netns_a {PYTHON} {sys.argv[0]} server {mode}"))
+        client = subprocess.Popen(shlex.split(f"ip netns exec netns_b {PYTHON} {sys.argv[0]} client"))
+
+        client.wait()
+        server.wait()
+        sys.exit(server.returncode)
+
+    finally:
+        subprocess.run(shlex.split("ip netns delete netns_a"))
+        subprocess.run(shlex.split("ip netns delete netns_b"))
+
+Fixes: d445516966dc ("net: xdp: support xdp generic on virtual devices")
+Reported-by: Stepan Horacek <shoracek@redhat.com>
+Suggested-by: Paolo Abeni <pabeni@redhat.com>
+Signed-off-by: Toke HÃ¸iland-JÃ¸rgensen <toke@redhat.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- drivers/net/wireless/intel/iwlwifi/mvm/mac80211.c | 8 +++-----
- 1 file changed, 3 insertions(+), 5 deletions(-)
+ net/core/dev.c |    4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/net/wireless/intel/iwlwifi/mvm/mac80211.c b/drivers/net/wireless/intel/iwlwifi/mvm/mac80211.c
-index 18ccc2692437f..6ca087ffd163b 100644
---- a/drivers/net/wireless/intel/iwlwifi/mvm/mac80211.c
-+++ b/drivers/net/wireless/intel/iwlwifi/mvm/mac80211.c
-@@ -5,10 +5,9 @@
-  *
-  * GPL LICENSE SUMMARY
-  *
-- * Copyright(c) 2012 - 2014 Intel Corporation. All rights reserved.
-  * Copyright(c) 2013 - 2015 Intel Mobile Communications GmbH
-  * Copyright(c) 2016 - 2017 Intel Deutschland GmbH
-- * Copyright(c) 2018 - 2019 Intel Corporation
-+ * Copyright(c) 2012 - 2014, 2018 - 2020 Intel Corporation
-  *
-  * This program is free software; you can redistribute it and/or modify
-  * it under the terms of version 2 of the GNU General Public License as
-@@ -28,10 +27,9 @@
-  *
-  * BSD LICENSE
-  *
-- * Copyright(c) 2012 - 2014 Intel Corporation. All rights reserved.
-  * Copyright(c) 2013 - 2015 Intel Mobile Communications GmbH
-  * Copyright(c) 2016 - 2017 Intel Deutschland GmbH
-- * Copyright(c) 2018 - 2019 Intel Corporation
-+ * Copyright(c) 2012 - 2014, 2018 - 2020 Intel Corporation
-  * All rights reserved.
-  *
-  * Redistribution and use in source and binary forms, with or without
-@@ -2025,7 +2023,7 @@ static void iwl_mvm_cfg_he_sta(struct iwl_mvm *mvm,
- 	rcu_read_lock();
+--- a/net/core/dev.c
++++ b/net/core/dev.c
+@@ -4306,14 +4306,14 @@ static u32 netif_receive_generic_xdp(str
+ 	/* Reinjected packets coming from act_mirred or similar should
+ 	 * not get XDP generic processing.
+ 	 */
+-	if (skb_cloned(skb) || skb_is_tc_redirected(skb))
++	if (skb_is_tc_redirected(skb))
+ 		return XDP_PASS;
  
- 	sta = rcu_dereference(mvm->fw_id_to_mac_id[sta_ctxt_cmd.sta_id]);
--	if (IS_ERR(sta)) {
-+	if (IS_ERR_OR_NULL(sta)) {
- 		rcu_read_unlock();
- 		WARN(1, "Can't find STA to configure HE\n");
- 		return;
--- 
-2.20.1
-
+ 	/* XDP packets must be linear and must have sufficient headroom
+ 	 * of XDP_PACKET_HEADROOM bytes. This is the guarantee that also
+ 	 * native XDP provides, thus we need to do it here as well.
+ 	 */
+-	if (skb_is_nonlinear(skb) ||
++	if (skb_cloned(skb) || skb_is_nonlinear(skb) ||
+ 	    skb_headroom(skb) < XDP_PACKET_HEADROOM) {
+ 		int hroom = XDP_PACKET_HEADROOM - skb_headroom(skb);
+ 		int troom = skb->tail + skb->data_len - skb->end;
 
 
