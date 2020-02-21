@@ -7,47 +7,46 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1EDE5C35640
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 07:46:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7F1F4C35640
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 07:46:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DF49824673
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 07:46:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 49E7624673
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 07:46:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582271166;
-	bh=2a+zUaID5zALeOpO/fqjSjJWxrxS49+DTJaNZxvO+2Y=;
+	s=default; t=1582271169;
+	bh=Nqpuz4d+htBfl/ekXZG3MCc0UaBli9XkrokB59aAyT4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=BgEgZiEHuuiQB2q7Wh/NvBhd1ObMdNKtbx+ZZ/gzVPZiJjOHGl1Gzlo5nZjeiz44t
-	 CaOwfNBtM3DIA4nIjM2pUfyx/g+D8iJuBjjjPjoj9vF/c98dRnjUla8XlOeV3uEW4A
-	 I0uksH4nqVsLXDpDeKCT5UHQfmVqKmRyhwTIb3pM=
+	b=p8ofDH5QbzC86oTMAXpL2e9W6CkwgYXNBhIfM2lLn7GkwN0fTEiA7dYF/HkKffka3
+	 yFRHfcgKGQiJctTBf7buVvk1iEp/04OVmeKnjJ5JcilvDdiU5hsG6hDzBn/R/gKzPn
+	 719ehRcm6q6ygWkl+Vo+LSZCrjJW7tyZk650S+5Y=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728605AbgBUHqF (ORCPT
+        id S1728620AbgBUHqI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Feb 2020 02:46:05 -0500
-Received: from mail.kernel.org ([198.145.29.99]:41390 "EHLO mail.kernel.org"
+        Fri, 21 Feb 2020 02:46:08 -0500
+Received: from mail.kernel.org ([198.145.29.99]:41460 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728554AbgBUHqD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Feb 2020 02:46:03 -0500
+        id S1728554AbgBUHqF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 21 Feb 2020 02:46:05 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2D8FC20801;
-        Fri, 21 Feb 2020 07:46:02 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A228E24672;
+        Fri, 21 Feb 2020 07:46:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1582271162;
-        bh=2a+zUaID5zALeOpO/fqjSjJWxrxS49+DTJaNZxvO+2Y=;
+        s=default; t=1582271165;
+        bh=Nqpuz4d+htBfl/ekXZG3MCc0UaBli9XkrokB59aAyT4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Ov5Z6JAcFvX+/MpHxBCIm+17o5Tow9XFA0DQPksrUvkpQm3A2d3ih5mobeOijnv28
-         On9AQtPOk4YtaL4sMIVhmaQp7kyeRZIS5ZyPSOqAMfsSFWzlJuaUgmxYWPCoANIroR
-         V2gJPr2C3/+VSCGDkYBPnH+nqCkqRtTUi4zH3QwQ=
+        b=Fwdzz5uMUwSzhaJ9YZvoKrJa/ujlFxNmAN1nNXea3Ag0CX0GrizRPzGrGdoO6Cvbg
+         xV5A0pytn9McdL+R2GdE//GWd1Rz+RwNqOFXrNjoetiNnpklsp9DwiLvZPm+4BT8xP
+         lMw8rULpBAwjgGU/msaTCpbjjaKIyBaH/n33oEvo=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Lorenzo Bianconi <lorenzo@kernel.org>,
-        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+        stable@vger.kernel.org, Jia-Ju Bai <baijiaju1990@gmail.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.5 061/399] iio: imu: st_lsm6dsx: check return value from st_lsm6dsx_sensor_set_enable
-Date:   Fri, 21 Feb 2020 08:36:26 +0100
-Message-Id: <20200221072408.298365940@linuxfoundation.org>
+Subject: [PATCH 5.5 062/399] uio: fix a sleep-in-atomic-context bug in uio_dmem_genirq_irqcontrol()
+Date:   Fri, 21 Feb 2020 08:36:27 +0100
+Message-Id: <20200221072408.414271593@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200221072402.315346745@linuxfoundation.org>
 References: <20200221072402.315346745@linuxfoundation.org>
@@ -60,45 +59,54 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Lorenzo Bianconi <lorenzo@kernel.org>
+From: Jia-Ju Bai <baijiaju1990@gmail.com>
 
-[ Upstream commit a2dd9bd9334efb8dc0bdc0109abff3a7b57effb1 ]
+[ Upstream commit b74351287d4bd90636c3f48bc188c2f53824c2d4 ]
 
-Add missing return value check in st_lsm6dsx_read_oneshot disabling the
-sensor. The issue is reported by coverity with the following error:
+The driver may sleep while holding a spinlock.
+The function call path (from bottom to top) in Linux 4.19 is:
 
-Unchecked return value:
-If the function returns an error value, the error value may be mistaken
-for a normal value.
+kernel/irq/manage.c, 523:
+	synchronize_irq in disable_irq
+drivers/uio/uio_dmem_genirq.c, 140:
+	disable_irq in uio_dmem_genirq_irqcontrol
+drivers/uio/uio_dmem_genirq.c, 134:
+	_raw_spin_lock_irqsave in uio_dmem_genirq_irqcontrol
 
-Addresses-Coverity-ID: 1446733 ("Unchecked return value")
-Fixes: b5969abfa8b8 ("iio: imu: st_lsm6dsx: add motion events")
-Fixes: 290a6ce11d93 ("iio: imu: add support to lsm6dsx driver")
-Signed-off-by: Lorenzo Bianconi <lorenzo@kernel.org>
-Signed-off-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+synchronize_irq() can sleep at runtime.
+
+To fix this bug, disable_irq() is called without holding the spinlock.
+
+This bug is found by a static analysis tool STCheck written by myself.
+
+Signed-off-by: Jia-Ju Bai <baijiaju1990@gmail.com>
+Link: https://lore.kernel.org/r/20191218094405.6009-1-baijiaju1990@gmail.com
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/iio/imu/st_lsm6dsx/st_lsm6dsx_core.c | 7 +++++--
- 1 file changed, 5 insertions(+), 2 deletions(-)
+ drivers/uio/uio_dmem_genirq.c | 6 ++++--
+ 1 file changed, 4 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/iio/imu/st_lsm6dsx/st_lsm6dsx_core.c b/drivers/iio/imu/st_lsm6dsx/st_lsm6dsx_core.c
-index b921dd9e108fa..e45123d8d2812 100644
---- a/drivers/iio/imu/st_lsm6dsx/st_lsm6dsx_core.c
-+++ b/drivers/iio/imu/st_lsm6dsx/st_lsm6dsx_core.c
-@@ -1506,8 +1506,11 @@ static int st_lsm6dsx_read_oneshot(struct st_lsm6dsx_sensor *sensor,
- 	if (err < 0)
- 		return err;
+diff --git a/drivers/uio/uio_dmem_genirq.c b/drivers/uio/uio_dmem_genirq.c
+index 81c88f7bbbcbb..f6ab3f28c8382 100644
+--- a/drivers/uio/uio_dmem_genirq.c
++++ b/drivers/uio/uio_dmem_genirq.c
+@@ -132,11 +132,13 @@ static int uio_dmem_genirq_irqcontrol(struct uio_info *dev_info, s32 irq_on)
+ 	if (irq_on) {
+ 		if (test_and_clear_bit(0, &priv->flags))
+ 			enable_irq(dev_info->irq);
++		spin_unlock_irqrestore(&priv->lock, flags);
+ 	} else {
+-		if (!test_and_set_bit(0, &priv->flags))
++		if (!test_and_set_bit(0, &priv->flags)) {
++			spin_unlock_irqrestore(&priv->lock, flags);
+ 			disable_irq(dev_info->irq);
++		}
+ 	}
+-	spin_unlock_irqrestore(&priv->lock, flags);
  
--	if (!hw->enable_event)
--		st_lsm6dsx_sensor_set_enable(sensor, false);
-+	if (!hw->enable_event) {
-+		err = st_lsm6dsx_sensor_set_enable(sensor, false);
-+		if (err < 0)
-+			return err;
-+	}
- 
- 	*val = (s16)le16_to_cpu(data);
- 
+ 	return 0;
+ }
 -- 
 2.20.1
 
