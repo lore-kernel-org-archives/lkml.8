@@ -2,172 +2,191 @@ Return-Path: <SRS0=1210=4J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_2
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 58600C35655
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 13:05:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AEA9AC35647
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 13:07:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2948A20722
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 13:05:48 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="tOVwwD8q"
+	by mail.kernel.org (Postfix) with ESMTP id 81C962073A
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 13:07:20 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728526AbgBUNFq (ORCPT
+        id S1728530AbgBUNHT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Feb 2020 08:05:46 -0500
-Received: from mail-wr1-f68.google.com ([209.85.221.68]:42386 "EHLO
-        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728085AbgBUNFq (ORCPT
+        Fri, 21 Feb 2020 08:07:19 -0500
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:33902 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1728085AbgBUNHT (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Feb 2020 08:05:46 -0500
-Received: by mail-wr1-f68.google.com with SMTP id k11so1975320wrd.9
-        for <linux-kernel@vger.kernel.org>; Fri, 21 Feb 2020 05:05:44 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to
-         :user-agent;
-        bh=Jmee0gPaCTfsOpWSoQjCJFto4t8cMGzSFxQTb3xz48k=;
-        b=tOVwwD8qmpuy5R/iusBnSTi8xzbbMZqdDcRX1UOwcX8kYv5EzHXV5Ir5H2I6/HY6Hv
-         GHf+wxF/Eu/sDmuamXnYsjUsxTYXICaKH1O67ZVlBrWMNCXCIY8FwA5CAIT5tRVzIm5R
-         SzzKxvH5U9ZGw02P+TWARGK1gYUEDSeg0Nil+OEPJxqUoNA9ceBM1Xs+S2wAuJCu2a2t
-         BcG8GYWfdv51wj9aVj+vQ6z1GkOcoaDsm2wii0rDsEMImic2AUBX6vBFegMWdWgq+3Dv
-         Xqma0ebK4QQ3qXwG/wD/JNMq7nmiAXc4fiLJTXOZPl/Fg4IPEXNX+500312IIPGI2tC1
-         Ht6w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to:user-agent;
-        bh=Jmee0gPaCTfsOpWSoQjCJFto4t8cMGzSFxQTb3xz48k=;
-        b=BRT6BZn+Vav5h934OWKWjDgECTAHGKTjZA1k6Vw4Zeb8AdzeA+k5BwkT3+40JJ7bXg
-         TXJSrIXs8Pje2Avnp1DJISMbQVciLvzBNrR17eka3khbMStxaEaS/wkjxmJMD1FHHu6U
-         piLoU6DPowICb+IalymA2e+MC4Pq80pMKdXTIDquCz3I/uYQAqHAaCYuvCTITSyrJ0JZ
-         3CP539d8KDWm9yxhSAR7R9Qvk5z5MNZNntOmwfNFiIkThQse8Ri4e+IFp1LBod0r0QeA
-         xkhodqVfY5cX4XTCO6VGndECcdF3dqvmwHRgibZgnSmAKYvPp0kr2RhkStHXSra5ucfy
-         BpxQ==
-X-Gm-Message-State: APjAAAXKaWF7JqUBqx/HOQrLaKwZpDafHUVOiBFP80pFaOoSYlRxHYCf
-        PVFsAhNJIc900N7x7vEtqMyKOw==
-X-Google-Smtp-Source: APXvYqxdbqMgUjOMna0Vnnx+4FKMnwXT3QMS6vD/TsFNrXqcxXU3SY8DOXJ72CRLWnbQ393hdP3QPw==
-X-Received: by 2002:a5d:53c1:: with SMTP id a1mr47209498wrw.373.1582290343755;
-        Fri, 21 Feb 2020 05:05:43 -0800 (PST)
-Received: from linaro.org ([2a01:e34:ed2f:f020:2dfb:b5ce:9043:4adb])
-        by smtp.gmail.com with ESMTPSA id y1sm3422496wrq.16.2020.02.21.05.05.41
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Fri, 21 Feb 2020 05:05:43 -0800 (PST)
-Date:   Fri, 21 Feb 2020 14:05:40 +0100
-From:   Daniel Lezcano <daniel.lezcano@linaro.org>
-To:     Anson Huang <Anson.Huang@nxp.com>
-Cc:     robh+dt@kernel.org, mark.rutland@arm.com, shawnguo@kernel.org,
-        s.hauer@pengutronix.de, kernel@pengutronix.de, festevam@gmail.com,
-        catalin.marinas@arm.com, will@kernel.org, rui.zhang@intel.com,
-        amit.kucheria@verdurent.com, aisheng.dong@nxp.com,
-        linux@roeck-us.net, srinivas.kandagatla@linaro.org,
-        krzk@kernel.org, fugang.duan@nxp.com, peng.fan@nxp.com,
-        daniel.baluta@nxp.com, bjorn.andersson@linaro.org, olof@lixom.net,
-        dinguyen@kernel.org, leonard.crestez@nxp.com,
-        marcin.juszkiewicz@linaro.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-pm@vger.kernel.org, Linux-imx@nxp.com
-Subject: Re: [PATCH V15 RESEND 5/5] arm64: dts: imx: add i.MX8QXP thermal
- support
-Message-ID: <20200221130540.GD10516@linaro.org>
-References: <1582161028-2844-1-git-send-email-Anson.Huang@nxp.com>
- <1582161028-2844-5-git-send-email-Anson.Huang@nxp.com>
+        Fri, 21 Feb 2020 08:07:19 -0500
+Received: from pps.filterd (m0098410.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 01LD4d2E094637
+        for <linux-kernel@vger.kernel.org>; Fri, 21 Feb 2020 08:07:18 -0500
+Received: from e06smtp02.uk.ibm.com (e06smtp02.uk.ibm.com [195.75.94.98])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2ya6e6h54q-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Fri, 21 Feb 2020 08:07:17 -0500
+Received: from localhost
+        by e06smtp02.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-kernel@vger.kernel.org> from <pasic@linux.ibm.com>;
+        Fri, 21 Feb 2020 13:07:15 -0000
+Received: from b06avi18626390.portsmouth.uk.ibm.com (9.149.26.192)
+        by e06smtp02.uk.ibm.com (192.168.101.132) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Fri, 21 Feb 2020 13:07:11 -0000
+Received: from d06av23.portsmouth.uk.ibm.com (d06av23.portsmouth.uk.ibm.com [9.149.105.59])
+        by b06avi18626390.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 01LD6DcU43778356
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Fri, 21 Feb 2020 13:06:13 GMT
+Received: from d06av23.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 36FD9A4040;
+        Fri, 21 Feb 2020 13:07:09 +0000 (GMT)
+Received: from d06av23.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 5AB02A404D;
+        Fri, 21 Feb 2020 13:07:07 +0000 (GMT)
+Received: from oc2783563651 (unknown [9.152.224.149])
+        by d06av23.portsmouth.uk.ibm.com (Postfix) with ESMTP;
+        Fri, 21 Feb 2020 13:07:07 +0000 (GMT)
+Date:   Fri, 21 Feb 2020 14:06:39 +0100
+From:   Halil Pasic <pasic@linux.ibm.com>
+To:     David Gibson <david@gibson.dropbear.id.au>
+Cc:     Christoph Hellwig <hch@lst.de>,
+        Christian Borntraeger <borntraeger@de.ibm.com>,
+        "Michael S. Tsirkin" <mst@redhat.com>,
+        Jason Wang <jasowang@redhat.com>,
+        Marek Szyprowski <m.szyprowski@samsung.com>,
+        Robin Murphy <robin.murphy@arm.com>,
+        linux-s390@vger.kernel.org,
+        virtualization@lists.linux-foundation.org,
+        linux-kernel@vger.kernel.org, iommu@lists.linux-foundation.org,
+        Janosch Frank <frankja@linux.ibm.com>,
+        Viktor Mihajlovski <mihajlov@linux.ibm.com>,
+        Cornelia Huck <cohuck@redhat.com>,
+        Ram Pai <linuxram@us.ibm.com>,
+        Thiago Jung Bauermann <bauerman@linux.ibm.com>,
+        "Lendacky, Thomas" <Thomas.Lendacky@amd.com>,
+        Michael Mueller <mimu@linux.ibm.com>
+Subject: Re: [PATCH 1/2] mm: move force_dma_unencrypted() to mem_encrypt.h
+In-Reply-To: <20200221032727.GC2298@umbus.fritz.box>
+References: <20200220160606.53156-1-pasic@linux.ibm.com>
+        <20200220160606.53156-2-pasic@linux.ibm.com>
+        <20200220161146.GA12709@lst.de>
+        <4369f099-e4e4-4a58-b38b-642cf53ccca6@de.ibm.com>
+        <20200220163135.GA13192@lst.de>
+        <20200221032727.GC2298@umbus.fritz.box>
+Organization: IBM
+X-Mailer: Claws Mail 3.11.1 (GTK+ 2.24.31; x86_64-redhat-linux-gnu)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <1582161028-2844-5-git-send-email-Anson.Huang@nxp.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+Content-Type: multipart/signed; micalg=pgp-sha1;
+ boundary="Sig_/0Kh./iiZFoeVIQkl275YsuF"; protocol="application/pgp-signature"
+X-TM-AS-GCONF: 00
+x-cbid: 20022113-0008-0000-0000-000003551FF7
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 20022113-0009-0000-0000-00004A7632D4
+Message-Id: <20200221140639.54928efe.pasic@linux.ibm.com>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.572
+ definitions=2020-02-21_03:2020-02-19,2020-02-21 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 lowpriorityscore=0
+ suspectscore=0 phishscore=0 adultscore=0 clxscore=1015 impostorscore=0
+ malwarescore=0 spamscore=0 bulkscore=0 priorityscore=1501 mlxscore=0
+ mlxlogscore=999 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2001150001 definitions=main-2002210100
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Feb 20, 2020 at 09:10:28AM +0800, Anson Huang wrote:
-> Add i.MX8QXP CPU thermal zone support.
-> 
-> Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
-> ---
-> No change.
-> ---
->  arch/arm64/boot/dts/freescale/imx8qxp.dtsi | 36 ++++++++++++++++++++++++++++++
->  1 file changed, 36 insertions(+)
-> 
-> diff --git a/arch/arm64/boot/dts/freescale/imx8qxp.dtsi b/arch/arm64/boot/dts/freescale/imx8qxp.dtsi
-> index fb5f752..0a14fe4 100644
-> --- a/arch/arm64/boot/dts/freescale/imx8qxp.dtsi
-> +++ b/arch/arm64/boot/dts/freescale/imx8qxp.dtsi
-> @@ -11,6 +11,7 @@
->  #include <dt-bindings/input/input.h>
->  #include <dt-bindings/interrupt-controller/arm-gic.h>
->  #include <dt-bindings/pinctrl/pads-imx8qxp.h>
-> +#include <dt-bindings/thermal/thermal.h>
->  
->  / {
->  	interrupt-parent = <&gic>;
-> @@ -189,6 +190,11 @@
->  			compatible = "fsl,imx8qxp-sc-wdt", "fsl,imx-sc-wdt";
->  			timeout-sec = <60>;
->  		};
-> +
-> +		tsens: thermal-sensor {
-> +			compatible = "fsl,imx8qxp-sc-thermal", "fsl,imx-sc-thermal";
-> +			#thermal-sensor-cells = <1>;
-> +		};
->  	};
->  
->  	timer {
-> @@ -586,4 +592,34 @@
->  			#clock-cells = <1>;
->  		};
->  	};
-> +
-> +	thermal_zones: thermal-zones {
-> +		cpu-thermal0 {
-> +			polling-delay-passive = <250>;
-> +			polling-delay = <2000>;
-> +			thermal-sensors = <&tsens IMX_SC_R_SYSTEM>;
-> +			trips {
-> +				cpu_alert0: trip0 {
-> +					temperature = <107000>;
-> +					hysteresis = <2000>;
-> +					type = "passive";
-> +				};
+--Sig_/0Kh./iiZFoeVIQkl275YsuF
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-Same comment as previous patch.
+On Fri, 21 Feb 2020 14:27:27 +1100
+David Gibson <david@gibson.dropbear.id.au> wrote:
 
-> +				cpu_crit0: trip1 {
-> +					temperature = <127000>;
-> +					hysteresis = <2000>;
-> +					type = "critical";
-> +				};
-> +			};
-> +			cooling-maps {
-> +				map0 {
-> +					trip = <&cpu_alert0>;
-> +					cooling-device =
-> +						<&A35_0 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
-> +						<&A35_1 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
-> +						<&A35_2 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
-> +						<&A35_3 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>;
-> +				};
-> +			};
-> +		};
-> +	};
->  };
-> -- 
-> 2.7.4
-> 
+> On Thu, Feb 20, 2020 at 05:31:35PM +0100, Christoph Hellwig wrote:
+> > On Thu, Feb 20, 2020 at 05:23:20PM +0100, Christian Borntraeger wrote:
+> > > >From a users perspective it makes absolutely perfect sense to use the
+> > > bounce buffers when they are NEEDED.=20
+> > > Forcing the user to specify iommu_platform just because you need boun=
+ce buffers
+> > > really feels wrong. And obviously we have a severe performance issue
+> > > because of the indirections.
+> >=20
+> > The point is that the user should not have to specify iommu_platform.
+> > We need to make sure any new hypervisor (especially one that might requ=
+ire
+> > bounce buffering) always sets it,
+>=20
+> So, I have draft qemu patches which enable iommu_platform by default.
+> But that's really because of other problems with !iommu_platform, not
+> anything to do with bounce buffering or secure VMs.
+>=20
+> The thing is that the hypervisor *doesn't* require bounce buffering.
+> In the POWER (and maybe s390 as well) models for Secure VMs, it's the
+> *guest*'s choice to enter secure mode, so the hypervisor has no reason
+> to know whether the guest needs bounce buffering.  As far as the
+> hypervisor and qemu are concerned that's a guest internal detail, it
+> just expects to get addresses it can access whether those are GPAs
+> (iommu_platform=3Doff) or IOVAs (iommu_platform=3Don).
 
--- 
+I very much agree!
 
- <http://www.linaro.org/> Linaro.org │ Open source software for ARM SoCs
+>=20
+> > as was a rather bogus legacy hack
+>=20
+> It was certainly a bad idea, but it was a bad idea that went into a
+> public spec and has been widely deployed for many years.  We can't
+> just pretend it didn't happen and move on.
+>=20
+> Turning iommu_platform=3Don by default breaks old guests, some of which
+> we still care about.  We can't (automatically) do it only for guests
+> that need bounce buffering, because the hypervisor doesn't know that
+> ahead of time.
 
-Follow Linaro:  <http://www.facebook.com/pages/Linaro> Facebook |
-<http://twitter.com/#!/linaroorg> Twitter |
-<http://www.linaro.org/linaro-blog/> Blog
+Turning iommu_platform=3Don for virtio-ccw makes no sense whatsover,
+because for CCW I/O there is no such thing as IOMMU and the addresses
+are always physical addresses.
+
+>=20
+> > that isn't extensibe for cases that for example require bounce bufferin=
+g.
+>=20
+> In fact bounce buffering isn't really the issue from the hypervisor
+> (or spec's) point of view.  It's the fact that not all of guest memory
+> is accessible to the hypervisor.  Bounce buffering is just one way the
+> guest might deal with that.
+>=20
+
+Agreed.
+
+Regards,
+Halil
+
+
+
+
+--Sig_/0Kh./iiZFoeVIQkl275YsuF
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2.0.22 (GNU/Linux)
+
+iQIcBAEBAgAGBQJeT9X4AAoJEA0vhuyXGx0ARxMQANpU75HMoKggL5saR9hlPY+f
+8kd9nsbmTauewzRRSYganieZMbhq5H4sv5H2VARK0ySgBNe1c+odv/sbtfFcGGcp
+2eYet2eXXYLylxx0nExFUWlXigdd1ZdF6OLCzriuNQO20M3bhoA619DLYAZ9LcG9
+w0FNjbUyDaucworTmNFr/fbQ6Sx5UMr5KJ/ms/dK9gG4pzlIx58yfOYkyPNXfmof
+/BCm3hYysWjzCprWJiWoe439z1f12ZTmtNu+nsYYhFL4JSY+HOZaY/LR3IgmKsSx
+1wNvMwr5GTc+Wap23hJPd0SWEH03Szl2rbTEkhMGGzCbv44E7OFJVMt8DBKwunUD
+ojlaoDt4PtkEvDI6iQxT+C0aL7rHLSmmT1aaGjCi+GhN0pVmSqBa9v71VzcdWhQb
+jS22EkPJnMt+mdmEObiDo38AA/L8wyKt8Emvvza+Xm43+LGsAU7Dlq452PauXABA
+jlyOp7VvKBy15KUPQsLgLY9G29wQeVfRhqXI/b1fZvPZFYjbo5eTZCsHOdoXc+w9
+wrW+SYSHotrl9FCTFKXB5n4DGC+hrwaUXlX5/cEMGPhSijtYTbemx0KopMuhV4rD
+ri6Am9MOOwS/UxHve/SQw17N1RfUdGat2pQNTPiSSKw8XvpWLlK2iNw+/pz4SENC
+9TtNOE3IvOXOuA6UMeXy
+=Cagi
+-----END PGP SIGNATURE-----
+
+--Sig_/0Kh./iiZFoeVIQkl275YsuF--
+
