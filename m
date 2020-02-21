@@ -7,47 +7,49 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BBC34C35641
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 08:25:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C8285C35641
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 08:26:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8F29020679
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 08:25:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 93F7420679
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 08:26:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582273558;
-	bh=7P2vlFybEQGvQnGZvdak6Xt5WNMRnhmHfVS2Glgdc78=;
+	s=default; t=1582273561;
+	bh=Dsh/Qd043VlBj8iAhdts5UbxfZgcXm4Hu4M2aPNVJ/o=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=d2ea0znqUHtco5RVlOPetgQA5YZoUQDK0UXKiFW6eBE8ntmGy95Rq9M9P4WfzQgse
-	 TYNV4BLrwmNTHs2U8cu8Y3/Z25XImaWFzZbs1dmnPkh4e8C3REvNmy46VAqpo+hgLd
-	 rklnTpArJKcOw2KELVIhGwkNDIX2856dDwTkSuN8=
+	b=iofpoqlY8HQGBN4ewRLEesGTmOn/87m/BPiIdrTJkS62fQdo5Ad+U3z/Dvon3ijKu
+	 8YAzU5MQktel9Lyo2/rId5CHT7ojbLrrBha3aj+x/td7A38Th+MHcZVXL3q1wsnHpv
+	 YHSELyBMnFY9rQQfE6HzlWw/crzT2foH4xAdvTgE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388618AbgBUIZ5 (ORCPT
+        id S2388713AbgBUIYz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Feb 2020 03:25:57 -0500
-Received: from mail.kernel.org ([198.145.29.99]:37570 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388334AbgBUIYz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Fri, 21 Feb 2020 03:24:55 -0500
+Received: from mail.kernel.org ([198.145.29.99]:37334 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2388687AbgBUIYp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 21 Feb 2020 03:24:45 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C4499246A6;
-        Fri, 21 Feb 2020 08:24:54 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2DA4A2469F;
+        Fri, 21 Feb 2020 08:24:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1582273495;
-        bh=7P2vlFybEQGvQnGZvdak6Xt5WNMRnhmHfVS2Glgdc78=;
+        s=default; t=1582273484;
+        bh=Dsh/Qd043VlBj8iAhdts5UbxfZgcXm4Hu4M2aPNVJ/o=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=1KVuvKbhHReysdM7Kbez3KklFd/IRHiIcMHNjs/F/PS+JngjOExfKQ4T54ffDLMDD
-         SvLrYA7vxvhIkGHazqQ+Qx+KS7ddsy6sJ7f4H2xqHJrrtYUKVXYOKN51McJSenTZ9H
-         o2jZ6WWjKdLnq0h4taJslbhNo1Z4vtALY+vBfIKc=
+        b=Pb5F8teg/hNA07G7BP3RS7poI6CLKXhERBNOc5gPk6wQNfjIobCcexZF6v80lApC4
+         qG25xwOhXoW88lx6gXBweXar643/kKr9ZVbBOqIuX8jphyPNB41eP5qrpfZ8SnS2FA
+         xSUJHuPOwLLYYnPqzYHwSrxK0RxRfoEiWlOvDd2k=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Vasily Averin <vvs@virtuozzo.com>,
-        Daniel Borkmann <daniel@iogearbox.net>,
+        stable@vger.kernel.org, Steve French <stfrench@microsoft.com>,
+        Oleg Kravtsov <oleg@tuxera.com>,
+        Ronnie Sahlberg <lsahlber@redhat.com>,
+        Pavel Shilovsky <pshilov@microsoft.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 168/191] bpf: map_seq_next should always increase position index
-Date:   Fri, 21 Feb 2020 08:42:21 +0100
-Message-Id: <20200221072310.880540739@linuxfoundation.org>
+Subject: [PATCH 4.19 188/191] cifs: log warning message (once) if out of disk space
+Date:   Fri, 21 Feb 2020 08:42:41 +0100
+Message-Id: <20200221072313.381537875@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200221072250.732482588@linuxfoundation.org>
 References: <20200221072250.732482588@linuxfoundation.org>
@@ -60,46 +62,40 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Vasily Averin <vvs@virtuozzo.com>
+From: Steve French <stfrench@microsoft.com>
 
-[ Upstream commit 90435a7891a2259b0f74c5a1bc5600d0d64cba8f ]
+[ Upstream commit d6fd41905ec577851734623fb905b1763801f5ef ]
 
-If seq_file .next fuction does not change position index,
-read after some lseek can generate an unexpected output.
+We ran into a confusing problem where an application wasn't checking
+return code on close and so user didn't realize that the application
+ran out of disk space.  log a warning message (once) in these
+cases. For example:
 
-See also: https://bugzilla.kernel.org/show_bug.cgi?id=206283
+  [ 8407.391909] Out of space writing to \\oleg-server\small-share
 
-v1 -> v2: removed missed increment in end of function
-
-Signed-off-by: Vasily Averin <vvs@virtuozzo.com>
-Signed-off-by: Daniel Borkmann <daniel@iogearbox.net>
-Link: https://lore.kernel.org/bpf/eca84fdd-c374-a154-d874-6c7b55fc3bc4@virtuozzo.com
+Signed-off-by: Steve French <stfrench@microsoft.com>
+Reported-by: Oleg Kravtsov <oleg@tuxera.com>
+Reviewed-by: Ronnie Sahlberg <lsahlber@redhat.com>
+Reviewed-by: Pavel Shilovsky <pshilov@microsoft.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- kernel/bpf/inode.c | 3 +--
- 1 file changed, 1 insertion(+), 2 deletions(-)
+ fs/cifs/smb2pdu.c | 3 +++
+ 1 file changed, 3 insertions(+)
 
-diff --git a/kernel/bpf/inode.c b/kernel/bpf/inode.c
-index dc9d7ac8228db..c04815bb15cc1 100644
---- a/kernel/bpf/inode.c
-+++ b/kernel/bpf/inode.c
-@@ -198,6 +198,7 @@ static void *map_seq_next(struct seq_file *m, void *v, loff_t *pos)
- 	void *key = map_iter(m)->key;
- 	void *prev_key;
- 
-+	(*pos)++;
- 	if (map_iter(m)->done)
- 		return NULL;
- 
-@@ -210,8 +211,6 @@ static void *map_seq_next(struct seq_file *m, void *v, loff_t *pos)
- 		map_iter(m)->done = true;
- 		return NULL;
- 	}
--
--	++(*pos);
- 	return key;
- }
- 
+diff --git a/fs/cifs/smb2pdu.c b/fs/cifs/smb2pdu.c
+index 0d4e4d97e6cf5..e2d2b749c8f38 100644
+--- a/fs/cifs/smb2pdu.c
++++ b/fs/cifs/smb2pdu.c
+@@ -3425,6 +3425,9 @@ smb2_writev_callback(struct mid_q_entry *mid)
+ 				     wdata->cfile->fid.persistent_fid,
+ 				     tcon->tid, tcon->ses->Suid, wdata->offset,
+ 				     wdata->bytes, wdata->result);
++		if (wdata->result == -ENOSPC)
++			printk_once(KERN_WARNING "Out of space writing to %s\n",
++				    tcon->treeName);
+ 	} else
+ 		trace_smb3_write_done(0 /* no xid */,
+ 				      wdata->cfile->fid.persistent_fid,
 -- 
 2.20.1
 
