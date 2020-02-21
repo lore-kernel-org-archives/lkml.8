@@ -2,126 +2,159 @@ Return-Path: <SRS0=1210=4J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B3A9AC35646
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 11:12:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8B420C35653
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 11:13:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8F6F124656
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 11:12:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6323424650
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 11:13:17 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1582283597;
+	bh=1Udq+7Q69q3s3KUMwUZ8BG97EPboX7J33NslS8Xmk0M=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=DzUPLlUAGdioxpmKmN4rPw5AM0NvMpksLBTlEwxd5/EUAV7LNusgccZIAZfv9+as6
+	 JXd6+tyUIcKJbxUmREOZTu8isSOKzx1JTpUBnvt7dO6sN6fNLFedLY7bbsuWKA+nJR
+	 bJ8jCIbj1GL4Rz49ROTZPhoh8D24rMUsnI2Es+mg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728003AbgBULM2 (ORCPT
+        id S1727489AbgBULNQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Feb 2020 06:12:28 -0500
-Received: from foss.arm.com ([217.140.110.172]:36834 "EHLO foss.arm.com"
+        Fri, 21 Feb 2020 06:13:16 -0500
+Received: from mail.kernel.org ([198.145.29.99]:33912 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726100AbgBULM2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Feb 2020 06:12:28 -0500
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 6FE7A31B;
-        Fri, 21 Feb 2020 03:12:27 -0800 (PST)
-Received: from e107158-lin.cambridge.arm.com (e107158-lin.cambridge.arm.com [10.1.195.21])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 1DB9A3F68F;
-        Fri, 21 Feb 2020 03:12:26 -0800 (PST)
-Date:   Fri, 21 Feb 2020 11:12:23 +0000
-From:   Qais Yousef <qais.yousef@arm.com>
-To:     Pavan Kondeti <pkondeti@codeaurora.org>
-Cc:     Ingo Molnar <mingo@redhat.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Dietmar Eggemann <dietmar.eggemann@arm.com>,
-        Juri Lelli <juri.lelli@redhat.com>,
-        Vincent Guittot <vincent.guittot@linaro.org>,
-        Ben Segall <bsegall@google.com>, Mel Gorman <mgorman@suse.de>,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 3/3] sched/rt: fix pushing unfit tasks to a better CPU
-Message-ID: <20200221111223.bb4y57zdox7qdy2w@e107158-lin.cambridge.arm.com>
-References: <20200214163949.27850-1-qais.yousef@arm.com>
- <20200214163949.27850-4-qais.yousef@arm.com>
- <20200217092329.GC28029@codeaurora.org>
- <20200217135306.cjc2225wdlwqiicu@e107158-lin.cambridge.arm.com>
- <20200219140243.wfljmupcrwm2jelo@e107158-lin>
- <20200221081551.GG28029@codeaurora.org>
+        id S1726694AbgBULNQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 21 Feb 2020 06:13:16 -0500
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 154DE207FD;
+        Fri, 21 Feb 2020 11:13:14 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1582283595;
+        bh=1Udq+7Q69q3s3KUMwUZ8BG97EPboX7J33NslS8Xmk0M=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=KV9jz8yu6t/SDUZjJtrNxxjcTDcMTonrg1ozc33TeV+Y09h6uI05MN2kYNDEatK7A
+         hBQPWg8ZkhXmM92WnIeC8Gr9CDjk+jJlt4l2j6JVJsXqYgYcG9mn2XlwPT4e3Y0nK2
+         P5UZpgmIITRx6wT+fYHMHgV6ksp+iMbAhPrklyhE=
+Date:   Fri, 21 Feb 2020 12:13:13 +0100
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     Chanwoo Choi <cw00.choi@samsung.com>
+Cc:     John Stultz <john.stultz@linaro.org>,
+        Orson Zhai <orson.unisoc@gmail.com>,
+        MyungJoo Ham <myungjoo.ham@samsung.com>,
+        Kyungmin Park <kyungmin.park@samsung.com>,
+        mingmin.ling@unisoc.com, orsonzhai@gmail.com,
+        jingchao.ye@unisoc.com, Linux PM list <linux-pm@vger.kernel.org>,
+        lkml <linux-kernel@vger.kernel.org>,
+        stable <stable@vger.kernel.org>
+Subject: Re: [PATCH] Revert "PM / devfreq: Modify the device name as
+ devfreq(X) for sysfs"
+Message-ID: <20200221111313.GA110504@kroah.com>
+References: <1582220224-1904-1-git-send-email-orson.unisoc@gmail.com>
+ <20200220191513.GA3450796@kroah.com>
+ <CALAqxLViRgGE8FsukCJL+doqk_GqabLDCtXBWem+VOGf9xXZdg@mail.gmail.com>
+ <CGME20200221070652epcas1p11e82863794f130373055c0b7bdedff23@epcas1p1.samsung.com>
+ <20200221070646.GA4103708@kroah.com>
+ <1b9e510a-71bb-5aa8-ef85-a9a9c623f313@samsung.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200221081551.GG28029@codeaurora.org>
-User-Agent: NeoMutt/20171215
+In-Reply-To: <1b9e510a-71bb-5aa8-ef85-a9a9c623f313@samsung.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 02/21/20 13:45, Pavan Kondeti wrote:
-> On Wed, Feb 19, 2020 at 02:02:44PM +0000, Qais Yousef wrote:
-> > On 02/17/20 13:53, Qais Yousef wrote:
-> > > On 02/17/20 14:53, Pavan Kondeti wrote:
-> > > > I notice a case where tasks would migrate for no reason (happens without this
-> > > > patch also). Assuming BIG cores are busy with other RT tasks. Now this RT
-> > > > task can go to *any* little CPU. There is no bias towards its previous CPU.
-> > > > I don't know if it makes any difference but I see RT task placement is too
-> > > > keen on reducing the migrations unless it is absolutely needed.
-> > > 
-> > > In find_lowest_rq() there's a check if the task_cpu(p) is in the lowest_mask
-> > > and prefer it if it is.
-> > > 
-> > > But yeah I see it happening too
-> > > 
-> > > https://imgur.com/a/FYqLIko
-> > > 
-> > > Tasks on CPU 0 and 3 swap. Note that my tasks are periodic but the plots don't
-> > > show that.
-> > > 
-> > > I shouldn't have changed something to affect this bias. Do you think it's
-> > > something I introduced?
-> > > 
-> > > It's something maybe worth digging into though. I'll try to have a look.
+On Fri, Feb 21, 2020 at 05:11:02PM +0900, Chanwoo Choi wrote:
+> On 2/21/20 4:06 PM, Greg Kroah-Hartman wrote:
+> > On Thu, Feb 20, 2020 at 11:47:41AM -0800, John Stultz wrote:
+> >> On Thu, Feb 20, 2020 at 11:15 AM Greg Kroah-Hartman
+> >> <gregkh@linuxfoundation.org> wrote:
+> >>>
+> >>> On Fri, Feb 21, 2020 at 01:37:04AM +0800, Orson Zhai wrote:
+> >>>> This reverts commit 4585fbcb5331fc910b7e553ad3efd0dd7b320d14.
+> >>>>
+> >>>> The name changing as devfreq(X) breaks some user space applications,
+> >>>> such as Android HAL from Unisoc and Hikey [1].
+> >>>> The device name will be changed unexpectly after every boot depending
+> >>>> on module init sequence. It will make trouble to setup some system
+> >>>> configuration like selinux for Android.
+> >>>>
+> >>>> So we'd like to revert it back to old naming rule before any better
+> >>>> way being found.
+> >>>>
+> >>>> [1] https://protect2.fireeye.com/url?k=00fa721e-5d2a7af6-00fbf951-000babff32e3-95e4b92259b05656&u=https://lkml.org/lkml/2018/5/8/1042
+> >>>>
+> >>>> Cc: John Stultz <john.stultz@linaro.org>
+> >>>> Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+> >>>> Cc: stable@vger.kernel.org
+> >>>> Signed-off-by: Orson Zhai <orson.unisoc@gmail.com>
+> >>>>
+> >>>> ---
+> >>>>  drivers/devfreq/devfreq.c | 4 +---
+> >>>>  1 file changed, 1 insertion(+), 3 deletions(-)
+> >>>>
+> >>>> diff --git a/drivers/devfreq/devfreq.c b/drivers/devfreq/devfreq.c
+> >>>> index cceee8b..7dcf209 100644
+> >>>> --- a/drivers/devfreq/devfreq.c
+> >>>> +++ b/drivers/devfreq/devfreq.c
+> >>>> @@ -738,7 +738,6 @@ struct devfreq *devfreq_add_device(struct device *dev,
+> >>>>  {
+> >>>>       struct devfreq *devfreq;
+> >>>>       struct devfreq_governor *governor;
+> >>>> -     static atomic_t devfreq_no = ATOMIC_INIT(-1);
+> >>>>       int err = 0;
+> >>>>
+> >>>>       if (!dev || !profile || !governor_name) {
+> >>>> @@ -800,8 +799,7 @@ struct devfreq *devfreq_add_device(struct device *dev,
+> >>>>       devfreq->suspend_freq = dev_pm_opp_get_suspend_opp_freq(dev);
+> >>>>       atomic_set(&devfreq->suspend_count, 0);
+> >>>>
+> >>>> -     dev_set_name(&devfreq->dev, "devfreq%d",
+> >>>> -                             atomic_inc_return(&devfreq_no));
+> >>>> +     dev_set_name(&devfreq->dev, "%s", dev_name(dev));
+> >>>>       err = device_register(&devfreq->dev);
+> >>>>       if (err) {
+> >>>>               mutex_unlock(&devfreq->lock);
+> >>>> --
+> >>>> 2.7.4
+> >>>>
+> >>>
+> >>> Thanks for this, I agree, this needs to get back to the way things were
+> >>> as it seems to break too many existing systems as-is.
+> >>>
+> >>> I'll queue this up in my tree now, thanks.
+> >>
+> >> Oof this old thing. I unfortunately didn't get back to look at the
+> >> devfreq name node issue or the compatibility links, since the impact
+> >> of the regression (breaking the powerHAL's interactions with the gpu)
+> >> wasn't as big as other problems we had. While the regression was
+> >> frustrating, my only hesitancy at this point is that its been this way
+> >> since 4.10, so reverting the problematic patch is likely to break any
+> >> new users since then.
 > > 
-> > FWIW, I dug a bit into this and I found out we have a thundering herd issue.
+> > Looks like most users just revert that commit in their trees:
+> > 	https://protect2.fireeye.com/url?k=1012ad0f-4dc2a5e7-10132640-000babff32e3-35779c5ed675ef0f&u=https://source.codeaurora.org/quic/la/kernel/msm-4.14/commit/drivers/devfreq?h=msm-4.14&id=ccf273f6d89ad0fa8032e9225305ad6f62c7770c
 > > 
-> > Since I just have a set of periodic task that all start together,
-> > select_task_rq_rt() ends up selecting the same fitting CPU for all of them
-> > (CPU1). The end up all waking up on CPU1, only to get pushed back out
-> > again with only one surviving.
-> > 
-> > This reshuffles the task placement ending with some tasks being swapped.
-> > 
-> > I don't think this problem is specific to my change and could happen without
-> > it.
-> > 
-> > The problem is caused by the way find_lowest_rq() selects a cpu in the mask
-> > 
-> > 1750                         best_cpu = cpumask_first_and(lowest_mask,
-> > 1751                                                      sched_domain_span(sd));
-> > 1752                         if (best_cpu < nr_cpu_ids) {
-> > 1753                                 rcu_read_unlock();
-> > 1754                                 return best_cpu;
-> > 1755                         }
-> > 
-> > It always returns the first CPU in the mask. Or the mask could only contain
-> > a single CPU too. The end result is that we most likely end up herding all the
-> > tasks that wake up simultaneously to the same CPU.
-> > 
-> > I'm not sure how to fix this problem yet.
-> > 
+> > So we should be ok here.
 > 
-> Yes, I have seen this problem too. This is not limited to RT even fair class
-> (find_energy_efficient_cpu path) also have the same issue. There is a window
-> where we select a CPU for the task and the task being queued there. Because of
-> this, we may select the same CPU for two successive waking tasks. Turning off
-> TTWU_QUEUE sched feature addresses this up to some extent. At least it would
-> solve the cases like multiple tasks getting woken up from an interrupt handler.
+> I'm sorry about changing the devfreq node name.
+> 
+> OK. Do you pick this patch to your tree?
 
-Oh, handy. Let me try this out.
+Yes, I can do that.
 
-I added it to my to-do to investigate it when I have time anyway.
+> or If not, I'll apply it to devfreq-next branch for v5.7-rc1.
+> 
+> And do you apply it to kernel of linux-stable tree since 4.11?
 
-In modern systems where L3 is spanning all CPUs, the migration isn't that
-costly, but it'd still be unnecessary wakeup latency that can add up.
+Yeah, I'll mark it for stable.
 
-Thanks
+Can I get an ack from you for this?
 
---
-Qais Yousef
+thanks,
+
+greg k-h
