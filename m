@@ -7,48 +7,47 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 85298C35640
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 08:10:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3126BC35641
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 08:10:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4D9F720578
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 08:10:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 03F9E20801
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 08:10:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582272626;
-	bh=abcxH2FDkY67ywKz9OWa3xtvSrEUbS2mzMluiL1bXfE=;
+	s=default; t=1582272633;
+	bh=EfqTLV/Ja2CAc990v9LG2sf9f+XqMnZ58KAWfhoHIno=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=G2lhGHTbqtaXzfvJxDRBLt80F4X8PU7wEk4haGT3xex8Uk3DcnExdSKfQk5s34aUd
-	 9K6TygzwNWedxdDJqv874z2tbtIdLUyPL8Ob6c3SWagwApAAI8nOwZ0bPZEdAVd3e2
-	 g1vkk1EIofVLR9IJiZX9fommOPgxTRHRc1EB4elo=
+	b=I/aruW5IP6Yo2UZFuADDDo1yaqMbZyn2TwPdrxh3K93Hql8McPCOEdBgyB10pET9E
+	 wEDvBJXNZZV02cFAl1Ls4lbcszWvMbOiN1LeNSGVHi40C1mhiI7x0UQUeytQLXTUgT
+	 /tkFWF++LSQfx4U0hCr0uSomkJ/ZqceKAU0m2fwk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732527AbgBUIKY (ORCPT
+        id S1732542AbgBUIKb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Feb 2020 03:10:24 -0500
-Received: from mail.kernel.org ([198.145.29.99]:45584 "EHLO mail.kernel.org"
+        Fri, 21 Feb 2020 03:10:31 -0500
+Received: from mail.kernel.org ([198.145.29.99]:45700 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732515AbgBUIKX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Feb 2020 03:10:23 -0500
+        id S1732082AbgBUIK2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 21 Feb 2020 03:10:28 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id CB5BE24670;
-        Fri, 21 Feb 2020 08:10:21 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D4D4C20801;
+        Fri, 21 Feb 2020 08:10:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1582272622;
-        bh=abcxH2FDkY67ywKz9OWa3xtvSrEUbS2mzMluiL1bXfE=;
+        s=default; t=1582272627;
+        bh=EfqTLV/Ja2CAc990v9LG2sf9f+XqMnZ58KAWfhoHIno=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=bANEdDXm1B0XcKoBx+A7ilU7ha0Np8YsIpoD0T8VVNJHJEUd39LttEDU9O1Mw74Ly
-         aweqdissU0H1t1qrIEiSfqBomAqmjxd6PyB6CV5UMjvzqc8/pB3NFIEiFYz4umG8pi
-         EE+ovWB7RDlO8tXp1y9wFy9c5u8BUngpHQub4UMM=
+        b=b3dBiTKoxEq7pB8R7Nd00UMmef2KHxGfwU8UZ+uXl6tE70IQw8uEV/09nYeP7lR0W
+         gWJsQQhGU7JbyXWTO6Inq4YYV+FVp5MtSylxAEQzVXJjs/3gTxQvNuxh4hX8k5DkVl
+         AQk2HH/xZmsTv5IwMtzycfLAWLtTH3CDTWpgYGws=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Hulk Robot <hulkci@huawei.com>,
-        Chen Zhou <chenzhou10@huawei.com>,
-        Mark Brown <broonie@kernel.org>,
+        stable@vger.kernel.org, Michael Guralnik <michaelgur@mellanox.com>,
+        Jason Gunthorpe <jgg@mellanox.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 211/344] ASoC: atmel: fix build error with CONFIG_SND_ATMEL_SOC_DMA=m
-Date:   Fri, 21 Feb 2020 08:40:10 +0100
-Message-Id: <20200221072408.342066313@linuxfoundation.org>
+Subject: [PATCH 5.4 213/344] RDMA/uverbs: Remove needs_kfree_rcu from uverbs_obj_type_class
+Date:   Fri, 21 Feb 2020 08:40:12 +0100
+Message-Id: <20200221072408.545629391@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200221072349.335551332@linuxfoundation.org>
 References: <20200221072349.335551332@linuxfoundation.org>
@@ -61,41 +60,88 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Chen Zhou <chenzhou10@huawei.com>
+From: Jason Gunthorpe <jgg@mellanox.com>
 
-[ Upstream commit 8fea78029f5e6ed734ae1957bef23cfda1af4354 ]
+[ Upstream commit 8bdf9dd984c18375d1090ddeb1792511f619c5c1 ]
 
-If CONFIG_SND_ATMEL_SOC_DMA=m, build error:
+After device disassociation the uapi_objects are destroyed and freed,
+however it is still possible that core code can be holding a kref on the
+uobject. When it finally goes to uverbs_uobject_free() via the kref_put()
+it can trigger a use-after-free on the uapi_object.
 
-sound/soc/atmel/atmel_ssc_dai.o: In function `atmel_ssc_set_audio':
-(.text+0x7cd): undefined reference to `atmel_pcm_dma_platform_register'
+Since needs_kfree_rcu is a micro optimization that only benefits file
+uobjects, just get rid of it. There is no harm in using kfree_rcu even if
+it isn't required, and the number of involved objects is small.
 
-Function atmel_pcm_dma_platform_register is defined under
-CONFIG SND_ATMEL_SOC_DMA, so select SND_ATMEL_SOC_DMA in
-CONFIG SND_ATMEL_SOC_SSC, same to CONFIG_SND_ATMEL_SOC_PDC.
-
-Reported-by: Hulk Robot <hulkci@huawei.com>
-Signed-off-by: Chen Zhou <chenzhou10@huawei.com>
-Link: https://lore.kernel.org/r/20200113133242.144550-1-chenzhou10@huawei.com
-Signed-off-by: Mark Brown <broonie@kernel.org>
+Link: https://lore.kernel.org/r/20200113143306.GA28717@ziepe.ca
+Signed-off-by: Michael Guralnik <michaelgur@mellanox.com>
+Signed-off-by: Jason Gunthorpe <jgg@mellanox.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- sound/soc/atmel/Kconfig | 2 ++
- 1 file changed, 2 insertions(+)
+ drivers/infiniband/core/rdma_core.c | 23 +----------------------
+ include/rdma/uverbs_types.h         |  1 -
+ 2 files changed, 1 insertion(+), 23 deletions(-)
 
-diff --git a/sound/soc/atmel/Kconfig b/sound/soc/atmel/Kconfig
-index f118c229ed829..d1dc8e6366dcb 100644
---- a/sound/soc/atmel/Kconfig
-+++ b/sound/soc/atmel/Kconfig
-@@ -19,6 +19,8 @@ config SND_ATMEL_SOC_DMA
+diff --git a/drivers/infiniband/core/rdma_core.c b/drivers/infiniband/core/rdma_core.c
+index ccf4d069c25c9..7dd9bd1e4d118 100644
+--- a/drivers/infiniband/core/rdma_core.c
++++ b/drivers/infiniband/core/rdma_core.c
+@@ -49,13 +49,7 @@ void uverbs_uobject_get(struct ib_uobject *uobject)
  
- config SND_ATMEL_SOC_SSC
- 	tristate
-+	select SND_ATMEL_SOC_DMA
-+	select SND_ATMEL_SOC_PDC
+ static void uverbs_uobject_free(struct kref *ref)
+ {
+-	struct ib_uobject *uobj =
+-		container_of(ref, struct ib_uobject, ref);
+-
+-	if (uobj->uapi_object->type_class->needs_kfree_rcu)
+-		kfree_rcu(uobj, rcu);
+-	else
+-		kfree(uobj);
++	kfree_rcu(container_of(ref, struct ib_uobject, ref), rcu);
+ }
  
- config SND_ATMEL_SOC_SSC_PDC
- 	tristate "SoC PCM DAI support for AT91 SSC controller using PDC"
+ void uverbs_uobject_put(struct ib_uobject *uobject)
+@@ -744,20 +738,6 @@ const struct uverbs_obj_type_class uverbs_idr_class = {
+ 	.lookup_put = lookup_put_idr_uobject,
+ 	.destroy_hw = destroy_hw_idr_uobject,
+ 	.remove_handle = remove_handle_idr_uobject,
+-	/*
+-	 * When we destroy an object, we first just lock it for WRITE and
+-	 * actually DESTROY it in the finalize stage. So, the problematic
+-	 * scenario is when we just started the finalize stage of the
+-	 * destruction (nothing was executed yet). Now, the other thread
+-	 * fetched the object for READ access, but it didn't lock it yet.
+-	 * The DESTROY thread continues and starts destroying the object.
+-	 * When the other thread continue - without the RCU, it would
+-	 * access freed memory. However, the rcu_read_lock delays the free
+-	 * until the rcu_read_lock of the READ operation quits. Since the
+-	 * exclusive lock of the object is still taken by the DESTROY flow, the
+-	 * READ operation will get -EBUSY and it'll just bail out.
+-	 */
+-	.needs_kfree_rcu = true,
+ };
+ EXPORT_SYMBOL(uverbs_idr_class);
+ 
+@@ -919,7 +899,6 @@ const struct uverbs_obj_type_class uverbs_fd_class = {
+ 	.lookup_put = lookup_put_fd_uobject,
+ 	.destroy_hw = destroy_hw_fd_uobject,
+ 	.remove_handle = remove_handle_fd_uobject,
+-	.needs_kfree_rcu = false,
+ };
+ EXPORT_SYMBOL(uverbs_fd_class);
+ 
+diff --git a/include/rdma/uverbs_types.h b/include/rdma/uverbs_types.h
+index d57a5ba00c743..0b0f5a5f392de 100644
+--- a/include/rdma/uverbs_types.h
++++ b/include/rdma/uverbs_types.h
+@@ -98,7 +98,6 @@ struct uverbs_obj_type_class {
+ 				       enum rdma_remove_reason why,
+ 				       struct uverbs_attr_bundle *attrs);
+ 	void (*remove_handle)(struct ib_uobject *uobj);
+-	u8    needs_kfree_rcu;
+ };
+ 
+ struct uverbs_obj_type {
 -- 
 2.20.1
 
