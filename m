@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F1D3FC35640
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 08:46:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7F3D6C35644
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 08:46:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C01DD206DB
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 08:46:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 58385206DB
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 08:46:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582274788;
-	bh=k3VHynw8rDv6gnu2039yCPRNdfOZ1y2P1trvZkmC6Ss=;
+	s=default; t=1582274793;
+	bh=lO0caDtha1NplqJQjeZaJidxhiU6dcZ2jyMKnQl68Lg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=B8q8dJmoici/yVYHVOcFmivkKs9AC3cR0HvsQ2BOKHqUE71YngAQHkIOp66doXb9l
-	 7aHSIsXEUIJeaw3NlV6gdbQHRslH/OZBsS450HG+XvROkffyrRr/EprkL6ZQNhIAPV
-	 mOyPZARQjIxodvba9cfo8XihGwI/YQPLBRvAd9MQ=
+	b=Ej8FSHNiS3VE0AS0ty5UHfZBQ4OwNMdXdQEH4+Uaj+wXbf+tYXQA5OVujF3gkn+BH
+	 +74NOdaHoyRORDQQem8wjCB0pQ91XmQ5XOjrqoInrRT1Vib5HgsJpOr8zRGDHnFKgs
+	 OkjALlvXknmoMjHrjvC/zYcZiFV+EhA1dQ+Zn17Q=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731437AbgBUIq1 (ORCPT
+        id S1727952AbgBUHte (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Feb 2020 03:46:27 -0500
-Received: from mail.kernel.org ([198.145.29.99]:46342 "EHLO mail.kernel.org"
+        Fri, 21 Feb 2020 02:49:34 -0500
+Received: from mail.kernel.org ([198.145.29.99]:45984 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728008AbgBUHtp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Feb 2020 02:49:45 -0500
+        id S1728824AbgBUHt2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 21 Feb 2020 02:49:28 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0C72620801;
-        Fri, 21 Feb 2020 07:49:43 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id ED568207FD;
+        Fri, 21 Feb 2020 07:49:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1582271384;
-        bh=k3VHynw8rDv6gnu2039yCPRNdfOZ1y2P1trvZkmC6Ss=;
+        s=default; t=1582271368;
+        bh=lO0caDtha1NplqJQjeZaJidxhiU6dcZ2jyMKnQl68Lg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=DgoQAkujKIf9uD8MQnANNCwqw06px9sG+feGsWYP+yMYgtgx3XP5tycUkAQTb7ah7
-         T8rcig7cMYQQ7tlyyVtdZ/daE2RVAshR/0QSKlg2mDbP9Ow0kXdLflFcl2Qu4Da27S
-         lcqoTWuo51HGAsxrnlht61tcX/SUeqxb3jqZVYdg=
+        b=Plkm1KLR5On4ZIKyj7e9ZlA89sna8V251CB+A1LLv3A4qIpHRko1/uDBN+Mx08fYR
+         lictojHYBlh8m32ZYdwzrWZnsqbQlVfU9Hxs9QrWD/jyWrDWeeSp32xcM+H+5iJYLg
+         OoRdv1+LKaC1kY/S94ds4q8EBKhhMdSOa7ehmKns=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Heiner Kallweit <hkallweit1@gmail.com>,
-        "David S. Miller" <davem@davemloft.net>,
+        stable@vger.kernel.org, Paul Cercueil <paul@crapouillou.net>,
+        Sam Ravnborg <sam@ravnborg.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.5 144/399] r8169: check that Realtek PHY driver module is loaded
-Date:   Fri, 21 Feb 2020 08:37:49 +0100
-Message-Id: <20200221072416.495118208@linuxfoundation.org>
+Subject: [PATCH 5.5 139/399] gpu/drm: ingenic: Avoid null pointer deference in plane atomic update
+Date:   Fri, 21 Feb 2020 08:37:44 +0100
+Message-Id: <20200221072415.979908175@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200221072402.315346745@linuxfoundation.org>
 References: <20200221072402.315346745@linuxfoundation.org>
@@ -60,45 +60,53 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Heiner Kallweit <hkallweit1@gmail.com>
+From: Paul Cercueil <paul@crapouillou.net>
 
-[ Upstream commit f325937735498afb054a0195291bbf68d0b60be5 ]
+[ Upstream commit 354b051c5dcbeb35bbfd5d54161364fc7a75a58a ]
 
-Some users complained about problems with r8169 and it turned out that
-the generic PHY driver was used instead instead of the dedicated one.
-In all cases reason was that r8169.ko was in initramfs, but realtek.ko
-not. Manually adding realtek.ko to initramfs fixed the issues.
-Root cause seems to be that tools like dracut and genkernel don't
-consider softdeps. Add a check for loaded Realtek PHY driver module
-and provide the user with a hint if it's not loaded.
+It is possible that there is no drm_framebuffer associated with a given
+plane state.
 
-Signed-off-by: Heiner Kallweit <hkallweit1@gmail.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+v2: Handle drm_plane->state which can be NULL too
+
+Signed-off-by: Paul Cercueil <paul@crapouillou.net>
+Link: https://patchwork.freedesktop.org/patch/msgid/20191210144142.33143-2-paul@crapouillou.net
+# *** extracted tags ***
+Acked-by: Sam Ravnborg <sam@ravnborg.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/ethernet/realtek/r8169_main.c | 9 +++++++++
- 1 file changed, 9 insertions(+)
+ drivers/gpu/drm/ingenic/ingenic-drm.c | 16 ++++++++++------
+ 1 file changed, 10 insertions(+), 6 deletions(-)
 
-diff --git a/drivers/net/ethernet/realtek/r8169_main.c b/drivers/net/ethernet/realtek/r8169_main.c
-index 92a590154bb9f..2d2d22f86dc6f 100644
---- a/drivers/net/ethernet/realtek/r8169_main.c
-+++ b/drivers/net/ethernet/realtek/r8169_main.c
-@@ -6831,6 +6831,15 @@ static int rtl_init_one(struct pci_dev *pdev, const struct pci_device_id *ent)
- 	int chipset, region;
- 	int jumbo_max, rc;
+diff --git a/drivers/gpu/drm/ingenic/ingenic-drm.c b/drivers/gpu/drm/ingenic/ingenic-drm.c
+index ec32e1c673350..43a015f33e975 100644
+--- a/drivers/gpu/drm/ingenic/ingenic-drm.c
++++ b/drivers/gpu/drm/ingenic/ingenic-drm.c
+@@ -372,14 +372,18 @@ static void ingenic_drm_plane_atomic_update(struct drm_plane *plane,
+ 	struct ingenic_drm *priv = drm_plane_get_priv(plane);
+ 	struct drm_plane_state *state = plane->state;
+ 	unsigned int width, height, cpp;
++	dma_addr_t addr;
  
-+	/* Some tools for creating an initramfs don't consider softdeps, then
-+	 * r8169.ko may be in initramfs, but realtek.ko not. Then the generic
-+	 * PHY driver is used that doesn't work with most chip versions.
-+	 */
-+	if (!driver_find("RTL8201CP Ethernet", &mdio_bus_type)) {
-+		dev_err(&pdev->dev, "realtek.ko not loaded, maybe it needs to be added to initramfs?\n");
-+		return -ENOENT;
+-	width = state->crtc->state->adjusted_mode.hdisplay;
+-	height = state->crtc->state->adjusted_mode.vdisplay;
+-	cpp = state->fb->format->cpp[plane->index];
++	if (state && state->fb) {
++		addr = drm_fb_cma_get_gem_addr(state->fb, state, 0);
++		width = state->crtc->state->adjusted_mode.hdisplay;
++		height = state->crtc->state->adjusted_mode.vdisplay;
++		cpp = state->fb->format->cpp[plane->index];
+ 
+-	priv->dma_hwdesc->addr = drm_fb_cma_get_gem_addr(state->fb, state, 0);
+-	priv->dma_hwdesc->cmd = width * height * cpp / 4;
+-	priv->dma_hwdesc->cmd |= JZ_LCD_CMD_EOF_IRQ;
++		priv->dma_hwdesc->addr = addr;
++		priv->dma_hwdesc->cmd = width * height * cpp / 4;
++		priv->dma_hwdesc->cmd |= JZ_LCD_CMD_EOF_IRQ;
 +	}
-+
- 	dev = devm_alloc_etherdev(&pdev->dev, sizeof (*tp));
- 	if (!dev)
- 		return -ENOMEM;
+ }
+ 
+ static void ingenic_drm_encoder_atomic_mode_set(struct drm_encoder *encoder,
 -- 
 2.20.1
 
