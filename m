@@ -4,50 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1711DC35641
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 07:53:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2CAEEC35640
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 07:53:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D381720578
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 07:53:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0006324653
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 07:53:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582271615;
-	bh=mKWmx4I93Aba8MNuE9ihDLM//DIvjwAt2Uk5+XmjeUo=;
+	s=default; t=1582271622;
+	bh=TR7zXGPKrRyVAFY0prVY1a+2it4hknv8ec1MtPqoews=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=lrbM4oy/CYcRWa5vtdbmm4KEco7enHvtkZKMspOO52zSMwxpCxL91nEnVWbSlFFaa
-	 gBqbZCM+9eL7YyhLd4pmTTOvHAqdxBUbV9o8KSznYDkvVm+Fxm0/9EkLKRtOgXBn95
-	 Qj53DFV5XZk7WrLMF2/jyV0pSs1Qge+r6z2rTGTE=
+	b=AATFhF2TGvrdbF3pyKI8J2BkNYAFHaxRnmyPvsMET/QGonMX/d/Q7azIw3Ls4U9bD
+	 4THyujxN4PoqsqDSo2IIMGxsOcREXMqXHVz+RD71K1HyFNAjtchVO/stuFdrkhdhFO
+	 lTCMAP0td16IwkY6FjkhWRPgo08kS88+vzUUw3AI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730118AbgBUHxe (ORCPT
+        id S1730145AbgBUHxk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Feb 2020 02:53:34 -0500
-Received: from mail.kernel.org ([198.145.29.99]:51782 "EHLO mail.kernel.org"
+        Fri, 21 Feb 2020 02:53:40 -0500
+Received: from mail.kernel.org ([198.145.29.99]:51986 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730107AbgBUHxa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Feb 2020 02:53:30 -0500
+        id S1730125AbgBUHxh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 21 Feb 2020 02:53:37 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id CB3552073A;
-        Fri, 21 Feb 2020 07:53:28 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B34A224653;
+        Fri, 21 Feb 2020 07:53:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1582271609;
-        bh=mKWmx4I93Aba8MNuE9ihDLM//DIvjwAt2Uk5+XmjeUo=;
+        s=default; t=1582271617;
+        bh=TR7zXGPKrRyVAFY0prVY1a+2it4hknv8ec1MtPqoews=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=VtdA06bsJJkZ/GfVxPoP04qeo7js5dDebG6r+lPDDiWgx3AUSS7PgGWwx8OQAKckI
-         vxBuNJ/MaqMssiKViMewzXne0oj+FKA9k2SfL1QciJ7p8Z5UzPwu0odsM56309eeRx
-         oim1zAsrOK4bc3ocG8ucjr5jEoaSEgKR8jmOISzM=
+        b=jr6bVFqvv1/D+O6vbPltiQK1y4Cu6LX+jg6dxIHXzVMETXO7dV1lg6O6ltkiFqhwB
+         8DCz/RjalCvzhN/NFaYPskSGa6k2vQ+EYDXBM15iuafpdhlzxHuyE2texzc6TCc7DO
+         691l86hMUVurm/0FXQv5MoTx8OzONzQBEpVP2ius=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, "Paul E. McKenney" <paulmck@kernel.org>,
-        Sasha Levin <sashal@kernel.org>,
-        Eric Dumazet <edumazet@google.com>
-Subject: [PATCH 5.5 230/399] rcu: Use WRITE_ONCE() for assignments to ->pprev for hlist_nulls
-Date:   Fri, 21 Feb 2020 08:39:15 +0100
-Message-Id: <20200221072425.168084735@linuxfoundation.org>
+        stable@vger.kernel.org, Jonathan Lemon <jonathan.lemon@gmail.com>,
+        Andy Gospodarek <gospo@broadcom.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.5 232/399] bnxt: Detach page from page pool before sending up the stack
+Date:   Fri, 21 Feb 2020 08:39:17 +0100
+Message-Id: <20200221072425.313970278@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200221072402.315346745@linuxfoundation.org>
 References: <20200221072402.315346745@linuxfoundation.org>
@@ -60,167 +61,36 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Paul E. McKenney <paulmck@kernel.org>
+From: Jonathan Lemon <jonathan.lemon@gmail.com>
 
-[ Upstream commit 860c8802ace14c646864795e057349c9fb2d60ad ]
+[ Upstream commit 3071c51783b39d6a676d02a9256c3b3f87804285 ]
 
-Eric Dumazet supplied a KCSAN report of a bug that forces use
-of hlist_unhashed_lockless() from sk_unhashed():
+When running in XDP mode, pages come from the page pool, and should
+be freed back to the same pool or specifically detached.  Currently,
+when the driver re-initializes, the page pool destruction is delayed
+forever since it thinks there are oustanding pages.
 
-------------------------------------------------------------------------
-
-BUG: KCSAN: data-race in inet_unhash / inet_unhash
-
-write to 0xffff8880a69a0170 of 8 bytes by interrupt on cpu 1:
- __hlist_nulls_del include/linux/list_nulls.h:88 [inline]
- hlist_nulls_del_init_rcu include/linux/rculist_nulls.h:36 [inline]
- __sk_nulls_del_node_init_rcu include/net/sock.h:676 [inline]
- inet_unhash+0x38f/0x4a0 net/ipv4/inet_hashtables.c:612
- tcp_set_state+0xfa/0x3e0 net/ipv4/tcp.c:2249
- tcp_done+0x93/0x1e0 net/ipv4/tcp.c:3854
- tcp_write_err+0x7e/0xc0 net/ipv4/tcp_timer.c:56
- tcp_retransmit_timer+0x9b8/0x16d0 net/ipv4/tcp_timer.c:479
- tcp_write_timer_handler+0x42d/0x510 net/ipv4/tcp_timer.c:599
- tcp_write_timer+0xd1/0xf0 net/ipv4/tcp_timer.c:619
- call_timer_fn+0x5f/0x2f0 kernel/time/timer.c:1404
- expire_timers kernel/time/timer.c:1449 [inline]
- __run_timers kernel/time/timer.c:1773 [inline]
- __run_timers kernel/time/timer.c:1740 [inline]
- run_timer_softirq+0xc0c/0xcd0 kernel/time/timer.c:1786
- __do_softirq+0x115/0x33f kernel/softirq.c:292
- invoke_softirq kernel/softirq.c:373 [inline]
- irq_exit+0xbb/0xe0 kernel/softirq.c:413
- exiting_irq arch/x86/include/asm/apic.h:536 [inline]
- smp_apic_timer_interrupt+0xe6/0x280 arch/x86/kernel/apic/apic.c:1137
- apic_timer_interrupt+0xf/0x20 arch/x86/entry/entry_64.S:830
- native_safe_halt+0xe/0x10 arch/x86/kernel/paravirt.c:71
- arch_cpu_idle+0x1f/0x30 arch/x86/kernel/process.c:571
- default_idle_call+0x1e/0x40 kernel/sched/idle.c:94
- cpuidle_idle_call kernel/sched/idle.c:154 [inline]
- do_idle+0x1af/0x280 kernel/sched/idle.c:263
- cpu_startup_entry+0x1b/0x20 kernel/sched/idle.c:355
- start_secondary+0x208/0x260 arch/x86/kernel/smpboot.c:264
- secondary_startup_64+0xa4/0xb0 arch/x86/kernel/head_64.S:241
-
-read to 0xffff8880a69a0170 of 8 bytes by interrupt on cpu 0:
- sk_unhashed include/net/sock.h:607 [inline]
- inet_unhash+0x3d/0x4a0 net/ipv4/inet_hashtables.c:592
- tcp_set_state+0xfa/0x3e0 net/ipv4/tcp.c:2249
- tcp_done+0x93/0x1e0 net/ipv4/tcp.c:3854
- tcp_write_err+0x7e/0xc0 net/ipv4/tcp_timer.c:56
- tcp_retransmit_timer+0x9b8/0x16d0 net/ipv4/tcp_timer.c:479
- tcp_write_timer_handler+0x42d/0x510 net/ipv4/tcp_timer.c:599
- tcp_write_timer+0xd1/0xf0 net/ipv4/tcp_timer.c:619
- call_timer_fn+0x5f/0x2f0 kernel/time/timer.c:1404
- expire_timers kernel/time/timer.c:1449 [inline]
- __run_timers kernel/time/timer.c:1773 [inline]
- __run_timers kernel/time/timer.c:1740 [inline]
- run_timer_softirq+0xc0c/0xcd0 kernel/time/timer.c:1786
- __do_softirq+0x115/0x33f kernel/softirq.c:292
- invoke_softirq kernel/softirq.c:373 [inline]
- irq_exit+0xbb/0xe0 kernel/softirq.c:413
- exiting_irq arch/x86/include/asm/apic.h:536 [inline]
- smp_apic_timer_interrupt+0xe6/0x280 arch/x86/kernel/apic/apic.c:1137
- apic_timer_interrupt+0xf/0x20 arch/x86/entry/entry_64.S:830
- native_safe_halt+0xe/0x10 arch/x86/kernel/paravirt.c:71
- arch_cpu_idle+0x1f/0x30 arch/x86/kernel/process.c:571
- default_idle_call+0x1e/0x40 kernel/sched/idle.c:94
- cpuidle_idle_call kernel/sched/idle.c:154 [inline]
- do_idle+0x1af/0x280 kernel/sched/idle.c:263
- cpu_startup_entry+0x1b/0x20 kernel/sched/idle.c:355
- rest_init+0xec/0xf6 init/main.c:452
- arch_call_rest_init+0x17/0x37
- start_kernel+0x838/0x85e init/main.c:786
- x86_64_start_reservations+0x29/0x2b arch/x86/kernel/head64.c:490
- x86_64_start_kernel+0x72/0x76 arch/x86/kernel/head64.c:471
- secondary_startup_64+0xa4/0xb0 arch/x86/kernel/head_64.S:241
-
-Reported by Kernel Concurrency Sanitizer on:
-CPU: 0 PID: 0 Comm: swapper/0 Not tainted 5.4.0-rc6+ #0
-Hardware name: Google Google Compute Engine/Google Compute Engine,
-BIOS Google 01/01/2011
-
-------------------------------------------------------------------------
-
-This commit therefore replaces C-language assignments with WRITE_ONCE()
-in include/linux/list_nulls.h and include/linux/rculist_nulls.h.
-
-Reported-by: Eric Dumazet <edumazet@google.com> # For KCSAN
-Signed-off-by: Paul E. McKenney <paulmck@kernel.org>
+Fixes: 322b87ca55f2 ("bnxt_en: add page_pool support")
+Signed-off-by: Jonathan Lemon <jonathan.lemon@gmail.com>
+Reviewed-by: Andy Gospodarek <gospo@broadcom.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- include/linux/list_nulls.h    | 8 ++++----
- include/linux/rculist_nulls.h | 8 ++++----
- 2 files changed, 8 insertions(+), 8 deletions(-)
+ drivers/net/ethernet/broadcom/bnxt/bnxt.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/include/linux/list_nulls.h b/include/linux/list_nulls.h
-index 3ef96743db8da..1ecd35664e0d3 100644
---- a/include/linux/list_nulls.h
-+++ b/include/linux/list_nulls.h
-@@ -72,10 +72,10 @@ static inline void hlist_nulls_add_head(struct hlist_nulls_node *n,
- 	struct hlist_nulls_node *first = h->first;
+diff --git a/drivers/net/ethernet/broadcom/bnxt/bnxt.c b/drivers/net/ethernet/broadcom/bnxt/bnxt.c
+index 01b603c5e76ad..9d62200b6c335 100644
+--- a/drivers/net/ethernet/broadcom/bnxt/bnxt.c
++++ b/drivers/net/ethernet/broadcom/bnxt/bnxt.c
+@@ -944,6 +944,7 @@ static struct sk_buff *bnxt_rx_page_skb(struct bnxt *bp,
+ 	dma_addr -= bp->rx_dma_offset;
+ 	dma_unmap_page_attrs(&bp->pdev->dev, dma_addr, PAGE_SIZE, bp->rx_dir,
+ 			     DMA_ATTR_WEAK_ORDERING);
++	page_pool_release_page(rxr->page_pool, page);
  
- 	n->next = first;
--	n->pprev = &h->first;
-+	WRITE_ONCE(n->pprev, &h->first);
- 	h->first = n;
- 	if (!is_a_nulls(first))
--		first->pprev = &n->next;
-+		WRITE_ONCE(first->pprev, &n->next);
- }
- 
- static inline void __hlist_nulls_del(struct hlist_nulls_node *n)
-@@ -85,13 +85,13 @@ static inline void __hlist_nulls_del(struct hlist_nulls_node *n)
- 
- 	WRITE_ONCE(*pprev, next);
- 	if (!is_a_nulls(next))
--		next->pprev = pprev;
-+		WRITE_ONCE(next->pprev, pprev);
- }
- 
- static inline void hlist_nulls_del(struct hlist_nulls_node *n)
- {
- 	__hlist_nulls_del(n);
--	n->pprev = LIST_POISON2;
-+	WRITE_ONCE(n->pprev, LIST_POISON2);
- }
- 
- /**
-diff --git a/include/linux/rculist_nulls.h b/include/linux/rculist_nulls.h
-index 61974c4c566be..90f2e2232c6d7 100644
---- a/include/linux/rculist_nulls.h
-+++ b/include/linux/rculist_nulls.h
-@@ -34,7 +34,7 @@ static inline void hlist_nulls_del_init_rcu(struct hlist_nulls_node *n)
- {
- 	if (!hlist_nulls_unhashed(n)) {
- 		__hlist_nulls_del(n);
--		n->pprev = NULL;
-+		WRITE_ONCE(n->pprev, NULL);
- 	}
- }
- 
-@@ -66,7 +66,7 @@ static inline void hlist_nulls_del_init_rcu(struct hlist_nulls_node *n)
- static inline void hlist_nulls_del_rcu(struct hlist_nulls_node *n)
- {
- 	__hlist_nulls_del(n);
--	n->pprev = LIST_POISON2;
-+	WRITE_ONCE(n->pprev, LIST_POISON2);
- }
- 
- /**
-@@ -94,10 +94,10 @@ static inline void hlist_nulls_add_head_rcu(struct hlist_nulls_node *n,
- 	struct hlist_nulls_node *first = h->first;
- 
- 	n->next = first;
--	n->pprev = &h->first;
-+	WRITE_ONCE(n->pprev, &h->first);
- 	rcu_assign_pointer(hlist_nulls_first_rcu(h), n);
- 	if (!is_a_nulls(first))
--		first->pprev = &n->next;
-+		WRITE_ONCE(first->pprev, &n->next);
- }
- 
- /**
+ 	if (unlikely(!payload))
+ 		payload = eth_get_headlen(bp->dev, data_ptr, len);
 -- 
 2.20.1
 
