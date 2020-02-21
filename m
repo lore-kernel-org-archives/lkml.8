@@ -5,55 +5,49 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CA0FEC35641
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 07:55:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4F587C35641
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 07:55:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A119A24656
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 07:55:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 234E7222C4
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 07:55:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582271723;
-	bh=VsoPGYP7IwxvKxpWReLwO2yQMlJO/BfI+jGEu2gpKqs=;
+	s=default; t=1582271729;
+	bh=rXdWtPMHa6hJZMY0j6WQRhp1vZvRxw1l4dsVIRkRzkI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=xEiptJcWYBO+o02/oSBSv34b889O5DyUbGVC/GRGRY+iBZJRCbm784X9aAZRF6bVQ
-	 jv4M7wH7uLpDFmWE64yl/pSmqGxVxQtFWXem36EbViHQTLU2lVq3Fi5OjddE37GeTj
-	 OlPq8qEoZoyI8sgZiqPcf4cf9kFAvzI6hmah2KpQ=
+	b=sIxyZ9HGMX+A07syYx55DVX7SmvK7jaHeAaZLt1BvoYj4C20j8F9JRGdUoTVAR0DX
+	 yut2tTLDni11ilP6chBP9dYTYBBqEzE3YeJItt5tAz9y6WCJSjMQCwZj8aUwiohPL7
+	 2OCGdMBSn8zrQE63wXoVrKqqp9jhRylsITP4TcAs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730304AbgBUHzW (ORCPT
+        id S1730319AbgBUHz1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Feb 2020 02:55:22 -0500
-Received: from mail.kernel.org ([198.145.29.99]:54182 "EHLO mail.kernel.org"
+        Fri, 21 Feb 2020 02:55:27 -0500
+Received: from mail.kernel.org ([198.145.29.99]:54360 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730194AbgBUHzT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Feb 2020 02:55:19 -0500
+        id S1730194AbgBUHzX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 21 Feb 2020 02:55:23 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C9EA720801;
-        Fri, 21 Feb 2020 07:55:17 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C82A020801;
+        Fri, 21 Feb 2020 07:55:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1582271718;
-        bh=VsoPGYP7IwxvKxpWReLwO2yQMlJO/BfI+jGEu2gpKqs=;
+        s=default; t=1582271723;
+        bh=rXdWtPMHa6hJZMY0j6WQRhp1vZvRxw1l4dsVIRkRzkI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=OJZmOXmlihPXOt8ckDEhSNzJIRnlnXlamGFmxu+BcnGUh0IL6Ck7+KpX0l8serT5L
-         S6IVdNavMz1YKgQvNz/UW17xLgHWglA6FmQWwk++cZI7eNJOyWw60qhi7MnhnCcoha
-         fbFOYtmYlGbDFgosUaR3Kvmz02ENv1sCu2+Nh8cw=
+        b=wdGqr6LYlAdtv7O5P+58Q3e9OObE75hYl4KcANtRMVe7IctTTM5X7lvYrp49/puaD
+         OkNBHk/mLB6Zy8GYEPQgv/xzirGhfKNzn8n2kFlthYjwIs0jUZDzNpPR11aMjGVs+z
+         LGOd/QmNzChZDYJ8oN9MaZY0n5QJJocHaqiiPFbg=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Alim Akhtar <alim.akhtar@samsung.com>,
-        Asutosh Das <asutoshd@codeaurora.org>,
-        Avri Altman <avri.altman@wdc.com>,
-        Bart Van Assche <bvanassche@acm.org>,
-        Bean Huo <beanhuo@micron.com>, Can Guo <cang@codeaurora.org>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Stanley Chu <stanley.chu@mediatek.com>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>,
+        stable@vger.kernel.org, Johan Jonker <jbx6244@gmail.com>,
+        Heiko Stuebner <heiko@sntech.de>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.5 271/399] scsi: ufs: pass device information to apply_dev_quirks
-Date:   Fri, 21 Feb 2020 08:39:56 +0100
-Message-Id: <20200221072428.555909237@linuxfoundation.org>
+Subject: [PATCH 5.5 237/399] arm64: dts: rockchip: fix dwmmc clock name for rk3308
+Date:   Fri, 21 Feb 2020 08:39:22 +0100
+Message-Id: <20200221072425.679507074@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200221072402.315346745@linuxfoundation.org>
 References: <20200221072402.315346745@linuxfoundation.org>
@@ -66,115 +60,59 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Stanley Chu <stanley.chu@mediatek.com>
+From: Johan Jonker <jbx6244@gmail.com>
 
-[ Upstream commit c40ad6b7fcd35bc4d36db820c7737e1aa18d5d41 ]
+[ Upstream commit 2be6a280144e521248a4bdefb691a0a97e604294 ]
 
-Pass UFS device information to vendor-specific variant callback
-"apply_dev_quirks" because some platform vendors need to know such
-information to apply special handling or quirks in specific devices.
+An experimental test with the command below gives this error:
+rk3308-evb.dt.yaml: dwmmc@ff480000: clock-names:2:
+'ciu-drive' was expected
 
-At the same time, modify existing vendor implementations according to the
-new interface for those vendor drivers which will be built-in or built as a
-module alone with UFS core driver.
+'ciu-drv' is not a valid dwmmc clock name,
+so fix this by changing it to 'ciu-drive'.
 
-[mkp: clarified commit desc]
+make ARCH=arm64 dtbs_check
+DT_SCHEMA_FILES=Documentation/devicetree/bindings/mmc/rockchip-dw-mshc.yaml
 
-Cc: Alim Akhtar <alim.akhtar@samsung.com>
-Cc: Asutosh Das <asutoshd@codeaurora.org>
-Cc: Avri Altman <avri.altman@wdc.com>
-Cc: Bart Van Assche <bvanassche@acm.org>
-Cc: Bean Huo <beanhuo@micron.com>
-Cc: Can Guo <cang@codeaurora.org>
-Cc: Matthias Brugger <matthias.bgg@gmail.com>
-Link: https://lore.kernel.org/r/1578726707-6596-2-git-send-email-stanley.chu@mediatek.com
-Reviewed-by: Avri Altman <avri.altman@wdc.com>
-Reviewed-by: Bean Huo <beanhuo@micron.com>
-Signed-off-by: Stanley Chu <stanley.chu@mediatek.com>
-Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
+Signed-off-by: Johan Jonker <jbx6244@gmail.com>
+Link: https://lore.kernel.org/r/20200110161200.22755-1-jbx6244@gmail.com
+Signed-off-by: Heiko Stuebner <heiko@sntech.de>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/scsi/ufs/ufs-qcom.c | 3 ++-
- drivers/scsi/ufs/ufshcd.c   | 8 ++++----
- drivers/scsi/ufs/ufshcd.h   | 7 ++++---
- 3 files changed, 10 insertions(+), 8 deletions(-)
+ arch/arm64/boot/dts/rockchip/rk3308.dtsi | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/scsi/ufs/ufs-qcom.c b/drivers/scsi/ufs/ufs-qcom.c
-index c69c29a1ceb90..ebb5c66e069fa 100644
---- a/drivers/scsi/ufs/ufs-qcom.c
-+++ b/drivers/scsi/ufs/ufs-qcom.c
-@@ -949,7 +949,8 @@ out:
- 	return err;
- }
- 
--static int ufs_qcom_apply_dev_quirks(struct ufs_hba *hba)
-+static int ufs_qcom_apply_dev_quirks(struct ufs_hba *hba,
-+				     struct ufs_dev_desc *card)
- {
- 	int err = 0;
- 
-diff --git a/drivers/scsi/ufs/ufshcd.c b/drivers/scsi/ufs/ufshcd.c
-index 7d8300c9a0148..5340a980d24b8 100644
---- a/drivers/scsi/ufs/ufshcd.c
-+++ b/drivers/scsi/ufs/ufshcd.c
-@@ -6798,7 +6798,8 @@ out:
- 	return ret;
- }
- 
--static void ufshcd_tune_unipro_params(struct ufs_hba *hba)
-+static void ufshcd_tune_unipro_params(struct ufs_hba *hba,
-+				      struct ufs_dev_desc *card)
- {
- 	if (ufshcd_is_unipro_pa_params_tuning_req(hba)) {
- 		ufshcd_tune_pa_tactivate(hba);
-@@ -6812,7 +6813,7 @@ static void ufshcd_tune_unipro_params(struct ufs_hba *hba)
- 	if (hba->dev_quirks & UFS_DEVICE_QUIRK_HOST_PA_TACTIVATE)
- 		ufshcd_quirk_tune_host_pa_tactivate(hba);
- 
--	ufshcd_vops_apply_dev_quirks(hba);
-+	ufshcd_vops_apply_dev_quirks(hba, card);
- }
- 
- static void ufshcd_clear_dbg_ufs_stats(struct ufs_hba *hba)
-@@ -6975,10 +6976,9 @@ static int ufshcd_probe_hba(struct ufs_hba *hba)
- 	}
- 
- 	ufs_fixup_device_setup(hba, &card);
-+	ufshcd_tune_unipro_params(hba, &card);
- 	ufs_put_device_desc(&card);
- 
--	ufshcd_tune_unipro_params(hba);
--
- 	/* UFS device is also active now */
- 	ufshcd_set_ufs_dev_active(hba);
- 	ufshcd_force_reset_auto_bkops(hba);
-diff --git a/drivers/scsi/ufs/ufshcd.h b/drivers/scsi/ufs/ufshcd.h
-index 2e59f9d8ab89e..46bec0e18c724 100644
---- a/drivers/scsi/ufs/ufshcd.h
-+++ b/drivers/scsi/ufs/ufshcd.h
-@@ -322,7 +322,7 @@ struct ufs_hba_variant_ops {
- 	void	(*setup_task_mgmt)(struct ufs_hba *, int, u8);
- 	void    (*hibern8_notify)(struct ufs_hba *, enum uic_cmd_dme,
- 					enum ufs_notify_change_status);
--	int	(*apply_dev_quirks)(struct ufs_hba *);
-+	int	(*apply_dev_quirks)(struct ufs_hba *, struct ufs_dev_desc *);
- 	int     (*suspend)(struct ufs_hba *, enum ufs_pm_op);
- 	int     (*resume)(struct ufs_hba *, enum ufs_pm_op);
- 	void	(*dbg_register_dump)(struct ufs_hba *hba);
-@@ -1057,10 +1057,11 @@ static inline void ufshcd_vops_hibern8_notify(struct ufs_hba *hba,
- 		return hba->vops->hibern8_notify(hba, cmd, status);
- }
- 
--static inline int ufshcd_vops_apply_dev_quirks(struct ufs_hba *hba)
-+static inline int ufshcd_vops_apply_dev_quirks(struct ufs_hba *hba,
-+					       struct ufs_dev_desc *card)
- {
- 	if (hba->vops && hba->vops->apply_dev_quirks)
--		return hba->vops->apply_dev_quirks(hba);
-+		return hba->vops->apply_dev_quirks(hba, card);
- 	return 0;
- }
- 
+diff --git a/arch/arm64/boot/dts/rockchip/rk3308.dtsi b/arch/arm64/boot/dts/rockchip/rk3308.dtsi
+index 8bdc66c62975b..fa0d55f1a5871 100644
+--- a/arch/arm64/boot/dts/rockchip/rk3308.dtsi
++++ b/arch/arm64/boot/dts/rockchip/rk3308.dtsi
+@@ -591,7 +591,7 @@
+ 		bus-width = <4>;
+ 		clocks = <&cru HCLK_SDMMC>, <&cru SCLK_SDMMC>,
+ 			 <&cru SCLK_SDMMC_DRV>, <&cru SCLK_SDMMC_SAMPLE>;
+-		clock-names = "biu", "ciu", "ciu-drv", "ciu-sample";
++		clock-names = "biu", "ciu", "ciu-drive", "ciu-sample";
+ 		fifo-depth = <0x100>;
+ 		max-frequency = <150000000>;
+ 		pinctrl-names = "default";
+@@ -606,7 +606,7 @@
+ 		bus-width = <8>;
+ 		clocks = <&cru HCLK_EMMC>, <&cru SCLK_EMMC>,
+ 			 <&cru SCLK_EMMC_DRV>, <&cru SCLK_EMMC_SAMPLE>;
+-		clock-names = "biu", "ciu", "ciu-drv", "ciu-sample";
++		clock-names = "biu", "ciu", "ciu-drive", "ciu-sample";
+ 		fifo-depth = <0x100>;
+ 		max-frequency = <150000000>;
+ 		status = "disabled";
+@@ -619,7 +619,7 @@
+ 		bus-width = <4>;
+ 		clocks = <&cru HCLK_SDIO>, <&cru SCLK_SDIO>,
+ 			 <&cru SCLK_SDIO_DRV>, <&cru SCLK_SDIO_SAMPLE>;
+-		clock-names = "biu", "ciu", "ciu-drv", "ciu-sample";
++		clock-names = "biu", "ciu", "ciu-drive", "ciu-sample";
+ 		fifo-depth = <0x100>;
+ 		max-frequency = <150000000>;
+ 		pinctrl-names = "default";
 -- 
 2.20.1
 
