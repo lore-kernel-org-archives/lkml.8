@@ -5,52 +5,49 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 438EAC35641
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 08:47:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AFA3CC35641
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 08:47:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 17018206DB
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 08:47:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 848E6206DB
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 08:47:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582274855;
-	bh=Xtj/2LP1zyfjNHngLDdDkOuIo8CJqF67tevzFrepR9M=;
+	s=default; t=1582274858;
+	bh=wySVuzOAKsVfP2zWPLQgRaUCUUY7XFfw5EC5uuHR3qU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=glqryAs+2McMuuqP21NBBsmF+JtSlSPicvpn1/NBflhIJRlLx3m5skzTj35SAiU8U
-	 bZUFjBGwDzJoDPZgULoG6Tvl0lJKw92FCtpFlQZ5D2b232actIppQPekRQEwy/l75M
-	 GEeb1nc5yPz0eSwHT+QdnbmDl8wU63JwMm1Z8noo=
+	b=Rid6c6H21rIw21D0CzSByF7q6lEGJQv6hu4MTYvToqZ3HMadAHJQNbmNFLbOsj+2b
+	 G3TMeopj8c7oAWDnAvlk6QQ8aX8K/+W8Q2RhOI39J+o8m3SrGPMhfya2LBriluljlg
+	 zSb8oP7I9QhcLUGZZFHqeHi4QGszJfXk08BArrMw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733079AbgBUIre (ORCPT
+        id S1728687AbgBUHs2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Feb 2020 03:47:34 -0500
-Received: from mail.kernel.org ([198.145.29.99]:44694 "EHLO mail.kernel.org"
+        Fri, 21 Feb 2020 02:48:28 -0500
+Received: from mail.kernel.org ([198.145.29.99]:44496 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727893AbgBUHsf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Feb 2020 02:48:35 -0500
+        id S1728122AbgBUHsZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 21 Feb 2020 02:48:25 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B46A020801;
-        Fri, 21 Feb 2020 07:48:34 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1DF20207FD;
+        Fri, 21 Feb 2020 07:48:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1582271315;
-        bh=Xtj/2LP1zyfjNHngLDdDkOuIo8CJqF67tevzFrepR9M=;
+        s=default; t=1582271304;
+        bh=wySVuzOAKsVfP2zWPLQgRaUCUUY7XFfw5EC5uuHR3qU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=QlrZNvX8di5IQyYglflq9gJCDZXeSlUihoXHF19L5NPtJsn/gPeU7mmlgB5Jy2x3b
-         ge+NXvwkVpJ+RJZfY7UWa8lepM6R2eeO9UQDpN6t5fpE4pHn6P8QTYIeEVPADlrmnC
-         w8LEJ5J6aLgl3o1HqSRrdpsqc8SwSfY6Gj/nryeQ=
+        b=jXa1KmZpqWhVVlI8JpTD3AtfbPxm+4SJS9yJU+CfJaAssPlIEKjtFUQHJSExffmAu
+         CJkthCUE9PXhxsRwIPdIYptlJxRTxV9MtujtBz+Ou40sgIY3pGpGAvnO25/VdJadGx
+         jkKQsPdfUD9UngwRULmgaBdQOy5J1rQGV9XpWyLE=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Sathyanarayana Nujella <sathyanarayana.nujella@intel.com>,
-        Jairaj Arava <jairaj.arava@intel.com>,
-        Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>,
-        Mark Brown <broonie@kernel.org>,
+        stable@vger.kernel.org, Martin Schiller <ms@dev.tdt.de>,
+        "David S. Miller" <davem@davemloft.net>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.5 112/399] ASoC: intel: sof_rt5682: Add quirk for number of HDMI DAIs
-Date:   Fri, 21 Feb 2020 08:37:17 +0100
-Message-Id: <20200221072413.334845396@linuxfoundation.org>
+Subject: [PATCH 5.5 078/399] wan/hdlc_x25: fix skb handling
+Date:   Fri, 21 Feb 2020 08:36:43 +0100
+Message-Id: <20200221072409.927263069@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200221072402.315346745@linuxfoundation.org>
 References: <20200221072402.315346745@linuxfoundation.org>
@@ -63,64 +60,68 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Sathyanarayana Nujella <sathyanarayana.nujella@intel.com>
+From: Martin Schiller <ms@dev.tdt.de>
 
-[ Upstream commit c68e07970eca79106b0c35b88a12298569590081 ]
+[ Upstream commit 953c4a08dfc9ffe763a8340ac10f459d6c6cc4eb ]
 
-TGL supports one more HDMI DAI than previous models.
-So add quirk support for number of HDMI DAI's.
+o call skb_reset_network_header() before hdlc->xmit()
+ o change skb proto to HDLC (0x0019) before hdlc->xmit()
+ o call dev_queue_xmit_nit() before hdlc->xmit()
 
-Signed-off-by: Sathyanarayana Nujella <sathyanarayana.nujella@intel.com>
-Signed-off-by: Jairaj Arava <jairaj.arava@intel.com>
-Signed-off-by: Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
-Link: https://lore.kernel.org/r/20191126143205.21987-2-pierre-louis.bossart@linux.intel.com
-Signed-off-by: Mark Brown <broonie@kernel.org>
+This changes make it possible to trace (tcpdump) outgoing layer2
+(ETH_P_HDLC) packets
+
+Additionally call skb_reset_network_header() after each skb_push() /
+skb_pull().
+
+Signed-off-by: Martin Schiller <ms@dev.tdt.de>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- sound/soc/intel/boards/sof_rt5682.c | 14 +++++++++++---
- 1 file changed, 11 insertions(+), 3 deletions(-)
+ drivers/net/wan/hdlc_x25.c | 13 +++++++++++--
+ 1 file changed, 11 insertions(+), 2 deletions(-)
 
-diff --git a/sound/soc/intel/boards/sof_rt5682.c b/sound/soc/intel/boards/sof_rt5682.c
-index 751b8ea6ae1f5..57adadacbf436 100644
---- a/sound/soc/intel/boards/sof_rt5682.c
-+++ b/sound/soc/intel/boards/sof_rt5682.c
-@@ -35,6 +35,10 @@
- #define SOF_RT5682_SSP_AMP(quirk)	\
- 	(((quirk) << SOF_RT5682_SSP_AMP_SHIFT) & SOF_RT5682_SSP_AMP_MASK)
- #define SOF_RT5682_MCLK_BYTCHT_EN		BIT(9)
-+#define SOF_RT5682_NUM_HDMIDEV_SHIFT		10
-+#define SOF_RT5682_NUM_HDMIDEV_MASK		(GENMASK(12, 10))
-+#define SOF_RT5682_NUM_HDMIDEV(quirk)	\
-+	((quirk << SOF_RT5682_NUM_HDMIDEV_SHIFT) & SOF_RT5682_NUM_HDMIDEV_MASK)
+diff --git a/drivers/net/wan/hdlc_x25.c b/drivers/net/wan/hdlc_x25.c
+index 5643675ff7241..bf78073ee7fd9 100644
+--- a/drivers/net/wan/hdlc_x25.c
++++ b/drivers/net/wan/hdlc_x25.c
+@@ -62,11 +62,12 @@ static int x25_data_indication(struct net_device *dev, struct sk_buff *skb)
+ {
+ 	unsigned char *ptr;
  
- /* Default: MCLK on, MCLK 19.2M, SSP0  */
- static unsigned long sof_rt5682_quirk = SOF_RT5682_MCLK_EN |
-@@ -594,6 +598,8 @@ static int sof_audio_probe(struct platform_device *pdev)
- 	if (!ctx)
- 		return -ENOMEM;
- 
-+	dmi_check_system(sof_rt5682_quirk_table);
-+
- 	if (soc_intel_is_byt() || soc_intel_is_cht()) {
- 		is_legacy_cpu = 1;
- 		dmic_be_num = 0;
-@@ -604,11 +610,13 @@ static int sof_audio_probe(struct platform_device *pdev)
- 						SOF_RT5682_SSP_CODEC(2);
- 	} else {
- 		dmic_be_num = 2;
--		hdmi_num = 3;
-+		hdmi_num = (sof_rt5682_quirk & SOF_RT5682_NUM_HDMIDEV_MASK) >>
-+			 SOF_RT5682_NUM_HDMIDEV_SHIFT;
-+		/* default number of HDMI DAI's */
-+		if (!hdmi_num)
-+			hdmi_num = 3;
- 	}
- 
--	dmi_check_system(sof_rt5682_quirk_table);
+-	skb_push(skb, 1);
 -
- 	/* need to get main clock from pmc */
- 	if (sof_rt5682_quirk & SOF_RT5682_MCLK_BYTCHT_EN) {
- 		ctx->mclk = devm_clk_get(&pdev->dev, "pmc_plt_clk_3");
+ 	if (skb_cow(skb, 1))
+ 		return NET_RX_DROP;
+ 
++	skb_push(skb, 1);
++	skb_reset_network_header(skb);
++
+ 	ptr  = skb->data;
+ 	*ptr = X25_IFACE_DATA;
+ 
+@@ -79,6 +80,13 @@ static int x25_data_indication(struct net_device *dev, struct sk_buff *skb)
+ static void x25_data_transmit(struct net_device *dev, struct sk_buff *skb)
+ {
+ 	hdlc_device *hdlc = dev_to_hdlc(dev);
++
++	skb_reset_network_header(skb);
++	skb->protocol = hdlc_type_trans(skb, dev);
++
++	if (dev_nit_active(dev))
++		dev_queue_xmit_nit(skb, dev);
++
+ 	hdlc->xmit(skb, dev); /* Ignore return value :-( */
+ }
+ 
+@@ -93,6 +101,7 @@ static netdev_tx_t x25_xmit(struct sk_buff *skb, struct net_device *dev)
+ 	switch (skb->data[0]) {
+ 	case X25_IFACE_DATA:	/* Data to be transmitted */
+ 		skb_pull(skb, 1);
++		skb_reset_network_header(skb);
+ 		if ((result = lapb_data_request(dev, skb)) != LAPB_OK)
+ 			dev_kfree_skb(skb);
+ 		return NETDEV_TX_OK;
 -- 
 2.20.1
 
