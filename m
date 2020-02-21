@@ -5,48 +5,50 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7AE67C35640
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 07:48:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2952DC35641
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 07:48:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 50F15208C4
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 07:48:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F05CD24650
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 07:48:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582271332;
-	bh=pkzmAGkgONH4rFn4Kchybr1EOFbP5fb3Z/OEklRicnc=;
+	s=default; t=1582271335;
+	bh=ekYjyNCK8N49Zy3Z98Cf9hLx+id4hjIpCRRgjkWzGX4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=T3uEFPDR9USl7N/1BUS+/xnvHEuhVVbueTcYbAN+6Gb4u6E2Dpk/j8bmcavyvaIV7
-	 CxJ3p25D/nSk6hVqGXIlYmFKKlAli8rk9T0xmhdI3vWXBiCaOagoM/sBR9k6R8CDAL
-	 tKlv0jBK+X0CCN0mS7zt9cU77sRT8PLbviUFrjRQ=
+	b=fFSjtSOlgARFqwhlfFa/3JE1A1USqzAabinay3rlfjO2/lwGQKJqOoGgC5978Sxl5
+	 iZlAzH8jsje9PWpmhWOfIr9DPIObwB21VEcpvh+l0IbzLxySotxzRU5y0DE9LXLPuQ
+	 4m64FCNMQk+AlznrdBLg5Dik6njnBlImNyIQiADY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729134AbgBUHsn (ORCPT
+        id S1728595AbgBUHsx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Feb 2020 02:48:43 -0500
-Received: from mail.kernel.org ([198.145.29.99]:44828 "EHLO mail.kernel.org"
+        Fri, 21 Feb 2020 02:48:53 -0500
+Received: from mail.kernel.org ([198.145.29.99]:44852 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727315AbgBUHsl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Feb 2020 02:48:41 -0500
+        id S1729093AbgBUHsn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 21 Feb 2020 02:48:43 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C6C55208C4;
-        Fri, 21 Feb 2020 07:48:39 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4DDEC208C4;
+        Fri, 21 Feb 2020 07:48:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1582271320;
-        bh=pkzmAGkgONH4rFn4Kchybr1EOFbP5fb3Z/OEklRicnc=;
+        s=default; t=1582271322;
+        bh=ekYjyNCK8N49Zy3Z98Cf9hLx+id4hjIpCRRgjkWzGX4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=2KfnzyHmxLccS+5su/nNBWr/99jO0Fvdo/tDeJ4zCI99vs5e+tVVWk6CXdtSLvENO
-         wxyk9SbTzsciV3OSxlefdYlVIpCZkeYzrYETbkilXm61WXR0FrIHqKfLVfxuXqRkel
-         k001DVbMq2X/vr0NxGGc+SDN6Skv2ITc+FVDQ9Kw=
+        b=LgdGCNCZImQ6/vdnQt0gX0AiWQlA0gunp/XXodiUwB6dfK2UeZkQmfgryZlKytwfQ
+         O9h4LX93MShEITyDNOEISLPeo/HDpnfNIqKvEkLtk0UQ6ChG/9lWY9oHFL9psQGv2h
+         Js4igHxFPK6OLY4+4mKuaAvX/yxYXcm4atX8Cx8U=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Viresh Kumar <viresh.kumar@linaro.org>,
+        stable@vger.kernel.org, rsiddoji@codeaurora.org,
+        Stephen Smalley <sds@tycho.nsa.gov>,
+        Paul Moore <paul@paul-moore.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.5 122/399] opp: Free static OPPs on errors while adding them
-Date:   Fri, 21 Feb 2020 08:37:27 +0100
-Message-Id: <20200221072414.333210327@linuxfoundation.org>
+Subject: [PATCH 5.5 123/399] selinux: ensure we cleanup the internal AVC counters on error in avc_insert()
+Date:   Fri, 21 Feb 2020 08:37:28 +0100
+Message-Id: <20200221072414.435063037@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200221072402.315346745@linuxfoundation.org>
 References: <20200221072402.315346745@linuxfoundation.org>
@@ -59,76 +61,92 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Viresh Kumar <viresh.kumar@linaro.org>
+From: Paul Moore <paul@paul-moore.com>
 
-[ Upstream commit ba0033192145cbd4e70ef64552958b13d597eb9e ]
+[ Upstream commit d8db60cb23e49a92cf8cada3297395c7fa50fdf8 ]
 
-The static OPPs aren't getting freed properly, if errors occur while
-adding them. Fix that by calling _put_opp_list_kref() and putting their
-reference on failures.
+Fix avc_insert() to call avc_node_kill() if we've already allocated
+an AVC node and the code fails to insert the node in the cache.
 
-Fixes: 11e1a1648298 ("opp: Don't decrement uninitialized list_kref")
-Signed-off-by: Viresh Kumar <viresh.kumar@linaro.org>
+Fixes: fa1aa143ac4a ("selinux: extended permissions for ioctls")
+Reported-by: rsiddoji@codeaurora.org
+Suggested-by: Stephen Smalley <sds@tycho.nsa.gov>
+Acked-by: Stephen Smalley <sds@tycho.nsa.gov>
+Signed-off-by: Paul Moore <paul@paul-moore.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/opp/of.c | 17 +++++++++++++----
- 1 file changed, 13 insertions(+), 4 deletions(-)
+ security/selinux/avc.c | 51 ++++++++++++++++++++----------------------
+ 1 file changed, 24 insertions(+), 27 deletions(-)
 
-diff --git a/drivers/opp/of.c b/drivers/opp/of.c
-index 1cbb58240b801..1e5fcdee043c4 100644
---- a/drivers/opp/of.c
-+++ b/drivers/opp/of.c
-@@ -678,15 +678,17 @@ static int _of_add_opp_table_v2(struct device *dev, struct opp_table *opp_table)
- 			dev_err(dev, "%s: Failed to add OPP, %d\n", __func__,
- 				ret);
- 			of_node_put(np);
--			return ret;
-+			goto put_list_kref;
- 		} else if (opp) {
- 			count++;
- 		}
- 	}
+diff --git a/security/selinux/avc.c b/security/selinux/avc.c
+index 23dc888ae3056..6646300f7ccb2 100644
+--- a/security/selinux/avc.c
++++ b/security/selinux/avc.c
+@@ -617,40 +617,37 @@ static struct avc_node *avc_insert(struct selinux_avc *avc,
+ 	struct avc_node *pos, *node = NULL;
+ 	int hvalue;
+ 	unsigned long flag;
++	spinlock_t *lock;
++	struct hlist_head *head;
  
- 	/* There should be one of more OPP defined */
--	if (WARN_ON(!count))
--		return -ENOENT;
-+	if (WARN_ON(!count)) {
-+		ret = -ENOENT;
-+		goto put_list_kref;
+ 	if (avc_latest_notif_update(avc, avd->seqno, 1))
+-		goto out;
++		return NULL;
+ 
+ 	node = avc_alloc_node(avc);
+-	if (node) {
+-		struct hlist_head *head;
+-		spinlock_t *lock;
+-		int rc = 0;
+-
+-		hvalue = avc_hash(ssid, tsid, tclass);
+-		avc_node_populate(node, ssid, tsid, tclass, avd);
+-		rc = avc_xperms_populate(node, xp_node);
+-		if (rc) {
+-			kmem_cache_free(avc_node_cachep, node);
+-			return NULL;
+-		}
+-		head = &avc->avc_cache.slots[hvalue];
+-		lock = &avc->avc_cache.slots_lock[hvalue];
++	if (!node)
++		return NULL;
+ 
+-		spin_lock_irqsave(lock, flag);
+-		hlist_for_each_entry(pos, head, list) {
+-			if (pos->ae.ssid == ssid &&
+-			    pos->ae.tsid == tsid &&
+-			    pos->ae.tclass == tclass) {
+-				avc_node_replace(avc, node, pos);
+-				goto found;
+-			}
++	avc_node_populate(node, ssid, tsid, tclass, avd);
++	if (avc_xperms_populate(node, xp_node)) {
++		avc_node_kill(avc, node);
++		return NULL;
 +	}
- 
- 	list_for_each_entry(opp, &opp_table->opp_list, node)
- 		pstate_count += !!opp->pstate;
-@@ -695,7 +697,8 @@ static int _of_add_opp_table_v2(struct device *dev, struct opp_table *opp_table)
- 	if (pstate_count && pstate_count != count) {
- 		dev_err(dev, "Not all nodes have performance state set (%d: %d)\n",
- 			count, pstate_count);
--		return -ENOENT;
-+		ret = -ENOENT;
-+		goto put_list_kref;
++
++	hvalue = avc_hash(ssid, tsid, tclass);
++	head = &avc->avc_cache.slots[hvalue];
++	lock = &avc->avc_cache.slots_lock[hvalue];
++	spin_lock_irqsave(lock, flag);
++	hlist_for_each_entry(pos, head, list) {
++		if (pos->ae.ssid == ssid &&
++			pos->ae.tsid == tsid &&
++			pos->ae.tclass == tclass) {
++			avc_node_replace(avc, node, pos);
++			goto found;
+ 		}
+-		hlist_add_head_rcu(&node->list, head);
+-found:
+-		spin_unlock_irqrestore(lock, flag);
  	}
- 
- 	if (pstate_count)
-@@ -704,6 +707,11 @@ static int _of_add_opp_table_v2(struct device *dev, struct opp_table *opp_table)
- 	opp_table->parsed_static_opps = true;
- 
- 	return 0;
-+
-+put_list_kref:
-+	_put_opp_list_kref(opp_table);
-+
-+	return ret;
+-out:
++	hlist_add_head_rcu(&node->list, head);
++found:
++	spin_unlock_irqrestore(lock, flag);
+ 	return node;
  }
  
- /* Initializes OPP tables based on old-deprecated bindings */
-@@ -738,6 +746,7 @@ static int _of_add_opp_table_v1(struct device *dev, struct opp_table *opp_table)
- 		if (ret) {
- 			dev_err(dev, "%s: Failed to add OPP %ld (%d)\n",
- 				__func__, freq, ret);
-+			_put_opp_list_kref(opp_table);
- 			return ret;
- 		}
- 		nr -= 2;
 -- 
 2.20.1
 
