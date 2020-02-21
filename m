@@ -5,50 +5,48 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 25EB1C35640
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 08:05:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0FF72C35643
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 08:06:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F0A3B222C4
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 08:05:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D87062073A
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 08:06:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582272359;
-	bh=FsDCGFXutCMRdUwir8BJRRaQZlwlI0XCDXOKRaP7r9A=;
+	s=default; t=1582272361;
+	bh=HPTBNIgufBhtrErdc5gIbRW4g4btuC/j0cH6+rg11NE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ulaH83pJKq+1lv8NTUlYqaQ/xl4CnJFlHl/hbESqeN698Mziv8dBn3BX7v8nfA+mW
-	 bKS/A+YPNpRnCVedOMKvkXS+XDqsxoVFupfMN4cN8nE7KS3UmsffU4c8TlMtIkb2DC
-	 UTp3alKmZ0PcMN7qM5jVRsSw+ZxqZJIvWTvjMqsY=
+	b=H2AH2kkonyonvZddd1xoQ3E31UdoA+H8y7it1sVBU+WPPGrCSI5RdzfmSGofo8XXs
+	 iUhGh7W3yMNRjSFLGcim8xpXeQk3Vc6H5QSXtd1yFEkaHQ8CVoUcdY/o4pZ4BOc0oR
+	 9yXn92F8UzIZ0iRCQnYIE/lqAEA3guJTPuVTnngs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731890AbgBUIF5 (ORCPT
+        id S1730263AbgBUIGA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Feb 2020 03:05:57 -0500
-Received: from mail.kernel.org ([198.145.29.99]:39444 "EHLO mail.kernel.org"
+        Fri, 21 Feb 2020 03:06:00 -0500
+Received: from mail.kernel.org ([198.145.29.99]:39500 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731870AbgBUIFu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Feb 2020 03:05:50 -0500
+        id S1731883AbgBUIFx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 21 Feb 2020 03:05:53 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 75DBB20578;
-        Fri, 21 Feb 2020 08:05:48 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B080120801;
+        Fri, 21 Feb 2020 08:05:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1582272348;
-        bh=FsDCGFXutCMRdUwir8BJRRaQZlwlI0XCDXOKRaP7r9A=;
+        s=default; t=1582272352;
+        bh=HPTBNIgufBhtrErdc5gIbRW4g4btuC/j0cH6+rg11NE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=KcxN6DC9VBBiZieYOHphWC0MzV2hyxMTXskzSchmyeSGgQ3KzYpFv6F90MiYdPpnY
-         cCMMSNKXztmMPY1cBn/AH7wwwwTDZfNZ9UBHpf9GDrUdPKzWt0k8yuCualsJcOt7Et
-         EHZDR9EEXzq1eFmerNfHZ0PUHrMJwqWoRCH1P6IU=
+        b=GDP8bYufzl+bkoak0WDkhp/jFaUgbzE8EvqNj2Emxg+k0BXM6cSFcr5ckUE0pgDX3
+         BdXFECrrSjEm69kU5tv/qYltAoZYTmFB5a88DcbdANDVBYEK0wRyVo0dWzZ9SUX68H
+         V4lLHMpBZ7soHxHl1bF0DRbkagT9/YyS63Vzj6Vc=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Oliver OHalloran <oohall@gmail.com>,
-        Alexey Kardashevskiy <aik@ozlabs.ru>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 073/344] powerpc/iov: Move VF pdev fixup into pcibios_fixup_iov()
-Date:   Fri, 21 Feb 2020 08:37:52 +0100
-Message-Id: <20200221072355.632124230@linuxfoundation.org>
+        stable@vger.kernel.org, Kai Li <li.kai4@h3c.com>,
+        Theodore Tso <tytso@mit.edu>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.4 064/344] jbd2: clear JBD2_ABORT flag before journal_reset to update log tail info when load journal
+Date:   Fri, 21 Feb 2020 08:37:43 +0100
+Message-Id: <20200221072354.832846800@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200221072349.335551332@linuxfoundation.org>
 References: <20200221072349.335551332@linuxfoundation.org>
@@ -61,121 +59,53 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Oliver O'Halloran <oohall@gmail.com>
+From: Kai Li <li.kai4@h3c.com>
 
-[ Upstream commit 965c94f309be58fbcc6c8d3e4f123376c5970d79 ]
+[ Upstream commit a09decff5c32060639a685581c380f51b14e1fc2 ]
 
-An ioda_pe for each VF is allocated in pnv_pci_sriov_enable() before
-the pci_dev for the VF is created. We need to set the pe->pdev pointer
-at some point after the pci_dev is created. Currently we do that in:
+If the journal is dirty when the filesystem is mounted, jbd2 will replay
+the journal but the journal superblock will not be updated by
+journal_reset() because JBD2_ABORT flag is still set (it was set in
+journal_init_common()). This is problematic because when a new transaction
+is then committed, it will be recorded in block 1 (journal->j_tail was set
+to 1 in journal_reset()). If unclean shutdown happens again before the
+journal superblock is updated, the new recorded transaction will not be
+replayed during the next mount (because of stale sb->s_start and
+sb->s_sequence values) which can lead to filesystem corruption.
 
-pcibios_bus_add_device()
-	pnv_pci_dma_dev_setup() (via phb->ops.dma_dev_setup)
-		/* fixup is done here */
-		pnv_pci_ioda_dma_dev_setup() (via pnv_phb->dma_dev_setup)
-
-The fixup needs to be done before setting up DMA for for the VF's PE,
-but there's no real reason to delay it until this point. Move the
-fixup into pnv_pci_ioda_fixup_iov() so the ordering is:
-
-	pcibios_add_device()
-		pnv_pci_ioda_fixup_iov() (via ppc_md.pcibios_fixup_sriov)
-
-	pcibios_bus_add_device()
-		...
-
-This isn't strictly required, but it's a slightly more logical place
-to do the fixup and it simplifies pnv_pci_dma_dev_setup().
-
-Signed-off-by: Oliver O'Halloran <oohall@gmail.com>
-Reviewed-by: Alexey Kardashevskiy <aik@ozlabs.ru>
-Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
-Link: https://lore.kernel.org/r/20200110070207.439-4-oohall@gmail.com
+Fixes: 85e0c4e89c1b ("jbd2: if the journal is aborted then don't allow update of the log tail")
+Signed-off-by: Kai Li <li.kai4@h3c.com>
+Link: https://lore.kernel.org/r/20200111022542.5008-1-li.kai4@h3c.com
+Signed-off-by: Theodore Ts'o <tytso@mit.edu>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/powerpc/platforms/powernv/pci-ioda.c | 29 +++++++++++++++++++----
- arch/powerpc/platforms/powernv/pci.c      | 14 -----------
- 2 files changed, 25 insertions(+), 18 deletions(-)
+ fs/jbd2/journal.c | 6 +++++-
+ 1 file changed, 5 insertions(+), 1 deletion(-)
 
-diff --git a/arch/powerpc/platforms/powernv/pci-ioda.c b/arch/powerpc/platforms/powernv/pci-ioda.c
-index 59de6a5bc41c2..058223233088e 100644
---- a/arch/powerpc/platforms/powernv/pci-ioda.c
-+++ b/arch/powerpc/platforms/powernv/pci-ioda.c
-@@ -2900,9 +2900,6 @@ static void pnv_pci_ioda_fixup_iov_resources(struct pci_dev *pdev)
- 	struct pci_dn *pdn;
- 	int mul, total_vfs;
- 
--	if (!pdev->is_physfn || pci_dev_is_added(pdev))
--		return;
--
- 	pdn = pci_get_pdn(pdev);
- 	pdn->vfs_expanded = 0;
- 	pdn->m64_single_mode = false;
-@@ -2977,6 +2974,30 @@ truncate_iov:
- 		res->end = res->start - 1;
+diff --git a/fs/jbd2/journal.c b/fs/jbd2/journal.c
+index ef485f892d1b0..389c9be4e7919 100644
+--- a/fs/jbd2/journal.c
++++ b/fs/jbd2/journal.c
+@@ -1682,6 +1682,11 @@ int jbd2_journal_load(journal_t *journal)
+ 		       journal->j_devname);
+ 		return -EFSCORRUPTED;
  	}
- }
-+
-+static void pnv_pci_ioda_fixup_iov(struct pci_dev *pdev)
-+{
-+	if (WARN_ON(pci_dev_is_added(pdev)))
-+		return;
-+
-+	if (pdev->is_virtfn) {
-+		struct pnv_ioda_pe *pe = pnv_ioda_get_pe(pdev);
-+
-+		/*
-+		 * VF PEs are single-device PEs so their pdev pointer needs to
-+		 * be set. The pdev doesn't exist when the PE is allocated (in
-+		 * (pcibios_sriov_enable()) so we fix it up here.
-+		 */
-+		pe->pdev = pdev;
-+		WARN_ON(!(pe->flags & PNV_IODA_PE_VF));
-+	} else if (pdev->is_physfn) {
-+		/*
-+		 * For PFs adjust their allocated IOV resources to match what
-+		 * the PHB can support using it's M64 BAR table.
-+		 */
-+		pnv_pci_ioda_fixup_iov_resources(pdev);
-+	}
-+}
- #endif /* CONFIG_PCI_IOV */
++	/*
++	 * clear JBD2_ABORT flag initialized in journal_init_common
++	 * here to update log tail information with the newest seq.
++	 */
++	journal->j_flags &= ~JBD2_ABORT;
  
- static void pnv_ioda_setup_pe_res(struct pnv_ioda_pe *pe,
-@@ -3873,7 +3894,7 @@ static void __init pnv_pci_init_ioda_phb(struct device_node *np,
- 	ppc_md.pcibios_default_alignment = pnv_pci_default_alignment;
+ 	/* OK, we've finished with the dynamic journal bits:
+ 	 * reinitialise the dynamic contents of the superblock in memory
+@@ -1689,7 +1694,6 @@ int jbd2_journal_load(journal_t *journal)
+ 	if (journal_reset(journal))
+ 		goto recovery_error;
  
- #ifdef CONFIG_PCI_IOV
--	ppc_md.pcibios_fixup_sriov = pnv_pci_ioda_fixup_iov_resources;
-+	ppc_md.pcibios_fixup_sriov = pnv_pci_ioda_fixup_iov;
- 	ppc_md.pcibios_iov_resource_alignment = pnv_pci_iov_resource_alignment;
- 	ppc_md.pcibios_sriov_enable = pnv_pcibios_sriov_enable;
- 	ppc_md.pcibios_sriov_disable = pnv_pcibios_sriov_disable;
-diff --git a/arch/powerpc/platforms/powernv/pci.c b/arch/powerpc/platforms/powernv/pci.c
-index e8e58a2cccddf..8307e1f4086cb 100644
---- a/arch/powerpc/platforms/powernv/pci.c
-+++ b/arch/powerpc/platforms/powernv/pci.c
-@@ -814,20 +814,6 @@ void pnv_pci_dma_dev_setup(struct pci_dev *pdev)
- {
- 	struct pci_controller *hose = pci_bus_to_host(pdev->bus);
- 	struct pnv_phb *phb = hose->private_data;
--#ifdef CONFIG_PCI_IOV
--	struct pnv_ioda_pe *pe;
--
--	/* Fix the VF pdn PE number */
--	if (pdev->is_virtfn) {
--		list_for_each_entry(pe, &phb->ioda.pe_list, list) {
--			if (pe->rid == ((pdev->bus->number << 8) |
--			    (pdev->devfn & 0xff))) {
--				pe->pdev = pdev;
--				break;
--			}
--		}
--	}
--#endif /* CONFIG_PCI_IOV */
+-	journal->j_flags &= ~JBD2_ABORT;
+ 	journal->j_flags |= JBD2_LOADED;
+ 	return 0;
  
- 	if (phb && phb->dma_dev_setup)
- 		phb->dma_dev_setup(phb, pdev);
 -- 
 2.20.1
 
