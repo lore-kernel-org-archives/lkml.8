@@ -2,114 +2,145 @@ Return-Path: <SRS0=1210=4J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 48018C35656
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 15:05:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BC07FC35646
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 15:05:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1AF9724653
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 15:05:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 867D6206E2
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 15:05:58 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="Wg9/Uy3u"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=embeddedor.com header.i=@embeddedor.com header.b="A9eCgCb7"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729148AbgBUPFl (ORCPT
+        id S1729163AbgBUPF5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Feb 2020 10:05:41 -0500
-Received: from perceval.ideasonboard.com ([213.167.242.64]:51738 "EHLO
-        perceval.ideasonboard.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728837AbgBUPFk (ORCPT
+        Fri, 21 Feb 2020 10:05:57 -0500
+Received: from gateway22.websitewelcome.com ([192.185.46.225]:35239 "EHLO
+        gateway22.websitewelcome.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727315AbgBUPF4 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Feb 2020 10:05:40 -0500
-Received: from pendragon.ideasonboard.com (81-175-216-236.bb.dnainternet.fi [81.175.216.236])
-        by perceval.ideasonboard.com (Postfix) with ESMTPSA id 5114E563;
-        Fri, 21 Feb 2020 16:05:38 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
-        s=mail; t=1582297538;
-        bh=+PNfg4uEi08dmlNNvtGKnwrRV4kPZIDZ1TGvGbACPug=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=Wg9/Uy3u8ceD8NzGdv6JVmxnbWJTbjKODlEKfeJd3QrKb/r6JGJvHijgSbNp4OIPa
-         ruuf7fBXDd0sMFZ9JE+UPPnnpyJZM7WsT7fBin1/MsPR7EfwZesD++03YcbYI7Uq+M
-         zApSmBZLNAAqJM+bEmGIfXH3DljXscmENRrapfDI=
-Date:   Fri, 21 Feb 2020 17:05:18 +0200
-From:   Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-To:     Torsten Duwe <duwe@lst.de>
-Cc:     Thomas Zimmermann <tzimmermann@suse.de>,
-        Vasily Khoruzhick <anarsoul@gmail.com>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Thierry Reding <treding@nvidia.com>,
-        Jernej Skrabec <jernej.skrabec@siol.net>,
-        Jonas Karlman <jonas@kwiboo.se>,
-        David Airlie <airlied@linux.ie>,
-        Neil Armstrong <narmstrong@baylibre.com>,
-        linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org,
-        Andrzej Hajda <a.hajda@samsung.com>,
-        Sean Paul <seanpaul@chromium.org>,
-        Maxime Ripard <maxime@cerno.tech>
-Subject: Re: [RESEND2][PATCH] drm/bridge: analogix-anx6345: Fix drm_dp_link
- helper removal
-Message-ID: <20200221150518.GK4955@pendragon.ideasonboard.com>
-References: <20200221140455.8713068BFE@verein.lst.de>
- <b30435c7-95c5-e21e-ea05-cd3ada20d150@suse.de>
- <20200221150117.GA6928@lst.de>
+        Fri, 21 Feb 2020 10:05:56 -0500
+Received: from cm17.websitewelcome.com (cm17.websitewelcome.com [100.42.49.20])
+        by gateway22.websitewelcome.com (Postfix) with ESMTP id D71DC120A0
+        for <linux-kernel@vger.kernel.org>; Fri, 21 Feb 2020 09:05:54 -0600 (CST)
+Received: from gator4166.hostgator.com ([108.167.133.22])
+        by cmsmtp with SMTP
+        id 59sIjVGuRAGTX59sIjfeoA; Fri, 21 Feb 2020 09:05:54 -0600
+X-Authority-Reason: nr=8
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=embeddedor.com; s=default; h=Content-Transfer-Encoding:Content-Type:
+        In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:Subject:Sender
+        :Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
+        Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
+        List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+        bh=cRboVsbWUEPwGuWfgqo+v5EtxXTlBTRHmRBEEMttca4=; b=A9eCgCb71huWTqs9SOPBKMuYwO
+        kEfPPdcGnmXb8mZRplFMKZNbkAWcQSnEFgFSpzVq0FzlAhFidI/haLmlO1wTILipUSKdY7Hu1TjYc
+        UpxENZfWd0xNx7EwefdEWZ+zZNneAlc5YATUgl7yw2/NHiZFKnK24oCSZfAHh8JM6haiqpjOX6H7h
+        +a3BLkmEiVGhZIBuSfkek6C9GrLNE3NH8x3hhjWWamQppyjbOHs8KRcYy3ZxH8JumrRhGBKRA7g7t
+        o3wQdBmOpjZzkqYiEENu1RW+dxhAcyR+32eVXpLI5ocfc1qfHeJboEkE8OlD0T9IoKlVmiSQZGxSh
+        vu2LYb+g==;
+Received: from [200.68.141.13] (port=18808 helo=[192.168.43.131])
+        by gator4166.hostgator.com with esmtpsa (TLSv1.2:ECDHE-RSA-AES128-GCM-SHA256:128)
+        (Exim 4.92)
+        (envelope-from <gustavo@embeddedor.com>)
+        id 1j59sI-003VkV-Hk; Fri, 21 Feb 2020 09:05:54 -0600
+Subject: Re: [PATCH] firmware: arm_scmi: driver: Replace zero-length array
+ with flexible-array member
+To:     Sudeep Holla <sudeep.holla@arm.com>
+Cc:     linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+References: <20200211231045.GA13956@embeddedor> <20200220171840.GB44840@bogus>
+From:   "Gustavo A. R. Silva" <gustavo@embeddedor.com>
+Autocrypt: addr=gustavo@embeddedor.com; keydata=
+ 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
+ VtSixD1uOgytAP7RWS474w==
+Message-ID: <b79e117f-1e1f-c3ab-9622-ed57914b530b@embeddedor.com>
+Date:   Fri, 21 Feb 2020 09:08:38 -0600
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.1
 MIME-Version: 1.0
+In-Reply-To: <20200220171840.GB44840@bogus>
 Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20200221150117.GA6928@lst.de>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
+X-AntiAbuse: Primary Hostname - gator4166.hostgator.com
+X-AntiAbuse: Original Domain - vger.kernel.org
+X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
+X-AntiAbuse: Sender Address Domain - embeddedor.com
+X-BWhitelist: no
+X-Source-IP: 200.68.141.13
+X-Source-L: No
+X-Exim-ID: 1j59sI-003VkV-Hk
+X-Source: 
+X-Source-Args: 
+X-Source-Dir: 
+X-Source-Sender: ([192.168.43.131]) [200.68.141.13]:18808
+X-Source-Auth: gustavo@embeddedor.com
+X-Email-Count: 12
+X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
+X-Local-Domain: yes
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Torsten,
 
-On Fri, Feb 21, 2020 at 04:01:17PM +0100, Torsten Duwe wrote:
-> On Fri, Feb 21, 2020 at 03:39:32PM +0100, Thomas Zimmermann wrote:
-> > Am 21.02.20 um 15:04 schrieb Torsten Duwe:
-> > > drm_dp_link_rate_to_bw_code and ...bw_code_to_link_rate simply divide by
-> > > and multiply with 27000, respectively. Avoid an overflow in the u8 dpcd[0]
-> > > and the multiply+divide alltogether.
-> > > 
-> > > fixes: e1cff82c1097bda2478 ("fix anx6345 compilation for v5.5")
-> > 
-> > You have to create the fixes tag and related cc tags with 'dim fixes',
-> > available at [1]. For this patch, the output is
-> > 
-> > Fixes: e1cff82c1097 ("drm/bridge: fix anx6345 compilation for v5.5")
-> > Cc: Torsten Duwe <duwe@suse.de>
-> > Cc: Maxime Ripard <maxime@cerno.tech>
-> > Cc: Torsten Duwe <duwe@lst.de>
-> > Cc: Sam Ravnborg <sam@ravnborg.org>
-> > Cc: Linus Walleij <linus.walleij@linaro.org>
-> > Cc: Thomas Zimmermann <tzimmermann@suse.de>
-> > Cc: Icenowy Zheng <icenowy@aosc.io>
-> > Cc: Stephen Rothwell <sfr@canb.auug.org.au>
+
+On 2/20/20 11:18, Sudeep Holla wrote:
+
+>>
+>> [1] https://gcc.gnu.org/onlinedocs/gcc/Zero-Length.html
+>> [2] https://github.com/KSPP/linux/issues/21
+>> [3] commit 76497732932f ("cxgb3/l2t: Fix undefined behaviour")
+>>
+>> Signed-off-by: Gustavo A. R. Silva <gustavo@embeddedor.com>
 > 
-> Ah, neat.
+> Applied these 3 patches [0][1][2] for v5.7
 > 
-> > > Signed-off-by: Torsten Duwe <duwe@suse.de>
-> > 
-> > You signed off with your SUSE email address, but sent the mail from
-> > lst.de. I don't know if it's strictly not allowed, but that's at least
-> > confusing to the tools.
-> 
-> From my understanding, it is legally correct. The work is owned by Suse,
-> so I have to sign off as an employee, but I'm subscribed with the LST
-> address, and I'd also like to see all replies there.
 
-That's fine, but then the mail body should start with a From: line that
-matches the address used in Signed-off-by. git-send-email should
-generate that automatically.
-
-> > [1] https://gitlab.freedesktop.org/drm/maintainer-tools/
-> 
-> I'll send an appropriate v2 once I get a review for it.
-
--- 
-Regards,
-
-Laurent Pinchart
+Thanks, Sudeep.
+--
+Gustavo
