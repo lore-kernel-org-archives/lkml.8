@@ -7,55 +7,55 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E09B3C35656
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 15:49:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E2B01C35657
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 15:49:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B6A1D208E4
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 15:49:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B5776208E4
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 15:49:02 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=bgdev-pl.20150623.gappssmtp.com header.i=@bgdev-pl.20150623.gappssmtp.com header.b="RI1Eye7X"
+	dkim=pass (2048-bit key) header.d=bgdev-pl.20150623.gappssmtp.com header.i=@bgdev-pl.20150623.gappssmtp.com header.b="pDPNgmdO"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729317AbgBUPs7 (ORCPT
+        id S1729351AbgBUPtB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Feb 2020 10:48:59 -0500
-Received: from mail-wm1-f65.google.com ([209.85.128.65]:36174 "EHLO
-        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729179AbgBUPsu (ORCPT
+        Fri, 21 Feb 2020 10:49:01 -0500
+Received: from mail-wm1-f66.google.com ([209.85.128.66]:33815 "EHLO
+        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729253AbgBUPsz (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Feb 2020 10:48:50 -0500
-Received: by mail-wm1-f65.google.com with SMTP id p17so2412869wma.1
-        for <linux-kernel@vger.kernel.org>; Fri, 21 Feb 2020 07:48:49 -0800 (PST)
+        Fri, 21 Feb 2020 10:48:55 -0500
+Received: by mail-wm1-f66.google.com with SMTP id s144so5456333wme.1
+        for <linux-kernel@vger.kernel.org>; Fri, 21 Feb 2020 07:48:54 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=bgdev-pl.20150623.gappssmtp.com; s=20150623;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=Kc3RH6cl8PrURMVC2HcOMEqzVbKCqch6ndQPKF/V66A=;
-        b=RI1Eye7XDj1Sf4dEbOo6SKh+OtOPT62d9EGBP15dioK9//v/oxEheCrG4DZXrkVurJ
-         VEU03SSY5RtDayC9Ly5GNiz1jPKY8k7sxHYdSIOzdX6lnBGm1HBtvLxdaqnJSz5MtGvB
-         Bxg1LmCfvHxMb+Ux9j6QNOK7//ktcTYB3yHsnONKRDiNj3hKYEHh4TyZYJmJ6StVvCDb
-         K3n+8GRLuWsP+tacCC4LVSnIg+Sy6ENIjVWC3xF4UEIuFu1cEOsj7A+HxoHe0CSrJroR
-         4mBHsP/ElDeMemZ10+r2VeAYr+5PcEoDnwO8CDjZL6XEfodYS2VWeDXPfYD43k9Ry8Dg
-         6qnA==
+        bh=weuvYYix3RqIGgN/zRk1CorKOjlasqkVrieHVbtyLfQ=;
+        b=pDPNgmdOf/U0uJA/dCUvRKyjmPqgQvuJPLGrWl10qYMA1x29exMf1l4sMCoM/uyRq3
+         HW+5fymFWoWTnZ6Ipuwh119yotiA8G/fYUEzHjW2lZT/0/W8DD5VlOpQNw7I2jBIJLzO
+         zGlZqnauVbfzXjoB453dr1XEsE3UdK7Z8lOAjNxhu5asdDQmJXAdfTzhXozAWlBs80B/
+         juK+HqFYs2X3k/XqQsoCxV7v24sstOWillOR3fN0ESUYNfSUohFjodwZzddws9LqGupi
+         KilmL3Wp7U2udJH8sEleyox/chdfTl2xWR78NHWjZHYV1MpiUMIWaQflO4I66iDXet+G
+         UNLg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=Kc3RH6cl8PrURMVC2HcOMEqzVbKCqch6ndQPKF/V66A=;
-        b=HVBoc831slU+Z43nNEBxcjYpWb7ZLa1CUVAFx0u2dlAkwePJZr+OLhOSppIWEVmIRW
-         NQHS78K5olXskq69zzLbteUIeqQkQ+n59vtKeA1aIeWpWoromyhgYO6LpD2PY0nH6QNF
-         poEPcfe1mZVu7lK3yJIDG/J3fa7DdE0VWDjRPyuBE5pte5G8k8QDRj1b3uIDDfOfeMZO
-         M4j1PUFplEvpDp9wFpaHHA/V9MJU8LOA9LEhf7FKnjZA++UaxqMaHFoWcWqEZzJUcQUG
-         L3BNS7RhjjMxQWPKN1l+R1QLZZ3/HFc6OcTQIZyMzIch6SPo1Xzgi66dO/ONSOsH02xK
-         1uTA==
-X-Gm-Message-State: APjAAAVcRUXRPLCj4eECU5tSv4oXj82Fdbzam7gnSOAvn+nYO+gt9rYu
-        h+gVFx4YXgXJ/YQpSIwbprVehw==
-X-Google-Smtp-Source: APXvYqwm5JScae4Vtb7EJK4NqO1U0EeoMiI7GvTzMu19s3xt71xFidsN/+ghrTO1Ugo/ZubaVCEiZw==
-X-Received: by 2002:a7b:c119:: with SMTP id w25mr4640116wmi.116.1582300129076;
-        Fri, 21 Feb 2020 07:48:49 -0800 (PST)
+        bh=weuvYYix3RqIGgN/zRk1CorKOjlasqkVrieHVbtyLfQ=;
+        b=Uz44trBxwnVs4Td2KQJTSNLyhceMgRBjsJXRbvPXMx+hx7Ymzzg+B0Z0z+hVIHIVs4
+         lheTvCUxUZoXFZL0m5UvLEHuSGulJvkSKE28Lpyne/fBVEU+S0ewcnTcDQ+evdvuo/90
+         xKZLGHt+/GT+zEAxePhYwX4AojCBH77eoW8cJp2vlUHNqNbb61urfgI2wInab6u426aY
+         a8XvQTMEGAaKXTglhHdc9y512xuIU5zROt4+K3nBeGZDtl5NZN1edN4wBV0xZUI6tARI
+         8+HkrOgkV9foPdxar+Ki8sMRxJ4HBSChiajDGBlU7t8p2fe0J52i7iPv5EDGzZluAvsN
+         pOLg==
+X-Gm-Message-State: APjAAAXjRp4qA7TCkgqw73yUc4IVqByFCE96uJMS3PMkGAb6l43h+b+h
+        tYdogwSDHloByp54xJ7wTzOiTA==
+X-Google-Smtp-Source: APXvYqz92SmB6gKyEyIcN3ICAdhIl2aQg8oaEDyPWAMvK1vUcPAjc3XIajuwdwWuLn4EzJh5mbCYdA==
+X-Received: by 2002:a1c:bc08:: with SMTP id m8mr4707440wmf.189.1582300134092;
+        Fri, 21 Feb 2020 07:48:54 -0800 (PST)
 Received: from localhost.localdomain (lfbn-nic-1-65-232.w2-15.abo.wanadoo.fr. [2.15.156.232])
-        by smtp.gmail.com with ESMTPSA id h10sm4267947wml.18.2020.02.21.07.48.48
+        by smtp.gmail.com with ESMTPSA id h10sm4267947wml.18.2020.02.21.07.48.53
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 21 Feb 2020 07:48:48 -0800 (PST)
+        Fri, 21 Feb 2020 07:48:53 -0800 (PST)
 From:   Bartosz Golaszewski <brgl@bgdev.pl>
 To:     Linus Walleij <linus.walleij@linaro.org>,
         Srinivas Kandagatla <srinivas.kandagatla@linaro.org>,
@@ -63,9 +63,9 @@ To:     Linus Walleij <linus.walleij@linaro.org>,
         Geert Uytterhoeven <geert@linux-m68k.org>
 Cc:     linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
         Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Subject: [PATCH v5 2/5] gpiolib: provide VALIDATE_DESC_PTR() macro
-Date:   Fri, 21 Feb 2020 16:48:34 +0100
-Message-Id: <20200221154837.18845-3-brgl@bgdev.pl>
+Subject: [PATCH v5 5/5] nvmem: release the write-protect pin
+Date:   Fri, 21 Feb 2020 16:48:37 +0100
+Message-Id: <20200221154837.18845-6-brgl@bgdev.pl>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200221154837.18845-1-brgl@bgdev.pl>
 References: <20200221154837.18845-1-brgl@bgdev.pl>
@@ -76,36 +76,33 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
+From: Khouloud Touil <ktouil@baylibre.com>
 
-We're about to add a public GPIO function that takes a descriptor as
-argument and returns a pointer. Add a corresponding macro wrapping the
-validate_desc() function that returns an ERR_PTR() on error.
+Put the write-protect GPIO descriptor in nvmem_release() so that it can
+be automatically released when the associated device's reference count
+drops to 0.
 
+Fixes: 2a127da461a9 ("nvmem: add support for the write-protect pin")
+Reported-by: Geert Uytterhoeven <geert@linux-m68k.org>
+Signed-off-by: Khouloud Touil <ktouil@baylibre.com>
+[Bartosz: tweak the commit message]
 Signed-off-by: Bartosz Golaszewski <bgolaszewski@baylibre.com>
 ---
- drivers/gpio/gpiolib.c | 8 ++++++++
- 1 file changed, 8 insertions(+)
+ drivers/nvmem/core.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/drivers/gpio/gpiolib.c b/drivers/gpio/gpiolib.c
-index 4d0106ceeba7..da8ffd40aa97 100644
---- a/drivers/gpio/gpiolib.c
-+++ b/drivers/gpio/gpiolib.c
-@@ -2864,6 +2864,14 @@ static int validate_desc(const struct gpio_desc *desc, const char *func)
- 		return; \
- 	} while (0)
+diff --git a/drivers/nvmem/core.c b/drivers/nvmem/core.c
+index 4a4ef2049022..790ec9b5552e 100644
+--- a/drivers/nvmem/core.c
++++ b/drivers/nvmem/core.c
+@@ -72,6 +72,7 @@ static void nvmem_release(struct device *dev)
+ 	struct nvmem_device *nvmem = to_nvmem_device(dev);
  
-+#define VALIDATE_DESC_PTR(desc) do { \
-+	int __valid = validate_desc(desc, __func__); \
-+	if (__valid < 0) \
-+		return ERR_PTR(__valid); \
-+	if (__valid == 0) \
-+		return NULL; \
-+	} while (0)
-+
- int gpiod_request(struct gpio_desc *desc, const char *label)
- {
- 	int ret = -EPROBE_DEFER;
+ 	ida_simple_remove(&nvmem_ida, nvmem->id);
++	gpiod_put(nvmem->wp_gpio);
+ 	kfree(nvmem);
+ }
+ 
 -- 
 2.25.0
 
