@@ -2,125 +2,111 @@ Return-Path: <SRS0=1210=4J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F0812C35656
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 16:01:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E8309C35657
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 16:01:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C2988222C4
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 16:01:32 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582300892;
-	bh=BEciPzHo8CuryHbvE/f20uJHph4MuYVHw/4AtR5NS6Y=;
-	h=Date:From:To:Cc:Subject:List-ID:From;
-	b=RkMqXRGgnTxOGRV+dt/qqsx/Az1X6wc7nImFETApm+Aob3hEvr5X1nytAwl5Qefy2
-	 QVDcLlJHEJ57PDx5u4pQSdpuBZtvenrkxYSS6kacmuKilRVy9p6bidqqnSyknV/xLF
-	 aP5/tpwn/git9juvBYmqCCh54qnv0SbPHzsopSu8=
+	by mail.kernel.org (Postfix) with ESMTP id BFC102067D
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 16:01:44 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Zg7t7aQs"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729326AbgBUQBb (ORCPT
+        id S1729388AbgBUQBn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Feb 2020 11:01:31 -0500
-Received: from mail.kernel.org ([198.145.29.99]:48880 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728822AbgBUQBb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Feb 2020 11:01:31 -0500
-Received: from willie-the-truck (236.31.169.217.in-addr.arpa [217.169.31.236])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id DFB522067D;
-        Fri, 21 Feb 2020 16:01:29 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1582300890;
-        bh=BEciPzHo8CuryHbvE/f20uJHph4MuYVHw/4AtR5NS6Y=;
-        h=Date:From:To:Cc:Subject:From;
-        b=zRPNlg7ZZCCwC9ptj3GpudDZKoPg1f9V2n2HZeKl9vgYeepePq5DIXqB73FhrYWwN
-         YiF/OSuRz9WVxGVhbrToyAkJm3HpDI3KrayiuJ0U/dPL7O/NWcME7JlAjmS/OybVXw
-         1u3gsYqp4h8gZC+LJxp6AYEvrxmsyjJKubdcZhs4=
-Date:   Fri, 21 Feb 2020 16:01:26 +0000
-From:   Will Deacon <will@kernel.org>
-To:     torvalds@linux-foundation.org
-Cc:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        catalin.marinas@arm.com, kernel-team@android.com
-Subject: [GIT PULL] arm64 fixes for -rc3
-Message-ID: <20200221160126.GB19330@willie-the-truck>
+        Fri, 21 Feb 2020 11:01:43 -0500
+Received: from mail-ot1-f65.google.com ([209.85.210.65]:38360 "EHLO
+        mail-ot1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728822AbgBUQBn (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 21 Feb 2020 11:01:43 -0500
+Received: by mail-ot1-f65.google.com with SMTP id z9so2429330oth.5
+        for <linux-kernel@vger.kernel.org>; Fri, 21 Feb 2020 08:01:43 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=wLXxnQp7HIaEPOKqosq0pF27kK5rqBwu9jtY7ZzaZNg=;
+        b=Zg7t7aQs1mHUnhU9aTiekAaV+Bp3+M0P+YZeKti3TISeAY9CQdUrdOFmjsqepztxOx
+         48Dv1/D7WO6nWGRwPKlWwvIYThN07XeuH0zDZUdCQwJ+myRzcg5LnEG7ZVdKxGD26lTK
+         KVCopA4uqWUz+vUYIyv/B2l6y8PvqMHJ0cFB6loBx4vuTfe/wfetHc0eAkd6jfENDH+p
+         TXLTe/XjYDfrfxzrF+PgaQOaoeW0mhvhTp2yRu3bcltFFeuIsb7D8biIrvg7SoZduJja
+         kDZBbYU7R7e3gNPkSuTe0potbG8q/lX5OTUkpIedz5/7ibHouBzgPG4LLKgPybONZvUE
+         9pkg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=wLXxnQp7HIaEPOKqosq0pF27kK5rqBwu9jtY7ZzaZNg=;
+        b=GrQU48LAfAWgVXazRGCPk0hf+sCSAGWpjjktVGDIbwffeEc7Hy44AY4uL0fB6D3zvn
+         Znv9WSRI8PHU2fLALJJLijWub1fmjPUVwmJV6DXIj4URLnJEI6iWqKlP2P4s+6T/cJa8
+         NvgKkD9UF+NO207acDjIjiTjMM1nS7nUe0qUMuiBCK0KEquldMJmAormsdfNPuoGFJr3
+         FpLjFH16Um4l1c9RGV9WoR5SGSdF567zaNpUGDaWaJg2tpcoSt++e4EUfX6OS3eUxnol
+         xVgl/035dxRLPlXDEHhYXHy4jaMSVojrfk2sN+OWz2ZDOUIcGXcxTm5f1zN2o0X23NU+
+         Le8A==
+X-Gm-Message-State: APjAAAXSF4mFnlCZCk7I5oNHOWKCJWNGWsBBKPYMMdg83w3zN2ky4Usd
+        G+jPX5TuwkuJErHM4nBhNelGbGT21AXmKQ0kjLxafg==
+X-Google-Smtp-Source: APXvYqzaURoo4lqFhOzDSfM/yflLXGfwIE9mGC1jzOlYcjOmVHK4/ZIENpO+WI50lxlAFBPJA1F5KORZeiw2+L9fEio=
+X-Received: by 2002:a9d:3b09:: with SMTP id z9mr28988967otb.195.1582300888825;
+ Fri, 21 Feb 2020 08:01:28 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-User-Agent: Mutt/1.10.1 (2018-07-13)
+References: <20200221080510.197337-1-saravanak@google.com> <20200221080510.197337-2-saravanak@google.com>
+ <20200221092540.GA71325@kroah.com> <CAGETcx_yQZtU4O2KgMxVt-hSJCBtNsOpyWsSXc+OZcjjJ91M3g@mail.gmail.com>
+ <20200221103233.GA101069@kroah.com>
+In-Reply-To: <20200221103233.GA101069@kroah.com>
+From:   Saravana Kannan <saravanak@google.com>
+Date:   Fri, 21 Feb 2020 08:00:00 -0800
+Message-ID: <CAGETcx-YhSBf2r8wAjqkupnrsYKZHkvCWyMvo01gvdPTzQa7zA@mail.gmail.com>
+Subject: Re: [PATCH v2 1/3] driver core: Call sync_state() even if supplier
+ has no consumers
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     "Rafael J. Wysocki" <rafael@kernel.org>,
+        Android Kernel Team <kernel-team@android.com>,
+        LKML <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Linus,
+On Fri, Feb 21, 2020 at 2:32 AM Greg Kroah-Hartman
+<gregkh@linuxfoundation.org> wrote:
+>
+> On Fri, Feb 21, 2020 at 01:48:49AM -0800, Saravana Kannan wrote:
+> > On Fri, Feb 21, 2020 at 1:25 AM Greg Kroah-Hartman
+> > <gregkh@linuxfoundation.org> wrote:
+> > >
+> > > On Fri, Feb 21, 2020 at 12:05:08AM -0800, Saravana Kannan wrote:
+> > > > The initial patch that added sync_state() support didn't handle the case
+> > > > where a supplier has no consumers. This was because when a device is
+> > > > successfully bound with a driver, only its suppliers were checked to see
+> > > > if they are eligible to get a sync_state(). This is not sufficient for
+> > > > devices that have no consumers but still need to do device state clean
+> > > > up. So fix this.
+> > > >
+> > > > Fixes: fc5a251d0fd7ca90 (driver core: Add sync_state driver/bus callback)
+> > >
+> > > Should be:
+> > > Fixes: fc5a251d0fd7 ("driver core: Add sync_state driver/bus callback")
+> >
+> > Sorry, late night sleepy patches are never good!
+> > Btw I thought the sha should be only 12 characters but then saw
+> > another instance where you used 16 chars. What's the right one?
+>
+> I used 16 chars?  12 should be all that is needed.
+>
+> > > > Signed-off-by: Saravana Kannan <saravanak@google.com>
+> > >
+> > > So this needs to go to 5.5 also, right?
+> >
+> > Did you mean 5.4? Yes.
+>
+> fc5a251d0fd7 is only in 5.5, not 5.4 from what I can see, right?
 
-Please pull these arm64 fixes for -rc3.
+Ah, right!
 
-It's all straightforward apart from the changes to mmap()/mremap() in
-relation to their handling of address arguments from userspace with
-non-zero tag bits in the upper byte. The change to brk() is necessary
-to fix a nasty user-visible regression in malloc(), but we tightened up
-mmap() and mremap() at the same time because they also allow the user to
-create virtual aliases by accident. It's much less likely than brk() to
-matter in practice, but enforcing the principle of "don't permit the
-creation of mappings using tagged addresses" leads to a straightforward
-ABI without having to worry about the "but what if a crazy program did
-foo?" aspect of things.
 
-That said, this is core code and I know you'd prefer to limit the change
-to brk(), so the patch is sitting on top of the branch in case you prefer
-not to include it. If you decide to tweak it manually, please can you
-update the docs at the same time?
-
-Cheers,
-
-Will
-
---->8
-
-The following changes since commit d91771848f0ae2eec250a9345926a1a3558fa943:
-
-  arm64: time: Replace <linux/clk-provider.h> by <linux/of_clk.h> (2020-02-12 17:26:38 +0000)
-
-are available in the Git repository at:
-
-  git://git.kernel.org/pub/scm/linux/kernel/git/arm64/linux.git tags/arm64-fixes
-
-for you to fetch changes up to dcde237319e626d1ec3c9d8b7613032f0fd4663a:
-
-  mm: Avoid creating virtual address aliases in brk()/mmap()/mremap() (2020-02-20 10:03:14 +0000)
-
-----------------------------------------------------------------
-arm64 fixes for -rc3
-
-- Fix regression in malloc() caused by ignored address tags in brk()
-
-- Add missing brackets around argument to untagged_addr() macro
-
-- Fix clang build when using binutils assembler
-
-- Fix silly typo in virtual memory map documentation
-
-----------------------------------------------------------------
-Catalin Marinas (1):
-      mm: Avoid creating virtual address aliases in brk()/mmap()/mremap()
-
-Scott Branden (1):
-      docs: arm64: fix trivial spelling enought to enough in memory.rst
-
-Vincenzo Frascino (1):
-      arm64: lse: Fix LSE atomics with LLVM
-
-Will Deacon (1):
-      arm64: memory: Add missing brackets to untagged_addr() macro
-
- Documentation/arm64/memory.rst             |  2 +-
- Documentation/arm64/tagged-address-abi.rst | 11 +++++++++--
- arch/arm64/include/asm/lse.h               |  2 +-
- arch/arm64/include/asm/memory.h            |  2 +-
- mm/mmap.c                                  |  4 ----
- mm/mremap.c                                |  1 -
- 6 files changed, 12 insertions(+), 10 deletions(-)
+-Saravana
