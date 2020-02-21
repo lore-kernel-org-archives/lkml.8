@@ -2,102 +2,114 @@ Return-Path: <SRS0=1210=4J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 90A0DC35669
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 21:41:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1E19DC35666
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 21:48:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6E6FD206EF
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 21:41:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EF023206D7
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 21:48:50 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728461AbgBUVls (ORCPT
+        id S1728843AbgBUVst (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Feb 2020 16:41:48 -0500
-Received: from mga09.intel.com ([134.134.136.24]:53356 "EHLO mga09.intel.com"
+        Fri, 21 Feb 2020 16:48:49 -0500
+Received: from mxout2.idt.com ([157.165.5.26]:45584 "EHLO mxout2.idt.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726683AbgBUVls (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Feb 2020 16:41:48 -0500
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga006.fm.intel.com ([10.253.24.20])
-  by orsmga102.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 21 Feb 2020 13:41:47 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.70,469,1574150400"; 
-   d="scan'208";a="437084627"
-Received: from vcostago-desk1.jf.intel.com (HELO vcostago-desk1) ([10.54.70.26])
-  by fmsmga006.fm.intel.com with ESMTP; 21 Feb 2020 13:41:45 -0800
-From:   Vinicius Costa Gomes <vinicius.gomes@intel.com>
-To:     Po Liu <po.liu@nxp.com>,
-        "davem\@davemloft.net" <davem@davemloft.net>,
-        "hauke.mehrtens\@intel.com" <hauke.mehrtens@intel.com>,
-        "gregkh\@linuxfoundation.org" <gregkh@linuxfoundation.org>,
-        "allison\@lohutok.net" <allison@lohutok.net>,
-        "tglx\@linutronix.de" <tglx@linutronix.de>,
-        "hkallweit1\@gmail.com" <hkallweit1@gmail.com>,
-        "saeedm\@mellanox.com" <saeedm@mellanox.com>,
-        "andrew\@lunn.ch" <andrew@lunn.ch>,
-        "f.fainelli\@gmail.com" <f.fainelli@gmail.com>,
-        "alexandru.ardelean\@analog.com" <alexandru.ardelean@analog.com>,
-        "jiri\@mellanox.com" <jiri@mellanox.com>,
-        "ayal\@mellanox.com" <ayal@mellanox.com>,
-        "pablo\@netfilter.org" <pablo@netfilter.org>,
-        "linux-kernel\@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "netdev\@vger.kernel.org" <netdev@vger.kernel.org>
-Cc:     "simon.horman\@netronome.com" <simon.horman@netronome.com>,
-        Claudiu Manoil <claudiu.manoil@nxp.com>,
-        Vladimir Oltean <vladimir.oltean@nxp.com>,
-        Alexandru Marginean <alexandru.marginean@nxp.com>,
-        Xiaoliang Yang <xiaoliang.yang_1@nxp.com>,
-        Roy Zang <roy.zang@nxp.com>, Mingkai Hu <mingkai.hu@nxp.com>,
-        Jerry Huang <jerry.huang@nxp.com>, Leo Li <leoyang.li@nxp.com>,
-        Po Liu <po.liu@nxp.com>
-Subject: Re: [v1,net-next, 1/2] ethtool: add setting frame preemption of traffic classes
-In-Reply-To: <20191127094517.6255-1-Po.Liu@nxp.com>
-References: <20191127094517.6255-1-Po.Liu@nxp.com>
-Date:   Fri, 21 Feb 2020 13:43:33 -0800
-Message-ID: <87a75br4ze.fsf@linux.intel.com>
-MIME-Version: 1.0
-Content-Type: text/plain
+        id S1728135AbgBUVst (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 21 Feb 2020 16:48:49 -0500
+Received: from mail6.idt.com (localhost [127.0.0.1])
+        by mxout2.idt.com (8.14.4/8.14.4) with ESMTP id 01LLmgEO018488;
+        Fri, 21 Feb 2020 13:48:42 -0800
+Received: from corpml3.corp.idt.com (corpml3.corp.idt.com [157.165.140.25])
+        by mail6.idt.com (8.14.4/8.14.4) with ESMTP id 01LLmfME013329;
+        Fri, 21 Feb 2020 13:48:41 -0800
+Received: from minli-office.na.ads.idt.com (corpimss2.corp.idt.com [157.165.141.30])
+        by corpml3.corp.idt.com (8.11.7p1+Sun/8.11.7) with ESMTP id 01LLmeW21670;
+        Fri, 21 Feb 2020 13:48:40 -0800 (PST)
+From:   min.li.xe@renesas.com
+To:     robh+dt@kernel.org, mark.rutland@arm.com, netdev@vger.kernel.org
+Cc:     devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Min Li <min.li.xe@renesas.com>
+Subject: [PATCH net-next v4 1/2] dt-bindings: ptp: Add device tree binding for IDT 82P33 based PTP clock
+Date:   Fri, 21 Feb 2020 16:48:38 -0500
+Message-Id: <1582321718-27516-1-git-send-email-min.li.xe@renesas.com>
+X-Mailer: git-send-email 2.7.4
+X-TM-AS-MML: disable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+From: Min Li <min.li.xe@renesas.com>
 
-Po Liu <po.liu@nxp.com> writes:
+Add device tree binding doc for the PTP clock based on IDT 82P33
+Synchronization Management Unit (SMU).
 
-> IEEE Std 802.1Qbu standard defined the frame preemption of port
-> traffic classes. This patch introduce a method to set traffic
-> classes preemption. Add a parameter 'preemption' in struct
-> ethtool_link_settings. The value will be translated to a binary,
-> each bit represent a traffic class. Bit "1" means preemptable
-> traffic class. Bit "0" means express traffic class.  MSB represent
-> high number traffic class.
->
-> If hardware support the frame preemption, driver could set the
-> ethernet device with hw_features and features with NETIF_F_PREEMPTION
-> when initializing the port driver.
->
-> User can check the feature 'tx-preemption' by command 'ethtool -k
-> devname'. If hareware set preemption feature. The property would
-> be a fixed value 'on' if hardware support the frame preemption.
-> Feature would show a fixed value 'off' if hardware don't support
-> the frame preemption.
->
-> Command 'ethtool devname' and 'ethtool -s devname preemption N'
-> would show/set which traffic classes are frame preemptable.
->
-> Port driver would implement the frame preemption in the function
-> get_link_ksettings() and set_link_ksettings() in the struct ethtool_ops.
->
+Changes since v1:
+ - As suggested by Rob Herring:
+   1. Drop reg description for i2c
+   2. Replace i2c@1 with i2c
+   3. Add addtionalProperties: false
 
-Any updates on this series? If you think that there's something that I
-could help, just tell.
+Signed-off-by: Min Li <min.li.xe@renesas.com>
+---
+ .../devicetree/bindings/ptp/ptp-idt82p33.yaml      | 45 ++++++++++++++++++++++
+ 1 file changed, 45 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/ptp/ptp-idt82p33.yaml
 
-
-Cheers,
+diff --git a/Documentation/devicetree/bindings/ptp/ptp-idt82p33.yaml b/Documentation/devicetree/bindings/ptp/ptp-idt82p33.yaml
+new file mode 100644
+index 0000000..9bc664f
+--- /dev/null
++++ b/Documentation/devicetree/bindings/ptp/ptp-idt82p33.yaml
+@@ -0,0 +1,45 @@
++# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/ptp/ptp-idt82p33.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
++
++title: IDT 82P33 PTP Clock Device Tree Bindings
++
++description: |
++  IDT 82P33XXX Synchronization Management Unit (SMU) based PTP clock
++
++maintainers:
++  - Min Li <min.li.xe@renesas.com>
++
++properties:
++  compatible:
++    enum:
++      - idt,82p33810
++      - idt,82p33813
++      - idt,82p33814
++      - idt,82p33831
++      - idt,82p33910
++      - idt,82p33913
++      - idt,82p33914
++      - idt,82p33931
++
++  reg:
++    maxItems: 1
++
++required:
++  - compatible
++  - reg
++
++additionalProperties: false
++
++examples:
++  - |
++    i2c {
++        #address-cells = <1>;
++        #size-cells = <0>;
++        phc@51 {
++            compatible = "idt,82p33810";
++            reg = <0x51>;
++        };
++    };
 -- 
-Vinicius
+2.7.4
+
