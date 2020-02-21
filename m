@@ -7,47 +7,50 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CB238C35641
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 08:11:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A6436C35640
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 08:11:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 98D8820722
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 08:11:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7763C24670
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 08:11:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582272714;
-	bh=JtLdoFb5vk4yL5BF0/BYDK63z/UKKfyFPF6sQjWHJAU=;
+	s=default; t=1582272718;
+	bh=cF0AFVHw8PPABmHKwcOZG09O4STfsB3xpXfX9/LrqXg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=rLyUbP48I0BGSfAFOQLsijE34TL2SlAqAFSwexZIDOY1ucJXM8yiy9//4KZ5GAqBS
-	 Q/aaTJgAy3M3Kjk1l/QobqIq+DNZ8GQvDHtYUvWGy7rhKY9GOy4Slu9FIUOkMpvTXH
-	 F1EPl/MibpmKoSLGZ1bkjzaRUr1LKpwUQ2I0uIwU=
+	b=kabCV2S6vrRazF0sPE6eCoAExNt1A1Se3wKnWqcAzThYZgpIg5/USuJBF0O4zM7bS
+	 RnE7mAIeNM5fsbg+pC4+G+LPjRx7copg66mrkvCiyg2x/7DSFNejIcLq0cVa4P69eo
+	 Ul37c6yvjcyCSJvGjPbdxJIdjuDG187MJudHVnTI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730194AbgBUILm (ORCPT
+        id S1732762AbgBUIL5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Feb 2020 03:11:42 -0500
-Received: from mail.kernel.org ([198.145.29.99]:47224 "EHLO mail.kernel.org"
+        Fri, 21 Feb 2020 03:11:57 -0500
+Received: from mail.kernel.org ([198.145.29.99]:47464 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732392AbgBUILj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Feb 2020 03:11:39 -0500
+        id S1732413AbgBUILx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 21 Feb 2020 03:11:53 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 070BD20578;
-        Fri, 21 Feb 2020 08:11:37 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4A48120722;
+        Fri, 21 Feb 2020 08:11:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1582272698;
-        bh=JtLdoFb5vk4yL5BF0/BYDK63z/UKKfyFPF6sQjWHJAU=;
+        s=default; t=1582272711;
+        bh=cF0AFVHw8PPABmHKwcOZG09O4STfsB3xpXfX9/LrqXg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=CiwRV08gOTYlT5UaVDfA0eJr1G92JcDk8q1ppSQBpk3/S+JIrA1cJG5TJ9d+oWFhV
-         nnzR39rVtk0f8yF4Vgmh8azsy7n8RbDeJftQ3DZvA6GMGXoWhK/jMbvscZYfNsRArw
-         wObE5NeZ5H/lokuqYeN0MNS58Mvhz6dUMq3dlXD8=
+        b=oUgGsovBGt5sb3RfKuJCWNjS6tc0qVh2WeKwuxUFbsiF+cyP6NJBGrwK1g6TgAOu5
+         ZgSoWv1706d7ztiBkWkClkML2pd8AUH97D1hC5N9uPGRc5YCy19lpEY+83ttg9z70I
+         nD7bhuAt7J8x84hyoWqKtYJ7A3Bu7nI0+dEp/N+8=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Geert Uytterhoeven <geert@linux-m68k.org>,
-        Herbert Xu <herbert@gondor.apana.org.au>,
+        stable@vger.kernel.org, Jun Lei <Jun.Lei@amd.com>,
+        Anthony Koo <Anthony.Koo@amd.com>,
+        Harry Wentland <harry.wentland@amd.com>,
+        Rodrigo Siqueira <Rodrigo.Siqueira@amd.com>,
+        Alex Deucher <alexander.deucher@amd.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 241/344] crypto: essiv - fix AEAD capitalization and preposition use in help text
-Date:   Fri, 21 Feb 2020 08:40:40 +0100
-Message-Id: <20200221072411.220742279@linuxfoundation.org>
+Subject: [PATCH 5.4 246/344] drm/amd/display: fixup DML dependencies
+Date:   Fri, 21 Feb 2020 08:40:45 +0100
+Message-Id: <20200221072411.762057375@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200221072349.335551332@linuxfoundation.org>
 References: <20200221072349.335551332@linuxfoundation.org>
@@ -60,38 +63,60 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Geert Uytterhoeven <geert@linux-m68k.org>
+From: Jun Lei <Jun.Lei@amd.com>
 
-[ Upstream commit ab3d436bf3e9d05f58ceaa85ff7475bfcd6e45af ]
+[ Upstream commit 34ad0230062c39cdcba564d16d122c0fb467a7d6 ]
 
-"AEAD" is capitalized everywhere else.
-Use "an" when followed by a written or spoken vowel.
+[why]
+Need to fix DML portability issues to enable SW unit testing around DML
 
-Fixes: be1eb7f78aa8fbe3 ("crypto: essiv - create wrapper template for ESSIV generation")
-Signed-off-by: Geert Uytterhoeven <geert@linux-m68k.org>
-Signed-off-by: Herbert Xu <herbert@gondor.apana.org.au>
+[how]
+Move calcs into dc include folder since multiple components reference it
+Remove relative paths to external dependencies
+
+Signed-off-by: Jun Lei <Jun.Lei@amd.com>
+Reviewed-by: Anthony Koo <Anthony.Koo@amd.com>
+Acked-by: Harry Wentland <harry.wentland@amd.com>
+Acked-by: Rodrigo Siqueira <Rodrigo.Siqueira@amd.com>
+Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- crypto/Kconfig | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ drivers/gpu/drm/amd/display/dc/dml/dml_common_defs.c          | 2 +-
+ drivers/gpu/drm/amd/display/dc/dml/dml_inline_defs.h          | 2 +-
+ drivers/gpu/drm/amd/display/dc/{calcs => inc}/dcn_calc_math.h | 0
+ 3 files changed, 2 insertions(+), 2 deletions(-)
+ rename drivers/gpu/drm/amd/display/dc/{calcs => inc}/dcn_calc_math.h (100%)
 
-diff --git a/crypto/Kconfig b/crypto/Kconfig
-index 29472fb795f34..b2cc0ad3792ad 100644
---- a/crypto/Kconfig
-+++ b/crypto/Kconfig
-@@ -500,10 +500,10 @@ config CRYPTO_ESSIV
- 	  encryption.
+diff --git a/drivers/gpu/drm/amd/display/dc/dml/dml_common_defs.c b/drivers/gpu/drm/amd/display/dc/dml/dml_common_defs.c
+index b953b02a15121..723af0b2dda04 100644
+--- a/drivers/gpu/drm/amd/display/dc/dml/dml_common_defs.c
++++ b/drivers/gpu/drm/amd/display/dc/dml/dml_common_defs.c
+@@ -24,7 +24,7 @@
+  */
  
- 	  This driver implements a crypto API template that can be
--	  instantiated either as a skcipher or as a aead (depending on the
-+	  instantiated either as an skcipher or as an AEAD (depending on the
- 	  type of the first template argument), and which defers encryption
- 	  and decryption requests to the encapsulated cipher after applying
--	  ESSIV to the input IV. Note that in the aead case, it is assumed
-+	  ESSIV to the input IV. Note that in the AEAD case, it is assumed
- 	  that the keys are presented in the same format used by the authenc
- 	  template, and that the IV appears at the end of the authenticated
- 	  associated data (AAD) region (which is how dm-crypt uses it.)
+ #include "dml_common_defs.h"
+-#include "../calcs/dcn_calc_math.h"
++#include "dcn_calc_math.h"
+ 
+ #include "dml_inline_defs.h"
+ 
+diff --git a/drivers/gpu/drm/amd/display/dc/dml/dml_inline_defs.h b/drivers/gpu/drm/amd/display/dc/dml/dml_inline_defs.h
+index eca140da13d82..ded71ea82413d 100644
+--- a/drivers/gpu/drm/amd/display/dc/dml/dml_inline_defs.h
++++ b/drivers/gpu/drm/amd/display/dc/dml/dml_inline_defs.h
+@@ -27,7 +27,7 @@
+ #define __DML_INLINE_DEFS_H__
+ 
+ #include "dml_common_defs.h"
+-#include "../calcs/dcn_calc_math.h"
++#include "dcn_calc_math.h"
+ #include "dml_logger.h"
+ 
+ static inline double dml_min(double a, double b)
+diff --git a/drivers/gpu/drm/amd/display/dc/calcs/dcn_calc_math.h b/drivers/gpu/drm/amd/display/dc/inc/dcn_calc_math.h
+similarity index 100%
+rename from drivers/gpu/drm/amd/display/dc/calcs/dcn_calc_math.h
+rename to drivers/gpu/drm/amd/display/dc/inc/dcn_calc_math.h
 -- 
 2.20.1
 
