@@ -2,284 +2,143 @@ Return-Path: <SRS0=1210=4J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0AA41C11D25
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 01:16:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 52A80C11D00
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 01:18:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CC330206E2
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 01:16:09 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b="JCdw/jYC"
+	by mail.kernel.org (Postfix) with ESMTP id 25D71206E2
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 01:18:07 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729529AbgBUBQI (ORCPT
+        id S1729548AbgBUBSE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Feb 2020 20:16:08 -0500
-Received: from mail-wr1-f66.google.com ([209.85.221.66]:39977 "EHLO
-        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729484AbgBUBQI (ORCPT
+        Thu, 20 Feb 2020 20:18:04 -0500
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:15260 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1729476AbgBUBSE (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Feb 2020 20:16:08 -0500
-Received: by mail-wr1-f66.google.com with SMTP id t3so155081wru.7
-        for <linux-kernel@vger.kernel.org>; Thu, 20 Feb 2020 17:16:06 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=broadcom.com; s=google;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-transfer-encoding:content-language;
-        bh=o+pp6WjkijFi/cFymD5udOX8QbE4tnzlUQVoizd2/v8=;
-        b=JCdw/jYCzwsajXk+2CRmpVEuCLHdL5I2WS7TTRwQgDkpfHH2vClT/cONJ+PaB6MenR
-         +EOi/x2mr7KGl30PbOwwgQ6BfQoVCbFG4FVzXEbqGOFKRqQ65kjbM2+WnDz1OL3nN8G5
-         uMwCnkiVZ89PeOTZOyg1EPOp6/t84WvjVZlnw=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-transfer-encoding
-         :content-language;
-        bh=o+pp6WjkijFi/cFymD5udOX8QbE4tnzlUQVoizd2/v8=;
-        b=BI/xZ//u/YscltQfgEL2ih4Kg0/po+//Yle2BvGQaHsm4KWSDhGnI5WFs9N9Mbq/fI
-         HwY/ySmdR/wJk8sqXXZiuC92aKgjrW1PrjfSonfUSipU4JJQ1ISKdzKn2PJkKZx76Ale
-         Fff5RcGiI7rFp1fBLpZ4bLBjkZeB3c8ddT+lJ6PQirbBja8THzi5ng85No3NCrxa0llp
-         opKT6UKc3oXJGEwutpMeKSk5WUWgSt5D2v0MLzjdKY1s/B82nG8/hRTQkz0MdCCxA2kj
-         v13PHGoPHsspdtpStO0fMrBwwoYQedaesdy/xG7ma0vPg6RCqbnbAr87ppVP5Z7Afbke
-         w67A==
-X-Gm-Message-State: APjAAAXxai+h9D3CYzNgGFK9hEsyJ/K6fqz3+H3sm+hKWrnRcNnbYuN6
-        VG+q4G3dD60AMQOyhADGfZDr7Q==
-X-Google-Smtp-Source: APXvYqxxcQJGSUxxc/xkaF1XgEwdO9U0vVvBJoSNVQvkEfShM9JCtvPvpgn1NaRGE7wFd3Ii4IpK9w==
-X-Received: by 2002:adf:df03:: with SMTP id y3mr45314758wrl.260.1582247765872;
-        Thu, 20 Feb 2020 17:16:05 -0800 (PST)
-Received: from [10.136.13.65] ([192.19.228.250])
-        by smtp.gmail.com with ESMTPSA id h205sm1517742wmf.25.2020.02.20.17.16.00
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 20 Feb 2020 17:16:04 -0800 (PST)
-Subject: Re: [PATCH v2 5/7] bcm-vk: add bcm_vk UAPI
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     Luis Chamberlain <mcgrof@kernel.org>,
-        David Brown <david.brown@linaro.org>,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        Shuah Khan <shuah@kernel.org>, bjorn.andersson@linaro.org,
-        Shuah Khan <skhan@linuxfoundation.org>,
-        Arnd Bergmann <arnd@arndb.de>,
-        "Rafael J . Wysocki" <rafael@kernel.org>,
-        linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org,
-        BCM Kernel Feedback <bcm-kernel-feedback-list@broadcom.com>,
-        Olof Johansson <olof@lixom.net>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Dan Carpenter <dan.carpenter@oracle.com>,
-        Colin Ian King <colin.king@canonical.com>,
-        Kees Cook <keescook@chromium.org>,
-        Takashi Iwai <tiwai@suse.de>, linux-kselftest@vger.kernel.org,
-        Andy Gross <agross@kernel.org>
-References: <20200220004825.23372-1-scott.branden@broadcom.com>
- <20200220004825.23372-6-scott.branden@broadcom.com>
- <20200220075045.GB3261162@kroah.com>
-From:   Scott Branden <scott.branden@broadcom.com>
-Message-ID: <030219dc-539a-a2db-5ab2-1de7336a811c@broadcom.com>
-Date:   Thu, 20 Feb 2020 17:15:58 -0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.1
+        Thu, 20 Feb 2020 20:18:04 -0500
+Received: from pps.filterd (m0098399.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 01L1AES3058501
+        for <linux-kernel@vger.kernel.org>; Thu, 20 Feb 2020 20:18:03 -0500
+Received: from e06smtp04.uk.ibm.com (e06smtp04.uk.ibm.com [195.75.94.100])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2y9ytr1e7k-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Thu, 20 Feb 2020 20:18:03 -0500
+Received: from localhost
+        by e06smtp04.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-kernel@vger.kernel.org> from <linuxram@us.ibm.com>;
+        Fri, 21 Feb 2020 01:18:01 -0000
+Received: from b06avi18878370.portsmouth.uk.ibm.com (9.149.26.194)
+        by e06smtp04.uk.ibm.com (192.168.101.134) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Fri, 21 Feb 2020 01:17:57 -0000
+Received: from d06av24.portsmouth.uk.ibm.com (d06av24.portsmouth.uk.ibm.com [9.149.105.60])
+        by b06avi18878370.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 01L1HtsE41419040
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Fri, 21 Feb 2020 01:17:55 GMT
+Received: from d06av24.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id C748D4203F;
+        Fri, 21 Feb 2020 01:17:55 +0000 (GMT)
+Received: from d06av24.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 8C2A642045;
+        Fri, 21 Feb 2020 01:17:51 +0000 (GMT)
+Received: from oc0525413822.ibm.com (unknown [9.85.188.83])
+        by d06av24.portsmouth.uk.ibm.com (Postfix) with ESMTPS;
+        Fri, 21 Feb 2020 01:17:51 +0000 (GMT)
+Date:   Thu, 20 Feb 2020 17:17:48 -0800
+From:   Ram Pai <linuxram@us.ibm.com>
+To:     "Michael S. Tsirkin" <mst@redhat.com>
+Cc:     Halil Pasic <pasic@linux.ibm.com>,
+        Jason Wang <jasowang@redhat.com>,
+        Marek Szyprowski <m.szyprowski@samsung.com>,
+        Robin Murphy <robin.murphy@arm.com>,
+        Christoph Hellwig <hch@lst.de>, linux-s390@vger.kernel.org,
+        virtualization@lists.linux-foundation.org,
+        linux-kernel@vger.kernel.org, iommu@lists.linux-foundation.org,
+        Christian Borntraeger <borntraeger@de.ibm.com>,
+        Janosch Frank <frankja@linux.ibm.com>,
+        Viktor Mihajlovski <mihajlov@linux.ibm.com>,
+        Cornelia Huck <cohuck@redhat.com>,
+        Thiago Jung Bauermann <bauerman@linux.ibm.com>,
+        David Gibson <david@gibson.dropbear.id.au>,
+        "Lendacky, Thomas" <Thomas.Lendacky@amd.com>,
+        Michael Mueller <mimu@linux.ibm.com>
+Reply-To: Ram Pai <linuxram@us.ibm.com>
+References: <20200220160606.53156-1-pasic@linux.ibm.com>
+ <20200220160606.53156-3-pasic@linux.ibm.com>
+ <20200220154904-mutt-send-email-mst@kernel.org>
 MIME-Version: 1.0
-In-Reply-To: <20200220075045.GB3261162@kroah.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
-Content-Language: en-US
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200220154904-mutt-send-email-mst@kernel.org>
+User-Agent: Mutt/1.5.21 (2010-09-15)
+X-TM-AS-GCONF: 00
+x-cbid: 20022101-0016-0000-0000-000002E8C975
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 20022101-0017-0000-0000-0000334BE816
+Message-Id: <20200221011748.GE5713@oc0525413822.ibm.com>
+Subject: RE: [PATCH 2/2] virtio: let virtio use DMA API when guest RAM is protected
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.572
+ definitions=2020-02-20_19:2020-02-19,2020-02-20 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ suspectscore=0 clxscore=1011 mlxlogscore=989 mlxscore=0 adultscore=0
+ lowpriorityscore=0 malwarescore=0 spamscore=0 impostorscore=0 phishscore=0
+ bulkscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2001150001 definitions=main-2002210006
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Greg,
+On Thu, Feb 20, 2020 at 03:55:14PM -0500, Michael S. Tsirkin wrote:
+> On Thu, Feb 20, 2020 at 05:06:06PM +0100, Halil Pasic wrote:
+> > Currently the advanced guest memory protection technologies (AMD SEV,
+> > powerpc secure guest technology and s390 Protected VMs) abuse the
+> > VIRTIO_F_IOMMU_PLATFORM flag to make virtio core use the DMA API, which
+> > is in turn necessary, to make IO work with guest memory protection.
+> > 
+> > But VIRTIO_F_IOMMU_PLATFORM a.k.a. VIRTIO_F_ACCESS_PLATFORM is really a
+> > different beast: with virtio devices whose implementation runs on an SMP
+> > CPU we are still fine with doing all the usual optimizations, it is just
+> > that we need to make sure that the memory protection mechanism does not
+> > get in the way. The VIRTIO_F_ACCESS_PLATFORM mandates more work on the
+> > side of the guest (and possibly he host side as well) than we actually
+> > need.
+> > 
+> > An additional benefit of teaching the guest to make the right decision
+> > (and use DMA API) on it's own is: removing the need, to mandate special
+> > VM configuration for guests that may run with protection. This is
+> > especially interesting for s390 as VIRTIO_F_IOMMU_PLATFORM pushes all
+> > the virtio control structures into the first 2G of guest memory:
+> > something we don't necessarily want to do per-default.
+> > 
+> > Signed-off-by: Halil Pasic <pasic@linux.ibm.com>
+> > Tested-by: Ram Pai <linuxram@us.ibm.com>
+> > Tested-by: Michael Mueller <mimu@linux.ibm.com>
+> 
+> This might work for you but it's fragile, since without
+> VIRTIO_F_ACCESS_PLATFORM hypervisor assumes it gets
+> GPA's, not DMA addresses.
+> 
+> 
+> 
+> IOW this looks like another iteration of:
+> 
+> 	virtio: Support encrypted memory on powerpc secure guests
+> 
+> which I was under the impression was abandoned as unnecessary.
 
-Thanks for the review.  Comments inline.
+It has been abondoned on powerpc. We enabled VIRTIO_F_ACCESS_PLATFORM;
+by default, flag on powerpc.
 
-On 2020-02-19 11:50 p.m., Greg Kroah-Hartman wrote:
-> On Wed, Feb 19, 2020 at 04:48:23PM -0800, Scott Branden wrote:
->> Add user space api for bcm-vk driver.
->>
->> Signed-off-by: Scott Branden <scott.branden@broadcom.com>
->> ---
->>   include/uapi/linux/misc/bcm_vk.h | 117 +++++++++++++++++++++++++++++++
->>   1 file changed, 117 insertions(+)
->>   create mode 100644 include/uapi/linux/misc/bcm_vk.h
->>
->> diff --git a/include/uapi/linux/misc/bcm_vk.h b/include/uapi/linux/misc/bcm_vk.h
->> new file mode 100644
->> index 000000000000..56a2178e06f5
->> --- /dev/null
->> +++ b/include/uapi/linux/misc/bcm_vk.h
->> @@ -0,0 +1,117 @@
->> +/* SPDX-License-Identifier: ((GPL-2.0 WITH Linux-syscall-note) OR BSD-2-Clause) */
->> +/*
->> + * Copyright 2018-2020 Broadcom.
->> + */
->> +
->> +#ifndef __UAPI_LINUX_MISC_BCM_VK_H
->> +#define __UAPI_LINUX_MISC_BCM_VK_H
->> +
->> +#include <linux/ioctl.h>
->> +#include <linux/types.h>
->> +
->> +struct vk_image {
->> +	__u32 type;     /* Type of image */
->> +#define VK_IMAGE_TYPE_BOOT1 1 /* 1st stage (load to SRAM) */
->> +#define VK_IMAGE_TYPE_BOOT2 2 /* 2nd stage (load to DDR) */
->> +	char filename[64]; /* Filename of image */
-> __u8?
-I don't understand why char is not appropriate for a filename.
-Would like to understand why __u8 is correct to use here vs. char.
->
->> +};
->> +
->> +/* default firmware images names */
->> +#define VK_BOOT1_DEF_VALKYRIE_FILENAME	"vk-boot1.bin"
->> +#define VK_BOOT2_DEF_VALKYRIE_FILENAME	"vk-boot2.bin"
->> +
->> +#define VK_BOOT1_DEF_VIPER_FILENAME	"vp-boot1.bin"
->> +#define VK_BOOT2_DEF_VIPER_FILENAME	"vp-boot2.bin"
-> Why do these need to be in a uapi .h file?  Shouldn't they just be part
-> of the normal MODULE_FIRMWARE() macro in the driver itself?
-ioctl VK_IOCTL_LOAD_IMAGE passes in type of image to load and filename.
-These are the default names used if the images are autoloaded by the driver.
-But if userspace app wishes to load (or reload) the default images then 
-it needs to know the name of the file to pass in ioctl.
-I guess I could change the API at this point to lookup the default 
-filename if NULL filename passed into ioctl.
->> +struct vk_access {
->> +	__u8 barno;     /* BAR number to use */
->> +	__u8 type;      /* Type of access */
->> +#define VK_ACCESS_READ 0
->> +#define VK_ACCESS_WRITE 1
->> +	__u32 len;      /* length of data */
-> Horrible padding issues, are you sure this all works properly?
-Haven't had any issues.
->
->> +	__u64 offset;   /* offset in BAR */
->> +	__u32 *data;    /* where to read/write data to */
-> Are you _SURE_ you want a pointer here?  How do you handle the compat
-> issues with 32/64 user/kernel space?
-Don't care about 32-bit user space for this driver.
-I don't think there isn't even enough memory in such systems for the 
-number of streams of video buffers needed for transcoding.
-This driver is only used in high end 64-bit x86 servers.
-But, VK_IOCTL_ACCESS_BAR can go away entirely if standard user space 
-approach already exists as you imply.
->> +};
-> And isn't this just a normal PCI write thing?  Can't you do it from
-> userspace using the existing userspace PCI accesses?  Why do you need a
-> special ioctl for it?
-This follows how pci_endpoint_test reads and writes BARS via ioctl.
-It also abstracts the accesses all into the device node being opened.
+We would like to enable secure guests on powerpc without this flag
+aswell enabled, but past experience has educated us that its not a easy
+path.  However if Halil makes some inroads in this path for s390, we
+will like to support him.
 
-I am not familiar with userspace PCI accesses.  Would this be through 
-some sys entries?
->
->> +
->> +struct vk_reset {
->> +	__u32 arg1;
->> +	__u32 arg2;
->> +};
->> +
->> +#define VK_MAGIC              0x5E
->> +
->> +/* Load image to Valkyrie */
->> +#define VK_IOCTL_LOAD_IMAGE   _IOW(VK_MAGIC, 0x2, struct vk_image)
->> +
->> +/* Read data from Valkyrie */
->> +#define VK_IOCTL_ACCESS_BAR   _IOWR(VK_MAGIC, 0x3, struct vk_access)
->> +
->> +/* Send Reset to Valkyrie */
->> +#define VK_IOCTL_RESET        _IOW(VK_MAGIC, 0x4, struct vk_reset)
->> +
->> +/*
->> + * message block - basic unit in the message where a message's size is always
->> + *		   N x sizeof(basic_block)
->> + */
->> +struct vk_msg_blk {
->> +	__u8 function_id;
->> +#define VK_FID_TRANS_BUF 5
->> +#define VK_FID_SHUTDOWN  8
->> +	__u8 size;
->> +	__u16 queue_id:4;
->> +	__u16 msg_id:12;
-> Do not use bitfields in ioctls, they will not work properly on all
-> systems.  Use masks and shifts instead.
-I don't like the bitfields either - structure inherited from firmware code.
-Will work on getting these removed.
->
->> +	__u32 context_id;
->> +	__u32 args[2];
->> +#define VK_CMD_PLANES_MASK 0x000F /* number of planes to up/download */
->> +#define VK_CMD_UPLOAD      0x0400 /* memory transfer to vk */
->> +#define VK_CMD_DOWNLOAD    0x0500 /* memory transfer from vk */
->> +#define VK_CMD_MASK        0x0F00 /* command mask */
->> +};
->> +
->> +#define VK_BAR_FWSTS			0x41C
->> +/* VK_FWSTS definitions */
->> +#define VK_FWSTS_RELOCATION_ENTRY	BIT(0)
->> +#define VK_FWSTS_RELOCATION_EXIT	BIT(1)
->> +#define VK_FWSTS_INIT_START		BIT(2)
->> +#define VK_FWSTS_ARCH_INIT_DONE		BIT(3)
->> +#define VK_FWSTS_PRE_KNL1_INIT_DONE	BIT(4)
->> +#define VK_FWSTS_PRE_KNL2_INIT_DONE	BIT(5)
->> +#define VK_FWSTS_POST_KNL_INIT_DONE	BIT(6)
->> +#define VK_FWSTS_INIT_DONE		BIT(7)
->> +#define VK_FWSTS_APP_INIT_START		BIT(8)
->> +#define VK_FWSTS_APP_INIT_DONE		BIT(9)
-> I do not think that BIT() is exported to userspace properly, is it
-> really ok here?
-Works fine.  Also in uapi/linux/rtc.h.
->
->> +#define VK_FWSTS_MASK			0xFFFFFFFF
->> +#define VK_FWSTS_READY			(VK_FWSTS_INIT_START | \
->> +					 VK_FWSTS_ARCH_INIT_DONE | \
->> +					 VK_FWSTS_PRE_KNL1_INIT_DONE | \
->> +					 VK_FWSTS_PRE_KNL2_INIT_DONE | \
->> +					 VK_FWSTS_POST_KNL_INIT_DONE | \
->> +					 VK_FWSTS_INIT_DONE | \
->> +					 VK_FWSTS_APP_INIT_START | \
->> +					 VK_FWSTS_APP_INIT_DONE)
->> +/* Deinit */
->> +#define VK_FWSTS_APP_DEINIT_START	BIT(23)
->> +#define VK_FWSTS_APP_DEINIT_DONE	BIT(24)
->> +#define VK_FWSTS_DRV_DEINIT_START	BIT(25)
->> +#define VK_FWSTS_DRV_DEINIT_DONE	BIT(26)
->> +#define VK_FWSTS_RESET_DONE		BIT(27)
->> +#define VK_FWSTS_DEINIT_TRIGGERED	(VK_FWSTS_APP_DEINIT_START | \
->> +					 VK_FWSTS_APP_DEINIT_DONE  | \
->> +					 VK_FWSTS_DRV_DEINIT_START | \
->> +					 VK_FWSTS_DRV_DEINIT_DONE)
->> +/* Last nibble for reboot reason */
->> +#define VK_FWSTS_RESET_REASON_SHIFT	28
->> +#define VK_FWSTS_RESET_REASON_MASK	(0xF << VK_FWSTS_RESET_REASON_SHIFT)
->> +#define VK_FWSTS_RESET_SYS_PWRUP	(0x0 << VK_FWSTS_RESET_REASON_SHIFT)
->> +#define VK_FWSTS_RESET_MBOX_DB		(0x1 << VK_FWSTS_RESET_REASON_SHIFT)
->> +#define VK_FWSTS_RESET_M7_WDOG		(0x2 << VK_FWSTS_RESET_REASON_SHIFT)
->> +#define VK_FWSTS_RESET_TEMP		(0x3 << VK_FWSTS_RESET_REASON_SHIFT)
->> +#define VK_FWSTS_RESET_PCI_FLR		(0x4 << VK_FWSTS_RESET_REASON_SHIFT)
->> +#define VK_FWSTS_RESET_PCI_HOT		(0x5 << VK_FWSTS_RESET_REASON_SHIFT)
->> +#define VK_FWSTS_RESET_PCI_WARM		(0x6 << VK_FWSTS_RESET_REASON_SHIFT)
->> +#define VK_FWSTS_RESET_PCI_COLD		(0x7 << VK_FWSTS_RESET_REASON_SHIFT)
->> +#define VK_FWSTS_RESET_L1		(0x8 << VK_FWSTS_RESET_REASON_SHIFT)
->> +#define VK_FWSTS_RESET_L0		(0x9 << VK_FWSTS_RESET_REASON_SHIFT)
->> +#define VK_FWSTS_RESET_UNKNOWN		(0xF << VK_FWSTS_RESET_REASON_SHIFT)
-> What are all of these #defines doing in an uapi file?  How is userspace
-> going to use them?
-There are actually 2 linux user spaces that use this header.
-One is the x86 host with the bcm-vk PCI driver.
-The x86 host user space could use them to check the firmware status and 
-find out what state VK is in.
 
-The other user space is a coprocessor inside the VK SOC.
-The app running in user space needs to know the state of the FWSTS in 
-order to proceed.
-It includes this header in its user space app (even though it doesn't 
-user the linux driver, it needs access to the same FWSTS register 
-directly).
-> thanks,
->
-> greg k-h
+RP
 
