@@ -2,211 +2,113 @@ Return-Path: <SRS0=1210=4J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNWANTED_LANGUAGE_BODY,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2CC2CC35640
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 06:47:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 34D5EC35640
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 06:47:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 055C124650
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 06:47:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0C3E624650
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 06:47:27 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=geanix.com header.i=@geanix.com header.b="Acn0rHEs"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727352AbgBUGrV (ORCPT
+        id S1727513AbgBUGr0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Feb 2020 01:47:21 -0500
-Received: from inva020.nxp.com ([92.121.34.13]:41458 "EHLO inva020.nxp.com"
+        Fri, 21 Feb 2020 01:47:26 -0500
+Received: from first.geanix.com ([116.203.34.67]:55378 "EHLO first.geanix.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727066AbgBUGrT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Feb 2020 01:47:19 -0500
-Received: from inva020.nxp.com (localhost [127.0.0.1])
-        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id B69FE1A6D88;
-        Fri, 21 Feb 2020 07:47:16 +0100 (CET)
-Received: from invc005.ap-rdc01.nxp.com (invc005.ap-rdc01.nxp.com [165.114.16.14])
-        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id 8931A1A6D82;
-        Fri, 21 Feb 2020 07:47:08 +0100 (CET)
-Received: from localhost.localdomain (shlinux2.ap.freescale.net [10.192.224.44])
-        by invc005.ap-rdc01.nxp.com (Postfix) with ESMTP id C85EB4043C;
-        Fri, 21 Feb 2020 14:46:10 +0800 (SGT)
-From:   sherry sun <sherry.sun@nxp.com>
-To:     bp@alien8.de, mchehab@kernel.org, tony.luck@intel.com,
-        james.morse@arm.com, rrichter@marvell.com, michal.simek@xilinx.com,
-        shawnguo@kernel.org, s.hauer@pengutronix.de, robh+dt@kernel.org,
-        mark.rutland@arm.com
-Cc:     linux-edac@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-imx@nxp.com, frank.li@nxp.com
-Subject: [PATCH 3/3] EDAC: synopsys: Add edac driver support for i.MX8MP
-Date:   Fri, 21 Feb 2020 14:39:16 +0800
-Message-Id: <1582267156-20189-4-git-send-email-sherry.sun@nxp.com>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1582267156-20189-1-git-send-email-sherry.sun@nxp.com>
-References: <1582267156-20189-1-git-send-email-sherry.sun@nxp.com>
-X-Virus-Scanned: ClamAV using ClamSMTP
+        id S1727391AbgBUGrZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 21 Feb 2020 01:47:25 -0500
+Received: from localhost (87-49-45-242-mobile.dk.customer.tdc.net [87.49.45.242])
+        by first.geanix.com (Postfix) with ESMTPSA id 785C3AEB4D;
+        Fri, 21 Feb 2020 06:47:22 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=geanix.com; s=first;
+        t=1582267642; bh=KvmUZ7RpfqddUx8uLthfjCMTy9g+ZYpZDHIMYzR1KoQ=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References;
+        b=Acn0rHEsAci/DYy2yplp8EcwQxmU0WxRKZiq5d4xvpYk9+E+Jk3Y667o2USRuVqJb
+         Ksy6yHHV+Jy4J1BangMSPHMYI5BZcD2t3vMNFc/VDFuj09+xuuctbPbYpejEsLt8WC
+         xgrGC+/4lq4Q93JSsNy5ztBfytW0CnjDsI8B6Eekt60Ikpv7hYEz73IoSPM2Cjt6gM
+         pId7SarJoZiWdRjd5V7cL4gGq1aRMXK+yj8GWXIqpn0Rymc67CUSbyyw2JAXCnCjQc
+         VCDEw8z6Q12Of+nCkYOJxEOv3z8EOWG73SsL0PVoK6aKPJM8NiE0dBSf0+2xq3vm4L
+         uVQs2O0npbKow==
+From:   Esben Haabendal <esben@geanix.com>
+To:     netdev@vger.kernel.org
+Cc:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        Andrew Lunn <andrew@lunn.ch>,
+        "David S . Miller" <davem@davemloft.net>,
+        Michal Simek <michal.simek@xilinx.com>,
+        =?UTF-8?q?Petr=20=C5=A0tetiar?= <ynezz@true.cz>
+Subject: [PATCH net v2 1/4] net: ll_temac: Fix race condition causing TX hang
+Date:   Fri, 21 Feb 2020 07:47:21 +0100
+Message-Id: <c93e0f5ef92d2b17c04e256e32460e9dee1107e8.1582267079.git.esben@geanix.com>
+X-Mailer: git-send-email 2.25.0
+In-Reply-To: <cover.1582267079.git.esben@geanix.com>
+References: <cover.1582108989.git.esben@geanix.com> <cover.1582267079.git.esben@geanix.com>
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Sherry Sun <sherry.sun@nxp.com>
+It is possible that the interrupt handler fires and frees up space in
+the TX ring in between checking for sufficient TX ring space and
+stopping the TX queue in temac_start_xmit. If this happens, the
+queue wake from the interrupt handler will occur before the queue is
+stopped, causing a lost wakeup and the adapter's transmit hanging.
 
-Since i.MX8MP use synopsys ddr controller IP, so add edac support
-for i.MX8MP based on synopsys edac driver. i.MX8MP use LPDDR4 and
-support interrupts for corrected and uncorrected errors. The main
-difference between ZynqMP and i.MX8MP ddr controller is the interrupt
-registers. So add another interrupt handler function, enable/disable
-interrupt function to distinguish with ZynqMP.
+To avoid this, after stopping the queue, check again whether there is
+sufficient space in the TX ring. If so, wake up the queue again.
 
-Signed-off-by: Sherry Sun <sherry.sun@nxp.com>
+This is a port of the similar fix in axienet driver,
+commit 7de44285c1f6 ("net: axienet: Fix race condition causing TX hang").
+
+Fixes: 23ecc4bde21f ("net: ll_temac: fix checksum offload logic")
+Signed-off-by: Esben Haabendal <esben@geanix.com>
 ---
- drivers/edac/synopsys_edac.c | 77 +++++++++++++++++++++++++++++++++++-
- 1 file changed, 76 insertions(+), 1 deletion(-)
+ drivers/net/ethernet/xilinx/ll_temac_main.c | 19 ++++++++++++++++---
+ 1 file changed, 16 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/edac/synopsys_edac.c b/drivers/edac/synopsys_edac.c
-index 2d263382d797..66c801502212 100644
---- a/drivers/edac/synopsys_edac.c
-+++ b/drivers/edac/synopsys_edac.c
-@@ -101,6 +101,7 @@
- /* DDR ECC Quirks */
- #define DDR_ECC_INTR_SUPPORT		BIT(0)
- #define DDR_ECC_DATA_POISON_SUPPORT	BIT(1)
-+#define DDR_ECC_IMX8MP			BIT(2)
- 
- /* ZynqMP Enhanced DDR memory controller registers that are relevant to ECC */
- /* ECC Configuration Registers */
-@@ -266,6 +267,11 @@
- 
- #define RANK_B0_BASE			6
- 
-+/* ECCCTL UE/CE Interrupt enable/disable for IMX8MP*/
-+#define DDR_CE_INTR_EN_MASK			0x100
-+#define DDR_UE_INTR_EN_MASK			0x200
-+#define ECC_INTR_MASK				0x10100
-+
- /**
-  * struct ecc_error_info - ECC error log information.
-  * @row:	Row number.
-@@ -524,6 +530,54 @@ static void handle_error(struct mem_ctl_info *mci, struct synps_ecc_status *p)
- 	memset(p, 0, sizeof(*p));
- }
- 
-+static void enable_intr_imx8mp(struct synps_edac_priv *priv)
-+{
-+	int regval;
-+
-+	regval = readl(priv->baseaddr + ECC_CLR_OFST);
-+	regval |= (DDR_CE_INTR_EN_MASK | DDR_UE_INTR_EN_MASK);
-+	writel(regval, priv->baseaddr + ECC_CLR_OFST);
-+}
-+
-+static void disable_intr_imx8mp(struct synps_edac_priv *priv)
-+{
-+	int regval;
-+
-+	regval = readl(priv->baseaddr + ECC_CLR_OFST);
-+	regval &= ~(DDR_CE_INTR_EN_MASK | DDR_UE_INTR_EN_MASK);
-+	writel(regval, priv->baseaddr + ECC_CLR_OFST);
-+}
-+
-+/* Interrupt Handler for ECC interrupts on imx8mp platform. */
-+static irqreturn_t intr_handler_imx8mp(int irq, void *dev_id)
-+{
-+	const struct synps_platform_data *p_data;
-+	struct mem_ctl_info *mci = dev_id;
-+	struct synps_edac_priv *priv;
-+	int status, regval;
-+
-+	priv = mci->pvt_info;
-+	p_data = priv->p_data;
-+
-+	regval = readl(priv->baseaddr + ECC_STAT_OFST);
-+	if (!(regval & ECC_INTR_MASK))
-+		return IRQ_NONE;
-+
-+	status = p_data->get_error_info(priv);
-+	if (status)
-+		return IRQ_NONE;
-+
-+	priv->ce_cnt += priv->stat.ce_cnt;
-+	priv->ue_cnt += priv->stat.ue_cnt;
-+	handle_error(mci, &priv->stat);
-+
-+	edac_dbg(3, "Total error count CE %d UE %d\n",
-+		 priv->ce_cnt, priv->ue_cnt);
-+	enable_intr_imx8mp(priv);
-+
-+	return IRQ_HANDLED;
-+}
-+
- /**
-  * intr_handler - Interrupt Handler for ECC interrupts.
-  * @irq:        IRQ number.
-@@ -541,6 +595,9 @@ static irqreturn_t intr_handler(int irq, void *dev_id)
- 	priv = mci->pvt_info;
- 	p_data = priv->p_data;
- 
-+	if (p_data->quirks & DDR_ECC_IMX8MP)
-+		return intr_handler_imx8mp(irq, dev_id);
-+
- 	regval = readl(priv->baseaddr + DDR_QOS_IRQ_STAT_OFST);
- 	regval &= (DDR_QOSCE_MASK | DDR_QOSUE_MASK);
- 	if (!(regval & ECC_CE_UE_INTR_MASK))
-@@ -817,7 +874,7 @@ static void mc_init(struct mem_ctl_info *mci, struct platform_device *pdev)
- 	platform_set_drvdata(pdev, mci);
- 
- 	/* Initialize controller capabilities and configuration */
--	mci->mtype_cap = MEM_FLAG_DDR3 | MEM_FLAG_DDR2;
-+	mci->mtype_cap = MEM_FLAG_LRDDR4 | MEM_FLAG_DDR3 | MEM_FLAG_DDR2;
- 	mci->edac_ctl_cap = EDAC_FLAG_NONE | EDAC_FLAG_SECDED;
- 	mci->scrub_cap = SCRUB_HW_SRC;
- 	mci->scrub_mode = SCRUB_NONE;
-@@ -842,6 +899,9 @@ static void mc_init(struct mem_ctl_info *mci, struct platform_device *pdev)
- static void enable_intr(struct synps_edac_priv *priv)
- {
- 	/* Enable UE/CE Interrupts */
-+	if (priv->p_data->quirks & DDR_ECC_IMX8MP)
-+		return enable_intr_imx8mp(priv);
-+
- 	writel(DDR_QOSUE_MASK | DDR_QOSCE_MASK,
- 			priv->baseaddr + DDR_QOS_IRQ_EN_OFST);
- }
-@@ -849,6 +909,9 @@ static void enable_intr(struct synps_edac_priv *priv)
- static void disable_intr(struct synps_edac_priv *priv)
- {
- 	/* Disable UE/CE Interrupts */
-+	if (priv->p_data->quirks & DDR_ECC_IMX8MP)
-+		return disable_intr_imx8mp(priv);
-+
- 	writel(DDR_QOSUE_MASK | DDR_QOSCE_MASK,
- 			priv->baseaddr + DDR_QOS_IRQ_DB_OFST);
- }
-@@ -898,6 +961,14 @@ static const struct synps_platform_data zynqmp_edac_def = {
- 			  ),
- };
- 
-+static const struct synps_platform_data imx8mp_edac_def = {
-+	.get_error_info	= zynqmp_get_error_info,
-+	.get_mtype	= zynqmp_get_mtype,
-+	.get_dtype	= zynqmp_get_dtype,
-+	.get_ecc_state	= zynqmp_get_ecc_state,
-+	.quirks         = (DDR_ECC_INTR_SUPPORT | DDR_ECC_IMX8MP),
-+};
-+
- static const struct of_device_id synps_edac_match[] = {
- 	{
- 		.compatible = "xlnx,zynq-ddrc-a05",
-@@ -907,6 +978,10 @@ static const struct of_device_id synps_edac_match[] = {
- 		.compatible = "xlnx,zynqmp-ddrc-2.40a",
- 		.data = (void *)&zynqmp_edac_def
- 	},
-+	{
-+		.compatible = "fsl,imx8mp-ddrc",
-+		.data = (void *)&imx8mp_edac_def
-+	},
- 	{
- 		/* end of table */
+diff --git a/drivers/net/ethernet/xilinx/ll_temac_main.c b/drivers/net/ethernet/xilinx/ll_temac_main.c
+index 6f11f52c9a9e..996004ef8bd4 100644
+--- a/drivers/net/ethernet/xilinx/ll_temac_main.c
++++ b/drivers/net/ethernet/xilinx/ll_temac_main.c
+@@ -788,6 +788,9 @@ static void temac_start_xmit_done(struct net_device *ndev)
+ 		stat = be32_to_cpu(cur_p->app0);
  	}
+ 
++	/* Matches barrier in temac_start_xmit */
++	smp_mb();
++
+ 	netif_wake_queue(ndev);
+ }
+ 
+@@ -830,9 +833,19 @@ temac_start_xmit(struct sk_buff *skb, struct net_device *ndev)
+ 	cur_p = &lp->tx_bd_v[lp->tx_bd_tail];
+ 
+ 	if (temac_check_tx_bd_space(lp, num_frag + 1)) {
+-		if (!netif_queue_stopped(ndev))
+-			netif_stop_queue(ndev);
+-		return NETDEV_TX_BUSY;
++		if (netif_queue_stopped(ndev))
++			return NETDEV_TX_BUSY;
++
++		netif_stop_queue(ndev);
++
++		/* Matches barrier in temac_start_xmit_done */
++		smp_mb();
++
++		/* Space might have just been freed - check again */
++		if (temac_check_tx_bd_space(lp, num_frag))
++			return NETDEV_TX_BUSY;
++
++		netif_wake_queue(ndev);
+ 	}
+ 
+ 	cur_p->app0 = 0;
 -- 
-2.17.1
+2.25.0
 
