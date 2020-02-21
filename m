@@ -2,142 +2,170 @@ Return-Path: <SRS0=1210=4J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6342AC35647
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 13:20:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3BF9DC35647
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 13:21:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 37E1A24650
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 13:20:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0B9F220578
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 13:21:06 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="KIpZPdVD"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="JSRizBa+"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728466AbgBUNUs (ORCPT
+        id S1728591AbgBUNVE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Feb 2020 08:20:48 -0500
-Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:21172 "EHLO
+        Fri, 21 Feb 2020 08:21:04 -0500
+Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:36970 "EHLO
         us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1728086AbgBUNUs (ORCPT
+        with ESMTP id S1727699AbgBUNVE (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Feb 2020 08:20:48 -0500
+        Fri, 21 Feb 2020 08:21:04 -0500
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1582291247;
+        s=mimecast20190719; t=1582291263;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=V45FPE8E/uSpIv1R1RMAVvbVJqCO9c9QhM88Z/L7IQI=;
-        b=KIpZPdVDzq24mU96yfjTo9tDyfyQtHZ1MKWslRUY/IFkzs+g579CK/jK3S/8ieXwvlqWjC
-        GX8mM2Ly5rslWweW2Sf+m9DE6PHNyDkOsk+ZucS1hyxTi+8Ir59oHObX154Mw1D5k5YGBG
-        M2UxrIauZ48/M8/0xLdOesrRPlooyXo=
-Received: from mail-wm1-f71.google.com (mail-wm1-f71.google.com
- [209.85.128.71]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-254-o9VmbEVUNvKM4rDz8O3h_g-1; Fri, 21 Feb 2020 08:20:45 -0500
-X-MC-Unique: o9VmbEVUNvKM4rDz8O3h_g-1
-Received: by mail-wm1-f71.google.com with SMTP id y7so564697wmd.4
-        for <linux-kernel@vger.kernel.org>; Fri, 21 Feb 2020 05:20:45 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=V45FPE8E/uSpIv1R1RMAVvbVJqCO9c9QhM88Z/L7IQI=;
-        b=jDHsZF/S4bTztt+qEPJcbVPECT07RmIuCaHSbyUh1A+Pc3hYA2CKxbALGi4QJIV8QD
-         Q7H3ePGXDtxFbF4pCDreF5EMP21DqHuZQghRz676d3vK9MU7H+4hroqhyNfxKhXaWoj4
-         KiPLGXBwbfm0PWK+rSfgy4Y7PPcBlnJxWMfxsgUpXvb8R7BMHVawtT543lDJ4LWKTmUj
-         ZpnZBdEkKkcFw29jX9Wzm4ta/tAHc9+ctrW0auV89977MELg8mWp8Kii1OK0Hix1Stqm
-         53V1iTCTBU56b9vxNnVMMgN7iCdblm6REQZ1qbLj3zhyr62B2gFegO8ocLpW3mEvXm6w
-         RGjA==
-X-Gm-Message-State: APjAAAUWQ15L7Z4QRbNOaMH8Q7FhgXdJBRDZf1zKQ+UadxTTymXGft6z
-        n+y6+O7s7jbT51KtKN/LTE6CZ+BzwKKNoj3JO7w8wDKiWEhg1bN55eY5M2dQWwvno01i0/1d6WX
-        l8WrKqYsvbv+8Vgi9e+sjEHcl
-X-Received: by 2002:a05:6000:1208:: with SMTP id e8mr51009108wrx.351.1582291244365;
-        Fri, 21 Feb 2020 05:20:44 -0800 (PST)
-X-Google-Smtp-Source: APXvYqwXgzt5blvA3I2e+h/HOQivRsOOnvHTyqfqBCG2YxfjYwz0b8N/EbQuo8Mp5i1XvX2dQVzGhg==
-X-Received: by 2002:a05:6000:1208:: with SMTP id e8mr51009081wrx.351.1582291244058;
-        Fri, 21 Feb 2020 05:20:44 -0800 (PST)
-Received: from [192.168.178.40] ([151.20.135.128])
-        by smtp.gmail.com with ESMTPSA id m9sm3971187wrx.55.2020.02.21.05.20.42
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 21 Feb 2020 05:20:43 -0800 (PST)
-Subject: Re: [PATCH 00/10] KVM: x86: Clean up VMX's TLB flushing code
-To:     Sean Christopherson <sean.j.christopherson@intel.com>
-Cc:     Vitaly Kuznetsov <vkuznets@redhat.com>,
-        Wanpeng Li <wanpengli@tencent.com>,
-        Jim Mattson <jmattson@google.com>,
-        Joerg Roedel <joro@8bytes.org>, kvm@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-References: <20200220204356.8837-1-sean.j.christopherson@intel.com>
-From:   Paolo Bonzini <pbonzini@redhat.com>
-Message-ID: <efb07c80-58ab-c3ce-1fed-832475190add@redhat.com>
-Date:   Fri, 21 Feb 2020 14:20:42 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.1.1
+        bh=K4ms2CgVns2BaGnINjY8fAnvcQ0WnyDlOpXKLBLyMwo=;
+        b=JSRizBa+LIXeP5hmVH2CE3VUhNBCclNWwE0Pfj5Iy9gnoExuPF8OXkvikYsTVvNODzcOMJ
+        k2JOM0aKf43v+3S2Q5RKes4ER2PWuj2I5TLngNwhLxTEClEc11F5Nklk/a1dJ2u2EDcTYz
+        AhMAX10Oo6HVKC1U6gydOh1/3tvGnR8=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-29-wrBPfRNlOUmJH_P1DeT36w-1; Fri, 21 Feb 2020 08:20:57 -0500
+X-MC-Unique: wrBPfRNlOUmJH_P1DeT36w-1
+Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id D4AF7107ACC5;
+        Fri, 21 Feb 2020 13:20:54 +0000 (UTC)
+Received: from krava (unknown [10.43.17.9])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 1FE0427180;
+        Fri, 21 Feb 2020 13:20:50 +0000 (UTC)
+Date:   Fri, 21 Feb 2020 14:20:48 +0100
+From:   Jiri Olsa <jolsa@redhat.com>
+To:     Feng Tang <feng.tang@intel.com>
+Cc:     Peter Zijlstra <peterz@infradead.org>,
+        kernel test robot <rong.a.chen@intel.com>,
+        Ingo Molnar <mingo@kernel.org>,
+        Vince Weaver <vincent.weaver@maine.edu>,
+        Jiri Olsa <jolsa@kernel.org>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Arnaldo Carvalho de Melo <acme@redhat.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        "Naveen N. Rao" <naveen.n.rao@linux.vnet.ibm.com>,
+        Ravi Bangoria <ravi.bangoria@linux.ibm.com>,
+        Stephane Eranian <eranian@google.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        LKML <linux-kernel@vger.kernel.org>, lkp@lists.01.org,
+        andi.kleen@intel.com, ying.huang@intel.com
+Subject: Re: [LKP] Re: [perf/x86] 81ec3f3c4c: will-it-scale.per_process_ops
+ -5.5% regression
+Message-ID: <20200221132048.GE652992@krava>
+References: <20200205123216.GO12867@shao2-debian>
+ <20200205125804.GM14879@hirez.programming.kicks-ass.net>
+ <20200221080325.GA67807@shbuild999.sh.intel.com>
 MIME-Version: 1.0
-In-Reply-To: <20200220204356.8837-1-sean.j.christopherson@intel.com>
-Content-Type: text/plain; charset=windows-1252
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200221080325.GA67807@shbuild999.sh.intel.com>
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 20/02/20 21:43, Sean Christopherson wrote:
-> This series is technically x86 wide, but it only superficially affects
-> SVM, the motivation and primary touchpoints are all about VMX.
+On Fri, Feb 21, 2020 at 04:03:25PM +0800, Feng Tang wrote:
 > 
-> The goal of this series to ultimately clean up __vmx_flush_tlb(), which,
-> for me, manages to be extremely confusing despite being only ten lines of
-> code.
+> On Wed, Feb 05, 2020 at 01:58:04PM +0100, Peter Zijlstra wrote:
+> > On Wed, Feb 05, 2020 at 08:32:16PM +0800, kernel test robot wrote:
+> > > Greeting,
+> > > 
+> > > FYI, we noticed a -5.5% regression of will-it-scale.per_process_ops due to commit:
+> > > 
+> > > 
+> > > commit: 81ec3f3c4c4d78f2d3b6689c9816bfbdf7417dbb ("perf/x86: Add check_period PMU callback")
+> > > https://git.kernel.org/cgit/linux/kernel/git/torvalds/linux.git master
+> > > 
+> > 
+> > I'm fairly sure this bisect/result is bogus.
 > 
-> The most confusing aspect of __vmx_flush_tlb() is that it is overloaded
-> for multiple uses:
 > 
->  1) TLB flushes in response to a change in KVM's MMU
+> Hi Peter,
 > 
->  2) TLB flushes during nested VM-Enter/VM-Exit when VPID is enabled
+> Some updates:
 > 
->  3) Guest-scoped TLB flushes for paravirt TLB flushing
+> We checked more on this. We run 14 times test for it, and the
+> results are consistent about the 5.5% degradation, and we
+> run the same test on several other platforms, whose test results
+> are also consistent, though there are no such -5.5% seen.
 > 
-> Handling (2) and (3) in the same flow as (1) is kludgy, because the rules
-> for (1) are quite different than the rules for (2) and (3).  They're all
-> squeezed into __vmx_flush_tlb() via the @invalidate_gpa param, which means
-> "invalidate gpa mappings", not "invalidate a specific gpa"; it took me
-> forever and a day to realize that.
+> We are also curious that the commit seems to be completely not
+> relative to this scalability test of signal, which starts a task
+> for each online CPU, and keeps calling raise(), and calculating
+> the run numbers.
 > 
-> To clean things up, handle (2) by directly calling vpid_sync_context()
-> instead of bouncing through __vmx_flush_tlb(), and handle (3) via a
-> dedicated kvm_x86_ops hook.  This allows for a less tricky implementation
-> of vmx_flush_tlb() for (1), and (hopefully) clarifies the rules for what
-> mappings must be invalidated when.
+> One experiment we did is checking which part of the commit
+> really affects the test, and it turned out to be the change of
+> "struct pmu". Effectively, applying this patch upon 5.0-rc6 
+> which triggers the same regression.
 > 
-> Sean Christopherson (10):
->   KVM: VMX: Use vpid_sync_context() directly when possible
->   KVM: VMX: Move vpid_sync_vcpu_addr() down a few lines
->   KVM: VMX: Handle INVVPID fallback logic in vpid_sync_vcpu_addr()
->   KVM: VMX: Fold vpid_sync_vcpu_{single,global}() into
->     vpid_sync_context()
->   KVM: nVMX: Use vpid_sync_vcpu_addr() to emulate INVVPID with address
->   KVM: x86: Move "flush guest's TLB" logic to separate kvm_x86_ops hook
->   KVM: VMX: Clean up vmx_flush_tlb_gva()
->   KVM: x86: Drop @invalidate_gpa param from kvm_x86_ops' tlb_flush()
->   KVM: VMX: Drop @invalidate_gpa from __vmx_flush_tlb()
->   KVM: VMX: Fold __vmx_flush_tlb() into vmx_flush_tlb()
+> diff --git a/include/linux/perf_event.h b/include/linux/perf_event.h
+> index 1d5c551..e1a0517 100644
+> --- a/include/linux/perf_event.h
+> +++ b/include/linux/perf_event.h
+> @@ -447,6 +447,11 @@ struct pmu {
+>  	 * Filter events for PMU-specific reasons.
+>  	 */
+>  	int (*filter_match)		(struct perf_event *event); /* optional */
+> +
+> +	/*
+> +	 * Check period value for PERF_EVENT_IOC_PERIOD ioctl.
+> +	 */
+> +	int (*check_period)		(struct perf_event *event, u64 value); /* optional */
+>  };
 > 
->  arch/x86/include/asm/kvm_host.h |  8 +++++++-
->  arch/x86/kvm/mmu/mmu.c          |  2 +-
->  arch/x86/kvm/svm.c              | 14 ++++++++++----
->  arch/x86/kvm/vmx/nested.c       | 12 ++++--------
->  arch/x86/kvm/vmx/ops.h          | 32 +++++++++-----------------------
->  arch/x86/kvm/vmx/vmx.c          | 26 +++++++++++++++++---------
->  arch/x86/kvm/vmx/vmx.h          | 19 ++++++++++---------
->  arch/x86/kvm/x86.c              |  8 ++++----
->  8 files changed, 62 insertions(+), 59 deletions(-)
-> 
+> So likely, this commit changes the layout of the kernel text
+> and data, which may trigger some cacheline level change. From
+> the system map of the 2 kernels, a big trunk of symbol's address
+> changes which follow the global "pmu",
 
-Reviewed-by: Paolo Bonzini <pbonzini@redhat.com>
+nice, I wonder we could see that in perf c2c output ;-)
+I'll try to run and check
+
+thanks,
+jirka
+
+> 
+> 5.0-rc6-systemap:
+> 
+> ffffffff8221d000 d pmu
+> ffffffff8221d100 d pmc_reserve_mutex
+> ffffffff8221d120 d amd_f15_PMC53
+> ffffffff8221d160 d amd_f15_PMC50
+> 
+> 5.0-rc6+pmu-change-systemap:
+> 
+> ffffffff8221d000 d pmu
+> ffffffff8221d120 d pmc_reserve_mutex
+> ffffffff8221d140 d amd_f15_PMC53
+> ffffffff8221d180 d amd_f15_PMC50
+> 
+> But we can hardly identify which exact symbol is responsible
+> for the change, as too many symbols are offseted. 
+> 
+> btw, we've seen similar case that an irrelevant commit changes
+> the benchmark, like a hugetlb patch improves pagefault test on
+> a platform that never uses hugetlb https://lkml.org/lkml/2020/1/14/150  
+> 
+> Thanks,
+> Feng
+> 
+> > _______________________________________________
+> > LKP mailing list -- lkp@lists.01.org
+> > To unsubscribe send an email to lkp-leave@lists.01.org
+> 
 
