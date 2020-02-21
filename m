@@ -5,49 +5,49 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 18431C35641
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 07:52:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7B01BC35640
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 07:52:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D1818222C4
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 07:52:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 444442073A
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 07:52:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582271546;
-	bh=KuEgsFhctq+NMX/iGUxTFyaBIdZHanXPB/FL5E3J6L8=;
+	s=default; t=1582271550;
+	bh=IL0DlRLZwPFnTOfxoGC0+a/kYVgGNy0nkZp7u869IZc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=mP21I3NbIJT9ffkY/6vjK3ToMAig3C8xloWM3GU45oSVhN7ncaaRgtnQ7yeCiSmD7
-	 IijwnYwiZOMn9SADgJvFs1P4oef69eseUie71zCzEANbqaqSrVyC3jdLViqAnb1Owz
-	 /Mzl4PEI2OXww/wx3u5ZRlezwhWxVG8Myfa0wqQo=
+	b=0Mudqf2LacRSRHfSsoJEfhA2mN71OP25gjdWDDE7U5o46ScWNQgYyLaAqlgGeSI4h
+	 1z7KAMVO4aHD47cLKMo21jzXIZaY6nHEAu7xvkECUpp0RoAWZ2iiAO7EX1HiTyml1I
+	 xIrcEvXPvRtFHpAFgnlN4F6XaT0GIVbtYdwpSS/8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728639AbgBUHw0 (ORCPT
+        id S1729907AbgBUHw2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Feb 2020 02:52:26 -0500
-Received: from mail.kernel.org ([198.145.29.99]:50160 "EHLO mail.kernel.org"
+        Fri, 21 Feb 2020 02:52:28 -0500
+Received: from mail.kernel.org ([198.145.29.99]:50282 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729497AbgBUHwV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Feb 2020 02:52:21 -0500
+        id S1729554AbgBUHw0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 21 Feb 2020 02:52:26 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6930C2073A;
-        Fri, 21 Feb 2020 07:52:20 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8F4E32073A;
+        Fri, 21 Feb 2020 07:52:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1582271540;
-        bh=KuEgsFhctq+NMX/iGUxTFyaBIdZHanXPB/FL5E3J6L8=;
+        s=default; t=1582271546;
+        bh=IL0DlRLZwPFnTOfxoGC0+a/kYVgGNy0nkZp7u869IZc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=mCWB3XGNaWD5+2NejxNewmRxRNL93BYLDKXkBBYjx+nC8dd1ct702LhqC6BkMaF0t
-         AKshNOfd5nj4HP8wkI1nVQWZn/htz87jr9kmw6I1keWOeCT1MFzibMQoTMUawQXL6X
-         UV+tCYdwrvLAj9LN3f1TDzsr6NJy8VRCThRQ7KNQ=
+        b=f4zHvXotIhYOZorkCQ6nahR53+sE0xT88S0z6kaDEmmft4mnpdxEjaeJ7SfOuU3XQ
+         e5u0RVDWHNA3IxIBTvob1EC2aYWwVWPV88+P2GtagnH2LCsn8b2VUhWl9jwwSFqxoB
+         Gg+LQ4QuhoyKXX/kAhbM/3xNLEGaIJjomilrSAEc=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, "David S. Miller" <davem@davemloft.net>,
-        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+        stable@vger.kernel.org, Alexey Kardashevskiy <aik@ozlabs.ru>,
+        Alex Williamson <alex.williamson@redhat.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.5 206/399] net: phy: fixed_phy: fix use-after-free when checking link GPIO
-Date:   Fri, 21 Feb 2020 08:38:51 +0100
-Message-Id: <20200221072422.910002773@linuxfoundation.org>
+Subject: [PATCH 5.5 208/399] vfio/spapr/nvlink2: Skip unpinning pages on error exit
+Date:   Fri, 21 Feb 2020 08:38:53 +0100
+Message-Id: <20200221072423.130034911@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200221072402.315346745@linuxfoundation.org>
 References: <20200221072402.315346745@linuxfoundation.org>
@@ -60,45 +60,47 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+From: Alexey Kardashevskiy <aik@ozlabs.ru>
 
-[ Upstream commit d266f19f3ae7fbcaf92229639b78d2110ae44f33 ]
+[ Upstream commit 338b4e10f939a71194d8ecef7ece205a942cec05 ]
 
-If we fail to locate GPIO for any reason other than deferral or
-not-found-GPIO, we try to print device tree node info, however if might
-be freed already as we called of_node_put() on it.
+The nvlink2 subdriver for IBM Witherspoon machines preregisters
+GPU memory in the IOMMI API so KVM TCE code can map this memory
+for DMA as well. This is done by mm_iommu_newdev() called from
+vfio_pci_nvgpu_regops::mmap.
 
-Acked-by: David S. Miller <davem@davemloft.net>
-Signed-off-by: Dmitry Torokhov <dmitry.torokhov@gmail.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+In an unlikely event of failure the data->mem remains NULL and
+since mm_iommu_put() (which unregisters the region and unpins memory
+if that was regular memory) does not expect mem=NULL, it should not be
+called.
+
+This adds a check to only call mm_iommu_put() for a valid data->mem.
+
+Fixes: 7f92891778df ("vfio_pci: Add NVIDIA GV100GL [Tesla V100 SXM2] subdriver")
+Signed-off-by: Alexey Kardashevskiy <aik@ozlabs.ru>
+Signed-off-by: Alex Williamson <alex.williamson@redhat.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/phy/fixed_phy.c | 7 ++-----
- 1 file changed, 2 insertions(+), 5 deletions(-)
+ drivers/vfio/pci/vfio_pci_nvlink2.c | 6 ++++--
+ 1 file changed, 4 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/net/phy/fixed_phy.c b/drivers/net/phy/fixed_phy.c
-index 7c5265fd2b94d..4190f9ed5313d 100644
---- a/drivers/net/phy/fixed_phy.c
-+++ b/drivers/net/phy/fixed_phy.c
-@@ -212,16 +212,13 @@ static struct gpio_desc *fixed_phy_get_gpiod(struct device_node *np)
- 	 */
- 	gpiod = gpiod_get_from_of_node(fixed_link_node, "link-gpios", 0,
- 				       GPIOD_IN, "mdio");
--	of_node_put(fixed_link_node);
--	if (IS_ERR(gpiod)) {
--		if (PTR_ERR(gpiod) == -EPROBE_DEFER)
--			return gpiod;
--
-+	if (IS_ERR(gpiod) && PTR_ERR(gpiod) != -EPROBE_DEFER) {
- 		if (PTR_ERR(gpiod) != -ENOENT)
- 			pr_err("error getting GPIO for fixed link %pOF, proceed without\n",
- 			       fixed_link_node);
- 		gpiod = NULL;
- 	}
-+	of_node_put(fixed_link_node);
+diff --git a/drivers/vfio/pci/vfio_pci_nvlink2.c b/drivers/vfio/pci/vfio_pci_nvlink2.c
+index f2983f0f84bea..3f5f8198a6bb1 100644
+--- a/drivers/vfio/pci/vfio_pci_nvlink2.c
++++ b/drivers/vfio/pci/vfio_pci_nvlink2.c
+@@ -97,8 +97,10 @@ static void vfio_pci_nvgpu_release(struct vfio_pci_device *vdev,
  
- 	return gpiod;
- }
+ 	/* If there were any mappings at all... */
+ 	if (data->mm) {
+-		ret = mm_iommu_put(data->mm, data->mem);
+-		WARN_ON(ret);
++		if (data->mem) {
++			ret = mm_iommu_put(data->mm, data->mem);
++			WARN_ON(ret);
++		}
+ 
+ 		mmdrop(data->mm);
+ 	}
 -- 
 2.20.1
 
