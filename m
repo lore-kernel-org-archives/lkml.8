@@ -2,199 +2,351 @@ Return-Path: <SRS0=1210=4J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_2 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 294C1C35647
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 13:28:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1E61CC35646
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 13:28:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F29EA222C4
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 13:28:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D6D05222C4
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 13:28:22 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=joelfernandes.org header.i=@joelfernandes.org header.b="BVfIGLO/"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728761AbgBUN17 (ORCPT
+        id S1728781AbgBUN2V (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Feb 2020 08:27:59 -0500
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:36476 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1728130AbgBUN17 (ORCPT
+        Fri, 21 Feb 2020 08:28:21 -0500
+Received: from mail-qt1-f196.google.com ([209.85.160.196]:46135 "EHLO
+        mail-qt1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728103AbgBUN2U (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Feb 2020 08:27:59 -0500
-Received: from pps.filterd (m0098399.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 01LDJ6Du070703
-        for <linux-kernel@vger.kernel.org>; Fri, 21 Feb 2020 08:27:58 -0500
-Received: from e06smtp04.uk.ibm.com (e06smtp04.uk.ibm.com [195.75.94.100])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2y9ytrnbjn-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Fri, 21 Feb 2020 08:27:58 -0500
-Received: from localhost
-        by e06smtp04.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-kernel@vger.kernel.org> from <pasic@linux.ibm.com>;
-        Fri, 21 Feb 2020 13:27:54 -0000
-Received: from b06cxnps4074.portsmouth.uk.ibm.com (9.149.109.196)
-        by e06smtp04.uk.ibm.com (192.168.101.134) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Fri, 21 Feb 2020 13:27:50 -0000
-Received: from d06av21.portsmouth.uk.ibm.com (d06av21.portsmouth.uk.ibm.com [9.149.105.232])
-        by b06cxnps4074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 01LDRmrG20971590
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Fri, 21 Feb 2020 13:27:48 GMT
-Received: from d06av21.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 9DE4F5204F;
-        Fri, 21 Feb 2020 13:27:48 +0000 (GMT)
-Received: from oc2783563651 (unknown [9.152.224.149])
-        by d06av21.portsmouth.uk.ibm.com (Postfix) with ESMTP id 2DB6352052;
-        Fri, 21 Feb 2020 13:27:48 +0000 (GMT)
-Date:   Fri, 21 Feb 2020 14:27:46 +0100
-From:   Halil Pasic <pasic@linux.ibm.com>
-To:     David Gibson <david@gibson.dropbear.id.au>
-Cc:     Christoph Hellwig <hch@lst.de>,
-        "Michael S. Tsirkin" <mst@redhat.com>,
-        Jason Wang <jasowang@redhat.com>,
-        Marek Szyprowski <m.szyprowski@samsung.com>,
-        Robin Murphy <robin.murphy@arm.com>,
-        linux-s390@vger.kernel.org,
-        virtualization@lists.linux-foundation.org,
-        linux-kernel@vger.kernel.org, iommu@lists.linux-foundation.org,
-        Christian Borntraeger <borntraeger@de.ibm.com>,
-        Janosch Frank <frankja@linux.ibm.com>,
-        Viktor Mihajlovski <mihajlov@linux.ibm.com>,
-        Cornelia Huck <cohuck@redhat.com>,
-        Ram Pai <linuxram@us.ibm.com>,
-        Thiago Jung Bauermann <bauerman@linux.ibm.com>,
-        "Lendacky, Thomas" <Thomas.Lendacky@amd.com>,
-        Michael Mueller <mimu@linux.ibm.com>
-Subject: Re: [PATCH 2/2] virtio: let virtio use DMA API when guest RAM is
- protected
-In-Reply-To: <20200221025915.GB2298@umbus.fritz.box>
-References: <20200220160606.53156-1-pasic@linux.ibm.com>
-        <20200220160606.53156-3-pasic@linux.ibm.com>
-        <20200220161309.GB12709@lst.de>
-        <20200221025915.GB2298@umbus.fritz.box>
-Organization: IBM
-X-Mailer: Claws Mail 3.11.1 (GTK+ 2.24.31; x86_64-redhat-linux-gnu)
+        Fri, 21 Feb 2020 08:28:20 -0500
+Received: by mail-qt1-f196.google.com with SMTP id i14so1207505qtv.13
+        for <linux-kernel@vger.kernel.org>; Fri, 21 Feb 2020 05:28:19 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=joelfernandes.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=ttw7zbAKUYQGYrdurjacYFEgGvhEz3TZgtMI5lpX0U4=;
+        b=BVfIGLO/GnUrYvKVSHBfApZeSvJwQV+JVs0B7EPICFhsCTTYppnKxZWIQH358zEpDo
+         m9nIHwfIINrGHkZWC2KQsxXKV6IESLPn96ZujfXajLv3in5e1n2zxunFvznSXn1myHWy
+         asvVJAI5kaMIYsUdDmBBeu+ACKjcTymn+CfBA=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=ttw7zbAKUYQGYrdurjacYFEgGvhEz3TZgtMI5lpX0U4=;
+        b=NZuxD5SJd5rCXO+dALxr9VO8wdlX3vJKWycIlXCADA/bUrinshubw4CA6QocH1ILQp
+         zW1ABxzYIyQDr0Kgt87Nq9rMaq20Id0UjIr5kejRt38iy9naB5DXyoFBQ/SKm7BE12Rs
+         ZljLuPO52ZgsxZB3uPHxmNZCbvRn4xE9qtS/51a4BqODu2sHqMtgdVvhLnJdmoKM3ljQ
+         9pjMCUEpsxaz5A+7S8CJDykj6h77isxZwjPnW3L0BHUyOCgiJKPjcp+DbeLXy4u8432e
+         +m4DHXOfdS6+OA7EIz6RNBU22TatFjjmsOLSL+gPdGwBO3UQdSE34cc1h43lnaXKPjYM
+         8Iig==
+X-Gm-Message-State: APjAAAXH/dC2/R1JkfB2lRytq4t/2PKT4ywrmKQ8ZE+vBqnFU/TPB7ot
+        DFGr1nAGQGKSerTk/+LF8hv+bQ==
+X-Google-Smtp-Source: APXvYqxpLDn0bCSYatZg7Uqhj28dqOda+8wk8jeIA5o4UuOhP0FzZdpWO/o0xpLUi/UNbdJRyTmwtA==
+X-Received: by 2002:ac8:554b:: with SMTP id o11mr31612397qtr.36.1582291698716;
+        Fri, 21 Feb 2020 05:28:18 -0800 (PST)
+Received: from localhost ([2620:15c:6:12:9c46:e0da:efbf:69cc])
+        by smtp.gmail.com with ESMTPSA id k58sm1535726qtb.60.2020.02.21.05.28.18
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 21 Feb 2020 05:28:18 -0800 (PST)
+Date:   Fri, 21 Feb 2020 08:28:17 -0500
+From:   Joel Fernandes <joel@joelfernandes.org>
+To:     Uladzislau Rezki <urezki@gmail.com>
+Cc:     "Theodore Y. Ts'o" <tytso@mit.edu>,
+        "Paul E. McKenney" <paulmck@kernel.org>,
+        Ext4 Developers List <linux-ext4@vger.kernel.org>,
+        Suraj Jitindar Singh <surajjs@amazon.com>,
+        LKML <linux-kernel@vger.kernel.org>, rcu@vger.kernel.org
+Subject: Re: [PATCH RFC] ext4: fix potential race between online resizing and
+ write operations
+Message-ID: <20200221132817.GB194360@google.com>
+References: <20200215233817.GA670792@mit.edu>
+ <20200216121246.GG2935@paulmck-ThinkPad-P72>
+ <20200217160827.GA5685@pc636>
+ <20200217193314.GA12604@mit.edu>
+ <20200218170857.GA28774@pc636>
+ <20200221120618.GA194360@google.com>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
- boundary="Sig_/6L0zE9scbEzJxcRVxZin/tR"; protocol="application/pgp-signature"
-X-TM-AS-GCONF: 00
-x-cbid: 20022113-0016-0000-0000-000002E8FC1A
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 20022113-0017-0000-0000-0000334C1C9A
-Message-Id: <20200221142746.1da0881f.pasic@linux.ibm.com>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.572
- definitions=2020-02-21_03:2020-02-19,2020-02-21 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- suspectscore=0 clxscore=1015 mlxlogscore=999 mlxscore=0 adultscore=0
- lowpriorityscore=0 malwarescore=0 spamscore=0 impostorscore=0 phishscore=0
- bulkscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2001150001 definitions=main-2002210103
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200221120618.GA194360@google.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/6L0zE9scbEzJxcRVxZin/tR
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+On Fri, Feb 21, 2020 at 07:06:18AM -0500, Joel Fernandes wrote:
+> On Tue, Feb 18, 2020 at 06:08:57PM +0100, Uladzislau Rezki wrote:
+> > On Mon, Feb 17, 2020 at 02:33:14PM -0500, Theodore Y. Ts'o wrote:
+> > > On Mon, Feb 17, 2020 at 05:08:27PM +0100, Uladzislau Rezki wrote:
+> > > > Hello, Joel, Paul, Ted. 
+> > > > 
+> > > > > 
+> > > > > Good point!
+> > > > > 
+> > > > > Now that kfree_rcu() is on its way to being less of a hack deeply
+> > > > > entangled into the bowels of RCU, this might be fairly easy to implement.
+> > > > > It might well be simply a matter of a function pointer and a kvfree_rcu()
+> > > > > API.  Adding Uladzislau Rezki and Joel Fernandez on CC for their thoughts.
+> > > > > 
+> > > > I think it makes sense. For example i see there is a similar demand in
+> > > > the mm/list_lru.c too. As for implementation, it will not be hard, i think. 
+> > > > 
+> > > > The easiest way is to inject kvfree() support directly into existing kfree_call_rcu()
+> > > > logic(probably will need to rename that function), i.e. to free vmalloc() allocations
+> > > > only in "emergency path" by just calling kvfree(). So that function in its turn will
+> > > > figure out if it is _vmalloc_ address or not and trigger corresponding "free" path.
+> > > 
+> > > The other difference between ext4_kvfree_array_rcu() and kfree_rcu()
+> > > is that kfree_rcu() is a magic macro which frees a structure, which
+> > > has to contain a struct rcu_head.  In this case, I'm freeing a pointer
+> > > to set of structures, or in another case, a set of buffer_heads, which
+> > > do *not* have an rcu_head structure.
+> > > 
+> > We can implement kvfree_rcu() that will deal with pointer only, it is not
+> > an issue. I mean without embedding rcu_head to the structure or whatever
+> > else.
+> > 
+> > I tried to implement it with less number of changes to make it more clear
+> > and readable. Please have a look:
+> > 
+> > <snip>
+> > diff --git a/include/linux/rcupdate.h b/include/linux/rcupdate.h
+> 
+> Overall this implementation is nice. You are basically avoiding allocating
+> rcu_head like Ted did by using the array-of-pointers technique we used for
+> the previous kfree_rcu() work.
+> 
+> One thing stands out, the path where we could not allocate a page for the new
+> block node:
+> 
+> > @@ -3061,6 +3148,11 @@ void kfree_call_rcu(struct rcu_head *head, rcu_callback_t func)
+> >         if (krcp->initialized)
+> >                 spin_unlock(&krcp->lock);
+> >         local_irq_restore(flags);
+> > +
+> > +       if (!skip_call_rcu) {
+> > +               synchronize_rcu();
+> > +               kvfree(ptr_to_free);
+> 
+> We can't block, it has to be async otherwise everything else blocks, and I
+> think this can also be used from interrupt handlers which would at least be
+> an SWA violation. So perhaps it needs to allocate an rcu_head wrapper object
+> itself for the 'emergeny case' and use the regular techniques.
+> 
+> Another thing that stands out is the code duplication, if we can make this
+> reuse as much as of the previous code as possible, that'd be great. I'd like
+> to avoid bvcached and bvhead if possible. Maybe we can store information
+> about the fact that this is a 'special object' in some of the lower-order
+> bits of the pointer. Then we can detect that it is 'special' and free it
+> using kvfree() during the reclaim
 
-On Fri, 21 Feb 2020 13:59:15 +1100
-David Gibson <david@gibson.dropbear.id.au> wrote:
+I was thinking something like the following, only build-tested -- just to
+show the idea. Perhaps the synchronize_rcu() should be done from a workqueue
+handler to prevent IRQ crapping out?
 
-> On Thu, Feb 20, 2020 at 05:13:09PM +0100, Christoph Hellwig wrote:
-> > On Thu, Feb 20, 2020 at 05:06:06PM +0100, Halil Pasic wrote:
-> > > diff --git a/drivers/virtio/virtio_ring.c b/drivers/virtio/virtio_rin=
-g.c
-> > > index 867c7ebd3f10..fafc8f924955 100644
-> > > --- a/drivers/virtio/virtio_ring.c
-> > > +++ b/drivers/virtio/virtio_ring.c
-> > > @@ -243,6 +243,9 @@ static bool vring_use_dma_api(struct virtio_devic=
-e *vdev)
-> > >  	if (!virtio_has_iommu_quirk(vdev))
-> > >  		return true;
-> > > =20
-> > > +	if (force_dma_unencrypted(&vdev->dev))
-> > > +		return true;
-> >=20
-> > Hell no.  This is a detail of the platform DMA direct implementation.
-> > Drivers have no business looking at this flag, and virtio finally needs
-> > to be fixed to use the DMA API properly for everything but legacy devic=
-es.
->=20
-> So, this patch definitely isn't right as it stands, but I'm struggling
-> to understand what it is you're saying is the right way.
->=20
-> By "legacy devices" I assume you mean pre-virtio-1.0 devices, that
-> lack the F_VERSION_1 feature flag.  Is that right?  Because I don't
-> see how being a legacy device or not relates to use of the DMA API.
->=20
-> I *think* what you are suggesting here is that virtio devices that
-> have !F_IOMMU_PLATFORM should have their dma_ops set up so that the
-> DMA API treats IOVA=3D=3DPA, which will satisfy what the device expects.
-> Then the virtio driver can use the DMA API the same way for both
-> F_IOMMU_PLATFORM and !F_IOMMU_PLATFORM devices.
+Basically what I did different is:
+1. Use the existing kfree_rcu_bulk_data::records array to store the
+   to-be-freed array.
+2. In case of emergency, allocate a new wrapper and tag the pointer.
+   Read the tag later to figure its an array wrapper and do additional kvfree.
 
-I've considered this idea, and as a matter a fact would be my preferred
-solution. It would be, if we could use GFP_DMA when allocating coherent
-memory through the DMA API. For CCW devices we *must* have some of the
-device accessible memory 31 bit addressable (in physical address space),
-because the s390 architecture *mandates it*. I had patches
-(https://lkml.org/lkml/2019/9/23/313) that do that but Christoph was not
-open to the idea.
+debug_objects bits wouldn't work obviously for the !emergency kvfree case,
+not sure what we can do there.
+---8<-----------------------
 
-Always pushing all the stuff allocated by virtio devices into the DMA
-zone is not a good option for us. We did that for protected guests,
-because that was what Christoph was willing to accept, but not happy
-with it.
-
-I'm willing to go down that rute, but I really need the capability to
-tell the DMA API 'do this allocation from ZONE_DMA'. I don't care how.
-
-
->=20
-> But if that works for !F_IOMMU_PLATFORM_DEVICES+F_VERSION_1 devices,
-> then AFAICT it will work equally well for legacy devices.
-
-I agree.
-
->=20
-> Using the DMA API for *everything* in virtio, legacy or not, seems
-> like a reasonable approach to me.  But, AFAICT, that does require the
-> DMA layer to have some kind of explicit call to turn on this
-> behaviour, which the virtio driver would call during initializsation.
-> I don't think we can do it 100% within the DMA layer, because only the
-> driver can reasonably know when a device has this weird non-standard
-> DMA behaviour.
->=20
-
-IMHO one could make the DMA API work with different DMA ops. The
-virtio transport or the virtio core can probably intervene. But then, we
-(virtio-ccw) would need the iommu=3Doff DMA ops to do the bounce buffering
-iff force_dma_unencrypted().
-
-Regards,
-Halil
-
---Sig_/6L0zE9scbEzJxcRVxZin/tR
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2.0.22 (GNU/Linux)
-
-iQIcBAEBAgAGBQJeT9rSAAoJEA0vhuyXGx0AgHQP+gLGTX4Ns4WO0rTvm272UO/v
-hxbJZMxeojiTFWHD4TkCbltyBOw2vVGwyCrlR264NQDgcPkDbUpp/kU5KyuUWkMx
-fg6K4ZOh4ZiwczUstvV5PB0qzEbKI4lK8uktHUzvHBdo7Hkflb3adUCZekqhKgJU
-E5dipJ6cqTuWGgjY9hqOhFHBphLbThSY1fUlgIv3yXFrwW0LGUX4WFETF3Mq9S5y
-4Z8xR8QsjPoNEmRpP6uZhSZ7ue5i0iRpf+zgJRF/F7mP4buODibZ3rN7YGhRP+ip
-LP4NDLuooYIDnVVGcDZm578p/20XCGYldebH7wIcpoJemQGMRE8ZxS3eqvqhFMS4
-PhUYS8/mR8v5Hq61r85qu4R6JDHJ8yH47YEFFVO+ZLrhk4WE7/NXohjGWzimmsx7
-+oaTFLiuuQvn7K3ur1KGfgiMYDt4f2x7AstT3dr1qXj+jtKLcUUsSCjRdCN/CT65
-o+lpGU4sDp04ekLWOGCtyymzC4QoJq8fZ5osnQnRb+w5mbDleSUgKD8FZbX2Zonu
-t8XpKJBtY3ByHi2qu0Ll/1Kx22TTtTtt4CNedhQLvzZ6BEmZtx1/yQHZ6ju3V4p+
-y6kumCXn8PCdSsrnzJL2zblvZhrDuyshzKNtB2Ihgn5ksldJ6z54hUCuw/oFbZ/y
-B9ZUzg5KJmqce9haoZCY
-=zf/I
------END PGP SIGNATURE-----
-
---Sig_/6L0zE9scbEzJxcRVxZin/tR--
-
+diff --git a/include/linux/rcupdate.h b/include/linux/rcupdate.h
+index 2678a37c31696..19fd7c74ad532 100644
+--- a/include/linux/rcupdate.h
++++ b/include/linux/rcupdate.h
+@@ -805,7 +805,7 @@ static inline notrace void rcu_read_unlock_sched_notrace(void)
+ #define __kfree_rcu(head, offset) \
+ 	do { \
+ 		BUILD_BUG_ON(!__is_kfree_rcu_offset(offset)); \
+-		kfree_call_rcu(head, (rcu_callback_t)(unsigned long)(offset)); \
++		kfree_call_rcu(head, (rcu_callback_t)(unsigned long)(offset), NULL); \
+ 	} while (0)
+ 
+ /**
+@@ -842,6 +842,14 @@ do {									\
+ 		__kfree_rcu(&((___p)->rhf), offsetof(typeof(*(ptr)), rhf)); \
+ } while (0)
+ 
++#define kvfree_rcu(ptr)                                                \
++do {                                                                   \
++       typeof (ptr) ___p = (ptr);                                      \
++                                                                       \
++       if (___p)                                                       \
++               kfree_call_rcu(NULL, (rcu_callback_t)(unsigned long)(0), ___p); \
++} while (0)
++
+ /*
+  * Place this after a lock-acquisition primitive to guarantee that
+  * an UNLOCK+LOCK pair acts as a full barrier.  This guarantee applies
+diff --git a/include/linux/rcutiny.h b/include/linux/rcutiny.h
+index 045c28b71f4f3..a12ecc1645fa9 100644
+--- a/include/linux/rcutiny.h
++++ b/include/linux/rcutiny.h
+@@ -34,7 +34,7 @@ static inline void synchronize_rcu_expedited(void)
+ 	synchronize_rcu();
+ }
+ 
+-static inline void kfree_call_rcu(struct rcu_head *head, rcu_callback_t func)
++static inline void kfree_call_rcu(struct rcu_head *head, rcu_callback_t func, void *ptr)
+ {
+ 	call_rcu(head, func);
+ }
+diff --git a/include/linux/rcutree.h b/include/linux/rcutree.h
+index 45f3f66bb04df..1e445b566c019 100644
+--- a/include/linux/rcutree.h
++++ b/include/linux/rcutree.h
+@@ -33,7 +33,7 @@ static inline void rcu_virt_note_context_switch(int cpu)
+ }
+ 
+ void synchronize_rcu_expedited(void);
+-void kfree_call_rcu(struct rcu_head *head, rcu_callback_t func);
++void kfree_call_rcu(struct rcu_head *head, rcu_callback_t func, void *ptr);
+ 
+ void rcu_barrier(void);
+ bool rcu_eqs_special_set(int cpu);
+diff --git a/kernel/rcu/tree.c b/kernel/rcu/tree.c
+index ec81139cc4c6a..7b6ab4160f080 100644
+--- a/kernel/rcu/tree.c
++++ b/kernel/rcu/tree.c
+@@ -2814,6 +2814,15 @@ struct kfree_rcu_cpu {
+ 	bool initialized;
+ };
+ 
++/*
++ * Used in a situation where array of pointers could
++ * not be put onto a kfree_bulk_data::records array.
++ */
++struct kfree_rcu_wrap_kvarray {
++	struct rcu_head head;
++	void *ptr;
++};
++
+ static DEFINE_PER_CPU(struct kfree_rcu_cpu, krc);
+ 
+ static __always_inline void
+@@ -2873,12 +2882,25 @@ static void kfree_rcu_work(struct work_struct *work)
+ 	 */
+ 	for (; head; head = next) {
+ 		unsigned long offset = (unsigned long)head->func;
++		bool is_array_ptr = false;
++
++		if (((unsigned long)head - offset) & BIT(0)) {
++			is_array_ptr = true;
++			offset = offset - 1;
++		}
+ 
+ 		next = head->next;
+-		debug_rcu_head_unqueue(head);
++		if (!is_array_ptr)
++			debug_rcu_head_unqueue(head);
++
+ 		rcu_lock_acquire(&rcu_callback_map);
+ 		trace_rcu_invoke_kfree_callback(rcu_state.name, head, offset);
+ 
++		if (is_array_ptr) {
++			struct kfree_rcu_wrap_kvarray *kv = (void *)head - offset;
++			kvfree((void *)kv->ptr);
++		}
++
+ 		if (!WARN_ON_ONCE(!__is_kfree_rcu_offset(offset)))
+ 			kfree((void *)head - offset);
+ 
+@@ -2975,7 +2997,7 @@ static void kfree_rcu_monitor(struct work_struct *work)
+ 
+ static inline bool
+ kfree_call_rcu_add_ptr_to_bulk(struct kfree_rcu_cpu *krcp,
+-	struct rcu_head *head, rcu_callback_t func)
++	struct rcu_head *head, rcu_callback_t func, void *ptr)
+ {
+ 	struct kfree_rcu_bulk_data *bnode;
+ 
+@@ -3009,14 +3031,20 @@ kfree_call_rcu_add_ptr_to_bulk(struct kfree_rcu_cpu *krcp,
+ 	}
+ 
+ #ifdef CONFIG_DEBUG_OBJECTS_RCU_HEAD
+-	head->func = func;
+-	head->next = krcp->bhead->head_free_debug;
+-	krcp->bhead->head_free_debug = head;
++	/* debug_objects doesn't work for kvfree */
++	if (!ptr) {
++		head->func = func;
++		head->next = krcp->bhead->head_free_debug;
++		krcp->bhead->head_free_debug = head;
++	}
+ #endif
+ 
+ 	/* Finally insert. */
+-	krcp->bhead->records[krcp->bhead->nr_records++] =
+-		(void *) head - (unsigned long) func;
++	if (ptr)
++		krcp->bhead->records[krcp->bhead->nr_records++] = ptr;
++	else
++		krcp->bhead->records[krcp->bhead->nr_records++] =
++			(void *) head - (unsigned long) func;
+ 
+ 	return true;
+ }
+@@ -3033,10 +3061,11 @@ kfree_call_rcu_add_ptr_to_bulk(struct kfree_rcu_cpu *krcp,
+  * be free'd in workqueue context. This allows us to: batch requests together to
+  * reduce the number of grace periods during heavy kfree_rcu() load.
+  */
+-void kfree_call_rcu(struct rcu_head *head, rcu_callback_t func)
++void kfree_call_rcu(struct rcu_head *head, rcu_callback_t func, void *ptr)
+ {
+ 	unsigned long flags;
+ 	struct kfree_rcu_cpu *krcp;
++	bool ret;
+ 
+ 	local_irq_save(flags);	// For safely calling this_cpu_ptr().
+ 	krcp = this_cpu_ptr(&krc);
+@@ -3044,7 +3073,8 @@ void kfree_call_rcu(struct rcu_head *head, rcu_callback_t func)
+ 		spin_lock(&krcp->lock);
+ 
+ 	// Queue the object but don't yet schedule the batch.
+-	if (debug_rcu_head_queue(head)) {
++	// NOTE: debug objects doesn't work for kvfree.
++	if (!ptr && debug_rcu_head_queue(head)) {
+ 		// Probable double kfree_rcu(), just leak.
+ 		WARN_ONCE(1, "%s(): Double-freed call. rcu_head %p\n",
+ 			  __func__, head);
+@@ -3055,7 +3085,29 @@ void kfree_call_rcu(struct rcu_head *head, rcu_callback_t func)
+ 	 * Under high memory pressure GFP_NOWAIT can fail,
+ 	 * in that case the emergency path is maintained.
+ 	 */
+-	if (unlikely(!kfree_call_rcu_add_ptr_to_bulk(krcp, head, func))) {
++	ret = !kfree_call_rcu_add_ptr_to_bulk(krcp, head, func, ptr);
++	if (unlikely(!ret)) {
++		if (ptr) {
++			struct kfree_rcu_wrap_kvarray *kvwrap;
++
++			kvwrap = kzalloc(sizeof(*kvwrap), GFP_KERNEL);
++
++			// If memory is really low, just try inline-freeing.
++			if (!kvwrap) {
++				// NOT SURE if permitted due to IRQ. Maybe we
++				// should try doing this from WQ?
++				synchronize_rcu();
++				kvfree(ptr);
++			}
++
++			kvwrap->ptr = ptr;
++			ptr = NULL;
++			head = &(kvwrap->head);
++			func = offsetof(typeof(*kvwrap), head);
++			// Tag the array as wrapper
++			func = (rcu_callback_t)((unsigned long)func + 1);
++		}
++
+ 		head->func = func;
+ 		head->next = krcp->head;
+ 		krcp->head = head;
