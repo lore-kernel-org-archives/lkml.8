@@ -2,213 +2,271 @@ Return-Path: <SRS0=1210=4J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2DA5EC11D00
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 02:43:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C7D8FC11D00
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 02:44:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DE651207FD
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 02:43:34 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="PTZvZBMq"
+	by mail.kernel.org (Postfix) with ESMTP id 9D8B6207FD
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 02:44:18 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729548AbgBUCne (ORCPT
+        id S1729602AbgBUCoR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Feb 2020 21:43:34 -0500
-Received: from hqnvemgate25.nvidia.com ([216.228.121.64]:9206 "EHLO
-        hqnvemgate25.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729259AbgBUCnd (ORCPT
+        Thu, 20 Feb 2020 21:44:17 -0500
+Received: from twhmllg3.macronix.com ([211.75.127.131]:14394 "EHLO
+        TWHMLLG3.macronix.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729259AbgBUCoR (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Feb 2020 21:43:33 -0500
-Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate25.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5e4f43b30000>; Thu, 20 Feb 2020 18:42:59 -0800
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate101.nvidia.com (PGP Universal service);
-  Thu, 20 Feb 2020 18:43:32 -0800
-X-PGP-Universal: processed;
-        by hqpgpgate101.nvidia.com on Thu, 20 Feb 2020 18:43:32 -0800
-Received: from [10.110.48.28] (10.124.1.5) by HQMAIL107.nvidia.com
- (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Fri, 21 Feb
- 2020 02:43:32 +0000
-Subject: Re: [PATCH v7 01/24] mm: Move readahead prototypes from mm.h
-To:     Matthew Wilcox <willy@infradead.org>,
-        <linux-fsdevel@vger.kernel.org>
-CC:     <linux-mm@kvack.org>, <linux-kernel@vger.kernel.org>,
-        <linux-btrfs@vger.kernel.org>, <linux-erofs@lists.ozlabs.org>,
-        <linux-ext4@vger.kernel.org>,
-        <linux-f2fs-devel@lists.sourceforge.net>,
-        <cluster-devel@redhat.com>, <ocfs2-devel@oss.oracle.com>,
-        <linux-xfs@vger.kernel.org>
-References: <20200219210103.32400-1-willy@infradead.org>
- <20200219210103.32400-2-willy@infradead.org>
-X-Nvconfidentiality: public
-From:   John Hubbard <jhubbard@nvidia.com>
-Message-ID: <e065679e-222f-7323-9782-0c4471bb9233@nvidia.com>
-Date:   Thu, 20 Feb 2020 18:43:31 -0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.5.0
+        Thu, 20 Feb 2020 21:44:17 -0500
+Received: from twhfmlp1.macronix.com (twhfm1p1.macronix.com [172.17.20.91])
+        by TWHMLLG3.macronix.com with ESMTP id 01L2iBgM043871;
+        Fri, 21 Feb 2020 10:44:11 +0800 (GMT-8)
+        (envelope-from masonccyang@mxic.com.tw)
+Received: from MXML06C.mxic.com.tw (mxml06c.macronix.com [172.17.14.55])
+        by Forcepoint Email with ESMTP id 891C3BD214BC865C0EDB;
+        Fri, 21 Feb 2020 10:44:11 +0800 (CST)
+In-Reply-To: <20200109180128.0f3e7b99@xps13>
+References: <1572256527-5074-1-git-send-email-masonccyang@mxic.com.tw>  <1572256527-5074-5-git-send-email-masonccyang@mxic.com.tw> <20200109180128.0f3e7b99@xps13>
+To:     "Miquel Raynal" <miquel.raynal@bootlin.com>
+Cc:     bbrezillon@kernel.org, computersforpeace@gmail.com,
+        dwmw2@infradead.org, juliensu@mxic.com.tw,
+        linux-kernel@vger.kernel.org, linux-mtd@lists.infradead.org,
+        marek.vasut@gmail.com, richard@nod.at, vigneshr@ti.com
+Subject: Re: [PATCH v2 4/4] mtd: rawnand: Add support Macronix deep power down mode
 MIME-Version: 1.0
-In-Reply-To: <20200219210103.32400-2-willy@infradead.org>
-X-Originating-IP: [10.124.1.5]
-X-ClientProxiedBy: HQMAIL111.nvidia.com (172.20.187.18) To
- HQMAIL107.nvidia.com (172.20.187.13)
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1582252979; bh=FupvP/7fBUSXeaHkpIPB/6auVkQxSnSk5TKtwtzmqZs=;
-        h=X-PGP-Universal:Subject:To:CC:References:X-Nvconfidentiality:From:
-         Message-ID:Date:User-Agent:MIME-Version:In-Reply-To:
-         X-Originating-IP:X-ClientProxiedBy:Content-Type:Content-Language:
-         Content-Transfer-Encoding;
-        b=PTZvZBMqGka5juXI/K7VSjqGZuA2OQhrqobKWw47A6aYHII6j1MhFAvbELI3dGadM
-         PrgKfenh6ZhddOY03XwMVWxrJdpVuH9XaaraajiQH62Xt5kO01Jn6Qq64S3BQBsQnu
-         FX+2chIKaTlsU4YvxA1ANZxAzhOAPicsBXho8Xa1oRypUcTkxEzLnDv0caGzVLZrPo
-         FwY554vv2RX9xx1O6PYXsc2ug3Oc5f7qahsBWhrzIuj6pupPO0et9/uor0PLX1V8Yf
-         Sgy5K80isbnmNaNcnOFvHQt/nevDdWbyhIlyy/b+G7tAh95wVP/qHY4GiW4ZIyVq2q
-         Oo9GNFt84iUNA==
+X-KeepSent: D2853198:840A44DE-48258515:0008B888;
+ type=4; name=$KeepSent
+X-Mailer: Lotus Notes Release 8.5.3FP4 SHF90 June 10, 2013
+Message-ID: <OFD2853198.840A44DE-ON48258515.0008B888-48258515.000F0829@mxic.com.tw>
+From:   masonccyang@mxic.com.tw
+Date:   Fri, 21 Feb 2020 10:44:11 +0800
+X-MIMETrack: Serialize by Router on MXML06C/TAIWAN/MXIC(Release 9.0.1FP10 HF265|July 25, 2018) at
+ 2020/02/21 AM 10:44:11,
+        Serialize complete at 2020/02/21 AM 10:44:11
+Content-Type: text/plain; charset="US-ASCII"
+X-MAIL: TWHMLLG3.macronix.com 01L2iBgM043871
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2/19/20 1:00 PM, Matthew Wilcox wrote:
-> From: "Matthew Wilcox (Oracle)" <willy@infradead.org>
+
+Hi Miquel,
+
+ 
+> > Macronix AD series support deep power down mode for a minimum
+> > power consumption state.
+> > 
+> > Patch nand_suspend() & nand_resume() by Macronix specific
+> > deep power down mode command and exit it.
+> > 
+> > Signed-off-by: Mason Yang <masonccyang@mxic.com.tw>
+> > ---
+> >  drivers/mtd/nand/raw/nand_macronix.c | 72 
++++++++++++++++++++++++++++++++++++-
+> >  1 file changed, 70 insertions(+), 2 deletions(-)
+> > 
+> > diff --git a/drivers/mtd/nand/raw/nand_macronix.c 
+b/drivers/mtd/nand/raw/
+> nand_macronix.c
+> > index 13929bf..3098bc0 100644
+> > --- a/drivers/mtd/nand/raw/nand_macronix.c
+> > +++ b/drivers/mtd/nand/raw/nand_macronix.c
+> > @@ -15,6 +15,8 @@
+> >  #define MXIC_BLOCK_PROTECTION_ALL_LOCK 0x38
+> >  #define MXIC_BLOCK_PROTECTION_ALL_UNLOCK 0x0
+> > 
+> > +#define NAND_CMD_POWER_DOWN 0xB9
 > 
-> The readahead code is part of the page cache so should be found in the
-> pagemap.h file.  force_page_cache_readahead is only used within mm,
-> so move it to mm/internal.h instead.  Remove the parameter names where
-> they add no value, and rename the ones which were actively misleading.
+> I suppose this value is Macronix specific, and hence should have a
+> MACRONIX_ or MXIC_ prefix instead of NAND_.
+
+okay, will patch it to
+#define MXIC_CMD_POWER_DOWN 0xB9
+
 > 
-> Signed-off-by: Matthew Wilcox (Oracle) <willy@infradead.org>
-> ---
->  block/blk-core.c        |  1 +
->  include/linux/mm.h      | 19 -------------------
->  include/linux/pagemap.h |  8 ++++++++
->  mm/fadvise.c            |  2 ++
->  mm/internal.h           |  2 ++
->  5 files changed, 13 insertions(+), 19 deletions(-)
+> > +
+> >  struct nand_onfi_vendor_macronix {
+> >     u8 reserved;
+> >     u8 reliability_func;
+> > @@ -137,13 +139,66 @@ static int mxic_nand_unlock(struct nand_chip 
+*chip, 
+> loff_t ofs, uint64_t len)
+> >     return ret;
+> >  }
+> > 
+> > +int nand_power_down_op(struct nand_chip *chip)
+> > +{
+> > +   int ret;
+> > +
+> > +   if (nand_has_exec_op(chip)) {
+> > +      struct nand_op_instr instrs[] = {
+> > +         NAND_OP_CMD(NAND_CMD_POWER_DOWN, 0),
+> > +      };
+> > +
+> > +      struct nand_operation op = NAND_OPERATION(chip->cur_cs, 
+instrs);
+> > +
+> > +      ret = nand_exec_op(chip, &op);
+> > +      if (ret)
+> > +         return ret;
+> > +
+> > +   } else {
+> > +      chip->legacy.cmdfunc(chip, NAND_CMD_POWER_DOWN, -1, -1);
+> > +   }
+> > +
+> > +   return 0;
+> > +}
+> > +
+> > +static int mxic_nand_suspend(struct nand_chip *chip)
+> > +{
+> > +   int ret;
+> > +
+> > +   nand_select_target(chip, 0);
+> > +   ret = nand_power_down_op(chip);
+> > +   if (ret < 0)
+> > +      pr_err("%s called for chip into suspend failed\n", __func__);
 > 
-> diff --git a/block/blk-core.c b/block/blk-core.c
-> index 089e890ab208..41417bb93634 100644
-> --- a/block/blk-core.c
-> +++ b/block/blk-core.c
-> @@ -20,6 +20,7 @@
->  #include <linux/blk-mq.h>
->  #include <linux/highmem.h>
->  #include <linux/mm.h>
-> +#include <linux/pagemap.h>
-
-Yes. But I think these files also need a similar change:
-
-    fs/btrfs/disk-io.c
-    fs/nfs/super.c
-    
-
-...because they also use VM_READAHEAD_PAGES, and do not directly include
-pagemap.h yet.
-
-
->  #include <linux/kernel_stat.h>
->  #include <linux/string.h>
->  #include <linux/init.h>
-> diff --git a/include/linux/mm.h b/include/linux/mm.h
-> index 52269e56c514..68dcda9a2112 100644
-> --- a/include/linux/mm.h
-> +++ b/include/linux/mm.h
-> @@ -2401,25 +2401,6 @@ extern vm_fault_t filemap_page_mkwrite(struct vm_fault *vmf);
->  int __must_check write_one_page(struct page *page);
->  void task_dirty_inc(struct task_struct *tsk);
->  
-> -/* readahead.c */
-> -#define VM_READAHEAD_PAGES	(SZ_128K / PAGE_SIZE)
-> -
-> -int force_page_cache_readahead(struct address_space *mapping, struct file *filp,
-> -			pgoff_t offset, unsigned long nr_to_read);
-> -
-> -void page_cache_sync_readahead(struct address_space *mapping,
-> -			       struct file_ra_state *ra,
-> -			       struct file *filp,
-> -			       pgoff_t offset,
-> -			       unsigned long size);
-> -
-> -void page_cache_async_readahead(struct address_space *mapping,
-> -				struct file_ra_state *ra,
-> -				struct file *filp,
-> -				struct page *pg,
-> -				pgoff_t offset,
-> -				unsigned long size);
-> -
->  extern unsigned long stack_guard_gap;
->  /* Generic expand stack which grows the stack according to GROWS{UP,DOWN} */
->  extern int expand_stack(struct vm_area_struct *vma, unsigned long address);
-> diff --git a/include/linux/pagemap.h b/include/linux/pagemap.h
-> index ccb14b6a16b5..24894b9b90c9 100644
-> --- a/include/linux/pagemap.h
-> +++ b/include/linux/pagemap.h
-> @@ -614,6 +614,14 @@ int replace_page_cache_page(struct page *old, struct page *new, gfp_t gfp_mask);
->  void delete_from_page_cache_batch(struct address_space *mapping,
->  				  struct pagevec *pvec);
->  
-> +#define VM_READAHEAD_PAGES	(SZ_128K / PAGE_SIZE)
-> +
-> +void page_cache_sync_readahead(struct address_space *, struct file_ra_state *,
-> +		struct file *, pgoff_t index, unsigned long req_count);
-
-
-Yes, "struct address_space *mapping" is weird, but I don't know if it's
-"misleading", given that it's actually one of the things you have to learn
-right from the beginning, with linux-mm, right? Or is that about to change?
-
-I'm not asking to restore this to "struct address_space *mapping", but I thought
-it's worth mentioning out loud, especially if you or others are planning on
-changing those names or something. Just curious.
-
-
-
-thanks,
--- 
-John Hubbard
-NVIDIA
-
-
-> +void page_cache_async_readahead(struct address_space *, struct file_ra_state *,
-> +		struct file *, struct page *, pgoff_t index,
-> +		unsigned long req_count);
-> +
->  /*
->   * Like add_to_page_cache_locked, but used to add newly allocated pages:
->   * the page is new, so we can just run __SetPageLocked() against it.
-> diff --git a/mm/fadvise.c b/mm/fadvise.c
-> index 4f17c83db575..3efebfb9952c 100644
-> --- a/mm/fadvise.c
-> +++ b/mm/fadvise.c
-> @@ -22,6 +22,8 @@
->  
->  #include <asm/unistd.h>
->  
-> +#include "internal.h"
-> +
->  /*
->   * POSIX_FADV_WILLNEED could set PG_Referenced, and POSIX_FADV_NOREUSE could
->   * deactivate the pages and clear PG_Referenced.
-> diff --git a/mm/internal.h b/mm/internal.h
-> index 3cf20ab3ca01..83f353e74654 100644
-> --- a/mm/internal.h
-> +++ b/mm/internal.h
-> @@ -49,6 +49,8 @@ void unmap_page_range(struct mmu_gather *tlb,
->  			     unsigned long addr, unsigned long end,
->  			     struct zap_details *details);
->  
-> +int force_page_cache_readahead(struct address_space *, struct file *,
-> +		pgoff_t index, unsigned long nr_to_read);
->  extern unsigned int __do_page_cache_readahead(struct address_space *mapping,
->  		struct file *filp, pgoff_t offset, unsigned long nr_to_read,
->  		unsigned long lookahead_size);
+> What about something more specific?
 > 
+>        "Suspending MXIC NAND chip failed (%)\n", ret
+
+okay, patch it with this sentence, thanks.
+
+> 
+> > +   nand_deselect_target(chip);
+> > +
+> > +   return ret;
+> > +}
+> > +
+> > +static void mxic_nand_resume(struct nand_chip *chip)
+> > +{
+> > +   /*
+> > +    * Toggle #CS pin to resume NAND device and don't care
+> > +    * of the others CLE, #WE, #RE pins status.
+> > +    * Here sending power down command to toggle #CS line.
+> 
+> The first sentence seems right, the second could be upgraded:
+> 
+>            The purpose of doing a power down operation is just to
+>            ensure some bytes will be sent over the NAND bus so that #CS
+>            gets toggled because this is why the chip is woken up.
+>       The content of the bytes sent on the NAND bus are not
+>       relevant at this time. Sending bytes on the bus is mandatory
+>       for a lot of NAND controllers otherwise they are not able to
+>       just assert/de-assert #CS.
+
+okay, will patch the second sentence based on your comments.
+i.e,.
+
+ /*
+  * Toggle #CS pin to resume NAND device and don't care
+  * of the others CLE, #WE, #RE pins status.
+  * A NAND controller ensure it is able to assert/de-assert #CS
+  * by sending any byte over the NAND bus.
+  * i.e.,
+  * NAND power down command or reset command.
+  */ 
+
+> 
+> > +    */
+> > +   nand_select_target(chip, 0);
+> > +   nand_power_down_op(chip);
+> 
+> Are you sure sending a power_down_op will not be interpreted by the
+> chip?
+
+yes, sure !
+
+> 
+> I would expect a sleeping delay here, even small.
+
+okay, will patch it.
+
+> 
+> > +   nand_deselect_target(chip);
+> > +}
+> > +
+> >  /*
+> > - * Macronix NAND AC series support Block Protection by SET_FEATURES
+> > + * Macronix NAND AC & AD series support Block Protection by 
+SET_FEATURES
+> >   * to lock/unlock blocks.
+> >   */
+> >  static int macronix_nand_init(struct nand_chip *chip)
+> >  {
+> > -   bool blockprotected = false;
+> > +   unsigned int i;
+> > +   bool blockprotected = false, powerdown = false;
+> > +   static const char * const power_down_dev[] = {
+> > +      "MX30LF1G28AD",
+> > +      "MX30LF2G28AD",
+> > +      "MX30LF4G28AD",
+> > +   };
+> > 
+> >     if (nand_is_slc(chip))
+> >        chip->options |= NAND_BBM_FIRSTPAGE | NAND_BBM_SECONDPAGE;
+> > @@ -153,6 +208,14 @@ static int macronix_nand_init(struct nand_chip 
+*chip)
+> > 
+> >     macronix_nand_onfi_init(chip);
+> > 
+> > +   for (i = 0; i < ARRAY_SIZE(power_down_dev); i++) {
+> > +      if (!strcmp(power_down_dev[i], chip->parameters.model)) {
+> > +         blockprotected = true;
+> > +         powerdown = true;
+> > +         break;
+> > +      }
+> > +   }
+> > +
+> >     if (blockprotected) {
+> >        bitmap_set(chip->parameters.set_feature_list,
+> >              ONFI_FEATURE_ADDR_MXIC_PROTECTION, 1);
+> > @@ -163,6 +226,11 @@ static int macronix_nand_init(struct nand_chip 
+*chip)
+> >        chip->_unlock = mxic_nand_unlock;
+> >     }
+> > 
+> > +   if (powerdown) {
+> > +      chip->_suspend = mxic_nand_suspend;
+> > +      chip->_resume = mxic_nand_resume;
+> > +   }
+> 
+> See my comment on patch 2.
+
+ok, got it.
+
+thanks for your time & comments.
+Mason
 
 
+CONFIDENTIALITY NOTE:
+
+This e-mail and any attachments may contain confidential information 
+and/or personal data, which is protected by applicable laws. Please be 
+reminded that duplication, disclosure, distribution, or use of this e-mail 
+(and/or its attachments) or any part thereof is prohibited. If you receive 
+this e-mail in error, please notify us immediately and delete this mail as 
+well as its attachment(s) from your system. In addition, please be 
+informed that collection, processing, and/or use of personal data is 
+prohibited unless expressly permitted by personal data protection laws. 
+Thank you for your attention and cooperation.
+
+Macronix International Co., Ltd.
+
+=====================================================================
+
+
+
+============================================================================
+
+CONFIDENTIALITY NOTE:
+
+This e-mail and any attachments may contain confidential information and/or personal data, which is protected by applicable laws. Please be reminded that duplication, disclosure, distribution, or use of this e-mail (and/or its attachments) or any part thereof is prohibited. If you receive this e-mail in error, please notify us immediately and delete this mail as well as its attachment(s) from your system. In addition, please be informed that collection, processing, and/or use of personal data is prohibited unless expressly permitted by personal data protection laws. Thank you for your attention and cooperation.
+
+Macronix International Co., Ltd.
+
+=====================================================================
 
