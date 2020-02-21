@@ -2,164 +2,119 @@ Return-Path: <SRS0=1210=4J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FAKE_REPLY_C,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-14.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 153F1C11D27
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 05:21:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 70CE3C11D28
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 05:24:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DFEB8222C4
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 05:21:50 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582262510;
-	bh=k+xWkXE9GanKA1I/TU4Il80HQEcFWT0VW7It7YnO+zk=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:List-ID:From;
-	b=N3dqDPgoAIVo0bnRDjkt8G1TsL1HUHVc2LdxbQzUgDFefLVibC04rMOFD9kuDUcdq
-	 LMa2qC11IAlk57kb4/nuwSKP2iQqBZ4V2Elu45BDVz4nc53jFVqobtTI8ocPv7NULw
-	 83eaAK0OvIcDkY4r+CLGpAJJOoRnmVg25kKUT33Y=
+	by mail.kernel.org (Postfix) with ESMTP id 42AC1208C4
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 05:24:54 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="HBd4QMBc"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726287AbgBUFVt (ORCPT
+        id S1727066AbgBUFYx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Feb 2020 00:21:49 -0500
-Received: from mail.kernel.org ([198.145.29.99]:50150 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725800AbgBUFVt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Feb 2020 00:21:49 -0500
-Received: from localhost (c-98-207-104-244.hsd1.ca.comcast.net [98.207.104.244])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7BD0D208C4;
-        Fri, 21 Feb 2020 05:21:48 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1582262508;
-        bh=k+xWkXE9GanKA1I/TU4Il80HQEcFWT0VW7It7YnO+zk=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=rZFfbt3Ind5n5SyHSLZN3GqLiBN5qUpHq45nLTBbtrWN4pYOamrXosFr3rLw5C/H3
-         KXTCjKCkEVfNrc3FHCGrEZdoEj4qiNosTJKLYEpodgKj5VoLN/LxWXvyGg7shdIyqf
-         2OguAs98pfUFkh7ppaynQ/11UWTr64XVMtVAZPTc=
-Date:   Thu, 20 Feb 2020 23:21:47 -0600
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Stuart Hayes <stuart.w.hayes@gmail.com>
-Cc:     Austin Bolen <austin_bolen@dell.com>, keith.busch@intel.com,
-        Alexandru Gagniuc <mr.nuke.me@gmail.com>,
-        "Rafael J . Wysocki" <rafael.j.wysocki@intel.com>,
-        Mika Westerberg <mika.westerberg@linux.intel.com>,
-        Andy Shevchenko <andy.shevchenko@gmail.com>,
-        "Gustavo A . R . Silva" <gustavo@embeddedor.com>,
-        Sinan Kaya <okaya@kernel.org>,
-        Oza Pawandeep <poza@codeaurora.org>, linux-pci@vger.kernel.org,
-        linux-kernel@vger.kernel.org, lukas@wunner.de
-Subject: Re: [PATCH v4 3/3] PCI: pciehp: Add dmi table for in-band presence
- disabled
-Message-ID: <20200221052147.GA154040@google.com>
+        Fri, 21 Feb 2020 00:24:53 -0500
+Received: from mail-oi1-f195.google.com ([209.85.167.195]:37903 "EHLO
+        mail-oi1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725800AbgBUFYw (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 21 Feb 2020 00:24:52 -0500
+Received: by mail-oi1-f195.google.com with SMTP id r137so473044oie.5;
+        Thu, 20 Feb 2020 21:24:51 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=x/k1sZ+cnmOUANpT53mM2H5yfgMY19H5epCa2pIy6TU=;
+        b=HBd4QMBcVXIf55/hE9c/wiNETb99mXC1ejXxvSxH4yfwxEfPXNsnJ1UV9I97pNluQS
+         bmhdUz46epWDZJav+GITaDud6DkLzyb17bWvJxNuUzi43JGaI5ihh0lXlFnWt9Ihqr2N
+         0LUWssAJqSfJ3gWxROrSLGYKEkp3KPtgcBPE5VJYbpEFgt4J1XtFbfaahG7WMBTwhP6n
+         4yDcNYj/F7AqEZf52K577MuFYTPhZ+DAOX6Nw5SK54fY/4vgJHhJazqgaOvjEL6vjKO7
+         gHkHop7dVAJHR3CWvew4cEsS7uZhmkx7644Yf39qRI8Q9IvNWbM0jT6wPxyWBHkUFdu5
+         DPiQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=x/k1sZ+cnmOUANpT53mM2H5yfgMY19H5epCa2pIy6TU=;
+        b=MLtUS/pZpjBD+4XWRD1TF0EyIvmRA9uGm+wYmC8MysXaIykvuTNGVJTorbS0tChiC7
+         SZ3Iz9HHFzQkSgUWU4x7lk9wm68jpRJcdsFzNJxbIoL08l7+EM28sbq+F91Qx69vyu9w
+         Ehd0PhYsB79ck+jzPFfJx7FxRNbg6rifjLj/4TFDqfw+Y/rXjj3Tp+Yrjf5P1AUvPayM
+         Ott14uL+istK9oPV8EyRJ/iRD3mnmBBmmVwNo7zwa7eK9eRm8D22eShRUCN2qt7b31w7
+         VsV7vLYZbMBRWc6ycK5rZkvsKCsqSxozMHHR7UCO6FcBeXAT/5EDcitKwzRoU37zWTzL
+         wASg==
+X-Gm-Message-State: APjAAAWJtKG80lLGWVSOPXRKMDkFX0nQ0DjGYo95LBV71cxYB6tevV5L
+        Y8aMVkXGZDgghwmOo/Gzwvl2sFmnU+Y=
+X-Google-Smtp-Source: APXvYqwvfB6MwrssVhb4WD21BdS03tdh97HJpq0IW01xj307MOXolcQaSO2bmc2/TWKtfw+kq3KT3w==
+X-Received: by 2002:aca:4a0b:: with SMTP id x11mr582391oia.37.1582262690999;
+        Thu, 20 Feb 2020 21:24:50 -0800 (PST)
+Received: from localhost.localdomain ([2604:1380:4111:8b00::1])
+        by smtp.gmail.com with ESMTPSA id i2sm661408oth.39.2020.02.20.21.24.50
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 20 Feb 2020 21:24:50 -0800 (PST)
+From:   Nathan Chancellor <natechancellor@gmail.com>
+To:     Saeed Mahameed <saeedm@mellanox.com>,
+        Leon Romanovsky <leon@kernel.org>
+Cc:     Aya Levin <ayal@mellanox.com>, Moshe Shemesh <moshe@mellanox.com>,
+        Jiri Pirko <jiri@mellanox.com>, netdev@vger.kernel.org,
+        linux-rdma@vger.kernel.org, linux-kernel@vger.kernel.org,
+        clang-built-linux@googlegroups.com,
+        Nathan Chancellor <natechancellor@gmail.com>
+Subject: [PATCH net-next] net/mlx5: Fix header guard in rsc_dump.h
+Date:   Thu, 20 Feb 2020 22:24:37 -0700
+Message-Id: <20200221052437.2884-1-natechancellor@gmail.com>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191025190047.38130-4-stuart.w.hayes@gmail.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+X-Patchwork-Bot: notify
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Oct 25, 2019 at 03:00:47PM -0400, Stuart Hayes wrote:
-> Some systems have in-band presence detection disabled for hot-plug PCI
-> slots, but do not report this in the slot capabilities 2 (SLTCAP2) register.
+Clang warns:
 
-This doesn't seem quite accurate to me.  PCI_EXP_SLTCAP2_IBPD does not
-actually tell us whether in-band presence detection is disabled.  It
-only tells us whether it *can* be disabled.
+ In file included from
+ ../drivers/net/ethernet/mellanox/mlx5/core/main.c:73:
+ ../drivers/net/ethernet/mellanox/mlx5/core/diag/rsc_dump.h:4:9: warning:
+ '__MLX5_RSC_DUMP_H' is used as a header guard here, followed by #define
+ of a different macro [-Wheader-guard]
+ #ifndef __MLX5_RSC_DUMP_H
+         ^~~~~~~~~~~~~~~~~
+ ../drivers/net/ethernet/mellanox/mlx5/core/diag/rsc_dump.h:5:9: note:
+ '__MLX5_RSC_DUMP__H' is defined here; did you mean '__MLX5_RSC_DUMP_H'?
+ #define __MLX5_RSC_DUMP__H
+         ^~~~~~~~~~~~~~~~~~
+         __MLX5_RSC_DUMP_H
+ 1 warning generated.
 
-I think I know what you mean, but this text suggests that
-PCI_EXP_SLTCAP2_IBPD not being set is the defect, and I don't think it
-is.  IIUC, even if PCI_EXP_SLTCAP2_IBPD were set,
-PCI_EXP_SLTCTL_IBPD_DISABLE would have no effect because in-band
-presence detect just isn't supported at all regardless of how we set
-PCI_EXP_SLTCTL_IBPD_DISABLE.
+Make them match to get the intended behavior and remove the warning.
 
-> On these systems, presence detect can become active well after the link is
-> reported to be active, which can cause the slots to be disabled after a
-> device is connected.
-> 
-> Add a dmi table to flag these systems as having in-band presence disabled.
-> 
-> Signed-off-by: Stuart Hayes <stuart.w.hayes@gmail.com>
-> ---
-> v4
->   add comment to dmi table
-> 
->  drivers/pci/hotplug/pciehp_hpc.c | 22 ++++++++++++++++++++++
->  1 file changed, 22 insertions(+)
-> 
-> diff --git a/drivers/pci/hotplug/pciehp_hpc.c b/drivers/pci/hotplug/pciehp_hpc.c
-> index 02d95ab27a12..9541735bd0aa 100644
-> --- a/drivers/pci/hotplug/pciehp_hpc.c
-> +++ b/drivers/pci/hotplug/pciehp_hpc.c
-> @@ -14,6 +14,7 @@
->  
->  #define dev_fmt(fmt) "pciehp: " fmt
->  
-> +#include <linux/dmi.h>
->  #include <linux/kernel.h>
->  #include <linux/types.h>
->  #include <linux/jiffies.h>
-> @@ -26,6 +27,24 @@
->  #include "../pci.h"
->  #include "pciehp.h"
->  
-> +static const struct dmi_system_id inband_presence_disabled_dmi_table[] = {
-> +	/*
-> +	 * Match all Dell systems, as some Dell systems have inband
-> +	 * presence disabled on NVMe slots (but don't support the bit to
+Fixes: 12206b17235a ("net/mlx5: Add support for resource dump")
+Link: https://github.com/ClangBuiltLinux/linux/issues/897
+Signed-off-by: Nathan Chancellor <natechancellor@gmail.com>
+---
+ drivers/net/ethernet/mellanox/mlx5/core/diag/rsc_dump.h | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-Is there something that restricts these slots to being used only for
-NVMe?  If not, I'd rather simply say that some Root Ports don't
-support in-band presence detect.  You say it's "disabled", which
-suggests that it could be *enabled*.  But I have the impression that
-it's actually just not supported at all (or maybe it's disabled by the
-BIOS via some non-architected mechanism).
+diff --git a/drivers/net/ethernet/mellanox/mlx5/core/diag/rsc_dump.h b/drivers/net/ethernet/mellanox/mlx5/core/diag/rsc_dump.h
+index 3b7573461a45..148270073e71 100644
+--- a/drivers/net/ethernet/mellanox/mlx5/core/diag/rsc_dump.h
++++ b/drivers/net/ethernet/mellanox/mlx5/core/diag/rsc_dump.h
+@@ -2,7 +2,7 @@
+ /* Copyright (c) 2019 Mellanox Technologies. */
+ 
+ #ifndef __MLX5_RSC_DUMP_H
+-#define __MLX5_RSC_DUMP__H
++#define __MLX5_RSC_DUMP_H
+ 
+ #include <linux/mlx5/driver.h>
+ #include "mlx5_core.h"
+-- 
+2.25.1
 
-> +	 * report it). Setting inband presence disabled should have no
-> +	 * negative effect, except on broken hotplug slots that never
-> +	 * assert presence detect--and those will still work, they will
-> +	 * just have a bit of extra delay before being probed.
-> +	 */
-> +	{
-> +		.ident = "Dell System",
-> +		.matches = {
-> +			DMI_MATCH(DMI_OEM_STRING, "Dell System"),
-> +		},
-> +	},
-> +	{}
-> +};
-> +
->  static inline struct pci_dev *ctrl_dev(struct controller *ctrl)
->  {
->  	return ctrl->pcie->port;
-> @@ -895,6 +914,9 @@ struct controller *pcie_init(struct pcie_device *dev)
->  		ctrl->inband_presence_disabled = 1;
->  	}
->  
-> +	if (dmi_first_match(inband_presence_disabled_dmi_table))
-> +		ctrl->inband_presence_disabled = 1;
-
-This doesn't seem quite right: the DMI table should only apply to
-built-in ports, not to ports on plugin cards.
-
-If we plug in a switch with hotplug-capable downstream ports, and
-those ports do not advertise PCI_EXP_SLTCAP2_IBPD, I think this code
-sets "inband_presence_disabled" for those ports even though it is not
-disabled.
-
-IIUC, that will make this plugin card behave differently in a Dell
-system than it will in other systems, and that doesn't seem right to
-me.
-
->  	/*
->  	 * If empty slot's power status is on, turn power off.  The IRQ isn't
->  	 * requested yet, so avoid triggering a notification with this command.
-> -- 
-> 2.18.1
-> 
