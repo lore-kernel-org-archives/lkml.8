@@ -7,50 +7,47 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C1C20C35641
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 08:08:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F1B33C35641
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 08:08:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 943E424676
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 08:08:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C8DB32073A
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 08:08:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582272497;
-	bh=t+CZ/Xrc3LGCVh6lVgMRcMaaEwqkKuYLyhpdG8JoK2A=;
+	s=default; t=1582272499;
+	bh=I6FKwP+LM7+J5E/prXxfyE67zXp+oC1gcc+XNAtkz3Q=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=XtyS+KDl6rTUsRyNxb/YmmHdyHvlBXgF9skxsyg5SeZMZW4c0b8Wdwm95fwL/+nHc
-	 Y6Ql20Ndd+JJJFgKpjOCH6SBYCevkZ8tyArcVCa7U7FrE3LXc9GzpTJ7qwsbP6vxQK
-	 lwxSD/0jv/pK0uFlIW0UV0k1xIafRfi5+LxZtEcM=
+	b=XuYiJ0Fbf4k2Z3P1mVf/I79/dXXLvwuZ+omOtP7Oq7ilXifdWu2clC3l7q1TUjXdL
+	 7aTl3UAIaNDLSFjQ93Xmk7JShutH0Rt5j4xlz43b2OCzcvlbiyr/80XoPx7IKsbA20
+	 UPSZHAIvRF4pBru7Vlu7YvNioWzwym98kzBIKW70=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732177AbgBUIIQ (ORCPT
+        id S1732187AbgBUIIS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Feb 2020 03:08:16 -0500
-Received: from mail.kernel.org ([198.145.29.99]:42730 "EHLO mail.kernel.org"
+        Fri, 21 Feb 2020 03:08:18 -0500
+Received: from mail.kernel.org ([198.145.29.99]:42774 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732156AbgBUIIO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Feb 2020 03:08:14 -0500
+        id S1732156AbgBUIIR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 21 Feb 2020 03:08:17 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A47702465D;
-        Fri, 21 Feb 2020 08:08:13 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2EC3D2073A;
+        Fri, 21 Feb 2020 08:08:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1582272494;
-        bh=t+CZ/Xrc3LGCVh6lVgMRcMaaEwqkKuYLyhpdG8JoK2A=;
+        s=default; t=1582272496;
+        bh=I6FKwP+LM7+J5E/prXxfyE67zXp+oC1gcc+XNAtkz3Q=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=McHsdVwM9kx8Jbm7jEH7khXE6537iEK2D0LAJ8bjZDjIvfYHs3wddr+PecoODGp2D
-         UGd4TVCicGRElgrcjfRfOysNW+JGOFalwQpI/2h9lJNM10Z7Sp4FoBcpX2+W7TvIpI
-         peSMo0Uz9dLWK0FgtWUMN28zzszkbLRsftxVtEjY=
+        b=lBVCgUS15CM2n1fV40G/I0i38Ob25ZyjKjL/1OCdLJcrCrut7kdbJrUMRdzEZowzY
+         9LxZudzd9JW2TzUslaJ4I38L6QNT97AgfSc1FmcE11XY96XK/ra5iMq8F1seZdbVVq
+         suXVeSJatvx8HYIl3wwdoORCK2KFg9Xavn01FoeI=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Valdis Kletnieks <valdis.kletnieks@vt.edu>,
-        Borislav Petkov <bp@suse.de>, "H. Peter Anvin" <hpa@zytor.com>,
-        Andy Lutomirski <luto@kernel.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Thomas Gleixner <tglx@linutronix.de>, x86-ml <x86@kernel.org>,
+        stable@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>,
+        Chanwoo Choi <cw00.choi@samsung.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 164/344] x86/vdso: Provide missing include file
-Date:   Fri, 21 Feb 2020 08:39:23 +0100
-Message-Id: <20200221072403.766800703@linuxfoundation.org>
+Subject: [PATCH 5.4 165/344] PM / devfreq: exynos-ppmu: Fix excessive stack usage
+Date:   Fri, 21 Feb 2020 08:39:24 +0100
+Message-Id: <20200221072403.854183763@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200221072349.335551332@linuxfoundation.org>
 References: <20200221072349.335551332@linuxfoundation.org>
@@ -63,42 +60,72 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Valdis Klētnieks <valdis.kletnieks@vt.edu>
+From: Arnd Bergmann <arnd@arndb.de>
 
-[ Upstream commit bff47c2302cc249bcd550b17067f8dddbd4b6f77 ]
+[ Upstream commit d4556f5e99d5f603913bac01adaff8670cb2d08b ]
 
-When building with C=1, sparse issues a warning:
+Putting a 'struct devfreq_event_dev' object on the stack is generally
+a bad idea and here it leads to a warnig about potential stack overflow:
 
-  CHECK   arch/x86/entry/vdso/vdso32-setup.c
-  arch/x86/entry/vdso/vdso32-setup.c:28:28: warning: symbol 'vdso32_enabled' was not declared. Should it be static?
+drivers/devfreq/event/exynos-ppmu.c:643:12: error: stack frame size of 1040 bytes in function 'exynos_ppmu_probe' [-Werror,-Wframe-larger-than=]
 
-Provide the missing header file.
+There is no real need for the device structure, only the string inside
+it, so add an internal helper function that simply takes the string
+as its argument and remove the device structure.
 
-Signed-off-by: Valdis Kletnieks <valdis.kletnieks@vt.edu>
-Signed-off-by: Borislav Petkov <bp@suse.de>
-Cc: "H. Peter Anvin" <hpa@zytor.com>
-Cc: Andy Lutomirski <luto@kernel.org>
-Cc: Ingo Molnar <mingo@redhat.com>
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Cc: x86-ml <x86@kernel.org>
-Link: https://lkml.kernel.org/r/36224.1575599767@turing-police
+Fixes: 1dd62c66d345 ("PM / devfreq: events: extend events by type of counted data")
+Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+[cw00.choi: Fix the issue from 'desc->name' to 'desc[j].name']
+Signed-off-by: Chanwoo Choi <cw00.choi@samsung.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/x86/entry/vdso/vdso32-setup.c | 1 +
- 1 file changed, 1 insertion(+)
+ drivers/devfreq/event/exynos-ppmu.c | 13 ++++++++-----
+ 1 file changed, 8 insertions(+), 5 deletions(-)
 
-diff --git a/arch/x86/entry/vdso/vdso32-setup.c b/arch/x86/entry/vdso/vdso32-setup.c
-index 240626e7f55aa..43842fade8fa1 100644
---- a/arch/x86/entry/vdso/vdso32-setup.c
-+++ b/arch/x86/entry/vdso/vdso32-setup.c
-@@ -11,6 +11,7 @@
- #include <linux/smp.h>
- #include <linux/kernel.h>
- #include <linux/mm_types.h>
-+#include <linux/elf.h>
+diff --git a/drivers/devfreq/event/exynos-ppmu.c b/drivers/devfreq/event/exynos-ppmu.c
+index 87b42055e6bc9..c4873bb791f88 100644
+--- a/drivers/devfreq/event/exynos-ppmu.c
++++ b/drivers/devfreq/event/exynos-ppmu.c
+@@ -101,17 +101,22 @@ static struct __exynos_ppmu_events {
+ 	PPMU_EVENT(dmc1_1),
+ };
  
- #include <asm/processor.h>
- #include <asm/vdso.h>
+-static int exynos_ppmu_find_ppmu_id(struct devfreq_event_dev *edev)
++static int __exynos_ppmu_find_ppmu_id(const char *edev_name)
+ {
+ 	int i;
+ 
+ 	for (i = 0; i < ARRAY_SIZE(ppmu_events); i++)
+-		if (!strcmp(edev->desc->name, ppmu_events[i].name))
++		if (!strcmp(edev_name, ppmu_events[i].name))
+ 			return ppmu_events[i].id;
+ 
+ 	return -EINVAL;
+ }
+ 
++static int exynos_ppmu_find_ppmu_id(struct devfreq_event_dev *edev)
++{
++	return __exynos_ppmu_find_ppmu_id(edev->desc->name);
++}
++
+ /*
+  * The devfreq-event ops structure for PPMU v1.1
+  */
+@@ -556,13 +561,11 @@ static int of_get_devfreq_events(struct device_node *np,
+ 			 * use default if not.
+ 			 */
+ 			if (info->ppmu_type == EXYNOS_TYPE_PPMU_V2) {
+-				struct devfreq_event_dev edev;
+ 				int id;
+ 				/* Not all registers take the same value for
+ 				 * read+write data count.
+ 				 */
+-				edev.desc = &desc[j];
+-				id = exynos_ppmu_find_ppmu_id(&edev);
++				id = __exynos_ppmu_find_ppmu_id(desc[j].name);
+ 
+ 				switch (id) {
+ 				case PPMU_PMNCNT0:
 -- 
 2.20.1
 
