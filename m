@@ -5,49 +5,50 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DC335C35640
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 08:14:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1E544C35640
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 08:14:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A7A052467D
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 08:14:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E570624670
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 08:14:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582272895;
-	bh=qy/UrVKJD9Yzo9V6luGLjIKHtwLML0Xd8oiQh3MDx2c=;
+	s=default; t=1582272899;
+	bh=6BIz0sbbF8aSruqpnPbCttGMJV/o3U6qNcUvabsK/cU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=D26uiSvM7OH7Sz3sQ16JXpTO+BKrQl+K+4+a4QFQGUJhFhOUHmK2n6d5Jd+Whydsc
-	 ixo+63A94buXJCDAGfD9/E0Ir2YXuNpYLQtUdQbHfEohLtVBZGKr0Da4oiQiEfWp6P
-	 sIENlkmHh1U8buCbXxGg+CqDClimnQ26ekjtU998=
+	b=AsZpZNu3mA1OxF7GVPcpBNgIoNOApGH6tKP1QV69Uo1vu5rdZ4Q7204jZIBND5RN/
+	 qyUVTrVfaNAtskDKswKY2cAJO+SPgkXgJCFvoc3OtDHOnWxxi7S5IIaMmv0yF4CxCb
+	 MpLai5aW0iPL862RHTqK/ymIcuNVrHp0FY0bwOFc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733250AbgBUIOy (ORCPT
+        id S1733257AbgBUIO5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Feb 2020 03:14:54 -0500
-Received: from mail.kernel.org ([198.145.29.99]:51446 "EHLO mail.kernel.org"
+        Fri, 21 Feb 2020 03:14:57 -0500
+Received: from mail.kernel.org ([198.145.29.99]:51552 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1733236AbgBUIOu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Feb 2020 03:14:50 -0500
+        id S1733252AbgBUIOz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 21 Feb 2020 03:14:55 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 274AB24680;
-        Fri, 21 Feb 2020 08:14:48 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 24E482467B;
+        Fri, 21 Feb 2020 08:14:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1582272889;
-        bh=qy/UrVKJD9Yzo9V6luGLjIKHtwLML0Xd8oiQh3MDx2c=;
+        s=default; t=1582272894;
+        bh=6BIz0sbbF8aSruqpnPbCttGMJV/o3U6qNcUvabsK/cU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=EVO9+7mGfNnl2di7lk7P8gNiebOM0xQumb9oAXkLQ9VMnmcxsVXGk8gTjKYyUHRMg
-         AjOzLeE5zcIxjj0SELe4HOIIZwxJOJWa7xfS0dl4UcgQr+yQ+kMJJvNaRabVbRp4US
-         U8BaRUK9NKRZUIsJlx6B37zwEPqoLza4X3mlom2A=
+        b=gc2pG0l+T8qgIc7LjSMwYpK8JSEHNXm1JEci0K9JWiLj2GM7WV+dXSEl8s2tg+wjD
+         WDevVAzt4i6bs3LqWRZvx1qyB5Oro0yPgw4I0jsP7yd7q8fG9LK5ksLJoUXZctqIgw
+         pCpV0Qq4zGRsrQnYio1xdtincbSBSRSjqwS84sa8=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Vasily Averin <vvs@virtuozzo.com>,
-        "Steven Rostedt (VMware)" <rostedt@goodmis.org>,
+        stable@vger.kernel.org, Alex Deucher <alexander.deucher@amd.com>,
+        =?UTF-8?q?Michel=20D=C3=A4nzer?= <michel.daenzer@amd.com>,
+        Daniel Vetter <daniel.vetter@intel.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 313/344] ftrace: fpid_next() should increase position index
-Date:   Fri, 21 Feb 2020 08:41:52 +0100
-Message-Id: <20200221072418.491462997@linuxfoundation.org>
+Subject: [PATCH 5.4 315/344] radeon: insert 10ms sleep in dce5_crtc_load_lut
+Date:   Fri, 21 Feb 2020 08:41:54 +0100
+Message-Id: <20200221072418.692644324@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200221072349.335551332@linuxfoundation.org>
 References: <20200221072349.335551332@linuxfoundation.org>
@@ -60,61 +61,47 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Vasily Averin <vvs@virtuozzo.com>
+From: Daniel Vetter <daniel.vetter@ffwll.ch>
 
-[ Upstream commit e4075e8bdffd93a9b6d6e1d52fabedceeca5a91b ]
+[ Upstream commit ec3d65082d7dabad6fa8f66a8ef166f2d522d6b2 ]
 
-if seq_file .next fuction does not change position index,
-read after some lseek can generate unexpected output.
+Per at least one tester this is enough magic to recover the regression
+introduced for some people (but not all) in
 
-Without patch:
- # dd bs=4 skip=1 if=/sys/kernel/tracing/set_ftrace_pid
- dd: /sys/kernel/tracing/set_ftrace_pid: cannot skip to specified offset
- id
- no pid
- 2+1 records in
- 2+1 records out
- 10 bytes copied, 0.000213285 s, 46.9 kB/s
+commit b8e2b0199cc377617dc238f5106352c06dcd3fa2
+Author: Peter Rosin <peda@axentia.se>
+Date:   Tue Jul 4 12:36:57 2017 +0200
 
-Notice the "id" followed by "no pid".
+    drm/fb-helper: factor out pseudo-palette
 
-With the patch:
- # dd bs=4 skip=1 if=/sys/kernel/tracing/set_ftrace_pid
- dd: /sys/kernel/tracing/set_ftrace_pid: cannot skip to specified offset
- id
- 0+1 records in
- 0+1 records out
- 3 bytes copied, 0.000202112 s, 14.8 kB/s
+which for radeon had the side-effect of refactoring out a seemingly
+redudant writing of the color palette.
 
-Notice that it only prints "id" and not the "no pid" afterward.
+10ms in a fairly slow modeset path feels like an acceptable form of
+duct-tape, so maybe worth a shot and see what sticks.
 
-Link: http://lkml.kernel.org/r/4f87c6ad-f114-30bb-8506-c32274ce2992@virtuozzo.com
-
-https://bugzilla.kernel.org/show_bug.cgi?id=206283
-Signed-off-by: Vasily Averin <vvs@virtuozzo.com>
-Signed-off-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
+Cc: Alex Deucher <alexander.deucher@amd.com>
+Cc: Michel Dänzer <michel.daenzer@amd.com>
+Signed-off-by: Daniel Vetter <daniel.vetter@intel.com>
+Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- kernel/trace/ftrace.c | 5 +++--
- 1 file changed, 3 insertions(+), 2 deletions(-)
+ drivers/gpu/drm/radeon/radeon_display.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/kernel/trace/ftrace.c b/kernel/trace/ftrace.c
-index 407d8bf4ed93e..15160d707da45 100644
---- a/kernel/trace/ftrace.c
-+++ b/kernel/trace/ftrace.c
-@@ -6537,9 +6537,10 @@ static void *fpid_next(struct seq_file *m, void *v, loff_t *pos)
- 	struct trace_array *tr = m->private;
- 	struct trace_pid_list *pid_list = rcu_dereference_sched(tr->function_pids);
+diff --git a/drivers/gpu/drm/radeon/radeon_display.c b/drivers/gpu/drm/radeon/radeon_display.c
+index e81b01f8db90e..0826efd9b5f51 100644
+--- a/drivers/gpu/drm/radeon/radeon_display.c
++++ b/drivers/gpu/drm/radeon/radeon_display.c
+@@ -127,6 +127,8 @@ static void dce5_crtc_load_lut(struct drm_crtc *crtc)
  
--	if (v == FTRACE_NO_PIDS)
-+	if (v == FTRACE_NO_PIDS) {
-+		(*pos)++;
- 		return NULL;
--
-+	}
- 	return trace_pid_next(pid_list, v, pos);
- }
+ 	DRM_DEBUG_KMS("%d\n", radeon_crtc->crtc_id);
  
++	msleep(10);
++
+ 	WREG32(NI_INPUT_CSC_CONTROL + radeon_crtc->crtc_offset,
+ 	       (NI_INPUT_CSC_GRPH_MODE(NI_INPUT_CSC_BYPASS) |
+ 		NI_INPUT_CSC_OVL_MODE(NI_INPUT_CSC_BYPASS)));
 -- 
 2.20.1
 
