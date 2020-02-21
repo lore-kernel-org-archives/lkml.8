@@ -2,88 +2,106 @@ Return-Path: <SRS0=1210=4J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 649F4C35646
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 10:47:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4C3FCC35647
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 10:47:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 35BAD2073A
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 10:47:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 208212073A
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 10:47:28 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="RGDqo7t7"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="R2ZUvr3Z"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727958AbgBUKrB (ORCPT
+        id S1728097AbgBUKr1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Feb 2020 05:47:01 -0500
-Received: from mail-wr1-f66.google.com ([209.85.221.66]:33866 "EHLO
-        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727827AbgBUKrA (ORCPT
+        Fri, 21 Feb 2020 05:47:27 -0500
+Received: from mail-ed1-f67.google.com ([209.85.208.67]:33664 "EHLO
+        mail-ed1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727827AbgBUKr0 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Feb 2020 05:47:00 -0500
-Received: by mail-wr1-f66.google.com with SMTP id n10so1490128wrm.1
-        for <linux-kernel@vger.kernel.org>; Fri, 21 Feb 2020 02:46:59 -0800 (PST)
+        Fri, 21 Feb 2020 05:47:26 -0500
+Received: by mail-ed1-f67.google.com with SMTP id r21so1809018edq.0;
+        Fri, 21 Feb 2020 02:47:25 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
-        h=references:user-agent:from:to:cc:subject:in-reply-to:date
-         :message-id:mime-version;
-        bh=f7yu7K3JlqyMe87m1GSh91P+I8Cu0Gpj7XsTeWNuw/0=;
-        b=RGDqo7t7PQPwtANjW5Ko22b90oJlbS9Mbf6ViJpbXRNCF7YDRSRfcvNmdV/zT3QepT
-         HThU/ZP44u6O6LrZKKLyVd+22OjfZ3zbVn9pls+kj3owR3PMIQhitrXFftNz3SitokNR
-         T9mPMwW3fNVmP5iOQ7p/HA3l3Lb9CdcHBngtcXO3U2oV+r0IdSKHXiUM1sOKePr8qnea
-         qM00U+ZEW0OciRHwoyROaCyh+gPx7YMiHu61+a2gOcvloFrncIu++N35yGAmyMzsdyPd
-         AJlP1Ycpd3nkKQbMNXSKVsxgYoPo4JjmEbtslNFQNYDgbTxTqTyI+1Cf0wwACm5gt6AC
-         arcA==
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references;
+        bh=JU7gxEFwqK+Oxre///Ayp0+fP1f8xI82V+ZomELLvp4=;
+        b=R2ZUvr3ZuLAjFgvdrwOgxABTV1rb54T8Yot4G6CZhY33nraY/yTW8WHI8KSWs4LuhZ
+         MJG1OoU2i7KsKlydCYMqvmQMP60uFvKbgt9yOlPGdHqQ8Ybx9L0r3yLtP+0aPJH/zZ55
+         +ybM0KR/6kxsvD8HjL02eLeotMe1NdDyVlpGi02Hi3yVDLB+AyoT4iMLw2HH4Egtic9F
+         ObS5a/tP7Iiau+EyL5ukYMjYxkMQvWOJheMcHAl1dLj5f5iP9E5vz0mZJ2D6I6NH9W/l
+         ln3xH+q5H4ZxJPfPkmbBgUUY40SnPIk5fDsGyeAhYA3HqOBC/rCv5vMledURFHpv4aNj
+         Ru5A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:references:user-agent:from:to:cc:subject
-         :in-reply-to:date:message-id:mime-version;
-        bh=f7yu7K3JlqyMe87m1GSh91P+I8Cu0Gpj7XsTeWNuw/0=;
-        b=SWXKsSfWXkS5JK+FUQ6EkjGYWjSOf5x0IJyoADz7STr7YDCbbxlJckljohdu6FS8IF
-         K38sRvEd6dmTRl8isIUhihjNyA9DQcZ3Y7Ijnb45TwtxxCC1W+SEYnwRk9AGugLRkSKT
-         xTQXihJ2cLhfPqey3X+j1wWsLNbUSvNqQ+Oxp3t9BIBWtKmE4h/WNtF2W4wIEEAlzCNe
-         AcD+ipbxYkKmJtM56pXE4G7pw2vnUpF+wnlklDA3SKh/4txXDWlGfZ77NcA5DrzCj5Sf
-         TYW1QSZ8ZVnczbhJU5EvcA6E4O/2u3MsAvbj09ZixCSDE21pG8COx6vpC2VOkeoxuylq
-         P+Nw==
-X-Gm-Message-State: APjAAAXfJ6bBXhbZdIx5H+Cd2BZlaoFcmbNOTnicd9orIx/frkWDxpa1
-        HtNb5VkbZ7H7Phiv6Mp5NoinpdCcAys=
-X-Google-Smtp-Source: APXvYqwsELLBhCREi3H11GBspa/fR2fMvBqx3YW0qemlsSfDpaHyhrVRZwlk5hC2zFPbUNrDKhRDaQ==
-X-Received: by 2002:adf:f28f:: with SMTP id k15mr47355503wro.230.1582282018874;
-        Fri, 21 Feb 2020 02:46:58 -0800 (PST)
-Received: from localhost (laubervilliers-658-1-213-31.w90-63.abo.wanadoo.fr. [90.63.244.31])
-        by smtp.gmail.com with ESMTPSA id q1sm3376647wrw.5.2020.02.21.02.46.57
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references;
+        bh=JU7gxEFwqK+Oxre///Ayp0+fP1f8xI82V+ZomELLvp4=;
+        b=bv+FIYbT8VczK/Xtl4PvcNQbuLoO7cF8mA1ceGtl0v4llpyToTmhxTUE/STTgOR9CW
+         NC4m7EVNoicehgdTAw4qqCGU5q5w+/7PodkYXfxmXeaLlknUCAFX6qnHi/SJ6pe9FrJg
+         RRPf3wULaImzZRWPFScZxyePtN9GpVJsPA/HpYHP3oqtm1R3KdzHE2n9lqqCqUxH11rP
+         oPBSMP8CTBOglniX0e8wNvbVA7XhKp+iifkZRu4/wjP5OnXhfo30uByQ0mMOmI1C9mMd
+         LVZ1dytjuDZ9SZvHnZWM3tf+i7eGeVh5wksIvdwd8YugynoX7EEp7h8dCRLqjRoUGUfL
+         AXfw==
+X-Gm-Message-State: APjAAAWYa2vSJK9csjzqzXuG4MmlCf80NOMzHcZqebbtaQnYEO5cYdlF
+        UWXFP2IZ5Y2+9WiMjmEo5H1UXu8v
+X-Google-Smtp-Source: APXvYqxFpO/dJx50hzO5j6R0vnqEpN2UskYHsdUTUvY8vTeSxERiuoJAxTUjAKW6VvKZDkKTFqxcCw==
+X-Received: by 2002:a17:906:ccdd:: with SMTP id ot29mr33226021ejb.204.1582282044212;
+        Fri, 21 Feb 2020 02:47:24 -0800 (PST)
+Received: from jwang-Latitude-5491.pb.local ([2001:1438:4010:2558:d8ec:cf8e:d7de:fb22])
+        by smtp.gmail.com with ESMTPSA id 2sm270594edv.87.2020.02.21.02.47.23
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 21 Feb 2020 02:46:58 -0800 (PST)
-References: <20200220204433.67113-1-martin.blumenstingl@googlemail.com> <74a8613c-ba30-5f42-9edd-b5af1d7f330c@baylibre.com>
-User-agent: mu4e 1.3.3; emacs 26.3
-From:   Jerome Brunet <jbrunet@baylibre.com>
-To:     Neil Armstrong <narmstrong@baylibre.com>,
-        Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
-        linux-amlogic@lists.infradead.org
-Cc:     linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org, sboyd@kernel.org,
-        mturquette@baylibre.com
-Subject: Re: [PATCH] clk: meson: meson8b: set audio output clock hierarchy
-In-reply-to: <74a8613c-ba30-5f42-9edd-b5af1d7f330c@baylibre.com>
+        Fri, 21 Feb 2020 02:47:23 -0800 (PST)
+From:   Jack Wang <jinpuwang@gmail.com>
+To:     linux-block@vger.kernel.org, linux-rdma@vger.kernel.org
+Cc:     axboe@kernel.dk, hch@infradead.org, sagi@grimberg.me,
+        bvanassche@acm.org, leon@kernel.org, dledford@redhat.com,
+        jgg@ziepe.ca, danil.kipnis@cloud.ionos.com,
+        jinpu.wang@cloud.ionos.com, rpenyaev@suse.de,
+        pankaj.gupta@cloud.ionos.com,
+        Roman Pen <roman.penyaev@profitbricks.com>,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH v9 01/25] sysfs: export sysfs_remove_file_self()
 Date:   Fri, 21 Feb 2020 11:46:57 +0100
-Message-ID: <1jpne82p5q.fsf@starbuckisacylon.baylibre.com>
-MIME-Version: 1.0
-Content-Type: text/plain
+Message-Id: <20200221104721.350-2-jinpuwang@gmail.com>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20200221104721.350-1-jinpuwang@gmail.com>
+References: <20200221104721.350-1-jinpuwang@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+From: Jack Wang <jinpu.wang@cloud.ionos.com>
 
-On Fri 21 Feb 2020 at 09:28, Neil Armstrong <narmstrong@baylibre.com> wrote:
+Function is going to be used in transport over RDMA module
+in subsequent patches, so export it to GPL modules.
 
-> On 20/02/2020 21:44, Martin Blumenstingl wrote:
->> The aiu devices peripheral clocks needs the aiu and aiu_glue clocks to
->> operate. Reflect this hierarchy in the clock tree.
->> 
->> Fixes: e31a1900c1ff73 ("meson: clk: Add support for clock gates")
->> Suggested-by: Jerome Brunet <jbrunet@baylibre.com>
->> Signed-off-by: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+Signed-off-by: Roman Pen <roman.penyaev@profitbricks.com>
+Acked-by: Tejun Heo <tj@kernel.org>
+Cc: linux-kernel@vger.kernel.org
+[jwang: extend the commit message]
+Signed-off-by: Jack Wang <jinpu.wang@cloud.ionos.com>
+---
+ fs/sysfs/file.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-Applied, Thx !
+diff --git a/fs/sysfs/file.c b/fs/sysfs/file.c
+index 130fc6fbcc03..1ff4672d7746 100644
+--- a/fs/sysfs/file.c
++++ b/fs/sysfs/file.c
+@@ -492,6 +492,7 @@ bool sysfs_remove_file_self(struct kobject *kobj, const struct attribute *attr)
+ 	kernfs_put(kn);
+ 	return ret;
+ }
++EXPORT_SYMBOL_GPL(sysfs_remove_file_self);
+ 
+ void sysfs_remove_files(struct kobject *kobj, const struct attribute * const *ptr)
+ {
+-- 
+2.17.1
+
