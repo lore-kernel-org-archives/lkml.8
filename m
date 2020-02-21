@@ -7,49 +7,49 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E3012C35641
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 08:04:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2DD49C35640
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 08:04:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BAC6924656
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 08:04:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 035762465D
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 08:04:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582272270;
-	bh=mhrvYHx10N0wbmHbF+nYPvCSAlLYueoEr/8yc7/phfA=;
+	s=default; t=1582272273;
+	bh=a/JbiaU6A10GtmsEI/rx+V/8XXumfKNN7zGs8yipPCQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=MwDfYaTkHIvM7ckV7aHkNGnA6LF6siR8//SgqCet8zc5kXPvUcTaVnvgibY8ivjdq
-	 99RZLbOnCgJK68tqTTQdCVwMbqd1dHOljUxkan5DRFSrKdRHBfI8/ZYfF18s/j7J/9
-	 Ru38N+ihcuV/JNIoE+ZB9Q3rwm2DWIB3dWjNxD/4=
+	b=dabdfdtigXhIjsJVeGnQh/iTE35iXdd7n3+freCZ/koCPsFuMpFidSR9B8CNWrv0k
+	 nkRk8VqmTmfodqxD73f23j9T0CKnj+mCiUunsopKcjltzWygG39CTjF/p1nfHsv113
+	 fbUkP9AWfl6Tu4JZ41wv/TcrhsVSvavlTfguvsuE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731655AbgBUIE3 (ORCPT
+        id S1729689AbgBUIEc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Feb 2020 03:04:29 -0500
-Received: from mail.kernel.org ([198.145.29.99]:37538 "EHLO mail.kernel.org"
+        Fri, 21 Feb 2020 03:04:32 -0500
+Received: from mail.kernel.org ([198.145.29.99]:37610 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731649AbgBUIE2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Feb 2020 03:04:28 -0500
+        id S1731649AbgBUIEa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 21 Feb 2020 03:04:30 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id CC67D24656;
-        Fri, 21 Feb 2020 08:04:26 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 496B72465D;
+        Fri, 21 Feb 2020 08:04:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1582272267;
-        bh=mhrvYHx10N0wbmHbF+nYPvCSAlLYueoEr/8yc7/phfA=;
+        s=default; t=1582272269;
+        bh=a/JbiaU6A10GtmsEI/rx+V/8XXumfKNN7zGs8yipPCQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=GISUmqnnFDcd3bLm09Twr/3NcGCelm9P6CYkiJk+BPRhTBAYDJEX8n5KJb+preOVy
-         1naE6I4y2xe6iVi+QJjcyiyAbNXi3jD6FMAkzEwVJScjw0WrFnNopa02WUR9XcBZYK
-         J0A8Eeg8RlxZEM/oMcy5QShj+IYfwDhgMiyeRgD4=
+        b=DsQdeY14O8vsI9hcoTs95ziCYhDRrwb2qyfDnmlxTuIDyz0y5jawgfFz6TtmI2JYo
+         cBqfoT/uzY0cxZrRF7hIOHiBrlJEpiS2F4jPY0vScdPcXs+HDfWzpVxMz1IFCWFj47
+         2liec6uh+P32coxYZ/qdDGtfDE4hTOuMzSFI6Epc=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Ping-Ke Shih <pkshih@realtek.com>,
-        Yan-Hsuan Chuang <yhchuang@realtek.com>,
-        Chris Chiu <chiu@endlessm.com>,
+        stable@vger.kernel.org,
+        Jean-Philippe Brucker <jean-philippe@linaro.org>,
+        Arend van Spriel <arend.vanspriel@broadcom.com>,
         Kalle Valo <kvalo@codeaurora.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 079/344] rtw88: fix rate mask for 1SS chip
-Date:   Fri, 21 Feb 2020 08:37:58 +0100
-Message-Id: <20200221072356.149435301@linuxfoundation.org>
+Subject: [PATCH 5.4 080/344] brcmfmac: sdio: Fix OOB interrupt initialization on brcm43362
+Date:   Fri, 21 Feb 2020 08:37:59 +0100
+Message-Id: <20200221072356.237166482@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200221072349.335551332@linuxfoundation.org>
 References: <20200221072349.335551332@linuxfoundation.org>
@@ -62,66 +62,65 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Ping-Ke Shih <pkshih@realtek.com>
+From: Jean-Philippe Brucker <jean-philippe@linaro.org>
 
-[ Upstream commit 35a68fa5f96a80797e11b6952a47c5a84939a7bf ]
+[ Upstream commit 8c8e60fb86a90a30721bbd797f58f96b3980dcc1 ]
 
-The rate mask is used to tell firmware the supported rate depends on
-negotiation. We loop 2 times for all VHT/HT 2SS rate mask first, and then
-only keep the part according to chip's NSS.
+Commit 262f2b53f679 ("brcmfmac: call brcmf_attach() just before calling
+brcmf_bus_started()") changed the initialization order of the brcmfmac
+SDIO driver. Unfortunately since brcmf_sdiod_intr_register() is now
+called before the sdiodev->bus_if initialization, it reads the wrong
+chip ID and fails to initialize the GPIO on brcm43362. Thus the chip
+cannot send interrupts and fails to probe:
 
-This commit fixes the logic error of '&' operations for VHT/HT rate, and
-we should run this logic before adding legacy rate.
+[   12.517023] brcmfmac: brcmf_sdio_bus_rxctl: resumed on timeout
+[   12.531214] ieee80211 phy0: brcmf_bus_started: failed: -110
+[   12.536976] ieee80211 phy0: brcmf_attach: dongle is not responding: err=-110
+[   12.566467] brcmfmac: brcmf_sdio_firmware_callback: brcmf_attach failed
 
-To access HT MCS map, index 0/1 represent MCS 0-7/8-15 respectively. Use
-NL80211_BAND_xxx is incorrect, so fix it as well.
+Initialize the bus interface earlier to ensure that
+brcmf_sdiod_intr_register() properly sets up the OOB interrupt.
 
-Signed-off-by: Ping-Ke Shih <pkshih@realtek.com>
-Signed-off-by: Yan-Hsuan Chuang <yhchuang@realtek.com>
-Reviewed-by: Chris Chiu <chiu@endlessm.com>
+BugLink: https://bugs.debian.org/cgi-bin/bugreport.cgi?bug=908438
+Fixes: 262f2b53f679 ("brcmfmac: call brcmf_attach() just before calling brcmf_bus_started()")
+Signed-off-by: Jean-Philippe Brucker <jean-philippe@linaro.org>
+Reviewed-by: Arend van Spriel <arend.vanspriel@broadcom.com>
 Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/wireless/realtek/rtw88/main.c | 12 +++++-------
- 1 file changed, 5 insertions(+), 7 deletions(-)
+ .../net/wireless/broadcom/brcm80211/brcmfmac/sdio.c  | 12 ++++++------
+ 1 file changed, 6 insertions(+), 6 deletions(-)
 
-diff --git a/drivers/net/wireless/realtek/rtw88/main.c b/drivers/net/wireless/realtek/rtw88/main.c
-index 806af37192bc2..88e2252bf8a2b 100644
---- a/drivers/net/wireless/realtek/rtw88/main.c
-+++ b/drivers/net/wireless/realtek/rtw88/main.c
-@@ -556,8 +556,8 @@ void rtw_update_sta_info(struct rtw_dev *rtwdev, struct rtw_sta_info *si)
- 		if (sta->vht_cap.cap & IEEE80211_VHT_CAP_SHORT_GI_80)
- 			is_support_sgi = true;
- 	} else if (sta->ht_cap.ht_supported) {
--		ra_mask |= (sta->ht_cap.mcs.rx_mask[NL80211_BAND_5GHZ] << 20) |
--			   (sta->ht_cap.mcs.rx_mask[NL80211_BAND_2GHZ] << 12);
-+		ra_mask |= (sta->ht_cap.mcs.rx_mask[1] << 20) |
-+			   (sta->ht_cap.mcs.rx_mask[0] << 12);
- 		if (sta->ht_cap.cap & IEEE80211_HT_CAP_RX_STBC)
- 			stbc_en = HT_STBC_EN;
- 		if (sta->ht_cap.cap & IEEE80211_HT_CAP_LDPC_CODING)
-@@ -567,6 +567,9 @@ void rtw_update_sta_info(struct rtw_dev *rtwdev, struct rtw_sta_info *si)
- 			is_support_sgi = true;
+diff --git a/drivers/net/wireless/broadcom/brcm80211/brcmfmac/sdio.c b/drivers/net/wireless/broadcom/brcm80211/brcmfmac/sdio.c
+index 1dea0178832ea..a935993a3c514 100644
+--- a/drivers/net/wireless/broadcom/brcm80211/brcmfmac/sdio.c
++++ b/drivers/net/wireless/broadcom/brcm80211/brcmfmac/sdio.c
+@@ -4226,6 +4226,12 @@ static void brcmf_sdio_firmware_callback(struct device *dev, int err,
  	}
  
-+	if (efuse->hw_cap.nss == 1)
-+		ra_mask &= RA_MASK_VHT_RATES_1SS | RA_MASK_HT_RATES_1SS;
+ 	if (err == 0) {
++		/* Assign bus interface call back */
++		sdiod->bus_if->dev = sdiod->dev;
++		sdiod->bus_if->ops = &brcmf_sdio_bus_ops;
++		sdiod->bus_if->chip = bus->ci->chip;
++		sdiod->bus_if->chiprev = bus->ci->chiprev;
 +
- 	if (hal->current_band_type == RTW_BAND_5G) {
- 		ra_mask |= (u64)sta->supp_rates[NL80211_BAND_5GHZ] << 4;
- 		if (sta->vht_cap.vht_supported) {
-@@ -600,11 +603,6 @@ void rtw_update_sta_info(struct rtw_dev *rtwdev, struct rtw_sta_info *si)
- 		wireless_set = 0;
- 	}
+ 		/* Allow full data communication using DPC from now on. */
+ 		brcmf_sdiod_change_state(bus->sdiodev, BRCMF_SDIOD_DATA);
  
--	if (efuse->hw_cap.nss == 1) {
--		ra_mask &= RA_MASK_VHT_RATES_1SS;
--		ra_mask &= RA_MASK_HT_RATES_1SS;
--	}
+@@ -4242,12 +4248,6 @@ static void brcmf_sdio_firmware_callback(struct device *dev, int err,
+ 
+ 	sdio_release_host(sdiod->func1);
+ 
+-	/* Assign bus interface call back */
+-	sdiod->bus_if->dev = sdiod->dev;
+-	sdiod->bus_if->ops = &brcmf_sdio_bus_ops;
+-	sdiod->bus_if->chip = bus->ci->chip;
+-	sdiod->bus_if->chiprev = bus->ci->chiprev;
 -
- 	switch (sta->bandwidth) {
- 	case IEEE80211_STA_RX_BW_80:
- 		bw_mode = RTW_CHANNEL_WIDTH_80;
+ 	err = brcmf_alloc(sdiod->dev, sdiod->settings);
+ 	if (err) {
+ 		brcmf_err("brcmf_alloc failed\n");
 -- 
 2.20.1
 
