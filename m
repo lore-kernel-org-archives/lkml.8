@@ -5,51 +5,49 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B37F4C35642
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 08:44:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 60C4FC35640
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 08:44:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 85D18206DB
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 08:44:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 36E9E206DB
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 08:44:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582274690;
-	bh=WbO+uEKXoG/iwhQ7nd5kQE3ky3wQoI1Lapj7wUubyT4=;
+	s=default; t=1582274693;
+	bh=K+GbBvUYMrSGOr40poPKHl1+OJzijRKgppJ0R0XLZ9M=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=W8c/LExmTfHnKAv/EypRKcNrVAtKO1IZqYdInhUx4doR5Mq9wAifYu83Dlb4MWn0S
-	 xB8CV/bcOA81RT4XnFG2jRaGzeOSxQH8FXNnAvVC0cuHKn8yQaUAEA+zl1scBhQlDt
-	 dSNoiY6qpZ9xM/k70901RQmWhfZiUhexZarzYXfg=
+	b=ANaCXYWWNo+9zn5JiE5fexavAEgQSdhaQdNlGbIIj/a8mRfotN4SSN7Lsw+aOBgNx
+	 xFn4JLoU5rPn5eP7XEioi8vHwSGeiqabFYIUdJGuyWmP5YvNBqQuRU0Aj92nmP5+QC
+	 WTsn5LAU9DoDo4+DyksiCnTVbAcZjCPiRVhIal5M=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729784AbgBUHvj (ORCPT
+        id S1730688AbgBUIov (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Feb 2020 02:51:39 -0500
-Received: from mail.kernel.org ([198.145.29.99]:49046 "EHLO mail.kernel.org"
+        Fri, 21 Feb 2020 03:44:51 -0500
+Received: from mail.kernel.org ([198.145.29.99]:49262 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729326AbgBUHvh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Feb 2020 02:51:37 -0500
+        id S1729786AbgBUHvo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 21 Feb 2020 02:51:44 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3147E2073A;
-        Fri, 21 Feb 2020 07:51:36 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id CBB932073A;
+        Fri, 21 Feb 2020 07:51:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1582271496;
-        bh=WbO+uEKXoG/iwhQ7nd5kQE3ky3wQoI1Lapj7wUubyT4=;
+        s=default; t=1582271504;
+        bh=K+GbBvUYMrSGOr40poPKHl1+OJzijRKgppJ0R0XLZ9M=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=z7wjN85Ivel6B7jLJGwNNDiH98yNZ5USiW8kuX8H+5J/2yQ1TYTkvv7j3lTTRogDF
-         j1YXdCeZivq73XUBwFUvuZnq5UzZHtua7q4ZQehhakhWHd7Ovcy1ZIXzS68BuF1Dc8
-         uxVe/COP0nL1I9zVkMTd5Q7i4gdYZUBCLsaOqGnY=
+        b=nOrmEFvFhWy07iWiJmi3xh8hW2JP3I+vjLPNsg2+lbienWoHTwjW4GBcuhZ9pjrjK
+         jkO6ft05xDO3zt6uqTy1B9A61t1AuiVMw8OK9WVPUoOXiea1rdLgUHpXxgC8bZ2N18
+         lUnEi6s61PvbOjVmZnjsKS/t3JTEpySuX/kGjTgc=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        "David S. Miller" <davem@davemloft.net>,
+        stable@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>,
+        Chanwoo Choi <cw00.choi@samsung.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.5 187/399] net: phy: realtek: add logging for the RGMII TX delay configuration
-Date:   Fri, 21 Feb 2020 08:38:32 +0100
-Message-Id: <20200221072420.996253867@linuxfoundation.org>
+Subject: [PATCH 5.5 190/399] PM / devfreq: exynos-ppmu: Fix excessive stack usage
+Date:   Fri, 21 Feb 2020 08:38:35 +0100
+Message-Id: <20200221072421.275322914@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200221072402.315346745@linuxfoundation.org>
 References: <20200221072402.315346745@linuxfoundation.org>
@@ -62,72 +60,72 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+From: Arnd Bergmann <arnd@arndb.de>
 
-[ Upstream commit 3aec743d69822d22d4a5b60deb9518ed8be6fa67 ]
+[ Upstream commit d4556f5e99d5f603913bac01adaff8670cb2d08b ]
 
-RGMII requires a delay of 2ns between the data and the clock signal.
-There are at least three ways this can happen. One possibility is by
-having the PHY generate this delay.
-This is a common source for problems (for example with slow TX speeds or
-packet loss when sending data). The TX delay configuration of the
-RTL8211F PHY can be set either by pin-strappping the RXD1 pin (HIGH
-means enabled, LOW means disabled) or through configuring a paged
-register. The setting from the RXD1 pin is also reflected in the
-register.
+Putting a 'struct devfreq_event_dev' object on the stack is generally
+a bad idea and here it leads to a warnig about potential stack overflow:
 
-Add debug logging to the TX delay configuration on RTL8211F so it's
-easier to spot these issues (for example if the TX delay is enabled for
-both, the RTL8211F PHY and the MAC).
-This is especially helpful because there is no public datasheet for the
-RTL8211F PHY available with all the RX/TX delay specifics.
+drivers/devfreq/event/exynos-ppmu.c:643:12: error: stack frame size of 1040 bytes in function 'exynos_ppmu_probe' [-Werror,-Wframe-larger-than=]
 
-Signed-off-by: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
-Reviewed-by: Florian Fainelli <f.fainelli@gmail.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+There is no real need for the device structure, only the string inside
+it, so add an internal helper function that simply takes the string
+as its argument and remove the device structure.
+
+Fixes: 1dd62c66d345 ("PM / devfreq: events: extend events by type of counted data")
+Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+[cw00.choi: Fix the issue from 'desc->name' to 'desc[j].name']
+Signed-off-by: Chanwoo Choi <cw00.choi@samsung.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/phy/realtek.c | 19 ++++++++++++++++++-
- 1 file changed, 18 insertions(+), 1 deletion(-)
+ drivers/devfreq/event/exynos-ppmu.c | 13 ++++++++-----
+ 1 file changed, 8 insertions(+), 5 deletions(-)
 
-diff --git a/drivers/net/phy/realtek.c b/drivers/net/phy/realtek.c
-index 476db5345e1af..879ca37c85081 100644
---- a/drivers/net/phy/realtek.c
-+++ b/drivers/net/phy/realtek.c
-@@ -171,7 +171,9 @@ static int rtl8211c_config_init(struct phy_device *phydev)
+diff --git a/drivers/devfreq/event/exynos-ppmu.c b/drivers/devfreq/event/exynos-ppmu.c
+index 85c7a77bf3f0d..055deea42c373 100644
+--- a/drivers/devfreq/event/exynos-ppmu.c
++++ b/drivers/devfreq/event/exynos-ppmu.c
+@@ -101,17 +101,22 @@ static struct __exynos_ppmu_events {
+ 	PPMU_EVENT(dmc1_1),
+ };
  
- static int rtl8211f_config_init(struct phy_device *phydev)
+-static int exynos_ppmu_find_ppmu_id(struct devfreq_event_dev *edev)
++static int __exynos_ppmu_find_ppmu_id(const char *edev_name)
  {
-+	struct device *dev = &phydev->mdio.dev;
- 	u16 val;
-+	int ret;
+ 	int i;
  
- 	/* enable TX-delay for rgmii-{id,txid}, and disable it for rgmii and
- 	 * rgmii-rxid. The RX-delay can be enabled by the external RXDLY pin.
-@@ -189,7 +191,22 @@ static int rtl8211f_config_init(struct phy_device *phydev)
- 		return 0;
- 	}
+ 	for (i = 0; i < ARRAY_SIZE(ppmu_events); i++)
+-		if (!strcmp(edev->desc->name, ppmu_events[i].name))
++		if (!strcmp(edev_name, ppmu_events[i].name))
+ 			return ppmu_events[i].id;
  
--	return phy_modify_paged(phydev, 0xd08, 0x11, RTL8211F_TX_DELAY, val);
-+	ret = phy_modify_paged_changed(phydev, 0xd08, 0x11, RTL8211F_TX_DELAY,
-+				       val);
-+	if (ret < 0) {
-+		dev_err(dev, "Failed to update the TX delay register\n");
-+		return ret;
-+	} else if (ret) {
-+		dev_dbg(dev,
-+			"%s 2ns TX delay (and changing the value from pin-strapping RXD1 or the bootloader)\n",
-+			val ? "Enabling" : "Disabling");
-+	} else {
-+		dev_dbg(dev,
-+			"2ns TX delay was already %s (by pin-strapping RXD1 or bootloader configuration)\n",
-+			val ? "enabled" : "disabled");
-+	}
-+
-+	return 0;
+ 	return -EINVAL;
  }
  
- static int rtl8211e_config_init(struct phy_device *phydev)
++static int exynos_ppmu_find_ppmu_id(struct devfreq_event_dev *edev)
++{
++	return __exynos_ppmu_find_ppmu_id(edev->desc->name);
++}
++
+ /*
+  * The devfreq-event ops structure for PPMU v1.1
+  */
+@@ -556,13 +561,11 @@ static int of_get_devfreq_events(struct device_node *np,
+ 			 * use default if not.
+ 			 */
+ 			if (info->ppmu_type == EXYNOS_TYPE_PPMU_V2) {
+-				struct devfreq_event_dev edev;
+ 				int id;
+ 				/* Not all registers take the same value for
+ 				 * read+write data count.
+ 				 */
+-				edev.desc = &desc[j];
+-				id = exynos_ppmu_find_ppmu_id(&edev);
++				id = __exynos_ppmu_find_ppmu_id(desc[j].name);
+ 
+ 				switch (id) {
+ 				case PPMU_PMNCNT0:
 -- 
 2.20.1
 
