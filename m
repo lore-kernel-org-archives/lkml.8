@@ -2,57 +2,57 @@ Return-Path: <SRS0=1210=4J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNWANTED_LANGUAGE_BODY,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 86ED7C11D28
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 03:29:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4D10DC11D00
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 03:29:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5E3B4208E4
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 03:29:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2202420716
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 03:29:46 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729945AbgBUD3i (ORCPT
+        id S1729947AbgBUD3p (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Feb 2020 22:29:38 -0500
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:59238 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1729745AbgBUD3g (ORCPT
+        Thu, 20 Feb 2020 22:29:45 -0500
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:30590 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1729608AbgBUD3o (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Feb 2020 22:29:36 -0500
-Received: from pps.filterd (m0098399.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 01L3Sh0d102223
-        for <linux-kernel@vger.kernel.org>; Thu, 20 Feb 2020 22:29:36 -0500
-Received: from e06smtp03.uk.ibm.com (e06smtp03.uk.ibm.com [195.75.94.99])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2y9ytr4636-1
+        Thu, 20 Feb 2020 22:29:44 -0500
+Received: from pps.filterd (m0098420.ppops.net [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 01L3TgQe150578
+        for <linux-kernel@vger.kernel.org>; Thu, 20 Feb 2020 22:29:43 -0500
+Received: from e06smtp05.uk.ibm.com (e06smtp05.uk.ibm.com [195.75.94.101])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 2y8ubu7vhk-1
         (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Thu, 20 Feb 2020 22:29:35 -0500
+        for <linux-kernel@vger.kernel.org>; Thu, 20 Feb 2020 22:29:42 -0500
 Received: from localhost
-        by e06smtp03.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        by e06smtp05.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
         for <linux-kernel@vger.kernel.org> from <alastair@au1.ibm.com>;
-        Fri, 21 Feb 2020 03:29:33 -0000
+        Fri, 21 Feb 2020 03:29:32 -0000
 Received: from b06cxnps4074.portsmouth.uk.ibm.com (9.149.109.196)
-        by e06smtp03.uk.ibm.com (192.168.101.133) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        by e06smtp05.uk.ibm.com (192.168.101.135) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
         (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Fri, 21 Feb 2020 03:29:27 -0000
-Received: from d06av23.portsmouth.uk.ibm.com (d06av23.portsmouth.uk.ibm.com [9.149.105.59])
-        by b06cxnps4074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 01L3SBe549086650
+        Fri, 21 Feb 2020 03:29:26 -0000
+Received: from d06av26.portsmouth.uk.ibm.com (d06av26.portsmouth.uk.ibm.com [9.149.105.62])
+        by b06cxnps4074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 01L3SAFD49086646
         (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
         Fri, 21 Feb 2020 03:28:11 GMT
-Received: from d06av23.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 1757FA404D;
-        Fri, 21 Feb 2020 03:28:11 +0000 (GMT)
-Received: from d06av23.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 7252BA4040;
+Received: from d06av26.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id D8936AE04D;
+        Fri, 21 Feb 2020 03:28:10 +0000 (GMT)
+Received: from d06av26.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 32941AE045;
         Fri, 21 Feb 2020 03:28:10 +0000 (GMT)
 Received: from ozlabs.au.ibm.com (unknown [9.192.253.14])
-        by d06av23.portsmouth.uk.ibm.com (Postfix) with ESMTP;
+        by d06av26.portsmouth.uk.ibm.com (Postfix) with ESMTP;
         Fri, 21 Feb 2020 03:28:10 +0000 (GMT)
 Received: from adsilva.ozlabs.ibm.com (haven.au.ibm.com [9.192.254.114])
         (using TLSv1.2 with cipher AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by ozlabs.au.ibm.com (Postfix) with ESMTPSA id 7B369A03DD;
+        by ozlabs.au.ibm.com (Postfix) with ESMTPSA id CA2C4A03E2;
         Fri, 21 Feb 2020 14:28:03 +1100 (AEDT)
 From:   "Alastair D'Silva" <alastair@au1.ibm.com>
 To:     alastair@d-silva.org
@@ -87,25 +87,25 @@ Cc:     "Aneesh Kumar K . V" <aneesh.kumar@linux.ibm.com>,
         Alexey Kardashevskiy <aik@ozlabs.ru>,
         linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
         linux-nvdimm@lists.01.org, linux-mm@kvack.org
-Subject: [PATCH v3 16/27] powerpc/powernv/pmem: Register a character device for userspace to interact with
-Date:   Fri, 21 Feb 2020 14:27:09 +1100
+Subject: [PATCH v3 21/27] powerpc/powernv/pmem: Add an IOCTL to request controller health & perf data
+Date:   Fri, 21 Feb 2020 14:27:14 +1100
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20200221032720.33893-1-alastair@au1.ibm.com>
 References: <20200221032720.33893-1-alastair@au1.ibm.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-TM-AS-GCONF: 00
-x-cbid: 20022103-0012-0000-0000-00000388D1D4
+x-cbid: 20022103-0020-0000-0000-000003AC221B
 X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 20022103-0013-0000-0000-000021C56A75
-Message-Id: <20200221032720.33893-17-alastair@au1.ibm.com>
+x-cbparentid: 20022103-0021-0000-0000-000022042A3E
+Message-Id: <20200221032720.33893-22-alastair@au1.ibm.com>
 X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.572
  definitions=2020-02-20_19:2020-02-19,2020-02-20 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- suspectscore=3 clxscore=1015 mlxlogscore=999 mlxscore=0 adultscore=0
- lowpriorityscore=0 malwarescore=0 spamscore=0 impostorscore=0 phishscore=0
- bulkscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2001150001 definitions=main-2002210021
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 malwarescore=0
+ lowpriorityscore=0 clxscore=1015 adultscore=0 bulkscore=0
+ priorityscore=1501 mlxscore=0 impostorscore=0 suspectscore=1 spamscore=0
+ mlxlogscore=622 phishscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.12.0-2001150001 definitions=main-2002210021
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
@@ -113,202 +113,62 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Alastair D'Silva <alastair@d-silva.org>
 
-This patch introduces a character device (/dev/ocxl-scmX) which further
-patches will use to interact with userspace.
+When health & performance data is requested from the controller,
+it responds with an error log containing the requested information.
+
+This patch allows the request to me issued via an IOCTL.
 
 Signed-off-by: Alastair D'Silva <alastair@d-silva.org>
 ---
- arch/powerpc/platforms/powernv/pmem/ocxl.c    | 116 +++++++++++++++++-
- .../platforms/powernv/pmem/ocxl_internal.h    |   2 +
- 2 files changed, 116 insertions(+), 2 deletions(-)
+ arch/powerpc/platforms/powernv/pmem/ocxl.c | 16 ++++++++++++++++
+ include/uapi/nvdimm/ocxl-pmem.h            |  1 +
+ 2 files changed, 17 insertions(+)
 
 diff --git a/arch/powerpc/platforms/powernv/pmem/ocxl.c b/arch/powerpc/platforms/powernv/pmem/ocxl.c
-index b8bd7e703b19..63109a870d2c 100644
+index e46696d3cc36..081883a8247a 100644
 --- a/arch/powerpc/platforms/powernv/pmem/ocxl.c
 +++ b/arch/powerpc/platforms/powernv/pmem/ocxl.c
-@@ -10,6 +10,7 @@
- #include <misc/ocxl.h>
- #include <linux/delay.h>
- #include <linux/ndctl.h>
-+#include <linux/fs.h>
- #include <linux/mm_types.h>
- #include <linux/memory_hotplug.h>
- #include "ocxl_internal.h"
-@@ -339,6 +340,9 @@ static void free_ocxlpmem(struct ocxlpmem *ocxlpmem)
- 
- 	free_minor(ocxlpmem);
- 
-+	if (ocxlpmem->cdev.owner)
-+		cdev_del(&ocxlpmem->cdev);
-+
- 	if (ocxlpmem->metadata_addr)
- 		devm_memunmap(&ocxlpmem->dev, ocxlpmem->metadata_addr);
- 
-@@ -396,6 +400,70 @@ static int ocxlpmem_register(struct ocxlpmem *ocxlpmem)
- 	return device_register(&ocxlpmem->dev);
+@@ -1000,6 +1000,18 @@ static int ioctl_event_check(struct ocxlpmem *ocxlpmem, u64 __user *uarg)
+ 	return rc;
  }
  
-+static void ocxlpmem_put(struct ocxlpmem *ocxlpmem)
-+{
-+	put_device(&ocxlpmem->dev);
-+}
-+
-+static struct ocxlpmem *ocxlpmem_get(struct ocxlpmem *ocxlpmem)
-+{
-+	return (get_device(&ocxlpmem->dev) == NULL) ? NULL : ocxlpmem;
-+}
-+
-+static struct ocxlpmem *find_and_get_ocxlpmem(dev_t devno)
-+{
-+	struct ocxlpmem *ocxlpmem;
-+	int minor = MINOR(devno);
-+	/*
-+	 * We don't declare an RCU critical section here, as our AFU
-+	 * is protected by a reference counter on the device. By the time the
-+	 * minor number of a device is removed from the idr, the ref count of
-+	 * the device is already at 0, so no user API will access that AFU and
-+	 * this function can't return it.
-+	 */
-+	ocxlpmem = idr_find(&minors_idr, minor);
-+	if (ocxlpmem)
-+		ocxlpmem_get(ocxlpmem);
-+	return ocxlpmem;
-+}
-+
-+static int file_open(struct inode *inode, struct file *file)
-+{
-+	struct ocxlpmem *ocxlpmem;
-+
-+	ocxlpmem = find_and_get_ocxlpmem(inode->i_rdev);
-+	if (!ocxlpmem)
-+		return -ENODEV;
-+
-+	file->private_data = ocxlpmem;
-+	return 0;
-+}
-+
-+static int file_release(struct inode *inode, struct file *file)
-+{
-+	struct ocxlpmem *ocxlpmem = file->private_data;
-+
-+	ocxlpmem_put(ocxlpmem);
-+	return 0;
-+}
-+
-+static const struct file_operations fops = {
-+	.owner		= THIS_MODULE,
-+	.open		= file_open,
-+	.release	= file_release,
-+};
-+
 +/**
-+ * create_cdev() - Create the chardev in /dev for the device
-+ * @ocxlpmem: the SCM metadata
++ * req_controller_health_perf() - Request controller health & performance data
++ * @ocxlpmem: the device metadata
 + * Return: 0 on success, negative on failure
 + */
-+static int create_cdev(struct ocxlpmem *ocxlpmem)
++int req_controller_health_perf(struct ocxlpmem *ocxlpmem)
 +{
-+	cdev_init(&ocxlpmem->cdev, &fops);
-+	return cdev_add(&ocxlpmem->cdev, ocxlpmem->dev.devt, 1);
++	return ocxl_global_mmio_set64(ocxlpmem->ocxl_afu, GLOBAL_MMIO_HCI,
++				      OCXL_LITTLE_ENDIAN,
++				      GLOBAL_MMIO_HCI_REQ_HEALTH_PERF);
 +}
 +
- /**
-  * ocxlpmem_remove() - Free an OpenCAPI persistent memory device
-  * @pdev: the PCI device information struct
-@@ -572,6 +640,11 @@ static int probe(struct pci_dev *pdev, const struct pci_device_id *ent)
- 		goto err;
+ static long file_ioctl(struct file *file, unsigned int cmd, unsigned long args)
+ {
+ 	struct ocxlpmem *ocxlpmem = file->private_data;
+@@ -1037,6 +1049,10 @@ static long file_ioctl(struct file *file, unsigned int cmd, unsigned long args)
+ 	case IOCTL_OCXL_PMEM_EVENT_CHECK:
+ 		rc = ioctl_event_check(ocxlpmem, (u64 __user *)args);
+ 		break;
++
++	case IOCTL_OCXL_PMEM_REQUEST_HEALTH:
++		rc = req_controller_health_perf(ocxlpmem);
++		break;
  	}
  
-+	if (create_cdev(ocxlpmem)) {
-+		dev_err(&pdev->dev, "Could not create character device\n");
-+		goto err;
-+	}
-+
- 	elapsed = 0;
- 	timeout = ocxlpmem->readiness_timeout + ocxlpmem->memory_available_timeout;
- 	while (!is_usable(ocxlpmem, false)) {
-@@ -613,20 +686,59 @@ static struct pci_driver pci_driver = {
- 	.shutdown = ocxlpmem_remove,
- };
+ 	return rc;
+diff --git a/include/uapi/nvdimm/ocxl-pmem.h b/include/uapi/nvdimm/ocxl-pmem.h
+index 988eb0bc413d..0d03abb44001 100644
+--- a/include/uapi/nvdimm/ocxl-pmem.h
++++ b/include/uapi/nvdimm/ocxl-pmem.h
+@@ -90,5 +90,6 @@ struct ioctl_ocxl_pmem_eventfd {
+ #define IOCTL_OCXL_PMEM_CONTROLLER_STATS		_IO(OCXL_PMEM_MAGIC, 0x05)
+ #define IOCTL_OCXL_PMEM_EVENTFD				_IOW(OCXL_PMEM_MAGIC, 0x06, struct ioctl_ocxl_pmem_eventfd)
+ #define IOCTL_OCXL_PMEM_EVENT_CHECK			_IOR(OCXL_PMEM_MAGIC, 0x07, __u64)
++#define IOCTL_OCXL_PMEM_REQUEST_HEALTH			_IO(OCXL_PMEM_MAGIC, 0x08)
  
-+static int file_init(void)
-+{
-+	int rc;
-+
-+	mutex_init(&minors_idr_lock);
-+	idr_init(&minors_idr);
-+
-+	rc = alloc_chrdev_region(&ocxlpmem_dev, 0, NUM_MINORS, "ocxl-pmem");
-+	if (rc) {
-+		idr_destroy(&minors_idr);
-+		pr_err("Unable to allocate OpenCAPI persistent memory major number: %d\n", rc);
-+		return rc;
-+	}
-+
-+	ocxlpmem_class = class_create(THIS_MODULE, "ocxl-pmem");
-+	if (IS_ERR(ocxlpmem_class)) {
-+		idr_destroy(&minors_idr);
-+		pr_err("Unable to create ocxl-pmem class\n");
-+		unregister_chrdev_region(ocxlpmem_dev, NUM_MINORS);
-+		return PTR_ERR(ocxlpmem_class);
-+	}
-+
-+	return 0;
-+}
-+
-+static void file_exit(void)
-+{
-+	class_destroy(ocxlpmem_class);
-+	unregister_chrdev_region(ocxlpmem_dev, NUM_MINORS);
-+	idr_destroy(&minors_idr);
-+}
-+
- static int __init ocxlpmem_init(void)
- {
--	int rc = 0;
-+	int rc;
- 
--	rc = pci_register_driver(&pci_driver);
-+	rc = file_init();
- 	if (rc)
- 		return rc;
- 
-+	rc = pci_register_driver(&pci_driver);
-+	if (rc) {
-+		file_exit();
-+		return rc;
-+	}
-+
- 	return 0;
- }
- 
- static void ocxlpmem_exit(void)
- {
- 	pci_unregister_driver(&pci_driver);
-+	file_exit();
- }
- 
- module_init(ocxlpmem_init);
-diff --git a/arch/powerpc/platforms/powernv/pmem/ocxl_internal.h b/arch/powerpc/platforms/powernv/pmem/ocxl_internal.h
-index 28e2020f6355..d2d81fec7bb1 100644
---- a/arch/powerpc/platforms/powernv/pmem/ocxl_internal.h
-+++ b/arch/powerpc/platforms/powernv/pmem/ocxl_internal.h
-@@ -2,6 +2,7 @@
- // Copyright 2019 IBM Corp.
- 
- #include <linux/pci.h>
-+#include <linux/cdev.h>
- #include <misc/ocxl.h>
- #include <linux/libnvdimm.h>
- #include <linux/mm.h>
-@@ -99,6 +100,7 @@ struct ocxlpmem_function0 {
- struct ocxlpmem {
- 	struct device dev;
- 	struct pci_dev *pdev;
-+	struct cdev cdev;
- 	struct ocxl_fn *ocxl_fn;
- 	struct nd_interleave_set nd_set;
- 	struct nvdimm_bus_descriptor bus_desc;
+ #endif /* _UAPI_OCXL_SCM_H */
 -- 
 2.24.1
 
