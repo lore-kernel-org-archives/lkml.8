@@ -5,49 +5,51 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 82FC7C35641
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 08:49:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B580EC35640
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 08:49:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5A1932465D
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 08:49:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7BCB620722
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 08:49:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582274978;
-	bh=CqYiNBMlMWHKkp/lCav82O14317gOiqR2e73IbrS+zI=;
+	s=default; t=1582274981;
+	bh=uTLnBEJERTGry/cuDv6VzwuoL0a2YHXZt5HbDHNk0wA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=aCUE0tQcDBaikWPc9FwGD0Eaxg4ROApc5ocFsylvXDX3nHi1HpmkupCmPZb7yTrlk
-	 nUGZgZOwZG4fPb4zZCyz0LFXMt66Hi2KqVQuxPcHzu4FY6L3OxMFcRTLvSdpgTZuct
-	 0CBaBCB+v0FJMSM23ABzIJnIpUSG2CFS4zxlcxhw=
+	b=rCm/sKggirQrl2S+ill2VjRq6l+KY0LvmdRc5YkIh4IXPIA7TAEW1Ru5Q58WDVOxd
+	 pmS9q1KP0Zn9d2uKYuN7qZkgxofpHr/PiCQbjsf8XH/zHJQydz7oOxqMKAE0L9yCNd
+	 aZiqylGtbP7LB8GDWQm7I23m+eoId8wa+jkL3pyQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728255AbgBUHpD (ORCPT
+        id S2388240AbgBUItj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Feb 2020 02:45:03 -0500
-Received: from mail.kernel.org ([198.145.29.99]:39990 "EHLO mail.kernel.org"
+        Fri, 21 Feb 2020 03:49:39 -0500
+Received: from mail.kernel.org ([198.145.29.99]:40106 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728208AbgBUHpB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Feb 2020 02:45:01 -0500
+        id S1727063AbgBUHpG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 21 Feb 2020 02:45:06 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id DE448222C4;
-        Fri, 21 Feb 2020 07:44:59 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 16DD624656;
+        Fri, 21 Feb 2020 07:45:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1582271100;
-        bh=CqYiNBMlMWHKkp/lCav82O14317gOiqR2e73IbrS+zI=;
+        s=default; t=1582271105;
+        bh=uTLnBEJERTGry/cuDv6VzwuoL0a2YHXZt5HbDHNk0wA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Q5qnbLbsXZrQSl3BDKtpj9wK3vkWvDP5EDAGG+2gT605+chwOlSBkxCY8hz+VuYjz
-         XDQn7K09j3Sh4ob+ja4DeA3kk8roN7vPxIQER1Z5mNZ+VW+Djd81xNepw2KZlRT7sw
-         ayZklIBm3YvJMVBVt0MT9606dEvqX+VD/1Nb1ewo=
+        b=XWoqsMAwUM5Mb3shTyj0gwLwHjjAY4w6T0DKPSIWiVJe8fyTRW4p2oQ7HGuKZ2WHU
+         utBwYZ7H4p7EgkW9DA3wImisSTNZwC3VVztI4M0MY76OzJ5XZ6KUB8bs9v0zGbRw/L
+         qR/vq3gqON/I7ysO1OANOlhwVqYVxlpnGXlf2YC8=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Takashi Sakamoto <o-takashi@sakamocchi.jp>,
-        Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.de>,
+        stable@vger.kernel.org, Chen-Yu Tsai <wens@csie.org>,
+        Maxime Ripard <mripard@kernel.org>,
+        Sakari Ailus <sakari.ailus@linux.intel.com>,
+        Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.5 032/399] ALSA: ctl: allow TLV read operation for callback type of element in locked case
-Date:   Fri, 21 Feb 2020 08:35:57 +0100
-Message-Id: <20200221072405.496012264@linuxfoundation.org>
+Subject: [PATCH 5.5 042/399] media: sun4i-csi: Fix data sampling polarity handling
+Date:   Fri, 21 Feb 2020 08:36:07 +0100
+Message-Id: <20200221072406.455489326@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200221072402.315346745@linuxfoundation.org>
 References: <20200221072402.315346745@linuxfoundation.org>
@@ -60,58 +62,43 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Takashi Sakamoto <o-takashi@sakamocchi.jp>
+From: Chen-Yu Tsai <wens@csie.org>
 
-[ Upstream commit d61fe22c2ae42d9fd76c34ef4224064cca4b04b0 ]
+[ Upstream commit cf9e6d5dbdd56ef2aa72f28c806711c4293c8848 ]
 
-A design of ALSA control core allows applications to execute three
-operations for TLV feature; read, write and command. Furthermore, it
-allows driver developers to process the operations by two ways; allocated
-array or callback function. In the former, read operation is just allowed,
-thus developers uses the latter when device driver supports variety of
-models or the target model is expected to dynamically change information
-stored in TLV container.
+The CLK_POL field specifies whether data is sampled on the falling or
+rising edge of PCLK, not whether the data lines are active high or low.
+Evidence of this can be found in the timing diagram labeled "horizontal
+size setting and pixel clock timing".
 
-The core also allows applications to lock any element so that the other
-applications can't perform write operation to the element for element
-value and TLV information. When the element is locked, write and command
-operation for TLV information are prohibited as well as element value.
-Any read operation should be allowed in the case.
+Fix the setting by checking the correct flag, V4L2_MBUS_PCLK_SAMPLE_RISING.
+While at it, reorder the three polarity flag checks so HSYNC and VSYNC
+are grouped together.
 
-At present, when an element has callback function for TLV information,
-TLV read operation returns EPERM if the element is locked. On the
-other hand, the read operation is success when an element has allocated
-array for TLV information. In both cases, read operation is success for
-element value expectedly.
-
-This commit fixes the bug. This change can be backported to v4.14
-kernel or later.
-
-Signed-off-by: Takashi Sakamoto <o-takashi@sakamocchi.jp>
-Reviewed-by: Jaroslav Kysela <perex@perex.cz>
-Link: https://lore.kernel.org/r/20191223093347.15279-1-o-takashi@sakamocchi.jp
-Signed-off-by: Takashi Iwai <tiwai@suse.de>
+Fixes: 577bbf23b758 ("media: sunxi: Add A10 CSI driver")
+Signed-off-by: Chen-Yu Tsai <wens@csie.org>
+Acked-by: Maxime Ripard <mripard@kernel.org>
+Signed-off-by: Sakari Ailus <sakari.ailus@linux.intel.com>
+Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- sound/core/control.c | 5 +++--
- 1 file changed, 3 insertions(+), 2 deletions(-)
+ drivers/media/platform/sunxi/sun4i-csi/sun4i_dma.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/sound/core/control.c b/sound/core/control.c
-index 7a4d8690ce41f..08ca7666e84cf 100644
---- a/sound/core/control.c
-+++ b/sound/core/control.c
-@@ -1430,8 +1430,9 @@ static int call_tlv_handler(struct snd_ctl_file *file, int op_flag,
- 	if (kctl->tlv.c == NULL)
- 		return -ENXIO;
+diff --git a/drivers/media/platform/sunxi/sun4i-csi/sun4i_dma.c b/drivers/media/platform/sunxi/sun4i-csi/sun4i_dma.c
+index d6979e11a67b2..8b567d0f019bf 100644
+--- a/drivers/media/platform/sunxi/sun4i-csi/sun4i_dma.c
++++ b/drivers/media/platform/sunxi/sun4i-csi/sun4i_dma.c
+@@ -279,8 +279,8 @@ static int sun4i_csi_start_streaming(struct vb2_queue *vq, unsigned int count)
+ 	       csi->regs + CSI_WIN_CTRL_H_REG);
  
--	/* When locked, this is unavailable. */
--	if (vd->owner != NULL && vd->owner != file)
-+	/* Write and command operations are not allowed for locked element. */
-+	if (op_flag != SNDRV_CTL_TLV_OP_READ &&
-+	    vd->owner != NULL && vd->owner != file)
- 		return -EPERM;
- 
- 	return kctl->tlv.c(kctl, op_flag, size, buf);
+ 	hsync_pol = !!(bus->flags & V4L2_MBUS_HSYNC_ACTIVE_HIGH);
+-	pclk_pol = !!(bus->flags & V4L2_MBUS_DATA_ACTIVE_HIGH);
+ 	vsync_pol = !!(bus->flags & V4L2_MBUS_VSYNC_ACTIVE_HIGH);
++	pclk_pol = !!(bus->flags & V4L2_MBUS_PCLK_SAMPLE_RISING);
+ 	writel(CSI_CFG_INPUT_FMT(csi_fmt->input) |
+ 	       CSI_CFG_OUTPUT_FMT(csi_fmt->output) |
+ 	       CSI_CFG_VSYNC_POL(vsync_pol) |
 -- 
 2.20.1
 
