@@ -2,162 +2,91 @@ Return-Path: <SRS0=1210=4J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1,USER_IN_DEF_DKIM_WL autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D1458C11D00
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 00:06:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C7A2AC11D25
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 00:11:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A65512071E
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 00:06:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9DFD52071E
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 00:11:07 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b="YaGJ1WcJ"
+	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="Gqbbv60b"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729444AbgBUAGu (ORCPT
+        id S1729435AbgBUALG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Feb 2020 19:06:50 -0500
-Received: from mail-pj1-f68.google.com ([209.85.216.68]:37774 "EHLO
-        mail-pj1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729353AbgBUAGu (ORCPT
+        Thu, 20 Feb 2020 19:11:06 -0500
+Received: from linux.microsoft.com ([13.77.154.182]:43026 "EHLO
+        linux.microsoft.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729373AbgBUALF (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Feb 2020 19:06:50 -0500
-Received: by mail-pj1-f68.google.com with SMTP id m13so213949pjb.2
-        for <linux-kernel@vger.kernel.org>; Thu, 20 Feb 2020 16:06:49 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=broadcom.com; s=google;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-transfer-encoding:content-language;
-        bh=2SZEgD5g5TBz11BF0RQOXvwvVsuErja6hQBhQx9iqtI=;
-        b=YaGJ1WcJmrZ9+UccHzdSAh0ocSCrEkLtIKG+wxpLLF5UCP4a9dn/4qDx6NEQEadWCH
-         K6NzCNrgRJZaIu8hAHddRJAPGjbZSsZTwPOdqZtEpnYEay7Gouyomz3ZPxoyE78CDS+Y
-         0/yJ9nzBOwSj/1cvAmJByGdfRF82SHRVeKCiQ=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-transfer-encoding
-         :content-language;
-        bh=2SZEgD5g5TBz11BF0RQOXvwvVsuErja6hQBhQx9iqtI=;
-        b=sqfCnhFvVayUTo4/udRXsodLPWAngD55zVPAYGK9ASB5JjOAp+6Uzb1dFGL/eu6yie
-         b/vZpsyAvnUclBbOdJ+1bAPgiTnP44xYHnTHCOpRRXjHEvx1FPZ5Upjwa3ylWsvN7NnG
-         Ees23sD5BYRIOHk3pCaRqFCbsTMUsQRIqSS2HzXOKZ2ADiQ1Tw1/4ydU6ykHbmw6NDbS
-         KjKTZzIGPESbhEAuIvXKfB+YhLqZfeqMw/nWVZNy2G78uUN7ncdPwgNyxTL3bji/52yk
-         PwoUsCrZQl9WsZ0fap2oskG6fZo7eKVJbvE/JgWIMqYA9E5h24EuDztNBjVdX8uz6mmM
-         rRRQ==
-X-Gm-Message-State: APjAAAVj/h6zM5d5Ai3pKEz+VABwAqkkeAMAjqOXHSMZyy6nwqKGobP4
-        Vt1YNrymtTIP3xQbZnzl3AHmfw==
-X-Google-Smtp-Source: APXvYqw9fUeVqImRN3Q03UIMQbkuQySGlRq4FWfWYNUs3nc8AjQHb2oXb636cz8lJotP6M35Bxu35Q==
-X-Received: by 2002:a17:90a:8545:: with SMTP id a5mr6523527pjw.43.1582243609242;
-        Thu, 20 Feb 2020 16:06:49 -0800 (PST)
-Received: from [10.136.13.65] ([192.19.228.250])
-        by smtp.gmail.com with ESMTPSA id x10sm706267pfi.180.2020.02.20.16.06.46
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 20 Feb 2020 16:06:48 -0800 (PST)
-Subject: Re: [PATCH v2 6/7] misc: bcm-vk: add Broadcom VK driver
-To:     Randy Dunlap <rdunlap@infradead.org>,
-        Luis Chamberlain <mcgrof@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        David Brown <david.brown@linaro.org>,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        Shuah Khan <shuah@kernel.org>, bjorn.andersson@linaro.org,
-        Shuah Khan <skhan@linuxfoundation.org>,
-        Arnd Bergmann <arnd@arndb.de>
-Cc:     "Rafael J . Wysocki" <rafael@kernel.org>,
-        linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org,
-        BCM Kernel Feedback <bcm-kernel-feedback-list@broadcom.com>,
-        Olof Johansson <olof@lixom.net>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Dan Carpenter <dan.carpenter@oracle.com>,
-        Colin Ian King <colin.king@canonical.com>,
-        Kees Cook <keescook@chromium.org>,
-        Takashi Iwai <tiwai@suse.de>, linux-kselftest@vger.kernel.org,
-        Andy Gross <agross@kernel.org>,
-        Desmond Yan <desmond.yan@broadcom.com>,
-        James Hu <james.hu@broadcom.com>
-References: <20200220004825.23372-1-scott.branden@broadcom.com>
- <20200220004825.23372-7-scott.branden@broadcom.com>
- <827a4520-95ce-5264-90d9-ed730e5918e6@infradead.org>
-From:   Scott Branden <scott.branden@broadcom.com>
-Message-ID: <22c48aaf-21e2-56ab-3f40-e497a69cd936@broadcom.com>
-Date:   Thu, 20 Feb 2020 16:06:44 -0800
+        Thu, 20 Feb 2020 19:11:05 -0500
+Received: from [10.131.86.135] (unknown [131.107.147.135])
+        by linux.microsoft.com (Postfix) with ESMTPSA id BF7BB2007690;
+        Thu, 20 Feb 2020 16:11:04 -0800 (PST)
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com BF7BB2007690
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
+        s=default; t=1582243864;
+        bh=zorJuQNXMnYkPB8Xz0B94YjuA01qeWQy1dyOh6tP+f8=;
+        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
+        b=Gqbbv60bmqz+5F6mV/kCW3gQZGu3DycmYrYLu8NMF+ZHg4LfwU14I/TTaZKt2yHJK
+         qvlueHIQyEPAkSW+rKdO9Uxo1MXtzS5rI8gxvOKqp0qt1eantpqZaiLAqKmy20yLRv
+         mHenMROitS8e5qUS0mN4zJi8tgUR3TtD4JvjaDLk=
+Subject: Re: [PATCH v26 10/22] x86/sgx: Linux Enclave Driver
+To:     Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>,
+        Sean Christopherson <sean.j.christopherson@intel.com>
+Cc:     linux-kernel@vger.kernel.org, x86@kernel.org,
+        linux-sgx@vger.kernel.org, akpm@linux-foundation.org,
+        dave.hansen@intel.com, nhorman@redhat.com, npmccallum@redhat.com,
+        haitao.huang@intel.com, andriy.shevchenko@linux.intel.com,
+        tglx@linutronix.de, kai.svahn@intel.com, bp@alien8.de,
+        josh@joshtriplett.org, luto@kernel.org, kai.huang@intel.com,
+        rientjes@google.com, cedric.xing@intel.com, puiterwijk@redhat.com,
+        linux-security-module@vger.kernel.org,
+        Suresh Siddha <suresh.b.siddha@intel.com>,
+        Haitao Huang <haitao.huang@linux.intel.com>
+References: <20200209212609.7928-1-jarkko.sakkinen@linux.intel.com>
+ <20200209212609.7928-11-jarkko.sakkinen@linux.intel.com>
+ <15074c16-4832-456d-dd12-af8548e46d6d@linux.microsoft.com>
+ <20200220181345.GD3972@linux.intel.com>
+ <7738b3cf-fb32-5306-5740-59974444e327@linux.microsoft.com>
+ <20200220184842.GE3972@linux.intel.com>
+ <20200220221607.GB26618@linux.intel.com>
+From:   Jordan Hand <jorhand@linux.microsoft.com>
+Message-ID: <2c077197-a8a7-feac-58ea-e901c92fb58b@linux.microsoft.com>
+Date:   Thu, 20 Feb 2020 16:11:04 -0800
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
  Thunderbird/68.4.1
 MIME-Version: 1.0
-In-Reply-To: <827a4520-95ce-5264-90d9-ed730e5918e6@infradead.org>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200220221607.GB26618@linux.intel.com>
+Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Randy,
+On 2/20/20 2:16 PM, Jarkko Sakkinen wrote:
+> On Thu, Feb 20, 2020 at 10:48:42AM -0800, Sean Christopherson wrote:
+>> My biggest concern for allowing PROT_EXEC if RIE is that it would result
+>> in #PF(SGX) (#GP on Skylake) due to an EPCM violation if the enclave
+>> actually tried to execute from such a page.  This isn't a problem for the
+>> kernel as the fault will be reported cleanly through the vDSO (or get
+>> delivered as a SIGSEGV if the enclave isn't entered through the vDSO), but
+>> it's a bit weird for userspace as userspace will see the #PF(SGX) and
+>> likely assume the EPC was lost, e.g. silently restart the enclave instead
+>> of logging an error that the enclave is broken.
+> 
+> I think right way to fix the current implementation is to -EACCES mmap()
+> (and mprotect) when !!(current->personality & READ_IMPLIES_EXEC).
+> 
 
-On 2020-02-19 5:04 p.m., Randy Dunlap wrote:
-> Hi,
->
-> On 2/19/20 4:48 PM, Scott Branden wrote:
->> diff --git a/drivers/misc/bcm-vk/Kconfig b/drivers/misc/bcm-vk/Kconfig
->> new file mode 100644
->> index 000000000000..c75dfb89a38d
->> --- /dev/null
->> +++ b/drivers/misc/bcm-vk/Kconfig
->> @@ -0,0 +1,42 @@
->> +# SPDX-License-Identifier: GPL-2.0-only
->> +#
->> +# Broadcom VK device
->> +#
->> +config BCM_VK
->> +	tristate "Support for Broadcom VK Accelerators"
->> +	depends on PCI_MSI
->> +	default m
-> Need to justify default m. Normally we don't add drivers as enabled unless
-> they are required for basic (boot) operation.
-Will remove default m as not needed to boot.  Interesting other offload 
-engines misc/ocxl/Kconfig and misc/cxl/Kconfig have default m.
->
->> +	help
->> +	  Select this option to enable support for Broadcom
->> +	  VK Accelerators.  VK is used for performing
->> +	  specific video offload processing.  This driver enables
->> +	  userspace programs to access these accelerators via /dev/bcm-vk.N
->> +	  devices.
->> +
->> +	  If unsure, say N.
->> +
->> +if BCM_VK
->> +
->> +config BCM_VK_H2VK_VERIFY_AND_RETRY
->> +	bool "Host To VK Verifiy Data and Retry"
-> 	                 Verify
->
->> +	help
->> +	  Turn on to verify the data passed down to VK is good,
->> +	  and if not, do a retry until it succeeds.
-> No timeout on that retry?
-This is only enabled for debug purposes or fpga workarounds - no need 
-for a timeout.
->
->> +	  This is a debug/workaround on FPGA PCIe timing issues
->> +	  but may be found useful for debugging other PCIe hardware issues.
->> +	  Small performance loss by enabling this debug config.
->> +	  For properly operating PCIe hardware no need to enable this.
->> +
->> +	  If unsure, say N.
->> +
->> +config BCM_VK_QSTATS
->> +	bool "VK Queue Statistics"
->> +	help
->> +	  Turn on to enable Queue Statistics.
->> +	  These are useful for debugging purposes.
->> +	  Some performance loss by enabling this debug config.
->> +	  For properly operating PCIe hardware no need to enable this.
->> +
->> +	  If unsure, say N.
->> +
->> +endif
-> cheers.
+I agree. It still means userspace code with an executable stack can't
+mmap/mprotect enclave pages and request PROT_READ but the check you've
+proposed would more consistently enforce this which is easier to
+understand from userspace perspective.
 
+-Jordan
