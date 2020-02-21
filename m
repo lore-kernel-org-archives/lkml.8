@@ -2,85 +2,87 @@ Return-Path: <SRS0=1210=4J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 68F43C3565B
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 18:28:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5B342C35646
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 18:29:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 35810206DB
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 18:28:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 39146206DB
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 18:29:08 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729577AbgBUS2P (ORCPT
+        id S1727966AbgBUS3H (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Feb 2020 13:28:15 -0500
-Received: from mga12.intel.com ([192.55.52.136]:11194 "EHLO mga12.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726066AbgBUS2O (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Feb 2020 13:28:14 -0500
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from fmsmga007.fm.intel.com ([10.253.24.52])
-  by fmsmga106.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 21 Feb 2020 10:28:14 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.70,469,1574150400"; 
-   d="scan'208";a="229271098"
-Received: from sjchrist-coffee.jf.intel.com (HELO linux.intel.com) ([10.54.74.202])
-  by fmsmga007.fm.intel.com with ESMTP; 21 Feb 2020 10:28:13 -0800
-Date:   Fri, 21 Feb 2020 10:28:13 -0800
-From:   Sean Christopherson <sean.j.christopherson@intel.com>
-To:     Paolo Bonzini <pbonzini@redhat.com>
-Cc:     Vitaly Kuznetsov <vkuznets@redhat.com>,
-        Wanpeng Li <wanpengli@tencent.com>,
-        Jim Mattson <jmattson@google.com>,
-        Joerg Roedel <joro@8bytes.org>, kvm@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 3/3] KVM: x86: Move #PF retry tracking variables into
- emulation context
-Message-ID: <20200221182813.GK12665@linux.intel.com>
-References: <20200218230310.29410-1-sean.j.christopherson@intel.com>
- <20200218230310.29410-4-sean.j.christopherson@intel.com>
- <40c8d560-1a5d-d592-5682-720980ca3dd9@redhat.com>
- <20200219151644.GB15888@linux.intel.com>
- <d5626891-82f6-0a0c-401c-89a901a8455d@redhat.com>
+        Fri, 21 Feb 2020 13:29:07 -0500
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:60402 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725947AbgBUS3G (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 21 Feb 2020 13:29:06 -0500
+Received: from pps.filterd (m0098394.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 01LIJMMO074257;
+        Fri, 21 Feb 2020 13:29:01 -0500
+Received: from pps.reinject (localhost [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2y8ubwngjh-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Fri, 21 Feb 2020 13:29:01 -0500
+Received: from m0098394.ppops.net (m0098394.ppops.net [127.0.0.1])
+        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 01LIM942088355;
+        Fri, 21 Feb 2020 13:29:00 -0500
+Received: from ppma02wdc.us.ibm.com (aa.5b.37a9.ip4.static.sl-reverse.com [169.55.91.170])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2y8ubwnghx-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Fri, 21 Feb 2020 13:29:00 -0500
+Received: from pps.filterd (ppma02wdc.us.ibm.com [127.0.0.1])
+        by ppma02wdc.us.ibm.com (8.16.0.27/8.16.0.27) with SMTP id 01LIKZ2b015385;
+        Fri, 21 Feb 2020 18:28:59 GMT
+Received: from b01cxnp23034.gho.pok.ibm.com (b01cxnp23034.gho.pok.ibm.com [9.57.198.29])
+        by ppma02wdc.us.ibm.com with ESMTP id 2y689770hv-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Fri, 21 Feb 2020 18:28:59 +0000
+Received: from b01ledav004.gho.pok.ibm.com (b01ledav004.gho.pok.ibm.com [9.57.199.109])
+        by b01cxnp23034.gho.pok.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 01LISxZK54722924
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Fri, 21 Feb 2020 18:28:59 GMT
+Received: from b01ledav004.gho.pok.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 2836A112063;
+        Fri, 21 Feb 2020 18:28:59 +0000 (GMT)
+Received: from b01ledav004.gho.pok.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 03ED8112061;
+        Fri, 21 Feb 2020 18:28:58 +0000 (GMT)
+Received: from localhost (unknown [9.41.179.160])
+        by b01ledav004.gho.pok.ibm.com (Postfix) with ESMTP;
+        Fri, 21 Feb 2020 18:28:58 +0000 (GMT)
+From:   Nathan Lynch <nathanl@linux.ibm.com>
+To:     Scott Cheloha <cheloha@linux.ibm.com>
+Cc:     Nathan Fontenont <ndfont@gmail.com>,
+        Rick Lindsley <ricklind@linux.vnet.ibm.com>,
+        linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org,
+        Michael Ellerman <mpe@ellerman.id.au>
+Subject: Re: [PATCH] powerpc/drmem: cache LMBs in xarray to accelerate lookup
+In-Reply-To: <8736b3u7xn.fsf@linux.ibm.com>
+References: <20200128221113.17158-1-cheloha@linux.ibm.com> <8736b3u7xn.fsf@linux.ibm.com>
+Date:   Fri, 21 Feb 2020 12:28:58 -0600
+Message-ID: <87y2svssk5.fsf@linux.ibm.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <d5626891-82f6-0a0c-401c-89a901a8455d@redhat.com>
-User-Agent: Mutt/1.5.24 (2015-08-30)
+Content-Type: text/plain
+X-TM-AS-GCONF: 00
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.572
+ definitions=2020-02-21_06:2020-02-21,2020-02-21 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 impostorscore=0 phishscore=0
+ spamscore=0 priorityscore=1501 mlxlogscore=948 bulkscore=0 malwarescore=0
+ lowpriorityscore=0 clxscore=1015 adultscore=0 mlxscore=0 suspectscore=1
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2001150001
+ definitions=main-2002210140
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Feb 21, 2020 at 06:14:03PM +0100, Paolo Bonzini wrote:
-> On 19/02/20 16:16, Sean Christopherson wrote:
-> > The easy solution to that is to move retry_instruction() into emulate.c.
-> > That would also allow making x86_page_table_writing_insn() static.  All
-> > other functions invoked from retry_instruction() are exposed via kvm_host.h.
-> 
-> emulate.c is supposed to invoke no (or almost no) function outside the
-> ctxt->ops struct.  In particular, retry_instruction() invokes
-> kvm_mmu_gva_to_gpa_write and kvm_mmu_unprotect_page.
+Nathan Lynch <nathanl@linux.ibm.com> writes:
 
-Ah, right.  We could split the logic, e.g.
+> Hi Scott, I've owed you a follow-up on this for a couple weeks, sorry.
 
-	if (x86_retry_pf_instruction(ctxt, cr2_or_gpa, emulation_type)) {
-		gpa_t = gpa = cr2_or_gpa;
-
-		if (!vcpu->arch.mmu->direct_map)
-			gpa = kvm_mmu_gva_to_gpa_write(vcpu, cr2_or_gpa, NULL);
-
-		kvm_mmu_unprotect_page(vcpu->kvm, gpa_to_gfn(gpa));
-		return 1;
-	}
-
-but that's probably a net negative in terms of clarity.  And there's also
-vcpu->arch.write_fault_to_shadow_pgtable, which is consumed only by
-reexecute_instruction(), and I 100% agree that that variable should stay
-in vcpu->arch.  Moving one flag used to retry #PF instructions and not the
-other would be weird.
-
-That was a long winded way of saying I agree we should drop this patch :-)
+I see v2 was posted as I was writing this, so I'll follow up on that
+thread.
