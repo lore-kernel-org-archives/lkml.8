@@ -2,110 +2,109 @@ Return-Path: <SRS0=1210=4J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9A83CC35656
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 15:16:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 620D4C35657
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 15:18:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6B62F208E4
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 15:16:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 39D18206EF
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 15:18:09 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="XHqUsWyZ"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="NO1zhZOh"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729080AbgBUPQ1 (ORCPT
+        id S1728970AbgBUPSH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Feb 2020 10:16:27 -0500
-Received: from mail-pf1-f195.google.com ([209.85.210.195]:41025 "EHLO
-        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727053AbgBUPQ0 (ORCPT
+        Fri, 21 Feb 2020 10:18:07 -0500
+Received: from mail-wr1-f68.google.com ([209.85.221.68]:33686 "EHLO
+        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727352AbgBUPSH (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Feb 2020 10:16:26 -0500
-Received: by mail-pf1-f195.google.com with SMTP id j9so1360485pfa.8;
-        Fri, 21 Feb 2020 07:16:26 -0800 (PST)
+        Fri, 21 Feb 2020 10:18:07 -0500
+Received: by mail-wr1-f68.google.com with SMTP id u6so2500326wrt.0
+        for <linux-kernel@vger.kernel.org>; Fri, 21 Feb 2020 07:18:05 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=tt5oxns5lx1f646f1QThGbvv5Sl7/0SEXMWJEeaTqzA=;
-        b=XHqUsWyZpog7dGkF2/1vy0XTPQVmrc3GfB3/7gzT7AU3Ppp54bRgKBWQQpv+YyAVRN
-         jDMqH+xq/B+yeFSi3bYiI5FZNGGHqK1r8BV2ERyHgdHhpiDtRrQqVvZwvTfuFtru9nVj
-         qI1rsAUke55VKP+GCASFz9QPRyXZi88rhE4eonRwFKX5c+tHUZmF4plFiYnLG1twO6Ey
-         5gYd8TzBIrgRhdlORR8VXXZH4ghI84aGmmCZZPfXxqBlDMCWfWUt/ldK26EhaK77/toL
-         Act9AWx73QCjqqZswcrdKNb/fKAGr8OhCdHETSjBXF45dUAyf/cMMUEwKFVX00cZR9qN
-         JA3A==
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to
+         :user-agent;
+        bh=Xs/pMjB7/UAvSRgUz3vf1voZfhwMsJXveHYGhWrFdvo=;
+        b=NO1zhZOhc4ARAQOoDIEF4wqjZjFyeXwv4Q9EpWeiulrTX4z0YI9oOGa++ikmL9YdJJ
+         O/9SNaMQxkwKlI8g9bQJjhf3ES/rFORqa2ih6KaT2njQrNKM5UjaNb4oInmF3p3T2f1I
+         /ySfV94lkY+9aK2rOyZ0Ap8BG9NmrFYTrL6mBxH8ch7Wx+HMUWNEAZnt0fCL0oAXdLCD
+         /E7fqFePw81uyJWTQ/sYKovEFEvmo5LJZC8nEGn/T0hSrQ7JqX0rlEHkqedBdm7AT5YO
+         qFQjtb2TPO667cv6xQ+/akFDyilzU4b4EZXUuknHiN0Ha3iG2wPqQQvCVzd4KZ1LDRjZ
+         YINw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=tt5oxns5lx1f646f1QThGbvv5Sl7/0SEXMWJEeaTqzA=;
-        b=Q1vJMywX3nYNdkwFrSezoxNoWq5tGP56idpTEQ3sdxwQcO0/00RTue+GSmJDYoD3ve
-         QureQxs0c6eYPAcqax2bbNy6O5umMcjvD9bTLyxeG0tZGNk9hNWkB2wh9XoWYk5Q0zCz
-         lXlrbNepZqYw3zw//0eMHEMycb0Z1m10DX92lve3sKuyA91hKH9eWiRB7BuEMb0XgDti
-         vBi92Mf9/7KYAmfEfALdnmXrWrvK6TuZQdFcc0ng3fMMb/YqLHyHsRCiHdoRsjI0bs6J
-         R6HOrq8DkgtXZPzT+/72Md7aEN+U/rbLEkNw5m/HRsBG7mypykM3zNL84+kyNp2c8DIb
-         1F1Q==
-X-Gm-Message-State: APjAAAW+ZOXxiCrEyuyvcLMlpq0Qoq67QHWWyeOp+1nfYWKpjX8BTI5N
-        1c3EqaYaFKc2YCehfHuAUbHwTOcc81I=
-X-Google-Smtp-Source: APXvYqwS0Ob3VOCEHDxy3+rkM8vo9z+IVglG6FEY74TcvgDu8IUNl4kEuR2PSPfRYJ/RKzHHRSRkaQ==
-X-Received: by 2002:a63:5124:: with SMTP id f36mr1105111pgb.288.1582298186030;
-        Fri, 21 Feb 2020 07:16:26 -0800 (PST)
-Received: from localhost.localdomain ([103.87.57.170])
-        by smtp.googlemail.com with ESMTPSA id q25sm3239490pfg.41.2020.02.21.07.16.22
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 21 Feb 2020 07:16:25 -0800 (PST)
-From:   Amol Grover <frextrite@gmail.com>
-To:     Eric Dumazet <edumazet@google.com>,
-        "David S . Miller" <davem@davemloft.net>,
-        Alexey Kuznetsov <kuznet@ms2.inr.ac.ru>,
-        Hideaki YOSHIFUJI <yoshfuji@linux-ipv6.org>,
-        Jakub Kicinski <kuba@kernel.org>
-Cc:     linux-kernel@vger.kernel.org,
-        linux-kernel-mentees@lists.linuxfoundation.org,
-        Joel Fernandes <joel@joelfernandes.org>,
-        Madhuparna Bhowmik <madhuparnabhowmik10@gmail.com>,
-        "Paul E . McKenney" <paulmck@kernel.org>, netdev@vger.kernel.org,
-        Amol Grover <frextrite@gmail.com>
-Subject: [PATCH] tcp, ulp: Pass lockdep expression to RCU lists
-Date:   Fri, 21 Feb 2020 20:45:38 +0530
-Message-Id: <20200221151537.12334-1-frextrite@gmail.com>
-X-Mailer: git-send-email 2.24.1
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to:user-agent;
+        bh=Xs/pMjB7/UAvSRgUz3vf1voZfhwMsJXveHYGhWrFdvo=;
+        b=FH3Jkzw7d/3p0Fin9jo3FTz+AO33SlctgUi1q0YY1X/N23vhnHRlcZI704bIiAlGWF
+         6CApXMZl8lg1wA4J6cxu4bfT+2wCzd2/dv7VZNY6XfOqHjtp5OVxHFVPDG3Z3qjjjE6h
+         Gm3lVrlYn4VNiHr//JlrnIb4eK69fzuk7/U/VlsOYNr7yJVCC+I5mc4cDEcEveHo4d0S
+         RkT7JT2bxreCd/nYi11JO5cXfRDN3+Us8UxlVWy414fFJinGD9frcbpNprskSthZLz9K
+         nTpqpk3eiITdwNrY1SoK0V1riTBjbhVmRbe/6AtgIZBKzLm8LgxtGdeIvNNDAYAaiSnq
+         39sA==
+X-Gm-Message-State: APjAAAVa0280xEkcWMIzP6bYb6aVhRK+22gglU+r4iUrEdprBeV9nBO5
+        6hcw3lg0+5AhiNZeSd0tJEm4sA==
+X-Google-Smtp-Source: APXvYqwsPdNWWNY83b7chQBTdWo7WqG2J+ICUWV8+47fBy1kGKEOcw6OoXUj2py6PednFjj5sxl96w==
+X-Received: by 2002:adf:eb48:: with SMTP id u8mr48640392wrn.283.1582298285067;
+        Fri, 21 Feb 2020 07:18:05 -0800 (PST)
+Received: from linaro.org ([2a01:e34:ed2f:f020:903b:a048:f296:e3ae])
+        by smtp.gmail.com with ESMTPSA id s15sm4277441wrp.4.2020.02.21.07.18.03
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Fri, 21 Feb 2020 07:18:04 -0800 (PST)
+Date:   Fri, 21 Feb 2020 16:18:02 +0100
+From:   Daniel Lezcano <daniel.lezcano@linaro.org>
+To:     Dmitry Osipenko <digetx@gmail.com>
+Cc:     Thierry Reding <thierry.reding@gmail.com>,
+        Jonathan Hunter <jonathanh@nvidia.com>,
+        Peter De Schrijver <pdeschrijver@nvidia.com>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        =?utf-8?B?TWljaGHFgiBNaXJvc8WCYXc=?= <mirq-linux@rere.qmqm.pl>,
+        Jasper Korten <jja2000@gmail.com>,
+        David Heidelberg <david@ixit.cz>,
+        Peter Geis <pgwipeout@gmail.com>, linux-pm@vger.kernel.org,
+        linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v9 06/17] ARM: tegra: Expose PM functions required for
+ new cpuidle driver
+Message-ID: <20200221151802.GK10516@linaro.org>
+References: <20200212235134.12638-1-digetx@gmail.com>
+ <20200212235134.12638-7-digetx@gmail.com>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200212235134.12638-7-digetx@gmail.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-tcp_ulp_list is traversed using list_for_each_entry_rcu
-outside an RCU read-side critical section but under the protection
-of tcp_ulp_list_lock.
+On Thu, Feb 13, 2020 at 02:51:23AM +0300, Dmitry Osipenko wrote:
+> The upcoming unified CPUIDLE driver will be added to the drivers/cpuidle/
+> directory and it will require all these exposed Tegra PM-core functions.
+> 
+> Acked-by: Peter De Schrijver <pdeschrijver@nvidia.com>
+> Tested-by: Peter Geis <pgwipeout@gmail.com>
+> Tested-by: Jasper Korten <jja2000@gmail.com>
+> Tested-by: David Heidelberg <david@ixit.cz>
+> Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
 
-Hence, add corresponding lockdep expression to silence false-positive
-warnings, and harden RCU lists.t
+Acked-by: Daniel Lezcano <daniel.lezcano@linaro.org>
 
-Signed-off-by: Amol Grover <frextrite@gmail.com>
----
- net/ipv4/tcp_ulp.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+[ ... ]
 
-diff --git a/net/ipv4/tcp_ulp.c b/net/ipv4/tcp_ulp.c
-index 38d3ad141161..b9e55759054e 100644
---- a/net/ipv4/tcp_ulp.c
-+++ b/net/ipv4/tcp_ulp.c
-@@ -22,7 +22,8 @@ static struct tcp_ulp_ops *tcp_ulp_find(const char *name)
- {
- 	struct tcp_ulp_ops *e;
- 
--	list_for_each_entry_rcu(e, &tcp_ulp_list, list) {
-+	list_for_each_entry_rcu(e, &tcp_ulp_list, list,
-+				lockdep_is_held(&tcp_ulp_list_lock)) {
- 		if (strcmp(e->name, name) == 0)
- 			return e;
- 	}
+
 -- 
-2.24.1
 
+ <http://www.linaro.org/> Linaro.org │ Open source software for ARM SoCs
+
+Follow Linaro:  <http://www.facebook.com/pages/Linaro> Facebook |
+<http://twitter.com/#!/linaroorg> Twitter |
+<http://www.linaro.org/linaro-blog/> Blog
