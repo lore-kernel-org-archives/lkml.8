@@ -2,143 +2,92 @@ Return-Path: <SRS0=1210=4J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 08C37C35646
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 12:38:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 764D9C35646
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 12:39:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C7F102071E
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 12:38:43 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=silabs.onmicrosoft.com header.i=@silabs.onmicrosoft.com header.b="bGEO33Sq"
+	by mail.kernel.org (Postfix) with ESMTP id 4E1312071E
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 12:39:06 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1582288746;
+	bh=sNAVKTRBngWU+2TyxJb4sGncGp00AoX91Oj9U2SgxNo=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=LpVBgOTSYK4vBOJ+15nOlW9JPKLBZlf6l1O09vqRnki/K9Z9b1VRU1l35WMxZxwhV
+	 pNd6tjf5JKHOIi7n4XCdujuluvZTpNdgx9n8dulRihLUxw9rGxMMC5xZ0WzUp9fXqU
+	 N2g/Cku0DcxRIwpKh4a+G12DBSH5OxRO6nHFRQfk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728147AbgBUMim (ORCPT
+        id S1728235AbgBUMjF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Feb 2020 07:38:42 -0500
-Received: from mail-eopbgr680086.outbound.protection.outlook.com ([40.107.68.86]:30117
-        "EHLO NAM04-BN3-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726976AbgBUMim (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Feb 2020 07:38:42 -0500
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=N9dpLENZaR02ClvEcVl+sMEDeFcgU67B0EHsU6otePENIHVPZnvdzj7v0b0SV/YOkyz2YoBz2CSQBn6R+p321SjbyQJVZorKivhQUunX4QlxU2o3Gr3SSI2tr/w8HKuHB5CE6N7viMRi1mA7H8kOl2RpO+i+TuHoQbRIoHWK8yeMD2mytwGGfrjyvKwMMmOxn5l3VSoY8qJjjKq1Bp5K7CIFzEfqQUsyLNHqLpN6DMK8sQNmSN/ZXwQiZmMC2KpRZIcx8IZIWkts27mtTsPuIVwhDnhFHl7NSSHWOzDdwgjbS02+6IUOSTpjvf0y3V2oin5ZyzL6BY48X77zYC84pg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=QY5RNjBpuT223hlON31e8EY8SrvwN1q8f0F5o7mAVFY=;
- b=LYsRUN9pq+YmMuuUKcL0vm8ZAfKyTMDURSDosztfZCiUE8UcG/Z6ychaWCkDkct7z7GGBjr5V2EvWCupL6unY3d7ffvwDI0REhNYa+Oh+oT1eA25bgorYx2RcsizAvXAq9zTRQD/k77gJI3ZuDKykep9/MPQc79AhYpaFBHLe+WsLXy75Jj5sujcGHi5ZDUR9O71H+ZaO7NulU9J+HoxCCUAnhmWcVwfjXaed8kc60lS/3ZvaWwgILUDC2k+RfmVSdt86FQx34kjRm9vd0n4Q1NWlCJUxAoPcJKL+7qwBCTtkoaJwHECpNwxD9bRRP6O4nz+2DpO4zJKK4r8oQN4fA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=silabs.com; dmarc=pass action=none header.from=silabs.com;
- dkim=pass header.d=silabs.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=silabs.onmicrosoft.com; s=selector2-silabs-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=QY5RNjBpuT223hlON31e8EY8SrvwN1q8f0F5o7mAVFY=;
- b=bGEO33SqZoKNTKBiQmxnY52Hotg65YC3/Y1k4hZM7P2vfjXIA0RZqvX/WA0T3rEyiYxvRc+Wc24pTJNNiBgcpfdTOuk5pEQ0mQnjbQ5cmNXNx5mRpn8Nu2O9kT5SChQ1ffbgmtuVxQ950cbWfmgegT6HaAJVxLPB77FA496ZHUc=
-Received: from MN2PR11MB4063.namprd11.prod.outlook.com (2603:10b6:208:13f::22)
- by MN2PR11MB4429.namprd11.prod.outlook.com (2603:10b6:208:18b::12) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2729.31; Fri, 21 Feb
- 2020 12:38:38 +0000
-Received: from MN2PR11MB4063.namprd11.prod.outlook.com
- ([fe80::ade4:5702:1c8b:a2b3]) by MN2PR11MB4063.namprd11.prod.outlook.com
- ([fe80::ade4:5702:1c8b:a2b3%7]) with mapi id 15.20.2729.033; Fri, 21 Feb 2020
- 12:38:37 +0000
-From:   =?iso-8859-1?Q?J=E9r=F4me_Pouiller?= <Jerome.Pouiller@silabs.com>
-To:     Johannes Berg <johannes@sipsolutions.net>
-CC:     "linux-wireless@vger.kernel.org" <linux-wireless@vger.kernel.org>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Jakub Kicinski <kuba@kernel.org>,
-        "David S . Miller" <davem@davemloft.net>
-Subject: Re: [PATCH 09/10] cfg80211: align documentation style of
- ieee80211_iface_combination
-Thread-Topic: [PATCH 09/10] cfg80211: align documentation style of
- ieee80211_iface_combination
-Thread-Index: AQHV6K3zmkarmgxVQ0OGCjaD/lmZqagljBmAgAAKNgA=
-Date:   Fri, 21 Feb 2020 12:38:37 +0000
-Message-ID: <10411162.7U3r8zC6Ku@pc-42>
-References: <20200221115604.594035-1-Jerome.Pouiller@silabs.com>
- <20200221115604.594035-9-Jerome.Pouiller@silabs.com>
- <bc10669e0572d69d22ee7ca67a19c7d03bacd6ed.camel@sipsolutions.net>
-In-Reply-To: <bc10669e0572d69d22ee7ca67a19c7d03bacd6ed.camel@sipsolutions.net>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=Jerome.Pouiller@silabs.com; 
-x-originating-ip: [37.71.187.125]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: afe8b2c9-8ce1-40df-ce90-08d7b6caf95e
-x-ms-traffictypediagnostic: MN2PR11MB4429:
-x-microsoft-antispam-prvs: <MN2PR11MB4429C96EDA0DCC176A672FB893120@MN2PR11MB4429.namprd11.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:9508;
-x-forefront-prvs: 0320B28BE1
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(7916004)(39860400002)(136003)(396003)(366004)(346002)(376002)(189003)(199004)(54906003)(6506007)(6916009)(81156014)(8936002)(26005)(8676002)(316002)(6512007)(64756008)(66446008)(81166006)(2906002)(6486002)(186003)(9686003)(478600001)(66946007)(91956017)(5660300002)(33716001)(86362001)(66476007)(66556008)(4326008)(76116006)(71200400001)(39026012);DIR:OUT;SFP:1101;SCL:1;SRVR:MN2PR11MB4429;H:MN2PR11MB4063.namprd11.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
-received-spf: None (protection.outlook.com: silabs.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: sVxHG1ckCdDm0slUXVrPQHldXkmDSAbpv9kLZWOPuty5gN6Dji7tu7HYuWC7TrHoPI8bGP54iEiBPDFpkhokm6ppw+RqkHoE/byNmkJrtnZzfQi9BG+ct4egjSpXzSe7NYxs3qh1SkOT4mG2gkfwR5d+gYkFFIb9dOJj1YppIgOqgUBu/qhf8eipFuLCpMeGnkKMcUHa3NnI7++rFTktZ0DTFc+LcnOQkppRYlvqZAlLQt9O95cbiaXI4CPmTPTctqukCqg3SUzsrJtVfbIQ2reFen0pRNECW6VvknqWZzyuYKTp5fd+Q2bDRfsrs1w3lNFlkkJgFeH2YRX1Z8oKECV3dURRi85F7ChLMD9Hz75Gn7crOV/XzoC4A5gMQt0CgBWShvcV774E7HFtsDtqBtORlLTuZoH6Q1BczHe4hZ2P1588oIDU8VC7FUAAR0xp5hY0Xy+EpYwIh2Bp8jQZpFQlOGvp/MBnM9eJqMaXndnNQgd37Ll2j8LSfAYn4Z6j
-x-ms-exchange-antispam-messagedata: Q+dq32WYQ0Nmag6EAsptdq59S3Hvs1y0wdPlPObiDR6FsaOV4hozzHWEx40TZb0TN4926xe9AbasaRTNaxwVOHmrPaj0WoLNqpZmbvCgZo9a/BIfxWSw+/9busrl5HH5lTLNmvd0x9Btrc7ozT4fMA==
-x-ms-exchange-transport-forked: True
-Content-Type: text/plain; charset="iso-8859-1"
-Content-ID: <BCFE23D13A64184C8DDAFB92016F33AF@namprd11.prod.outlook.com>
-Content-Transfer-Encoding: quoted-printable
+        Fri, 21 Feb 2020 07:39:05 -0500
+Received: from foss.arm.com ([217.140.110.172]:38474 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726976AbgBUMjE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 21 Feb 2020 07:39:04 -0500
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 590A130E;
+        Fri, 21 Feb 2020 04:39:04 -0800 (PST)
+Received: from localhost (unknown [10.37.6.21])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id C5D5B3F68F;
+        Fri, 21 Feb 2020 04:39:03 -0800 (PST)
+Date:   Fri, 21 Feb 2020 12:39:02 +0000
+From:   Mark Brown <broonie@kernel.org>
+To:     Sameer Pujar <spujar@nvidia.com>
+Cc:     perex@perex.cz, tiwai@suse.com, robh+dt@kernel.org,
+        lgirdwood@gmail.com, thierry.reding@gmail.com,
+        jonathanh@nvidia.com, digetx@gmail.com,
+        alsa-devel@alsa-project.org, devicetree@vger.kernel.org,
+        linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org,
+        sharadg@nvidia.com, mkumard@nvidia.com, viswanathl@nvidia.com,
+        rlokhande@nvidia.com, dramesh@nvidia.com, atalambedu@nvidia.com
+Subject: Re: [PATCH v3 01/10] dt-bindings: sound: tegra: add DT binding for
+ AHUB
+Message-ID: <20200221123902.GC5546@sirena.org.uk>
+References: <1582180492-25297-1-git-send-email-spujar@nvidia.com>
+ <1582180492-25297-2-git-send-email-spujar@nvidia.com>
 MIME-Version: 1.0
-X-OriginatorOrg: silabs.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: afe8b2c9-8ce1-40df-ce90-08d7b6caf95e
-X-MS-Exchange-CrossTenant-originalarrivaltime: 21 Feb 2020 12:38:37.8724
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 54dbd822-5231-4b20-944d-6f4abcd541fb
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: WN+2cji0lHB7gH8IfekoBhfxh+WBu1pOmwvgQ3bTNzR7/SHJxR/3+2h8UH8Te6ha5B4G/dJBOcE6OcmJ+dMKiA==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: MN2PR11MB4429
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="32u276st3Jlj2kUU"
+Content-Disposition: inline
+In-Reply-To: <1582180492-25297-2-git-send-email-spujar@nvidia.com>
+X-Cookie: Dead? No excuse for laying off work.
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Friday 21 February 2020 13:02:20 CET Johannes Berg wrote:
-> CAUTION: This email originated from outside of the organization. Do not c=
-lick links or open attachments unless you recognize the sender and know the=
- content is safe.
->=20
->=20
-> On Fri, 2020-02-21 at 12:56 +0100, Jerome Pouiller wrote:
-> >
-> > + *   intervals:
-> > + *       * =3D 0: all beacon intervals for different interface must be=
- same.
-> > + *       * > 0: any beacon interval for the interface part of this
-> > + *         combination AND GCD of all beacon intervals from beaconing
-> > + *         interfaces of this combination must be greater or equal to =
-this
-> > + *         value.
->=20
-> Hmm. I have a feeling I actually split this one out because
->=20
-> > -      * =3D 0
-> > -      *   all beacon intervals for different interface must be same.
-> > -      * > 0
-> > -      *   any beacon interval for the interface part of this combinati=
-on AND
-> > -      *   GCD of all beacon intervals from beaconing interfaces of thi=
-s
-> > -      *   combination must be greater or equal to this value.
->=20
-> This generates the nicer output, not with bullets but as a definition
-> list or something.
-Indeed.
 
-Unfortunately, I hasn't been able to use the same syntax in struct
-description: if sphinx find a blank line, it considers that the rest of
-the input is the long description of the struct.
+--32u276st3Jlj2kUU
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
---=20
-J=E9r=F4me Pouiller
+On Thu, Feb 20, 2020 at 12:04:43PM +0530, Sameer Pujar wrote:
+> Audio Hub (AHUB) comprises a collection of hardware accelerators for audio
+> pre-processing and post-processing and a programmable full crossbar for
+> audio routing across these accelerators. This patch adds YAML schema for DT
 
+Please submit patches using subject lines reflecting the style for the
+subsystem, this makes it easier for people to identify relevant patches.
+Look at what existing commits in the area you're changing are doing and
+make sure your subject lines visually resemble what they're doing.
+There's no need to resubmit to fix this alone.
+
+--32u276st3Jlj2kUU
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl5Pz2UACgkQJNaLcl1U
+h9AHeQf+Piae6cY2B5ePno99lDsl5PHxfR24xDy2XG2/hPqCtEqWXT3EcJlRacLQ
+a6tlKMXvOgdQ4wYzctGGH1SBj00qM6k/Wl4hYaCqxyNdk/6L9VlDM/3S2Aab8Src
+CQ9RHkGUgsWqeAH5KsZ/nFWy9jJ43f+s6hhuJXizxMhAylNlMMvFF7cbahu0nqnu
+K/sB0GN3f+TYIkqCjbuSRdIobC54aMU2mubTk7a0dgEKHfl69Zb8HBVHgjhkSBGf
+r8av9AKtl0yOFQIqVA9PhlOkgwsYdCa5mJKULWK728W/pbPGr+c96RqEgo8vijQg
+bKLrSY6B+ljUVJnpaT5KvMMEYSPevQ==
+=SKbZ
+-----END PGP SIGNATURE-----
+
+--32u276st3Jlj2kUU--
