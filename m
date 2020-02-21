@@ -2,52 +2,53 @@ Return-Path: <SRS0=1210=4J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9C17CC35642
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 08:13:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 38863C35640
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 08:13:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 733C62467B
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 08:13:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0D42820578
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 08:13:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582272780;
-	bh=+wNQcH+TJ4zlI48ZRTuJb8YhmGGiHfyRhbMPl65NfmM=;
+	s=default; t=1582272783;
+	bh=2o1WWQoBMGzmDpPyFqcjlSZ5s7gYYUk7TLywGJkq9G4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=WA350O7IaSaDjMVYRQYeXAnPUIipOwjaRE74U2Gjkcoq8n5BjWSqJbSM9QuXIZDX3
-	 yh4M4YU1zOuO+t4AL3IrFhZEIY10QsLgj0wHtr0blwTaHbJtjYQyodPBJxHXi66Ctz
-	 Ymjs7LFC/lN5eg5WOm6ttn3x6YoOmtmwBXoaw4Kg=
+	b=FeqVN+ro0ISSMIGEdcPik5oK5PlBhSvc9QRoaJOb3lF26xvtw5mFe01Xsux1lGEWw
+	 Fzys2xzLhjYunsmX0buFyoRVgzIatUQWJSq41CqVumJPcEBn1xhKuD6WNrFQyo8ItO
+	 tPSAujdZt255n2u9SFJdaal1iQSOR68ezkrqzyg0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732930AbgBUIM7 (ORCPT
+        id S1732938AbgBUINB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Feb 2020 03:12:59 -0500
-Received: from mail.kernel.org ([198.145.29.99]:48846 "EHLO mail.kernel.org"
+        Fri, 21 Feb 2020 03:13:01 -0500
+Received: from mail.kernel.org ([198.145.29.99]:48792 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732576AbgBUIM5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Feb 2020 03:12:57 -0500
+        id S1732376AbgBUIMy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 21 Feb 2020 03:12:54 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id CDA0A24673;
-        Fri, 21 Feb 2020 08:12:55 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A01FF20722;
+        Fri, 21 Feb 2020 08:12:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1582272776;
-        bh=+wNQcH+TJ4zlI48ZRTuJb8YhmGGiHfyRhbMPl65NfmM=;
+        s=default; t=1582272773;
+        bh=2o1WWQoBMGzmDpPyFqcjlSZ5s7gYYUk7TLywGJkq9G4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=U+ol6EAYpLN6amV0CTO5RNxmHrdJ3zIe8XYuE4i+SMILgzUGtK1nxlf2+CiRST/oi
-         QUw5XKQs+zRywACcjfp0Csmx2niQCaEQUWsOEVLQyoHU+avuwPB17gdyMkUEoU0uqC
-         2pasi0uLY4+OuxBbFEuZgaBdVG8ic4nOAqh4WrNw=
+        b=1xnZrYnVgtBKyfB2RmGzSbUwJ1Ho0vpURW0EcAgrbSUl0M5jq2aYTTAmmrPODrHkD
+         gwWOe2NbyX0A1JnYy/KJcpex3Ll7f1c+3YrN4K94kwGS8QQeIaXRILk0rnzrBHP0Fr
+         1BRmdJ9svoJp21JAVFyNl9WXeoQH3y4nf28Mx3dE=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Kai Vehmanen <kai.vehmanen@linux.intel.com>,
-        Takashi Iwai <tiwai@suse.de>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 271/344] ALSA: hda/hdmi - add retry logic to parse_intel_hdmi()
-Date:   Fri, 21 Feb 2020 08:41:10 +0100
-Message-Id: <20200221072414.317823120@linuxfoundation.org>
+        stable@vger.kernel.org, John Garry <john.garry@huawei.com>,
+        Marc Zyngier <maz@kernel.org>,
+        Hanjun Guo <guohanjun@huawei.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.4 270/344] irqchip/mbigen: Set driver .suppress_bind_attrs to avoid remove problems
+Date:   Fri, 21 Feb 2020 08:41:09 +0100
+Message-Id: <20200221072414.226372865@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200221072349.335551332@linuxfoundation.org>
 References: <20200221072349.335551332@linuxfoundation.org>
@@ -60,50 +61,124 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Kai Vehmanen <kai.vehmanen@linux.intel.com>
+From: John Garry <john.garry@huawei.com>
 
-[ Upstream commit 2928fa0a97ebb9549cb877fdc99aed9b95438c3a ]
+[ Upstream commit d6152e6ec9e2171280436f7b31a571509b9287e1 ]
 
-The initial snd_hda_get_sub_node() can fail on certain
-devices (e.g. some Chromebook models using Intel GLK).
-The failure rate is very low, but as this is is part of
-the probe process, end-user impact is high.
+The following crash can be seen for setting
+CONFIG_DEBUG_TEST_DRIVER_REMOVE=y for DT FW (which some people still use):
 
-In observed cases, related hardware status registers have
-expected values, but the node query still fails. Retrying
-the node query does seem to help, so fix the problem by
-adding retry logic to the query. This does not impact
-non-Intel platforms.
+Hisilicon MBIGEN-V2 60080000.interrupt-controller: Failed to create mbi-gen irqdomain
+Hisilicon MBIGEN-V2: probe of 60080000.interrupt-controller failed with error -12
 
-BugLink: https://github.com/thesofproject/linux/issues/1642
-Signed-off-by: Kai Vehmanen <kai.vehmanen@linux.intel.com>
-Reviewed-by: Takashi Iwai <tiwai@suse.de>
-Link: https://lore.kernel.org/r/20200120160117.29130-4-kai.vehmanen@linux.intel.com
-Signed-off-by: Takashi Iwai <tiwai@suse.de>
+[...]
+
+Unable to handle kernel paging request at virtual address 0000000000005008
+ Mem abort info:
+   ESR = 0x96000004
+   EC = 0x25: DABT (current EL), IL = 32 bits
+   SET = 0, FnV = 0
+   EA = 0, S1PTW = 0
+ Data abort info:
+   ISV = 0, ISS = 0x00000004
+   CM = 0, WnR = 0
+ user pgtable: 4k pages, 48-bit VAs, pgdp=0000041fb9990000
+ [0000000000005008] pgd=0000000000000000
+ Internal error: Oops: 96000004 [#1] PREEMPT SMP
+ Modules linked in:
+ CPU: 7 PID: 1 Comm: swapper/0 Not tainted 5.5.0-rc6-00002-g3fc42638a506-dirty #1622
+ Hardware name: Huawei Taishan 2280 /D05, BIOS Hisilicon D05 IT21 Nemo 2.0 RC0 04/18/2018
+ pstate: 40000085 (nZcv daIf -PAN -UAO)
+ pc : mbigen_set_type+0x38/0x60
+ lr : __irq_set_trigger+0x6c/0x188
+ sp : ffff800014b4b400
+ x29: ffff800014b4b400 x28: 0000000000000007
+ x27: 0000000000000000 x26: 0000000000000000
+ x25: ffff041fd83bd0d4 x24: ffff041fd83bd188
+ x23: 0000000000000000 x22: ffff80001193ce00
+ x21: 0000000000000004 x20: 0000000000000000
+ x19: ffff041fd83bd000 x18: ffffffffffffffff
+ x17: 0000000000000000 x16: 0000000000000000
+ x15: ffff8000119098c8 x14: ffff041fb94ec91c
+ x13: ffff041fb94ec1a1 x12: 0000000000000030
+ x11: 0101010101010101 x10: 0000000000000040
+ x9 : 0000000000000000 x8 : ffff041fb98c6680
+ x7 : ffff800014b4b380 x6 : ffff041fd81636c8
+ x5 : 0000000000000000 x4 : 000000000000025f
+ x3 : 0000000000005000 x2 : 0000000000005008
+ x1 : 0000000000000004 x0 : 0000000080000000
+ Call trace:
+  mbigen_set_type+0x38/0x60
+  __setup_irq+0x744/0x900
+  request_threaded_irq+0xe0/0x198
+  pcie_pme_probe+0x98/0x118
+  pcie_port_probe_service+0x38/0x78
+  really_probe+0xa0/0x3e0
+  driver_probe_device+0x58/0x100
+  __device_attach_driver+0x90/0xb0
+  bus_for_each_drv+0x64/0xc8
+  __device_attach+0xd8/0x138
+  device_initial_probe+0x10/0x18
+  bus_probe_device+0x90/0x98
+  device_add+0x4c4/0x770
+  device_register+0x1c/0x28
+  pcie_port_device_register+0x1e4/0x4f0
+  pcie_portdrv_probe+0x34/0xd8
+  local_pci_probe+0x3c/0xa0
+  pci_device_probe+0x128/0x1c0
+  really_probe+0xa0/0x3e0
+  driver_probe_device+0x58/0x100
+  __device_attach_driver+0x90/0xb0
+  bus_for_each_drv+0x64/0xc8
+  __device_attach+0xd8/0x138
+  device_attach+0x10/0x18
+  pci_bus_add_device+0x4c/0xb8
+  pci_bus_add_devices+0x38/0x88
+  pci_host_probe+0x3c/0xc0
+  pci_host_common_probe+0xf0/0x208
+  hisi_pcie_almost_ecam_probe+0x24/0x30
+  platform_drv_probe+0x50/0xa0
+  really_probe+0xa0/0x3e0
+  driver_probe_device+0x58/0x100
+  device_driver_attach+0x6c/0x90
+  __driver_attach+0x84/0xc8
+  bus_for_each_dev+0x74/0xc8
+  driver_attach+0x20/0x28
+  bus_add_driver+0x148/0x1f0
+  driver_register+0x60/0x110
+  __platform_driver_register+0x40/0x48
+  hisi_pcie_almost_ecam_driver_init+0x1c/0x24
+
+The specific problem here is that the mbigen driver real probe has failed
+as the mbigen_of_create_domain()->of_platform_device_create() call fails,
+the reason for that being that we never destroyed the platform device
+created during the remove test dry run and there is some conflict.
+
+Since we generally would never want to unbind this driver, and to save
+adding a driver tear down path for that, just set the driver
+.suppress_bind_attrs member to avoid this possibility.
+
+Signed-off-by: John Garry <john.garry@huawei.com>
+Signed-off-by: Marc Zyngier <maz@kernel.org>
+Reviewed-by: Hanjun Guo <guohanjun@huawei.com>
+Link: https://lore.kernel.org/r/1579196323-180137-1-git-send-email-john.garry@huawei.com
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- sound/pci/hda/patch_hdmi.c | 7 +++++--
- 1 file changed, 5 insertions(+), 2 deletions(-)
+ drivers/irqchip/irq-mbigen.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/sound/pci/hda/patch_hdmi.c b/sound/pci/hda/patch_hdmi.c
-index 8ac805a634f4e..307ca1f036762 100644
---- a/sound/pci/hda/patch_hdmi.c
-+++ b/sound/pci/hda/patch_hdmi.c
-@@ -2794,9 +2794,12 @@ static int alloc_intel_hdmi(struct hda_codec *codec)
- /* parse and post-process for Intel codecs */
- static int parse_intel_hdmi(struct hda_codec *codec)
- {
--	int err;
-+	int err, retries = 3;
-+
-+	do {
-+		err = hdmi_parse_codec(codec);
-+	} while (err < 0 && retries--);
- 
--	err = hdmi_parse_codec(codec);
- 	if (err < 0) {
- 		generic_spec_free(codec);
- 		return err;
+diff --git a/drivers/irqchip/irq-mbigen.c b/drivers/irqchip/irq-mbigen.c
+index 3f09f658e8e29..6b566bba263bd 100644
+--- a/drivers/irqchip/irq-mbigen.c
++++ b/drivers/irqchip/irq-mbigen.c
+@@ -374,6 +374,7 @@ static struct platform_driver mbigen_platform_driver = {
+ 		.name		= "Hisilicon MBIGEN-V2",
+ 		.of_match_table	= mbigen_of_match,
+ 		.acpi_match_table = ACPI_PTR(mbigen_acpi_match),
++		.suppress_bind_attrs = true,
+ 	},
+ 	.probe			= mbigen_device_probe,
+ };
 -- 
 2.20.1
 
