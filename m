@@ -2,156 +2,127 @@ Return-Path: <SRS0=1210=4J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BB9E6C35641
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 09:22:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AC79AC35640
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 09:22:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 85B8220722
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 09:22:33 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=citrix.com header.i=@citrix.com header.b="MFoYi+tE"
+	by mail.kernel.org (Postfix) with ESMTP id 7E9232073A
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 09:22:53 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1582276973;
+	bh=ALN0VHctPPGg0pxI3Em/Or50WMnH8i03K/5ZLFgljvs=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=qB9VzZ69n0ohNbzMX6avaB51LYitSUX861hnoCozgCidDvxiaJpIOTj0ite1ojOQ6
+	 LFYRhjI57+pxFD8lQ6k6/G2EVhfUA0OnMHqQxN5NdTWx/Ftqqam9kItgPK/A6+0jv1
+	 /VCmoVuiY8HtqwW1l3cBVKtwYBbC6lgIjGAO0Um0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727933AbgBUJWc (ORCPT
+        id S1727973AbgBUJWw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Feb 2020 04:22:32 -0500
-Received: from esa4.hc3370-68.iphmx.com ([216.71.155.144]:43788 "EHLO
-        esa4.hc3370-68.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726244AbgBUJWb (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Feb 2020 04:22:31 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
-  d=citrix.com; s=securemail; t=1582276950;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:content-transfer-encoding:in-reply-to;
-  bh=1o0dm0wP/9Dz9LlBZ6U1xeJE27JCYBLNrNyaJmSV7RA=;
-  b=MFoYi+tEl5BCR2wNmd5aWhFrnUXQDbqy9EzmBv+5Ij7a2pw+5LkAKqTj
-   yMl30d4+G1sbV3yQyvVXRX+8QwCBzC31Z+jjtbegpsndmqzOe6rOv7TUG
-   7nE42Yp91W0NmDeaoZoSdAWJULlCdPmhpfdMAR6T/QYJQlYWArAe/cLCh
-   0=;
-Authentication-Results: esa4.hc3370-68.iphmx.com; dkim=none (message not signed) header.i=none; spf=None smtp.pra=roger.pau@citrix.com; spf=Pass smtp.mailfrom=roger.pau@citrix.com; spf=None smtp.helo=postmaster@mail.citrix.com
-Received-SPF: None (esa4.hc3370-68.iphmx.com: no sender
-  authenticity information available from domain of
-  roger.pau@citrix.com) identity=pra; client-ip=162.221.158.21;
-  receiver=esa4.hc3370-68.iphmx.com;
-  envelope-from="roger.pau@citrix.com";
-  x-sender="roger.pau@citrix.com";
-  x-conformance=sidf_compatible
-Received-SPF: Pass (esa4.hc3370-68.iphmx.com: domain of
-  roger.pau@citrix.com designates 162.221.158.21 as permitted
-  sender) identity=mailfrom; client-ip=162.221.158.21;
-  receiver=esa4.hc3370-68.iphmx.com;
-  envelope-from="roger.pau@citrix.com";
-  x-sender="roger.pau@citrix.com";
-  x-conformance=sidf_compatible; x-record-type="v=spf1";
-  x-record-text="v=spf1 ip4:209.167.231.154 ip4:178.63.86.133
-  ip4:195.66.111.40/30 ip4:85.115.9.32/28 ip4:199.102.83.4
-  ip4:192.28.146.160 ip4:192.28.146.107 ip4:216.52.6.88
-  ip4:216.52.6.188 ip4:162.221.158.21 ip4:162.221.156.83
-  ip4:168.245.78.127 ~all"
-Received-SPF: None (esa4.hc3370-68.iphmx.com: no sender
-  authenticity information available from domain of
-  postmaster@mail.citrix.com) identity=helo;
-  client-ip=162.221.158.21; receiver=esa4.hc3370-68.iphmx.com;
-  envelope-from="roger.pau@citrix.com";
-  x-sender="postmaster@mail.citrix.com";
-  x-conformance=sidf_compatible
-IronPort-SDR: 2naM2fLXRcIEz8ci/DVJT0B1w7DqJ7CFF6pH3dGfAg8IDJnxKdg4pAIVGMLNM76zeD8JWQiYPu
- aCowGjUBDV4/+Jj8d2GFJ4juB5ltAKhgt2ZeugZnWy0t88xKRc5q2rSJI1SB5tCEG1FWZ5nlZw
- 0XpRIC+ckYLXsDK6/kM0cf6X8gOnCHMrrpTTVSe0V89LPhDLMpjyrXTuK2k0XFmXbmtzAWf1Tw
- ayuQD7J/bhQRq21Khs7UiVOkrPP/IlfRq6ASzfvfe513kMpID3AZbDw7cSKFXRHGtJyy5X4TFQ
- hfE=
-X-SBRS: 2.7
-X-MesageID: 13431188
-X-Ironport-Server: esa4.hc3370-68.iphmx.com
-X-Remote-IP: 162.221.158.21
-X-Policy: $RELAYED
-X-IronPort-AV: E=Sophos;i="5.70,467,1574139600"; 
-   d="scan'208";a="13431188"
-Date:   Fri, 21 Feb 2020 10:22:19 +0100
-From:   Roger Pau =?utf-8?B?TW9ubsOp?= <roger.pau@citrix.com>
-To:     "Durrant, Paul" <pdurrant@amazon.co.uk>
-CC:     "Agarwal, Anchal" <anchalag@amazon.com>,
-        "Valentin, Eduardo" <eduval@amazon.com>,
-        "len.brown@intel.com" <len.brown@intel.com>,
-        "peterz@infradead.org" <peterz@infradead.org>,
-        "benh@kernel.crashing.org" <benh@kernel.crashing.org>,
-        "x86@kernel.org" <x86@kernel.org>,
-        "linux-mm@kvack.org" <linux-mm@kvack.org>,
-        "pavel@ucw.cz" <pavel@ucw.cz>, "hpa@zytor.com" <hpa@zytor.com>,
-        "tglx@linutronix.de" <tglx@linutronix.de>,
-        "sstabellini@kernel.org" <sstabellini@kernel.org>,
-        "fllinden@amaozn.com" <fllinden@amaozn.com>,
-        "Kamata, Munehisa" <kamatam@amazon.com>,
-        "mingo@redhat.com" <mingo@redhat.com>,
-        "xen-devel@lists.xenproject.org" <xen-devel@lists.xenproject.org>,
-        "Singh, Balbir" <sblbir@amazon.com>,
-        "axboe@kernel.dk" <axboe@kernel.dk>,
-        "konrad.wilk@oracle.com" <konrad.wilk@oracle.com>,
-        "bp@alien8.de" <bp@alien8.de>,
-        "boris.ostrovsky@oracle.com" <boris.ostrovsky@oracle.com>,
-        "jgross@suse.com" <jgross@suse.com>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-        "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>,
-        "rjw@rjwysocki.net" <rjw@rjwysocki.net>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "vkuznets@redhat.com" <vkuznets@redhat.com>,
-        "davem@davemloft.net" <davem@davemloft.net>,
-        "Woodhouse, David" <dwmw@amazon.co.uk>
-Subject: Re: [Xen-devel] [RFC PATCH v3 06/12] xen-blkfront: add callbacks for
- PM suspend and hibernation
-Message-ID: <20200221092219.GU4679@Air-de-Roger>
-References: <20200217100509.GE4679@Air-de-Roger>
- <20200217230553.GA8100@dev-dsk-anchalag-2a-9c2d1d96.us-west-2.amazon.com>
- <20200218091611.GN4679@Air-de-Roger>
- <20200219180424.GA17584@dev-dsk-anchalag-2a-9c2d1d96.us-west-2.amazon.com>
- <20200220083904.GI4679@Air-de-Roger>
- <f986b845491b47cc8469d88e2e65e2a7@EX13D32EUC003.ant.amazon.com>
- <20200220154507.GO4679@Air-de-Roger>
- <c9662397256a4568a5cc7d70a84940e5@EX13D32EUC003.ant.amazon.com>
- <20200220164839.GR4679@Air-de-Roger>
- <e42fa35800f04b6f953e4af87f2c1a02@EX13D32EUC003.ant.amazon.com>
+        Fri, 21 Feb 2020 04:22:52 -0500
+Received: from mail.kernel.org ([198.145.29.99]:38708 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726244AbgBUJWv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 21 Feb 2020 04:22:51 -0500
+Received: from willie-the-truck (236.31.169.217.in-addr.arpa [217.169.31.236])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4986C20722;
+        Fri, 21 Feb 2020 09:22:46 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1582276971;
+        bh=ALN0VHctPPGg0pxI3Em/Or50WMnH8i03K/5ZLFgljvs=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=VB4dS6ni6nuf+jC6BMCt6gKplNkZ3/m5PBW3FkqeN4wgkGtpqn1bKsDBuvTrJ40nU
+         6u5Usn9f6Bb+NGwxZO6u6WWC0zmyIvY8frgCGmdSIdv9092Tc9Y8Xp9eXSIwjJ+A/a
+         JDLU9Wrx30hZjTJymghhADO8Axxbu7RlmHBDelVo=
+Date:   Fri, 21 Feb 2020 09:22:43 +0000
+From:   Will Deacon <will@kernel.org>
+To:     Masahiro Yamada <masahiroy@kernel.org>
+Cc:     Marek Szyprowski <m.szyprowski@samsung.com>,
+        Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>,
+        X86 ML <x86@kernel.org>,
+        sparclinux <sparclinux@vger.kernel.org>,
+        Linux-sh list <linux-sh@vger.kernel.org>,
+        linux-um@lists.infradead.org,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Albert Ou <aou@eecs.berkeley.edu>,
+        Anton Ivanov <anton.ivanov@cambridgegreys.com>,
+        Borislav Petkov <bp@alien8.de>,
+        "David S. Miller" <davem@davemloft.net>,
+        Greentime Hu <green.hu@gmail.com>, Guo Ren <guoren@kernel.org>,
+        "H. Peter Anvin" <hpa@zytor.com>, Ingo Molnar <mingo@redhat.com>,
+        Jeff Dike <jdike@addtoit.com>, Nick Hu <nickhu@andestech.com>,
+        Palmer Dabbelt <palmer@dabbelt.com>,
+        Paul Walmsley <paul.walmsley@sifive.com>,
+        Rich Felker <dalias@libc.org>,
+        Richard Weinberger <richard@nod.at>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Vincent Chen <deanbo422@gmail.com>,
+        Yoshinori Sato <ysato@users.sourceforge.jp>,
+        "open list:SIFIVE DRIVERS" <linux-riscv@lists.infradead.org>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        Catalin Marinas <catalin.marinas@arm.com>
+Subject: Re: [PATCH] kbuild: use KBUILD_DEFCONFIG as the fallback for
+ DEFCONFIG_LIST
+Message-ID: <20200221092242.GA11448@willie-the-truck>
+References: <CGME20200221085039eucas1p2b439c37eb04870cc020f452b7ad31929@eucas1p2.samsung.com>
+ <20200216154502.26478-1-masahiroy@kernel.org>
+ <e0212512-bc44-fc3a-a647-47eff86983b7@samsung.com>
+ <CAK7LNAQqsLnZc4h_XEMifS2hX+E39-vxD-BL5C59Aj+TaQo+eA@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <e42fa35800f04b6f953e4af87f2c1a02@EX13D32EUC003.ant.amazon.com>
-X-ClientProxiedBy: AMSPEX02CAS01.citrite.net (10.69.22.112) To
- AMSPEX02CL01.citrite.net (10.69.22.125)
+In-Reply-To: <CAK7LNAQqsLnZc4h_XEMifS2hX+E39-vxD-BL5C59Aj+TaQo+eA@mail.gmail.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Feb 20, 2020 at 05:01:52PM +0000, Durrant, Paul wrote:
-> > > Hopefully what I said above illustrates why it may not be 100% common.
-> > 
-> > Yes, that's fine. I don't expect it to be 100% common (as I guess
-> > that the hooks will have different prototypes), but I expect
-> > that routines can be shared, and that the approach taken can be the
-> > same.
-> > 
-> > For example one necessary difference will be that xenbus initiated
-> > suspend won't close the PV connection, in case suspension fails. On PM
-> > suspend you seem to always close the connection beforehand, so you
-> > will always have to re-negotiate on resume even if suspension failed.
-> > 
-> > What I'm mostly worried about is the different approach to ring
-> > draining. Ie: either xenbus is changed to freeze the queues and drain
-> > the shared rings, or PM uses the already existing logic of not
-> > flushing the rings an re-issuing in-flight requests on resume.
-> > 
+On Fri, Feb 21, 2020 at 06:18:50PM +0900, Masahiro Yamada wrote:
+> On Fri, Feb 21, 2020 at 5:50 PM Marek Szyprowski
+> <m.szyprowski@samsung.com> wrote:
+> > This patch landed in today's linux-next (next-20200221) and broke arm64
+> > builds:
+> >
+> > --->8---
+> >
+> > $ make ARCH=arm64 CROSS_COMPILE=aarch64-linux-gnu- defconfig
+> > *** Default configuration is based on 'defconfig'
+> > #
+> > # configuration written to .config
+> > #
+> > $ make ARCH=arm64 CROSS_COMPILE=aarch64-linux-gnu- Image.gz
+> > scripts/kconfig/conf  --syncconfig Kconfig
+> > scripts/kconfig/conf  --syncconfig Kconfig
+> > scripts/kconfig/conf  --syncconfig Kconfig
+> > scripts/kconfig/conf  --syncconfig Kconfig
+> > scripts/kconfig/conf  --syncconfig Kconfig
+> > ...
+> >
+> > (endless loop)
+> >
+> > --->8---
+> >
+> > Reverting it fixes the issue:
 > 
-> Yes, that's needs consideration. I don’t think the same semantic can be suitable for both. E.g. in a xen-suspend we need to freeze with as little processing as possible to avoid dirtying RAM late in the migration cycle, and we know that in-flight data can wait. But in a transition to S4 we need to make sure that at least all the in-flight blkif requests get completed, since they probably contain bits of the guest's memory image and that's not going to get saved any other way.
+> 
+> 
+> My bad.
+> 
+> This is because arch/arm64/Makefile does not define
+> KBUILD_DEFCONFIG.
+> 
+> 
+> 
+> I will drop it.
+> 
+> Sorry about that.
 
-Thanks, that makes sense and something along this lines should be
-added to the commit message IMO.
+Thanks, Masahiro.
 
-Wondering about S4, shouldn't we expect the queues to already be
-empty? As any subsystem that wanted to store something to disk should
-make sure requests have been successfully completed before
-suspending.
-
-Thanks, Roger.
+Will
