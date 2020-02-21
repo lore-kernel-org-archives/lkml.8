@@ -2,197 +2,310 @@ Return-Path: <SRS0=1210=4J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8D1A1C11D24
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 00:46:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6C350C11D25
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 00:49:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6CA64208CD
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 00:46:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 314D4207FD
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 00:49:26 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="k50Fxfzu"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729558AbgBUAqW (ORCPT
+        id S1729523AbgBUAtZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Feb 2020 19:46:22 -0500
-Received: from cloudserver094114.home.pl ([79.96.170.134]:61269 "EHLO
-        cloudserver094114.home.pl" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729419AbgBUAqW (ORCPT
+        Thu, 20 Feb 2020 19:49:25 -0500
+Received: from mail-wm1-f68.google.com ([209.85.128.68]:53715 "EHLO
+        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729365AbgBUAtY (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Feb 2020 19:46:22 -0500
-Received: from 79.184.254.252.ipv4.supernova.orange.pl (79.184.254.252) (HELO kreacher.localnet)
- by serwer1319399.home.pl (79.96.170.134) with SMTP (IdeaSmtpServer 0.83.341)
- id 7483224b3d42fef3; Fri, 21 Feb 2020 01:46:18 +0100
-From:   "Rafael J. Wysocki" <rjw@rjwysocki.net>
-To:     Chris Wilson <chris@chris-wilson.co.uk>
-Cc:     linux-kernel@vger.kernel.org,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
-        Linux PM <linux-pm@vger.kernel.org>,
-        Linux ACPI <linux-acpi@vger.kernel.org>
-Subject: Re: Linux 5.6-rc2
-Date:   Fri, 21 Feb 2020 01:46:18 +0100
-Message-ID: <4974198.mf5Me8BlfX@kreacher>
-In-Reply-To: <10791544.HYfhKnFLvn@kreacher>
-References: <CAHk-=wgqwiBLGvwTqU2kJEPNmafPpPe_K0XgBU-A58M+mkwpgQ@mail.gmail.com> <158197497594.2449.9692451182044632969@skylake-alporthouse-com> <10791544.HYfhKnFLvn@kreacher>
+        Thu, 20 Feb 2020 19:49:24 -0500
+Received: by mail-wm1-f68.google.com with SMTP id s10so454899wmh.3;
+        Thu, 20 Feb 2020 16:49:22 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:references:in-reply-to:subject:date:message-id
+         :mime-version:content-transfer-encoding:thread-index
+         :content-language;
+        bh=TUpgFvCUo1t8bKlaum1Vfawy9XPhXrFVUMDpr7fMy/0=;
+        b=k50Fxfzuub5Of7FhShXrOIA/2Kv26wvdhFm0NWbcqJ0k4gJPdZwB4aY1owcwbOXk2+
+         0TQmj0U9syBQ/COVozIYPUGn8xF+mfL+cVgM1MpPlTv6HZRWaWG+cdO9ootXzbXqZYC9
+         1t0BLM4uLdxpyTT2DdeLVB1ozGDFKD/ALDLrLkuww9L3afat1uaW7nrDPPXPiw5Ziu6w
+         OTLc2h1uSlzsWcNYXAvy2RxRSEkVY3pVUYY6ZniYL1EZ7FfAfK8IcGJkj4FfgxBRynbQ
+         /BjzCSGa8E4J/cu3O9Hpl4ICKImh+gCF4teZ5SQtDlJx4gHQoXvNYpHHMxcptdN+QdwZ
+         cI2g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:references:in-reply-to:subject:date
+         :message-id:mime-version:content-transfer-encoding:thread-index
+         :content-language;
+        bh=TUpgFvCUo1t8bKlaum1Vfawy9XPhXrFVUMDpr7fMy/0=;
+        b=obxMY5gdEBq7jRS2e6t5i/A9RFwJ2DaB4tOp/vg69Vew2R9Y9mSX27fHrzaWNyYm8Q
+         bWzzuLVEgmUKlUAofh3I9eQZ63cTi/kHkJKDrm2oZX9bX8kUCCWqGp9ptprLNis8abJK
+         8Dx40/5bnLy2cXaoZPaWb2k2sEsUlwTOlSDl/nnrW9cvrv2DnkTlWJHg0Xzz6zpuMo11
+         lUSPMruqUpBf1Y0vWcp5E41dOpj37TLHDdAvBGtmVEoQsr7sz+SnzWWretqGWG9Z+GW2
+         J+7EVyw55Ew9D9Bg0SHJzFpP3eeg66fsoEj/9+dN2Z+wkusoJIExvk3zLnj5oKb+qu/y
+         JxTQ==
+X-Gm-Message-State: APjAAAVZfeCJxyPPLS/kYk2JixrQ+hlm/rPM1iK/SPAbJzO+UUWvsatV
+        N5gKLLtacrXD37GGxQrxWZ2Z2PfdG7U=
+X-Google-Smtp-Source: APXvYqwj21jD0rPT6EwGXCZyPPi39P5w9BN875IX6Nxot00sxfue3FdwlmbscFUmUaKOv9J3ior7pg==
+X-Received: by 2002:a05:600c:218b:: with SMTP id e11mr7401006wme.56.1582246161826;
+        Thu, 20 Feb 2020 16:49:21 -0800 (PST)
+Received: from AnsuelXPS (93-39-149-95.ip76.fastwebnet.it. [93.39.149.95])
+        by smtp.gmail.com with ESMTPSA id c9sm1694064wrq.44.2020.02.20.16.49.20
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Thu, 20 Feb 2020 16:49:21 -0800 (PST)
+From:   <ansuelsmth@gmail.com>
+To:     "'Russell King - ARM Linux admin'" <linux@armlinux.org.uk>
+Cc:     "'Andy Gross'" <agross@kernel.org>,
+        "'Bjorn Andersson'" <bjorn.andersson@linaro.org>,
+        "'David S. Miller'" <davem@davemloft.net>,
+        "'Rob Herring'" <robh+dt@kernel.org>,
+        "'Mark Rutland'" <mark.rutland@arm.com>,
+        "'Andrew Lunn'" <andrew@lunn.ch>,
+        "'Florian Fainelli'" <f.fainelli@gmail.com>,
+        "'Heiner Kallweit'" <hkallweit1@gmail.com>,
+        <linux-arm-msm@vger.kernel.org>, <netdev@vger.kernel.org>,
+        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+References: <20200220232624.7001-1-ansuelsmth@gmail.com> <20200221004013.GF25745@shell.armlinux.org.uk>
+In-Reply-To: <20200221004013.GF25745@shell.armlinux.org.uk>
+Subject: R: [PATCH v3 1/2] net: mdio: add ipq8064 mdio driver
+Date:   Fri, 21 Feb 2020 01:49:17 +0100
+Message-ID: <000601d5e850$c0161cc0$40425640$@gmail.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7Bit
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain;
+        charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+X-Mailer: Microsoft Outlook 16.0
+Thread-Index: AQC5BnfVD9qIQfuabKNYdaQfon7jHAE69gxCqlS7flA=
+Content-Language: it
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thursday, February 20, 2020 11:41:22 PM CET Rafael J. Wysocki wrote:
-> On Monday, February 17, 2020 10:29:35 PM CET Chris Wilson wrote:
-> > Quoting Linus Torvalds (2020-02-17 21:20:27)
-> > > On Mon, Feb 17, 2020 at 8:22 AM Chris Wilson <chris@chris-wilson.co.uk> wrote:
-> > > >
-> > > > Quoting Linus Torvalds (2020-02-16 21:32:32)
-> > > > > Rafael J. Wysocki (4):
-> > > > >       ACPI: EC: Fix flushing of pending work
-> > > > >       ACPI: PM: s2idle: Avoid possible race related to the EC GPE
-> > > > >       ACPICA: Introduce acpi_any_gpe_status_set()
-> > > > >       ACPI: PM: s2idle: Prevent spurious SCIs from waking up the system
-> > > >
-> > > > Our S0 testing broke on all platforms, so we've reverted
-> > > > e3728b50cd9b ("ACPI: PM: s2idle: Avoid possible race related to the EC GPE")
-> > > > fdde0ff8590b ("ACPI: PM: s2idle: Prevent spurious SCIs from waking up the system")
-> > > >
-> > > > There wasn't much in the logs, for example,
-> > > > https://intel-gfx-ci.01.org/tree/drm-tip/IGT_5445/fi-kbl-7500u/igt@gem_exec_suspend@basic-s0.html
-> > > 
-> > > So the machine suspends, but never comes back?
-> > > 
-> > > Do you need to revert both for it to work for you? Or is the revert of
-> > > fdde0ff8590b just to avoid the conflict?
-> > 
-> > fdde0ff85 was just to avoid conflicts.
-> >  
-> > > I'm assuming you bisected this, and the bisect indicated e3728b50cd9b,
-> > > and then to revert it you reverted the other commit too..
-> > 
-> > Lucky guess based on diff rc1..rc2. Bisect was going to be painful, but
-> > could be done if this is not enough clue for Rafael.
+> On Fri, Feb 21, 2020 at 12:26:21AM +0100, Ansuel Smith wrote:
+> > Currently ipq806x soc use generi bitbang driver to
+> > comunicate with the gmac ethernet interface.
+> > Add a dedicated driver created by chunkeey to fix this.
+> >
+> > Christian Lamparter <chunkeey@gmail.com>
+> > Signed-off-by: Ansuel Smith <ansuelsmth@gmail.com>
+> > ---
+> >  drivers/net/phy/Kconfig        |   8 ++
+> >  drivers/net/phy/Makefile       |   1 +
+> >  drivers/net/phy/mdio-ipq8064.c | 163
+> +++++++++++++++++++++++++++++++++
+> >  3 files changed, 172 insertions(+)
+> >  create mode 100644 drivers/net/phy/mdio-ipq8064.c
+> >
+> > diff --git a/drivers/net/phy/Kconfig b/drivers/net/phy/Kconfig
+> > index 9dabe03a668c..ec2a5493a7e8 100644
+> > --- a/drivers/net/phy/Kconfig
+> > +++ b/drivers/net/phy/Kconfig
+> > @@ -157,6 +157,14 @@ config MDIO_I2C
+> >
+> >  	  This is library mode.
+> >
+> > +config MDIO_IPQ8064
+> > +	tristate "Qualcomm IPQ8064 MDIO interface support"
+> > +	depends on HAS_IOMEM && OF_MDIO
+> > +	depends on MFD_SYSCON
+> > +	help
+> > +	  This driver supports the MDIO interface found in the network
+> > +	  interface units of the IPQ8064 SoC
+> > +
+> >  config MDIO_MOXART
+> >  	tristate "MOXA ART MDIO interface support"
+> >  	depends on ARCH_MOXART || COMPILE_TEST
+> > diff --git a/drivers/net/phy/Makefile b/drivers/net/phy/Makefile
+> > index fe5badf13b65..8f02bd2089f3 100644
+> > --- a/drivers/net/phy/Makefile
+> > +++ b/drivers/net/phy/Makefile
+> > @@ -36,6 +36,7 @@ obj-$(CONFIG_MDIO_CAVIUM)	+= mdio-
+> cavium.o
+> >  obj-$(CONFIG_MDIO_GPIO)		+= mdio-gpio.o
+> >  obj-$(CONFIG_MDIO_HISI_FEMAC)	+= mdio-hisi-femac.o
+> >  obj-$(CONFIG_MDIO_I2C)		+= mdio-i2c.o
+> > +obj-$(CONFIG_MDIO_IPQ8064)	+= mdio-ipq8064.o
+> >  obj-$(CONFIG_MDIO_MOXART)	+= mdio-moxart.o
+> >  obj-$(CONFIG_MDIO_MSCC_MIIM)	+= mdio-mscc-miim.o
+> >  obj-$(CONFIG_MDIO_OCTEON)	+= mdio-octeon.o
+> > diff --git a/drivers/net/phy/mdio-ipq8064.c b/drivers/net/phy/mdio-
+> ipq8064.c
+> > new file mode 100644
+> > index 000000000000..e974a6f5d5ef
+> > --- /dev/null
+> > +++ b/drivers/net/phy/mdio-ipq8064.c
+> > @@ -0,0 +1,163 @@
+> > +// SPDX-License-Identifier: GPL-2.0
+> > +//
+> > +// Qualcomm IPQ8064 MDIO interface driver
+> > +//
+> > +// Copyright (C) 2019 Christian Lamparter <chunkeey@gmail.com>
+> > +
+> > +#include <linux/delay.h>
+> > +#include <linux/kernel.h>
+> > +#include <linux/module.h>
+> > +#include <linux/regmap.h>
+> > +#include <linux/of_mdio.h>
+> > +#include <linux/phy.h>
+> > +#include <linux/platform_device.h>
+> > +#include <linux/mfd/syscon.h>
+> > +
+> > +/* MII address register definitions */
+> > +#define MII_ADDR_REG_ADDR                       0x10
+> > +#define MII_BUSY                                BIT(0)
+> > +#define MII_WRITE                               BIT(1)
+> > +#define MII_CLKRANGE_60_100M                    (0 << 2)
+> > +#define MII_CLKRANGE_100_150M                   (1 << 2)
+> > +#define MII_CLKRANGE_20_35M                     (2 << 2)
+> > +#define MII_CLKRANGE_35_60M                     (3 << 2)
+> > +#define MII_CLKRANGE_150_250M                   (4 << 2)
+> > +#define MII_CLKRANGE_250_300M                   (5 << 2)
+> > +#define MII_CLKRANGE_MASK			GENMASK(4, 2)
+> > +#define MII_REG_SHIFT				6
+> > +#define MII_REG_MASK				GENMASK(10, 6)
+> > +#define MII_ADDR_SHIFT				11
+> > +#define MII_ADDR_MASK				GENMASK(15, 11)
+> > +
+> > +#define MII_DATA_REG_ADDR                       0x14
+> > +
+> > +#define MII_MDIO_DELAY                          (1000)
 > 
-> Sorry for the delayed response, was away.
+> Maybe name this MII_MDIO_DELAY_USEC to show that it is in
+> microseconds?
 > 
-> I'm guessing that you are using rtcwake for wakeup, in which case reverting
-> fdde0ff85 alone should unbreak it.
+> > +#define MII_MDIO_RETRY                          (10)
 > 
-> Can you please double check that?
-
-And below is a patch that should fix it if I'm not mistaken (verified on my
-system where I was able to reproduce the issue), so it would suffice to test
-this one on top of the -rc2.
-
----
-From: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
-Subject: [PATCH] ACPI: PM: s2idle: Check fixed wakeup events in acpi_s2idle_wake()
-
-Commit fdde0ff8590b ("ACPI: PM: s2idle: Prevent spurious SCIs from
-waking up the system") overlooked the fact that fixed events can wake
-up the system too and broke RTC wakeup from suspend-to-idle as a
-result.
-
-Fix this issue by checking the fixed events in acpi_s2idle_wake() in
-addition to checking wakeup GPEs and break out of the suspend-to-idle
-loop if the status bits of any enabled fixed events are set then.
-
-Fixes: fdde0ff8590b ("ACPI: PM: s2idle: Prevent spurious SCIs from waking up the system")
-Reported-by: Chris Wilson <chris@chris-wilson.co.uk>
-Cc: 5.4+ <stable@vger.kernel.org> # 5.4+
-Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
----
- drivers/acpi/acpica/evevent.c |   45 ++++++++++++++++++++++++++++++++++++++++++
- drivers/acpi/sleep.c          |    7 ++++++
- include/acpi/acpixf.h         |    1 
- 3 files changed, 53 insertions(+)
-
-Index: linux-pm/drivers/acpi/acpica/evevent.c
-===================================================================
---- linux-pm.orig/drivers/acpi/acpica/evevent.c
-+++ linux-pm/drivers/acpi/acpica/evevent.c
-@@ -265,4 +265,49 @@ static u32 acpi_ev_fixed_event_dispatch(
- 		 handler) (acpi_gbl_fixed_event_handlers[event].context));
- }
- 
-+/*******************************************************************************
-+ *
-+ * FUNCTION:    acpi_any_fixed_event_status_set
-+ *
-+ * PARAMETERS:  None
-+ *
-+ * RETURN:      TRUE or FALSE
-+ *
-+ * DESCRIPTION: Checks the PM status register for active fixed events
-+ *
-+ ******************************************************************************/
-+
-+u32 acpi_any_fixed_event_status_set(void)
-+{
-+	acpi_status status;
-+	u32 in_status;
-+	u32 in_enable;
-+	u32 i;
-+
-+	status = acpi_hw_register_read(ACPI_REGISTER_PM1_ENABLE, &in_enable);
-+	if (ACPI_FAILURE(status)) {
-+		return (FALSE);
-+	}
-+
-+	status = acpi_hw_register_read(ACPI_REGISTER_PM1_STATUS, &in_status);
-+	if (ACPI_FAILURE(status)) {
-+		return (FALSE);
-+	}
-+
-+	/*
-+	 * Check for all possible Fixed Events and dispatch those that are active
-+	 */
-+	for (i = 0; i < ACPI_NUM_FIXED_EVENTS; i++) {
-+
-+		/* Both the status and enable bits must be on for this event */
-+
-+		if ((in_status & acpi_gbl_fixed_event_info[i].status_bit_mask) &&
-+		    (in_enable & acpi_gbl_fixed_event_info[i].enable_bit_mask)) {
-+			return (TRUE);
-+		}
-+	}
-+
-+	return (FALSE);
-+}
-+
- #endif				/* !ACPI_REDUCED_HARDWARE */
-Index: linux-pm/include/acpi/acpixf.h
-===================================================================
---- linux-pm.orig/include/acpi/acpixf.h
-+++ linux-pm/include/acpi/acpixf.h
-@@ -753,6 +753,7 @@ ACPI_HW_DEPENDENT_RETURN_STATUS(acpi_sta
- ACPI_HW_DEPENDENT_RETURN_STATUS(acpi_status acpi_enable_all_runtime_gpes(void))
- ACPI_HW_DEPENDENT_RETURN_STATUS(acpi_status acpi_enable_all_wakeup_gpes(void))
- ACPI_HW_DEPENDENT_RETURN_UINT32(u32 acpi_any_gpe_status_set(void))
-+ACPI_HW_DEPENDENT_RETURN_UINT32(u32 acpi_any_fixed_event_status_set(void))
- 
- ACPI_HW_DEPENDENT_RETURN_STATUS(acpi_status
- 				acpi_get_gpe_device(u32 gpe_index,
-Index: linux-pm/drivers/acpi/sleep.c
-===================================================================
---- linux-pm.orig/drivers/acpi/sleep.c
-+++ linux-pm/drivers/acpi/sleep.c
-@@ -1006,6 +1006,13 @@ static bool acpi_s2idle_wake(void)
- 			return true;
- 
- 		/*
-+		 * If the status bit of any enabled fixed event is set, the
-+		 * wakeup is regarded as valid.
-+		 */
-+		if (acpi_any_fixed_event_status_set())
-+			return true;
-+
-+		/*
- 		 * If there are no EC events to process and at least one of the
- 		 * other enabled GPEs is active, the wakeup is regarded as a
- 		 * genuine one.
-
-
+> Maybe name this MII_MDIO_RETRY_MSEC to show that it is in
+> milliseconds?
+> 
+> > +
+> > +struct ipq8064_mdio {
+> > +	struct regmap *base; /* NSS_GMAC0_BASE */
+> > +};
+> > +
+> > +static int
+> > +ipq8064_mdio_wait_busy(struct ipq8064_mdio *priv)
+> > +{
+> > +	u32 busy;
+> > +
+> > +	return regmap_read_poll_timeout(priv->base,
+> MII_ADDR_REG_ADDR, busy,
+> > +				   !(busy & MII_BUSY), MII_MDIO_DELAY,
+> > +				   MII_MDIO_RETRY * USEC_PER_MSEC);
+> 
+> Thanks.
+> 
+> > +}
+> > +
+> > +static int
+> > +ipq8064_mdio_read(struct mii_bus *bus, int phy_addr, int reg_offset)
+> > +{
+> > +	struct ipq8064_mdio *priv = bus->priv;
+> > +	u32 miiaddr = MII_BUSY | MII_CLKRANGE_250_300M;
+> > +	u32 ret_val;
+> > +	int err;
+> > +
+> > +	/* Reject clause 45 */
+> > +	if (reg_offset & MII_ADDR_C45)
+> > +		return -EOPNOTSUPP;
+> 
+> Thanks.
+> 
+> > +
+> > +	miiaddr |= ((phy_addr << MII_ADDR_SHIFT) & MII_ADDR_MASK) |
+> > +		   ((reg_offset << MII_REG_SHIFT) & MII_REG_MASK);
+> > +
+> > +	regmap_write(priv->base, MII_ADDR_REG_ADDR, miiaddr);
+> > +	usleep_range(10, 20);
+> > +
+> > +	err = ipq8064_mdio_wait_busy(priv);
+> > +	if (err)
+> > +		return err;
+> > +
+> > +	regmap_read(priv->base, MII_DATA_REG_ADDR, &ret_val);
+> > +	return (int)ret_val;
+> > +}
+> > +
+> > +static int
+> > +ipq8064_mdio_write(struct mii_bus *bus, int phy_addr, int reg_offset,
+> u16 data)
+> > +{
+> > +	struct ipq8064_mdio *priv = bus->priv;
+> > +	u32 miiaddr = MII_WRITE | MII_BUSY | MII_CLKRANGE_250_300M;
+> > +
+> > +	/* Reject clause 45 */
+> > +	if (reg_offset & MII_ADDR_C45)
+> > +		return -EOPNOTSUPP;
+> 
+> Thanks.
+> 
+> > +
+> > +	regmap_write(priv->base, MII_DATA_REG_ADDR, data);
+> > +
+> > +	miiaddr |= ((phy_addr << MII_ADDR_SHIFT) & MII_ADDR_MASK) |
+> > +		   ((reg_offset << MII_REG_SHIFT) & MII_REG_MASK);
+> > +
+> > +	regmap_write(priv->base, MII_ADDR_REG_ADDR, miiaddr);
+> > +	usleep_range(10, 20);
+> > +
+> > +	return ipq8064_mdio_wait_busy(priv);
+> > +}
+> > +
+> > +static int
+> > +ipq8064_mdio_probe(struct platform_device *pdev)
+> > +{
+> > +	struct device_node *np = pdev->dev.of_node;
+> > +	struct ipq8064_mdio *priv;
+> > +	struct mii_bus *bus;
+> > +	int ret;
+> > +
+> > +	bus = devm_mdiobus_alloc_size(&pdev->dev, sizeof(*priv));
+> > +	if (!bus)
+> > +		return -ENOMEM;
+> > +
+> > +	bus->name = "ipq8064_mdio_bus";
+> > +	bus->read = ipq8064_mdio_read;
+> > +	bus->write = ipq8064_mdio_write;
+> > +	snprintf(bus->id, MII_BUS_ID_SIZE, "%s-mii", dev_name(&pdev-
+> >dev));
+> > +	bus->parent = &pdev->dev;
+> > +
+> > +	priv = bus->priv;
+> > +	priv->base = syscon_node_to_regmap(np);
+> > +	if (IS_ERR_OR_NULL(priv->base)) {
+> > +		priv->base = syscon_regmap_lookup_by_phandle(np,
+> "master");
+> > +		if (IS_ERR_OR_NULL(priv->base)) {
+> > +			dev_err(&pdev->dev, "master phandle not
+> found\n");
+> > +			return -EINVAL;
+> > +		}
+> > +	}
+> 
+> I'm curious why you've kept this as-is given my comments?
+> 
+> If you don't agree with them, it would be helpful to reply to the
+> review email giving the reasons why.
+> 
+> Thanks.
+> 
+> --
+> RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
+> FTTC broadband for 0.8mile line in suburbia: sync at 12.1Mbps down
+> 622kbps up
+> According to speedtest.net: 11.9Mbps down 500kbps up
+I hope it's not a problem if I answer here.
+I read your command and now I understand what you mean. Since they both
+never return NULL the IS_ERR_OR_NULL is wrong and only IS_ERR should be
+used. Correct me if I'm wrong.
+About the error propagation, should I return the
+syscon_regmap_lookup_by_phandle
+error or I can keep the EINVAL error? 
 
