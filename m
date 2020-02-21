@@ -2,55 +2,51 @@ Return-Path: <SRS0=1210=4J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A02DFC35640
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 08:19:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5D4CBC35640
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 08:19:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7237224689
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 08:19:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2775F24691
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 08:19:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582273168;
-	bh=wq7lxjt7cRlqyFc4oM2xYceah9Pd7LC/X/ok4YEThvs=;
+	s=default; t=1582273170;
+	bh=VjGmQW4ZaEIwBplxGXhjzp+VjZggaABay/iw0AmQNss=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=AX6krEn2aUd8go3QZk80tC2Bq5GX5uaPfLRg7ltCOKdz2PlFKjhBCwhaoIqB1Uq+M
-	 T+qK3kPyYPzq4+WyBBCZfWKZuuQVe0KD14WrSUOwYbW6EzJKbKJMRq64QVBnCgdQi5
-	 lh4FAO/ab+gCWQs183o+d/YpCpnJr8yga2WdlN5c=
+	b=VNb1mC7veBlkF7gQzTY3NYRfBO63esyKdeaUgyUxw5KyDVy6kpIWwKZkUrDkR9PYA
+	 pUDzojL2DiKNyfpJVKJJgn5jON9Ab9/+IrdYasYNskiKeJ/pU0bEjzH08O3VL4K4Wv
+	 PuV9siUnC9EPqRCzUR7gvfl/qsr+o41v479YWLH4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388002AbgBUITZ (ORCPT
+        id S2388022AbgBUIT3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Feb 2020 03:19:25 -0500
-Received: from mail.kernel.org ([198.145.29.99]:57840 "EHLO mail.kernel.org"
+        Fri, 21 Feb 2020 03:19:29 -0500
+Received: from mail.kernel.org ([198.145.29.99]:57916 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732901AbgBUITW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Feb 2020 03:19:22 -0500
+        id S2387996AbgBUITY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 21 Feb 2020 03:19:24 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 192F62468F;
-        Fri, 21 Feb 2020 08:19:20 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 890FF24689;
+        Fri, 21 Feb 2020 08:19:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1582273161;
-        bh=wq7lxjt7cRlqyFc4oM2xYceah9Pd7LC/X/ok4YEThvs=;
+        s=default; t=1582273164;
+        bh=VjGmQW4ZaEIwBplxGXhjzp+VjZggaABay/iw0AmQNss=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=dca5lb4URahPWGlxhZ1+Q/8vGoLWWzIHexZp3j2SuCypSpQm3iVRhFMWbSmrTEWv9
-         sYAxoxBk9yGOmeSutWhP3jZs2iPlLl6HKxPnW2AbQKc1MjqcXudWz/33NOcilkipTa
-         M/CeXCgYpHqt8P1sAJAr7sO+JBmhVpbgtGzhpsnM=
+        b=Ql3abFVnq4geFTUDsGf1lHmLGf5lQV5DyJ+lKSrVyg8cRZQYdCE/qHWNdcEZ7Vw8f
+         eRpnD+1O+rtO5Qk1EXfvWZYIZ0K7lG/rtSaj0PgZFbO7tl4yPfmt5g41EzTYjrK7vi
+         sgGfx9nLqoLU2t89HrSbUKYRDYMywaiBOpjciVAo=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Ezequiel Garcia <ezequiel@collabora.com>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        Nathan Chancellor <natechancellor@gmail.com>,
-        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
-        Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
+        stable@vger.kernel.org, Jan Kara <jack@suse.cz>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 068/191] media: v4l2-device.h: Explicitly compare grp{id,mask} to zero in v4l2_device macros
-Date:   Fri, 21 Feb 2020 08:40:41 +0100
-Message-Id: <20200221072259.546521124@linuxfoundation.org>
+Subject: [PATCH 4.19 069/191] reiserfs: Fix spurious unlock in reiserfs_fill_super() error handling
+Date:   Fri, 21 Feb 2020 08:40:42 +0100
+Message-Id: <20200221072259.649320230@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200221072250.732482588@linuxfoundation.org>
 References: <20200221072250.732482588@linuxfoundation.org>
@@ -63,91 +59,34 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Nathan Chancellor <natechancellor@gmail.com>
+From: Jan Kara <jack@suse.cz>
 
-[ Upstream commit afb34781620274236bd9fc9246e22f6963ef5262 ]
+[ Upstream commit 4d5c1adaf893b8aa52525d2b81995e949bcb3239 ]
 
-When building with Clang + -Wtautological-constant-compare, several of
-the ivtv and cx18 drivers warn along the lines of:
+When we fail to allocate string for journal device name we jump to
+'error' label which tries to unlock reiserfs write lock which is not
+held. Jump to 'error_unlocked' instead.
 
- drivers/media/pci/cx18/cx18-driver.c:1005:21: warning: converting the
- result of '<<' to a boolean always evaluates to true
- [-Wtautological-constant-compare]
-                         cx18_call_hw(cx, CX18_HW_GPIO_RESET_CTRL,
-                                         ^
- drivers/media/pci/cx18/cx18-cards.h:18:37: note: expanded from macro
- 'CX18_HW_GPIO_RESET_CTRL'
- #define CX18_HW_GPIO_RESET_CTRL         (1 << 6)
-                                           ^
- 1 warning generated.
-
-This warning happens because the shift operation is implicitly converted
-to a boolean in v4l2_device_mask_call_all before being negated. This can
-be solved by just comparing the mask result to 0 explicitly so that
-there is no boolean conversion. The ultimate goal is to enable
--Wtautological-compare globally because there are several subwarnings
-that would be helpful to have.
-
-For visual consistency and avoidance of these warnings in the future,
-all of the implicitly boolean conversions in the v4l2_device macros
-are converted to explicit ones as well.
-
-Link: https://github.com/ClangBuiltLinux/linux/issues/752
-
-Reviewed-by: Ezequiel Garcia <ezequiel@collabora.com>
-Reviewed-by: Nick Desaulniers <ndesaulniers@google.com>
-Signed-off-by: Nathan Chancellor <natechancellor@gmail.com>
-Signed-off-by: Hans Verkuil <hverkuil-cisco@xs4all.nl>
-Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
+Fixes: f32485be8397 ("reiserfs: delay reiserfs lock until journal initialization")
+Signed-off-by: Jan Kara <jack@suse.cz>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- include/media/v4l2-device.h | 12 ++++++------
- 1 file changed, 6 insertions(+), 6 deletions(-)
+ fs/reiserfs/super.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/include/media/v4l2-device.h b/include/media/v4l2-device.h
-index b330e4a08a6b8..40840fec337ca 100644
---- a/include/media/v4l2-device.h
-+++ b/include/media/v4l2-device.h
-@@ -372,7 +372,7 @@ static inline void v4l2_subdev_notify(struct v4l2_subdev *sd,
- 		struct v4l2_subdev *__sd;				\
- 									\
- 		__v4l2_device_call_subdevs_p(v4l2_dev, __sd,		\
--			!(grpid) || __sd->grp_id == (grpid), o, f ,	\
-+			(grpid) == 0 || __sd->grp_id == (grpid), o, f ,	\
- 			##args);					\
- 	} while (0)
- 
-@@ -404,7 +404,7 @@ static inline void v4l2_subdev_notify(struct v4l2_subdev *sd,
- ({									\
- 	struct v4l2_subdev *__sd;					\
- 	__v4l2_device_call_subdevs_until_err_p(v4l2_dev, __sd,		\
--			!(grpid) || __sd->grp_id == (grpid), o, f ,	\
-+			(grpid) == 0 || __sd->grp_id == (grpid), o, f ,	\
- 			##args);					\
- })
- 
-@@ -432,8 +432,8 @@ static inline void v4l2_subdev_notify(struct v4l2_subdev *sd,
- 		struct v4l2_subdev *__sd;				\
- 									\
- 		__v4l2_device_call_subdevs_p(v4l2_dev, __sd,		\
--			!(grpmsk) || (__sd->grp_id & (grpmsk)), o, f ,	\
--			##args);					\
-+			(grpmsk) == 0 || (__sd->grp_id & (grpmsk)), o,	\
-+			f , ##args);					\
- 	} while (0)
- 
- /**
-@@ -463,8 +463,8 @@ static inline void v4l2_subdev_notify(struct v4l2_subdev *sd,
- ({									\
- 	struct v4l2_subdev *__sd;					\
- 	__v4l2_device_call_subdevs_until_err_p(v4l2_dev, __sd,		\
--			!(grpmsk) || (__sd->grp_id & (grpmsk)), o, f ,	\
--			##args);					\
-+			(grpmsk) == 0 || (__sd->grp_id & (grpmsk)), o,	\
-+			f , ##args);					\
- })
- 
- 
+diff --git a/fs/reiserfs/super.c b/fs/reiserfs/super.c
+index 6280efeceb0a2..de5eda33c92a0 100644
+--- a/fs/reiserfs/super.c
++++ b/fs/reiserfs/super.c
+@@ -1954,7 +1954,7 @@ static int reiserfs_fill_super(struct super_block *s, void *data, int silent)
+ 		if (!sbi->s_jdev) {
+ 			SWARN(silent, s, "", "Cannot allocate memory for "
+ 				"journal device name");
+-			goto error;
++			goto error_unlocked;
+ 		}
+ 	}
+ #ifdef CONFIG_QUOTA
 -- 
 2.20.1
 
