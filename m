@@ -2,91 +2,149 @@ Return-Path: <SRS0=1210=4J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9C7DCC35646
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 15:49:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6EC5AC35656
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 15:49:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 69A8124656
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 15:49:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 37251206E2
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 15:49:39 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="CdmQEUm8"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=embeddedor.com header.i=@embeddedor.com header.b="ZncAuOkW"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729375AbgBUPtc (ORCPT
+        id S1729399AbgBUPth (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Feb 2020 10:49:32 -0500
-Received: from mail-oi1-f193.google.com ([209.85.167.193]:43457 "EHLO
-        mail-oi1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728235AbgBUPtb (ORCPT
+        Fri, 21 Feb 2020 10:49:37 -0500
+Received: from gateway31.websitewelcome.com ([192.185.143.35]:23719 "EHLO
+        gateway31.websitewelcome.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1728550AbgBUPtg (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Feb 2020 10:49:31 -0500
-Received: by mail-oi1-f193.google.com with SMTP id p125so1976249oif.10
-        for <linux-kernel@vger.kernel.org>; Fri, 21 Feb 2020 07:49:31 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=tZq1kXcTzLYMO34ccHleJXhWtfhzhvYI72RXtYcu7d0=;
-        b=CdmQEUm8JFubqCiKsGRRwXaaEn4qDiBSqM15yM/guhBqxH9V3QOcf/DPFyjJx3SIXM
-         sSKrSthI73C8sGegIXkZRqWATeanB5j2t3Lberqg2CMBchFEPYrStpZ8+fxLyqaeiGG+
-         cQm4GkqXK/TmylwKp39PXCVweb+KMzgJ0aox0FOipONF3hu+eaIDomovULMYNUb5FxVI
-         Cqq7lrK+ojtFa1C2FZjIb7Ff/Uqb9nHpH+g1vs6gebvrESJbMVm73IvPmLooQ91ao5RV
-         ymwGGJagi9SrtWu8R4Abmlj1JTK2CaTlZbXXS007p4Z383xXzfZJn/zrmkIaqZirnaRx
-         bR0A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=tZq1kXcTzLYMO34ccHleJXhWtfhzhvYI72RXtYcu7d0=;
-        b=P64K+QZnQLauhPTVNohdOAykBFuWzSB3W5jLCcqmpis1RGjIUPDJUmULA0wgMLLm40
-         xB4s2AAYIX52544V5gZZ6xb7l76734CUxdIILlP+ck0/5Qi3hxezlTpgE06MF8u9NZrN
-         u9bp0idt27LK9sFzesrCxCpp+4egV1+EeqH9lmLXypmi9IUYOjYjg+H6WdsjWEG8tqIM
-         LdcjIIP2KwnuKDSplp8q/46X+JdxnbAGkNaDknH1NJ8ygvn8x5tLuU+GKo5PT26Ip4Sn
-         Eq1POY8T+WhCTtVypdpXcHbfEuUyam/EgcCvC8GZdCS3bPqt7jLdblp55IUdEU1AG9we
-         zx7A==
-X-Gm-Message-State: APjAAAUPkR1FZcUh5+rDq70ExDTXu8LTw3Jk1vMZIL6Jp1tFEyzYuqul
-        UMfKmOsIHbULFAQ589JrfvgI0VI3Gjl0IAmHpxT5fg==
-X-Google-Smtp-Source: APXvYqx6oYoFCUHz9LVEwbxSzLX1UA9ybF3b+klYwrM1272ykReKNgP4dv2zTdA7aiz1zUlVmIn0Cga9Tqdx35yo8Ww=
-X-Received: by 2002:aca:d954:: with SMTP id q81mr2492691oig.157.1582300170627;
- Fri, 21 Feb 2020 07:49:30 -0800 (PST)
+        Fri, 21 Feb 2020 10:49:36 -0500
+Received: from cm10.websitewelcome.com (cm10.websitewelcome.com [100.42.49.4])
+        by gateway31.websitewelcome.com (Postfix) with ESMTP id 4CACD3F17
+        for <linux-kernel@vger.kernel.org>; Fri, 21 Feb 2020 09:49:35 -0600 (CST)
+Received: from gator4166.hostgator.com ([108.167.133.22])
+        by cmsmtp with SMTP
+        id 5AYZjwvBaEfyq5AYZj4CFD; Fri, 21 Feb 2020 09:49:35 -0600
+X-Authority-Reason: nr=8
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=embeddedor.com; s=default; h=Content-Transfer-Encoding:Content-Type:
+        In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:Subject:Sender
+        :Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
+        Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
+        List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+        bh=jLtuDYMwrewwkQYs7hCd13VFgJPAgO9CH5G/SdbjwwY=; b=ZncAuOkW5LUk4w3t/N6TSy9Lp3
+        F3iqT1jy+qmpHqdQwrznrQIOKrU3rLCO9hZCzxNF6YGTqrWKUoRvm5QCe79tU239vOZWIgCxM8sMK
+        euigRcztPzrJqqHKmcCIPkTRCPq/S/hTHVqn21Vt6xhvDHy2zC9la8jRub5MvJ//pQasaM9YdqoxD
+        TFI2SHVLo1WQjU6f7Od/P/pN2tZn1F7Viw+i4yPzwWC958s7vWsoaD1BrfmoUZZNYZTmg7o4/nkXD
+        MkIWGi9R+14hIa6eUfqYjkxaK03pXhZrIS24pCdE521RCSeYU7ZWiVnuqpO4+esp7asgIu5trqKi+
+        BGWv6oJA==;
+Received: from [200.68.140.54] (port=18298 helo=[192.168.43.131])
+        by gator4166.hostgator.com with esmtpsa (TLSv1.2:ECDHE-RSA-AES128-GCM-SHA256:128)
+        (Exim 4.92)
+        (envelope-from <gustavo@embeddedor.com>)
+        id 1j5AYY-003r6B-VU; Fri, 21 Feb 2020 09:49:35 -0600
+Subject: Re: [PATCH] efi/apple-properties: Replace zero-length array with
+ flexible-array member
+To:     Ard Biesheuvel <ardb@kernel.org>
+Cc:     linux-efi <linux-efi@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+References: <20200221152430.GA20788@embeddedor>
+ <CAKv+Gu9wZ1PjDVQmFPaoxwyDZRYev2LAXr5vBkBGAstdf-5W7w@mail.gmail.com>
+From:   "Gustavo A. R. Silva" <gustavo@embeddedor.com>
+Autocrypt: addr=gustavo@embeddedor.com; keydata=
+ xsFNBFssHAwBEADIy3ZoPq3z5UpsUknd2v+IQud4TMJnJLTeXgTf4biSDSrXn73JQgsISBwG
+ 2Pm4wnOyEgYUyJd5tRWcIbsURAgei918mck3tugT7AQiTUN3/5aAzqe/4ApDUC+uWNkpNnSV
+ tjOx1hBpla0ifywy4bvFobwSh5/I3qohxDx+c1obd8Bp/B/iaOtnq0inli/8rlvKO9hp6Z4e
+ DXL3PlD0QsLSc27AkwzLEc/D3ZaqBq7ItvT9Pyg0z3Q+2dtLF00f9+663HVC2EUgP25J3xDd
+ 496SIeYDTkEgbJ7WYR0HYm9uirSET3lDqOVh1xPqoy+U9zTtuA9NQHVGk+hPcoazSqEtLGBk
+ YE2mm2wzX5q2uoyptseSNceJ+HE9L+z1KlWW63HhddgtRGhbP8pj42bKaUSrrfDUsicfeJf6
+ m1iJRu0SXYVlMruGUB1PvZQ3O7TsVfAGCv85pFipdgk8KQnlRFkYhUjLft0u7CL1rDGZWDDr
+ NaNj54q2CX9zuSxBn9XDXvGKyzKEZ4NY1Jfw+TAMPCp4buawuOsjONi2X0DfivFY+ZsjAIcx
+ qQMglPtKk/wBs7q2lvJ+pHpgvLhLZyGqzAvKM1sVtRJ5j+ARKA0w4pYs5a5ufqcfT7dN6TBk
+ LXZeD9xlVic93Ju08JSUx2ozlcfxq+BVNyA+dtv7elXUZ2DrYwARAQABzSxHdXN0YXZvIEEu
+ IFIuIFNpbHZhIDxndXN0YXZvQGVtYmVkZGVkb3IuY29tPsLBfQQTAQgAJwUCWywcDAIbIwUJ
+ CWYBgAULCQgHAgYVCAkKCwIEFgIDAQIeAQIXgAAKCRBHBbTLRwbbMZ6tEACk0hmmZ2FWL1Xi
+ l/bPqDGFhzzexrdkXSfTTZjBV3a+4hIOe+jl6Rci/CvRicNW4H9yJHKBrqwwWm9fvKqOBAg9
+ obq753jydVmLwlXO7xjcfyfcMWyx9QdYLERTeQfDAfRqxir3xMeOiZwgQ6dzX3JjOXs6jHBP
+ cgry90aWbaMpQRRhaAKeAS14EEe9TSIly5JepaHoVdASuxklvOC0VB0OwNblVSR2S5i5hSsh
+ ewbOJtwSlonsYEj4EW1noQNSxnN/vKuvUNegMe+LTtnbbocFQ7dGMsT3kbYNIyIsp42B5eCu
+ JXnyKLih7rSGBtPgJ540CjoPBkw2mCfhj2p5fElRJn1tcX2McsjzLFY5jK9RYFDavez5w3lx
+ JFgFkla6sQHcrxH62gTkb9sUtNfXKucAfjjCMJ0iuQIHRbMYCa9v2YEymc0k0RvYr43GkA3N
+ PJYd/vf9vU7VtZXaY4a/dz1d9dwIpyQARFQpSyvt++R74S78eY/+lX8wEznQdmRQ27kq7BJS
+ R20KI/8knhUNUJR3epJu2YFT/JwHbRYC4BoIqWl+uNvDf+lUlI/D1wP+lCBSGr2LTkQRoU8U
+ 64iK28BmjJh2K3WHmInC1hbUucWT7Swz/+6+FCuHzap/cjuzRN04Z3Fdj084oeUNpP6+b9yW
+ e5YnLxF8ctRAp7K4yVlvA87BTQRbLBwMARAAsHCE31Ffrm6uig1BQplxMV8WnRBiZqbbsVJB
+ H1AAh8tq2ULl7udfQo1bsPLGGQboJSVN9rckQQNahvHAIK8ZGfU4Qj8+CER+fYPp/MDZj+t0
+ DbnWSOrG7z9HIZo6PR9z4JZza3Hn/35jFggaqBtuydHwwBANZ7A6DVY+W0COEU4of7CAahQo
+ 5NwYiwS0lGisLTqks5R0Vh+QpvDVfuaF6I8LUgQR/cSgLkR//V1uCEQYzhsoiJ3zc1HSRyOP
+ otJTApqGBq80X0aCVj1LOiOF4rrdvQnj6iIlXQssdb+WhSYHeuJj1wD0ZlC7ds5zovXh+FfF
+ l5qH5RFY/qVn3mNIVxeO987WSF0jh+T5ZlvUNdhedGndRmwFTxq2Li6GNMaolgnpO/CPcFpD
+ jKxY/HBUSmaE9rNdAa1fCd4RsKLlhXda+IWpJZMHlmIKY8dlUybP+2qDzP2lY7kdFgPZRU+e
+ zS/pzC/YTzAvCWM3tDgwoSl17vnZCr8wn2/1rKkcLvTDgiJLPCevqpTb6KFtZosQ02EGMuHQ
+ I6Zk91jbx96nrdsSdBLGH3hbvLvjZm3C+fNlVb9uvWbdznObqcJxSH3SGOZ7kCHuVmXUcqoz
+ ol6ioMHMb+InrHPP16aVDTBTPEGwgxXI38f7SUEn+NpbizWdLNz2hc907DvoPm6HEGCanpcA
+ EQEAAcLBZQQYAQgADwUCWywcDAIbDAUJCWYBgAAKCRBHBbTLRwbbMdsZEACUjmsJx2CAY+QS
+ UMebQRFjKavwXB/xE7fTt2ahuhHT8qQ/lWuRQedg4baInw9nhoPE+VenOzhGeGlsJ0Ys52sd
+ XvUjUocKgUQq6ekOHbcw919nO5L9J2ejMf/VC/quN3r3xijgRtmuuwZjmmi8ct24TpGeoBK4
+ WrZGh/1hAYw4ieARvKvgjXRstcEqM5thUNkOOIheud/VpY+48QcccPKbngy//zNJWKbRbeVn
+ imua0OpqRXhCrEVm/xomeOvl1WK1BVO7z8DjSdEBGzbV76sPDJb/fw+y+VWrkEiddD/9CSfg
+ fBNOb1p1jVnT2mFgGneIWbU0zdDGhleI9UoQTr0e0b/7TU+Jo6TqwosP9nbk5hXw6uR5k5PF
+ 8ieyHVq3qatJ9K1jPkBr8YWtI5uNwJJjTKIA1jHlj8McROroxMdI6qZ/wZ1ImuylpJuJwCDC
+ ORYf5kW61fcrHEDlIvGc371OOvw6ejF8ksX5+L2zwh43l/pKkSVGFpxtMV6d6J3eqwTafL86
+ YJWH93PN+ZUh6i6Rd2U/i8jH5WvzR57UeWxE4P8bQc0hNGrUsHQH6bpHV2lbuhDdqo+cM9eh
+ GZEO3+gCDFmKrjspZjkJbB5Gadzvts5fcWGOXEvuT8uQSvl+vEL0g6vczsyPBtqoBLa9SNrS
+ VtSixD1uOgytAP7RWS474w==
+Message-ID: <745923b4-6751-97cc-30a2-337695384810@embeddedor.com>
+Date:   Fri, 21 Feb 2020 09:52:19 -0600
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.1
 MIME-Version: 1.0
-References: <158204549488.3299825.3783690177353088425.stgit@warthog.procyon.org.uk>
- <158204559631.3299825.5358385352169781990.stgit@warthog.procyon.org.uk>
- <CAG48ez3ZMg4O5US3n=p1CYK-2AAgLRY+pjnUXp2p5hdwbjCRSA@mail.gmail.com> <1808070.1582287889@warthog.procyon.org.uk>
-In-Reply-To: <1808070.1582287889@warthog.procyon.org.uk>
-From:   Jann Horn <jannh@google.com>
-Date:   Fri, 21 Feb 2020 16:49:04 +0100
-Message-ID: <CAG48ez0+_kO_YL6iO9uA+HjjnHRVHVD-bFq0C=ZLeaGtTMss5A@mail.gmail.com>
-Subject: Re: [PATCH 13/19] vfs: Add a mount-notification facility [ver #16]
-To:     David Howells <dhowells@redhat.com>
-Cc:     Al Viro <viro@zeniv.linux.org.uk>, raven@themaw.net,
-        Miklos Szeredi <mszeredi@redhat.com>,
-        Christian Brauner <christian@brauner.io>,
-        Linux API <linux-api@vger.kernel.org>,
-        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
-        kernel list <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <CAKv+Gu9wZ1PjDVQmFPaoxwyDZRYev2LAXr5vBkBGAstdf-5W7w@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
+X-AntiAbuse: Primary Hostname - gator4166.hostgator.com
+X-AntiAbuse: Original Domain - vger.kernel.org
+X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
+X-AntiAbuse: Sender Address Domain - embeddedor.com
+X-BWhitelist: no
+X-Source-IP: 200.68.140.54
+X-Source-L: No
+X-Exim-ID: 1j5AYY-003r6B-VU
+X-Source: 
+X-Source-Args: 
+X-Source-Dir: 
+X-Source-Sender: ([192.168.43.131]) [200.68.140.54]:18298
+X-Source-Auth: gustavo@embeddedor.com
+X-Email-Count: 28
+X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
+X-Local-Domain: yes
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Feb 21, 2020 at 1:24 PM David Howells <dhowells@redhat.com> wrote:
-> Jann Horn <jannh@google.com> wrote:
->
-> > > + * Post mount notifications to all watches going rootwards along the tree.
-> > > + *
-> > > + * Must be called with the mount_lock held.
-> >
-> > Please put such constraints into lockdep assertions instead of
-> > comments; that way, violations can actually be detected.
->
-> What's the best way to write a lockdep assertion?
->
->         BUG_ON(!lockdep_is_held(lock));
 
-lockdep_assert_held(lock) is the normal way, I think - that will
-WARN() if lockdep is enabled and the lock is not held.
+
+On 2/21/20 09:44, Ard Biesheuvel wrote:
+
+>>
+>> [1] https://gcc.gnu.org/onlinedocs/gcc/Zero-Length.html
+>> [2] https://github.com/KSPP/linux/issues/21
+>> [3] commit 76497732932f ("cxgb3/l2t: Fix undefined behaviour")
+>>
+>> Signed-off-by: Gustavo A. R. Silva <gustavo@embeddedor.com>
+> 
+> Please don't send duplicates. I already queued this in efi/next, and
+> responded accordingly.
+> 
+
+Oh, sorry for the noise, and thanks for queuing that up.
+
+--
+Gustavo
