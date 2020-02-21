@@ -2,240 +2,205 @@ Return-Path: <SRS0=1210=4J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 98743C11D24
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 01:22:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 30D7CC11D00
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 01:26:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6FE4920679
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 01:22:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F39D92071E
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 01:26:00 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="KeLcOadt"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729554AbgBUBWH (ORCPT
+        id S1729539AbgBUBZ7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Feb 2020 20:22:07 -0500
-Received: from mout-p-202.mailbox.org ([80.241.56.172]:22976 "EHLO
-        mout-p-202.mailbox.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729476AbgBUBWG (ORCPT
+        Thu, 20 Feb 2020 20:25:59 -0500
+Received: from mail-pf1-f194.google.com ([209.85.210.194]:41309 "EHLO
+        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729476AbgBUBZ7 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Feb 2020 20:22:06 -0500
-Received: from smtp2.mailbox.org (smtp2.mailbox.org [IPv6:2001:67c:2050:105:465:1:2:0])
-        (using TLSv1.2 with cipher ECDHE-RSA-CHACHA20-POLY1305 (256/256 bits))
-        (No client certificate requested)
-        by mout-p-202.mailbox.org (Postfix) with ESMTPS id 48NtwW3WsKzQlCK;
-        Fri, 21 Feb 2020 02:22:03 +0100 (CET)
-X-Virus-Scanned: amavisd-new at heinlein-support.de
-Received: from smtp2.mailbox.org ([80.241.60.241])
-        by spamfilter03.heinlein-hosting.de (spamfilter03.heinlein-hosting.de [80.241.56.117]) (amavisd-new, port 10030)
-        with ESMTP id gB_F9IHMADEC; Fri, 21 Feb 2020 02:21:59 +0100 (CET)
-Date:   Fri, 21 Feb 2020 12:21:42 +1100
-From:   Aleksa Sarai <cyphar@cyphar.com>
-To:     Ross Zwisler <zwisler@google.com>
-Cc:     David Howells <dhowells@redhat.com>,
-        Matthew Wilcox <willy@infradead.org>,
-        Raul Rangel <rrangel@google.com>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        Mattias Nissler <mnissler@chromium.org>,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        linux-fsdevel@vger.kernel.org,
-        Benjamin Gordon <bmgordon@google.com>,
-        Micah Morton <mortonm@google.com>,
-        Dmitry Torokhov <dtor@google.com>, Jan Kara <jack@suse.cz>
-Subject: Re: [PATCH v5] Add a "nosymfollow" mount option.
-Message-ID: <20200221012142.4onrcfjtyghg237d@yavin.dot.cyphar.com>
-References: <20200204215014.257377-1-zwisler@google.com>
- <CAHQZ30BgsCodGofui2kLwtpgzmpqcDnaWpS4hYf7Z+mGgwxWQw@mail.gmail.com>
- <CAGRrVHwQimihNNVs434jNGF3BL5_Qov+1eYqBYKPCecQ0yjxpw@mail.gmail.com>
- <CAGRrVHyzX4zOpO2nniv42BHOCbyCdPV9U7GE3FVhjzeFonb0bQ@mail.gmail.com>
- <20200205032110.GR8731@bombadil.infradead.org>
- <20200205034500.x3omkziqwu3g5gpx@yavin>
- <CAGRrVHxRdLMx5axcB1Fyea8RZhfd-EO3TTpQtOvpOP0yxnAsbQ@mail.gmail.com>
- <20200213154642.GA38197@google.com>
+        Thu, 20 Feb 2020 20:25:59 -0500
+Received: by mail-pf1-f194.google.com with SMTP id j9so326413pfa.8
+        for <linux-kernel@vger.kernel.org>; Thu, 20 Feb 2020 17:25:57 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=mime-version:content-transfer-encoding:in-reply-to:references
+         :subject:from:cc:to:date:message-id:user-agent;
+        bh=J27tQOPYceXfH5oaFJMMhJDT732qIsb34aA7vP0bweA=;
+        b=KeLcOadtXcfeKufQnhfHWukRpP0rcjyigVh9n2QuBfFREEOJgQ9cERYSzBVO1H24bf
+         GslQJhgovU12DwmWhdY1905yRIetjAfxvF7MTGnZ2UE9m8YX3B2TXbn2ONVNoNQ+/ySK
+         CkCd9IBBjpBTwn/oXa+CPLoM/O9/n5cl7IGqM=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:content-transfer-encoding
+         :in-reply-to:references:subject:from:cc:to:date:message-id
+         :user-agent;
+        bh=J27tQOPYceXfH5oaFJMMhJDT732qIsb34aA7vP0bweA=;
+        b=fAUPgdpkP3lz8FDOVfknS+xuG4V7W7nR+Zvys7xdHbx661traHHPpQ/SkQwmWfJ8Fn
+         L92/gnF2eOesTgyX3XfGFx2WAB/LKygWzUeGtw4Wp8wIjbCwLsJIhs1ocNr2Nd1zwX/T
+         TWbWTYE0/3w6wUdjoZnoqvMlQJQhJmfa67zdwUp68EfJhtmjbgAtAQG03j7xXtyG/b8r
+         7W2/Ddw4JWPKPCwSxLTaySAoIW9xHCx1J1n4LE7IZi8QthcwdA1IBuxfNbyQnPi2HdsR
+         N9t1nPIuZa8vAIosuiCkuogUtRo+4Z9N4E4/t6IjzG+Wl1xpquxaOG7W64CbsxAcnlzM
+         EdPw==
+X-Gm-Message-State: APjAAAUkWfCtYD3QtTPMtmhJGQbynB17o2idU57+wkGbee69nwaWQmzZ
+        EN9qJljhrRSaYZgSrwGtVws64g==
+X-Google-Smtp-Source: APXvYqwnp1RJPUUY+xeDLnhF608PQs6KEBc6Qiwmq2RWYeRfku/XGkGrTRPkQ7mJPGNM+td+uYP8jA==
+X-Received: by 2002:a63:ed16:: with SMTP id d22mr8697865pgi.314.1582248356653;
+        Thu, 20 Feb 2020 17:25:56 -0800 (PST)
+Received: from chromium.org ([2620:15c:202:1:fa53:7765:582b:82b9])
+        by smtp.gmail.com with ESMTPSA id j17sm818392pfa.16.2020.02.20.17.25.55
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 20 Feb 2020 17:25:56 -0800 (PST)
+Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="xsczwp6mfjixgoyo"
-Content-Disposition: inline
-In-Reply-To: <20200213154642.GA38197@google.com>
+Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <1582105474-27866-1-git-send-email-vbadigan@codeaurora.org>
+References: <1581413771-18005-1-git-send-email-vbadigan@codeaurora.org> <1582105474-27866-1-git-send-email-vbadigan@codeaurora.org>
+Subject: Re: [PATCH V2] mmc: mmc_test: Pass different sg lists for non-blocking requests
+From:   Stephen Boyd <swboyd@chromium.org>
+Cc:     asutoshd@codeaurora.org, stummala@codeaurora.org,
+        sayalil@codeaurora.org, cang@codeaurora.org,
+        rampraka@codeaurora.org, dianders@google.com,
+        linux-mmc@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-arm-msm@vger.kernel.org,
+        Veerabhadrarao Badiganti <vbadigan@codeaurora.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Allison Randal <allison@lohutok.net>,
+        Thomas Gleixner <tglx@linutronix.de>
+To:     Veerabhadrarao Badiganti <vbadigan@codeaurora.org>,
+        robh+dt@kernel.org, ulf.hansson@linaro.org
+Date:   Thu, 20 Feb 2020 17:25:55 -0800
+Message-ID: <158224835519.184098.16667027079485274979@swboyd.mtv.corp.google.com>
+User-Agent: alot/0.9
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
---xsczwp6mfjixgoyo
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-
-On 2020-02-13, Ross Zwisler <zwisler@google.com> wrote:
-> On Thu, Feb 06, 2020 at 12:10:45PM -0700, Ross Zwisler wrote:
-> > On Tue, Feb 4, 2020 at 8:45 PM Aleksa Sarai <cyphar@cyphar.com> wrote:
-> > > On 2020-02-04, Matthew Wilcox <willy@infradead.org> wrote:
-> > > > On Tue, Feb 04, 2020 at 04:49:48PM -0700, Ross Zwisler wrote:
-> > > > > On Tue, Feb 4, 2020 at 3:11 PM Ross Zwisler <zwisler@chromium.org=
-> wrote:
-> > > > > > On Tue, Feb 4, 2020 at 2:53 PM Raul Rangel <rrangel@google.com>=
- wrote:
-> > > > > > > > --- a/include/uapi/linux/mount.h
-> > > > > > > > +++ b/include/uapi/linux/mount.h
-> > > > > > > > @@ -34,6 +34,7 @@
-> > > > > > > >  #define MS_I_VERSION   (1<<23) /* Update inode I_version f=
-ield */
-> > > > > > > >  #define MS_STRICTATIME (1<<24) /* Always perform atime upd=
-ates */
-> > > > > > > >  #define MS_LAZYTIME    (1<<25) /* Update the on-disk [acm]=
-times lazily */
-> > > > > > > > +#define MS_NOSYMFOLLOW (1<<26) /* Do not follow symlinks */
-> > > > > > > Doesn't this conflict with MS_SUBMOUNT below?
-> > > > > > > >
-> > > > > > > >  /* These sb flags are internal to the kernel */
-> > > > > > > >  #define MS_SUBMOUNT     (1<<26)
-> > > > > >
-> > > > > > Yep.  Thanks for the catch, v6 on it's way.
-> > > > >
-> > > > > It actually looks like most of the flags which are internal to the
-> > > > > kernel are actually unused (MS_SUBMOUNT, MS_NOREMOTELOCK, MS_NOSE=
-C,
-> > > > > MS_BORN and MS_ACTIVE).  Several are unused completely, and the r=
-est
-> > > > > are just part of the AA_MS_IGNORE_MASK which masks them off in the
-> > > > > apparmor LSM, but I'm pretty sure they couldn't have been set any=
-way.
-> > > > >
-> > > > > I'll just take over (1<<26) for MS_NOSYMFOLLOW, and remove the re=
-st in
-> > > > > a second patch.
-> > > > >
-> > > > > If someone thinks these flags are actually used by something and =
-I'm
-> > > > > just missing it, please let me know.
-> > > >
-> > > > Afraid you did miss it ...
-> > > >
-> > > > /*
-> > > >  * sb->s_flags.  Note that these mirror the equivalent MS_* flags w=
-here
-> > > >  * represented in both.
-> > > >  */
-> > > > ...
-> > > > #define SB_SUBMOUNT     (1<<26)
-> > > >
-> > > > It's not entirely clear to me why they need to be the same, but I h=
-aven't
-> > > > been paying close attention to the separation of superblock and mou=
-nt
-> > > > flags, so someone else can probably explain the why of it.
-> > >
-> > > I could be wrong, but I believe this is historic and originates from =
-the
-> > > kernel setting certain flags internally (similar to the whole O_* fla=
-g,
-> > > "internal" O_* flag, and FMODE_NOTIFY mixup).
-> > >
-> > > Also, one of the arguments for the new mount API was that we'd run out
-> > > MS_* bits so it's possible that you have to enable this new mount opt=
-ion
-> > > in the new mount API only. (Though Howells is the right person to talk
-> > > to on this point.)
-> >=20
-> > As far as I can tell, SB_SUBMOUNT doesn't actually have any dependence =
-on
-> > MS_SUBMOUNT. Nothing ever sets or checks MS_SUBMOUNT from within the ke=
-rnel,
-> > and whether or not it's set from userspace has no bearing on how SB_SUB=
-MOUNT
-> > is used.  SB_SUBMOUNT is set independently inside of the kernel in
-> > vfs_submount().
-> >=20
-> > I agree that their association seems to be historical, introduced in th=
-is
-> > commit from David Howells:
-> >=20
-> > e462ec50cb5fa VFS: Differentiate mount flags (MS_*) from internal super=
-block flags
-> >=20
-> > In that commit message David notes:
-> >=20
-> >      (1) Some MS_* flags get translated to MNT_* flags (such as MS_NODE=
-V ->
-> >          MNT_NODEV) without passing this on to the filesystem, but some
-> >          filesystems set such flags anyway.
-> >=20
-> > I think this is sort of what we are trying to do with MS_NOSYMFOLLOW: h=
-ave a
-> > userspace flag that translates to MNT_NOSYMFOLLOW, but which doesn't ne=
-ed an
-> > associated SB_* flag.  Is it okay to reclaim the bit currently owned by
-> > MS_SUBMOUNT and use it for MS_NOSYMFOLLOW.
-> >=20
-> > A second option would be to choose one of the unused MS_* values from t=
-he
-> > middle of the range, such as 256 or 512.  Looking back as far as git wi=
-ll let
-> > me, I don't think that these flags have been used for MS_* values at le=
-ast
-> > since v2.6.12:
-> >=20
-> > https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/comm=
-it/include/linux/fs.h?id=3D1da177e4c3f41524e886b7f1b8a0c1fc7321cac2
-> >=20
-> > I think maybe these used to be S_WRITE and S_APPEND, which weren't file=
-system
-> > mount flags?
-> >=20
-> > https://sites.uclouvain.be/SystInfo/usr/include/sys/mount.h.html
-> >=20
-> > A third option would be to create this flag using the new mount system:
-> >=20
-> > https://lwn.net/Articles/753473/
-> > https://lwn.net/Articles/759499/
-> >=20
-> > My main concern with this option is that for Chrome OS we'd like to be =
-able to
-> > backport whatever solution we come up with to a variety of older kernel=
-s, and
-> > if we go with the new mount system this would require us to backport the
-> > entire new mount system to those kernels, which I think is infeasible. =
-=20
-> >=20
-> > David, what are your thoughts on this?  Of these three options for supp=
-orting
-> > a new MS_NOSYMFOLLOW flag:
-> >=20
-> > 1) reclaim the bit currently used by MS_SUBMOUNT
-> > 2) use a smaller unused value for the flag, 256 or 512
-> > 3) implement the new flag only in the new mount system
-> >=20
-> > do you think either #1 or #2 are workable?  If so, which would you pref=
-er?
+Quoting Veerabhadrarao Badiganti (2020-02-19 01:44:31)
+> Supply a separate sg list for each of the request in non-blocking
+> IO test cases where two requests will be issued at same time.
 >=20
-> Gentle ping on this - do either of the options using the existing mount A=
-PI
-> seem possible?  Would it be useful for me to send out example patches in =
-one
-> of those directions?  Or is it out of the question, and I should spend my=
- time
-> on making patches using the new mount system?  Thanks!
+> Otherwise, sg memory may get unmapped when a request is done while
+> same memory is being accessed by controller from the other request,
+> and it leads to iommu errors with below call stack:
+>=20
+>         __arm_lpae_unmap+0x2e0/0x478
+>         arm_lpae_unmap+0x54/0x70
+>         arm_smmu_unmap+0x64/0xa4
+>         __iommu_unmap+0xb8/0x1f0
+>         iommu_unmap_fast+0x38/0x48
+>         __iommu_dma_unmap+0x88/0x108
+>         iommu_dma_unmap_sg+0x90/0xa4
+>         sdhci_post_req+0x5c/0x78
+>         mmc_test_start_areq+0x10c/0x120 [mmc_test]
+>         mmc_test_area_io_seq+0x150/0x264 [mmc_test]
+>         mmc_test_rw_multiple+0x174/0x1c0 [mmc_test]
+>         mmc_test_rw_multiple_sg_len+0x44/0x6c [mmc_test]
+>         mmc_test_profile_sglen_wr_nonblock_perf+0x6c/0x94 [mmc_test]
+>         mtf_test_write+0x238/0x3cc [mmc_test]
+>=20
+> Signed-off-by: Veerabhadrarao Badiganti <vbadigan@codeaurora.org>
+>=20
+> ---
 
-I think (1) or (2) sound reasonable, but I'm not really the right person
-to ask.
+Reviewed-by: Stephen Boyd <swboyd@chromium.org>
 
---=20
-Aleksa Sarai
-Senior Software Engineer (Containers)
-SUSE Linux GmbH
-<https://www.cyphar.com/>
+> Changes since V1:
+>         - Freeing-up sg_areq memory.
+>         - Added check to ensure sg length is equal for both the sg-lists
+>           supplied in case of non-blocking requests.
+> ---
+>  drivers/mmc/core/mmc_test.c | 42 ++++++++++++++++++++++++++++++++++++---=
+---
+>  1 file changed, 36 insertions(+), 6 deletions(-)
+>=20
+> diff --git a/drivers/mmc/core/mmc_test.c b/drivers/mmc/core/mmc_test.c
+> index 492dd45..f8f884a 100644
+> --- a/drivers/mmc/core/mmc_test.c
+> +++ b/drivers/mmc/core/mmc_test.c
+> @@ -1411,6 +1417,22 @@ static int mmc_test_area_map(struct mmc_test_card =
+*test, unsigned long sz,
+>                 err =3D mmc_test_map_sg(t->mem, sz, t->sg, 1, t->max_segs,
+>                                       t->max_seg_sz, &t->sg_len, min_sg_l=
+en);
+>         }
+> +
+> +       if (err || !nonblock)
+> +               goto err;
+> +
+> +       if (max_scatter) {
+> +               err =3D mmc_test_map_sg_max_scatter(t->mem, sz, t->sg_are=
+q,
+> +                                                 t->max_segs, t->max_seg=
+_sz,
+> +                                                 &sg_len);
+> +       } else {
+> +               err =3D mmc_test_map_sg(t->mem, sz, t->sg_areq, 1, t->max=
+_segs,
 
---xsczwp6mfjixgoyo
-Content-Type: application/pgp-signature; name="signature.asc"
+'repeat' is always set to 1. Why not remove that argument and update the
+code? As a follow up patch.
 
------BEGIN PGP SIGNATURE-----
+> +                                     t->max_seg_sz, &sg_len, min_sg_len);
+> +       }
+> +       if (!err && sg_len !=3D t->sg_len)
+> +               err =3D -EINVAL;
+> +
+> +err:
+>         if (err)
+>                 pr_info("%s: Failed to map sg list\n",
+>                        mmc_hostname(test->card->host));
+> @@ -1458,15 +1480,16 @@ static int mmc_test_area_io_seq(struct mmc_test_c=
+ard *test, unsigned long sz,
+>                         sz =3D max_tfr;
+>         }
+> =20
+> -       ret =3D mmc_test_area_map(test, sz, max_scatter, min_sg_len);
+> +       ret =3D mmc_test_area_map(test, sz, max_scatter, min_sg_len, nonb=
+lock);
+>         if (ret)
+>                 return ret;
+> =20
+>         if (timed)
+>                 ktime_get_ts64(&ts1);
+>         if (nonblock)
+> -               ret =3D mmc_test_nonblock_transfer(test, t->sg, t->sg_len,
+> -                                dev_addr, t->blocks, 512, write, count);
+> +               ret =3D mmc_test_nonblock_transfer(test, t->sg, t->sg_are=
+q,
+> +                                t->sg_len, dev_addr, t->blocks, 512, wri=
+te,
+> +                                count);
 
-iHUEABYIAB0WIQSxZm6dtfE8gxLLfYqdlLljIbnQEgUCXk8wowAKCRCdlLljIbnQ
-Es1iAQDuT/a47/nE7aKahxtlanEMrLCGeMRrWIZPfm9nP6QvIAEAzmfRulzyRUaO
-aJqg3PlVJUtu7shA39yqgFXB6iB3tQM=
-=TQ4/
------END PGP SIGNATURE-----
+This is only called one time so it may be simpler to pass 't' instead of
+pick it apart and pass it as many arguments. Not a problem in this
+patch, besides that we're now passing even more arguments here making
+this harder to read. Also, the blksz could be hardcoded in the function
+instead of passing it as 512.
 
---xsczwp6mfjixgoyo--
+>         else
+>                 for (i =3D 0; i < count && ret =3D=3D 0; i++) {
+>                         ret =3D mmc_test_area_transfer(test, dev_addr, wr=
+ite);
+> @@ -1584,6 +1608,12 @@ static int mmc_test_area_init(struct mmc_test_card=
+ *test, int erase, int fill)
+>                 goto out_free;
+>         }
+> =20
+> +       t->sg_areq =3D kmalloc_array(t->max_segs, sizeof(*t->sg), GFP_KER=
+NEL);
+
+It's more idiomatic to use sizeof(*t->sq_areq) here.
+
+> +       if (!t->sg_areq) {
+> +               ret =3D -ENOMEM;
+> +               goto out_free;
+> +       }
+> +
+>         t->dev_addr =3D mmc_test_capacity(test->card) / 2;
+>         t->dev_addr -=3D t->dev_addr % (t->max_sz >> 9);
+>
