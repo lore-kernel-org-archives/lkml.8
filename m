@@ -2,142 +2,104 @@ Return-Path: <SRS0=1210=4J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-17.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT,
+	USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DC7A5C35641
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 08:05:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 74809C35642
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 08:05:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B19332467A
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 08:05:26 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582272326;
-	bh=2RobnehjzjN4gENd8OlyjC+tVLtjWRcD/KaqApge1Ss=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=mXlC8hoMJKFUJYAAUNU2KLPaFa6FmNCHjsuekRjEguN7aZww49PB4AuaTNpZ9v6R5
-	 XzMxdNhKqyVUt8nLURTUNlq/TIymvrbxTKZCqUFDQYPV10GaTtnc4ym59nUvvNn1Uf
-	 fSZucExlxqEsO3MRGyzWgXbLFTK46KgRR4mcbr/E=
+	by mail.kernel.org (Postfix) with ESMTP id 400EE222C4
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 08:05:28 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="iFjRi2lX"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731820AbgBUIFZ (ORCPT
+        id S1731636AbgBUIF1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Feb 2020 03:05:25 -0500
-Received: from mail.kernel.org ([198.145.29.99]:38864 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731615AbgBUIFX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 21 Feb 2020 03:05:27 -0500
+Received: from mail-pg1-f201.google.com ([209.85.215.201]:33256 "EHLO
+        mail-pg1-f201.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731809AbgBUIFX (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
         Fri, 21 Feb 2020 03:05:23 -0500
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5C4482073A;
-        Fri, 21 Feb 2020 08:05:22 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1582272322;
-        bh=2RobnehjzjN4gENd8OlyjC+tVLtjWRcD/KaqApge1Ss=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=jdInb4wTHcO+2f3TUIReIJJI3lBXJg11a3RJtyovTRg8p+6L0/vrdrrm6IkTUSj3U
-         eM09Rk37+P9x1oEZrdC9bsSnquR+mImqBqqKKvywc8SCSjO6Hr6iBllwGJvetLgZzS
-         mpjNDoYEH7GOUwHbI0LaZZx1p160Fmo6n2KrSZVM=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Adam Ford <aford173@gmail.com>,
-        Sam Ravnborg <sam@ravnborg.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 098/344] drm/panel: simple: Add Logic PD Type 28 display support
-Date:   Fri, 21 Feb 2020 08:38:17 +0100
-Message-Id: <20200221072357.849363469@linuxfoundation.org>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20200221072349.335551332@linuxfoundation.org>
-References: <20200221072349.335551332@linuxfoundation.org>
-User-Agent: quilt/0.66
-MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Received: by mail-pg1-f201.google.com with SMTP id 37so774115pgq.0
+        for <linux-kernel@vger.kernel.org>; Fri, 21 Feb 2020 00:05:23 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=date:in-reply-to:message-id:mime-version:references:subject:from:to
+         :cc;
+        bh=TmMGk/2HBR1UCtTSik3KGPjlUzxkj3b3kzWXZC6WT9Q=;
+        b=iFjRi2lXT3xCMYDE9bXhtNTLTPvc/qH/k0oZFPXOxEmT77SupUGzWbQlxjIkYDvepJ
+         J9m8yzaSxeNODkQo4SNsHB7r3mdbZphkPoMS8nwejEWyCm1o2Yi5799rE1NpThTna3G2
+         OmBhe0RsQMPWgbObAglt1/23z6cPD70Hwh0LuccpHztgX4nyAsbugqpyb6VzLlsm/2r0
+         O1um1spjp+JKFiTI5jmugktkX6EarXzwznHkso5Se6zh48jpoyM7P5rLyUKLy41HPvnQ
+         7K/avBOyXpvJoulZfo/ANUTrpc7dfVv/OyVX/611NoYiOVEeSq5GpQBwA7CLcn29E+MC
+         I4+w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:in-reply-to:message-id:mime-version
+         :references:subject:from:to:cc;
+        bh=TmMGk/2HBR1UCtTSik3KGPjlUzxkj3b3kzWXZC6WT9Q=;
+        b=uhgfbOhQVJWVChQ3Fp32/OmlwTfuwyhNgpc9E+47DjmtwKdG3Sy1DkB0uUKv45rCXX
+         Os5G1j/qPeJmOmi7DoNHxBKggeWBA7y4Vhyhubc9BJLrgbucvNgbCxCNFtQvGrnOs4Xo
+         PQyYFwTJAHCEOmasIVT5+/tl2LBmhUsPUkQpkT+Uqu2BdRltfnWsxrAdpHpV4glQxI8v
+         bkUe0KQFoomrYQ2hdlxUF10Ukeii+kfxjiYn0+Tl2dW9QKzr1YZZ2s8U5Cfns1JNA9F8
+         YOI4xfiAin/QGAfRL+rA1c+gKpodu+P3xRNiqGsAsR07yK6SHoYWVwy11YkYd94V6GGT
+         oMUg==
+X-Gm-Message-State: APjAAAWn/Khw+BlBmCk23Meiyk76BQBq/aM526ZyUBPAKegidTJMxA3N
+        3mRUGHBXMrsHht4giJKeVPqZtCOOtKhzEHg=
+X-Google-Smtp-Source: APXvYqwwT8HrJMcRaQcjbMBtfXoB9pFj05Vh7NYFLdWIETzC1+E/D7owCTf4aiQ+/33i/qwrW6L5AmqEXOqk5Rc=
+X-Received: by 2002:a63:d49:: with SMTP id 9mr36176560pgn.249.1582272322794;
+ Fri, 21 Feb 2020 00:05:22 -0800 (PST)
+Date:   Fri, 21 Feb 2020 00:05:09 -0800
+In-Reply-To: <20200221080510.197337-1-saravanak@google.com>
+Message-Id: <20200221080510.197337-3-saravanak@google.com>
+Mime-Version: 1.0
+References: <20200221080510.197337-1-saravanak@google.com>
+X-Mailer: git-send-email 2.25.0.265.gbab2e86ba0-goog
+Subject: [PATCH v2 2/3] driver core: Add dev_has_sync_state()
+From:   Saravana Kannan <saravanak@google.com>
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        "Rafael J. Wysocki" <rafael@kernel.org>
+Cc:     Saravana Kannan <saravanak@google.com>, kernel-team@android.com,
+        linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Adam Ford <aford173@gmail.com>
+Add an API to check if a device has sync_state support in its driver or
+bus.
 
-[ Upstream commit 0d35408afbeb603bc9972ae91e4dd2638bcffe52 ]
-
-Previously, there was an omap panel-dpi driver that would
-read generic timings from the device tree and set the display
-timing accordingly.  This driver was removed so the screen
-no longer functions.  This patch modifies the panel-simple
-file to setup the timings to the same values previously used.
-
-Fixes: 8bf4b1621178 ("drm/omap: Remove panel-dpi driver")
-
-Signed-off-by: Adam Ford <aford173@gmail.com>
-Reviewed-by: Sam Ravnborg <sam@ravnborg.org>
-Signed-off-by: Sam Ravnborg <sam@ravnborg.org>
-Link: https://patchwork.freedesktop.org/patch/msgid/20191016135147.7743-1-aford173@gmail.com
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+Signed-off-by: Saravana Kannan <saravanak@google.com>
 ---
- drivers/gpu/drm/panel/panel-simple.c | 37 ++++++++++++++++++++++++++++
- 1 file changed, 37 insertions(+)
+ include/linux/device.h | 11 +++++++++++
+ 1 file changed, 11 insertions(+)
 
-diff --git a/drivers/gpu/drm/panel/panel-simple.c b/drivers/gpu/drm/panel/panel-simple.c
-index 28fa6ba7b7673..8abb31f83ffc7 100644
---- a/drivers/gpu/drm/panel/panel-simple.c
-+++ b/drivers/gpu/drm/panel/panel-simple.c
-@@ -2048,6 +2048,40 @@ static const struct drm_display_mode mitsubishi_aa070mc01_mode = {
- 	.flags = DRM_MODE_FLAG_NHSYNC | DRM_MODE_FLAG_NVSYNC,
- };
+diff --git a/include/linux/device.h b/include/linux/device.h
+index 0cd7c647c16c..fa04dfd22bbc 100644
+--- a/include/linux/device.h
++++ b/include/linux/device.h
+@@ -798,6 +798,17 @@ static inline struct device_node *dev_of_node(struct device *dev)
+ 	return dev->of_node;
+ }
  
-+static const struct drm_display_mode logicpd_type_28_mode = {
-+	.clock = 9000,
-+	.hdisplay = 480,
-+	.hsync_start = 480 + 3,
-+	.hsync_end = 480 + 3 + 42,
-+	.htotal = 480 + 3 + 42 + 2,
++static inline bool dev_has_sync_state(struct device *dev)
++{
++	if (!dev)
++		return false;
++	if (dev->driver && dev->driver->sync_state)
++		return true;
++	if (dev->bus && dev->bus->sync_state)
++		return true;
++	return false;
++}
 +
-+	.vdisplay = 272,
-+	.vsync_start = 272 + 2,
-+	.vsync_end = 272 + 2 + 11,
-+	.vtotal = 272 + 2 + 11 + 3,
-+	.vrefresh = 60,
-+	.flags = DRM_MODE_FLAG_PHSYNC | DRM_MODE_FLAG_PVSYNC,
-+};
-+
-+static const struct panel_desc logicpd_type_28 = {
-+	.modes = &logicpd_type_28_mode,
-+	.num_modes = 1,
-+	.bpc = 8,
-+	.size = {
-+		.width = 105,
-+		.height = 67,
-+	},
-+	.delay = {
-+		.prepare = 200,
-+		.enable = 200,
-+		.unprepare = 200,
-+		.disable = 200,
-+	},
-+	.bus_format = MEDIA_BUS_FMT_RGB888_1X24,
-+	.bus_flags = DRM_BUS_FLAG_DE_HIGH | DRM_BUS_FLAG_PIXDATA_DRIVE_POSEDGE |
-+		     DRM_BUS_FLAG_SYNC_DRIVE_NEGEDGE,
-+};
-+
- static const struct panel_desc mitsubishi_aa070mc01 = {
- 	.modes = &mitsubishi_aa070mc01_mode,
- 	.num_modes = 1,
-@@ -3264,6 +3298,9 @@ static const struct of_device_id platform_of_match[] = {
- 	}, {
- 		.compatible = "lg,lp129qe",
- 		.data = &lg_lp129qe,
-+	}, {
-+		.compatible = "logicpd,type28",
-+		.data = &logicpd_type_28,
- 	}, {
- 		.compatible = "mitsubishi,aa070mc01-ca1",
- 		.data = &mitsubishi_aa070mc01,
+ /*
+  * High level routines for use by the bus drivers
+  */
 -- 
-2.20.1
-
-
+2.25.0.265.gbab2e86ba0-goog
 
