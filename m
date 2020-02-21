@@ -2,120 +2,182 @@ Return-Path: <SRS0=1210=4J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_2
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 03728C3565B
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 18:20:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E0199C3565B
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 18:21:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CC214222C4
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 18:20:38 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="LKGAvzC9"
+	by mail.kernel.org (Postfix) with ESMTP id B3FA4208E4
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 18:21:19 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729413AbgBUSUh (ORCPT
+        id S1729421AbgBUSVS convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Feb 2020 13:20:37 -0500
-Received: from mail-lj1-f195.google.com ([209.85.208.195]:36511 "EHLO
-        mail-lj1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726946AbgBUSUh (ORCPT
+        Fri, 21 Feb 2020 13:21:18 -0500
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:59690 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726408AbgBUSVS (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Feb 2020 13:20:37 -0500
-Received: by mail-lj1-f195.google.com with SMTP id r19so3170973ljg.3;
-        Fri, 21 Feb 2020 10:20:35 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=C/E0xAjOCzonbvn0GhLbHdAipH5CVwsvYZUDR+hNQS4=;
-        b=LKGAvzC9Qi31ga4E7gObDwA/wkunftsW36SXCKS+z3e2ryzms7/Kk1l7WHrD8SLY68
-         zMGyCaAV/OjRq+1HlLtIAg/SFZsk531KCh2QvMVkykPPWYJO1nifmzxsfBKw8mmxPioj
-         LoKGhkwkTB4uj6iIpnwCgYmN7Q2FDeV+TVxe9VIXg/ZqmbA3UNfpmyRsS1tXQUGlvUd2
-         ZyHpZdYn4x+dFVYZaGCvQPQuv1lHbLRsibFJVqB7WX7yBNH0k2hU9NOC54j+cqlU5l+8
-         vB6pZAVFuGDLVEvSV8dr2IPL9Ku47JjQAHWWulD0uVj2CAEHN/mXnFPadG3YF89LQ+ZS
-         kwIw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=C/E0xAjOCzonbvn0GhLbHdAipH5CVwsvYZUDR+hNQS4=;
-        b=WptLRENIlGu+CHr38hduF2Ov3aX1oBvlg+wGileoEb0BPqoLbfI+Q7gHDzaCyvInHj
-         0vMA7GfVkkgc22MgI/+RqsC66K5EImlFVgmz7Ra4c7FCCdAgvEYhp3XD7kTMUEgnWcSH
-         S45S55zqmKpuf7SuCkjCjx638Bdiuo7WVMTsDixrvpYgDM3LENsxdyP6KipM94tjisIm
-         K8rCA+rJhZzRnGib0Gt7lEXAgdlKVcfVRDMab5wZlG8+Ksuy7l+isUqZ5ytGNyJzZNXI
-         KfPFvtmPsCwFatQPKjp11rybpcDa3vUaz0f9ZgMkAceNA2/Yu30NpHi3YdGgl/+Zn7ja
-         IjzQ==
-X-Gm-Message-State: APjAAAUH6eXWV2iOu6mWLn3Fd7fVH21CiRTZaRo9xfMuKEEkZJijPqsK
-        ZPNX3pKzkTL5kcE5N8jHkXrRRed+
-X-Google-Smtp-Source: APXvYqyOq+v4Eh6q5hcFWzhG0NPLOok3SvgWv8r5p2HWHU7QWWRYRDbO/750ZdsoHcCoZyDQdoKjOg==
-X-Received: by 2002:a2e:844e:: with SMTP id u14mr22731544ljh.183.1582309234179;
-        Fri, 21 Feb 2020 10:20:34 -0800 (PST)
-Received: from [192.168.2.145] (79-139-233-37.dynamic.spd-mgts.ru. [79.139.233.37])
-        by smtp.googlemail.com with ESMTPSA id u22sm2084441lff.65.2020.02.21.10.20.33
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 21 Feb 2020 10:20:33 -0800 (PST)
-Subject: Re: [PATCH v9 13/17] cpuidle: tegra: Squash Tegra30 driver into the
- common driver
-To:     Daniel Lezcano <daniel.lezcano@linaro.org>
-Cc:     Thierry Reding <thierry.reding@gmail.com>,
-        Jonathan Hunter <jonathanh@nvidia.com>,
-        Peter De Schrijver <pdeschrijver@nvidia.com>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        =?UTF-8?B?TWljaGHFgiBNaXJvc8WCYXc=?= <mirq-linux@rere.qmqm.pl>,
-        Jasper Korten <jja2000@gmail.com>,
-        David Heidelberg <david@ixit.cz>,
-        Peter Geis <pgwipeout@gmail.com>, linux-pm@vger.kernel.org,
-        linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20200212235134.12638-1-digetx@gmail.com>
- <20200212235134.12638-14-digetx@gmail.com>
- <20200221162951.GQ10516@linaro.org>
- <89a9838c-faf3-b890-cea2-aad53df1eac3@gmail.com>
- <20200221174128.GW10516@linaro.org>
-From:   Dmitry Osipenko <digetx@gmail.com>
-Message-ID: <9de1aad1-1926-db4d-73e3-d10f77bb8a36@gmail.com>
-Date:   Fri, 21 Feb 2020 21:20:32 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.3.0
+        Fri, 21 Feb 2020 13:21:18 -0500
+Received: from pps.filterd (m0098393.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 01LILBNn105226
+        for <linux-kernel@vger.kernel.org>; Fri, 21 Feb 2020 13:21:17 -0500
+Received: from e06smtp02.uk.ibm.com (e06smtp02.uk.ibm.com [195.75.94.98])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2y8ubyq0kt-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Fri, 21 Feb 2020 13:19:47 -0500
+Received: from localhost
+        by e06smtp02.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-kernel@vger.kernel.org> from <pasic@linux.ibm.com>;
+        Fri, 21 Feb 2020 18:16:34 -0000
+Received: from b06cxnps4075.portsmouth.uk.ibm.com (9.149.109.197)
+        by e06smtp02.uk.ibm.com (192.168.101.132) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Fri, 21 Feb 2020 18:16:29 -0000
+Received: from d06av21.portsmouth.uk.ibm.com (d06av21.portsmouth.uk.ibm.com [9.149.105.232])
+        by b06cxnps4075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 01LIGRl854984706
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Fri, 21 Feb 2020 18:16:27 GMT
+Received: from d06av21.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 6FE7C52051;
+        Fri, 21 Feb 2020 18:16:27 +0000 (GMT)
+Received: from oc2783563651 (unknown [9.152.224.149])
+        by d06av21.portsmouth.uk.ibm.com (Postfix) with ESMTP id E10EA5204E;
+        Fri, 21 Feb 2020 18:16:26 +0000 (GMT)
+Date:   Fri, 21 Feb 2020 19:16:25 +0100
+From:   Halil Pasic <pasic@linux.ibm.com>
+To:     Christoph Hellwig <hch@lst.de>
+Cc:     "Michael S. Tsirkin" <mst@redhat.com>,
+        Jason Wang <jasowang@redhat.com>,
+        Marek Szyprowski <m.szyprowski@samsung.com>,
+        Robin Murphy <robin.murphy@arm.com>,
+        linux-s390@vger.kernel.org,
+        virtualization@lists.linux-foundation.org,
+        linux-kernel@vger.kernel.org, iommu@lists.linux-foundation.org,
+        Christian Borntraeger <borntraeger@de.ibm.com>,
+        Janosch Frank <frankja@linux.ibm.com>,
+        Viktor Mihajlovski <mihajlov@linux.ibm.com>,
+        Cornelia Huck <cohuck@redhat.com>,
+        Ram Pai <linuxram@us.ibm.com>,
+        Thiago Jung Bauermann <bauerman@linux.ibm.com>,
+        David Gibson <david@gibson.dropbear.id.au>,
+        "Lendacky, Thomas" <Thomas.Lendacky@amd.com>,
+        Michael Mueller <mimu@linux.ibm.com>
+Subject: Re: [PATCH 2/2] virtio: let virtio use DMA API when guest RAM is
+ protected
+In-Reply-To: <20200221163938.GC10054@lst.de>
+References: <20200220160606.53156-1-pasic@linux.ibm.com>
+        <20200220160606.53156-3-pasic@linux.ibm.com>
+        <20200220161309.GB12709@lst.de>
+        <20200221153340.4cdcde81.pasic@linux.ibm.com>
+        <20200221163938.GC10054@lst.de>
+Organization: IBM
+X-Mailer: Claws Mail 3.11.1 (GTK+ 2.24.31; x86_64-redhat-linux-gnu)
 MIME-Version: 1.0
-In-Reply-To: <20200221174128.GW10516@linaro.org>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 8BIT
+X-TM-AS-GCONF: 00
+x-cbid: 20022118-0008-0000-0000-00000355389C
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 20022118-0009-0000-0000-00004A764C38
+Message-Id: <20200221191625.1d589ea7.pasic@linux.ibm.com>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.572
+ definitions=2020-02-21_06:2020-02-21,2020-02-21 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxscore=0 lowpriorityscore=0
+ phishscore=0 impostorscore=0 clxscore=1015 priorityscore=1501 bulkscore=0
+ suspectscore=0 malwarescore=0 mlxlogscore=999 spamscore=0 adultscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2001150001
+ definitions=main-2002210140
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-21.02.2020 20:41, Daniel Lezcano пишет:
-> On Fri, Feb 21, 2020 at 07:59:14PM +0300, Dmitry Osipenko wrote:
->> 21.02.2020 19:29, Daniel Lezcano пишет:
->>> On Thu, Feb 13, 2020 at 02:51:30AM +0300, Dmitry Osipenko wrote:
->>>> Tegra20 and Terga30 SoCs have common C1 and CC6 idling states and thus
->>>> share the same code paths, there is no point in having separate drivers
->>>> for a similar hardware. This patch merely moves functionality of the old
->>>> driver into the new, although the CC6 state is kept disabled for now since
->>>> old driver had a rudimentary support for this state (allowing to enter
->>>> into CC6 only when secondary CPUs are put offline), while new driver can
->>>> provide a full-featured support. The new feature will be enabled by
->>>> another patch.
->>>>
->>>> Acked-by: Peter De Schrijver <pdeschrijver@nvidia.com>
->>>> Tested-by: Peter Geis <pgwipeout@gmail.com>
->>>> Tested-by: Jasper Korten <jja2000@gmail.com>
->>>> Tested-by: David Heidelberg <david@ixit.cz>
->>>> Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
->>>> ---
->>>>  arch/arm/mach-tegra/Makefile          |   3 -
->>>>  arch/arm/mach-tegra/cpuidle-tegra30.c | 123 --------------------------
->>>
->>> Add the -M option when resending please.
->>
->> Okay, thank you very much for taking a look at the patches!
-> 
-> Yeah, sorry for the delay. Nice cleanup BTW.
+On Fri, 21 Feb 2020 17:39:38 +0100
+Christoph Hellwig <hch@lst.de> wrote:
 
-No problems, thank you :)
+> On Fri, Feb 21, 2020 at 03:33:40PM +0100, Halil Pasic wrote:
+> > > Hell no.  This is a detail of the platform DMA direct implementation.
+> > 
+> > I beg to differ. If it was a detail of the DMA direct implementation, it
+> > should have/would have been private to kernel/dma/direct.c. 
+> 
+> It can't given that platforms have to implement it.  It is an arch hook
+> for dma-direct.
+> 
+> > Consider what would we have to do to make PCI devices do I/O trough
+> > pages that were shared when the guest is running in a protected VM. The
+> > s390_pci_dma_ops would also need to know whether to 'force dma uencrypted'
+> > or not, and it's the exact same logic. I doubt simply using DMA direct
+> > for zPCI would do, because we still have to do all the Z specific IOMMU
+> > management.
+> 
+> And your IOMMU can't deal with the encryption bit?
+
+There is no encrypt bit, and our memory is not encrypted, but protected.
+Means e.g. when buggy/malicious hypervisor tries to read a protected
+page it wont get ciphertext, but a slap on its finger. In order do make
+memory accessible to the hypervisor (or another guest, or a real device)
+the guest must make a so called utlravisor call (talk to the firmware)
+and share the respective page.
+
+We tapped into the memory encryption infrastructure, because both is
+protecting the guest memory form the host (just by different means), and
+because it made no sense to build up something in parallel when most of
+the stuff we need was already there. But most unfortunately the names
+are deceiving when it comes to s390 protected virtualization and it's
+guest I/O enablement.
+
+
+>  In the case we
+> could think of allowing IOMMU implementation to access it.  But the
+> point that it is an internal detail of the DMA implementation and by
+> now means for drivers.
+
+From the perspective, that any driver that does anything remotely DMAish,
+that is, some external entity (possibly a hypervisor, possibly a channel
+subsystem, possibly a DMA controller) to should the memory, should do
+DMA API first, to make sure, the DMAish goes well, your argument makes
+perfect sense. But form that perspective !F_ACCESS_PLATFORM is also a
+DMAish. And the virtio spec mandates that !F_ACCESS_PLATFORM implies
+GPA's.
+
+For virtio-ccw I want GPA's and not IOVA's on s390, for virtio-pci,
+which we also support in general but not with protected virtualization,
+well, it's a different story.
+
+With protected visualization however I must make sure all I/O goes
+through shared pages. We use swiotlb for that. But then the old
+infrastructure won't cut it. Jet we still need GPA's on the ring (with
+the extra requirement that the page must be shared). 
+
+DMA API is a nice fit there because we can allocate DMA coherent memory
+(such that what comes back from our DMA ops is a GPA), so we have shared
+memory that the hypervisor and the guest is allowed to look at
+concurrently, and for the buffers that are going to be put on the vring,
+we can use the streaming API, which uses bounce buffers. The returned
+IOVA (in DMA API speak) is a GPA of the bounce buffer, and the guest is
+not allowed to peek until it unmaps, so everything is cozy. But for that
+to work, we all (AMD SEV, power, and s390) must go through the DMA API,
+because the old infrastructure in virtio core simply won't cut it. And
+it has nothing to do with the device. David explained it very well.
+
+My series is about controlling virtio-core's usage of DMA API. I believe,
+I did it in a way that doesn't hurt any arch at the moment.
+
+Maybe the conflict can be resolved if the transport gets a say in
+whether to use the DMA API or not. In the end the VIRTIO spec does say
+that "Whether accesses are actually limited or translated is described
+by platform-specific means."
+
+Regards,
+Halil
+
+
+
+
+
+
+ 
+
