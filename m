@@ -2,53 +2,52 @@ Return-Path: <SRS0=1210=4J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 702D3C35640
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 08:20:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 132C7C35641
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 08:20:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 332B724698
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 08:20:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CF3EB24691
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 08:20:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582273211;
-	bh=7kdgymCTe3z+kDx0t23a5tS8Fgh/KOpwizHQDgLdcc4=;
+	s=default; t=1582273216;
+	bh=6HKEoRuBusvKcuT8Fuw5jbBQs7MAmC6gXzaQukErTvA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=vZ4+IRdTr4j7cMne8yvUVokLR5RmmiExuplItIsNYuC8zUnWdop9c01TPrcg/9Jpj
-	 ubxkq5R5tkEsLRRs5uTBF+sq/PzVI+QorxqRmZ6mFouHrm7lOiJNhiXnhfTSCNAnMo
-	 ExB7wOTW9QqnOC1WEF19QRuJ2B4/5x0UMqXo8iQ0=
+	b=X2LqtFe3axodCh5Iy46bxoFjNktHXAcbyrOLO4cc6iVWlqR8fr7C9bN4csqknrfxH
+	 IaCEY3TiKWF93erFBUwW23FT/bd2JYfkugwZp2mkJDXrYQA4E/QaMgLwpD8uEl0pbS
+	 TNFRZDhzWYUxfhcsVrwCHJrRQyRSgcxjlRGDL+Ec=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388128AbgBUIUJ (ORCPT
+        id S2387861AbgBUIUP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Feb 2020 03:20:09 -0500
-Received: from mail.kernel.org ([198.145.29.99]:58874 "EHLO mail.kernel.org"
+        Fri, 21 Feb 2020 03:20:15 -0500
+Received: from mail.kernel.org ([198.145.29.99]:59150 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388107AbgBUIUD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Feb 2020 03:20:03 -0500
+        id S2387693AbgBUIUK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 21 Feb 2020 03:20:10 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8249E2468F;
-        Fri, 21 Feb 2020 08:20:02 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0316424691;
+        Fri, 21 Feb 2020 08:20:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1582273203;
-        bh=7kdgymCTe3z+kDx0t23a5tS8Fgh/KOpwizHQDgLdcc4=;
+        s=default; t=1582273210;
+        bh=6HKEoRuBusvKcuT8Fuw5jbBQs7MAmC6gXzaQukErTvA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=JEX66qfDJpkJ/oCtsQQCwR++SEsgohg08qXssdz4TeWvKUzZfNeqOFb8LDBJbq3XD
-         4FJb84WWKcZr6EgOZlbbli3LtuImM/2RE5MfRd9m+nK9kNI1053ZHMRvi5aDzL1xlv
-         OfoIl1eJi4DW88zXY7zaFryf1Pm2BEA1zsDpm8Eg=
+        b=rKL0PryQ8eNwxkEn07Q8/fZYiloFuo3jeLZ6RTvWvzUocqljfVcGrfgRYGQz287XJ
+         WJP5kVM3r8vYUPtUBzxTp7LTv8vbOHlMr5QVaxU6ttAMh6mE9sO2tyQ4cnyJGcK8xP
+         XKe3dYly8zBthN8ZC3lFP+SDfljkyyJ76dBGlVvk=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org,
-        Nathan Chancellor <natechancellor@gmail.com>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>,
+        Geert Uytterhoeven <geert+renesas@glider.be>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 082/191] scsi: aic7xxx: Adjust indentation in ahc_find_syncrate
-Date:   Fri, 21 Feb 2020 08:40:55 +0100
-Message-Id: <20200221072301.047802665@linuxfoundation.org>
+Subject: [PATCH 4.19 084/191] ARM: dts: r8a7779: Add device node for ARM global timer
+Date:   Fri, 21 Feb 2020 08:40:57 +0100
+Message-Id: <20200221072301.311962195@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200221072250.732482588@linuxfoundation.org>
 References: <20200221072250.732482588@linuxfoundation.org>
@@ -61,52 +60,42 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Nathan Chancellor <natechancellor@gmail.com>
+From: Geert Uytterhoeven <geert+renesas@glider.be>
 
-[ Upstream commit 4dbc96ad65c45cdd4e895ed7ae4c151b780790c5 ]
+[ Upstream commit 8443ffd1bbd5be74e9b12db234746d12e8ea93e2 ]
 
-Clang warns:
+Add a device node for the global timer, which is part of the Cortex-A9
+MPCore.
 
-../drivers/scsi/aic7xxx/aic7xxx_core.c:2317:5: warning: misleading
-indentation; statement is not part of the previous 'if'
-[-Wmisleading-indentation]
-                        if ((syncrate->sxfr_u2 & ST_SXFR) != 0)
-                        ^
-../drivers/scsi/aic7xxx/aic7xxx_core.c:2310:4: note: previous statement
-is here
-                        if (syncrate == &ahc_syncrates[maxsync])
-                        ^
-1 warning generated.
+The global timer can serve as an accurate (4 ns) clock source for
+scheduling and delay loops.
 
-This warning occurs because there is a space amongst the tabs on this
-line. Remove it so that the indentation is consistent with the Linux kernel
-coding style and clang no longer warns.
-
-This has been a problem since the beginning of git history hence no fixes
-tag.
-
-Link: https://github.com/ClangBuiltLinux/linux/issues/817
-Link: https://lore.kernel.org/r/20191218014220.52746-1-natechancellor@gmail.com
-Signed-off-by: Nathan Chancellor <natechancellor@gmail.com>
-Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
+Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
+Link: https://lore.kernel.org/r/20191211135222.26770-4-geert+renesas@glider.be
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/scsi/aic7xxx/aic7xxx_core.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ arch/arm/boot/dts/r8a7779.dtsi | 8 ++++++++
+ 1 file changed, 8 insertions(+)
 
-diff --git a/drivers/scsi/aic7xxx/aic7xxx_core.c b/drivers/scsi/aic7xxx/aic7xxx_core.c
-index 915a34f141e4f..49e02e8745533 100644
---- a/drivers/scsi/aic7xxx/aic7xxx_core.c
-+++ b/drivers/scsi/aic7xxx/aic7xxx_core.c
-@@ -2321,7 +2321,7 @@ ahc_find_syncrate(struct ahc_softc *ahc, u_int *period,
- 			 * At some speeds, we only support
- 			 * ST transfers.
- 			 */
--		 	if ((syncrate->sxfr_u2 & ST_SXFR) != 0)
-+			if ((syncrate->sxfr_u2 & ST_SXFR) != 0)
- 				*ppr_options &= ~MSG_EXT_PPR_DT_REQ;
- 			break;
- 		}
+diff --git a/arch/arm/boot/dts/r8a7779.dtsi b/arch/arm/boot/dts/r8a7779.dtsi
+index 03919714645ae..f1c9b2bc542c5 100644
+--- a/arch/arm/boot/dts/r8a7779.dtsi
++++ b/arch/arm/boot/dts/r8a7779.dtsi
+@@ -68,6 +68,14 @@
+ 		      <0xf0000100 0x100>;
+ 	};
+ 
++	timer@f0000200 {
++		compatible = "arm,cortex-a9-global-timer";
++		reg = <0xf0000200 0x100>;
++		interrupts = <GIC_PPI 11
++			(GIC_CPU_MASK_SIMPLE(4) | IRQ_TYPE_EDGE_RISING)>;
++		clocks = <&cpg_clocks R8A7779_CLK_ZS>;
++	};
++
+ 	timer@f0000600 {
+ 		compatible = "arm,cortex-a9-twd-timer";
+ 		reg = <0xf0000600 0x20>;
 -- 
 2.20.1
 
