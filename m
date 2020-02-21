@@ -2,53 +2,54 @@ Return-Path: <SRS0=1210=4J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 10102C35642
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 08:44:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B37F4C35642
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 08:44:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DC4ED206ED
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 08:44:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 85D18206DB
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 08:44:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582274685;
-	bh=QuibLGJxi5N9X8ol8r7LnQclohG6opJBBZnbALm4+OI=;
+	s=default; t=1582274690;
+	bh=WbO+uEKXoG/iwhQ7nd5kQE3ky3wQoI1Lapj7wUubyT4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=qH7pngSkWFuLdvcVRlK0rH2OnZoDvgGh2CLJFzvScwjbMShqG0lOQZt2Yg8+8ofWq
-	 vgX62A0JtDchtA7xT+UBkzDWWVSWH9u/KcSnKy9eIh5axBQaC5a4wJrD1FnuMvsFvy
-	 mtLrnUcjDexcSPoFvLRxIb9bG9ZcLvo0UCaOZOZ8=
+	b=W8c/LExmTfHnKAv/EypRKcNrVAtKO1IZqYdInhUx4doR5Mq9wAifYu83Dlb4MWn0S
+	 xB8CV/bcOA81RT4XnFG2jRaGzeOSxQH8FXNnAvVC0cuHKn8yQaUAEA+zl1scBhQlDt
+	 dSNoiY6qpZ9xM/k70901RQmWhfZiUhexZarzYXfg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729828AbgBUHvw (ORCPT
+        id S1729784AbgBUHvj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Feb 2020 02:51:52 -0500
-Received: from mail.kernel.org ([198.145.29.99]:49380 "EHLO mail.kernel.org"
+        Fri, 21 Feb 2020 02:51:39 -0500
+Received: from mail.kernel.org ([198.145.29.99]:49046 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729812AbgBUHvt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Feb 2020 02:51:49 -0500
+        id S1729326AbgBUHvh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 21 Feb 2020 02:51:37 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C8B0D2073A;
-        Fri, 21 Feb 2020 07:51:48 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3147E2073A;
+        Fri, 21 Feb 2020 07:51:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1582271509;
-        bh=QuibLGJxi5N9X8ol8r7LnQclohG6opJBBZnbALm4+OI=;
+        s=default; t=1582271496;
+        bh=WbO+uEKXoG/iwhQ7nd5kQE3ky3wQoI1Lapj7wUubyT4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=I3fOpuT4/mwarSsMPxjF1X5g1Z0/QujVcVXSTz2I5bHtx6BercFSFv6W4jPBg+KMX
-         zQqAkysEW/SgEgIvwYt/gTK3IX2gBlZvm0jVU9DIVc5NW64PLDu18W4V97FlICjJSt
-         ev+V5+HM6jRhD+Kk8OIxjXk9slwStw9N184QRzV0=
+        b=z7wjN85Ivel6B7jLJGwNNDiH98yNZ5USiW8kuX8H+5J/2yQ1TYTkvv7j3lTTRogDF
+         j1YXdCeZivq73XUBwFUvuZnq5UzZHtua7q4ZQehhakhWHd7Ovcy1ZIXzS68BuF1Dc8
+         uxVe/COP0nL1I9zVkMTd5Q7i4gdYZUBCLsaOqGnY=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Phong Tran <tranmanphong@gmail.com>,
-        Kees Cook <keescook@chromium.org>,
-        Kalle Valo <kvalo@codeaurora.org>,
+        stable@vger.kernel.org,
+        Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        "David S. Miller" <davem@davemloft.net>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.5 156/399] iwlegacy: Fix -Wcast-function-type
-Date:   Fri, 21 Feb 2020 08:38:01 +0100
-Message-Id: <20200221072417.685989842@linuxfoundation.org>
+Subject: [PATCH 5.5 187/399] net: phy: realtek: add logging for the RGMII TX delay configuration
+Date:   Fri, 21 Feb 2020 08:38:32 +0100
+Message-Id: <20200221072420.996253867@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200221072402.315346745@linuxfoundation.org>
 References: <20200221072402.315346745@linuxfoundation.org>
@@ -61,70 +62,72 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Phong Tran <tranmanphong@gmail.com>
+From: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
 
-[ Upstream commit da5e57e8a6a3e69dac2937ba63fa86355628fbb2 ]
+[ Upstream commit 3aec743d69822d22d4a5b60deb9518ed8be6fa67 ]
 
-correct usage prototype of callback in tasklet_init().
-Report by https://github.com/KSPP/linux/issues/20
+RGMII requires a delay of 2ns between the data and the clock signal.
+There are at least three ways this can happen. One possibility is by
+having the PHY generate this delay.
+This is a common source for problems (for example with slow TX speeds or
+packet loss when sending data). The TX delay configuration of the
+RTL8211F PHY can be set either by pin-strappping the RXD1 pin (HIGH
+means enabled, LOW means disabled) or through configuring a paged
+register. The setting from the RXD1 pin is also reflected in the
+register.
 
-Signed-off-by: Phong Tran <tranmanphong@gmail.com>
-Reviewed-by: Kees Cook <keescook@chromium.org>
-Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
+Add debug logging to the TX delay configuration on RTL8211F so it's
+easier to spot these issues (for example if the TX delay is enabled for
+both, the RTL8211F PHY and the MAC).
+This is especially helpful because there is no public datasheet for the
+RTL8211F PHY available with all the RX/TX delay specifics.
+
+Signed-off-by: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+Reviewed-by: Florian Fainelli <f.fainelli@gmail.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/wireless/intel/iwlegacy/3945-mac.c | 5 +++--
- drivers/net/wireless/intel/iwlegacy/4965-mac.c | 5 +++--
- 2 files changed, 6 insertions(+), 4 deletions(-)
+ drivers/net/phy/realtek.c | 19 ++++++++++++++++++-
+ 1 file changed, 18 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/net/wireless/intel/iwlegacy/3945-mac.c b/drivers/net/wireless/intel/iwlegacy/3945-mac.c
-index 1168055da1828..206b43b9dff86 100644
---- a/drivers/net/wireless/intel/iwlegacy/3945-mac.c
-+++ b/drivers/net/wireless/intel/iwlegacy/3945-mac.c
-@@ -1376,8 +1376,9 @@ il3945_dump_nic_error_log(struct il_priv *il)
- }
+diff --git a/drivers/net/phy/realtek.c b/drivers/net/phy/realtek.c
+index 476db5345e1af..879ca37c85081 100644
+--- a/drivers/net/phy/realtek.c
++++ b/drivers/net/phy/realtek.c
+@@ -171,7 +171,9 @@ static int rtl8211c_config_init(struct phy_device *phydev)
  
- static void
--il3945_irq_tasklet(struct il_priv *il)
-+il3945_irq_tasklet(unsigned long data)
+ static int rtl8211f_config_init(struct phy_device *phydev)
  {
-+	struct il_priv *il = (struct il_priv *)data;
- 	u32 inta, handled = 0;
- 	u32 inta_fh;
- 	unsigned long flags;
-@@ -3401,7 +3402,7 @@ il3945_setup_deferred_work(struct il_priv *il)
- 	timer_setup(&il->watchdog, il_bg_watchdog, 0);
++	struct device *dev = &phydev->mdio.dev;
+ 	u16 val;
++	int ret;
  
- 	tasklet_init(&il->irq_tasklet,
--		     (void (*)(unsigned long))il3945_irq_tasklet,
-+		     il3945_irq_tasklet,
- 		     (unsigned long)il);
+ 	/* enable TX-delay for rgmii-{id,txid}, and disable it for rgmii and
+ 	 * rgmii-rxid. The RX-delay can be enabled by the external RXDLY pin.
+@@ -189,7 +191,22 @@ static int rtl8211f_config_init(struct phy_device *phydev)
+ 		return 0;
+ 	}
+ 
+-	return phy_modify_paged(phydev, 0xd08, 0x11, RTL8211F_TX_DELAY, val);
++	ret = phy_modify_paged_changed(phydev, 0xd08, 0x11, RTL8211F_TX_DELAY,
++				       val);
++	if (ret < 0) {
++		dev_err(dev, "Failed to update the TX delay register\n");
++		return ret;
++	} else if (ret) {
++		dev_dbg(dev,
++			"%s 2ns TX delay (and changing the value from pin-strapping RXD1 or the bootloader)\n",
++			val ? "Enabling" : "Disabling");
++	} else {
++		dev_dbg(dev,
++			"2ns TX delay was already %s (by pin-strapping RXD1 or bootloader configuration)\n",
++			val ? "enabled" : "disabled");
++	}
++
++	return 0;
  }
  
-diff --git a/drivers/net/wireless/intel/iwlegacy/4965-mac.c b/drivers/net/wireless/intel/iwlegacy/4965-mac.c
-index 3664f56f8cbd0..d1e17589dbeb7 100644
---- a/drivers/net/wireless/intel/iwlegacy/4965-mac.c
-+++ b/drivers/net/wireless/intel/iwlegacy/4965-mac.c
-@@ -4343,8 +4343,9 @@ il4965_synchronize_irq(struct il_priv *il)
- }
- 
- static void
--il4965_irq_tasklet(struct il_priv *il)
-+il4965_irq_tasklet(unsigned long data)
- {
-+	struct il_priv *il = (struct il_priv *)data;
- 	u32 inta, handled = 0;
- 	u32 inta_fh;
- 	unsigned long flags;
-@@ -6237,7 +6238,7 @@ il4965_setup_deferred_work(struct il_priv *il)
- 	timer_setup(&il->watchdog, il_bg_watchdog, 0);
- 
- 	tasklet_init(&il->irq_tasklet,
--		     (void (*)(unsigned long))il4965_irq_tasklet,
-+		     il4965_irq_tasklet,
- 		     (unsigned long)il);
- }
- 
+ static int rtl8211e_config_init(struct phy_device *phydev)
 -- 
 2.20.1
 
