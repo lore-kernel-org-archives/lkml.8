@@ -7,46 +7,48 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 38CC9C35642
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 07:57:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5850AC35640
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 07:57:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0D49120578
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 07:57:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2C8432073A
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 07:57:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582271825;
-	bh=LUbkeXlPtCA6S3i2O8c+vGXGoIF16WvHwsz2W6tdzrE=;
+	s=default; t=1582271831;
+	bh=F7yV7B9cZ2IEW8ez9zw43MwkFZxqGIZ/+JFHLnfbauw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=iy0KakfVyCRBtyH5Ua4acrhJnaWRnWpuuY55okohlzPr+OHdqNFlGPBWkYaVGq57H
-	 OKEY+wnrt9SpByjW3OHi7XaSmuNxUAHpriISQaQNXzoZE+0pO5bVLL7Q4B2MWw3Quf
-	 K4dQlSKZFdvOJscq6NNQFHS/BTjPYBEk5G2cmmYk=
+	b=vH9YK5Ce7dti2ZoeSFrVSPdQYRGXo5odzSUFkQNBkLyVidAI2qofpFsuApA9KtPNg
+	 3ShdzsEBiwmo8MXThsoqfPOqCRngjigZ9ww5NTTc73QE0YaIfjTdsQROeqr1eK1fXq
+	 lBXzqmGcYRybh0ewv2YAqWJjJ7j5MZ5XM4+znsBc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730562AbgBUH5E (ORCPT
+        id S1730580AbgBUH5J (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Feb 2020 02:57:04 -0500
-Received: from mail.kernel.org ([198.145.29.99]:56502 "EHLO mail.kernel.org"
+        Fri, 21 Feb 2020 02:57:09 -0500
+Received: from mail.kernel.org ([198.145.29.99]:56636 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728301AbgBUH5C (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Feb 2020 02:57:02 -0500
+        id S1730417AbgBUH5H (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 21 Feb 2020 02:57:07 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 000E020578;
-        Fri, 21 Feb 2020 07:57:00 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9F3E820578;
+        Fri, 21 Feb 2020 07:57:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1582271821;
-        bh=LUbkeXlPtCA6S3i2O8c+vGXGoIF16WvHwsz2W6tdzrE=;
+        s=default; t=1582271827;
+        bh=F7yV7B9cZ2IEW8ez9zw43MwkFZxqGIZ/+JFHLnfbauw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=CufJDoYz2ZgAzuh1oQ0Mzwf8agXR42kXDoedzok6sBgTNZfKD5NAFCO4fLeO2htJJ
-         H3SArrrlYKjedSuj3I/lM0dgLWffgAss4+dOUMkhV98bYVtkXfiZg5nIWI7EGhNNH5
-         dOeXFkxjZ/LMAKIUz6jJZhiToxqG5BMb3LsZHxLo=
+        b=hNKeVYyWQEJvhbHvKaaoi4eDIP3CiLNVBJYoJkIEF/DeO0U2UXcOgkCrYGLoJ6Ush
+         M55WSJM9lkIpbNLTCXncWEOHI6vRscLtHU3+8n6jSIAr/4vMFXreI4TUgnlAgC30cs
+         JKf21VX7e/GdE/AJ0MqM2quoGowLUa7vBPjikrz0=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Miroslav Benes <mbenes@suse.cz>,
-        Jessica Yu <jeyu@kernel.org>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.5 310/399] module: avoid setting info->name early in case we can fall back to info->mod->name
-Date:   Fri, 21 Feb 2020 08:40:35 +0100
-Message-Id: <20200221072431.685881155@linuxfoundation.org>
+        stable@vger.kernel.org, Dmitry Osipenko <digetx@gmail.com>,
+        Enric Balletbo i Serra <enric.balletbo@collabora.com>,
+        Mark Brown <broonie@kernel.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.5 312/399] regulator: core: Fix exported symbols to the exported GPL version
+Date:   Fri, 21 Feb 2020 08:40:37 +0100
+Message-Id: <20200221072431.835221874@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200221072402.315346745@linuxfoundation.org>
 References: <20200221072402.315346745@linuxfoundation.org>
@@ -59,58 +61,47 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jessica Yu <jeyu@kernel.org>
+From: Enric Balletbo i Serra <enric.balletbo@collabora.com>
 
-[ Upstream commit 708e0ada1916be765b7faa58854062f2bc620bbf ]
+[ Upstream commit 3d7610e8da993539346dce6f7c909fd3d56bf4d5 ]
 
-In setup_load_info(), info->name (which contains the name of the module,
-mostly used for early logging purposes before the module gets set up)
-gets unconditionally assigned if .modinfo is missing despite the fact
-that there is an if (!info->name) check near the end of the function.
-Avoid assigning a placeholder string to info->name if .modinfo doesn't
-exist, so that we can fall back to info->mod->name later on.
+Change the exported symbols introduced by commit e9153311491da
+("regulator: vctrl-regulator: Avoid deadlock getting and setting the voltage")
+from EXPORT_SYMBOL() to EXPORT_SYMBOL_GPL(), like is used for all the core
+parts.
 
-Fixes: 5fdc7db6448a ("module: setup load info before module_sig_check()")
-Reviewed-by: Miroslav Benes <mbenes@suse.cz>
-Signed-off-by: Jessica Yu <jeyu@kernel.org>
+Fixes: e9153311491da ("regulator: vctrl-regulator: Avoid deadlock getting and setting the voltage")
+Reported-by: Dmitry Osipenko <digetx@gmail.com>
+Signed-off-by: Enric Balletbo i Serra <enric.balletbo@collabora.com>
+Link: https://lore.kernel.org/r/20200120123921.1204339-1-enric.balletbo@collabora.com
+Signed-off-by: Mark Brown <broonie@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- kernel/module.c | 9 ++++-----
- 1 file changed, 4 insertions(+), 5 deletions(-)
+ drivers/regulator/core.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/kernel/module.c b/kernel/module.c
-index d83edc3a41a33..4810ce0fbbca3 100644
---- a/kernel/module.c
-+++ b/kernel/module.c
-@@ -3059,9 +3059,7 @@ static int setup_load_info(struct load_info *info, int flags)
+diff --git a/drivers/regulator/core.c b/drivers/regulator/core.c
+index e7d167ce326cb..d015d99cb59d9 100644
+--- a/drivers/regulator/core.c
++++ b/drivers/regulator/core.c
+@@ -3470,7 +3470,7 @@ int regulator_set_voltage_rdev(struct regulator_dev *rdev, int min_uV,
+ out:
+ 	return ret;
+ }
+-EXPORT_SYMBOL(regulator_set_voltage_rdev);
++EXPORT_SYMBOL_GPL(regulator_set_voltage_rdev);
  
- 	/* Try to find a name early so we can log errors with a module name */
- 	info->index.info = find_sec(info, ".modinfo");
--	if (!info->index.info)
--		info->name = "(missing .modinfo section)";
--	else
-+	if (info->index.info)
- 		info->name = get_modinfo(info, "name");
+ static int regulator_limit_voltage_step(struct regulator_dev *rdev,
+ 					int *current_uV, int *min_uV)
+@@ -4035,7 +4035,7 @@ int regulator_get_voltage_rdev(struct regulator_dev *rdev)
+ 		return ret;
+ 	return ret - rdev->constraints->uV_offset;
+ }
+-EXPORT_SYMBOL(regulator_get_voltage_rdev);
++EXPORT_SYMBOL_GPL(regulator_get_voltage_rdev);
  
- 	/* Find internal symbols and strings. */
-@@ -3076,14 +3074,15 @@ static int setup_load_info(struct load_info *info, int flags)
- 	}
- 
- 	if (info->index.sym == 0) {
--		pr_warn("%s: module has no symbols (stripped?)\n", info->name);
-+		pr_warn("%s: module has no symbols (stripped?)\n",
-+			info->name ?: "(missing .modinfo section or name field)");
- 		return -ENOEXEC;
- 	}
- 
- 	info->index.mod = find_sec(info, ".gnu.linkonce.this_module");
- 	if (!info->index.mod) {
- 		pr_warn("%s: No module found in object\n",
--			info->name ?: "(missing .modinfo name field)");
-+			info->name ?: "(missing .modinfo section or name field)");
- 		return -ENOEXEC;
- 	}
- 	/* This is temporary: point mod into copy of data. */
+ /**
+  * regulator_get_voltage - get regulator output voltage
 -- 
 2.20.1
 
