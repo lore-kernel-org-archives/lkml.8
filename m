@@ -2,49 +2,49 @@ Return-Path: <SRS0=1210=4J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 30521C35647
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 13:51:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D0AD7C35647
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 13:51:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 002B72467A
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 13:51:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A402E20578
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 13:51:46 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="OI06iL+7"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="D5JBJcNj"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729099AbgBUNve (ORCPT
+        id S1728648AbgBUNu1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Feb 2020 08:51:34 -0500
-Received: from bombadil.infradead.org ([198.137.202.133]:56360 "EHLO
+        Fri, 21 Feb 2020 08:50:27 -0500
+Received: from bombadil.infradead.org ([198.137.202.133]:56306 "EHLO
         bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728779AbgBUNud (ORCPT
+        with ESMTP id S1727352AbgBUNu0 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Feb 2020 08:50:33 -0500
+        Fri, 21 Feb 2020 08:50:26 -0500
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=Subject:Cc:To:From:Date:Message-Id:
-        Sender:Reply-To:MIME-Version:Content-Type:Content-Transfer-Encoding:
-        Content-ID:Content-Description:In-Reply-To:References;
-        bh=XF/u7PFUoJFIlPxaNEfNsc+eUnvckEy+hBYoLnJ5VHE=; b=OI06iL+7PkLoVsEdzmte3XBHv1
-        hy0MxNNGHjGXyKL8FALTtxrqfHewCMLtJkkyJI5USTMkaPw6YPizrS7RVU3KpEN72wLshibITMYWT
-        5TT3RRvZL1kv6o2/opNulv8N89YCCH5AXzibujmSNVaTaN09XWfPSSAmrykZYzIU9uhexcmvOXyD+
-        DmFgxdSryI+AVrWvxfdq4Uwq7L3xtYaysjXBmXIi4hkWGXYwVNC9c9k56KSyNrnWwLgBQUI3v8mb4
-        EqMCzglVqVbHMjfMo8ZwX54DUsW6VH8pci6yKHWxCAgRmk/WvrbGil7w3fqH6EbptpjLPsSyDDbAZ
-        lcW2I6QA==;
+        d=infradead.org; s=bombadil.20170209; h=Content-Type:MIME-Version:References:
+        Subject:Cc:To:From:Date:Message-Id:Sender:Reply-To:Content-Transfer-Encoding:
+        Content-ID:Content-Description:In-Reply-To;
+        bh=9TKCQFcOzd7oNHjRvHOdKn3uFNBRWxE3XUWeK72UNIE=; b=D5JBJcNjTQJpmTImrQqGyVV2io
+        Xp7hOiQREaads8Tu8b8H7dXNrUH7qxTRQC3ANlQxge9VBuT/N1dSZP63mufm4NzfbL+Xm2t26884g
+        bbVIYga6DsXMjuS5YXl4Z74D5wFOQuWBDrfVDaXotYish4a5U6jkBnyqAYdpg0K9aZHDtr7X+UPqM
+        bHjRefdpgJp/7M6JxYOk75rdn/sZJoU9Trm8YL68WaXxGCRncOun0h31RcN6hNzCXtUTgyGVA7SAI
+        BvdXLLlybO3Nz5KIKo4jhakAMV0ber0/jrRZVauYayA+FRxHfEx/fh2dVc+fM79xpwfCjKCiKCvT/
+        DGO0rgUg==;
 Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
         by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1j58gt-0000Pa-ON; Fri, 21 Feb 2020 13:50:03 +0000
+        id 1j58gx-00014G-0P; Fri, 21 Feb 2020 13:50:07 +0000
 Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (Client did not present a certificate)
-        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id EA456306588;
-        Fri, 21 Feb 2020 14:48:07 +0100 (CET)
+        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 8E10B30788D;
+        Fri, 21 Feb 2020 14:48:08 +0100 (CET)
 Received: by hirez.programming.kicks-ass.net (Postfix, from userid 0)
-        id A2B4F29B59037; Fri, 21 Feb 2020 14:50:00 +0100 (CET)
-Message-Id: <20200221133416.777099322@infradead.org>
+        id 4F3B829D740BA; Fri, 21 Feb 2020 14:50:01 +0100 (CET)
+Message-Id: <20200221134216.860887691@infradead.org>
 User-Agent: quilt/0.65
-Date:   Fri, 21 Feb 2020 14:34:16 +0100
+Date:   Fri, 21 Feb 2020 14:34:43 +0100
 From:   Peter Zijlstra <peterz@infradead.org>
 To:     linux-kernel@vger.kernel.org, linux-arch@vger.kernel.org,
         rostedt@goodmis.org
@@ -53,64 +53,117 @@ Cc:     peterz@infradead.org, mingo@kernel.org, joel@joelfernandes.org,
         tglx@linutronix.de, paulmck@kernel.org, josh@joshtriplett.org,
         mathieu.desnoyers@efficios.com, jiangshanlai@gmail.com,
         luto@kernel.org, tony.luck@intel.com, frederic@kernel.org,
-        dan.carpenter@oracle.com, mhiramat@kernel.org
-Subject: [PATCH v4 00/27] tracing vs world
+        dan.carpenter@oracle.com, mhiramat@kernel.org,
+        Dmitry Vyukov <dvyukov@google.com>
+Subject: [PATCH v4 27/27] x86/int3: Ensure that poke_int3_handler() is not sanitized
+References: <20200221133416.777099322@infradead.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi all,
+In order to ensure poke_int3_handler() is completely self contained --
+we call this while we're modifying other text, imagine the fun of
+hitting another INT3 -- ensure that everything is without sanitize
+instrumentation.
 
+Reported-by: Thomas Gleixner <tglx@linutronix.de>
+Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+Acked-by: Dmitry Vyukov <dvyukov@google.com>
+---
+ arch/x86/kernel/alternative.c       |    2 +-
+ arch/x86/kernel/traps.c             |    2 +-
+ include/linux/compiler-clang.h      |    7 +++++++
+ include/linux/compiler-gcc.h        |    6 ++++++
+ include/linux/compiler.h            |    5 +++++
+ include/linux/compiler_attributes.h |    1 +
+ 6 files changed, 21 insertions(+), 2 deletions(-)
 
-These here patches are the result of Mathieu and Steve trying to get commit
-865e63b04e9b2 ("tracing: Add back in rcu_irq_enter/exit_irqson() for rcuidle
-tracepoints") reverted again.
+--- a/arch/x86/kernel/alternative.c
++++ b/arch/x86/kernel/alternative.c
+@@ -990,7 +990,7 @@ static __always_inline int patch_cmp(con
+ 	return 0;
+ }
+ 
+-int notrace poke_int3_handler(struct pt_regs *regs)
++notrace __no_sanitize int poke_int3_handler(struct pt_regs *regs)
+ {
+ 	struct bp_patching_desc *desc;
+ 	struct text_poke_loc *tp;
+--- a/arch/x86/kernel/traps.c
++++ b/arch/x86/kernel/traps.c
+@@ -502,7 +502,7 @@ dotraplinkage void do_general_protection
+ }
+ NOKPROBE_SYMBOL(do_general_protection);
+ 
+-dotraplinkage notrace void do_int3(struct pt_regs *regs, long error_code)
++dotraplinkage notrace __no_sanitize void do_int3(struct pt_regs *regs, long error_code)
+ {
+ 	if (poke_int3_handler(regs))
+ 		return;
+--- a/include/linux/compiler-clang.h
++++ b/include/linux/compiler-clang.h
+@@ -24,6 +24,13 @@
+ #define __no_sanitize_address
+ #endif
+ 
++#if __has_feature(undefined_sanitizer)
++#define __no_sanitize_undefined \
++		__atribute__((no_sanitize("undefined")))
++#else
++#define __no_sanitize_undefined
++#endif
++
+ /*
+  * Not all versions of clang implement the the type-generic versions
+  * of the builtin overflow checkers. Fortunately, clang implements
+--- a/include/linux/compiler-gcc.h
++++ b/include/linux/compiler-gcc.h
+@@ -145,6 +145,12 @@
+ #define __no_sanitize_address
+ #endif
+ 
++#if __has_attribute(__no_sanitize_undefined__)
++#define __no_sanitize_undefined __attribute__((no_sanitize_undefined))
++#else
++#define __no_sanitize_undefined
++#endif
++
+ #if GCC_VERSION >= 50100
+ #define COMPILER_HAS_GENERIC_BUILTIN_OVERFLOW 1
+ #endif
+--- a/include/linux/compiler.h
++++ b/include/linux/compiler.h
+@@ -199,6 +199,7 @@ void __read_once_size(const volatile voi
+ 	__READ_ONCE_SIZE;
+ }
+ 
++#define __no_kasan __no_sanitize_address
+ #ifdef CONFIG_KASAN
+ /*
+  * We can't declare function 'inline' because __no_sanitize_address confilcts
+@@ -274,6 +275,10 @@ static __always_inline void __write_once
+  */
+ #define READ_ONCE_NOCHECK(x) __READ_ONCE(x, 0)
+ 
++#define __no_ubsan __no_sanitize_undefined
++
++#define __no_sanitize __no_kasan __no_ubsan
++
+ static __no_kasan_or_inline
+ unsigned long read_word_at_a_time(const void *addr)
+ {
+--- a/include/linux/compiler_attributes.h
++++ b/include/linux/compiler_attributes.h
+@@ -41,6 +41,7 @@
+ # define __GCC4_has_attribute___nonstring__           0
+ # define __GCC4_has_attribute___no_sanitize_address__ (__GNUC_MINOR__ >= 8)
+ # define __GCC4_has_attribute___fallthrough__         0
++# define __GCC4_has_attribute___no_sanitize_undefined__ (__GNUC_MINOR__ >= 9)
+ #endif
+ 
+ /*
 
-One of the things discovered is that tracing MUST NOT happen before nmi_enter()
-or after nmi_exit(). Audit results of the previous version are still valid.
-
-This then snowballed into auditing other exceptions, notably #MC, and #BP. Lots
-of patches came out of that.
-
-I would love for some tooling in this area. Dan, smatch has full callchains
-right? Would it be possible to have an __assert_no_tracing__() marker of sorts
-that validates that no possible callchain reaching that assertion has hit
-tracing before that point?
-
-It would mean you have to handle the various means of 'notrace' annotation
-(both the function attribute as well as the Makefile rules), recognising
-tracepoints and ideally handling NOKPROBE annotations.
-
-NOTE:
-  patches 19,20,21 already live in tip/locking/kcsan and are included
-  here because 20,21 are needed for the patches following to make sense.
-  If/when this gets merged, we need to figure out how to resolve this.
-
-Changes since -v3:
-
- - Replaced the #DF patch with one from Boris
- - Moved trace_rcu_{enter,exit}() into rcupdate.h
- - Flipped TIF_SIGPENDING and TIF_NOTIFY_RESUME handling
- - Added comment to nmi_enter()
- - fixed various compile fails
- - inlined bsearch()
- - Added lockdep checking for USED <- IN-NMI recursion
- - Added rcu_nmi_enter vs kprobes comment
-
-Changes since -v2:
-
- - #MC / ist_enter() audit -- first 4 patches. After this in_nmi() should
-   always be set 'correctly'.
- - RCU IRQ enter/exit function simplification
- - #BP / poke_int3_handler() audit -- last many patches.
- - pulled in some locking/kcsan patches
-
-Changes since -v1:
-
- - Added tags
- - Changed #4; changed nmi_enter() to use __preempt_count_add() vs
-   marking preempt_count_add() notrace.
- - Changed #5; confusion on which functions are notrace due to Makefile
- - Added #9; remove limitation on the perf-function-trace coupling
 
