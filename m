@@ -2,189 +2,144 @@ Return-Path: <SRS0=1210=4J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.3 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1F3CFC35642
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 08:56:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 714A1C35640
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 08:56:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EA1EE2067D
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 08:56:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4B9D0206EF
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 08:56:26 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728761AbgBUI4A (ORCPT
+        id S1729664AbgBUI4Z (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Feb 2020 03:56:00 -0500
-Received: from mx2.suse.de ([195.135.220.15]:58916 "EHLO mx2.suse.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727670AbgBUI4A (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Feb 2020 03:56:00 -0500
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx2.suse.de (Postfix) with ESMTP id A2784AD19;
-        Fri, 21 Feb 2020 08:55:58 +0000 (UTC)
+        Fri, 21 Feb 2020 03:56:25 -0500
+Received: from szxga04-in.huawei.com ([45.249.212.190]:10661 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1727670AbgBUI4Y (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 21 Feb 2020 03:56:24 -0500
+Received: from DGGEMS405-HUB.china.huawei.com (unknown [172.30.72.60])
+        by Forcepoint Email with ESMTP id A9C6B24B492927AD0DB8;
+        Fri, 21 Feb 2020 16:56:13 +0800 (CST)
+Received: from [127.0.0.1] (10.57.60.129) by DGGEMS405-HUB.china.huawei.com
+ (10.3.19.205) with Microsoft SMTP Server id 14.3.439.0; Fri, 21 Feb 2020
+ 16:56:05 +0800
 Subject: Re: [PATCH] drm/hisilicon: Fixed pcie resource conflict using the
  general API
-To:     Tian Tao <tiantao6@hisilicon.com>, puck.chen@hisilicon.com,
-        airlied@linux.ie, daniel@ffwll.ch, kraxel@redhat.com,
-        alexander.deucher@amd.com, tglx@linutronix.de,
-        dri-devel@lists.freedesktop.org, xinliang.liu@linaro.org,
-        linux-kernel@vger.kernel.org
-Cc:     linuxarm@huawei.com
+To:     Thomas Zimmermann <tzimmermann@suse.de>,
+        Xinliang Liu <xinliang.liu@linaro.org>,
+        Tian Tao <tiantao6@hisilicon.com>
+CC:     <puck.chen@hisilicon.com>, <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>, <kraxel@redhat.com>,
+        <alexander.deucher@amd.com>, <tglx@linutronix.de>,
+        <dri-devel@lists.freedesktop.org>, <linux-kernel@vger.kernel.org>,
+        <linuxarm@huawei.com>
 References: <1582264523-61170-1-git-send-email-tiantao6@hisilicon.com>
-From:   Thomas Zimmermann <tzimmermann@suse.de>
-Autocrypt: addr=tzimmermann@suse.de; keydata=
- mQENBFs50uABCADEHPidWt974CaxBVbrIBwqcq/WURinJ3+2WlIrKWspiP83vfZKaXhFYsdg
- XH47fDVbPPj+d6tQrw5lPQCyqjwrCPYnq3WlIBnGPJ4/jreTL6V+qfKRDlGLWFjZcsrPJGE0
- BeB5BbqP5erN1qylK9i3gPoQjXGhpBpQYwRrEyQyjuvk+Ev0K1Jc5tVDeJAuau3TGNgah4Yc
- hdHm3bkPjz9EErV85RwvImQ1dptvx6s7xzwXTgGAsaYZsL8WCwDaTuqFa1d1jjlaxg6+tZsB
- 9GluwvIhSezPgnEmimZDkGnZRRSFiGP8yjqTjjWuf0bSj5rUnTGiyLyRZRNGcXmu6hjlABEB
- AAG0J1Rob21hcyBaaW1tZXJtYW5uIDx0emltbWVybWFubkBzdXNlLmRlPokBVAQTAQgAPhYh
- BHIX+6yM6c9jRKFo5WgNwR1TC3ojBQJbOdLgAhsDBQkDwmcABQsJCAcCBhUKCQgLAgQWAgMB
- Ah4BAheAAAoJEGgNwR1TC3ojR80H/jH+vYavwQ+TvO8ksXL9JQWc3IFSiGpuSVXLCdg62AmR
- irxW+qCwNncNQyb9rd30gzdectSkPWL3KSqEResBe24IbA5/jSkPweJasgXtfhuyoeCJ6PXo
- clQQGKIoFIAEv1s8l0ggPZswvCinegl1diyJXUXmdEJRTWYAtxn/atut1o6Giv6D2qmYbXN7
- mneMC5MzlLaJKUtoH7U/IjVw1sx2qtxAZGKVm4RZxPnMCp9E1MAr5t4dP5gJCIiqsdrVqI6i
- KupZstMxstPU//azmz7ZWWxT0JzgJqZSvPYx/SATeexTYBP47YFyri4jnsty2ErS91E6H8os
- Bv6pnSn7eAq5AQ0EWznS4AEIAMYmP4M/V+T5RY5at/g7rUdNsLhWv1APYrh9RQefODYHrNRH
- UE9eosYbT6XMryR9hT8XlGOYRwKWwiQBoWSDiTMo/Xi29jUnn4BXfI2px2DTXwc22LKtLAgT
- RjP+qbU63Y0xnQN29UGDbYgyyK51DW3H0If2a3JNsheAAK+Xc9baj0LGIc8T9uiEWHBnCH+R
- dhgATnWWGKdDegUR5BkDfDg5O/FISymJBHx2Dyoklv5g4BzkgqTqwmaYzsl8UxZKvbaxq0zb
- ehDda8lvhFXodNFMAgTLJlLuDYOGLK2AwbrS3Sp0AEbkpdJBb44qVlGm5bApZouHeJ/+n+7r
- 12+lqdsAEQEAAYkBPAQYAQgAJhYhBHIX+6yM6c9jRKFo5WgNwR1TC3ojBQJbOdLgAhsMBQkD
- wmcAAAoJEGgNwR1TC3ojpfcIAInwP5OlcEKokTnHCiDTz4Ony4GnHRP2fXATQZCKxmu4AJY2
- h9ifw9Nf2TjCZ6AMvC3thAN0rFDj55N9l4s1CpaDo4J+0fkrHuyNacnT206CeJV1E7NYntxU
- n+LSiRrOdywn6erjxRi9EYTVLCHcDhBEjKmFZfg4AM4GZMWX1lg0+eHbd5oL1as28WvvI/uI
- aMyV8RbyXot1r/8QLlWldU3NrTF5p7TMU2y3ZH2mf5suSKHAMtbE4jKJ8ZHFOo3GhLgjVrBW
- HE9JXO08xKkgD+w6v83+nomsEuf6C6LYrqY/tsZvyEX6zN8CtirPdPWu/VXNRYAl/lat7lSI
- 3H26qrE=
-Message-ID: <eb8977c8-534b-b183-f3b0-c279ce36f832@suse.de>
-Date:   Fri, 21 Feb 2020 09:55:57 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.1
+ <CAKoKPbztX8--gWgLDYJFQX1=Wf1jiFKx+H2_RFN90fxOpr_RdQ@mail.gmail.com>
+ <e65e3728-406e-ff9c-a8ef-6829666fa573@suse.de>
+From:   "tiantao (H)" <tiantao6@huawei.com>
+Message-ID: <4a8ba960-34c5-d044-900d-5cd0e9ec310e@huawei.com>
+Date:   Fri, 21 Feb 2020 16:56:05 +0800
+User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-In-Reply-To: <1582264523-61170-1-git-send-email-tiantao6@hisilicon.com>
-Content-Type: multipart/signed; micalg=pgp-sha256;
- protocol="application/pgp-signature";
- boundary="YQdYkM8jO7nAeTclrDCJy0h5qmlUO6Cec"
+In-Reply-To: <e65e3728-406e-ff9c-a8ef-6829666fa573@suse.de>
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Transfer-Encoding: 8bit
+X-Originating-IP: [10.57.60.129]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This is an OpenPGP/MIME signed message (RFC 4880 and 3156)
---YQdYkM8jO7nAeTclrDCJy0h5qmlUO6Cec
-Content-Type: multipart/mixed; boundary="YiLgKugGB590YbNbdZpEx3GCMfUeoXLdM";
- protected-headers="v1"
-From: Thomas Zimmermann <tzimmermann@suse.de>
-To: Tian Tao <tiantao6@hisilicon.com>, puck.chen@hisilicon.com,
- airlied@linux.ie, daniel@ffwll.ch, kraxel@redhat.com,
- alexander.deucher@amd.com, tglx@linutronix.de,
- dri-devel@lists.freedesktop.org, xinliang.liu@linaro.org,
- linux-kernel@vger.kernel.org
-Cc: linuxarm@huawei.com
-Message-ID: <eb8977c8-534b-b183-f3b0-c279ce36f832@suse.de>
-Subject: Re: [PATCH] drm/hisilicon: Fixed pcie resource conflict using the
- general API
-References: <1582264523-61170-1-git-send-email-tiantao6@hisilicon.com>
-In-Reply-To: <1582264523-61170-1-git-send-email-tiantao6@hisilicon.com>
+Sorry,my mistake. I sent the wrong patch, please ignore the patch below
 
---YiLgKugGB590YbNbdZpEx3GCMfUeoXLdM
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: quoted-printable
+在 2020/2/21 16:52, Thomas Zimmermann 写道:
+> Hi
+> 
+> Am 21.02.20 um 08:06 schrieb Xinliang Liu:
+>> Hi tao,
+>> Are you sending a wrong patch?
+>> Function hibmc_remove_framebuffers is added by your prior reviewing patch.
+>> Please send patch based on drm-misc-next branch[1] or linux-next.
+> 
+> There's drm_fb_helper_remove_conflicting_pci_framebuffers() which
+> already implements the functionality. I asked to try using it instead of
+> creating an own implementation.
+> 
+> Best regards
+> Thomas
+> 
+>>
+>> Thanks,
+>> -Xinliang
+>>
+>> [1] https://anongit.freedesktop.org/git/drm-misc.git
+>>
+>> On Fri, 21 Feb 2020 at 13:56, Tian Tao <tiantao6@hisilicon.com
+>> <mailto:tiantao6@hisilicon.com>> wrote:
+>>
+>>      the kernel provide the drm_fb_helper_remove_conflicting_pci_framebuffer
+>>      to remvoe the pcie resource conflict,there is no need to driver it
+>>      again.
+>>
+>>      Signed-off-by: Tian Tao <tiantao6@hisilicon.com
+>>      <mailto:tiantao6@hisilicon.com>>
+>>      ---
+>>       drivers/gpu/drm/hisilicon/hibmc/hibmc_drm_drv.c | 22
+>>      +++++-----------------
+>>       1 file changed, 5 insertions(+), 17 deletions(-)
+>>
+>>      diff --git a/drivers/gpu/drm/hisilicon/hibmc/hibmc_drm_drv.c
+>>      b/drivers/gpu/drm/hisilicon/hibmc/hibmc_drm_drv.c
+>>      index 7ebe831..0f7dba7 100644
+>>      --- a/drivers/gpu/drm/hisilicon/hibmc/hibmc_drm_drv.c
+>>      +++ b/drivers/gpu/drm/hisilicon/hibmc/hibmc_drm_drv.c
+>>      @@ -47,22 +47,6 @@ static irqreturn_t hibmc_drm_interrupt(int irq,
+>>      void *arg)
+>>              return IRQ_HANDLED;
+>>       }
+>>
+>>      -static void hibmc_remove_framebuffers(struct pci_dev *pdev)
+>>      -{
+>>      -       struct apertures_struct *ap;
+>>      -
+>>      -       ap = alloc_apertures(1);
+>>      -       if (!ap)
+>>      -               return;
+>>      -
+>>      -       ap->ranges[0].base = pci_resource_start(pdev, 0);
+>>      -       ap->ranges[0].size = pci_resource_len(pdev, 0);
+>>      -
+>>      -       drm_fb_helper_remove_conflicting_framebuffers(ap,
+>>      "hibmcdrmfb", false);
+>>      -
+>>      -       kfree(ap);
+>>      -}
+>>      -
+>>       static struct drm_driver hibmc_driver = {
+>>              .driver_features        = DRIVER_GEM | DRIVER_MODESET |
+>>      DRIVER_ATOMIC,
+>>              .fops                   = &hibmc_fops,
+>>      @@ -343,7 +327,11 @@ static int hibmc_pci_probe(struct pci_dev *pdev,
+>>              struct drm_device *dev;
+>>              int ret;
+>>
+>>      -       hibmc_remove_framebuffers(pdev);
+>>      +       ret = drm_fb_helper_remove_conflicting_pci_framebuffers(pdev,
+>>      +
+>>       "hibmcdrmfb");
+>>      +       if (ret)
+>>      +               return ret;
+>>      +
+>>
+>>              dev = drm_dev_alloc(&hibmc_driver, &pdev->dev);
+>>              if (IS_ERR(dev)) {
+>>      --
+>>      2.7.4
+>>
+> 
 
-Hi
-
-Am 21.02.20 um 06:55 schrieb Tian Tao:
-> the kernel provide the drm_fb_helper_remove_conflicting_pci_framebuffer=
-
-> to remvoe the pcie resource conflict,there is no need to driver it agai=
-n.
->=20
-> Signed-off-by: Tian Tao <tiantao6@hisilicon.com>
-> ---
->  drivers/gpu/drm/hisilicon/hibmc/hibmc_drm_drv.c | 22 +++++------------=
------
->  1 file changed, 5 insertions(+), 17 deletions(-)
->=20
-> diff --git a/drivers/gpu/drm/hisilicon/hibmc/hibmc_drm_drv.c b/drivers/=
-gpu/drm/hisilicon/hibmc/hibmc_drm_drv.c
-> index 7ebe831..0f7dba7 100644
-> --- a/drivers/gpu/drm/hisilicon/hibmc/hibmc_drm_drv.c
-> +++ b/drivers/gpu/drm/hisilicon/hibmc/hibmc_drm_drv.c
-> @@ -47,22 +47,6 @@ static irqreturn_t hibmc_drm_interrupt(int irq, void=
- *arg)
->  	return IRQ_HANDLED;
->  }
-> =20
-> -static void hibmc_remove_framebuffers(struct pci_dev *pdev)
-> -{
-> -	struct apertures_struct *ap;
-> -
-> -	ap =3D alloc_apertures(1);
-> -	if (!ap)
-> -		return;
-> -
-> -	ap->ranges[0].base =3D pci_resource_start(pdev, 0);
-> -	ap->ranges[0].size =3D pci_resource_len(pdev, 0);
-> -
-> -	drm_fb_helper_remove_conflicting_framebuffers(ap, "hibmcdrmfb", false=
-);
-> -
-> -	kfree(ap);
-> -}
-> -
->  static struct drm_driver hibmc_driver =3D {
->  	.driver_features	=3D DRIVER_GEM | DRIVER_MODESET | DRIVER_ATOMIC,
->  	.fops			=3D &hibmc_fops,
-> @@ -343,7 +327,11 @@ static int hibmc_pci_probe(struct pci_dev *pdev,
->  	struct drm_device *dev;
->  	int ret;
-> =20
-> -	hibmc_remove_framebuffers(pdev);
-> +	ret =3D drm_fb_helper_remove_conflicting_pci_framebuffers(pdev,
-> +								"hibmcdrmfb");
-> +	if (ret)
-> +		return ret;
-> +
-> =20
-
-Only one empty line please. With this change
-
-Acked-by: Thomas Zimmermann <tzimmermann@suse.de>
-
-
->  	dev =3D drm_dev_alloc(&hibmc_driver, &pdev->dev);
->  	if (IS_ERR(dev)) {
->=20
-
---=20
-Thomas Zimmermann
-Graphics Driver Developer
-SUSE Software Solutions Germany GmbH
-Maxfeldstr. 5, 90409 N=C3=BCrnberg, Germany
-(HRB 36809, AG N=C3=BCrnberg)
-Gesch=C3=A4ftsf=C3=BChrer: Felix Imend=C3=B6rffer
-
-
---YiLgKugGB590YbNbdZpEx3GCMfUeoXLdM--
-
---YQdYkM8jO7nAeTclrDCJy0h5qmlUO6Cec
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: OpenPGP digital signature
-Content-Disposition: attachment; filename="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEEchf7rIzpz2NEoWjlaA3BHVMLeiMFAl5Pmx0ACgkQaA3BHVML
-eiPCAwgAiJnDvZZEm94npwLMaxXy07QovzNj3o/zrAdOXmE0u2qNUS2G58P7KvU1
-K1jdwKCA5MMX4UIuXCwwBmGfEj3Rqfx6exty6r7xJhxCarfMo4Jas+YlL8E7vScg
-NbUmudyX4XNzqIayp+f8wsYOJGRV9dyPpKY4WcMc8McIpgQCBpyCftgqf1dKtDD1
-qCxaTjqlkA4GrS8k50kDGrhz9zCteB2DZACsj5pQi+eWWtb28wc7GEfYA+U83C0B
-RjHh+fPGCvhfsMcCKLGJ0itgslpbCEQtbdWzKz4EYQ7v1SctjqNhbykSGm5bhEzH
-0QSXKb7VW1dKk65dpJk9/AZM5anyWg==
-=Ko/m
------END PGP SIGNATURE-----
-
---YQdYkM8jO7nAeTclrDCJy0h5qmlUO6Cec--
