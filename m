@@ -2,51 +2,54 @@ Return-Path: <SRS0=1210=4J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-14.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 38EEEC35640
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 08:40:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 003A2C35640
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 08:40:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 03DC920578
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 08:40:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C14F5206ED
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 08:40:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582274400;
-	bh=b7WeVWMU18+0j8Oy/dzmg82C976aMJG0iJwWBry31w0=;
+	s=default; t=1582274404;
+	bh=ghfHmbsHqcAaTT8fpcwffk7RwHomEhJQzeyQkH2KBl8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=kwd4qyKKUIJIN2CFwEl9oZnyir+06CXxrufrBzkezUqgQJk3Th0UO71/OKDxCdIjt
-	 krWtl8xb5ipdrOTCOzHiOudXDlaJjEyfEim8pyOy8AdDXKMiYwSbDfnNAUVcsGuKSk
-	 vnfkk6GECowFkY9AoZTvnkX00rqIM5tPh2BandsM=
+	b=AKTlPoZD1jgwX4cUFqZ+bQPKY9hz8bPkPLpjrr0HI87UcbYRADOZlQBrkoYbC5mqL
+	 UHCbYO39TXxB4yhhUb9twNmUWQMR+pILeVRs+aSVS3gxYOK6MyqgsEe1eQpi1b1UVc
+	 a0Iou9xedF98cASUkJ2ftC8NaHeAqfAt/b4BgKYs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730705AbgBUH77 (ORCPT
+        id S1728435AbgBUH7n (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Feb 2020 02:59:59 -0500
-Received: from mail.kernel.org ([198.145.29.99]:60094 "EHLO mail.kernel.org"
+        Fri, 21 Feb 2020 02:59:43 -0500
+Received: from mail.kernel.org ([198.145.29.99]:59766 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730966AbgBUH7z (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Feb 2020 02:59:55 -0500
+        id S1730783AbgBUH7j (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 21 Feb 2020 02:59:39 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4008F222C4;
-        Fri, 21 Feb 2020 07:59:54 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5A5EE20801;
+        Fri, 21 Feb 2020 07:59:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1582271994;
-        bh=b7WeVWMU18+0j8Oy/dzmg82C976aMJG0iJwWBry31w0=;
+        s=default; t=1582271978;
+        bh=ghfHmbsHqcAaTT8fpcwffk7RwHomEhJQzeyQkH2KBl8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Pfu0JQ+2Hzicy75BxlEPZT+Gr5resjWfTNKV3NHqMx6na5yfxtClH/Tnc/bZl55qw
-         E7qXHai8ZAhK3aGzvFHjqtuoq4YmoRgGeqFgW+5GVle9mbTEL4OdX2Ruo/CnzR1Lx3
-         8gZ9k+94tf9F+mO2hEM33F5+CXptS3xTVD5nkUSM=
+        b=XFjRiWVkKHkcp6aSHKqIlOTqnkl3KiWbNBo5khXK3NFXhWZDE++TGQeQ8mOAiI6R8
+         Xjx8s0K1i2HfA01DpCH+Ua3Br7jdWlNQz5ZyAu6vWfRwQyLZfDftrvkPHq9VZ3W+HU
+         JBHM0GOhkqgsenQ0uP6749kp0CTtS+lkmRQRPjU8=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Zenghui Yu <yuzenghui@huawei.com>,
-        Marc Zyngier <maz@kernel.org>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.5 376/399] irqchip/gic-v3-its: Reference to its_invall_cmd descriptor when building INVALL
-Date:   Fri, 21 Feb 2020 08:41:41 +0100
-Message-Id: <20200221072436.881050013@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Nathan Chancellor <natechancellor@gmail.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.5 371/399] lib/scatterlist.c: adjust indentation in __sg_alloc_table
+Date:   Fri, 21 Feb 2020 08:41:36 +0100
+Message-Id: <20200221072436.541669447@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200221072402.315346745@linuxfoundation.org>
 References: <20200221072402.315346745@linuxfoundation.org>
@@ -59,37 +62,49 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Zenghui Yu <yuzenghui@huawei.com>
+From: Nathan Chancellor <natechancellor@gmail.com>
 
-[ Upstream commit 107945227ac5d4c37911c7841b27c64b489ce9a9 ]
+[ Upstream commit 4e456fee215677584cafa7f67298a76917e89c64 ]
 
-It looks like an obvious mistake to use its_mapc_cmd descriptor when
-building the INVALL command block. It so far worked by luck because
-both its_mapc_cmd.col and its_invall_cmd.col sit at the same offset of
-the ITS command descriptor, but we should not rely on it.
+Clang warns:
 
-Fixes: cc2d3216f53c ("irqchip: GICv3: ITS command queue")
-Signed-off-by: Zenghui Yu <yuzenghui@huawei.com>
-Signed-off-by: Marc Zyngier <maz@kernel.org>
-Link: https://lore.kernel.org/r/20191202071021.1251-1-yuzenghui@huawei.com
+  ../lib/scatterlist.c:314:5: warning: misleading indentation; statement
+  is not part of the previous 'if' [-Wmisleading-indentation]
+                          return -ENOMEM;
+                          ^
+  ../lib/scatterlist.c:311:4: note: previous statement is here
+                          if (prv)
+                          ^
+  1 warning generated.
+
+This warning occurs because there is a space before the tab on this
+line.  Remove it so that the indentation is consistent with the Linux
+kernel coding style and clang no longer warns.
+
+Link: http://lkml.kernel.org/r/20191218033606.11942-1-natechancellor@gmail.com
+Link: https://github.com/ClangBuiltLinux/linux/issues/830
+Fixes: edce6820a9fd ("scatterlist: prevent invalid free when alloc fails")
+Signed-off-by: Nathan Chancellor <natechancellor@gmail.com>
+Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
+Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/irqchip/irq-gic-v3-its.c | 2 +-
+ lib/scatterlist.c | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/irqchip/irq-gic-v3-its.c b/drivers/irqchip/irq-gic-v3-its.c
-index b704214390c0f..50f89056c16bb 100644
---- a/drivers/irqchip/irq-gic-v3-its.c
-+++ b/drivers/irqchip/irq-gic-v3-its.c
-@@ -598,7 +598,7 @@ static struct its_collection *its_build_invall_cmd(struct its_node *its,
- 						   struct its_cmd_desc *desc)
- {
- 	its_encode_cmd(cmd, GITS_CMD_INVALL);
--	its_encode_collection(cmd, desc->its_mapc_cmd.col->col_id);
-+	its_encode_collection(cmd, desc->its_invall_cmd.col->col_id);
+diff --git a/lib/scatterlist.c b/lib/scatterlist.c
+index c2cf2c311b7db..5813072bc5895 100644
+--- a/lib/scatterlist.c
++++ b/lib/scatterlist.c
+@@ -311,7 +311,7 @@ int __sg_alloc_table(struct sg_table *table, unsigned int nents,
+ 			if (prv)
+ 				table->nents = ++table->orig_nents;
  
- 	its_fixup_cmd(cmd);
+- 			return -ENOMEM;
++			return -ENOMEM;
+ 		}
  
+ 		sg_init_table(sg, alloc_size);
 -- 
 2.20.1
 
