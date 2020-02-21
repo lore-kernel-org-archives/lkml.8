@@ -5,53 +5,51 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6D730C35641
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 08:36:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F3583C35641
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 08:36:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 43E9C206ED
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 08:36:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B1A9620578
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 08:36:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582274203;
-	bh=e1O9gRId/5Nnkv0pkYMKzLfZnhFV6fUZqb3Gwk/Dgew=;
+	s=default; t=1582274207;
+	bh=5frUTEE1/tpJIoyzeSXzhxHtKAjZb1k6HaWHwSQ/Jlg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=TSK60XVW8pBuCmgiKemTiamKazcbIRHdDZajd7/IX4w/zKsH1f4pEmAoG/Brs2O/q
-	 sqkcWrLKfp4S+5Q0jqHcsLacIDEGWXBc5r8Hg6tK1FAp4DPq4vfSBoGHN+zCl4dJpb
-	 7TRKD46lSSP2ipI7Z2WmiFbmQYlnt6vxANkKPkTU=
+	b=aD48LTHGX9Q7jpE7S+oHXmKHD30veSxUPnTyTtkAATTaJUgZwh2z7rYbIpVt5TFR+
+	 akeJFCEClWq5YBY9bQxHTo4QpKHZ/KcP5QIbIPTXBBdMOi7uOa/0nVoNsXK3JYUnXg
+	 dmSwrNvcqh5Xb19B9gIkVjRadER6V+MnAiOrnuOk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732520AbgBUIgl (ORCPT
+        id S1732673AbgBUIgq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Feb 2020 03:36:41 -0500
-Received: from mail.kernel.org ([198.145.29.99]:39752 "EHLO mail.kernel.org"
+        Fri, 21 Feb 2020 03:36:46 -0500
+Received: from mail.kernel.org ([198.145.29.99]:39524 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731552AbgBUIGG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Feb 2020 03:06:06 -0500
+        id S1731573AbgBUIFz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 21 Feb 2020 03:05:55 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A01C72073A;
-        Fri, 21 Feb 2020 08:06:05 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 33E6120578;
+        Fri, 21 Feb 2020 08:05:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1582272366;
-        bh=e1O9gRId/5Nnkv0pkYMKzLfZnhFV6fUZqb3Gwk/Dgew=;
+        s=default; t=1582272354;
+        bh=5frUTEE1/tpJIoyzeSXzhxHtKAjZb1k6HaWHwSQ/Jlg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=FYbJiJrzpxep8fI0tp70YZCDv6b606O7pHVJXM70vkwUzj5EiSl2XgDVvjJHJFZXs
-         xlQdlPobPG99JCZ66uMeHsO9yBfkMGSgKy2d1KEH90nPV3fPvnwufJGXBP7/ocvCHf
-         Yj6rQToJkNcZuv76AamlnMfDWbgVPVyB/FvmJI8U=
+        b=y0Vvf8pf+Z99xvLMIyrAouRo2lFGV+yA4o0lPqzz+QL/rgnQAJ9xrWrtaoq2SuRFo
+         /Q/UnDOwMNpMItB6asXijoXhLLSxpUiBa+UgqF0YHi4xJK5lRfNn8kLN3dHm03dlxV
+         dDqNQybzwORpFCG2mJnfZKCwgMdeTqxpFgW23xEc=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Chris Healy <cphealy@gmail.com>,
-        Lucas Stach <l.stach@pengutronix.de>,
-        Andrey Smirnov <andrew.smirnov@gmail.com>,
-        Shawn Guo <shawnguo@kernel.org>,
-        Fabio Estevam <festevam@gmail.com>,
-        linux-arm-kernel@lists.infradead.org,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 116/344] ARM: dts: imx6: rdu2: Disable WP for USDHC2 and USDHC3
-Date:   Fri, 21 Feb 2020 08:38:35 +0100
-Message-Id: <20200221072359.422976479@linuxfoundation.org>
+        stable@vger.kernel.org, Qiang Zhao <qiang.zhao@nxp.com>,
+        Timur Tabi <timur@kernel.org>,
+        Rasmus Villemoes <linux@rasmusvillemoes.dk>,
+        "David S. Miller" <davem@davemloft.net>,
+        Li Yang <leoyang.li@nxp.com>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.4 104/344] net/wan/fsl_ucc_hdlc: reject muram offsets above 64K
+Date:   Fri, 21 Feb 2020 08:38:23 +0100
+Message-Id: <20200221072358.371382790@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200221072349.335551332@linuxfoundation.org>
 References: <20200221072349.335551332@linuxfoundation.org>
@@ -64,67 +62,42 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Andrey Smirnov <andrew.smirnov@gmail.com>
+From: Rasmus Villemoes <linux@rasmusvillemoes.dk>
 
-[ Upstream commit cd58a174e58649426fb43d7456e5f7d7eab58af1 ]
+[ Upstream commit 148587a59f6b85831695e0497d9dd1af5f0495af ]
 
-RDU2 production units come with resistor connecting WP pin to
-correpsonding GPIO DNPed for both SD card slots. Drop any WP related
-configuration and mark both slots with "disable-wp".
+Qiang Zhao points out that these offsets get written to 16-bit
+registers, and there are some QE platforms with more than 64K
+muram. So it is possible that qe_muram_alloc() gives us an allocation
+that can't actually be used by the hardware, so detect and reject
+that.
 
-Reported-by: Chris Healy <cphealy@gmail.com>
-Reviewed-by: Chris Healy <cphealy@gmail.com>
-Reviewed-by: Lucas Stach <l.stach@pengutronix.de>
-Signed-off-by: Andrey Smirnov <andrew.smirnov@gmail.com>
-Cc: Shawn Guo <shawnguo@kernel.org>
-Cc: Fabio Estevam <festevam@gmail.com>
-Cc: Lucas Stach <l.stach@pengutronix.de>
-Cc: linux-arm-kernel@lists.infradead.org
-Cc: linux-kernel@vger.kernel.org
-Signed-off-by: Shawn Guo <shawnguo@kernel.org>
+Reported-by: Qiang Zhao <qiang.zhao@nxp.com>
+Reviewed-by: Timur Tabi <timur@kernel.org>
+Signed-off-by: Rasmus Villemoes <linux@rasmusvillemoes.dk>
+Acked-by: David S. Miller <davem@davemloft.net>
+Signed-off-by: Li Yang <leoyang.li@nxp.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm/boot/dts/imx6qdl-zii-rdu2.dtsi | 6 ++----
- 1 file changed, 2 insertions(+), 4 deletions(-)
+ drivers/net/wan/fsl_ucc_hdlc.c | 5 +++++
+ 1 file changed, 5 insertions(+)
 
-diff --git a/arch/arm/boot/dts/imx6qdl-zii-rdu2.dtsi b/arch/arm/boot/dts/imx6qdl-zii-rdu2.dtsi
-index 93be00a60c887..7b5c0e9b0fcff 100644
---- a/arch/arm/boot/dts/imx6qdl-zii-rdu2.dtsi
-+++ b/arch/arm/boot/dts/imx6qdl-zii-rdu2.dtsi
-@@ -627,7 +627,7 @@
- 	pinctrl-0 = <&pinctrl_usdhc2>;
- 	bus-width = <4>;
- 	cd-gpios = <&gpio2 2 GPIO_ACTIVE_LOW>;
--	wp-gpios = <&gpio2 3 GPIO_ACTIVE_HIGH>;
-+	disable-wp;
- 	vmmc-supply = <&reg_3p3v_sd>;
- 	vqmmc-supply = <&reg_3p3v>;
- 	no-1-8-v;
-@@ -640,7 +640,7 @@
- 	pinctrl-0 = <&pinctrl_usdhc3>;
- 	bus-width = <4>;
- 	cd-gpios = <&gpio2 0 GPIO_ACTIVE_LOW>;
--	wp-gpios = <&gpio2 1 GPIO_ACTIVE_HIGH>;
-+	disable-wp;
- 	vmmc-supply = <&reg_3p3v_sd>;
- 	vqmmc-supply = <&reg_3p3v>;
- 	no-1-8-v;
-@@ -1055,7 +1055,6 @@
- 			MX6QDL_PAD_SD2_DAT1__SD2_DATA1		0x17059
- 			MX6QDL_PAD_SD2_DAT2__SD2_DATA2		0x17059
- 			MX6QDL_PAD_SD2_DAT3__SD2_DATA3		0x17059
--			MX6QDL_PAD_NANDF_D3__GPIO2_IO03		0x40010040
- 			MX6QDL_PAD_NANDF_D2__GPIO2_IO02		0x40010040
- 		>;
- 	};
-@@ -1068,7 +1067,6 @@
- 			MX6QDL_PAD_SD3_DAT1__SD3_DATA1		0x17059
- 			MX6QDL_PAD_SD3_DAT2__SD3_DATA2		0x17059
- 			MX6QDL_PAD_SD3_DAT3__SD3_DATA3		0x17059
--			MX6QDL_PAD_NANDF_D1__GPIO2_IO01		0x40010040
- 			MX6QDL_PAD_NANDF_D0__GPIO2_IO00		0x40010040
+diff --git a/drivers/net/wan/fsl_ucc_hdlc.c b/drivers/net/wan/fsl_ucc_hdlc.c
+index aef7de225783f..4ad0a0c33d853 100644
+--- a/drivers/net/wan/fsl_ucc_hdlc.c
++++ b/drivers/net/wan/fsl_ucc_hdlc.c
+@@ -245,6 +245,11 @@ static int uhdlc_init(struct ucc_hdlc_private *priv)
+ 		ret = -ENOMEM;
+ 		goto free_riptr;
+ 	}
++	if (riptr != (u16)riptr || tiptr != (u16)tiptr) {
++		dev_err(priv->dev, "MURAM allocation out of addressable range\n");
++		ret = -ENOMEM;
++		goto free_tiptr;
++	}
  
- 		>;
+ 	/* Set RIPTR, TIPTR */
+ 	iowrite16be(riptr, &priv->ucc_pram->riptr);
 -- 
 2.20.1
 
