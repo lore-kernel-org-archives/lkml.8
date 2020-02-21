@@ -2,187 +2,103 @@ Return-Path: <SRS0=1210=4J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNPARSEABLE_RELAY,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 56D18C35646
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 12:32:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DAF8BC35646
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 12:38:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 355D024653
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 12:32:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id ADF312071E
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 12:38:27 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1582288707;
+	bh=mrPWCZBNvFOdRkprxAMO3hpzj291OUskqj7PNsQ+FxY=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=fh4NsOsEHDbocrYpREJarklL0oFN+arWtytqVjvh2B6mYaltj7wiQg8fxvo4waULG
+	 8DVCZinTyhGgfkq8w3O1Tn+MN9eh0dzoY/3U8OyM+6alNVh34DRmhlhKkqHA+BzXQG
+	 ZD87ixb4IzRGel7NdC07kf/IiBEk2I55SenB7heI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728264AbgBUMcg (ORCPT
+        id S1727851AbgBUMiR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Feb 2020 07:32:36 -0500
-Received: from bhuna.collabora.co.uk ([46.235.227.227]:57660 "EHLO
-        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727312AbgBUMcf (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Feb 2020 07:32:35 -0500
-Received: from [127.0.0.1] (localhost [127.0.0.1])
-        (Authenticated sender: dafna)
-        with ESMTPSA id 2B17A28DAC4
-From:   Dafna Hirschfeld <dafna.hirschfeld@collabora.com>
-To:     linux-i2c@vger.kernel.org
-Cc:     robh+dt@kernel.org, mark.rutland@arm.com, bleung@chromium.org,
-        enric.balletbo@collabora.com, groeck@chromium.org,
-        dafna.hirschfeld@collabora.com, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, helen.koike@collabora.com,
-        ezequiel@collabora.com, kernel@collabora.com, dafna3@gmail.com,
-        sebastian.reichel@collabora.com
-Subject: [PATCH v4 1/2] dt-bindings: i2c: cros-ec-tunnel: convert i2c-cros-ec-tunnel.txt to yaml
-Date:   Fri, 21 Feb 2020 13:32:13 +0100
-Message-Id: <20200221123214.26341-1-dafna.hirschfeld@collabora.com>
-X-Mailer: git-send-email 2.17.1
+        Fri, 21 Feb 2020 07:38:17 -0500
+Received: from foss.arm.com ([217.140.110.172]:38454 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726976AbgBUMiQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 21 Feb 2020 07:38:16 -0500
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 0AF8230E;
+        Fri, 21 Feb 2020 04:38:16 -0800 (PST)
+Received: from localhost (unknown [10.37.6.21])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 780EA3F68F;
+        Fri, 21 Feb 2020 04:38:15 -0800 (PST)
+Date:   Fri, 21 Feb 2020 12:38:13 +0000
+From:   Mark Brown <broonie@kernel.org>
+To:     Marek Szyprowski <m.szyprowski@samsung.com>
+Cc:     linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Krzysztof Kozlowski <krzk@kernel.org>,
+        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
+        Chanwoo Choi <cw00.choi@samsung.com>,
+        MyungJoo Ham <myungjoo.ham@samsung.com>,
+        Sebastian Reichel <sre@kernel.org>
+Subject: Re: [PATCH 1/3] regulator: max14577: Add proper dt-compatible strings
+Message-ID: <20200221123813.GB5546@sirena.org.uk>
+References: <CGME20200220145134eucas1p288ae1910d3e8d12dc12f010ed0b07b45@eucas1p2.samsung.com>
+ <20200220145127.21273-1-m.szyprowski@samsung.com>
+ <20200220165614.GD3926@sirena.org.uk>
+ <964b8c4c-36ca-203d-e62b-4a8fc970e23d@samsung.com>
+MIME-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="f2QGlHpHGjS2mn6Y"
+Content-Disposition: inline
+In-Reply-To: <964b8c4c-36ca-203d-e62b-4a8fc970e23d@samsung.com>
+X-Cookie: Dead? No excuse for laying off work.
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Convert the binding file i2c-cros-ec-tunnel.txt to yaml format.
 
-This was tested and verified on ARM and ARM64 with:
+--f2QGlHpHGjS2mn6Y
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-make dt_binding_check DT_SCHEMA_FILES=Documentation/devicetree/bindings/i2c/i2c-cros-ec-tunnel.yaml
-make dtbs_check DT_SCHEMA_FILES=Documentation/devicetree/bindings/i2c/i2c-cros-ec-tunnel.yaml
+On Fri, Feb 21, 2020 at 11:44:03AM +0100, Marek Szyprowski wrote:
+> On 20.02.2020 17:56, Mark Brown wrote:
 
-Signed-off-by: Dafna Hirschfeld <dafna.hirschfeld@collabora.com>
----
-Changes since v1:
-- changing the subject to start with "dt-bindings: i2c: cros-ec-tunnel:"
-- changing the license to (GPL-2.0-only OR BSD-2-Clause)
-- removing "Guenter Roeck <groeck@chromium.org>" from the maintainers list
-- adding ref: /schemas/i2c/i2c-controller.yaml
+> > Why would we want to encode the particular way Linux happens to
+> > represent regulators on a MFD into the DT binding?  It's not clear that
+> > this is a generic thing (another OS might choose to have a separate
+> > object for each regulator with no parent for example) and the compatible
+> > isn't adding any information we didn't have already knowing about the
+> > parent device.
 
-Changes since v2:
-- adding another patch that fixes a warning found by this patch
+> Well, that's how the bindings for max14577/max77836 are defined:
 
-Changes since v3:
-- In the example, change sbs-battery@b to battery@b
+> Documentation/devicetree/bindings/mfd/max14577.txt
 
+> I've only fixed regulator, charger and extcon drivers to match the cells=
+=20
+> created by the current mfd driver.
 
- .../bindings/i2c/i2c-cros-ec-tunnel.txt       | 39 ------------
- .../bindings/i2c/i2c-cros-ec-tunnel.yaml      | 63 +++++++++++++++++++
- 2 files changed, 63 insertions(+), 39 deletions(-)
- delete mode 100644 Documentation/devicetree/bindings/i2c/i2c-cros-ec-tunnel.txt
- create mode 100644 Documentation/devicetree/bindings/i2c/i2c-cros-ec-tunnel.yaml
+We could just remove the compatible strings from the binding
+documentation, they won't do any harm if we don't use them.
 
-diff --git a/Documentation/devicetree/bindings/i2c/i2c-cros-ec-tunnel.txt b/Documentation/devicetree/bindings/i2c/i2c-cros-ec-tunnel.txt
-deleted file mode 100644
-index 898f030eba62..000000000000
---- a/Documentation/devicetree/bindings/i2c/i2c-cros-ec-tunnel.txt
-+++ /dev/null
-@@ -1,39 +0,0 @@
--I2C bus that tunnels through the ChromeOS EC (cros-ec)
--======================================================
--On some ChromeOS board designs we've got a connection to the EC (embedded
--controller) but no direct connection to some devices on the other side of
--the EC (like a battery and PMIC).  To get access to those devices we need
--to tunnel our i2c commands through the EC.
--
--The node for this device should be under a cros-ec node like google,cros-ec-spi
--or google,cros-ec-i2c.
--
--
--Required properties:
--- compatible: google,cros-ec-i2c-tunnel
--- google,remote-bus: The EC bus we'd like to talk to.
--
--Optional child nodes:
--- One node per I2C device connected to the tunnelled I2C bus.
--
--
--Example:
--	cros-ec@0 {
--		compatible = "google,cros-ec-spi";
--
--		...
--
--		i2c-tunnel {
--			compatible = "google,cros-ec-i2c-tunnel";
--			#address-cells = <1>;
--			#size-cells = <0>;
--
--			google,remote-bus = <0>;
--
--			battery: sbs-battery@b {
--				compatible = "sbs,sbs-battery";
--				reg = <0xb>;
--				sbs,poll-retry-count = <1>;
--			};
--		};
--	}
-diff --git a/Documentation/devicetree/bindings/i2c/i2c-cros-ec-tunnel.yaml b/Documentation/devicetree/bindings/i2c/i2c-cros-ec-tunnel.yaml
-new file mode 100644
-index 000000000000..cfe4f0aeb46f
---- /dev/null
-+++ b/Documentation/devicetree/bindings/i2c/i2c-cros-ec-tunnel.yaml
-@@ -0,0 +1,63 @@
-+# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/i2c/i2c-cros-ec-tunnel.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title: I2C bus that tunnels through the ChromeOS EC (cros-ec)
-+
-+maintainers:
-+  - Benson Leung <bleung@chromium.org>
-+  - Enric Balletbo i Serra <enric.balletbo@collabora.com>
-+
-+description: |
-+  On some ChromeOS board designs we've got a connection to the EC (embedded
-+  controller) but no direct connection to some devices on the other side of
-+  the EC (like a battery and PMIC). To get access to those devices we need
-+  to tunnel our i2c commands through the EC.
-+  The node for this device should be under a cros-ec node like google,cros-ec-spi
-+  or google,cros-ec-i2c.
-+
-+allOf:
-+  - $ref: /schemas/i2c/i2c-controller.yaml#
-+
-+properties:
-+  compatible:
-+    const:
-+      google,cros-ec-i2c-tunnel
-+
-+  google,remote-bus:
-+    $ref: "/schemas/types.yaml#/definitions/uint32"
-+    description: The EC bus we'd like to talk to.
-+
-+  "#address-cells": true
-+  "#size-cells": true
-+
-+patternProperties:
-+  "^.*@[0-9a-f]+$":
-+    type: object
-+    description: One node per I2C device connected to the tunnelled I2C bus.
-+
-+additionalProperties: false
-+
-+required:
-+  - compatible
-+  - google,remote-bus
-+
-+examples:
-+  - |
-+    cros-ec@0 {
-+        compatible = "google,cros-ec-spi";
-+        i2c-tunnel {
-+            compatible = "google,cros-ec-i2c-tunnel";
-+            #address-cells = <1>;
-+            #size-cells = <0>;
-+            google,remote-bus = <0>;
-+
-+            battery: battery@b {
-+                compatible = "sbs,sbs-battery";
-+                reg = <0xb>;
-+                sbs,poll-retry-count = <1>;
-+            };
-+        };
-+    };
--- 
-2.17.1
+--f2QGlHpHGjS2mn6Y
+Content-Type: application/pgp-signature; name="signature.asc"
 
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl5PzzUACgkQJNaLcl1U
+h9A8Ngf/SfRefh9o1XBTE2v/15NpjtrE65kGU09QEQ1tkHy4YEO5itYQeNBOU92n
+mwdRrsqe1dh5P303HYqqLL6NPr85ZRfH5dSAVrUVEymN8kmBbjDnRlk5erYMqWUo
+ZGqe1H85+7ncnoVN+p9OhazcrhGgDYiOI0Jh2W8xmoOkkdnEIfsE+izIpEK/qyhS
+Xa3M0XrzGs2NKZxn9l3Cd6/2V/5sKuAuwT3nt65q5LZ1Qciz2Yt+Iuj2g3+ig37/
+oiVbnUIP2/vtkHxO9ofdoaTTTkx2yXT4SXXaMWioB0OHLd3vxM26LY/F6CWtAMMF
+phTmMf8zdhw7NSHZpCFFEdHiuy+9ww==
+=AD14
+-----END PGP SIGNATURE-----
+
+--f2QGlHpHGjS2mn6Y--
