@@ -2,128 +2,107 @@ Return-Path: <SRS0=1210=4J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E3D01C11D24
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 04:57:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E81F5C11D24
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 05:10:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9E4F5207FD
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 04:57:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B7D8C208E4
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 05:10:37 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="kIEoFngw"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="KEVWFg31"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729656AbgBUE5o (ORCPT
+        id S1726214AbgBUFKe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Feb 2020 23:57:44 -0500
-Received: from mail-ot1-f66.google.com ([209.85.210.66]:45016 "EHLO
-        mail-ot1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729546AbgBUE5o (ORCPT
+        Fri, 21 Feb 2020 00:10:34 -0500
+Received: from mail-yb1-f194.google.com ([209.85.219.194]:43843 "EHLO
+        mail-yb1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725800AbgBUFKd (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Feb 2020 23:57:44 -0500
-Received: by mail-ot1-f66.google.com with SMTP id h9so909734otj.11;
-        Thu, 20 Feb 2020 20:57:42 -0800 (PST)
+        Fri, 21 Feb 2020 00:10:33 -0500
+Received: by mail-yb1-f194.google.com with SMTP id b141so574426ybg.10
+        for <linux-kernel@vger.kernel.org>; Thu, 20 Feb 2020 21:10:33 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=ogn/J4giaQGLC3qcPsRUe3cWuadkZCD6KASZ61C4ThA=;
-        b=kIEoFngwEB2uizuWztZrPisyrMtzekpWhy+TjV93VsYmFrHQ3Pcp6fut+K4lBdL3F7
-         hYa9mFpXC8zQIhW+jAeRG5kaQQ+o4UqewiTjbLWESn0auaUWUuJCV7O3C5kgofVNKFJG
-         /iTmwExGNd2RaaHRUpPWxtVOUGPLGCGIcJRFw44gQvapOxF7tsIUE0jheKYMr7+4XeqD
-         8DEljxOi3rTum3dIVxr0d2sdcNUtqLpO6g2dZyI4vJz7razV1oKmftSI1k4IlqJ03ImG
-         9dPEMiZpxF4xZnlBOtWVsIhwXKgBlg1I2790KQFCu/Ph2crRExpSPfFPiGOkQy7gct72
-         8Edw==
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=Qx1TzrvyogNiRSqJXStGPZvREBzcHURDJFmU6BgZWjc=;
+        b=KEVWFg314052tWozaaoNWzgxDGtQyUG7wPc9cMULhcvnHXywOY4cueaHFTxGmlsH5T
+         D5SmiZKF6kx10F20kCX55hIsMzvVEzbAq421MUKShN8ooaGcmXz59DV7UHVqcqggVWDC
+         1oIyxLOooSav+dBD0Esace/XpwNd16TkTXL+BluYL6oxdg6Ub+Uk99kG5CXxmM3Z3QHc
+         0eSpNX2cWC2JEh07k7PO5ZRCsMHloL/MRiwAsmZlyQ9H4Uw/wpfincNf13ahzd8sWAgk
+         RYDfU9YLhTmshBk4BSrvTq/Y+q2RjdyxivOGoE11athr20lWc1RQMuGSm9PnGMNabBY6
+         XB1A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=ogn/J4giaQGLC3qcPsRUe3cWuadkZCD6KASZ61C4ThA=;
-        b=BdoM0MtoFyQ2qRuFt99O8pPyag7SA/6IRCXQADMcwk6IUR7pdcNQ9kLUcvu9slIrBn
-         BblqrSGLoFjXeCJ+Raxk518cOrJbtnz7S+JPfgMcdb3iv0lu7dOnv09LDBQ4+UmSgN4l
-         afeHhxhAeUkuD41wcICcdeMVzcO4SEZphBQzos5SRHNI1LyrtrBfIlytUmM8IRdIVgjL
-         QQvlhqh3IKcI+HB1kwt8FeCOPAX68HjpnnaCZ2zjaDw5riJgcc3jm+R87DS3ifKroDCP
-         XVIg8yrpSt/qODXUxWOj28k1Qv14s0w2Nt75QJOwvMTJ6YQwH25OvuZfCsE5t1acCOi+
-         00Ag==
-X-Gm-Message-State: APjAAAU0p8UjJFAmj64QneNnFz1RUJUzdfizvc91S3ZmVK45Xh5j8hLX
-        8xGs+ptz95Oz+lQkkz9sIfE=
-X-Google-Smtp-Source: APXvYqzTqMZvH/9ZgI3+G8aJjVo4IcNpjr++SOjdjDD/PR19TdNUf9R7rgpYCw/rQP3r0Sv9FTMfWA==
-X-Received: by 2002:a9d:6e98:: with SMTP id a24mr25542147otr.53.1582261062265;
-        Thu, 20 Feb 2020 20:57:42 -0800 (PST)
-Received: from ubuntu-m2-xlarge-x86 ([2604:1380:4111:8b00::1])
-        by smtp.gmail.com with ESMTPSA id y25sm660670oto.27.2020.02.20.20.57.41
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Thu, 20 Feb 2020 20:57:41 -0800 (PST)
-Date:   Thu, 20 Feb 2020 21:57:40 -0700
-From:   Nathan Chancellor <natechancellor@gmail.com>
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     Felipe Balbi <balbi@kernel.org>,
-        Ashwini Pahuja <ashwini.linux@gmail.com>,
-        linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org,
-        clang-built-linux@googlegroups.com
-Subject: Re: [PATCH] usb: gadget: udc: bdc: Remove unnecessary NULL checks in
- bdc_req_complete
-Message-ID: <20200221045740.GA43417@ubuntu-m2-xlarge-x86>
-References: <20191023002014.22571-1-natechancellor@gmail.com>
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=Qx1TzrvyogNiRSqJXStGPZvREBzcHURDJFmU6BgZWjc=;
+        b=n9h3SmcxPq5NLzm5mLcaxs3clxDEw7zBSrjVfrab+3EcFy8A3de1drm5PCBtfQIYb1
+         yWFypVrH4TmBzF51whS8mw2lzQAH6nWoiehLYRPK1Fos4TcpNBDHXIAeD89jBfbvoDp/
+         A796I0PXiQrbvAuTCw1UocpIlvZJ4V9hz7eS+qKG7X+h8gZ/PAGAnF82lUjvQb0Pp7bX
+         8A2HotsIRiHJ7sp2+rpviEzW3hrZrGH6Fs0w9SLinz3VuZXt35bdxxHygyeVjbSq45JI
+         VzpQbKnPa5un2KPYtPO1KXrZRkKo7F7ZUwWzSHRbdQYxqyGWsM5RZX64bI0kGNNFtOrC
+         wuRw==
+X-Gm-Message-State: APjAAAW43cmHZ7Qk+nuSU77+Dt85HtuTfJE8Dofxogx3jFTR3VZrGO/1
+        iq3f+QRIYZW2vmSlZtCKUz7k9qY=
+X-Google-Smtp-Source: APXvYqx0fIgfhpDqFFTxznqGCiuskeOmsCNweaY0t6etMlfGpvFta+bHSs7nGE/mCTiDE1333/gsgQ==
+X-Received: by 2002:a25:74d3:: with SMTP id p202mr29238862ybc.493.1582261832671;
+        Thu, 20 Feb 2020 21:10:32 -0800 (PST)
+Received: from localhost.localdomain (174-084-153-250.res.spectrum.com. [174.84.153.250])
+        by smtp.gmail.com with ESMTPSA id a12sm840904ywa.95.2020.02.20.21.10.31
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 20 Feb 2020 21:10:32 -0800 (PST)
+From:   Brian Gerst <brgerst@gmail.com>
+To:     linux-kernel@vger.kernel.org, x86@kernel.org
+Cc:     Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@kernel.org>, Borislav Petkov <bp@alien8.de>,
+        "H . Peter Anvin" <hpa@zytor.com>,
+        Andy Lutomirski <luto@kernel.org>,
+        Brian Gerst <brgerst@gmail.com>
+Subject: [PATCH 0/5] Enable pt_regs based syscalls for x86-32 native
+Date:   Fri, 21 Feb 2020 00:09:29 -0500
+Message-Id: <20200221050934.719152-1-brgerst@gmail.com>
+X-Mailer: git-send-email 2.24.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191023002014.22571-1-natechancellor@gmail.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-I know it has been a while but ping?
+This patch series cleans up the x86 syscall wrapper code and converts
+the 32-bit native kernel over to pt_regs based syscalls.
 
-On Tue, Oct 22, 2019 at 05:20:15PM -0700, Nathan Chancellor wrote:
-> When building with Clang + -Wtautological-pointer-compare:
-> 
-> drivers/usb/gadget/udc/bdc/bdc_ep.c:543:28: warning: comparison of
-> address of 'req->queue' equal to a null pointer is always false
-> [-Wtautological-pointer-compare]
->         if (req == NULL  || &req->queue == NULL || &req->usb_req == NULL)
->                              ~~~~~^~~~~    ~~~~
-> drivers/usb/gadget/udc/bdc/bdc_ep.c:543:51: warning: comparison of
-> address of 'req->usb_req' equal to a null pointer is always false
-> [-Wtautological-pointer-compare]
->         if (req == NULL  || &req->queue == NULL || &req->usb_req == NULL)
->                                                     ~~~~~^~~~~~~    ~~~~
-> 2 warnings generated.
-> 
-> As it notes, these statements will always evaluate to false so remove
-> them.
-> 
-> Fixes: efed421a94e6 ("usb: gadget: Add UDC driver for Broadcom USB3.0 device controller IP BDC")
-> Link: https://github.com/ClangBuiltLinux/linux/issues/749
-> Signed-off-by: Nathan Chancellor <natechancellor@gmail.com>
-> ---
-> 
-> Note: I am not sure if these checks were intended to check if the
-> contents of these arrays were NULL or if there should be some other
-> checks in lieu of these; I am not familiar with the USB subsystem to
-> answer this but I will happily respin the patch if this is not correct.
-> 
->  drivers/usb/gadget/udc/bdc/bdc_ep.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/drivers/usb/gadget/udc/bdc/bdc_ep.c b/drivers/usb/gadget/udc/bdc/bdc_ep.c
-> index a4d9b5e1e50e..d49c6dc1082d 100644
-> --- a/drivers/usb/gadget/udc/bdc/bdc_ep.c
-> +++ b/drivers/usb/gadget/udc/bdc/bdc_ep.c
-> @@ -540,7 +540,7 @@ static void bdc_req_complete(struct bdc_ep *ep, struct bdc_req *req,
->  {
->  	struct bdc *bdc = ep->bdc;
->  
-> -	if (req == NULL  || &req->queue == NULL || &req->usb_req == NULL)
-> +	if (req == NULL)
->  		return;
->  
->  	dev_dbg(bdc->dev, "%s ep:%s status:%d\n", __func__, ep->name, status);
-> -- 
-> 2.23.0
-> 
+Brian Gerst (5):
+  x86: Refactor syscall_wrapper.h
+  x86: Move 32-bit compat syscalls to common location
+  x86-32: Enable syscall wrappers
+  x86-64: Use syscall wrappers for x32_rt_sigreturn
+  x86: Drop asmlinkage from syscalls
+
+ arch/x86/Kconfig                       |   2 +-
+ arch/x86/entry/common.c                |  20 +-
+ arch/x86/entry/syscall_32.c            |  13 +-
+ arch/x86/entry/syscall_64.c            |   9 +-
+ arch/x86/entry/syscalls/syscall_32.tbl | 818 ++++++++++++-------------
+ arch/x86/entry/syscalls/syscall_64.tbl |   2 +-
+ arch/x86/entry/syscalls/syscalltbl.sh  |  33 +-
+ arch/x86/ia32/Makefile                 |   2 +-
+ arch/x86/include/asm/sighandling.h     |   5 -
+ arch/x86/include/asm/syscall.h         |   8 +-
+ arch/x86/include/asm/syscall_wrapper.h | 372 +++++------
+ arch/x86/include/asm/syscalls.h        |  29 -
+ arch/x86/kernel/Makefile               |   2 +
+ arch/x86/kernel/signal.c               |   2 +-
+ arch/x86/{ia32 => kernel}/sys_ia32.c   | 130 ++--
+ arch/x86/um/sys_call_table_32.c        |  10 +
+ 16 files changed, 722 insertions(+), 735 deletions(-)
+ rename arch/x86/{ia32 => kernel}/sys_ia32.c (83%)
+
+-- 
+2.24.1
+
