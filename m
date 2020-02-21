@@ -2,150 +2,217 @@ Return-Path: <SRS0=1210=4J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7CDE0C35646
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 12:49:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 14409C35646
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 12:53:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 460542073A
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 12:49:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D535E206EF
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 12:53:09 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=silabs.onmicrosoft.com header.i=@silabs.onmicrosoft.com header.b="dgna0+W8"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Is97m+zF"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728359AbgBUMt1 (ORCPT
+        id S1728103AbgBUMxH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Feb 2020 07:49:27 -0500
-Received: from mail-eopbgr750058.outbound.protection.outlook.com ([40.107.75.58]:64832
-        "EHLO NAM02-BL2-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727683AbgBUMt0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Feb 2020 07:49:26 -0500
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=dsRGFh2bEGL26D3njAe9T26V4nFaKElcG4uzHhwaaopnHr+sSbYdt4AFpr5eWQaS0wjrj3rsDtUD2LUFjnMuAXSiE1tJKRtBOUarvs83/tKDnD8Pqnqq9RGB6vdxNhidiIhuzE8oN24OUDIuZ2xBAJBUpKbGduXtH5hKgp0W1Z01ekuX2Q/+wQDRcft96o60aUS+HorpdGk1sfeaF5gl51N3MwUFgvE+vqmx5+00PwILBMFRNiVFl6P1Gwl1i27Drc16ZnLt8dRsn1fVIcChU+AhID2nNb2YBDATdr8V6TNuJELIeoFpwk5FiFzT5DrzOg95b5fK/NERs/FER+LVfg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=QUYreOpvE64zcz4LKjYQaMrMrZvxuEb/ed22KD24eiI=;
- b=EX2ZnE5dzdRSon4llpqGuy3fGcwaxax+9x3qG3HCMUbYyi+k2zlLHPMuRHE1vBJ3eduweC9l0H2Fjl2T4vC4Z1xz8gmCIl1B88Wv6wkdIXbSf3VHkw18LXPFreRzHpT+rDjQLNJqf27YRN4sbvCzCiwUJJgiR6x20+j7M8VT6Qy0+IgA/OjPFVDuAAx0cnflEc03k0YnLC9KATgKZ7mDX8nNtISomYkx4YLHY62hGNi37bFTTTdl6CPt3u7t2l8w7APz/4VYR7r/TNsuCtVNWcpb9g6095+RwHu4JIXOWGoh69v2f6f+MiOBKPfTnSdwO/IC8O0mIJVx6/pPLyas9g==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=silabs.com; dmarc=pass action=none header.from=silabs.com;
- dkim=pass header.d=silabs.com; arc=none
+        Fri, 21 Feb 2020 07:53:07 -0500
+Received: from mail-wr1-f68.google.com ([209.85.221.68]:45770 "EHLO
+        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727137AbgBUMxH (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 21 Feb 2020 07:53:07 -0500
+Received: by mail-wr1-f68.google.com with SMTP id g3so1919134wrs.12
+        for <linux-kernel@vger.kernel.org>; Fri, 21 Feb 2020 04:53:05 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=silabs.onmicrosoft.com; s=selector2-silabs-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=QUYreOpvE64zcz4LKjYQaMrMrZvxuEb/ed22KD24eiI=;
- b=dgna0+W8RuaMdFgG4AZ0AN8UIqAyLjUyKVUJBn6WS8BYB/niI2Um5fuUTUi/MHkgSQ0AwD+BzWfpAtVawVyO95zNZVXX/7LBTdrO1OEiAyhD1HaybIR8i+sor5S0CRYVYpipISPphGUNtEgbzoV3lVSmlJej06gp/BTKrIDc3V4=
-Received: from MN2PR11MB4063.namprd11.prod.outlook.com (2603:10b6:208:13f::22)
- by MN2PR11MB3871.namprd11.prod.outlook.com (2603:10b6:208:13c::31) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2729.23; Fri, 21 Feb
- 2020 12:49:21 +0000
-Received: from MN2PR11MB4063.namprd11.prod.outlook.com
- ([fe80::ade4:5702:1c8b:a2b3]) by MN2PR11MB4063.namprd11.prod.outlook.com
- ([fe80::ade4:5702:1c8b:a2b3%7]) with mapi id 15.20.2729.033; Fri, 21 Feb 2020
- 12:49:21 +0000
-From:   =?iso-8859-1?Q?J=E9r=F4me_Pouiller?= <Jerome.Pouiller@silabs.com>
-To:     Johannes Berg <johannes@sipsolutions.net>
-CC:     "linux-wireless@vger.kernel.org" <linux-wireless@vger.kernel.org>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Jakub Kicinski <kuba@kernel.org>,
-        "David S . Miller" <davem@davemloft.net>
-Subject: Re: [PATCH 09/10] cfg80211: align documentation style of
- ieee80211_iface_combination
-Thread-Topic: [PATCH 09/10] cfg80211: align documentation style of
- ieee80211_iface_combination
-Thread-Index: AQHV6K3zmkarmgxVQ0OGCjaD/lmZqagljBmAgAAKNgCAAADIAIAAAjgA
-Date:   Fri, 21 Feb 2020 12:49:21 +0000
-Message-ID: <35962489.2oEhloAINf@pc-42>
-References: <20200221115604.594035-1-Jerome.Pouiller@silabs.com>
- <10411162.7U3r8zC6Ku@pc-42>
- <1cbc48003d249d3ce14941adbb32089b57573cd0.camel@sipsolutions.net>
-In-Reply-To: <1cbc48003d249d3ce14941adbb32089b57573cd0.camel@sipsolutions.net>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=Jerome.Pouiller@silabs.com; 
-x-originating-ip: [37.71.187.125]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 3196135b-c425-42e7-c779-08d7b6cc793b
-x-ms-traffictypediagnostic: MN2PR11MB3871:
-x-microsoft-antispam-prvs: <MN2PR11MB3871F446CE8C2B344AEE4BE593120@MN2PR11MB3871.namprd11.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:9508;
-x-forefront-prvs: 0320B28BE1
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(7916004)(39860400002)(136003)(376002)(346002)(396003)(366004)(199004)(189003)(71200400001)(6916009)(66446008)(66556008)(66946007)(9686003)(91956017)(316002)(186003)(64756008)(66476007)(6486002)(76116006)(6512007)(26005)(6506007)(86362001)(478600001)(66574012)(2906002)(33716001)(54906003)(8676002)(5660300002)(8936002)(4326008)(81166006)(81156014)(39026012);DIR:OUT;SFP:1101;SCL:1;SRVR:MN2PR11MB3871;H:MN2PR11MB4063.namprd11.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
-received-spf: None (protection.outlook.com: silabs.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: 3XgZwmxPKUJkBWztp1uEUVpkmY2f00AU0Ke++sFMUWiE9K5saohpC3DaEA/gRUEcmdRC/J8c5fTDPm6prq96sINdT5y5JQ8JToxqj9eN1e5ylKC9apx7SmHPPWSyriHmk2600VA/IQ15YE9Mfi+kN/TRdpFU2fM7Pn4eMPtNvAHtG7R0f9TEay/HwsbpjweAOlcmSc5v+LPEYRFZnF8zJR++fkLJR4e+yy1qf4p4ZM14htArQOyyVXXlnoOMYbUICqQJ26qQ8F+tfVsehiqEL0gUClDcBAFHBH6Ed7kHO/vyfs5f7XcBvr68t+CsCLVK2ruefOZR7C6ecWCpt67Xo9k5uxMELYmwuLxVHxsm6ur/CmYJoMy0BeSGUqHC0sdS1bwyKU/9aNkn0V3p2P7tNtXW+Ngv7dDv5mcgW0upqOOdVLvD1oZi5GQwMiS33OIWI/uHHW8yd3qLoAEddJs+bffmvnvxyZmRk2IIDYahtPWvO6myutW9ZUZ1/Ci81Ypo
-x-ms-exchange-antispam-messagedata: KQWd8XwAcIcWZlAyO/E47TqKzXEbatMW5ukaka4y1I9H/mTKhzocqVb9pGkcLcDjjF2ufXYWptlCsoJgeKuwBoEVVIREpmg7dkYTvVVxCfW3VJjTV/jfDbfhYoSKvTOROCQEugbms3wcBHFh+qYZ9w==
-x-ms-exchange-transport-forked: True
-Content-Type: text/plain; charset="iso-8859-1"
-Content-ID: <5460CBE59039BF408F10650D567564CE@namprd11.prod.outlook.com>
-Content-Transfer-Encoding: quoted-printable
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to
+         :user-agent;
+        bh=1Ecw0TwcU7uRxX0RbgoPbcukxSNyerj4Gg5H+/7jGU4=;
+        b=Is97m+zF/OlL47unjgTyrlN2h5LOz7b+bCuBXaZ7I4NfCKXkYB+eEn9tr8HWToU5hS
+         LcgaMH98pZ8E1XJVjarNN4j5rDbOg0TvWZqonAeorXDYmylpc5/p3a6zdZo0+OViPxVf
+         vjaBs1HwK+d066WsYLlvTd/cfgCUGAocMJZCBxAbIYOmchE4hYYwfT2fgcgtO/lDa6n+
+         s46hilc6kKO54iNjcQIKiz/zMeNqSx8RMh2L/6aFfRv62MCyYyw9TIi26wXy7zkiHsnO
+         0qJx6mpEC9etxLhetlmYRb+0QZ7ItHTVG67ZgyBXOa2HCHtlIL/DA/fAs1ZuOWKYzTqv
+         60OQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to:user-agent;
+        bh=1Ecw0TwcU7uRxX0RbgoPbcukxSNyerj4Gg5H+/7jGU4=;
+        b=gYle4WPFJz1q9j6c617MSFCPxfO6xo4R50/wjtbbnoss4D+FWR6qTHCSQx8tsh/Hzr
+         70nfaqzRo/n+2tyb+uLhr5BKwoHQ9wAzw2LEDXD7oPeQ+3JyOfB3XdqtPDdZ1vnyrwng
+         7unpcjXj6ONSHb2pKD+6oAdegYyXkqG5FgH/0ta9FMExv+86AIebgLZl3WfSF3XqqIxf
+         FQ34EIwLuOSUfDIvp+UZ7KwCrMbI7Ty2RbW8UfP5D7FYXB2xrXfEYAYeiVbUlPup1MpC
+         TMt6MX/4iVeLPSDEkY+Zc5EUy5hcnlC/YpRV/LXomDZPbucfhMH2Zj2A8R9oHeF3STGw
+         jBjA==
+X-Gm-Message-State: APjAAAUdgrwWGNyx0s0aOzs/G4HwashFczwwJ0ZQqSrc+9YKzrHFxfpj
+        EsR09oK+L9LnXBJKgq4iaOOwjXantE4=
+X-Google-Smtp-Source: APXvYqxlFnvz5Oqlv3ZiF1S9hXG57kU+AY4Dg2xiBGuM31y83G3pczXUHHnhoRpdAgUpGaKfUCxWBQ==
+X-Received: by 2002:a05:6000:124b:: with SMTP id j11mr45114087wrx.285.1582289584497;
+        Fri, 21 Feb 2020 04:53:04 -0800 (PST)
+Received: from linaro.org ([2a01:e34:ed2f:f020:2dfb:b5ce:9043:4adb])
+        by smtp.gmail.com with ESMTPSA id k10sm3781715wrd.68.2020.02.21.04.53.02
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Fri, 21 Feb 2020 04:53:03 -0800 (PST)
+Date:   Fri, 21 Feb 2020 13:53:00 +0100
+From:   Daniel Lezcano <daniel.lezcano@linaro.org>
+To:     Anson Huang <Anson.Huang@nxp.com>
+Cc:     robh+dt@kernel.org, mark.rutland@arm.com, shawnguo@kernel.org,
+        s.hauer@pengutronix.de, kernel@pengutronix.de, festevam@gmail.com,
+        catalin.marinas@arm.com, will@kernel.org, rui.zhang@intel.com,
+        amit.kucheria@verdurent.com, aisheng.dong@nxp.com,
+        linux@roeck-us.net, srinivas.kandagatla@linaro.org,
+        krzk@kernel.org, fugang.duan@nxp.com, peng.fan@nxp.com,
+        daniel.baluta@nxp.com, bjorn.andersson@linaro.org, olof@lixom.net,
+        dinguyen@kernel.org, leonard.crestez@nxp.com,
+        marcin.juszkiewicz@linaro.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-pm@vger.kernel.org, Linux-imx@nxp.com
+Subject: Re: [PATCH V15 RESEND 3/5] thermal: imx_sc: add i.MX system
+ controller thermal support
+Message-ID: <20200221125300.GB10516@linaro.org>
+References: <1582161028-2844-1-git-send-email-Anson.Huang@nxp.com>
+ <1582161028-2844-3-git-send-email-Anson.Huang@nxp.com>
 MIME-Version: 1.0
-X-OriginatorOrg: silabs.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 3196135b-c425-42e7-c779-08d7b6cc793b
-X-MS-Exchange-CrossTenant-originalarrivaltime: 21 Feb 2020 12:49:21.8449
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 54dbd822-5231-4b20-944d-6f4abcd541fb
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: Cw5ZrhIMYc5P/HIeTA9KxadenkWlrSYNMucpD7Hb/egRGaB/nSGuEkJ/36QbAF34+UHaIlbc+n62kK6L72j+3Q==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: MN2PR11MB3871
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <1582161028-2844-3-git-send-email-Anson.Huang@nxp.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Friday 21 February 2020 13:41:34 CET Johannes Berg wrote:
-> CAUTION: This email originated from outside of the organization. Do not c=
-lick links or open attachments unless you recognize the sender and know the=
- content is safe.
->=20
->=20
-> On Fri, 2020-02-21 at 12:38 +0000, J=E9r=F4me Pouiller wrote:
-> >
-> > > > -      * =3D 0
-> > > > -      *   all beacon intervals for different interface must be sam=
-e.
-> > > > -      * > 0
-> > > > -      *   any beacon interval for the interface part of this combi=
-nation AND
-> > > > -      *   GCD of all beacon intervals from beaconing interfaces of=
- this
-> > > > -      *   combination must be greater or equal to this value.
-> > >
-> > > This generates the nicer output, not with bullets but as a definition
-> > > list or something.
-> > Indeed.
-> >
-> > Unfortunately, I hasn't been able to use the same syntax in struct
-> > description: if sphinx find a blank line, it considers that the rest of
-> > the input is the long description of the struct.
->=20
-> So let's just leave it as is. I don't consider using the same style
-> (inline or header) everywhere to be even nearly as important as the
-> output :)
-Ok.
+Hi Anson,
 
-Alternatively, the following syntax generate an output close to the
-original:
+sorry for the delay with this review, hopefully the upstreaming will be now a
+bit more smooth.
 
-    *   intervals:
-    *       :=3D 0: all beacon intervals for different interface must be sa=
-me.
-    *       :> 0: any beacon interval for the interface part of this
-    *         combination AND GCD of all beacon intervals from beaconing
-    *         interfaces of this combination must be greater or equal to th=
-is
-    *         value.
+Apart the comments below, the driver looks good to me.
 
---=20
-J=E9r=F4me Pouiller
+On Thu, Feb 20, 2020 at 09:10:26AM +0800, Anson Huang wrote:
+> i.MX8QXP is an ARMv8 SoC which has a Cortex-M4 system controller
+> inside, the system controller is in charge of controlling power,
+> clock and thermal sensors etc..
+> 
+> This patch adds i.MX system controller thermal driver support,
+> Linux kernel has to communicate with system controller via MU
+> (message unit) IPC to get each thermal sensor's temperature,
+> it supports multiple sensors which are passed from device tree,
+> please see the binding doc for details.
+> 
+> Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
+> ---
+> No change.
+> ---
+>  drivers/thermal/Kconfig          |  11 +++
+>  drivers/thermal/Makefile         |   1 +
+>  drivers/thermal/imx_sc_thermal.c | 142 +++++++++++++++++++++++++++++++++++++++
+>  3 files changed, 154 insertions(+)
+>  create mode 100644 drivers/thermal/imx_sc_thermal.c
+> 
+> diff --git a/drivers/thermal/Kconfig b/drivers/thermal/Kconfig
+> index 5a05db5..d1cb8dc 100644
+> --- a/drivers/thermal/Kconfig
+> +++ b/drivers/thermal/Kconfig
+> @@ -251,6 +251,17 @@ config IMX_THERMAL
+>  	  cpufreq is used as the cooling device to throttle CPUs when the
+>  	  passive trip is crossed.
+>  
+> +config IMX_SC_THERMAL
+> +	tristate "Temperature sensor driver for NXP i.MX SoCs with System Controller"
+> +	depends on ARCH_MXC && IMX_SCU
 
+IMX_SCU depends on IMX_MBOX which depends on ARCH_MXC. This dependency could be
+simplified.
+
+Also add the COMPILE_TEST option to improve compilation test coverage.
+
+> +	depends on OF
+> +	help
+> +	  Support for Temperature Monitor (TEMPMON) found on NXP i.MX SoCs with
+> +	  system controller inside, Linux kernel has to communicate with system
+> +	  controller via MU (message unit) IPC to get temperature from thermal
+> +	  sensor. It supports one critical trip point and one
+> +	  passive trip point for each thermal sensor.
+> +
+>  config MAX77620_THERMAL
+>  	tristate "Temperature sensor driver for Maxim MAX77620 PMIC"
+>  	depends on MFD_MAX77620
+> diff --git a/drivers/thermal/Makefile b/drivers/thermal/Makefile
+> index 9fb88e2..a11a6d8 100644
+> --- a/drivers/thermal/Makefile
+> +++ b/drivers/thermal/Makefile
+> @@ -43,6 +43,7 @@ obj-$(CONFIG_DB8500_THERMAL)	+= db8500_thermal.o
+>  obj-$(CONFIG_ARMADA_THERMAL)	+= armada_thermal.o
+>  obj-$(CONFIG_TANGO_THERMAL)	+= tango_thermal.o
+>  obj-$(CONFIG_IMX_THERMAL)	+= imx_thermal.o
+> +obj-$(CONFIG_IMX_SC_THERMAL)	+= imx_sc_thermal.o
+>  obj-$(CONFIG_MAX77620_THERMAL)	+= max77620_thermal.o
+>  obj-$(CONFIG_QORIQ_THERMAL)	+= qoriq_thermal.o
+>  obj-$(CONFIG_DA9062_THERMAL)	+= da9062-thermal.o
+> diff --git a/drivers/thermal/imx_sc_thermal.c b/drivers/thermal/imx_sc_thermal.c
+> new file mode 100644
+> index 0000000..d406ecb
+> --- /dev/null
+> +++ b/drivers/thermal/imx_sc_thermal.c
+> @@ -0,0 +1,142 @@
+> +// SPDX-License-Identifier: GPL-2.0+
+> +/*
+> + * Copyright 2018-2019 NXP.
+
+*sigh* 2020 now ...
+
+[ ... ]
+
+> +static int imx_sc_thermal_get_temp(void *data, int *temp)
+> +{
+> +	struct imx_sc_msg_misc_get_temp msg;
+> +	struct imx_sc_rpc_msg *hdr = &msg.hdr;
+> +	struct imx_sc_sensor *sensor = data;
+> +	int ret;
+> +
+> +	msg.data.req.resource_id = sensor->resource_id;
+> +	msg.data.req.type = IMX_SC_C_TEMP;
+> +
+> +	hdr->ver = IMX_SC_RPC_VERSION;
+> +	hdr->svc = IMX_SC_RPC_SVC_MISC;
+> +	hdr->func = IMX_SC_MISC_FUNC_GET_TEMP;
+> +	hdr->size = 2;
+
+Can you explain this 'size' value?
+
+[ ... ]
+
+> +MODULE_DEVICE_TABLE(of, imx_sc_thermal_table);
+> +
+> +static struct platform_driver imx_sc_thermal_driver = {
+> +		.probe = imx_sc_thermal_probe,
+
+The driver can be compiled as module but there is no 'remove' callback
+
+> +		.driver = {
+> +			.name = "imx-sc-thermal",
+> +			.of_match_table = imx_sc_thermal_table,
+> +		},
+> +};
+> +module_platform_driver(imx_sc_thermal_driver);
+> +
+> +MODULE_AUTHOR("Anson Huang <Anson.Huang@nxp.com>");
+> +MODULE_DESCRIPTION("Thermal driver for NXP i.MX SoCs with system controller");
+> +MODULE_LICENSE("GPL v2");
+
+
+
+-- 
+
+ <http://www.linaro.org/> Linaro.org │ Open source software for ARM SoCs
+
+Follow Linaro:  <http://www.facebook.com/pages/Linaro> Facebook |
+<http://twitter.com/#!/linaroorg> Twitter |
+<http://www.linaro.org/linaro-blog/> Blog
