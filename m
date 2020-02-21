@@ -2,139 +2,307 @@ Return-Path: <SRS0=1210=4J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 46B68C35656
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 13:52:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 22993C35656
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 13:53:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1EA7D208C4
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 13:52:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E31F620578
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 13:53:45 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b="SolkEdh6"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b="GvFv+6I9"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728971AbgBUNwW (ORCPT
+        id S1728668AbgBUNxp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Feb 2020 08:52:22 -0500
-Received: from smtp-fw-9101.amazon.com ([207.171.184.25]:28289 "EHLO
-        smtp-fw-9101.amazon.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727876AbgBUNwW (ORCPT
+        Fri, 21 Feb 2020 08:53:45 -0500
+Received: from pandora.armlinux.org.uk ([78.32.30.218]:49246 "EHLO
+        pandora.armlinux.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727836AbgBUNxo (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Feb 2020 08:52:22 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
-  t=1582293142; x=1613829142;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   mime-version;
-  bh=TtBhTe+Xk+Dj8T9pKB7s2pqvj4w2Mw9Dz/MJKOk2uyo=;
-  b=SolkEdh6yBGn93WVFggoGJP/RSG+YIpuqY/51VtGaA0f6NYtGh7x41sq
-   JTtlIRv/m2HWgl8bOQFDV7Y6pKWl7weRKFbO0rpmzPJIHuSK4o2eAtWP4
-   yG0UJlF4se87lJYYop5pXgULn5Cnx5VRFNdANRYP+Cwx3iyQ8AnmnsTOW
-   k=;
-IronPort-SDR: 89UMV0sd3/ZhGS2vJ8ck00hlSuyDYSrGH2TmQNJ4+L6eQe/dBDCECyVQ0zLGu1ZiGpUIAKVgrZ
- T4DoVvCD6RMQ==
-X-IronPort-AV: E=Sophos;i="5.70,468,1574121600"; 
-   d="scan'208";a="18321703"
-Received: from sea32-co-svc-lb4-vlan3.sea.corp.amazon.com (HELO email-inbound-relay-1d-38ae4ad2.us-east-1.amazon.com) ([10.47.23.38])
-  by smtp-border-fw-out-9101.sea19.amazon.com with ESMTP; 21 Feb 2020 13:52:18 +0000
-Received: from EX13MTAUEA002.ant.amazon.com (iad55-ws-svc-p15-lb9-vlan3.iad.amazon.com [10.40.159.166])
-        by email-inbound-relay-1d-38ae4ad2.us-east-1.amazon.com (Postfix) with ESMTPS id B3E2CA2D93;
-        Fri, 21 Feb 2020 13:52:09 +0000 (UTC)
-Received: from EX13D31EUA001.ant.amazon.com (10.43.165.15) by
- EX13MTAUEA002.ant.amazon.com (10.43.61.77) with Microsoft SMTP Server (TLS)
- id 15.0.1236.3; Fri, 21 Feb 2020 13:52:09 +0000
-Received: from u886c93fd17d25d.ant.amazon.com (10.43.162.118) by
- EX13D31EUA001.ant.amazon.com (10.43.165.15) with Microsoft SMTP Server (TLS)
- id 15.0.1367.3; Fri, 21 Feb 2020 13:51:57 +0000
-From:   SeongJae Park <sjpark@amazon.com>
-To:     SeongJae Park <sjpark@amazon.com>
-CC:     <akpm@linux-foundation.org>, SeongJae Park <sjpark@amazon.de>,
-        <acme@kernel.org>, <alexander.shishkin@linux.intel.com>,
-        <amit@kernel.org>, <brendan.d.gregg@gmail.com>,
-        <brendanhiggins@google.com>, <cai@lca.pw>,
-        <colin.king@canonical.com>, <corbet@lwn.net>, <dwmw@amazon.com>,
-        <jolsa@redhat.com>, <kirill@shutemov.name>, <mark.rutland@arm.com>,
-        <mgorman@suse.de>, <minchan@kernel.org>, <mingo@redhat.com>,
-        <namhyung@kernel.org>, <peterz@infradead.org>,
-        <rdunlap@infradead.org>, <rostedt@goodmis.org>, <shuah@kernel.org>,
-        <sj38.park@gmail.com>, <vdavydov.dev@gmail.com>,
-        <linux-mm@kvack.org>, <linux-doc@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v5 02/14] mm/damon: Implement region based sampling
-Date:   Fri, 21 Feb 2020 14:51:42 +0100
-Message-ID: <20200221135142.8182-1-sjpark@amazon.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20200217102544.29012-3-sjpark@amazon.com> (raw)
+        Fri, 21 Feb 2020 08:53:44 -0500
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=armlinux.org.uk; s=pandora-2019; h=Sender:In-Reply-To:Content-Type:
+        MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=9eeBha9lPzAUV3NjBfsVhaOkGKArfI3EhMei1YyTe9A=; b=GvFv+6I9mh2IpGMQ3I1ucTbN8
+        jhVvZPRcwWcMwxeN+EHWcVUV/jvwJgyMr/nsEFGFCDv2dZR5NA++oCZT3aBYl1MDMF0Ov3vOZHrQ8
+        cEeTXXmalcF6gmioN9dl+IeJRU0KHVLSyDTBqS12O9zGpBQlLcdCYOLpjXE53e0g7H+0ORLwOU6ol
+        IdCVYS3vf7eih0vxVorORZ1HTFvVz/c70vlfcw5yVpPMuHkyS1sgw46NPIqiRsPFKOeQsVUqqELs5
+        EEJMnj8NuIF6Nws2d6axD522Wu9FEgmGkM31ZFZuVGs2a/afwcQwi0wE42nuQlQqPUHyiCl1KXQk+
+        XiQb93HxA==;
+Received: from shell.armlinux.org.uk ([fd8f:7570:feb6:1:5054:ff:fe00:4ec]:54994)
+        by pandora.armlinux.org.uk with esmtpsa (TLSv1.2:ECDHE-RSA-AES256-GCM-SHA384:256)
+        (Exim 4.90_1)
+        (envelope-from <linux@armlinux.org.uk>)
+        id 1j58kE-0001Za-6P; Fri, 21 Feb 2020 13:53:30 +0000
+Received: from linux by shell.armlinux.org.uk with local (Exim 4.92)
+        (envelope-from <linux@shell.armlinux.org.uk>)
+        id 1j58kA-0003YG-1R; Fri, 21 Feb 2020 13:53:26 +0000
+Date:   Fri, 21 Feb 2020 13:53:26 +0000
+From:   Russell King - ARM Linux admin <linux@armlinux.org.uk>
+To:     Ansuel Smith <ansuelsmth@gmail.com>
+Cc:     Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Andrew Lunn <andrew@lunn.ch>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Heiner Kallweit <hkallweit1@gmail.com>,
+        linux-arm-msm@vger.kernel.org, netdev@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v4 1/2] net: mdio: add ipq8064 mdio driver
+Message-ID: <20200221135325.GI25745@shell.armlinux.org.uk>
+References: <20200221132834.20719-1-ansuelsmth@gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.43.162.118]
-X-ClientProxiedBy: EX13D30UWC001.ant.amazon.com (10.43.162.128) To
- EX13D31EUA001.ant.amazon.com (10.43.165.15)
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200221132834.20719-1-ansuelsmth@gmail.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 17 Feb 2020 11:25:32 +0100 SeongJae Park <sjpark@amazon.com> wrote:
+On Fri, Feb 21, 2020 at 02:28:31PM +0100, Ansuel Smith wrote:
+> Currently ipq806x soc use generi bitbang driver to
+> comunicate with the gmac ethernet interface.
+> Add a dedicated driver created by chunkeey to fix this.
+> 
+> Christian Lamparter <chunkeey@gmail.com>
+> Signed-off-by: Ansuel Smith <ansuelsmth@gmail.com>
+> ---
+>  drivers/net/phy/Kconfig        |   8 ++
+>  drivers/net/phy/Makefile       |   1 +
+>  drivers/net/phy/mdio-ipq8064.c | 166 +++++++++++++++++++++++++++++++++
+>  3 files changed, 175 insertions(+)
+>  create mode 100644 drivers/net/phy/mdio-ipq8064.c
+> 
+> diff --git a/drivers/net/phy/Kconfig b/drivers/net/phy/Kconfig
+> index 9dabe03a668c..ec2a5493a7e8 100644
+> --- a/drivers/net/phy/Kconfig
+> +++ b/drivers/net/phy/Kconfig
+> @@ -157,6 +157,14 @@ config MDIO_I2C
+>  
+>  	  This is library mode.
+>  
+> +config MDIO_IPQ8064
+> +	tristate "Qualcomm IPQ8064 MDIO interface support"
+> +	depends on HAS_IOMEM && OF_MDIO
+> +	depends on MFD_SYSCON
+> +	help
+> +	  This driver supports the MDIO interface found in the network
+> +	  interface units of the IPQ8064 SoC
+> +
+>  config MDIO_MOXART
+>  	tristate "MOXA ART MDIO interface support"
+>  	depends on ARCH_MOXART || COMPILE_TEST
+> diff --git a/drivers/net/phy/Makefile b/drivers/net/phy/Makefile
+> index fe5badf13b65..8f02bd2089f3 100644
+> --- a/drivers/net/phy/Makefile
+> +++ b/drivers/net/phy/Makefile
+> @@ -36,6 +36,7 @@ obj-$(CONFIG_MDIO_CAVIUM)	+= mdio-cavium.o
+>  obj-$(CONFIG_MDIO_GPIO)		+= mdio-gpio.o
+>  obj-$(CONFIG_MDIO_HISI_FEMAC)	+= mdio-hisi-femac.o
+>  obj-$(CONFIG_MDIO_I2C)		+= mdio-i2c.o
+> +obj-$(CONFIG_MDIO_IPQ8064)	+= mdio-ipq8064.o
+>  obj-$(CONFIG_MDIO_MOXART)	+= mdio-moxart.o
+>  obj-$(CONFIG_MDIO_MSCC_MIIM)	+= mdio-mscc-miim.o
+>  obj-$(CONFIG_MDIO_OCTEON)	+= mdio-octeon.o
+> diff --git a/drivers/net/phy/mdio-ipq8064.c b/drivers/net/phy/mdio-ipq8064.c
+> new file mode 100644
+> index 000000000000..fd856b798194
+> --- /dev/null
+> +++ b/drivers/net/phy/mdio-ipq8064.c
+> @@ -0,0 +1,166 @@
+> +// SPDX-License-Identifier: GPL-2.0
+> +//
+> +// Qualcomm IPQ8064 MDIO interface driver
+> +//
+> +// Copyright (C) 2019 Christian Lamparter <chunkeey@gmail.com>
+> +
+> +#include <linux/delay.h>
+> +#include <linux/kernel.h>
+> +#include <linux/module.h>
+> +#include <linux/regmap.h>
+> +#include <linux/of_mdio.h>
+> +#include <linux/phy.h>
+> +#include <linux/platform_device.h>
+> +#include <linux/mfd/syscon.h>
+> +
+> +/* MII address register definitions */
+> +#define MII_ADDR_REG_ADDR                       0x10
+> +#define MII_BUSY                                BIT(0)
+> +#define MII_WRITE                               BIT(1)
+> +#define MII_CLKRANGE_60_100M                    (0 << 2)
+> +#define MII_CLKRANGE_100_150M                   (1 << 2)
+> +#define MII_CLKRANGE_20_35M                     (2 << 2)
+> +#define MII_CLKRANGE_35_60M                     (3 << 2)
+> +#define MII_CLKRANGE_150_250M                   (4 << 2)
+> +#define MII_CLKRANGE_250_300M                   (5 << 2)
+> +#define MII_CLKRANGE_MASK			GENMASK(4, 2)
+> +#define MII_REG_SHIFT				6
+> +#define MII_REG_MASK				GENMASK(10, 6)
+> +#define MII_ADDR_SHIFT				11
+> +#define MII_ADDR_MASK				GENMASK(15, 11)
+> +
+> +#define MII_DATA_REG_ADDR                       0x14
+> +
+> +#define MII_MDIO_DELAY                          (1000)
+> +#define MII_MDIO_RETRY                          (10)
 
-> From: SeongJae Park <sjpark@amazon.de>
-> 
-> This commit implements DAMON's basic access check and region based
-> sampling mechanisms.  This change would seems make no sense, mainly
-> because it is only a part of the DAMON's logics.  Following two commits
-> will make more sense.
-> 
-[...]
-> +/*
-> + * Check whether the given region has accessed since the last check
-> + *
-> + * mm	'mm_struct' for the given virtual address space
-> + * r	the region to be checked
-> + */
-> +static void kdamond_check_access(struct damon_ctx *ctx,
-> +			struct mm_struct *mm, struct damon_region *r)
+You've missed my comments on these.
+
+> +
+> +struct ipq8064_mdio {
+> +	struct regmap *base; /* NSS_GMAC0_BASE */
+> +};
+> +
+> +static int
+> +ipq8064_mdio_wait_busy(struct ipq8064_mdio *priv)
 > +{
-> +	pte_t *pte = NULL;
-> +	pmd_t *pmd = NULL;
-> +	spinlock_t *ptl;
+> +	u32 busy;
 > +
-> +	if (follow_pte_pmd(mm, r->sampling_addr, NULL, &pte, &pmd, &ptl))
-> +		goto mkold;
+> +	return regmap_read_poll_timeout(priv->base, MII_ADDR_REG_ADDR, busy,
+> +				   !(busy & MII_BUSY), MII_MDIO_DELAY,
+> +				   MII_MDIO_RETRY * USEC_PER_MSEC);
+> +}
 > +
-> +	/* Read the page table access bit of the page */
-> +	if (pte && pte_young(*pte))
-> +		r->nr_accesses++;
-> +#ifdef CONFIG_TRANSPARENT_HUGEPAGE
-> +	else if (pmd && pmd_young(*pmd))
-> +		r->nr_accesses++;
-> +#endif	/* CONFIG_TRANSPARENT_HUGEPAGE */
+> +static int
+> +ipq8064_mdio_read(struct mii_bus *bus, int phy_addr, int reg_offset)
+> +{
+> +	struct ipq8064_mdio *priv = bus->priv;
+> +	u32 miiaddr = MII_BUSY | MII_CLKRANGE_250_300M;
+> +	u32 ret_val;
+> +	int err;
 > +
-> +	spin_unlock(ptl);
+> +	/* Reject clause 45 */
+> +	if (reg_offset & MII_ADDR_C45)
+> +		return -EOPNOTSUPP;
 > +
-> +mkold:
-> +	/* mkold next target */
-> +	r->sampling_addr = damon_rand(ctx, r->vm_start, r->vm_end);
+> +	miiaddr |= ((phy_addr << MII_ADDR_SHIFT) & MII_ADDR_MASK) |
+> +		   ((reg_offset << MII_REG_SHIFT) & MII_REG_MASK);
 > +
-> +	if (follow_pte_pmd(mm, r->sampling_addr, NULL, &pte, &pmd, &ptl))
-> +		return;
+> +	regmap_write(priv->base, MII_ADDR_REG_ADDR, miiaddr);
+> +	usleep_range(10, 20);
 > +
-> +	if (pte) {
-> +		if (pte_young(*pte)) {
-> +			clear_page_idle(pte_page(*pte));
-> +			set_page_young(pte_page(*pte));
-> +		}
-> +		*pte = pte_mkold(*pte);
+> +	err = ipq8064_mdio_wait_busy(priv);
+> +	if (err)
+> +		return err;
+> +
+> +	regmap_read(priv->base, MII_DATA_REG_ADDR, &ret_val);
+> +	return (int)ret_val;
+> +}
+> +
+> +static int
+> +ipq8064_mdio_write(struct mii_bus *bus, int phy_addr, int reg_offset, u16 data)
+> +{
+> +	struct ipq8064_mdio *priv = bus->priv;
+> +	u32 miiaddr = MII_WRITE | MII_BUSY | MII_CLKRANGE_250_300M;
+> +
+> +	/* Reject clause 45 */
+> +	if (reg_offset & MII_ADDR_C45)
+> +		return -EOPNOTSUPP;
+> +
+> +	regmap_write(priv->base, MII_DATA_REG_ADDR, data);
+> +
+> +	miiaddr |= ((phy_addr << MII_ADDR_SHIFT) & MII_ADDR_MASK) |
+> +		   ((reg_offset << MII_REG_SHIFT) & MII_REG_MASK);
+> +
+> +	regmap_write(priv->base, MII_ADDR_REG_ADDR, miiaddr);
+> +	usleep_range(10, 20);
+> +
+> +	return ipq8064_mdio_wait_busy(priv);
+> +}
+> +
+> +static int
+> +ipq8064_mdio_probe(struct platform_device *pdev)
+> +{
+> +	struct device_node *np = pdev->dev.of_node;
+> +	struct ipq8064_mdio *priv;
+> +	struct mii_bus *bus;
+> +	int ret;
+> +
+> +	bus = devm_mdiobus_alloc_size(&pdev->dev, sizeof(*priv));
+> +	if (!bus)
+> +		return -ENOMEM;
+> +
+> +	bus->name = "ipq8064_mdio_bus";
+> +	bus->read = ipq8064_mdio_read;
+> +	bus->write = ipq8064_mdio_write;
+> +	snprintf(bus->id, MII_BUS_ID_SIZE, "%s-mii", dev_name(&pdev->dev));
+> +	bus->parent = &pdev->dev;
+> +
+> +	priv = bus->priv;
+> +	priv->base = syscon_node_to_regmap(np);
+> +	if (IS_ERR(priv->base) && priv->base != ERR_PTR(-EPROBE_DEFER))
+> +		priv->base = syscon_regmap_lookup_by_phandle(np, "master");
+> +
+> +	if (priv->base == ERR_PTR(-EPROBE_DEFER)) {
+> +		return -EPROBE_DEFER;
+> +	} else if (IS_ERR(priv->base)) {
+> +		dev_err(&pdev->dev, "error getting syscon regmap, error=%ld\n",
+> +			PTR_ERR(priv->base));
+
+Why not %pe as I suggested, which is documented in printk-formats to
+optionally give a symbolic error string.
+
+> +		return PTR_ERR(priv->base);
 > +	}
-> +#ifdef CONFIG_TRANSPARENT_HUGEPAGE
-> +	else if (pmd) {
-> +		if (pmd_young(*pmd)) {
-> +			clear_page_idle(pmd_page(*pmd));
-> +			set_page_young(pte_page(*pte));
 
-Oops, This should be `set_page_young(pmd_page(*pmd))`.  Will fix in next spin.
+And have you even tested the above - you haven't said whether you have
+or not...
 
+> +
+> +	ret = of_mdiobus_register(bus, np);
+> +	if (ret)
+> +		return ret;
+> +
+> +	platform_set_drvdata(pdev, bus);
+> +	return 0;
+> +}
+> +
+> +static int
+> +ipq8064_mdio_remove(struct platform_device *pdev)
+> +{
+> +	struct mii_bus *bus = platform_get_drvdata(pdev);
+> +
+> +	mdiobus_unregister(bus);
+> +
+> +	return 0;
+> +}
+> +
+> +static const struct of_device_id ipq8064_mdio_dt_ids[] = {
+> +	{ .compatible = "qcom,ipq8064-mdio" },
+> +	{ }
+> +};
+> +MODULE_DEVICE_TABLE(of, ipq8064_mdio_dt_ids);
+> +
+> +static struct platform_driver ipq8064_mdio_driver = {
+> +	.probe = ipq8064_mdio_probe,
+> +	.remove = ipq8064_mdio_remove,
+> +	.driver = {
+> +		.name = "ipq8064-mdio",
+> +		.of_match_table = ipq8064_mdio_dt_ids,
+> +	},
+> +};
+> +
+> +module_platform_driver(ipq8064_mdio_driver);
+> +
+> +MODULE_DESCRIPTION("Qualcomm IPQ8064 MDIO interface driver");
+> +MODULE_AUTHOR("Christian Lamparter <chunkeey@gmail.com>");
+> +MODULE_LICENSE("GPL");
+> -- 
+> 2.25.0
+> 
+> 
 
-Thanks,
-SeongJae Park
+-- 
+RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
+FTTC broadband for 0.8mile line in suburbia: sync at 12.1Mbps down 622kbps up
+According to speedtest.net: 11.9Mbps down 500kbps up
