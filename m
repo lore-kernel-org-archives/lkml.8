@@ -2,128 +2,74 @@ Return-Path: <SRS0=1210=4J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1100BC35647
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 14:04:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 455B0C35647
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 14:05:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D7855208C4
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 14:04:40 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=alien8.de header.i=@alien8.de header.b="U3itHwo/"
+	by mail.kernel.org (Postfix) with ESMTP id 1874620679
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 14:05:00 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728848AbgBUOEj (ORCPT
+        id S1728881AbgBUOE7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Feb 2020 09:04:39 -0500
-Received: from mail.skyhub.de ([5.9.137.197]:41500 "EHLO mail.skyhub.de"
+        Fri, 21 Feb 2020 09:04:59 -0500
+Received: from verein.lst.de ([213.95.11.211]:55568 "EHLO verein.lst.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728228AbgBUOEj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Feb 2020 09:04:39 -0500
-Received: from zn.tnic (p200300EC2F090A006DBA3D6338540E70.dip0.t-ipconnect.de [IPv6:2003:ec:2f09:a00:6dba:3d63:3854:e70])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 31BA61EC013F;
-        Fri, 21 Feb 2020 15:04:37 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
-        t=1582293877;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:in-reply-to:in-reply-to:  references:references;
-        bh=x0fzHa7Cf9E295Bqa5BO51qM8xrIeqQzCJUTtrURefg=;
-        b=U3itHwo/rmDus63XbCBbMMJwZLEqu+6VwdVwRnlSFt3Rhwc09OuERGY+DWgi+B26APfo1a
-        9ZoZtGsyU9/AbK+lTXi0AwqYwOkjfxV3ebDvDDX8818WE4ppvJ9T1YGZlCdnmbuthbjTxS
-        rbTBllQAHPzoSIl0UoSLeZKU2XjL6LU=
-Date:   Fri, 21 Feb 2020 15:04:33 +0100
-From:   Borislav Petkov <bp@alien8.de>
-To:     Yu-cheng Yu <yu-cheng.yu@intel.com>
-Cc:     linux-kernel@vger.kernel.org, x86@kernel.org,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Tony Luck <tony.luck@intel.com>,
-        Andy Lutomirski <luto@kernel.org>,
-        Rik van Riel <riel@surriel.com>,
-        "Ravi V. Shankar" <ravi.v.shankar@intel.com>,
-        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
-        Fenghua Yu <fenghua.yu@intel.com>,
-        Peter Zijlstra <peterz@infradead.org>
-Subject: Re: [PATCH v2 4/8] x86/fpu/xstate: Define new functions for clearing
- fpregs and xstates
-Message-ID: <20200221140433.GF25747@zn.tnic>
-References: <20200121201843.12047-1-yu-cheng.yu@intel.com>
- <20200121201843.12047-5-yu-cheng.yu@intel.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20200121201843.12047-5-yu-cheng.yu@intel.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+        id S1728530AbgBUOE6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 21 Feb 2020 09:04:58 -0500
+Received: by verein.lst.de (Postfix, from userid 2005)
+        id 8713068BFE; Fri, 21 Feb 2020 15:04:55 +0100 (CET)
+From:   Torsten Duwe <duwe@lst.de>
+To:     Vasily Khoruzhick <anarsoul@gmail.com>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Thierry Reding <treding@nvidia.com>
+Cc:     Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+        Sean Paul <seanpaul@chromium.org>,
+        Andrzej Hajda <a.hajda@samsung.com>,
+        Neil Armstrong <narmstrong@baylibre.com>,
+        Laurent Pinchart <Laurent.pinchart@ideasonboard.com>,
+        Jonas Karlman <jonas@kwiboo.se>,
+        Jernej Skrabec <jernej.skrabec@siol.net>,
+        David Airlie <airlied@linux.ie>,
+        Thomas Zimmermann <tzimmermann@suse.de>,
+        Maxime Ripard <maxime@cerno.tech>,
+        dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org
+Subject: [RESEND2][PATCH] drm/bridge: analogix-anx6345: Fix drm_dp_link helper removal
+Message-Id: <20200221140455.8713068BFE@verein.lst.de>
+Date:   Fri, 21 Feb 2020 15:04:55 +0100 (CET)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jan 21, 2020 at 12:18:39PM -0800, Yu-cheng Yu wrote:
-> @@ -318,9 +313,29 @@ static inline void copy_init_fpstate_to_fpregs(void)
->   * Called by sys_execve(), by the signal handler code and by various
->   * error paths.
->   */
-> -void fpu__clear(struct fpu *fpu)
-> +void fpu__clear_user_states(struct fpu *fpu)
-> +{
-> +	WARN_ON_FPU(fpu != &current->thread.fpu);
-> +
-> +	if (static_cpu_has(X86_FEATURE_FPU)) {
-> +		fpregs_lock();
-> +		if (!fpregs_state_valid(fpu, smp_processor_id()) &&
-> +		    xfeatures_mask_supervisor())
-> +			copy_kernel_to_xregs(&fpu->state.xsave,
-> +					     xfeatures_mask_supervisor());
-> +		copy_init_fpstate_to_fpregs(xfeatures_mask_user());
-> +		fpregs_mark_activate();
-> +		fpregs_unlock();
-> +		return;
-> +	} else {
-> +		fpu__drop(fpu);
-> +		fpu__initialize(fpu);
-> +	}
-> +}
-> +
-> +void fpu__clear_all(struct fpu *fpu)
->  {
-> -	WARN_ON_FPU(fpu != &current->thread.fpu); /* Almost certainly an anomaly */
-> +	WARN_ON_FPU(fpu != &current->thread.fpu);
->  
->  	fpu__drop(fpu);
->  
-> @@ -328,8 +343,12 @@ void fpu__clear(struct fpu *fpu)
->  	 * Make sure fpstate is cleared and initialized.
->  	 */
->  	fpu__initialize(fpu);
-> -	if (static_cpu_has(X86_FEATURE_FPU))
-> -		copy_init_fpstate_to_fpregs();
-> +	if (static_cpu_has(X86_FEATURE_FPU)) {
-> +		fpregs_lock();
-> +		copy_init_fpstate_to_fpregs(xfeatures_mask_all);
-> +		fpregs_mark_activate();
-> +		fpregs_unlock();
-> +	}
->  }
+drm_dp_link_rate_to_bw_code and ...bw_code_to_link_rate simply divide by
+and multiply with 27000, respectively. Avoid an overflow in the u8 dpcd[0]
+and the multiply+divide alltogether.
 
-Why do you need two different functions which are pretty similar if you
-can do
+fixes: e1cff82c1097bda2478 ("fix anx6345 compilation for v5.5")
+Signed-off-by: Torsten Duwe <duwe@suse.de>
+---
+https://patchwork.freedesktop.org/patch/343004/
+https://lists.freedesktop.org/archives/dri-devel/2020-January/253535.html
 
-fpu__clear(struct fpu *fpu, bool user_only)
-{
-	...
+Can someone please review this? It's equivalent to commit
+3e138a63d6674a4567a018a31 which just made it into drm-tip.
 
-and query that user_only variable in the fpu__clear() body to do the
-respective work dependent on the its setting?
-
--- 
-Regards/Gruss,
-    Boris.
-
-https://people.kernel.org/tglx/notes-about-netiquette
+--- a/drivers/gpu/drm/bridge/analogix/analogix-anx6345.c
++++ b/drivers/gpu/drm/bridge/analogix/analogix-anx6345.c
+@@ -210,10 +210,9 @@ static int anx6345_dp_link_training(struct anx6345 *anx6345)
+ 	if (err)
+ 		return err;
+ 
+-	dpcd[0] = drm_dp_max_link_rate(anx6345->dpcd);
+-	dpcd[0] = drm_dp_link_rate_to_bw_code(dpcd[0]);
+ 	err = regmap_write(anx6345->map[I2C_IDX_DPTX],
+-			   SP_DP_MAIN_LINK_BW_SET_REG, dpcd[0]);
++			   SP_DP_MAIN_LINK_BW_SET_REG,
++			   anx6345->dpcd[DP_MAX_LINK_RATE]);
+ 	if (err)
+ 		return err;
+ 
