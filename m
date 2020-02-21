@@ -5,49 +5,49 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 110B5C35642
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 08:07:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 51AC1C35643
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 08:07:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D895520578
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 08:07:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1FD8520578
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 08:07:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582272438;
-	bh=8HUB1l7K/kfrc9BPVRbNuWolaKKk6PF6kPZqwuYtyTg=;
+	s=default; t=1582272441;
+	bh=Axi621C+trmYJ2hkH6lGnJy9hkrtz3txnGYSyx8Bdg8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=fv6P4MwKHVmf5vvP4aU3LuzUfhZ23VtQHJnvG84j+1cCeyLI5Jp3J4mBzyZKTlYVY
-	 7ncxnJsHYggOOQg+7sqO+Xag/xOU9e9Strlf4b99wtjVn3fOITvjxj+nnWwtq2Us56
-	 D20vRj6j/mPaf8s78wQhhgJRKlHDR9rTfvhrJdfA=
+	b=W5Hh+IeM12WjXKiRpEuh88BK/iIkfMhmnQKpEGgINZRvniHvqfXMf+5Tu2pRjbO6H
+	 JScSX82yGvtIX7VhmIpnmTlS1kZUWMLrDAcbULBL746kPBBdVw+gRx3UVkjGwHLEUt
+	 O0NRoRXKRnqhWcWdk50AYg9hnEkqVh+baZ30FDGE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732042AbgBUIHQ (ORCPT
+        id S1731834AbgBUIHU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Feb 2020 03:07:16 -0500
-Received: from mail.kernel.org ([198.145.29.99]:41384 "EHLO mail.kernel.org"
+        Fri, 21 Feb 2020 03:07:20 -0500
+Received: from mail.kernel.org ([198.145.29.99]:41434 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731133AbgBUIHP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Feb 2020 03:07:15 -0500
+        id S1731133AbgBUIHR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 21 Feb 2020 03:07:17 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E5D1720578;
-        Fri, 21 Feb 2020 08:07:13 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 72E4320722;
+        Fri, 21 Feb 2020 08:07:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1582272434;
-        bh=8HUB1l7K/kfrc9BPVRbNuWolaKKk6PF6kPZqwuYtyTg=;
+        s=default; t=1582272436;
+        bh=Axi621C+trmYJ2hkH6lGnJy9hkrtz3txnGYSyx8Bdg8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=eHH6PQr1oS0ut1NUEhJA8PvVqAWMPlJ2gyZYHpZ+JK9ZpSPkQdJZGrVq0P4RmDyl1
-         RQtuSxlz6Gt8JcETFl2YcozJpAeYnQWIquKUcpdB1q7pCRm/pRAvqRwAh0PYJ+XqEo
-         NuqQt2Oy4kMv8sqE/EPGw2BbJVuXor0UswwCyyVs=
+        b=LHMfnWHNOojvlgWqrZT3lZIcaEphpPM2N2YSTQRYrFkMXWCcY5lGiMdGp0qQKbnCF
+         mRq/V5TULPiS58cy4emqP67q6X+THiWtBexQwgPgqghZLL+CDvmBjn8KjtV52htU8m
+         bNGk4GuR6RQuj1bA8xuCSk2Al5vzxe/xEJumQaoA=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org, Andre Przywara <andre.przywara@arm.com>,
         Maxime Ripard <maxime@cerno.tech>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 107/344] arm64: dts: allwinner: H5: Add PMU node
-Date:   Fri, 21 Feb 2020 08:38:26 +0100
-Message-Id: <20200221072358.635552303@linuxfoundation.org>
+Subject: [PATCH 5.4 108/344] arm: dts: allwinner: H3: Add PMU node
+Date:   Fri, 21 Feb 2020 08:38:27 +0100
+Message-Id: <20200221072358.732867183@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200221072349.335551332@linuxfoundation.org>
 References: <20200221072349.335551332@linuxfoundation.org>
@@ -62,70 +62,69 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Andre Przywara <andre.przywara@arm.com>
 
-[ Upstream commit c35a516a46187c8eeb7a56c64505ec6f7e22a0c7 ]
+[ Upstream commit 0388a110747bec0c9d9de995842bb2a03a26aae1 ]
 
-Add the Performance Monitoring Unit (PMU) device tree node to the H5
+Add the Performance Monitoring Unit (PMU) device tree node to the H3
 .dtsi, which tells DT users which interrupts are triggered by PMU
-overflow events on each core.
-As with the A64, the interrupt numbers from the manual were wrong (off
-by 4), the actual SPI IDs have been gathered in U-Boot, and were
-verified with perf in Linux.
+overflow events on each core. The numbers come from the manual and have
+been checked in U-Boot and with perf in Linux.
 
-Tested with perf record and taskset on an OrangePi PC2.
+Tested with perf record and taskset on an OrangePi Zero.
 
 Signed-off-by: Andre Przywara <andre.przywara@arm.com>
 Signed-off-by: Maxime Ripard <maxime@cerno.tech>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm64/boot/dts/allwinner/sun50i-h5.dtsi | 16 +++++++++++++---
- 1 file changed, 13 insertions(+), 3 deletions(-)
+ arch/arm/boot/dts/sun8i-h3.dtsi | 15 ++++++++++++---
+ 1 file changed, 12 insertions(+), 3 deletions(-)
 
-diff --git a/arch/arm64/boot/dts/allwinner/sun50i-h5.dtsi b/arch/arm64/boot/dts/allwinner/sun50i-h5.dtsi
-index f002a496d7cbb..1d34e3eefda3f 100644
---- a/arch/arm64/boot/dts/allwinner/sun50i-h5.dtsi
-+++ b/arch/arm64/boot/dts/allwinner/sun50i-h5.dtsi
-@@ -54,21 +54,21 @@
- 			enable-method = "psci";
+diff --git a/arch/arm/boot/dts/sun8i-h3.dtsi b/arch/arm/boot/dts/sun8i-h3.dtsi
+index e37c30e811d3b..6056f206c9e39 100644
+--- a/arch/arm/boot/dts/sun8i-h3.dtsi
++++ b/arch/arm/boot/dts/sun8i-h3.dtsi
+@@ -80,7 +80,7 @@
+ 			#cooling-cells = <2>;
  		};
  
 -		cpu@1 {
 +		cpu1: cpu@1 {
- 			compatible = "arm,cortex-a53";
+ 			compatible = "arm,cortex-a7";
  			device_type = "cpu";
  			reg = <1>;
- 			enable-method = "psci";
+@@ -90,7 +90,7 @@
+ 			#cooling-cells = <2>;
  		};
  
 -		cpu@2 {
 +		cpu2: cpu@2 {
- 			compatible = "arm,cortex-a53";
+ 			compatible = "arm,cortex-a7";
  			device_type = "cpu";
  			reg = <2>;
- 			enable-method = "psci";
+@@ -100,7 +100,7 @@
+ 			#cooling-cells = <2>;
  		};
  
 -		cpu@3 {
 +		cpu3: cpu@3 {
- 			compatible = "arm,cortex-a53";
+ 			compatible = "arm,cortex-a7";
  			device_type = "cpu";
  			reg = <3>;
-@@ -76,6 +76,16 @@
+@@ -111,6 +111,15 @@
  		};
  	};
  
 +	pmu {
-+		compatible = "arm,cortex-a53-pmu",
-+			     "arm,armv8-pmuv3";
-+		interrupts = <GIC_SPI 116 IRQ_TYPE_LEVEL_HIGH>,
-+			     <GIC_SPI 117 IRQ_TYPE_LEVEL_HIGH>,
-+			     <GIC_SPI 118 IRQ_TYPE_LEVEL_HIGH>,
-+			     <GIC_SPI 119 IRQ_TYPE_LEVEL_HIGH>;
++		compatible = "arm,cortex-a7-pmu";
++		interrupts = <GIC_SPI 120 IRQ_TYPE_LEVEL_HIGH>,
++			     <GIC_SPI 121 IRQ_TYPE_LEVEL_HIGH>,
++			     <GIC_SPI 122 IRQ_TYPE_LEVEL_HIGH>,
++			     <GIC_SPI 123 IRQ_TYPE_LEVEL_HIGH>;
 +		interrupt-affinity = <&cpu0>, <&cpu1>, <&cpu2>, <&cpu3>;
 +	};
 +
- 	psci {
- 		compatible = "arm,psci-0.2";
- 		method = "smc";
+ 	timer {
+ 		compatible = "arm,armv7-timer";
+ 		interrupts = <GIC_PPI 13 (GIC_CPU_MASK_SIMPLE(4) | IRQ_TYPE_LEVEL_LOW)>,
 -- 
 2.20.1
 
