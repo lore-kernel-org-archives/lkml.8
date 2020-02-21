@@ -2,169 +2,131 @@ Return-Path: <SRS0=1210=4J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 055B7C35646
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 14:20:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 398E6C35646
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 14:20:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D6D02206EF
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 14:20:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0A26C206EF
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 14:20:31 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="VZSFSvky"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728460AbgBUOUR (ORCPT
+        id S1728704AbgBUOU3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Feb 2020 09:20:17 -0500
-Received: from mx2.suse.de ([195.135.220.15]:41524 "EHLO mx2.suse.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728081AbgBUOUR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Feb 2020 09:20:17 -0500
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx2.suse.de (Postfix) with ESMTP id DD6CAB23C;
-        Fri, 21 Feb 2020 14:20:14 +0000 (UTC)
-Date:   Fri, 21 Feb 2020 14:20:10 +0000
-From:   Mel Gorman <mgorman@suse.de>
-To:     ?????? <yun.wang@linux.alibaba.com>
-Cc:     Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Juri Lelli <juri.lelli@redhat.com>,
-        Vincent Guittot <vincent.guittot@linaro.org>,
-        Dietmar Eggemann <dietmar.eggemann@arm.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Ben Segall <bsegall@google.com>,
-        Luis Chamberlain <mcgrof@kernel.org>,
-        Kees Cook <keescook@chromium.org>,
-        Iurii Zaikin <yzaikin@google.com>,
-        Michal Koutn? <mkoutny@suse.com>,
-        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-doc@vger.kernel.org,
-        "Paul E. McKenney" <paulmck@linux.ibm.com>,
-        Randy Dunlap <rdunlap@infradead.org>,
-        Jonathan Corbet <corbet@lwn.net>
-Subject: Re: [PATCH RESEND v8 1/2] sched/numa: introduce per-cgroup NUMA
- locality info
-Message-ID: <20200221142010.GT3420@suse.de>
-References: <fe56d99d-82e0-498c-ae44-f7cde83b5206@linux.alibaba.com>
- <cde13472-46c0-7e17-175f-4b2ba4d8148a@linux.alibaba.com>
- <20200214151048.GL14914@hirez.programming.kicks-ass.net>
- <20200217115810.GA3420@suse.de>
- <881deb50-163e-442a-41ec-b375cc445e4d@linux.alibaba.com>
- <20200217141616.GB3420@suse.de>
- <114519ab-4e9e-996a-67b8-4f5fcecba72a@linux.alibaba.com>
+        Fri, 21 Feb 2020 09:20:29 -0500
+Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:38874 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1728011AbgBUOU3 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 21 Feb 2020 09:20:29 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1582294828;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=SoBzR7ZqtKjiFmct3fll5NpKOfUjalkqOXKRmpcWspU=;
+        b=VZSFSvky/bkERBNFezM0ug9UgZkYMQeDf9QlZ5DViaPLbYJ84W062qVSHssTTRBziDc+Ew
+        skUjF4fR4WPz4WRhJ5nfbMn9yKhHRY0MA0Wv8rV++BzzhtYbuskbOChZWPg/Oel//SC8Ox
+        /F22Bd1u2+4Hsr/KbOHhJ5qewpPG1yg=
+Received: from mail-wr1-f71.google.com (mail-wr1-f71.google.com
+ [209.85.221.71]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-127-YVBBz6jYNXam4nLV2b_ivg-1; Fri, 21 Feb 2020 09:20:26 -0500
+X-MC-Unique: YVBBz6jYNXam4nLV2b_ivg-1
+Received: by mail-wr1-f71.google.com with SMTP id r1so1074894wrc.15
+        for <linux-kernel@vger.kernel.org>; Fri, 21 Feb 2020 06:20:26 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:in-reply-to:references:date
+         :message-id:mime-version;
+        bh=SoBzR7ZqtKjiFmct3fll5NpKOfUjalkqOXKRmpcWspU=;
+        b=LCUkc87lWcpjurwCr05WLGyKEgu7URlbsFI9eelEvxhdwa8D6v+C61H6utarWTmoYl
+         7JWrTLuoWdCmbsjFHnYaLV/xkFY0ZI8EyHdXRRPxsQ/w++nZTTDHEFKwJ08e3hgeFmZZ
+         6A43dAmTMF1aajKBKekroQ0vsk8xQCQo4EjVOS4wI5jQlSSTlreMT9Nhq5b91gJeXLwi
+         IEMvSZzGjQ9G18zuTpyTWRuHVWchoQfFuOgpVy8W5ct1m8Uxa/+NjEyE8sIhA74EG26w
+         b1qyJ5Sob4HXB4aipywAJLR+Hor4Ll82wZXYmUQXic0CQdQk4vNWYRGRlXy8g9cChnJQ
+         VtEA==
+X-Gm-Message-State: APjAAAVypnGNvrY/vs3Wb+rZadixiiXAZH0NBp7kR3wTqSF+6sKFSnT+
+        wuTTOBVIYqpjQGB/x22ok4F+WwUYrafM5qd/Fdm+RGVZV3UlkAb7mte9Hi6unja2wIuSzq0DHnf
+        x3z2O2aQvfgX5K2/h3oLWoKX5
+X-Received: by 2002:adf:e68d:: with SMTP id r13mr48476863wrm.349.1582294825409;
+        Fri, 21 Feb 2020 06:20:25 -0800 (PST)
+X-Google-Smtp-Source: APXvYqyeALhvpOT47CPYypy+gYe7rOAhcLd8Q3GisyBu9lp+EJJr+DkWBh6I7CXgvgL3PbKUdTP0tg==
+X-Received: by 2002:adf:e68d:: with SMTP id r13mr48476740wrm.349.1582294823532;
+        Fri, 21 Feb 2020 06:20:23 -0800 (PST)
+Received: from vitty.brq.redhat.com (nat-pool-brq-t.redhat.com. [213.175.37.10])
+        by smtp.gmail.com with ESMTPSA id n3sm4158922wmc.27.2020.02.21.06.20.22
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 21 Feb 2020 06:20:22 -0800 (PST)
+From:   Vitaly Kuznetsov <vkuznets@redhat.com>
+To:     Sean Christopherson <sean.j.christopherson@intel.com>
+Cc:     Paolo Bonzini <pbonzini@redhat.com>,
+        Wanpeng Li <wanpengli@tencent.com>,
+        Jim Mattson <jmattson@google.com>,
+        Joerg Roedel <joro@8bytes.org>, kvm@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 10/61] KVM: x86: Clean up CPUID 0x7 sub-leaf loop
+In-Reply-To: <20200201185218.24473-11-sean.j.christopherson@intel.com>
+References: <20200201185218.24473-1-sean.j.christopherson@intel.com> <20200201185218.24473-11-sean.j.christopherson@intel.com>
+Date:   Fri, 21 Feb 2020 15:20:21 +0100
+Message-ID: <87ftf4rpi2.fsf@vitty.brq.redhat.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-15
-Content-Disposition: inline
-In-Reply-To: <114519ab-4e9e-996a-67b8-4f5fcecba72a@linux.alibaba.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Feb 18, 2020 at 09:39:35AM +0800, ?????? wrote:
-> On 2020/2/17 ??????10:16, Mel Gorman wrote:
-> > On Mon, Feb 17, 2020 at 09:23:52PM +0800, ?????? wrote:
-> [snip]
-> >>
-> >> IMHO the scan period changing should not be a problem now, since the
-> >> maximum period is defined by user, so monitoring at maximum period
-> >> on the accumulated page accessing counters is always meaningful, correct?
-> >>
-> > 
-> > It has meaning but the scan rate drives the fault rate which is the basis
-> > for the stats you accumulate. If the scan rate is high when accesses
-> > are local, the stats can be skewed making it appear the task is much
-> > more local than it may really is at a later point in time. The scan rate
-> > affects the accuracy of the information. The counters have meaning but
-> > they needs careful interpretation.
-> 
-> Yeah, to zip so many information from NUMA Balancing to some statistics
-> is a challenge itself, the locality still not so easy to be understood by
-> NUMA newbie :-P
-> 
+Sean Christopherson <sean.j.christopherson@intel.com> writes:
 
-Indeed and if they do not take into account historical skew into
-account, they still might not understand.
+> Refactor the sub-leaf loop for CPUID 0x7 to move the main leaf out of
+> said loop.  The emitted code savings is basically a mirage, as the
+> handling of the main leaf can easily be split to its own helper to avoid
+> code bloat.
+>
+> No functional change intended.
+>
+> Signed-off-by: Sean Christopherson <sean.j.christopherson@intel.com>
+> ---
+>  arch/x86/kvm/cpuid.c | 18 +++++++++---------
+>  1 file changed, 9 insertions(+), 9 deletions(-)
+>
+> diff --git a/arch/x86/kvm/cpuid.c b/arch/x86/kvm/cpuid.c
+> index 6e1685a16cca..b626893a11d5 100644
+> --- a/arch/x86/kvm/cpuid.c
+> +++ b/arch/x86/kvm/cpuid.c
+> @@ -573,16 +573,16 @@ static inline int __do_cpuid_func(struct kvm_cpuid_entry2 *entry, u32 function,
+>  	case 7: {
+>  		int i;
+>  
+> -		for (i = 0; ; ) {
+> +		do_cpuid_7_mask(entry, 0);
+> +
+> +		for (i = 1; i <= entry->eax; i++) {
+> +			if (*nent >= maxnent)
+> +				goto out;
+> +
+> +			do_host_cpuid(&entry[i], function, i);
+> +			++*nent;
+> +
+>  			do_cpuid_7_mask(&entry[i], i);
+> -			if (i == entry->eax)
+> -				break;
+> -			if (*nent >= maxnent)
+> -				goto out;
+> -
+> -			++i;
+> -			do_host_cpuid(&entry[i], function, i);
+> -			++*nent;
+>  		}
+>  		break;
+>  	}
 
-> > 
-> >> FYI, by monitoring locality, we found that the kvm vcpu thread is not
-> >> covered by NUMA Balancing, whatever how many maximum period passed, the
-> >> counters are not increasing, or very slowly, although inside guest we are
-> >> copying memory.
-> >>
-> >> Later we found such task rarely exit to user space to trigger task
-> >> work callbacks, and NUMA Balancing scan depends on that, which help us
-> >> realize the importance to enable NUMA Balancing inside guest, with the
-> >> correct NUMA topo, a big performance risk I'll say :-P
-> >>
-> > 
-> > Which is a very interesting corner case in itself but also one that
-> > could have potentially have been inferred from monitoring /proc/vmstat
-> > numa_pte_updates or on a per-task basis by monitoring /proc/PID/sched and
-> > watching numa_scan_seq and total_numa_faults. Accumulating the information
-> > on a per-cgroup basis would require a bit more legwork.
-> 
-> That's not working for daily monitoring...
-> 
-
-Indeed although at least /proc/vmstat is cheap to monitor and it could
-at least be tracked if the number of NUMA faults are abnormally low or
-the ratio of remote to local hints are problematic.
-
-> Besides, compared with locality, this require much more deeper understand
-> on the implementation, which could even be tough for NUMA developers to
-> assemble all these statistics together.
-> 
-
-My point is that even with the patch, the definition of locality is
-subtle. At a single point in time, the locality might appear to be low
-but it's due to an event that happened far in the past.
-
-> > 
-> >> Maybe not a good example, but we just try to highlight that NUMA Balancing
-> >> could have issue in some cases, and we want them to be exposed, somehow,
-> >> maybe by the locality.
-> >>
-> > 
-> > Again, I'm somewhat neutral on the patch simply because I would not use
-> > the information for debugging problems with NUMA balancing. I would try
-> > using tracepoints and if the tracepoints were not good enough, I'd add or
-> > fix them -- similar to what I had to do with sched_stick_numa recently.
-> > The caveat is that I mostly look at this sort of problem as a developer.
-> > Sysadmins have very different requirements, especially simplicity even
-> > if the simplicity in this case is an illusion.
-> 
-> Fair enough, but I guess PeterZ still want your Ack, so neutral means
-> refuse in this case :-(
-> 
-
-I think the patch is functionally harmless and can be disabled but I also
-would be wary of dealing with a bug report that was based on the numbers
-provided by the locality metric. The bulk of the work related to the bug
-would likely be spent on trying to explain the metric and I've dealt with
-quite a few bugs that were essentially "We don't like this number and think
-something is wrong because of it -- fix it". Even then, I would want the
-workload isolated and then vmstat recorded over time to determine it's
-a persistent problem or not. That's the reason why I'm relucant to ack it.
-
-I fully acknowledge that this may have value for sysadmins and may be a
-good enough reason to merge it for environments that typically build and
-configure their own kernels. I doubt that general distributions would
-enable it but that's a guess.
-
-> BTW, how do you think about the documentation in second patch?
-> 
-
-I think the documentation is great, it's clear and explains itself well.
-
-> Do you think it's necessary to have a doc to explain NUMA related statistics?
-> 
-
-It would be nice but AFAIK, the stats in vmstats are not documented.
-They are there because recording them over time can be very useful when
-dealing with user bug reports.
+Reviewed-by: Vitaly Kuznetsov <vkuznets@redhat.com>
 
 -- 
-Mel Gorman
-SUSE Labs
+Vitaly
+
