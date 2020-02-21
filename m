@@ -4,50 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D767AC35643
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 08:24:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EEBC3C35641
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 08:24:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A06A52469F
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 08:24:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B7E2C246A9
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 08:24:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582273480;
-	bh=kpxSpiOredmCdN9Q0Stfhh2Dls3j079H4/egN8JsXU0=;
+	s=default; t=1582273485;
+	bh=9j8X2m67R4Ml4yEuJzG98wz75DIpMegNzJAmtFU/4bQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=MdEFGEWVjzNHx/XyyBMZqpLf49iul3LXTTbK7NlVbNJHDlkWg9EqwK/+H8/gmYNe8
-	 LPpzvkSRbxty81fg5QazwZoNi1cjCzStIwb1E+K68STT+qhFhDifVBbp4WgkpFyabO
-	 7J+32AqvRIZbhhhA5vunp4j4ui1XSZB1xIdke98I=
+	b=ArDks3IouW+bdyNfwRX/rg29ppgyR5Nlvdp+tWJDAK/gVKgXh6sRJFAGYGmW6Ru1W
+	 k2EsB4GWmHIuE/1sNNhnB3wNdTXqBLe6qPAwAnSZcBkKxN4+rC74xEDEHccM+iMbK2
+	 hBV/yMBKz0cknKoPLFpTurwmT9f0wM7MAwKVyqkA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388680AbgBUIYj (ORCPT
+        id S2388684AbgBUIYn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Feb 2020 03:24:39 -0500
-Received: from mail.kernel.org ([198.145.29.99]:37036 "EHLO mail.kernel.org"
+        Fri, 21 Feb 2020 03:24:43 -0500
+Received: from mail.kernel.org ([198.145.29.99]:37084 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388667AbgBUIYb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Feb 2020 03:24:31 -0500
+        id S2388670AbgBUIYe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 21 Feb 2020 03:24:34 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id CA186246A1;
-        Fri, 21 Feb 2020 08:24:30 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 514B5246A1;
+        Fri, 21 Feb 2020 08:24:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1582273471;
-        bh=kpxSpiOredmCdN9Q0Stfhh2Dls3j079H4/egN8JsXU0=;
+        s=default; t=1582273473;
+        bh=9j8X2m67R4Ml4yEuJzG98wz75DIpMegNzJAmtFU/4bQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=XEHMZkXqWIH1Y4dMpFwx8yWHEPRfsE3/a8lrm0pePfSyIrXrpz1PAQjEuRfimOQ32
-         1ReK0tXmQ6hqm3CNc7KR8UcLlb/BT44NQprmnwBD07znrO3fBjRLXNcjC7z1KlzL3P
-         IykrYTM6bAakIDAqiL0Tegc2JkubokSHjR0Ds0QQ=
+        b=2N0ZEwfynCz5w5cjaF14f99bq0DqRrbABWx0QNAyChwWJzUMACPO+Cjs2BgG0CttF
+         o1bi5YdgYg5oWoSnhrFnz39IEBMSg0acurKqEKiM5vHgvzSZ34m/1I4lwoK8WwpuO9
+         /cPYqM2iVcsG10D4ABjdN+xmld/P+irJhjAY+sco=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Evan Quan <evan.quan@amd.com>,
-        Alex Deucher <alexander.deucher@amd.com>,
+        stable@vger.kernel.org, Ronnie Sahlberg <lsahlber@redhat.com>,
+        Steve French <stfrench@microsoft.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 184/191] drm/amdgpu/smu10: fix smu10_get_clock_by_type_with_latency
-Date:   Fri, 21 Feb 2020 08:42:37 +0100
-Message-Id: <20200221072312.821201678@linuxfoundation.org>
+Subject: [PATCH 4.19 167/191] cifs: fix NULL dereference in match_prepath
+Date:   Fri, 21 Feb 2020 08:42:20 +0100
+Message-Id: <20200221072310.707468432@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200221072250.732482588@linuxfoundation.org>
 References: <20200221072250.732482588@linuxfoundation.org>
@@ -60,47 +60,41 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Alex Deucher <alexander.deucher@amd.com>
+From: Ronnie Sahlberg <lsahlber@redhat.com>
 
-[ Upstream commit 4d0a72b66065dd7e274bad6aa450196d42fd8f84 ]
+[ Upstream commit fe1292686333d1dadaf84091f585ee903b9ddb84 ]
 
-Only send non-0 clocks to DC for validation.  This mirrors
-what the windows driver does.
+RHBZ: 1760879
 
-Bug: https://gitlab.freedesktop.org/drm/amd/issues/963
-Reviewed-by: Evan Quan <evan.quan@amd.com>
-Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
+Fix an oops in match_prepath() by making sure that the prepath string is not
+NULL before we pass it into strcmp().
+
+This is similar to other checks we make for example in cifs_root_iget()
+
+Signed-off-by: Ronnie Sahlberg <lsahlber@redhat.com>
+Signed-off-by: Steve French <stfrench@microsoft.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/gpu/drm/amd/powerplay/hwmgr/smu10_hwmgr.c | 15 +++++++++------
- 1 file changed, 9 insertions(+), 6 deletions(-)
+ fs/cifs/connect.c | 6 ++++--
+ 1 file changed, 4 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/gpu/drm/amd/powerplay/hwmgr/smu10_hwmgr.c b/drivers/gpu/drm/amd/powerplay/hwmgr/smu10_hwmgr.c
-index 1546bc49004f8..3fa6e8123b8eb 100644
---- a/drivers/gpu/drm/amd/powerplay/hwmgr/smu10_hwmgr.c
-+++ b/drivers/gpu/drm/amd/powerplay/hwmgr/smu10_hwmgr.c
-@@ -994,12 +994,15 @@ static int smu10_get_clock_by_type_with_latency(struct pp_hwmgr *hwmgr,
+diff --git a/fs/cifs/connect.c b/fs/cifs/connect.c
+index 576cf71576da1..6c62ce40608a1 100644
+--- a/fs/cifs/connect.c
++++ b/fs/cifs/connect.c
+@@ -3342,8 +3342,10 @@ match_prepath(struct super_block *sb, struct cifs_mnt_data *mnt_data)
+ {
+ 	struct cifs_sb_info *old = CIFS_SB(sb);
+ 	struct cifs_sb_info *new = mnt_data->cifs_sb;
+-	bool old_set = old->mnt_cifs_flags & CIFS_MOUNT_USE_PREFIX_PATH;
+-	bool new_set = new->mnt_cifs_flags & CIFS_MOUNT_USE_PREFIX_PATH;
++	bool old_set = (old->mnt_cifs_flags & CIFS_MOUNT_USE_PREFIX_PATH) &&
++		old->prepath;
++	bool new_set = (new->mnt_cifs_flags & CIFS_MOUNT_USE_PREFIX_PATH) &&
++		new->prepath;
  
- 	clocks->num_levels = 0;
- 	for (i = 0; i < pclk_vol_table->count; i++) {
--		clocks->data[i].clocks_in_khz = pclk_vol_table->entries[i].clk * 10;
--		clocks->data[i].latency_in_us = latency_required ?
--						smu10_get_mem_latency(hwmgr,
--						pclk_vol_table->entries[i].clk) :
--						0;
--		clocks->num_levels++;
-+		if (pclk_vol_table->entries[i].clk) {
-+			clocks->data[clocks->num_levels].clocks_in_khz =
-+				pclk_vol_table->entries[i].clk * 10;
-+			clocks->data[clocks->num_levels].latency_in_us = latency_required ?
-+				smu10_get_mem_latency(hwmgr,
-+						      pclk_vol_table->entries[i].clk) :
-+				0;
-+			clocks->num_levels++;
-+		}
- 	}
- 
- 	return 0;
+ 	if (old_set && new_set && !strcmp(new->prepath, old->prepath))
+ 		return 1;
 -- 
 2.20.1
 
