@@ -2,137 +2,292 @@ Return-Path: <SRS0=1210=4J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3EF3BC35641
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 23:21:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 88D89C35669
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 23:23:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 120BE2073A
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 23:21:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 46AA62072C
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 23:23:28 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=digitalocean.com header.i=@digitalocean.com header.b="WiY3pb7h"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=wdc.com header.i=@wdc.com header.b="SIgDkMi1"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729530AbgBUXVE (ORCPT
+        id S1729384AbgBUXX1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Feb 2020 18:21:04 -0500
-Received: from mail-qk1-f193.google.com ([209.85.222.193]:38329 "EHLO
-        mail-qk1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728656AbgBUXVE (ORCPT
+        Fri, 21 Feb 2020 18:23:27 -0500
+Received: from esa2.hgst.iphmx.com ([68.232.143.124]:60282 "EHLO
+        esa2.hgst.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726290AbgBUXX0 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Feb 2020 18:21:04 -0500
-Received: by mail-qk1-f193.google.com with SMTP id z19so3479284qkj.5
-        for <linux-kernel@vger.kernel.org>; Fri, 21 Feb 2020 15:21:04 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=digitalocean.com; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=mpe0qtwY2gMuskKZj3H+pQ6GlWYhtea/PlocoE1R970=;
-        b=WiY3pb7h03Vv3q0IsnMCBXn8NZOUgznakTQ6UgKI/sXcmj3tJ/yjl7e0Y+Fkm9sNS7
-         MFP8RDGZt6IFrdOlE4SsnzINByjRflmJR0q23nA2teiDndsG2FXtVUS9eQxnNX+SDgHw
-         7+rx82C3dakNBu+nLTLt59vr7LMVYB9jL7S7Q=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=mpe0qtwY2gMuskKZj3H+pQ6GlWYhtea/PlocoE1R970=;
-        b=uZPPr1omg8wiIBh1XnypoAdeZftb2l+ZDFiYC+CJqqIKOI8apzqyC3EzlLgeKwHoql
-         DxRl9lzigYQ552vJ1NvB2xtTadoalQBqaIQf+aNmR6W/zn1an8JGDJ0gS4OgQF1EbRek
-         yiQOwujcsrZf/PQ+kNwd7Whl8hmzvPKEley3mFBsx2W75QxCR1NSPbyOTa0iacOsH7zv
-         xU+u5prT3VKNCOAY1GoawgQezVAc6V95B/B3t2C8f868WnL3uLcRl0CmOOd4q43T0l6u
-         5Ml6AHzrTeIjckIum9VHuzOilcPqC8KHphss9faNB2Z8Z8GhCj6izoNgrcJt/Na2zFb4
-         vXwg==
-X-Gm-Message-State: APjAAAU4JPePmemfYFFljzFb1jBNs9S/eY1gD08Yg9+2yhKiIE6wHCo+
-        FxnX1py0fFBG+zAaAb9Ku1ewcg==
-X-Google-Smtp-Source: APXvYqzsskusGoG46JELopQqDjVdTpUcWHjwZRz0jkHSYN+oGRXt6/B7TpZlZkk7Snwb0ZEHDK7EVg==
-X-Received: by 2002:a37:aa4d:: with SMTP id t74mr8540085qke.241.1582327263516;
-        Fri, 21 Feb 2020 15:21:03 -0800 (PST)
-Received: from sinkpad (192-222-189-155.qc.cable.ebox.net. [192.222.189.155])
-        by smtp.gmail.com with ESMTPSA id h9sm2289479qtq.61.2020.02.21.15.21.01
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Fri, 21 Feb 2020 15:21:02 -0800 (PST)
-Date:   Fri, 21 Feb 2020 18:20:57 -0500
-From:   Julien Desfossez <jdesfossez@digitalocean.com>
-To:     Vineeth Remanan Pillai <vpillai@digitalocean.com>
-Cc:     Aubrey Li <aubrey.intel@gmail.com>,
-        Tim Chen <tim.c.chen@linux.intel.com>,
-        Nishanth Aravamudan <naravamudan@digitalocean.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Paul Turner <pjt@google.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Linux List Kernel Mailing <linux-kernel@vger.kernel.org>,
-        Dario Faggioli <dfaggioli@suse.com>,
-        =?iso-8859-1?Q?Fr=E9d=E9ric?= Weisbecker <fweisbec@gmail.com>,
-        Kees Cook <keescook@chromium.org>,
-        Greg Kerr <kerrnel@google.com>, Phil Auld <pauld@redhat.com>,
-        Aaron Lu <aaron.lwe@gmail.com>,
-        Valentin Schneider <valentin.schneider@arm.com>,
-        Mel Gorman <mgorman@techsingularity.net>,
-        Pawan Gupta <pawan.kumar.gupta@linux.intel.com>,
-        Paolo Bonzini <pbonzini@redhat.com>
-Subject: Re: [RFC PATCH v4 00/19] Core scheduling v4
-Message-ID: <20200221232057.GA19671@sinkpad>
-References: <5e3cea14-28d1-bf1e-cabe-fb5b48fdeadc@linux.intel.com>
- <3c3c56c1-b8dc-652c-535e-74f6dcf45560@linux.intel.com>
- <CANaguZAz+mw1Oi8ecZt+JuCWbf=g5UvKrdSvAeM82Z1c+9oWAw@mail.gmail.com>
- <e322a252-f983-e3f3-f823-16d0c16b2867@linux.intel.com>
- <20200212230705.GA25315@sinkpad>
- <29d43466-1e18-6b42-d4d0-20ccde20ff07@linux.intel.com>
- <CAERHkruG4y8si9FrBp7cZNEdfP7EzxbmYwvdF2EvHLf=mU1mgg@mail.gmail.com>
- <CANaguZC40mDHfL1H_9AA7H8cyd028t9PQVRqQ3kB4ha8R7hhqg@mail.gmail.com>
- <CAERHkruPUrOzDjEp1FV3KY20p9CxLAVzKrZNe5QXsCFZdGskzA@mail.gmail.com>
- <CANaguZBj_x_2+9KwbHCQScsmraC_mHdQB6uRqMTYMmvhBYfv2Q@mail.gmail.com>
+        Fri, 21 Feb 2020 18:23:26 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
+  d=wdc.com; i=@wdc.com; q=dns/txt; s=dkim.wdc.com;
+  t=1582327412; x=1613863412;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=oT2R0meeLStyZStuUidGKZsmZN+Qxv/GRFYMm+I3XE4=;
+  b=SIgDkMi1ICbsBFCvoulV+hUH6pUQ187Iu2IhNeZZenISNPcRAXzHKMBQ
+   JhTDAIm3+//2KOymKqRACJMS7GqhgEQ3QddGMgzApeLLH9q9/MsqyT8JQ
+   s5u6qcy4IO2ZKNzU2G21nFOuoOoIRKl+Vm5QE7hRiZD0B564lUYof65aZ
+   d66fBzi/WXukd//ESGLleCA1AFjIvzFw1XWYw7LQv2GNH8VFBaL6Ii+LQ
+   9XLWrPGlsXUe9v5evJl4pBjgUvqV0S2e4YNy6H53gnsSxLv07WYyZQJyd
+   mscOJCKaTZs7cOwm2E/VtF52Fy2/sUStGBiiTChiupacO23s7YzQwcFuP
+   w==;
+IronPort-SDR: U1gYKVHWmd6AVqDy0sV5jPKrcm4XkYkKqj2xlLEA1VoJjkWcL5+QbVNh2+st1dpI6+YlWto2jT
+ 0FMT3F296i8xnJlfimvq5OWtCW3EKqIAbIlIoyA7BwdqwxBEF01xyeApnxATikzYVw4Hl/eEIx
+ uaNuo166nZXLZS/KIgG+TZb8hXe8qFe7/OglKxsK+Jtf4S1YXLDXP7bfWRrmWGl9cGxNOHCjJK
+ Y+E4nwOQeA5+24yZOzmgpXrv/mkJ8jitSAnDbIsav88IXB0w7s8TTpdKphcgkxGDnjztioMQzH
+ OfI=
+X-IronPort-AV: E=Sophos;i="5.70,470,1574092800"; 
+   d="scan'208";a="232307705"
+Received: from h199-255-45-14.hgst.com (HELO uls-op-cesaep01.wdc.com) ([199.255.45.14])
+  by ob1.hgst.iphmx.com with ESMTP; 22 Feb 2020 07:23:31 +0800
+IronPort-SDR: 5SLCQd0DjZQFMuo/holc96R45MuBCD8KRvIw04e3v9R8vi6o6V4broNcM4QyyEy4cxzJOml52z
+ oQy9AjZfaaxZiiYKxeKntRCjl+sA0KD4D/REL3xK+rr6dx6YDTt+IJkkcCMhlxbCvwyxFB5Uug
+ fdiO6Q475+b3MR2rNIoeolCL2GETPGid+7nBL+eib19rkWnYXAaeO0Wspy9ZDbCoD0T3UHyBBu
+ uXD8+7FQauiW0p7x65w64/fK/M/YnWsibf0/U1D+m2oFpuqRx9PYZzsG5hE1d7hJurVyyN/FBC
+ A2WPO7mfYpstBGHe4V8WCL3K
+Received: from uls-op-cesaip01.wdc.com ([10.248.3.36])
+  by uls-op-cesaep01.wdc.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Feb 2020 15:15:58 -0800
+IronPort-SDR: Mo93vb7y5Qr8CAlYW3THBEi4nwttZ3hDIkckXZ3un3d4jSpOVUUpNPbT4+UqeIpABwJ/9V/Im+
+ hjBIwtqmFoaZmW5eU4wUi9HE2T86d9kY4YvLUcuW5kcZPndihml/KUjmkLtJhUraO1fkILBN1c
+ AP2rHzQQlWPQW3DK2zdBbYQnVaCNisYiFOuxddx45mXdKFGMyGhDCwyL7Tb62fwyan3RTlAhlj
+ 1TlnsWdLwT84ianehFaMI0QfpJFPyFbg3yXgDhtq4U+gSB+zlw3a6KZ5evzdMTvJlRuCTmIyGJ
+ V14=
+WDCIronportException: Internal
+Received: from yoda.sdcorp.global.sandisk.com (HELO yoda.int.fusionio.com) ([10.196.158.80])
+  by uls-op-cesaip01.wdc.com with ESMTP; 21 Feb 2020 15:23:26 -0800
+From:   Atish Patra <atish.patra@wdc.com>
+To:     linux-kernel@vger.kernel.org
+Cc:     Atish Patra <atish.patra@wdc.com>,
+        Jason Cooper <jason@lakedaemon.net>,
+        linux-riscv@lists.infradead.org, Marc Zyngier <maz@kernel.org>,
+        Palmer Dabbelt <palmer@dabbelt.com>,
+        Paul Walmsley <paul.walmsley@sifive.com>,
+        Thomas Gleixner <tglx@linutronix.de>
+Subject: [v2 PATCH] irqchip/sifive-plic: Add support for multiple PLICs
+Date:   Fri, 21 Feb 2020 15:22:46 -0800
+Message-Id: <20200221232246.9176-1-atish.patra@wdc.com>
+X-Mailer: git-send-email 2.25.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CANaguZBj_x_2+9KwbHCQScsmraC_mHdQB6uRqMTYMmvhBYfv2Q@mail.gmail.com>
-X-Mailer: Mutt 1.9.4 (2018-02-28)
-User-Agent: Mutt/1.9.4 (2018-02-28)
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 18-Feb-2020 04:58:02 PM, Vineeth Remanan Pillai wrote:
-> > Yes, this makes sense, patch updated at here, I put your name there if
-> > you don't mind.
-> > https://github.com/aubreyli/linux/tree/coresched_v4-v5.5.2-rc2
-> >
-> > Thanks Aubrey!
+Current, PLIC driver can support only 1 PLIC on the board. However,
+there can be multiple PLICs present on a two socket systems in RISC-V.
 
-Just a quick note, I ran a very cpu-intensive benchmark (9x12 vcpus VMs
-running linpack), all affined to an 18 cores NUMA node (36 hardware
-threads). Each VM is running in its own cgroup/tag with core scheduling
-enabled. We know it already performed much better than nosmt, so for
-this case, I measured various co-scheduling statistics:
-- how much time the process spends co-scheduled with idle, a compatible
-  or an incompatible task
-- how long does the process spends running in a inefficient
-  configuration (more than 1 thread running alone on a core)
+Modify the driver so that each PLIC handler can have a information
+about individual PLIC registers and an irqdomain associated with it.
 
-And I am very happy to report than even though the 9 VMs were configured
-to float on the whole NUMA node, the scheduler / load-balancer did a
-very good job at keeping an efficient configuration:
+Tested on two socket RISC-V system based on VCU118 FPGA connected via
+OmniXtend protocol.
 
-Process 10667 (qemu-system-x86), 10 seconds trace:
-  - total runtime: 46451472309 ns,
-  - local neighbors (total: 45713285084 ns, 98.411 % of process runtime):
-  - idle neighbors (total: 484054061 ns, 1.042 % of process runtime):
-  - foreign neighbors (total: 4191002 ns, 0.009 % of process runtime):
-  - unknown neighbors  (total: 92042503 ns, 0.198 % of process runtime)
-  - inefficient periods (total: 464832 ns, 0.001 % of process runtime):
-    - number of periods: 48
-    - min period duration: 1424 ns
-    - max period duration: 116988 ns
-    - average period duration: 9684.000 ns
-    - stdev: 19282.130
+Signed-off-by: Atish Patra <atish.patra@wdc.com>
+---
+This patch is rebased on top of 5.6-rc2 and following plic fix from
+hotplug series.
 
-I thought you would enjoy seeing this :-)
+https://lkml.org/lkml/2020/2/20/1220
 
-Have a good weekend,
+Changes from v1->v2:
+1. Use irq_chip_get_data to retrieve host_data
+2. Renamed plic_hw to plic_node_ctx
+---
+ drivers/irqchip/irq-sifive-plic.c | 82 ++++++++++++++++++++-----------
+ 1 file changed, 52 insertions(+), 30 deletions(-)
 
-Julien
+diff --git a/drivers/irqchip/irq-sifive-plic.c b/drivers/irqchip/irq-sifive-plic.c
+index 7c7f37393f99..9b9b6f4def4f 100644
+--- a/drivers/irqchip/irq-sifive-plic.c
++++ b/drivers/irqchip/irq-sifive-plic.c
+@@ -59,7 +59,11 @@
+ #define	PLIC_DISABLE_THRESHOLD		0xf
+ #define	PLIC_ENABLE_THRESHOLD		0
+ 
+-static void __iomem *plic_regs;
++struct plic_node_ctx {
++	struct cpumask lmask;
++	struct irq_domain *irqdomain;
++	void __iomem *regs;
++};
+ 
+ struct plic_handler {
+ 	bool			present;
+@@ -70,6 +74,7 @@ struct plic_handler {
+ 	 */
+ 	raw_spinlock_t		enable_lock;
+ 	void __iomem		*enable_base;
++	struct plic_node_ctx		*node_ctx;
+ };
+ static DEFINE_PER_CPU(struct plic_handler, plic_handlers);
+ 
+@@ -88,31 +93,41 @@ static inline void plic_toggle(struct plic_handler *handler,
+ }
+ 
+ static inline void plic_irq_toggle(const struct cpumask *mask,
+-				   int hwirq, int enable)
++				   struct irq_data *d, int enable)
+ {
+ 	int cpu;
++	struct plic_node_ctx *node_ctx = irq_get_chip_data(d->irq);
+ 
+-	writel(enable, plic_regs + PRIORITY_BASE + hwirq * PRIORITY_PER_ID);
++	writel(enable,
++	       node_ctx->regs + PRIORITY_BASE + d->hwirq * PRIORITY_PER_ID);
+ 	for_each_cpu(cpu, mask) {
+ 		struct plic_handler *handler = per_cpu_ptr(&plic_handlers, cpu);
+ 
+-		if (handler->present)
+-			plic_toggle(handler, hwirq, enable);
++		if (handler->present &&
++		    cpumask_test_cpu(cpu, &handler->node_ctx->lmask))
++			plic_toggle(handler, d->hwirq, enable);
+ 	}
+ }
+ 
+ static void plic_irq_unmask(struct irq_data *d)
+ {
+-	unsigned int cpu = cpumask_any_and(irq_data_get_affinity_mask(d),
+-					   cpu_online_mask);
++	struct cpumask amask;
++	unsigned int cpu;
++	struct plic_node_ctx *node_ctx = irq_get_chip_data(d->irq);
++
++	cpumask_and(&amask, &node_ctx->lmask, cpu_online_mask);
++	cpu = cpumask_any_and(irq_data_get_affinity_mask(d),
++					   &amask);
+ 	if (WARN_ON_ONCE(cpu >= nr_cpu_ids))
+ 		return;
+-	plic_irq_toggle(cpumask_of(cpu), d->hwirq, 1);
++	plic_irq_toggle(cpumask_of(cpu), d, 1);
+ }
+ 
+ static void plic_irq_mask(struct irq_data *d)
+ {
+-	plic_irq_toggle(cpu_possible_mask, d->hwirq, 0);
++	struct plic_node_ctx *node_ctx = irq_get_chip_data(d->irq);
++
++	plic_irq_toggle(&node_ctx->lmask, d, 0);
+ }
+ 
+ #ifdef CONFIG_SMP
+@@ -120,17 +135,21 @@ static int plic_set_affinity(struct irq_data *d,
+ 			     const struct cpumask *mask_val, bool force)
+ {
+ 	unsigned int cpu;
++	struct cpumask amask;
++	struct plic_node_ctx *node_ctx = irq_get_chip_data(d->irq);
++
++	cpumask_and(&amask, &node_ctx->lmask, mask_val);
+ 
+ 	if (force)
+-		cpu = cpumask_first(mask_val);
++		cpu = cpumask_first(&amask);
+ 	else
+-		cpu = cpumask_any_and(mask_val, cpu_online_mask);
++		cpu = cpumask_any_and(&amask, cpu_online_mask);
+ 
+ 	if (cpu >= nr_cpu_ids)
+ 		return -EINVAL;
+ 
+-	plic_irq_toggle(cpu_possible_mask, d->hwirq, 0);
+-	plic_irq_toggle(cpumask_of(cpu), d->hwirq, 1);
++	plic_irq_toggle(&node_ctx->lmask, d, 0);
++	plic_irq_toggle(cpumask_of(cpu), d, 1);
+ 
+ 	irq_data_update_effective_affinity(d, cpumask_of(cpu));
+ 
+@@ -191,8 +210,6 @@ static const struct irq_domain_ops plic_irqdomain_ops = {
+ 	.free		= irq_domain_free_irqs_top,
+ };
+ 
+-static struct irq_domain *plic_irqdomain;
+-
+ /*
+  * Handling an interrupt is a two-step process: first you claim the interrupt
+  * by reading the claim register, then you complete the interrupt by writing
+@@ -209,7 +226,7 @@ static void plic_handle_irq(struct pt_regs *regs)
+ 
+ 	csr_clear(CSR_IE, IE_EIE);
+ 	while ((hwirq = readl(claim))) {
+-		int irq = irq_find_mapping(plic_irqdomain, hwirq);
++		int irq = irq_find_mapping(handler->node_ctx->irqdomain, hwirq);
+ 
+ 		if (unlikely(irq <= 0))
+ 			pr_warn_ratelimited("can't find mapping for hwirq %lu\n",
+@@ -265,15 +282,17 @@ static int __init plic_init(struct device_node *node,
+ {
+ 	int error = 0, nr_contexts, nr_handlers = 0, i;
+ 	u32 nr_irqs;
++	struct plic_node_ctx *node_ctx;
+ 
+-	if (plic_regs) {
+-		pr_warn("PLIC already present.\n");
+-		return -ENXIO;
+-	}
++	node_ctx = kzalloc(sizeof(*node_ctx), GFP_KERNEL);
++	if (!node_ctx)
++		return -ENOMEM;
+ 
+-	plic_regs = of_iomap(node, 0);
+-	if (WARN_ON(!plic_regs))
+-		return -EIO;
++	node_ctx->regs = of_iomap(node, 0);
++	if (WARN_ON(!node_ctx->regs)) {
++		error = -EIO;
++		goto out_free_nctx;
++	}
+ 
+ 	error = -EINVAL;
+ 	of_property_read_u32(node, "riscv,ndev", &nr_irqs);
+@@ -287,9 +306,9 @@ static int __init plic_init(struct device_node *node,
+ 		goto out_iounmap;
+ 
+ 	error = -ENOMEM;
+-	plic_irqdomain = irq_domain_add_linear(node, nr_irqs + 1,
+-			&plic_irqdomain_ops, NULL);
+-	if (WARN_ON(!plic_irqdomain))
++	node_ctx->irqdomain = irq_domain_add_linear(node, nr_irqs + 1,
++			&plic_irqdomain_ops, node_ctx);
++	if (WARN_ON(!node_ctx->irqdomain))
+ 		goto out_iounmap;
+ 
+ 	for (i = 0; i < nr_contexts; i++) {
+@@ -334,13 +353,14 @@ static int __init plic_init(struct device_node *node,
+ 			goto done;
+ 		}
+ 
++		cpumask_set_cpu(cpu, &node_ctx->lmask);
+ 		handler->present = true;
+ 		handler->hart_base =
+-			plic_regs + CONTEXT_BASE + i * CONTEXT_PER_HART;
++			node_ctx->regs + CONTEXT_BASE + i * CONTEXT_PER_HART;
+ 		raw_spin_lock_init(&handler->enable_lock);
+ 		handler->enable_base =
+-			plic_regs + ENABLE_BASE + i * ENABLE_PER_HART;
+-
++			node_ctx->regs + ENABLE_BASE + i * ENABLE_PER_HART;
++		handler->node_ctx = node_ctx;
+ done:
+ 		for (hwirq = 1; hwirq <= nr_irqs; hwirq++)
+ 			plic_toggle(handler, hwirq, 0);
+@@ -356,7 +376,9 @@ static int __init plic_init(struct device_node *node,
+ 	return 0;
+ 
+ out_iounmap:
+-	iounmap(plic_regs);
++	iounmap(node_ctx->regs);
++out_free_nctx:
++	kfree(node_ctx);
+ 	return error;
+ }
+ 
+-- 
+2.25.0
+
