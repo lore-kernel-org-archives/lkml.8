@@ -4,49 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0A721C35640
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 08:01:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4DF9BC35642
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 08:01:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CBE44206ED
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 08:01:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 12A4020801
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 08:01:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582272079;
-	bh=1Nd3uqmzSwlrm6Jrm/B7yAgszo+KDV79jFfoLkxUOLE=;
+	s=default; t=1582272084;
+	bh=0yf6ce4sDrBOesE1j8wafwtcfGWYWuH7tZjl7vWwWFs=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=gtDSpni457kOLrW8mUr4J6L2sPgjeeSDBybrXCLMZujNRU7tm+8EeLU1JEiqsO2E5
-	 zknUqPgfB/dOM6rtxAcRabornXR+59ndm9b+KOEIdrNDJJPrZPan/M6cNczEc2jPbf
-	 AzR5VXQ6CgnRz/JduKu8OrPuWKKqGg0MersAu/m8=
+	b=pELE/yoDr9+WNgBPQ2CzBCu4jrygWj0skftww0x+31folcxcQZG4edm79ib9cZTbO
+	 UpU+CI3bNLyO6BzrBizBlrIQyx7jb/0QKYU7ejeh3W7j8oMq1teh4FMK5eQ4XNie9o
+	 L5n/aGbz47ePEAXGxRk7o6UXlUqrE4BDvF382In0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731187AbgBUIBS (ORCPT
+        id S1731195AbgBUIBW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Feb 2020 03:01:18 -0500
-Received: from mail.kernel.org ([198.145.29.99]:33520 "EHLO mail.kernel.org"
+        Fri, 21 Feb 2020 03:01:22 -0500
+Received: from mail.kernel.org ([198.145.29.99]:33570 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730863AbgBUIBP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Feb 2020 03:01:15 -0500
+        id S1731024AbgBUIBR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 21 Feb 2020 03:01:17 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4C6DE206ED;
-        Fri, 21 Feb 2020 08:01:14 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C8E592073A;
+        Fri, 21 Feb 2020 08:01:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1582272074;
-        bh=1Nd3uqmzSwlrm6Jrm/B7yAgszo+KDV79jFfoLkxUOLE=;
+        s=default; t=1582272077;
+        bh=0yf6ce4sDrBOesE1j8wafwtcfGWYWuH7tZjl7vWwWFs=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=whL5EsWrliUqkS911cWmrwrNrRfTyNzjlKrNQgDo3YgXd3JArjOPlkZnfv8xks1st
-         vxypPtIp04oR788/Q0mSlj8+AfM9XdSnJiarOLn/WDnEVKxn5J9OeRDGvTzI6LU1hU
-         E8UrWHwZTQlbCpYQ1IqpOPJq6/8S4dx50sXRV2Ko=
+        b=ImkZpzxJspaB5ieOOs0GoFlH9baWE2BjBVc/cvhcxP5QEvtkOyxqtvY7thKRNxd3w
+         9PPXtll6dhYxqtmy16hefQulu4+QOtC37eSzVb4snsgWSgm3FMH7h15J2dN5GsukMU
+         PJ0rDIVCuDWQloEhqH4/uknp9cYJshuuORO7uIRc=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Coly Li <colyli@suse.de>,
-        Jens Axboe <axboe@kernel.dk>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.5 399/399] bcache: properly initialize path and err in register_bcache()
-Date:   Fri, 21 Feb 2020 08:42:04 +0100
-Message-Id: <20200221072438.575910308@linuxfoundation.org>
+        stable@vger.kernel.org, "Michael S. Tsirkin" <mst@redhat.com>,
+        David Hildenbrand <david@redhat.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.5 393/399] virtio_balloon: prevent pfn array overflow
+Date:   Fri, 21 Feb 2020 08:41:58 +0100
+Message-Id: <20200221072438.118804855@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200221072402.315346745@linuxfoundation.org>
 References: <20200221072402.315346745@linuxfoundation.org>
@@ -59,58 +60,34 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Coly Li <colyli@suse.de>
+From: Michael S. Tsirkin <mst@redhat.com>
 
-[ Upstream commit 29cda393bcaad160c4bf3676ddd99855adafc72f ]
+[ Upstream commit 6e9826e77249355c09db6ba41cd3f84e89f4b614 ]
 
-Patch "bcache: rework error unwinding in register_bcache" from
-Christoph Hellwig changes the local variables 'path' and 'err'
-in undefined initial state. If the code in register_bcache() jumps
-to label 'out:' or 'out_module_put:' by goto, these two variables
-might be reference with undefined value by the following line,
+Make sure, at build time, that pfn array is big enough to hold a single
+page.  It happens to be true since the PAGE_SHIFT value at the moment is
+20, which is 1M - exactly 256 4K balloon pages.
 
-	out_module_put:
-	        module_put(THIS_MODULE);
-	out:
-	        pr_info("error %s: %s", path, err);
-	        return ret;
-
-Therefore this patch initializes these two local variables properly
-in register_bcache() to avoid such issue.
-
-Signed-off-by: Coly Li <colyli@suse.de>
-Signed-off-by: Jens Axboe <axboe@kernel.dk>
+Signed-off-by: Michael S. Tsirkin <mst@redhat.com>
+Reviewed-by: David Hildenbrand <david@redhat.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/md/bcache/super.c | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+ drivers/virtio/virtio_balloon.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/drivers/md/bcache/super.c b/drivers/md/bcache/super.c
-index 05cb94664efee..3b3724285d907 100644
---- a/drivers/md/bcache/super.c
-+++ b/drivers/md/bcache/super.c
-@@ -2376,18 +2376,20 @@ static ssize_t register_bcache(struct kobject *k, struct kobj_attribute *attr,
- 			       const char *buffer, size_t size)
+diff --git a/drivers/virtio/virtio_balloon.c b/drivers/virtio/virtio_balloon.c
+index 7e5d84caeb940..7bfe365d93720 100644
+--- a/drivers/virtio/virtio_balloon.c
++++ b/drivers/virtio/virtio_balloon.c
+@@ -158,6 +158,8 @@ static void set_page_pfns(struct virtio_balloon *vb,
  {
- 	const char *err;
--	char *path;
-+	char *path = NULL;
- 	struct cache_sb *sb;
- 	struct block_device *bdev = NULL;
- 	struct page *sb_page;
- 	ssize_t ret;
+ 	unsigned int i;
  
- 	ret = -EBUSY;
-+	err = "failed to reference bcache module";
- 	if (!try_module_get(THIS_MODULE))
- 		goto out;
- 
- 	/* For latest state of bcache_is_reboot */
- 	smp_mb();
-+	err = "bcache is in reboot";
- 	if (bcache_is_reboot)
- 		goto out_module_put;
- 
++	BUILD_BUG_ON(VIRTIO_BALLOON_PAGES_PER_PAGE > VIRTIO_BALLOON_ARRAY_PFNS_MAX);
++
+ 	/*
+ 	 * Set balloon pfns pointing at this page.
+ 	 * Note that the first pfn points at start of the page.
 -- 
 2.20.1
 
