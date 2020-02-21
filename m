@@ -2,60 +2,60 @@ Return-Path: <SRS0=1210=4J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5ED28C11D27
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 00:11:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ADEF7C11D25
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 00:14:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3491C222C4
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 00:11:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7FC542071E
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 00:14:23 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b="OR4qbGMZ"
+	dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b="XWxniDG1"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729462AbgBUALQ (ORCPT
+        id S1729461AbgBUAOW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Feb 2020 19:11:16 -0500
-Received: from mail-wr1-f66.google.com ([209.85.221.66]:37704 "EHLO
-        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729417AbgBUALP (ORCPT
+        Thu, 20 Feb 2020 19:14:22 -0500
+Received: from mail-pl1-f196.google.com ([209.85.214.196]:33777 "EHLO
+        mail-pl1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729435AbgBUAOV (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Feb 2020 19:11:15 -0500
-Received: by mail-wr1-f66.google.com with SMTP id w15so52214wru.4
-        for <linux-kernel@vger.kernel.org>; Thu, 20 Feb 2020 16:11:13 -0800 (PST)
+        Thu, 20 Feb 2020 19:14:21 -0500
+Received: by mail-pl1-f196.google.com with SMTP id ay11so108882plb.0
+        for <linux-kernel@vger.kernel.org>; Thu, 20 Feb 2020 16:14:21 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=broadcom.com; s=google;
         h=subject:to:cc:references:from:message-id:date:user-agent
          :mime-version:in-reply-to:content-transfer-encoding:content-language;
-        bh=wXSbqjr+PXHQhEGWLVIbHnU0mAYhDxXp177C2dXLvkw=;
-        b=OR4qbGMZ3kSLXHwlfMWDnVjvxT0c/b5fmtDsqdt6bhn6yadSOJmNHGjqCWZm2yVRAO
-         ed/pScZ8+lYgnYH+P/9lFgMRmFo+EmDPQWLLyTUT3CJO+a8D2eeHF7rdlZaG1BnbIa9D
-         tNOFC7Kt+sV47VYFwmPjmlJ/tZzxGLf0wgzqQ=
+        bh=j9NfYN7oFcDu+7se145xCzZu7AyP4VVa9xyrU8e8kGg=;
+        b=XWxniDG1LOh43SJp7z2UJovq9YWn0rOeMwHcyEGODF0mipdAE2OM29lnoAol7jNm2k
+         GxF8H2F583pmx5hr+jvzunS+dWiBD7ZKqR0kswOHWmaIKeJ1zv2SoF3BHniIwkFFazT3
+         aHPsj7/ErkiG7rXIa1poz4II56IxQtU96xc+k=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:subject:to:cc:references:from:message-id:date
          :user-agent:mime-version:in-reply-to:content-transfer-encoding
          :content-language;
-        bh=wXSbqjr+PXHQhEGWLVIbHnU0mAYhDxXp177C2dXLvkw=;
-        b=nCInsOlP3uwjhykHIUEcVIPAogr3lueAxDKMwMcd1Ohi/BPErCGYNxr2Va/poi9oo7
-         XW9J0adLB2Qkq2gn8MP+9DlQk8cOUEpwn+T7bmfh1O7SbAoayzIlAObN1yXJYEqJiL7u
-         8mrjYnQ7UHENGv+OFTq3CZFK60Q67Q0CpptG+dG5K/oG7b34WHclDJ3iQS00vz++d4u6
-         2NwAIq7VM1EW62xINWQLK8WuD2zKd/NWqLbKsVJEFWqSYOpoBVfq5DhoGfArJHLW8rZW
-         aK0bJKUPUtDzjaxzfx/QOa9dYt91b8aQNmqE8mdx/SFd1dbG8L/JOMW7GScAPy8X5ZSN
-         e8rg==
-X-Gm-Message-State: APjAAAUwrnHMgPZB4TKlMzTyhgms+0FcJaCPRCy+Sm/+GWtf1GfSIf0B
-        W0Op8KtRABjZnybHmUWBTntZ1A==
-X-Google-Smtp-Source: APXvYqyZNpXUITw974Gj1d7jmXjJf2j4kz6bDP4xvQnH/etFM/nRGojeEXJirHn2sJxv9V2yWs/+Pw==
-X-Received: by 2002:a5d:510f:: with SMTP id s15mr44375580wrt.408.1582243873022;
-        Thu, 20 Feb 2020 16:11:13 -0800 (PST)
+        bh=j9NfYN7oFcDu+7se145xCzZu7AyP4VVa9xyrU8e8kGg=;
+        b=EptK5kckN2qW1AvwmwYWsgl242S/HbcJfJ4qk5ziy/YRBoBr3yvXzJc4UJoD8qsGmO
+         nR3cEhUcsOFfUvavwp1BuuDrmOrf/iHTRS86WGw5V36mzt5kLC2l27t0gH8e4mZoIziF
+         oq7D6kwFg/VMkm29iglvk0ubZNnr03SInFTK2PlC1MaRWmfULcYmxAiZJ2ZQCQ4HZEH4
+         9mYUy2yYElwjH+9OXMHXjlhMwHF3d6p3b2Uf8os5SwMpsw9Gh0TcMqaE1yy7uErfMSRQ
+         InFFbLIPNzzyP9hYzAxtrTJnL0AWAXRWtEWiNb6mHdQQ/knCWVFMK5OLpfrawlZkKpFl
+         rDkg==
+X-Gm-Message-State: APjAAAUyszejV27XIgZEaz4snbSSSLq2xcZdh3mvQ9wD9Vyi1r0+HXZq
+        TFm9s0y8wmeMjGHn2EZCyU6NGQ==
+X-Google-Smtp-Source: APXvYqx25cvFDEfSsVWYxxtiPJ4i/HB4cCqI6AWGUOOODbhBmUcXo4ZQNzLPzimdl5BHFsOLWIwruQ==
+X-Received: by 2002:a17:90a:191a:: with SMTP id 26mr6400987pjg.111.1582244061214;
+        Thu, 20 Feb 2020 16:14:21 -0800 (PST)
 Received: from [10.136.13.65] ([192.19.228.250])
-        by smtp.gmail.com with ESMTPSA id q9sm1553085wrx.18.2020.02.20.16.11.08
+        by smtp.gmail.com with ESMTPSA id x8sm701336pfr.104.2020.02.20.16.14.18
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 20 Feb 2020 16:11:12 -0800 (PST)
-Subject: Re: [PATCH 2/7] firmware: add offset to request_firmware_into_buf
-To:     Luis Chamberlain <mcgrof@kernel.org>, Takashi Iwai <tiwai@suse.de>
+        Thu, 20 Feb 2020 16:14:20 -0800 (PST)
+Subject: Re: [PATCH v2 2/7] firmware: add offset to request_firmware_into_buf
+To:     Luis Chamberlain <mcgrof@kernel.org>
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         David Brown <david.brown@linaro.org>,
         Alexander Viro <viro@zeniv.linux.org.uk>,
@@ -71,49 +71,44 @@ Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         Dan Carpenter <dan.carpenter@oracle.com>,
         Colin Ian King <colin.king@canonical.com>,
         Kees Cook <keescook@chromium.org>,
-        linux-kselftest@vger.kernel.org
-References: <20190822192451.5983-1-scott.branden@broadcom.com>
- <20190822192451.5983-3-scott.branden@broadcom.com>
- <s5hef1crybq.wl-tiwai@suse.de>
- <10461fcf-9eca-32b6-0f9d-23c63b3f3442@broadcom.com>
- <s5hr258j6ln.wl-tiwai@suse.de>
- <93b8285a-e5eb-d4a4-545d-426bbbeb8008@broadcom.com>
- <s5ho90byhnv.wl-tiwai@suse.de>
- <b440f372-45be-c06c-94a1-44ae6b1e7eb8@broadcom.com>
- <s5hwoeyj3i5.wl-tiwai@suse.de> <20191011133120.GP16384@42.do-not-panic.com>
+        Takashi Iwai <tiwai@suse.de>, linux-kselftest@vger.kernel.org,
+        Andy Gross <agross@kernel.org>
+References: <20200220004825.23372-1-scott.branden@broadcom.com>
+ <20200220004825.23372-3-scott.branden@broadcom.com>
+ <20200220012235.GU11244@42.do-not-panic.com>
 From:   Scott Branden <scott.branden@broadcom.com>
-Message-ID: <e65a3ba1-d064-96fe-077e-59bf8ffff377@broadcom.com>
-Date:   Thu, 20 Feb 2020 16:11:06 -0800
+Message-ID: <6a810f3c-3e17-fba6-b00d-4333ffa2ecca@broadcom.com>
+Date:   Thu, 20 Feb 2020 16:14:17 -0800
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
  Thunderbird/68.4.1
 MIME-Version: 1.0
-In-Reply-To: <20191011133120.GP16384@42.do-not-panic.com>
+In-Reply-To: <20200220012235.GU11244@42.do-not-panic.com>
 Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Hi Luis,
 
-
-On 2019-10-11 6:31 a.m., Luis Chamberlain wrote:
-> On Tue, Aug 27, 2019 at 12:40:02PM +0200, Takashi Iwai wrote:
->> On Mon, 26 Aug 2019 19:24:22 +0200,
->> Scott Branden wrote:
->>> I will admit I am not familiar with every subtlety of PCI
->>> accesses. Any comments to the Valkyrie driver in this patch series are
->>> appreciated.
->>> But not all drivers need to work on all architectures. I can add a
->>> depends on x86 64bit architectures to the driver to limit it to such.
->> But it's an individual board on PCIe, and should work no matter which
->> architecture is?  Or is this really exclusive to x86?
-> Poke Scott.
+On 2020-02-19 5:22 p.m., Luis Chamberlain wrote:
+> On Wed, Feb 19, 2020 at 04:48:20PM -0800, Scott Branden wrote:
+>> Add offset to request_firmware_into_buf to allow for portions
+>> of firmware file to be read into a buffer.  Necessary where firmware
+>> needs to be loaded in portions from file in memory constrained systems.
+>>
+>> Signed-off-by: Scott Branden <scott.branden@broadcom.com>
+> Thanks for following up Scott! However you failed to address the
+> feedback last time by Takashi, so until then, this remains a blocker for
+> this.
+>
+> http://lkml.kernel.org/r/s5hwoeyj3i5.wl-tiwai@suse.de
 >
 >    Luis
-Yes, this is exclusive to x86.
-In particular, 64-bit x86 server class machines with PCIe gen3 support.
-There is no reason for these PCIe boards to run in other lower end 
-machines or architectures.
+I responded to the email query.  Hopefully this addresses your concern.
+
+Regards,
+  Scott
 
