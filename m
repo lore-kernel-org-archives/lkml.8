@@ -6,45 +6,45 @@ X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
 	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5C670C35646
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 13:51:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C5BC2C35646
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 13:52:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 31CBF208C4
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 13:51:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 96F42222C4
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 13:52:00 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="NTODENbg"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="jWFGtaYv"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729142AbgBUNvw (ORCPT
+        id S1728588AbgBUNu0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Feb 2020 08:51:52 -0500
-Received: from bombadil.infradead.org ([198.137.202.133]:56316 "EHLO
+        Fri, 21 Feb 2020 08:50:26 -0500
+Received: from bombadil.infradead.org ([198.137.202.133]:56310 "EHLO
         bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728502AbgBUNu1 (ORCPT
+        with ESMTP id S1728502AbgBUNu0 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Feb 2020 08:50:27 -0500
+        Fri, 21 Feb 2020 08:50:26 -0500
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
         d=infradead.org; s=bombadil.20170209; h=Content-Type:MIME-Version:References:
         Subject:Cc:To:From:Date:Message-Id:Sender:Reply-To:Content-Transfer-Encoding:
         Content-ID:Content-Description:In-Reply-To;
-        bh=J2/JgQ4tDRPO/m+ThNDCC94wQ89HSPpvdmylRYiqZEc=; b=NTODENbgN8KC4ORXOCYLfFR+zm
-        M/mdsxUAgoFzu8IlSwC7o6RbZwAPQC5BblSgasSZw7BmgCQdYzLQCoJU2UYy97BVv1q+7OCxd7drv
-        Se9Jbo4p3bcVq18j0kTfQwWkQIfM/Q1GNA7X4GiyUeEqXp+lVUSW5tSoI+8flXFbxzD7NunvqCFmV
-        cQg0seQ8kkC6GU0Snak9ynWf6oznz6C3NzpfHSOuplhLfmIfDqxjIh4hKePCMgk03NWrtPaEU3feU
-        QAv1Ur6r5Y3hJC5F7orymt5Jf9u5xi4HMBknc6KEDfn+3TE4C5Cf19tBHVRJ+e1b5UtBibh7jL/Ny
-        a65Di+XA==;
+        bh=miiUwvGe7i5BsZI6va27ZyF936XFY9N6YVcmqFdnF/Y=; b=jWFGtaYv2V0pC7pTzGl1XeRhwG
+        myEcI9lpltXEpdmZUb8MIGR8X5gP+f3Juu6uG+1jHInIeBvNfiJlL6VEN1hpZeSti6NLsX6tlYwGj
+        s0FTmHq91WNU6o21CeHWhNd0eqbMMxB9SKlNWois0BTYwDDTAOdgc6c/RTBCWIsmib0CnoVe+itOG
+        soIQiG8Pfj8fm3jH6ZGcWE9LLMiT9eCUjtkOR2HRTQ0azwldmvOCjXvAFlOIdwEuaL8/BQNEYpJvY
+        VQAh4uMP/s5Y+Xkxmr+C9xFbZ2dAETvIDwcVY0c7EX5GgYQoRtRMl8oXI8qaQPZHH+FklFEtEsEj/
+        0tNmQf+A==;
 Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
         by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1j58gv-0000q3-Jv; Fri, 21 Feb 2020 13:50:05 +0000
+        id 1j58gw-0000xu-DE; Fri, 21 Feb 2020 13:50:06 +0000
 Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (Client did not present a certificate)
-        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 6CB61307444;
+        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 7967D307787;
         Fri, 21 Feb 2020 14:48:08 +0100 (CET)
 Received: by hirez.programming.kicks-ass.net (Postfix, from userid 0)
-        id DB6B629D740AD; Fri, 21 Feb 2020 14:50:00 +0100 (CET)
-Message-Id: <20200221134215.861984902@infradead.org>
+        id EBA9A29D740AF; Fri, 21 Feb 2020 14:50:00 +0100 (CET)
+Message-Id: <20200221134216.051596115@infradead.org>
 User-Agent: quilt/0.65
-Date:   Fri, 21 Feb 2020 14:34:30 +0100
+Date:   Fri, 21 Feb 2020 14:34:32 +0100
 From:   Peter Zijlstra <peterz@infradead.org>
 To:     linux-kernel@vger.kernel.org, linux-arch@vger.kernel.org,
         rostedt@goodmis.org
@@ -53,9 +53,8 @@ Cc:     peterz@infradead.org, mingo@kernel.org, joel@joelfernandes.org,
         tglx@linutronix.de, paulmck@kernel.org, josh@joshtriplett.org,
         mathieu.desnoyers@efficios.com, jiangshanlai@gmail.com,
         luto@kernel.org, tony.luck@intel.com, frederic@kernel.org,
-        dan.carpenter@oracle.com, mhiramat@kernel.org,
-        "Steven Rostedt (VMware)" <rosted@goodmis.org>
-Subject: [PATCH v4 14/27] perf,tracing: Prepare the perf-trace interface for RCU changes
+        dan.carpenter@oracle.com, mhiramat@kernel.org
+Subject: [PATCH v4 16/27] tracing: Remove regular RCU context for _rcuidle tracepoints (again)
 References: <20200221133416.777099322@infradead.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -64,44 +63,41 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The tracepoint interface will stop providing regular RCU context; make
-sure we do it ourselves, since perf makes use of regular RCU protected
-data.
+Effectively revert commit 865e63b04e9b2 ("tracing: Add back in
+rcu_irq_enter/exit_irqson() for rcuidle tracepoints") now that we've
+taught perf how to deal with not having an RCU context provided.
 
-Suggested-by: Steven Rostedt (VMware) <rosted@goodmis.org>
-Suggested-by: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
 Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+Reviewed-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
 ---
- kernel/events/core.c |    5 +++++
- 1 file changed, 5 insertions(+)
+ include/linux/tracepoint.h |    8 ++------
+ 1 file changed, 2 insertions(+), 6 deletions(-)
 
---- a/kernel/events/core.c
-+++ b/kernel/events/core.c
-@@ -8950,6 +8950,7 @@ void perf_tp_event(u16 event_type, u64 c
- {
- 	struct perf_sample_data data;
- 	struct perf_event *event;
-+	int rcu_flags;
- 
- 	struct perf_raw_record raw = {
- 		.frag = {
-@@ -8961,6 +8962,8 @@ void perf_tp_event(u16 event_type, u64 c
- 	perf_sample_data_init(&data, 0, 0);
- 	data.raw = &raw;
- 
-+	rcu_flags = trace_rcu_enter();
-+
- 	perf_trace_buf_update(record, event_type);
- 
- 	hlist_for_each_entry_rcu(event, head, hlist_entry) {
-@@ -8996,6 +8999,8 @@ void perf_tp_event(u16 event_type, u64 c
- 	}
- 
- 	perf_swevent_put_recursion_context(rctx);
-+
-+	trace_rcu_exit(rcu_flags);
- }
- EXPORT_SYMBOL_GPL(perf_tp_event);
- 
+--- a/include/linux/tracepoint.h
++++ b/include/linux/tracepoint.h
+@@ -179,10 +179,8 @@ static inline struct tracepoint *tracepo
+ 		 * For rcuidle callers, use srcu since sched-rcu	\
+ 		 * doesn't work from the idle path.			\
+ 		 */							\
+-		if (rcuidle) {						\
++		if (rcuidle)						\
+ 			__idx = srcu_read_lock_notrace(&tracepoint_srcu);\
+-			rcu_irq_enter_irqsave();			\
+-		}							\
+ 									\
+ 		it_func_ptr = rcu_dereference_raw((tp)->funcs);		\
+ 									\
+@@ -194,10 +192,8 @@ static inline struct tracepoint *tracepo
+ 			} while ((++it_func_ptr)->func);		\
+ 		}							\
+ 									\
+-		if (rcuidle) {						\
+-			rcu_irq_exit_irqsave();				\
++		if (rcuidle)						\
+ 			srcu_read_unlock_notrace(&tracepoint_srcu, __idx);\
+-		}							\
+ 									\
+ 		preempt_enable_notrace();				\
+ 	} while (0)
 
 
