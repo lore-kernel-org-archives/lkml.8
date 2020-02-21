@@ -2,123 +2,166 @@ Return-Path: <SRS0=1210=4J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8064EC11D25
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 02:25:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B89DFC11D24
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 02:25:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5631A20722
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 02:25:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8E706207FD
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 02:25:55 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="QollWffK"
+	dkim=pass (2048-bit key) header.d=nifty.com header.i=@nifty.com header.b="TKEJiQp0"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729516AbgBUCZm (ORCPT
+        id S1729595AbgBUCZy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Feb 2020 21:25:42 -0500
-Received: from mail-pl1-f193.google.com ([209.85.214.193]:41056 "EHLO
-        mail-pl1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729222AbgBUCZl (ORCPT
+        Thu, 20 Feb 2020 21:25:54 -0500
+Received: from conuserg-09.nifty.com ([210.131.2.76]:23423 "EHLO
+        conuserg-09.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729222AbgBUCZy (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Feb 2020 21:25:41 -0500
-Received: by mail-pl1-f193.google.com with SMTP id t14so211376plr.8;
-        Thu, 20 Feb 2020 18:25:41 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=5OYxEQQxQq0p35RLj6fqeKc94hTFaGsasuln1viLIdM=;
-        b=QollWffK6jd8OXRhT9J5DLBOBkw+xPgjx6gAMf9dPBC0kiyUcuXhIyV22tEuUBHhhU
-         1er5Pi6ahnldQshoUfq6PQlifzU1MlI01sY0Eq+ahqnDkp+0wfL/6varsJO72pYOO/yd
-         pmR/zciVCfIGgU9tOiwwqER1RCrG6AUSNxClvKN5gIluaSTJVg1S/NdY0F0vR4PNTYQF
-         lrWg53MU9MGhDlr5EUE2w6+Q0VNKtk8EBUZD2JjPUdnJanQ5Dl8OHCYj6Fnx+YjMDVQt
-         hyCuCuX/B7oTerLlxxKWMlruLhmkUYv79FPHfDej0MnCDXakRGIQEeeobe1WyzCFJy16
-         pxgQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=5OYxEQQxQq0p35RLj6fqeKc94hTFaGsasuln1viLIdM=;
-        b=qf4q5v7m/NLPf04xn7pS7td5Q8NjE675vimaXDGf+uX9AMvydOnVgh2bSX3NwHe5ic
-         /9thVONWGCKZBXUGR3DAI0cOgupyEorjKBl412MqaniY/GQXe6Td3Bs0LDZAc5ikBLzy
-         4jVS17u/5OR+W0k8mWUuc7RXmQIuVz7UoEDm8UIH5fYGir/DfJsbQdSiNrqklOwO2D0+
-         5CQZumSlbUQzoccRGIF9GnT/KApMPe2yZcakXGyVc6ybm+sLFeCaJEn1e6tG05yDjrEp
-         diY6YnPV+dK1i8cQVzxiGVoSHjFERafRkVbcZqIrIWAtG28VbcqPXQfvcO0BXyT96uTC
-         NLBA==
-X-Gm-Message-State: APjAAAVar9TK+5EWLbo9bzdKLtkpqWNBThQ8+IeRo6llgZ2M84u/0jkM
-        p1o426OBKSpWlmMTmtx7n6s=
-X-Google-Smtp-Source: APXvYqzhUU5b2z0pgBVEdf+2WxrIVTDiYtYVi35cMj89Vpxa+xCRoKVQtJb0z5fUOwrnT/JLSNHs6Q==
-X-Received: by 2002:a17:90b:8d1:: with SMTP id ds17mr228481pjb.33.1582251941007;
-        Thu, 20 Feb 2020 18:25:41 -0800 (PST)
-Received: from ast-mbp ([2620:10d:c090:500::5:f03d])
-        by smtp.gmail.com with ESMTPSA id 26sm717367pjk.3.2020.02.20.18.25.39
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 20 Feb 2020 18:25:40 -0800 (PST)
-Date:   Thu, 20 Feb 2020 18:25:38 -0800
-From:   Alexei Starovoitov <alexei.starovoitov@gmail.com>
-To:     KP Singh <kpsingh@chromium.org>
-Cc:     linux-kernel@vger.kernel.org, bpf@vger.kernel.org,
-        linux-security-module@vger.kernel.org,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        James Morris <jmorris@namei.org>,
-        Kees Cook <keescook@chromium.org>,
-        Jann Horn <jannh@google.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Subject: Re: [PATCH bpf-next v4 3/8] bpf: lsm: provide attachment points for
- BPF LSM programs
-Message-ID: <20200221022537.wbmhdfkdbfvw2pww@ast-mbp>
-References: <20200220175250.10795-1-kpsingh@chromium.org>
- <20200220175250.10795-4-kpsingh@chromium.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200220175250.10795-4-kpsingh@chromium.org>
-User-Agent: NeoMutt/20180223
+        Thu, 20 Feb 2020 21:25:54 -0500
+Received: from localhost.localdomain (p14092-ipngnfx01kyoto.kyoto.ocn.ne.jp [153.142.97.92]) (authenticated)
+        by conuserg-09.nifty.com with ESMTP id 01L2P6P4019101;
+        Fri, 21 Feb 2020 11:25:06 +0900
+DKIM-Filter: OpenDKIM Filter v2.10.3 conuserg-09.nifty.com 01L2P6P4019101
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
+        s=dec2015msa; t=1582251907;
+        bh=eqHny2FaqNErlaYN7wu9BhfmPoOAesBI8drGqqCcumU=;
+        h=From:To:Cc:Subject:Date:From;
+        b=TKEJiQp0Jz01Hs5YJIVJSHWi8i8mxGOblcOKkYhYWSMLGCXwut6zT2hr3jJ2Fp6i9
+         MU9zGmCJfeoqjBdjtN29n5GrXRemKacIW/GjCDi208sSieuJfEcpm0/mh+2L71X2d0
+         F/DJFWnQgoiG9CsZx9jxtEZA+T1XErp7mr/pv8dFwdC72xQSstOM0BUexWRuzeDa5W
+         hyeBhDa1Jg1v7q3hr9g06GjNUHfCSlfMd69A3axQUlNYnQDkxAiS9Ge07c/XtG4U0n
+         MiA3MkaFIeogPLpbEzVwDyhSHvMpd0RdyQJgomUdgG4Ie4hgzIb0MOiZrZnovFVxma
+         x00o7hYBKyPrw==
+X-Nifty-SrcIP: [153.142.97.92]
+From:   Masahiro Yamada <yamada.masahiro@socionext.com>
+To:     devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>
+Cc:     Frank Rowand <frowand.list@gmail.com>,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Vinod Koul <vkoul@kernel.org>, dmaengine@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: [PATCH] dt-bindings: dma: Convert UniPhier MIO DMA controller to json-schema
+Date:   Fri, 21 Feb 2020 11:25:04 +0900
+Message-Id: <20200221022504.24104-1-yamada.masahiro@socionext.com>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Feb 20, 2020 at 06:52:45PM +0100, KP Singh wrote:
-> From: KP Singh <kpsingh@google.com>
-> 
-> The BPF LSM programs are implemented as fexit trampolines to avoid the
-> overhead of retpolines. These programs cannot be attached to security_*
-> wrappers as there are quite a few security_* functions that do more than
-> just calling the LSM callbacks.
-> 
-> This was discussed on the lists in:
-> 
->   https://lore.kernel.org/bpf/20200123152440.28956-1-kpsingh@chromium.org/T/#m068becce588a0cdf01913f368a97aea4c62d8266
-> 
-> Adding a NOP callback after all the static LSM callbacks are called has
-> the following benefits:
-> 
-> - The BPF programs run at the right stage of the security_* wrappers.
-> - They run after all the static LSM hooks allowed the operation,
->   therefore cannot allow an action that was already denied.
-> 
-> There are some hooks which do not call call_int_hooks or
-> call_void_hooks. It's not possible to call the bpf_lsm_* functions
-> without checking if there is BPF LSM program attached to these hooks.
-> This is added further in a subsequent patch. For now, these hooks are
-> marked as NO_BPF (i.e. attachment of BPF programs is not possible).
+Convert the UniPhier MIO (Media I/O) DMA controller binding to DT
+schema format.
 
-the commit log doesn't match the code.
+Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
+---
 
-> +
-> +/* For every LSM hook  that allows attachment of BPF programs, declare a NOP
-> + * function where a BPF program can be attached as an fexit trampoline.
-> + */
-> +#define LSM_HOOK(RET, NAME, ...) LSM_HOOK_##RET(NAME, __VA_ARGS__)
-> +#define LSM_HOOK_int(NAME, ...) noinline int bpf_lsm_##NAME(__VA_ARGS__)  \
+ .../dma/socionext,uniphier-mio-dmac.yaml      | 59 +++++++++++++++++++
+ .../bindings/dma/uniphier-mio-dmac.txt        | 25 --------
+ 2 files changed, 59 insertions(+), 25 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/dma/socionext,uniphier-mio-dmac.yaml
+ delete mode 100644 Documentation/devicetree/bindings/dma/uniphier-mio-dmac.txt
 
-Did you check generated asm?
-I think I saw cases when gcc ignored 'noinline' when function is defined in the
-same file and still performed inlining while keeping the function body.
-To be safe I think __weak is necessary. That will guarantee noinline.
+diff --git a/Documentation/devicetree/bindings/dma/socionext,uniphier-mio-dmac.yaml b/Documentation/devicetree/bindings/dma/socionext,uniphier-mio-dmac.yaml
+new file mode 100644
+index 000000000000..817e5aec3b31
+--- /dev/null
++++ b/Documentation/devicetree/bindings/dma/socionext,uniphier-mio-dmac.yaml
+@@ -0,0 +1,59 @@
++# SPDX-License-Identifier: GPL-2.0-only OR BSD-2-Clause
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/dma/socionext,uniphier-mio-dmac.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
++
++title: UniPhier Media IO DMA controller
++
++description: |
++  This works as an external DMA engine for SD/eMMC controllers etc.
++  found in UniPhier LD4, Pro4, sLD8 SoCs.
++
++maintainers:
++  - Masahiro Yamada <yamada.masahiro@socionext.com>
++
++allOf:
++  - $ref: "dma-controller.yaml#"
++
++properties:
++  compatible:
++    const: socionext,uniphier-mio-dmac
++
++  reg:
++    maxItems: 1
++
++  interrupts:
++    description: |
++      A list of interrupt specifiers associated with the DMA channels.
++      The number of interrupt lines is SoC-dependent.
++
++  clocks:
++    maxItems: 1
++
++  '#dma-cells':
++    description: The single cell represents the channel index.
++    const: 1
++
++required:
++  - compatible
++  - reg
++  - interrupts
++  - clocks
++  - '#dma-cells'
++
++additionalProperties: false
++
++examples:
++  - |
++    // In the example below, "interrupts = <0 68 4>, <0 68 4>, ..." is not a
++    // typo. The first two channels share a single interrupt line.
++
++    dmac: dma-controller@5a000000 {
++        compatible = "socionext,uniphier-mio-dmac";
++        reg = <0x5a000000 0x1000>;
++        interrupts = <0 68 4>, <0 68 4>, <0 69 4>, <0 70 4>,
++                     <0 71 4>, <0 72 4>, <0 73 4>, <0 74 4>;
++        clocks = <&mio_clk 7>;
++        #dma-cells = <1>;
++    };
+diff --git a/Documentation/devicetree/bindings/dma/uniphier-mio-dmac.txt b/Documentation/devicetree/bindings/dma/uniphier-mio-dmac.txt
+deleted file mode 100644
+index b12388dc7eac..000000000000
+--- a/Documentation/devicetree/bindings/dma/uniphier-mio-dmac.txt
++++ /dev/null
+@@ -1,25 +0,0 @@
+-UniPhier Media IO DMA controller
+-
+-This works as an external DMA engine for SD/eMMC controllers etc.
+-found in UniPhier LD4, Pro4, sLD8 SoCs.
+-
+-Required properties:
+-- compatible: should be "socionext,uniphier-mio-dmac".
+-- reg: offset and length of the register set for the device.
+-- interrupts: a list of interrupt specifiers associated with the DMA channels.
+-- clocks: a single clock specifier.
+-- #dma-cells: should be <1>. The single cell represents the channel index.
+-
+-Example:
+-	dmac: dma-controller@5a000000 {
+-		compatible = "socionext,uniphier-mio-dmac";
+-		reg = <0x5a000000 0x1000>;
+-		interrupts = <0 68 4>, <0 68 4>, <0 69 4>, <0 70 4>,
+-			     <0 71 4>, <0 72 4>, <0 73 4>, <0 74 4>;
+-		clocks = <&mio_clk 7>;
+-		#dma-cells = <1>;
+-	};
+-
+-Note:
+-In the example above, "interrupts = <0 68 4>, <0 68 4>, ..." is not a typo.
+-The first two channels share a single interrupt line.
+-- 
+2.17.1
 
-And please reduce your cc next time. It's way too long.
