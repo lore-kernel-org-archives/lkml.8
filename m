@@ -7,48 +7,46 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 09B7FC35641
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 07:47:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 78D23C35640
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 07:47:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C8CA5222C4
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 07:47:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 46263208C4
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 07:47:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582271251;
-	bh=y/fHO2NUkuUAl0Ye179CG0J01vFCflv+yegSPsLRYk8=;
+	s=default; t=1582271254;
+	bh=3IvopkT27FOsq+8sijVVp9M6p5tv3XeeY25VMCYj45M=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=sp2kUHWTX0A59SUyOH28rCpMmXZzPToYtj0Qsc0/LyadXsxo9qfWafY8d3ra8bThK
-	 ZnZVoZs4SOC7708JjTuyeIUTUc+oWZbImqRfTh2LVZbAxWReqIMd4w15ik5k0lSifT
-	 e01lo4Uxhg9jrJ+9XCKpp2rxzZPMsN+02bCQCLL8=
+	b=jVoc+Hm8phNGN23EsgoTXic4eRncxNIVPzwbvUlXe8t0nN3kObOwXk+MdhIBMvoy7
+	 lY0sOy62BzGQdESvM2nIK05YQ4yplJJAZTpFDXrsJWAtMwWLp2xqrKc35Io/FXJzNd
+	 lkELjCCRlTmjFIyIsIj7oiy8sXA6ZI/tdSKs4KYA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728296AbgBUHra (ORCPT
+        id S1728930AbgBUHrd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Feb 2020 02:47:30 -0500
-Received: from mail.kernel.org ([198.145.29.99]:43236 "EHLO mail.kernel.org"
+        Fri, 21 Feb 2020 02:47:33 -0500
+Received: from mail.kernel.org ([198.145.29.99]:43306 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728913AbgBUHr1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1728901AbgBUHr1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Fri, 21 Feb 2020 02:47:27 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 98A7720801;
-        Fri, 21 Feb 2020 07:47:24 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1815D222C4;
+        Fri, 21 Feb 2020 07:47:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1582271245;
-        bh=y/fHO2NUkuUAl0Ye179CG0J01vFCflv+yegSPsLRYk8=;
+        s=default; t=1582271247;
+        bh=3IvopkT27FOsq+8sijVVp9M6p5tv3XeeY25VMCYj45M=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=JW+EMHOX64XSI7Vu/p2Lcc5U+K3Y2FhC/FLr6Ngb7CJyUlSLjMKu0FJ0fqSoON/VL
-         jNuAcP06RTxqEWJiSnH/MzGa8QIM87UMuixkHWge4QY+G4Mlc3zqFlrv6fS580eZgF
-         lN3qaTL1SuxImXN/Lwx8bHOq6DwLkdCIiBIeG12g=
+        b=Iuiv07VThuj6010lo3I5RryNeb409wey+q+Bb/znRogFTRj55nE8IjMhueS4DMYZ8
+         petywk73Vzt0Y2rjmADM5ledkDxaGMJwKPf5lmy+/Lc98YLscHFnIMDUm6TeHqpLnP
+         J3Q55p0ygwr365GTNaHmOUNGs9uKi16x8L8fXzYk=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Masami Hiramatsu <mhiramat@kernel.org>,
-        Tom Zanussi <zanussi@kernel.org>,
-        "Steven Rostedt (VMware)" <rostedt@goodmis.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.5 093/399] tracing: Simplify assignment parsing for hist triggers
-Date:   Fri, 21 Feb 2020 08:36:58 +0100
-Message-Id: <20200221072411.383968851@linuxfoundation.org>
+        stable@vger.kernel.org, Sun Ke <sunke32@huawei.com>,
+        Jens Axboe <axboe@kernel.dk>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.5 094/399] nbd: add a flush_workqueue in nbd_start_device
+Date:   Fri, 21 Feb 2020 08:36:59 +0100
+Message-Id: <20200221072411.495353985@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200221072402.315346745@linuxfoundation.org>
 References: <20200221072402.315346745@linuxfoundation.org>
@@ -61,191 +59,54 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Tom Zanussi <zanussi@kernel.org>
+From: Sun Ke <sunke32@huawei.com>
 
-[ Upstream commit b527b638fd63ba791dc90a0a6e9a3035b10df52b ]
+[ Upstream commit 5c0dd228b5fc30a3b732c7ae2657e0161ec7ed80 ]
 
-In the process of adding better error messages for sorting, I realized
-that strsep was being used incorrectly and some of the error paths I
-was expecting to be hit weren't and just fell through to the common
-invalid key error case.
+When kzalloc fail, may cause trying to destroy the
+workqueue from inside the workqueue.
 
-It also became obvious that for keyword assignments, it wasn't
-necessary to save the full assignment and reparse it later, and having
-a common empty-assignment check would also make more sense in terms of
-error processing.
+If num_connections is m (2 < m), and NO.1 ~ NO.n
+(1 < n < m) kzalloc are successful. The NO.(n + 1)
+failed. Then, nbd_start_device will return ENOMEM
+to nbd_start_device_ioctl, and nbd_start_device_ioctl
+will return immediately without running flush_workqueue.
+However, we still have n recv threads. If nbd_release
+run first, recv threads may have to drop the last
+config_refs and try to destroy the workqueue from
+inside the workqueue.
 
-Change the code to fix these problems and simplify it for new error
-message changes in a subsequent patch.
+To fix it, add a flush_workqueue in nbd_start_device.
 
-Link: http://lkml.kernel.org/r/1c3ef0b6655deaf345f6faee2584a0298ac2d743.1561743018.git.zanussi@kernel.org
-
-Fixes: e62347d24534 ("tracing: Add hist trigger support for user-defined sorting ('sort=' param)")
-Fixes: 7ef224d1d0e3 ("tracing: Add 'hist' event trigger command")
-Fixes: a4072fe85ba3 ("tracing: Add a clock attribute for hist triggers")
-Reported-by: Masami Hiramatsu <mhiramat@kernel.org>
-Reviewed-by: Masami Hiramatsu <mhiramat@kernel.org>
-Signed-off-by: Tom Zanussi <zanussi@kernel.org>
-Signed-off-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
+Fixes: e9e006f5fcf2 ("nbd: fix max number of supported devs")
+Signed-off-by: Sun Ke <sunke32@huawei.com>
+Signed-off-by: Jens Axboe <axboe@kernel.dk>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- kernel/trace/trace_events_hist.c | 70 ++++++++++++--------------------
- 1 file changed, 27 insertions(+), 43 deletions(-)
+ drivers/block/nbd.c | 10 ++++++++++
+ 1 file changed, 10 insertions(+)
 
-diff --git a/kernel/trace/trace_events_hist.c b/kernel/trace/trace_events_hist.c
-index 6ac35b9e195de..48f9075e4fa18 100644
---- a/kernel/trace/trace_events_hist.c
-+++ b/kernel/trace/trace_events_hist.c
-@@ -2035,12 +2035,6 @@ static int parse_map_size(char *str)
- 	unsigned long size, map_bits;
- 	int ret;
- 
--	strsep(&str, "=");
--	if (!str) {
--		ret = -EINVAL;
--		goto out;
--	}
--
- 	ret = kstrtoul(str, 0, &size);
- 	if (ret)
- 		goto out;
-@@ -2100,25 +2094,25 @@ static int parse_action(char *str, struct hist_trigger_attrs *attrs)
- static int parse_assignment(struct trace_array *tr,
- 			    char *str, struct hist_trigger_attrs *attrs)
- {
--	int ret = 0;
-+	int len, ret = 0;
- 
--	if ((str_has_prefix(str, "key=")) ||
--	    (str_has_prefix(str, "keys="))) {
--		attrs->keys_str = kstrdup(str, GFP_KERNEL);
-+	if ((len = str_has_prefix(str, "key=")) ||
-+	    (len = str_has_prefix(str, "keys="))) {
-+		attrs->keys_str = kstrdup(str + len, GFP_KERNEL);
- 		if (!attrs->keys_str) {
- 			ret = -ENOMEM;
- 			goto out;
+diff --git a/drivers/block/nbd.c b/drivers/block/nbd.c
+index b4607dd961852..78181908f0df6 100644
+--- a/drivers/block/nbd.c
++++ b/drivers/block/nbd.c
+@@ -1265,6 +1265,16 @@ static int nbd_start_device(struct nbd_device *nbd)
+ 		args = kzalloc(sizeof(*args), GFP_KERNEL);
+ 		if (!args) {
+ 			sock_shutdown(nbd);
++			/*
++			 * If num_connections is m (2 < m),
++			 * and NO.1 ~ NO.n(1 < n < m) kzallocs are successful.
++			 * But NO.(n + 1) failed. We still have n recv threads.
++			 * So, add flush_workqueue here to prevent recv threads
++			 * dropping the last config_refs and trying to destroy
++			 * the workqueue from inside the workqueue.
++			 */
++			if (i)
++				flush_workqueue(nbd->recv_workq);
+ 			return -ENOMEM;
  		}
--	} else if ((str_has_prefix(str, "val=")) ||
--		   (str_has_prefix(str, "vals=")) ||
--		   (str_has_prefix(str, "values="))) {
--		attrs->vals_str = kstrdup(str, GFP_KERNEL);
-+	} else if ((len = str_has_prefix(str, "val=")) ||
-+		   (len = str_has_prefix(str, "vals=")) ||
-+		   (len = str_has_prefix(str, "values="))) {
-+		attrs->vals_str = kstrdup(str + len, GFP_KERNEL);
- 		if (!attrs->vals_str) {
- 			ret = -ENOMEM;
- 			goto out;
- 		}
--	} else if (str_has_prefix(str, "sort=")) {
--		attrs->sort_key_str = kstrdup(str, GFP_KERNEL);
-+	} else if ((len = str_has_prefix(str, "sort="))) {
-+		attrs->sort_key_str = kstrdup(str + len, GFP_KERNEL);
- 		if (!attrs->sort_key_str) {
- 			ret = -ENOMEM;
- 			goto out;
-@@ -2129,12 +2123,8 @@ static int parse_assignment(struct trace_array *tr,
- 			ret = -ENOMEM;
- 			goto out;
- 		}
--	} else if (str_has_prefix(str, "clock=")) {
--		strsep(&str, "=");
--		if (!str) {
--			ret = -EINVAL;
--			goto out;
--		}
-+	} else if ((len = str_has_prefix(str, "clock="))) {
-+		str += len;
- 
- 		str = strstrip(str);
- 		attrs->clock = kstrdup(str, GFP_KERNEL);
-@@ -2142,8 +2132,8 @@ static int parse_assignment(struct trace_array *tr,
- 			ret = -ENOMEM;
- 			goto out;
- 		}
--	} else if (str_has_prefix(str, "size=")) {
--		int map_bits = parse_map_size(str);
-+	} else if ((len = str_has_prefix(str, "size="))) {
-+		int map_bits = parse_map_size(str + len);
- 
- 		if (map_bits < 0) {
- 			ret = map_bits;
-@@ -2183,8 +2173,14 @@ parse_hist_trigger_attrs(struct trace_array *tr, char *trigger_str)
- 
- 	while (trigger_str) {
- 		char *str = strsep(&trigger_str, ":");
-+		char *rhs;
- 
--		if (strchr(str, '=')) {
-+		rhs = strchr(str, '=');
-+		if (rhs) {
-+			if (!strlen(++rhs)) {
-+				ret = -EINVAL;
-+				goto free;
-+			}
- 			ret = parse_assignment(tr, str, attrs);
- 			if (ret)
- 				goto free;
-@@ -4536,10 +4532,6 @@ static int create_val_fields(struct hist_trigger_data *hist_data,
- 	if (!fields_str)
- 		goto out;
- 
--	strsep(&fields_str, "=");
--	if (!fields_str)
--		goto out;
--
- 	for (i = 0, j = 1; i < TRACING_MAP_VALS_MAX &&
- 		     j < TRACING_MAP_VALS_MAX; i++) {
- 		field_str = strsep(&fields_str, ",");
-@@ -4634,10 +4626,6 @@ static int create_key_fields(struct hist_trigger_data *hist_data,
- 	if (!fields_str)
- 		goto out;
- 
--	strsep(&fields_str, "=");
--	if (!fields_str)
--		goto out;
--
- 	for (i = n_vals; i < n_vals + TRACING_MAP_KEYS_MAX; i++) {
- 		field_str = strsep(&fields_str, ",");
- 		if (!field_str)
-@@ -4795,12 +4783,6 @@ static int create_sort_keys(struct hist_trigger_data *hist_data)
- 	if (!fields_str)
- 		goto out;
- 
--	strsep(&fields_str, "=");
--	if (!fields_str) {
--		ret = -EINVAL;
--		goto out;
--	}
--
- 	for (i = 0; i < TRACING_MAP_SORT_KEYS_MAX; i++) {
- 		struct hist_field *hist_field;
- 		char *field_str, *field_name;
-@@ -4809,9 +4791,11 @@ static int create_sort_keys(struct hist_trigger_data *hist_data)
- 		sort_key = &hist_data->sort_keys[i];
- 
- 		field_str = strsep(&fields_str, ",");
--		if (!field_str) {
--			if (i == 0)
--				ret = -EINVAL;
-+		if (!field_str)
-+			break;
-+
-+		if (!*field_str) {
-+			ret = -EINVAL;
- 			break;
- 		}
- 
-@@ -4821,7 +4805,7 @@ static int create_sort_keys(struct hist_trigger_data *hist_data)
- 		}
- 
- 		field_name = strsep(&field_str, ".");
--		if (!field_name) {
-+		if (!field_name || !*field_name) {
- 			ret = -EINVAL;
- 			break;
- 		}
+ 		sk_set_memalloc(config->socks[i]->sock->sk);
 -- 
 2.20.1
 
