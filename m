@@ -5,51 +5,49 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B8CFFC35641
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 08:36:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 767C7C35641
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 08:36:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8EEBB20578
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 08:36:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4D80520578
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 08:36:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582274214;
-	bh=xhY7BV3Ql3HJ94mAkEn0dm358OpGYEaUApGgi1BxkN4=;
+	s=default; t=1582274217;
+	bh=wySVuzOAKsVfP2zWPLQgRaUCUUY7XFfw5EC5uuHR3qU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=PXMEaYZhtUv4uK/rAQw65YJ7DNGwq83bRjgLWTWND74J34em8EZ45LthFVr6Wz8tq
-	 vCjdojwpdQmc9xR3gqZ2FeS+CXQ8bWwktK30tLXev11obxRZEhUFYSSkfjB4cWrtGQ
-	 X4YaJSc15CQqPA0qLCdAwr9wm8c6RwoRkNIdXnac=
+	b=WRQs1B9ti10X0WQLgtrp7R6he3zoBF/OX5RARFMODRvtXRdCBK0++wNuWtg29uZ8q
+	 W5CfVfrVtZ3dq9tBoeC9WFVDx4DtImpF1DnuzWQZsHd87YRMl1KgfkPvDXszGNlk+0
+	 vI0ELr5FjwWxXzMDQs+iBINmurK2CfFGnUfj/dE4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731863AbgBUIFq (ORCPT
+        id S1732131AbgBUIg4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Feb 2020 03:05:46 -0500
-Received: from mail.kernel.org ([198.145.29.99]:39156 "EHLO mail.kernel.org"
+        Fri, 21 Feb 2020 03:36:56 -0500
+Received: from mail.kernel.org ([198.145.29.99]:39352 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731626AbgBUIFg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Feb 2020 03:05:36 -0500
+        id S1731492AbgBUIFo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 21 Feb 2020 03:05:44 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7EC8320801;
-        Fri, 21 Feb 2020 08:05:35 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 13749222C4;
+        Fri, 21 Feb 2020 08:05:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1582272336;
-        bh=xhY7BV3Ql3HJ94mAkEn0dm358OpGYEaUApGgi1BxkN4=;
+        s=default; t=1582272343;
+        bh=wySVuzOAKsVfP2zWPLQgRaUCUUY7XFfw5EC5uuHR3qU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Pw1Z9WHIndAUAZ4h0NchY9ZdMmZo3/MFP/qvQWs/9D9QzSpPG3w4WkL5xQlHd1Wvl
-         6zzcRvjOIJxnxN+81tp60YiuBJoLIGlv9KJqEhjRS0Sf34StrDtc/HdtZv1nodWkjY
-         XTNMwK7AivRZhYpsGMhVWbN73FcLb+yWXxu2c6Ow=
+        b=GUxByzR1X1yXH0FoWJZ81OQ3U5DcLH61mFDfjHVD5pVWP65SNV0bbsPwSvRXu6FXa
+         TifsYVdpAKzbUviXK6m5FH+e68DVPegoMhhWAU+3JKUXhhhmbfYwgw4xVLBCufNjxq
+         cFraDjtdMNdLi+V/VI1bLqe694MrFHTup1Jp79eQ=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= 
-        <u.kleine-koenig@pengutronix.de>,
-        Thierry Reding <thierry.reding@gmail.com>,
+        stable@vger.kernel.org, Martin Schiller <ms@dev.tdt.de>,
+        "David S. Miller" <davem@davemloft.net>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 068/344] pwm: omap-dmtimer: Simplify error handling
-Date:   Fri, 21 Feb 2020 08:37:47 +0100
-Message-Id: <20200221072355.178250233@linuxfoundation.org>
+Subject: [PATCH 5.4 071/344] wan/hdlc_x25: fix skb handling
+Date:   Fri, 21 Feb 2020 08:37:50 +0100
+Message-Id: <20200221072355.441387749@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200221072349.335551332@linuxfoundation.org>
 References: <20200221072349.335551332@linuxfoundation.org>
@@ -62,80 +60,68 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Uwe Kleine-König <u.kleine-koenig@pengutronix.de>
+From: Martin Schiller <ms@dev.tdt.de>
 
-[ Upstream commit c4cf7aa57eb83b108d2d9c6c37c143388fee2a4d ]
+[ Upstream commit 953c4a08dfc9ffe763a8340ac10f459d6c6cc4eb ]
 
-Instead of doing error handling in the middle of ->probe(), move error
-handling and freeing the reference to timer to the end.
+o call skb_reset_network_header() before hdlc->xmit()
+ o change skb proto to HDLC (0x0019) before hdlc->xmit()
+ o call dev_queue_xmit_nit() before hdlc->xmit()
 
-This fixes a resource leak as dm_timer wasn't freed when allocating
-*omap failed.
+This changes make it possible to trace (tcpdump) outgoing layer2
+(ETH_P_HDLC) packets
 
-Implementation note: The put: label was never reached without a goto and
-ret being unequal to 0, so the removed return statement is fine.
+Additionally call skb_reset_network_header() after each skb_push() /
+skb_pull().
 
-Fixes: 6604c6556db9 ("pwm: Add PWM driver for OMAP using dual-mode timers")
-Signed-off-by: Uwe Kleine-König <u.kleine-koenig@pengutronix.de>
-Signed-off-by: Thierry Reding <thierry.reding@gmail.com>
+Signed-off-by: Martin Schiller <ms@dev.tdt.de>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/pwm/pwm-omap-dmtimer.c | 28 +++++++++++++++++++---------
- 1 file changed, 19 insertions(+), 9 deletions(-)
+ drivers/net/wan/hdlc_x25.c | 13 +++++++++++--
+ 1 file changed, 11 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/pwm/pwm-omap-dmtimer.c b/drivers/pwm/pwm-omap-dmtimer.c
-index 00772fc534906..6cfeb0e1cc679 100644
---- a/drivers/pwm/pwm-omap-dmtimer.c
-+++ b/drivers/pwm/pwm-omap-dmtimer.c
-@@ -298,15 +298,10 @@ static int pwm_omap_dmtimer_probe(struct platform_device *pdev)
- 		goto put;
- 	}
+diff --git a/drivers/net/wan/hdlc_x25.c b/drivers/net/wan/hdlc_x25.c
+index 5643675ff7241..bf78073ee7fd9 100644
+--- a/drivers/net/wan/hdlc_x25.c
++++ b/drivers/net/wan/hdlc_x25.c
+@@ -62,11 +62,12 @@ static int x25_data_indication(struct net_device *dev, struct sk_buff *skb)
+ {
+ 	unsigned char *ptr;
  
--put:
--	of_node_put(timer);
--	if (ret < 0)
--		return ret;
+-	skb_push(skb, 1);
 -
- 	omap = devm_kzalloc(&pdev->dev, sizeof(*omap), GFP_KERNEL);
- 	if (!omap) {
--		pdata->free(dm_timer);
--		return -ENOMEM;
-+		ret = -ENOMEM;
-+		goto err_alloc_omap;
- 	}
+ 	if (skb_cow(skb, 1))
+ 		return NET_RX_DROP;
  
- 	omap->pdata = pdata;
-@@ -339,13 +334,28 @@ put:
- 	ret = pwmchip_add(&omap->chip);
- 	if (ret < 0) {
- 		dev_err(&pdev->dev, "failed to register PWM\n");
--		omap->pdata->free(omap->dm_timer);
--		return ret;
-+		goto err_pwmchip_add;
- 	}
++	skb_push(skb, 1);
++	skb_reset_network_header(skb);
++
+ 	ptr  = skb->data;
+ 	*ptr = X25_IFACE_DATA;
  
-+	of_node_put(timer);
+@@ -79,6 +80,13 @@ static int x25_data_indication(struct net_device *dev, struct sk_buff *skb)
+ static void x25_data_transmit(struct net_device *dev, struct sk_buff *skb)
+ {
+ 	hdlc_device *hdlc = dev_to_hdlc(dev);
 +
- 	platform_set_drvdata(pdev, omap);
- 
- 	return 0;
++	skb_reset_network_header(skb);
++	skb->protocol = hdlc_type_trans(skb, dev);
 +
-+err_pwmchip_add:
++	if (dev_nit_active(dev))
++		dev_queue_xmit_nit(skb, dev);
 +
-+	/*
-+	 * *omap is allocated using devm_kzalloc,
-+	 * so no free necessary here
-+	 */
-+err_alloc_omap:
-+
-+	pdata->free(dm_timer);
-+put:
-+	of_node_put(timer);
-+
-+	return ret;
+ 	hdlc->xmit(skb, dev); /* Ignore return value :-( */
  }
  
- static int pwm_omap_dmtimer_remove(struct platform_device *pdev)
+@@ -93,6 +101,7 @@ static netdev_tx_t x25_xmit(struct sk_buff *skb, struct net_device *dev)
+ 	switch (skb->data[0]) {
+ 	case X25_IFACE_DATA:	/* Data to be transmitted */
+ 		skb_pull(skb, 1);
++		skb_reset_network_header(skb);
+ 		if ((result = lapb_data_request(dev, skb)) != LAPB_OK)
+ 			dev_kfree_skb(skb);
+ 		return NETDEV_TX_OK;
 -- 
 2.20.1
 
