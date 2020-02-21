@@ -2,134 +2,180 @@ Return-Path: <SRS0=1210=4J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_2 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 97652C35659
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 17:40:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F0903C35657
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 17:41:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 68CB4222C4
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 17:40:42 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="S1zv+eyv"
+	by mail.kernel.org (Postfix) with ESMTP id C46E5206E2
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 17:41:26 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726701AbgBURkl (ORCPT
+        id S1726927AbgBURlZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Feb 2020 12:40:41 -0500
-Received: from mail-wr1-f65.google.com ([209.85.221.65]:34931 "EHLO
-        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725947AbgBURkk (ORCPT
+        Fri, 21 Feb 2020 12:41:25 -0500
+Received: from bhuna.collabora.co.uk ([46.235.227.227]:60268 "EHLO
+        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725947AbgBURlZ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Feb 2020 12:40:40 -0500
-Received: by mail-wr1-f65.google.com with SMTP id w12so2973903wrt.2
-        for <linux-kernel@vger.kernel.org>; Fri, 21 Feb 2020 09:40:38 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to
-         :user-agent;
-        bh=3V9d6h+w2Jn04j6QHprbTz1jBnUlayRXHk3bj59std0=;
-        b=S1zv+eyvfvNLGritTRUO4O07zMDmH2GjJWPuiXIdVvT9rwyOC+uM4H0gOWvu+ZG7KC
-         kOsSv3VIpoe9UPLxuvjnnDVkz4Dp8GU0MoTlYJlGUL5pWSc/rUBLrDMe/wAaNSM/BUnK
-         Me8EM5xUyclfKueqfEGGeTUUgxgPkUZCr3eV4M0Gwi6DWnsPArzYVUKSuosGhHaIdJqm
-         AFNgITQd7cNvZWvfkKidj38GQoZ5vIr+NFAT4ATDQWmJCWRnnxMv3Gxd8n8Al0+IZyQn
-         oYDKiFRoJ3dxZzYmq1ebb22sbS69QYJAycY+JRDTaLK1YrfdlNMlMSNTqt0QUwsT3P+R
-         12QA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to:user-agent;
-        bh=3V9d6h+w2Jn04j6QHprbTz1jBnUlayRXHk3bj59std0=;
-        b=cfhsPgY2QN8o2cBiFW+DVoExSEJyHWv1bSrSm4PFlL4E7+5qHLDQYI82oWFp0k12OX
-         0wX7keXl5j9VVpCd8LPL1f7w/ux5eZl39T7WOhb4pT6v8rY8ToyWpV9Mx4iS9kCcFIp/
-         f0Iyo8IFhWvWOTZOrawGTRL7hKK0ChkJQ1HZGSoSx04miP4bCvD3iQ3x3DG0WBQet/TT
-         bep9d2NKGBFWwYd4PGVMjmo0pPNS4eJmtlnZohSMkW1JFgxkkVv9YvncDJA4qOuTfIZu
-         ySYaezlOAHg8biH/tZkJLpN9+Bmi4UBYF+gzIG/UHLtGXrKemJQnzILhK9oeKrTvPQ/T
-         YWvA==
-X-Gm-Message-State: APjAAAUZc23sDZ46Xd4qYFL3WHMh0GiVul/wYvNTjC345J1vktqx5DBi
-        S4AxTIolDUc4XewTzlNWzgrubQ==
-X-Google-Smtp-Source: APXvYqyMv9sqLAcg9X7RL2yIUHrWh1u/L1U9ff6yIGnRxUO9BHWyghYULmWGNzjMlwA/tOgJhZrSmA==
-X-Received: by 2002:adf:a19c:: with SMTP id u28mr49326009wru.221.1582306837974;
-        Fri, 21 Feb 2020 09:40:37 -0800 (PST)
-Received: from linaro.org ([2a01:e34:ed2f:f020:903b:a048:f296:e3ae])
-        by smtp.gmail.com with ESMTPSA id f207sm4980688wme.9.2020.02.21.09.40.35
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Fri, 21 Feb 2020 09:40:37 -0800 (PST)
-Date:   Fri, 21 Feb 2020 18:40:33 +0100
-From:   Daniel Lezcano <daniel.lezcano@linaro.org>
-To:     Dmitry Osipenko <digetx@gmail.com>
-Cc:     Thierry Reding <thierry.reding@gmail.com>,
-        Jonathan Hunter <jonathanh@nvidia.com>,
-        Peter De Schrijver <pdeschrijver@nvidia.com>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        =?utf-8?B?TWljaGHFgiBNaXJvc8WCYXc=?= <mirq-linux@rere.qmqm.pl>,
-        Jasper Korten <jja2000@gmail.com>,
-        David Heidelberg <david@ixit.cz>,
-        Peter Geis <pgwipeout@gmail.com>, linux-pm@vger.kernel.org,
-        linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v9 05/17] ARM: tegra: Propagate error from
- tegra_idle_lp2_last()
-Message-ID: <20200221174033.GV10516@linaro.org>
-References: <20200212235134.12638-1-digetx@gmail.com>
- <20200212235134.12638-6-digetx@gmail.com>
- <20200221151612.GJ10516@linaro.org>
- <1a8c81ab-6f6a-8221-6a4e-c080ba595836@gmail.com>
+        Fri, 21 Feb 2020 12:41:25 -0500
+Received: from localhost (unknown [IPv6:2a01:e0a:2c:6930:5cf4:84a1:2763:fe0d])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        (Authenticated sender: bbrezillon)
+        by bhuna.collabora.co.uk (Postfix) with ESMTPSA id 54EED295AE9;
+        Fri, 21 Feb 2020 17:41:23 +0000 (GMT)
+Date:   Fri, 21 Feb 2020 18:41:16 +0100
+From:   Boris Brezillon <boris.brezillon@collabora.com>
+To:     Vitor Soares <Vitor.Soares@synopsys.com>
+Cc:     "bbrezillon@kernel.org" <bbrezillon@kernel.org>,
+        Joao Pinto <Joao.Pinto@synopsys.com>,
+        Jose Abreu <Jose.Abreu@synopsys.com>,
+        "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>,
+        "wsa@the-dreams.de" <wsa@the-dreams.de>,
+        "arnd@arndb.de" <arnd@arndb.de>,
+        "broonie@kernel.org" <broonie@kernel.org>,
+        "corbet@lwn.net" <corbet@lwn.net>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-i3c@lists.infradead.org" <linux-i3c@lists.infradead.org>
+Subject: Re: [PATCH v3 0/5] Introduce i3c device userspace interface
+Message-ID: <20200221184116.1d8f0677@collabora.com>
+In-Reply-To: <CH2PR12MB4216ECDC745C8255DF8106A3AE120@CH2PR12MB4216.namprd12.prod.outlook.com>
+References: <cover.1582069402.git.vitor.soares@synopsys.com>
+        <CH2PR12MB421604E9272413A6C456AB16AE100@CH2PR12MB4216.namprd12.prod.outlook.com>
+        <20200219091658.7506e7bd@collabora.com>
+        <CH2PR12MB4216ECDC745C8255DF8106A3AE120@CH2PR12MB4216.namprd12.prod.outlook.com>
+Organization: Collabora
+X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; x86_64-redhat-linux-gnu)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <1a8c81ab-6f6a-8221-6a4e-c080ba595836@gmail.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Feb 21, 2020 at 08:21:41PM +0300, Dmitry Osipenko wrote:
-> 21.02.2020 18:16, Daniel Lezcano пишет:
-> > On Thu, Feb 13, 2020 at 02:51:22AM +0300, Dmitry Osipenko wrote:
-> >> Technically cpu_suspend() may fail and it's never good to lose information
-> >> about failure. For example things like cpuidle core could correctly sample
-> >> idling time in the case of failure.
-> >>
-> >> Acked-by: Peter De Schrijver <pdeschrijver@nvidia.com>
-> >> Tested-by: Peter Geis <pgwipeout@gmail.com>
-> >> Tested-by: Jasper Korten <jja2000@gmail.com>
-> >> Tested-by: David Heidelberg <david@ixit.cz>
-> >> Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
-> >> ---
-> > 
-> > [ ... ]
-> > 
-> >>  	cpu_cluster_pm_enter();
-> >>  	suspend_cpu_complex();
-> >>  
-> >> -	cpu_suspend(PHYS_OFFSET - PAGE_OFFSET, &tegra_sleep_cpu);
-> >> +	err = cpu_suspend(PHYS_OFFSET - PAGE_OFFSET, &tegra_sleep_cpu);
-> >>  
-> >>  	/*
-> >>  	 * Resume L2 cache if it wasn't re-enabled early during resume,
-> >> @@ -208,6 +210,8 @@ void tegra_idle_lp2_last(void)
-> >>  
-> >>  	restore_cpu_complex();
-> > 
-> > If the cpu_suspend fails, does restore_cpu_complex() need to be called ?
+On Fri, 21 Feb 2020 17:08:17 +0000
+Vitor Soares <Vitor.Soares@synopsys.com> wrote:
+
+> Hi Boris,
 > 
-> Yes, because suspend_cpu_complex() didn't fail. I don't see any reason
-> why restore_cpu_complex() shouldn't be called, please clarify yours thought.
+> From: Boris Brezillon <boris.brezillon@collabora.com>
+> Date: Wed, Feb 19, 2020 at 08:16:58
+> 
+> > On Wed, 19 Feb 2020 00:39:31 +0000
+> > Vitor Soares <Vitor.Soares@synopsys.com> wrote:
+> >   
+> > > Hi Boris,
+> > > 
+> > > From: Vitor Soares <vitor.soares@synopsys.com>
+> > > Date: Wed, Feb 19, 2020 at 00:20:38
+> > >   
+> > > > For today there is no way to use i3c devices from user space and
+> > > > the introduction of such API will help developers during the i3c device
+> > > > or i3c host controllers development.
+> > > > 
+> > > > The i3cdev module is highly based on i2c-dev and yet I tried to address
+> > > > the concerns raised in [1].
+> > > > 
+> > > > NOTES:
+> > > > - The i3cdev dynamically request an unused major number.
+> > > > 
+> > > > - The i3c devices are dynamically exposed/removed from dev/ folder based
+> > > >   on if they have a device driver bound to it.
+> > > > 
+> > > > - For now, the module exposes i3c devices without device driver on
+> > > >   dev/bus/i3c/<bus>-<pid>
+> > > > 
+> > > > - As in the i2c subsystem, here it is exposed the i3c_priv_xfer to
+> > > >   userspace. I tried to use a dedicated structure as in spidev but I don't
+> > > >   see any obvious advantage.
+> > > > 
+> > > > - Since the i3c API only exposes i3c_priv_xfer to devices, for now, the
+> > > >   module just makes use of one ioctl(). This can change in the future with
+> > > >   the introduction hdr commands or by the need of exposing some CCC
+> > > >   commands to the device API (private contract between master-slave).
+> > > >   Regarding the i3c device info, some information is already available
+> > > >   through sysfs. We can add more device attributes to expose more
+> > > >   information or add a dedicated ioctl() request for that purpose or both.
+> > > > 
+> > > > - Similar to i2c, I have also created a tool that you can find in [2]
+> > > >   for testing purposes. If you have some time available I would appreciate
+> > > >   your feedback about it as well.
+> > > > 
+> > > > [1] https://urldefense.proofpoint.com/v2/url?u=https-3A__lkml.org_lkml_2018_11_15_853&d=DwICAg&c=DPL6_X_6JkXFx7AXWqB0tg&r=qVuU64u9x77Y0Kd0PhDK_lpxFgg6PK9PateHwjb_DY0&m=1N2OHEqhXNvZn7HIjf_EmPX5N9wwBWLsUakJ9a1zno0&s=RJ3Lr0SIvJYiKxLCFaV0_pNArfUJj7TxsJecNgYbTQA&e= 
+> > > > [2] https://urldefense.proofpoint.com/v2/url?u=https-3A__github.com_vitor-2Dsoares-2Dsnps_i3c-2Dtools.git&d=DwICAg&c=DPL6_X_6JkXFx7AXWqB0tg&r=qVuU64u9x77Y0Kd0PhDK_lpxFgg6PK9PateHwjb_DY0&m=1N2OHEqhXNvZn7HIjf_EmPX5N9wwBWLsUakJ9a1zno0&s=q4Oi7UD-dZ1YMlTN9prqycS1G1QvEUuBFnsABMGRuBk&e= 
+> > > > 
+> > > > Changes in v3:
+> > > >   Use the xfer_lock to prevent device detach during ioctl call
+> > > >   Expose i3cdev under /dev/bus/i3c/ folder like usb does
+> > > >   Change NOTIFY_BOUND to NOTIFY_BIND, this allows the device detach occur
+> > > >   before driver->probe call
+> > > >   Avoid use of IS_ERR_OR_NULL
+> > > >   Use u64_to_user_ptr instead of (void __user *)(uintptr_t) cast
+> > > >   Allocate k_xfer and data_ptrs at once and eliminate double allocation
+> > > >   check
+> > > >   Pass i3cdev to dev->driver_data
+> > > >   Make all minors available
+> > > >   Add API documentation
+> > > > 
+> > > > Changes in v2:
+> > > >   Use IDR api for minor numbering
+> > > >   Modify ioctl struct
+> > > >   Fix SPDX license
+> > > > 
+> > > > Vitor Soares (5):
+> > > >   i3c: master: export i3c_masterdev_type
+> > > >   i3c: master: export i3c_bus_type symbol
+> > > >   i3c: master: add i3c_for_each_dev helper
+> > > >   i3c: add i3cdev module to expose i3c dev in /dev
+> > > >   userspace-api: add i3cdev documentation
+> > > > 
+> > > >  Documentation/userspace-api/i3c/i3cdev.rst | 116 ++++++++
+> > > >  drivers/i3c/Kconfig                        |  15 +
+> > > >  drivers/i3c/Makefile                       |   1 +
+> > > >  drivers/i3c/i3cdev.c                       | 429 +++++++++++++++++++++++++++++
+> > > >  drivers/i3c/internals.h                    |   2 +
+> > > >  drivers/i3c/master.c                       |  16 +-
+> > > >  include/uapi/linux/i3c/i3cdev.h            |  38 +++
+> > > >  7 files changed, 616 insertions(+), 1 deletion(-)
+> > > >  create mode 100644 Documentation/userspace-api/i3c/i3cdev.rst
+> > > >  create mode 100644 drivers/i3c/i3cdev.c
+> > > >  create mode 100644 include/uapi/linux/i3c/i3cdev.h
+> > > > 
+> > > > -- 
+> > > > 2.7.4    
+> > > 
+> > > I want to make you know that none of your previous comments was ignored 
+> > > and  I would like to start the discussion from this point.  
+> > 
+> > Sure, np. I'll probably wait for a v4 exploring the option I proposed
+> > then.  
+> 
+> I would like to check with you:
+>   - How can we prioritize the device driver over the i3cdev driver if the 
+> driver is loaded after i3cdev? Currently, this is done automatically 
+> without any command, and for me, this is a requirement.
 
-If the suspend fails, the power down does not happen, thus the logic is not
-lost and then it not necessary to restore something which has not been lost.
+No devs would be bound to the i3cdev driver by default, it would have
+to be done explicitly through a sysfs knob. Which makes me realize
+we can't use the generic bind knob since it doesn't let the subsystem
+know that it's a manual bind. I thought there was a way to distinguish
+between manual and auto-bind.
 
-I don't know the hardware details, so that may be partially correct.
+>   - For the ioctl command structure, there is no rule about the way I did 
+> or what you proposed, both are currently used in the kernel. For me it is 
+> one more structure to deal with, can you point the advantages of your 
+> purpose?
 
--- 
+I don't have a strong opinion on that one, though I find it a bit
+easier to follow when the number of xfers is encoded in a separate
+struct rather than extracted from the data size passed through the cmd
+argument.
 
- <http://www.linaro.org/> Linaro.org │ Open source software for ARM SoCs
+>   - Regarding the ioctl codes, I tried to use those after I2C.
 
-Follow Linaro:  <http://www.facebook.com/pages/Linaro> Facebook |
-<http://twitter.com/#!/linaroorg> Twitter |
-<http://www.linaro.org/linaro-blog/> Blog
+Why start from 0x30? It doesn't make sense to me. Just because you base
+your code on something that already exists doesn't mean you have to
+copy all of it.
