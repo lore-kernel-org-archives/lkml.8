@@ -5,51 +5,49 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6AE41C35642
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 08:14:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DC335C35640
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 08:14:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 36F3A24681
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 08:14:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A7A052467D
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 08:14:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582272892;
-	bh=hDDi7NfkHyAkUUnTbKQGRytKtjAXcZBx1AojSyMOTjA=;
+	s=default; t=1582272895;
+	bh=qy/UrVKJD9Yzo9V6luGLjIKHtwLML0Xd8oiQh3MDx2c=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=IK7e+BUDMntLEpuMeE88L503d9vaTkG6IZTYlpm5qElRYa5JumE2+VPqRRTTx8+NG
-	 eHDuuOyEpd+p7i/1lI8VtewNt9/BI0dEr9oHEm9VDxmLDUVZo44t2XnrBOYbtZJHNa
-	 QhUyu0oYgykwPgINyKxZIvqg4svMgqJwAn2RI6wI=
+	b=D26uiSvM7OH7Sz3sQ16JXpTO+BKrQl+K+4+a4QFQGUJhFhOUHmK2n6d5Jd+Whydsc
+	 ixo+63A94buXJCDAGfD9/E0Ir2YXuNpYLQtUdQbHfEohLtVBZGKr0Da4oiQiEfWp6P
+	 sIENlkmHh1U8buCbXxGg+CqDClimnQ26ekjtU998=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733234AbgBUIOt (ORCPT
+        id S1733250AbgBUIOy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Feb 2020 03:14:49 -0500
-Received: from mail.kernel.org ([198.145.29.99]:51392 "EHLO mail.kernel.org"
+        Fri, 21 Feb 2020 03:14:54 -0500
+Received: from mail.kernel.org ([198.145.29.99]:51446 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732492AbgBUIOr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Feb 2020 03:14:47 -0500
+        id S1733236AbgBUIOu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 21 Feb 2020 03:14:50 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A42AA24670;
-        Fri, 21 Feb 2020 08:14:46 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 274AB24680;
+        Fri, 21 Feb 2020 08:14:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1582272887;
-        bh=hDDi7NfkHyAkUUnTbKQGRytKtjAXcZBx1AojSyMOTjA=;
+        s=default; t=1582272889;
+        bh=qy/UrVKJD9Yzo9V6luGLjIKHtwLML0Xd8oiQh3MDx2c=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Y+mUhSB+L/4xHwI2sLVHH79pkNKFV1ZHQzGNiwuhehikdGo5XlX00pCGsAvT49tbU
-         lVZ3dx1M1Du46YMYjGnk7ld+vlTvG32For/QgBfX/1ByQTBC/TXgrg89M3cpOK+MhN
-         zcLSSQFkfHdMH/OA78jo+qz/L/4DzhWNpXW+FIvE=
+        b=EVO9+7mGfNnl2di7lk7P8gNiebOM0xQumb9oAXkLQ9VMnmcxsVXGk8gTjKYyUHRMg
+         AjOzLeE5zcIxjj0SELe4HOIIZwxJOJWa7xfS0dl4UcgQr+yQ+kMJJvNaRabVbRp4US
+         U8BaRUK9NKRZUIsJlx6B37zwEPqoLza4X3mlom2A=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        "Gustavo A. R. Silva" <gustavo@embeddedor.com>,
-        Tetsuo Handa <penguin-kernel@I-love.SAKURA.ne.jp>,
-        Eric Biggers <ebiggers@kernel.org>,
+        stable@vger.kernel.org, Vasily Averin <vvs@virtuozzo.com>,
+        "Steven Rostedt (VMware)" <rostedt@goodmis.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 312/344] char: hpet: Fix out-of-bounds read bug
-Date:   Fri, 21 Feb 2020 08:41:51 +0100
-Message-Id: <20200221072418.378382693@linuxfoundation.org>
+Subject: [PATCH 5.4 313/344] ftrace: fpid_next() should increase position index
+Date:   Fri, 21 Feb 2020 08:41:52 +0100
+Message-Id: <20200221072418.491462997@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200221072349.335551332@linuxfoundation.org>
 References: <20200221072349.335551332@linuxfoundation.org>
@@ -62,54 +60,61 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Gustavo A. R. Silva <gustavo@embeddedor.com>
+From: Vasily Averin <vvs@virtuozzo.com>
 
-[ Upstream commit 98c49f1746ac44ccc164e914b9a44183fad09f51 ]
+[ Upstream commit e4075e8bdffd93a9b6d6e1d52fabedceeca5a91b ]
 
-Currently, there is an out-of-bounds read on array hpetp->hp_dev
-in the following for loop:
+if seq_file .next fuction does not change position index,
+read after some lseek can generate unexpected output.
 
-870         for (i = 0; i < hdp->hd_nirqs; i++)
-871                 hpetp->hp_dev[i].hd_hdwirq = hdp->hd_irq[i];
+Without patch:
+ # dd bs=4 skip=1 if=/sys/kernel/tracing/set_ftrace_pid
+ dd: /sys/kernel/tracing/set_ftrace_pid: cannot skip to specified offset
+ id
+ no pid
+ 2+1 records in
+ 2+1 records out
+ 10 bytes copied, 0.000213285 s, 46.9 kB/s
 
-This is due to the recent change from one-element array to
-flexible-array member in struct hpets:
+Notice the "id" followed by "no pid".
 
-104 struct hpets {
-	...
-113         struct hpet_dev hp_dev[];
-114 };
+With the patch:
+ # dd bs=4 skip=1 if=/sys/kernel/tracing/set_ftrace_pid
+ dd: /sys/kernel/tracing/set_ftrace_pid: cannot skip to specified offset
+ id
+ 0+1 records in
+ 0+1 records out
+ 3 bytes copied, 0.000202112 s, 14.8 kB/s
 
-This change affected the total size of the dynamic memory
-allocation, decreasing it by one time the size of struct hpet_dev.
+Notice that it only prints "id" and not the "no pid" afterward.
 
-Fix this by adjusting the allocation size when calling
-struct_size().
+Link: http://lkml.kernel.org/r/4f87c6ad-f114-30bb-8506-c32274ce2992@virtuozzo.com
 
-Fixes: 987f028b8637c ("char: hpet: Use flexible-array member")
-Signed-off-by: Gustavo A. R. Silva <gustavo@embeddedor.com>
-Signed-off-by: Tetsuo Handa <penguin-kernel@I-love.SAKURA.ne.jp>
-Acked-by: Eric Biggers <ebiggers@kernel.org>
-Link: https://lore.kernel.org/r/20200129022613.GA24281@embeddedor.com
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+https://bugzilla.kernel.org/show_bug.cgi?id=206283
+Signed-off-by: Vasily Averin <vvs@virtuozzo.com>
+Signed-off-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/char/hpet.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ kernel/trace/ftrace.c | 5 +++--
+ 1 file changed, 3 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/char/hpet.c b/drivers/char/hpet.c
-index 9ac6671bb5141..f69609b47fef8 100644
---- a/drivers/char/hpet.c
-+++ b/drivers/char/hpet.c
-@@ -855,7 +855,7 @@ int hpet_alloc(struct hpet_data *hdp)
- 		return 0;
- 	}
+diff --git a/kernel/trace/ftrace.c b/kernel/trace/ftrace.c
+index 407d8bf4ed93e..15160d707da45 100644
+--- a/kernel/trace/ftrace.c
++++ b/kernel/trace/ftrace.c
+@@ -6537,9 +6537,10 @@ static void *fpid_next(struct seq_file *m, void *v, loff_t *pos)
+ 	struct trace_array *tr = m->private;
+ 	struct trace_pid_list *pid_list = rcu_dereference_sched(tr->function_pids);
  
--	hpetp = kzalloc(struct_size(hpetp, hp_dev, hdp->hd_nirqs - 1),
-+	hpetp = kzalloc(struct_size(hpetp, hp_dev, hdp->hd_nirqs),
- 			GFP_KERNEL);
+-	if (v == FTRACE_NO_PIDS)
++	if (v == FTRACE_NO_PIDS) {
++		(*pos)++;
+ 		return NULL;
+-
++	}
+ 	return trace_pid_next(pid_list, v, pos);
+ }
  
- 	if (!hpetp)
 -- 
 2.20.1
 
