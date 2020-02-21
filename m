@@ -2,217 +2,104 @@ Return-Path: <SRS0=1210=4J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 14409C35646
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 12:53:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D1269C35656
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 12:53:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D535E206EF
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 12:53:09 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Is97m+zF"
+	by mail.kernel.org (Postfix) with ESMTP id AF988206EF
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 12:53:23 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728103AbgBUMxH (ORCPT
+        id S1728301AbgBUMxW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Feb 2020 07:53:07 -0500
-Received: from mail-wr1-f68.google.com ([209.85.221.68]:45770 "EHLO
-        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727137AbgBUMxH (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Feb 2020 07:53:07 -0500
-Received: by mail-wr1-f68.google.com with SMTP id g3so1919134wrs.12
-        for <linux-kernel@vger.kernel.org>; Fri, 21 Feb 2020 04:53:05 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to
-         :user-agent;
-        bh=1Ecw0TwcU7uRxX0RbgoPbcukxSNyerj4Gg5H+/7jGU4=;
-        b=Is97m+zF/OlL47unjgTyrlN2h5LOz7b+bCuBXaZ7I4NfCKXkYB+eEn9tr8HWToU5hS
-         LcgaMH98pZ8E1XJVjarNN4j5rDbOg0TvWZqonAeorXDYmylpc5/p3a6zdZo0+OViPxVf
-         vjaBs1HwK+d066WsYLlvTd/cfgCUGAocMJZCBxAbIYOmchE4hYYwfT2fgcgtO/lDa6n+
-         s46hilc6kKO54iNjcQIKiz/zMeNqSx8RMh2L/6aFfRv62MCyYyw9TIi26wXy7zkiHsnO
-         0qJx6mpEC9etxLhetlmYRb+0QZ7ItHTVG67ZgyBXOa2HCHtlIL/DA/fAs1ZuOWKYzTqv
-         60OQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to:user-agent;
-        bh=1Ecw0TwcU7uRxX0RbgoPbcukxSNyerj4Gg5H+/7jGU4=;
-        b=gYle4WPFJz1q9j6c617MSFCPxfO6xo4R50/wjtbbnoss4D+FWR6qTHCSQx8tsh/Hzr
-         70nfaqzRo/n+2tyb+uLhr5BKwoHQ9wAzw2LEDXD7oPeQ+3JyOfB3XdqtPDdZ1vnyrwng
-         7unpcjXj6ONSHb2pKD+6oAdegYyXkqG5FgH/0ta9FMExv+86AIebgLZl3WfSF3XqqIxf
-         FQ34EIwLuOSUfDIvp+UZ7KwCrMbI7Ty2RbW8UfP5D7FYXB2xrXfEYAYeiVbUlPup1MpC
-         TMt6MX/4iVeLPSDEkY+Zc5EUy5hcnlC/YpRV/LXomDZPbucfhMH2Zj2A8R9oHeF3STGw
-         jBjA==
-X-Gm-Message-State: APjAAAUdgrwWGNyx0s0aOzs/G4HwashFczwwJ0ZQqSrc+9YKzrHFxfpj
-        EsR09oK+L9LnXBJKgq4iaOOwjXantE4=
-X-Google-Smtp-Source: APXvYqxlFnvz5Oqlv3ZiF1S9hXG57kU+AY4Dg2xiBGuM31y83G3pczXUHHnhoRpdAgUpGaKfUCxWBQ==
-X-Received: by 2002:a05:6000:124b:: with SMTP id j11mr45114087wrx.285.1582289584497;
-        Fri, 21 Feb 2020 04:53:04 -0800 (PST)
-Received: from linaro.org ([2a01:e34:ed2f:f020:2dfb:b5ce:9043:4adb])
-        by smtp.gmail.com with ESMTPSA id k10sm3781715wrd.68.2020.02.21.04.53.02
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Fri, 21 Feb 2020 04:53:03 -0800 (PST)
-Date:   Fri, 21 Feb 2020 13:53:00 +0100
-From:   Daniel Lezcano <daniel.lezcano@linaro.org>
-To:     Anson Huang <Anson.Huang@nxp.com>
-Cc:     robh+dt@kernel.org, mark.rutland@arm.com, shawnguo@kernel.org,
-        s.hauer@pengutronix.de, kernel@pengutronix.de, festevam@gmail.com,
-        catalin.marinas@arm.com, will@kernel.org, rui.zhang@intel.com,
-        amit.kucheria@verdurent.com, aisheng.dong@nxp.com,
-        linux@roeck-us.net, srinivas.kandagatla@linaro.org,
-        krzk@kernel.org, fugang.duan@nxp.com, peng.fan@nxp.com,
-        daniel.baluta@nxp.com, bjorn.andersson@linaro.org, olof@lixom.net,
-        dinguyen@kernel.org, leonard.crestez@nxp.com,
-        marcin.juszkiewicz@linaro.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-pm@vger.kernel.org, Linux-imx@nxp.com
-Subject: Re: [PATCH V15 RESEND 3/5] thermal: imx_sc: add i.MX system
- controller thermal support
-Message-ID: <20200221125300.GB10516@linaro.org>
-References: <1582161028-2844-1-git-send-email-Anson.Huang@nxp.com>
- <1582161028-2844-3-git-send-email-Anson.Huang@nxp.com>
+        Fri, 21 Feb 2020 07:53:22 -0500
+Received: from mga17.intel.com ([192.55.52.151]:55135 "EHLO mga17.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726909AbgBUMxW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 21 Feb 2020 07:53:22 -0500
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from orsmga005.jf.intel.com ([10.7.209.41])
+  by fmsmga107.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 21 Feb 2020 04:53:21 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.70,468,1574150400"; 
+   d="scan'208";a="409128495"
+Received: from mklimasz-mobl1.ger.corp.intel.com (HELO localhost) ([10.251.87.58])
+  by orsmga005.jf.intel.com with ESMTP; 21 Feb 2020 04:53:06 -0800
+Date:   Fri, 21 Feb 2020 14:53:04 +0200
+From:   Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
+To:     Jordan Hand <jorhand@linux.microsoft.com>
+Cc:     Sean Christopherson <sean.j.christopherson@intel.com>,
+        linux-kernel@vger.kernel.org, x86@kernel.org,
+        linux-sgx@vger.kernel.org, akpm@linux-foundation.org,
+        dave.hansen@intel.com, nhorman@redhat.com, npmccallum@redhat.com,
+        haitao.huang@intel.com, andriy.shevchenko@linux.intel.com,
+        tglx@linutronix.de, kai.svahn@intel.com, bp@alien8.de,
+        josh@joshtriplett.org, luto@kernel.org, kai.huang@intel.com,
+        rientjes@google.com, cedric.xing@intel.com, puiterwijk@redhat.com,
+        linux-security-module@vger.kernel.org,
+        Suresh Siddha <suresh.b.siddha@intel.com>,
+        Haitao Huang <haitao.huang@linux.intel.com>
+Subject: Re: [PATCH v26 10/22] x86/sgx: Linux Enclave Driver
+Message-ID: <20200221125242.GA3112@linux.intel.com>
+References: <20200209212609.7928-1-jarkko.sakkinen@linux.intel.com>
+ <20200209212609.7928-11-jarkko.sakkinen@linux.intel.com>
+ <15074c16-4832-456d-dd12-af8548e46d6d@linux.microsoft.com>
+ <20200220181345.GD3972@linux.intel.com>
+ <7738b3cf-fb32-5306-5740-59974444e327@linux.microsoft.com>
+ <20200220184842.GE3972@linux.intel.com>
+ <20200220221607.GB26618@linux.intel.com>
+ <2c077197-a8a7-feac-58ea-e901c92fb58b@linux.microsoft.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <1582161028-2844-3-git-send-email-Anson.Huang@nxp.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+In-Reply-To: <2c077197-a8a7-feac-58ea-e901c92fb58b@linux.microsoft.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Anson,
-
-sorry for the delay with this review, hopefully the upstreaming will be now a
-bit more smooth.
-
-Apart the comments below, the driver looks good to me.
-
-On Thu, Feb 20, 2020 at 09:10:26AM +0800, Anson Huang wrote:
-> i.MX8QXP is an ARMv8 SoC which has a Cortex-M4 system controller
-> inside, the system controller is in charge of controlling power,
-> clock and thermal sensors etc..
+On Thu, Feb 20, 2020 at 04:11:04PM -0800, Jordan Hand wrote:
+> On 2/20/20 2:16 PM, Jarkko Sakkinen wrote:
+> > On Thu, Feb 20, 2020 at 10:48:42AM -0800, Sean Christopherson wrote:
+> >> My biggest concern for allowing PROT_EXEC if RIE is that it would result
+> >> in #PF(SGX) (#GP on Skylake) due to an EPCM violation if the enclave
+> >> actually tried to execute from such a page.  This isn't a problem for the
+> >> kernel as the fault will be reported cleanly through the vDSO (or get
+> >> delivered as a SIGSEGV if the enclave isn't entered through the vDSO), but
+> >> it's a bit weird for userspace as userspace will see the #PF(SGX) and
+> >> likely assume the EPC was lost, e.g. silently restart the enclave instead
+> >> of logging an error that the enclave is broken.
+> > 
+> > I think right way to fix the current implementation is to -EACCES mmap()
+> > (and mprotect) when !!(current->personality & READ_IMPLIES_EXEC).
+> > 
 > 
-> This patch adds i.MX system controller thermal driver support,
-> Linux kernel has to communicate with system controller via MU
-> (message unit) IPC to get each thermal sensor's temperature,
-> it supports multiple sensors which are passed from device tree,
-> please see the binding doc for details.
-> 
-> Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
-> ---
-> No change.
-> ---
->  drivers/thermal/Kconfig          |  11 +++
->  drivers/thermal/Makefile         |   1 +
->  drivers/thermal/imx_sc_thermal.c | 142 +++++++++++++++++++++++++++++++++++++++
->  3 files changed, 154 insertions(+)
->  create mode 100644 drivers/thermal/imx_sc_thermal.c
-> 
-> diff --git a/drivers/thermal/Kconfig b/drivers/thermal/Kconfig
-> index 5a05db5..d1cb8dc 100644
-> --- a/drivers/thermal/Kconfig
-> +++ b/drivers/thermal/Kconfig
-> @@ -251,6 +251,17 @@ config IMX_THERMAL
->  	  cpufreq is used as the cooling device to throttle CPUs when the
->  	  passive trip is crossed.
->  
-> +config IMX_SC_THERMAL
-> +	tristate "Temperature sensor driver for NXP i.MX SoCs with System Controller"
-> +	depends on ARCH_MXC && IMX_SCU
+> I agree. It still means userspace code with an executable stack can't
+> mmap/mprotect enclave pages and request PROT_READ but the check you've
+> proposed would more consistently enforce this which is easier to
+> understand from userspace perspective.
 
-IMX_SCU depends on IMX_MBOX which depends on ARCH_MXC. This dependency could be
-simplified.
+Thank you. Your observation was really important because having half
+working RIE support hanging around would only have potential to cause
+unnecessary maintenance burden. It would even make adding a legit RIE
+support later on somewhat more difficult.
 
-Also add the COMPILE_TEST option to improve compilation test coverage.
+I updated the commit under discussion in my tree [*] with a fix that
+adds the following to the beginning of sgx_encl_may_map():
 
-> +	depends on OF
-> +	help
-> +	  Support for Temperature Monitor (TEMPMON) found on NXP i.MX SoCs with
-> +	  system controller inside, Linux kernel has to communicate with system
-> +	  controller via MU (message unit) IPC to get temperature from thermal
-> +	  sensor. It supports one critical trip point and one
-> +	  passive trip point for each thermal sensor.
-> +
->  config MAX77620_THERMAL
->  	tristate "Temperature sensor driver for Maxim MAX77620 PMIC"
->  	depends on MFD_MAX77620
-> diff --git a/drivers/thermal/Makefile b/drivers/thermal/Makefile
-> index 9fb88e2..a11a6d8 100644
-> --- a/drivers/thermal/Makefile
-> +++ b/drivers/thermal/Makefile
-> @@ -43,6 +43,7 @@ obj-$(CONFIG_DB8500_THERMAL)	+= db8500_thermal.o
->  obj-$(CONFIG_ARMADA_THERMAL)	+= armada_thermal.o
->  obj-$(CONFIG_TANGO_THERMAL)	+= tango_thermal.o
->  obj-$(CONFIG_IMX_THERMAL)	+= imx_thermal.o
-> +obj-$(CONFIG_IMX_SC_THERMAL)	+= imx_sc_thermal.o
->  obj-$(CONFIG_MAX77620_THERMAL)	+= max77620_thermal.o
->  obj-$(CONFIG_QORIQ_THERMAL)	+= qoriq_thermal.o
->  obj-$(CONFIG_DA9062_THERMAL)	+= da9062-thermal.o
-> diff --git a/drivers/thermal/imx_sc_thermal.c b/drivers/thermal/imx_sc_thermal.c
-> new file mode 100644
-> index 0000000..d406ecb
-> --- /dev/null
-> +++ b/drivers/thermal/imx_sc_thermal.c
-> @@ -0,0 +1,142 @@
-> +// SPDX-License-Identifier: GPL-2.0+
-> +/*
-> + * Copyright 2018-2019 NXP.
+/*
+ * Disallow RIE tasks as their VMA permissions might conflict with the
+ * enclave page permissions.
+ */
+if (!!(current->personality & READ_IMPLIES_EXEC))
+	return -EACCES;
 
-*sigh* 2020 now ...
+[*] https://github.com/jsakkine-intel/linux-sgx.git
 
-[ ... ]
-
-> +static int imx_sc_thermal_get_temp(void *data, int *temp)
-> +{
-> +	struct imx_sc_msg_misc_get_temp msg;
-> +	struct imx_sc_rpc_msg *hdr = &msg.hdr;
-> +	struct imx_sc_sensor *sensor = data;
-> +	int ret;
-> +
-> +	msg.data.req.resource_id = sensor->resource_id;
-> +	msg.data.req.type = IMX_SC_C_TEMP;
-> +
-> +	hdr->ver = IMX_SC_RPC_VERSION;
-> +	hdr->svc = IMX_SC_RPC_SVC_MISC;
-> +	hdr->func = IMX_SC_MISC_FUNC_GET_TEMP;
-> +	hdr->size = 2;
-
-Can you explain this 'size' value?
-
-[ ... ]
-
-> +MODULE_DEVICE_TABLE(of, imx_sc_thermal_table);
-> +
-> +static struct platform_driver imx_sc_thermal_driver = {
-> +		.probe = imx_sc_thermal_probe,
-
-The driver can be compiled as module but there is no 'remove' callback
-
-> +		.driver = {
-> +			.name = "imx-sc-thermal",
-> +			.of_match_table = imx_sc_thermal_table,
-> +		},
-> +};
-> +module_platform_driver(imx_sc_thermal_driver);
-> +
-> +MODULE_AUTHOR("Anson Huang <Anson.Huang@nxp.com>");
-> +MODULE_DESCRIPTION("Thermal driver for NXP i.MX SoCs with system controller");
-> +MODULE_LICENSE("GPL v2");
-
-
-
--- 
-
- <http://www.linaro.org/> Linaro.org │ Open source software for ARM SoCs
-
-Follow Linaro:  <http://www.facebook.com/pages/Linaro> Facebook |
-<http://twitter.com/#!/linaroorg> Twitter |
-<http://www.linaro.org/linaro-blog/> Blog
+/Jarkko
