@@ -5,51 +5,49 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 89FF7C35640
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 08:30:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6B084C35640
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 08:30:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6132520679
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 08:30:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3241C20578
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 08:30:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582273851;
-	bh=21U/1a7d6mQjvZS+p4suqgModgU1QDnOz+aloeZnv8A=;
+	s=default; t=1582273855;
+	bh=ZRxvlopwdj/ZPtbwhnXfZ5htJU2YT/tx5DBERp0QAfM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=E2R4YonRu9+/rg0Q5gh+OUsGn6MYXqWizGIqEFIRvx9c6qO7JhfYl+k0Cyk/ELoVQ
-	 lKF6Vu/CXrdOx42GxP7gmd1RcyXYBB2Bzg+gK/q8g+WHWBUQypvDUKfwbyf2f67V/2
-	 gVL+F/DjghY5mEsC6YEwnLkBFFzs71SM4yjZVja8=
+	b=jT7/NjHhNR4VgcVxW9UBKyaWXxm3OdLKb3dJYwZpd6X2aeDnwDLaYrsKGLCbTd9Uv
+	 tcdREeb+JjSCxIZd/O0ePNXq1R8PMgQL/wimzWIcPggbHv3QmtrsyR1tGsyhthpENV
+	 oVs9DqtocuJ36A5v6ZOITdGJMVJsc4SeICFMKRvI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388702AbgBUIat (ORCPT
+        id S1733291AbgBUIPQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Feb 2020 03:30:49 -0500
-Received: from mail.kernel.org ([198.145.29.99]:52324 "EHLO mail.kernel.org"
+        Fri, 21 Feb 2020 03:15:16 -0500
+Received: from mail.kernel.org ([198.145.29.99]:51856 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1733312AbgBUIPa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Feb 2020 03:15:30 -0500
+        id S1731814AbgBUIPI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 21 Feb 2020 03:15:08 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 117DA24680;
-        Fri, 21 Feb 2020 08:15:28 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 81CA124680;
+        Fri, 21 Feb 2020 08:15:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1582272929;
-        bh=21U/1a7d6mQjvZS+p4suqgModgU1QDnOz+aloeZnv8A=;
+        s=default; t=1582272908;
+        bh=ZRxvlopwdj/ZPtbwhnXfZ5htJU2YT/tx5DBERp0QAfM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=yxHamMdBjC8Wb7cQJxsCGvYyJHDi/XiUmO9+eMCsD5yOaVD6haI8aRxxNQk6obtf3
-         TGoMKVBV/1wPYuDwsKHEa1cvZ/a39LKXKBUkLxbEhaGeoYNsEWPb/C0FLTBD+HIF45
-         YKLgk9epfbfVWAKRM4vNxBXUNV+w/xCPntdEsenA=
+        b=f2tH1myNnfRtV9ABGeqC2w/ssHrJpuojBSIJymP1TOuR9sTZMNxL/UGZzXCODVdD3
+         MAzt8FTfOJ4jOtYWd+2x3iZU1m7juwANQeGdEpv2Epr1/3FPN4JISKuKQMOUsXyPbM
+         GQYPf5oUdcNfpXrik2mywDvomcSZ58DCVb5EMVKU=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Edmund Nadolski <edmund.nadolski@intel.com>,
-        Christoph Hellwig <hch@lst.de>,
-        Keith Busch <kbusch@kernel.org>,
+        stable@vger.kernel.org, "zhangyi (F)" <yi.zhang@huawei.com>,
+        Jan Kara <jack@suse.cz>, Theodore Tso <tytso@mit.edu>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 327/344] nvme-pci: remove nvmeq->tags
-Date:   Fri, 21 Feb 2020 08:42:06 +0100
-Message-Id: <20200221072419.956367258@linuxfoundation.org>
+Subject: [PATCH 5.4 293/344] jbd2: switch to use jbd2_journal_abort() when failed to submit the commit record
+Date:   Fri, 21 Feb 2020 08:41:32 +0100
+Message-Id: <20200221072416.481669508@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200221072349.335551332@linuxfoundation.org>
 References: <20200221072349.335551332@linuxfoundation.org>
@@ -62,98 +60,48 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Christoph Hellwig <hch@lst.de>
+From: zhangyi (F) <yi.zhang@huawei.com>
 
-[ Upstream commit cfa27356f835dc7755192e7b941d4f4851acbcc7 ]
+[ Upstream commit d0a186e0d3e7ac05cc77da7c157dae5aa59f95d9 ]
 
-There is no real need to have a pointer to the tagset in
-struct nvme_queue, as we only need it in a single place, and that place
-can derive the used tagset from the device and qid trivially.  This
-fixes a problem with stale pointer exposure when tagsets are reset,
-and also shrinks the nvme_queue structure.  It also matches what most
-other transports have done since day 1.
+We invoke jbd2_journal_abort() to abort the journal and record errno
+in the jbd2 superblock when committing journal transaction besides the
+failure on submitting the commit record. But there is no need for the
+case and we can also invoke jbd2_journal_abort() instead of
+__jbd2_journal_abort_hard().
 
-Reported-by: Edmund Nadolski <edmund.nadolski@intel.com>
-Signed-off-by: Christoph Hellwig <hch@lst.de>
-Signed-off-by: Keith Busch <kbusch@kernel.org>
+Fixes: 818d276ceb83a ("ext4: Add the journal checksum feature")
+Signed-off-by: zhangyi (F) <yi.zhang@huawei.com>
+Reviewed-by: Jan Kara <jack@suse.cz>
+Link: https://lore.kernel.org/r/20191204124614.45424-2-yi.zhang@huawei.com
+Signed-off-by: Theodore Ts'o <tytso@mit.edu>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/nvme/host/pci.c | 23 ++++++++---------------
- 1 file changed, 8 insertions(+), 15 deletions(-)
+ fs/jbd2/commit.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/nvme/host/pci.c b/drivers/nvme/host/pci.c
-index 14d513087a14b..f34a56d588d31 100644
---- a/drivers/nvme/host/pci.c
-+++ b/drivers/nvme/host/pci.c
-@@ -167,7 +167,6 @@ struct nvme_queue {
- 	 /* only used for poll queues: */
- 	spinlock_t cq_poll_lock ____cacheline_aligned_in_smp;
- 	volatile struct nvme_completion *cqes;
--	struct blk_mq_tags **tags;
- 	dma_addr_t sq_dma_addr;
- 	dma_addr_t cq_dma_addr;
- 	u32 __iomem *q_db;
-@@ -377,29 +376,17 @@ static int nvme_admin_init_hctx(struct blk_mq_hw_ctx *hctx, void *data,
- 
- 	WARN_ON(hctx_idx != 0);
- 	WARN_ON(dev->admin_tagset.tags[0] != hctx->tags);
--	WARN_ON(nvmeq->tags);
- 
- 	hctx->driver_data = nvmeq;
--	nvmeq->tags = &dev->admin_tagset.tags[0];
- 	return 0;
- }
- 
--static void nvme_admin_exit_hctx(struct blk_mq_hw_ctx *hctx, unsigned int hctx_idx)
--{
--	struct nvme_queue *nvmeq = hctx->driver_data;
--
--	nvmeq->tags = NULL;
--}
--
- static int nvme_init_hctx(struct blk_mq_hw_ctx *hctx, void *data,
- 			  unsigned int hctx_idx)
- {
- 	struct nvme_dev *dev = data;
- 	struct nvme_queue *nvmeq = &dev->queues[hctx_idx + 1];
- 
--	if (!nvmeq->tags)
--		nvmeq->tags = &dev->tagset.tags[hctx_idx];
--
- 	WARN_ON(dev->tagset.tags[hctx_idx] != hctx->tags);
- 	hctx->driver_data = nvmeq;
- 	return 0;
-@@ -950,6 +937,13 @@ static inline void nvme_ring_cq_doorbell(struct nvme_queue *nvmeq)
- 		writel(head, nvmeq->q_db + nvmeq->dev->db_stride);
- }
- 
-+static inline struct blk_mq_tags *nvme_queue_tagset(struct nvme_queue *nvmeq)
-+{
-+	if (!nvmeq->qid)
-+		return nvmeq->dev->admin_tagset.tags[0];
-+	return nvmeq->dev->tagset.tags[nvmeq->qid - 1];
-+}
-+
- static inline void nvme_handle_cqe(struct nvme_queue *nvmeq, u16 idx)
- {
- 	volatile struct nvme_completion *cqe = &nvmeq->cqes[idx];
-@@ -975,7 +969,7 @@ static inline void nvme_handle_cqe(struct nvme_queue *nvmeq, u16 idx)
- 		return;
+diff --git a/fs/jbd2/commit.c b/fs/jbd2/commit.c
+index 2a42904bcd62c..754ec3c47d6fb 100644
+--- a/fs/jbd2/commit.c
++++ b/fs/jbd2/commit.c
+@@ -784,7 +784,7 @@ start_journal_io:
+ 		err = journal_submit_commit_record(journal, commit_transaction,
+ 						 &cbh, crc32_sum);
+ 		if (err)
+-			__jbd2_journal_abort_hard(journal);
++			jbd2_journal_abort(journal, err);
  	}
  
--	req = blk_mq_tag_to_rq(*nvmeq->tags, cqe->command_id);
-+	req = blk_mq_tag_to_rq(nvme_queue_tagset(nvmeq), cqe->command_id);
- 	trace_nvme_sq(req, cqe->sq_head, nvmeq->sq_tail);
- 	nvme_end_request(req, cqe->status, cqe->result);
- }
-@@ -1578,7 +1572,6 @@ static const struct blk_mq_ops nvme_mq_admin_ops = {
- 	.queue_rq	= nvme_queue_rq,
- 	.complete	= nvme_pci_complete_rq,
- 	.init_hctx	= nvme_admin_init_hctx,
--	.exit_hctx      = nvme_admin_exit_hctx,
- 	.init_request	= nvme_init_request,
- 	.timeout	= nvme_timeout,
- };
+ 	blk_finish_plug(&plug);
+@@ -877,7 +877,7 @@ start_journal_io:
+ 		err = journal_submit_commit_record(journal, commit_transaction,
+ 						&cbh, crc32_sum);
+ 		if (err)
+-			__jbd2_journal_abort_hard(journal);
++			jbd2_journal_abort(journal, err);
+ 	}
+ 	if (cbh)
+ 		err = journal_wait_on_commit_record(journal, cbh);
 -- 
 2.20.1
 
