@@ -2,52 +2,51 @@ Return-Path: <SRS0=1210=4J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B7271C35641
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 07:57:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 744EDC35641
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 07:57:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8D4AF24650
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 07:57:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4B9BD2073A
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 07:57:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582271866;
-	bh=Q1AXNF7/YBceLKM0t6wsQ+e5+2pz9pwHhqbAUEzue1w=;
+	s=default; t=1582271872;
+	bh=H+HW9LdC+gGzgBI2knQjxdHksSbqipHsIqlIEKwTmKU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=uRW4e7nWL9ULipB1e193SF8mIID0zOq/kBqr2BfOg8zaNwFGni29bnrtpkI62Ob6u
-	 PYgUSEFOsGUmYfSbmlrDbQxy/IwvPgQ4vcFOdd1q18wX3aX0XjZX8x3EddyHmd7IJL
-	 DDIanJu9zSFMLkaI4fAAFsezhS88fsX9nki6iii0=
+	b=h4lIffvxHRyemju+mM4vUAoIULnmKvu4LgIeYjLYw+FZmZleHBNmopH8vTTcqz50L
+	 F8iRRc2Kzq5T+mq7e/SvFShw26VEGsHSgoRNX1kCOMxocsROBXLIeQ1VfUu3YyfcN6
+	 aiyP8p7ivCtWW9wSYNQIEC1mRwnnaboj4Q0L+IPc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730646AbgBUH5d (ORCPT
+        id S1730675AbgBUH5u (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Feb 2020 02:57:33 -0500
-Received: from mail.kernel.org ([198.145.29.99]:57050 "EHLO mail.kernel.org"
+        Fri, 21 Feb 2020 02:57:50 -0500
+Received: from mail.kernel.org ([198.145.29.99]:57272 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730629AbgBUH53 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Feb 2020 02:57:29 -0500
+        id S1730651AbgBUH5t (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 21 Feb 2020 02:57:49 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id EF9692073A;
-        Fri, 21 Feb 2020 07:57:28 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0E396222C4;
+        Fri, 21 Feb 2020 07:57:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1582271849;
-        bh=Q1AXNF7/YBceLKM0t6wsQ+e5+2pz9pwHhqbAUEzue1w=;
+        s=default; t=1582271859;
+        bh=H+HW9LdC+gGzgBI2knQjxdHksSbqipHsIqlIEKwTmKU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=jiqQJpmGAuihlPtKoOi3JQy6pPk+6mVIiAM3mj2BuJxbXfcE1zTS8FJ3v67mT5NO8
-         rbkIBC6cf5wk/upzOsui5/DGYJI8/NqsPJLdgNZv768kouwR6xKPk1aaTkCuC5uc1n
-         XVVpshGI+dwGQ5oGxoqxGIOMRV5uakeg1f8nPAxU=
+        b=2jnqr94EX6Tp+MBjhQzOc8Q836MVmgs9xdghEpnk6OmuOacX63A05M0GA7EN3hi40
+         0nX4xGoWN+7BWqC9jx/GzMnrobk0uxwaNLoandz3y9cBBW03ev2oYHuGXjgfO//9/6
+         EfcL7vlMK2ESg0cD2e0MkAuHygOca2qYuZiWC7WQ=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Kai Vehmanen <kai.vehmanen@linux.intel.com>,
-        Takashi Iwai <tiwai@suse.de>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.5 314/399] ALSA: hda/hdmi - add retry logic to parse_intel_hdmi()
-Date:   Fri, 21 Feb 2020 08:40:39 +0100
-Message-Id: <20200221072431.990812034@linuxfoundation.org>
+        stable@vger.kernel.org, Ben Skeggs <bskeggs@redhat.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.5 326/399] drm/nouveau/mmu: fix comptag memory leak
+Date:   Fri, 21 Feb 2020 08:40:51 +0100
+Message-Id: <20200221072432.943397166@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200221072402.315346745@linuxfoundation.org>
 References: <20200221072402.315346745@linuxfoundation.org>
@@ -60,50 +59,30 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Kai Vehmanen <kai.vehmanen@linux.intel.com>
+From: Ben Skeggs <bskeggs@redhat.com>
 
-[ Upstream commit 2928fa0a97ebb9549cb877fdc99aed9b95438c3a ]
+[ Upstream commit 35e4909b6a2b4005ced3c4238da60d926b78fdea ]
 
-The initial snd_hda_get_sub_node() can fail on certain
-devices (e.g. some Chromebook models using Intel GLK).
-The failure rate is very low, but as this is is part of
-the probe process, end-user impact is high.
-
-In observed cases, related hardware status registers have
-expected values, but the node query still fails. Retrying
-the node query does seem to help, so fix the problem by
-adding retry logic to the query. This does not impact
-non-Intel platforms.
-
-BugLink: https://github.com/thesofproject/linux/issues/1642
-Signed-off-by: Kai Vehmanen <kai.vehmanen@linux.intel.com>
-Reviewed-by: Takashi Iwai <tiwai@suse.de>
-Link: https://lore.kernel.org/r/20200120160117.29130-4-kai.vehmanen@linux.intel.com
-Signed-off-by: Takashi Iwai <tiwai@suse.de>
+Signed-off-by: Ben Skeggs <bskeggs@redhat.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- sound/pci/hda/patch_hdmi.c | 7 +++++--
- 1 file changed, 5 insertions(+), 2 deletions(-)
+ drivers/gpu/drm/nouveau/nvkm/core/memory.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/sound/pci/hda/patch_hdmi.c b/sound/pci/hda/patch_hdmi.c
-index bde50414029d9..4f195c7d966a9 100644
---- a/sound/pci/hda/patch_hdmi.c
-+++ b/sound/pci/hda/patch_hdmi.c
-@@ -2862,9 +2862,12 @@ static int alloc_intel_hdmi(struct hda_codec *codec)
- /* parse and post-process for Intel codecs */
- static int parse_intel_hdmi(struct hda_codec *codec)
- {
--	int err;
-+	int err, retries = 3;
-+
-+	do {
-+		err = hdmi_parse_codec(codec);
-+	} while (err < 0 && retries--);
+diff --git a/drivers/gpu/drm/nouveau/nvkm/core/memory.c b/drivers/gpu/drm/nouveau/nvkm/core/memory.c
+index e85a08ecd9da5..4cc186262d344 100644
+--- a/drivers/gpu/drm/nouveau/nvkm/core/memory.c
++++ b/drivers/gpu/drm/nouveau/nvkm/core/memory.c
+@@ -91,8 +91,8 @@ nvkm_memory_tags_get(struct nvkm_memory *memory, struct nvkm_device *device,
+ 	}
  
--	err = hdmi_parse_codec(codec);
- 	if (err < 0) {
- 		generic_spec_free(codec);
- 		return err;
+ 	refcount_set(&tags->refcount, 1);
++	*ptags = memory->tags = tags;
+ 	mutex_unlock(&fb->subdev.mutex);
+-	*ptags = tags;
+ 	return 0;
+ }
+ 
 -- 
 2.20.1
 
