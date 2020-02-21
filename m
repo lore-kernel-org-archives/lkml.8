@@ -4,51 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1B66DC35642
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 08:35:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 779E5C35641
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 08:35:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E5BFE20578
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 08:35:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 49B9D20637
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 08:35:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582274103;
-	bh=Jz7VOT6IJFOysEqQ77WGLAWBfmUApaFC614EZYGS230=;
+	s=default; t=1582274107;
+	bh=MMvYnTh/h4R2QL5OTCI5uAa2vYTgJROedZx4TjC11Sw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Nfc516Dos8x07m6WuKvzC9BXagQVbv1LUvo7m4ZEl1CrF5rNuNewAVYtG8ClkdZAK
-	 20VigMSw8BzdTm7r4fU9QBWb/+SMmiNEDEcMDYE+OmdP/p/O77WV5JpagnKtvPA1nn
-	 aIt2cTUZkc05+bCwuFPajy8QIpuVXOf2SGIrEZ/4=
+	b=Z3p9pCPjC4KruQUQrj3Zk2Uu7Ylqt7UulKbDeMwNkhdKAQUth+o8HzafhsO+tuHH4
+	 uNI+uzw2XJzpCeVCAsU4mGzLdX3xPpIRbbNfJ1zo13gSRGoo/w+mfKfH7QrVkGHg/2
+	 MeiMqVcqVkN26Fu5osakNqvodYGnaevwVVXHbreU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731003AbgBUIIO (ORCPT
+        id S1732616AbgBUIfF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Feb 2020 03:08:14 -0500
-Received: from mail.kernel.org ([198.145.29.99]:42654 "EHLO mail.kernel.org"
+        Fri, 21 Feb 2020 03:35:05 -0500
+Received: from mail.kernel.org ([198.145.29.99]:42570 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732156AbgBUIIM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Feb 2020 03:08:12 -0500
+        id S1730543AbgBUIIH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 21 Feb 2020 03:08:07 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 38F182073A;
-        Fri, 21 Feb 2020 08:08:11 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2B5B620578;
+        Fri, 21 Feb 2020 08:08:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1582272491;
-        bh=Jz7VOT6IJFOysEqQ77WGLAWBfmUApaFC614EZYGS230=;
+        s=default; t=1582272486;
+        bh=MMvYnTh/h4R2QL5OTCI5uAa2vYTgJROedZx4TjC11Sw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=2W65gMxFSalPTdGQv2fsTCeIBOK5ZcFAOc6ofm4+YGkIPRdd5scy4NppZc7CS/+6w
-         Y8isGYghfMsILUi2DmpleQ3XpoAaImtHF0uDql8NwtHeN+5aJjCsPYmDhnLv6nk//2
-         xU2bMshX4bBRhZvjQ6LuvX2NC3iJRKYacpSOjJpo=
+        b=z0qFLQvkU5OUyra2SBtAWOAg89V1XyvGTtDicHfyGaSX4lg1b83PKaQdz0lilkggv
+         Sx30QVU60EVZhA5Iqlx2C6k6/H036J/cGg/u9OIvGQ2RRs9VTgPWy1K4b2gS/+sx7P
+         FH2fsafwyHmAMb3QMxnv+j7xOCCces1SW+g2S7Dg=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Vinay Kumar Yadav <vinay.yadav@chelsio.com>,
-        Herbert Xu <herbert@gondor.apana.org.au>,
+        stable@vger.kernel.org, Hechao Li <hechaol@fb.com>,
+        Daniel Borkmann <daniel@iogearbox.net>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 163/344] crypto: chtls - Fixed memory leak
-Date:   Fri, 21 Feb 2020 08:39:22 +0100
-Message-Id: <20200221072403.646851238@linuxfoundation.org>
+Subject: [PATCH 5.4 161/344] bpf: Print error message for bpftool cgroup show
+Date:   Fri, 21 Feb 2020 08:39:20 +0100
+Message-Id: <20200221072403.456352807@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200221072349.335551332@linuxfoundation.org>
 References: <20200221072349.335551332@linuxfoundation.org>
@@ -61,143 +60,138 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Vinay Kumar Yadav <vinay.yadav@chelsio.com>
+From: Hechao Li <hechaol@fb.com>
 
-[ Upstream commit 93e23eb2ed6c11b4f483c8111ac155ec2b1f3042 ]
+[ Upstream commit 1162f844030ac1ac7321b5e8f6c9badc7a11428f ]
 
-Freed work request skbs when connection terminates.
-enqueue_wr()/ dequeue_wr() is shared between softirq
-and application contexts, should be protected by socket
-lock. Moved dequeue_wr() to appropriate file.
+Currently, when bpftool cgroup show <path> has an error, no error
+message is printed. This is confusing because the user may think the
+result is empty.
 
-Signed-off-by: Vinay Kumar Yadav <vinay.yadav@chelsio.com>
-Signed-off-by: Herbert Xu <herbert@gondor.apana.org.au>
+Before the change:
+
+$ bpftool cgroup show /sys/fs/cgroup
+ID       AttachType      AttachFlags     Name
+$ echo $?
+255
+
+After the change:
+$ ./bpftool cgroup show /sys/fs/cgroup
+Error: can't query bpf programs attached to /sys/fs/cgroup: Operation
+not permitted
+
+v2: Rename check_query_cgroup_progs to cgroup_has_attached_progs
+
+Signed-off-by: Hechao Li <hechaol@fb.com>
+Signed-off-by: Daniel Borkmann <daniel@iogearbox.net>
+Link: https://lore.kernel.org/bpf/20191224011742.3714301-1-hechaol@fb.com
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/crypto/chelsio/chtls/chtls_cm.c | 27 +++++++++++++------------
- drivers/crypto/chelsio/chtls/chtls_cm.h | 21 +++++++++++++++++++
- drivers/crypto/chelsio/chtls/chtls_hw.c |  3 +++
- 3 files changed, 38 insertions(+), 13 deletions(-)
+ tools/bpf/bpftool/cgroup.c | 56 ++++++++++++++++++++++++++------------
+ 1 file changed, 39 insertions(+), 17 deletions(-)
 
-diff --git a/drivers/crypto/chelsio/chtls/chtls_cm.c b/drivers/crypto/chelsio/chtls/chtls_cm.c
-index aca75237bbcf8..dffa2aa855fdd 100644
---- a/drivers/crypto/chelsio/chtls/chtls_cm.c
-+++ b/drivers/crypto/chelsio/chtls/chtls_cm.c
-@@ -727,6 +727,14 @@ static int chtls_close_listsrv_rpl(struct chtls_dev *cdev, struct sk_buff *skb)
- 	return 0;
+diff --git a/tools/bpf/bpftool/cgroup.c b/tools/bpf/bpftool/cgroup.c
+index 1ef45e55039e1..2f017caa678dc 100644
+--- a/tools/bpf/bpftool/cgroup.c
++++ b/tools/bpf/bpftool/cgroup.c
+@@ -117,6 +117,25 @@ static int count_attached_bpf_progs(int cgroup_fd, enum bpf_attach_type type)
+ 	return prog_cnt;
  }
  
-+static void chtls_purge_wr_queue(struct sock *sk)
++static int cgroup_has_attached_progs(int cgroup_fd)
 +{
-+	struct sk_buff *skb;
++	enum bpf_attach_type type;
++	bool no_prog = true;
 +
-+	while ((skb = dequeue_wr(sk)) != NULL)
-+		kfree_skb(skb);
-+}
++	for (type = 0; type < __MAX_BPF_ATTACH_TYPE; type++) {
++		int count = count_attached_bpf_progs(cgroup_fd, type);
 +
- static void chtls_release_resources(struct sock *sk)
- {
- 	struct chtls_sock *csk = rcu_dereference_sk_user_data(sk);
-@@ -741,6 +749,11 @@ static void chtls_release_resources(struct sock *sk)
- 	kfree_skb(csk->txdata_skb_cache);
- 	csk->txdata_skb_cache = NULL;
- 
-+	if (csk->wr_credits != csk->wr_max_credits) {
-+		chtls_purge_wr_queue(sk);
-+		chtls_reset_wr_list(csk);
++		if (count < 0 && errno != EINVAL)
++			return -1;
++
++		if (count > 0) {
++			no_prog = false;
++			break;
++		}
 +	}
 +
- 	if (csk->l2t_entry) {
- 		cxgb4_l2t_release(csk->l2t_entry);
- 		csk->l2t_entry = NULL;
-@@ -1735,6 +1748,7 @@ static void chtls_peer_close(struct sock *sk, struct sk_buff *skb)
- 		else
- 			sk_wake_async(sk, SOCK_WAKE_WAITD, POLL_IN);
- 	}
-+	kfree_skb(skb);
- }
- 
- static void chtls_close_con_rpl(struct sock *sk, struct sk_buff *skb)
-@@ -2062,19 +2076,6 @@ rel_skb:
- 	return 0;
- }
- 
--static struct sk_buff *dequeue_wr(struct sock *sk)
--{
--	struct chtls_sock *csk = rcu_dereference_sk_user_data(sk);
--	struct sk_buff *skb = csk->wr_skb_head;
--
--	if (likely(skb)) {
--	/* Don't bother clearing the tail */
--		csk->wr_skb_head = WR_SKB_CB(skb)->next_wr;
--		WR_SKB_CB(skb)->next_wr = NULL;
--	}
--	return skb;
--}
--
- static void chtls_rx_ack(struct sock *sk, struct sk_buff *skb)
- {
- 	struct cpl_fw4_ack *hdr = cplhdr(skb) + RSS_HDR;
-diff --git a/drivers/crypto/chelsio/chtls/chtls_cm.h b/drivers/crypto/chelsio/chtls/chtls_cm.h
-index 129d7ac649a93..3fac0c74a41fa 100644
---- a/drivers/crypto/chelsio/chtls/chtls_cm.h
-+++ b/drivers/crypto/chelsio/chtls/chtls_cm.h
-@@ -185,6 +185,12 @@ static inline void chtls_kfree_skb(struct sock *sk, struct sk_buff *skb)
- 	kfree_skb(skb);
- }
- 
-+static inline void chtls_reset_wr_list(struct chtls_sock *csk)
-+{
-+	csk->wr_skb_head = NULL;
-+	csk->wr_skb_tail = NULL;
++	return no_prog ? 0 : 1;
 +}
-+
- static inline void enqueue_wr(struct chtls_sock *csk, struct sk_buff *skb)
+ static int show_attached_bpf_progs(int cgroup_fd, enum bpf_attach_type type,
+ 				   int level)
  {
- 	WR_SKB_CB(skb)->next_wr = NULL;
-@@ -197,4 +203,19 @@ static inline void enqueue_wr(struct chtls_sock *csk, struct sk_buff *skb)
- 		WR_SKB_CB(csk->wr_skb_tail)->next_wr = skb;
- 	csk->wr_skb_tail = skb;
- }
-+
-+static inline struct sk_buff *dequeue_wr(struct sock *sk)
-+{
-+	struct chtls_sock *csk = rcu_dereference_sk_user_data(sk);
-+	struct sk_buff *skb = NULL;
-+
-+	skb = csk->wr_skb_head;
-+
-+	if (likely(skb)) {
-+	 /* Don't bother clearing the tail */
-+		csk->wr_skb_head = WR_SKB_CB(skb)->next_wr;
-+		WR_SKB_CB(skb)->next_wr = NULL;
+@@ -161,6 +180,7 @@ static int show_attached_bpf_progs(int cgroup_fd, enum bpf_attach_type type,
+ static int do_show(int argc, char **argv)
+ {
+ 	enum bpf_attach_type type;
++	int has_attached_progs;
+ 	const char *path;
+ 	int cgroup_fd;
+ 	int ret = -1;
+@@ -192,6 +212,16 @@ static int do_show(int argc, char **argv)
+ 		goto exit;
+ 	}
+ 
++	has_attached_progs = cgroup_has_attached_progs(cgroup_fd);
++	if (has_attached_progs < 0) {
++		p_err("can't query bpf programs attached to %s: %s",
++		      path, strerror(errno));
++		goto exit_cgroup;
++	} else if (!has_attached_progs) {
++		ret = 0;
++		goto exit_cgroup;
 +	}
-+	return skb;
-+}
- #endif
-diff --git a/drivers/crypto/chelsio/chtls/chtls_hw.c b/drivers/crypto/chelsio/chtls/chtls_hw.c
-index 2a34035d3cfbc..a217fe72602d4 100644
---- a/drivers/crypto/chelsio/chtls/chtls_hw.c
-+++ b/drivers/crypto/chelsio/chtls/chtls_hw.c
-@@ -350,6 +350,7 @@ int chtls_setkey(struct chtls_sock *csk, u32 keylen, u32 optname)
- 	kwr->sc_imm.cmd_more = cpu_to_be32(ULPTX_CMD_V(ULP_TX_SC_IMM));
- 	kwr->sc_imm.len = cpu_to_be32(klen);
++
+ 	if (json_output)
+ 		jsonw_start_array(json_wtr);
+ 	else
+@@ -212,6 +242,7 @@ static int do_show(int argc, char **argv)
+ 	if (json_output)
+ 		jsonw_end_array(json_wtr);
  
-+	lock_sock(sk);
- 	/* key info */
- 	kctx = (struct _key_ctx *)(kwr + 1);
- 	ret = chtls_key_info(csk, kctx, keylen, optname);
-@@ -388,8 +389,10 @@ int chtls_setkey(struct chtls_sock *csk, u32 keylen, u32 optname)
- 		csk->tlshws.txkey = keyid;
- 	}
- 
-+	release_sock(sk);
++exit_cgroup:
+ 	close(cgroup_fd);
+ exit:
  	return ret;
- out_notcb:
-+	release_sock(sk);
- 	free_tls_keyid(sk);
- out_nokey:
- 	kfree_skb(skb);
+@@ -228,7 +259,7 @@ static int do_show_tree_fn(const char *fpath, const struct stat *sb,
+ 			   int typeflag, struct FTW *ftw)
+ {
+ 	enum bpf_attach_type type;
+-	bool skip = true;
++	int has_attached_progs;
+ 	int cgroup_fd;
+ 
+ 	if (typeflag != FTW_D)
+@@ -240,22 +271,13 @@ static int do_show_tree_fn(const char *fpath, const struct stat *sb,
+ 		return SHOW_TREE_FN_ERR;
+ 	}
+ 
+-	for (type = 0; type < __MAX_BPF_ATTACH_TYPE; type++) {
+-		int count = count_attached_bpf_progs(cgroup_fd, type);
+-
+-		if (count < 0 && errno != EINVAL) {
+-			p_err("can't query bpf programs attached to %s: %s",
+-			      fpath, strerror(errno));
+-			close(cgroup_fd);
+-			return SHOW_TREE_FN_ERR;
+-		}
+-		if (count > 0) {
+-			skip = false;
+-			break;
+-		}
+-	}
+-
+-	if (skip) {
++	has_attached_progs = cgroup_has_attached_progs(cgroup_fd);
++	if (has_attached_progs < 0) {
++		p_err("can't query bpf programs attached to %s: %s",
++		      fpath, strerror(errno));
++		close(cgroup_fd);
++		return SHOW_TREE_FN_ERR;
++	} else if (!has_attached_progs) {
+ 		close(cgroup_fd);
+ 		return 0;
+ 	}
 -- 
 2.20.1
 
