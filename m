@@ -4,49 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 535FDC35640
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 08:23:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E91DCC35641
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 08:23:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 273EB246A1
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 08:23:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BF4D9246A0
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 08:23:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582273410;
-	bh=H+HW9LdC+gGzgBI2knQjxdHksSbqipHsIqlIEKwTmKU=;
+	s=default; t=1582273414;
+	bh=HhQ4HBxToqOlP2WfNDtZs5pT2ABW7zoq0eEpp6vCOrA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=vtPlsWCqOf/DkGep4oAS9cSmPfkXLzTTz+jZOKYO2ETdKto6aP8S4yyik4oAndWeM
-	 CI0aZqWXPCxlfbEOGlKZljrClnYJUaRt4vO5WfTieItdJZDf4U8gkH6eKGb8MC3Ejt
-	 Ymh1e0IePn1Tw55bo8joObogmf4am+YgAaKQ6Xew=
+	b=mqOZ2YMyxG+rz5Moe0H4p+0KxgVXCp/RpsmZXez/dkS/rY+yD2MbuR8hJRfMgNQvF
+	 ZlBpfFbmLPUtsra5vRFPOq2qbmOkCfLCVjHFFKHCWcKtuicVoxyuh9Moz8xD2lw3ri
+	 wHt6OWrgmKHqeMVZ1mRwnkoM2mlj09zzQUlKsfIY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388488AbgBUIX2 (ORCPT
+        id S2388505AbgBUIXd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Feb 2020 03:23:28 -0500
-Received: from mail.kernel.org ([198.145.29.99]:35428 "EHLO mail.kernel.org"
+        Fri, 21 Feb 2020 03:23:33 -0500
+Received: from mail.kernel.org ([198.145.29.99]:35588 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388476AbgBUIXZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Feb 2020 03:23:25 -0500
+        id S2388490AbgBUIXb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 21 Feb 2020 03:23:31 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2F28C24697;
-        Fri, 21 Feb 2020 08:23:24 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1325424676;
+        Fri, 21 Feb 2020 08:23:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1582273404;
-        bh=H+HW9LdC+gGzgBI2knQjxdHksSbqipHsIqlIEKwTmKU=;
+        s=default; t=1582273410;
+        bh=HhQ4HBxToqOlP2WfNDtZs5pT2ABW7zoq0eEpp6vCOrA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=nW3vHUY849TmTd6zwWugXmE8o1ue8p0E7a+pGWPfWS27glGOZUwfL7vcB7Foo0qYd
-         h+7uzhc8jN02Fk8i/ksopShSw6pnp6AO06sj5Y+qJL3XwWQVzT1kDxuhpHx6C2HF6e
-         fCjy0vedCT5Tg+5lbk5bDTB3vKOol+hH5Rnjt4Q4=
+        b=lZwqciHKW8VEhTSe/n6PlT6w5DnsTHsdFDV+IJLnYJK6EEyVCcEriGZMOiCcF+plF
+         zEPSyLk17aHEB9uOgJpmWACYN04QsUCP/ieX94wLkYmsaTZKRDF2o2XdNaIwhtOMGt
+         2v4VN4wsTbqnFKKsdQkUs+gQrhQ6NkfSx2eQn7E8=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Ben Skeggs <bskeggs@redhat.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 157/191] drm/nouveau/mmu: fix comptag memory leak
-Date:   Fri, 21 Feb 2020 08:42:10 +0100
-Message-Id: <20200221072309.677035788@linuxfoundation.org>
+        stable@vger.kernel.org, Liang Chen <liangchen.linux@gmail.com>,
+        Christoph Hellwig <hch@lst.de>, Coly Li <colyli@suse.de>,
+        Jens Axboe <axboe@kernel.dk>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.19 159/191] bcache: cached_dev_free needs to put the sb page
+Date:   Fri, 21 Feb 2020 08:42:12 +0100
+Message-Id: <20200221072309.946803647@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200221072250.732482588@linuxfoundation.org>
 References: <20200221072250.732482588@linuxfoundation.org>
@@ -59,29 +60,36 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Ben Skeggs <bskeggs@redhat.com>
+From: Liang Chen <liangchen.linux@gmail.com>
 
-[ Upstream commit 35e4909b6a2b4005ced3c4238da60d926b78fdea ]
+[ Upstream commit e8547d42095e58bee658f00fef8e33d2a185c927 ]
 
-Signed-off-by: Ben Skeggs <bskeggs@redhat.com>
+Same as cache device, the buffer page needs to be put while
+freeing cached_dev.  Otherwise a page would be leaked every
+time a cached_dev is stopped.
+
+Signed-off-by: Liang Chen <liangchen.linux@gmail.com>
+Signed-off-by: Christoph Hellwig <hch@lst.de>
+Signed-off-by: Coly Li <colyli@suse.de>
+Signed-off-by: Jens Axboe <axboe@kernel.dk>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/gpu/drm/nouveau/nvkm/core/memory.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/md/bcache/super.c | 3 +++
+ 1 file changed, 3 insertions(+)
 
-diff --git a/drivers/gpu/drm/nouveau/nvkm/core/memory.c b/drivers/gpu/drm/nouveau/nvkm/core/memory.c
-index e85a08ecd9da5..4cc186262d344 100644
---- a/drivers/gpu/drm/nouveau/nvkm/core/memory.c
-+++ b/drivers/gpu/drm/nouveau/nvkm/core/memory.c
-@@ -91,8 +91,8 @@ nvkm_memory_tags_get(struct nvkm_memory *memory, struct nvkm_device *device,
- 	}
+diff --git a/drivers/md/bcache/super.c b/drivers/md/bcache/super.c
+index c45d9ad010770..5b5cbfadd003d 100644
+--- a/drivers/md/bcache/super.c
++++ b/drivers/md/bcache/super.c
+@@ -1226,6 +1226,9 @@ static void cached_dev_free(struct closure *cl)
  
- 	refcount_set(&tags->refcount, 1);
-+	*ptags = memory->tags = tags;
- 	mutex_unlock(&fb->subdev.mutex);
--	*ptags = tags;
- 	return 0;
- }
+ 	mutex_unlock(&bch_register_lock);
+ 
++	if (dc->sb_bio.bi_inline_vecs[0].bv_page)
++		put_page(bio_first_page_all(&dc->sb_bio));
++
+ 	if (!IS_ERR_OR_NULL(dc->bdev))
+ 		blkdev_put(dc->bdev, FMODE_READ|FMODE_WRITE|FMODE_EXCL);
  
 -- 
 2.20.1
