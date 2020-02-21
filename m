@@ -2,286 +2,144 @@ Return-Path: <SRS0=1210=4J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+X-Spam-Status: No, score=-10.3 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1EBE0C35641
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 08:03:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 659A1C35641
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 08:03:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E19F32467A
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 08:03:26 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582272207;
-	bh=DF0xzH7KHrXRGTpdus/MUq9ztK8Z6G1+lyoNv4pAiRA=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=HNt5PVzVoUuACEdOjqb7i5fEbJClIgJ9vEQ7XfnGwcpXsaWI6zNEKSbVCiIWyc6k1
-	 PCdaifi5wkAaLmCM8W/9hZZmehxZF2a4WGhP1DixCflpjXGxuTEcBPiacrfOZqMMbm
-	 N2nyY2f7ZbpS5/G8rlqnJJpI/9RhKpenQeqw9+6w=
+	by mail.kernel.org (Postfix) with ESMTP id 4413C222C4
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 08:03:35 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731465AbgBUIDZ (ORCPT
+        id S1731351AbgBUIDd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Feb 2020 03:03:25 -0500
-Received: from mail.kernel.org ([198.145.29.99]:36122 "EHLO mail.kernel.org"
+        Fri, 21 Feb 2020 03:03:33 -0500
+Received: from mga01.intel.com ([192.55.52.88]:39992 "EHLO mga01.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731324AbgBUIDX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Feb 2020 03:03:23 -0500
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9F2962073A;
-        Fri, 21 Feb 2020 08:03:20 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1582272201;
-        bh=DF0xzH7KHrXRGTpdus/MUq9ztK8Z6G1+lyoNv4pAiRA=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ow9b1tj9rl/vCtct+/XBArsvhCfoTuitDnAbBoH6asmCoH8skPGuCiESQaCnxOt15
-         VcYeEvPoAz/I2XsE0fOAiT0RCdfIs89Vg2r05b85TE0rOroD5zvYlh8koEcRABnXPa
-         LMClPP8pnaQkorkhM3r1Jvq7od7PCkPAqxSvK3fA=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Linus Walleij <linus.walleij@linaro.org>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 053/344] net: ethernet: ixp4xx: Standard module init
-Date:   Fri, 21 Feb 2020 08:37:32 +0100
-Message-Id: <20200221072353.898158155@linuxfoundation.org>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20200221072349.335551332@linuxfoundation.org>
-References: <20200221072349.335551332@linuxfoundation.org>
-User-Agent: quilt/0.66
+        id S1731477AbgBUIDa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 21 Feb 2020 03:03:30 -0500
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from fmsmga007.fm.intel.com ([10.253.24.52])
+  by fmsmga101.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 21 Feb 2020 00:03:29 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.70,467,1574150400"; 
+   d="scan'208";a="229139800"
+Received: from shbuild999.sh.intel.com (HELO localhost) ([10.239.147.113])
+  by fmsmga007.fm.intel.com with ESMTP; 21 Feb 2020 00:03:26 -0800
+Date:   Fri, 21 Feb 2020 16:03:25 +0800
+From:   Feng Tang <feng.tang@intel.com>
+To:     Peter Zijlstra <peterz@infradead.org>
+Cc:     kernel test robot <rong.a.chen@intel.com>,
+        Jiri Olsa <jolsa@redhat.com>, Ingo Molnar <mingo@kernel.org>,
+        Vince Weaver <vincent.weaver@maine.edu>,
+        Jiri Olsa <jolsa@kernel.org>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Arnaldo Carvalho de Melo <acme@redhat.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        "Naveen N. Rao" <naveen.n.rao@linux.vnet.ibm.com>,
+        Ravi Bangoria <ravi.bangoria@linux.ibm.com>,
+        Stephane Eranian <eranian@google.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        LKML <linux-kernel@vger.kernel.org>, lkp@lists.01.org,
+        andi.kleen@intel.com, ying.huang@intel.com
+Subject: Re: [LKP] Re: [perf/x86] 81ec3f3c4c: will-it-scale.per_process_ops
+ -5.5% regression
+Message-ID: <20200221080325.GA67807@shbuild999.sh.intel.com>
+References: <20200205123216.GO12867@shao2-debian>
+ <20200205125804.GM14879@hirez.programming.kicks-ass.net>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200205125804.GM14879@hirez.programming.kicks-ass.net>
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Linus Walleij <linus.walleij@linaro.org>
 
-[ Upstream commit c83db9ef5640548631707e8b4a7bcddc115fdbae ]
+On Wed, Feb 05, 2020 at 01:58:04PM +0100, Peter Zijlstra wrote:
+> On Wed, Feb 05, 2020 at 08:32:16PM +0800, kernel test robot wrote:
+> > Greeting,
+> > 
+> > FYI, we noticed a -5.5% regression of will-it-scale.per_process_ops due to commit:
+> > 
+> > 
+> > commit: 81ec3f3c4c4d78f2d3b6689c9816bfbdf7417dbb ("perf/x86: Add check_period PMU callback")
+> > https://git.kernel.org/cgit/linux/kernel/git/torvalds/linux.git master
+> > 
+> 
+> I'm fairly sure this bisect/result is bogus.
 
-The IXP4xx driver was initializing the MDIO bus before even
-probing, in the callbacks supposed to be used for setting up
-the module itself, and with the side effect of trying to
-register the MDIO bus as soon as this module was loaded or
-compiled into the kernel whether the device was discovered
-or not.
 
-This does not work with multiplatform environments.
+Hi Peter,
 
-To get rid of this: set up the MDIO bus from the probe()
-callback and remove it in the remove() callback. Rename
-the probe() and remove() calls to reflect the most common
-conventions.
+Some updates:
 
-Since there is a bit of checking for the ethernet feature
-to be present in the MDIO registering function, making the
-whole module not even be registered if we can't find an
-MDIO bus, we need something similar: register the MDIO
-bus when the corresponding ethernet is probed, and
-return -EPROBE_DEFER on the other interfaces until this
-happens. If no MDIO bus is present on any of the
-registered interfaces we will eventually bail out.
+We checked more on this. We run 14 times test for it, and the
+results are consistent about the 5.5% degradation, and we
+run the same test on several other platforms, whose test results
+are also consistent, though there are no such -5.5% seen.
 
-None of the platforms I've seen has e.g. MDIO on EthB
-and only uses EthC, there is always a Ethernet hardware
-on the NPE (B, C) that has the MDIO bus, we just might
-have to wait for it.
+We are also curious that the commit seems to be completely not
+relative to this scalability test of signal, which starts a task
+for each online CPU, and keeps calling raise(), and calculating
+the run numbers.
 
-Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
-Signed-off-by: Jakub Kicinski <kuba@kernel.org>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- drivers/net/ethernet/xscale/ixp4xx_eth.c | 96 +++++++++++-------------
- 1 file changed, 44 insertions(+), 52 deletions(-)
+One experiment we did is checking which part of the commit
+really affects the test, and it turned out to be the change of
+"struct pmu". Effectively, applying this patch upon 5.0-rc6 
+which triggers the same regression.
 
-diff --git a/drivers/net/ethernet/xscale/ixp4xx_eth.c b/drivers/net/ethernet/xscale/ixp4xx_eth.c
-index 6fc04ffb22c2a..d4e095d0e8f14 100644
---- a/drivers/net/ethernet/xscale/ixp4xx_eth.c
-+++ b/drivers/net/ethernet/xscale/ixp4xx_eth.c
-@@ -517,25 +517,14 @@ static int ixp4xx_mdio_write(struct mii_bus *bus, int phy_id, int location,
- 	return ret;
- }
- 
--static int ixp4xx_mdio_register(void)
-+static int ixp4xx_mdio_register(struct eth_regs __iomem *regs)
- {
- 	int err;
- 
- 	if (!(mdio_bus = mdiobus_alloc()))
- 		return -ENOMEM;
- 
--	if (cpu_is_ixp43x()) {
--		/* IXP43x lacks NPE-B and uses NPE-C for MII PHY access */
--		if (!(ixp4xx_read_feature_bits() & IXP4XX_FEATURE_NPEC_ETH))
--			return -ENODEV;
--		mdio_regs = (struct eth_regs __iomem *)IXP4XX_EthC_BASE_VIRT;
--	} else {
--		/* All MII PHY accesses use NPE-B Ethernet registers */
--		if (!(ixp4xx_read_feature_bits() & IXP4XX_FEATURE_NPEB_ETH0))
--			return -ENODEV;
--		mdio_regs = (struct eth_regs __iomem *)IXP4XX_EthB_BASE_VIRT;
--	}
--
-+	mdio_regs = regs;
- 	__raw_writel(DEFAULT_CORE_CNTRL, &mdio_regs->core_control);
- 	spin_lock_init(&mdio_lock);
- 	mdio_bus->name = "IXP4xx MII Bus";
-@@ -1374,7 +1363,7 @@ static const struct net_device_ops ixp4xx_netdev_ops = {
- 	.ndo_validate_addr = eth_validate_addr,
+diff --git a/include/linux/perf_event.h b/include/linux/perf_event.h
+index 1d5c551..e1a0517 100644
+--- a/include/linux/perf_event.h
++++ b/include/linux/perf_event.h
+@@ -447,6 +447,11 @@ struct pmu {
+ 	 * Filter events for PMU-specific reasons.
+ 	 */
+ 	int (*filter_match)		(struct perf_event *event); /* optional */
++
++	/*
++	 * Check period value for PERF_EVENT_IOC_PERIOD ioctl.
++	 */
++	int (*check_period)		(struct perf_event *event, u64 value); /* optional */
  };
- 
--static int eth_init_one(struct platform_device *pdev)
-+static int ixp4xx_eth_probe(struct platform_device *pdev)
- {
- 	struct port *port;
- 	struct net_device *dev;
-@@ -1384,7 +1373,7 @@ static int eth_init_one(struct platform_device *pdev)
- 	char phy_id[MII_BUS_ID_SIZE + 3];
- 	int err;
- 
--	if (!(dev = alloc_etherdev(sizeof(struct port))))
-+	if (!(dev = devm_alloc_etherdev(&pdev->dev, sizeof(struct port))))
- 		return -ENOMEM;
- 
- 	SET_NETDEV_DEV(dev, &pdev->dev);
-@@ -1394,20 +1383,51 @@ static int eth_init_one(struct platform_device *pdev)
- 
- 	switch (port->id) {
- 	case IXP4XX_ETH_NPEA:
-+		/* If the MDIO bus is not up yet, defer probe */
-+		if (!mdio_bus)
-+			return -EPROBE_DEFER;
- 		port->regs = (struct eth_regs __iomem *)IXP4XX_EthA_BASE_VIRT;
- 		regs_phys  = IXP4XX_EthA_BASE_PHYS;
- 		break;
- 	case IXP4XX_ETH_NPEB:
-+		/*
-+		 * On all except IXP43x, NPE-B is used for the MDIO bus.
-+		 * If there is no NPE-B in the feature set, bail out, else
-+		 * register the MDIO bus.
-+		 */
-+		if (!cpu_is_ixp43x()) {
-+			if (!(ixp4xx_read_feature_bits() &
-+			      IXP4XX_FEATURE_NPEB_ETH0))
-+				return -ENODEV;
-+			/* Else register the MDIO bus on NPE-B */
-+			if ((err = ixp4xx_mdio_register(IXP4XX_EthC_BASE_VIRT)))
-+				return err;
-+		}
-+		if (!mdio_bus)
-+			return -EPROBE_DEFER;
- 		port->regs = (struct eth_regs __iomem *)IXP4XX_EthB_BASE_VIRT;
- 		regs_phys  = IXP4XX_EthB_BASE_PHYS;
- 		break;
- 	case IXP4XX_ETH_NPEC:
-+		/*
-+		 * IXP43x lacks NPE-B and uses NPE-C for the MDIO bus access,
-+		 * of there is no NPE-C, no bus, nothing works, so bail out.
-+		 */
-+		if (cpu_is_ixp43x()) {
-+			if (!(ixp4xx_read_feature_bits() &
-+			      IXP4XX_FEATURE_NPEC_ETH))
-+				return -ENODEV;
-+			/* Else register the MDIO bus on NPE-C */
-+			if ((err = ixp4xx_mdio_register(IXP4XX_EthC_BASE_VIRT)))
-+				return err;
-+		}
-+		if (!mdio_bus)
-+			return -EPROBE_DEFER;
- 		port->regs = (struct eth_regs __iomem *)IXP4XX_EthC_BASE_VIRT;
- 		regs_phys  = IXP4XX_EthC_BASE_PHYS;
- 		break;
- 	default:
--		err = -ENODEV;
--		goto err_free;
-+		return -ENODEV;
- 	}
- 
- 	dev->netdev_ops = &ixp4xx_netdev_ops;
-@@ -1416,10 +1436,8 @@ static int eth_init_one(struct platform_device *pdev)
- 
- 	netif_napi_add(dev, &port->napi, eth_poll, NAPI_WEIGHT);
- 
--	if (!(port->npe = npe_request(NPE_ID(port->id)))) {
--		err = -EIO;
--		goto err_free;
--	}
-+	if (!(port->npe = npe_request(NPE_ID(port->id))))
-+		return -EIO;
- 
- 	port->mem_res = request_mem_region(regs_phys, REGS_SIZE, dev->name);
- 	if (!port->mem_res) {
-@@ -1465,12 +1483,10 @@ err_free_mem:
- 	release_resource(port->mem_res);
- err_npe_rel:
- 	npe_release(port->npe);
--err_free:
--	free_netdev(dev);
- 	return err;
- }
- 
--static int eth_remove_one(struct platform_device *pdev)
-+static int ixp4xx_eth_remove(struct platform_device *pdev)
- {
- 	struct net_device *dev = platform_get_drvdata(pdev);
- 	struct phy_device *phydev = dev->phydev;
-@@ -1478,45 +1494,21 @@ static int eth_remove_one(struct platform_device *pdev)
- 
- 	unregister_netdev(dev);
- 	phy_disconnect(phydev);
-+	ixp4xx_mdio_remove();
- 	npe_port_tab[NPE_ID(port->id)] = NULL;
- 	npe_release(port->npe);
- 	release_resource(port->mem_res);
--	free_netdev(dev);
- 	return 0;
- }
- 
- static struct platform_driver ixp4xx_eth_driver = {
- 	.driver.name	= DRV_NAME,
--	.probe		= eth_init_one,
--	.remove		= eth_remove_one,
-+	.probe		= ixp4xx_eth_probe,
-+	.remove		= ixp4xx_eth_remove,
- };
--
--static int __init eth_init_module(void)
--{
--	int err;
--
--	/*
--	 * FIXME: we bail out on device tree boot but this really needs
--	 * to be fixed in a nicer way: this registers the MDIO bus before
--	 * even matching the driver infrastructure, we should only probe
--	 * detected hardware.
--	 */
--	if (of_have_populated_dt())
--		return -ENODEV;
--	if ((err = ixp4xx_mdio_register()))
--		return err;
--	return platform_driver_register(&ixp4xx_eth_driver);
--}
--
--static void __exit eth_cleanup_module(void)
--{
--	platform_driver_unregister(&ixp4xx_eth_driver);
--	ixp4xx_mdio_remove();
--}
-+module_platform_driver(ixp4xx_eth_driver);
- 
- MODULE_AUTHOR("Krzysztof Halasa");
- MODULE_DESCRIPTION("Intel IXP4xx Ethernet driver");
- MODULE_LICENSE("GPL v2");
- MODULE_ALIAS("platform:ixp4xx_eth");
--module_init(eth_init_module);
--module_exit(eth_cleanup_module);
--- 
-2.20.1
 
+So likely, this commit changes the layout of the kernel text
+and data, which may trigger some cacheline level change. From
+the system map of the 2 kernels, a big trunk of symbol's address
+changes which follow the global "pmu",
 
+5.0-rc6-systemap:
 
+ffffffff8221d000 d pmu
+ffffffff8221d100 d pmc_reserve_mutex
+ffffffff8221d120 d amd_f15_PMC53
+ffffffff8221d160 d amd_f15_PMC50
+
+5.0-rc6+pmu-change-systemap:
+
+ffffffff8221d000 d pmu
+ffffffff8221d120 d pmc_reserve_mutex
+ffffffff8221d140 d amd_f15_PMC53
+ffffffff8221d180 d amd_f15_PMC50
+
+But we can hardly identify which exact symbol is responsible
+for the change, as too many symbols are offseted. 
+
+btw, we've seen similar case that an irrelevant commit changes
+the benchmark, like a hugetlb patch improves pagefault test on
+a platform that never uses hugetlb https://lkml.org/lkml/2020/1/14/150  
+
+Thanks,
+Feng
+
+> _______________________________________________
+> LKP mailing list -- lkp@lists.01.org
+> To unsubscribe send an email to lkp-leave@lists.01.org
