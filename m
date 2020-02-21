@@ -2,77 +2,123 @@ Return-Path: <SRS0=1210=4J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 189DEC35646
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 19:44:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 35E4EC3565B
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 19:44:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DD482208C4
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 19:44:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 01006208C4
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 19:44:35 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="lYdo4NH8"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726878AbgBUToM (ORCPT
+        id S1727362AbgBUToe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Feb 2020 14:44:12 -0500
-Received: from shards.monkeyblade.net ([23.128.96.9]:40490 "EHLO
-        shards.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726483AbgBUToM (ORCPT
+        Fri, 21 Feb 2020 14:44:34 -0500
+Received: from hqnvemgate26.nvidia.com ([216.228.121.65]:15668 "EHLO
+        hqnvemgate26.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726443AbgBUTod (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Feb 2020 14:44:12 -0500
-Received: from localhost (unknown [IPv6:2601:601:9f00:477::3d5])
-        (using TLSv1 with cipher AES256-SHA (256/256 bits))
-        (Client did not present a certificate)
-        (Authenticated sender: davem-davemloft)
-        by shards.monkeyblade.net (Postfix) with ESMTPSA id D038B14648EF7;
-        Fri, 21 Feb 2020 11:44:11 -0800 (PST)
-Date:   Fri, 21 Feb 2020 11:44:11 -0800 (PST)
-Message-Id: <20200221.114411.2138437746889179289.davem@davemloft.net>
-To:     dmurphy@ti.com
-Cc:     andrew@lunn.ch, f.fainelli@gmail.com, hkallweit1@gmail.com,
-        linux@armlinux.org.uk, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH net-next v3] net: phy: dp83867: Add speed optimization
- feature
-From:   David Miller <davem@davemloft.net>
-In-Reply-To: <20200218141130.28825-1-dmurphy@ti.com>
-References: <20200218141130.28825-1-dmurphy@ti.com>
-X-Mailer: Mew version 6.8 on Emacs 26.1
-Mime-Version: 1.0
-Content-Type: Text/Plain; charset=us-ascii
+        Fri, 21 Feb 2020 14:44:33 -0500
+Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate26.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5e5033120000>; Fri, 21 Feb 2020 11:44:18 -0800
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate101.nvidia.com (PGP Universal service);
+  Fri, 21 Feb 2020 11:44:32 -0800
+X-PGP-Universal: processed;
+        by hqpgpgate101.nvidia.com on Fri, 21 Feb 2020 11:44:32 -0800
+Received: from [10.2.166.200] (10.124.1.5) by HQMAIL107.nvidia.com
+ (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Fri, 21 Feb
+ 2020 19:44:32 +0000
+Subject: Re: [PATCH v7 11/24] mm: Move end_index check out of readahead loop
+To:     Matthew Wilcox <willy@infradead.org>
+CC:     <linux-fsdevel@vger.kernel.org>, <linux-mm@kvack.org>,
+        <linux-kernel@vger.kernel.org>, <linux-btrfs@vger.kernel.org>,
+        <linux-erofs@lists.ozlabs.org>, <linux-ext4@vger.kernel.org>,
+        <linux-f2fs-devel@lists.sourceforge.net>,
+        <cluster-devel@redhat.com>, <ocfs2-devel@oss.oracle.com>,
+        <linux-xfs@vger.kernel.org>
+References: <20200219210103.32400-1-willy@infradead.org>
+ <20200219210103.32400-12-willy@infradead.org>
+ <e6ef2075-b849-299e-0f11-c6ee82b0a3c7@nvidia.com>
+ <20200221153537.GE24185@bombadil.infradead.org>
+From:   John Hubbard <jhubbard@nvidia.com>
+X-Nvconfidentiality: public
+Message-ID: <1fd052ce-cd5e-60ce-e494-cbf6427d3ed3@nvidia.com>
+Date:   Fri, 21 Feb 2020 11:41:28 -0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.5.0
+MIME-Version: 1.0
+In-Reply-To: <20200221153537.GE24185@bombadil.infradead.org>
+X-Originating-IP: [10.124.1.5]
+X-ClientProxiedBy: HQMAIL101.nvidia.com (172.20.187.10) To
+ HQMAIL107.nvidia.com (172.20.187.13)
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Language: en-US
 Content-Transfer-Encoding: 7bit
-X-Greylist: Sender succeeded SMTP AUTH, not delayed by milter-greylist-4.5.12 (shards.monkeyblade.net [149.20.54.216]); Fri, 21 Feb 2020 11:44:12 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1582314258; bh=pQKOwwEmNmp5lZ+eX1Ols5QNnW+OORTLQJDMCsPxtEc=;
+        h=X-PGP-Universal:Subject:To:CC:References:From:X-Nvconfidentiality:
+         Message-ID:Date:User-Agent:MIME-Version:In-Reply-To:
+         X-Originating-IP:X-ClientProxiedBy:Content-Type:Content-Language:
+         Content-Transfer-Encoding;
+        b=lYdo4NH8M7SXphPat6doJg0oOA1V6kLXukQ7JIEh5FVkfFb0/CxKOhHQdMiRNYy87
+         Q6EhPR2Fph1xqpiZaGm+fIV8Ra4pJE8E5H2Ofj6LlTy0+Qb+/+y64EhZcbjIYXrOqI
+         IXR7s2kX4Yi3hnWXNuj2sU2+Joh83jXJxvw8pHXSeKQS/7ccswnLmpLkros2lxWTg/
+         2U8B/Ar6NYNMOQFqfCj3j5XpjUwSHVdi0BMHCh2YVMnazsUm42RddLEt+ZRAKHCaXa
+         IlYO+1WyQ2QxlFvwnZy2R5xtgMwusy7sT9ZlwHQi2bqndUATGT9KLiH14aMZETjP0i
+         ow4Jt857PEIiA==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Dan Murphy <dmurphy@ti.com>
-Date: Tue, 18 Feb 2020 08:11:30 -0600
+On 2/21/20 7:35 AM, Matthew Wilcox wrote:
+> On Thu, Feb 20, 2020 at 07:50:39PM -0800, John Hubbard wrote:
+>> This tiny patch made me pause, because I wasn't sure at first of the exact
+>> intent of the lines above. Once I worked it out, it seemed like it might
+>> be helpful (or overkill??) to add a few hints for the reader, especially since
+>> there are no hints in the function's (minimal) documentation header. What
+>> do you think of this?
+>>
+>> 	/*
+>> 	 * If we can't read *any* pages without going past the inodes's isize
+>> 	 * limit, give up entirely:
+>> 	 */
+>> 	if (index > end_index)
+>> 		return;
+>>
+>> 	/* Cap nr_to_read, in order to avoid overflowing the ULONG type: */
+>> 	if (index + nr_to_read < index)
+>> 		nr_to_read = ULONG_MAX - index + 1;
+>>
+>> 	/* Cap nr_to_read, to avoid reading past the inode's isize limit: */
+>> 	if (index + nr_to_read >= end_index)
+>> 		nr_to_read = end_index - index + 1;
+> 
+> A little verbose for my taste ... How about this?
 
-> Set the speed optimization bit on the DP83867 PHY.
-> This feature can also be strapped on the 64 pin PHY devices
-> but the 48 pin devices do not have the strap pin available to enable
-> this feature in the hardware.  PHY team suggests to have this bit set.
-> 
-> With this bit set the PHY will auto negotiate and report the link
-> parameters in the PHYSTS register.  This register provides a single
-> location within the register set for quick access to commonly accessed
-> information.
-> 
-> In this case when auto negotiation is on the PHY core reads the bits
-> that have been configured or if auto negotiation is off the PHY core
-> reads the BMCR register and sets the phydev parameters accordingly.
-> 
-> This Giga bit PHY can throttle the speed to 100Mbps or 10Mbps to accomodate a
-> 4-wire cable.  If this should occur the PHYSTS register contains the
-> current negotiated speed and duplex mode.
-> 
-> In overriding the genphy_read_status the dp83867_read_status will do a
-> genphy_read_status to setup the LP and pause bits.  And then the PHYSTS
-> register is read and the phydev speed and duplex mode settings are
-> updated.
-> 
-> Signed-off-by: Dan Murphy <dmurphy@ti.com>
 
-Applied to net-next, thank you.
+Mine too, actually. :)  I think your version below looks good.
+
+
+thanks,
+-- 
+John Hubbard
+NVIDIA
+
+> 
+>          end_index = (isize - 1) >> PAGE_SHIFT;
+>          if (index > end_index)
+>                  return;
+>          /* Avoid wrapping to the beginning of the file */
+>          if (index + nr_to_read < index)
+>                  nr_to_read = ULONG_MAX - index + 1;
+>          /* Don't read past the page containing the last byte of the file */
+>          if (index + nr_to_read >= end_index)
+>                  nr_to_read = end_index - index + 1;
+> 
+
