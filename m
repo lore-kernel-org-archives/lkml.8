@@ -7,49 +7,51 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7A792C35640
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 08:19:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 32715C35640
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 08:19:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3F2D324695
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 08:19:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 062BF24697
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 08:19:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582273142;
-	bh=fjEoFM/ZI/nczcEXkmdnLMMUAcHJBEZV0uX7k/XZlH4=;
+	s=default; t=1582273145;
+	bh=RMhyLwjHo+FIB9P37K7aaJm4nJKilhyzbJgF6malxW4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=JeECO/Lq0iojsCEj0C611mKWlXv+D/VKw9HMeeLy5yl/D1CYwO/2jY+pYReP0Jljz
-	 GW+FVlLzY2tuHtCODx5z8QqaZeelfXOhC0WN7GJkmXqlVbGminhnRMkOYJy2N3Rf2R
-	 NKeUgvi8crYZmr8OhdIhcZvSf+/8pgOHIynvwS8M=
+	b=uzuGDN7EvTlHOxgzvK2iRBuYR/X2P2orl71+mfwdcNqJY78ZAn2KUqKA7pK69sF35
+	 URYZG5G+ivsHWKBjXVkQoxJNEYyuEoeRKrZGY1pM6/EwiwZLFrz8U+TaHEnDeuDWqP
+	 Fvo0LRMXMMRx0wUz4Qu2RNHKZF7mbcKgObUOmaFc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387943AbgBUITB (ORCPT
+        id S2387953AbgBUITD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Feb 2020 03:19:01 -0500
-Received: from mail.kernel.org ([198.145.29.99]:57132 "EHLO mail.kernel.org"
+        Fri, 21 Feb 2020 03:19:03 -0500
+Received: from mail.kernel.org ([198.145.29.99]:57178 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387897AbgBUIS7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Feb 2020 03:18:59 -0500
+        id S2387897AbgBUITC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 21 Feb 2020 03:19:02 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1C6CA24689;
-        Fri, 21 Feb 2020 08:18:57 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4FC0F2468E;
+        Fri, 21 Feb 2020 08:19:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1582273138;
-        bh=fjEoFM/ZI/nczcEXkmdnLMMUAcHJBEZV0uX7k/XZlH4=;
+        s=default; t=1582273141;
+        bh=RMhyLwjHo+FIB9P37K7aaJm4nJKilhyzbJgF6malxW4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ALwLw8dyteAdQAbKRiBR1K/AVB2ZS9i8YFDnDxlqxKARNIMg5Kh8KNQOXpmcD1hxu
-         BPjcEy/p00Vx7k4racnk71N7+sZhOogsH3+a+XjxSb8YHA1rwRx5Fk/wZysjxfS8cy
-         cIt6SWfNAp8hlaoLhqEDSGom/sGwe0aqBVsk45LU=
+        b=dXOpYmfGa1spEf9CYilpe6KvFcmwurKoXcoY4cHxR6qxFd27D5ZEZezBpVLihur35
+         A/ghoozbbfoVwMM1qo8d+bAhGhzmGTUr/VzgO4oFOgEE7k3fb8pdtktFrTS4k1qCPz
+         zHIkIIWrw49QjUKtn/uuJhRn4byKlHEiBJymIE6w=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Daniel Jordan <daniel.m.jordan@oracle.com>,
-        Eric Biggers <ebiggers@kernel.org>,
-        Herbert Xu <herbert@gondor.apana.org.au>,
-        Steffen Klassert <steffen.klassert@secunet.com>,
-        linux-crypto@vger.kernel.org, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 061/191] padata: always acquire cpu_hotplug_lock before pinst->lock
-Date:   Fri, 21 Feb 2020 08:40:34 +0100
-Message-Id: <20200221072258.745173144@linuxfoundation.org>
+        stable@vger.kernel.org, Chris Healy <cphealy@gmail.com>,
+        Lucas Stach <l.stach@pengutronix.de>,
+        Andrey Smirnov <andrew.smirnov@gmail.com>,
+        Shawn Guo <shawnguo@kernel.org>,
+        Fabio Estevam <festevam@gmail.com>,
+        linux-arm-kernel@lists.infradead.org,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.19 062/191] ARM: dts: imx6: rdu2: Disable WP for USDHC2 and USDHC3
+Date:   Fri, 21 Feb 2020 08:40:35 +0100
+Message-Id: <20200221072258.852020820@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200221072250.732482588@linuxfoundation.org>
 References: <20200221072250.732482588@linuxfoundation.org>
@@ -62,69 +64,67 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Daniel Jordan <daniel.m.jordan@oracle.com>
+From: Andrey Smirnov <andrew.smirnov@gmail.com>
 
-[ Upstream commit 38228e8848cd7dd86ccb90406af32de0cad24be3 ]
+[ Upstream commit cd58a174e58649426fb43d7456e5f7d7eab58af1 ]
 
-lockdep complains when padata's paths to update cpumasks via CPU hotplug
-and sysfs are both taken:
+RDU2 production units come with resistor connecting WP pin to
+correpsonding GPIO DNPed for both SD card slots. Drop any WP related
+configuration and mark both slots with "disable-wp".
 
-  # echo 0 > /sys/devices/system/cpu/cpu1/online
-  # echo ff > /sys/kernel/pcrypt/pencrypt/parallel_cpumask
-
-  ======================================================
-  WARNING: possible circular locking dependency detected
-  5.4.0-rc8-padata-cpuhp-v3+ #1 Not tainted
-  ------------------------------------------------------
-  bash/205 is trying to acquire lock:
-  ffffffff8286bcd0 (cpu_hotplug_lock.rw_sem){++++}, at: padata_set_cpumask+0x2b/0x120
-
-  but task is already holding lock:
-  ffff8880001abfa0 (&pinst->lock){+.+.}, at: padata_set_cpumask+0x26/0x120
-
-  which lock already depends on the new lock.
-
-padata doesn't take cpu_hotplug_lock and pinst->lock in a consistent
-order.  Which should be first?  CPU hotplug calls into padata with
-cpu_hotplug_lock already held, so it should have priority.
-
-Fixes: 6751fb3c0e0c ("padata: Use get_online_cpus/put_online_cpus")
-Signed-off-by: Daniel Jordan <daniel.m.jordan@oracle.com>
-Cc: Eric Biggers <ebiggers@kernel.org>
-Cc: Herbert Xu <herbert@gondor.apana.org.au>
-Cc: Steffen Klassert <steffen.klassert@secunet.com>
-Cc: linux-crypto@vger.kernel.org
+Reported-by: Chris Healy <cphealy@gmail.com>
+Reviewed-by: Chris Healy <cphealy@gmail.com>
+Reviewed-by: Lucas Stach <l.stach@pengutronix.de>
+Signed-off-by: Andrey Smirnov <andrew.smirnov@gmail.com>
+Cc: Shawn Guo <shawnguo@kernel.org>
+Cc: Fabio Estevam <festevam@gmail.com>
+Cc: Lucas Stach <l.stach@pengutronix.de>
+Cc: linux-arm-kernel@lists.infradead.org
 Cc: linux-kernel@vger.kernel.org
-Signed-off-by: Herbert Xu <herbert@gondor.apana.org.au>
+Signed-off-by: Shawn Guo <shawnguo@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- kernel/padata.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ arch/arm/boot/dts/imx6qdl-zii-rdu2.dtsi | 6 ++----
+ 1 file changed, 2 insertions(+), 4 deletions(-)
 
-diff --git a/kernel/padata.c b/kernel/padata.c
-index cfab62923c452..c280cb153915f 100644
---- a/kernel/padata.c
-+++ b/kernel/padata.c
-@@ -671,8 +671,8 @@ int padata_set_cpumask(struct padata_instance *pinst, int cpumask_type,
- 	struct cpumask *serial_mask, *parallel_mask;
- 	int err = -EINVAL;
+diff --git a/arch/arm/boot/dts/imx6qdl-zii-rdu2.dtsi b/arch/arm/boot/dts/imx6qdl-zii-rdu2.dtsi
+index 315d0e7615f33..56d6e82b75337 100644
+--- a/arch/arm/boot/dts/imx6qdl-zii-rdu2.dtsi
++++ b/arch/arm/boot/dts/imx6qdl-zii-rdu2.dtsi
+@@ -657,7 +657,7 @@
+ 	pinctrl-0 = <&pinctrl_usdhc2>;
+ 	bus-width = <4>;
+ 	cd-gpios = <&gpio2 2 GPIO_ACTIVE_LOW>;
+-	wp-gpios = <&gpio2 3 GPIO_ACTIVE_HIGH>;
++	disable-wp;
+ 	vmmc-supply = <&reg_3p3v_sd>;
+ 	vqmmc-supply = <&reg_3p3v>;
+ 	no-1-8-v;
+@@ -670,7 +670,7 @@
+ 	pinctrl-0 = <&pinctrl_usdhc3>;
+ 	bus-width = <4>;
+ 	cd-gpios = <&gpio2 0 GPIO_ACTIVE_LOW>;
+-	wp-gpios = <&gpio2 1 GPIO_ACTIVE_HIGH>;
++	disable-wp;
+ 	vmmc-supply = <&reg_3p3v_sd>;
+ 	vqmmc-supply = <&reg_3p3v>;
+ 	no-1-8-v;
+@@ -1081,7 +1081,6 @@
+ 			MX6QDL_PAD_SD2_DAT1__SD2_DATA1		0x17059
+ 			MX6QDL_PAD_SD2_DAT2__SD2_DATA2		0x17059
+ 			MX6QDL_PAD_SD2_DAT3__SD2_DATA3		0x17059
+-			MX6QDL_PAD_NANDF_D3__GPIO2_IO03		0x40010040
+ 			MX6QDL_PAD_NANDF_D2__GPIO2_IO02		0x40010040
+ 		>;
+ 	};
+@@ -1094,7 +1093,6 @@
+ 			MX6QDL_PAD_SD3_DAT1__SD3_DATA1		0x17059
+ 			MX6QDL_PAD_SD3_DAT2__SD3_DATA2		0x17059
+ 			MX6QDL_PAD_SD3_DAT3__SD3_DATA3		0x17059
+-			MX6QDL_PAD_NANDF_D1__GPIO2_IO01		0x40010040
+ 			MX6QDL_PAD_NANDF_D0__GPIO2_IO00		0x40010040
  
--	mutex_lock(&pinst->lock);
- 	get_online_cpus();
-+	mutex_lock(&pinst->lock);
- 
- 	switch (cpumask_type) {
- 	case PADATA_CPU_PARALLEL:
-@@ -690,8 +690,8 @@ int padata_set_cpumask(struct padata_instance *pinst, int cpumask_type,
- 	err =  __padata_set_cpumasks(pinst, parallel_mask, serial_mask);
- 
- out:
--	put_online_cpus();
- 	mutex_unlock(&pinst->lock);
-+	put_online_cpus();
- 
- 	return err;
- }
+ 		>;
 -- 
 2.20.1
 
