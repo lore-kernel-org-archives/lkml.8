@@ -2,151 +2,121 @@ Return-Path: <SRS0=1210=4J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2E9E4C35669
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 20:10:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 40B17C3566E
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 20:11:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id ECF0720578
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 20:10:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 173DF24653
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 20:11:17 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=zx2c4.com header.i=@zx2c4.com header.b="a72Iwp74"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="JBy54IX1"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726823AbgBUUKr (ORCPT
+        id S1727874AbgBUULQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Feb 2020 15:10:47 -0500
-Received: from frisell.zx2c4.com ([192.95.5.64]:36897 "EHLO frisell.zx2c4.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726443AbgBUUKr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Feb 2020 15:10:47 -0500
-Received: by frisell.zx2c4.com (ZX2C4 Mail Server) with ESMTP id 67b8b6f5;
-        Fri, 21 Feb 2020 20:07:43 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha1; c=relaxed; d=zx2c4.com; h=from:to:cc
-        :subject:date:message-id:in-reply-to:references:mime-version
-        :content-transfer-encoding; s=mail; bh=Y5FQH6O7ANENEU2z1fYsRnL7r
-        EY=; b=a72Iwp74d5zGb/pN41iOtoXdQFeY7YX+ZibpbG6rmxr7+PvxHX4aAsCJ+
-        cvLrv5CwBoG5xT1qh/lXSOXjSw3vffBUDUFwUWj/v6bt5Q7x6/HsbVFRdr1KbeLe
-        HYCpjVG6X1TURBQu7TudAVbdHMBtvo2XBahoulUxoOKiPckjQaJDX8AJsUZXUiRV
-        FBRqhSau3cbcLarBOvK22tRe3djblSRuqGnm7w5LgjvZafElpz3b9GGPf2i5HSSQ
-        2lhnNiimH2Z3FNxyvdNSpkkP/wuDMznrxI+cG2/2cOd2nVKpwnbIPGZITakvj2H6
-        VRy0DsnWeADgIr5VAaX7//oCinxSQ==
-Received: by frisell.zx2c4.com (ZX2C4 Mail Server) with ESMTPSA id c3d9c1c2 (TLSv1.2:ECDHE-RSA-AES256-GCM-SHA384:256:NO);
-        Fri, 21 Feb 2020 20:07:43 +0000 (UTC)
-From:   "Jason A. Donenfeld" <Jason@zx2c4.com>
-To:     tytso@mit.edu, linux-kernel@vger.kernel.org,
-        gregkh@linuxfoundation.org
-Cc:     "Jason A. Donenfeld" <Jason@zx2c4.com>
-Subject: [PATCH v2] random: always use batched entropy for get_random_u{32,64}
-Date:   Fri, 21 Feb 2020 21:10:37 +0100
-Message-Id: <20200221201037.30231-1-Jason@zx2c4.com>
-In-Reply-To: <CAHmME9o+Nh0=0QBimOJLXpLitQ9p6rsAut+Zvb4A1-iEjGn3jw@mail.gmail.com>
-References: <CAHmME9o+Nh0=0QBimOJLXpLitQ9p6rsAut+Zvb4A1-iEjGn3jw@mail.gmail.com>
+        Fri, 21 Feb 2020 15:11:16 -0500
+Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:35660 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726761AbgBUULP (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 21 Feb 2020 15:11:15 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1582315874;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=8Gz/b9tAua2Q4fMbTSmY0pGnQmTNc4CSxCSn9ArkmH4=;
+        b=JBy54IX1UCgyq+QwnOaZ8l1pudNu+x/AXLJ7MUl7RSn1lQ5X+LLJJJv/RJd3MStNTDoWUQ
+        8m9jEjwLexU0RWDGdzHOhtk3wNbnKo+O0sIOm79CSp7DIIqrnFHu65onohkNFPCtWKQflV
+        eE30GHUrdqN1M/GWn8WnYZgVCTaOBtA=
+Received: from mail-qk1-f199.google.com (mail-qk1-f199.google.com
+ [209.85.222.199]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-15-1Bhvph2OO86luUjaCwsttA-1; Fri, 21 Feb 2020 15:11:12 -0500
+X-MC-Unique: 1Bhvph2OO86luUjaCwsttA-1
+Received: by mail-qk1-f199.google.com with SMTP id m25so2575897qka.4
+        for <linux-kernel@vger.kernel.org>; Fri, 21 Feb 2020 12:11:12 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=8Gz/b9tAua2Q4fMbTSmY0pGnQmTNc4CSxCSn9ArkmH4=;
+        b=jZRpJ1kkQF4tzYnMvZ80sFtLCLfM6txo3FgjrzGPuFHzTeuOocomX9BoizHHaKGfBl
+         K6J3begw3ZRrJaRnYPIyTWnizeNbEAb4uZl93gvNJMAgGVV/HpiO6J6SVNslaXtC5kTx
+         2L9/oDeqH6qN9OIR1SDGOBy90R/3sklUPHh5U90a/Itop0u1IHHYheiT5SYVHd+xUKu9
+         PTXeYhR5UGS9UAkx3oQc9rOHU41Y2vVCnHGN8KNJtzCqGrrDlr+9mpXRFOlVkPBwaUq/
+         5BpeaTbJIsAaJEdPt19rBY/0JgZCh7aFPyrfUmOLbpYQVWRPOrDruzi2VatdbJtALWJa
+         FUUQ==
+X-Gm-Message-State: APjAAAVc3RN7/YoLCZZoRlIequVGJZKcEFmdv64VZPR3ZWTX8OWqPkig
+        aXGvNlqXRyAJ3ocha7UHMAT7fEXr3Bp3UXPKb6Okkwy0owXPMRjVehAFEgZEZv7yCxcbCAlPpXa
+        +Fhaj7ZZJVQrwEJoRfLsinX7x
+X-Received: by 2002:a05:6214:209:: with SMTP id i9mr31803591qvt.54.1582315871644;
+        Fri, 21 Feb 2020 12:11:11 -0800 (PST)
+X-Google-Smtp-Source: APXvYqz4BkknkVZ9+EecFTrsNvRKvHosigsHM3LMGrSwNqgXCCWe84767ilsxYYyezA4GFqlHStDtA==
+X-Received: by 2002:a05:6214:209:: with SMTP id i9mr31803560qvt.54.1582315871391;
+        Fri, 21 Feb 2020 12:11:11 -0800 (PST)
+Received: from xz-x1 (CPEf81d0fb19163-CMf81d0fb19160.cpe.net.fido.ca. [72.137.123.47])
+        by smtp.gmail.com with ESMTPSA id j4sm1985671qkk.84.2020.02.21.12.11.09
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 21 Feb 2020 12:11:10 -0800 (PST)
+Date:   Fri, 21 Feb 2020 15:11:08 -0500
+From:   Peter Xu <peterx@redhat.com>
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        Linux-MM <linux-mm@kvack.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Andrea Arcangeli <aarcange@redhat.com>,
+        Martin Cracauer <cracauer@cons.org>,
+        Mike Rapoport <rppt@linux.vnet.ibm.com>,
+        "Kirill A . Shutemov" <kirill@shutemov.name>,
+        Johannes Weiner <hannes@cmpxchg.org>,
+        "Dr . David Alan Gilbert" <dgilbert@redhat.com>,
+        David Hildenbrand <david@redhat.com>,
+        Bobby Powers <bobbypowers@gmail.com>,
+        Maya Gokhale <gokhale2@llnl.gov>,
+        Jerome Glisse <jglisse@redhat.com>,
+        Mike Kravetz <mike.kravetz@oracle.com>,
+        Matthew Wilcox <willy@infradead.org>,
+        Marty McFadden <mcfadden8@llnl.gov>,
+        Mel Gorman <mgorman@suse.de>, Hugh Dickins <hughd@google.com>,
+        Brian Geffon <bgeffon@google.com>,
+        Denis Plotnikov <dplotnikov@virtuozzo.com>,
+        Pavel Emelyanov <xemul@virtuozzo.com>
+Subject: Re: [PATCH RESEND v6 00/16] mm: Page fault enhancements
+Message-ID: <20200221201108.GF37727@xz-x1>
+References: <20200220155353.8676-1-peterx@redhat.com>
+ <CAHk-=wjboPc5diXRfhgMQbDOxfJAW=8XyVmAVhAjx3Ha3W+u0Q@mail.gmail.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <CAHk-=wjboPc5diXRfhgMQbDOxfJAW=8XyVmAVhAjx3Ha3W+u0Q@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-It turns out that RDRAND is pretty slow. Comparing these two
-constructions:
+On Fri, Feb 21, 2020 at 11:32:36AM -0800, Linus Torvalds wrote:
+> On Thu, Feb 20, 2020 at 7:54 AM Peter Xu <peterx@redhat.com> wrote:
+> >
+> > This is v6 of the series.  It is majorly a rebase to 5.6-rc2, nothing
+> > else to be expected (plus some tests after the rebase).  Instead of
+> > rewrite the cover letter I decided to use what we have for v5.
+> 
+> I continue to think this is the right thing to do, and the series
+> looks good to me.
+> 
+> I'd love for it to get more testing, but realistically I suspect that
+> being in linux-next will be the right thing.
+> 
+> I've been assuming this will go through Andrew. He's not explicitly
+> cc'd, though (although maybe he does read all of linux-mm and has seen
+> this several times as a result).
 
-  for (i = 0; i < CHACHA_BLOCK_SIZE; i += sizeof(ret))
-    arch_get_random_long(&ret);
+I'm very sorry for missing that.  I should have cced Andrew for every
+mm patches.  Hope that's not a problem for this series.  I'll remember
+to do that from now on.  Thanks!
 
-and
-
-  long buf[CHACHA_BLOCK_SIZE / sizeof(long)];
-  extract_crng((u8 *)buf);
-
-it amortizes out to 352 cycles per long for the top one and 107 cycles
-per long for the bottom one, on Coffee Lake Refresh, Intel Core i9-9880H.
-
-And importantly, the top one has the drawback of not benefiting from the
-real rng, whereas the bottom one has all the nice benefits of using our
-own chacha rng. As get_random_u{32,64} gets used in more places (perhaps
-beyond what it was originally intended for when it was introduced as
-get_random_{int,long} back in the md5 monstrosity era), it seems like it
-might be a good thing to strengthen its posture a tiny bit. Doing this
-should only be stronger and not any weaker because that pool is already
-initialized with a bunch of rdrand data (when available). This way, we
-get the benefits of the hardware rng as well as our own rng.
-
-Another benefit of this is that we no longer hit pitfalls of the recent
-stream of AMD bugs in RDRAND. One often used code pattern for various
-things is:
-
-  do {
-  	val = get_random_u32();
-  } while (hash_table_contains_key(val));
-
-That recent AMD bug rendered that pattern useless, whereas we're really
-very certain that chacha20 output will give pretty distributed numbers,
-no matter what.
-
-So, this simplification seems better both from a security perspective
-and from a performance perspective.
-
-Signed-off-by: Jason A. Donenfeld <Jason@zx2c4.com>
-Reviewed-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
----
-Changes v1->v2:
-
-- Tony Luck suggested I also update the comment that referenced the
-  no-longer relevant RDRAND.
-
- drivers/char/random.c | 20 ++++----------------
- 1 file changed, 4 insertions(+), 16 deletions(-)
-
-diff --git a/drivers/char/random.c b/drivers/char/random.c
-index c7f9584de2c8..a6b77a850ddd 100644
---- a/drivers/char/random.c
-+++ b/drivers/char/random.c
-@@ -2149,11 +2149,11 @@ struct batched_entropy {
- 
- /*
-  * Get a random word for internal kernel use only. The quality of the random
-- * number is either as good as RDRAND or as good as /dev/urandom, with the
-- * goal of being quite fast and not depleting entropy. In order to ensure
-+ * number is good as /dev/urandom, but there is no backtrack protection, with
-+ * the goal of being quite fast and not depleting entropy. In order to ensure
-  * that the randomness provided by this function is okay, the function
-- * wait_for_random_bytes() should be called and return 0 at least once
-- * at any point prior.
-+ * wait_for_random_bytes() should be called and return 0 at least once at any
-+ * point prior.
-  */
- static DEFINE_PER_CPU(struct batched_entropy, batched_entropy_u64) = {
- 	.batch_lock	= __SPIN_LOCK_UNLOCKED(batched_entropy_u64.lock),
-@@ -2166,15 +2166,6 @@ u64 get_random_u64(void)
- 	struct batched_entropy *batch;
- 	static void *previous;
- 
--#if BITS_PER_LONG == 64
--	if (arch_get_random_long((unsigned long *)&ret))
--		return ret;
--#else
--	if (arch_get_random_long((unsigned long *)&ret) &&
--	    arch_get_random_long((unsigned long *)&ret + 1))
--	    return ret;
--#endif
--
- 	warn_unseeded_randomness(&previous);
- 
- 	batch = raw_cpu_ptr(&batched_entropy_u64);
-@@ -2199,9 +2190,6 @@ u32 get_random_u32(void)
- 	struct batched_entropy *batch;
- 	static void *previous;
- 
--	if (arch_get_random_int(&ret))
--		return ret;
--
- 	warn_unseeded_randomness(&previous);
- 
- 	batch = raw_cpu_ptr(&batched_entropy_u32);
 -- 
-2.25.0
+Peter Xu
 
