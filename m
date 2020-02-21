@@ -4,49 +4,52 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 58AC1C35640
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 08:22:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6403CC35640
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 08:22:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2C7C624676
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 08:22:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 30D6624672
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 08:22:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582273356;
-	bh=3TZXsTWy+GWOyXb49qV/Qbo9WyB4oDNA5l7odcnIJfE=;
+	s=default; t=1582273359;
+	bh=GmrqN0DFIZ7l/FZPcAk3tdx0dJ/S2si6wfb5OJrkPpw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=HkwWcAmGFMSZdpc6iCf7madAwN5tiwxpgJArsEptoZTpOctlyiJWN5wkrMQPKz5BP
-	 UPGQPahIT1qr94DYalRXRs48gEAENVDDorBhNP/cJsQrYNnQcFqov2wMTAj5MtsoS9
-	 PZei8+dAdYs/JavuhwnZ9hHHu5jfgi7uy43KrhjU=
+	b=m+Py4TolcvCofN2Xb14lXX9qAmKR7FxKDkIwWebcB5F41jmlxnAoQYUtjy0jN0hio
+	 Wu2eFE3Gl0IU/HzTEIPlHPOiKjD2fB3YfaEMxwklgCo5ZwW22XMvNVeoB+y4z1lkXS
+	 +W1j17dhPTA/z/syRi8ckYboTQJDLa2QR9MQl7DY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388328AbgBUIWe (ORCPT
+        id S2388338AbgBUIWh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Feb 2020 03:22:34 -0500
-Received: from mail.kernel.org ([198.145.29.99]:34182 "EHLO mail.kernel.org"
+        Fri, 21 Feb 2020 03:22:37 -0500
+Received: from mail.kernel.org ([198.145.29.99]:34218 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388317AbgBUIWc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Feb 2020 03:22:32 -0500
+        id S2388317AbgBUIWf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 21 Feb 2020 03:22:35 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 246ED24672;
-        Fri, 21 Feb 2020 08:22:30 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4DD7E24672;
+        Fri, 21 Feb 2020 08:22:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1582273351;
-        bh=3TZXsTWy+GWOyXb49qV/Qbo9WyB4oDNA5l7odcnIJfE=;
+        s=default; t=1582273354;
+        bh=GmrqN0DFIZ7l/FZPcAk3tdx0dJ/S2si6wfb5OJrkPpw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=qVVl8XBXZ+rr7q61qBQYW3BYn/zVPxuKiRdh6Fl8ei5w+sQ6bMPDLF1ZhGC1uVagu
-         xF7TI7tRmi/NgA839KcR8RNG9/HRuks1ztU7XC3yklkU4oDOeQqAUGUH8jTboEm/TK
-         v8Dpc+gcZJpan6QdaeGOXraJ6b17aMdGK+mhAF9E=
+        b=PH0PsBMTQBgk0XSvcARdW/nYBUhI6jSQ7xr6QlGnWCZJAo4pW6969AK27CeuowSsk
+         WuNvyH6Ah1qB+4QveEiloaImB/r8enIDfoU/2qlxXTkVwBbFrEoJmmTAXveEjx3UK7
+         eW711QO19nBJnO3U4W8QtUFhT+yas/sbfCFXAJ6g=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Ard Biesheuvel <ardb@kernel.org>,
-        Ingo Molnar <mingo@kernel.org>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 139/191] x86/mm: Fix NX bit clearing issue in kernel_map_pages_in_pgd
-Date:   Fri, 21 Feb 2020 08:41:52 +0100
-Message-Id: <20200221072307.386508422@linuxfoundation.org>
+        stable@vger.kernel.org,
+        =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= 
+        <u.kleine-koenig@pengutronix.de>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.19 140/191] pwm: omap-dmtimer: Remove PWM chip in .remove before making it unfunctional
+Date:   Fri, 21 Feb 2020 08:41:53 +0100
+Message-Id: <20200221072307.481538716@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200221072250.732482588@linuxfoundation.org>
 References: <20200221072250.732482588@linuxfoundation.org>
@@ -59,59 +62,47 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Ard Biesheuvel <ardb@kernel.org>
+From: Uwe Kleine-König <u.kleine-koenig@pengutronix.de>
 
-[ Upstream commit 75fbef0a8b6b4bb19b9a91b5214f846c2dc5139e ]
+[ Upstream commit 43efdc8f0e6d7088ec61bd55a73bf853f002d043 ]
 
-The following commit:
+In the old code (e.g.) mutex_destroy() was called before
+pwmchip_remove(). Between these two calls it is possible that a PWM
+callback is used which tries to grab the mutex.
 
-  15f003d20782 ("x86/mm/pat: Don't implicitly allow _PAGE_RW in kernel_map_pages_in_pgd()")
-
-modified kernel_map_pages_in_pgd() to manage writable permissions
-of memory mappings in the EFI page table in a different way, but
-in the process, it removed the ability to clear NX attributes from
-read-only mappings, by clobbering the clear mask if _PAGE_RW is not
-being requested.
-
-Failure to remove the NX attribute from read-only mappings is
-unlikely to be a security issue, but it does prevent us from
-tightening the permissions in the EFI page tables going forward,
-so let's fix it now.
-
-Fixes: 15f003d20782 ("x86/mm/pat: Don't implicitly allow _PAGE_RW in kernel_map_pages_in_pgd()
-Signed-off-by: Ard Biesheuvel <ardb@kernel.org>
-Signed-off-by: Ingo Molnar <mingo@kernel.org>
-Link: https://lore.kernel.org/r/20200113172245.27925-5-ardb@kernel.org
+Fixes: 6604c6556db9 ("pwm: Add PWM driver for OMAP using dual-mode timers")
+Signed-off-by: Uwe Kleine-König <u.kleine-koenig@pengutronix.de>
+Signed-off-by: Thierry Reding <thierry.reding@gmail.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/x86/mm/pageattr.c | 8 +-------
- 1 file changed, 1 insertion(+), 7 deletions(-)
+ drivers/pwm/pwm-omap-dmtimer.c | 7 ++++++-
+ 1 file changed, 6 insertions(+), 1 deletion(-)
 
-diff --git a/arch/x86/mm/pageattr.c b/arch/x86/mm/pageattr.c
-index e2d4b25c7aa44..101f3ad0d6ad1 100644
---- a/arch/x86/mm/pageattr.c
-+++ b/arch/x86/mm/pageattr.c
-@@ -2126,19 +2126,13 @@ int kernel_map_pages_in_pgd(pgd_t *pgd, u64 pfn, unsigned long address,
- 		.pgd = pgd,
- 		.numpages = numpages,
- 		.mask_set = __pgprot(0),
--		.mask_clr = __pgprot(0),
-+		.mask_clr = __pgprot(~page_flags & (_PAGE_NX|_PAGE_RW)),
- 		.flags = 0,
- 	};
+diff --git a/drivers/pwm/pwm-omap-dmtimer.c b/drivers/pwm/pwm-omap-dmtimer.c
+index 2d585c101d52e..c6e710a713d31 100644
+--- a/drivers/pwm/pwm-omap-dmtimer.c
++++ b/drivers/pwm/pwm-omap-dmtimer.c
+@@ -364,6 +364,11 @@ put:
+ static int pwm_omap_dmtimer_remove(struct platform_device *pdev)
+ {
+ 	struct pwm_omap_dmtimer_chip *omap = platform_get_drvdata(pdev);
++	int ret;
++
++	ret = pwmchip_remove(&omap->chip);
++	if (ret)
++		return ret;
  
- 	if (!(__supported_pte_mask & _PAGE_NX))
- 		goto out;
+ 	if (pm_runtime_active(&omap->dm_timer_pdev->dev))
+ 		omap->pdata->stop(omap->dm_timer);
+@@ -372,7 +377,7 @@ static int pwm_omap_dmtimer_remove(struct platform_device *pdev)
  
--	if (!(page_flags & _PAGE_NX))
--		cpa.mask_clr = __pgprot(_PAGE_NX);
--
--	if (!(page_flags & _PAGE_RW))
--		cpa.mask_clr = __pgprot(_PAGE_RW);
--
- 	if (!(page_flags & _PAGE_ENC))
- 		cpa.mask_clr = pgprot_encrypted(cpa.mask_clr);
+ 	mutex_destroy(&omap->mutex);
  
+-	return pwmchip_remove(&omap->chip);
++	return 0;
+ }
+ 
+ static const struct of_device_id pwm_omap_dmtimer_of_match[] = {
 -- 
 2.20.1
 
