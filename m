@@ -2,114 +2,119 @@ Return-Path: <SRS0=1210=4J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MSGID_FROM_MTA_HEADER,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EE44BC35647
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 10:44:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EED16C35647
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 10:45:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C1DE220722
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 10:44:54 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=silabs.onmicrosoft.com header.i=@silabs.onmicrosoft.com header.b="MXIwQKRt"
+	by mail.kernel.org (Postfix) with ESMTP id C9705222C4
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 10:45:04 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728049AbgBUKox (ORCPT
+        id S1728121AbgBUKpD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Feb 2020 05:44:53 -0500
-Received: from mail-co1nam11on2066.outbound.protection.outlook.com ([40.107.220.66]:6255
-        "EHLO NAM11-CO1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726325AbgBUKox (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Feb 2020 05:44:53 -0500
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=CN+BDGfLFMX9DVCCMIChGMkYdFBtxdJBOGIBf0JAcH95D3SX945cUL/j7tTVUDlYIMmj/SMN1tkBJIY9vPfxth2juoKOBtV+UUK5pVSEk0bXomfx17j7GU6H/fCpQv+ve1dhVRr84b5Y/CGUcGlLc3hz3vRlsxITNN6Z9lWXQbTweeS/htmhbnF90wSjWQBVZs7uFgs8MhE8bBxJAWTXYV5MyAtlPtoDdR8Xt2wYahKMhKMY3laD84GXNfT8tbkytI+c3MWm40sohI/Oe8TqpyDoDy547qC+cSO3Q8OVMzFeBmCyzJlqPaBMLsME/3752aVekt7ai47d1YQigJIpuw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=0yKMONHiuBf2VsFkqxQTxYQqMZfGxNuIOvHK8P9lq+Q=;
- b=LcdyYEI23mOfjkni658aYNwRs9RCXY5NzobDudZayA37Ftrs5BNss6F+UbrNuOLXyRflUdAXTUWTUOycUYnMTUjT5ZsJofRYz9mWMCkKxTBp8hzzWyKB6qIbD/jHV3V2XTxM/GMk69dVz1Q3IdstV4YaVVjmZhmQnqfoxJGt62gc5J1V4VU4Pb4XV/VnVN9DVPClWGHcvCSQ/OiLng2i2iurejNpJhXKm32tnZj5sY5eidyIRu8OJV/upqzV2YNEVRQroZwSMvTsuH+yfiihSvT4HtiK5E3TP2GXEu8KOV8LvlYn37VHuf38lMnFfcFpNYGbrh4/aiXBbPlGfxXK7Q==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=silabs.com; dmarc=pass action=none header.from=silabs.com;
- dkim=pass header.d=silabs.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=silabs.onmicrosoft.com; s=selector2-silabs-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=0yKMONHiuBf2VsFkqxQTxYQqMZfGxNuIOvHK8P9lq+Q=;
- b=MXIwQKRtzbFDXl3nPhXMM4Lcs0uWKdBZFCmsW4FnArMotOqSgb9u0lhpDP2w/KCfgiiccAlzy3ADYQ9mSSv6b5XQ37xEzDpyFzgGjEgCgo1bh3vCg/q47Uy4St79c/ThWFHf9FKJVn1sgatuXNgUotH7ux8szpKQJ350hvxz2VE=
-Authentication-Results: spf=none (sender IP is )
- smtp.mailfrom=Jerome.Pouiller@silabs.com; 
-Received: from MN2PR11MB4063.namprd11.prod.outlook.com (2603:10b6:208:13f::22)
- by MN2PR11MB4270.namprd11.prod.outlook.com (2603:10b6:208:18c::21) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2729.25; Fri, 21 Feb
- 2020 10:44:49 +0000
-Received: from MN2PR11MB4063.namprd11.prod.outlook.com
- ([fe80::ade4:5702:1c8b:a2b3]) by MN2PR11MB4063.namprd11.prod.outlook.com
- ([fe80::ade4:5702:1c8b:a2b3%7]) with mapi id 15.20.2729.033; Fri, 21 Feb 2020
- 10:44:48 +0000
-From:   Jerome Pouiller <Jerome.Pouiller@silabs.com>
-To:     linux-mmc@vger.kernel.org, Ulf Hansson <ulf.hansson@linaro.org>
-Cc:     linux-kernel@vger.kernel.org,
-        =?UTF-8?q?J=C3=A9r=C3=B4me=20Pouiller?= 
-        <jerome.pouiller@silabs.com>
-Subject: [PATCH] mmc: core: Fix indentation
-Date:   Fri, 21 Feb 2020 11:43:41 +0100
-Message-Id: <20200221104341.583028-1-Jerome.Pouiller@silabs.com>
-X-Mailer: git-send-email 2.25.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: base64
-X-ClientProxiedBy: PR0P264CA0041.FRAP264.PROD.OUTLOOK.COM
- (2603:10a6:100:1::29) To MN2PR11MB4063.namprd11.prod.outlook.com
- (2603:10b6:208:13f::22)
+        Fri, 21 Feb 2020 05:45:03 -0500
+Received: from foss.arm.com ([217.140.110.172]:36426 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727077AbgBUKpD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 21 Feb 2020 05:45:03 -0500
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 7B45C31B;
+        Fri, 21 Feb 2020 02:45:02 -0800 (PST)
+Received: from e121166-lin.cambridge.arm.com (e121166-lin.cambridge.arm.com [10.1.196.255])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 63E163F68F;
+        Fri, 21 Feb 2020 02:45:00 -0800 (PST)
+Date:   Fri, 21 Feb 2020 10:44:54 +0000
+From:   Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+To:     Boqun Feng <boqun.feng@gmail.com>
+Cc:     linux-pci@vger.kernel.org, linux-hyperv@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        Michael Kelley <mikelley@microsoft.com>,
+        "K. Y. Srinivasan" <kys@microsoft.com>,
+        Haiyang Zhang <haiyangz@microsoft.com>,
+        Stephen Hemminger <sthemmin@microsoft.com>,
+        Sasha Levin <sashal@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        "H. Peter Anvin" <hpa@zytor.com>, x86@kernel.org,
+        Andrew Murray <andrew.murray@arm.com>,
+        Bjorn Helgaas <bhelgaas@google.com>
+Subject: Re: [PATCH v3 0/3] PCI: hv: Generify pci-hyperv.c
+Message-ID: <20200221104454.GA8595@e121166-lin.cambridge.arm.com>
+References: <20200210033953.99692-1-boqun.feng@gmail.com>
+ <20200221023344.GJ69864@debian-boqun.qqnc3lrjykvubdpftowmye0fmh.lx.internal.cloudapp.net>
 MIME-Version: 1.0
-Received: from pc-42.silabs.com (37.71.187.125) by PR0P264CA0041.FRAP264.PROD.OUTLOOK.COM (2603:10a6:100:1::29) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2750.18 via Frontend Transport; Fri, 21 Feb 2020 10:44:47 +0000
-X-Mailer: git-send-email 2.25.0
-X-Originating-IP: [37.71.187.125]
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id: 3a3ceceb-db80-4fb3-f400-08d7b6bb12b1
-X-MS-TrafficTypeDiagnostic: MN2PR11MB4270:
-X-MS-Exchange-Transport-Forked: True
-X-Microsoft-Antispam-PRVS: <MN2PR11MB427049C92D28EA398C65698993120@MN2PR11MB4270.namprd11.prod.outlook.com>
-X-MS-Oob-TLC-OOBClassifiers: OLM:1303;
-X-Forefront-PRVS: 0320B28BE1
-X-Forefront-Antispam-Report: SFV:NSPM;SFS:(10009020)(376002)(136003)(366004)(39860400002)(346002)(396003)(189003)(199004)(6666004)(52116002)(66476007)(478600001)(66556008)(316002)(4326008)(66946007)(2616005)(2906002)(7696005)(956004)(107886003)(4744005)(6916009)(5660300002)(16526019)(26005)(36756003)(1076003)(186003)(81156014)(86362001)(8676002)(81166006)(6486002)(8936002);DIR:OUT;SFP:1101;SCL:1;SRVR:MN2PR11MB4270;H:MN2PR11MB4063.namprd11.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
-Received-SPF: None (protection.outlook.com: silabs.com does not designate
- permitted sender hosts)
-X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: nXcT6t3R5zoXFzL3+zcvs2j8UQQJ0dqzqo9g1yKFWon7H2zH9n2UWyBw2bHnBCvASwuzLkhNAqeZeJaxKf8/fXklBnspdpbDOza+CxNoOLICYqZ3OpxElNiimUB8INNI6e6cz654sM0XjmBH7EhkO0SXa8LsdEGe6Xr92m+g5fk4BUyg/7yhLE67UgQyz68JiAgty6TmbOAQa8Vv7icfpH9rbXQU/Kdmew9kgc5hG8IiMUapnl54uazMMoau5EsCnibviehfSabEw33i3BQCeW5mGlFUhqwB/9m/r2nmo8xcvRsOGT4iQBxrx2TlCd6LSS8WJCG0XiSVs/opf1UZBiZ+Ubp+6fz1xXXI0h1MD2nDlVzLYYvpOde8qlNktHS9SvZw8QZLgtgAgTunw8xhovXhRfAH8GberkVcBUEsyKFp+U9iPWfQi4CJ2snKYk78
-X-MS-Exchange-AntiSpam-MessageData: d2/b6EoSrF/kLaPhqH19ZtUMgXG5dQPeJmRuc/P7/7SDcTrbXTGuPKgRPMH2U7ix31FmpYfr/IaKzTpZp+3jBUhdwChfMaoeHER99TphHoXcEAuEV6OMyFhnQZOt3/xrifJquSjdzqb8K2fwxho9mw==
-X-OriginatorOrg: silabs.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 3a3ceceb-db80-4fb3-f400-08d7b6bb12b1
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 21 Feb 2020 10:44:48.9323
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 54dbd822-5231-4b20-944d-6f4abcd541fb
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: HpHTaIlW64tTPvySDdrgJHIRU03Oc7y1NGOFdNyb5gVyXkby3V3iqy/X+HY8y+8kv1HUTqatySRkWfKUuFizXw==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: MN2PR11MB4270
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200221023344.GJ69864@debian-boqun.qqnc3lrjykvubdpftowmye0fmh.lx.internal.cloudapp.net>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-RnJvbTogSsOpcsO0bWUgUG91aWxsZXIgPGplcm9tZS5wb3VpbGxlckBzaWxhYnMuY29tPgoKc2Rp
-b19zaW5nbGVfaXJxX3NldCgpIHdhcyBpbmRlbnRlZCB3aXRoIGEgbWl4IG9mIHRhYnMgYW5kIHNw
-YWNlcy4KClNpZ25lZC1vZmYtYnk6IErDqXLDtG1lIFBvdWlsbGVyIDxqZXJvbWUucG91aWxsZXJA
-c2lsYWJzLmNvbT4KLS0tCiBkcml2ZXJzL21tYy9jb3JlL3NkaW9faXJxLmMgfCAxMiArKysrKyst
-LS0tLS0KIDEgZmlsZSBjaGFuZ2VkLCA2IGluc2VydGlvbnMoKyksIDYgZGVsZXRpb25zKC0pCgpk
-aWZmIC0tZ2l0IGEvZHJpdmVycy9tbWMvY29yZS9zZGlvX2lycS5jIGIvZHJpdmVycy9tbWMvY29y
-ZS9zZGlvX2lycS5jCmluZGV4IDkwMDg3MTA3M2JkNy4uZmFlMjVmYzY1Yjk1IDEwMDY0NAotLS0g
-YS9kcml2ZXJzL21tYy9jb3JlL3NkaW9faXJxLmMKKysrIGIvZHJpdmVycy9tbWMvY29yZS9zZGlv
-X2lycS5jCkBAIC0yNzgsMTIgKzI3OCwxMiBAQCBzdGF0aWMgdm9pZCBzZGlvX3NpbmdsZV9pcnFf
-c2V0KHN0cnVjdCBtbWNfY2FyZCAqY2FyZCkKIAlpZiAoKGNhcmQtPmhvc3QtPmNhcHMgJiBNTUNf
-Q0FQX1NESU9fSVJRKSAmJgogCSAgICBjYXJkLT5ob3N0LT5zZGlvX2lycXMgPT0gMSkKIAkJZm9y
-IChpID0gMDsgaSA8IGNhcmQtPnNkaW9fZnVuY3M7IGkrKykgewotCQkgICAgICAgZnVuYyA9IGNh
-cmQtPnNkaW9fZnVuY1tpXTsKLQkJICAgICAgIGlmIChmdW5jICYmIGZ1bmMtPmlycV9oYW5kbGVy
-KSB7Ci0JCQkgICAgICAgY2FyZC0+c2Rpb19zaW5nbGVfaXJxID0gZnVuYzsKLQkJCSAgICAgICBi
-cmVhazsKLQkJICAgICAgIH0KLQkgICAgICAgfQorCQkJZnVuYyA9IGNhcmQtPnNkaW9fZnVuY1tp
-XTsKKwkJCWlmIChmdW5jICYmIGZ1bmMtPmlycV9oYW5kbGVyKSB7CisJCQkJY2FyZC0+c2Rpb19z
-aW5nbGVfaXJxID0gZnVuYzsKKwkJCQlicmVhazsKKwkJCX0KKwkJfQogfQogCiAvKioKLS0gCjIu
-MjUuMAoK
+On Fri, Feb 21, 2020 at 10:33:44AM +0800, Boqun Feng wrote:
+> Ping ;-)
+> 
+> Any suggestion or plan on this patchset?
+
+Hi,
+
+I shall have a look shortly, thanks.
+
+Lorenzo
+
+> Thanks and Regards,
+> Boqun
+> 
+> On Mon, Feb 10, 2020 at 11:39:50AM +0800, Boqun Feng wrote:
+> > Hi,
+> > 
+> > This is the first part for virtual PCI support of Hyper-V guest on
+> > ARM64. The whole patchset doesn't have any functional change, but only
+> > refactors the pci-hyperv.c code to make it more arch-independent.
+> > 
+> > Previous version:
+> > v1: https://lore.kernel.org/lkml/20200121015713.69691-1-boqun.feng@gmail.com/
+> > v2: https://lore.kernel.org/linux-arm-kernel/20200203050313.69247-1-boqun.feng@gmail.com/
+> > 
+> > Changes since v2:
+> > 
+> > *	Rebased on 5.6-rc1
+> > 
+> > *	Reword commit logs as per Andrew's suggestion.
+> > 
+> > *	It makes more sense to have a generic interface to set the whole
+> > 	msi_entry rather than only the "address" field. So change
+> > 	hv_set_msi_address_from_desc() to hv_set_msi_entry_from_desc().
+> > 	Additionally, make it an inline function as per the suggestion
+> > 	of Andrew and Thomas.
+> > 
+> > *	Add the missing comment saying the partition_id of
+> > 	hv_retarget_device_interrupt must be self.
+> > 
+> > *	Add the explanation for why "__packed" is needed for TLFS
+> > 	structures.
+> > 
+> > I've done compile and boot test of this patchset, also done some tests
+> > with a pass-through NVMe device.
+> > 
+> > Suggestions and comments are welcome!
+> > 
+> > Regards,
+> > Boqun
+> > 
+> > Boqun Feng (3):
+> >   PCI: hv: Move hypercall related definitions into tlfs header
+> >   PCI: hv: Move retarget related structures into tlfs header
+> >   PCI: hv: Introduce hv_msi_entry
+> > 
+> >  arch/x86/include/asm/hyperv-tlfs.h  | 41 +++++++++++++++++++++++++++
+> >  arch/x86/include/asm/mshyperv.h     |  8 ++++++
+> >  drivers/pci/controller/pci-hyperv.c | 43 ++---------------------------
+> >  3 files changed, 52 insertions(+), 40 deletions(-)
+> > 
+> > -- 
+> > 2.24.1
+> > 
