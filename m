@@ -5,49 +5,49 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AFA3CC35641
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 08:47:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 74EF2C35640
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 08:47:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 848E6206DB
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 08:47:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 49DD8206DB
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 08:47:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582274858;
-	bh=wySVuzOAKsVfP2zWPLQgRaUCUUY7XFfw5EC5uuHR3qU=;
+	s=default; t=1582274866;
+	bh=idBDqzu2y3o0QPiMY39TEUWKHEZlHWZnr1qSgzMQ1lU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Rid6c6H21rIw21D0CzSByF7q6lEGJQv6hu4MTYvToqZ3HMadAHJQNbmNFLbOsj+2b
-	 G3TMeopj8c7oAWDnAvlk6QQ8aX8K/+W8Q2RhOI39J+o8m3SrGPMhfya2LBriluljlg
-	 zSb8oP7I9QhcLUGZZFHqeHi4QGszJfXk08BArrMw=
+	b=h9pwObhgUMdik0sygnygfnGfv/eT1vRVukdv5yibx7tFqusaq3AkEyik4wQ/fJpOG
+	 0YWfBiwMceZL30c6ug3PUM2Fs9pELzB58dyGTmhu6DTC9OllZ6MVKiu/eCRu1sZ2hk
+	 P9iCm8mXCLgaHhqsLuh93k4QTuvoQHkhgSGix7WM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728687AbgBUHs2 (ORCPT
+        id S1732352AbgBUIro (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Feb 2020 02:48:28 -0500
-Received: from mail.kernel.org ([198.145.29.99]:44496 "EHLO mail.kernel.org"
+        Fri, 21 Feb 2020 03:47:44 -0500
+Received: from mail.kernel.org ([198.145.29.99]:44310 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728122AbgBUHsZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Feb 2020 02:48:25 -0500
+        id S1728730AbgBUHsT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 21 Feb 2020 02:48:19 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1DF20207FD;
-        Fri, 21 Feb 2020 07:48:23 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 87DEF207FD;
+        Fri, 21 Feb 2020 07:48:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1582271304;
-        bh=wySVuzOAKsVfP2zWPLQgRaUCUUY7XFfw5EC5uuHR3qU=;
+        s=default; t=1582271299;
+        bh=idBDqzu2y3o0QPiMY39TEUWKHEZlHWZnr1qSgzMQ1lU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=jXa1KmZpqWhVVlI8JpTD3AtfbPxm+4SJS9yJU+CfJaAssPlIEKjtFUQHJSExffmAu
-         CJkthCUE9PXhxsRwIPdIYptlJxRTxV9MtujtBz+Ou40sgIY3pGpGAvnO25/VdJadGx
-         jkKQsPdfUD9UngwRULmgaBdQOy5J1rQGV9XpWyLE=
+        b=P+424neCDuDf2ioVFH4l83NwuTi4xoh3D65F0aZ2BwWlxnJPSkkATvbwBuSyuHy8N
+         sh/Ccxcn5qTpdcLOPt6AD+IDn4xOnNhLnrZ4PdFBTPNKmgT2dXUTAbCPStM+q9RkBX
+         zwFN7d6q4y0kcOTQdn90xlWWfXFXq9+dv2o7hcoI=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Martin Schiller <ms@dev.tdt.de>,
-        "David S. Miller" <davem@davemloft.net>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.5 078/399] wan/hdlc_x25: fix skb handling
-Date:   Fri, 21 Feb 2020 08:36:43 +0100
-Message-Id: <20200221072409.927263069@linuxfoundation.org>
+        stable@vger.kernel.org,
+        =?UTF-8?q?Pali=20Roh=C3=A1r?= <pali.rohar@gmail.com>,
+        Jan Kara <jack@suse.cz>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.5 076/399] udf: Allow writing to Rewritable partitions
+Date:   Fri, 21 Feb 2020 08:36:41 +0100
+Message-Id: <20200221072409.731406618@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200221072402.315346745@linuxfoundation.org>
 References: <20200221072402.315346745@linuxfoundation.org>
@@ -60,68 +60,55 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Martin Schiller <ms@dev.tdt.de>
+From: Jan Kara <jack@suse.cz>
 
-[ Upstream commit 953c4a08dfc9ffe763a8340ac10f459d6c6cc4eb ]
+[ Upstream commit 15fb05fd286ac57a0802d71624daeb5c1c2d5b07 ]
 
-o call skb_reset_network_header() before hdlc->xmit()
- o change skb proto to HDLC (0x0019) before hdlc->xmit()
- o call dev_queue_xmit_nit() before hdlc->xmit()
+UDF 2.60 standard states in section 2.2.14.2:
 
-This changes make it possible to trace (tcpdump) outgoing layer2
-(ETH_P_HDLC) packets
+    A partition with Access Type 3 (rewritable) shall define a Freed
+    Space Bitmap or a Freed Space Table, see 2.3.3. All other partitions
+    shall not define a Freed Space Bitmap or a Freed Space Table.
 
-Additionally call skb_reset_network_header() after each skb_push() /
-skb_pull().
+    Rewritable partitions are used on media that require some form of
+    preprocessing before re-writing data (for example legacy MO). Such
+    partitions shall use Access Type 3.
 
-Signed-off-by: Martin Schiller <ms@dev.tdt.de>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+    Overwritable partitions are used on media that do not require
+    preprocessing before overwriting data (for example: CD-RW, DVD-RW,
+    DVD+RW, DVD-RAM, BD-RE, HD DVD-Rewritable). Such partitions shall
+    use Access Type 4.
+
+however older versions of the standard didn't have this wording and
+there are tools out there that create UDF filesystems with rewritable
+partitions but that don't contain a Freed Space Bitmap or a Freed Space
+Table on media that does not require pre-processing before overwriting a
+block. So instead of forcing media with rewritable partition read-only,
+base this decision on presence of a Freed Space Bitmap or a Freed Space
+Table.
+
+Reported-by: Pali Rohár <pali.rohar@gmail.com>
+Reviewed-by: Pali Rohár <pali.rohar@gmail.com>
+Fixes: b085fbe2ef7f ("udf: Fix crash during mount")
+Link: https://lore.kernel.org/linux-fsdevel/20200112144735.hj2emsoy4uwsouxz@pali
+Signed-off-by: Jan Kara <jack@suse.cz>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/wan/hdlc_x25.c | 13 +++++++++++--
- 1 file changed, 11 insertions(+), 2 deletions(-)
+ fs/udf/super.c | 1 -
+ 1 file changed, 1 deletion(-)
 
-diff --git a/drivers/net/wan/hdlc_x25.c b/drivers/net/wan/hdlc_x25.c
-index 5643675ff7241..bf78073ee7fd9 100644
---- a/drivers/net/wan/hdlc_x25.c
-+++ b/drivers/net/wan/hdlc_x25.c
-@@ -62,11 +62,12 @@ static int x25_data_indication(struct net_device *dev, struct sk_buff *skb)
- {
- 	unsigned char *ptr;
- 
--	skb_push(skb, 1);
--
- 	if (skb_cow(skb, 1))
- 		return NET_RX_DROP;
- 
-+	skb_push(skb, 1);
-+	skb_reset_network_header(skb);
-+
- 	ptr  = skb->data;
- 	*ptr = X25_IFACE_DATA;
- 
-@@ -79,6 +80,13 @@ static int x25_data_indication(struct net_device *dev, struct sk_buff *skb)
- static void x25_data_transmit(struct net_device *dev, struct sk_buff *skb)
- {
- 	hdlc_device *hdlc = dev_to_hdlc(dev);
-+
-+	skb_reset_network_header(skb);
-+	skb->protocol = hdlc_type_trans(skb, dev);
-+
-+	if (dev_nit_active(dev))
-+		dev_queue_xmit_nit(skb, dev);
-+
- 	hdlc->xmit(skb, dev); /* Ignore return value :-( */
- }
- 
-@@ -93,6 +101,7 @@ static netdev_tx_t x25_xmit(struct sk_buff *skb, struct net_device *dev)
- 	switch (skb->data[0]) {
- 	case X25_IFACE_DATA:	/* Data to be transmitted */
- 		skb_pull(skb, 1);
-+		skb_reset_network_header(skb);
- 		if ((result = lapb_data_request(dev, skb)) != LAPB_OK)
- 			dev_kfree_skb(skb);
- 		return NETDEV_TX_OK;
+diff --git a/fs/udf/super.c b/fs/udf/super.c
+index 8c28e93e9b730..008bf96b1732d 100644
+--- a/fs/udf/super.c
++++ b/fs/udf/super.c
+@@ -1035,7 +1035,6 @@ static int check_partition_desc(struct super_block *sb,
+ 	switch (le32_to_cpu(p->accessType)) {
+ 	case PD_ACCESS_TYPE_READ_ONLY:
+ 	case PD_ACCESS_TYPE_WRITE_ONCE:
+-	case PD_ACCESS_TYPE_REWRITABLE:
+ 	case PD_ACCESS_TYPE_NONE:
+ 		goto force_ro;
+ 	}
 -- 
 2.20.1
 
