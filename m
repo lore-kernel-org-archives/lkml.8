@@ -2,88 +2,116 @@ Return-Path: <SRS0=1210=4J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7DAF8C11D00
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 01:31:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EAF7DC11D24
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 01:34:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5ACE6208E4
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 01:31:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CCDF524656
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 01:34:56 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729580AbgBUBbf convert rfc822-to-8bit (ORCPT
+        id S1729598AbgBUBe4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Feb 2020 20:31:35 -0500
-Received: from szxga03-in.huawei.com ([45.249.212.189]:2587 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1729502AbgBUBbe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Feb 2020 20:31:34 -0500
-Received: from DGGEMM403-HUB.china.huawei.com (unknown [172.30.72.54])
-        by Forcepoint Email with ESMTP id 21462BDAFE3C774C6D18;
-        Fri, 21 Feb 2020 09:31:31 +0800 (CST)
-Received: from dggeme754-chm.china.huawei.com (10.3.19.100) by
- DGGEMM403-HUB.china.huawei.com (10.3.20.211) with Microsoft SMTP Server (TLS)
- id 14.3.439.0; Fri, 21 Feb 2020 09:31:29 +0800
-Received: from dggeme753-chm.china.huawei.com (10.3.19.99) by
- dggeme754-chm.china.huawei.com (10.3.19.100) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id
- 15.1.1713.5; Fri, 21 Feb 2020 09:31:28 +0800
-Received: from dggeme753-chm.china.huawei.com ([10.7.64.70]) by
- dggeme753-chm.china.huawei.com ([10.7.64.70]) with mapi id 15.01.1713.004;
- Fri, 21 Feb 2020 09:31:28 +0800
-From:   linmiaohe <linmiaohe@huawei.com>
-To:     Vitaly Kuznetsov <vkuznets@redhat.com>
-CC:     "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "x86@kernel.org" <x86@kernel.org>,
-        "pbonzini@redhat.com" <pbonzini@redhat.com>,
-        "rkrcmar@redhat.com" <rkrcmar@redhat.com>,
-        "sean.j.christopherson@intel.com" <sean.j.christopherson@intel.com>,
-        "wanpengli@tencent.com" <wanpengli@tencent.com>,
-        "jmattson@google.com" <jmattson@google.com>,
-        "joro@8bytes.org" <joro@8bytes.org>,
-        "tglx@linutronix.de" <tglx@linutronix.de>,
-        "mingo@redhat.com" <mingo@redhat.com>,
-        "bp@alien8.de" <bp@alien8.de>, "hpa@zytor.com" <hpa@zytor.com>
-Subject: Re: [PATCH] KVM: apic: avoid calculating pending eoi from an
- uninitialized val
-Thread-Topic: [PATCH] KVM: apic: avoid calculating pending eoi from an
- uninitialized val
-Thread-Index: AdXoVXZpfpesId6ET2iiNj75bnuaGg==
-Date:   Fri, 21 Feb 2020 01:31:28 +0000
-Message-ID: <91e9222f333648db84cb06c77cbdfb2f@huawei.com>
-Accept-Language: en-US
-Content-Language: zh-CN
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-originating-ip: [10.173.221.158]
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 8BIT
+        Thu, 20 Feb 2020 20:34:56 -0500
+Received: from mail104.syd.optusnet.com.au ([211.29.132.246]:54386 "EHLO
+        mail104.syd.optusnet.com.au" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1729516AbgBUBez (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 20 Feb 2020 20:34:55 -0500
+Received: from dread.disaster.area (pa49-195-185-106.pa.nsw.optusnet.com.au [49.195.185.106])
+        by mail104.syd.optusnet.com.au (Postfix) with ESMTPS id 9D2FA820B9F;
+        Fri, 21 Feb 2020 12:34:52 +1100 (AEDT)
+Received: from dave by dread.disaster.area with local (Exim 4.92.3)
+        (envelope-from <david@fromorbit.com>)
+        id 1j4xDP-0005DD-UK; Fri, 21 Feb 2020 12:34:51 +1100
+Date:   Fri, 21 Feb 2020 12:34:51 +1100
+From:   Dave Chinner <david@fromorbit.com>
+To:     ira.weiny@intel.com
+Cc:     linux-kernel@vger.kernel.org,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        "Darrick J. Wong" <darrick.wong@oracle.com>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Christoph Hellwig <hch@lst.de>,
+        "Theodore Y. Ts'o" <tytso@mit.edu>, Jan Kara <jack@suse.cz>,
+        linux-ext4@vger.kernel.org, linux-xfs@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org
+Subject: Re: [PATCH V4 02/13] fs/xfs: Clarify lockdep dependency for
+ xfs_isilocked()
+Message-ID: <20200221013451.GU10776@dread.disaster.area>
+References: <20200221004134.30599-1-ira.weiny@intel.com>
+ <20200221004134.30599-3-ira.weiny@intel.com>
 MIME-Version: 1.0
-X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200221004134.30599-3-ira.weiny@intel.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
+X-Optus-CM-Score: 0
+X-Optus-CM-Analysis: v=2.3 cv=W5xGqiek c=1 sm=1 tr=0
+        a=bkRQb8bsQZKWSSj4M57YXw==:117 a=bkRQb8bsQZKWSSj4M57YXw==:17
+        a=jpOVt7BSZ2e4Z31A5e1TngXxSK0=:19 a=kj9zAlcOel0A:10 a=l697ptgUJYAA:10
+        a=QyXUC8HyAAAA:8 a=7-415B0cAAAA:8 a=GGKX1iC3Kp7g_2JCx8gA:9
+        a=CjuIK1q_8ugA:10 a=biEYGPWJfzWAr4FL6Ov7:22
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Vitaly Kuznetsov <vkuznets@redhat.com> writes:
->linmiaohe <linmiaohe@huawei.com> writes:
->> When get user eoi value failed, var val would be uninitialized and 
->> result in calculating pending eoi from an uninitialized val. 
->> Initialize var val to 0 to fix this case.
->
->Let me try to suggest an alternative wording,
->
->"When pv_eoi_get_user() fails, 'val' may remain uninitialized and the return value of pv_eoi_get_pending() becomes random. Fix the issue by initializing the variable."
+On Thu, Feb 20, 2020 at 04:41:23PM -0800, ira.weiny@intel.com wrote:
+> From: Ira Weiny <ira.weiny@intel.com>
+> 
+> xfs_isilocked() can't work fully without CONFIG_LOCKDEP.  However,
+> making xfs_isilocked() dependant on CONFIG_LOCKDEP is not feasible
+> because it is used for more than the i_rwsem.  Therefore a short-circuit
+> was provided via debug_locks.  However, this caused confusion while
+> working through the xfs locking.
+> 
+> Rather than use debug_locks as a flag specify this clearly using
+> IS_ENABLED(CONFIG_LOCKDEP).
+> 
+> Signed-off-by: Ira Weiny <ira.weiny@intel.com>
+> 
+> ---
+> Changes from V3:
+> 	Reordered to be a "pre-cleanup" patch
+> 
+> Changes from V2:
+> 	This patch is new for V3
+> ---
+>  fs/xfs/xfs_inode.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/fs/xfs/xfs_inode.c b/fs/xfs/xfs_inode.c
+> index c5077e6326c7..35df324875db 100644
+> --- a/fs/xfs/xfs_inode.c
+> +++ b/fs/xfs/xfs_inode.c
+> @@ -364,7 +364,7 @@ xfs_isilocked(
+>  
+>  	if (lock_flags & (XFS_IOLOCK_EXCL|XFS_IOLOCK_SHARED)) {
+>  		if (!(lock_flags & XFS_IOLOCK_SHARED))
+> -			return !debug_locks ||
+> +			return !IS_ENABLED(CONFIG_LOCKDEP) ||
+>  				lockdep_is_held_type(&VFS_I(ip)->i_rwsem, 0);
 
-Sounds much better. You're really good at it. :) Thanks.
+This breaks expected lockdep behaviour.
 
->>
->>
->Reviewed-by: Vitaly Kuznetsov <vkuznets@redhat.com>
->
->But why compilers don't complain?
+We need to use debug_locks here because lockdep turns off lock
+checking via debug_locks when lockdep encounters a locking
+inconsistency.  We only want to know about the first locking
+problem, not spew cascading lock problems over and over once we
+already know there is a locking problem.
 
-Maybe it's because @val only remain uninitialized when pv_eoi_get_user() failed?
+IOWs, checking debug_locks is required here for the same reason it
+is used in lockdep_assert_held_{read/write}(). essentially we are
+open coding lockdep_assert_held_write() here because this function
+is only called from within ASSERT() statements and we don't want
+multiple WARN/BUGs being issued when this triggers....
 
+Cheers,
+
+Dave.
+-- 
+Dave Chinner
+david@fromorbit.com
