@@ -7,47 +7,48 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0E366C35641
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 08:23:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 48308C35640
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 08:23:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D0841246A0
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 08:23:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1FC0824697
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 08:23:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582273418;
-	bh=Mtlh610rIh1oU57Gn79F/DgIvT7mImV8G06VW8H0y+o=;
+	s=default; t=1582273420;
+	bh=LiJe7Oagm1mNMXF6zMLtUS9MDYRytae+4NbXXsV9DaI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=yfQrVk+ReqMwsIRuItbR/eOIqGNQaBySLnGfT0geQqxOyS4PJBvEEvmb/xgqV/XRD
-	 FG3NKQp+IwOydAx/zzcBr2VMkO9fkCvESp0nVoUmgjpR3x0l2/LJShePYYl0hv/j3f
-	 3kB/D0KftDxoHrAYnQy4ecpxPHF8t+4T+MLYNXhw=
+	b=upAjAp0CB5gGaRn3D2abWglmdW9o121DzJXDwpw3rlN/3MEbqwE3AXS7cADjVCjtQ
+	 u4OkxxYFBj9TJwji+d7WQ4cNtiJSBjyzhVE05k4jkLa+BE0K+LSAc6wJGSZspN7A9X
+	 fQoqo0qyrgwAhk0+5c69vtv2nO8yaVg2nAiWam+c=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387964AbgBUIXh (ORCPT
+        id S2388497AbgBUIXc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Feb 2020 03:23:37 -0500
-Received: from mail.kernel.org ([198.145.29.99]:35642 "EHLO mail.kernel.org"
+        Fri, 21 Feb 2020 03:23:32 -0500
+Received: from mail.kernel.org ([198.145.29.99]:35522 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388490AbgBUIXe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Feb 2020 03:23:34 -0500
+        id S2388486AbgBUIX2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 21 Feb 2020 03:23:28 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2B25A206ED;
-        Fri, 21 Feb 2020 08:23:32 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 95EA224697;
+        Fri, 21 Feb 2020 08:23:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1582273413;
-        bh=Mtlh610rIh1oU57Gn79F/DgIvT7mImV8G06VW8H0y+o=;
+        s=default; t=1582273408;
+        bh=LiJe7Oagm1mNMXF6zMLtUS9MDYRytae+4NbXXsV9DaI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=LjXPLC8KO1sTPvesVluFmCBVO4Bwbu0QW2KMLNrsW9vlCVzfhW+w+31E58O9VtqKe
-         ejC7IlvsiwKA8cb2G6/lTo2Kdja9oXNmW1hQ99eARIBmvCTIouEzokTwVM/3dpgG6A
-         ZrLhcbuvK/ochwS+OF/GT2trMjxOM+tAbuESr1vk=
+        b=Us42cI4wy5Ihk+NVP/r4zjhx6ZUr8gV3mjsSPVV3W0pf76uPQfuNokrAyP6OPhBJf
+         wAcusXh3mPvMFhVLCZjvwCtxbiKAPEfPSmVZ52Ap3kL2mSptz3j8NfXKm45r6EVuto
+         8M0uA8gGbJ68UsvRJv4bQvBuemE1Cnfl0dv0VhoM=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Lu Baolu <baolu.lu@linux.intel.com>,
-        Joerg Roedel <jroedel@suse.de>,
-        Sasha Levin <sashal@kernel.org>, Frank <fgndev@posteo.de>
-Subject: [PATCH 4.19 160/191] iommu/vt-d: Remove unnecessary WARN_ON_ONCE()
-Date:   Fri, 21 Feb 2020 08:42:13 +0100
-Message-Id: <20200221072310.035950622@linuxfoundation.org>
+        stable@vger.kernel.org, Oliver OHalloran <oohall@gmail.com>,
+        Sam Bobroff <sbobroff@linux.ibm.com>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.19 158/191] powerpc/sriov: Remove VF eeh_dev state when disabling SR-IOV
+Date:   Fri, 21 Feb 2020 08:42:11 +0100
+Message-Id: <20200221072309.787670966@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200221072250.732482588@linuxfoundation.org>
 References: <20200221072250.732482588@linuxfoundation.org>
@@ -60,47 +61,55 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Lu Baolu <baolu.lu@linux.intel.com>
+From: Oliver O'Halloran <oohall@gmail.com>
 
-[ Upstream commit 857f081426e5aa38313426c13373730f1345fe95 ]
+[ Upstream commit 1fb4124ca9d456656a324f1ee29b7bf942f59ac8 ]
 
-Address field in device TLB invalidation descriptor is qualified
-by the S field. If S field is zero, a single page at page address
-specified by address [63:12] is requested to be invalidated. If S
-field is set, the least significant bit in the address field with
-value 0b (say bit N) indicates the invalidation address range. The
-spec doesn't require the address [N - 1, 0] to be cleared, hence
-remove the unnecessary WARN_ON_ONCE().
+When disabling virtual functions on an SR-IOV adapter we currently do not
+correctly remove the EEH state for the now-dead virtual functions. When
+removing the pci_dn that was created for the VF when SR-IOV was enabled
+we free the corresponding eeh_dev without removing it from the child device
+list of the eeh_pe that contained it. This can result in crashes due to the
+use-after-free.
 
-Otherwise, the caller might set "mask = MAX_AGAW_PFN_WIDTH" in order
-to invalidating all the cached mappings on an endpoint, and below
-overflow error will be triggered.
-
-[...]
-UBSAN: Undefined behaviour in drivers/iommu/dmar.c:1354:3
-shift exponent 64 is too large for 64-bit type 'long long unsigned int'
-[...]
-
-Reported-and-tested-by: Frank <fgndev@posteo.de>
-Signed-off-by: Lu Baolu <baolu.lu@linux.intel.com>
-Signed-off-by: Joerg Roedel <jroedel@suse.de>
+Signed-off-by: Oliver O'Halloran <oohall@gmail.com>
+Reviewed-by: Sam Bobroff <sbobroff@linux.ibm.com>
+Tested-by: Sam Bobroff <sbobroff@linux.ibm.com>
+Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
+Link: https://lore.kernel.org/r/20190821062655.19735-1-oohall@gmail.com
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/iommu/dmar.c | 1 -
- 1 file changed, 1 deletion(-)
+ arch/powerpc/kernel/pci_dn.c | 15 ++++++++++++++-
+ 1 file changed, 14 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/iommu/dmar.c b/drivers/iommu/dmar.c
-index 7f9824b0609e7..72994d67bc5b9 100644
---- a/drivers/iommu/dmar.c
-+++ b/drivers/iommu/dmar.c
-@@ -1345,7 +1345,6 @@ void qi_flush_dev_iotlb(struct intel_iommu *iommu, u16 sid, u16 pfsid,
- 	struct qi_desc desc;
+diff --git a/arch/powerpc/kernel/pci_dn.c b/arch/powerpc/kernel/pci_dn.c
+index ab147a1909c8b..7cecc3bd953b7 100644
+--- a/arch/powerpc/kernel/pci_dn.c
++++ b/arch/powerpc/kernel/pci_dn.c
+@@ -257,9 +257,22 @@ void remove_dev_pci_data(struct pci_dev *pdev)
+ 				continue;
  
- 	if (mask) {
--		WARN_ON_ONCE(addr & ((1ULL << (VTD_PAGE_SHIFT + mask)) - 1));
- 		addr |= (1ULL << (VTD_PAGE_SHIFT + mask - 1)) - 1;
- 		desc.high = QI_DEV_IOTLB_ADDR(addr) | QI_DEV_IOTLB_SIZE;
- 	} else
+ #ifdef CONFIG_EEH
+-			/* Release EEH device for the VF */
++			/*
++			 * Release EEH state for this VF. The PCI core
++			 * has already torn down the pci_dev for this VF, but
++			 * we're responsible to removing the eeh_dev since it
++			 * has the same lifetime as the pci_dn that spawned it.
++			 */
+ 			edev = pdn_to_eeh_dev(pdn);
+ 			if (edev) {
++				/*
++				 * We allocate pci_dn's for the totalvfs count,
++				 * but only only the vfs that were activated
++				 * have a configured PE.
++				 */
++				if (edev->pe)
++					eeh_rmv_from_parent_pe(edev);
++
+ 				pdn->edev = NULL;
+ 				kfree(edev);
+ 			}
 -- 
 2.20.1
 
