@@ -7,47 +7,48 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 65C37C35641
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 08:27:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4AE39C35641
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 08:27:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2F62C24681
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 08:27:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 19BD324681
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 08:27:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582273657;
-	bh=H7Q6UGkUDohsAqgIcQdUPnUGdO92IToU1TSe781EBNM=;
+	s=default; t=1582273663;
+	bh=3kbU4PpQCtspoH5V5Ms/X/D2pQJR9+ziZQiWMj764e8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=VodNF6SD8aaDDrZrIZP1fv2WACk+UbzYHWIvvOxkpJLH3sY9TSXb/A3jyAWOoqa7b
-	 lJpKUvuUhoz/Aga9/zDQ5qmbArjFMg5DFZrxpvDKeaUd5C+r11aToWmDfC3ZYApuTl
-	 IXTNZ0ukPHO8Rq2LHuEhSrB8EM+5Qy8RsEVat8wU=
+	b=EYWX4VkAs8r2wzNr9O3Bo8V6y075Hl5phRA1NWSnwHylFyRxmwsJqlO9k16zL0t97
+	 HUbhOGgJHYO+iUCxeNOy79k5wtT6pEBedCIGqCvlNNHHM9xEgKXnfkKrO+G6ToCUUk
+	 8Ke3XAQA7XhVK27mdk1WpCRCFUEArIUfyMRygsQM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388598AbgBUI1g (ORCPT
+        id S2388653AbgBUI1l (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Feb 2020 03:27:36 -0500
-Received: from mail.kernel.org ([198.145.29.99]:33134 "EHLO mail.kernel.org"
+        Fri, 21 Feb 2020 03:27:41 -0500
+Received: from mail.kernel.org ([198.145.29.99]:60950 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730303AbgBUIVq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Feb 2020 03:21:46 -0500
+        id S1730807AbgBUIV1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 21 Feb 2020 03:21:27 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6AC6220578;
-        Fri, 21 Feb 2020 08:21:45 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6D145222C4;
+        Fri, 21 Feb 2020 08:21:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1582273305;
-        bh=H7Q6UGkUDohsAqgIcQdUPnUGdO92IToU1TSe781EBNM=;
+        s=default; t=1582273286;
+        bh=3kbU4PpQCtspoH5V5Ms/X/D2pQJR9+ziZQiWMj764e8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=bJZeTYiHXWq6XK9lxFIIdi733E90l/sCV1RkQOrJ3p9lQ72unS95lsX0l8Kq0mFQZ
-         GKBCO+QEYzFWDskG2q8bvnJDDQUVxIaoSjn5OUxPoUPnFhh37DOFZpTf+jDe9JtjS0
-         mWFyPJKKSx9nmZuLixFxLC+HnU/t1zKMSCtKh0e4=
+        b=PGzVEzlQ92jr5rSb7WR1lkWOV+R/ljd5Iz6WgzUZtVO0Yp7EUENEOmNaidh6aPZfR
+         YX4pL6whB/Vud8dVsw12rENfQMnxMPIQJtrargcaqQ0G3o/MyEAa+xRfUWnqou5K6d
+         AS97oTkrpIYulsTteA5s0qRvUKRok0hocibeE5wA=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Geert Uytterhoeven <geert+renesas@glider.be>,
+        stable@vger.kernel.org, Hulk Robot <hulkci@huawei.com>,
+        Chen Zhou <chenzhou10@huawei.com>,
+        Mark Brown <broonie@kernel.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 120/191] driver core: Print device when resources present in really_probe()
-Date:   Fri, 21 Feb 2020 08:41:33 +0100
-Message-Id: <20200221072305.278715977@linuxfoundation.org>
+Subject: [PATCH 4.19 114/191] ASoC: atmel: fix build error with CONFIG_SND_ATMEL_SOC_DMA=m
+Date:   Fri, 21 Feb 2020 08:41:27 +0100
+Message-Id: <20200221072304.590894861@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200221072250.732482588@linuxfoundation.org>
 References: <20200221072250.732482588@linuxfoundation.org>
@@ -60,43 +61,41 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Geert Uytterhoeven <geert+renesas@glider.be>
+From: Chen Zhou <chenzhou10@huawei.com>
 
-[ Upstream commit 7c35e699c88bd60734277b26962783c60e04b494 ]
+[ Upstream commit 8fea78029f5e6ed734ae1957bef23cfda1af4354 ]
 
-If a device already has devres items attached before probing, a warning
-backtrace is printed.  However, this backtrace does not reveal the
-offending device, leaving the user uninformed.  Furthermore, using
-WARN_ON() causes systems with panic-on-warn to reboot.
+If CONFIG_SND_ATMEL_SOC_DMA=m, build error:
 
-Fix this by replacing the WARN_ON() by a dev_crit() message.
-Abort probing the device, to prevent doing more damage to the device's
-resources.
+sound/soc/atmel/atmel_ssc_dai.o: In function `atmel_ssc_set_audio':
+(.text+0x7cd): undefined reference to `atmel_pcm_dma_platform_register'
 
-Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
-Link: https://lore.kernel.org/r/20191206132219.28908-1-geert+renesas@glider.be
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Function atmel_pcm_dma_platform_register is defined under
+CONFIG SND_ATMEL_SOC_DMA, so select SND_ATMEL_SOC_DMA in
+CONFIG SND_ATMEL_SOC_SSC, same to CONFIG_SND_ATMEL_SOC_PDC.
+
+Reported-by: Hulk Robot <hulkci@huawei.com>
+Signed-off-by: Chen Zhou <chenzhou10@huawei.com>
+Link: https://lore.kernel.org/r/20200113133242.144550-1-chenzhou10@huawei.com
+Signed-off-by: Mark Brown <broonie@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/base/dd.c | 5 ++++-
- 1 file changed, 4 insertions(+), 1 deletion(-)
+ sound/soc/atmel/Kconfig | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/drivers/base/dd.c b/drivers/base/dd.c
-index 11d24a552ee49..5f6416e6ba96b 100644
---- a/drivers/base/dd.c
-+++ b/drivers/base/dd.c
-@@ -470,7 +470,10 @@ static int really_probe(struct device *dev, struct device_driver *drv)
- 	atomic_inc(&probe_count);
- 	pr_debug("bus: '%s': %s: probing driver %s with device %s\n",
- 		 drv->bus->name, __func__, drv->name, dev_name(dev));
--	WARN_ON(!list_empty(&dev->devres_head));
-+	if (!list_empty(&dev->devres_head)) {
-+		dev_crit(dev, "Resources present before probing\n");
-+		return -EBUSY;
-+	}
+diff --git a/sound/soc/atmel/Kconfig b/sound/soc/atmel/Kconfig
+index 64b784e96f844..dad778e5884bd 100644
+--- a/sound/soc/atmel/Kconfig
++++ b/sound/soc/atmel/Kconfig
+@@ -25,6 +25,8 @@ config SND_ATMEL_SOC_DMA
  
- re_probe:
- 	dev->driver = drv;
+ config SND_ATMEL_SOC_SSC_DMA
+ 	tristate
++	select SND_ATMEL_SOC_DMA
++	select SND_ATMEL_SOC_PDC
+ 
+ config SND_ATMEL_SOC_SSC
+ 	tristate
 -- 
 2.20.1
 
