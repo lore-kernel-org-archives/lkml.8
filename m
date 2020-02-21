@@ -4,49 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3BA97C35642
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 07:58:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 95B0EC35640
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 07:58:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0480E206ED
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 07:58:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5A86F2073A
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 07:58:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582271918;
-	bh=FSZNZhAOFhYYMThmr+oCAnsLgXdPEgdWYjoPiw6Ulfs=;
+	s=default; t=1582271921;
+	bh=gL1QEeR6PJrwA5ExvA/MU2u2t/8kiN9G1g+z+gyqnTA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=1DJBaF7L13F1p7ojbsZq8gdIS87Srdb11bNMPlWrv1WAGvELX0qBjNAqYBbKQjI4r
-	 Ip2G7fvzioHBvhvC+MoDCwenSs9Uq4fh2nb706ygorW1nrIOkeFybR9eZpMFeiH5sm
-	 jXO/Qh7Ee3+JGb0v/8uE3XGcZXFGVbWk9vxlFjfQ=
+	b=Gx6i4Ls7255RCMY8GQZASRPNDOaNyyCqftswoEt3pqqNvtR3qonOAih1PFTjdxtnz
+	 tN2RtXN0++irPvRmhcJTm8/OyExNuZG+E1eZsi74lToHUcsEhUvAq/vcNBTsDAXNXo
+	 9L5Hmir7zJZdlZC5iAHVcEboIdz0CNRfa8M7a+VA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730787AbgBUH6d (ORCPT
+        id S1730808AbgBUH6k (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Feb 2020 02:58:33 -0500
-Received: from mail.kernel.org ([198.145.29.99]:58288 "EHLO mail.kernel.org"
+        Fri, 21 Feb 2020 02:58:40 -0500
+Received: from mail.kernel.org ([198.145.29.99]:58420 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730776AbgBUH62 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Feb 2020 02:58:28 -0500
+        id S1729326AbgBUH6g (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 21 Feb 2020 02:58:36 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id DB838206ED;
-        Fri, 21 Feb 2020 07:58:26 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id EBB05206ED;
+        Fri, 21 Feb 2020 07:58:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1582271907;
-        bh=FSZNZhAOFhYYMThmr+oCAnsLgXdPEgdWYjoPiw6Ulfs=;
+        s=default; t=1582271915;
+        bh=gL1QEeR6PJrwA5ExvA/MU2u2t/8kiN9G1g+z+gyqnTA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=v34Cg5drAv/RGS7/77AhPqIwS39Ay7+v7Frs802BNN5nXXt2NSyIdYbfTmaBeju22
-         9WYpxTsQCFU3fG6eDZgPZ0kiUEUZNwxxfcFhVJTom0HIsvw3qQPQiJ0Bc3MQXlfXmO
-         8gN6MJPbyDEMqb5lUedEkn98adpo26svcImhZDfs=
+        b=Qvc3ywQjgHZmJ3ki5+p2EijUUe8gHsasXAyU/m6GTZEXJVhSH6MUOpEmcm5orE3KO
+         0rMaX1FwbrKDi37gKO/exooarA2UAEkyU3K8GM5JqVEvKuqMStNLY/Ybpq8l4kD6Ns
+         NFsYSVMNxHMX0GsDe7cbhGkTkdNTjOLAx5fur6Dg=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Masahiro Yamada <masahiroy@kernel.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.5 316/399] kbuild: use -S instead of -E for precise cc-option test in Kconfig
-Date:   Fri, 21 Feb 2020 08:40:41 +0100
-Message-Id: <20200221072432.144557510@linuxfoundation.org>
+        stable@vger.kernel.org, Nicola Lunghi <nick83ola@gmail.com>,
+        Takashi Iwai <tiwai@suse.de>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.5 345/399] ALSA: usb-audio: add quirks for Line6 Helix devices fw>=2.82
+Date:   Fri, 21 Feb 2020 08:41:10 +0100
+Message-Id: <20200221072434.305802013@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200221072402.315346745@linuxfoundation.org>
 References: <20200221072402.315346745@linuxfoundation.org>
@@ -59,47 +59,39 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Masahiro Yamada <masahiroy@kernel.org>
+From: Nicola Lunghi <nick83ola@gmail.com>
 
-[ Upstream commit 3bed1b7b9d79ca40e41e3af130931a3225e951a3 ]
+[ Upstream commit b81cbf7abfc94878a3c6f0789f2185ee55b1cc21 ]
 
-Currently, -E (stop after the preprocessing stage) is used to check
-whether the given compiler flag is supported.
+With firmware 2.82 Line6 changed the usb id of some of the Helix
+devices but the quirks is still needed.
 
-While it is faster than -S (or -c), it can be false-positive. You need
-to run the compilation proper to check the flag more precisely.
+Add it to the quirk list for line6 helix family of devices.
 
-For example, -E and -S disagree about the support of
-"--param asan-instrument-allocas=1".
+Thanks to Jens for pointing out the missing ids.
 
-$ gcc -Werror --param asan-instrument-allocas=1 -E -x c /dev/null -o /dev/null
-$ echo $?
-0
-
-$ gcc -Werror --param asan-instrument-allocas=1 -S -x c /dev/null -o /dev/null
-cc1: error: invalid --param name ‘asan-instrument-allocas’; did you mean ‘asan-instrument-writes’?
-$ echo $?
-1
-
-Signed-off-by: Masahiro Yamada <masahiroy@kernel.org>
+Signed-off-by: Nicola Lunghi <nick83ola@gmail.com>
+Link: https://lore.kernel.org/r/20200125150917.5040-1-nick83ola@gmail.com
+Signed-off-by: Takashi Iwai <tiwai@suse.de>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- scripts/Kconfig.include | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ sound/usb/format.c | 3 +++
+ 1 file changed, 3 insertions(+)
 
-diff --git a/scripts/Kconfig.include b/scripts/Kconfig.include
-index d4adfbe426903..bfb44b265a948 100644
---- a/scripts/Kconfig.include
-+++ b/scripts/Kconfig.include
-@@ -25,7 +25,7 @@ failure = $(if-success,$(1),n,y)
- 
- # $(cc-option,<flag>)
- # Return y if the compiler supports <flag>, n otherwise
--cc-option = $(success,$(CC) -Werror $(CLANG_FLAGS) $(1) -E -x c /dev/null -o /dev/null)
-+cc-option = $(success,$(CC) -Werror $(CLANG_FLAGS) $(1) -S -x c /dev/null -o /dev/null)
- 
- # $(ld-option,<flag>)
- # Return y if the linker supports <flag>, n otherwise
+diff --git a/sound/usb/format.c b/sound/usb/format.c
+index 25668ba5e68e3..f4f0cf3deaf0c 100644
+--- a/sound/usb/format.c
++++ b/sound/usb/format.c
+@@ -296,6 +296,9 @@ static int line6_parse_audio_format_rates_quirk(struct snd_usb_audio *chip,
+ 	case USB_ID(0x0E41, 0x4242): /* Line6 Helix Rack */
+ 	case USB_ID(0x0E41, 0x4244): /* Line6 Helix LT */
+ 	case USB_ID(0x0E41, 0x4246): /* Line6 HX-Stomp */
++	case USB_ID(0x0E41, 0x4248): /* Line6 Helix >= fw 2.82 */
++	case USB_ID(0x0E41, 0x4249): /* Line6 Helix Rack >= fw 2.82 */
++	case USB_ID(0x0E41, 0x424a): /* Line6 Helix LT >= fw 2.82 */
+ 		/* supported rates: 48Khz */
+ 		kfree(fp->rate_table);
+ 		fp->rate_table = kmalloc(sizeof(int), GFP_KERNEL);
 -- 
 2.20.1
 
