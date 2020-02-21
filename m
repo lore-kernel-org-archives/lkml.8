@@ -2,54 +2,53 @@ Return-Path: <SRS0=1210=4J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLACK,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A44B7C35640
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 08:18:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1ACF0C35640
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 08:18:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 77E2524682
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 08:18:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E01D324696
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 08:18:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582273087;
-	bh=Uy+uU0lTHozrOu7Zp3nMGr4SJBMZzKyAgAl9QYPUfTE=;
+	s=default; t=1582273090;
+	bh=prr9loutUhzcxUyUY0QhUlgVNDxML2mvrs3HklSUOkE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=xtiG+ruLBGVZvMlUKwHtFeGyD4A0scUHOyyPXSS2KGBcQ7C0s7unrGgP6c3dOgQ97
-	 9Tu5SGHOjia6nXvLoYxdn3LYV32dKwMDWkmdMja0cVKRg1c0UCzIeoG8VNRr7c0Rmf
-	 mU60A45QJy/GEWhLsxd1LXXspnAEjxZrDwR+8pAA=
+	b=cLI28AUcLh5sVr53DeFvTwdBKtOmjrGC/MI9uIRM6qhrXK0CDACf5qvrIABmuYxcd
+	 quiGQ0xUpWF0r3iuDAAA/iUzumYALCd+en+1mwb37QBIZtBVI5xMZ0W9vSyau3XDWv
+	 yhGVJNVKS7swKN+owtVq/fuIaYerWAgua5ng6Nh4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387434AbgBUISF (ORCPT
+        id S1733182AbgBUISI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Feb 2020 03:18:05 -0500
-Received: from mail.kernel.org ([198.145.29.99]:55706 "EHLO mail.kernel.org"
+        Fri, 21 Feb 2020 03:18:08 -0500
+Received: from mail.kernel.org ([198.145.29.99]:55868 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387739AbgBUISA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Feb 2020 03:18:00 -0500
+        id S2387494AbgBUISG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 21 Feb 2020 03:18:06 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2F0292468A;
-        Fri, 21 Feb 2020 08:17:58 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0D7FF24689;
+        Fri, 21 Feb 2020 08:18:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1582273079;
-        bh=Uy+uU0lTHozrOu7Zp3nMGr4SJBMZzKyAgAl9QYPUfTE=;
+        s=default; t=1582273085;
+        bh=prr9loutUhzcxUyUY0QhUlgVNDxML2mvrs3HklSUOkE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=IxZN/l1Dqgwp/n9TxiSKBbMveJKURM6EdUEiY9vQQqqpeRmm8JwlEkD2tqLHAcds5
-         gn1mD+ywoUzXxhrsyewWPitenYsgvVwp6/PsChOUY+rE/yQvVHieUk9+MHEIy4TaeX
-         SgwwJVxpXTzczQ4iiEgJ9g1MLxAyUJZ4rNwZAxI4=
+        b=rHpqt7vDWCd58s2CSHZ5mVlTiizI94zHtwaz/p/UVACEDNXGhSrnjnJB2z5Q5/KEw
+         tJC8Ng8AWGqdvVDD5EEi1N9VA7Wb+8/kern1xeKlMaV73g/3xCzMUl521/RAgo54I+
+         iJMSBdZ1MMP8uC2TdQ5L8X+nkGU57G8VvT8yO6WE=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= 
-        <u.kleine-koenig@pengutronix.de>,
-        Thierry Reding <thierry.reding@gmail.com>,
+        stable@vger.kernel.org, Oliver OHalloran <oohall@gmail.com>,
+        Alexey Kardashevskiy <aik@ozlabs.ru>,
+        Michael Ellerman <mpe@ellerman.id.au>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 038/191] pwm: omap-dmtimer: Simplify error handling
-Date:   Fri, 21 Feb 2020 08:40:11 +0100
-Message-Id: <20200221072256.150152720@linuxfoundation.org>
+Subject: [PATCH 4.19 040/191] powerpc/iov: Move VF pdev fixup into pcibios_fixup_iov()
+Date:   Fri, 21 Feb 2020 08:40:13 +0100
+Message-Id: <20200221072256.370855841@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200221072250.732482588@linuxfoundation.org>
 References: <20200221072250.732482588@linuxfoundation.org>
@@ -62,80 +61,121 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Uwe Kleine-König <u.kleine-koenig@pengutronix.de>
+From: Oliver O'Halloran <oohall@gmail.com>
 
-[ Upstream commit c4cf7aa57eb83b108d2d9c6c37c143388fee2a4d ]
+[ Upstream commit 965c94f309be58fbcc6c8d3e4f123376c5970d79 ]
 
-Instead of doing error handling in the middle of ->probe(), move error
-handling and freeing the reference to timer to the end.
+An ioda_pe for each VF is allocated in pnv_pci_sriov_enable() before
+the pci_dev for the VF is created. We need to set the pe->pdev pointer
+at some point after the pci_dev is created. Currently we do that in:
 
-This fixes a resource leak as dm_timer wasn't freed when allocating
-*omap failed.
+pcibios_bus_add_device()
+	pnv_pci_dma_dev_setup() (via phb->ops.dma_dev_setup)
+		/* fixup is done here */
+		pnv_pci_ioda_dma_dev_setup() (via pnv_phb->dma_dev_setup)
 
-Implementation note: The put: label was never reached without a goto and
-ret being unequal to 0, so the removed return statement is fine.
+The fixup needs to be done before setting up DMA for for the VF's PE,
+but there's no real reason to delay it until this point. Move the
+fixup into pnv_pci_ioda_fixup_iov() so the ordering is:
 
-Fixes: 6604c6556db9 ("pwm: Add PWM driver for OMAP using dual-mode timers")
-Signed-off-by: Uwe Kleine-König <u.kleine-koenig@pengutronix.de>
-Signed-off-by: Thierry Reding <thierry.reding@gmail.com>
+	pcibios_add_device()
+		pnv_pci_ioda_fixup_iov() (via ppc_md.pcibios_fixup_sriov)
+
+	pcibios_bus_add_device()
+		...
+
+This isn't strictly required, but it's a slightly more logical place
+to do the fixup and it simplifies pnv_pci_dma_dev_setup().
+
+Signed-off-by: Oliver O'Halloran <oohall@gmail.com>
+Reviewed-by: Alexey Kardashevskiy <aik@ozlabs.ru>
+Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
+Link: https://lore.kernel.org/r/20200110070207.439-4-oohall@gmail.com
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/pwm/pwm-omap-dmtimer.c | 28 +++++++++++++++++++---------
- 1 file changed, 19 insertions(+), 9 deletions(-)
+ arch/powerpc/platforms/powernv/pci-ioda.c | 29 +++++++++++++++++++----
+ arch/powerpc/platforms/powernv/pci.c      | 14 -----------
+ 2 files changed, 25 insertions(+), 18 deletions(-)
 
-diff --git a/drivers/pwm/pwm-omap-dmtimer.c b/drivers/pwm/pwm-omap-dmtimer.c
-index f45798679e3c0..2d585c101d52e 100644
---- a/drivers/pwm/pwm-omap-dmtimer.c
-+++ b/drivers/pwm/pwm-omap-dmtimer.c
-@@ -301,15 +301,10 @@ static int pwm_omap_dmtimer_probe(struct platform_device *pdev)
- 		goto put;
- 	}
+diff --git a/arch/powerpc/platforms/powernv/pci-ioda.c b/arch/powerpc/platforms/powernv/pci-ioda.c
+index 28adfe4dd04c5..ecd211c5f24a5 100644
+--- a/arch/powerpc/platforms/powernv/pci-ioda.c
++++ b/arch/powerpc/platforms/powernv/pci-ioda.c
+@@ -3015,9 +3015,6 @@ static void pnv_pci_ioda_fixup_iov_resources(struct pci_dev *pdev)
+ 	struct pci_dn *pdn;
+ 	int mul, total_vfs;
  
--put:
--	of_node_put(timer);
--	if (ret < 0)
--		return ret;
+-	if (!pdev->is_physfn || pci_dev_is_added(pdev))
+-		return;
 -
- 	omap = devm_kzalloc(&pdev->dev, sizeof(*omap), GFP_KERNEL);
- 	if (!omap) {
--		pdata->free(dm_timer);
--		return -ENOMEM;
-+		ret = -ENOMEM;
-+		goto err_alloc_omap;
+ 	pdn = pci_get_pdn(pdev);
+ 	pdn->vfs_expanded = 0;
+ 	pdn->m64_single_mode = false;
+@@ -3092,6 +3089,30 @@ truncate_iov:
+ 		res->end = res->start - 1;
  	}
- 
- 	omap->pdata = pdata;
-@@ -342,13 +337,28 @@ put:
- 	ret = pwmchip_add(&omap->chip);
- 	if (ret < 0) {
- 		dev_err(&pdev->dev, "failed to register PWM\n");
--		omap->pdata->free(omap->dm_timer);
--		return ret;
-+		goto err_pwmchip_add;
- 	}
- 
-+	of_node_put(timer);
-+
- 	platform_set_drvdata(pdev, omap);
- 
- 	return 0;
-+
-+err_pwmchip_add:
-+
-+	/*
-+	 * *omap is allocated using devm_kzalloc,
-+	 * so no free necessary here
-+	 */
-+err_alloc_omap:
-+
-+	pdata->free(dm_timer);
-+put:
-+	of_node_put(timer);
-+
-+	return ret;
  }
++
++static void pnv_pci_ioda_fixup_iov(struct pci_dev *pdev)
++{
++	if (WARN_ON(pci_dev_is_added(pdev)))
++		return;
++
++	if (pdev->is_virtfn) {
++		struct pnv_ioda_pe *pe = pnv_ioda_get_pe(pdev);
++
++		/*
++		 * VF PEs are single-device PEs so their pdev pointer needs to
++		 * be set. The pdev doesn't exist when the PE is allocated (in
++		 * (pcibios_sriov_enable()) so we fix it up here.
++		 */
++		pe->pdev = pdev;
++		WARN_ON(!(pe->flags & PNV_IODA_PE_VF));
++	} else if (pdev->is_physfn) {
++		/*
++		 * For PFs adjust their allocated IOV resources to match what
++		 * the PHB can support using it's M64 BAR table.
++		 */
++		pnv_pci_ioda_fixup_iov_resources(pdev);
++	}
++}
+ #endif /* CONFIG_PCI_IOV */
  
- static int pwm_omap_dmtimer_remove(struct platform_device *pdev)
+ static void pnv_ioda_setup_pe_res(struct pnv_ioda_pe *pe,
+@@ -3985,7 +4006,7 @@ static void __init pnv_pci_init_ioda_phb(struct device_node *np,
+ 	ppc_md.pcibios_default_alignment = pnv_pci_default_alignment;
+ 
+ #ifdef CONFIG_PCI_IOV
+-	ppc_md.pcibios_fixup_sriov = pnv_pci_ioda_fixup_iov_resources;
++	ppc_md.pcibios_fixup_sriov = pnv_pci_ioda_fixup_iov;
+ 	ppc_md.pcibios_iov_resource_alignment = pnv_pci_iov_resource_alignment;
+ 	ppc_md.pcibios_sriov_enable = pnv_pcibios_sriov_enable;
+ 	ppc_md.pcibios_sriov_disable = pnv_pcibios_sriov_disable;
+diff --git a/arch/powerpc/platforms/powernv/pci.c b/arch/powerpc/platforms/powernv/pci.c
+index aa95b8e0f66ad..b6fa900af5da5 100644
+--- a/arch/powerpc/platforms/powernv/pci.c
++++ b/arch/powerpc/platforms/powernv/pci.c
+@@ -820,20 +820,6 @@ void pnv_pci_dma_dev_setup(struct pci_dev *pdev)
+ {
+ 	struct pci_controller *hose = pci_bus_to_host(pdev->bus);
+ 	struct pnv_phb *phb = hose->private_data;
+-#ifdef CONFIG_PCI_IOV
+-	struct pnv_ioda_pe *pe;
+-
+-	/* Fix the VF pdn PE number */
+-	if (pdev->is_virtfn) {
+-		list_for_each_entry(pe, &phb->ioda.pe_list, list) {
+-			if (pe->rid == ((pdev->bus->number << 8) |
+-			    (pdev->devfn & 0xff))) {
+-				pe->pdev = pdev;
+-				break;
+-			}
+-		}
+-	}
+-#endif /* CONFIG_PCI_IOV */
+ 
+ 	if (phb && phb->dma_dev_setup)
+ 		phb->dma_dev_setup(phb, pdev);
 -- 
 2.20.1
 
