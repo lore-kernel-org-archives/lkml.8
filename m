@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4F587C35641
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 07:55:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E7C64C35642
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 07:55:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 234E7222C4
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 07:55:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BEA02222C4
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 07:55:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582271729;
-	bh=rXdWtPMHa6hJZMY0j6WQRhp1vZvRxw1l4dsVIRkRzkI=;
+	s=default; t=1582271730;
+	bh=kpIYvkygOL80jCOC4mTASNNjnr+Ez++17Cyd5v07r7w=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=sIxyZ9HGMX+A07syYx55DVX7SmvK7jaHeAaZLt1BvoYj4C20j8F9JRGdUoTVAR0DX
-	 yut2tTLDni11ilP6chBP9dYTYBBqEzE3YeJItt5tAz9y6WCJSjMQCwZj8aUwiohPL7
-	 2OCGdMBSn8zrQE63wXoVrKqqp9jhRylsITP4TcAs=
+	b=V8+WqLphoFiZnxpBjayABJbguHrNQachEbZNLgb26HYEIDSL2iqyKUuVWQXLSP11P
+	 Al4iVyC0YzaYRzXawEYkOViKQqc4zNObKd7Y+5TCgcBCxU2zamctitwT+dpoZ6yQwR
+	 +fhpWKnSoMsFNLYbm8p/pUvOmHK+LHSgPKhjkyf8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730319AbgBUHz1 (ORCPT
+        id S1730331AbgBUHz3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Feb 2020 02:55:27 -0500
-Received: from mail.kernel.org ([198.145.29.99]:54360 "EHLO mail.kernel.org"
+        Fri, 21 Feb 2020 02:55:29 -0500
+Received: from mail.kernel.org ([198.145.29.99]:54430 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730194AbgBUHzX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Feb 2020 02:55:23 -0500
+        id S1730314AbgBUHz1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 21 Feb 2020 02:55:27 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C82A020801;
-        Fri, 21 Feb 2020 07:55:22 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 12BA0222C4;
+        Fri, 21 Feb 2020 07:55:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1582271723;
-        bh=rXdWtPMHa6hJZMY0j6WQRhp1vZvRxw1l4dsVIRkRzkI=;
+        s=default; t=1582271726;
+        bh=kpIYvkygOL80jCOC4mTASNNjnr+Ez++17Cyd5v07r7w=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=wdGqr6LYlAdtv7O5P+58Q3e9OObE75hYl4KcANtRMVe7IctTTM5X7lvYrp49/puaD
-         OkNBHk/mLB6Zy8GYEPQgv/xzirGhfKNzn8n2kFlthYjwIs0jUZDzNpPR11aMjGVs+z
-         LGOd/QmNzChZDYJ8oN9MaZY0n5QJJocHaqiiPFbg=
+        b=b6NDvZJD2Ni+CTBIGFKJAckcwRnOfd/UGMuBTVvwYqCEcAXnhdZzle2NEFjYIOwTh
+         f6kOQwYcuiqF+lB5XqFq0psSxZLPAnrgfia5TkmUnVvNRcpC6Mi7JAPONDxlqZpNnb
+         MSBVTS3JU8TZhCS0dxzWsBKJ3ock3hW5fiOrlb30=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org, Johan Jonker <jbx6244@gmail.com>,
         Heiko Stuebner <heiko@sntech.de>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.5 237/399] arm64: dts: rockchip: fix dwmmc clock name for rk3308
-Date:   Fri, 21 Feb 2020 08:39:22 +0100
-Message-Id: <20200221072425.679507074@linuxfoundation.org>
+Subject: [PATCH 5.5 238/399] arm64: dts: rockchip: add reg property to brcmf sub-nodes
+Date:   Fri, 21 Feb 2020 08:39:23 +0100
+Message-Id: <20200221072425.751806916@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200221072402.315346745@linuxfoundation.org>
 References: <20200221072402.315346745@linuxfoundation.org>
@@ -62,57 +62,86 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Johan Jonker <jbx6244@gmail.com>
 
-[ Upstream commit 2be6a280144e521248a4bdefb691a0a97e604294 ]
+[ Upstream commit 96ff264bccb22175bbe2185a1eb5204ca3c5f03f ]
 
 An experimental test with the command below gives this error:
-rk3308-evb.dt.yaml: dwmmc@ff480000: clock-names:2:
-'ciu-drive' was expected
-
-'ciu-drv' is not a valid dwmmc clock name,
-so fix this by changing it to 'ciu-drive'.
+rk3399-firefly.dt.yaml: dwmmc@fe310000: wifi@1:
+'reg' is a required property
+rk3399-orangepi.dt.yaml: dwmmc@fe310000: wifi@1:
+'reg' is a required property
+rk3399-khadas-edge.dt.yaml: dwmmc@fe310000: wifi@1:
+'reg' is a required property
+rk3399-khadas-edge-captain.dt.yaml: dwmmc@fe310000: wifi@1:
+'reg' is a required property
+rk3399-khadas-edge-v.dt.yaml: dwmmc@fe310000: wifi@1:
+'reg' is a required property
+So fix this by adding a reg property to the brcmf sub node.
+Also add #address-cells and #size-cells to prevent more warnings.
 
 make ARCH=arm64 dtbs_check
 DT_SCHEMA_FILES=Documentation/devicetree/bindings/mmc/rockchip-dw-mshc.yaml
 
 Signed-off-by: Johan Jonker <jbx6244@gmail.com>
-Link: https://lore.kernel.org/r/20200110161200.22755-1-jbx6244@gmail.com
+Link: https://lore.kernel.org/r/20200110142128.13522-1-jbx6244@gmail.com
 Signed-off-by: Heiko Stuebner <heiko@sntech.de>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm64/boot/dts/rockchip/rk3308.dtsi | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+ arch/arm64/boot/dts/rockchip/rk3399-firefly.dts      | 3 +++
+ arch/arm64/boot/dts/rockchip/rk3399-khadas-edge.dtsi | 3 +++
+ arch/arm64/boot/dts/rockchip/rk3399-orangepi.dts     | 3 +++
+ 3 files changed, 9 insertions(+)
 
-diff --git a/arch/arm64/boot/dts/rockchip/rk3308.dtsi b/arch/arm64/boot/dts/rockchip/rk3308.dtsi
-index 8bdc66c62975b..fa0d55f1a5871 100644
---- a/arch/arm64/boot/dts/rockchip/rk3308.dtsi
-+++ b/arch/arm64/boot/dts/rockchip/rk3308.dtsi
-@@ -591,7 +591,7 @@
- 		bus-width = <4>;
- 		clocks = <&cru HCLK_SDMMC>, <&cru SCLK_SDMMC>,
- 			 <&cru SCLK_SDMMC_DRV>, <&cru SCLK_SDMMC_SAMPLE>;
--		clock-names = "biu", "ciu", "ciu-drv", "ciu-sample";
-+		clock-names = "biu", "ciu", "ciu-drive", "ciu-sample";
- 		fifo-depth = <0x100>;
- 		max-frequency = <150000000>;
- 		pinctrl-names = "default";
-@@ -606,7 +606,7 @@
- 		bus-width = <8>;
- 		clocks = <&cru HCLK_EMMC>, <&cru SCLK_EMMC>,
- 			 <&cru SCLK_EMMC_DRV>, <&cru SCLK_EMMC_SAMPLE>;
--		clock-names = "biu", "ciu", "ciu-drv", "ciu-sample";
-+		clock-names = "biu", "ciu", "ciu-drive", "ciu-sample";
- 		fifo-depth = <0x100>;
- 		max-frequency = <150000000>;
- 		status = "disabled";
-@@ -619,7 +619,7 @@
- 		bus-width = <4>;
- 		clocks = <&cru HCLK_SDIO>, <&cru SCLK_SDIO>,
- 			 <&cru SCLK_SDIO_DRV>, <&cru SCLK_SDIO_SAMPLE>;
--		clock-names = "biu", "ciu", "ciu-drv", "ciu-sample";
-+		clock-names = "biu", "ciu", "ciu-drive", "ciu-sample";
- 		fifo-depth = <0x100>;
- 		max-frequency = <150000000>;
- 		pinctrl-names = "default";
+diff --git a/arch/arm64/boot/dts/rockchip/rk3399-firefly.dts b/arch/arm64/boot/dts/rockchip/rk3399-firefly.dts
+index c706db0ee9ec6..76f5db696009b 100644
+--- a/arch/arm64/boot/dts/rockchip/rk3399-firefly.dts
++++ b/arch/arm64/boot/dts/rockchip/rk3399-firefly.dts
+@@ -669,9 +669,12 @@
+ 	vqmmc-supply = &vcc1v8_s3;	/* IO line */
+ 	vmmc-supply = &vcc_sdio;	/* card's power */
+ 
++	#address-cells = <1>;
++	#size-cells = <0>;
+ 	status = "okay";
+ 
+ 	brcmf: wifi@1 {
++		reg = <1>;
+ 		compatible = "brcm,bcm4329-fmac";
+ 		interrupt-parent = <&gpio0>;
+ 		interrupts = <RK_PA3 GPIO_ACTIVE_HIGH>;
+diff --git a/arch/arm64/boot/dts/rockchip/rk3399-khadas-edge.dtsi b/arch/arm64/boot/dts/rockchip/rk3399-khadas-edge.dtsi
+index 4944d78a0a1cb..e87a04477440e 100644
+--- a/arch/arm64/boot/dts/rockchip/rk3399-khadas-edge.dtsi
++++ b/arch/arm64/boot/dts/rockchip/rk3399-khadas-edge.dtsi
+@@ -654,9 +654,12 @@
+ 	sd-uhs-sdr104;
+ 	vqmmc-supply = <&vcc1v8_s3>;
+ 	vmmc-supply = <&vccio_sd>;
++	#address-cells = <1>;
++	#size-cells = <0>;
+ 	status = "okay";
+ 
+ 	brcmf: wifi@1 {
++		reg = <1>;
+ 		compatible = "brcm,bcm4329-fmac";
+ 		interrupt-parent = <&gpio0>;
+ 		interrupts = <RK_PA3 GPIO_ACTIVE_HIGH>;
+diff --git a/arch/arm64/boot/dts/rockchip/rk3399-orangepi.dts b/arch/arm64/boot/dts/rockchip/rk3399-orangepi.dts
+index 0541dfce924d6..9c659f3115c88 100644
+--- a/arch/arm64/boot/dts/rockchip/rk3399-orangepi.dts
++++ b/arch/arm64/boot/dts/rockchip/rk3399-orangepi.dts
+@@ -648,9 +648,12 @@
+ 	pinctrl-names = "default";
+ 	pinctrl-0 = <&sdio0_bus4 &sdio0_cmd &sdio0_clk>;
+ 	sd-uhs-sdr104;
++	#address-cells = <1>;
++	#size-cells = <0>;
+ 	status = "okay";
+ 
+ 	brcmf: wifi@1 {
++		reg = <1>;
+ 		compatible = "brcm,bcm4329-fmac";
+ 		interrupt-parent = <&gpio0>;
+ 		interrupts = <RK_PA3 GPIO_ACTIVE_HIGH>;
 -- 
 2.20.1
 
