@@ -2,129 +2,110 @@ Return-Path: <SRS0=1210=4J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 30859C35646
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 15:16:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9A83CC35656
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 15:16:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 024BC208E4
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 15:16:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6B62F208E4
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 15:16:28 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="fAAklVNs"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="XHqUsWyZ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729000AbgBUPQR (ORCPT
+        id S1729080AbgBUPQ1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Feb 2020 10:16:17 -0500
-Received: from mail-wm1-f67.google.com ([209.85.128.67]:34868 "EHLO
-        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727039AbgBUPQR (ORCPT
+        Fri, 21 Feb 2020 10:16:27 -0500
+Received: from mail-pf1-f195.google.com ([209.85.210.195]:41025 "EHLO
+        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727053AbgBUPQ0 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Feb 2020 10:16:17 -0500
-Received: by mail-wm1-f67.google.com with SMTP id b17so2302683wmb.0
-        for <linux-kernel@vger.kernel.org>; Fri, 21 Feb 2020 07:16:15 -0800 (PST)
+        Fri, 21 Feb 2020 10:16:26 -0500
+Received: by mail-pf1-f195.google.com with SMTP id j9so1360485pfa.8;
+        Fri, 21 Feb 2020 07:16:26 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to
-         :user-agent;
-        bh=lsRtvfQ93vhY3R5WN0DHRgFSBr0NRD5+eVgC+E/3Pbw=;
-        b=fAAklVNs6u22WEFZnDC9d3+wS0ae4X2F3sUylnwCuDLPilr2eb91R4kz0vBP7QrY/v
-         QKDxU7B7r4SuuQR4fWjmrGd9kF0elPfjL6nTklyFRi+Yng5dntCdgTHHcN478Yg3aJRA
-         B94xKDBI6YBo3mAp3NyWMsm0TG1okPl9+xTc27v/at80ODKV0fXF+7nwvGDdGlCD0JdI
-         0OnR6zADpSAuhYhBmVicqBS5eXMNLC7B8tgGwSb3ejDcTaY8HHEC28xksKWyFzKns3WJ
-         EueDIvgrc5dCfwDqMMRpyTwE7GOZGmOYu5/VjtsyPJR+C9E9d+ojXpEJu/kGABv4mDpS
-         7Myg==
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=tt5oxns5lx1f646f1QThGbvv5Sl7/0SEXMWJEeaTqzA=;
+        b=XHqUsWyZpog7dGkF2/1vy0XTPQVmrc3GfB3/7gzT7AU3Ppp54bRgKBWQQpv+YyAVRN
+         jDMqH+xq/B+yeFSi3bYiI5FZNGGHqK1r8BV2ERyHgdHhpiDtRrQqVvZwvTfuFtru9nVj
+         qI1rsAUke55VKP+GCASFz9QPRyXZi88rhE4eonRwFKX5c+tHUZmF4plFiYnLG1twO6Ey
+         5gYd8TzBIrgRhdlORR8VXXZH4ghI84aGmmCZZPfXxqBlDMCWfWUt/ldK26EhaK77/toL
+         Act9AWx73QCjqqZswcrdKNb/fKAGr8OhCdHETSjBXF45dUAyf/cMMUEwKFVX00cZR9qN
+         JA3A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to:user-agent;
-        bh=lsRtvfQ93vhY3R5WN0DHRgFSBr0NRD5+eVgC+E/3Pbw=;
-        b=Rbil1DgBgFwHdnrYwRD/px9MYq42ULibKqKMH6Dv1skmmgTl6u7RKTiEzXECNIPNn0
-         +VSYOA6mDudsbPgF3eE4EJ+3SXHS/jY8NnfalsjHj8Trwyy3jZ8PMzfzN4pphQ7szEhM
-         bMx493hpNVMjxS9XjX6V8HKJ8Sl8gcISkckHQVjIKwHKM3CdaCMYCsMk7m0swtVQ5sq4
-         xppb9ow+lmULaeI0PXQVx+5zppx5cwJD2Buchycg9SaWWVUw0t9yxw6RT3VtPvvjWDO1
-         8t7IVUYhTJzL7SrDI7CVjtTh8qD3y5rOH22Q6KRdYaYtUaVSTOvSX2JWXHby2ViJVl9G
-         eq9w==
-X-Gm-Message-State: APjAAAWBpVwWhuv6eACmPG8xP+Eb/dxSw0IPSs7lS6lq3bJbcmedESvN
-        5sDSRsJU8ijkDZH9nJg8Jz0vLTiPsAs=
-X-Google-Smtp-Source: APXvYqxw++XREifah78diEeK1TZzx8Ns6mS0TdJog/RtI1u9e/6SveUpjFpR92+56VCNuy0kMv6cdw==
-X-Received: by 2002:a7b:c92e:: with SMTP id h14mr4450716wml.110.1582298175055;
-        Fri, 21 Feb 2020 07:16:15 -0800 (PST)
-Received: from linaro.org ([2a01:e34:ed2f:f020:903b:a048:f296:e3ae])
-        by smtp.gmail.com with ESMTPSA id b16sm3955789wmj.39.2020.02.21.07.16.13
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Fri, 21 Feb 2020 07:16:14 -0800 (PST)
-Date:   Fri, 21 Feb 2020 16:16:12 +0100
-From:   Daniel Lezcano <daniel.lezcano@linaro.org>
-To:     Dmitry Osipenko <digetx@gmail.com>
-Cc:     Thierry Reding <thierry.reding@gmail.com>,
-        Jonathan Hunter <jonathanh@nvidia.com>,
-        Peter De Schrijver <pdeschrijver@nvidia.com>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        =?utf-8?B?TWljaGHFgiBNaXJvc8WCYXc=?= <mirq-linux@rere.qmqm.pl>,
-        Jasper Korten <jja2000@gmail.com>,
-        David Heidelberg <david@ixit.cz>,
-        Peter Geis <pgwipeout@gmail.com>, linux-pm@vger.kernel.org,
-        linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v9 05/17] ARM: tegra: Propagate error from
- tegra_idle_lp2_last()
-Message-ID: <20200221151612.GJ10516@linaro.org>
-References: <20200212235134.12638-1-digetx@gmail.com>
- <20200212235134.12638-6-digetx@gmail.com>
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=tt5oxns5lx1f646f1QThGbvv5Sl7/0SEXMWJEeaTqzA=;
+        b=Q1vJMywX3nYNdkwFrSezoxNoWq5tGP56idpTEQ3sdxwQcO0/00RTue+GSmJDYoD3ve
+         QureQxs0c6eYPAcqax2bbNy6O5umMcjvD9bTLyxeG0tZGNk9hNWkB2wh9XoWYk5Q0zCz
+         lXlrbNepZqYw3zw//0eMHEMycb0Z1m10DX92lve3sKuyA91hKH9eWiRB7BuEMb0XgDti
+         vBi92Mf9/7KYAmfEfALdnmXrWrvK6TuZQdFcc0ng3fMMb/YqLHyHsRCiHdoRsjI0bs6J
+         R6HOrq8DkgtXZPzT+/72Md7aEN+U/rbLEkNw5m/HRsBG7mypykM3zNL84+kyNp2c8DIb
+         1F1Q==
+X-Gm-Message-State: APjAAAW+ZOXxiCrEyuyvcLMlpq0Qoq67QHWWyeOp+1nfYWKpjX8BTI5N
+        1c3EqaYaFKc2YCehfHuAUbHwTOcc81I=
+X-Google-Smtp-Source: APXvYqwS0Ob3VOCEHDxy3+rkM8vo9z+IVglG6FEY74TcvgDu8IUNl4kEuR2PSPfRYJ/RKzHHRSRkaQ==
+X-Received: by 2002:a63:5124:: with SMTP id f36mr1105111pgb.288.1582298186030;
+        Fri, 21 Feb 2020 07:16:26 -0800 (PST)
+Received: from localhost.localdomain ([103.87.57.170])
+        by smtp.googlemail.com with ESMTPSA id q25sm3239490pfg.41.2020.02.21.07.16.22
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 21 Feb 2020 07:16:25 -0800 (PST)
+From:   Amol Grover <frextrite@gmail.com>
+To:     Eric Dumazet <edumazet@google.com>,
+        "David S . Miller" <davem@davemloft.net>,
+        Alexey Kuznetsov <kuznet@ms2.inr.ac.ru>,
+        Hideaki YOSHIFUJI <yoshfuji@linux-ipv6.org>,
+        Jakub Kicinski <kuba@kernel.org>
+Cc:     linux-kernel@vger.kernel.org,
+        linux-kernel-mentees@lists.linuxfoundation.org,
+        Joel Fernandes <joel@joelfernandes.org>,
+        Madhuparna Bhowmik <madhuparnabhowmik10@gmail.com>,
+        "Paul E . McKenney" <paulmck@kernel.org>, netdev@vger.kernel.org,
+        Amol Grover <frextrite@gmail.com>
+Subject: [PATCH] tcp, ulp: Pass lockdep expression to RCU lists
+Date:   Fri, 21 Feb 2020 20:45:38 +0530
+Message-Id: <20200221151537.12334-1-frextrite@gmail.com>
+X-Mailer: git-send-email 2.24.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <20200212235134.12638-6-digetx@gmail.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Feb 13, 2020 at 02:51:22AM +0300, Dmitry Osipenko wrote:
-> Technically cpu_suspend() may fail and it's never good to lose information
-> about failure. For example things like cpuidle core could correctly sample
-> idling time in the case of failure.
-> 
-> Acked-by: Peter De Schrijver <pdeschrijver@nvidia.com>
-> Tested-by: Peter Geis <pgwipeout@gmail.com>
-> Tested-by: Jasper Korten <jja2000@gmail.com>
-> Tested-by: David Heidelberg <david@ixit.cz>
-> Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
-> ---
+tcp_ulp_list is traversed using list_for_each_entry_rcu
+outside an RCU read-side critical section but under the protection
+of tcp_ulp_list_lock.
 
-[ ... ]
+Hence, add corresponding lockdep expression to silence false-positive
+warnings, and harden RCU lists.t
 
->  	cpu_cluster_pm_enter();
->  	suspend_cpu_complex();
->  
-> -	cpu_suspend(PHYS_OFFSET - PAGE_OFFSET, &tegra_sleep_cpu);
-> +	err = cpu_suspend(PHYS_OFFSET - PAGE_OFFSET, &tegra_sleep_cpu);
->  
->  	/*
->  	 * Resume L2 cache if it wasn't re-enabled early during resume,
-> @@ -208,6 +210,8 @@ void tegra_idle_lp2_last(void)
->  
->  	restore_cpu_complex();
+Signed-off-by: Amol Grover <frextrite@gmail.com>
+---
+ net/ipv4/tcp_ulp.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-If the cpu_suspend fails, does restore_cpu_complex() need to be called ?
-
->  	cpu_cluster_pm_exit();
-> +
-> +	return err;
->  }
-
-[ ... ]
-
+diff --git a/net/ipv4/tcp_ulp.c b/net/ipv4/tcp_ulp.c
+index 38d3ad141161..b9e55759054e 100644
+--- a/net/ipv4/tcp_ulp.c
++++ b/net/ipv4/tcp_ulp.c
+@@ -22,7 +22,8 @@ static struct tcp_ulp_ops *tcp_ulp_find(const char *name)
+ {
+ 	struct tcp_ulp_ops *e;
+ 
+-	list_for_each_entry_rcu(e, &tcp_ulp_list, list) {
++	list_for_each_entry_rcu(e, &tcp_ulp_list, list,
++				lockdep_is_held(&tcp_ulp_list_lock)) {
+ 		if (strcmp(e->name, name) == 0)
+ 			return e;
+ 	}
 -- 
+2.24.1
 
- <http://www.linaro.org/> Linaro.org │ Open source software for ARM SoCs
-
-Follow Linaro:  <http://www.facebook.com/pages/Linaro> Facebook |
-<http://twitter.com/#!/linaroorg> Twitter |
-<http://www.linaro.org/linaro-blog/> Blog
