@@ -2,120 +2,94 @@ Return-Path: <SRS0=1210=4J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CC52AC11D25
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 00:21:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 56EDDC11D00
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 00:22:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A253E24653
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 00:21:24 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="I6fAixvG"
+	by mail.kernel.org (Postfix) with ESMTP id 1E48524653
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 00:22:36 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1582244556;
+	bh=3zzigx0wsPNwcqVybdA7xBVz/mTSBm8jN2Gi+VxS/zw=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=HdxPZ9lqcL6e4cRwD7wjFFnPgG1faN71q/uqZDtvS5XHijlgYk7AMngm6GzBFWt5p
+	 z5HIbzalIn9B6CndrPerOjrysc3268cupsBb7S78xFp8j4ZojdgJf4WOjueSVUM540
+	 xRHeZQGVIk2IxUb62Uxl0QlyI1Zd2WJwyiOoeCa0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729541AbgBUAVX (ORCPT
+        id S1729446AbgBUAWe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Feb 2020 19:21:23 -0500
-Received: from bombadil.infradead.org ([198.137.202.133]:33250 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729392AbgBUAVX (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Feb 2020 19:21:23 -0500
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
-        Content-Type:In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:
-        Subject:Sender:Reply-To:Content-ID:Content-Description;
-        bh=tMJ8YKxTeBtxTcT9+8gwag/FsvtT3wSn7stN9kvfG0Q=; b=I6fAixvGMEOmvfzzpJEepAfJtm
-        PXVdq7yCLQEEvy3t4ujzGyV7hIW+tgNWOV8C5gsgeQYhP6ptOwGo++BOf6tv10ZObHBITktO81YPa
-        4jTb5lEt5DXYFa/oiYiSp7rLSDtYv9RCg2hyZx+zX+bQ/SrQKlYio37lgRDJw1YECZxMGJfkoLMwR
-        CN/nFFlNnR7HtjwlPFeDw5VT4YPCJkAPkoD9d4K90iqtIkPIfypmhBbxTdEdhNu3K0GaPha8Nmgqp
-        yuh3hYYGgfpmN2VKO1HvdUWu2GBjyqBPghv3XIiekadWeA8GpLbHW3OafvDVigtMmp/mfiK4hAPQO
-        vAbEVGdQ==;
-Received: from [2601:1c0:6280:3f0::19c2]
-        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1j4w4H-0003FS-Sz; Fri, 21 Feb 2020 00:21:21 +0000
-Subject: Re: [PATCH v2 6/7] misc: bcm-vk: add Broadcom VK driver
-To:     Scott Branden <scott.branden@broadcom.com>,
-        Luis Chamberlain <mcgrof@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        David Brown <david.brown@linaro.org>,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        Shuah Khan <shuah@kernel.org>, bjorn.andersson@linaro.org,
-        Shuah Khan <skhan@linuxfoundation.org>,
-        Arnd Bergmann <arnd@arndb.de>
-Cc:     "Rafael J . Wysocki" <rafael@kernel.org>,
-        linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org,
-        BCM Kernel Feedback <bcm-kernel-feedback-list@broadcom.com>,
-        Olof Johansson <olof@lixom.net>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Dan Carpenter <dan.carpenter@oracle.com>,
-        Colin Ian King <colin.king@canonical.com>,
-        Kees Cook <keescook@chromium.org>,
-        Takashi Iwai <tiwai@suse.de>, linux-kselftest@vger.kernel.org,
-        Andy Gross <agross@kernel.org>,
-        Desmond Yan <desmond.yan@broadcom.com>,
-        James Hu <james.hu@broadcom.com>
-References: <20200220004825.23372-1-scott.branden@broadcom.com>
- <20200220004825.23372-7-scott.branden@broadcom.com>
- <827a4520-95ce-5264-90d9-ed730e5918e6@infradead.org>
- <22c48aaf-21e2-56ab-3f40-e497a69cd936@broadcom.com>
-From:   Randy Dunlap <rdunlap@infradead.org>
-Message-ID: <bfbb883b-f222-922e-bdf0-3491af14e446@infradead.org>
-Date:   Thu, 20 Feb 2020 16:21:20 -0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.1
-MIME-Version: 1.0
-In-Reply-To: <22c48aaf-21e2-56ab-3f40-e497a69cd936@broadcom.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+        Thu, 20 Feb 2020 19:22:34 -0500
+Received: from mail.kernel.org ([198.145.29.99]:41434 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729413AbgBUAWe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 20 Feb 2020 19:22:34 -0500
+Received: from devnote2 (NE2965lan1.rev.em-net.ne.jp [210.141.244.193])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9B53E207FD;
+        Fri, 21 Feb 2020 00:22:32 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1582244554;
+        bh=3zzigx0wsPNwcqVybdA7xBVz/mTSBm8jN2Gi+VxS/zw=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=iKNJCd68G3Msz/J6bM51p7M3hGTkXIfusPfoNOqGx3KT4S94bSxoLTscqWYY4FpPX
+         gUZmZz2O97guy5NOwJeqF16N+Kr0AnuMB9u/ddr3GqnqCLuKb0wzQBG+nyrLZVI7qZ
+         slOsl6RA33UAap6MArD8/i2Tz2dSil4w1ozr/iPw=
+Date:   Fri, 21 Feb 2020 09:22:30 +0900
+From:   Masami Hiramatsu <mhiramat@kernel.org>
+To:     Tom Zanussi <zanussi@kernel.org>
+Cc:     Steven Rostedt <rostedt@goodmis.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Masami Hiramatsu <mhiramat@kernel.org>
+Subject: Re: [PATCH] tracing: Have synthetic event test use
+ raw_smp_processor_id()
+Message-Id: <20200221092230.6ec9160d0ae135b14f29fd8c@kernel.org>
+In-Reply-To: <1582236880.12738.5.camel@kernel.org>
+References: <20200220162950.35162579@gandalf.local.home>
+        <1582236880.12738.5.camel@kernel.org>
+X-Mailer: Sylpheed 3.5.1 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2/20/20 4:06 PM, Scott Branden wrote:
-> Hi Randy,
+On Thu, 20 Feb 2020 16:14:40 -0600
+Tom Zanussi <zanussi@kernel.org> wrote:
+
+> Hi Steve,
 > 
-> On 2020-02-19 5:04 p.m., Randy Dunlap wrote:
->> Hi,
->>
->> On 2/19/20 4:48 PM, Scott Branden wrote:
->>> diff --git a/drivers/misc/bcm-vk/Kconfig b/drivers/misc/bcm-vk/Kconfig
->>> new file mode 100644
->>> index 000000000000..c75dfb89a38d
->>> --- /dev/null
->>> +++ b/drivers/misc/bcm-vk/Kconfig
->>> @@ -0,0 +1,42 @@
->>> +# SPDX-License-Identifier: GPL-2.0-only
->>> +#
->>> +# Broadcom VK device
->>> +#
->>> +config BCM_VK
->>> +    tristate "Support for Broadcom VK Accelerators"
->>> +    depends on PCI_MSI
->>> +    default m
->> Need to justify default m. Normally we don't add drivers as enabled unless
->> they are required for basic (boot) operation.
-> Will remove default m as not needed to boot.  Interesting other offload engines misc/ocxl/Kconfig and misc/cxl/Kconfig have default m.
+> On Thu, 2020-02-20 at 16:29 -0500, Steven Rostedt wrote:
+> > From: "Steven Rostedt (VMware)" <rostedt@goodmis.org>
+> > 
+> > The test code that tests synthetic event creation pushes in as one of
+> > its
+> > test fields the current CPU using "smp_processor_id()". As this is
+> > just
+> > something to see if the value is correctly passed in, and the actual
+> > CPU
+> > used does not matter, use raw_smp_processor_id(), otherwise with
+> > debug
+> > preemption enabled, a warning happens as the smp_processor_id() is
+> > called
+> > without preemption enabled.
+> > 
+> > Signed-off-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
+> 
+> Makes sense - I guess it's simpler than Masami's and fine for this
+> purpose.
+> 
+> Reviewed-by: Tom Zanussi <zanussi@kernel.org>
 
-Thanks.
+Hmm, can we reserve ring buffer on CPU1 and commit it on CPU2?
+Shouldn't we disable preemption between them?
 
-Uh, yes, that is interesting.  They both depend on PPC_POWERNV,
-which I know nothing about.
-
->>> +    help
->>> +      Select this option to enable support for Broadcom
->>> +      VK Accelerators.  VK is used for performing
->>> +      specific video offload processing.  This driver enables
->>> +      userspace programs to access these accelerators via /dev/bcm-vk.N
->>> +      devices.
->>> +
->>> +      If unsure, say N.
+Thank you,
 
 -- 
-~Randy
-
+Masami Hiramatsu <mhiramat@kernel.org>
