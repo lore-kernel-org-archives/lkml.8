@@ -5,49 +5,50 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3A3A0C35640
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 07:53:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9D062C35640
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 07:54:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 05D4B20801
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 07:53:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 71CAA222C4
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 07:54:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582271639;
-	bh=2wsmw7LgUVLxcb60T5P9mFsAuefCeFVQD3JLWpvFv74=;
+	s=default; t=1582271642;
+	bh=etUzyDHmfexgQRO1XOxPZqnTAoosJKCBo372Wqi6lBc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=pW7uSQKNIsMhoye6UuTcsdML4AFxRxMy5gvhWyPkTcR2ot2Zp3UJNNyH/S4BgX3Pa
-	 x+otwMJLVZg/2sMY4kvpnY8edwGD4Y/Dz+zr8ssXBvTeUT6o3g6G/eHF/1IMvoAP6j
-	 trbBFs3ptE1wjrylNn1bMAexJPf1A+oQm7/KpkYk=
+	b=h9ttL7fT7zD1W6QJhvD1IqxN73uHEMlBPB5TC+5R54FaS0ePPV/cIhTyeklWY7/us
+	 pewvfWczIMLzigglSltHge3JOV7tYtk2NBqM6vDS9CJ4sLw0nqDt6mzhWzy+rLKAzW
+	 LCX/2gg12Mxn6mFXh0rmUNwcIk6mWl9yGsDv3yio=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730191AbgBUHx6 (ORCPT
+        id S1730196AbgBUHyB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Feb 2020 02:53:58 -0500
-Received: from mail.kernel.org ([198.145.29.99]:52328 "EHLO mail.kernel.org"
+        Fri, 21 Feb 2020 02:54:01 -0500
+Received: from mail.kernel.org ([198.145.29.99]:52352 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730174AbgBUHxx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Feb 2020 02:53:53 -0500
+        id S1730187AbgBUHx4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 21 Feb 2020 02:53:56 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E85C620801;
-        Fri, 21 Feb 2020 07:53:52 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7A1D8222C4;
+        Fri, 21 Feb 2020 07:53:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1582271633;
-        bh=2wsmw7LgUVLxcb60T5P9mFsAuefCeFVQD3JLWpvFv74=;
+        s=default; t=1582271635;
+        bh=etUzyDHmfexgQRO1XOxPZqnTAoosJKCBo372Wqi6lBc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=icMVpQ19TbfQsOKGhARVnj9BtDB7CmsRPi41xnZK/Y8UcLATw5M/FgJxmPOZfngiF
-         PC1+vxvP/fSedn3Rs4ZB2FoJlt3mJomGZMUJbx/HS0nvdDcDhyxKUE/E8lZrPgByPG
-         cK3TCT1vWnSuBbrGUxhTJe91VCzA+otMbMKZUbeE=
+        b=Mxkl9uQAcmUzpzV0+xmN0F0Alg+A00yvgCtglc62zNxv4kZUyv3Nkx8r6fD4tYlN1
+         ytxKMUz0OHog+7UQaHcf5hUPQcnedvWRJjyxFJzlCi9BjYQFqEOam+N8bZzTAtoa1b
+         weZpEWLOy2QRzgnl3OCVH28rb/JDIzbZ9wkkWW5E=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, kbuild test robot <lkp@intel.com>,
-        Chanwoo Choi <cw00.choi@samsung.com>,
+        stable@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Jakub Kicinski <kuba@kernel.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.5 192/399] PM / devfreq: rk3399_dmc: Add COMPILE_TEST and HAVE_ARM_SMCCC dependency
-Date:   Fri, 21 Feb 2020 08:38:37 +0100
-Message-Id: <20200221072421.485975199@linuxfoundation.org>
+Subject: [PATCH 5.5 234/399] wan: ixp4xx_hss: fix compile-testing on 64-bit
+Date:   Fri, 21 Feb 2020 08:39:19 +0100
+Message-Id: <20200221072425.457202867@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200221072402.315346745@linuxfoundation.org>
 References: <20200221072402.315346745@linuxfoundation.org>
@@ -60,50 +61,53 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Chanwoo Choi <cw00.choi@samsung.com>
+From: Arnd Bergmann <arnd@arndb.de>
 
-[ Upstream commit eff5d31f7407fa9d31fb840106f1593399457298 ]
+[ Upstream commit 504c28c853ec5c626900b914b5833daf0581a344 ]
 
-To build test, add COMPILE_TEST depedency to both ARM_RK3399_DMC_DEVFREQ
-and DEVFREQ_EVENT_ROCKCHIP_DFI configuration. And ARM_RK3399_DMC_DEVFREQ
-used the SMCCC interface so that add HAVE_ARM_SMCCC dependency to prevent
-the build break.
+Change the driver to use portable integer types to avoid
+warnings during compile testing:
 
-Reported-by: kbuild test robot <lkp@intel.com>
-Signed-off-by: Chanwoo Choi <cw00.choi@samsung.com>
+drivers/net/wan/ixp4xx_hss.c:863:21: error: cast to 'u32 *' (aka 'unsigned int *') from smaller integer type 'int' [-Werror,-Wint-to-pointer-cast]
+        memcpy_swab32(mem, (u32 *)((int)skb->data & ~3), bytes / 4);
+                           ^
+drivers/net/wan/ixp4xx_hss.c:979:12: error: incompatible pointer types passing 'u32 *' (aka 'unsigned int *') to parameter of type 'dma_addr_t *' (aka 'unsigned long long *') [-Werror,-Wincompatible-pointer-types]
+                                              &port->desc_tab_phys)))
+                                              ^~~~~~~~~~~~~~~~~~~~
+include/linux/dmapool.h:27:20: note: passing argument to parameter 'handle' here
+                     dma_addr_t *handle);
+                                 ^
+
+Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
+Signed-off-by: Jakub Kicinski <kuba@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/devfreq/Kconfig       | 3 ++-
- drivers/devfreq/event/Kconfig | 2 +-
- 2 files changed, 3 insertions(+), 2 deletions(-)
+ drivers/net/wan/ixp4xx_hss.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/devfreq/Kconfig b/drivers/devfreq/Kconfig
-index 35535833b6f78..c7804635e89ea 100644
---- a/drivers/devfreq/Kconfig
-+++ b/drivers/devfreq/Kconfig
-@@ -115,7 +115,8 @@ config ARM_TEGRA20_DEVFREQ
+diff --git a/drivers/net/wan/ixp4xx_hss.c b/drivers/net/wan/ixp4xx_hss.c
+index ea6ee6a608ce3..e7619cec978a8 100644
+--- a/drivers/net/wan/ixp4xx_hss.c
++++ b/drivers/net/wan/ixp4xx_hss.c
+@@ -258,7 +258,7 @@ struct port {
+ 	struct hss_plat_info *plat;
+ 	buffer_t *rx_buff_tab[RX_DESCS], *tx_buff_tab[TX_DESCS];
+ 	struct desc *desc_tab;	/* coherent */
+-	u32 desc_tab_phys;
++	dma_addr_t desc_tab_phys;
+ 	unsigned int id;
+ 	unsigned int clock_type, clock_rate, loopback;
+ 	unsigned int initialized, carrier;
+@@ -858,7 +858,7 @@ static int hss_hdlc_xmit(struct sk_buff *skb, struct net_device *dev)
+ 		dev->stats.tx_dropped++;
+ 		return NETDEV_TX_OK;
+ 	}
+-	memcpy_swab32(mem, (u32 *)((int)skb->data & ~3), bytes / 4);
++	memcpy_swab32(mem, (u32 *)((uintptr_t)skb->data & ~3), bytes / 4);
+ 	dev_kfree_skb(skb);
+ #endif
  
- config ARM_RK3399_DMC_DEVFREQ
- 	tristate "ARM RK3399 DMC DEVFREQ Driver"
--	depends on ARCH_ROCKCHIP
-+	depends on (ARCH_ROCKCHIP && HAVE_ARM_SMCCC) || \
-+		(COMPILE_TEST && HAVE_ARM_SMCCC)
- 	select DEVFREQ_EVENT_ROCKCHIP_DFI
- 	select DEVFREQ_GOV_SIMPLE_ONDEMAND
- 	select PM_DEVFREQ_EVENT
-diff --git a/drivers/devfreq/event/Kconfig b/drivers/devfreq/event/Kconfig
-index cef2cf5347ca7..a53e0a6ffdfeb 100644
---- a/drivers/devfreq/event/Kconfig
-+++ b/drivers/devfreq/event/Kconfig
-@@ -34,7 +34,7 @@ config DEVFREQ_EVENT_EXYNOS_PPMU
- 
- config DEVFREQ_EVENT_ROCKCHIP_DFI
- 	tristate "ROCKCHIP DFI DEVFREQ event Driver"
--	depends on ARCH_ROCKCHIP
-+	depends on ARCH_ROCKCHIP || COMPILE_TEST
- 	help
- 	  This add the devfreq-event driver for Rockchip SoC. It provides DFI
- 	  (DDR Monitor Module) driver to count ddr load.
 -- 
 2.20.1
 
