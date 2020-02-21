@@ -7,48 +7,47 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7BD24C35641
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 07:58:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BF52FC35641
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 07:58:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4A4B5206ED
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 07:58:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8C3202073A
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 07:58:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582271924;
-	bh=4xz8fuR2XJP3Un2ldiH769b+k8BXaoSjCq8w1wOO9rc=;
+	s=default; t=1582271927;
+	bh=72jwIr70tZSmKLso6PZnaN8QwHlfCrUagBq8IFNznWo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=bU9zPVyNTQWg5SCm/ubD3u7GVESxxGw2x4ZHy0c6UrXXnXATV7UjTZVk10tlOyx0E
-	 NmlNpSFh2shRNVZ0TTC+PqDSXVFF5uGUnPv50MC46qZhwnqDEFcVZnS2Umwq2LireO
-	 xGD/pRA0iIbTxBnYP0syX7TxnDh5OWN4QnmeqO1A=
+	b=hGFuKYu5eP2OJK3yicCPqoq30OO6Rski5a2jyNyATUSf9iL8VkpTZxCdDgBLRmF0I
+	 cWlmlJle+nhNyYqSDvclWEWVZ1Dfo4wQAG8qLQh5IlwskULoLRkCrlNsEVuYF958fo
+	 55gTZ5QImBllOfh1dtl9DKStXoP0j7AGGfp+jGBs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730800AbgBUH6j (ORCPT
+        id S1730815AbgBUH6p (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Feb 2020 02:58:39 -0500
-Received: from mail.kernel.org ([198.145.29.99]:58394 "EHLO mail.kernel.org"
+        Fri, 21 Feb 2020 02:58:45 -0500
+Received: from mail.kernel.org ([198.145.29.99]:58540 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730543AbgBUH6d (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Feb 2020 02:58:33 -0500
+        id S1729326AbgBUH6l (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 21 Feb 2020 02:58:41 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id F2C772073A;
-        Fri, 21 Feb 2020 07:58:31 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 70E4E206ED;
+        Fri, 21 Feb 2020 07:58:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1582271912;
-        bh=4xz8fuR2XJP3Un2ldiH769b+k8BXaoSjCq8w1wOO9rc=;
+        s=default; t=1582271920;
+        bh=72jwIr70tZSmKLso6PZnaN8QwHlfCrUagBq8IFNznWo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=v8ZO7mWDHff0rGVlg9vtpkHp6gk1mIHMwh8Em0i41TaDc1nltmHUXb/SHbWJjz3XI
-         zrYVkx7wFxHVsnOZ0uaKo/wDiLw+gD7+lM8P0KBu8MxUT17Vq7hrsE3xXe79J38tiX
-         LQVmyR+A0kSYkVEdQmnfmHoIW5PLDUVWWisyKH+c=
+        b=RWPqGFfghfU6inSkLCqrmz8fP2VHVrXFCN0F19mxGPJBc3bXPmliIBbRROxBY2RCa
+         4J65nOj+2eMf3o53zfjBEAYmF81TpJ7hAwVAwmdNUHjRu96duAllOB97XvM3pgGDlM
+         ZfEbcU5rvFUaSlqtnf/nqtAiTHoOIkz9ZpQ5Awu0=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Vincenzo Frascino <vincenzo.frascino@arm.com>,
-        Russell King <rmk+kernel@armlinux.org.uk>,
+        stable@vger.kernel.org, Yan-Hsuan Chuang <yhchuang@realtek.com>,
+        Kalle Valo <kvalo@codeaurora.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.5 344/399] ARM: 8951/1: Fix Kexec compilation issue.
-Date:   Fri, 21 Feb 2020 08:41:09 +0100
-Message-Id: <20200221072434.230713301@linuxfoundation.org>
+Subject: [PATCH 5.5 347/399] rtw88: fix potential NULL skb access in TX ISR
+Date:   Fri, 21 Feb 2020 08:41:12 +0100
+Message-Id: <20200221072434.452782197@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200221072402.315346745@linuxfoundation.org>
 References: <20200221072402.315346745@linuxfoundation.org>
@@ -61,48 +60,41 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Vincenzo Frascino <vincenzo.frascino@arm.com>
+From: Yan-Hsuan Chuang <yhchuang@realtek.com>
 
-[ Upstream commit 76950f7162cad51d2200ebd22c620c14af38f718 ]
+[ Upstream commit f4f84ff8377d4cedf18317747bc407b2cf657d0f ]
 
-To perform the reserve_crashkernel() operation kexec uses SECTION_SIZE to
-find a memblock in a range.
-SECTION_SIZE is not defined for nommu systems. Trying to compile kexec in
-these conditions results in a build error:
+Sometimes the TX queue may be empty and we could possible
+dequeue a NULL pointer, crash the kernel. If the skb is NULL
+then there is nothing to do, just leave the ISR.
 
-  linux/arch/arm/kernel/setup.c: In function ‘reserve_crashkernel’:
-  linux/arch/arm/kernel/setup.c:1016:25: error: ‘SECTION_SIZE’ undeclared
-     (first use in this function); did you mean ‘SECTIONS_WIDTH’?
-             crash_size, SECTION_SIZE);
-                         ^~~~~~~~~~~~
-                         SECTIONS_WIDTH
-  linux/arch/arm/kernel/setup.c:1016:25: note: each undeclared identifier
-     is reported only once for each function it appears in
-  linux/scripts/Makefile.build:265: recipe for target 'arch/arm/kernel/setup.o'
-     failed
+And the TX queue should not be empty here, so print an error
+to see if there is anything wrong for DMA ring.
 
-Make KEXEC depend on MMU to fix the compilation issue.
-
-Signed-off-by: Vincenzo Frascino <vincenzo.frascino@arm.com>
-Signed-off-by: Russell King <rmk+kernel@armlinux.org.uk>
+Fixes: e3037485c68e ("rtw88: new Realtek 802.11ac driver")
+Signed-off-by: Yan-Hsuan Chuang <yhchuang@realtek.com>
+Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm/Kconfig | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/net/wireless/realtek/rtw88/pci.c | 5 +++++
+ 1 file changed, 5 insertions(+)
 
-diff --git a/arch/arm/Kconfig b/arch/arm/Kconfig
-index 2c3a9fd05f571..7ef1916fcbf45 100644
---- a/arch/arm/Kconfig
-+++ b/arch/arm/Kconfig
-@@ -1905,7 +1905,7 @@ config XIP_DEFLATED_DATA
- config KEXEC
- 	bool "Kexec system call (EXPERIMENTAL)"
- 	depends on (!SMP || PM_SLEEP_SMP)
--	depends on !CPU_V7M
-+	depends on MMU
- 	select KEXEC_CORE
- 	help
- 	  kexec is a system call that implements the ability to shutdown your
+diff --git a/drivers/net/wireless/realtek/rtw88/pci.c b/drivers/net/wireless/realtek/rtw88/pci.c
+index a58e8276a41a3..a6746b5a9ff2d 100644
+--- a/drivers/net/wireless/realtek/rtw88/pci.c
++++ b/drivers/net/wireless/realtek/rtw88/pci.c
+@@ -832,6 +832,11 @@ static void rtw_pci_tx_isr(struct rtw_dev *rtwdev, struct rtw_pci *rtwpci,
+ 
+ 	while (count--) {
+ 		skb = skb_dequeue(&ring->queue);
++		if (!skb) {
++			rtw_err(rtwdev, "failed to dequeue %d skb TX queue %d, BD=0x%08x, rp %d -> %d\n",
++				count, hw_queue, bd_idx, ring->r.rp, cur_rp);
++			break;
++		}
+ 		tx_data = rtw_pci_get_tx_data(skb);
+ 		pci_unmap_single(rtwpci->pdev, tx_data->dma, skb->len,
+ 				 PCI_DMA_TODEVICE);
 -- 
 2.20.1
 
