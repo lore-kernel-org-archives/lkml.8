@@ -2,53 +2,53 @@ Return-Path: <SRS0=1210=4J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 52D43C35641
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 08:24:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DFDB0C35642
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 08:24:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 285DF24697
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 08:24:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AAD0324697
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 08:24:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582273447;
-	bh=qRbUMUoNDNhRm65zIbW/W+MIQ+kVKOlc6pAN/6NB8T8=;
+	s=default; t=1582273450;
+	bh=m/otNxC3zvJZKrphncMYDqdLByu/oTw6h9f5kpSGpsU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=lQrz9lFII9Fh1NRgfmQb7VfhnQx7VGEtykFn1QRBkXqmh1mC8Ujr2HgieA4Lx1ulc
-	 Lo+jyNtMVXPxp2hu9zOmM85ajko0ymki9da7a0lKTfw45ATBj6sDXzM7AQ+bxcd1bQ
-	 K9doqdlxY9WNA9bBOqYCwBgHVnClJxu3BSeQ4X3Q=
+	b=zTHO4mjInWn5Vkg8qqD2XkWkQCRKqaWPEg2BTMWF6p0cHNcNv2/4S/4BgRelygxAR
+	 Ft9J7/+k77f2jqjCi69i/23kXKZHTV57IUCx0wFtSwpkmIF+mI29VGecFbYpW4h3Mh
+	 NuqYPz+dffkuBBzcnZ67mreGZT4FaXR51WHHFkPg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388581AbgBUIYB (ORCPT
+        id S2388606AbgBUIYJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Feb 2020 03:24:01 -0500
-Received: from mail.kernel.org ([198.145.29.99]:36220 "EHLO mail.kernel.org"
+        Fri, 21 Feb 2020 03:24:09 -0500
+Received: from mail.kernel.org ([198.145.29.99]:36324 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388572AbgBUIX6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Feb 2020 03:23:58 -0500
+        id S2388287AbgBUIYD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 21 Feb 2020 03:24:03 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1826E2467D;
-        Fri, 21 Feb 2020 08:23:56 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id AC51A206ED;
+        Fri, 21 Feb 2020 08:24:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1582273437;
-        bh=qRbUMUoNDNhRm65zIbW/W+MIQ+kVKOlc6pAN/6NB8T8=;
+        s=default; t=1582273443;
+        bh=m/otNxC3zvJZKrphncMYDqdLByu/oTw6h9f5kpSGpsU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=14EL8769x4wvVCTSC45EEZRLG+mSdPlzvxKfD48KaBuUjBXl+z0kXAW8qY9jd+TVs
-         RW6gEhstsEC3f1bt7ENKZIVYZrzXs8ccpd9AT9plAMHlnnjkhG9yVPvdRDjt0TAeNh
-         9Bksl+WLx/OXu63hfx18UKksffhLYq/QHg5T2X3U=
+        b=WiNPEteuG9/lB4JPEevXiL5LxgctTsYcVYpDA6jhcFnmJzHkdiwMhzIhbTpDRkfb+
+         de7DqTVsuJvx2cA/U9u+YfMrJ/QAtPL5XJb0q7ScIEt+SEmNcvtcJPK/L8WOHPaFHm
+         OUIF5SWUPjtaG+2Acbo42xXrbVIuy/gclO49zV80=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Sami Tolvanen <samitolvanen@google.com>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        Kees Cook <keescook@chromium.org>,
-        Will Deacon <will@kernel.org>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 134/191] arm64: fix alternatives with LLVMs integrated assembler
-Date:   Fri, 21 Feb 2020 08:41:47 +0100
-Message-Id: <20200221072306.861454640@linuxfoundation.org>
+        stable@vger.kernel.org, Hulk Robot <hulkci@huawei.com>,
+        YueHaibing <yuehaibing@huawei.com>,
+        Ben Skeggs <bskeggs@redhat.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.19 126/191] drm/nouveau/drm/ttm: Remove set but not used variable mem
+Date:   Fri, 21 Feb 2020 08:41:39 +0100
+Message-Id: <20200221072306.079147050@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200221072250.732482588@linuxfoundation.org>
 References: <20200221072250.732482588@linuxfoundation.org>
@@ -61,117 +61,56 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Sami Tolvanen <samitolvanen@google.com>
+From: YueHaibing <yuehaibing@huawei.com>
 
-[ Upstream commit c54f90c2627cc316d365e3073614731e17dbc631 ]
+[ Upstream commit 2e4534a22794746b11a794b2229b8d58797eccce ]
 
-LLVM's integrated assembler fails with the following error when
-building KVM:
+drivers/gpu/drm/nouveau/nouveau_ttm.c: In function nouveau_vram_manager_new:
+drivers/gpu/drm/nouveau/nouveau_ttm.c:66:22: warning: variable mem set but not used [-Wunused-but-set-variable]
+drivers/gpu/drm/nouveau/nouveau_ttm.c: In function nouveau_gart_manager_new:
+drivers/gpu/drm/nouveau/nouveau_ttm.c:106:22: warning: variable mem set but not used [-Wunused-but-set-variable]
 
-  <inline asm>:12:6: error: expected absolute expression
-   .if kvm_update_va_mask == 0
-       ^
-  <inline asm>:21:6: error: expected absolute expression
-   .if kvm_update_va_mask == 0
-       ^
-  <inline asm>:24:2: error: unrecognized instruction mnemonic
-          NOT_AN_INSTRUCTION
-          ^
-  LLVM ERROR: Error parsing inline asm
+They are not used any more, so remove it.
 
-These errors come from ALTERNATIVE_CB and __ALTERNATIVE_CFG,
-which test for the existence of the callback parameter in inline
-assembly using the following expression:
-
-  " .if " __stringify(cb) " == 0\n"
-
-This works with GNU as, but isn't supported by LLVM. This change
-splits __ALTERNATIVE_CFG and ALTINSTR_ENTRY into separate macros
-to fix the LLVM build.
-
-Link: https://github.com/ClangBuiltLinux/linux/issues/472
-Signed-off-by: Sami Tolvanen <samitolvanen@google.com>
-Tested-by: Nick Desaulniers <ndesaulniers@google.com>
-Reviewed-by: Kees Cook <keescook@chromium.org>
-Signed-off-by: Will Deacon <will@kernel.org>
+Reported-by: Hulk Robot <hulkci@huawei.com>
+Signed-off-by: YueHaibing <yuehaibing@huawei.com>
+Signed-off-by: Ben Skeggs <bskeggs@redhat.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm64/include/asm/alternative.h | 32 ++++++++++++++++++----------
- 1 file changed, 21 insertions(+), 11 deletions(-)
+ drivers/gpu/drm/nouveau/nouveau_ttm.c | 4 ----
+ 1 file changed, 4 deletions(-)
 
-diff --git a/arch/arm64/include/asm/alternative.h b/arch/arm64/include/asm/alternative.h
-index 4b650ec1d7dd1..887a8512bf10b 100644
---- a/arch/arm64/include/asm/alternative.h
-+++ b/arch/arm64/include/asm/alternative.h
-@@ -35,13 +35,16 @@ void apply_alternatives_module(void *start, size_t length);
- static inline void apply_alternatives_module(void *start, size_t length) { }
- #endif
+diff --git a/drivers/gpu/drm/nouveau/nouveau_ttm.c b/drivers/gpu/drm/nouveau/nouveau_ttm.c
+index e4b977cc84528..37715a2a2f3f9 100644
+--- a/drivers/gpu/drm/nouveau/nouveau_ttm.c
++++ b/drivers/gpu/drm/nouveau/nouveau_ttm.c
+@@ -63,14 +63,12 @@ nouveau_vram_manager_new(struct ttm_mem_type_manager *man,
+ {
+ 	struct nouveau_bo *nvbo = nouveau_bo(bo);
+ 	struct nouveau_drm *drm = nouveau_bdev(bo->bdev);
+-	struct nouveau_mem *mem;
+ 	int ret;
  
--#define ALTINSTR_ENTRY(feature,cb)					      \
-+#define ALTINSTR_ENTRY(feature)					              \
- 	" .word 661b - .\n"				/* label           */ \
--	" .if " __stringify(cb) " == 0\n"				      \
- 	" .word 663f - .\n"				/* new instruction */ \
--	" .else\n"							      \
-+	" .hword " __stringify(feature) "\n"		/* feature bit     */ \
-+	" .byte 662b-661b\n"				/* source len      */ \
-+	" .byte 664f-663f\n"				/* replacement len */
-+
-+#define ALTINSTR_ENTRY_CB(feature, cb)					      \
-+	" .word 661b - .\n"				/* label           */ \
- 	" .word " __stringify(cb) "- .\n"		/* callback */	      \
--	" .endif\n"							      \
- 	" .hword " __stringify(feature) "\n"		/* feature bit     */ \
- 	" .byte 662b-661b\n"				/* source len      */ \
- 	" .byte 664f-663f\n"				/* replacement len */
-@@ -62,15 +65,14 @@ static inline void apply_alternatives_module(void *start, size_t length) { }
-  *
-  * Alternatives with callbacks do not generate replacement instructions.
-  */
--#define __ALTERNATIVE_CFG(oldinstr, newinstr, feature, cfg_enabled, cb)	\
-+#define __ALTERNATIVE_CFG(oldinstr, newinstr, feature, cfg_enabled)	\
- 	".if "__stringify(cfg_enabled)" == 1\n"				\
- 	"661:\n\t"							\
- 	oldinstr "\n"							\
- 	"662:\n"							\
- 	".pushsection .altinstructions,\"a\"\n"				\
--	ALTINSTR_ENTRY(feature,cb)					\
-+	ALTINSTR_ENTRY(feature)						\
- 	".popsection\n"							\
--	" .if " __stringify(cb) " == 0\n"				\
- 	".pushsection .altinstr_replacement, \"a\"\n"			\
- 	"663:\n\t"							\
- 	newinstr "\n"							\
-@@ -78,17 +80,25 @@ static inline void apply_alternatives_module(void *start, size_t length) { }
- 	".popsection\n\t"						\
- 	".org	. - (664b-663b) + (662b-661b)\n\t"			\
- 	".org	. - (662b-661b) + (664b-663b)\n"			\
--	".else\n\t"							\
-+	".endif\n"
-+
-+#define __ALTERNATIVE_CFG_CB(oldinstr, feature, cfg_enabled, cb)	\
-+	".if "__stringify(cfg_enabled)" == 1\n"				\
-+	"661:\n\t"							\
-+	oldinstr "\n"							\
-+	"662:\n"							\
-+	".pushsection .altinstructions,\"a\"\n"				\
-+	ALTINSTR_ENTRY_CB(feature, cb)					\
-+	".popsection\n"							\
- 	"663:\n\t"							\
- 	"664:\n\t"							\
--	".endif\n"							\
- 	".endif\n"
+ 	if (drm->client.device.info.ram_size == 0)
+ 		return -ENOMEM;
  
- #define _ALTERNATIVE_CFG(oldinstr, newinstr, feature, cfg, ...)	\
--	__ALTERNATIVE_CFG(oldinstr, newinstr, feature, IS_ENABLED(cfg), 0)
-+	__ALTERNATIVE_CFG(oldinstr, newinstr, feature, IS_ENABLED(cfg))
+ 	ret = nouveau_mem_new(&drm->master, nvbo->kind, nvbo->comp, reg);
+-	mem = nouveau_mem(reg);
+ 	if (ret)
+ 		return ret;
  
- #define ALTERNATIVE_CB(oldinstr, cb) \
--	__ALTERNATIVE_CFG(oldinstr, "NOT_AN_INSTRUCTION", ARM64_CB_PATCH, 1, cb)
-+	__ALTERNATIVE_CFG_CB(oldinstr, ARM64_CB_PATCH, 1, cb)
- #else
+@@ -103,11 +101,9 @@ nouveau_gart_manager_new(struct ttm_mem_type_manager *man,
+ {
+ 	struct nouveau_bo *nvbo = nouveau_bo(bo);
+ 	struct nouveau_drm *drm = nouveau_bdev(bo->bdev);
+-	struct nouveau_mem *mem;
+ 	int ret;
  
- #include <asm/assembler.h>
+ 	ret = nouveau_mem_new(&drm->master, nvbo->kind, nvbo->comp, reg);
+-	mem = nouveau_mem(reg);
+ 	if (ret)
+ 		return ret;
+ 
 -- 
 2.20.1
 
