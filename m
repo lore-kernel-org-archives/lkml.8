@@ -2,58 +2,57 @@ Return-Path: <SRS0=1210=4J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9C11DC11D24
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 03:29:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 258F8C11D00
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 03:29:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 740F424653
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 03:29:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EDB94222C4
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 03:29:28 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729892AbgBUD3P (ORCPT
+        id S1729927AbgBUD32 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Feb 2020 22:29:15 -0500
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:32698 "EHLO
+        Thu, 20 Feb 2020 22:29:28 -0500
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:54260 "EHLO
         mx0b-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1729722AbgBUD2X (ORCPT
+        by vger.kernel.org with ESMTP id S1729612AbgBUD2V (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Feb 2020 22:28:23 -0500
+        Thu, 20 Feb 2020 22:28:21 -0500
 Received: from pps.filterd (m0127361.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 01L3K728028531
-        for <linux-kernel@vger.kernel.org>; Thu, 20 Feb 2020 22:28:22 -0500
-Received: from e06smtp03.uk.ibm.com (e06smtp03.uk.ibm.com [195.75.94.99])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2y92xf23jk-1
+        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 01L3K7oi028508
+        for <linux-kernel@vger.kernel.org>; Thu, 20 Feb 2020 22:28:20 -0500
+Received: from e06smtp05.uk.ibm.com (e06smtp05.uk.ibm.com [195.75.94.101])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2y92xf23he-1
         (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Thu, 20 Feb 2020 22:28:22 -0500
+        for <linux-kernel@vger.kernel.org>; Thu, 20 Feb 2020 22:28:20 -0500
 Received: from localhost
-        by e06smtp03.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        by e06smtp05.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
         for <linux-kernel@vger.kernel.org> from <alastair@au1.ibm.com>;
-        Fri, 21 Feb 2020 03:28:18 -0000
+        Fri, 21 Feb 2020 03:28:16 -0000
 Received: from b06cxnps4074.portsmouth.uk.ibm.com (9.149.109.196)
-        by e06smtp03.uk.ibm.com (192.168.101.133) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        by e06smtp05.uk.ibm.com (192.168.101.135) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
         (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Fri, 21 Feb 2020 03:28:11 -0000
-Received: from d06av26.portsmouth.uk.ibm.com (d06av26.portsmouth.uk.ibm.com [9.149.105.62])
-        by b06cxnps4074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 01L3SAB843647038
+        Fri, 21 Feb 2020 03:28:08 -0000
+Received: from b06wcsmtp001.portsmouth.uk.ibm.com (b06wcsmtp001.portsmouth.uk.ibm.com [9.149.105.160])
+        by b06cxnps4074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 01L3S7Xw51314800
         (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Fri, 21 Feb 2020 03:28:10 GMT
-Received: from d06av26.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 8F6F3AE04D;
-        Fri, 21 Feb 2020 03:28:10 +0000 (GMT)
-Received: from d06av26.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id DC284AE051;
-        Fri, 21 Feb 2020 03:28:09 +0000 (GMT)
+        Fri, 21 Feb 2020 03:28:07 GMT
+Received: from b06wcsmtp001.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id BADFCA405C;
+        Fri, 21 Feb 2020 03:28:07 +0000 (GMT)
+Received: from b06wcsmtp001.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 1E1F6A4054;
+        Fri, 21 Feb 2020 03:28:07 +0000 (GMT)
 Received: from ozlabs.au.ibm.com (unknown [9.192.253.14])
-        by d06av26.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Fri, 21 Feb 2020 03:28:09 +0000 (GMT)
+        by b06wcsmtp001.portsmouth.uk.ibm.com (Postfix) with ESMTP;
+        Fri, 21 Feb 2020 03:28:07 +0000 (GMT)
 Received: from adsilva.ozlabs.ibm.com (haven.au.ibm.com [9.192.254.114])
         (using TLSv1.2 with cipher AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by ozlabs.au.ibm.com (Postfix) with ESMTPSA id 69933A03DC;
-        Fri, 21 Feb 2020 14:28:03 +1100 (AEDT)
+        by ozlabs.au.ibm.com (Postfix) with ESMTPSA id 82291A0209;
+        Fri, 21 Feb 2020 14:28:02 +1100 (AEDT)
 From:   "Alastair D'Silva" <alastair@au1.ibm.com>
 To:     alastair@d-silva.org
 Cc:     "Aneesh Kumar K . V" <aneesh.kumar@linux.ibm.com>,
@@ -87,18 +86,16 @@ Cc:     "Aneesh Kumar K . V" <aneesh.kumar@linux.ibm.com>,
         Alexey Kardashevskiy <aik@ozlabs.ru>,
         linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
         linux-nvdimm@lists.01.org, linux-mm@kvack.org
-Subject: [PATCH v3 15/27] powerpc/powernv/pmem: Add support for near storage commands
-Date:   Fri, 21 Feb 2020 14:27:08 +1100
+Subject: [PATCH v3 00/27] Add support for OpenCAPI Persistent Memory devices
+Date:   Fri, 21 Feb 2020 14:26:53 +1100
 X-Mailer: git-send-email 2.24.1
-In-Reply-To: <20200221032720.33893-1-alastair@au1.ibm.com>
-References: <20200221032720.33893-1-alastair@au1.ibm.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-TM-AS-GCONF: 00
-x-cbid: 20022103-0012-0000-0000-00000388D1CF
+x-cbid: 20022103-0020-0000-0000-000003AC220E
 X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 20022103-0013-0000-0000-000021C56A70
-Message-Id: <20200221032720.33893-16-alastair@au1.ibm.com>
+x-cbparentid: 20022103-0021-0000-0000-000022042A30
+Message-Id: <20200221032720.33893-1-alastair@au1.ibm.com>
 X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.572
  definitions=2020-02-20_19:2020-02-19,2020-02-20 signatures=0
 X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxscore=0 adultscore=0
@@ -113,145 +110,77 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Alastair D'Silva <alastair@d-silva.org>
 
-Similar to the previous patch, this adds support for near storage commands.
+This series adds support for OpenCAPI Persistent Memory devices, exposing
+them as nvdimms so that we can make use of the existing infrastructure.
 
-Signed-off-by: Alastair D'Silva <alastair@d-silva.org>
----
- arch/powerpc/platforms/powernv/pmem/ocxl.c    |  6 +++
- .../platforms/powernv/pmem/ocxl_internal.c    | 41 +++++++++++++++++++
- .../platforms/powernv/pmem/ocxl_internal.h    | 37 +++++++++++++++++
- 3 files changed, 84 insertions(+)
+Alastair D'Silva (27):
+  powerpc: Add OPAL calls for LPC memory alloc/release
+  mm/memory_hotplug: Allow check_hotplug_memory_addressable to be called
+    from drivers
+  powerpc: Map & release OpenCAPI LPC memory
+  ocxl: Remove unnecessary externs
+  ocxl: Address kernel doc errors & warnings
+  ocxl: Tally up the LPC memory on a link & allow it to be mapped
+  ocxl: Add functions to map/unmap LPC memory
+  ocxl: Emit a log message showing how much LPC memory was detected
+  ocxl: Save the device serial number in ocxl_fn
+  powerpc: Add driver for OpenCAPI Persistent Memory
+  powerpc: Enable the OpenCAPI Persistent Memory driver for
+    powernv_defconfig
+  powerpc/powernv/pmem: Add register addresses & status values to the
+    header
+  powerpc/powernv/pmem: Read the capability registers & wait for device
+    ready
+  powerpc/powernv/pmem: Add support for Admin commands
+  powerpc/powernv/pmem: Add support for near storage commands
+  powerpc/powernv/pmem: Register a character device for userspace to
+    interact with
+  powerpc/powernv/pmem: Implement the Read Error Log command
+  powerpc/powernv/pmem: Add controller dump IOCTLs
+  powerpc/powernv/pmem: Add an IOCTL to report controller statistics
+  powerpc/powernv/pmem: Forward events to userspace
+  powerpc/powernv/pmem: Add an IOCTL to request controller health & perf
+    data
+  powerpc/powernv/pmem: Implement the heartbeat command
+  powerpc/powernv/pmem: Add debug IOCTLs
+  powerpc/powernv/pmem: Expose SMART data via ndctl
+  powerpc/powernv/pmem: Expose the serial number in sysfs
+  powerpc/powernv/pmem: Expose the firmware version in sysfs
+  MAINTAINERS: Add myself & nvdimm/ocxl to ocxl
 
-diff --git a/arch/powerpc/platforms/powernv/pmem/ocxl.c b/arch/powerpc/platforms/powernv/pmem/ocxl.c
-index 4e782d22605b..b8bd7e703b19 100644
---- a/arch/powerpc/platforms/powernv/pmem/ocxl.c
-+++ b/arch/powerpc/platforms/powernv/pmem/ocxl.c
-@@ -259,12 +259,18 @@ static int setup_command_metadata(struct ocxlpmem *ocxlpmem)
- 	int rc;
- 
- 	mutex_init(&ocxlpmem->admin_command.lock);
-+	mutex_init(&ocxlpmem->ns_command.lock);
- 
- 	rc = extract_command_metadata(ocxlpmem, GLOBAL_MMIO_ACMA_CREQO,
- 				      &ocxlpmem->admin_command);
- 	if (rc)
- 		return rc;
- 
-+	rc = extract_command_metadata(ocxlpmem, GLOBAL_MMIO_NSCMA_CREQO,
-+					  &ocxlpmem->ns_command);
-+	if (rc)
-+		return rc;
-+
- 	return 0;
- }
- 
-diff --git a/arch/powerpc/platforms/powernv/pmem/ocxl_internal.c b/arch/powerpc/platforms/powernv/pmem/ocxl_internal.c
-index 583f48023025..3e0b133feddf 100644
---- a/arch/powerpc/platforms/powernv/pmem/ocxl_internal.c
-+++ b/arch/powerpc/platforms/powernv/pmem/ocxl_internal.c
-@@ -133,6 +133,47 @@ int admin_response_handled(const struct ocxlpmem *ocxlpmem)
- 				      OCXL_LITTLE_ENDIAN, GLOBAL_MMIO_CHI_ACRA);
- }
- 
-+int ns_command_request(struct ocxlpmem *ocxlpmem, u8 op_code)
-+{
-+	u64 val;
-+	int rc = ocxl_global_mmio_read64(ocxlpmem->ocxl_afu, GLOBAL_MMIO_CHI,
-+					 OCXL_LITTLE_ENDIAN, &val);
-+	if (rc)
-+		return rc;
-+
-+	if (!(val & GLOBAL_MMIO_CHI_NSCRA))
-+		return -EBUSY;
-+
-+	return scm_command_request(ocxlpmem, &ocxlpmem->ns_command, op_code);
-+}
-+
-+int ns_response(const struct ocxlpmem *ocxlpmem)
-+{
-+	return command_response(ocxlpmem, &ocxlpmem->ns_command);
-+}
-+
-+int ns_command_execute(const struct ocxlpmem *ocxlpmem)
-+{
-+	return ocxl_global_mmio_set64(ocxlpmem->ocxl_afu, GLOBAL_MMIO_HCI,
-+				      OCXL_LITTLE_ENDIAN, GLOBAL_MMIO_HCI_NSCRW);
-+}
-+
-+bool ns_command_complete(const struct ocxlpmem *ocxlpmem)
-+{
-+	u64 val = 0;
-+	int rc = ocxlpmem_chi(ocxlpmem, &val);
-+
-+	WARN_ON(rc);
-+
-+	return (val & GLOBAL_MMIO_CHI_NSCRA) != 0;
-+}
-+
-+int ns_response_handled(const struct ocxlpmem *ocxlpmem)
-+{
-+	return ocxl_global_mmio_set64(ocxlpmem->ocxl_afu, GLOBAL_MMIO_CHIC,
-+				      OCXL_LITTLE_ENDIAN, GLOBAL_MMIO_CHI_NSCRA);
-+}
-+
- void warn_status(const struct ocxlpmem *ocxlpmem, const char *message,
- 		     u8 status)
- {
-diff --git a/arch/powerpc/platforms/powernv/pmem/ocxl_internal.h b/arch/powerpc/platforms/powernv/pmem/ocxl_internal.h
-index 2fef68c71271..28e2020f6355 100644
---- a/arch/powerpc/platforms/powernv/pmem/ocxl_internal.h
-+++ b/arch/powerpc/platforms/powernv/pmem/ocxl_internal.h
-@@ -107,6 +107,7 @@ struct ocxlpmem {
- 	struct ocxl_context *ocxl_context;
- 	void *metadata_addr;
- 	struct command_metadata admin_command;
-+	struct command_metadata ns_command;
- 	struct resource pmem_res;
- 	struct nd_region *nd_region;
- 	char fw_version[8+1];
-@@ -175,6 +176,42 @@ int admin_command_complete_timeout(const struct ocxlpmem *ocxlpmem,
-  */
- int admin_response_handled(const struct ocxlpmem *ocxlpmem);
- 
-+/**
-+ * ns_command_request() - Issue a near storage command request
-+ * @ocxlpmem: the device metadata
-+ * @op_code: The op-code for the command
-+ * Returns an identifier for the command, or negative on error
-+ */
-+int ns_command_request(struct ocxlpmem *ocxlpmem, u8 op_code);
-+
-+/**
-+ * ns_response() - Validate a near storage response
-+ * @ocxlpmem: the device metadata
-+ * Returns the status code of the command, or negative on error
-+ */
-+int ns_response(const struct ocxlpmem *ocxlpmem);
-+
-+/**
-+ * ns_command_execute() - Notify the controller to start processing a pending near storage command
-+ * @ocxlpmem: the device metadata
-+ * Returns 0 on success, negative on error
-+ */
-+int ns_command_execute(const struct ocxlpmem *ocxlpmem);
-+
-+/**
-+ * ns_command_complete() - Is a near storage command executing
-+ * @ocxlpmem: the device metadata
-+ * Returns true if the previous admin command has completed
-+ */
-+bool ns_command_complete(const struct ocxlpmem *ocxlpmem);
-+
-+/**
-+ * ns_response_handled() - Notify the controller that the near storage response has been handled
-+ * @ocxlpmem: the device metadata
-+ * Returns 0 on success, negative on failure
-+ */
-+int ns_response_handled(const struct ocxlpmem *ocxlpmem);
-+
- /**
-  * warn_status() - Emit a kernel warning showing a command status.
-  * @ocxlpmem: the device metadata
+ MAINTAINERS                                   |    3 +
+ arch/powerpc/configs/powernv_defconfig        |    5 +
+ arch/powerpc/include/asm/opal-api.h           |    2 +
+ arch/powerpc/include/asm/opal.h               |    3 +
+ arch/powerpc/include/asm/pnv-ocxl.h           |   40 +-
+ arch/powerpc/platforms/powernv/Kconfig        |    3 +
+ arch/powerpc/platforms/powernv/Makefile       |    1 +
+ arch/powerpc/platforms/powernv/ocxl.c         |   43 +
+ arch/powerpc/platforms/powernv/opal-call.c    |    2 +
+ arch/powerpc/platforms/powernv/pmem/Kconfig   |   21 +
+ arch/powerpc/platforms/powernv/pmem/Makefile  |    7 +
+ arch/powerpc/platforms/powernv/pmem/ocxl.c    | 1991 +++++++++++++++++
+ .../platforms/powernv/pmem/ocxl_internal.c    |  213 ++
+ .../platforms/powernv/pmem/ocxl_internal.h    |  254 +++
+ .../platforms/powernv/pmem/ocxl_sysfs.c       |   46 +
+ drivers/misc/ocxl/config.c                    |   74 +-
+ drivers/misc/ocxl/core.c                      |   61 +
+ drivers/misc/ocxl/link.c                      |   53 +
+ drivers/misc/ocxl/ocxl_internal.h             |   45 +-
+ include/linux/memory_hotplug.h                |    5 +
+ include/misc/ocxl.h                           |  122 +-
+ include/uapi/linux/ndctl.h                    |    1 +
+ include/uapi/nvdimm/ocxl-pmem.h               |  127 ++
+ mm/memory_hotplug.c                           |    4 +-
+ 24 files changed, 3029 insertions(+), 97 deletions(-)
+ create mode 100644 arch/powerpc/platforms/powernv/pmem/Kconfig
+ create mode 100644 arch/powerpc/platforms/powernv/pmem/Makefile
+ create mode 100644 arch/powerpc/platforms/powernv/pmem/ocxl.c
+ create mode 100644 arch/powerpc/platforms/powernv/pmem/ocxl_internal.c
+ create mode 100644 arch/powerpc/platforms/powernv/pmem/ocxl_internal.h
+ create mode 100644 arch/powerpc/platforms/powernv/pmem/ocxl_sysfs.c
+ create mode 100644 include/uapi/nvdimm/ocxl-pmem.h
+
 -- 
 2.24.1
 
