@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C30D1C35640
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 07:54:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F3268C35641
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 07:54:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 990792073A
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 07:54:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BB7CC24653
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 07:54:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582271669;
-	bh=zAa2uEgQbd2JoS7G+0gTzPTd/qwhQJyo3d9rW0gWzZU=;
+	s=default; t=1582271671;
+	bh=+rAfQc5HdLOMIL4uUKimOeM2WHF8AZu9IucVD2BUBUs=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=R4Tp5ROjdjOCjp20EBxNGzHeXg5cC93s4BEpnrAJ/tmM8C49gXz4D6znRI6Kel/1s
-	 xKMDO2S0pV5Ygp7nXQP9jiEjWPMdjOYKgEkK0ohCSDLNwCQxqT+VitssDx1yubDBLF
-	 Ru4HKmFjMu6w3v7juDayJ5WqzNNT9KUWDCtEplJ0=
+	b=NcmAVHxDcrzP8DrP5w6wy4ZaGfdb2avVjn775fZmhJlCAOZJMU6qIsIhA12tR1+v5
+	 2NzW3VxwrM2xST4JFhpnww4l72Cvs1lMz0s9IHFhFMQPUdT+O3e+1ixDviF1NDcNic
+	 UOh7codHP1X6FTUXUaBl2VIe0SQwkyqkmlBxpiE0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730252AbgBUHy2 (ORCPT
+        id S1730072AbgBUHya (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Feb 2020 02:54:28 -0500
-Received: from mail.kernel.org ([198.145.29.99]:52984 "EHLO mail.kernel.org"
+        Fri, 21 Feb 2020 02:54:30 -0500
+Received: from mail.kernel.org ([198.145.29.99]:53040 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729725AbgBUHyZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Feb 2020 02:54:25 -0500
+        id S1730250AbgBUHy2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 21 Feb 2020 02:54:28 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 596112073A;
-        Fri, 21 Feb 2020 07:54:24 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 513C020578;
+        Fri, 21 Feb 2020 07:54:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1582271664;
-        bh=zAa2uEgQbd2JoS7G+0gTzPTd/qwhQJyo3d9rW0gWzZU=;
+        s=default; t=1582271667;
+        bh=+rAfQc5HdLOMIL4uUKimOeM2WHF8AZu9IucVD2BUBUs=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=LR5FSJpIZI5YRg/3OUA2QY1RG957mZ4CKbdyMFkNIdBApdY2oY36E/IUdfTDzL8zS
-         us3j9SAvf7bd/rEOMfqoP6ceAW4dRv0XW6zrhepQ++3CfTcdkpDOcj9xnKozs38M+S
-         bu41Qkscgpeq7aIWbL18iOJacywY/O+MpWnFBVA4=
+        b=RCidh2rVIpu4tCyUA+/gNU0rUuPQTH+LtJFd01CsU2JpLisL2vOZPsQwZvZwpMNgV
+         +MFoqbZbaW2c7pP8qogR37Ny8+v+DbB+kHld9CjfB9isAhZEMqT9vzdALFfT+XvRUR
+         gdIbtx7npnElhC87li1DAeRNq+bsGNdz7xdU+ggM=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Sekhar Nori <nsekhar@ti.com>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.5 235/399] clocksource: davinci: only enable clockevents once tim34 is initialized
-Date:   Fri, 21 Feb 2020 08:39:20 +0100
-Message-Id: <20200221072425.532861822@linuxfoundation.org>
+        stable@vger.kernel.org, Daniel Borkmann <daniel@iogearbox.net>,
+        Li RongQing <lirongqing@baidu.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.5 253/399] bpf: Return -EBADRQC for invalid map type in __bpf_tx_xdp_map
+Date:   Fri, 21 Feb 2020 08:39:38 +0100
+Message-Id: <20200221072427.015149476@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200221072402.315346745@linuxfoundation.org>
 References: <20200221072402.315346745@linuxfoundation.org>
@@ -60,55 +60,43 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
+From: Li RongQing <lirongqing@baidu.com>
 
-[ Upstream commit cea931c25104e6bddc42eb067f58193f355dbdd7 ]
+[ Upstream commit 0a29275b6300f39f78a87f2038bbfe5bdbaeca47 ]
 
-The DM365 platform has a strange quirk (only present when using ancient
-u-boot - mainline u-boot v2013.01 and later works fine) where if we
-enable the second half of the timer in periodic mode before we do its
-initialization - the time won't start flowing and we can't boot.
+A negative value should be returned if map->map_type is invalid
+although that is impossible now, but if we run into such situation
+in future, then xdpbuff could be leaked.
 
-When using more recent u-boot, we can enable the timer, then reinitialize
-it and all works fine.
+Daniel Borkmann suggested:
 
-To work around this issue only enable clockevents once tim34 is
-initialized i.e. move clockevents_config_and_register() below tim34
-initialization.
+-EBADRQC should be returned to stay consistent with generic XDP
+for the tracepoint output and not to be confused with -EOPNOTSUPP
+from other locations like dev_map_enqueue() when ndo_xdp_xmit is
+missing and such.
 
-Signed-off-by: Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Signed-off-by: Sekhar Nori <nsekhar@ti.com>
+Suggested-by: Daniel Borkmann <daniel@iogearbox.net>
+Signed-off-by: Li RongQing <lirongqing@baidu.com>
+Signed-off-by: Daniel Borkmann <daniel@iogearbox.net>
+Link: https://lore.kernel.org/bpf/1578618277-18085-1-git-send-email-lirongqing@baidu.com
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/clocksource/timer-davinci.c | 8 ++++----
- 1 file changed, 4 insertions(+), 4 deletions(-)
+ net/core/filter.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/clocksource/timer-davinci.c b/drivers/clocksource/timer-davinci.c
-index 62745c9620498..e421946a91c5a 100644
---- a/drivers/clocksource/timer-davinci.c
-+++ b/drivers/clocksource/timer-davinci.c
-@@ -302,10 +302,6 @@ int __init davinci_timer_register(struct clk *clk,
- 		return rv;
+diff --git a/net/core/filter.c b/net/core/filter.c
+index 538f6a735a19f..f797b1599c92f 100644
+--- a/net/core/filter.c
++++ b/net/core/filter.c
+@@ -3543,7 +3543,7 @@ static int __bpf_tx_xdp_map(struct net_device *dev_rx, void *fwd,
+ 		return err;
  	}
- 
--	clockevents_config_and_register(&clockevent->dev, tick_rate,
--					DAVINCI_TIMER_MIN_DELTA,
--					DAVINCI_TIMER_MAX_DELTA);
--
- 	davinci_clocksource.dev.rating = 300;
- 	davinci_clocksource.dev.read = davinci_clocksource_read;
- 	davinci_clocksource.dev.mask =
-@@ -323,6 +319,10 @@ int __init davinci_timer_register(struct clk *clk,
- 		davinci_clocksource_init_tim34(base);
+ 	default:
+-		break;
++		return -EBADRQC;
  	}
- 
-+	clockevents_config_and_register(&clockevent->dev, tick_rate,
-+					DAVINCI_TIMER_MIN_DELTA,
-+					DAVINCI_TIMER_MAX_DELTA);
-+
- 	rv = clocksource_register_hz(&davinci_clocksource.dev, tick_rate);
- 	if (rv) {
- 		pr_err("Unable to register clocksource");
+ 	return 0;
+ }
 -- 
 2.20.1
 
