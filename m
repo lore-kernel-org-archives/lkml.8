@@ -7,46 +7,50 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A8C49C35641
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 08:21:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4AD65C35641
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 08:21:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7FAB2206ED
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 08:21:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1F808222C4
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 08:21:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582273276;
-	bh=sVnxuLXbC0/c7u22TqpsUNlP8xJHaNjnGHR1lfIr40U=;
+	s=default; t=1582273279;
+	bh=C1v+ShQ1N1QW7naAQ+oLxC/VhO0Hozp6QIKDYeQARzw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=gUuL289FdnAbbci8NY1dKgpQKSf/W/ykjiAtnCHrgkuKWy33DA5Xk+O6qil8KEno2
-	 jOUVOgL4sqK51QGp2qi+ltLjKf5cMRBVtyU7GihmBifJkJaTLvKarTM8/ebJP7f4TT
-	 V2/CWKeSMbqdbubxXDW9b6LTgJfo9KT4opGbtGZM=
+	b=rBPcsPCiJYnywV+fJRrOjDixthRCEOnU7NZ4kQfoyQfJf5ZKhrWLdHOUyuLaujWyU
+	 j/dOW29cnwvsdwAgixD4JtrYBTh/6ZJGsiy7KzPQF3B0KOAX6W2zgCi+0zwl3g+jvb
+	 wPYzDivTD9XMgMzD48K5h47KJImSty+Hy/9yvumg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388237AbgBUIVL (ORCPT
+        id S1730379AbgBUIVR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Feb 2020 03:21:11 -0500
-Received: from mail.kernel.org ([198.145.29.99]:60394 "EHLO mail.kernel.org"
+        Fri, 21 Feb 2020 03:21:17 -0500
+Received: from mail.kernel.org ([198.145.29.99]:60584 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387997AbgBUIVE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Feb 2020 03:21:04 -0500
+        id S2388239AbgBUIVO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 21 Feb 2020 03:21:14 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id DCA19206ED;
-        Fri, 21 Feb 2020 08:21:03 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9E6D4206ED;
+        Fri, 21 Feb 2020 08:21:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1582273264;
-        bh=sVnxuLXbC0/c7u22TqpsUNlP8xJHaNjnGHR1lfIr40U=;
+        s=default; t=1582273273;
+        bh=C1v+ShQ1N1QW7naAQ+oLxC/VhO0Hozp6QIKDYeQARzw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=S4yC/l54ZA0PQDvLy+UDKu7P6cgFID8QIcdrlJe2uOV8TDpZkShM9gXsd/fujuMOr
-         fVAUkqSo1+Aq359E89Sjze2TDDOxClMLlhxoKfTwNG7u6Zz+XikJG2lc7tO2hMtjs3
-         FtHYUDfWPaR3QFXeFx/4NNT2FnyqoDMg4WOySGAo=
+        b=OB9QJBCzhIwwV/2srxe5IbnVMqDOS6g08SdPt8sRu2iwS+zEDdMZ9T0tJp7/c7A4H
+         Jq8bi9aZLL3r28pPb3NM0tViVEuG9kW5K7tROqb2F4YDkUsN5muXzbPxbhBSbDejWc
+         HLiQGwdxj+nT1P7wOFuLEswZKOoA8oZjFxF1Q6/E=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 106/191] staging: rtl8188: avoid excessive stack usage
-Date:   Fri, 21 Feb 2020 08:41:19 +0100
-Message-Id: <20200221072303.661252801@linuxfoundation.org>
+        stable@vger.kernel.org, Ard Biesheuvel <ardb@kernel.org>,
+        Andy Lutomirski <luto@kernel.org>,
+        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
+        Arvind Sankar <nivedita@alum.mit.edu>,
+        Matthew Garrett <mjg59@google.com>, linux-efi@vger.kernel.org,
+        Ingo Molnar <mingo@kernel.org>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.19 109/191] efi/x86: Dont panic or BUG() on non-critical error conditions
+Date:   Fri, 21 Feb 2020 08:41:22 +0100
+Message-Id: <20200221072303.986267295@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200221072250.732482588@linuxfoundation.org>
 References: <20200221072250.732482588@linuxfoundation.org>
@@ -59,72 +63,129 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Arnd Bergmann <arnd@arndb.de>
+From: Ard Biesheuvel <ardb@kernel.org>
 
-[ Upstream commit c497ae2077c055b85c1bf04f3d182a84bd8f365b ]
+[ Upstream commit e2d68a955e49d61fd0384f23e92058dc9b79be5e ]
 
-The rtl8188 copy of the os_dep support code causes a
-warning about a very significant stack usage in the translate_scan()
-function:
+The logic in __efi_enter_virtual_mode() does a number of steps in
+sequence, all of which may fail in one way or the other. In most
+cases, we simply print an error and disable EFI runtime services
+support, but in some cases, we BUG() or panic() and bring down the
+system when encountering conditions that we could easily handle in
+the same way.
 
-drivers/staging/rtl8188eu/os_dep/ioctl_linux.c: In function 'translate_scan':
-drivers/staging/rtl8188eu/os_dep/ioctl_linux.c:306:1: error: the frame size of 1560 bytes is larger than 1400 bytes [-Werror=frame-larger-than=]
+While at it, replace a pointless page-to-virt-phys conversion with
+one that goes straight from struct page to physical.
 
-Use the same trick as in the rtl8723bs copy of the same function, and
-allocate it dynamically.
-
-Signed-off-by: Arnd Bergmann <arnd@arndb.de>
-Link: https://lore.kernel.org/r/20200104214832.558198-1-arnd@arndb.de
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Signed-off-by: Ard Biesheuvel <ardb@kernel.org>
+Cc: Andy Lutomirski <luto@kernel.org>
+Cc: Ard Biesheuvel <ard.biesheuvel@linaro.org>
+Cc: Arvind Sankar <nivedita@alum.mit.edu>
+Cc: Matthew Garrett <mjg59@google.com>
+Cc: linux-efi@vger.kernel.org
+Link: https://lkml.kernel.org/r/20200103113953.9571-14-ardb@kernel.org
+Signed-off-by: Ingo Molnar <mingo@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/staging/rtl8188eu/os_dep/ioctl_linux.c | 9 ++++++---
- 1 file changed, 6 insertions(+), 3 deletions(-)
+ arch/x86/platform/efi/efi.c    | 28 ++++++++++++++--------------
+ arch/x86/platform/efi/efi_64.c |  9 +++++----
+ 2 files changed, 19 insertions(+), 18 deletions(-)
 
-diff --git a/drivers/staging/rtl8188eu/os_dep/ioctl_linux.c b/drivers/staging/rtl8188eu/os_dep/ioctl_linux.c
-index bee3c3a7a7a99..2db4444267a74 100644
---- a/drivers/staging/rtl8188eu/os_dep/ioctl_linux.c
-+++ b/drivers/staging/rtl8188eu/os_dep/ioctl_linux.c
-@@ -229,18 +229,21 @@ static char *translate_scan(struct adapter *padapter,
+diff --git a/arch/x86/platform/efi/efi.c b/arch/x86/platform/efi/efi.c
+index 5b0275310070e..e7f19dec16b97 100644
+--- a/arch/x86/platform/efi/efi.c
++++ b/arch/x86/platform/efi/efi.c
+@@ -930,16 +930,14 @@ static void __init __efi_enter_virtual_mode(void)
  
- 	/* parsing WPA/WPA2 IE */
- 	{
--		u8 buf[MAX_WPA_IE_LEN];
-+		u8 *buf;
- 		u8 wpa_ie[255], rsn_ie[255];
- 		u16 wpa_len = 0, rsn_len = 0;
- 		u8 *p;
- 
-+		buf = kzalloc(MAX_WPA_IE_LEN, GFP_ATOMIC);
-+		if (!buf)
-+			return start;
-+
- 		rtw_get_sec_ie(pnetwork->network.ies, pnetwork->network.ie_length, rsn_ie, &rsn_len, wpa_ie, &wpa_len);
- 		RT_TRACE(_module_rtl871x_mlme_c_, _drv_info_, ("rtw_wx_get_scan: ssid =%s\n", pnetwork->network.Ssid.Ssid));
- 		RT_TRACE(_module_rtl871x_mlme_c_, _drv_info_, ("rtw_wx_get_scan: wpa_len =%d rsn_len =%d\n", wpa_len, rsn_len));
- 
- 		if (wpa_len > 0) {
- 			p = buf;
--			memset(buf, 0, MAX_WPA_IE_LEN);
- 			p += sprintf(p, "wpa_ie=");
- 			for (i = 0; i < wpa_len; i++)
- 				p += sprintf(p, "%02x", wpa_ie[i]);
-@@ -257,7 +260,6 @@ static char *translate_scan(struct adapter *padapter,
- 		}
- 		if (rsn_len > 0) {
- 			p = buf;
--			memset(buf, 0, MAX_WPA_IE_LEN);
- 			p += sprintf(p, "rsn_ie=");
- 			for (i = 0; i < rsn_len; i++)
- 				p += sprintf(p, "%02x", rsn_ie[i]);
-@@ -271,6 +273,7 @@ static char *translate_scan(struct adapter *padapter,
- 			iwe.u.data.length = rsn_len;
- 			start = iwe_stream_add_point(info, start, stop, &iwe, rsn_ie);
- 		}
-+		kfree(buf);
+ 	if (efi_alloc_page_tables()) {
+ 		pr_err("Failed to allocate EFI page tables\n");
+-		clear_bit(EFI_RUNTIME_SERVICES, &efi.flags);
+-		return;
++		goto err;
  	}
  
- 	{/* parsing WPS IE */
+ 	efi_merge_regions();
+ 	new_memmap = efi_map_regions(&count, &pg_shift);
+ 	if (!new_memmap) {
+ 		pr_err("Error reallocating memory, EFI runtime non-functional!\n");
+-		clear_bit(EFI_RUNTIME_SERVICES, &efi.flags);
+-		return;
++		goto err;
+ 	}
+ 
+ 	pa = __pa(new_memmap);
+@@ -953,8 +951,7 @@ static void __init __efi_enter_virtual_mode(void)
+ 
+ 	if (efi_memmap_init_late(pa, efi.memmap.desc_size * count)) {
+ 		pr_err("Failed to remap late EFI memory map\n");
+-		clear_bit(EFI_RUNTIME_SERVICES, &efi.flags);
+-		return;
++		goto err;
+ 	}
+ 
+ 	if (efi_enabled(EFI_DBG)) {
+@@ -962,12 +959,11 @@ static void __init __efi_enter_virtual_mode(void)
+ 		efi_print_memmap();
+ 	}
+ 
+-	BUG_ON(!efi.systab);
++	if (WARN_ON(!efi.systab))
++		goto err;
+ 
+-	if (efi_setup_page_tables(pa, 1 << pg_shift)) {
+-		clear_bit(EFI_RUNTIME_SERVICES, &efi.flags);
+-		return;
+-	}
++	if (efi_setup_page_tables(pa, 1 << pg_shift))
++		goto err;
+ 
+ 	efi_sync_low_kernel_mappings();
+ 
+@@ -987,9 +983,9 @@ static void __init __efi_enter_virtual_mode(void)
+ 	}
+ 
+ 	if (status != EFI_SUCCESS) {
+-		pr_alert("Unable to switch EFI into virtual mode (status=%lx)!\n",
+-			 status);
+-		panic("EFI call to SetVirtualAddressMap() failed!");
++		pr_err("Unable to switch EFI into virtual mode (status=%lx)!\n",
++		       status);
++		goto err;
+ 	}
+ 
+ 	/*
+@@ -1016,6 +1012,10 @@ static void __init __efi_enter_virtual_mode(void)
+ 
+ 	/* clean DUMMY object */
+ 	efi_delete_dummy_variable();
++	return;
++
++err:
++	clear_bit(EFI_RUNTIME_SERVICES, &efi.flags);
+ }
+ 
+ void __init efi_enter_virtual_mode(void)
+diff --git a/arch/x86/platform/efi/efi_64.c b/arch/x86/platform/efi/efi_64.c
+index ee5d08f25ce45..6db8f3598c800 100644
+--- a/arch/x86/platform/efi/efi_64.c
++++ b/arch/x86/platform/efi/efi_64.c
+@@ -389,11 +389,12 @@ int __init efi_setup_page_tables(unsigned long pa_memmap, unsigned num_pages)
+ 		return 0;
+ 
+ 	page = alloc_page(GFP_KERNEL|__GFP_DMA32);
+-	if (!page)
+-		panic("Unable to allocate EFI runtime stack < 4GB\n");
++	if (!page) {
++		pr_err("Unable to allocate EFI runtime stack < 4GB\n");
++		return 1;
++	}
+ 
+-	efi_scratch.phys_stack = virt_to_phys(page_address(page));
+-	efi_scratch.phys_stack += PAGE_SIZE; /* stack grows down */
++	efi_scratch.phys_stack = page_to_phys(page + 1); /* stack grows down */
+ 
+ 	npages = (_etext - _text) >> PAGE_SHIFT;
+ 	text = __pa(_text);
 -- 
 2.20.1
 
