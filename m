@@ -2,106 +2,146 @@ Return-Path: <SRS0=1210=4J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A83DAC35656
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 15:34:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DC15FC35646
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 15:34:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 896FF2073A
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 15:34:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B02AA2073A
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 15:34:03 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="GpJ3okpK"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728299AbgBUPd7 convert rfc822-to-8bit (ORCPT
+        id S1727312AbgBUPeC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Feb 2020 10:33:59 -0500
-Received: from eu-smtp-delivery-151.mimecast.com ([207.82.80.151]:56745 "EHLO
-        eu-smtp-delivery-151.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727312AbgBUPd7 (ORCPT
+        Fri, 21 Feb 2020 10:34:02 -0500
+Received: from us-smtp-1.mimecast.com ([207.211.31.81]:27537 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1728344AbgBUPd7 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Fri, 21 Feb 2020 10:33:59 -0500
-Received: from AcuMS.aculab.com (156.67.243.126 [156.67.243.126]) (Using
- TLS) by relay.mimecast.com with ESMTP id
- uk-mta-214-eMyEWOzeMhKDhmybp4jdXw-1; Fri, 21 Feb 2020 15:33:54 +0000
-Received: from AcuMS.Aculab.com (fd9f:af1c:a25b:0:43c:695e:880f:8750) by
- AcuMS.aculab.com (fd9f:af1c:a25b:0:43c:695e:880f:8750) with Microsoft SMTP
- Server (TLS) id 15.0.1347.2; Fri, 21 Feb 2020 15:33:53 +0000
-Received: from AcuMS.Aculab.com ([fe80::43c:695e:880f:8750]) by
- AcuMS.aculab.com ([fe80::43c:695e:880f:8750%12]) with mapi id 15.00.1347.000;
- Fri, 21 Feb 2020 15:33:53 +0000
-From:   David Laight <David.Laight@ACULAB.COM>
-To:     'Jesse Brandeburg' <jesse.brandeburg@intel.com>,
-        "tglx@linutronix.de" <tglx@linutronix.de>,
-        "mingo@redhat.com" <mingo@redhat.com>,
-        "bp@alien8.de" <bp@alien8.de>
-CC:     "x86@kernel.org" <x86@kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux@rasmusvillemoes.dk" <linux@rasmusvillemoes.dk>,
-        "andriy.shevchenko@intel.com" <andriy.shevchenko@intel.com>,
-        "dan.j.williams@intel.com" <dan.j.williams@intel.com>,
-        "peterz@infradead.org" <peterz@infradead.org>
-Subject: RE: [PATCH v3 1/2] x86: fix bitops.h warning with a moved cast
-Thread-Topic: [PATCH v3 1/2] x86: fix bitops.h warning with a moved cast
-Thread-Index: AQHV6EScwamYP56GlUmFigARI6lhOqglx7RQ
-Date:   Fri, 21 Feb 2020 15:33:53 +0000
-Message-ID: <ca95b4325c8c44258672b7822ab4d16b@AcuMS.aculab.com>
-References: <20200220232155.2123827-1-jesse.brandeburg@intel.com>
-In-Reply-To: <20200220232155.2123827-1-jesse.brandeburg@intel.com>
-Accept-Language: en-GB, en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-ms-exchange-transport-fromentityheader: Hosted
-x-originating-ip: [10.202.205.107]
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1582299239;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=E+guHrGhfox0uGOVfKWJjH3Qg42hXDUOFTb9rh1W6rw=;
+        b=GpJ3okpKr0UvRueKdKm6NhOBS7ixkecCr9aWMZ9/p8K2De4kqQN1/FqMzViehnxUFH24nJ
+        Rs6BxZny0wUzVWqXYPIiwjVOi4hbd2GaOe0lweD5q/LDFGj6ylatGtuQ8MyWHvm9ySUyLh
+        kX1omrcQIwSqzdzZ2j2LW7vw6wckpiQ=
+Received: from mail-wr1-f71.google.com (mail-wr1-f71.google.com
+ [209.85.221.71]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-237-NwIklvIRPE6OgLg_Ib_gKg-1; Fri, 21 Feb 2020 10:33:57 -0500
+X-MC-Unique: NwIklvIRPE6OgLg_Ib_gKg-1
+Received: by mail-wr1-f71.google.com with SMTP id n23so1162829wra.20
+        for <linux-kernel@vger.kernel.org>; Fri, 21 Feb 2020 07:33:57 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:in-reply-to:references:date
+         :message-id:mime-version;
+        bh=E+guHrGhfox0uGOVfKWJjH3Qg42hXDUOFTb9rh1W6rw=;
+        b=A/3k+CK1tbPya3OWn+HSeAHx2aem0rD6i4wnS3nG+tUKiZi9+e0rj+uRdid3ljCsjR
+         EeWMIHXPfQV6aubwlSyntZQ7x/gB55sfX49uxWx63QkhjccvMnBbp1uW9IJPrKPKPG5M
+         nuBMcLxSxmRGLVF7j1oIGG6ediUhku6lBqU/qIGOuARajc+hqmnEVnCxMUqIfULUKYaj
+         HiTDYxskW8mGs6fAhFD7W0/ED4k6/P53NJD9LshQGnDkEpEmeDXhWLJRQIpTht81Kbqi
+         Bx5NRljlf59Jby/fLMLvFbAoVwfUnJmV9B/7UDwwj3PwXxIwaaPAxrTr+k8X3b4BO2Iy
+         Dgvg==
+X-Gm-Message-State: APjAAAWl3fSwShAgfAKk9B18mDd5Wv4dqdy6ukU4QrOBwOC7lm5zc6ED
+        CCVOrIinG3/cGvRy/sKAde5lYaelhu09yJ5YKZcAns3XJ4pHzwigQ2/4NpIK3e7410WkBSbYd8g
+        zPC8MZAz7cRl43dOSJdCa/XfB
+X-Received: by 2002:adf:a3ca:: with SMTP id m10mr9979649wrb.148.1582299236463;
+        Fri, 21 Feb 2020 07:33:56 -0800 (PST)
+X-Google-Smtp-Source: APXvYqxOaNg350262rKP8Ewbykavm9FIuTsZJiYbkJJJHkubI4PyxMb+9IoeLOXh2iX99PyPzJ4Yhw==
+X-Received: by 2002:adf:a3ca:: with SMTP id m10mr9979628wrb.148.1582299236252;
+        Fri, 21 Feb 2020 07:33:56 -0800 (PST)
+Received: from vitty.brq.redhat.com (nat-pool-brq-t.redhat.com. [213.175.37.10])
+        by smtp.gmail.com with ESMTPSA id c9sm4209920wme.41.2020.02.21.07.33.55
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 21 Feb 2020 07:33:55 -0800 (PST)
+From:   Vitaly Kuznetsov <vkuznets@redhat.com>
+To:     Sean Christopherson <sean.j.christopherson@intel.com>
+Cc:     Paolo Bonzini <pbonzini@redhat.com>,
+        Wanpeng Li <wanpengli@tencent.com>,
+        Jim Mattson <jmattson@google.com>,
+        Joerg Roedel <joro@8bytes.org>, kvm@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 22/61] KVM: x86: Make kvm_mpx_supported() an inline function
+In-Reply-To: <20200201185218.24473-23-sean.j.christopherson@intel.com>
+References: <20200201185218.24473-1-sean.j.christopherson@intel.com> <20200201185218.24473-23-sean.j.christopherson@intel.com>
+Date:   Fri, 21 Feb 2020 16:33:55 +0100
+Message-ID: <87h7zkq7j0.fsf@vitty.brq.redhat.com>
 MIME-Version: 1.0
-X-MC-Unique: eMyEWOzeMhKDhmybp4jdXw-1
-X-Mimecast-Spam-Score: 0
-X-Mimecast-Originator: aculab.com
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8BIT
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jesse Brandeburg
-> Fix many sparse warnings when building with C=1.
-> 
-> When the kernel is compiled with C=1, there are lots of messages like:
->   arch/x86/include/asm/bitops.h:77:37: warning: cast truncates bits from constant value (ffffff7f
-> becomes 7f)
-> 
-> CONST_MASK() is using a signed integer "1" to create the mask which
-> is later cast to (u8) when used. Move the cast to the definition and
-> clean up the calling sites to prevent sparse from warning.
-> 
-> The reason the warning was occurring is because certain bitmasks that
-> end with a mask next to a natural boundary like 7, 15, 23, 31, end up
-> with a mask like 0x7f, which then results in sign extension when doing
-> an invert (but I'm not a compiler expert). It was really only
-> "clear_bit" that was having problems, and it was only on bit checks next
-> to a byte boundary (top bit).
-> 
-> Verified with a test module (see next patch) and assembly inspection
-> that the patch doesn't introduce any change in generated code.
-...
-> diff --git a/arch/x86/include/asm/bitops.h b/arch/x86/include/asm/bitops.h
-> index 062cdecb2f24..96ef19dcbde6 100644
-> --- a/arch/x86/include/asm/bitops.h
-> +++ b/arch/x86/include/asm/bitops.h
-...
-> @@ -74,7 +74,7 @@ arch_clear_bit(long nr, volatile unsigned long *addr)
->  	if (__builtin_constant_p(nr)) {
->  		asm volatile(LOCK_PREFIX "andb %1,%0"
->  			: CONST_MASK_ADDR(nr, addr)
-> -			: "iq" ((u8)~CONST_MASK(nr)));
-> +			: "iq" (0xff ^ CONST_MASK(nr)));
+Sean Christopherson <sean.j.christopherson@intel.com> writes:
 
-IMHO (CONST_MASK(nr) ^ 0xff) is better.
+> Expose kvm_mpx_supported() as a static inline so that it can be inlined
+> in kvm_intel.ko.
+>
+> No functional change intended.
+>
+> Signed-off-by: Sean Christopherson <sean.j.christopherson@intel.com>
+> ---
+>  arch/x86/kvm/cpuid.c | 6 ------
+>  arch/x86/kvm/cpuid.h | 1 -
+>  arch/x86/kvm/x86.h   | 5 +++++
+>  3 files changed, 5 insertions(+), 7 deletions(-)
+>
+> diff --git a/arch/x86/kvm/cpuid.c b/arch/x86/kvm/cpuid.c
+> index 84006cc4007c..d3c93b94abc3 100644
+> --- a/arch/x86/kvm/cpuid.c
+> +++ b/arch/x86/kvm/cpuid.c
+> @@ -45,12 +45,6 @@ static u32 xstate_required_size(u64 xstate_bv, bool compacted)
+>  	return ret;
+>  }
+>  
+> -bool kvm_mpx_supported(void)
+> -{
+> -	return supported_xcr0 & (XFEATURE_MASK_BNDREGS | XFEATURE_MASK_BNDCSR);
+> -}
+> -EXPORT_SYMBOL_GPL(kvm_mpx_supported);
+> -
+>  #define F feature_bit
+>  
+>  int kvm_update_cpuid(struct kvm_vcpu *vcpu)
+> diff --git a/arch/x86/kvm/cpuid.h b/arch/x86/kvm/cpuid.h
+> index 7366c618aa04..c1ac0995843d 100644
+> --- a/arch/x86/kvm/cpuid.h
+> +++ b/arch/x86/kvm/cpuid.h
+> @@ -7,7 +7,6 @@
+>  #include <asm/processor.h>
+>  
+>  int kvm_update_cpuid(struct kvm_vcpu *vcpu);
+> -bool kvm_mpx_supported(void);
+>  struct kvm_cpuid_entry2 *kvm_find_cpuid_entry(struct kvm_vcpu *vcpu,
+>  					      u32 function, u32 index);
+>  int kvm_dev_ioctl_get_cpuid(struct kvm_cpuid2 *cpuid,
+> diff --git a/arch/x86/kvm/x86.h b/arch/x86/kvm/x86.h
+> index 02b49ee49e24..bfac4a80956c 100644
+> --- a/arch/x86/kvm/x86.h
+> +++ b/arch/x86/kvm/x86.h
+> @@ -283,6 +283,11 @@ enum exit_fastpath_completion handle_fastpath_set_msr_irqoff(struct kvm_vcpu *vc
+>  extern u64 host_xcr0;
+>  extern u64 supported_xcr0;
+>  
+> +static inline bool kvm_mpx_supported(void)
+> +{
+> +	return supported_xcr0 & (XFEATURE_MASK_BNDREGS | XFEATURE_MASK_BNDCSR);
+> +}
+> +
+>  extern unsigned int min_timer_period_us;
+>  
+>  extern bool enable_vmware_backdoor;
 
-	David
+Reviewed-by: Vitaly Kuznetsov <vkuznets@redhat.com>
 
--
-Registered Address Lakeside, Bramley Road, Mount Farm, Milton Keynes, MK1 1PT, UK
-Registration No: 1397386 (Wales)
+-- 
+Vitaly
 
