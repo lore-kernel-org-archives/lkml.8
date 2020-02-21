@@ -2,173 +2,155 @@ Return-Path: <SRS0=1210=4J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8CB94C3565B
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 18:58:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 44DEEC3565B
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 18:59:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5A8B42071E
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 18:58:45 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=cmpxchg-org.20150623.gappssmtp.com header.i=@cmpxchg-org.20150623.gappssmtp.com header.b="JNcMF1Tj"
+	by mail.kernel.org (Postfix) with ESMTP id 222222071E
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 18:59:07 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729704AbgBUS6o (ORCPT
+        id S1729676AbgBUS7G (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Feb 2020 13:58:44 -0500
-Received: from mail-pf1-f196.google.com ([209.85.210.196]:34373 "EHLO
-        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729355AbgBUS6n (ORCPT
+        Fri, 21 Feb 2020 13:59:06 -0500
+Received: from zeniv.linux.org.uk ([195.92.253.2]:58466 "EHLO
+        ZenIV.linux.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729355AbgBUS7F (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Feb 2020 13:58:43 -0500
-Received: by mail-pf1-f196.google.com with SMTP id i6so1714824pfc.1
-        for <linux-kernel@vger.kernel.org>; Fri, 21 Feb 2020 10:58:43 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=cmpxchg-org.20150623.gappssmtp.com; s=20150623;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to;
-        bh=X7YUq5od3M/2TN7ugJSsAL6lYQ9XwqefEDuKdD1PqAs=;
-        b=JNcMF1TjdTarFup/EM8aDwnWuLH7JKMWtkRBV5PEvy6I11QbX9XV9KabcTJwlFsfw8
-         9Mr36EBYX5+iDFB4slTWF2XJcOssDO8Nvrvo6lIxxSqK1tMXigmetsyqBAhgthsN7Vk+
-         TmL7rEVZElRAYyeueFB9I+Xo0NBdkFO310ycJcMKTYwGg3OI//YYJqoXBhJ27f0P/OOq
-         Zatjps8RSeTWtkagG8iXf73fOkNNiMNoUp2w413Z3sFEmkjizzvq9GbwLUafA0v/5D+0
-         Dvs2bD5w356Iti/lU8nFJCMMH6hXuWhBDe3VGT6oDofIuwwoAArYnqgwsXKskSvy8Ndc
-         N39Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to;
-        bh=X7YUq5od3M/2TN7ugJSsAL6lYQ9XwqefEDuKdD1PqAs=;
-        b=XE1+udd9TE5FIwh6zBLIrMUsnRMWRa+1kSvSi88deuyjOh2td91vI3DeWXvD+IEZOY
-         2f6unfSpN1CFsLtgoY0k+LFa9GF5Lpltime96uKhVAcXqYEIng/eDoki0ODhVRoY4aYR
-         tXZoW7H3GorID9Omfoa09NS0JuVmqmZP1lbamjoboaZXjez9S2/zadiNxMqhNQEo39/l
-         4piAJXO3SgCaKJ8OLeQRK/5UU+SM7Owi28AwbncBNg6TcFEqRBgZnjgMeqFi+1N8P5z5
-         0WKvwuCxHwdcvLR7TMJL5zQJZ8GnZjmcrfY7I1VsHd0IqQpbx6dhrnXhqRJwJ0N+De+s
-         n5yQ==
-X-Gm-Message-State: APjAAAVE4ubxGo9xfYaEGdPl5vrAlVs2mFhOhaUtAhSWGeVmyyNljf1i
-        1e8qT0geqqHgUOoPXpu0C5dBSg==
-X-Google-Smtp-Source: APXvYqwjk5taAXZOALpF3n1rQRg3DSlji7oMI2Z3TQIxfofQHUo4NLtnoALcVYUGAO3xx8A3M+WcqA==
-X-Received: by 2002:a62:820c:: with SMTP id w12mr16904143pfd.92.1582311522637;
-        Fri, 21 Feb 2020 10:58:42 -0800 (PST)
-Received: from localhost ([2620:10d:c090:180::d660])
-        by smtp.gmail.com with ESMTPSA id x65sm3715325pfb.171.2020.02.21.10.58.41
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 21 Feb 2020 10:58:41 -0800 (PST)
-Date:   Fri, 21 Feb 2020 13:58:39 -0500
-From:   Johannes Weiner <hannes@cmpxchg.org>
-To:     Michal =?iso-8859-1?Q?Koutn=FD?= <mkoutny@suse.com>
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        Roman Gushchin <guro@fb.com>, Michal Hocko <mhocko@suse.com>,
-        Tejun Heo <tj@kernel.org>, linux-mm@kvack.org,
-        cgroups@vger.kernel.org, linux-kernel@vger.kernel.org,
-        kernel-team@fb.com
-Subject: Re: [PATCH v2 3/3] mm: memcontrol: recursive memory.low protection
-Message-ID: <20200221185839.GB70967@cmpxchg.org>
-References: <20191219200718.15696-1-hannes@cmpxchg.org>
- <20191219200718.15696-4-hannes@cmpxchg.org>
- <20200221171256.GB23476@blackbody.suse.cz>
+        Fri, 21 Feb 2020 13:59:05 -0500
+Received: from viro by ZenIV.linux.org.uk with local (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1j5DVv-00GWI0-6m; Fri, 21 Feb 2020 18:59:03 +0000
+Date:   Fri, 21 Feb 2020 18:59:03 +0000
+From:   Al Viro <viro@zeniv.linux.org.uk>
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     linux-arch <linux-arch@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Arnd Bergmann <arnd@arndb.de>
+Subject: Re: [RFC] regset ->get() API
+Message-ID: <20200221185903.GA3929948@ZenIV.linux.org.uk>
+References: <20200217183340.GI23230@ZenIV.linux.org.uk>
+ <CAHk-=wivKU1eP8ir4q5xEwOV0hsomFz7DMtiAot__X2zU-yGog@mail.gmail.com>
+ <20200220224707.GQ23230@ZenIV.linux.org.uk>
+ <CAHk-=wiKs7Q2DbP6kk8JQksb0nhUvAs2wO5cNdWirNEc3CM-YQ@mail.gmail.com>
+ <20200220232929.GU23230@ZenIV.linux.org.uk>
+ <CAHk-=whdat=wfwKh5rF3MuCbTxhcFwaGqmdsCXXv=H=kDERTOw@mail.gmail.com>
+ <20200221033016.GV23230@ZenIV.linux.org.uk>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20200221171256.GB23476@blackbody.suse.cz>
+In-Reply-To: <20200221033016.GV23230@ZenIV.linux.org.uk>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Feb 21, 2020 at 06:12:56PM +0100, Michal Koutný wrote:
-> On Thu, Dec 19, 2019 at 03:07:18PM -0500, Johannes Weiner <hannes@cmpxchg.org> wrote:
-> > Unfortunately, this limitation makes it impossible to protect an
-> > entire subtree from another without forcing the user to make explicit
-> > protection allocations all the way to the leaf cgroups - something
-> > that is highly undesirable in real life scenarios.
-> I see that the jobs in descedant cgroups don't know (or care) what
-> protection is above them and hence the implicit distribution is sensible
-> here.
-> 
-> However, the protection your case requires can already be reached thanks
-> to the the hierachical capping and overcommit normalization -- you can
-> set memory.low to "max" at all the non-caring descendants.
-> IIUC, that is the same as setting zeroes (after your patch) and relying
-> on the recursive distribution of unused protection -- or is there a
-> mistake in my reasonineg?
+On Fri, Feb 21, 2020 at 03:30:16AM +0000, Al Viro wrote:
 
-That is correct, but it comes with major problems. We did in fact try
-exactly this as a workaround in our fleet, but had to revert and
-develop the patch we are discussing now instead.
+> Alternatively, we could introduce a new method, with one-by-one
+> conversion to it.  Hmm...
+> 	int (*get2)(struct task_struct *target,
+> 		    const struct user_regset *regset,
+> 		    struct membuf to);
+> returning -E... on error and amount left unfilled on success, perhaps?
+> That seems to generate decent code and is pretty easy on the instances,
+> especially if membuf_write() et.al. are made to return to->left...
 
-The reason is this: max isn't a "don't care" value. It's just a high
-number with actual meaning in the configuration, and that interferes
-when you try to compose it with other settings, such as limits.
+Arrrrghhh...  sparc is interesting.  For one thing, GETREGS64 uses
+a format different from coredump (or GETREGSET) - instead of
+	G0..G7, O0..O7, L0..L7, I0..I7, TSTATE, TPC, TNPC, (u64)Y
+it's
+	G1..G7, O0..O7, TSTATE, TPC, TNPC, (u64)Y
+with interesting comment about Y being mishandled.  Achieved by
+a couple of copy_regset_to_user() with non-zero offset ;-/
 
-Here is a configuration we actually use in practice:
+GETREGS is also different from coredump/GETREGSET - instead of
+	G0..G7, O0..O7, L0..L7, I0..I7, PSR, PC, nPC, Y, 0 (WIM), 0 (TBR)
+it's
+	PSR, PC, nPC, Y, G1..G7, O0..O7
+Again, a couple of copy_regset_to_user(), but there's an additional
+twist - GETREGSET of 32bit task on sparc64 will use access_process_vm()
+when trying to fetch L0..L7/I0..I7 of other task, using copy_from_user()
+only when the target is equal to current.  For sparc32 this is not
+true - it's always copy_from_user() there, so the values it reports
+for those registers have nothing to do with the target process.  That
+part smells like a bug; by the time GETREGSET had been introduced
+sparc32 was not getting much attention, GETREGS worked just fine
+(not reporting L*/I* anyway) and for coredump it was accessing the
+caller's memory.  Not sure if anyone cares at that point...
 
-                workload.slice (memory.low=20G)
-                /                      \
-              job (max=12G, low=10G)    job2 (max=12G, low=10G)
-             /   \
-           task logger
+The situation with floating point is similar.  FWIW, considering how
+compact those ->get2() instances become, I wonder if we should just
+go for
+static int getregs_get(struct task_struct *target,
+                         const struct user_regset *regset,
+                         struct membuf to)
+{
+        const struct pt_regs *regs = task_pt_regs(target);
+        int i;
 
-The idea is that we want to mostly protect the workload from other
-stuff running in the system (low=20G), but we also want to catch a job
-when it goes wild, to ensure reproducibility in testing regardless of
-how loaded the host otherwise is (max=12G).
+        if (target == current)
+                flushw_user();
 
-When you set task's and logger's memory.low to "max" or 10G or any
-bogus number like this, a limit reclaim in job treats this as origin
-protection and tries hard to avoid reclaiming anything in either of
-the two cgroups. memory.events::low skyrockets even though no intended
-protection was violated, we'll have reclaim latencies (especially when
-there are a few dying cgroups accumluated in subtree).
+        membuf_store(&to, (u32)tstate_to_psr(regs->tstate));
+        membuf_store(&to, (u32)(regs->tpc));
+        membuf_store(&to, (u32)(regs->tnpc));
+        membuf_store(&to, (u32)(regs->y));
+        for (i = 1; i < 16; i++)
+                membuf_store(&to, (u32)regs->u_regs[i]);
+        return to.left;
+}
 
-So we had to undo this setting because of workload performance and
-problems with monitoring workload health (the bogus low events).
+static int getfpregs_get(struct task_struct *target,
+                        const struct user_regset *regset,
+                        struct membuf to)
+{
+	struct thread_info *t = task_thread_info(target);
 
-The secondary problem with requiring explicit downward propagation is
-that you may want to protect all jobs on the host from system
-management software, as a very high-level host configuration. But a
-random job that gets scheduled on a host, that lives in a delegated
-cgroup and namespace, and creates its own nested tree of cgroups to
-manage stuff - that job can't possibly *know* about the top-level host
-protection that lies beyond the delegation point and outside its own
-namespace, and that it needs to propagate protection against rpm
-upgrades into its own leaf groups for each tasklet and component.
+        if (target == current)
+                save_and_clear_fpu();
 
-Again, in practice we have found this to be totally unmanageable and
-routinely first forgot and then had trouble hacking the propagation
-into random jobs that create their own groups.
+        membuf_write(&to, t->fpregs, 32 * sizeof(u32));
+        if (t->fpsaved[0] & FPRS_FEF)
+                membuf_store(&to, (u32)t->xfsr[0]);
+        else
+                membuf_zero(&to, sizeof(u32));
+        return membuf_zero(&to, 35 * sizeof(u32));
+}
 
-[ And these job subgroups don't even use their *own* memory.low
-  prioritization between siblings yet - god knows how you would
-  integrate that with the values that you may inherit from higher
-  level ancestors. ]
+and slap together a couple of struct user_regset refering to those,
+so that PTRACE_GETREGS/PTRACE_GETFPREGS would just use solitary
+copy_regset_to_user() calls on those, rather than trying to
+paste them out of several calls on the normal regsets...
 
-And when you add new hardware configurations, you cannot just make a
-top-level change in the host config, you have to update all the job
-specs of workloads running in the fleet.
+FWIW, they do shrink nicely - compare e.g.
+static int fpregs64_get(struct task_struct *target,
+                        const struct user_regset *regset,
+                        struct membuf to)
+{
+        const unsigned long *fpregs = task_thread_info(target)->fpregs;
+        unsigned long fprs;
 
-My patch brings memory configuration in line with other cgroup2
-controllers. You can make a high-level decision to prioritize one
-subtree over another, just like a top-level weight assignment in CPU
-or IO, and then you can delegate the subtree to a different entity
-that doesn't need to be aware of and reflect that decision all the way
-down the tree in its own settings.
+        if (target == current)
+                save_and_clear_fpu();
 
-And of course can compose it properly with limits.
+        fprs = task_thread_info(target)->fpsaved[0];
 
-> So in my view, the recursive distribution doesn't bring anything new,
-> however, its new semantics of memory.low doesn't allow turning the
-> protection off in a protected subtree (delegating the decision to
-> distribute protection within parent bounds is IMO a valid use case).
-
-I've made the case why it's not a supported usecase, and why it is a
-meaningless configuration in practice due to the way other controllers
-already behave.
-
-I think at this point in the discussion, the only thing I can do is
-remind you that the behavior I'm introducing is gated behind a mount
-option that nobody is forced to enable if they insist on disagreeing
-against all evidence to the contrary.
+        if (fprs & FPRS_DL)
+                membuf_write(&to, fpregs, 16 * sizeof(u64));
+        else
+                membuf_zero(&to, 16 * sizeof(u64));
+        if (fprs & FPRS_DU)
+                membuf_write(&to, fpregs + 16, 16 * sizeof(u64));
+        else
+                membuf_zero(&to, 16 * sizeof(u64));
+        if (fprs & FPRS_FEF) {
+                membuf_store(&to, task_thread_info(target)->xfsr[0]);
+                membuf_store(&to, task_thread_info(target)->gsr[0]);
+        } else {
+                membuf_zero(&to, 2 * sizeof(u64));
+        }
+        return membuf_store(&to, fprs);
+}
+with the same function in mainline arch/sparc/kernel/ptrace_64.c...
