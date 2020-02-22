@@ -2,176 +2,126 @@ Return-Path: <SRS0=8jYG=4K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F35BBC35666
-	for <linux-kernel@archiver.kernel.org>; Sat, 22 Feb 2020 11:41:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3CE41C35666
+	for <linux-kernel@archiver.kernel.org>; Sat, 22 Feb 2020 11:44:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C0D482071E
-	for <linux-kernel@archiver.kernel.org>; Sat, 22 Feb 2020 11:41:53 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=walle.cc header.i=@walle.cc header.b="jMOey1Vl"
+	by mail.kernel.org (Postfix) with ESMTP id 0F1702071E
+	for <linux-kernel@archiver.kernel.org>; Sat, 22 Feb 2020 11:44:38 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727250AbgBVLlv (ORCPT
+        id S1727247AbgBVLog (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 22 Feb 2020 06:41:51 -0500
-Received: from ssl.serverraum.org ([176.9.125.105]:48477 "EHLO
-        ssl.serverraum.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726763AbgBVLlv (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 22 Feb 2020 06:41:51 -0500
-Received: from apollo.fritz.box (unknown [IPv6:2a02:810c:c200:2e91:6257:18ff:fec4:ca34])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-384) server-signature RSA-PSS (2048 bits) server-digest SHA256)
-        (No client certificate requested)
-        by ssl.serverraum.org (Postfix) with ESMTPSA id AFB6122F43;
-        Sat, 22 Feb 2020 12:41:48 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=walle.cc; s=mail2016061301;
-        t=1582371709;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=5rMQSooxdrmNpbI3Gk43YVHWsQamSQ5BVKAeoY/eF7Y=;
-        b=jMOey1VlZv3VJgw/HwupTlvFr8BmPI+3mJ2XOKlxoCvvUWG0/qApZQFvQOxpERW9yD4jSI
-        aMZikSrlb/dkgNVdbLLiU7IAaEYvZckTFqrpQOmhZXbDazQ2b0rpfPLbhKtEJnKmnzTabu
-        1MrK0NIa9lvMcuxlJWxqdeO0hprU1EU=
-From:   Michael Walle <michael@walle.cc>
-To:     olteanv@gmail.com
-Cc:     andrew@lunn.ch, davem@davemloft.net, devicetree@vger.kernel.org,
-        f.fainelli@gmail.com, linux-kernel@vger.kernel.org,
-        mark.rutland@arm.com, netdev@vger.kernel.org, robh+dt@kernel.org,
-        shawnguo@kernel.org, vivien.didelot@gmail.com,
-        Michael Walle <michael@walle.cc>
-Subject: Re: [PATCH v2 net-next/devicetree 5/5] arm64: dts: fsl: ls1028a: enable switch PHYs on RDB
-Date:   Sat, 22 Feb 2020 12:41:36 +0100
-Message-Id: <20200222114136.595-1-michael@walle.cc>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20200219151259.14273-6-olteanv@gmail.com>
-References: <20200219151259.14273-6-olteanv@gmail.com>
+        Sat, 22 Feb 2020 06:44:36 -0500
+Received: from sauhun.de ([88.99.104.3]:53152 "EHLO pokefinder.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726883AbgBVLog (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 22 Feb 2020 06:44:36 -0500
+Received: from localhost (p5486C6B7.dip0.t-ipconnect.de [84.134.198.183])
+        by pokefinder.org (Postfix) with ESMTPSA id 2399A2C07F9;
+        Sat, 22 Feb 2020 12:44:34 +0100 (CET)
+Date:   Sat, 22 Feb 2020 12:44:33 +0100
+From:   Wolfram Sang <wsa@the-dreams.de>
+To:     Codrin Ciubotariu <codrin.ciubotariu@microchip.com>
+Cc:     linux-i2c@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        kamel.bouhara@bootlin.com, Nicolas.Ferre@microchip.com,
+        alexandre.belloni@bootlin.com, Ludovic.Desroches@microchip.com,
+        robh@kernel.org, peda@axentia.se, linux@armlinux.org.uk
+Subject: Re: [PATCH v3 3/6] i2c: at91: Send bus clear command if SDA is down
+Message-ID: <20200222114433.GC1716@kunai>
+References: <20200115115422.17097-1-codrin.ciubotariu@microchip.com>
+ <20200115115422.17097-4-codrin.ciubotariu@microchip.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Spamd-Bar: ++++
-X-Rspamd-Server: web
-X-Rspamd-Queue-Id: AFB6122F43
-X-Spamd-Result: default: False [4.90 / 15.00];
-         FROM_HAS_DN(0.00)[];
-         TO_DN_SOME(0.00)[];
-         R_MISSING_CHARSET(2.50)[];
-         FREEMAIL_ENVRCPT(0.00)[gmail.com];
-         TAGGED_RCPT(0.00)[dt];
-         MIME_GOOD(-0.10)[text/plain];
-         BROKEN_CONTENT_TYPE(1.50)[];
-         TO_MATCH_ENVRCPT_ALL(0.00)[];
-         NEURAL_SPAM(0.00)[0.635];
-         DKIM_SIGNED(0.00)[];
-         DBL_PROHIBIT(0.00)[0.0.0.12:email,0.0.0.11:email,0.0.0.13:email,0.0.0.10:email];
-         RCPT_COUNT_TWELVE(0.00)[12];
-         MID_CONTAINS_FROM(1.00)[];
-         FREEMAIL_TO(0.00)[gmail.com];
-         RCVD_COUNT_ZERO(0.00)[0];
-         FROM_EQ_ENVFROM(0.00)[];
-         MIME_TRACE(0.00)[0:+];
-         ASN(0.00)[asn:31334, ipnet:2a02:810c::/31, country:DE];
-         FREEMAIL_CC(0.00)[lunn.ch,davemloft.net,vger.kernel.org,gmail.com,arm.com,kernel.org,walle.cc]
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="2/5bycvrmDh4d1IB"
+Content-Disposition: inline
+In-Reply-To: <20200115115422.17097-4-codrin.ciubotariu@microchip.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
 
-> Link the switch PHY nodes to the central MDIO controller PCIe endpoint
-> node on LS1028A (implemented as PF3) so that PHYs are accessible via
-> MDIO.
-> 
-> Enable SGMII AN on the Felix PCS by telling PHYLINK that the VSC8514
-> quad PHY is capable of in-band-status.
-> 
-> The PHYs are used in poll mode due to an issue with the interrupt line
-> on current revisions of the LS1028A-RDB board.
-> 
-> Signed-off-by: Claudiu Manoil <claudiu.manoil@nxp.com>
-> Signed-off-by: Alex Marginean <alexandru.marginean@nxp.com>
-> Signed-off-by: Vladimir Oltean <vladimir.oltean@nxp.com>
-> Reviewed-by: Andrew Lunn <andrew@lunn.ch>
-> ---
-> Changes in v2:
-> None.
-> 
->  .../boot/dts/freescale/fsl-ls1028a-rdb.dts    | 51 +++++++++++++++++++
->  1 file changed, 51 insertions(+)
-> 
-> diff --git a/arch/arm64/boot/dts/freescale/fsl-ls1028a-rdb.dts b/arch/arm64/boot/dts/freescale/fsl-ls1028a-rdb.dts
-> index afb55653850d..9353c00e46a7 100644
-> --- a/arch/arm64/boot/dts/freescale/fsl-ls1028a-rdb.dts
-> +++ b/arch/arm64/boot/dts/freescale/fsl-ls1028a-rdb.dts
-> @@ -194,6 +194,57 @@
->  	status = "disabled";
->  };
->  
-> +&enetc_mdio_pf3 {
-> +	/* VSC8514 QSGMII quad PHY */
-> +	qsgmii_phy0: ethernet-phy@10 {
-> +		reg = <0x10>;
-> +	};
-> +
-> +	qsgmii_phy1: ethernet-phy@11 {
-> +		reg = <0x11>;
-> +	};
-> +
-> +	qsgmii_phy2: ethernet-phy@12 {
-> +		reg = <0x12>;
-> +	};
-> +
-> +	qsgmii_phy3: ethernet-phy@13 {
-> +		reg = <0x13>;
-> +	};
-> +};
-> +
-> +&mscc_felix_port0 {
-> +	status = "okay";
-status should be the last property, correct?
+--2/5bycvrmDh4d1IB
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
--michael
+On Wed, Jan 15, 2020 at 01:54:19PM +0200, Codrin Ciubotariu wrote:
+> After a transfer timeout, some faulty I2C slave devices might hold down
+> the SDA pin. We can generate a bus clear command, hoping that the slave
+> might release the pins.
+> If the CLEAR command is not supported, we will use gpio recovery, if
+> available, to reset the bus.
+>=20
+> Signed-off-by: Codrin Ciubotariu <codrin.ciubotariu@microchip.com>
 
-> +	label = "swp0";
-> +	managed = "in-band-status";
-> +	phy-handle = <&qsgmii_phy0>;
-> +	phy-mode = "qsgmii";
-> +};
+One thing to improve:
+
+> +	/*
+> +	 * some faulty I2C slave devices might hold SDA down;
+> +	 * we can send a bus clear command, hoping that the pins will be
+> +	 * released
+> +	 */
+> +	if (has_clear_cmd) {
+> +		if (!(dev->transfer_status & AT91_TWI_SDA)) {
+> +			dev_dbg(dev->dev,
+> +				"SDA is down; sending bus clear command\n");
+> +			if (dev->use_alt_cmd) {
+> +				unsigned int acr;
 > +
-> +&mscc_felix_port1 {
-> +	status = "okay";
-> +	label = "swp1";
-> +	managed = "in-band-status";
-> +	phy-handle = <&qsgmii_phy1>;
-> +	phy-mode = "qsgmii";
-> +};
-> +
-> +&mscc_felix_port2 {
-> +	status = "okay";
-> +	label = "swp2";
-> +	managed = "in-band-status";
-> +	phy-handle = <&qsgmii_phy2>;
-> +	phy-mode = "qsgmii";
-> +};
-> +
-> +&mscc_felix_port3 {
-> +	status = "okay";
-> +	label = "swp3";
-> +	managed = "in-band-status";
-> +	phy-handle = <&qsgmii_phy3>;
-> +	phy-mode = "qsgmii";
-> +};
-> +
->  &sai4 {
->  	status = "okay";
->  };
-> -- 
-> 2.17.1
+> +				acr =3D at91_twi_read(dev, AT91_TWI_ACR);
+> +				acr &=3D ~AT91_TWI_ACR_DATAL_MASK;
+> +				at91_twi_write(dev, AT91_TWI_ACR, acr);
+> +			}
+> +			at91_twi_write(dev, AT91_TWI_CR, AT91_TWI_CLEAR);
+> +		}
+
+The inner if-block should be a seperate function, then you could do in
+probe:
+
+	if (has_clear_cmd)
+		rinfo->recover_bus =3D <the above function>;
+	else
+		rinfo->recover_bus =3D i2c_generic_scl_recovery;
+
+Then, i2c_recover_bus() will always do the right thing. More readable
+and better maintainable IMO.
+
+If this is not possible (maybe I overlooked some logic), then maybe this
+will work:
+
+	rinfo->recover_bus =3D <your custom function>;
+
+and put the
+
+	if (has_clear_cmd)
+
+block there.
 
 
+--2/5bycvrmDh4d1IB
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCgAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAl5RFCEACgkQFA3kzBSg
+KbawZQ//djH+GtmK3cq1f/dFHYW7brVxy999V22SKk3jREpntfZkN3nb23ARpOvR
+JxIHA71f3FR5XIIyLWV0xzU04ZsmwZctcQ5jS15KPNHzHShSRgXWq0ioGAjzxkX2
+AKqutS55+2qUGELcX7C/KKeIaLLOfzdvrol4ZPqowCaMrP/DbqcNh/7qL2JB244N
+5giSlvyaOmOMIO8ZdMqrA85G+OwHMDcChti8Ba9TxzSmDJRas46XQ9HkwvEEpdca
+iUoPbSj3hFaAlplTUVs/j4NlOV0fIjxeC3fGYgXTVIGOD1KvGfh4+f+YI2lV9YDx
+lAHcIM6fUTx0+uC4dFWJdaqq+9QfyxHPnCOiH8wIr8XKDvOQbAIu2kP/C80QvhL3
+WeK3fl/JMwxLC3b4fFeAvki9Kdzt42IFK2EDXw/uWyDa39Vl1smk3vRDqHkDzKoB
+DUZ+BWF9VB/y5qdgN2lvT510u0oiCMW0EuaOgZHrvvB08+e7Z5PNZvJb+JzUaXYo
+oSVCsdevMNE7yBX+aBjjOegU8p2ip9jIHCGRiKALM1ab1Vr1co/x3U02hecgTBNd
+VOfHwyBQbdukaExvFAmcrCBeWDOCLUj1F6Wy8g38hBhwKcT1kG/xqYflmQdeTKJk
+taBIAgbnPcMxpcqh+yphRZv69GXo3KQ9fwygszyHw4KWp4d0p50=
+=P68w
+-----END PGP SIGNATURE-----
+
+--2/5bycvrmDh4d1IB--
