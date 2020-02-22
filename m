@@ -2,112 +2,170 @@ Return-Path: <SRS0=8jYG=4K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0C505C35670
-	for <linux-kernel@archiver.kernel.org>; Sat, 22 Feb 2020 00:42:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 95A26C35669
+	for <linux-kernel@archiver.kernel.org>; Sat, 22 Feb 2020 00:45:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D609D20722
-	for <linux-kernel@archiver.kernel.org>; Sat, 22 Feb 2020 00:42:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 69BD320722
+	for <linux-kernel@archiver.kernel.org>; Sat, 22 Feb 2020 00:45:10 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="mlZk+5DH"
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="nN7Sv9aA"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727352AbgBVAm4 (ORCPT
+        id S1727487AbgBVApJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Feb 2020 19:42:56 -0500
-Received: from bombadil.infradead.org ([198.137.202.133]:60810 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726697AbgBVAmz (ORCPT
+        Fri, 21 Feb 2020 19:45:09 -0500
+Received: from aserp2120.oracle.com ([141.146.126.78]:57560 "EHLO
+        aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726328AbgBVApI (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Feb 2020 19:42:55 -0500
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
-        Content-Type:In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:
-        Subject:Sender:Reply-To:Content-ID:Content-Description;
-        bh=IoauFu+SPVxJ/QgMkD5H70t6W74upwBHouoPWlRKDBs=; b=mlZk+5DHPSke/pQ6XCytBfGkjH
-        hkIgPJ+WZD70eJKDNBWwAy9MSR8hIq6WZ2I3LBjGVsjOVdMZlPU3nFzTPi6C8vFZYM4masCDI5A/M
-        MCydby8lJ2dnhxOTkf2kTNzbTmVlYfO+kfMRMj1NN5HqKnpwjnzGPWiJHgh7S0nc1Jncl4iSVtEUx
-        xtXS5ven+MNBNrhjRAY5CrOWTYTggZ61qDjrdfkmrqGcqbl9rSJEei60nQDhM+lOnXvVvGHwVnUhr
-        qW5PgludRb3NWWqKCTfcQVul57sEuSJ3O6PdAyYm5UVBblNcN2yKCTH+WCpme3XZvdwnjrUtIoILk
-        At1JJZMw==;
-Received: from [2601:1c0:6280:3f0::19c2]
-        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1j5Is1-0000Tu-Eh; Sat, 22 Feb 2020 00:42:19 +0000
-Subject: Re: [PATCH v3 1/4] PM / EM: add devices to Energy Model
-To:     Lukasz Luba <lukasz.luba@arm.com>, linux-kernel@vger.kernel.org,
-        linux-pm@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        dri-devel@lists.freedesktop.org, linux-omap@vger.kernel.org,
-        linux-mediatek@lists.infradead.org, linux-arm-msm@vger.kernel.org,
-        linux-imx@nxp.com
-Cc:     Morten.Rasmussen@arm.com, Dietmar.Eggemann@arm.com,
-        javi.merino@arm.com, cw00.choi@samsung.com,
-        b.zolnierkie@samsung.com, rjw@rjwysocki.net, sudeep.holla@arm.com,
-        viresh.kumar@linaro.org, nm@ti.com, sboyd@kernel.org,
-        rui.zhang@intel.com, amit.kucheria@verdurent.com,
-        daniel.lezcano@linaro.org, mingo@redhat.com, peterz@infradead.org,
-        juri.lelli@redhat.com, vincent.guittot@linaro.org,
-        rostedt@goodmis.org, qperret@google.com, bsegall@google.com,
-        mgorman@suse.de, shawnguo@kernel.org, s.hauer@pengutronix.de,
-        festevam@gmail.com, kernel@pengutronix.de, khilman@kernel.org,
-        agross@kernel.org, bjorn.andersson@linaro.org, robh@kernel.org,
-        matthias.bgg@gmail.com, steven.price@arm.com,
-        tomeu.vizoso@collabora.com, alyssa.rosenzweig@collabora.com,
-        airlied@linux.ie, daniel@ffwll.ch, liviu.dudau@arm.com,
-        lorenzo.pieralisi@arm.com, patrick.bellasi@matbug.net,
-        orjan.eide@arm.com
-References: <20200221194731.13814-1-lukasz.luba@arm.com>
- <20200221194731.13814-2-lukasz.luba@arm.com>
-From:   Randy Dunlap <rdunlap@infradead.org>
-Message-ID: <4ac6a187-1a09-335d-5c05-bf810ff81aaa@infradead.org>
-Date:   Fri, 21 Feb 2020 16:42:10 -0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.1
+        Fri, 21 Feb 2020 19:45:08 -0500
+Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
+        by aserp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 01M0iXKo069490;
+        Sat, 22 Feb 2020 00:44:33 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
+ : subject : message-id : references : mime-version : content-type :
+ in-reply-to; s=corp-2020-01-29;
+ bh=RJWVxIQBtpVgLNZnOCgy+9DNBRETFyaw+B0IqQ80Smk=;
+ b=nN7Sv9aAp1H5VNNHgY3l0Y8a6GkUkVAQwxYCK7nBY3u4+U0MhiP8X5I4zx8YknXK7zVO
+ kSiV7uX0W1ht1ti0UCfB9WMesmmPQQNYMgrjYAKzWbu9+zDyk1QLFzxk2eXMBu12OgOb
+ IK11lZpex2Vs79Mc9GOI67PGIte05b1FhvOddV/Hmp6TCKu+/8YmKr57C9gshxW+71eS
+ k9YCRmVeiiMcdml+G/0dXbBKhQpDRF4Jb5reMrmO6oBEKdRiXFUaNCeG2SoUS7s1lCC0
+ vObNA+f+EtvbzMBjjuEOJkL0chWUualvFuiinduRft/uSF2RD+r78eE7lIG3Vpw6kQnj OA== 
+Received: from aserp3030.oracle.com (aserp3030.oracle.com [141.146.126.71])
+        by aserp2120.oracle.com with ESMTP id 2y8udkuk25-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Sat, 22 Feb 2020 00:44:33 +0000
+Received: from pps.filterd (aserp3030.oracle.com [127.0.0.1])
+        by aserp3030.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 01M0h54Z146709;
+        Sat, 22 Feb 2020 00:44:33 GMT
+Received: from pps.reinject (localhost [127.0.0.1])
+        by aserp3030.oracle.com with ESMTP id 2y8udg8m3c-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Sat, 22 Feb 2020 00:44:33 +0000
+Received: from aserp3030.oracle.com (aserp3030.oracle.com [127.0.0.1])
+        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 01M0iWwv149129;
+        Sat, 22 Feb 2020 00:44:32 GMT
+Received: from aserv0121.oracle.com (aserv0121.oracle.com [141.146.126.235])
+        by aserp3030.oracle.com with ESMTP id 2y8udg8m32-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Sat, 22 Feb 2020 00:44:32 +0000
+Received: from abhmp0012.oracle.com (abhmp0012.oracle.com [141.146.116.18])
+        by aserv0121.oracle.com (8.14.4/8.13.8) with ESMTP id 01M0iRp8021588;
+        Sat, 22 Feb 2020 00:44:27 GMT
+Received: from localhost (/10.145.179.117)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Fri, 21 Feb 2020 16:44:27 -0800
+Date:   Fri, 21 Feb 2020 16:44:25 -0800
+From:   "Darrick J. Wong" <darrick.wong@oracle.com>
+To:     Matthew Wilcox <willy@infradead.org>
+Cc:     linux-fsdevel@vger.kernel.org, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org, linux-btrfs@vger.kernel.org,
+        linux-erofs@lists.ozlabs.org, linux-ext4@vger.kernel.org,
+        linux-f2fs-devel@lists.sourceforge.net, cluster-devel@redhat.com,
+        ocfs2-devel@oss.oracle.com, linux-xfs@vger.kernel.org
+Subject: Re: [PATCH v7 21/24] iomap: Restructure iomap_readpages_actor
+Message-ID: <20200222004425.GG9506@magnolia>
+References: <20200219210103.32400-1-willy@infradead.org>
+ <20200219210103.32400-22-willy@infradead.org>
 MIME-Version: 1.0
-In-Reply-To: <20200221194731.13814-2-lukasz.luba@arm.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200219210103.32400-22-willy@infradead.org>
+User-Agent: Mutt/1.9.4 (2018-02-28)
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9538 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 lowpriorityscore=0 suspectscore=0
+ spamscore=0 priorityscore=1501 adultscore=0 mlxscore=0 clxscore=1011
+ malwarescore=0 mlxlogscore=999 phishscore=0 impostorscore=0 bulkscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2001150001
+ definitions=main-2002220001
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
-One minor nit. Please see inline:
-
-On 2/21/20 11:47 AM, Lukasz Luba wrote:
-> Add support of other devices into the Energy Model framework not only the
-> CPUs. Change the interface to be more unified which can handle other
-> devices as well.
+On Wed, Feb 19, 2020 at 01:01:00PM -0800, Matthew Wilcox wrote:
+> From: "Matthew Wilcox (Oracle)" <willy@infradead.org>
 > 
-> Signed-off-by: Lukasz Luba <lukasz.luba@arm.com>
+> By putting the 'have we reached the end of the page' condition at the end
+> of the loop instead of the beginning, we can remove the 'submit the last
+> page' code from iomap_readpages().  Also check that iomap_readpage_actor()
+> didn't return 0, which would lead to an endless loop.
+> 
+> Signed-off-by: Matthew Wilcox (Oracle) <willy@infradead.org>
 > ---
->  Documentation/power/energy-model.rst     | 133 ++++----
+>  fs/iomap/buffered-io.c | 32 ++++++++++++++++++--------------
+>  1 file changed, 18 insertions(+), 14 deletions(-)
 > 
-> diff --git a/Documentation/power/energy-model.rst b/Documentation/power/energy-model.rst
-> index 90a345d57ae9..7576820664e5 100644
-> --- a/Documentation/power/energy-model.rst
-> +++ b/Documentation/power/energy-model.rst
-
-> @@ -85,13 +89,20 @@ API.
->  2.3 Accessing performance domains
->  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
->  
-> +There is two API functions which provide the access to the energy model:
-
-   There are two
-
-> +em_cpu_get() which takes CPU id as an argument and em_pd_get() with device
-> +pointer as an argument. It depends on the subsystem which interface it is
-> +going to use, but in case of CPU devices both functions return the same
-> +performance domain.
+> diff --git a/fs/iomap/buffered-io.c b/fs/iomap/buffered-io.c
+> index cb3511eb152a..31899e6cb0f8 100644
+> --- a/fs/iomap/buffered-io.c
+> +++ b/fs/iomap/buffered-io.c
+> @@ -400,15 +400,9 @@ iomap_readpages_actor(struct inode *inode, loff_t pos, loff_t length,
+>  		void *data, struct iomap *iomap, struct iomap *srcmap)
+>  {
+>  	struct iomap_readpage_ctx *ctx = data;
+> -	loff_t done, ret;
+> -
+> -	for (done = 0; done < length; done += ret) {
+> -		if (ctx->cur_page && offset_in_page(pos + done) == 0) {
+> -			if (!ctx->cur_page_in_bio)
+> -				unlock_page(ctx->cur_page);
+> -			put_page(ctx->cur_page);
+> -			ctx->cur_page = NULL;
+> -		}
+> +	loff_t ret, done = 0;
 > +
+> +	while (done < length) {
+>  		if (!ctx->cur_page) {
+>  			ctx->cur_page = iomap_next_page(inode, ctx->pages,
+>  					pos, length, &done);
+> @@ -418,6 +412,20 @@ iomap_readpages_actor(struct inode *inode, loff_t pos, loff_t length,
+>  		}
+>  		ret = iomap_readpage_actor(inode, pos + done, length - done,
+>  				ctx, iomap, srcmap);
+> +		done += ret;
+> +
+> +		/* Keep working on a partial page */
+> +		if (ret && offset_in_page(pos + done))
+> +			continue;
+> +
+> +		if (!ctx->cur_page_in_bio)
+> +			unlock_page(ctx->cur_page);
+> +		put_page(ctx->cur_page);
+> +		ctx->cur_page = NULL;
+> +
+> +		/* Don't loop forever if we made no progress */
+> +		if (WARN_ON(!ret))
+> +			break;
+>  	}
+>  
+>  	return done;
+> @@ -451,11 +459,7 @@ iomap_readpages(struct address_space *mapping, struct list_head *pages,
+>  done:
+>  	if (ctx.bio)
+>  		submit_bio(ctx.bio);
+> -	if (ctx.cur_page) {
+> -		if (!ctx.cur_page_in_bio)
+> -			unlock_page(ctx.cur_page);
+> -		put_page(ctx.cur_page);
+> -	}
+> +	BUG_ON(ctx.cur_page);
 
+Whoah, is the system totally unrecoverably hosed at this point?
 
-cheers.
--- 
-~Randy
+I get that this /shouldn't/ happen, but should we somehow end up with a
+page here, are we unable either to release it or even just leak it?  I'd
+have thought a WARN_ON would be just fine here.
 
+--D
+
+>  
+>  	/*
+>  	 * Check that we didn't lose a page due to the arcance calling
+> -- 
+> 2.25.0
+> 
