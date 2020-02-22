@@ -2,256 +2,131 @@ Return-Path: <SRS0=8jYG=4K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_2 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6847FC35676
-	for <linux-kernel@archiver.kernel.org>; Sat, 22 Feb 2020 07:11:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D3967C35671
+	for <linux-kernel@archiver.kernel.org>; Sat, 22 Feb 2020 07:17:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2FC67214DB
-	for <linux-kernel@archiver.kernel.org>; Sat, 22 Feb 2020 07:11:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A8297208C3
+	for <linux-kernel@archiver.kernel.org>; Sat, 22 Feb 2020 07:17:13 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1582355833;
+	bh=rquXggSO5rdCvbw3bu7MM0yqPIWyWVqYfs/ET6of2gw=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=Xqvy3K/a7qRdQ1kbELn1qvOcW4NW0Y3xvjlFDo8nyRoeDZNDQgeYPW58MF5eWwods
+	 bSxizqPAqnAUj5//ObxQ4d7+VOOd90LSmrxQjzpxopjsXVaEe0CTgyrCgkHYaxHrDr
+	 NgQfH/+dZ7izN2YJAL3Dgk+EfEgwzD8meNZ17OIY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727319AbgBVHLs (ORCPT
+        id S1727080AbgBVHQu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 22 Feb 2020 02:11:48 -0500
-Received: from mga03.intel.com ([134.134.136.65]:1100 "EHLO mga03.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727156AbgBVHLm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 22 Feb 2020 02:11:42 -0500
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga007.fm.intel.com ([10.253.24.52])
-  by orsmga103.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 21 Feb 2020 23:11:41 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.70,471,1574150400"; 
-   d="scan'208";a="229404093"
-Received: from lkp-server01.sh.intel.com (HELO lkp-server01) ([10.239.97.150])
-  by fmsmga007.fm.intel.com with ESMTP; 21 Feb 2020 23:11:40 -0800
-Received: from kbuild by lkp-server01 with local (Exim 4.89)
-        (envelope-from <lkp@intel.com>)
-        id 1j5Owt-00012v-KJ; Sat, 22 Feb 2020 15:11:39 +0800
-Date:   Sat, 22 Feb 2020 15:11:15 +0800
-From:   kbuild test robot <lkp@intel.com>
-To:     "x86-ml" <x86@kernel.org>
-Cc:     linux-kernel@vger.kernel.org
-Subject: [tip:auto-latest] BUILD SUCCESS
- 6256a7afd8b4f032e5aaab81789af1b1d8cafa62
-Message-ID: <5e50d413.kR7VSntOml6BUi2+%lkp@intel.com>
-User-Agent: Heirloom mailx 12.5 6/20/10
+        Sat, 22 Feb 2020 02:16:50 -0500
+Received: from bombadil.infradead.org ([198.137.202.133]:53880 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726689AbgBVHQt (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 22 Feb 2020 02:16:49 -0500
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
+        Content-Type:MIME-Version:References:In-Reply-To:Message-ID:Subject:Cc:To:
+        From:Date:Sender:Reply-To:Content-ID:Content-Description;
+        bh=mFEqFqymAvME5G5W7AmH2bon8VFqmjzCdm3adlAcf+U=; b=NoR84TKN7Rndg7cE0Z167YoO1z
+        xZdmBp8Ezv0tqRCFaKI9X1J6mZjhjwYbxItwpitRChzu/fIzBVYPrfMU76fGsdkIZ8/hHW8wrtfqX
+        U1vn+t1Ub9OrydxuP3f5W72uv6OSjl9lMUBo0r1gqZJEGgP6YUucdwpKZyOXXwvgwwNlLsaydk1j3
+        XJtL+g1WtYaz+ix8/tR0b9Fq7PDEobRTCd3vzh/eGn2Ymb7Sw9UgP78QaC4OHLC438//bpplkWhI4
+        6XE5kiNuE42wow6fVfvYKMNnxjxqjsE8Z36ZX3MX39a96RSMRUPM9ay+19HpPa5kJdoqTJ7/BwdFr
+        VLp5FGJQ==;
+Received: from [80.156.29.194] (helo=localhost)
+        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1j5P1s-0003Wd-8Q; Sat, 22 Feb 2020 07:16:48 +0000
+Date:   Sat, 22 Feb 2020 08:16:44 +0100
+From:   Mauro Carvalho Chehab <mchehab@kernel.org>
+To:     "Bird, Tim" <Tim.Bird@sony.com>
+Cc:     "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>,
+        "corbet@lwn.net" <corbet@lwn.net>,
+        LKML <linux-kernel@vger.kernel.org>
+Subject: Re: RFC: Fix for sphinx setup message
+Message-ID: <20200222081644.4ce926a0@kernel.org>
+In-Reply-To: <MWHPR13MB0895675B302AF38BB1D141BBFD120@MWHPR13MB0895.namprd13.prod.outlook.com>
+References: <MWHPR13MB0895675B302AF38BB1D141BBFD120@MWHPR13MB0895.namprd13.prod.outlook.com>
+X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; x86_64-redhat-linux-gnu)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/peterz/queue.git  auto-latest
-branch HEAD: 6256a7afd8b4f032e5aaab81789af1b1d8cafa62  Merge branch 'core/objtool'
+Hi Tim,
 
-elapsed time: 920m
+Em Fri, 21 Feb 2020 22:15:36 +0000
+"Bird, Tim" <Tim.Bird@sony.com> escreveu:
 
-configs tested: 193
-configs skipped: 0
+> (Resend: Sorry for the dup.  I forgot to include the maintainers, and I had the LKML
+> address wrong.) 
+> 
+> I was trying to set up my machine to do some documentation work, 
+> and I had some problems with the sphinx install.  I figured out how to work
+> around the issue, but I have a question about how to add the information
+> to scripts/sphinx-pre-install (or whether it should go somewhere else).
+> 
+> Detailed messages below, but the TLl;DR is that I got the message:
+> -------
+> You should run:
+> 
+>     sudo apt-get install dvipng fonts-noto-cjk latexmk librsvg2-bin texlive-xetex
+>     /usr/bin/virtualenv sphinx_1.7.9
+>     . sphinx_1.7.9/bin/activate
+>     pip install -r ./Documentation/sphinx/requirements.txt
+>     ...
+> ------
+> 
+> The pip install step didn't work, and I found that I needed to have everything
+> based on python3 instead.  When I replaced:
+>     /usr/bin/virtualenv sphinx_1.7.9
+> with
+>     /usr/bin/virtualenv -p python3 sphinx_1.7.9
+> everything worked.
+> 
+> This message is coming from scripts/sphinx-pre-install (I believe on line 708).
+> 
+> Should I go ahead and submit a patch to add '-p python3' to that line?
+> 
+> Are there any downsides to enforcing that the virtualenv used for the
+> documentation build use python3 only?
 
-The following configs have been built successfully.
-More configs may be tested in the coming days.
+Actually, the script tries to detect if python3 is installed. Currently, it
+does it by seeking for a python3 variant of virtualenv. If it finds, it
+changes the recommendation accordingly. The actual code with does that is
+this one:
 
-arm                              allmodconfig
-arm                               allnoconfig
-arm                              allyesconfig
-arm64                            allmodconfig
-arm64                             allnoconfig
-arm64                            allyesconfig
-arm                         at91_dt_defconfig
-arm                           efm32_defconfig
-arm                          exynos_defconfig
-arm                        multi_v5_defconfig
-arm                        multi_v7_defconfig
-arm                        shmobile_defconfig
-arm                           sunxi_defconfig
-arm64                               defconfig
-sparc                            allyesconfig
-sh                               allmodconfig
-riscv                          rv32_defconfig
-i386                             alldefconfig
-i386                              allnoconfig
-i386                             allyesconfig
-i386                                defconfig
-ia64                             alldefconfig
-ia64                             allmodconfig
-ia64                              allnoconfig
-ia64                             allyesconfig
-ia64                                defconfig
-c6x                              allyesconfig
-c6x                        evmc6678_defconfig
-nios2                         10m50_defconfig
-nios2                         3c120_defconfig
-openrisc                    or1ksim_defconfig
-openrisc                 simple_smp_defconfig
-xtensa                       common_defconfig
-xtensa                          iss_defconfig
-nds32                               defconfig
-nds32                             allnoconfig
-csky                                defconfig
-alpha                               defconfig
-h8300                       h8s-sim_defconfig
-h8300                     edosk2674_defconfig
-m68k                       m5475evb_defconfig
-m68k                             allmodconfig
-h8300                    h8300h-sim_defconfig
-m68k                           sun3_defconfig
-m68k                          multi_defconfig
-arc                                 defconfig
-arc                              allyesconfig
-microblaze                      mmu_defconfig
-microblaze                    nommu_defconfig
-powerpc                           allnoconfig
-powerpc                             defconfig
-powerpc                       ppc64_defconfig
-powerpc                          rhel-kconfig
-mips                           32r2_defconfig
-mips                         64r6el_defconfig
-mips                             allmodconfig
-mips                              allnoconfig
-mips                             allyesconfig
-mips                      fuloong2e_defconfig
-mips                      malta_kvm_defconfig
-parisc                            allnoconfig
-parisc                           allyesconfig
-parisc                generic-32bit_defconfig
-parisc                generic-64bit_defconfig
-x86_64               randconfig-a001-20200221
-x86_64               randconfig-a002-20200221
-x86_64               randconfig-a003-20200221
-i386                 randconfig-a001-20200221
-i386                 randconfig-a002-20200221
-i386                 randconfig-a003-20200221
-alpha                randconfig-a001-20200221
-m68k                 randconfig-a001-20200221
-mips                 randconfig-a001-20200221
-nds32                randconfig-a001-20200221
-parisc               randconfig-a001-20200221
-riscv                randconfig-a001-20200221
-alpha                randconfig-a001-20200222
-m68k                 randconfig-a001-20200222
-mips                 randconfig-a001-20200222
-nds32                randconfig-a001-20200222
-parisc               randconfig-a001-20200222
-riscv                randconfig-a001-20200222
-nios2                randconfig-a001-20200221
-c6x                  randconfig-a001-20200221
-sparc64              randconfig-a001-20200221
-h8300                randconfig-a001-20200221
-microblaze           randconfig-a001-20200221
-openrisc             randconfig-a001-20200221
-sh                   randconfig-a001-20200221
-s390                 randconfig-a001-20200221
-xtensa               randconfig-a001-20200221
-csky                 randconfig-a001-20200221
-csky                 randconfig-a001-20200222
-openrisc             randconfig-a001-20200222
-s390                 randconfig-a001-20200222
-sh                   randconfig-a001-20200222
-xtensa               randconfig-a001-20200222
-x86_64               randconfig-b001-20200221
-x86_64               randconfig-b002-20200221
-x86_64               randconfig-b003-20200221
-i386                 randconfig-b001-20200221
-i386                 randconfig-b002-20200221
-i386                 randconfig-b003-20200221
-x86_64               randconfig-b001-20200222
-x86_64               randconfig-b002-20200222
-x86_64               randconfig-b003-20200222
-i386                 randconfig-b001-20200222
-i386                 randconfig-b002-20200222
-i386                 randconfig-b003-20200222
-x86_64               randconfig-d001-20200221
-x86_64               randconfig-d002-20200221
-x86_64               randconfig-d003-20200221
-i386                 randconfig-d001-20200221
-i386                 randconfig-d002-20200221
-i386                 randconfig-d003-20200221
-x86_64               randconfig-d001-20200222
-x86_64               randconfig-d002-20200222
-x86_64               randconfig-d003-20200222
-i386                 randconfig-d001-20200222
-i386                 randconfig-d002-20200222
-i386                 randconfig-d003-20200222
-x86_64               randconfig-e001-20200222
-x86_64               randconfig-e002-20200222
-x86_64               randconfig-e003-20200222
-i386                 randconfig-e001-20200222
-i386                 randconfig-e002-20200222
-i386                 randconfig-e003-20200222
-x86_64               randconfig-f001-20200222
-x86_64               randconfig-f002-20200222
-x86_64               randconfig-f003-20200222
-i386                 randconfig-f001-20200222
-i386                 randconfig-f002-20200222
-i386                 randconfig-f003-20200222
-x86_64               randconfig-f003-20200221
-x86_64               randconfig-f002-20200221
-x86_64               randconfig-f001-20200221
-i386                 randconfig-f001-20200221
-i386                 randconfig-f003-20200221
-i386                 randconfig-f002-20200221
-x86_64               randconfig-g001-20200222
-x86_64               randconfig-g002-20200222
-x86_64               randconfig-g003-20200222
-i386                 randconfig-g001-20200222
-i386                 randconfig-g002-20200222
-i386                 randconfig-g003-20200222
-x86_64               randconfig-g001-20200221
-x86_64               randconfig-g002-20200221
-x86_64               randconfig-g003-20200221
-i386                 randconfig-g001-20200221
-i386                 randconfig-g002-20200221
-i386                 randconfig-g003-20200221
-x86_64               randconfig-h001-20200221
-x86_64               randconfig-h002-20200221
-x86_64               randconfig-h003-20200221
-i386                 randconfig-h001-20200221
-i386                 randconfig-h002-20200221
-i386                 randconfig-h003-20200221
-arm64                randconfig-a001-20200221
-ia64                 randconfig-a001-20200221
-arm                  randconfig-a001-20200221
-arc                  randconfig-a001-20200221
-sparc                randconfig-a001-20200221
-powerpc              randconfig-a001-20200221
-riscv                            allmodconfig
-riscv                             allnoconfig
-riscv                            allyesconfig
-riscv                               defconfig
-riscv                    nommu_virt_defconfig
-s390                       zfcpdump_defconfig
-s390                          debug_defconfig
-s390                             allyesconfig
-s390                              allnoconfig
-s390                             allmodconfig
-s390                             alldefconfig
-s390                                defconfig
-sh                                allnoconfig
-sh                          rsk7269_defconfig
-sh                  sh7785lcr_32bit_defconfig
-sh                            titan_defconfig
-sparc                               defconfig
-sparc64                          allmodconfig
-sparc64                           allnoconfig
-sparc64                          allyesconfig
-sparc64                             defconfig
-um                           x86_64_defconfig
-um                             i386_defconfig
-um                                  defconfig
-x86_64                              fedora-25
-x86_64                                  kexec
-x86_64                                    lkp
-x86_64                                   rhel
-x86_64                         rhel-7.2-clear
-x86_64                               rhel-7.6
+	my $virtualenv = findprog("virtualenv-3");
+	$virtualenv = findprog("virtualenv-3.5") if (!$virtualenv);
+	$virtualenv = findprog("virtualenv") if (!$virtualenv);
+	$virtualenv = "virtualenv" if (!$virtualenv);
 
----
-0-DAY CI Kernel Test Service, Intel Corporation
-https://lists.01.org/hyperkitty/list/kbuild-all@lists.01.org
+This works fine on older Fedora distros (and probably CentOS/RHEL), where
+there is a python3 variant of virtualenv. On Ubuntu (and Fedora 31), it
+will just use virtualenv.
+
+So, perhaps if we add something like this (untested):
+
+	my $python = findprog("python3");
+
+	if ($python)
+		$virtualenv = "$virtualenv -p $python";
+
+it would make the trick. Please notice, however, that this could cause
+troubles with some distros that might have a version of virtualenv that
+won't work with the above. So, perhaps we should add something like the
+above inside give_debian_hints(), and either ensure that other Debian and 
+Ubuntu LTS versions will work with such change, or add some checks for the
+Ubuntu/Debian versions where we know this works.
+
+Note: the version of the distribution (and its name) is already stored
+at the global var $system_release.
+
+Cheers,
+Mauro
