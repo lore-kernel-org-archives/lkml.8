@@ -2,212 +2,239 @@ Return-Path: <SRS0=8jYG=4K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CA58AC35669
-	for <linux-kernel@archiver.kernel.org>; Sat, 22 Feb 2020 07:52:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E6B72C35669
+	for <linux-kernel@archiver.kernel.org>; Sat, 22 Feb 2020 08:01:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 90627208C4
-	for <linux-kernel@archiver.kernel.org>; Sat, 22 Feb 2020 07:52:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A29B9208C3
+	for <linux-kernel@archiver.kernel.org>; Sat, 22 Feb 2020 08:01:59 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Q79JC3DE"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="E7O6HkSF"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726824AbgBVHwD (ORCPT
+        id S1726832AbgBVIBp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 22 Feb 2020 02:52:03 -0500
-Received: from mail-wr1-f67.google.com ([209.85.221.67]:46684 "EHLO
-        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726294AbgBVHwC (ORCPT
+        Sat, 22 Feb 2020 03:01:45 -0500
+Received: from mail-ot1-f68.google.com ([209.85.210.68]:34312 "EHLO
+        mail-ot1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726343AbgBVIBp (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 22 Feb 2020 02:52:02 -0500
-Received: by mail-wr1-f67.google.com with SMTP id z7so4516960wrl.13
-        for <linux-kernel@vger.kernel.org>; Fri, 21 Feb 2020 23:52:01 -0800 (PST)
+        Sat, 22 Feb 2020 03:01:45 -0500
+Received: by mail-ot1-f68.google.com with SMTP id j16so4281320otl.1;
+        Sat, 22 Feb 2020 00:01:42 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=subject:to:cc:references:from:autocrypt:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=QUtHKT7e8Py7ijOYzzIEt46tkkQ7iGc4YaN3KsSFBLM=;
-        b=Q79JC3DECAOa5y6wlykoNBhfn7WKO7SbH70qdgTm2pCFXoO6i2OiqalqD9C7d5kNGV
-         /zr7pI/kje9kHg31Q1G7nEuV6hOIS1rOJnLyaq+YCXOjzer3DGSl9Ndkh+AOLqrhYs32
-         bqahe4B/z6U+hxWISnwsvHkV5qxd9gF85YJEqRyAkYM0ENpgTZ5SbyvU2yXUuo7XMvUx
-         iMLfTnSSEfCz+SUrkDbcMe8iVR2/6tqdN6ty/H1psx5TrLvJgCHELJ3165FSh3Wb8q/A
-         dihUQgkYn0qLWz5hGC6hDOiTZOaAgq3GjbYMt1gE6WwcIJBg588CamMnqlqLXr3wHIYM
-         +DkA==
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to
+         :user-agent;
+        bh=vT81nvbtkGPYyB7EYop5s54CEn2jqtzV1GkVQRlvubQ=;
+        b=E7O6HkSF4D+Uxknx/QGF9lTKHLoun8VV8g0bjPaFeXOvk1hMvR5mXW1jBp6fPJNJVZ
+         aZB7e6HLMhKX+h9MVNI7q8KNLLoxCOPHb49419ykJKO0NTLi/kGUyDbUKGxs5cEkECyw
+         dwMuaiNI3QPYR+uYjaReFrvp5hx9qlz0T/P+k0CnHnUfWaBCjVnKXcbVtdIWlvlsMqLz
+         pD9SsuwXyHwy8DCusOg7qCIKY+geoQXRZnmRb0HqS67yFg2sx0UIqvyFCe7KiQptbMwG
+         7JTwf6e37eEihNZOhJmGy5JPim4KQDR19JcdGF1MeFhHI0Cv4HjDMsTb+6rLO2Wx6wpk
+         fI2w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:autocrypt
-         :message-id:date:user-agent:mime-version:in-reply-to
-         :content-language:content-transfer-encoding;
-        bh=QUtHKT7e8Py7ijOYzzIEt46tkkQ7iGc4YaN3KsSFBLM=;
-        b=sXEkA7SJSYlk7/KPE/PgewylJLHOfCBRmRZOM2ovI99a/XgsLEPGTpN/jhxCxxP1Gz
-         wPlSSVzTb+BmVtG0b1FdL2+mvalZpq+TldneiwIMJ00Mea17BjyoBgTGqeiXsO26B6mS
-         beSvW3qKVM7OSW7L3MM22i1Yw6CDnbx3/9CvlRtT7Jw49ENJK9AO5s1uAIQbaa9cXUi3
-         pIQsKA0H13F4apDgWDj1+7wURACLHWqQq90yreRM9KSD3WpgekvJBQPoll9eZM43+o2b
-         5LjkBg2b/KfPyfjzcxLhSrSjHnaotI+3Zc8PT+DIOc/2/zv5JLDC5sGxi0P4JPVmpLlQ
-         uvbg==
-X-Gm-Message-State: APjAAAX8KBLYomysE0tRYIXHhto1l1SPcUYvjlmwFfY0B40KRvscbc/K
-        E0XK1i0zVu0ufn35EcXhbRhbVQ==
-X-Google-Smtp-Source: APXvYqzBZw6U9SQJ/DL73MMLA6PSr+uS16G3wh9wgcOUAhYt9tB+b1B4hmC4GaCY/tHpstV3bZFeIQ==
-X-Received: by 2002:a5d:5221:: with SMTP id i1mr49845193wra.44.1582357920292;
-        Fri, 21 Feb 2020 23:52:00 -0800 (PST)
-Received: from ?IPv6:2a01:e34:ed2f:f020:903b:a048:f296:e3ae? ([2a01:e34:ed2f:f020:903b:a048:f296:e3ae])
-        by smtp.googlemail.com with ESMTPSA id r6sm7514006wrp.95.2020.02.21.23.51.58
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 21 Feb 2020 23:51:59 -0800 (PST)
-Subject: Re: [PATCH V15 RESEND 5/5] arm64: dts: imx: add i.MX8QXP thermal
- support
-To:     Anson Huang <anson.huang@nxp.com>
-Cc:     "robh+dt@kernel.org" <robh+dt@kernel.org>,
-        "mark.rutland@arm.com" <mark.rutland@arm.com>,
-        "shawnguo@kernel.org" <shawnguo@kernel.org>,
-        "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>,
-        "kernel@pengutronix.de" <kernel@pengutronix.de>,
-        "festevam@gmail.com" <festevam@gmail.com>,
-        "catalin.marinas@arm.com" <catalin.marinas@arm.com>,
-        "will@kernel.org" <will@kernel.org>,
-        "rui.zhang@intel.com" <rui.zhang@intel.com>,
-        "amit.kucheria@verdurent.com" <amit.kucheria@verdurent.com>,
-        Aisheng Dong <aisheng.dong@nxp.com>,
-        "linux@roeck-us.net" <linux@roeck-us.net>,
-        "srinivas.kandagatla@linaro.org" <srinivas.kandagatla@linaro.org>,
-        "krzk@kernel.org" <krzk@kernel.org>,
-        Andy Duan <fugang.duan@nxp.com>, Peng Fan <peng.fan@nxp.com>,
-        Daniel Baluta <daniel.baluta@nxp.com>,
-        "bjorn.andersson@linaro.org" <bjorn.andersson@linaro.org>,
-        "olof@lixom.net" <olof@lixom.net>,
-        "dinguyen@kernel.org" <dinguyen@kernel.org>,
-        Leonard Crestez <leonard.crestez@nxp.com>,
-        "marcin.juszkiewicz@linaro.org" <marcin.juszkiewicz@linaro.org>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>,
-        dl-linux-imx <linux-imx@nxp.com>
-References: <1582161028-2844-1-git-send-email-Anson.Huang@nxp.com>
- <1582161028-2844-5-git-send-email-Anson.Huang@nxp.com>
- <20200221130448.GC10516@linaro.org>
- <DB3PR0402MB39163B3EC2B6077C51D821DEF5120@DB3PR0402MB3916.eurprd04.prod.outlook.com>
-From:   Daniel Lezcano <daniel.lezcano@linaro.org>
-Autocrypt: addr=daniel.lezcano@linaro.org; prefer-encrypt=mutual; keydata=
- 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
-Message-ID: <59784965-dba6-5878-68fa-5657f3e5f02e@linaro.org>
-Date:   Sat, 22 Feb 2020 08:51:57 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.1
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to:user-agent;
+        bh=vT81nvbtkGPYyB7EYop5s54CEn2jqtzV1GkVQRlvubQ=;
+        b=SaJmBg2Yiw6x+vzrBNN38Z+zpkL3aTFVEFjVGj/pTvhQh888eYw+ay8tvOw81kxcJx
+         ZB30EWbJ2RFhLL8TJhP3d3w/bZbAWZfyEW6Yh7I4z/pPeAqGx9CHAqoCPxhChucv+Jfk
+         gNk71F/ihZx/gbInDWXQidY/iYIt3rYETzCWgH3Q9HxzL5Dquax9BUfZKteblbDgtj0a
+         3C5e5RuuLI9/sSsNI/7GZRn0yBRWovC7Yfaw+G5tyxyOReW3pXn1upExkPOrsuXFPlKG
+         3/HLORKn4C2Pk7CsWBhfNCI5mTUJA4ojVXXptjfRDX9NL6Gk1bfyH6afI7zHvxgbeTHN
+         uu8g==
+X-Gm-Message-State: APjAAAXdy5dBEV6BJPwNQk16qrQQoUCshhqRB4fCYNEVRrnZuqzJ9yCj
+        my+BS/DQyZR3n04Ok2gQk+vPnMgw
+X-Google-Smtp-Source: APXvYqwozrjydg0qlpHHdirUIatUqNDdS/rPMUEphftHCBpdfqQ9n9h/OV0v2ujjZGxaNuh47mmK0A==
+X-Received: by 2002:a9d:62d8:: with SMTP id z24mr30827638otk.362.1582358502147;
+        Sat, 22 Feb 2020 00:01:42 -0800 (PST)
+Received: from ubuntu-m2-xlarge-x86 ([2604:1380:4111:8b00::1])
+        by smtp.gmail.com with ESMTPSA id n22sm1995229otj.36.2020.02.22.00.01.41
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Sat, 22 Feb 2020 00:01:41 -0800 (PST)
+Date:   Sat, 22 Feb 2020 01:01:40 -0700
+From:   Nathan Chancellor <natechancellor@gmail.com>
+To:     "Alex Xu (Hello71)" <alex_y_xu@yahoo.ca>
+Cc:     Russell King <linux@armlinux.org.uk>, linux-kbuild@vger.kernel.org,
+        linux-kernel@vger.kernel.org, masahiroy@kernel.org,
+        michal.lkml@markovi.net
+Subject: Re: [PATCH] kbuild: move -pipe to global KBUILD_CFLAGS
+Message-ID: <20200222080140.GA40311@ubuntu-m2-xlarge-x86>
+References: <20200222003820.220854-1-alex_y_xu.ref@yahoo.ca>
+ <20200222003820.220854-1-alex_y_xu@yahoo.ca>
+ <20200222021619.GA51223@ubuntu-m2-xlarge-x86>
+ <1582341758.yo66djba3t.none@localhost>
 MIME-Version: 1.0
-In-Reply-To: <DB3PR0402MB39163B3EC2B6077C51D821DEF5120@DB3PR0402MB3916.eurprd04.prod.outlook.com>
 Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
+In-Reply-To: <1582341758.yo66djba3t.none@localhost>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 22/02/2020 00:53, Anson Huang wrote:
-> Hi, Daniel
+On Fri, Feb 21, 2020 at 11:01:24PM -0500, Alex Xu (Hello71) wrote:
+> Excerpts from Nathan Chancellor's message of February 21, 2020 9:16 pm:
+> > Hi Alex,
+> > 
+> > On Fri, Feb 21, 2020 at 07:38:20PM -0500, Alex Xu (Hello71) wrote:
+> >> -pipe reduces unnecessary disk wear for systems where /tmp is not a
+> >> tmpfs, slightly increases compilation speed, and avoids leaving behind
+> >> files when gcc crashes.
+> >> 
+> >> According to the gcc manual, "this fails to work on some systems where
+> >> the assembler is unable to read from a pipe; but the GNU assembler has
+> >> no trouble". We already require GNU ld on all platforms, so this is not
+> >> an additional dependency. LLVM as also supports pipes.
+> >> 
+> >> -pipe has always been used for most architectures, this change
+> >> standardizes it globally. Most notably, arm, arm64, riscv, and x86 are
+> >> affected.
+> >> 
+> >> Signed-off-by: Alex Xu (Hello71) <alex_y_xu@yahoo.ca>
+> > 
+> > Do you have any numbers to show this is actually beneficial from a
+> > compilation time perspective? I ask because I saw an improvement in
+> > compilation time when removing -pipe from x86's KBUILD_CFLAGS in
+> > commit 437e88ab8f9e ("x86/build: Remove -pipe from KBUILD_CFLAGS").
+> > 
+> > For what it's worth, clang ignores -pipe so this does not actually
+> > matter for its integrated assembler.
+> > 
+> > That type of change could have been a fluke but I guarantee people
+> > will care more about any change in compilation time than any of the
+> > other things that you mention so it might be wise to check on major
+> > architectures to make sure that it doesn't hurt.
+> > 
+> > Cheers,
+> > Nathan
+> > 
 > 
-
-[ ... ]
-
->>> +
->>> +	thermal_zones: thermal-zones {
->>> +		cpu-thermal0 {
->>> +			polling-delay-passive = <250>;
->>> +			polling-delay = <2000>;
->>> +			thermal-sensors = <&tsens IMX_SC_R_SYSTEM>;
->>> +			trips {
->>> +				cpu_alert0: trip0 {
->>> +					temperature = <107000>;
->>> +					hysteresis = <2000>;
->>> +					type = "passive";
->>> +				};
->>
->> May be you can add a 'hot' trip point before 'critical' for future use before
->> reaching the emergency shutdown.
+> Sorry, I should've checked the performance first. I have now run:
 > 
-> The 'passive' trip is actually the 'hot' trip point you mentioned, and I have combined it to
-> below cooling map which will throttle cpu-freq when passive (hot) point is reached.
-> We all use 'passive' as 'hot' alarm and trigger cpu-freq throttle on i.MX platforms. 
+> cd /tmp/linux # previously: make O=/tmp/linux
+> export MAKEFLAGS=12 # Ryzen 1600, 6 cores, 12 threads
+> make allnoconfig
+> for i in {1..10}; do
+>     make clean >/dev/null
+>     time make XPIPE=-pipe >/dev/null
+>     make clean >/dev/null
+>     time make >/dev/null
+> done
+> 
+> after patching -pipe to $(XPIPE) in Makefile.
+> 
+> Results (without ld warnings):
+> 
+> make > /dev/null  130.54s user 10.41s system 969% cpu 14.537 total
+> make XPIPE=-pipe > /dev/null  129.83s user 9.95s system 977% cpu 14.296 total
+> make > /dev/null  129.73s user 10.28s system 966% cpu 14.493 total
+> make XPIPE=-pipe > /dev/null  130.04s user 10.63s system 986% cpu 14.252 total
+> make > /dev/null  129.53s user 10.28s system 972% cpu 14.379 total
+> make XPIPE=-pipe > /dev/null  130.29s user 10.17s system 983% cpu 14.288 total
+> make > /dev/null  130.19s user 10.52s system 968% cpu 14.530 total
+> make XPIPE=-pipe > /dev/null  129.90s user 10.47s system 978% cpu 14.343 total
+> make > /dev/null  129.50s user 10.81s system 959% cpu 14.620 total
+> make XPIPE=-pipe > /dev/null  130.37s user 10.60s system 975% cpu 14.446 total
+> make > /dev/null  129.63s user 10.18s system 972% cpu 14.374 total
+> make XPIPE=-pipe > /dev/null  131.29s user 9.92s system 1016% cpu 13.899 total
+> make > /dev/null  129.96s user 10.39s system 961% cpu 14.596 total
+> make XPIPE=-pipe > /dev/null  131.63s user 10.16s system 1011% cpu 14.015 total
+> make > /dev/null  129.33s user 10.54s system 970% cpu 14.405 total
+> make XPIPE=-pipe > /dev/null  129.70s user 10.40s system 976% cpu 14.349 total
+> make > /dev/null  129.53s user 10.25s system 964% cpu 14.494 total
+> make XPIPE=-pipe > /dev/null  130.38s user 10.62s system 973% cpu 14.479 total
+> make > /dev/null  130.73s user 10.08s system 957% cpu 14.704 total
+> make XPIPE=-pipe > /dev/null  130.43s user 10.62s system 985% cpu 14.309 total
+> make > /dev/null  130.54s user 10.41s system 969% cpu 14.537 total
+> 
+> There is a fair bit of variance, probably due to cpufreq, schedutil, CPU 
+> temperature, CPU scheduler, motherboard power delivery, etc. But, I 
+> think it can be clearly seen that -pipe is, on average, about 0.1 to 0.2 
+> seconds faster.
+> 
+> I also tried "make defconfig":
+> 
+> make > /dev/null  1238.26s user 102.39s system 1095% cpu 2:02.33 total
+> make XPIPE=-pipe > /dev/null  1231.33s user 102.52s system 1081% cpu 2:03.29 total
+> make > /dev/null  1232.92s user 102.07s system 1096% cpu 2:01.71 total
+> make XPIPE=-pipe > /dev/null  1239.59s user 102.30s system 1096% cpu 2:02.39 total
+> make > /dev/null  1229.81s user 101.72s system 1093% cpu 2:01.74 total
+> make XPIPE=-pipe > /dev/null  1234.64s user 101.30s system 1098% cpu 2:01.64 total
+> make > /dev/null  1228.50s user 104.39s system 1093% cpu 2:01.91 total
+> make XPIPE=-pipe > /dev/null  1238.78s user 102.57s system 1099% cpu 2:01.99 total
+> make > /dev/null  1238.26s user 102.39s system 1095% cpu 2:02.33 total
+> 
+> I stopped after this because I needed to use the machine for other 
+> tasks. The results are less clear, but I think there's not a big 
+> difference one way or another, at least on my machine.
+> 
+> CPU: Ryzen 1600, overclocked to ~3.8 GHz
+> RAM: Corsair Vengeance, overclocked to ~3300 MHz, forgot timings
+> Motherboard: ASRock B450 Pro4
+> 
+> I would speculate that the recent pipe changes have caused a change in 
+> the relative speed compared to 2018. I am using 5.6.0-rc2 with -O3 
+> -march=native patches.
+> 
+> Regards,
+> Alex.
 
-Sorry, I'm not sure to get the point. A 'hot' trip point is not a
-'passive' trip point. The 'hot' trip point is a critical temperature and
-a notification is raised [1][2].
+I used hyperfine [1] to run a quick benchmark with a freshly built
+GCC 9.2.0 for x86 and aarch64 and here are the results:
 
-It is the last chance for the system to do something before the next
-trip point 'critical' is reached and where an emergency shutdown is done.
+$ hyperfine -w 1 -r 25 \
+            -p 'rm -rf out.x86_64' \
+            'make -j$(nproc) -s CROSS_COMPILE=x86_64-linux- O=out.x86_64 defconfig all' \
+            'make -j$(nproc) -s CROSS_COMPILE=x86_64-linux- KCFLAGS=-pipe O=out.x86_64 defconfig all'
 
-The 'passive' trip point is the target temperature for mitigation in a
-normal situation when the system is loaded.
+Benchmark #1: make -j$(nproc) -s CROSS_COMPILE=x86_64-linux- O=out.x86_64 defconfig all
+  Time (mean ± σ):     68.535 s ±  0.275 s    [User: 2241.681 s, System: 185.454 s]
+  Range (min … max):   67.855 s … 68.953 s    25 runs
 
-[1]
-https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/drivers/thermal/thermal_core.c#n288
-[2]
-https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/drivers/thermal/thermal_core.c#n420
+Benchmark #2: make -j$(nproc) -s CROSS_COMPILE=x86_64-linux- KCFLAGS=-pipe O=out.x86_64 defconfig all
+  Time (mean ± σ):     68.922 s ±  0.095 s    [User: 2264.168 s, System: 190.297 s]
+  Range (min … max):   68.781 s … 69.126 s    25 runs
 
+Summary
+  'make -j$(nproc) -s CROSS_COMPILE=x86_64-linux- O=out.x86_64 defconfig all' ran
+    1.01 ± 0.00 times faster than 'make -j$(nproc) -s CROSS_COMPILE=x86_64-linux- KCFLAGS=-pipe O=out.x86_64 defconfig all'
 
+$ hyperfine -w 1 -r 25 \
+            -p 'rm -rf out.aarch64' \
+            'make -j$(nproc) -s ARCH=arm64 CROSS_COMPILE=aarch64-linux- O=out.aarch64 defconfig all' \
+            'make -j$(nproc) -s ARCH=arm64 CROSS_COMPILE=aarch64-linux- KCFLAGS=-pipe O=out.aarch64 defconfig all'
 
+Benchmark #1: make -j$(nproc) -s ARCH=arm64 CROSS_COMPILE=aarch64-linux- O=out.aarch64 defconfig all
+  Time (mean ± σ):     166.732 s ±  0.594 s    [User: 5654.780 s, System: 475.493 s]
+  Range (min … max):   165.873 s … 167.859 s    25 runs
 
--- 
- <http://www.linaro.org/> Linaro.org │ Open source software for ARM SoCs
+Benchmark #2: make -j$(nproc) -s ARCH=arm64 CROSS_COMPILE=aarch64-linux- KCFLAGS=-pipe O=out.aarch64 defconfig all
+  Time (mean ± σ):     168.047 s ±  0.428 s    [User: 5734.031 s, System: 488.392 s]
+  Range (min … max):   167.328 s … 168.959 s    25 runs
 
-Follow Linaro:  <http://www.facebook.com/pages/Linaro> Facebook |
-<http://twitter.com/#!/linaroorg> Twitter |
-<http://www.linaro.org/linaro-blog/> Blog
+Summary
+  'make -j$(nproc) -s ARCH=arm64 CROSS_COMPILE=aarch64-linux- O=out.aarch64 defconfig all' ran
+    1.01 ± 0.00 times faster than 'make -j$(nproc) -s ARCH=arm64 CROSS_COMPILE=aarch64-linux- KCFLAGS=-pipe O=out.aarch64 defconfig all'
 
+In both cases it seems like performance regresses (by 1% but still) but
+maybe it is my machine, even though this benchmark was done on a
+different machine than the one from my commit back in 2018.
+
+I am not sure I would write off these results, since I did the benchmark
+25 times on each one back to back, eliminating most of the variance that
+you described.
+
+[1]: https://github.com/sharkdp/hyperfine
+
+Cheers,
+Nathan
