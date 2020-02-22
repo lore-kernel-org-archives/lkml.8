@@ -2,96 +2,110 @@ Return-Path: <SRS0=8jYG=4K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D87FEC35669
-	for <linux-kernel@archiver.kernel.org>; Sat, 22 Feb 2020 00:02:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0E4E6C35641
+	for <linux-kernel@archiver.kernel.org>; Sat, 22 Feb 2020 00:02:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A801F208C4
-	for <linux-kernel@archiver.kernel.org>; Sat, 22 Feb 2020 00:02:44 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="F813bmeh"
+	by mail.kernel.org (Postfix) with ESMTP id E4A0C208C4
+	for <linux-kernel@archiver.kernel.org>; Sat, 22 Feb 2020 00:02:45 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729764AbgBVACn (ORCPT
+        id S1729788AbgBVACo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
+        Fri, 21 Feb 2020 19:02:44 -0500
+Received: from mga02.intel.com ([134.134.136.20]:43852 "EHLO mga02.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729755AbgBVACn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Fri, 21 Feb 2020 19:02:43 -0500
-Received: from mail-pj1-f65.google.com ([209.85.216.65]:54390 "EHLO
-        mail-pj1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729541AbgBVACn (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Feb 2020 19:02:43 -0500
-Received: by mail-pj1-f65.google.com with SMTP id dw13so1473169pjb.4
-        for <linux-kernel@vger.kernel.org>; Fri, 21 Feb 2020 16:02:43 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=date:from:to:cc:subject:message-id:mime-version:content-disposition;
-        bh=mlYJKghLuJvyIb9vTdDK73ZdLUo5D/iUeEEKRshNNdU=;
-        b=F813bmehcWyoOKuLB18kNU/7ag9mgf6iNgkmwDBMt+nd7w/qt4bb4Y7NfrgdZTKpMr
-         vhmFYAxnKpi/Q83QSAVGa7QcTSDT7gK/MjCjhYPRmAJnlHwKkbLcmShXoDGHwMbyFVy8
-         Mkc+WoOMGkd3oB1FOM5O1Clm9mkoMRmedmpPg=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
-         :content-disposition;
-        bh=mlYJKghLuJvyIb9vTdDK73ZdLUo5D/iUeEEKRshNNdU=;
-        b=Vuc5K5ewrAv82jVGxuW05svPXggc41tuAJ7Cj85YgTlrMvpXa0qtDdV6sBYlg+8tPq
-         SCu9GFGzE6qgbU+ORnU8tvgR6tqYKzQ6DBoyRgNzdUh2sYKr9o8Be7JvV5xSyOkHLLIp
-         M7lQwCRifKbiWw75byNlareP7OD8yvQaCm8ToN6KkEZQ0XRH4rKGhBTm+KXkgw6bXF4C
-         jj6/V2Zg7QNg3cx/wTHEsJRBEOmCzFwAeXXHSVZlPpv9GUhPVLkfnmaccXTU/2xllF8e
-         x4oMOHKGB+lezrhr0gHF0sgmu6wXuXg15Fj2qXgHge0LiD0o4iWKDG9obtWHsaafr7N7
-         3WsQ==
-X-Gm-Message-State: APjAAAVFpmy1inF9cZjznn7Zcud6ufskN6qnfl/niA5kP07f6uOwv4oW
-        EIBPHlnD7vKwC4IRwV3siZjliA==
-X-Google-Smtp-Source: APXvYqxWXDVzmbnMKsqNsGng+5nphCWKQ4pTyJ3j6HWshT/R2zSiILwT7bURopmZ9Z+CNal2PtMHxA==
-X-Received: by 2002:a17:90a:ba91:: with SMTP id t17mr6127308pjr.74.1582329762627;
-        Fri, 21 Feb 2020 16:02:42 -0800 (PST)
-Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id l11sm3574354pgt.59.2020.02.21.16.02.40
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 21 Feb 2020 16:02:41 -0800 (PST)
-Date:   Fri, 21 Feb 2020 16:02:39 -0800
-From:   Kees Cook <keescook@chromium.org>
-To:     Jonathan Corbet <corbet@lwn.net>
-Cc:     "Rafael J. Wysocki" <rafael@kernel.org>,
-        linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org
-Subject: [PATCH] docs: Fix empty parallelism argument
-Message-ID: <202002211601.322B596B@keescook>
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga004.jf.intel.com ([10.7.209.38])
+  by orsmga101.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 21 Feb 2020 16:02:43 -0800
+X-IronPort-AV: E=Sophos;i="5.70,470,1574150400"; 
+   d="scan'208";a="383605949"
+Received: from jbrandeb-desk.jf.intel.com ([10.166.244.152])
+  by orsmga004-auth.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 21 Feb 2020 16:02:43 -0800
+From:   Jesse Brandeburg <jesse.brandeburg@intel.com>
+To:     tglx@linutronix.de, mingo@redhat.com, bp@alien8.de
+Cc:     Jesse Brandeburg <jesse.brandeburg@intel.com>, x86@kernel.org,
+        linux-kernel@vger.kernel.org, linux@rasmusvillemoes.dk,
+        andriy.shevchenko@intel.com, dan.j.williams@intel.com,
+        peterz@infradead.org
+Subject: [PATCH v4 1/2] x86: fix bitops.h warning with a moved cast
+Date:   Fri, 21 Feb 2020 16:02:13 -0800
+Message-Id: <20200222000214.2169531-1-jesse.brandeburg@intel.com>
+X-Mailer: git-send-email 2.24.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-When there was no parallelism (no top-level -j arg and a pre-1.7
-sphinx-build), the argument passed would be empty ("") instead of just
-being missing, which would (understandably) badly confuse sphinx-build.
-Fix this by removing the quotes.
+Fix many sparse warnings when building with C=1.
 
-Reported-by: Rafael J. Wysocki <rafael@kernel.org>
-Fixes: 51e46c7a4007 ("docs, parallelism: Rearrange how jobserver reservations are made")
-Signed-off-by: Kees Cook <keescook@chromium.org>
+When the kernel is compiled with C=1, there are lots of messages like:
+  arch/x86/include/asm/bitops.h:77:37: warning: cast truncates bits from constant value (ffffff7f becomes 7f)
+
+CONST_MASK() is using a signed integer "1" to create the mask which
+is later cast to (u8) when used. Move the cast to the definition and
+clean up the calling sites to prevent sparse from warning.
+
+The reason the warning was occurring is because certain bitmasks that
+end with a mask next to a natural boundary like 7, 15, 23, 31, end up
+with a mask like 0x7f, which then results in sign extension when doing
+an invert (but I'm not a compiler expert). It was really only
+"clear_bit" that was having problems, and it was only on bit checks next
+to a byte boundary (top bit).
+
+Verified with a test module (see next patch) and assembly inspection
+that the patch doesn't introduce any change in generated code.
+
+Signed-off-by: Jesse Brandeburg <jesse.brandeburg@intel.com>
+Reviewed-by: Andy Shevchenko <andriy.shevchenko@intel.com>
 ---
- Documentation/sphinx/parallel-wrapper.sh | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+v4: reverse argument order as suggested by David Laight, added reviewed-by
+v3: Clean up the header file changes as per peterz.
+v2: use correct CC: list
+---
+ arch/x86/include/asm/bitops.h | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
-diff --git a/Documentation/sphinx/parallel-wrapper.sh b/Documentation/sphinx/parallel-wrapper.sh
-index 7daf5133bdd3..e54c44ce117d 100644
---- a/Documentation/sphinx/parallel-wrapper.sh
-+++ b/Documentation/sphinx/parallel-wrapper.sh
-@@ -30,4 +30,4 @@ if [ -n "$parallel" ] ; then
- 	parallel="-j$parallel"
- fi
+diff --git a/arch/x86/include/asm/bitops.h b/arch/x86/include/asm/bitops.h
+index 062cdecb2f24..fed152434ed0 100644
+--- a/arch/x86/include/asm/bitops.h
++++ b/arch/x86/include/asm/bitops.h
+@@ -46,7 +46,7 @@
+  * a mask operation on a byte.
+  */
+ #define CONST_MASK_ADDR(nr, addr)	WBYTE_ADDR((void *)(addr) + ((nr)>>3))
+-#define CONST_MASK(nr)			(1 << ((nr) & 7))
++#define CONST_MASK(nr)			((u8)1 << ((nr) & 7))
  
--exec "$sphinx" "$parallel" "$@"
-+exec "$sphinx" $parallel "$@"
--- 
-2.20.1
+ static __always_inline void
+ arch_set_bit(long nr, volatile unsigned long *addr)
+@@ -54,7 +54,7 @@ arch_set_bit(long nr, volatile unsigned long *addr)
+ 	if (__builtin_constant_p(nr)) {
+ 		asm volatile(LOCK_PREFIX "orb %1,%0"
+ 			: CONST_MASK_ADDR(nr, addr)
+-			: "iq" ((u8)CONST_MASK(nr))
++			: "iq" (CONST_MASK(nr))
+ 			: "memory");
+ 	} else {
+ 		asm volatile(LOCK_PREFIX __ASM_SIZE(bts) " %1,%0"
+@@ -74,7 +74,7 @@ arch_clear_bit(long nr, volatile unsigned long *addr)
+ 	if (__builtin_constant_p(nr)) {
+ 		asm volatile(LOCK_PREFIX "andb %1,%0"
+ 			: CONST_MASK_ADDR(nr, addr)
+-			: "iq" ((u8)~CONST_MASK(nr)));
++			: "iq" (CONST_MASK(nr) ^ 0xff));
+ 	} else {
+ 		asm volatile(LOCK_PREFIX __ASM_SIZE(btr) " %1,%0"
+ 			: : RLONG_ADDR(addr), "Ir" (nr) : "memory");
 
-
+base-commit: ca7e1fd1026c5af6a533b4b5447e1d2f153e28f2
 -- 
-Kees Cook
+2.24.1
+
