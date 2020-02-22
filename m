@@ -2,151 +2,149 @@ Return-Path: <SRS0=8jYG=4K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-16.3 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FSL_HELO_FAKE,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 540BAC35671
-	for <linux-kernel@archiver.kernel.org>; Sat, 22 Feb 2020 21:01:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C65B1C35666
+	for <linux-kernel@archiver.kernel.org>; Sat, 22 Feb 2020 21:06:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1FBF4206ED
-	for <linux-kernel@archiver.kernel.org>; Sat, 22 Feb 2020 21:01:46 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Q1hFllBq"
+	by mail.kernel.org (Postfix) with ESMTP id 9D930206EF
+	for <linux-kernel@archiver.kernel.org>; Sat, 22 Feb 2020 21:06:00 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726907AbgBVVBG (ORCPT
+        id S1726891AbgBVVF6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 22 Feb 2020 16:01:06 -0500
-Received: from mail-pj1-f68.google.com ([209.85.216.68]:52212 "EHLO
-        mail-pj1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726826AbgBVVBF (ORCPT
+        Sat, 22 Feb 2020 16:05:58 -0500
+Received: from Galois.linutronix.de ([193.142.43.55]:47684 "EHLO
+        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726828AbgBVVF6 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 22 Feb 2020 16:01:05 -0500
-Received: by mail-pj1-f68.google.com with SMTP id fa20so2309051pjb.1
-        for <linux-kernel@vger.kernel.org>; Sat, 22 Feb 2020 13:01:05 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=laEHxH1L9Tdj6O2OTgMojiMOqUUb6PedrFi1g5j2gKw=;
-        b=Q1hFllBqSn4fR6AzHGxaLoq0TcAbiOW4B6TXVyl+M2UM3D4qQ4964Ctex/XFU1tGyK
-         p4sSTdV2w4cFfCI9XEQElJygM/3XzhR8EFSUSvKz7mNzOEMB+cHMbexGgCjICFh2b9M0
-         k0k5iaTF06fD26i1vgUA31A0EdTX8LJvk9iEUSgr2JYUlx9/wYBj3wVJCSkVC7YsPR6O
-         Q6hbctC7OjLYEM0wXL150Y4H6JU9goQrzKhXP5WTyHmgQhnCJ15UN4Mmi21hgr+P5kCL
-         8lpPKAdaUWw04SHJie6s4ltpdlFqGOi1vsnXmhNF/pRtr3ZV4ozshwJfy7NngXubhExM
-         MVNQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=laEHxH1L9Tdj6O2OTgMojiMOqUUb6PedrFi1g5j2gKw=;
-        b=DAtDUZwzs7x1S/sZ8Fpe75csTuCeUjTABNCFf9OTtvdEFBoOMSXlDQuNvWsVHi+t9+
-         uiz3DZUy53ki6puXtzh7M+jCWN4ugIwrgHNEitcAklM5aYT4NNfb+fhp1Y6GnfMxIYhG
-         G+Xe0xawvSoqw2l6g6sQlnHrBiG6MkV3R9H392LhMs75RjTNy6I+mUdS52l7+UCf9Ig0
-         0A4f4Ua67B3aKaaR9Ic6+BG87ZB3W+cpu96xPr7AOn76BxweMm3oWGhDp8MGQN4uYOhD
-         CrLVke74fqnWBnsh+pwJAGh56j4rCS0gMsINh3AQIsgyzUnWJ+r1aUdOrpRQ75MSbOng
-         MTVA==
-X-Gm-Message-State: APjAAAXG+jo0hZeKCRLtoOxmjScIZugI5OSGqjq6eAQ7Eux8HZsgyrLw
-        AdztTzXQ1lwGVjMxcrMn/jWrYA==
-X-Google-Smtp-Source: APXvYqxoMTRXvtk+LvyaNv3ILd1j6HwkVq68c8JHrJjI4QZ8TdCjLQMCRi/WdV/nRpCfwkVL6khcLw==
-X-Received: by 2002:a17:902:5a0c:: with SMTP id q12mr43016059pli.301.1582405264875;
-        Sat, 22 Feb 2020 13:01:04 -0800 (PST)
-Received: from google.com ([2620:15c:2ce:0:9efe:9f1:9267:2b27])
-        by smtp.gmail.com with ESMTPSA id 72sm7400306pfw.7.2020.02.22.13.01.03
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 22 Feb 2020 13:01:04 -0800 (PST)
-Date:   Sat, 22 Feb 2020 13:01:01 -0800
-From:   Fangrui Song <maskray@google.com>
-To:     Arvind Sankar <nivedita@alum.mit.edu>
-Cc:     Borislav Petkov <bp@alien8.de>,
-        Nathan Chancellor <natechancellor@gmail.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>,
-        "H. Peter Anvin" <hpa@zytor.com>, x86@kernel.org,
-        linux-kernel@vger.kernel.org, clang-built-linux@googlegroups.com,
-        Michael Matz <matz@suse.de>
-Subject: Re: [PATCH] x86/boot/compressed: Fix compressed kernel linking with
- lld
-Message-ID: <20200222210101.diqw4zt6lz42ekgx@google.com>
-References: <20200222164419.GB3326744@rani.riverdale.lan>
- <20200222171859.3594058-1-nivedita@alum.mit.edu>
- <20200222181413.GA22627@ubuntu-m2-xlarge-x86>
- <20200222185806.ywnqhfqmy67akfsa@google.com>
- <20200222201715.GA3674682@rani.riverdale.lan>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii; format=flowed
+        Sat, 22 Feb 2020 16:05:58 -0500
+Received: from p5de0bf0b.dip0.t-ipconnect.de ([93.224.191.11] helo=nanos.tec.linutronix.de)
+        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
+        (Exim 4.80)
+        (envelope-from <tglx@linutronix.de>)
+        id 1j5byG-0003Ah-0O; Sat, 22 Feb 2020 22:05:56 +0100
+Received: from nanos.tec.linutronix.de (localhost [IPv6:::1])
+        by nanos.tec.linutronix.de (Postfix) with ESMTP id 7844610408B;
+        Sat, 22 Feb 2020 22:05:55 +0100 (CET)
+Date:   Sat, 22 Feb 2020 21:00:04 -0000
+From:   Thomas Gleixner <tglx@linutronix.de>
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     linux-kernel@vger.kernel.org, x86@kernel.org
+Subject: [GIT pull] x86 fixes for 5.6-rc3
+References: <158240520445.852.16454463053831663511.tglx@nanos.tec.linutronix.de>
+Message-ID: <158240520445.852.1076310115215713264.tglx@nanos.tec.linutronix.de>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
 Content-Disposition: inline
-In-Reply-To: <20200222201715.GA3674682@rani.riverdale.lan>
+X-Linutronix-Spam-Score: -1.0
+X-Linutronix-Spam-Level: -
+X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2020-02-22, Arvind Sankar wrote:
->On Sat, Feb 22, 2020 at 10:58:06AM -0800, Fangrui Song wrote:
->> On 2020-02-22, Nathan Chancellor wrote:
->> >On Sat, Feb 22, 2020 at 12:18:59PM -0500, Arvind Sankar wrote:
->> >> Commit TBD ("x86/boot/compressed: Remove unnecessary sections from
->> >> bzImage") discarded unnecessary sections with *(*). While this works
->> >> fine with the bfd linker, lld tries to also discard essential sections
->> >> like .shstrtab, .symtab and .strtab, which results in the link failing
->> >> since .shstrtab is required by the ELF specification. .symtab and
->> >> .strtab are also necessary to generate the zoffset.h file for the
->> >> bzImage header.
->> >>
->> >> Since the only sizeable section that can be discarded is .eh_frame,
->> >> restrict the discard to only .eh_frame to be safe.
->> >>
->> >> Signed-off-by: Arvind Sankar <nivedita@alum.mit.edu>
->> >> ---
->> >> Sending as a fix on top of tip/x86/boot.
->> >>
->> >>  arch/x86/boot/compressed/vmlinux.lds.S | 4 ++--
->> >>  1 file changed, 2 insertions(+), 2 deletions(-)
->> >>
->> >> diff --git a/arch/x86/boot/compressed/vmlinux.lds.S b/arch/x86/boot/compressed/vmlinux.lds.S
->> >> index 12a20603d92e..469dcf800a2c 100644
->> >> --- a/arch/x86/boot/compressed/vmlinux.lds.S
->> >> +++ b/arch/x86/boot/compressed/vmlinux.lds.S
->> >> @@ -74,8 +74,8 @@ SECTIONS
->> >>  	. = ALIGN(PAGE_SIZE);	/* keep ZO size page aligned */
->> >>  	_end = .;
->> >>
->> >> -	/* Discard all remaining sections */
->> >> +	/* Discard .eh_frame to save some space */
->> >>  	/DISCARD/ : {
->> >> -		*(*)
->> >> +		*(.eh_frame)
->> >>  	}
->> >>  }
->> >> --
->> >> 2.24.1
->> >>
->> >
->> >FWIW:
->> >
->> >Tested-by: Nathan Chancellor <natechancellor@gmail.com>
->>
->> I am puzzled. Doesn't -fno-asynchronous-unwind-tables suppress
->> .eh_frame in the object files? Why are there still .eh_frame?
->>
->> Though, there is prior art: arch/s390/boot/compressed/vmlinux.lds.S also discards .eh_frame
->
->The compressed kernel doesn't use the regular flags and it seems it
->doesn't have that option. Maybe we should add it in to avoid generating
->those in the first place.
->
->The .eh_frame discard in arch/x86/kernel/vmlinux.lds.S does seem
->superfluous though.
+Linus,
 
-Yes, please do that. I recommend suppressting unneeded sections at
-compile time, instead of discarding them at link time.
+please pull the latest x86/urgent branch from:
 
-https://github.com/torvalds/linux/commit/83a092cf95f28696ddc36c8add0cf03ac034897f
-added -Wl,--orphan-handling=warn to arch/powerpc/Makefile .
-x86 can follow if that is appropriate.
+   git://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git x86-urgent-2020-02-22
 
-I don't recommend -Wl,--orphan-handling=error, which can unnecessarily
-break the builds.
+up to:  21b5ee59ef18: x86/cpu/amd: Enable the fixed Instructions Retired counter IRPERF
+
+Two fixes for x86:
+
+  - Remove the __force_oder definiton from the kaslr boot code as it is
+    already defined in the page table code which makes GCC 10 builds fail
+    because it changed the default to -fno-common.
+
+  - Address the AMD erratum 1054 concerning the IRPERF capability and
+    enable the Instructions Retired fixed counter on machines which are not
+    affected by the erratum.
+
+Thanks,
+
+	tglx
+
+------------------>
+H.J. Lu (1):
+      x86/boot/compressed: Don't declare __force_order in kaslr_64.c
+
+Kim Phillips (1):
+      x86/cpu/amd: Enable the fixed Instructions Retired counter IRPERF
+
+
+ arch/x86/boot/compressed/kaslr_64.c |  3 ---
+ arch/x86/include/asm/msr-index.h    |  2 ++
+ arch/x86/kernel/cpu/amd.c           | 14 ++++++++++++++
+ 3 files changed, 16 insertions(+), 3 deletions(-)
+
+diff --git a/arch/x86/boot/compressed/kaslr_64.c b/arch/x86/boot/compressed/kaslr_64.c
+index 748456c365f4..9557c5a15b91 100644
+--- a/arch/x86/boot/compressed/kaslr_64.c
++++ b/arch/x86/boot/compressed/kaslr_64.c
+@@ -29,9 +29,6 @@
+ #define __PAGE_OFFSET __PAGE_OFFSET_BASE
+ #include "../../mm/ident_map.c"
+ 
+-/* Used by pgtable.h asm code to force instruction serialization. */
+-unsigned long __force_order;
+-
+ /* Used to track our page table allocation area. */
+ struct alloc_pgt_data {
+ 	unsigned char *pgt_buf;
+diff --git a/arch/x86/include/asm/msr-index.h b/arch/x86/include/asm/msr-index.h
+index ebe1685e92dd..d5e517d1c3dd 100644
+--- a/arch/x86/include/asm/msr-index.h
++++ b/arch/x86/include/asm/msr-index.h
+@@ -512,6 +512,8 @@
+ #define MSR_K7_HWCR			0xc0010015
+ #define MSR_K7_HWCR_SMMLOCK_BIT		0
+ #define MSR_K7_HWCR_SMMLOCK		BIT_ULL(MSR_K7_HWCR_SMMLOCK_BIT)
++#define MSR_K7_HWCR_IRPERF_EN_BIT	30
++#define MSR_K7_HWCR_IRPERF_EN		BIT_ULL(MSR_K7_HWCR_IRPERF_EN_BIT)
+ #define MSR_K7_FID_VID_CTL		0xc0010041
+ #define MSR_K7_FID_VID_STATUS		0xc0010042
+ 
+diff --git a/arch/x86/kernel/cpu/amd.c b/arch/x86/kernel/cpu/amd.c
+index ac83a0fef628..1f875fbe1384 100644
+--- a/arch/x86/kernel/cpu/amd.c
++++ b/arch/x86/kernel/cpu/amd.c
+@@ -28,6 +28,7 @@
+ 
+ static const int amd_erratum_383[];
+ static const int amd_erratum_400[];
++static const int amd_erratum_1054[];
+ static bool cpu_has_amd_erratum(struct cpuinfo_x86 *cpu, const int *erratum);
+ 
+ /*
+@@ -972,6 +973,15 @@ static void init_amd(struct cpuinfo_x86 *c)
+ 	/* AMD CPUs don't reset SS attributes on SYSRET, Xen does. */
+ 	if (!cpu_has(c, X86_FEATURE_XENPV))
+ 		set_cpu_bug(c, X86_BUG_SYSRET_SS_ATTRS);
++
++	/*
++	 * Turn on the Instructions Retired free counter on machines not
++	 * susceptible to erratum #1054 "Instructions Retired Performance
++	 * Counter May Be Inaccurate".
++	 */
++	if (cpu_has(c, X86_FEATURE_IRPERF) &&
++	    !cpu_has_amd_erratum(c, amd_erratum_1054))
++		msr_set_bit(MSR_K7_HWCR, MSR_K7_HWCR_IRPERF_EN_BIT);
+ }
+ 
+ #ifdef CONFIG_X86_32
+@@ -1099,6 +1109,10 @@ static const int amd_erratum_400[] =
+ static const int amd_erratum_383[] =
+ 	AMD_OSVW_ERRATUM(3, AMD_MODEL_RANGE(0x10, 0, 0, 0xff, 0xf));
+ 
++/* #1054: Instructions Retired Performance Counter May Be Inaccurate */
++static const int amd_erratum_1054[] =
++	AMD_OSVW_ERRATUM(0, AMD_MODEL_RANGE(0x17, 0, 0, 0x2f, 0xf));
++
+ 
+ static bool cpu_has_amd_erratum(struct cpuinfo_x86 *cpu, const int *erratum)
+ {
+
