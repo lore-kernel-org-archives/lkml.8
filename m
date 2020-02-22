@@ -2,144 +2,140 @@ Return-Path: <SRS0=8jYG=4K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_2 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E67E4C35670
-	for <linux-kernel@archiver.kernel.org>; Sat, 22 Feb 2020 03:36:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B1F8CC35670
+	for <linux-kernel@archiver.kernel.org>; Sat, 22 Feb 2020 03:37:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B437F206DB
-	for <linux-kernel@archiver.kernel.org>; Sat, 22 Feb 2020 03:36:10 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="AmrhPy7R"
+	by mail.kernel.org (Postfix) with ESMTP id 8F3F620679
+	for <linux-kernel@archiver.kernel.org>; Sat, 22 Feb 2020 03:37:21 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727938AbgBVDgJ (ORCPT
+        id S1728031AbgBVDhU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Feb 2020 22:36:09 -0500
-Received: from mail-pl1-f194.google.com ([209.85.214.194]:40787 "EHLO
-        mail-pl1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727186AbgBVDgJ (ORCPT
+        Fri, 21 Feb 2020 22:37:20 -0500
+Received: from relay7-d.mail.gandi.net ([217.70.183.200]:45237 "EHLO
+        relay7-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726387AbgBVDhU (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Feb 2020 22:36:09 -0500
-Received: by mail-pl1-f194.google.com with SMTP id y1so1694737plp.7
-        for <linux-kernel@vger.kernel.org>; Fri, 21 Feb 2020 19:36:09 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=Dy4w/JtP1JAdelu+LxOrdV8M+iFt3K5B73WlLdHiOa4=;
-        b=AmrhPy7RumaWH6FOFHW3GNC6kY68F1410q008OJPuXEzc8b4LAhybx6uLh6Twwz4mp
-         TPPbGhdCnnTCDMNdemay7kGwoVq3yb/Lm2y5mAr3HCih8z3Y5MBd4E5dtlFZsluckQvO
-         H7sBTTErYEOs+yTcyLb9t1sxLI8PugM5PtZrI=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=Dy4w/JtP1JAdelu+LxOrdV8M+iFt3K5B73WlLdHiOa4=;
-        b=Zztg55BcUcAHf6z1JBX4kVSXglrPfin88qJOoXXQF6u519zI12bBMcVUmsGUIOz7X/
-         RHkZzint/9CcBan5c95oLdodMdNKjPHfZLqqiPkpdZCJLVdrQfrP1PviJ0vY9vVy+r68
-         EnvCvyCdxyIfgN88fIJCXTCdFk6mscwlcQZ9BJJx/tPEnkhxuUrzf8n08NuGwq2/M/bf
-         q/3a0PE7R9GQp81juicus9cz/XlF52UZVzmDXsFpRwqOoV6NAsSzbCArxel+m0mb86Ux
-         tGtxEmCAish0XlCD3/7sbKr4iLs/ABATDp6QDhl5Mk2lSzUzdJqmQdM9kxcJLpYP8NE7
-         sZhw==
-X-Gm-Message-State: APjAAAWS0bJOBBslxXWT4JeLmg/RKGwWd58+hdegqbJ4LO7LM6FO1XDN
-        b1aplECjlFcqEr1AVztoEygL4A==
-X-Google-Smtp-Source: APXvYqzjTBw/bhvUIWQPCmbF9AleRhd6Oh8HsREouo4o8p5KTXx04i33eeEUh7oMqMk24ma41xQegQ==
-X-Received: by 2002:a17:902:be0e:: with SMTP id r14mr39370446pls.33.1582342568584;
-        Fri, 21 Feb 2020 19:36:08 -0800 (PST)
-Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id dw10sm3908095pjb.11.2020.02.21.19.36.06
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 21 Feb 2020 19:36:07 -0800 (PST)
-Date:   Fri, 21 Feb 2020 19:36:06 -0800
-From:   Kees Cook <keescook@chromium.org>
-To:     Casey Schaufler <casey@schaufler-ca.com>
-Cc:     KP Singh <kpsingh@chromium.org>,
-        Linux Security Module list 
-        <linux-security-module@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>, bpf <bpf@vger.kernel.org>,
-        James Morris <jmorris@namei.org>
-Subject: Re: [PATCH bpf-next v4 0/8] MAC and Audit policy using eBPF (KRSI)
-Message-ID: <202002211909.10D57A125@keescook>
-References: <20200220175250.10795-1-kpsingh@chromium.org>
- <85e89b0c-5f2c-a4b1-17d3-47cc3bdab38b@schaufler-ca.com>
- <20200221194149.GA9207@chromium.org>
- <8a2a2d59-ec4b-80d1-2710-c2ead588e638@schaufler-ca.com>
- <202002211617.28EAC6826@keescook>
- <7fd415e0-35c8-e30e-e4b8-af0ba286f628@schaufler-ca.com>
+        Fri, 21 Feb 2020 22:37:20 -0500
+X-Originating-IP: 185.189.113.83
+Received: from orivej.orivej.org (unknown [185.189.113.83])
+        (Authenticated sender: orivej@orivej.org)
+        by relay7-d.mail.gandi.net (Postfix) with ESMTPSA id CDD4D20004;
+        Sat, 22 Feb 2020 03:37:15 +0000 (UTC)
+Date:   Sat, 22 Feb 2020 03:37:09 +0000
+From:   Orivej Desh <c@orivej.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     linux-spdx@vger.kernel.org, Thomas Gleixner <tglx@linutronix.de>
+Subject: Confusing Usage-Guide in LICENSES/exceptions/Linux-syscall-note
+Message-ID: <20200222023147.3cc31b90@orivej.orivej.org>
+X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <7fd415e0-35c8-e30e-e4b8-af0ba286f628@schaufler-ca.com>
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Feb 21, 2020 at 05:04:38PM -0800, Casey Schaufler wrote:
-> On 2/21/2020 4:22 PM, Kees Cook wrote:
-> > I really like this approach: it actually _simplifies_ the LSM piece in
-> > that there is no need to keep the union and the hook lists in sync any
-> > more: they're defined once now. (There were already 2 lists, and this
-> > collapses the list into 1 place for all 3 users.) It's very visible in
-> > the diffstat too (~300 lines removed):
-> 
-> Erk. Too many smart people like this. I still don't, but it's possible
-> that I could learn to.
+For the reference, here is the Linux syscall note:
 
-Well, I admit that I am, perhaps, overly infatuatied with "fancy" macros,
-but in cases like this where we're operating on a list of stuff and doing
-the same thing over and over but with different elements, I've found
-this is actually much nicer way to do it. (E.g. I did something like
-this in drivers/misc/lkdtm/core.c to avoid endless typing, and Mimi did
-something similar in include/linux/fs.h for keeping kernel_read_file_id
-and kernel_read_file_str automatically in sync.) KP's macros are more
-extensive, but I think it's a clever to avoid going crazy as LSM hooks
-evolve.
+     NOTE! This copyright does *not* cover user programs that use kernel
+     services by normal system calls - this is merely considered normal use
+     of the kernel, and does *not* fall under the heading of "derived work".
 
-> > Also, there is no need to worry about divergence: the BPF will always
-> > track the exposed LSM. Backward compat is (AIUI) explicitly a
-> > non-feature.
-> 
-> As written you're correct, it can't diverge. My concern is about
-> what happens when someone decides that they want the BPF and hook
-> to be different. I fear there will be a hideous solution.
+When Linux-syscall-note was split from the COPYING file [1] [2], it
+added a Usage-Guide section that says that "This exception" marks
+"user space API (uapi) header files so they can be included into non
+GPL compliant user space application code". However, the License-Text
+extracted from the COPYING does not say anything about including
+headers; instead it says that programs that make system calls to the
+kernel are not considered derived from the kernel.
 
-This is related to some of the discussion at the last Maintainer's
-Summit and tracepoints: i.e. the exposure of what is basically kernel
-internals to a userspace system. The conclusion there (which, I think,
-has been extended strongly into BPF) is that things that produce BPF are
-accepted to be strongly tied to kernel version, so if a hook changes, so
-much the userspace side. This appears to be proven out in the existing
-BPF world, which gives me some evidence that this claim (close tie to
-kernel version) isn't an empty promise.
+I think that Linus shares the view expressed by Stallman [3]:
 
-> > I don't see why anything here is "harmful"?
-> 
-> Injecting large chucks of code via an #include does nothing
-> for readability. I've seen it fail disastrously many times,
-> usually after the original author has moved on and entrusted
-> the code to someone who missed some of the nuance.
+     Someone recently made the claim that including a header file
+     always makes a derivative work.
 
-I totally agree about wanting to avoid reduced readability. In this case,
-I actually think readability is improved since the macro "implementation"
-are right above each #include. And then looking at the resulting included
-header, all the metadata is visible in one place. But I agree: it is
-"unusual", but I think on the sum it's an improvement. (But I share some
-of the frustration of the kernel being filled with weird preprocessor
-insanity. I will never get back the weeks I spent on trying to improve
-the min/max macros.... *sob*)
+     That's not the FSF's view. Our view is that just using structure
+     definitions, typedefs, enumeration constants, macros with simple
+     bodies, etc., is NOT enough to make a derivative work. It would
+     take a substantial amount of code (coming from inline functions
+     or macros with substantial bodies) to do that.
 
-> I'll drop objection to this bit, but still object to making
-> BPF special in the infrastructure. It doesn't need to be and
-> it is exactly the kind of additional complexity we need to
-> avoid.
+and wrote the syscall note as something to be added on top of this
+view, while Thomas Gleixner took the note as a relaxation of GPL that
+allows the use of the headers in non-GPL programs when he wrote the
+Usage-Guide and Documentation/process/license-rules.rst that says:
 
-You mean 3/8's RUN_BPF_LSM_*_PROGS() additions to the call_*_hook()s?
+     The User-space API (UAPI) header files, which describe the
+     interface of user-space programs to the kernel are a special
+     case. According to the note in the kernel COPYING file, the
+     syscall interface is a clear boundary, which does not extend the
+     GPL requirements to any software which uses it to communicate
+     with the kernel. Because the UAPI headers must be includable into
+     any source files which create an executable running on the Linux
+     kernel, the exception must be documented by a special license
+     expression.
 
-I'll go comment on that thread directly instead of splitting the
-discussion. :)
+I think that the lawyers should review whether the syscall note grants
+anything not already granted by GPL-2.0. If it unambiguously does not
+than the note could be deleted, overwise the following mistakes should
+be corrected:
 
--- 
-Kees Cook
+1. Since the note declares user programs to not be considered derived
+   from the running kernel, it applies to the kernel as a whole. It
+   does not make sense to restrict Linux-syscall-note to UAPI headers
+   only (in their SPDX-License-Identifier) and not to apply it to the
+   whole kernel. "WITH Linux-syscall-note" should be deleted from all
+   sources; the link to the note from the root COPYING is enough.
+
+2. Linux-syscall-note should be cleared from these parts of the old
+   COPYING unrelated to the note:
+
+      Also note that the GPL below is copyrighted by the Free Software
+      Foundation, but the instance of code that it refers to (the Linux
+      kernel) is copyrighted by me and others who actually wrote it.
+
+      Also note that the only valid version of the GPL as far as the kernel
+      is concerned is _this_ particular version of the license (ie v2, not
+      v2.2 or v3.x or whatever), unless explicitly otherwise stated.
+
+                             Linus Torvalds
+
+   Note that there is no GPL text below.
+
+3. Linux-syscall-note Usage-Guide could be deleted (does a three line
+   note need a guide?), or it may say something like this:
+
+     This exception allows non-GPL programs to run on Linux.
+
+4. Documentation/process/license-rules.rst should be updated
+   accordingly. Something like the Stallman explanation of derived
+   works would be useful.
+
+5. SPDX license list maintainers should be notified to update [5]. Its
+   current Note about the exception is unclear and mistaken:
+
+     This note is used with the Linux kernel to clarify how user space
+     API files should be treated.
+
+The people seem easily confused by the Usage-Guide: they believe that
+the syscall exception does what it does not (allowing uapi includes in
+user programs), and do not understand what it does (allowing making
+system calls). Please correct it!
+
+[1] https://lore.kernel.org/patchwork/patch/851955/
+[2] https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/?id=bf02d491237eea10290bd379bf7fc8c37ac6c3b4
+[3] http://lkml.iu.edu/hypermail/linux/kernel/0301.1/0362.html
+[4] https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/Documentation/process/license-rules.rst?id=aa19a176df95d6e49295d6ff77f7967224c71761
+[5] https://spdx.org/licenses/Linux-syscall-note.html
+
+--
+
+This is my second attempt to reach @vger, as my message from @gmx.fr seems to
+have been dropped.
+
+Please CC me in response.
