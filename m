@@ -2,212 +2,147 @@ Return-Path: <SRS0=8jYG=4K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 66889C35670
-	for <linux-kernel@archiver.kernel.org>; Sat, 22 Feb 2020 01:49:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9CA37C35669
+	for <linux-kernel@archiver.kernel.org>; Sat, 22 Feb 2020 01:53:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 31B0220722
-	for <linux-kernel@archiver.kernel.org>; Sat, 22 Feb 2020 01:49:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5F5EB20656
+	for <linux-kernel@archiver.kernel.org>; Sat, 22 Feb 2020 01:53:24 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="YxwOEI3a"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="mPktKWlv"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727973AbgBVBtw (ORCPT
+        id S1727894AbgBVBxX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Feb 2020 20:49:52 -0500
-Received: from mail-oi1-f194.google.com ([209.85.167.194]:39535 "EHLO
-        mail-oi1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726842AbgBVBtv (ORCPT
+        Fri, 21 Feb 2020 20:53:23 -0500
+Received: from mail-pj1-f66.google.com ([209.85.216.66]:36637 "EHLO
+        mail-pj1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726842AbgBVBxW (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Feb 2020 20:49:51 -0500
-Received: by mail-oi1-f194.google.com with SMTP id 18so600804oij.6
-        for <linux-kernel@vger.kernel.org>; Fri, 21 Feb 2020 17:49:49 -0800 (PST)
+        Fri, 21 Feb 2020 20:53:22 -0500
+Received: by mail-pj1-f66.google.com with SMTP id gv17so1573179pjb.1
+        for <linux-kernel@vger.kernel.org>; Fri, 21 Feb 2020 17:53:22 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=9RB5FaQbzQgbIL5nfWOlaYI9euOnM0n/xrO01cC3y4A=;
-        b=YxwOEI3aPWiqbDzeypVY5RciIfiOmAgVFyUfidQdPNEy5hAeU3MlnuS2lvPsg8ZQQt
-         32TeqEWSjAXgXzGwqYOhopacZHXWMkyaIr7PG4raOs9Igi6tjJMPuZJHtP9+e5bHTvZr
-         akNuht7bh9C+DsU3ARsOhZR/zPYpTHAzFteAqblFeEciTjkN9zn/tTMDoZMOZXomimyN
-         y2judLthdCsztfodgjm5kPbweqH3d0A9dNEFIFUYS5miqGt/oF4srFdf5FopXqPk6uQU
-         fKjvOoMg2Yfzhqg0Uy/In1FqidDB6nO5RcNxOyS5HjUPGk1sN2QehJkSQ7oz6VO9nbpc
-         WS2g==
+        d=linaro.org; s=google;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-transfer-encoding:content-language;
+        bh=t2WN9Y6i+1sMeMmerTg/sIx0hN9tYd17GbQLJc7KWJ4=;
+        b=mPktKWlv91J8zSVtP4T+e9BPp7EcbGwMkei5J/fBl3dBCAU7bzR0Gh9Hrdv25yYi9+
+         KU5dPtNWsjM864SJ4zW/iT/MwY+dXe6EBn0QPYv5gaUfd537Ik6FOLz1nio5+5SPCACT
+         H2zaNJsEkotdbxpnuzIDFodkNIKHUn62v1WuYFB7Flw6y4uugwe6ciVDBaAg/3DQTr7D
+         yOYIWYs2ParfrKfXw8THe7ekRhRjoaUOIX3j0RtXRMw4/Rq89Y6QFmzWMmwrbXk9G6ZW
+         YkPaP40q2o4cISWp+2fU2CXkLpsLcTJ/q7B27GoHMbSVvdbUrMMlVXIb/VXBqn2foHKb
+         ww8Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=9RB5FaQbzQgbIL5nfWOlaYI9euOnM0n/xrO01cC3y4A=;
-        b=K8hRhhNn0fV0nnwd0ecPZ+5Fg8ncFJCG9E/ZG0Ia13auft15Z0GQI5bXOV9uyqwOSS
-         0ew8DQzewqvOVK/7OzOAI8j0zOaKxOtlcHLw3EQxlwyBbTzyRjvTZ1MgbMDsuXckfL+d
-         zVz1XrJNk+rGDL262YL+LVwWAUGK4TxN8Y9/zWts7yW2Q84Y+w9jyHcsdfNJtQ2aYFxp
-         bRntqkWeH/GwCzwLBKOfa2b7aZadA6MxKuVviPxVQNgTlGnYDSSXW+Vy6FD2hQ1Y94WW
-         U94tbpDgtMTrzz8jeLmqqZOGzMSarfV8XvV8ek7CKTxzf0HPL0daAdRnnjrQqtIB7VOA
-         h/GA==
-X-Gm-Message-State: APjAAAX6PUFEjupe2VUWCASrDfp7t6KJRe2iovjRV7KvNm0uanHB4/ZH
-        pM4bdu6fQ2Gd0yc1eSpbZP95p2Qzfdthb4qK7DE4jw==
-X-Google-Smtp-Source: APXvYqw5MkBVBvtCzvavj3S5PGsEm5xQdu1+qp/GKgHgauqtCmnPRt4yxKhpuy6RL+FIJanxP8jq+BEk6+fHVbZu2rg=
-X-Received: by 2002:aca:4183:: with SMTP id o125mr4361233oia.125.1582336189111;
- Fri, 21 Feb 2020 17:49:49 -0800 (PST)
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-transfer-encoding
+         :content-language;
+        bh=t2WN9Y6i+1sMeMmerTg/sIx0hN9tYd17GbQLJc7KWJ4=;
+        b=VHnkA/WGfm6oQOAgnv6BM8MreDDM3cPyAEvr/AQO6Kfgv5IRf7VUqoqOgD/FUtZxfK
+         Lyno9pOuFdBd5nte7OD4NXMiqCzV19YTbzvnseZu61d5diG0g27PRnbAsWeaEElTWAoq
+         7LAIZbAuZbGxqfqa3jR5KizmIiOI15YT1nFMYgw7cmUvweH65uuVCpeTGGUHFJASYVp+
+         0rAZYzSSQIPb+K7rmAjuA9vNJWAyLoZQpoIVay4hBEbDdURvEM7pq5jhRZfKqSEpbPBO
+         3ShR6w8Mnlh/uorsP07FNJeoPhmVh9SAY6uK72YlVGdcaJdsssWFMQgvEjmpoShE+PSs
+         HmNQ==
+X-Gm-Message-State: APjAAAUvtwBitTvYMMF4RtQyeKy0w7oM35scNcdXqq774SMyKSUV2cHk
+        zFKZpSEGFUoRxt7ZZpCI7FqbvQ==
+X-Google-Smtp-Source: APXvYqzHrVqrmX9+Lk9w9FP91YPzkYcV0jkjab6rvQK3U4g9KuosSje8dbq9YgFdMYQh5L1aPjY6jQ==
+X-Received: by 2002:a17:90a:cf08:: with SMTP id h8mr6352327pju.81.1582336401930;
+        Fri, 21 Feb 2020 17:53:21 -0800 (PST)
+Received: from ?IPv6:240e:362:47d:ee00:e13e:da52:2837:6aff? ([240e:362:47d:ee00:e13e:da52:2837:6aff])
+        by smtp.gmail.com with ESMTPSA id 78sm1436422pge.58.2020.02.21.17.52.52
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Fri, 21 Feb 2020 17:53:21 -0800 (PST)
+Subject: Re: [PATCH v13 0/4] Add uacce module for Accelerator
+To:     Herbert Xu <herbert@gondor.apana.org.au>
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Arnd Bergmann <arnd@arndb.de>, jonathan.cameron@huawei.com,
+        dave.jiang@intel.com, grant.likely@arm.com,
+        jean-philippe <jean-philippe@linaro.org>,
+        Jerome Glisse <jglisse@redhat.com>,
+        ilias.apalodimas@linaro.org, francois.ozog@linaro.org,
+        kenneth-lee-2012@foxmail.com, Wangzhou <wangzhou1@hisilicon.com>,
+        "haojian . zhuang" <haojian.zhuang@linaro.org>,
+        guodong.xu@linaro.org, linux-accelerators@lists.ozlabs.org,
+        linux-kernel@vger.kernel.org, linux-crypto@vger.kernel.org,
+        iommu@lists.linux-foundation.org
+References: <1581407665-13504-1-git-send-email-zhangfei.gao@linaro.org>
+ <20200222014148.GC19028@gondor.apana.org.au>
+From:   zhangfei <zhangfei.gao@linaro.org>
+Message-ID: <9048453c-530a-9063-b266-faa8d434015b@linaro.org>
+Date:   Sat, 22 Feb 2020 09:52:41 +0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-References: <20200221195919.186576-1-shakeelb@google.com> <20200222011046.GB459391@carbon.DHCP.thefacebook.com>
-In-Reply-To: <20200222011046.GB459391@carbon.DHCP.thefacebook.com>
-From:   Shakeel Butt <shakeelb@google.com>
-Date:   Fri, 21 Feb 2020 17:49:37 -0800
-Message-ID: <CALvZod5pAv=u8L2Tgk0hDY7XAiiF2dvjC1omQ5BSfzFu_2zSXA@mail.gmail.com>
-Subject: Re: [PATCH] memcg: css_tryget_online cleanups
-To:     Roman Gushchin <guro@fb.com>
-Cc:     Johannes Weiner <hannes@cmpxchg.org>,
-        Michal Hocko <mhocko@kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Linux MM <linux-mm@kvack.org>,
-        Cgroups <cgroups@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20200222014148.GC19028@gondor.apana.org.au>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8bit
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Feb 21, 2020 at 5:10 PM Roman Gushchin <guro@fb.com> wrote:
->
-> On Fri, Feb 21, 2020 at 11:59:19AM -0800, Shakeel Butt wrote:
-> > Currently multiple locations in memcg code, css_tryget_online() is being
-> > used. However it doesn't matter whether the cgroup is online for the
-> > callers. Online used to matter when we had reparenting on offlining and
-> > we needed a way to prevent new ones from showing up.
-> >
-> > The failure case for couple of these css_tryget_online usage is to
-> > fallback to root_mem_cgroup which kind of make bypassing the memcg
-> > limits possible for some workloads. For example creating an inotify
-> > group in a subcontainer and then deleting that container after moving the
-> > process to a different container will make all the event objects
-> > allocated for that group to the root_mem_cgroup. So, using
-> > css_tryget_online() is dangerous for such cases.
-> >
-> > Two locations still use the online version. The swapin of offlined
-> > memcg's pages and the memcg kmem cache creation. The kmem cache indeed
-> > needs the online version as the kernel does the reparenting of memcg
-> > kmem caches. For the swapin case, it has been left for later as the
-> > fallback is not really that concerning.
-> >
-> > Signed-off-by: Shakeel Butt <shakeelb@google.com>
->
-> Hello, Shakeel!
->
-> > ---
-> >  mm/memcontrol.c | 14 +++++++++-----
-> >  1 file changed, 9 insertions(+), 5 deletions(-)
-> >
-> > diff --git a/mm/memcontrol.c b/mm/memcontrol.c
-> > index 63bb6a2aab81..75fa8123909e 100644
-> > --- a/mm/memcontrol.c
-> > +++ b/mm/memcontrol.c
-> > @@ -656,7 +656,7 @@ __mem_cgroup_largest_soft_limit_node(struct mem_cgroup_tree_per_node *mctz)
-> >        */
-> >       __mem_cgroup_remove_exceeded(mz, mctz);
-> >       if (!soft_limit_excess(mz->memcg) ||
-> > -         !css_tryget_online(&mz->memcg->css))
-> > +         !css_tryget(&mz->memcg->css))
->
-> Looks good.
->
-> >               goto retry;
-> >  done:
-> >       return mz;
-> > @@ -962,7 +962,8 @@ struct mem_cgroup *get_mem_cgroup_from_page(struct page *page)
-> >               return NULL;
-> >
-> >       rcu_read_lock();
-> > -     if (!memcg || !css_tryget_online(&memcg->css))
-> > +     /* Page should not get uncharged and freed memcg under us. */
-> > +     if (!memcg || WARN_ON(!css_tryget(&memcg->css)))
->
-> I'm slightly worried about this WARN_ON().
-> As I understand the idea is that the caller must own the page and make
-> sure that page->memcg remains intact.
 
-Yes you are correct.
 
-> Do we really need this?
+On 2020/2/22 上午9:41, Herbert Xu wrote:
+> On Tue, Feb 11, 2020 at 03:54:21PM +0800, Zhangfei Gao wrote:
+>> Uacce (Unified/User-space-access-intended Accelerator Framework) targets to
+>> provide Shared Virtual Addressing (SVA) between accelerators and processes.
+>> So accelerator can access any data structure of the main cpu.
+>> This differs from the data sharing between cpu and io device, which share
+>> data content rather than address.
+>> Because of unified address, hardware and user space of process can share
+>> the same virtual address in the communication.
+>>
+>> Uacce is intended to be used with Jean Philippe Brucker's SVA
+>> patchset[1], which enables IO side page fault and PASID support.
+>> We have keep verifying with Jean's sva patchset [2]
+>> We also keep verifying with Eric's SMMUv3 Nested Stage patches [3]
+>>
+>> This series and related zip & qm driver
+>> https://github.com/Linaro/linux-kernel-warpdrive/tree/v5.6-rc1-uacce-v13
+>>
+>> The library and user application:
+>> https://github.com/Linaro/warpdrive/tree/wdprd-upstream-v13
+>>
+>>
+>> Kenneth Lee (2):
+>>    uacce: Add documents for uacce
+>>    uacce: add uacce driver
+>>
+>> Zhangfei Gao (2):
+>>    crypto: hisilicon - Remove module_param uacce_mode
+>>    crypto: hisilicon - register zip engine to uacce
+>>
+>>   Documentation/ABI/testing/sysfs-driver-uacce |  39 ++
+>>   Documentation/misc-devices/uacce.rst         | 176 ++++++
+>>   drivers/crypto/hisilicon/qm.c                | 239 ++++++-
+>>   drivers/crypto/hisilicon/qm.h                |  11 +
+>>   drivers/crypto/hisilicon/zip/zip_main.c      |  49 +-
+>>   drivers/misc/Kconfig                         |   1 +
+>>   drivers/misc/Makefile                        |   1 +
+>>   drivers/misc/uacce/Kconfig                   |  13 +
+>>   drivers/misc/uacce/Makefile                  |   2 +
+>>   drivers/misc/uacce/uacce.c                   | 617 +++++++++++++++++++
+>>   include/linux/uacce.h                        | 161 +++++
+>>   include/uapi/misc/uacce/hisi_qm.h            |  23 +
+>>   include/uapi/misc/uacce/uacce.h              |  38 ++
+>>   13 files changed, 1337 insertions(+), 33 deletions(-)
+>>   create mode 100644 Documentation/ABI/testing/sysfs-driver-uacce
+>>   create mode 100644 Documentation/misc-devices/uacce.rst
+>>   create mode 100644 drivers/misc/uacce/Kconfig
+>>   create mode 100644 drivers/misc/uacce/Makefile
+>>   create mode 100644 drivers/misc/uacce/uacce.c
+>>   create mode 100644 include/linux/uacce.h
+>>   create mode 100644 include/uapi/misc/uacce/hisi_qm.h
+>>   create mode 100644 include/uapi/misc/uacce/uacce.h
+> All applied.  Thanks.
+That's Great,
+Thanks Herbert for the great help.
 
-There are no current such users, maybe just the warning in the comment
-is enough and use css_get(). I don't have any strong opinion. I will
-at least convert the warning to once and wait for comments from
-others.
 
->
-> Also, I'd go with WARN_ON_ONCE() to limit the dmesg flow in the case
-> if something will go wrong.
->
-> >               memcg = root_mem_cgroup;
-> >       rcu_read_unlock();
-> >       return memcg;
-> > @@ -975,10 +976,13 @@ EXPORT_SYMBOL(get_mem_cgroup_from_page);
-> >  static __always_inline struct mem_cgroup *get_mem_cgroup_from_current(void)
-> >  {
-> >       if (unlikely(current->active_memcg)) {
-> > -             struct mem_cgroup *memcg = root_mem_cgroup;
-> > +             struct mem_cgroup *memcg;
-> >
-> >               rcu_read_lock();
-> > -             if (css_tryget_online(&current->active_memcg->css))
-> > +             /* current->active_memcg must hold a ref. */
->
-> Hm, does it?
-> memalloc_use_memcg() isn't touching the memcg's reference counter.
-> And if it does hold a reference, why can't we just do css_get()?
-
-The callers of the memalloc_use_memcg() should already have the refcnt
-of the memcg elevated. I should add that to the comment description of
-memalloc_use_memcg().
-
->
-> > +             if (WARN_ON(!css_tryget(&current->active_memcg->css)))
-> > +                     memcg = root_mem_cgroup;
->
-> Btw, if css_tryget() fails here, what does it mean?
-> I'd s/WARN_ON/WARN_ON_ONCE too.
->
-
-If css_tryget() fails, it means someone is using memalloc_use_memcg()
-without holding the reference to the memcg. Converting to once makes
-sense.
-
-> > +             else
-> >                       memcg = current->active_memcg;
-> >               rcu_read_unlock();
-> >               return memcg;
-> > @@ -6703,7 +6707,7 @@ void mem_cgroup_sk_alloc(struct sock *sk)
-> >               goto out;
-> >       if (!cgroup_subsys_on_dfl(memory_cgrp_subsys) && !memcg->tcpmem_active)
-> >               goto out;
-> > -     if (css_tryget_online(&memcg->css))
-> > +     if (css_tryget(&memcg->css))
->
-> So it can be offline, right? Makes sense.
->
-
-Actually we got the memcg from the current just few lines above within
-rcu lock. memcg can not go offline here, right?
-
-> >               sk->sk_memcg = memcg;
-> >  out:
-> >       rcu_read_unlock();
-> > --
-> > 2.25.0.265.gbab2e86ba0-goog
-> >
->
-> Overall I have to admit it all is quite tricky. I had a patchset doing
-> a similar cleanup (but not only in the mm code), but dropped it after
-> Tejun showed me some edge cases, when it would cause a regression.
->
-> So I really think it's a valuable work, but we need to be careful here.
->
-
-Totally agreed.
-
-Shakeel
