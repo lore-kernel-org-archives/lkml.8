@@ -2,89 +2,248 @@ Return-Path: <SRS0=8jYG=4K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_RHS_DOB,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D1559C35671
-	for <linux-kernel@archiver.kernel.org>; Sat, 22 Feb 2020 11:34:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DB0A1C35671
+	for <linux-kernel@archiver.kernel.org>; Sat, 22 Feb 2020 11:38:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AE3A3206EF
-	for <linux-kernel@archiver.kernel.org>; Sat, 22 Feb 2020 11:34:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9DB702071E
+	for <linux-kernel@archiver.kernel.org>; Sat, 22 Feb 2020 11:38:50 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=walle.cc header.i=@walle.cc header.b="jjxb1gxl"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727242AbgBVLeC (ORCPT
+        id S1727215AbgBVLis (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 22 Feb 2020 06:34:02 -0500
-Received: from sauhun.de ([88.99.104.3]:53062 "EHLO pokefinder.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726821AbgBVLeB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 22 Feb 2020 06:34:01 -0500
-Received: from localhost (p5486C6B7.dip0.t-ipconnect.de [84.134.198.183])
-        by pokefinder.org (Postfix) with ESMTPSA id 4BB2A2C07F9;
-        Sat, 22 Feb 2020 12:33:59 +0100 (CET)
-Date:   Sat, 22 Feb 2020 12:33:58 +0100
-From:   Wolfram Sang <wsa@the-dreams.de>
-To:     Codrin Ciubotariu <codrin.ciubotariu@microchip.com>
-Cc:     linux-i2c@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        kamel.bouhara@bootlin.com, Nicolas.Ferre@microchip.com,
-        alexandre.belloni@bootlin.com, Ludovic.Desroches@microchip.com,
-        robh@kernel.org, peda@axentia.se, linux@armlinux.org.uk
-Subject: Re: [PATCH v3 2/6] i2c: at91: implement i2c bus recovery
-Message-ID: <20200222113358.GB1716@kunai>
-References: <20200115115422.17097-1-codrin.ciubotariu@microchip.com>
- <20200115115422.17097-3-codrin.ciubotariu@microchip.com>
+        Sat, 22 Feb 2020 06:38:48 -0500
+Received: from ssl.serverraum.org ([176.9.125.105]:60237 "EHLO
+        ssl.serverraum.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726763AbgBVLis (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 22 Feb 2020 06:38:48 -0500
+Received: from apollo.fritz.box (unknown [IPv6:2a02:810c:c200:2e91:6257:18ff:fec4:ca34])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-384) server-signature RSA-PSS (2048 bits) server-digest SHA256)
+        (No client certificate requested)
+        by ssl.serverraum.org (Postfix) with ESMTPSA id EF21D22F43;
+        Sat, 22 Feb 2020 12:38:44 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=walle.cc; s=mail2016061301;
+        t=1582371525;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=pYMuUm/RjiwigJasXlwzaROJLDQFtW/xLZX6dbkkEw8=;
+        b=jjxb1gxl+A/CKSJ72cuwnqNBf6ArHNnKzSPD9x7iZC4F08A4m8eVioHSlnMGJGBlgeyiGV
+        cweNejZu9JJDDdlC7tJUspPxkW+s5Z8g+gzKdPpxox7KEoEIJ34dH68J/lPMjX3w/Nro49
+        QTqgTnoVhuPdn6I/YjUnutYZSa30wIQ=
+From:   Michael Walle <michael@walle.cc>
+To:     olteanv@gmail.com
+Cc:     andrew@lunn.ch, davem@davemloft.net, devicetree@vger.kernel.org,
+        f.fainelli@gmail.com, linux-kernel@vger.kernel.org,
+        mark.rutland@arm.com, netdev@vger.kernel.org, robh+dt@kernel.org,
+        shawnguo@kernel.org, vivien.didelot@gmail.com,
+        Michael Walle <michael@walle.cc>
+Subject: Re: [PATCH v2 net-next/devicetree 4/5] arm64: dts: fsl: ls1028a: add node for Felix switch
+Date:   Sat, 22 Feb 2020 12:38:29 +0100
+Message-Id: <20200222113829.32431-1-michael@walle.cc>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20200219151259.14273-5-olteanv@gmail.com>
+References: <20200219151259.14273-5-olteanv@gmail.com>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="+g7M9IMkV8truYOl"
-Content-Disposition: inline
-In-Reply-To: <20200115115422.17097-3-codrin.ciubotariu@microchip.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Transfer-Encoding: 8bit
+X-Spamd-Bar: ++++
+X-Rspamd-Server: web
+X-Rspamd-Queue-Id: EF21D22F43
+X-Spamd-Result: default: False [4.90 / 15.00];
+         FROM_HAS_DN(0.00)[];
+         TO_DN_SOME(0.00)[];
+         R_MISSING_CHARSET(2.50)[];
+         FREEMAIL_ENVRCPT(0.00)[gmail.com];
+         TAGGED_RCPT(0.00)[dt];
+         MIME_GOOD(-0.10)[text/plain];
+         BROKEN_CONTENT_TYPE(1.50)[];
+         TO_MATCH_ENVRCPT_ALL(0.00)[];
+         NEURAL_SPAM(0.00)[0.629];
+         DKIM_SIGNED(0.00)[];
+         DBL_PROHIBIT(0.00)[0.0.0.4:email,0.0.0.2:email,0.0.0.0:email,0.0.0.3:email,0.0.0.5:email,0.0.0.1:email];
+         RCPT_COUNT_TWELVE(0.00)[12];
+         MID_CONTAINS_FROM(1.00)[];
+         FREEMAIL_TO(0.00)[gmail.com];
+         RCVD_COUNT_ZERO(0.00)[0];
+         FROM_EQ_ENVFROM(0.00)[];
+         MIME_TRACE(0.00)[0:+];
+         ASN(0.00)[asn:31334, ipnet:2a02:810c::/31, country:DE];
+         FREEMAIL_CC(0.00)[lunn.ch,davemloft.net,vger.kernel.org,gmail.com,arm.com,kernel.org,walle.cc]
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Hi,
 
---+g7M9IMkV8truYOl
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+> Add the switch device node, available on PF5, so that the switch port
+> sub-nodes (net devices) can be linked to corresponding board specific
+> phy nodes (external ports) or have their link mode defined (internal
+> ports).
+> 
+> The switch device features 6 ports, 4 with external links and 2
+> internally facing to the LS1028A SoC and connected via fixed links to 2
+> internal ENETC Ethernet controller ports.
+> 
+> Add the corresponding ENETC host port device nodes, mapped to PF2 and
+> PF6 PCIe functions. Since the switch only supports tagging on one CPU
+> port, only one port pair (swp4, eno2) is enabled by default and the
+> other, lower speed, port pair is disabled to prevent the PCI core from
+> probing them. If enabled, swp5 will be a fixed-link slave port.
+> 
+> DSA tagging can also be moved from the swp4-eno2 2.5G port pair to the
+> 1G swp5-eno3 pair by changing the ethernet = <&enetc_port2> phandle to
+> <&enetc_port3> and moving it under port5, but in that case enetc_port2
+> should not be disabled, because it is the hardware owner of the Felix
+> PCS and disabling its memory would result in access faults in the Felix
+> DSA driver.
+> 
+> All ports are disabled by default, except one CPU port.
+> 
+> The switch's INTB interrupt line signals:
+> - PTP timestamp ready in timestamp FIFO
+> - TSN Frame Preemption
+> 
+> And don't forget to enable the 4MB BAR4 in the root complex ECAM space,
+> where the switch registers are mapped.
+> 
+> Signed-off-by: Claudiu Manoil <claudiu.manoil@nxp.com>
+> Signed-off-by: Alex Marginean <alexandru.marginean@nxp.com>
+> Signed-off-by: Yangbo Lu <yangbo.lu@nxp.com>
+> Signed-off-by: Vladimir Oltean <vladimir.oltean@nxp.com>
+> ---
+> Changes in v2:
+> Adapted phy-mode = "gmii" to phy-mode = "internal".
+> 
+>  .../arm64/boot/dts/freescale/fsl-ls1028a.dtsi | 84 ++++++++++++++++++-
+>  1 file changed, 83 insertions(+), 1 deletion(-)
+> 
+> diff --git a/arch/arm64/boot/dts/freescale/fsl-ls1028a.dtsi b/arch/arm64/boot/dts/freescale/fsl-ls1028a.dtsi
+> index dfead691e509..a6b9c6d1eb5e 100644
+> --- a/arch/arm64/boot/dts/freescale/fsl-ls1028a.dtsi
+> +++ b/arch/arm64/boot/dts/freescale/fsl-ls1028a.dtsi
+> @@ -700,7 +700,9 @@
+>  				  /* PF1: VF0-1 BAR0 - non-prefetchable memory */
+>  				  0x82000000 0x0 0x00000000  0x1 0xf8210000  0x0 0x020000
+>  				  /* PF1: VF0-1 BAR2 - prefetchable memory */
+> -				  0xc2000000 0x0 0x00000000  0x1 0xf8230000  0x0 0x020000>;
+> +				  0xc2000000 0x0 0x00000000  0x1 0xf8230000  0x0 0x020000
+> +				  /* BAR4 (PF5) - non-prefetchable memory */
+> +				  0x82000000 0x0 0x00000000  0x1 0xfc000000  0x0 0x400000>;
+>  
+>  			enetc_port0: ethernet@0,0 {
+>  				compatible = "fsl,enetc";
+> @@ -710,6 +712,18 @@
+>  				compatible = "fsl,enetc";
+>  				reg = <0x000100 0 0 0 0>;
+>  			};
+> +
+> +			enetc_port2: ethernet@0,2 {
+> +				compatible = "fsl,enetc";
+> +				reg = <0x000200 0 0 0 0>;
+> +				phy-mode = "gmii";
+Can we disable this port by default in this dtsi? As mentioned in the other
+mail, I'd prefer to have all ports disabled because it doesn't make sense
+to have this port while having all the external ports disabled.
 
-On Wed, Jan 15, 2020 at 01:54:18PM +0200, Codrin Ciubotariu wrote:
-> From: Kamel Bouhara <kamel.bouhara@bootlin.com>
->=20
-> Implement i2c bus recovery when slaves devices might hold SDA low.
-> In this case re-assign SCL/SDA to gpios and issue 9 dummy clock pulses
-> until the slave release SDA.
->=20
-> Signed-off-by: Kamel Bouhara <kamel.bouhara@bootlin.com>
-> Signed-off-by: Codrin Ciubotariu <codrin.ciubotariu@microchip.com>
+> +
+> +				fixed-link {
+> +					speed = <1000>;
+> +					full-duplex;
+> +				};
+> +			};
+> +
+>  			enetc_mdio_pf3: mdio@0,3 {
+>  				compatible = "fsl,enetc-mdio";
+>  				reg = <0x000300 0 0 0 0>;
+> @@ -722,6 +736,74 @@
+>  				clocks = <&clockgen 4 0>;
+>  				little-endian;
+>  			};
+> +
+> +			ethernet-switch@0,5 {
+> +				reg = <0x000500 0 0 0 0>;
+> +				/* IEP INT_B */
+> +				interrupts = <GIC_SPI 95 IRQ_TYPE_LEVEL_HIGH>;
+> +
+> +				ports {
+> +					#address-cells = <1>;
+> +					#size-cells = <0>;
+> +
+> +					/* external ports */
+> +					mscc_felix_port0: port@0 {
+> +						reg = <0>;
+> +						status = "disabled";
+> +					};
+> +
+> +					mscc_felix_port1: port@1 {
+> +						reg = <1>;
+> +						status = "disabled";
+> +					};
+> +
+> +					mscc_felix_port2: port@2 {
+> +						reg = <2>;
+> +						status = "disabled";
+> +					};
+> +
+> +					mscc_felix_port3: port@3 {
+> +						reg = <3>;
+> +						status = "disabled";
+> +					};
+> +
+> +					/* Internal port with DSA tagging */
+> +					mscc_felix_port4: port@4 {
+> +						reg = <4>;
+> +						phy-mode = "internal";
+> +						ethernet = <&enetc_port2>;
+Likewise, I'd prefer to have this disabled.
 
-Applied to for-next, thanks!
+> +
+> +						fixed-link {
+> +							speed = <2500>;
+> +							full-duplex;
+> +						};
+> +					};
+> +
+> +					/* Internal port without DSA tagging */
+> +					mscc_felix_port5: port@5 {
+> +						reg = <5>;
+> +						phy-mode = "internal";
+> +						status = "disabled";
+> +
+> +						fixed-link {
+> +							speed = <1000>;
+> +							full-duplex;
+> +						};
+> +					};
+> +				};
+> +			};
+> +
+> +			enetc_port3: ethernet@0,6 {
+> +				compatible = "fsl,enetc";
+> +				reg = <0x000600 0 0 0 0>;
+> +				status = "disabled";
+> +				phy-mode = "gmii";
+shouldn't the status be after the phy-mode property?
 
-The implementation is very similar to i2c-imx. Maybe we should move this
-mechanism into the core somewhen...
+-michael
 
-
---+g7M9IMkV8truYOl
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCgAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAl5REaYACgkQFA3kzBSg
-Kbb/5BAAjIRoPQE9LABWbJpndp9jLdUzU84jFgAC8Doa8diKtDq4FRlalY3b3N+D
-ciV1rCm+jDxHbvrtSkzoB4zzqVwoHbCYG2UqCDeb6kGQW+64oCn2PaRGETahlzTt
-t6xJGm/VCwYNoDOTlp6M27TWtP89PAIc2byd6YgejLdkPld5gfYatdWT5WIv4zci
-ayDRoh7drxaSKT3umNfixWaafLSLnrVP4ylTA+2FZ2mgp9luw6y6scnSj0Yyk0do
-elir7QNRItWLYJdtEI5oo2Jfm8wII5P0V3MMS9RWK3diOheswZBdJuX7mEMHXHLz
-7hqFRGpkW9U0/7kXfFaLBQWJFAANZeoNHVKg7MyA9rIbRwAqrngy6uVwZD1KPtxn
-DIYRKZotx/PNmOOaZEMGuwwU70vM9ff0b/ZOYQtYBTzwYDDirXO/ZGipUFLyfaIl
-sfvCQB6FNb8f8qQpOip20ecYjorUP4duRY2kK0ZTvfqJQTyQi7ziRPLVSB1ukNv+
-LG8jlj0RyWojDK/jl0lTUW4mbncWkqBMhWigd5nIJp5qAGRZLfCjKW+xhGos7CNc
-AJAYLMyGhVazIidpUhju9zqqsTMNXVLwbmwqXd76TmK4hhneqjJqN+uRndSiZNY8
-EfnrgyJ6mdYSBxh6MhBZ6fw/s1FplEMs1SR5aOMN1LzGdYIoQg0=
-=BEk4
------END PGP SIGNATURE-----
-
---+g7M9IMkV8truYOl--
+> +
+> +				fixed-link {
+> +					speed = <1000>;
+> +					full-duplex;
+> +				};
+> +			};
+>  		};
+>  	};
+>  
+> -- 
+> 2.17.1
