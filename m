@@ -4,45 +4,44 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EEED5C35666
-	for <linux-kernel@archiver.kernel.org>; Sat, 22 Feb 2020 19:04:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4EC38C35673
+	for <linux-kernel@archiver.kernel.org>; Sat, 22 Feb 2020 19:04:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C22A320702
-	for <linux-kernel@archiver.kernel.org>; Sat, 22 Feb 2020 19:04:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 288E7206EF
+	for <linux-kernel@archiver.kernel.org>; Sat, 22 Feb 2020 19:04:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582398295;
-	bh=ZqbO1fcS9HWOteOgaRlUyNeb3iSn+PG2ujIzwG6SWWM=;
+	s=default; t=1582398297;
+	bh=YiWf/FYt2l+Or/lobMbtOdv8wa//de5wWbhZINemizQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=DX80ZD8xd7RpKQ7eLn2K9yX9u1WfaS+pon8R/Ks7KJyJuemvn6f8UHsxN0llk+TZJ
-	 tAUYEX9fpwMS3eq2izrNBoFt8KUS6EA535EEHl3tFRPBHaVI3BJofdwCIssrZUEfIs
-	 /3KrlwUy56w0LOlsTWC3iI61MRIq0+TvbDqyjpsM=
+	b=stlUA6Nkjf79sA6n3GOo9upY2O3TLhci5InqRcpkYKHd9L6cBsOSDehhn1tlvvuDL
+	 SL4YZfqYq/bJkV0l1xEe0m6Pxde/w7tT6Y8lFtDvbBdnTVcsx0n3RzMoOagkbCjTdw
+	 Uxc0CWSqjNJ2tqX6wg5MIunqrde5ymotJZIRqMng=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726892AbgBVTEy (ORCPT
+        id S1727023AbgBVTEz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 22 Feb 2020 14:04:54 -0500
-Received: from conuserg-09.nifty.com ([210.131.2.76]:23008 "EHLO
+        Sat, 22 Feb 2020 14:04:55 -0500
+Received: from conuserg-09.nifty.com ([210.131.2.76]:23006 "EHLO
         conuserg-09.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726758AbgBVTEy (ORCPT
+        with ESMTP id S1726767AbgBVTEz (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 22 Feb 2020 14:04:54 -0500
-X-Greylist: delayed 11519 seconds by postgrey-1.27 at vger.kernel.org; Sat, 22 Feb 2020 14:04:53 EST
+        Sat, 22 Feb 2020 14:04:55 -0500
 Received: from grover.flets-west.jp (softbank126093102113.bbtec.net [126.93.102.113]) (authenticated)
-        by conuserg-09.nifty.com with ESMTP id 01MJ4cZ6012807;
-        Sun, 23 Feb 2020 04:04:40 +0900
-DKIM-Filter: OpenDKIM Filter v2.10.3 conuserg-09.nifty.com 01MJ4cZ6012807
+        by conuserg-09.nifty.com with ESMTP id 01MJ4cZ4012807;
+        Sun, 23 Feb 2020 04:04:39 +0900
+DKIM-Filter: OpenDKIM Filter v2.10.3 conuserg-09.nifty.com 01MJ4cZ4012807
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
-        s=dec2015msa; t=1582398281;
-        bh=bmT77VUANmQdBakUB1snAYo2YaYV2b/WXJDLs84Hovk=;
+        s=dec2015msa; t=1582398280;
+        bh=CKV2mLdhn4rZmWRUQWRtoBNfJibOoB2mxoSqdYrpxT8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=yBsvDE/CYqb/HNefyT+1ZKG3smJf90UvTH//vprBPxgqpAcpFMjIGZNXdWHO3jFHO
-         La5hBmQeGJ+LoM62Q6eqG1w+GUNOauaL4wPfmAVUxEjy7DsQFuhOUAKisNfq8UHBdi
-         Ypbw+bad/q8L1ccq7X7v3ZguMUV30JQO+ptaKmyO5cREQeI5ZZGavMbkaUDRpXhwio
-         fHGtozZ4+YBkhikIIuh+7dfUEhVdQB97Nrtzt5NJGYqJH1I1VrJB8XoX7PryiHFRIV
-         5m9kjWxSHHi7/CRjvHQP3kzNRe/H+1iwHL69/1VIOvv/OEndK/tX3XXVoU5QD90lx3
-         Ox7EpMRfKqfDw==
+        b=bXwa5UjtDiDN0ZVWw7SA3NWvmQJDFc2CgBdllAU4YwuemCPVYL/aL/ROECuldUl73
+         Cx9wQP7dkqTkwP8pqoF1zSjvptolR/oGB+1sG5o4OVNn4zNhZi/6x9hl+jd5VxHXWA
+         f/03VJL5JpRYdkgYo3SBEO+xKvcUeCGXAhJIU+Y+NW+J5Ay3/Bep+TZ4Nx5VViW958
+         5MOC0a4/ccTG/3pX9yuCgLthOgczd9KxOz1Y9ZqXNUs4+Rw4xk6fkuOQEDuK+2gLm2
+         K/SYxThoDioVsJu7UPHy17fwvQV/j4EoXPPruL6oJy9IgcZDY1pjc9yWh36OlRcN7o
+         QlztR3TUqItog==
 X-Nifty-SrcIP: [126.93.102.113]
 From:   Masahiro Yamada <masahiroy@kernel.org>
 To:     linux-kbuild@vger.kernel.org
@@ -50,9 +49,9 @@ Cc:     Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org,
         Masahiro Yamada <masahiroy@kernel.org>,
         Michal Marek <michal.lkml@markovi.net>,
         linux-kernel@vger.kernel.org
-Subject: [PATCH 4/5] kbuild: add dt_binding_check to PHONY in a correct place
-Date:   Sun, 23 Feb 2020 04:04:34 +0900
-Message-Id: <20200222190435.11767-4-masahiroy@kernel.org>
+Subject: [PATCH 2/5] kbuild: remove unneeded semicolon at the end of cmd_dtb_check
+Date:   Sun, 23 Feb 2020 04:04:32 +0900
+Message-Id: <20200222190435.11767-2-masahiroy@kernel.org>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20200222190435.11767-1-masahiroy@kernel.org>
 References: <20200222190435.11767-1-masahiroy@kernel.org>
@@ -61,39 +60,27 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The dt_binding_check is added to PHONY, but it is visible only
-when $(dtstree) is not empty. So, it is not specified as phony
-for ARCH=x86 etc.
-
-Add it to PHONY outside the ifneq ... endif block.
+This trailing semicolon is unneeded.
 
 Signed-off-by: Masahiro Yamada <masahiroy@kernel.org>
 ---
 
- Makefile | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ scripts/Makefile.lib | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/Makefile b/Makefile
-index 102710a9228c..83f9b8f6fbaf 100644
---- a/Makefile
-+++ b/Makefile
-@@ -1238,7 +1238,7 @@ ifneq ($(dtstree),)
- %.dtb: include/config/kernel.release scripts_dtc
- 	$(Q)$(MAKE) $(build)=$(dtstree) $(dtstree)/$@
+diff --git a/scripts/Makefile.lib b/scripts/Makefile.lib
+index 64b938c10039..752ff0a225a9 100644
+--- a/scripts/Makefile.lib
++++ b/scripts/Makefile.lib
+@@ -300,7 +300,7 @@ DT_BINDING_DIR := Documentation/devicetree/bindings
+ DT_TMP_SCHEMA := $(objtree)/$(DT_BINDING_DIR)/processed-schema.yaml
  
--PHONY += dtbs dtbs_install dtbs_check dt_binding_check
-+PHONY += dtbs dtbs_install dtbs_check
- dtbs dtbs_check: include/config/kernel.release scripts_dtc
- 	$(Q)$(MAKE) $(build)=$(dtstree)
+ quiet_cmd_dtb_check =	CHECK   $@
+-      cmd_dtb_check =	$(DT_CHECKER) -u $(srctree)/$(DT_BINDING_DIR) -p $(DT_TMP_SCHEMA) $@ ;
++      cmd_dtb_check =	$(DT_CHECKER) -u $(srctree)/$(DT_BINDING_DIR) -p $(DT_TMP_SCHEMA) $@
  
-@@ -1258,6 +1258,7 @@ PHONY += scripts_dtc
- scripts_dtc: scripts_basic
- 	$(Q)$(MAKE) $(build)=scripts/dtc
- 
-+PHONY += dt_binding_check
- dt_binding_check: scripts_dtc
- 	$(Q)$(MAKE) $(build)=Documentation/devicetree/bindings
- 
+ define rule_dtc
+ 	$(call cmd_and_fixdep,dtc,yaml)
 -- 
 2.17.1
 
