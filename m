@@ -2,200 +2,130 @@ Return-Path: <SRS0=8jYG=4K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 10FEEC35666
-	for <linux-kernel@archiver.kernel.org>; Sat, 22 Feb 2020 14:36:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B66F9C35666
+	for <linux-kernel@archiver.kernel.org>; Sat, 22 Feb 2020 14:41:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D1CD120684
-	for <linux-kernel@archiver.kernel.org>; Sat, 22 Feb 2020 14:36:51 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=megous.com header.i=@megous.com header.b="W8XrVqWi"
+	by mail.kernel.org (Postfix) with ESMTP id 85E9720702
+	for <linux-kernel@archiver.kernel.org>; Sat, 22 Feb 2020 14:41:55 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1582382515;
+	bh=eKrjDcVPFGldXTKBfSEfT7EC9knttzmH0OoM9Oc5WtI=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=uDqnUnp2vo1WlMdQf+hlaRhC+h/BZNESI4dW7QTOTx7NDiNDBYQD2dBFQlvWgqFqG
+	 9HNLECWhIC+TXGqAxQXFEVa2Ka4JlBM+QxDmjgTFPB/wthkTKQ5El7Zx0ccSOiyz9A
+	 G6zX3lUi+S9pqNQxQjAGuvv8tPee8GX/HIQw61ec=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727763AbgBVOgu (ORCPT
+        id S1727670AbgBVOlx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 22 Feb 2020 09:36:50 -0500
-Received: from vps.xff.cz ([195.181.215.36]:59090 "EHLO vps.xff.cz"
+        Sat, 22 Feb 2020 09:41:53 -0500
+Received: from mail.kernel.org ([198.145.29.99]:56108 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727382AbgBVOgu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 22 Feb 2020 09:36:50 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=megous.com; s=mail;
-        t=1582382208; bh=HE3v7bOejO+dhgKXSB0UO2Jzk9/x8w6N83RUyOcVJ1Y=;
-        h=Date:From:To:Subject:References:X-My-GPG-KeyId:From;
-        b=W8XrVqWi4t9GcdWofDfixPF9vShRGY8uURWROGztauV2p7iqkhU+XV387cQi0ghTl
-         +mOpRI10RCtXfr3BV6GJ1WE10G1GtfaZTzrTSyeBhVmuRTlvC/Vxadeq4yzrx+Ft6X
-         uEdShmhqJ+CqYAsUjKxylkeCiUbarDgDtFq9p73U=
-Date:   Sat, 22 Feb 2020 15:36:47 +0100
-From:   =?utf-8?Q?Ond=C5=99ej?= Jirman <megous@megous.com>
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-kernel@vger.kernel.org, stable@vger.kernel.org,
-        Chao Yu <yuchao0@huawei.com>, Jaegeuk Kim <jaegeuk@kernel.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: Re: [PATCH 5.5 020/399] f2fs: call f2fs_balance_fs outside of locked
- page
-Message-ID: <20200222143647.k7cfv6ryd53oejmp@core.my.home>
-Mail-Followup-To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-kernel@vger.kernel.org, stable@vger.kernel.org,
-        Chao Yu <yuchao0@huawei.com>, Jaegeuk Kim <jaegeuk@kernel.org>,
-        Sasha Levin <sashal@kernel.org>
-References: <20200221072402.315346745@linuxfoundation.org>
- <20200221072404.289499313@linuxfoundation.org>
- <20200222044151.odurt3xqyhgxqqve@core.my.home>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200222044151.odurt3xqyhgxqqve@core.my.home>
-X-My-GPG-KeyId: EBFBDDE11FB918D44D1F56C1F9F0A873BE9777ED
- <https://xff.cz/key.txt>
+        id S1727184AbgBVOlw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 22 Feb 2020 09:41:52 -0500
+Received: from devnote2 (NE2965lan1.rev.em-net.ne.jp [210.141.244.193])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id C332C20684;
+        Sat, 22 Feb 2020 14:41:49 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1582382512;
+        bh=eKrjDcVPFGldXTKBfSEfT7EC9knttzmH0OoM9Oc5WtI=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=hIqzfF6CKTPJQ+mjDtf8H4SHad6PWQO5TLRw5r8xInUl7Cv7f/1TYzl5kJ776CdcQ
+         jr4/Ejw0T3B+Mjke5mqW4Q7GyLc8b9mg04ILmRxcOtme0yo2+qVPf2BvDOXSJDax08
+         31tWeHtr9onWovsK58H8fLv4ySYsAm6dkTtFiyVA=
+Date:   Sat, 22 Feb 2020 23:41:47 +0900
+From:   Masami Hiramatsu <mhiramat@kernel.org>
+To:     Geert Uytterhoeven <geert@linux-m68k.org>
+Cc:     Randy Dunlap <rdunlap@infradead.org>,
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Borislav Petkov <bp@alien8.de>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Ingo Molnar <mingo@kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Peter Zijlstra <peterz@infradead.org>
+Subject: Re: [PATCH v3 1/2] bootconfig: Prohibit re-defining value on same
+ key
+Message-Id: <20200222234147.7525a2d527ebbf53f06b5734@kernel.org>
+In-Reply-To: <CAMuHMdURcRPXo7Q-2E7bS7X9w73NvYP8ffdJeNk37wdQgVxThw@mail.gmail.com>
+References: <158227281198.12842.8478910651170568606.stgit@devnote2>
+        <158227282199.12842.10110929876059658601.stgit@devnote2>
+        <536c681d-a546-bb51-a6cb-2d39ed726716@infradead.org>
+        <CAMuHMdURcRPXo7Q-2E7bS7X9w73NvYP8ffdJeNk37wdQgVxThw@mail.gmail.com>
+X-Mailer: Sylpheed 3.5.1 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, Feb 22, 2020 at 05:41:51AM +0100, megous hlavni wrote:
-> Hello,
-> 
-> On Fri, Feb 21, 2020 at 08:35:45AM +0100, Greg Kroah-Hartman wrote:
-> > From: Jaegeuk Kim <jaegeuk@kernel.org>
-> > 
-> > [ Upstream commit bdf03299248916640a835a05d32841bb3d31912d ]
-> 
-> I have somes issues with this patch.
-> 
-> It causes panics due to hung tasks on 5.6. I guess it fixes one deadlock, but
-> causes other one? Not sure backporting it to stable branches is a good idea.
+On Sat, 22 Feb 2020 10:31:17 +0100
+Geert Uytterhoeven <geert@linux-m68k.org> wrote:
 
-False alarm. The issue is unrelated to this patch.
+> Hi Randy,
+> 
+> On Sat, Feb 22, 2020 at 5:30 AM Randy Dunlap <rdunlap@infradead.org> wrote:
+> > On 2/21/20 12:13 AM, Masami Hiramatsu wrote:
+> > > --- a/Documentation/admin-guide/bootconfig.rst
+> > > +++ b/Documentation/admin-guide/bootconfig.rst
+> > > @@ -62,7 +62,16 @@ Or more shorter, written as following::
+> > >  In both styles, same key words are automatically merged when parsing it
+> > >  at boot time. So you can append similar trees or key-values.
+> > >
+> > > -Note that a sub-key and a value can not co-exist under a parent key.
+> > > +Same-key Values
+> > > +---------------
+> > > +
+> > > +It is prohibited that two or more values or arraies share a same-key.
+> >
+> > I think (?):                                   arrays
+> >
+> > > +For example,::
+> > > +
+> > > + foo = bar, baz
+> > > + foo = qux  # !ERROR! we can not re-define same key
+> > > +
+> > > +Also, a sub-key and a value can not co-exist under a parent key.
+> > >  For example, following config is NOT allowed.::
+> > >
+> > >   foo = value1
+> >
+> >
+> > I'm pretty sure that the kernel command line allows someone to use
+> >   key=value1 ... key=value2
+> > and the first setting is just overwritten with value2 (for most "key"s).
+> >
+> > Am I wrong?  and is this patch saying that bootconfig won't operate like that?
+> 
+> I think so. Both are retained.
+> A typical example is "console=ttyS0 console=tty", to have the kernel output
+> on both the serial and the graphical console.
 
-regards,
-	o.
+Right, it actually depends on how the option is defined and its handler.
+If the option is defined with module_param*() macros, those will be 
+overwritten.
+But if it is defined with __setup() or early_param(), the handler function
+will be called repeatedly. Thus, overwrite or append or skip later one
+depends on the option handler.
 
-> regards,
-> 	o.
-> 
-> 
-> INFO: task kworker/u16:2:341 blocked for more than 122 seconds.
->       Not tainted 5.6.0-rc2-00254-g9a029a493dc16 #4
-> "echo 0 > /proc/sys/kernel/hung_task_timeout_secs" disables this message.
-> kworker/u16:2   D    0   341      2 0x00000000
-> Workqueue: writeback wb_workfn (flush-179:0)
-> Backtrace:
-> [<c0912bd0>] (__schedule) from [<c0913274>] (schedule+0x78/0xf4)
->  r10:ede1a000 r9:00000000 r8:ede1ba60 r7:ec417290 r6:00000002 r5:ede1a000
->  r4:ee8e8000
-> [<c09131fc>] (schedule) from [<c017ec74>] (rwsem_down_write_slowpath+0x24c/0x4c0)
->  r5:00000001 r4:ec417280
-> [<c017ea28>] (rwsem_down_write_slowpath) from [<c0915f6c>] (down_write+0x6c/0x70)
->  r10:ec417280 r9:ede1bd80 r8:ee128000 r7:00000001 r6:00000000 r5:eff0afc4
->  r4:ec417280
-> [<c0915f00>] (down_write) from [<c0435b68>] (f2fs_write_single_data_page+0x608/0x7ac)
->  r5:eff0afc4 r4:ec4170e0
-> [<c0435560>] (f2fs_write_single_data_page) from [<c0435fc0>] (f2fs_write_cache_pages+0x2b4/0x7c4)
->  r10:ede1bc28 r9:ec4171e0 r8:ec4170e0 r7:00000001 r6:ede1bd80 r5:00000001
->  r4:eff0afc4
-> [<c0435d0c>] (f2fs_write_cache_pages) from [<c0436814>] (f2fs_write_data_pages+0x344/0x35c)
->  r10:0000012c r9:ee12802c r8:ee128000 r7:00000004 r6:ec4171e0 r5:ec4170e0
->  r4:ede1bd80
-> [<c04364d0>] (f2fs_write_data_pages) from [<c0267fa0>] (do_writepages+0x3c/0xd4)
->  r10:0000012c r9:c0e03d00 r8:00001400 r7:c0264e94 r6:ede1bd80 r5:ec4171e0
->  r4:ec4170e0
-> [<c0267f64>] (do_writepages) from [<c0310d24>] (__writeback_single_inode+0x44/0x454)
->  r7:ec4171e0 r6:ede1beac r5:ede1bd80 r4:ec4170e0
-> [<c0310ce0>] (__writeback_single_inode) from [<c0311338>] (writeback_sb_inodes+0x204/0x4b0)
->  r10:0000012c r9:c0e03d00 r8:ec417148 r7:ec4170e0 r6:ede1beac r5:ec417188
->  r4:eebed848
-> [<c0311134>] (writeback_sb_inodes) from [<c0311634>] (__writeback_inodes_wb+0x50/0xe4)
->  r10:ee7128e8 r9:c0e03d00 r8:eebed85c r7:ede1beac r6:00000000 r5:eebed848
->  r4:ee120000
-> [<c03115e4>] (__writeback_inodes_wb) from [<c031195c>] (wb_writeback+0x294/0x338)
->  r10:00020800 r9:ede1a000 r8:c0e04e64 r7:eebed848 r6:000192d0 r5:ede1beac
->  r4:eebed848
-> [<c03116c8>] (wb_writeback) from [<c0312e98>] (wb_workfn+0x3e0/0x54c)
->  r10:ee894005 r9:eebed84c r8:eebed948 r7:eebed848 r6:00000000 r5:eebed954
->  r4:00002b6e
-> [<c0312ab8>] (wb_workfn) from [<c014f2b8>] (process_one_work+0x214/0x544)
->  r10:ee894005 r9:00000200 r8:00000000 r7:ee894000 r6:ef044400 r5:edb1c700
->  r4:eebed954
-> [<c014f0a4>] (process_one_work) from [<c014f634>] (worker_thread+0x4c/0x574)
->  r10:ef044400 r9:c0e03d00 r8:ef044418 r7:00000088 r6:ef044400 r5:edb1c714
->  r4:edb1c700
-> [<c014f5e8>] (worker_thread) from [<c01564fc>] (kthread+0x144/0x170)
->  r10:ef125e90 r9:ec0f235c r8:edb1c700 r7:ede1a000 r6:00000000 r5:ec0f2300
->  r4:ec0f2340
-> [<c01563b8>] (kthread) from [<c01010e8>] (ret_from_fork+0x14/0x2c)
-> Exception stack(0xede1bfb0 to 0xede1bff8)
-> bfa0:                                     00000000 00000000 00000000 00000000
-> bfc0: 00000000 00000000 00000000 00000000 00000000 00000000 00000000 00000000
-> bfe0: 00000000 00000000 00000000 00000000 00000013 00000000
->  r10:00000000 r9:00000000 r8:00000000 r7:00000000 r6:00000000 r5:c01563b8
->  r4:ec0f2300
-> NMI backtrace for cpu 2
-> CPU: 2 PID: 52 Comm: khungtaskd Not tainted 5.6.0-rc2-00254-g9a029a493dc16 #4
-> Hardware name: Allwinner A83t board
-> Backtrace:
-> [<c010db5c>] (dump_backtrace) from [<c010dee0>] (show_stack+0x20/0x24)
->  r7:00000000 r6:60060013 r5:00000000 r4:c0e9ab10
-> 
-> > Otherwise, we can hit deadlock by waiting for the locked page in
-> > move_data_block in GC.
-> > 
-> >  Thread A                     Thread B
-> >  - do_page_mkwrite
-> >   - f2fs_vm_page_mkwrite
-> >    - lock_page
-> >                               - f2fs_balance_fs
-> >                                   - mutex_lock(gc_mutex)
-> >                                - f2fs_gc
-> >                                 - do_garbage_collect
-> >                                  - ra_data_block
-> >                                   - grab_cache_page
-> >    - f2fs_balance_fs
-> >     - mutex_lock(gc_mutex)
-> > 
-> > Fixes: 39a8695824510 ("f2fs: refactor ->page_mkwrite() flow")
-> > Reviewed-by: Chao Yu <yuchao0@huawei.com>
-> > Signed-off-by: Jaegeuk Kim <jaegeuk@kernel.org>
-> > Signed-off-by: Sasha Levin <sashal@kernel.org>
-> > ---
-> >  fs/f2fs/file.c | 7 ++++---
-> >  1 file changed, 4 insertions(+), 3 deletions(-)
-> > 
-> > diff --git a/fs/f2fs/file.c b/fs/f2fs/file.c
-> > index 33c412d178f0f..6c4436a5ce797 100644
-> > --- a/fs/f2fs/file.c
-> > +++ b/fs/f2fs/file.c
-> > @@ -50,7 +50,7 @@ static vm_fault_t f2fs_vm_page_mkwrite(struct vm_fault *vmf)
-> >  	struct page *page = vmf->page;
-> >  	struct inode *inode = file_inode(vmf->vma->vm_file);
-> >  	struct f2fs_sb_info *sbi = F2FS_I_SB(inode);
-> > -	struct dnode_of_data dn = { .node_changed = false };
-> > +	struct dnode_of_data dn;
-> >  	int err;
-> >  
-> >  	if (unlikely(f2fs_cp_error(sbi))) {
-> > @@ -63,6 +63,9 @@ static vm_fault_t f2fs_vm_page_mkwrite(struct vm_fault *vmf)
-> >  		goto err;
-> >  	}
-> >  
-> > +	/* should do out of any locked page */
-> > +	f2fs_balance_fs(sbi, true);
-> > +
-> >  	sb_start_pagefault(inode->i_sb);
-> >  
-> >  	f2fs_bug_on(sbi, f2fs_has_inline_data(inode));
-> > @@ -120,8 +123,6 @@ static vm_fault_t f2fs_vm_page_mkwrite(struct vm_fault *vmf)
-> >  out_sem:
-> >  	up_read(&F2FS_I(inode)->i_mmap_sem);
-> >  
-> > -	f2fs_balance_fs(sbi, dn.node_changed);
-> > -
-> >  	sb_end_pagefault(inode->i_sb);
-> >  err:
-> >  	return block_page_mkwrite_return(err);
-> > -- 
-> > 2.20.1
-> > 
-> > 
-> > 
+I think the bootconfig is a bit different from legacy command line at
+this moment. The legacy command line can be modified by bootloader,
+whereas the bootconfig is a single text file which user can update
+each value. Of course bootloader will support the bootconfig to append
+some key-values in the future.
+So I would like to introduce another "overwrite" operator (":=") and
+"assign default" operator ("?=") too. With those operators, the
+bootloader can just add their own key-value without decoding the
+current bootconfig.
+
+Thank you,
+
+-- 
+Masami Hiramatsu <mhiramat@kernel.org>
