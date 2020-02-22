@@ -2,113 +2,83 @@ Return-Path: <SRS0=8jYG=4K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 58C01C35666
-	for <linux-kernel@archiver.kernel.org>; Sat, 22 Feb 2020 17:20:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3FD27C35666
+	for <linux-kernel@archiver.kernel.org>; Sat, 22 Feb 2020 17:29:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3076E20707
-	for <linux-kernel@archiver.kernel.org>; Sat, 22 Feb 2020 17:20:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CA36520702
+	for <linux-kernel@archiver.kernel.org>; Sat, 22 Feb 2020 17:29:56 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="AhvXtgXr"
+	dkim=pass (1024-bit key) header.d=alien8.de header.i=@alien8.de header.b="SLFjpd8Z"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726884AbgBVRUT (ORCPT
+        id S1726767AbgBVR3z (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 22 Feb 2020 12:20:19 -0500
-Received: from mail-pl1-f195.google.com ([209.85.214.195]:37313 "EHLO
-        mail-pl1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726198AbgBVRUT (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 22 Feb 2020 12:20:19 -0500
-Received: by mail-pl1-f195.google.com with SMTP id c23so2219593plz.4;
-        Sat, 22 Feb 2020 09:20:19 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=76mGlpp6BFJSmPDHJW6kprv/8C2HQ3fa7ORMT87pipU=;
-        b=AhvXtgXr8v/7hcsVNalXOtAMxUQGg+OE/SI9/59KpjrJJKTzdFu6gUOq/LuJRpqBY0
-         FYwSgXktGDhXnxJhU2U90NIxa+7RN66/jwTwRNLQhjLZWDu4ngBO04tPrP5ZGeqWwsa4
-         Sby6zAhTXe+ZJh0Ro82a7S+HR0pUgR6wT4d0onSlnyKCWfcSG35Jr22+4olJ7iiexMQx
-         qFkGQxPKNG65rZfE0ngObnTGSx4jRB2mrHaLqMMerAIcn3pm+dOIofsrj0NE5RO03RW+
-         OcXxr6GO++1LxMqSozC0UQxPEgpBW2CNB/gtyo6QKlW3lwjmFII7A9faa5wJet69n5lo
-         6yGw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=76mGlpp6BFJSmPDHJW6kprv/8C2HQ3fa7ORMT87pipU=;
-        b=pxUqQU732q/sBAfmZlkz8aFi0n2B6ybFB35k/PFbCKVKq3l3qnNAeFQAX8NPf7N398
-         gn1/+TB7d+rEb7Zn1nvK6uPstK++8H2V1LjiY1xIGzgX+0Oi7FlauEpK7mifwyAuS3gS
-         iAWkJpJMrv0Y4cxZsWQgN1R9EoZgEVp3r27sosQ4fxNdGPMwGvd8kV6P3YP9xeghz40k
-         nkk/VDdmPU6baywDc3zLHqdZbyo+O5EpsW5t8d3Ug3IL/DRd6exfs6xGmP+0vInd77XV
-         Q1pHGKI+QgrFEgS5+Mq1MXaKeAvf9NebhKUCEZPD8zrI+r1q/aerSkwOE0u6kuD3OMgL
-         h1dw==
-X-Gm-Message-State: APjAAAWisnf889QnUEpsFEvHHthIg50IftdwPkZ0Y56EBkyVvz2LApw5
-        Bh8R6/EFXxvZAInb6MQkzYT8xzn+0N4=
-X-Google-Smtp-Source: APXvYqw9ScUK576eJpHRzjT0V+dYpENY1q/4Limxa/EmkHyr08VAeeRcRXsUX3jm2jzFKbuhC3jelw==
-X-Received: by 2002:a17:90a:ca12:: with SMTP id x18mr10118744pjt.66.1582392018775;
-        Sat, 22 Feb 2020 09:20:18 -0800 (PST)
-Received: from localhost.localdomain ([103.87.57.201])
-        by smtp.googlemail.com with ESMTPSA id o19sm10305622pjr.2.2020.02.22.09.20.15
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 22 Feb 2020 09:20:18 -0800 (PST)
-From:   Amol Grover <frextrite@gmail.com>
-To:     James Morris <jmorris@namei.org>,
-        "Serge E . Hallyn" <serge@hallyn.com>
-Cc:     linux-kernel@vger.kernel.org,
-        linux-kernel-mentees@lists.linuxfoundation.org,
-        Joel Fernandes <joel@joelfernandes.org>,
-        Madhuparna Bhowmik <madhuparnabhowmik10@gmail.com>,
-        "Paul E . McKenney" <paulmck@kernel.org>,
-        linux-security-module@vger.kernel.org,
-        Amol Grover <frextrite@gmail.com>
-Subject: [PATCH] device_cgroup: Fix RCU list debugging warning
-Date:   Sat, 22 Feb 2020 22:49:39 +0530
-Message-Id: <20200222171938.14339-1-frextrite@gmail.com>
-X-Mailer: git-send-email 2.24.1
+        Sat, 22 Feb 2020 12:29:55 -0500
+Received: from mail.skyhub.de ([5.9.137.197]:33546 "EHLO mail.skyhub.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726198AbgBVR3z (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 22 Feb 2020 12:29:55 -0500
+Received: from zn.tnic (p200300EC2F1C5400329C23FFFEA6A903.dip0.t-ipconnect.de [IPv6:2003:ec:2f1c:5400:329c:23ff:fea6:a903])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id D39C21EC027B;
+        Sat, 22 Feb 2020 18:29:53 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
+        t=1582392594;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:in-reply-to:in-reply-to:  references:references;
+        bh=Q8Zz/tPA4c0tTFwY1epydrU6u1758UfizTFQVuBcSzA=;
+        b=SLFjpd8ZFH2Vok4UxC27nQVm9hf43UKl1gOgWfkI7SH03l3M8vJMMxavJUEBjj19AFEX88
+        8mCuORff+CcWJ5Fkmqo6fudfKCjkw2o+w35G3D+IbVW2faZjEN0aVjclKHqC9PCSqTH4Cq
+        eqkUcbBZeEGNxnU0XCzu2Fnq0h9pudg=
+Date:   Sat, 22 Feb 2020 18:29:48 +0100
+From:   Borislav Petkov <bp@alien8.de>
+To:     Arvind Sankar <nivedita@alum.mit.edu>
+Cc:     Nathan Chancellor <natechancellor@gmail.com>,
+        Fangrui Song <maskray@google.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>,
+        "H. Peter Anvin" <hpa@zytor.com>, x86@kernel.org,
+        linux-kernel@vger.kernel.org, clang-built-linux@googlegroups.com,
+        Michael Matz <matz@suse.de>
+Subject: Re: [PATCH 2/2] x86/boot/compressed: Remove unnecessary sections
+ from bzImage
+Message-ID: <20200222172948.GC11284@zn.tnic>
+References: <20200109150218.16544-1-nivedita@alum.mit.edu>
+ <20200109150218.16544-2-nivedita@alum.mit.edu>
+ <20200222050845.GA19912@ubuntu-m2-xlarge-x86>
+ <20200222065521.GA11284@zn.tnic>
+ <20200222070218.GA27571@ubuntu-m2-xlarge-x86>
+ <20200222072144.asqaxlv364s6ezbv@google.com>
+ <20200222074242.GA17358@ubuntu-m2-xlarge-x86>
+ <20200222153747.GA3234293@rani.riverdale.lan>
+ <20200222164419.GB3326744@rani.riverdale.lan>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20200222164419.GB3326744@rani.riverdale.lan>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-exceptions may be traversed using list_for_each_entry_rcu()
-outside of an RCU read side critical section BUT under the
-protection of decgroup_mutex. Hence add the corresponding
-lockdep expression to fix the following false-positive
-warning:
+On Sat, Feb 22, 2020 at 11:44:20AM -0500, Arvind Sankar wrote:
+> Boris, should I send the fix as a diff to the current patch in tip, or
+> as a fresh one that can replace it?
 
-[    2.304417] =============================
-[    2.304418] WARNING: suspicious RCU usage
-[    2.304420] 5.5.4-stable #17 Tainted: G            E
-[    2.304422] -----------------------------
-[    2.304424] security/device_cgroup.c:355 RCU-list traversed in non-reader section!!
+The offending commit is the top commit on tip:x86/boot so I'll merge
+your new one with it and thus "convert" the former one into the new one
+discarding .eh_frame only.
 
-Signed-off-by: Amol Grover <frextrite@gmail.com>
----
- security/device_cgroup.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+Thx.
 
-diff --git a/security/device_cgroup.c b/security/device_cgroup.c
-index 7d0f8f7431ff..b7da9e0970d9 100644
---- a/security/device_cgroup.c
-+++ b/security/device_cgroup.c
-@@ -352,7 +352,8 @@ static bool match_exception_partial(struct list_head *exceptions, short type,
- {
- 	struct dev_exception_item *ex;
- 
--	list_for_each_entry_rcu(ex, exceptions, list) {
-+	list_for_each_entry_rcu(ex, exceptions, list,
-+				lockdep_is_held(&devcgroup_mutex)) {
- 		if ((type & DEVCG_DEV_BLOCK) && !(ex->type & DEVCG_DEV_BLOCK))
- 			continue;
- 		if ((type & DEVCG_DEV_CHAR) && !(ex->type & DEVCG_DEV_CHAR))
 -- 
-2.24.1
+Regards/Gruss,
+    Boris.
 
+https://people.kernel.org/tglx/notes-about-netiquette
