@@ -2,126 +2,154 @@ Return-Path: <SRS0=8jYG=4K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EAD84C35671
-	for <linux-kernel@archiver.kernel.org>; Sat, 22 Feb 2020 04:32:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F0B9CC35669
+	for <linux-kernel@archiver.kernel.org>; Sat, 22 Feb 2020 04:33:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BD3E8208C4
-	for <linux-kernel@archiver.kernel.org>; Sat, 22 Feb 2020 04:32:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C4502208C4
+	for <linux-kernel@archiver.kernel.org>; Sat, 22 Feb 2020 04:33:04 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="E6MKTnGs"
+	dkim=pass (2048-bit key) header.d=lca.pw header.i=@lca.pw header.b="kCtRbLdy"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728105AbgBVEcC (ORCPT
+        id S1728080AbgBVEdD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Feb 2020 23:32:02 -0500
-Received: from bombadil.infradead.org ([198.137.202.133]:35466 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727959AbgBVEcC (ORCPT
+        Fri, 21 Feb 2020 23:33:03 -0500
+Received: from mail-qk1-f193.google.com ([209.85.222.193]:38052 "EHLO
+        mail-qk1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727025AbgBVEdD (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Feb 2020 23:32:02 -0500
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
-        Content-Type:In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:
-        Subject:Sender:Reply-To:Content-ID:Content-Description;
-        bh=XfGTO7Us+1xmScgro1e+X7n3mnQDon0InuDzMdikMEw=; b=E6MKTnGstEhFaGANjP0zfbCpF2
-        2gkyRP0p1PkZiIC2rI0QHkHK9HDgAI+GwxNpmPcWNloNg0AFOEzqbxqpKB9kfoUX34KUx6vo9l0Pc
-        5bY5VC0b4xN7PfLlZzjSPBUf6Ug9s6S9qAHHElzzUJ5Fc63MzpAXik1geZVYYN3xA6I3KGM5jwBWu
-        D+v/sZeQ2Kn+SgEAv9RtM6nLnctyfXephxkAAjMd8DdxuJAk7zLH6WLXKLK4NPiSpNgQf55vVKMLu
-        yqP+j59BMXkLdWVKbwuTmBZX4fkaIiBwCa8r0ZKrvTphZG8Oqlbol/ZLI7MxALKnW7AzxM7y9eRMb
-        o8BTp82A==;
-Received: from [2601:1c0:6280:3f0::19c2]
-        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1j5MHi-0001Nl-NW; Sat, 22 Feb 2020 04:20:58 +0000
-Subject: Re: [PATCH v3 1/2] bootconfig: Prohibit re-defining value on same key
-To:     Masami Hiramatsu <mhiramat@kernel.org>,
-        Steven Rostedt <rostedt@goodmis.org>
-Cc:     Geert Uytterhoeven <geert@linux-m68k.org>,
-        Borislav Petkov <bp@alien8.de>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Ingo Molnar <mingo@kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Peter Zijlstra <peterz@infradead.org>
-References: <158227281198.12842.8478910651170568606.stgit@devnote2>
- <158227282199.12842.10110929876059658601.stgit@devnote2>
-From:   Randy Dunlap <rdunlap@infradead.org>
-Message-ID: <536c681d-a546-bb51-a6cb-2d39ed726716@infradead.org>
-Date:   Fri, 21 Feb 2020 20:20:57 -0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.1
+        Fri, 21 Feb 2020 23:33:03 -0500
+Received: by mail-qk1-f193.google.com with SMTP id z19so3916223qkj.5
+        for <linux-kernel@vger.kernel.org>; Fri, 21 Feb 2020 20:33:02 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=lca.pw; s=google;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=OPdiCspFUoLNdKrsNyt7aSs4T7N6gYtV5I8j4acuNpk=;
+        b=kCtRbLdy7+38MLaQOqGvMn+7ARfqNP34p7Adh+Nw0vxvzdxkFuJqwccbrDTlSw/rIW
+         a6TiZ4wDah27pbw5okdb81kVQ8H9gn3q2+7squeRbWaDfx7wqIFMrussM/adOQ1558qu
+         vM/KRBsMBBX3s70MJmNT/XcO30s4LnsodDhHEE+vzXPnrx3DLSvMq0zWyXTE6OYBg+kR
+         SXOXG8CMZTPSTIxw0M78unzC4qPvAhF7QREFjpU4G/rxpJe9H07eq2hd8hcP44arR5jQ
+         D0J7NjGQuWpJdvcRRwkQ3qhAbrDKU4vfMhCtYX1fIZJH1SyJFDz9WAf349Fob4Ao1KEd
+         2/Wg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=OPdiCspFUoLNdKrsNyt7aSs4T7N6gYtV5I8j4acuNpk=;
+        b=GD2Y2XXUueq2u/AJo2mylgqCkX8vKMaF0sFD70DwqMYh0nCWHxkgMNv6swkOnQSwvG
+         Fg8vKasxI+VOhKzgHYkhkqBn4jiYshjq5nlJQ77wlSjdVNguINec/s20Sri62ZfT8IQ4
+         a+L921OkO7xesYdFwbX8AgXtTmYktb2P/RnQse/Jx+5Nwquy0dMgZtgEYu+8QXJfbBS3
+         8BAF1OHiMkrfdlSOgIN0pPO067aefomw+nB8L9ivolQ1cNbiOXjQnoiWR681WlpFs9kN
+         yGe2pMqOzcDFQzWfnhKEGGeChs1sOF9J42QnaTfaaTAM6VVg3EFr6yeH6Wa2iy3gFMsV
+         Cy3Q==
+X-Gm-Message-State: APjAAAUB4UNwas/kXTXkN+vPrjM8PVYiFBU495tKrupSmriU+v9sg3FI
+        ZGpI/8SxPZEUrbPo443fgZDgO5HsDhEOsA==
+X-Google-Smtp-Source: APXvYqy262Ujqqx69YRIfaoGQM3oqw+MXZRaRJpxs5U7PdfiOQq4CReAY2bXktxNoCUNNXHXTer0nQ==
+X-Received: by 2002:a05:620a:15cf:: with SMTP id o15mr37586094qkm.140.1582345982183;
+        Fri, 21 Feb 2020 20:33:02 -0800 (PST)
+Received: from ovpn-120-117.rdu2.redhat.com (pool-71-184-117-43.bstnma.fios.verizon.net. [71.184.117.43])
+        by smtp.gmail.com with ESMTPSA id j11sm2592733qkl.97.2020.02.21.20.33.01
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Fri, 21 Feb 2020 20:33:01 -0800 (PST)
+From:   Qian Cai <cai@lca.pw>
+To:     tytso@mit.edu
+Cc:     adilger.kernel@dilger.ca, elver@google.com,
+        linux-ext4@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Qian Cai <cai@lca.pw>
+Subject: [PATCH] ext4: fix a data race at inode->i_blocks
+Date:   Fri, 21 Feb 2020 23:32:58 -0500
+Message-Id: <20200222043258.2279-1-cai@lca.pw>
+X-Mailer: git-send-email 2.21.0 (Apple Git-122.2)
 MIME-Version: 1.0
-In-Reply-To: <158227282199.12842.10110929876059658601.stgit@devnote2>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2/21/20 12:13 AM, Masami Hiramatsu wrote:
-> Currently, bootconfig adds new value on the existing key
-> to the tail of an array. But this looks a bit confusing
-> because admin can rewrite original value in same config
-> file easily.
-> 
-> This rejects following value re-definition.
-> 
->   key = value1
->   ...
->   key = value2
-> 
-> You should rewrite value1 to value2 in this case.
-> 
-> Signed-off-by: Masami Hiramatsu <mhiramat@kernel.org>
+inode->i_blocks could be accessed concurrently as noticed by KCSAN,
 
-Hi,
-One correction below and then question.
+ BUG: KCSAN: data-race in ext4_do_update_inode [ext4] / inode_add_bytes
 
-> ---
->  Documentation/admin-guide/bootconfig.rst   |   11 ++++++++++-
->  lib/bootconfig.c                           |   13 ++++++++-----
->  tools/bootconfig/samples/bad-samekey.bconf |    6 ++++++
->  3 files changed, 24 insertions(+), 6 deletions(-)
->  create mode 100644 tools/bootconfig/samples/bad-samekey.bconf
-> 
-> diff --git a/Documentation/admin-guide/bootconfig.rst b/Documentation/admin-guide/bootconfig.rst
-> index dfeffa73dca3..9ee7650b7817 100644
-> --- a/Documentation/admin-guide/bootconfig.rst
-> +++ b/Documentation/admin-guide/bootconfig.rst
-> @@ -62,7 +62,16 @@ Or more shorter, written as following::
->  In both styles, same key words are automatically merged when parsing it
->  at boot time. So you can append similar trees or key-values.
->  
-> -Note that a sub-key and a value can not co-exist under a parent key.
-> +Same-key Values
-> +---------------
-> +
-> +It is prohibited that two or more values or arraies share a same-key.
+ write to 0xffff9a00d4b982d0 of 8 bytes by task 22100 on cpu 118:
+  inode_add_bytes+0x65/0xf0
+  __inode_add_bytes at fs/stat.c:689
+  (inlined by) inode_add_bytes at fs/stat.c:702
+  ext4_mb_new_blocks+0x418/0xca0 [ext4]
+  ext4_ext_map_blocks+0x1a6b/0x27b0 [ext4]
+  ext4_map_blocks+0x1a9/0x950 [ext4]
+  _ext4_get_block+0xfc/0x270 [ext4]
+  ext4_get_block_unwritten+0x33/0x50 [ext4]
+  __block_write_begin_int+0x22e/0xae0
+  __block_write_begin+0x39/0x50
+  ext4_write_begin+0x388/0xb50 [ext4]
+  ext4_da_write_begin+0x35f/0x8f0 [ext4]
+  generic_perform_write+0x15d/0x290
+  ext4_buffered_write_iter+0x11f/0x210 [ext4]
+  ext4_file_write_iter+0xce/0x9e0 [ext4]
+  new_sync_write+0x29c/0x3b0
+  __vfs_write+0x92/0xa0
+  vfs_write+0x103/0x260
+  ksys_write+0x9d/0x130
+  __x64_sys_write+0x4c/0x60
+  do_syscall_64+0x91/0xb05
+  entry_SYSCALL_64_after_hwframe+0x49/0xbe
 
-I think (?):                                   arrays
+ read to 0xffff9a00d4b982d0 of 8 bytes by task 8 on cpu 65:
+  ext4_do_update_inode+0x4a0/0xf60 [ext4]
+  ext4_inode_blocks_set at fs/ext4/inode.c:4815
+  ext4_mark_iloc_dirty+0xaf/0x160 [ext4]
+  ext4_mark_inode_dirty+0x129/0x3e0 [ext4]
+  ext4_convert_unwritten_extents+0x253/0x2d0 [ext4]
+  ext4_convert_unwritten_io_end_vec+0xc5/0x150 [ext4]
+  ext4_end_io_rsv_work+0x22c/0x350 [ext4]
+  process_one_work+0x54f/0xb90
+  worker_thread+0x80/0x5f0
+  kthread+0x1cd/0x1f0
+  ret_from_fork+0x27/0x50
 
-> +For example,::
-> +
-> + foo = bar, baz
-> + foo = qux  # !ERROR! we can not re-define same key
-> +
-> +Also, a sub-key and a value can not co-exist under a parent key.
->  For example, following config is NOT allowed.::
->  
->   foo = value1
+ 4 locks held by kworker/u256:0/8:
+  #0: ffff9a025abc4328 ((wq_completion)ext4-rsv-conversion){+.+.}, at: process_one_work+0x443/0xb90
+  #1: ffffab5a862dbe20 ((work_completion)(&ei->i_rsv_conversion_work)){+.+.}, at: process_one_work+0x443/0xb90
+  #2: ffff9a025a9d0f58 (jbd2_handle){++++}, at: start_this_handle+0x1c1/0x9d0 [jbd2]
+  #3: ffff9a00d4b985d8 (&(&ei->i_raw_lock)->rlock){+.+.}, at: ext4_do_update_inode+0xaa/0xf60 [ext4]
+ irq event stamp: 3009267
+ hardirqs last  enabled at (3009267): [<ffffffff980da9b7>] __find_get_block+0x107/0x790
+ hardirqs last disabled at (3009266): [<ffffffff980da8f9>] __find_get_block+0x49/0x790
+ softirqs last  enabled at (3009230): [<ffffffff98a0034c>] __do_softirq+0x34c/0x57c
+ softirqs last disabled at (3009223): [<ffffffff97cc67a2>] irq_exit+0xa2/0xc0
 
+ Reported by Kernel Concurrency Sanitizer on:
+ CPU: 65 PID: 8 Comm: kworker/u256:0 Tainted: G L 5.6.0-rc2-next-20200221+ #7
+ Hardware name: HPE ProLiant DL385 Gen10/ProLiant DL385 Gen10, BIOS A40 07/10/2019
+ Workqueue: ext4-rsv-conversion ext4_end_io_rsv_work [ext4]
 
-I'm pretty sure that the kernel command line allows someone to use
-  key=value1 ... key=value2
-and the first setting is just overwritten with value2 (for most "key"s).
+The plain read is outside of inode->i_lock critical section which
+results in a data race. Fix it by adding READ_ONCE() there.
 
-Am I wrong?  and is this patch saying that bootconfig won't operate like that?
+Signed-off-by: Qian Cai <cai@lca.pw>
+---
+ fs/ext4/inode.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-thanks.
+diff --git a/fs/ext4/inode.c b/fs/ext4/inode.c
+index e60aca791d3f..98cadd111942 100644
+--- a/fs/ext4/inode.c
++++ b/fs/ext4/inode.c
+@@ -4812,7 +4812,7 @@ static int ext4_inode_blocks_set(handle_t *handle,
+ 				struct ext4_inode_info *ei)
+ {
+ 	struct inode *inode = &(ei->vfs_inode);
+-	u64 i_blocks = inode->i_blocks;
++	u64 i_blocks = READ_ONCE(inode->i_blocks);
+ 	struct super_block *sb = inode->i_sb;
+ 
+ 	if (i_blocks <= ~0U) {
 -- 
-~Randy
+2.21.0 (Apple Git-122.2)
 
