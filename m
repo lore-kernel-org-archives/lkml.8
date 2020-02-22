@@ -2,105 +2,164 @@ Return-Path: <SRS0=8jYG=4K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E8263C35671
-	for <linux-kernel@archiver.kernel.org>; Sat, 22 Feb 2020 05:23:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 711AFC35669
+	for <linux-kernel@archiver.kernel.org>; Sat, 22 Feb 2020 05:33:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C007920707
-	for <linux-kernel@archiver.kernel.org>; Sat, 22 Feb 2020 05:23:48 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=lca.pw header.i=@lca.pw header.b="LrZLayjP"
+	by mail.kernel.org (Postfix) with ESMTP id 3873E20707
+	for <linux-kernel@archiver.kernel.org>; Sat, 22 Feb 2020 05:33:23 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1582349603;
+	bh=UAynlrotBk0FmHZnSdHsZMAiHJVBUDjojQexsIfluho=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=FDtWdjuXmCnVIYyHWz8lLRiUSkJQ1zqDV7rtfVdUHcVQ0f80UbvD/5J74YQ03txX9
+	 ooUsisut4nJ0+hvqxRCUO3MF8SpphTiIHYfMhY/duWzMb4yiG0Bg3KP+g2cXSmAoTm
+	 oQkV1XglC8BGeeadvYsgCHAYoalm8qIphVuZpP6Q=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726981AbgBVFXs (ORCPT
+        id S1726730AbgBVFdU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 22 Feb 2020 00:23:48 -0500
-Received: from mail-qk1-f193.google.com ([209.85.222.193]:43707 "EHLO
-        mail-qk1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726053AbgBVFXr (ORCPT
+        Sat, 22 Feb 2020 00:33:20 -0500
+Received: from conssluserg-04.nifty.com ([210.131.2.83]:58306 "EHLO
+        conssluserg-04.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726151AbgBVFdT (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 22 Feb 2020 00:23:47 -0500
-Received: by mail-qk1-f193.google.com with SMTP id p7so3955294qkh.10
-        for <linux-kernel@vger.kernel.org>; Fri, 21 Feb 2020 21:23:47 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=lca.pw; s=google;
-        h=content-transfer-encoding:from:mime-version:date:subject:message-id
-         :cc:to;
-        bh=IBBznMQ3bpiql9lX29jMw8rTRB5UTkasssHzmZ7+M1c=;
-        b=LrZLayjPzm6EQLYSudY/2Rq4gWifOId4PQrAAT2F3r3h4NRgVvIhbC9wOx7dlx1Tyk
-         WYPz/nHQ3vkybT2k2xkip3nUM4f72z609ZgHuowVvxaTzPOYtt/rzDEr2NC84AIv8CXR
-         U0opX2VzCXA/HJ/qpCXLc9V2nv5DRytdGovTfs1rZAEOs7Y6qmGvGpAdfto34hIsA8Ra
-         pkfe+e2+ciVrJ92OSsP2KnSO+hNJDpQYdRs7y3RPJ+SbfCtXmkkIIvCahCwn6T2Unqfv
-         bBKdNSO98xMr8l4tnMagKiMmWhHFfKIKh6j29waM9bi1stIdadM5rNWv1myS2PUTOZqY
-         FLTg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:content-transfer-encoding:from:mime-version:date
-         :subject:message-id:cc:to;
-        bh=IBBznMQ3bpiql9lX29jMw8rTRB5UTkasssHzmZ7+M1c=;
-        b=RocLhQrvIgIDtM95DdG7qdNG1lG2N+aYzhLy1KWu+DF8hdF7Djc3L9gaGn/iqmF5O1
-         coxuU8MK3b+uJHj2AexrmoTdi6PfKYgr9utsvUNryUyrpfRqejqoJyqoGdXIjWwejKSA
-         DpjLY+qhr3SGVlzgV3IlC9czXMLbxXYAn9O81iEdoiQ+hpLpi1Q2zqOqIBO4JvvrheE5
-         A7h/zxDVfMLtMaQm/reSGkNRFuEdg64poBAQytUi6/TNrDt5Ohab7fUnBo40Qqzsq/J/
-         6YTrN0ZOue8I56RlDwqSUtrf0QSl8zxFwlVMfEB23qbmnqh/9qUiOC5RjNvi40DFiF0S
-         yVXQ==
-X-Gm-Message-State: APjAAAUE6JCI0+DITJ5MZZa8p8Se38MRcaOmdGpWJPIl5DoAvXEIUfYN
-        rwWlpkvXTJ6RgfyNB9AagNfopg==
-X-Google-Smtp-Source: APXvYqxGJcaAbkb93bWjAuEqI5MWehvGgfWEWF9ozw2izn5dANYgU464h3LFov9e+Z+7R98DjY8LlQ==
-X-Received: by 2002:a37:bc06:: with SMTP id m6mr21225596qkf.383.1582349026611;
-        Fri, 21 Feb 2020 21:23:46 -0800 (PST)
-Received: from [192.168.1.183] (pool-71-184-117-43.bstnma.fios.verizon.net. [71.184.117.43])
-        by smtp.gmail.com with ESMTPSA id j30sm2612022qki.96.2020.02.21.21.23.45
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 21 Feb 2020 21:23:46 -0800 (PST)
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-From:   Qian Cai <cai@lca.pw>
-Mime-Version: 1.0 (1.0)
-Date:   Sat, 22 Feb 2020 00:23:44 -0500
-Subject: Re: [PATCH v2] mm/hugetlb: fix a addressing exception caused by huge_pte_offset()
-Message-Id: <C4ED630A-FAD8-4998-A0A3-9C36F3303379@lca.pw>
-Cc:     akpm@linux-foundation.org, mike.kravetz@oracle.com,
-        kirill.shutemov@linux.intel.com, linux-kernel@vger.kernel.org,
-        arei.gonglei@huawei.com, weidong.huang@huawei.com,
-        weifuqiang@huawei.com, kvm@vger.kernel.org, linux-mm@kvack.org,
-        Matthew Wilcox <willy@infradead.org>,
-        Sean Christopherson <sean.j.christopherson@intel.com>,
-        stable@vger.kernel.org
-To:     "Longpeng(Mike)" <longpeng2@huawei.com>
-X-Mailer: iPhone Mail (17D50)
+        Sat, 22 Feb 2020 00:33:19 -0500
+Received: from mail-vk1-f175.google.com (mail-vk1-f175.google.com [209.85.221.175]) (authenticated)
+        by conssluserg-04.nifty.com with ESMTP id 01M5XDb8000801;
+        Sat, 22 Feb 2020 14:33:14 +0900
+DKIM-Filter: OpenDKIM Filter v2.10.3 conssluserg-04.nifty.com 01M5XDb8000801
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
+        s=dec2015msa; t=1582349594;
+        bh=kfkRB8NqTSB8RfnnWhYO851m+pZCn26htPS02MwccbU=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=jGpTyMmaQFCA/yAC8SI4sEY5rRsGwV7n37iHBsYx0Tf7yhCGxJurnEkRnYv7mXkEJ
+         JsG/XgCkElNDfWpzULElIwahEskifFcCgfbfMXCevqXYv/LoxA47zlm0vQm2c+wXks
+         9sU0GorFjzp+hiEZTdTagyKsg7jPMB0IirRAzwYH6j1ZvpUe4A//reJSJZAgZdootB
+         2g7WnMlVvqwRfef0X7RYd/XXHwhTzr55mpoceajykax0eZUJhKShxiuBLuEbqxsn9r
+         23cnn4NQdvEhPKtWkgxQp/tWiyQ7DXLBQ2ZGCkxLv13OY12pHAVXycTmv8OGqxec2N
+         bHWw0f1u66WqQ==
+X-Nifty-SrcIP: [209.85.221.175]
+Received: by mail-vk1-f175.google.com with SMTP id w4so1193531vkd.5;
+        Fri, 21 Feb 2020 21:33:14 -0800 (PST)
+X-Gm-Message-State: APjAAAX9u7kSV5E4z26VhT21c5/p6BMSVa0JSalDpoLUTvi30+AlUk11
+        5KHMakTJ92TETGCzaHaUkDF5RruOVSnLL0yU3B0=
+X-Google-Smtp-Source: APXvYqw0koqWOvytLQ0hXmAEc9eS7xUecajG9z93OX8duyLUDb6bva5IL7M/xtzmqsUqDWyYc6mF9iWEJjnMvLa+UjA=
+X-Received: by 2002:a1f:1bc3:: with SMTP id b186mr19356263vkb.96.1582349592746;
+ Fri, 21 Feb 2020 21:33:12 -0800 (PST)
+MIME-Version: 1.0
+References: <20200221021002.18795-1-yamada.masahiro@socionext.com>
+ <20200221021002.18795-2-yamada.masahiro@socionext.com> <20200221153215.GA9815@bogus>
+In-Reply-To: <20200221153215.GA9815@bogus>
+From:   Masahiro Yamada <masahiroy@kernel.org>
+Date:   Sat, 22 Feb 2020 14:32:36 +0900
+X-Gmail-Original-Message-ID: <CAK7LNARhXbyUwMwXK=afXLnBVzg_MPv2D=oyn5qWkZtv12zmRg@mail.gmail.com>
+Message-ID: <CAK7LNARhXbyUwMwXK=afXLnBVzg_MPv2D=oyn5qWkZtv12zmRg@mail.gmail.com>
+Subject: Re: [PATCH 2/3] dt-bindings: gpio: Convert UniPhier GPIO to json-schema
+To:     Rob Herring <robh@kernel.org>
+Cc:     DTML <devicetree@vger.kernel.org>,
+        Frank Rowand <frowand.list@gmail.com>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Hi Rob,
+
+On Sat, Feb 22, 2020 at 12:32 AM Rob Herring <robh@kernel.org> wrote:
+>
+> On Fri, 21 Feb 2020 11:10:01 +0900, Masahiro Yamada wrote:
+> > Convert the UniPhier GPIO controller binding to DT schema format.
+> >
+> > I omitted the 'gpio-ranges' property because it is defined in the
+> > dt-schema project (/schemas/gpio/gpio.yaml).
+> >
+> > As of writing, the 'gpio-ranges-group-names' is not defined in that
+> > file despite it is a common property described in
+> > Documentation/devicetree/bindings/gpio/gpio.txt
+> > So, I defined it in this schema.
+> >
+> > Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
+> > ---
+> >
+> > I have a question about the range about 'ngpio'.
+> >
+> >   ngpios:
+> >     minimum: 0
+> >     maximum: 512
+> >
+> > The 'ngpio' property is already defined as 'uint32' in the dt-schema tool:
+> > https://github.com/robherring/dt-schema/blob/master/schemas/gpio/gpio.yaml#L20
+> >
+> > 'uint32' is unsigned, so 'minimum: 0' looks too obvious.
+> >
+> > I cannot omit the minimum because minimum and maximum depend on each other.
+> > I just put a sensible number, 512, in maximum.
+> >
+> > If this range is entirely unneeded, I will delete it.
+>
+> This property is generally for when you can have some number less
+> than a maximum number implied by the compatible string.
+>
+> If there is really no max (e.g. 2^32 - 1 is valid), then just do
+> 'ngpios: true'
 
 
-> On Feb 21, 2020, at 10:34 PM, Longpeng(Mike) <longpeng2@huawei.com> wrote:=
+What does ': true' mean?
 
->=20
-> diff --git a/mm/hugetlb.c b/mm/hugetlb.c
-> index dd8737a..90daf37 100644
-> --- a/mm/hugetlb.c
-> +++ b/mm/hugetlb.c
-> @@ -4910,28 +4910,30 @@ pte_t *huge_pte_offset(struct mm_struct *mm,
-> {
->    pgd_t *pgd;
->    p4d_t *p4d;
-> -    pud_t *pud;
-> -    pmd_t *pmd;
-> +    pud_t *pud, pud_entry;
-> +    pmd_t *pmd, pmd_entry;
->=20
->    pgd =3D pgd_offset(mm, addr);
-> -    if (!pgd_present(*pgd))
-> +    if (!pgd_present(READ_ONCE(*pgd)))
->        return NULL;
->    p4d =3D p4d_offset(pgd, addr);
-> -    if (!p4d_present(*p4d))
-> +    if (!p4d_present(READ_ONCE(*p4d)))
->        return NULL;
 
-What=E2=80=99s the point of READ_ONCE() on those two places?=
+If it is documented somewhere,
+could you point me to the reference?
+
+Even if I remove the 'ngpio' entirely
+from my dt-schema, the 'ngpio' is checked
+correctly.
+
+
+
+
+>
+> >
+> >
+> >  .../bindings/gpio/gpio-uniphier.txt           | 51 -----------
+> >  .../gpio/socionext,uniphier-gpio.yaml         | 89 +++++++++++++++++++
+> >  MAINTAINERS                                   |  2 +-
+> >  3 files changed, 90 insertions(+), 52 deletions(-)
+> >  delete mode 100644 Documentation/devicetree/bindings/gpio/gpio-uniphier.txt
+> >  create mode 100644 Documentation/devicetree/bindings/gpio/socionext,uniphier-gpio.yaml
+> >
+>
+> My bot found errors running 'make dt_binding_check' on your patch:
+>
+> Documentation/devicetree/bindings/display/simple-framebuffer.example.dts:21.16-37.11: Warning (chosen_node_is_root): /example-0/chosen: chosen node must be at root node
+> Error: Documentation/devicetree/bindings/gpio/socionext,uniphier-gpio.example.dts:38.34-35 syntax error
+> FATAL ERROR: Unable to parse input tree
+> scripts/Makefile.lib:300: recipe for target 'Documentation/devicetree/bindings/gpio/socionext,uniphier-gpio.example.dt.yaml' failed
+> make[1]: *** [Documentation/devicetree/bindings/gpio/socionext,uniphier-gpio.example.dt.yaml] Error 1
+> Makefile:1263: recipe for target 'dt_binding_check' failed
+> make: *** [dt_binding_check] Error 2
+>
+> See https://patchwork.ozlabs.org/patch/1241747
+> Please check and re-submit.
+
+OK, I will.
+
+
+
+-- 
+Best Regards
+Masahiro Yamada
