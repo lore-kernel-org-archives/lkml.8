@@ -2,131 +2,88 @@ Return-Path: <SRS0=8jYG=4K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_2 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A31C1C35666
-	for <linux-kernel@archiver.kernel.org>; Sat, 22 Feb 2020 10:40:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C1DA7C35666
+	for <linux-kernel@archiver.kernel.org>; Sat, 22 Feb 2020 10:41:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5AA12206E2
-	for <linux-kernel@archiver.kernel.org>; Sat, 22 Feb 2020 10:40:31 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582368031;
-	bh=6Wmafw7bm+Sez1pspQxTJG8ckuulq3Dz0SOXvtDrc8A=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=Y35JlbFsGWEIXubBdZ0drDc8iou5VBHEvUYfdgrFUMKsU7DACU2ZTDDCacF4GWzoQ
-	 zr8cGIOFirWXH3YCIV6mamBPvvgh2R42MAHRZSj26SYfZcJrKcpolny8d2z1k4teUv
-	 ozt508cxZteQEIyJDOaPlXMHeXUjiNsR3mn3awlM=
+	by mail.kernel.org (Postfix) with ESMTP id A3A72206E2
+	for <linux-kernel@archiver.kernel.org>; Sat, 22 Feb 2020 10:41:42 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727102AbgBVKkJ (ORCPT
+        id S1727181AbgBVKll (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 22 Feb 2020 05:40:09 -0500
-Received: from mail.kernel.org ([198.145.29.99]:57030 "EHLO mail.kernel.org"
+        Sat, 22 Feb 2020 05:41:41 -0500
+Received: from elvis.franken.de ([193.175.24.41]:60555 "EHLO elvis.franken.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726763AbgBVKkJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 22 Feb 2020 05:40:09 -0500
-Received: from disco-boy.misterjones.org (disco-boy.misterjones.org [51.254.78.96])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D7B7D206E2;
-        Sat, 22 Feb 2020 10:40:08 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1582368009;
-        bh=6Wmafw7bm+Sez1pspQxTJG8ckuulq3Dz0SOXvtDrc8A=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=hJ8vBz5YImwnzyR06r0PXFCCN11xWNCuBXVBewnggMEXfopP9vYh1WEsVMg+gPhTA
-         Pta7BW5qW7O0b8swPoD0AcoUJLoyU8UZTxeguzE+JF5jwVXQCY094k+ou6/5ZW+9d2
-         wWxV4aYnWdNzE/lGr7ZsYz7aTDrMVRFADKpQVn80=
-Received: from 78.163-31-62.static.virginmediabusiness.co.uk ([62.31.163.78] helo=why)
-        by disco-boy.misterjones.org with esmtpsa (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <maz@kernel.org>)
-        id 1j5SCc-007C3Z-NX; Sat, 22 Feb 2020 10:40:06 +0000
-Date:   Sat, 22 Feb 2020 10:40:05 +0000
-From:   Marc Zyngier <maz@kernel.org>
-To:     Vincenzo Frascino <vincenzo.frascino@arm.com>
-Cc:     linux-arch@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org, catalin.marinas@arm.com,
-        will.deacon@arm.com, linux@armlinux.org.uk, tglx@linutronix.de,
-        luto@kernel.org, m.szyprowski@samsung.com, Mark.Rutland@arm.com
-Subject: Re: [PATCH v2 0/3] Fix arm_arch_timer clockmode when vDSO disabled
-Message-ID: <20200222104005.6fc4019d@why>
-In-Reply-To: <20200221181849.40351-1-vincenzo.frascino@arm.com>
-References: <20200221181849.40351-1-vincenzo.frascino@arm.com>
-Organization: Approximate
-X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        id S1726763AbgBVKll (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 22 Feb 2020 05:41:41 -0500
+Received: from uucp (helo=alpha)
+        by elvis.franken.de with local-bsmtp (Exim 3.36 #1)
+        id 1j5SE4-0003bo-00; Sat, 22 Feb 2020 11:41:36 +0100
+Received: by alpha.franken.de (Postfix, from userid 1000)
+        id 9868BC0E42; Sat, 22 Feb 2020 11:41:24 +0100 (CET)
+Date:   Sat, 22 Feb 2020 11:41:24 +0100
+From:   Thomas Bogendoerfer <tsbogend@alpha.franken.de>
+To:     YunQiang Su <wzssyqa@gmail.com>
+Cc:     Paul Burton <paulburton@kernel.org>,
+        linux-mips <linux-mips@vger.kernel.org>,
+        linux-kernel@vger.kernel.org, wayne.sun@cipunited.com,
+        chris.wang@neocore.cn, Yunqiang Su <ysu@wavecomp.com>
+Subject: Re: [PATCH 2/2] MAINTAINERS: Set MIPS status to Odd Fixes
+Message-ID: <20200222104124.GA4589@alpha.franken.de>
+References: <20200219191730.1277800-1-paulburton@kernel.org>
+ <20200219191730.1277800-3-paulburton@kernel.org>
+ <20200220112330.GA3053@alpha.franken.de>
+ <CAKcpw6UDik=K6MdEayDPVaZP+BsqrbKoKAXJaHLERrxDmFF7+A@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
-X-SA-Exim-Connect-IP: 62.31.163.78
-X-SA-Exim-Rcpt-To: vincenzo.frascino@arm.com, linux-arch@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, catalin.marinas@arm.com, will.deacon@arm.com, linux@armlinux.org.uk, tglx@linutronix.de, luto@kernel.org, m.szyprowski@samsung.com, Mark.Rutland@arm.com
-X-SA-Exim-Mail-From: maz@kernel.org
-X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAKcpw6UDik=K6MdEayDPVaZP+BsqrbKoKAXJaHLERrxDmFF7+A@mail.gmail.com>
+User-Agent: Mutt/1.5.23 (2014-03-12)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 21 Feb 2020 18:18:46 +0000
-Vincenzo Frascino <vincenzo.frascino@arm.com> wrote:
+On Thu, Feb 20, 2020 at 08:11:08PM +0800, YunQiang Su wrote:
+> I noticed that you are mainly working some old machines.
+> And recently years, there are some new machines from Ingenic, Loongson, MTK etc.
+> MIPS Inc also have some MIPSr6 IPs.
+> I think that you need some of these machines.
 
-> The arm_arch_timer requires that VDSO_CLOCKMODE_ARCHTIMER to be
-> defined to compile correctly. On arm the vDSO can be disabled and when
-> this is the case the compilation ends prematurely with an error:
->=20
->  $ make ARCH=3Darm multi_v7_defconfig
->  $ ./scripts/config -d VDSO
->  $ make
->=20
->  drivers/clocksource/arm_arch_timer.c:73:44: error:
->  =E2=80=98VDSO_CLOCKMODE_ARCHTIMER=E2=80=99 undeclared here (not in a fun=
-ction)
->  static enum vdso_clock_mode vdso_default =3D VDSO_CLOCKMODE_ARCHTIMER;
->                                             ^
->  scripts/Makefile.build:267: recipe for target
->  'drivers/clocksource/arm_arch_timer.o' failed
->  make[2]: *** [drivers/clocksource/arm_arch_timer.o] Error 1
->  make[2]: *** Waiting for unfinished jobs....
->  scripts/Makefile.build:505: recipe for target 'drivers/clocksource' fail=
-ed
->  make[1]: *** [drivers/clocksource] Error 2
->  make[1]: *** Waiting for unfinished jobs....
->  Makefile:1683: recipe for target 'drivers' failed
->  make: *** [drivers] Error 2
->=20
-> This patch series addresses the issue defining a default arch clockmode
-> for arm and arm64 and using it to initialize the arm_arch_timer.
+sure, it would be helpfull. And with a reasonable price I have no problem
+buying a new machine. But IMHO it's not mandatory for a maintainer
+to have all supported hardware available.
 
-arm only. arm64 is just fine.
+> In the last years, we see that the single maintainer is not enough as
+> people may quite busy.
+> Do you think that we need co-maintainers?
 
->=20
-> Changes:
-> --------
-> v2:
->   - Addressed Marc Zyngier comments.
->   - Rebased on 5.6-rc2.
+Looking at the number of patches in arch/mips for the last few
+release cylces we were always in the range of 100-150 commits.
+So I don't see a need for a co-maintainer, but having backup
+maintainer(s) is a good thing.
 
-This doesn't apply to -rc2, and is rather against next.
+For me maintaining means
 
->=20
-> Cc: Catalin Marinas <catalin.marinas@arm.com>
-> Cc: Will Deacon <will.deacon@arm.com>
-> Cc: Russell King <linux@armlinux.org.uk>
-> Cc: Thomas Gleixner <tglx@linutronix.de>
-> Cc: Marc Zyngier <maz@kernel.org>
-> Cc: Mark Rutland <Mark.Rutland@arm.com>
-> Cc: Marek Szyprowski <m.szyprowski@samsung.com>
-> Signed-off-by: Vincenzo Frascino <vincenzo.frascino@arm.com>
->=20
-> Vincenzo Frascino (3):
->   arm: clocksource: Add VDSO default clockmode
->   arm64: clocksource: Add VDSO default clockmode
->   clocksource: Fix arm_arch_timer clockmode when vDSO disabled
+- keep MIPS archicture alive (legacy and newer stuff)
+- collecting patches and integrating them into a git tree for pulling
+- send pull requests to Linus in a timely manner
+- review/comment patches
+- give guidance on how to do abstractions inside MIPS arch code
 
-Please squash the three patches into a single one. There is zero point
-in having 3 patches for something that small.
+Some personal background
 
-	M.
---=20
-Jazz is not dead. It just smells funny...
+- doing Linux/MIPS coding since 1995
+- worked as system architect for OS development with MIPS 4kec, 24k, 34k
+  based embedded systems
+- working now for SUSE in kernel network driver area (with enough time
+  for other open source projects)
+
+Thomas.
+
+-- 
+Crap can work. Given enough thrust pigs will fly, but it's not necessarily a
+good idea.                                                [ RFC1925, 2.3 ]
