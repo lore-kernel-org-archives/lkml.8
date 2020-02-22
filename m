@@ -2,93 +2,205 @@ Return-Path: <SRS0=8jYG=4K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 397E4C35669
-	for <linux-kernel@archiver.kernel.org>; Sat, 22 Feb 2020 00:29:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0B132C35669
+	for <linux-kernel@archiver.kernel.org>; Sat, 22 Feb 2020 00:30:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0C63A24672
-	for <linux-kernel@archiver.kernel.org>; Sat, 22 Feb 2020 00:29:33 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="UaeuT1T2"
+	by mail.kernel.org (Postfix) with ESMTP id CA4CA24672
+	for <linux-kernel@archiver.kernel.org>; Sat, 22 Feb 2020 00:30:27 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727103AbgBVA3c (ORCPT
+        id S1727169AbgBVAa0 convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Feb 2020 19:29:32 -0500
-Received: from mail-pj1-f66.google.com ([209.85.216.66]:35538 "EHLO
-        mail-pj1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726697AbgBVA3b (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Feb 2020 19:29:31 -0500
-Received: by mail-pj1-f66.google.com with SMTP id q39so1514006pjc.0
-        for <linux-kernel@vger.kernel.org>; Fri, 21 Feb 2020 16:29:31 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=/3+ekiIDMOGmiDjrYAnNc8G9eXFhd69LzzwYliKSeDk=;
-        b=UaeuT1T2xzPoXNPxlPuN7qgHSNKYaqFXhKAUALtPwg8DJgTO/AVDcCGa0WQzLMZBj6
-         ozTjHup3RowLqIjE0+/c9LeYRCxnA7HCkhT1nIb2BKK2fLUIVha0L9Wv2wsBpOxD3R2w
-         QCDUb5IRlqbWRjl9Ud3gWtpP/Q71ObowauXB0=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=/3+ekiIDMOGmiDjrYAnNc8G9eXFhd69LzzwYliKSeDk=;
-        b=VHLT1kuCPXhhiEr43Eafwg+FIkfIo3KPdBJqAbeABcdRS4yp/BgYBGcnHH88zSwXha
-         00dqN8Baf69q7wFRfuH2hozYEY8kJaludS92a6oIz8WHsFWKvbkx5pFfHTmyKFVDLLli
-         /lk6laFpHd+7mfmKM/uO0AoTeWQ2bn/Gi10Yp+xS9OCSsMw8q6R1ZNTYqxT0wTIVn7CF
-         4WeylEwXp3oxtwvkcdHiq5SYjl4Cl2TrrzSxL/qtwPe3PrxtqRVvKvRPAEE2JNe5pLbq
-         +bCT9Cpn8FIXsTNI7Z7J/S6Vk5zqu94ChrMkba+5qPMEzzt78c/XXgo7tn7muLw2zaI5
-         +ZIQ==
-X-Gm-Message-State: APjAAAWJ3UIX7ObGOJBG6a5U8U5mXhi+hen4IfPR6wpsiZiEtjFLD1cM
-        sUKtL7xO98vWKjSzQw652b/Jqw==
-X-Google-Smtp-Source: APXvYqyP2Eu7DZ39Tl0jFQ4lvdUnRpiBhcQzdZ7LrEf/OVF8NHlMo9EFXeE53kJ5qfdNni+OtJyw/w==
-X-Received: by 2002:a17:90a:8c0f:: with SMTP id a15mr6299848pjo.86.1582331371026;
-        Fri, 21 Feb 2020 16:29:31 -0800 (PST)
-Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id z5sm4213775pfq.3.2020.02.21.16.29.30
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 21 Feb 2020 16:29:30 -0800 (PST)
-Date:   Fri, 21 Feb 2020 16:29:29 -0800
-From:   Kees Cook <keescook@chromium.org>
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     Andy Lutomirski <luto@amacapital.net>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Jens Axboe <axboe@kernel.dk>, Jann Horn <jannh@google.com>,
-        Will Deacon <will@kernel.org>
-Subject: Re: [PATCH] mm/tlb: Fix use_mm() vs TLB invalidate
-Message-ID: <202002211627.33D858AA@keescook>
-References: <CAHk-=wi4uO+Djqr4Jc1TnCofwxUTuXHtgkgwnVX86q06UGV6DA@mail.gmail.com>
- <6A09F721-0AD9-4B86-AB3E-563A1CF5ABDE@amacapital.net>
- <202002211506.2151CA26@keescook>
- <CAHk-=wjL-4=YfvQb_pLhK5oH1QL2j-JCt-Z+S-r86-H__Vow0w@mail.gmail.com>
+        Fri, 21 Feb 2020 19:30:26 -0500
+Received: from mga12.intel.com ([192.55.52.136]:57313 "EHLO mga12.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726697AbgBVAa0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 21 Feb 2020 19:30:26 -0500
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga006.fm.intel.com ([10.253.24.20])
+  by fmsmga106.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 21 Feb 2020 16:30:25 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.70,470,1574150400"; 
+   d="scan'208";a="437123404"
+Received: from orsmsx107.amr.corp.intel.com ([10.22.240.5])
+  by fmsmga006.fm.intel.com with ESMTP; 21 Feb 2020 16:30:22 -0800
+Received: from orsmsx103.amr.corp.intel.com ([169.254.5.43]) by
+ ORSMSX107.amr.corp.intel.com ([169.254.1.106]) with mapi id 14.03.0439.000;
+ Fri, 21 Feb 2020 16:30:22 -0800
+From:   "Brown, Aaron F" <aaron.f.brown@intel.com>
+To:     Kai-Heng Feng <kai.heng.feng@canonical.com>,
+        "davem@davemloft.net" <davem@davemloft.net>,
+        "mkubecek@suse.cz" <mkubecek@suse.cz>,
+        "Kirsher, Jeffrey T" <jeffrey.t.kirsher@intel.com>
+CC:     "open list:NETWORKING DRIVERS" <netdev@vger.kernel.org>,
+        "moderated list:INTEL ETHERNET DRIVERS" 
+        <intel-wired-lan@lists.osuosl.org>,
+        open list <linux-kernel@vger.kernel.org>
+Subject: RE: [Intel-wired-lan] [PATCH v3 1/2] igb: Use device_lock() insead
+ of rtnl_lock()
+Thread-Topic: [Intel-wired-lan] [PATCH v3 1/2] igb: Use device_lock() insead
+ of rtnl_lock()
+Thread-Index: AQHV3Z7TQowGVpsUH068d9CcjdELQKgmcBOA
+Date:   Sat, 22 Feb 2020 00:30:22 +0000
+Message-ID: <309B89C4C689E141A5FF6A0C5FB2118B971F9210@ORSMSX103.amr.corp.intel.com>
+References: <20200207101005.4454-1-kai.heng.feng@canonical.com>
+In-Reply-To: <20200207101005.4454-1-kai.heng.feng@canonical.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+dlp-product: dlpe-windows
+dlp-version: 11.2.0.6
+dlp-reaction: no-action
+x-originating-ip: [10.22.254.139]
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 8BIT
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAHk-=wjL-4=YfvQb_pLhK5oH1QL2j-JCt-Z+S-r86-H__Vow0w@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Feb 21, 2020 at 03:57:21PM -0800, Linus Torvalds wrote:
-> On Fri, Feb 21, 2020 at 3:10 PM Kees Cook <keescook@chromium.org> wrote:
-> > Why not just fail after the WARN -- I wrote the patch for the (very few)
-> > callers to handle the errors, clean up, and carry on.
+
+
+> -----Original Message-----
+> From: Intel-wired-lan <intel-wired-lan-bounces@osuosl.org> On Behalf Of
+> Kai-Heng Feng
+> Sent: Friday, February 7, 2020 2:10 AM
+> To: davem@davemloft.net; mkubecek@suse.cz; Kirsher, Jeffrey T
+> <jeffrey.t.kirsher@intel.com>
+> Cc: open list:NETWORKING DRIVERS <netdev@vger.kernel.org>; Kai-Heng
+> Feng <kai.heng.feng@canonical.com>; moderated list:INTEL ETHERNET
+> DRIVERS <intel-wired-lan@lists.osuosl.org>; open list <linux-
+> kernel@vger.kernel.org>
+> Subject: [Intel-wired-lan] [PATCH v3 1/2] igb: Use device_lock() insead of
+> rtnl_lock()
 > 
-> Can it actually fail? Or is this all just "let's add new error
-> conditions that make the code harder to read because they make no
-> actual sense"?
+> Commit 9474933caf21 ("igb: close/suspend race in netif_device_detach")
+> fixed race condition between close and power management ops by using
+> rtnl_lock().
+> 
+> However we can achieve the same by using device_lock() since all power
+> management ops are protected by device_lock().
+> 
+> This fix is a preparation for next patch, to prevent a dead lock under
+> rtnl_lock() when calling runtime resume routine.
+> 
+> Signed-off-by: Kai-Heng Feng <kai.heng.feng@canonical.com>
+> ---
+> v3:
+>  - Fix unreleased lock reported by 0-day test bot.
+> v2:
+>  - No change.
+> 
+>  drivers/net/ethernet/intel/igb/igb_main.c | 14 ++++++++------
+>  1 file changed, 8 insertions(+), 6 deletions(-)
 
-I was just trying to see if there was a reasonable "do not continue and
-do stuff we just tested for". If this should just be WARN_ON_ONCE() and
-continue anyway, so be it. My general guideline is to avoid continuing a
-known-bad path.
-
--- 
-Kees Cook
+This patch introduces the following call trace / RIP when I sleep / resume (via rtcwake) a system that has an igb port with link up:  I'm not sure if it introduces the issue or just exposes / displays it as it only shows up on the first sleep / resume cycle and the systems I have that were stable for many sleep / resume cycles (arbitrarily 50+) continue to be so.  
+-------------------------------------------------------------------------------------------------
+...
+[   50.279436] usb usb3: root hub lost power or was reset
+[   50.279437] usb usb4: root hub lost power or was reset
+[   50.279491] sd 1:0:0:0: [sda] Starting disk
+[   50.317691] ------------[ cut here ]------------
+[   50.317692] RTNL: assertion failed at net/core/dev.c (2867)
+[   50.317700] WARNING: CPU: 6 PID: 5287 at net/core/dev.c:2867 netif_set_real_num_tx_queues+0x184/0x1a0
+[   50.317701] Modules linked in: rfcomm xt_conntrack nf_conntrack nf_defrag_ipv6 nf_defrag_ipv4 ipt_REJECT nf_rej
+ect_ipv4 nft_counter nft_compat nf_tables nfnetlink tun bridge stp llc cmac bnep iTCO_wdt intel_wmi_thunderbolt iT
+CO_vendor_support mxm_wmi wmi_bmof x86_pkg_temp_thermal intel_powerclamp coretemp kvm_intel snd_hda_codec_hdmi kvm
+ snd_hda_codec_realtek irqbypass snd_hda_codec_generic ledtrig_audio btusb btrtl btbcm snd_hda_intel btintel snd_i
+ntel_dspcfg snd_hda_codec bluetooth snd_hwdep snd_hda_core snd_seq crct10dif_pclmul crc32_pclmul joydev snd_seq_de
+vice ghash_clmulni_intel intel_cstate snd_pcm mei_me intel_uncore snd_timer ecdh_generic snd ecc pcspkr mei rfkill
+ i2c_i801 soundcore intel_rapl_perf sg wmi acpi_pad intel_pmc_core nfsd auth_rpcgss nfs_acl lockd grace sunrpc ip_
+tables xfs libcrc32c sr_mod sd_mod cdrom t10_pi i915 intel_gtt drm_kms_helper syscopyarea sysfillrect sysimgblt fb
+_sys_fops cec drm igb ahci libahci e1000e libata crc32c_intel dca i2c_algo_bit video
+[   50.317719] CPU: 6 PID: 5287 Comm: kworker/u24:17 Not tainted 5.6.0-rc2_next-queue_dev-queue_81b6341+ #5
+[   50.317720] Hardware name: Gigabyte Technology Co., Ltd. Z370 AORUS Gaming 5/Z370 AORUS Gaming 5-CF, BIOS F6 04
+/03/2018
+[   50.317722] Workqueue: events_unbound async_run_entry_fn
+[   50.317723] RIP: 0010:netif_set_real_num_tx_queues+0x184/0x1a0
+[   50.317724] Code: 43 1e e7 00 00 0f 85 fc fe ff ff ba 33 0b 00 00 48 c7 c6 92 57 9a bd 48 c7 c7 e0 a4 91 bd c6
+05 23 1e e7 00 01 e8 57 3c 97 ff <0f> 0b e9 d6 fe ff ff 41 be ea ff ff ff e9 a4 fe ff ff 66 2e 0f 1f
+[   50.317724] RSP: 0018:ffffb57fc1347d38 EFLAGS: 00010282
+[   50.317725] RAX: 0000000000000000 RBX: ffff995a9e3e4000 RCX: 0000000000000007
+[   50.317725] RDX: 0000000000000007 RSI: 0000000000000002 RDI: ffff995abe398f40
+[   50.317725] RBP: 0000000000000004 R08: 0000000000000002 R09: 000000000002b500
+[   50.317726] R10: 0000003a9dc62fa1 R11: 0000000000fed278 R12: 0000000000000004
+[   50.317726] R13: 0000000000000004 R14: ffff995a9e3e4000 R15: ffff995a9e3e4000
+[   50.317727] FS:  0000000000000000(0000) GS:ffff995abe380000(0000) knlGS:0000000000000000
+[   50.317727] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+[   50.317727] CR2: 00007f4dbd7fae20 CR3: 0000000efbe0a004 CR4: 00000000003606e0
+[   50.317728] DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+[   50.317728] DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+[   50.317728] Call Trace:
+[   50.317734]  __igb_open+0x1ee/0x5c0 [igb]
+[   50.317737]  igb_resume+0x193/0x1c0 [igb]
+[   50.317739]  ? pci_pm_thaw+0x80/0x80
+[   50.317741]  dpm_run_callback+0x4f/0x140
+[   50.317742]  device_resume+0x107/0x180
+[   50.317743]  async_resume+0x19/0x50
+[   50.317744]  async_run_entry_fn+0x39/0x160
+[   50.317746]  process_one_work+0x1a7/0x370
+[   50.317747]  worker_thread+0x30/0x380
+[   50.317748]  ? process_one_work+0x370/0x370
+[   50.317749]  kthread+0x10c/0x130
+[   50.317750]  ? kthread_park+0x80/0x80
+[   50.317751]  ret_from_fork+0x35/0x40
+[   50.317752] ---[ end trace 45a9ec6b02347b6e ]---
+[   50.317753] ------------[ cut here ]------------
+[   50.317753] RTNL: assertion failed at net/core/dev.c (2913)
+[   50.317756] WARNING: CPU: 6 PID: 5287 at net/core/dev.c:2913 netif_set_real_num_rx_queues+0x79/0x80
+[   50.317757] Modules linked in: rfcomm xt_conntrack nf_conntrack nf_defrag_ipv6 nf_defrag_ipv4 ipt_REJECT nf_rej
+ect_ipv4 nft_counter nft_compat nf_tables nfnetlink tun bridge stp llc cmac bnep iTCO_wdt intel_wmi_thunderbolt iT
+CO_vendor_support mxm_wmi wmi_bmof x86_pkg_temp_thermal intel_powerclamp coretemp kvm_intel snd_hda_codec_hdmi kvm
+ snd_hda_codec_realtek irqbypass snd_hda_codec_generic ledtrig_audio btusb btrtl btbcm snd_hda_intel btintel snd_i
+ntel_dspcfg snd_hda_codec bluetooth snd_hwdep snd_hda_core snd_seq crct10dif_pclmul crc32_pclmul joydev snd_seq_de
+vice ghash_clmulni_intel intel_cstate snd_pcm mei_me intel_uncore snd_timer ecdh_generic snd ecc pcspkr mei rfkill
+ i2c_i801 soundcore intel_rapl_perf sg wmi acpi_pad intel_pmc_core nfsd auth_rpcgss nfs_acl lockd grace sunrpc ip_
+tables xfs libcrc32c sr_mod sd_mod cdrom t10_pi i915 intel_gtt drm_kms_helper syscopyarea sysfillrect sysimgblt fb
+_sys_fops cec drm igb ahci libahci e1000e libata crc32c_intel dca i2c_algo_bit video
+[   50.317766] CPU: 6 PID: 5287 Comm: kworker/u24:17 Tainted: G        W         5.6.0-rc2_next-queue_dev-queue_81
+b6341+ #5
+[   50.317766] Hardware name: Gigabyte Technology Co., Ltd. Z370 AORUS Gaming 5/Z370 AORUS Gaming 5-CF, BIOS F6 04
+/03/2018
+[   50.317767] Workqueue: events_unbound async_run_entry_fn
+[   50.317768] RIP: 0010:netif_set_real_num_rx_queues+0x79/0x80
+[   50.317768] Code: ff c3 80 3d 89 6c e7 00 00 75 db ba 61 0b 00 00 48 c7 c6 92 57 9a bd 48 c7 c7 e0 a4 91 bd c6
+05 6d 6c e7 00 01 e8 a2 8a 97 ff <0f> 0b eb b8 0f 1f 00 0f 1f 44 00 00 53 f0 48 0f ba af d8 00 00 00
+[   50.317769] RSP: 0018:ffffb57fc1347d58 EFLAGS: 00010282
+[   50.317769] RAX: 0000000000000000 RBX: ffff995a9e3e4000 RCX: 0000000000000007
+[   50.317769] RDX: 0000000000000007 RSI: 0000000000000002 RDI: ffff995abe398f40
+[   50.317770] RBP: 0000000000000004 R08: 0000000000000002 R09: 000000000002b500
+[   50.317770] R10: 0000003a9dc92851 R11: 0000000000fec568 R12: 0000000000000000
+[   50.317770] R13: 0000000000000001 R14: ffff995a9e3e4000 R15: ffff995a9e3e4000
+[   50.317771] FS:  0000000000000000(0000) GS:ffff995abe380000(0000) knlGS:0000000000000000
+[   50.317771] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+[   50.317771] CR2: 00007f4dbd7fae20 CR3: 0000000efbe0a004 CR4: 00000000003606e0
+[   50.317772] DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+[   50.317772] DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+[   50.317772] Call Trace:
+[   50.317775]  __igb_open+0x208/0x5c0 [igb]
+[   50.317777]  igb_resume+0x193/0x1c0 [igb]
+[   50.317777]  ? pci_pm_thaw+0x80/0x80
+[   50.317778]  dpm_run_callback+0x4f/0x140
+[   50.317779]  device_resume+0x107/0x180
+[   50.317780]  async_resume+0x19/0x50
+[   50.317781]  async_run_entry_fn+0x39/0x160
+[   50.317782]  process_one_work+0x1a7/0x370
+[   50.317783]  worker_thread+0x30/0x380
+[   50.317784]  ? process_one_work+0x370/0x370
+[   50.317785]  kthread+0x10c/0x130
+[   50.317785]  ? kthread_park+0x80/0x80
+[   50.317786]  ret_from_fork+0x35/0x40
+[   50.317787] ---[ end trace 45a9ec6b02347b6f ]---
+[   50.560158] OOM killer enabled.
+[   50.560158] Restarting tasks ... done.
+[   50.560713] video LNXVIDEO:00: Restoring backlight state
+[   50.560714] PM: suspend exit
+[   50.601179] ata5: SATA link down (SStatus 4 SControl 300)
+[   50.601201] ata4: SATA link up 1.5 Gbps (SStatus 113 SControl 300)
+...
