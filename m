@@ -2,90 +2,71 @@ Return-Path: <SRS0=8jYG=4K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8FE31C35666
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A2D16C35671
 	for <linux-kernel@archiver.kernel.org>; Sat, 22 Feb 2020 14:24:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5C5CF206EF
+	by mail.kernel.org (Postfix) with ESMTP id 858B320702
 	for <linux-kernel@archiver.kernel.org>; Sat, 22 Feb 2020 14:24:24 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=yahoo.ca header.i=@yahoo.ca header.b="ZfYsdNcy"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727706AbgBVOYV (ORCPT
+        id S1727757AbgBVOYX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 22 Feb 2020 09:24:21 -0500
-Received: from sonic316-54.consmr.mail.gq1.yahoo.com ([98.137.69.30]:39939
-        "EHLO sonic316-54.consmr.mail.gq1.yahoo.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727259AbgBVOYV (ORCPT
+        Sat, 22 Feb 2020 09:24:23 -0500
+Received: from youngberry.canonical.com ([91.189.89.112]:54623 "EHLO
+        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727584AbgBVOYW (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 22 Feb 2020 09:24:21 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=yahoo.ca; s=s2048; t=1582381460; bh=liTe1C7UBRwJrfq2LfqWSrRW/RTFPmELB83A9NRLLsY=; h=Date:From:Subject:To:Cc:References:In-Reply-To:From:Subject; b=ZfYsdNcypCF9yz5FwYNKx/LH5bJNdeKW3gV8elm9sIturkgLwhONj8KVWJuyLLup1eSJv3rEB14h0i1+cS8XzPRWSJe3ttKB0VyqZTCcwIZcWIKSqstEVaQHxjVuUyMepBp4Iwu2IDyFczBgyUNZnFs+EK9iLvwDGYTdrlHU8UGLCyT1GRrRcDqPsTT1Pek3mLpQEF2LjnyIGcDvkxVDnevGoatfKzdf8oXvlqtd7+5aSQ8h54bk8mjRC6cCSXUzOZTblR8AMKQT24jUrE1nBIKxc3Iz0atHWBCcbinOJrciBd1MbCRLQtBvdILfnTlbBnSu6vzI3JaOl2kcTKZqOw==
-X-YMail-OSG: VkqpVfQVM1lrJ.0Je7pBA9JWf08RYTMppv_B7f8gA.EGZGpAfpkIyc7e6zplYQN
- UATTStDDNz6.n1dGoGqj1mC0USCP3p2eQAY0cVLCrp7S49ckR4w5jRrmKyv.Jf9yfAklKxQCdZU0
- 1PtlDuVbrxNpfzpLecoH8owuF9E4WLt5uqgM3uGzG8S2y9BoUjtxHrEVxHAIFD5OGPlGWSTfu.zq
- _UgCajlV5BZq_tDv0YMpYTotHaUuvJP9yPbC.ewyD9lK_4eELZsQdM411con._dEtrbaEOuRslAb
- ZHciIla8N7bC9Wgh63W3Uz_HHVgs_LBYVu_Odeim2DRW4yr8.O1unzzqmwI9Zg6p1toj6SnjUl.O
- cIc.rs5XiQhyxIG7OaF60dHD9k_Ymc8AG6HJb4NbtIDNlfHh_KNrGftR2D_bR0pTyECDpqxnZgLm
- XcQA0qgNlUXkQ2hPfilmWuBjeYvuRUrU556p2hggieKU17MB_JGeoiMZWDzX9Z923nPqZbFDsV0L
- jR8qCcfxCV2x3fiBdlWm1ypEcCIGGZe9oB1j1W0HV.9oXFjCzOjLPWIFsRNKkbgmng4WRXLcmYTp
- UsQbzxyBFSdVK_oEmtJCWsh4cWuWdGVYYTXCcbIXQWGd4Z7y2WG1.WguXPolxGT20H64KMPxZ0Lg
- esS6wtm74bvnnI9c0ihUoDZ..KbEuxLB9MbWIREegoYL39mNJ2GUYOTE_o9.wJ5gVJt3qxF_0GsA
- gA6MFP__2eVzJrYWxmiFH2nv9hFpcRaicRj.HZMTl.kUd0r1iK65a2UFCaoR3OZWr5C29kQhnkvW
- mhXAKzlPzBBt2xRlcZRJ6xMGC0s4nNborWL.RtNDoLf5tn4cfYXu4y43eNgUJ1biK6gEJ0DEDniZ
- .ubxZhjwodt.frmEridyArcu9078lVQO6H5IL_jJJifuDmSo43q.BT5DOZ27MRJfFHjD2T3xfiby
- lp97Q4wDrR4U95yuNxi39MUL48WPy83w8Q5PPhDIwOPVDQ_A7UKeZB5zuq_5U5YEsUj92ZkY_KNF
- icdU1eqaQkl9IgKFFLM1SNRacuGigqCzCheq7nnkFB55Mmn7pB5PQTYB4E1OFFWezYLUsW0TQ69w
- yeBmn3YS_AzsoaHaKGXsTG3mv0cGi1J5EcyRizNc24GJ.LiWJRJya7JFF78FRklgS.FQ7ZYxxdyP
- 4ogwHnmStvMXpzTDX.wltiENJG52rvLQDdBq3voKDItdCMmwI1FHhH0LIZSu0qmXJZ8NKXdMmxT2
- Um0i1YQOjziCwAsaqRuQPAI5DZCUeTNhvOOpi_4ZKHzaSBGTBjQY0fa07gK3xeF.cpnnlQ_MuwzW
- 9KANdn0DTsGcVKywO_hgisaHLhT4GohrbwQmdPJYetJmVY6UDRAcgPvS_LysWHvUgMuwaTTuDC8A
- xpsczsxVD
-Received: from sonic.gate.mail.ne1.yahoo.com by sonic316.consmr.mail.gq1.yahoo.com with HTTP; Sat, 22 Feb 2020 14:24:20 +0000
-Received: by smtp401.mail.bf1.yahoo.com (Oath Hermes SMTP Server) with ESMTPA ID 08d9970ba44d42f11deb6bf6cb444e34;
-          Sat, 22 Feb 2020 14:24:17 +0000 (UTC)
-Date:   Sat, 22 Feb 2020 09:24:14 -0500
-From:   "Alex Xu (Hello71)" <alex_y_xu@yahoo.ca>
-Subject: Re: [PATCH] kbuild: move -pipe to global KBUILD_CFLAGS
-To:     Nathan Chancellor <natechancellor@gmail.com>
-Cc:     Russell King <linux@armlinux.org.uk>, linux-kbuild@vger.kernel.org,
-        linux-kernel@vger.kernel.org, masahiroy@kernel.org,
-        michal.lkml@markovi.net
-References: <20200222003820.220854-1-alex_y_xu.ref@yahoo.ca>
-        <20200222003820.220854-1-alex_y_xu@yahoo.ca>
-        <20200222021619.GA51223@ubuntu-m2-xlarge-x86>
-        <1582341758.yo66djba3t.none@localhost>
-        <20200222080140.GA40311@ubuntu-m2-xlarge-x86>
-In-Reply-To: <20200222080140.GA40311@ubuntu-m2-xlarge-x86>
+        Sat, 22 Feb 2020 09:24:22 -0500
+Received: from 1.general.cking.uk.vpn ([10.172.193.212] helo=localhost)
+        by youngberry.canonical.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.86_2)
+        (envelope-from <colin.king@canonical.com>)
+        id 1j5VhS-0002wG-2x; Sat, 22 Feb 2020 14:24:10 +0000
+From:   Colin King <colin.king@canonical.com>
+To:     Zaibo Xu <xuzaibo@huawei.com>,
+        Herbert Xu <herbert@gondor.apana.org.au>,
+        "David S . Miller" <davem@davemloft.net>,
+        linux-crypto@vger.kernel.org
+Cc:     kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH] crypto: hisilicon: remove redundant assignment of pointer ctx
+Date:   Sat, 22 Feb 2020 14:24:09 +0000
+Message-Id: <20200222142409.141057-1-colin.king@canonical.com>
+X-Mailer: git-send-email 2.25.0
 MIME-Version: 1.0
-Message-Id: <1582381271.1karmgahx0.none@localhost>
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-X-Mailer: WebService/1.1.15302 hermes Apache-HttpAsyncClient/4.1.4 (Java/1.8.0_241)
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Excerpts from Nathan Chancellor's message of February 22, 2020 3:01 am:
-> I used hyperfine [1] to run a quick benchmark with a freshly built
-> GCC 9.2.0 for x86 and aarch64 and here are the results:
->=20
-> In both cases it seems like performance regresses (by 1% but still) but
-> maybe it is my machine, even though this benchmark was done on a
-> different machine than the one from my commit back in 2018.
->=20
-> I am not sure I would write off these results, since I did the benchmark
-> 25 times on each one back to back, eliminating most of the variance that
-> you described.
->=20
-> [1]: https://github.com/sharkdp/hyperfine
->=20
-> Cheers,
-> Nathan
->=20
+From: Colin Ian King <colin.king@canonical.com>
 
-What kernel version are you running? Do you have the 5.6 pipe reworks?
+Pointer ctx is being re-assigned with the same value as it
+was initialized with. The second assignment is redundant and
+can be removed.
+
+Addresses-Coverity: ("Unused value")
+Signed-off-by: Colin Ian King <colin.king@canonical.com>
+---
+ drivers/crypto/hisilicon/sec2/sec_crypto.c | 1 -
+ 1 file changed, 1 deletion(-)
+
+diff --git a/drivers/crypto/hisilicon/sec2/sec_crypto.c b/drivers/crypto/hisilicon/sec2/sec_crypto.c
+index a2cfcc9ccd94..acd15507eb8a 100644
+--- a/drivers/crypto/hisilicon/sec2/sec_crypto.c
++++ b/drivers/crypto/hisilicon/sec2/sec_crypto.c
+@@ -447,7 +447,6 @@ static int sec_skcipher_init(struct crypto_skcipher *tfm)
+ 	struct sec_ctx *ctx = crypto_skcipher_ctx(tfm);
+ 	int ret;
+ 
+-	ctx = crypto_skcipher_ctx(tfm);
+ 	ctx->alg_type = SEC_SKCIPHER;
+ 	crypto_skcipher_set_reqsize(tfm, sizeof(struct sec_req));
+ 	ctx->c_ctx.ivsize = crypto_skcipher_ivsize(tfm);
+-- 
+2.25.0
+
