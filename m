@@ -2,189 +2,143 @@ Return-Path: <SRS0=8jYG=4K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.4 required=3.0 tests=FROM_LOCAL_HEX,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 59057C35671
-	for <linux-kernel@archiver.kernel.org>; Sat, 22 Feb 2020 04:52:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B83FAC35669
+	for <linux-kernel@archiver.kernel.org>; Sat, 22 Feb 2020 05:00:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 20EE4208C3
-	for <linux-kernel@archiver.kernel.org>; Sat, 22 Feb 2020 04:52:23 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=xff.cz header.i=@xff.cz header.b="B6+iRBdG"
+	by mail.kernel.org (Postfix) with ESMTP id 8CBDC208C4
+	for <linux-kernel@archiver.kernel.org>; Sat, 22 Feb 2020 05:00:11 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728074AbgBVEvw (ORCPT
+        id S1726329AbgBVFAK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Feb 2020 23:51:52 -0500
-Received: from vps.xff.cz ([195.181.215.36]:53292 "EHLO vps.xff.cz"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726198AbgBVEvv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Feb 2020 23:51:51 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=xff.cz; s=mail;
-        t=1582346778; bh=AU93XwymVxG1tNXGl1srm3ioYWzwHO+dNAtH9K6Tfto=;
-        h=Date:From:To:Cc:Subject:References:X-My-GPG-KeyId:From;
-        b=B6+iRBdGGXCezXY0bqWcDNllNSjpaO0ONWc0qx9jJWtHgTrHfZL9Q9k5BAdzkwy0s
-         12VDVw7C7m+/AZwsmmHWkDLlMroVgjcvz8DsrUvRKbaqtIO/K6/R4IQTJgZjbClJhI
-         RhOYoMmJcUevKoi+qrjb0j+oOFW2PeWzV8Ajzanw=
-Date:   Sat, 22 Feb 2020 05:46:17 +0100
-From:   =?utf-8?Q?Ond=C5=99ej?= Jirman <megi@xff.cz>
-To:     Jaegeuk Kim <jaegeuk@kernel.org>
-Cc:     linux-kernel@vger.kernel.org,
-        linux-f2fs-devel@lists.sourceforge.net
-Subject: Re: [PATCH 1/6] f2fs: call f2fs_balance_fs outside of locked page
-Message-ID: <20200222044617.pfrhnz2iavkrtdn6@core.my.home>
-Mail-Followup-To: Jaegeuk Kim <jaegeuk@kernel.org>,
-        linux-kernel@vger.kernel.org,
-        linux-f2fs-devel@lists.sourceforge.net
-References: <20191209222345.1078-1-jaegeuk@kernel.org>
+        Sat, 22 Feb 2020 00:00:10 -0500
+Received: from mail-io1-f72.google.com ([209.85.166.72]:35738 "EHLO
+        mail-io1-f72.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725813AbgBVFAK (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 22 Feb 2020 00:00:10 -0500
+Received: by mail-io1-f72.google.com with SMTP id x10so4063091iob.2
+        for <linux-kernel@vger.kernel.org>; Fri, 21 Feb 2020 21:00:09 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:date:in-reply-to:message-id:subject
+         :from:to;
+        bh=mEjXcB7cAjbl57mGasHTa5HJtAGVg5J5n7PTyu8dTJA=;
+        b=InFmhYRShdqa1MQ/r88g6EQTwobQdHtuyhkfHFHf26sK8q12LiUFYZg4OkCovQz0Md
+         V+VvuZJniJ2jIkNxOyAGeYYFBa5uzd30juFqHpBUGaO7UzY+LWajVD1mJmW7c2F4iVBI
+         gEjP5+5Oi1Zdod9Emke2A9sr0tjCALsEh9DbX8ySxpB1cDVBosR9MMSgmj1IpjJu0Ugr
+         61MiR4LTdXzLZfTqhUIqzoZF6c2ex24arwPBbHNRs9ceInIBRwsDvt2io8+LnuTG5odQ
+         5k1tQlCm+xrYYk5D2mVesk+UgQTf7Rbxj6JdovQ6WdxKy2aDbVRgUyLOOOg2tfJaJsuJ
+         eWJw==
+X-Gm-Message-State: APjAAAWm08eoKvrZCe4OPQvb4hAc0jvNod9gxra9IntNxk1srXRA2C0u
+        byXdZ4DMHOSYchI02bdUer3sfJDJcU9CXdOi5ZIRt6Qnofy5
+X-Google-Smtp-Source: APXvYqyAlLO7ItiblabhJFZo30UlAim8o+QYMrnZU4GsDDVIA3a5sq/DwqA99JyinvTVeNn97VVA+ci56VDKM39+Smu+PJTMIgt2
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191209222345.1078-1-jaegeuk@kernel.org>
-X-My-GPG-KeyId: EBFBDDE11FB918D44D1F56C1F9F0A873BE9777ED
- <https://xff.cz/key.txt>
+X-Received: by 2002:a92:7301:: with SMTP id o1mr40729644ilc.272.1582347609436;
+ Fri, 21 Feb 2020 21:00:09 -0800 (PST)
+Date:   Fri, 21 Feb 2020 21:00:09 -0800
+In-Reply-To: <0000000000008a9e79059f1409f1@google.com>
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <0000000000002bf78e059f2303c5@google.com>
+Subject: Re: KMSAN: uninit-value in fat_evict_inode
+From:   syzbot <syzbot+9d82b8de2992579da5d0@syzkaller.appspotmail.com>
+To:     akpm@linux-foundation.org, glider@google.com,
+        hirofumi@mail.parknet.co.jp, linux-kernel@vger.kernel.org,
+        syzkaller-bugs@googlegroups.com
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello,
+syzbot has found a reproducer for the following crash on:
 
-On Mon, Dec 09, 2019 at 02:23:40PM -0800, Jaegeuk Kim wrote:
-> Otherwise, we can hit deadlock by waiting for the locked page in
-> move_data_block in GC.
+HEAD commit:    8bbbc5cf kmsan: don't compile memmove
+git tree:       https://github.com/google/kmsan.git master
+console output: https://syzkaller.appspot.com/x/log.txt?x=11c3774ee00000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=cd0e9a6b0e555cc3
+dashboard link: https://syzkaller.appspot.com/bug?extid=9d82b8de2992579da5d0
+compiler:       clang version 10.0.0 (https://github.com/llvm/llvm-project/ c2443155a0fb245c8f17f2c1c72b6ea391e86e81)
+userspace arch: i386
+syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=171ce265e00000
+C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=15bb1109e00000
 
-I had the task hangs on 5.6 shortly after boot. (f2fs as rootfs).
-See below for stacktrace.
+IMPORTANT: if you fix the bug, please add the following tag to the commit:
+Reported-by: syzbot+9d82b8de2992579da5d0@syzkaller.appspotmail.com
 
-So I went through the changelog in f2fs and noticed this patch as
-a suspect, and after reverting it the hung task panics went away.
+FAT-fs (loop0): error, invalid access to FAT (entry 0x00006500)
+FAT-fs (loop0): Filesystem has been set read-only
+=====================================================
+BUG: KMSAN: uninit-value in fat_free_eofblocks fs/fat/inode.c:628 [inline]
+BUG: KMSAN: uninit-value in fat_evict_inode+0x2f4/0x920 fs/fat/inode.c:658
+CPU: 0 PID: 11199 Comm: syz-executor375 Not tainted 5.6.0-rc2-syzkaller #0
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
+Call Trace:
+ __dump_stack lib/dump_stack.c:77 [inline]
+ dump_stack+0x1c9/0x220 lib/dump_stack.c:118
+ kmsan_report+0xf7/0x1e0 mm/kmsan/kmsan_report.c:118
+ __msan_warning+0x58/0xa0 mm/kmsan/kmsan_instr.c:215
+ fat_free_eofblocks fs/fat/inode.c:628 [inline]
+ fat_evict_inode+0x2f4/0x920 fs/fat/inode.c:658
+ evict+0x4ab/0xe10 fs/inode.c:575
+ iput_final fs/inode.c:1571 [inline]
+ iput+0xa70/0xe10 fs/inode.c:1597
+ fat_build_inode+0x6a3/0x840 fs/fat/inode.c:610
+ vfat_mkdir+0x547/0x7d0 fs/fat/namei_vfat.c:871
+ vfs_mkdir+0x691/0x920 fs/namei.c:3889
+ do_mkdirat+0x39f/0x680 fs/namei.c:3912
+ __do_sys_mkdir fs/namei.c:3928 [inline]
+ __se_sys_mkdir fs/namei.c:3926 [inline]
+ __ia32_sys_mkdir+0x9f/0xd0 fs/namei.c:3926
+ do_syscall_32_irqs_on arch/x86/entry/common.c:339 [inline]
+ do_fast_syscall_32+0x3c7/0x6e0 arch/x86/entry/common.c:410
+ entry_SYSENTER_compat+0x68/0x77 arch/x86/entry/entry_64_compat.S:139
+RIP: 0023:0xf7f1bd99
+Code: 90 e8 0b 00 00 00 f3 90 0f ae e8 eb f9 8d 74 26 00 89 3c 24 c3 90 90 90 90 90 90 90 90 90 90 90 90 51 52 55 89 e5 0f 34 cd 80 <5d> 5a 59 c3 90 90 90 90 eb 0d 90 90 90 90 90 90 90 90 90 90 90 90
+RSP: 002b:00000000ffb4ff4c EFLAGS: 00000292 ORIG_RAX: 0000000000000027
+RAX: ffffffffffffffda RBX: 0000000020000740 RCX: 0000000000000000
+RDX: 0000000000000000 RSI: 00000000ffb4ffbe RDI: 0000000000000001
+RBP: 00000000000000c2 R08: 0000000000000000 R09: 0000000000000000
+R10: 0000000000000000 R11: 0000000000000000 R12: 0000000000000000
+R13: 0000000000000000 R14: 0000000000000000 R15: 0000000000000000
 
-I reverted it manually, because the master changed too much for
-a clean revert:
+Uninit was created at:
+ kmsan_save_stack_with_flags+0x3c/0x90 mm/kmsan/kmsan.c:144
+ kmsan_internal_alloc_meta_for_pages mm/kmsan/kmsan_shadow.c:307 [inline]
+ kmsan_alloc_page+0x12a/0x310 mm/kmsan/kmsan_shadow.c:336
+ __alloc_pages_nodemask+0x5712/0x5e80 mm/page_alloc.c:4775
+ alloc_pages_current+0x67d/0x990 mm/mempolicy.c:2211
+ alloc_pages include/linux/gfp.h:534 [inline]
+ alloc_slab_page+0x111/0x12f0 mm/slub.c:1530
+ allocate_slab mm/slub.c:1675 [inline]
+ new_slab+0x2bc/0x1130 mm/slub.c:1741
+ new_slab_objects mm/slub.c:2492 [inline]
+ ___slab_alloc+0x1533/0x1f30 mm/slub.c:2643
+ __slab_alloc mm/slub.c:2683 [inline]
+ slab_alloc_node mm/slub.c:2757 [inline]
+ slab_alloc mm/slub.c:2802 [inline]
+ kmem_cache_alloc+0xb23/0xd70 mm/slub.c:2807
+ fat_alloc_inode+0x58/0x120 fs/fat/inode.c:748
+ alloc_inode fs/inode.c:231 [inline]
+ new_inode_pseudo+0xb1/0x590 fs/inode.c:927
+ new_inode+0x5a/0x3d0 fs/inode.c:956
+ fat_fill_super+0x634b/0x89b0 fs/fat/inode.c:1844
+ vfat_fill_super+0xa6/0xc0 fs/fat/namei_vfat.c:1050
+ mount_bdev+0x654/0x880 fs/super.c:1417
+ vfat_mount+0xc9/0xe0 fs/fat/namei_vfat.c:1057
+ legacy_get_tree+0x169/0x2e0 fs/fs_context.c:622
+ vfs_get_tree+0xdd/0x580 fs/super.c:1547
+ do_new_mount fs/namespace.c:2822 [inline]
+ do_mount+0x365c/0x4ac0 fs/namespace.c:3107
+ __do_compat_sys_mount fs/compat.c:122 [inline]
+ __se_compat_sys_mount+0x3a8/0xa10 fs/compat.c:89
+ __ia32_compat_sys_mount+0x157/0x1b0 fs/compat.c:89
+ do_syscall_32_irqs_on arch/x86/entry/common.c:339 [inline]
+ do_fast_syscall_32+0x3c7/0x6e0 arch/x86/entry/common.c:410
+ entry_SYSENTER_compat+0x68/0x77 arch/x86/entry/entry_64_compat.S:139
+=====================================================
 
-https://megous.com/git/linux/commit/?h=orange-pi-5.6&id=9983bdae4974edc2af6ff547a401ae397388b6b5
-
-regards,
-	o.
-
-INFO: task kworker/u16:2:341 blocked for more than 122 seconds.
-      Not tainted 5.6.0-rc2-00254-g9a029a493dc16 #4
-"echo 0 > /proc/sys/kernel/hung_task_timeout_secs" disables this message.
-kworker/u16:2   D    0   341      2 0x00000000
-Workqueue: writeback wb_workfn (flush-179:0)
-Backtrace:
-[<c0912bd0>] (__schedule) from [<c0913274>] (schedule+0x78/0xf4)
- r10:ede1a000 r9:00000000 r8:ede1ba60 r7:ec417290 r6:00000002 r5:ede1a000
- r4:ee8e8000
-[<c09131fc>] (schedule) from [<c017ec74>] (rwsem_down_write_slowpath+0x24c/0x4c0)
- r5:00000001 r4:ec417280
-[<c017ea28>] (rwsem_down_write_slowpath) from [<c0915f6c>] (down_write+0x6c/0x70)
- r10:ec417280 r9:ede1bd80 r8:ee128000 r7:00000001 r6:00000000 r5:eff0afc4
- r4:ec417280
-[<c0915f00>] (down_write) from [<c0435b68>] (f2fs_write_single_data_page+0x608/0x7ac)
- r5:eff0afc4 r4:ec4170e0
-[<c0435560>] (f2fs_write_single_data_page) from [<c0435fc0>] (f2fs_write_cache_pages+0x2b4/0x7c4)
- r10:ede1bc28 r9:ec4171e0 r8:ec4170e0 r7:00000001 r6:ede1bd80 r5:00000001
- r4:eff0afc4
-[<c0435d0c>] (f2fs_write_cache_pages) from [<c0436814>] (f2fs_write_data_pages+0x344/0x35c)
- r10:0000012c r9:ee12802c r8:ee128000 r7:00000004 r6:ec4171e0 r5:ec4170e0
- r4:ede1bd80
-[<c04364d0>] (f2fs_write_data_pages) from [<c0267fa0>] (do_writepages+0x3c/0xd4)
- r10:0000012c r9:c0e03d00 r8:00001400 r7:c0264e94 r6:ede1bd80 r5:ec4171e0
- r4:ec4170e0
-[<c0267f64>] (do_writepages) from [<c0310d24>] (__writeback_single_inode+0x44/0x454)
- r7:ec4171e0 r6:ede1beac r5:ede1bd80 r4:ec4170e0
-[<c0310ce0>] (__writeback_single_inode) from [<c0311338>] (writeback_sb_inodes+0x204/0x4b0)
- r10:0000012c r9:c0e03d00 r8:ec417148 r7:ec4170e0 r6:ede1beac r5:ec417188
- r4:eebed848
-[<c0311134>] (writeback_sb_inodes) from [<c0311634>] (__writeback_inodes_wb+0x50/0xe4)
- r10:ee7128e8 r9:c0e03d00 r8:eebed85c r7:ede1beac r6:00000000 r5:eebed848
- r4:ee120000
-[<c03115e4>] (__writeback_inodes_wb) from [<c031195c>] (wb_writeback+0x294/0x338)
- r10:00020800 r9:ede1a000 r8:c0e04e64 r7:eebed848 r6:000192d0 r5:ede1beac
- r4:eebed848
-[<c03116c8>] (wb_writeback) from [<c0312e98>] (wb_workfn+0x3e0/0x54c)
- r10:ee894005 r9:eebed84c r8:eebed948 r7:eebed848 r6:00000000 r5:eebed954
- r4:00002b6e
-[<c0312ab8>] (wb_workfn) from [<c014f2b8>] (process_one_work+0x214/0x544)
- r10:ee894005 r9:00000200 r8:00000000 r7:ee894000 r6:ef044400 r5:edb1c700
- r4:eebed954
-[<c014f0a4>] (process_one_work) from [<c014f634>] (worker_thread+0x4c/0x574)
- r10:ef044400 r9:c0e03d00 r8:ef044418 r7:00000088 r6:ef044400 r5:edb1c714
- r4:edb1c700
-[<c014f5e8>] (worker_thread) from [<c01564fc>] (kthread+0x144/0x170)
- r10:ef125e90 r9:ec0f235c r8:edb1c700 r7:ede1a000 r6:00000000 r5:ec0f2300
- r4:ec0f2340
-[<c01563b8>] (kthread) from [<c01010e8>] (ret_from_fork+0x14/0x2c)
-Exception stack(0xede1bfb0 to 0xede1bff8)
-bfa0:                                     00000000 00000000 00000000 00000000
-bfc0: 00000000 00000000 00000000 00000000 00000000 00000000 00000000 00000000
-bfe0: 00000000 00000000 00000000 00000000 00000013 00000000
- r10:00000000 r9:00000000 r8:00000000 r7:00000000 r6:00000000 r5:c01563b8
- r4:ec0f2300
-NMI backtrace for cpu 2
-CPU: 2 PID: 52 Comm: khungtaskd Not tainted 5.6.0-rc2-00254-g9a029a493dc16 #4
-Hardware name: Allwinner A83t board
-Backtrace:
-[<c010db5c>] (dump_backtrace) from [<c010dee0>] (show_stack+0x20/0x24)
- r7:00000000 r6:60060013 r5:00000000 r4:c0e9ab10
-
-
-
->  Thread A                     Thread B
->  - do_page_mkwrite
->   - f2fs_vm_page_mkwrite
->    - lock_page
->                               - f2fs_balance_fs
->                                   - mutex_lock(gc_mutex)
->                                - f2fs_gc
->                                 - do_garbage_collect
->                                  - ra_data_block
->                                   - grab_cache_page
->    - f2fs_balance_fs
->     - mutex_lock(gc_mutex)
-> 
-> Fixes: 39a8695824510 ("f2fs: refactor ->page_mkwrite() flow")
-> Signed-off-by: Jaegeuk Kim <jaegeuk@kernel.org>
-> ---
->  fs/f2fs/file.c | 7 ++++---
->  1 file changed, 4 insertions(+), 3 deletions(-)
-> 
-> diff --git a/fs/f2fs/file.c b/fs/f2fs/file.c
-> index e7fcbd8c23f4..6cebc6681487 100644
-> --- a/fs/f2fs/file.c
-> +++ b/fs/f2fs/file.c
-> @@ -50,7 +50,7 @@ static vm_fault_t f2fs_vm_page_mkwrite(struct vm_fault *vmf)
->  	struct page *page = vmf->page;
->  	struct inode *inode = file_inode(vmf->vma->vm_file);
->  	struct f2fs_sb_info *sbi = F2FS_I_SB(inode);
-> -	struct dnode_of_data dn = { .node_changed = false };
-> +	struct dnode_of_data dn;
->  	int err;
->  
->  	if (unlikely(f2fs_cp_error(sbi))) {
-> @@ -63,6 +63,9 @@ static vm_fault_t f2fs_vm_page_mkwrite(struct vm_fault *vmf)
->  		goto err;
->  	}
->  
-> +	/* should do out of any locked page */
-> +	f2fs_balance_fs(sbi, true);
-> +
->  	sb_start_pagefault(inode->i_sb);
->  
->  	f2fs_bug_on(sbi, f2fs_has_inline_data(inode));
-> @@ -120,8 +123,6 @@ static vm_fault_t f2fs_vm_page_mkwrite(struct vm_fault *vmf)
->  out_sem:
->  	up_read(&F2FS_I(inode)->i_mmap_sem);
->  
-> -	f2fs_balance_fs(sbi, dn.node_changed);
-> -
->  	sb_end_pagefault(inode->i_sb);
->  err:
->  	return block_page_mkwrite_return(err);
-> -- 
-> 2.19.0.605.g01d371f741-goog
-> 
