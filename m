@@ -2,779 +2,257 @@ Return-Path: <SRS0=8jYG=4K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 101C0C35669
-	for <linux-kernel@archiver.kernel.org>; Sat, 22 Feb 2020 00:47:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3D611C35641
+	for <linux-kernel@archiver.kernel.org>; Sat, 22 Feb 2020 00:52:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D2084207FD
-	for <linux-kernel@archiver.kernel.org>; Sat, 22 Feb 2020 00:47:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F3F9F206EF
+	for <linux-kernel@archiver.kernel.org>; Sat, 22 Feb 2020 00:52:19 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="GBUM81/q"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727616AbgBVArk (ORCPT
+        id S1727648AbgBVAwT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Feb 2020 19:47:40 -0500
-Received: from alexa-out-sd-02.qualcomm.com ([199.106.114.39]:38432 "EHLO
-        alexa-out-sd-02.qualcomm.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727263AbgBVArj (ORCPT
+        Fri, 21 Feb 2020 19:52:19 -0500
+Received: from mail-qk1-f195.google.com ([209.85.222.195]:46978 "EHLO
+        mail-qk1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726802AbgBVAwS (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Feb 2020 19:47:39 -0500
-Received: from unknown (HELO ironmsg05-sd.qualcomm.com) ([10.53.140.145])
-  by alexa-out-sd-02.qualcomm.com with ESMTP; 21 Feb 2020 16:47:38 -0800
-Received: from asutoshd-linux1.qualcomm.com ([10.46.160.39])
-  by ironmsg05-sd.qualcomm.com with ESMTP; 21 Feb 2020 16:47:38 -0800
-Received: by asutoshd-linux1.qualcomm.com (Postfix, from userid 92687)
-        id 74FB9216F4; Fri, 21 Feb 2020 16:47:38 -0800 (PST)
-From:   Asutosh Das <asutoshd@codeaurora.org>
-To:     subhashj@codeaurora.org, cang@codeaurora.org,
-        rnayak@codeaurora.org, vinholikatti@gmail.com,
-        jejb@linux.vnet.ibm.com, martin.petersen@oracle.com,
-        linux-scsi@vger.kernel.org
-Cc:     Asutosh Das <asutoshd@codeaurora.org>,
-        linux-arm-msm@vger.kernel.org,
-        Alim Akhtar <alim.akhtar@samsung.com>,
-        Avri Altman <avri.altman@wdc.com>,
-        "James E.J. Bottomley" <jejb@linux.ibm.com>,
-        Stanley Chu <stanley.chu@mediatek.com>,
-        Bean Huo <beanhuo@micron.com>,
-        Tomas Winkler <tomas.winkler@intel.com>,
-        Colin Ian King <colin.king@canonical.com>,
-        Bart Van Assche <bvanassche@acm.org>,
-        Venkat Gopalakrishnan <venkatg@codeaurora.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        linux-kernel@vger.kernel.org (open list)
-Subject: [<RFC PATCH v1> 1/2] scsi: ufs: add write booster feature support
-Date:   Fri, 21 Feb 2020 16:47:20 -0800
-Message-Id: <0eb182e6731bc4ce0c1d6a97f102155d7186520f.1582330473.git.asutoshd@codeaurora.org>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <cover.1582330473.git.asutoshd@codeaurora.org>
-References: <cover.1582330473.git.asutoshd@codeaurora.org>
-In-Reply-To: <cover.1582330473.git.asutoshd@codeaurora.org>
-References: <cover.1582330473.git.asutoshd@codeaurora.org>
+        Fri, 21 Feb 2020 19:52:18 -0500
+Received: by mail-qk1-f195.google.com with SMTP id u124so3593090qkh.13
+        for <linux-kernel@vger.kernel.org>; Fri, 21 Feb 2020 16:52:17 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=Yh6Np5NAp09sqBJL1Y7XFYzIWwPoRwAqcckkXofTxjk=;
+        b=GBUM81/qNqkpx0uMEh6RM0GrbiS1/mdjWuGaeuudxvb0WBTPZc2js2SDQqLy5QcN61
+         0dDcl6xyS/WWq0fx/wrf4Y5uHZj/wfk5hsDLZqf8t4nW058/cZHiAtoCnYFr7TrASAqb
+         y+8iD4HancfVacdnpfw9/eE0wSgA9IgCi/g4devlSyW8tQKfQ5GSH9pDnJLEcCf6HATO
+         qCuEyULgKFnrGOe24rxL9X+NSfg0MOxIQ3Efgns7qVZIeNBriNBpVr/hNff4mFaBkEr5
+         DoNiGfKuIkbe+HphQSCi68QFrirq9vIih6LznO6mGuweP0daTxJyT2xf8MJVnBYYoFdb
+         Y75g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=Yh6Np5NAp09sqBJL1Y7XFYzIWwPoRwAqcckkXofTxjk=;
+        b=SlBRDJ3rMuOQNdLnDCTJoCJU3mrz9+lq7SqurirEDkZpy0/ZVSVasXkaF2h9QyvJgV
+         Wz1aEyfKzIlRdUtxwZPGGqq7qOPhCxTh/ji8VWb/oRZyuIFXZ2QE85KGyvnMqkzLioNR
+         Ohj6mkRSGMaqfcmz1O+MuaHF/Kv+//zx+F3O4qVeK5HWmwvTRnhs+gzfcqKvc4+UoWBO
+         aFZ3QqH+w24+RYzNIAipAsbAiiNF2g//QfpnGqBozrXBu6EXW1pQ5haTXs0n0h/UiX71
+         SkUMqO47QjPXm5CnPSMTl3x6WTjxqmbhuzj/lBherUMlOhSPtwYjZthoxMaOM3/VICCO
+         EnxA==
+X-Gm-Message-State: APjAAAXXgIQthqoSQmzI5SqojcrnL9EgbH0Rq0M2uSY3ejBIr578HWLQ
+        K4sfoq9+9bQOr2r2e1idkM+GzOgjolwfOQ==
+X-Google-Smtp-Source: APXvYqybIo6HRD3a7jmSFItcBNm/Y/muJWOTiIYwyPFdELdGVP3tUDXKRBJjybRaGcaWXeAxlx8K2w==
+X-Received: by 2002:a37:91c2:: with SMTP id t185mr32944019qkd.284.1582332736752;
+        Fri, 21 Feb 2020 16:52:16 -0800 (PST)
+Received: from pop-os.fios-router.home (pool-71-255-246-27.washdc.fios.verizon.net. [71.255.246.27])
+        by smtp.googlemail.com with ESMTPSA id 12sm359559qkj.136.2020.02.21.16.52.15
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 21 Feb 2020 16:52:16 -0800 (PST)
+From:   Thara Gopinath <thara.gopinath@linaro.org>
+To:     mingo@redhat.com, peterz@infradead.org, ionela.voinescu@arm.com,
+        vincent.guittot@linaro.org, dietmar.eggemann@arm.com,
+        rui.zhang@intel.com, qperret@google.com, daniel.lezcano@linaro.org,
+        viresh.kumar@linaro.org, rostedt@goodmis.org, will@kernel.org,
+        catalin.marinas@arm.com, sudeep.holla@arm.com,
+        juri.lelli@redhat.com, corbet@lwn.net
+Cc:     linux-kernel@vger.kernel.org, amit.kachhap@gmail.com,
+        javi.merino@kernel.org, amit.kucheria@verdurent.com
+Subject: [Patch v10 1/9] sched/pelt: Add support to track thermal pressure
+Date:   Fri, 21 Feb 2020 19:52:05 -0500
+Message-Id: <20200222005213.3873-2-thara.gopinath@linaro.org>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20200222005213.3873-1-thara.gopinath@linaro.org>
+References: <20200222005213.3873-1-thara.gopinath@linaro.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Write Booster enable: SW will enable the feature
-when clocks are scaled up.
-Once clocks and gear are scaled up,
-SW will set “fWriteBoosterEn” flag
-before exiting from ufshcd_devfreq_scale() function.
+Extrapolating on the existing framework to track rt/dl utilization using
+pelt signals, add a similar mechanism to track thermal pressure. The
+difference here from rt/dl utilization tracking is that, instead of
+tracking time spent by a cpu running a rt/dl task through util_avg, the
+average thermal pressure is tracked through load_avg. This is because
+thermal pressure signal is weighted time "delta" capacity unlike util_avg
+which is binary. "delta capacity" here means delta between the actual
+capacity of a cpu and the decreased capacity a cpu due to a thermal event.
 
-Write Booster disable: SW will disable the feature,
-when clocks are scaled down. Once clocks and gear
-are scaled down, SW will clear “fWriteBoosterEn” flag
-before exiting from ufshcd_devfreq_scale() function.
+In order to track average thermal pressure, a new sched_avg variable
+avg_thermal is introduced. Function update_thermal_load_avg can be called
+to do the periodic bookkeeping (accumulate, decay and average) of the
+thermal pressure.
 
-Write Booster Buffer flush will be enabled in following cases:
- 1. During runtime suspend, driver would query
-    bAvailableWriteBoosterBufferSize attribute and enable the
-    Write Booster Buffer Flush if less than 30% Write Booster
-    Buffer is available.
-
-Write Booster Buffer flush will be disabled in following case:
-During runtime suspend, if available buffer size is >30%,
-then Write Booster Flush will be stopped by
-clearing fWriteBoosterBufferFlushEn flag.
-
-In non-reduction case, during runtime-suspend,
-dCurrentWriteBoosterBufferSize attribute would determine
-if flush is possible.
-If this value is > 0 and availBuf is less
-than 30% then flush is needed and vcc needs to be ON.
-
-Signed-off-by: Asutosh Das <asutoshd@codeaurora.org>
-Signed-off-by: Subhash Jadavani <subhashj@codeaurora.org>
+Signed-off-by: Thara Gopinath <thara.gopinath@linaro.org>
+Reviewed-by: Vincent Guittot <vincent.guittot@linaro.org>
 ---
- drivers/scsi/ufs/ufs-sysfs.c |  41 ++++++-
- drivers/scsi/ufs/ufs.h       |  61 ++++++++-
- drivers/scsi/ufs/ufshcd.c    | 286 ++++++++++++++++++++++++++++++++++++++++++-
- drivers/scsi/ufs/ufshcd.h    |   9 ++
- 4 files changed, 390 insertions(+), 7 deletions(-)
+v6->v7:
+	- Added CONFIG_HAVE_SCHED_THERMAL_PRESSURE to stub out
+	  update_thermal_load_avg in unsupported architectures as per
+	  review comments from Peter, Dietmar and Quentin.
+	- Updated comment for update_thermal_load_avg as per review
+	  comments from Peter and Dietmar.
+v7->v8:
+	- Fixed typo in defining update_thermal_load_avg which was
+	  causing build errors (reported by kbuild test report)
+v8->v9:
+	- Defined thermal_load_avg to read rq->avg_thermal.load_avg and
+	  avoid cacheline miss in unsupported cases as per Peter's
+          suggestion.
+v9->v10:
+	- Fixed typos in comments as per Amit Kucheria's review comments.
 
-diff --git a/drivers/scsi/ufs/ufs-sysfs.c b/drivers/scsi/ufs/ufs-sysfs.c
-index dbdf8b0..4505e27 100644
---- a/drivers/scsi/ufs/ufs-sysfs.c
-+++ b/drivers/scsi/ufs/ufs-sysfs.c
-@@ -274,6 +274,10 @@ UFS_DEVICE_DESC_PARAM(device_version, _DEV_VER, 2);
- UFS_DEVICE_DESC_PARAM(number_of_secure_wpa, _NUM_SEC_WPA, 1);
- UFS_DEVICE_DESC_PARAM(psa_max_data_size, _PSA_MAX_DATA, 4);
- UFS_DEVICE_DESC_PARAM(psa_state_timeout, _PSA_TMT, 1);
-+UFS_DEVICE_DESC_PARAM(ext_feature_sup, _EXT_UFS_FEATURE_SUP, 4);
-+UFS_DEVICE_DESC_PARAM(wb_presv_us_en, _WB_US_RED_EN, 1);
-+UFS_DEVICE_DESC_PARAM(wb_type, _WB_TYPE, 1);
-+UFS_DEVICE_DESC_PARAM(wb_shared_alloc_units, _WB_SHARED_ALLOC_UNITS, 4);
+ include/trace/events/sched.h |  4 ++++
+ init/Kconfig                 |  4 ++++
+ kernel/sched/pelt.c          | 31 +++++++++++++++++++++++++++++++
+ kernel/sched/pelt.h          | 31 +++++++++++++++++++++++++++++++
+ kernel/sched/sched.h         |  3 +++
+ 5 files changed, 73 insertions(+)
+
+diff --git a/include/trace/events/sched.h b/include/trace/events/sched.h
+index 420e80e56e55..a8fb667c669e 100644
+--- a/include/trace/events/sched.h
++++ b/include/trace/events/sched.h
+@@ -613,6 +613,10 @@ DECLARE_TRACE(pelt_dl_tp,
+ 	TP_PROTO(struct rq *rq),
+ 	TP_ARGS(rq));
  
- static struct attribute *ufs_sysfs_device_descriptor[] = {
- 	&dev_attr_device_type.attr,
-@@ -302,6 +306,10 @@ static struct attribute *ufs_sysfs_device_descriptor[] = {
- 	&dev_attr_number_of_secure_wpa.attr,
- 	&dev_attr_psa_max_data_size.attr,
- 	&dev_attr_psa_state_timeout.attr,
-+	&dev_attr_ext_feature_sup.attr,
-+	&dev_attr_wb_presv_us_en.attr,
-+	&dev_attr_wb_type.attr,
-+	&dev_attr_wb_shared_alloc_units.attr,
- 	NULL,
- };
- 
-@@ -371,6 +379,12 @@ UFS_GEOMETRY_DESC_PARAM(enh4_memory_max_alloc_units,
- 	_ENM4_MAX_NUM_UNITS, 4);
- UFS_GEOMETRY_DESC_PARAM(enh4_memory_capacity_adjustment_factor,
- 	_ENM4_CAP_ADJ_FCTR, 2);
-+UFS_GEOMETRY_DESC_PARAM(wb_max_alloc_units, _WB_MAX_ALLOC_UNITS, 4);
-+UFS_GEOMETRY_DESC_PARAM(wb_max_wb_luns, _WB_MAX_WB_LUNS, 1);
-+UFS_GEOMETRY_DESC_PARAM(wb_buff_cap_adj, _WB_BUFF_CAP_ADJ, 1);
-+UFS_GEOMETRY_DESC_PARAM(wb_sup_red_type, _WB_SUP_RED_TYPE, 1);
-+UFS_GEOMETRY_DESC_PARAM(wb_sup_wb_type, _WB_SUP_WB_TYPE, 1);
++DECLARE_TRACE(pelt_thermal_tp,
++	TP_PROTO(struct rq *rq),
++	TP_ARGS(rq));
 +
+ DECLARE_TRACE(pelt_irq_tp,
+ 	TP_PROTO(struct rq *rq),
+ 	TP_ARGS(rq));
+diff --git a/init/Kconfig b/init/Kconfig
+index 2a25c769eaaa..8d56902efa70 100644
+--- a/init/Kconfig
++++ b/init/Kconfig
+@@ -464,6 +464,10 @@ config HAVE_SCHED_AVG_IRQ
+ 	depends on IRQ_TIME_ACCOUNTING || PARAVIRT_TIME_ACCOUNTING
+ 	depends on SMP
  
- static struct attribute *ufs_sysfs_geometry_descriptor[] = {
- 	&dev_attr_raw_device_capacity.attr,
-@@ -402,6 +416,11 @@ static struct attribute *ufs_sysfs_geometry_descriptor[] = {
- 	&dev_attr_enh3_memory_capacity_adjustment_factor.attr,
- 	&dev_attr_enh4_memory_max_alloc_units.attr,
- 	&dev_attr_enh4_memory_capacity_adjustment_factor.attr,
-+	&dev_attr_wb_max_alloc_units.attr,
-+	&dev_attr_wb_max_wb_luns.attr,
-+	&dev_attr_wb_buff_cap_adj.attr,
-+	&dev_attr_wb_sup_red_type.attr,
-+	&dev_attr_wb_sup_wb_type.attr,
- 	NULL,
- };
- 
-@@ -608,7 +627,7 @@ static ssize_t _name##_show(struct device *dev,				\
- 	if (ufshcd_query_flag(hba, UPIU_QUERY_OPCODE_READ_FLAG,		\
- 		QUERY_FLAG_IDN##_uname, &flag))				\
- 		return -EINVAL;						\
--	return sprintf(buf, "%s\n", flag ? "true" : "false");		\
-+	return snprintf(buf, PAGE_SIZE, "%s\n", flag ? "true" : "false"); \
- }									\
- static DEVICE_ATTR_RO(_name)
- 
-@@ -620,6 +639,9 @@ UFS_FLAG(life_span_mode_enable, _LIFE_SPAN_MODE_ENABLE);
- UFS_FLAG(phy_resource_removal, _FPHYRESOURCEREMOVAL);
- UFS_FLAG(busy_rtc, _BUSY_RTC);
- UFS_FLAG(disable_fw_update, _PERMANENTLY_DISABLE_FW_UPDATE);
-+UFS_FLAG(wb_enable, _WB_EN);
-+UFS_FLAG(wb_flush_en, _WB_BUFF_FLUSH_EN);
-+UFS_FLAG(wb_flush_during_h8, _WB_BUFF_FLUSH_DURING_HIBERN8);
- 
- static struct attribute *ufs_sysfs_device_flags[] = {
- 	&dev_attr_device_init.attr,
-@@ -630,6 +652,9 @@ static struct attribute *ufs_sysfs_device_flags[] = {
- 	&dev_attr_phy_resource_removal.attr,
- 	&dev_attr_busy_rtc.attr,
- 	&dev_attr_disable_fw_update.attr,
-+	&dev_attr_wb_enable.attr,
-+	&dev_attr_wb_flush_en.attr,
-+	&dev_attr_wb_flush_during_h8.attr,
- 	NULL,
- };
- 
-@@ -647,7 +672,7 @@ static ssize_t _name##_show(struct device *dev,				\
- 	if (ufshcd_query_attr(hba, UPIU_QUERY_OPCODE_READ_ATTR,		\
- 		QUERY_ATTR_IDN##_uname, 0, 0, &value))			\
- 		return -EINVAL;						\
--	return sprintf(buf, "0x%08X\n", value);				\
-+	return snprintf(buf, PAGE_SIZE, "0x%08X\n", value);		\
- }									\
- static DEVICE_ATTR_RO(_name)
- 
-@@ -667,6 +692,11 @@ UFS_ATTRIBUTE(exception_event_status, _EE_STATUS);
- UFS_ATTRIBUTE(ffu_status, _FFU_STATUS);
- UFS_ATTRIBUTE(psa_state, _PSA_STATE);
- UFS_ATTRIBUTE(psa_data_size, _PSA_DATA_SIZE);
-+UFS_ATTRIBUTE(wb_flush_status, _WB_FLUSH_STATUS);
-+UFS_ATTRIBUTE(wb_avail_buf, _AVAIL_WB_BUFF_SIZE);
-+UFS_ATTRIBUTE(wb_life_time_est, _WB_BUFF_LIFE_TIME_EST);
-+UFS_ATTRIBUTE(wb_cur_buf, _CURR_WB_BUFF_SIZE);
++config HAVE_SCHED_THERMAL_PRESSURE
++	bool "Enable periodic averaging of thermal pressure"
++	depends on SMP
 +
- 
- static struct attribute *ufs_sysfs_attributes[] = {
- 	&dev_attr_boot_lun_enabled.attr,
-@@ -685,6 +715,10 @@ static struct attribute *ufs_sysfs_attributes[] = {
- 	&dev_attr_ffu_status.attr,
- 	&dev_attr_psa_state.attr,
- 	&dev_attr_psa_data_size.attr,
-+	&dev_attr_wb_flush_status.attr,
-+	&dev_attr_wb_avail_buf.attr,
-+	&dev_attr_wb_life_time_est.attr,
-+	&dev_attr_wb_cur_buf.attr,
- 	NULL,
- };
- 
-@@ -736,6 +770,8 @@ UFS_UNIT_DESC_PARAM(provisioning_type, _PROVISIONING_TYPE, 1);
- UFS_UNIT_DESC_PARAM(physical_memory_resourse_count, _PHY_MEM_RSRC_CNT, 8);
- UFS_UNIT_DESC_PARAM(context_capabilities, _CTX_CAPABILITIES, 2);
- UFS_UNIT_DESC_PARAM(large_unit_granularity, _LARGE_UNIT_SIZE_M1, 1);
-+UFS_UNIT_DESC_PARAM(wb_buf_alloc_units, _WB_BUF_ALLOC_UNITS, 4);
-+
- 
- static struct attribute *ufs_sysfs_unit_descriptor[] = {
- 	&dev_attr_boot_lun_id.attr,
-@@ -751,6 +787,7 @@ static struct attribute *ufs_sysfs_unit_descriptor[] = {
- 	&dev_attr_physical_memory_resourse_count.attr,
- 	&dev_attr_context_capabilities.attr,
- 	&dev_attr_large_unit_granularity.attr,
-+	&dev_attr_wb_buf_alloc_units.attr,
- 	NULL,
- };
- 
-diff --git a/drivers/scsi/ufs/ufs.h b/drivers/scsi/ufs/ufs.h
-index 990cb48..ffc4e18 100644
---- a/drivers/scsi/ufs/ufs.h
-+++ b/drivers/scsi/ufs/ufs.h
-@@ -63,6 +63,7 @@
- #define UFS_UPIU_MAX_UNIT_NUM_ID	0x7F
- #define UFS_MAX_LUNS		(SCSI_W_LUN_BASE + UFS_UPIU_MAX_UNIT_NUM_ID)
- #define UFS_UPIU_WLUN_ID	(1 << 7)
-+#define UFS_UPIU_MAX_GENERAL_LUN	8
- 
- /* Well known logical unit id in LUN field of UPIU */
- enum {
-@@ -140,6 +141,9 @@ enum flag_idn {
- 	QUERY_FLAG_IDN_BUSY_RTC				= 0x09,
- 	QUERY_FLAG_IDN_RESERVED3			= 0x0A,
- 	QUERY_FLAG_IDN_PERMANENTLY_DISABLE_FW_UPDATE	= 0x0B,
-+	QUERY_FLAG_IDN_WB_EN                            = 0x0E,
-+	QUERY_FLAG_IDN_WB_BUFF_FLUSH_EN                 = 0x0F,
-+	QUERY_FLAG_IDN_WB_BUFF_FLUSH_DURING_HIBERN8     = 0x10,
- };
- 
- /* Attribute idn for Query requests */
-@@ -168,6 +172,10 @@ enum attr_idn {
- 	QUERY_ATTR_IDN_PSA_STATE		= 0x15,
- 	QUERY_ATTR_IDN_PSA_DATA_SIZE		= 0x16,
- 	QUERY_ATTR_IDN_REF_CLK_GATING_WAIT_TIME	= 0x17,
-+	QUERY_ATTR_IDN_WB_FLUSH_STATUS	        = 0x1C,
-+	QUERY_ATTR_IDN_AVAIL_WB_BUFF_SIZE       = 0x1D,
-+	QUERY_ATTR_IDN_WB_BUFF_LIFE_TIME_EST    = 0x1E,
-+	QUERY_ATTR_IDN_CURR_WB_BUFF_SIZE        = 0x1F,
- };
- 
- /* Descriptor idn for Query requests */
-@@ -191,7 +199,7 @@ enum desc_header_offset {
- };
- 
- enum ufs_desc_def_size {
--	QUERY_DESC_DEVICE_DEF_SIZE		= 0x40,
-+	QUERY_DESC_DEVICE_DEF_SIZE		= 0x59,
- 	QUERY_DESC_CONFIGURATION_DEF_SIZE	= 0x90,
- 	QUERY_DESC_UNIT_DEF_SIZE		= 0x23,
- 	QUERY_DESC_INTERCONNECT_DEF_SIZE	= 0x06,
-@@ -219,6 +227,7 @@ enum unit_desc_param {
- 	UNIT_DESC_PARAM_PHY_MEM_RSRC_CNT	= 0x18,
- 	UNIT_DESC_PARAM_CTX_CAPABILITIES	= 0x20,
- 	UNIT_DESC_PARAM_LARGE_UNIT_SIZE_M1	= 0x22,
-+	UNIT_DESC_PARAM_WB_BUF_ALLOC_UNITS	= 0x29,
- };
- 
- /* Device descriptor parameters offsets in bytes*/
-@@ -258,6 +267,10 @@ enum device_desc_param {
- 	DEVICE_DESC_PARAM_PSA_MAX_DATA		= 0x25,
- 	DEVICE_DESC_PARAM_PSA_TMT		= 0x29,
- 	DEVICE_DESC_PARAM_PRDCT_REV		= 0x2A,
-+	DEVICE_DESC_PARAM_EXT_UFS_FEATURE_SUP	= 0x4F,
-+	DEVICE_DESC_PARAM_WB_US_RED_EN		= 0x53,
-+	DEVICE_DESC_PARAM_WB_TYPE		= 0x54,
-+	DEVICE_DESC_PARAM_WB_SHARED_ALLOC_UNITS = 0x55,
- };
- 
- /* Interconnect descriptor parameters offsets in bytes*/
-@@ -302,6 +315,11 @@ enum geometry_desc_param {
- 	GEOMETRY_DESC_PARAM_ENM4_MAX_NUM_UNITS	= 0x3E,
- 	GEOMETRY_DESC_PARAM_ENM4_CAP_ADJ_FCTR	= 0x42,
- 	GEOMETRY_DESC_PARAM_OPT_LOG_BLK_SIZE	= 0x44,
-+	GEOMETRY_DESC_PARAM_WB_MAX_ALLOC_UNITS	= 0x4F,
-+	GEOMETRY_DESC_PARAM_WB_MAX_WB_LUNS	= 0x53,
-+	GEOMETRY_DESC_PARAM_WB_BUFF_CAP_ADJ	= 0x54,
-+	GEOMETRY_DESC_PARAM_WB_SUP_RED_TYPE	= 0x55,
-+	GEOMETRY_DESC_PARAM_WB_SUP_WB_TYPE	= 0x56,
- };
- 
- /* Health descriptor parameters offsets in bytes*/
-@@ -333,6 +351,11 @@ enum {
- 	UFSHCD_AMP		= 3,
- };
- 
-+/* Possible values for dExtendedUFSFeaturesSupport */
-+enum {
-+	UFS_DEV_WRITE_BOOSTER_SUP	= BIT(8),
-+};
-+
- #define POWER_DESC_MAX_SIZE			0x62
- #define POWER_DESC_MAX_ACTV_ICC_LVLS		16
- 
-@@ -447,6 +470,38 @@ enum ufs_dev_pwr_mode {
- 	UFS_POWERDOWN_PWR_MODE	= 3,
- };
- 
-+enum ufs_dev_wb_buf_avail_size {
-+	UFS_WB_0_PERCENT_BUF_REMAIN = 0x0,
-+	UFS_WB_10_PERCENT_BUF_REMAIN = 0x1,
-+	UFS_WB_20_PERCENT_BUF_REMAIN = 0x2,
-+	UFS_WB_30_PERCENT_BUF_REMAIN = 0x3,
-+	UFS_WB_40_PERCENT_BUF_REMAIN = 0x4,
-+	UFS_WB_50_PERCENT_BUF_REMAIN = 0x5,
-+	UFS_WB_60_PERCENT_BUF_REMAIN = 0x6,
-+	UFS_WB_70_PERCENT_BUF_REMAIN = 0x7,
-+	UFS_WB_80_PERCENT_BUF_REMAIN = 0x8,
-+	UFS_WB_90_PERCENT_BUF_REMAIN = 0x9,
-+	UFS_WB_100_PERCENT_BUF_REMAIN = 0xA,
-+};
-+
-+enum ufs_dev_wb_buf_life_time_est {
-+	UFS_WB_0_10_PERCENT_USED = 0x1,
-+	UFS_WB_10_20_PERCENT_USED = 0x2,
-+	UFS_WB_20_30_PERCENT_USED = 0x3,
-+	UFS_WB_30_40_PERCENT_USED = 0x4,
-+	UFS_WB_40_50_PERCENT_USED = 0x5,
-+	UFS_WB_50_60_PERCENT_USED = 0x6,
-+	UFS_WB_60_70_PERCENT_USED = 0x7,
-+	UFS_WB_70_80_PERCENT_USED = 0x8,
-+	UFS_WB_80_90_PERCENT_USED = 0x9,
-+	UFS_WB_90_100_PERCENT_USED = 0xA,
-+	UFS_WB_MAX_USED = 0xB,
-+};
-+
-+enum ufs_dev_wb_buf_user_cap_config {
-+	UFS_WB_BUFF_PRESERVE_USER_SPACE = 1,
-+	UFS_WB_BUFF_USER_SPACE_RED_EN = 2,
-+};
- /**
-  * struct utp_cmd_rsp - Response UPIU structure
-  * @residual_transfer_count: Residual transfer count DW-3
-@@ -537,6 +592,10 @@ struct ufs_dev_info {
- 	u8 *model;
- 	u16 wspecversion;
- 	u32 clk_gating_wait_us;
-+	u32 d_ext_ufs_feature_sup;
-+	u8 b_wb_buffer_type;
-+	bool wb_config_lun;
-+	bool keep_vcc_on;
- };
- 
- /**
-diff --git a/drivers/scsi/ufs/ufshcd.c b/drivers/scsi/ufs/ufshcd.c
-index f4aa10f..4cc1fb4 100644
---- a/drivers/scsi/ufs/ufshcd.c
-+++ b/drivers/scsi/ufs/ufshcd.c
-@@ -47,6 +47,7 @@
- #include "unipro.h"
- #include "ufs-sysfs.h"
- #include "ufs_bsg.h"
-+#include <linux/blkdev.h>
- 
- #define CREATE_TRACE_POINTS
- #include <trace/events/ufs.h>
-@@ -263,6 +264,13 @@ static int ufshcd_scale_clks(struct ufs_hba *hba, bool scale_up);
- static irqreturn_t ufshcd_intr(int irq, void *__hba);
- static int ufshcd_change_power_mode(struct ufs_hba *hba,
- 			     struct ufs_pa_layer_attr *pwr_mode);
-+static bool ufshcd_wb_sup(struct ufs_hba *hba);
-+static int ufshcd_wb_ctrl(struct ufs_hba *hba, bool enable);
-+static int ufshcd_wb_buf_flush_enable(struct ufs_hba *hba);
-+static int ufshcd_wb_buf_flush_disable(struct ufs_hba *hba);
-+static bool ufshcd_wb_is_buf_flush_needed(struct ufs_hba *hba);
-+static int ufshcd_wb_toggle_flush_during_h8(struct ufs_hba *hba, bool set);
-+
- static inline bool ufshcd_valid_tag(struct ufs_hba *hba, int tag)
- {
- 	return tag >= 0 && tag < hba->nutrs;
-@@ -284,6 +292,38 @@ static inline void ufshcd_disable_irq(struct ufs_hba *hba)
- 	}
+ config BSD_PROCESS_ACCT
+ 	bool "BSD Process Accounting"
+ 	depends on MULTIUSER
+diff --git a/kernel/sched/pelt.c b/kernel/sched/pelt.c
+index bd006b79b360..1fdacbf6fb44 100644
+--- a/kernel/sched/pelt.c
++++ b/kernel/sched/pelt.c
+@@ -367,6 +367,37 @@ int update_dl_rq_load_avg(u64 now, struct rq *rq, int running)
+ 	return 0;
  }
  
-+static inline void ufshcd_wb_toggle_flush(struct ufs_hba *hba)
-+{
-+	/*
-+	 * Query dAvailableWriteBoosterBufferSize attribute and enable
-+	 * the Write BoosterBuffer Flush if only 30% Write Booster
-+	 * Buffer is available.
-+	 * In reduction case, flush only if 10% is available
-+	 */
-+	if (ufshcd_wb_is_buf_flush_needed(hba))
-+		ufshcd_wb_buf_flush_enable(hba);
-+	else
-+		ufshcd_wb_buf_flush_disable(hba);
-+}
-+
-+static inline void ufshcd_wb_config(struct ufs_hba *hba)
-+{
-+	int ret;
-+
-+	if (!ufshcd_wb_sup(hba))
-+		return;
-+
-+	ret = ufshcd_wb_ctrl(hba, true);
-+	if (ret)
-+		dev_err(hba->dev, "%s: Enable WB failed: %d\n", __func__, ret);
-+	else
-+		dev_info(hba->dev, "%s: Write Booster Configured\n", __func__);
-+	ret = ufshcd_wb_toggle_flush_during_h8(hba, true);
-+	if (ret)
-+		dev_err(hba->dev, "%s: En WB flush during H8: failed: %d\n",
-+			__func__, ret);
-+}
-+
- static void ufshcd_scsi_unblock_requests(struct ufs_hba *hba)
- {
- 	if (atomic_dec_and_test(&hba->scsi_block_reqs_cnt))
-@@ -1139,6 +1179,8 @@ static int ufshcd_devfreq_scale(struct ufs_hba *hba, bool scale_up)
- 	}
- 
- 	ret = ufshcd_vops_clk_scale_notify(hba, scale_up, POST_CHANGE);
-+	/* Enable Write Booster if we have scaled up else disable it */
-+	ufshcd_wb_ctrl(hba, scale_up);
- 
- out:
- 	ufshcd_clock_scaling_unprepare(hba);
-@@ -4572,6 +4614,37 @@ static int ufshcd_get_lu_wp(struct ufs_hba *hba,
- 	return ret;
- }
- 
++#ifdef CONFIG_HAVE_SCHED_THERMAL_PRESSURE
 +/*
-+ * ufshcd_get_wb_alloc_units - returns "dLUNumWriteBoosterBufferAllocUnits"
-+ * @hba: per-adapter instance
-+ * @lun: UFS device lun id
-+ * @d_lun_wbb_au: pointer to buffer to hold the LU's alloc units info
++ * thermal:
 + *
-+ * Returns 0 in case of success and d_lun_wbb_au would be returned
-+ * Returns -ENOTSUPP if reading d_lun_wbb_au is not supported.
-+ * Returns -EINVAL in case of invalid parameters passed to this function.
++ *   load_sum = \Sum se->avg.load_sum but se->avg.load_sum is not tracked
++ *
++ *   util_avg and runnable_load_avg are not supported and meaningless.
++ *
++ * Unlike rt/dl utilization tracking that track time spent by a cpu
++ * running a rt/dl task through util_avg, the average thermal pressure is
++ * tracked through load_avg. This is because thermal pressure signal is
++ * time weighted "delta" capacity unlike util_avg which is binary.
++ * "delta capacity" =  actual capacity  -
++ *			capped capacity a cpu due to a thermal event.
 + */
-+static int ufshcd_get_wb_alloc_units(struct ufs_hba *hba,
-+			    u8 lun,
-+			    u8 *d_lun_wbb_au)
++
++int update_thermal_load_avg(u64 now, struct rq *rq, u64 capacity)
 +{
-+	int ret;
-+
-+	if (!d_lun_wbb_au)
-+		ret = -EINVAL;
-+
-+	/* WB can be supported only from LU0..LU7 */
-+	else if (lun >= UFS_UPIU_MAX_GENERAL_LUN)
-+		ret = -ENOTSUPP;
-+	else
-+		ret = ufshcd_read_unit_desc_param(hba,
-+					  lun,
-+					  UNIT_DESC_PARAM_WB_BUF_ALLOC_UNITS,
-+					  d_lun_wbb_au,
-+					  sizeof(*d_lun_wbb_au));
-+	return ret;
-+}
-+
- /**
-  * ufshcd_get_lu_power_on_wp_status - get LU's power on write protect
-  * status
-@@ -5194,6 +5267,165 @@ static void ufshcd_bkops_exception_event_handler(struct ufs_hba *hba)
- 				__func__, err);
- }
- 
-+static bool ufshcd_wb_sup(struct ufs_hba *hba)
-+{
-+	return ((hba->dev_info.d_ext_ufs_feature_sup &
-+		   UFS_DEV_WRITE_BOOSTER_SUP) &&
-+		  (hba->dev_info.b_wb_buffer_type
-+		   || hba->dev_info.wb_config_lun));
-+}
-+
-+static int ufshcd_wb_ctrl(struct ufs_hba *hba, bool enable)
-+{
-+	int ret;
-+	enum query_opcode opcode;
-+
-+	if (!ufshcd_wb_sup(hba))
-+		return 0;
-+
-+	if (enable)
-+		opcode = UPIU_QUERY_OPCODE_SET_FLAG;
-+	else
-+		opcode = UPIU_QUERY_OPCODE_CLEAR_FLAG;
-+
-+	ret = ufshcd_query_flag_retry(hba, opcode,
-+				      QUERY_FLAG_IDN_WB_EN, NULL);
-+	if (ret) {
-+		dev_err(hba->dev, "%s write booster %s failed %d\n",
-+			__func__, enable ? "enable" : "disable", ret);
-+		return ret;
++	if (___update_load_sum(now, &rq->avg_thermal,
++			       capacity,
++			       capacity,
++			       capacity)) {
++		___update_load_avg(&rq->avg_thermal, 1, 1);
++		trace_pelt_thermal_tp(rq);
++		return 1;
 +	}
 +
-+	hba->wb_enabled = enable;
-+	dev_dbg(hba->dev, "%s write booster %s %d\n",
-+			__func__, enable ? "enable" : "disable", ret);
-+
-+	return ret;
-+}
-+
-+static int ufshcd_wb_toggle_flush_during_h8(struct ufs_hba *hba, bool set)
-+{
-+	int val;
-+
-+	if (set)
-+		val =  UPIU_QUERY_OPCODE_SET_FLAG;
-+	else
-+		val = UPIU_QUERY_OPCODE_CLEAR_FLAG;
-+
-+	return ufshcd_query_flag_retry(hba, val,
-+			       QUERY_FLAG_IDN_WB_BUFF_FLUSH_DURING_HIBERN8,
-+				       NULL);
-+}
-+
-+static int ufshcd_wb_buf_flush_enable(struct ufs_hba *hba)
-+{
-+	int ret;
-+
-+	if (!ufshcd_wb_sup(hba) || hba->wb_buf_flush_enabled)
-+		return 0;
-+
-+	ret = ufshcd_query_flag_retry(hba, UPIU_QUERY_OPCODE_SET_FLAG,
-+				      QUERY_FLAG_IDN_WB_BUFF_FLUSH_EN, NULL);
-+	if (ret)
-+		dev_err(hba->dev, "%s WB - buf flush enable failed %d\n",
-+			__func__, ret);
-+	else
-+		hba->wb_buf_flush_enabled = true;
-+
-+	dev_dbg(hba->dev, "WB - Flush enabled: %d\n", ret);
-+	return ret;
-+}
-+
-+static int ufshcd_wb_buf_flush_disable(struct ufs_hba *hba)
-+{
-+	int ret;
-+
-+	if (!ufshcd_wb_sup(hba) || !hba->wb_buf_flush_enabled)
-+		return 0;
-+
-+	ret = ufshcd_query_flag_retry(hba, UPIU_QUERY_OPCODE_CLEAR_FLAG,
-+				      QUERY_FLAG_IDN_WB_BUFF_FLUSH_EN, NULL);
-+	if (ret) {
-+		dev_warn(hba->dev, "%s: WB - buf flush disable failed %d\n",
-+			__func__, ret);
-+	} else {
-+		hba->wb_buf_flush_enabled = false;
-+		dev_dbg(hba->dev, "WB - Flush disabled: %d\n", ret);
-+	}
-+
-+	return ret;
-+}
-+
-+static bool ufshcd_wb_is_buf_flush_needed(struct ufs_hba *hba)
-+{
-+	int ret;
-+	u32 cur_buf, status, avail_buf;
-+
-+	if (!ufshcd_wb_sup(hba))
-+		return false;
-+
-+	ret = ufshcd_query_attr_retry(hba, UPIU_QUERY_OPCODE_READ_ATTR,
-+				      QUERY_ATTR_IDN_AVAIL_WB_BUFF_SIZE,
-+				      0, 0, &avail_buf);
-+	if (ret) {
-+		dev_warn(hba->dev, "%s dAvailableWriteBoosterBufferSize read failed %d\n",
-+			 __func__, ret);
-+		return false;
-+	}
-+
-+	ret = ufshcd_vops_get_user_cap_mode(hba);
-+	if (ret <= 0) {
-+		dev_dbg(hba->dev, "Get user-cap reduction mode: failed: %d\n",
-+			ret);
-+		/* Most commonly used */
-+		ret = UFS_WB_BUFF_PRESERVE_USER_SPACE;
-+	}
-+
-+	hba->dev_info.keep_vcc_on = false;
-+	if (ret == UFS_WB_BUFF_USER_SPACE_RED_EN) {
-+		if (avail_buf <= UFS_WB_10_PERCENT_BUF_REMAIN) {
-+			hba->dev_info.keep_vcc_on = true;
-+			return true;
-+		}
-+		return false;
-+	} else if (ret == UFS_WB_BUFF_PRESERVE_USER_SPACE) {
-+		ret = ufshcd_query_attr_retry(hba, UPIU_QUERY_OPCODE_READ_ATTR,
-+					      QUERY_ATTR_IDN_CURR_WB_BUFF_SIZE,
-+					      0, 0, &cur_buf);
-+		if (ret) {
-+			dev_err(hba->dev, "%s dCurWriteBoosterBufferSize read failed %d\n",
-+				 __func__, ret);
-+			return false;
-+		}
-+
-+		if (!cur_buf) {
-+			dev_info(hba->dev, "dCurWBBuf: %d WB disabled until free-space is available\n",
-+				 cur_buf);
-+			return false;
-+		}
-+
-+		ret = ufshcd_get_ee_status(hba, &status);
-+		if (ret) {
-+			dev_err(hba->dev, "%s: failed to get exception status %d\n",
-+				__func__, ret);
-+			if (avail_buf < UFS_WB_40_PERCENT_BUF_REMAIN) {
-+				hba->dev_info.keep_vcc_on = true;
-+				return true;
-+			}
-+			return false;
-+		}
-+
-+		status &= hba->ee_ctrl_mask;
-+
-+		if ((status & MASK_EE_URGENT_BKOPS) ||
-+		    (avail_buf < UFS_WB_40_PERCENT_BUF_REMAIN)) {
-+			hba->dev_info.keep_vcc_on = true;
-+			return true;
-+		}
-+	}
-+	return false;
-+}
-+
- /**
-  * ufshcd_exception_event_handler - handle exceptions raised by device
-  * @work: pointer to work data
-@@ -6629,7 +6861,8 @@ static int ufs_get_device_desc(struct ufs_hba *hba)
- 	int err;
- 	size_t buff_len;
- 	u8 model_index;
--	u8 *desc_buf;
-+	u8 *desc_buf, wb_buf[4];
-+	u32 lun, res;
- 	struct ufs_dev_info *dev_info = &hba->dev_info;
- 
- 	buff_len = max_t(size_t, hba->desc_size.dev_desc,
-@@ -6660,6 +6893,40 @@ static int ufs_get_device_desc(struct ufs_hba *hba)
- 				      desc_buf[DEVICE_DESC_PARAM_SPEC_VER + 1];
- 
- 	model_index = desc_buf[DEVICE_DESC_PARAM_PRDCT_NAME];
-+	/* Enable WB only for UFS-3.1 OR if desc len >= 0x59 */
-+	if (dev_info->wspecversion >= 0x310) {
-+		hba->dev_info.d_ext_ufs_feature_sup =
-+			desc_buf[DEVICE_DESC_PARAM_EXT_UFS_FEATURE_SUP]
-+								<< 24 |
-+			desc_buf[DEVICE_DESC_PARAM_EXT_UFS_FEATURE_SUP + 1]
-+								<< 16 |
-+			desc_buf[DEVICE_DESC_PARAM_EXT_UFS_FEATURE_SUP + 2]
-+								<< 8 |
-+			desc_buf[DEVICE_DESC_PARAM_EXT_UFS_FEATURE_SUP + 3];
-+
-+		hba->dev_info.b_wb_buffer_type =
-+			desc_buf[DEVICE_DESC_PARAM_WB_TYPE];
-+
-+		if (hba->dev_info.b_wb_buffer_type)
-+			goto skip_unit_desc;
-+
-+		hba->dev_info.wb_config_lun = false;
-+		for (lun = 0; lun < UFS_UPIU_MAX_GENERAL_LUN; lun++) {
-+			memset(wb_buf, 0, sizeof(wb_buf));
-+			err = ufshcd_get_wb_alloc_units(hba, lun, wb_buf);
-+			if (err)
-+				break;
-+
-+			res = wb_buf[0] << 24 | wb_buf[1] << 16 |
-+				wb_buf[2] << 8 | wb_buf[3];
-+			if (res) {
-+				hba->dev_info.wb_config_lun = true;
-+				break;
-+			}
-+		}
-+	}
-+
-+skip_unit_desc:
- 	err = ufshcd_read_string_desc(hba, model_index,
- 				      &dev_info->model, SD_ASCII_STD);
- 	if (err < 0) {
-@@ -7162,6 +7429,7 @@ static int ufshcd_probe_hba(struct ufs_hba *hba, bool async)
- 
- 	/* set the state as operational after switching to desired gear */
- 	hba->ufshcd_state = UFSHCD_STATE_OPERATIONAL;
-+	ufshcd_wb_config(hba);
- 
- 	/* Enable Auto-Hibernate if configured */
- 	ufshcd_auto_hibern8_enable(hba);
-@@ -7823,12 +8091,16 @@ static void ufshcd_vreg_set_lpm(struct ufs_hba *hba)
- 	 *
- 	 * Ignore the error returned by ufshcd_toggle_vreg() as device is anyway
- 	 * in low power state which would save some power.
-+	 *
-+	 * If Write Booster is enabled and the device needs to flush the WB
-+	 * buffer OR if bkops status is urgent for WB, keep Vcc on.
- 	 */
- 	if (ufshcd_is_ufs_dev_poweroff(hba) && ufshcd_is_link_off(hba) &&
- 	    !hba->dev_info.is_lu_power_on_wp) {
- 		ufshcd_setup_vreg(hba, false);
- 	} else if (!ufshcd_is_ufs_dev_active(hba)) {
--		ufshcd_toggle_vreg(hba->dev, hba->vreg_info.vcc, false);
-+		if (!hba->dev_info.keep_vcc_on)
-+			ufshcd_toggle_vreg(hba->dev, hba->vreg_info.vcc, false);
- 		if (!ufshcd_is_link_active(hba)) {
- 			ufshcd_config_vreg_lpm(hba, hba->vreg_info.vccq);
- 			ufshcd_config_vreg_lpm(hba, hba->vreg_info.vccq2);
-@@ -7952,11 +8224,16 @@ static int ufshcd_suspend(struct ufs_hba *hba, enum ufs_pm_op pm_op)
- 			/* make sure that auto bkops is disabled */
- 			ufshcd_disable_auto_bkops(hba);
- 		}
-+		ufshcd_wb_toggle_flush(hba);
-+	} else if (!ufshcd_is_runtime_pm(pm_op)) {
-+		ufshcd_wb_buf_flush_disable(hba);
-+		hba->dev_info.keep_vcc_on = false;
- 	}
- 
- 	if ((req_dev_pwr_mode != hba->curr_dev_pwr_mode) &&
--	     ((ufshcd_is_runtime_pm(pm_op) && !hba->auto_bkops_enabled) ||
--	       !ufshcd_is_runtime_pm(pm_op))) {
-+	    ((ufshcd_is_runtime_pm(pm_op) && (!hba->auto_bkops_enabled)
-+	      && !hba->wb_buf_flush_enabled) ||
-+	     !ufshcd_is_runtime_pm(pm_op))) {
- 		/* ensure that bkops is disabled */
- 		ufshcd_disable_auto_bkops(hba);
- 		ret = ufshcd_set_dev_pwr_mode(hba, req_dev_pwr_mode);
-@@ -8078,6 +8355,7 @@ static int ufshcd_resume(struct ufs_hba *hba, enum ufs_pm_op pm_op)
- 			goto vendor_suspend;
- 	}
- 
-+	ufshcd_wb_buf_flush_disable(hba);
- 	if (!ufshcd_is_ufs_dev_active(hba)) {
- 		ret = ufshcd_set_dev_pwr_mode(hba, UFS_ACTIVE_PWR_MODE);
- 		if (ret)
-diff --git a/drivers/scsi/ufs/ufshcd.h b/drivers/scsi/ufs/ufshcd.h
-index 8f516b2..6f36ff3 100644
---- a/drivers/scsi/ufs/ufshcd.h
-+++ b/drivers/scsi/ufs/ufshcd.h
-@@ -327,6 +327,7 @@ struct ufs_hba_variant_ops {
- 	void	(*dbg_register_dump)(struct ufs_hba *hba);
- 	int	(*phy_initialization)(struct ufs_hba *);
- 	void	(*device_reset)(struct ufs_hba *hba);
-+	u32	(*get_user_cap_mode)(struct ufs_hba *hba);
- };
- 
- /* clock gating state  */
-@@ -731,6 +732,8 @@ struct ufs_hba {
- 
- 	struct device		bsg_dev;
- 	struct request_queue	*bsg_queue;
-+	bool wb_buf_flush_enabled;
-+	bool wb_enabled;
- };
- 
- /* Returns true if clocks can be gated. Otherwise false */
-@@ -1123,4 +1126,10 @@ static inline u8 ufshcd_scsi_to_upiu_lun(unsigned int scsi_lun)
- int ufshcd_dump_regs(struct ufs_hba *hba, size_t offset, size_t len,
- 		     const char *prefix);
- 
-+static inline unsigned int ufshcd_vops_get_user_cap_mode(struct ufs_hba *hba)
-+{
-+	if (hba->vops && hba->vops->get_user_cap_mode)
-+		return hba->vops->get_user_cap_mode(hba);
 +	return 0;
 +}
- #endif /* End of Header */
++#endif
++
+ #ifdef CONFIG_HAVE_SCHED_AVG_IRQ
+ /*
+  * irq:
+diff --git a/kernel/sched/pelt.h b/kernel/sched/pelt.h
+index afff644da065..916979a54782 100644
+--- a/kernel/sched/pelt.h
++++ b/kernel/sched/pelt.h
+@@ -7,6 +7,26 @@ int __update_load_avg_cfs_rq(u64 now, struct cfs_rq *cfs_rq);
+ int update_rt_rq_load_avg(u64 now, struct rq *rq, int running);
+ int update_dl_rq_load_avg(u64 now, struct rq *rq, int running);
+ 
++#ifdef CONFIG_HAVE_SCHED_THERMAL_PRESSURE
++int update_thermal_load_avg(u64 now, struct rq *rq, u64 capacity);
++
++static inline u64 thermal_load_avg(struct rq *rq)
++{
++	return READ_ONCE(rq->avg_thermal.load_avg);
++}
++#else
++static inline int
++update_thermal_load_avg(u64 now, struct rq *rq, u64 capacity)
++{
++	return 0;
++}
++
++static inline u64 thermal_load_avg(struct rq *rq)
++{
++	return 0;
++}
++#endif
++
+ #ifdef CONFIG_HAVE_SCHED_AVG_IRQ
+ int update_irq_load_avg(struct rq *rq, u64 running);
+ #else
+@@ -158,6 +178,17 @@ update_dl_rq_load_avg(u64 now, struct rq *rq, int running)
+ 	return 0;
+ }
+ 
++static inline int
++update_thermal_load_avg(u64 now, struct rq *rq, u64 capacity)
++{
++	return 0;
++}
++
++static inline u64 thermal_load_avg(struct rq *rq)
++{
++	return 0;
++}
++
+ static inline int
+ update_irq_load_avg(struct rq *rq, u64 running)
+ {
+diff --git a/kernel/sched/sched.h b/kernel/sched/sched.h
+index 12bf82d86156..211411ac0efa 100644
+--- a/kernel/sched/sched.h
++++ b/kernel/sched/sched.h
+@@ -943,6 +943,9 @@ struct rq {
+ 	struct sched_avg	avg_dl;
+ #ifdef CONFIG_HAVE_SCHED_AVG_IRQ
+ 	struct sched_avg	avg_irq;
++#endif
++#ifdef CONFIG_HAVE_SCHED_THERMAL_PRESSURE
++	struct sched_avg	avg_thermal;
+ #endif
+ 	u64			idle_stamp;
+ 	u64			avg_idle;
 -- 
-Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum, a Linux Foundation Collaborative Project.
+2.20.1
 
