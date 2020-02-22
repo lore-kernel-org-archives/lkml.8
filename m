@@ -6,35 +6,34 @@ X-Spam-Status: No, score=-8.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C65B1C35666
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DA915C35671
 	for <linux-kernel@archiver.kernel.org>; Sat, 22 Feb 2020 21:06:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9D930206EF
+	by mail.kernel.org (Postfix) with ESMTP id BD2CF20702
 	for <linux-kernel@archiver.kernel.org>; Sat, 22 Feb 2020 21:06:00 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726891AbgBVVF6 (ORCPT
+        id S1726965AbgBVVF7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 22 Feb 2020 16:05:58 -0500
-Received: from Galois.linutronix.de ([193.142.43.55]:47684 "EHLO
+        Sat, 22 Feb 2020 16:05:59 -0500
+Received: from Galois.linutronix.de ([193.142.43.55]:47685 "EHLO
         Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726828AbgBVVF6 (ORCPT
+        with ESMTP id S1726826AbgBVVF7 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 22 Feb 2020 16:05:58 -0500
+        Sat, 22 Feb 2020 16:05:59 -0500
 Received: from p5de0bf0b.dip0.t-ipconnect.de ([93.224.191.11] helo=nanos.tec.linutronix.de)
         by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
         (Exim 4.80)
         (envelope-from <tglx@linutronix.de>)
-        id 1j5byG-0003Ah-0O; Sat, 22 Feb 2020 22:05:56 +0100
+        id 1j5byF-0003Ad-Pu; Sat, 22 Feb 2020 22:05:55 +0100
 Received: from nanos.tec.linutronix.de (localhost [IPv6:::1])
-        by nanos.tec.linutronix.de (Postfix) with ESMTP id 7844610408B;
+        by nanos.tec.linutronix.de (Postfix) with ESMTP id 10562FFC77;
         Sat, 22 Feb 2020 22:05:55 +0100 (CET)
 Date:   Sat, 22 Feb 2020 21:00:04 -0000
 From:   Thomas Gleixner <tglx@linutronix.de>
 To:     Linus Torvalds <torvalds@linux-foundation.org>
 Cc:     linux-kernel@vger.kernel.org, x86@kernel.org
-Subject: [GIT pull] x86 fixes for 5.6-rc3
-References: <158240520445.852.16454463053831663511.tglx@nanos.tec.linutronix.de>
-Message-ID: <158240520445.852.1076310115215713264.tglx@nanos.tec.linutronix.de>
+Subject: [GIT pull] irq fixes for 5.6-rc3
+Message-ID: <158240520445.852.16454463053831663511.tglx@nanos.tec.linutronix.de>
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
 Content-Disposition: inline
@@ -48,103 +47,148 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 Linus,
 
-please pull the latest x86/urgent branch from:
+please pull the latest irq/urgent branch from:
 
-   git://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git x86-urgent-2020-02-22
+   git://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git irq-urgent-2020-02-22
 
-up to:  21b5ee59ef18: x86/cpu/amd: Enable the fixed Instructions Retired counter IRPERF
+up to:  2546287c5fb3: genirq/irqdomain: Make sure all irq domain flags are distinct
 
-Two fixes for x86:
+Two fixes for the irq core code which are follow ups to the recent MSI
+fixes:
 
-  - Remove the __force_oder definiton from the kaslr boot code as it is
-    already defined in the page table code which makes GCC 10 builds fail
-    because it changed the default to -fno-common.
+ - The WARN_ON which was put into the MSI setaffinity callback for paranoia
+   reasons actually triggered via a callchain which escaped when all the
+   possible ways to reach that code were analyzed.
 
-  - Address the AMD erratum 1054 concerning the IRPERF capability and
-    enable the Instructions Retired fixed counter on machines which are not
-    affected by the erratum.
+   The proc/irq/$N/*affinity interfaces have a quirk which came in when
+   ALPHA moved to the generic interface: In case that the written affinity
+   mask does not contain any online CPU it calls into ALPHAs magic auto
+   affinity setting code.
+
+   A few years later this mechanism was also made available to x86 for no
+   good reasons and in a way which circumvents all sanity checks for
+   interrupts which cannot have their affinity set from process context on
+   X86 due to the way the X86 interrupt delivery works.
+
+   It would be possible to make this work properly, but there is no point
+   in doing so. If the interrupt is not yet started then the affinity
+   setting has no effect and if it is started already then it is already
+   assigned to an online CPU so there is no point to randomly move it to
+   some other CPU. Just return EINVAL as the code has done before that
+   change forever.
+
+ - The new MSI quirk bit in the irq domain flags turned out to be already
+   occupied, which escaped the author and the reviewers because the already
+   in use bits were 0,6,2,3,4,5 listed in that order. That bit 6 was simply
+   overlooked because the ordering was straight forward linear
+   otherwise. So the new bit ended up being a duplicate. Fix it up by
+   switching the oddball 6 to the obvious 1.
 
 Thanks,
 
 	tglx
 
 ------------------>
-H.J. Lu (1):
-      x86/boot/compressed: Don't declare __force_order in kaslr_64.c
+Thomas Gleixner (1):
+      genirq/proc: Reject invalid affinity masks (again)
 
-Kim Phillips (1):
-      x86/cpu/amd: Enable the fixed Instructions Retired counter IRPERF
+Zenghui Yu (1):
+      genirq/irqdomain: Make sure all irq domain flags are distinct
 
 
- arch/x86/boot/compressed/kaslr_64.c |  3 ---
- arch/x86/include/asm/msr-index.h    |  2 ++
- arch/x86/kernel/cpu/amd.c           | 14 ++++++++++++++
- 3 files changed, 16 insertions(+), 3 deletions(-)
+ include/linux/irqdomain.h |  2 +-
+ kernel/irq/internals.h    |  2 --
+ kernel/irq/manage.c       | 18 ++----------------
+ kernel/irq/proc.c         | 22 ++++++++++++++++++++++
+ 4 files changed, 25 insertions(+), 19 deletions(-)
 
-diff --git a/arch/x86/boot/compressed/kaslr_64.c b/arch/x86/boot/compressed/kaslr_64.c
-index 748456c365f4..9557c5a15b91 100644
---- a/arch/x86/boot/compressed/kaslr_64.c
-+++ b/arch/x86/boot/compressed/kaslr_64.c
-@@ -29,9 +29,6 @@
- #define __PAGE_OFFSET __PAGE_OFFSET_BASE
- #include "../../mm/ident_map.c"
+diff --git a/include/linux/irqdomain.h b/include/linux/irqdomain.h
+index b2d47571ab67..8d062e86d954 100644
+--- a/include/linux/irqdomain.h
++++ b/include/linux/irqdomain.h
+@@ -192,7 +192,7 @@ enum {
+ 	IRQ_DOMAIN_FLAG_HIERARCHY	= (1 << 0),
  
--/* Used by pgtable.h asm code to force instruction serialization. */
--unsigned long __force_order;
+ 	/* Irq domain name was allocated in __irq_domain_add() */
+-	IRQ_DOMAIN_NAME_ALLOCATED	= (1 << 6),
++	IRQ_DOMAIN_NAME_ALLOCATED	= (1 << 1),
+ 
+ 	/* Irq domain is an IPI domain with virq per cpu */
+ 	IRQ_DOMAIN_FLAG_IPI_PER_CPU	= (1 << 2),
+diff --git a/kernel/irq/internals.h b/kernel/irq/internals.h
+index 3924fbe829d4..c9d8eb7f5c02 100644
+--- a/kernel/irq/internals.h
++++ b/kernel/irq/internals.h
+@@ -128,8 +128,6 @@ static inline void unregister_handler_proc(unsigned int irq,
+ 
+ extern bool irq_can_set_affinity_usr(unsigned int irq);
+ 
+-extern int irq_select_affinity_usr(unsigned int irq);
 -
- /* Used to track our page table allocation area. */
- struct alloc_pgt_data {
- 	unsigned char *pgt_buf;
-diff --git a/arch/x86/include/asm/msr-index.h b/arch/x86/include/asm/msr-index.h
-index ebe1685e92dd..d5e517d1c3dd 100644
---- a/arch/x86/include/asm/msr-index.h
-+++ b/arch/x86/include/asm/msr-index.h
-@@ -512,6 +512,8 @@
- #define MSR_K7_HWCR			0xc0010015
- #define MSR_K7_HWCR_SMMLOCK_BIT		0
- #define MSR_K7_HWCR_SMMLOCK		BIT_ULL(MSR_K7_HWCR_SMMLOCK_BIT)
-+#define MSR_K7_HWCR_IRPERF_EN_BIT	30
-+#define MSR_K7_HWCR_IRPERF_EN		BIT_ULL(MSR_K7_HWCR_IRPERF_EN_BIT)
- #define MSR_K7_FID_VID_CTL		0xc0010041
- #define MSR_K7_FID_VID_STATUS		0xc0010042
+ extern void irq_set_thread_affinity(struct irq_desc *desc);
  
-diff --git a/arch/x86/kernel/cpu/amd.c b/arch/x86/kernel/cpu/amd.c
-index ac83a0fef628..1f875fbe1384 100644
---- a/arch/x86/kernel/cpu/amd.c
-+++ b/arch/x86/kernel/cpu/amd.c
-@@ -28,6 +28,7 @@
+ extern int irq_do_set_affinity(struct irq_data *data,
+diff --git a/kernel/irq/manage.c b/kernel/irq/manage.c
+index 3089a60ea8f9..7eee98c38f25 100644
+--- a/kernel/irq/manage.c
++++ b/kernel/irq/manage.c
+@@ -481,23 +481,9 @@ int irq_setup_affinity(struct irq_desc *desc)
+ {
+ 	return irq_select_affinity(irq_desc_get_irq(desc));
+ }
+-#endif
++#endif /* CONFIG_AUTO_IRQ_AFFINITY */
++#endif /* CONFIG_SMP */
  
- static const int amd_erratum_383[];
- static const int amd_erratum_400[];
-+static const int amd_erratum_1054[];
- static bool cpu_has_amd_erratum(struct cpuinfo_x86 *cpu, const int *erratum);
+-/*
+- * Called when a bogus affinity is set via /proc/irq
+- */
+-int irq_select_affinity_usr(unsigned int irq)
+-{
+-	struct irq_desc *desc = irq_to_desc(irq);
+-	unsigned long flags;
+-	int ret;
+-
+-	raw_spin_lock_irqsave(&desc->lock, flags);
+-	ret = irq_setup_affinity(desc);
+-	raw_spin_unlock_irqrestore(&desc->lock, flags);
+-	return ret;
+-}
+-#endif
  
- /*
-@@ -972,6 +973,15 @@ static void init_amd(struct cpuinfo_x86 *c)
- 	/* AMD CPUs don't reset SS attributes on SYSRET, Xen does. */
- 	if (!cpu_has(c, X86_FEATURE_XENPV))
- 		set_cpu_bug(c, X86_BUG_SYSRET_SS_ATTRS);
-+
-+	/*
-+	 * Turn on the Instructions Retired free counter on machines not
-+	 * susceptible to erratum #1054 "Instructions Retired Performance
-+	 * Counter May Be Inaccurate".
-+	 */
-+	if (cpu_has(c, X86_FEATURE_IRPERF) &&
-+	    !cpu_has_amd_erratum(c, amd_erratum_1054))
-+		msr_set_bit(MSR_K7_HWCR, MSR_K7_HWCR_IRPERF_EN_BIT);
+ /**
+  *	irq_set_vcpu_affinity - Set vcpu affinity for the interrupt
+diff --git a/kernel/irq/proc.c b/kernel/irq/proc.c
+index 9e5783d98033..32c071d7bc03 100644
+--- a/kernel/irq/proc.c
++++ b/kernel/irq/proc.c
+@@ -111,6 +111,28 @@ static int irq_affinity_list_proc_show(struct seq_file *m, void *v)
+ 	return show_irq_affinity(AFFINITY_LIST, m);
  }
  
- #ifdef CONFIG_X86_32
-@@ -1099,6 +1109,10 @@ static const int amd_erratum_400[] =
- static const int amd_erratum_383[] =
- 	AMD_OSVW_ERRATUM(3, AMD_MODEL_RANGE(0x10, 0, 0, 0xff, 0xf));
++#ifndef CONFIG_AUTO_IRQ_AFFINITY
++static inline int irq_select_affinity_usr(unsigned int irq)
++{
++	/*
++	 * If the interrupt is started up already then this fails. The
++	 * interrupt is assigned to an online CPU already. There is no
++	 * point to move it around randomly. Tell user space that the
++	 * selected mask is bogus.
++	 *
++	 * If not then any change to the affinity is pointless because the
++	 * startup code invokes irq_setup_affinity() which will select
++	 * a online CPU anyway.
++	 */
++	return -EINVAL;
++}
++#else
++/* ALPHA magic affinity auto selector. Keep it for historical reasons. */
++static inline int irq_select_affinity_usr(unsigned int irq)
++{
++	return irq_select_affinity(irq);
++}
++#endif
  
-+/* #1054: Instructions Retired Performance Counter May Be Inaccurate */
-+static const int amd_erratum_1054[] =
-+	AMD_OSVW_ERRATUM(0, AMD_MODEL_RANGE(0x17, 0, 0, 0x2f, 0xf));
-+
- 
- static bool cpu_has_amd_erratum(struct cpuinfo_x86 *cpu, const int *erratum)
- {
+ static ssize_t write_irq_affinity(int type, struct file *file,
+ 		const char __user *buffer, size_t count, loff_t *pos)
 
