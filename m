@@ -2,201 +2,151 @@ Return-Path: <SRS0=8jYG=4K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F0B2FC35671
-	for <linux-kernel@archiver.kernel.org>; Sat, 22 Feb 2020 16:50:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 336D3C35666
+	for <linux-kernel@archiver.kernel.org>; Sat, 22 Feb 2020 16:50:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B7F91206EF
-	for <linux-kernel@archiver.kernel.org>; Sat, 22 Feb 2020 16:50:17 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="fov6amsM"
+	by mail.kernel.org (Postfix) with ESMTP id 04F5720702
+	for <linux-kernel@archiver.kernel.org>; Sat, 22 Feb 2020 16:50:52 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1582390252;
+	bh=y1IU9aOcbMs7lufYIheqPXc0WiAeuFziYRvZuF3V4a8=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=yVG6o3xBJa+yUqglHnKU1pgJMbJpFmLUgwX6aDoARIvYmzeBHKGqFeo3SIJ2Oujy0
+	 dSxVSSEIWM5hAtY89U7yI+avxdV/0ikc/FUv65qmN3vM3OvSZBfFv7WQr7+4tfK/wZ
+	 mOFl9Ezn3vZ3RHhukfQhNm3ePxCB5FvOrxWyhH6M=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726791AbgBVQuQ (ORCPT
+        id S1726865AbgBVQuu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 22 Feb 2020 11:50:16 -0500
-Received: from mail-yw1-f66.google.com ([209.85.161.66]:38921 "EHLO
-        mail-yw1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726044AbgBVQuQ (ORCPT
+        Sat, 22 Feb 2020 11:50:50 -0500
+Received: from conssluserg-02.nifty.com ([210.131.2.81]:50631 "EHLO
+        conssluserg-02.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726811AbgBVQuu (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 22 Feb 2020 11:50:16 -0500
-Received: by mail-yw1-f66.google.com with SMTP id h126so3121298ywc.6;
-        Sat, 22 Feb 2020 08:50:15 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=9CEtPQwqb2jRT0+JdcJwq9ByMA6NE9XRRq10JDdwV54=;
-        b=fov6amsMb71SraLpdll6TXLXhCsbsUDPsGPGict5Ib4uEKHqaG9PHoVbXgGaDbpcuf
-         5RcGJJHZ/7gDwRFtfjQexAH/AYfCI9AdrjDtRogEcRckbLs7QC0TrUTivyo7QwFFDtnA
-         N797tBSmOPt2AnuXPdc7j9oXGzSoDssszcVGMjI5be+ioKslIob9r3IUfQJLBOpF9l93
-         S7M2TPVODqo1cktkfrz/uwZ1JvrrqYgWss3mWArICThlLsCDfQTBNfEoziwy9ewA558t
-         8tzID89xnXTjx1g7EAtH++A9AoxE4/UfBwR59P3fAAngvAbIOWPbHrKIZDG/eyh69jPH
-         lF1g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=9CEtPQwqb2jRT0+JdcJwq9ByMA6NE9XRRq10JDdwV54=;
-        b=Ejj4vwOxvJykT+YLXijDwlsCVzU1eG4Pq/Is8MQ+8MxSizlzbchN4GUlRsMoHT+csT
-         VuX5W1xa0x0RffAZFgSgAFHG4kr7akI0fMorlhmJsDDhJGYfA795uaOc76V3Has3UTZY
-         smBy2JBQvcQBP5L7D6a3RKGRZ+PFXPloePVIVnIVendlKIAxB8sbq3duIs3griZuMtsa
-         o2uSku9gyb50iF71QJa9hcDqIUbPylK9PohVeR9x1Lbohx6JQoEAUmyGjrOSogL/2VPF
-         egly16DEoL0gIAEY4M+fCMStqFp5/FrBjwWfMl7BaxhDvI/q9TTseFVGawriq3p10lmG
-         G9qA==
-X-Gm-Message-State: APjAAAW/KXFv1vu0RZWy5kNMj2RVzAJf9ZLU96SG4c5nIMHA3xghsZrl
-        G1g+qsXhsEH4DuwRyTJuZ2U=
-X-Google-Smtp-Source: APXvYqx6ZZYFdxmQ/GlIOciTe2UWdxrHrhPWQmtMGP/bnwtUjCFzk3NCQGw3D+/Msys4oStUCC97eg==
-X-Received: by 2002:a81:a189:: with SMTP id y131mr36078889ywg.329.1582390214706;
-        Sat, 22 Feb 2020 08:50:14 -0800 (PST)
-Received: from localhost.localdomain (072-189-064-225.res.spectrum.com. [72.189.64.225])
-        by smtp.gmail.com with ESMTPSA id c84sm2997249ywa.1.2020.02.22.08.50.13
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 22 Feb 2020 08:50:14 -0800 (PST)
-From:   William Breathitt Gray <vilhelm.gray@gmail.com>
-To:     jic23@kernel.org
-Cc:     linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org,
-        William Breathitt Gray <vilhelm.gray@gmail.com>
-Subject: [PATCH] counter: 104-quad-8: Support Filter Clock Prescaler
-Date:   Sat, 22 Feb 2020 11:49:58 -0500
-Message-Id: <20200222164958.105288-1-vilhelm.gray@gmail.com>
-X-Mailer: git-send-email 2.24.1
+        Sat, 22 Feb 2020 11:50:50 -0500
+Received: from mail-vs1-f51.google.com (mail-vs1-f51.google.com [209.85.217.51]) (authenticated)
+        by conssluserg-02.nifty.com with ESMTP id 01MGokUG022778;
+        Sun, 23 Feb 2020 01:50:47 +0900
+DKIM-Filter: OpenDKIM Filter v2.10.3 conssluserg-02.nifty.com 01MGokUG022778
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
+        s=dec2015msa; t=1582390247;
+        bh=ntkgHYUYCfIwZNIh8WL84KmzpWPirlhPyraQtzsQYdk=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=Dyup2KWKIfIIEZ2JS8/N7vw5FHYnQYVHFcchipX13bXB88ywC3RTO+17LPMXaWEZQ
+         WBSly9tizmDr+QlJ74VN7Y9JPuOr3yv6xMC3H2tbiSLIf4uQ97jRYe/L/EcxtABdDa
+         7MswKFgm03WqAYug/KQfFk7ZFTF01Fr5HwaQf0G4coMlsOJg3LOTopaPaZgzGp5B4n
+         xP5RGE4l2Nk1EOZpeFVI4Enm7DQIiKCYGtzI6h8F+9i4IVrEjYAxr1nbO6X7p4fX1V
+         a+pzsKvMCBSa789GVoHw5fEwwQJ87lopDW1KCapEWmHQGLpfi6HwQl0gUmihyNaj28
+         dyIkwQ80x0VzQ==
+X-Nifty-SrcIP: [209.85.217.51]
+Received: by mail-vs1-f51.google.com with SMTP id a2so3236286vso.3;
+        Sat, 22 Feb 2020 08:50:46 -0800 (PST)
+X-Gm-Message-State: APjAAAW0ghFXyxZKhHDoD5RKDz5fL3tryd7KXNLJhjLNWDM5BCyxM0KX
+        dYOTbgPXVK8aOWPvsicXT/IsI9U2T+qBxU9y/tU=
+X-Google-Smtp-Source: APXvYqyWutBden8aJ3HU4rqJhQ+/ltavj3SvOxpcg7LDa5NGabG42XSuDN8zg7hRQTNqH2n5elTn/BHqmpBgtmFCqyY=
+X-Received: by 2002:a67:fa4b:: with SMTP id j11mr23386621vsq.155.1582390245902;
+ Sat, 22 Feb 2020 08:50:45 -0800 (PST)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20200221222955.21038-1-robh@kernel.org> <20200221222955.21038-2-robh@kernel.org>
+In-Reply-To: <20200221222955.21038-2-robh@kernel.org>
+From:   Masahiro Yamada <masahiroy@kernel.org>
+Date:   Sun, 23 Feb 2020 01:50:09 +0900
+X-Gmail-Original-Message-ID: <CAK7LNATo6b178Zfj3gOdnicFfP6s5-yNwbPg+CAd4YcKHYdFqA@mail.gmail.com>
+Message-ID: <CAK7LNATo6b178Zfj3gOdnicFfP6s5-yNwbPg+CAd4YcKHYdFqA@mail.gmail.com>
+Subject: Re: [PATCH 2/2] kbuild: Build DT binding examples with dtc warnings enabled
+To:     Rob Herring <robh@kernel.org>
+Cc:     DTML <devicetree@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Michal Marek <michal.lkml@markovi.net>,
+        Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The ACCES 104-QUAD-8 series does active filtering on the quadrature
-input signals via the PC/104 bus clock (OSC 14.318 MHz). This patch
-exposes the filter clock prescaler available on each channel.
+Hi Rob,
 
-Signed-off-by: William Breathitt Gray <vilhelm.gray@gmail.com>
----
- .../ABI/testing/sysfs-bus-counter-104-quad-8  |  7 +++
- drivers/counter/104-quad-8.c                  | 61 ++++++++++++++++++-
- 2 files changed, 65 insertions(+), 3 deletions(-)
+On Sat, Feb 22, 2020 at 7:29 AM Rob Herring <robh@kernel.org> wrote:
+>
+> Now that we have a separate rule for DT binding examples, we can customize
+> the dtc options. Let's adjust the dtc warnings to me more strict by
+> default so the examples get cleaned up as they get converted to schema.
+>
+> Leaving 'avoid_unnecessary_addr_size' and 'graph_child_address' warnings
+> disabled as examples tend to be incomplete and they generates a lot of
+> warnings.
+>
+> Cc: Masahiro Yamada <masahiroy@kernel.org>
+> Cc: Michal Marek <michal.lkml@markovi.net>
+> Cc: linux-kbuild@vger.kernel.org
+> Signed-off-by: Rob Herring <robh@kernel.org>
+> ---
+>  scripts/Makefile.lib | 4 ++++
+>  1 file changed, 4 insertions(+)
+>
+> diff --git a/scripts/Makefile.lib b/scripts/Makefile.lib
+> index 78fa1a3d983a..1a149e680308 100644
+> --- a/scripts/Makefile.lib
+> +++ b/scripts/Makefile.lib
+> @@ -308,6 +308,10 @@ define rule_dtc_dt_yaml
+>         $(call cmd,dtb_check,$(word 2, $(real-prereqs)))
+>  endef
+>
+> +$(obj)/%.example.dt.yaml: DTC_FLAGS = \
+> +       -Wno-avoid_unnecessary_addr_size \
+> +       -Wno-graph_child_address
+> +
 
-diff --git a/Documentation/ABI/testing/sysfs-bus-counter-104-quad-8 b/Documentation/ABI/testing/sysfs-bus-counter-104-quad-8
-index 46b1f33b2fce..3c905d3cf5d7 100644
---- a/Documentation/ABI/testing/sysfs-bus-counter-104-quad-8
-+++ b/Documentation/ABI/testing/sysfs-bus-counter-104-quad-8
-@@ -1,3 +1,10 @@
-+What:		/sys/bus/counter/devices/counterX/signalY/filter_clock_prescaler
-+KernelVersion:	5.7
-+Contact:	linux-iio@vger.kernel.org
-+Description:
-+		Filter clock factor for input Signal Y. This prescaler value
-+		affects the inputs of both quadrature pair signals.
-+
- What:		/sys/bus/counter/devices/counterX/signalY/index_polarity
- KernelVersion:	5.2
- Contact:	linux-iio@vger.kernel.org
-diff --git a/drivers/counter/104-quad-8.c b/drivers/counter/104-quad-8.c
-index 17e67a84777d..0cfc813ee2cb 100644
---- a/drivers/counter/104-quad-8.c
-+++ b/drivers/counter/104-quad-8.c
-@@ -43,6 +43,7 @@ MODULE_PARM_DESC(base, "ACCES 104-QUAD-8 base addresses");
-  */
- struct quad8_iio {
- 	struct counter_device counter;
-+	unsigned int fck_prescaler[QUAD8_NUM_COUNTERS];
- 	unsigned int preset[QUAD8_NUM_COUNTERS];
- 	unsigned int count_mode[QUAD8_NUM_COUNTERS];
- 	unsigned int quadrature_mode[QUAD8_NUM_COUNTERS];
-@@ -84,6 +85,8 @@ struct quad8_iio {
- #define QUAD8_RLD_PRESET_CNTR 0x08
- /* Transfer Counter to Output Latch */
- #define QUAD8_RLD_CNTR_OUT 0x10
-+/* Transfer Preset Register LSB to FCK Prescaler */
-+#define QUAD8_RLD_PRESET_PSC 0x18
- #define QUAD8_CHAN_OP_ENABLE_COUNTERS 0x00
- #define QUAD8_CHAN_OP_RESET_COUNTERS 0x01
- #define QUAD8_CMR_QUADRATURE_X1 0x08
-@@ -1140,6 +1143,50 @@ static ssize_t quad8_count_preset_enable_write(struct counter_device *counter,
- 	return len;
- }
- 
-+static ssize_t quad8_signal_fck_prescaler_read(struct counter_device *counter,
-+	struct counter_signal *signal, void *private, char *buf)
-+{
-+	const struct quad8_iio *const priv = counter->priv;
-+	const size_t channel_id = signal->id / 2;
-+
-+	return sprintf(buf, "%u\n", priv->fck_prescaler[channel_id]);
-+}
-+
-+static ssize_t quad8_signal_fck_prescaler_write(struct counter_device *counter,
-+	struct counter_signal *signal, void *private, const char *buf,
-+	size_t len)
-+{
-+	struct quad8_iio *const priv = counter->priv;
-+	const size_t channel_id = signal->id / 2;
-+	const int base_offset = priv->base + 2 * channel_id;
-+	u8 prescaler;
-+	int ret;
-+
-+	ret = kstrtou8(buf, 0, &prescaler);
-+	if (ret)
-+		return ret;
-+
-+	priv->fck_prescaler[channel_id] = prescaler;
-+
-+	/* Reset Byte Pointer */
-+	outb(QUAD8_CTR_RLD | QUAD8_RLD_RESET_BP, base_offset + 1);
-+
-+	/* Set filter clock factor */
-+	outb(prescaler, base_offset);
-+	outb(QUAD8_CTR_RLD | QUAD8_RLD_RESET_BP | QUAD8_RLD_PRESET_PSC,
-+	     base_offset + 1);
-+
-+	return len;
-+}
-+
-+static const struct counter_signal_ext quad8_signal_ext[] = {
-+	{
-+		.name = "filter_clock_prescaler",
-+		.read = quad8_signal_fck_prescaler_read,
-+		.write = quad8_signal_fck_prescaler_write
-+	}
-+};
-+
- static const struct counter_signal_ext quad8_index_ext[] = {
- 	COUNTER_SIGNAL_ENUM("index_polarity", &quad8_index_pol_enum),
- 	COUNTER_SIGNAL_ENUM_AVAILABLE("index_polarity",	&quad8_index_pol_enum),
-@@ -1147,9 +1194,11 @@ static const struct counter_signal_ext quad8_index_ext[] = {
- 	COUNTER_SIGNAL_ENUM_AVAILABLE("synchronous_mode", &quad8_syn_mode_enum)
- };
- 
--#define	QUAD8_QUAD_SIGNAL(_id, _name) {	\
--	.id = (_id),			\
--	.name = (_name)			\
-+#define QUAD8_QUAD_SIGNAL(_id, _name) {		\
-+	.id = (_id),				\
-+	.name = (_name),			\
-+	.ext = quad8_signal_ext,		\
-+	.num_ext = ARRAY_SIZE(quad8_signal_ext)	\
- }
- 
- #define	QUAD8_INDEX_SIGNAL(_id, _name) {	\
-@@ -1314,6 +1363,12 @@ static int quad8_probe(struct device *dev, unsigned int id)
- 		base_offset = base[id] + 2 * i;
- 		/* Reset Byte Pointer */
- 		outb(QUAD8_CTR_RLD | QUAD8_RLD_RESET_BP, base_offset + 1);
-+		/* Reset filter clock factor */
-+		outb(0, base_offset);
-+		outb(QUAD8_CTR_RLD | QUAD8_RLD_RESET_BP | QUAD8_RLD_PRESET_PSC,
-+		     base_offset + 1);
-+		/* Reset Byte Pointer */
-+		outb(QUAD8_CTR_RLD | QUAD8_RLD_RESET_BP, base_offset + 1);
- 		/* Reset Preset Register */
- 		for (j = 0; j < 3; j++)
- 			outb(0x00, base_offset);
+
+
+This does not work since I suggested to
+not add this pattern rule in 1/2.
+
+
+Instead, you can override DTC_FLAGS
+from Documentation/devicetree/bindings/Makefile
+
+So, alternative solution is like follows
+(on top of my suggestion in 1/2)
+
+
+
+diff --git a/Documentation/devicetree/bindings/Makefile
+b/Documentation/devicetree/bindings/Makefile
+index 7c40d5ba1b51..e44c972849e6 100644
+--- a/Documentation/devicetree/bindings/Makefile
++++ b/Documentation/devicetree/bindings/Makefile
+@@ -12,6 +12,8 @@ $(obj)/%.example.dts: $(src)/%.yaml FORCE
+
+ # Use full schemas when checking %.example.dts
+ DT_TMP_SCHEMA := $(obj)/processed-schema-examples.yaml
++# More strict checks for examples
++override DTC_FLAGS := -Wno-avoid_unnecessary_addr_size -Wno-graph_child_address
+
+ quiet_cmd_mk_schema = SCHEMA  $@
+       cmd_mk_schema = $(DT_MK_SCHEMA) $(DT_MK_SCHEMA_FLAGS) -o $@
+$(real-prereqs)
+
+
+
+
+
+One limitation for this way is that
+you cannot use W=1, W=2, W=3 for example DT.
+
+
+
+>  $(obj)/%.example.dt.yaml: $(src)/%.example.dts $(DT_EXAMPLES_SCHEMA) $(DTC) FORCE
+>         $(call if_changed_rule,dtc_dt_yaml)
+
+
+
+
+
 -- 
-2.24.1
-
+Best Regards
+Masahiro Yamada
