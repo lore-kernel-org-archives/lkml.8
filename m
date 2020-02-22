@@ -2,156 +2,108 @@ Return-Path: <SRS0=8jYG=4K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 04CCFC35666
-	for <linux-kernel@archiver.kernel.org>; Sat, 22 Feb 2020 16:29:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 37C23C35666
+	for <linux-kernel@archiver.kernel.org>; Sat, 22 Feb 2020 16:31:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D0B46206ED
-	for <linux-kernel@archiver.kernel.org>; Sat, 22 Feb 2020 16:29:06 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=goldelico.com header.i=@goldelico.com header.b="U07K+VOI"
+	by mail.kernel.org (Postfix) with ESMTP id 15908206ED
+	for <linux-kernel@archiver.kernel.org>; Sat, 22 Feb 2020 16:31:36 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727470AbgBVQ3F (ORCPT
+        id S1727053AbgBVQbe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 22 Feb 2020 11:29:05 -0500
-Received: from mo4-p02-ob.smtp.rzone.de ([81.169.146.168]:28326 "EHLO
-        mo4-p02-ob.smtp.rzone.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726550AbgBVQ3F (ORCPT
+        Sat, 22 Feb 2020 11:31:34 -0500
+Received: from mx2.yrkesakademin.fi ([85.134.45.195]:22755 "EHLO
+        mx2.yrkesakademin.fi" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726550AbgBVQbe (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 22 Feb 2020 11:29:05 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; t=1582388943;
-        s=strato-dkim-0002; d=goldelico.com;
-        h=To:References:Message-Id:Cc:Date:In-Reply-To:From:Subject:
-        X-RZG-CLASS-ID:X-RZG-AUTH:From:Subject:Sender;
-        bh=zAvMFq9lL3ySMXeZOGYNoXXsphK30TkbKVrcXyeb2SA=;
-        b=U07K+VOIuEO1VjWG2QOIel4+iZw1lwGHw+JTlPGaV2yyj7tVgmB0BIBZAh4Lq/JSNn
-        y0MOOyd2nq3Tpm8EMcvSqu4C+nx3R9Vl1nq8R4K5Ea1wStPGWnz95zJpixSTvpfMe8J5
-        +a7qdRFg2W2orl+owKOvBLuP0cPlPZ9u0WQElABq49OA/9Wlv1QdI/NxR9nIbwjQ+uZn
-        skRLk1iswZyGMrcJBVU9qgqWbVBgNySSQcVANiFc44VZEExOYc8rql3SslH7bPq1ipvX
-        TRYMLH07B3MY8ThyoLgHcaE9fhuus3UbWL+ciRleoBEIlcv/pllwQ6dtq8caoK6y86u0
-        tzCQ==
-X-RZG-AUTH: ":JGIXVUS7cutRB/49FwqZ7WcJeFKiMgPgp8VKxflSZ1P34KBj4Qpw9iZeHmAiw43swGE="
-X-RZG-CLASS-ID: mo00
-Received: from imac.fritz.box
-        by smtp.strato.de (RZmta 46.1.12 DYNA|AUTH)
-        with ESMTPSA id U06217w1MGSijzG
-        (using TLSv1 with cipher ECDHE-RSA-AES256-SHA (curve X9_62_prime256v1 with 256 ECDH bits, eq. 3072 bits RSA))
-        (Client did not present a certificate);
-        Sat, 22 Feb 2020 17:28:44 +0100 (CET)
-Subject: Re: [PATCH v5 2/6] Bindings: nvmem: add bindings for JZ4780 efuse
-Mime-Version: 1.0 (Mac OS X Mail 9.3 \(3124\))
-Content-Type: text/plain; charset=us-ascii
-From:   "H. Nikolaus Schaller" <hns@goldelico.com>
-In-Reply-To: <20200222115425.50f66b08@kemnade.info>
-Date:   Sat, 22 Feb 2020 17:28:44 +0100
-Cc:     PrasannaKumar Muralidharan <prasannatsmkumar@gmail.com>,
-        Paul Cercueil <paul@crapouillou.net>,
-        Mathieu Malaterre <malat@debian.org>,
-        Srinivas Kandagatla <srinivas.kandagatla@linaro.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Ralf Baechle <ralf@linux-mips.org>,
-        Paul Burton <paulburton@kernel.org>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-        Krzysztof Kozlowski <krzk@kernel.org>,
-        Kees Cook <keescook@chromium.org>,
-        Andi Kleen <ak@linux.intel.com>,
-        Geert Uytterhoeven <geert+renesas@glider.be>,
-        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-mips@vger.kernel.org, letux-kernel@openphoenux.org,
-        kernel@pyra-handheld.com
-Content-Transfer-Encoding: quoted-printable
-Message-Id: <6FC01B9A-4252-48DA-9D24-911C0B0401A6@goldelico.com>
-References: <cover.1582367141.git.hns@goldelico.com> <51642368a064073ab99bb3110863b5fadc382f82.1582367141.git.hns@goldelico.com> <20200222115425.50f66b08@kemnade.info>
-To:     Andreas Kemnade <andreas@kemnade.info>
-X-Mailer: Apple Mail (2.3124)
+        Sat, 22 Feb 2020 11:31:34 -0500
+X-Greylist: delayed 902 seconds by postgrey-1.27 at vger.kernel.org; Sat, 22 Feb 2020 11:31:33 EST
+Subject: Re: Regression in 5.4 kernel on 32-bit Radeon IBM T40
+To:     =?UTF-8?Q?Christian_K=c3=b6nig?= <christian.koenig@amd.com>,
+        Christoph Hellwig <hch@lst.de>,
+        Woody Suwalski <terraluna977@gmail.com>
+CC:     DRI mailing list <dri-devel@lists.freedesktop.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        "Deucher, Alexander" <alexander.deucher@amd.com>,
+        Pavel Machek <pavel@ucw.cz>
+References: <400f6ce9-e360-0860-ca2a-fb8bccdcdc9b@gmail.com>
+ <20200109141436.GA22111@lst.de>
+ <9ad75215-3ff1-ee76-9985-12fd78d6aa5f@amd.com>
+From:   Thomas Backlund <tmb@mageia.org>
+Message-ID: <801e4196-5e22-e805-4d45-0245efdaa508@mageia.org>
+Date:   Sat, 22 Feb 2020 18:16:28 +0200
+MIME-Version: 1.0
+In-Reply-To: <9ad75215-3ff1-ee76-9985-12fd78d6aa5f@amd.com>
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Den 09-01-2020 kl. 17:12, skrev Christian König:
+> Hi Christoph,
+> 
+> Am 09.01.20 um 15:14 schrieb Christoph Hellwig:
+>> Hi Woody,
+>>
+>> sorry for the late reply, I've been off to a vacation over the holidays.
+>>
+>> On Sat, Dec 14, 2019 at 10:17:15PM -0500, Woody Suwalski wrote:
+>>> Regression in 5.4 kernel on 32-bit Radeon IBM T40
+>>> triggered by
+>>> commit 33b3ad3788aba846fc8b9a065fe2685a0b64f713
+>>> Author: Christoph Hellwig <hch@lst.de>
+>>> Date:   Thu Aug 15 09:27:00 2019 +0200
+>>>
+>>> Howdy,
+>>> The above patch has triggered a display problem on IBM Thinkpad T40, 
+>>> where
+>>> the screen is covered with a lots of random short black horizontal 
+>>> lines,
+>>> or distorted letters in X terms.
+>>>
+>>> The culprit seems to be that the dma_get_required_mask() is returning a
+>>> value 0x3fffffff
+>>> which is smaller than dma_get_mask()0xffffffff.That results in
+>>> dma_addressing_limited()==0 in ttm_bo_device(), and using 40-bits dma
+>>> instead of 32-bits.
+>> Which is the intended behavior assuming your system has 1GB of memory.
+>> Does it?
+> 
+> Assuming the system doesn't have the 1GB split up somehow crazy over the 
+> address space that should indeed work as intended.
+> 
+>>
+>>> If I hardcode "1" as the last parameter to ttm_bo_device_init() in 
+>>> place of
+>>> a call to dma_addressing_limited(),the problem goes away.
+>> I'll need some help from the drm / radeon / TTM maintainers if there are
+>> any other side effects from not passing the need_dma32 paramters.
+>> Obviously if the device doesn't have more than 32-bits worth of dram and
+>> no DMA offset we can't feed unaddressable memory to the device.
+>> Unfortunately I have a very hard time following the implementation of
+>> the TTM pool if it does anything else in this case.
+> 
+> The only other thing which comes to mind is using huge pages. Can you 
+> try a kernel with CONFIG_TRANSPARENT_HUGEPAGE disabled?
+> 
 
-> Am 22.02.2020 um 11:54 schrieb Andreas Kemnade <andreas@kemnade.info>:
->=20
-> On Sat, 22 Feb 2020 11:25:37 +0100
-> "H. Nikolaus Schaller" <hns@goldelico.com> wrote:
->=20
->> From: PrasannaKumar Muralidharan <prasannatsmkumar@gmail.com>
->>=20
->> This patch brings support for the JZ4780 efuse. Currently it only =
-exposes
->> a read only access to the entire 8K bits efuse memory.
->>=20
->> Tested-by: Mathieu Malaterre <malat@debian.org>
->> Signed-off-by: PrasannaKumar Muralidharan =
-<prasannatsmkumar@gmail.com>
->> Signed-off-by: Mathieu Malaterre <malat@debian.org>
->> Signed-off-by: H. Nikolaus Schaller <hns@goldelico.com>
->> [converted to yaml]
->> Signed-off-by: Andreas Kemnade <andreas@kemnade.info>
->> ---
->> .../bindings/nvmem/ingenic,jz4780-efuse.yaml  | 50 =
-+++++++++++++++++++
->> 1 file changed, 50 insertions(+)
->> create mode 100644 =
-Documentation/devicetree/bindings/nvmem/ingenic,jz4780-efuse.yaml
->>=20
->> diff --git =
-a/Documentation/devicetree/bindings/nvmem/ingenic,jz4780-efuse.yaml =
-b/Documentation/devicetree/bindings/nvmem/ingenic,jz4780-efuse.yaml
->> new file mode 100644
->> index 000000000000..09a8ef937750
->> --- /dev/null
->> +++ =
-b/Documentation/devicetree/bindings/nvmem/ingenic,jz4780-efuse.yaml
->> @@ -0,0 +1,50 @@
->> +# SPDX-License-Identifier: GPL-2.0-only OR BSD-2-Clause
->> +%YAML 1.2
->> +---
->> +$id: http://devicetree.org/schemas/nvmem/ingenic,jz4780-efuse.yaml#
->> +$schema: http://devicetree.org/meta-schemas/core.yaml#
->> +
->> +title: Ingenic JZ EFUSE driver bindings
->> +
->> +maintainers:
->> +  - PrasannaKumar Muralidharan <prasannatsmkumar@gmail.com>
->> +
->> +allOf:
->> +  - $ref: "nvmem.yaml#"
->> +
->> +properties:
->> +  compatible:
->> +    enum:
->> +      - ingenic,jz4780-efuse
->> +
->> +  reg:
->> +    maxItems: 1
->> +
->> +  clocks:
->> +    # Handle for the ahb for the efuse.
->> +    maxItems: 1
->> +
->> +  clock-names:
->> +   items:
->> +     - const:  ahb2
->> +
->> +required:
->> +  - compatible
->> +  - reg
->> +  - clock-names
-> - clocks ?
->=20
-> In my first try there was "clock" without s which
-> caused the trouble.
 
-Ah, ok. Seems I have mis-interpreted this.
+Any progress on this ?
 
-BR and thanks,
-Nikolaus
+We have a bugreport in Mageia with the hw:
+Dell Inspiron 5100, 32-bit P4 processor, 2GB of RAM, Radeon Mobility 
+7500 (RV200) graphics
 
+that gets display issues too and reverting the offending commit restores 
+normal behaviour.
+
+and the same issue is still there with 5.5 series kernels.
+
+--
+Thomas
