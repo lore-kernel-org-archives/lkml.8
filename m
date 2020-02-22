@@ -2,114 +2,125 @@ Return-Path: <SRS0=8jYG=4K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B7395C35666
-	for <linux-kernel@archiver.kernel.org>; Sat, 22 Feb 2020 18:06:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 72144C35671
+	for <linux-kernel@archiver.kernel.org>; Sat, 22 Feb 2020 18:13:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 913C8206EF
-	for <linux-kernel@archiver.kernel.org>; Sat, 22 Feb 2020 18:06:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4034D206EF
+	for <linux-kernel@archiver.kernel.org>; Sat, 22 Feb 2020 18:13:04 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=cogentembedded-com.20150623.gappssmtp.com header.i=@cogentembedded-com.20150623.gappssmtp.com header.b="pv3F9y3+"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="pDm+h/yZ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726853AbgBVSGs (ORCPT
+        id S1726828AbgBVSMw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 22 Feb 2020 13:06:48 -0500
-Received: from mail-lj1-f193.google.com ([209.85.208.193]:32893 "EHLO
-        mail-lj1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726701AbgBVSGs (ORCPT
+        Sat, 22 Feb 2020 13:12:52 -0500
+Received: from mail-oi1-f196.google.com ([209.85.167.196]:44448 "EHLO
+        mail-oi1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726310AbgBVSMv (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 22 Feb 2020 13:06:48 -0500
-Received: by mail-lj1-f193.google.com with SMTP id y6so5666782lji.0
-        for <linux-kernel@vger.kernel.org>; Sat, 22 Feb 2020 10:06:46 -0800 (PST)
+        Sat, 22 Feb 2020 13:12:51 -0500
+Received: by mail-oi1-f196.google.com with SMTP id d62so5011582oia.11;
+        Sat, 22 Feb 2020 10:12:51 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=cogentembedded-com.20150623.gappssmtp.com; s=20150623;
-        h=subject:to:cc:references:from:organization:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=GBIxSIeZmeDMNIuD3/L4tNo0lsdugthZe8A+ZiKwsNU=;
-        b=pv3F9y3+OT0H8xQLmYaVojz8GUG0opoKQ+jwNHqay+rxS+VwZGx6fv683ddYF7GAs+
-         bklU9TDNvtruVUeDZq9Og0hh92ncVq4GATaY1vjCxtMi+RCqYZnpovILqZ5PZbxFj9Zm
-         quQv/z2VtTAxdrDeqGZI6Tp9gwbwimdMdN8xvUl0GCIt40eaMcZgkjaPpilR7TniAKL8
-         qTdy41GaI/3HApqI9eFLBsGeG5n93/vCVhUKgZqLsiRWu8KycHFvl8jmplg4RnBODxsd
-         L9x9K8Umfb8J+dcgF2oTtP46n4cMnMFJHTtToz+di+1cjldzcw7hX0Jdjdmf1NuA/T/d
-         SJDQ==
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=hihCTLsn58SiIEuraoW0VJp1oBOLey3E988oD/herXE=;
+        b=pDm+h/yZOxgNP0sCWlGw+uv0LKtdiOzmQ/JG7uUZFkHm0WDj4PuF8bs10JQlmws8d1
+         63LFOgPS7PM5+REmNvBwUkurhlkDjKkEpIlgzNVEKZ9uUCrLszkUSnL1Yu+H0qKLe2Ia
+         rn+t7406yPSOSYTKq04Gn95RW3N8awXyxYt2Ja09Q9s5C+C0aOlELc5pltv2PnI4p/tA
+         DjpkwuvYEb8O6b23S894BAuqairHU4Xim11BtmWQKe4cYIivIvHQM8rgo8Bl+xzpRGB0
+         T095umF98MB+tupWeXqtjL9JU0yJfTJF6udVkfVdT2fSxIBkPyMlkW5YABdUTakqe+ft
+         dCEA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:organization
-         :message-id:date:user-agent:mime-version:in-reply-to
-         :content-language:content-transfer-encoding;
-        bh=GBIxSIeZmeDMNIuD3/L4tNo0lsdugthZe8A+ZiKwsNU=;
-        b=HwBP/izps0tsdYeBn5ceMfk4jbwd0zhwOpCc1q1WY+R+pyimSviQmGtmSpFxes8edo
-         2QNZb1UVxU8qq3BVvFnz5z621oElhnR8L62+H0HmGWx6JlCGC5fsBfaVEizhsx2qR2ye
-         EWP2W59pZajGhjp+mfDRAcatcScXnCio4mbCy2jtwrpF7bRPuhJgcr/GYWT7WyhyWhI3
-         gqHMQLzwxY9nItzTQb4icJlz2yFtRESUjXJBbKfJ03XQYqGHRUJ5h/RXFy76zI5VOIf6
-         VbFTJpbmlAlwIt63GZggcAFp0KzASXnmj1vu6Niga0gJYO9sW0DoPzpI2eiVi/UmQoZO
-         kFug==
-X-Gm-Message-State: APjAAAUFcJSElP3S0rW273Ri4HhhxjT4GD/as74fNa5lAGhaU7KKBlzQ
-        GZ2pnU3haE96t94zhoC3YnLV6YhkIGI=
-X-Google-Smtp-Source: APXvYqyvWJSQqBtILUCVcF2wX6xT0599tZsTh8hWakuWZ2eucs2bVjoe3wXtngSXRR3NSaMlJ3Lixw==
-X-Received: by 2002:a2e:9b12:: with SMTP id u18mr25878094lji.274.1582394805812;
-        Sat, 22 Feb 2020 10:06:45 -0800 (PST)
-Received: from wasted.cogentembedded.com ([2a00:1fa0:4621:26b8:f6bb:b31c:6567:7228])
-        by smtp.gmail.com with ESMTPSA id i13sm3602020ljg.89.2020.02.22.10.06.44
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Sat, 22 Feb 2020 10:06:44 -0800 (PST)
-Subject: Re: [for-next PATCH 5/5] arm64: dts: ti: k3-j721e-mcu: add scm node
- and phy-gmii-sel nodes
-To:     Grygorii Strashko <grygorii.strashko@ti.com>,
-        Kishon Vijay Abraham I <kishon@ti.com>,
-        Tero Kristo <t-kristo@ti.com>,
-        "David S. Miller" <davem@davemloft.net>
-Cc:     netdev@vger.kernel.org, Sekhar Nori <nsekhar@ti.com>,
-        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
-        Rob Herring <robh+dt@kernel.org>
-References: <20200222120358.10003-1-grygorii.strashko@ti.com>
- <20200222120358.10003-6-grygorii.strashko@ti.com>
-From:   Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
-Organization: Cogent Embedded
-Message-ID: <f54c18c5-9c74-7853-1812-1b31d4160307@cogentembedded.com>
-Date:   Sat, 22 Feb 2020 21:06:43 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:52.0) Gecko/20100101
- Thunderbird/52.2.1
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=hihCTLsn58SiIEuraoW0VJp1oBOLey3E988oD/herXE=;
+        b=nH+BZNjim8rEKwoafPz+z6BfLO5S/8Y9eMozSj7CTYygDoUhnxmVCemsjEKxhBbIDs
+         S5wyj5YxOUox6zK9SHvPR6JfaUayAM2C0zr0mSAZv1+AydQAAjmCEhpLDWXFtpoXedwB
+         i/ZliHyAObQAMV1DZLmKp2/Z3UQ1NgezkhsfZ4fqh5E10KuzP5uVg3EjNgcSRf/jrior
+         5p0bwOx24VjKwJ8ttaR1dYjetZdTMc4sKDH44SiCGK/8NWClpZYWDD6ikeab3xWp9p1v
+         ui89nZp18kPwetO7GaLdWCjL2ZF3btVSO3GJmYrD7NFwTMCP0mA18MBLmp6FvVGoK+RV
+         WeJQ==
+X-Gm-Message-State: APjAAAXkDCwq6+Ui40gYGf3L2SK4gGi0cMzUO2uBKvR28OoS2z9tD9qB
+        hd4VYV7rZH7C3+6cOlymG4c=
+X-Google-Smtp-Source: APXvYqzJ0Crd1ggjKEJY+mR1yAlXQFP7CMlJSf4HMNFeSEYJb6VLqXC3bgriO6S0rSeeYP19Mqwxpw==
+X-Received: by 2002:a05:6808:b23:: with SMTP id t3mr7106123oij.88.1582395170927;
+        Sat, 22 Feb 2020 10:12:50 -0800 (PST)
+Received: from ubuntu-m2-xlarge-x86 ([2604:1380:4111:8b00::1])
+        by smtp.gmail.com with ESMTPSA id 3sm2451668otd.15.2020.02.22.10.12.50
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Sat, 22 Feb 2020 10:12:50 -0800 (PST)
+Date:   Sat, 22 Feb 2020 11:12:49 -0700
+From:   Nathan Chancellor <natechancellor@gmail.com>
+To:     "Alex Xu (Hello71)" <alex_y_xu@yahoo.ca>
+Cc:     Russell King <linux@armlinux.org.uk>, linux-kbuild@vger.kernel.org,
+        linux-kernel@vger.kernel.org, masahiroy@kernel.org,
+        michal.lkml@markovi.net
+Subject: Re: [PATCH] kbuild: move -pipe to global KBUILD_CFLAGS
+Message-ID: <20200222181249.GA23843@ubuntu-m2-xlarge-x86>
+References: <20200222003820.220854-1-alex_y_xu.ref@yahoo.ca>
+ <20200222003820.220854-1-alex_y_xu@yahoo.ca>
+ <20200222021619.GA51223@ubuntu-m2-xlarge-x86>
+ <1582341758.yo66djba3t.none@localhost>
+ <20200222080140.GA40311@ubuntu-m2-xlarge-x86>
+ <1582381271.1karmgahx0.none@localhost>
 MIME-Version: 1.0
-In-Reply-To: <20200222120358.10003-6-grygorii.strashko@ti.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-MW
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1582381271.1karmgahx0.none@localhost>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello!
-
-On 02/22/2020 03:03 PM, Grygorii Strashko wrote:
-
-> Add DT node for MCU System Control module DT node and DT node for the TI
-> J721E SoC phy-gmii-sel PHY required for Ethernet ports mode selection.
+On Sat, Feb 22, 2020 at 09:24:14AM -0500, Alex Xu (Hello71) wrote:
+> Excerpts from Nathan Chancellor's message of February 22, 2020 3:01 am:
+> > I used hyperfine [1] to run a quick benchmark with a freshly built
+> > GCC 9.2.0 for x86 and aarch64 and here are the results:
+> > 
+> > In both cases it seems like performance regresses (by 1% but still) but
+> > maybe it is my machine, even though this benchmark was done on a
+> > different machine than the one from my commit back in 2018.
+> > 
+> > I am not sure I would write off these results, since I did the benchmark
+> > 25 times on each one back to back, eliminating most of the variance that
+> > you described.
+> > 
+> > [1]: https://github.com/sharkdp/hyperfine
+> > 
+> > Cheers,
+> > Nathan
+> > 
 > 
-> Signed-off-by: Grygorii Strashko <grygorii.strashko@ti.com>
-> ---
->  arch/arm64/boot/dts/ti/k3-j721e-mcu-wakeup.dtsi | 14 ++++++++++++++
->  1 file changed, 14 insertions(+)
-> 
-> diff --git a/arch/arm64/boot/dts/ti/k3-j721e-mcu-wakeup.dtsi b/arch/arm64/boot/dts/ti/k3-j721e-mcu-wakeup.dtsi
-> index 16c874bfd49a..9b3d10241a2e 100644
-> --- a/arch/arm64/boot/dts/ti/k3-j721e-mcu-wakeup.dtsi
-> +++ b/arch/arm64/boot/dts/ti/k3-j721e-mcu-wakeup.dtsi
-> @@ -34,6 +34,20 @@
->  		};
->  	};
->  
-> +	mcu_conf: scm_conf@40f00000 {
+> What kernel version are you running? Do you have the 5.6 pipe reworks?
 
-   The devce names should be generic and it appears that DT spec even has has
-a device name "syscon".
+No, it is a stock Ubuntu 18.04 kernel, which is running 4.15.0.
 
-[...]
+$ uname -a
+Linux c2-medium-x86 4.15.0-50-generic #54-Ubuntu SMP Mon May 6 18:46:08 UTC 2019 x86_64 x86_64 x86_64 GNU/Linux
 
-MBR, Sergei
+If you are curious about the specs:
+
+$ neofetch --stdout
+nathan@c2-medium-x86 
+-------------------- 
+OS: Ubuntu 18.04.3 LTS x86_64 
+Host: PowerEdge R6415 
+Kernel: 4.15.0-50-generic 
+Uptime: 126 days, 12 hours, 39 mins 
+Packages: 686 
+Shell: zsh 5.4.2 
+Terminal: /dev/pts/0 
+CPU: AMD EPYC 7401P 24- (48) @ 2.794GHz 
+Memory: 2974MiB / 64018MiB 
+
+Cheers,
+Nathan
