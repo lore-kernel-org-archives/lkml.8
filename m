@@ -2,82 +2,129 @@ Return-Path: <SRS0=8jYG=4K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.3 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FSL_HELO_FAKE,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_IN_DEF_DKIM_WL autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B7F30C35673
-	for <linux-kernel@archiver.kernel.org>; Sat, 22 Feb 2020 18:57:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D5F10C35666
+	for <linux-kernel@archiver.kernel.org>; Sat, 22 Feb 2020 18:58:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 83E80214DB
-	for <linux-kernel@archiver.kernel.org>; Sat, 22 Feb 2020 18:57:44 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582397864;
-	bh=mC0oXdHLRn4JZ38YS63IufJ4vPZBjzIX8GqLZZsP5GY=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=AZY16OnVaFpKxo909W2D5bHfMt15K75IxMIvo6tMWKe441a2h3qFMsazXXj7q2ppv
-	 H4BeQ7kkMi0vzWgHRKw4+tBrsXxVi1FpicBPMrAplWqXxJyQBi5Tsz48KnyLGOZckW
-	 hFTQk/2hv1uLd9TeEbAnUE0pvy10mdE4Aijrs6bQ=
+	by mail.kernel.org (Postfix) with ESMTP id AE5CB206EF
+	for <linux-kernel@archiver.kernel.org>; Sat, 22 Feb 2020 18:58:16 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="LOr6ninH"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726853AbgBVS5n (ORCPT
+        id S1726965AbgBVS6N (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 22 Feb 2020 13:57:43 -0500
-Received: from mail.kernel.org ([198.145.29.99]:48446 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726550AbgBVS5n (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 22 Feb 2020 13:57:43 -0500
-Received: from localhost (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5C55C206EF;
-        Sat, 22 Feb 2020 18:57:42 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1582397862;
-        bh=mC0oXdHLRn4JZ38YS63IufJ4vPZBjzIX8GqLZZsP5GY=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=2S8jXIbKNj9oQS+9rPPq028+mxkcME+XhNTuiDsvIw7rKhdp6zJ4joflVrYGuOSRc
-         yW23vvy4cZfmierN/FzgFSUDj/1lDfmw3jWh8UGQ7HRlqgJdmEtsfjdqzE5H1sw0jH
-         Gzi7vAjfoqIGP6RQ/HZlFtPR78kYOB8Y1vW/Ynak=
-Date:   Sat, 22 Feb 2020 13:57:41 -0500
-From:   Sasha Levin <sashal@kernel.org>
-To:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-kernel@vger.kernel.org, stable@vger.kernel.org,
-        Pankaj Bansal <pankaj.bansal@nxp.com>,
-        Hanjun Guo <guohanjun@huawei.com>,
-        Will Deacon <will@kernel.org>,
-        Sudeep Holla <sudeep.holla@arm.com>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Robin Murphy <robin.murphy@arm.com>
-Subject: Re: [PATCH 5.5 293/399] ACPI/IORT: Fix Number of IDs handling in
- iort_id_map()
-Message-ID: <20200222185741.GB26320@sasha-vm>
-References: <20200221072402.315346745@linuxfoundation.org>
- <20200221072430.253096930@linuxfoundation.org>
- <20200221095019.GA29220@e121166-lin.cambridge.arm.com>
+        Sat, 22 Feb 2020 13:58:13 -0500
+Received: from mail-pf1-f196.google.com ([209.85.210.196]:47056 "EHLO
+        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726550AbgBVS6M (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 22 Feb 2020 13:58:12 -0500
+Received: by mail-pf1-f196.google.com with SMTP id k29so3050884pfp.13
+        for <linux-kernel@vger.kernel.org>; Sat, 22 Feb 2020 10:58:12 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=euAwmf9ZhKSh37U9bkj0mMT6F/SgMII2G3vEqdzGF+E=;
+        b=LOr6ninHef6EqwLrCnhGqXf8avbYzlLKURAE+lq3h/R9/U2FLomgbcvSelltYM8q20
+         6YE4sduH4cyP8TaFXw0doD0t8Xxi+TEQQFdwu40eGlND0v3d/dK6G4Y+wsz9Dp3B+sUL
+         MKnIQ1P/hOE2jopPzo0y5vM7UlULyBIqKltSwfK13JqAnMXWsyZ05GUjr6OpmH3/3aX/
+         BlC8MuWnUj8ADf3aV8bY43/LVNXL74o4RXSI9LgJt5DuEt11zu0lKDlmw5lmnMTmRQvn
+         YvkwCHhbBBzC4EHP/gsjzo9uTukADuV+PHNC06ndCo/SVuu15d7HgjFkIggeyO467QKX
+         3NuQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=euAwmf9ZhKSh37U9bkj0mMT6F/SgMII2G3vEqdzGF+E=;
+        b=ulGGaW8C3XaWBQqNpAgDxx4z4ZJS5vjr+hgcS9BW9hAE1kr2SOoWf6hVHc8ZCQ3frk
+         u8hR8S02+FbrKrZsVR8cFnO/pitTngNQL27i/B3eTlffXJBiP0uQCdjEqd6yV4/O9Ofp
+         uP7cV8bY5p+jHj+ffzqcTgT1kBprw5mUdM5KepPt0HsbrL+xHG0xiWQdYETRfTkfsyrP
+         9ly+ysdB1j0U4bEB6kISdQ7FqjWYZSSjquTEjkOfzfeHeJFMes0CRMbWEuR0q/xbcaaR
+         lcPx5UKoe2dU4CF5X8WgEtDSJVutyDbPoakGwdcIrtmVhKNZllPROiQHYcLj4HwUmWl3
+         f8lw==
+X-Gm-Message-State: APjAAAUokJeoGRXAqjdDdLaNy9j9dzTpKIB41KpQB68NuCvBC35jMWax
+        NP4wLEXOanz1T4hCXB3J+0xNMA==
+X-Google-Smtp-Source: APXvYqygas/dxK1EVtQA7DXEn1HcH6FBvhHP+BJJNnhP2oSpzCNCyRzeAR16wqUW9M35Ib6O8/B9ig==
+X-Received: by 2002:a63:7453:: with SMTP id e19mr16713707pgn.50.1582397891896;
+        Sat, 22 Feb 2020 10:58:11 -0800 (PST)
+Received: from google.com ([2620:15c:2ce:0:9efe:9f1:9267:2b27])
+        by smtp.gmail.com with ESMTPSA id f43sm6640138pje.23.2020.02.22.10.58.10
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sat, 22 Feb 2020 10:58:10 -0800 (PST)
+Date:   Sat, 22 Feb 2020 10:58:06 -0800
+From:   Fangrui Song <maskray@google.com>
+To:     Arvind Sankar <nivedita@alum.mit.edu>
+Cc:     Borislav Petkov <bp@alien8.de>,
+        Nathan Chancellor <natechancellor@gmail.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>,
+        "H. Peter Anvin" <hpa@zytor.com>, x86@kernel.org,
+        linux-kernel@vger.kernel.org, clang-built-linux@googlegroups.com,
+        Michael Matz <matz@suse.de>
+Subject: Re: [PATCH] x86/boot/compressed: Fix compressed kernel linking with
+ lld
+Message-ID: <20200222185806.ywnqhfqmy67akfsa@google.com>
+References: <20200222164419.GB3326744@rani.riverdale.lan>
+ <20200222171859.3594058-1-nivedita@alum.mit.edu>
+ <20200222181413.GA22627@ubuntu-m2-xlarge-x86>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii; format=flowed
 Content-Disposition: inline
-In-Reply-To: <20200221095019.GA29220@e121166-lin.cambridge.arm.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20200222181413.GA22627@ubuntu-m2-xlarge-x86>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Feb 21, 2020 at 09:50:19AM +0000, Lorenzo Pieralisi wrote:
->On Fri, Feb 21, 2020 at 08:40:18AM +0100, Greg Kroah-Hartman wrote:
->> From: Hanjun Guo <guohanjun@huawei.com>
+On 2020-02-22, Nathan Chancellor wrote:
+>On Sat, Feb 22, 2020 at 12:18:59PM -0500, Arvind Sankar wrote:
+>> Commit TBD ("x86/boot/compressed: Remove unnecessary sections from
+>> bzImage") discarded unnecessary sections with *(*). While this works
+>> fine with the bfd linker, lld tries to also discard essential sections
+>> like .shstrtab, .symtab and .strtab, which results in the link failing
+>> since .shstrtab is required by the ELF specification. .symtab and
+>> .strtab are also necessary to generate the zoffset.h file for the
+>> bzImage header.
 >>
->> [ Upstream commit 3c23b83a88d00383e1d498cfa515249aa2fe0238 ]
+>> Since the only sizeable section that can be discarded is .eh_frame,
+>> restrict the discard to only .eh_frame to be safe.
+>>
+>> Signed-off-by: Arvind Sankar <nivedita@alum.mit.edu>
+>> ---
+>> Sending as a fix on top of tip/x86/boot.
+>>
+>>  arch/x86/boot/compressed/vmlinux.lds.S | 4 ++--
+>>  1 file changed, 2 insertions(+), 2 deletions(-)
+>>
+>> diff --git a/arch/x86/boot/compressed/vmlinux.lds.S b/arch/x86/boot/compressed/vmlinux.lds.S
+>> index 12a20603d92e..469dcf800a2c 100644
+>> --- a/arch/x86/boot/compressed/vmlinux.lds.S
+>> +++ b/arch/x86/boot/compressed/vmlinux.lds.S
+>> @@ -74,8 +74,8 @@ SECTIONS
+>>  	. = ALIGN(PAGE_SIZE);	/* keep ZO size page aligned */
+>>  	_end = .;
+>>
+>> -	/* Discard all remaining sections */
+>> +	/* Discard .eh_frame to save some space */
+>>  	/DISCARD/ : {
+>> -		*(*)
+>> +		*(.eh_frame)
+>>  	}
+>>  }
+>> --
+>> 2.24.1
+>>
 >
->Hi Greg,
+>FWIW:
 >
->this patch should not be applied to stable kernels, not yet at
->least, please drop it.
+>Tested-by: Nathan Chancellor <natechancellor@gmail.com>
 
-I've dropped it, thank you.
+I am puzzled. Doesn't -fno-asynchronous-unwind-tables suppress
+.eh_frame in the object files? Why are there still .eh_frame?
 
--- 
-Thanks,
-Sasha
+Though, there is prior art: arch/s390/boot/compressed/vmlinux.lds.S also discards .eh_frame
