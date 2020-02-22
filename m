@@ -2,214 +2,89 @@ Return-Path: <SRS0=8jYG=4K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_RHS_DOB,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EC92BC35671
-	for <linux-kernel@archiver.kernel.org>; Sat, 22 Feb 2020 11:29:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C9CE0C35672
+	for <linux-kernel@archiver.kernel.org>; Sat, 22 Feb 2020 11:33:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BC0F8206EF
-	for <linux-kernel@archiver.kernel.org>; Sat, 22 Feb 2020 11:29:03 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=walle.cc header.i=@walle.cc header.b="I8oZj+/H"
+	by mail.kernel.org (Postfix) with ESMTP id A7257206EF
+	for <linux-kernel@archiver.kernel.org>; Sat, 22 Feb 2020 11:33:06 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727238AbgBVL3C (ORCPT
+        id S1727193AbgBVLdF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 22 Feb 2020 06:29:02 -0500
-Received: from ssl.serverraum.org ([176.9.125.105]:52341 "EHLO
-        ssl.serverraum.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726763AbgBVL3C (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 22 Feb 2020 06:29:02 -0500
-Received: from apollo.fritz.box (unknown [IPv6:2a02:810c:c200:2e91:6257:18ff:fec4:ca34])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-384) server-signature RSA-PSS (2048 bits) server-digest SHA256)
-        (No client certificate requested)
-        by ssl.serverraum.org (Postfix) with ESMTPSA id C25BA22F43;
-        Sat, 22 Feb 2020 12:28:55 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=walle.cc; s=mail2016061301;
-        t=1582370938;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=e0h+j99WGr7wIIbHMLcV3S5aoHAcIz/PdQJyb0wgPnM=;
-        b=I8oZj+/HaL1gIkhtRKfWF3mOwkdK9UnbDUhuCokq1OMD1SG0VB+vPxRsbJMhtK5G97O0wl
-        Fb5aOlyDjbmhZcyVTw7oCxW61DlgokC9PdAj9GYRqPFAKD9GyyLmnuHvSP6huIutEaKBd/
-        GaaRjcFG3DyjHvfQRbpEMvXuEPUC6kg=
-From:   Michael Walle <michael@walle.cc>
-To:     olteanv@gmail.com
-Cc:     andrew@lunn.ch, davem@davemloft.net, devicetree@vger.kernel.org,
-        f.fainelli@gmail.com, linux-kernel@vger.kernel.org,
-        mark.rutland@arm.com, netdev@vger.kernel.org, robh+dt@kernel.org,
-        shawnguo@kernel.org, vivien.didelot@gmail.com,
-        Michael Walle <michael@walle.cc>
-Subject: Re: [PATCH v2 net-next/devicetree 3/5] dt-bindings: net: dsa: ocelot: document the vsc9959 core
-Date:   Sat, 22 Feb 2020 12:28:41 +0100
-Message-Id: <20200222112841.29927-1-michael@walle.cc>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20200219151259.14273-4-olteanv@gmail.com>
-References: <20200219151259.14273-4-olteanv@gmail.com>
+        Sat, 22 Feb 2020 06:33:05 -0500
+Received: from sauhun.de ([88.99.104.3]:53024 "EHLO pokefinder.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726839AbgBVLdF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 22 Feb 2020 06:33:05 -0500
+Received: from localhost (p5486C6B7.dip0.t-ipconnect.de [84.134.198.183])
+        by pokefinder.org (Postfix) with ESMTPSA id DAFA52C07F9;
+        Sat, 22 Feb 2020 12:33:01 +0100 (CET)
+Date:   Sat, 22 Feb 2020 12:33:01 +0100
+From:   Wolfram Sang <wsa@the-dreams.de>
+To:     Codrin Ciubotariu <codrin.ciubotariu@microchip.com>
+Cc:     linux-i2c@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        kamel.bouhara@bootlin.com, Nicolas.Ferre@microchip.com,
+        alexandre.belloni@bootlin.com, Ludovic.Desroches@microchip.com,
+        robh@kernel.org, peda@axentia.se, linux@armlinux.org.uk
+Subject: Re: [PATCH v3 1/6] dt-bindings: i2c: at91: document optional bus
+ recovery properties
+Message-ID: <20200222113301.GA1716@kunai>
+References: <20200115115422.17097-1-codrin.ciubotariu@microchip.com>
+ <20200115115422.17097-2-codrin.ciubotariu@microchip.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Spamd-Bar: ++++
-X-Rspamd-Server: web
-X-Rspamd-Queue-Id: C25BA22F43
-X-Spamd-Result: default: False [4.90 / 15.00];
-         FROM_HAS_DN(0.00)[];
-         TO_DN_SOME(0.00)[];
-         R_MISSING_CHARSET(2.50)[];
-         FREEMAIL_ENVRCPT(0.00)[gmail.com];
-         TAGGED_RCPT(0.00)[dt];
-         MIME_GOOD(-0.10)[text/plain];
-         BROKEN_CONTENT_TYPE(1.50)[];
-         TO_MATCH_ENVRCPT_ALL(0.00)[];
-         NEURAL_SPAM(0.00)[0.617];
-         DKIM_SIGNED(0.00)[];
-         DBL_PROHIBIT(0.00)[0.0.0.2:email,0.0.0.3:email,0.0.0.0:email,0.0.0.4:email,0.0.0.5:email,0.0.0.1:email];
-         RCPT_COUNT_TWELVE(0.00)[12];
-         MID_CONTAINS_FROM(1.00)[];
-         FREEMAIL_TO(0.00)[gmail.com];
-         RCVD_COUNT_ZERO(0.00)[0];
-         FROM_EQ_ENVFROM(0.00)[];
-         MIME_TRACE(0.00)[0:+];
-         ASN(0.00)[asn:31334, ipnet:2a02:810c::/31, country:DE];
-         FREEMAIL_CC(0.00)[lunn.ch,davemloft.net,vger.kernel.org,gmail.com,arm.com,kernel.org,walle.cc]
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="pf9I7BMVVzbSWLtt"
+Content-Disposition: inline
+In-Reply-To: <20200115115422.17097-2-codrin.ciubotariu@microchip.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-> This patch adds the required documentation for the embedded L2 switch
-> inside the NXP LS1028A chip.
-> 
-> I've submitted it in the legacy format instead of yaml schema, because
-> DSA itself has not yet been converted to yaml, and this driver defines
-> no custom bindings.
-> 
-> Signed-off-by: Vladimir Oltean <vladimir.oltean@nxp.com>
-> ---
-> Changes in v2:
-> Adapted phy-mode = "gmii" to phy-mode = "internal".
-> 
->  .../devicetree/bindings/net/dsa/ocelot.txt    | 96 +++++++++++++++++++
->  1 file changed, 96 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/net/dsa/ocelot.txt
-> 
-> diff --git a/Documentation/devicetree/bindings/net/dsa/ocelot.txt b/Documentation/devicetree/bindings/net/dsa/ocelot.txt
-> new file mode 100644
-> index 000000000000..a9d86e09dafa
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/net/dsa/ocelot.txt
-> @@ -0,0 +1,96 @@
-> +Microchip Ocelot switch driver family
-> +=====================================
-> +
-> +Felix
-> +-----
-> +
-> +The VSC9959 core is currently the only switch supported by the driver, and is
-> +found in the NXP LS1028A. It is a PCI device, part of the larger ENETC root
-> +complex. As a result, the ethernet-switch node is a sub-node of the PCIe root
-> +complex node and its "reg" property conforms to the parent node bindings:
-> +
-> +* reg: Specifies PCIe Device Number and Function Number of the endpoint device,
-> +  in this case for the Ethernet L2Switch it is PF5 (of device 0, bus 0).
-> +
-> +It does not require a "compatible" string.
-> +
-> +The interrupt line is used to signal availability of PTP TX timestamps and for
-> +TSN frame preemption.
-> +
-> +For the external switch ports, depending on board configuration, "phy-mode" and
-> +"phy-handle" are populated by board specific device tree instances. Ports 4 and
-> +5 are fixed as internal ports in the NXP LS1028A instantiation.
-> +
-> +Any port can be disabled, but the CPU port should be kept enabled.
 
-What is the reason for this? Do you mean if you actually want to use it? In
-fact, I'd would like to see it disabled by default in the .dtsi file. It
-doesn't make sense to just have the CPU port enabled, but not any of the
-outgoing ports. It'd just confuse the user if there is an additional
-network port which cannot be used.
+--pf9I7BMVVzbSWLtt
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
--michael
+On Wed, Jan 15, 2020 at 01:54:17PM +0200, Codrin Ciubotariu wrote:
+> From: Kamel Bouhara <kamel.bouhara@bootlin.com>
+>=20
+> The at91 I2C controller can support bus recovery by re-assigning SCL
+> and SDA to gpios. Add the optional pinctrl and gpio properties to do
+> so.
+>=20
+> Signed-off-by: Kamel Bouhara <kamel.bouhara@bootlin.com>
+> [codrin.ciubotariu@microchip.com: rebased]
+> Signed-off-by: Codrin Ciubotariu <codrin.ciubotariu@microchip.com>
+> Reviewed-by: Rob Herring <robh@kernel.org>
 
-> +
-> +The CPU port property ("ethernet"), which is assigned by default to the 2.5Gbps
-> +port@4, can be moved to the 1Gbps port@5, depending on the specific use case.
-> +DSA tagging is supported on a single port at a time.
-> +
-> +For the rest of the device tree binding definitions, which are standard DSA and
-> +PCI, refer to the following documents:
-> +
-> +Documentation/devicetree/bindings/net/dsa/dsa.txt
-> +Documentation/devicetree/bindings/pci/pci.txt
-> +
-> +Example:
-> +
-> +&soc {
-> +	pcie@1f0000000 { /* Integrated Endpoint Root Complex */
-> +		ethernet-switch@0,5 {
-> +			reg = <0x000500 0 0 0 0>;
-> +			/* IEP INT_B */
-> +			interrupts = <GIC_SPI 95 IRQ_TYPE_LEVEL_HIGH>;
-> +
-> +			ports {
-> +				#address-cells = <1>;
-> +				#size-cells = <0>;
-> +
-> +				/* External ports */
-> +				port@0 {
-> +					reg = <0>;
-> +					label = "swp0";
-> +				};
-> +
-> +				port@1 {
-> +					reg = <1>;
-> +					label = "swp1";
-> +				};
-> +
-> +				port@2 {
-> +					reg = <2>;
-> +					label = "swp2";
-> +				};
-> +
-> +				port@3 {
-> +					reg = <3>;
-> +					label = "swp3";
-> +				};
-> +
-> +				/* Tagging CPU port */
-> +				port@4 {
-> +					reg = <4>;
-> +					ethernet = <&enetc_port2>;
-> +					phy-mode = "internal";
-> +
-> +					fixed-link {
-> +						speed = <2500>;
-> +						full-duplex;
-> +					};
-> +				};
-> +
-> +				/* Non-tagging CPU port */
-> +				port@5 {
-> +					reg = <5>;
-> +					phy-mode = "internal";
-> +					status = "disabled";
-> +
-> +					fixed-link {
-> +						speed = <1000>;
-> +						full-duplex;
-> +					};
-> +				};
-> +			};
-> +		};
-> +	};
-> +};
-> -- 
-> 2.17.1
+Applied to for-next, thanks!
 
 
+--pf9I7BMVVzbSWLtt
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCgAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAl5REWUACgkQFA3kzBSg
+KbYSSQ/+Og6OQ8KKYGzfH/m0bVgrt4ZZ6XseXHSbqLqZPLwt0ZdTqJRwTTC4nGoA
+VwQTF8w/OteA1gO2MIX9aibT9CAiqVM3lgPKBNyABF9IAHKVLjkm2eqwe3HoGfbX
+30iL3vfiJqkXsgN/l+WQiFzEB0Pzb3XfUJd1WDoKyMRckdKsYiUlMX8tQyP8XN2a
+qHebhGgDLLIy4Lf/mYdTYmVsa5U+RHT8oTfMlwDUaYNs+u6cx6CuHdN2bkVvKMqE
+0BMoSi6MNpE1jY1C3VrfooxqVlGFoxYIC2mlIxDYY1B6pRJRXuot3cNdvudVPC82
+B/+MOeJRCRsMAmZ/eOP8sGBV+D978ackCQvKJtHDaOedf7eIzoeTA7BouAQvpqp/
+/KY6mcfNB4JQCjQOWnL0gKPfLTf5p2/C8F1ozdefav+en0CyxGA957KStiXy6YBJ
+DeJbJz5TMmEbPzFvysflXbFr9h8kfDbPMuiBJjm1ICS3KJMPmMPAoDQPoTPREHRC
+F5vK00iTwuiFTHm8NnmD4FT0qN0XJBC3JCU+eVkPlCCd1Jb9WGZVYP78/vXRmYKx
+AAn1SO2fM1MzgxEaE84V3CwCRltuMkE7h9EBTPLCO2iKAFMW1ww2F/Mc2zhs1tbt
+wMPhow+wsY9KonG0r4xTplzJjry9EcECTXCJUnti9RNZ3Zdzbao=
+=+3Bp
+-----END PGP SIGNATURE-----
+
+--pf9I7BMVVzbSWLtt--
