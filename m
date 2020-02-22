@@ -2,257 +2,245 @@ Return-Path: <SRS0=8jYG=4K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 78A61C35675
-	for <linux-kernel@archiver.kernel.org>; Sat, 22 Feb 2020 06:06:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 72746C35669
+	for <linux-kernel@archiver.kernel.org>; Sat, 22 Feb 2020 06:12:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 50D4A21741
-	for <linux-kernel@archiver.kernel.org>; Sat, 22 Feb 2020 06:06:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3A367214DB
+	for <linux-kernel@archiver.kernel.org>; Sat, 22 Feb 2020 06:12:02 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nifty.com header.i=@nifty.com header.b="brdOKtaq"
+	dkim=pass (2048-bit key) header.d=nifty.com header.i=@nifty.com header.b="e/Mhl4l/"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727136AbgBVGF4 (ORCPT
+        id S1726892AbgBVGMB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 22 Feb 2020 01:05:56 -0500
-Received: from conuserg-11.nifty.com ([210.131.2.78]:42396 "EHLO
-        conuserg-11.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726196AbgBVGFy (ORCPT
+        Sat, 22 Feb 2020 01:12:01 -0500
+Received: from conuserg-08.nifty.com ([210.131.2.75]:49576 "EHLO
+        conuserg-08.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726189AbgBVGMA (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 22 Feb 2020 01:05:54 -0500
-X-Greylist: delayed 100448 seconds by postgrey-1.27 at vger.kernel.org; Sat, 22 Feb 2020 01:05:52 EST
+        Sat, 22 Feb 2020 01:12:00 -0500
 Received: from grover.flets-west.jp (softbank126093102113.bbtec.net [126.93.102.113]) (authenticated)
-        by conuserg-11.nifty.com with ESMTP id 01M64cSK007264;
-        Sat, 22 Feb 2020 15:04:39 +0900
-DKIM-Filter: OpenDKIM Filter v2.10.3 conuserg-11.nifty.com 01M64cSK007264
+        by conuserg-08.nifty.com with ESMTP id 01M6BBda022333;
+        Sat, 22 Feb 2020 15:11:12 +0900
+DKIM-Filter: OpenDKIM Filter v2.10.3 conuserg-08.nifty.com 01M6BBda022333
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
-        s=dec2015msa; t=1582351480;
-        bh=QDsj9fQRh1dUOvTWAuvPScwGCLineeDyL2Vs+90dfww=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=brdOKtaqTcaIBKZLJlFWtWmuZ/ritj3jrT5KxuqiYwuCbJ2G3yDExIZ9Hy7qIkzT0
-         dWnOlIFIJLcvozpjwWswrg/jQoYJa4aV7onyLY3Vaq0rPTvpco738GyON1s4cUHOyQ
-         /I6LEYeQAIbcJkCym07tVMqjM+6q1H5iFhgA60uBm/tltZV7CKDBIvmTueMhDX0WbM
-         i4XfJ1eeovVtPx+042/VZew8LZkbikZteg1Fe4mq/TuW64W+FZKl1Inb7oisAsbmoJ
-         fC2RkMoD7pfauf+DeC87iYIKvwx9dQ9ZpSXNDIMbmyn79zZH2iRbyzY4QRP8rqVCuZ
-         8U5bKZdQd2Zeg==
+        s=dec2015msa; t=1582351872;
+        bh=ofaX97ywZVys/DBQiZa8Q89J0Zb7XR2aWwApmyQRzaU=;
+        h=From:To:Cc:Subject:Date:From;
+        b=e/Mhl4l/T02aWHh+dQ9/WCfuIvt8F4G7Pu7xo5VZc4QaFR7ca8fOw4VkUpM5NmVMB
+         eI6YAzqJ06Wa+QMN1fSr0U9H6TV9G/hF5yQzyK+rlvDYYPgEvVT0S2TyEYoIrGbTDC
+         EyUL4zOEIeMfq5zeDDTNz6MzmnnIGNb3PmQOP5o71gMvl5SsPJlXJ8dexQqlH9s6yH
+         jLrQE9V324UMJ+pdLhsYG794Mb+aKKk0rxUeTq6cwuwjNeRf9R/8EiUKIrvzn+Qqdl
+         jJZRvmuUsd3J2OwSmsrxl+YEojBYSgbNac20sXykTJYpfVZHE9/mczcEV8DsmkOAuX
+         FwMCUqm0u419A==
 X-Nifty-SrcIP: [126.93.102.113]
 From:   Masahiro Yamada <yamada.masahiro@socionext.com>
 To:     Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org
 Cc:     linux-kernel@vger.kernel.org,
         Masahiro Yamada <yamada.masahiro@socionext.com>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
         Mark Rutland <mark.rutland@arm.com>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
-        linux-arm-kernel@lists.infradead.org, linux-gpio@vger.kernel.org
-Subject: [PATCH v2 2/3] dt-bindings: gpio: Convert UniPhier GPIO to json-schema
-Date:   Sat, 22 Feb 2020 15:04:34 +0900
-Message-Id: <20200222060435.971-2-yamada.masahiro@socionext.com>
+        linux-arm-kernel@lists.infradead.org
+Subject: [PATCH v2] dt-bindings: bus: Convert UniPhier System Bus to json-schema
+Date:   Sat, 22 Feb 2020 15:11:09 +0900
+Message-Id: <20200222061109.2021-1-yamada.masahiro@socionext.com>
 X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20200222060435.971-1-yamada.masahiro@socionext.com>
-References: <20200222060435.971-1-yamada.masahiro@socionext.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Convert the UniPhier GPIO controller binding to DT schema format.
-
-I omitted the 'gpio-ranges' property because it is defined in the
-dt-schema project (/schemas/gpio/gpio.yaml).
-
-As of writing, the 'gpio-ranges-group-names' is not defined in that
-file despite it is a common property described in
-Documentation/devicetree/bindings/gpio/gpio.txt
-So, I defined it in this schema.
+Convert the UniPhier System Bus controller binding to DT schema format.
 
 Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
 ---
 
 Changes in v2:
-  - fix the build error in the example
+  - Fix the build error in the example
 
- .../bindings/gpio/gpio-uniphier.txt           | 51 ----------
- .../gpio/socionext,uniphier-gpio.yaml         | 92 +++++++++++++++++++
- MAINTAINERS                                   |  2 +-
- 3 files changed, 93 insertions(+), 52 deletions(-)
- delete mode 100644 Documentation/devicetree/bindings/gpio/gpio-uniphier.txt
- create mode 100644 Documentation/devicetree/bindings/gpio/socionext,uniphier-gpio.yaml
+ .../bus/socionext,uniphier-system-bus.yaml    | 96 +++++++++++++++++++
+ .../bindings/bus/uniphier-system-bus.txt      | 66 -------------
+ 2 files changed, 96 insertions(+), 66 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/bus/socionext,uniphier-system-bus.yaml
+ delete mode 100644 Documentation/devicetree/bindings/bus/uniphier-system-bus.txt
 
-diff --git a/Documentation/devicetree/bindings/gpio/gpio-uniphier.txt b/Documentation/devicetree/bindings/gpio/gpio-uniphier.txt
-deleted file mode 100644
-index f281f12dac18..000000000000
---- a/Documentation/devicetree/bindings/gpio/gpio-uniphier.txt
-+++ /dev/null
-@@ -1,51 +0,0 @@
--UniPhier GPIO controller
--
--Required properties:
--- compatible: Should be "socionext,uniphier-gpio".
--- reg: Specifies offset and length of the register set for the device.
--- gpio-controller: Marks the device node as a GPIO controller.
--- #gpio-cells: Should be 2.  The first cell is the pin number and the second
--  cell is used to specify optional parameters.
--- interrupt-controller: Marks the device node as an interrupt controller.
--- #interrupt-cells: Should be 2.  The first cell defines the interrupt number.
--  The second cell bits[3:0] is used to specify trigger type as follows:
--    1 = low-to-high edge triggered
--    2 = high-to-low edge triggered
--    4 = active high level-sensitive
--    8 = active low level-sensitive
--  Valid combinations are 1, 2, 3, 4, 8.
--- ngpios: Specifies the number of GPIO lines.
--- gpio-ranges: Mapping to pin controller pins (as described in gpio.txt)
--- socionext,interrupt-ranges: Specifies an interrupt number mapping between
--  this GPIO controller and its interrupt parent, in the form of arbitrary
--  number of <child-interrupt-base parent-interrupt-base length> triplets.
--
--Optional properties:
--- gpio-ranges-group-names: Used for named gpio ranges (as described in gpio.txt)
--
--Example:
--	gpio: gpio@55000000 {
--		compatible = "socionext,uniphier-gpio";
--		reg = <0x55000000 0x200>;
--		interrupt-parent = <&aidet>;
--		interrupt-controller;
--		#interrupt-cells = <2>;
--		gpio-controller;
--		#gpio-cells = <2>;
--		gpio-ranges = <&pinctrl 0 0 0>;
--		gpio-ranges-group-names = "gpio_range";
--		ngpios = <248>;
--		socionext,interrupt-ranges = <0 48 16>, <16 154 5>, <21 217 3>;
--	};
--
--Consumer Example:
--
--	sdhci0_pwrseq {
--		compatible = "mmc-pwrseq-emmc";
--		reset-gpios = <&gpio UNIPHIER_GPIO_PORT(29, 4) GPIO_ACTIVE_LOW>;
--	};
--
--Please note UNIPHIER_GPIO_PORT(29, 4) represents PORT294 in the SoC document.
--Unfortunately, only the one's place is octal in the port numbering.  (That is,
--PORT 8, 9, 18, 19, 28, 29, ... are missing.)  UNIPHIER_GPIO_PORT() is a helper
--macro to calculate 29 * 8 + 4.
-diff --git a/Documentation/devicetree/bindings/gpio/socionext,uniphier-gpio.yaml b/Documentation/devicetree/bindings/gpio/socionext,uniphier-gpio.yaml
+diff --git a/Documentation/devicetree/bindings/bus/socionext,uniphier-system-bus.yaml b/Documentation/devicetree/bindings/bus/socionext,uniphier-system-bus.yaml
 new file mode 100644
-index 000000000000..580a39e09d39
+index 000000000000..ff9600d6de3b
 --- /dev/null
-+++ b/Documentation/devicetree/bindings/gpio/socionext,uniphier-gpio.yaml
-@@ -0,0 +1,92 @@
++++ b/Documentation/devicetree/bindings/bus/socionext,uniphier-system-bus.yaml
+@@ -0,0 +1,96 @@
 +# SPDX-License-Identifier: GPL-2.0-only OR BSD-2-Clause
 +%YAML 1.2
 +---
-+$id: http://devicetree.org/schemas/gpio/socionext,uniphier-gpio.yaml#
++$id: http://devicetree.org/schemas/bus/socionext,uniphier-system-bus.yaml#
 +$schema: http://devicetree.org/meta-schemas/core.yaml#
 +
-+title: UniPhier GPIO controller
++title: UniPhier System Bus
++
++description: |
++  The UniPhier System Bus is an external bus that connects on-board devices to
++  the UniPhier SoC. It is a simple (semi-)parallel bus with address, data, and
++  some control signals. It supports up to 8 banks (chip selects).
++
++  Before any access to the bus, the bus controller must be configured; the bus
++  controller registers provide the control for the translation from the offset
++  within each bank to the CPU-viewed address. The needed setup includes the
++  base address, the size of each bank. Optionally, some timing parameters can
++  be optimized for faster bus access.
 +
 +maintainers:
 +  - Masahiro Yamada <yamada.masahiro@socionext.com>
 +
 +properties:
-+  $nodename:
-+    pattern: "^gpio@[0-9a-f]+$"
-+
 +  compatible:
-+    const: socionext,uniphier-gpio
++    const: socionext,uniphier-system-bus
 +
 +  reg:
 +    maxItems: 1
 +
-+  gpio-controller: true
-+
-+  "#gpio-cells":
++  "#address-cells":
++    description: |
++      The first cell is the bank number (chip select).
++      The second cell is the address offset within the bank.
 +    const: 2
 +
-+  interrupt-controller: true
++  "#size-cells":
++    const: 1
 +
-+  "#interrupt-cells":
++  ranges:
 +    description: |
-+      The first cell defines the interrupt number.
-+      The second cell bits[3:0] is used to specify trigger type as follows:
-+        1 = low-to-high edge triggered
-+        2 = high-to-low edge triggered
-+        4 = active high level-sensitive
-+        8 = active low level-sensitive
-+      Valid combinations are 1, 2, 3, 4, 8.
-+    const: 2
++      Provide address translation from the System Bus to the parent bus.
 +
-+  ngpios:
-+    minimum: 0
-+    maximum: 512
++      Note:
++      The address region(s) that can be assigned for the System Bus is
++      implementation defined. Some SoCs can use 0x00000000-0x0fffffff and
++      0x40000000-0x4fffffff, while other SoCs only 0x40000000-0x4fffffff.
++      There might be additional limitations depending on SoCs and the boot mode.
++      The address translation is arbitrary as long as the banks are assigned in
++      the supported address space with the required alignment and they do not
++      overlap one another.
 +
-+  gpio-ranges-group-names:
-+    $ref: /schemas/types.yaml#/definitions/string-array
-+
-+  socionext,interrupt-ranges:
-+    description: |
-+      Specifies an interrupt number mapping between this GPIO controller and
-+      its interrupt parent, in the form of arbitrary number of
-+      <child-interrupt-base parent-interrupt-base length> triplets.
-+    $ref: /schemas/types.yaml#/definitions/uint32-matrix
++      For example, it is possible to map:
++        bank 0 to 0x42000000-0x43ffffff, bank 5 to 0x46000000-0x46ffffff
++      It is also possible to map:
++        bank 0 to 0x48000000-0x49ffffff, bank 5 to 0x44000000-0x44ffffff
++      There is no reason to stick to a particular translation mapping, but the
++      "ranges" property should provide a "reasonable" default that is known to
++      work. The software should initialize the bus controller according to it.
 +
 +required:
 +  - compatible
 +  - reg
-+  - gpio-controller
-+  - "#gpio-cells"
-+  - interrupt-controller
-+  - "#interrupt-cells"
-+  - ngpios
-+  - gpio-ranges
-+  - socionext,interrupt-ranges
++  - "#address-cells"
++  - "#size-cells"
++  - ranges
 +
 +examples:
 +  - |
-+    #include <dt-bindings/gpio/gpio.h>
-+    #include <dt-bindings/gpio/uniphier-gpio.h>
++    // In this example,
++    // - the Ethernet device is connected at the offset 0x01f00000 of CS1 and
++    //   mapped to 0x43f00000 of the parent bus.
++    // - the UART device is connected at the offset 0x00200000 of CS5 and
++    //   mapped to 0x46200000 of the parent bus.
 +
-+    gpio: gpio@55000000 {
-+        compatible = "socionext,uniphier-gpio";
-+        reg = <0x55000000 0x200>;
-+        interrupt-parent = <&aidet>;
-+        interrupt-controller;
-+        #interrupt-cells = <2>;
-+        gpio-controller;
-+        #gpio-cells = <2>;
-+        gpio-ranges = <&pinctrl 0 0 0>;
-+        gpio-ranges-group-names = "gpio_range";
-+        ngpios = <248>;
-+        socionext,interrupt-ranges = <0 48 16>, <16 154 5>, <21 217 3>;
-+    };
++    system-bus {
++        compatible = "socionext,uniphier-system-bus";
++        reg = <0x58c00000 0x400>;
++        #address-cells = <2>;
++        #size-cells = <1>;
++        ranges = <1 0x00000000 0x42000000 0x02000000>,
++                 <5 0x00000000 0x46000000 0x01000000>;
 +
-+    // Consumer:
-+    // Please note UNIPHIER_GPIO_PORT(29, 4) represents PORT294 in the SoC
-+    // document. Unfortunately, only the one's place is octal in the port
-+    // numbering. (That is, PORT 8, 9, 18, 19, 28, 29, ... do not exist.)
-+    // UNIPHIER_GPIO_PORT() is a helper macro to calculate 29 * 8 + 4.
-+    sdhci0_pwrseq {
-+        compatible = "mmc-pwrseq-emmc";
-+        reset-gpios = <&gpio UNIPHIER_GPIO_PORT(29, 4) GPIO_ACTIVE_LOW>;
++        ethernet@1,01f00000 {
++            compatible = "smsc,lan9115";
++            reg = <1 0x01f00000 0x1000>;
++            interrupts = <0 48 4>;
++            phy-mode = "mii";
++        };
++
++        uart@5,00200000 {
++            compatible = "ns16550a";
++            reg = <5 0x00200000 0x20>;
++            interrupts = <0 49 4>;
++            clock-frequency = <12288000>;
++        };
 +    };
-diff --git a/MAINTAINERS b/MAINTAINERS
-index 93ccb6708ae9..3cb4c8a9107d 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -2547,7 +2547,7 @@ L:	linux-arm-kernel@lists.infradead.org (moderated for non-subscribers)
- T:	git git://git.kernel.org/pub/scm/linux/kernel/git/masahiroy/linux-uniphier.git
- S:	Maintained
- F:	Documentation/devicetree/bindings/arm/socionext/uniphier.yaml
--F:	Documentation/devicetree/bindings/gpio/gpio-uniphier.txt
-+F:	Documentation/devicetree/bindings/gpio/socionext,uniphier-gpio.yaml
- F:	Documentation/devicetree/bindings/pinctrl/socionext,uniphier-pinctrl.txt
- F:	arch/arm/boot/dts/uniphier*
- F:	arch/arm/include/asm/hardware/cache-uniphier.h
+diff --git a/Documentation/devicetree/bindings/bus/uniphier-system-bus.txt b/Documentation/devicetree/bindings/bus/uniphier-system-bus.txt
+deleted file mode 100644
+index 68ef80afff16..000000000000
+--- a/Documentation/devicetree/bindings/bus/uniphier-system-bus.txt
++++ /dev/null
+@@ -1,66 +0,0 @@
+-UniPhier System Bus
+-
+-The UniPhier System Bus is an external bus that connects on-board devices to
+-the UniPhier SoC.  It is a simple (semi-)parallel bus with address, data, and
+-some control signals.  It supports up to 8 banks (chip selects).
+-
+-Before any access to the bus, the bus controller must be configured; the bus
+-controller registers provide the control for the translation from the offset
+-within each bank to the CPU-viewed address.  The needed setup includes the base
+-address, the size of each bank.  Optionally, some timing parameters can be
+-optimized for faster bus access.
+-
+-Required properties:
+-- compatible: should be "socionext,uniphier-system-bus".
+-- reg: offset and length of the register set for the bus controller device.
+-- #address-cells: should be 2.  The first cell is the bank number (chip select).
+-  The second cell is the address offset within the bank.
+-- #size-cells: should be 1.
+-- ranges: should provide a proper address translation from the System Bus to
+-  the parent bus.
+-
+-Note:
+-The address region(s) that can be assigned for the System Bus is implementation
+-defined.  Some SoCs can use 0x00000000-0x0fffffff and 0x40000000-0x4fffffff,
+-while other SoCs can only use 0x40000000-0x4fffffff.  There might be additional
+-limitations depending on SoCs and the boot mode.  The address translation is
+-arbitrary as long as the banks are assigned in the supported address space with
+-the required alignment and they do not overlap one another.
+-For example, it is possible to map:
+-  bank 0 to 0x42000000-0x43ffffff, bank 5 to 0x46000000-0x46ffffff
+-It is also possible to map:
+-  bank 0 to 0x48000000-0x49ffffff, bank 5 to 0x44000000-0x44ffffff
+-There is no reason to stick to a particular translation mapping, but the
+-"ranges" property should provide a "reasonable" default that is known to work.
+-The software should initialize the bus controller according to it.
+-
+-Example:
+-
+-	system-bus {
+-		compatible = "socionext,uniphier-system-bus";
+-		reg = <0x58c00000 0x400>;
+-		#address-cells = <2>;
+-		#size-cells = <1>;
+-		ranges = <1 0x00000000 0x42000000 0x02000000
+-			  5 0x00000000 0x46000000 0x01000000>;
+-
+-		ethernet@1,01f00000 {
+-			compatible = "smsc,lan9115";
+-			reg = <1 0x01f00000 0x1000>;
+-			interrupts = <0 48 4>
+-			phy-mode = "mii";
+-		};
+-
+-		uart@5,00200000 {
+-			compatible = "ns16550a";
+-			reg = <5 0x00200000 0x20>;
+-			interrupts = <0 49 4>
+-			clock-frequency = <12288000>;
+-		};
+-	};
+-
+-In this example,
+- - the Ethernet device is connected at the offset 0x01f00000 of CS1 and
+-   mapped to 0x43f00000 of the parent bus.
+- - the UART device is connected at the offset 0x00200000 of CS5 and
+-   mapped to 0x46200000 of the parent bus.
 -- 
 2.17.1
 
