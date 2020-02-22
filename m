@@ -2,258 +2,184 @@ Return-Path: <SRS0=8jYG=4K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-19.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A2BA3C35671
-	for <linux-kernel@archiver.kernel.org>; Sat, 22 Feb 2020 23:21:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0CB22C35669
+	for <linux-kernel@archiver.kernel.org>; Sat, 22 Feb 2020 23:33:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 736372064C
-	for <linux-kernel@archiver.kernel.org>; Sat, 22 Feb 2020 23:21:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CC9992071E
+	for <linux-kernel@archiver.kernel.org>; Sat, 22 Feb 2020 23:33:36 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="JFIBQ86P"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727125AbgBVXU7 (ORCPT
+        id S1727024AbgBVXdf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 22 Feb 2020 18:20:59 -0500
-Received: from mga18.intel.com ([134.134.136.126]:52508 "EHLO mga18.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726965AbgBVXU5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 22 Feb 2020 18:20:57 -0500
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga001.jf.intel.com ([10.7.209.18])
-  by orsmga106.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 22 Feb 2020 15:20:56 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.70,473,1574150400"; 
-   d="scan'208";a="316403318"
-Received: from lkp-server01.sh.intel.com (HELO lkp-server01) ([10.239.97.150])
-  by orsmga001.jf.intel.com with ESMTP; 22 Feb 2020 15:20:54 -0800
-Received: from kbuild by lkp-server01 with local (Exim 4.89)
-        (envelope-from <lkp@intel.com>)
-        id 1j5e4s-000503-13; Sun, 23 Feb 2020 07:20:54 +0800
-Date:   Sun, 23 Feb 2020 07:20:01 +0800
-From:   kbuild test robot <lkp@intel.com>
-To:     "Paul E. McKenney" <paulmck@kernel.org>
-Cc:     linux-kernel@vger.kernel.org
-Subject: [rcu:rcu/next] BUILD SUCCESS
- 8aa63de65a79bd8c5c1c2b19452e35f58b043ac7
-Message-ID: <5e51b721.7v6Z0Qwhoaoy1b+W%lkp@intel.com>
-User-Agent: Heirloom mailx 12.5 6/20/10
+        Sat, 22 Feb 2020 18:33:35 -0500
+Received: from mail-pl1-f193.google.com ([209.85.214.193]:46634 "EHLO
+        mail-pl1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726864AbgBVXdf (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 22 Feb 2020 18:33:35 -0500
+Received: by mail-pl1-f193.google.com with SMTP id y8so2433897pll.13
+        for <linux-kernel@vger.kernel.org>; Sat, 22 Feb 2020 15:33:33 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=uHfmwLnIUqXAiwLNkRBchsGXQLdmwgnefDEPy9uPxHc=;
+        b=JFIBQ86PX40lycOJupY2A+tQRN4Xn1ZW5uQjrBrneSel/4FPHMEYdntyDBW7PLo3en
+         M+gT6aU+wirPeqLwD8EV1EFoQaQacXkxzkSb+e4UN6N3zf2+RU0HExJpwh1VLpkP9aQH
+         LLSd1tMLCOpxMpo0+djX6FzWi4CqPCoF3kYHnKDP2Nzm8hX9U5t/gJsS1BYq/cVOtH88
+         f5UGJJy0ZJgc53ORJIHxRukvrC1BPLGIq/n178hrxRa9M2l/yV43qrW1MNhlwRP2d3T/
+         BQ5UGnwLbjxObA+adp4VqrGTgSieF82C3aXvz15IgKMc/YisYk5qpd9DZh0n4r5r5RXG
+         3LTg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=uHfmwLnIUqXAiwLNkRBchsGXQLdmwgnefDEPy9uPxHc=;
+        b=HhzEWmO8bdmk6OcJWRepGQL6kQlZoQKzLjx9Ha2DqfvWrRMcUS9XnV/S6+RC0TFVeM
+         jR3M3SVWS0z/SZXLvkT3vQ03rq0WNhZ7yYQeYosf5iDc5A9WKamaxeecnuk/79LBtFmM
+         6F2Ywpw+aPINsnsbFAVzpt/kBSw27MiNXiavdVC3IDYDZqOcy7RDU/p8yaE/6whYcpwm
+         SNBZj0JDBJO1kJIQNNzPgHxEAuJS5GGCqYeWIwcLfzKx0fs4pvtufB7qZoKmy3X1f2yW
+         SGSUho76nYZrdU2gjkteSry65jwFlDXBf7y0CfeGPK9sYx1UKnEseK7QfwkVkKMQo4pt
+         HpJw==
+X-Gm-Message-State: APjAAAVT1FiUKj8fpyXD6Rvz4VKPPLpPgRFZjdQOIasbwH4K2sjnYjLW
+        VsMKi4VRXABckQWJqCdN1XBuPIwONAWHRSH1gYullw==
+X-Google-Smtp-Source: APXvYqw7vj3n8OT7RmPwbSBOTMJigZLWZDldpo3uNeq93VVpORhmes3kT4E1kaQnPfv7IA9worLvhD52wY6R4lp/ELg=
+X-Received: by 2002:a17:902:760e:: with SMTP id k14mr41180763pll.119.1582414412419;
+ Sat, 22 Feb 2020 15:33:32 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Transfer-Encoding: 7bit
+References: <20200222164419.GB3326744@rani.riverdale.lan> <20200222171859.3594058-1-nivedita@alum.mit.edu>
+ <20200222181413.GA22627@ubuntu-m2-xlarge-x86> <20200222185806.ywnqhfqmy67akfsa@google.com>
+ <20200222201715.GA3674682@rani.riverdale.lan> <20200222210101.diqw4zt6lz42ekgx@google.com>
+In-Reply-To: <20200222210101.diqw4zt6lz42ekgx@google.com>
+From:   Nick Desaulniers <ndesaulniers@google.com>
+Date:   Sat, 22 Feb 2020 15:33:20 -0800
+Message-ID: <CAKwvOdn2pmRqJ+Rs+dhAPJy3hOb4VNn70XB40jcVgTeM8XmeFQ@mail.gmail.com>
+Subject: Re: [PATCH] x86/boot/compressed: Fix compressed kernel linking with lld
+To:     Arvind Sankar <nivedita@alum.mit.edu>,
+        Borislav Petkov <bp@alien8.de>
+Cc:     Nathan Chancellor <natechancellor@gmail.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        "maintainer:X86 ARCHITECTURE (32-BIT AND 64-BIT)" <x86@kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        clang-built-linux <clang-built-linux@googlegroups.com>,
+        Michael Matz <matz@suse.de>, Fangrui Song <maskray@google.com>,
+        Kees Cook <keescook@chromium.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/paulmck/linux-rcu.git  rcu/next
-branch HEAD: 8aa63de65a79bd8c5c1c2b19452e35f58b043ac7  kcsan: Add option for verbose reporting
+On Sat, Feb 22, 2020 at 1:01 PM 'Fangrui Song' via Clang Built Linux
+<clang-built-linux@googlegroups.com> wrote:
+>
+> On 2020-02-22, Arvind Sankar wrote:
+> >On Sat, Feb 22, 2020 at 10:58:06AM -0800, Fangrui Song wrote:
+> >> On 2020-02-22, Nathan Chancellor wrote:
+> >> >On Sat, Feb 22, 2020 at 12:18:59PM -0500, Arvind Sankar wrote:
+> >> >> Commit TBD ("x86/boot/compressed: Remove unnecessary sections from
+> >> >> bzImage") discarded unnecessary sections with *(*). While this works
+> >> >> fine with the bfd linker, lld tries to also discard essential sections
+> >> >> like .shstrtab, .symtab and .strtab, which results in the link failing
+> >> >> since .shstrtab is required by the ELF specification. .symtab and
+> >> >> .strtab are also necessary to generate the zoffset.h file for the
+> >> >> bzImage header.
+> >> >>
+> >> >> Since the only sizeable section that can be discarded is .eh_frame,
+> >> >> restrict the discard to only .eh_frame to be safe.
+> >> >>
+> >> >> Signed-off-by: Arvind Sankar <nivedita@alum.mit.edu>
+> >> >> ---
+> >> >> Sending as a fix on top of tip/x86/boot.
+> >> >>
+> >> >>  arch/x86/boot/compressed/vmlinux.lds.S | 4 ++--
+> >> >>  1 file changed, 2 insertions(+), 2 deletions(-)
+> >> >>
+> >> >> diff --git a/arch/x86/boot/compressed/vmlinux.lds.S b/arch/x86/boot/compressed/vmlinux.lds.S
+> >> >> index 12a20603d92e..469dcf800a2c 100644
+> >> >> --- a/arch/x86/boot/compressed/vmlinux.lds.S
+> >> >> +++ b/arch/x86/boot/compressed/vmlinux.lds.S
+> >> >> @@ -74,8 +74,8 @@ SECTIONS
+> >> >>   . = ALIGN(PAGE_SIZE);   /* keep ZO size page aligned */
+> >> >>   _end = .;
+> >> >>
+> >> >> - /* Discard all remaining sections */
+> >> >> + /* Discard .eh_frame to save some space */
+> >> >>   /DISCARD/ : {
+> >> >> -         *(*)
+> >> >> +         *(.eh_frame)
+> >> >>   }
+> >> >>  }
+> >> >> --
+> >> >> 2.24.1
+> >> >>
+> >> >
+> >> >FWIW:
+> >> >
+> >> >Tested-by: Nathan Chancellor <natechancellor@gmail.com>
+> >>
+> >> I am puzzled. Doesn't -fno-asynchronous-unwind-tables suppress
+> >> .eh_frame in the object files? Why are there still .eh_frame?
+> >>
+> >> Though, there is prior art: arch/s390/boot/compressed/vmlinux.lds.S also discards .eh_frame
+> >
+> >The compressed kernel doesn't use the regular flags and it seems it
+> >doesn't have that option. Maybe we should add it in to avoid generating
+> >those in the first place.
 
-elapsed time: 1088m
+Ah, yikes.  For reference, please see my commit:
 
-configs tested: 195
-configs skipped: 0
+commit b059f801a937 ("x86/purgatory: Use CFLAGS_REMOVE rather than
+reset KBUILD_CFLAGS")
 
-The following configs have been built successfully.
-More configs may be tested in the coming days.
+I'm of the conviction that reassigning KBUILD_CFLAGS via `:=`, as
+opposed to strictly filtering flags out of it or appending to it, is
+an antipattern.  We very very carefully construct KBUILD_CFLAGS in top
+level and arch/ Makefiles, and it's very easy to miss a flag or to
+when you "reset" KBUILD_CFLAGS.
 
-arm                              allmodconfig
-arm                               allnoconfig
-arm                              allyesconfig
-arm64                            allmodconfig
-arm64                             allnoconfig
-arm64                            allyesconfig
-arm                         at91_dt_defconfig
-arm                           efm32_defconfig
-arm                          exynos_defconfig
-arm                        multi_v5_defconfig
-arm                        multi_v7_defconfig
-arm                        shmobile_defconfig
-arm                           sunxi_defconfig
-arm64                               defconfig
-sparc                            allyesconfig
-riscv                             allnoconfig
-h8300                    h8300h-sim_defconfig
-openrisc                 simple_smp_defconfig
-microblaze                    nommu_defconfig
-riscv                            allmodconfig
-ia64                                defconfig
-riscv                            allyesconfig
-m68k                       m5475evb_defconfig
-i386                                defconfig
-parisc                generic-32bit_defconfig
-i386                              allnoconfig
-i386                             allyesconfig
-i386                             alldefconfig
-ia64                             alldefconfig
-ia64                             allmodconfig
-ia64                              allnoconfig
-ia64                             allyesconfig
-c6x                              allyesconfig
-c6x                        evmc6678_defconfig
-nios2                         10m50_defconfig
-nios2                         3c120_defconfig
-openrisc                    or1ksim_defconfig
-xtensa                       common_defconfig
-xtensa                          iss_defconfig
-alpha                               defconfig
-csky                                defconfig
-nds32                             allnoconfig
-nds32                               defconfig
-h8300                     edosk2674_defconfig
-h8300                       h8s-sim_defconfig
-m68k                             allmodconfig
-m68k                          multi_defconfig
-m68k                           sun3_defconfig
-arc                              allyesconfig
-arc                                 defconfig
-microblaze                      mmu_defconfig
-powerpc                           allnoconfig
-powerpc                             defconfig
-powerpc                       ppc64_defconfig
-powerpc                          rhel-kconfig
-mips                      fuloong2e_defconfig
-mips                             allyesconfig
-mips                      malta_kvm_defconfig
-mips                         64r6el_defconfig
-mips                           32r2_defconfig
-mips                             allmodconfig
-mips                              allnoconfig
-parisc                            allnoconfig
-parisc                generic-64bit_defconfig
-parisc                           allyesconfig
-x86_64               randconfig-a001-20200223
-x86_64               randconfig-a002-20200223
-x86_64               randconfig-a003-20200223
-i386                 randconfig-a001-20200223
-i386                 randconfig-a002-20200223
-i386                 randconfig-a003-20200223
-alpha                randconfig-a001-20200222
-m68k                 randconfig-a001-20200222
-mips                 randconfig-a001-20200222
-nds32                randconfig-a001-20200222
-parisc               randconfig-a001-20200222
-riscv                randconfig-a001-20200222
-alpha                randconfig-a001-20200223
-m68k                 randconfig-a001-20200223
-mips                 randconfig-a001-20200223
-nds32                randconfig-a001-20200223
-parisc               randconfig-a001-20200223
-c6x                  randconfig-a001-20200222
-h8300                randconfig-a001-20200222
-microblaze           randconfig-a001-20200222
-nios2                randconfig-a001-20200222
-sparc64              randconfig-a001-20200222
-c6x                  randconfig-a001-20200223
-h8300                randconfig-a001-20200223
-microblaze           randconfig-a001-20200223
-nios2                randconfig-a001-20200223
-sparc64              randconfig-a001-20200223
-csky                 randconfig-a001-20200223
-openrisc             randconfig-a001-20200223
-s390                 randconfig-a001-20200223
-sh                   randconfig-a001-20200223
-xtensa               randconfig-a001-20200223
-openrisc             randconfig-a001-20200222
-sh                   randconfig-a001-20200222
-s390                 randconfig-a001-20200222
-xtensa               randconfig-a001-20200222
-csky                 randconfig-a001-20200222
-x86_64               randconfig-b001-20200222
-x86_64               randconfig-b002-20200222
-x86_64               randconfig-b003-20200222
-i386                 randconfig-b001-20200222
-i386                 randconfig-b002-20200222
-i386                 randconfig-b003-20200222
-x86_64               randconfig-b001-20200223
-x86_64               randconfig-b002-20200223
-x86_64               randconfig-b003-20200223
-i386                 randconfig-b001-20200223
-i386                 randconfig-b002-20200223
-i386                 randconfig-b003-20200223
-x86_64               randconfig-e001-20200223
-x86_64               randconfig-e002-20200223
-x86_64               randconfig-e003-20200223
-i386                 randconfig-e001-20200223
-i386                 randconfig-e002-20200223
-i386                 randconfig-e003-20200223
-x86_64               randconfig-e002-20200222
-i386                 randconfig-e001-20200222
-x86_64               randconfig-e003-20200222
-x86_64               randconfig-e001-20200222
-x86_64               randconfig-f001-20200222
-x86_64               randconfig-f002-20200222
-x86_64               randconfig-f003-20200222
-i386                 randconfig-f001-20200222
-i386                 randconfig-f002-20200222
-i386                 randconfig-f003-20200222
-x86_64               randconfig-f001-20200223
-x86_64               randconfig-f002-20200223
-x86_64               randconfig-f003-20200223
-i386                 randconfig-f001-20200223
-i386                 randconfig-f002-20200223
-i386                 randconfig-f003-20200223
-x86_64               randconfig-g001-20200222
-i386                 randconfig-g002-20200222
-i386                 randconfig-g003-20200222
-i386                 randconfig-g001-20200222
-x86_64               randconfig-g003-20200222
-x86_64               randconfig-g002-20200222
-x86_64               randconfig-g001-20200223
-x86_64               randconfig-g002-20200223
-x86_64               randconfig-g003-20200223
-i386                 randconfig-g001-20200223
-i386                 randconfig-g002-20200223
-i386                 randconfig-g003-20200223
-x86_64               randconfig-h001-20200222
-x86_64               randconfig-h002-20200222
-x86_64               randconfig-h003-20200222
-i386                 randconfig-h001-20200222
-i386                 randconfig-h002-20200222
-i386                 randconfig-h003-20200222
-x86_64               randconfig-h001-20200223
-x86_64               randconfig-h002-20200223
-x86_64               randconfig-h003-20200223
-i386                 randconfig-h001-20200223
-i386                 randconfig-h002-20200223
-i386                 randconfig-h003-20200223
-arc                  randconfig-a001-20200223
-arm                  randconfig-a001-20200223
-arm64                randconfig-a001-20200223
-ia64                 randconfig-a001-20200223
-powerpc              randconfig-a001-20200223
-sparc                randconfig-a001-20200223
-riscv                               defconfig
-riscv                    nommu_virt_defconfig
-riscv                          rv32_defconfig
-s390                             alldefconfig
-s390                             allmodconfig
-s390                              allnoconfig
-s390                             allyesconfig
-s390                          debug_defconfig
-s390                                defconfig
-s390                       zfcpdump_defconfig
-sh                               allmodconfig
-sh                                allnoconfig
-sh                          rsk7269_defconfig
-sh                  sh7785lcr_32bit_defconfig
-sh                            titan_defconfig
-sparc                               defconfig
-sparc64                          allmodconfig
-sparc64                           allnoconfig
-sparc64                          allyesconfig
-sparc64                             defconfig
-um                                  defconfig
-um                             i386_defconfig
-um                           x86_64_defconfig
-x86_64                              fedora-25
-x86_64                                  kexec
-x86_64                                    lkp
-x86_64                                   rhel
-x86_64                         rhel-7.2-clear
-x86_64                               rhel-7.6
+*Boom* Case in point.
 
----
-0-DAY CI Kernel Test Service, Intel Corporation
-https://lists.01.org/hyperkitty/list/kbuild-all@lists.01.org
+I meant to audit the rest of the places we do this in the kernel, but
+haven't had the time to revisit arch/x86/boot/compressed/Makefile.
+
+For now, I suggest:
+1. revert `Commit TBD ("x86/boot/compressed: Remove unnecessary
+sections from bzImage")` as it runs afoul differences in `*` for
+`DISCARD` sections between linkers, as the intent was to remove
+.eh_frame, of which it's less work to not generate them in the first
+place via compiler flag, rather than generate then discard via linker.
+2. simply add `KBUILD_CFLAGS += -fno-asynchronous-unwind-tables` to
+arch/x86/boot/compressed/Makefile with Fangrui's Sugguested-by tag.
+3. Remind me to revisit my proposed cleanup of
+arch/x86/boot/compressed/Makefile (which eventually will undo #2). ;)
+4. tglx to remind me that my compiler is broken and that I should fix it. :P
+
+> >
+> >The .eh_frame discard in arch/x86/kernel/vmlinux.lds.S does seem
+> >superfluous though.
+>
+> Yes, please do that. I recommend suppressting unneeded sections at
+> compile time, instead of discarding them at link time.
+>
+> https://github.com/torvalds/linux/commit/83a092cf95f28696ddc36c8add0cf03ac034897f
+> added -Wl,--orphan-handling=warn to arch/powerpc/Makefile .
+> x86 can follow if that is appropriate.
+
+Kees has patches for that; I recommend waiting on his series.
+
+> I don't recommend -Wl,--orphan-handling=error, which can unnecessarily
+> break the builds.
+
+Agreed. Until we have CI testing with LLD which is a WIP (action item on me).
+-- 
+Thanks,
+~Nick Desaulniers
