@@ -2,122 +2,151 @@ Return-Path: <SRS0=8jYG=4K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 21C4BC35666
-	for <linux-kernel@archiver.kernel.org>; Sat, 22 Feb 2020 13:33:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 75999C35672
+	for <linux-kernel@archiver.kernel.org>; Sat, 22 Feb 2020 13:39:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E686420659
-	for <linux-kernel@archiver.kernel.org>; Sat, 22 Feb 2020 13:33:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3B0622071E
+	for <linux-kernel@archiver.kernel.org>; Sat, 22 Feb 2020 13:39:40 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=walle.cc header.i=@walle.cc header.b="Y4GkoE5L"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="GXLKlRfc"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727647AbgBVNd2 (ORCPT
+        id S1727498AbgBVNjj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 22 Feb 2020 08:33:28 -0500
-Received: from ssl.serverraum.org ([176.9.125.105]:37091 "EHLO
-        ssl.serverraum.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726839AbgBVNd2 (ORCPT
+        Sat, 22 Feb 2020 08:39:39 -0500
+Received: from mail-pf1-f194.google.com ([209.85.210.194]:33470 "EHLO
+        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727046AbgBVNji (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 22 Feb 2020 08:33:28 -0500
-Received: from apollo.fritz.box (unknown [IPv6:2a02:810c:c200:2e91:6257:18ff:fec4:ca34])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-384) server-signature RSA-PSS (2048 bits) server-digest SHA256)
-        (No client certificate requested)
-        by ssl.serverraum.org (Postfix) with ESMTPSA id DB577230E1;
-        Sat, 22 Feb 2020 14:33:24 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=walle.cc; s=mail2016061301;
-        t=1582378405;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=Ju1sES4dqml8Iarmbh4tFHkRxf0KzZNsexlc5IqJhjQ=;
-        b=Y4GkoE5LTskillGNJQ+3bSPxHjSgzvfhF11ANViWaA2IHkC19paRBFoSAbLc5Tp+PM8+rC
-        tiAE+03lwzUsUWplX4AZR9/qf+Ce+aTeGExtKyneY9ugm/uvgGZXG1ca1/y9I6gEDMz7PE
-        Fs0ui8yxZEk89W6Xs1oH2kgwbjfPqmE=
-From:   Michael Walle <michael@walle.cc>
-To:     davem@davemloft.net
-Cc:     andrew@lunn.ch, devicetree@vger.kernel.org, f.fainelli@gmail.com,
-        linux-kernel@vger.kernel.org, mark.rutland@arm.com,
-        netdev@vger.kernel.org, olteanv@gmail.com, robh+dt@kernel.org,
-        shawnguo@kernel.org, vivien.didelot@gmail.com,
-        Michael Walle <michael@walle.cc>
-Subject: Re: [PATCH v2 net-next/devicetree 0/5] DT bindings for Felix DSA switch on LS1028A
-Date:   Sat, 22 Feb 2020 14:33:13 +0100
-Message-Id: <20200222133313.9993-1-michael@walle.cc>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20200219.111213.2304689693183810621.davem@davemloft.net>
-References: <20200219.111213.2304689693183810621.davem@davemloft.net>
+        Sat, 22 Feb 2020 08:39:38 -0500
+Received: by mail-pf1-f194.google.com with SMTP id n7so2839381pfn.0;
+        Sat, 22 Feb 2020 05:39:36 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:date:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=vpxT9jClDrKoKxPt0kmgtgiiuZoHxIxpAJPkebvXON0=;
+        b=GXLKlRfcHhBTYgl1ilH4o6mibl1xTvcNCPXZFQNec8/NOTrpQtsfA1JP8KaNs3aYYg
+         IKfHktkagA44VixY1m/yaksXVZI5mnnwvskjvQ1JJWZKSVnvNsI/JcinID87RR5f7yjq
+         rHGb0hKXst4/I4k0njMJlneWTL1tuJdQbyMx/seEwj0Zf3U4AsBFvjnM2hGQyFL6APOV
+         TtrndIYAHC20+ueeYgIK9XVKf6e1xpCSPWecjH8LXHahEI3yc98+initYn99IdzOFo27
+         yid+lJqWR0oJoKtaGJcH7Tp8DfuMUG4Vdg6vkiq9v8McSlvmfVPiknC3XDMcYiyKlgA6
+         ASdQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:date:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=vpxT9jClDrKoKxPt0kmgtgiiuZoHxIxpAJPkebvXON0=;
+        b=mr+7nvDcu/+zJwSEOSpAms3QJdZJ4/bXNBfYJf5Ne5yrHhuKxFEF/U0zgz5/fv67uC
+         2uAv05UOdF7hyFPUc9p1Bs+jWCtKguincnNl8ZSsJfHfU1cQ+P5DBG96AqzKndc3da7i
+         9CC4EkRo7KzDGM8cUBMzsmdhLJp7YFmpzNWr+5SO76X3NGHnR+vxt0x5gqjX7zFg09r4
+         vFq7wbKjB4lJ7BpigwXOARjmp75wOS19vVYuceTxFNtXtiSqTKVhYbGuaspB+wAOugBe
+         XQyUfXTIs7NhrqRTp0A9LclFU/SBmNUjfaCMJKc97xWEU+aCMhnkMXlLH8CLG9RNrtmu
+         AGeg==
+X-Gm-Message-State: APjAAAUkLars2E33PNLm6aqvtFeiAaXMNdhJe2Qhm8OtPa1dRqpXlsHN
+        FdtjVXS92p6ayZPgYhPT3Q==
+X-Google-Smtp-Source: APXvYqwEKQ41EVLj6CR4+LTHf/M95sWALC35qShHEDBl/TpwOUcje2MB0Kb3HNksVa1H25ZDOgRBJg==
+X-Received: by 2002:a62:f243:: with SMTP id y3mr43858640pfl.146.1582378776499;
+        Sat, 22 Feb 2020 05:39:36 -0800 (PST)
+Received: from madhuparna-HP-Notebook ([42.109.145.199])
+        by smtp.gmail.com with ESMTPSA id b12sm6517235pfr.26.2020.02.22.05.39.31
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Sat, 22 Feb 2020 05:39:35 -0800 (PST)
+From:   Madhuparna Bhowmik <madhuparnabhowmik10@gmail.com>
+X-Google-Original-From: Madhuparna Bhowmik <change_this_user_name@gmail.com>
+Date:   Sat, 22 Feb 2020 19:09:28 +0530
+To:     Johannes Berg <johannes@sipsolutions.net>
+Cc:     madhuparnabhowmik10@gmail.com, davem@davemloft.net,
+        linux-wireless@vger.kernel.org, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org, joel@joelfernandes.org,
+        frextrite@gmail.com,
+        linux-kernel-mentees@lists.linuxfoundation.org, paulmck@kernel.org
+Subject: Re: [PATCH] net: mac80211: rx.c: Use built-in RCU list checking
+Message-ID: <20200222133928.GA10397@madhuparna-HP-Notebook>
+References: <20200222101831.8001-1-madhuparnabhowmik10@gmail.com>
+ <f1913847671d0b7e19aaa9bef1e1eb89febfa942.camel@sipsolutions.net>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Spamd-Bar: ++++
-X-Rspamd-Server: web
-X-Rspamd-Queue-Id: DB577230E1
-X-Spamd-Result: default: False [4.90 / 15.00];
-         FROM_HAS_DN(0.00)[];
-         TO_DN_SOME(0.00)[];
-         R_MISSING_CHARSET(2.50)[];
-         FREEMAIL_ENVRCPT(0.00)[gmail.com];
-         TAGGED_RCPT(0.00)[dt];
-         MIME_GOOD(-0.10)[text/plain];
-         BROKEN_CONTENT_TYPE(1.50)[];
-         TO_MATCH_ENVRCPT_ALL(0.00)[];
-         NEURAL_SPAM(0.00)[0.601];
-         DKIM_SIGNED(0.00)[];
-         RCPT_COUNT_TWELVE(0.00)[12];
-         MID_CONTAINS_FROM(1.00)[];
-         RCVD_COUNT_ZERO(0.00)[0];
-         FROM_EQ_ENVFROM(0.00)[];
-         MIME_TRACE(0.00)[0:+];
-         ASN(0.00)[asn:31334, ipnet:2a02:810c::/31, country:DE];
-         FREEMAIL_CC(0.00)[lunn.ch,vger.kernel.org,gmail.com,arm.com,kernel.org,walle.cc]
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <f1913847671d0b7e19aaa9bef1e1eb89febfa942.camel@sipsolutions.net>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-> This series officializes the device tree bindings for the embedded
-> Ethernet switch on NXP LS1028A (and for the reference design board).
-> The driver has been in the tree since v5.4-rc6.
+On Sat, Feb 22, 2020 at 01:53:25PM +0100, Johannes Berg wrote:
+> On Sat, 2020-02-22 at 15:48 +0530, madhuparnabhowmik10@gmail.com wrote:
+> > From: Madhuparna Bhowmik <madhuparnabhowmik10@gmail.com>
+> > 
+> > list_for_each_entry_rcu() has built-in RCU and lock checking.
+> > 
+> > Pass cond argument to list_for_each_entry_rcu() to silence
+> > false lockdep warning when CONFIG_PROVE_RCU_LIST is enabled
+> > by default.
 > 
-> As per feedback received in v1, I've changed the DT bindings for the
-> internal ports from "gmii" to "internal". So I would like the entire
-> series to be merged through a single tree, be it net-next or devicetree.
-> If this happens, I would like the other maintainer to acknowledge this
-> fact and the patches themselves. Thanks.
+> Umm. What warning?
+>
+If list_for_each_entry_rcu() is called from non rcu protection
+i.e without holding rcu_read_lock, but under the protection of
+a different lock then we can pass that as the condition for lockdep checking
+because otherwise lockdep will complain if list_for_each_entry_rcu()
+is used without rcu protection. So, if we do not pass this argument
+(cond) it may lead to false lockdep warnings.
+
+> > +++ b/net/mac80211/rx.c
+> > @@ -3547,7 +3547,8 @@ static void ieee80211_rx_cooked_monitor(struct ieee80211_rx_data *rx,
+> >  	skb->pkt_type = PACKET_OTHERHOST;
+> >  	skb->protocol = htons(ETH_P_802_2);
+> >  
+> > -	list_for_each_entry_rcu(sdata, &local->interfaces, list) {
+> > +	list_for_each_entry_rcu(sdata, &local->interfaces, list,
+> > +				lockdep_is_held(&rx->local->rx_path_lock)) {
+> >  		if (!ieee80211_sdata_running(sdata))
+> >  			continue;
 > 
-> Claudiu Manoil (2):
->   arm64: dts: fsl: ls1028a: add node for Felix switch
->   arm64: dts: fsl: ls1028a: enable switch PHYs on RDB
+> This is not related at all.
+
+I analysed the following traces:
+ieee80211_rx_handlers() -> ieee80211_rx_handlers_result() -> ieee80211_rx_cooked_monitor()
+
+here ieee80211_rx_handlers() is holding the rx->local->rx_path_lock and
+therefore I used this for the cond argument.
+
+ If this is not right, can you help me in figuring out that which other
+ lock is held?
+
+and 
+__ieee80211_rx_handle_packet() -> ieee80211_prepare_and_rx_handle() -> ieee80211_invoke_rx_handlers() -> 
+ieee80211_rx_handlers_result() -> ieee80211_rx_cooked_monitor()
+
+Here __ieee80211_rx_handle_packet() should be called under
+rcu_read_lock protection.
+So this trace seems okay and no need to pass any cond.
+
+I may have missed something, please correct me in that case.
+
+> > @@ -4114,7 +4115,8 @@ void __ieee80211_check_fast_rx_iface(struct ieee80211_sub_if_data *sdata)
+> >  
+> >  	lockdep_assert_held(&local->sta_mtx);
+> >  
+> > -	list_for_each_entry_rcu(sta, &local->sta_list, list) {
+> > +	list_for_each_entry_rcu(sta, &local->sta_list, list,
+> > +				lockdep_is_held(&local->sta_mtx)) {
 > 
-> Vladimir Oltean (3):
->   arm64: dts: fsl: ls1028a: delete extraneous #interrupt-cells for ENETC
->     RCIE
->   net: dsa: felix: Use PHY_INTERFACE_MODE_INTERNAL instead of GMII
->   dt-bindings: net: dsa: ocelot: document the vsc9959 core
+> And this isn't even a real RCU iteration, since we _must_ hold the mutex
+> here.
+>
+Yeah exactly, dropping _rcu (use list_for_each_entry()) would be a good option in this case.
+Let me know if that is alright and I will send a new patch with all the
+changes required.
 
-For all patches except 5/5 (because it was tested on a custom board) and
-with patch from [1] applied:
+Thank you,
+Madhuparna
 
-Tested-by: Michael Walle <michael@walle.cc>
-
--michael
-
-[1] https://patchwork.ozlabs.org/patch/1239296/
-
+> johannes
 > 
->  .../devicetree/bindings/net/dsa/ocelot.txt    | 96 +++++++++++++++++++
->  .../boot/dts/freescale/fsl-ls1028a-rdb.dts    | 51 ++++++++++
->  .../arm64/boot/dts/freescale/fsl-ls1028a.dtsi | 85 +++++++++++++++-
->  drivers/net/dsa/ocelot/felix.c                |  3 +-
->  drivers/net/dsa/ocelot/felix_vsc9959.c        |  3 +-
->  5 files changed, 232 insertions(+), 6 deletions(-)
->  create mode 100644 Documentation/devicetree/bindings/net/dsa/ocelot.txt
-
--- 
-2.17.1
-
-
