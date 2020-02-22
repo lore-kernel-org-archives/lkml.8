@@ -2,252 +2,142 @@ Return-Path: <SRS0=8jYG=4K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-17.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT,
+	USER_IN_DEF_DKIM_WL autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E4E55C35641
-	for <linux-kernel@archiver.kernel.org>; Sat, 22 Feb 2020 00:31:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0B4EAC3566F
+	for <linux-kernel@archiver.kernel.org>; Sat, 22 Feb 2020 00:33:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AE2CE2071E
-	for <linux-kernel@archiver.kernel.org>; Sat, 22 Feb 2020 00:31:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D520E2071E
+	for <linux-kernel@archiver.kernel.org>; Sat, 22 Feb 2020 00:33:24 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="iwNLY9wz"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="l11FZQE6"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727213AbgBVAbW (ORCPT
+        id S1727074AbgBVAdX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Feb 2020 19:31:22 -0500
-Received: from userp2130.oracle.com ([156.151.31.86]:42526 "EHLO
-        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726672AbgBVAbW (ORCPT
+        Fri, 21 Feb 2020 19:33:23 -0500
+Received: from mail-vk1-f201.google.com ([209.85.221.201]:36002 "EHLO
+        mail-vk1-f201.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726710AbgBVAdW (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Feb 2020 19:31:22 -0500
-Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
-        by userp2130.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 01M0V6ed179005;
-        Sat, 22 Feb 2020 00:31:12 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
- : subject : message-id : references : mime-version : content-type :
- in-reply-to; s=corp-2020-01-29;
- bh=8dG0FXA4wWuKv9M0FiPwAifGFclBlKhCvtoUyeoOwcs=;
- b=iwNLY9wznf9oHIromlJJqfjEs+fiBdhTQ2FDP25t6xR8Fbb+ISZrOGhfaRt3plwGjuUx
- qgEoZhYxGJUM3fl/LyAMoeSokg4SxZrDCHLy+zAoCMcAFTEcrxtxL643ttglsPOVNufr
- R9pmQD4EtHdrC4f4+GbEsHi5P0MmB3YXFeOs0hTAZ8ixkMO1xSw36YaWJUkzkmTiFUaP
- pKA0Pi+v4eSEK4jl8cwS4DUfdmakOCo2DplqH4SbqoHuTAi/YPERkXYCMUJt4sPRqWKq
- cBQ6Y7FdY93H4PLQb2R7fSZZ2hxBJRiyNc2Tz9HyQSATDxg4mnxx6fJ6Dkqd8J2bxgED JQ== 
-Received: from userp3030.oracle.com (userp3030.oracle.com [156.151.31.80])
-        by userp2130.oracle.com with ESMTP id 2y8uddkjgm-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Sat, 22 Feb 2020 00:31:12 +0000
-Received: from pps.filterd (userp3030.oracle.com [127.0.0.1])
-        by userp3030.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 01M0RxPl118096;
-        Sat, 22 Feb 2020 00:31:12 GMT
-Received: from aserv0121.oracle.com (aserv0121.oracle.com [141.146.126.235])
-        by userp3030.oracle.com with ESMTP id 2yasdv1h1v-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Sat, 22 Feb 2020 00:31:12 +0000
-Received: from abhmp0005.oracle.com (abhmp0005.oracle.com [141.146.116.11])
-        by aserv0121.oracle.com (8.14.4/8.13.8) with ESMTP id 01M0VAgt025430;
-        Sat, 22 Feb 2020 00:31:11 GMT
-Received: from localhost (/10.145.179.117)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Fri, 21 Feb 2020 16:31:10 -0800
-Date:   Fri, 21 Feb 2020 16:31:09 -0800
-From:   "Darrick J. Wong" <darrick.wong@oracle.com>
-To:     ira.weiny@intel.com
-Cc:     linux-kernel@vger.kernel.org,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Dave Chinner <david@fromorbit.com>,
-        Christoph Hellwig <hch@lst.de>,
-        "Theodore Y. Ts'o" <tytso@mit.edu>, Jan Kara <jack@suse.cz>,
-        linux-ext4@vger.kernel.org, linux-xfs@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org
-Subject: Re: [PATCH V4 09/13] fs/xfs: Add write aops lock to xfs layer
-Message-ID: <20200222003109.GE9506@magnolia>
-References: <20200221004134.30599-1-ira.weiny@intel.com>
- <20200221004134.30599-10-ira.weiny@intel.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200221004134.30599-10-ira.weiny@intel.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9538 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 adultscore=0 phishscore=0
- mlxlogscore=999 bulkscore=0 malwarescore=0 suspectscore=1 mlxscore=0
- spamscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2001150001 definitions=main-2002220000
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9538 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 phishscore=0 impostorscore=0
- mlxlogscore=999 malwarescore=0 mlxscore=0 suspectscore=1
- priorityscore=1501 bulkscore=0 adultscore=0 spamscore=0 lowpriorityscore=0
- clxscore=1015 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2001150001 definitions=main-2002220000
+        Fri, 21 Feb 2020 19:33:22 -0500
+Received: by mail-vk1-f201.google.com with SMTP id j25so1634319vkn.3
+        for <linux-kernel@vger.kernel.org>; Fri, 21 Feb 2020 16:33:22 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=date:message-id:mime-version:subject:from:to:cc;
+        bh=OqxJ7uFM6QirldzKomGS86nipI+w+uqyhp1pa4CeHPE=;
+        b=l11FZQE6V8RxsI2VoZDUgCeS8uBjfKYdayCEjmfzGtSLpL+FmxZ12lPTOzKCEfFbgy
+         i9RNdPM+q2UeJsmzcwJQa8Tdae6rMQ1bWasVph50yejryH/Z4YlYOamP8H36JjznclMB
+         rRxgBQsRfVrRFTr53kaiZNL9waTw0Z1B+N/1i/LhIf8913anKqsBkbYbVsCS+3juliBc
+         +A1vV4p69SfiPwOt7gTBQTVB0/SFzNAiGhCy+77xg3zuq71zedQcuVoe6O+/bxMHZxdt
+         cwPi9zKra5Usswsy5LnwTkbBsVUXVbHNSA9r+MS78gOA6xfnZTh5svOReq/s5ixaRwva
+         RITA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:message-id:mime-version:subject:from:to:cc;
+        bh=OqxJ7uFM6QirldzKomGS86nipI+w+uqyhp1pa4CeHPE=;
+        b=cuA/3Cu9vg3gM2/jKdoCp8wZ7b7N3s5W3ZtJ0n2fRl7wJ8x9d4pcOdhy8KWkXUeJfz
+         ORUm7cKnFOxd4uoKmcVYYCX5xgTbU1NTsBEJSgBlOewmOTqbGnBoaLrbYoMgl61GNnEL
+         U2onH7YMb84T4O+pC8UkLBGk3Ij4v/FXNb+2Ck+iT1V9u6OewO2ldtbCqhFtcyWr3D46
+         YA7Rke+tigIjRnESZ8UmV0eh4DWwNf+PtKvarmQBr20tE46wqPgWoBnLGPvySoGhPbbn
+         B7wO+xtD5Y4/kiYVRmtlQPQTQSvUBt39KLaY/FNtzUqBjJYzqfJXF4BAH3o7hd1kRa2A
+         lKsw==
+X-Gm-Message-State: APjAAAW45fqK99ceM/JI2y20HEVAeaSH8C5jC5w55Y8iZayOd/MpuoVW
+        lsae1D/jZsNdSuLECtRN58jnGLBidXyNq0M=
+X-Google-Smtp-Source: APXvYqzJyj0dXwKd98P0iXGqbwlTWwwl2aamL/zqvJJ4fLf8Lv9XUkRWOo26SYLGT5N3TT5VWhNkJbfmt7hgqfyB
+X-Received: by 2002:a1f:6344:: with SMTP id x65mr18208843vkb.26.1582331601314;
+ Fri, 21 Feb 2020 16:33:21 -0800 (PST)
+Date:   Fri, 21 Feb 2020 16:33:11 -0800
+Message-Id: <20200222003311.106837-1-jkardatzke@google.com>
+Mime-Version: 1.0
+X-Mailer: git-send-email 2.25.0.265.gbab2e86ba0-goog
+Subject: [PATCH v2] media: venus: support frame rate control
+From:   Jeffrey Kardatzke <jkardatzke@google.com>
+To:     linux-media@vger.kernel.org
+Cc:     Stanimir Varbanov <stanimir.varbanov@linaro.org>,
+        Andy Gross <agross@kernel.org>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Jeffrey Kardatzke <jkardatzke@google.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Feb 20, 2020 at 04:41:30PM -0800, ira.weiny@intel.com wrote:
-> From: Ira Weiny <ira.weiny@intel.com>
-> 
-> XFS requires the use of the aops of an inode to quiesced prior to
-> changing it to/from the DAX aops vector.
-> 
-> Take the aops write lock while changing DAX state.
-> 
-> We define a new XFS_DAX_EXCL lock type to carry the lock through to
-> transaction completion.
-> 
-> Signed-off-by: Ira Weiny <ira.weiny@intel.com>
-> 
-> ---
-> Changes from v3:
-> 	Change locking function names to reflect changes in previous
-> 	patches.
-> 
-> Changes from V2:
-> 	Change name of patch (WAS: fs/xfs: Add lock/unlock state to xfs)
-> 	Remove the xfs specific lock and move to the vfs layer.
-> 		We still use XFS_LOCK_DAX_EXCL to be able to pass this
-> 		flag through to the transaction code.  But we no longer
-> 		have a lock specific to xfs.  This removes a lot of code
-> 		from the XFS layer, preps us for using this in ext4, and
-> 		is actually more straight forward now that all the
-> 		locking requirements are better known.
-> 
-> 	Fix locking order comment
-> 	Rework for new 'state' names
-> 	(Other comments on the previous patch are not applicable with
-> 	new patch as much of the code was removed in favor of the vfs
-> 	level lock)
-> ---
->  fs/xfs/xfs_inode.c | 22 ++++++++++++++++++++--
->  fs/xfs/xfs_inode.h |  7 +++++--
->  2 files changed, 25 insertions(+), 4 deletions(-)
-> 
-> diff --git a/fs/xfs/xfs_inode.c b/fs/xfs/xfs_inode.c
-> index 35df324875db..5b014c428f0f 100644
-> --- a/fs/xfs/xfs_inode.c
-> +++ b/fs/xfs/xfs_inode.c
-> @@ -142,12 +142,12 @@ xfs_ilock_attr_map_shared(
->   *
->   * Basic locking order:
->   *
-> - * i_rwsem -> i_mmap_lock -> page_lock -> i_ilock
-> + * s_dax_sem -> i_rwsem -> i_mmap_lock -> page_lock -> i_ilock
+Add encoder control for enabling/disabling frame rate control via
+V4L2_CID_MPEG_VIDEO_FRAME_RC_ENABLE. It is enabled by default.
 
-"dax_sem"?  I thought this was now called i_aops_sem?
+Signed-off-by: Jeffrey Kardatzke <jkardatzke@google.com>
+---
+ drivers/media/platform/qcom/venus/core.h       | 1 +
+ drivers/media/platform/qcom/venus/venc.c       | 4 +++-
+ drivers/media/platform/qcom/venus/venc_ctrls.c | 8 +++++++-
+ 3 files changed, 11 insertions(+), 2 deletions(-)
 
->   *
->   * mmap_sem locking order:
->   *
->   * i_rwsem -> page lock -> mmap_sem
-> - * mmap_sem -> i_mmap_lock -> page_lock
-> + * s_dax_sem -> mmap_sem -> i_mmap_lock -> page_lock
->   *
->   * The difference in mmap_sem locking order mean that we cannot hold the
->   * i_mmap_lock over syscall based read(2)/write(2) based IO. These IO paths can
-> @@ -182,6 +182,9 @@ xfs_ilock(
->  	       (XFS_ILOCK_SHARED | XFS_ILOCK_EXCL));
->  	ASSERT((lock_flags & ~(XFS_LOCK_MASK | XFS_LOCK_SUBCLASS_MASK)) == 0);
->  
-> +	if (lock_flags & XFS_DAX_EXCL)
+diff --git a/drivers/media/platform/qcom/venus/core.h b/drivers/media/platform/qcom/venus/core.h
+index 11585fb3cae3..2b0649ffbd92 100644
+--- a/drivers/media/platform/qcom/venus/core.h
++++ b/drivers/media/platform/qcom/venus/core.h
+@@ -187,6 +187,7 @@ struct venc_controls {
+ 	u32 bitrate_mode;
+ 	u32 bitrate;
+ 	u32 bitrate_peak;
++	u32 rc_enable;
+ 
+ 	u32 h264_i_period;
+ 	u32 h264_entropy_mode;
+diff --git a/drivers/media/platform/qcom/venus/venc.c b/drivers/media/platform/qcom/venus/venc.c
+index 453edf966d4f..56079c9d9900 100644
+--- a/drivers/media/platform/qcom/venus/venc.c
++++ b/drivers/media/platform/qcom/venus/venc.c
+@@ -731,7 +731,9 @@ static int venc_set_properties(struct venus_inst *inst)
+ 	if (ret)
+ 		return ret;
+ 
+-	if (ctr->bitrate_mode == V4L2_MPEG_VIDEO_BITRATE_MODE_VBR)
++	if (!ctr->rc_enable)
++		rate_control = HFI_RATE_CONTROL_OFF;
++	else if (ctr->bitrate_mode == V4L2_MPEG_VIDEO_BITRATE_MODE_VBR)
+ 		rate_control = HFI_RATE_CONTROL_VBR_CFR;
+ 	else
+ 		rate_control = HFI_RATE_CONTROL_CBR_CFR;
+diff --git a/drivers/media/platform/qcom/venus/venc_ctrls.c b/drivers/media/platform/qcom/venus/venc_ctrls.c
+index 877c0b3299e9..0572a00b8380 100644
+--- a/drivers/media/platform/qcom/venus/venc_ctrls.c
++++ b/drivers/media/platform/qcom/venus/venc_ctrls.c
+@@ -199,6 +199,9 @@ static int venc_op_s_ctrl(struct v4l2_ctrl *ctrl)
+ 		}
+ 		mutex_unlock(&inst->lock);
+ 		break;
++	case V4L2_CID_MPEG_VIDEO_FRAME_RC_ENABLE:
++		ctr->rc_enable = ctrl->val;
++		break;
+ 	default:
+ 		return -EINVAL;
+ 	}
+@@ -214,7 +217,7 @@ int venc_ctrl_init(struct venus_inst *inst)
+ {
+ 	int ret;
+ 
+-	ret = v4l2_ctrl_handler_init(&inst->ctrl_handler, 30);
++	ret = v4l2_ctrl_handler_init(&inst->ctrl_handler, 31);
+ 	if (ret)
+ 		return ret;
+ 
+@@ -351,6 +354,9 @@ int venc_ctrl_init(struct venus_inst *inst)
+ 	v4l2_ctrl_new_std(&inst->ctrl_handler, &venc_ctrl_ops,
+ 			  V4L2_CID_MPEG_VIDEO_FORCE_KEY_FRAME, 0, 0, 0, 0);
+ 
++	v4l2_ctrl_new_std(&inst->ctrl_handler, &venc_ctrl_ops,
++		V4L2_CID_MPEG_VIDEO_FRAME_RC_ENABLE, 0, 1, 1, 1);
++
+ 	ret = inst->ctrl_handler.error;
+ 	if (ret)
+ 		goto err;
+-- 
+2.25.0.265.gbab2e86ba0-goog
 
-And similarly, I think this should be XFS_OPSLOCK_EXCL...
-
---D
-
-> +		inode_aops_down_write(VFS_I(ip));
-> +
->  	if (lock_flags & XFS_IOLOCK_EXCL) {
->  		down_write_nested(&VFS_I(ip)->i_rwsem,
->  				  XFS_IOLOCK_DEP(lock_flags));
-> @@ -224,6 +227,8 @@ xfs_ilock_nowait(
->  	 * You can't set both SHARED and EXCL for the same lock,
->  	 * and only XFS_IOLOCK_SHARED, XFS_IOLOCK_EXCL, XFS_ILOCK_SHARED,
->  	 * and XFS_ILOCK_EXCL are valid values to set in lock_flags.
-> +	 *
-> +	 * XFS_DAX_* is not allowed
->  	 */
->  	ASSERT((lock_flags & (XFS_IOLOCK_SHARED | XFS_IOLOCK_EXCL)) !=
->  	       (XFS_IOLOCK_SHARED | XFS_IOLOCK_EXCL));
-> @@ -232,6 +237,7 @@ xfs_ilock_nowait(
->  	ASSERT((lock_flags & (XFS_ILOCK_SHARED | XFS_ILOCK_EXCL)) !=
->  	       (XFS_ILOCK_SHARED | XFS_ILOCK_EXCL));
->  	ASSERT((lock_flags & ~(XFS_LOCK_MASK | XFS_LOCK_SUBCLASS_MASK)) == 0);
-> +	ASSERT((lock_flags & XFS_DAX_EXCL) == 0);
->  
->  	if (lock_flags & XFS_IOLOCK_EXCL) {
->  		if (!down_write_trylock(&VFS_I(ip)->i_rwsem))
-> @@ -318,6 +324,9 @@ xfs_iunlock(
->  	else if (lock_flags & XFS_ILOCK_SHARED)
->  		mrunlock_shared(&ip->i_lock);
->  
-> +	if (lock_flags & XFS_DAX_EXCL)
-> +		inode_aops_up_write(VFS_I(ip));
-> +
->  	trace_xfs_iunlock(ip, lock_flags, _RET_IP_);
->  }
->  
-> @@ -333,6 +342,8 @@ xfs_ilock_demote(
->  	ASSERT(lock_flags & (XFS_IOLOCK_EXCL|XFS_MMAPLOCK_EXCL|XFS_ILOCK_EXCL));
->  	ASSERT((lock_flags &
->  		~(XFS_IOLOCK_EXCL|XFS_MMAPLOCK_EXCL|XFS_ILOCK_EXCL)) == 0);
-> +	/* XFS_DAX_* is not allowed */
-> +	ASSERT((lock_flags & XFS_DAX_EXCL) == 0);
->  
->  	if (lock_flags & XFS_ILOCK_EXCL)
->  		mrdemote(&ip->i_lock);
-> @@ -465,6 +476,9 @@ xfs_lock_inodes(
->  	ASSERT(!(lock_mode & XFS_ILOCK_EXCL) ||
->  		inodes <= XFS_ILOCK_MAX_SUBCLASS + 1);
->  
-> +	/* XFS_DAX_* is not allowed */
-> +	ASSERT((lock_mode & XFS_DAX_EXCL) == 0);
-> +
->  	if (lock_mode & XFS_IOLOCK_EXCL) {
->  		ASSERT(!(lock_mode & (XFS_MMAPLOCK_EXCL | XFS_ILOCK_EXCL)));
->  	} else if (lock_mode & XFS_MMAPLOCK_EXCL)
-> @@ -566,6 +580,10 @@ xfs_lock_two_inodes(
->  	ASSERT(!(ip0_mode & (XFS_MMAPLOCK_SHARED|XFS_MMAPLOCK_EXCL)) ||
->  	       !(ip1_mode & (XFS_ILOCK_SHARED|XFS_ILOCK_EXCL)));
->  
-> +	/* XFS_DAX_* is not allowed */
-> +	ASSERT((ip0_mode & XFS_DAX_EXCL) == 0);
-> +	ASSERT((ip1_mode & XFS_DAX_EXCL) == 0);
-> +
->  	ASSERT(ip0->i_ino != ip1->i_ino);
->  
->  	if (ip0->i_ino > ip1->i_ino) {
-> diff --git a/fs/xfs/xfs_inode.h b/fs/xfs/xfs_inode.h
-> index 492e53992fa9..25fe20740bf7 100644
-> --- a/fs/xfs/xfs_inode.h
-> +++ b/fs/xfs/xfs_inode.h
-> @@ -278,10 +278,12 @@ static inline void xfs_ifunlock(struct xfs_inode *ip)
->  #define	XFS_ILOCK_SHARED	(1<<3)
->  #define	XFS_MMAPLOCK_EXCL	(1<<4)
->  #define	XFS_MMAPLOCK_SHARED	(1<<5)
-> +#define	XFS_DAX_EXCL		(1<<6)
->  
->  #define XFS_LOCK_MASK		(XFS_IOLOCK_EXCL | XFS_IOLOCK_SHARED \
->  				| XFS_ILOCK_EXCL | XFS_ILOCK_SHARED \
-> -				| XFS_MMAPLOCK_EXCL | XFS_MMAPLOCK_SHARED)
-> +				| XFS_MMAPLOCK_EXCL | XFS_MMAPLOCK_SHARED \
-> +				| XFS_DAX_EXCL)
->  
->  #define XFS_LOCK_FLAGS \
->  	{ XFS_IOLOCK_EXCL,	"IOLOCK_EXCL" }, \
-> @@ -289,7 +291,8 @@ static inline void xfs_ifunlock(struct xfs_inode *ip)
->  	{ XFS_ILOCK_EXCL,	"ILOCK_EXCL" }, \
->  	{ XFS_ILOCK_SHARED,	"ILOCK_SHARED" }, \
->  	{ XFS_MMAPLOCK_EXCL,	"MMAPLOCK_EXCL" }, \
-> -	{ XFS_MMAPLOCK_SHARED,	"MMAPLOCK_SHARED" }
-> +	{ XFS_MMAPLOCK_SHARED,	"MMAPLOCK_SHARED" }, \
-> +	{ XFS_DAX_EXCL,		"DAX_EXCL" }
->  
->  
->  /*
-> -- 
-> 2.21.0
-> 
