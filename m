@@ -2,715 +2,141 @@ Return-Path: <SRS0=8jYG=4K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C8780C35666
-	for <linux-kernel@archiver.kernel.org>; Sat, 22 Feb 2020 20:15:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 72F3EC35671
+	for <linux-kernel@archiver.kernel.org>; Sat, 22 Feb 2020 20:17:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 70C92206ED
-	for <linux-kernel@archiver.kernel.org>; Sat, 22 Feb 2020 20:15:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 418FF206ED
+	for <linux-kernel@archiver.kernel.org>; Sat, 22 Feb 2020 20:17:28 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="sYMHafMY"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="F53zer16"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726864AbgBVUPr (ORCPT
+        id S1726891AbgBVURT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 22 Feb 2020 15:15:47 -0500
-Received: from mail-wm1-f66.google.com ([209.85.128.66]:51974 "EHLO
-        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726730AbgBVUPr (ORCPT
+        Sat, 22 Feb 2020 15:17:19 -0500
+Received: from mail-qk1-f196.google.com ([209.85.222.196]:33518 "EHLO
+        mail-qk1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726730AbgBVURT (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 22 Feb 2020 15:15:47 -0500
-Received: by mail-wm1-f66.google.com with SMTP id t23so5206998wmi.1;
-        Sat, 22 Feb 2020 12:15:43 -0800 (PST)
+        Sat, 22 Feb 2020 15:17:19 -0500
+Received: by mail-qk1-f196.google.com with SMTP id h4so5299254qkm.0
+        for <linux-kernel@vger.kernel.org>; Sat, 22 Feb 2020 12:17:18 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:mime-version:content-disposition
-         :user-agent;
-        bh=FjuM2srzfpLcMvU/Na4EiQ7IKK5moY01W11oAlVhD1w=;
-        b=sYMHafMYNJ0k4Ax2xT+0bGXfvW7YT+fW368fca+xKTToY3dsRYpfbgzMuxiQqFx4jy
-         dlTEWTqTdmLhwgrQAk33ynkwksNjkfURFHHknSngVkhc/nRcydlUtRv9f5thXKjuCEQ5
-         J9x5G2/wAUexs8cVSCWOTdwtZLXY3KXzM1Yu4B7FZzoyEowrD1vHtG0KT6LNBy8P7oTD
-         ubb96iFQlm68BeEU/FzlFiXMKQU81pJS64UKP0rfdE2uzK1oD1fk8S22P6vYdO9Pgngx
-         3MQVexbDXmz9fnuF0wW5IuAjMlNg0vH/jSslTNTAFKgQyVLEbyLOgeGSA4Wmf5lfHNpP
-         jN2w==
+        h=sender:from:date:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=b/ySdKTZFlFCT4Win5U1jB4XU2Vrkoz7ZLdDWOfcGHA=;
+        b=F53zer16nQMz28VvlSk6jANwD4MQI/lAVH31QS062jUTSPs5LhKMEHsMhmQ28aLSca
+         7Dot+DR3XCREZlRBZaFqog/U8E0J1bB8jNwjElz3xNzHssOYXREDXWY2ARaYDifJ7J1j
+         U6ebjFjikomqd4X+SafP0OOkihJE7eYal/XAgmqZ+GUn5OYsACW/FVytvAiV2wkB+oln
+         GvlJAQ+t/al8gQ8+02RrTRalz2rkMSBM+coCpwwHtpN3VpRLcxMnZ/APKhPLPxeGVrUh
+         wKL2QEVRdq33RexuXFgD3d7y6HZQl+op4ugK3685RuRu3SAGoh7vviSEEJURHHJuUpWv
+         rdXQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
-         :content-disposition:user-agent;
-        bh=FjuM2srzfpLcMvU/Na4EiQ7IKK5moY01W11oAlVhD1w=;
-        b=qCkKlM0QhJ9vzIAbqzgdUIBKy/8pVHvzF/d/ogZqLoOt5Zt6fqgMX8Wg9nyEMS3HPp
-         NrBvyAm7hDBjdDd20yh8IM8trbQKvvx1LAcmsUa3AohylWXBA+tRtp3ufRNAYlhBmwm0
-         bdfsQ3J20dlxriibDLVNQxSmsJJa00ofncz9ajw61Cxayh3S5B4XcW6W6W916GTC7m3A
-         sMDAW++K4mn7inCnJFNZQg6zK48zcu4sjJZ28RLqJD2X8/8uXE1L42UTfM8YrMk+fgTA
-         09aLXOFbFThxXrsIdugjw8N0AdhMyU/uUkZVnL0epiF9SatUBJmzYucGwV+34nf8FIOB
-         dyww==
-X-Gm-Message-State: APjAAAX75MCW96lvRXe7aSN2yWp2OZcY9ZwQPW7ZCvRyWylZX9UnLCit
-        rk9rXrmHPCRgKGzkzLBYEQ==
-X-Google-Smtp-Source: APXvYqxSIxa4gyl+/jWJLiCG57wRzFskWyObjjkPbcz7pIeXMz7f9jW6bk38OHbLXxyQ+xD86uq6nA==
-X-Received: by 2002:a7b:c183:: with SMTP id y3mr11185668wmi.45.1582402542046;
-        Sat, 22 Feb 2020 12:15:42 -0800 (PST)
-Received: from avx2 ([46.53.254.212])
-        by smtp.gmail.com with ESMTPSA id z25sm9806004wmf.14.2020.02.22.12.15.40
+        h=x-gm-message-state:sender:from:date:to:cc:subject:message-id
+         :references:mime-version:content-disposition:in-reply-to:user-agent;
+        bh=b/ySdKTZFlFCT4Win5U1jB4XU2Vrkoz7ZLdDWOfcGHA=;
+        b=jCG5a4raH6UUA/91kxSOFiwsR0MIiH+a/BsLy4HG2F3cSP8O4wK6fl0ekXpxW7EQPi
+         PMzw0ZI7nO85gOGa2IfBT49O1d5PvdgPWHcnHPGFuBppQrMzjV5JDp2RpxyX4mvMQUz9
+         G0r97zrJBCHQzaK23uqfqQQI46DzDXp1r9imrfpLooA3OKCDY7b3JJoC4Fjj0vUoQuxq
+         /IWtGTU/rgHqLaHL9hALYodf2+srnOKUj9TUAkXhXZQ+qcCTM3Ofz4hOh8GnDJiiNXN5
+         Vsnkl6QbZLAgCyYiox9PnT/JteMcOKweXRLHLgoj3/Kc2ZD5rhGw2JmL7OgIs3yc4zhA
+         4wKw==
+X-Gm-Message-State: APjAAAUkQTLdIhziOaPNFTibgGrL0gsriSqTndspFFxm0NMTKsX2MGIJ
+        mFddQs+PZsoI0Gw00/+nweAzFTZMMoZEgQ==
+X-Google-Smtp-Source: APXvYqzBfl+lNu+4spgHUoEKU79bhEkIvU8+ri9pSpR6EL0GHrkgSO0qhcw/dHZXWNt5jKciSWBaaw==
+X-Received: by 2002:ae9:dcc1:: with SMTP id q184mr39777273qkf.480.1582402638244;
+        Sat, 22 Feb 2020 12:17:18 -0800 (PST)
+Received: from rani.riverdale.lan ([2001:470:1f07:5f3::b55f])
+        by smtp.gmail.com with ESMTPSA id w60sm3543568qte.39.2020.02.22.12.17.17
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 22 Feb 2020 12:15:41 -0800 (PST)
-Date:   Sat, 22 Feb 2020 23:15:39 +0300
-From:   Alexey Dobriyan <adobriyan@gmail.com>
-To:     akpm@linux-foundation.org
-Cc:     linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org
-Subject: [PATCH v3] proc: faster open/read/close with "permanent" files
-Message-ID: <20200222201539.GA22576@avx2>
+        Sat, 22 Feb 2020 12:17:17 -0800 (PST)
+From:   Arvind Sankar <nivedita@alum.mit.edu>
+X-Google-Original-From: Arvind Sankar <arvind@rani.riverdale.lan>
+Date:   Sat, 22 Feb 2020 15:17:16 -0500
+To:     Fangrui Song <maskray@google.com>
+Cc:     Arvind Sankar <nivedita@alum.mit.edu>,
+        Borislav Petkov <bp@alien8.de>,
+        Nathan Chancellor <natechancellor@gmail.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>,
+        "H. Peter Anvin" <hpa@zytor.com>, x86@kernel.org,
+        linux-kernel@vger.kernel.org, clang-built-linux@googlegroups.com,
+        Michael Matz <matz@suse.de>
+Subject: Re: [PATCH] x86/boot/compressed: Fix compressed kernel linking with
+ lld
+Message-ID: <20200222201715.GA3674682@rani.riverdale.lan>
+References: <20200222164419.GB3326744@rani.riverdale.lan>
+ <20200222171859.3594058-1-nivedita@alum.mit.edu>
+ <20200222181413.GA22627@ubuntu-m2-xlarge-x86>
+ <20200222185806.ywnqhfqmy67akfsa@google.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
+In-Reply-To: <20200222185806.ywnqhfqmy67akfsa@google.com>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Now that "struct proc_ops" exist we can start putting there stuff which
-could not fly with VFS "struct file_operations"...
+On Sat, Feb 22, 2020 at 10:58:06AM -0800, Fangrui Song wrote:
+> On 2020-02-22, Nathan Chancellor wrote:
+> >On Sat, Feb 22, 2020 at 12:18:59PM -0500, Arvind Sankar wrote:
+> >> Commit TBD ("x86/boot/compressed: Remove unnecessary sections from
+> >> bzImage") discarded unnecessary sections with *(*). While this works
+> >> fine with the bfd linker, lld tries to also discard essential sections
+> >> like .shstrtab, .symtab and .strtab, which results in the link failing
+> >> since .shstrtab is required by the ELF specification. .symtab and
+> >> .strtab are also necessary to generate the zoffset.h file for the
+> >> bzImage header.
+> >>
+> >> Since the only sizeable section that can be discarded is .eh_frame,
+> >> restrict the discard to only .eh_frame to be safe.
+> >>
+> >> Signed-off-by: Arvind Sankar <nivedita@alum.mit.edu>
+> >> ---
+> >> Sending as a fix on top of tip/x86/boot.
+> >>
+> >>  arch/x86/boot/compressed/vmlinux.lds.S | 4 ++--
+> >>  1 file changed, 2 insertions(+), 2 deletions(-)
+> >>
+> >> diff --git a/arch/x86/boot/compressed/vmlinux.lds.S b/arch/x86/boot/compressed/vmlinux.lds.S
+> >> index 12a20603d92e..469dcf800a2c 100644
+> >> --- a/arch/x86/boot/compressed/vmlinux.lds.S
+> >> +++ b/arch/x86/boot/compressed/vmlinux.lds.S
+> >> @@ -74,8 +74,8 @@ SECTIONS
+> >>  	. = ALIGN(PAGE_SIZE);	/* keep ZO size page aligned */
+> >>  	_end = .;
+> >>
+> >> -	/* Discard all remaining sections */
+> >> +	/* Discard .eh_frame to save some space */
+> >>  	/DISCARD/ : {
+> >> -		*(*)
+> >> +		*(.eh_frame)
+> >>  	}
+> >>  }
+> >> --
+> >> 2.24.1
+> >>
+> >
+> >FWIW:
+> >
+> >Tested-by: Nathan Chancellor <natechancellor@gmail.com>
+> 
+> I am puzzled. Doesn't -fno-asynchronous-unwind-tables suppress
+> .eh_frame in the object files? Why are there still .eh_frame?
+> 
+> Though, there is prior art: arch/s390/boot/compressed/vmlinux.lds.S also discards .eh_frame
 
-Most of fs/proc/inode.c file is dedicated to make open/read/.../close reliable
-in the event of disappearing /proc entries which usually happens if module is
-getting removed. Files like /proc/cpuinfo which never disappear simply do not
-need such protection.
+The compressed kernel doesn't use the regular flags and it seems it
+doesn't have that option. Maybe we should add it in to avoid generating
+those in the first place.
 
-Save 2 atomic ops, 1 allocation, 1 free per open/read/close sequence for such
-"permanent" files.
-
-Enable "permanent" flag for
-
-	/proc/cpuinfo
-	/proc/kmsg
-	/proc/modules
-	/proc/slabinfo
-	/proc/stat
-	/proc/sysvipc/*
-	/proc/swaps
-
-More will come once I figure out foolproof way to prevent out module
-authors from marking their stuff "permanent" for performance reasons
-when it is not.
-
-This should help with scalability: benchmark is "read /proc/cpuinfo R times
-by N threads scattered over the system".
-
-	N	R	t, s (before)	t, s (after)
-	-----------------------------------------------------
-	64	4096	1.582458	1.530502	-3.2%
-	256	4096	6.371926	6.125168	-3.9%
-	1024	4096	25.64888	24.47528	-4.6%
-
-Benchmark source:
-
-#include <chrono>
-#include <iostream>
-#include <thread>
-#include <vector>
-
-#include <sys/types.h>
-#include <sys/stat.h>
-#include <fcntl.h>
-#include <unistd.h>
-
-const int NR_CPUS = sysconf(_SC_NPROCESSORS_ONLN);
-int N;
-const char *filename;
-int R;
-
-int xxx = 0;
-
-int glue(int n)
-{
-	cpu_set_t m;
-	CPU_ZERO(&m);
-	CPU_SET(n, &m);
-	return sched_setaffinity(0, sizeof(cpu_set_t), &m);
-}
-
-void f(int n)
-{
-	glue(n % NR_CPUS);
-
-	while (*(volatile int *)&xxx == 0) {
-	}
-
-	for (int i = 0; i < R; i++) {
-		int fd = open(filename, O_RDONLY);
-		char buf[4096];
-		ssize_t rv = read(fd, buf, sizeof(buf));
-		asm volatile ("" :: "g" (rv));
-		close(fd);
-	}
-}
-
-int main(int argc, char *argv[])
-{
-	if (argc < 4) {
-		std::cerr << "usage: " << argv[0] << ' ' << "N /proc/filename R\n";
-		return 1;
-	}
-
-	N = atoi(argv[1]);
-	filename = argv[2];
-	R = atoi(argv[3]);
-
-	for (int i = 0; i < NR_CPUS; i++) {
-		if (glue(i) == 0)
-			break;
-	}
-
-	std::vector<std::thread> T;
-	T.reserve(N);
-	for (int i = 0; i < N; i++) {
-		T.emplace_back(f, i);
-	}
-
-	auto t0 = std::chrono::system_clock::now();
-	{
-		*(volatile int *)&xxx = 1;
-		for (auto& t: T) {
-			t.join();
-		}
-	}
-	auto t1 = std::chrono::system_clock::now();
-	std::chrono::duration<double> dt = t1 - t0;
-	std::cout << dt.count() << '\n';
-
-	return 0;
-}
-
-P.S.:
-Explicit randomization marker is added because adding non-function pointer
-will silently disable structure layout randomization.
-
-Signed-off-by: Alexey Dobriyan <adobriyan@gmail.com>
-Reported-by: kbuild test robot <lkp@intel.com>
-Reported-by: Dan Carpenter <dan.carpenter@oracle.com>
----
-
-	v2: fix unlock on error path
-	v3: more comments
-
- fs/proc/cpuinfo.c       |    1 
- fs/proc/generic.c       |   33 +++++++-
- fs/proc/inode.c         |  187 +++++++++++++++++++++++++++++++++++-------------
- fs/proc/internal.h      |    6 +
- fs/proc/kmsg.c          |    1 
- fs/proc/stat.c          |    1 
- include/linux/proc_fs.h |   17 ++++
- ipc/util.c              |    1 
- kernel/module.c         |    1 
- mm/slab_common.c        |    1 
- mm/swapfile.c           |    1 
- 11 files changed, 196 insertions(+), 54 deletions(-)
-
---- a/fs/proc/cpuinfo.c
-+++ b/fs/proc/cpuinfo.c
-@@ -17,6 +17,7 @@ static int cpuinfo_open(struct inode *inode, struct file *file)
- }
- 
- static const struct proc_ops cpuinfo_proc_ops = {
-+	.proc_flags	= PROC_ENTRY_PERMANENT,
- 	.proc_open	= cpuinfo_open,
- 	.proc_read	= seq_read,
- 	.proc_lseek	= seq_lseek,
---- a/fs/proc/generic.c
-+++ b/fs/proc/generic.c
-@@ -531,6 +531,13 @@ struct proc_dir_entry *proc_create_reg(const char *name, umode_t mode,
- 	return p;
- }
- 
-+static inline void pde_set_flags(struct proc_dir_entry *pde)
-+{
-+	if (pde->proc_ops->proc_flags & PROC_ENTRY_PERMANENT) {
-+		pde->flags |= PROC_ENTRY_PERMANENT;
-+	}
-+}
-+
- struct proc_dir_entry *proc_create_data(const char *name, umode_t mode,
- 		struct proc_dir_entry *parent,
- 		const struct proc_ops *proc_ops, void *data)
-@@ -541,6 +548,7 @@ struct proc_dir_entry *proc_create_data(const char *name, umode_t mode,
- 	if (!p)
- 		return NULL;
- 	p->proc_ops = proc_ops;
-+	pde_set_flags(p);
- 	return proc_register(parent, p);
- }
- EXPORT_SYMBOL(proc_create_data);
-@@ -572,6 +580,7 @@ static int proc_seq_release(struct inode *inode, struct file *file)
- }
- 
- static const struct proc_ops proc_seq_ops = {
-+	/* not permanent -- can call into arbitrary seq_operations */
- 	.proc_open	= proc_seq_open,
- 	.proc_read	= seq_read,
- 	.proc_lseek	= seq_lseek,
-@@ -602,6 +611,7 @@ static int proc_single_open(struct inode *inode, struct file *file)
- }
- 
- static const struct proc_ops proc_single_ops = {
-+	/* not permanent -- can call into arbitrary ->single_show */
- 	.proc_open	= proc_single_open,
- 	.proc_read	= seq_read,
- 	.proc_lseek	= seq_lseek,
-@@ -662,9 +672,14 @@ void remove_proc_entry(const char *name, struct proc_dir_entry *parent)
- 
- 	de = pde_subdir_find(parent, fn, len);
- 	if (de) {
--		rb_erase(&de->subdir_node, &parent->subdir);
--		if (S_ISDIR(de->mode)) {
--			parent->nlink--;
-+		if (unlikely(pde_is_permanent(de))) {
-+			WARN(1, "removing permanent /proc entry '%s'", de->name);
-+			de = NULL;
-+		} else {
-+			rb_erase(&de->subdir_node, &parent->subdir);
-+			if (S_ISDIR(de->mode)) {
-+				parent->nlink--;
-+			}
- 		}
- 	}
- 	write_unlock(&proc_subdir_lock);
-@@ -700,12 +715,24 @@ int remove_proc_subtree(const char *name, struct proc_dir_entry *parent)
- 		write_unlock(&proc_subdir_lock);
- 		return -ENOENT;
- 	}
-+	if (unlikely(pde_is_permanent(root))) {
-+		write_unlock(&proc_subdir_lock);
-+		WARN(1, "removing permanent /proc entry '%s/%s'",
-+			root->parent->name, root->name);
-+		return -EINVAL;
-+	}
- 	rb_erase(&root->subdir_node, &parent->subdir);
- 
- 	de = root;
- 	while (1) {
- 		next = pde_subdir_first(de);
- 		if (next) {
-+			if (unlikely(pde_is_permanent(root))) {
-+				write_unlock(&proc_subdir_lock);
-+				WARN(1, "removing permanent /proc entry '%s/%s'",
-+					next->parent->name, next->name);
-+				return -EINVAL;
-+			}
- 			rb_erase(&next->subdir_node, &de->subdir);
- 			de = next;
- 			continue;
---- a/fs/proc/inode.c
-+++ b/fs/proc/inode.c
-@@ -195,135 +195,204 @@ void proc_entry_rundown(struct proc_dir_entry *de)
- 	spin_unlock(&de->pde_unload_lock);
- }
- 
-+static loff_t pde_lseek(struct proc_dir_entry *pde, struct file *file, loff_t offset, int whence)
-+{
-+	typeof_member(struct proc_ops, proc_lseek) lseek;
-+
-+	lseek = pde->proc_ops->proc_lseek;
-+	if (!lseek)
-+		lseek = default_llseek;
-+	return lseek(file, offset, whence);
-+}
-+
- static loff_t proc_reg_llseek(struct file *file, loff_t offset, int whence)
- {
- 	struct proc_dir_entry *pde = PDE(file_inode(file));
- 	loff_t rv = -EINVAL;
--	if (use_pde(pde)) {
--		typeof_member(struct proc_ops, proc_lseek) lseek;
- 
--		lseek = pde->proc_ops->proc_lseek;
--		if (!lseek)
--			lseek = default_llseek;
--		rv = lseek(file, offset, whence);
-+	if (pde_is_permanent(pde)) {
-+		return pde_lseek(pde, file, offset, whence);
-+	} else if (use_pde(pde)) {
-+		rv = pde_lseek(pde, file, offset, whence);
- 		unuse_pde(pde);
- 	}
- 	return rv;
- }
- 
-+static ssize_t pde_read(struct proc_dir_entry *pde, struct file *file, char __user *buf, size_t count, loff_t *ppos)
-+{
-+	typeof_member(struct proc_ops, proc_read) read;
-+
-+	read = pde->proc_ops->proc_read;
-+	if (read)
-+		return read(file, buf, count, ppos);
-+	return -EIO;
-+}
-+
- static ssize_t proc_reg_read(struct file *file, char __user *buf, size_t count, loff_t *ppos)
- {
- 	struct proc_dir_entry *pde = PDE(file_inode(file));
- 	ssize_t rv = -EIO;
--	if (use_pde(pde)) {
--		typeof_member(struct proc_ops, proc_read) read;
- 
--		read = pde->proc_ops->proc_read;
--		if (read)
--			rv = read(file, buf, count, ppos);
-+	if (pde_is_permanent(pde)) {
-+		return pde_read(pde, file, buf, count, ppos);
-+	} else if (use_pde(pde)) {
-+		rv = pde_read(pde, file, buf, count, ppos);
- 		unuse_pde(pde);
- 	}
- 	return rv;
- }
- 
-+static ssize_t pde_write(struct proc_dir_entry *pde, struct file *file, const char __user *buf, size_t count, loff_t *ppos)
-+{
-+	typeof_member(struct proc_ops, proc_write) write;
-+
-+	write = pde->proc_ops->proc_write;
-+	if (write)
-+		return write(file, buf, count, ppos);
-+	return -EIO;
-+}
-+
- static ssize_t proc_reg_write(struct file *file, const char __user *buf, size_t count, loff_t *ppos)
- {
- 	struct proc_dir_entry *pde = PDE(file_inode(file));
- 	ssize_t rv = -EIO;
--	if (use_pde(pde)) {
--		typeof_member(struct proc_ops, proc_write) write;
- 
--		write = pde->proc_ops->proc_write;
--		if (write)
--			rv = write(file, buf, count, ppos);
-+	if (pde_is_permanent(pde)) {
-+		return pde_write(pde, file, buf, count, ppos);
-+	} else if (use_pde(pde)) {
-+		rv = pde_write(pde, file, buf, count, ppos);
- 		unuse_pde(pde);
- 	}
- 	return rv;
- }
- 
-+static __poll_t pde_poll(struct proc_dir_entry *pde, struct file *file, struct poll_table_struct *pts)
-+{
-+	typeof_member(struct proc_ops, proc_poll) poll;
-+
-+	poll = pde->proc_ops->proc_poll;
-+	if (poll)
-+		return poll(file, pts);
-+	return DEFAULT_POLLMASK;
-+}
-+
- static __poll_t proc_reg_poll(struct file *file, struct poll_table_struct *pts)
- {
- 	struct proc_dir_entry *pde = PDE(file_inode(file));
- 	__poll_t rv = DEFAULT_POLLMASK;
--	if (use_pde(pde)) {
--		typeof_member(struct proc_ops, proc_poll) poll;
- 
--		poll = pde->proc_ops->proc_poll;
--		if (poll)
--			rv = poll(file, pts);
-+	if (pde_is_permanent(pde)) {
-+		return pde_poll(pde, file, pts);
-+	} else if (use_pde(pde)) {
-+		rv = pde_poll(pde, file, pts);
- 		unuse_pde(pde);
- 	}
- 	return rv;
- }
- 
-+static long pde_ioctl(struct proc_dir_entry *pde, struct file *file, unsigned int cmd, unsigned long arg)
-+{
-+	typeof_member(struct proc_ops, proc_ioctl) ioctl;
-+
-+	ioctl = pde->proc_ops->proc_ioctl;
-+	if (ioctl)
-+		return ioctl(file, cmd, arg);
-+	return -ENOTTY;
-+}
-+
- static long proc_reg_unlocked_ioctl(struct file *file, unsigned int cmd, unsigned long arg)
- {
- 	struct proc_dir_entry *pde = PDE(file_inode(file));
- 	long rv = -ENOTTY;
--	if (use_pde(pde)) {
--		typeof_member(struct proc_ops, proc_ioctl) ioctl;
- 
--		ioctl = pde->proc_ops->proc_ioctl;
--		if (ioctl)
--			rv = ioctl(file, cmd, arg);
-+	if (pde_is_permanent(pde)) {
-+		return pde_ioctl(pde, file, cmd, arg);
-+	} else if (use_pde(pde)) {
-+		rv = pde_ioctl(pde, file, cmd, arg);
- 		unuse_pde(pde);
- 	}
- 	return rv;
- }
- 
- #ifdef CONFIG_COMPAT
-+static long pde_compat_ioctl(struct proc_dir_entry *pde, struct file *file, unsigned int cmd, unsigned long arg)
-+{
-+	typeof_member(struct proc_ops, proc_compat_ioctl) compat_ioctl;
-+
-+	compat_ioctl = pde->proc_ops->proc_compat_ioctl;
-+	if (compat_ioctl)
-+		return compat_ioctl(file, cmd, arg);
-+	return -ENOTTY;
-+}
-+
- static long proc_reg_compat_ioctl(struct file *file, unsigned int cmd, unsigned long arg)
- {
- 	struct proc_dir_entry *pde = PDE(file_inode(file));
- 	long rv = -ENOTTY;
--	if (use_pde(pde)) {
--		typeof_member(struct proc_ops, proc_compat_ioctl) compat_ioctl;
--
--		compat_ioctl = pde->proc_ops->proc_compat_ioctl;
--		if (compat_ioctl)
--			rv = compat_ioctl(file, cmd, arg);
-+	if (pde_is_permanent(pde)) {
-+		return pde_compat_ioctl(pde, file, cmd, arg);
-+	} else if (use_pde(pde)) {
-+		rv = pde_compat_ioctl(pde, file, cmd, arg);
- 		unuse_pde(pde);
- 	}
- 	return rv;
- }
- #endif
- 
-+static int pde_mmap(struct proc_dir_entry *pde, struct file *file, struct vm_area_struct *vma)
-+{
-+	typeof_member(struct proc_ops, proc_mmap) mmap;
-+
-+	mmap = pde->proc_ops->proc_mmap;
-+	if (mmap)
-+		return mmap(file, vma);
-+	return -EIO;
-+}
-+
- static int proc_reg_mmap(struct file *file, struct vm_area_struct *vma)
- {
- 	struct proc_dir_entry *pde = PDE(file_inode(file));
- 	int rv = -EIO;
--	if (use_pde(pde)) {
--		typeof_member(struct proc_ops, proc_mmap) mmap;
- 
--		mmap = pde->proc_ops->proc_mmap;
--		if (mmap)
--			rv = mmap(file, vma);
-+	if (pde_is_permanent(pde)) {
-+		return pde_mmap(pde, file, vma);
-+	} else if (use_pde(pde)) {
-+		rv = pde_mmap(pde, file, vma);
- 		unuse_pde(pde);
- 	}
- 	return rv;
- }
- 
- static unsigned long
--proc_reg_get_unmapped_area(struct file *file, unsigned long orig_addr,
-+pde_get_unmapped_area(struct proc_dir_entry *pde, struct file *file, unsigned long orig_addr,
- 			   unsigned long len, unsigned long pgoff,
- 			   unsigned long flags)
- {
--	struct proc_dir_entry *pde = PDE(file_inode(file));
--	unsigned long rv = -EIO;
--
--	if (use_pde(pde)) {
--		typeof_member(struct proc_ops, proc_get_unmapped_area) get_area;
-+	typeof_member(struct proc_ops, proc_get_unmapped_area) get_area;
- 
--		get_area = pde->proc_ops->proc_get_unmapped_area;
-+	get_area = pde->proc_ops->proc_get_unmapped_area;
- #ifdef CONFIG_MMU
--		if (!get_area)
--			get_area = current->mm->get_unmapped_area;
-+	if (!get_area)
-+		get_area = current->mm->get_unmapped_area;
- #endif
-+	if (get_area)
-+		return get_area(file, orig_addr, len, pgoff, flags);
-+	return orig_addr;
-+}
-+
-+static unsigned long
-+proc_reg_get_unmapped_area(struct file *file, unsigned long orig_addr,
-+			   unsigned long len, unsigned long pgoff,
-+			   unsigned long flags)
-+{
-+	struct proc_dir_entry *pde = PDE(file_inode(file));
-+	unsigned long rv = -EIO;
- 
--		if (get_area)
--			rv = get_area(file, orig_addr, len, pgoff, flags);
--		else
--			rv = orig_addr;
-+	if (pde_is_permanent(pde)) {
-+		return pde_get_unmapped_area(pde, file, orig_addr, len, pgoff, flags);
-+	} else if (use_pde(pde)) {
-+		rv = pde_get_unmapped_area(pde, file, orig_addr, len, pgoff, flags);
- 		unuse_pde(pde);
- 	}
- 	return rv;
-@@ -337,6 +406,13 @@ static int proc_reg_open(struct inode *inode, struct file *file)
- 	typeof_member(struct proc_ops, proc_release) release;
- 	struct pde_opener *pdeo;
- 
-+	if (pde_is_permanent(pde)) {
-+		open = pde->proc_ops->proc_open;
-+		if (open)
-+			rv = open(inode, file);
-+		return rv;
-+	}
-+
- 	/*
- 	 * Ensure that
- 	 * 1) PDE's ->release hook will be called no matter what
-@@ -386,6 +462,17 @@ static int proc_reg_release(struct inode *inode, struct file *file)
- {
- 	struct proc_dir_entry *pde = PDE(inode);
- 	struct pde_opener *pdeo;
-+
-+	if (pde_is_permanent(pde)) {
-+		typeof_member(struct proc_ops, proc_release) release;
-+
-+		release = pde->proc_ops->proc_release;
-+		if (release) {
-+			return release(inode, file);
-+		}
-+		return 0;
-+	}
-+
- 	spin_lock(&pde->pde_unload_lock);
- 	list_for_each_entry(pdeo, &pde->pde_openers, lh) {
- 		if (pdeo->file == file) {
---- a/fs/proc/internal.h
-+++ b/fs/proc/internal.h
-@@ -61,6 +61,7 @@ struct proc_dir_entry {
- 	struct rb_node subdir_node;
- 	char *name;
- 	umode_t mode;
-+	u8 flags;
- 	u8 namelen;
- 	char inline_name[];
- } __randomize_layout;
-@@ -73,6 +74,11 @@ struct proc_dir_entry {
- 	0)
- #define SIZEOF_PDE_INLINE_NAME (SIZEOF_PDE - sizeof(struct proc_dir_entry))
- 
-+static inline bool pde_is_permanent(const struct proc_dir_entry *pde)
-+{
-+	return pde->flags & PROC_ENTRY_PERMANENT;
-+}
-+
- extern struct kmem_cache *proc_dir_entry_cache;
- void pde_free(struct proc_dir_entry *pde);
- 
---- a/fs/proc/kmsg.c
-+++ b/fs/proc/kmsg.c
-@@ -50,6 +50,7 @@ static __poll_t kmsg_poll(struct file *file, poll_table *wait)
- 
- 
- static const struct proc_ops kmsg_proc_ops = {
-+	.proc_flags	= PROC_ENTRY_PERMANENT,
- 	.proc_read	= kmsg_read,
- 	.proc_poll	= kmsg_poll,
- 	.proc_open	= kmsg_open,
---- a/fs/proc/stat.c
-+++ b/fs/proc/stat.c
-@@ -224,6 +224,7 @@ static int stat_open(struct inode *inode, struct file *file)
- }
- 
- static const struct proc_ops stat_proc_ops = {
-+	.proc_flags	= PROC_ENTRY_PERMANENT,
- 	.proc_open	= stat_open,
- 	.proc_read	= seq_read,
- 	.proc_lseek	= seq_lseek,
---- a/include/linux/proc_fs.h
-+++ b/include/linux/proc_fs.h
-@@ -5,6 +5,7 @@
- #ifndef _LINUX_PROC_FS_H
- #define _LINUX_PROC_FS_H
- 
-+#include <linux/compiler.h>
- #include <linux/types.h>
- #include <linux/fs.h>
- 
-@@ -12,7 +13,21 @@ struct proc_dir_entry;
- struct seq_file;
- struct seq_operations;
- 
-+enum {
-+	/*
-+	 * All /proc entries using this ->proc_ops instance are never removed.
-+	 *
-+	 * If in doubt, ignore this flag.
-+	 */
-+#ifdef MODULE
-+	PROC_ENTRY_PERMANENT = 0U,
-+#else
-+	PROC_ENTRY_PERMANENT = 1U << 0,
-+#endif
-+};
-+
- struct proc_ops {
-+	unsigned int proc_flags;
- 	int	(*proc_open)(struct inode *, struct file *);
- 	ssize_t	(*proc_read)(struct file *, char __user *, size_t, loff_t *);
- 	ssize_t	(*proc_write)(struct file *, const char __user *, size_t, loff_t *);
-@@ -25,7 +40,7 @@ struct proc_ops {
- #endif
- 	int	(*proc_mmap)(struct file *, struct vm_area_struct *);
- 	unsigned long (*proc_get_unmapped_area)(struct file *, unsigned long, unsigned long, unsigned long, unsigned long);
--};
-+} __randomize_layout;
- 
- #ifdef CONFIG_PROC_FS
- 
---- a/ipc/util.c
-+++ b/ipc/util.c
-@@ -885,6 +885,7 @@ static int sysvipc_proc_release(struct inode *inode, struct file *file)
- }
- 
- static const struct proc_ops sysvipc_proc_ops = {
-+	.proc_flags	= PROC_ENTRY_PERMANENT,
- 	.proc_open	= sysvipc_proc_open,
- 	.proc_read	= seq_read,
- 	.proc_lseek	= seq_lseek,
---- a/kernel/module.c
-+++ b/kernel/module.c
-@@ -4355,6 +4355,7 @@ static int modules_open(struct inode *inode, struct file *file)
- }
- 
- static const struct proc_ops modules_proc_ops = {
-+	.proc_flags	= PROC_ENTRY_PERMANENT,
- 	.proc_open	= modules_open,
- 	.proc_read	= seq_read,
- 	.proc_lseek	= seq_lseek,
---- a/mm/slab_common.c
-+++ b/mm/slab_common.c
-@@ -1581,6 +1581,7 @@ static int slabinfo_open(struct inode *inode, struct file *file)
- }
- 
- static const struct proc_ops slabinfo_proc_ops = {
-+	.proc_flags	= PROC_ENTRY_PERMANENT,
- 	.proc_open	= slabinfo_open,
- 	.proc_read	= seq_read,
- 	.proc_write	= slabinfo_write,
---- a/mm/swapfile.c
-+++ b/mm/swapfile.c
-@@ -2797,6 +2797,7 @@ static int swaps_open(struct inode *inode, struct file *file)
- }
- 
- static const struct proc_ops swaps_proc_ops = {
-+	.proc_flags	= PROC_ENTRY_PERMANENT,
- 	.proc_open	= swaps_open,
- 	.proc_read	= seq_read,
- 	.proc_lseek	= seq_lseek,
+The .eh_frame discard in arch/x86/kernel/vmlinux.lds.S does seem
+superfluous though.
