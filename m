@@ -2,170 +2,107 @@ Return-Path: <SRS0=8jYG=4K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_RHS_DOB,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B5E30C35671
-	for <linux-kernel@archiver.kernel.org>; Sat, 22 Feb 2020 18:18:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D789EC35671
+	for <linux-kernel@archiver.kernel.org>; Sat, 22 Feb 2020 18:21:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9D6B320707
-	for <linux-kernel@archiver.kernel.org>; Sat, 22 Feb 2020 18:18:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id ABBB02071E
+	for <linux-kernel@archiver.kernel.org>; Sat, 22 Feb 2020 18:21:51 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1582395711;
+	bh=jY4Y7QOL+KjG+Mt+brU+9X0gWDUk7y5CT5BqEsL3DNY=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=JyJLUqRklqgzcWODw7e67JOeraRCM0P/U4l9x3tsIMxfuCM7Xkb7w6uA21w2pDGxP
+	 /KOG0mqt+bJ6z77y2oWv4ZiIMrJxODDIAuJ+tL/PkDJOx/eAn6koRQtY57XGXQ97zI
+	 VnGn/cLJGENB1tzyVuzN4s0tRnViuNPQaqa/WSKE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726884AbgBVSSG (ORCPT
+        id S1726832AbgBVSVu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 22 Feb 2020 13:18:06 -0500
-Received: from ivanoab7.miniserver.com ([37.128.132.42]:44742 "EHLO
-        www.kot-begemot.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726550AbgBVSSG (ORCPT
+        Sat, 22 Feb 2020 13:21:50 -0500
+Received: from mail-pj1-f65.google.com ([209.85.216.65]:37895 "EHLO
+        mail-pj1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726550AbgBVSVt (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 22 Feb 2020 13:18:06 -0500
-Received: from tun252.jain.kot-begemot.co.uk ([192.168.18.6] helo=jain.kot-begemot.co.uk)
-        by www.kot-begemot.co.uk with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <anton.ivanov@cambridgegreys.com>)
-        id 1j5ZLl-0006OE-Ua; Sat, 22 Feb 2020 18:18:02 +0000
-Received: from [151.251.251.9] (helo=[192.168.14.3])
-        by jain.kot-begemot.co.uk with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.92)
-        (envelope-from <anton.ivanov@cambridgegreys.com>)
-        id 1j5ZLj-0005tN-3P; Sat, 22 Feb 2020 18:18:01 +0000
-Subject: Re: [PATCH] Documentation: update UserModeLinux-HOWTO.txt
-To:     Manbing <manbing3@gmail.com>, Jeff Dike <jdike@addtoit.com>,
-        Richard Weinberger <richard@nod.at>,
-        Jonathan Corbet <corbet@lwn.net>
-Cc:     linux-um@lists.infradead.org, linux-doc@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-References: <1582391968-3960-1-git-send-email-manbing3@gmail.com>
-From:   Anton Ivanov <anton.ivanov@cambridgegreys.com>
-Organization: Cambridge Greys Limited
-Message-ID: <9e8a47ca-bc82-496c-dc32-a5cde0d26fe9@cambridgegreys.com>
-Date:   Sat, 22 Feb 2020 18:17:56 +0000
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        Sat, 22 Feb 2020 13:21:49 -0500
+Received: by mail-pj1-f65.google.com with SMTP id j17so2208119pjz.3;
+        Sat, 22 Feb 2020 10:21:48 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=iCwcVv4xnWxcWa1WsgaUhoEXl3ZCR2vSZR6hr5gWHNc=;
+        b=qn/j0hsTDGj5g1hdy+11qB9A07uT+P3d3rAzVRn7MD6aFqzDvLxR5a7CC6njCrOMwj
+         zrCaXS8fNHAWQG8ADogGQXzIzib18/3w4Ptqo57efJ0aryRaBg/t10WLRaAWuHGDtYIC
+         ++rC3Ol/S9in7qcCWU33wUgOfM0Jo8QfbvTbj8ixwkvp676t5KUEIux+s2TjtzL7VDav
+         DnBVe6ts4cQxB5Rt6ktGq5uLlP9CbToeYkRhKytEFDBHSBBp4mOjt4cCFoQ6Ps8HIvWn
+         SrWYViJMZVrmT6JWmrW5Ixd7faUDoTB7zvuZDIUndERRJwPr7nr/cC63AJ2XAcoiOZl4
+         8ukA==
+X-Gm-Message-State: APjAAAW1HNDMdeWd4VPjyMzpeybAFJD+0ozGBSpwf85kUa0OIbhX9nDx
+        h8df/Sl6OHODE7b7i1/NiaU=
+X-Google-Smtp-Source: APXvYqwGViPPPxaNS7z+K4MXgi0LZN0EVHaNC8Lcr39w9C6uZBgZpJBc7aRJ3CH2jofuSwKjOzKP/Q==
+X-Received: by 2002:a17:90a:9dc3:: with SMTP id x3mr10376777pjv.45.1582395707660;
+        Sat, 22 Feb 2020 10:21:47 -0800 (PST)
+Received: from localhost ([2601:647:5b00:710:ffa7:88dc:9c39:76d9])
+        by smtp.gmail.com with ESMTPSA id z3sm7012747pfz.155.2020.02.22.10.21.45
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sat, 22 Feb 2020 10:21:46 -0800 (PST)
+Date:   Sat, 22 Feb 2020 10:21:45 -0800
+From:   Moritz Fischer <mdf@kernel.org>
+To:     Michal Simek <michal.simek@xilinx.com>
+Cc:     linux-kernel@vger.kernel.org, monstr@monstr.eu, git@xilinx.com,
+        Shubhrajyoti Datta <shubhrajyoti.datta@xilinx.com>,
+        Moritz Fischer <mdf@kernel.org>,
+        linux-arm-kernel@lists.infradead.org, linux-fpga@vger.kernel.org
+Subject: Re: [PATCH] fpga: zynq: Remove clk_get error message for probe defer
+Message-ID: <20200222182145.GA4905@epycbox.lan>
+References: <0060e55f0b8d3a57e129d7eb096267cc96eae846.1581517026.git.michal.simek@xilinx.com>
 MIME-Version: 1.0
-In-Reply-To: <1582391968-3960-1-git-send-email-manbing3@gmail.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Clacks-Overhead: GNU Terry Pratchett
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <0060e55f0b8d3a57e129d7eb096267cc96eae846.1581517026.git.michal.simek@xilinx.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
-
-On 22/02/2020 17:19, Manbing wrote:
-> Original content is obsolete. Which is based on kernel 2.4.0-prerelease.
-> Updating content according to kernel 5.5.1.
+On Wed, Feb 12, 2020 at 03:17:08PM +0100, Michal Simek wrote:
+> From: Shubhrajyoti Datta <shubhrajyoti.datta@xilinx.com>
 > 
-> Signed-off-by: Manbing <manbing3@gmail.com>
+> In probe, the driver checks for devm_clk_get return and print error
+> message in the failing case. However for -EPROBE_DEFER this message is
+> confusing so avoid it.
+> 
+> The similar change was done also by commit 28910cee898c
+> ("fpga: xilinx-pr-decoupler: Remove clk_get error message for probe defer")
+> 
+> Signed-off-by: Shubhrajyoti Datta <shubhrajyoti.datta@xilinx.com>
+> Signed-off-by: Michal Simek <michal.simek@xilinx.com>
 > ---
->   Documentation/virt/uml/UserModeLinux-HOWTO.txt | 42 +++++---------------------
->   1 file changed, 8 insertions(+), 34 deletions(-)
 > 
-> diff --git a/Documentation/virt/uml/UserModeLinux-HOWTO.txt b/Documentation/virt/uml/UserModeLinux-HOWTO.txt
-> index 87b80f5..08ee28d 100644
-> --- a/Documentation/virt/uml/UserModeLinux-HOWTO.txt
-> +++ b/Documentation/virt/uml/UserModeLinux-HOWTO.txt
-> @@ -1,6 +1,6 @@
->     User Mode Linux HOWTO
->     User Mode Linux Core Team
-> -  Mon Nov 18 14:16:16 EST 2002
-> +  Mon Feb 10 08:27:24 EST 2020
->   
->     This document describes the use and abuse of Jeff Dike's User Mode
->     Linux: a port of the Linux kernel as a normal Intel Linux process.
-> @@ -215,26 +215,17 @@
->   
->   
->     Compiling the user mode kernel is just like compiling any other
-> -  kernel.  Let's go through the steps, using 2.4.0-prerelease (current
-> +  kernel.  Let's go through the steps, using 5.5.1 (current
->     as of this writing) as an example:
->   
->   
-> -  1. Download the latest UML patch from
-> -
-> -     the download page <http://user-mode-linux.sourceforge.net/
-> -
-> -     In this example, the file is uml-patch-2.4.0-prerelease.bz2.
-> -
-> -
-> -  2. Download the matching kernel from your favourite kernel mirror,
-> +  1. Download the matching kernel from your favourite kernel mirror,
->        such as:
->   
-> -     ftp://ftp.ca.kernel.org/pub/kernel/v2.4/linux-2.4.0-prerelease.tar.bz2
-> -     <ftp://ftp.ca.kernel.org/pub/kernel/v2.4/linux-2.4.0-prerelease.tar.bz2>
-> -     .
-> +     wget https://cdn.kernel.org/pub/linux/kernel/v5.x/linux-5.5.1.tar.xz
->   
->   
-> -  3. Make a directory and unpack the kernel into it.
-> +  2. Make a directory and unpack the kernel into it.
->   
->   
->   
-> @@ -255,31 +246,14 @@
->   
->   
->          host%
-> -       tar -xzvf linux-2.4.0-prerelease.tar.bz2
-> -
-> -
-> -
-> -
-> -
-> -
-> -  4. Apply the patch using
-> -
-> -
-> -
-> -       host%
-> -       cd ~/uml/linux
-> -
-> -
-> -
-> -       host%
-> -       bzcat uml-patch-2.4.0-prerelease.bz2 | patch -p1
-> +       tar xvf linux-5.5.1.tar.xz
->   
->   
->   
->   
->   
->   
-> -  5. Run your favorite config; `make xconfig ARCH=um' is the most
-> +  3. Run your favorite config; `make xconfig ARCH=um' is the most
->        convenient.  `make config ARCH=um' and 'make menuconfig ARCH=um'
->        will work as well.  The defaults will give you a useful kernel.  If
->        you want to change something, go ahead, it probably won't hurt
-> @@ -293,7 +267,7 @@
->   
->   
->   
-> -  6. Finish with `make linux ARCH=um': the result is a file called
-> +  4. Finish with `make linux ARCH=um': the result is a file called
->        `linux' in the top directory of your source tree.
->   
->     Make sure that you don't build this kernel in /usr/src/linux.  On some
+>  drivers/fpga/zynq-fpga.c | 3 ++-
+>  1 file changed, 2 insertions(+), 1 deletion(-)
 > 
+> diff --git a/drivers/fpga/zynq-fpga.c b/drivers/fpga/zynq-fpga.c
+> index ee7765049607..07fa8d9ec675 100644
+> --- a/drivers/fpga/zynq-fpga.c
+> +++ b/drivers/fpga/zynq-fpga.c
+> @@ -583,7 +583,8 @@ static int zynq_fpga_probe(struct platform_device *pdev)
+>  
+>  	priv->clk = devm_clk_get(dev, "ref_clk");
+>  	if (IS_ERR(priv->clk)) {
+> -		dev_err(dev, "input clock not found\n");
+> +		if (PTR_ERR(priv->clk) != -EPROBE_DEFER)
+> +			dev_err(dev, "input clock not found\n");
+>  		return PTR_ERR(priv->clk);
+>  	}
+>  
+> -- 
+> 2.25.0
+> 
+Applied to for-next.
 
-I am rewriting the whole thing at the moment.
-
-I will publish the finished sections for review at some point during the 
-coming week.
-
-It needs to be rewritten from scratch, fixing a few things like this is 
-not enough.
-
-Brgds,
-
--- 
-Anton R. Ivanov
-
-Cambridge Greys Limited, England and Wales company No 10273661
-http://www.cambridgegreys.com/
+Thanks,
+Moritz
