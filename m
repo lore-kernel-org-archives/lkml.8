@@ -2,215 +2,130 @@ Return-Path: <SRS0=8jYG=4K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 553E6C35672
-	for <linux-kernel@archiver.kernel.org>; Sat, 22 Feb 2020 06:55:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8FFAAC35671
+	for <linux-kernel@archiver.kernel.org>; Sat, 22 Feb 2020 06:56:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2F6DF20707
-	for <linux-kernel@archiver.kernel.org>; Sat, 22 Feb 2020 06:55:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 60F9120707
+	for <linux-kernel@archiver.kernel.org>; Sat, 22 Feb 2020 06:56:16 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="dPURgE2L"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727205AbgBVGzo (ORCPT
+        id S1727244AbgBVG4O (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 22 Feb 2020 01:55:44 -0500
-Received: from out30-43.freemail.mail.aliyun.com ([115.124.30.43]:51352 "EHLO
-        out30-43.freemail.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727080AbgBVGzo (ORCPT
+        Sat, 22 Feb 2020 01:56:14 -0500
+Received: from mail-pf1-f194.google.com ([209.85.210.194]:39344 "EHLO
+        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727080AbgBVG4N (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 22 Feb 2020 01:55:44 -0500
-X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R841e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01e04420;MF=wenyang@linux.alibaba.com;NM=1;PH=DS;RN=9;SR=0;TI=SMTPD_---0TqaCEln_1582354539;
-Received: from IT-C02W23QPG8WN.local(mailfrom:wenyang@linux.alibaba.com fp:SMTPD_---0TqaCEln_1582354539)
-          by smtp.aliyun-inc.com(127.0.0.1);
-          Sat, 22 Feb 2020 14:55:40 +0800
-From:   Wen Yang <wenyang@linux.alibaba.com>
-Subject: Re: [PATCH] mm/slub: Detach node lock from counting free objects
-To:     Roman Gushchin <guro@fb.com>
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        Christoph Lameter <cl@linux.com>,
-        Pekka Enberg <penberg@kernel.org>,
-        David Rientjes <rientjes@google.com>,
-        Joonsoo Kim <iamjoonsoo.kim@lge.com>,
-        Xunlei Pang <xlpang@linux.alibaba.com>, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org
-References: <20200201031502.92218-1-wenyang@linux.alibaba.com>
- <20200212145247.bf89431272038de53dd9d975@linux-foundation.org>
- <b42f7daa-4aea-1cf8-5bbb-2cd5d48b4e9a@linux.alibaba.com>
- <20200218205312.GA3156@carbon>
- <cb36f3e5-c01c-a99d-9230-af52f806e227@linux.alibaba.com>
- <20200220154036.GA191388@carbon.dhcp.thefacebook.com>
-Message-ID: <98c84f23-0636-a877-a96d-d6e58d540aa4@linux.alibaba.com>
-Date:   Sat, 22 Feb 2020 14:55:39 +0800
-User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.14; rv:68.0)
- Gecko/20100101 Thunderbird/68.1.1
+        Sat, 22 Feb 2020 01:56:13 -0500
+Received: by mail-pf1-f194.google.com with SMTP id 84so2460198pfy.6;
+        Fri, 21 Feb 2020 22:56:13 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:date:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=P1m+5CvuP9WCDPeB2rpqQfl3ZDcAcnZi8bxAc6P+hRk=;
+        b=dPURgE2Lm4GaZRYbjxHDP2B3otEz+xUJEcA5i3LVcJjawKYEdOuzaftuH86Hvn+z2u
+         p/HVStoCr46D2r7vAdKIPPtDTw4Ri6UvouwJXuUMdRnjZR1uRFWRzplttwg9dEQVxU19
+         1NG0zIrux8y1zMOTymtU3BKJ784cQOyQRz5msCWx/YsIFqY961KYxuzX3vGbVwouhQQz
+         ik8FgDZLGYnmcK/wYxvm6zW8PFY+Z5VTTRXJXHAH5fTCVu26af795nwaVHxInjqxlJoD
+         Ypo8gnLH4AqjLeMSFFSB4nCkVEYNbTnuLJM9gTLI/IxYz+6WNlc5FJztHC4QepS+LQ0x
+         j1Ig==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:date:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=P1m+5CvuP9WCDPeB2rpqQfl3ZDcAcnZi8bxAc6P+hRk=;
+        b=pFFGm2OYdezz9RIN+NiokpC6oFQTjf9OFow8vQtWIj+gdssLPpLkI3TOqOZuwm4TQK
+         XsIW0URTXLn+HqYBJ7IPFPrRq6drpQI1HJxIt/Cc/6ntsclADWbbWgNkcVFtpl1hN6iB
+         qDTWnpIdPSqdyjaiZrJrnJjeU9oj8KBa8EEvh24iUNw+fVBEcqbkE0SXl1er8gGekshk
+         MZwFvNPHd749kbNvxAatidVyWnzuWDZ5Hd6z2i0eS9Ub10JtCQ9w3otpuRolZJ6+HeS1
+         7fmgLFGTFZ0JNn9VDvitX7SriNPIexrYmUL764IICEuUc8as5tquxf/5A9v5yZa7sGVU
+         drAg==
+X-Gm-Message-State: APjAAAUkumCcKlqbo6Zze+Bkro+jhTEBPHNY4NdYVv04XTDOXyizJsJq
+        8Oa+vO8heBsATRbUaHAOdw==
+X-Google-Smtp-Source: APXvYqwowHvFtBe6LpkACUng2s38E8ahG4DvKaIDLCfgUrVAiTcya7q3HI8cDbC0aT0bMh1HGsTSXA==
+X-Received: by 2002:aa7:9359:: with SMTP id 25mr41508430pfn.188.1582354573071;
+        Fri, 21 Feb 2020 22:56:13 -0800 (PST)
+Received: from madhuparna-HP-Notebook ([42.109.147.216])
+        by smtp.gmail.com with ESMTPSA id z127sm4456084pgb.64.2020.02.21.22.56.09
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Fri, 21 Feb 2020 22:56:12 -0800 (PST)
+From:   Madhuparna Bhowmik <madhuparnabhowmik10@gmail.com>
+X-Google-Original-From: Madhuparna Bhowmik <change_this_user_name@gmail.com>
+Date:   Sat, 22 Feb 2020 12:25:36 +0530
+To:     Jiri Pirko <jiri@resnulli.us>
+Cc:     madhuparnabhowmik10@gmail.com, jiri@mellanox.com,
+        davem@davemloft.net, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org, joel@joelfernandes.org,
+        frextrite@gmail.com,
+        linux-kernel-mentees@lists.linuxfoundation.org, paulmck@kernel.org
+Subject: Re: [PATCH] net: core: devlink.c: Hold devlink->lock from the
+ beginning of devlink_dpipe_table_register()
+Message-ID: <20200222065536.GA9143@madhuparna-HP-Notebook>
+References: <20200221180943.17415-1-madhuparnabhowmik10@gmail.com>
+ <20200222062640.GA2228@nanopsycho>
 MIME-Version: 1.0
-In-Reply-To: <20200220154036.GA191388@carbon.dhcp.thefacebook.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200222062640.GA2228@nanopsycho>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
-
-On 2020/2/20 11:40 下午, Roman Gushchin wrote:
-> On Thu, Feb 20, 2020 at 09:53:26PM +0800, Wen Yang wrote:
->>
->>
->> On 2020/2/19 4:53 上午, Roman Gushchin wrote:
->>> On Sun, Feb 16, 2020 at 12:15:54PM +0800, Wen Yang wrote:
->>>>
->>>>
->>>> On 2020/2/13 6:52 上午, Andrew Morton wrote:
->>>>> On Sat,  1 Feb 2020 11:15:02 +0800 Wen Yang <wenyang@linux.alibaba.com> wrote:
->>>>>
->>>>>> The lock, protecting the node partial list, is taken when couting the free
->>>>>> objects resident in that list. It introduces locking contention when the
->>>>>> page(s) is moved between CPU and node partial lists in allocation path
->>>>>> on another CPU. So reading "/proc/slabinfo" can possibily block the slab
->>>>>> allocation on another CPU for a while, 200ms in extreme cases. If the
->>>>>> slab object is to carry network packet, targeting the far-end disk array,
->>>>>> it causes block IO jitter issue.
->>>>>>
->>>>>> This fixes the block IO jitter issue by caching the total inuse objects in
->>>>>> the node in advance. The value is retrieved without taking the node partial
->>>>>> list lock on reading "/proc/slabinfo".
->>>>>>
->>>>>> ...
->>>>>>
->>>>>> @@ -1768,7 +1774,9 @@ static void free_slab(struct kmem_cache *s, struct page *page)
->>>>>>     static void discard_slab(struct kmem_cache *s, struct page *page)
->>>>>>     {
->>>>>> -	dec_slabs_node(s, page_to_nid(page), page->objects);
->>>>>> +	int inuse = page->objects;
->>>>>> +
->>>>>> +	dec_slabs_node(s, page_to_nid(page), page->objects, inuse);
->>>>>
->>>>> Is this right?  dec_slabs_node(..., page->objects, page->objects)?
->>>>>
->>>>> If no, we could simply pass the page* to inc_slabs_node/dec_slabs_node
->>>>> and save a function argument.
->>>>>
->>>>> If yes then why?
->>>>>
->>>>
->>>> Thanks for your comments.
->>>> We are happy to improve this patch based on your suggestions.
->>>>
->>>>
->>>> When the user reads /proc/slabinfo, in order to obtain the active_objs
->>>> information, the kernel traverses all slabs and executes the following code
->>>> snippet:
->>>> static unsigned long count_partial(struct kmem_cache_node *n,
->>>>                                           int (*get_count)(struct page *))
->>>> {
->>>>           unsigned long flags;
->>>>           unsigned long x = 0;
->>>>           struct page *page;
->>>>
->>>>           spin_lock_irqsave(&n->list_lock, flags);
->>>>           list_for_each_entry(page, &n->partial, slab_list)
->>>>                   x += get_count(page);
->>>>           spin_unlock_irqrestore(&n->list_lock, flags);
->>>>           return x;
->>>> }
->>>>
->>>> It may cause performance issues.
->>>>
->>>> Christoph suggested "you could cache the value in the userspace application?
->>>> Why is this value read continually?", But reading the /proc/slabinfo is
->>>> initiated by the user program. As a cloud provider, we cannot control user
->>>> behavior. If a user program inadvertently executes cat /proc/slabinfo, it
->>>> may affect other user programs.
->>>>
->>>> As Christoph said: "The count is not needed for any operations. Just for the
->>>> slabinfo output. The value has no operational value for the allocator
->>>> itself. So why use extra logic to track it in potentially performance
->>>> critical paths?"
->>>>
->>>> In this way, could we show the approximate value of active_objs in the
->>>> /proc/slabinfo?
->>>>
->>>> Based on the following information:
->>>> In the discard_slab() function, page->inuse is equal to page->total_objects;
->>>> In the allocate_slab() function, page->inuse is also equal to
->>>> page->total_objects (with one exception: for kmem_cache_node, page-> inuse
->>>> equals 1);
->>>> page->inuse will only change continuously when the obj is constantly
->>>> allocated or released. (This should be the performance critical path
->>>> emphasized by Christoph)
->>>>
->>>> When users query the global slabinfo information, we may use total_objects
->>>> to approximate active_objs.
->>>
->>> Well, from one point of view, it makes no sense, because the ratio between
->>> these two numbers is very meaningful: it's the slab utilization rate.
->>>
->>> On the other side, with enabled per-cpu partial lists active_objs has
->>> nothing to do with the reality anyway, so I agree with you, calling
->>> count_partial() is almost useless.
->>>
->>> That said, I wonder if the right thing to do is something like the patch below?
->>>
->>> Thanks!
->>>
->>> Roman
->>>
->>> --
->>>
->>> diff --git a/mm/slub.c b/mm/slub.c
->>> index 1d644143f93e..ba0505e75ecc 100644
->>> --- a/mm/slub.c
->>> +++ b/mm/slub.c
->>> @@ -2411,14 +2411,16 @@ static inline unsigned long node_nr_objs(struct kmem_cache_node *n)
->>>    static unsigned long count_partial(struct kmem_cache_node *n,
->>>                                           int (*get_count)(struct page *))
->>>    {
->>> -       unsigned long flags;
->>>           unsigned long x = 0;
->>> +#ifdef CONFIG_SLUB_CPU_PARTIAL
->>> +       unsigned long flags;
->>>           struct page *page;
->>>           spin_lock_irqsave(&n->list_lock, flags);
->>>           list_for_each_entry(page, &n->partial, slab_list)
->>>                   x += get_count(page);
->>>           spin_unlock_irqrestore(&n->list_lock, flags);
->>> +#endif
->>>           return x;
->>>    }
->>>    #endif /* CONFIG_SLUB_DEBUG || CONFIG_SYSFS */
->>>
->>
->> Hi Roman,
->>
->> Thanks for your comments.
->>
->> In the server scenario, SLUB_CPU_PARTIAL is turned on by default, and can
->> improve the performance of the cloud server, as follows:
+On Sat, Feb 22, 2020 at 07:26:40AM +0100, Jiri Pirko wrote:
+> Fri, Feb 21, 2020 at 07:09:43PM CET, madhuparnabhowmik10@gmail.com wrote:
+> >From: Madhuparna Bhowmik <madhuparnabhowmik10@gmail.com>
+> >
+> >devlink_dpipe_table_find() should be called under either
+> >rcu_read_lock() or devlink->lock. devlink_dpipe_table_register()
+> >calls devlink_dpipe_table_find() without holding the lock
+> >and acquires it later. Therefore hold the devlink->lock
+> >from the beginning of devlink_dpipe_table_register().
+> >
+> >Suggested-by: Jiri Pirko <jiri@mellanox.com>
+> >Signed-off-by: Madhuparna Bhowmik <madhuparnabhowmik10@gmail.com>
+> >---
+> > net/core/devlink.c | 3 ++-
+> > 1 file changed, 2 insertions(+), 1 deletion(-)
+> >
+> >diff --git a/net/core/devlink.c b/net/core/devlink.c
+> >index 3e8c94155d93..d54e1f156b6f 100644
+> >--- a/net/core/devlink.c
+> >+++ b/net/core/devlink.c
+> >@@ -6840,6 +6840,8 @@ int devlink_dpipe_table_register(struct devlink *devlink,
+> > {
+> > 	struct devlink_dpipe_table *table;
+> > 
+> >+	mutex_lock(&devlink->lock);
+> >+
+> > 	if (devlink_dpipe_table_find(&devlink->dpipe_table_list, table_name))
+> > 		return -EEXIST;
 > 
-> Hello, Wen!
+> You have to handle the error path.
+>
+Sure, I have sent the updated patch.
+
+Thank you,
+Madhuparna
 > 
-> That's exactly my point: if CONFIG_SLUB_CPU_PARTIAL is on, count_partial() is useless
-> anyway because the returned number is far from the reality. So if we define
-> active_objects == total_objects, as you basically suggest, we do not introduce any
-> regression. Actually I think it's even preferable to show the unrealistic uniform 100%
-> slab utilization rather than some very high but incorrect value.
-> 
-> And on real-time systems uncontrolled readings of /proc/slabinfo is less
-> of a concern, I hope.
-> 
-> Thank you!
-> 
-
-Great！
-We only need to correct a typo to achieve this goal, as follows:
-Change #ifdef CONFIG_SLUB_CPU_PARTIAL to #ifndef CONFIG_SLUB_CPU_PARTIAL
-
-We will continue testing and send the modified patch soon.
-
-Thank you very much.
-
-
+> > 
+> >@@ -6855,7 +6857,6 @@ int devlink_dpipe_table_register(struct devlink *devlink,
+> > 	table->priv = priv;
+> > 	table->counter_control_extern = counter_control_extern;
+> > 
+> >-	mutex_lock(&devlink->lock);
+> > 	list_add_tail_rcu(&table->list, &devlink->dpipe_table_list);
+> > 	mutex_unlock(&devlink->lock);
+> > 	return 0;
+> >-- 
+> >2.17.1
+> >
