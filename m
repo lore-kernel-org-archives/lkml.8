@@ -2,150 +2,102 @@ Return-Path: <SRS0=8jYG=4K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNWANTED_LANGUAGE_BODY,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3E300C35671
-	for <linux-kernel@archiver.kernel.org>; Sat, 22 Feb 2020 15:59:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7FE93C35666
+	for <linux-kernel@archiver.kernel.org>; Sat, 22 Feb 2020 15:59:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0F91220702
-	for <linux-kernel@archiver.kernel.org>; Sat, 22 Feb 2020 15:59:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 55613206EF
+	for <linux-kernel@archiver.kernel.org>; Sat, 22 Feb 2020 15:59:17 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="agovbtnV"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="PaHUwJq4"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728266AbgBVP7C (ORCPT
+        id S1728273AbgBVP7Q (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 22 Feb 2020 10:59:02 -0500
-Received: from fllv0016.ext.ti.com ([198.47.19.142]:54036 "EHLO
-        fllv0016.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727480AbgBVP7B (ORCPT
+        Sat, 22 Feb 2020 10:59:16 -0500
+Received: from mail-pf1-f193.google.com ([209.85.210.193]:46705 "EHLO
+        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727480AbgBVP7P (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 22 Feb 2020 10:59:01 -0500
-Received: from fllv0035.itg.ti.com ([10.64.41.0])
-        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id 01MFwwdC094152;
-        Sat, 22 Feb 2020 09:58:58 -0600
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1582387138;
-        bh=FZIbChqraScWDQp84GWjNyufMYe6dLz98wNOtdVdA9w=;
-        h=From:To:CC:Subject:Date:In-Reply-To:References;
-        b=agovbtnVY0axeM52R6T3EureLxertyc9nLmKiwf6Zxk8VpSXEYfuKzIKvkWCwiT9q
-         b9Gm17lLgojwIpR+dd2ps7RhNK3eL3hGesu5/oMI8F+FgWlxN3miNxhK/mw5Rvrvfi
-         wis79zlHdgHXNgGoX6OZLza1zyVbBvFXmQ2wecSI=
-Received: from DFLE115.ent.ti.com (dfle115.ent.ti.com [10.64.6.36])
-        by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTP id 01MFwwjw077271;
-        Sat, 22 Feb 2020 09:58:58 -0600
-Received: from DFLE107.ent.ti.com (10.64.6.28) by DFLE115.ent.ti.com
- (10.64.6.36) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Sat, 22
- Feb 2020 09:58:58 -0600
-Received: from fllv0040.itg.ti.com (10.64.41.20) by DFLE107.ent.ti.com
- (10.64.6.28) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
- Frontend Transport; Sat, 22 Feb 2020 09:58:58 -0600
-Received: from localhost (ileax41-snat.itg.ti.com [10.172.224.153])
-        by fllv0040.itg.ti.com (8.15.2/8.15.2) with ESMTP id 01MFwvGb076957;
-        Sat, 22 Feb 2020 09:58:57 -0600
-From:   Grygorii Strashko <grygorii.strashko@ti.com>
-To:     Roger Quadros <rogerq@ti.com>, Tero Kristo <t-kristo@ti.com>,
-        <netdev@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        Rob Herring <robh+dt@kernel.org>
-CC:     Peter Ujfalusi <peter.ujfalusi@ti.com>,
-        Sekhar Nori <nsekhar@ti.com>, <linux-kernel@vger.kernel.org>,
-        Grygorii Strashko <grygorii.strashko@ti.com>
-Subject: [PATCH net-next 9/9] arm64: dts: ti: k3-j721e-common-proc-board: add mcu cpsw nuss pinmux and phy defs
-Date:   Sat, 22 Feb 2020 17:57:52 +0200
-Message-ID: <20200222155752.22021-10-grygorii.strashko@ti.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20200222155752.22021-1-grygorii.strashko@ti.com>
-References: <20200222155752.22021-1-grygorii.strashko@ti.com>
+        Sat, 22 Feb 2020 10:59:15 -0500
+Received: by mail-pf1-f193.google.com with SMTP id k29so2913682pfp.13;
+        Sat, 22 Feb 2020 07:59:15 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=sender:date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=MzYWJC/9BXD1WcJiZNbRJwvggXBjntBidP31oxmGeNg=;
+        b=PaHUwJq4K+HFLDXfO1Z5bZEh6kWOpxogv6v8ULD2S1gYcatBK4xjBjfhgxRW+lWmqM
+         xIu9zYryFs3MJn1ZLGXsL4yEp+Dkc/FrgW7rNHm7w4OodydaijO7nCbiFVMk3ZpXUesK
+         65xbP2OsaiKj0EwwAVahvaiAEodZWw/a3bufhxv8AUko8rozxIMvUfPDQd1FoR/X7o59
+         q/teE6He2C8m10p1jizA87XD2wL2OTiSH6eYCDpGJTSsBroq6tK/H7wCgmLpC837TwM1
+         4PDFzjjBbbANNlg+8aixTwKVp/CnvDsehTmfQpQMeC8Ro6FNAaXdX+bMuUDQye0phbfw
+         0qYQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
+         :references:mime-version:content-disposition:in-reply-to:user-agent;
+        bh=MzYWJC/9BXD1WcJiZNbRJwvggXBjntBidP31oxmGeNg=;
+        b=nvfwiu4wGP0fJIZqQAL1gi8W5Yn7nRiv5L/QU2LjoGaCrptngq+oHIHluP8ZcB0uu0
+         uXxeJOEgi2A2clU/Fx89onUYE/cUGRpwfrNcsWrisBgt3VbphPJvebO2EhxtgFyf6fPr
+         OZvV7k0Xcd5D6O2EEsSgT1tBJcmLauLeYbzO1XHtUfvhywJNTwgKGXfDb5UEYz1JDur3
+         kuWawQRv4GPirdawL3YwNZh2jCp8BbITu4yUO5EAxC8ONAFngBrXtia8CYIb/ASyLJHg
+         9TfTqRFhBVW3Z47A4xSDB4Fv4tl9dcBDj4wN0ZEW1zIP8AVAuw+3MO3lp3jb+5P3IMGd
+         Xhdg==
+X-Gm-Message-State: APjAAAV7KVDNy9jjoRZeTioChHxoivGOUmJhmO5nN/S5poy+x5PLRCEZ
+        S5mO3Om4o475fszkCGuPaaM=
+X-Google-Smtp-Source: APXvYqyEz+GN8PLo+6IySOzOQPgQjSYLrs/jV2UQ9LMFOVV5+CRwabU8szMuA3LDBxz7UTR79PczgQ==
+X-Received: by 2002:aa7:979a:: with SMTP id o26mr43663603pfp.257.1582387155023;
+        Sat, 22 Feb 2020 07:59:15 -0800 (PST)
+Received: from localhost ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
+        by smtp.gmail.com with ESMTPSA id z16sm6747504pff.125.2020.02.22.07.59.14
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Sat, 22 Feb 2020 07:59:14 -0800 (PST)
+Date:   Sat, 22 Feb 2020 07:59:13 -0800
+From:   Guenter Roeck <linux@roeck-us.net>
+To:     Anson Huang <Anson.Huang@nxp.com>
+Cc:     wim@linux-watchdog.org, shawnguo@kernel.org,
+        s.hauer@pengutronix.de, kernel@pengutronix.de, festevam@gmail.com,
+        linux-watchdog@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        Linux-imx@nxp.com
+Subject: Re: [PATCH 2/3] watchdog: imx7ulp: Remove unused include of init.h
+Message-ID: <20200222155913.GA12613@roeck-us.net>
+References: <1582250430-8872-1-git-send-email-Anson.Huang@nxp.com>
+ <1582250430-8872-2-git-send-email-Anson.Huang@nxp.com>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1582250430-8872-2-git-send-email-Anson.Huang@nxp.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The TI J721E EVM base board has TI DP83867 PHY connected to external CPSW
-NUSS Port 1 in rgmii-rxid mode.
+On Fri, Feb 21, 2020 at 10:00:29AM +0800, Anson Huang wrote:
+> There is nothing in use from init.h, remove it.
+> 
+> Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
 
-Hence, add pinmux and Ethernet PHY configuration for TI j721e SoC MCU
-Gigabit Ethernet subsystem (MCU CPSW2G NUSS).
+Reviewed-by: Guenter Roeck <linux@roeck-us.net>
 
-Signed-off-by: Grygorii Strashko <grygorii.strashko@ti.com>
----
- .../dts/ti/k3-j721e-common-proc-board.dts     | 43 +++++++++++++++++++
- 1 file changed, 43 insertions(+)
-
-diff --git a/arch/arm64/boot/dts/ti/k3-j721e-common-proc-board.dts b/arch/arm64/boot/dts/ti/k3-j721e-common-proc-board.dts
-index 7a5c3d4adadd..98e5e17e3ff7 100644
---- a/arch/arm64/boot/dts/ti/k3-j721e-common-proc-board.dts
-+++ b/arch/arm64/boot/dts/ti/k3-j721e-common-proc-board.dts
-@@ -8,6 +8,7 @@
- #include "k3-j721e-som-p0.dtsi"
- #include <dt-bindings/gpio/gpio.h>
- #include <dt-bindings/input/input.h>
-+#include <dt-bindings/net/ti-dp83867.h>
- 
- / {
- 	chosen {
-@@ -128,6 +129,30 @@
- 			J721E_WKUP_IOPAD(0x38, PIN_INPUT, 0) /* (A23) MCU_OSPI1_LBCLKO */
- 		>;
- 	};
-+
-+	mcu_cpsw_pins_default: mcu_cpsw_pins_default {
-+		pinctrl-single,pins = <
-+			J721E_WKUP_IOPAD(0x0058, PIN_OUTPUT, 0) /* MCU_RGMII1_TX_CTL */
-+			J721E_WKUP_IOPAD(0x005c, PIN_INPUT, 0) /* MCU_RGMII1_RX_CTL */
-+			J721E_WKUP_IOPAD(0x0060, PIN_OUTPUT, 0) /* MCU_RGMII1_TD3 */
-+			J721E_WKUP_IOPAD(0x0064, PIN_OUTPUT, 0) /* MCU_RGMII1_TD2 */
-+			J721E_WKUP_IOPAD(0x0068, PIN_OUTPUT, 0) /* MCU_RGMII1_TD1 */
-+			J721E_WKUP_IOPAD(0x006c, PIN_OUTPUT, 0) /* MCU_RGMII1_TD0 */
-+			J721E_WKUP_IOPAD(0x0078, PIN_INPUT, 0) /* MCU_RGMII1_RD3 */
-+			J721E_WKUP_IOPAD(0x007c, PIN_INPUT, 0) /* MCU_RGMII1_RD2 */
-+			J721E_WKUP_IOPAD(0x0080, PIN_INPUT, 0) /* MCU_RGMII1_RD1 */
-+			J721E_WKUP_IOPAD(0x0084, PIN_INPUT, 0) /* MCU_RGMII1_RD0 */
-+			J721E_WKUP_IOPAD(0x0070, PIN_INPUT, 0) /* MCU_RGMII1_TXC */
-+			J721E_WKUP_IOPAD(0x0074, PIN_INPUT, 0) /* MCU_RGMII1_RXC */
-+		>;
-+	};
-+
-+	mcu_mdio_pins_default: mcu_mdio1_pins_default {
-+		pinctrl-single,pins = <
-+			J721E_WKUP_IOPAD(0x008c, PIN_OUTPUT, 0) /* MCU_MDIO0_MDC */
-+			J721E_WKUP_IOPAD(0x0088, PIN_INPUT, 0) /* MCU_MDIO0_MDIO */
-+		>;
-+	};
- };
- 
- &wkup_uart0 {
-@@ -429,3 +454,21 @@
- 		#gpio-cells = <2>;
- 	};
- };
-+
-+&mcu_cpsw {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&mcu_cpsw_pins_default &mcu_mdio_pins_default>;
-+};
-+
-+&davinci_mdio {
-+	phy0: ethernet-phy@0 {
-+		reg = <0>;
-+		ti,rx-internal-delay = <DP83867_RGMIIDCTL_2_00_NS>;
-+		ti,fifo-depth = <DP83867_PHYCR_FIFO_DEPTH_4_B_NIB>;
-+	};
-+};
-+
-+&cpsw_port1 {
-+	phy-mode = "rgmii-rxid";
-+	phy-handle = <&phy0>;
-+};
--- 
-2.17.1
-
+> ---
+>  drivers/watchdog/imx7ulp_wdt.c | 1 -
+>  1 file changed, 1 deletion(-)
+> 
+> diff --git a/drivers/watchdog/imx7ulp_wdt.c b/drivers/watchdog/imx7ulp_wdt.c
+> index 11b9e7c..7993c8c 100644
+> --- a/drivers/watchdog/imx7ulp_wdt.c
+> +++ b/drivers/watchdog/imx7ulp_wdt.c
+> @@ -4,7 +4,6 @@
+>   */
+>  
+>  #include <linux/clk.h>
+> -#include <linux/init.h>
+>  #include <linux/io.h>
+>  #include <linux/kernel.h>
+>  #include <linux/module.h>
