@@ -2,78 +2,63 @@ Return-Path: <SRS0=8jYG=4K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-14.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_RHS_DOB,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 07864C35671
-	for <linux-kernel@archiver.kernel.org>; Sat, 22 Feb 2020 17:03:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D6F3BC35673
+	for <linux-kernel@archiver.kernel.org>; Sat, 22 Feb 2020 17:04:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CCD6320707
-	for <linux-kernel@archiver.kernel.org>; Sat, 22 Feb 2020 17:03:57 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="PJmGn2jA"
+	by mail.kernel.org (Postfix) with ESMTP id AF15720702
+	for <linux-kernel@archiver.kernel.org>; Sat, 22 Feb 2020 17:04:32 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1582391072;
+	bh=ghATMoPNAeb5vOHjsk/bbPh+ZQ9R7ln7l2ZZF1sZpVg=;
+	h=From:To:Cc:Subject:Date:List-ID:From;
+	b=Q3TvEm5/jyr88Ks7MxDdZsG5xKRwESxK4SZXN5bbrFnSxMpcDpU7c89EoBeMPOcQd
+	 vOJRTcn3OVxY10CPTrLwCaSu6mWrN3LgjBe7kr4PuUdgWzw4PZdkNJCRX6ols18CEM
+	 fhQcXHI6fBvdMJjXydzlH7w3o0m0SlWYUDMW4NTQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726817AbgBVRD4 (ORCPT
+        id S1726859AbgBVREb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 22 Feb 2020 12:03:56 -0500
-Received: from mail-pf1-f193.google.com ([209.85.210.193]:38966 "EHLO
-        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726701AbgBVRD4 (ORCPT
+        Sat, 22 Feb 2020 12:04:31 -0500
+Received: from mail-pg1-f194.google.com ([209.85.215.194]:45836 "EHLO
+        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726387AbgBVREb (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 22 Feb 2020 12:03:56 -0500
-Received: by mail-pf1-f193.google.com with SMTP id 84so2980506pfy.6
-        for <linux-kernel@vger.kernel.org>; Sat, 22 Feb 2020 09:03:56 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=XO/sXJfBbNEYg2i8BDzFxjIgOlJB//vgC4CZTQZkcBA=;
-        b=PJmGn2jApbOjslqr8jSDJI6wgkUPvtJw+T1CKTeT7HgtsLJPEzjkhoAJt0d5kMaAg1
-         1wUpg4ZzCivc9q/Ma0ZnjuzyhAiYmmC83H1XBgFzQ8IlM25FN0pqjduiRNAijPxfVBKO
-         ZdwNLf++C3filmTuiH4b5cPn3Tb0PH7nKLMh8dqGwvrHpTY7tR3iUEOqZLIPJkhN5onm
-         GPlV8ugIs/Hp3NfC0ZcUTkmNAedBOgXOg/+UD+7j/jYwEo6Dl0ZLTIFoxNGsgM1h0rI8
-         OOdJBAYJaUYXVINQYY+xhJHOKvliSwRdQEshUKSZ2azB2KzwUNjPR3byMUa9afzAQztK
-         0klg==
+        Sat, 22 Feb 2020 12:04:31 -0500
+Received: by mail-pg1-f194.google.com with SMTP id b9so2645573pgk.12;
+        Sat, 22 Feb 2020 09:04:30 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
          :content-transfer-encoding;
-        bh=XO/sXJfBbNEYg2i8BDzFxjIgOlJB//vgC4CZTQZkcBA=;
-        b=P1b4gVj0w9gRto3XPqSPHGPrzW98nwPzMpoFo3eIIWNcvbD93e0tRaB0SS7npdUNlK
-         UetLTWJ8HptrmB1gprCZdysVNleArNbtTWhMHimgceRUEWiPeAn0if7pUI3BRjxodEOS
-         wx2G/NGH+MayIgMyd1QSIvIIpPYbh+oi9Doe5yaVJeE6dbtG2JuGyiGOFdIvVgQStVk8
-         JaJS4IEa3xfz8UfD8Bdi33aFvXw/KvHkTeQEiPX2JwWKNxZ68yDuySbrGeOs3PHzzzS5
-         10lqd5H+BncoLThrJ8BEKmROY9Tce2FCG0Yk8Gk9rQgI47xi9KzOmuaCehbYq2vm2is7
-         4Drw==
-X-Gm-Message-State: APjAAAXOv47WlQN2pxwuVRW45KEBdCU+j9awEfEu77l1ZA4/mJU42Kci
-        WSqo03WmpSy9opvEXuoKV0M=
-X-Google-Smtp-Source: APXvYqxOsT7MWSDKmWYMFdKJpmiJl9IDPRCtUX0zHZya0dBoV+yHgENdK086iULD2/pZnYfgXJinww==
-X-Received: by 2002:a63:5d47:: with SMTP id o7mr10454009pgm.327.1582391035691;
-        Sat, 22 Feb 2020 09:03:55 -0800 (PST)
-Received: from localhost.localdomain ([103.87.57.201])
-        by smtp.googlemail.com with ESMTPSA id z64sm7286220pfz.23.2020.02.22.09.03.51
+        bh=q4n6bs4f2I9HHkeFr8cnzxb3GG42Q6+aqDQfllFs8fw=;
+        b=EFJy7e3Eq30aIQGBqf/iwJEPsDkEACKnMwZhFjxrXWdljZzhdxE9Qjwrsquvi//fUL
+         fQ8sHy7uWtebXDKKEP3SIkj+1UwkTG5Hr5kdmo/YihVEVbptQEa/iC71Or4TxOiLPfZP
+         Oc58NbNS2P8B8bGPgTDd7m7IdClb6RfYqLqgWX0y4HBXava/33zDhVpHpIcPXV4ShFAB
+         SmoewSz/btGVstg5VhuiiIwxRbyInxM+x4R2RawGwm1hTboWMtZl2Lb9wcqau5Z1s7JX
+         Nx4LXkdgRcdFvxwV3uju0miTQHEjiZgZpLcF0pDBXlnAjhU+sRycHHBSCtr4M3quwE5P
+         c4Tw==
+X-Gm-Message-State: APjAAAV/tiZyt8VvKZG1/Jw5+zGnrQCoYGF48rhqxIBs3POPeenziRIt
+        4KdUwZLgsuODsxKeFR4Vg7Ql9h9EWgIBkA==
+X-Google-Smtp-Source: APXvYqyE0wlSP1pvJenNgGssttvJm4/4JyLPClTGGGNhQG+G2ctMAMNBtBcimn8VddB5YGpmEp4kug==
+X-Received: by 2002:a63:9c12:: with SMTP id f18mr41786345pge.397.1582391069907;
+        Sat, 22 Feb 2020 09:04:29 -0800 (PST)
+Received: from localhost ([2601:646:8a00:9810:5af3:56d9:f882:39d4])
+        by smtp.gmail.com with ESMTPSA id s206sm7232100pfs.100.2020.02.22.09.04.29
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 22 Feb 2020 09:03:55 -0800 (PST)
-From:   Amol Grover <frextrite@gmail.com>
-To:     Allison Randal <allison@lohutok.net>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Lu Baolu <baolu.lu@linux.intel.com>,
-        Thomas Gleixner <tglx@linutronix.de>, Qian Cai <cai@lca.pw>,
-        Deepa Dinamani <deepa.kernel@gmail.com>
-Cc:     linux-kernel@vger.kernel.org,
-        linux-kernel-mentees@lists.linuxfoundation.org,
-        Joel Fernandes <joel@joelfernandes.org>,
-        Madhuparna Bhowmik <madhuparnabhowmik10@gmail.com>,
-        "Paul E . McKenney" <paulmck@kernel.org>,
-        Amol Grover <frextrite@gmail.com>
-Subject: [PATCH] iommu: dmar: Fix RCU list debugging warnings
-Date:   Sat, 22 Feb 2020 22:33:33 +0530
-Message-Id: <20200222170333.10570-1-frextrite@gmail.com>
-X-Mailer: git-send-email 2.24.1
+        Sat, 22 Feb 2020 09:04:29 -0800 (PST)
+From:   Paul Burton <paulburton@kernel.org>
+To:     linux-mips@vger.kernel.org
+Cc:     linux-kernel@vger.kernel.org, Paul Burton <paulburton@kernel.org>,
+        Ralf Baechle <ralf@linux-mips.org>,
+        Thomas Bogendoerfer <tsbogend@alpha.franken.de>
+Subject: [PATCH v2] MAINTAINERS: Hand MIPS over to Thomas
+Date:   Sat, 22 Feb 2020 09:04:17 -0800
+Message-Id: <20200222170417.1531867-1-paulburton@kernel.org>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -81,55 +66,71 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-dmar_drhd_units is traversed using list_for_each_entry_rcu()
-outside of an RCU read side critical section but under the
-protection of dmar_global_lock. Hence add corresponding lockdep
-expression to silence the following false-positive warnings:
+My time with MIPS the company has reached its end, and so at best I'll
+have little time spend on maintaining arch/mips/.
 
-[    1.603975] =============================
-[    1.603976] WARNING: suspicious RCU usage
-[    1.603977] 5.5.4-stable #17 Not tainted
-[    1.603978] -----------------------------
-[    1.603980] drivers/iommu/intel-iommu.c:4769 RCU-list traversed in non-reader section!!
+Ralf last authored a patch over 2 years ago, the last time he committed
+one is even further back & activity was sporadic for a while before
+that. The reality is that he isn't active.
 
-[    1.603869] =============================
-[    1.603870] WARNING: suspicious RCU usage
-[    1.603872] 5.5.4-stable #17 Not tainted
-[    1.603874] -----------------------------
-[    1.603875] drivers/iommu/dmar.c:293 RCU-list traversed in non-reader section!!
+Having a new maintainer with time to do things properly will be
+beneficial all round. Thomas Bogendoerfer has been involved in MIPS
+development for a long time & has offered to step up as maintainer, so
+add Thomas and remove myself & Ralf from the MIPS entry.
 
-Tested-by: Madhuparna Bhowmik <madhuparnabhowmik10@gmail.com>
-Signed-off-by: Amol Grover <frextrite@gmail.com>
+Ralf already has an entry in CREDITS to honor his contributions, so this
+just adds one for me.
+
+Signed-off-by: Paul Burton <paulburton@kernel.org>
+Cc: Ralf Baechle <ralf@linux-mips.org>
+Cc: Thomas Bogendoerfer <tsbogend@alpha.franken.de>
+Cc: linux-mips@vger.kernel.org
 ---
- include/linux/dmar.h | 8 +++++---
- 1 file changed, 5 insertions(+), 3 deletions(-)
+Changes in v2:
+- Merge the 2 patches & add Thomas :)
+- Drop the link to Ralf's git tree
+---
+ CREDITS     | 5 +++++
+ MAINTAINERS | 6 ++----
+ 2 files changed, 7 insertions(+), 4 deletions(-)
 
-diff --git a/include/linux/dmar.h b/include/linux/dmar.h
-index f64ca27dc210..712be8bc6a7c 100644
---- a/include/linux/dmar.h
-+++ b/include/linux/dmar.h
-@@ -69,8 +69,9 @@ struct dmar_pci_notify_info {
- extern struct rw_semaphore dmar_global_lock;
- extern struct list_head dmar_drhd_units;
+diff --git a/CREDITS b/CREDITS
+index a97d3280a627..032b5994f476 100644
+--- a/CREDITS
++++ b/CREDITS
+@@ -567,6 +567,11 @@ D: Original author of Amiga FFS filesystem
+ S: Orlando, Florida
+ S: USA
  
--#define for_each_drhd_unit(drhd) \
--	list_for_each_entry_rcu(drhd, &dmar_drhd_units, list)
-+#define for_each_drhd_unit(drhd)					\
-+	list_for_each_entry_rcu(drhd, &dmar_drhd_units, list,		\
-+				dmar_rcu_check())
++N: Paul Burton
++E: paulburton@kernel.org
++W: https://pburton.com
++D: MIPS maintainer 2018-2020
++
+ N: Lennert Buytenhek
+ E: kernel@wantstofly.org
+ D: Original (2.4) rewrite of the ethernet bridging code
+diff --git a/MAINTAINERS b/MAINTAINERS
+index a0d86490c2c6..86e70a216ab1 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -11114,14 +11114,12 @@ S:	Maintained
+ F:	drivers/usb/image/microtek.*
  
- #define for_each_active_drhd_unit(drhd)					\
- 	list_for_each_entry_rcu(drhd, &dmar_drhd_units, list)		\
-@@ -81,7 +82,8 @@ extern struct list_head dmar_drhd_units;
- 		if (i=drhd->iommu, drhd->ignored) {} else
- 
- #define for_each_iommu(i, drhd)						\
--	list_for_each_entry_rcu(drhd, &dmar_drhd_units, list)		\
-+	list_for_each_entry_rcu(drhd, &dmar_drhd_units, list,		\
-+				dmar_rcu_check())			\
- 		if (i=drhd->iommu, 0) {} else 
- 
- static inline bool dmar_rcu_check(void)
+ MIPS
+-M:	Ralf Baechle <ralf@linux-mips.org>
+-M:	Paul Burton <paulburton@kernel.org>
++M:	Thomas Bogendoerfer <tsbogend@alpha.franken.de>
+ L:	linux-mips@vger.kernel.org
+ W:	http://www.linux-mips.org/
+-T:	git git://git.linux-mips.org/pub/scm/ralf/linux.git
+ T:	git git://git.kernel.org/pub/scm/linux/kernel/git/mips/linux.git
+ Q:	http://patchwork.linux-mips.org/project/linux-mips/list/
+-S:	Supported
++S:	Maintained
+ F:	Documentation/devicetree/bindings/mips/
+ F:	Documentation/mips/
+ F:	arch/mips/
 -- 
-2.24.1
+2.25.1
 
