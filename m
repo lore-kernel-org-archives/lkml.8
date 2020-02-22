@@ -2,124 +2,122 @@ Return-Path: <SRS0=8jYG=4K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AE65FC35671
-	for <linux-kernel@archiver.kernel.org>; Sat, 22 Feb 2020 19:08:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CB0EEC35666
+	for <linux-kernel@archiver.kernel.org>; Sat, 22 Feb 2020 19:42:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7BA0D206E2
-	for <linux-kernel@archiver.kernel.org>; Sat, 22 Feb 2020 19:08:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9B6C1206EF
+	for <linux-kernel@archiver.kernel.org>; Sat, 22 Feb 2020 19:42:34 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="NWNXQdKf"
+	dkim=pass (2048-bit key) header.d=googlemail.com header.i=@googlemail.com header.b="UMIrgNyD"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726828AbgBVTII (ORCPT
+        id S1726975AbgBVTmd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 22 Feb 2020 14:08:08 -0500
-Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:28818 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726550AbgBVTII (ORCPT
+        Sat, 22 Feb 2020 14:42:33 -0500
+Received: from mail-ed1-f65.google.com ([209.85.208.65]:36997 "EHLO
+        mail-ed1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726917AbgBVTmd (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 22 Feb 2020 14:08:08 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1582398486;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=l8Co0LvRp3ramNpVW3gFF8vKkokm29L15IzKuQ8ukBs=;
-        b=NWNXQdKf1K6da2Ths6s9CB6Gl17KaDXkUmxkV2O267owuNKaZUsJJkzrO/lZ55mM2l3Vk6
-        1xj1df9UwhaME0hohDSIstB0M51dPph7KLFoeomGJ63roJQ8GN4slBRitfWzbfyyCGxwEX
-        bL7ZxxDUOYjecDlj/Rnl9GoR3MDZl3E=
-Received: from mail-wr1-f72.google.com (mail-wr1-f72.google.com
- [209.85.221.72]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-19-opXK0u6WPtyh_hOAPgJVJw-1; Sat, 22 Feb 2020 14:08:04 -0500
-X-MC-Unique: opXK0u6WPtyh_hOAPgJVJw-1
-Received: by mail-wr1-f72.google.com with SMTP id z15so2877178wrw.0
-        for <linux-kernel@vger.kernel.org>; Sat, 22 Feb 2020 11:08:04 -0800 (PST)
+        Sat, 22 Feb 2020 14:42:33 -0500
+Received: by mail-ed1-f65.google.com with SMTP id t7so6826618edr.4
+        for <linux-kernel@vger.kernel.org>; Sat, 22 Feb 2020 11:42:32 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=googlemail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=jxXwmG/BoLt3/DuSIM90nibgbKIiQUu8A/JCVZrI5aE=;
+        b=UMIrgNyD6Xysh3omTsoSt+PHA41YQHPYK5cghpRVeHlz77TJ7VeDmYfWrDvhOmc1qI
+         jHj7IHIBLOuwbuN1YbltxeLjSG+oGJTz9lKiXLh0GMtSkLa3f1CwAu3mApEn9rY6zIWW
+         qnsZoJPouP5O0tOJ2Fg/kJvcf+p4ecUGrx6pfZfPCXo+4iInjRvgm14RUbXu0l9Elg0w
+         EN2Xi+CKWIITk0Rucsz09925+BtHNYF+NBKK8MSOemJ6EYCxNgqaNmXop5RgFYxkjfd9
+         I4IW9qJwpAxIZ8H6bp14M8B4losIzyNOG2OR4lniKVyn+PmOQhWAYji3fViIQWDlM1iY
+         MG9Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=l8Co0LvRp3ramNpVW3gFF8vKkokm29L15IzKuQ8ukBs=;
-        b=Z1kq/VaDPA7825rbuRdRRnmV7j0SFCDud1i+IcG+HHsLAC+Mxajl4bpPdHFq2oEWTO
-         r+9mcnb4aV8a4KfmKtmz4fgG43LYmDqEE9ekAJn/JgHEMbc7gLTTJW2HudMlOduTAejo
-         0c3fYCGd6wZoquynDO+rCsEz6AewaLUr1DrPe3QZPAHPBrA4yXnG988GbynTQ9qPJ5iR
-         30YizN3XnG6IG2LcuUl39WEGXg5/HQemDUlfnTMJIErV6cHwbMM8K3b6qgZwW2ZdKjBX
-         2qyQW3iu1EfQGvk1oc7qLMHEumcu5zwsE69D+hyrq6wepKWyuZI3YimPmKnwc5JAAyyh
-         q8DQ==
-X-Gm-Message-State: APjAAAVQQoWqubfiKJlT3mYT/3XTAnDxNBS38RY1DwcoohO1ZnEY/XTC
-        J5BWs9uUla7SIyyXE2AzM+NWjfc56tqH6ANlejDoc1EpbWgDAjsQzWLHl/kKZnsDjWfqr/82dmJ
-        VK4wFg8ucQKdFtFYxNl9a+tZG
-X-Received: by 2002:a1c:f21a:: with SMTP id s26mr11484208wmc.39.1582398483372;
-        Sat, 22 Feb 2020 11:08:03 -0800 (PST)
-X-Google-Smtp-Source: APXvYqwkw9wErSHWGp2TCjgAZ9qrXX7+D7Wndcr6dYdr8omT/WT5gNCQFRWrzivLVlKcFtBEcNGXcA==
-X-Received: by 2002:a1c:f21a:: with SMTP id s26mr11484193wmc.39.1582398483111;
-        Sat, 22 Feb 2020 11:08:03 -0800 (PST)
-Received: from redhat.com (bzq-79-178-2-214.red.bezeqint.net. [79.178.2.214])
-        by smtp.gmail.com with ESMTPSA id m68sm9604715wme.48.2020.02.22.11.08.00
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 22 Feb 2020 11:08:02 -0800 (PST)
-Date:   Sat, 22 Feb 2020 14:07:58 -0500
-From:   "Michael S. Tsirkin" <mst@redhat.com>
-To:     Halil Pasic <pasic@linux.ibm.com>
-Cc:     Christoph Hellwig <hch@lst.de>, Jason Wang <jasowang@redhat.com>,
-        Marek Szyprowski <m.szyprowski@samsung.com>,
-        Robin Murphy <robin.murphy@arm.com>,
-        linux-s390@vger.kernel.org,
-        virtualization@lists.linux-foundation.org,
-        linux-kernel@vger.kernel.org, iommu@lists.linux-foundation.org,
-        Christian Borntraeger <borntraeger@de.ibm.com>,
-        Janosch Frank <frankja@linux.ibm.com>,
-        Viktor Mihajlovski <mihajlov@linux.ibm.com>,
-        Cornelia Huck <cohuck@redhat.com>,
-        Ram Pai <linuxram@us.ibm.com>,
-        Thiago Jung Bauermann <bauerman@linux.ibm.com>,
-        David Gibson <david@gibson.dropbear.id.au>,
-        "Lendacky, Thomas" <Thomas.Lendacky@amd.com>,
-        Michael Mueller <mimu@linux.ibm.com>
-Subject: Re: [PATCH 2/2] virtio: let virtio use DMA API when guest RAM is
- protected
-Message-ID: <20200222140408-mutt-send-email-mst@kernel.org>
-References: <20200220160606.53156-1-pasic@linux.ibm.com>
- <20200220160606.53156-3-pasic@linux.ibm.com>
- <20200220161309.GB12709@lst.de>
- <20200221153340.4cdcde81.pasic@linux.ibm.com>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=jxXwmG/BoLt3/DuSIM90nibgbKIiQUu8A/JCVZrI5aE=;
+        b=SCFLqDZ7kye4L6fypgpNyVyIT/Qvo85LFpj4TEswJgDMC8WyjAOu89dYDvx6dXtpZZ
+         n4yNi2/C4zVHixRQVvOdFNrTpelX+ecrS6ORJRX3ro/3xHOnnHs+quQVcNH9nskZStJA
+         dUJhOeJRW9WE/QPWtNU1NxrIALrV2zdSdTk5g71iePeXnDpLG9VbEpetB3JcreYvUAIC
+         pkkW7g5TXwC+PsPwMg42Vxh9S+Qd6bD6fQf7kPF1Ah0xqHsoSsubxqTWx02rlqx6M9qJ
+         2R/+YwMzOS8NwPmJzQ6xeaYHTKeCYSOvJaCQzMe94Dgz38y2hS9eT1eKovFdj56axv8t
+         WMZg==
+X-Gm-Message-State: APjAAAWqEFBSV+VAS9A5ArSiiGvp6W4U039mFDZ8eNOMs8MUc1JH78/z
+        0j1eqGfF3FMHtbbW+0Hc8i/9tG8nNhywsEVQgDo=
+X-Google-Smtp-Source: APXvYqwfAkL5gcMkA/17+706cDRZPOl9loVVEPtWeFZTvqzB7twy3wihTpHS8mLjeiRkAbjzkyTYXKADIgMaiqwtzIM=
+X-Received: by 2002:a05:6402:b2e:: with SMTP id bo14mr41025601edb.13.1582400551407;
+ Sat, 22 Feb 2020 11:42:31 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200221153340.4cdcde81.pasic@linux.ibm.com>
+References: <20200112001623.2121227-1-martin.blumenstingl@googlemail.com>
+In-Reply-To: <20200112001623.2121227-1-martin.blumenstingl@googlemail.com>
+From:   Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+Date:   Sat, 22 Feb 2020 20:42:20 +0100
+Message-ID: <CAFBinCBLJyPxOBv0JNe7o0ME3rvPi+2Qv7Lwgw6T92f15ZXcxA@mail.gmail.com>
+Subject: Re: [PATCH RFT v2 0/3] devfreq fixes for panfrost
+To:     steven.price@arm.com
+Cc:     linux-kernel@vger.kernel.org, daniel@ffwll.ch, airlied@linux.ie,
+        robin.murphy@arm.com, linux-amlogic@lists.infradead.org,
+        linux-rockchip@lists.infradead.org, sudeep.holla@arm.com,
+        tomeu.vizoso@collabora.com, alyssa@rosenzweig.io,
+        dri-devel@lists.freedesktop.org, robh@kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Feb 21, 2020 at 03:33:40PM +0100, Halil Pasic wrote:
-> AFAIU you have a positive attitude towards the idea, that 
-> !F_VIRTIO_PLATFORM implies 'no DMA API is used by virtio' 
-> should be scrapped. 
-> 
-> I would like to accomplish that without adverse effects to virtio-ccw
-> (because caring for virtio-ccw is a part of job description).
-> 
-> Regards,
-> Halil
+Hi Steven,
 
-It is possible, in theory. IIRC the main challenge is that DMA API
-has overhead of indirect function calls even when all it
-does it return back the PA without changes. So that will lead to
-a measureable performance degradation. That might be fixable,
-possibly using some kind of logic along the lines of
-	if (iova is pa)
-		return pa
-	else
-		indirect call
+On Sun, Jan 12, 2020 at 1:16 AM Martin Blumenstingl
+<martin.blumenstingl@googlemail.com> wrote:
+>
+> These are a bunch of devfreq fixes for panfrost that came up in a
+> discussion with Robin Murphy during the code-review of the lima
+> devfreq patches: [0]
+>
+> I am only able to test patch #1 properly because the only boards with
+> panfrost GPU that I have are using an Amlogic SoC. We don't have
+> support for the OPP tables or dynamic clock changes there yet.
+> So patches #2 and #3 are compile-tested only.
+>
+>
+> Changes since v1 at [1]
+> - added Steven's Reviewed-by to patch #2 (thank you!)
+> - only use dev_pm_opp_put_regulators() to clean up in
+>   panfrost_devfreq_init() if regulators_opp_table is not NULL to fix
+>   a potential crash inside dev_pm_opp_put_regulators() as spotted by
+>   Steven Price (thank you!). While here, I also switched to "goto err"
+>   pattern to avoid lines with more than 80 characters.
+>
+> Known discussion topics (I have no way to test either of these, so I am
+> looking for help here):
+> - Steven Price reported the following message on his firefly (RK3288)
+>   board:
+>   "debugfs: Directory 'ffa30000.gpu-mali' with parent 'vdd_gpu' already
+>   present!"
+> - Robin Murphy suggested that patch #1 may not work once the OPP table
+>   for the GPU comes from SCMI
+>
+>
+> [0] https://patchwork.freedesktop.org/patch/346898/
+> [1] https://patchwork.freedesktop.org/series/71744/
+>
+>
+> Martin Blumenstingl (3):
+>   drm/panfrost: enable devfreq based the "operating-points-v2" property
+>   drm/panfrost: call dev_pm_opp_of_remove_table() in all error-paths
+>   drm/panfrost: Use the mali-supply regulator for control again
+I don't have time to work on these patches in the near future
+can you (or if someone else is interested then please speak up) please
+take these over? you are familiar with the panfrost devfreq code and
+you have at least one board where the GPU regulator actually has to
+change the voltage (which means you can test this properly; on Amlogic
+SoCs the GPU voltage is fixed across all frequencies).
 
-and for unmapping, we might need an API that says "unmap
-is a nop, safe to skip" so we don't maintain the
-dma address until unmap.
 
-
--- 
-MST
-
+Martin
