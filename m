@@ -6,76 +6,74 @@ X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 97747C35641
-	for <linux-kernel@archiver.kernel.org>; Sat, 22 Feb 2020 00:41:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 745A4C35641
+	for <linux-kernel@archiver.kernel.org>; Sat, 22 Feb 2020 00:42:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 68A7220722
-	for <linux-kernel@archiver.kernel.org>; Sat, 22 Feb 2020 00:41:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4510620722
+	for <linux-kernel@archiver.kernel.org>; Sat, 22 Feb 2020 00:42:01 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727326AbgBVAll (ORCPT
+        id S1727497AbgBVAmA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Feb 2020 19:41:41 -0500
-Received: from outgoing-auth-1.mit.edu ([18.9.28.11]:58454 "EHLO
-        outgoing.mit.edu" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726697AbgBVAlk (ORCPT
+        Fri, 21 Feb 2020 19:42:00 -0500
+Received: from zeniv.linux.org.uk ([195.92.253.2]:34010 "EHLO
+        ZenIV.linux.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726697AbgBVAmA (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Feb 2020 19:41:40 -0500
-Received: from callcc.thunk.org (guestnat-104-133-8-109.corp.google.com [104.133.8.109] (may be forged))
-        (authenticated bits=0)
-        (User authenticated as tytso@ATHENA.MIT.EDU)
-        by outgoing.mit.edu (8.14.7/8.12.4) with ESMTP id 01M0fXsg017796
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Fri, 21 Feb 2020 19:41:35 -0500
-Received: by callcc.thunk.org (Postfix, from userid 15806)
-        id 7717F4211EF; Fri, 21 Feb 2020 19:41:33 -0500 (EST)
-Date:   Fri, 21 Feb 2020 19:41:33 -0500
-From:   "Theodore Y. Ts'o" <tytso@mit.edu>
-To:     "Jason A. Donenfeld" <Jason@zx2c4.com>
-Cc:     Tony Luck <tony.luck@gmail.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] random: always use batched entropy for
- get_random_u{32,64}
-Message-ID: <20200222004133.GC873427@mit.edu>
-References: <20200216161836.1976-1-Jason@zx2c4.com>
- <20200216182319.GA54139@kroah.com>
- <CA+8MBbKScktNPWPgMqexp9gSX+y2FVnXTDJyyEMVsdONPBpFrQ@mail.gmail.com>
- <CA+8MBbKyRhipHsxb0nvV11Bvv8ypQ_gq5JR8ihfuG6JfBTnxZw@mail.gmail.com>
- <CAHmME9q1rnD5z2bENYhqnM5-XCD+E68nm2RrGRWXt8ntpvfezg@mail.gmail.com>
+        Fri, 21 Feb 2020 19:42:00 -0500
+Received: from viro by ZenIV.linux.org.uk with local (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1j5Irl-00Gerj-Gl; Sat, 22 Feb 2020 00:41:57 +0000
+Date:   Sat, 22 Feb 2020 00:41:57 +0000
+From:   Al Viro <viro@zeniv.linux.org.uk>
+To:     David Miller <davem@davemloft.net>
+Cc:     torvalds@linux-foundation.org, linux-arch@vger.kernel.org,
+        linux-kernel@vger.kernel.org, arnd@arndb.de
+Subject: Re: [RFC] regset ->get() API
+Message-ID: <20200222004157.GX23230@ZenIV.linux.org.uk>
+References: <CAHk-=whdat=wfwKh5rF3MuCbTxhcFwaGqmdsCXXv=H=kDERTOw@mail.gmail.com>
+ <20200221033016.GV23230@ZenIV.linux.org.uk>
+ <20200221185903.GA3929948@ZenIV.linux.org.uk>
+ <20200221.112244.1426580944977593272.davem@davemloft.net>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <CAHmME9q1rnD5z2bENYhqnM5-XCD+E68nm2RrGRWXt8ntpvfezg@mail.gmail.com>
+In-Reply-To: <20200221.112244.1426580944977593272.davem@davemloft.net>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Feb 21, 2020 at 09:08:19PM +0100, Jason A. Donenfeld wrote:
-> On Thu, Feb 20, 2020 at 11:29 PM Tony Luck <tony.luck@gmail.com> wrote:
-> >
-> > Also ... what's the deal with a spin_lock on a per-cpu structure?
-> >
-> >         batch = raw_cpu_ptr(&batched_entropy_u64);
-> >         spin_lock_irqsave(&batch->batch_lock, flags);
-> >         if (batch->position % ARRAY_SIZE(batch->entropy_u64) == 0) {
-> >                 extract_crng((u8 *)batch->entropy_u64);
-> >                 batch->position = 0;
-> >         }
-> >         ret = batch->entropy_u64[batch->position++];
-> >         spin_unlock_irqrestore(&batch->batch_lock, flags);
-> >
-> > Could we just disable interrupts and pre-emption around the entropy extraction?
+On Fri, Feb 21, 2020 at 11:22:44AM -0800, David Miller wrote:
+> From: Al Viro <viro@zeniv.linux.org.uk>
+> Date: Fri, 21 Feb 2020 18:59:03 +0000
 > 
-> Probably, yes... We can address this in a separate patch.
+> > Again, a couple of copy_regset_to_user(), but there's an additional
+> > twist - GETREGSET of 32bit task on sparc64 will use access_process_vm()
+> > when trying to fetch L0..L7/I0..I7 of other task, using copy_from_user()
+> > only when the target is equal to current.  For sparc32 this is not
+> > true - it's always copy_from_user() there, so the values it reports
+> > for those registers have nothing to do with the target process.  That
+> > part smells like a bug; by the time GETREGSET had been introduced
+> > sparc32 was not getting much attention, GETREGS worked just fine
+> > (not reporting L*/I* anyway) and for coredump it was accessing the
+> > caller's memory.  Not sure if anyone cares at that point...
+> 
+> That's definitely a bug and sparc64 is doing it correctly.
 
-No, we can't; take a look at invalidate_batched_entropy(), where we
-need invalidate all of per-cpu batched entropy from a single CPU after
-we have initialized the the CRNG.
+OK...  What does the comment in
+        case PTRACE_GETREGS64:
+                ret = copy_regset_to_user(child, view, REGSET_GENERAL,
+                                          1 * sizeof(u64),
+                                          15 * sizeof(u64),
+                                          &pregs->u_regs[0]);
+                if (!ret) {
+                        /* XXX doesn't handle 'y' register correctly XXX */
+                        ret = copy_regset_to_user(child, view, REGSET_GENERAL,
+                                                  32 * sizeof(u64),
+                                                  4 * sizeof(u64),
+                                                  &pregs->tstate);
+                }
+                break;   
+refer to?  The fact that you end up with 0 in pregs->y and Y in pregs->magic?
+In that case it's probably too late to do anything about that...
 
-Since most of the time after CRNG initialization, the spinlock for
-each CPU will be on that CPU's cacheline, the time to take and release
-the spinlock is not going to be material.
-
-					- Ted
-
+Or is that something different?
