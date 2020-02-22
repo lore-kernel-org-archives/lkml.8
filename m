@@ -2,266 +2,124 @@ Return-Path: <SRS0=8jYG=4K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F324CC35666
-	for <linux-kernel@archiver.kernel.org>; Sat, 22 Feb 2020 19:05:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AE65FC35671
+	for <linux-kernel@archiver.kernel.org>; Sat, 22 Feb 2020 19:08:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B8FF720702
-	for <linux-kernel@archiver.kernel.org>; Sat, 22 Feb 2020 19:05:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7BA0D206E2
+	for <linux-kernel@archiver.kernel.org>; Sat, 22 Feb 2020 19:08:09 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="UhHwTGpr"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="NWNXQdKf"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727024AbgBVTFj (ORCPT
+        id S1726828AbgBVTII (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 22 Feb 2020 14:05:39 -0500
-Received: from mail-pj1-f66.google.com ([209.85.216.66]:39755 "EHLO
-        mail-pj1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726758AbgBVTFj (ORCPT
+        Sat, 22 Feb 2020 14:08:08 -0500
+Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:28818 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726550AbgBVTII (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 22 Feb 2020 14:05:39 -0500
-Received: by mail-pj1-f66.google.com with SMTP id e9so2240795pjr.4;
-        Sat, 22 Feb 2020 11:05:38 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=+dsYkY6brW/7UfgFdDaX+h/ueyclzrR+0QSsM2U4Rlk=;
-        b=UhHwTGpr8XGGqFHQZaCGalRqVDMskiksqNnGCBkSGDIivHvN2N/lVC49aSAYyyIxtK
-         tvPfMWlGOAWyO+Yly+Gxb2wWcw8k3xzBLQtKuUbdW7hqYXJg07Q3qmIMGy3k5eUeWcjV
-         n6Kw7808y+/rN1edpm1s2RCBn0Poc764WXGqfoDHA6qD+w6Fe5fmKCdZp2N08jAyOF4g
-         4vlT/lfbSnxx7fUM9DXdJ19b5MrCX2kHlW9ROF7c2wLnFgG2LOfLcTkb5NmreDxEk1kr
-         455+REeVKBEA/NkPSgGTjyXQ/WrsIsVbRB2VuwTpEr2ER/SW0by4R6geN1CiI4ntgzAe
-         stNQ==
+        Sat, 22 Feb 2020 14:08:08 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1582398486;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=l8Co0LvRp3ramNpVW3gFF8vKkokm29L15IzKuQ8ukBs=;
+        b=NWNXQdKf1K6da2Ths6s9CB6Gl17KaDXkUmxkV2O267owuNKaZUsJJkzrO/lZ55mM2l3Vk6
+        1xj1df9UwhaME0hohDSIstB0M51dPph7KLFoeomGJ63roJQ8GN4slBRitfWzbfyyCGxwEX
+        bL7ZxxDUOYjecDlj/Rnl9GoR3MDZl3E=
+Received: from mail-wr1-f72.google.com (mail-wr1-f72.google.com
+ [209.85.221.72]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-19-opXK0u6WPtyh_hOAPgJVJw-1; Sat, 22 Feb 2020 14:08:04 -0500
+X-MC-Unique: opXK0u6WPtyh_hOAPgJVJw-1
+Received: by mail-wr1-f72.google.com with SMTP id z15so2877178wrw.0
+        for <linux-kernel@vger.kernel.org>; Sat, 22 Feb 2020 11:08:04 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:subject:to:cc:references:from:message-id
-         :date:user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=+dsYkY6brW/7UfgFdDaX+h/ueyclzrR+0QSsM2U4Rlk=;
-        b=YF62K8KqbTs7+ED3Sh9YlKc0JXAHOZhhBZjLs3aL3T+0pNYGbE+30RFUdWisxUvnA4
-         eoSGNaUT78lqPf2Ptf58cahqPQBRCBe1j0xqqdiNBBCCEE4GkfNTcTEIHg9a/U9q5/SV
-         ENVa5TbMPdvdhv+GeVUqEuKRipmDJZhl0lNzsR4mgf7EIN3DfyZlL2k/YZhJqdnKb4zW
-         lVpGxveAHfIhcs+1i67S125fKL+a+LJUPaGngleoo+qhwkOeQayfWHiOCgbNYdOPZQqW
-         XautrUuLqvlt8LtobgJEXqfmr5SNTsGWpdBUO6MtcO/LoWNmUBuf/uetkRSJaf11bBts
-         HwqA==
-X-Gm-Message-State: APjAAAWqcxJvtZxopCK1gVEuYIELDXEaHPGiuPJtXFOrB4iudr+ptWPu
-        BiRJdVEy91FXMGbDP94ZJW+kEKHQ
-X-Google-Smtp-Source: APXvYqzCfVyhOaX3HsugYN99XN5G6qcWREZk1WJzxvbmUJu+k+aASvfNw4Hkc3HkQXmILlrkVQxgiQ==
-X-Received: by 2002:a17:90a:c385:: with SMTP id h5mr10520064pjt.122.1582398337675;
-        Sat, 22 Feb 2020 11:05:37 -0800 (PST)
-Received: from server.roeck-us.net ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
-        by smtp.gmail.com with ESMTPSA id l21sm6790540pgo.33.2020.02.22.11.05.35
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sat, 22 Feb 2020 11:05:36 -0800 (PST)
-Subject: Re: [regression] nct6775 does not load in 5.4 and 5.5, bisected to
- b84398d6d7f90080
-To:     Martin Volf <martin.volf.42@gmail.com>
-Cc:     Mika Westerberg <mika.westerberg@linux.intel.com>,
-        Jean Delvare <jdelvare@suse.com>,
-        Wolfram Sang <wsa@the-dreams.de>, linux-i2c@vger.kernel.org,
-        linux-hwmon@vger.kernel.org,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-References: <CAM1AHpQ4196tyD=HhBu-2donSsuogabkfP03v1YF26Q7_BgvgA@mail.gmail.com>
- <1bdbac08-86f8-2a57-2b0d-8cd2beb2a1c0@roeck-us.net>
- <CAM1AHpSKFk9ZosQf=k-Rm2=EFqco7y4Lpfb7m07r=j_uJd4T0A@mail.gmail.com>
-From:   Guenter Roeck <linux@roeck-us.net>
-Message-ID: <85356d1a-f90d-e94d-16eb-1071d4e94753@roeck-us.net>
-Date:   Sat, 22 Feb 2020 11:05:35 -0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.1
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=l8Co0LvRp3ramNpVW3gFF8vKkokm29L15IzKuQ8ukBs=;
+        b=Z1kq/VaDPA7825rbuRdRRnmV7j0SFCDud1i+IcG+HHsLAC+Mxajl4bpPdHFq2oEWTO
+         r+9mcnb4aV8a4KfmKtmz4fgG43LYmDqEE9ekAJn/JgHEMbc7gLTTJW2HudMlOduTAejo
+         0c3fYCGd6wZoquynDO+rCsEz6AewaLUr1DrPe3QZPAHPBrA4yXnG988GbynTQ9qPJ5iR
+         30YizN3XnG6IG2LcuUl39WEGXg5/HQemDUlfnTMJIErV6cHwbMM8K3b6qgZwW2ZdKjBX
+         2qyQW3iu1EfQGvk1oc7qLMHEumcu5zwsE69D+hyrq6wepKWyuZI3YimPmKnwc5JAAyyh
+         q8DQ==
+X-Gm-Message-State: APjAAAVQQoWqubfiKJlT3mYT/3XTAnDxNBS38RY1DwcoohO1ZnEY/XTC
+        J5BWs9uUla7SIyyXE2AzM+NWjfc56tqH6ANlejDoc1EpbWgDAjsQzWLHl/kKZnsDjWfqr/82dmJ
+        VK4wFg8ucQKdFtFYxNl9a+tZG
+X-Received: by 2002:a1c:f21a:: with SMTP id s26mr11484208wmc.39.1582398483372;
+        Sat, 22 Feb 2020 11:08:03 -0800 (PST)
+X-Google-Smtp-Source: APXvYqwkw9wErSHWGp2TCjgAZ9qrXX7+D7Wndcr6dYdr8omT/WT5gNCQFRWrzivLVlKcFtBEcNGXcA==
+X-Received: by 2002:a1c:f21a:: with SMTP id s26mr11484193wmc.39.1582398483111;
+        Sat, 22 Feb 2020 11:08:03 -0800 (PST)
+Received: from redhat.com (bzq-79-178-2-214.red.bezeqint.net. [79.178.2.214])
+        by smtp.gmail.com with ESMTPSA id m68sm9604715wme.48.2020.02.22.11.08.00
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sat, 22 Feb 2020 11:08:02 -0800 (PST)
+Date:   Sat, 22 Feb 2020 14:07:58 -0500
+From:   "Michael S. Tsirkin" <mst@redhat.com>
+To:     Halil Pasic <pasic@linux.ibm.com>
+Cc:     Christoph Hellwig <hch@lst.de>, Jason Wang <jasowang@redhat.com>,
+        Marek Szyprowski <m.szyprowski@samsung.com>,
+        Robin Murphy <robin.murphy@arm.com>,
+        linux-s390@vger.kernel.org,
+        virtualization@lists.linux-foundation.org,
+        linux-kernel@vger.kernel.org, iommu@lists.linux-foundation.org,
+        Christian Borntraeger <borntraeger@de.ibm.com>,
+        Janosch Frank <frankja@linux.ibm.com>,
+        Viktor Mihajlovski <mihajlov@linux.ibm.com>,
+        Cornelia Huck <cohuck@redhat.com>,
+        Ram Pai <linuxram@us.ibm.com>,
+        Thiago Jung Bauermann <bauerman@linux.ibm.com>,
+        David Gibson <david@gibson.dropbear.id.au>,
+        "Lendacky, Thomas" <Thomas.Lendacky@amd.com>,
+        Michael Mueller <mimu@linux.ibm.com>
+Subject: Re: [PATCH 2/2] virtio: let virtio use DMA API when guest RAM is
+ protected
+Message-ID: <20200222140408-mutt-send-email-mst@kernel.org>
+References: <20200220160606.53156-1-pasic@linux.ibm.com>
+ <20200220160606.53156-3-pasic@linux.ibm.com>
+ <20200220161309.GB12709@lst.de>
+ <20200221153340.4cdcde81.pasic@linux.ibm.com>
 MIME-Version: 1.0
-In-Reply-To: <CAM1AHpSKFk9ZosQf=k-Rm2=EFqco7y4Lpfb7m07r=j_uJd4T0A@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200221153340.4cdcde81.pasic@linux.ibm.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2/22/20 9:55 AM, Martin Volf wrote:
-> Hello,
+On Fri, Feb 21, 2020 at 03:33:40PM +0100, Halil Pasic wrote:
+> AFAIU you have a positive attitude towards the idea, that 
+> !F_VIRTIO_PLATFORM implies 'no DMA API is used by virtio' 
+> should be scrapped. 
 > 
-> On Sat, Feb 22, 2020 at 4:41 PM Guenter Roeck <linux@roeck-us.net> wrote:
->> On 2/22/20 3:13 AM, Martin Volf wrote:
->>> hardware monitoring sensors NCT6796D on my Asus PRIME Z390M-PLUS
->>> motherboard with Intel i7-9700 CPU don't work with 5.4 and newer linux
->>> kernels, the driver nct6775 does not load.
->>>
->>> It is working OK in version 5.3. I have used almost all released stable
->>> versions from 5.3.8 to 5.3.16; I didn't try older kernels.
-> ...
->> My wild guess would be that the i801 driver is a bit aggressive with
->> reserving memory spaces, but I don't immediately see what it does
->> differently in that regard after the offending patch. Does it work
->> if you unload the i2c_i801 driver first ?
+> I would like to accomplish that without adverse effects to virtio-ccw
+> (because caring for virtio-ccw is a part of job description).
 > 
-> Yes, after unloading i2c_i801, the nct6775 works. There is definitely
-> some sort of race between these two drivers. Mostly i2c_i801 wins, but it
-> happened twice that nct6775 got automatically loaded just before i2c_i801
-> and the sensors worked.
-> 
->> You could also try to compare the output of /proc/ioports with
->> the old and the new kernel, and see if the IO address space used
->> by nct6775 in v5.3 is assigned to the i801 driver (or some other
->> driver, such as the watchdog driver) in v5.4.
-> 
-> This is diff of /proc/ioports in 5.3.18 with loaded nct6775 and in
-> 5.4.21 without:
-> 
-> --- ioports-5.3.18
-> +++ ioports-5.4.21
-> @@ -2,6 +2,7 @@
->     0000-001f : dma1
->     0020-0021 : pic1
->     002e-0031 : iTCO_wdt
-> +    002e-0031 : iTCO_wdt
->     0040-0043 : timer0
->     0050-0053 : timer1
->     0060-0060 : keyboard
-> @@ -14,11 +15,10 @@
->     00f0-00ff : fpu
->       00f0-00f0 : PNP0C04:00
->     0290-029f : pnp 00:01
-> -    0295-0296 : nct6775
-> -      0295-0296 : nct6775
->     03c0-03df : vga+
->     03f8-03ff : serial
->     0400-041f : iTCO_wdt
-> +    0400-041f : iTCO_wdt
->     0680-069f : pnp 00:03
->   0cf8-0cff : PCI conf1
->   0d00-ffff : PCI Bus 0000:00
-> 
->> If you are into hacking the kernel, you could also add some
->> debug messages into the nct6775 driver to find out where exactly
->> it fails. If that helps, maybe we can then add those messages into
->> into the driver source to help others if this is observed again.
-> 
-> I have added some pr_info calls, the diff is at the and of this massage.
-> 
-> "bad" dmesg (i.e. i2c_i801 loaded before modprobe nct6775)
-> 
-> [ 1631.975392] nct6775: ### sensors_nct6775_init:
-> platform_driver_register() -> 0x0
-> [ 1631.975396] nct6775: ### nct6775_find: superio_enter(0x2e) -> 0xfffffff0
-> [ 1631.975417] nct6775: ### nct6775_find: superio_enter(0x4e) -> 0x0
-> [ 1631.975455] nct6775: ### nct6775_find: (val & SIO_ID_MASK) == 0xffff
-> 
-> "good" dmesg (rmmod i2c_i801; modprobe nct6775)
-> 
-> [ 1730.751188] nct6775: ### sensors_nct6775_init:
-> platform_driver_register() -> 0x0
-> [ 1730.751213] nct6775: ### nct6775_find: superio_enter(0x2e) -> 0x0
-> [ 1730.751251] nct6775: ### nct6775_find: (val & SIO_ID_MASK) == 0xd42b
-> [ 1730.751359] nct6775: Found NCT6798D or compatible chip at 0x2e:0x290
-> [ 1730.751367] ACPI Warning: SystemIO range
-> 0x0000000000000295-0x0000000000000296 conflicts with OpRegion
-> 0x0000000000000290-0x0000000000000299 (\AMW0.SHWM)
-> (20190816/utaddress-204)
-> [ 1730.751379] ACPI: This conflict may cause random problems and
-> system instability
-> [ 1730.751381] ACPI: If an ACPI driver is available for this device,
-> you should use it instead of the native driver
-> [ 1730.751431] nct6775: ### nct6775_probe: platform_get_resource() -> 0xfdac7b00
-> [ 1730.751434] nct6775: ### nct6775_probe: devm_request_region() -> 0
-> [ 1730.751554] nct6775 nct6775.656: Invalid temperature source 28 at
-> index 0, source register 0x100, temp register 0x73
-> [ 1730.751588] nct6775 nct6775.656: Invalid temperature source 28 at
-> index 1, source register 0x200, temp register 0x75
-> [ 1730.751686] nct6775 nct6775.656: Invalid temperature source 28 at
-> index 4, source register 0x900, temp register 0x7b
-> [ 1730.751865] nct6775: ### nct6775_probe: superio_enter(0x2e) -> 0x0
-> [ 1730.753685] nct6775: ### nct6775_find: superio_enter(0x4e) -> 0x0
-> [ 1730.753722] nct6775: ### nct6775_find: (val & SIO_ID_MASK) == 0xffff
-> 
-> So 0x2e is the resource the two drivers are fighting for.
-> 
+> Regards,
+> Halil
 
-Yes, and it should not do that, since the range can be used to access
-different segments of the same chip from multiple drivers. This region
-should only be reserved temporarily, using request_muxed_region() when
-needed and release_region() after the access is complete. Either case,
-I don't immediately see why that region would be interesting for the
-iTCO watchdog driver.
+It is possible, in theory. IIRC the main challenge is that DMA API
+has overhead of indirect function calls even when all it
+does it return back the PA without changes. So that will lead to
+a measureable performance degradation. That might be fixable,
+possibly using some kind of logic along the lines of
+	if (iova is pa)
+		return pa
+	else
+		indirect call
 
-Can you add some debugging into the i801 driver to see what memory regions
-it reserves, and how it gets to reserve 0x2e..0x31 ? That range really
-doesn't make any sense to me.
+and for unmapping, we might need an API that says "unmap
+is a nop, safe to skip" so we don't maintain the
+dma address until unmap.
 
-Thanks,
-Guenter
 
-> I have created /etc/modprobe.d/nct6775-before-i2c_i801.conf with
-> install i2c_i801 /sbin/modprobe nct6775; /sbin/modprobe
-> --ignore-install i2c_i801
-> 
-> and it is working. I'm OK with this workaround, but I can do more
-> experiments if you instruct me what to try.
-> 
-> Thanks,
-> 
-> Martin
-> 
-> --8<--
-> --- nct6775.c.orig
-> +++ nct6775.c
-> @@ -3806,10 +3806,13 @@ static int nct6775_probe(struct platform
->          int num_attr_groups = 0;
-> 
->          res = platform_get_resource(pdev, IORESOURCE_IO, 0);
-> +pr_info("### nct6775_probe: platform_get_resource() -> 0x%x\n", res);
->          if (!devm_request_region(&pdev->dev, res->start, IOREGION_LENGTH,
->                                   DRVNAME))
->                  return -EBUSY;
-> 
-> +pr_info("### nct6775_probe: devm_request_region() -> 0");
-> +
->          data = devm_kzalloc(&pdev->dev, sizeof(struct nct6775_data),
->                              GFP_KERNEL);
->          if (!data)
-> @@ -4318,6 +4321,7 @@ static int nct6775_probe(struct platform
-> 
->                  break;
->          default:
-> +pr_info("### nct6775_probe: data->kind == 0x%x\n", data->kind);
->                  return -ENODEV;
->          }
->          data->have_in = BIT(data->in_num) - 1;
-> @@ -4503,6 +4507,7 @@ static int nct6775_probe(struct platform
->          nct6775_init_device(data);
-> 
->          err = superio_enter(sio_data->sioreg);
-> +pr_info("### nct6775_probe: superio_enter(0x%x) -> 0x%x\n",
-> sio_data->sioreg, err);
->          if (err)
->                  return err;
-> 
-> @@ -4729,6 +4734,7 @@ static int __init nct6775_find(int sioad
->          int addr;
-> 
->          err = superio_enter(sioaddr);
-> +pr_info("### nct6775_find: superio_enter(0x%x) -> 0x%x\n", sioaddr, err);
->          if (err)
->                  return err;
-> 
-> @@ -4737,6 +4743,7 @@ static int __init nct6775_find(int sioad
->          if (force_id && val != 0xffff)
->                  val = force_id;
-> 
-> +pr_info("### nct6775_find: (val & SIO_ID_MASK) == 0x%04x\n", val);
->          switch (val & SIO_ID_MASK) {
->          case SIO_NCT6106_ID:
->                  sio_data->kind = nct6106;
-> @@ -4831,6 +4838,7 @@ static int __init sensors_nct6775_init(v
->          int sioaddr[2] = { 0x2e, 0x4e };
-> 
->          err = platform_driver_register(&nct6775_driver);
-> +pr_info("### sensors_nct6775_init: platform_driver_register() -> 0x%x\n", err);
->          if (err)
->                  return err;
-> 
+-- 
+MST
 
