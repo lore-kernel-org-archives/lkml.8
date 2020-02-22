@@ -2,69 +2,106 @@ Return-Path: <SRS0=8jYG=4K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 29411C35669
-	for <linux-kernel@archiver.kernel.org>; Sat, 22 Feb 2020 00:15:15 +0000 (UTC)
-Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 008AC207FD
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F3A7DC35670
 	for <linux-kernel@archiver.kernel.org>; Sat, 22 Feb 2020 00:15:14 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582330515;
-	bh=J6Cc2gYzrzZWbZXyYPz+cfI+3s684n4iE2XGXd/G8nQ=;
-	h=Subject:From:In-Reply-To:References:Date:To:Cc:List-ID:From;
-	b=QfwAoqBsLGaZF0amZgz1JAQaGvOrePx84gEksKNIoKgBGFaNr5PPy65HUjUe/93YV
-	 GdfdpkjYsnDU4iRSHSYS0nIANjb1+So6VFkunaVPg8NOZFK7xt+bvklqDIGwcGQcgn
-	 X8KM/eWR0Mymz2m4iS0mIJsauvGYFy0lzj2p2A0E=
+Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
+	by mail.kernel.org (Postfix) with ESMTP id D4FDE24650
+	for <linux-kernel@archiver.kernel.org>; Sat, 22 Feb 2020 00:15:14 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726877AbgBVAPO (ORCPT
+        id S1726791AbgBVAPM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Feb 2020 19:15:14 -0500
-Received: from mail.kernel.org ([198.145.29.99]:38158 "EHLO mail.kernel.org"
+        Fri, 21 Feb 2020 19:15:12 -0500
+Received: from inva021.nxp.com ([92.121.34.21]:38572 "EHLO inva021.nxp.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726525AbgBVAPN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Feb 2020 19:15:13 -0500
-Subject: Re: [GIT PULL] arm64 fixes for -rc3
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1582330513;
-        bh=J6Cc2gYzrzZWbZXyYPz+cfI+3s684n4iE2XGXd/G8nQ=;
-        h=From:In-Reply-To:References:Date:To:Cc:From;
-        b=xy3ImlQNzf6cj2X1XyP0B4fbtrR4IDe/zaCFTlMkxXLh6E0kIVdCO0ZuyDWvDpmFE
-         4+BfgmUiyVaqDx3pMYly87f+N6+pHOQz00NhzYxD+Ug7TSlDWQjLR6OgkI5TFLR0aA
-         Tg/715V1qyakIYhW5an6piohWtmFbG8TplZWbOL8=
-From:   pr-tracker-bot@kernel.org
-In-Reply-To: <20200221160126.GB19330@willie-the-truck>
-References: <20200221160126.GB19330@willie-the-truck>
-X-PR-Tracked-List-Id: <linux-kernel.vger.kernel.org>
-X-PR-Tracked-Message-Id: <20200221160126.GB19330@willie-the-truck>
-X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/arm64/linux.git
- tags/arm64-fixes
-X-PR-Tracked-Commit-Id: dcde237319e626d1ec3c9d8b7613032f0fd4663a
-X-PR-Merge-Tree: torvalds/linux.git
-X-PR-Merge-Refname: refs/heads/master
-X-PR-Merge-Commit-Id: 63f01d852c75366fb4d15ce217d12c48b69a4bcc
-Message-Id: <158233051320.15315.16901615049793407371.pr-tracker-bot@kernel.org>
-Date:   Sat, 22 Feb 2020 00:15:13 +0000
-To:     Will Deacon <will@kernel.org>
-Cc:     torvalds@linux-foundation.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        catalin.marinas@arm.com, kernel-team@android.com
+        id S1726613AbgBVAPL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 21 Feb 2020 19:15:11 -0500
+Received: from inva021.nxp.com (localhost [127.0.0.1])
+        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id 7AA602084BB;
+        Sat, 22 Feb 2020 01:15:09 +0100 (CET)
+Received: from invc005.ap-rdc01.nxp.com (invc005.ap-rdc01.nxp.com [165.114.16.14])
+        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id 6661F200E2F;
+        Sat, 22 Feb 2020 01:14:53 +0100 (CET)
+Received: from localhost.localdomain (shlinux2.ap.freescale.net [10.192.224.44])
+        by invc005.ap-rdc01.nxp.com (Postfix) with ESMTP id DA4A5402B0;
+        Sat, 22 Feb 2020 08:14:39 +0800 (SGT)
+From:   Anson Huang <Anson.Huang@nxp.com>
+To:     robh+dt@kernel.org, mark.rutland@arm.com, shawnguo@kernel.org,
+        s.hauer@pengutronix.de, kernel@pengutronix.de, festevam@gmail.com,
+        catalin.marinas@arm.com, will@kernel.org, rui.zhang@intel.com,
+        daniel.lezcano@linaro.org, amit.kucheria@verdurent.com,
+        aisheng.dong@nxp.com, linux@roeck-us.net,
+        srinivas.kandagatla@linaro.org, krzk@kernel.org,
+        fugang.duan@nxp.com, peng.fan@nxp.com, daniel.baluta@nxp.com,
+        bjorn.andersson@linaro.org, olof@lixom.net, dinguyen@kernel.org,
+        leonard.crestez@nxp.com, marcin.juszkiewicz@linaro.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-pm@vger.kernel.org
+Cc:     Linux-imx@nxp.com
+Subject: [PATCH V16 1/5] dt-bindings: fsl: scu: add thermal binding
+Date:   Sat, 22 Feb 2020 08:08:48 +0800
+Message-Id: <1582330132-13461-1-git-send-email-Anson.Huang@nxp.com>
+X-Mailer: git-send-email 2.7.4
+X-Virus-Scanned: ClamAV using ClamSMTP
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The pull request you sent on Fri, 21 Feb 2020 16:01:26 +0000:
+NXP i.MX8QXP is an ARMv8 SoC with a Cortex-M4 core inside as
+system controller, the system controller is in charge of system
+power, clock and thermal sensors etc. management, Linux kernel
+has to communicate with system controller via MU (message unit)
+IPC to get temperature from thermal sensors, this patch adds
+binding doc for i.MX system controller thermal driver.
 
-> git://git.kernel.org/pub/scm/linux/kernel/git/arm64/linux.git tags/arm64-fixes
+Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
+Reviewed-by: Rob Herring <robh@kernel.org>
+Reviewed-by: Dong Aisheng <aisheng.dong@nxp.com>
+---
+No change.
+---
+ .../devicetree/bindings/arm/freescale/fsl,scu.txt        | 16 ++++++++++++++++
+ 1 file changed, 16 insertions(+)
 
-has been merged into torvalds/linux.git:
-https://git.kernel.org/torvalds/c/63f01d852c75366fb4d15ce217d12c48b69a4bcc
-
-Thank you!
-
+diff --git a/Documentation/devicetree/bindings/arm/freescale/fsl,scu.txt b/Documentation/devicetree/bindings/arm/freescale/fsl,scu.txt
+index e07735a8..7f42cc3 100644
+--- a/Documentation/devicetree/bindings/arm/freescale/fsl,scu.txt
++++ b/Documentation/devicetree/bindings/arm/freescale/fsl,scu.txt
+@@ -166,6 +166,17 @@ Required properties:
+               followed by "fsl,imx-sc-key";
+ - linux,keycodes: See Documentation/devicetree/bindings/input/keys.txt
+ 
++Thermal bindings based on SCU Message Protocol
++------------------------------------------------------------
++
++Required properties:
++- compatible:			Should be :
++				  "fsl,imx8qxp-sc-thermal"
++				followed by "fsl,imx-sc-thermal";
++
++- #thermal-sensor-cells:	See Documentation/devicetree/bindings/thermal/thermal.txt
++				for a description.
++
+ Example (imx8qxp):
+ -------------
+ aliases {
+@@ -238,6 +249,11 @@ firmware {
+ 			compatible = "fsl,imx8qxp-sc-wdt", "fsl,imx-sc-wdt";
+ 			timeout-sec = <60>;
+ 		};
++
++		tsens: thermal-sensor {
++			compatible = "fsl,imx8qxp-sc-thermal", "fsl,imx-sc-thermal";
++			#thermal-sensor-cells = <1>;
++		};
+ 	};
+ };
+ 
 -- 
-Deet-doot-dot, I am a bot.
-https://korg.wiki.kernel.org/userdoc/prtracker
+2.7.4
+
