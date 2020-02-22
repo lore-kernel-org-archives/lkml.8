@@ -2,142 +2,76 @@ Return-Path: <SRS0=8jYG=4K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-17.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT,
-	USER_IN_DEF_DKIM_WL autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-14.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1,
+	USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0B4EAC3566F
-	for <linux-kernel@archiver.kernel.org>; Sat, 22 Feb 2020 00:33:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A21B1C35669
+	for <linux-kernel@archiver.kernel.org>; Sat, 22 Feb 2020 00:33:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D520E2071E
-	for <linux-kernel@archiver.kernel.org>; Sat, 22 Feb 2020 00:33:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 758C82072C
+	for <linux-kernel@archiver.kernel.org>; Sat, 22 Feb 2020 00:33:51 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="l11FZQE6"
+	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="bA+nrq1S"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727074AbgBVAdX (ORCPT
+        id S1727283AbgBVAdu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Feb 2020 19:33:23 -0500
-Received: from mail-vk1-f201.google.com ([209.85.221.201]:36002 "EHLO
-        mail-vk1-f201.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726710AbgBVAdW (ORCPT
+        Fri, 21 Feb 2020 19:33:50 -0500
+Received: from linux.microsoft.com ([13.77.154.182]:48818 "EHLO
+        linux.microsoft.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726907AbgBVAdt (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Feb 2020 19:33:22 -0500
-Received: by mail-vk1-f201.google.com with SMTP id j25so1634319vkn.3
-        for <linux-kernel@vger.kernel.org>; Fri, 21 Feb 2020 16:33:22 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=date:message-id:mime-version:subject:from:to:cc;
-        bh=OqxJ7uFM6QirldzKomGS86nipI+w+uqyhp1pa4CeHPE=;
-        b=l11FZQE6V8RxsI2VoZDUgCeS8uBjfKYdayCEjmfzGtSLpL+FmxZ12lPTOzKCEfFbgy
-         i9RNdPM+q2UeJsmzcwJQa8Tdae6rMQ1bWasVph50yejryH/Z4YlYOamP8H36JjznclMB
-         rRxgBQsRfVrRFTr53kaiZNL9waTw0Z1B+N/1i/LhIf8913anKqsBkbYbVsCS+3juliBc
-         +A1vV4p69SfiPwOt7gTBQTVB0/SFzNAiGhCy+77xg3zuq71zedQcuVoe6O+/bxMHZxdt
-         cwPi9zKra5Usswsy5LnwTkbBsVUXVbHNSA9r+MS78gOA6xfnZTh5svOReq/s5ixaRwva
-         RITA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:message-id:mime-version:subject:from:to:cc;
-        bh=OqxJ7uFM6QirldzKomGS86nipI+w+uqyhp1pa4CeHPE=;
-        b=cuA/3Cu9vg3gM2/jKdoCp8wZ7b7N3s5W3ZtJ0n2fRl7wJ8x9d4pcOdhy8KWkXUeJfz
-         ORUm7cKnFOxd4uoKmcVYYCX5xgTbU1NTsBEJSgBlOewmOTqbGnBoaLrbYoMgl61GNnEL
-         U2onH7YMb84T4O+pC8UkLBGk3Ij4v/FXNb+2Ck+iT1V9u6OewO2ldtbCqhFtcyWr3D46
-         YA7Rke+tigIjRnESZ8UmV0eh4DWwNf+PtKvarmQBr20tE46wqPgWoBnLGPvySoGhPbbn
-         B7wO+xtD5Y4/kiYVRmtlQPQTQSvUBt39KLaY/FNtzUqBjJYzqfJXF4BAH3o7hd1kRa2A
-         lKsw==
-X-Gm-Message-State: APjAAAW45fqK99ceM/JI2y20HEVAeaSH8C5jC5w55Y8iZayOd/MpuoVW
-        lsae1D/jZsNdSuLECtRN58jnGLBidXyNq0M=
-X-Google-Smtp-Source: APXvYqzJyj0dXwKd98P0iXGqbwlTWwwl2aamL/zqvJJ4fLf8Lv9XUkRWOo26SYLGT5N3TT5VWhNkJbfmt7hgqfyB
-X-Received: by 2002:a1f:6344:: with SMTP id x65mr18208843vkb.26.1582331601314;
- Fri, 21 Feb 2020 16:33:21 -0800 (PST)
-Date:   Fri, 21 Feb 2020 16:33:11 -0800
-Message-Id: <20200222003311.106837-1-jkardatzke@google.com>
-Mime-Version: 1.0
-X-Mailer: git-send-email 2.25.0.265.gbab2e86ba0-goog
-Subject: [PATCH v2] media: venus: support frame rate control
-From:   Jeffrey Kardatzke <jkardatzke@google.com>
-To:     linux-media@vger.kernel.org
-Cc:     Stanimir Varbanov <stanimir.varbanov@linaro.org>,
-        Andy Gross <agross@kernel.org>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Jeffrey Kardatzke <jkardatzke@google.com>
-Content-Type: text/plain; charset="UTF-8"
+        Fri, 21 Feb 2020 19:33:49 -0500
+Received: from [10.131.86.135] (unknown [131.107.159.7])
+        by linux.microsoft.com (Postfix) with ESMTPSA id D54A820B9C02;
+        Fri, 21 Feb 2020 16:33:48 -0800 (PST)
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com D54A820B9C02
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
+        s=default; t=1582331628;
+        bh=xnkJ8j7rW1UeoqnfcEgj4o2S9dzSeeSCkJXJe0LZ8yQ=;
+        h=To:From:Subject:Cc:Date:From;
+        b=bA+nrq1ShJaDqvp0a6Z9OJ0V+Du2QSphzBo48XQzbizr4wxYFFDr3s3XrIbUUMiHE
+         q6MFCOkbsHDAPEINVSYTtyyLEDLocJJ/cohFkAC5/vw4M6W5wYnCAHfjqRT9ChPK3p
+         a4fmVg/QA0LeYI73Q/g2lCO7RG7i0XUUXduTR62g=
+To:     netdev@vger.kernel.org, linux-kernel@vger.kernel.org
+From:   Jordan Hand <jorhand@linux.microsoft.com>
+Subject: net/kgdb: Taking another crack at implementing kgdboe
+Cc:     jason.wessel@windriver.com, daniel.thompson@linaro.org,
+        dianders@chromium.org
+Message-ID: <ccd03920-375a-2e65-cc28-d00f3297cb67@linux.microsoft.com>
+Date:   Fri, 21 Feb 2020 16:33:48 -0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.1
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add encoder control for enabling/disabling frame rate control via
-V4L2_CID_MPEG_VIDEO_FRAME_RC_ENABLE. It is enabled by default.
+Hey folks,
 
-Signed-off-by: Jeffrey Kardatzke <jkardatzke@google.com>
----
- drivers/media/platform/qcom/venus/core.h       | 1 +
- drivers/media/platform/qcom/venus/venc.c       | 4 +++-
- drivers/media/platform/qcom/venus/venc_ctrls.c | 8 +++++++-
- 3 files changed, 11 insertions(+), 2 deletions(-)
+I have been scouring patches from around 2005-2008 related to kgdboe
+(kgdb over ethernet) and I am interested in taking a shot at getting it
+into the mainline kernel.
 
-diff --git a/drivers/media/platform/qcom/venus/core.h b/drivers/media/platform/qcom/venus/core.h
-index 11585fb3cae3..2b0649ffbd92 100644
---- a/drivers/media/platform/qcom/venus/core.h
-+++ b/drivers/media/platform/qcom/venus/core.h
-@@ -187,6 +187,7 @@ struct venc_controls {
- 	u32 bitrate_mode;
- 	u32 bitrate;
- 	u32 bitrate_peak;
-+	u32 rc_enable;
- 
- 	u32 h264_i_period;
- 	u32 h264_entropy_mode;
-diff --git a/drivers/media/platform/qcom/venus/venc.c b/drivers/media/platform/qcom/venus/venc.c
-index 453edf966d4f..56079c9d9900 100644
---- a/drivers/media/platform/qcom/venus/venc.c
-+++ b/drivers/media/platform/qcom/venus/venc.c
-@@ -731,7 +731,9 @@ static int venc_set_properties(struct venus_inst *inst)
- 	if (ret)
- 		return ret;
- 
--	if (ctr->bitrate_mode == V4L2_MPEG_VIDEO_BITRATE_MODE_VBR)
-+	if (!ctr->rc_enable)
-+		rate_control = HFI_RATE_CONTROL_OFF;
-+	else if (ctr->bitrate_mode == V4L2_MPEG_VIDEO_BITRATE_MODE_VBR)
- 		rate_control = HFI_RATE_CONTROL_VBR_CFR;
- 	else
- 		rate_control = HFI_RATE_CONTROL_CBR_CFR;
-diff --git a/drivers/media/platform/qcom/venus/venc_ctrls.c b/drivers/media/platform/qcom/venus/venc_ctrls.c
-index 877c0b3299e9..0572a00b8380 100644
---- a/drivers/media/platform/qcom/venus/venc_ctrls.c
-+++ b/drivers/media/platform/qcom/venus/venc_ctrls.c
-@@ -199,6 +199,9 @@ static int venc_op_s_ctrl(struct v4l2_ctrl *ctrl)
- 		}
- 		mutex_unlock(&inst->lock);
- 		break;
-+	case V4L2_CID_MPEG_VIDEO_FRAME_RC_ENABLE:
-+		ctr->rc_enable = ctrl->val;
-+		break;
- 	default:
- 		return -EINVAL;
- 	}
-@@ -214,7 +217,7 @@ int venc_ctrl_init(struct venus_inst *inst)
- {
- 	int ret;
- 
--	ret = v4l2_ctrl_handler_init(&inst->ctrl_handler, 30);
-+	ret = v4l2_ctrl_handler_init(&inst->ctrl_handler, 31);
- 	if (ret)
- 		return ret;
- 
-@@ -351,6 +354,9 @@ int venc_ctrl_init(struct venus_inst *inst)
- 	v4l2_ctrl_new_std(&inst->ctrl_handler, &venc_ctrl_ops,
- 			  V4L2_CID_MPEG_VIDEO_FORCE_KEY_FRAME, 0, 0, 0, 0);
- 
-+	v4l2_ctrl_new_std(&inst->ctrl_handler, &venc_ctrl_ops,
-+		V4L2_CID_MPEG_VIDEO_FRAME_RC_ENABLE, 0, 1, 1, 1);
-+
- 	ret = inst->ctrl_handler.error;
- 	if (ret)
- 		goto err;
--- 
-2.25.0.265.gbab2e86ba0-goog
+I found an implementation from Tom Rini in 2005[1] and an out of tree
+implementation[2].
 
+So I have a couple questions before I dive in:
+
+1. Is anyone actively working on this? From lkml archives it appears no
+but I thought I'd ask.
+2. Does anyone have an objection to this feature? From my reading it
+seems that the reason it was never merged was due to reliability issues
+but I just want to double check that people don't see some larger issue.
+
+I don't have 100% of my time to devote to this so it will likely take me
+a while but this is something I would like to see in the upstream kernel
+so I thought I'd give it a try.
+
+[1] https://lkml.org/lkml/2005/7/29/321
+[2] https://github.com/sysprogs/kgdboe
