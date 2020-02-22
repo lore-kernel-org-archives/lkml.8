@@ -2,135 +2,114 @@ Return-Path: <SRS0=8jYG=4K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_RHS_DOB,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D6F3BC35673
-	for <linux-kernel@archiver.kernel.org>; Sat, 22 Feb 2020 17:04:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9CABBC35666
+	for <linux-kernel@archiver.kernel.org>; Sat, 22 Feb 2020 17:05:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AF15720702
-	for <linux-kernel@archiver.kernel.org>; Sat, 22 Feb 2020 17:04:32 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582391072;
-	bh=ghATMoPNAeb5vOHjsk/bbPh+ZQ9R7ln7l2ZZF1sZpVg=;
-	h=From:To:Cc:Subject:Date:List-ID:From;
-	b=Q3TvEm5/jyr88Ks7MxDdZsG5xKRwESxK4SZXN5bbrFnSxMpcDpU7c89EoBeMPOcQd
-	 vOJRTcn3OVxY10CPTrLwCaSu6mWrN3LgjBe7kr4PuUdgWzw4PZdkNJCRX6ols18CEM
-	 fhQcXHI6fBvdMJjXydzlH7w3o0m0SlWYUDMW4NTQ=
+	by mail.kernel.org (Postfix) with ESMTP id 7560620702
+	for <linux-kernel@archiver.kernel.org>; Sat, 22 Feb 2020 17:05:36 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel-dk.20150623.gappssmtp.com header.i=@kernel-dk.20150623.gappssmtp.com header.b="Ro51XH06"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726859AbgBVREb (ORCPT
+        id S1726826AbgBVRFf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 22 Feb 2020 12:04:31 -0500
-Received: from mail-pg1-f194.google.com ([209.85.215.194]:45836 "EHLO
-        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726387AbgBVREb (ORCPT
+        Sat, 22 Feb 2020 12:05:35 -0500
+Received: from mail-pl1-f195.google.com ([209.85.214.195]:38948 "EHLO
+        mail-pl1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726387AbgBVRFe (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 22 Feb 2020 12:04:31 -0500
-Received: by mail-pg1-f194.google.com with SMTP id b9so2645573pgk.12;
-        Sat, 22 Feb 2020 09:04:30 -0800 (PST)
+        Sat, 22 Feb 2020 12:05:34 -0500
+Received: by mail-pl1-f195.google.com with SMTP id g6so2204758plp.6
+        for <linux-kernel@vger.kernel.org>; Sat, 22 Feb 2020 09:05:33 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=kernel-dk.20150623.gappssmtp.com; s=20150623;
+        h=to:cc:from:subject:message-id:date:user-agent:mime-version
+         :content-language:content-transfer-encoding;
+        bh=Ar43/pIEDTuzXkqZAaJR3YM1BZfZyVYtyTj0Sx88Fts=;
+        b=Ro51XH06xPU2FxAhIjNX5OSNDvjJkYl9w9QUX4+23kDBCaGRB2hd3uxOay0J5dfcaX
+         4JBzuFgRWGnO0Of8H7FYnllj4jj3s14+f/vQ7L+nf5vh70/6EJ3QKrz9ir+H8K1D7MMn
+         S3vLxRNvsTXuCOZdF4/lCFIcLxLdWrdx0khle71GBGuTKIuBtnqUsYwwMVM4C4/u9MHi
+         FgXJ01bzGAXgUixp+fNoK51Fg0XzXtqbAHwVA2izAovyf5q785LmWBNQ2F3jiZSU0ZJZ
+         5GSihRmZAY5hix+RxNZiHTfkCJgLX22TQwsuooIrgJxKbiEOlZv6KFZp5JdqF0i9tgOY
+         a+eA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=q4n6bs4f2I9HHkeFr8cnzxb3GG42Q6+aqDQfllFs8fw=;
-        b=EFJy7e3Eq30aIQGBqf/iwJEPsDkEACKnMwZhFjxrXWdljZzhdxE9Qjwrsquvi//fUL
-         fQ8sHy7uWtebXDKKEP3SIkj+1UwkTG5Hr5kdmo/YihVEVbptQEa/iC71Or4TxOiLPfZP
-         Oc58NbNS2P8B8bGPgTDd7m7IdClb6RfYqLqgWX0y4HBXava/33zDhVpHpIcPXV4ShFAB
-         SmoewSz/btGVstg5VhuiiIwxRbyInxM+x4R2RawGwm1hTboWMtZl2Lb9wcqau5Z1s7JX
-         Nx4LXkdgRcdFvxwV3uju0miTQHEjiZgZpLcF0pDBXlnAjhU+sRycHHBSCtr4M3quwE5P
-         c4Tw==
-X-Gm-Message-State: APjAAAV/tiZyt8VvKZG1/Jw5+zGnrQCoYGF48rhqxIBs3POPeenziRIt
-        4KdUwZLgsuODsxKeFR4Vg7Ql9h9EWgIBkA==
-X-Google-Smtp-Source: APXvYqyE0wlSP1pvJenNgGssttvJm4/4JyLPClTGGGNhQG+G2ctMAMNBtBcimn8VddB5YGpmEp4kug==
-X-Received: by 2002:a63:9c12:: with SMTP id f18mr41786345pge.397.1582391069907;
-        Sat, 22 Feb 2020 09:04:29 -0800 (PST)
-Received: from localhost ([2601:646:8a00:9810:5af3:56d9:f882:39d4])
-        by smtp.gmail.com with ESMTPSA id s206sm7232100pfs.100.2020.02.22.09.04.29
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 22 Feb 2020 09:04:29 -0800 (PST)
-From:   Paul Burton <paulburton@kernel.org>
-To:     linux-mips@vger.kernel.org
-Cc:     linux-kernel@vger.kernel.org, Paul Burton <paulburton@kernel.org>,
-        Ralf Baechle <ralf@linux-mips.org>,
-        Thomas Bogendoerfer <tsbogend@alpha.franken.de>
-Subject: [PATCH v2] MAINTAINERS: Hand MIPS over to Thomas
-Date:   Sat, 22 Feb 2020 09:04:17 -0800
-Message-Id: <20200222170417.1531867-1-paulburton@kernel.org>
-X-Mailer: git-send-email 2.25.1
+        h=x-gm-message-state:to:cc:from:subject:message-id:date:user-agent
+         :mime-version:content-language:content-transfer-encoding;
+        bh=Ar43/pIEDTuzXkqZAaJR3YM1BZfZyVYtyTj0Sx88Fts=;
+        b=AqzsBdxVEq/PNVRh50tf1DtB8FpcL8O7sh/RaeQGW95JJoHR+YuIhDjiLbJD5EXIeE
+         C0+kxADKB0C4p/psWZQRRI1A44loQhb0/bXIG9NntyQVtaATzyhLjhRNrn0I/z1ODV0a
+         eeRlW09RUeQupSGg8BxsZ6EPwEShh4SVzIjebHcAoMT4xRepsCELy617wAQ0cnuyp0YQ
+         XeHwP/b3B0YWr1zw4q1FLodcZLeQdZdUe6PcTZX45HoUtJPW+0KpcVHpK+7hk8HuQYpJ
+         CbfQh/lW1m+1H4cXVin74KJxPDKnKfSfzlZ0HRHlzDdSR5le7CfXqD3spvJEXbgRhKqF
+         M3CQ==
+X-Gm-Message-State: APjAAAW3gZ/nsgFE30wm4DNUYZuQxv9X3L3cOigWbET6WWbjsyYy445x
+        C2l9zzAxsG4/kLLPl8Mf6THYt3wnvjM=
+X-Google-Smtp-Source: APXvYqy4MdZ9sr7ap6ZA6+hwn3NQQbOGOOi/z1blhPzoD8hhWy8LO5RhzOkrYC3+nJWQWCqFh4JzMw==
+X-Received: by 2002:a17:90a:8001:: with SMTP id b1mr10064966pjn.39.1582391132757;
+        Sat, 22 Feb 2020 09:05:32 -0800 (PST)
+Received: from ?IPv6:2605:e000:100e:8c61:a99e:da38:67d8:36ae? ([2605:e000:100e:8c61:a99e:da38:67d8:36ae])
+        by smtp.gmail.com with ESMTPSA id c15sm6786491pfo.137.2020.02.22.09.05.31
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Sat, 22 Feb 2020 09:05:32 -0800 (PST)
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     io-uring <io-uring@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+From:   Jens Axboe <axboe@kernel.dk>
+Subject: [GIT PULL] io_uring fixes for 5.6-rc3
+Message-ID: <fdbadf53-2421-d0a7-8883-059c34608cd0@kernel.dk>
+Date:   Sat, 22 Feb 2020 09:05:30 -0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.1
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-My time with MIPS the company has reached its end, and so at best I'll
-have little time spend on maintaining arch/mips/.
+Hi Linus,
 
-Ralf last authored a patch over 2 years ago, the last time he committed
-one is even further back & activity was sporadic for a while before
-that. The reality is that he isn't active.
+Been mostly away this week, but here's a small collection of fixes that
+were queued up for -rc3. This pull request contains:
 
-Having a new maintainer with time to do things properly will be
-beneficial all round. Thomas Bogendoerfer has been involved in MIPS
-development for a long time & has offered to step up as maintainer, so
-add Thomas and remove myself & Ralf from the MIPS entry.
+- Remove unnecessary NULL check (Dan)
 
-Ralf already has an entry in CREDITS to honor his contributions, so this
-just adds one for me.
+- Missing io_req_cancelled() call in fallocate (Pavel)
 
-Signed-off-by: Paul Burton <paulburton@kernel.org>
-Cc: Ralf Baechle <ralf@linux-mips.org>
-Cc: Thomas Bogendoerfer <tsbogend@alpha.franken.de>
-Cc: linux-mips@vger.kernel.org
----
-Changes in v2:
-- Merge the 2 patches & add Thomas :)
-- Drop the link to Ralf's git tree
----
- CREDITS     | 5 +++++
- MAINTAINERS | 6 ++----
- 2 files changed, 7 insertions(+), 4 deletions(-)
+- Put the cleanup check for aux data in the right spot (Pavel)
 
-diff --git a/CREDITS b/CREDITS
-index a97d3280a627..032b5994f476 100644
---- a/CREDITS
-+++ b/CREDITS
-@@ -567,6 +567,11 @@ D: Original author of Amiga FFS filesystem
- S: Orlando, Florida
- S: USA
- 
-+N: Paul Burton
-+E: paulburton@kernel.org
-+W: https://pburton.com
-+D: MIPS maintainer 2018-2020
-+
- N: Lennert Buytenhek
- E: kernel@wantstofly.org
- D: Original (2.4) rewrite of the ethernet bridging code
-diff --git a/MAINTAINERS b/MAINTAINERS
-index a0d86490c2c6..86e70a216ab1 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -11114,14 +11114,12 @@ S:	Maintained
- F:	drivers/usb/image/microtek.*
- 
- MIPS
--M:	Ralf Baechle <ralf@linux-mips.org>
--M:	Paul Burton <paulburton@kernel.org>
-+M:	Thomas Bogendoerfer <tsbogend@alpha.franken.de>
- L:	linux-mips@vger.kernel.org
- W:	http://www.linux-mips.org/
--T:	git git://git.linux-mips.org/pub/scm/ralf/linux.git
- T:	git git://git.kernel.org/pub/scm/linux/kernel/git/mips/linux.git
- Q:	http://patchwork.linux-mips.org/project/linux-mips/list/
--S:	Supported
-+S:	Maintained
- F:	Documentation/devicetree/bindings/mips/
- F:	Documentation/mips/
- F:	arch/mips/
+- Two fixes for SQPOLL (Stefano, Xiaoguang)
+
+Please pull!
+
+
+  git://git.kernel.dk/linux-block.git tags/io_uring-5.6-2020-02-22
+
+
+----------------------------------------------------------------
+Dan Carpenter (1):
+      io_uring: remove unnecessary NULL checks
+
+Pavel Begunkov (2):
+      io_uring: add missing io_req_cancelled()
+      io_uring: fix use-after-free by io_cleanup_req()
+
+Stefano Garzarella (1):
+      io_uring: prevent sq_thread from spinning when it should stop
+
+Xiaoguang Wang (1):
+      io_uring: fix __io_iopoll_check deadlock in io_sq_thread
+
+ fs/io_uring.c | 65 +++++++++++++++++++++++++++--------------------------------
+ 1 file changed, 30 insertions(+), 35 deletions(-)
+
 -- 
-2.25.1
+Jens Axboe
 
