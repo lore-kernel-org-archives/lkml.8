@@ -2,86 +2,81 @@ Return-Path: <SRS0=8jYG=4K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4065AC35666
-	for <linux-kernel@archiver.kernel.org>; Sat, 22 Feb 2020 17:52:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D1619C35671
+	for <linux-kernel@archiver.kernel.org>; Sat, 22 Feb 2020 17:52:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1CD3D206ED
-	for <linux-kernel@archiver.kernel.org>; Sat, 22 Feb 2020 17:52:06 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=alien8.de header.i=@alien8.de header.b="iPp3t+d2"
+	by mail.kernel.org (Postfix) with ESMTP id 99C2920702
+	for <linux-kernel@archiver.kernel.org>; Sat, 22 Feb 2020 17:52:09 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1582393929;
+	bh=LKke1TZKO5OgzTL/0rK5P/ASeho6K5dTtJsthmRpUEo=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=g7rD6MA9m2uSuWywRlNze4QgT33INKrYD4rOlOPFN1uZ6ygzsuXID2oQa9YTpbvVV
+	 kgAaO15WGs0nwXF3JuDzaljYraIlvoniQQFfAdNq37g5NU0VnyorrVLrJX9XR8abNm
+	 l6cSkwzBpt3T4UDx0MEe2Fao3R7cRTEvHVeMEoSg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726930AbgBVRwE (ORCPT
+        id S1727024AbgBVRwI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 22 Feb 2020 12:52:04 -0500
-Received: from mail.skyhub.de ([5.9.137.197]:36234 "EHLO mail.skyhub.de"
+        Sat, 22 Feb 2020 12:52:08 -0500
+Received: from mail.kernel.org ([198.145.29.99]:40726 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726832AbgBVRwA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 22 Feb 2020 12:52:00 -0500
-Received: from zn.tnic (p200300EC2F1C5400329C23FFFEA6A903.dip0.t-ipconnect.de [IPv6:2003:ec:2f1c:5400:329c:23ff:fea6:a903])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        id S1726975AbgBVRwH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 22 Feb 2020 12:52:07 -0500
+Received: from mail-wm1-f46.google.com (mail-wm1-f46.google.com [209.85.128.46])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 3A2281EC0C2B;
-        Sat, 22 Feb 2020 18:51:58 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
-        t=1582393918;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:in-reply-to:in-reply-to:  references:references;
-        bh=+k6vcshKzlOrgLczSsM+NviqJvVFIej9VdfUzXk4rKw=;
-        b=iPp3t+d2hLwXdK9KVbZ1Q/pMALh9+LAmxFGWPePZ/HbxwA1eHQqOBewIIbSUdos66lL1TQ
-        4NFMwGEOglbBtnIrKTyDgAd8tERR3eFaXN3Cz6KAwctN4zIhuyqmc7kxHbIHgxQ94BTmNn
-        vIsldXPWISxQOFFD57mByBsNC7/djcg=
-Date:   Sat, 22 Feb 2020 18:51:51 +0100
-From:   Borislav Petkov <bp@alien8.de>
-To:     Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
-Cc:     tony.luck@intel.com, tglx@linutronix.de, mingo@redhat.com,
-        hpa@zytor.com, x86@kernel.org, linux-edac@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        Chris Wilson <chris@chris-wilson.co.uk>
-Subject: Re: [PATCH] x86/mce/therm_throt: Handle case where
- throttle_active_work() is called on behalf of an offline CPU
-Message-ID: <20200222175151.GD11284@zn.tnic>
-References: <20200222162432.497201-1-srinivas.pandruvada@linux.intel.com>
+        by mail.kernel.org (Postfix) with ESMTPSA id 9350E208C3
+        for <linux-kernel@vger.kernel.org>; Sat, 22 Feb 2020 17:52:06 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1582393926;
+        bh=LKke1TZKO5OgzTL/0rK5P/ASeho6K5dTtJsthmRpUEo=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=nh6sObk+UwVZuQ7QmtqhTvnXLpatEoUVRRWkB1jVTVKv4xeODsmlYVWhnZyQULNMd
+         AnvGvplkv8jDgKd9wp0OoiJI4OVlM1wlDjHs2swTccS34MpM9RBFrzQdZRvyq1Vr2y
+         iro3cbATyjYCMbuLAuZcUH3yY1rE4WSMsxCfDqZI=
+Received: by mail-wm1-f46.google.com with SMTP id b17so5215742wmb.0
+        for <linux-kernel@vger.kernel.org>; Sat, 22 Feb 2020 09:52:06 -0800 (PST)
+X-Gm-Message-State: APjAAAUc2s0pQYfHezQTlHXcrV8Ixn45AfTYSro5TxSnvlHjdYt06dTq
+        zmW3dog31ZSqrpL2MBW6VwcZiTAdA+bXwVFba8tWdg==
+X-Google-Smtp-Source: APXvYqx8LK/iq059UICaGpUxYYrdkEVXivBGrCUSlxtERrg7G74GqbVSDvwfoUaXtovQ0xXYjQKtTfosScxBnq5QMZ0=
+X-Received: by 2002:a1c:b603:: with SMTP id g3mr11842893wmf.133.1582393925002;
+ Sat, 22 Feb 2020 09:52:05 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20200222162432.497201-1-srinivas.pandruvada@linux.intel.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+References: <20200221114716.4372-1-xypron.glpk@gmx.de> <20200221163017.GA4477@light.dominikbrodowski.net>
+In-Reply-To: <20200221163017.GA4477@light.dominikbrodowski.net>
+From:   Ard Biesheuvel <ardb@kernel.org>
+Date:   Sat, 22 Feb 2020 18:51:54 +0100
+X-Gmail-Original-Message-ID: <CAKv+Gu8FhCYQsihjQ4MTXPQsGbz8a3rUA+Cy2-4GT8cukdJHSQ@mail.gmail.com>
+Message-ID: <CAKv+Gu8FhCYQsihjQ4MTXPQsGbz8a3rUA+Cy2-4GT8cukdJHSQ@mail.gmail.com>
+Subject: Re: [PATCH 1/1] efi/libstub: describe RNG functions
+To:     Dominik Brodowski <linux@dominikbrodowski.net>
+Cc:     Heinrich Schuchardt <xypron.glpk@gmx.de>,
+        Ingo Molnar <mingo@kernel.org>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Hans de Goede <hdegoede@redhat.com>,
+        linux-efi <linux-efi@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, Feb 22, 2020 at 08:24:32AM -0800, Srinivas Pandruvada wrote:
-> During cpu-hotplug test with CONFIG_PREEMPTION and CONFIG_DEBUG_PREEMPT
-> enabled, Chris reported error:
-> 
-> BUG: using smp_processor_id() in preemptible [00000000] code: kworker/1:0/17
-> caller is throttle_active_work+0x12/0x280
-> 
-> Here throttle_active_work() is a work queue callback scheduled with
-> schedule_delayed_work_on(). This will not cause this error for the use
-> of smp_processor_id() under normal conditions as there is a check for
-> "current->nr_cpus_allowed == 1".
-> But when the target CPU is offline the workqueue becomes unbound.
-> Then the work queue callback can be scheduled on another CPU and the
-> error is printed for the use of smp_processor_id() in preemptible context.
+On Fri, 21 Feb 2020 at 17:30, Dominik Brodowski
+<linux@dominikbrodowski.net> wrote:
+>
+> On Fri, Feb 21, 2020 at 12:47:16PM +0100, Heinrich Schuchardt wrote:
+> > Provide descriptions for the functions invoking the EFI_RNG_PROTOCOL.
+> >
+> > Signed-off-by: Heinrich Schuchardt <xypron.glpk@gmx.de>
+>
+> Reviewed-by: Dominik Brodowski <linux@dominikbrodowski.net>
+>
 
-So what's wrong with simply doing:
+Queued in efi/next
 
-	if (cpu_is_offline(this_cpu))
-		return;
-
-?
-
-You don't need to run the callback on an offlined CPU anyway...
-
--- 
-Regards/Gruss,
-    Boris.
-
-https://people.kernel.org/tglx/notes-about-netiquette
+Thanks,
