@@ -2,120 +2,109 @@ Return-Path: <SRS0=8jYG=4K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 137E3C35672
-	for <linux-kernel@archiver.kernel.org>; Sat, 22 Feb 2020 06:42:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D050BC35671
+	for <linux-kernel@archiver.kernel.org>; Sat, 22 Feb 2020 06:45:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DF8D2208C4
-	for <linux-kernel@archiver.kernel.org>; Sat, 22 Feb 2020 06:42:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A67FE2071E
+	for <linux-kernel@archiver.kernel.org>; Sat, 22 Feb 2020 06:45:31 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="EjxVA3Br"
+	dkim=pass (2048-bit key) header.d=nifty.com header.i=@nifty.com header.b="LTJLxviy"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727160AbgBVGmO (ORCPT
+        id S1727119AbgBVGp3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 22 Feb 2020 01:42:14 -0500
-Received: from mail-pg1-f193.google.com ([209.85.215.193]:47031 "EHLO
-        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726684AbgBVGmN (ORCPT
+        Sat, 22 Feb 2020 01:45:29 -0500
+Received: from conuserg-07.nifty.com ([210.131.2.74]:58837 "EHLO
+        conuserg-07.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726706AbgBVGp3 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 22 Feb 2020 01:42:13 -0500
-Received: by mail-pg1-f193.google.com with SMTP id y30so2097869pga.13;
-        Fri, 21 Feb 2020 22:42:13 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=9hYMlHxQU9EhnNg/RTgwCsCYqoi4kN3olIEeJ3OkvPk=;
-        b=EjxVA3Br6FjEjanPqEhDEoiXcouvU+bGrOv3uTHp9VrVsy3AXGgMpJunV/dlGd1qUm
-         h3uIb/c+THfk4d8i8eRh2Gmc6RKBk0FeWU0DeLHdnsCMJijfu9dXn3U/Gbw9qIpykRGt
-         gagL4hr4DlgdCOOYPod1UshTeKzN51JTcTv3f74iLTF3ML8aBN5tFTu6vgRzkeuugQ8+
-         v7r1tvbe5PFXIYjKy1auosHppC+l4qMmg+TqQGywTUnIQ9D24onvbs6RVVN+8cyCqdJZ
-         7gcoN0kyc3bs6KMHZ694GcP6l1jBOCqrZomZdNBuvqhCS9wlN++JrQOVIs3Jl97i9n2/
-         1y2w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=9hYMlHxQU9EhnNg/RTgwCsCYqoi4kN3olIEeJ3OkvPk=;
-        b=I3Dtv0C2qiI+W9qIqynuQp6GzUt0mwf7Gt+HCKHVglc4ez/fz+Zetm3SCN4pL3bA20
-         h0MxQ9AMI10s7xI1GqU3RNay4N1q1WewJVMX98+GMyWOkg8IDzvB0d72sNvlIzTM57QA
-         ZJW0AUyQZSqQRD8nSg2lcKr8i0IlLWittsf55AfHLoRHvtc6NKWlXip2t3Awahv+f79C
-         18aka8oM0ID4HkN8H2KZKveAFnpukZdtpY64KBxS1vxxuhGH14bYX5OTMQFKvTEfuE/p
-         5sBRGNMw/n7q6gKq7qJkIqvJk9ll3Y8lz8muWNmgw/3XPlvZS+3fUGq5NXxmStmXlKT2
-         Zpiw==
-X-Gm-Message-State: APjAAAVJGbSldYCZvu05LzIezEYx8Fl6JjlmwIwggQvP3wptveGpPPcN
-        u9jgU3Tm+6CFhtkFjMXAW19HAk40pJo=
-X-Google-Smtp-Source: APXvYqwdWk7osSGXdnZrrkUWAfAmanU6pj0j8QeL8rczy5YSTPsqUDFk5CjIMGs1shp3kNuLzO94Qg==
-X-Received: by 2002:a65:645a:: with SMTP id s26mr40682184pgv.135.1582353733058;
-        Fri, 21 Feb 2020 22:42:13 -0800 (PST)
-Received: from localhost.localdomain ([103.87.57.201])
-        by smtp.googlemail.com with ESMTPSA id k5sm4455071pju.29.2020.02.21.22.42.09
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 21 Feb 2020 22:42:12 -0800 (PST)
-From:   Amol Grover <frextrite@gmail.com>
-To:     "David S . Miller" <davem@davemloft.net>,
-        Alexey Kuznetsov <kuznet@ms2.inr.ac.ru>,
-        Hideaki YOSHIFUJI <yoshfuji@linux-ipv6.org>,
-        Jakub Kicinski <kuba@kernel.org>
-Cc:     netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-kernel-mentees@lists.linuxfoundation.org,
-        Joel Fernandes <joel@joelfernandes.org>,
-        Madhuparna Bhowmik <madhuparnabhowmik10@gmail.com>,
-        "Paul E . McKenney" <paulmck@kernel.org>,
-        Amol Grover <frextrite@gmail.com>
-Subject: [PATCH 2/2] ipmr: Add lockdep expression to ipmr_for_each_table macro
-Date:   Sat, 22 Feb 2020 12:08:36 +0530
-Message-Id: <20200222063835.14328-2-frextrite@gmail.com>
-X-Mailer: git-send-email 2.24.1
-In-Reply-To: <20200222063835.14328-1-frextrite@gmail.com>
-References: <20200222063835.14328-1-frextrite@gmail.com>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+        Sat, 22 Feb 2020 01:45:29 -0500
+Received: from grover.flets-west.jp (softbank126093102113.bbtec.net [126.93.102.113]) (authenticated)
+        by conuserg-07.nifty.com with ESMTP id 01M6ik5S005982;
+        Sat, 22 Feb 2020 15:44:49 +0900
+DKIM-Filter: OpenDKIM Filter v2.10.3 conuserg-07.nifty.com 01M6ik5S005982
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
+        s=dec2015msa; t=1582353889;
+        bh=QqGyHAeO/ubqw+w/CGTT6IeJ8TCbUiUiGrqEMAfnxi0=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=LTJLxviy0//6PBFHicl9ayUMniCHU2eba/TlzDSH/zXskm74nbSi1qOoY6VLNBwC5
+         PFSgmku0BNeEYOan3HeY85X6gzU5RDQB+r8yI9WhgOWObiAduIm0p2aTzccXu2iQaJ
+         ycyLpUJU3lX2eCWq8USB9t8glHCDvU1QzoMusnYu27k8Vzqjr5YmGCET9prTxaNIqy
+         75X2fETzshvUHcqwFzPtZH82kORGdkSnWztOoc4FLiYIAD26PuhtI2ioQ9MePOb+9T
+         NzL/ryQ88XD7hI2j5Ug4sC7QRRfhfNrCCBjg4d2534VNax99fPk+DJFKrnVKR1Ltzq
+         Wcne4+TPzZ2bA==
+X-Nifty-SrcIP: [126.93.102.113]
+From:   Masahiro Yamada <yamada.masahiro@socionext.com>
+To:     linux-arm-kernel@lists.infradead.org
+Cc:     Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, masahiroy@kernel.org,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        Mark Rutland <mark.rutland@arm.com>
+Subject: [PATCH 4/4] arm64: dts: uniphier: rename aidet node names to follow json-schema
+Date:   Sat, 22 Feb 2020 15:44:45 +0900
+Message-Id: <20200222064445.14903-4-yamada.masahiro@socionext.com>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20200222064445.14903-1-yamada.masahiro@socionext.com>
+References: <20200222064445.14903-1-yamada.masahiro@socionext.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-ipmr_for_each_table() uses list_for_each_entry_rcu() for
-traversing outside of an RCU read-side critical section but
-under the protection of pernet_ops_rwsem. Hence add the
-corresponding lockdep expression to silence the following
-false-positive warning at boot:
+Follow the standard nodename pattern "^interrupt-controller(@[0-9a-f,]+)*$"
+defined in schemas/interrupt-controller.yaml of dt-schema.
 
-[    0.645292] =============================
-[    0.645294] WARNING: suspicious RCU usage
-[    0.645296] 5.5.4-stable #17 Not tainted
-[    0.645297] -----------------------------
-[    0.645299] net/ipv4/ipmr.c:136 RCU-list traversed in non-reader section!!
-
-Signed-off-by: Amol Grover <frextrite@gmail.com>
+Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
 ---
- net/ipv4/ipmr.c | 7 ++++---
- 1 file changed, 4 insertions(+), 3 deletions(-)
 
-diff --git a/net/ipv4/ipmr.c b/net/ipv4/ipmr.c
-index 99c864eb6e34..950ffe9943da 100644
---- a/net/ipv4/ipmr.c
-+++ b/net/ipv4/ipmr.c
-@@ -109,9 +109,10 @@ static void mroute_clean_tables(struct mr_table *mrt, int flags);
- static void ipmr_expire_process(struct timer_list *t);
+ arch/arm64/boot/dts/socionext/uniphier-ld11.dtsi | 2 +-
+ arch/arm64/boot/dts/socionext/uniphier-ld20.dtsi | 2 +-
+ arch/arm64/boot/dts/socionext/uniphier-pxs3.dtsi | 2 +-
+ 3 files changed, 3 insertions(+), 3 deletions(-)
+
+diff --git a/arch/arm64/boot/dts/socionext/uniphier-ld11.dtsi b/arch/arm64/boot/dts/socionext/uniphier-ld11.dtsi
+index 7510db465f33..2e53daca9f5c 100644
+--- a/arch/arm64/boot/dts/socionext/uniphier-ld11.dtsi
++++ b/arch/arm64/boot/dts/socionext/uniphier-ld11.dtsi
+@@ -566,7 +566,7 @@
+ 			};
+ 		};
  
- #ifdef CONFIG_IP_MROUTE_MULTIPLE_TABLES
--#define ipmr_for_each_table(mrt, net) \
--	list_for_each_entry_rcu(mrt, &net->ipv4.mr_tables, list, \
--				lockdep_rtnl_is_held())
-+#define ipmr_for_each_table(mrt, net)					\
-+	list_for_each_entry_rcu(mrt, &net->ipv4.mr_tables, list,	\
-+				lockdep_rtnl_is_held() ||		\
-+				lockdep_is_held(&pernet_ops_rwsem))
+-		aidet: aidet@5fc20000 {
++		aidet: interrupt-controller@5fc20000 {
+ 			compatible = "socionext,uniphier-ld11-aidet";
+ 			reg = <0x5fc20000 0x200>;
+ 			interrupt-controller;
+diff --git a/arch/arm64/boot/dts/socionext/uniphier-ld20.dtsi b/arch/arm64/boot/dts/socionext/uniphier-ld20.dtsi
+index 8d360c5cc32b..be984200a70e 100644
+--- a/arch/arm64/boot/dts/socionext/uniphier-ld20.dtsi
++++ b/arch/arm64/boot/dts/socionext/uniphier-ld20.dtsi
+@@ -664,7 +664,7 @@
+ 			};
+ 		};
  
- static struct mr_table *ipmr_mr_table_iter(struct net *net,
- 					   struct mr_table *mrt)
+-		aidet: aidet@5fc20000 {
++		aidet: interrupt-controller@5fc20000 {
+ 			compatible = "socionext,uniphier-ld20-aidet";
+ 			reg = <0x5fc20000 0x200>;
+ 			interrupt-controller;
+diff --git a/arch/arm64/boot/dts/socionext/uniphier-pxs3.dtsi b/arch/arm64/boot/dts/socionext/uniphier-pxs3.dtsi
+index d51b0735917c..994fea7b12c1 100644
+--- a/arch/arm64/boot/dts/socionext/uniphier-pxs3.dtsi
++++ b/arch/arm64/boot/dts/socionext/uniphier-pxs3.dtsi
+@@ -462,7 +462,7 @@
+ 			};
+ 		};
+ 
+-		aidet: aidet@5fc20000 {
++		aidet: interrupt-controller@5fc20000 {
+ 			compatible = "socionext,uniphier-pxs3-aidet";
+ 			reg = <0x5fc20000 0x200>;
+ 			interrupt-controller;
 -- 
-2.24.1
+2.17.1
 
