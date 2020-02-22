@@ -2,83 +2,89 @@ Return-Path: <SRS0=8jYG=4K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B9525C35666
-	for <linux-kernel@archiver.kernel.org>; Sat, 22 Feb 2020 12:53:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 55E67C35674
+	for <linux-kernel@archiver.kernel.org>; Sat, 22 Feb 2020 12:53:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9AF31206EF
-	for <linux-kernel@archiver.kernel.org>; Sat, 22 Feb 2020 12:53:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 38663206EF
+	for <linux-kernel@archiver.kernel.org>; Sat, 22 Feb 2020 12:53:52 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727359AbgBVMxm (ORCPT
+        id S1727426AbgBVMxv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 22 Feb 2020 07:53:42 -0500
-Received: from s3.sipsolutions.net ([144.76.43.62]:58060 "EHLO
-        sipsolutions.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726839AbgBVMxl (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 22 Feb 2020 07:53:41 -0500
-Received: by sipsolutions.net with esmtpsa (TLS1.3:ECDHE_SECP256R1__RSA_PSS_RSAE_SHA256__AES_256_GCM:256)
-        (Exim 4.93)
-        (envelope-from <johannes@sipsolutions.net>)
-        id 1j5UHe-000fEg-Jf; Sat, 22 Feb 2020 13:53:26 +0100
-Message-ID: <f1913847671d0b7e19aaa9bef1e1eb89febfa942.camel@sipsolutions.net>
-Subject: Re: [PATCH] net: mac80211: rx.c: Use built-in RCU list checking
-From:   Johannes Berg <johannes@sipsolutions.net>
-To:     madhuparnabhowmik10@gmail.com, davem@davemloft.net
-Cc:     linux-wireless@vger.kernel.org, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org, joel@joelfernandes.org,
-        frextrite@gmail.com,
-        linux-kernel-mentees@lists.linuxfoundation.org, paulmck@kernel.org
-Date:   Sat, 22 Feb 2020 13:53:25 +0100
-In-Reply-To: <20200222101831.8001-1-madhuparnabhowmik10@gmail.com> (sfid-20200222_112140_052707_ACC75C29)
-References: <20200222101831.8001-1-madhuparnabhowmik10@gmail.com>
-         (sfid-20200222_112140_052707_ACC75C29)
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.34.2 (3.34.2-1.fc31) 
+        Sat, 22 Feb 2020 07:53:51 -0500
+Received: from sauhun.de ([88.99.104.3]:53856 "EHLO pokefinder.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726839AbgBVMxu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 22 Feb 2020 07:53:50 -0500
+Received: from localhost (p5486C6B7.dip0.t-ipconnect.de [84.134.198.183])
+        by pokefinder.org (Postfix) with ESMTPSA id 938972C1EC7;
+        Sat, 22 Feb 2020 13:53:48 +0100 (CET)
+Date:   Sat, 22 Feb 2020 13:53:48 +0100
+From:   Wolfram Sang <wsa@the-dreams.de>
+To:     Prashant Malani <pmalani@chromium.org>
+Cc:     linux-kernel@vger.kernel.org, Benson Leung <bleung@chromium.org>,
+        Enric Balletbo i Serra <enric.balletbo@collabora.com>,
+        Guenter Roeck <groeck@chromium.org>,
+        Gwendal Grignou <gwendal@chromium.org>,
+        Lee Jones <lee.jones@linaro.org>,
+        Chanwoo Choi <cw00.choi@samsung.com>,
+        Akshu Agrawal <akshu.agrawal@amd.com>,
+        "open list:I2C SUBSYSTEM HOST DRIVERS" <linux-i2c@vger.kernel.org>
+Subject: Re: [PATCH v2 16/17] i2c: cros-ec-tunnel: Use cros_ec_cmd()
+Message-ID: <20200222125348.GL1716@kunai>
+References: <20200205192253.187649-1-pmalani@chromium.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="L1EIGrW/+75u5Nmw"
+Content-Disposition: inline
+In-Reply-To: <20200205192253.187649-1-pmalani@chromium.org>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, 2020-02-22 at 15:48 +0530, madhuparnabhowmik10@gmail.com wrote:
-> From: Madhuparna Bhowmik <madhuparnabhowmik10@gmail.com>
-> 
-> list_for_each_entry_rcu() has built-in RCU and lock checking.
-> 
-> Pass cond argument to list_for_each_entry_rcu() to silence
-> false lockdep warning when CONFIG_PROVE_RCU_LIST is enabled
-> by default.
 
-Umm. What warning?
+--L1EIGrW/+75u5Nmw
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-> +++ b/net/mac80211/rx.c
-> @@ -3547,7 +3547,8 @@ static void ieee80211_rx_cooked_monitor(struct ieee80211_rx_data *rx,
->  	skb->pkt_type = PACKET_OTHERHOST;
->  	skb->protocol = htons(ETH_P_802_2);
->  
-> -	list_for_each_entry_rcu(sdata, &local->interfaces, list) {
-> +	list_for_each_entry_rcu(sdata, &local->interfaces, list,
-> +				lockdep_is_held(&rx->local->rx_path_lock)) {
->  		if (!ieee80211_sdata_running(sdata))
->  			continue;
+On Wed, Feb 05, 2020 at 11:22:51AM -0800, Prashant Malani wrote:
+> Replace cros_ec_cmd_xfer_status() calls with the new function
+> cros_ec_cmd() which takes care of the EC message struct setup and
+> subsequent cleanup (which is a common pattern among users of
+> cros_ec_cmd_xfer_status).
+>=20
+> Signed-off-by: Prashant Malani <pmalani@chromium.org>
 
-This is not related at all.
- 
-> @@ -4114,7 +4115,8 @@ void __ieee80211_check_fast_rx_iface(struct ieee80211_sub_if_data *sdata)
->  
->  	lockdep_assert_held(&local->sta_mtx);
->  
-> -	list_for_each_entry_rcu(sta, &local->sta_list, list) {
-> +	list_for_each_entry_rcu(sta, &local->sta_list, list,
-> +				lockdep_is_held(&local->sta_mtx)) {
+I guess the plan is that this series goes upstream as a whole via some
+chrome-tree? In that case:
 
-And this isn't even a real RCU iteration, since we _must_ hold the mutex
-here.
+Acked-by: Wolfram Sang <wsa@the-dreams.de>
 
-johannes
 
+--L1EIGrW/+75u5Nmw
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCgAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAl5RJFwACgkQFA3kzBSg
+KbZAJhAAno9ex5acdPq9wkA/gSWspLKV9G+6WYa+E0+XcX+w1es1q/X4i1L2+S0k
+ddGemIHCYEgHHxcozQbl64RRnerEUsIyplyc6MFIQ5bv/R38pGpliuL3Y9YcsqLl
+FDxUzUbyTWb8KbkbTFBKuVZDFB8vv7n7ZWJdLbZQ2rf8TZFahbE1lYLVZKHWRQC8
+aizZdg6+bCLRxUyQMWg4NcXTrudmpq6GUzLONWzp0vgzS8OHVWMKUxoSesDDF9Ua
+nAYi5kVPuldgEBO/4oFmAG9cxhSE0t1ZS2fByxBmFuILInszPur5cIPdgBRzISUQ
+iNZZW3Hr58Q5i7eM7G9I7MiaDboYFlc9Xpd8Ltw79ONNR221pgoSQbI4PWJ57NVB
+3+6aT+ivbr32N2t3kb7rcCBWlVGUTRKh67avE5mIkQKfirLs9FqcJZYhI/uLNyyf
+y58QIXp2ghXKV/34hCOwHtg0Sea8qbmiSWkfsyXTKVO7Cjx3Es+A5YB67APzRHtE
+M9HYFETj+FVhYguzWtLMa+yDdYqdHJg6b7JpB8tPT5O74puzkHkQy0gqoELgw+ZK
+HUclo4HHtwLj540miXbGpsRVffGXfQXdVrJZIi9PfdOptE6SFv5qjZdgMX8RkbFT
+JaVa5MKDfUW+vuG4zvP/X9kORxMeWD6/S1FGPlKjvybB/RD/Hp8=
+=scB2
+-----END PGP SIGNATURE-----
+
+--L1EIGrW/+75u5Nmw--
