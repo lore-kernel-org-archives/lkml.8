@@ -7,59 +7,58 @@ X-Spam-Status: No, score=-17.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT,
 	USER_IN_DEF_DKIM_WL autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E8B28C35641
-	for <linux-kernel@archiver.kernel.org>; Sat, 22 Feb 2020 01:40:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BAA5FC35641
+	for <linux-kernel@archiver.kernel.org>; Sat, 22 Feb 2020 01:40:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BB4DF2072C
-	for <linux-kernel@archiver.kernel.org>; Sat, 22 Feb 2020 01:40:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 90C0B20722
+	for <linux-kernel@archiver.kernel.org>; Sat, 22 Feb 2020 01:40:56 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="ud1xUGHO"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="tiWAct/l"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727932AbgBVBks (ORCPT
+        id S1727980AbgBVBkz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Feb 2020 20:40:48 -0500
-Received: from mail-pf1-f202.google.com ([209.85.210.202]:51317 "EHLO
-        mail-pf1-f202.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727686AbgBVBkq (ORCPT
+        Fri, 21 Feb 2020 20:40:55 -0500
+Received: from mail-pl1-f201.google.com ([209.85.214.201]:39142 "EHLO
+        mail-pl1-f201.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727935AbgBVBkx (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Feb 2020 20:40:46 -0500
-Received: by mail-pf1-f202.google.com with SMTP id z19so2331552pfn.18
-        for <linux-kernel@vger.kernel.org>; Fri, 21 Feb 2020 17:40:46 -0800 (PST)
+        Fri, 21 Feb 2020 20:40:53 -0500
+Received: by mail-pl1-f201.google.com with SMTP id q24so2158714pls.6
+        for <linux-kernel@vger.kernel.org>; Fri, 21 Feb 2020 17:40:52 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=google.com; s=20161025;
         h=date:in-reply-to:message-id:mime-version:references:subject:from:to
          :cc;
-        bh=sbjXfIRqNbN+zO5bw0TFE0zoSgbZ1QQ5aagCM5afePc=;
-        b=ud1xUGHOBKvb/hZaryVaI0jhkYzz5PMsiqucgi7KvMFeX2D1rSak9aqlz2JV4MfsgI
-         pJbYlLQNDo2dsKJEc9w0UdWn5OkznacQzkYXVWHl90VuF0fsvPkoR3nquTTE1GsB4MQm
-         YAjxBeEEt7lWKTHfucFlkjRcz0SATmBBngwVsozp9aYIuHPNtonVoPndgLcoQREA/smt
-         9G0k9UU9LmKNVjRSlwiQ1TgsSxURjQTvJks4xUdDTpOZRjuHkRVGVhehKQ2T8djuWzyt
-         AUb8BWrZi4JAcse07+7XxAOmwWyrDwx+gJWak2I03A+RyDpRqhNZqdm8xpLBMwtrHxhX
-         obOQ==
+        bh=KcPp0gP7GELHPbQmhvOuNvrhkif2qUrzumcvFBDOK9U=;
+        b=tiWAct/lW1qWhKwT1NraZmKOl/hogEF7BkErGRXVit1viyco6ajvbC9mz3kiFMua6i
+         TXNq2t+i0wPehD/a08VL1JQQH9Rnr9VR2NEKeEmZ8FLJhmSFDZ0rVirUFv3+tELLG6Gp
+         1Odhw8Q7qlUlkq1pZqeqAMwP3dTqnrHwG/aPULh9Zktd5pHO30UGcf0fGZWZPZ85s0Y6
+         g5vruuy+o5NmhnAq1Bi7z5UhTM9KxLDhHYWDSFQ31yZ5D0g/dNjltCGyIjGVEk50kOv0
+         /sABPtof6x7ACZaNTuqAWywFBrRPUIP1zVHm1SpMLSbhEsUJQJhGbghszJjbeEqYP4d+
+         zPkg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:in-reply-to:message-id:mime-version
          :references:subject:from:to:cc;
-        bh=sbjXfIRqNbN+zO5bw0TFE0zoSgbZ1QQ5aagCM5afePc=;
-        b=D80a7c24Tf4b//Uc1Xxv4GryBGULUJlUNNzZnIKM+r16S67XmMNZNVAApaYy50tBUC
-         AppQ03eJVfQFTK1yMhO5Npqj2VETJ2O0UI8TobVaPvBqqxmR9MakdVwW/mUF93OGbovI
-         OaQHLNlrAFft/UKr5o8/w0okQyGgV9mVBkwjGHtM/uzU6ZT68S5jo7J2p96uAAMGQRJF
-         I0a9hw9DGfRmTJGIbMzgriq8YlVNx0iTiXs9PQPzZblqUbwPL9Wi3sMcfNFKk3S5Zlv4
-         k5s4sjjttLiVVZoVI5UyvnmMSSWRQQXxG61gF8O/h7JjMq7rQ6XjxzkXhfgA9phaYfiA
-         +gow==
-X-Gm-Message-State: APjAAAUn6OQDPGQpfr0JVap23OVHb8i3yn4kSUlzPtIz093qjiXksKhm
-        a8r49MVNToOLT6LgaZCCbDPZyKEOzrY8g5o=
-X-Google-Smtp-Source: APXvYqxDQk1BSfiJ4Um6agz42N01VWAX3UFH/JG2+Be5e7QkaImHOBKwFc8btIvgsRytF/5NFRyY8vpitPM8CIY=
-X-Received: by 2002:a63:8ac7:: with SMTP id y190mr41772483pgd.68.1582335645920;
- Fri, 21 Feb 2020 17:40:45 -0800 (PST)
-Date:   Fri, 21 Feb 2020 17:40:34 -0800
+        bh=KcPp0gP7GELHPbQmhvOuNvrhkif2qUrzumcvFBDOK9U=;
+        b=ORSf01lYFQSESrI+qhA0byF0ovbImqNqu7LZynPDOpgTlaX1JMZrERbxhrKNmBW3ns
+         4Vg0ZtfAoxSxqm9kGIyPp/NpX5CHj4QkKY/LcSf3RVSo4ZWpyqauETkch7xlEYr8A0fj
+         6PbKh/vuVTEMRwSIjMlr/jqgC98lThBo1bw1/WFA+DF6gqjE9Fu+JOKslCLrCtkcA/gS
+         aGUl/SME9aHtzBYAhKpnhRjCdO2YYDGAwDNBYnOr6NQsDPIgpMv2nx3WpnWl8RGLoojh
+         AtprCNcWBsk3Bf5ENY4mrCzvhrDpYjErxvoRomw0Tx0qZOXgeVA8hMP0oLJJuUT7lWIm
+         GLdg==
+X-Gm-Message-State: APjAAAUubdDOR+so+rQTgNoJsOXeKLKk6xxxkCsuy6oAhK90UjnSEemc
+        IRXs0lnu0kv6ywG4HnJn36J5rPz24B5UoiM=
+X-Google-Smtp-Source: APXvYqzPdWRjgeOkhSTiaxyK4n8nsnHWWk0aEfT3lTbN5PVbLfvLNibYxGOnd/zAFy69mSlFb3/Z8610AQaog60=
+X-Received: by 2002:a63:ec49:: with SMTP id r9mr41310425pgj.445.1582335652146;
+ Fri, 21 Feb 2020 17:40:52 -0800 (PST)
+Date:   Fri, 21 Feb 2020 17:40:36 -0800
 In-Reply-To: <20200222014038.180923-1-saravanak@google.com>
-Message-Id: <20200222014038.180923-2-saravanak@google.com>
+Message-Id: <20200222014038.180923-4-saravanak@google.com>
 Mime-Version: 1.0
 References: <20200222014038.180923-1-saravanak@google.com>
 X-Mailer: git-send-email 2.25.0.265.gbab2e86ba0-goog
-Subject: [PATCH v1 1/5] driver core: Reevaluate dev->links.need_for_probe as
- suppliers are added
+Subject: [PATCH v1 3/5] efi/arm: Start using fw_devlink_get_flags()
 From:   Saravana Kannan <saravanak@google.com>
 To:     Jonathan Corbet <corbet@lwn.net>,
         Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
@@ -67,73 +66,39 @@ To:     Jonathan Corbet <corbet@lwn.net>,
         Ard Biesheuvel <ardb@kernel.org>,
         Rob Herring <robh+dt@kernel.org>,
         Frank Rowand <frowand.list@gmail.com>,
-        Len Brown <lenb@kernel.org>,
-        Saravana Kannan <saravanak@google.com>
-Cc:     kernel-team@android.com, linux-doc@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-efi@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-acpi@vger.kernel.org
+        Len Brown <lenb@kernel.org>
+Cc:     Saravana Kannan <saravanak@google.com>, kernel-team@android.com,
+        linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-efi@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-acpi@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-A previous patch 03324507e66c ("driver core: Allow
-fwnode_operations.add_links to differentiate errors") forgot to update
-all call sites to fwnode_operations.add_links. This patch fixes that.
+The fw_devlink_get_flags() provides the right flags to use when creating
+mandatory device links derived from information provided by the
+firmware. So, use that.
 
-Legend:
--> Denotes RHS is an optional/potential supplier for LHS
-=> Denotes RHS is a mandatory supplier for LHS
-
-Example:
-
-Device A => Device X
-Device A -> Device Y
-
-Before this patch:
-1. Device A is added.
-2. Device A is marked as waiting for mandatory suppliers
-3. Device X is added
-4. Device A is left marked as waiting for mandatory suppliers
-
-Step 4 is wrong since all mandatory suppliers of Device A have been
-added.
-
-After this patch:
-1. Device A is added.
-2. Device A is marked as waiting for mandatory suppliers
-3. Device X is added
-4. Device A is no longer considered as waiting for mandatory suppliers
-
-This is the correct behavior.
-
-Fixes: 03324507e66c ("driver core: Allow fwnode_operations.add_links to differentiate errors")
 Signed-off-by: Saravana Kannan <saravanak@google.com>
 ---
- drivers/base/core.c | 8 ++++++--
- 1 file changed, 6 insertions(+), 2 deletions(-)
+ drivers/firmware/efi/arm-init.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/base/core.c b/drivers/base/core.c
-index dbb0f9130f42..d32a3aefff32 100644
---- a/drivers/base/core.c
-+++ b/drivers/base/core.c
-@@ -523,9 +523,13 @@ static void device_link_add_missing_supplier_links(void)
+diff --git a/drivers/firmware/efi/arm-init.c b/drivers/firmware/efi/arm-init.c
+index d99f5b0c8a09..6703bedfa9e1 100644
+--- a/drivers/firmware/efi/arm-init.c
++++ b/drivers/firmware/efi/arm-init.c
+@@ -349,7 +349,7 @@ static int efifb_add_links(const struct fwnode_handle *fwnode,
+ 	 * If this fails, retrying this function at a later point won't
+ 	 * change anything. So, don't return an error after this.
+ 	 */
+-	if (!device_link_add(dev, sup_dev, 0))
++	if (!device_link_add(dev, sup_dev, fw_devlink_get_flags()))
+ 		dev_warn(dev, "device_link_add() failed\n");
  
- 	mutex_lock(&wfs_lock);
- 	list_for_each_entry_safe(dev, tmp, &wait_for_suppliers,
--				 links.needs_suppliers)
--		if (!fwnode_call_int_op(dev->fwnode, add_links, dev))
-+				 links.needs_suppliers) {
-+		int ret = fwnode_call_int_op(dev->fwnode, add_links, dev);
-+		if (!ret)
- 			list_del_init(&dev->links.needs_suppliers);
-+		else if (ret != -ENODEV)
-+			dev->links.need_for_probe = false;
-+	}
- 	mutex_unlock(&wfs_lock);
- }
- 
+ 	put_device(sup_dev);
 -- 
 2.25.0.265.gbab2e86ba0-goog
 
