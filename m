@@ -2,119 +2,170 @@ Return-Path: <SRS0=8jYG=4K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CED39C35672
-	for <linux-kernel@archiver.kernel.org>; Sat, 22 Feb 2020 15:47:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 956E5C35672
+	for <linux-kernel@archiver.kernel.org>; Sat, 22 Feb 2020 15:48:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A452E206ED
-	for <linux-kernel@archiver.kernel.org>; Sat, 22 Feb 2020 15:47:01 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="RTwmpbCp"
+	by mail.kernel.org (Postfix) with ESMTP id 6C439206ED
+	for <linux-kernel@archiver.kernel.org>; Sat, 22 Feb 2020 15:48:37 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727644AbgBVPrA (ORCPT
+        id S1727735AbgBVPsg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 22 Feb 2020 10:47:00 -0500
-Received: from mail-pg1-f196.google.com ([209.85.215.196]:44454 "EHLO
-        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727230AbgBVPrA (ORCPT
+        Sat, 22 Feb 2020 10:48:36 -0500
+Received: from out03.mta.xmission.com ([166.70.13.233]:53310 "EHLO
+        out03.mta.xmission.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727480AbgBVPsf (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 22 Feb 2020 10:47:00 -0500
-Received: by mail-pg1-f196.google.com with SMTP id a14so2220152pgb.11;
-        Sat, 22 Feb 2020 07:46:59 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=2lwPLEdlD/tmi2l2jsbyyk3Xs3TaLO5BXgpdmx6EkWQ=;
-        b=RTwmpbCpxRQmmCciyKB7ZqeCdN2rmCOTffe/tvgqyMV9UPDtW/V1iW96tqxj6Dfp+O
-         a7mplCZsu1NfGtPsSy7LCv8+6ypdHekipDdoDg38gCZpRSsBfIXXEBunp7QiAOA5MVob
-         m651XcYzrqzN6W/GFwApYQiBwvnOSjfjt/7u58/kAmLsjdTfwu2B/QGPDDJF7Vv7dI+K
-         LwprVyM9w2J5lAlNb/f1Y4Qr8ZBZzhx1Oas+OULCS6YKpPHMddlYuun/PkfNOjJFU5/D
-         U8lgHPc/kWqA9VUkBZboih1Dun7AoIC4IMcRCCHq5Wv0h61IWJzFF0OvmsczkGYCj4Ql
-         wfiw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:subject:to:cc:references:from:message-id
-         :date:user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=2lwPLEdlD/tmi2l2jsbyyk3Xs3TaLO5BXgpdmx6EkWQ=;
-        b=NFHbLrAGdBhvirQ1qFQLv9tX43nLHEpnVI/+pZSNJRhLY8XUjHK82dQkxlbjCj9Cz1
-         uEUlvHxsiogBRccz4eUXg1N4HGgRP5RNAkzS3RyErVcDccQxCMRFrkKtUr++j3AVQmZe
-         fKt+L1dy/HiID2dJXqAMX8LfXfgMTULpMedzK6s9l+j+iF9h5WqeIiyxzxUl/Dpkn2xt
-         QQ8X7cAA+QnwaVfFy3UFNqe2pe4NtTAw+/QMEt6Pa6zvdvOidEm58wS2/cFd1dqQL+Z1
-         qrnPh76+B6NDyMCn56gFaV85aQWKlU1AUyg24rHQjXr3OlV5T04MRJlPy7IgPeVL+q10
-         d89A==
-X-Gm-Message-State: APjAAAX2htdHAD0hPkeGjV7tTpceQkRajZCoFvJqJ1P9Bw9aabFotBXa
-        goXWrMb05ltpw8XS4Ic6YgoB8F9t
-X-Google-Smtp-Source: APXvYqxBM+oZjtWmczrhNgdGoYCIwP8S5TXnNCRHEnhvg1Rm9Z9GjqrqCLjyfwNFTsfJrmF7LgcwDw==
-X-Received: by 2002:a62:33c6:: with SMTP id z189mr43504686pfz.246.1582386419080;
-        Sat, 22 Feb 2020 07:46:59 -0800 (PST)
-Received: from server.roeck-us.net ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
-        by smtp.gmail.com with ESMTPSA id g2sm6487486pgj.45.2020.02.22.07.46.57
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sat, 22 Feb 2020 07:46:58 -0800 (PST)
-Subject: Re: [PATCH 4.19 000/191] 4.19.106-stable review
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-kernel@vger.kernel.org
-Cc:     torvalds@linux-foundation.org, akpm@linux-foundation.org,
-        shuah@kernel.org, patches@kernelci.org,
-        ben.hutchings@codethink.co.uk, lkft-triage@lists.linaro.org,
-        stable@vger.kernel.org
-References: <20200221072250.732482588@linuxfoundation.org>
-From:   Guenter Roeck <linux@roeck-us.net>
-Message-ID: <73554d3c-ff50-d8c7-3694-e67b8a76d904@roeck-us.net>
-Date:   Sat, 22 Feb 2020 07:46:57 -0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.1
+        Sat, 22 Feb 2020 10:48:35 -0500
+Received: from in01.mta.xmission.com ([166.70.13.51])
+        by out03.mta.xmission.com with esmtps (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.90_1)
+        (envelope-from <ebiederm@xmission.com>)
+        id 1j5X15-0002Kb-RQ; Sat, 22 Feb 2020 08:48:31 -0700
+Received: from ip68-227-160-95.om.om.cox.net ([68.227.160.95] helo=x220.xmission.com)
+        by in01.mta.xmission.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.87)
+        (envelope-from <ebiederm@xmission.com>)
+        id 1j5X14-0004kb-Io; Sat, 22 Feb 2020 08:48:31 -0700
+From:   ebiederm@xmission.com (Eric W. Biederman)
+To:     Oleg Nesterov <oleg@redhat.com>
+Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
+        Al Viro <viro@zeniv.linux.org.uk>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Kernel Hardening <kernel-hardening@lists.openwall.com>,
+        Linux API <linux-api@vger.kernel.org>,
+        Linux FS Devel <linux-fsdevel@vger.kernel.org>,
+        Linux Security Module <linux-security-module@vger.kernel.org>,
+        Akinobu Mita <akinobu.mita@gmail.com>,
+        Alexey Dobriyan <adobriyan@gmail.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Andy Lutomirski <luto@kernel.org>,
+        Daniel Micay <danielmicay@gmail.com>,
+        Djalal Harouni <tixxdz@gmail.com>,
+        "Dmitry V . Levin" <ldv@altlinux.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Ingo Molnar <mingo@kernel.org>,
+        "J . Bruce Fields" <bfields@fieldses.org>,
+        Jeff Layton <jlayton@poochiereds.net>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Kees Cook <keescook@chromium.org>,
+        Solar Designer <solar@openwall.com>
+References: <20200212200335.GO23230@ZenIV.linux.org.uk>
+        <CAHk-=wi+1CPShMFvJNPfnrJ8DD8uVKUOQ5TQzQUNGLUkeoahkg@mail.gmail.com>
+        <20200212203833.GQ23230@ZenIV.linux.org.uk>
+        <20200212204124.GR23230@ZenIV.linux.org.uk>
+        <CAHk-=wi5FOGV_3tALK3n6E2fK3Oa_yCYkYQtCSaXLSEm2DUCKg@mail.gmail.com>
+        <87lfp7h422.fsf@x220.int.ebiederm.org>
+        <CAHk-=wgmn9Qds0VznyphouSZW6e42GWDT5H1dpZg8pyGDGN+=w@mail.gmail.com>
+        <87pnejf6fz.fsf@x220.int.ebiederm.org>
+        <871rqpaswu.fsf_-_@x220.int.ebiederm.org>
+        <87r1yp7zhc.fsf_-_@x220.int.ebiederm.org>
+        <20200221165036.GB16646@redhat.com>
+Date:   Sat, 22 Feb 2020 09:46:29 -0600
+In-Reply-To: <20200221165036.GB16646@redhat.com> (Oleg Nesterov's message of
+        "Fri, 21 Feb 2020 17:50:37 +0100")
+Message-ID: <87mu9a4obu.fsf@x220.int.ebiederm.org>
+User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.1 (gnu/linux)
 MIME-Version: 1.0
-In-Reply-To: <20200221072250.732482588@linuxfoundation.org>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain
+X-XM-SPF: eid=1j5X14-0004kb-Io;;;mid=<87mu9a4obu.fsf@x220.int.ebiederm.org>;;;hst=in01.mta.xmission.com;;;ip=68.227.160.95;;;frm=ebiederm@xmission.com;;;spf=neutral
+X-XM-AID: U2FsdGVkX1+wG8oCF9P5p4qTliSUMtLy9dXaaffHDtc=
+X-SA-Exim-Connect-IP: 68.227.160.95
+X-SA-Exim-Mail-From: ebiederm@xmission.com
+Subject: Re: [PATCH 7/7] proc: Ensure we see the exit of each process tid exactly once
+X-SA-Exim-Version: 4.2.1 (built Thu, 05 May 2016 13:38:54 -0600)
+X-SA-Exim-Scanned: Yes (on in01.mta.xmission.com)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2/20/20 11:39 PM, Greg Kroah-Hartman wrote:
-> This is the start of the stable review cycle for the 4.19.106 release.
-> There are 191 patches in this series, all will be posted as a response
-> to this one.  If anyone has any issues with these being applied, please
-> let me know.
-> 
-> Responses should be made by Sun, 23 Feb 2020 07:19:49 +0000.
-> Anything received after that time might be too late.
-> 
+Oleg Nesterov <oleg@redhat.com> writes:
 
-I didn't send final summaries this time around because all release candidates
-are broken. I expected to get updated images last night, but that didn't
-happen. FTR, the test results for v4.19.105-192-g27ac98449017 are:
+> On 02/20, Eric W. Biederman wrote:
+>>
+>> +void exchange_tids(struct task_struct *ntask, struct task_struct *otask)
+>> +{
+>> +	/* pid_links[PIDTYPE_PID].next is always NULL */
+>> +	struct pid *npid = READ_ONCE(ntask->thread_pid);
+>> +	struct pid *opid = READ_ONCE(otask->thread_pid);
+>> +
+>> +	rcu_assign_pointer(opid->tasks[PIDTYPE_PID].first, &ntask->pid_links[PIDTYPE_PID]);
+>> +	rcu_assign_pointer(npid->tasks[PIDTYPE_PID].first, &otask->pid_links[PIDTYPE_PID]);
+>> +	rcu_assign_pointer(ntask->thread_pid, opid);
+>> +	rcu_assign_pointer(otask->thread_pid, npid);
+>
+> this breaks has_group_leader_pid()...
+>
+> proc_pid_readdir() can miss a process doing mt-exec but this looks fixable,
+> just we need to update ntask->thread_pid before updating ->first.
+>
+> The more problematic case is __exit_signal() which does
+> 		
+> 		if (unlikely(has_group_leader_pid(tsk)))
+> 			posix_cpu_timers_exit_group(tsk);
 
-Build results:
-	total: 156 pass: 155 fail: 1
-Failed builds:
-	x86_64:allnoconfig
-Qemu test results:
-	total: 403 pass: 403 fail: 0
+Along with the comment:
+		/*
+		 * This can only happen if the caller is de_thread().
+		 * FIXME: this is the temporary hack, we should teach
+		 * posix-cpu-timers to handle this case correctly.
+		 */
+So I suspect this is fixable and the above fix might be part of that.
 
-with:
+Hmm looking at your commit:
 
-Building x86_64:allnoconfig ... failed
---------------
-Error log:
-arch/x86/kernel/unwind_orc.c: In function 'unwind_init':
-arch/x86/kernel/unwind_orc.c:267:56: error: 'orc_sort_cmp' undeclared (first use in this function)
-   267 |  sort(__start_orc_unwind_ip, num_entries, sizeof(int), orc_sort_cmp,
-       |                                                        ^~~~~~~~~~~~
-arch/x86/kernel/unwind_orc.c:267:56: note: each undeclared identifier is reported only once for each function it appears in
-arch/x86/kernel/unwind_orc.c:268:7: error: 'orc_sort_swap' undeclared (first use in this function)
-   268 |       orc_sort_swap);
-       |       ^~~~~~~~~~~~~
+commit e0a70217107e6f9844628120412cb27bb4cea194
+Author: Oleg Nesterov <oleg@redhat.com>
+Date:   Fri Nov 5 16:53:42 2010 +0100
 
-I don't plan to send final summaries for the other release candidates;
-all failures have already been reported.
+    posix-cpu-timers: workaround to suppress the problems with mt exec
+    
+    posix-cpu-timers.c correctly assumes that the dying process does
+    posix_cpu_timers_exit_group() and removes all !CPUCLOCK_PERTHREAD
+    timers from signal->cpu_timers list.
+    
+    But, it also assumes that timer->it.cpu.task is always the group
+    leader, and thus the dead ->task means the dead thread group.
+    
+    This is obviously not true after de_thread() changes the leader.
+    After that almost every posix_cpu_timer_ method has problems.
+    
+    It is not simple to fix this bug correctly. First of all, I think
+    that timer->it.cpu should use struct pid instead of task_struct.
+    Also, the locking should be reworked completely. In particular,
+    tasklist_lock should not be used at all. This all needs a lot of
+    nontrivial and hard-to-test changes.
+    
+    Change __exit_signal() to do posix_cpu_timers_exit_group() when
+    the old leader dies during exec. This is not the fix, just the
+    temporary hack to hide the problem for 2.6.37 and stable. IOW,
+    this is obviously wrong but this is what we currently have anyway:
+    cpu timers do not work after mt exec.
+    
+    In theory this change adds another race. The exiting leader can
+    detach the timers which were attached to the new leader. However,
+    the window between de_thread() and release_task() is small, we
+    can pretend that sys_timer_create() was called before de_thread().
+    
+    Signed-off-by: Oleg Nesterov <oleg@redhat.com>
+    Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
 
-Guenter
+It looks like the data structures need fixing.  Possibly to use struct
+pid.  Possibly to move the group data to signal struct.
+
+I think I played with some of that awhile ago.
+
+I am going to move this change to another patchset.  So I don't wind up
+playing shift the bug around.  I thought I would need this to get the
+other code working but it turns out we remain bug compatible without
+this.
+
+Hopefully I can get something out in the next week or so that addresses
+the issues you have pointed out.
+
+Eric
+
