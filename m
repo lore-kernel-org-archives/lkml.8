@@ -7,55 +7,55 @@ X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AF738C35641
-	for <linux-kernel@archiver.kernel.org>; Sat, 22 Feb 2020 00:52:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 74542C35670
+	for <linux-kernel@archiver.kernel.org>; Sat, 22 Feb 2020 00:52:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8064A206EF
-	for <linux-kernel@archiver.kernel.org>; Sat, 22 Feb 2020 00:52:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 476AD206EF
+	for <linux-kernel@archiver.kernel.org>; Sat, 22 Feb 2020 00:52:46 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="RK5gwiuz"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="x6bc4h8r"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727926AbgBVAwj (ORCPT
+        id S1727789AbgBVAwY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Feb 2020 19:52:39 -0500
-Received: from mail-qv1-f66.google.com ([209.85.219.66]:42916 "EHLO
-        mail-qv1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727780AbgBVAw2 (ORCPT
+        Fri, 21 Feb 2020 19:52:24 -0500
+Received: from mail-qk1-f195.google.com ([209.85.222.195]:43688 "EHLO
+        mail-qk1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727709AbgBVAwV (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Feb 2020 19:52:28 -0500
-Received: by mail-qv1-f66.google.com with SMTP id dc14so1794918qvb.9
-        for <linux-kernel@vger.kernel.org>; Fri, 21 Feb 2020 16:52:27 -0800 (PST)
+        Fri, 21 Feb 2020 19:52:21 -0500
+Received: by mail-qk1-f195.google.com with SMTP id p7so3601732qkh.10
+        for <linux-kernel@vger.kernel.org>; Fri, 21 Feb 2020 16:52:20 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=p98CUcx71WuQUXfbK29pwYzUrkAutx1lZcDJt+p+2C0=;
-        b=RK5gwiuzd8mbfs3DxPIt8ns0qWRUrb6cGtSIH/KMj1riAyGQ6mSHAqtuIWk8HXk/qX
-         MJ/el423LkdNl5y9sDgoRRu718ZWFkQnd3ivNr5cSC72gZgQ+38K80Sa3mlE2pq3mqCu
-         PC5+FbtRk6ALLlRYkrH0IQhx8RaT5sC71/EGKkW07I9+dg81YRFopmXT64kxGTAbLpYU
-         AHHkyFf8BpkqeU5kwYlthxx3q3qsno/UrzFzapzB1RpOBhKlogyrlPVMwp7QEwee5HyO
-         kj1UVYvCO9GIo78aik7VNJOiEU1ltpGkdzhNRhs23jKjTkztjiYsUf8X0AXdWSWH6b3X
-         7/Cw==
+        bh=6+ZxPJznoEPUfiqyrXwCulsBLwujoyfJz8x/7U9rRwY=;
+        b=x6bc4h8r0e3oZSXqEk4DjlT2CgZ7ux7ct8qhv+YkhJGvBMcuAHiIfQYYDoXnBSSSb8
+         s69b0sPE01EtdWsJed/dVdl7pGEm0svbl/2dCwHjIhj8MHj9/Ll4bU5x3pZtSOcQINbh
+         2bsYQCQTk41oLYT1s5LQt8o8bqhuDUhonHD8+BPVaQOK2wUWIydMzyrDw2RUzmQW/s3D
+         HaZs+FlBVxBSpyk8VXtbs4mjlowYTiFhfyJt41BSLAv5BrmgDCf4K42OJcdaXRrOuLA1
+         gKXgBG35vDZkX3ZuJljyW+xQL6nyCXHukLLpbKOxdYIoIMjfRuHzNUv3nvowqG3Sv9KO
+         PO9g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=p98CUcx71WuQUXfbK29pwYzUrkAutx1lZcDJt+p+2C0=;
-        b=WX2GQdH8SmvFc0YblvZxdnDskSWc/4impy2Gfn+2KpLkdTWggNqW+BSB4KX+vYP2L6
-         PxVbDhz+W4HO+9y7q2Lsm1JUqte6FVUzvQT7n0yOs3XMoeo38RUkQE2vU9LuOPkPaGAS
-         DWf9cwgExlBBbcKh4v1m8Wd+FDGG4BMviCZCAzfHiYSN8fPDIsbaJIluPKCMfy2AXA00
-         35k8oUS26mWatcyfn7FCYhhvzXWZWytGyiWJ0GkKMDhIOXdiSY9KYNCCbnSFNJ5wfiDv
-         lTA6FlDFJu9wT/zt3/KtT2f7qO+GmyAr7IG0iaXeNnrjXLZovRli9ljFtYFfBEbc2Cqz
-         y6FQ==
-X-Gm-Message-State: APjAAAVkqvi7U9qUXjvqf4+aKtOizCy/QEV+nFYNhvo4oeMIC5P4rdu2
-        DWSOPSnjMcqRLr6S14NO5LXpHg==
-X-Google-Smtp-Source: APXvYqwJ6Mrd1sOciRepdsM1BISRCwpVtORTJ6wkT2r5W8dKurM1RbqVDpsoLvijL9de/UNeQsNMJw==
-X-Received: by 2002:ad4:58a8:: with SMTP id ea8mr32484103qvb.93.1582332746682;
-        Fri, 21 Feb 2020 16:52:26 -0800 (PST)
+        bh=6+ZxPJznoEPUfiqyrXwCulsBLwujoyfJz8x/7U9rRwY=;
+        b=aQ8CEqwfWKknmATeUCsYxEFWhDUbmqJujOgipdNHEAv/UVMeAUppRG1HTliUzKafvI
+         Q60Bi3W50j5xRU7N4yPxj6Bmgmdf1xLSHUEmyv0YV5yTcXR3wzN7Q7wsXPjm2z5n8UZ8
+         H5Efxh6VQpltRA0CT2zQIbhrXUlBAW/9jB5+f7FosCLI2TWL0yIVE4FvPlEeUZx42T7s
+         KujDFN9eg1Es4rwQdDNTjcJSVykaoUJuXXOVGF+W/tzdpgu36HUdZIwIMFmmyYlBgVpF
+         DJQnCLD8iKZc1TwyospYvWPchvKbevDG3+uMzvFshteUZ4d4ve8vD6Fi4/dxYudghJdx
+         iMpA==
+X-Gm-Message-State: APjAAAWWfByZEbf+4qJZ+8BzZi49D1X9bYX0eq1+Qla3vDK+vxQaF/aQ
+        pxJjCZJ7NO1iP+0x0hmOQruTeg==
+X-Google-Smtp-Source: APXvYqxBNg9parclQhmAGBadMxHFvsdVANWEGHp4DjRm/RmsIsMDdfH8m4qnoYYQcL85UnzdNQq3mw==
+X-Received: by 2002:a05:620a:12b4:: with SMTP id x20mr331347qki.308.1582332739680;
+        Fri, 21 Feb 2020 16:52:19 -0800 (PST)
 Received: from pop-os.fios-router.home (pool-71-255-246-27.washdc.fios.verizon.net. [71.255.246.27])
-        by smtp.googlemail.com with ESMTPSA id 12sm359559qkj.136.2020.02.21.16.52.25
+        by smtp.googlemail.com with ESMTPSA id 12sm359559qkj.136.2020.02.21.16.52.18
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 21 Feb 2020 16:52:26 -0800 (PST)
+        Fri, 21 Feb 2020 16:52:19 -0800 (PST)
 From:   Thara Gopinath <thara.gopinath@linaro.org>
 To:     mingo@redhat.com, peterz@infradead.org, ionela.voinescu@arm.com,
         vincent.guittot@linaro.org, dietmar.eggemann@arm.com,
@@ -65,9 +65,9 @@ To:     mingo@redhat.com, peterz@infradead.org, ionela.voinescu@arm.com,
         juri.lelli@redhat.com, corbet@lwn.net
 Cc:     linux-kernel@vger.kernel.org, amit.kachhap@gmail.com,
         javi.merino@kernel.org, amit.kucheria@verdurent.com
-Subject: [Patch v10 8/9] thermal/cpu-cooling: Update thermal pressure in case of a maximum frequency capping
-Date:   Fri, 21 Feb 2020 19:52:12 -0500
-Message-Id: <20200222005213.3873-9-thara.gopinath@linaro.org>
+Subject: [Patch v10 3/9] drivers/base/arch_topology: Add infrastructure to store and update instantaneous thermal pressure
+Date:   Fri, 21 Feb 2020 19:52:07 -0500
+Message-Id: <20200222005213.3873-4-thara.gopinath@linaro.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200222005213.3873-1-thara.gopinath@linaro.org>
 References: <20200222005213.3873-1-thara.gopinath@linaro.org>
@@ -78,61 +78,83 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Thermal governors can request for a cpu's maximum supported frequency to
-be capped in case of an overheat event. This in turn means that the
-maximum capacity available for tasks to run on the particular cpu is
-reduced. Delta between the original maximum capacity and capped maximum
-capacity is known as thermal pressure. Enable cpufreq cooling device to
-update the thermal pressure in event of a capped maximum frequency.
+Add architecture specific APIs to update and track thermal pressure on a
+per cpu basis. A per cpu variable thermal_pressure is introduced to keep
+track of instantaneous per cpu thermal pressure. Thermal pressure is the
+delta between maximum capacity and capped capacity due to a thermal event.
+
+topology_get_thermal_pressure can be hooked into the scheduler specified
+arch_scale_thermal_pressure to retrieve instantaneous thermal pressure of
+a cpu.
+
+arch_set_thermal_pressure can be used to update the thermal pressure.
+
+Considering topology_get_thermal_pressure reads thermal_pressure and
+arch_set_thermal_pressure writes into thermal_pressure, one can argue for
+some sort of locking mechanism to avoid a stale value.  But considering
+topology_get_thermal_pressure can be called from a system critical path
+like scheduler tick function, a locking mechanism is not ideal. This means
+that it is possible the thermal_pressure value used to calculate average
+thermal pressure for a cpu can be stale for upto 1 tick period.
 
 Signed-off-by: Thara Gopinath <thara.gopinath@linaro.org>
 ---
-v6->v7
+v6->v7:
 	- Changed the input argument in arch_set_thermal_pressure from
 	  capped capacity to delta capacity(thermal pressure) as per
-	  Ionela's review comments. Hence the calculation for delta
-	  capacity(thermal pressure) is moved to cpufreq_cooling.c.
+	  Ionela's review comments.
+v9->v10:
+	- Split the patch into three thus separating out arch/arm
+	  and arch/arm64 specific code into individual patches as
+	  suggested by Amit Kucheria.
 
- drivers/thermal/cpufreq_cooling.c | 19 +++++++++++++++++--
- 1 file changed, 17 insertions(+), 2 deletions(-)
+ drivers/base/arch_topology.c  | 11 +++++++++++
+ include/linux/arch_topology.h | 10 ++++++++++
+ 2 files changed, 21 insertions(+)
 
-diff --git a/drivers/thermal/cpufreq_cooling.c b/drivers/thermal/cpufreq_cooling.c
-index fe83d7a210d4..4ae8c856c88e 100644
---- a/drivers/thermal/cpufreq_cooling.c
-+++ b/drivers/thermal/cpufreq_cooling.c
-@@ -431,6 +431,10 @@ static int cpufreq_set_cur_state(struct thermal_cooling_device *cdev,
- 				 unsigned long state)
- {
- 	struct cpufreq_cooling_device *cpufreq_cdev = cdev->devdata;
-+	struct cpumask *cpus;
-+	unsigned int frequency;
-+	unsigned long max_capacity, capacity;
-+	int ret;
- 
- 	/* Request state should be less than max_level */
- 	if (WARN_ON(state > cpufreq_cdev->max_level))
-@@ -442,8 +446,19 @@ static int cpufreq_set_cur_state(struct thermal_cooling_device *cdev,
- 
- 	cpufreq_cdev->cpufreq_state = state;
- 
--	return freq_qos_update_request(&cpufreq_cdev->qos_req,
--				get_state_freq(cpufreq_cdev, state));
-+	frequency = get_state_freq(cpufreq_cdev, state);
-+
-+	ret = freq_qos_update_request(&cpufreq_cdev->qos_req, frequency);
-+
-+	if (ret > 0) {
-+		cpus = cpufreq_cdev->policy->cpus;
-+		max_capacity = arch_scale_cpu_capacity(cpumask_first(cpus));
-+		capacity = frequency * max_capacity;
-+		capacity /= cpufreq_cdev->policy->cpuinfo.max_freq;
-+		arch_set_thermal_pressure(cpus, max_capacity - capacity);
-+	}
-+
-+	return ret;
+diff --git a/drivers/base/arch_topology.c b/drivers/base/arch_topology.c
+index 6119e11a9f95..68dfa49d3b63 100644
+--- a/drivers/base/arch_topology.c
++++ b/drivers/base/arch_topology.c
+@@ -42,6 +42,17 @@ void topology_set_cpu_scale(unsigned int cpu, unsigned long capacity)
+ 	per_cpu(cpu_scale, cpu) = capacity;
  }
  
- /* Bind cpufreq callbacks to thermal cooling device ops */
++DEFINE_PER_CPU(unsigned long, thermal_pressure);
++
++void arch_set_thermal_pressure(struct cpumask *cpus,
++			       unsigned long th_pressure)
++{
++	int cpu;
++
++	for_each_cpu(cpu, cpus)
++		WRITE_ONCE(per_cpu(thermal_pressure, cpu), th_pressure);
++}
++
+ static ssize_t cpu_capacity_show(struct device *dev,
+ 				 struct device_attribute *attr,
+ 				 char *buf)
+diff --git a/include/linux/arch_topology.h b/include/linux/arch_topology.h
+index 3015ecbb90b1..88a115e81f27 100644
+--- a/include/linux/arch_topology.h
++++ b/include/linux/arch_topology.h
+@@ -33,6 +33,16 @@ unsigned long topology_get_freq_scale(int cpu)
+ 	return per_cpu(freq_scale, cpu);
+ }
+ 
++DECLARE_PER_CPU(unsigned long, thermal_pressure);
++
++static inline unsigned long topology_get_thermal_pressure(int cpu)
++{
++	return per_cpu(thermal_pressure, cpu);
++}
++
++void arch_set_thermal_pressure(struct cpumask *cpus,
++			       unsigned long th_pressure);
++
+ struct cpu_topology {
+ 	int thread_id;
+ 	int core_id;
 -- 
 2.20.1
 
