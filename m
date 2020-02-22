@@ -2,125 +2,96 @@ Return-Path: <SRS0=8jYG=4K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_1 autolearn=no
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 07F54C35669
-	for <linux-kernel@archiver.kernel.org>; Sat, 22 Feb 2020 00:01:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D87FEC35669
+	for <linux-kernel@archiver.kernel.org>; Sat, 22 Feb 2020 00:02:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CEB8B2071E
-	for <linux-kernel@archiver.kernel.org>; Sat, 22 Feb 2020 00:00:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A801F208C4
+	for <linux-kernel@archiver.kernel.org>; Sat, 22 Feb 2020 00:02:44 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="KPQE/C9e"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="F813bmeh"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729715AbgBVAA6 (ORCPT
+        id S1729764AbgBVACn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Feb 2020 19:00:58 -0500
-Received: from aserp2120.oracle.com ([141.146.126.78]:35624 "EHLO
-        aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726802AbgBVAA6 (ORCPT
+        Fri, 21 Feb 2020 19:02:43 -0500
+Received: from mail-pj1-f65.google.com ([209.85.216.65]:54390 "EHLO
+        mail-pj1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729541AbgBVACn (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Feb 2020 19:00:58 -0500
-Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
-        by aserp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 01M00Vfk122309;
-        Sat, 22 Feb 2020 00:00:31 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
- : subject : message-id : references : mime-version : content-type :
- in-reply-to; s=corp-2020-01-29;
- bh=EWJFhG6yhtm3ul3h7WoSZAkEKq6UjIeEomHo8PWThow=;
- b=KPQE/C9esyf64uM6XExvFniOurRwQ4sK/tyKdJRr2W6jcDL2NAtcHqTmJxu84c0z95SL
- Ezdjvhg3Hfmyo0IK55dFbfPyIPiQwRn6Vd01zixrO0RMHatzpLdHQklZ5LXFjDFTHaib
- hA2HlPYiBLkw9Q7SPRKWNPBFYbtqXxB10icU1Nj51wIuDO2k4cu4M57NLMNxFYWExww+
- X6F7t3f5NIFYdfgIxkK4dyUCcr06WYsvan6dDCslbVnTJgWksoWj0KAfixsAKQpC/VCs
- dtdLgxj2X5C05I12xICyQy52WetIBXXYPVhMXYbDpsXO9/G9uRmxjlw2c9XP/noh+run 2g== 
-Received: from userp3020.oracle.com (userp3020.oracle.com [156.151.31.79])
-        by aserp2120.oracle.com with ESMTP id 2y8udkufqu-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Sat, 22 Feb 2020 00:00:31 +0000
-Received: from pps.filterd (userp3020.oracle.com [127.0.0.1])
-        by userp3020.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 01LNvpU6153765;
-        Sat, 22 Feb 2020 00:00:30 GMT
-Received: from userv0121.oracle.com (userv0121.oracle.com [156.151.31.72])
-        by userp3020.oracle.com with ESMTP id 2y8ud7vec6-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Sat, 22 Feb 2020 00:00:30 +0000
-Received: from abhmp0010.oracle.com (abhmp0010.oracle.com [141.146.116.16])
-        by userv0121.oracle.com (8.14.4/8.13.8) with ESMTP id 01M00SuG007204;
-        Sat, 22 Feb 2020 00:00:29 GMT
-Received: from ca-dmjordan1.us.oracle.com (/10.211.9.48)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Fri, 21 Feb 2020 16:00:28 -0800
-Date:   Fri, 21 Feb 2020 19:00:45 -0500
-From:   Daniel Jordan <daniel.m.jordan@oracle.com>
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     linux-kernel@vger.kernel.org, stable@vger.kernel.org,
-        Daniel Jordan <daniel.m.jordan@oracle.com>,
-        Eric Biggers <ebiggers@kernel.org>,
-        Herbert Xu <herbert@gondor.apana.org.au>,
-        Steffen Klassert <steffen.klassert@secunet.com>,
-        linux-crypto@vger.kernel.org, Sasha Levin <sashal@kernel.org>
-Subject: Re: [PATCH 4.19 061/191] padata: always acquire cpu_hotplug_lock
- before pinst->lock
-Message-ID: <20200222000045.cl45vclfhvkjursm@ca-dmjordan1.us.oracle.com>
-References: <20200221072250.732482588@linuxfoundation.org>
- <20200221072258.745173144@linuxfoundation.org>
+        Fri, 21 Feb 2020 19:02:43 -0500
+Received: by mail-pj1-f65.google.com with SMTP id dw13so1473169pjb.4
+        for <linux-kernel@vger.kernel.org>; Fri, 21 Feb 2020 16:02:43 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=date:from:to:cc:subject:message-id:mime-version:content-disposition;
+        bh=mlYJKghLuJvyIb9vTdDK73ZdLUo5D/iUeEEKRshNNdU=;
+        b=F813bmehcWyoOKuLB18kNU/7ag9mgf6iNgkmwDBMt+nd7w/qt4bb4Y7NfrgdZTKpMr
+         vhmFYAxnKpi/Q83QSAVGa7QcTSDT7gK/MjCjhYPRmAJnlHwKkbLcmShXoDGHwMbyFVy8
+         Mkc+WoOMGkd3oB1FOM5O1Clm9mkoMRmedmpPg=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
+         :content-disposition;
+        bh=mlYJKghLuJvyIb9vTdDK73ZdLUo5D/iUeEEKRshNNdU=;
+        b=Vuc5K5ewrAv82jVGxuW05svPXggc41tuAJ7Cj85YgTlrMvpXa0qtDdV6sBYlg+8tPq
+         SCu9GFGzE6qgbU+ORnU8tvgR6tqYKzQ6DBoyRgNzdUh2sYKr9o8Be7JvV5xSyOkHLLIp
+         M7lQwCRifKbiWw75byNlareP7OD8yvQaCm8ToN6KkEZQ0XRH4rKGhBTm+KXkgw6bXF4C
+         jj6/V2Zg7QNg3cx/wTHEsJRBEOmCzFwAeXXHSVZlPpv9GUhPVLkfnmaccXTU/2xllF8e
+         x4oMOHKGB+lezrhr0gHF0sgmu6wXuXg15Fj2qXgHge0LiD0o4iWKDG9obtWHsaafr7N7
+         3WsQ==
+X-Gm-Message-State: APjAAAVFpmy1inF9cZjznn7Zcud6ufskN6qnfl/niA5kP07f6uOwv4oW
+        EIBPHlnD7vKwC4IRwV3siZjliA==
+X-Google-Smtp-Source: APXvYqxWXDVzmbnMKsqNsGng+5nphCWKQ4pTyJ3j6HWshT/R2zSiILwT7bURopmZ9Z+CNal2PtMHxA==
+X-Received: by 2002:a17:90a:ba91:: with SMTP id t17mr6127308pjr.74.1582329762627;
+        Fri, 21 Feb 2020 16:02:42 -0800 (PST)
+Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
+        by smtp.gmail.com with ESMTPSA id l11sm3574354pgt.59.2020.02.21.16.02.40
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 21 Feb 2020 16:02:41 -0800 (PST)
+Date:   Fri, 21 Feb 2020 16:02:39 -0800
+From:   Kees Cook <keescook@chromium.org>
+To:     Jonathan Corbet <corbet@lwn.net>
+Cc:     "Rafael J. Wysocki" <rafael@kernel.org>,
+        linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org
+Subject: [PATCH] docs: Fix empty parallelism argument
+Message-ID: <202002211601.322B596B@keescook>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200221072258.745173144@linuxfoundation.org>
-User-Agent: NeoMutt/20180716
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9538 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 bulkscore=0 malwarescore=0
- mlxlogscore=503 suspectscore=0 adultscore=0 spamscore=0 mlxscore=0
- phishscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2001150001 definitions=main-2002210180
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9538 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 lowpriorityscore=0 suspectscore=0
- spamscore=0 priorityscore=1501 adultscore=0 mlxscore=0 clxscore=1011
- malwarescore=0 mlxlogscore=552 phishscore=0 impostorscore=0 bulkscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2001150001
- definitions=main-2002210180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Feb 21, 2020 at 08:40:34AM +0100, Greg Kroah-Hartman wrote:
-> From: Daniel Jordan <daniel.m.jordan@oracle.com>
-> 
-> [ Upstream commit 38228e8848cd7dd86ccb90406af32de0cad24be3 ]
-> 
-> lockdep complains when padata's paths to update cpumasks via CPU hotplug
-> and sysfs are both taken:
-> 
->   # echo 0 > /sys/devices/system/cpu/cpu1/online
->   # echo ff > /sys/kernel/pcrypt/pencrypt/parallel_cpumask
-> 
->   ======================================================
->   WARNING: possible circular locking dependency detected
->   5.4.0-rc8-padata-cpuhp-v3+ #1 Not tainted
->   ------------------------------------------------------
->   bash/205 is trying to acquire lock:
->   ffffffff8286bcd0 (cpu_hotplug_lock.rw_sem){++++}, at: padata_set_cpumask+0x2b/0x120
-> 
->   but task is already holding lock:
->   ffff8880001abfa0 (&pinst->lock){+.+.}, at: padata_set_cpumask+0x26/0x120
-> 
->   which lock already depends on the new lock.
+When there was no parallelism (no top-level -j arg and a pre-1.7
+sphinx-build), the argument passed would be empty ("") instead of just
+being missing, which would (understandably) badly confuse sphinx-build.
+Fix this by removing the quotes.
 
-I think this patch should be dropped from all stable queues (4.4, 4.9, 4.14,
-4.19, 5.4, and 5.5).
+Reported-by: Rafael J. Wysocki <rafael@kernel.org>
+Fixes: 51e46c7a4007 ("docs, parallelism: Rearrange how jobserver reservations are made")
+Signed-off-by: Kees Cook <keescook@chromium.org>
+---
+ Documentation/sphinx/parallel-wrapper.sh | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-The main benefit is to un-break lockdep for testing with future padata changes,
-and an actual deadlock seems unlikely.
+diff --git a/Documentation/sphinx/parallel-wrapper.sh b/Documentation/sphinx/parallel-wrapper.sh
+index 7daf5133bdd3..e54c44ce117d 100644
+--- a/Documentation/sphinx/parallel-wrapper.sh
++++ b/Documentation/sphinx/parallel-wrapper.sh
+@@ -30,4 +30,4 @@ if [ -n "$parallel" ] ; then
+ 	parallel="-j$parallel"
+ fi
+ 
+-exec "$sphinx" "$parallel" "$@"
++exec "$sphinx" $parallel "$@"
+-- 
+2.20.1
 
-These stable versions don't fix the ordering in padata_remove_cpu() either
-(nothing calls it though).
 
-I tried the other stable padata patch in this cycle ("padata: validate cpumask
-without removed CPU during offline"), it passed my tests and should stay in.
-
-thanks,
-Daniel
+-- 
+Kees Cook
