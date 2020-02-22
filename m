@@ -7,55 +7,55 @@ X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EB7FAC35641
-	for <linux-kernel@archiver.kernel.org>; Sat, 22 Feb 2020 00:52:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AF738C35641
+	for <linux-kernel@archiver.kernel.org>; Sat, 22 Feb 2020 00:52:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B829F206EF
-	for <linux-kernel@archiver.kernel.org>; Sat, 22 Feb 2020 00:52:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8064A206EF
+	for <linux-kernel@archiver.kernel.org>; Sat, 22 Feb 2020 00:52:40 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="ob7s8eKd"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="RK5gwiuz"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727903AbgBVAwg (ORCPT
+        id S1727926AbgBVAwj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Feb 2020 19:52:36 -0500
-Received: from mail-qv1-f65.google.com ([209.85.219.65]:42916 "EHLO
-        mail-qv1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727864AbgBVAw2 (ORCPT
+        Fri, 21 Feb 2020 19:52:39 -0500
+Received: from mail-qv1-f66.google.com ([209.85.219.66]:42916 "EHLO
+        mail-qv1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727780AbgBVAw2 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Fri, 21 Feb 2020 19:52:28 -0500
-Received: by mail-qv1-f65.google.com with SMTP id dc14so1794937qvb.9
-        for <linux-kernel@vger.kernel.org>; Fri, 21 Feb 2020 16:52:28 -0800 (PST)
+Received: by mail-qv1-f66.google.com with SMTP id dc14so1794918qvb.9
+        for <linux-kernel@vger.kernel.org>; Fri, 21 Feb 2020 16:52:27 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=BAQF5ZDVNMZbeHaYGSomVWZS84RJ+K8mXzXhYs96H3A=;
-        b=ob7s8eKdRzuIfCLK11osjD3uvs+SrJEUCHWadWxu3dijYZwsnmgWZztyFAolW37eLr
-         N7rFclyVFx0P30Aoz7sC46OqH3HTLuOWQds8Mq482pj1vGpc1mScAXMeLcdPPl8K2Jwy
-         5ELsDqr/mg6vLZdhHxuLCttP+YvuGIg6Ht4/6XgWb1wqgPO81M13weYplKJ96jrD/Cai
-         y3fZ4JYHf8Y0/hRWrAT4k1hYE5dr/Zc31rq5P8mtnnmlapG8A9oOsdw9MMoNLw8CLQG+
-         8NN8IQ1DVPc8JQqA6Ai4R05b+j0ZlnZuk44UZoHxfGaCUUEe5dtZWmC5y6wVvlNt3O/3
-         oJVQ==
+        bh=p98CUcx71WuQUXfbK29pwYzUrkAutx1lZcDJt+p+2C0=;
+        b=RK5gwiuzd8mbfs3DxPIt8ns0qWRUrb6cGtSIH/KMj1riAyGQ6mSHAqtuIWk8HXk/qX
+         MJ/el423LkdNl5y9sDgoRRu718ZWFkQnd3ivNr5cSC72gZgQ+38K80Sa3mlE2pq3mqCu
+         PC5+FbtRk6ALLlRYkrH0IQhx8RaT5sC71/EGKkW07I9+dg81YRFopmXT64kxGTAbLpYU
+         AHHkyFf8BpkqeU5kwYlthxx3q3qsno/UrzFzapzB1RpOBhKlogyrlPVMwp7QEwee5HyO
+         kj1UVYvCO9GIo78aik7VNJOiEU1ltpGkdzhNRhs23jKjTkztjiYsUf8X0AXdWSWH6b3X
+         7/Cw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=BAQF5ZDVNMZbeHaYGSomVWZS84RJ+K8mXzXhYs96H3A=;
-        b=HHtqJL6D8zRrCvpxVOOagASugcBxi0/IhTZXH21kn+nbYs3rANir8HLvTaycOCNWB3
-         X39bpt3iT68mteANVOOMYIQkCBbRq3nkztc8v3TdJD7I6CkqKSSuezIyleuYqQGwsWUB
-         HvZORffZXPBkToBB/OpAxsIm5F1YsEUdRX55x9QXXODSKwUDEiGrrG5Ko767+FD7zg5+
-         Fu0ese44k9g3VdYmCDr/M3mxd6l21pV5toTQ3y8uKpRp+P4zExgEBBOt8QcxhN6sHUPR
-         G+wGsjgm+nruEA6sOijw8QSNmYlT539zrd4BRgls/h+Y4rDwqqFphO4L+rU2HY2ayR7H
-         Qzqw==
-X-Gm-Message-State: APjAAAXoi/JY/pJsu+XDSqRKOWjdtYRqdjN6CKCM+4dPYzQiUZiaCdBT
-        hdsqlg6oF5Kxsw/7R/daLmEiaA==
-X-Google-Smtp-Source: APXvYqxGYXCgRBB9YnM6QD+ED/aPRbAafg8fZ++cq8l+Ypx7MdzpGgFciEZmBP+m30kbkcpCZoc/Sw==
-X-Received: by 2002:a0c:f8c6:: with SMTP id h6mr33610352qvo.239.1582332748073;
-        Fri, 21 Feb 2020 16:52:28 -0800 (PST)
+        bh=p98CUcx71WuQUXfbK29pwYzUrkAutx1lZcDJt+p+2C0=;
+        b=WX2GQdH8SmvFc0YblvZxdnDskSWc/4impy2Gfn+2KpLkdTWggNqW+BSB4KX+vYP2L6
+         PxVbDhz+W4HO+9y7q2Lsm1JUqte6FVUzvQT7n0yOs3XMoeo38RUkQE2vU9LuOPkPaGAS
+         DWf9cwgExlBBbcKh4v1m8Wd+FDGG4BMviCZCAzfHiYSN8fPDIsbaJIluPKCMfy2AXA00
+         35k8oUS26mWatcyfn7FCYhhvzXWZWytGyiWJ0GkKMDhIOXdiSY9KYNCCbnSFNJ5wfiDv
+         lTA6FlDFJu9wT/zt3/KtT2f7qO+GmyAr7IG0iaXeNnrjXLZovRli9ljFtYFfBEbc2Cqz
+         y6FQ==
+X-Gm-Message-State: APjAAAVkqvi7U9qUXjvqf4+aKtOizCy/QEV+nFYNhvo4oeMIC5P4rdu2
+        DWSOPSnjMcqRLr6S14NO5LXpHg==
+X-Google-Smtp-Source: APXvYqwJ6Mrd1sOciRepdsM1BISRCwpVtORTJ6wkT2r5W8dKurM1RbqVDpsoLvijL9de/UNeQsNMJw==
+X-Received: by 2002:ad4:58a8:: with SMTP id ea8mr32484103qvb.93.1582332746682;
+        Fri, 21 Feb 2020 16:52:26 -0800 (PST)
 Received: from pop-os.fios-router.home (pool-71-255-246-27.washdc.fios.verizon.net. [71.255.246.27])
-        by smtp.googlemail.com with ESMTPSA id 12sm359559qkj.136.2020.02.21.16.52.26
+        by smtp.googlemail.com with ESMTPSA id 12sm359559qkj.136.2020.02.21.16.52.25
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 21 Feb 2020 16:52:27 -0800 (PST)
+        Fri, 21 Feb 2020 16:52:26 -0800 (PST)
 From:   Thara Gopinath <thara.gopinath@linaro.org>
 To:     mingo@redhat.com, peterz@infradead.org, ionela.voinescu@arm.com,
         vincent.guittot@linaro.org, dietmar.eggemann@arm.com,
@@ -65,9 +65,9 @@ To:     mingo@redhat.com, peterz@infradead.org, ionela.voinescu@arm.com,
         juri.lelli@redhat.com, corbet@lwn.net
 Cc:     linux-kernel@vger.kernel.org, amit.kachhap@gmail.com,
         javi.merino@kernel.org, amit.kucheria@verdurent.com
-Subject: [Patch v10 9/9] sched/fair: Enable tuning of decay period
-Date:   Fri, 21 Feb 2020 19:52:13 -0500
-Message-Id: <20200222005213.3873-10-thara.gopinath@linaro.org>
+Subject: [Patch v10 8/9] thermal/cpu-cooling: Update thermal pressure in case of a maximum frequency capping
+Date:   Fri, 21 Feb 2020 19:52:12 -0500
+Message-Id: <20200222005213.3873-9-thara.gopinath@linaro.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200222005213.3873-1-thara.gopinath@linaro.org>
 References: <20200222005213.3873-1-thara.gopinath@linaro.org>
@@ -78,130 +78,61 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Thermal pressure follows pelt signals which means the decay period for
-thermal pressure is the default pelt decay period. Depending on soc
-characteristics and thermal activity, it might be beneficial to decay
-thermal pressure slower, but still in-tune with the pelt signals.  One way
-to achieve this is to provide a command line parameter to set a decay
-shift parameter to an integer between 0 and 10.
+Thermal governors can request for a cpu's maximum supported frequency to
+be capped in case of an overheat event. This in turn means that the
+maximum capacity available for tasks to run on the particular cpu is
+reduced. Delta between the original maximum capacity and capped maximum
+capacity is known as thermal pressure. Enable cpufreq cooling device to
+update the thermal pressure in event of a capped maximum frequency.
 
 Signed-off-by: Thara Gopinath <thara.gopinath@linaro.org>
 ---
-v8->v9:
-	- Initialized the __shift to 0 in setup_sched_thermal_decay_shift
-	  as per Quentin's suggestion.
-v9->v10:
-	- Added description for sched_thermal_decay_shift in
-	  kernel-parameters.txt following Randy's review comments.
+v6->v7
+	- Changed the input argument in arch_set_thermal_pressure from
+	  capped capacity to delta capacity(thermal pressure) as per
+	  Ionela's review comments. Hence the calculation for delta
+	  capacity(thermal pressure) is moved to cpufreq_cooling.c.
 
- .../admin-guide/kernel-parameters.txt          | 16 ++++++++++++++++
- kernel/sched/core.c                            |  2 +-
- kernel/sched/fair.c                            | 15 ++++++++++++++-
- kernel/sched/sched.h                           | 18 ++++++++++++++++++
- 4 files changed, 49 insertions(+), 2 deletions(-)
+ drivers/thermal/cpufreq_cooling.c | 19 +++++++++++++++++--
+ 1 file changed, 17 insertions(+), 2 deletions(-)
 
-diff --git a/Documentation/admin-guide/kernel-parameters.txt b/Documentation/admin-guide/kernel-parameters.txt
-index c7f407eb22d3..7cf12c611fe0 100644
---- a/Documentation/admin-guide/kernel-parameters.txt
-+++ b/Documentation/admin-guide/kernel-parameters.txt
-@@ -4393,6 +4393,22 @@
- 			incurs a small amount of overhead in the scheduler
- 			but is useful for debugging and performance tuning.
+diff --git a/drivers/thermal/cpufreq_cooling.c b/drivers/thermal/cpufreq_cooling.c
+index fe83d7a210d4..4ae8c856c88e 100644
+--- a/drivers/thermal/cpufreq_cooling.c
++++ b/drivers/thermal/cpufreq_cooling.c
+@@ -431,6 +431,10 @@ static int cpufreq_set_cur_state(struct thermal_cooling_device *cdev,
+ 				 unsigned long state)
+ {
+ 	struct cpufreq_cooling_device *cpufreq_cdev = cdev->devdata;
++	struct cpumask *cpus;
++	unsigned int frequency;
++	unsigned long max_capacity, capacity;
++	int ret;
  
-+	sched_thermal_decay_shift=
-+			[KNL, SMP] Set a decay shift for scheduler thermal
-+			pressure signal. Thermal pressure signal follows the
-+			default decay period of other scheduler pelt
-+			signals(usually 32 ms but configurable). Setting
-+			sched_thermal_decay_shift will left shift the decay
-+			period for the thermal pressure signal by the shift
-+			value.
-+			i.e. with the default pelt decay period of 32 ms
-+			sched_thermal_decay_shift   thermal pressure decay pr
-+				1			64 ms
-+				2			128 ms
-+			and so on.
-+			Format: integer between 0 and 10
-+			Default is 0.
+ 	/* Request state should be less than max_level */
+ 	if (WARN_ON(state > cpufreq_cdev->max_level))
+@@ -442,8 +446,19 @@ static int cpufreq_set_cur_state(struct thermal_cooling_device *cdev,
+ 
+ 	cpufreq_cdev->cpufreq_state = state;
+ 
+-	return freq_qos_update_request(&cpufreq_cdev->qos_req,
+-				get_state_freq(cpufreq_cdev, state));
++	frequency = get_state_freq(cpufreq_cdev, state);
 +
- 	skew_tick=	[KNL] Offset the periodic timer tick per cpu to mitigate
- 			xtime_lock contention on larger systems, and/or RCU lock
- 			contention on all systems with CONFIG_MAXSMP set.
-diff --git a/kernel/sched/core.c b/kernel/sched/core.c
-index 160b5e9e8945..166a3edfad5f 100644
---- a/kernel/sched/core.c
-+++ b/kernel/sched/core.c
-@@ -3597,7 +3597,7 @@ void scheduler_tick(void)
- 
- 	update_rq_clock(rq);
- 	thermal_pressure = arch_scale_thermal_pressure(cpu_of(rq));
--	update_thermal_load_avg(rq_clock_task(rq), rq, thermal_pressure);
-+	update_thermal_load_avg(rq_clock_thermal(rq), rq, thermal_pressure);
- 	curr->sched_class->task_tick(rq, curr, 0);
- 	calc_global_load_tick(rq);
- 	psi_task_tick(rq);
-diff --git a/kernel/sched/fair.c b/kernel/sched/fair.c
-index 10e867e540ab..454d7735764e 100644
---- a/kernel/sched/fair.c
-+++ b/kernel/sched/fair.c
-@@ -86,6 +86,19 @@ static unsigned int normalized_sysctl_sched_wakeup_granularity	= 1000000UL;
- 
- const_debug unsigned int sysctl_sched_migration_cost	= 500000UL;
- 
-+int sched_thermal_decay_shift;
-+static int __init setup_sched_thermal_decay_shift(char *str)
-+{
-+	int _shift = 0;
++	ret = freq_qos_update_request(&cpufreq_cdev->qos_req, frequency);
 +
-+	if (kstrtoint(str, 0, &_shift))
-+		pr_warn("Unable to set scheduler thermal pressure decay shift parameter\n");
++	if (ret > 0) {
++		cpus = cpufreq_cdev->policy->cpus;
++		max_capacity = arch_scale_cpu_capacity(cpumask_first(cpus));
++		capacity = frequency * max_capacity;
++		capacity /= cpufreq_cdev->policy->cpuinfo.max_freq;
++		arch_set_thermal_pressure(cpus, max_capacity - capacity);
++	}
 +
-+	sched_thermal_decay_shift = clamp(_shift, 0, 10);
-+	return 1;
-+}
-+__setup("sched_thermal_decay_shift=", setup_sched_thermal_decay_shift);
-+
- #ifdef CONFIG_SMP
- /*
-  * For asym packing, by default the lower numbered CPU has higher priority.
-@@ -7577,7 +7590,7 @@ static bool __update_blocked_others(struct rq *rq, bool *done)
- 
- 	decayed = update_rt_rq_load_avg(now, rq, curr_class == &rt_sched_class) |
- 		  update_dl_rq_load_avg(now, rq, curr_class == &dl_sched_class) |
--		  update_thermal_load_avg(rq_clock_task(rq), rq, thermal_pressure) |
-+		  update_thermal_load_avg(rq_clock_thermal(rq), rq, thermal_pressure) |
- 		  update_irq_load_avg(rq, 0);
- 
- 	if (others_have_blocked(rq))
-diff --git a/kernel/sched/sched.h b/kernel/sched/sched.h
-index 211411ac0efa..e6312662679d 100644
---- a/kernel/sched/sched.h
-+++ b/kernel/sched/sched.h
-@@ -1110,6 +1110,24 @@ static inline u64 rq_clock_task(struct rq *rq)
- 	return rq->clock_task;
++	return ret;
  }
  
-+/**
-+ * By default the decay is the default pelt decay period.
-+ * The decay shift can change the decay period in
-+ * multiples of 32.
-+ *  Decay shift		Decay period(ms)
-+ *	0			32
-+ *	1			64
-+ *	2			128
-+ *	3			256
-+ *	4			512
-+ */
-+extern int sched_thermal_decay_shift;
-+
-+static inline u64 rq_clock_thermal(struct rq *rq)
-+{
-+	return rq_clock_task(rq) >> sched_thermal_decay_shift;
-+}
-+
- static inline void rq_clock_skip_update(struct rq *rq)
- {
- 	lockdep_assert_held(&rq->lock);
+ /* Bind cpufreq callbacks to thermal cooling device ops */
 -- 
 2.20.1
 
