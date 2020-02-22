@@ -2,143 +2,214 @@ Return-Path: <SRS0=8jYG=4K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6881FC35671
-	for <linux-kernel@archiver.kernel.org>; Sat, 22 Feb 2020 11:26:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EC92BC35671
+	for <linux-kernel@archiver.kernel.org>; Sat, 22 Feb 2020 11:29:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3DC7E206EF
-	for <linux-kernel@archiver.kernel.org>; Sat, 22 Feb 2020 11:26:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BC0F8206EF
+	for <linux-kernel@archiver.kernel.org>; Sat, 22 Feb 2020 11:29:03 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=c-s.fr header.i=@c-s.fr header.b="rH4W7axa"
+	dkim=pass (1024-bit key) header.d=walle.cc header.i=@walle.cc header.b="I8oZj+/H"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727227AbgBVL0i (ORCPT
+        id S1727238AbgBVL3C (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 22 Feb 2020 06:26:38 -0500
-Received: from pegase1.c-s.fr ([93.17.236.30]:33579 "EHLO pegase1.c-s.fr"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726726AbgBVL0i (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 22 Feb 2020 06:26:38 -0500
-Received: from localhost (mailhub1-int [192.168.12.234])
-        by localhost (Postfix) with ESMTP id 48PmHZ5d62z9v6f3;
-        Sat, 22 Feb 2020 12:26:34 +0100 (CET)
-Authentication-Results: localhost; dkim=pass
-        reason="1024-bit key; insecure key"
-        header.d=c-s.fr header.i=@c-s.fr header.b=rH4W7axa; dkim-adsp=pass;
-        dkim-atps=neutral
-X-Virus-Scanned: Debian amavisd-new at c-s.fr
-Received: from pegase1.c-s.fr ([192.168.12.234])
-        by localhost (pegase1.c-s.fr [192.168.12.234]) (amavisd-new, port 10024)
-        with ESMTP id eb4TsJikDmNu; Sat, 22 Feb 2020 12:26:34 +0100 (CET)
-Received: from messagerie.si.c-s.fr (messagerie.si.c-s.fr [192.168.25.192])
-        by pegase1.c-s.fr (Postfix) with ESMTP id 48PmHZ4MFYz9v6f2;
-        Sat, 22 Feb 2020 12:26:34 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=c-s.fr; s=mail;
-        t=1582370794; bh=4iT5oLUTroPjIccYuns5zqLIPkL8k2A2IrBunY3qOp8=;
-        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
-        b=rH4W7axalzOcHBRnuymJNHQcPX24IdgR45ag0MClwMYM1QnYKLxX8JXans4uwc62Y
-         pOk6CCVCQZK9hqUjvIH3VmP+1zRV2aQNkfas5G1nL2c8JU4VXDwLlfTlm49E16O+Aj
-         psqVKvLwdf6RJfD0wBIJTSoApFY3r9u5nRz4KWYQ=
-Received: from localhost (localhost [127.0.0.1])
-        by messagerie.si.c-s.fr (Postfix) with ESMTP id CE4FE8B762;
-        Sat, 22 Feb 2020 12:26:35 +0100 (CET)
-X-Virus-Scanned: amavisd-new at c-s.fr
-Received: from messagerie.si.c-s.fr ([127.0.0.1])
-        by localhost (messagerie.si.c-s.fr [127.0.0.1]) (amavisd-new, port 10023)
-        with ESMTP id UQprTtsWVdWK; Sat, 22 Feb 2020 12:26:35 +0100 (CET)
-Received: from pc16570vm.idsi0.si.c-s.fr (unknown [192.168.4.90])
-        by messagerie.si.c-s.fr (Postfix) with ESMTP id 575228B755;
-        Sat, 22 Feb 2020 12:26:35 +0100 (CET)
-Subject: Re: [PATCH] powerpc/watchpoint: Don't call dar_within_range() for
- Book3S
-To:     Ravi Bangoria <ravi.bangoria@linux.ibm.com>, mpe@ellerman.id.au
-Cc:     mikey@neuling.org, linuxppc-dev@lists.ozlabs.org,
-        linux-kernel@vger.kernel.org
-References: <20200222082049.330435-1-ravi.bangoria@linux.ibm.com>
-From:   Christophe Leroy <christophe.leroy@c-s.fr>
-Message-ID: <d2aad6ea-5b61-7321-13a6-5faef361c57d@c-s.fr>
-Date:   Sat, 22 Feb 2020 11:26:08 +0000
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:52.0) Gecko/20100101
- Thunderbird/52.7.0
+        Sat, 22 Feb 2020 06:29:02 -0500
+Received: from ssl.serverraum.org ([176.9.125.105]:52341 "EHLO
+        ssl.serverraum.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726763AbgBVL3C (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 22 Feb 2020 06:29:02 -0500
+Received: from apollo.fritz.box (unknown [IPv6:2a02:810c:c200:2e91:6257:18ff:fec4:ca34])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-384) server-signature RSA-PSS (2048 bits) server-digest SHA256)
+        (No client certificate requested)
+        by ssl.serverraum.org (Postfix) with ESMTPSA id C25BA22F43;
+        Sat, 22 Feb 2020 12:28:55 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=walle.cc; s=mail2016061301;
+        t=1582370938;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=e0h+j99WGr7wIIbHMLcV3S5aoHAcIz/PdQJyb0wgPnM=;
+        b=I8oZj+/HaL1gIkhtRKfWF3mOwkdK9UnbDUhuCokq1OMD1SG0VB+vPxRsbJMhtK5G97O0wl
+        Fb5aOlyDjbmhZcyVTw7oCxW61DlgokC9PdAj9GYRqPFAKD9GyyLmnuHvSP6huIutEaKBd/
+        GaaRjcFG3DyjHvfQRbpEMvXuEPUC6kg=
+From:   Michael Walle <michael@walle.cc>
+To:     olteanv@gmail.com
+Cc:     andrew@lunn.ch, davem@davemloft.net, devicetree@vger.kernel.org,
+        f.fainelli@gmail.com, linux-kernel@vger.kernel.org,
+        mark.rutland@arm.com, netdev@vger.kernel.org, robh+dt@kernel.org,
+        shawnguo@kernel.org, vivien.didelot@gmail.com,
+        Michael Walle <michael@walle.cc>
+Subject: Re: [PATCH v2 net-next/devicetree 3/5] dt-bindings: net: dsa: ocelot: document the vsc9959 core
+Date:   Sat, 22 Feb 2020 12:28:41 +0100
+Message-Id: <20200222112841.29927-1-michael@walle.cc>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20200219151259.14273-4-olteanv@gmail.com>
+References: <20200219151259.14273-4-olteanv@gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <20200222082049.330435-1-ravi.bangoria@linux.ibm.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
+X-Spamd-Bar: ++++
+X-Rspamd-Server: web
+X-Rspamd-Queue-Id: C25BA22F43
+X-Spamd-Result: default: False [4.90 / 15.00];
+         FROM_HAS_DN(0.00)[];
+         TO_DN_SOME(0.00)[];
+         R_MISSING_CHARSET(2.50)[];
+         FREEMAIL_ENVRCPT(0.00)[gmail.com];
+         TAGGED_RCPT(0.00)[dt];
+         MIME_GOOD(-0.10)[text/plain];
+         BROKEN_CONTENT_TYPE(1.50)[];
+         TO_MATCH_ENVRCPT_ALL(0.00)[];
+         NEURAL_SPAM(0.00)[0.617];
+         DKIM_SIGNED(0.00)[];
+         DBL_PROHIBIT(0.00)[0.0.0.2:email,0.0.0.3:email,0.0.0.0:email,0.0.0.4:email,0.0.0.5:email,0.0.0.1:email];
+         RCPT_COUNT_TWELVE(0.00)[12];
+         MID_CONTAINS_FROM(1.00)[];
+         FREEMAIL_TO(0.00)[gmail.com];
+         RCVD_COUNT_ZERO(0.00)[0];
+         FROM_EQ_ENVFROM(0.00)[];
+         MIME_TRACE(0.00)[0:+];
+         ASN(0.00)[asn:31334, ipnet:2a02:810c::/31, country:DE];
+         FREEMAIL_CC(0.00)[lunn.ch,davemloft.net,vger.kernel.org,gmail.com,arm.com,kernel.org,walle.cc]
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
-
-On 02/22/2020 08:20 AM, Ravi Bangoria wrote:
-> DAR is set to the first byte of overlap between actual access and
-> watched range at DSI on Book3S processor. But actual access range
-> might or might not be within user asked range. So for Book3S, it
-> must not call dar_within_range().
+> This patch adds the required documentation for the embedded L2 switch
+> inside the NXP LS1028A chip.
 > 
-> This revert portion of commit 39413ae00967 ("powerpc/hw_breakpoints:
-> Rewrite 8xx breakpoints to allow any address range size.").
+> I've submitted it in the legacy format instead of yaml schema, because
+> DSA itself has not yet been converted to yaml, and this driver defines
+> no custom bindings.
 > 
-> Before patch:
->    # ./tools/testing/selftests/powerpc/ptrace/perf-hwbreak
->    ...
->    TESTED: No overlap
->    FAILED: Partial overlap: 0 != 2
->    TESTED: Partial overlap
->    TESTED: No overlap
->    FAILED: Full overlap: 0 != 2
->    failure: perf_hwbreak
-> 
-> After patch:
->    TESTED: No overlap
->    TESTED: Partial overlap
->    TESTED: Partial overlap
->    TESTED: No overlap
->    TESTED: Full overlap
->    success: perf_hwbreak
-> 
-> Fixes: 39413ae00967 ("powerpc/hw_breakpoints: Rewrite 8xx breakpoints to allow any address range size.")
-
-Oh, this seems to have been introduced by 27985b2a640e 
-("powerpc/watchpoint: Don't ignore extraneous exceptions blindly").
-
-I must have lost it through a rebase as we were doing our series 
-approximately at the same time, sorry for that.
-
-Reviewed-by: Christophe Leroy <christophe.leroy@c-s.fr>
-
-> Reported-by: Michael Ellerman <mpe@ellerman.id.au>
-> Signed-off-by: Ravi Bangoria <ravi.bangoria@linux.ibm.com>
+> Signed-off-by: Vladimir Oltean <vladimir.oltean@nxp.com>
 > ---
->   arch/powerpc/kernel/hw_breakpoint.c | 12 +++++++-----
->   1 file changed, 7 insertions(+), 5 deletions(-)
+> Changes in v2:
+> Adapted phy-mode = "gmii" to phy-mode = "internal".
 > 
-> diff --git a/arch/powerpc/kernel/hw_breakpoint.c b/arch/powerpc/kernel/hw_breakpoint.c
-> index 2462cd7c565c..d0854320bb50 100644
-> --- a/arch/powerpc/kernel/hw_breakpoint.c
-> +++ b/arch/powerpc/kernel/hw_breakpoint.c
-> @@ -331,11 +331,13 @@ int hw_breakpoint_handler(struct die_args *args)
->   	}
->   
->   	info->type &= ~HW_BRK_TYPE_EXTRANEOUS_IRQ;
-> -	if (!dar_within_range(regs->dar, info))
-> -		info->type |= HW_BRK_TYPE_EXTRANEOUS_IRQ;
-> -
-> -	if (!IS_ENABLED(CONFIG_PPC_8xx) && !stepping_handler(regs, bp, info))
-> -		goto out;
-> +	if (IS_ENABLED(CONFIG_PPC_8xx)) {
-> +		if (!dar_within_range(regs->dar, info))
-> +			info->type |= HW_BRK_TYPE_EXTRANEOUS_IRQ;
-> +	} else {
-> +		if (!stepping_handler(regs, bp, info))
-> +			goto out;
-> +	}
->   
->   	/*
->   	 * As a policy, the callback is invoked in a 'trigger-after-execute'
+>  .../devicetree/bindings/net/dsa/ocelot.txt    | 96 +++++++++++++++++++
+>  1 file changed, 96 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/net/dsa/ocelot.txt
 > 
+> diff --git a/Documentation/devicetree/bindings/net/dsa/ocelot.txt b/Documentation/devicetree/bindings/net/dsa/ocelot.txt
+> new file mode 100644
+> index 000000000000..a9d86e09dafa
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/net/dsa/ocelot.txt
+> @@ -0,0 +1,96 @@
+> +Microchip Ocelot switch driver family
+> +=====================================
+> +
+> +Felix
+> +-----
+> +
+> +The VSC9959 core is currently the only switch supported by the driver, and is
+> +found in the NXP LS1028A. It is a PCI device, part of the larger ENETC root
+> +complex. As a result, the ethernet-switch node is a sub-node of the PCIe root
+> +complex node and its "reg" property conforms to the parent node bindings:
+> +
+> +* reg: Specifies PCIe Device Number and Function Number of the endpoint device,
+> +  in this case for the Ethernet L2Switch it is PF5 (of device 0, bus 0).
+> +
+> +It does not require a "compatible" string.
+> +
+> +The interrupt line is used to signal availability of PTP TX timestamps and for
+> +TSN frame preemption.
+> +
+> +For the external switch ports, depending on board configuration, "phy-mode" and
+> +"phy-handle" are populated by board specific device tree instances. Ports 4 and
+> +5 are fixed as internal ports in the NXP LS1028A instantiation.
+> +
+> +Any port can be disabled, but the CPU port should be kept enabled.
+
+What is the reason for this? Do you mean if you actually want to use it? In
+fact, I'd would like to see it disabled by default in the .dtsi file. It
+doesn't make sense to just have the CPU port enabled, but not any of the
+outgoing ports. It'd just confuse the user if there is an additional
+network port which cannot be used.
+
+-michael
+
+> +
+> +The CPU port property ("ethernet"), which is assigned by default to the 2.5Gbps
+> +port@4, can be moved to the 1Gbps port@5, depending on the specific use case.
+> +DSA tagging is supported on a single port at a time.
+> +
+> +For the rest of the device tree binding definitions, which are standard DSA and
+> +PCI, refer to the following documents:
+> +
+> +Documentation/devicetree/bindings/net/dsa/dsa.txt
+> +Documentation/devicetree/bindings/pci/pci.txt
+> +
+> +Example:
+> +
+> +&soc {
+> +	pcie@1f0000000 { /* Integrated Endpoint Root Complex */
+> +		ethernet-switch@0,5 {
+> +			reg = <0x000500 0 0 0 0>;
+> +			/* IEP INT_B */
+> +			interrupts = <GIC_SPI 95 IRQ_TYPE_LEVEL_HIGH>;
+> +
+> +			ports {
+> +				#address-cells = <1>;
+> +				#size-cells = <0>;
+> +
+> +				/* External ports */
+> +				port@0 {
+> +					reg = <0>;
+> +					label = "swp0";
+> +				};
+> +
+> +				port@1 {
+> +					reg = <1>;
+> +					label = "swp1";
+> +				};
+> +
+> +				port@2 {
+> +					reg = <2>;
+> +					label = "swp2";
+> +				};
+> +
+> +				port@3 {
+> +					reg = <3>;
+> +					label = "swp3";
+> +				};
+> +
+> +				/* Tagging CPU port */
+> +				port@4 {
+> +					reg = <4>;
+> +					ethernet = <&enetc_port2>;
+> +					phy-mode = "internal";
+> +
+> +					fixed-link {
+> +						speed = <2500>;
+> +						full-duplex;
+> +					};
+> +				};
+> +
+> +				/* Non-tagging CPU port */
+> +				port@5 {
+> +					reg = <5>;
+> +					phy-mode = "internal";
+> +					status = "disabled";
+> +
+> +					fixed-link {
+> +						speed = <1000>;
+> +						full-duplex;
+> +					};
+> +				};
+> +			};
+> +		};
+> +	};
+> +};
+> -- 
+> 2.17.1
+
+
