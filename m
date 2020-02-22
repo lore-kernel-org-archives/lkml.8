@@ -2,231 +2,145 @@ Return-Path: <SRS0=8jYG=4K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MSGID_FROM_MTA_HEADER,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.4 required=3.0 tests=FROM_LOCAL_HEX,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 089FEC35641
-	for <linux-kernel@archiver.kernel.org>; Sat, 22 Feb 2020 01:11:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A20EEC35669
+	for <linux-kernel@archiver.kernel.org>; Sat, 22 Feb 2020 01:13:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C65212071E
-	for <linux-kernel@archiver.kernel.org>; Sat, 22 Feb 2020 01:11:01 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=fb.com header.i=@fb.com header.b="o4SdbUDq";
-	dkim=pass (1024-bit key) header.d=fb.onmicrosoft.com header.i=@fb.onmicrosoft.com header.b="XadzIhL8"
+	by mail.kernel.org (Postfix) with ESMTP id 81AE520828
+	for <linux-kernel@archiver.kernel.org>; Sat, 22 Feb 2020 01:13:17 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727843AbgBVBLA (ORCPT
+        id S1727740AbgBVBNQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Feb 2020 20:11:00 -0500
-Received: from mx0b-00082601.pphosted.com ([67.231.153.30]:27654 "EHLO
-        mx0b-00082601.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727614AbgBVBLA (ORCPT
+        Fri, 21 Feb 2020 20:13:16 -0500
+Received: from mail-io1-f70.google.com ([209.85.166.70]:50061 "EHLO
+        mail-io1-f70.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726852AbgBVBNP (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Feb 2020 20:11:00 -0500
-Received: from pps.filterd (m0148460.ppops.net [127.0.0.1])
-        by mx0a-00082601.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 01M14KnP017113;
-        Fri, 21 Feb 2020 17:10:54 -0800
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.com; h=date : from : to : cc :
- subject : message-id : references : content-type : in-reply-to :
- mime-version; s=facebook; bh=4eRmRnp8FS/CmnrSgyAD67jo6cjwwDO++cBE1P7DmxM=;
- b=o4SdbUDqPIaD6GzoXkPdGKWwnVuksrXzhxAEMMFS3u1TWsDLStzcVHfbUwRHfn3eRJ2I
- J8tMN99MM6pljb99mxMKHvuNMWYUZz7CSrltsGTjgcXPv5rRxC6c8jtSbEmI73nO17ee
- OgZrznzcgVW1HMWLJeqt90cKuZrgm/5WjuA= 
-Received: from mail.thefacebook.com ([163.114.132.120])
-        by mx0a-00082601.pphosted.com with ESMTP id 2yah9qasu1-2
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT);
-        Fri, 21 Feb 2020 17:10:53 -0800
-Received: from NAM12-DM6-obe.outbound.protection.outlook.com (100.104.98.9) by
- o365-in.thefacebook.com (100.104.94.196) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.1779.2; Fri, 21 Feb 2020 17:10:52 -0800
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=RelMBIhc4ngiAaWBDFsaK4Eb1TfvNJ2z1LLqJY9Li0SM27K21V7jU1tiDbdEt/XHRTs/QOw7luOtEBjAuLByCU2i5PxRjEUDuFqmSV0Li8QoAfCe9uDpHF5p7ANGvH56EmvRnEUKrMGiR2x7LgXzGoYFpe77Zca4Z8su6+c0UWePj+4nAD42w1J3lKDL1gLvQF4VTm6B4GGcrWZf8OYGc51ieAfKNwpLaGGKI1lqGZcLfSo/4jv5tMMVSRrroo2H1h+3G3dlH4iFJwgvPssoV9GZX3m4qYLaPJcraL1bNHhK5yhKhzCeOzmoabGcjFznpuOk5oMZuiMqTU4RFCXZxw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=4eRmRnp8FS/CmnrSgyAD67jo6cjwwDO++cBE1P7DmxM=;
- b=fy8CcsTikbKYHhL7cq1AhBDSx79dks6wX+mtcW/ppceWOdj91mfh8aauNURLQQmUkHTFNu/v3lceQZuDTXp9uS7A2KQ+WiGu00l/IlygzidcjiTOlO+8R6LkDsQMlxPStRXdbnGKG6MtU2wT2JpyIEc3gCPcBN7zykUA0+LPENPnI5WEH5FcWCIIHXWWDXn9rSFiO9SuuTSoIIr94nUaHicAv+kLQLcDPpo5rEkkGuBeWVnrdcXeb47MMiD6f1f1F5JUVLZistu9Jf/CjXeISpJsAJTqUCmr6lpnkYmIeb/vG8dmIFBOeaGlhQ48xVSfi0c0veBnC7jW9Cy9Or18Bw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=fb.com; dmarc=pass action=none header.from=fb.com; dkim=pass
- header.d=fb.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.onmicrosoft.com;
- s=selector2-fb-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=4eRmRnp8FS/CmnrSgyAD67jo6cjwwDO++cBE1P7DmxM=;
- b=XadzIhL8iY2j71gL4NM4uf0RbghdM/tzr9pkkJwdhmUqUXJolVxsAUmXT8F+CvCbKONI5bNGA+c8i2flXvyjKxjA7x5965sGgKw+uuuJ36EUWYxwJi/jA5dP8nEgfkmsG5WfGK1n+YyC7d/bZtOQ1PwTHyqGTAbDfEFvokI9eGo=
-Received: from BYAPR15MB2631.namprd15.prod.outlook.com (20.179.155.147) by
- BYAPR15MB2216.namprd15.prod.outlook.com (52.135.197.157) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2750.17; Sat, 22 Feb 2020 01:10:51 +0000
-Received: from BYAPR15MB2631.namprd15.prod.outlook.com
- ([fe80::ccb6:a331:77d8:d308]) by BYAPR15MB2631.namprd15.prod.outlook.com
- ([fe80::ccb6:a331:77d8:d308%7]) with mapi id 15.20.2729.033; Sat, 22 Feb 2020
- 01:10:51 +0000
-Date:   Fri, 21 Feb 2020 17:10:46 -0800
-From:   Roman Gushchin <guro@fb.com>
-To:     Shakeel Butt <shakeelb@google.com>
-CC:     Johannes Weiner <hannes@cmpxchg.org>,
-        Michal Hocko <mhocko@kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        <linux-mm@kvack.org>, <cgroups@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] memcg: css_tryget_online cleanups
-Message-ID: <20200222011046.GB459391@carbon.DHCP.thefacebook.com>
-References: <20200221195919.186576-1-shakeelb@google.com>
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200221195919.186576-1-shakeelb@google.com>
-X-ClientProxiedBy: CO2PR05CA0068.namprd05.prod.outlook.com
- (2603:10b6:102:2::36) To BYAPR15MB2631.namprd15.prod.outlook.com
- (2603:10b6:a03:150::19)
+        Fri, 21 Feb 2020 20:13:15 -0500
+Received: by mail-io1-f70.google.com with SMTP id v11so3696133iop.16
+        for <linux-kernel@vger.kernel.org>; Fri, 21 Feb 2020 17:13:13 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
+        bh=6eLAPqtZ8c5EdwJf7EVWvvnHhrg/3kPG4gMqHFy5v4A=;
+        b=oCmny8Een3xZKkj3LSd0+ZbSPyFQldhIzLbGo768Tg18ZiGzbShjEyECqdyx7jhGe+
+         lxEfGXJYzY1e94CaGVnw9Y8BajXwtsQrSB6tzDihLDpIX4iRGDLbWw6EIk+iPV6mwi88
+         RgGQD7t0inwPpFWZqGOO5O7QUvo/SQEKUppP5R/ZOCstYUkhKG8H2bA63f2ruKoKhrVq
+         TmDa5VC+/mfxJToadGtReSZN4ahUxCWGj2vSpQihX/UUKRdQXLwqn1Yg/uXGZStGpdIo
+         unaC1I9HJ/s6IR4XOh+Yt5NTThw4Aq1KRIFCt8AP+tZm74+JWrEpplu23aaG0nWtIMcm
+         tbCA==
+X-Gm-Message-State: APjAAAU5jiGdk2yKOFo/XYsP7LXVVQu48rdE3KlbFLOFoax3MjTyzn9H
+        P1Wmzr3dQLLqI/SDasZVXyTiOsCkx+XdX++HAfJxnmxT9Y2K
+X-Google-Smtp-Source: APXvYqzbaMogp/HG01MNtFex4blRaUgwqV4zRTvObvGHWAiNFmsEDRlx2xNtXRh0TW9qSQF6PSZLllmHa9ms9GXF7vKm0O5NRTl6
 MIME-Version: 1.0
-Received: from carbon.DHCP.thefacebook.com (2620:10d:c090:400::5:c751) by CO2PR05CA0068.namprd05.prod.outlook.com (2603:10b6:102:2::36) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2772.9 via Frontend Transport; Sat, 22 Feb 2020 01:10:50 +0000
-X-Originating-IP: [2620:10d:c090:400::5:c751]
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id: 240f50db-8b18-4ce7-42a6-08d7b7340eab
-X-MS-TrafficTypeDiagnostic: BYAPR15MB2216:
-X-Microsoft-Antispam-PRVS: <BYAPR15MB22163A6ECFF27BF1D6190059BEEE0@BYAPR15MB2216.namprd15.prod.outlook.com>
-X-FB-Source: Internal
-X-MS-Oob-TLC-OOBClassifiers: OLM:9508;
-X-Forefront-PRVS: 03218BFD9F
-X-Forefront-Antispam-Report: SFV:NSPM;SFS:(10019020)(366004)(396003)(346002)(376002)(39860400002)(136003)(199004)(189003)(81156014)(55016002)(66946007)(52116002)(8676002)(66476007)(4326008)(66556008)(7696005)(478600001)(86362001)(316002)(54906003)(9686003)(1076003)(2906002)(33656002)(186003)(8936002)(16526019)(6506007)(6916009)(6666004)(81166006)(5660300002);DIR:OUT;SFP:1102;SCL:1;SRVR:BYAPR15MB2216;H:BYAPR15MB2631.namprd15.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
-Received-SPF: None (protection.outlook.com: fb.com does not designate
- permitted sender hosts)
-X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: ppv2GihhZU6uTVGP6s/9Go8onmc6V5UrzQRlQD6bVad86AiTmQ22yczilHd9d0lqyAHXw6/ZHBHI0CtykR0ZhoMGer9OioKYgUCWOLlmgmTTvW53fLQL+bI3MjMhlOc6ktzrtvGuyLGIKptNgM/VdFwrBZgjSob81Xg2sh3dgLzNsLa0+ItNXybMXQ5buU0nNp2yv0/RHHdkIgjEL821EhGardaQj/+ykYX5za04P91W984LAi1RwnprTnkyur7Bikq5JMsDSVetWYyt2/zZf/izAqwd+7fya6dZLVk4zCDhjU2epFd5l9lSEhGFWZCSg6zyn9ClrcnCNLtanbMDrY+CE7ZgTQOLnZOGsloCi80sSmmwwY3GJmb+aKXc3RTNDvbUBjJdW5OczFagF2poUSqUDjQhRFtqGKIb996aq+R8vXO50HlNLVxJbhLmf+CY
-X-MS-Exchange-AntiSpam-MessageData: zYF0IbKG+9aIXfu0CRvCuZddNA3xvReG3wcyOcQbORSK5m7B2TrRVIJq4LAFlLrx7i5RKzj0M7cWl8Z9J3eIeMAqxZAaxEegVbffBy6oVWyNKd9Iqx1gVSQBT67zHJxtbGNzB/U9Y3ffpm/LiJhyts5DcZbecblng2PV6xIs260Hy1FsFshUj3f0932DF0cT
-X-MS-Exchange-CrossTenant-Network-Message-Id: 240f50db-8b18-4ce7-42a6-08d7b7340eab
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 22 Feb 2020 01:10:51.1859
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 8ae927fe-1255-47a7-a2af-5f3a069daaa2
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: rA4nqMXKSn/oudTNjz/ZIx92h0G1CJfS5T7+MhXehwpZ6WSwVRFqPC635+/GMimL
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: BYAPR15MB2216
-X-OriginatorOrg: fb.com
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.572
- definitions=2020-02-21_09:2020-02-21,2020-02-21 signatures=0
-X-Proofpoint-Spam-Details: rule=fb_default_notspam policy=fb_default score=0 suspectscore=1
- malwarescore=0 impostorscore=0 mlxscore=0 adultscore=0 clxscore=1015
- bulkscore=0 spamscore=0 priorityscore=1501 lowpriorityscore=0
- mlxlogscore=999 phishscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.12.0-2001150001 definitions=main-2002220005
-X-FB-Internal: deliver
+X-Received: by 2002:a6b:740c:: with SMTP id s12mr36894580iog.108.1582333992768;
+ Fri, 21 Feb 2020 17:13:12 -0800 (PST)
+Date:   Fri, 21 Feb 2020 17:13:12 -0800
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <0000000000008e18fb059f1fd725@google.com>
+Subject: kernel BUG at arch/x86/mm/physaddr.c:LINE! (4)
+From:   syzbot <syzbot+1f4d90ead370d72e450b@syzkaller.appspotmail.com>
+To:     eparis@redhat.com, linux-audit@redhat.com,
+        linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
+        paul@paul-moore.com, syzkaller-bugs@googlegroups.com
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Feb 21, 2020 at 11:59:19AM -0800, Shakeel Butt wrote:
-> Currently multiple locations in memcg code, css_tryget_online() is being
-> used. However it doesn't matter whether the cgroup is online for the
-> callers. Online used to matter when we had reparenting on offlining and
-> we needed a way to prevent new ones from showing up.
-> 
-> The failure case for couple of these css_tryget_online usage is to
-> fallback to root_mem_cgroup which kind of make bypassing the memcg
-> limits possible for some workloads. For example creating an inotify
-> group in a subcontainer and then deleting that container after moving the
-> process to a different container will make all the event objects
-> allocated for that group to the root_mem_cgroup. So, using
-> css_tryget_online() is dangerous for such cases.
-> 
-> Two locations still use the online version. The swapin of offlined
-> memcg's pages and the memcg kmem cache creation. The kmem cache indeed
-> needs the online version as the kernel does the reparenting of memcg
-> kmem caches. For the swapin case, it has been left for later as the
-> fallback is not really that concerning.
-> 
-> Signed-off-by: Shakeel Butt <shakeelb@google.com>
+Hello,
 
-Hello, Shakeel!
+syzbot found the following crash on:
 
-> ---
->  mm/memcontrol.c | 14 +++++++++-----
->  1 file changed, 9 insertions(+), 5 deletions(-)
-> 
-> diff --git a/mm/memcontrol.c b/mm/memcontrol.c
-> index 63bb6a2aab81..75fa8123909e 100644
-> --- a/mm/memcontrol.c
-> +++ b/mm/memcontrol.c
-> @@ -656,7 +656,7 @@ __mem_cgroup_largest_soft_limit_node(struct mem_cgroup_tree_per_node *mctz)
->  	 */
->  	__mem_cgroup_remove_exceeded(mz, mctz);
->  	if (!soft_limit_excess(mz->memcg) ||
-> -	    !css_tryget_online(&mz->memcg->css))
-> +	    !css_tryget(&mz->memcg->css))
+HEAD commit:    36a44bcd Merge branch 'bnxt_en-shutdown-and-kexec-kdump-re..
+git tree:       net
+console output: https://syzkaller.appspot.com/x/log.txt?x=12524265e00000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=768cc3d3e277cc16
+dashboard link: https://syzkaller.appspot.com/bug?extid=1f4d90ead370d72e450b
+compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
+syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=123d9de9e00000
+C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=1648fe09e00000
 
-Looks good.
+IMPORTANT: if you fix the bug, please add the following tag to the commit:
+Reported-by: syzbot+1f4d90ead370d72e450b@syzkaller.appspotmail.com
 
->  		goto retry;
->  done:
->  	return mz;
-> @@ -962,7 +962,8 @@ struct mem_cgroup *get_mem_cgroup_from_page(struct page *page)
->  		return NULL;
->  
->  	rcu_read_lock();
-> -	if (!memcg || !css_tryget_online(&memcg->css))
-> +	/* Page should not get uncharged and freed memcg under us. */
-> +	if (!memcg || WARN_ON(!css_tryget(&memcg->css)))
+------------[ cut here ]------------
+kernel BUG at arch/x86/mm/physaddr.c:28!
+invalid opcode: 0000 [#1] PREEMPT SMP KASAN
+CPU: 1 PID: 9873 Comm: syz-executor039 Not tainted 5.6.0-rc1-syzkaller #0
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
+RIP: 0010:__phys_addr+0xb3/0x120 arch/x86/mm/physaddr.c:28
+Code: 09 4c 89 e3 31 ff 48 d3 eb 48 89 de e8 36 e2 40 00 48 85 db 75 0f e8 8c e0 40 00 4c 89 e0 5b 41 5c 41 5d 5d c3 e8 7d e0 40 00 <0f> 0b e8 76 e0 40 00 48 c7 c0 10 50 a7 89 48 ba 00 00 00 00 00 fc
+RSP: 0018:ffffc90005b47490 EFLAGS: 00010093
+RAX: ffff8880944f4600 RBX: 0000000002777259 RCX: ffffffff8134ad32
+RDX: 0000000000000000 RSI: ffffffff8134ad93 RDI: 0000000000000006
+RBP: ffffc90005b474a8 R08: ffff8880944f4600 R09: ffffed1015d2707c
+R10: ffffed1015d2707b R11: ffff8880ae9383db R12: 0000778002777259
+R13: 0000000082777259 R14: ffff88809a765000 R15: 0000000000000010
+FS:  0000000001436880(0000) GS:ffff8880ae900000(0000) knlGS:0000000000000000
+CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+CR2: 00000000200004c0 CR3: 0000000096da8000 CR4: 00000000001406e0
+DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+Call Trace:
+ virt_to_head_page include/linux/mm.h:721 [inline]
+ virt_to_cache mm/slab.h:472 [inline]
+ kfree+0x7b/0x2c0 mm/slab.c:3749
+ audit_free_lsm_field kernel/auditfilter.c:76 [inline]
+ audit_free_rule kernel/auditfilter.c:91 [inline]
+ audit_data_to_entry+0xb7b/0x25f0 kernel/auditfilter.c:603
+ audit_rule_change+0x6b5/0x1130 kernel/auditfilter.c:1130
+ audit_receive_msg+0xda5/0x28b0 kernel/audit.c:1368
+ audit_receive+0x114/0x230 kernel/audit.c:1513
+ netlink_unicast_kernel net/netlink/af_netlink.c:1303 [inline]
+ netlink_unicast+0x59e/0x7e0 net/netlink/af_netlink.c:1329
+ netlink_sendmsg+0x91c/0xea0 net/netlink/af_netlink.c:1918
+ sock_sendmsg_nosec net/socket.c:652 [inline]
+ sock_sendmsg+0xd7/0x130 net/socket.c:672
+ ____sys_sendmsg+0x753/0x880 net/socket.c:2343
+ ___sys_sendmsg+0x100/0x170 net/socket.c:2397
+ __sys_sendmsg+0x105/0x1d0 net/socket.c:2430
+ __do_sys_sendmsg net/socket.c:2439 [inline]
+ __se_sys_sendmsg net/socket.c:2437 [inline]
+ __x64_sys_sendmsg+0x78/0xb0 net/socket.c:2437
+ do_syscall_64+0xfa/0x790 arch/x86/entry/common.c:294
+ entry_SYSCALL_64_after_hwframe+0x49/0xbe
+RIP: 0033:0x4401a9
+Code: 18 89 d0 c3 66 2e 0f 1f 84 00 00 00 00 00 0f 1f 00 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 0f 83 fb 13 fc ff c3 66 2e 0f 1f 84 00 00 00 00
+RSP: 002b:00007ffd66553d28 EFLAGS: 00000246 ORIG_RAX: 000000000000002e
+RAX: ffffffffffffffda RBX: 00000000004002c8 RCX: 00000000004401a9
+RDX: 0000000000000000 RSI: 00000000200004c0 RDI: 0000000000000003
+RBP: 00000000006ca018 R08: 0000000000000000 R09: 00000000004002c8
+R10: 0000000000000000 R11: 0000000000000246 R12: 0000000000401a30
+R13: 0000000000401ac0 R14: 0000000000000000 R15: 0000000000000000
+Modules linked in:
+---[ end trace 1e4db35053a9d748 ]---
+RIP: 0010:__phys_addr+0xb3/0x120 arch/x86/mm/physaddr.c:28
+Code: 09 4c 89 e3 31 ff 48 d3 eb 48 89 de e8 36 e2 40 00 48 85 db 75 0f e8 8c e0 40 00 4c 89 e0 5b 41 5c 41 5d 5d c3 e8 7d e0 40 00 <0f> 0b e8 76 e0 40 00 48 c7 c0 10 50 a7 89 48 ba 00 00 00 00 00 fc
+RSP: 0018:ffffc90005b47490 EFLAGS: 00010093
+RAX: ffff8880944f4600 RBX: 0000000002777259 RCX: ffffffff8134ad32
+RDX: 0000000000000000 RSI: ffffffff8134ad93 RDI: 0000000000000006
+RBP: ffffc90005b474a8 R08: ffff8880944f4600 R09: ffffed1015d2707c
+R10: ffffed1015d2707b R11: ffff8880ae9383db R12: 0000778002777259
+R13: 0000000082777259 R14: ffff88809a765000 R15: 0000000000000010
+FS:  0000000001436880(0000) GS:ffff8880ae900000(0000) knlGS:0000000000000000
+CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+CR2: 00000000200004c0 CR3: 0000000096da8000 CR4: 00000000001406e0
+DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
 
-I'm slightly worried about this WARN_ON().
-As I understand the idea is that the caller must own the page and make
-sure that page->memcg remains intact. Do we really need this?
 
-Also, I'd go with WARN_ON_ONCE() to limit the dmesg flow in the case
-if something will go wrong.
+---
+This bug is generated by a bot. It may contain errors.
+See https://goo.gl/tpsmEJ for more information about syzbot.
+syzbot engineers can be reached at syzkaller@googlegroups.com.
 
->  		memcg = root_mem_cgroup;
->  	rcu_read_unlock();
->  	return memcg;
-> @@ -975,10 +976,13 @@ EXPORT_SYMBOL(get_mem_cgroup_from_page);
->  static __always_inline struct mem_cgroup *get_mem_cgroup_from_current(void)
->  {
->  	if (unlikely(current->active_memcg)) {
-> -		struct mem_cgroup *memcg = root_mem_cgroup;
-> +		struct mem_cgroup *memcg;
->  
->  		rcu_read_lock();
-> -		if (css_tryget_online(&current->active_memcg->css))
-> +		/* current->active_memcg must hold a ref. */
-
-Hm, does it?
-memalloc_use_memcg() isn't touching the memcg's reference counter.
-And if it does hold a reference, why can't we just do css_get()?
-
-> +		if (WARN_ON(!css_tryget(&current->active_memcg->css)))
-> +			memcg = root_mem_cgroup;
-
-Btw, if css_tryget() fails here, what does it mean?
-I'd s/WARN_ON/WARN_ON_ONCE too.
-
-> +		else
->  			memcg = current->active_memcg;
->  		rcu_read_unlock();
->  		return memcg;
-> @@ -6703,7 +6707,7 @@ void mem_cgroup_sk_alloc(struct sock *sk)
->  		goto out;
->  	if (!cgroup_subsys_on_dfl(memory_cgrp_subsys) && !memcg->tcpmem_active)
->  		goto out;
-> -	if (css_tryget_online(&memcg->css))
-> +	if (css_tryget(&memcg->css))
-
-So it can be offline, right? Makes sense.
-
->  		sk->sk_memcg = memcg;
->  out:
->  	rcu_read_unlock();
-> -- 
-> 2.25.0.265.gbab2e86ba0-goog
-> 
-
-Overall I have to admit it all is quite tricky. I had a patchset doing
-a similar cleanup (but not only in the mm code), but dropped it after
-Tejun showed me some edge cases, when it would cause a regression.
-
-So I really think it's a valuable work, but we need to be careful here.
-
-Thank you!
+syzbot will keep track of this bug report. See:
+https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
+syzbot can test patches for this bug, for details see:
+https://goo.gl/tpsmEJ#testing-patches
