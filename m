@@ -2,110 +2,141 @@ Return-Path: <SRS0=8jYG=4K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-17.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT,
+	USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4C38AC35641
-	for <linux-kernel@archiver.kernel.org>; Sat, 22 Feb 2020 02:16:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0354AC35641
+	for <linux-kernel@archiver.kernel.org>; Sat, 22 Feb 2020 02:35:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1FB86206E2
-	for <linux-kernel@archiver.kernel.org>; Sat, 22 Feb 2020 02:16:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C289A206EF
+	for <linux-kernel@archiver.kernel.org>; Sat, 22 Feb 2020 02:35:21 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="SaK4Tkvh"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="eBgFXXFG"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728054AbgBVCQW (ORCPT
+        id S1727993AbgBVCfT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Feb 2020 21:16:22 -0500
-Received: from mail-ot1-f65.google.com ([209.85.210.65]:35028 "EHLO
-        mail-ot1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728010AbgBVCQW (ORCPT
+        Fri, 21 Feb 2020 21:35:19 -0500
+Received: from mail-pf1-f202.google.com ([209.85.210.202]:44985 "EHLO
+        mail-pf1-f202.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726802AbgBVCfT (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Feb 2020 21:16:22 -0500
-Received: by mail-ot1-f65.google.com with SMTP id r16so3864877otd.2;
-        Fri, 21 Feb 2020 18:16:21 -0800 (PST)
+        Fri, 21 Feb 2020 21:35:19 -0500
+Received: by mail-pf1-f202.google.com with SMTP id r127so2398754pfc.11
+        for <linux-kernel@vger.kernel.org>; Fri, 21 Feb 2020 18:35:17 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=hNbrrFkKPFhSR7F7zgyGSYHr2/p2BvESnaaeAk58nuE=;
-        b=SaK4TkvhlKL9nOfKFT6YgraHBsFXGdGpPB5Z/AJAFuUxAv2UelJnPYdDJh4oVjDGiH
-         Re5HhHkm2nf1sDiT0hiVEj37fNBNm6qWiGZgFsXdV3XzMIWvcMrP+ehKySJ2piBFTN2E
-         kiyLdbucbdEU6IbbDSMgiicicMsuZllJ2lXvP5Ji7baR/h8kv55brcdA40yUIXbYaY6x
-         Va5H+2mR5vF86Vzw+5GqA6SLVFZGc9fI/JjpLQg5Jy5lgm376GN2e/tuM0UtxB15jFRS
-         /f0r1A9qHYs3VWfSEEcmqiJbwhlEF30kj0UhQYPWWUcjXets4gg3zne20HaGw+QhBnq7
-         Sz5w==
+        d=google.com; s=20161025;
+        h=date:message-id:mime-version:subject:from:to:cc;
+        bh=YWE+MLnOjK4IvZZLwvQEPG2A0OjN+JMmVnFRhQHYJMc=;
+        b=eBgFXXFGkeT5/uAIvCLjYTs5ZF9zNsG77UJxFH5+o2fO8jOjzd7BGMrmBVaoruIcmq
+         0A3nJSGzQJTcqWdmwClNEhhIfJT3RlBglY+KM212kLV0k99Kbd5YtWGs1PoXp9H5jKW7
+         fOVGEWwtGLq/x6MQYFehTUpvgfVhndZL3KtWiczoGdaDqaOkzgAe2HIPD1oYzkop/d27
+         bXetWVCGNsizjssAiZ9RuI2W44NN+s0ZBRdbbT2JTQeO7T2JvyAGrQlT75NsjEnh0hXu
+         nA+4nlUufuZ0rl4P2+7v2D0jKFxRABY0AtwEUBgHKOAZbdzS1ZRBPGY3g0DaClPuv9pw
+         NDjw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=hNbrrFkKPFhSR7F7zgyGSYHr2/p2BvESnaaeAk58nuE=;
-        b=oZdeQZTdi1x1vW2GtIRRoQjvTS3XmOjpJ3oy9zw+hmCQRkb3wdUxXqSCdhp6wWL48W
-         DVAtlQVwBvUmppi+DyNC048iFDsP9GZZgcvQfhARe07tUEoIQS55XQi8JI7gCIPY+CNl
-         OUA9la9tfNJc7/yqp/MXsy1ZuSlv6c2cmdgd5+KB+GQKypxr/Qkwa5ScrIZ5BYG3ONMu
-         8j8pPJB1mQBLn9C2AlD3n2RTMe6YGMADEh4kTl+4fMGqFFj/dZy1iTGyK20Mg2Esbk7+
-         jaB9elCaYN2SzjPw6k+ht72ImKSvv7rQYzS7HjaQAu0zn80Aslqe7xAFuBPoUAeAwYZo
-         FJrA==
-X-Gm-Message-State: APjAAAVAJ1mzx8VWBd/wILqRf2m4kq/iwaAqze7kGKhLKwmQqORuWLVy
-        T4SVv8XboolkB4y8J5kzgGk=
-X-Google-Smtp-Source: APXvYqwi8LKBV6oX/qnZSLaAgOfMKPpIj1zxsvrfz0yq13DLX3sHxO1QWrBisgQa4rdeg5uKCCUiCw==
-X-Received: by 2002:a9d:6e9a:: with SMTP id a26mr29465578otr.344.1582337781285;
-        Fri, 21 Feb 2020 18:16:21 -0800 (PST)
-Received: from ubuntu-m2-xlarge-x86 ([2604:1380:4111:8b00::1])
-        by smtp.gmail.com with ESMTPSA id y6sm1693943oti.44.2020.02.21.18.16.20
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Fri, 21 Feb 2020 18:16:20 -0800 (PST)
-Date:   Fri, 21 Feb 2020 19:16:19 -0700
-From:   Nathan Chancellor <natechancellor@gmail.com>
-To:     "Alex Xu (Hello71)" <alex_y_xu@yahoo.ca>
-Cc:     linux-kbuild@vger.kernel.org, michal.lkml@markovi.net,
-        masahiroy@kernel.org, linux-kernel@vger.kernel.org,
-        Russell King <linux@armlinux.org.uk>
-Subject: Re: [PATCH] kbuild: move -pipe to global KBUILD_CFLAGS
-Message-ID: <20200222021619.GA51223@ubuntu-m2-xlarge-x86>
-References: <20200222003820.220854-1-alex_y_xu.ref@yahoo.ca>
- <20200222003820.220854-1-alex_y_xu@yahoo.ca>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200222003820.220854-1-alex_y_xu@yahoo.ca>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+        h=x-gm-message-state:date:message-id:mime-version:subject:from:to:cc;
+        bh=YWE+MLnOjK4IvZZLwvQEPG2A0OjN+JMmVnFRhQHYJMc=;
+        b=IG6EwsmN3piLviuZ0Sxs/6W6t/8QlqwV9gT5+sp+V5I7Dz7SMJKkIUrQ1hoHF8Rly7
+         uqqlSK8EcMVtS4KSHUQ3M3pFL35ri4KMx1a+vzvcI2SpaVL+mQUyg2kCkVpn8SVeKfxF
+         bS10Y4Cfs3z6KsqQ0VV1SpWszu8+yeOh0ujfu6QybbNqjKgso6hWiLbtaDWfRqCLRAcu
+         a0kdmK7mmcxQgkk6ThubKY7xER9e0fUm1KTQ8HdyMAEkMaIsTQWsTuE51NY2zYqeC0Tw
+         XtToXgzRu1Qwd/SGjt2s7tmAKtMlPBOTh+0FRyt8AsdMivmb6evJvn3RKqKJiL3kWBXo
+         pqWw==
+X-Gm-Message-State: APjAAAXNq62p//pg7KJxCND8sA37iAbc0G4asS4uVJUOr5I/obUC5BwS
+        dlx/hfto2uB+QkK+sfNY+DZv7us3Sf7wniA=
+X-Google-Smtp-Source: APXvYqz/5nZSxiCEMANum1t9/MuA4rvyDGQUbSoYAmrDG89Qk66FIjDXtoFPXPLbgqYWY+92O8YQeM6VQxVkOk8=
+X-Received: by 2002:a63:a807:: with SMTP id o7mr40015719pgf.407.1582338917117;
+ Fri, 21 Feb 2020 18:35:17 -0800 (PST)
+Date:   Fri, 21 Feb 2020 18:34:13 -0800
+Message-Id: <20200222023413.78202-1-ehankland@google.com>
+Mime-Version: 1.0
+X-Mailer: git-send-email 2.25.0.265.gbab2e86ba0-goog
+Subject: [PATCH] KVM: x86: Adjust counter sample period after a wrmsr
+From:   Eric Hankland <ehankland@google.com>
+To:     Jim Mattson <jmattson@google.com>, Peter Shier <pshier@google.com>
+Cc:     Paolo Bonzini <pbonzini@redhat.com>, linux-kernel@vger.kernel.org,
+        kvm@vger.kernel.org, Eric Hankland <ehankland@google.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Alex,
+The sample_period of a counter tracks when that counter will
+overflow and set global status/trigger a PMI. However this currently
+only gets set when the initial counter is created or when a counter is
+resumed; this updates the sample period after a wrmsr so running
+counters will accurately reflect their new value.
 
-On Fri, Feb 21, 2020 at 07:38:20PM -0500, Alex Xu (Hello71) wrote:
-> -pipe reduces unnecessary disk wear for systems where /tmp is not a
-> tmpfs, slightly increases compilation speed, and avoids leaving behind
-> files when gcc crashes.
-> 
-> According to the gcc manual, "this fails to work on some systems where
-> the assembler is unable to read from a pipe; but the GNU assembler has
-> no trouble". We already require GNU ld on all platforms, so this is not
-> an additional dependency. LLVM as also supports pipes.
-> 
-> -pipe has always been used for most architectures, this change
-> standardizes it globally. Most notably, arm, arm64, riscv, and x86 are
-> affected.
-> 
-> Signed-off-by: Alex Xu (Hello71) <alex_y_xu@yahoo.ca>
+Signed-off-by: Eric Hankland <ehankland@google.com>
+---
+ arch/x86/kvm/pmu.c           | 4 ++--
+ arch/x86/kvm/pmu.h           | 8 ++++++++
+ arch/x86/kvm/vmx/pmu_intel.c | 6 ++++++
+ 3 files changed, 16 insertions(+), 2 deletions(-)
 
-Do you have any numbers to show this is actually beneficial from a
-compilation time perspective? I ask because I saw an improvement in
-compilation time when removing -pipe from x86's KBUILD_CFLAGS in
-commit 437e88ab8f9e ("x86/build: Remove -pipe from KBUILD_CFLAGS").
-
-For what it's worth, clang ignores -pipe so this does not actually
-matter for its integrated assembler.
-
-That type of change could have been a fluke but I guarantee people
-will care more about any change in compilation time than any of the
-other things that you mention so it might be wise to check on major
-architectures to make sure that it doesn't hurt.
-
-Cheers,
-Nathan
+diff --git a/arch/x86/kvm/pmu.c b/arch/x86/kvm/pmu.c
+index bcc6a73d6628..d1f8ca57d354 100644
+--- a/arch/x86/kvm/pmu.c
++++ b/arch/x86/kvm/pmu.c
+@@ -111,7 +111,7 @@ static void pmc_reprogram_counter(struct kvm_pmc *pmc, u32 type,
+ 		.config = config,
+ 	};
+ 
+-	attr.sample_period = (-pmc->counter) & pmc_bitmask(pmc);
++	attr.sample_period = get_sample_period(pmc, pmc->counter);
+ 
+ 	if (in_tx)
+ 		attr.config |= HSW_IN_TX;
+@@ -158,7 +158,7 @@ static bool pmc_resume_counter(struct kvm_pmc *pmc)
+ 
+ 	/* recalibrate sample period and check if it's accepted by perf core */
+ 	if (perf_event_period(pmc->perf_event,
+-			(-pmc->counter) & pmc_bitmask(pmc)))
++			      get_sample_period(pmc, pmc->counter)))
+ 		return false;
+ 
+ 	/* reuse perf_event to serve as pmc_reprogram_counter() does*/
+diff --git a/arch/x86/kvm/pmu.h b/arch/x86/kvm/pmu.h
+index 13332984b6d5..354b8598b6c1 100644
+--- a/arch/x86/kvm/pmu.h
++++ b/arch/x86/kvm/pmu.h
+@@ -129,6 +129,15 @@ static inline struct kvm_pmc *get_fixed_pmc(struct kvm_pmu *pmu, u32 msr)
+ 	return NULL;
+ }
+ 
++static inline u64 get_sample_period(struct kvm_pmc *pmc, u64 counter_value)
++{
++	u64 sample_period = (-counter_value) & pmc_bitmask(pmc);
++
++	if (!sample_period)
++		sample_period = pmc_bitmask(pmc) + 1;
++	return sample_period;
++}
++
+ void reprogram_gp_counter(struct kvm_pmc *pmc, u64 eventsel);
+ void reprogram_fixed_counter(struct kvm_pmc *pmc, u8 ctrl, int fixed_idx);
+ void reprogram_counter(struct kvm_pmu *pmu, int pmc_idx);
+diff --git a/arch/x86/kvm/vmx/pmu_intel.c b/arch/x86/kvm/vmx/pmu_intel.c
+index fd21cdb10b79..e933541751fb 100644
+--- a/arch/x86/kvm/vmx/pmu_intel.c
++++ b/arch/x86/kvm/vmx/pmu_intel.c
+@@ -263,9 +263,15 @@ static int intel_pmu_set_msr(struct kvm_vcpu *vcpu, struct msr_data *msr_info)
+ 			if (!msr_info->host_initiated)
+ 				data = (s64)(s32)data;
+ 			pmc->counter += data - pmc_read_counter(pmc);
++			if (pmc->perf_event)
++				perf_event_period(pmc->perf_event,
++						  get_sample_period(pmc, data));
+ 			return 0;
+ 		} else if ((pmc = get_fixed_pmc(pmu, msr))) {
+ 			pmc->counter += data - pmc_read_counter(pmc);
++			if (pmc->perf_event)
++				perf_event_period(pmc->perf_event,
++						  get_sample_period(pmc, data));
+ 			return 0;
+ 		} else if ((pmc = get_gp_pmc(pmu, msr, MSR_P6_EVNTSEL0))) {
+ 			if (data == pmc->eventsel)
