@@ -2,135 +2,141 @@ Return-Path: <SRS0=8jYG=4K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0976DC35666
-	for <linux-kernel@archiver.kernel.org>; Sat, 22 Feb 2020 16:44:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3ACA6C35671
+	for <linux-kernel@archiver.kernel.org>; Sat, 22 Feb 2020 16:45:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BEF33206EF
-	for <linux-kernel@archiver.kernel.org>; Sat, 22 Feb 2020 16:44:24 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="bviH1RPW"
+	by mail.kernel.org (Postfix) with ESMTP id 1540B208C3
+	for <linux-kernel@archiver.kernel.org>; Sat, 22 Feb 2020 16:45:24 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726713AbgBVQoX (ORCPT
+        id S1726828AbgBVQpV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 22 Feb 2020 11:44:23 -0500
-Received: from mail-qt1-f193.google.com ([209.85.160.193]:45579 "EHLO
-        mail-qt1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725976AbgBVQoX (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 22 Feb 2020 11:44:23 -0500
-Received: by mail-qt1-f193.google.com with SMTP id d9so3620040qte.12
-        for <linux-kernel@vger.kernel.org>; Sat, 22 Feb 2020 08:44:22 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:from:date:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=davRPrnHp93f1Lv0/YKPaOSAs3H7scM60qBahhAvztc=;
-        b=bviH1RPWtioE2KaAVd6bH4iA541Q4p7D8OL/hVwNV1nEkOx8u6ZqZVK3RuhBeGVvIP
-         zRnCZNpibC9hURy6jgLOACsx+6IMjQesJAUCmZh8JXAoC47V7c+BkZMmd8/yLIy3D8pM
-         /kZdEV/dloJqeqvVd3i1sdKqGhTydCGtEoIFwp9sjNJR+FeUomdo261bQSh/AawPxQwG
-         fpmB/1JBnbQaHAc/C5LGMw2rF8j2YdtFDSaT7rwQYdjzgVh6ac2IWpXNRJDXraloTQ2K
-         YnPCKAsNtOlZsehOmP6CoWD2qtqWD6gJoMfuqWiLXZ0K4hVy29fnmNsGfZXynJUg9cRv
-         XvMQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:from:date:to:cc:subject:message-id
-         :references:mime-version:content-disposition:in-reply-to:user-agent;
-        bh=davRPrnHp93f1Lv0/YKPaOSAs3H7scM60qBahhAvztc=;
-        b=EFJkp0O2VdJB/HZEE1d0gHh2mrW62JNDNLN4k51FUU+Yz4u2OOgH7vbgwDhJhcCcQw
-         vnnCQD6xYXxTMAjrh2pXEh/+mK3as/xijXFSP39o02/a5RxKbqbEuc4ODi64hK0ee9I4
-         +Gx2AFEdxnRz+IXZW6G3ULHDC6PPQPJbPbvCmdre6ENFG1RxzUFFOlPSDpAjh6S+4Duf
-         5Xt5/EUCDothigak6+1ctFNkr+KE4a93kOQnvJ0JjPkJAzQFZu7dXMO7QBBFKdL3Gqm3
-         UwUM2uvom/hF7auKp90U0pjg9mELU4XSUgtPz+9iIsUL0eVIIfkfsjZo/4bw3u3u/2rR
-         Mhqw==
-X-Gm-Message-State: APjAAAWAOubp+5vZ30QGwnoRbZQMME5HWUtZBomJeb7nf9Clcg9VyaK6
-        2fV4iYzx1QqkxZW2QcMfwy4=
-X-Google-Smtp-Source: APXvYqxRoijrZVVJNjRz2/DB9ALnt6oFd7StwkqoNnUDtUiq4LaD99Lk/YEy2kePQehnE60VXKNo0w==
-X-Received: by 2002:ac8:6b4f:: with SMTP id x15mr37560537qts.152.1582389862273;
-        Sat, 22 Feb 2020 08:44:22 -0800 (PST)
-Received: from rani.riverdale.lan ([2001:470:1f07:5f3::b55f])
-        by smtp.gmail.com with ESMTPSA id x41sm3345118qtj.52.2020.02.22.08.44.21
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 22 Feb 2020 08:44:21 -0800 (PST)
-From:   Arvind Sankar <nivedita@alum.mit.edu>
-X-Google-Original-From: Arvind Sankar <arvind@rani.riverdale.lan>
-Date:   Sat, 22 Feb 2020 11:44:20 -0500
-To:     Nathan Chancellor <natechancellor@gmail.com>
-Cc:     Fangrui Song <maskray@google.com>,
-        Arvind Sankar <nivedita@alum.mit.edu>,
-        Borislav Petkov <bp@alien8.de>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>,
-        "H. Peter Anvin" <hpa@zytor.com>, x86@kernel.org,
-        linux-kernel@vger.kernel.org, clang-built-linux@googlegroups.com,
-        Michael Matz <matz@suse.de>
-Subject: Re: [PATCH 2/2] x86/boot/compressed: Remove unnecessary sections
- from bzImage
-Message-ID: <20200222164419.GB3326744@rani.riverdale.lan>
-References: <20200109150218.16544-1-nivedita@alum.mit.edu>
- <20200109150218.16544-2-nivedita@alum.mit.edu>
- <20200222050845.GA19912@ubuntu-m2-xlarge-x86>
- <20200222065521.GA11284@zn.tnic>
- <20200222070218.GA27571@ubuntu-m2-xlarge-x86>
- <20200222072144.asqaxlv364s6ezbv@google.com>
- <20200222074242.GA17358@ubuntu-m2-xlarge-x86>
- <20200222153747.GA3234293@rani.riverdale.lan>
+        Sat, 22 Feb 2020 11:45:21 -0500
+Received: from mga07.intel.com ([134.134.136.100]:47003 "EHLO mga07.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726758AbgBVQpU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 22 Feb 2020 11:45:20 -0500
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from fmsmga001.fm.intel.com ([10.253.24.23])
+  by orsmga105.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 22 Feb 2020 08:45:19 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.70,472,1574150400"; 
+   d="scan'208";a="349603727"
+Received: from lkp-server01.sh.intel.com (HELO lkp-server01) ([10.239.97.150])
+  by fmsmga001.fm.intel.com with ESMTP; 22 Feb 2020 08:45:14 -0800
+Received: from kbuild by lkp-server01 with local (Exim 4.89)
+        (envelope-from <lkp@intel.com>)
+        id 1j5Xtx-0001CW-Nc; Sun, 23 Feb 2020 00:45:13 +0800
+Date:   Sun, 23 Feb 2020 00:44:49 +0800
+From:   kbuild test robot <lkp@intel.com>
+To:     Scott Branden <scott.branden@broadcom.com>
+Cc:     kbuild-all@lists.01.org, Luis Chamberlain <mcgrof@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        David Brown <david.brown@linaro.org>,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        Shuah Khan <shuah@kernel.org>, bjorn.andersson@linaro.org,
+        Shuah Khan <skhan@linuxfoundation.org>,
+        Arnd Bergmann <arnd@arndb.de>,
+        "Rafael J . Wysocki" <rafael@kernel.org>,
+        linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org,
+        BCM Kernel Feedback <bcm-kernel-feedback-list@broadcom.com>,
+        Olof Johansson <olof@lixom.net>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Dan Carpenter <dan.carpenter@oracle.com>,
+        Colin Ian King <colin.king@canonical.com>,
+        Kees Cook <keescook@chromium.org>,
+        Takashi Iwai <tiwai@suse.de>, linux-kselftest@vger.kernel.org,
+        Andy Gross <agross@kernel.org>,
+        Scott Branden <scott.branden@broadcom.com>,
+        Desmond Yan <desmond.yan@broadcom.com>,
+        James Hu <james.hu@broadcom.com>,
+        Linux Memory Management List <linux-mm@kvack.org>
+Subject: Re: [PATCH v2 6/7] misc: bcm-vk: add Broadcom VK driver
+Message-ID: <202002230019.zc13SqPI%lkp@intel.com>
+References: <20200220004825.23372-7-scott.branden@broadcom.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200222153747.GA3234293@rani.riverdale.lan>
+In-Reply-To: <20200220004825.23372-7-scott.branden@broadcom.com>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, Feb 22, 2020 at 10:37:47AM -0500, Arvind Sankar wrote:
-> On Sat, Feb 22, 2020 at 12:42:42AM -0700, Nathan Chancellor wrote:
-> > 
-> > Thanks for the clarity. With your suggestion (diff below), I see the
-> > following error:
-> > 
-> > arch/x86/boot/compressed/vmlinux: no symbols
-> > ld.lld: error: undefined symbol: ZO_input_data
-> > >>> referenced by arch/x86/boot/header.o:(.header+0x59)
-> > 
-> > ld.lld: error: undefined symbol: ZO_z_input_len
-> > >>> referenced by arch/x86/boot/header.o:(.header+0x5D)
-> > make[3]: *** [../arch/x86/boot/Makefile:108: arch/x86/boot/setup.elf]
-> > 
-> > It seems like the section still isn't being added?
-> > 
-> > Cheers,
-> > Nathan
-> 
-> It seems like lld also doesn't treat .symtab as special and is
-> discarding it, but that one is actually essential to be able to build
-> the bzImage.
-> 
-> The sections that GNU ld ends up discarding via that *(*) directive are
-> .dynsym, .dynstr, .gnu.hash, .eh_frame, .rela.dyn, .comment and
-> .dynamic.
-> 
-> Out of these, only .eh_frame has any significant size, and that's what
-> we discard in the other linker scripts (in kernel/vmlinux.lds.S and
-> boot/setup.ld).
-> 
-> It looks like it would be safest to just do
-> 	/DISCARD/ : {
-> 		*(.eh_frame)
-> 	}
-> instead. If you can double-check that that works with lld, I can send
-> out a new version.
-> 
-> Thanks and sorry for the breakage.
+Hi Scott,
 
-Tested with lld and it seems fine with that change.
+I love your patch! Perhaps something to improve:
 
-Boris, should I send the fix as a diff to the current patch in tip, or
-as a fresh one that can replace it?
+[auto build test WARNING on char-misc/char-misc-testing]
+[also build test WARNING on kselftest/next linus/master v5.6-rc2]
+[cannot apply to driver-core/driver-core-testing next-20200221]
+[if your patch is applied to the wrong git tree, please drop us a note to help
+improve the system. BTW, we also suggest to use '--base' option to specify the
+base tree in git format-patch, please see https://stackoverflow.com/a/37406982]
 
-Thanks.
+url:    https://github.com/0day-ci/linux/commits/Scott-Branden/firmware-add-partial-read-support-in-request_firmware_into_buf/20200222-032851
+base:   https://git.kernel.org/pub/scm/linux/kernel/git/gregkh/char-misc.git 06e33595e96f212811066df192ae8bf802174296
+reproduce:
+        # apt-get install sparse
+        # sparse version: v0.6.1-173-ge0787745-dirty
+        make ARCH=x86_64 allmodconfig
+        make C=1 CF='-fdiagnostic-prefix -D__CHECK_ENDIAN__'
+
+If you fix the issue, kindly add following tag
+Reported-by: kbuild test robot <lkp@intel.com>
+
+
+sparse warnings: (new ones prefixed by >>)
+
+>> drivers/misc/bcm-vk/bcm_vk_dev.c:34:29: sparse: sparse: symbol 'image_tab' was not declared. Should it be static?
+>> drivers/misc/bcm-vk/bcm_vk_dev.c:185:15: sparse: sparse: incorrect type in assignment (different address spaces)
+>> drivers/misc/bcm-vk/bcm_vk_dev.c:185:15: sparse:    expected struct bcm_vk_peer_log *p_ctl
+>> drivers/misc/bcm-vk/bcm_vk_dev.c:185:15: sparse:    got void [noderef] <asn:2> *
+   drivers/misc/bcm-vk/bcm_vk_dev.c:415:22: sparse: sparse: incorrect type in assignment (different address spaces)
+>> drivers/misc/bcm-vk/bcm_vk_dev.c:415:22: sparse:    expected void *bufp
+   drivers/misc/bcm-vk/bcm_vk_dev.c:415:22: sparse:    got void [noderef] <asn:2> *
+>> drivers/misc/bcm-vk/bcm_vk_dev.c:654:36: sparse: sparse: incorrect type in argument 2 (different address spaces)
+>> drivers/misc/bcm-vk/bcm_vk_dev.c:654:36: sparse:    expected void const [noderef] <asn:1> *from
+>> drivers/misc/bcm-vk/bcm_vk_dev.c:654:36: sparse:    got struct vk_image *arg
+   drivers/misc/bcm-vk/bcm_vk_dev.c:694:37: sparse: sparse: incorrect type in argument 2 (different address spaces)
+   drivers/misc/bcm-vk/bcm_vk_dev.c:694:37: sparse:    expected void const [noderef] <asn:1> *from
+>> drivers/misc/bcm-vk/bcm_vk_dev.c:694:37: sparse:    got struct vk_access *arg
+   drivers/misc/bcm-vk/bcm_vk_dev.c:717:31: sparse: sparse: incorrect type in argument 1 (different address spaces)
+>> drivers/misc/bcm-vk/bcm_vk_dev.c:717:31: sparse:    expected void const volatile [noderef] <asn:1> *
+>> drivers/misc/bcm-vk/bcm_vk_dev.c:717:31: sparse:    got unsigned int [usertype] *
+   drivers/misc/bcm-vk/bcm_vk_dev.c:728:31: sparse: sparse: incorrect type in argument 1 (different address spaces)
+   drivers/misc/bcm-vk/bcm_vk_dev.c:728:31: sparse:    expected void const volatile [noderef] <asn:1> *
+   drivers/misc/bcm-vk/bcm_vk_dev.c:728:31: sparse:    got unsigned int [usertype] *
+   drivers/misc/bcm-vk/bcm_vk_dev.c:793:36: sparse: sparse: incorrect type in argument 2 (different address spaces)
+   drivers/misc/bcm-vk/bcm_vk_dev.c:793:36: sparse:    expected void const [noderef] <asn:1> *from
+>> drivers/misc/bcm-vk/bcm_vk_dev.c:793:36: sparse:    got struct vk_reset *arg
+   drivers/misc/bcm-vk/bcm_vk_dev.c:873:45: sparse: sparse: incorrect type in argument 2 (different address spaces)
+>> drivers/misc/bcm-vk/bcm_vk_dev.c:873:45: sparse:    expected struct vk_image *arg
+>> drivers/misc/bcm-vk/bcm_vk_dev.c:873:45: sparse:    got void [noderef] <asn:1> *argp
+   drivers/misc/bcm-vk/bcm_vk_dev.c:877:45: sparse: sparse: incorrect type in argument 2 (different address spaces)
+>> drivers/misc/bcm-vk/bcm_vk_dev.c:877:45: sparse:    expected struct vk_access *arg
+   drivers/misc/bcm-vk/bcm_vk_dev.c:877:45: sparse:    got void [noderef] <asn:1> *argp
+   drivers/misc/bcm-vk/bcm_vk_dev.c:881:40: sparse: sparse: incorrect type in argument 2 (different address spaces)
+>> drivers/misc/bcm-vk/bcm_vk_dev.c:881:40: sparse:    expected struct vk_reset *arg
+   drivers/misc/bcm-vk/bcm_vk_dev.c:881:40: sparse:    got void [noderef] <asn:1> *argp
+--
+>> drivers/misc/bcm-vk/bcm_vk_msg.c:102:6: sparse: sparse: symbol 'bcm_vk_update_qstats' was not declared. Should it be static?
+>> drivers/misc/bcm-vk/bcm_vk_msg.c:455:17: sparse: sparse: cast removes address space '<asn:2>' of expression
+   drivers/misc/bcm-vk/bcm_vk_msg.c:656:15: sparse: sparse: cast removes address space '<asn:2>' of expression
+   drivers/misc/bcm-vk/bcm_vk_msg.c:664:23: sparse: sparse: cast removes address space '<asn:2>' of expression
+>> drivers/misc/bcm-vk/bcm_vk_msg.c:734:5: sparse: sparse: symbol 'bcm_vk_handle_last_sess' was not declared. Should it be static?
+   drivers/misc/bcm-vk/bcm_vk_msg.c:823:31: sparse: sparse: cast removes address space '<asn:2>' of expression
+   drivers/misc/bcm-vk/bcm_vk_msg.c:851:47: sparse: sparse: cast removes address space '<asn:2>' of expression
+
+Please review and possibly fold the followup patch.
+
+---
+0-DAY CI Kernel Test Service, Intel Corporation
+https://lists.01.org/hyperkitty/list/kbuild-all@lists.01.org
