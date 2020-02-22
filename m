@@ -6,109 +6,129 @@ X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 01DD9C35666
-	for <linux-kernel@archiver.kernel.org>; Sat, 22 Feb 2020 16:22:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 41CB2C35671
+	for <linux-kernel@archiver.kernel.org>; Sat, 22 Feb 2020 16:24:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C8008206ED
-	for <linux-kernel@archiver.kernel.org>; Sat, 22 Feb 2020 16:22:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 14F1C206ED
+	for <linux-kernel@archiver.kernel.org>; Sat, 22 Feb 2020 16:24:07 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="epPAQj4d"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="LjQwNHd7"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727445AbgBVQWa (ORCPT
+        id S1727405AbgBVQYG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 22 Feb 2020 11:22:30 -0500
-Received: from mail-qk1-f193.google.com ([209.85.222.193]:40206 "EHLO
-        mail-qk1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726550AbgBVQWa (ORCPT
+        Sat, 22 Feb 2020 11:24:06 -0500
+Received: from bombadil.infradead.org ([198.137.202.133]:43668 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726550AbgBVQYF (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 22 Feb 2020 11:22:30 -0500
-Received: by mail-qk1-f193.google.com with SMTP id b7so4871705qkl.7
-        for <linux-kernel@vger.kernel.org>; Sat, 22 Feb 2020 08:22:28 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:from:date:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=MdqxzzXPoIcQtN1yVVsOrdqBL5LnseCidtxS+ZQd6qM=;
-        b=epPAQj4dws//isTKjVJBUDjl5lSvkK614XMZSc0uMGC9R01p7/7s+f0pP5ziNpAv9L
-         8Wen+P5IceyxmpZOsLlk4aulUvGS0du2OJH2BMrm17X/moKuMP7hHCbfsBdr9jolZ2jL
-         jHDdHdu6Ji3jPpu/WLvA/C32QirrIyMm2HvX4BUCe/QZAalfVzDj3AS8eb82zGe+lEZb
-         DTqxRuhUNEpeZ9D/mpJu7bF5ZOpn6a+9VD4P2ho9efGLkrq5PHpKV5yzGFUUkWPkuRfH
-         twf6/9wc5I8Vt9DKX2KmG6c4M/3Tg6qOzcpWfZLcOiv4ZzcMSgz24zKxxm/hqCJErUWc
-         h2gw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:from:date:to:cc:subject:message-id
-         :references:mime-version:content-disposition:in-reply-to:user-agent;
-        bh=MdqxzzXPoIcQtN1yVVsOrdqBL5LnseCidtxS+ZQd6qM=;
-        b=efk5NE/6Ef583mUUiyHJp9hMuUmwg00o2HKWXfMRc0aU7d7//+cZOOgOgs1I0Cs3Qp
-         3REXB6sTfk+3uoICkclEyJZsVBnf41MQ6k0sDXlMY7trisG6xdfDOVMvGP1HmkUfZ4JI
-         Ihr0ILWgH5DJo5jSRkNlHwyaR26ii6gY9lI9z92kkBQXvgY3S/Qo8s7EIWJQYgXFbBw0
-         pOsx4C5aFvIUlrDoY2T3Hj8jg2ZH77kopmmt+OArVlLKVRuLJBaFq6/CduFycjgiOTn7
-         rgt+N17k6RaBxOpwojP+kKHCs0VHp5x2sncefb+Gsu++FFEi8GwDbta389FeWoxYoRMY
-         prcQ==
-X-Gm-Message-State: APjAAAVI9QnvKBp8rlYXjB0OntD+Kw6RtBT67yWuURUynLfXxxKkb+Eb
-        xaeRwCsISItEo9oXRIESr/s=
-X-Google-Smtp-Source: APXvYqy1KFrbIID6qeLfxbrfGELlGF+h3XJ6cIcK0ATEzyBhpziZaA5ggZgSIuJIjDr6bzEvcVF6vA==
-X-Received: by 2002:a37:6650:: with SMTP id a77mr34249151qkc.343.1582388547911;
-        Sat, 22 Feb 2020 08:22:27 -0800 (PST)
-Received: from rani.riverdale.lan ([2001:470:1f07:5f3::b55f])
-        by smtp.gmail.com with ESMTPSA id g19sm3212418qkk.91.2020.02.22.08.22.27
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 22 Feb 2020 08:22:27 -0800 (PST)
-From:   Arvind Sankar <nivedita@alum.mit.edu>
-X-Google-Original-From: Arvind Sankar <arvind@rani.riverdale.lan>
-Date:   Sat, 22 Feb 2020 11:22:25 -0500
-To:     Borislav Petkov <bp@alien8.de>
-Cc:     Fangrui Song <maskray@google.com>,
-        Nathan Chancellor <natechancellor@gmail.com>,
-        Arvind Sankar <nivedita@alum.mit.edu>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>,
-        "H. Peter Anvin" <hpa@zytor.com>, x86@kernel.org,
-        linux-kernel@vger.kernel.org, clang-built-linux@googlegroups.com,
-        Michael Matz <matz@suse.de>
-Subject: Re: [PATCH 2/2] x86/boot/compressed: Remove unnecessary sections
- from bzImage
-Message-ID: <20200222162225.GA3326744@rani.riverdale.lan>
-References: <20200109150218.16544-1-nivedita@alum.mit.edu>
- <20200109150218.16544-2-nivedita@alum.mit.edu>
- <20200222050845.GA19912@ubuntu-m2-xlarge-x86>
- <20200222065521.GA11284@zn.tnic>
- <20200222070218.GA27571@ubuntu-m2-xlarge-x86>
- <20200222072144.asqaxlv364s6ezbv@google.com>
- <20200222074254.GB11284@zn.tnic>
+        Sat, 22 Feb 2020 11:24:05 -0500
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
+        Content-Type:In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:
+        Subject:Sender:Reply-To:Content-ID:Content-Description;
+        bh=tfEsnk1+KpKAKA991WyR6/b0YuEnsP1eg5dSBJauod4=; b=LjQwNHd7Wwuug5QTpCLzdmWxoX
+        uaoPtFkMmfCc2si41D6fCGzmbkAjwOVi5DtZf3tmGw58aoVw2uQG4OL6gQT5Cdyl8TQoyDdclv6Hq
+        E9lSAVpvxVBtyQir7d5WuymBK6xf6nLEBwIjhLdjEjDzusvhJ250ilRBo2Hujknj8qWq0rgBed07M
+        MV80VIgatRUX3z+2ZhU+MLmr7scoNTGsdVJjiPNHt3/r1NpAfvC4aTEfTd497FtfjdQ4PodlBo14f
+        oDaDr2TiZ+6YxHY16MJQF+DE6T+n1NoxX4Gse8AyjVydgFPoeD0hjMmw/H/QiZz7WFWc9lpBcLzx2
+        SBD8k1hw==;
+Received: from [2601:1c0:6280:3f0::19c2]
+        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1j5XZT-0007jg-6X; Sat, 22 Feb 2020 16:24:03 +0000
+Subject: Re: [PATCH v3 1/2] bootconfig: Prohibit re-defining value on same key
+To:     Masami Hiramatsu <mhiramat@kernel.org>,
+        Geert Uytterhoeven <geert@linux-m68k.org>
+Cc:     Steven Rostedt <rostedt@goodmis.org>,
+        Borislav Petkov <bp@alien8.de>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Ingo Molnar <mingo@kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Peter Zijlstra <peterz@infradead.org>
+References: <158227281198.12842.8478910651170568606.stgit@devnote2>
+ <158227282199.12842.10110929876059658601.stgit@devnote2>
+ <536c681d-a546-bb51-a6cb-2d39ed726716@infradead.org>
+ <CAMuHMdURcRPXo7Q-2E7bS7X9w73NvYP8ffdJeNk37wdQgVxThw@mail.gmail.com>
+ <20200222234147.7525a2d527ebbf53f06b5734@kernel.org>
+From:   Randy Dunlap <rdunlap@infradead.org>
+Message-ID: <dcd31dc2-a555-1d5a-c5f5-56ee5c3e6405@infradead.org>
+Date:   Sat, 22 Feb 2020 08:24:00 -0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.1
 MIME-Version: 1.0
+In-Reply-To: <20200222234147.7525a2d527ebbf53f06b5734@kernel.org>
 Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20200222074254.GB11284@zn.tnic>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, Feb 22, 2020 at 08:42:54AM +0100, Borislav Petkov wrote:
-> On Fri, Feb 21, 2020 at 11:21:44PM -0800, Fangrui Song wrote:
-> > In GNU ld, it seems that .shstrtab .symtab and .strtab are special
-> > cased. Neither the input section description *(.shstrtab) nor *(*)
-> > discards .shstrtab . I feel that this is a weird case (probably even a bug)
-> > that lld should not implement.
+On 2/22/20 6:41 AM, Masami Hiramatsu wrote:
+> On Sat, 22 Feb 2020 10:31:17 +0100
+> Geert Uytterhoeven <geert@linux-m68k.org> wrote:
 > 
-> Ok, forget what the tools do for a second: why is .shstrtab special and
-> why would one want to keep it?
-> 
-> Because one still wants to know what the section names of an object are
-> or other tools need it or why?
-> 
-> Thx.
-> 
-> -- 
-> Regards/Gruss,
->     Boris.
-> 
-> https://people.kernel.org/tglx/notes-about-netiquette
+>> Hi Randy,
+>>
+>> On Sat, Feb 22, 2020 at 5:30 AM Randy Dunlap <rdunlap@infradead.org> wrote:
+>>> On 2/21/20 12:13 AM, Masami Hiramatsu wrote:
+>>>> --- a/Documentation/admin-guide/bootconfig.rst
+>>>> +++ b/Documentation/admin-guide/bootconfig.rst
+>>>> @@ -62,7 +62,16 @@ Or more shorter, written as following::
+>>>>  In both styles, same key words are automatically merged when parsing it
+>>>>  at boot time. So you can append similar trees or key-values.
+>>>>
+>>>> -Note that a sub-key and a value can not co-exist under a parent key.
+>>>> +Same-key Values
+>>>> +---------------
+>>>> +
+>>>> +It is prohibited that two or more values or arraies share a same-key.
+>>>
+>>> I think (?):                                   arrays
+>>>
+>>>> +For example,::
+>>>> +
+>>>> + foo = bar, baz
+>>>> + foo = qux  # !ERROR! we can not re-define same key
+>>>> +
+>>>> +Also, a sub-key and a value can not co-exist under a parent key.
+>>>>  For example, following config is NOT allowed.::
+>>>>
+>>>>   foo = value1
+>>>
+>>>
+>>> I'm pretty sure that the kernel command line allows someone to use
+>>>   key=value1 ... key=value2
+>>> and the first setting is just overwritten with value2 (for most "key"s).
+>>>
+>>> Am I wrong?  and is this patch saying that bootconfig won't operate like that?
+>>
+>> I think so. Both are retained.
+>> A typical example is "console=ttyS0 console=tty", to have the kernel output
+>> on both the serial and the graphical console.
 
-.shstrtab is required by the ELF specification. The e_shstrndx field in
-the ELF header is the index of .shstrtab, and each section in the
-section table is required to have an sh_name that points into the
-.shstrtab.
+Yes, I was aware of that one also.
+
+> Right, it actually depends on how the option is defined and its handler.
+> If the option is defined with module_param*() macros, those will be 
+> overwritten.
+> But if it is defined with __setup() or early_param(), the handler function
+> will be called repeatedly. Thus, overwrite or append or skip later one
+> depends on the option handler.
+
+OK, thanks for that clarification.
+
+> I think the bootconfig is a bit different from legacy command line at
+> this moment. The legacy command line can be modified by bootloader,
+> whereas the bootconfig is a single text file which user can update
+> each value. Of course bootloader will support the bootconfig to append
+> some key-values in the future.
+> So I would like to introduce another "overwrite" operator (":=") and
+> "assign default" operator ("?=") too. With those operators, the
+> bootloader can just add their own key-value without decoding the
+> current bootconfig.
+
+
+-- 
+~Randy
+
