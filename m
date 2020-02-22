@@ -2,186 +2,93 @@ Return-Path: <SRS0=8jYG=4K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 15485C35670
-	for <linux-kernel@archiver.kernel.org>; Sat, 22 Feb 2020 00:28:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 397E4C35669
+	for <linux-kernel@archiver.kernel.org>; Sat, 22 Feb 2020 00:29:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D8F7824672
-	for <linux-kernel@archiver.kernel.org>; Sat, 22 Feb 2020 00:28:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0C63A24672
+	for <linux-kernel@archiver.kernel.org>; Sat, 22 Feb 2020 00:29:33 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="w/v2PiDC"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="UaeuT1T2"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726945AbgBVA2w (ORCPT
+        id S1727103AbgBVA3c (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Feb 2020 19:28:52 -0500
-Received: from userp2120.oracle.com ([156.151.31.85]:36164 "EHLO
-        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726697AbgBVA2w (ORCPT
+        Fri, 21 Feb 2020 19:29:32 -0500
+Received: from mail-pj1-f66.google.com ([209.85.216.66]:35538 "EHLO
+        mail-pj1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726697AbgBVA3b (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Feb 2020 19:28:52 -0500
-Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
-        by userp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 01M0IJ9o062366;
-        Sat, 22 Feb 2020 00:28:30 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
- : subject : message-id : references : mime-version : content-type :
- in-reply-to; s=corp-2020-01-29;
- bh=/VPVeh1c+6mc9B9FJQZVdoDMBgYy/1D1NNm9h5BUePQ=;
- b=w/v2PiDCjJ37v8mFyABwCCdqxpL2+e7giVrv7yNq1kYmANdP5xf4oPmNaRFaLEy0Ys9v
- 0UKiHeccK9N/EgPGv037qg612gn+gXMppnYvBDXnE1iEOuhm/x1MGHTCq74/RCrgJZzb
- bHj95B2HTHriEc3BT2FZ8z2mHKLz0G0FnNGdMOTi5evKFxqGHMJctFEK3U1sT3egJNjk
- xwH6W5msLM897b0g2gAj6jdl5PiZWlumUyGanjOshSX+yVQ4bnIPrDW92esF3+hHiI1Y
- 6ZS3v2UdzzOUjcbDoeY0Cu3sG90PrmYFDiNszq3ve1Iy93s0JeVVBAtyVSJLP6Iv/5a5 Jg== 
-Received: from aserp3030.oracle.com (aserp3030.oracle.com [141.146.126.71])
-        by userp2120.oracle.com with ESMTP id 2y8ud1kj0x-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Sat, 22 Feb 2020 00:28:30 +0000
-Received: from pps.filterd (aserp3030.oracle.com [127.0.0.1])
-        by aserp3030.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 01M0STRT038398;
-        Sat, 22 Feb 2020 00:28:29 GMT
-Received: from aserv0122.oracle.com (aserv0122.oracle.com [141.146.126.236])
-        by aserp3030.oracle.com with ESMTP id 2y8udg7t2h-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Sat, 22 Feb 2020 00:28:29 +0000
-Received: from abhmp0008.oracle.com (abhmp0008.oracle.com [141.146.116.14])
-        by aserv0122.oracle.com (8.14.4/8.14.4) with ESMTP id 01M0SNgV005254;
-        Sat, 22 Feb 2020 00:28:23 GMT
-Received: from localhost (/10.145.179.117)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Fri, 21 Feb 2020 16:28:22 -0800
-Date:   Fri, 21 Feb 2020 16:28:21 -0800
-From:   "Darrick J. Wong" <darrick.wong@oracle.com>
-To:     ira.weiny@intel.com
-Cc:     linux-kernel@vger.kernel.org,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Dave Chinner <david@fromorbit.com>,
-        Christoph Hellwig <hch@lst.de>,
-        "Theodore Y. Ts'o" <tytso@mit.edu>, Jan Kara <jack@suse.cz>,
-        linux-ext4@vger.kernel.org, linux-xfs@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org
-Subject: Re: [PATCH V4 06/13] fs/xfs: Create function xfs_inode_enable_dax()
-Message-ID: <20200222002821.GD9506@magnolia>
-References: <20200221004134.30599-1-ira.weiny@intel.com>
- <20200221004134.30599-7-ira.weiny@intel.com>
+        Fri, 21 Feb 2020 19:29:31 -0500
+Received: by mail-pj1-f66.google.com with SMTP id q39so1514006pjc.0
+        for <linux-kernel@vger.kernel.org>; Fri, 21 Feb 2020 16:29:31 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=/3+ekiIDMOGmiDjrYAnNc8G9eXFhd69LzzwYliKSeDk=;
+        b=UaeuT1T2xzPoXNPxlPuN7qgHSNKYaqFXhKAUALtPwg8DJgTO/AVDcCGa0WQzLMZBj6
+         ozTjHup3RowLqIjE0+/c9LeYRCxnA7HCkhT1nIb2BKK2fLUIVha0L9Wv2wsBpOxD3R2w
+         QCDUb5IRlqbWRjl9Ud3gWtpP/Q71ObowauXB0=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=/3+ekiIDMOGmiDjrYAnNc8G9eXFhd69LzzwYliKSeDk=;
+        b=VHLT1kuCPXhhiEr43Eafwg+FIkfIo3KPdBJqAbeABcdRS4yp/BgYBGcnHH88zSwXha
+         00dqN8Baf69q7wFRfuH2hozYEY8kJaludS92a6oIz8WHsFWKvbkx5pFfHTmyKFVDLLli
+         /lk6laFpHd+7mfmKM/uO0AoTeWQ2bn/Gi10Yp+xS9OCSsMw8q6R1ZNTYqxT0wTIVn7CF
+         4WeylEwXp3oxtwvkcdHiq5SYjl4Cl2TrrzSxL/qtwPe3PrxtqRVvKvRPAEE2JNe5pLbq
+         +bCT9Cpn8FIXsTNI7Z7J/S6Vk5zqu94ChrMkba+5qPMEzzt78c/XXgo7tn7muLw2zaI5
+         +ZIQ==
+X-Gm-Message-State: APjAAAWJ3UIX7ObGOJBG6a5U8U5mXhi+hen4IfPR6wpsiZiEtjFLD1cM
+        sUKtL7xO98vWKjSzQw652b/Jqw==
+X-Google-Smtp-Source: APXvYqyP2Eu7DZ39Tl0jFQ4lvdUnRpiBhcQzdZ7LrEf/OVF8NHlMo9EFXeE53kJ5qfdNni+OtJyw/w==
+X-Received: by 2002:a17:90a:8c0f:: with SMTP id a15mr6299848pjo.86.1582331371026;
+        Fri, 21 Feb 2020 16:29:31 -0800 (PST)
+Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
+        by smtp.gmail.com with ESMTPSA id z5sm4213775pfq.3.2020.02.21.16.29.30
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 21 Feb 2020 16:29:30 -0800 (PST)
+Date:   Fri, 21 Feb 2020 16:29:29 -0800
+From:   Kees Cook <keescook@chromium.org>
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     Andy Lutomirski <luto@amacapital.net>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Jens Axboe <axboe@kernel.dk>, Jann Horn <jannh@google.com>,
+        Will Deacon <will@kernel.org>
+Subject: Re: [PATCH] mm/tlb: Fix use_mm() vs TLB invalidate
+Message-ID: <202002211627.33D858AA@keescook>
+References: <CAHk-=wi4uO+Djqr4Jc1TnCofwxUTuXHtgkgwnVX86q06UGV6DA@mail.gmail.com>
+ <6A09F721-0AD9-4B86-AB3E-563A1CF5ABDE@amacapital.net>
+ <202002211506.2151CA26@keescook>
+ <CAHk-=wjL-4=YfvQb_pLhK5oH1QL2j-JCt-Z+S-r86-H__Vow0w@mail.gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200221004134.30599-7-ira.weiny@intel.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9538 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 spamscore=0 mlxscore=0 adultscore=0
- mlxlogscore=999 malwarescore=0 bulkscore=0 suspectscore=1 phishscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2001150001
- definitions=main-2002220000
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9538 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 lowpriorityscore=0 malwarescore=0
- suspectscore=1 bulkscore=0 spamscore=0 priorityscore=1501 phishscore=0
- impostorscore=0 mlxlogscore=999 clxscore=1015 adultscore=0 mlxscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2001150001
- definitions=main-2002220000
+In-Reply-To: <CAHk-=wjL-4=YfvQb_pLhK5oH1QL2j-JCt-Z+S-r86-H__Vow0w@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Feb 20, 2020 at 04:41:27PM -0800, ira.weiny@intel.com wrote:
-> From: Ira Weiny <ira.weiny@intel.com>
+On Fri, Feb 21, 2020 at 03:57:21PM -0800, Linus Torvalds wrote:
+> On Fri, Feb 21, 2020 at 3:10 PM Kees Cook <keescook@chromium.org> wrote:
+> > Why not just fail after the WARN -- I wrote the patch for the (very few)
+> > callers to handle the errors, clean up, and carry on.
 > 
-> xfs_inode_supports_dax() should reflect if the inode can support DAX not
-> that it is enabled for DAX.
-> 
-> Change the use of xfs_inode_supports_dax() to reflect only if the inode
-> and underlying storage support dax.
-> 
-> Add a new function xfs_inode_enable_dax() which reflects if the inode
+> Can it actually fail? Or is this all just "let's add new error
+> conditions that make the code harder to read because they make no
+> actual sense"?
 
-Heavily into bikeshedding here, but "enable" sounds like a verb, but
-this function doesn't actually turn dax on for a file, it merely decides
-if we /should/ turn it on.
+I was just trying to see if there was a reasonable "do not continue and
+do stuff we just tested for". If this should just be WARN_ON_ONCE() and
+continue anyway, so be it. My general guideline is to avoid continuing a
+known-bad path.
 
-xfs_inode_wants_dax() ?
-
---D
-
-> should be enabled for DAX.
-> 
-> Signed-off-by: Ira Weiny <ira.weiny@intel.com>
-> 
-> ---
-> Changes from v3:
-> 	Update functions and names to be more clear
-> 	Update commit message
-> 	Merge with
-> 		'fs/xfs: Clean up DAX support check'
-> 		don't allow IS_DAX() on a directory
-> 		use STATIC macro for static
-> 		make xfs_inode_supports_dax() static
-> ---
->  fs/xfs/xfs_iops.c | 25 +++++++++++++++++++------
->  1 file changed, 19 insertions(+), 6 deletions(-)
-> 
-> diff --git a/fs/xfs/xfs_iops.c b/fs/xfs/xfs_iops.c
-> index 81f2f93caec0..ff711efc5247 100644
-> --- a/fs/xfs/xfs_iops.c
-> +++ b/fs/xfs/xfs_iops.c
-> @@ -1237,19 +1237,18 @@ static const struct inode_operations xfs_inline_symlink_inode_operations = {
->  };
->  
->  /* Figure out if this file actually supports DAX. */
-> -static bool
-> +STATIC bool
->  xfs_inode_supports_dax(
->  	struct xfs_inode	*ip)
->  {
->  	struct xfs_mount	*mp = ip->i_mount;
->  
->  	/* Only supported on non-reflinked files. */
-> -	if (!S_ISREG(VFS_I(ip)->i_mode) || xfs_is_reflink_inode(ip))
-> +	if (xfs_is_reflink_inode(ip))
->  		return false;
->  
-> -	/* DAX mount option or DAX iflag must be set. */
-> -	if (!(mp->m_flags & XFS_MOUNT_DAX) &&
-> -	    !(ip->i_d.di_flags2 & XFS_DIFLAG2_DAX))
-> +	/* Only supported on regular files. */
-> +	if (!S_ISREG(VFS_I(ip)->i_mode))
->  		return false;
->  
->  	/* Block size must match page size */
-> @@ -1260,6 +1259,20 @@ xfs_inode_supports_dax(
->  	return xfs_inode_buftarg(ip)->bt_daxdev != NULL;
->  }
->  
-> +STATIC bool
-> +xfs_inode_enable_dax(
-> +	struct xfs_inode *ip)
-> +{
-> +	if (!xfs_inode_supports_dax(ip))
-> +		return false;
-> +
-> +	if (ip->i_d.di_flags2 & XFS_DIFLAG2_DAX)
-> +		return true;
-> +	if (ip->i_mount->m_flags & XFS_MOUNT_DAX)
-> +		return true;
-> +	return false;
-> +}
-> +
->  STATIC void
->  xfs_diflags_to_iflags(
->  	struct inode		*inode,
-> @@ -1278,7 +1291,7 @@ xfs_diflags_to_iflags(
->  		inode->i_flags |= S_SYNC;
->  	if (flags & XFS_DIFLAG_NOATIME)
->  		inode->i_flags |= S_NOATIME;
-> -	if (xfs_inode_supports_dax(ip))
-> +	if (xfs_inode_enable_dax(ip))
->  		inode->i_flags |= S_DAX;
->  }
->  
-> -- 
-> 2.21.0
-> 
+-- 
+Kees Cook
