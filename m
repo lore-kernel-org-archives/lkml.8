@@ -2,189 +2,126 @@ Return-Path: <SRS0=8jYG=4K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8C461C35671
-	for <linux-kernel@archiver.kernel.org>; Sat, 22 Feb 2020 06:45:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DAD6FC35671
+	for <linux-kernel@archiver.kernel.org>; Sat, 22 Feb 2020 06:53:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 61AC92192A
-	for <linux-kernel@archiver.kernel.org>; Sat, 22 Feb 2020 06:45:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B3707208C4
+	for <linux-kernel@archiver.kernel.org>; Sat, 22 Feb 2020 06:53:10 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nifty.com header.i=@nifty.com header.b="HfTPlUp6"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="UWf3o/nE"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727223AbgBVGpi (ORCPT
+        id S1727159AbgBVGxJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 22 Feb 2020 01:45:38 -0500
-Received: from conuserg-07.nifty.com ([210.131.2.74]:58915 "EHLO
-        conuserg-07.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727159AbgBVGpd (ORCPT
+        Sat, 22 Feb 2020 01:53:09 -0500
+Received: from mail-pf1-f194.google.com ([209.85.210.194]:37813 "EHLO
+        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726706AbgBVGxJ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 22 Feb 2020 01:45:33 -0500
-Received: from grover.flets-west.jp (softbank126093102113.bbtec.net [126.93.102.113]) (authenticated)
-        by conuserg-07.nifty.com with ESMTP id 01M6ik5P005982;
-        Sat, 22 Feb 2020 15:44:46 +0900
-DKIM-Filter: OpenDKIM Filter v2.10.3 conuserg-07.nifty.com 01M6ik5P005982
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
-        s=dec2015msa; t=1582353887;
-        bh=pw80puZqFh3HIHozKVPIxQUqE9lmyrEYJKdro2WSFao=;
-        h=From:To:Cc:Subject:Date:From;
-        b=HfTPlUp6gRIDOM5AHjHcEoJbHhsA6IQ8dnxS7J5KrSP/Ez3Vwzsj/ZT8dooUjJI3p
-         qbk1DKyeDhD6acKXMrPMkudpMKXIWHJ5CPQq8whHCcr352EEqebWpibBPgEsukJ3lx
-         iSfNvle3Vz+9+Y4P2q7O03gcKCV9OluLy4YZedWnwsxKCAECgPd3VuuhHkQz3m/3Yk
-         WCkSxasMFRqdTRjdppN9Zoib6+rt7sWRtvj/odAsW0kyOdppfhxOB6H9VCMTzaenTa
-         fcpmAA64MfEIRPcfCuzWkXbXKs9K5DieDc9B00+6NXZO7M7X0IIUy+9n1jiAW1EXjP
-         2b2Xv7oXiZeVw==
-X-Nifty-SrcIP: [126.93.102.113]
-From:   Masahiro Yamada <yamada.masahiro@socionext.com>
-To:     linux-arm-kernel@lists.infradead.org
-Cc:     Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, masahiroy@kernel.org,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        Mark Rutland <mark.rutland@arm.com>
-Subject: [PATCH 1/4] ARM: dts: uniphier: change SD/eMMC node names to follow json-schema
-Date:   Sat, 22 Feb 2020 15:44:42 +0900
-Message-Id: <20200222064445.14903-1-yamada.masahiro@socionext.com>
+        Sat, 22 Feb 2020 01:53:09 -0500
+Received: by mail-pf1-f194.google.com with SMTP id p14so2465547pfn.4;
+        Fri, 21 Feb 2020 22:53:08 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id;
+        bh=O8dGjw47rBMTaYq9ZdIJC+Ct6bZIAQqAuCZjvsrgZq8=;
+        b=UWf3o/nEx+XZVQxA8TbPakPz+HWWS1vWyxffSLKKOmh+vtB76WPi9666TVY80DE/54
+         yg78oRlOJ2rdlUSabRRdLed8VYF+rMDwp5eKKRnbaaXgAgu3f7/Chf8CK/lukAacHOF/
+         P6AQsNmXhOlxvgTgdWidnw0QYm/ZpAj8NLRccYR+wWCODSJPt+HRtt88Z+3YNwSmf0mc
+         FvgILHFFOr+fHt13B30aqvt4SFTrhr3udX6vMgo75SeWR3aXipNHfm0W6r7rUi+izf+z
+         y3Piw82miHXfGGz9IWG9hzgrsuBOswaCUIDloVHoPfjDMD8+b5CRhlP//O6kGC3nGYMl
+         6rAw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=O8dGjw47rBMTaYq9ZdIJC+Ct6bZIAQqAuCZjvsrgZq8=;
+        b=XMQn7ki7BJeGNuz0UeObzvK/If+4ML6m9LVXR7TCwcy5CoTAyBxvzivXFcnm71L3s5
+         JIxXmpTVzmEqGDQ01GSfZwdxqqnG+Dh2Zr/yF2WfamAMcJ+mdsZ0yNfdW5xSakyxkvlH
+         MZ6hGYRZEapmjHCrltZBwcncDs5Bce6SXevN4mGiceu878Gziyh0bFfZuUhZ1krw7XEo
+         YgpEwfg//+SI0bAM2U3t1MWZDzdazDJ/TFqkcoi04VUX6y3tZ4ONJJ16gARpHo/nrx+H
+         CwvYlyQaIXY4ZXdIasWFbBjDJV7jHRN0KvHNJoKURgnaa//YBcGAsRLOOnGetyetOBfd
+         GxcA==
+X-Gm-Message-State: APjAAAX+o51JdRntTULEAYCmH8BlJhNLMru93nOOQALH603cwEJ/ENqK
+        XImLc6XcLZX/YVySXzn+Iw==
+X-Google-Smtp-Source: APXvYqxCu6MyWMp3NdwLGo82GJR7m2KUSumjYRTil3dfhsgIWR7CGlVVNIztSQdZsszDa4hWCju4GA==
+X-Received: by 2002:a63:5e07:: with SMTP id s7mr41011057pgb.261.1582354388478;
+        Fri, 21 Feb 2020 22:53:08 -0800 (PST)
+Received: from madhuparna-HP-Notebook.nitk.ac.in ([2402:3a80:536:efd4:3cf2:2ab1:f2dc:185c])
+        by smtp.gmail.com with ESMTPSA id d14sm4708631pjz.12.2020.02.21.22.53.03
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 21 Feb 2020 22:53:07 -0800 (PST)
+From:   madhuparnabhowmik10@gmail.com
+To:     jiri@mellanox.com, davem@davemloft.net
+Cc:     netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+        joel@joelfernandes.org, frextrite@gmail.com,
+        linux-kernel-mentees@lists.linuxfoundation.org, paulmck@kernel.org,
+        Madhuparna Bhowmik <madhuparnabhowmik10@gmail.com>
+Subject: [PATCH] net: core: devlink.c: Hold devlink->lock from the beginning of devlink_dpipe_table_register()
+Date:   Sat, 22 Feb 2020 12:22:34 +0530
+Message-Id: <20200222065234.8829-1-madhuparnabhowmik10@gmail.com>
 X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Follow the standard nodename pattern "^mmc(@.*)?$" defined in
-Documentation/devicetree/bindings/mmc/mmc-controller.yaml
+From: Madhuparna Bhowmik <madhuparnabhowmik10@gmail.com>
 
-Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
+devlink_dpipe_table_find() should be called under either
+rcu_read_lock() or devlink->lock. devlink_dpipe_table_register()
+calls devlink_dpipe_table_find() without holding the lock
+and acquires it later. Therefore hold the devlink->lock
+from the beginning of devlink_dpipe_table_register().
+
+Suggested-by: Jiri Pirko <jiri@mellanox.com>
+Signed-off-by: Madhuparna Bhowmik <madhuparnabhowmik10@gmail.com>
 ---
+ net/core/devlink.c | 15 +++++++++++----
+ 1 file changed, 11 insertions(+), 4 deletions(-)
 
- arch/arm/boot/dts/uniphier-ld4.dtsi  | 4 ++--
- arch/arm/boot/dts/uniphier-pro4.dtsi | 6 +++---
- arch/arm/boot/dts/uniphier-pro5.dtsi | 4 ++--
- arch/arm/boot/dts/uniphier-pxs2.dtsi | 4 ++--
- arch/arm/boot/dts/uniphier-sld8.dtsi | 4 ++--
- 5 files changed, 11 insertions(+), 11 deletions(-)
-
-diff --git a/arch/arm/boot/dts/uniphier-ld4.dtsi b/arch/arm/boot/dts/uniphier-ld4.dtsi
-index 64ec46c72a4c..f3a20dc0b22b 100644
---- a/arch/arm/boot/dts/uniphier-ld4.dtsi
-+++ b/arch/arm/boot/dts/uniphier-ld4.dtsi
-@@ -245,7 +245,7 @@
- 			#dma-cells = <1>;
- 		};
+diff --git a/net/core/devlink.c b/net/core/devlink.c
+index 3e8c94155d93..ba9dd8cb98c3 100644
+--- a/net/core/devlink.c
++++ b/net/core/devlink.c
+@@ -6840,22 +6840,29 @@ int devlink_dpipe_table_register(struct devlink *devlink,
+ {
+ 	struct devlink_dpipe_table *table;
  
--		sd: sdhc@5a400000 {
-+		sd: mmc@5a400000 {
- 			compatible = "socionext,uniphier-sd-v2.91";
- 			status = "disabled";
- 			reg = <0x5a400000 0x200>;
-@@ -265,7 +265,7 @@
- 			sd-uhs-sdr50;
- 		};
+-	if (devlink_dpipe_table_find(&devlink->dpipe_table_list, table_name))
++	mutex_lock(&devlink->lock);
++
++	if (devlink_dpipe_table_find(&devlink->dpipe_table_list, table_name)) {
++		mutex_unlock(&devlink->lock);
+ 		return -EEXIST;
++	}
  
--		emmc: sdhc@5a500000 {
-+		emmc: mmc@5a500000 {
- 			compatible = "socionext,uniphier-sd-v2.91";
- 			status = "disabled";
- 			reg = <0x5a500000 0x200>;
-diff --git a/arch/arm/boot/dts/uniphier-pro4.dtsi b/arch/arm/boot/dts/uniphier-pro4.dtsi
-index 2ec04d7972ef..e96b5796f0f8 100644
---- a/arch/arm/boot/dts/uniphier-pro4.dtsi
-+++ b/arch/arm/boot/dts/uniphier-pro4.dtsi
-@@ -279,7 +279,7 @@
- 			#dma-cells = <1>;
- 		};
+-	if (WARN_ON(!table_ops->size_get))
++	if (WARN_ON(!table_ops->size_get)) {
++		mutex_unlock(&devlink->lock);
+ 		return -EINVAL;
++	}
  
--		sd: sdhc@5a400000 {
-+		sd: mmc@5a400000 {
- 			compatible = "socionext,uniphier-sd-v2.91";
- 			status = "disabled";
- 			reg = <0x5a400000 0x200>;
-@@ -299,7 +299,7 @@
- 			sd-uhs-sdr50;
- 		};
+ 	table = kzalloc(sizeof(*table), GFP_KERNEL);
+-	if (!table)
++	if (!table) {
++		mutex_unlock(&devlink->lock);
+ 		return -ENOMEM;
++	}
  
--		emmc: sdhc@5a500000 {
-+		emmc: mmc@5a500000 {
- 			compatible = "socionext,uniphier-sd-v2.91";
- 			status = "disabled";
- 			reg = <0x5a500000 0x200>;
-@@ -317,7 +317,7 @@
- 			non-removable;
- 		};
+ 	table->name = table_name;
+ 	table->table_ops = table_ops;
+ 	table->priv = priv;
+ 	table->counter_control_extern = counter_control_extern;
  
--		sd1: sdhc@5a600000 {
-+		sd1: mmc@5a600000 {
- 			compatible = "socionext,uniphier-sd-v2.91";
- 			status = "disabled";
- 			reg = <0x5a600000 0x200>;
-diff --git a/arch/arm/boot/dts/uniphier-pro5.dtsi b/arch/arm/boot/dts/uniphier-pro5.dtsi
-index ea3961f920a0..f794a0676760 100644
---- a/arch/arm/boot/dts/uniphier-pro5.dtsi
-+++ b/arch/arm/boot/dts/uniphier-pro5.dtsi
-@@ -469,7 +469,7 @@
- 			resets = <&sys_rst 2>, <&sys_rst 2>;
- 		};
- 
--		emmc: sdhc@68400000 {
-+		emmc: mmc@68400000 {
- 			compatible = "socionext,uniphier-sd-v3.1";
- 			status = "disabled";
- 			reg = <0x68400000 0x800>;
-@@ -485,7 +485,7 @@
- 			non-removable;
- 		};
- 
--		sd: sdhc@68800000 {
-+		sd: mmc@68800000 {
- 			compatible = "socionext,uniphier-sd-v3.1";
- 			status = "disabled";
- 			reg = <0x68800000 0x800>;
-diff --git a/arch/arm/boot/dts/uniphier-pxs2.dtsi b/arch/arm/boot/dts/uniphier-pxs2.dtsi
-index 13b0d4a7741f..04d6bef3a00f 100644
---- a/arch/arm/boot/dts/uniphier-pxs2.dtsi
-+++ b/arch/arm/boot/dts/uniphier-pxs2.dtsi
-@@ -446,7 +446,7 @@
- 			};
- 		};
- 
--		emmc: sdhc@5a000000 {
-+		emmc: mmc@5a000000 {
- 			compatible = "socionext,uniphier-sd-v3.1.1";
- 			status = "disabled";
- 			reg = <0x5a000000 0x800>;
-@@ -462,7 +462,7 @@
- 			non-removable;
- 		};
- 
--		sd: sdhc@5a400000 {
-+		sd: mmc@5a400000 {
- 			compatible = "socionext,uniphier-sd-v3.1.1";
- 			status = "disabled";
- 			reg = <0x5a400000 0x800>;
-diff --git a/arch/arm/boot/dts/uniphier-sld8.dtsi b/arch/arm/boot/dts/uniphier-sld8.dtsi
-index 4fc6676f5486..beb1eac85436 100644
---- a/arch/arm/boot/dts/uniphier-sld8.dtsi
-+++ b/arch/arm/boot/dts/uniphier-sld8.dtsi
-@@ -249,7 +249,7 @@
- 			#dma-cells = <1>;
- 		};
- 
--		sd: sdhc@5a400000 {
-+		sd: mmc@5a400000 {
- 			compatible = "socionext,uniphier-sd-v2.91";
- 			status = "disabled";
- 			reg = <0x5a400000 0x200>;
-@@ -269,7 +269,7 @@
- 			sd-uhs-sdr50;
- 		};
- 
--		emmc: sdhc@5a500000 {
-+		emmc: mmc@5a500000 {
- 			compatible = "socionext,uniphier-sd-v2.91";
- 			status = "disabled";
- 			reg = <0x5a500000 0x200>;
+-	mutex_lock(&devlink->lock);
+ 	list_add_tail_rcu(&table->list, &devlink->dpipe_table_list);
+ 	mutex_unlock(&devlink->lock);
+ 	return 0;
 -- 
 2.17.1
 
