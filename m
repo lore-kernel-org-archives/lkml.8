@@ -2,93 +2,113 @@ Return-Path: <SRS0=8jYG=4K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C1203C35671
-	for <linux-kernel@archiver.kernel.org>; Sat, 22 Feb 2020 17:53:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5D549C35666
+	for <linux-kernel@archiver.kernel.org>; Sat, 22 Feb 2020 17:55:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9C711206ED
-	for <linux-kernel@archiver.kernel.org>; Sat, 22 Feb 2020 17:53:41 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582394021;
-	bh=YgKrm0xiETHM9Cmfn3YsYzVL6NnGHRbjPZ0LttoOZPs=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=GbaN8GfGMav4e6mgVEzvECow4mwO9KOWnh2QX0ThvheybU/WNW8vG3kspb8j7mH/2
-	 BxRMmC/Phv2Lq6hD7emVVUydsBP/g+6QJgL05Vg4OvrjNEiOSYg/W+YxR1d18nJrli
-	 RcLKtQf2V9BJC+vDy55j493Fl1qRWU5VRXwdLVCc=
+	by mail.kernel.org (Postfix) with ESMTP id 3A143206ED
+	for <linux-kernel@archiver.kernel.org>; Sat, 22 Feb 2020 17:55:27 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=flygoat.com header.i=jiaxun.yang@flygoat.com header.b="HCxX1orI"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726907AbgBVRxk (ORCPT
+        id S1726895AbgBVRzZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 22 Feb 2020 12:53:40 -0500
-Received: from mail.kernel.org ([198.145.29.99]:41336 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726828AbgBVRxi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 22 Feb 2020 12:53:38 -0500
-Received: from mail-wr1-f45.google.com (mail-wr1-f45.google.com [209.85.221.45])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 919EC208C3
-        for <linux-kernel@vger.kernel.org>; Sat, 22 Feb 2020 17:53:37 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1582394017;
-        bh=YgKrm0xiETHM9Cmfn3YsYzVL6NnGHRbjPZ0LttoOZPs=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=WHBit2bA6T3EHwMhwqLDdrr2CZGcZ4tX4F/1r5Lyk9AQFzU/OqaIeMgyCzk97aE/7
-         O6S595fJcXq5KtBCozs3jOWCnHfAra61DJEVNImt3IcPoHBp16EPEQ+CCjyiaNIa+j
-         0fH3UOISh+mdmW2T186huegR4ms51t3JnWEZ/IrE=
-Received: by mail-wr1-f45.google.com with SMTP id w12so5618161wrt.2
-        for <linux-kernel@vger.kernel.org>; Sat, 22 Feb 2020 09:53:37 -0800 (PST)
-X-Gm-Message-State: APjAAAUEoAD2Z+mdCSN7GWnx34gGaq3YrKMBn7og2HnWVp163ITi1cud
-        wWfQycA1BsBB9AAwD/RO7Mc7b+OmDFFdn71RAASm5Q==
-X-Google-Smtp-Source: APXvYqyWzaLbt4HYjpKwPlRQWQGBksiImz9hsJkpyk87ED2N2OOaMX24u0bAr90dNAd3Wc+csetD0svSTq78dij7MPk=
-X-Received: by 2002:a5d:5188:: with SMTP id k8mr55791430wrv.151.1582394015897;
- Sat, 22 Feb 2020 09:53:35 -0800 (PST)
+        Sat, 22 Feb 2020 12:55:25 -0500
+Received: from sender3-op-o12.zoho.com.cn ([124.251.121.243]:17952 "EHLO
+        sender3-op-o12.zoho.com.cn" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726310AbgBVRzZ (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 22 Feb 2020 12:55:25 -0500
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1582394088;
+        s=mail; d=flygoat.com; i=jiaxun.yang@flygoat.com;
+        h=Date:In-Reply-To:References:MIME-Version:Content-Type:Content-Transfer-Encoding:Subject:To:CC:From:Message-ID;
+        bh=YFad9zuR8StHw8egh96QPLS0XGUOUsUoNOQH4WGQF8Q=;
+        b=HCxX1orIKgWPevpzyibr7jFT19ZptsX5dAzW649+vSBptMTLSi9aUtOYlrJhnVte
+        zU+/eQUWw0NpCo4dqd351RzlsGcX7wLjOBoTOMFe9Mcd2eLoyJ4o08qUsbp6zPigNMZ
+        AbPYKiZwonntsQlmbPUKk1J3UkGlwRCbJDwEnB8k=
+Received: from Galaxy-Note9.202.net.flygoat.com (183.156.46.156 [183.156.46.156]) by mx.zoho.com.cn
+        with SMTPS id 1582394085608759.8716354985457; Sun, 23 Feb 2020 01:54:45 +0800 (CST)
+Date:   Sun, 23 Feb 2020 01:54:43 +0800
+User-Agent: K-9 Mail for Android
+In-Reply-To: <1582387719.3.1@crapouillou.net>
+References: <20200219191730.1277800-1-paulburton@kernel.org> <20200219191730.1277800-3-paulburton@kernel.org> <1582387719.3.1@crapouillou.net>
 MIME-Version: 1.0
-References: <20200221191829.18149-1-xypron.glpk@gmx.de>
-In-Reply-To: <20200221191829.18149-1-xypron.glpk@gmx.de>
-From:   Ard Biesheuvel <ardb@kernel.org>
-Date:   Sat, 22 Feb 2020 18:53:25 +0100
-X-Gmail-Original-Message-ID: <CAKv+Gu_A1r7JYmUrgEyZjkiZam7oEB=rANuUiCfsFfkQAfxuCg@mail.gmail.com>
-Message-ID: <CAKv+Gu_A1r7JYmUrgEyZjkiZam7oEB=rANuUiCfsFfkQAfxuCg@mail.gmail.com>
-Subject: Re: [PATCH 1/1] efi/libstub: error message in handle_cmdline_files()
-To:     Heinrich Schuchardt <xypron.glpk@gmx.de>
-Cc:     linux-efi <linux-efi@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain;
+ charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+Subject: Re: [PATCH 2/2] MAINTAINERS: Set MIPS status to Odd Fixes
+To:     Paul Cercueil <paul@crapouillou.net>,
+        Paul Burton <paulburton@kernel.org>
+CC:     linux-mips@vger.kernel.org, linux-kernel@vger.kernel.org
+From:   Jiaxun Yang <jiaxun.yang@flygoat.com>
+Message-ID: <5CF20000-7E47-49B3-8B35-E13753AABBBD@flygoat.com>
+X-ZohoCNMailClient: External
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 21 Feb 2020 at 20:18, Heinrich Schuchardt <xypron.glpk@gmx.de> wrote:
->
-> The memory for files is allocated not reallocated.
->
-> Signed-off-by: Heinrich Schuchardt <xypron.glpk@gmx.de>
 
-Queued in efi/next
 
-Thanks,
+=E4=BA=8E 2020=E5=B9=B42=E6=9C=8823=E6=97=A5 GMT+08:00 =E4=B8=8A=E5=8D=881=
+2:08:39, Paul Cercueil <paul@crapouillou=2Enet> =E5=86=99=E5=88=B0:
+>Hi,
+>
+>So I think Thomas is the best candidate to be maintainer, since he has=20
+>both experience and free time ;)
 
-> ---
->  drivers/firmware/efi/libstub/file.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
+So do I!
+
 >
-> diff --git a/drivers/firmware/efi/libstub/file.c b/drivers/firmware/efi/libstub/file.c
-> index be78f64f8d80..d4c7e5f59d2c 100644
-> --- a/drivers/firmware/efi/libstub/file.c
-> +++ b/drivers/firmware/efi/libstub/file.c
-> @@ -190,7 +190,7 @@ static efi_status_t handle_cmdline_files(efi_loaded_image_t *image,
->                                                             &alloc_addr,
->                                                             hard_limit);
->                         if (status != EFI_SUCCESS) {
-> -                               pr_efi_err("Failed to reallocate memory for files\n");
-> +                               pr_efi_err("Failed to allocate memory for files\n");
->                                 goto err_close_file;
->                         }
+>I'm sort-of the maintainer for the Ingenic platform and drivers, if=20
+>Jiaxun wants to do the same for Loongson hardware, that would make=20
+>Thomas' job easier=2E Having three co-maintainers with equal rights would
 >
-> --
-> 2.25.0
+>be a total mess=2E
+
+Sure=2E I'm still going to take care Loongson code=2E
+Probably we can help with reviewing MIPS common code too=2E
+
+Thanks
+
 >
+>-Paul
+>
+>
+>Le mer=2E, f=C3=A9vr=2E 19, 2020 at 11:17, Paul Burton <paulburton@kernel=
+=2Eorg>=20
+>a =C3=A9crit :
+>> My time with MIPS the company has reached its end, and so at best
+>I'll
+>> have little time spend on maintaining arch/mips/=2E Reflect that in
+>> MAINTAINERS by changing status to Odd Fixes=2E Hopefully this might
+>spur
+>> the involvement of someone with more time, but even if not it should
+>> help serve to avoid unrealistic expectations=2E
+>>=20
+>> Signed-off-by: Paul Burton <paulburton@kernel=2Eorg>
+>> ---
+>>  MAINTAINERS | 2 +-
+>>  1 file changed, 1 insertion(+), 1 deletion(-)
+>>=20
+>> diff --git a/MAINTAINERS b/MAINTAINERS
+>> index afa228ade18e=2E=2E67f05f6dbf77 100644
+>> --- a/MAINTAINERS
+>> +++ b/MAINTAINERS
+>> @@ -11120,7 +11120,7 @@ W:	http://www=2Elinux-mips=2Eorg/
+>>  T:	git git://git=2Elinux-mips=2Eorg/pub/scm/ralf/linux=2Egit
+>>  T:	git git://git=2Ekernel=2Eorg/pub/scm/linux/kernel/git/mips/linux=2E=
+git
+>>  Q:	http://patchwork=2Elinux-mips=2Eorg/project/linux-mips/list/
+>> -S:	Supported
+>> +S:	Odd Fixes
+>>  F:	Documentation/devicetree/bindings/mips/
+>>  F:	Documentation/mips/
+>>  F:	arch/mips/
+
+--=20
+Jiaxun Yang
