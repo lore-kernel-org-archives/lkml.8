@@ -2,151 +2,74 @@ Return-Path: <SRS0=8jYG=4K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 75999C35672
-	for <linux-kernel@archiver.kernel.org>; Sat, 22 Feb 2020 13:39:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3230DC35671
+	for <linux-kernel@archiver.kernel.org>; Sat, 22 Feb 2020 13:48:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3B0622071E
-	for <linux-kernel@archiver.kernel.org>; Sat, 22 Feb 2020 13:39:40 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="GXLKlRfc"
+	by mail.kernel.org (Postfix) with ESMTP id 14C3820702
+	for <linux-kernel@archiver.kernel.org>; Sat, 22 Feb 2020 13:48:08 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727498AbgBVNjj (ORCPT
+        id S1727401AbgBVNsF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 22 Feb 2020 08:39:39 -0500
-Received: from mail-pf1-f194.google.com ([209.85.210.194]:33470 "EHLO
-        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727046AbgBVNji (ORCPT
+        Sat, 22 Feb 2020 08:48:05 -0500
+Received: from youngberry.canonical.com ([91.189.89.112]:54157 "EHLO
+        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727115AbgBVNsF (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 22 Feb 2020 08:39:38 -0500
-Received: by mail-pf1-f194.google.com with SMTP id n7so2839381pfn.0;
-        Sat, 22 Feb 2020 05:39:36 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:date:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=vpxT9jClDrKoKxPt0kmgtgiiuZoHxIxpAJPkebvXON0=;
-        b=GXLKlRfcHhBTYgl1ilH4o6mibl1xTvcNCPXZFQNec8/NOTrpQtsfA1JP8KaNs3aYYg
-         IKfHktkagA44VixY1m/yaksXVZI5mnnwvskjvQ1JJWZKSVnvNsI/JcinID87RR5f7yjq
-         rHGb0hKXst4/I4k0njMJlneWTL1tuJdQbyMx/seEwj0Zf3U4AsBFvjnM2hGQyFL6APOV
-         TtrndIYAHC20+ueeYgIK9XVKf6e1xpCSPWecjH8LXHahEI3yc98+initYn99IdzOFo27
-         yid+lJqWR0oJoKtaGJcH7Tp8DfuMUG4Vdg6vkiq9v8McSlvmfVPiknC3XDMcYiyKlgA6
-         ASdQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:date:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=vpxT9jClDrKoKxPt0kmgtgiiuZoHxIxpAJPkebvXON0=;
-        b=mr+7nvDcu/+zJwSEOSpAms3QJdZJ4/bXNBfYJf5Ne5yrHhuKxFEF/U0zgz5/fv67uC
-         2uAv05UOdF7hyFPUc9p1Bs+jWCtKguincnNl8ZSsJfHfU1cQ+P5DBG96AqzKndc3da7i
-         9CC4EkRo7KzDGM8cUBMzsmdhLJp7YFmpzNWr+5SO76X3NGHnR+vxt0x5gqjX7zFg09r4
-         vFq7wbKjB4lJ7BpigwXOARjmp75wOS19vVYuceTxFNtXtiSqTKVhYbGuaspB+wAOugBe
-         XQyUfXTIs7NhrqRTp0A9LclFU/SBmNUjfaCMJKc97xWEU+aCMhnkMXlLH8CLG9RNrtmu
-         AGeg==
-X-Gm-Message-State: APjAAAUkLars2E33PNLm6aqvtFeiAaXMNdhJe2Qhm8OtPa1dRqpXlsHN
-        FdtjVXS92p6ayZPgYhPT3Q==
-X-Google-Smtp-Source: APXvYqwEKQ41EVLj6CR4+LTHf/M95sWALC35qShHEDBl/TpwOUcje2MB0Kb3HNksVa1H25ZDOgRBJg==
-X-Received: by 2002:a62:f243:: with SMTP id y3mr43858640pfl.146.1582378776499;
-        Sat, 22 Feb 2020 05:39:36 -0800 (PST)
-Received: from madhuparna-HP-Notebook ([42.109.145.199])
-        by smtp.gmail.com with ESMTPSA id b12sm6517235pfr.26.2020.02.22.05.39.31
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Sat, 22 Feb 2020 05:39:35 -0800 (PST)
-From:   Madhuparna Bhowmik <madhuparnabhowmik10@gmail.com>
-X-Google-Original-From: Madhuparna Bhowmik <change_this_user_name@gmail.com>
-Date:   Sat, 22 Feb 2020 19:09:28 +0530
-To:     Johannes Berg <johannes@sipsolutions.net>
-Cc:     madhuparnabhowmik10@gmail.com, davem@davemloft.net,
-        linux-wireless@vger.kernel.org, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org, joel@joelfernandes.org,
-        frextrite@gmail.com,
-        linux-kernel-mentees@lists.linuxfoundation.org, paulmck@kernel.org
-Subject: Re: [PATCH] net: mac80211: rx.c: Use built-in RCU list checking
-Message-ID: <20200222133928.GA10397@madhuparna-HP-Notebook>
-References: <20200222101831.8001-1-madhuparnabhowmik10@gmail.com>
- <f1913847671d0b7e19aaa9bef1e1eb89febfa942.camel@sipsolutions.net>
+        Sat, 22 Feb 2020 08:48:05 -0500
+Received: from 1.general.cking.uk.vpn ([10.172.193.212] helo=localhost)
+        by youngberry.canonical.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.86_2)
+        (envelope-from <colin.king@canonical.com>)
+        id 1j5V8N-0000sM-Kt; Sat, 22 Feb 2020 13:47:55 +0000
+From:   Colin King <colin.king@canonical.com>
+To:     Jani Nikula <jani.nikula@linux.intel.com>,
+        Rodrigo Vivi <rodrigo.vivi@intel.com>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Chris Wilson <chris@chris-wilson.co.uk>,
+        intel-gfx@lists.freedesktop.org, dri-devel@lists.freedesktop.org
+Cc:     kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH] drm/i915/gt: remove redundant assignment to variable dw
+Date:   Sat, 22 Feb 2020 13:47:55 +0000
+Message-Id: <20200222134755.134209-1-colin.king@canonical.com>
+X-Mailer: git-send-email 2.25.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <f1913847671d0b7e19aaa9bef1e1eb89febfa942.camel@sipsolutions.net>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, Feb 22, 2020 at 01:53:25PM +0100, Johannes Berg wrote:
-> On Sat, 2020-02-22 at 15:48 +0530, madhuparnabhowmik10@gmail.com wrote:
-> > From: Madhuparna Bhowmik <madhuparnabhowmik10@gmail.com>
-> > 
-> > list_for_each_entry_rcu() has built-in RCU and lock checking.
-> > 
-> > Pass cond argument to list_for_each_entry_rcu() to silence
-> > false lockdep warning when CONFIG_PROVE_RCU_LIST is enabled
-> > by default.
-> 
-> Umm. What warning?
->
-If list_for_each_entry_rcu() is called from non rcu protection
-i.e without holding rcu_read_lock, but under the protection of
-a different lock then we can pass that as the condition for lockdep checking
-because otherwise lockdep will complain if list_for_each_entry_rcu()
-is used without rcu protection. So, if we do not pass this argument
-(cond) it may lead to false lockdep warnings.
+From: Colin Ian King <colin.king@canonical.com>
 
-> > +++ b/net/mac80211/rx.c
-> > @@ -3547,7 +3547,8 @@ static void ieee80211_rx_cooked_monitor(struct ieee80211_rx_data *rx,
-> >  	skb->pkt_type = PACKET_OTHERHOST;
-> >  	skb->protocol = htons(ETH_P_802_2);
-> >  
-> > -	list_for_each_entry_rcu(sdata, &local->interfaces, list) {
-> > +	list_for_each_entry_rcu(sdata, &local->interfaces, list,
-> > +				lockdep_is_held(&rx->local->rx_path_lock)) {
-> >  		if (!ieee80211_sdata_running(sdata))
-> >  			continue;
-> 
-> This is not related at all.
+Variable dw is being initialized with a value that is never read,
+it is assigned a new value later on. The assignment is redundant
+and can be removed.
 
-I analysed the following traces:
-ieee80211_rx_handlers() -> ieee80211_rx_handlers_result() -> ieee80211_rx_cooked_monitor()
+Addresses-Coverity: ("Unused value")
+Signed-off-by: Colin Ian King <colin.king@canonical.com>
+---
+ drivers/gpu/drm/i915/gt/intel_engine_cs.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-here ieee80211_rx_handlers() is holding the rx->local->rx_path_lock and
-therefore I used this for the cond argument.
+diff --git a/drivers/gpu/drm/i915/gt/intel_engine_cs.c b/drivers/gpu/drm/i915/gt/intel_engine_cs.c
+index e46e55354e95..119c9cb24fd4 100644
+--- a/drivers/gpu/drm/i915/gt/intel_engine_cs.c
++++ b/drivers/gpu/drm/i915/gt/intel_engine_cs.c
+@@ -639,7 +639,7 @@ static int measure_breadcrumb_dw(struct intel_context *ce)
+ {
+ 	struct intel_engine_cs *engine = ce->engine;
+ 	struct measure_breadcrumb *frame;
+-	int dw = -ENOMEM;
++	int dw;
+ 
+ 	GEM_BUG_ON(!engine->gt->scratch);
+ 
+-- 
+2.25.0
 
- If this is not right, can you help me in figuring out that which other
- lock is held?
-
-and 
-__ieee80211_rx_handle_packet() -> ieee80211_prepare_and_rx_handle() -> ieee80211_invoke_rx_handlers() -> 
-ieee80211_rx_handlers_result() -> ieee80211_rx_cooked_monitor()
-
-Here __ieee80211_rx_handle_packet() should be called under
-rcu_read_lock protection.
-So this trace seems okay and no need to pass any cond.
-
-I may have missed something, please correct me in that case.
-
-> > @@ -4114,7 +4115,8 @@ void __ieee80211_check_fast_rx_iface(struct ieee80211_sub_if_data *sdata)
-> >  
-> >  	lockdep_assert_held(&local->sta_mtx);
-> >  
-> > -	list_for_each_entry_rcu(sta, &local->sta_list, list) {
-> > +	list_for_each_entry_rcu(sta, &local->sta_list, list,
-> > +				lockdep_is_held(&local->sta_mtx)) {
-> 
-> And this isn't even a real RCU iteration, since we _must_ hold the mutex
-> here.
->
-Yeah exactly, dropping _rcu (use list_for_each_entry()) would be a good option in this case.
-Let me know if that is alright and I will send a new patch with all the
-changes required.
-
-Thank you,
-Madhuparna
-
-> johannes
-> 
