@@ -2,52 +2,52 @@ Return-Path: <SRS0=8jYG=4K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	UNWANTED_LANGUAGE_BODY,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C4294C35666
-	for <linux-kernel@archiver.kernel.org>; Sat, 22 Feb 2020 15:58:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3E300C35671
+	for <linux-kernel@archiver.kernel.org>; Sat, 22 Feb 2020 15:59:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9714C206EF
-	for <linux-kernel@archiver.kernel.org>; Sat, 22 Feb 2020 15:58:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0F91220702
+	for <linux-kernel@archiver.kernel.org>; Sat, 22 Feb 2020 15:59:04 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="en1Ev8LI"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="agovbtnV"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728236AbgBVP64 (ORCPT
+        id S1728266AbgBVP7C (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 22 Feb 2020 10:58:56 -0500
-Received: from fllv0015.ext.ti.com ([198.47.19.141]:51330 "EHLO
-        fllv0015.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727480AbgBVP6x (ORCPT
+        Sat, 22 Feb 2020 10:59:02 -0500
+Received: from fllv0016.ext.ti.com ([198.47.19.142]:54036 "EHLO
+        fllv0016.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727480AbgBVP7B (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 22 Feb 2020 10:58:53 -0500
-Received: from lelv0266.itg.ti.com ([10.180.67.225])
-        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id 01MFwpbh020457;
-        Sat, 22 Feb 2020 09:58:51 -0600
+        Sat, 22 Feb 2020 10:59:01 -0500
+Received: from fllv0035.itg.ti.com ([10.64.41.0])
+        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id 01MFwwdC094152;
+        Sat, 22 Feb 2020 09:58:58 -0600
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1582387131;
-        bh=7gOG68lQaWq6c+Fm3gWozt94N4p9t3c4pd76WGOE5DU=;
+        s=ti-com-17Q1; t=1582387138;
+        bh=FZIbChqraScWDQp84GWjNyufMYe6dLz98wNOtdVdA9w=;
         h=From:To:CC:Subject:Date:In-Reply-To:References;
-        b=en1Ev8LI9HhUHCkVbyMpQJaT4exebmbrzMWY6Sht+FiZddRvVK0tjzqmRnbm2qQoZ
-         lYO28ExfDGq++h1qra5dUux//BAQvx0NjQnd333kfr1pOG0Z+awE+++51gCT2WNh0b
-         Q1JHGrTRe67smUbwGCuAFKycF1XS3wOAnbilfmyQ=
-Received: from DFLE106.ent.ti.com (dfle106.ent.ti.com [10.64.6.27])
-        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 01MFwp5O064160
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Sat, 22 Feb 2020 09:58:51 -0600
-Received: from DFLE114.ent.ti.com (10.64.6.35) by DFLE106.ent.ti.com
- (10.64.6.27) with Microsoft SMTP Server (version=TLS1_2,
+        b=agovbtnVY0axeM52R6T3EureLxertyc9nLmKiwf6Zxk8VpSXEYfuKzIKvkWCwiT9q
+         b9Gm17lLgojwIpR+dd2ps7RhNK3eL3hGesu5/oMI8F+FgWlxN3miNxhK/mw5Rvrvfi
+         wis79zlHdgHXNgGoX6OZLza1zyVbBvFXmQ2wecSI=
+Received: from DFLE115.ent.ti.com (dfle115.ent.ti.com [10.64.6.36])
+        by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTP id 01MFwwjw077271;
+        Sat, 22 Feb 2020 09:58:58 -0600
+Received: from DFLE107.ent.ti.com (10.64.6.28) by DFLE115.ent.ti.com
+ (10.64.6.36) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Sat, 22
- Feb 2020 09:58:50 -0600
-Received: from lelv0327.itg.ti.com (10.180.67.183) by DFLE114.ent.ti.com
- (10.64.6.35) with Microsoft SMTP Server (version=TLS1_2,
+ Feb 2020 09:58:58 -0600
+Received: from fllv0040.itg.ti.com (10.64.41.20) by DFLE107.ent.ti.com
+ (10.64.6.28) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
- Frontend Transport; Sat, 22 Feb 2020 09:58:50 -0600
+ Frontend Transport; Sat, 22 Feb 2020 09:58:58 -0600
 Received: from localhost (ileax41-snat.itg.ti.com [10.172.224.153])
-        by lelv0327.itg.ti.com (8.15.2/8.15.2) with ESMTP id 01MFwnMX112631;
-        Sat, 22 Feb 2020 09:58:50 -0600
+        by fllv0040.itg.ti.com (8.15.2/8.15.2) with ESMTP id 01MFwvGb076957;
+        Sat, 22 Feb 2020 09:58:57 -0600
 From:   Grygorii Strashko <grygorii.strashko@ti.com>
 To:     Roger Quadros <rogerq@ti.com>, Tero Kristo <t-kristo@ti.com>,
         <netdev@vger.kernel.org>, <devicetree@vger.kernel.org>,
@@ -56,9 +56,9 @@ To:     Roger Quadros <rogerq@ti.com>, Tero Kristo <t-kristo@ti.com>,
 CC:     Peter Ujfalusi <peter.ujfalusi@ti.com>,
         Sekhar Nori <nsekhar@ti.com>, <linux-kernel@vger.kernel.org>,
         Grygorii Strashko <grygorii.strashko@ti.com>
-Subject: [PATCH net-next 8/9] arm64: dts: ti: k3-j721e-mcu: add mcu cpsw nuss node
-Date:   Sat, 22 Feb 2020 17:57:51 +0200
-Message-ID: <20200222155752.22021-9-grygorii.strashko@ti.com>
+Subject: [PATCH net-next 9/9] arm64: dts: ti: k3-j721e-common-proc-board: add mcu cpsw nuss pinmux and phy defs
+Date:   Sat, 22 Feb 2020 17:57:52 +0200
+Message-ID: <20200222155752.22021-10-grygorii.strashko@ti.com>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20200222155752.22021-1-grygorii.strashko@ti.com>
 References: <20200222155752.22021-1-grygorii.strashko@ti.com>
@@ -70,85 +70,82 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add DT node for The TI J721E MCU SoC Gigabit Ethernet
-subsystem (MCU CPSW2G NUSS).
+The TI J721E EVM base board has TI DP83867 PHY connected to external CPSW
+NUSS Port 1 in rgmii-rxid mode.
+
+Hence, add pinmux and Ethernet PHY configuration for TI j721e SoC MCU
+Gigabit Ethernet subsystem (MCU CPSW2G NUSS).
 
 Signed-off-by: Grygorii Strashko <grygorii.strashko@ti.com>
 ---
- .../boot/dts/ti/k3-j721e-mcu-wakeup.dtsi      | 49 +++++++++++++++++++
- arch/arm64/boot/dts/ti/k3-j721e.dtsi          |  1 +
- 2 files changed, 50 insertions(+)
+ .../dts/ti/k3-j721e-common-proc-board.dts     | 43 +++++++++++++++++++
+ 1 file changed, 43 insertions(+)
 
-diff --git a/arch/arm64/boot/dts/ti/k3-j721e-mcu-wakeup.dtsi b/arch/arm64/boot/dts/ti/k3-j721e-mcu-wakeup.dtsi
-index 9b3d10241a2e..b27ee15515a1 100644
---- a/arch/arm64/boot/dts/ti/k3-j721e-mcu-wakeup.dtsi
-+++ b/arch/arm64/boot/dts/ti/k3-j721e-mcu-wakeup.dtsi
-@@ -284,4 +284,53 @@
- 			ti,sci-rm-range-rflow = <0x00>; /* GP RFLOW */
- 		};
+diff --git a/arch/arm64/boot/dts/ti/k3-j721e-common-proc-board.dts b/arch/arm64/boot/dts/ti/k3-j721e-common-proc-board.dts
+index 7a5c3d4adadd..98e5e17e3ff7 100644
+--- a/arch/arm64/boot/dts/ti/k3-j721e-common-proc-board.dts
++++ b/arch/arm64/boot/dts/ti/k3-j721e-common-proc-board.dts
+@@ -8,6 +8,7 @@
+ #include "k3-j721e-som-p0.dtsi"
+ #include <dt-bindings/gpio/gpio.h>
+ #include <dt-bindings/input/input.h>
++#include <dt-bindings/net/ti-dp83867.h>
+ 
+ / {
+ 	chosen {
+@@ -128,6 +129,30 @@
+ 			J721E_WKUP_IOPAD(0x38, PIN_INPUT, 0) /* (A23) MCU_OSPI1_LBCLKO */
+ 		>;
  	};
 +
-+	mcu_cpsw: ethernet@46000000 {
-+		compatible = "ti,j721e-cpsw-nuss";
-+		#address-cells = <2>;
-+		#size-cells = <2>;
-+		reg = <0x0 0x46000000 0x0 0x200000>;
-+		reg-names = "cpsw_nuss";
-+		ranges = <0x0 0x0 0x0 0x46000000 0x0 0x200000>;
-+		dma-coherent;
-+		clocks = <&k3_clks 18 22>;
-+		clock-names = "fck";
-+		power-domains = <&k3_pds 18 TI_SCI_PD_EXCLUSIVE>;
++	mcu_cpsw_pins_default: mcu_cpsw_pins_default {
++		pinctrl-single,pins = <
++			J721E_WKUP_IOPAD(0x0058, PIN_OUTPUT, 0) /* MCU_RGMII1_TX_CTL */
++			J721E_WKUP_IOPAD(0x005c, PIN_INPUT, 0) /* MCU_RGMII1_RX_CTL */
++			J721E_WKUP_IOPAD(0x0060, PIN_OUTPUT, 0) /* MCU_RGMII1_TD3 */
++			J721E_WKUP_IOPAD(0x0064, PIN_OUTPUT, 0) /* MCU_RGMII1_TD2 */
++			J721E_WKUP_IOPAD(0x0068, PIN_OUTPUT, 0) /* MCU_RGMII1_TD1 */
++			J721E_WKUP_IOPAD(0x006c, PIN_OUTPUT, 0) /* MCU_RGMII1_TD0 */
++			J721E_WKUP_IOPAD(0x0078, PIN_INPUT, 0) /* MCU_RGMII1_RD3 */
++			J721E_WKUP_IOPAD(0x007c, PIN_INPUT, 0) /* MCU_RGMII1_RD2 */
++			J721E_WKUP_IOPAD(0x0080, PIN_INPUT, 0) /* MCU_RGMII1_RD1 */
++			J721E_WKUP_IOPAD(0x0084, PIN_INPUT, 0) /* MCU_RGMII1_RD0 */
++			J721E_WKUP_IOPAD(0x0070, PIN_INPUT, 0) /* MCU_RGMII1_TXC */
++			J721E_WKUP_IOPAD(0x0074, PIN_INPUT, 0) /* MCU_RGMII1_RXC */
++		>;
++	};
 +
-+		dmas = <&mcu_udmap 0xf000>,
-+		       <&mcu_udmap 0xf001>,
-+		       <&mcu_udmap 0xf002>,
-+		       <&mcu_udmap 0xf003>,
-+		       <&mcu_udmap 0xf004>,
-+		       <&mcu_udmap 0xf005>,
-+		       <&mcu_udmap 0xf006>,
-+		       <&mcu_udmap 0xf007>,
-+		       <&mcu_udmap 0x7000>;
-+		dma-names = "tx0", "tx1", "tx2", "tx3",
-+			    "tx4", "tx5", "tx6", "tx7",
-+			    "rx";
-+
-+		ethernet-ports {
-+			#address-cells = <1>;
-+			#size-cells = <0>;
-+
-+			cpsw_port1: port@1 {
-+				reg = <1>;
-+				ti,mac-only;
-+				label = "port1";
-+				ti,syscon-efuse = <&mcu_conf 0x200>;
-+				phys = <&phy_gmii_sel 1>;
-+			};
-+		};
-+
-+		davinci_mdio: mdio@f00 {
-+			compatible = "ti,cpsw-mdio","ti,davinci_mdio";
-+			reg = <0x0 0xf00 0x0 0x100>;
-+			#address-cells = <1>;
-+			#size-cells = <0>;
-+			clocks = <&k3_clks 18 22>;
-+			clock-names = "fck";
-+			bus_freq = <1000000>;
-+		};
++	mcu_mdio_pins_default: mcu_mdio1_pins_default {
++		pinctrl-single,pins = <
++			J721E_WKUP_IOPAD(0x008c, PIN_OUTPUT, 0) /* MCU_MDIO0_MDC */
++			J721E_WKUP_IOPAD(0x0088, PIN_INPUT, 0) /* MCU_MDIO0_MDIO */
++		>;
 +	};
  };
-diff --git a/arch/arm64/boot/dts/ti/k3-j721e.dtsi b/arch/arm64/boot/dts/ti/k3-j721e.dtsi
-index 027bd1febafa..2f9a56d9b114 100644
---- a/arch/arm64/boot/dts/ti/k3-j721e.dtsi
-+++ b/arch/arm64/boot/dts/ti/k3-j721e.dtsi
-@@ -30,6 +30,7 @@
- 		serial9 = &main_uart7;
- 		serial10 = &main_uart8;
- 		serial11 = &main_uart9;
-+		ethernet0 = &cpsw_port1;
- 	};
  
- 	chosen { };
+ &wkup_uart0 {
+@@ -429,3 +454,21 @@
+ 		#gpio-cells = <2>;
+ 	};
+ };
++
++&mcu_cpsw {
++	pinctrl-names = "default";
++	pinctrl-0 = <&mcu_cpsw_pins_default &mcu_mdio_pins_default>;
++};
++
++&davinci_mdio {
++	phy0: ethernet-phy@0 {
++		reg = <0>;
++		ti,rx-internal-delay = <DP83867_RGMIIDCTL_2_00_NS>;
++		ti,fifo-depth = <DP83867_PHYCR_FIFO_DEPTH_4_B_NIB>;
++	};
++};
++
++&cpsw_port1 {
++	phy-mode = "rgmii-rxid";
++	phy-handle = <&phy0>;
++};
 -- 
 2.17.1
 
