@@ -2,144 +2,130 @@ Return-Path: <SRS0=8jYG=4K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-14.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7891AC35669
-	for <linux-kernel@archiver.kernel.org>; Sat, 22 Feb 2020 01:54:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5DD1DC35641
+	for <linux-kernel@archiver.kernel.org>; Sat, 22 Feb 2020 01:54:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 498FD20656
-	for <linux-kernel@archiver.kernel.org>; Sat, 22 Feb 2020 01:54:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 342B520656
+	for <linux-kernel@archiver.kernel.org>; Sat, 22 Feb 2020 01:54:58 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="okpmlLDU"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="RHl51ojs"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727964AbgBVByh (ORCPT
+        id S1728020AbgBVBy4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Feb 2020 20:54:37 -0500
-Received: from bombadil.infradead.org ([198.137.202.133]:33782 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726842AbgBVByg (ORCPT
+        Fri, 21 Feb 2020 20:54:56 -0500
+Received: from mail-ot1-f67.google.com ([209.85.210.67]:40792 "EHLO
+        mail-ot1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726842AbgBVByz (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Feb 2020 20:54:36 -0500
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
-        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=3z9OxyAbSn1SdH2kkHfL31c9BGogsy9OLW6r1AiETwA=; b=okpmlLDUcn2WJSLgCMGAQ/y3ea
-        wUx7sYNdOzqYPRD79lRmEtjSkrPrcJfVsD9xPGx/OEj4opTESHh6CYwZzOmuJEsyumYBwdnBSPv7g
-        16GkwPCUQhbT1ezTB0jognGyz8oIm6SUil1aybwZf5s5+OhrDRLxuYqnAi5mVLeaU2RxOwOxA/zNs
-        KYbdl3XUppUek8iRi+5uW/I3hpcLPqxH+AmdzbPTNFg7qp4grnRwvEiCEJmAo3/C8soB6NZZdaPwo
-        6XP9UHgU7AUBNbe3o0CA3AZUkjmFriX3wxHNG3GcDmgcTse+CtXbmuDxLU2MsixE0H2J7aWT8SIfZ
-        PnUpa2Fw==;
-Received: from willy by bombadil.infradead.org with local (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1j5K03-0000tY-FT; Sat, 22 Feb 2020 01:54:35 +0000
-Date:   Fri, 21 Feb 2020 17:54:35 -0800
-From:   Matthew Wilcox <willy@infradead.org>
-To:     "Darrick J. Wong" <darrick.wong@oracle.com>
-Cc:     linux-fsdevel@vger.kernel.org, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org, linux-btrfs@vger.kernel.org,
-        linux-erofs@lists.ozlabs.org, linux-ext4@vger.kernel.org,
-        linux-f2fs-devel@lists.sourceforge.net, cluster-devel@redhat.com,
-        ocfs2-devel@oss.oracle.com, linux-xfs@vger.kernel.org
-Subject: Re: [PATCH v7 21/24] iomap: Restructure iomap_readpages_actor
-Message-ID: <20200222015435.GH24185@bombadil.infradead.org>
-References: <20200219210103.32400-1-willy@infradead.org>
- <20200219210103.32400-22-willy@infradead.org>
- <20200222004425.GG9506@magnolia>
+        Fri, 21 Feb 2020 20:54:55 -0500
+Received: by mail-ot1-f67.google.com with SMTP id i6so3810447otr.7
+        for <linux-kernel@vger.kernel.org>; Fri, 21 Feb 2020 17:54:55 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=sw7GUZ8pSeTtd2D2gBjMqfVeJ6NiOruxqtzQHUcbXAE=;
+        b=RHl51ojseo7iryCem5GSsxvnC3ShVs3uMsdYTB/dvjcL2ajlQMa+5vHX1oFp//4BRD
+         Ox4SCW1s6tUDg0ECSWE5b0dWoY1XLsw0p8h1op0TLp55JMD2lXWxT8s5730OatksAgcy
+         kGuyRceUWy+zrrBkZFmTnQU9VsI2cBUGSo491ie/es5JJ9C+RhHbnj0brJJZtSxjmWH9
+         ZxPPrwBlCDDgvYW3KdYjZc94tAWvw2JNynNaMJkAaUnvOGCl/gaO6jBJb1xyDogSQ/Uv
+         PUGCmp/AFfqBM5w52zSxo3gpfAtTDMeu8P/Hj63dqUcORBbMWXcd2yvixbNsHPh91+lh
+         Gt2A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=sw7GUZ8pSeTtd2D2gBjMqfVeJ6NiOruxqtzQHUcbXAE=;
+        b=NdEB38xwss6klMAn6uPXEZcmSh+wAaZgFzmfNWLOEkRKoMxRLnviB48oFip3A7qLdR
+         l9HSbsTWPcubPMNDCu502wfwkdLJt/A0QhSVvjfr1oGnlr0LqFOUd2HwkL6ftpC7Mr7a
+         mr1B7ozwPBfKcRNAnSet7zSbGc+dP2NVj1VV+HEl/TFOtCO8zZ0LCNAFta9+c9I7LDfR
+         DxLpSI6BndkA8/VtVgpa//HEJFwU98TO0CjIbsYJWo8N2JObX4FXClPnv4yCSfpA9/x9
+         yEEq3JujvPcpdZH7vUaaqAxSFlQsJyRUcIJYpmhNP6EBhX9wfFK3Sjf2/JX0aEd1cexl
+         uClA==
+X-Gm-Message-State: APjAAAUP3QrBSfNrtNzMetdFU4XsU7czc/MEIBNZB+v3if0kVwk3P1bt
+        6hyK/5L+bp1/B5U80zDStgghLlU/FAXnvL3zaADFhA==
+X-Google-Smtp-Source: APXvYqwA2FLdzOYAZnzv8L6gxTKWf/O7OoyWGLV81E0wtW5gnT6B29/EwVNKaP1myT00aDYqCcKhzWES2cnjryeszMw=
+X-Received: by 2002:a05:6830:1e2b:: with SMTP id t11mr31146916otr.81.1582336494304;
+ Fri, 21 Feb 2020 17:54:54 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200222004425.GG9506@magnolia>
+References: <20200222010456.40635-1-shakeelb@google.com> <20200222014850.GC459391@carbon.DHCP.thefacebook.com>
+In-Reply-To: <20200222014850.GC459391@carbon.DHCP.thefacebook.com>
+From:   Shakeel Butt <shakeelb@google.com>
+Date:   Fri, 21 Feb 2020 17:54:43 -0800
+Message-ID: <CALvZod6njD5Km=qqaQNOwHdPjx+dt=LJRkzosBYUJLEWyYtHMQ@mail.gmail.com>
+Subject: Re: [PATCH] net: memcg: late association of sock to memcg
+To:     Roman Gushchin <guro@fb.com>
+Cc:     Eric Dumazet <edumazet@google.com>,
+        Johannes Weiner <hannes@cmpxchg.org>,
+        Michal Hocko <mhocko@kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        "David S . Miller" <davem@davemloft.net>,
+        Alexey Kuznetsov <kuznet@ms2.inr.ac.ru>,
+        netdev@vger.kernel.org,
+        Hideaki YOSHIFUJI <yoshfuji@linux-ipv6.org>,
+        Linux MM <linux-mm@kvack.org>,
+        Cgroups <cgroups@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Feb 21, 2020 at 04:44:25PM -0800, Darrick J. Wong wrote:
-> On Wed, Feb 19, 2020 at 01:01:00PM -0800, Matthew Wilcox wrote:
-> > From: "Matthew Wilcox (Oracle)" <willy@infradead.org>
-> > 
-> > By putting the 'have we reached the end of the page' condition at the end
-> > of the loop instead of the beginning, we can remove the 'submit the last
-> > page' code from iomap_readpages().  Also check that iomap_readpage_actor()
-> > didn't return 0, which would lead to an endless loop.
-> > 
-> > Signed-off-by: Matthew Wilcox (Oracle) <willy@infradead.org>
+On Fri, Feb 21, 2020 at 5:49 PM Roman Gushchin <guro@fb.com> wrote:
+>
+> On Fri, Feb 21, 2020 at 05:04:56PM -0800, Shakeel Butt wrote:
+> > If a TCP socket is allocated in IRQ context or cloned from unassociated
+> > (i.e. not associated to a memcg) in IRQ context then it will remain
+> > unassociated for its whole life. Almost half of the TCPs created on the
+> > system are created in IRQ context, so, memory used by suck sockets will
+> > not be accounted by the memcg.
+> >
+> > This issue is more widespread in cgroup v1 where network memory
+> > accounting is opt-in but it can happen in cgroup v2 if the source socket
+> > for the cloning was created in root memcg.
+> >
+> > To fix the issue, just do the late association of the unassociated
+> > sockets at accept() time in the process context and then force charge
+> > the memory buffer already reserved by the socket.
+> >
+> > Signed-off-by: Shakeel Butt <shakeelb@google.com>
+>
+> Hello, Shakeel!
+>
 > > ---
-> >  fs/iomap/buffered-io.c | 32 ++++++++++++++++++--------------
-> >  1 file changed, 18 insertions(+), 14 deletions(-)
-> > 
-> > diff --git a/fs/iomap/buffered-io.c b/fs/iomap/buffered-io.c
-> > index cb3511eb152a..31899e6cb0f8 100644
-> > --- a/fs/iomap/buffered-io.c
-> > +++ b/fs/iomap/buffered-io.c
-> > @@ -400,15 +400,9 @@ iomap_readpages_actor(struct inode *inode, loff_t pos, loff_t length,
-> >  		void *data, struct iomap *iomap, struct iomap *srcmap)
-> >  {
-> >  	struct iomap_readpage_ctx *ctx = data;
-> > -	loff_t done, ret;
-> > -
-> > -	for (done = 0; done < length; done += ret) {
-> > -		if (ctx->cur_page && offset_in_page(pos + done) == 0) {
-> > -			if (!ctx->cur_page_in_bio)
-> > -				unlock_page(ctx->cur_page);
-> > -			put_page(ctx->cur_page);
-> > -			ctx->cur_page = NULL;
-> > -		}
-> > +	loff_t ret, done = 0;
+> >  net/ipv4/inet_connection_sock.c | 7 +++++++
+> >  1 file changed, 7 insertions(+)
+> >
+> > diff --git a/net/ipv4/inet_connection_sock.c b/net/ipv4/inet_connection_sock.c
+> > index a4db79b1b643..df9c8ef024a2 100644
+> > --- a/net/ipv4/inet_connection_sock.c
+> > +++ b/net/ipv4/inet_connection_sock.c
+> > @@ -482,6 +482,13 @@ struct sock *inet_csk_accept(struct sock *sk, int flags, int *err, bool kern)
+> >               }
+> >               spin_unlock_bh(&queue->fastopenq.lock);
+> >       }
 > > +
-> > +	while (done < length) {
-> >  		if (!ctx->cur_page) {
-> >  			ctx->cur_page = iomap_next_page(inode, ctx->pages,
-> >  					pos, length, &done);
-> > @@ -418,6 +412,20 @@ iomap_readpages_actor(struct inode *inode, loff_t pos, loff_t length,
-> >  		}
-> >  		ret = iomap_readpage_actor(inode, pos + done, length - done,
-> >  				ctx, iomap, srcmap);
-> > +		done += ret;
-> > +
-> > +		/* Keep working on a partial page */
-> > +		if (ret && offset_in_page(pos + done))
-> > +			continue;
-> > +
-> > +		if (!ctx->cur_page_in_bio)
-> > +			unlock_page(ctx->cur_page);
-> > +		put_page(ctx->cur_page);
-> > +		ctx->cur_page = NULL;
-> > +
-> > +		/* Don't loop forever if we made no progress */
-> > +		if (WARN_ON(!ret))
-> > +			break;
-> >  	}
-> >  
-> >  	return done;
-> > @@ -451,11 +459,7 @@ iomap_readpages(struct address_space *mapping, struct list_head *pages,
-> >  done:
-> >  	if (ctx.bio)
-> >  		submit_bio(ctx.bio);
-> > -	if (ctx.cur_page) {
-> > -		if (!ctx.cur_page_in_bio)
-> > -			unlock_page(ctx.cur_page);
-> > -		put_page(ctx.cur_page);
-> > -	}
-> > +	BUG_ON(ctx.cur_page);
-> 
-> Whoah, is the system totally unrecoverably hosed at this point?
-> 
-> I get that this /shouldn't/ happen, but should we somehow end up with a
-> page here, are we unable either to release it or even just leak it?  I'd
-> have thought a WARN_ON would be just fine here.
+> > +     if (mem_cgroup_sockets_enabled && !newsk->sk_memcg) {
+> > +             mem_cgroup_sk_alloc(newsk);
+> > +             if (newsk->sk_memcg)
+> > +                     mem_cgroup_charge_skmem(newsk->sk_memcg,
+> > +                                     sk_mem_pages(newsk->sk_forward_alloc));
+> > +     }
+>
+> Looks good for me from the memcg side. Let's see what networking people will say...
+>
+> Btw, do you plan to make a separate patch for associating the socket with the default
+> cgroup on the unified hierarchy? I mean cgroup_sk_alloc().
+>
 
-If we do find a page here, we don't actually know what to do with it.
-It might be (currently) locked, it might have the wrong refcount.
-Whatever is going on, it's probably better that we stop everything right
-here rather than allow things to go further and possibly present bad
-data to the application.  I mean, we could even be leaking the previous
-contents of this page to userspace.  Or maybe the future contents of a
-page which shouldn't be in the page cache any more, but userspace gets
-a mapping to it.
+Yes. I tried to do that here but was not able to do without adding the
+(newsk->sk_cgrp_data.val) check which I can not do in this file as
+sk_cgrp_data might not be compiled. I will send a separate patch.
 
-I'm not enthusiastic about putting in some code here to try to handle
-a "can't happen" case, since it's never going to be tested, and might
-end up causing more problems than it tries to solve.  Let's just stop.
+Shakeel
