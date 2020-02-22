@@ -2,194 +2,120 @@ Return-Path: <SRS0=8jYG=4K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FAKE_REPLY_C,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0D642C35666
-	for <linux-kernel@archiver.kernel.org>; Sat, 22 Feb 2020 16:56:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DAEBAC35671
+	for <linux-kernel@archiver.kernel.org>; Sat, 22 Feb 2020 16:58:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C9B852071E
-	for <linux-kernel@archiver.kernel.org>; Sat, 22 Feb 2020 16:56:36 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582390596;
-	bh=98ab+zFtjpRV2/2XwjgNDpcfq7s8dB9xZ51dSQ4UUdc=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:List-ID:From;
-	b=kHrVEexbvgwVZ9E5TY9PQav4QQlk6FOHa48cl3iNN+dci42bErlnWm2Mr/5qX9JvP
-	 p97WmOj+/qQ+k0vOP2zlNGuhXuvxYfXQ/d5toGCc5bJkOjHdZLIDDGIB1CfRhUAKan
-	 yUSj3R5jJuDb9mBA1uKGhmUvfTQ0Yp+9T2fUOUgo=
+	by mail.kernel.org (Postfix) with ESMTP id 9DA96208C3
+	for <linux-kernel@archiver.kernel.org>; Sat, 22 Feb 2020 16:58:42 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="jv5v78Gk"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726880AbgBVQ4f (ORCPT
+        id S1726813AbgBVQ6l (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 22 Feb 2020 11:56:35 -0500
-Received: from mail.kernel.org ([198.145.29.99]:55980 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726550AbgBVQ4f (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 22 Feb 2020 11:56:35 -0500
-Received: from localhost (mobile-166-175-186-165.mycingular.net [166.175.186.165])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 55EEA20707;
-        Sat, 22 Feb 2020 16:56:33 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1582390593;
-        bh=98ab+zFtjpRV2/2XwjgNDpcfq7s8dB9xZ51dSQ4UUdc=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=RpTAVEh3HRsVrFVosUYVg3uSxrUkXCNyfNQ/LQAje769YVu6i57ohkDxwAkXJI424
-         xnxMU9g2yXNPJkgcq6jBqXYI/BMBCucFB3QDcwVu/jP5JM1yp8IWsqYK44FzCrJUyI
-         e+mcyMIGw0+s42hhanEruxDO1tLo/glA1YEPABTQ=
-Date:   Sat, 22 Feb 2020 10:56:31 -0600
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Kairui Song <kasong@redhat.com>
-Cc:     linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org,
-        kexec@lists.infradead.org, Jerry Hoemann <jerry.hoemann@hpe.com>,
-        Baoquan He <bhe@redhat.com>,
-        Khalid Aziz <khalid@gonehiking.org>,
-        Deepa Dinamani <deepa.kernel@gmail.com>,
-        Randy Wright <rwright@hpe.com>, Dave Young <dyoung@redhat.com>,
-        Myron Stowe <myron.stowe@redhat.com>
-Subject: Re: [RFC PATCH] PCI, kdump: Clear bus master bit upon shutdown in
- kdump kernel
-Message-ID: <20200222165631.GA213225@google.com>
+        Sat, 22 Feb 2020 11:58:41 -0500
+Received: from mail-pg1-f196.google.com ([209.85.215.196]:37587 "EHLO
+        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726310AbgBVQ6l (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 22 Feb 2020 11:58:41 -0500
+Received: by mail-pg1-f196.google.com with SMTP id z12so2670493pgl.4;
+        Sat, 22 Feb 2020 08:58:40 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=z3KO4eN5jhFVoFYevJd1WekBeBDLgNl7tb0PRqx3KTw=;
+        b=jv5v78GkeLtIpANUBMkMOUQSQsYzG31CXCzESaei3K/C5a0XeuvYwK0FXTxO/sA4ZV
+         VFQoadLEu3xYGM+OE8KgOekct8BIyERsI9SlbeLFD2Yfbs0mehB/xSeSnUvuGvOVZ4Dz
+         X1tjgXdQIQlzibmkqGYiAEFsm6qV5EnNWLaCdP4HTS+wErYlJ2acBfilGZFtzSEgFOG1
+         BXLU1q/64Rw+2oR5XgAiqBq//GmLEnEa8WLJu0QXO/i+afTosVeb3kdKxWQ2awxIrEFp
+         D/z2+nUi3N7vxloYtneEgEBNpqvK/fapbLymX74dhA5t7OJHL9Z831TnHc0Mdh7oSMte
+         o1Qg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=z3KO4eN5jhFVoFYevJd1WekBeBDLgNl7tb0PRqx3KTw=;
+        b=KcbtthREp2pc26pzQlUW5wUw36K4X+Z3lWvmw/To/5M8g75fA7dJI5daDZefAqsv3h
+         qMIkmJRofhk9Fy06r8qhA5uVLIuag6hVtedKyl7IlY3/vfq8G0ojmEIwPDmx+6xKXbN3
+         atr3AWaifPV6Af5qs6NUHogXgrkXL6RHY4isU/njmy78tAYQtvfKdRMmzoau4lh/MLPM
+         DbLbCBO8KGOWX53E3Laj9gz0IQCXXtrDaFzLgOzi1Tv9d68d0WkePzCJpEBKHTnF3d0n
+         lE31czdNujmk60Tg45c1F3hWiDwug3T1cfl/VJh79hI30PGnxOUqgpOYn/9PhfSubsEG
+         7wGA==
+X-Gm-Message-State: APjAAAXvRF03F0DPCK6TpzoM5yJZeYn/Xy/8px8Y7lpG1x6neSkoXNPX
+        4P/rs2B1uKn4vP/fMet+Soo=
+X-Google-Smtp-Source: APXvYqzU/oKjoAjO1ie8MPYCGZVdDNYNMPm7PBDPQCslrrf4LLM3ID6101gQUXy0TcG/QYh3wowZNQ==
+X-Received: by 2002:a62:cfc4:: with SMTP id b187mr43233929pfg.155.1582390720405;
+        Sat, 22 Feb 2020 08:58:40 -0800 (PST)
+Received: from localhost.localdomain ([103.87.57.201])
+        by smtp.googlemail.com with ESMTPSA id y9sm6615835pjj.17.2020.02.22.08.58.37
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sat, 22 Feb 2020 08:58:40 -0800 (PST)
+From:   Amol Grover <frextrite@gmail.com>
+To:     "David S . Miller" <davem@davemloft.net>,
+        Alexey Kuznetsov <kuznet@ms2.inr.ac.ru>,
+        Hideaki YOSHIFUJI <yoshfuji@linux-ipv6.org>,
+        Jakub Kicinski <kuba@kernel.org>
+Cc:     linux-kernel@vger.kernel.org,
+        linux-kernel-mentees@lists.linuxfoundation.org,
+        Joel Fernandes <joel@joelfernandes.org>,
+        Madhuparna Bhowmik <madhuparnabhowmik10@gmail.com>,
+        "Paul E . McKenney" <paulmck@kernel.org>, netdev@vger.kernel.org,
+        Amol Grover <frextrite@gmail.com>
+Subject: [PATCH] ip6mr: Fix RCU list debugging warning
+Date:   Sat, 22 Feb 2020 22:27:27 +0530
+Message-Id: <20200222165726.9330-1-frextrite@gmail.com>
+X-Mailer: git-send-email 2.24.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191225192118.283637-1-kasong@redhat.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[+cc Khalid, Deepa, Randy, Dave, Myron]
+ip6mr_for_each_table() macro uses list_for_each_entry_rcu()
+for traversing outside an RCU read side critical section
+but under the protection of rtnl_mutex. Hence add the
+corresponding lockdep expression to silence the following
+false-positive warnings:
 
-On Thu, Dec 26, 2019 at 03:21:18AM +0800, Kairui Song wrote:
-> There are reports about kdump hang upon reboot on some HPE machines,
-> kernel hanged when trying to shutdown a PCIe port, an uncorrectable
-> error occurred and crashed the system.
+[    4.319479] =============================
+[    4.319480] WARNING: suspicious RCU usage
+[    4.319482] 5.5.4-stable #17 Tainted: G            E
+[    4.319483] -----------------------------
+[    4.319485] net/ipv6/ip6mr.c:1243 RCU-list traversed in non-reader section!!
 
-Did we ever make progress on this?  This definitely sounds like a
-problem that needs to be fixed, but I don't see a resolution here.
+[    4.456831] =============================
+[    4.456832] WARNING: suspicious RCU usage
+[    4.456834] 5.5.4-stable #17 Tainted: G            E
+[    4.456835] -----------------------------
+[    4.456837] net/ipv6/ip6mr.c:1582 RCU-list traversed in non-reader section!!
 
-> On the machine I can reproduce this issue, part of the topology
-> looks like this:
-> 
-> [0000:00]-+-00.0  Intel Corporation Xeon E7 v3/Xeon E5 v3/Core i7 DMI2
->           +-01.0-[02]--
->           +-01.1-[05]--
->           +-02.0-[06]--+-00.0  Emulex Corporation OneConnect NIC (Skyhawk)
->           |            +-00.1  Emulex Corporation OneConnect NIC (Skyhawk)
->           |            +-00.2  Emulex Corporation OneConnect NIC (Skyhawk)
->           |            +-00.3  Emulex Corporation OneConnect NIC (Skyhawk)
->           |            +-00.4  Emulex Corporation OneConnect NIC (Skyhawk)
->           |            +-00.5  Emulex Corporation OneConnect NIC (Skyhawk)
->           |            +-00.6  Emulex Corporation OneConnect NIC (Skyhawk)
->           |            \-00.7  Emulex Corporation OneConnect NIC (Skyhawk)
->           +-02.1-[0f]--
->           +-02.2-[07]----00.0  Hewlett-Packard Company Smart Array Gen9 Controllers
-> 
-> When shuting down PCIe port 0000:00:02.2 or 0000:00:02.0, the machine
-> will hang, depend on which device is reinitialized in kdump kernel.
-> 
-> If force remove unused device then trigger kdump, the problem will never
-> happen:
-> 
->     echo 1 > /sys/bus/pci/devices/0000\:00\:02.2/0000\:07\:00.0/remove
->     echo c > /proc/sysrq-trigger
-> 
->     ... Kdump save vmcore through network, the NIC get reinitialized and
->     hpsa is untouched. Then reboot with no problem. (If hpsa is used
->     instead, shutdown the NIC in first kernel will help)
-> 
-> The cause is that some devices are enabled by the first kernel, but it
-> don't have the chance to shutdown the device, and kdump kernel is not
-> aware of it, unless it reinitialize the device.
-> 
-> Upon reboot, kdump kernel will skip downstream device shutdown and
-> clears its bridge's master bit directly. The downstream device could
-> error out as it can still send requests but upstream refuses it.
-> 
-> So for kdump, let kernel read the correct hardware power state on boot,
-> and always clear the bus master bit of PCI device upon shutdown if the
-> device is on. PCIe port driver will always shutdown all downstream
-> devices first, so this should ensure all downstream devices have bus
-> master bit off before clearing the bridge's bus master bit.
-> 
-> Signed-off-by: Kairui Song <kasong@redhat.com>
-> ---
->  drivers/pci/pci-driver.c | 11 ++++++++---
->  drivers/pci/quirks.c     | 20 ++++++++++++++++++++
->  2 files changed, 28 insertions(+), 3 deletions(-)
-> 
-> diff --git a/drivers/pci/pci-driver.c b/drivers/pci/pci-driver.c
-> index 0454ca0e4e3f..84a7fd643b4d 100644
-> --- a/drivers/pci/pci-driver.c
-> +++ b/drivers/pci/pci-driver.c
-> @@ -18,6 +18,7 @@
->  #include <linux/kexec.h>
->  #include <linux/of_device.h>
->  #include <linux/acpi.h>
-> +#include <linux/crash_dump.h>
->  #include "pci.h"
->  #include "pcie/portdrv.h"
->  
-> @@ -488,10 +489,14 @@ static void pci_device_shutdown(struct device *dev)
->  	 * If this is a kexec reboot, turn off Bus Master bit on the
->  	 * device to tell it to not continue to do DMA. Don't touch
->  	 * devices in D3cold or unknown states.
-> -	 * If it is not a kexec reboot, firmware will hit the PCI
-> -	 * devices with big hammer and stop their DMA any way.
-> +	 * If this is kdump kernel, also turn off Bus Master, the device
-> +	 * could be activated by previous crashed kernel and may block
-> +	 * it's upstream from shutting down.
-> +	 * Else, firmware will hit the PCI devices with big hammer
-> +	 * and stop their DMA any way.
->  	 */
-> -	if (kexec_in_progress && (pci_dev->current_state <= PCI_D3hot))
-> +	if ((kexec_in_progress || is_kdump_kernel()) &&
-> +			pci_dev->current_state <= PCI_D3hot)
->  		pci_clear_master(pci_dev);
->  }
->  
-> diff --git a/drivers/pci/quirks.c b/drivers/pci/quirks.c
-> index 4937a088d7d8..c65d11ab3939 100644
-> --- a/drivers/pci/quirks.c
-> +++ b/drivers/pci/quirks.c
-> @@ -28,6 +28,7 @@
->  #include <linux/platform_data/x86/apple.h>
->  #include <linux/pm_runtime.h>
->  #include <linux/switchtec.h>
-> +#include <linux/crash_dump.h>
->  #include <asm/dma.h>	/* isa_dma_bridge_buggy */
->  #include "pci.h"
->  
-> @@ -192,6 +193,25 @@ static int __init pci_apply_final_quirks(void)
->  }
->  fs_initcall_sync(pci_apply_final_quirks);
->  
-> +/*
-> + * Read the device state even if it's not enabled. The device could be
-> + * activated by previous crashed kernel, this will read and correct the
-> + * cached state.
-> + */
-> +static void quirk_read_pm_state_in_kdump(struct pci_dev *dev)
-> +{
-> +	u16 pmcsr;
-> +
-> +	if (!is_kdump_kernel())
-> +		return;
-> +
-> +	if (dev->pm_cap) {
-> +		pci_read_config_word(dev, dev->pm_cap + PCI_PM_CTRL, &pmcsr);
-> +		dev->current_state = (pmcsr & PCI_PM_CTRL_STATE_MASK);
-> +	}
-> +}
-> +DECLARE_PCI_FIXUP_FINAL(PCI_ANY_ID, PCI_ANY_ID, quirk_read_pm_state_in_kdump);
-> +
->  /*
->   * Decoding should be disabled for a PCI device during BAR sizing to avoid
->   * conflict. But doing so may cause problems on host bridge and perhaps other
-> -- 
-> 2.24.1
-> 
+Signed-off-by: Amol Grover <frextrite@gmail.com>
+---
+ net/ipv6/ip6mr.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
+
+diff --git a/net/ipv6/ip6mr.c b/net/ipv6/ip6mr.c
+index bfa49ff70531..d6483926f449 100644
+--- a/net/ipv6/ip6mr.c
++++ b/net/ipv6/ip6mr.c
+@@ -97,7 +97,8 @@ static void ipmr_expire_process(struct timer_list *t);
+ 
+ #ifdef CONFIG_IPV6_MROUTE_MULTIPLE_TABLES
+ #define ip6mr_for_each_table(mrt, net) \
+-	list_for_each_entry_rcu(mrt, &net->ipv6.mr6_tables, list)
++	list_for_each_entry_rcu(mrt, &net->ipv6.mr6_tables, list, \
++				lockdep_rtnl_is_held())
+ 
+ static struct mr_table *ip6mr_mr_table_iter(struct net *net,
+ 					    struct mr_table *mrt)
+-- 
+2.24.1
+
