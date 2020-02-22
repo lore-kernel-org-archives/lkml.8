@@ -7,58 +7,58 @@ X-Spam-Status: No, score=-17.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT,
 	USER_IN_DEF_DKIM_WL autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BAA5FC35641
-	for <linux-kernel@archiver.kernel.org>; Sat, 22 Feb 2020 01:40:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 21B3DC35669
+	for <linux-kernel@archiver.kernel.org>; Sat, 22 Feb 2020 01:41:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 90C0B20722
-	for <linux-kernel@archiver.kernel.org>; Sat, 22 Feb 2020 01:40:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E85BC20722
+	for <linux-kernel@archiver.kernel.org>; Sat, 22 Feb 2020 01:41:00 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="tiWAct/l"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="e/G2izCt"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727980AbgBVBkz (ORCPT
+        id S1728012AbgBVBk6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Feb 2020 20:40:55 -0500
-Received: from mail-pl1-f201.google.com ([209.85.214.201]:39142 "EHLO
-        mail-pl1-f201.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727935AbgBVBkx (ORCPT
+        Fri, 21 Feb 2020 20:40:58 -0500
+Received: from mail-pj1-f74.google.com ([209.85.216.74]:58267 "EHLO
+        mail-pj1-f74.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727989AbgBVBk4 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Feb 2020 20:40:53 -0500
-Received: by mail-pl1-f201.google.com with SMTP id q24so2158714pls.6
-        for <linux-kernel@vger.kernel.org>; Fri, 21 Feb 2020 17:40:52 -0800 (PST)
+        Fri, 21 Feb 2020 20:40:56 -0500
+Received: by mail-pj1-f74.google.com with SMTP id ca1so1990397pjb.7
+        for <linux-kernel@vger.kernel.org>; Fri, 21 Feb 2020 17:40:55 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=google.com; s=20161025;
         h=date:in-reply-to:message-id:mime-version:references:subject:from:to
          :cc;
-        bh=KcPp0gP7GELHPbQmhvOuNvrhkif2qUrzumcvFBDOK9U=;
-        b=tiWAct/lW1qWhKwT1NraZmKOl/hogEF7BkErGRXVit1viyco6ajvbC9mz3kiFMua6i
-         TXNq2t+i0wPehD/a08VL1JQQH9Rnr9VR2NEKeEmZ8FLJhmSFDZ0rVirUFv3+tELLG6Gp
-         1Odhw8Q7qlUlkq1pZqeqAMwP3dTqnrHwG/aPULh9Zktd5pHO30UGcf0fGZWZPZ85s0Y6
-         g5vruuy+o5NmhnAq1Bi7z5UhTM9KxLDhHYWDSFQ31yZ5D0g/dNjltCGyIjGVEk50kOv0
-         /sABPtof6x7ACZaNTuqAWywFBrRPUIP1zVHm1SpMLSbhEsUJQJhGbghszJjbeEqYP4d+
-         zPkg==
+        bh=dLJUCpK8J7QSv9pjJWTn5rjODL1aEvnJG2mu5Q6XKZg=;
+        b=e/G2izCtRWiEex8vSlfihQZwWbRD38v38ILG4l4r0PBFW4nViuSsYy2XUvAta7Lg+H
+         iwqAKMJhoSdeJvTXWCRNXcpv/oibXCTVqKiCZAtcZ/10EL22JqVpY311ZGjdWeCZ6TWl
+         8dyvPrRs3TcgxxUs+km0ytcbrL8LP1G4CqJEc+oX/d3UX0nhbrwIbgTzLHjrUY9Qv0iT
+         vMKmD8aus0eCRycaqJkgLLOPimbsn9TPbDIsjZfKcyaWKw7f7WfeukqDuKNG4mncrK8V
+         XMYT45YusmnMzgHTM21b3xNOrzprNYN46RRF/MK+TTqfmcgndJlUtph86LKTOtFenFaQ
+         uNyw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:in-reply-to:message-id:mime-version
          :references:subject:from:to:cc;
-        bh=KcPp0gP7GELHPbQmhvOuNvrhkif2qUrzumcvFBDOK9U=;
-        b=ORSf01lYFQSESrI+qhA0byF0ovbImqNqu7LZynPDOpgTlaX1JMZrERbxhrKNmBW3ns
-         4Vg0ZtfAoxSxqm9kGIyPp/NpX5CHj4QkKY/LcSf3RVSo4ZWpyqauETkch7xlEYr8A0fj
-         6PbKh/vuVTEMRwSIjMlr/jqgC98lThBo1bw1/WFA+DF6gqjE9Fu+JOKslCLrCtkcA/gS
-         aGUl/SME9aHtzBYAhKpnhRjCdO2YYDGAwDNBYnOr6NQsDPIgpMv2nx3WpnWl8RGLoojh
-         AtprCNcWBsk3Bf5ENY4mrCzvhrDpYjErxvoRomw0Tx0qZOXgeVA8hMP0oLJJuUT7lWIm
-         GLdg==
-X-Gm-Message-State: APjAAAUubdDOR+so+rQTgNoJsOXeKLKk6xxxkCsuy6oAhK90UjnSEemc
-        IRXs0lnu0kv6ywG4HnJn36J5rPz24B5UoiM=
-X-Google-Smtp-Source: APXvYqzPdWRjgeOkhSTiaxyK4n8nsnHWWk0aEfT3lTbN5PVbLfvLNibYxGOnd/zAFy69mSlFb3/Z8610AQaog60=
-X-Received: by 2002:a63:ec49:: with SMTP id r9mr41310425pgj.445.1582335652146;
- Fri, 21 Feb 2020 17:40:52 -0800 (PST)
-Date:   Fri, 21 Feb 2020 17:40:36 -0800
+        bh=dLJUCpK8J7QSv9pjJWTn5rjODL1aEvnJG2mu5Q6XKZg=;
+        b=mRuBWq8tE1OJy6Rl9exSHScMgJtkx85dryjqZsK3FEjlZGUG71R7HzD0suC57dB2XN
+         AC2r+++/Cv+EYT+I3zxLnFuz+co/wlFk4+ousYE4rkJDJgVMrSTGA4HsormxP1VSC6qj
+         Gt3IYQ+li24/IBcL81pDgLclXWhZq8WxKDHGpU8jh87cX4UYFuY6WfHijB7bOAqXF0IR
+         zC4cQqnDteRjqmZcIDK67c+8HISOv66yoqy7F/iuVsViGpAZwHn95hRTD/nn5BAX5dve
+         pszkavERogIn2rZMbqx6gUhizllT9DN7NR67+9Bqt4rHQaagxmZi/VFK0N/159blFJUk
+         VLvw==
+X-Gm-Message-State: APjAAAUH6NFBAln6vi+1e8/DLjazx5il2KqPg1mKAkF6HogvPdBGsv/Q
+        ggd75GyZ73VKgi8MnHO1qtbnmuRqrG8wv/A=
+X-Google-Smtp-Source: APXvYqzesfXR7lGxs6e5jxSQUmuI+4SNQj8u282WnFoEoOOntmofH4HAOCXHvIB2dz4XXYHvKMvIdKicGMtW4q8=
+X-Received: by 2002:a63:be48:: with SMTP id g8mr42416014pgo.23.1582335655195;
+ Fri, 21 Feb 2020 17:40:55 -0800 (PST)
+Date:   Fri, 21 Feb 2020 17:40:37 -0800
 In-Reply-To: <20200222014038.180923-1-saravanak@google.com>
-Message-Id: <20200222014038.180923-4-saravanak@google.com>
+Message-Id: <20200222014038.180923-5-saravanak@google.com>
 Mime-Version: 1.0
 References: <20200222014038.180923-1-saravanak@google.com>
 X-Mailer: git-send-email 2.25.0.265.gbab2e86ba0-goog
-Subject: [PATCH v1 3/5] efi/arm: Start using fw_devlink_get_flags()
+Subject: [PATCH v1 4/5] of: property: Start using fw_devlink_get_flags()
 From:   Saravana Kannan <saravanak@google.com>
 To:     Jonathan Corbet <corbet@lwn.net>,
         Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
@@ -83,22 +83,22 @@ firmware. So, use that.
 
 Signed-off-by: Saravana Kannan <saravanak@google.com>
 ---
- drivers/firmware/efi/arm-init.c | 2 +-
+ drivers/of/property.c | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/firmware/efi/arm-init.c b/drivers/firmware/efi/arm-init.c
-index d99f5b0c8a09..6703bedfa9e1 100644
---- a/drivers/firmware/efi/arm-init.c
-+++ b/drivers/firmware/efi/arm-init.c
-@@ -349,7 +349,7 @@ static int efifb_add_links(const struct fwnode_handle *fwnode,
- 	 * If this fails, retrying this function at a later point won't
- 	 * change anything. So, don't return an error after this.
- 	 */
--	if (!device_link_add(dev, sup_dev, 0))
-+	if (!device_link_add(dev, sup_dev, fw_devlink_get_flags()))
- 		dev_warn(dev, "device_link_add() failed\n");
+diff --git a/drivers/of/property.c b/drivers/of/property.c
+index e851c57a15b0..15fc9315f1a7 100644
+--- a/drivers/of/property.c
++++ b/drivers/of/property.c
+@@ -1262,7 +1262,7 @@ static int of_link_property(struct device *dev, struct device_node *con_np,
+ 	u32 dl_flags;
  
- 	put_device(sup_dev);
+ 	if (dev->of_node == con_np)
+-		dl_flags = DL_FLAG_AUTOPROBE_CONSUMER;
++		dl_flags = fw_devlink_get_flags();
+ 	else
+ 		dl_flags = DL_FLAG_SYNC_STATE_ONLY;
+ 
 -- 
 2.25.0.265.gbab2e86ba0-goog
 
