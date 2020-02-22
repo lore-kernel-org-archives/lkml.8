@@ -2,128 +2,212 @@ Return-Path: <SRS0=8jYG=4K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,MSGID_FROM_MTA_HEADER,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-14.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A5984C35671
-	for <linux-kernel@archiver.kernel.org>; Sat, 22 Feb 2020 06:00:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1D1E3C35672
+	for <linux-kernel@archiver.kernel.org>; Sat, 22 Feb 2020 06:05:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7529B2071E
-	for <linux-kernel@archiver.kernel.org>; Sat, 22 Feb 2020 06:00:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E85EC2071E
+	for <linux-kernel@archiver.kernel.org>; Sat, 22 Feb 2020 06:05:56 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=microsoft.com header.i=@microsoft.com header.b="YHRDTg6r"
+	dkim=pass (2048-bit key) header.d=nifty.com header.i=@nifty.com header.b="ymyB8kZz"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727004AbgBVGAr (ORCPT
+        id S1727025AbgBVGFy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 22 Feb 2020 01:00:47 -0500
-Received: from mail-dm6nam10on2092.outbound.protection.outlook.com ([40.107.93.92]:7935
-        "EHLO NAM10-DM6-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726892AbgBVGAr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 22 Feb 2020 01:00:47 -0500
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=kvKL1FACf9bvnRnQIdz0CD6+y7XbPn48UQ5rdPRkwNVyGV17mcblWpuKWTMxGfil9HAosXZ3N4ev5gZSKy3JMlHaTHQIZ8iXdFsxSRV6LGILjvmNBF5hMetgMwNWxglbXjEpMS/U/qVzw1fDQxOg8L6vlQ2O7Bc7GbykW2UQkS2ixsKSHz+/XAaqPrENzVL4IL1HqAs9BLFeH9Ov0nVJGW4wlPUJJdkRGkGyI1bOHjeGg1IJzdmQu8K2V+eHTtzVWHRTGSw7gevJ8fmeBGoAqMhI78bMMK0yUqjzFjFue5zmstB4J5zzKUeoprH4RDC4mC3tUg5fRICCyFJ5gwklQA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=nnk/aPUxC+GGxB30HOxEVgj2VHoKv7y1lL/Co1ZgWXg=;
- b=B1U3hKpjWfSktPH9Cx9Em3AiXRpIlY+3HMZkdzkTxKwNB5uDOfkDoEmybepZfBld21fLaYeMLmCZP5P+tXIaXyiUZDtjRtUwZe9zYYLPIZKnvqm+ph01MKx5UwXimerhiUoSM8O0zNPte+7uSQYM/M5lPchpCb0ulsMK5Rzm1CDVdnHAnzuUJ4UhVbHrOExICOxuK9fS8pBxkDby4l5Kun91/lVodPpqXIOrdASCXf6SSh/rLYiS37Mp8fd/JpC9YJ2voCebn1306CCjUIeg+RgPRrOBkHRHFyEVVoe3LdgK1Ch3XUOQoEz2SOwYrfK5Gof9EuvhrZ+ZxDujuJrz2g==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=microsoft.com; dmarc=pass action=none
- header.from=microsoft.com; dkim=pass header.d=microsoft.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=nnk/aPUxC+GGxB30HOxEVgj2VHoKv7y1lL/Co1ZgWXg=;
- b=YHRDTg6rxIhUAJdvGCb1eHwYMU+EBeV1mHylBIph+x/UDx+1xr8kw+/v2/k7TUflg8C6WlosZntHs6ArkBISlk7PJJbixhubk4s3W8x0lCLP38urLt/LpRN8vg3BROkzevhzcx1GWb8GbIbX6UvIvOhboQcsxCAYOGFkj2lEWu4=
-Authentication-Results: spf=none (sender IP is )
- smtp.mailfrom=decui@microsoft.com; 
-Received: from BN8PR21MB1139.namprd21.prod.outlook.com (20.179.72.138) by
- BN8PR21MB1154.namprd21.prod.outlook.com (20.179.72.161) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2772.5; Sat, 22 Feb 2020 06:00:44 +0000
-Received: from BN8PR21MB1139.namprd21.prod.outlook.com
- ([fe80::18c0:bfd0:9181:4c62]) by BN8PR21MB1139.namprd21.prod.outlook.com
- ([fe80::18c0:bfd0:9181:4c62%8]) with mapi id 15.20.2772.004; Sat, 22 Feb 2020
- 06:00:43 +0000
-From:   Dexuan Cui <decui@microsoft.com>
-To:     kys@microsoft.com, haiyangz@microsoft.com, sthemmin@microsoft.com,
-        lorenzo.pieralisi@arm.com, bhelgaas@google.com,
-        linux-hyperv@vger.kernel.org, linux-pci@vger.kernel.org,
-        linux-kernel@vger.kernel.org, mikelley@microsoft.com
-Cc:     Dexuan Cui <decui@microsoft.com>
-Subject: [PATCH v2 2/2] PCI: hv: Use kfree(hbus) in hv_pci_probe()'s error handling path
-Date:   Fri, 21 Feb 2020 21:59:57 -0800
-Message-Id: <1582351197-12303-2-git-send-email-decui@microsoft.com>
-X-Mailer: git-send-email 1.8.3.1
-In-Reply-To: <1582351197-12303-1-git-send-email-decui@microsoft.com>
-References: <1582351197-12303-1-git-send-email-decui@microsoft.com>
-Reply-To: decui@microsoft.com
-Content-Type: text/plain
-X-ClientProxiedBy: CO2PR04CA0117.namprd04.prod.outlook.com
- (2603:10b6:104:7::19) To BN8PR21MB1139.namprd21.prod.outlook.com
- (2603:10b6:408:72::10)
-MIME-Version: 1.0
-X-MS-Exchange-MessageSentRepresentingType: 1
-Received: from linuxonhyperv3.guj3yctzbm1etfxqx2vob5hsef.xx.internal.cloudapp.net (13.77.154.182) by CO2PR04CA0117.namprd04.prod.outlook.com (2603:10b6:104:7::19) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2750.17 via Frontend Transport; Sat, 22 Feb 2020 06:00:41 +0000
-X-Mailer: git-send-email 1.8.3.1
-X-Originating-IP: [13.77.154.182]
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-HT: Tenant
-X-MS-Office365-Filtering-Correlation-Id: 782a057e-53bd-4125-9784-08d7b75c8d02
-X-MS-TrafficTypeDiagnostic: BN8PR21MB1154:|BN8PR21MB1154:
-X-MS-Exchange-Transport-Forked: True
-X-Microsoft-Antispam-PRVS: <BN8PR21MB1154A26F6560215303333A11BFEE0@BN8PR21MB1154.namprd21.prod.outlook.com>
-X-MS-Oob-TLC-OOBClassifiers: OLM:7219;
-X-Forefront-PRVS: 03218BFD9F
-X-Forefront-Antispam-Report: SFV:NSPM;SFS:(10019020)(4636009)(366004)(346002)(39860400002)(376002)(396003)(136003)(189003)(199004)(8936002)(66556008)(8676002)(66476007)(36756003)(66946007)(10290500003)(81156014)(478600001)(107886003)(6636002)(81166006)(2906002)(16526019)(186003)(2616005)(6512007)(956004)(5660300002)(86362001)(4326008)(52116002)(4744005)(316002)(3450700001)(26005)(6506007)(6666004)(6486002);DIR:OUT;SFP:1102;SCL:1;SRVR:BN8PR21MB1154;H:BN8PR21MB1139.namprd21.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
-Received-SPF: None (protection.outlook.com: microsoft.com does not designate
- permitted sender hosts)
-X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: PkD/a0fCCy+UARzIKCbZC+/JAsI/2E4alaUHNr4UwplMaXwq9PqYXxssg/lubqrrgjKWjAV0GPTQ71Np7SqPqdImuPgJ6RzA/YifS8vNmPmIRymLDeuXq8Fh/3IslLevYCKPvaNjwJsYbTE2nICBcU7fJGQGlwq7MIznLhnuy4+IftIwwowcC1vbKJg5/9+ZpqSl+ml38mr2xRvUAWR7TaOOBHxXp14qPmelbeDXqq8YIlVE+gFUuUq4oTqCMozABTwLMVL7U/XFs8Y/QwNpNpDycIilAKcKIyyLltTTsIqDDtaKSud9PhytnCY9mel+w4wBP+XeIgQKnM68yRTRn6dCUni3f5t3TXBntdC4dAWC+ZYEMLPph3qx73cxSBYfmRu0J8pGEG/ruO0L37rGtEXoUHDUTFq9Jqq7KYFCm0IPvfUKrp6MaEWlLCrPu0tJ
-X-MS-Exchange-AntiSpam-MessageData: k3dfGmysRSeA8dvNgt1gLW8qdy3ql45kIBjKROXhrHKp6nYHtZxnjBDZd+ngo3q+qGjaEGf8yQUh3BJRJCppMx4CeDRy/PazkLfRjKSbFVEhlVloRTg3oct40Tj/6kbzf2FedNJTxYL+JV75Bv4X1g==
-X-OriginatorOrg: microsoft.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 782a057e-53bd-4125-9784-08d7b75c8d02
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 22 Feb 2020 06:00:43.5821
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 72f988bf-86f1-41af-91ab-2d7cd011db47
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: BFkeo/DL+ck3sMeVqNW+G3TADfnf4H79+PcGaN6abGsaE23vRr02S4XiK5xxZUz1budEDGwajuONtadKIGraPA==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: BN8PR21MB1154
+        Sat, 22 Feb 2020 01:05:54 -0500
+Received: from conuserg-11.nifty.com ([210.131.2.78]:42370 "EHLO
+        conuserg-11.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726189AbgBVGFx (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 22 Feb 2020 01:05:53 -0500
+Received: from grover.flets-west.jp (softbank126093102113.bbtec.net [126.93.102.113]) (authenticated)
+        by conuserg-11.nifty.com with ESMTP id 01M64cSJ007264;
+        Sat, 22 Feb 2020 15:04:38 +0900
+DKIM-Filter: OpenDKIM Filter v2.10.3 conuserg-11.nifty.com 01M64cSJ007264
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
+        s=dec2015msa; t=1582351479;
+        bh=tZ/Fv+Hm02lylfP8gzd4irqcz0a8ojTD90nzr+or0w0=;
+        h=From:To:Cc:Subject:Date:From;
+        b=ymyB8kZzlnIkSU9Y+ArJQ/rpOTO4Svg1KDeKqwH4avIj0rPAbso4qj04CwHxfUsGL
+         ZClkNY51eu/GmOMo+C/V5Qj5wn9ljIG1eCmgLPkrSJn3C6kHZxQdDmVnECEdZi27Um
+         tRlMqOfIua7AxijHT0Go2VxdjiHQA5o9L/M9WoNzaGm8WhfBF6onIM+Jp6rMMBXyr9
+         w5DnzTa5fxZS1HvV9mKdh/wgriqsYLry4SYoRODSaEC0LXR5a00uXq9CgQk4UUZR47
+         /6CDH6GRJBaTstM23L2uKh2kCA4KnaJhS1W9F0icZxL3LnbU5Zfczvjo9X7Q1qVLPf
+         ca3YQ+kRsV/9Q==
+X-Nifty-SrcIP: [126.93.102.113]
+From:   Masahiro Yamada <yamada.masahiro@socionext.com>
+To:     Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org
+Cc:     linux-kernel@vger.kernel.org,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        linux-arm-kernel@lists.infradead.org
+Subject: [PATCH v2 1/3] dt-bindings: arm: Convert UniPhier board/SoC bindings to json-schema
+Date:   Sat, 22 Feb 2020 15:04:33 +0900
+Message-Id: <20200222060435.971-1-yamada.masahiro@socionext.com>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Now that we use kzalloc() to allocate the hbus buffer, we should use
-kfree() in the error path as well.
+Convert the Socionext UniPhier board/SoC binding to DT schema format.
 
-Fixes: 877b911a5ba0 ("PCI: hv: Avoid a kmemleak false positive caused by the hbus buffer")
-Signed-off-by: Dexuan Cui <decui@microsoft.com>
-Reviewed-by: Michael Kelley <mikelley@microsoft.com>
+Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
 ---
- drivers/pci/controller/pci-hyperv.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
 
-Change in v2: this was part of v1.
+Changes in v2:
+  - Remove 'examples' because examples are fold into /example-0 node
+    and there is no way to meet
+      $nodename:
+         const: '/'
 
-diff --git a/drivers/pci/controller/pci-hyperv.c b/drivers/pci/controller/pci-hyperv.c
-index 0fe0283368d2..15011a349520 100644
---- a/drivers/pci/controller/pci-hyperv.c
-+++ b/drivers/pci/controller/pci-hyperv.c
-@@ -3058,7 +3058,7 @@ static int hv_pci_probe(struct hv_device *hdev,
- free_dom:
- 	hv_put_dom_num(hbus->sysdata.domain);
- free_bus:
--	free_page((unsigned long)hbus);
-+	kfree(hbus);
- 	return ret;
- }
- 
+ .../bindings/arm/socionext/uniphier.txt       | 47 --------------
+ .../bindings/arm/socionext/uniphier.yaml      | 61 +++++++++++++++++++
+ MAINTAINERS                                   |  2 +-
+ 3 files changed, 62 insertions(+), 48 deletions(-)
+ delete mode 100644 Documentation/devicetree/bindings/arm/socionext/uniphier.txt
+ create mode 100644 Documentation/devicetree/bindings/arm/socionext/uniphier.yaml
+
+diff --git a/Documentation/devicetree/bindings/arm/socionext/uniphier.txt b/Documentation/devicetree/bindings/arm/socionext/uniphier.txt
+deleted file mode 100644
+index b3ed1033740e..000000000000
+--- a/Documentation/devicetree/bindings/arm/socionext/uniphier.txt
++++ /dev/null
+@@ -1,47 +0,0 @@
+-Socionext UniPhier SoC family
+------------------------------
+-
+-Required properties in the root node:
+-  - compatible: should contain board and SoC compatible strings
+-
+-SoC and board compatible strings:
+-  (sorted chronologically)
+-
+-  - LD4 SoC:  "socionext,uniphier-ld4"
+-      - Reference Board: "socionext,uniphier-ld4-ref"
+-
+-  - Pro4 SoC: "socionext,uniphier-pro4"
+-      - Reference Board: "socionext,uniphier-pro4-ref"
+-      - Ace Board:       "socionext,uniphier-pro4-ace"
+-      - Sanji Board:     "socionext,uniphier-pro4-sanji"
+-
+-  - sLD8 SoC: "socionext,uniphier-sld8"
+-      - Reference Board: "socionext,uniphier-sld8-ref"
+-
+-  - PXs2 SoC: "socionext,uniphier-pxs2"
+-      - Gentil Board:    "socionext,uniphier-pxs2-gentil"
+-      - Vodka Board:     "socionext,uniphier-pxs2-vodka"
+-
+-  - LD6b SoC: "socionext,uniphier-ld6b"
+-      - Reference Board: "socionext,uniphier-ld6b-ref"
+-
+-  - LD11 SoC: "socionext,uniphier-ld11"
+-      - Reference Board: "socionext,uniphier-ld11-ref"
+-      - Global Board:    "socionext,uniphier-ld11-global"
+-
+-  - LD20 SoC: "socionext,uniphier-ld20"
+-      - Reference Board: "socionext,uniphier-ld20-ref"
+-      - Global Board:    "socionext,uniphier-ld20-global"
+-
+-  - PXs3 SoC: "socionext,uniphier-pxs3"
+-      - Reference Board: "socionext,uniphier-pxs3-ref"
+-
+-Example:
+-
+-/dts-v1/;
+-
+-/ {
+-	compatible = "socionext,uniphier-ld20-ref", "socionext,uniphier-ld20";
+-
+-	...
+-};
+diff --git a/Documentation/devicetree/bindings/arm/socionext/uniphier.yaml b/Documentation/devicetree/bindings/arm/socionext/uniphier.yaml
+new file mode 100644
+index 000000000000..65ad6d8a3c99
+--- /dev/null
++++ b/Documentation/devicetree/bindings/arm/socionext/uniphier.yaml
+@@ -0,0 +1,61 @@
++# SPDX-License-Identifier: GPL-2.0-only OR BSD-2-Clause
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/arm/socionext/uniphier.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
++
++title: Socionext UniPhier platform device tree bindings
++
++maintainers:
++  - Masahiro Yamada <yamada.masahiro@socionext.com>
++
++properties:
++  $nodename:
++    const: /
++  compatible:
++    oneOf:
++      - description: LD4 SoC boards
++        items:
++          - enum:
++            - socionext,uniphier-ld4-ref
++          - const: socionext,uniphier-ld4
++      - description: Pro4 SoC boards
++        items:
++          - enum:
++            - socionext,uniphier-pro4-ace
++            - socionext,uniphier-pro4-ref
++            - socionext,uniphier-pro4-sanji
++          - const: socionext,uniphier-pro4
++      - description: sLD8 SoC boards
++        items:
++          - enum:
++            - socionext,uniphier-sld8-ref
++          - const: socionext,uniphier-sld8
++      - description: PXs2 SoC boards
++        items:
++          - enum:
++            - socionext,uniphier-pxs2-gentil
++            - socionext,uniphier-pxs2-vodka
++          - const: socionext,uniphier-pxs2
++      - description: LD6b SoC boards
++        items:
++          - enum:
++            - socionext,uniphier-ld6b-ref
++          - const: socionext,uniphier-ld6b
++      - description: LD11 SoC boards
++        items:
++          - enum:
++            - socionext,uniphier-ld11-global
++            - socionext,uniphier-ld11-ref
++          - const: socionext,uniphier-ld11
++      - description: LD20 SoC boards
++        items:
++          - enum:
++            - socionext,uniphier-ld20-global
++            - socionext,uniphier-ld20-ref
++          - const: socionext,uniphier-ld20
++      - description: PXs3 SoC boards
++        items:
++          - enum:
++            - socionext,uniphier-pxs3-ref
++          - const: socionext,uniphier-pxs3
+diff --git a/MAINTAINERS b/MAINTAINERS
+index 4beb8dc4c7eb..93ccb6708ae9 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -2546,7 +2546,7 @@ M:	Masahiro Yamada <yamada.masahiro@socionext.com>
+ L:	linux-arm-kernel@lists.infradead.org (moderated for non-subscribers)
+ T:	git git://git.kernel.org/pub/scm/linux/kernel/git/masahiroy/linux-uniphier.git
+ S:	Maintained
+-F:	Documentation/devicetree/bindings/arm/socionext/uniphier.txt
++F:	Documentation/devicetree/bindings/arm/socionext/uniphier.yaml
+ F:	Documentation/devicetree/bindings/gpio/gpio-uniphier.txt
+ F:	Documentation/devicetree/bindings/pinctrl/socionext,uniphier-pinctrl.txt
+ F:	arch/arm/boot/dts/uniphier*
 -- 
-2.19.1
+2.17.1
 
