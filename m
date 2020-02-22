@@ -2,141 +2,121 @@ Return-Path: <SRS0=8jYG=4K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-17.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT,
-	USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0354AC35641
-	for <linux-kernel@archiver.kernel.org>; Sat, 22 Feb 2020 02:35:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A93EFC35641
+	for <linux-kernel@archiver.kernel.org>; Sat, 22 Feb 2020 02:43:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C289A206EF
-	for <linux-kernel@archiver.kernel.org>; Sat, 22 Feb 2020 02:35:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7103A206D7
+	for <linux-kernel@archiver.kernel.org>; Sat, 22 Feb 2020 02:43:17 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="eBgFXXFG"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=aosc.io header.i=@aosc.io header.b="iBuZGyAA"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727993AbgBVCfT (ORCPT
+        id S1728002AbgBVCnL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Feb 2020 21:35:19 -0500
-Received: from mail-pf1-f202.google.com ([209.85.210.202]:44985 "EHLO
-        mail-pf1-f202.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726802AbgBVCfT (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Feb 2020 21:35:19 -0500
-Received: by mail-pf1-f202.google.com with SMTP id r127so2398754pfc.11
-        for <linux-kernel@vger.kernel.org>; Fri, 21 Feb 2020 18:35:17 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=date:message-id:mime-version:subject:from:to:cc;
-        bh=YWE+MLnOjK4IvZZLwvQEPG2A0OjN+JMmVnFRhQHYJMc=;
-        b=eBgFXXFGkeT5/uAIvCLjYTs5ZF9zNsG77UJxFH5+o2fO8jOjzd7BGMrmBVaoruIcmq
-         0A3nJSGzQJTcqWdmwClNEhhIfJT3RlBglY+KM212kLV0k99Kbd5YtWGs1PoXp9H5jKW7
-         fOVGEWwtGLq/x6MQYFehTUpvgfVhndZL3KtWiczoGdaDqaOkzgAe2HIPD1oYzkop/d27
-         bXetWVCGNsizjssAiZ9RuI2W44NN+s0ZBRdbbT2JTQeO7T2JvyAGrQlT75NsjEnh0hXu
-         nA+4nlUufuZ0rl4P2+7v2D0jKFxRABY0AtwEUBgHKOAZbdzS1ZRBPGY3g0DaClPuv9pw
-         NDjw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:message-id:mime-version:subject:from:to:cc;
-        bh=YWE+MLnOjK4IvZZLwvQEPG2A0OjN+JMmVnFRhQHYJMc=;
-        b=IG6EwsmN3piLviuZ0Sxs/6W6t/8QlqwV9gT5+sp+V5I7Dz7SMJKkIUrQ1hoHF8Rly7
-         uqqlSK8EcMVtS4KSHUQ3M3pFL35ri4KMx1a+vzvcI2SpaVL+mQUyg2kCkVpn8SVeKfxF
-         bS10Y4Cfs3z6KsqQ0VV1SpWszu8+yeOh0ujfu6QybbNqjKgso6hWiLbtaDWfRqCLRAcu
-         a0kdmK7mmcxQgkk6ThubKY7xER9e0fUm1KTQ8HdyMAEkMaIsTQWsTuE51NY2zYqeC0Tw
-         XtToXgzRu1Qwd/SGjt2s7tmAKtMlPBOTh+0FRyt8AsdMivmb6evJvn3RKqKJiL3kWBXo
-         pqWw==
-X-Gm-Message-State: APjAAAXNq62p//pg7KJxCND8sA37iAbc0G4asS4uVJUOr5I/obUC5BwS
-        dlx/hfto2uB+QkK+sfNY+DZv7us3Sf7wniA=
-X-Google-Smtp-Source: APXvYqz/5nZSxiCEMANum1t9/MuA4rvyDGQUbSoYAmrDG89Qk66FIjDXtoFPXPLbgqYWY+92O8YQeM6VQxVkOk8=
-X-Received: by 2002:a63:a807:: with SMTP id o7mr40015719pgf.407.1582338917117;
- Fri, 21 Feb 2020 18:35:17 -0800 (PST)
-Date:   Fri, 21 Feb 2020 18:34:13 -0800
-Message-Id: <20200222023413.78202-1-ehankland@google.com>
-Mime-Version: 1.0
-X-Mailer: git-send-email 2.25.0.265.gbab2e86ba0-goog
-Subject: [PATCH] KVM: x86: Adjust counter sample period after a wrmsr
-From:   Eric Hankland <ehankland@google.com>
-To:     Jim Mattson <jmattson@google.com>, Peter Shier <pshier@google.com>
-Cc:     Paolo Bonzini <pbonzini@redhat.com>, linux-kernel@vger.kernel.org,
-        kvm@vger.kernel.org, Eric Hankland <ehankland@google.com>
-Content-Type: text/plain; charset="UTF-8"
+        Fri, 21 Feb 2020 21:43:11 -0500
+Received: from hermes.aosc.io ([199.195.250.187]:36629 "EHLO hermes.aosc.io"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726802AbgBVCnL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 21 Feb 2020 21:43:11 -0500
+Received: from localhost (localhost [127.0.0.1]) (Authenticated sender: icenowy@aosc.io)
+        by hermes.aosc.io (Postfix) with ESMTPSA id DE74848A85;
+        Sat, 22 Feb 2020 02:43:07 +0000 (UTC)
+Date:   Sat, 22 Feb 2020 10:43:02 +0800
+In-Reply-To: <20200221171328.GC6928@lst.de>
+References: <20200221165127.813325-1-icenowy@aosc.io> <20200221171328.GC6928@lst.de>
+MIME-Version: 1.0
+Content-Type: text/plain;
+ charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+Subject: Re: [PATCH] drm/bridge: analogix-anx6345: fix set of link bandwidth
+To:     Torsten Duwe <duwe@lst.de>
+CC:     Andrzej Hajda <a.hajda@samsung.com>,
+        Neil Armstrong <narmstrong@baylibre.com>,
+        Laurent Pinchart <Laurent.pinchart@ideasonboard.com>,
+        Jonas Karlman <jonas@kwiboo.se>,
+        Jernej Skrabec <jernej.skrabec@siol.net>,
+        Maxime Ripard <maxime@cerno.tech>,
+        Vasily Khoruzhick <anarsoul@gmail.com>,
+        dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org
+From:   Icenowy Zheng <icenowy@aosc.io>
+Message-ID: <1E7BDB0F-639B-42BB-A4B4-A4C8CF94EBE0@aosc.io>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=aosc.io; s=dkim;
+        t=1582339390;
+        h=from:subject:date:message-id:to:cc:mime-version:content-type:content-transfer-encoding:in-reply-to:references;
+        bh=HdzgxMt6spoiHKpSzevHwlrwkDQO+555z64Q+HRu8y8=;
+        b=iBuZGyAA0D0whU3sCLhDXXiLyba9sqcc4GM3/SEbgRPvBCAzBSwOwFuOdjRUYotm6k9CAh
+        KBxhTXsm/SKXf4+xZP00qKmnXmiOoDmtW8Ui2hLE9BKBR3Wvx1l0M6NvybawdkxtH9XpqX
+        njZ0SNgbpZfZrWMJDhaAGIDFLL8Ea4E=
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The sample_period of a counter tracks when that counter will
-overflow and set global status/trigger a PMI. However this currently
-only gets set when the initial counter is created or when a counter is
-resumed; this updates the sample period after a wrmsr so running
-counters will accurately reflect their new value.
 
-Signed-off-by: Eric Hankland <ehankland@google.com>
----
- arch/x86/kvm/pmu.c           | 4 ++--
- arch/x86/kvm/pmu.h           | 8 ++++++++
- arch/x86/kvm/vmx/pmu_intel.c | 6 ++++++
- 3 files changed, 16 insertions(+), 2 deletions(-)
 
-diff --git a/arch/x86/kvm/pmu.c b/arch/x86/kvm/pmu.c
-index bcc6a73d6628..d1f8ca57d354 100644
---- a/arch/x86/kvm/pmu.c
-+++ b/arch/x86/kvm/pmu.c
-@@ -111,7 +111,7 @@ static void pmc_reprogram_counter(struct kvm_pmc *pmc, u32 type,
- 		.config = config,
- 	};
- 
--	attr.sample_period = (-pmc->counter) & pmc_bitmask(pmc);
-+	attr.sample_period = get_sample_period(pmc, pmc->counter);
- 
- 	if (in_tx)
- 		attr.config |= HSW_IN_TX;
-@@ -158,7 +158,7 @@ static bool pmc_resume_counter(struct kvm_pmc *pmc)
- 
- 	/* recalibrate sample period and check if it's accepted by perf core */
- 	if (perf_event_period(pmc->perf_event,
--			(-pmc->counter) & pmc_bitmask(pmc)))
-+			      get_sample_period(pmc, pmc->counter)))
- 		return false;
- 
- 	/* reuse perf_event to serve as pmc_reprogram_counter() does*/
-diff --git a/arch/x86/kvm/pmu.h b/arch/x86/kvm/pmu.h
-index 13332984b6d5..354b8598b6c1 100644
---- a/arch/x86/kvm/pmu.h
-+++ b/arch/x86/kvm/pmu.h
-@@ -129,6 +129,15 @@ static inline struct kvm_pmc *get_fixed_pmc(struct kvm_pmu *pmu, u32 msr)
- 	return NULL;
- }
- 
-+static inline u64 get_sample_period(struct kvm_pmc *pmc, u64 counter_value)
-+{
-+	u64 sample_period = (-counter_value) & pmc_bitmask(pmc);
-+
-+	if (!sample_period)
-+		sample_period = pmc_bitmask(pmc) + 1;
-+	return sample_period;
-+}
-+
- void reprogram_gp_counter(struct kvm_pmc *pmc, u64 eventsel);
- void reprogram_fixed_counter(struct kvm_pmc *pmc, u8 ctrl, int fixed_idx);
- void reprogram_counter(struct kvm_pmu *pmu, int pmc_idx);
-diff --git a/arch/x86/kvm/vmx/pmu_intel.c b/arch/x86/kvm/vmx/pmu_intel.c
-index fd21cdb10b79..e933541751fb 100644
---- a/arch/x86/kvm/vmx/pmu_intel.c
-+++ b/arch/x86/kvm/vmx/pmu_intel.c
-@@ -263,9 +263,15 @@ static int intel_pmu_set_msr(struct kvm_vcpu *vcpu, struct msr_data *msr_info)
- 			if (!msr_info->host_initiated)
- 				data = (s64)(s32)data;
- 			pmc->counter += data - pmc_read_counter(pmc);
-+			if (pmc->perf_event)
-+				perf_event_period(pmc->perf_event,
-+						  get_sample_period(pmc, data));
- 			return 0;
- 		} else if ((pmc = get_fixed_pmc(pmu, msr))) {
- 			pmc->counter += data - pmc_read_counter(pmc);
-+			if (pmc->perf_event)
-+				perf_event_period(pmc->perf_event,
-+						  get_sample_period(pmc, data));
- 			return 0;
- 		} else if ((pmc = get_gp_pmc(pmu, msr, MSR_P6_EVNTSEL0))) {
- 			if (data == pmc->eventsel)
+=E4=BA=8E 2020=E5=B9=B42=E6=9C=8822=E6=97=A5 GMT+08:00 =E4=B8=8A=E5=8D=881=
+:13:28, Torsten Duwe <duwe@lst=2Ede> =E5=86=99=E5=88=B0:
+>On Sat, Feb 22, 2020 at 12:51:27AM +0800, Icenowy Zheng wrote:
+>> Current code tries to store the link rate (in bps, which is a big
+>> number) in a u8, which surely overflow=2E Then it's converted back to
+>> bandwidth code (which is thus 0) and written to the chip=2E
+>>=20
+>> The code sometimes works because the chip will automatically fallback
+>to
+>> the lowest possible DP link rate (1=2E62Gbps) when get the invalid
+>value=2E
+>> However, on the eDP panel of Olimex TERES-I, which wants 2=2E7Gbps
+>link,
+>> it failed=2E
+>>=20
+>> As we had already read the link bandwidth as bandwidth code in
+>earlier
+>> code (to check whether it is supported), use it when setting
+>bandwidth,
+>> instead of converting it to link rate and then converting back=2E
+>>=20
+>> Fixes: e1cff82c1097 ("drm/bridge: fix anx6345 compilation for v5=2E5")
+>> Signed-off-by: Icenowy Zheng <icenowy@aosc=2Eio>
+>> ---
+>>  drivers/gpu/drm/bridge/analogix/analogix-anx6345=2Ec | 3 +--
+>>  1 file changed, 1 insertion(+), 2 deletions(-)
+>>=20
+>> diff --git a/drivers/gpu/drm/bridge/analogix/analogix-anx6345=2Ec
+>b/drivers/gpu/drm/bridge/analogix/analogix-anx6345=2Ec
+>> index 56f55c53abfd=2E=2E2dfa2fd2a23b 100644
+>> --- a/drivers/gpu/drm/bridge/analogix/analogix-anx6345=2Ec
+>> +++ b/drivers/gpu/drm/bridge/analogix/analogix-anx6345=2Ec
+>> @@ -210,8 +210,7 @@ static int anx6345_dp_link_training(struct
+>anx6345 *anx6345)
+>>  	if (err)
+>>  		return err;
+>> =20
+>> -	dpcd[0] =3D drm_dp_max_link_rate(anx6345->dpcd);
+>> -	dpcd[0] =3D drm_dp_link_rate_to_bw_code(dpcd[0]);
+>> +	dpcd[0] =3D dp_bw;
+>
+>Why do you make this assignment and not use dp_bw directly in the call?
+
+Because the dpcd array is then written as a continous array
+back to DPCD=2E
+
+>
+>>  	err =3D regmap_write(anx6345->map[I2C_IDX_DPTX],
+>>  			   SP_DP_MAIN_LINK_BW_SET_REG, dpcd[0]);
+>                                                       ^^^^^^
+>>  	if (err)
+>> --=20
+>> 2=2E24=2E1
+>
+>BTW, my version is only a bit more verbose:
+>
+>https://patchwork=2Efreedesktop=2Eorg/patch/354344/
+>
+>	Torsten
+
+--=20
+=E4=BD=BF=E7=94=A8 K-9 Mail =E5=8F=91=E9=80=81=E8=87=AA=E6=88=91=E7=9A=84A=
+ndroid=E8=AE=BE=E5=A4=87=E3=80=82
