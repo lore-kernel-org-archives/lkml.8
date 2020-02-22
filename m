@@ -2,239 +2,131 @@ Return-Path: <SRS0=8jYG=4K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E6B72C35669
-	for <linux-kernel@archiver.kernel.org>; Sat, 22 Feb 2020 08:01:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AA71DC35669
+	for <linux-kernel@archiver.kernel.org>; Sat, 22 Feb 2020 08:03:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A29B9208C3
-	for <linux-kernel@archiver.kernel.org>; Sat, 22 Feb 2020 08:01:59 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="E7O6HkSF"
+	by mail.kernel.org (Postfix) with ESMTP id 8C8DE208C3
+	for <linux-kernel@archiver.kernel.org>; Sat, 22 Feb 2020 08:03:05 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726832AbgBVIBp (ORCPT
+        id S1727348AbgBVIDE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 22 Feb 2020 03:01:45 -0500
-Received: from mail-ot1-f68.google.com ([209.85.210.68]:34312 "EHLO
-        mail-ot1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726343AbgBVIBp (ORCPT
+        Sat, 22 Feb 2020 03:03:04 -0500
+Received: from mout.kundenserver.de ([212.227.126.134]:55497 "EHLO
+        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726808AbgBVIDD (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 22 Feb 2020 03:01:45 -0500
-Received: by mail-ot1-f68.google.com with SMTP id j16so4281320otl.1;
-        Sat, 22 Feb 2020 00:01:42 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to
-         :user-agent;
-        bh=vT81nvbtkGPYyB7EYop5s54CEn2jqtzV1GkVQRlvubQ=;
-        b=E7O6HkSF4D+Uxknx/QGF9lTKHLoun8VV8g0bjPaFeXOvk1hMvR5mXW1jBp6fPJNJVZ
-         aZB7e6HLMhKX+h9MVNI7q8KNLLoxCOPHb49419ykJKO0NTLi/kGUyDbUKGxs5cEkECyw
-         dwMuaiNI3QPYR+uYjaReFrvp5hx9qlz0T/P+k0CnHnUfWaBCjVnKXcbVtdIWlvlsMqLz
-         pD9SsuwXyHwy8DCusOg7qCIKY+geoQXRZnmRb0HqS67yFg2sx0UIqvyFCe7KiQptbMwG
-         7JTwf6e37eEihNZOhJmGy5JPim4KQDR19JcdGF1MeFhHI0Cv4HjDMsTb+6rLO2Wx6wpk
-         fI2w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to:user-agent;
-        bh=vT81nvbtkGPYyB7EYop5s54CEn2jqtzV1GkVQRlvubQ=;
-        b=SaJmBg2Yiw6x+vzrBNN38Z+zpkL3aTFVEFjVGj/pTvhQh888eYw+ay8tvOw81kxcJx
-         ZB30EWbJ2RFhLL8TJhP3d3w/bZbAWZfyEW6Yh7I4z/pPeAqGx9CHAqoCPxhChucv+Jfk
-         gNk71F/ihZx/gbInDWXQidY/iYIt3rYETzCWgH3Q9HxzL5Dquax9BUfZKteblbDgtj0a
-         3C5e5RuuLI9/sSsNI/7GZRn0yBRWovC7Yfaw+G5tyxyOReW3pXn1upExkPOrsuXFPlKG
-         3/HLORKn4C2Pk7CsWBhfNCI5mTUJA4ojVXXptjfRDX9NL6Gk1bfyH6afI7zHvxgbeTHN
-         uu8g==
-X-Gm-Message-State: APjAAAXdy5dBEV6BJPwNQk16qrQQoUCshhqRB4fCYNEVRrnZuqzJ9yCj
-        my+BS/DQyZR3n04Ok2gQk+vPnMgw
-X-Google-Smtp-Source: APXvYqwozrjydg0qlpHHdirUIatUqNDdS/rPMUEphftHCBpdfqQ9n9h/OV0v2ujjZGxaNuh47mmK0A==
-X-Received: by 2002:a9d:62d8:: with SMTP id z24mr30827638otk.362.1582358502147;
-        Sat, 22 Feb 2020 00:01:42 -0800 (PST)
-Received: from ubuntu-m2-xlarge-x86 ([2604:1380:4111:8b00::1])
-        by smtp.gmail.com with ESMTPSA id n22sm1995229otj.36.2020.02.22.00.01.41
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Sat, 22 Feb 2020 00:01:41 -0800 (PST)
-Date:   Sat, 22 Feb 2020 01:01:40 -0700
-From:   Nathan Chancellor <natechancellor@gmail.com>
-To:     "Alex Xu (Hello71)" <alex_y_xu@yahoo.ca>
-Cc:     Russell King <linux@armlinux.org.uk>, linux-kbuild@vger.kernel.org,
-        linux-kernel@vger.kernel.org, masahiroy@kernel.org,
-        michal.lkml@markovi.net
-Subject: Re: [PATCH] kbuild: move -pipe to global KBUILD_CFLAGS
-Message-ID: <20200222080140.GA40311@ubuntu-m2-xlarge-x86>
-References: <20200222003820.220854-1-alex_y_xu.ref@yahoo.ca>
- <20200222003820.220854-1-alex_y_xu@yahoo.ca>
- <20200222021619.GA51223@ubuntu-m2-xlarge-x86>
- <1582341758.yo66djba3t.none@localhost>
+        Sat, 22 Feb 2020 03:03:03 -0500
+Received: from mail-lj1-f170.google.com ([209.85.208.170]) by
+ mrelayeu.kundenserver.de (mreue012 [212.227.15.129]) with ESMTPSA (Nemesis)
+ id 1MGQ85-1jDNxT0E8L-00Gmo9; Sat, 22 Feb 2020 09:03:02 +0100
+Received: by mail-lj1-f170.google.com with SMTP id w1so4663095ljh.5;
+        Sat, 22 Feb 2020 00:03:01 -0800 (PST)
+X-Gm-Message-State: APjAAAXzm3mazZhpifv6NLwNUOZwOlo1AXN5boy8wUSX/H3CDKpMt+O5
+        rZW0g871fIpzP2DTUA4cwHcEtUsYDjUs/bnkz+M=
+X-Google-Smtp-Source: APXvYqy8pqZnXs4eA0pVTt5xMk383YhNUC6JgnQCwACtDyc9LnpCj6Rs0ZSynacog0ZUWSe9rR6qD5KRQrqsZqng2m8=
+X-Received: by 2002:a2e:8e70:: with SMTP id t16mr24610761ljk.73.1582358581384;
+ Sat, 22 Feb 2020 00:03:01 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <1582341758.yo66djba3t.none@localhost>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+References: <20200220004825.23372-1-scott.branden@broadcom.com>
+ <20200220004825.23372-7-scott.branden@broadcom.com> <20200220074711.GA3261162@kroah.com>
+ <ee53fe6f-53de-87c0-db16-989cc15abbce@broadcom.com>
+In-Reply-To: <ee53fe6f-53de-87c0-db16-989cc15abbce@broadcom.com>
+From:   Arnd Bergmann <arnd@arndb.de>
+Date:   Sat, 22 Feb 2020 09:02:44 +0100
+X-Gmail-Original-Message-ID: <CAK8P3a0y8RfjEng4AsMr4MAPGMTXduiFOyfUzazgw9c+KVWmYA@mail.gmail.com>
+Message-ID: <CAK8P3a0y8RfjEng4AsMr4MAPGMTXduiFOyfUzazgw9c+KVWmYA@mail.gmail.com>
+Subject: Re: [PATCH v2 6/7] misc: bcm-vk: add Broadcom VK driver
+To:     Scott Branden <scott.branden@broadcom.com>
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Luis Chamberlain <mcgrof@kernel.org>,
+        David Brown <david.brown@linaro.org>,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        Shuah Khan <shuah@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Shuah Khan <skhan@linuxfoundation.org>,
+        "Rafael J . Wysocki" <rafael@kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
+        Linux FS-devel Mailing List <linux-fsdevel@vger.kernel.org>,
+        BCM Kernel Feedback <bcm-kernel-feedback-list@broadcom.com>,
+        Olof Johansson <olof@lixom.net>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Dan Carpenter <dan.carpenter@oracle.com>,
+        Colin Ian King <colin.king@canonical.com>,
+        Kees Cook <keescook@chromium.org>,
+        Takashi Iwai <tiwai@suse.de>,
+        "open list:KERNEL SELFTEST FRAMEWORK" 
+        <linux-kselftest@vger.kernel.org>, Andy Gross <agross@kernel.org>,
+        Desmond Yan <desmond.yan@broadcom.com>,
+        James Hu <james.hu@broadcom.com>
+Content-Type: text/plain; charset="UTF-8"
+X-Provags-ID: V03:K1:XZlkbUR4fxvy+eE3fvD5js5E7JSWv9M4hJtyepE/iQGN5bhv2kl
+ LCRDkcdhGgVq9hhYgkCZgDR+VchB2qOw2MftAiiGtTFUU2tweq60mZQa635lfEwtVeEKbWs
+ MnJ61uB+Wp7wWZPjOAtlkBmAImwxQO7Ykpn56BlDB0JVbz66Aa27T17gmP7vhlQd6/sfeSy
+ QsAJR7A4fAvOlUoULX7cg==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:vCKx0DV6jsY=:ZsJCmUIHVEjxqelF+v30ky
+ lC0Y/TQGa+3Rw3L57lffpcaWs4ZYYhg5vv9wGqlr5jlabbaOpg8V67KH3ZE8IA2X/mtc9J+zm
+ +EboEKThaasEeUHgCpyTARgb+oHTQ56g3rp/+CsQjvWyy/zTQQCBVgU6n8JjWHRX3V92XBGEH
+ RQ/NcjEF4Xpxec+a++cxJFDCxYMiooJceIVUQK0ypZH9Tjge/LCnt+soje2RgAvYyPbQbI2ZB
+ s/hJH7tSKNQd3OHAgjGQszvL9rhTIVK3KHDrBJ5RTR7jXSm3QJjvnCUu4bIh+beLlODSh5Hpj
+ 3DwCH1bmvrAC19pFXm7+GeKaerf5aOVGe1dWZgBIcpiies54HKXei/5dQ+qwJ4Rghe6+z86PM
+ LOTRPDeMSSIau5D0FPh+/g3FRWjz9rkDaI2cccpJZ7dePCAlgkm+HoQasDKk4caYqTbvbW7bk
+ md5LyLt70Gj1Iqdd/5KpIKLP9hYOH1yTpoYk08qsKv7XjBsChcJDivxd95HrpuuL4KyrmIzhg
+ Cd0DrT7KyLpDyA8K9dkDwPMgRNa+hu86CAkGa7gy/3lCJ8C6ZtllEDFI611rgZW6stxPrfr2F
+ lZ3GXKge51OQZ69LqB16KRYr3kyj0YHkPoQbmyRiI/tRT2N2VWYa2HGrmCgwIwqmVgsECMGap
+ RtZ14uQm+RrA4IzULJoPDdmF3NU6c7EvQCMpRV79y1zUFq9T6HLkt7BsPViE+FtoR5pGtSiTC
+ w8l6oJop0NZNhSkYHu0sKe1Vj+nrZNI7bLi9oFSaMtX9gJRXB9x1XOBrRSLEecrfDX3CMIYp/
+ iWjjodC82c9+3yzaXUbBiwhSHDAYsYqdIQLoIak8F6KxcPWWTk=
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Feb 21, 2020 at 11:01:24PM -0500, Alex Xu (Hello71) wrote:
-> Excerpts from Nathan Chancellor's message of February 21, 2020 9:16 pm:
-> > Hi Alex,
-> > 
-> > On Fri, Feb 21, 2020 at 07:38:20PM -0500, Alex Xu (Hello71) wrote:
-> >> -pipe reduces unnecessary disk wear for systems where /tmp is not a
-> >> tmpfs, slightly increases compilation speed, and avoids leaving behind
-> >> files when gcc crashes.
-> >> 
-> >> According to the gcc manual, "this fails to work on some systems where
-> >> the assembler is unable to read from a pipe; but the GNU assembler has
-> >> no trouble". We already require GNU ld on all platforms, so this is not
-> >> an additional dependency. LLVM as also supports pipes.
-> >> 
-> >> -pipe has always been used for most architectures, this change
-> >> standardizes it globally. Most notably, arm, arm64, riscv, and x86 are
-> >> affected.
-> >> 
-> >> Signed-off-by: Alex Xu (Hello71) <alex_y_xu@yahoo.ca>
-> > 
-> > Do you have any numbers to show this is actually beneficial from a
-> > compilation time perspective? I ask because I saw an improvement in
-> > compilation time when removing -pipe from x86's KBUILD_CFLAGS in
-> > commit 437e88ab8f9e ("x86/build: Remove -pipe from KBUILD_CFLAGS").
-> > 
-> > For what it's worth, clang ignores -pipe so this does not actually
-> > matter for its integrated assembler.
-> > 
-> > That type of change could have been a fluke but I guarantee people
-> > will care more about any change in compilation time than any of the
-> > other things that you mention so it might be wise to check on major
-> > architectures to make sure that it doesn't hurt.
-> > 
-> > Cheers,
-> > Nathan
-> > 
-> 
-> Sorry, I should've checked the performance first. I have now run:
-> 
-> cd /tmp/linux # previously: make O=/tmp/linux
-> export MAKEFLAGS=12 # Ryzen 1600, 6 cores, 12 threads
-> make allnoconfig
-> for i in {1..10}; do
->     make clean >/dev/null
->     time make XPIPE=-pipe >/dev/null
->     make clean >/dev/null
->     time make >/dev/null
-> done
-> 
-> after patching -pipe to $(XPIPE) in Makefile.
-> 
-> Results (without ld warnings):
-> 
-> make > /dev/null  130.54s user 10.41s system 969% cpu 14.537 total
-> make XPIPE=-pipe > /dev/null  129.83s user 9.95s system 977% cpu 14.296 total
-> make > /dev/null  129.73s user 10.28s system 966% cpu 14.493 total
-> make XPIPE=-pipe > /dev/null  130.04s user 10.63s system 986% cpu 14.252 total
-> make > /dev/null  129.53s user 10.28s system 972% cpu 14.379 total
-> make XPIPE=-pipe > /dev/null  130.29s user 10.17s system 983% cpu 14.288 total
-> make > /dev/null  130.19s user 10.52s system 968% cpu 14.530 total
-> make XPIPE=-pipe > /dev/null  129.90s user 10.47s system 978% cpu 14.343 total
-> make > /dev/null  129.50s user 10.81s system 959% cpu 14.620 total
-> make XPIPE=-pipe > /dev/null  130.37s user 10.60s system 975% cpu 14.446 total
-> make > /dev/null  129.63s user 10.18s system 972% cpu 14.374 total
-> make XPIPE=-pipe > /dev/null  131.29s user 9.92s system 1016% cpu 13.899 total
-> make > /dev/null  129.96s user 10.39s system 961% cpu 14.596 total
-> make XPIPE=-pipe > /dev/null  131.63s user 10.16s system 1011% cpu 14.015 total
-> make > /dev/null  129.33s user 10.54s system 970% cpu 14.405 total
-> make XPIPE=-pipe > /dev/null  129.70s user 10.40s system 976% cpu 14.349 total
-> make > /dev/null  129.53s user 10.25s system 964% cpu 14.494 total
-> make XPIPE=-pipe > /dev/null  130.38s user 10.62s system 973% cpu 14.479 total
-> make > /dev/null  130.73s user 10.08s system 957% cpu 14.704 total
-> make XPIPE=-pipe > /dev/null  130.43s user 10.62s system 985% cpu 14.309 total
-> make > /dev/null  130.54s user 10.41s system 969% cpu 14.537 total
-> 
-> There is a fair bit of variance, probably due to cpufreq, schedutil, CPU 
-> temperature, CPU scheduler, motherboard power delivery, etc. But, I 
-> think it can be clearly seen that -pipe is, on average, about 0.1 to 0.2 
-> seconds faster.
-> 
-> I also tried "make defconfig":
-> 
-> make > /dev/null  1238.26s user 102.39s system 1095% cpu 2:02.33 total
-> make XPIPE=-pipe > /dev/null  1231.33s user 102.52s system 1081% cpu 2:03.29 total
-> make > /dev/null  1232.92s user 102.07s system 1096% cpu 2:01.71 total
-> make XPIPE=-pipe > /dev/null  1239.59s user 102.30s system 1096% cpu 2:02.39 total
-> make > /dev/null  1229.81s user 101.72s system 1093% cpu 2:01.74 total
-> make XPIPE=-pipe > /dev/null  1234.64s user 101.30s system 1098% cpu 2:01.64 total
-> make > /dev/null  1228.50s user 104.39s system 1093% cpu 2:01.91 total
-> make XPIPE=-pipe > /dev/null  1238.78s user 102.57s system 1099% cpu 2:01.99 total
-> make > /dev/null  1238.26s user 102.39s system 1095% cpu 2:02.33 total
-> 
-> I stopped after this because I needed to use the machine for other 
-> tasks. The results are less clear, but I think there's not a big 
-> difference one way or another, at least on my machine.
-> 
-> CPU: Ryzen 1600, overclocked to ~3.8 GHz
-> RAM: Corsair Vengeance, overclocked to ~3300 MHz, forgot timings
-> Motherboard: ASRock B450 Pro4
-> 
-> I would speculate that the recent pipe changes have caused a change in 
-> the relative speed compared to 2018. I am using 5.6.0-rc2 with -O3 
-> -march=native patches.
-> 
-> Regards,
-> Alex.
+On Fri, Feb 21, 2020 at 7:19 PM Scott Branden
+<scott.branden@broadcom.com> wrote:
+> On 2020-02-19 11:47 p.m., Greg Kroah-Hartman wrote:
 
-I used hyperfine [1] to run a quick benchmark with a freshly built
-GCC 9.2.0 for x86 and aarch64 and here are the results:
+> > Have you worked with the V4L developers to tie this into the proper
+> > in-kernel apis for this type of functionality?
+> We looked at the V4L model doesn't have any support for anything we are
+> doing in this driver.
+> We also want a driver that doesn't care about video.  It could be
+> offloading crypto or other operations.
+> We talked with Olof about all of this previously and he said leave it as
+> a misc driver for now.
+> He was going to discuss at linux plumbers conference that we need some
+> sort of offload engine model that such devices could fit into.
 
-$ hyperfine -w 1 -r 25 \
-            -p 'rm -rf out.x86_64' \
-            'make -j$(nproc) -s CROSS_COMPILE=x86_64-linux- O=out.x86_64 defconfig all' \
-            'make -j$(nproc) -s CROSS_COMPILE=x86_64-linux- KCFLAGS=-pipe O=out.x86_64 defconfig all'
+I see. Have you looked at the "uacce" driver submission? It seems
+theirs is similar enough that there might be some way to share interfaces.
 
-Benchmark #1: make -j$(nproc) -s CROSS_COMPILE=x86_64-linux- O=out.x86_64 defconfig all
-  Time (mean ± σ):     68.535 s ±  0.275 s    [User: 2241.681 s, System: 185.454 s]
-  Range (min … max):   67.855 s … 68.953 s    25 runs
+> > Using a tty driver seems like the totally incorrect way to do this, what
+> > am I missing?
+> tty driver is used to provide console access to the processors running
+> on vk.
+> Data is sent using the bcm_vk_msg interface by read/write operations
+> from user space.
+> VK then gets the messages and DMA's the data to/from host memory when
+> needed to process.
 
-Benchmark #2: make -j$(nproc) -s CROSS_COMPILE=x86_64-linux- KCFLAGS=-pipe O=out.x86_64 defconfig all
-  Time (mean ± σ):     68.922 s ±  0.095 s    [User: 2264.168 s, System: 190.297 s]
-  Range (min … max):   68.781 s … 69.126 s    25 runs
+In turn here, it sounds like you'd want to look at what drivers/misc/mic/
+and the mellanox bluefield drivers are doing. As I understand, they have the
+same requirements for console, but have a nicer approach of providing
+abstract 'virtio' channels between the PCIe endpoint and the host, and
+then run regular virtio based drivers (console, tty, block, filesystem,
+network, ...) along with application specific ones to provide the custom
+high-level protocols. This is also similar to what the drivers/pci/endpoint
+(from the other end) as the drivers/ntb (pci host on both ends) frameworks
+and of course the rpmsg/remoteproc framework do.
 
-Summary
-  'make -j$(nproc) -s CROSS_COMPILE=x86_64-linux- O=out.x86_64 defconfig all' ran
-    1.01 ± 0.00 times faster than 'make -j$(nproc) -s CROSS_COMPILE=x86_64-linux- KCFLAGS=-pipe O=out.x86_64 defconfig all'
+In the long run, I would want much more consolidation between the
+low-level parts of all these frameworks, but moving your high-level
+protocols to the same virtio method would sound like a step in the
+direction towards a generialized framework and easier sharing of
+the abstractions.
 
-$ hyperfine -w 1 -r 25 \
-            -p 'rm -rf out.aarch64' \
-            'make -j$(nproc) -s ARCH=arm64 CROSS_COMPILE=aarch64-linux- O=out.aarch64 defconfig all' \
-            'make -j$(nproc) -s ARCH=arm64 CROSS_COMPILE=aarch64-linux- KCFLAGS=-pipe O=out.aarch64 defconfig all'
-
-Benchmark #1: make -j$(nproc) -s ARCH=arm64 CROSS_COMPILE=aarch64-linux- O=out.aarch64 defconfig all
-  Time (mean ± σ):     166.732 s ±  0.594 s    [User: 5654.780 s, System: 475.493 s]
-  Range (min … max):   165.873 s … 167.859 s    25 runs
-
-Benchmark #2: make -j$(nproc) -s ARCH=arm64 CROSS_COMPILE=aarch64-linux- KCFLAGS=-pipe O=out.aarch64 defconfig all
-  Time (mean ± σ):     168.047 s ±  0.428 s    [User: 5734.031 s, System: 488.392 s]
-  Range (min … max):   167.328 s … 168.959 s    25 runs
-
-Summary
-  'make -j$(nproc) -s ARCH=arm64 CROSS_COMPILE=aarch64-linux- O=out.aarch64 defconfig all' ran
-    1.01 ± 0.00 times faster than 'make -j$(nproc) -s ARCH=arm64 CROSS_COMPILE=aarch64-linux- KCFLAGS=-pipe O=out.aarch64 defconfig all'
-
-In both cases it seems like performance regresses (by 1% but still) but
-maybe it is my machine, even though this benchmark was done on a
-different machine than the one from my commit back in 2018.
-
-I am not sure I would write off these results, since I did the benchmark
-25 times on each one back to back, eliminating most of the variance that
-you described.
-
-[1]: https://github.com/sharkdp/hyperfine
-
-Cheers,
-Nathan
+       Arnd
