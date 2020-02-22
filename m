@@ -2,111 +2,111 @@ Return-Path: <SRS0=8jYG=4K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 43B3CC35672
-	for <linux-kernel@archiver.kernel.org>; Sat, 22 Feb 2020 15:55:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 816DFC35671
+	for <linux-kernel@archiver.kernel.org>; Sat, 22 Feb 2020 15:56:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1A40C20656
-	for <linux-kernel@archiver.kernel.org>; Sat, 22 Feb 2020 15:55:51 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Vex6A7ca"
+	by mail.kernel.org (Postfix) with ESMTP id 4A96920702
+	for <linux-kernel@archiver.kernel.org>; Sat, 22 Feb 2020 15:56:24 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1582386984;
+	bh=YDQaHQ4HoiCOvY4NXJWuU84Ut3b5JPOGNOmSnmDw1qk=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=sVCVgumeYukA1pPzgUy82Q47Z8AHpdF1aMkXLBWxTg3A0G1+s7XW1tI0kWFREYVvx
+	 VTYO0QC2lbvrk46LSAcqZ1xbIy+UDvfMNqLcmLQozh2e/lfQO7ImESmqzmFZuUsYtn
+	 mjxNnB4EFodLetwZ6k+Q2ovAO5J/22iFZ7PH3fTw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727708AbgBVPzt (ORCPT
+        id S1727785AbgBVP4X (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 22 Feb 2020 10:55:49 -0500
-Received: from mail-pj1-f65.google.com ([209.85.216.65]:39736 "EHLO
-        mail-pj1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727230AbgBVPzt (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 22 Feb 2020 10:55:49 -0500
-Received: by mail-pj1-f65.google.com with SMTP id e9so2121317pjr.4;
-        Sat, 22 Feb 2020 07:55:49 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=xBBBMhUIQhUE2f9rKIV0ran2b+vF87fdNtOXyBakS7w=;
-        b=Vex6A7caHfueCivvuB68sR3wUUvABHwkEuux7USfTw6eBrrIWO4trPVm66SQy0njXD
-         2FzojX2T/Bz7mCjktrl7sAJhJRXjO2d+NUYyJjSXrqEuqD96p7psuvdvPy3E9e2NJGBB
-         2PzTANbFlc7KFR9OsIL/tg7I2iHCGWHqxtqZAhCokXPLXyPiDAB3ca/Vv7TEnild+j4f
-         Gye9cjWaPoRu/bAsy0prcJynaZseQwFjzOTSJm9zUJ4rrJOkrIdBrieTsL3ZLu66hJmt
-         h2bZ+RCuMMNMTLAydAJeCnREaaCCND1d9JeImVv2ZJVrJO10UWhY7B4TdpFxR4+IIErb
-         y8UA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:subject:to:cc:references:from:message-id
-         :date:user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=xBBBMhUIQhUE2f9rKIV0ran2b+vF87fdNtOXyBakS7w=;
-        b=TA0B1PCWTcG0lRAkkWlXoQytm6whq0Xz4LJx+1UaW0qzknRyde9KEwv4dIjobsiK0i
-         FWvrVkpDIDdGUn2T0UbNwrUr6L6KkOF/3cSBqkl+ISfewxU7++hSRk8JyGVbig4hfNn9
-         NrPzyKRJqtPp/5LbdGeD2K7YE9RQHx8PVOQc3EGDJtbP/R0JWPNBty9MyKfMmO09qFL+
-         +IaITpbdFypQyD24LttsjN365P8o/K+OrZ3KiorsKeZI3I0KQdpmvKN9XfemsZy2Tz6P
-         PpyATx5gA3TB8strfcwAuugKPxl+aWdBEIEJ3ig0amN1Lf+WrxyiKvwg9C/pnTA5pwJi
-         gjvw==
-X-Gm-Message-State: APjAAAXchXCiJhjbOredeZEm5QELLhlMZgRE/R61m6yjYy+O46KmSYeQ
-        aYwAX4+V5jPSts7xjHyBaZA=
-X-Google-Smtp-Source: APXvYqxarWw25HR6eJgr5jn1aGOQGyPF2NF5phA2vFgKlpU8qKGocjNHXL74q/xw5OO5iLYG0mkIPA==
-X-Received: by 2002:a17:902:b484:: with SMTP id y4mr41025827plr.126.1582386948559;
-        Sat, 22 Feb 2020 07:55:48 -0800 (PST)
-Received: from server.roeck-us.net ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
-        by smtp.gmail.com with ESMTPSA id o6sm3342655pfg.180.2020.02.22.07.55.47
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sat, 22 Feb 2020 07:55:47 -0800 (PST)
-Subject: Re: [PATCH 1/3] watchdog: imx_sc_wdt: Remove unused includes
-To:     Anson Huang <Anson.Huang@nxp.com>, wim@linux-watchdog.org,
-        shawnguo@kernel.org, s.hauer@pengutronix.de, kernel@pengutronix.de,
-        festevam@gmail.com, linux-watchdog@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Cc:     Linux-imx@nxp.com
-References: <1582250430-8872-1-git-send-email-Anson.Huang@nxp.com>
-From:   Guenter Roeck <linux@roeck-us.net>
-Message-ID: <74657776-ebee-555f-431c-00b65ba83ca9@roeck-us.net>
-Date:   Sat, 22 Feb 2020 07:55:46 -0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.1
-MIME-Version: 1.0
-In-Reply-To: <1582250430-8872-1-git-send-email-Anson.Huang@nxp.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+        Sat, 22 Feb 2020 10:56:23 -0500
+Received: from mail.kernel.org ([198.145.29.99]:38106 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727230AbgBVP4W (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 22 Feb 2020 10:56:22 -0500
+Received: from devnote2 (NE2965lan1.rev.em-net.ne.jp [210.141.244.193])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id CC23C206EF;
+        Sat, 22 Feb 2020 15:56:17 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1582386982;
+        bh=YDQaHQ4HoiCOvY4NXJWuU84Ut3b5JPOGNOmSnmDw1qk=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=MuA2irKY2IdcB2C8kkAZ41BTJYIeAHYgD2CQTHcG4xiO70M0ikEE13LvwG4+CPC3w
+         2SY6ynXy4oi5kZfFJYRDK3po397myrUeL/B2Urn/l3yuFF8agkWSpAZTeDu/wDuliA
+         StTnY59MZl1QRQ2V0vouCYW2Imj6v8G/Js3RCzXM=
+Date:   Sun, 23 Feb 2020 00:56:15 +0900
+From:   Masami Hiramatsu <mhiramat@kernel.org>
+To:     Markus Elfring <Markus.Elfring@web.de>
+Cc:     Steven Rostedt <rostedt@goodmis.org>, linux-doc@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org, kernel-janitors@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        Alexey Dobriyan <adobriyan@gmail.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Frank Rowand <frowand.list@gmail.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Ingo Molnar <mingo@redhat.com>, Jiri Olsa <jolsa@redhat.com>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Randy Dunlap <rdunlap@infradead.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Tim Bird <Tim.Bird@sony.com>,
+        Tom Zanussi <tom.zanussi@linux.intel.com>
+Subject: Re: [for-next][12/26] Documentation: bootconfig: Add a doc for
+ extended boot config
+Message-Id: <20200223005615.79f308e2ca0717132bb2887b@kernel.org>
+In-Reply-To: <370e675a-598e-71db-8213-f5494b852a71@web.de>
+References: <23e371ca-5df8-3ae3-c685-b01c07b55540@web.de>
+        <20200220221340.2b66fd2051a5da74775c474b@kernel.org>
+        <5ed96b7b-7485-1ea0-16e2-d39c14ae266d@web.de>
+        <20200221191637.e9eed4268ff607a98200628c@kernel.org>
+        <5ade73b0-a3e8-e71a-3685-6485f37ac8b7@web.de>
+        <20200222131833.56a5be2d36033dc5a77a9f0b@kernel.org>
+        <370e675a-598e-71db-8213-f5494b852a71@web.de>
+X-Mailer: Sylpheed 3.5.1 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+Mime-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2/20/20 6:00 PM, Anson Huang wrote:
-> There is nothing in use from init.h/reboot.h, remove them.
-> 
-> Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
+On Sat, 22 Feb 2020 10:48:28 +0100
+Markus Elfring <Markus.Elfring@web.de> wrote:
 
-Reviewed-by: Guenter Roeck <linux@roeck-us.net>
-
-> ---
->   drivers/watchdog/imx_sc_wdt.c | 2 --
->   1 file changed, 2 deletions(-)
+> >> * Will a file format description become helpful in the way of
+> >>   an extended Backus–Naur form?
+> >
+> > Good suggestion! Let me try to write an EBNF section.
 > 
-> diff --git a/drivers/watchdog/imx_sc_wdt.c b/drivers/watchdog/imx_sc_wdt.c
-> index 8ed89f0..60a3246 100644
-> --- a/drivers/watchdog/imx_sc_wdt.c
-> +++ b/drivers/watchdog/imx_sc_wdt.c
-> @@ -6,13 +6,11 @@
->   #include <linux/arm-smccc.h>
->   #include <linux/firmware/imx/sci.h>
->   #include <linux/io.h>
-> -#include <linux/init.h>
->   #include <linux/kernel.h>
->   #include <linux/module.h>
->   #include <linux/moduleparam.h>
->   #include <linux/of.h>
->   #include <linux/platform_device.h>
-> -#include <linux/reboot.h>
->   #include <linux/watchdog.h>
->   
->   #define DEFAULT_TIMEOUT 60
+> Is there a need to provide two format descriptions as separate files
+> (so that they can help more for different software users)?
 > 
+> * RST
+> * EBNF
 
+Hmm, since RST is enough flexible, we can write it as a section.
+Then user can copy & paste if they need it.
+
+> 
+> 
+> Will it matter to adjust another wording?
+> 
+> -/proc/bootconfig is a user-space interface of the boot config.
+> +The file “/proc/bootconfig” is an user-space interface to the configuration
+> +of system boot parameters.
+
+OK.
+
+Thank you,
+
+
+-- 
+Masami Hiramatsu <mhiramat@kernel.org>
