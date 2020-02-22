@@ -7,46 +7,42 @@ X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9BEE1C35669
-	for <linux-kernel@archiver.kernel.org>; Sat, 22 Feb 2020 04:43:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 59057C35671
+	for <linux-kernel@archiver.kernel.org>; Sat, 22 Feb 2020 04:52:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 525F12071E
-	for <linux-kernel@archiver.kernel.org>; Sat, 22 Feb 2020 04:43:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 20EE4208C3
+	for <linux-kernel@archiver.kernel.org>; Sat, 22 Feb 2020 04:52:23 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=megous.com header.i=@megous.com header.b="r0kgt1qz"
+	dkim=pass (1024-bit key) header.d=xff.cz header.i=@xff.cz header.b="B6+iRBdG"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728049AbgBVEly (ORCPT
+        id S1728074AbgBVEvw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Feb 2020 23:41:54 -0500
-Received: from vps.xff.cz ([195.181.215.36]:53204 "EHLO vps.xff.cz"
+        Fri, 21 Feb 2020 23:51:52 -0500
+Received: from vps.xff.cz ([195.181.215.36]:53292 "EHLO vps.xff.cz"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726198AbgBVEly (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Feb 2020 23:41:54 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=megous.com; s=mail;
-        t=1582346512; bh=lu42HKPfs8W3F34qV2Vvg++VjwzFzV7KC4WH6c2u/0Y=;
+        id S1726198AbgBVEvv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 21 Feb 2020 23:51:51 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=xff.cz; s=mail;
+        t=1582346778; bh=AU93XwymVxG1tNXGl1srm3ioYWzwHO+dNAtH9K6Tfto=;
         h=Date:From:To:Cc:Subject:References:X-My-GPG-KeyId:From;
-        b=r0kgt1qzNAwLorPK+IlooEqy5oL0J1E/DJZVoFiAzdDyuET7pqJKA7Dm/5F8su1AT
-         BgL+65fJ0CjaxPS5CTJsndzkpc5QM1yc5V4NUO57izHozKf3De3qEInt3p+trOkO7P
-         fYX496T3AdqhasAVKhr5Uf/P6KGdf9gOJ/FUVNk8=
-Date:   Sat, 22 Feb 2020 05:41:51 +0100
-From:   =?utf-8?Q?Ond=C5=99ej?= Jirman <megous@megous.com>
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     linux-kernel@vger.kernel.org, stable@vger.kernel.org,
-        Chao Yu <yuchao0@huawei.com>, Jaegeuk Kim <jaegeuk@kernel.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: Re: [PATCH 5.5 020/399] f2fs: call f2fs_balance_fs outside of locked
- page
-Message-ID: <20200222044151.odurt3xqyhgxqqve@core.my.home>
-Mail-Followup-To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-kernel@vger.kernel.org, stable@vger.kernel.org,
-        Chao Yu <yuchao0@huawei.com>, Jaegeuk Kim <jaegeuk@kernel.org>,
-        Sasha Levin <sashal@kernel.org>
-References: <20200221072402.315346745@linuxfoundation.org>
- <20200221072404.289499313@linuxfoundation.org>
+        b=B6+iRBdGGXCezXY0bqWcDNllNSjpaO0ONWc0qx9jJWtHgTrHfZL9Q9k5BAdzkwy0s
+         12VDVw7C7m+/AZwsmmHWkDLlMroVgjcvz8DsrUvRKbaqtIO/K6/R4IQTJgZjbClJhI
+         RhOYoMmJcUevKoi+qrjb0j+oOFW2PeWzV8Ajzanw=
+Date:   Sat, 22 Feb 2020 05:46:17 +0100
+From:   =?utf-8?Q?Ond=C5=99ej?= Jirman <megi@xff.cz>
+To:     Jaegeuk Kim <jaegeuk@kernel.org>
+Cc:     linux-kernel@vger.kernel.org,
+        linux-f2fs-devel@lists.sourceforge.net
+Subject: Re: [PATCH 1/6] f2fs: call f2fs_balance_fs outside of locked page
+Message-ID: <20200222044617.pfrhnz2iavkrtdn6@core.my.home>
+Mail-Followup-To: Jaegeuk Kim <jaegeuk@kernel.org>,
+        linux-kernel@vger.kernel.org,
+        linux-f2fs-devel@lists.sourceforge.net
+References: <20191209222345.1078-1-jaegeuk@kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200221072404.289499313@linuxfoundation.org>
+In-Reply-To: <20191209222345.1078-1-jaegeuk@kernel.org>
 X-My-GPG-KeyId: EBFBDDE11FB918D44D1F56C1F9F0A873BE9777ED
  <https://xff.cz/key.txt>
 Sender: linux-kernel-owner@vger.kernel.org
@@ -56,19 +52,23 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 Hello,
 
-On Fri, Feb 21, 2020 at 08:35:45AM +0100, Greg Kroah-Hartman wrote:
-> From: Jaegeuk Kim <jaegeuk@kernel.org>
-> 
-> [ Upstream commit bdf03299248916640a835a05d32841bb3d31912d ]
+On Mon, Dec 09, 2019 at 02:23:40PM -0800, Jaegeuk Kim wrote:
+> Otherwise, we can hit deadlock by waiting for the locked page in
+> move_data_block in GC.
 
-I have somes issues with this patch.
+I had the task hangs on 5.6 shortly after boot. (f2fs as rootfs).
+See below for stacktrace.
 
-It causes panics due to hung tasks on 5.6. I guess it fixes one deadlock, but
-causes other one? Not sure backporting it to stable branches is a good idea.
+So I went through the changelog in f2fs and noticed this patch as
+a suspect, and after reverting it the hung task panics went away.
+
+I reverted it manually, because the master changed too much for
+a clean revert:
+
+https://megous.com/git/linux/commit/?h=orange-pi-5.6&id=9983bdae4974edc2af6ff547a401ae397388b6b5
 
 regards,
 	o.
-
 
 INFO: task kworker/u16:2:341 blocked for more than 122 seconds.
       Not tainted 5.6.0-rc2-00254-g9a029a493dc16 #4
@@ -132,9 +132,8 @@ Backtrace:
 [<c010db5c>] (dump_backtrace) from [<c010dee0>] (show_stack+0x20/0x24)
  r7:00000000 r6:60060013 r5:00000000 r4:c0e9ab10
 
-> Otherwise, we can hit deadlock by waiting for the locked page in
-> move_data_block in GC.
-> 
+
+
 >  Thread A                     Thread B
 >  - do_page_mkwrite
 >   - f2fs_vm_page_mkwrite
@@ -149,15 +148,13 @@ Backtrace:
 >     - mutex_lock(gc_mutex)
 > 
 > Fixes: 39a8695824510 ("f2fs: refactor ->page_mkwrite() flow")
-> Reviewed-by: Chao Yu <yuchao0@huawei.com>
 > Signed-off-by: Jaegeuk Kim <jaegeuk@kernel.org>
-> Signed-off-by: Sasha Levin <sashal@kernel.org>
 > ---
 >  fs/f2fs/file.c | 7 ++++---
 >  1 file changed, 4 insertions(+), 3 deletions(-)
 > 
 > diff --git a/fs/f2fs/file.c b/fs/f2fs/file.c
-> index 33c412d178f0f..6c4436a5ce797 100644
+> index e7fcbd8c23f4..6cebc6681487 100644
 > --- a/fs/f2fs/file.c
 > +++ b/fs/f2fs/file.c
 > @@ -50,7 +50,7 @@ static vm_fault_t f2fs_vm_page_mkwrite(struct vm_fault *vmf)
@@ -189,7 +186,5 @@ Backtrace:
 >  err:
 >  	return block_page_mkwrite_return(err);
 > -- 
-> 2.20.1
-> 
-> 
+> 2.19.0.605.g01d371f741-goog
 > 
