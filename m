@@ -2,217 +2,126 @@ Return-Path: <SRS0=8jYG=4K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5BE40C35671
-	for <linux-kernel@archiver.kernel.org>; Sat, 22 Feb 2020 11:05:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6BD0EC35671
+	for <linux-kernel@archiver.kernel.org>; Sat, 22 Feb 2020 11:14:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2598F2071E
-	for <linux-kernel@archiver.kernel.org>; Sat, 22 Feb 2020 11:05:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 35CC520702
+	for <linux-kernel@archiver.kernel.org>; Sat, 22 Feb 2020 11:14:29 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nifty.com header.i=@nifty.com header.b="tL77W5FH"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="t6NTppqn"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727124AbgBVLFe (ORCPT
+        id S1727166AbgBVLNT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 22 Feb 2020 06:05:34 -0500
-Received: from conuserg-10.nifty.com ([210.131.2.77]:32951 "EHLO
-        conuserg-10.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726821AbgBVLFd (ORCPT
+        Sat, 22 Feb 2020 06:13:19 -0500
+Received: from mail-il1-f182.google.com ([209.85.166.182]:42003 "EHLO
+        mail-il1-f182.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726726AbgBVLNT (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 22 Feb 2020 06:05:33 -0500
-Received: from grover.flets-west.jp (softbank126093102113.bbtec.net [126.93.102.113]) (authenticated)
-        by conuserg-10.nifty.com with ESMTP id 01MB4alo020451;
-        Sat, 22 Feb 2020 20:04:36 +0900
-DKIM-Filter: OpenDKIM Filter v2.10.3 conuserg-10.nifty.com 01MB4alo020451
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
-        s=dec2015msa; t=1582369476;
-        bh=QUtc/zt9J0Re8J3lue0pAvtGUOq+B5S2sXMyFuVNQpw=;
-        h=From:To:Cc:Subject:Date:From;
-        b=tL77W5FH0U9kZMw1COHxjPFCyr0/vNN3EXD2Hhli6b/WVxmfuVq4a2s+CnV9vbm9t
-         B2H7i8eAw7IMRQtB8vWpV5/78B+XyR7WpiLsI4Lxp6S84yoNJSgSthZE9SKvrKHDf8
-         bpFLa4XqcVVjnt3dLiWkWwAeU/SSCWdThIaMYTQk5DzNF8X7WSmMdW9UZsAaVZf5zc
-         L4Q4+S5rWB/8CkahNwQwRfFizi2hOZQs22KeIjndcEFXlUqAds5F0jP/3ttRHlmteh
-         WMeXaOhQCVI0LWjJOjwA0M9l12HEFcgDTcEvS8mMzjR2kW1+37T/lv5EfK/MRjxiJ+
-         q/wBwDrQAx75g==
-X-Nifty-SrcIP: [126.93.102.113]
-From:   Masahiro Yamada <yamada.masahiro@socionext.com>
-To:     linux-arm-kernel@lists.infradead.org
-Cc:     Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, masahiroy@kernel.org,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        Jason Cooper <jason@lakedaemon.net>,
-        Marc Zyngier <maz@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Thomas Gleixner <tglx@linutronix.de>
-Subject: [PATCH v2] dt-bindings: interrupt-controller: Convert UniPhier AIDET to json-schema
-Date:   Sat, 22 Feb 2020 20:04:35 +0900
-Message-Id: <20200222110435.18772-1-yamada.masahiro@socionext.com>
-X-Mailer: git-send-email 2.17.1
+        Sat, 22 Feb 2020 06:13:19 -0500
+Received: by mail-il1-f182.google.com with SMTP id x2so3844369ila.9;
+        Sat, 22 Feb 2020 03:13:19 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:from:date:message-id:subject:to:cc;
+        bh=Ht5BoY4Unpl7Z+knQPBoIyIniKZQ/PndFQpeGScWNOg=;
+        b=t6NTppqn5wJdtw8VlyZ/AvOHefL6e7n8KWG0Aqnmn7EDo/i2+7IrUswKcKOUyTrVYo
+         8VOXuZt9Ea2d3EjMk8D0CFXhD/SZeIan12eFWJgj7+w3v5sxPq1PgpX0uwZskLPqA/Zo
+         DYP3e629pM/elBqIJ9vqJXpEZPeBvC51DpciCpyan9s0u+zYej2P2wcgr7IkCS5I68WX
+         QYX1w445QTOsSaF6ZLdOcHOcCqfHqcz6ixZz62vrnjBAbidktsnHyUuR+/M0SIZhEzSy
+         q/FONZZXIMmlpMq56VKluxHYQcWv/VQ3BB+XvSYIAmfzYujDl0JZL5qI1JPq3xzzEVhO
+         fNcA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:from:date:message-id:subject:to:cc;
+        bh=Ht5BoY4Unpl7Z+knQPBoIyIniKZQ/PndFQpeGScWNOg=;
+        b=LGXjzO2uGzP/j1Fcw+HD+LyAhoNSVfr9caRL7afrO40BW5uRn/oPDj8JNDrgaOu+kK
+         9SNn0I5Mu0tIGtpYUKGSTNLXjgzxjEPgV2Z+uCLwDqrHfreSwQgLXbZX7JvqyqIOrCDE
+         o8PCb6rDcJZPob806lsnfflxdEha1fuD3hFpSd1BPty97ad25juGMOjqyzKls4nk0xbc
+         j9SA5GjEjpwYuhlJDu/NdD4tqy7A4mTNEcdcx30kJGErou//4DMlGGYxX81WRh6bWqrn
+         9DwZERBXtBz5EDyhOMIgGSbLRtLvn46P3sucnHzL2t7IPJKKHZsUbreuzw0zI9lIIG87
+         hjoA==
+X-Gm-Message-State: APjAAAVJDqDnePdlfYo/1M6NUL8uOB1TzysgFidWvB91K52/cCKs7DXZ
+        Op2r0llXrLoCtXbSf2LGIuC6LxPIs3eXmqdH0xw=
+X-Google-Smtp-Source: APXvYqyZYteqVWyvhXrnoZ3cXXqYSvKuW7cUtmxNri/Z/UE90+7L+OEOo8VOF6Ymoo34PWyws9+OcdufW7YTbDFjzQY=
+X-Received: by 2002:a05:6e02:f0f:: with SMTP id x15mr42502883ilj.298.1582369998523;
+ Sat, 22 Feb 2020 03:13:18 -0800 (PST)
+MIME-Version: 1.0
+From:   Martin Volf <martin.volf.42@gmail.com>
+Date:   Sat, 22 Feb 2020 12:13:07 +0100
+Message-ID: <CAM1AHpQ4196tyD=HhBu-2donSsuogabkfP03v1YF26Q7_BgvgA@mail.gmail.com>
+Subject: [regression] nct6775 does not load in 5.4 and 5.5, bisected to b84398d6d7f90080
+To:     Mika Westerberg <mika.westerberg@linux.intel.com>,
+        Jean Delvare <jdelvare@suse.com>,
+        Wolfram Sang <wsa@the-dreams.de>,
+        Guenter Roeck <linux@roeck-us.net>
+Cc:     linux-i2c@vger.kernel.org, linux-hwmon@vger.kernel.org,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Convert the UniPhier AIDET (ARM Interrupt Detector) binding to DT
-schema format.
+Hello,
 
-Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
-Some qeustions:
+hardware monitoring sensors NCT6796D on my Asus PRIME Z390M-PLUS
+motherboard with Intel i7-9700 CPU don't work with 5.4 and newer linux
+kernels, the driver nct6775 does not load.
 
-I was wondering when 'additionalProperties: false' should be added.
+It is working OK in version 5.3. I have used almost all released stable
+versions from 5.3.8 to 5.3.16; I didn't try older kernels.
 
-If I add it to a bus controller device (e.g. I2C),
-I see some schema warnings because various sub-nodes
-are added depending on which device you connect.
+Even on new kernels the sensors-detect finds the sensors:
+        Found `Nuvoton NCT6796D Super IO Sensors' Success!
+            (address 0x290, driver `nct6775')
+but "modprobe nct6775" says:
+        ERROR: could not insert 'nct6775': No such device
+There is nothing interesting in dmesg.
 
-On the other hand, the interrupt controller like this
-does not have a subnode.
-So, probably this is the case where we can add
-'additionalProperties: false'.
+git bisect found out the first bad commit is
+b84398d6d7f900805662b1619223fd644d862d7c,
+i2c: i801: Use iTCO version 6 in Cannon Lake PCH and beyond
 
-Is this correct?
+Unfortunately I am not able to revert it in v5.4 to confirm it is really
+the culprit.
 
-One more thing.
+Is there a way to have working hwmon sensors on my system in newer linux
+kernels?
 
-There are multiple ways to do a similar thing:
+Thanks,
 
-   compatible:
-     enum:
-        - socionext,uniphier-ld4-aidet
-        - socionext,uniphier-pro4-aidet
-        ...
-vs
+Martin
 
-   compatible:
-     oneOf:
-        - const: socionext,uniphier-ld4-aidet
-        - const: socionext,uniphier-pro4-aidet
-        ...
-
-I adopted the former because I can save 'const'.
-If there is a preferred way, I will follow it.
-
-END
-
----
-
-Changes in v2:
-  - fix the schema warning in the example
-
- .../socionext,uniphier-aidet.txt              | 32 ----------
- .../socionext,uniphier-aidet.yaml             | 61 +++++++++++++++++++
- 2 files changed, 61 insertions(+), 32 deletions(-)
- delete mode 100644 Documentation/devicetree/bindings/interrupt-controller/socionext,uniphier-aidet.txt
- create mode 100644 Documentation/devicetree/bindings/interrupt-controller/socionext,uniphier-aidet.yaml
-
-diff --git a/Documentation/devicetree/bindings/interrupt-controller/socionext,uniphier-aidet.txt b/Documentation/devicetree/bindings/interrupt-controller/socionext,uniphier-aidet.txt
-deleted file mode 100644
-index 48e71d3ac2ad..000000000000
---- a/Documentation/devicetree/bindings/interrupt-controller/socionext,uniphier-aidet.txt
-+++ /dev/null
-@@ -1,32 +0,0 @@
--UniPhier AIDET
--
--UniPhier AIDET (ARM Interrupt Detector) is an add-on block for ARM GIC (Generic
--Interrupt Controller).  GIC itself can handle only high level and rising edge
--interrupts.  The AIDET provides logic inverter to support low level and falling
--edge interrupts.
--
--Required properties:
--- compatible: Should be one of the following:
--    "socionext,uniphier-ld4-aidet"  - for LD4 SoC
--    "socionext,uniphier-pro4-aidet" - for Pro4 SoC
--    "socionext,uniphier-sld8-aidet" - for sLD8 SoC
--    "socionext,uniphier-pro5-aidet" - for Pro5 SoC
--    "socionext,uniphier-pxs2-aidet" - for PXs2/LD6b SoC
--    "socionext,uniphier-ld11-aidet" - for LD11 SoC
--    "socionext,uniphier-ld20-aidet" - for LD20 SoC
--    "socionext,uniphier-pxs3-aidet" - for PXs3 SoC
--- reg: Specifies offset and length of the register set for the device.
--- interrupt-controller: Identifies the node as an interrupt controller
--- #interrupt-cells : Specifies the number of cells needed to encode an interrupt
--  source.  The value should be 2.  The first cell defines the interrupt number
--  (corresponds to the SPI interrupt number of GIC).  The second cell specifies
--  the trigger type as defined in interrupts.txt in this directory.
--
--Example:
--
--	aidet: aidet@5fc20000 {
--		compatible = "socionext,uniphier-pro4-aidet";
--		reg = <0x5fc20000 0x200>;
--		interrupt-controller;
--		#interrupt-cells = <2>;
--	};
-diff --git a/Documentation/devicetree/bindings/interrupt-controller/socionext,uniphier-aidet.yaml b/Documentation/devicetree/bindings/interrupt-controller/socionext,uniphier-aidet.yaml
-new file mode 100644
-index 000000000000..f89ebde76dab
---- /dev/null
-+++ b/Documentation/devicetree/bindings/interrupt-controller/socionext,uniphier-aidet.yaml
-@@ -0,0 +1,61 @@
-+# SPDX-License-Identifier: GPL-2.0-only OR BSD-2-Clause
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/interrupt-controller/socionext,uniphier-aidet.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title: UniPhier AIDET
-+
-+description: |
-+  UniPhier AIDET (ARM Interrupt Detector) is an add-on block for ARM GIC
-+  (Generic Interrupt Controller). GIC itself can handle only high level and
-+  rising edge interrupts. The AIDET provides logic inverter to support low
-+  level and falling edge interrupts.
-+
-+maintainers:
-+  - Masahiro Yamada <yamada.masahiro@socionext.com>
-+
-+allOf:
-+  - $ref: /schemas/interrupt-controller.yaml#
-+
-+properties:
-+  compatible:
-+    enum:
-+      - socionext,uniphier-ld4-aidet
-+      - socionext,uniphier-pro4-aidet
-+      - socionext,uniphier-sld8-aidet
-+      - socionext,uniphier-pro5-aidet
-+      - socionext,uniphier-pxs2-aidet
-+      - socionext,uniphier-ld6b-aidet
-+      - socionext,uniphier-ld11-aidet
-+      - socionext,uniphier-ld20-aidet
-+      - socionext,uniphier-pxs3-aidet
-+
-+  reg:
-+    maxItems: 1
-+
-+  interrupt-controller: true
-+
-+  '#interrupt-cells':
-+    description: |
-+      The first cell defines the interrupt number (corresponds to the SPI
-+      interrupt number of GIC). The second cell specifies the trigger type as
-+      defined in interrupts.txt in this directory.
-+    const: 2
-+
-+required:
-+  - compatible
-+  - reg
-+  - interrupt-controller
-+  - '#interrupt-cells'
-+
-+additionalProperties: false
-+
-+examples:
-+  - |
-+    interrupt-controller@5fc20000 {
-+        compatible = "socionext,uniphier-pro4-aidet";
-+        reg = <0x5fc20000 0x200>;
-+        interrupt-controller;
-+        #interrupt-cells = <2>;
-+    };
--- 
-2.17.1
-
+--8<--
+lspci
+00:00.0 Host bridge: Intel Corporation 8th Gen Core 8-core Desktop
+Processor Host Bridge/DRAM Registers [Coffee Lake S] (rev 0d)
+00:02.0 VGA compatible controller: Intel Corporation UHD Graphics 630
+(Desktop 9 Series) (rev 02)
+00:14.0 USB controller: Intel Corporation Cannon Lake PCH USB 3.1 xHCI
+Host Controller (rev 10)
+00:14.2 RAM memory: Intel Corporation Cannon Lake PCH Shared SRAM (rev 10)
+00:16.0 Communication controller: Intel Corporation Cannon Lake PCH
+HECI Controller (rev 10)
+00:17.0 SATA controller: Intel Corporation Cannon Lake PCH SATA AHCI
+Controller (rev 10)
+00:1b.0 PCI bridge: Intel Corporation Cannon Lake PCH PCI Express Root
+Port #17 (rev f0)
+00:1c.0 PCI bridge: Intel Corporation Cannon Lake PCH PCI Express Root
+Port #1 (rev f0)
+00:1c.6 PCI bridge: Intel Corporation Cannon Lake PCH PCI Express Root
+Port #7 (rev f0)
+00:1d.0 PCI bridge: Intel Corporation Cannon Lake PCH PCI Express Root
+Port #9 (rev f0)
+00:1f.0 ISA bridge: Intel Corporation Z390 Chipset LPC/eSPI Controller (rev 10)
+00:1f.3 Audio device: Intel Corporation Cannon Lake PCH cAVS (rev 10)
+00:1f.4 SMBus: Intel Corporation Cannon Lake PCH SMBus Controller (rev 10)
+00:1f.5 Serial bus controller [0c80]: Intel Corporation Cannon Lake
+PCH SPI Controller (rev 10)
+00:1f.6 Ethernet controller: Intel Corporation Ethernet Connection (7)
+I219-V (rev 10)
