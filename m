@@ -2,78 +2,112 @@ Return-Path: <SRS0=8jYG=4K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 745A4C35641
-	for <linux-kernel@archiver.kernel.org>; Sat, 22 Feb 2020 00:42:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0C505C35670
+	for <linux-kernel@archiver.kernel.org>; Sat, 22 Feb 2020 00:42:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4510620722
-	for <linux-kernel@archiver.kernel.org>; Sat, 22 Feb 2020 00:42:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D609D20722
+	for <linux-kernel@archiver.kernel.org>; Sat, 22 Feb 2020 00:42:56 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="mlZk+5DH"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727497AbgBVAmA (ORCPT
+        id S1727352AbgBVAm4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Feb 2020 19:42:00 -0500
-Received: from zeniv.linux.org.uk ([195.92.253.2]:34010 "EHLO
-        ZenIV.linux.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726697AbgBVAmA (ORCPT
+        Fri, 21 Feb 2020 19:42:56 -0500
+Received: from bombadil.infradead.org ([198.137.202.133]:60810 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726697AbgBVAmz (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Feb 2020 19:42:00 -0500
-Received: from viro by ZenIV.linux.org.uk with local (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1j5Irl-00Gerj-Gl; Sat, 22 Feb 2020 00:41:57 +0000
-Date:   Sat, 22 Feb 2020 00:41:57 +0000
-From:   Al Viro <viro@zeniv.linux.org.uk>
-To:     David Miller <davem@davemloft.net>
-Cc:     torvalds@linux-foundation.org, linux-arch@vger.kernel.org,
-        linux-kernel@vger.kernel.org, arnd@arndb.de
-Subject: Re: [RFC] regset ->get() API
-Message-ID: <20200222004157.GX23230@ZenIV.linux.org.uk>
-References: <CAHk-=whdat=wfwKh5rF3MuCbTxhcFwaGqmdsCXXv=H=kDERTOw@mail.gmail.com>
- <20200221033016.GV23230@ZenIV.linux.org.uk>
- <20200221185903.GA3929948@ZenIV.linux.org.uk>
- <20200221.112244.1426580944977593272.davem@davemloft.net>
+        Fri, 21 Feb 2020 19:42:55 -0500
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
+        Content-Type:In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:
+        Subject:Sender:Reply-To:Content-ID:Content-Description;
+        bh=IoauFu+SPVxJ/QgMkD5H70t6W74upwBHouoPWlRKDBs=; b=mlZk+5DHPSke/pQ6XCytBfGkjH
+        hkIgPJ+WZD70eJKDNBWwAy9MSR8hIq6WZ2I3LBjGVsjOVdMZlPU3nFzTPi6C8vFZYM4masCDI5A/M
+        MCydby8lJ2dnhxOTkf2kTNzbTmVlYfO+kfMRMj1NN5HqKnpwjnzGPWiJHgh7S0nc1Jncl4iSVtEUx
+        xtXS5ven+MNBNrhjRAY5CrOWTYTggZ61qDjrdfkmrqGcqbl9rSJEei60nQDhM+lOnXvVvGHwVnUhr
+        qW5PgludRb3NWWqKCTfcQVul57sEuSJ3O6PdAyYm5UVBblNcN2yKCTH+WCpme3XZvdwnjrUtIoILk
+        At1JJZMw==;
+Received: from [2601:1c0:6280:3f0::19c2]
+        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1j5Is1-0000Tu-Eh; Sat, 22 Feb 2020 00:42:19 +0000
+Subject: Re: [PATCH v3 1/4] PM / EM: add devices to Energy Model
+To:     Lukasz Luba <lukasz.luba@arm.com>, linux-kernel@vger.kernel.org,
+        linux-pm@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        dri-devel@lists.freedesktop.org, linux-omap@vger.kernel.org,
+        linux-mediatek@lists.infradead.org, linux-arm-msm@vger.kernel.org,
+        linux-imx@nxp.com
+Cc:     Morten.Rasmussen@arm.com, Dietmar.Eggemann@arm.com,
+        javi.merino@arm.com, cw00.choi@samsung.com,
+        b.zolnierkie@samsung.com, rjw@rjwysocki.net, sudeep.holla@arm.com,
+        viresh.kumar@linaro.org, nm@ti.com, sboyd@kernel.org,
+        rui.zhang@intel.com, amit.kucheria@verdurent.com,
+        daniel.lezcano@linaro.org, mingo@redhat.com, peterz@infradead.org,
+        juri.lelli@redhat.com, vincent.guittot@linaro.org,
+        rostedt@goodmis.org, qperret@google.com, bsegall@google.com,
+        mgorman@suse.de, shawnguo@kernel.org, s.hauer@pengutronix.de,
+        festevam@gmail.com, kernel@pengutronix.de, khilman@kernel.org,
+        agross@kernel.org, bjorn.andersson@linaro.org, robh@kernel.org,
+        matthias.bgg@gmail.com, steven.price@arm.com,
+        tomeu.vizoso@collabora.com, alyssa.rosenzweig@collabora.com,
+        airlied@linux.ie, daniel@ffwll.ch, liviu.dudau@arm.com,
+        lorenzo.pieralisi@arm.com, patrick.bellasi@matbug.net,
+        orjan.eide@arm.com
+References: <20200221194731.13814-1-lukasz.luba@arm.com>
+ <20200221194731.13814-2-lukasz.luba@arm.com>
+From:   Randy Dunlap <rdunlap@infradead.org>
+Message-ID: <4ac6a187-1a09-335d-5c05-bf810ff81aaa@infradead.org>
+Date:   Fri, 21 Feb 2020 16:42:10 -0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200221.112244.1426580944977593272.davem@davemloft.net>
+In-Reply-To: <20200221194731.13814-2-lukasz.luba@arm.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Feb 21, 2020 at 11:22:44AM -0800, David Miller wrote:
-> From: Al Viro <viro@zeniv.linux.org.uk>
-> Date: Fri, 21 Feb 2020 18:59:03 +0000
-> 
-> > Again, a couple of copy_regset_to_user(), but there's an additional
-> > twist - GETREGSET of 32bit task on sparc64 will use access_process_vm()
-> > when trying to fetch L0..L7/I0..I7 of other task, using copy_from_user()
-> > only when the target is equal to current.  For sparc32 this is not
-> > true - it's always copy_from_user() there, so the values it reports
-> > for those registers have nothing to do with the target process.  That
-> > part smells like a bug; by the time GETREGSET had been introduced
-> > sparc32 was not getting much attention, GETREGS worked just fine
-> > (not reporting L*/I* anyway) and for coredump it was accessing the
-> > caller's memory.  Not sure if anyone cares at that point...
-> 
-> That's definitely a bug and sparc64 is doing it correctly.
+Hi,
+One minor nit. Please see inline:
 
-OK...  What does the comment in
-        case PTRACE_GETREGS64:
-                ret = copy_regset_to_user(child, view, REGSET_GENERAL,
-                                          1 * sizeof(u64),
-                                          15 * sizeof(u64),
-                                          &pregs->u_regs[0]);
-                if (!ret) {
-                        /* XXX doesn't handle 'y' register correctly XXX */
-                        ret = copy_regset_to_user(child, view, REGSET_GENERAL,
-                                                  32 * sizeof(u64),
-                                                  4 * sizeof(u64),
-                                                  &pregs->tstate);
-                }
-                break;   
-refer to?  The fact that you end up with 0 in pregs->y and Y in pregs->magic?
-In that case it's probably too late to do anything about that...
+On 2/21/20 11:47 AM, Lukasz Luba wrote:
+> Add support of other devices into the Energy Model framework not only the
+> CPUs. Change the interface to be more unified which can handle other
+> devices as well.
+> 
+> Signed-off-by: Lukasz Luba <lukasz.luba@arm.com>
+> ---
+>  Documentation/power/energy-model.rst     | 133 ++++----
+> 
+> diff --git a/Documentation/power/energy-model.rst b/Documentation/power/energy-model.rst
+> index 90a345d57ae9..7576820664e5 100644
+> --- a/Documentation/power/energy-model.rst
+> +++ b/Documentation/power/energy-model.rst
 
-Or is that something different?
+> @@ -85,13 +89,20 @@ API.
+>  2.3 Accessing performance domains
+>  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+>  
+> +There is two API functions which provide the access to the energy model:
+
+   There are two
+
+> +em_cpu_get() which takes CPU id as an argument and em_pd_get() with device
+> +pointer as an argument. It depends on the subsystem which interface it is
+> +going to use, but in case of CPU devices both functions return the same
+> +performance domain.
+> +
+
+
+cheers.
+-- 
+~Randy
+
