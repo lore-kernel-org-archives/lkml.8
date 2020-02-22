@@ -2,323 +2,200 @@ Return-Path: <SRS0=8jYG=4K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 92E82C35672
-	for <linux-kernel@archiver.kernel.org>; Sat, 22 Feb 2020 14:35:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 10FEEC35666
+	for <linux-kernel@archiver.kernel.org>; Sat, 22 Feb 2020 14:36:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 658F820702
-	for <linux-kernel@archiver.kernel.org>; Sat, 22 Feb 2020 14:35:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D1CD120684
+	for <linux-kernel@archiver.kernel.org>; Sat, 22 Feb 2020 14:36:51 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nifty.com header.i=@nifty.com header.b="zJUnV+qB"
+	dkim=pass (1024-bit key) header.d=megous.com header.i=@megous.com header.b="W8XrVqWi"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727689AbgBVOf0 (ORCPT
+        id S1727763AbgBVOgu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 22 Feb 2020 09:35:26 -0500
-Received: from conuserg-10.nifty.com ([210.131.2.77]:46166 "EHLO
-        conuserg-10.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727382AbgBVOf0 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 22 Feb 2020 09:35:26 -0500
-Received: from grover.flets-west.jp (softbank126093102113.bbtec.net [126.93.102.113]) (authenticated)
-        by conuserg-10.nifty.com with ESMTP id 01MEYkvx030545;
-        Sat, 22 Feb 2020 23:34:47 +0900
-DKIM-Filter: OpenDKIM Filter v2.10.3 conuserg-10.nifty.com 01MEYkvx030545
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
-        s=dec2015msa; t=1582382087;
-        bh=5R5701ZYweXd3rfKO1OuY5xutb8Z93pleM360HuNZrI=;
-        h=From:To:Cc:Subject:Date:From;
-        b=zJUnV+qBlhmzCwf/FiFVYh2VD9T/1jkoMKbG6TE0jjLqdw+etoS2G+BpZg16Wf4aZ
-         U6CiiXQOtiiUxgAGp189hKd/qY/sE83ORQvW6mgq3L2n9sIwCXaE96nKOJrvBlNo8x
-         zWIBFOP5vtC5PwVMj2usEkwGYCSgJwVJlOIdPzevq299wYKyvb81zgRZpJ7ZtRg7cr
-         FdVGmklnZtm75JOzxXLADMyO0w0s8or1pCdj0AmGBOJkXJ2ozioU9eANgFDyV7WjHR
-         fW4y2TUcBBL1+k7DWsewna6gxPYZGrELlNxtNXzSJe7Gg1mXGvm4i86Hp/qUaZbs+S
-         gydVON6OZ39hA==
-X-Nifty-SrcIP: [126.93.102.113]
-From:   Masahiro Yamada <yamada.masahiro@socionext.com>
-To:     Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org
-Cc:     linux-kernel@vger.kernel.org, masahiroy@kernel.org,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        Piotr Sroka <piotrs@cadence.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Ulf Hansson <ulf.hansson@linaro.org>, linux-mmc@vger.kernel.org
-Subject: [PATCH v2] dt-bindings: mmc: Convert Cadence SD/SDIO/eMMC controller to json-schema
-Date:   Sat, 22 Feb 2020 23:34:44 +0900
-Message-Id: <20200222143444.5135-1-yamada.masahiro@socionext.com>
-X-Mailer: git-send-email 2.17.1
+        Sat, 22 Feb 2020 09:36:50 -0500
+Received: from vps.xff.cz ([195.181.215.36]:59090 "EHLO vps.xff.cz"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727382AbgBVOgu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 22 Feb 2020 09:36:50 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=megous.com; s=mail;
+        t=1582382208; bh=HE3v7bOejO+dhgKXSB0UO2Jzk9/x8w6N83RUyOcVJ1Y=;
+        h=Date:From:To:Subject:References:X-My-GPG-KeyId:From;
+        b=W8XrVqWi4t9GcdWofDfixPF9vShRGY8uURWROGztauV2p7iqkhU+XV387cQi0ghTl
+         +mOpRI10RCtXfr3BV6GJ1WE10G1GtfaZTzrTSyeBhVmuRTlvC/Vxadeq4yzrx+Ft6X
+         uEdShmhqJ+CqYAsUjKxylkeCiUbarDgDtFq9p73U=
+Date:   Sat, 22 Feb 2020 15:36:47 +0100
+From:   =?utf-8?Q?Ond=C5=99ej?= Jirman <megous@megous.com>
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-kernel@vger.kernel.org, stable@vger.kernel.org,
+        Chao Yu <yuchao0@huawei.com>, Jaegeuk Kim <jaegeuk@kernel.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: Re: [PATCH 5.5 020/399] f2fs: call f2fs_balance_fs outside of locked
+ page
+Message-ID: <20200222143647.k7cfv6ryd53oejmp@core.my.home>
+Mail-Followup-To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-kernel@vger.kernel.org, stable@vger.kernel.org,
+        Chao Yu <yuchao0@huawei.com>, Jaegeuk Kim <jaegeuk@kernel.org>,
+        Sasha Levin <sashal@kernel.org>
+References: <20200221072402.315346745@linuxfoundation.org>
+ <20200221072404.289499313@linuxfoundation.org>
+ <20200222044151.odurt3xqyhgxqqve@core.my.home>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200222044151.odurt3xqyhgxqqve@core.my.home>
+X-My-GPG-KeyId: EBFBDDE11FB918D44D1F56C1F9F0A873BE9777ED
+ <https://xff.cz/key.txt>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Convert the Cadence SD/SDIO/eMMC host controller IP (a.k.a. SD4HC)
-binding to DT schema format.
+On Sat, Feb 22, 2020 at 05:41:51AM +0100, megous hlavni wrote:
+> Hello,
+> 
+> On Fri, Feb 21, 2020 at 08:35:45AM +0100, Greg Kroah-Hartman wrote:
+> > From: Jaegeuk Kim <jaegeuk@kernel.org>
+> > 
+> > [ Upstream commit bdf03299248916640a835a05d32841bb3d31912d ]
+> 
+> I have somes issues with this patch.
+> 
+> It causes panics due to hung tasks on 5.6. I guess it fixes one deadlock, but
+> causes other one? Not sure backporting it to stable branches is a good idea.
 
-Socionext UniPhier ARM 64-bit SoCs are integrated with this IP.
+False alarm. The issue is unrelated to this patch.
 
-Cc: Piotr Sroka <piotrs@cadence.com>
-Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
----
+regards,
+	o.
 
-I wanted to keep some precious comments, which apply to multiple
-properties.
-
-I do not think 'description:' is a good fit for this.
-
-I was searching for a way to insert a comment line that does not
-affect the schema.
-
-The $comment did not work. I just use '#', which is YAML comment.
-If there is a better way, please let me know.
-
-
-Changes in v2:
-  - fix schema warning in example
-
- .../devicetree/bindings/mmc/cdns,sdhci.yaml   | 143 ++++++++++++++++++
- .../devicetree/bindings/mmc/sdhci-cadence.txt |  80 ----------
- 2 files changed, 143 insertions(+), 80 deletions(-)
- create mode 100644 Documentation/devicetree/bindings/mmc/cdns,sdhci.yaml
- delete mode 100644 Documentation/devicetree/bindings/mmc/sdhci-cadence.txt
-
-diff --git a/Documentation/devicetree/bindings/mmc/cdns,sdhci.yaml b/Documentation/devicetree/bindings/mmc/cdns,sdhci.yaml
-new file mode 100644
-index 000000000000..2f45dd0d04db
---- /dev/null
-+++ b/Documentation/devicetree/bindings/mmc/cdns,sdhci.yaml
-@@ -0,0 +1,143 @@
-+# SPDX-License-Identifier: GPL-2.0-only OR BSD-2-Clause
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/mmc/cdns,sdhci.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title: Cadence SD/SDIO/eMMC Host Controller (SD4HC)
-+
-+maintainers:
-+  - Masahiro Yamada <yamada.masahiro@socionext.com>
-+  - Piotr Sroka <piotrs@cadence.com>
-+
-+allOf:
-+  - $ref: mmc-controller.yaml
-+
-+properties:
-+  compatible:
-+    items:
-+      - enum:
-+         - socionext,uniphier-sd4hc
-+      - const: cdns,sd4hc
-+
-+  reg:
-+    maxItems: 1
-+
-+  interrupts:
-+    maxItems: 1
-+
-+  clocks:
-+    maxItems: 1
-+
-+  # PHY DLL input delays:
-+  # They are used to delay the data valid window, and align the window to
-+  # sampling clock. The delay starts from 5ns (for delay parameter equal to 0)
-+  # and it is increased by 2.5ns in each step.
-+
-+  cdns,phy-input-delay-sd-highspeed:
-+    description: Value of the delay in the input path for SD high-speed timing
-+    allOf:
-+      - $ref: "/schemas/types.yaml#/definitions/uint32"
-+      - minimum: 0
-+      - maximum: 0x1f
-+
-+  cdns,phy-input-delay-legacy:
-+    description: Value of the delay in the input path for legacy timing
-+    allOf:
-+      - $ref: "/schemas/types.yaml#/definitions/uint32"
-+      - minimum: 0
-+      - maximum: 0x1f
-+
-+  cdns,phy-input-delay-sd-uhs-sdr12:
-+    description: Value of the delay in the input path for SD UHS SDR12 timing
-+    allOf:
-+      - $ref: "/schemas/types.yaml#/definitions/uint32"
-+      - minimum: 0
-+      - maximum: 0x1f
-+
-+  cdns,phy-input-delay-sd-uhs-sdr25:
-+    description: Value of the delay in the input path for SD UHS SDR25 timing
-+    allOf:
-+      - $ref: "/schemas/types.yaml#/definitions/uint32"
-+      - minimum: 0
-+      - maximum: 0x1f
-+
-+  cdns,phy-input-delay-sd-uhs-sdr50:
-+    description: Value of the delay in the input path for SD UHS SDR50 timing
-+    allOf:
-+      - $ref: "/schemas/types.yaml#/definitions/uint32"
-+      - minimum: 0
-+      - maximum: 0x1f
-+
-+  cdns,phy-input-delay-sd-uhs-ddr50:
-+    description: Value of the delay in the input path for SD UHS DDR50 timing
-+    allOf:
-+      - $ref: "/schemas/types.yaml#/definitions/uint32"
-+      - minimum: 0
-+      - maximum: 0x1f
-+
-+  cdns,phy-input-delay-mmc-highspeed:
-+    description: Value of the delay in the input path for MMC high-speed timing
-+    allOf:
-+      - $ref: "/schemas/types.yaml#/definitions/uint32"
-+      - minimum: 0
-+      - maximum: 0x1f
-+
-+  cdns,phy-input-delay-mmc-ddr:
-+    description: Value of the delay in the input path for eMMC high-speed DDR timing
-+    allOf:
-+      - $ref: "/schemas/types.yaml#/definitions/uint32"
-+      - minimum: 0
-+      - maximum: 0x1f
-+
-+  # PHY DLL clock delays:
-+  # Each delay property represents the fraction of the clock period.
-+  # The approximate delay value will be
-+  # (<delay property value>/128)*sdmclk_clock_period.
-+
-+  cdns,phy-dll-delay-sdclk:
-+    description: |
-+      Value of the delay introduced on the sdclk output for all modes except
-+      HS200, HS400 and HS400_ES.
-+    allOf:
-+      - $ref: "/schemas/types.yaml#/definitions/uint32"
-+      - minimum: 0
-+      - maximum: 0x7f
-+
-+  cdns,phy-dll-delay-sdclk-hsmmc:
-+    description: |
-+      Value of the delay introduced on the sdclk output for HS200, HS400 and
-+      HS400_ES speed modes.
-+    allOf:
-+      - $ref: "/schemas/types.yaml#/definitions/uint32"
-+      - minimum: 0
-+      - maximum: 0x7f
-+
-+  cdns,phy-dll-delay-strobe:
-+    description: |
-+      Value of the delay introduced on the dat_strobe input used in
-+      HS400 / HS400_ES speed modes.
-+    allOf:
-+      - $ref: "/schemas/types.yaml#/definitions/uint32"
-+      - minimum: 0
-+      - maximum: 0x7f
-+
-+required:
-+  - compatible
-+  - reg
-+  - interrupts
-+  - clocks
-+
-+examples:
-+  - |
-+    emmc: mmc@5a000000 {
-+        compatible = "socionext,uniphier-sd4hc", "cdns,sd4hc";
-+        reg = <0x5a000000 0x400>;
-+        interrupts = <0 78 4>;
-+        clocks = <&clk 4>;
-+        bus-width = <8>;
-+        mmc-ddr-1_8v;
-+        mmc-hs200-1_8v;
-+        mmc-hs400-1_8v;
-+        cdns,phy-dll-delay-sdclk = <0>;
-+    };
-diff --git a/Documentation/devicetree/bindings/mmc/sdhci-cadence.txt b/Documentation/devicetree/bindings/mmc/sdhci-cadence.txt
-deleted file mode 100644
-index fa423c277853..000000000000
---- a/Documentation/devicetree/bindings/mmc/sdhci-cadence.txt
-+++ /dev/null
-@@ -1,80 +0,0 @@
--* Cadence SD/SDIO/eMMC Host Controller
--
--Required properties:
--- compatible: should be one of the following:
--    "cdns,sd4hc"               - default of the IP
--    "socionext,uniphier-sd4hc" - for Socionext UniPhier SoCs
--- reg: offset and length of the register set for the device.
--- interrupts: a single interrupt specifier.
--- clocks: phandle to the input clock.
--
--Optional properties:
--For eMMC configuration, supported speed modes are not indicated by the SDHCI
--Capabilities Register.  Instead, the following properties should be specified
--if supported.  See mmc.txt for details.
--- mmc-ddr-1_8v
--- mmc-ddr-1_2v
--- mmc-hs200-1_8v
--- mmc-hs200-1_2v
--- mmc-hs400-1_8v
--- mmc-hs400-1_2v
--
--Some PHY delays can be configured by following properties.
--PHY DLL input delays:
--They are used to delay the data valid window, and align the window
--to sampling clock. The delay starts from 5ns (for delay parameter equal to 0)
--and it is increased by 2.5ns in each step.
--- cdns,phy-input-delay-sd-highspeed:
--  Value of the delay in the input path for SD high-speed timing
--  Valid range = [0:0x1F].
--- cdns,phy-input-delay-legacy:
--  Value of the delay in the input path for legacy timing
--  Valid range = [0:0x1F].
--- cdns,phy-input-delay-sd-uhs-sdr12:
--  Value of the delay in the input path for SD UHS SDR12 timing
--  Valid range = [0:0x1F].
--- cdns,phy-input-delay-sd-uhs-sdr25:
--  Value of the delay in the input path for SD UHS SDR25 timing
--  Valid range = [0:0x1F].
--- cdns,phy-input-delay-sd-uhs-sdr50:
--  Value of the delay in the input path for SD UHS SDR50 timing
--  Valid range = [0:0x1F].
--- cdns,phy-input-delay-sd-uhs-ddr50:
--  Value of the delay in the input path for SD UHS DDR50 timing
--  Valid range = [0:0x1F].
--- cdns,phy-input-delay-mmc-highspeed:
--  Value of the delay in the input path for MMC high-speed timing
--  Valid range = [0:0x1F].
--- cdns,phy-input-delay-mmc-ddr:
--  Value of the delay in the input path for eMMC high-speed DDR timing
--  Valid range = [0:0x1F].
--
--PHY DLL clock delays:
--Each delay property represents the fraction of the clock period.
--The approximate delay value will be
--(<delay property value>/128)*sdmclk_clock_period.
--- cdns,phy-dll-delay-sdclk:
--  Value of the delay introduced on the sdclk output
--  for all modes except HS200, HS400 and HS400_ES.
--  Valid range = [0:0x7F].
--- cdns,phy-dll-delay-sdclk-hsmmc:
--  Value of the delay introduced on the sdclk output
--  for HS200, HS400 and HS400_ES speed modes.
--  Valid range = [0:0x7F].
--- cdns,phy-dll-delay-strobe:
--  Value of the delay introduced on the dat_strobe input
--  used in HS400 / HS400_ES speed modes.
--  Valid range = [0:0x7F].
--
--Example:
--	emmc: sdhci@5a000000 {
--		compatible = "socionext,uniphier-sd4hc", "cdns,sd4hc";
--		reg = <0x5a000000 0x400>;
--		interrupts = <0 78 4>;
--		clocks = <&clk 4>;
--		bus-width = <8>;
--		mmc-ddr-1_8v;
--		mmc-hs200-1_8v;
--		mmc-hs400-1_8v;
--		cdns,phy-dll-delay-sdclk = <0>;
--	};
--- 
-2.17.1
-
+> regards,
+> 	o.
+> 
+> 
+> INFO: task kworker/u16:2:341 blocked for more than 122 seconds.
+>       Not tainted 5.6.0-rc2-00254-g9a029a493dc16 #4
+> "echo 0 > /proc/sys/kernel/hung_task_timeout_secs" disables this message.
+> kworker/u16:2   D    0   341      2 0x00000000
+> Workqueue: writeback wb_workfn (flush-179:0)
+> Backtrace:
+> [<c0912bd0>] (__schedule) from [<c0913274>] (schedule+0x78/0xf4)
+>  r10:ede1a000 r9:00000000 r8:ede1ba60 r7:ec417290 r6:00000002 r5:ede1a000
+>  r4:ee8e8000
+> [<c09131fc>] (schedule) from [<c017ec74>] (rwsem_down_write_slowpath+0x24c/0x4c0)
+>  r5:00000001 r4:ec417280
+> [<c017ea28>] (rwsem_down_write_slowpath) from [<c0915f6c>] (down_write+0x6c/0x70)
+>  r10:ec417280 r9:ede1bd80 r8:ee128000 r7:00000001 r6:00000000 r5:eff0afc4
+>  r4:ec417280
+> [<c0915f00>] (down_write) from [<c0435b68>] (f2fs_write_single_data_page+0x608/0x7ac)
+>  r5:eff0afc4 r4:ec4170e0
+> [<c0435560>] (f2fs_write_single_data_page) from [<c0435fc0>] (f2fs_write_cache_pages+0x2b4/0x7c4)
+>  r10:ede1bc28 r9:ec4171e0 r8:ec4170e0 r7:00000001 r6:ede1bd80 r5:00000001
+>  r4:eff0afc4
+> [<c0435d0c>] (f2fs_write_cache_pages) from [<c0436814>] (f2fs_write_data_pages+0x344/0x35c)
+>  r10:0000012c r9:ee12802c r8:ee128000 r7:00000004 r6:ec4171e0 r5:ec4170e0
+>  r4:ede1bd80
+> [<c04364d0>] (f2fs_write_data_pages) from [<c0267fa0>] (do_writepages+0x3c/0xd4)
+>  r10:0000012c r9:c0e03d00 r8:00001400 r7:c0264e94 r6:ede1bd80 r5:ec4171e0
+>  r4:ec4170e0
+> [<c0267f64>] (do_writepages) from [<c0310d24>] (__writeback_single_inode+0x44/0x454)
+>  r7:ec4171e0 r6:ede1beac r5:ede1bd80 r4:ec4170e0
+> [<c0310ce0>] (__writeback_single_inode) from [<c0311338>] (writeback_sb_inodes+0x204/0x4b0)
+>  r10:0000012c r9:c0e03d00 r8:ec417148 r7:ec4170e0 r6:ede1beac r5:ec417188
+>  r4:eebed848
+> [<c0311134>] (writeback_sb_inodes) from [<c0311634>] (__writeback_inodes_wb+0x50/0xe4)
+>  r10:ee7128e8 r9:c0e03d00 r8:eebed85c r7:ede1beac r6:00000000 r5:eebed848
+>  r4:ee120000
+> [<c03115e4>] (__writeback_inodes_wb) from [<c031195c>] (wb_writeback+0x294/0x338)
+>  r10:00020800 r9:ede1a000 r8:c0e04e64 r7:eebed848 r6:000192d0 r5:ede1beac
+>  r4:eebed848
+> [<c03116c8>] (wb_writeback) from [<c0312e98>] (wb_workfn+0x3e0/0x54c)
+>  r10:ee894005 r9:eebed84c r8:eebed948 r7:eebed848 r6:00000000 r5:eebed954
+>  r4:00002b6e
+> [<c0312ab8>] (wb_workfn) from [<c014f2b8>] (process_one_work+0x214/0x544)
+>  r10:ee894005 r9:00000200 r8:00000000 r7:ee894000 r6:ef044400 r5:edb1c700
+>  r4:eebed954
+> [<c014f0a4>] (process_one_work) from [<c014f634>] (worker_thread+0x4c/0x574)
+>  r10:ef044400 r9:c0e03d00 r8:ef044418 r7:00000088 r6:ef044400 r5:edb1c714
+>  r4:edb1c700
+> [<c014f5e8>] (worker_thread) from [<c01564fc>] (kthread+0x144/0x170)
+>  r10:ef125e90 r9:ec0f235c r8:edb1c700 r7:ede1a000 r6:00000000 r5:ec0f2300
+>  r4:ec0f2340
+> [<c01563b8>] (kthread) from [<c01010e8>] (ret_from_fork+0x14/0x2c)
+> Exception stack(0xede1bfb0 to 0xede1bff8)
+> bfa0:                                     00000000 00000000 00000000 00000000
+> bfc0: 00000000 00000000 00000000 00000000 00000000 00000000 00000000 00000000
+> bfe0: 00000000 00000000 00000000 00000000 00000013 00000000
+>  r10:00000000 r9:00000000 r8:00000000 r7:00000000 r6:00000000 r5:c01563b8
+>  r4:ec0f2300
+> NMI backtrace for cpu 2
+> CPU: 2 PID: 52 Comm: khungtaskd Not tainted 5.6.0-rc2-00254-g9a029a493dc16 #4
+> Hardware name: Allwinner A83t board
+> Backtrace:
+> [<c010db5c>] (dump_backtrace) from [<c010dee0>] (show_stack+0x20/0x24)
+>  r7:00000000 r6:60060013 r5:00000000 r4:c0e9ab10
+> 
+> > Otherwise, we can hit deadlock by waiting for the locked page in
+> > move_data_block in GC.
+> > 
+> >  Thread A                     Thread B
+> >  - do_page_mkwrite
+> >   - f2fs_vm_page_mkwrite
+> >    - lock_page
+> >                               - f2fs_balance_fs
+> >                                   - mutex_lock(gc_mutex)
+> >                                - f2fs_gc
+> >                                 - do_garbage_collect
+> >                                  - ra_data_block
+> >                                   - grab_cache_page
+> >    - f2fs_balance_fs
+> >     - mutex_lock(gc_mutex)
+> > 
+> > Fixes: 39a8695824510 ("f2fs: refactor ->page_mkwrite() flow")
+> > Reviewed-by: Chao Yu <yuchao0@huawei.com>
+> > Signed-off-by: Jaegeuk Kim <jaegeuk@kernel.org>
+> > Signed-off-by: Sasha Levin <sashal@kernel.org>
+> > ---
+> >  fs/f2fs/file.c | 7 ++++---
+> >  1 file changed, 4 insertions(+), 3 deletions(-)
+> > 
+> > diff --git a/fs/f2fs/file.c b/fs/f2fs/file.c
+> > index 33c412d178f0f..6c4436a5ce797 100644
+> > --- a/fs/f2fs/file.c
+> > +++ b/fs/f2fs/file.c
+> > @@ -50,7 +50,7 @@ static vm_fault_t f2fs_vm_page_mkwrite(struct vm_fault *vmf)
+> >  	struct page *page = vmf->page;
+> >  	struct inode *inode = file_inode(vmf->vma->vm_file);
+> >  	struct f2fs_sb_info *sbi = F2FS_I_SB(inode);
+> > -	struct dnode_of_data dn = { .node_changed = false };
+> > +	struct dnode_of_data dn;
+> >  	int err;
+> >  
+> >  	if (unlikely(f2fs_cp_error(sbi))) {
+> > @@ -63,6 +63,9 @@ static vm_fault_t f2fs_vm_page_mkwrite(struct vm_fault *vmf)
+> >  		goto err;
+> >  	}
+> >  
+> > +	/* should do out of any locked page */
+> > +	f2fs_balance_fs(sbi, true);
+> > +
+> >  	sb_start_pagefault(inode->i_sb);
+> >  
+> >  	f2fs_bug_on(sbi, f2fs_has_inline_data(inode));
+> > @@ -120,8 +123,6 @@ static vm_fault_t f2fs_vm_page_mkwrite(struct vm_fault *vmf)
+> >  out_sem:
+> >  	up_read(&F2FS_I(inode)->i_mmap_sem);
+> >  
+> > -	f2fs_balance_fs(sbi, dn.node_changed);
+> > -
+> >  	sb_end_pagefault(inode->i_sb);
+> >  err:
+> >  	return block_page_mkwrite_return(err);
+> > -- 
+> > 2.20.1
+> > 
+> > 
+> > 
