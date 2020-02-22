@@ -2,147 +2,144 @@ Return-Path: <SRS0=8jYG=4K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9CA37C35669
-	for <linux-kernel@archiver.kernel.org>; Sat, 22 Feb 2020 01:53:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7891AC35669
+	for <linux-kernel@archiver.kernel.org>; Sat, 22 Feb 2020 01:54:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5F5EB20656
-	for <linux-kernel@archiver.kernel.org>; Sat, 22 Feb 2020 01:53:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 498FD20656
+	for <linux-kernel@archiver.kernel.org>; Sat, 22 Feb 2020 01:54:38 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="mPktKWlv"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="okpmlLDU"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727894AbgBVBxX (ORCPT
+        id S1727964AbgBVByh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Feb 2020 20:53:23 -0500
-Received: from mail-pj1-f66.google.com ([209.85.216.66]:36637 "EHLO
-        mail-pj1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726842AbgBVBxW (ORCPT
+        Fri, 21 Feb 2020 20:54:37 -0500
+Received: from bombadil.infradead.org ([198.137.202.133]:33782 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726842AbgBVByg (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Feb 2020 20:53:22 -0500
-Received: by mail-pj1-f66.google.com with SMTP id gv17so1573179pjb.1
-        for <linux-kernel@vger.kernel.org>; Fri, 21 Feb 2020 17:53:22 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-transfer-encoding:content-language;
-        bh=t2WN9Y6i+1sMeMmerTg/sIx0hN9tYd17GbQLJc7KWJ4=;
-        b=mPktKWlv91J8zSVtP4T+e9BPp7EcbGwMkei5J/fBl3dBCAU7bzR0Gh9Hrdv25yYi9+
-         KU5dPtNWsjM864SJ4zW/iT/MwY+dXe6EBn0QPYv5gaUfd537Ik6FOLz1nio5+5SPCACT
-         H2zaNJsEkotdbxpnuzIDFodkNIKHUn62v1WuYFB7Flw6y4uugwe6ciVDBaAg/3DQTr7D
-         yOYIWYs2ParfrKfXw8THe7ekRhRjoaUOIX3j0RtXRMw4/Rq89Y6QFmzWMmwrbXk9G6ZW
-         YkPaP40q2o4cISWp+2fU2CXkLpsLcTJ/q7B27GoHMbSVvdbUrMMlVXIb/VXBqn2foHKb
-         ww8Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-transfer-encoding
-         :content-language;
-        bh=t2WN9Y6i+1sMeMmerTg/sIx0hN9tYd17GbQLJc7KWJ4=;
-        b=VHnkA/WGfm6oQOAgnv6BM8MreDDM3cPyAEvr/AQO6Kfgv5IRf7VUqoqOgD/FUtZxfK
-         Lyno9pOuFdBd5nte7OD4NXMiqCzV19YTbzvnseZu61d5diG0g27PRnbAsWeaEElTWAoq
-         7LAIZbAuZbGxqfqa3jR5KizmIiOI15YT1nFMYgw7cmUvweH65uuVCpeTGGUHFJASYVp+
-         0rAZYzSSQIPb+K7rmAjuA9vNJWAyLoZQpoIVay4hBEbDdURvEM7pq5jhRZfKqSEpbPBO
-         3ShR6w8Mnlh/uorsP07FNJeoPhmVh9SAY6uK72YlVGdcaJdsssWFMQgvEjmpoShE+PSs
-         HmNQ==
-X-Gm-Message-State: APjAAAUvtwBitTvYMMF4RtQyeKy0w7oM35scNcdXqq774SMyKSUV2cHk
-        zFKZpSEGFUoRxt7ZZpCI7FqbvQ==
-X-Google-Smtp-Source: APXvYqzHrVqrmX9+Lk9w9FP91YPzkYcV0jkjab6rvQK3U4g9KuosSje8dbq9YgFdMYQh5L1aPjY6jQ==
-X-Received: by 2002:a17:90a:cf08:: with SMTP id h8mr6352327pju.81.1582336401930;
-        Fri, 21 Feb 2020 17:53:21 -0800 (PST)
-Received: from ?IPv6:240e:362:47d:ee00:e13e:da52:2837:6aff? ([240e:362:47d:ee00:e13e:da52:2837:6aff])
-        by smtp.gmail.com with ESMTPSA id 78sm1436422pge.58.2020.02.21.17.52.52
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Fri, 21 Feb 2020 17:53:21 -0800 (PST)
-Subject: Re: [PATCH v13 0/4] Add uacce module for Accelerator
-To:     Herbert Xu <herbert@gondor.apana.org.au>
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Arnd Bergmann <arnd@arndb.de>, jonathan.cameron@huawei.com,
-        dave.jiang@intel.com, grant.likely@arm.com,
-        jean-philippe <jean-philippe@linaro.org>,
-        Jerome Glisse <jglisse@redhat.com>,
-        ilias.apalodimas@linaro.org, francois.ozog@linaro.org,
-        kenneth-lee-2012@foxmail.com, Wangzhou <wangzhou1@hisilicon.com>,
-        "haojian . zhuang" <haojian.zhuang@linaro.org>,
-        guodong.xu@linaro.org, linux-accelerators@lists.ozlabs.org,
-        linux-kernel@vger.kernel.org, linux-crypto@vger.kernel.org,
-        iommu@lists.linux-foundation.org
-References: <1581407665-13504-1-git-send-email-zhangfei.gao@linaro.org>
- <20200222014148.GC19028@gondor.apana.org.au>
-From:   zhangfei <zhangfei.gao@linaro.org>
-Message-ID: <9048453c-530a-9063-b266-faa8d434015b@linaro.org>
-Date:   Sat, 22 Feb 2020 09:52:41 +0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        Fri, 21 Feb 2020 20:54:36 -0500
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
+        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=3z9OxyAbSn1SdH2kkHfL31c9BGogsy9OLW6r1AiETwA=; b=okpmlLDUcn2WJSLgCMGAQ/y3ea
+        wUx7sYNdOzqYPRD79lRmEtjSkrPrcJfVsD9xPGx/OEj4opTESHh6CYwZzOmuJEsyumYBwdnBSPv7g
+        16GkwPCUQhbT1ezTB0jognGyz8oIm6SUil1aybwZf5s5+OhrDRLxuYqnAi5mVLeaU2RxOwOxA/zNs
+        KYbdl3XUppUek8iRi+5uW/I3hpcLPqxH+AmdzbPTNFg7qp4grnRwvEiCEJmAo3/C8soB6NZZdaPwo
+        6XP9UHgU7AUBNbe3o0CA3AZUkjmFriX3wxHNG3GcDmgcTse+CtXbmuDxLU2MsixE0H2J7aWT8SIfZ
+        PnUpa2Fw==;
+Received: from willy by bombadil.infradead.org with local (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1j5K03-0000tY-FT; Sat, 22 Feb 2020 01:54:35 +0000
+Date:   Fri, 21 Feb 2020 17:54:35 -0800
+From:   Matthew Wilcox <willy@infradead.org>
+To:     "Darrick J. Wong" <darrick.wong@oracle.com>
+Cc:     linux-fsdevel@vger.kernel.org, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org, linux-btrfs@vger.kernel.org,
+        linux-erofs@lists.ozlabs.org, linux-ext4@vger.kernel.org,
+        linux-f2fs-devel@lists.sourceforge.net, cluster-devel@redhat.com,
+        ocfs2-devel@oss.oracle.com, linux-xfs@vger.kernel.org
+Subject: Re: [PATCH v7 21/24] iomap: Restructure iomap_readpages_actor
+Message-ID: <20200222015435.GH24185@bombadil.infradead.org>
+References: <20200219210103.32400-1-willy@infradead.org>
+ <20200219210103.32400-22-willy@infradead.org>
+ <20200222004425.GG9506@magnolia>
 MIME-Version: 1.0
-In-Reply-To: <20200222014148.GC19028@gondor.apana.org.au>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
-Content-Language: en-US
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200222004425.GG9506@magnolia>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Fri, Feb 21, 2020 at 04:44:25PM -0800, Darrick J. Wong wrote:
+> On Wed, Feb 19, 2020 at 01:01:00PM -0800, Matthew Wilcox wrote:
+> > From: "Matthew Wilcox (Oracle)" <willy@infradead.org>
+> > 
+> > By putting the 'have we reached the end of the page' condition at the end
+> > of the loop instead of the beginning, we can remove the 'submit the last
+> > page' code from iomap_readpages().  Also check that iomap_readpage_actor()
+> > didn't return 0, which would lead to an endless loop.
+> > 
+> > Signed-off-by: Matthew Wilcox (Oracle) <willy@infradead.org>
+> > ---
+> >  fs/iomap/buffered-io.c | 32 ++++++++++++++++++--------------
+> >  1 file changed, 18 insertions(+), 14 deletions(-)
+> > 
+> > diff --git a/fs/iomap/buffered-io.c b/fs/iomap/buffered-io.c
+> > index cb3511eb152a..31899e6cb0f8 100644
+> > --- a/fs/iomap/buffered-io.c
+> > +++ b/fs/iomap/buffered-io.c
+> > @@ -400,15 +400,9 @@ iomap_readpages_actor(struct inode *inode, loff_t pos, loff_t length,
+> >  		void *data, struct iomap *iomap, struct iomap *srcmap)
+> >  {
+> >  	struct iomap_readpage_ctx *ctx = data;
+> > -	loff_t done, ret;
+> > -
+> > -	for (done = 0; done < length; done += ret) {
+> > -		if (ctx->cur_page && offset_in_page(pos + done) == 0) {
+> > -			if (!ctx->cur_page_in_bio)
+> > -				unlock_page(ctx->cur_page);
+> > -			put_page(ctx->cur_page);
+> > -			ctx->cur_page = NULL;
+> > -		}
+> > +	loff_t ret, done = 0;
+> > +
+> > +	while (done < length) {
+> >  		if (!ctx->cur_page) {
+> >  			ctx->cur_page = iomap_next_page(inode, ctx->pages,
+> >  					pos, length, &done);
+> > @@ -418,6 +412,20 @@ iomap_readpages_actor(struct inode *inode, loff_t pos, loff_t length,
+> >  		}
+> >  		ret = iomap_readpage_actor(inode, pos + done, length - done,
+> >  				ctx, iomap, srcmap);
+> > +		done += ret;
+> > +
+> > +		/* Keep working on a partial page */
+> > +		if (ret && offset_in_page(pos + done))
+> > +			continue;
+> > +
+> > +		if (!ctx->cur_page_in_bio)
+> > +			unlock_page(ctx->cur_page);
+> > +		put_page(ctx->cur_page);
+> > +		ctx->cur_page = NULL;
+> > +
+> > +		/* Don't loop forever if we made no progress */
+> > +		if (WARN_ON(!ret))
+> > +			break;
+> >  	}
+> >  
+> >  	return done;
+> > @@ -451,11 +459,7 @@ iomap_readpages(struct address_space *mapping, struct list_head *pages,
+> >  done:
+> >  	if (ctx.bio)
+> >  		submit_bio(ctx.bio);
+> > -	if (ctx.cur_page) {
+> > -		if (!ctx.cur_page_in_bio)
+> > -			unlock_page(ctx.cur_page);
+> > -		put_page(ctx.cur_page);
+> > -	}
+> > +	BUG_ON(ctx.cur_page);
+> 
+> Whoah, is the system totally unrecoverably hosed at this point?
+> 
+> I get that this /shouldn't/ happen, but should we somehow end up with a
+> page here, are we unable either to release it or even just leak it?  I'd
+> have thought a WARN_ON would be just fine here.
 
+If we do find a page here, we don't actually know what to do with it.
+It might be (currently) locked, it might have the wrong refcount.
+Whatever is going on, it's probably better that we stop everything right
+here rather than allow things to go further and possibly present bad
+data to the application.  I mean, we could even be leaking the previous
+contents of this page to userspace.  Or maybe the future contents of a
+page which shouldn't be in the page cache any more, but userspace gets
+a mapping to it.
 
-On 2020/2/22 上午9:41, Herbert Xu wrote:
-> On Tue, Feb 11, 2020 at 03:54:21PM +0800, Zhangfei Gao wrote:
->> Uacce (Unified/User-space-access-intended Accelerator Framework) targets to
->> provide Shared Virtual Addressing (SVA) between accelerators and processes.
->> So accelerator can access any data structure of the main cpu.
->> This differs from the data sharing between cpu and io device, which share
->> data content rather than address.
->> Because of unified address, hardware and user space of process can share
->> the same virtual address in the communication.
->>
->> Uacce is intended to be used with Jean Philippe Brucker's SVA
->> patchset[1], which enables IO side page fault and PASID support.
->> We have keep verifying with Jean's sva patchset [2]
->> We also keep verifying with Eric's SMMUv3 Nested Stage patches [3]
->>
->> This series and related zip & qm driver
->> https://github.com/Linaro/linux-kernel-warpdrive/tree/v5.6-rc1-uacce-v13
->>
->> The library and user application:
->> https://github.com/Linaro/warpdrive/tree/wdprd-upstream-v13
->>
->>
->> Kenneth Lee (2):
->>    uacce: Add documents for uacce
->>    uacce: add uacce driver
->>
->> Zhangfei Gao (2):
->>    crypto: hisilicon - Remove module_param uacce_mode
->>    crypto: hisilicon - register zip engine to uacce
->>
->>   Documentation/ABI/testing/sysfs-driver-uacce |  39 ++
->>   Documentation/misc-devices/uacce.rst         | 176 ++++++
->>   drivers/crypto/hisilicon/qm.c                | 239 ++++++-
->>   drivers/crypto/hisilicon/qm.h                |  11 +
->>   drivers/crypto/hisilicon/zip/zip_main.c      |  49 +-
->>   drivers/misc/Kconfig                         |   1 +
->>   drivers/misc/Makefile                        |   1 +
->>   drivers/misc/uacce/Kconfig                   |  13 +
->>   drivers/misc/uacce/Makefile                  |   2 +
->>   drivers/misc/uacce/uacce.c                   | 617 +++++++++++++++++++
->>   include/linux/uacce.h                        | 161 +++++
->>   include/uapi/misc/uacce/hisi_qm.h            |  23 +
->>   include/uapi/misc/uacce/uacce.h              |  38 ++
->>   13 files changed, 1337 insertions(+), 33 deletions(-)
->>   create mode 100644 Documentation/ABI/testing/sysfs-driver-uacce
->>   create mode 100644 Documentation/misc-devices/uacce.rst
->>   create mode 100644 drivers/misc/uacce/Kconfig
->>   create mode 100644 drivers/misc/uacce/Makefile
->>   create mode 100644 drivers/misc/uacce/uacce.c
->>   create mode 100644 include/linux/uacce.h
->>   create mode 100644 include/uapi/misc/uacce/hisi_qm.h
->>   create mode 100644 include/uapi/misc/uacce/uacce.h
-> All applied.  Thanks.
-That's Great,
-Thanks Herbert for the great help.
-
-
+I'm not enthusiastic about putting in some code here to try to handle
+a "can't happen" case, since it's never going to be tested, and might
+end up causing more problems than it tries to solve.  Let's just stop.
