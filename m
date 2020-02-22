@@ -2,110 +2,95 @@ Return-Path: <SRS0=8jYG=4K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FAKE_REPLY_C,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3CCD0C35666
-	for <linux-kernel@archiver.kernel.org>; Sat, 22 Feb 2020 16:58:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E4886C35671
+	for <linux-kernel@archiver.kernel.org>; Sat, 22 Feb 2020 17:02:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1175820702
-	for <linux-kernel@archiver.kernel.org>; Sat, 22 Feb 2020 16:58:47 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582390727;
-	bh=gkjFs/1a+pJHG97GNGxiu0bTzUWm8c+N+Zh6h+i2bpY=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:List-ID:From;
-	b=BhQBMYn0BbUf4ZM91AP3U3HCZQqG0aKK24mbk7eezB2oywU07Qe205Kgr+gM5VmuG
-	 Zxj79p6z/o593y+k22+h6UBBQP37NnZsp8XrtUJLqxTb442hmNZcImyA50WvLWq4yO
-	 vxF8F0u1IM2PwgZj09H+Tz6N30VDOhKgXrLS+neM=
+	by mail.kernel.org (Postfix) with ESMTP id AF6A520707
+	for <linux-kernel@archiver.kernel.org>; Sat, 22 Feb 2020 17:02:44 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="cC5CpFYD"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726898AbgBVQ6p (ORCPT
+        id S1726741AbgBVRCn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 22 Feb 2020 11:58:45 -0500
-Received: from mail.kernel.org ([198.145.29.99]:56410 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726310AbgBVQ6m (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 22 Feb 2020 11:58:42 -0500
-Received: from localhost (mobile-166-175-186-165.mycingular.net [166.175.186.165])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D8BBF20702;
-        Sat, 22 Feb 2020 16:58:41 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1582390722;
-        bh=gkjFs/1a+pJHG97GNGxiu0bTzUWm8c+N+Zh6h+i2bpY=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=1g1mqO0MCzSViG9n4r2G+9mRMtxkY+CMmvJJt9rUAPfG17iazzt2KeWAsjnYAzzkk
-         e6oc/woJRK+lLRz2SU/p6BFtUwXexTix4uUDruhnWMIlSmbrxG07v/LMs5VKADBn33
-         SREmsw7MAfw1SBcwAdy54eZ9Ouvf7ImAjKGEXOz0=
-Date:   Sat, 22 Feb 2020 10:58:40 -0600
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Alexandru Gagniuc <mr.nuke.me@gmail.com>,
-        Alexandru Gagniuc <alex_gagniuc@dellteam.com>,
-        Keith Busch <keith.busch@intel.com>
-Cc:     Jan Vesely <jano.vesely@gmail.com>, Lukas Wunner <lukas@wunner.de>,
-        Alex Williamson <alex.williamson@redhat.com>,
-        Austin Bolen <austin_bolen@dell.com>,
-        Shyam Iyer <Shyam_Iyer@dell.com>,
-        Sinan Kaya <okaya@kernel.org>, linux-pci@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Christoph Hellwig <hch@lst.de>,
-        Lucas Stach <l.stach@pengutronix.de>,
-        Dave Airlie <airlied@gmail.com>,
-        Ben Skeggs <skeggsb@gmail.com>,
-        Alex Deucher <alexdeucher@gmail.com>,
-        Myron Stowe <myron.stowe@redhat.com>
-Subject: Re: Issues with "PCI/LINK: Report degraded links via link bandwidth
- notification"
-Message-ID: <20200222165840.GA214760@google.com>
+        Sat, 22 Feb 2020 12:02:43 -0500
+Received: from bombadil.infradead.org ([198.137.202.133]:54650 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726198AbgBVRCn (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 22 Feb 2020 12:02:43 -0500
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Transfer-Encoding
+        :Content-Type:MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:
+        Sender:Reply-To:Content-ID:Content-Description;
+        bh=SY35JLLv+vBVjF2AfSVM5A43C4jm9v1brv6q5yWkRzU=; b=cC5CpFYDWqcMFhwSbiePfLpJKa
+        kwoTL5cYHcxmTKP4DMbY102XnLlQ1/AzXURwUHkNRRfyLgSJvx1zzHEhf3reZhSBiyR3e8zzxZAoe
+        lVTUiNE3CXPjPBQntPEKui5NqJqN+VkYowNZbqQ1iFWjRy61gEIz7SI8cJH/Gf816sEfp7aV5upTJ
+        mQzDU8DQZuG0Cz9vLDeWs37a/PRueidkzItJknwFV3xw3PrAsaobmY+hCTKsyAtHlJnVxOo7NEXsl
+        umj5CTV59yw67b98GLGClqC66/erz7kWsWGm1tYystlInM0vFwwgmk85tI/OwDg0x2lSuGmpjJ9TR
+        qVbURNWA==;
+Received: from willy by bombadil.infradead.org with local (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1j5YAY-0005UU-St; Sat, 22 Feb 2020 17:02:22 +0000
+Date:   Sat, 22 Feb 2020 09:02:22 -0800
+From:   Matthew Wilcox <willy@infradead.org>
+To:     "Longpeng (Mike)" <longpeng2@huawei.com>
+Cc:     Qian Cai <cai@lca.pw>, akpm@linux-foundation.org,
+        mike.kravetz@oracle.com, kirill.shutemov@linux.intel.com,
+        linux-kernel@vger.kernel.org, arei.gonglei@huawei.com,
+        weidong.huang@huawei.com, weifuqiang@huawei.com,
+        kvm@vger.kernel.org, linux-mm@kvack.org,
+        Sean Christopherson <sean.j.christopherson@intel.com>,
+        stable@vger.kernel.org
+Subject: Re: [PATCH v2] mm/hugetlb: fix a addressing exception caused by
+ huge_pte_offset()
+Message-ID: <20200222170222.GJ24185@bombadil.infradead.org>
+References: <C4ED630A-FAD8-4998-A0A3-9C36F3303379@lca.pw>
+ <f274b368-6fdb-2ae3-160e-fd8b105b9ac4@huawei.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20200115221008.GA191037@google.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <f274b368-6fdb-2ae3-160e-fd8b105b9ac4@huawei.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[+cc Christoph, Lucas, Dave, Ben, Alex, Myron]
+On Sat, Feb 22, 2020 at 02:33:10PM +0800, Longpeng (Mike) wrote:
+> 在 2020/2/22 13:23, Qian Cai 写道:
+> >> On Feb 21, 2020, at 10:34 PM, Longpeng(Mike) <longpeng2@huawei.com> wrote:
+> >>
+> >> diff --git a/mm/hugetlb.c b/mm/hugetlb.c
+> >> index dd8737a..90daf37 100644
+> >> --- a/mm/hugetlb.c
+> >> +++ b/mm/hugetlb.c
+> >> @@ -4910,28 +4910,30 @@ pte_t *huge_pte_offset(struct mm_struct *mm,
+> >> {
+> >>    pgd_t *pgd;
+> >>    p4d_t *p4d;
+> >> -    pud_t *pud;
+> >> -    pmd_t *pmd;
+> >> +    pud_t *pud, pud_entry;
+> >> +    pmd_t *pmd, pmd_entry;
+> >>
+> >>    pgd = pgd_offset(mm, addr);
+> >> -    if (!pgd_present(*pgd))
+> >> +    if (!pgd_present(READ_ONCE(*pgd)))
+> >>        return NULL;
+> >>    p4d = p4d_offset(pgd, addr);
+> >> -    if (!p4d_present(*p4d))
+> >> +    if (!p4d_present(READ_ONCE(*p4d)))
+> >>        return NULL;
+> > 
+> > What’s the point of READ_ONCE() on those two places?
+> > 
+> As explained in the commit messages, it's for safe(e.g. avoid the compilier
+> mischief). You can also find the same usage in the ARM64's huge_pte_offset() in
+> arch/arm64/mm/hugetlbpage.c
 
-On Wed, Jan 15, 2020 at 04:10:08PM -0600, Bjorn Helgaas wrote:
-> I think we have a problem with link bandwidth change notifications
-> (see https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/drivers/pci/pcie/bw_notification.c).
-> 
-> Here's a recent bug report where Jan reported "_tons_" of these
-> notifications on an nvme device:
-> https://bugzilla.kernel.org/show_bug.cgi?id=206197
-
-AFAICT, this thread petered out with no resolution.
-
-If the bandwidth change notifications are important to somebody,
-please speak up, preferably with a patch that makes the notifications
-disabled by default and adds a parameter to enable them (or some other
-strategy that makes sense).
-
-I think these are potentially useful, so I don't really want to just
-revert them, but if nobody thinks these are important enough to fix,
-that's a possibility.
-
-> There was similar discussion involving GPU drivers at
-> https://lore.kernel.org/r/20190429185611.121751-2-helgaas@kernel.org
-> 
-> The current solution is the CONFIG_PCIE_BW config option, which
-> disables the messages completely.  That option defaults to "off" (no
-> messages), but even so, I think it's a little problematic.
-> 
-> Users are not really in a position to figure out whether it's safe to
-> enable.  All they can do is experiment and see whether it works with
-> their current mix of devices and drivers.
-> 
-> I don't think it's currently useful for distros because it's a
-> compile-time switch, and distros cannot predict what system configs
-> will be used, so I don't think they can enable it.
-> 
-> Does anybody have proposals for making it smarter about distinguishing
-> real problems from intentional power management, or maybe interfaces
-> drivers could use to tell us when we should ignore bandwidth changes?
-> 
-> Bjorn
+I rather agree with Qian; if we need something like READ_ONCE() here,
+why don't we always need it as part of pgd_present()?  It seems like an
+unnecessary burden for every user.
