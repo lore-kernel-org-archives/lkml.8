@@ -2,116 +2,169 @@ Return-Path: <SRS0=8jYG=4K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 97AFCC35666
-	for <linux-kernel@archiver.kernel.org>; Sat, 22 Feb 2020 15:41:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DAD14C35672
+	for <linux-kernel@archiver.kernel.org>; Sat, 22 Feb 2020 15:44:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 64805206ED
-	for <linux-kernel@archiver.kernel.org>; Sat, 22 Feb 2020 15:41:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B1D02206ED
+	for <linux-kernel@archiver.kernel.org>; Sat, 22 Feb 2020 15:44:01 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Pgu+gYaD"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="jyYsTTy2"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727864AbgBVPlW (ORCPT
+        id S1727846AbgBVPn7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 22 Feb 2020 10:41:22 -0500
-Received: from mail-pl1-f194.google.com ([209.85.214.194]:33382 "EHLO
-        mail-pl1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727230AbgBVPlV (ORCPT
+        Sat, 22 Feb 2020 10:43:59 -0500
+Received: from mail-yb1-f196.google.com ([209.85.219.196]:38210 "EHLO
+        mail-yb1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727230AbgBVPn7 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 22 Feb 2020 10:41:21 -0500
-Received: by mail-pl1-f194.google.com with SMTP id ay11so2168986plb.0;
-        Sat, 22 Feb 2020 07:41:21 -0800 (PST)
+        Sat, 22 Feb 2020 10:43:59 -0500
+Received: by mail-yb1-f196.google.com with SMTP id x9so288818ybl.5;
+        Sat, 22 Feb 2020 07:43:57 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=sender:subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=ZKqnhKtnjlrm/NrpyM5QaS9UL8/A0/pvxGGFI8Wsv3o=;
-        b=Pgu+gYaDPETaF85sNjWfDPiAD6EkDxAO6E9xek1rU5M6uwrNQN13L3OMjjvwiPxDoe
-         gp49QnHzOchd1YoaxN/JosfktWZFqyf/pV5JScPo+95BIbujN1wTPRaAsX2HGOHpASmG
-         UzrvvEAy2gZ9ddMNJfWXCse+uP9NdXWuN2uqQ4B7RFbnVMdfeFQyFx6UHwi6xBTO6vqP
-         TUWuBZ4qN5wJAo0WeeVPDrlHANL/sbbVl1wut/om3pYofISgu2DFAqWO2dDXENljZckj
-         1ugcPNB6OUHLG23KAG2eHjzujmB4nPLqGnfPe8YLLPAZEjJTUkpK9foURb2yHjwdm7ue
-         XMKg==
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=arWDm/3kLJm5rI8N0qQm53HGCCCM1TrzgwNwRa0+tjc=;
+        b=jyYsTTy2l60KPfihKG5ZkKn8T/o2ge+FHBhs2TfPMgneaCmIl07wmpxcvyzDZByJBF
+         ITFrSnW2MStxqSDZd1qjRTZptoDupZz06d/NJQdBIoAe7zVUQMYMROQkJ2D9iOpkIvzh
+         pR5saTpLal99kj+WqEto/Hqlkm++L+yQwZGvoNuz15uc9PDf704w+UBdNFu6+v9XKeph
+         biGf9oCuVsJJtPkC6wjbuAnZZB3txDP9DAce7rnUdKFnoq8RBsecojZReHSkl7jl1BbT
+         VtobwlixQ/IJw1cZnUVUv9GoprHk8Vv9rIrdmigCYdI3FJLJCTxGM5tk6le/NNvgZLHv
+         obWQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:subject:to:cc:references:from:message-id
-         :date:user-agent:mime-version:in-reply-to:content-language
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
          :content-transfer-encoding;
-        bh=ZKqnhKtnjlrm/NrpyM5QaS9UL8/A0/pvxGGFI8Wsv3o=;
-        b=c6xdj2CfQENiUAe74mRONG/chuTE7G3pbJCKfzCKurPwFEAeNx+zlW+Q44QlxrBPCE
-         wBUNoDhoVJw276QnFhAthPvpF3z1kANkH0N4RRanpxntjY7K0iAdR50yO9n0b9GG8/p5
-         8M4DFBuGsjElLpZevfWSoQUXHqqsznLNscO3ImqmBDC+KXKe2Giv8qOL5vY0Den4Lr4w
-         rnFDwvjxq2GIPbw4TEUSWgq1NIjSR1wHYuwfLXEFWZM8b6MeLXNvnegw71BrV+5V0Bgh
-         Y5TLY5msyUBAqtckbgNhUCAG+KoBlYgxsjU+XP7aU8Nh53rsvIMkpAQ++2qY0pyeiapu
-         rSLg==
-X-Gm-Message-State: APjAAAVpjkWL+TnNNKt3FaJ6bP1Tjtz4eAS6KKHb9afeKfaSiTX6rdIe
-        2yTl6RuqpBSh+T/Tm+d5tS2+r2ay
-X-Google-Smtp-Source: APXvYqxQm22B+SJe7ymcheyrXUZZA2F9Z0qnG9iBS9cXm58rL50yqAHe+Sb+plQX+1/lnt4E7jPOEg==
-X-Received: by 2002:a17:90a:17e5:: with SMTP id q92mr10137107pja.28.1582386080725;
-        Sat, 22 Feb 2020 07:41:20 -0800 (PST)
-Received: from server.roeck-us.net ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
-        by smtp.gmail.com with ESMTPSA id r8sm6230930pjo.22.2020.02.22.07.41.19
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sat, 22 Feb 2020 07:41:19 -0800 (PST)
-Subject: Re: [regression] nct6775 does not load in 5.4 and 5.5, bisected to
- b84398d6d7f90080
-To:     Martin Volf <martin.volf.42@gmail.com>,
-        Mika Westerberg <mika.westerberg@linux.intel.com>,
-        Jean Delvare <jdelvare@suse.com>,
-        Wolfram Sang <wsa@the-dreams.de>
-Cc:     linux-i2c@vger.kernel.org, linux-hwmon@vger.kernel.org,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-References: <CAM1AHpQ4196tyD=HhBu-2donSsuogabkfP03v1YF26Q7_BgvgA@mail.gmail.com>
-From:   Guenter Roeck <linux@roeck-us.net>
-Message-ID: <1bdbac08-86f8-2a57-2b0d-8cd2beb2a1c0@roeck-us.net>
-Date:   Sat, 22 Feb 2020 07:41:18 -0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.1
+        bh=arWDm/3kLJm5rI8N0qQm53HGCCCM1TrzgwNwRa0+tjc=;
+        b=cQK0Z9UpaA0Xq0xbJgEZFagvtatMmYSd8pY4ol8xrXxsmuL9idQucJR6pJMgTr3r6O
+         7dhUo4gYXQQk8GfFveSYPvG0EnFEBEfo6neEt9RzEvabnoklFftdbkGW/YLtP4deecd2
+         4kmUN8E7wd5E8mxSPLyPPvWYyPqJn/uGSYLXaLI9z3YnoK4yh9TgiggC4F5AgS7zAfhg
+         2PFkFtZpJ0tQJr0nPXhiWyWnn06rKS1lfcFqX5p22CKNrCdrrkij1hfsOmuJA8vFD6li
+         O1L8j2dy/szN4gByfMEH1W3LWwdNC9ovzHq8e2UPPrhN4SWXRlRkCbuHitM1YLYbzZ4P
+         Qjpg==
+X-Gm-Message-State: APjAAAXGwd81eyOkLD6ti1MOYLelgIJdQ0/IQo0AGXgng1kQZp4baHRj
+        7aDwUbGq7p0CoeK0a8wlq2j31RRG8QAN8Q==
+X-Google-Smtp-Source: APXvYqylRu63VslzkP/CTd/NhDeoW859/K/hILADJmdwa2v/0OGJz3gQy2bA8H9ESkxmCJizrtpbuQ==
+X-Received: by 2002:a25:aa32:: with SMTP id s47mr3154655ybi.137.1582386237073;
+        Sat, 22 Feb 2020 07:43:57 -0800 (PST)
+Received: from localhost.localdomain (072-189-064-225.res.spectrum.com. [72.189.64.225])
+        by smtp.gmail.com with ESMTPSA id s3sm2855329ywf.22.2020.02.22.07.43.56
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sat, 22 Feb 2020 07:43:56 -0800 (PST)
+From:   William Breathitt Gray <vilhelm.gray@gmail.com>
+To:     jic23@kernel.org
+Cc:     linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org,
+        William Breathitt Gray <vilhelm.gray@gmail.com>
+Subject: [PATCH] counter: 104-quad-8: Support Differential Encoder Cable Status
+Date:   Sat, 22 Feb 2020 10:43:40 -0500
+Message-Id: <20200222154340.89464-1-vilhelm.gray@gmail.com>
+X-Mailer: git-send-email 2.24.1
 MIME-Version: 1.0
-In-Reply-To: <CAM1AHpQ4196tyD=HhBu-2donSsuogabkfP03v1YF26Q7_BgvgA@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2/22/20 3:13 AM, Martin Volf wrote:
-> Hello,
-> 
-> hardware monitoring sensors NCT6796D on my Asus PRIME Z390M-PLUS
-> motherboard with Intel i7-9700 CPU don't work with 5.4 and newer linux
-> kernels, the driver nct6775 does not load.
-> 
-> It is working OK in version 5.3. I have used almost all released stable
-> versions from 5.3.8 to 5.3.16; I didn't try older kernels.
-> 
-> Even on new kernels the sensors-detect finds the sensors:
->          Found `Nuvoton NCT6796D Super IO Sensors' Success!
->              (address 0x290, driver `nct6775')
-> but "modprobe nct6775" says:
->          ERROR: could not insert 'nct6775': No such device
-> There is nothing interesting in dmesg.
-> 
+The ACCES 104-QUAD-8 series provides status information about the
+connection state of the differential encoder cable inputs. This patch
+implements support to expose such information from these devices.
 
-My wild guess would be that the i801 driver is a bit aggressive with
-reserving memory spaces, but I don't immediately see what it does
-differently in that regard after the offending patch. Does it work
-if you unload the i2c_i801 driver first ?
+Signed-off-by: William Breathitt Gray <vilhelm.gray@gmail.com>
+---
+ .../ABI/testing/sysfs-bus-counter-104-quad-8  | 12 ++++++
+ drivers/counter/104-quad-8.c                  | 38 +++++++++++++++++++
+ 2 files changed, 50 insertions(+)
 
-You could also try to compare the output of /proc/ioports with
-the old and the new kernel, and see if the IO address space used
-by nct6775 in v5.3 is assigned to the i801 driver (or some other
-driver, such as the watchdog driver) in v5.4.
+diff --git a/Documentation/ABI/testing/sysfs-bus-counter-104-quad-8 b/Documentation/ABI/testing/sysfs-bus-counter-104-quad-8
+index 46b1f33b2fce..492b3e98f369 100644
+--- a/Documentation/ABI/testing/sysfs-bus-counter-104-quad-8
++++ b/Documentation/ABI/testing/sysfs-bus-counter-104-quad-8
+@@ -1,3 +1,15 @@
++What:		/sys/bus/counter/devices/counterX/cable_status
++KernelVersion:	5.7
++Contact:	linux-iio@vger.kernel.org
++Description:
++		Differential encoder cable status; bits 0 through 7
++		correspond to channels 1 through 8. Writing a 0 to the
++		corresponding bit will enable the status of the
++		respective channel.
++
++		Logic 0 = cable fault (not connected or loose wires)
++		Logic 1 = cable connection good or cable fault disabled
++
+ What:		/sys/bus/counter/devices/counterX/signalY/index_polarity
+ KernelVersion:	5.2
+ Contact:	linux-iio@vger.kernel.org
+diff --git a/drivers/counter/104-quad-8.c b/drivers/counter/104-quad-8.c
+index 17e67a84777d..1cbaf7e100a3 100644
+--- a/drivers/counter/104-quad-8.c
++++ b/drivers/counter/104-quad-8.c
+@@ -56,6 +56,7 @@ struct quad8_iio {
+ 
+ #define QUAD8_REG_CHAN_OP 0x11
+ #define QUAD8_REG_INDEX_INPUT_LEVELS 0x16
++#define QUAD8_DIFF_ENCODER_CABLE_STATUS 0x17
+ /* Borrow Toggle flip-flop */
+ #define QUAD8_FLAG_BT BIT(0)
+ /* Carry Toggle flip-flop */
+@@ -1268,6 +1269,42 @@ static struct counter_count quad8_counts[] = {
+ 	QUAD8_COUNT(7, "Channel 8 Count")
+ };
+ 
++static ssize_t quad8_cable_status_read(struct counter_device *counter,
++				       void *private, char *buf)
++{
++	const struct quad8_iio *const priv = counter->priv;
++	unsigned int status;
++
++	status = inb(priv->base + QUAD8_DIFF_ENCODER_CABLE_STATUS);
++
++	return sprintf(buf, "0x%X\n", status);
++}
++
++static ssize_t quad8_cable_status_write(struct counter_device *counter,
++					void *private, const char *buf,
++					size_t len)
++{
++	struct quad8_iio *const priv = counter->priv;
++	u8 enable;
++	int ret;
++
++	ret = kstrtou8(buf, 0, &enable);
++	if (ret)
++		return ret;
++
++	outb(enable, priv->base + QUAD8_DIFF_ENCODER_CABLE_STATUS);
++
++	return len;
++}
++
++static const struct counter_device_ext quad8_device_ext[] = {
++	{
++		.name = "cable_status",
++		.read = quad8_cable_status_read,
++		.write = quad8_cable_status_write
++	}
++};
++
+ static int quad8_probe(struct device *dev, unsigned int id)
+ {
+ 	struct iio_dev *indio_dev;
+@@ -1304,6 +1341,7 @@ static int quad8_probe(struct device *dev, unsigned int id)
+ 	quad8iio->counter.num_counts = ARRAY_SIZE(quad8_counts);
+ 	quad8iio->counter.signals = quad8_signals;
+ 	quad8iio->counter.num_signals = ARRAY_SIZE(quad8_signals);
++	quad8iio->counter.ext = quad8_device_ext;
+ 	quad8iio->counter.priv = quad8iio;
+ 	quad8iio->base = base[id];
+ 
+-- 
+2.24.1
 
-If you are into hacking the kernel, you could also add some
-debug messages into the nct6775 driver to find out where exactly
-it fails. If that helps, maybe we can then add those messages into
-into the driver source to help others if this is observed again.
-
-Thanks,
-Guenter
