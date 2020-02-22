@@ -2,139 +2,151 @@ Return-Path: <SRS0=8jYG=4K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-16.3 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FSL_HELO_FAKE,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0A6D4C35671
-	for <linux-kernel@archiver.kernel.org>; Sat, 22 Feb 2020 20:49:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 540BAC35671
+	for <linux-kernel@archiver.kernel.org>; Sat, 22 Feb 2020 21:01:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D0A6B20684
-	for <linux-kernel@archiver.kernel.org>; Sat, 22 Feb 2020 20:49:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1FBF4206ED
+	for <linux-kernel@archiver.kernel.org>; Sat, 22 Feb 2020 21:01:46 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="dT5BMyzC"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Q1hFllBq"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726884AbgBVUtW (ORCPT
+        id S1726907AbgBVVBG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 22 Feb 2020 15:49:22 -0500
-Received: from mail-io1-f65.google.com ([209.85.166.65]:45071 "EHLO
-        mail-io1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726817AbgBVUtV (ORCPT
+        Sat, 22 Feb 2020 16:01:06 -0500
+Received: from mail-pj1-f68.google.com ([209.85.216.68]:52212 "EHLO
+        mail-pj1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726826AbgBVVBF (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 22 Feb 2020 15:49:21 -0500
-Received: by mail-io1-f65.google.com with SMTP id i11so6193712ioi.12;
-        Sat, 22 Feb 2020 12:49:21 -0800 (PST)
+        Sat, 22 Feb 2020 16:01:05 -0500
+Received: by mail-pj1-f68.google.com with SMTP id fa20so2309051pjb.1
+        for <linux-kernel@vger.kernel.org>; Sat, 22 Feb 2020 13:01:05 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=Tyttl7wAFzUY9uhKyioctY+cw2c/9OPGZ4FJT7jjtXU=;
-        b=dT5BMyzCTyJJp+nvhdoFwyoGOluAnmLzaeCodeI+VdJln29TcnaayygUaf+h0pkBl7
-         JZfFCRFxzH7ApVzgz1n/a2cIDwWSvkSVoLq+HhQt2+eSxm4xatSiGflSKVFGaXyXBGH8
-         XtIUyiHgAZXfAJnN3OPIAEhPD4sRNoS7/3Kg+75q7KjLSQMZUz2jUuXzd9P1bGNXmg6r
-         9k5YKA2OkKx2buLFUqyzwwSYrULTYuZ/N9VSxpb3Kt6Dbj1DHNSvHWI1PlprZUU5p1Uv
-         dLJftJv17Yoz0Vdl4PYo/wBIHn07rnGPtr+ZGA0Tl4pcYIpv8Luju0N7ulfYrcwIfHWa
-         8VHw==
+        d=google.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=laEHxH1L9Tdj6O2OTgMojiMOqUUb6PedrFi1g5j2gKw=;
+        b=Q1hFllBqSn4fR6AzHGxaLoq0TcAbiOW4B6TXVyl+M2UM3D4qQ4964Ctex/XFU1tGyK
+         p4sSTdV2w4cFfCI9XEQElJygM/3XzhR8EFSUSvKz7mNzOEMB+cHMbexGgCjICFh2b9M0
+         k0k5iaTF06fD26i1vgUA31A0EdTX8LJvk9iEUSgr2JYUlx9/wYBj3wVJCSkVC7YsPR6O
+         Q6hbctC7OjLYEM0wXL150Y4H6JU9goQrzKhXP5WTyHmgQhnCJ15UN4Mmi21hgr+P5kCL
+         8lpPKAdaUWw04SHJie6s4ltpdlFqGOi1vsnXmhNF/pRtr3ZV4ozshwJfy7NngXubhExM
+         MVNQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=Tyttl7wAFzUY9uhKyioctY+cw2c/9OPGZ4FJT7jjtXU=;
-        b=SQ2HovfrsfQnbnbS0+oJ6mvg2HPBjQYGqVJ+uDX9EJpmbRRW/3oeWHVcAftbzuEVsE
-         7AlNZJYyCjSggj0s+ROZUUJyxaHwWcE/xMxQRpLHQMRe2q1msVwgmWR6/B12wPJgT994
-         hLkR+6Xe1RipfaTl0vcx86wAfeccYjnDv5g/c3gzAVBSu3Amc2Wj6xuN2MeAFiWxnJr4
-         KYf6nv/31jJtoVXgmbJHKhzQqmW44EXCTkjENUHULqcr8KY3U0EhxLbE3Q7miLhsZ7l8
-         IJpDLv4h6N8vEcs0tqNYFY62hv/4oYPD6FEh36KW5xKi7fbltQbwutDtulZXxbQBbdAp
-         vftA==
-X-Gm-Message-State: APjAAAVBLqlitTjai47hGp9Y/uhmRhKSUooEkSuJptp3moVykNuMVeaF
-        tREa/f4v/Ul6p1m3nHFv1QeeF5g0bkyLez2LMPA=
-X-Google-Smtp-Source: APXvYqztJRhXR0FUdnfb7W66f5mv3tPvBbrNQtEroKmjuZm3mu0Roba9eamT1ueHuSiTmo7Rs+8qz2Zy+sEXVtq07Pg=
-X-Received: by 2002:a05:6638:1e6:: with SMTP id t6mr40033964jaq.118.1582404560631;
- Sat, 22 Feb 2020 12:49:20 -0800 (PST)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=laEHxH1L9Tdj6O2OTgMojiMOqUUb6PedrFi1g5j2gKw=;
+        b=DAtDUZwzs7x1S/sZ8Fpe75csTuCeUjTABNCFf9OTtvdEFBoOMSXlDQuNvWsVHi+t9+
+         uiz3DZUy53ki6puXtzh7M+jCWN4ugIwrgHNEitcAklM5aYT4NNfb+fhp1Y6GnfMxIYhG
+         G+Xe0xawvSoqw2l6g6sQlnHrBiG6MkV3R9H392LhMs75RjTNy6I+mUdS52l7+UCf9Ig0
+         0A4f4Ua67B3aKaaR9Ic6+BG87ZB3W+cpu96xPr7AOn76BxweMm3oWGhDp8MGQN4uYOhD
+         CrLVke74fqnWBnsh+pwJAGh56j4rCS0gMsINh3AQIsgyzUnWJ+r1aUdOrpRQ75MSbOng
+         MTVA==
+X-Gm-Message-State: APjAAAXG+jo0hZeKCRLtoOxmjScIZugI5OSGqjq6eAQ7Eux8HZsgyrLw
+        AdztTzXQ1lwGVjMxcrMn/jWrYA==
+X-Google-Smtp-Source: APXvYqxoMTRXvtk+LvyaNv3ILd1j6HwkVq68c8JHrJjI4QZ8TdCjLQMCRi/WdV/nRpCfwkVL6khcLw==
+X-Received: by 2002:a17:902:5a0c:: with SMTP id q12mr43016059pli.301.1582405264875;
+        Sat, 22 Feb 2020 13:01:04 -0800 (PST)
+Received: from google.com ([2620:15c:2ce:0:9efe:9f1:9267:2b27])
+        by smtp.gmail.com with ESMTPSA id 72sm7400306pfw.7.2020.02.22.13.01.03
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sat, 22 Feb 2020 13:01:04 -0800 (PST)
+Date:   Sat, 22 Feb 2020 13:01:01 -0800
+From:   Fangrui Song <maskray@google.com>
+To:     Arvind Sankar <nivedita@alum.mit.edu>
+Cc:     Borislav Petkov <bp@alien8.de>,
+        Nathan Chancellor <natechancellor@gmail.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>,
+        "H. Peter Anvin" <hpa@zytor.com>, x86@kernel.org,
+        linux-kernel@vger.kernel.org, clang-built-linux@googlegroups.com,
+        Michael Matz <matz@suse.de>
+Subject: Re: [PATCH] x86/boot/compressed: Fix compressed kernel linking with
+ lld
+Message-ID: <20200222210101.diqw4zt6lz42ekgx@google.com>
+References: <20200222164419.GB3326744@rani.riverdale.lan>
+ <20200222171859.3594058-1-nivedita@alum.mit.edu>
+ <20200222181413.GA22627@ubuntu-m2-xlarge-x86>
+ <20200222185806.ywnqhfqmy67akfsa@google.com>
+ <20200222201715.GA3674682@rani.riverdale.lan>
 MIME-Version: 1.0
-References: <CAM1AHpQ4196tyD=HhBu-2donSsuogabkfP03v1YF26Q7_BgvgA@mail.gmail.com>
- <1bdbac08-86f8-2a57-2b0d-8cd2beb2a1c0@roeck-us.net> <CAM1AHpSKFk9ZosQf=k-Rm2=EFqco7y4Lpfb7m07r=j_uJd4T0A@mail.gmail.com>
- <85356d1a-f90d-e94d-16eb-1071d4e94753@roeck-us.net>
-In-Reply-To: <85356d1a-f90d-e94d-16eb-1071d4e94753@roeck-us.net>
-From:   Martin Volf <martin.volf.42@gmail.com>
-Date:   Sat, 22 Feb 2020 21:49:09 +0100
-Message-ID: <CAM1AHpSpEFshpUGxKdhLV3XuThQg_XVaPgOWzvrTv6YtzHyO+A@mail.gmail.com>
-Subject: Re: [regression] nct6775 does not load in 5.4 and 5.5, bisected to b84398d6d7f90080
-To:     Guenter Roeck <linux@roeck-us.net>
-Cc:     Mika Westerberg <mika.westerberg@linux.intel.com>,
-        Jean Delvare <jdelvare@suse.com>,
-        Wolfram Sang <wsa@the-dreams.de>, linux-i2c@vger.kernel.org,
-        linux-hwmon@vger.kernel.org,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii; format=flowed
+Content-Disposition: inline
+In-Reply-To: <20200222201715.GA3674682@rani.riverdale.lan>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello,
-
-On Sat, Feb 22, 2020 at 8:05 PM Guenter Roeck <linux@roeck-us.net> wrote:
-> On 2/22/20 9:55 AM, Martin Volf wrote:
-> > On Sat, Feb 22, 2020 at 4:41 PM Guenter Roeck <linux@roeck-us.net> wrote:
-> >> On 2/22/20 3:13 AM, Martin Volf wrote:
-> >>> hardware monitoring sensors NCT6796D on my Asus PRIME Z390M-PLUS
-> >>> motherboard with Intel i7-9700 CPU don't work with 5.4 and newer linux
-> >>> kernels, the driver nct6775 does not load.
-> >>>
-> >>> It is working OK in version 5.3. I have used almost all released stable
-> >>> versions from 5.3.8 to 5.3.16; I didn't try older kernels.
-> > ...
-> >> My wild guess would be that the i801 driver is a bit aggressive with
-> >> reserving memory spaces, but I don't immediately see what it does
-> >> differently in that regard after the offending patch. Does it work
-> >> if you unload the i2c_i801 driver first ?
-> >
-> > Yes, after unloading i2c_i801, the nct6775 works.
-...
-> > This is diff of /proc/ioports in 5.3.18 with loaded nct6775 and in
-> > 5.4.21 without:
-> >
-> > --- ioports-5.3.18
-> > +++ ioports-5.4.21
-> > @@ -2,6 +2,7 @@
-> >     0000-001f : dma1
-> >     0020-0021 : pic1
-> >     002e-0031 : iTCO_wdt
-> > +    002e-0031 : iTCO_wdt
-> >     0040-0043 : timer0
-> >     0050-0053 : timer1
-...
-> > So 0x2e is the resource the two drivers are fighting for.
-...
-> Yes, and it should not do that, since the range can be used to access
-> different segments of the same chip from multiple drivers. This region
-> should only be reserved temporarily, using request_muxed_region() when
-> needed and release_region() after the access is complete. Either case,
-> I don't immediately see why that region would be interesting for the
-> iTCO watchdog driver.
+On 2020-02-22, Arvind Sankar wrote:
+>On Sat, Feb 22, 2020 at 10:58:06AM -0800, Fangrui Song wrote:
+>> On 2020-02-22, Nathan Chancellor wrote:
+>> >On Sat, Feb 22, 2020 at 12:18:59PM -0500, Arvind Sankar wrote:
+>> >> Commit TBD ("x86/boot/compressed: Remove unnecessary sections from
+>> >> bzImage") discarded unnecessary sections with *(*). While this works
+>> >> fine with the bfd linker, lld tries to also discard essential sections
+>> >> like .shstrtab, .symtab and .strtab, which results in the link failing
+>> >> since .shstrtab is required by the ELF specification. .symtab and
+>> >> .strtab are also necessary to generate the zoffset.h file for the
+>> >> bzImage header.
+>> >>
+>> >> Since the only sizeable section that can be discarded is .eh_frame,
+>> >> restrict the discard to only .eh_frame to be safe.
+>> >>
+>> >> Signed-off-by: Arvind Sankar <nivedita@alum.mit.edu>
+>> >> ---
+>> >> Sending as a fix on top of tip/x86/boot.
+>> >>
+>> >>  arch/x86/boot/compressed/vmlinux.lds.S | 4 ++--
+>> >>  1 file changed, 2 insertions(+), 2 deletions(-)
+>> >>
+>> >> diff --git a/arch/x86/boot/compressed/vmlinux.lds.S b/arch/x86/boot/compressed/vmlinux.lds.S
+>> >> index 12a20603d92e..469dcf800a2c 100644
+>> >> --- a/arch/x86/boot/compressed/vmlinux.lds.S
+>> >> +++ b/arch/x86/boot/compressed/vmlinux.lds.S
+>> >> @@ -74,8 +74,8 @@ SECTIONS
+>> >>  	. = ALIGN(PAGE_SIZE);	/* keep ZO size page aligned */
+>> >>  	_end = .;
+>> >>
+>> >> -	/* Discard all remaining sections */
+>> >> +	/* Discard .eh_frame to save some space */
+>> >>  	/DISCARD/ : {
+>> >> -		*(*)
+>> >> +		*(.eh_frame)
+>> >>  	}
+>> >>  }
+>> >> --
+>> >> 2.24.1
+>> >>
+>> >
+>> >FWIW:
+>> >
+>> >Tested-by: Nathan Chancellor <natechancellor@gmail.com>
+>>
+>> I am puzzled. Doesn't -fno-asynchronous-unwind-tables suppress
+>> .eh_frame in the object files? Why are there still .eh_frame?
+>>
+>> Though, there is prior art: arch/s390/boot/compressed/vmlinux.lds.S also discards .eh_frame
 >
-> Can you add some debugging into the i801 driver to see what memory regions
-> it reserves, and how it gets to reserve 0x2e..0x31 ? That range really
-> doesn't make any sense to me.
+>The compressed kernel doesn't use the regular flags and it seems it
+>doesn't have that option. Maybe we should add it in to avoid generating
+>those in the first place.
+>
+>The .eh_frame discard in arch/x86/kernel/vmlinux.lds.S does seem
+>superfluous though.
 
-in the function i801_add_tco() in drivers/i2c/busses/i2c-i801.c
-(line 1601 in 5.4.21), there is this code:
+Yes, please do that. I recommend suppressting unneeded sections at
+compile time, instead of discarding them at link time.
 
-        /*
-         * Power Management registers.
-         */
-        devfn = PCI_DEVFN(PCI_SLOT(pci_dev->devfn), 2);
-        pci_bus_read_config_dword(pci_dev->bus, devfn, ACPIBASE, &base_addr);
+https://github.com/torvalds/linux/commit/83a092cf95f28696ddc36c8add0cf03ac034897f
+added -Wl,--orphan-handling=warn to arch/powerpc/Makefile .
+x86 can follow if that is appropriate.
 
-        res = &tco_res[ICH_RES_IO_SMI];
-        res->start = (base_addr & ~1) + ACPIBASE_SMI_OFF;
-        res->end = res->start + 3;
-        res->flags = IORESOURCE_IO;
-
-base_addr is 0xffffffff after pci_bus_read_config_dword() call.
-ACPIBASE_SMI_OFF is 0x030, therefore res->start is 0x2e.
-Not that I understand even a bit of this...
-
-Martin
+I don't recommend -Wl,--orphan-handling=error, which can unnecessarily
+break the builds.
