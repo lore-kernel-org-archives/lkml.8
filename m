@@ -2,180 +2,79 @@ Return-Path: <SRS0=8jYG=4K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 24D49C35671
-	for <linux-kernel@archiver.kernel.org>; Sat, 22 Feb 2020 22:24:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B8B52C35669
+	for <linux-kernel@archiver.kernel.org>; Sat, 22 Feb 2020 22:32:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E552820656
-	for <linux-kernel@archiver.kernel.org>; Sat, 22 Feb 2020 22:24:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8F773214DB
+	for <linux-kernel@archiver.kernel.org>; Sat, 22 Feb 2020 22:32:00 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=joelfernandes.org header.i=@joelfernandes.org header.b="dEXWUbD6"
+	dkim=pass (1024-bit key) header.d=megous.com header.i=@megous.com header.b="q1EKs86T"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726908AbgBVWYU (ORCPT
+        id S1727027AbgBVWb7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 22 Feb 2020 17:24:20 -0500
-Received: from mail-qk1-f194.google.com ([209.85.222.194]:36651 "EHLO
-        mail-qk1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726832AbgBVWYU (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 22 Feb 2020 17:24:20 -0500
-Received: by mail-qk1-f194.google.com with SMTP id f3so2502206qkh.3
-        for <linux-kernel@vger.kernel.org>; Sat, 22 Feb 2020 14:24:17 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=joelfernandes.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=ZF9LbUNZg5HlajZQndFknXuW2sz/slubs7EATboatLA=;
-        b=dEXWUbD6RYJ9OeB2s6SqbDbV9IsIykjUvTeBQ+8D09VaaLNHpNmCPjDZ7SLrC7ZNTL
-         BsVMVjMBAZvZ4cuhBJv/F02F5tdf9om9ft9OVbXKl7GjwlcaHChmyiMxO5VyzWTkDKQH
-         o0sZQn/G8pT5DZKmJvyT8osZyABADSEPWBxXM=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=ZF9LbUNZg5HlajZQndFknXuW2sz/slubs7EATboatLA=;
-        b=XlDBGuZ+6IiOJ23a2n04mEB3ySh9Gf92W7pQCbwHfpXNUBCG9TBHv7ND77LUACcsOv
-         mofuqqZxd15DNWT5HxHPOh5YZvz18ib2gRF5jqVFUOuyvonuhkvvv/5RginYUbbPZJP5
-         E0ukg0onkPBa3ejriA1b6wIRZfS0C2BmYLLi2c1QMtvjDu2LnF0sZYFFQJuU+hI7SNP/
-         6S9MGjr441wwBnqfk1bfbrwIBM5+6JReFfMqVsoN0LCUJdhAfr5kKzCnmSD+WpvuecP2
-         rhw1sf32sFuD4h5bBEzDPj1KTBDQYAHqslXVHyV/85OVBuDUjrJ+QIq55C4Uhu3GM0Ac
-         /ifw==
-X-Gm-Message-State: APjAAAVJ/Pi8ZpO0YTw3+5MZ5vBYb0UkZSGy7OvUqNcVSaPJC3UlE35n
-        XK5gC9+yHk5Dl4TdH8+tHNuLkikKIB8=
-X-Google-Smtp-Source: APXvYqyOsXBY1YbzemprzZGG5Ktxb3rWaCylOgFYfn9KQOs4tv5YJWSM1yFrYwqIkSHTPCk0y6n3Bw==
-X-Received: by 2002:a05:620a:1583:: with SMTP id d3mr41344906qkk.290.1582410256964;
-        Sat, 22 Feb 2020 14:24:16 -0800 (PST)
-Received: from localhost ([2620:15c:6:12:9c46:e0da:efbf:69cc])
-        by smtp.gmail.com with ESMTPSA id e20sm3808033qka.39.2020.02.22.14.24.16
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 22 Feb 2020 14:24:16 -0800 (PST)
-Date:   Sat, 22 Feb 2020 17:24:15 -0500
-From:   Joel Fernandes <joel@joelfernandes.org>
-To:     "Paul E. McKenney" <paulmck@kernel.org>
-Cc:     Uladzislau Rezki <urezki@gmail.com>,
-        "Theodore Y. Ts'o" <tytso@mit.edu>,
-        Ext4 Developers List <linux-ext4@vger.kernel.org>,
-        Suraj Jitindar Singh <surajjs@amazon.com>,
-        LKML <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH RFC] ext4: fix potential race between online resizing and
- write operations
-Message-ID: <20200222222415.GC191380@google.com>
-References: <20200215233817.GA670792@mit.edu>
- <20200216121246.GG2935@paulmck-ThinkPad-P72>
- <20200217160827.GA5685@pc636>
- <20200217193314.GA12604@mit.edu>
- <20200218170857.GA28774@pc636>
- <20200220045233.GC476845@mit.edu>
- <20200221003035.GC2935@paulmck-ThinkPad-P72>
- <20200221131455.GA4904@pc636>
- <20200221202250.GK2935@paulmck-ThinkPad-P72>
+        Sat, 22 Feb 2020 17:31:59 -0500
+Received: from vps.xff.cz ([195.181.215.36]:33610 "EHLO vps.xff.cz"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726853AbgBVWb6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 22 Feb 2020 17:31:58 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=megous.com; s=mail;
+        t=1582410716; bh=Fm/QajNW4NPZ7cUaKixvAZfoL/6sl0LR+iU2+Z/Jpwg=;
+        h=From:To:Cc:Subject:Date:References:From;
+        b=q1EKs86TN+17bnVuvYDClp8arpK0rLQWrQDIK0K9f/1dJPqCc28H0O9mlkw/HBQDV
+         ZHshwVhFzpKwklIQjqnocMrt6udcot/U6nQIkPfhEF80+IiQNr3ONMSLA8JcmPWD9I
+         9mxgquN5jmFfI8IJ37drhIEEJLy/5h3wZDKbNnO4=
+From:   Ondrej Jirman <megous@megous.com>
+To:     linux-sunxi@googlegroups.com, Maxime Ripard <mripard@kernel.org>,
+        Chen-Yu Tsai <wens@csie.org>
+Cc:     Ondrej Jirman <megous@megous.com>,
+        Tomas Novotny <tomas@novotny.cz>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        devicetree@vger.kernel.org (open list:OPEN FIRMWARE AND FLATTENED
+        DEVICE TREE BINDINGS),
+        linux-arm-kernel@lists.infradead.org (moderated list:ARM/Allwinner
+        sunXi SoC support), linux-kernel@vger.kernel.org (open list)
+Subject: [PATCH 1/4] ARM: dts: sun8i-a83t-tbs-a711: OOB WiFi interrupt doesn't work
+Date:   Sat, 22 Feb 2020 23:31:51 +0100
+Message-Id: <20200222223154.221632-2-megous@megous.com>
+In-Reply-To: <20200222223154.221632-1-megous@megous.com>
+References: <20200222223154.221632-1-megous@megous.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200221202250.GK2935@paulmck-ThinkPad-P72>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Feb 21, 2020 at 12:22:50PM -0800, Paul E. McKenney wrote:
-> On Fri, Feb 21, 2020 at 02:14:55PM +0100, Uladzislau Rezki wrote:
-> > On Thu, Feb 20, 2020 at 04:30:35PM -0800, Paul E. McKenney wrote:
-> > > On Wed, Feb 19, 2020 at 11:52:33PM -0500, Theodore Y. Ts'o wrote:
-> > > > On Tue, Feb 18, 2020 at 06:08:57PM +0100, Uladzislau Rezki wrote:
-> > > > > now it becomes possible to use it like: 
-> > > > > 	...
-> > > > > 	void *p = kvmalloc(PAGE_SIZE);
-> > > > > 	kvfree_rcu(p);
-> > > > > 	...
-> > > > > also have a look at the example in the mm/list_lru.c diff.
-> > > > 
-> > > > I certainly like the interface, thanks!  I'm going to be pushing
-> > > > patches to fix this using ext4_kvfree_array_rcu() since there are a
-> > > > number of bugs in ext4's online resizing which appear to be hitting
-> > > > multiple cloud providers (with reports from both AWS and GCP) and I
-> > > > want something which can be easily backported to stable kernels.
-> > > > 
-> > > > But once kvfree_rcu() hits mainline, I'll switch ext4 to use it, since
-> > > > your kvfree_rcu() is definitely more efficient than my expedient
-> > > > jury-rig.
-> > > > 
-> > > > I don't feel entirely competent to review the implementation, but I do
-> > > > have one question.  It looks like the rcutiny implementation of
-> > > > kfree_call_rcu() isn't going to do the right thing with kvfree_rcu(p).
-> > > > Am I missing something?
-> > > 
-> > > Good catch!  I believe that rcu_reclaim_tiny() would need to do
-> > > kvfree() instead of its current kfree().
-> > > 
-> > > Vlad, anything I am missing here?
-> > >
-> > Yes something like that. There are some open questions about
-> > realization, when it comes to tiny RCU. Since we are talking
-> > about "headless" kvfree_rcu() interface, i mean we can not link
-> > freed "objects" between each other, instead we should place a
-> > pointer directly into array that will be drained later on.
-> > 
-> > It would be much more easier to achieve that if we were talking
-> > about the interface like: kvfree_rcu(p, rcu), but that is not our
-> > case :)
-> > 
-> > So, for CONFIG_TINY_RCU we should implement very similar what we
-> > have done for CONFIG_TREE_RCU or just simply do like Ted has done
-> > with his
-> > 
-> > void ext4_kvfree_array_rcu(void *to_free)
-> > 
-> > i mean:
-> > 
-> >    local_irq_save(flags);
-> >    struct foo *ptr = kzalloc(sizeof(*ptr), GFP_ATOMIC);
-> > 
-> >    if (ptr) {
-> >            ptr->ptr = to_free;
-> >            call_rcu(&ptr->rcu, kvfree_callback);
-> >    }
-> >    local_irq_restore(flags);
-> 
-> We really do still need the emergency case, in this case for when
-> kzalloc() returns NULL.  Which does indeed mean an rcu_head in the thing
-> being freed.  Otherwise, you end up with an out-of-memory deadlock where
-> you could free memory only if you had memor to allocate.
+It just causes a constant rate of 5000 interrupts per second for both
+GPIO and MMC, even if nothing is happening. Rely on in-band interrupts
+instead.
 
-Can we rely on GFP_ATOMIC allocations for these? These have emergency memory
-pools which are reserved.
+Fixes: 0e23372080def7bb ("arm: dts: sun8i: Add the TBS A711 tablet devicetree")
+Signed-off-by: Ondrej Jirman <megous@megous.com>
+---
+ arch/arm/boot/dts/sun8i-a83t-tbs-a711.dts | 3 ---
+ 1 file changed, 3 deletions(-)
 
-I was thinking a 2 fold approach (just thinking out loud..):
-
-If kfree_call_rcu() is called in atomic context or in any rcu reader, then
-use GFP_ATOMIC to grow an rcu_head wrapper on the atomic memory pool and
-queue that.
-
-Otherwise, grow an rcu_head on the stack of kfree_call_rcu() and call
-synchronize_rcu() inline with it.
-
-Use preemptible() andr task_struct's rcu_read_lock_nesting to differentiate
-between the 2 cases.
-
-Thoughts?
-
-> > Also there is one more open question what to do if GFP_ATOMIC
-> > gets failed in case of having low memory condition. Probably
-> > we can make use of "mempool interface" that allows to have
-> > min_nr guaranteed pre-allocated pages. 
-> 
-> But we really do still need to handle the case where everything runs out,
-> even the pre-allocated pages.
-
-If *everything* runs out, you are pretty much going to OOM sooner or later
-anyway :D. But I see what you mean. But the 'tradeoff' is RCU can free
-head-less objects where possible.
-
-thanks,
-
- - Joel
+diff --git a/arch/arm/boot/dts/sun8i-a83t-tbs-a711.dts b/arch/arm/boot/dts/sun8i-a83t-tbs-a711.dts
+index 2fd31a0a0b344..ee5ce3556b2ad 100644
+--- a/arch/arm/boot/dts/sun8i-a83t-tbs-a711.dts
++++ b/arch/arm/boot/dts/sun8i-a83t-tbs-a711.dts
+@@ -214,9 +214,6 @@ &mmc1 {
+ 	brcmf: wifi@1 {
+ 		reg = <1>;
+ 		compatible = "brcm,bcm4329-fmac";
+-		interrupt-parent = <&r_pio>;
+-		interrupts = <0 3 IRQ_TYPE_LEVEL_LOW>; /* PL3 WL_WAKE_UP */
+-		interrupt-names = "host-wake";
+ 	};
+ };
+ 
+-- 
+2.25.1
 
