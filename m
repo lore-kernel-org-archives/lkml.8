@@ -2,546 +2,248 @@ Return-Path: <SRS0=8jYG=4K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 66EF9C35673
-	for <linux-kernel@archiver.kernel.org>; Sat, 22 Feb 2020 22:05:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4E255C35666
+	for <linux-kernel@archiver.kernel.org>; Sat, 22 Feb 2020 22:12:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 29F9E20707
-	for <linux-kernel@archiver.kernel.org>; Sat, 22 Feb 2020 22:05:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 19A5A206EF
+	for <linux-kernel@archiver.kernel.org>; Sat, 22 Feb 2020 22:12:57 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=googlemail.com header.i=@googlemail.com header.b="hqTZR+1I"
+	dkim=pass (1024-bit key) header.d=joelfernandes.org header.i=@joelfernandes.org header.b="dgPuUSGb"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727099AbgBVWEx (ORCPT
+        id S1726908AbgBVWM4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 22 Feb 2020 17:04:53 -0500
-Received: from mail-wm1-f65.google.com ([209.85.128.65]:54042 "EHLO
-        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727069AbgBVWEv (ORCPT
+        Sat, 22 Feb 2020 17:12:56 -0500
+Received: from mail-qv1-f66.google.com ([209.85.219.66]:37871 "EHLO
+        mail-qv1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726853AbgBVWMz (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 22 Feb 2020 17:04:51 -0500
-Received: by mail-wm1-f65.google.com with SMTP id s10so5323469wmh.3;
-        Sat, 22 Feb 2020 14:04:48 -0800 (PST)
+        Sat, 22 Feb 2020 17:12:55 -0500
+Received: by mail-qv1-f66.google.com with SMTP id ci20so1263953qvb.4
+        for <linux-kernel@vger.kernel.org>; Sat, 22 Feb 2020 14:12:55 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=googlemail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=EhQUUlUjVhHr6sphTHHa2ksMN9UV4WLzzCRFzZrdNOk=;
-        b=hqTZR+1ILk5FVqauJCy6rjaxmiYbw2I5CisYse+baC5mgxwAUTLVT00YGw40xnpxfX
-         PzoKuox+EiEU2naOkj7PNfL3yhEs6Gquq9wzNKG8gCGtwHoxNlzIw178jrISjOCHACwU
-         4aTnnk9+RnBkwY8nxyU1nkIAQ8l0Jq8jM+kyS96s3PtNqZSyac6fkyEjf5XHIK44sCK2
-         4bHKWjBQbH7Ii83fjMRpV876RY1RKQwYjRzOt1gjkZXYqG64dBICBZnwM7LwDIEMqGIO
-         0xlIGnj+5SlS3KcWA3Z3XrJSF2pjGaUdnmd/fUEntGoF0OkaC+Obk2MYbDzfRIMMUYd9
-         vTxw==
+        d=joelfernandes.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=SlZWFeo/xeISosmrn1jsoTgJVZUqzfSk+kXXXeZ7TCI=;
+        b=dgPuUSGbLZR58jkS1J1gV4iXGQkYyGJcq06IXmtvDYDvgZy/uycNkeFsibcG1QWRn/
+         YWWf17LxF7QFaOCh8/Rec4tSOymouFIA0sKQg61ZllbMw1luINzPEVKELu+6swz4IlUI
+         1kJdW7uFOiMCCeARwVRAzjkFQhN/mUiH4Sx18=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=EhQUUlUjVhHr6sphTHHa2ksMN9UV4WLzzCRFzZrdNOk=;
-        b=MAPl+AvJBi0svZLnNC+pbOB8XpHtc5zs/+RhSlMwsunWmAmRZXF8ZPLaeRxdunxPpI
-         rnmCyhRhu5l5cvk0r4YMwcp7hneelc3uDGs3C5xI8UkEJzI4BHq6MZcy9iKHozwf2wSp
-         R1rZ4uisgexFVMgRib2vKOvc9G7LEMBhxhhj2PsPoySfGzB/4F18g+xNk4ZTtLHhHVNK
-         bBAidNQ4IrNAsAgIC4eTy6DGw+uhzbgTgAiu7tamtUb4b29q/lfzo77Z1HY7uDp+veVQ
-         aEun//xl0gFjeXNf7xPNEPVOq6kQjkA+FH92EFfS7D8E0a0yCwdfED2Ts64lU1dsz/kb
-         H9OQ==
-X-Gm-Message-State: APjAAAXn0NOqPKt6KMVaugdGzeDn7MWOXODgWzC88T0JRIgzK1D4qUg/
-        X54t1WIaDSFR5NYWSJhhiEo=
-X-Google-Smtp-Source: APXvYqwQ8u99yRx/WtTy3S7i93YkO3dPik8SKciWy6GxI5oagbMDni7PyYQJoLBYnAqPcQKllZtyJQ==
-X-Received: by 2002:a7b:c5cd:: with SMTP id n13mr12000734wmk.172.1582409087753;
-        Sat, 22 Feb 2020 14:04:47 -0800 (PST)
-Received: from localhost.localdomain (p200300F1373A1900428D5CFFFEB99DB8.dip0.t-ipconnect.de. [2003:f1:373a:1900:428d:5cff:feb9:9db8])
-        by smtp.googlemail.com with ESMTPSA id q130sm11151738wme.19.2020.02.22.14.04.46
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=SlZWFeo/xeISosmrn1jsoTgJVZUqzfSk+kXXXeZ7TCI=;
+        b=JnSsAWD22KR+mhU7qURdtrwB11xYPaVUTPAa/rZkD3T8Dq4LrnPtGA0jS0zxDle1eZ
+         wO9V/pWXRz254Y5lHZIqRvv2D5tK//oJkh6D0YsZHSSVgUCfRT0DLbyVZnbL6bHJXz+t
+         yJ2+sB7cxDYVAx6zTTkPp3f5hMLJw9DkT3ePjeEFuaFBa79C3b83usIc09nELf6xxtDP
+         pa9eIN/mSpB+imeQGYcFkeRcThMm0FBXNYb9JS2DEvk9HKsPoXaYPOx5edZOIz0YQyl2
+         1v4gvymQolWquCP2eYxXRKVnGRlpPIu8LAafv2389OsFBBa9LcNKnzfsMbLOorEEF6AI
+         xjew==
+X-Gm-Message-State: APjAAAVLzhc/w3zC25EpMtLnCuJolBuzwQwDWlMvZd/6v2vE3442uJKo
+        AeZgaBDpZaOkLol5OLGsLasM1Q==
+X-Google-Smtp-Source: APXvYqyh7v0sVfuBPM9DJO3MPdrRbTBg+5GYxGIWr9+HNrNofK4qA3bIbGHhMZdtHTqgWwVeAyTlRw==
+X-Received: by 2002:a0c:f9c7:: with SMTP id j7mr37411528qvo.222.1582409574447;
+        Sat, 22 Feb 2020 14:12:54 -0800 (PST)
+Received: from localhost ([2620:15c:6:12:9c46:e0da:efbf:69cc])
+        by smtp.gmail.com with ESMTPSA id v7sm3772085qkg.103.2020.02.22.14.12.53
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 22 Feb 2020 14:04:47 -0800 (PST)
-From:   Martin Blumenstingl <martin.blumenstingl@googlemail.com>
-To:     yuq825@gmail.com, dri-devel@lists.freedesktop.org
-Cc:     airlied@linux.ie, daniel@ffwll.ch, linux-kernel@vger.kernel.org,
-        tomeu.vizoso@collabora.com, robh@kernel.org, steven.price@arm.com,
-        alyssa.rosenzweig@collabora.com, linux-amlogic@lists.infradead.org,
-        linux-rockchip@lists.infradead.org, wens@csie.org,
-        linux-pm@vger.kernel.org,
-        Martin Blumenstingl <martin.blumenstingl@googlemail.com>
-Subject: [PATCH RFC v3 2/2] drm/lima: Add optional devfreq and cooling device support
-Date:   Sat, 22 Feb 2020 23:04:32 +0100
-Message-Id: <20200222220432.448115-3-martin.blumenstingl@googlemail.com>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20200222220432.448115-1-martin.blumenstingl@googlemail.com>
-References: <20200222220432.448115-1-martin.blumenstingl@googlemail.com>
+        Sat, 22 Feb 2020 14:12:53 -0800 (PST)
+Date:   Sat, 22 Feb 2020 17:12:53 -0500
+From:   Joel Fernandes <joel@joelfernandes.org>
+To:     Uladzislau Rezki <urezki@gmail.com>
+Cc:     "Theodore Y. Ts'o" <tytso@mit.edu>,
+        "Paul E. McKenney" <paulmck@kernel.org>,
+        Ext4 Developers List <linux-ext4@vger.kernel.org>,
+        Suraj Jitindar Singh <surajjs@amazon.com>,
+        LKML <linux-kernel@vger.kernel.org>, rcu@vger.kernel.org
+Subject: Re: [PATCH RFC] ext4: fix potential race between online resizing and
+ write operations
+Message-ID: <20200222221253.GB191380@google.com>
+References: <20200215233817.GA670792@mit.edu>
+ <20200216121246.GG2935@paulmck-ThinkPad-P72>
+ <20200217160827.GA5685@pc636>
+ <20200217193314.GA12604@mit.edu>
+ <20200218170857.GA28774@pc636>
+ <20200221120618.GA194360@google.com>
+ <20200221132817.GB194360@google.com>
+ <20200221192152.GA6306@pc636>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200221192152.GA6306@pc636>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Most platforms with a Mali-400 or Mali-450 GPU also have support for
-changing the GPU clock frequency. Add devfreq support so the GPU clock
-rate is updated based on the actual GPU usage when the
-"operating-points-v2" property is present in the board.dts.
+On Fri, Feb 21, 2020 at 08:21:52PM +0100, Uladzislau Rezki wrote:
+> > > 
+> > > Overall this implementation is nice. You are basically avoiding allocating
+> > > rcu_head like Ted did by using the array-of-pointers technique we used for
+> > > the previous kfree_rcu() work.
+> > > 
+> > > One thing stands out, the path where we could not allocate a page for the new
+> > > block node:
+> > > 
+> > > > @@ -3061,6 +3148,11 @@ void kfree_call_rcu(struct rcu_head *head, rcu_callback_t func)
+> > > >         if (krcp->initialized)
+> > > >                 spin_unlock(&krcp->lock);
+> > > >         local_irq_restore(flags);
+> > > > +
+> > > > +       if (!skip_call_rcu) {
+> > > > +               synchronize_rcu();
+> > > > +               kvfree(ptr_to_free);
+> > > 
+> > > We can't block, it has to be async otherwise everything else blocks, and I
+> > > think this can also be used from interrupt handlers which would at least be
+> > > an SWA violation. So perhaps it needs to allocate an rcu_head wrapper object
+> > > itself for the 'emergeny case' and use the regular techniques.
+> > > 
+> > > Another thing that stands out is the code duplication, if we can make this
+> > > reuse as much as of the previous code as possible, that'd be great. I'd like
+> > > to avoid bvcached and bvhead if possible. Maybe we can store information
+> > > about the fact that this is a 'special object' in some of the lower-order
+> > > bits of the pointer. Then we can detect that it is 'special' and free it
+> > > using kvfree() during the reclaim
+> > 
+> > Basically what I did different is:
+> > 1. Use the existing kfree_rcu_bulk_data::records array to store the
+> >    to-be-freed array.
+> > 2. In case of emergency, allocate a new wrapper and tag the pointer.
+> >    Read the tag later to figure its an array wrapper and do additional kvfree.
+> >
+> I see your point and agree that duplication is odd and we should avoid
+> it as much as possible. Also, i like the idea of using the wrapper as
+> one more chance to build a "head" for headless object.
+> 
+> I did not mix pointers because then you will need to understand what is what.
 
-The actual devfreq code is taken from panfrost_devfreq.c and modified so
-it matches what the lima hardware needs:
-- a call to dev_pm_opp_set_clkname() during initialization because there
-  are two clocks on Mali-4x0 IPs. "core" is the one that actually clocks
-  the GPU so we need to control it using devfreq.
-- locking when reading or writing the devfreq statistics because (unlike
-  than panfrost) we have multiple PP and GP IRQs which may finish jobs
-  concurrently.
+Well that's why I brought up the whole tagging idea. Then you don't need
+separate pointers to manage either (edit: but maybe you do as you mentioned
+vfree below..).
 
-Signed-off-by: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
----
- drivers/gpu/drm/lima/Kconfig        |   1 +
- drivers/gpu/drm/lima/Makefile       |   3 +-
- drivers/gpu/drm/lima/lima_devfreq.c | 215 ++++++++++++++++++++++++++++
- drivers/gpu/drm/lima/lima_devfreq.h |  15 ++
- drivers/gpu/drm/lima/lima_device.c  |   4 +
- drivers/gpu/drm/lima/lima_device.h  |  18 +++
- drivers/gpu/drm/lima/lima_drv.c     |  14 +-
- drivers/gpu/drm/lima/lima_sched.c   |   9 ++
- drivers/gpu/drm/lima/lima_sched.h   |   3 +
- 9 files changed, 279 insertions(+), 3 deletions(-)
- create mode 100644 drivers/gpu/drm/lima/lima_devfreq.c
- create mode 100644 drivers/gpu/drm/lima/lima_devfreq.h
+> It is OK for "emergency" path, because we simply can just serialize it by kvfree()
+> call, it checks inside what the ptr address belong to:
+> 
+> <snip>
+> void kvfree(const void *addr)
+> {
+>     if (is_vmalloc_addr(addr))
+>         vfree(addr);
+>     else
+>         kfree(addr);
+> }
+> <snip>
+> 
+> whereas normal path, i mean "bulk one" where we store pointers into array
+> would be broken. We can not call kfree_bulk(array, nr_entries) if the passed
+> array contains "vmalloc" pointers, because it is different allocator. Therefore,
+> i deliberately have made it as a special case.
 
-diff --git a/drivers/gpu/drm/lima/Kconfig b/drivers/gpu/drm/lima/Kconfig
-index d589f09d04d9..09404bc96ad8 100644
---- a/drivers/gpu/drm/lima/Kconfig
-+++ b/drivers/gpu/drm/lima/Kconfig
-@@ -10,5 +10,6 @@ config DRM_LIMA
-        depends on OF
-        select DRM_SCHED
-        select DRM_GEM_SHMEM_HELPER
-+       select PM_DEVFREQ
-        help
- 	 DRM driver for ARM Mali 400/450 GPUs.
-diff --git a/drivers/gpu/drm/lima/Makefile b/drivers/gpu/drm/lima/Makefile
-index a85444b0a1d4..5e5c29875e9c 100644
---- a/drivers/gpu/drm/lima/Makefile
-+++ b/drivers/gpu/drm/lima/Makefile
-@@ -14,6 +14,7 @@ lima-y := \
- 	lima_sched.o \
- 	lima_ctx.o \
- 	lima_dlbu.o \
--	lima_bcast.o
-+	lima_bcast.o \
-+	lima_devfreq.o
- 
- obj-$(CONFIG_DRM_LIMA) += lima.o
-diff --git a/drivers/gpu/drm/lima/lima_devfreq.c b/drivers/gpu/drm/lima/lima_devfreq.c
-new file mode 100644
-index 000000000000..3a6b315136ce
---- /dev/null
-+++ b/drivers/gpu/drm/lima/lima_devfreq.c
-@@ -0,0 +1,215 @@
-+// SPDX-License-Identifier: GPL-2.0
-+/*
-+ * Copyright 2019 Martin Blumenstingl <martin.blumenstingl@googlemail.com>
-+ *
-+ * Based on panfrost_devfreq.c:
-+ *   Copyright 2019 Collabora ltd.
-+ */
-+#include <linux/clk.h>
-+#include <linux/devfreq.h>
-+#include <linux/devfreq_cooling.h>
-+#include <linux/device.h>
-+#include <linux/platform_device.h>
-+#include <linux/pm_opp.h>
-+#include <linux/property.h>
-+
-+#include "lima_device.h"
-+#include "lima_devfreq.h"
-+
-+static void lima_devfreq_update_utilization(struct lima_device *ldev)
-+{
-+	unsigned long irqflags;
-+	ktime_t now, last;
-+
-+	if (!ldev->devfreq.devfreq)
-+		return;
-+
-+	spin_lock_irqsave(&ldev->devfreq.lock, irqflags);
-+
-+	now = ktime_get();
-+	last = ldev->devfreq.time_last_update;
-+
-+	if (atomic_read(&ldev->devfreq.busy_count) > 0)
-+		ldev->devfreq.busy_time += ktime_sub(now, last);
-+	else
-+		ldev->devfreq.idle_time += ktime_sub(now, last);
-+
-+	ldev->devfreq.time_last_update = now;
-+
-+	spin_unlock_irqrestore(&ldev->devfreq.lock, irqflags);
-+}
-+
-+static int lima_devfreq_target(struct device *dev, unsigned long *freq,
-+			       u32 flags)
-+{
-+	struct dev_pm_opp *opp;
-+	int err;
-+
-+	opp = devfreq_recommended_opp(dev, freq, flags);
-+	if (IS_ERR(opp))
-+		return PTR_ERR(opp);
-+	dev_pm_opp_put(opp);
-+
-+	err = dev_pm_opp_set_rate(dev, *freq);
-+	if (err)
-+		return err;
-+
-+	return 0;
-+}
-+
-+static void lima_devfreq_reset(struct lima_device *ldev)
-+{
-+	unsigned long irqflags;
-+
-+	spin_lock_irqsave(&ldev->devfreq.lock, irqflags);
-+
-+	ldev->devfreq.busy_time = 0;
-+	ldev->devfreq.idle_time = 0;
-+	ldev->devfreq.time_last_update = ktime_get();
-+
-+	spin_unlock_irqrestore(&ldev->devfreq.lock, irqflags);
-+}
-+
-+static int lima_devfreq_get_dev_status(struct device *dev,
-+				       struct devfreq_dev_status *status)
-+{
-+	struct lima_device *ldev = dev_get_drvdata(dev);
-+	unsigned long irqflags;
-+
-+	lima_devfreq_update_utilization(ldev);
-+
-+	status->current_frequency = clk_get_rate(ldev->clk_gpu);
-+
-+	spin_lock_irqsave(&ldev->devfreq.lock, irqflags);
-+
-+	status->total_time = ktime_to_ns(ktime_add(ldev->devfreq.busy_time,
-+						   ldev->devfreq.idle_time));
-+	status->busy_time = ktime_to_ns(ldev->devfreq.busy_time);
-+
-+	spin_unlock_irqrestore(&ldev->devfreq.lock, irqflags);
-+
-+	lima_devfreq_reset(ldev);
-+
-+	dev_dbg(ldev->dev, "busy %lu total %lu %lu %% freq %lu MHz\n",
-+		status->busy_time, status->total_time,
-+		status->busy_time / (status->total_time / 100),
-+		status->current_frequency / 1000 / 1000);
-+
-+	return 0;
-+}
-+
-+static struct devfreq_dev_profile lima_devfreq_profile = {
-+	.polling_ms = 50, /* ~3 frames */
-+	.target = lima_devfreq_target,
-+	.get_dev_status = lima_devfreq_get_dev_status,
-+};
-+
-+void lima_devfreq_fini(struct lima_device *ldev)
-+{
-+	if (ldev->devfreq.cooling)
-+		devfreq_cooling_unregister(ldev->devfreq.cooling);
-+
-+	if (ldev->devfreq.devfreq)
-+		devm_devfreq_remove_device(&ldev->pdev->dev,
-+					   ldev->devfreq.devfreq);
-+
-+	dev_pm_opp_of_remove_table(&ldev->pdev->dev);
-+
-+	if (ldev->devfreq.regulators_opp_table)
-+		dev_pm_opp_put_regulators(ldev->devfreq.regulators_opp_table);
-+
-+	if (ldev->devfreq.clkname_opp_table)
-+		dev_pm_opp_put_clkname(ldev->devfreq.clkname_opp_table);
-+}
-+
-+int lima_devfreq_init(struct lima_device *ldev)
-+{
-+	struct thermal_cooling_device *cooling;
-+	struct device *dev = &ldev->pdev->dev;
-+	struct opp_table *opp_table;
-+	struct devfreq *devfreq;
-+	struct dev_pm_opp *opp;
-+	unsigned long cur_freq;
-+	int ret;
-+
-+	if (!device_property_present(dev, "operating-points-v2"))
-+		/* Optional, continue without devfreq */
-+		return 0;
-+
-+	spin_lock_init(&ldev->devfreq.lock);
-+
-+	opp_table = dev_pm_opp_set_clkname(dev, "core");
-+	if (IS_ERR(opp_table)) {
-+		ret = PTR_ERR(opp_table);
-+		goto err_fini;
-+	}
-+
-+	ldev->devfreq.clkname_opp_table = opp_table;
-+
-+	opp_table = dev_pm_opp_set_regulators(dev,
-+					      (const char *[]){ "mali" },
-+					      1);
-+	if (IS_ERR(opp_table)) {
-+		ret = PTR_ERR(opp_table);
-+
-+		/* Continue if the optional regulator is missing */
-+		if (ret != -ENODEV)
-+			goto err_fini;
-+	} else {
-+		ldev->devfreq.regulators_opp_table = opp_table;
-+	}
-+
-+	ret = dev_pm_opp_of_add_table(dev);
-+	if (ret)
-+		goto err_fini;
-+
-+	lima_devfreq_reset(ldev);
-+
-+	cur_freq = clk_get_rate(ldev->clk_gpu);
-+
-+	opp = devfreq_recommended_opp(dev, &cur_freq, 0);
-+	if (IS_ERR(opp)) {
-+		ret = PTR_ERR(opp);
-+		goto err_fini;
-+	}
-+
-+	lima_devfreq_profile.initial_freq = cur_freq;
-+	dev_pm_opp_put(opp);
-+
-+	devfreq = devm_devfreq_add_device(dev, &lima_devfreq_profile,
-+					  DEVFREQ_GOV_SIMPLE_ONDEMAND, NULL);
-+	if (IS_ERR(devfreq)) {
-+		dev_err(dev, "Couldn't initialize GPU devfreq\n");
-+		ret = PTR_ERR(devfreq);
-+		goto err_fini;
-+	}
-+
-+	ldev->devfreq.devfreq = devfreq;
-+
-+	cooling = of_devfreq_cooling_register(dev->of_node, devfreq);
-+	if (IS_ERR(cooling))
-+		dev_info(dev, "Failed to register cooling device\n");
-+	else
-+		ldev->devfreq.cooling = cooling;
-+
-+	return 0;
-+
-+err_fini:
-+	lima_devfreq_fini(ldev);
-+	return ret;
-+}
-+
-+void lima_devfreq_record_busy(struct lima_device *ldev)
-+{
-+	lima_devfreq_update_utilization(ldev);
-+	atomic_inc(&ldev->devfreq.busy_count);
-+}
-+
-+void lima_devfreq_record_idle(struct lima_device *ldev)
-+{
-+	int count;
-+
-+	lima_devfreq_update_utilization(ldev);
-+	count = atomic_dec_if_positive(&ldev->devfreq.busy_count);
-+	WARN_ON(count < 0);
-+}
-diff --git a/drivers/gpu/drm/lima/lima_devfreq.h b/drivers/gpu/drm/lima/lima_devfreq.h
-new file mode 100644
-index 000000000000..fe4f8a437033
---- /dev/null
-+++ b/drivers/gpu/drm/lima/lima_devfreq.h
-@@ -0,0 +1,15 @@
-+/* SPDX-License-Identifier: GPL-2.0 */
-+/* Copyright 2019 Martin Blumenstingl <martin.blumenstingl@googlemail.com> */
-+
-+#ifndef __LIMA_DEVFREQ_H__
-+#define __LIMA_DEVFREQ_H__
-+
-+struct lima_device;
-+
-+int lima_devfreq_init(struct lima_device *ldev);
-+void lima_devfreq_fini(struct lima_device *ldev);
-+
-+void lima_devfreq_record_busy(struct lima_device *ldev);
-+void lima_devfreq_record_idle(struct lima_device *ldev);
-+
-+#endif
-diff --git a/drivers/gpu/drm/lima/lima_device.c b/drivers/gpu/drm/lima/lima_device.c
-index 19829b543024..7f1f7a1c03e5 100644
---- a/drivers/gpu/drm/lima/lima_device.c
-+++ b/drivers/gpu/drm/lima/lima_device.c
-@@ -214,6 +214,8 @@ static int lima_init_gp_pipe(struct lima_device *dev)
- 	struct lima_sched_pipe *pipe = dev->pipe + lima_pipe_gp;
- 	int err;
- 
-+	pipe->ldev = dev;
-+
- 	err = lima_sched_pipe_init(pipe, "gp");
- 	if (err)
- 		return err;
-@@ -244,6 +246,8 @@ static int lima_init_pp_pipe(struct lima_device *dev)
- 	struct lima_sched_pipe *pipe = dev->pipe + lima_pipe_pp;
- 	int err, i;
- 
-+	pipe->ldev = dev;
-+
- 	err = lima_sched_pipe_init(pipe, "pp");
- 	if (err)
- 		return err;
-diff --git a/drivers/gpu/drm/lima/lima_device.h b/drivers/gpu/drm/lima/lima_device.h
-index 31158d86271c..f5348474a6fc 100644
---- a/drivers/gpu/drm/lima/lima_device.h
-+++ b/drivers/gpu/drm/lima/lima_device.h
-@@ -5,6 +5,7 @@
- #define __LIMA_DEVICE_H__
- 
- #include <drm/drm_device.h>
-+#include <linux/atomic.h>
- #include <linux/delay.h>
- 
- #include "lima_sched.h"
-@@ -94,6 +95,23 @@ struct lima_device {
- 
- 	u32 *dlbu_cpu;
- 	dma_addr_t dlbu_dma;
-+
-+	struct {
-+		struct devfreq *devfreq;
-+		struct opp_table *clkname_opp_table;
-+		struct opp_table *regulators_opp_table;
-+		struct thermal_cooling_device *cooling;
-+		ktime_t busy_time;
-+		ktime_t idle_time;
-+		ktime_t time_last_update;
-+		atomic_t busy_count;
-+		/*
-+		 * Protect busy_time, idle_time and time_last_update because
-+		 * these can be updated concurrently - for example by the GP
-+		 * and PP interrupts.
-+		 */
-+		spinlock_t lock;
-+	} devfreq;
- };
- 
- static inline struct lima_device *
-diff --git a/drivers/gpu/drm/lima/lima_drv.c b/drivers/gpu/drm/lima/lima_drv.c
-index 2daac64d8955..5d9cfc940dd8 100644
---- a/drivers/gpu/drm/lima/lima_drv.c
-+++ b/drivers/gpu/drm/lima/lima_drv.c
-@@ -10,6 +10,7 @@
- #include <drm/drm_prime.h>
- #include <drm/lima_drm.h>
- 
-+#include "lima_devfreq.h"
- #include "lima_drv.h"
- #include "lima_gem.h"
- #include "lima_vm.h"
-@@ -306,18 +307,26 @@ static int lima_pdev_probe(struct platform_device *pdev)
- 	if (err)
- 		goto err_out1;
- 
-+	err = lima_devfreq_init(ldev);
-+	if (err) {
-+		dev_err(&pdev->dev, "Fatal error during devfreq init\n");
-+		goto err_out2;
-+	}
-+
- 	/*
- 	 * Register the DRM device with the core and the connectors with
- 	 * sysfs.
- 	 */
- 	err = drm_dev_register(ddev, 0);
- 	if (err < 0)
--		goto err_out2;
-+		goto err_out3;
- 
- 	return 0;
- 
--err_out2:
-+err_out3:
- 	lima_device_fini(ldev);
-+err_out2:
-+	lima_devfreq_fini(ldev);
- err_out1:
- 	drm_dev_put(ddev);
- err_out0:
-@@ -331,6 +340,7 @@ static int lima_pdev_remove(struct platform_device *pdev)
- 	struct drm_device *ddev = ldev->ddev;
- 
- 	drm_dev_unregister(ddev);
-+	lima_devfreq_fini(ldev);
- 	lima_device_fini(ldev);
- 	drm_dev_put(ddev);
- 	lima_sched_slab_fini();
-diff --git a/drivers/gpu/drm/lima/lima_sched.c b/drivers/gpu/drm/lima/lima_sched.c
-index 3886999b4533..2eae4ddfa504 100644
---- a/drivers/gpu/drm/lima/lima_sched.c
-+++ b/drivers/gpu/drm/lima/lima_sched.c
-@@ -5,6 +5,7 @@
- #include <linux/slab.h>
- #include <linux/xarray.h>
- 
-+#include "lima_devfreq.h"
- #include "lima_drv.h"
- #include "lima_sched.h"
- #include "lima_vm.h"
-@@ -214,6 +215,8 @@ static struct dma_fence *lima_sched_run_job(struct drm_sched_job *job)
- 	 */
- 	ret = dma_fence_get(task->fence);
- 
-+	lima_devfreq_record_busy(pipe->ldev);
-+
- 	pipe->current_task = task;
- 
- 	/* this is needed for MMU to work correctly, otherwise GP/PP
-@@ -285,6 +288,8 @@ static void lima_sched_timedout_job(struct drm_sched_job *job)
- 	pipe->current_vm = NULL;
- 	pipe->current_task = NULL;
- 
-+	lima_devfreq_record_idle(pipe->ldev);
-+
- 	drm_sched_resubmit_jobs(&pipe->base);
- 	drm_sched_start(&pipe->base, true);
- }
-@@ -362,6 +367,10 @@ void lima_sched_pipe_task_done(struct lima_sched_pipe *pipe)
- 		else
- 			drm_sched_fault(&pipe->base);
- 	} else {
-+		struct lima_sched_task *task = pipe->current_task;
-+
-+		lima_devfreq_record_idle(pipe->ldev);
-+
- 		pipe->task_fini(pipe);
- 		dma_fence_signal(task->fence);
- 	}
-diff --git a/drivers/gpu/drm/lima/lima_sched.h b/drivers/gpu/drm/lima/lima_sched.h
-index d64393fb50a9..19bbc5214cf2 100644
---- a/drivers/gpu/drm/lima/lima_sched.h
-+++ b/drivers/gpu/drm/lima/lima_sched.h
-@@ -6,6 +6,7 @@
- 
- #include <drm/gpu_scheduler.h>
- 
-+struct lima_device;
- struct lima_vm;
- 
- struct lima_sched_task {
-@@ -44,6 +45,8 @@ struct lima_sched_pipe {
- 	u32 fence_seqno;
- 	spinlock_t fence_lock;
- 
-+	struct lima_device *ldev;
-+
- 	struct lima_sched_task *current_task;
- 	struct lima_vm *current_vm;
- 
--- 
-2.25.1
+Ok, it would be nice if you can verify that ptr_to_free passed to
+kfree_call_rcu() is infact a vmalloc pointer.
+
+> > Perhaps the synchronize_rcu() should be done from a workqueue handler
+> > to prevent IRQ crapping out?
+> >
+> I think so. For example one approach would be:
+> 
+> <snip>
+> struct free_deferred {
+>  struct llist_head list;
+>  struct work_struct wq;
+> };
+> static DEFINE_PER_CPU(struct free_deferred, free_deferred);
+> 
+> static void free_work(struct work_struct *w)
+> {
+>   struct free_deferred *p = container_of(w, struct free_deferred, wq);
+>   struct llist_node *t, *llnode;
+> 
+>   synchronize_rcu();
+> 
+>   llist_for_each_safe(llnode, t, llist_del_all(&p->list))
+>      vfree((void *)llnode, 1);
+> }
+> 
+> static inline void free_deferred_common(void *ptr_to_free)
+> {
+>     struct free_deferred *p = raw_cpu_ptr(&free_deferred);
+> 
+>     if (llist_add((struct llist_node *)ptr_to_free, &p->list))
+
+Would this not corrupt the ptr_to_free pointer which readers might still be
+accessing since grace period has not yet ended?
+
+We cannot touch the ptr_to_free pointer until after the grace period has
+ended.
+
+>         schedule_work(&p->wq);
+> }
+> <snip>
+> 
+> and it seems it should work. Because we know that KMALLOC_MIN_SIZE
+> can not be less then machine word:
+> 
+> /*
+>  * Kmalloc subsystem.
+>  */
+>  #ifndef KMALLOC_MIN_SIZE
+>  #define KMALLOC_MIN_SIZE (1 << KMALLOC_SHIFT_LOW)
+>  #endif
+> 
+> when it comes to vmalloc pointer it can not be less then one PAGE_SIZE :)
+> 
+> Another thing:
+> 
+> we are talking about "headless" variant that is special, therefore it
+> implies to have some restrictions, since we need a dynamic memory to
+> drive it. For example "headless" object can be freed from preemptible
+> context only, because freeing can be inlined:
+> 
+> <snip>
+> +   // NOT SURE if permitted due to IRQ. Maybe we
+> +   // should try doing this from WQ?
+> +   synchronize_rcu();
+> +   kvfree(ptr);
+> <snip>
+> 
+> Calling synchronize_rcu() from the IRQ context will screw the system up :)
+> Because the current CPU will never pass the QS state if i do not miss something.
+
+Yes are you right, calling synchronize_rcu() from IRQ context is a strict no-no.
+
+I believe we could tap into the GFP_ATOMIC emergency memory pool for this
+emergency situation. This pool is used for emergency cases. I think in
+emergency we can grow an rcu_head on this pool.
+
+> Also kvfree() itself can be called from the preemptible context only, excluding IRQ,
+> there is a special path for it, otherwise vfree() can sleep. 
+
+Ok that's good to know.
+
+> > debug_objects bits wouldn't work obviously for the !emergency kvfree case,
+> > not sure what we can do there.
+> >
+> Agree.
+> 
+> Thank you, Joel, for your comments!
+
+No problem, I think we have a couple of ideas here.
+
+What I also wanted to do was (may be after all this), see if we can create an
+API for head-less kfree based on the same ideas. Not just for arrays for for
+any object. Calling it, say, kfree_rcu_headless() and then use the bulk array
+as we have been doing. That would save any users from having an rcu_head --
+of course with all needed warnings about memory allocation failure. Vlad,
+What do you think? Paul, any thoughts on this?
+
+thanks,
+
+ - Joel
 
