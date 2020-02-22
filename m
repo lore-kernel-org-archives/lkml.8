@@ -2,126 +2,176 @@ Return-Path: <SRS0=8jYG=4K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6BD0EC35671
-	for <linux-kernel@archiver.kernel.org>; Sat, 22 Feb 2020 11:14:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DE25FC35666
+	for <linux-kernel@archiver.kernel.org>; Sat, 22 Feb 2020 11:21:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 35CC520702
-	for <linux-kernel@archiver.kernel.org>; Sat, 22 Feb 2020 11:14:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B1F91206EF
+	for <linux-kernel@archiver.kernel.org>; Sat, 22 Feb 2020 11:21:38 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="t6NTppqn"
+	dkim=pass (2048-bit key) header.d=nifty.com header.i=@nifty.com header.b="tND51qjy"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727166AbgBVLNT (ORCPT
+        id S1727152AbgBVLVQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 22 Feb 2020 06:13:19 -0500
-Received: from mail-il1-f182.google.com ([209.85.166.182]:42003 "EHLO
-        mail-il1-f182.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726726AbgBVLNT (ORCPT
+        Sat, 22 Feb 2020 06:21:16 -0500
+Received: from conuserg-12.nifty.com ([210.131.2.79]:29551 "EHLO
+        conuserg-12.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726726AbgBVLVQ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 22 Feb 2020 06:13:19 -0500
-Received: by mail-il1-f182.google.com with SMTP id x2so3844369ila.9;
-        Sat, 22 Feb 2020 03:13:19 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:from:date:message-id:subject:to:cc;
-        bh=Ht5BoY4Unpl7Z+knQPBoIyIniKZQ/PndFQpeGScWNOg=;
-        b=t6NTppqn5wJdtw8VlyZ/AvOHefL6e7n8KWG0Aqnmn7EDo/i2+7IrUswKcKOUyTrVYo
-         8VOXuZt9Ea2d3EjMk8D0CFXhD/SZeIan12eFWJgj7+w3v5sxPq1PgpX0uwZskLPqA/Zo
-         DYP3e629pM/elBqIJ9vqJXpEZPeBvC51DpciCpyan9s0u+zYej2P2wcgr7IkCS5I68WX
-         QYX1w445QTOsSaF6ZLdOcHOcCqfHqcz6ixZz62vrnjBAbidktsnHyUuR+/M0SIZhEzSy
-         q/FONZZXIMmlpMq56VKluxHYQcWv/VQ3BB+XvSYIAmfzYujDl0JZL5qI1JPq3xzzEVhO
-         fNcA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:from:date:message-id:subject:to:cc;
-        bh=Ht5BoY4Unpl7Z+knQPBoIyIniKZQ/PndFQpeGScWNOg=;
-        b=LGXjzO2uGzP/j1Fcw+HD+LyAhoNSVfr9caRL7afrO40BW5uRn/oPDj8JNDrgaOu+kK
-         9SNn0I5Mu0tIGtpYUKGSTNLXjgzxjEPgV2Z+uCLwDqrHfreSwQgLXbZX7JvqyqIOrCDE
-         o8PCb6rDcJZPob806lsnfflxdEha1fuD3hFpSd1BPty97ad25juGMOjqyzKls4nk0xbc
-         j9SA5GjEjpwYuhlJDu/NdD4tqy7A4mTNEcdcx30kJGErou//4DMlGGYxX81WRh6bWqrn
-         9DwZERBXtBz5EDyhOMIgGSbLRtLvn46P3sucnHzL2t7IPJKKHZsUbreuzw0zI9lIIG87
-         hjoA==
-X-Gm-Message-State: APjAAAVJDqDnePdlfYo/1M6NUL8uOB1TzysgFidWvB91K52/cCKs7DXZ
-        Op2r0llXrLoCtXbSf2LGIuC6LxPIs3eXmqdH0xw=
-X-Google-Smtp-Source: APXvYqyZYteqVWyvhXrnoZ3cXXqYSvKuW7cUtmxNri/Z/UE90+7L+OEOo8VOF6Ymoo34PWyws9+OcdufW7YTbDFjzQY=
-X-Received: by 2002:a05:6e02:f0f:: with SMTP id x15mr42502883ilj.298.1582369998523;
- Sat, 22 Feb 2020 03:13:18 -0800 (PST)
-MIME-Version: 1.0
-From:   Martin Volf <martin.volf.42@gmail.com>
-Date:   Sat, 22 Feb 2020 12:13:07 +0100
-Message-ID: <CAM1AHpQ4196tyD=HhBu-2donSsuogabkfP03v1YF26Q7_BgvgA@mail.gmail.com>
-Subject: [regression] nct6775 does not load in 5.4 and 5.5, bisected to b84398d6d7f90080
-To:     Mika Westerberg <mika.westerberg@linux.intel.com>,
-        Jean Delvare <jdelvare@suse.com>,
-        Wolfram Sang <wsa@the-dreams.de>,
-        Guenter Roeck <linux@roeck-us.net>
-Cc:     linux-i2c@vger.kernel.org, linux-hwmon@vger.kernel.org,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+        Sat, 22 Feb 2020 06:21:16 -0500
+X-Greylist: delayed 118522 seconds by postgrey-1.27 at vger.kernel.org; Sat, 22 Feb 2020 06:21:14 EST
+Received: from grover.flets-west.jp (softbank126093102113.bbtec.net [126.93.102.113]) (authenticated)
+        by conuserg-12.nifty.com with ESMTP id 01MBKjen004488;
+        Sat, 22 Feb 2020 20:20:46 +0900
+DKIM-Filter: OpenDKIM Filter v2.10.3 conuserg-12.nifty.com 01MBKjen004488
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
+        s=dec2015msa; t=1582370446;
+        bh=Fm1qChr6ZbZLhdE3dP5bKvN2cnwWcGsLh5GHdABxVyE=;
+        h=From:To:Cc:Subject:Date:From;
+        b=tND51qjySwpbpvelT1nqARk2V3PBmw+G/91f5VL+7kQ8U6lzFvobKmL4ivpI3tTZR
+         Y/OjJTFSMLPAggU5pvKARW8Xw3YdLeCQAwX/h3Vfob1Y6IAUMLe1pez7DeBazDmt1X
+         m8Csj6062CPiy6sgOUKnB0K4EsShKp+mU9ISVC9ANX6ZxbImQovZcdEqqAGdqL2nUQ
+         xIh1PYOOFIgKcttm1GxTOyRZNJibjW8xfol4nS+jy13eIBvzT9X5ke7ynxf8io/q6K
+         baxH+4UFcdsw+llaa38eluyvX5mP5LGjwgzr+SPRdfhQ1+XavGSOnPLBwKMmyft4fZ
+         ZP/EEdXZCwkBA==
+X-Nifty-SrcIP: [126.93.102.113]
+From:   Masahiro Yamada <yamada.masahiro@socionext.com>
+To:     Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org
+Cc:     linux-kernel@vger.kernel.org, masahiroy@kernel.org,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Vinod Koul <vkoul@kernel.org>, dmaengine@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org
+Subject: [PATCH v2] dt-bindings: dma: Convert UniPhier MIO DMA controller to json-schema
+Date:   Sat, 22 Feb 2020 20:20:42 +0900
+Message-Id: <20200222112042.32345-1-yamada.masahiro@socionext.com>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello,
+Convert the UniPhier MIO (Media I/O) DMA controller binding to DT
+schema format.
 
-hardware monitoring sensors NCT6796D on my Asus PRIME Z390M-PLUS
-motherboard with Intel i7-9700 CPU don't work with 5.4 and newer linux
-kernels, the driver nct6775 does not load.
+While I was here, I added the resets property.
 
-It is working OK in version 5.3. I have used almost all released stable
-versions from 5.3.8 to 5.3.16; I didn't try older kernels.
+Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
+---
 
-Even on new kernels the sensors-detect finds the sensors:
-        Found `Nuvoton NCT6796D Super IO Sensors' Success!
-            (address 0x290, driver `nct6775')
-but "modprobe nct6775" says:
-        ERROR: could not insert 'nct6775': No such device
-There is nothing interesting in dmesg.
+Changes in v2:
+ - add 'resets'
 
-git bisect found out the first bad commit is
-b84398d6d7f900805662b1619223fd644d862d7c,
-i2c: i801: Use iTCO version 6 in Cannon Lake PCH and beyond
+ .../dma/socionext,uniphier-mio-dmac.yaml      | 63 +++++++++++++++++++
+ .../bindings/dma/uniphier-mio-dmac.txt        | 25 --------
+ 2 files changed, 63 insertions(+), 25 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/dma/socionext,uniphier-mio-dmac.yaml
+ delete mode 100644 Documentation/devicetree/bindings/dma/uniphier-mio-dmac.txt
 
-Unfortunately I am not able to revert it in v5.4 to confirm it is really
-the culprit.
+diff --git a/Documentation/devicetree/bindings/dma/socionext,uniphier-mio-dmac.yaml b/Documentation/devicetree/bindings/dma/socionext,uniphier-mio-dmac.yaml
+new file mode 100644
+index 000000000000..e7bf6dd7da29
+--- /dev/null
++++ b/Documentation/devicetree/bindings/dma/socionext,uniphier-mio-dmac.yaml
+@@ -0,0 +1,63 @@
++# SPDX-License-Identifier: GPL-2.0-only OR BSD-2-Clause
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/dma/socionext,uniphier-mio-dmac.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
++
++title: UniPhier Media IO DMA controller
++
++description: |
++  This works as an external DMA engine for SD/eMMC controllers etc.
++  found in UniPhier LD4, Pro4, sLD8 SoCs.
++
++maintainers:
++  - Masahiro Yamada <yamada.masahiro@socionext.com>
++
++allOf:
++  - $ref: "dma-controller.yaml#"
++
++properties:
++  compatible:
++    const: socionext,uniphier-mio-dmac
++
++  reg:
++    maxItems: 1
++
++  interrupts:
++    description: |
++      A list of interrupt specifiers associated with the DMA channels.
++      The number of interrupt lines is SoC-dependent.
++
++  clocks:
++    maxItems: 1
++
++  resets:
++    maxItems: 1
++
++  '#dma-cells':
++    description: The single cell represents the channel index.
++    const: 1
++
++required:
++  - compatible
++  - reg
++  - interrupts
++  - clocks
++  - '#dma-cells'
++
++additionalProperties: false
++
++examples:
++  - |
++    // In the example below, "interrupts = <0 68 4>, <0 68 4>, ..." is not a
++    // typo. The first two channels share a single interrupt line.
++
++    dmac: dma-controller@5a000000 {
++        compatible = "socionext,uniphier-mio-dmac";
++        reg = <0x5a000000 0x1000>;
++        interrupts = <0 68 4>, <0 68 4>, <0 69 4>, <0 70 4>,
++                     <0 71 4>, <0 72 4>, <0 73 4>, <0 74 4>;
++        clocks = <&mio_clk 7>;
++        resets = <&mio_rst 7>;
++        #dma-cells = <1>;
++    };
+diff --git a/Documentation/devicetree/bindings/dma/uniphier-mio-dmac.txt b/Documentation/devicetree/bindings/dma/uniphier-mio-dmac.txt
+deleted file mode 100644
+index b12388dc7eac..000000000000
+--- a/Documentation/devicetree/bindings/dma/uniphier-mio-dmac.txt
++++ /dev/null
+@@ -1,25 +0,0 @@
+-UniPhier Media IO DMA controller
+-
+-This works as an external DMA engine for SD/eMMC controllers etc.
+-found in UniPhier LD4, Pro4, sLD8 SoCs.
+-
+-Required properties:
+-- compatible: should be "socionext,uniphier-mio-dmac".
+-- reg: offset and length of the register set for the device.
+-- interrupts: a list of interrupt specifiers associated with the DMA channels.
+-- clocks: a single clock specifier.
+-- #dma-cells: should be <1>. The single cell represents the channel index.
+-
+-Example:
+-	dmac: dma-controller@5a000000 {
+-		compatible = "socionext,uniphier-mio-dmac";
+-		reg = <0x5a000000 0x1000>;
+-		interrupts = <0 68 4>, <0 68 4>, <0 69 4>, <0 70 4>,
+-			     <0 71 4>, <0 72 4>, <0 73 4>, <0 74 4>;
+-		clocks = <&mio_clk 7>;
+-		#dma-cells = <1>;
+-	};
+-
+-Note:
+-In the example above, "interrupts = <0 68 4>, <0 68 4>, ..." is not a typo.
+-The first two channels share a single interrupt line.
+-- 
+2.17.1
 
-Is there a way to have working hwmon sensors on my system in newer linux
-kernels?
-
-Thanks,
-
-Martin
-
---8<--
-lspci
-00:00.0 Host bridge: Intel Corporation 8th Gen Core 8-core Desktop
-Processor Host Bridge/DRAM Registers [Coffee Lake S] (rev 0d)
-00:02.0 VGA compatible controller: Intel Corporation UHD Graphics 630
-(Desktop 9 Series) (rev 02)
-00:14.0 USB controller: Intel Corporation Cannon Lake PCH USB 3.1 xHCI
-Host Controller (rev 10)
-00:14.2 RAM memory: Intel Corporation Cannon Lake PCH Shared SRAM (rev 10)
-00:16.0 Communication controller: Intel Corporation Cannon Lake PCH
-HECI Controller (rev 10)
-00:17.0 SATA controller: Intel Corporation Cannon Lake PCH SATA AHCI
-Controller (rev 10)
-00:1b.0 PCI bridge: Intel Corporation Cannon Lake PCH PCI Express Root
-Port #17 (rev f0)
-00:1c.0 PCI bridge: Intel Corporation Cannon Lake PCH PCI Express Root
-Port #1 (rev f0)
-00:1c.6 PCI bridge: Intel Corporation Cannon Lake PCH PCI Express Root
-Port #7 (rev f0)
-00:1d.0 PCI bridge: Intel Corporation Cannon Lake PCH PCI Express Root
-Port #9 (rev f0)
-00:1f.0 ISA bridge: Intel Corporation Z390 Chipset LPC/eSPI Controller (rev 10)
-00:1f.3 Audio device: Intel Corporation Cannon Lake PCH cAVS (rev 10)
-00:1f.4 SMBus: Intel Corporation Cannon Lake PCH SMBus Controller (rev 10)
-00:1f.5 Serial bus controller [0c80]: Intel Corporation Cannon Lake
-PCH SPI Controller (rev 10)
-00:1f.6 Ethernet controller: Intel Corporation Ethernet Connection (7)
-I219-V (rev 10)
