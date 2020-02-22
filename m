@@ -2,107 +2,123 @@ Return-Path: <SRS0=8jYG=4K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D789EC35671
-	for <linux-kernel@archiver.kernel.org>; Sat, 22 Feb 2020 18:21:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1D8E8C35671
+	for <linux-kernel@archiver.kernel.org>; Sat, 22 Feb 2020 18:27:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id ABBB02071E
-	for <linux-kernel@archiver.kernel.org>; Sat, 22 Feb 2020 18:21:51 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582395711;
-	bh=jY4Y7QOL+KjG+Mt+brU+9X0gWDUk7y5CT5BqEsL3DNY=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=JyJLUqRklqgzcWODw7e67JOeraRCM0P/U4l9x3tsIMxfuCM7Xkb7w6uA21w2pDGxP
-	 /KOG0mqt+bJ6z77y2oWv4ZiIMrJxODDIAuJ+tL/PkDJOx/eAn6koRQtY57XGXQ97zI
-	 VnGn/cLJGENB1tzyVuzN4s0tRnViuNPQaqa/WSKE=
+	by mail.kernel.org (Postfix) with ESMTP id E1909206E2
+	for <linux-kernel@archiver.kernel.org>; Sat, 22 Feb 2020 18:27:33 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="tYJ2ESlu"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726832AbgBVSVu (ORCPT
+        id S1726826AbgBVS1Q (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 22 Feb 2020 13:21:50 -0500
-Received: from mail-pj1-f65.google.com ([209.85.216.65]:37895 "EHLO
-        mail-pj1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726550AbgBVSVt (ORCPT
+        Sat, 22 Feb 2020 13:27:16 -0500
+Received: from mail-qk1-f196.google.com ([209.85.222.196]:45239 "EHLO
+        mail-qk1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726550AbgBVS1P (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 22 Feb 2020 13:21:49 -0500
-Received: by mail-pj1-f65.google.com with SMTP id j17so2208119pjz.3;
-        Sat, 22 Feb 2020 10:21:48 -0800 (PST)
+        Sat, 22 Feb 2020 13:27:15 -0500
+Received: by mail-qk1-f196.google.com with SMTP id a2so5057692qko.12
+        for <linux-kernel@vger.kernel.org>; Sat, 22 Feb 2020 10:27:15 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=iSt0msnF0ZhwKCGb8Okdz1fIg/M5YVTNd1XK2V2MV/g=;
+        b=tYJ2ESlu1tFD+UfI/001XgMEBByJPJaVyN0sZwLIzlBz29lV+eTRKZk54oYApL6K31
+         Qixv4ggI/IgoRQTHkUVE7Af6XhUiKa3LhQD93T9r6MKA5gyuLeZim5azELfof3wCRJEM
+         FqzPX/PFo337GgqW0K1nS1xTjI5w+uc205lX+Jh5R1lXXKr5CNkvjJDrwf50Uu4wYUDW
+         LoDt0S5am2cxTJTyHTq0+sVfQ3bljIW2ddVEPrRCydQ7mrvgA5ffQ8nZjW1WLdd15/c5
+         JG0qsDH+y6A7/8iWhgK/BvrlIxqGkJ8VCuvos1h8aYH1/JztPMbNyPvnL+Gs9oju1+2Z
+         8hIQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=iCwcVv4xnWxcWa1WsgaUhoEXl3ZCR2vSZR6hr5gWHNc=;
-        b=qn/j0hsTDGj5g1hdy+11qB9A07uT+P3d3rAzVRn7MD6aFqzDvLxR5a7CC6njCrOMwj
-         zrCaXS8fNHAWQG8ADogGQXzIzib18/3w4Ptqo57efJ0aryRaBg/t10WLRaAWuHGDtYIC
-         ++rC3Ol/S9in7qcCWU33wUgOfM0Jo8QfbvTbj8ixwkvp676t5KUEIux+s2TjtzL7VDav
-         DnBVe6ts4cQxB5Rt6ktGq5uLlP9CbToeYkRhKytEFDBHSBBp4mOjt4cCFoQ6Ps8HIvWn
-         SrWYViJMZVrmT6JWmrW5Ixd7faUDoTB7zvuZDIUndERRJwPr7nr/cC63AJ2XAcoiOZl4
-         8ukA==
-X-Gm-Message-State: APjAAAW1HNDMdeWd4VPjyMzpeybAFJD+0ozGBSpwf85kUa0OIbhX9nDx
-        h8df/Sl6OHODE7b7i1/NiaU=
-X-Google-Smtp-Source: APXvYqwGViPPPxaNS7z+K4MXgi0LZN0EVHaNC8Lcr39w9C6uZBgZpJBc7aRJ3CH2jofuSwKjOzKP/Q==
-X-Received: by 2002:a17:90a:9dc3:: with SMTP id x3mr10376777pjv.45.1582395707660;
-        Sat, 22 Feb 2020 10:21:47 -0800 (PST)
-Received: from localhost ([2601:647:5b00:710:ffa7:88dc:9c39:76d9])
-        by smtp.gmail.com with ESMTPSA id z3sm7012747pfz.155.2020.02.22.10.21.45
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 22 Feb 2020 10:21:46 -0800 (PST)
-Date:   Sat, 22 Feb 2020 10:21:45 -0800
-From:   Moritz Fischer <mdf@kernel.org>
-To:     Michal Simek <michal.simek@xilinx.com>
-Cc:     linux-kernel@vger.kernel.org, monstr@monstr.eu, git@xilinx.com,
-        Shubhrajyoti Datta <shubhrajyoti.datta@xilinx.com>,
-        Moritz Fischer <mdf@kernel.org>,
-        linux-arm-kernel@lists.infradead.org, linux-fpga@vger.kernel.org
-Subject: Re: [PATCH] fpga: zynq: Remove clk_get error message for probe defer
-Message-ID: <20200222182145.GA4905@epycbox.lan>
-References: <0060e55f0b8d3a57e129d7eb096267cc96eae846.1581517026.git.michal.simek@xilinx.com>
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=iSt0msnF0ZhwKCGb8Okdz1fIg/M5YVTNd1XK2V2MV/g=;
+        b=VocfAm+Ze3mXi9yjIEry1XnAEvVYN3VFaaxnDnX+3jsL5/jnLPOQUYTHeOsxi3CH7I
+         87RK3mkiQeIWcARWYLOhBS4P7NcS2dnFzhwDObGqPnD2gY0k4m0Nf4W9ueicKWVLyQm4
+         XOXeoQ8qbH9ZrKs3dRtefdT3yFx9auABtmwVKZbPSgPFAmD4RAYw6kxxGR8F64UltuBC
+         yO+CKFMl6ZV5/zWYtjnrPD8vEXMSg5la12R6xsD0cGF39C8STOL2Vbrx3C2+NGPhFrLA
+         3xiNHVz1aXGCgBDzyJrNsMaOgm9YhtlmF9FxVIx0FUQA4wgeotXzQOOt0QtZaFH/e95V
+         hY9g==
+X-Gm-Message-State: APjAAAWwdojxwvgUThkJmdiy6eMI/YybPI/3EmJQHDHoYp79EI8BbsNL
+        AZXvcpOWwMt3pQ+9nUbo7V4BWg==
+X-Google-Smtp-Source: APXvYqxOxxyrz/iCNkESC/H6dFVvOvVrgrQdHhV6KIzj37uxQCea0Op4Ll5OAkWVLXlpek0RvVEElA==
+X-Received: by 2002:a05:620a:14b8:: with SMTP id x24mr15752725qkj.210.1582396034342;
+        Sat, 22 Feb 2020 10:27:14 -0800 (PST)
+Received: from [192.168.1.92] (pool-71-255-246-27.washdc.fios.verizon.net. [71.255.246.27])
+        by smtp.gmail.com with ESMTPSA id f128sm1024267qke.54.2020.02.22.10.27.12
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Sat, 22 Feb 2020 10:27:13 -0800 (PST)
+Subject: Re: [Patch v10 1/9] sched/pelt: Add support to track thermal pressure
+To:     Randy Dunlap <rdunlap@infradead.org>, mingo@redhat.com,
+        peterz@infradead.org, ionela.voinescu@arm.com,
+        vincent.guittot@linaro.org, dietmar.eggemann@arm.com,
+        rui.zhang@intel.com, qperret@google.com, daniel.lezcano@linaro.org,
+        viresh.kumar@linaro.org, rostedt@goodmis.org, will@kernel.org,
+        catalin.marinas@arm.com, sudeep.holla@arm.com,
+        juri.lelli@redhat.com, corbet@lwn.net
+Cc:     linux-kernel@vger.kernel.org, amit.kachhap@gmail.com,
+        javi.merino@kernel.org, amit.kucheria@verdurent.com
+References: <20200222005213.3873-1-thara.gopinath@linaro.org>
+ <20200222005213.3873-2-thara.gopinath@linaro.org>
+ <db1a554a-1c8a-0078-def5-4b5f1ee68c99@infradead.org>
+From:   Thara Gopinath <thara.gopinath@linaro.org>
+Message-ID: <d7890dc4-f5d8-9bad-8473-062c0206da09@linaro.org>
+Date:   Sat, 22 Feb 2020 13:27:11 -0500
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <0060e55f0b8d3a57e129d7eb096267cc96eae846.1581517026.git.michal.simek@xilinx.com>
+In-Reply-To: <db1a554a-1c8a-0078-def5-4b5f1ee68c99@infradead.org>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Feb 12, 2020 at 03:17:08PM +0100, Michal Simek wrote:
-> From: Shubhrajyoti Datta <shubhrajyoti.datta@xilinx.com>
-> 
-> In probe, the driver checks for devm_clk_get return and print error
-> message in the failing case. However for -EPROBE_DEFER this message is
-> confusing so avoid it.
-> 
-> The similar change was done also by commit 28910cee898c
-> ("fpga: xilinx-pr-decoupler: Remove clk_get error message for probe defer")
-> 
-> Signed-off-by: Shubhrajyoti Datta <shubhrajyoti.datta@xilinx.com>
-> Signed-off-by: Michal Simek <michal.simek@xilinx.com>
-> ---
-> 
->  drivers/fpga/zynq-fpga.c | 3 ++-
->  1 file changed, 2 insertions(+), 1 deletion(-)
-> 
-> diff --git a/drivers/fpga/zynq-fpga.c b/drivers/fpga/zynq-fpga.c
-> index ee7765049607..07fa8d9ec675 100644
-> --- a/drivers/fpga/zynq-fpga.c
-> +++ b/drivers/fpga/zynq-fpga.c
-> @@ -583,7 +583,8 @@ static int zynq_fpga_probe(struct platform_device *pdev)
->  
->  	priv->clk = devm_clk_get(dev, "ref_clk");
->  	if (IS_ERR(priv->clk)) {
-> -		dev_err(dev, "input clock not found\n");
-> +		if (PTR_ERR(priv->clk) != -EPROBE_DEFER)
-> +			dev_err(dev, "input clock not found\n");
->  		return PTR_ERR(priv->clk);
->  	}
->  
-> -- 
-> 2.25.0
-> 
-Applied to for-next.
 
-Thanks,
-Moritz
+
+On 2/21/20 7:59 PM, Randy Dunlap wrote:
+> On 2/21/20 4:52 PM, Thara Gopinath wrote:
+>> diff --git a/init/Kconfig b/init/Kconfig
+>> index 2a25c769eaaa..8d56902efa70 100644
+>> --- a/init/Kconfig
+>> +++ b/init/Kconfig
+>> @@ -464,6 +464,10 @@ config HAVE_SCHED_AVG_IRQ
+>>   	depends on IRQ_TIME_ACCOUNTING || PARAVIRT_TIME_ACCOUNTING
+>>   	depends on SMP
+>>   
+>> +config HAVE_SCHED_THERMAL_PRESSURE
+>> +	bool "Enable periodic averaging of thermal pressure"
+> 
+> This prompt string makes this symbol user-configurable, but
+> I don't think that's what you want here.
+
+Hi Randy,
+Thank you for the review.
+Actually I thought being user-configurable is a good idea as it will 
+allow users to easily enable it and see if the benefits their systems. 
+(I used menuconfig while developing, to enable it).
+Do you see a reason why this should not be so?
+
+> 
+>> +	depends on SMP
+>> +
+>>   config BSD_PROCESS_ACCT
+>>   	bool "BSD Process Accounting"
+>>   	depends on MULTIUSER
+> 
+> 
+
+-- 
+Warm Regards
+Thara
