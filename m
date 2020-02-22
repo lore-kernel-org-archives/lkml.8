@@ -2,133 +2,146 @@ Return-Path: <SRS0=8jYG=4K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 47005C35669
-	for <linux-kernel@archiver.kernel.org>; Sat, 22 Feb 2020 02:08:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AC853C35670
+	for <linux-kernel@archiver.kernel.org>; Sat, 22 Feb 2020 02:16:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 18BB3206E2
-	for <linux-kernel@archiver.kernel.org>; Sat, 22 Feb 2020 02:08:24 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582337304;
-	bh=zmW4SnTFdWF9ThHYGcitqrDsoBQVp8CyN2jzLEtj5n8=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=YCNZTr9mmfs9bb6B3eHppCoZAFL3YW7aiMdZDtknsv5WkhIHTO0QRITN5oz0BkCRB
-	 +BrAZeSCabjdW5EGSddV0U6RttPBh68GsfWX9bw0go1eAaFsXQvW+i4I7xd1pY/2jI
-	 dfu7o2Tj3mdHNYEKyJwZ5gt9Hxs8g4tKPuZu8oCc=
+	by mail.kernel.org (Postfix) with ESMTP id 8C257206E2
+	for <linux-kernel@archiver.kernel.org>; Sat, 22 Feb 2020 02:16:06 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727989AbgBVCII (ORCPT
+        id S1728003AbgBVCQE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Feb 2020 21:08:08 -0500
-Received: from conssluserg-05.nifty.com ([210.131.2.90]:36492 "EHLO
-        conssluserg-05.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727614AbgBVCIH (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Feb 2020 21:08:07 -0500
-Received: from mail-ua1-f48.google.com (mail-ua1-f48.google.com [209.85.222.48]) (authenticated)
-        by conssluserg-05.nifty.com with ESMTP id 01M27pq0019695;
-        Sat, 22 Feb 2020 11:07:52 +0900
-DKIM-Filter: OpenDKIM Filter v2.10.3 conssluserg-05.nifty.com 01M27pq0019695
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
-        s=dec2015msa; t=1582337272;
-        bh=TYeg4Bu2Cm4zg+SosHfJhXDl9NaBkIe9vTu10xXiyPY=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=siBi6422Adl4HyJFo6ewKwOUC7vv5+/KDzMJ27mMmcDRzcp/pXJ9cJFZhP/MkfcwG
-         ADTyFeI6bBNqEVcQ+fxVnsuJdRr86WSfv0CaOkj7oKh9unZ754Xs948LPk3vTjmy8O
-         ZHCJ+eTaRZ3bPxVp2sSWWKZtwU3MbxzQzXY2qkpSFMNxTJiz9pKjZpEqRhHXOyT4Z7
-         mUtrFUBKiX35d81vaYtzrata8Z3T7c/qYTTdX/1RdDyOvSW+hX8lj2gVyeGeFbpTlz
-         TMRkI3QK8gsTsU4qpK9CrDU5vltT9uc5s7BsT8efaRsN3muLh+tkVAuBxOorB3xULL
-         vmpLFciOtq7iw==
-X-Nifty-SrcIP: [209.85.222.48]
-Received: by mail-ua1-f48.google.com with SMTP id l6so1372325uap.13;
-        Fri, 21 Feb 2020 18:07:51 -0800 (PST)
-X-Gm-Message-State: APjAAAWOjKhjRf4/GWkEtGsJ3NTpbSdtbZx96deCbe46u+x4OOTQLlOa
-        xwpZe8jgQpWdNq07jddAspgOSu6Rn3kVtH5ByK4=
-X-Google-Smtp-Source: APXvYqy64BDtpJM6tCLKq1UaIlD4WE9x1BFzkNuYwRDuIYfuA4OQm5/DVZnxw4VhIskXXReLLHCvVmI6Fe+cQGDuKCY=
-X-Received: by 2002:ab0:2ea6:: with SMTP id y6mr20800352uay.25.1582337270650;
- Fri, 21 Feb 2020 18:07:50 -0800 (PST)
+        Fri, 21 Feb 2020 21:16:04 -0500
+Received: from szxga07-in.huawei.com ([45.249.212.35]:57724 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1727614AbgBVCQD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 21 Feb 2020 21:16:03 -0500
+Received: from DGGEMS413-HUB.china.huawei.com (unknown [172.30.72.60])
+        by Forcepoint Email with ESMTP id 029D1CC4DAC9F3D0C1A2;
+        Sat, 22 Feb 2020 10:15:56 +0800 (CST)
+Received: from [127.0.0.1] (10.177.246.209) by DGGEMS413-HUB.china.huawei.com
+ (10.3.19.213) with Microsoft SMTP Server id 14.3.439.0; Sat, 22 Feb 2020
+ 10:15:49 +0800
+Subject: Re: [PATCH] mm/hugetlb: avoid get wrong ptep caused by race
+To:     Mike Kravetz <mike.kravetz@oracle.com>,
+        Sean Christopherson <sean.j.christopherson@intel.com>
+CC:     <akpm@linux-foundation.org>, <linux-mm@kvack.org>,
+        <linux-kernel@vger.kernel.org>, <arei.gonglei@huawei.com>,
+        <weidong.huang@huawei.com>, <weifuqiang@huawei.com>,
+        <kvm@vger.kernel.org>,
+        "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>,
+        Matthew Wilcox <willy@infradead.org>
+References: <1582027825-112728-1-git-send-email-longpeng2@huawei.com>
+ <20200218203717.GE28156@linux.intel.com>
+ <a041fdb4-bfd0-ac4b-2809-6fddfc4f8d83@huawei.com>
+ <20200219015836.GM28156@linux.intel.com>
+ <098a5dd6-e1da-f161-97d7-cfe735d14fd8@oracle.com>
+ <502b5e52-060b-6864-d1b7-eab2dc951aed@huawei.com>
+ <a82956f7-26e4-5c1c-8d5d-4b2510f6b17d@oracle.com>
+From:   "Longpeng (Mike)" <longpeng2@huawei.com>
+Message-ID: <e2b9af10-b048-e5d2-e5b5-609622226a3c@huawei.com>
+Date:   Sat, 22 Feb 2020 10:15:47 +0800
+User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.2
 MIME-Version: 1.0
-References: <20200222003820.220854-1-alex_y_xu.ref@yahoo.ca> <20200222003820.220854-1-alex_y_xu@yahoo.ca>
-In-Reply-To: <20200222003820.220854-1-alex_y_xu@yahoo.ca>
-From:   Masahiro Yamada <masahiroy@kernel.org>
-Date:   Sat, 22 Feb 2020 11:07:14 +0900
-X-Gmail-Original-Message-ID: <CAK7LNARNEu2gVBVDpRtbha_n=RWWfcQu57LtO=CbLBXLU9Ds-g@mail.gmail.com>
-Message-ID: <CAK7LNARNEu2gVBVDpRtbha_n=RWWfcQu57LtO=CbLBXLU9Ds-g@mail.gmail.com>
-Subject: Re: [PATCH] kbuild: move -pipe to global KBUILD_CFLAGS
-To:     "Alex Xu (Hello71)" <alex_y_xu@yahoo.ca>
-Cc:     Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>,
-        Michal Marek <michal.lkml@markovi.net>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Russell King <linux@armlinux.org.uk>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <a82956f7-26e4-5c1c-8d5d-4b2510f6b17d@oracle.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
+X-Originating-IP: [10.177.246.209]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, Feb 22, 2020 at 9:40 AM Alex Xu (Hello71) <alex_y_xu@yahoo.ca> wrote:
->
-> -pipe reduces unnecessary disk wear for systems where /tmp is not a
-> tmpfs, slightly increases compilation speed, and avoids leaving behind
-> files when gcc crashes.
->
-> According to the gcc manual, "this fails to work on some systems where
-> the assembler is unable to read from a pipe; but the GNU assembler has
-> no trouble". We already require GNU ld on all platforms, so this is not
-> an additional dependency. LLVM as also supports pipes.
->
-> -pipe has always been used for most architectures, this change
-> standardizes it globally. Most notably, arm, arm64, riscv, and x86 are
-> affected.
->
-> Signed-off-by: Alex Xu (Hello71) <alex_y_xu@yahoo.ca>
+在 2020/2/21 8:22, Mike Kravetz 写道:
+> On 2/19/20 6:30 PM, Longpeng (Mike) wrote:
+>> 在 2020/2/20 3:33, Mike Kravetz 写道:
+>>> + Kirill
+>>> On 2/18/20 5:58 PM, Sean Christopherson wrote:
+>>>> On Wed, Feb 19, 2020 at 09:39:59AM +0800, Longpeng (Mike) wrote:
+> <snip>
+>>>> The race and the fix make sense.  I assumed dereferencing garbage from the
+>>>> huge page was the issue, but I wasn't 100% that was the case, which is why
+>>>> I asked about alternative fixes.
+>>>>
+>>>>> We change the code from
+>>>>> 	if (pud_huge(*pud) || !pud_present(*pud))
+>>>>> to
+>>>>> 	if (pud_huge(*pud)
+>>>>> 		return (pte_t *)pud;
+>>>>> 	busy loop for 500ms
+>>>>> 	if (!pud_present(*pud))
+>>>>> 		return (pte_t *)pud;
+>>>>> and the panic will be hit quickly.
+>>>>>
+>>>>> ARM64 has already use READ/WRITE_ONCE to access the pagetable, look at this
+>>>>> commit 20a004e7 (arm64: mm: Use READ_ONCE/WRITE_ONCE when accessing page tables).
+>>>>>
+>>>>> The root cause is: 'if (pud_huge(*pud) || !pud_present(*pud))' read entry from
+>>>>> pud twice and the *pud maybe change in a race, so if we only read the pud once.
+>>>>> I use READ_ONCE here is just for safe, to prevents the complier mischief if
+>>>>> possible.
+>>>>
+>>>> FWIW, I'd be in favor of going the READ/WRITE_ONCE() route for x86, e.g.
+>>>> convert everything as a follow-up patch (or patches).  I'm fairly confident
+>>>> that KVM's usage of lookup_address_in_mm() is safe, but I wouldn't exactly
+>>>> bet my life on it.  I'd much rather the failing scenario be that KVM uses
+>>>> a sub-optimal page size as opposed to exploding on a bad pointer.
+>>>
+>>> Longpeng(Mike) asked in another e-mail specifically about making similar
+>>> changes to lookup_address_in_mm().  Replying here as there is more context.
+>>>
+>>> I 'think' lookup_address_in_mm is safe from this issue.  Why?  IIUC, the
+>>> problem with the huge_pte_offset routine is that the pud changes from
+>>> pud_none() to pud_huge() in the middle of
+>>> 'if (pud_huge(*pud) || !pud_present(*pud))'.  In the case of
+>>> lookup_address_in_mm, we know pud was not pud_none() as it was previously
+>>> checked.  I am not aware of any other state transitions which could cause
+>>> us trouble.  However, I am no expert in this area.
+> 
+> Bad copy/paste by me.  Longpeng(Mike) was asking about lookup_address_in_pgd.
+> 
+>> So... I need just fix huge_pte_offset in mm/hugetlb.c, right?
+> 
+> Let's start with just a fix for huge_pte_offset() as you can easily reproduce
+> that issue by adding a delay.
+> 
+>> Is it possible the pud changes from pud_huge() to pud_none() while another CPU
+>> is walking the pagetable ?
+> 
+All right, I'll send V2 to fix it, thanks :)
 
-<snip>
+> I believe it is possible.  If we hole punch a hugetlbfs file, we will clear
+> the corresponding pud's.  Hence, we can go from pud_huge() to pud_none().
+> Unless I am missing something, that does imply we could have issues in places
+> such as lookup_address_in_pgd:
+> 
+> 	pud = pud_offset(p4d, address);
+> 	if (pud_none(*pud))
+> 		return NULL;
+> 
+> 	*level = PG_LEVEL_1G;
+> 	if (pud_large(*pud) || !pud_present(*pud))
+> 		return (pte_t *)pud;
+> 
+> I hope I am wrong, but it seems like pud_none(*pud) could become true after
+> the initial check, and before the (pud_large) check.  If so, there could be
+> a problem (addressing exception) when the code continues and looks up the pmd.
+> 
+> 	pmd = pmd_offset(pud, address);
+> 	if (pmd_none(*pmd))
+> 		return NULL;
+> 
+> It has been mentioned before that there are many page table walks like this.
+> What am I missing that prevents races like this?  Or, have we just been lucky?
+> 
+That's what I worry about. Maybe there is no usecase to hit it.
 
-> diff --git a/arch/arc/Makefile b/arch/arc/Makefile
-> index 20e9ab6cc521..b6a2f553771c 100644
-> --- a/arch/arc/Makefile
-> +++ b/arch/arc/Makefile
-> @@ -9,7 +9,7 @@ ifeq ($(CROSS_COMPILE),)
->  CROSS_COMPILE := $(call cc-cross-prefix, arc-linux- arceb-linux-)
->  endif
->
-> -cflags-y       += -fno-common -pipe -fno-builtin -mmedium-calls -D__linux__
-> +cflags-y       += -fno-common -fno-builtin -mmedium-calls -D__linux__
->  cflags-$(CONFIG_ISA_ARCOMPACT) += -mA7
->  cflags-$(CONFIG_ISA_ARCV2)     += -mcpu=hs38
->
-> diff --git a/arch/arm/Makefile b/arch/arm/Makefile
-> index db857d07114f..7711467e0797 100644
-> --- a/arch/arm/Makefile
-> +++ b/arch/arm/Makefile
-> @@ -21,7 +21,6 @@ KBUILD_LDS_MODULE     += $(srctree)/arch/arm/kernel/module.lds
->  endif
->
->  GZFLAGS                :=-9
-> -#KBUILD_CFLAGS +=-pipe
+-- 
+Regards,
+Longpeng(Mike)
 
-
-This was commented out by a very old commit,
-which is available in the historical git tree.
-
-https://git.kernel.org/pub/scm/linux/kernel/git/history/history.git/commit/?id=ce20ed858a20f6f04de475cae79e40d3697f4776
-
-But, I could not parse the reason from the commit message.
-Russell, do you remember why?
-
-
-If arch maintainers are fine with this change,
-I can pick up it.
-
-Thanks.
-
-
-
---
-Best Regards
-
-Masahiro Yamada
