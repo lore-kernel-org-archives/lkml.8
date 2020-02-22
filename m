@@ -2,89 +2,103 @@ Return-Path: <SRS0=8jYG=4K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 55E67C35674
-	for <linux-kernel@archiver.kernel.org>; Sat, 22 Feb 2020 12:53:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8EDB6C35671
+	for <linux-kernel@archiver.kernel.org>; Sat, 22 Feb 2020 12:59:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 38663206EF
-	for <linux-kernel@archiver.kernel.org>; Sat, 22 Feb 2020 12:53:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6F654206EF
+	for <linux-kernel@archiver.kernel.org>; Sat, 22 Feb 2020 12:59:40 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727426AbgBVMxv (ORCPT
+        id S1727366AbgBVM7f (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 22 Feb 2020 07:53:51 -0500
-Received: from sauhun.de ([88.99.104.3]:53856 "EHLO pokefinder.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726839AbgBVMxu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 22 Feb 2020 07:53:50 -0500
-Received: from localhost (p5486C6B7.dip0.t-ipconnect.de [84.134.198.183])
-        by pokefinder.org (Postfix) with ESMTPSA id 938972C1EC7;
-        Sat, 22 Feb 2020 13:53:48 +0100 (CET)
-Date:   Sat, 22 Feb 2020 13:53:48 +0100
-From:   Wolfram Sang <wsa@the-dreams.de>
-To:     Prashant Malani <pmalani@chromium.org>
-Cc:     linux-kernel@vger.kernel.org, Benson Leung <bleung@chromium.org>,
-        Enric Balletbo i Serra <enric.balletbo@collabora.com>,
-        Guenter Roeck <groeck@chromium.org>,
-        Gwendal Grignou <gwendal@chromium.org>,
-        Lee Jones <lee.jones@linaro.org>,
-        Chanwoo Choi <cw00.choi@samsung.com>,
-        Akshu Agrawal <akshu.agrawal@amd.com>,
-        "open list:I2C SUBSYSTEM HOST DRIVERS" <linux-i2c@vger.kernel.org>
-Subject: Re: [PATCH v2 16/17] i2c: cros-ec-tunnel: Use cros_ec_cmd()
-Message-ID: <20200222125348.GL1716@kunai>
-References: <20200205192253.187649-1-pmalani@chromium.org>
+        Sat, 22 Feb 2020 07:59:35 -0500
+Received: from jabberwock.ucw.cz ([46.255.230.98]:56120 "EHLO
+        jabberwock.ucw.cz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726839AbgBVM7e (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 22 Feb 2020 07:59:34 -0500
+Received: by jabberwock.ucw.cz (Postfix, from userid 1017)
+        id 8982F1C036F; Sat, 22 Feb 2020 13:59:32 +0100 (CET)
+Date:   Sat, 22 Feb 2020 13:59:31 +0100
+From:   Pavel Machek <pavel@denx.de>
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     linux-kernel@vger.kernel.org, stable@vger.kernel.org,
+        Steve French <stfrench@microsoft.com>,
+        Oleg Kravtsov <oleg@tuxera.com>,
+        Ronnie Sahlberg <lsahlber@redhat.com>,
+        Pavel Shilovsky <pshilov@microsoft.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: Re: [PATCH 4.19 188/191] cifs: log warning message (once) if out of
+ disk space
+Message-ID: <20200222125931.GC14067@amd>
+References: <20200221072250.732482588@linuxfoundation.org>
+ <20200221072313.381537875@linuxfoundation.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="L1EIGrW/+75u5Nmw"
+Content-Type: multipart/signed; micalg=pgp-sha1;
+        protocol="application/pgp-signature"; boundary="da4uJneut+ArUgXk"
 Content-Disposition: inline
-In-Reply-To: <20200205192253.187649-1-pmalani@chromium.org>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20200221072313.381537875@linuxfoundation.org>
+User-Agent: Mutt/1.5.23 (2014-03-12)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
 
---L1EIGrW/+75u5Nmw
+--da4uJneut+ArUgXk
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
 
-On Wed, Feb 05, 2020 at 11:22:51AM -0800, Prashant Malani wrote:
-> Replace cros_ec_cmd_xfer_status() calls with the new function
-> cros_ec_cmd() which takes care of the EC message struct setup and
-> subsequent cleanup (which is a common pattern among users of
-> cros_ec_cmd_xfer_status).
+On Fri 2020-02-21 08:42:41, Greg Kroah-Hartman wrote:
+> From: Steve French <stfrench@microsoft.com>
 >=20
-> Signed-off-by: Prashant Malani <pmalani@chromium.org>
+> [ Upstream commit d6fd41905ec577851734623fb905b1763801f5ef ]
+>=20
+> We ran into a confusing problem where an application wasn't checking
+> return code on close and so user didn't realize that the application
+> ran out of disk space.  log a warning message (once) in these
+> cases. For example:
+>=20
+>   [ 8407.391909] Out of space writing to \\oleg-server\small-share
 
-I guess the plan is that this series goes upstream as a whole via some
-chrome-tree? In that case:
+Out of space can happen on any filesystem, and yes, it can be
+confusing. But why is cifs so special that we warn here (and not
+elsewhere) and why was this marked for stable?
 
-Acked-by: Wolfram Sang <wsa@the-dreams.de>
+Best regards,
+								Pavel
 
+> +++ b/fs/cifs/smb2pdu.c
+> @@ -3425,6 +3425,9 @@ smb2_writev_callback(struct mid_q_entry *mid)
+>  				     wdata->cfile->fid.persistent_fid,
+>  				     tcon->tid, tcon->ses->Suid, wdata->offset,
+>  				     wdata->bytes, wdata->result);
+> +		if (wdata->result =3D=3D -ENOSPC)
+> +			printk_once(KERN_WARNING "Out of space writing to %s\n",
+> +				    tcon->treeName);
+>  	} else
+>  		trace_smb3_write_done(0 /* no xid */,
+>  				      wdata->cfile->fid.persistent_fid,
 
---L1EIGrW/+75u5Nmw
+--=20
+(english) http://www.livejournal.com/~pavelmachek
+(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blo=
+g.html
+
+--da4uJneut+ArUgXk
 Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
 
 -----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1
 
-iQIzBAABCgAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAl5RJFwACgkQFA3kzBSg
-KbZAJhAAno9ex5acdPq9wkA/gSWspLKV9G+6WYa+E0+XcX+w1es1q/X4i1L2+S0k
-ddGemIHCYEgHHxcozQbl64RRnerEUsIyplyc6MFIQ5bv/R38pGpliuL3Y9YcsqLl
-FDxUzUbyTWb8KbkbTFBKuVZDFB8vv7n7ZWJdLbZQ2rf8TZFahbE1lYLVZKHWRQC8
-aizZdg6+bCLRxUyQMWg4NcXTrudmpq6GUzLONWzp0vgzS8OHVWMKUxoSesDDF9Ua
-nAYi5kVPuldgEBO/4oFmAG9cxhSE0t1ZS2fByxBmFuILInszPur5cIPdgBRzISUQ
-iNZZW3Hr58Q5i7eM7G9I7MiaDboYFlc9Xpd8Ltw79ONNR221pgoSQbI4PWJ57NVB
-3+6aT+ivbr32N2t3kb7rcCBWlVGUTRKh67avE5mIkQKfirLs9FqcJZYhI/uLNyyf
-y58QIXp2ghXKV/34hCOwHtg0Sea8qbmiSWkfsyXTKVO7Cjx3Es+A5YB67APzRHtE
-M9HYFETj+FVhYguzWtLMa+yDdYqdHJg6b7JpB8tPT5O74puzkHkQy0gqoELgw+ZK
-HUclo4HHtwLj540miXbGpsRVffGXfQXdVrJZIi9PfdOptE6SFv5qjZdgMX8RkbFT
-JaVa5MKDfUW+vuG4zvP/X9kORxMeWD6/S1FGPlKjvybB/RD/Hp8=
-=scB2
+iEYEARECAAYFAl5RJbMACgkQMOfwapXb+vLCGQCgrGjJIfafpgWeDlUD4lQDyTlk
+EBwAmgLIA2xgvjoxSOCFHf/XPKc4B7bf
+=ux05
 -----END PGP SIGNATURE-----
 
---L1EIGrW/+75u5Nmw--
+--da4uJneut+ArUgXk--
