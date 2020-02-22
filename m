@@ -4,30 +4,30 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 85342C35669
-	for <linux-kernel@archiver.kernel.org>; Sat, 22 Feb 2020 23:14:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 91C39C35676
+	for <linux-kernel@archiver.kernel.org>; Sat, 22 Feb 2020 23:14:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5BD7F2071E
-	for <linux-kernel@archiver.kernel.org>; Sat, 22 Feb 2020 23:14:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 678C7206D7
+	for <linux-kernel@archiver.kernel.org>; Sat, 22 Feb 2020 23:14:38 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=megous.com header.i=@megous.com header.b="aGVQrg/C"
+	dkim=pass (1024-bit key) header.d=megous.com header.i=@megous.com header.b="LjoOPj4S"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727156AbgBVXOf (ORCPT
+        id S1727174AbgBVXOh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 22 Feb 2020 18:14:35 -0500
-Received: from vps.xff.cz ([195.181.215.36]:34030 "EHLO vps.xff.cz"
+        Sat, 22 Feb 2020 18:14:37 -0500
+Received: from vps.xff.cz ([195.181.215.36]:34014 "EHLO vps.xff.cz"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726895AbgBVXOe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1726884AbgBVXOe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Sat, 22 Feb 2020 18:14:34 -0500
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=megous.com; s=mail;
-        t=1582413272; bh=WwPRw8c1ksPjhP3qFyeLOPanGzgHH/wo0hf0oKx3fqE=;
+        t=1582413272; bh=qyh2OlARxoLc6jQbO/NQcybKEjpkaFE5bGOvLXVrtSU=;
         h=From:To:Cc:Subject:Date:References:From;
-        b=aGVQrg/CmOuf7Mgexl9iQ0PdpxoBG17io2yR/F56s4kLZXF80RUVr6dZAzNA3x409
-         Elfcnmzo1wJDBcswdpSWlWyzSovwzAeHQ7oEmzVslMvsezYaN8kOHNui0ssas3y2K7
-         jHkup+yjw/2ou0xcGS6uCikver+f8S3eCTU/Xi4Y=
+        b=LjoOPj4St3DnRfbWcKLv0tZmk9I25Jh9//0tE87FGKiS/D59r2V/1IBKeS/BIf5CA
+         uSSlifj/4n2AExCoXYJi2llIV299w6d0gnk8azsYMLYYMXVwQ1hu8hrWRfiUSG74TO
+         4TIdXcf4qN1XjlZ6pRP5avLGYg68IT/dg3ov8qcE=
 From:   Ondrej Jirman <megous@megous.com>
 To:     linux-sunxi@googlegroups.com,
         Dmitry Torokhov <dmitry.torokhov@gmail.com>,
@@ -39,9 +39,9 @@ Cc:     Ondrej Jirman <megous@megous.com>,
         Luca Weiss <luca@z3ntu.xyz>, Tomas Novotny <tomas@novotny.cz>,
         linux-input@vger.kernel.org, devicetree@vger.kernel.org,
         linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
-Subject: [PATCH 4/4] ARM: dts: sun8i-a83t-tbs-a711: Increase voltage on the vibrator
-Date:   Sun, 23 Feb 2020 00:14:28 +0100
-Message-Id: <20200222231428.233621-5-megous@megous.com>
+Subject: [PATCH 3/4] ARM: dts: sun8i-a83t-tbs-a711: Add support for the vibrator motor
+Date:   Sun, 23 Feb 2020 00:14:27 +0100
+Message-Id: <20200222231428.233621-4-megous@megous.com>
 In-Reply-To: <20200222231428.233621-1-megous@megous.com>
 References: <20200222231428.233621-1-megous@megous.com>
 MIME-Version: 1.0
@@ -51,28 +51,29 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Vibrator motor is weak at the current voltage. Increase the voltage.
+The board has a vibrator mottor. Hook it to the input subsystem.
 
 Signed-off-by: Ondrej Jirman <megous@megous.com>
 ---
- arch/arm/boot/dts/sun8i-a83t-tbs-a711.dts | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ arch/arm/boot/dts/sun8i-a83t-tbs-a711.dts | 5 +++++
+ 1 file changed, 5 insertions(+)
 
 diff --git a/arch/arm/boot/dts/sun8i-a83t-tbs-a711.dts b/arch/arm/boot/dts/sun8i-a83t-tbs-a711.dts
-index a22920275e99b..314491cdafca2 100644
+index 2fd31a0a0b344..a22920275e99b 100644
 --- a/arch/arm/boot/dts/sun8i-a83t-tbs-a711.dts
 +++ b/arch/arm/boot/dts/sun8i-a83t-tbs-a711.dts
-@@ -434,8 +434,8 @@ &reg_ldo_io0 {
- };
+@@ -99,6 +99,11 @@ panel_input: endpoint {
+ 		};
+ 	};
  
- &reg_ldo_io1 {
--	regulator-min-microvolt = <3100000>;
--	regulator-max-microvolt = <3100000>;
-+	regulator-min-microvolt = <3300000>;
-+	regulator-max-microvolt = <3300000>;
- 	regulator-name = "vcc-vb";
- 	status = "okay";
- };
++	vibrator {
++		compatible = "gpio-vibrator";
++		vcc-supply = <&reg_ldo_io1>;
++	};
++
+ 	reg_gps: reg-gps {
+ 		compatible = "regulator-fixed";
+ 		regulator-name = "gps";
 -- 
 2.25.1
 
