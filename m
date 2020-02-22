@@ -2,103 +2,156 @@ Return-Path: <SRS0=8jYG=4K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 85377C35671
-	for <linux-kernel@archiver.kernel.org>; Sat, 22 Feb 2020 16:25:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 04CCFC35666
+	for <linux-kernel@archiver.kernel.org>; Sat, 22 Feb 2020 16:29:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5B5BE206ED
-	for <linux-kernel@archiver.kernel.org>; Sat, 22 Feb 2020 16:25:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D0B46206ED
+	for <linux-kernel@archiver.kernel.org>; Sat, 22 Feb 2020 16:29:06 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="R8Zns9Uf"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=goldelico.com header.i=@goldelico.com header.b="U07K+VOI"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728023AbgBVQZY (ORCPT
+        id S1727470AbgBVQ3F (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 22 Feb 2020 11:25:24 -0500
-Received: from mail-pl1-f195.google.com ([209.85.214.195]:45062 "EHLO
-        mail-pl1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727979AbgBVQZW (ORCPT
+        Sat, 22 Feb 2020 11:29:05 -0500
+Received: from mo4-p02-ob.smtp.rzone.de ([81.169.146.168]:28326 "EHLO
+        mo4-p02-ob.smtp.rzone.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726550AbgBVQ3F (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 22 Feb 2020 11:25:22 -0500
-Received: by mail-pl1-f195.google.com with SMTP id b22so2169427pls.12
-        for <linux-kernel@vger.kernel.org>; Sat, 22 Feb 2020 08:25:22 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=gg7bS1nflOAaxyupRzfc5VSU36LQb9MIJVDzdfFhX04=;
-        b=R8Zns9UfFCLkk51MpnD30Zt7kTfhnWJpFVg858FZmvU0SYaspwl+hj5Dxmf5F7KdtD
-         JczjkiLhNwc7OEFMuPNntrvRuDR2bN3B/ojiXZIyhC8X7rCs9cwpxZW+yrCQMtzyoOck
-         Rhr9fF1Y/yrtEdcNZz3R8bAEOiooSfmj7GWb2LqUX3jEiKpf3B2T1bPfuY0xEtvy/71e
-         /eRpU73u+8zxiqOln+O1XpGxRiP4u3ilob3CVnzvNXJoKFZMrdSZ0VIQq+9/1tfFY9zE
-         HDXFIGXM2PO47j3ow9xSshARQrJjsqQ05SKzLMziSVIkKeT1+YzyRhbGx/X+EufB195z
-         Mzkg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references;
-        bh=gg7bS1nflOAaxyupRzfc5VSU36LQb9MIJVDzdfFhX04=;
-        b=l+1t54p7vKQOYnUGywYQfUsMCd6Oz0zaJ3uFXyF21LizpXEAyV8tGDlqRTNc5bxdYr
-         yvf/4KUo5gfAnkYHixD5PVeA7gWKbg6Ou+RhSkUDhyQS6mwfFj5JceBkTBcAxkskdPt6
-         trAh+X9lCD2kroXKvNbv8JxqIMHTl6zGpFVAU/daQXT+ZQO/7v5I6m+kcpLPmeChVZ1v
-         yoUWq1JZvqJQyX5DbS4UmDV/ThzwvYi6RvMTcFM7tXqkdnQuvt0O84jg27xjwXYFZVdH
-         mbSKDV4yPMhK/pAqf9fkzeWU4RghOBmB//t2IOTUWBJPKy7fTvHyux2080PcWgW8bauK
-         cZIQ==
-X-Gm-Message-State: APjAAAXOote5BriJhZzP0jU14BpRx3EcC9ZaVPsg8kDCS+JpCKzkTAhG
-        J0tGKXRDbFS2mlVf+kss/3uN
-X-Google-Smtp-Source: APXvYqyya8y7D5YQFJCiWMM9h4XXO/EBmT5VgPITYvRx6kw0b7p7kv+JpJQey18UWknHAr5CfF29wA==
-X-Received: by 2002:a17:90a:cf07:: with SMTP id h7mr9838281pju.66.1582388722406;
-        Sat, 22 Feb 2020 08:25:22 -0800 (PST)
-Received: from localhost.localdomain ([2409:4072:801:b38c:89e8:305c:23c4:b77f])
-        by smtp.gmail.com with ESMTPSA id q17sm6851296pfg.123.2020.02.22.08.25.18
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 22 Feb 2020 08:25:21 -0800 (PST)
-From:   Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-To:     matthias.bgg@gmail.com, robh+dt@kernel.org
-Cc:     devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-mediatek@lists.infradead.org, linux-kernel@vger.kernel.org,
-        adamboardman@gmail.com,
-        Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-Subject: [PATCH 4/4] arm64: dts: mediatek: Switch to SPDX license identifier for MT6797 SoC
-Date:   Sat, 22 Feb 2020 21:54:44 +0530
-Message-Id: <20200222162444.11590-5-manivannan.sadhasivam@linaro.org>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20200222162444.11590-1-manivannan.sadhasivam@linaro.org>
-References: <20200222162444.11590-1-manivannan.sadhasivam@linaro.org>
+        Sat, 22 Feb 2020 11:29:05 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; t=1582388943;
+        s=strato-dkim-0002; d=goldelico.com;
+        h=To:References:Message-Id:Cc:Date:In-Reply-To:From:Subject:
+        X-RZG-CLASS-ID:X-RZG-AUTH:From:Subject:Sender;
+        bh=zAvMFq9lL3ySMXeZOGYNoXXsphK30TkbKVrcXyeb2SA=;
+        b=U07K+VOIuEO1VjWG2QOIel4+iZw1lwGHw+JTlPGaV2yyj7tVgmB0BIBZAh4Lq/JSNn
+        y0MOOyd2nq3Tpm8EMcvSqu4C+nx3R9Vl1nq8R4K5Ea1wStPGWnz95zJpixSTvpfMe8J5
+        +a7qdRFg2W2orl+owKOvBLuP0cPlPZ9u0WQElABq49OA/9Wlv1QdI/NxR9nIbwjQ+uZn
+        skRLk1iswZyGMrcJBVU9qgqWbVBgNySSQcVANiFc44VZEExOYc8rql3SslH7bPq1ipvX
+        TRYMLH07B3MY8ThyoLgHcaE9fhuus3UbWL+ciRleoBEIlcv/pllwQ6dtq8caoK6y86u0
+        tzCQ==
+X-RZG-AUTH: ":JGIXVUS7cutRB/49FwqZ7WcJeFKiMgPgp8VKxflSZ1P34KBj4Qpw9iZeHmAiw43swGE="
+X-RZG-CLASS-ID: mo00
+Received: from imac.fritz.box
+        by smtp.strato.de (RZmta 46.1.12 DYNA|AUTH)
+        with ESMTPSA id U06217w1MGSijzG
+        (using TLSv1 with cipher ECDHE-RSA-AES256-SHA (curve X9_62_prime256v1 with 256 ECDH bits, eq. 3072 bits RSA))
+        (Client did not present a certificate);
+        Sat, 22 Feb 2020 17:28:44 +0100 (CET)
+Subject: Re: [PATCH v5 2/6] Bindings: nvmem: add bindings for JZ4780 efuse
+Mime-Version: 1.0 (Mac OS X Mail 9.3 \(3124\))
+Content-Type: text/plain; charset=us-ascii
+From:   "H. Nikolaus Schaller" <hns@goldelico.com>
+In-Reply-To: <20200222115425.50f66b08@kemnade.info>
+Date:   Sat, 22 Feb 2020 17:28:44 +0100
+Cc:     PrasannaKumar Muralidharan <prasannatsmkumar@gmail.com>,
+        Paul Cercueil <paul@crapouillou.net>,
+        Mathieu Malaterre <malat@debian.org>,
+        Srinivas Kandagatla <srinivas.kandagatla@linaro.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Ralf Baechle <ralf@linux-mips.org>,
+        Paul Burton <paulburton@kernel.org>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+        Krzysztof Kozlowski <krzk@kernel.org>,
+        Kees Cook <keescook@chromium.org>,
+        Andi Kleen <ak@linux.intel.com>,
+        Geert Uytterhoeven <geert+renesas@glider.be>,
+        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-mips@vger.kernel.org, letux-kernel@openphoenux.org,
+        kernel@pyra-handheld.com
+Content-Transfer-Encoding: quoted-printable
+Message-Id: <6FC01B9A-4252-48DA-9D24-911C0B0401A6@goldelico.com>
+References: <cover.1582367141.git.hns@goldelico.com> <51642368a064073ab99bb3110863b5fadc382f82.1582367141.git.hns@goldelico.com> <20200222115425.50f66b08@kemnade.info>
+To:     Andreas Kemnade <andreas@kemnade.info>
+X-Mailer: Apple Mail (2.3124)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Switch to SPDX license identifier for MT6797 SoC.
 
-Signed-off-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
----
- arch/arm64/boot/dts/mediatek/mt6797.dtsi | 9 +--------
- 1 file changed, 1 insertion(+), 8 deletions(-)
+> Am 22.02.2020 um 11:54 schrieb Andreas Kemnade <andreas@kemnade.info>:
+>=20
+> On Sat, 22 Feb 2020 11:25:37 +0100
+> "H. Nikolaus Schaller" <hns@goldelico.com> wrote:
+>=20
+>> From: PrasannaKumar Muralidharan <prasannatsmkumar@gmail.com>
+>>=20
+>> This patch brings support for the JZ4780 efuse. Currently it only =
+exposes
+>> a read only access to the entire 8K bits efuse memory.
+>>=20
+>> Tested-by: Mathieu Malaterre <malat@debian.org>
+>> Signed-off-by: PrasannaKumar Muralidharan =
+<prasannatsmkumar@gmail.com>
+>> Signed-off-by: Mathieu Malaterre <malat@debian.org>
+>> Signed-off-by: H. Nikolaus Schaller <hns@goldelico.com>
+>> [converted to yaml]
+>> Signed-off-by: Andreas Kemnade <andreas@kemnade.info>
+>> ---
+>> .../bindings/nvmem/ingenic,jz4780-efuse.yaml  | 50 =
++++++++++++++++++++
+>> 1 file changed, 50 insertions(+)
+>> create mode 100644 =
+Documentation/devicetree/bindings/nvmem/ingenic,jz4780-efuse.yaml
+>>=20
+>> diff --git =
+a/Documentation/devicetree/bindings/nvmem/ingenic,jz4780-efuse.yaml =
+b/Documentation/devicetree/bindings/nvmem/ingenic,jz4780-efuse.yaml
+>> new file mode 100644
+>> index 000000000000..09a8ef937750
+>> --- /dev/null
+>> +++ =
+b/Documentation/devicetree/bindings/nvmem/ingenic,jz4780-efuse.yaml
+>> @@ -0,0 +1,50 @@
+>> +# SPDX-License-Identifier: GPL-2.0-only OR BSD-2-Clause
+>> +%YAML 1.2
+>> +---
+>> +$id: http://devicetree.org/schemas/nvmem/ingenic,jz4780-efuse.yaml#
+>> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+>> +
+>> +title: Ingenic JZ EFUSE driver bindings
+>> +
+>> +maintainers:
+>> +  - PrasannaKumar Muralidharan <prasannatsmkumar@gmail.com>
+>> +
+>> +allOf:
+>> +  - $ref: "nvmem.yaml#"
+>> +
+>> +properties:
+>> +  compatible:
+>> +    enum:
+>> +      - ingenic,jz4780-efuse
+>> +
+>> +  reg:
+>> +    maxItems: 1
+>> +
+>> +  clocks:
+>> +    # Handle for the ahb for the efuse.
+>> +    maxItems: 1
+>> +
+>> +  clock-names:
+>> +   items:
+>> +     - const:  ahb2
+>> +
+>> +required:
+>> +  - compatible
+>> +  - reg
+>> +  - clock-names
+> - clocks ?
+>=20
+> In my first try there was "clock" without s which
+> caused the trouble.
 
-diff --git a/arch/arm64/boot/dts/mediatek/mt6797.dtsi b/arch/arm64/boot/dts/mediatek/mt6797.dtsi
-index 22f093960d27..c1295bf7080c 100644
---- a/arch/arm64/boot/dts/mediatek/mt6797.dtsi
-+++ b/arch/arm64/boot/dts/mediatek/mt6797.dtsi
-@@ -1,14 +1,7 @@
-+// SPDX-License-Identifier: GPL-2.0
- /*
-  * Copyright (c) 2017 MediaTek Inc.
-  * Author: Mars.C <mars.cheng@mediatek.com>
-- *
-- * This program is free software; you can redistribute it and/or modify
-- * it under the terms of the GNU General Public License version 2 as
-- * published by the Free Software Foundation.
-- *
-- * This program is distributed in the hope that it will be useful,
-- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-- * GNU General Public License for more details.
-  */
- 
- #include <dt-bindings/clock/mt6797-clk.h>
--- 
-2.17.1
+Ah, ok. Seems I have mis-interpreted this.
+
+BR and thanks,
+Nikolaus
 
