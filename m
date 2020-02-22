@@ -2,146 +2,110 @@ Return-Path: <SRS0=8jYG=4K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AC853C35670
-	for <linux-kernel@archiver.kernel.org>; Sat, 22 Feb 2020 02:16:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4C38AC35641
+	for <linux-kernel@archiver.kernel.org>; Sat, 22 Feb 2020 02:16:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8C257206E2
-	for <linux-kernel@archiver.kernel.org>; Sat, 22 Feb 2020 02:16:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1FB86206E2
+	for <linux-kernel@archiver.kernel.org>; Sat, 22 Feb 2020 02:16:26 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="SaK4Tkvh"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728003AbgBVCQE (ORCPT
+        id S1728054AbgBVCQW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Feb 2020 21:16:04 -0500
-Received: from szxga07-in.huawei.com ([45.249.212.35]:57724 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727614AbgBVCQD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Feb 2020 21:16:03 -0500
-Received: from DGGEMS413-HUB.china.huawei.com (unknown [172.30.72.60])
-        by Forcepoint Email with ESMTP id 029D1CC4DAC9F3D0C1A2;
-        Sat, 22 Feb 2020 10:15:56 +0800 (CST)
-Received: from [127.0.0.1] (10.177.246.209) by DGGEMS413-HUB.china.huawei.com
- (10.3.19.213) with Microsoft SMTP Server id 14.3.439.0; Sat, 22 Feb 2020
- 10:15:49 +0800
-Subject: Re: [PATCH] mm/hugetlb: avoid get wrong ptep caused by race
-To:     Mike Kravetz <mike.kravetz@oracle.com>,
-        Sean Christopherson <sean.j.christopherson@intel.com>
-CC:     <akpm@linux-foundation.org>, <linux-mm@kvack.org>,
-        <linux-kernel@vger.kernel.org>, <arei.gonglei@huawei.com>,
-        <weidong.huang@huawei.com>, <weifuqiang@huawei.com>,
-        <kvm@vger.kernel.org>,
-        "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>,
-        Matthew Wilcox <willy@infradead.org>
-References: <1582027825-112728-1-git-send-email-longpeng2@huawei.com>
- <20200218203717.GE28156@linux.intel.com>
- <a041fdb4-bfd0-ac4b-2809-6fddfc4f8d83@huawei.com>
- <20200219015836.GM28156@linux.intel.com>
- <098a5dd6-e1da-f161-97d7-cfe735d14fd8@oracle.com>
- <502b5e52-060b-6864-d1b7-eab2dc951aed@huawei.com>
- <a82956f7-26e4-5c1c-8d5d-4b2510f6b17d@oracle.com>
-From:   "Longpeng (Mike)" <longpeng2@huawei.com>
-Message-ID: <e2b9af10-b048-e5d2-e5b5-609622226a3c@huawei.com>
-Date:   Sat, 22 Feb 2020 10:15:47 +0800
-User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.2
+        Fri, 21 Feb 2020 21:16:22 -0500
+Received: from mail-ot1-f65.google.com ([209.85.210.65]:35028 "EHLO
+        mail-ot1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728010AbgBVCQW (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 21 Feb 2020 21:16:22 -0500
+Received: by mail-ot1-f65.google.com with SMTP id r16so3864877otd.2;
+        Fri, 21 Feb 2020 18:16:21 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=hNbrrFkKPFhSR7F7zgyGSYHr2/p2BvESnaaeAk58nuE=;
+        b=SaK4TkvhlKL9nOfKFT6YgraHBsFXGdGpPB5Z/AJAFuUxAv2UelJnPYdDJh4oVjDGiH
+         Re5HhHkm2nf1sDiT0hiVEj37fNBNm6qWiGZgFsXdV3XzMIWvcMrP+ehKySJ2piBFTN2E
+         kiyLdbucbdEU6IbbDSMgiicicMsuZllJ2lXvP5Ji7baR/h8kv55brcdA40yUIXbYaY6x
+         Va5H+2mR5vF86Vzw+5GqA6SLVFZGc9fI/JjpLQg5Jy5lgm376GN2e/tuM0UtxB15jFRS
+         /f0r1A9qHYs3VWfSEEcmqiJbwhlEF30kj0UhQYPWWUcjXets4gg3zne20HaGw+QhBnq7
+         Sz5w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=hNbrrFkKPFhSR7F7zgyGSYHr2/p2BvESnaaeAk58nuE=;
+        b=oZdeQZTdi1x1vW2GtIRRoQjvTS3XmOjpJ3oy9zw+hmCQRkb3wdUxXqSCdhp6wWL48W
+         DVAtlQVwBvUmppi+DyNC048iFDsP9GZZgcvQfhARe07tUEoIQS55XQi8JI7gCIPY+CNl
+         OUA9la9tfNJc7/yqp/MXsy1ZuSlv6c2cmdgd5+KB+GQKypxr/Qkwa5ScrIZ5BYG3ONMu
+         8j8pPJB1mQBLn9C2AlD3n2RTMe6YGMADEh4kTl+4fMGqFFj/dZy1iTGyK20Mg2Esbk7+
+         jaB9elCaYN2SzjPw6k+ht72ImKSvv7rQYzS7HjaQAu0zn80Aslqe7xAFuBPoUAeAwYZo
+         FJrA==
+X-Gm-Message-State: APjAAAVAJ1mzx8VWBd/wILqRf2m4kq/iwaAqze7kGKhLKwmQqORuWLVy
+        T4SVv8XboolkB4y8J5kzgGk=
+X-Google-Smtp-Source: APXvYqwi8LKBV6oX/qnZSLaAgOfMKPpIj1zxsvrfz0yq13DLX3sHxO1QWrBisgQa4rdeg5uKCCUiCw==
+X-Received: by 2002:a9d:6e9a:: with SMTP id a26mr29465578otr.344.1582337781285;
+        Fri, 21 Feb 2020 18:16:21 -0800 (PST)
+Received: from ubuntu-m2-xlarge-x86 ([2604:1380:4111:8b00::1])
+        by smtp.gmail.com with ESMTPSA id y6sm1693943oti.44.2020.02.21.18.16.20
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Fri, 21 Feb 2020 18:16:20 -0800 (PST)
+Date:   Fri, 21 Feb 2020 19:16:19 -0700
+From:   Nathan Chancellor <natechancellor@gmail.com>
+To:     "Alex Xu (Hello71)" <alex_y_xu@yahoo.ca>
+Cc:     linux-kbuild@vger.kernel.org, michal.lkml@markovi.net,
+        masahiroy@kernel.org, linux-kernel@vger.kernel.org,
+        Russell King <linux@armlinux.org.uk>
+Subject: Re: [PATCH] kbuild: move -pipe to global KBUILD_CFLAGS
+Message-ID: <20200222021619.GA51223@ubuntu-m2-xlarge-x86>
+References: <20200222003820.220854-1-alex_y_xu.ref@yahoo.ca>
+ <20200222003820.220854-1-alex_y_xu@yahoo.ca>
 MIME-Version: 1.0
-In-Reply-To: <a82956f7-26e4-5c1c-8d5d-4b2510f6b17d@oracle.com>
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
-X-Originating-IP: [10.177.246.209]
-X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200222003820.220854-1-alex_y_xu@yahoo.ca>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-在 2020/2/21 8:22, Mike Kravetz 写道:
-> On 2/19/20 6:30 PM, Longpeng (Mike) wrote:
->> 在 2020/2/20 3:33, Mike Kravetz 写道:
->>> + Kirill
->>> On 2/18/20 5:58 PM, Sean Christopherson wrote:
->>>> On Wed, Feb 19, 2020 at 09:39:59AM +0800, Longpeng (Mike) wrote:
-> <snip>
->>>> The race and the fix make sense.  I assumed dereferencing garbage from the
->>>> huge page was the issue, but I wasn't 100% that was the case, which is why
->>>> I asked about alternative fixes.
->>>>
->>>>> We change the code from
->>>>> 	if (pud_huge(*pud) || !pud_present(*pud))
->>>>> to
->>>>> 	if (pud_huge(*pud)
->>>>> 		return (pte_t *)pud;
->>>>> 	busy loop for 500ms
->>>>> 	if (!pud_present(*pud))
->>>>> 		return (pte_t *)pud;
->>>>> and the panic will be hit quickly.
->>>>>
->>>>> ARM64 has already use READ/WRITE_ONCE to access the pagetable, look at this
->>>>> commit 20a004e7 (arm64: mm: Use READ_ONCE/WRITE_ONCE when accessing page tables).
->>>>>
->>>>> The root cause is: 'if (pud_huge(*pud) || !pud_present(*pud))' read entry from
->>>>> pud twice and the *pud maybe change in a race, so if we only read the pud once.
->>>>> I use READ_ONCE here is just for safe, to prevents the complier mischief if
->>>>> possible.
->>>>
->>>> FWIW, I'd be in favor of going the READ/WRITE_ONCE() route for x86, e.g.
->>>> convert everything as a follow-up patch (or patches).  I'm fairly confident
->>>> that KVM's usage of lookup_address_in_mm() is safe, but I wouldn't exactly
->>>> bet my life on it.  I'd much rather the failing scenario be that KVM uses
->>>> a sub-optimal page size as opposed to exploding on a bad pointer.
->>>
->>> Longpeng(Mike) asked in another e-mail specifically about making similar
->>> changes to lookup_address_in_mm().  Replying here as there is more context.
->>>
->>> I 'think' lookup_address_in_mm is safe from this issue.  Why?  IIUC, the
->>> problem with the huge_pte_offset routine is that the pud changes from
->>> pud_none() to pud_huge() in the middle of
->>> 'if (pud_huge(*pud) || !pud_present(*pud))'.  In the case of
->>> lookup_address_in_mm, we know pud was not pud_none() as it was previously
->>> checked.  I am not aware of any other state transitions which could cause
->>> us trouble.  However, I am no expert in this area.
-> 
-> Bad copy/paste by me.  Longpeng(Mike) was asking about lookup_address_in_pgd.
-> 
->> So... I need just fix huge_pte_offset in mm/hugetlb.c, right?
-> 
-> Let's start with just a fix for huge_pte_offset() as you can easily reproduce
-> that issue by adding a delay.
-> 
->> Is it possible the pud changes from pud_huge() to pud_none() while another CPU
->> is walking the pagetable ?
-> 
-All right, I'll send V2 to fix it, thanks :)
+Hi Alex,
 
-> I believe it is possible.  If we hole punch a hugetlbfs file, we will clear
-> the corresponding pud's.  Hence, we can go from pud_huge() to pud_none().
-> Unless I am missing something, that does imply we could have issues in places
-> such as lookup_address_in_pgd:
+On Fri, Feb 21, 2020 at 07:38:20PM -0500, Alex Xu (Hello71) wrote:
+> -pipe reduces unnecessary disk wear for systems where /tmp is not a
+> tmpfs, slightly increases compilation speed, and avoids leaving behind
+> files when gcc crashes.
 > 
-> 	pud = pud_offset(p4d, address);
-> 	if (pud_none(*pud))
-> 		return NULL;
+> According to the gcc manual, "this fails to work on some systems where
+> the assembler is unable to read from a pipe; but the GNU assembler has
+> no trouble". We already require GNU ld on all platforms, so this is not
+> an additional dependency. LLVM as also supports pipes.
 > 
-> 	*level = PG_LEVEL_1G;
-> 	if (pud_large(*pud) || !pud_present(*pud))
-> 		return (pte_t *)pud;
+> -pipe has always been used for most architectures, this change
+> standardizes it globally. Most notably, arm, arm64, riscv, and x86 are
+> affected.
 > 
-> I hope I am wrong, but it seems like pud_none(*pud) could become true after
-> the initial check, and before the (pud_large) check.  If so, there could be
-> a problem (addressing exception) when the code continues and looks up the pmd.
-> 
-> 	pmd = pmd_offset(pud, address);
-> 	if (pmd_none(*pmd))
-> 		return NULL;
-> 
-> It has been mentioned before that there are many page table walks like this.
-> What am I missing that prevents races like this?  Or, have we just been lucky?
-> 
-That's what I worry about. Maybe there is no usecase to hit it.
+> Signed-off-by: Alex Xu (Hello71) <alex_y_xu@yahoo.ca>
 
--- 
-Regards,
-Longpeng(Mike)
+Do you have any numbers to show this is actually beneficial from a
+compilation time perspective? I ask because I saw an improvement in
+compilation time when removing -pipe from x86's KBUILD_CFLAGS in
+commit 437e88ab8f9e ("x86/build: Remove -pipe from KBUILD_CFLAGS").
 
+For what it's worth, clang ignores -pipe so this does not actually
+matter for its integrated assembler.
+
+That type of change could have been a fluke but I guarantee people
+will care more about any change in compilation time than any of the
+other things that you mention so it might be wise to check on major
+architectures to make sure that it doesn't hurt.
+
+Cheers,
+Nathan
