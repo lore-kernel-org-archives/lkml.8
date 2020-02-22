@@ -2,105 +2,98 @@ Return-Path: <SRS0=8jYG=4K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5FB94C35673
-	for <linux-kernel@archiver.kernel.org>; Sat, 22 Feb 2020 19:02:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EEED5C35666
+	for <linux-kernel@archiver.kernel.org>; Sat, 22 Feb 2020 19:04:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 33C0520707
-	for <linux-kernel@archiver.kernel.org>; Sat, 22 Feb 2020 19:02:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C22A320702
+	for <linux-kernel@archiver.kernel.org>; Sat, 22 Feb 2020 19:04:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582398174;
-	bh=DpUM/OsF1FK0wRQ2NhZ1OXxzKYvkGiF6L8aCVgMDtOA=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=BSDhGy8eTHtL4zhWy+wNwZOPWONdqVM/7O0x6am7iTzG3D/Tu4nvLDM6HjQY2AFdY
-	 75jmohPsP4g9hAE1ynTAFB8i6XYQPmJf0bsVYPaRchsq+9tE8FeSjv92HdycUQk+jQ
-	 dl8oEoCE/OkcMljWGWTD4TIda/rl7F8IRnI1TILY=
+	s=default; t=1582398295;
+	bh=ZqbO1fcS9HWOteOgaRlUyNeb3iSn+PG2ujIzwG6SWWM=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=DX80ZD8xd7RpKQ7eLn2K9yX9u1WfaS+pon8R/Ks7KJyJuemvn6f8UHsxN0llk+TZJ
+	 tAUYEX9fpwMS3eq2izrNBoFt8KUS6EA535EEHl3tFRPBHaVI3BJofdwCIssrZUEfIs
+	 /3KrlwUy56w0LOlsTWC3iI61MRIq0+TvbDqyjpsM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726979AbgBVTCx (ORCPT
+        id S1726892AbgBVTEy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 22 Feb 2020 14:02:53 -0500
-Received: from mail.kernel.org ([198.145.29.99]:50100 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726550AbgBVTCw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 22 Feb 2020 14:02:52 -0500
-Received: from localhost (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E4A4F206EF;
-        Sat, 22 Feb 2020 19:02:51 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1582398172;
-        bh=DpUM/OsF1FK0wRQ2NhZ1OXxzKYvkGiF6L8aCVgMDtOA=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=JrBLp1qVxkmorY9bHIuXnzxPpJ2ddR19kuinzPOhnrx4Sv2AUO2/0tWyPo6G9QsBo
-         o5A+L75o4/+JRQfRlXWnGZg8RwZ+Om2MH+L63l2bh4zP4Lm6fgaVyZ/fMvemTn/aTq
-         Cz6l5TryGnnh0fHEM6nZIA5Qi5nuUUeR35iSavuk=
-Date:   Sat, 22 Feb 2020 14:02:50 -0500
-From:   Sasha Levin <sashal@kernel.org>
-To:     Daniel Jordan <daniel.m.jordan@oracle.com>
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-kernel@vger.kernel.org, stable@vger.kernel.org,
-        Eric Biggers <ebiggers@kernel.org>,
-        Herbert Xu <herbert@gondor.apana.org.au>,
-        Steffen Klassert <steffen.klassert@secunet.com>,
-        linux-crypto@vger.kernel.org
-Subject: Re: [PATCH 4.19 061/191] padata: always acquire cpu_hotplug_lock
- before pinst->lock
-Message-ID: <20200222190250.GD26320@sasha-vm>
-References: <20200221072250.732482588@linuxfoundation.org>
- <20200221072258.745173144@linuxfoundation.org>
- <20200222000045.cl45vclfhvkjursm@ca-dmjordan1.us.oracle.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii; format=flowed
-Content-Disposition: inline
-In-Reply-To: <20200222000045.cl45vclfhvkjursm@ca-dmjordan1.us.oracle.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+        Sat, 22 Feb 2020 14:04:54 -0500
+Received: from conuserg-09.nifty.com ([210.131.2.76]:23008 "EHLO
+        conuserg-09.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726758AbgBVTEy (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 22 Feb 2020 14:04:54 -0500
+X-Greylist: delayed 11519 seconds by postgrey-1.27 at vger.kernel.org; Sat, 22 Feb 2020 14:04:53 EST
+Received: from grover.flets-west.jp (softbank126093102113.bbtec.net [126.93.102.113]) (authenticated)
+        by conuserg-09.nifty.com with ESMTP id 01MJ4cZ6012807;
+        Sun, 23 Feb 2020 04:04:40 +0900
+DKIM-Filter: OpenDKIM Filter v2.10.3 conuserg-09.nifty.com 01MJ4cZ6012807
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
+        s=dec2015msa; t=1582398281;
+        bh=bmT77VUANmQdBakUB1snAYo2YaYV2b/WXJDLs84Hovk=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=yBsvDE/CYqb/HNefyT+1ZKG3smJf90UvTH//vprBPxgqpAcpFMjIGZNXdWHO3jFHO
+         La5hBmQeGJ+LoM62Q6eqG1w+GUNOauaL4wPfmAVUxEjy7DsQFuhOUAKisNfq8UHBdi
+         Ypbw+bad/q8L1ccq7X7v3ZguMUV30JQO+ptaKmyO5cREQeI5ZZGavMbkaUDRpXhwio
+         fHGtozZ4+YBkhikIIuh+7dfUEhVdQB97Nrtzt5NJGYqJH1I1VrJB8XoX7PryiHFRIV
+         5m9kjWxSHHi7/CRjvHQP3kzNRe/H+1iwHL69/1VIOvv/OEndK/tX3XXVoU5QD90lx3
+         Ox7EpMRfKqfDw==
+X-Nifty-SrcIP: [126.93.102.113]
+From:   Masahiro Yamada <masahiroy@kernel.org>
+To:     linux-kbuild@vger.kernel.org
+Cc:     Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org,
+        Masahiro Yamada <masahiroy@kernel.org>,
+        Michal Marek <michal.lkml@markovi.net>,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH 4/5] kbuild: add dt_binding_check to PHONY in a correct place
+Date:   Sun, 23 Feb 2020 04:04:34 +0900
+Message-Id: <20200222190435.11767-4-masahiroy@kernel.org>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20200222190435.11767-1-masahiroy@kernel.org>
+References: <20200222190435.11767-1-masahiroy@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Feb 21, 2020 at 07:00:45PM -0500, Daniel Jordan wrote:
->On Fri, Feb 21, 2020 at 08:40:34AM +0100, Greg Kroah-Hartman wrote:
->> From: Daniel Jordan <daniel.m.jordan@oracle.com>
->>
->> [ Upstream commit 38228e8848cd7dd86ccb90406af32de0cad24be3 ]
->>
->> lockdep complains when padata's paths to update cpumasks via CPU hotplug
->> and sysfs are both taken:
->>
->>   # echo 0 > /sys/devices/system/cpu/cpu1/online
->>   # echo ff > /sys/kernel/pcrypt/pencrypt/parallel_cpumask
->>
->>   ======================================================
->>   WARNING: possible circular locking dependency detected
->>   5.4.0-rc8-padata-cpuhp-v3+ #1 Not tainted
->>   ------------------------------------------------------
->>   bash/205 is trying to acquire lock:
->>   ffffffff8286bcd0 (cpu_hotplug_lock.rw_sem){++++}, at: padata_set_cpumask+0x2b/0x120
->>
->>   but task is already holding lock:
->>   ffff8880001abfa0 (&pinst->lock){+.+.}, at: padata_set_cpumask+0x26/0x120
->>
->>   which lock already depends on the new lock.
->
->I think this patch should be dropped from all stable queues (4.4, 4.9, 4.14,
->4.19, 5.4, and 5.5).
->
->The main benefit is to un-break lockdep for testing with future padata changes,
->and an actual deadlock seems unlikely.
->
->These stable versions don't fix the ordering in padata_remove_cpu() either
->(nothing calls it though).
->
->I tried the other stable padata patch in this cycle ("padata: validate cpumask
->without removed CPU during offline"), it passed my tests and should stay in.
+The dt_binding_check is added to PHONY, but it is visible only
+when $(dtstree) is not empty. So, it is not specified as phony
+for ARCH=x86 etc.
 
-I've dropped it, thanks.
+Add it to PHONY outside the ifneq ... endif block.
 
+Signed-off-by: Masahiro Yamada <masahiroy@kernel.org>
+---
+
+ Makefile | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
+
+diff --git a/Makefile b/Makefile
+index 102710a9228c..83f9b8f6fbaf 100644
+--- a/Makefile
++++ b/Makefile
+@@ -1238,7 +1238,7 @@ ifneq ($(dtstree),)
+ %.dtb: include/config/kernel.release scripts_dtc
+ 	$(Q)$(MAKE) $(build)=$(dtstree) $(dtstree)/$@
+ 
+-PHONY += dtbs dtbs_install dtbs_check dt_binding_check
++PHONY += dtbs dtbs_install dtbs_check
+ dtbs dtbs_check: include/config/kernel.release scripts_dtc
+ 	$(Q)$(MAKE) $(build)=$(dtstree)
+ 
+@@ -1258,6 +1258,7 @@ PHONY += scripts_dtc
+ scripts_dtc: scripts_basic
+ 	$(Q)$(MAKE) $(build)=scripts/dtc
+ 
++PHONY += dt_binding_check
+ dt_binding_check: scripts_dtc
+ 	$(Q)$(MAKE) $(build)=Documentation/devicetree/bindings
+ 
 -- 
-Thanks,
-Sasha
+2.17.1
+
