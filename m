@@ -2,154 +2,194 @@ Return-Path: <SRS0=8jYG=4K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F0B9CC35669
-	for <linux-kernel@archiver.kernel.org>; Sat, 22 Feb 2020 04:33:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9BEE1C35669
+	for <linux-kernel@archiver.kernel.org>; Sat, 22 Feb 2020 04:43:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C4502208C4
-	for <linux-kernel@archiver.kernel.org>; Sat, 22 Feb 2020 04:33:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 525F12071E
+	for <linux-kernel@archiver.kernel.org>; Sat, 22 Feb 2020 04:43:38 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=lca.pw header.i=@lca.pw header.b="kCtRbLdy"
+	dkim=pass (1024-bit key) header.d=megous.com header.i=@megous.com header.b="r0kgt1qz"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728080AbgBVEdD (ORCPT
+        id S1728049AbgBVEly (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Feb 2020 23:33:03 -0500
-Received: from mail-qk1-f193.google.com ([209.85.222.193]:38052 "EHLO
-        mail-qk1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727025AbgBVEdD (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Feb 2020 23:33:03 -0500
-Received: by mail-qk1-f193.google.com with SMTP id z19so3916223qkj.5
-        for <linux-kernel@vger.kernel.org>; Fri, 21 Feb 2020 20:33:02 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=lca.pw; s=google;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=OPdiCspFUoLNdKrsNyt7aSs4T7N6gYtV5I8j4acuNpk=;
-        b=kCtRbLdy7+38MLaQOqGvMn+7ARfqNP34p7Adh+Nw0vxvzdxkFuJqwccbrDTlSw/rIW
-         a6TiZ4wDah27pbw5okdb81kVQ8H9gn3q2+7squeRbWaDfx7wqIFMrussM/adOQ1558qu
-         vM/KRBsMBBX3s70MJmNT/XcO30s4LnsodDhHEE+vzXPnrx3DLSvMq0zWyXTE6OYBg+kR
-         SXOXG8CMZTPSTIxw0M78unzC4qPvAhF7QREFjpU4G/rxpJe9H07eq2hd8hcP44arR5jQ
-         D0J7NjGQuWpJdvcRRwkQ3qhAbrDKU4vfMhCtYX1fIZJH1SyJFDz9WAf349Fob4Ao1KEd
-         2/Wg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=OPdiCspFUoLNdKrsNyt7aSs4T7N6gYtV5I8j4acuNpk=;
-        b=GD2Y2XXUueq2u/AJo2mylgqCkX8vKMaF0sFD70DwqMYh0nCWHxkgMNv6swkOnQSwvG
-         Fg8vKasxI+VOhKzgHYkhkqBn4jiYshjq5nlJQ77wlSjdVNguINec/s20Sri62ZfT8IQ4
-         a+L921OkO7xesYdFwbX8AgXtTmYktb2P/RnQse/Jx+5Nwquy0dMgZtgEYu+8QXJfbBS3
-         8BAF1OHiMkrfdlSOgIN0pPO067aefomw+nB8L9ivolQ1cNbiOXjQnoiWR681WlpFs9kN
-         yGe2pMqOzcDFQzWfnhKEGGeChs1sOF9J42QnaTfaaTAM6VVg3EFr6yeH6Wa2iy3gFMsV
-         Cy3Q==
-X-Gm-Message-State: APjAAAUB4UNwas/kXTXkN+vPrjM8PVYiFBU495tKrupSmriU+v9sg3FI
-        ZGpI/8SxPZEUrbPo443fgZDgO5HsDhEOsA==
-X-Google-Smtp-Source: APXvYqy262Ujqqx69YRIfaoGQM3oqw+MXZRaRJpxs5U7PdfiOQq4CReAY2bXktxNoCUNNXHXTer0nQ==
-X-Received: by 2002:a05:620a:15cf:: with SMTP id o15mr37586094qkm.140.1582345982183;
-        Fri, 21 Feb 2020 20:33:02 -0800 (PST)
-Received: from ovpn-120-117.rdu2.redhat.com (pool-71-184-117-43.bstnma.fios.verizon.net. [71.184.117.43])
-        by smtp.gmail.com with ESMTPSA id j11sm2592733qkl.97.2020.02.21.20.33.01
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Fri, 21 Feb 2020 20:33:01 -0800 (PST)
-From:   Qian Cai <cai@lca.pw>
-To:     tytso@mit.edu
-Cc:     adilger.kernel@dilger.ca, elver@google.com,
-        linux-ext4@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Qian Cai <cai@lca.pw>
-Subject: [PATCH] ext4: fix a data race at inode->i_blocks
-Date:   Fri, 21 Feb 2020 23:32:58 -0500
-Message-Id: <20200222043258.2279-1-cai@lca.pw>
-X-Mailer: git-send-email 2.21.0 (Apple Git-122.2)
+        Fri, 21 Feb 2020 23:41:54 -0500
+Received: from vps.xff.cz ([195.181.215.36]:53204 "EHLO vps.xff.cz"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726198AbgBVEly (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 21 Feb 2020 23:41:54 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=megous.com; s=mail;
+        t=1582346512; bh=lu42HKPfs8W3F34qV2Vvg++VjwzFzV7KC4WH6c2u/0Y=;
+        h=Date:From:To:Cc:Subject:References:X-My-GPG-KeyId:From;
+        b=r0kgt1qzNAwLorPK+IlooEqy5oL0J1E/DJZVoFiAzdDyuET7pqJKA7Dm/5F8su1AT
+         BgL+65fJ0CjaxPS5CTJsndzkpc5QM1yc5V4NUO57izHozKf3De3qEInt3p+trOkO7P
+         fYX496T3AdqhasAVKhr5Uf/P6KGdf9gOJ/FUVNk8=
+Date:   Sat, 22 Feb 2020 05:41:51 +0100
+From:   =?utf-8?Q?Ond=C5=99ej?= Jirman <megous@megous.com>
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     linux-kernel@vger.kernel.org, stable@vger.kernel.org,
+        Chao Yu <yuchao0@huawei.com>, Jaegeuk Kim <jaegeuk@kernel.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: Re: [PATCH 5.5 020/399] f2fs: call f2fs_balance_fs outside of locked
+ page
+Message-ID: <20200222044151.odurt3xqyhgxqqve@core.my.home>
+Mail-Followup-To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-kernel@vger.kernel.org, stable@vger.kernel.org,
+        Chao Yu <yuchao0@huawei.com>, Jaegeuk Kim <jaegeuk@kernel.org>,
+        Sasha Levin <sashal@kernel.org>
+References: <20200221072402.315346745@linuxfoundation.org>
+ <20200221072404.289499313@linuxfoundation.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200221072404.289499313@linuxfoundation.org>
+X-My-GPG-KeyId: EBFBDDE11FB918D44D1F56C1F9F0A873BE9777ED
+ <https://xff.cz/key.txt>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-inode->i_blocks could be accessed concurrently as noticed by KCSAN,
+Hello,
 
- BUG: KCSAN: data-race in ext4_do_update_inode [ext4] / inode_add_bytes
+On Fri, Feb 21, 2020 at 08:35:45AM +0100, Greg Kroah-Hartman wrote:
+> From: Jaegeuk Kim <jaegeuk@kernel.org>
+> 
+> [ Upstream commit bdf03299248916640a835a05d32841bb3d31912d ]
 
- write to 0xffff9a00d4b982d0 of 8 bytes by task 22100 on cpu 118:
-  inode_add_bytes+0x65/0xf0
-  __inode_add_bytes at fs/stat.c:689
-  (inlined by) inode_add_bytes at fs/stat.c:702
-  ext4_mb_new_blocks+0x418/0xca0 [ext4]
-  ext4_ext_map_blocks+0x1a6b/0x27b0 [ext4]
-  ext4_map_blocks+0x1a9/0x950 [ext4]
-  _ext4_get_block+0xfc/0x270 [ext4]
-  ext4_get_block_unwritten+0x33/0x50 [ext4]
-  __block_write_begin_int+0x22e/0xae0
-  __block_write_begin+0x39/0x50
-  ext4_write_begin+0x388/0xb50 [ext4]
-  ext4_da_write_begin+0x35f/0x8f0 [ext4]
-  generic_perform_write+0x15d/0x290
-  ext4_buffered_write_iter+0x11f/0x210 [ext4]
-  ext4_file_write_iter+0xce/0x9e0 [ext4]
-  new_sync_write+0x29c/0x3b0
-  __vfs_write+0x92/0xa0
-  vfs_write+0x103/0x260
-  ksys_write+0x9d/0x130
-  __x64_sys_write+0x4c/0x60
-  do_syscall_64+0x91/0xb05
-  entry_SYSCALL_64_after_hwframe+0x49/0xbe
+I have somes issues with this patch.
 
- read to 0xffff9a00d4b982d0 of 8 bytes by task 8 on cpu 65:
-  ext4_do_update_inode+0x4a0/0xf60 [ext4]
-  ext4_inode_blocks_set at fs/ext4/inode.c:4815
-  ext4_mark_iloc_dirty+0xaf/0x160 [ext4]
-  ext4_mark_inode_dirty+0x129/0x3e0 [ext4]
-  ext4_convert_unwritten_extents+0x253/0x2d0 [ext4]
-  ext4_convert_unwritten_io_end_vec+0xc5/0x150 [ext4]
-  ext4_end_io_rsv_work+0x22c/0x350 [ext4]
-  process_one_work+0x54f/0xb90
-  worker_thread+0x80/0x5f0
-  kthread+0x1cd/0x1f0
-  ret_from_fork+0x27/0x50
+It causes panics due to hung tasks on 5.6. I guess it fixes one deadlock, but
+causes other one? Not sure backporting it to stable branches is a good idea.
 
- 4 locks held by kworker/u256:0/8:
-  #0: ffff9a025abc4328 ((wq_completion)ext4-rsv-conversion){+.+.}, at: process_one_work+0x443/0xb90
-  #1: ffffab5a862dbe20 ((work_completion)(&ei->i_rsv_conversion_work)){+.+.}, at: process_one_work+0x443/0xb90
-  #2: ffff9a025a9d0f58 (jbd2_handle){++++}, at: start_this_handle+0x1c1/0x9d0 [jbd2]
-  #3: ffff9a00d4b985d8 (&(&ei->i_raw_lock)->rlock){+.+.}, at: ext4_do_update_inode+0xaa/0xf60 [ext4]
- irq event stamp: 3009267
- hardirqs last  enabled at (3009267): [<ffffffff980da9b7>] __find_get_block+0x107/0x790
- hardirqs last disabled at (3009266): [<ffffffff980da8f9>] __find_get_block+0x49/0x790
- softirqs last  enabled at (3009230): [<ffffffff98a0034c>] __do_softirq+0x34c/0x57c
- softirqs last disabled at (3009223): [<ffffffff97cc67a2>] irq_exit+0xa2/0xc0
+regards,
+	o.
 
- Reported by Kernel Concurrency Sanitizer on:
- CPU: 65 PID: 8 Comm: kworker/u256:0 Tainted: G L 5.6.0-rc2-next-20200221+ #7
- Hardware name: HPE ProLiant DL385 Gen10/ProLiant DL385 Gen10, BIOS A40 07/10/2019
- Workqueue: ext4-rsv-conversion ext4_end_io_rsv_work [ext4]
 
-The plain read is outside of inode->i_lock critical section which
-results in a data race. Fix it by adding READ_ONCE() there.
+INFO: task kworker/u16:2:341 blocked for more than 122 seconds.
+      Not tainted 5.6.0-rc2-00254-g9a029a493dc16 #4
+"echo 0 > /proc/sys/kernel/hung_task_timeout_secs" disables this message.
+kworker/u16:2   D    0   341      2 0x00000000
+Workqueue: writeback wb_workfn (flush-179:0)
+Backtrace:
+[<c0912bd0>] (__schedule) from [<c0913274>] (schedule+0x78/0xf4)
+ r10:ede1a000 r9:00000000 r8:ede1ba60 r7:ec417290 r6:00000002 r5:ede1a000
+ r4:ee8e8000
+[<c09131fc>] (schedule) from [<c017ec74>] (rwsem_down_write_slowpath+0x24c/0x4c0)
+ r5:00000001 r4:ec417280
+[<c017ea28>] (rwsem_down_write_slowpath) from [<c0915f6c>] (down_write+0x6c/0x70)
+ r10:ec417280 r9:ede1bd80 r8:ee128000 r7:00000001 r6:00000000 r5:eff0afc4
+ r4:ec417280
+[<c0915f00>] (down_write) from [<c0435b68>] (f2fs_write_single_data_page+0x608/0x7ac)
+ r5:eff0afc4 r4:ec4170e0
+[<c0435560>] (f2fs_write_single_data_page) from [<c0435fc0>] (f2fs_write_cache_pages+0x2b4/0x7c4)
+ r10:ede1bc28 r9:ec4171e0 r8:ec4170e0 r7:00000001 r6:ede1bd80 r5:00000001
+ r4:eff0afc4
+[<c0435d0c>] (f2fs_write_cache_pages) from [<c0436814>] (f2fs_write_data_pages+0x344/0x35c)
+ r10:0000012c r9:ee12802c r8:ee128000 r7:00000004 r6:ec4171e0 r5:ec4170e0
+ r4:ede1bd80
+[<c04364d0>] (f2fs_write_data_pages) from [<c0267fa0>] (do_writepages+0x3c/0xd4)
+ r10:0000012c r9:c0e03d00 r8:00001400 r7:c0264e94 r6:ede1bd80 r5:ec4171e0
+ r4:ec4170e0
+[<c0267f64>] (do_writepages) from [<c0310d24>] (__writeback_single_inode+0x44/0x454)
+ r7:ec4171e0 r6:ede1beac r5:ede1bd80 r4:ec4170e0
+[<c0310ce0>] (__writeback_single_inode) from [<c0311338>] (writeback_sb_inodes+0x204/0x4b0)
+ r10:0000012c r9:c0e03d00 r8:ec417148 r7:ec4170e0 r6:ede1beac r5:ec417188
+ r4:eebed848
+[<c0311134>] (writeback_sb_inodes) from [<c0311634>] (__writeback_inodes_wb+0x50/0xe4)
+ r10:ee7128e8 r9:c0e03d00 r8:eebed85c r7:ede1beac r6:00000000 r5:eebed848
+ r4:ee120000
+[<c03115e4>] (__writeback_inodes_wb) from [<c031195c>] (wb_writeback+0x294/0x338)
+ r10:00020800 r9:ede1a000 r8:c0e04e64 r7:eebed848 r6:000192d0 r5:ede1beac
+ r4:eebed848
+[<c03116c8>] (wb_writeback) from [<c0312e98>] (wb_workfn+0x3e0/0x54c)
+ r10:ee894005 r9:eebed84c r8:eebed948 r7:eebed848 r6:00000000 r5:eebed954
+ r4:00002b6e
+[<c0312ab8>] (wb_workfn) from [<c014f2b8>] (process_one_work+0x214/0x544)
+ r10:ee894005 r9:00000200 r8:00000000 r7:ee894000 r6:ef044400 r5:edb1c700
+ r4:eebed954
+[<c014f0a4>] (process_one_work) from [<c014f634>] (worker_thread+0x4c/0x574)
+ r10:ef044400 r9:c0e03d00 r8:ef044418 r7:00000088 r6:ef044400 r5:edb1c714
+ r4:edb1c700
+[<c014f5e8>] (worker_thread) from [<c01564fc>] (kthread+0x144/0x170)
+ r10:ef125e90 r9:ec0f235c r8:edb1c700 r7:ede1a000 r6:00000000 r5:ec0f2300
+ r4:ec0f2340
+[<c01563b8>] (kthread) from [<c01010e8>] (ret_from_fork+0x14/0x2c)
+Exception stack(0xede1bfb0 to 0xede1bff8)
+bfa0:                                     00000000 00000000 00000000 00000000
+bfc0: 00000000 00000000 00000000 00000000 00000000 00000000 00000000 00000000
+bfe0: 00000000 00000000 00000000 00000000 00000013 00000000
+ r10:00000000 r9:00000000 r8:00000000 r7:00000000 r6:00000000 r5:c01563b8
+ r4:ec0f2300
+NMI backtrace for cpu 2
+CPU: 2 PID: 52 Comm: khungtaskd Not tainted 5.6.0-rc2-00254-g9a029a493dc16 #4
+Hardware name: Allwinner A83t board
+Backtrace:
+[<c010db5c>] (dump_backtrace) from [<c010dee0>] (show_stack+0x20/0x24)
+ r7:00000000 r6:60060013 r5:00000000 r4:c0e9ab10
 
-Signed-off-by: Qian Cai <cai@lca.pw>
----
- fs/ext4/inode.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/fs/ext4/inode.c b/fs/ext4/inode.c
-index e60aca791d3f..98cadd111942 100644
---- a/fs/ext4/inode.c
-+++ b/fs/ext4/inode.c
-@@ -4812,7 +4812,7 @@ static int ext4_inode_blocks_set(handle_t *handle,
- 				struct ext4_inode_info *ei)
- {
- 	struct inode *inode = &(ei->vfs_inode);
--	u64 i_blocks = inode->i_blocks;
-+	u64 i_blocks = READ_ONCE(inode->i_blocks);
- 	struct super_block *sb = inode->i_sb;
- 
- 	if (i_blocks <= ~0U) {
--- 
-2.21.0 (Apple Git-122.2)
-
+> Otherwise, we can hit deadlock by waiting for the locked page in
+> move_data_block in GC.
+> 
+>  Thread A                     Thread B
+>  - do_page_mkwrite
+>   - f2fs_vm_page_mkwrite
+>    - lock_page
+>                               - f2fs_balance_fs
+>                                   - mutex_lock(gc_mutex)
+>                                - f2fs_gc
+>                                 - do_garbage_collect
+>                                  - ra_data_block
+>                                   - grab_cache_page
+>    - f2fs_balance_fs
+>     - mutex_lock(gc_mutex)
+> 
+> Fixes: 39a8695824510 ("f2fs: refactor ->page_mkwrite() flow")
+> Reviewed-by: Chao Yu <yuchao0@huawei.com>
+> Signed-off-by: Jaegeuk Kim <jaegeuk@kernel.org>
+> Signed-off-by: Sasha Levin <sashal@kernel.org>
+> ---
+>  fs/f2fs/file.c | 7 ++++---
+>  1 file changed, 4 insertions(+), 3 deletions(-)
+> 
+> diff --git a/fs/f2fs/file.c b/fs/f2fs/file.c
+> index 33c412d178f0f..6c4436a5ce797 100644
+> --- a/fs/f2fs/file.c
+> +++ b/fs/f2fs/file.c
+> @@ -50,7 +50,7 @@ static vm_fault_t f2fs_vm_page_mkwrite(struct vm_fault *vmf)
+>  	struct page *page = vmf->page;
+>  	struct inode *inode = file_inode(vmf->vma->vm_file);
+>  	struct f2fs_sb_info *sbi = F2FS_I_SB(inode);
+> -	struct dnode_of_data dn = { .node_changed = false };
+> +	struct dnode_of_data dn;
+>  	int err;
+>  
+>  	if (unlikely(f2fs_cp_error(sbi))) {
+> @@ -63,6 +63,9 @@ static vm_fault_t f2fs_vm_page_mkwrite(struct vm_fault *vmf)
+>  		goto err;
+>  	}
+>  
+> +	/* should do out of any locked page */
+> +	f2fs_balance_fs(sbi, true);
+> +
+>  	sb_start_pagefault(inode->i_sb);
+>  
+>  	f2fs_bug_on(sbi, f2fs_has_inline_data(inode));
+> @@ -120,8 +123,6 @@ static vm_fault_t f2fs_vm_page_mkwrite(struct vm_fault *vmf)
+>  out_sem:
+>  	up_read(&F2FS_I(inode)->i_mmap_sem);
+>  
+> -	f2fs_balance_fs(sbi, dn.node_changed);
+> -
+>  	sb_end_pagefault(inode->i_sb);
+>  err:
+>  	return block_page_mkwrite_return(err);
+> -- 
+> 2.20.1
+> 
+> 
+> 
