@@ -2,176 +2,94 @@ Return-Path: <SRS0=8jYG=4K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DE25FC35666
-	for <linux-kernel@archiver.kernel.org>; Sat, 22 Feb 2020 11:21:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EFC02C35666
+	for <linux-kernel@archiver.kernel.org>; Sat, 22 Feb 2020 11:23:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B1F91206EF
-	for <linux-kernel@archiver.kernel.org>; Sat, 22 Feb 2020 11:21:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C2346206EF
+	for <linux-kernel@archiver.kernel.org>; Sat, 22 Feb 2020 11:23:01 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nifty.com header.i=@nifty.com header.b="tND51qjy"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="KIwfoweW"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727152AbgBVLVQ (ORCPT
+        id S1727201AbgBVLWn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 22 Feb 2020 06:21:16 -0500
-Received: from conuserg-12.nifty.com ([210.131.2.79]:29551 "EHLO
-        conuserg-12.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726726AbgBVLVQ (ORCPT
+        Sat, 22 Feb 2020 06:22:43 -0500
+Received: from mail-lf1-f65.google.com ([209.85.167.65]:33398 "EHLO
+        mail-lf1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726836AbgBVLWn (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 22 Feb 2020 06:21:16 -0500
-X-Greylist: delayed 118522 seconds by postgrey-1.27 at vger.kernel.org; Sat, 22 Feb 2020 06:21:14 EST
-Received: from grover.flets-west.jp (softbank126093102113.bbtec.net [126.93.102.113]) (authenticated)
-        by conuserg-12.nifty.com with ESMTP id 01MBKjen004488;
-        Sat, 22 Feb 2020 20:20:46 +0900
-DKIM-Filter: OpenDKIM Filter v2.10.3 conuserg-12.nifty.com 01MBKjen004488
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
-        s=dec2015msa; t=1582370446;
-        bh=Fm1qChr6ZbZLhdE3dP5bKvN2cnwWcGsLh5GHdABxVyE=;
-        h=From:To:Cc:Subject:Date:From;
-        b=tND51qjySwpbpvelT1nqARk2V3PBmw+G/91f5VL+7kQ8U6lzFvobKmL4ivpI3tTZR
-         Y/OjJTFSMLPAggU5pvKARW8Xw3YdLeCQAwX/h3Vfob1Y6IAUMLe1pez7DeBazDmt1X
-         m8Csj6062CPiy6sgOUKnB0K4EsShKp+mU9ISVC9ANX6ZxbImQovZcdEqqAGdqL2nUQ
-         xIh1PYOOFIgKcttm1GxTOyRZNJibjW8xfol4nS+jy13eIBvzT9X5ke7ynxf8io/q6K
-         baxH+4UFcdsw+llaa38eluyvX5mP5LGjwgzr+SPRdfhQ1+XavGSOnPLBwKMmyft4fZ
-         ZP/EEdXZCwkBA==
-X-Nifty-SrcIP: [126.93.102.113]
-From:   Masahiro Yamada <yamada.masahiro@socionext.com>
-To:     Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org
-Cc:     linux-kernel@vger.kernel.org, masahiroy@kernel.org,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Vinod Koul <vkoul@kernel.org>, dmaengine@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org
-Subject: [PATCH v2] dt-bindings: dma: Convert UniPhier MIO DMA controller to json-schema
-Date:   Sat, 22 Feb 2020 20:20:42 +0900
-Message-Id: <20200222112042.32345-1-yamada.masahiro@socionext.com>
-X-Mailer: git-send-email 2.17.1
+        Sat, 22 Feb 2020 06:22:43 -0500
+Received: by mail-lf1-f65.google.com with SMTP id n25so3429093lfl.0
+        for <linux-kernel@vger.kernel.org>; Sat, 22 Feb 2020 03:22:42 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=ROzac2uLC7kqowxE+PDOREiBLkFFQM2vDr6O0hYhD9w=;
+        b=KIwfoweWr/ifwgofjrdkqltpUNUZq2GNDeSDGFKuhqsdvHJNxmdIxPEpmCMmgi/7Mq
+         aMNKFsPFkoFR5pSysGd/DtosSaTDyNSQwX32AvZz47DqFgj2J3Pu3PTt8ehOQWDMIj7z
+         YguRXfiiCPKKDVLkQPE15O6mibJ3joOzalY+zwbwEyW6QBrNqbP/UPX6dQxgQjcGg9uG
+         uG+DSdYsOSKa7fmNjuDqUqftgkjNvFclBcaIgv0HckE0dX8kDuJJAjZOOQr/yerUveRt
+         MTaTskaDiRciaXesfQanOGD6eGT2vwIw/nsWgXKLpCAH17zZvIGn9QThhQIVOqQ8ybcL
+         YZdg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=ROzac2uLC7kqowxE+PDOREiBLkFFQM2vDr6O0hYhD9w=;
+        b=nQwI3sGBQaU+N14L+5lnQZNbxrGjrTZb6t96+kKCWwvoD6lt6l1XodpsuCpmYRgswV
+         QewpbCq881ftQea6BwiGI4Y/ZNm4bkjPyyVrAVnBB2UuIvb8oohsZZ3QM/BPgkgpCmq1
+         NR+l0PgD+NNH4MmgRG56s53HEfhqfOXRpd1hs0hRTUGpG7SQc7zVC2INhGgiJat9CZNk
+         yajt16fO45ed7rVbRicGepycr0uoq5Nipwphl9vTEx8ffiv4vdvJjyJ9hqk4DePZH5Ul
+         cX2ex95t/gsmmDGEAxOotJ0GZSn9ycM+Da9skEZS/Fa+0rtB5+5ZlTbMpWzyBiw6jd3+
+         gSPA==
+X-Gm-Message-State: APjAAAUKwEvTK/pWIyLoGXE28arjzrUKb3xO5LpZ0xJR4Qw6naHNUjEk
+        +6cXRs4dZWWhSsEpNKNP7dWCINGs1Juko9U3yeDJAcHnwiE=
+X-Google-Smtp-Source: APXvYqyTywaJiSpbnWFC1W2YkgVQEnrOsf/OK0dEWuaZYFukmvPYTaNDVbNpAJK2yXNZtbzIrXL2ZU197DHrl6cNTek=
+X-Received: by 2002:a19:dc14:: with SMTP id t20mr22063257lfg.47.1582370561607;
+ Sat, 22 Feb 2020 03:22:41 -0800 (PST)
+MIME-Version: 1.0
+References: <20200203140425.26579-1-erwan.leray@st.com> <609b5744-cc1e-8ada-fe14-6cc199c0a91d@st.com>
+In-Reply-To: <609b5744-cc1e-8ada-fe14-6cc199c0a91d@st.com>
+From:   Linus Walleij <linus.walleij@linaro.org>
+Date:   Sat, 22 Feb 2020 12:22:30 +0100
+Message-ID: <CACRpkdbZDaX71gLvmLTB5XxeE+6R9pGzhUiFEWjhFQUjS2yP8Q@mail.gmail.com>
+Subject: Re: [PATCH v3 0/4] STM32 early console
+To:     Alexandre Torgue <alexandre.torgue@st.com>
+Cc:     Erwan Le Ray <erwan.leray@st.com>,
+        Russell King <linux@armlinux.org.uk>,
+        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+        Arnd Bergmann <arnd@arndb.de>, Olof Johansson <olof@lixom.net>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        linux-stm32@st-md-mailman.stormreply.com,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        Geert Uytterhoeven <geert+renesas@glider.be>,
+        Nathan Huckleberry <nhuck15@gmail.com>,
+        Gerald Baeza <gerald.baeza@st.com>,
+        Clement Peron <peron.clem@gmail.com>,
+        Fabrice Gasnier <fabrice.gasnier@st.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Convert the UniPhier MIO (Media I/O) DMA controller binding to DT
-schema format.
+On Fri, Feb 21, 2020 at 4:58 PM Alexandre Torgue
+<alexandre.torgue@st.com> wrote:
 
-While I was here, I added the resets property.
+> > Erwan Le Ray (4):
+> >    ARM: debug: stm32: add UART early console configuration for STM32F4
+> >    ARM: debug: stm32: add UART early console configuration for STM32F7
+> >    ARM: debug: stm32: add UART early console support for STM32H7
+> >    ARM: debug: stm32: add UART early console support for STM32MP1
+(...)
+> Do I have to take this series in my next PR ? or you'll ?
 
-Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
----
+Sign it off and send a PR to ARM SoC.
 
-Changes in v2:
- - add 'resets'
-
- .../dma/socionext,uniphier-mio-dmac.yaml      | 63 +++++++++++++++++++
- .../bindings/dma/uniphier-mio-dmac.txt        | 25 --------
- 2 files changed, 63 insertions(+), 25 deletions(-)
- create mode 100644 Documentation/devicetree/bindings/dma/socionext,uniphier-mio-dmac.yaml
- delete mode 100644 Documentation/devicetree/bindings/dma/uniphier-mio-dmac.txt
-
-diff --git a/Documentation/devicetree/bindings/dma/socionext,uniphier-mio-dmac.yaml b/Documentation/devicetree/bindings/dma/socionext,uniphier-mio-dmac.yaml
-new file mode 100644
-index 000000000000..e7bf6dd7da29
---- /dev/null
-+++ b/Documentation/devicetree/bindings/dma/socionext,uniphier-mio-dmac.yaml
-@@ -0,0 +1,63 @@
-+# SPDX-License-Identifier: GPL-2.0-only OR BSD-2-Clause
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/dma/socionext,uniphier-mio-dmac.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title: UniPhier Media IO DMA controller
-+
-+description: |
-+  This works as an external DMA engine for SD/eMMC controllers etc.
-+  found in UniPhier LD4, Pro4, sLD8 SoCs.
-+
-+maintainers:
-+  - Masahiro Yamada <yamada.masahiro@socionext.com>
-+
-+allOf:
-+  - $ref: "dma-controller.yaml#"
-+
-+properties:
-+  compatible:
-+    const: socionext,uniphier-mio-dmac
-+
-+  reg:
-+    maxItems: 1
-+
-+  interrupts:
-+    description: |
-+      A list of interrupt specifiers associated with the DMA channels.
-+      The number of interrupt lines is SoC-dependent.
-+
-+  clocks:
-+    maxItems: 1
-+
-+  resets:
-+    maxItems: 1
-+
-+  '#dma-cells':
-+    description: The single cell represents the channel index.
-+    const: 1
-+
-+required:
-+  - compatible
-+  - reg
-+  - interrupts
-+  - clocks
-+  - '#dma-cells'
-+
-+additionalProperties: false
-+
-+examples:
-+  - |
-+    // In the example below, "interrupts = <0 68 4>, <0 68 4>, ..." is not a
-+    // typo. The first two channels share a single interrupt line.
-+
-+    dmac: dma-controller@5a000000 {
-+        compatible = "socionext,uniphier-mio-dmac";
-+        reg = <0x5a000000 0x1000>;
-+        interrupts = <0 68 4>, <0 68 4>, <0 69 4>, <0 70 4>,
-+                     <0 71 4>, <0 72 4>, <0 73 4>, <0 74 4>;
-+        clocks = <&mio_clk 7>;
-+        resets = <&mio_rst 7>;
-+        #dma-cells = <1>;
-+    };
-diff --git a/Documentation/devicetree/bindings/dma/uniphier-mio-dmac.txt b/Documentation/devicetree/bindings/dma/uniphier-mio-dmac.txt
-deleted file mode 100644
-index b12388dc7eac..000000000000
---- a/Documentation/devicetree/bindings/dma/uniphier-mio-dmac.txt
-+++ /dev/null
-@@ -1,25 +0,0 @@
--UniPhier Media IO DMA controller
--
--This works as an external DMA engine for SD/eMMC controllers etc.
--found in UniPhier LD4, Pro4, sLD8 SoCs.
--
--Required properties:
--- compatible: should be "socionext,uniphier-mio-dmac".
--- reg: offset and length of the register set for the device.
--- interrupts: a list of interrupt specifiers associated with the DMA channels.
--- clocks: a single clock specifier.
--- #dma-cells: should be <1>. The single cell represents the channel index.
--
--Example:
--	dmac: dma-controller@5a000000 {
--		compatible = "socionext,uniphier-mio-dmac";
--		reg = <0x5a000000 0x1000>;
--		interrupts = <0 68 4>, <0 68 4>, <0 69 4>, <0 70 4>,
--			     <0 71 4>, <0 72 4>, <0 73 4>, <0 74 4>;
--		clocks = <&mio_clk 7>;
--		#dma-cells = <1>;
--	};
--
--Note:
--In the example above, "interrupts = <0 68 4>, <0 68 4>, ..." is not a typo.
--The first two channels share a single interrupt line.
--- 
-2.17.1
-
+Yours,
+Linus Walleij
