@@ -2,108 +2,107 @@ Return-Path: <SRS0=8jYG=4K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 94478C35671
-	for <linux-kernel@archiver.kernel.org>; Sat, 22 Feb 2020 12:44:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7C5C9C35666
+	for <linux-kernel@archiver.kernel.org>; Sat, 22 Feb 2020 12:45:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6AAB42071E
-	for <linux-kernel@archiver.kernel.org>; Sat, 22 Feb 2020 12:44:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 567AD208C3
+	for <linux-kernel@archiver.kernel.org>; Sat, 22 Feb 2020 12:45:28 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727290AbgBVMoF (ORCPT
+        id S1727318AbgBVMp0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 22 Feb 2020 07:44:05 -0500
-Received: from mga06.intel.com ([134.134.136.31]:54138 "EHLO mga06.intel.com"
+        Sat, 22 Feb 2020 07:45:26 -0500
+Received: from sauhun.de ([88.99.104.3]:53746 "EHLO pokefinder.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726839AbgBVMoF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 22 Feb 2020 07:44:05 -0500
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from orsmga002.jf.intel.com ([10.7.209.21])
-  by orsmga104.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 22 Feb 2020 04:44:04 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.70,471,1574150400"; 
-   d="scan'208";a="255104506"
-Received: from shbuild999.sh.intel.com (HELO localhost) ([10.239.147.113])
-  by orsmga002.jf.intel.com with ESMTP; 22 Feb 2020 04:44:00 -0800
-Date:   Sat, 22 Feb 2020 20:43:59 +0800
-From:   Feng Tang <feng.tang@intel.com>
-To:     "Kleen, Andi" <andi.kleen@intel.com>
-Cc:     Peter Zijlstra <peterz@infradead.org>,
-        "Chen, Rong A" <rong.a.chen@intel.com>,
-        Jiri Olsa <jolsa@redhat.com>, Ingo Molnar <mingo@kernel.org>,
-        Vince Weaver <vincent.weaver@maine.edu>,
-        Jiri Olsa <jolsa@kernel.org>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Arnaldo Carvalho de Melo <acme@redhat.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        "Naveen N. Rao" <naveen.n.rao@linux.vnet.ibm.com>,
-        Ravi Bangoria <ravi.bangoria@linux.ibm.com>,
-        Stephane Eranian <eranian@google.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        LKML <linux-kernel@vger.kernel.org>,
-        "lkp@lists.01.org" <lkp@lists.01.org>,
-        "Huang, Ying" <ying.huang@intel.com>
-Subject: Re: [LKP] Re: [perf/x86] 81ec3f3c4c: will-it-scale.per_process_ops
- -5.5% regression
-Message-ID: <20200222124359.GA86836@shbuild999.sh.intel.com>
-References: <20200205123216.GO12867@shao2-debian>
- <20200205125804.GM14879@hirez.programming.kicks-ass.net>
- <20200221080325.GA67807@shbuild999.sh.intel.com>
- <E8ECBC65D0B2554DAD44EBE43059B3740F1EAC@ORSMSX110.amr.corp.intel.com>
+        id S1726839AbgBVMp0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 22 Feb 2020 07:45:26 -0500
+Received: from localhost (p5486C6B7.dip0.t-ipconnect.de [84.134.198.183])
+        by pokefinder.org (Postfix) with ESMTPSA id 361D12C07F9;
+        Sat, 22 Feb 2020 13:45:24 +0100 (CET)
+Date:   Sat, 22 Feb 2020 13:45:23 +0100
+From:   Wolfram Sang <wsa@the-dreams.de>
+To:     Dan Carpenter <dan.carpenter@oracle.com>
+Cc:     Jean Delvare <khali@linux-fr.org>,
+        Daniel Kurtz <djkurtz@chromium.org>, linux-i2c@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        syzbot <syzbot+ed71512d469895b5b34e@syzkaller.appspotmail.com>,
+        Jarkko Nikula <jarkko.nikula@linux.intel.com>
+Subject: Re: [PATCH] i2c: i801: Fix memory corruption in i801_isr_byte_done()
+Message-ID: <20200222124523.GI1716@kunai>
+References: <0000000000009586b2059c13c7e1@google.com>
+ <20200114073406.qaq3hbrhtx76fkes@kili.mountain>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="1E1Oui4vdubnXi3o"
 Content-Disposition: inline
-In-Reply-To: <E8ECBC65D0B2554DAD44EBE43059B3740F1EAC@ORSMSX110.amr.corp.intel.com>
-User-Agent: Mutt/1.5.24 (2015-08-30)
+In-Reply-To: <20200114073406.qaq3hbrhtx76fkes@kili.mountain>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Andi,
 
-On Sat, Feb 22, 2020 at 02:05:02AM +0800, Kleen, Andi wrote:
-> 
-> 
-> >So likely, this commit changes the layout of the kernel text
-> >and data, 
-> 
-> It should be only data here. text changes all the time anyways,
-> but data tends to be more stable.
- 
-Yes, I also did en experiment by modifying the gcc option to let
-all functions address aligned to 32 or 64, and the 5.5% gap still
-exist for the 2 commmits.
+--1E1Oui4vdubnXi3o
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-> > which may trigger some cacheline level change. From
-> >the system map of the 2 kernels, a big trunk of symbol's address
-> >changes which follow the global "pmu",
-> 
-> I wonder if it's the effect Andrew predicted a long time ago from
-> using __read_mostly. If all the __read_mostlies are moved somewhere
-> else the remaining read/write variables will get more sensitive to false sharing.
-> 
-> A simple experiment would be to add a __cacheline_aligned to align it,
-> and then add
-> 
-> ____cacheline_aligned char dummy[0]; 
-> 
-> at the end to pad it to 64bytes.
+On Tue, Jan 14, 2020 at 10:34:06AM +0300, Dan Carpenter wrote:
+> Assigning "priv->data[-1] =3D priv->len;" obviously doesn't make sense.
+> What it does is it ends up corrupting the last byte of priv->len so
+> priv->len becomes a very high number.
+>=20
+> Reported-by: syzbot+ed71512d469895b5b34e@syzkaller.appspotmail.com
+> Fixes: d3ff6ce40031 ("i2c-i801: Enable IRQ for byte_by_byte transactions")
+> Signed-off-by: Dan Carpenter <dan.carpenter@oracle.com>
+> ---
 
-Thanks for the suggestion, I tried this and the 5.5 regrssion is gone!
-which also confirms the offset for the bulk of stuff following "pmu" 
-causes the performance drop.
+Daniel, Jean: what do you think?
+Also, adding Jarkko to CC who works a lot with this driver...
 
-> 
-> Or hopefully Jiri can figure it out from the C2C data.
+> Untested.
+>=20
+>  drivers/i2c/busses/i2c-i801.c | 1 -
+>  1 file changed, 1 deletion(-)
+>=20
+> diff --git a/drivers/i2c/busses/i2c-i801.c b/drivers/i2c/busses/i2c-i801.c
+> index f5e69fe56532..420d8025901e 100644
+> --- a/drivers/i2c/busses/i2c-i801.c
+> +++ b/drivers/i2c/busses/i2c-i801.c
+> @@ -584,7 +584,6 @@ static void i801_isr_byte_done(struct i801_priv *priv)
+>  					"SMBus block read size is %d\n",
+>  					priv->len);
+>  			}
+> -			priv->data[-1] =3D priv->len;
+>  		}
+> =20
+>  		/* Read next byte */
+> --=20
+> 2.11.0
+>=20
 
-I'm also trying to debug following Jiri's "perf c2c" suggestion.
+--1E1Oui4vdubnXi3o
+Content-Type: application/pgp-signature; name="signature.asc"
 
-Thanks,
-Feng
+-----BEGIN PGP SIGNATURE-----
 
+iQIzBAABCgAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAl5RImMACgkQFA3kzBSg
+KbZC0Q/+LOrn7S2BHakC6ciFfhoKlx1JKC1Ts+NkP4nKMIvrQMjYOREwWfvUvMRn
+a1el8fzdk5NbUIp9RVmh0yt+YKxLzcWKKAWjusc8yiTWgJXapVe2Cc2pT/xEER8A
+3APVZAmE7QvSWqbcCjYkBB6KoicYVKvOlIq2sr8OBdE5ERqgUhkGWB9LUh9syAn2
+qLCkfXj9emCWAvV4AvcLk21rG4MlpqMSmzJUlP+nx/fHOkaFAFcUGwj4pHb25iUd
+2a/JWiPpQ2dRX0+jVFL4S0TVCKGjvnvBOr+N3Dt2zQkDa9Ci1HvwAvwTgoRH1qc2
+kgmDm4A6po9WNgz8AhITH+IjuP5ozjEPQHixhOG9r2/BV3LrDnUuhoZboxd/WZSN
+5BLgOQvXbM7kS30droYZDMKCN9hE/TvphA/LuN45/LrzoCLOkMeiJOFGSrLCXZ1c
+bjQuM41PRtsv/kcG4UHkoXCnt9b5f10Pe+qiw4pedI3+4yL1DGZLu6OQMIrO/Yih
+yPNHocAQNoiGIMEKx2mC6gHra+LkHAUsHI+xutxO77VRmiHhQwf+z82P0CMTQSWz
+6gnfkZMG0YM1EASYLaa+7MGvd/Cglg+/oMr5cOfKvE6rZAZMg4kSuTmm0lFWd3eH
+t/YSAUEr8FsE32jUOjcShuLle3UDTeT6VHtCUPs9riSI28T0pR4=
+=hhzM
+-----END PGP SIGNATURE-----
+
+--1E1Oui4vdubnXi3o--
