@@ -2,164 +2,126 @@ Return-Path: <SRS0=8jYG=4K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,MSGID_FROM_MTA_HEADER,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 711AFC35669
-	for <linux-kernel@archiver.kernel.org>; Sat, 22 Feb 2020 05:33:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DD9DEC35673
+	for <linux-kernel@archiver.kernel.org>; Sat, 22 Feb 2020 06:00:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3873E20707
-	for <linux-kernel@archiver.kernel.org>; Sat, 22 Feb 2020 05:33:23 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582349603;
-	bh=UAynlrotBk0FmHZnSdHsZMAiHJVBUDjojQexsIfluho=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=FDtWdjuXmCnVIYyHWz8lLRiUSkJQ1zqDV7rtfVdUHcVQ0f80UbvD/5J74YQ03txX9
-	 ooUsisut4nJ0+hvqxRCUO3MF8SpphTiIHYfMhY/duWzMb4yiG0Bg3KP+g2cXSmAoTm
-	 oQkV1XglC8BGeeadvYsgCHAYoalm8qIphVuZpP6Q=
+	by mail.kernel.org (Postfix) with ESMTP id AC0602071E
+	for <linux-kernel@archiver.kernel.org>; Sat, 22 Feb 2020 06:00:43 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=microsoft.com header.i=@microsoft.com header.b="PBb0jSgu"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726730AbgBVFdU (ORCPT
+        id S1726855AbgBVGAm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 22 Feb 2020 00:33:20 -0500
-Received: from conssluserg-04.nifty.com ([210.131.2.83]:58306 "EHLO
-        conssluserg-04.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726151AbgBVFdT (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 22 Feb 2020 00:33:19 -0500
-Received: from mail-vk1-f175.google.com (mail-vk1-f175.google.com [209.85.221.175]) (authenticated)
-        by conssluserg-04.nifty.com with ESMTP id 01M5XDb8000801;
-        Sat, 22 Feb 2020 14:33:14 +0900
-DKIM-Filter: OpenDKIM Filter v2.10.3 conssluserg-04.nifty.com 01M5XDb8000801
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
-        s=dec2015msa; t=1582349594;
-        bh=kfkRB8NqTSB8RfnnWhYO851m+pZCn26htPS02MwccbU=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=jGpTyMmaQFCA/yAC8SI4sEY5rRsGwV7n37iHBsYx0Tf7yhCGxJurnEkRnYv7mXkEJ
-         JsG/XgCkElNDfWpzULElIwahEskifFcCgfbfMXCevqXYv/LoxA47zlm0vQm2c+wXks
-         9sU0GorFjzp+hiEZTdTagyKsg7jPMB0IirRAzwYH6j1ZvpUe4A//reJSJZAgZdootB
-         2g7WnMlVvqwRfef0X7RYd/XXHwhTzr55mpoceajykax0eZUJhKShxiuBLuEbqxsn9r
-         23cnn4NQdvEhPKtWkgxQp/tWiyQ7DXLBQ2ZGCkxLv13OY12pHAVXycTmv8OGqxec2N
-         bHWw0f1u66WqQ==
-X-Nifty-SrcIP: [209.85.221.175]
-Received: by mail-vk1-f175.google.com with SMTP id w4so1193531vkd.5;
-        Fri, 21 Feb 2020 21:33:14 -0800 (PST)
-X-Gm-Message-State: APjAAAX9u7kSV5E4z26VhT21c5/p6BMSVa0JSalDpoLUTvi30+AlUk11
-        5KHMakTJ92TETGCzaHaUkDF5RruOVSnLL0yU3B0=
-X-Google-Smtp-Source: APXvYqw0koqWOvytLQ0hXmAEc9eS7xUecajG9z93OX8duyLUDb6bva5IL7M/xtzmqsUqDWyYc6mF9iWEJjnMvLa+UjA=
-X-Received: by 2002:a1f:1bc3:: with SMTP id b186mr19356263vkb.96.1582349592746;
- Fri, 21 Feb 2020 21:33:12 -0800 (PST)
+        Sat, 22 Feb 2020 01:00:42 -0500
+Received: from mail-eopbgr680134.outbound.protection.outlook.com ([40.107.68.134]:5153
+        "EHLO NAM04-BN3-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726053AbgBVGAm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 22 Feb 2020 01:00:42 -0500
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=jZ3nD87NQKFeoI59KwNKaJonYby35Xm1b3J/UlgIwmsYvA9mwiMZfp7QT4qTCifGhizenTVzAzYwZQDWN4qnloizixdyZWJwcmvWsEHOC5rUofG8gSKPgK+TyrLtlzrlSVQsLNGKIPBOA4ivp1H18wQOF6HmLrCyZ+4N36+KvuaQe6Fy2oqrN4wGFvTW9PkjVKeBQ6dgSfDFh8/aEjIgOplDK2qypMcR2dZGI7QfzLtJLPO4RlzFAFEe0eUDWfzayAE/paWTIMrjjsMUnZqXMeV+8I3F+nyjVrp8p3+mr1aPy9igQBP1VOL4IA677hWCFEQ9WRpffhj3oK873FIreQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=sVfGPXOnjJ7gkW9g2nEcBnQ3/ZOoL/YqiMF1B12XDho=;
+ b=kO/pcWUcwyIHjK3I1RqRT5pzgj7DeFZcLdNl+fbucQg7iW4J58ExaQemdN9GOepuYd8n1KhgKb64tLJ9GoJwzp2hfJ/g902HLmr5VnBMzO/uhawYXD4Pr2QtfEmiLW808kY+i93PK5NEkSKJWF4fikSprf4L2dDZ6zoazDYCtldVGw71cr5Q1mlNlmA18NThotHrIkJTDqn5gbDzokSGoBYQdt/uYvQ7pATaL2ZKw+xuAYLGKRlMjapxeKctWqK+DGQ76h5eC+fX2HgNTlskVrNSazIw+Fug9EfbiSoIBlLSKdmEZ0nsy2vDdHzAc/yBFKI6oxEhQpP6Sf5R5mGlUA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=microsoft.com; dmarc=pass action=none
+ header.from=microsoft.com; dkim=pass header.d=microsoft.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=sVfGPXOnjJ7gkW9g2nEcBnQ3/ZOoL/YqiMF1B12XDho=;
+ b=PBb0jSguSr4yTCqhMTbot5RUASGMNdFisHT5L/LxMHaIG4Yb6fqscOd6x8Z7jccNEfUVSMcvm6UXkgUZ7mkoQ9dJeCFprOjXlzHCruhoxv3GQAqST2DZjsmRWWyDeFG87T02fVgh9GvocbJecQLZ79x9AVy6TM75hI4b1gFCIMI=
+Authentication-Results: spf=none (sender IP is )
+ smtp.mailfrom=decui@microsoft.com; 
+Received: from BN8PR21MB1139.namprd21.prod.outlook.com (20.179.72.138) by
+ BN8PR21MB1249.namprd21.prod.outlook.com (20.179.74.26) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2772.5; Sat, 22 Feb 2020 06:00:40 +0000
+Received: from BN8PR21MB1139.namprd21.prod.outlook.com
+ ([fe80::18c0:bfd0:9181:4c62]) by BN8PR21MB1139.namprd21.prod.outlook.com
+ ([fe80::18c0:bfd0:9181:4c62%8]) with mapi id 15.20.2772.004; Sat, 22 Feb 2020
+ 06:00:39 +0000
+From:   Dexuan Cui <decui@microsoft.com>
+To:     kys@microsoft.com, haiyangz@microsoft.com, sthemmin@microsoft.com,
+        lorenzo.pieralisi@arm.com, bhelgaas@google.com,
+        linux-hyperv@vger.kernel.org, linux-pci@vger.kernel.org,
+        linux-kernel@vger.kernel.org, mikelley@microsoft.com
+Cc:     Dexuan Cui <decui@microsoft.com>
+Subject: [PATCH v2 1/2] PCI: hv: Remove unnecessary type casting from kzalloc
+Date:   Fri, 21 Feb 2020 21:59:56 -0800
+Message-Id: <1582351197-12303-1-git-send-email-decui@microsoft.com>
+X-Mailer: git-send-email 1.8.3.1
+Reply-To: decui@microsoft.com
+Content-Type: text/plain
+X-ClientProxiedBy: CO2PR04CA0117.namprd04.prod.outlook.com
+ (2603:10b6:104:7::19) To BN8PR21MB1139.namprd21.prod.outlook.com
+ (2603:10b6:408:72::10)
 MIME-Version: 1.0
-References: <20200221021002.18795-1-yamada.masahiro@socionext.com>
- <20200221021002.18795-2-yamada.masahiro@socionext.com> <20200221153215.GA9815@bogus>
-In-Reply-To: <20200221153215.GA9815@bogus>
-From:   Masahiro Yamada <masahiroy@kernel.org>
-Date:   Sat, 22 Feb 2020 14:32:36 +0900
-X-Gmail-Original-Message-ID: <CAK7LNARhXbyUwMwXK=afXLnBVzg_MPv2D=oyn5qWkZtv12zmRg@mail.gmail.com>
-Message-ID: <CAK7LNARhXbyUwMwXK=afXLnBVzg_MPv2D=oyn5qWkZtv12zmRg@mail.gmail.com>
-Subject: Re: [PATCH 2/3] dt-bindings: gpio: Convert UniPhier GPIO to json-schema
-To:     Rob Herring <robh@kernel.org>
-Cc:     DTML <devicetree@vger.kernel.org>,
-        Frank Rowand <frowand.list@gmail.com>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+X-MS-Exchange-MessageSentRepresentingType: 1
+Received: from linuxonhyperv3.guj3yctzbm1etfxqx2vob5hsef.xx.internal.cloudapp.net (13.77.154.182) by CO2PR04CA0117.namprd04.prod.outlook.com (2603:10b6:104:7::19) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2750.17 via Frontend Transport; Sat, 22 Feb 2020 06:00:38 +0000
+X-Mailer: git-send-email 1.8.3.1
+X-Originating-IP: [13.77.154.182]
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-HT: Tenant
+X-MS-Office365-Filtering-Correlation-Id: d742a3f7-c305-4962-34a4-08d7b75c8aee
+X-MS-TrafficTypeDiagnostic: BN8PR21MB1249:|BN8PR21MB1249:
+X-MS-Exchange-Transport-Forked: True
+X-Microsoft-Antispam-PRVS: <BN8PR21MB1249E855BCEC95AC60FA0FBABFEE0@BN8PR21MB1249.namprd21.prod.outlook.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:7219;
+X-Forefront-PRVS: 03218BFD9F
+X-Forefront-Antispam-Report: SFV:NSPM;SFS:(10019020)(4636009)(346002)(136003)(396003)(366004)(39860400002)(376002)(189003)(199004)(26005)(8676002)(186003)(316002)(3450700001)(81156014)(5660300002)(6666004)(6512007)(16526019)(6506007)(2906002)(81166006)(8936002)(478600001)(10290500003)(4326008)(86362001)(36756003)(66556008)(2616005)(66946007)(52116002)(107886003)(6636002)(956004)(4744005)(6486002)(66476007);DIR:OUT;SFP:1102;SCL:1;SRVR:BN8PR21MB1249;H:BN8PR21MB1139.namprd21.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+Received-SPF: None (protection.outlook.com: microsoft.com does not designate
+ permitted sender hosts)
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: NkmjmcfvVeahwbpeO3AeS/9XGlFLuZqZwU4avS8pKVRobRLAlkuh0Px+aJp5ldCnBew5M8FP4Hh/lUBZmqUqSrbfXykjmM2YG85CzIt3uncFWxO4IA7y+AUrQnq95AcplCslh5hsWSsxNnvAzv05vG8a5lIvEPzYklSi7hWHag8zL6THiUAvVOdbjM7QkH1rbB4An2mz4Pxb4v4LWc48PSHP60aFZHsS8xuScShDwrnB9AYzkv5Y/W2gfHhr14sK0bRZ60e9qCTieu9cxHpPo/bxCvLu3bVCdaZQtS4757wGr5QJlAs5n/hJ9d7vIpLlFcHS0o9Afbbr2kDv8yLghjdERcVIkTzyD90v+BT3iXuLBSbXPJWjpGbdTYEQljO2b6SKoJopHY68VHesOOeHrOv82A14wt8mHmtHgYtijyh1JuwcUIqvKl0JxRxlkBYP
+X-MS-Exchange-AntiSpam-MessageData: z4/rMeGl9PMt7PCjhBSdzqxk+scwIMcQkFaH5q37gA8vkdZygDrRdrTA8rgptMHdwSqXG3Ls0dc+Mj0JDmSRhfQ8ScEmZU9g+1SSmL/xEjx6eeL/yzNQyABeBvYIVjljg7ORHv4I3EJNR/VDC+MraQ==
+X-OriginatorOrg: microsoft.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: d742a3f7-c305-4962-34a4-08d7b75c8aee
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 22 Feb 2020 06:00:39.8581
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 72f988bf-86f1-41af-91ab-2d7cd011db47
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: sUT2eLtxrOKsny9dn6VUMvPobOxHTClFsQRRFKd4Mja5bO7JBxgiE+OKUsxwnpqBN5Mtrw6zalYkhI4xunKilw==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BN8PR21MB1249
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Rob,
+In C, there is no need to cast a void * to any other pointer type.
 
-On Sat, Feb 22, 2020 at 12:32 AM Rob Herring <robh@kernel.org> wrote:
->
-> On Fri, 21 Feb 2020 11:10:01 +0900, Masahiro Yamada wrote:
-> > Convert the UniPhier GPIO controller binding to DT schema format.
-> >
-> > I omitted the 'gpio-ranges' property because it is defined in the
-> > dt-schema project (/schemas/gpio/gpio.yaml).
-> >
-> > As of writing, the 'gpio-ranges-group-names' is not defined in that
-> > file despite it is a common property described in
-> > Documentation/devicetree/bindings/gpio/gpio.txt
-> > So, I defined it in this schema.
-> >
-> > Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
-> > ---
-> >
-> > I have a question about the range about 'ngpio'.
-> >
-> >   ngpios:
-> >     minimum: 0
-> >     maximum: 512
-> >
-> > The 'ngpio' property is already defined as 'uint32' in the dt-schema tool:
-> > https://github.com/robherring/dt-schema/blob/master/schemas/gpio/gpio.yaml#L20
-> >
-> > 'uint32' is unsigned, so 'minimum: 0' looks too obvious.
-> >
-> > I cannot omit the minimum because minimum and maximum depend on each other.
-> > I just put a sensible number, 512, in maximum.
-> >
-> > If this range is entirely unneeded, I will delete it.
->
-> This property is generally for when you can have some number less
-> than a maximum number implied by the compatible string.
->
-> If there is really no max (e.g. 2^32 - 1 is valid), then just do
-> 'ngpios: true'
+Fixes: 877b911a5ba0 ("PCI: hv: Avoid a kmemleak false positive caused by the hbus buffer")
+Signed-off-by: Dexuan Cui <decui@microsoft.com>
+Reviewed-by: Michael Kelley <mikelley@microsoft.com>
+---
 
+Change in v2: this was part of v1.
 
-What does ': true' mean?
+ drivers/pci/controller/pci-hyperv.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-
-If it is documented somewhere,
-could you point me to the reference?
-
-Even if I remove the 'ngpio' entirely
-from my dt-schema, the 'ngpio' is checked
-correctly.
-
-
-
-
->
-> >
-> >
-> >  .../bindings/gpio/gpio-uniphier.txt           | 51 -----------
-> >  .../gpio/socionext,uniphier-gpio.yaml         | 89 +++++++++++++++++++
-> >  MAINTAINERS                                   |  2 +-
-> >  3 files changed, 90 insertions(+), 52 deletions(-)
-> >  delete mode 100644 Documentation/devicetree/bindings/gpio/gpio-uniphier.txt
-> >  create mode 100644 Documentation/devicetree/bindings/gpio/socionext,uniphier-gpio.yaml
-> >
->
-> My bot found errors running 'make dt_binding_check' on your patch:
->
-> Documentation/devicetree/bindings/display/simple-framebuffer.example.dts:21.16-37.11: Warning (chosen_node_is_root): /example-0/chosen: chosen node must be at root node
-> Error: Documentation/devicetree/bindings/gpio/socionext,uniphier-gpio.example.dts:38.34-35 syntax error
-> FATAL ERROR: Unable to parse input tree
-> scripts/Makefile.lib:300: recipe for target 'Documentation/devicetree/bindings/gpio/socionext,uniphier-gpio.example.dt.yaml' failed
-> make[1]: *** [Documentation/devicetree/bindings/gpio/socionext,uniphier-gpio.example.dt.yaml] Error 1
-> Makefile:1263: recipe for target 'dt_binding_check' failed
-> make: *** [dt_binding_check] Error 2
->
-> See https://patchwork.ozlabs.org/patch/1241747
-> Please check and re-submit.
-
-OK, I will.
-
-
-
+diff --git a/drivers/pci/controller/pci-hyperv.c b/drivers/pci/controller/pci-hyperv.c
+index 9977abff92fc..0fe0283368d2 100644
+--- a/drivers/pci/controller/pci-hyperv.c
++++ b/drivers/pci/controller/pci-hyperv.c
+@@ -2922,7 +2922,7 @@ static int hv_pci_probe(struct hv_device *hdev,
+ 	 * positive by using kmemleak_alloc() and kmemleak_free() to ask
+ 	 * kmemleak to track and scan the hbus buffer.
+ 	 */
+-	hbus = (struct hv_pcibus_device *)kzalloc(HV_HYP_PAGE_SIZE, GFP_KERNEL);
++	hbus = kzalloc(HV_HYP_PAGE_SIZE, GFP_KERNEL);
+ 	if (!hbus)
+ 		return -ENOMEM;
+ 	hbus->state = hv_pcibus_init;
 -- 
-Best Regards
-Masahiro Yamada
+2.19.1
+
