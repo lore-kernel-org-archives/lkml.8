@@ -2,115 +2,218 @@ Return-Path: <SRS0=8jYG=4K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=ham
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4F37DC35671
-	for <linux-kernel@archiver.kernel.org>; Sat, 22 Feb 2020 06:56:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 52599C35669
+	for <linux-kernel@archiver.kernel.org>; Sat, 22 Feb 2020 07:00:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 233AC20707
-	for <linux-kernel@archiver.kernel.org>; Sat, 22 Feb 2020 06:56:31 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="dRN9rxra"
+	by mail.kernel.org (Postfix) with ESMTP id 17BFD20707
+	for <linux-kernel@archiver.kernel.org>; Sat, 22 Feb 2020 07:00:18 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727258AbgBVG43 (ORCPT
+        id S1727127AbgBVHAQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 22 Feb 2020 01:56:29 -0500
-Received: from mail-oi1-f195.google.com ([209.85.167.195]:36426 "EHLO
-        mail-oi1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726832AbgBVG43 (ORCPT
+        Sat, 22 Feb 2020 02:00:16 -0500
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:12818 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726832AbgBVHAQ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 22 Feb 2020 01:56:29 -0500
-Received: by mail-oi1-f195.google.com with SMTP id c16so4002726oic.3
-        for <linux-kernel@vger.kernel.org>; Fri, 21 Feb 2020 22:56:29 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=IDjdYg8G8YiPVzJqdVxwXkt4r11bvSwv5ZKcIJIa3G0=;
-        b=dRN9rxraJC8cADe2vTgmjJNySFYRIp5kY1j+hJX0WQKT5Wp6OevL8izFX51cqBwJlV
-         y3ExuH471xTGu5aoGqRqhRghCJjZIGVLK3eBTgKyAc04oBBuGGZB+yT6W5FDHUNVZslE
-         B6gVLWDJ1f8HG//eXZsfgfnJi9OehpQ5W/Wjk1RaS+sa5iD6BNqe54X30oszNu8qYQ3O
-         Y9EslTD6MVfLyeS7m4LDdFPyaAnmRaJ9u632rgio80CX3yj09keQPSWUR/TX4TztMFND
-         bZHc1NEnvpyqIfEZ1yLqtbqEp1ixYAQOYll8GNAZmdqEuju5Hz1mqlNWTz3PBYX0fKY/
-         n+9w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=IDjdYg8G8YiPVzJqdVxwXkt4r11bvSwv5ZKcIJIa3G0=;
-        b=GjzT9Umdbjqv+PuUxhxQpMoKjh5RfgOYvEp6jE3RQMXTYt2EWjTaniixI0zz7D9vNg
-         vPEsdPywjRhEpEUJ4G2OMqqrL1HXRSSztPE78lWamQ4+iaETnVHLK+9DYMNXgz/lBSsD
-         VLx67aWZNxmBABwkAyGsBwec/INnxnSAw8RBS71cwwQV9GZwRZyzdfTikh0RA+Bm9u8v
-         sDVdMIHQjuDtnTj/hTsXDSALZCbBVB7XO1wt+siij6mQCurrIYuySY902FFiavozNvpi
-         iX7kw329nzN6d6oDMbmDXtgKHeEGPkTGNBSlRfhDTqCVhQbEWm5k3IuAja5puASgCGwo
-         PspQ==
-X-Gm-Message-State: APjAAAVUKapRqawiuN9tcHD+JN98wWPniAaSl1+wLcdYyngb998Rx6ED
-        jx7wDvh1OUqbizSb5mx6a1cO7EqcWN6lesxoNYDD/L7H
-X-Google-Smtp-Source: APXvYqxxz50l3JKdt93c/tA4iWEoS78ZjHNjfS5gljqNYy2epryAzXWTA2jvA0zdemkUA39IB3ybL6QQBHfOj6DdPcY=
-X-Received: by 2002:a05:6808:b29:: with SMTP id t9mr5185325oij.69.1582354588351;
- Fri, 21 Feb 2020 22:56:28 -0800 (PST)
+        Sat, 22 Feb 2020 02:00:16 -0500
+Received: from pps.filterd (m0187473.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 01M6vLm0106276
+        for <linux-kernel@vger.kernel.org>; Sat, 22 Feb 2020 02:00:15 -0500
+Received: from e06smtp01.uk.ibm.com (e06smtp01.uk.ibm.com [195.75.94.97])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2y8ucq29u8-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Sat, 22 Feb 2020 02:00:14 -0500
+Received: from localhost
+        by e06smtp01.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-kernel@vger.kernel.org> from <psampat@linux.ibm.com>;
+        Sat, 22 Feb 2020 07:00:09 -0000
+Received: from b06cxnps3074.portsmouth.uk.ibm.com (9.149.109.194)
+        by e06smtp01.uk.ibm.com (192.168.101.131) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Sat, 22 Feb 2020 07:00:08 -0000
+Received: from d06av26.portsmouth.uk.ibm.com (d06av26.portsmouth.uk.ibm.com [9.149.105.62])
+        by b06cxnps3074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 01M706UF8650902
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Sat, 22 Feb 2020 07:00:06 GMT
+Received: from d06av26.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 2B4A6AE05F;
+        Sat, 22 Feb 2020 07:00:06 +0000 (GMT)
+Received: from d06av26.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id A14E0AE057;
+        Sat, 22 Feb 2020 07:00:03 +0000 (GMT)
+Received: from pratiks-thinkpad.ibmuc.com (unknown [9.85.88.121])
+        by d06av26.portsmouth.uk.ibm.com (Postfix) with ESMTP;
+        Sat, 22 Feb 2020 07:00:03 +0000 (GMT)
+From:   Pratik Rajesh Sampat <psampat@linux.ibm.com>
+To:     linux-kernel@vger.kernel.org, rafael.j.wysocki@intel.com,
+        peterz@infradead.org, dsmythies@telus.net,
+        daniel.lezcano@linaro.org, ego@linux.vnet.ibm.com,
+        svaidy@linux.ibm.com, psampat@linux.ibm.com,
+        pratik.sampat@in.ibm.com, pratik.r.sampat@gmail.com
+Subject: [RFC 0/1] Weighted approach to gather and use history in TEO governor
+Date:   Sat, 22 Feb 2020 12:30:01 +0530
+X-Mailer: git-send-email 2.24.1
 MIME-Version: 1.0
-References: <7f7d9b37-3f10-fefb-db23-86c8f83e8885@huawei.com>
-In-Reply-To: <7f7d9b37-3f10-fefb-db23-86c8f83e8885@huawei.com>
-From:   Saravana Kannan <saravanak@google.com>
-Date:   Fri, 21 Feb 2020 22:55:52 -0800
-Message-ID: <CAGETcx_eHbVLmfYy5ggMKgXR1MQosLarrfpJA8j65krbvAzEbg@mail.gmail.com>
-Subject: Re: Query on device links
-To:     John Garry <john.garry@huawei.com>
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        "Rafael J. Wysocki" <rafael@kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
+x-cbid: 20022207-4275-0000-0000-000003A46439
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 20022207-4276-0000-0000-000038B87481
+Message-Id: <20200222070002.12897-1-psampat@linux.ibm.com>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.572
+ definitions=2020-02-22_01:2020-02-21,2020-02-22 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 malwarescore=0 adultscore=0
+ impostorscore=0 spamscore=0 phishscore=0 mlxlogscore=999
+ priorityscore=1501 clxscore=1011 suspectscore=0 bulkscore=0 mlxscore=0
+ lowpriorityscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2001150001 definitions=main-2002220060
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Feb 6, 2020 at 2:32 AM John Garry <john.garry@huawei.com> wrote:
->
-> Hi guys,
+Currently the TEO governor apart from the TEO timer and hit/miss/early
+hit buckets; also gathers history of 8 intervals and if there are
+significant idle durations less than the current, then it decides if a
+shallower state must be chosen.
 
-Sorry it took a while to get back.
+The current sliding history window does do a fair job at prediction,
+however, the hard-coded window can be a limiting factor for an accurate
+prediction and having the window size increase can also linearly affect
+both space and time complexity of the prediction.
 
->
-> According to "Limitations" section @
-> https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/Documentation/driver-api/device_link.rst#n110,
-> for a managed link, lack of the supplier driver may cause indefinite
-> delay in probing of the consumer. Is there any way around this?
+To complement the current moving window history, an approach is devised
+where each idle state separately maintains a weight for itself and its
+counterpart idle states to form a probability distribution.
 
-Currently, no. There's no way to guarantee ordering AND ignore
-supplier failures.
+When a decision needs to be made, the TEO governor selects an idle state
+based on its timer and other hits/early hits metric. After which, the
+probability distribution of that selected idle state is looked at which
+gives insight into how probable that state is to occur if picked.
 
-> So I just want the probe order attempt of the supplier and consumer to
-> be guaranteed, but the supplier probe may not be successful, i.e. does
-> not actually bind.
->
-> In my case, I would like to use device_link_add(supplier, consumer,
-> DL_FLAG_AUTOPROBE_CONSUMER), but I find the supplier probe may fail (and
-> not due to -EPROBE_DEFER), and my consumer remains in limbo.
+The probability distribution is nothing but a n*n matrix, where
+n = drv->state_count.
+Each entry in the array signifies a weight for that row.
+The weights can vary from the range [0-10000].
 
-The requirements seem to contradict each other. If you depend on the
-supplier, how can you probe the consumer if the supplier fails?
+For example:
+state_mat[1][2] = 3000 means that previously when state 1 was selected,
+the probability that state 2 will occur is 30%.
+The trailing zeros correspond to having more resolution while increasing
+or reducing the weights for correction.
 
-> You may ask my I want this ordering at all - it is because in
-> really_probe(), we do the device DMA configure before the actual device
-> driver probe, and I just need that ordering to be ensured between devices.
+Currently, for selection of an idle state based on probabilities, a
+weighted random number generator is used to choose one of the idle
+states. Naturally, the states with higher weights are more likely to be
+chosen.
 
-I'm assuming the supplier in your case is the "dma device" (is it an
-iommu?)? So if it fails, how is your consumer probing without the
-supplier? I'd think something like a DMA would be fundamental?
+On wakeup, the weights are updated. The state with which it should have
+woken up with (could be the hit / miss / early hit state) is increased
+in weight by the "LEARNING_RATE" % and the rest of the states for that
+index are reduced by the same factor.
 
-Why can't this logic be handled in your consumer driver instead of
-using device links? Why can't your consumer driver return
--EPROBE_DEFER if the dma ops are not set up correctly until some point
-after which (after late_initcall?) the consumer will continue probing
-without returning -EPROBE_DEFER even if the supplier isn't there/dma
-ops aren't set up?
+The advantage of this approach is that unlimited history of idle states
+can be maintained in constant overhead, which can help in more accurate
+prediction for choosing idle states.
 
-Can you give a more concrete example of your devices? Or why the
-suggestion above might not work?
+The advantage of unlimited history can become a possible disadvantage as
+the lifetime history for that thread may make the weights stale and
+influence the choosing of idle states which may not be relevant anymore.
+Aging the weights could be a solution for that, although this RFC does
+not cover the implementation for that.
 
--Saravana
+Having a finer view of the history in addition to weighted randomized
+salt seems to show some promise in terms of saving power without
+compromising performance.
+
+Benchmarks:
+Note: Wt. TEO governor represents the governor after the proposed change
+
+Schbench
+========
+Benchmarks wakeup latencies
+Scale of measurement:
+1. 99th percentile latency - usec
+2. Power - Watts
+
+Command: $ schbench -c 30000 -s 30000 -m 6 -r 30 -t <Threads>
+Varying parameter: -t
+
+Machine: IBM POWER 9
+
++--------+-------------+-----------------+-----------+-----------------+
+| Threads| TEO latency | Wt. TEO latency | TEO power | Wt. TEO power   |
++--------+-------------+-----------------+-----------+-----------------+
+| 2      | 979         | 949  ( +3.06%)  | 38        | 36  ( +5.26%)   |
+| 4      | 997         | 1042 ( -4.51%)  | 51        | 39  ( +23.52%)  |
+| 8      | 1158        | 1050 ( +9.32%)  | 89        | 63  ( +29.21%)  |
+| 16     | 1138        | 1135 ( +0.26%)  | 105       | 117 ( -11.42%)  |
++--------+-------------+-----------------+-----------+-----------------+
+
+Sleeping Ebizzy
+===============
+Program to generate workloads resembling web server workloads.
+The benchmark is customized to allow for a sleep interval -i
+Scale of measurement:
+1. Number of records/s
+2. systime (s)
+
+Parameters:
+1. -m => Always use mmap instead of malloc
+2. -M => Never use mmap
+3. -S <seconds> => Number of seconds to run
+4. -i <interval> => Sleep interval
+
+Machine: IBM POWER 9
+
++-------------------+-------------+-------------------+-----------+---------------+
+| Parameters        | TEO records | Wt. TEO records   | TEO power | Wt. TEO power |
++-------------------+-------------+-------------------+-----------+---------------+
+| -S 60 -i 10000    | 1115000     | 1198081 ( +7.45%) | 149       | 150 ( -0.66%) |
+| -m -S 60 -i 10000 | 15879       | 15513   ( -2.30%) | 23        | 22  ( +4.34%) |
+| -M -S 60 -i 10000 | 72887       | 77546   ( +6.39%) | 104       | 103 ( +0.96%) |
++-------------------+-------------+-------------------+-----------+---------------+
+
+Hackbench
+=========
+Creates a specified number of pairs of schedulable entities
+which communicate via either sockets or pipes and time how long  it
+takes for each pair to send data back and forth.
+Scale of measurement:
+1. Time (s)
+2. Power (watts)
+
+Command: Sockets: $ hackbench -l <Messages>
+         Pipes  : $ hackbench --pipe -l <Messages>
+Varying parameter: -l
+
+Machine: IBM POWER 9
+
++----------+------------+-------------------+----------+-------------------+
+| Messages | TEO socket | Wt. TEO socket    | TEO pipe | Wt. TEO pipe      |
++----------+------------+-------------------+----------+-------------------+
+| 100      | 0.042      | 0.043   ( -2.32%) | 0.031    | 0.032   ( +3.12%) |
+| 1000     | 0.258      | 0.272   ( +5.14%) | 0.301    | 0.312   ( -3.65%) |
+| 10000    | 2.397      | 2.441   ( +1.80%) | 5.642    | 5.092   ( +9.74%) |
+| 100000   | 23.691     | 23.730  ( -0.16%) | 57.762   | 57.857  ( -0.16%) |
+| 1000000  | 234.103    | 233.841 ( +0.11%) | 559.807  | 592.304 ( -5.80%) |
++----------+------------+-------------------+----------+-------------------+
+
+Power :Socket: Consistent between 135-140 watts for both TEO and Wt. TEO
+       Pipe: Consistent between 125-130 watts for both TEO and Wt. TEO
+
+
+
+Pratik Rajesh Sampat (1):
+  Weighted approach to gather and use history in TEO governor
+
+ drivers/cpuidle/governors/teo.c | 95 +++++++++++++++++++++++++++++++--
+ 1 file changed, 90 insertions(+), 5 deletions(-)
+
+-- 
+2.17.1
+
