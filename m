@@ -2,185 +2,126 @@ Return-Path: <SRS0=8jYG=4K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0F8CAC35671
-	for <linux-kernel@archiver.kernel.org>; Sat, 22 Feb 2020 16:36:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 486CEC35671
+	for <linux-kernel@archiver.kernel.org>; Sat, 22 Feb 2020 16:38:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D013F206D7
-	for <linux-kernel@archiver.kernel.org>; Sat, 22 Feb 2020 16:36:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1C86A206EF
+	for <linux-kernel@archiver.kernel.org>; Sat, 22 Feb 2020 16:38:23 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Jt5uKsl7"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="VPhhDO0X"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726707AbgBVQgP (ORCPT
+        id S1726719AbgBVQiW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 22 Feb 2020 11:36:15 -0500
-Received: from mail-wm1-f67.google.com ([209.85.128.67]:51515 "EHLO
-        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725976AbgBVQgP (ORCPT
+        Sat, 22 Feb 2020 11:38:22 -0500
+Received: from mail-il1-f195.google.com ([209.85.166.195]:39055 "EHLO
+        mail-il1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725976AbgBVQiV (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 22 Feb 2020 11:36:15 -0500
-Received: by mail-wm1-f67.google.com with SMTP id t23so4892408wmi.1;
-        Sat, 22 Feb 2020 08:36:13 -0800 (PST)
+        Sat, 22 Feb 2020 11:38:21 -0500
+Received: by mail-il1-f195.google.com with SMTP id f70so4272017ill.6
+        for <linux-kernel@vger.kernel.org>; Sat, 22 Feb 2020 08:38:21 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:autocrypt:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=dgr2+PYADNum4DteZn/qV6ZF6PBZFAZDhG/JhZudkKM=;
-        b=Jt5uKsl7aK76WTz8N51DcSYAaSAFHEfV/VI+mB4cQfkv75wz5VKof7odueKIzHoO5b
-         AfhRpmBCWHqq4YksJaQGdID2Tbjwi1Px1xVac+m3NHcNMxQZZb4PuhoqoULFItikYiC5
-         qFPj/O7QWoeCeqUYYfmTLJj1PYLlIIlWevFTOKR6esofDvxGY9D0POtSKIC62H/bg9sI
-         iIN80kDIpbTS+fRAPIqCWzDC+Yt5odLpDTB080zxOj+L935H8XC9lKBf96N5W+btgb/T
-         AENOMhaGWfaZppZK+DnHCgTJJfdat2eXtbss2Tsn//wuFagF8NIfJuDaYUkfZtz8uGbc
-         ++Ng==
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=J2lcmTwyMrOPuCOwLWRYUM2f987UesfeSpFXzubq3M0=;
+        b=VPhhDO0XyvOXJuHhhyDeMkuLbqYI5Te3zM8LnOL8z1b7LTEJwYCmtBvh1otLek2RPz
+         hEdXIdQPvAnqSRxDK8XUv1p+OYhx/6X2oJNJ6sX57BIM/adWC+i9Mcg+Lubch6/dQ8XF
+         dj7nljIPBod1kcjm77bWEv+fLG/e9yz62sJxuS5FeFR1U7/twvF4x7zISC2E8HsqP06D
+         8iVWeKPMn3hQozjvqvK8jJ+aRURyq/PRXTTiOOW6Ct0L/APNPqYFLI7TbrxQQg9wjRUV
+         lGtyU3IQLxIbHZbHbCzE7DaPJCRP5u1KjhfLkZ95BNfdECp/dZ3i0RBvbWH7ns1+Dkc8
+         LgTA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:autocrypt
-         :message-id:date:user-agent:mime-version:in-reply-to
-         :content-language:content-transfer-encoding;
-        bh=dgr2+PYADNum4DteZn/qV6ZF6PBZFAZDhG/JhZudkKM=;
-        b=LgyCVmD+1asIK7DPJVXuM2N1jdvprys76nB11qdBLw9dczFv98cDCnMTidxTxEhWXD
-         2TJPAyskJIiCiZYXikiVkv9D94t3lS+n5kdJODa7aTL+3kH03ZFr6pF4JiKAzqWKHLNV
-         6iEAzVNw7qOk2VBnqkso8o+VAxgx0fX416kUx1jXQCxJR4dxj67GpYWjkIj+BiqRKfKx
-         t572sjAH63AmytDzgYJIL+qW6XjNx4gVJ45fb2brbpIgZr/Qjw7/roNdgXCfnOoaXdT7
-         YXpE0/oXCXXDrsYKlBlQt40A39DBjWB+EKSa0l/D+FPvEpjab78O1rDFpj0w8LuiUGZh
-         fKRA==
-X-Gm-Message-State: APjAAAVXbSkpjrIITjOZl63jyHXTTAQ+3h9+e5QqrT416dkkJQCnrW6O
-        4vO0yMI+k1VJSjTapSQJ+BvP6rzG
-X-Google-Smtp-Source: APXvYqw5Ex3ww2kAmVFzzoDu4Pjd+3GJOt1oPjgkq7BSog/emMS6zVs0z6IudLYNuoMarvrLH1fj5A==
-X-Received: by 2002:a05:600c:290e:: with SMTP id i14mr10834180wmd.24.1582389371979;
-        Sat, 22 Feb 2020 08:36:11 -0800 (PST)
-Received: from [192.168.1.23] (affo138.neoplus.adsl.tpnet.pl. [95.49.144.138])
-        by smtp.gmail.com with ESMTPSA id h2sm9409509wrt.45.2020.02.22.08.36.10
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sat, 22 Feb 2020 08:36:11 -0800 (PST)
-Subject: Re: [PATCH v4] leds: add SGI IP30 led support
-To:     Thomas Bogendoerfer <tbogendoerfer@suse.de>
-Cc:     Pavel Machek <pavel@ucw.cz>, Dan Murphy <dmurphy@ti.com>,
-        linux-kernel@vger.kernel.org, linux-leds@vger.kernel.org
-References: <20200221111120.28799-1-tbogendoerfer@suse.de>
- <49524a9a-910a-9f1a-bc10-d78080a16d46@gmail.com>
- <20200222110545.fc96683543cb0dd538e5be82@suse.de>
-From:   Jacek Anaszewski <jacek.anaszewski@gmail.com>
-Autocrypt: addr=jacek.anaszewski@gmail.com; prefer-encrypt=mutual; keydata=
- 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
-Message-ID: <7bd606df-a5b6-6f05-43ef-b6691e16be94@gmail.com>
-Date:   Sat, 22 Feb 2020 17:36:09 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.5.0
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=J2lcmTwyMrOPuCOwLWRYUM2f987UesfeSpFXzubq3M0=;
+        b=myHPkstwbAybzFd5B4wHwedkxfhUV6rFKp6S9xQS/flDDdq2vyumKQowg0hBVx2VPz
+         lc6YmoKFly6jQNqFtN3hMCaqlf3952Um95EJ91q1wKIB7le0jsZXqdx85wQB0MwTM1zc
+         kEch2Epv25QgkAjXSTQfutXL2+vYwBWvfLnDaKuNM0MFz+Z+w8e6PUwRoIY2IQP/YE8p
+         QmaaLIZ1L1b4CjztuNQZqZd53XK0ouYmc5c/w4CMzJieADWdq9XTssG7mnc4RRwkWvtp
+         n6JG0HS0BF5ZEvTNcXKmirbgJzQxi8SpEYH5N/XhvhxpOBvkhTUnBg92PqBD3SY2sdnw
+         h7TA==
+X-Gm-Message-State: APjAAAWBE7EAjMlf7sCKCGMK7xUlNFnX0irdSCKY4f+W4O9dKDcUnEEV
+        fwZciAf6CJZ73sphMMuU/sD6EP2+MphpuBHgG8g=
+X-Google-Smtp-Source: APXvYqw73cI4FKHSPUknPM5sf5CcIf9Aur4WJiiMVylsuOkLvPPK+MIe5VuxT6HMie7KceerWUGix2PTn7R1lzg/l3Y=
+X-Received: by 2002:a92:9ac5:: with SMTP id c66mr48316823ill.232.1582389500921;
+ Sat, 22 Feb 2020 08:38:20 -0800 (PST)
 MIME-Version: 1.0
-In-Reply-To: <20200222110545.fc96683543cb0dd538e5be82@suse.de>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+References: <20200131181123.tmamivhq4b7uqasr@gmail.com> <30752f2a-fe0b-4150-c32d-07690fb43b82@windriver.com>
+In-Reply-To: <30752f2a-fe0b-4150-c32d-07690fb43b82@windriver.com>
+From:   Sam Lunt <samueljlunt@gmail.com>
+Date:   Sat, 22 Feb 2020 10:38:09 -0600
+Message-ID: <CAGn10uUFJLh7J5rNcbH-Y6aGGr0vK_YN40gry9PXh_tx3sSXMg@mail.gmail.com>
+Subject: Re: [PATCH] perf: Support Python 3.8+ in Makefile
+To:     He Zhe <zhe.he@windriver.com>
+Cc:     linux-kernel@vger.kernel.org, peterz@infradead.org,
+        mingo@redhat.com, acme@kernel.org, mark.rutland@arm.com,
+        alexander.shishkin@linux.intel.com, Jiri Olsa <jolsa@redhat.com>,
+        namhyung@kernel.org, trivial@kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2/22/20 11:05 AM, Thomas Bogendoerfer wrote:
-> On Fri, 21 Feb 2020 21:31:04 +0100
-> Jacek Anaszewski <jacek.anaszewski@gmail.com> wrote:
-> 
-> 
->>> +	if (num == 0)
->>> +		data->cdev.name = "white:indicator";
->>> +	else
->>> +		data->cdev.name = "red:indicator";
->>
->> Why indicator? Whereas it sounds quite generic it is used in the LED
->> subsystem specifically for naming indicator LEDs, that are often
->> found on flash LED controllers and are designed to indicate camera
->> sensor activity.
-> 
-> ok, ic.
-> 
->> If it is on the front panel of SGI Octane workstations then its
->> function is perhaps well known?
-> 
-> the red LED is clearly a fault led.
+On Sun, Feb 16, 2020 at 8:24 PM He Zhe <zhe.he@windriver.com> wrote:
+> On 2/1/20 2:11 AM, Sam Lunt wrote:
+> > Python 3.8 changed the output of 'python-config --ldflags' to no longer
+> > include the '-lpythonX.Y' flag (this apparently fixed an issue loading
+> > modules with a statically linked Python executable).  The libpython
+> > feature check in linux/build/feature fails if the Python library is not
+> > included in FEATURE_CHECK_LDFLAGS-libpython variable.
+> >
+> > This adds a check in the Makefile to determine if PYTHON_CONFIG accepts
+> > the '--embed' flag and passes that flag alongside '--ldflags' if so.
+> >
+> > tools/perf is the only place the libpython feature check is used.
+> >
+> > Signed-off-by: Sam Lunt <samuel.j.lunt@gmail.com>
+> > ---
+> >  tools/perf/Makefile.config | 11 ++++++++++-
+> >  1 file changed, 10 insertions(+), 1 deletion(-)
+> >
+> > diff --git a/tools/perf/Makefile.config b/tools/perf/Makefile.config
+> > index c90f4146e5a2..ccf99351f058 100644
+> > --- a/tools/perf/Makefile.config
+> > +++ b/tools/perf/Makefile.config
+> > @@ -228,8 +228,17 @@ strip-libs  = $(filter-out -l%,$(1))
+> >
+> >  PYTHON_CONFIG_SQ := $(call shell-sq,$(PYTHON_CONFIG))
+> >
+> > +# Python 3.8 changed the output of `python-config --ldflags` to not include the
+> > +# '-lpythonX.Y' flag unless '--embed' is also passed. The feature check for
+> > +# libpython fails if that flag is not included in LDFLAGS
+> > +ifeq ($(shell $(PYTHON_CONFIG_SQ) --ldflags --embed 2>&1 1>/dev/null; echo $$?), 0)
+> > +  PYTHON_CONFIG_LDFLAGS := --ldflags --embed
+> > +else
+> > +  PYTHON_CONFIG_LDFLAGS := --ldflags
+> > +endif
+> > +
+> >  ifdef PYTHON_CONFIG
+> > -  PYTHON_EMBED_LDOPTS := $(shell $(PYTHON_CONFIG_SQ) --ldflags 2>/dev/null)
+> > +  PYTHON_EMBED_LDOPTS := $(shell $(PYTHON_CONFIG_SQ) $(PYTHON_CONFIG_LDFLAGS) 2>/dev/null)
+>
+> I met the same problem. Would the following change be more simple and clear?
+>
+> -  PYTHON_EMBED_LDOPTS := $(shell $(PYTHON_CONFIG_SQ) --ldflags 2>/dev/null)
+> +  PYTHON_EMBED_LDOPTS := $(shell $(PYTHON_CONFIG_SQ) --ldflags --embed 2>/dev/null || $(PYTHON_CONFIG_SQ) --ldflags 2>/dev/null)
 
-We have fault in common LED names, so you can go for it.
+That change is nearly equivalent to the change I'd suggested, just
+squashed into one line. I think it's certainly more terse, but I'm not
+sure it's any clearer.
 
-> The white LED will be switch on
-> after system diagnostic was successfull. Nothing from common.h really
-> fits that, maybe status ?
+It's also making the implicit assumption that PYTHON_CONFIG_SQ does
+not print anything to stdout when it exits with a non-zero return
+code. I think that's probably a safe assumption, but it seems more
+robust not to make that assumption at all.
 
-I think that "system" would be OK. There are some LED drivers
-and DT bindings that use "system" in the LED names. I even proposed
-that also in the initial versions of my patch set standardizing LED
-naming but dropped it afterwards, since it its use was not clear.
-
-But now we have good use case for it.
-
-And one more thing: please add definitions for LEDs in your
-driver like:
-
-#define IP30_LED_SYSTEM 0
-#define IP30_LED_FAULT  1
-
-and use them instead of bare 0 and 1 numbers.
-
--- 
-Best regards,
-Jacek Anaszewski
+Best,
+Sam
