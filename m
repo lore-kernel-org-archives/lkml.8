@@ -2,78 +2,140 @@ Return-Path: <SRS0=8jYG=4K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FAKE_REPLY_C,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4CF99C35671
-	for <linux-kernel@archiver.kernel.org>; Sat, 22 Feb 2020 16:53:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6F4EBC35671
+	for <linux-kernel@archiver.kernel.org>; Sat, 22 Feb 2020 16:55:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 232CB20702
-	for <linux-kernel@archiver.kernel.org>; Sat, 22 Feb 2020 16:53:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 467B920707
+	for <linux-kernel@archiver.kernel.org>; Sat, 22 Feb 2020 16:55:21 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1582390521;
+	bh=0A/ghXzzkLBYWKnvYN8XpP4a6bqK1aF3NIRna1VaHC4=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:List-ID:From;
+	b=zUHjNLNTSAjFHMo5yny9PyPsIRMPSHVxEfaQ7gIOOvhJ33nrp2FthnhnK4ITCd2i7
+	 PcXuw5zCtrkSSRkr62QFArkTr03mlDVrLpYp5aghwa9a7VWcbZvThUbnciQf3jfzr5
+	 XNnWTn1NW/71DOT1+JpAjKSGvewt9cjAIA5kDlII=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726730AbgBVQxv convert rfc822-to-8bit (ORCPT
+        id S1726741AbgBVQzT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 22 Feb 2020 11:53:51 -0500
-Received: from mail.fireflyinternet.com ([77.68.26.236]:55608 "EHLO
-        fireflyinternet.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726198AbgBVQxv (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 22 Feb 2020 11:53:51 -0500
-X-Default-Received-SPF: pass (skip=forwardok (res=PASS)) x-ip-name=78.156.65.138;
-Received: from localhost (unverified [78.156.65.138]) 
-        by fireflyinternet.com (Firefly Internet (M1)) with ESMTP (TLS) id 20315157-1500050 
-        for multiple; Sat, 22 Feb 2020 16:53:32 +0000
-Content-Type: text/plain; charset="utf-8"
+        Sat, 22 Feb 2020 11:55:19 -0500
+Received: from mail.kernel.org ([198.145.29.99]:55530 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726044AbgBVQzT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 22 Feb 2020 11:55:19 -0500
+Received: from localhost (mobile-166-175-186-165.mycingular.net [166.175.186.165])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2EEC6206E2;
+        Sat, 22 Feb 2020 16:55:18 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1582390518;
+        bh=0A/ghXzzkLBYWKnvYN8XpP4a6bqK1aF3NIRna1VaHC4=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:From;
+        b=SYtvJH15dstxI2261Qi9JnwjEeSHCjuhb8UgMsKyEmRM1Gn7hP1BpRbrOPC228cff
+         OqoDOTLDVZw2ZPXh54MZMFbkOPjsA+ckFPb7psGwMvRLI0B0k18D/+L71kpiIr8H+z
+         KPZ95pxNYjDyAefVlvfU0P6nEN50PIhZMyZ6nngk=
+Date:   Sat, 22 Feb 2020 10:55:16 -0600
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     Xiang Zheng <zhengxiang9@huawei.com>
+Cc:     linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
+        mingo@redhat.com, peterz@infradead.org, alex.williamson@redhat.com,
+        Wang Haibin <wanghaibin.wang@huawei.com>,
+        Guoheyi <guoheyi@huawei.com>,
+        yebiaoxiang <yebiaoxiang@huawei.com>,
+        Matthew Wilcox <willy@infradead.org>,
+        Thomas Gleixner <tglx@linutronix.de>
+Subject: Re: Kernel panic while doing vfio-pci hot-plug/unplug test
+Message-ID: <20200222165516.GA206644@google.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8BIT
-To:     Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>,
-        bp@alien8.de, hpa@zytor.com, mingo@redhat.com, tglx@linutronix.de,
-        tony.luck@intel.com
-From:   Chris Wilson <chris@chris-wilson.co.uk>
-In-Reply-To: <20200222162432.497201-1-srinivas.pandruvada@linux.intel.com>
-Cc:     x86@kernel.org, linux-edac@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
-References: <20200222162432.497201-1-srinivas.pandruvada@linux.intel.com>
-Message-ID: <158239041049.15220.2836895127344585201@skylake-alporthouse-com>
-User-Agent: alot/0.6
-Subject: Re: [PATCH] x86/mce/therm_throt: Handle case where throttle_active_work() is
- called on behalf of an offline CPU
-Date:   Sat, 22 Feb 2020 16:53:30 +0000
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <79827f2f-9b43-4411-1376-b9063b67aee3@huawei.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Quoting Srinivas Pandruvada (2020-02-22 16:24:32)
-> During cpu-hotplug test with CONFIG_PREEMPTION and CONFIG_DEBUG_PREEMPT
-> enabled, Chris reported error:
-> 
-> BUG: using smp_processor_id() in preemptible [00000000] code: kworker/1:0/17
-> caller is throttle_active_work+0x12/0x280
-> 
-> Here throttle_active_work() is a work queue callback scheduled with
-> schedule_delayed_work_on(). This will not cause this error for the use
-> of smp_processor_id() under normal conditions as there is a check for
-> "current->nr_cpus_allowed == 1".
-> But when the target CPU is offline the workqueue becomes unbound.
-> Then the work queue callback can be scheduled on another CPU and the
-> error is printed for the use of smp_processor_id() in preemptible context.
-> 
-> When the workqueue is not getting called on the target CPU, simply return.
-> This is done by adding a cpu field in the _thermal_state struct and match
-> the current CPU id.
-> 
-> Once workqueue is scheduled, prevent CPU offline. In this way, the log
-> bits are checked and cleared on the correct CPU. Also use get_cpu() to
-> get current CPU id and prevent preemption before we finish processing.
-> 
-> Fixes: f6656208f04e ("x86/mce/therm_throt: Optimize notifications of thermal throttle")
-> Reported-by: Chris Wilson <chris@chris-wilson.co.uk>
-> Signed-off-by: Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
-> Reviewed-by: Tony Luck <tony.luck@intel.com>
+[+cc Matthew, Thomas]
 
-I've pushed the patch to our CI, but it's not a frequent occurrence, so
-it may be some time before I can state a t-b with any confidence.
--Chris
+On Wed, Oct 16, 2019 at 09:36:23PM +0800, Xiang Zheng wrote:
+> Hi all,
+> 
+> Recently I encountered a kernel panic while doing vfio-pci hot-plug/unplug test repeatly on my Arm-KVM virtual machines.
+
+Did we ever do anything about this panic?  I don't see any resolution
+in the email thread.
+
+> See the call stack below:
+> 
+> [66628.697280] vfio-pci 0000:06:03.5: enabling device (0000 -> 0002)
+> [66628.809290] vfio-pci 0000:06:03.1: enabling device (0000 -> 0002)
+> [66628.921283] vfio-pci 0000:06:02.7: enabling device (0000 -> 0002)
+> [66629.029280] vfio-pci 0000:06:03.6: enabling device (0000 -> 0002)
+> [66629.137338] vfio-pci 0000:06:03.2: enabling device (0000 -> 0002)
+> [66629.249285] vfio-pci 0000:06:03.7: enabling device (0000 -> 0002)
+> [66630.237261] Unable to handle kernel read from unreadable memory at virtual address ffff802dac469000
+> [66630.246266] Mem abort info:
+> [66630.249047]   ESR = 0x8600000d
+> [66630.252088]   Exception class = IABT (current EL), IL = 32 bits
+> [66630.257981]   SET = 0, FnV = 0
+> [66630.261022]   EA = 0, S1PTW = 0
+> [66630.264150] swapper pgtable: 4k pages, 48-bit VAs, pgdp = 00000000fb16886e
+> [66630.270992] [ffff802dac469000] pgd=0000203fffff6803, pud=00e8002d80000f11
+> [66630.277751] Internal error: Oops: 8600000d [#1] SMP
+> [66630.282606] Process qemu-kvm (pid: 37201, stack limit = 0x00000000d8f19858)
+> [66630.289537] CPU: 41 PID: 37201 Comm: qemu-kvm Kdump: loaded Tainted: G           OE     4.19.36-vhulk1907.1.0.h453.eulerosv2r8.aarch64 #1
+> [66630.301822] Hardware name: Huawei TaiShan 2280 V2/BC82AMDDA, BIOS 0.88 07/24/2019
+> [66630.309270] pstate: 80400089 (Nzcv daIf +PAN -UAO)
+> [66630.314042] pc : 0xffff802dac469000
+> [66630.317519] lr : __wake_up_common+0x90/0x1a8
+> [66630.321768] sp : ffff00027746bb00
+> [66630.325067] x29: ffff00027746bb00 x28: 0000000000000000
+> [66630.330355] x27: 0000000000000000 x26: ffff0000092755b8
+> [66630.335643] x25: 0000000000000000 x24: 0000000000000000
+> [66630.340930] x23: 0000000000000003 x22: ffff00027746bbc0
+> [66630.346219] x21: 000000000954c000 x20: ffff0001f542bc6c
+> [66630.351506] x19: ffff0001f542bb90 x18: 0000000000000000
+> [66630.356793] x17: 0000000000000000 x16: 0000000000000000
+> [66630.362081] x15: 0000000000000000 x14: 0000000000000000
+> [66630.367368] x13: 0000000000000000 x12: 0000000000000000
+> [66630.372655] x11: 0000000000000000 x10: 0000000000000bb0
+> [66630.377942] x9 : ffff00027746ba50 x8 : ffff80367ff6ca10
+> [66630.383229] x7 : ffff802e20d59200 x6 : 000000000000003f
+> [66630.388517] x5 : ffff00027746bbc0 x4 : ffff802dac469000
+> [66630.393806] x3 : 0000000000000000 x2 : 0000000000000000
+> [66630.399093] x1 : 0000000000000003 x0 : ffff0001f542bb90
+> [66630.404381] Call trace:
+> [66630.406818]  0xffff802dac469000
+> [66630.409945]  __wake_up_common_lock+0xa8/0x1a0
+> [66630.414283]  __wake_up+0x40/0x50
+> [66630.417499]  pci_cfg_access_unlock+0x9c/0xd0
+> [66630.421752]  pci_try_reset_function+0x58/0x78
+> [66630.426095]  vfio_pci_ioctl+0x478/0xdb8 [vfio_pci]
+> [66630.430870]  vfio_device_fops_unl_ioctl+0x44/0x70 [vfio]
+> [66630.436158]  do_vfs_ioctl+0xc4/0x8c0
+> [66630.439718]  ksys_ioctl+0x8c/0xa0
+> [66630.443018]  __arm64_sys_ioctl+0x28/0x38
+> [66630.446925]  el0_svc_common+0x78/0x130
+> [66630.450657]  el0_svc_handler+0x38/0x78
+> [66630.454389]  el0_svc+0x8/0xc
+> [66630.457260] Code: 00000000 00000000 00000000 00000000 (ac46d000)
+> [66630.463325] kernel fault(0x1) notification starting on CPU 41
+> [66630.469044] kernel fault(0x1) notification finished on CPU 41
+> 
+> The chance to reproduce this problem is very small. We had an initial analysis of this problem,
+> and found it was caused by the illegal value of the 'curr->func' in the __wake_up_common() function.
+> 
+> I cannot image how 'curr->func' can be wrote to 0xffff802dac469000. Is there any problem about
+> concurrent competition between the pci_wait_cfg() function and the wake_up_all() function?
+> 
+> 
+> -- 
+> 
+> Thanks,
+> Xiang
+> 
