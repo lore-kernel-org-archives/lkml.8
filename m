@@ -2,245 +2,119 @@ Return-Path: <SRS0=8jYG=4K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 72746C35669
-	for <linux-kernel@archiver.kernel.org>; Sat, 22 Feb 2020 06:12:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CA140C35669
+	for <linux-kernel@archiver.kernel.org>; Sat, 22 Feb 2020 06:26:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3A367214DB
-	for <linux-kernel@archiver.kernel.org>; Sat, 22 Feb 2020 06:12:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 89775208C3
+	for <linux-kernel@archiver.kernel.org>; Sat, 22 Feb 2020 06:26:46 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nifty.com header.i=@nifty.com header.b="e/Mhl4l/"
+	dkim=pass (2048-bit key) header.d=resnulli-us.20150623.gappssmtp.com header.i=@resnulli-us.20150623.gappssmtp.com header.b="YgYqaaBl"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726892AbgBVGMB (ORCPT
+        id S1726923AbgBVG0p (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 22 Feb 2020 01:12:01 -0500
-Received: from conuserg-08.nifty.com ([210.131.2.75]:49576 "EHLO
-        conuserg-08.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726189AbgBVGMA (ORCPT
+        Sat, 22 Feb 2020 01:26:45 -0500
+Received: from mail-wr1-f65.google.com ([209.85.221.65]:40798 "EHLO
+        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726230AbgBVG0o (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 22 Feb 2020 01:12:00 -0500
-Received: from grover.flets-west.jp (softbank126093102113.bbtec.net [126.93.102.113]) (authenticated)
-        by conuserg-08.nifty.com with ESMTP id 01M6BBda022333;
-        Sat, 22 Feb 2020 15:11:12 +0900
-DKIM-Filter: OpenDKIM Filter v2.10.3 conuserg-08.nifty.com 01M6BBda022333
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
-        s=dec2015msa; t=1582351872;
-        bh=ofaX97ywZVys/DBQiZa8Q89J0Zb7XR2aWwApmyQRzaU=;
-        h=From:To:Cc:Subject:Date:From;
-        b=e/Mhl4l/T02aWHh+dQ9/WCfuIvt8F4G7Pu7xo5VZc4QaFR7ca8fOw4VkUpM5NmVMB
-         eI6YAzqJ06Wa+QMN1fSr0U9H6TV9G/hF5yQzyK+rlvDYYPgEvVT0S2TyEYoIrGbTDC
-         EyUL4zOEIeMfq5zeDDTNz6MzmnnIGNb3PmQOP5o71gMvl5SsPJlXJ8dexQqlH9s6yH
-         jLrQE9V324UMJ+pdLhsYG794Mb+aKKk0rxUeTq6cwuwjNeRf9R/8EiUKIrvzn+Qqdl
-         jJZRvmuUsd3J2OwSmsrxl+YEojBYSgbNac20sXykTJYpfVZHE9/mczcEV8DsmkOAuX
-         FwMCUqm0u419A==
-X-Nifty-SrcIP: [126.93.102.113]
-From:   Masahiro Yamada <yamada.masahiro@socionext.com>
-To:     Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org
-Cc:     linux-kernel@vger.kernel.org,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        linux-arm-kernel@lists.infradead.org
-Subject: [PATCH v2] dt-bindings: bus: Convert UniPhier System Bus to json-schema
-Date:   Sat, 22 Feb 2020 15:11:09 +0900
-Message-Id: <20200222061109.2021-1-yamada.masahiro@socionext.com>
-X-Mailer: git-send-email 2.17.1
+        Sat, 22 Feb 2020 01:26:44 -0500
+Received: by mail-wr1-f65.google.com with SMTP id t3so4388403wru.7
+        for <linux-kernel@vger.kernel.org>; Fri, 21 Feb 2020 22:26:42 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=resnulli-us.20150623.gappssmtp.com; s=20150623;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=/59J0H3GMLZGQBLxUb/P9gfXRVxPokMyJCYkW6dkkKw=;
+        b=YgYqaaBlYOEfNDyadkILBH204HirajE3Z3I6L46m+XYGL+RnnSyqssH5LRBF8pMbnD
+         rQtwZBIeDF3K2aQKN4zQ444s8Sa7e3aV9hEH9D40u5crwSoUAh4FqtgVnSwoPWKNubm6
+         wO7MwJntiLJZyKKaytoOmia6jISJjJbEjGHXFc/G2TxotGF4hDPK5hAGgR27FMYX5otV
+         i+u9jQB+XjJ4GnYQKIpoAbPpId20EBlfrdC0atRKSbwC7cx8qdAKuptu/8+DYGQZGI3X
+         U124fcx9wtju0mIA7qZIyGSUQsER9a9jIctkjwhvw/ASrxNdJ4jsgL/H2veTEWvaZyeM
+         m9Bw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=/59J0H3GMLZGQBLxUb/P9gfXRVxPokMyJCYkW6dkkKw=;
+        b=dx+D4N5+xaub8yGzTWUz8jlRg4+A46/rFbGYEKabbmBNXmVzSa9VmO7LQawlVCIbQg
+         YtOb4E9EsYpIWTZDXLKKbXfpjgniHcWHOv6oAnm8Jl5yv/zHnav3fDkwcTJkEozUCDlU
+         GsHjYy24K26mAWntyT25cb9vZ/KBRYUhY9iQeHbbfd4u24eBAodPPTZZt9xs66Gpo/gN
+         R6+Ih9CDvyeJ0XhAYPbLBPhjxgrnVPO8jkq+cigXsc5NDYHVdm8MAcRX8EKSWbN4zL6J
+         Mi85xQ+ARmx+i7s2B1puiymCySaeYzm/u9T/LOxjR3xpV+7KXNFIwPQLLTfju1Gk5wHP
+         iOqQ==
+X-Gm-Message-State: APjAAAV29kRVXdFfncrpQD5DAZoGwIqFrRsO8ZL6n24/B/lc8ZBdkWo/
+        +XZ+BOfQqGpriVaE+E8Q3XjkDQ==
+X-Google-Smtp-Source: APXvYqzJCvVsgqjVymg7udnn6kagPdqKPFB6BfUwZSDat3KQhYu5qWhke/ZVlGCJiAG2QeUeiqvJhw==
+X-Received: by 2002:a5d:4687:: with SMTP id u7mr51024980wrq.176.1582352801556;
+        Fri, 21 Feb 2020 22:26:41 -0800 (PST)
+Received: from localhost (ip-89-177-130-96.net.upcbroadband.cz. [89.177.130.96])
+        by smtp.gmail.com with ESMTPSA id h5sm7655640wmf.8.2020.02.21.22.26.40
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 21 Feb 2020 22:26:41 -0800 (PST)
+Date:   Sat, 22 Feb 2020 07:26:40 +0100
+From:   Jiri Pirko <jiri@resnulli.us>
+To:     madhuparnabhowmik10@gmail.com
+Cc:     jiri@mellanox.com, davem@davemloft.net, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org, joel@joelfernandes.org,
+        frextrite@gmail.com,
+        linux-kernel-mentees@lists.linuxfoundation.org, paulmck@kernel.org
+Subject: Re: [PATCH] net: core: devlink.c: Hold devlink->lock from the
+ beginning of devlink_dpipe_table_register()
+Message-ID: <20200222062640.GA2228@nanopsycho>
+References: <20200221180943.17415-1-madhuparnabhowmik10@gmail.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200221180943.17415-1-madhuparnabhowmik10@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Convert the UniPhier System Bus controller binding to DT schema format.
+Fri, Feb 21, 2020 at 07:09:43PM CET, madhuparnabhowmik10@gmail.com wrote:
+>From: Madhuparna Bhowmik <madhuparnabhowmik10@gmail.com>
+>
+>devlink_dpipe_table_find() should be called under either
+>rcu_read_lock() or devlink->lock. devlink_dpipe_table_register()
+>calls devlink_dpipe_table_find() without holding the lock
+>and acquires it later. Therefore hold the devlink->lock
+>from the beginning of devlink_dpipe_table_register().
+>
+>Suggested-by: Jiri Pirko <jiri@mellanox.com>
+>Signed-off-by: Madhuparna Bhowmik <madhuparnabhowmik10@gmail.com>
+>---
+> net/core/devlink.c | 3 ++-
+> 1 file changed, 2 insertions(+), 1 deletion(-)
+>
+>diff --git a/net/core/devlink.c b/net/core/devlink.c
+>index 3e8c94155d93..d54e1f156b6f 100644
+>--- a/net/core/devlink.c
+>+++ b/net/core/devlink.c
+>@@ -6840,6 +6840,8 @@ int devlink_dpipe_table_register(struct devlink *devlink,
+> {
+> 	struct devlink_dpipe_table *table;
+> 
+>+	mutex_lock(&devlink->lock);
+>+
+> 	if (devlink_dpipe_table_find(&devlink->dpipe_table_list, table_name))
+> 		return -EEXIST;
 
-Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
----
+You have to handle the error path.
 
-Changes in v2:
-  - Fix the build error in the example
 
- .../bus/socionext,uniphier-system-bus.yaml    | 96 +++++++++++++++++++
- .../bindings/bus/uniphier-system-bus.txt      | 66 -------------
- 2 files changed, 96 insertions(+), 66 deletions(-)
- create mode 100644 Documentation/devicetree/bindings/bus/socionext,uniphier-system-bus.yaml
- delete mode 100644 Documentation/devicetree/bindings/bus/uniphier-system-bus.txt
-
-diff --git a/Documentation/devicetree/bindings/bus/socionext,uniphier-system-bus.yaml b/Documentation/devicetree/bindings/bus/socionext,uniphier-system-bus.yaml
-new file mode 100644
-index 000000000000..ff9600d6de3b
---- /dev/null
-+++ b/Documentation/devicetree/bindings/bus/socionext,uniphier-system-bus.yaml
-@@ -0,0 +1,96 @@
-+# SPDX-License-Identifier: GPL-2.0-only OR BSD-2-Clause
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/bus/socionext,uniphier-system-bus.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title: UniPhier System Bus
-+
-+description: |
-+  The UniPhier System Bus is an external bus that connects on-board devices to
-+  the UniPhier SoC. It is a simple (semi-)parallel bus with address, data, and
-+  some control signals. It supports up to 8 banks (chip selects).
-+
-+  Before any access to the bus, the bus controller must be configured; the bus
-+  controller registers provide the control for the translation from the offset
-+  within each bank to the CPU-viewed address. The needed setup includes the
-+  base address, the size of each bank. Optionally, some timing parameters can
-+  be optimized for faster bus access.
-+
-+maintainers:
-+  - Masahiro Yamada <yamada.masahiro@socionext.com>
-+
-+properties:
-+  compatible:
-+    const: socionext,uniphier-system-bus
-+
-+  reg:
-+    maxItems: 1
-+
-+  "#address-cells":
-+    description: |
-+      The first cell is the bank number (chip select).
-+      The second cell is the address offset within the bank.
-+    const: 2
-+
-+  "#size-cells":
-+    const: 1
-+
-+  ranges:
-+    description: |
-+      Provide address translation from the System Bus to the parent bus.
-+
-+      Note:
-+      The address region(s) that can be assigned for the System Bus is
-+      implementation defined. Some SoCs can use 0x00000000-0x0fffffff and
-+      0x40000000-0x4fffffff, while other SoCs only 0x40000000-0x4fffffff.
-+      There might be additional limitations depending on SoCs and the boot mode.
-+      The address translation is arbitrary as long as the banks are assigned in
-+      the supported address space with the required alignment and they do not
-+      overlap one another.
-+
-+      For example, it is possible to map:
-+        bank 0 to 0x42000000-0x43ffffff, bank 5 to 0x46000000-0x46ffffff
-+      It is also possible to map:
-+        bank 0 to 0x48000000-0x49ffffff, bank 5 to 0x44000000-0x44ffffff
-+      There is no reason to stick to a particular translation mapping, but the
-+      "ranges" property should provide a "reasonable" default that is known to
-+      work. The software should initialize the bus controller according to it.
-+
-+required:
-+  - compatible
-+  - reg
-+  - "#address-cells"
-+  - "#size-cells"
-+  - ranges
-+
-+examples:
-+  - |
-+    // In this example,
-+    // - the Ethernet device is connected at the offset 0x01f00000 of CS1 and
-+    //   mapped to 0x43f00000 of the parent bus.
-+    // - the UART device is connected at the offset 0x00200000 of CS5 and
-+    //   mapped to 0x46200000 of the parent bus.
-+
-+    system-bus {
-+        compatible = "socionext,uniphier-system-bus";
-+        reg = <0x58c00000 0x400>;
-+        #address-cells = <2>;
-+        #size-cells = <1>;
-+        ranges = <1 0x00000000 0x42000000 0x02000000>,
-+                 <5 0x00000000 0x46000000 0x01000000>;
-+
-+        ethernet@1,01f00000 {
-+            compatible = "smsc,lan9115";
-+            reg = <1 0x01f00000 0x1000>;
-+            interrupts = <0 48 4>;
-+            phy-mode = "mii";
-+        };
-+
-+        uart@5,00200000 {
-+            compatible = "ns16550a";
-+            reg = <5 0x00200000 0x20>;
-+            interrupts = <0 49 4>;
-+            clock-frequency = <12288000>;
-+        };
-+    };
-diff --git a/Documentation/devicetree/bindings/bus/uniphier-system-bus.txt b/Documentation/devicetree/bindings/bus/uniphier-system-bus.txt
-deleted file mode 100644
-index 68ef80afff16..000000000000
---- a/Documentation/devicetree/bindings/bus/uniphier-system-bus.txt
-+++ /dev/null
-@@ -1,66 +0,0 @@
--UniPhier System Bus
--
--The UniPhier System Bus is an external bus that connects on-board devices to
--the UniPhier SoC.  It is a simple (semi-)parallel bus with address, data, and
--some control signals.  It supports up to 8 banks (chip selects).
--
--Before any access to the bus, the bus controller must be configured; the bus
--controller registers provide the control for the translation from the offset
--within each bank to the CPU-viewed address.  The needed setup includes the base
--address, the size of each bank.  Optionally, some timing parameters can be
--optimized for faster bus access.
--
--Required properties:
--- compatible: should be "socionext,uniphier-system-bus".
--- reg: offset and length of the register set for the bus controller device.
--- #address-cells: should be 2.  The first cell is the bank number (chip select).
--  The second cell is the address offset within the bank.
--- #size-cells: should be 1.
--- ranges: should provide a proper address translation from the System Bus to
--  the parent bus.
--
--Note:
--The address region(s) that can be assigned for the System Bus is implementation
--defined.  Some SoCs can use 0x00000000-0x0fffffff and 0x40000000-0x4fffffff,
--while other SoCs can only use 0x40000000-0x4fffffff.  There might be additional
--limitations depending on SoCs and the boot mode.  The address translation is
--arbitrary as long as the banks are assigned in the supported address space with
--the required alignment and they do not overlap one another.
--For example, it is possible to map:
--  bank 0 to 0x42000000-0x43ffffff, bank 5 to 0x46000000-0x46ffffff
--It is also possible to map:
--  bank 0 to 0x48000000-0x49ffffff, bank 5 to 0x44000000-0x44ffffff
--There is no reason to stick to a particular translation mapping, but the
--"ranges" property should provide a "reasonable" default that is known to work.
--The software should initialize the bus controller according to it.
--
--Example:
--
--	system-bus {
--		compatible = "socionext,uniphier-system-bus";
--		reg = <0x58c00000 0x400>;
--		#address-cells = <2>;
--		#size-cells = <1>;
--		ranges = <1 0x00000000 0x42000000 0x02000000
--			  5 0x00000000 0x46000000 0x01000000>;
--
--		ethernet@1,01f00000 {
--			compatible = "smsc,lan9115";
--			reg = <1 0x01f00000 0x1000>;
--			interrupts = <0 48 4>
--			phy-mode = "mii";
--		};
--
--		uart@5,00200000 {
--			compatible = "ns16550a";
--			reg = <5 0x00200000 0x20>;
--			interrupts = <0 49 4>
--			clock-frequency = <12288000>;
--		};
--	};
--
--In this example,
-- - the Ethernet device is connected at the offset 0x01f00000 of CS1 and
--   mapped to 0x43f00000 of the parent bus.
-- - the UART device is connected at the offset 0x00200000 of CS5 and
--   mapped to 0x46200000 of the parent bus.
--- 
-2.17.1
-
+> 
+>@@ -6855,7 +6857,6 @@ int devlink_dpipe_table_register(struct devlink *devlink,
+> 	table->priv = priv;
+> 	table->counter_control_extern = counter_control_extern;
+> 
+>-	mutex_lock(&devlink->lock);
+> 	list_add_tail_rcu(&table->list, &devlink->dpipe_table_list);
+> 	mutex_unlock(&devlink->lock);
+> 	return 0;
+>-- 
+>2.17.1
+>
