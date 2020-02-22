@@ -2,110 +2,152 @@ Return-Path: <SRS0=8jYG=4K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 721D0C35671
-	for <linux-kernel@archiver.kernel.org>; Sat, 22 Feb 2020 09:31:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5965DC35669
+	for <linux-kernel@archiver.kernel.org>; Sat, 22 Feb 2020 09:41:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DAF8A208C3
-	for <linux-kernel@archiver.kernel.org>; Sat, 22 Feb 2020 09:31:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2DD7B2071E
+	for <linux-kernel@archiver.kernel.org>; Sat, 22 Feb 2020 09:41:56 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ejYQOQqu"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726907AbgBVJbb (ORCPT
+        id S1727023AbgBVJkK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 22 Feb 2020 04:31:31 -0500
-Received: from mail-oi1-f196.google.com ([209.85.167.196]:42183 "EHLO
-        mail-oi1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726675AbgBVJbb (ORCPT
+        Sat, 22 Feb 2020 04:40:10 -0500
+Received: from mail-pg1-f193.google.com ([209.85.215.193]:43131 "EHLO
+        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726675AbgBVJkK (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 22 Feb 2020 04:31:31 -0500
-Received: by mail-oi1-f196.google.com with SMTP id j132so4196666oih.9
-        for <linux-kernel@vger.kernel.org>; Sat, 22 Feb 2020 01:31:29 -0800 (PST)
+        Sat, 22 Feb 2020 04:40:10 -0500
+Received: by mail-pg1-f193.google.com with SMTP id u12so2267791pgb.10
+        for <linux-kernel@vger.kernel.org>; Sat, 22 Feb 2020 01:40:10 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=Q8Ztf084J9USzPL1dEx2mVWqtPlL0g/EL9tbykVLcaQ=;
+        b=ejYQOQquNfggHBgxOs7aHRcX8sS9QEJQXzYQ20J5LlQsRCrPa+OptZ+uuuA/rsnBO3
+         qJE92SIDesrERlAAjcYskfV8Q5p5ijrX96EYpyl856dj4YBsvbfyHBhVIo8Apm5N91nO
+         Vu7qja2iNLj0Bfp9AhizylRoes/RqMtkEmfJks7bWnnMYYhLC2hZnSUf3L5Xpz9+Q8CQ
+         RJQq8SuujPKI/rlX6JpDKHih3bntihnXl+BiwrG9uBbyhVOUu+x6cEmekCCwIIuaHUGf
+         I3UcSN8mwE5pMOIaL9XI+JIygF3AyoQsbqZpcn7pARiNgxc4RIaIYdrK98g0Ot9JrjnD
+         /D0Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=F3xnrjDb6hgTNnX7mGgWoeVfbuM9GGgQ7NTSprECVdM=;
-        b=OCBu+Qv6XPbzH2ka79QWLMXfRYUxe2HMTBMiKvFMizRR6Pfae90Lg95MFcELShMH4w
-         /4ou0lmQSIskQilngCvTR+PQ3JkwZApCxET7jl4/BuEh8QsSLM6DRHkhMReKvFNFVykN
-         HScqMK50FtOnRAeh/gstyuolwO5cL4TuzxSxi9Qq2k6Eu1QG1h+vc21XivTea9QGXW5f
-         lRAPRh+Br5w4j0rs7+6xfgyxI5acE2T9VWqZnCpm9tZlhVjXgwt4ofED8RdL/1QEqEQc
-         wgzwgWjhomteYdjXvWJocxdqR4DB7+vTWj8FrM12gax0cXr0pAzs0KaTFjmaKKKvf2U3
-         bxWQ==
-X-Gm-Message-State: APjAAAXdtv4hx3um29HHcDQlZ9WmYKc1recVxUbBJ8A6aPfuCqgdEA7G
-        uahIz/FbD+TIzCeDeimDyj++O4HvW7DtMmEVcRA=
-X-Google-Smtp-Source: APXvYqzkPHlUNRY0rLyWjHxG0GFr6uttOCebAMEHPBf3nCnrkCitisQfp9v2RpWvOd3pAJiZhyrOQ03BBYt0TcQIWa8=
-X-Received: by 2002:aca:1a06:: with SMTP id a6mr5320808oia.148.1582363889243;
- Sat, 22 Feb 2020 01:31:29 -0800 (PST)
+        bh=Q8Ztf084J9USzPL1dEx2mVWqtPlL0g/EL9tbykVLcaQ=;
+        b=DZ2eTt0JDhm+AP4JIJYAS77xSSajaKrZBMAO5pzTs1Ir3TDYuik3UTQKwB6Lvfju5e
+         qT9A7R2BdVPvGllf498qI6QLD+1toj2LLFDdaVEqvusnH7loq0nD9xujr7yFDKDHCW+G
+         iRhNuQw4Xl84N240AAt4WUBk0rE9RwbgozRgll45qq8InTewGh/tn+VKZVZ43Y0U3Rb9
+         7fxZ0UaPR4Ish0KQQuT2O+o95hDGOHKS/fbcn/ZxOU6GGrqjF8mwV/5wf+lz9D8Tu31F
+         WCe2rSltvCdTtvQotDrKzwqgKJJOZHF6ud7mGEAvQP9cms43KiEb5Jc54IF9h42upECY
+         /Y3w==
+X-Gm-Message-State: APjAAAWDN/BI/YFhBgOIg2y1fs2hBq03YipaYkRHj5ILouDqv52qYBg0
+        wYWSPJHHLgICRhBWhms/evtuiBEr6BcROBGgtuu6aMwgl5M=
+X-Google-Smtp-Source: APXvYqwWtr4FR/LS1ortbPsVne0DJQ7ymzUA9LObVo0rnFTPSgJXgyRl07oTCUoH3DgtG530Km9MEza76/Wc7Byps18=
+X-Received: by 2002:a62:1a09:: with SMTP id a9mr41966037pfa.64.1582364409550;
+ Sat, 22 Feb 2020 01:40:09 -0800 (PST)
 MIME-Version: 1.0
-References: <158227281198.12842.8478910651170568606.stgit@devnote2>
- <158227282199.12842.10110929876059658601.stgit@devnote2> <536c681d-a546-bb51-a6cb-2d39ed726716@infradead.org>
-In-Reply-To: <536c681d-a546-bb51-a6cb-2d39ed726716@infradead.org>
-From:   Geert Uytterhoeven <geert@linux-m68k.org>
-Date:   Sat, 22 Feb 2020 10:31:17 +0100
-Message-ID: <CAMuHMdURcRPXo7Q-2E7bS7X9w73NvYP8ffdJeNk37wdQgVxThw@mail.gmail.com>
-Subject: Re: [PATCH v3 1/2] bootconfig: Prohibit re-defining value on same key
-To:     Randy Dunlap <rdunlap@infradead.org>
-Cc:     Masami Hiramatsu <mhiramat@kernel.org>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Borislav Petkov <bp@alien8.de>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Ingo Molnar <mingo@kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Peter Zijlstra <peterz@infradead.org>
+References: <20200222000214.2169531-1-jesse.brandeburg@intel.com>
+In-Reply-To: <20200222000214.2169531-1-jesse.brandeburg@intel.com>
+From:   Andy Shevchenko <andy.shevchenko@gmail.com>
+Date:   Sat, 22 Feb 2020 11:39:57 +0200
+Message-ID: <CAHp75Vc=9aSt1DH-LzDHnX1+fnPpkJWHkkh0-ApTL0zm+ZA2oQ@mail.gmail.com>
+Subject: Re: [PATCH v4 1/2] x86: fix bitops.h warning with a moved cast
+To:     Jesse Brandeburg <jesse.brandeburg@intel.com>
+Cc:     Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        "maintainer:X86 ARCHITECTURE (32-BIT AND 64-BIT)" <x86@kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Rasmus Villemoes <linux@rasmusvillemoes.dk>,
+        Andriy Shevchenko <andriy.shevchenko@intel.com>,
+        Dan Williams <dan.j.williams@intel.com>,
+        "Peter Zijlstra (Intel)" <peterz@infradead.org>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Randy,
+On Sat, Feb 22, 2020 at 2:04 AM Jesse Brandeburg
+<jesse.brandeburg@intel.com> wrote:
+>
+> Fix many sparse warnings when building with C=1.
+>
+> When the kernel is compiled with C=1, there are lots of messages like:
+>   arch/x86/include/asm/bitops.h:77:37: warning: cast truncates bits from constant value (ffffff7f becomes 7f)
+>
+> CONST_MASK() is using a signed integer "1" to create the mask which
+> is later cast to (u8) when used. Move the cast to the definition and
+> clean up the calling sites to prevent sparse from warning.
+>
+> The reason the warning was occurring is because certain bitmasks that
+> end with a mask next to a natural boundary like 7, 15, 23, 31, end up
+> with a mask like 0x7f, which then results in sign extension when doing
+> an invert (but I'm not a compiler expert). It was really only
+> "clear_bit" that was having problems, and it was only on bit checks next
+> to a byte boundary (top bit).
+>
+> Verified with a test module (see next patch) and assembly inspection
+> that the patch doesn't introduce any change in generated code.
+>
+> Signed-off-by: Jesse Brandeburg <jesse.brandeburg@intel.com>
+> Reviewed-by: Andy Shevchenko <andriy.shevchenko@intel.com>
+> ---
+> v4: reverse argument order as suggested by David Laight, added reviewed-by
+> v3: Clean up the header file changes as per peterz.
+> v2: use correct CC: list
+> ---
+>  arch/x86/include/asm/bitops.h | 6 +++---
+>  1 file changed, 3 insertions(+), 3 deletions(-)
+>
+> diff --git a/arch/x86/include/asm/bitops.h b/arch/x86/include/asm/bitops.h
+> index 062cdecb2f24..fed152434ed0 100644
+> --- a/arch/x86/include/asm/bitops.h
+> +++ b/arch/x86/include/asm/bitops.h
+> @@ -46,7 +46,7 @@
+>   * a mask operation on a byte.
+>   */
+>  #define CONST_MASK_ADDR(nr, addr)      WBYTE_ADDR((void *)(addr) + ((nr)>>3))
+> -#define CONST_MASK(nr)                 (1 << ((nr) & 7))
+> +#define CONST_MASK(nr)                 ((u8)1 << ((nr) & 7))
+>
+>  static __always_inline void
+>  arch_set_bit(long nr, volatile unsigned long *addr)
+> @@ -54,7 +54,7 @@ arch_set_bit(long nr, volatile unsigned long *addr)
+>         if (__builtin_constant_p(nr)) {
+>                 asm volatile(LOCK_PREFIX "orb %1,%0"
+>                         : CONST_MASK_ADDR(nr, addr)
+> -                       : "iq" ((u8)CONST_MASK(nr))
+> +                       : "iq" (CONST_MASK(nr))
+>                         : "memory");
+>         } else {
+>                 asm volatile(LOCK_PREFIX __ASM_SIZE(bts) " %1,%0"
+> @@ -74,7 +74,7 @@ arch_clear_bit(long nr, volatile unsigned long *addr)
+>         if (__builtin_constant_p(nr)) {
+>                 asm volatile(LOCK_PREFIX "andb %1,%0"
+>                         : CONST_MASK_ADDR(nr, addr)
+> -                       : "iq" ((u8)~CONST_MASK(nr)));
+> +                       : "iq" (CONST_MASK(nr) ^ 0xff));
 
-On Sat, Feb 22, 2020 at 5:30 AM Randy Dunlap <rdunlap@infradead.org> wrote:
-> On 2/21/20 12:13 AM, Masami Hiramatsu wrote:
-> > --- a/Documentation/admin-guide/bootconfig.rst
-> > +++ b/Documentation/admin-guide/bootconfig.rst
-> > @@ -62,7 +62,16 @@ Or more shorter, written as following::
-> >  In both styles, same key words are automatically merged when parsing it
-> >  at boot time. So you can append similar trees or key-values.
-> >
-> > -Note that a sub-key and a value can not co-exist under a parent key.
-> > +Same-key Values
-> > +---------------
-> > +
-> > +It is prohibited that two or more values or arraies share a same-key.
->
-> I think (?):                                   arrays
->
-> > +For example,::
-> > +
-> > + foo = bar, baz
-> > + foo = qux  # !ERROR! we can not re-define same key
-> > +
-> > +Also, a sub-key and a value can not co-exist under a parent key.
-> >  For example, following config is NOT allowed.::
-> >
-> >   foo = value1
->
->
-> I'm pretty sure that the kernel command line allows someone to use
->   key=value1 ... key=value2
-> and the first setting is just overwritten with value2 (for most "key"s).
->
-> Am I wrong?  and is this patch saying that bootconfig won't operate like that?
+I'm wondering if the original, by Peter Z, order allows us to drop
+(u8) casting in the CONST_MASK completely.
 
-I think so. Both are retained.
-A typical example is "console=ttyS0 console=tty", to have the kernel output
-on both the serial and the graphical console.
+>         } else {
+>                 asm volatile(LOCK_PREFIX __ASM_SIZE(btr) " %1,%0"
+>                         : : RLONG_ADDR(addr), "Ir" (nr) : "memory");
+>
+> base-commit: ca7e1fd1026c5af6a533b4b5447e1d2f153e28f2
+> --
+> 2.24.1
+>
 
-Gr{oetje,eeting}s,
-
-                        Geert
 
 -- 
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+With Best Regards,
+Andy Shevchenko
