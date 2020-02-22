@@ -2,108 +2,153 @@ Return-Path: <SRS0=8jYG=4K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+X-Spam-Status: No, score=-7.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 37C23C35666
-	for <linux-kernel@archiver.kernel.org>; Sat, 22 Feb 2020 16:31:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A5735C35671
+	for <linux-kernel@archiver.kernel.org>; Sat, 22 Feb 2020 16:33:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 15908206ED
-	for <linux-kernel@archiver.kernel.org>; Sat, 22 Feb 2020 16:31:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7481F206ED
+	for <linux-kernel@archiver.kernel.org>; Sat, 22 Feb 2020 16:33:38 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1582389218;
+	bh=qRv0nKBYttUjMYj9cR4kA7M4ftISlLjLVSAvuTWkFPI=;
+	h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:List-ID:
+	 From;
+	b=Ulr2qDq70QDtW/qzdqdfe4RR3uh/4GHlppGygZjzdLtqgFrVkqVo9DE8qYGa6bZeS
+	 g5H3QNaSvnESgFiNYgtpY2bm8yeyipxKXcq94HLHPGO96qrE04vzCJ7puYyG3lv/Ue
+	 PgjpVkZgtZ6DaC9AlmhR968GecF32m9X5t1O8Ijc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727053AbgBVQbe (ORCPT
+        id S1726701AbgBVQdh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 22 Feb 2020 11:31:34 -0500
-Received: from mx2.yrkesakademin.fi ([85.134.45.195]:22755 "EHLO
-        mx2.yrkesakademin.fi" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726550AbgBVQbe (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 22 Feb 2020 11:31:34 -0500
-X-Greylist: delayed 902 seconds by postgrey-1.27 at vger.kernel.org; Sat, 22 Feb 2020 11:31:33 EST
-Subject: Re: Regression in 5.4 kernel on 32-bit Radeon IBM T40
-To:     =?UTF-8?Q?Christian_K=c3=b6nig?= <christian.koenig@amd.com>,
-        Christoph Hellwig <hch@lst.de>,
-        Woody Suwalski <terraluna977@gmail.com>
-CC:     DRI mailing list <dri-devel@lists.freedesktop.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        "Deucher, Alexander" <alexander.deucher@amd.com>,
-        Pavel Machek <pavel@ucw.cz>
-References: <400f6ce9-e360-0860-ca2a-fb8bccdcdc9b@gmail.com>
- <20200109141436.GA22111@lst.de>
- <9ad75215-3ff1-ee76-9985-12fd78d6aa5f@amd.com>
-From:   Thomas Backlund <tmb@mageia.org>
-Message-ID: <801e4196-5e22-e805-4d45-0245efdaa508@mageia.org>
-Date:   Sat, 22 Feb 2020 18:16:28 +0200
+        Sat, 22 Feb 2020 11:33:37 -0500
+Received: from mail.kernel.org ([198.145.29.99]:48746 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725976AbgBVQdg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 22 Feb 2020 11:33:36 -0500
+Received: from paulmck-ThinkPad-P72.home (50-39-105-78.bvtn.or.frontiernet.net [50.39.105.78])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 11667206ED;
+        Sat, 22 Feb 2020 16:33:36 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1582389216;
+        bh=qRv0nKBYttUjMYj9cR4kA7M4ftISlLjLVSAvuTWkFPI=;
+        h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:From;
+        b=m/cFHv9Qu7u6SS0ERqwv/7bc53RxQQg+7m1k2yoMP5Km3GtQIwj0CWbU8ckMyxWFG
+         5KUmHqWd9IOy/GIxSqOaWM7EfNPT+9+ak9uX6yDcix6zWJaVdrulhZlSvxaFxPa7XC
+         1rspmZ0oQMFbmFsozOPftfUJdIvA0eGzpVlRy4pE=
+Received: by paulmck-ThinkPad-P72.home (Postfix, from userid 1000)
+        id E1A8435226D5; Sat, 22 Feb 2020 08:33:35 -0800 (PST)
+Date:   Sat, 22 Feb 2020 08:33:35 -0800
+From:   "Paul E. McKenney" <paulmck@kernel.org>
+To:     kbuild test robot <lkp@intel.com>
+Cc:     kbuild-all@lists.01.org, linux-kernel@vger.kernel.org
+Subject: Re: [rcu:rcu/next 110/168] kernel/rcu/tree.c:3401:2: error: implicit
+ declaration of function 'ASSERT_EXCLUSIVE_WRITER'
+Message-ID: <20200222163335.GY2935@paulmck-ThinkPad-P72>
+Reply-To: paulmck@kernel.org
+References: <202002221501.6Iz5kP2U%lkp@intel.com>
 MIME-Version: 1.0
-In-Reply-To: <9ad75215-3ff1-ee76-9985-12fd78d6aa5f@amd.com>
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <202002221501.6Iz5kP2U%lkp@intel.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Den 09-01-2020 kl. 17:12, skrev Christian König:
-> Hi Christoph,
+On Sat, Feb 22, 2020 at 03:27:04PM +0800, kbuild test robot wrote:
+> tree:   https://git.kernel.org/pub/scm/linux/kernel/git/paulmck/linux-rcu.git rcu/next
+> head:   8aa63de65a79bd8c5c1c2b19452e35f58b043ac7
+> commit: e70e4b3e69ce8d3fdfc1f4bfe6ed27187e1a9016 [110/168] rcu: Mark rcu_state.ncpus to detect concurrent writes
+> config: arc-defconfig (attached as .config)
+> compiler: arc-elf-gcc (GCC) 9.2.0
+> reproduce:
+>         wget https://raw.githubusercontent.com/intel/lkp-tests/master/sbin/make.cross -O ~/bin/make.cross
+>         chmod +x ~/bin/make.cross
+>         git checkout e70e4b3e69ce8d3fdfc1f4bfe6ed27187e1a9016
+>         # save the attached .config to linux build tree
+>         GCC_VERSION=9.2.0 make.cross ARCH=arc 
 > 
-> Am 09.01.20 um 15:14 schrieb Christoph Hellwig:
->> Hi Woody,
->>
->> sorry for the late reply, I've been off to a vacation over the holidays.
->>
->> On Sat, Dec 14, 2019 at 10:17:15PM -0500, Woody Suwalski wrote:
->>> Regression in 5.4 kernel on 32-bit Radeon IBM T40
->>> triggered by
->>> commit 33b3ad3788aba846fc8b9a065fe2685a0b64f713
->>> Author: Christoph Hellwig <hch@lst.de>
->>> Date:   Thu Aug 15 09:27:00 2019 +0200
->>>
->>> Howdy,
->>> The above patch has triggered a display problem on IBM Thinkpad T40, 
->>> where
->>> the screen is covered with a lots of random short black horizontal 
->>> lines,
->>> or distorted letters in X terms.
->>>
->>> The culprit seems to be that the dma_get_required_mask() is returning a
->>> value 0x3fffffff
->>> which is smaller than dma_get_mask()0xffffffff.That results in
->>> dma_addressing_limited()==0 in ttm_bo_device(), and using 40-bits dma
->>> instead of 32-bits.
->> Which is the intended behavior assuming your system has 1GB of memory.
->> Does it?
+> If you fix the issue, kindly add following tag
+> Reported-by: kbuild test robot <lkp@intel.com>
 > 
-> Assuming the system doesn't have the 1GB split up somehow crazy over the 
-> address space that should indeed work as intended.
+> Note: the rcu/rcu/next HEAD 8aa63de65a79bd8c5c1c2b19452e35f58b043ac7 builds fine.
+>       It only hurts bisectibility.
 > 
->>
->>> If I hardcode "1" as the last parameter to ttm_bo_device_init() in 
->>> place of
->>> a call to dma_addressing_limited(),the problem goes away.
->> I'll need some help from the drm / radeon / TTM maintainers if there are
->> any other side effects from not passing the need_dma32 paramters.
->> Obviously if the device doesn't have more than 32-bits worth of dram and
->> no DMA offset we can't feed unaddressable memory to the device.
->> Unfortunately I have a very hard time following the implementation of
->> the TTM pool if it does anything else in this case.
+> All errors (new ones prefixed by >>):
 > 
-> The only other thing which comes to mind is using huge pages. Can you 
-> try a kernel with CONFIG_TRANSPARENT_HUGEPAGE disabled?
+>    kernel/rcu/tree.c: In function 'rcu_cpu_starting':
+> >> kernel/rcu/tree.c:3401:2: error: implicit declaration of function 'ASSERT_EXCLUSIVE_WRITER' [-Werror=implicit-function-declaration]
+>     3401 |  ASSERT_EXCLUSIVE_WRITER(rcu_state.ncpus);
+>          |  ^~~~~~~~~~~~~~~~~~~~~~~
+>    cc1: some warnings being treated as errors
+
+Good catch!  I will move this out of the set of commits intended for
+v5.7, thank you!
+
+							Thanx, Paul
+
+> vim +/ASSERT_EXCLUSIVE_WRITER +3401 kernel/rcu/tree.c
 > 
+>   3364	
+>   3365	/*
+>   3366	 * Mark the specified CPU as being online so that subsequent grace periods
+>   3367	 * (both expedited and normal) will wait on it.  Note that this means that
+>   3368	 * incoming CPUs are not allowed to use RCU read-side critical sections
+>   3369	 * until this function is called.  Failing to observe this restriction
+>   3370	 * will result in lockdep splats.
+>   3371	 *
+>   3372	 * Note that this function is special in that it is invoked directly
+>   3373	 * from the incoming CPU rather than from the cpuhp_step mechanism.
+>   3374	 * This is because this function must be invoked at a precise location.
+>   3375	 */
+>   3376	void rcu_cpu_starting(unsigned int cpu)
+>   3377	{
+>   3378		unsigned long flags;
+>   3379		unsigned long mask;
+>   3380		int nbits;
+>   3381		unsigned long oldmask;
+>   3382		struct rcu_data *rdp;
+>   3383		struct rcu_node *rnp;
+>   3384	
+>   3385		if (per_cpu(rcu_cpu_started, cpu))
+>   3386			return;
+>   3387	
+>   3388		per_cpu(rcu_cpu_started, cpu) = 1;
+>   3389	
+>   3390		rdp = per_cpu_ptr(&rcu_data, cpu);
+>   3391		rnp = rdp->mynode;
+>   3392		mask = rdp->grpmask;
+>   3393		raw_spin_lock_irqsave_rcu_node(rnp, flags);
+>   3394		WRITE_ONCE(rnp->qsmaskinitnext, rnp->qsmaskinitnext | mask);
+>   3395		oldmask = rnp->expmaskinitnext;
+>   3396		rnp->expmaskinitnext |= mask;
+>   3397		oldmask ^= rnp->expmaskinitnext;
+>   3398		nbits = bitmap_weight(&oldmask, BITS_PER_LONG);
+>   3399		/* Allow lockless access for expedited grace periods. */
+>   3400		smp_store_release(&rcu_state.ncpus, rcu_state.ncpus + nbits); /* ^^^ */
+> > 3401		ASSERT_EXCLUSIVE_WRITER(rcu_state.ncpus);
+>   3402		rcu_gpnum_ovf(rnp, rdp); /* Offline-induced counter wrap? */
+>   3403		rdp->rcu_onl_gp_seq = READ_ONCE(rcu_state.gp_seq);
+>   3404		rdp->rcu_onl_gp_flags = READ_ONCE(rcu_state.gp_flags);
+>   3405		if (rnp->qsmask & mask) { /* RCU waiting on incoming CPU? */
+>   3406			rcu_disable_urgency_upon_qs(rdp);
+>   3407			/* Report QS -after- changing ->qsmaskinitnext! */
+>   3408			rcu_report_qs_rnp(mask, rnp, rnp->gp_seq, flags);
+>   3409		} else {
+>   3410			raw_spin_unlock_irqrestore_rcu_node(rnp, flags);
+>   3411		}
+>   3412		smp_mb(); /* Ensure RCU read-side usage follows above initialization. */
+>   3413	}
+>   3414	
+> 
+> ---
+> 0-DAY CI Kernel Test Service, Intel Corporation
+> https://lists.01.org/hyperkitty/list/kbuild-all@lists.01.org
 
 
-Any progress on this ?
-
-We have a bugreport in Mageia with the hw:
-Dell Inspiron 5100, 32-bit P4 processor, 2GB of RAM, Radeon Mobility 
-7500 (RV200) graphics
-
-that gets display issues too and reverting the offending commit restores 
-normal behaviour.
-
-and the same issue is still there with 5.5 series kernels.
-
---
-Thomas
