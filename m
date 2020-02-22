@@ -2,113 +2,163 @@ Return-Path: <SRS0=8jYG=4K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3CA30C35671
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1F868C35666
 	for <linux-kernel@archiver.kernel.org>; Sat, 22 Feb 2020 21:27:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 13764206EF
-	for <linux-kernel@archiver.kernel.org>; Sat, 22 Feb 2020 21:27:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D907B20675
+	for <linux-kernel@archiver.kernel.org>; Sat, 22 Feb 2020 21:27:50 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="aTvdhtDL"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726943AbgBVV1T (ORCPT
+        id S1726891AbgBVV0w (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 22 Feb 2020 16:27:19 -0500
-Received: from asavdk3.altibox.net ([109.247.116.14]:39562 "EHLO
-        asavdk3.altibox.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726828AbgBVV1T (ORCPT
+        Sat, 22 Feb 2020 16:26:52 -0500
+Received: from mail-pl1-f193.google.com ([209.85.214.193]:37352 "EHLO
+        mail-pl1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726828AbgBVV0w (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 22 Feb 2020 16:27:19 -0500
-Received: from ravnborg.org (unknown [158.248.194.18])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by asavdk3.altibox.net (Postfix) with ESMTPS id B446120095;
-        Sat, 22 Feb 2020 22:27:14 +0100 (CET)
-Date:   Sat, 22 Feb 2020 22:27:13 +0100
-From:   Sam Ravnborg <sam@ravnborg.org>
-To:     tang pengchuan <kevin3.tang@gmail.com>
-Cc:     David Airlie <airlied@linux.ie>, Daniel Vetter <daniel@ffwll.ch>,
-        robh+dt@kernel.org, mark.rutland@arm.com,
-        Orson Zhai <orsonzhai@gmail.com>,
-        ML dri-devel <dri-devel@lists.freedesktop.org>,
-        "Linux-Kernel@Vger. Kernel. Org" <linux-kernel@vger.kernel.org>,
-        Chunyan Zhang <zhang.lyra@gmail.com>,
-        Baolin Wang <baolin.wang@linaro.org>
-Subject: Re: [PATCH RFC v3 2/6] drm/sprd: add Unisoc's drm kms master
-Message-ID: <20200222212713.GA30872@ravnborg.org>
-References: <1582271336-3708-1-git-send-email-kevin3.tang@gmail.com>
- <1582271336-3708-3-git-send-email-kevin3.tang@gmail.com>
- <20200221213652.GD3456@ravnborg.org>
- <CAFPSGXacMKTPrxk_FOrwrvH_XfmO3dYCCa_GoPCe_HUfQFPHtw@mail.gmail.com>
+        Sat, 22 Feb 2020 16:26:52 -0500
+Received: by mail-pl1-f193.google.com with SMTP id c23so2372088plz.4;
+        Sat, 22 Feb 2020 13:26:51 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=sender:subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=YIYXGSS8fcmSn+/UDOu18mOj75c8PxzQTNkib8e4EmA=;
+        b=aTvdhtDL2+Mbhb5VETddMZfDxbWJ6EZbCYCSx9D6sUrCe7Uenur7XB6+LX454vOb89
+         Md/Ww1N8czpeKjPMs2tk1lpbniKQA1BMw66AVtPvna49MpPRFZdOhiMevSUjYSfs37fP
+         FJq/iGw5MR+c1ba3+LwSvlxtKSZNyspFmCNzTwGe/i1vjUQB+wVI1co0OEn2di8G6wEZ
+         loPSUWHD+Dp+rq6j0b+oJE3zN5lGzoPRMQGA7KBocF/77+4Bomtm+z3ejC+u5MAeBvBE
+         XH4ixL8ZAkSCwxnJFu0Dy/57u04y3hcatyLH7Pid11LpQrwmtZ8ddGTVk4n6TT+fdUHc
+         hqeQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:subject:to:cc:references:from:message-id
+         :date:user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=YIYXGSS8fcmSn+/UDOu18mOj75c8PxzQTNkib8e4EmA=;
+        b=el+DJBaOzT9Bz2yVA+m2shV1t+SA1ysTin2libLjNayD9v2XNoyrUgtWCRNSu5JGB+
+         Q36YTEkL3HruqnJJBoLocQUjEMldIITARhNY0Kx+cSvOab7f2kc1nUYSSrKOHCkKGSLz
+         5kPrKdN8V55T3s9CJ9Ea0LLQBU9TI24XVaEVwww0Dpr+Ch0Luwk15my/pBgB+crGBGYR
+         /IZmbWxJHaxvRWc9qu0wHcHyec4bYRimvTBjRY0OqvQTFBWk5wf0eH2JIRP6B8dzf25l
+         UNx8hA8w53zaI4G/XAgRrCVjBLmaLzLVtIfaWtJ3M6q+HsX+e0Nfnwy49BaVDbLZkD7Y
+         W02Q==
+X-Gm-Message-State: APjAAAWcmvrGKnjU1tBk6r95caQ30e/rG4+nB0gZR9MspTOMsfvMjTfr
+        /RWY9WogyTX9hR0tgj7TDFWwhrrn
+X-Google-Smtp-Source: APXvYqxGHhG+YoimZM6KOAYrgFZeqwXLYxLIW+5+yyIxTusu61LzJRVvDSMP/nnIjlm0W5kplxOhJg==
+X-Received: by 2002:a17:902:343:: with SMTP id 61mr43399823pld.332.1582406811177;
+        Sat, 22 Feb 2020 13:26:51 -0800 (PST)
+Received: from server.roeck-us.net ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
+        by smtp.gmail.com with ESMTPSA id r7sm7570933pfg.34.2020.02.22.13.26.49
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Sat, 22 Feb 2020 13:26:50 -0800 (PST)
+Subject: Re: [regression] nct6775 does not load in 5.4 and 5.5, bisected to
+ b84398d6d7f90080
+To:     Martin Volf <martin.volf.42@gmail.com>
+Cc:     Mika Westerberg <mika.westerberg@linux.intel.com>,
+        Jean Delvare <jdelvare@suse.com>,
+        Wolfram Sang <wsa@the-dreams.de>, linux-i2c@vger.kernel.org,
+        linux-hwmon@vger.kernel.org,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+References: <CAM1AHpQ4196tyD=HhBu-2donSsuogabkfP03v1YF26Q7_BgvgA@mail.gmail.com>
+ <1bdbac08-86f8-2a57-2b0d-8cd2beb2a1c0@roeck-us.net>
+ <CAM1AHpSKFk9ZosQf=k-Rm2=EFqco7y4Lpfb7m07r=j_uJd4T0A@mail.gmail.com>
+ <85356d1a-f90d-e94d-16eb-1071d4e94753@roeck-us.net>
+ <CAM1AHpSpEFshpUGxKdhLV3XuThQg_XVaPgOWzvrTv6YtzHyO+A@mail.gmail.com>
+From:   Guenter Roeck <linux@roeck-us.net>
+Message-ID: <bec1f81c-09a8-ba48-c6c4-5d9b340f7c0b@roeck-us.net>
+Date:   Sat, 22 Feb 2020 13:26:48 -0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAFPSGXacMKTPrxk_FOrwrvH_XfmO3dYCCa_GoPCe_HUfQFPHtw@mail.gmail.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
-X-CMAE-Score: 0
-X-CMAE-Analysis: v=2.3 cv=eMA9ckh1 c=1 sm=1 tr=0
-        a=UWs3HLbX/2nnQ3s7vZ42gw==:117 a=UWs3HLbX/2nnQ3s7vZ42gw==:17
-        a=jpOVt7BSZ2e4Z31A5e1TngXxSK0=:19 a=kj9zAlcOel0A:10
-        a=GLTfEzBshYVTt7jvnNEA:9 a=CjuIK1q_8ugA:10
+In-Reply-To: <CAM1AHpSpEFshpUGxKdhLV3XuThQg_XVaPgOWzvrTv6YtzHyO+A@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Kevin/tang.
+On 2/22/20 12:49 PM, Martin Volf wrote:
+> Hello,
+> 
+> On Sat, Feb 22, 2020 at 8:05 PM Guenter Roeck <linux@roeck-us.net> wrote:
+>> On 2/22/20 9:55 AM, Martin Volf wrote:
+>>> On Sat, Feb 22, 2020 at 4:41 PM Guenter Roeck <linux@roeck-us.net> wrote:
+>>>> On 2/22/20 3:13 AM, Martin Volf wrote:
+>>>>> hardware monitoring sensors NCT6796D on my Asus PRIME Z390M-PLUS
+>>>>> motherboard with Intel i7-9700 CPU don't work with 5.4 and newer linux
+>>>>> kernels, the driver nct6775 does not load.
+>>>>>
+>>>>> It is working OK in version 5.3. I have used almost all released stable
+>>>>> versions from 5.3.8 to 5.3.16; I didn't try older kernels.
+>>> ...
+>>>> My wild guess would be that the i801 driver is a bit aggressive with
+>>>> reserving memory spaces, but I don't immediately see what it does
+>>>> differently in that regard after the offending patch. Does it work
+>>>> if you unload the i2c_i801 driver first ?
+>>>
+>>> Yes, after unloading i2c_i801, the nct6775 works.
+> ...
+>>> This is diff of /proc/ioports in 5.3.18 with loaded nct6775 and in
+>>> 5.4.21 without:
+>>>
+>>> --- ioports-5.3.18
+>>> +++ ioports-5.4.21
+>>> @@ -2,6 +2,7 @@
+>>>      0000-001f : dma1
+>>>      0020-0021 : pic1
+>>>      002e-0031 : iTCO_wdt
+>>> +    002e-0031 : iTCO_wdt
+>>>      0040-0043 : timer0
+>>>      0050-0053 : timer1
+> ...
+>>> So 0x2e is the resource the two drivers are fighting for.
+> ...
+>> Yes, and it should not do that, since the range can be used to access
+>> different segments of the same chip from multiple drivers. This region
+>> should only be reserved temporarily, using request_muxed_region() when
+>> needed and release_region() after the access is complete. Either case,
+>> I don't immediately see why that region would be interesting for the
+>> iTCO watchdog driver.
+>>
+>> Can you add some debugging into the i801 driver to see what memory regions
+>> it reserves, and how it gets to reserve 0x2e..0x31 ? That range really
+>> doesn't make any sense to me.
+> 
+> in the function i801_add_tco() in drivers/i2c/busses/i2c-i801.c
+> (line 1601 in 5.4.21), there is this code:
+> 
+>          /*
+>           * Power Management registers.
+>           */
+>          devfn = PCI_DEVFN(PCI_SLOT(pci_dev->devfn), 2);
+>          pci_bus_read_config_dword(pci_dev->bus, devfn, ACPIBASE, &base_addr);
+> 
+>          res = &tco_res[ICH_RES_IO_SMI];
+>          res->start = (base_addr & ~1) + ACPIBASE_SMI_OFF;
+>          res->end = res->start + 3;
+>          res->flags = IORESOURCE_IO;
+> 
+> base_addr is 0xffffffff after pci_bus_read_config_dword() call.
+> ACPIBASE_SMI_OFF is 0x030, therefore res->start is 0x2e.
+> Not that I understand even a bit of this...
+> 
 
-Thanks for the quick and detailed feedback.
-Your questions are addressed below.
+Outch. This means that the code is broken. ACPIBASE is not configured,
+or disabled, or the code reads from the wrong PCI configuration register.
+What I don't understand is why this works with v5.3 kernels; the code
+looks just as bad there for me. I must be missing something. Either case,
+the only thing you can really do at this point is to blacklist the
+iTCO_wdt driver.
 
-	Sam
+Other than that, we can only hope that someone who understands above
+code can provide a fix. Maybe Wolfram has an idea.
 
 
-> > > +static int sprd_drm_bind(struct device *dev)
-> > > +{
-> > > +     struct drm_device *drm;
-> > > +     struct sprd_drm *sprd;
-> > > +     int err;
-> > > +
-> > > +     drm = drm_dev_alloc(&sprd_drm_drv, dev);
-> > > +     if (IS_ERR(drm))
-> > > +             return PTR_ERR(drm);
-> > You should embed drm_device in struct sprd_drm.
-> > See example code in drm/drm_drv.c
-> >
-> > This is what modern drm drivers do.
-> >
-> > I *think* you can drop the component framework if you do this.
-> >
-> I have read it(drm/drm_drv.c) carefully, if drop the component framework,
-> the whole our drm driver maybe need to redesign, so i still want to keep
-> current design.
-OK, fine.
-
-> > > +     sprd_drm_mode_config_init(drm);
-> > > +
-> > > +     /* bind and init sub drivers */
-> > > +     err = component_bind_all(drm->dev, drm);
-> > > +     if (err) {
-> > > +             DRM_ERROR("failed to bind all component.\n");
-> > > +             goto err_dc_cleanup;
-> > > +     }
-> > When you have a drm_device - which you do here.
-> > Then please use drm_err() and friends for error messages.
-> > Please verify all uses of DRM_XXX
-> >
->   modern drm drivers need drm_xxx to replace DRM_XXX?
-Yes, use of DRM_XXX is deprecated - when you have a drm_device.
-
-> >
-> > > +     /* with irq_enabled = true, we can use the vblank feature. */
-> > > +     drm->irq_enabled = true;
-> > I cannot see any irq being installed. This looks wrong.
-> >
-> Our display controller isr is been register on crtc driver(sprd_dpu.c), not
-> here.
-
-I think you just need to move this to next patch and then it is fine.
-
-	Sam
-
+Guenter
