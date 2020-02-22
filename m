@@ -2,143 +2,99 @@ Return-Path: <SRS0=8jYG=4K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B3A9AC35672
-	for <linux-kernel@archiver.kernel.org>; Sat, 22 Feb 2020 08:07:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 905B1C35669
+	for <linux-kernel@archiver.kernel.org>; Sat, 22 Feb 2020 08:14:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 95B0A2071E
-	for <linux-kernel@archiver.kernel.org>; Sat, 22 Feb 2020 08:07:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 683D52071E
+	for <linux-kernel@archiver.kernel.org>; Sat, 22 Feb 2020 08:14:47 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Da9GNL/o"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727091AbgBVIHQ (ORCPT
+        id S1726975AbgBVIOo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 22 Feb 2020 03:07:16 -0500
-Received: from mout.kundenserver.de ([217.72.192.74]:34631 "EHLO
-        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725958AbgBVIHP (ORCPT
+        Sat, 22 Feb 2020 03:14:44 -0500
+Received: from mail-pg1-f195.google.com ([209.85.215.195]:45315 "EHLO
+        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725958AbgBVIOo (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 22 Feb 2020 03:07:15 -0500
-Received: from mail-lf1-f49.google.com ([209.85.167.49]) by
- mrelayeu.kundenserver.de (mreue106 [212.227.15.145]) with ESMTPSA (Nemesis)
- id 1MOzfO-1img6m1muK-00PPN4; Sat, 22 Feb 2020 09:07:12 +0100
-Received: by mail-lf1-f49.google.com with SMTP id s23so3185669lfs.10;
-        Sat, 22 Feb 2020 00:07:12 -0800 (PST)
-X-Gm-Message-State: APjAAAUERwCvXvfjPktZvxZvux4aBnbtp9P35O/TrUejem6kA48vhnWq
-        afcYUy01GmsjFZw8KKXjaFN8ssB9XvvVXa2LFRM=
-X-Google-Smtp-Source: APXvYqwpdYKZMO/96bj/N5vKrJ0LU+hK+ga1Pp5razsbdMm6ufUcmfcVDWHaahAN/oc9qEUtOll9vonbHUzwZQVvLp4=
-X-Received: by 2002:a19:c1cc:: with SMTP id r195mr10024414lff.173.1582358831729;
- Sat, 22 Feb 2020 00:07:11 -0800 (PST)
+        Sat, 22 Feb 2020 03:14:44 -0500
+Received: by mail-pg1-f195.google.com with SMTP id b9so2182290pgk.12;
+        Sat, 22 Feb 2020 00:14:44 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=5/sEM9m8/BfpN//Z+cqohWMKYfsWyIj6BtdHG+fGeTc=;
+        b=Da9GNL/ole8tIKOnRXqSb/UKpnSicVYDSkjADZ2BTQndythvM4xoihiGyRyvL49FqP
+         ehVg5wBYbKr2F0ESSTonTut4j7Cl0+y67/qKRcKUVb2rRc+VmnIz8zmwOJmMcq6mwr9a
+         ONE0zDxw1LlQeTTbwxRdaEt3rLxf1TXptzHvFPoPUOJHo1ZHKLyCbeiGhVCxDwsApRxm
+         qHxCIkmgR2nW3I/1mDdXnXwMkKvFgcFA/F1vKGyjbWQQ9G/KSukNsedcMLjgGIjIPT5D
+         7VbVGuu198KH50GCh0GGCAG+sFCCE6hESeiFKQfFcGvSO9CMRUA45EI1xNCjpUZjC17P
+         P91g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=5/sEM9m8/BfpN//Z+cqohWMKYfsWyIj6BtdHG+fGeTc=;
+        b=Ai6+TvzC2ZutcG0kEztpTdRl6ZuXV954HsOTzHZKIQaPnQv5ZBR3I+hGE8w8WR4Q+V
+         vqKz4X2wKYXnfI4K3tfYypqL3+JJRjicQ3O5xajKqFIEbqV5x0E9M+RkXCrMHMKm0hFp
+         lEG8/6fX9LypiL9hBCWgF4ZLgchS1SE9URS0utAiKKphLmDWLAbGxHpaENmRzUwBXQ3M
+         +aRE65ojHtixfHyNm46LUYgztFAmPvjOS/0PL6mqh6Nd6wRGLxjY2nX6btNS6h4JaUFR
+         fWjmAKlsuPWP2Xwkwzw1Jn3Vpxk/FRYMectN6mSh3vsMa+tsrKVIu8r9/iQKPWyFYZSO
+         2ZaA==
+X-Gm-Message-State: APjAAAXsNydxgA4ocJWVeSpAQ3OrKOP7NvfM54Uo61PPGq9+td7rFjeS
+        I3+zs0dG66y1ax+S4cJ8BKhAY6WvHT65QDqUmOc=
+X-Google-Smtp-Source: APXvYqwnXN+u1jIKOYXizt0jOLd/M21T1Ya20W6R4Hw/0giVBYykU3S0HHyGxESG8ar+ffNtHFYsnmM7YWzYimpv6TY=
+X-Received: by 2002:a63:5a23:: with SMTP id o35mr41725204pgb.4.1582359283721;
+ Sat, 22 Feb 2020 00:14:43 -0800 (PST)
 MIME-Version: 1.0
-References: <20190822192451.5983-1-scott.branden@broadcom.com>
- <20190822192451.5983-3-scott.branden@broadcom.com> <s5hef1crybq.wl-tiwai@suse.de>
- <10461fcf-9eca-32b6-0f9d-23c63b3f3442@broadcom.com> <s5hr258j6ln.wl-tiwai@suse.de>
- <93b8285a-e5eb-d4a4-545d-426bbbeb8008@broadcom.com> <s5ho90byhnv.wl-tiwai@suse.de>
- <b440f372-45be-c06c-94a1-44ae6b1e7eb8@broadcom.com> <s5hwoeyj3i5.wl-tiwai@suse.de>
- <20191011133120.GP16384@42.do-not-panic.com> <e65a3ba1-d064-96fe-077e-59bf8ffff377@broadcom.com>
- <CAK8P3a2NJurg_hxVbWYZwJVhYM5-xjWt12Kh0DdyfTGqQPrPAQ@mail.gmail.com> <3731a882-8784-b957-7628-49edfa9683e7@broadcom.com>
-In-Reply-To: <3731a882-8784-b957-7628-49edfa9683e7@broadcom.com>
-From:   Arnd Bergmann <arnd@arndb.de>
-Date:   Sat, 22 Feb 2020 09:06:55 +0100
-X-Gmail-Original-Message-ID: <CAK8P3a0WWeNxaLYZBOipsALu_Y9isY6jKjRy9tc4Xokktoa1Pg@mail.gmail.com>
-Message-ID: <CAK8P3a0WWeNxaLYZBOipsALu_Y9isY6jKjRy9tc4Xokktoa1Pg@mail.gmail.com>
-Subject: Re: [PATCH 2/7] firmware: add offset to request_firmware_into_buf
-To:     Scott Branden <scott.branden@broadcom.com>
-Cc:     Luis Chamberlain <mcgrof@kernel.org>, Takashi Iwai <tiwai@suse.de>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        David Brown <david.brown@linaro.org>,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        Shuah Khan <shuah@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Shuah Khan <skhan@linuxfoundation.org>,
-        "Rafael J . Wysocki" <rafael@kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
-        Linux FS-devel Mailing List <linux-fsdevel@vger.kernel.org>,
-        BCM Kernel Feedback <bcm-kernel-feedback-list@broadcom.com>,
-        Olof Johansson <olof@lixom.net>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Dan Carpenter <dan.carpenter@oracle.com>,
-        Colin Ian King <colin.king@canonical.com>,
+References: <CAHk-=wjEd-gZ1g52kgi_g8gq-QCF2E01TkQd5Hmj4W5aThLw3A@mail.gmail.com>
+ <20200219082155.6787-1-linux@rasmusvillemoes.dk> <CAOi1vP-4=QCSZ2A89g1po2p=6n_g09SXUCa0_r2SBJm2greRmw@mail.gmail.com>
+ <0fef2a1f-9391-43a9-32d5-2788ae96c529@rasmusvillemoes.dk> <20200219134826.qqdhy2z67ubsnr2m@pathway.suse.cz>
+ <5459eb50-48e2-2fd9-3560-0bc921e3678c@rasmusvillemoes.dk> <20200219144558.2jbawr52qb63vysq@pathway.suse.cz>
+ <bcfb2f94-e7a8-0860-86e3-9fc866d98742@rasmusvillemoes.dk> <20200220125707.hbcox3xgevpezq4l@pathway.suse.cz>
+ <CAOi1vP8E_DL7y=STP5-vbe_Wf5PZRiXWGTNV3rN96i4N2R3zUQ@mail.gmail.com>
+ <20200221130506.mly26uycxpdjl6oz@pathway.suse.cz> <cec0c65b-5b5d-6268-dae0-1d4088baab76@rasmusvillemoes.dk>
+In-Reply-To: <cec0c65b-5b5d-6268-dae0-1d4088baab76@rasmusvillemoes.dk>
+From:   Andy Shevchenko <andy.shevchenko@gmail.com>
+Date:   Sat, 22 Feb 2020 10:14:32 +0200
+Message-ID: <CAHp75Vft5YiHndMXvcQfHoV1R5M1VHc5bzLgZBAsiBmNFzgvsw@mail.gmail.com>
+Subject: Re: [PATCH] vsprintf: sanely handle NULL passed to %pe
+To:     Rasmus Villemoes <linux@rasmusvillemoes.dk>
+Cc:     Petr Mladek <pmladek@suse.com>, Ilya Dryomov <idryomov@gmail.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Jonathan Corbet <corbet@lwn.net>,
         Kees Cook <keescook@chromium.org>,
-        "open list:KERNEL SELFTEST FRAMEWORK" 
-        <linux-kselftest@vger.kernel.org>
+        "Tobin C . Harding" <me@tobin.cc>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Linux Documentation List <linux-doc@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
-X-Provags-ID: V03:K1:VSS0lrE+jTxSYsb/3xTXnnGOMtXSAO7qXek1a9Rhtelg8xUYL0k
- fYS3SFDkUeYRUIun/OF7XYx+FDGgQn70Q0idx6i8+7cupOe8RkJsdjX/lKIHsqK8mkzUIn+
- z7Kc2hOUQxxOaim+CfznkvXqaZOGsexPB0JupZqg+oSQbP/9jWLqK4La6+Kzg8oodyGRyQy
- +cK9sVsoiY3AkxbmFUxHg==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:sKEdyQlfYT8=:lOsUdoWyit+edBrSNGaJH6
- fxEvNN89AAEeHmesWC6DvvGMy3EZnNAF/yrfLlpan6ioYigGgldWsfteZ6UsI8Em6rY4w+0BL
- VnuGSpt+OlrmQZz14DIgcbFjiUgO0tKivCIX6yUVVuOw+FKvNcFfLUWcOmBXb3yOOt/TdChDb
- KKnrICkid7Rymi22DdDqYhj6i32MOOcnGOF/qfwjmdnsb/iIxwk6AQC2vPYd3npVHj0E/sKeV
- +CKfnHYYnemOD2oWRCBGirjRmB87PJY9Np+lzuFLZ0kp1rF15H0yelAm7WDHqxkT3EcMDfLSP
- K5Yl9Bz1NIQidm0B9g8Ys2ea2tH2ALly0oAMyJT1iOHjUX+X3o5Ybc6q4R2YePmCRbstctlhp
- lUxTY4TJk742AZFu9MhD9d+tqDJtiVpfAClRvckTKiZ2iCwwJPRGOeEdxNGvCzk750hxpPNwF
- lPFCyRZSAgAdCmNAjW1JX/pDp/2jwuyHUgt0ddwsF2fUBYnoUQEDoPN1xxKlrEBwOGo3Oy45Z
- eaPMINxrznxDg+eqLLM+oHyxyvRuAdS/xls023biXYhy72kNSRqJOEtHDlCbdy8uKY2VPUH2S
- 8SbHjeD6181EPf2ZeXq0hLgQRNBkxCKFFKgyFY7bDrf8xCLMLgvKcmPzNfK0AsHAeN/m94ZZ+
- yOe/B706FUVu4iqKKIybavt7uzKk2rIpk/wwHKBfsRs3+wB6/gYUQtZSUZJQ7OiWsESX+N1QT
- Voi3IGbWAasmARnf/J1KJFJwWSlCcqdxLWzyt6Y9CxVbSNiiogO9R3fuDgrQDtjCXcqRcwhMA
- bRk2mjg5n5HSQcMnvIEK1ZrODImlNYCelQ20HpDXqniLe3IfHw=
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, Feb 22, 2020 at 12:37 AM Scott Branden
-<scott.branden@broadcom.com> wrote:
-> On 2020-02-21 12:44 a.m., Arnd Bergmann wrote:
-> > On Fri, Feb 21, 2020 at 1:11 AM Scott Branden
-> > <scott.branden@broadcom.com> wrote:
-> >> On 2019-10-11 6:31 a.m., Luis Chamberlain wrote:
-> >>> On Tue, Aug 27, 2019 at 12:40:02PM +0200, Takashi Iwai wrote:
-> >>>> On Mon, 26 Aug 2019 19:24:22 +0200,
-> >>>> Scott Branden wrote:
-> >>>>> I will admit I am not familiar with every subtlety of PCI
-> >>>>> accesses. Any comments to the Valkyrie driver in this patch series are
-> >>>>> appreciated.
-> >>>>> But not all drivers need to work on all architectures. I can add a
-> >>>>> depends on x86 64bit architectures to the driver to limit it to such.
-> >>>> But it's an individual board on PCIe, and should work no matter which
-> >>>> architecture is?  Or is this really exclusive to x86?
-> >>> Poke Scott.
-> >> Yes, this is exclusive to x86.
-> >> In particular, 64-bit x86 server class machines with PCIe gen3 support.
-> >> There is no reason for these PCIe boards to run in other lower end
-> >> machines or architectures.
-> > It doesn't really matter that much what you expect your customers to
-> > do with your product, or what works a particular machine today, drivers
-> > should generally be written in a portable manner anyway and use
-> > the documented APIs. memcpy() into an __iomem pointer is not
-> > portable and while it probably works on any x86 machine today, please
-> > just don't do it. If you use 'sparse' to check your code, that would normally
-> > result in an address space warning, unless you add __force and a
-> > long comment explaining why you cannot just use memcpy_to_io()
-> > instead. At that point, you are already better off usingn memcpy_to_io() ;-)
-> >
-> >          Arnd
-> I am a not performing a memcpy at all right now.
-> I am calling a request_firmware_into_buf call and do not need to make a
-> copy.
-> This function eventually calls kernel_read_file, which then makes at
-> indirect call in __vfs_read to perform the read to memory.
+On Sat, Feb 22, 2020 at 1:53 AM Rasmus Villemoes
+<linux@rasmusvillemoes.dk> wrote:
+> On 21/02/2020 14.05, Petr Mladek wrote:
 
-Well, that comes down to a memcpy() in the end, even if you don't
-spell it like that in your driver. It may be a copy_from_user(), but
-clearly not a memcpy_to_io().
+...
 
->  From there I am lost as to what operation happens to achieve this.
-> The read function would need to detect the buf is in io space and
-> perform the necessary operation.
-> Anyone with any knowledge on how to make this read to io space would be
-> appreciated?
+> and we save testing the "%px" case for when we figure out a good name
+> for a helper for that (explicit_pointer? pointer_as_hex?)
+>
+> ?
 
-I don't think modifying the common code is helpful in this case:
-any access to PCI MMIO space is inevitably going to be slow, so
-an extra memcpy() in your driver is not going to cause any noticeable
-overhead, but the generic functions are meant to be fast for the
-normal use case and not gain any other features.
+real_pointer() ?
 
-       Arnd
+-- 
+With Best Regards,
+Andy Shevchenko
