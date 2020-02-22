@@ -2,200 +2,201 @@ Return-Path: <SRS0=8jYG=4K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2B3A1C35672
-	for <linux-kernel@archiver.kernel.org>; Sat, 22 Feb 2020 16:47:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F0B2FC35671
+	for <linux-kernel@archiver.kernel.org>; Sat, 22 Feb 2020 16:50:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 01153206EF
-	for <linux-kernel@archiver.kernel.org>; Sat, 22 Feb 2020 16:47:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B7F91206EF
+	for <linux-kernel@archiver.kernel.org>; Sat, 22 Feb 2020 16:50:17 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=kemnade.info header.i=@kemnade.info header.b="oC+1V8NG"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="fov6amsM"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726817AbgBVQrA (ORCPT
+        id S1726791AbgBVQuQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 22 Feb 2020 11:47:00 -0500
-Received: from mail.andi.de1.cc ([85.214.55.253]:52428 "EHLO mail.andi.de1.cc"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726044AbgBVQrA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 22 Feb 2020 11:47:00 -0500
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=kemnade.info; s=20180802; h=Content-Type:MIME-Version:References:
-        In-Reply-To:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=hRPFx+PZRKzFa546U2qlzpkcDSCf1FnKKySJh6PyUnk=; b=oC+1V8NGKKnq7OtxR/z/2+PlL
-        osEQgR5r2xXL+cgeZLa/H+O9n5VzM6dFMo/Svr3XEQG+6JGrzTl7Wf4jQAtSeLDWhFANu5yCnUawY
-        fumyiXfOa4IN56RipwHlDQckMhRJKg4Q/cBn8o9uLoXW//NQycb0Zp31azMifaIEY8DLg=;
-Received: from p5dc58966.dip0.t-ipconnect.de ([93.197.137.102] helo=eeepc)
-        by mail.andi.de1.cc with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.89)
-        (envelope-from <andreas@kemnade.info>)
-        id 1j5XvF-0004EA-Um; Sat, 22 Feb 2020 17:46:34 +0100
-Received: from localhost ([127.0.0.1])
-        by localhost with esmtp (Exim 4.92)
-        (envelope-from <andreas@kemnade.info>)
-        id 1j5XvF-0002YK-B5; Sat, 22 Feb 2020 17:46:33 +0100
-Date:   Sat, 22 Feb 2020 17:46:08 +0100
-From:   Andreas Kemnade <andreas@kemnade.info>
-To:     "H. Nikolaus Schaller" <hns@goldelico.com>
-Cc:     PrasannaKumar Muralidharan <prasannatsmkumar@gmail.com>,
-        Paul Cercueil <paul@crapouillou.net>,
-        Mathieu Malaterre <malat@debian.org>,
-        Srinivas Kandagatla <srinivas.kandagatla@linaro.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Ralf Baechle <ralf@linux-mips.org>,
-        Paul Burton <paulburton@kernel.org>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-        Krzysztof Kozlowski <krzk@kernel.org>,
-        Kees Cook <keescook@chromium.org>,
-        Andi Kleen <ak@linux.intel.com>,
-        Geert Uytterhoeven <geert+renesas@glider.be>,
-        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-mips@vger.kernel.org, letux-kernel@openphoenux.org,
-        kernel@pyra-handheld.com
-Subject: Re: [PATCH v5 2/6] Bindings: nvmem: add bindings for JZ4780 efuse
-Message-ID: <20200222174408.10588e32@kemnade.info>
-In-Reply-To: <D59DC84C-837E-4856-8FED-580381F748FF@goldelico.com>
-References: <cover.1582367141.git.hns@goldelico.com>
-        <51642368a064073ab99bb3110863b5fadc382f82.1582367141.git.hns@goldelico.com>
-        <20200222165738.61cde2a0@kemnade.info>
-        <D59DC84C-837E-4856-8FED-580381F748FF@goldelico.com>
-X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; i686-pc-linux-gnu)
+        Sat, 22 Feb 2020 11:50:16 -0500
+Received: from mail-yw1-f66.google.com ([209.85.161.66]:38921 "EHLO
+        mail-yw1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726044AbgBVQuQ (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 22 Feb 2020 11:50:16 -0500
+Received: by mail-yw1-f66.google.com with SMTP id h126so3121298ywc.6;
+        Sat, 22 Feb 2020 08:50:15 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=9CEtPQwqb2jRT0+JdcJwq9ByMA6NE9XRRq10JDdwV54=;
+        b=fov6amsMb71SraLpdll6TXLXhCsbsUDPsGPGict5Ib4uEKHqaG9PHoVbXgGaDbpcuf
+         5RcGJJHZ/7gDwRFtfjQexAH/AYfCI9AdrjDtRogEcRckbLs7QC0TrUTivyo7QwFFDtnA
+         N797tBSmOPt2AnuXPdc7j9oXGzSoDssszcVGMjI5be+ioKslIob9r3IUfQJLBOpF9l93
+         S7M2TPVODqo1cktkfrz/uwZ1JvrrqYgWss3mWArICThlLsCDfQTBNfEoziwy9ewA558t
+         8tzID89xnXTjx1g7EAtH++A9AoxE4/UfBwR59P3fAAngvAbIOWPbHrKIZDG/eyh69jPH
+         lF1g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=9CEtPQwqb2jRT0+JdcJwq9ByMA6NE9XRRq10JDdwV54=;
+        b=Ejj4vwOxvJykT+YLXijDwlsCVzU1eG4Pq/Is8MQ+8MxSizlzbchN4GUlRsMoHT+csT
+         VuX5W1xa0x0RffAZFgSgAFHG4kr7akI0fMorlhmJsDDhJGYfA795uaOc76V3Has3UTZY
+         smBy2JBQvcQBP5L7D6a3RKGRZ+PFXPloePVIVnIVendlKIAxB8sbq3duIs3griZuMtsa
+         o2uSku9gyb50iF71QJa9hcDqIUbPylK9PohVeR9x1Lbohx6JQoEAUmyGjrOSogL/2VPF
+         egly16DEoL0gIAEY4M+fCMStqFp5/FrBjwWfMl7BaxhDvI/q9TTseFVGawriq3p10lmG
+         G9qA==
+X-Gm-Message-State: APjAAAW/KXFv1vu0RZWy5kNMj2RVzAJf9ZLU96SG4c5nIMHA3xghsZrl
+        G1g+qsXhsEH4DuwRyTJuZ2U=
+X-Google-Smtp-Source: APXvYqx6ZZYFdxmQ/GlIOciTe2UWdxrHrhPWQmtMGP/bnwtUjCFzk3NCQGw3D+/Msys4oStUCC97eg==
+X-Received: by 2002:a81:a189:: with SMTP id y131mr36078889ywg.329.1582390214706;
+        Sat, 22 Feb 2020 08:50:14 -0800 (PST)
+Received: from localhost.localdomain (072-189-064-225.res.spectrum.com. [72.189.64.225])
+        by smtp.gmail.com with ESMTPSA id c84sm2997249ywa.1.2020.02.22.08.50.13
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sat, 22 Feb 2020 08:50:14 -0800 (PST)
+From:   William Breathitt Gray <vilhelm.gray@gmail.com>
+To:     jic23@kernel.org
+Cc:     linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org,
+        William Breathitt Gray <vilhelm.gray@gmail.com>
+Subject: [PATCH] counter: 104-quad-8: Support Filter Clock Prescaler
+Date:   Sat, 22 Feb 2020 11:49:58 -0500
+Message-Id: <20200222164958.105288-1-vilhelm.gray@gmail.com>
+X-Mailer: git-send-email 2.24.1
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
- boundary="Sig_/TgvauzzV4EyUJ_hH4abMMTu"; protocol="application/pgp-signature"
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/TgvauzzV4EyUJ_hH4abMMTu
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+The ACCES 104-QUAD-8 series does active filtering on the quadrature
+input signals via the PC/104 bus clock (OSC 14.318 MHz). This patch
+exposes the filter clock prescaler available on each channel.
 
-On Sat, 22 Feb 2020 17:34:06 +0100
-"H. Nikolaus Schaller" <hns@goldelico.com> wrote:
-
-> > Am 22.02.2020 um 16:57 schrieb Andreas Kemnade <andreas@kemnade.info>:
-> >=20
-> > On Sat, 22 Feb 2020 11:25:37 +0100
-> > "H. Nikolaus Schaller" <hns@goldelico.com> wrote:
-> >  =20
-> >> From: PrasannaKumar Muralidharan <prasannatsmkumar@gmail.com>
-> >>=20
-> >> This patch brings support for the JZ4780 efuse. Currently it only expo=
-ses
-> >> a read only access to the entire 8K bits efuse memory.
-> >>=20
-> >> Tested-by: Mathieu Malaterre <malat@debian.org>
-> >> Signed-off-by: PrasannaKumar Muralidharan <prasannatsmkumar@gmail.com>
-> >> Signed-off-by: Mathieu Malaterre <malat@debian.org>
-> >> Signed-off-by: H. Nikolaus Schaller <hns@goldelico.com>
-> >> [converted to yaml]
-> >> Signed-off-by: Andreas Kemnade <andreas@kemnade.info>
-> >> ---
-> >> .../bindings/nvmem/ingenic,jz4780-efuse.yaml  | 50 +++++++++++++++++++
-> >> 1 file changed, 50 insertions(+)
-> >> create mode 100644 Documentation/devicetree/bindings/nvmem/ingenic,jz4=
-780-efuse.yaml
-> >>=20
-> >> diff --git a/Documentation/devicetree/bindings/nvmem/ingenic,jz4780-ef=
-use.yaml b/Documentation/devicetree/bindings/nvmem/ingenic,jz4780-efuse.yaml
-> >> new file mode 100644
-> >> index 000000000000..09a8ef937750
-> >> --- /dev/null
-> >> +++ b/Documentation/devicetree/bindings/nvmem/ingenic,jz4780-efuse.yaml
-> >> @@ -0,0 +1,50 @@
-> >> +# SPDX-License-Identifier: GPL-2.0-only OR BSD-2-Clause
-> >> +%YAML 1.2
-> >> +---
-> >> +$id: http://devicetree.org/schemas/nvmem/ingenic,jz4780-efuse.yaml#
-> >> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> >> +
-> >> +title: Ingenic JZ EFUSE driver bindings
-> >> +
-> >> +maintainers:
-> >> +  - PrasannaKumar Muralidharan <prasannatsmkumar@gmail.com>
-> >> +
-> >> +allOf:
-> >> +  - $ref: "nvmem.yaml#"
-> >> +
-> >> +properties:
-> >> +  compatible:
-> >> +    enum:
-> >> +      - ingenic,jz4780-efuse
-> >> +
-> >> +  reg:
-> >> +    maxItems: 1
-> >> +
-> >> +  clocks:
-> >> +    # Handle for the ahb for the efuse.
-> >> +    maxItems: 1
-> >> +
-> >> +  clock-names:
-> >> +   items:
-> >> +     - const:  ahb2 =20
-> > as Rob said: probably not needed, since it is a single
-> > clock, and the driver uses devm_clk_get(dev, NULL), so it should be pre=
-pared
-> > for that without any extra work. =20
->=20
-> The question is if a specific driver implementation should determine
-> what the DT requires or the other way round. I don't know...
->=20
-> I did interpret Rob's comment differently: there was
->=20
-> > - "clock-names"		Must be "bus_clk" =20
->=20
-> and he did say:=20
->=20
-> 	'clk' is redundant. How about 'ahb'?
->=20
-> So I thought he refers to the _clk suffix?
->=20
-
-and he said to my first try:
+Signed-off-by: William Breathitt Gray <vilhelm.gray@gmail.com>
 ---
-> +  clock-names:
-> +   items:
-> +     - const:  bus_clk =20
+ .../ABI/testing/sysfs-bus-counter-104-quad-8  |  7 +++
+ drivers/counter/104-quad-8.c                  | 61 ++++++++++++++++++-
+ 2 files changed, 65 insertions(+), 3 deletions(-)
 
-My prior comment still applies.
+diff --git a/Documentation/ABI/testing/sysfs-bus-counter-104-quad-8 b/Documentation/ABI/testing/sysfs-bus-counter-104-quad-8
+index 46b1f33b2fce..3c905d3cf5d7 100644
+--- a/Documentation/ABI/testing/sysfs-bus-counter-104-quad-8
++++ b/Documentation/ABI/testing/sysfs-bus-counter-104-quad-8
+@@ -1,3 +1,10 @@
++What:		/sys/bus/counter/devices/counterX/signalY/filter_clock_prescaler
++KernelVersion:	5.7
++Contact:	linux-iio@vger.kernel.org
++Description:
++		Filter clock factor for input Signal Y. This prescaler value
++		affects the inputs of both quadrature pair signals.
++
+ What:		/sys/bus/counter/devices/counterX/signalY/index_polarity
+ KernelVersion:	5.2
+ Contact:	linux-iio@vger.kernel.org
+diff --git a/drivers/counter/104-quad-8.c b/drivers/counter/104-quad-8.c
+index 17e67a84777d..0cfc813ee2cb 100644
+--- a/drivers/counter/104-quad-8.c
++++ b/drivers/counter/104-quad-8.c
+@@ -43,6 +43,7 @@ MODULE_PARM_DESC(base, "ACCES 104-QUAD-8 base addresses");
+  */
+ struct quad8_iio {
+ 	struct counter_device counter;
++	unsigned int fck_prescaler[QUAD8_NUM_COUNTERS];
+ 	unsigned int preset[QUAD8_NUM_COUNTERS];
+ 	unsigned int count_mode[QUAD8_NUM_COUNTERS];
+ 	unsigned int quadrature_mode[QUAD8_NUM_COUNTERS];
+@@ -84,6 +85,8 @@ struct quad8_iio {
+ #define QUAD8_RLD_PRESET_CNTR 0x08
+ /* Transfer Counter to Output Latch */
+ #define QUAD8_RLD_CNTR_OUT 0x10
++/* Transfer Preset Register LSB to FCK Prescaler */
++#define QUAD8_RLD_PRESET_PSC 0x18
+ #define QUAD8_CHAN_OP_ENABLE_COUNTERS 0x00
+ #define QUAD8_CHAN_OP_RESET_COUNTERS 0x01
+ #define QUAD8_CMR_QUADRATURE_X1 0x08
+@@ -1140,6 +1143,50 @@ static ssize_t quad8_count_preset_enable_write(struct counter_device *counter,
+ 	return len;
+ }
+ 
++static ssize_t quad8_signal_fck_prescaler_read(struct counter_device *counter,
++	struct counter_signal *signal, void *private, char *buf)
++{
++	const struct quad8_iio *const priv = counter->priv;
++	const size_t channel_id = signal->id / 2;
++
++	return sprintf(buf, "%u\n", priv->fck_prescaler[channel_id]);
++}
++
++static ssize_t quad8_signal_fck_prescaler_write(struct counter_device *counter,
++	struct counter_signal *signal, void *private, const char *buf,
++	size_t len)
++{
++	struct quad8_iio *const priv = counter->priv;
++	const size_t channel_id = signal->id / 2;
++	const int base_offset = priv->base + 2 * channel_id;
++	u8 prescaler;
++	int ret;
++
++	ret = kstrtou8(buf, 0, &prescaler);
++	if (ret)
++		return ret;
++
++	priv->fck_prescaler[channel_id] = prescaler;
++
++	/* Reset Byte Pointer */
++	outb(QUAD8_CTR_RLD | QUAD8_RLD_RESET_BP, base_offset + 1);
++
++	/* Set filter clock factor */
++	outb(prescaler, base_offset);
++	outb(QUAD8_CTR_RLD | QUAD8_RLD_RESET_BP | QUAD8_RLD_PRESET_PSC,
++	     base_offset + 1);
++
++	return len;
++}
++
++static const struct counter_signal_ext quad8_signal_ext[] = {
++	{
++		.name = "filter_clock_prescaler",
++		.read = quad8_signal_fck_prescaler_read,
++		.write = quad8_signal_fck_prescaler_write
++	}
++};
++
+ static const struct counter_signal_ext quad8_index_ext[] = {
+ 	COUNTER_SIGNAL_ENUM("index_polarity", &quad8_index_pol_enum),
+ 	COUNTER_SIGNAL_ENUM_AVAILABLE("index_polarity",	&quad8_index_pol_enum),
+@@ -1147,9 +1194,11 @@ static const struct counter_signal_ext quad8_index_ext[] = {
+ 	COUNTER_SIGNAL_ENUM_AVAILABLE("synchronous_mode", &quad8_syn_mode_enum)
+ };
+ 
+-#define	QUAD8_QUAD_SIGNAL(_id, _name) {	\
+-	.id = (_id),			\
+-	.name = (_name)			\
++#define QUAD8_QUAD_SIGNAL(_id, _name) {		\
++	.id = (_id),				\
++	.name = (_name),			\
++	.ext = quad8_signal_ext,		\
++	.num_ext = ARRAY_SIZE(quad8_signal_ext)	\
+ }
+ 
+ #define	QUAD8_INDEX_SIGNAL(_id, _name) {	\
+@@ -1314,6 +1363,12 @@ static int quad8_probe(struct device *dev, unsigned int id)
+ 		base_offset = base[id] + 2 * i;
+ 		/* Reset Byte Pointer */
+ 		outb(QUAD8_CTR_RLD | QUAD8_RLD_RESET_BP, base_offset + 1);
++		/* Reset filter clock factor */
++		outb(0, base_offset);
++		outb(QUAD8_CTR_RLD | QUAD8_RLD_RESET_BP | QUAD8_RLD_PRESET_PSC,
++		     base_offset + 1);
++		/* Reset Byte Pointer */
++		outb(QUAD8_CTR_RLD | QUAD8_RLD_RESET_BP, base_offset + 1);
+ 		/* Reset Preset Register */
+ 		for (j = 0; j < 3; j++)
+ 			outb(0x00, base_offset);
+-- 
+2.24.1
 
-Also, for a single clock, you don't really need a name.
----
-
-Regards,
-Andreas
-
---Sig_/TgvauzzV4EyUJ_hH4abMMTu
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAEBCAAdFiEEPIWxmAFyOaBcwCpFl4jFM1s/ye8FAl5RWtAACgkQl4jFM1s/
-ye9VGhAAjRo5srdoJRml/7fEUEz7mS3nNuWp3JYCd8woqNanA6WUNL+vOHuys9d3
-ZOrX4MQ83qwlD+clQIvrN7qNNeXtZr6btgH+JynIWOePOlKtWK/crwh+UkANROyM
-jHxOIqJiIJ33EOVDTXP9+FIm4W48m/sGQQxvq1jjJ8ASw7gvZ/M3MDeMQJPZuhvn
-PAjIV9Lqs4X0TSZTvTQ+ThYXFllCyxwKojcyODrJAWKx9VMqCc9fz2SYMgYSrAwX
-2Sdv7aU5h1eD/1KUhchDRsAsIgzNjmalPkhL+SXj2flmaLSYKXIUQgpWwiKn4i96
-oLSh+vsQcrhMvN/L+F+iqSTVdDcAkxhfOB4jb1ReGbYasyJwNm/8ROiXMS5+zv/x
-dBWeGRR4DS+A6Z3ccPxJNdug1TtBQNJHvhal/TePTtxBuG0IL4Sq7SY5BPnjQi7w
-JoYxL3xuGZ2ee7Qb1U+gvWqgL38lB0kumxSnDneHBZT9dqOvcsD5OhgRfVAScGvM
-tWpwsXhuGq3tLr0/GCCj8Fik5WGMoambyt/rRFF7IKaOLraiJlqAdGEg5tiY8R8p
-wWuwF2YW29NX4sziZsVVTSnf5Y51HDn20/IVAHFU8fpZPjnFn30lyydddhKAeIzf
-jBy+63J7qYP0+Vqk/8w5g3SVnqiZXc+ZB+rpdA3lPKsBe/XRKO0=
-=7A1/
------END PGP SIGNATURE-----
-
---Sig_/TgvauzzV4EyUJ_hH4abMMTu--
