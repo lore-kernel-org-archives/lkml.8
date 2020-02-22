@@ -2,140 +2,186 @@ Return-Path: <SRS0=8jYG=4K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D1932C35641
-	for <linux-kernel@archiver.kernel.org>; Sat, 22 Feb 2020 00:28:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 15485C35670
+	for <linux-kernel@archiver.kernel.org>; Sat, 22 Feb 2020 00:28:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9CE8924672
-	for <linux-kernel@archiver.kernel.org>; Sat, 22 Feb 2020 00:28:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D8F7824672
+	for <linux-kernel@archiver.kernel.org>; Sat, 22 Feb 2020 00:28:53 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=rasmusvillemoes.dk header.i=@rasmusvillemoes.dk header.b="Er3whwMC"
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="w/v2PiDC"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726805AbgBVA2c (ORCPT
+        id S1726945AbgBVA2w (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Feb 2020 19:28:32 -0500
-Received: from mail-lj1-f195.google.com ([209.85.208.195]:40052 "EHLO
-        mail-lj1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726697AbgBVA2b (ORCPT
+        Fri, 21 Feb 2020 19:28:52 -0500
+Received: from userp2120.oracle.com ([156.151.31.85]:36164 "EHLO
+        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726697AbgBVA2w (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Feb 2020 19:28:31 -0500
-Received: by mail-lj1-f195.google.com with SMTP id n18so4018597ljo.7
-        for <linux-kernel@vger.kernel.org>; Fri, 21 Feb 2020 16:28:29 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=rasmusvillemoes.dk; s=google;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=3ADTmfft80RI7c2WY4TOkzrerMdgpKiB03T3sJQNmxs=;
-        b=Er3whwMCAVF/DBsN73siP1gSa3KXpBJQrxPXuPeG4XI0lo1atKo+Tw0mY0Z64SRm+J
-         3OqT65FrvtCeT7bNRITTFOJ0yVZ1sWYihv7d7RV7fwUbDppiazC7Z7k8XrJLrVOv1o1M
-         zp0XUxufCWdPgO1EOJNc5/YuOR8aVjGEOpV6E=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=3ADTmfft80RI7c2WY4TOkzrerMdgpKiB03T3sJQNmxs=;
-        b=XXZMtP1PPXhXKmzO7gobI/1qnjtadlnCsjKuSS3KxokXN6pE/R3Y3lbh8mJdyPEb5e
-         r+8zX03xkQhBw738jbOHjDMguUu9EflJVqjesYTFByjBKEcEfMP1YQhoiYfC1jwXNJtC
-         P9ixHQFoYsuWZN0NrgVx8hfBz93Ji9RWw5BIoXjL4HSeDqK7IwHIifRJLP8xl4s/oHCn
-         hfN+fIQXKPHcWn07QvBe7j54Dm/sI+aRYunOq4o+nGcp/UfWZ4yH4lhnZk2dc7eZsm/Q
-         enaZYIVQbb+RvS01dk++jDTUS/vgKGjs8JvV3+pTpbsO2XDfoytOg+DgD8rbwSmuTlEi
-         tB1A==
-X-Gm-Message-State: APjAAAWYTOcuvgalyDkIGudS1h3upCMfWBBFsHDi85vnlC4MPIebnGZt
-        isGaP7xjHu7kLvecg+0vFL8obg==
-X-Google-Smtp-Source: APXvYqwKYJ7W1iIgFdvVZmv0oo87jXC/8pPf5wbrmjfa5AKW+rpyFHJfX9vkjxDWuaRz/+vixJI3rA==
-X-Received: by 2002:a2e:730e:: with SMTP id o14mr23885198ljc.51.1582331308263;
-        Fri, 21 Feb 2020 16:28:28 -0800 (PST)
-Received: from [192.168.1.149] (ip-5-186-115-35.cgn.fibianet.dk. [5.186.115.35])
-        by smtp.gmail.com with ESMTPSA id y7sm2401215ljy.92.2020.02.21.16.28.26
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 21 Feb 2020 16:28:27 -0800 (PST)
-Subject: Re: [PATCH v1] lib/vsprintf: update comment about simple_strto<foo>()
- functions
-To:     =?UTF-8?Q?Uwe_Kleine-K=c3=b6nig?= <u.kleine-koenig@pengutronix.de>,
-        Andy Shevchenko <andy.shevchenko@gmail.com>
-Cc:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Petr Mladek <pmladek@suse.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Alexey Dobriyan <adobriyan@gmail.com>
-References: <20200221085723.42469-1-andriy.shevchenko@linux.intel.com>
- <20200221145141.pchim24oht7nxfir@pengutronix.de>
- <CAHp75VfR+X6Mw8ywKNW5mTomzmuHSM8ecQUhxtM=LUkWaSe9CA@mail.gmail.com>
- <20200221163334.w7pocmbbw4ymimlc@pengutronix.de>
-From:   Rasmus Villemoes <linux@rasmusvillemoes.dk>
-Message-ID: <d6c3b369-9777-9986-f41f-3f3a4f85d64c@rasmusvillemoes.dk>
-Date:   Sat, 22 Feb 2020 01:28:25 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.1
+        Fri, 21 Feb 2020 19:28:52 -0500
+Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
+        by userp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 01M0IJ9o062366;
+        Sat, 22 Feb 2020 00:28:30 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
+ : subject : message-id : references : mime-version : content-type :
+ in-reply-to; s=corp-2020-01-29;
+ bh=/VPVeh1c+6mc9B9FJQZVdoDMBgYy/1D1NNm9h5BUePQ=;
+ b=w/v2PiDCjJ37v8mFyABwCCdqxpL2+e7giVrv7yNq1kYmANdP5xf4oPmNaRFaLEy0Ys9v
+ 0UKiHeccK9N/EgPGv037qg612gn+gXMppnYvBDXnE1iEOuhm/x1MGHTCq74/RCrgJZzb
+ bHj95B2HTHriEc3BT2FZ8z2mHKLz0G0FnNGdMOTi5evKFxqGHMJctFEK3U1sT3egJNjk
+ xwH6W5msLM897b0g2gAj6jdl5PiZWlumUyGanjOshSX+yVQ4bnIPrDW92esF3+hHiI1Y
+ 6ZS3v2UdzzOUjcbDoeY0Cu3sG90PrmYFDiNszq3ve1Iy93s0JeVVBAtyVSJLP6Iv/5a5 Jg== 
+Received: from aserp3030.oracle.com (aserp3030.oracle.com [141.146.126.71])
+        by userp2120.oracle.com with ESMTP id 2y8ud1kj0x-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Sat, 22 Feb 2020 00:28:30 +0000
+Received: from pps.filterd (aserp3030.oracle.com [127.0.0.1])
+        by aserp3030.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 01M0STRT038398;
+        Sat, 22 Feb 2020 00:28:29 GMT
+Received: from aserv0122.oracle.com (aserv0122.oracle.com [141.146.126.236])
+        by aserp3030.oracle.com with ESMTP id 2y8udg7t2h-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Sat, 22 Feb 2020 00:28:29 +0000
+Received: from abhmp0008.oracle.com (abhmp0008.oracle.com [141.146.116.14])
+        by aserv0122.oracle.com (8.14.4/8.14.4) with ESMTP id 01M0SNgV005254;
+        Sat, 22 Feb 2020 00:28:23 GMT
+Received: from localhost (/10.145.179.117)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Fri, 21 Feb 2020 16:28:22 -0800
+Date:   Fri, 21 Feb 2020 16:28:21 -0800
+From:   "Darrick J. Wong" <darrick.wong@oracle.com>
+To:     ira.weiny@intel.com
+Cc:     linux-kernel@vger.kernel.org,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Dave Chinner <david@fromorbit.com>,
+        Christoph Hellwig <hch@lst.de>,
+        "Theodore Y. Ts'o" <tytso@mit.edu>, Jan Kara <jack@suse.cz>,
+        linux-ext4@vger.kernel.org, linux-xfs@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org
+Subject: Re: [PATCH V4 06/13] fs/xfs: Create function xfs_inode_enable_dax()
+Message-ID: <20200222002821.GD9506@magnolia>
+References: <20200221004134.30599-1-ira.weiny@intel.com>
+ <20200221004134.30599-7-ira.weiny@intel.com>
 MIME-Version: 1.0
-In-Reply-To: <20200221163334.w7pocmbbw4ymimlc@pengutronix.de>
-Content-Type: text/plain; charset=windows-1252
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200221004134.30599-7-ira.weiny@intel.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9538 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 spamscore=0 mlxscore=0 adultscore=0
+ mlxlogscore=999 malwarescore=0 bulkscore=0 suspectscore=1 phishscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2001150001
+ definitions=main-2002220000
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9538 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 lowpriorityscore=0 malwarescore=0
+ suspectscore=1 bulkscore=0 spamscore=0 priorityscore=1501 phishscore=0
+ impostorscore=0 mlxlogscore=999 clxscore=1015 adultscore=0 mlxscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2001150001
+ definitions=main-2002220000
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 21/02/2020 17.33, Uwe Kleine-König wrote:
-> On Fri, Feb 21, 2020 at 05:27:49PM +0200, Andy Shevchenko wrote:
->> On Fri, Feb 21, 2020 at 4:54 PM Uwe Kleine-König
->> <u.kleine-koenig@pengutronix.de> wrote:
->>> On Fri, Feb 21, 2020 at 10:57:23AM +0200, Andy Shevchenko wrote:
->>>> The commit 885e68e8b7b1 ("kernel.h: update comment about simple_strto<foo>()
->>>> functions") updated a comment regard to simple_strto<foo>() functions, but
->>>> missed similar change in the vsprintf.c module.
->>>>
->>>> Update comments in vsprintf.c as well for simple_strto<foo>() functions.
->>
->> ...
->>
->>>> - * This function is obsolete. Please use kstrtoull instead.
->>>> + * This function has caveats. Please use kstrtoull instead.
->>
->>> I wonder if we instead want to create a set of functions that is
->>> versatile enough to cover kstrtoull and simple_strtoull. i.e. fix the
->>> rounding problems (that are the caveats, right?) and as calling
->>> convention use an errorvalued int return + an output-parameter of the
->>> corresponding type.
->>
->> It wouldn't be possible to apply same rules to both. They both are
->> part of existing ABI.
+On Thu, Feb 20, 2020 at 04:41:27PM -0800, ira.weiny@intel.com wrote:
+> From: Ira Weiny <ira.weiny@intel.com>
 > 
-> The idea is to creat a sane set of functions, then convert all users to
-> the sane one and only then strip the strange functions away. (Userspace)
-> ABI isn't affected, is it?
+> xfs_inode_supports_dax() should reflect if the inode can support DAX not
+> that it is enabled for DAX.
+> 
+> Change the use of xfs_inode_supports_dax() to reflect only if the inode
+> and underlying storage support dax.
+> 
+> Add a new function xfs_inode_enable_dax() which reflects if the inode
 
-There are lots of in-tree users of all these interfaces, converting them
-all is never going to happen. And yes, there are also kstrtox_user
-variants which are definitely part of ABI (more or less the whole reason
-kstrox accepts a single trailing newline but is otherwise rather strict
-is so it can parse stuff that is echo'd to a sysfs/procfs/... file).
+Heavily into bikeshedding here, but "enable" sounds like a verb, but
+this function doesn't actually turn dax on for a file, it merely decides
+if we /should/ turn it on.
 
-But, one can at least try to unify the underlying integer parsing, and
-provide knobs for users (meaning other parts of the kernel) to decide
-how lax or strict to be in a given situation. Based on an idea from
-Alexey Dobriyan of creating a single type-generic parser, I did that a
-couple of years ago. It rebased pretty cleanly, so if anyone wants to
-take a look:
+xfs_inode_wants_dax() ?
 
-https://github.com/Villemoes/linux/tree/parse-integer
+--D
 
-There's certainly more to do, but just doing all kstrtox() in terms of
-parse_integer() seems to reduce vmlinux size. Next steps would be the
-simple_strtox family, which more or less just need PARSE_INTEGER_WRAP
-AFAICT.
-
-And stuff like strtoul_lenient in kernel/sysctl.c is an example of a
-caller that wants to specify the laxness of the parsing (no overflow
-allowed, so simple_* doesn't cut it, but we're parsing a string where we
-might want to continue after the current number, so kstrtox is too
-strict in terms of what trailers are allowed).
-
-Rasmus
+> should be enabled for DAX.
+> 
+> Signed-off-by: Ira Weiny <ira.weiny@intel.com>
+> 
+> ---
+> Changes from v3:
+> 	Update functions and names to be more clear
+> 	Update commit message
+> 	Merge with
+> 		'fs/xfs: Clean up DAX support check'
+> 		don't allow IS_DAX() on a directory
+> 		use STATIC macro for static
+> 		make xfs_inode_supports_dax() static
+> ---
+>  fs/xfs/xfs_iops.c | 25 +++++++++++++++++++------
+>  1 file changed, 19 insertions(+), 6 deletions(-)
+> 
+> diff --git a/fs/xfs/xfs_iops.c b/fs/xfs/xfs_iops.c
+> index 81f2f93caec0..ff711efc5247 100644
+> --- a/fs/xfs/xfs_iops.c
+> +++ b/fs/xfs/xfs_iops.c
+> @@ -1237,19 +1237,18 @@ static const struct inode_operations xfs_inline_symlink_inode_operations = {
+>  };
+>  
+>  /* Figure out if this file actually supports DAX. */
+> -static bool
+> +STATIC bool
+>  xfs_inode_supports_dax(
+>  	struct xfs_inode	*ip)
+>  {
+>  	struct xfs_mount	*mp = ip->i_mount;
+>  
+>  	/* Only supported on non-reflinked files. */
+> -	if (!S_ISREG(VFS_I(ip)->i_mode) || xfs_is_reflink_inode(ip))
+> +	if (xfs_is_reflink_inode(ip))
+>  		return false;
+>  
+> -	/* DAX mount option or DAX iflag must be set. */
+> -	if (!(mp->m_flags & XFS_MOUNT_DAX) &&
+> -	    !(ip->i_d.di_flags2 & XFS_DIFLAG2_DAX))
+> +	/* Only supported on regular files. */
+> +	if (!S_ISREG(VFS_I(ip)->i_mode))
+>  		return false;
+>  
+>  	/* Block size must match page size */
+> @@ -1260,6 +1259,20 @@ xfs_inode_supports_dax(
+>  	return xfs_inode_buftarg(ip)->bt_daxdev != NULL;
+>  }
+>  
+> +STATIC bool
+> +xfs_inode_enable_dax(
+> +	struct xfs_inode *ip)
+> +{
+> +	if (!xfs_inode_supports_dax(ip))
+> +		return false;
+> +
+> +	if (ip->i_d.di_flags2 & XFS_DIFLAG2_DAX)
+> +		return true;
+> +	if (ip->i_mount->m_flags & XFS_MOUNT_DAX)
+> +		return true;
+> +	return false;
+> +}
+> +
+>  STATIC void
+>  xfs_diflags_to_iflags(
+>  	struct inode		*inode,
+> @@ -1278,7 +1291,7 @@ xfs_diflags_to_iflags(
+>  		inode->i_flags |= S_SYNC;
+>  	if (flags & XFS_DIFLAG_NOATIME)
+>  		inode->i_flags |= S_NOATIME;
+> -	if (xfs_inode_supports_dax(ip))
+> +	if (xfs_inode_enable_dax(ip))
+>  		inode->i_flags |= S_DAX;
+>  }
+>  
+> -- 
+> 2.21.0
+> 
