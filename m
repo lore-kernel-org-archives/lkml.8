@@ -5,38 +5,38 @@ X-Spam-Level:
 X-Spam-Status: No, score=-14.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1D1E3C35672
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 708B3C35674
 	for <linux-kernel@archiver.kernel.org>; Sat, 22 Feb 2020 06:05:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E85EC2071E
-	for <linux-kernel@archiver.kernel.org>; Sat, 22 Feb 2020 06:05:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 480FB2071E
+	for <linux-kernel@archiver.kernel.org>; Sat, 22 Feb 2020 06:05:57 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nifty.com header.i=@nifty.com header.b="ymyB8kZz"
+	dkim=pass (2048-bit key) header.d=nifty.com header.i=@nifty.com header.b="aorvtRol"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727025AbgBVGFy (ORCPT
+        id S1727105AbgBVGFz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 22 Feb 2020 01:05:54 -0500
-Received: from conuserg-11.nifty.com ([210.131.2.78]:42370 "EHLO
+        Sat, 22 Feb 2020 01:05:55 -0500
+Received: from conuserg-11.nifty.com ([210.131.2.78]:42424 "EHLO
         conuserg-11.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726189AbgBVGFx (ORCPT
+        with ESMTP id S1726578AbgBVGFy (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 22 Feb 2020 01:05:53 -0500
+        Sat, 22 Feb 2020 01:05:54 -0500
 Received: from grover.flets-west.jp (softbank126093102113.bbtec.net [126.93.102.113]) (authenticated)
-        by conuserg-11.nifty.com with ESMTP id 01M64cSJ007264;
-        Sat, 22 Feb 2020 15:04:38 +0900
-DKIM-Filter: OpenDKIM Filter v2.10.3 conuserg-11.nifty.com 01M64cSJ007264
+        by conuserg-11.nifty.com with ESMTP id 01M64cSL007264;
+        Sat, 22 Feb 2020 15:04:40 +0900
+DKIM-Filter: OpenDKIM Filter v2.10.3 conuserg-11.nifty.com 01M64cSL007264
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
-        s=dec2015msa; t=1582351479;
-        bh=tZ/Fv+Hm02lylfP8gzd4irqcz0a8ojTD90nzr+or0w0=;
-        h=From:To:Cc:Subject:Date:From;
-        b=ymyB8kZzlnIkSU9Y+ArJQ/rpOTO4Svg1KDeKqwH4avIj0rPAbso4qj04CwHxfUsGL
-         ZClkNY51eu/GmOMo+C/V5Qj5wn9ljIG1eCmgLPkrSJn3C6kHZxQdDmVnECEdZi27Um
-         tRlMqOfIua7AxijHT0Go2VxdjiHQA5o9L/M9WoNzaGm8WhfBF6onIM+Jp6rMMBXyr9
-         w5DnzTa5fxZS1HvV9mKdh/wgriqsYLry4SYoRODSaEC0LXR5a00uXq9CgQk4UUZR47
-         /6CDH6GRJBaTstM23L2uKh2kCA4KnaJhS1W9F0icZxL3LnbU5Zfczvjo9X7Q1qVLPf
-         ca3YQ+kRsV/9Q==
+        s=dec2015msa; t=1582351481;
+        bh=oDf9qz+GZWAPWYmHoFftPILijL8CHYn9USMXC9ZrbE8=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=aorvtRolf0+JAnTTtXq8CQ3Ht2LYQ+fuE3QYJ+N30aFtxuCa0tSJfmCa+dVyr/gxX
+         CSyctQ50hP9L3j/JsytSH999TqGzNmczoqqYlGEUXX6mwb5M/3Cu2pNOnFMpZxfSk9
+         lGn6L6k9tIkMgbulGh3R6TyzTwJJQYf7mIl7crbD5cHIykiQYHRjHMxA89E4J2bxED
+         CFdnEGy/epKX17gh6SpccBuAf+t20eKFHjDAFbbtBmUE7uRWBJzUdSTCG5OBi8uNgV
+         01a6ubOIhWnuEQXmMYKEMu/6QuXoLsANS6kejVrH66VyawQLipoYZsPzsvIicYFLaK
+         g53w0HXuTIVbg==
 X-Nifty-SrcIP: [126.93.102.113]
 From:   Masahiro Yamada <yamada.masahiro@socionext.com>
 To:     Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org
@@ -45,169 +45,137 @@ Cc:     linux-kernel@vger.kernel.org,
         "David S. Miller" <davem@davemloft.net>,
         Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
         Mark Rutland <mark.rutland@arm.com>,
         Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
-        linux-arm-kernel@lists.infradead.org
-Subject: [PATCH v2 1/3] dt-bindings: arm: Convert UniPhier board/SoC bindings to json-schema
-Date:   Sat, 22 Feb 2020 15:04:33 +0900
-Message-Id: <20200222060435.971-1-yamada.masahiro@socionext.com>
+        linux-arm-kernel@lists.infradead.org, linux-gpio@vger.kernel.org
+Subject: [PATCH v2 3/3] dt-bingings: pinctrl: Convert UniPhier pin controller to json-schema
+Date:   Sat, 22 Feb 2020 15:04:35 +0900
+Message-Id: <20200222060435.971-3-yamada.masahiro@socionext.com>
 X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20200222060435.971-1-yamada.masahiro@socionext.com>
+References: <20200222060435.971-1-yamada.masahiro@socionext.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Convert the Socionext UniPhier board/SoC binding to DT schema format.
+Convert the UniPhier pin controller binding to DT schema format.
 
 Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
 ---
 
-Changes in v2:
-  - Remove 'examples' because examples are fold into /example-0 node
-    and there is no way to meet
-      $nodename:
-         const: '/'
+In the original .txt file, there is a description:
+The UniPhier pinctrl should be a subnode of a "syscon" compatible node
 
- .../bindings/arm/socionext/uniphier.txt       | 47 --------------
- .../bindings/arm/socionext/uniphier.yaml      | 61 +++++++++++++++++++
+I did not figure out how to represent (or check) it in dt-schema.
+I just moved it to a comment line in 'examples'.
+If there is a better way, please let me know.
+
+
+Changes in v2: None
+
+ .../pinctrl/socionext,uniphier-pinctrl.txt    | 27 ------------
+ .../pinctrl/socionext,uniphier-pinctrl.yaml   | 42 +++++++++++++++++++
  MAINTAINERS                                   |  2 +-
- 3 files changed, 62 insertions(+), 48 deletions(-)
- delete mode 100644 Documentation/devicetree/bindings/arm/socionext/uniphier.txt
- create mode 100644 Documentation/devicetree/bindings/arm/socionext/uniphier.yaml
+ 3 files changed, 43 insertions(+), 28 deletions(-)
+ delete mode 100644 Documentation/devicetree/bindings/pinctrl/socionext,uniphier-pinctrl.txt
+ create mode 100644 Documentation/devicetree/bindings/pinctrl/socionext,uniphier-pinctrl.yaml
 
-diff --git a/Documentation/devicetree/bindings/arm/socionext/uniphier.txt b/Documentation/devicetree/bindings/arm/socionext/uniphier.txt
+diff --git a/Documentation/devicetree/bindings/pinctrl/socionext,uniphier-pinctrl.txt b/Documentation/devicetree/bindings/pinctrl/socionext,uniphier-pinctrl.txt
 deleted file mode 100644
-index b3ed1033740e..000000000000
---- a/Documentation/devicetree/bindings/arm/socionext/uniphier.txt
+index 8173b12138ad..000000000000
+--- a/Documentation/devicetree/bindings/pinctrl/socionext,uniphier-pinctrl.txt
 +++ /dev/null
-@@ -1,47 +0,0 @@
--Socionext UniPhier SoC family
-------------------------------
+@@ -1,27 +0,0 @@
+-UniPhier SoCs pin controller
 -
--Required properties in the root node:
--  - compatible: should contain board and SoC compatible strings
+-Required properties:
+-- compatible: should be one of the following:
+-    "socionext,uniphier-ld4-pinctrl"  - for LD4 SoC
+-    "socionext,uniphier-pro4-pinctrl" - for Pro4 SoC
+-    "socionext,uniphier-sld8-pinctrl" - for sLD8 SoC
+-    "socionext,uniphier-pro5-pinctrl" - for Pro5 SoC
+-    "socionext,uniphier-pxs2-pinctrl" - for PXs2 SoC
+-    "socionext,uniphier-ld6b-pinctrl" - for LD6b SoC
+-    "socionext,uniphier-ld11-pinctrl" - for LD11 SoC
+-    "socionext,uniphier-ld20-pinctrl" - for LD20 SoC
+-    "socionext,uniphier-pxs3-pinctrl" - for PXs3 SoC
 -
--SoC and board compatible strings:
--  (sorted chronologically)
--
--  - LD4 SoC:  "socionext,uniphier-ld4"
--      - Reference Board: "socionext,uniphier-ld4-ref"
--
--  - Pro4 SoC: "socionext,uniphier-pro4"
--      - Reference Board: "socionext,uniphier-pro4-ref"
--      - Ace Board:       "socionext,uniphier-pro4-ace"
--      - Sanji Board:     "socionext,uniphier-pro4-sanji"
--
--  - sLD8 SoC: "socionext,uniphier-sld8"
--      - Reference Board: "socionext,uniphier-sld8-ref"
--
--  - PXs2 SoC: "socionext,uniphier-pxs2"
--      - Gentil Board:    "socionext,uniphier-pxs2-gentil"
--      - Vodka Board:     "socionext,uniphier-pxs2-vodka"
--
--  - LD6b SoC: "socionext,uniphier-ld6b"
--      - Reference Board: "socionext,uniphier-ld6b-ref"
--
--  - LD11 SoC: "socionext,uniphier-ld11"
--      - Reference Board: "socionext,uniphier-ld11-ref"
--      - Global Board:    "socionext,uniphier-ld11-global"
--
--  - LD20 SoC: "socionext,uniphier-ld20"
--      - Reference Board: "socionext,uniphier-ld20-ref"
--      - Global Board:    "socionext,uniphier-ld20-global"
--
--  - PXs3 SoC: "socionext,uniphier-pxs3"
--      - Reference Board: "socionext,uniphier-pxs3-ref"
+-Note:
+-The UniPhier pinctrl should be a subnode of a "syscon" compatible node.
 -
 -Example:
+-	soc-glue@5f800000 {
+-		compatible = "socionext,uniphier-pro4-soc-glue",
+-			     "simple-mfd", "syscon";
+-		reg = <0x5f800000 0x2000>;
 -
--/dts-v1/;
--
--/ {
--	compatible = "socionext,uniphier-ld20-ref", "socionext,uniphier-ld20";
--
--	...
--};
-diff --git a/Documentation/devicetree/bindings/arm/socionext/uniphier.yaml b/Documentation/devicetree/bindings/arm/socionext/uniphier.yaml
+-		pinctrl: pinctrl {
+-			compatible = "socionext,uniphier-pro4-pinctrl";
+-		};
+-	};
+diff --git a/Documentation/devicetree/bindings/pinctrl/socionext,uniphier-pinctrl.yaml b/Documentation/devicetree/bindings/pinctrl/socionext,uniphier-pinctrl.yaml
 new file mode 100644
-index 000000000000..65ad6d8a3c99
+index 000000000000..f8a93d8680f9
 --- /dev/null
-+++ b/Documentation/devicetree/bindings/arm/socionext/uniphier.yaml
-@@ -0,0 +1,61 @@
++++ b/Documentation/devicetree/bindings/pinctrl/socionext,uniphier-pinctrl.yaml
+@@ -0,0 +1,42 @@
 +# SPDX-License-Identifier: GPL-2.0-only OR BSD-2-Clause
 +%YAML 1.2
 +---
-+$id: http://devicetree.org/schemas/arm/socionext/uniphier.yaml#
++$id: http://devicetree.org/schemas/pinctrl/socionext,uniphier-pinctrl.yaml#
 +$schema: http://devicetree.org/meta-schemas/core.yaml#
 +
-+title: Socionext UniPhier platform device tree bindings
++title: UniPhier SoCs pin controller
 +
 +maintainers:
 +  - Masahiro Yamada <yamada.masahiro@socionext.com>
 +
 +properties:
 +  $nodename:
-+    const: /
++    pattern: "pinctrl"
++
 +  compatible:
-+    oneOf:
-+      - description: LD4 SoC boards
-+        items:
-+          - enum:
-+            - socionext,uniphier-ld4-ref
-+          - const: socionext,uniphier-ld4
-+      - description: Pro4 SoC boards
-+        items:
-+          - enum:
-+            - socionext,uniphier-pro4-ace
-+            - socionext,uniphier-pro4-ref
-+            - socionext,uniphier-pro4-sanji
-+          - const: socionext,uniphier-pro4
-+      - description: sLD8 SoC boards
-+        items:
-+          - enum:
-+            - socionext,uniphier-sld8-ref
-+          - const: socionext,uniphier-sld8
-+      - description: PXs2 SoC boards
-+        items:
-+          - enum:
-+            - socionext,uniphier-pxs2-gentil
-+            - socionext,uniphier-pxs2-vodka
-+          - const: socionext,uniphier-pxs2
-+      - description: LD6b SoC boards
-+        items:
-+          - enum:
-+            - socionext,uniphier-ld6b-ref
-+          - const: socionext,uniphier-ld6b
-+      - description: LD11 SoC boards
-+        items:
-+          - enum:
-+            - socionext,uniphier-ld11-global
-+            - socionext,uniphier-ld11-ref
-+          - const: socionext,uniphier-ld11
-+      - description: LD20 SoC boards
-+        items:
-+          - enum:
-+            - socionext,uniphier-ld20-global
-+            - socionext,uniphier-ld20-ref
-+          - const: socionext,uniphier-ld20
-+      - description: PXs3 SoC boards
-+        items:
-+          - enum:
-+            - socionext,uniphier-pxs3-ref
-+          - const: socionext,uniphier-pxs3
++    enum:
++      - socionext,uniphier-ld4-pinctrl
++      - socionext,uniphier-pro4-pinctrl
++      - socionext,uniphier-sld8-pinctrl
++      - socionext,uniphier-pro5-pinctrl
++      - socionext,uniphier-pxs2-pinctrl
++      - socionext,uniphier-ld6b-pinctrl
++      - socionext,uniphier-ld11-pinctrl
++      - socionext,uniphier-ld20-pinctrl
++      - socionext,uniphier-pxs3-pinctrl
++
++required:
++  - compatible
++
++examples:
++  - |
++    // The UniPhier pinctrl should be a subnode of a "syscon" compatible node.
++
++    soc-glue@5f800000 {
++        compatible = "socionext,uniphier-pro4-soc-glue", "simple-mfd", "syscon";
++        reg = <0x5f800000 0x2000>;
++
++        pinctrl: pinctrl {
++            compatible = "socionext,uniphier-pro4-pinctrl";
++        };
++    };
 diff --git a/MAINTAINERS b/MAINTAINERS
-index 4beb8dc4c7eb..93ccb6708ae9 100644
+index 3cb4c8a9107d..920bef1f5308 100644
 --- a/MAINTAINERS
 +++ b/MAINTAINERS
-@@ -2546,7 +2546,7 @@ M:	Masahiro Yamada <yamada.masahiro@socionext.com>
- L:	linux-arm-kernel@lists.infradead.org (moderated for non-subscribers)
- T:	git git://git.kernel.org/pub/scm/linux/kernel/git/masahiroy/linux-uniphier.git
+@@ -2548,7 +2548,7 @@ T:	git git://git.kernel.org/pub/scm/linux/kernel/git/masahiroy/linux-uniphier.gi
  S:	Maintained
--F:	Documentation/devicetree/bindings/arm/socionext/uniphier.txt
-+F:	Documentation/devicetree/bindings/arm/socionext/uniphier.yaml
- F:	Documentation/devicetree/bindings/gpio/gpio-uniphier.txt
- F:	Documentation/devicetree/bindings/pinctrl/socionext,uniphier-pinctrl.txt
+ F:	Documentation/devicetree/bindings/arm/socionext/uniphier.yaml
+ F:	Documentation/devicetree/bindings/gpio/socionext,uniphier-gpio.yaml
+-F:	Documentation/devicetree/bindings/pinctrl/socionext,uniphier-pinctrl.txt
++F:	Documentation/devicetree/bindings/pinctrl/socionext,uniphier-pinctrl.yaml
  F:	arch/arm/boot/dts/uniphier*
+ F:	arch/arm/include/asm/hardware/cache-uniphier.h
+ F:	arch/arm/mach-uniphier/
 -- 
 2.17.1
 
