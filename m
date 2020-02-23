@@ -3,93 +3,96 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=no
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D5E0CC35671
-	for <linux-kernel@archiver.kernel.org>; Sun, 23 Feb 2020 10:20:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ECBA5C35673
+	for <linux-kernel@archiver.kernel.org>; Sun, 23 Feb 2020 10:34:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id ABBE6208C3
-	for <linux-kernel@archiver.kernel.org>; Sun, 23 Feb 2020 10:20:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C34B6217F4
+	for <linux-kernel@archiver.kernel.org>; Sun, 23 Feb 2020 10:34:05 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727227AbgBWKUv (ORCPT
+        id S1727104AbgBWKd0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 23 Feb 2020 05:20:51 -0500
-Received: from mail-a09.ithnet.com ([217.64.83.104]:59577 "EHLO
-        mail-a09.ithnet.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725980AbgBWKUt (ORCPT
+        Sun, 23 Feb 2020 05:33:26 -0500
+Received: from jabberwock.ucw.cz ([46.255.230.98]:58620 "EHLO
+        jabberwock.ucw.cz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725980AbgBWKd0 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 23 Feb 2020 05:20:49 -0500
-X-Greylist: delayed 401 seconds by postgrey-1.27 at vger.kernel.org; Sun, 23 Feb 2020 05:20:48 EST
-Received: (qmail 8830 invoked by uid 0); 23 Feb 2020 10:14:06 -0000
-Received: from skraw.ml@ithnet.com by mail-a09 
- (Processed in 2.902792 secs); 23 Feb 2020 10:14:06 -0000
-X-Virus-Status: No
-X-ExecutableContent: No
-Received: from dialin014-sr.ithnet.com (HELO ithnet.com) (217.64.64.14)
-  by mail-a09.ithnet.com with ESMTPS (ECDHE-RSA-AES256-GCM-SHA384 encrypted); 23 Feb 2020 10:14:03 -0000
-X-Sender-Authentication: SMTP AUTH verified <skraw.ml@ithnet.com>
-Date:   Sun, 23 Feb 2020 11:14:02 +0100
-From:   Stephan von Krawczynski <skraw.ml@ithnet.com>
-To:     linux-kernel@vger.kernel.org
-Subject: General Discussion about GPLness
-Message-ID: <20200223111402.189c8739@ithnet.com>
-Organization: ith Kommunikationstechnik GmbH
-X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        Sun, 23 Feb 2020 05:33:26 -0500
+Received: by jabberwock.ucw.cz (Postfix, from userid 1017)
+        id 991AF1C036F; Sun, 23 Feb 2020 11:33:24 +0100 (CET)
+Date:   Sun, 23 Feb 2020 11:33:23 +0100
+From:   Pavel Machek <pavel@denx.de>
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     linux-kernel@vger.kernel.org, stable@vger.kernel.org,
+        Jia-Ju Bai <baijiaju1990@gmail.com>,
+        Felipe Balbi <balbi@kernel.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: Re: [PATCH 4.19 032/191] usb: gadget: udc: fix possible
+ sleep-in-atomic-context bugs in gr_probe()
+Message-ID: <20200223103323.GD14067@amd>
+References: <20200221072250.732482588@linuxfoundation.org>
+ <20200221072255.095987384@linuxfoundation.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: multipart/signed; micalg=pgp-sha1;
+        protocol="application/pgp-signature"; boundary="9dgjiU4MmWPVapMU"
+Content-Disposition: inline
+In-Reply-To: <20200221072255.095987384@linuxfoundation.org>
+User-Agent: Mutt/1.5.23 (2014-03-12)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello all,
 
-you may have already heard about it or not (several times in the past),
-non-kernel devices run into a symbol export problem as soon as something is
-only exported GPL from the kernel.
-Currently there is a discussion regarding zfs using this call chain:
+--9dgjiU4MmWPVapMU
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-vdev_bio_associate_blkg (zfs) -> blkg_tryget (kernel) -> percpu_ref_tryget
-(kernel) -> rcu_read_unlock (kernel) -> __rcu_read_unlock (kernel)
+Hi!
 
-where __rcu_read_[lock|unlock] is a GPL symbol now used by (not GPL exported)
-percpu_ref_tryget.
+> From: Jia-Ju Bai <baijiaju1990@gmail.com>
+>=20
+> [ Upstream commit 9c1ed62ae0690dfe5d5e31d8f70e70a95cb48e52 ]
+>=20
+> The driver may sleep while holding a spinlock.
 
-That this popped up (again) made me think a bit more general about the issue.
-And I do wonder if this rather ideologic problem is on the right track
-currently. Because what the kernel tries to do with the export GPL symbol
-stuff is to prevent any other licensed software from _using_ it in _runtime_.
-It does not try to prevent use/copy of the source code inside another non-gpl
-project.
-And I do think that this is not the intention of GPL. If it were, then 100% of
-all mobile phones on this planet are illegal. All of them use GPL software
-from non-gpl software, be it kernel modules or apps - and I see no difference
-in the two. The constructed difference between kernel mode software and
-user-space software is pure ideology. Because during runtime everything is
-just call-chained.
-Which means if you fopen() a file in user-space it of course uses GPL symbols
-down in the chain somewhere. The contents of the opened file are not
-heaven-sent.
-If you/we follow the current completely ideology-driven GPL strategy then I am
-all for completely giving up this whole project. In real world you simply
-cannot use such a piece of software. The success of linux during the last
-years (i.e. decade) is not based on the pure GPL strategy, but on the
-successful interaction between linux and non-GPL software.
-Just think of the billions of smartphones all using a non-gpl firmware
-(underneath, and there is no GPL version at all), the kernel (with non-gpl
-modules) and apps (quite some of which are non-gpl).
-This is only one prominent example, but there are lots of others.
-In the end it all sums up to one simple question:
-Can one _use_ GPL software during runtime as a base for own projects of any
-license type or not? We are not talking about _copying_ gpl code, we are
-talking about runtime use.
-If runtime use is generally allowed, then the export gpl symbol stuff inside
-the kernel code is nonsense. Because to use the kernel you must be allowed to
-call it, no matter from where.
-Hit me.
+True, but you can't just fix that by removing the locking.
 
--- 
-Regards,
-Stephan
+> +++ b/drivers/usb/gadget/udc/gr_udc.c
+> @@ -2180,8 +2180,6 @@ static int gr_probe(struct platform_device *pdev)
+>  		return -ENOMEM;
+>  	}
+> =20
+> -	spin_lock(&dev->lock);
+> -
+>  	/* Inside lock so that no gadget can use this udc until probe is done */
+>  	retval =3D usb_add_gadget_udc(dev->dev, &dev->gadget);
+>  	if (retval) {
+
+As this comment tries to explain. It is possible that the comment can
+just be removed, but it looks like the code needs to be rearranged so
+that rest of system does not see partly-initialized device.
+
+Best regards,
+								Pavel
+--=20
+(english) http://www.livejournal.com/~pavelmachek
+(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blo=
+g.html
+
+--9dgjiU4MmWPVapMU
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1
+
+iEYEARECAAYFAl5SVPMACgkQMOfwapXb+vLO7wCePfBiWkxUG6iwBB+/Zrtrmnaq
+9GsAnibVRvR1tYRkGwmR5Die/TAMKTeg
+=eY8A
+-----END PGP SIGNATURE-----
+
+--9dgjiU4MmWPVapMU--
