@@ -2,154 +2,207 @@ Return-Path: <SRS0=SnAt=4L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B4C40C35670
-	for <linux-kernel@archiver.kernel.org>; Sun, 23 Feb 2020 06:08:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8CC79C35670
+	for <linux-kernel@archiver.kernel.org>; Sun, 23 Feb 2020 06:34:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 864D3206ED
-	for <linux-kernel@archiver.kernel.org>; Sun, 23 Feb 2020 06:08:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 52CEF208C3
+	for <linux-kernel@archiver.kernel.org>; Sun, 23 Feb 2020 06:34:52 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726359AbgBWGIj (ORCPT
+        id S1726416AbgBWGca (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 23 Feb 2020 01:08:39 -0500
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:26753 "EHLO
+        Sun, 23 Feb 2020 01:32:30 -0500
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:4968 "EHLO
         mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725978AbgBWGIj (ORCPT
+        by vger.kernel.org with ESMTP id S1726028AbgBWGc3 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 23 Feb 2020 01:08:39 -0500
-Received: from pps.filterd (m0098393.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 01N64rkU074664
-        for <linux-kernel@vger.kernel.org>; Sun, 23 Feb 2020 01:08:38 -0500
-Received: from e06smtp02.uk.ibm.com (e06smtp02.uk.ibm.com [195.75.94.98])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2yax36dbeg-1
+        Sun, 23 Feb 2020 01:32:29 -0500
+Received: from pps.filterd (m0098399.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 01N6T2m1053928
+        for <linux-kernel@vger.kernel.org>; Sun, 23 Feb 2020 01:32:29 -0500
+Received: from e06smtp03.uk.ibm.com (e06smtp03.uk.ibm.com [195.75.94.99])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2yb1b61k2s-1
         (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Sun, 23 Feb 2020 01:08:37 -0500
+        for <linux-kernel@vger.kernel.org>; Sun, 23 Feb 2020 01:32:28 -0500
 Received: from localhost
-        by e06smtp02.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        by e06smtp03.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
         for <linux-kernel@vger.kernel.org> from <parth@linux.ibm.com>;
-        Sun, 23 Feb 2020 06:08:35 -0000
-Received: from b06cxnps3074.portsmouth.uk.ibm.com (9.149.109.194)
-        by e06smtp02.uk.ibm.com (192.168.101.132) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        Sun, 23 Feb 2020 06:32:26 -0000
+Received: from b06cxnps4074.portsmouth.uk.ibm.com (9.149.109.196)
+        by e06smtp03.uk.ibm.com (192.168.101.133) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
         (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Sun, 23 Feb 2020 06:08:30 -0000
+        Sun, 23 Feb 2020 06:32:23 -0000
 Received: from d06av22.portsmouth.uk.ibm.com (d06av22.portsmouth.uk.ibm.com [9.149.105.58])
-        by b06cxnps3074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 01N68TJm40173634
+        by b06cxnps4074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 01N6WMKs45875242
         (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Sun, 23 Feb 2020 06:08:29 GMT
+        Sun, 23 Feb 2020 06:32:22 GMT
 Received: from d06av22.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 4BE604C052;
-        Sun, 23 Feb 2020 06:08:29 +0000 (GMT)
+        by IMSVA (Postfix) with ESMTP id 48A0F4C044;
+        Sun, 23 Feb 2020 06:32:22 +0000 (GMT)
 Received: from d06av22.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 760224C044;
-        Sun, 23 Feb 2020 06:08:24 +0000 (GMT)
+        by IMSVA (Postfix) with ESMTP id 3F6134C040;
+        Sun, 23 Feb 2020 06:32:16 +0000 (GMT)
 Received: from localhost.localdomain (unknown [9.102.3.81])
         by d06av22.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Sun, 23 Feb 2020 06:08:24 +0000 (GMT)
-Subject: Re: [PATCH v4 0/5] remove runnable_load_avg and improve
- group_classify
+        Sun, 23 Feb 2020 06:32:15 +0000 (GMT)
+Subject: Re: [PATCH v4 2/5] sched/numa: Replace runnable_load_avg by load_avg
 To:     Vincent Guittot <vincent.guittot@linaro.org>, mingo@redhat.com,
         peterz@infradead.org, juri.lelli@redhat.com,
         dietmar.eggemann@arm.com, rostedt@goodmis.org, bsegall@google.com,
         mgorman@suse.de, linux-kernel@vger.kernel.org
 Cc:     pauld@redhat.com, valentin.schneider@arm.com, hdanton@sina.com
 References: <20200221132715.20648-1-vincent.guittot@linaro.org>
+ <20200221132715.20648-3-vincent.guittot@linaro.org>
 From:   Parth Shah <parth@linux.ibm.com>
-Date:   Sun, 23 Feb 2020 11:38:23 +0530
+Date:   Sun, 23 Feb 2020 12:02:14 +0530
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
  Thunderbird/60.4.0
 MIME-Version: 1.0
-In-Reply-To: <20200221132715.20648-1-vincent.guittot@linaro.org>
+In-Reply-To: <20200221132715.20648-3-vincent.guittot@linaro.org>
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
 X-TM-AS-GCONF: 00
-x-cbid: 20022306-0008-0000-0000-000003559290
+x-cbid: 20022306-0012-0000-0000-000003896EDC
 X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 20022306-0009-0000-0000-00004A76A812
-Message-Id: <a095f3ef-10d8-b58b-4d84-ac4b06fd91d1@linux.ibm.com>
+x-cbparentid: 20022306-0013-0000-0000-000021C60B57
+Message-Id: <c595c3be-2fbf-4cd3-5c58-7b5faa055d2f@linux.ibm.com>
 X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.572
  definitions=2020-02-22_08:2020-02-21,2020-02-22 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxscore=0 impostorscore=0
- bulkscore=0 spamscore=0 suspectscore=0 mlxlogscore=999 priorityscore=1501
- lowpriorityscore=0 clxscore=1015 phishscore=0 malwarescore=0 adultscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2001150001
- definitions=main-2002230052
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 spamscore=0 mlxscore=0
+ malwarescore=0 phishscore=0 mlxlogscore=999 lowpriorityscore=0 bulkscore=0
+ adultscore=0 impostorscore=0 clxscore=1015 priorityscore=1501
+ suspectscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2001150001 definitions=main-2002230054
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+
 
 On 2/21/20 6:57 PM, Vincent Guittot wrote:
-> This new version stays quite close to the previous one and should 
-> replace without problems the previous one that part of Mel's patchset:
-> https://lkml.org/lkml/2020/2/14/156
+> Similarly to what has been done for the normal load balancer, we can
+> replace runnable_load_avg by load_avg in numa load balancing and track the
+> other statistics like the utilization and the number of running tasks to
+> get to better view of the current state of a node.
 > 
-> NUMA load balancing is the last remaining piece of code that uses the 
-> runnable_load_avg of PELT to balance tasks between nodes. The normal
-> load_balance has replaced it by a better description of the current state
-> of the group of cpus.  The same policy can be applied to the numa
-> balancing.
+> Signed-off-by: Vincent Guittot <vincent.guittot@linaro.org>
+> Reviewed-by: "Dietmar Eggemann <dietmar.eggemann@arm.com>"
+> ---
+>  kernel/sched/fair.c | 102 ++++++++++++++++++++++++++++++--------------
+>  1 file changed, 70 insertions(+), 32 deletions(-)
 > 
-> Once unused, runnable_load_avg can be replaced by a simpler runnable_avg
-> signal that tracks the waiting time of tasks on rq. Currently, the state
-> of a group of CPUs is defined thanks to the number of running task and the
-> level of utilization of rq. But the utilization can be temporarly low
-> after the migration of a task whereas the rq is still overloaded with
-> tasks. In such case where tasks were competing for the rq, the
-> runnable_avg will stay high after the migration.
-> 
-> Some hackbench results:
-> 
-> - small arm64 dual quad cores system
-> hackbench -l (2560/#grp) -g #grp
-> 
-> grp    tip/sched/core         +patchset              improvement
-> 1       1,327(+/-10,06 %)     1,247(+/-5,45 %)       5,97 %
-> 4       1,250(+/- 2,55 %)     1,207(+/-2,12 %)       3,42 %
-> 8       1,189(+/- 1,47 %)     1,179(+/-1,93 %)       0,90 %
-> 16      1,221(+/- 3,25 %)     1,219(+/-2,44 %)       0,16 %						
-> 
-> - large arm64 2 nodes / 224 cores system
-> hackbench -l (256000/#grp) -g #grp
-> 
-> grp    tip/sched/core         +patchset              improvement
-> 1      14,197(+/- 2,73 %)     13,917(+/- 2,19 %)     1,98 %
-> 4       6,817(+/- 1,27 %)      6,523(+/-11,96 %)     4,31 %
-> 16      2,930(+/- 1,07 %)      2,911(+/- 1,08 %)     0,66 %
-> 32      2,735(+/- 1,71 %)      2,725(+/- 1,53 %)     0,37 %
-> 64      2,702(+/- 0,32 %)      2,717(+/- 1,07 %)    -0,53 %
-> 128     3,533(+/-14,66 %)     3,123(+/-12,47 %)     11,59 %
-> 256     3,918(+/-19,93 %)     3,390(+/- 5,93 %)     13,47 %
+> diff --git a/kernel/sched/fair.c b/kernel/sched/fair.c
+> index 27450c4ddc81..637f4eb47889 100644
+> --- a/kernel/sched/fair.c
+> +++ b/kernel/sched/fair.c
+> @@ -1473,38 +1473,35 @@ bool should_numa_migrate_memory(struct task_struct *p, struct page * page,
+>  	       group_faults_cpu(ng, src_nid) * group_faults(p, dst_nid) * 4;
+>  }
+>  
+> -static inline unsigned long cfs_rq_runnable_load_avg(struct cfs_rq *cfs_rq);
+> -
+> -static unsigned long cpu_runnable_load(struct rq *rq)
+> -{
+> -	return cfs_rq_runnable_load_avg(&rq->cfs);
+> -}
+> +/*
+> + * 'numa_type' describes the node at the moment of load balancing.
+> + */
+> +enum numa_type {
+> +	/* The node has spare capacity that can be used to run more tasks.  */
+> +	node_has_spare = 0,
+> +	/*
+> +	 * The node is fully used and the tasks don't compete for more CPU
+> +	 * cycles. Nevertheless, some tasks might wait before running.
+> +	 */
+> +	node_fully_busy,
+> +	/*
+> +	 * The node is overloaded and can't provide expected CPU cycles to all
+> +	 * tasks.
+> +	 */
+> +	node_overloaded
+> +};
+>  
+>  /* Cached statistics for all CPUs within a node */
+>  struct numa_stats {
+>  	unsigned long load;
+> -
+> +	unsigned long util;
+>  	/* Total compute capacity of CPUs on a node */
+>  	unsigned long compute_capacity;
+> +	unsigned int nr_running;
+> +	unsigned int weight;
+> +	enum numa_type node_type;
+>  };
+>  
+> -/*
+> - * XXX borrowed from update_sg_lb_stats
+> - */
+> -static void update_numa_stats(struct numa_stats *ns, int nid)
+> -{
+> -	int cpu;
+> -
+> -	memset(ns, 0, sizeof(*ns));
+> -	for_each_cpu(cpu, cpumask_of_node(nid)) {
+> -		struct rq *rq = cpu_rq(cpu);
+> -
+> -		ns->load += cpu_runnable_load(rq);
+> -		ns->compute_capacity += capacity_of(cpu);
+> -	}
+> -
+> -}
+> -
+>  struct task_numa_env {
+>  	struct task_struct *p;
+>  
+> @@ -1521,6 +1518,47 @@ struct task_numa_env {
+>  	int best_cpu;
+>  };
+>  
+> +static unsigned long cpu_load(struct rq *rq);
+> +static unsigned long cpu_util(int cpu);
+> +
+> +static inline enum
+> +numa_type numa_classify(unsigned int imbalance_pct,
+> +			 struct numa_stats *ns)
+> +{
+> +	if ((ns->nr_running > ns->weight) &&
+> +	    ((ns->compute_capacity * 100) < (ns->util * imbalance_pct)))
+> +		return node_overloaded;
+> +
+> +	if ((ns->nr_running < ns->weight) ||
+> +	    ((ns->compute_capacity * 100) > (ns->util * imbalance_pct)))
+> +		return node_has_spare;
+> +
+> +	return node_fully_busy;
+> +}
+
+
+I was pondering upon the possible cases of returning node_fully_busy here.
+
+It will return fully busy only when scaled util is exactly equal to
+capacity && ns->nr_running == ns->weight. From reading the patch-set, I
+failed to figure out the implications of it. Ideally, the tasks should
+neither be pulled to or pulled from this node. Is this what its use for?
+
+If yes, then should we return false when checking for load_too_imbalanced
+and found that env->dst_stats.node_type == node_fully_busy ?
 
 [...]
-
-I performed similar experiment on IBM POWER9 system with 2 nodes 44 cores
-system (22 per node)
-
-- hackbench -l (256000/#grp) -g #grp
-+-----+----------------+-------+
-| grp | tip/sched/core |  v4   |
-+-----+----------------+-------+
-|   1 |          76.97 | 76.31 |
-|   4 |          56.56 | 56.86 |
-|   8 |          54.23 | 54.25 |
-|  16 |          53.94 | 53.24 |
-|  32 |          54.10 | 54.01 |
-|  64 |          54.38 | 54.35 |
-| 128 |          55.11 | 55.08 |
-| 256 |          55.97 | 56.04 |
-| 512 |          54.81 |  55.5 |
-+-----+----------------+-------+
-- deviation in the result is very marginal ( < 1%)
-
-The results shows no changes with respect to the hackbench. I will do
-further benchmarking to see if any observable changes occurs.
-
+> @@ -1556,6 +1594,11 @@ static bool load_too_imbalanced(long src_load, long dst_load,
+>  	long orig_src_load, orig_dst_load;
+>  	long src_capacity, dst_capacity;
+>  
+> +
+> +	/* If dst node has spare capacity, there is no real load imbalance */
+> +	if (env->dst_stats.node_type == node_has_spare)
+> +		return false;
+[...]
 
 - Parth
 
