@@ -2,123 +2,130 @@ Return-Path: <SRS0=SnAt=4L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 14354C35670
-	for <linux-kernel@archiver.kernel.org>; Sun, 23 Feb 2020 03:54:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 81A4DC35671
+	for <linux-kernel@archiver.kernel.org>; Sun, 23 Feb 2020 04:04:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CE0AD2067D
-	for <linux-kernel@archiver.kernel.org>; Sun, 23 Feb 2020 03:54:26 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=sholland.org header.i=@sholland.org header.b="eH3O+Uht";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="GyuP/YCv"
+	by mail.kernel.org (Postfix) with ESMTP id 5F3AA2067D
+	for <linux-kernel@archiver.kernel.org>; Sun, 23 Feb 2020 04:04:20 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727166AbgBWDyZ (ORCPT
+        id S1727183AbgBWEEA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 22 Feb 2020 22:54:25 -0500
-Received: from new4-smtp.messagingengine.com ([66.111.4.230]:44435 "EHLO
-        new4-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726983AbgBWDyZ (ORCPT
+        Sat, 22 Feb 2020 23:04:00 -0500
+Received: from mail-ed1-f67.google.com ([209.85.208.67]:33787 "EHLO
+        mail-ed1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726983AbgBWED7 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 22 Feb 2020 22:54:25 -0500
-Received: from compute5.internal (compute5.nyi.internal [10.202.2.45])
-        by mailnew.nyi.internal (Postfix) with ESMTP id D30BD141E;
-        Sat, 22 Feb 2020 22:54:23 -0500 (EST)
-Received: from mailfrontend1 ([10.202.2.162])
-  by compute5.internal (MEProxy); Sat, 22 Feb 2020 22:54:23 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=sholland.org; h=
-        subject:to:cc:references:from:message-id:date:mime-version
-        :in-reply-to:content-type:content-transfer-encoding; s=fm2; bh=U
-        tQ4ZCxViuOYrkl32VfE2T3Vc4NBhu7cH68gein0hZ8=; b=eH3O+UhtcNk39WqG7
-        7++FXGFTX+4Z2PcXe3xjcwJsOODd4hxFQavwi0/mUwTIoxG9JBuAOmvs5HQJt990
-        QIgs1pI/FaTRd3ev0T4IL+aTvVevCQh7OFSFWKaP/KY94r+EE9D8RHkP90X8PxFC
-        oBLmR6XHSy54HBa/H14DQ7lYQ0J/Ydfp27ocjSVODTDsMZjhEZb10ccofds6YtNi
-        oaCndzsfnBoKSmoY5aRfQXCd4KQVTdffKFdF/fHmCrQVYwGy8OLV2MowadGuAqHn
-        YIqEA+IgJP8fQu88VichUhpYSu9m/bVcLBBWNImzHZQ0a/ObPiE6NmPeg6oxGd8W
-        K6ySQ==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-        messagingengine.com; h=cc:content-transfer-encoding:content-type
-        :date:from:in-reply-to:message-id:mime-version:references
-        :subject:to:x-me-proxy:x-me-proxy:x-me-sender:x-me-sender
-        :x-sasl-enc; s=fm2; bh=UtQ4ZCxViuOYrkl32VfE2T3Vc4NBhu7cH68gein0h
-        Z8=; b=GyuP/YCv6RLhHx+tybgAMZbAWarsj8Ii4R+BOab0Cw4iOfoJaifZtVc/6
-        5Fd1ZIpBORlLHlM5LdItWCbg4TqjJbGHEkASpjlrm+3gGzqj/BwAaZuqBOH0YZxx
-        XM34+pmlF976U4TwYysQcVWaDYNCrA75o/b6cM0a0sM3lmw8zmvMMPJXYX3Fpv4I
-        yYjTsV717azlzXouTRBaux6jcJMDECw07ZfLymaJ80a20T9FvQsSwAYXw9m6V4Vd
-        pFLgMxSD48vcLM7SooibOaf/fbhrA+Hv9V84TE7nSgj9bXlkh7UwPQfclWjLbRGz
-        K9IGLkbdVO+s8xbaE9j7kamSgE9ZQ==
-X-ME-Sender: <xms:avdRXiuiOsH3o0DSLtQ5DE1m9D-9YuzK8izj4qTuqAIMxZEQ3TuaEQ>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedugedrkeejgdeiudcutefuodetggdotefrodftvf
-    curfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfghnecu
-    uegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenuc
-    fjughrpefuvfhfhffkffgfgggjtgfgsehtjeertddtfeejnecuhfhrohhmpefurghmuhgv
-    lhcujfholhhlrghnugcuoehsrghmuhgvlhesshhhohhllhgrnhgurdhorhhgqeenucfkph
-    epjedtrddufeehrddugeekrdduhedunecuvehluhhsthgvrhfuihiivgeptdenucfrrghr
-    rghmpehmrghilhhfrhhomhepshgrmhhuvghlsehshhholhhlrghnugdrohhrgh
-X-ME-Proxy: <xmx:avdRXn51utho87JkjiCEVKsYSyaYUpq6F3T40tibOEYao28SHO_3Bw>
-    <xmx:avdRXjN-2TXP4CKuwakTE1BqjwcSJb_74ylsLvfxdtvCfcsv01adtw>
-    <xmx:avdRXrLkOPwWjIuYPLMnhvX-YnhSwzeK0a3As4WIj5J_T5iK2msXFw>
-    <xmx:b_dRXgzcsgknp-tn_3NniTdvYlav4zzWm91Lza6tirW8ghCKDJ3peg>
-Received: from [192.168.50.169] (70-135-148-151.lightspeed.stlsmo.sbcglobal.net [70.135.148.151])
-        by mail.messagingengine.com (Postfix) with ESMTPA id 4E23C3280059;
-        Sat, 22 Feb 2020 22:54:18 -0500 (EST)
-Subject: Re: [PATCH 5/8] ASoC: sun50i-codec-analog: Enable DAPM for headphone
- switch
-To:     Chen-Yu Tsai <wens@csie.org>
-Cc:     Mark Brown <broonie@kernel.org>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        Jaroslav Kysela <perex@perex.cz>,
-        Takashi Iwai <tiwai@suse.com>,
-        Maxime Ripard <mripard@kernel.org>,
-        Vasily Khoruzhick <anarsoul@gmail.com>,
-        Luca Weiss <luca@z3ntu.xyz>,
-        Linux-ALSA <alsa-devel@alsa-project.org>,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>
-References: <20200217021813.53266-1-samuel@sholland.org>
- <20200217021813.53266-6-samuel@sholland.org>
- <CAGb2v65v=wPJNxPfOzp2bcevk0qoDiW-+KFBO1MKHz6gE86DPQ@mail.gmail.com>
-From:   Samuel Holland <samuel@sholland.org>
-Message-ID: <f0037c9d-e3b5-3fa9-1f1a-d52d26de3ed7@sholland.org>
-Date:   Sat, 22 Feb 2020 21:54:17 -0600
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.2.2
+        Sat, 22 Feb 2020 23:03:59 -0500
+Received: by mail-ed1-f67.google.com with SMTP id r21so7647530edq.0;
+        Sat, 22 Feb 2020 20:03:58 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=BwEdqYydc8kdzSGTpNrqTMnSIQHLxOA+j53stoAmXIE=;
+        b=AYn5m+1G10wSaRo1IWwIUeGU9gyPu6w0eVfT8R5p4QCPQNgyiLRYXfqC/natGksJ3R
+         z4oA5oH2+OM7L02kX1Ug55K7cm0AhLmL33X0xe5E4augSwdECK7QkB2oleu/TrWIvt4a
+         0NbSbfMNQysYBSyQRyUPAyiXmWMDo+/HsWH4dg0dnSWNg4lueXxwr5eYtC5gDfM8HiVV
+         ZEUqeAe3DH1j4MdD17N4PJl/x96FY7YyOryHcprI6Y2KdQphg2f7kmOxH1qCG7fHBxPi
+         8BPCLct1XZ0RH/YsuD/MkXXjSMdUZy0ku1Bmx06CPxaan7qZ2/9YwhDGuJd+0eaLawpx
+         xQ0Q==
+X-Gm-Message-State: APjAAAV8PvCjCMjJVOxi/cVn3X74nJtxU7brEvOhVgIzWLDVIA95xydc
+        z4AVwHDECfbb+KGOtA3raV4lI3no07s=
+X-Google-Smtp-Source: APXvYqzrGSKXsrUGEXvzayBJLLJsND9LjHZK33uvYbD3CrtB/5P33UQxvPC1QhwB/L2HmC6n3SNaAA==
+X-Received: by 2002:a17:906:b2c5:: with SMTP id cf5mr41763793ejb.325.1582430637215;
+        Sat, 22 Feb 2020 20:03:57 -0800 (PST)
+Received: from mail-wr1-f42.google.com (mail-wr1-f42.google.com. [209.85.221.42])
+        by smtp.gmail.com with ESMTPSA id i11sm582047ejv.64.2020.02.22.20.03.56
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Sat, 22 Feb 2020 20:03:56 -0800 (PST)
+Received: by mail-wr1-f42.google.com with SMTP id n10so6439954wrm.1;
+        Sat, 22 Feb 2020 20:03:56 -0800 (PST)
+X-Received: by 2002:a5d:640d:: with SMTP id z13mr55885217wru.181.1582430636158;
+ Sat, 22 Feb 2020 20:03:56 -0800 (PST)
 MIME-Version: 1.0
-In-Reply-To: <CAGb2v65v=wPJNxPfOzp2bcevk0qoDiW-+KFBO1MKHz6gE86DPQ@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+References: <20200222223154.221632-1-megous@megous.com> <20200222223154.221632-2-megous@megous.com>
+ <CAGb2v67XwrYA8FLF9wpnngm9F-F9UV2m+rr+r3t+KUVv5-EMiw@mail.gmail.com>
+In-Reply-To: <CAGb2v67XwrYA8FLF9wpnngm9F-F9UV2m+rr+r3t+KUVv5-EMiw@mail.gmail.com>
+From:   Chen-Yu Tsai <wens@csie.org>
+Date:   Sun, 23 Feb 2020 12:03:46 +0800
+X-Gmail-Original-Message-ID: <CAGb2v66G5P_souwFHodO0_NYhWyQ+dGE4fbqLLK3qd9ue7Kk9g@mail.gmail.com>
+Message-ID: <CAGb2v66G5P_souwFHodO0_NYhWyQ+dGE4fbqLLK3qd9ue7Kk9g@mail.gmail.com>
+Subject: Re: [linux-sunxi] [PATCH 1/4] ARM: dts: sun8i-a83t-tbs-a711: OOB WiFi
+ interrupt doesn't work
+To:     =?UTF-8?Q?Ond=C5=99ej_Jirman?= <megous@megous.com>
+Cc:     linux-sunxi <linux-sunxi@googlegroups.com>,
+        Maxime Ripard <mripard@kernel.org>,
+        Tomas Novotny <tomas@novotny.cz>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        "moderated list:ARM/Allwinner sunXi SoC support" 
+        <linux-arm-kernel@lists.infradead.org>,
+        open list <linux-kernel@vger.kernel.org>,
+        Arend van Spriel <arend.vanspriel@broadcom.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2/17/20 1:17 AM, Chen-Yu Tsai wrote:
-> On Mon, Feb 17, 2020 at 10:18 AM Samuel Holland <samuel@sholland.org> wrote:
->>
->> By including the headphone mute switch to the DAPM graph, both the
->> headphone amplifier and the Mixer/DAC inputs can be powered off when
->> the headphones are muted.
->>
->> The mute switch is between the source selection and the amplifier,
->> as per the diagram in the SoC manual.
->>
->> Signed-off-by: Samuel Holland <samuel@sholland.org>
-> 
-> Reviewed-by: Chen-Yu Tsai <wens@csie.org>
-> 
-> BTW, have you also considered tying in the headphone volume control?
-> It also has a mute setting.
+On Sun, Feb 23, 2020 at 11:26 AM Chen-Yu Tsai <wens@csie.org> wrote:
+>
+> Hi,
+>
+>
+> On Sun, Feb 23, 2020 at 6:32 AM Ondrej Jirman <megous@megous.com> wrote:
+> >
+> > It just causes a constant rate of 5000 interrupts per second for both
+> > GPIO and MMC, even if nothing is happening. Rely on in-band interrupts
+> > instead.
+> >
+> > Fixes: 0e23372080def7bb ("arm: dts: sun8i: Add the TBS A711 tablet devicetree")
+> > Signed-off-by: Ondrej Jirman <megous@megous.com>
+>
+> What WiFi chip/module does this use? It might be worth asking Broadcom
+> people to help with this and fix the driver.
 
-As far as I can tell, setting a volume control to its "mute" level has no effect
-on the DAPM power state. So I didn't add PGA widgets for the volume controls on
-either codec. I can add them if there's some benefit to doing so.
+Based on the comments in the device tree file, it uses an AP6210, which
+is a BCM43362 inside for SDIO-based WiFi. There is a recent fix in 5.6-rc1
+for this,
+
+    8c8e60fb86a9 brcmfmac: sdio: Fix OOB interrupt initialization on brcm43362
+
+which seems to fix things for me. Could you try it on your end?
+
+ChenYu
+
 
 > ChenYu
-> 
-
-Regards,
-Samuel
+>
+> > ---
+> >  arch/arm/boot/dts/sun8i-a83t-tbs-a711.dts | 3 ---
+> >  1 file changed, 3 deletions(-)
+> >
+> > diff --git a/arch/arm/boot/dts/sun8i-a83t-tbs-a711.dts b/arch/arm/boot/dts/sun8i-a83t-tbs-a711.dts
+> > index 2fd31a0a0b344..ee5ce3556b2ad 100644
+> > --- a/arch/arm/boot/dts/sun8i-a83t-tbs-a711.dts
+> > +++ b/arch/arm/boot/dts/sun8i-a83t-tbs-a711.dts
+> > @@ -214,9 +214,6 @@ &mmc1 {
+> >         brcmf: wifi@1 {
+> >                 reg = <1>;
+> >                 compatible = "brcm,bcm4329-fmac";
+> > -               interrupt-parent = <&r_pio>;
+> > -               interrupts = <0 3 IRQ_TYPE_LEVEL_LOW>; /* PL3 WL_WAKE_UP */
+> > -               interrupt-names = "host-wake";
+> >         };
+> >  };
+> >
+> > --
+> > 2.25.1
+> >
+> > --
+> > You received this message because you are subscribed to the Google Groups "linux-sunxi" group.
+> > To unsubscribe from this group and stop receiving emails from it, send an email to linux-sunxi+unsubscribe@googlegroups.com.
+> > To view this discussion on the web, visit https://groups.google.com/d/msgid/linux-sunxi/20200222223154.221632-2-megous%40megous.com.
