@@ -2,69 +2,175 @@ Return-Path: <SRS0=SnAt=4L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E3467C35671
-	for <linux-kernel@archiver.kernel.org>; Sun, 23 Feb 2020 17:50:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EBC9BC35666
+	for <linux-kernel@archiver.kernel.org>; Sun, 23 Feb 2020 17:54:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BB47920836
-	for <linux-kernel@archiver.kernel.org>; Sun, 23 Feb 2020 17:50:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C6E6B208C4
+	for <linux-kernel@archiver.kernel.org>; Sun, 23 Feb 2020 17:54:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582480218;
-	bh=SflshuwIeGKsfRvAgspCjuFtPZtqq3/PoDLKco82kFI=;
-	h=Subject:From:In-Reply-To:References:Date:To:Cc:List-ID:From;
-	b=MXU+sA4qZXlmQCpUt4Xmo2TGX2lZpKZR5pE46NAkMu2G+DkV+0vPSS/47gBgMhvbR
-	 rrfGWe+8l1scYc480hViubjp+dOW63//v8iDZn4tpY8pCoZOOApphUyixBPn6kfo8N
-	 ociNwRr41tkrNg13L8DnHE+DUuew1lktXyDfgWTE=
+	s=default; t=1582480467;
+	bh=M3NMimfAZ1sgL3y3XjG68/hxflxXlHu+b3pf9l5741Y=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=ptqxHCAPnSSujZZ8PMR5FexmGvKXTQtzV6SwYC1GS80o3M3FYMsn30J9gXE6aWS00
+	 jRiWUJBEFkqgfTa2YSiKmL38EO/q3vDHkU3maZ6l98CCj9wTxaEEozgP/Lbj5BOldF
+	 QnRsphEaRJC9DeLR/V+D9f3VT036qXhd20f7hAUQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727249AbgBWRuR (ORCPT
+        id S1727100AbgBWRy0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 23 Feb 2020 12:50:17 -0500
-Received: from mail.kernel.org ([198.145.29.99]:42890 "EHLO mail.kernel.org"
+        Sun, 23 Feb 2020 12:54:26 -0500
+Received: from mail.kernel.org ([198.145.29.99]:43408 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727156AbgBWRuN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 23 Feb 2020 12:50:13 -0500
-Subject: Re: [GIT PULL] csky updates for 5.6-rc3
+        id S1726678AbgBWRy0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 23 Feb 2020 12:54:26 -0500
+Received: from localhost (95-141-97-180.as16211.net [95.141.97.180])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7EC5A206E0;
+        Sun, 23 Feb 2020 17:54:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1582480213;
-        bh=SflshuwIeGKsfRvAgspCjuFtPZtqq3/PoDLKco82kFI=;
-        h=From:In-Reply-To:References:Date:To:Cc:From;
-        b=A+q+qAXNZfJBH2vwNlFI3gsGabtt0FuhvdY04n6XwiB/kYbIZmnhSlGI8a/ecXm8z
-         8En6sFADiFgUQ37Rl8vq+B/avcvt8u5rxixo9XCzqcjPcQnNXwD78WqVWImhXFt4qb
-         odh5zF1av1BVUAXJs/zdWJKxYT1ayLr7HG3hMdFM=
-From:   pr-tracker-bot@kernel.org
-In-Reply-To: <20200223162332.16495-1-guoren@kernel.org>
-References: <20200223162332.16495-1-guoren@kernel.org>
-X-PR-Tracked-List-Id: <linux-kernel.vger.kernel.org>
-X-PR-Tracked-Message-Id: <20200223162332.16495-1-guoren@kernel.org>
-X-PR-Tracked-Remote: https://github.com/c-sky/csky-linux.git
- tags/csky-for-linus-5.6-rc3
-X-PR-Tracked-Commit-Id: 99db590b083fa2bc60adfcb5c839a62db4ef1d79
-X-PR-Merge-Tree: torvalds/linux.git
-X-PR-Merge-Refname: refs/heads/master
-X-PR-Merge-Commit-Id: c6188dff33fba320826e87e387ae6efffab0525d
-Message-Id: <158248021325.10261.12221204167090455190.pr-tracker-bot@kernel.org>
-Date:   Sun, 23 Feb 2020 17:50:13 +0000
-To:     guoren@kernel.org
-Cc:     torvalds@linux-foundation.org, arnd@arndb.de,
-        linux-kernel@vger.kernel.org, linux-arch@vger.kernel.org,
-        linux-csky@vger.kernel.org
+        s=default; t=1582480465;
+        bh=M3NMimfAZ1sgL3y3XjG68/hxflxXlHu+b3pf9l5741Y=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=arTf2rniNYwRgk5352xBxhz3unJzzzguYAuguqqA8We+q2uIukINzyk6wPvcdwoNN
+         S591q9RMxibHIi2k0oY8zdrXSKRnaI6ZQJyvi2axuTnaNJoe6FwuteRGgt2wuDUg+w
+         NQmUIY53jzgnn4T+s3BT2GPhWoC8mR6e/jgBp7AI=
+Date:   Sun, 23 Feb 2020 18:54:22 +0100
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     Chanwoo Choi <chanwoo@kernel.org>
+Cc:     Chanwoo Choi <cw00.choi@samsung.com>,
+        John Stultz <john.stultz@linaro.org>,
+        Orson Zhai <orson.unisoc@gmail.com>,
+        MyungJoo Ham <myungjoo.ham@samsung.com>,
+        Kyungmin Park <kyungmin.park@samsung.com>,
+        mingmin.ling@unisoc.com, orsonzhai@gmail.com,
+        jingchao.ye@unisoc.com, Linux PM list <linux-pm@vger.kernel.org>,
+        lkml <linux-kernel@vger.kernel.org>,
+        stable <stable@vger.kernel.org>
+Subject: Re: [PATCH] Revert "PM / devfreq: Modify the device name as
+ devfreq(X) for sysfs"
+Message-ID: <20200223175422.GD488486@kroah.com>
+References: <1582220224-1904-1-git-send-email-orson.unisoc@gmail.com>
+ <20200220191513.GA3450796@kroah.com>
+ <CALAqxLViRgGE8FsukCJL+doqk_GqabLDCtXBWem+VOGf9xXZdg@mail.gmail.com>
+ <CGME20200221070652epcas1p11e82863794f130373055c0b7bdedff23@epcas1p1.samsung.com>
+ <20200221070646.GA4103708@kroah.com>
+ <1b9e510a-71bb-5aa8-ef85-a9a9c623f313@samsung.com>
+ <20200221111313.GA110504@kroah.com>
+ <CAGTfZH0Ev2sCH073WdUjZJS5MNnJ9vzgsc_ApYkg+na2Fk4J+g@mail.gmail.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAGTfZH0Ev2sCH073WdUjZJS5MNnJ9vzgsc_ApYkg+na2Fk4J+g@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The pull request you sent on Mon, 24 Feb 2020 00:23:32 +0800:
+On Sat, Feb 22, 2020 at 08:55:22AM +0900, Chanwoo Choi wrote:
+> On Fri, Feb 21, 2020 at 8:13 PM Greg Kroah-Hartman
+> <gregkh@linuxfoundation.org> wrote:
+> >
+> > On Fri, Feb 21, 2020 at 05:11:02PM +0900, Chanwoo Choi wrote:
+> > > On 2/21/20 4:06 PM, Greg Kroah-Hartman wrote:
+> > > > On Thu, Feb 20, 2020 at 11:47:41AM -0800, John Stultz wrote:
+> > > >> On Thu, Feb 20, 2020 at 11:15 AM Greg Kroah-Hartman
+> > > >> <gregkh@linuxfoundation.org> wrote:
+> > > >>>
+> > > >>> On Fri, Feb 21, 2020 at 01:37:04AM +0800, Orson Zhai wrote:
+> > > >>>> This reverts commit 4585fbcb5331fc910b7e553ad3efd0dd7b320d14.
+> > > >>>>
+> > > >>>> The name changing as devfreq(X) breaks some user space applications,
+> > > >>>> such as Android HAL from Unisoc and Hikey [1].
+> > > >>>> The device name will be changed unexpectly after every boot depending
+> > > >>>> on module init sequence. It will make trouble to setup some system
+> > > >>>> configuration like selinux for Android.
+> > > >>>>
+> > > >>>> So we'd like to revert it back to old naming rule before any better
+> > > >>>> way being found.
+> > > >>>>
+> > > >>>> [1] https://protect2.fireeye.com/url?k=00fa721e-5d2a7af6-00fbf951-000babff32e3-95e4b92259b05656&u=https://lkml.org/lkml/2018/5/8/1042
+> > > >>>>
+> > > >>>> Cc: John Stultz <john.stultz@linaro.org>
+> > > >>>> Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+> > > >>>> Cc: stable@vger.kernel.org
+> > > >>>> Signed-off-by: Orson Zhai <orson.unisoc@gmail.com>
+> > > >>>>
+> > > >>>> ---
+> > > >>>>  drivers/devfreq/devfreq.c | 4 +---
+> > > >>>>  1 file changed, 1 insertion(+), 3 deletions(-)
+> > > >>>>
+> > > >>>> diff --git a/drivers/devfreq/devfreq.c b/drivers/devfreq/devfreq.c
+> > > >>>> index cceee8b..7dcf209 100644
+> > > >>>> --- a/drivers/devfreq/devfreq.c
+> > > >>>> +++ b/drivers/devfreq/devfreq.c
+> > > >>>> @@ -738,7 +738,6 @@ struct devfreq *devfreq_add_device(struct device *dev,
+> > > >>>>  {
+> > > >>>>       struct devfreq *devfreq;
+> > > >>>>       struct devfreq_governor *governor;
+> > > >>>> -     static atomic_t devfreq_no = ATOMIC_INIT(-1);
+> > > >>>>       int err = 0;
+> > > >>>>
+> > > >>>>       if (!dev || !profile || !governor_name) {
+> > > >>>> @@ -800,8 +799,7 @@ struct devfreq *devfreq_add_device(struct device *dev,
+> > > >>>>       devfreq->suspend_freq = dev_pm_opp_get_suspend_opp_freq(dev);
+> > > >>>>       atomic_set(&devfreq->suspend_count, 0);
+> > > >>>>
+> > > >>>> -     dev_set_name(&devfreq->dev, "devfreq%d",
+> > > >>>> -                             atomic_inc_return(&devfreq_no));
+> > > >>>> +     dev_set_name(&devfreq->dev, "%s", dev_name(dev));
+> > > >>>>       err = device_register(&devfreq->dev);
+> > > >>>>       if (err) {
+> > > >>>>               mutex_unlock(&devfreq->lock);
+> > > >>>> --
+> > > >>>> 2.7.4
+> > > >>>>
+> > > >>>
+> > > >>> Thanks for this, I agree, this needs to get back to the way things were
+> > > >>> as it seems to break too many existing systems as-is.
+> > > >>>
+> > > >>> I'll queue this up in my tree now, thanks.
+> > > >>
+> > > >> Oof this old thing. I unfortunately didn't get back to look at the
+> > > >> devfreq name node issue or the compatibility links, since the impact
+> > > >> of the regression (breaking the powerHAL's interactions with the gpu)
+> > > >> wasn't as big as other problems we had. While the regression was
+> > > >> frustrating, my only hesitancy at this point is that its been this way
+> > > >> since 4.10, so reverting the problematic patch is likely to break any
+> > > >> new users since then.
+> > > >
+> > > > Looks like most users just revert that commit in their trees:
+> > > >     https://protect2.fireeye.com/url?k=1012ad0f-4dc2a5e7-10132640-000babff32e3-35779c5ed675ef0f&u=https://source.codeaurora.org/quic/la/kernel/msm-4.14/commit/drivers/devfreq?h=msm-4.14&id=ccf273f6d89ad0fa8032e9225305ad6f62c7770c
+> > > >
+> > > > So we should be ok here.
+> > >
+> > > I'm sorry about changing the devfreq node name.
+> > >
+> > > OK. Do you pick this patch to your tree?
+> >
+> > Yes, I can do that.
+> 
+> If you agree, how about merging it to devfreq.git
+> for preventing the potential merge conflict with other devfreq patches?
 
-> https://github.com/c-sky/csky-linux.git tags/csky-for-linus-5.6-rc3
+Sure, but it should go for 5.6-final, right?
 
-has been merged into torvalds/linux.git:
-https://git.kernel.org/torvalds/c/c6188dff33fba320826e87e387ae6efffab0525d
+> > > or If not, I'll apply it to devfreq-next branch for v5.7-rc1.
+> > >
+> > > And do you apply it to kernel of linux-stable tree since 4.11?
+> >
+> > Yeah, I'll mark it for stable.
+> 
+> Thanks.
+> 
+> >
+> > Can I get an ack from you for this?
+> 
+> OK. but, if it will be merged to devfreq.git,
+> can I get an ack from you?
 
-Thank you!
-
--- 
-Deet-doot-dot, I am a bot.
-https://korg.wiki.kernel.org/userdoc/prtracker
+Acked-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
