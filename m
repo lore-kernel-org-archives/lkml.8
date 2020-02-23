@@ -2,173 +2,144 @@ Return-Path: <SRS0=SnAt=4L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8ACAFC35671
-	for <linux-kernel@archiver.kernel.org>; Sun, 23 Feb 2020 22:01:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1EAC2C35671
+	for <linux-kernel@archiver.kernel.org>; Sun, 23 Feb 2020 22:07:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 61B89206E2
-	for <linux-kernel@archiver.kernel.org>; Sun, 23 Feb 2020 22:01:28 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=gibson.dropbear.id.au header.i=@gibson.dropbear.id.au header.b="LwL/iptB"
+	by mail.kernel.org (Postfix) with ESMTP id ECFEE206E0
+	for <linux-kernel@archiver.kernel.org>; Sun, 23 Feb 2020 22:07:51 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727170AbgBWWBZ (ORCPT
+        id S1727156AbgBWWHt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 23 Feb 2020 17:01:25 -0500
-Received: from ozlabs.org ([203.11.71.1]:35501 "EHLO ozlabs.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726302AbgBWWBZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 23 Feb 2020 17:01:25 -0500
-Received: by ozlabs.org (Postfix, from userid 1007)
-        id 48QfKZ3rhhz9sR4; Mon, 24 Feb 2020 09:01:22 +1100 (AEDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-        d=gibson.dropbear.id.au; s=201602; t=1582495282;
-        bh=offKD/tuqL/DSDa2v25Jc0IM7BprqmjMf6LCeNiIZbE=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=LwL/iptBEMCarj+f3q8Os3B2TZTfsaK9r0ubJJ13bhD5UKGSewVyTATKgRL6ybTw6
-         TZ6r3y3evxFJ2T7GHqr77PmlzWNZc74Q2JYKrMRZpOZtmz7niIl6Ti9OpZmYSBayjZ
-         TBuqRBuLuno8PmSPypNw+iutg3ImuBykUAEZ9CMI=
-Date:   Mon, 24 Feb 2020 08:59:36 +1100
-From:   David Gibson <david@gibson.dropbear.id.au>
-To:     Frank Rowand <frowand.list@gmail.com>
-Cc:     Alexandre Torgue <alexandre.torgue@st.com>, robh+dt@kernel.org,
-        Masahiro Yamada <masahiroy@kernel.org>,
-        Michal Marek <michal.lkml@markovi.net>, sjg@chromium.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-kbuild@vger.kernel.org, devicetree-compiler@vger.kernel.org,
-        Ian Lepore <ian@freebsd.org>
-Subject: Re: [RFC PATCH v2 1/4] scripts: Add script to generate dtb build
- information
-Message-ID: <20200223215936.GB1751@umbus.fritz.box>
-References: <20200221161418.20225-1-alexandre.torgue@st.com>
- <20200221161418.20225-2-alexandre.torgue@st.com>
- <592e41a4-6115-474e-b6ce-eeb82f858a78@gmail.com>
+        Sun, 23 Feb 2020 17:07:49 -0500
+Received: from zeniv.linux.org.uk ([195.92.253.2]:34946 "EHLO
+        ZenIV.linux.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726302AbgBWWHs (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 23 Feb 2020 17:07:48 -0500
+Received: from viro by ZenIV.linux.org.uk with local (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1j5zPf-0003GM-9F; Sun, 23 Feb 2020 22:07:47 +0000
+Date:   Sun, 23 Feb 2020 22:07:47 +0000
+From:   Al Viro <viro@zeniv.linux.org.uk>
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     linux-fsdevel <linux-fsdevel@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Subject: Re: [RFC][PATCH v2 14/34] new step_into() flag: WALK_NOFOLLOW
+Message-ID: <20200223220747.GZ23230@ZenIV.linux.org.uk>
+References: <20200223011154.GY23230@ZenIV.linux.org.uk>
+ <20200223011626.4103706-1-viro@ZenIV.linux.org.uk>
+ <20200223011626.4103706-14-viro@ZenIV.linux.org.uk>
+ <CAHk-=whzmY4RdkqtitWVB=OJvHG-8_VLZrU1oXBX8b+5qJKBag@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="LZvS9be/3tNcYl/X"
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <592e41a4-6115-474e-b6ce-eeb82f858a78@gmail.com>
+In-Reply-To: <CAHk-=whzmY4RdkqtitWVB=OJvHG-8_VLZrU1oXBX8b+5qJKBag@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Sat, Feb 22, 2020 at 06:14:45PM -0800, Linus Torvalds wrote:
+> On Sat, Feb 22, 2020 at 5:20 PM Al Viro <viro@zeniv.linux.org.uk> wrote:
+> >
+> >         if (likely(!d_is_symlink(path->dentry)) ||
+> > -          !(flags & WALK_FOLLOW || nd->flags & LOOKUP_FOLLOW)) {
+> > +          !(flags & WALK_FOLLOW || nd->flags & LOOKUP_FOLLOW) ||
+> > +          flags & WALK_NOFOLLOW) {
+> 
+> Humor me, and don't mix bitwise ops with logical boolean ops without
+> parentheses, ok?
+> 
+> And yes, the old code did it too, so it's not a new thing.
+> 
+> But as it gets even more complex, let's just generally strive for doing
+> 
+>    (a & b) || (c & d)
+> 
+> instead of
+> 
+>    a & b || c & d
+> 
+> to make it easier to mentally see the grouping.
 
---LZvS9be/3tNcYl/X
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Can do...  FWIW, the only case where the normal "'and' is multiplication,
+'or' is addition" doesn't give the right result is
+	x | y && z
+written instead of
+	x | (y && z)
+where you would be better off rewriting the expression anyway.
 
-On Fri, Feb 21, 2020 at 11:52:34AM -0600, Frank Rowand wrote:
-> On 2/21/20 10:14 AM, Alexandre Torgue wrote:
-> > This commit adds a new script to create a file (in dts file directory) =
-with
-> > some information (date, Linux version, user). This file could then be u=
-sed
-> > to populate "build-info" property in every dts file that would use this
-> > build information:
-> >=20
-> > Example:
-> >=20
-> > / {
-> > 	...
-> > 	build-info =3D /incbin/("dtb-build.txt");
->=20
-> s/.txt/.dtsi/
+FWIW, one of the things in the local pile is this:
 
-I don't think that makes sense.  This is an /incbin/ not an /include/
-so the text file is *not* dts information.
+commit cc1b6724b32de1be108cf6a5f28dbb5aa424b42f
+Author: Al Viro <viro@zeniv.linux.org.uk>
+Date:   Sun Jan 19 12:44:18 2020 -0500
 
-> and same wherever the file name is used.
->=20
->=20
-> > 	...
-> > };
-> >=20
-> > Signed-off-by: Alexandre Torgue <alexandre.torgue@st.com>
-> >=20
-> > diff --git a/scripts/Makefile.lib b/scripts/Makefile.lib
-> > index bae62549e3d2..a5af84ef4ffc 100644
-> > --- a/scripts/Makefile.lib
-> > +++ b/scripts/Makefile.lib
-> > @@ -246,6 +246,7 @@ quiet_cmd_gzip =3D GZIP    $@
-> >  # DTC
-> >  # --------------------------------------------------------------------=
--------
-> >  DTC ?=3D $(objtree)/scripts/dtc/dtc
-> > +DTB_GEN_INFO ?=3D $(objtree)/scripts/gen_dtb_build_info.sh
-> > =20
-> >  # Disable noisy checks by default
-> >  ifeq ($(findstring 1,$(KBUILD_EXTRA_WARN)),)
-> > @@ -286,6 +287,7 @@ $(obj)/%.dtb.S: $(obj)/%.dtb FORCE
-> > =20
-> >  quiet_cmd_dtc =3D DTC     $@
-> >  cmd_dtc =3D mkdir -p $(dir ${dtc-tmp}) ; \
-> > +	$(DTB_GEN_INFO) $(src) ; \
-> >  	$(HOSTCC) -E $(dtc_cpp_flags) -x assembler-with-cpp -o $(dtc-tmp) $< =
-; \
-> >  	$(DTC) -O $(2) -o $@ -b 0 \
-> >  		$(addprefix -i,$(dir $<) $(DTC_INCLUDE)) $(DTC_FLAGS) \
-> > diff --git a/scripts/gen_dtb_build_info.sh b/scripts/gen_dtb_build_info=
-=2Esh
-> > new file mode 100755
-> > index 000000000000..0cd8bd98e410
-> > --- /dev/null
-> > +++ b/scripts/gen_dtb_build_info.sh
-> > @@ -0,0 +1,10 @@
-> > +#!/bin/bash
-> > +# SPDX-License-Identifier: GPL-2.0
-> > +
-> > +set -o nounset
-> > +
-> > +DTB_DIR=3D$1
-> > +DTB_COMPILE_BY=3D$(whoami | sed 's/\\/\\\\/')
-> > +DTB_INFO=3D"From Linux $KERNELRELEASE by $DTB_COMPILE_BY the $(date).\=
-0"
->=20
-> I would remove the filler words "From", "by", "the", and the trailing
-> period ('.').
->=20
-> <bikeshed>
-> You might consider using a format more like the Linux
-> kernel version line, which puts parenthesis around the
-> compiled by info.
-> </bikeshed>
->=20
-> -Frank
->=20
-> > +
-> > +printf "$DTB_INFO" > "$DTB_DIR/dtb-build.txt"
-> >=20
->=20
+    namei: invert the meaning of WALK_FOLLOW
+    
+    old flags & WALK_FOLLOW <=> new !(flags & WALK_TRAILING)
+    That's what that flag had really been used for.
+    
+    Signed-off-by: Al Viro <viro@zeniv.linux.org.uk>
 
---=20
-David Gibson			| I'll have my music baroque, and my code
-david AT gibson.dropbear.id.au	| minimalist, thank you.  NOT _the_ _other_
-				| _way_ _around_!
-http://www.ozlabs.org/~dgibson
+diff --git a/fs/namei.c b/fs/namei.c
+index 6eb708014d4b..7d938241157f 100644
+--- a/fs/namei.c
++++ b/fs/namei.c
+@@ -1786,7 +1786,7 @@ static const char *pick_link(struct nameidata *nd, struct path *link,
+ 	return NULL;
+ }
+ 
+-enum {WALK_FOLLOW = 1, WALK_MORE = 2, WALK_NOFOLLOW = 4};
++enum {WALK_TRAILING = 1, WALK_MORE = 2, WALK_NOFOLLOW = 4};
+ 
+ /*
+  * Do we need to follow links? We _really_ want to be able
+@@ -1805,7 +1805,7 @@ static const char *step_into(struct nameidata *nd, int flags,
+ 	if (!(flags & WALK_MORE) && nd->depth)
+ 		put_link(nd);
+ 	if (likely(!d_is_symlink(path.dentry)) ||
+-	   !(flags & WALK_FOLLOW || nd->flags & LOOKUP_FOLLOW) ||
++	   (flags & WALK_TRAILING && !(nd->flags & LOOKUP_FOLLOW)) ||
+ 	   flags & WALK_NOFOLLOW) {
+ 		/* not a symlink or should not follow */
+ 		path_to_nameidata(&path, nd);
+@@ -2157,10 +2157,10 @@ static int link_path_walk(const char *name, struct nameidata *nd)
+ 			if (!name)
+ 				return 0;
+ 			/* last component of nested symlink */
+-			link = walk_component(nd, WALK_FOLLOW);
++			link = walk_component(nd, 0);
+ 		} else {
+ 			/* not the last component */
+-			link = walk_component(nd, WALK_FOLLOW | WALK_MORE);
++			link = walk_component(nd, WALK_MORE);
+ 		}
+ 		if (unlikely(link)) {
+ 			if (IS_ERR(link))
+@@ -2288,7 +2288,7 @@ static inline const char *lookup_last(struct nameidata *nd)
+ 		nd->flags |= LOOKUP_FOLLOW | LOOKUP_DIRECTORY;
+ 
+ 	nd->flags &= ~LOOKUP_PARENT;
+-	link = walk_component(nd, 0);
++	link = walk_component(nd, WALK_TRAILING);
+ 	if (link) {
+ 		nd->flags |= LOOKUP_PARENT;
+ 		nd->stack[0].name = NULL;
+@@ -3241,7 +3241,7 @@ static const char *do_last(struct nameidata *nd,
+ 	}
+ 
+ finish_lookup:
+-	link = step_into(nd, 0, dentry, inode, seq);
++	link = step_into(nd, WALK_TRAILING, dentry, inode, seq);
+ 	if (unlikely(link)) {
+ 		nd->flags |= LOOKUP_PARENT;
+ 		nd->flags &= ~(LOOKUP_OPEN|LOOKUP_CREATE|LOOKUP_EXCL);
 
---LZvS9be/3tNcYl/X
-Content-Type: application/pgp-signature; name="signature.asc"
 
------BEGIN PGP SIGNATURE-----
-
-iQIzBAEBCAAdFiEEdfRlhq5hpmzETofcbDjKyiDZs5IFAl5S9cMACgkQbDjKyiDZ
-s5L+uA/+Ijah4iblw6QeplPNZ0j5P3vPdvAPrnFrpiCY6faeGB25BQpakMQSxYd7
-AUVpiyiW7OO5Re1VP7+A7M3RIeR2ZN8Yl7dQsb2Evpbs4cB4LyRfmZCLUebEkUuY
-lOSjFCIwLrM7InrWM2cS3Xim0i5jC9m1SB7TKAG+VQCT+ahF3rHSfoqKDADyoEov
-M6zVCPvPCnw8UF8JsciD3vn1ehO8MFNWDPxJmVl+FqXGn/woSD6CXqMRFOhkMILe
-qIThs0v1fGeKAKZgNnzfblAT8MHwOWIEq/uCDKktxsEFXe0Htb5m7O+jblm2jAyE
-XviDax1jJkzAn8LcJaguDZhekE5AbG4cimW2NV9Y4qYDqcKrUKxJlZxNC+7rAypV
-nlry93xwydvEHISHa2AB7zHOM0BTYlRBOYQRmFrwZO1uc9h4MV2K1P5LAtxRki/h
-gXnKoekE8bkqs6/9P0bTRQ9PpyKs/sYZpUcZmzezuwkopRjHLv1ohlJj/x6dZb9w
-X+FkHVdFs0cREO9nGTUeCvm/rfe+ntpnJzG9iBkOwIj1XVZQQu19CXBYoSAP5uX+
-vsxZH83B//jEMEj/oMYgdFbKxZqxoaFwJxBMRZSHFEHAQ9h+wCQS/tXmHqXvPTWJ
-ds7GSr5+Cv03afxPFENdyX69B1a3YFGT2qDKgln3YuRVs8Ww5no=
-=v1oI
------END PGP SIGNATURE-----
-
---LZvS9be/3tNcYl/X--
+and I can simply fold adding extra parens into it.  Or I can fold that into
+the patch you'd been replying to  - I'm still uncertain about the series
+containing WALK_TRAILING...
