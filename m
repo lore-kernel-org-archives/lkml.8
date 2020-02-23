@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D084FC35669
-	for <linux-kernel@archiver.kernel.org>; Sun, 23 Feb 2020 02:36:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 47E50C35669
+	for <linux-kernel@archiver.kernel.org>; Sun, 23 Feb 2020 02:36:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A491120702
-	for <linux-kernel@archiver.kernel.org>; Sun, 23 Feb 2020 02:36:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1BD1D2067D
+	for <linux-kernel@archiver.kernel.org>; Sun, 23 Feb 2020 02:36:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582425369;
-	bh=/wvHWtSABa6XrGoPvgU/g74uNC1TiUDqH775k+bJX6s=;
+	s=default; t=1582425380;
+	bh=0H7zd2fm3yBoPSOT5TXSvbCR26pgmFzavbvMTKWqxQA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Q0Uf6txyxQ7vhsafvHDZ5662Ro/xqmTxVO/qDDU69RhsDvkRoMciO9Hdbe28Sy7Ao
-	 HxNFvPFX0tLIrRoWFhKSKLPh9j5541YqGuVs2I5wb7LCsteFMBBTA9Otr2jak+hQDe
-	 tLRDp8srhgTdK+aYN8Ag9Y2qaxQ5GZhetnliB+xw=
+	b=sPbjCBQcMhYAu0TdCUdpff+slHwHiQ8z82f/XE3RtdFQPh6/dgQ20LcGZcK3IUGt9
+	 Cc5I6Hu9OGm78hoqnmzzLGduHhdiGCZQ3B5CPhydZB+7gG7V6Q8X4zKrZVttRc8DWB
+	 xNgozrygpeOKPP0t3IB5nkwIF3Rp3ukv6RH+dZM0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728880AbgBWCgD (ORCPT
+        id S1728306AbgBWCgT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 22 Feb 2020 21:36:03 -0500
-Received: from mail.kernel.org ([198.145.29.99]:50946 "EHLO mail.kernel.org"
+        Sat, 22 Feb 2020 21:36:19 -0500
+Received: from mail.kernel.org ([198.145.29.99]:50914 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727979AbgBWCWG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 22 Feb 2020 21:22:06 -0500
+        id S1727941AbgBWCWE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 22 Feb 2020 21:22:04 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1B2CD2071E;
-        Sun, 23 Feb 2020 02:22:05 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id BB1072192A;
+        Sun, 23 Feb 2020 02:22:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1582424525;
-        bh=/wvHWtSABa6XrGoPvgU/g74uNC1TiUDqH775k+bJX6s=;
+        s=default; t=1582424523;
+        bh=0H7zd2fm3yBoPSOT5TXSvbCR26pgmFzavbvMTKWqxQA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=OA+NRANFLnTTSTHKfFXS+d9xWGvIolIKA5eoV6ZnLZV/r2b+OEE1otvLvqxY0jtEx
-         Cd1czuE7WHI9j3UGVMUxArhlgHecTo/4ILQjkAorb9Jh34cBHSnJvr452XvsUJDWxK
-         ohatk7+gNxWHa24v2ny6+H3tOlPslj0K4JLFyLak=
+        b=thNjjikTz2mqGk7HniofW75iYSWnZ2BETZXoSHFRJh8JsJHqxhtcBu8efuPIrkbhr
+         skfbuGL4ZrGm5XuJCSRs1j46ZEPHn9EDM4QgZNXJmobyhn0WxglpGaXyfR6B1Pa8T0
+         CBRDBQG+XARnOh1OKyaBAZhSQzXyqnRTenPkWeV0=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 Cc:     Arthur Kiyanovski <akiyano@amazon.com>,
         Sameeh Jubran <sameehj@amazon.com>,
         "David S . Miller" <davem@davemloft.net>,
         Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.5 38/58] net: ena: fix corruption of dev_idx_to_host_tbl
-Date:   Sat, 22 Feb 2020 21:20:59 -0500
-Message-Id: <20200223022119.707-38-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 5.5 36/58] net: ena: rss: store hash function as values and not bits
+Date:   Sat, 22 Feb 2020 21:20:57 -0500
+Message-Id: <20200223022119.707-36-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200223022119.707-1-sashal@kernel.org>
 References: <20200223022119.707-1-sashal@kernel.org>
@@ -62,23 +62,25 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Arthur Kiyanovski <akiyano@amazon.com>
 
-[ Upstream commit e3f89f91e98ce07dc0f121a3b70d21aca749ba39 ]
+[ Upstream commit 4844470d472d660c26149ad764da2406adb13423 ]
 
-The function ena_com_ind_tbl_convert_from_device() has an overflow
-bug as explained below. Either way, this function is not needed at
-all since we don't retrieve the indirection table from the device
-at any point which means that this conversion is not needed.
+The device receives, stores and retrieves the hash function value as bits
+and not as their enum value.
 
 The bug:
-The for loop iterates over all io_sq_queues, when passing the actual
-number of used queues the io_sq_queues[i].idx equals 0 since they are
-uninitialized which results in the following code to be executed till
-the end of the loop:
+* In ena_com_set_hash_function() we set
+  cmd.u.flow_hash_func.selected_func to the bit value of rss->hash_func.
+ (1 << rss->hash_func)
+* In ena_com_get_hash_function() we retrieve the hash function and store
+  it's bit value in rss->hash_func. (Now the bit value of rss->hash_func
+  is stored in rss->hash_func instead of it's enum value)
 
-dev_idx_to_host_tbl[0] = i;
-
-This results dev_idx_to_host_tbl[0] in being equal to
-ENA_TOTAL_NUM_QUEUES - 1.
+The fix:
+This commit fixes the issue by converting the retrieved hash function
+values from the device to the matching enum value of the set bit using
+ffs(). ffs() finds the first set bit's index in a word. Since the function
+returns 1 for the LSB's index, we need to subtract 1 from the returned
+value (note that BIT(0) is 1).
 
 Fixes: 1738cd3ed342 ("net: ena: Add a driver for Amazon Elastic Network Adapters (ENA)")
 Signed-off-by: Sameeh Jubran <sameehj@amazon.com>
@@ -86,54 +88,25 @@ Signed-off-by: Arthur Kiyanovski <akiyano@amazon.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/ethernet/amazon/ena/ena_com.c | 28 -----------------------
- 1 file changed, 28 deletions(-)
+ drivers/net/ethernet/amazon/ena/ena_com.c | 6 +++++-
+ 1 file changed, 5 insertions(+), 1 deletion(-)
 
 diff --git a/drivers/net/ethernet/amazon/ena/ena_com.c b/drivers/net/ethernet/amazon/ena/ena_com.c
-index 8ab192cb26b74..74743fd8a1e0a 100644
+index 6f758ece86f60..8ab192cb26b74 100644
 --- a/drivers/net/ethernet/amazon/ena/ena_com.c
 +++ b/drivers/net/ethernet/amazon/ena/ena_com.c
-@@ -1281,30 +1281,6 @@ static int ena_com_ind_tbl_convert_to_device(struct ena_com_dev *ena_dev)
- 	return 0;
- }
+@@ -2370,7 +2370,11 @@ int ena_com_get_hash_function(struct ena_com_dev *ena_dev,
+ 	if (unlikely(rc))
+ 		return rc;
  
--static int ena_com_ind_tbl_convert_from_device(struct ena_com_dev *ena_dev)
--{
--	u16 dev_idx_to_host_tbl[ENA_TOTAL_NUM_QUEUES] = { (u16)-1 };
--	struct ena_rss *rss = &ena_dev->rss;
--	u8 idx;
--	u16 i;
--
--	for (i = 0; i < ENA_TOTAL_NUM_QUEUES; i++)
--		dev_idx_to_host_tbl[ena_dev->io_sq_queues[i].idx] = i;
--
--	for (i = 0; i < 1 << rss->tbl_log_size; i++) {
--		if (rss->rss_ind_tbl[i].cq_idx > ENA_TOTAL_NUM_QUEUES)
--			return -EINVAL;
--		idx = (u8)rss->rss_ind_tbl[i].cq_idx;
--
--		if (dev_idx_to_host_tbl[idx] > ENA_TOTAL_NUM_QUEUES)
--			return -EINVAL;
--
--		rss->host_rss_ind_tbl[i] = dev_idx_to_host_tbl[idx];
--	}
--
--	return 0;
--}
--
- static void ena_com_update_intr_delay_resolution(struct ena_com_dev *ena_dev,
- 						 u16 intr_delay_resolution)
- {
-@@ -2638,10 +2614,6 @@ int ena_com_indirect_table_get(struct ena_com_dev *ena_dev, u32 *ind_tbl)
- 	if (!ind_tbl)
- 		return 0;
- 
--	rc = ena_com_ind_tbl_convert_from_device(ena_dev);
--	if (unlikely(rc))
--		return rc;
--
- 	for (i = 0; i < (1 << rss->tbl_log_size); i++)
- 		ind_tbl[i] = rss->host_rss_ind_tbl[i];
+-	rss->hash_func = get_resp.u.flow_hash_func.selected_func;
++	/* ffs() returns 1 in case the lsb is set */
++	rss->hash_func = ffs(get_resp.u.flow_hash_func.selected_func);
++	if (rss->hash_func)
++		rss->hash_func--;
++
+ 	if (func)
+ 		*func = rss->hash_func;
  
 -- 
 2.20.1
