@@ -4,50 +4,52 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 47E50C35669
-	for <linux-kernel@archiver.kernel.org>; Sun, 23 Feb 2020 02:36:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 74C86C35669
+	for <linux-kernel@archiver.kernel.org>; Sun, 23 Feb 2020 02:36:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1BD1D2067D
-	for <linux-kernel@archiver.kernel.org>; Sun, 23 Feb 2020 02:36:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3DE712067D
+	for <linux-kernel@archiver.kernel.org>; Sun, 23 Feb 2020 02:36:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582425380;
-	bh=0H7zd2fm3yBoPSOT5TXSvbCR26pgmFzavbvMTKWqxQA=;
+	s=default; t=1582425387;
+	bh=r4h0h0vNmAe26MlCqgqj9TQfWY49lPNNCtdDgv9Pe6k=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=sPbjCBQcMhYAu0TdCUdpff+slHwHiQ8z82f/XE3RtdFQPh6/dgQ20LcGZcK3IUGt9
-	 Cc5I6Hu9OGm78hoqnmzzLGduHhdiGCZQ3B5CPhydZB+7gG7V6Q8X4zKrZVttRc8DWB
-	 xNgozrygpeOKPP0t3IB5nkwIF3Rp3ukv6RH+dZM0=
+	b=K83YPKRxNg4fiagopTRD5gdjcjLVeqllgK5Zw1feJCgzRLFLdoklcfK/TChBxeKST
+	 kW9yi6BkunUhukXutDJyYs070gkPYA+EFoZWumcXAu9xW1o9OL3oUSaVvbccsWJs0c
+	 dKcQi2XNrZ9GUGe/DiOZwobGs9bGvc579mo7Ryvk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728306AbgBWCgT (ORCPT
+        id S1727926AbgBWCWD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 22 Feb 2020 21:36:19 -0500
-Received: from mail.kernel.org ([198.145.29.99]:50914 "EHLO mail.kernel.org"
+        Sat, 22 Feb 2020 21:22:03 -0500
+Received: from mail.kernel.org ([198.145.29.99]:50400 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727941AbgBWCWE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 22 Feb 2020 21:22:04 -0500
+        id S1727734AbgBWCVt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 22 Feb 2020 21:21:49 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id BB1072192A;
-        Sun, 23 Feb 2020 02:22:02 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3E4572192A;
+        Sun, 23 Feb 2020 02:21:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1582424523;
-        bh=0H7zd2fm3yBoPSOT5TXSvbCR26pgmFzavbvMTKWqxQA=;
+        s=default; t=1582424509;
+        bh=r4h0h0vNmAe26MlCqgqj9TQfWY49lPNNCtdDgv9Pe6k=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=thNjjikTz2mqGk7HniofW75iYSWnZ2BETZXoSHFRJh8JsJHqxhtcBu8efuPIrkbhr
-         skfbuGL4ZrGm5XuJCSRs1j46ZEPHn9EDM4QgZNXJmobyhn0WxglpGaXyfR6B1Pa8T0
-         CBRDBQG+XARnOh1OKyaBAZhSQzXyqnRTenPkWeV0=
+        b=QmxzgkbhdK8/m/C2Kqnza6vEp8Q54Do8dT7HLUgMC7lP6vpTG/eqG7gr17gtYnL6F
+         1Beldf0czJvQpMAZw4wtP2xvcJWNqE2d6Z+5+0enc6KfaF0s+u5AKRrNDtB1HUd20+
+         dCunEmLZ0OuTLvZ8k/CFAYbyOWfEeWD+ZFxdT55o=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Arthur Kiyanovski <akiyano@amazon.com>,
-        Sameeh Jubran <sameehj@amazon.com>,
-        "David S . Miller" <davem@davemloft.net>,
-        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.5 36/58] net: ena: rss: store hash function as values and not bits
-Date:   Sat, 22 Feb 2020 21:20:57 -0500
-Message-Id: <20200223022119.707-36-sashal@kernel.org>
+Cc:     Aric Cyr <aric.cyr@amd.com>,
+        Harry Wentland <harry.wentland@amd.com>,
+        Bhawanpreet Lakha <Bhawanpreet.Lakha@amd.com>,
+        Alex Deucher <alexander.deucher@amd.com>,
+        Sasha Levin <sashal@kernel.org>, amd-gfx@lists.freedesktop.org,
+        dri-devel@lists.freedesktop.org
+Subject: [PATCH AUTOSEL 5.5 24/58] drm/amd/display: Check engine is not NULL before acquiring
+Date:   Sat, 22 Feb 2020 21:20:45 -0500
+Message-Id: <20200223022119.707-24-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200223022119.707-1-sashal@kernel.org>
 References: <20200223022119.707-1-sashal@kernel.org>
@@ -60,54 +62,38 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Arthur Kiyanovski <akiyano@amazon.com>
+From: Aric Cyr <aric.cyr@amd.com>
 
-[ Upstream commit 4844470d472d660c26149ad764da2406adb13423 ]
+[ Upstream commit 2b63d0ec0daf79ba503fa8bfa25e07dc3da274f3 ]
 
-The device receives, stores and retrieves the hash function value as bits
-and not as their enum value.
+[Why]
+Engine can be NULL in some cases, so we must not acquire it.
 
-The bug:
-* In ena_com_set_hash_function() we set
-  cmd.u.flow_hash_func.selected_func to the bit value of rss->hash_func.
- (1 << rss->hash_func)
-* In ena_com_get_hash_function() we retrieve the hash function and store
-  it's bit value in rss->hash_func. (Now the bit value of rss->hash_func
-  is stored in rss->hash_func instead of it's enum value)
+[How]
+Check for NULL engine before acquiring.
 
-The fix:
-This commit fixes the issue by converting the retrieved hash function
-values from the device to the matching enum value of the set bit using
-ffs(). ffs() finds the first set bit's index in a word. Since the function
-returns 1 for the LSB's index, we need to subtract 1 from the returned
-value (note that BIT(0) is 1).
-
-Fixes: 1738cd3ed342 ("net: ena: Add a driver for Amazon Elastic Network Adapters (ENA)")
-Signed-off-by: Sameeh Jubran <sameehj@amazon.com>
-Signed-off-by: Arthur Kiyanovski <akiyano@amazon.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Signed-off-by: Aric Cyr <aric.cyr@amd.com>
+Reviewed-by: Harry Wentland <harry.wentland@amd.com>
+Acked-by: Bhawanpreet Lakha <Bhawanpreet.Lakha@amd.com>
+Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/ethernet/amazon/ena/ena_com.c | 6 +++++-
- 1 file changed, 5 insertions(+), 1 deletion(-)
+ drivers/gpu/drm/amd/display/dc/dce/dce_aux.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/net/ethernet/amazon/ena/ena_com.c b/drivers/net/ethernet/amazon/ena/ena_com.c
-index 6f758ece86f60..8ab192cb26b74 100644
---- a/drivers/net/ethernet/amazon/ena/ena_com.c
-+++ b/drivers/net/ethernet/amazon/ena/ena_com.c
-@@ -2370,7 +2370,11 @@ int ena_com_get_hash_function(struct ena_com_dev *ena_dev,
- 	if (unlikely(rc))
- 		return rc;
+diff --git a/drivers/gpu/drm/amd/display/dc/dce/dce_aux.c b/drivers/gpu/drm/amd/display/dc/dce/dce_aux.c
+index 793c0cec407f9..5fcffb29317e3 100644
+--- a/drivers/gpu/drm/amd/display/dc/dce/dce_aux.c
++++ b/drivers/gpu/drm/amd/display/dc/dce/dce_aux.c
+@@ -398,7 +398,7 @@ static bool acquire(
+ {
+ 	enum gpio_result result;
  
--	rss->hash_func = get_resp.u.flow_hash_func.selected_func;
-+	/* ffs() returns 1 in case the lsb is set */
-+	rss->hash_func = ffs(get_resp.u.flow_hash_func.selected_func);
-+	if (rss->hash_func)
-+		rss->hash_func--;
-+
- 	if (func)
- 		*func = rss->hash_func;
+-	if (!is_engine_available(engine))
++	if ((engine == NULL) || !is_engine_available(engine))
+ 		return false;
  
+ 	result = dal_ddc_open(ddc, GPIO_MODE_HARDWARE,
 -- 
 2.20.1
 
