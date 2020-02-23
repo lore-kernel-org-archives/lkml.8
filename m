@@ -7,48 +7,47 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7090CC35671
-	for <linux-kernel@archiver.kernel.org>; Sun, 23 Feb 2020 02:23:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 869B9C35671
+	for <linux-kernel@archiver.kernel.org>; Sun, 23 Feb 2020 02:24:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 39BBF22464
-	for <linux-kernel@archiver.kernel.org>; Sun, 23 Feb 2020 02:23:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 55BD421741
+	for <linux-kernel@archiver.kernel.org>; Sun, 23 Feb 2020 02:24:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582424633;
-	bh=99EtiNtJdAvPT2as60AJ2VmPObSheEPp0q5rtgVAgns=;
+	s=default; t=1582424641;
+	bh=SPgzoJBpWxhqKj4AqAQmm2VU7/zyGbEZx9wPtWTH1TE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=JZC+TiNLxvSwFIhE5kliey1OTf/6UJRd2XCbh8EKj6SxjSkRU0yurTuRSOFiy4DaE
-	 NVwIjOab28/OMj0cYV0jXwR23GIf0gPTNbVANcarIdhGPm65otIaWe8g/wgxlkadKV
-	 OGdnQnxIurpZ84iO5ok4iAFdpp79ShcZj1SWy5P0=
+	b=udY7a7JxmgulQZ2wzn8vXaT9kXPtOoqJ2q1toUf6GZdoFBG5auUgUd4ai7ImHW2Mf
+	 jbqBojurg2DXNLj4PG3wNJYld0KeTqpzhdQmXvLNiGPkrcMSkmMzwWy9sgLuzLCRX7
+	 chtRRRVVNohREl6gtZV47mGUplrgbQVvmnBHYvfo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728844AbgBWCXu (ORCPT
+        id S1728914AbgBWCX7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 22 Feb 2020 21:23:50 -0500
-Received: from mail.kernel.org ([198.145.29.99]:53422 "EHLO mail.kernel.org"
+        Sat, 22 Feb 2020 21:23:59 -0500
+Received: from mail.kernel.org ([198.145.29.99]:53634 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728780AbgBWCXp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 22 Feb 2020 21:23:45 -0500
+        id S1728864AbgBWCXy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 22 Feb 2020 21:23:54 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 42C3124670;
-        Sun, 23 Feb 2020 02:23:44 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C259D24676;
+        Sun, 23 Feb 2020 02:23:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1582424625;
-        bh=99EtiNtJdAvPT2as60AJ2VmPObSheEPp0q5rtgVAgns=;
+        s=default; t=1582424633;
+        bh=SPgzoJBpWxhqKj4AqAQmm2VU7/zyGbEZx9wPtWTH1TE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=FsLF2fFePkndfvhHhCTdww8Olpm5/+yJkblEz45b/pC+RWYMiBYVJNt/DxPkZmU6j
-         wQN9Hxp7UWzBhcUU3ZS6meDFZ8xaOUJkWl+0gTo/tLGvzOjjA5D72X9yK0yrsnkA0H
-         GOoTaXm8cROKS6N/4AdGglxbHGlQ/7ysYqtEaGHk=
+        b=vJEFHdwU75onJziJNCZUFpWgTw4oOK0Q7EJY4fZXmaQ9fVFTzIWV/dlx8fDFtbu08
+         /IDEh0FLVeYOMjSbtGZOIqGYIX6vaNqB2MaVmx6YBY30pu5+xvoM7retYPtYQ683hN
+         YU4a7yaDOPo9z12LkBVzFpRh/5LfPdhDUug3yJWA=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Jeff Moyer <jmoyer@redhat.com>, Christoph Hellwig <hch@lst.de>,
-        Jan Kara <jack@suse.cz>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Sasha Levin <sashal@kernel.org>, linux-fsdevel@vger.kernel.org,
-        linux-nvdimm@lists.01.org
-Subject: [PATCH AUTOSEL 4.19 04/25] dax: pass NOWAIT flag to iomap_apply
-Date:   Sat, 22 Feb 2020 21:23:18 -0500
-Message-Id: <20200223022339.1885-4-sashal@kernel.org>
+Cc:     Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>,
+        Patrice Chotard <patrice.chotard@st.com>,
+        Sasha Levin <sashal@kernel.org>,
+        linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 11/25] ARM: dts: sti: fixup sound frame-inversion for stihxxx-b2120.dtsi
+Date:   Sat, 22 Feb 2020 21:23:25 -0500
+Message-Id: <20200223022339.1885-11-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200223022339.1885-1-sashal@kernel.org>
 References: <20200223022339.1885-1-sashal@kernel.org>
@@ -61,41 +60,34 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jeff Moyer <jmoyer@redhat.com>
+From: Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>
 
-[ Upstream commit 96222d53842dfe54869ec4e1b9d4856daf9105a2 ]
+[ Upstream commit f24667779b5348279e5e4328312a141a730a1fc7 ]
 
-fstests generic/471 reports a failure when run with MOUNT_OPTIONS="-o
-dax".  The reason is that the initial pwrite to an empty file with the
-RWF_NOWAIT flag set does not return -EAGAIN.  It turns out that
-dax_iomap_rw doesn't pass that flag through to iomap_apply.
+frame-inversion is "flag" not "uint32".
+This patch fixup it.
 
-With this patch applied, generic/471 passes for me.
-
-Signed-off-by: Jeff Moyer <jmoyer@redhat.com>
-Reviewed-by: Christoph Hellwig <hch@lst.de>
-Reviewed-by: Jan Kara <jack@suse.cz>
-Link: https://lore.kernel.org/r/x49r1z86e1d.fsf@segfault.boston.devel.redhat.com
-Signed-off-by: Dan Williams <dan.j.williams@intel.com>
+Signed-off-by: Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>
+Reviewed-by: Patrice Chotard <patrice.chotard@st.com>
+Signed-off-by: Patrice Chotard <patrice.chotard@st.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/dax.c | 3 +++
- 1 file changed, 3 insertions(+)
+ arch/arm/boot/dts/stihxxx-b2120.dtsi | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/fs/dax.c b/fs/dax.c
-index f0d932fa39c20..d09701aa6f2f4 100644
---- a/fs/dax.c
-+++ b/fs/dax.c
-@@ -1301,6 +1301,9 @@ dax_iomap_rw(struct kiocb *iocb, struct iov_iter *iter,
- 		lockdep_assert_held(&inode->i_rwsem);
- 	}
- 
-+	if (iocb->ki_flags & IOCB_NOWAIT)
-+		flags |= IOMAP_NOWAIT;
-+
- 	while (iov_iter_count(iter)) {
- 		ret = iomap_apply(inode, pos, iov_iter_count(iter), flags, ops,
- 				iter, dax_iomap_actor);
+diff --git a/arch/arm/boot/dts/stihxxx-b2120.dtsi b/arch/arm/boot/dts/stihxxx-b2120.dtsi
+index 4dedfcb0fcb30..ac42d3c6bda0b 100644
+--- a/arch/arm/boot/dts/stihxxx-b2120.dtsi
++++ b/arch/arm/boot/dts/stihxxx-b2120.dtsi
+@@ -45,7 +45,7 @@
+ 			/* DAC */
+ 			format = "i2s";
+ 			mclk-fs = <256>;
+-			frame-inversion = <1>;
++			frame-inversion;
+ 			cpu {
+ 				sound-dai = <&sti_uni_player2>;
+ 			};
 -- 
 2.20.1
 
