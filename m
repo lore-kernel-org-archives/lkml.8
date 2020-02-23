@@ -4,52 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B9095C35669
-	for <linux-kernel@archiver.kernel.org>; Sun, 23 Feb 2020 02:30:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5317DC35669
+	for <linux-kernel@archiver.kernel.org>; Sun, 23 Feb 2020 02:30:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 91AE120659
-	for <linux-kernel@archiver.kernel.org>; Sun, 23 Feb 2020 02:30:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 220AF206D7
+	for <linux-kernel@archiver.kernel.org>; Sun, 23 Feb 2020 02:30:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582425040;
-	bh=eXXEwCxnzdfxbjn5nkEQ8AGAGP1DgqEPMJ10TE5Ql3M=;
+	s=default; t=1582425046;
+	bh=fcYWeqZ+NvVYPuQOwjSEMDHOVle4+rOHXv1FIZXYU70=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=zH58OwBIlMwDgHc6ctquzyrvg3/Sp61pJHozc56OocaLVis0MEDaTqLr5MFAZ3q9W
-	 5fNbj0xUDS2z6K1wp8JhueKrlkx8y91KdxZJUQQYHo53c8pwpEblHGziz2JcCEjeRi
-	 2tGLaXYyDUXy7cucLA+6hbykKYQKYPsLSYjeXUHs=
+	b=Vn8dU6ttwa+dxkVFaoRAcAtLD3SYpmLfKSEYdnxh/fgxDUOnMQ8P9+9cRukrhuTTR
+	 1+w3r3hLAIaQkl716oIp+nrqFRVA2Lv2MEhu34wMpkm+Ki1PGbRl6riwP/7nbYvPbd
+	 +8P+ft4c31NaQ2QpAH3q9/8YY+GaSn50s3PFUnMM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728703AbgBWCXf (ORCPT
+        id S1728869AbgBWCao (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 22 Feb 2020 21:23:35 -0500
-Received: from mail.kernel.org ([198.145.29.99]:52898 "EHLO mail.kernel.org"
+        Sat, 22 Feb 2020 21:30:44 -0500
+Received: from mail.kernel.org ([198.145.29.99]:53100 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728661AbgBWCX0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 22 Feb 2020 21:23:26 -0500
+        id S1728715AbgBWCXd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 22 Feb 2020 21:23:33 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C99072071E;
-        Sun, 23 Feb 2020 02:23:24 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 577DB22525;
+        Sun, 23 Feb 2020 02:23:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1582424605;
-        bh=eXXEwCxnzdfxbjn5nkEQ8AGAGP1DgqEPMJ10TE5Ql3M=;
+        s=default; t=1582424613;
+        bh=fcYWeqZ+NvVYPuQOwjSEMDHOVle4+rOHXv1FIZXYU70=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=sLB72CR1KmgULm9w1HXhwVnyO952DTXsrH4Z+L59lKRGqZevqScq/493fEjwsVghE
-         bV34dPQ1i7/quDgoHQEIuH8xfiL040TrfvJJih/SFLA34g6rDxNuqV2qWDbTG9cNno
-         YbIrkN6Lu/K7zkerEP35bvPF2nR0PDlYq6cSBXI4=
+        b=G5KfIeDB6JvHn8lEztcYOF3PaJRXE78Hmbfz7c17SvR+EkmgfslFbaIXnCB4LiwHW
+         WXunK+1smgAkD6Gt9RpP+VXBJPG7Hff2J8ofs83s9yiUOFo2CwMv3pcVHNNKaH+xqV
+         RmeUMbadzE4wlkdXJsc/XgEm0nXBSm59sazvf7/I=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Bruce Allan <bruce.w.allan@intel.com>,
-        Tony Nguyen <anthony.l.nguyen@intel.com>,
-        Andrew Bowers <andrewx.bowers@intel.com>,
-        Jeff Kirsher <jeffrey.t.kirsher@intel.com>,
-        Sasha Levin <sashal@kernel.org>,
-        intel-wired-lan@lists.osuosl.org, netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.4 41/50] ice: update Unit Load Status bitmask to check after reset
-Date:   Sat, 22 Feb 2020 21:22:26 -0500
-Message-Id: <20200223022235.1404-41-sashal@kernel.org>
+Cc:     Guangbin Huang <huangguangbin2@huawei.com>,
+        Huazhong Tan <tanhuazhong@huawei.com>,
+        "David S . Miller" <davem@davemloft.net>,
+        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.4 47/50] net: hns3: fix a copying IPv6 address error in hclge_fd_get_flow_tuples()
+Date:   Sat, 22 Feb 2020 21:22:32 -0500
+Message-Id: <20200223022235.1404-47-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200223022235.1404-1-sashal@kernel.org>
 References: <20200223022235.1404-1-sashal@kernel.org>
@@ -62,81 +60,61 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Bruce Allan <bruce.w.allan@intel.com>
+From: Guangbin Huang <huangguangbin2@huawei.com>
 
-[ Upstream commit cf8fc2a0863f9ff27ebd2efcdb1f7d378b9fb8a6 ]
+[ Upstream commit 47327c9315b2f3ae4ab659457977a26669631f20 ]
 
-After a reset the Unit Load Status bits in the GLNVM_ULD register to check
-for completion should be 0x7FF before continuing.  Update the mask to check
-(minus the three reserved bits that are always set).
+The IPv6 address defined in struct in6_addr is specified as
+big endian, but there is no specified endian in struct
+hclge_fd_rule_tuples, so it  will cause a problem if directly
+use memcpy() to copy ipv6 address between these two structures
+since this field in struct hclge_fd_rule_tuples is little endian.
 
-Signed-off-by: Bruce Allan <bruce.w.allan@intel.com>
-Signed-off-by: Tony Nguyen <anthony.l.nguyen@intel.com>
-Tested-by: Andrew Bowers <andrewx.bowers@intel.com>
-Signed-off-by: Jeff Kirsher <jeffrey.t.kirsher@intel.com>
+This patch fixes this problem by using be32_to_cpu() to convert
+endian of IPv6 address of struct in6_addr before copying.
+
+Fixes: d93ed94fbeaf ("net: hns3: add aRFS support for PF")
+Signed-off-by: Guangbin Huang <huangguangbin2@huawei.com>
+Signed-off-by: Huazhong Tan <tanhuazhong@huawei.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/ethernet/intel/ice/ice_common.c     | 17 ++++++++++++-----
- drivers/net/ethernet/intel/ice/ice_hw_autogen.h |  6 ++++++
- 2 files changed, 18 insertions(+), 5 deletions(-)
+ .../ethernet/hisilicon/hns3/hns3pf/hclge_main.c   | 15 +++++++++------
+ 1 file changed, 9 insertions(+), 6 deletions(-)
 
-diff --git a/drivers/net/ethernet/intel/ice/ice_common.c b/drivers/net/ethernet/intel/ice/ice_common.c
-index 3a6b3950eb0e2..171f0b6254073 100644
---- a/drivers/net/ethernet/intel/ice/ice_common.c
-+++ b/drivers/net/ethernet/intel/ice/ice_common.c
-@@ -934,7 +934,7 @@ void ice_deinit_hw(struct ice_hw *hw)
-  */
- enum ice_status ice_check_reset(struct ice_hw *hw)
+diff --git a/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_main.c b/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_main.c
+index 0c3c63aed2c06..c01cf8ef69df9 100644
+--- a/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_main.c
++++ b/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_main.c
+@@ -6003,6 +6003,9 @@ static int hclge_get_all_rules(struct hnae3_handle *handle,
+ static void hclge_fd_get_flow_tuples(const struct flow_keys *fkeys,
+ 				     struct hclge_fd_rule_tuples *tuples)
  {
--	u32 cnt, reg = 0, grst_delay;
-+	u32 cnt, reg = 0, grst_delay, uld_mask;
- 
- 	/* Poll for Device Active state in case a recent CORER, GLOBR,
- 	 * or EMPR has occurred. The grst delay value is in 100ms units.
-@@ -956,13 +956,20 @@ enum ice_status ice_check_reset(struct ice_hw *hw)
- 		return ICE_ERR_RESET_FAILED;
- 	}
- 
--#define ICE_RESET_DONE_MASK	(GLNVM_ULD_CORER_DONE_M | \
--				 GLNVM_ULD_GLOBR_DONE_M)
-+#define ICE_RESET_DONE_MASK	(GLNVM_ULD_PCIER_DONE_M |\
-+				 GLNVM_ULD_PCIER_DONE_1_M |\
-+				 GLNVM_ULD_CORER_DONE_M |\
-+				 GLNVM_ULD_GLOBR_DONE_M |\
-+				 GLNVM_ULD_POR_DONE_M |\
-+				 GLNVM_ULD_POR_DONE_1_M |\
-+				 GLNVM_ULD_PCIER_DONE_2_M)
++#define flow_ip6_src fkeys->addrs.v6addrs.src.in6_u.u6_addr32
++#define flow_ip6_dst fkeys->addrs.v6addrs.dst.in6_u.u6_addr32
 +
-+	uld_mask = ICE_RESET_DONE_MASK;
+ 	tuples->ether_proto = be16_to_cpu(fkeys->basic.n_proto);
+ 	tuples->ip_proto = fkeys->basic.ip_proto;
+ 	tuples->dst_port = be16_to_cpu(fkeys->ports.dst);
+@@ -6011,12 +6014,12 @@ static void hclge_fd_get_flow_tuples(const struct flow_keys *fkeys,
+ 		tuples->src_ip[3] = be32_to_cpu(fkeys->addrs.v4addrs.src);
+ 		tuples->dst_ip[3] = be32_to_cpu(fkeys->addrs.v4addrs.dst);
+ 	} else {
+-		memcpy(tuples->src_ip,
+-		       fkeys->addrs.v6addrs.src.in6_u.u6_addr32,
+-		       sizeof(tuples->src_ip));
+-		memcpy(tuples->dst_ip,
+-		       fkeys->addrs.v6addrs.dst.in6_u.u6_addr32,
+-		       sizeof(tuples->dst_ip));
++		int i;
++
++		for (i = 0; i < IPV6_SIZE; i++) {
++			tuples->src_ip[i] = be32_to_cpu(flow_ip6_src[i]);
++			tuples->dst_ip[i] = be32_to_cpu(flow_ip6_dst[i]);
++		}
+ 	}
+ }
  
- 	/* Device is Active; check Global Reset processes are done */
- 	for (cnt = 0; cnt < ICE_PF_RESET_WAIT_COUNT; cnt++) {
--		reg = rd32(hw, GLNVM_ULD) & ICE_RESET_DONE_MASK;
--		if (reg == ICE_RESET_DONE_MASK) {
-+		reg = rd32(hw, GLNVM_ULD) & uld_mask;
-+		if (reg == uld_mask) {
- 			ice_debug(hw, ICE_DBG_INIT,
- 				  "Global reset processes done. %d\n", cnt);
- 			break;
-diff --git a/drivers/net/ethernet/intel/ice/ice_hw_autogen.h b/drivers/net/ethernet/intel/ice/ice_hw_autogen.h
-index 152fbd556e9b4..9138b19de87e0 100644
---- a/drivers/net/ethernet/intel/ice/ice_hw_autogen.h
-+++ b/drivers/net/ethernet/intel/ice/ice_hw_autogen.h
-@@ -273,8 +273,14 @@
- #define GLNVM_GENS_SR_SIZE_S			5
- #define GLNVM_GENS_SR_SIZE_M			ICE_M(0x7, 5)
- #define GLNVM_ULD				0x000B6008
-+#define GLNVM_ULD_PCIER_DONE_M			BIT(0)
-+#define GLNVM_ULD_PCIER_DONE_1_M		BIT(1)
- #define GLNVM_ULD_CORER_DONE_M			BIT(3)
- #define GLNVM_ULD_GLOBR_DONE_M			BIT(4)
-+#define GLNVM_ULD_POR_DONE_M			BIT(5)
-+#define GLNVM_ULD_POR_DONE_1_M			BIT(8)
-+#define GLNVM_ULD_PCIER_DONE_2_M		BIT(9)
-+#define GLNVM_ULD_PE_DONE_M			BIT(10)
- #define GLPCI_CNF2				0x000BE004
- #define GLPCI_CNF2_CACHELINE_SIZE_M		BIT(1)
- #define PF_FUNC_RID				0x0009E880
 -- 
 2.20.1
 
