@@ -2,115 +2,114 @@ Return-Path: <SRS0=SnAt=4L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+X-Spam-Status: No, score=-9.5 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 14896C35671
-	for <linux-kernel@archiver.kernel.org>; Sun, 23 Feb 2020 20:44:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 57E80C35673
+	for <linux-kernel@archiver.kernel.org>; Sun, 23 Feb 2020 20:46:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DB13B206E0
-	for <linux-kernel@archiver.kernel.org>; Sun, 23 Feb 2020 20:44:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 291A4206E0
+	for <linux-kernel@archiver.kernel.org>; Sun, 23 Feb 2020 20:46:20 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=gmx.net header.i=@gmx.net header.b="ijsR8YKo"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727100AbgBWUoY (ORCPT
+        id S1727149AbgBWUqH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 23 Feb 2020 15:44:24 -0500
-Received: from mga18.intel.com ([134.134.136.126]:27677 "EHLO mga18.intel.com"
+        Sun, 23 Feb 2020 15:46:07 -0500
+Received: from mout.gmx.net ([212.227.15.15]:41821 "EHLO mout.gmx.net"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726302AbgBWUoY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 23 Feb 2020 15:44:24 -0500
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga008.jf.intel.com ([10.7.209.65])
-  by orsmga106.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 23 Feb 2020 12:44:23 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.70,477,1574150400"; 
-   d="scan'208";a="230436248"
-Received: from twinkler-lnx.jer.intel.com ([10.12.91.155])
-  by orsmga008.jf.intel.com with ESMTP; 23 Feb 2020 12:44:22 -0800
-From:   Tomas Winkler <tomas.winkler@intel.com>
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     Alexander Usyskin <alexander.usyskin@intel.com>,
-        linux-kernel@vger.kernel.org,
-        Tomas Winkler <tomas.winkler@intel.com>
-Subject: [char-misc-next] mei: remove unused includes from pci-{me,txe}.c
-Date:   Sun, 23 Feb 2020 22:44:19 +0200
-Message-Id: <20200223204419.2634-1-tomas.winkler@intel.com>
-X-Mailer: git-send-email 2.21.1
+        id S1726302AbgBWUqH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 23 Feb 2020 15:46:07 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gmx.net;
+        s=badeba3b8450; t=1582490762;
+        bh=qZfvYCLOSrTYaWWsIfw80OJFIKAonSXgx7/lAZyVBkU=;
+        h=X-UI-Sender-Class:From:To:Cc:Subject:Date;
+        b=ijsR8YKoBO62QCVTY06/A3BiWJM3wBjwZ+a1C6GUTKHyuumVewbHX906j3MlLikKH
+         dTjC2JXns5pTz2gc0B64yYJ/UxAL/REMqLvwxWvd9mPVAtzw2esCTDr91004aAMPSK
+         rJN2VDFia784afw+DLPs7FBrDNEI6yLAAK3gAN7s=
+X-UI-Sender-Class: 01bb95c1-4bf8-414a-932a-4f6e2808ef9c
+Received: from LT02.fritz.box ([84.119.33.160]) by mail.gmx.com (mrgmx004
+ [212.227.17.184]) with ESMTPSA (Nemesis) id 1N3se2-1jW7uE20zg-00zjY6; Sun, 23
+ Feb 2020 21:46:02 +0100
+From:   Heinrich Schuchardt <xypron.glpk@gmx.de>
+To:     Ard Biesheuvel <ardb@kernel.org>
+Cc:     linux-efi@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Heinrich Schuchardt <xypron.glpk@gmx.de>
+Subject: [PATCH 1/1] efi/esrt: unused variable in __init efi_esrt_init
+Date:   Sun, 23 Feb 2020 21:45:57 +0100
+Message-Id: <20200223204557.114634-1-xypron.glpk@gmx.de>
+X-Mailer: git-send-email 2.25.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: quoted-printable
+X-Provags-ID: V03:K1:pgqCYKkQTKbRoU/yupnI6uC3jb44FCQ4Nu5SZfjmYi48GCYUaF3
+ LcQqpdRjzjFMihjuVPeVeGtgnczUfIuPrNN12Ea6SpCIINCIkyWCfNr7IsDSPoBhBOvEoV2
+ cacth49QHwyCf+wETJjAJzuXwqFEIKWDHkMdJWofLQxtB8CmxQdHavJyUnOvzsxSoRpewdf
+ /TW6ufF5aSeBWXHDf/oeQ==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:l+ZkU9xBG24=:NmPPnFNG44eSRXj0nkemg9
+ m0NhSvL4npoC0y/GlDTqfR8i5j4Ia0ZVbefZNpH8pgU51sgToGPGlmdmZrhiFxisEikHxbikC
+ V8GtDPNEZlB2u6Z82PQcM4GBMZoevjHiysXFZG3NX5RgcsaNgcG021jMvoJvK4IeSvEQ+Fwf5
+ BeWVkZh7vjBJRniePcr94zrBfKIwN2u/hK64vIJl8jg8T+5cw6IgSWm62ryIl6+BlIDiaUvHT
+ 7qR8CRewv+qKmbLqlLRGhepm6bncNYUP3V3odzkM7pfPODv8MwRT9MXmrWi+lDT6H422yTLY1
+ qv5H2zZ9+erqDmqF55xefS4NMXGtAlGg2TvgkInV4qAY06UWcRElpYPGY5Dt9pOWnSpS0mSyR
+ tvX3tE4sLZ1OpKzrlDaFKHDllYKinjdvmpqsfvOvNVqGS0abkZ97Qrs2EU1XOQsw2h8JRzg0n
+ cF5BafV7C6F/8IL8HPM5Ime4LA3aG8BIV0+o4Vj3DtBqvwbec5n9F/mvTOYBCeqvlAlZGdr39
+ Wn4nNIlWxNyIeM3ve6SXqCjSS2Zkcxw7GuALgKu3drj1wcTynGyul53/p7t/TssbbgEhZZiuD
+ srG5cyXRA1ghzDalsGKLV9GQn7qNo0cPC109M1e8vq0e8v1gwXaaum38enmlNs7M0e0x9Mrvs
+ QVSdHOOdZOxcApIPtzVYaAXBbiEU519t1wOiY23NkqLRwBFHFbhf09aF54sH2r/6WN85+yZjp
+ H5L0pGn1pdDiKqWrkK/2xjsJDbaLfyMtkXt2VdV/rOgA2h7nVNfXbchQHd5upc/efgv3L7rqm
+ UjmUTu2M2fVZYHQ2I12C54rCgj3iTyK/wW4r241Q9vbNJyOpoD6Z3AuVFyKUw+lyml3GF4SX/
+ I28Ygrg3HHF5KTPacw8MgmkYyYdMyivpOrJVfsNvfi+eLSvwwY37xhwkYLlYVWcFss6uJZjMp
+ WSBmulwv/NNr8splMGb8Y6BI2L95Z3JNNueV2+L5zNQr0zW3HdnnTHjXH0+qR/h9BKnQO8S56
+ aQdMnkrUQWAGpojQxL3GKZZCre3PK4fygWLE9/DrvBIqbjg6Zijp6YdrbLaavuOzsEFNvreFe
+ YqS3ys4JS+eogbSkrV4ByIhcTzztRKylti8MO9iyrmrJ5MVK96RpSokklEV2dpvd28DeO6FPX
+ lwvah8TSPjydtzeheeqJ3JEPLGS0+gQE0+ZqOWmY/wqxBoDWsO4U5BGcz6PmWfSrviBu+ZkMI
+ sIbiFuddlZJm48ukl
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-During the development some of the module functions were factored
-out of pci-mei.c and pci-txe.c files, but the includes
-have remain there. We can remove them now.
+Remove an unused variable in __init efi_esrt_init().
+Simplify a logical constraint.
 
-Signed-off-by: Tomas Winkler <tomas.winkler@intel.com>
----
- drivers/misc/mei/pci-me.c  | 11 +----------
- drivers/misc/mei/pci-txe.c |  5 +----
- 2 files changed, 2 insertions(+), 14 deletions(-)
+Signed-off-by: Heinrich Schuchardt <xypron.glpk@gmx.de>
+=2D--
+ drivers/firmware/efi/esrt.c | 6 ++----
+ 1 file changed, 2 insertions(+), 4 deletions(-)
 
-diff --git a/drivers/misc/mei/pci-me.c b/drivers/misc/mei/pci-me.c
-index 2711451b3d87..f51e5326b8bd 100644
---- a/drivers/misc/mei/pci-me.c
-+++ b/drivers/misc/mei/pci-me.c
-@@ -1,25 +1,16 @@
- // SPDX-License-Identifier: GPL-2.0
- /*
-- * Copyright (c) 2003-2019, Intel Corporation. All rights reserved.
-+ * Copyright (c) 2003-2020, Intel Corporation. All rights reserved.
-  * Intel Management Engine Interface (Intel MEI) Linux driver
-  */
- 
- #include <linux/module.h>
--#include <linux/moduleparam.h>
- #include <linux/kernel.h>
- #include <linux/device.h>
--#include <linux/fs.h>
- #include <linux/errno.h>
- #include <linux/types.h>
--#include <linux/fcntl.h>
- #include <linux/pci.h>
--#include <linux/poll.h>
--#include <linux/ioctl.h>
--#include <linux/cdev.h>
- #include <linux/sched.h>
--#include <linux/uuid.h>
--#include <linux/compat.h>
--#include <linux/jiffies.h>
- #include <linux/interrupt.h>
- 
- #include <linux/pm_domain.h>
-diff --git a/drivers/misc/mei/pci-txe.c b/drivers/misc/mei/pci-txe.c
-index f1c16a587495..beacf2a2f2b5 100644
---- a/drivers/misc/mei/pci-txe.c
-+++ b/drivers/misc/mei/pci-txe.c
-@@ -1,20 +1,17 @@
- // SPDX-License-Identifier: GPL-2.0
- /*
-- * Copyright (c) 2013-2017, Intel Corporation. All rights reserved.
-+ * Copyright (c) 2013-2020, Intel Corporation. All rights reserved.
-  * Intel Management Engine Interface (Intel MEI) Linux driver
-  */
- 
- #include <linux/module.h>
- #include <linux/kernel.h>
- #include <linux/device.h>
--#include <linux/fs.h>
- #include <linux/errno.h>
- #include <linux/types.h>
- #include <linux/pci.h>
- #include <linux/init.h>
- #include <linux/sched.h>
--#include <linux/uuid.h>
--#include <linux/jiffies.h>
- #include <linux/interrupt.h>
- #include <linux/workqueue.h>
- #include <linux/pm_domain.h>
--- 
-2.21.1
+diff --git a/drivers/firmware/efi/esrt.c b/drivers/firmware/efi/esrt.c
+index 2762e0662bf4..e3d692696583 100644
+=2D-- a/drivers/firmware/efi/esrt.c
++++ b/drivers/firmware/efi/esrt.c
+@@ -240,7 +240,6 @@ void __init efi_esrt_init(void)
+ {
+ 	void *va;
+ 	struct efi_system_resource_table tmpesrt;
+-	struct efi_system_resource_entry_v1 *v1_entries;
+ 	size_t size, max, entry_size, entries_size;
+ 	efi_memory_desc_t md;
+ 	int rc;
+@@ -288,14 +287,13 @@ void __init efi_esrt_init(void)
+ 	memcpy(&tmpesrt, va, sizeof(tmpesrt));
+ 	early_memunmap(va, size);
+
+-	if (tmpesrt.fw_resource_version =3D=3D 1) {
+-		entry_size =3D sizeof (*v1_entries);
+-	} else {
++	if (tmpesrt.fw_resource_version !=3D 1) {
+ 		pr_err("Unsupported ESRT version %lld.\n",
+ 		       tmpesrt.fw_resource_version);
+ 		return;
+ 	}
+
++	entry_size =3D sizeof(struct efi_system_resource_entry_v1);
+ 	if (tmpesrt.fw_resource_count > 0 && max - size < entry_size) {
+ 		pr_err("ESRT memory map entry can only hold the header. (max: %zu size:=
+ %zu)\n",
+ 		       max - size, entry_size);
+=2D-
+2.25.0
 
