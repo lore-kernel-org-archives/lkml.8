@@ -2,136 +2,68 @@ Return-Path: <SRS0=SnAt=4L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AFEF3C35669
-	for <linux-kernel@archiver.kernel.org>; Sun, 23 Feb 2020 01:36:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B593EC35671
+	for <linux-kernel@archiver.kernel.org>; Sun, 23 Feb 2020 01:52:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 86579206EF
-	for <linux-kernel@archiver.kernel.org>; Sun, 23 Feb 2020 01:36:08 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=paul-moore-com.20150623.gappssmtp.com header.i=@paul-moore-com.20150623.gappssmtp.com header.b="RTm5uGX/"
+	by mail.kernel.org (Postfix) with ESMTP id 9409120702
+	for <linux-kernel@archiver.kernel.org>; Sun, 23 Feb 2020 01:52:46 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727136AbgBWBfr (ORCPT
+        id S1727115AbgBWBwp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 22 Feb 2020 20:35:47 -0500
-Received: from mail-ed1-f65.google.com ([209.85.208.65]:41921 "EHLO
-        mail-ed1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726955AbgBWBfr (ORCPT
+        Sat, 22 Feb 2020 20:52:45 -0500
+Received: from ishtar.tlinx.org ([173.164.175.65]:50994 "EHLO
+        Ishtar.sc.tlinx.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726884AbgBWBwp (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 22 Feb 2020 20:35:47 -0500
-Received: by mail-ed1-f65.google.com with SMTP id c26so7399115eds.8
-        for <linux-kernel@vger.kernel.org>; Sat, 22 Feb 2020 17:35:44 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=paul-moore-com.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=20P6VASIF4kXfRxGqIIEpQkeQCJGweC3KQmcTkimeB8=;
-        b=RTm5uGX/k3ITY+whCQAA9gNJQlCO2ccrxW7bPatxz5RysxYUoyBKUJQyI17tNp1my6
-         dYqJYn+aQk9mPJ7BHPPbv+On5oUrc0mBKp9Zb3eF6JM0hXDdEPX2dMVYeBCUvn3NebzG
-         Bh3X/gOaNPBAAz5wUZ3gqxd/XfB08PaQ1YConNfBeJ4wBPGGv1q9UrkRd0aueq5oyRBf
-         QSItvuj9Ngw4iRUBu+3c0XqFBxS3m4PcmKSxjEjOjI5NXjow8Wb4nytvKIY3Z8Ur27cz
-         MN32/dxEY8gBK2EPgM/zcnJ+e7jOYYufjVHY0UgvtWKG8xjWwThRuoPd1ElKzZ7P7Rjr
-         XwDQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=20P6VASIF4kXfRxGqIIEpQkeQCJGweC3KQmcTkimeB8=;
-        b=UC0q0c8LqZVKiTZuC03ILA7kjH6mpf2VoXK00c6brbhd97BIiXIQI71Zkeo/ZrWAWb
-         p391wbO6gnFJIA7gcoi22TpCjbq6cmv8I5nYzmTOoNy23iyvi30BYdNfGXsecDJaQeeM
-         kbZJDn8jyJ4CUgAQzMYIi7RaarO1PECBYn6SIkCoQHkoow+u7TNxsJc0rTd7c5wbd4Yy
-         tmlRB4nGIlvFhyWLYxTHPEXl2XgjUB7QDT6i+0jZxY3mQ3Eb1kiGy5Vmx2GfecYFruUa
-         bO9NwnXP7+pDv7Cfl3WIo0ny+vLwA+o9q7l0P/IaUPZgFFlkWAs9AF5hpmcBtMFNx+Je
-         Yw3Q==
-X-Gm-Message-State: APjAAAWP51ZSpXByYwpKTtefic8r30iUpsDNzqBzT7IpJLzXfKgLITHN
-        dlpgIZBZkkg+d2NK2Kv3FdWEWwg4b1raosy7JsQ6
-X-Google-Smtp-Source: APXvYqz8DJKS5CKcLnZfHxjXlihVmzI0hJTOjd6/HsN9rvUBib9qD32P32RQSfCFIFr+XM7mZe8f07VSy739INwIpBk=
-X-Received: by 2002:a17:906:9352:: with SMTP id p18mr40572590ejw.95.1582421743723;
- Sat, 22 Feb 2020 17:35:43 -0800 (PST)
+        Sat, 22 Feb 2020 20:52:45 -0500
+Received: from [192.168.3.12] (Athenae [192.168.3.12])
+        by Ishtar.sc.tlinx.org (8.14.7/8.14.4/SuSE Linux 0.8) with ESMTP id 01N1qgA2080730;
+        Sat, 22 Feb 2020 17:52:44 -0800
+Message-ID: <5E51DAEA.8090702@tlinx.org>
+Date:   Sat, 22 Feb 2020 17:52:42 -0800
+From:   L Walsh <cifs@tlinx.org>
+User-Agent: Thunderbird
 MIME-Version: 1.0
-References: <0000000000008e18fb059f1fd725@google.com>
-In-Reply-To: <0000000000008e18fb059f1fd725@google.com>
-From:   Paul Moore <paul@paul-moore.com>
-Date:   Sat, 22 Feb 2020 20:35:32 -0500
-Message-ID: <CAHC9VhTKzn-OdmmvCRPQSNF2beaA6E7Cm0KkxN0u3UjA3OkyXA@mail.gmail.com>
-Subject: Re: kernel BUG at arch/x86/mm/physaddr.c:LINE! (4)
-To:     linux-audit@redhat.com
-Cc:     Eric Paris <eparis@redhat.com>, linux-kernel@vger.kernel.org,
-        netdev@vger.kernel.org, syzkaller-bugs@googlegroups.com,
-        syzbot <syzbot+1f4d90ead370d72e450b@syzkaller.appspotmail.com>
-Content-Type: text/plain; charset="UTF-8"
+To:     linux-cifs <linux-cifs@vger.kernel.org>,
+        Linux-Kernel <linux-kernel@vger.kernel.org>
+Subject: Regression -- linux 5.5.3: can no longer mount with unix extentions
+ using cifs 2.1 (Win10-only client additions)
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Feb 21, 2020 at 8:13 PM syzbot
-<syzbot+1f4d90ead370d72e450b@syzkaller.appspotmail.com> wrote:
->
-> Hello,
->
-> syzbot found the following crash on:
->
-> HEAD commit:    36a44bcd Merge branch 'bnxt_en-shutdown-and-kexec-kdump-re..
-> git tree:       net
-> console output: https://syzkaller.appspot.com/x/log.txt?x=12524265e00000
-> kernel config:  https://syzkaller.appspot.com/x/.config?x=768cc3d3e277cc16
-> dashboard link: https://syzkaller.appspot.com/bug?extid=1f4d90ead370d72e450b
-> compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
-> syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=123d9de9e00000
-> C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=1648fe09e00000
->
-> IMPORTANT: if you fix the bug, please add the following tag to the commit:
-> Reported-by: syzbot+1f4d90ead370d72e450b@syzkaller.appspotmail.com
->
-> ------------[ cut here ]------------
-> kernel BUG at arch/x86/mm/physaddr.c:28!
-> invalid opcode: 0000 [#1] PREEMPT SMP KASAN
-> CPU: 1 PID: 9873 Comm: syz-executor039 Not tainted 5.6.0-rc1-syzkaller #0
-> Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
-> RIP: 0010:__phys_addr+0xb3/0x120 arch/x86/mm/physaddr.c:28
-> Code: 09 4c 89 e3 31 ff 48 d3 eb 48 89 de e8 36 e2 40 00 48 85 db 75 0f e8 8c e0 40 00 4c 89 e0 5b 41 5c 41 5d 5d c3 e8 7d e0 40 00 <0f> 0b e8 76 e0 40 00 48 c7 c0 10 50 a7 89 48 ba 00 00 00 00 00 fc
-> RSP: 0018:ffffc90005b47490 EFLAGS: 00010093
-> RAX: ffff8880944f4600 RBX: 0000000002777259 RCX: ffffffff8134ad32
-> RDX: 0000000000000000 RSI: ffffffff8134ad93 RDI: 0000000000000006
-> RBP: ffffc90005b474a8 R08: ffff8880944f4600 R09: ffffed1015d2707c
-> R10: ffffed1015d2707b R11: ffff8880ae9383db R12: 0000778002777259
-> R13: 0000000082777259 R14: ffff88809a765000 R15: 0000000000000010
-> FS:  0000000001436880(0000) GS:ffff8880ae900000(0000) knlGS:0000000000000000
-> CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-> CR2: 00000000200004c0 CR3: 0000000096da8000 CR4: 00000000001406e0
-> DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-> DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
-> Call Trace:
->  virt_to_head_page include/linux/mm.h:721 [inline]
->  virt_to_cache mm/slab.h:472 [inline]
->  kfree+0x7b/0x2c0 mm/slab.c:3749
->  audit_free_lsm_field kernel/auditfilter.c:76 [inline]
->  audit_free_rule kernel/auditfilter.c:91 [inline]
->  audit_data_to_entry+0xb7b/0x25f0 kernel/auditfilter.c:603
->  audit_rule_change+0x6b5/0x1130 kernel/auditfilter.c:1130
->  audit_receive_msg+0xda5/0x28b0 kernel/audit.c:1368
->  audit_receive+0x114/0x230 kernel/audit.c:1513
+hard links and serverino numbers, among other things used to work when
+mounting a win7 client using a linux cifs client
 
-Ugh, I think I see the problem.
+I tried this today, and am getting:
 
-In audit_data_to_entry() the code sets both an audit_field->type and
-an audit_field->val near the top of the big for-loop (lines 466 and
-467 in Linus' tree as of now); if the type happens to be one of the
-types which cause the lsm_str field to be kfree()'d (see
-audit_free_lsm_field()), then we could run into problems if we end up
-following an error path in audit_data_to_entry() before the lsm_str
-field is populated with an actual string.
+[701913.978407] CIFS VFS: Autodisabling the use of server inode numbers 
+on \\Athenae\C.
+[701913.986151] CIFS VFS: The server doesn't seem to support them 
+properly or the files might be on different servers (DFS).
+[701913.997116] CIFS VFS: Hardlinks will not be recognized on this 
+mount. Consider mounting with the "noserverino" option to silence this 
+message.
+[703793.287615] CIFS VFS: Server does not support mounting with posix 
+SMB3.11 extensions.
+[703793.295810] CIFS VFS: cifs_mount failed w/return code = -95
 
-If the above reasoning proves to be correct, it looks like the problem
-was caused by 219ca39427bf ("audit: use union for audit_field values
-since they are mutually exclusive").
+The win7 workstation in question is running 1 hard disk, no DFS.
 
-I'll see about working up a fix.
+Unix extensions worked long before SMB3.x.  It seems there is ongoing work
+to disable SMB2.1 support and replace it with only latest SMB from MS
+compatible with Win10. 
 
---
-paul moore
-www.paul-moore.com
+If MS wants to backport SMB3.x to Win7, that would be fine, but I
+doubt that is going to happen.  NTL, if they keep breaking 2.1 compatibility
+that would be one option.
+
+
+
