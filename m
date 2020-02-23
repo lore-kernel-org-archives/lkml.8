@@ -7,52 +7,54 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 03253C35669
-	for <linux-kernel@archiver.kernel.org>; Sun, 23 Feb 2020 02:28:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7B87AC35671
+	for <linux-kernel@archiver.kernel.org>; Sun, 23 Feb 2020 02:28:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BF19720659
-	for <linux-kernel@archiver.kernel.org>; Sun, 23 Feb 2020 02:28:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 533B220659
+	for <linux-kernel@archiver.kernel.org>; Sun, 23 Feb 2020 02:28:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582424910;
-	bh=+4WPWUaGDWLShhdy5FaNvPbfl02ykHihgTT9PqSSayA=;
+	s=default; t=1582424912;
+	bh=zwqvGnTZQXuLQfs4bETDMXy9wOSAfwlHiP0Ase33big=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=sVo7KLBNc6NbXrjRAm2bs/gibCsJqfm+H8L7FJjxmKZibLOVDBmj639FsAxq9li53
-	 TenuZdfBjWYmloK8JOxmApvXQYD1TTXjKlSB1K62Y8Y1py8euypg2x/gCzuC1ukmFi
-	 gA8W4qjTcxJxl/ZfQ6qYVSfn+k56ee8AcwvFvvcI=
+	b=qJkBLu6Ds5zoi3wsedrJzF7qTtOQ//jXP9HswR4xTUaPYGmL+5YgCTd+oisd6bSSj
+	 AeROsWf35vb7nvm8/y4B2PY1DZErGX6yI7oSjIgMdG1mtqMHG+zT+Lx6iUEdliMoOZ
+	 sYvXfPlqAeIvonAxVC1pII4LTpzENEIerL7gV03E=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729169AbgBWCYT (ORCPT
+        id S1729360AbgBWC2b (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 22 Feb 2020 21:24:19 -0500
-Received: from mail.kernel.org ([198.145.29.99]:54148 "EHLO mail.kernel.org"
+        Sat, 22 Feb 2020 21:28:31 -0500
+Received: from mail.kernel.org ([198.145.29.99]:54292 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729042AbgBWCYQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 22 Feb 2020 21:24:16 -0500
+        id S1727803AbgBWCYU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 22 Feb 2020 21:24:20 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 40C5422464;
-        Sun, 23 Feb 2020 02:24:15 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D1C8E21741;
+        Sun, 23 Feb 2020 02:24:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1582424656;
-        bh=+4WPWUaGDWLShhdy5FaNvPbfl02ykHihgTT9PqSSayA=;
+        s=default; t=1582424659;
+        bh=zwqvGnTZQXuLQfs4bETDMXy9wOSAfwlHiP0Ase33big=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=k3nvsnYMtUJ8E7He9fK3XluVy5ErBPbePaT2uj3qqS8RoeSzHVqTWUnolGZZ+Abr9
-         ATZpKXCh8X91Y+J9MarZSr1MirQjdjLu8SsRPHbjapCGa96LDd/+wML+GQIobHWFdi
-         TykNNCMJXZZxzbfzRdNLZBaYFK6yoQEOtqwtIZV8=
+        b=2YaNbXluKUoMmcNqYt4W1YeLjoB8DOqe/UlJIv3zCWQUvN/TKCAgYo7BXqyY2GnmY
+         vLwEkNF03N9YmTCUpfE9Ek9ThjL0kBHI9GdUgls5uhb6ACwnEyQ+jSXVzU5QayuhML
+         PfH9yJ8VDgewN8RW0yRUD67OjLwRUmi81oEuMb/8=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Jeff Moyer <jmoyer@redhat.com>, Christoph Hellwig <hch@lst.de>,
-        Jan Kara <jack@suse.cz>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Sasha Levin <sashal@kernel.org>, linux-fsdevel@vger.kernel.org,
-        linux-nvdimm@lists.01.org
-Subject: [PATCH AUTOSEL 4.14 03/21] dax: pass NOWAIT flag to iomap_apply
-Date:   Sat, 22 Feb 2020 21:23:53 -0500
-Message-Id: <20200223022411.2159-3-sashal@kernel.org>
+Cc:     =?UTF-8?q?Bj=C3=B8rn=20Mork?= <bjorn@mork.no>,
+        Lars Melin <larsm17@gmail.com>,
+        Aleksander Morgado <aleksander@aleksander.es>,
+        "David S . Miller" <davem@davemloft.net>,
+        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org,
+        linux-usb@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.14 06/21] qmi_wwan: re-add DW5821e pre-production variant
+Date:   Sat, 22 Feb 2020 21:23:56 -0500
+Message-Id: <20200223022411.2159-6-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200223022411.2159-1-sashal@kernel.org>
 References: <20200223022411.2159-1-sashal@kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
@@ -61,41 +63,74 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jeff Moyer <jmoyer@redhat.com>
+From: Bjørn Mork <bjorn@mork.no>
 
-[ Upstream commit 96222d53842dfe54869ec4e1b9d4856daf9105a2 ]
+[ Upstream commit 88bf54603f6f2c137dfee1abf6436ceac3528d2d ]
 
-fstests generic/471 reports a failure when run with MOUNT_OPTIONS="-o
-dax".  The reason is that the initial pwrite to an empty file with the
-RWF_NOWAIT flag set does not return -EAGAIN.  It turns out that
-dax_iomap_rw doesn't pass that flag through to iomap_apply.
+Commit f25e1392fdb5 removed the support for the pre-production variant
+of the Dell DW5821e to avoid probing another USB interface unnecessarily.
+However, the pre-production samples are found in the wild, and this lack
+of support is causing problems for users of such samples.  It is therefore
+necessary to support both variants.
 
-With this patch applied, generic/471 passes for me.
+Matching on both interfaces 0 and 1 is not expected to cause any problem
+with either variant, as only the QMI function will be probed successfully
+on either.  Interface 1 will be rejected based on the HID class for the
+production variant:
 
-Signed-off-by: Jeff Moyer <jmoyer@redhat.com>
-Reviewed-by: Christoph Hellwig <hch@lst.de>
-Reviewed-by: Jan Kara <jack@suse.cz>
-Link: https://lore.kernel.org/r/x49r1z86e1d.fsf@segfault.boston.devel.redhat.com
-Signed-off-by: Dan Williams <dan.j.williams@intel.com>
+T:  Bus=01 Lev=03 Prnt=04 Port=00 Cnt=01 Dev#= 16 Spd=480 MxCh= 0
+D:  Ver= 2.10 Cls=ef(misc ) Sub=02 Prot=01 MxPS=64 #Cfgs=  2
+P:  Vendor=413c ProdID=81d7 Rev=03.18
+S:  Manufacturer=DELL
+S:  Product=DW5821e Snapdragon X20 LTE
+S:  SerialNumber=0123456789ABCDEF
+C:  #Ifs= 6 Cfg#= 1 Atr=a0 MxPwr=500mA
+I:  If#= 0 Alt= 0 #EPs= 3 Cls=ff(vend.) Sub=ff Prot=ff Driver=qmi_wwan
+I:  If#= 1 Alt= 0 #EPs= 1 Cls=03(HID  ) Sub=00 Prot=00 Driver=usbhid
+I:  If#= 2 Alt= 0 #EPs= 3 Cls=ff(vend.) Sub=00 Prot=00 Driver=option
+I:  If#= 3 Alt= 0 #EPs= 3 Cls=ff(vend.) Sub=00 Prot=00 Driver=option
+I:  If#= 4 Alt= 0 #EPs= 3 Cls=ff(vend.) Sub=00 Prot=00 Driver=option
+I:  If#= 5 Alt= 0 #EPs= 2 Cls=ff(vend.) Sub=ff Prot=ff Driver=option
+
+And interface 0 will be rejected based on too few endpoints for the
+pre-production variant:
+
+T: Bus=01 Lev=02 Prnt=02 Port=03 Cnt=03 Dev#= 7 Spd=480 MxCh= 0
+D: Ver= 2.10 Cls=ef(misc ) Sub=02 Prot=01 MxPS=64 #Cfgs= 2
+P: Vendor=413c ProdID=81d7 Rev= 3.18
+S: Manufacturer=DELL
+S: Product=DW5821e Snapdragon X20 LTE
+S: SerialNumber=0123456789ABCDEF
+C: #Ifs= 5 Cfg#= 1 Atr=a0 MxPwr=500mA
+I: If#= 0 Alt= 0 #EPs= 2 Cls=ff(vend.) Sub=ff Prot=ff Driver=
+I: If#= 1 Alt= 0 #EPs= 3 Cls=ff(vend.) Sub=ff Prot=ff Driver=qmi_wwan
+I: If#= 2 Alt= 0 #EPs= 3 Cls=ff(vend.) Sub=00 Prot=00 Driver=option
+I: If#= 3 Alt= 0 #EPs= 3 Cls=ff(vend.) Sub=00 Prot=00 Driver=option
+I: If#= 4 Alt= 0 #EPs= 3 Cls=ff(vend.) Sub=00 Prot=00 Driver=option
+
+Fixes: f25e1392fdb5 ("qmi_wwan: fix interface number for DW5821e production firmware")
+Link: https://whrl.pl/Rf0vNk
+Reported-by: Lars Melin <larsm17@gmail.com>
+Cc: Aleksander Morgado <aleksander@aleksander.es>
+Signed-off-by: Bjørn Mork <bjorn@mork.no>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/dax.c | 3 +++
- 1 file changed, 3 insertions(+)
+ drivers/net/usb/qmi_wwan.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/fs/dax.c b/fs/dax.c
-index ddb4981ae32eb..34a55754164f4 100644
---- a/fs/dax.c
-+++ b/fs/dax.c
-@@ -1057,6 +1057,9 @@ dax_iomap_rw(struct kiocb *iocb, struct iov_iter *iter,
- 		lockdep_assert_held(&inode->i_rwsem);
- 	}
- 
-+	if (iocb->ki_flags & IOCB_NOWAIT)
-+		flags |= IOMAP_NOWAIT;
-+
- 	while (iov_iter_count(iter)) {
- 		ret = iomap_apply(inode, pos, iov_iter_count(iter), flags, ops,
- 				iter, dax_iomap_actor);
+diff --git a/drivers/net/usb/qmi_wwan.c b/drivers/net/usb/qmi_wwan.c
+index db70d4c5778a6..08215a9f61454 100644
+--- a/drivers/net/usb/qmi_wwan.c
++++ b/drivers/net/usb/qmi_wwan.c
+@@ -1287,6 +1287,7 @@ static const struct usb_device_id products[] = {
+ 	{QMI_FIXED_INTF(0x413c, 0x81b6, 8)},	/* Dell Wireless 5811e */
+ 	{QMI_FIXED_INTF(0x413c, 0x81b6, 10)},	/* Dell Wireless 5811e */
+ 	{QMI_FIXED_INTF(0x413c, 0x81d7, 0)},	/* Dell Wireless 5821e */
++	{QMI_FIXED_INTF(0x413c, 0x81d7, 1)},	/* Dell Wireless 5821e preproduction config */
+ 	{QMI_FIXED_INTF(0x413c, 0x81e0, 0)},	/* Dell Wireless 5821e with eSIM support*/
+ 	{QMI_FIXED_INTF(0x03f0, 0x4e1d, 8)},	/* HP lt4111 LTE/EV-DO/HSPA+ Gobi 4G Module */
+ 	{QMI_FIXED_INTF(0x03f0, 0x9d1d, 1)},	/* HP lt4120 Snapdragon X5 LTE */
 -- 
 2.20.1
 
