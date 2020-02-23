@@ -2,86 +2,139 @@ Return-Path: <SRS0=SnAt=4L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BC9DCC35669
-	for <linux-kernel@archiver.kernel.org>; Sun, 23 Feb 2020 02:35:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 95981C35671
+	for <linux-kernel@archiver.kernel.org>; Sun, 23 Feb 2020 02:35:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4CB9820659
-	for <linux-kernel@archiver.kernel.org>; Sun, 23 Feb 2020 02:35:03 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="SpFbpKVO"
+	by mail.kernel.org (Postfix) with ESMTP id 6C2D220707
+	for <linux-kernel@archiver.kernel.org>; Sun, 23 Feb 2020 02:35:06 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1582425306;
+	bh=e1SKCZPdGa2avM3Ux/3r2Ge8S6FtgQ3cCJFYoRw0Vzs=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=gZKDzAomcvGNl2HLrxHBm10994liED8Wq/3zISZFsDf0+K0OdHhreTPeVckYJZ6gz
+	 YSfptxR7ZKlKvLydPG6eM8lO5F0tMukIEDS4UFtJfos3jjGYFHvCgYvLSZxpyaQT1c
+	 3IMFHy+33FYQfDzfgs/F2EtzCnR+v7HH8mziybsE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728720AbgBWCfB (ORCPT
+        id S1728090AbgBWCWT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 22 Feb 2020 21:35:01 -0500
-Received: from bilbo.ozlabs.org ([203.11.71.1]:39463 "EHLO ozlabs.org"
+        Sat, 22 Feb 2020 21:22:19 -0500
+Received: from mail.kernel.org ([198.145.29.99]:50764 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728110AbgBWCfA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 22 Feb 2020 21:35:00 -0500
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        id S1727890AbgBWCWB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 22 Feb 2020 21:22:01 -0500
+Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 48Q8Rk3hndz9sR4;
-        Sun, 23 Feb 2020 13:34:57 +1100 (AEDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
-        s=201702; t=1582425298;
-        bh=dRb5zLS6ETe8D++xeu8xpRqKrDs7UJOVhNBa9XQTBHY=;
-        h=Date:From:To:Cc:Subject:From;
-        b=SpFbpKVOGZBGSO0xACHxQSWyW/acnCZyUhDincIsvQK2/Gra60X8gkh7YZz9SSmT/
-         3a0PnE4M56LRzvK9lt+35j1pkgI5ejvT+7zKRNkyB4Z6pxbTFs0RttLaiDC/8axJ6G
-         2iJA7YwhXXssoCeIXhL83dLOyKOQgyEaxjQ6Kjj9Z61Klocm2mWNVemfkdjJJ15izC
-         Qs+PaA75xE5GBnY4c0z7Oc0ZkSfTCeNz2icPEmKE+VRxyL8yl2XG2E5EVpQ3Syt7Oe
-         kPcWJ2bkMwsjPgKS0oURiGZ3m9ZQ76akE3AzlFehVlVADJWVgR/ldbYE9HQZISDrpu
-         dnIeGehhO4vSw==
-Date:   Sun, 23 Feb 2020 13:34:51 +1100
-From:   Stephen Rothwell <sfr@canb.auug.org.au>
-To:     Guo Ren <ren_guo@c-sky.com>
-Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Subject: linux-next: Signed-off-by missing for commit in the csky tree
-Message-ID: <20200223133451.0c8c0f09@canb.auug.org.au>
+        by mail.kernel.org (Postfix) with ESMTPSA id 71204208C3;
+        Sun, 23 Feb 2020 02:21:59 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1582424520;
+        bh=e1SKCZPdGa2avM3Ux/3r2Ge8S6FtgQ3cCJFYoRw0Vzs=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=e2jRetkxtj6Nua6ji2iGNlDOBt3m0bdntwLhxQdaM1s6ynEnud8IOt8lbFIC8Xm+w
+         XL5s7gAs3D/+y8wWar1ZX5SvmKZg1P3PvSCjcFeTx+Mrgq/+HM5B2tnYKfKi6Oqqyy
+         VA4px6ZBRLVWILJwMfI8oCxm6oow1ROQtE34tBmM=
+From:   Sasha Levin <sashal@kernel.org>
+To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Cc:     Arthur Kiyanovski <akiyano@amazon.com>,
+        Sameeh Jubran <sameehj@amazon.com>,
+        "David S . Miller" <davem@davemloft.net>,
+        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.5 33/58] net: ena: fix incorrect default RSS key
+Date:   Sat, 22 Feb 2020 21:20:54 -0500
+Message-Id: <20200223022119.707-33-sashal@kernel.org>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20200223022119.707-1-sashal@kernel.org>
+References: <20200223022119.707-1-sashal@kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/X9iNySGKKX_gbiMwpaVRvMG";
- protocol="application/pgp-signature"; micalg=pgp-sha256
+X-stable: review
+X-Patchwork-Hint: Ignore
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/X9iNySGKKX_gbiMwpaVRvMG
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+From: Arthur Kiyanovski <akiyano@amazon.com>
 
-Hi all,
+[ Upstream commit 0d1c3de7b8c78a5e44b74b62ede4a63629f5d811 ]
 
-Commit
+Bug description:
+When running "ethtool -x <if_name>" the key shows up as all zeros.
 
-  24cfce6b33f2 ("csky: Replace <linux/clk-provider.h> by <linux/of_clk.h>")
+When we use "ethtool -X <if_name> hfunc toeplitz hkey <some:random:key>" to
+set the key and then try to retrieve it using "ethtool -x <if_name>" then
+we return the correct key because we return the one we saved.
 
-is missing a Signed-off-by from their committer.
+Bug cause:
+We don't fetch the key from the device but instead return the key
+that we have saved internally which is by default set to zero upon
+allocation.
 
---=20
-Cheers,
-Stephen Rothwell
+Fix:
+This commit fixes the issue by initializing the key to a random value
+using netdev_rss_key_fill().
 
---Sig_/X9iNySGKKX_gbiMwpaVRvMG
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
+Fixes: 1738cd3ed342 ("net: ena: Add a driver for Amazon Elastic Network Adapters (ENA)")
+Signed-off-by: Sameeh Jubran <sameehj@amazon.com>
+Signed-off-by: Arthur Kiyanovski <akiyano@amazon.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ drivers/net/ethernet/amazon/ena/ena_com.c | 15 +++++++++++++++
+ drivers/net/ethernet/amazon/ena/ena_com.h |  1 +
+ 2 files changed, 16 insertions(+)
 
------BEGIN PGP SIGNATURE-----
+diff --git a/drivers/net/ethernet/amazon/ena/ena_com.c b/drivers/net/ethernet/amazon/ena/ena_com.c
+index e54c44fdcaa73..d6b894b06fa30 100644
+--- a/drivers/net/ethernet/amazon/ena/ena_com.c
++++ b/drivers/net/ethernet/amazon/ena/ena_com.c
+@@ -1041,6 +1041,19 @@ static int ena_com_get_feature(struct ena_com_dev *ena_dev,
+ 				      feature_ver);
+ }
+ 
++static void ena_com_hash_key_fill_default_key(struct ena_com_dev *ena_dev)
++{
++	struct ena_admin_feature_rss_flow_hash_control *hash_key =
++		(ena_dev->rss).hash_key;
++
++	netdev_rss_key_fill(&hash_key->key, sizeof(hash_key->key));
++	/* The key is stored in the device in u32 array
++	 * as well as the API requires the key to be passed in this
++	 * format. Thus the size of our array should be divided by 4
++	 */
++	hash_key->keys_num = sizeof(hash_key->key) / sizeof(u32);
++}
++
+ static int ena_com_hash_key_allocate(struct ena_com_dev *ena_dev)
+ {
+ 	struct ena_rss *rss = &ena_dev->rss;
+@@ -2631,6 +2644,8 @@ int ena_com_rss_init(struct ena_com_dev *ena_dev, u16 indr_tbl_log_size)
+ 	if (unlikely(rc))
+ 		goto err_hash_key;
+ 
++	ena_com_hash_key_fill_default_key(ena_dev);
++
+ 	rc = ena_com_hash_ctrl_init(ena_dev);
+ 	if (unlikely(rc))
+ 		goto err_hash_ctrl;
+diff --git a/drivers/net/ethernet/amazon/ena/ena_com.h b/drivers/net/ethernet/amazon/ena/ena_com.h
+index 0ce37d54ed108..9b5bd28ed0ac6 100644
+--- a/drivers/net/ethernet/amazon/ena/ena_com.h
++++ b/drivers/net/ethernet/amazon/ena/ena_com.h
+@@ -44,6 +44,7 @@
+ #include <linux/spinlock.h>
+ #include <linux/types.h>
+ #include <linux/wait.h>
++#include <linux/netdevice.h>
+ 
+ #include "ena_common_defs.h"
+ #include "ena_admin_defs.h"
+-- 
+2.20.1
 
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl5R5MwACgkQAVBC80lX
-0GyG+Qf+MMuLExVboEViTvo8N/+g5AafwdhCM1fc+87FFTrqo8mvb/en1ky8rxYo
-zCkaKn9gpBuCy6RBb2SNBfY9OVwtBsxsr5D1boX/JgOMveOlEniMqwhVXUCFccfF
-vSSjOokdKB/5JkvmFglWyP0NcR0/qFvy+fnrvGMP1BtQVMK+hXSc0YU/OZpDESGG
-WxsOgs+eWPHH0fG9v2R58YWQL7uR/xe+z1XNiN/5j0kmuhgIIZZhEdIpnoyJkk3T
-l0rLluQt/ah23Iung7mPCpQTJhMdD+vXS2VFLTnXKJRnnrd+lJ05Ouyq4hdi/IGb
-A5/qdFr6AfPM2D01bvsVhh5nV74JUQ==
-=5gJ5
------END PGP SIGNATURE-----
-
---Sig_/X9iNySGKKX_gbiMwpaVRvMG--
