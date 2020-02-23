@@ -2,112 +2,82 @@ Return-Path: <SRS0=SnAt=4L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E9532C35671
-	for <linux-kernel@archiver.kernel.org>; Sun, 23 Feb 2020 17:20:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D7905C35671
+	for <linux-kernel@archiver.kernel.org>; Sun, 23 Feb 2020 17:25:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C3F2E206E0
-	for <linux-kernel@archiver.kernel.org>; Sun, 23 Feb 2020 17:20:26 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="cNzhGR+x"
+	by mail.kernel.org (Postfix) with ESMTP id ADF39206ED
+	for <linux-kernel@archiver.kernel.org>; Sun, 23 Feb 2020 17:25:51 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1582478751;
+	bh=/XKa3BFRoBFcTCYsAFpSQqMrFFlg1SCddpWYBY2aSx0=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=f4Lgt6tbFWzqdRO114uW7GzdMT/NEmuDHSU5k8QiK47mCe/A7Mtf+Pe0VHbOK7hFy
+	 itP9UHnbWc+vJeKCR0AHeqFOioPyQviZx15yKWD21bsbHi+/7PyYWXruYiidUq5A9W
+	 ISzAuSvnbV9BStRHIxrbHJEsPU1Mv6tZAPzyvR6M=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727159AbgBWRUZ (ORCPT
+        id S1727064AbgBWRZn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 23 Feb 2020 12:20:25 -0500
-Received: from mail-pl1-f195.google.com ([209.85.214.195]:41910 "EHLO
-        mail-pl1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726208AbgBWRUY (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 23 Feb 2020 12:20:24 -0500
-Received: by mail-pl1-f195.google.com with SMTP id t14so3013393plr.8;
-        Sun, 23 Feb 2020 09:20:23 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=xM5ras975p0Tzn0AuQOvcenknUI3u0IBL1jh0ZA+WuQ=;
-        b=cNzhGR+x91SUFBvtXojwfDzu/7qK3SG6d+HdeMkmTDaOCAeTuN/7OrYOWaJ5TNp3jv
-         nxH8krORBX1l+0cI2mTSjCpqLGxuBmaOvfoi2eNHIE2sWnFgqhv8V+BZmmd6HJ6HtW5A
-         7lrRptjJNIo9aCxh+dRgWonVLM8JmvES0w0G5obacQzr5y7hVuJx5YbxUarmb6Ity/Am
-         J2vjWDjxKOilrz2sDExP2gLmkC/aRHhLputa1s2dKuGJUCdke4Qq8MJwngpedGOfMUIU
-         MRC3bnah4NLrS1LC/jzDXN0PqPCCYG6AlNfXlG5723V/RGkiZoEe32cMqpwRxcEvL5eR
-         B/CQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=xM5ras975p0Tzn0AuQOvcenknUI3u0IBL1jh0ZA+WuQ=;
-        b=XgkWafjbG8qgxHVFNEnDup14R78eMYjqUuOzYDTHSSFjUxI+IuleR0SvVwdt4/u0Ca
-         mWxrB4bZ0bgUDWSo5+vxkCdhpCYSF07CIRrC7h7KjC7kFflfwsHRZhbpTsTfmX0Mbtk6
-         LKm4R65Z37mhcqL5FERMCiIp3k3uSwtP+TI+55hmMVQtu3DpjKKmmEFgUp/fvmA1ZBQI
-         b3oYoUVmjjGp5aIbfgeyJGi8NZgSWXTBMc9AR5vgTfQ5VEZeTH4EeeqyJrrxeOGRNhXv
-         pMQ3ElcZQH1lXETjcCP0obWMiVCMbdt43t0fbwJBfsRP0VfFz9DU9ixplJOaVeMYEbdD
-         fFPQ==
-X-Gm-Message-State: APjAAAVuV8BkSiSuWJesEQd4xVWV1r+nlTPQRlw2DaSmp4tGpX0V5TPO
-        tuTY75BLie9Fqd7LBerYDrM=
-X-Google-Smtp-Source: APXvYqxDhCPLqPA5RnVmZfA4rmg+IVQHA0vM8maBAyDA85AuIvnSjzr1DyVrQYqi6zUsbOcwQ2uD/w==
-X-Received: by 2002:a17:902:463:: with SMTP id 90mr48781720ple.213.1582478423623;
-        Sun, 23 Feb 2020 09:20:23 -0800 (PST)
-Received: from localhost.localdomain ([103.87.57.33])
-        by smtp.googlemail.com with ESMTPSA id 13sm9505424pfj.68.2020.02.23.09.20.19
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 23 Feb 2020 09:20:23 -0800 (PST)
-From:   Amol Grover <frextrite@gmail.com>
-To:     Pablo Neira Ayuso <pablo@netfilter.org>,
-        Jozsef Kadlecsik <kadlec@netfilter.org>,
-        Florian Westphal <fw@strlen.de>,
-        "David S . Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>
-Cc:     netfilter-devel@vger.kernel.org, coreteam@netfilter.org,
-        netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-kernel-mentees@lists.linuxfoundation.org,
-        Joel Fernandes <joel@joelfernandes.org>,
-        Madhuparna Bhowmik <madhuparnabhowmik10@gmail.com>,
-        "Paul E . McKenney" <paulmck@kernel.org>,
-        Amol Grover <frextrite@gmail.com>
-Subject: [PATCH 2/2] netfilter: Pass lockdep expression to instance_lookup traversal
-Date:   Sun, 23 Feb 2020 22:49:46 +0530
-Message-Id: <20200223171945.11391-2-frextrite@gmail.com>
-X-Mailer: git-send-email 2.24.1
-In-Reply-To: <20200223171945.11391-1-frextrite@gmail.com>
-References: <20200223171945.11391-1-frextrite@gmail.com>
+        Sun, 23 Feb 2020 12:25:43 -0500
+Received: from mail.kernel.org ([198.145.29.99]:60584 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726302AbgBWRZn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 23 Feb 2020 12:25:43 -0500
+Received: from localhost (95-141-97-180.as16211.net [95.141.97.180])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 948A92067D;
+        Sun, 23 Feb 2020 17:25:42 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1582478743;
+        bh=/XKa3BFRoBFcTCYsAFpSQqMrFFlg1SCddpWYBY2aSx0=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=paYladZMtZEgIYpny4kTreoohUj7Hk277otkGLZBd9Nsun6pst8BWdhM0nIHY2Zxs
+         wLAaaDMZAhIhw1XIlHyFj0KYK3VNbFPnC7YT/CoA1CvfjQUdqosa6zOlMNVoAyQOQB
+         XeJjeap9UkUAIBTwhc7hzE3joxAyxn9fVVbEg/J4=
+Date:   Sun, 23 Feb 2020 18:25:40 +0100
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     torvalds@linux-foundation.org, akpm@linux-foundation.org,
+        linux@roeck-us.net, shuah@kernel.org, patches@kernelci.org,
+        ben.hutchings@codethink.co.uk, lkft-triage@lists.linaro.org,
+        stable@vger.kernel.org
+Subject: Re: [PATCH 5.5 000/399] 5.5.6-stable review
+Message-ID: <20200223172540.GB349989@kroah.com>
+References: <20200221072402.315346745@linuxfoundation.org>
+ <20200223154024.GA131562@kroah.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200223154024.GA131562@kroah.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-q->instance_table[] may be traversed outside an RCU read-side
-critical section but under the protection of q->instances_lock.
+On Sun, Feb 23, 2020 at 04:40:24PM +0100, Greg Kroah-Hartman wrote:
+> On Fri, Feb 21, 2020 at 08:35:25AM +0100, Greg Kroah-Hartman wrote:
+> > This is the start of the stable review cycle for the 5.5.6 release.
+> > There are 399 patches in this series, all will be posted as a response
+> > to this one.  If anyone has any issues with these being applied, please
+> > let me know.
+> > 
+> > Responses should be made by Sun, 23 Feb 2020 07:19:49 +0000.
+> > Anything received after that time might be too late.
+> > 
+> > The whole patch series can be found in one patch at:
+> > 	https://www.kernel.org/pub/linux/kernel/v5.x/stable-review/patch-5.5.6-rc1.gz
+> > or in the git tree and branch at:
+> > 	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-5.5.y
+> > and the diffstat can be found below.
+> 
+> I've released -rc2 with a bunch of changes that I hope should resolve
+> the issues reported:
+> 	https://www.kernel.org/pub/linux/kernel/v5.x/stable-review/patch-5.5.6-rc2.gz
+> 
 
-Hence, add the corresponding lockdep expression to silence
-false-positive lockdep warnings.
-
-Signed-off-by: Amol Grover <frextrite@gmail.com>
----
- net/netfilter/nfnetlink_queue.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
-
-diff --git a/net/netfilter/nfnetlink_queue.c b/net/netfilter/nfnetlink_queue.c
-index feabdfb22920..5aef41847774 100644
---- a/net/netfilter/nfnetlink_queue.c
-+++ b/net/netfilter/nfnetlink_queue.c
-@@ -105,7 +105,8 @@ instance_lookup(struct nfnl_queue_net *q, u_int16_t queue_num)
- 	struct nfqnl_instance *inst;
- 
- 	head = &q->instance_table[instance_hashfn(queue_num)];
--	hlist_for_each_entry_rcu(inst, head, hlist) {
-+	hlist_for_each_entry_rcu(inst, head, hlist,
-+				 lockdep_is_held(&q->instances_lock)) {
- 		if (inst->queue_num == queue_num)
- 			return inst;
- 	}
--- 
-2.24.1
-
+Ugh, -rc3 is coming soon...
