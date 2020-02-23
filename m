@@ -7,49 +7,51 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A73C1C35669
-	for <linux-kernel@archiver.kernel.org>; Sun, 23 Feb 2020 02:22:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E9992C35674
+	for <linux-kernel@archiver.kernel.org>; Sun, 23 Feb 2020 02:22:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7F74A21D56
-	for <linux-kernel@archiver.kernel.org>; Sun, 23 Feb 2020 02:22:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C20E9208C4
+	for <linux-kernel@archiver.kernel.org>; Sun, 23 Feb 2020 02:22:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582424563;
-	bh=lxmqWaZgEEovvSNa32y3/wF6kvfIdlSz5WWFXV6+F1E=;
+	s=default; t=1582424567;
+	bh=siUPiCtxQBOzvDJ1cMGRJ/OOCF/Egl1VKvdrHIIzJWM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Tqlr1wSEAOb08+Op8xNQvBTgTRs1TZeGnT+aB6U6JghSBX0Q7hdLDbID1GLuy78Fb
-	 k02PJeqBxvPMmaLNrfrM3XDtxmBApJ11vOljWyliOuLS+7+gmShaaexd95jt/VJKCV
-	 HE7xIxnxEtx0vPBNb70KJtsDwJwpnYyaUg75Tnj4=
+	b=AMi5BJ7LuHEe7nXrRu8O6Rm0WmPlIwDLD2ghtDEix2Am67MNKXMq0GRi3gq+icMY9
+	 Cbona2llLPwKoJjz7kXE7FGQEbIp36fegKV2sLp912L2TkkS9Hb5OsqlXmzmefy4MP
+	 8boTUd27WR0d++ZzVBgyTTw7+hNkTvfyQBwuSdg8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728266AbgBWCWm (ORCPT
+        id S1728299AbgBWCWq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 22 Feb 2020 21:22:42 -0500
-Received: from mail.kernel.org ([198.145.29.99]:51544 "EHLO mail.kernel.org"
+        Sat, 22 Feb 2020 21:22:46 -0500
+Received: from mail.kernel.org ([198.145.29.99]:51792 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728097AbgBWCWb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 22 Feb 2020 21:22:31 -0500
+        id S1728267AbgBWCWn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 22 Feb 2020 21:22:43 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id AB13724656;
-        Sun, 23 Feb 2020 02:22:29 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 97AA02465D;
+        Sun, 23 Feb 2020 02:22:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1582424550;
-        bh=lxmqWaZgEEovvSNa32y3/wF6kvfIdlSz5WWFXV6+F1E=;
+        s=default; t=1582424562;
+        bh=siUPiCtxQBOzvDJ1cMGRJ/OOCF/Egl1VKvdrHIIzJWM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=dbVqZsvHZBuNRWwdS6d1YLwVpAJkS2WLZJbbfPPysqkqekUIjJismkdtpD3N+uI3Q
-         0zmEuoLTUwL+YUNsicrE/pYzmQOF7lpQeDPhXCV42rFosn6NJmNTF2QBIWJTDCjYYK
-         SrDqNfJG8RggQDnz+L9DH8hMy/iSEjQU2eFVL9AU=
+        b=0NTdJ2CaBezUYOn0PFinYWED9L0ibBxfWimft2hW4DbyZK10cb5IEtmGV40lGKDC6
+         k6qjWmap6RqEXwXhYFqyamL7JaTgXhyNRkJrzgCIuegaEB3JHvrVeYgxQ9Lvv2wn9P
+         07+V+M81cmUTNhFHVUtTmS/gEqdHbPC2v2W1rHNQ=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Keith Busch <kbusch@kernel.org>, Sagi Grimberg <sagi@grimberg.me>,
-        Christoph Hellwig <hch@lst.de>, Jens Axboe <axboe@kernel.dk>,
-        Sasha Levin <sashal@kernel.org>, linux-nvme@lists.infradead.org
-Subject: [PATCH AUTOSEL 5.5 58/58] nvme/pci: move cqe check after device shutdown
-Date:   Sat, 22 Feb 2020 21:21:19 -0500
-Message-Id: <20200223022119.707-58-sashal@kernel.org>
+Cc:     Vincent Guittot <vincent.guittot@linaro.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@kernel.org>,
+        Ben Segall <bsegall@google.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH AUTOSEL 5.4 05/50] sched/fair: Prevent unlimited runtime on throttled group
+Date:   Sat, 22 Feb 2020 21:21:50 -0500
+Message-Id: <20200223022235.1404-5-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20200223022119.707-1-sashal@kernel.org>
-References: <20200223022119.707-1-sashal@kernel.org>
+In-Reply-To: <20200223022235.1404-1-sashal@kernel.org>
+References: <20200223022235.1404-1-sashal@kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
@@ -59,77 +61,63 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Keith Busch <kbusch@kernel.org>
+From: Vincent Guittot <vincent.guittot@linaro.org>
 
-[ Upstream commit fa46c6fb5d61b1f17b06d7c6ef75478b576304c7 ]
+[ Upstream commit 2a4b03ffc69f2dedc6388e9a6438b5f4c133a40d ]
 
-Many users have reported nvme triggered irq_startup() warnings during
-shutdown. The driver uses the nvme queue's irq to synchronize scanning
-for completions, and enabling an interrupt affined to only offline CPUs
-triggers the alarming warning.
+When a running task is moved on a throttled task group and there is no
+other task enqueued on the CPU, the task can keep running using 100% CPU
+whatever the allocated bandwidth for the group and although its cfs rq is
+throttled. Furthermore, the group entity of the cfs_rq and its parents are
+not enqueued but only set as curr on their respective cfs_rqs.
 
-Move the final CQE check to after disabling the device and all
-registered interrupts have been torn down so that we do not have any
-IRQ to synchronize.
+We have the following sequence:
 
-Link: https://bugzilla.kernel.org/show_bug.cgi?id=206509
-Reviewed-by: Sagi Grimberg <sagi@grimberg.me>
-Reviewed-by: Christoph Hellwig <hch@lst.de>
-Signed-off-by: Keith Busch <kbusch@kernel.org>
-Signed-off-by: Jens Axboe <axboe@kernel.dk>
+sched_move_task
+  -dequeue_task: dequeue task and group_entities.
+  -put_prev_task: put task and group entities.
+  -sched_change_group: move task to new group.
+  -enqueue_task: enqueue only task but not group entities because cfs_rq is
+    throttled.
+  -set_next_task : set task and group_entities as current sched_entity of
+    their cfs_rq.
+
+Another impact is that the root cfs_rq runnable_load_avg at root rq stays
+null because the group_entities are not enqueued. This situation will stay
+the same until an "external" event triggers a reschedule. Let trigger it
+immediately instead.
+
+Signed-off-by: Vincent Guittot <vincent.guittot@linaro.org>
+Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+Signed-off-by: Ingo Molnar <mingo@kernel.org>
+Acked-by: Ben Segall <bsegall@google.com>
+Link: https://lkml.kernel.org/r/1579011236-31256-1-git-send-email-vincent.guittot@linaro.org
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/nvme/host/pci.c | 23 ++++++++++++++++++-----
- 1 file changed, 18 insertions(+), 5 deletions(-)
+ kernel/sched/core.c | 9 ++++++++-
+ 1 file changed, 8 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/nvme/host/pci.c b/drivers/nvme/host/pci.c
-index 365a2ddbeaa76..094c5924a6835 100644
---- a/drivers/nvme/host/pci.c
-+++ b/drivers/nvme/host/pci.c
-@@ -1407,6 +1407,23 @@ static void nvme_disable_admin_queue(struct nvme_dev *dev, bool shutdown)
- 	nvme_poll_irqdisable(nvmeq, -1);
- }
+diff --git a/kernel/sched/core.c b/kernel/sched/core.c
+index a6eeca7021621..be146a1220e33 100644
+--- a/kernel/sched/core.c
++++ b/kernel/sched/core.c
+@@ -7057,8 +7057,15 @@ void sched_move_task(struct task_struct *tsk)
  
-+/*
-+ * Called only on a device that has been disabled and after all other threads
-+ * that can check this device's completion queues have synced. This is the
-+ * last chance for the driver to see a natural completion before
-+ * nvme_cancel_request() terminates all incomplete requests.
-+ */
-+static void nvme_reap_pending_cqes(struct nvme_dev *dev)
-+{
-+	u16 start, end;
-+	int i;
-+
-+	for (i = dev->ctrl.queue_count - 1; i > 0; i--) {
-+		nvme_process_cq(&dev->queues[i], &start, &end, -1);
-+		nvme_complete_cqes(&dev->queues[i], start, end);
+ 	if (queued)
+ 		enqueue_task(rq, tsk, queue_flags);
+-	if (running)
++	if (running) {
+ 		set_next_task(rq, tsk);
++		/*
++		 * After changing group, the running task may have joined a
++		 * throttled one but it's still the running task. Trigger a
++		 * resched to make sure that task can still run.
++		 */
++		resched_curr(rq);
 +	}
-+}
-+
- static int nvme_cmb_qdepth(struct nvme_dev *dev, int nr_io_queues,
- 				int entry_size)
- {
-@@ -2242,11 +2259,6 @@ static bool __nvme_disable_io_queues(struct nvme_dev *dev, u8 opcode)
- 		if (timeout == 0)
- 			return false;
  
--		/* handle any remaining CQEs */
--		if (opcode == nvme_admin_delete_cq &&
--		    !test_bit(NVMEQ_DELETE_ERROR, &nvmeq->flags))
--			nvme_poll_irqdisable(nvmeq, -1);
--
- 		sent--;
- 		if (nr_queues)
- 			goto retry;
-@@ -2435,6 +2447,7 @@ static void nvme_dev_disable(struct nvme_dev *dev, bool shutdown)
- 	nvme_suspend_io_queues(dev);
- 	nvme_suspend_queue(&dev->queues[0]);
- 	nvme_pci_disable(dev);
-+	nvme_reap_pending_cqes(dev);
- 
- 	blk_mq_tagset_busy_iter(&dev->tagset, nvme_cancel_request, &dev->ctrl);
- 	blk_mq_tagset_busy_iter(&dev->admin_tagset, nvme_cancel_request, &dev->ctrl);
+ 	task_rq_unlock(rq, tsk, &rf);
+ }
 -- 
 2.20.1
 
