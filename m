@@ -7,48 +7,48 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B2FF0C35669
-	for <linux-kernel@archiver.kernel.org>; Sun, 23 Feb 2020 02:37:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 96F03C35669
+	for <linux-kernel@archiver.kernel.org>; Sun, 23 Feb 2020 02:37:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8A66820659
-	for <linux-kernel@archiver.kernel.org>; Sun, 23 Feb 2020 02:37:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6A1D420659
+	for <linux-kernel@archiver.kernel.org>; Sun, 23 Feb 2020 02:37:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582425432;
-	bh=g7lm6YgSyj6c2NL8Mpa/jUwJdQ2wfy+ZGEYhea2EoUw=;
+	s=default; t=1582425441;
+	bh=nWKwmnt7V+VmRBijgT0w4CKnk9ky7pcdeZKE9vO47Bg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=GtOon1suT+NSQxhGeLB7Uw9qUKMFEkPxGd55rTafcThogoAQAGAsDjJyAV5hMvslm
-	 mCP62e//UxdTXWPTptaRJ4cB51dz/CJbqx05L+OMmlyFTQNJnn/tIWjriRu5dxse9B
-	 OdI6Le2LZHWbKTmmUszrMW8bw0ZEnqYNfZ+L7sYM=
+	b=m9TUf4qDKbTBIm+xuV0/vvCq0LTdPGOPpfReW8hiT3Mfg0zO0xR3P6uqRx0jOFtl+
+	 UryYQMoEc5P++gq7b9NSA8ORjkARr4WYtTjCXvT0dWjx541JUtoae0UnD08FKvFWwk
+	 Va0zCEGntyjTeEyfMm23CfekrHL9DtnVcbRFC3Kw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728919AbgBWChK (ORCPT
+        id S1727877AbgBWChT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 22 Feb 2020 21:37:10 -0500
-Received: from mail.kernel.org ([198.145.29.99]:50304 "EHLO mail.kernel.org"
+        Sat, 22 Feb 2020 21:37:19 -0500
+Received: from mail.kernel.org ([198.145.29.99]:50200 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727733AbgBWCVr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 22 Feb 2020 21:21:47 -0500
+        id S1727673AbgBWCVn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 22 Feb 2020 21:21:43 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D218120707;
-        Sun, 23 Feb 2020 02:21:45 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6BE122067D;
+        Sun, 23 Feb 2020 02:21:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1582424506;
-        bh=g7lm6YgSyj6c2NL8Mpa/jUwJdQ2wfy+ZGEYhea2EoUw=;
+        s=default; t=1582424503;
+        bh=nWKwmnt7V+VmRBijgT0w4CKnk9ky7pcdeZKE9vO47Bg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ltvRQ1ujoxLuCxyIWjIcJh+GQbydud0EGsziMp0Efd52862DfTNtuLCJCrt/b6MeJ
-         VU0Nh9T1ZsttgHtUDXmx3ChB+4GndSPS8NiCBFSgBWWktmgtVHuUiMNUmuTErLJAUX
-         rSsy2S5Ji8bOESvWrx0mRCfxqo9Z4PnSS1viIOEQ=
+        b=IqtX06NGgtr4eVNBxu5w9d7GXKvM/N3aLNhx+53gNfRQu6B9NAVsKC6ib2q70mYuW
+         SkRwzpAqvGA1y+toGeXQ1vmNxdytC13jhj/y1pZNhDeOfaLqIM1Zbj2PLgHC6tAz9u
+         OdIxNsrCDwdxQronnBcnBj0WZUENLmZXQu8wbLvA=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Sung Lee <sung.lee@amd.com>, Tony Cheng <Tony.Cheng@amd.com>,
-        Bhawanpreet Lakha <Bhawanpreet.Lakha@amd.com>,
-        Alex Deucher <alexander.deucher@amd.com>,
-        Sasha Levin <sashal@kernel.org>, amd-gfx@lists.freedesktop.org,
-        dri-devel@lists.freedesktop.org
-Subject: [PATCH AUTOSEL 5.5 22/58] drm/amd/display: Do not set optimized_require to false after plane disable
-Date:   Sat, 22 Feb 2020 21:20:43 -0500
-Message-Id: <20200223022119.707-22-sashal@kernel.org>
+Cc:     Kan Liang <kan.liang@linux.intel.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@kernel.org>,
+        Andi Kleen <ak@linux.intel.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH AUTOSEL 5.5 19/58] perf/x86/msr: Add Tremont support
+Date:   Sat, 22 Feb 2020 21:20:40 -0500
+Message-Id: <20200223022119.707-19-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200223022119.707-1-sashal@kernel.org>
 References: <20200223022119.707-1-sashal@kernel.org>
@@ -61,39 +61,38 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Sung Lee <sung.lee@amd.com>
+From: Kan Liang <kan.liang@linux.intel.com>
 
-[ Upstream commit df36f6cf23ada812930afa8ee76681d4ad307c61 ]
+[ Upstream commit 0aa0e0d6b34b89649e6b5882a7e025a0eb9bd832 ]
 
-[WHY]
-The optimized_require flag is needed to set watermarks and clocks lower
-in certain conditions. This flag is set to true and then set to false
-while programming front end in dcn20.
+Tremont is Intel's successor to Goldmont Plus. SMI_COUNT MSR is also
+supported.
 
-[HOW]
-Do not set the flag to false while disabling plane.
-
-Signed-off-by: Sung Lee <sung.lee@amd.com>
-Reviewed-by: Tony Cheng <Tony.Cheng@amd.com>
-Acked-by: Bhawanpreet Lakha <Bhawanpreet.Lakha@amd.com>
-Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
+Signed-off-by: Kan Liang <kan.liang@linux.intel.com>
+Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+Signed-off-by: Ingo Molnar <mingo@kernel.org>
+Reviewed-by: Andi Kleen <ak@linux.intel.com>
+Link: https://lkml.kernel.org/r/1580236279-35492-3-git-send-email-kan.liang@linux.intel.com
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/gpu/drm/amd/display/dc/dcn20/dcn20_hwseq.c | 1 -
- 1 file changed, 1 deletion(-)
+ arch/x86/events/msr.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/gpu/drm/amd/display/dc/dcn20/dcn20_hwseq.c b/drivers/gpu/drm/amd/display/dc/dcn20/dcn20_hwseq.c
-index ac8c18fadefce..448bc9b39942f 100644
---- a/drivers/gpu/drm/amd/display/dc/dcn20/dcn20_hwseq.c
-+++ b/drivers/gpu/drm/amd/display/dc/dcn20/dcn20_hwseq.c
-@@ -493,7 +493,6 @@ static void dcn20_plane_atomic_disable(struct dc *dc, struct pipe_ctx *pipe_ctx)
- 	dpp->funcs->dpp_dppclk_control(dpp, false, false);
+diff --git a/arch/x86/events/msr.c b/arch/x86/events/msr.c
+index 6f86650b3f77d..a949f6f55991d 100644
+--- a/arch/x86/events/msr.c
++++ b/arch/x86/events/msr.c
+@@ -75,8 +75,9 @@ static bool test_intel(int idx, void *data)
  
- 	hubp->power_gated = true;
--	dc->optimized_required = false; /* We're powering off, no need to optimize */
+ 	case INTEL_FAM6_ATOM_GOLDMONT:
+ 	case INTEL_FAM6_ATOM_GOLDMONT_D:
+-
+ 	case INTEL_FAM6_ATOM_GOLDMONT_PLUS:
++	case INTEL_FAM6_ATOM_TREMONT_D:
++	case INTEL_FAM6_ATOM_TREMONT:
  
- 	dc->hwss.plane_atomic_power_down(dc,
- 			pipe_ctx->plane_res.dpp,
+ 	case INTEL_FAM6_XEON_PHI_KNL:
+ 	case INTEL_FAM6_XEON_PHI_KNM:
 -- 
 2.20.1
 
