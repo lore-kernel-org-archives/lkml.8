@@ -2,162 +2,136 @@ Return-Path: <SRS0=SnAt=4L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E351CC35670
-	for <linux-kernel@archiver.kernel.org>; Sun, 23 Feb 2020 23:11:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D01C7C35670
+	for <linux-kernel@archiver.kernel.org>; Sun, 23 Feb 2020 23:17:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B31362187F
-	for <linux-kernel@archiver.kernel.org>; Sun, 23 Feb 2020 23:11:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A953F20880
+	for <linux-kernel@archiver.kernel.org>; Sun, 23 Feb 2020 23:17:01 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="AKp3byLj"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727167AbgBWXLR (ORCPT
+        id S1727177AbgBWXRA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 23 Feb 2020 18:11:17 -0500
-Received: from hostingweb31-40.netsons.net ([89.40.174.40]:50009 "EHLO
-        hostingweb31-40.netsons.net" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727064AbgBWXLR (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 23 Feb 2020 18:11:17 -0500
-Received: from [78.134.20.33] (port=59608 helo=[192.168.77.67])
-        by hostingweb31.netsons.net with esmtpsa (TLSv1.2:ECDHE-RSA-AES128-GCM-SHA256:128)
-        (Exim 4.92)
-        (envelope-from <luca@lucaceresoli.net>)
-        id 1j60P0-00FBU2-SK; Mon, 24 Feb 2020 00:11:10 +0100
-Subject: Re: [RFC PATCH 3/7] i2c: allow DT nodes without 'compatible'
-To:     Geert Uytterhoeven <geert@linux-m68k.org>,
-        Wolfram Sang <wsa+renesas@sang-engineering.com>
-Cc:     Linux I2C <linux-i2c@vger.kernel.org>,
-        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
-        linux-i3c@lists.infradead.org,
-        Kieran Bingham <kieran@ksquared.org.uk>,
-        =?UTF-8?Q?Niklas_S=c3=b6derlund?= <niklas.soderlund@ragnatech.se>,
-        Jacopo Mondi <jacopo@jmondi.org>,
-        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
-        Vladimir Zapolskiy <vz@mleia.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>
-References: <20200220172403.26062-1-wsa+renesas@sang-engineering.com>
- <20200220172403.26062-4-wsa+renesas@sang-engineering.com>
- <CAMuHMdWaPfc050dZiRr+gAFzsdjSo9Vo70ztWgrMGPJxLUqupw@mail.gmail.com>
-From:   Luca Ceresoli <luca@lucaceresoli.net>
-Message-ID: <e43eaaf1-a294-902f-9a52-ebf8b29acab1@lucaceresoli.net>
-Date:   Mon, 24 Feb 2020 00:11:10 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.1
+        Sun, 23 Feb 2020 18:17:00 -0500
+Received: from ozlabs.org ([203.11.71.1]:51165 "EHLO ozlabs.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727064AbgBWXRA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 23 Feb 2020 18:17:00 -0500
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 48Qh0l2zmzz9sPK;
+        Mon, 24 Feb 2020 10:16:55 +1100 (AEDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
+        s=201702; t=1582499816;
+        bh=ZDsuoOV08OG4rWiKXytPH30q7PC/XrARg94GbSYzkBw=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=AKp3byLjUgGeWJ48kznETWc0Q3R5R+v1q1teBHVmawsNupD3Pe0ucEI5ezfd7pOAy
+         PW/mL8pfaMHcX16KOvg6I71vLR4Bieg2nsmUWXZItzr0DqnsomYD7lx/lHov0Ft8fQ
+         Hf9+mEEH7uRY8xZKIUCj0bEH679ZzqORtM5yx8UTUHzGIBFxluhGQUmhq4N54emir2
+         DaqzTzxbhB0bQqArroPfI+p1d3N/FF3ywJHRFrTAM8fouTZOkblsC/wk0kpn1xMWFG
+         BG9VEhQqMOam6UjEzDAKYuuUNUCRK7y1rY9DM21KuhEbv+hcA0Ck6cutVtrQKqe0bu
+         jN215DYPbaD8g==
+Date:   Mon, 24 Feb 2020 10:16:54 +1100
+From:   Stephen Rothwell <sfr@canb.auug.org.au>
+To:     Kevin Hilman <khilman@baylibre.com>,
+        Carlo Caione <carlo@caione.org>
+Cc:     Jianxin Pan <jianxin.pan@amlogic.com>,
+        <linux-amlogic@lists.infradead.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Neil Armstrong <narmstrong@baylibre.com>,
+        Jerome Brunet <jbrunet@baylibre.com>,
+        Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
+        <linux-pm@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <devicetree@vger.kernel.org>, Jian Hu <jian.hu@amlogic.com>,
+        Hanjie Lin <hanjie.lin@amlogic.com>,
+        Victor Wan <victor.wan@amlogic.com>,
+        Xingyu Chen <xingyu.chen@amlogic.com>
+Subject: Re: [PATCH] soc: amlogic: fix compile failure with
+ MESON_SECURE_PM_DOMAINS & !MESON_SM
+Message-ID: <20200224101654.530f1837@canb.auug.org.au>
+In-Reply-To: <20200218092229.0448d266@canb.auug.org.au>
+References: <1581955933-69832-1-git-send-email-jianxin.pan@amlogic.com>
+        <20200218080743.07e58c6e@canb.auug.org.au>
+        <20200218092229.0448d266@canb.auug.org.au>
 MIME-Version: 1.0
-In-Reply-To: <CAMuHMdWaPfc050dZiRr+gAFzsdjSo9Vo70ztWgrMGPJxLUqupw@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
-X-AntiAbuse: Primary Hostname - hostingweb31.netsons.net
-X-AntiAbuse: Original Domain - vger.kernel.org
-X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
-X-AntiAbuse: Sender Address Domain - lucaceresoli.net
-X-Get-Message-Sender-Via: hostingweb31.netsons.net: authenticated_id: luca@lucaceresoli.net
-X-Authenticated-Sender: hostingweb31.netsons.net: luca@lucaceresoli.net
-X-Source: 
-X-Source-Args: 
-X-Source-Dir: 
+Content-Type: multipart/signed; boundary="Sig_/HRS=wqj=EXtghxVG08E8STH";
+ protocol="application/pgp-signature"; micalg=pgp-sha256
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+--Sig_/HRS=wqj=EXtghxVG08E8STH
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-On 21/02/20 10:45, Geert Uytterhoeven wrote:
-> Hi Wolfram,
-> 
-> On Thu, Feb 20, 2020 at 6:26 PM Wolfram Sang
-> <wsa+renesas@sang-engineering.com> wrote:
->> Sometimes, we have unknown devices in a system and still want to block
->> their address. For that, we allow DT nodes with only a 'reg' property.
->> These devices will be bound to the "dummy" driver but with the name
->> "reserved". That way, we can distinguish them and even hand them over to
->> the "dummy" driver later when they are really requested using
->> i2c_new_ancillary_device().
->>
->> Signed-off-by: Wolfram Sang <wsa+renesas@sang-engineering.com>
+Hi all,
 
-Cc:ing Alexandre who raised the need for a described-but-disabled I2C node.
+On Tue, 18 Feb 2020 09:22:29 +1100 Stephen Rothwell <sfr@canb.auug.org.au> =
+wrote:
+>
+> On Tue, 18 Feb 2020 08:07:43 +1100 Stephen Rothwell <sfr@canb.auug.org.au=
+> wrote:
+> >
+> > On Tue, 18 Feb 2020 00:12:13 +0800 Jianxin Pan <jianxin.pan@amlogic.com=
+> wrote: =20
+> > >
+> > > When MESON_SECURE_PM_DOMAINS & !MESON_SM, there will be compile failu=
+re:
+> > > .../meson-secure-pwrc.o: In function `meson_secure_pwrc_on':
+> > > .../meson-secure-pwrc.c:76: undefined reference to `meson_sm_call'
+> > >=20
+> > > Fix this by adding depends on MESON_SM for MESON_SECURE_PM_DOMAINS.
+> > >=20
+> > > Fixes: b3dde5013e13 ("soc: amlogic: Add support for Secure power doma=
+ins controller")
+> > >=20
+> > > Reported-by: kbuild test robot <lkp@intel.com>
+> > > Reported-by: patchwork-bot+linux-amlogic<patchwork-bot+linux-amlogic@=
+kernel.org>
+> > > Reported-by: Stephen Rothwell<sfr@canb.auug.org.au>
+> > > Signed-off-by: Jianxin Pan <jianxin.pan@amlogic.com>
+> > > ---
+> > >  drivers/soc/amlogic/Kconfig | 2 +-
+> > >  1 file changed, 1 insertion(+), 1 deletion(-)   =20
+> >=20
+> > I will apply that patch to linux-next today. =20
+>=20
+> This fixes the build for me.
+>=20
+> Tested-by: Stephen Rothwell<sfr@canb.auug.org.au>
+>=20
+> Also, please keep the commit message tags together at the end of the
+> commit message i.e. remove the blank line after the Fixes: tag above.
+> (see "git interpret-trailers ")
 
-> Thanks for your patch!
-> 
-> Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
-> but one question below.
-> 
->> --- a/Documentation/devicetree/bindings/i2c/i2c-ocores.txt
->> +++ b/Documentation/devicetree/bindings/i2c/i2c-ocores.txt
->> @@ -50,7 +50,6 @@ Examples:
->>                 reg-io-width = <1>;     /* 8 bit read/write */
->>
->>                 dummy@60 {
->> -                       compatible = "dummy";
->>                         reg = <0x60>;
->>                 };
->>         };
-> 
-> There's a second instance to remove 18 lines below.
-> 
->> --- a/drivers/i2c/i2c-core-of.c
->> +++ b/drivers/i2c/i2c-core-of.c
->> @@ -27,17 +27,15 @@ int of_i2c_get_board_info(struct device *dev, struct device_node *node,
->>
->>         memset(info, 0, sizeof(*info));
->>
->> -       if (of_modalias_node(node, info->type, sizeof(info->type)) < 0) {
->> -               dev_err(dev, "of_i2c: modalias failure on %pOF\n", node);
->> -               return -EINVAL;
->> -       }
->> -
->>         ret = of_property_read_u32(node, "reg", &addr);
->>         if (ret) {
->>                 dev_err(dev, "of_i2c: invalid reg on %pOF\n", node);
->>                 return ret;
->>         }
->>
->> +       if (of_modalias_node(node, info->type, sizeof(info->type)) < 0)
->> +               strlcpy(info->type, I2C_RESERVED_DRV_NAME, sizeof(I2C_RESERVED_DRV_NAME));
-> 
-> Could this cause a regression, e.g. if people already have such dummy
-> nodes in their DTS, and use sysfs new_device from userspace to
-> instantiate the device later?
+I am still applying this patch ...
+--=20
+Cheers,
+Stephen Rothwell
 
-Such a DTS would be illegal because "compatible" has been a required
-property so far. Thus one could leave such people out in the cold
-because they went on an unsupported path. Not super nice anyway.
+--Sig_/HRS=wqj=EXtghxVG08E8STH
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
 
-However I'd like to view the issue from the DT point of view. DT
-describes the hardware, and it is possible (and even desirable) that the
-firmware provides the DTB independently from the OS, and the kernel
-consumes it. It this scenario, firmware could and should describe all
-I2C slaves with proper "compatible" property, and there is no way to
-remove it, in a clean way at least.
+-----BEGIN PGP SIGNATURE-----
 
-But the kernel currently ignores nodes that have no matching driver,
-right? So in this case the kernel knows that that address is used, but
-ignores this information and considers the address as available.
-Seen in this perspective, we should have a "compatible" for all nodes:
-it is just describing the hardware and could be out of the kernel
-control. But instead of discarding all nodes without a matching driver,
-the i2c-core-of code should mark them as "reserved".
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl5TB+YACgkQAVBC80lX
+0Gw1Ygf9FYA4QbsYVulSaeKZSzIU8INOux2IozBcABlP9zBBHobUJpQC28V80fti
+ImqOIwDNv+r67DnCKDg64+X5PfPyOySRYssr9sRSWcjwoud1qt2ln0iez9tDMG0t
+B7ntUEWmRAFZ0GtBYqSGZw73lldQRod4lD7B1RrxVK36xIVMUo+X/ZWAEbvlQGn1
+oWkoVMxhbDK6crqYBKgTfAVSa2QbpNQV++y0fmmfJUMl/8txhSYEhMIrKr+pr4i6
+xHLq3w3J4HJXTo/07+1RjlhgVHdO+e3JyLunOA5MA+aW215AjiCXGcSLHX7PD1QM
+mtWa7KCNYCHULAxJs6JOuzD+gOMLLg==
+=gH3w
+-----END PGP SIGNATURE-----
 
-Does it sound correct?
-
-Clearly this does not fit the case reported by Alexandre: a device
-having a driver which is known to be badly buggy, so we don't want to
-instantiate it. But again, this should not affect DT as it is not
-describing the HW, but only an implementation detail. Probably disabling
-or blacklisting the driver would be a better option there?
-
-My apologies to Wolfram, I appreciate a lot the effort you are doing,
-but before reviewing this patch I have never realized what I tried to
-explain above.
-
--- 
-Luca
+--Sig_/HRS=wqj=EXtghxVG08E8STH--
