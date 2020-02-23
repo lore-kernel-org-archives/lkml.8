@@ -4,57 +4,57 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7B87AC35671
-	for <linux-kernel@archiver.kernel.org>; Sun, 23 Feb 2020 02:28:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9B3FAC35669
+	for <linux-kernel@archiver.kernel.org>; Sun, 23 Feb 2020 02:28:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 533B220659
-	for <linux-kernel@archiver.kernel.org>; Sun, 23 Feb 2020 02:28:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 726A921D56
+	for <linux-kernel@archiver.kernel.org>; Sun, 23 Feb 2020 02:28:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582424912;
-	bh=zwqvGnTZQXuLQfs4bETDMXy9wOSAfwlHiP0Ase33big=;
+	s=default; t=1582424924;
+	bh=sQGY4kSrX0cPAf2T7dj+zWFO/aCKuHm4icQiAjsujVk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=qJkBLu6Ds5zoi3wsedrJzF7qTtOQ//jXP9HswR4xTUaPYGmL+5YgCTd+oisd6bSSj
-	 AeROsWf35vb7nvm8/y4B2PY1DZErGX6yI7oSjIgMdG1mtqMHG+zT+Lx6iUEdliMoOZ
-	 sYvXfPlqAeIvonAxVC1pII4LTpzENEIerL7gV03E=
+	b=CGeedJZtGvLfgMT7UwPRyylApqCcCWOP8Cky4w6dg4OnJWxKlkkGyA5ixDG6Lj2q9
+	 S87Xuo8lx+zFx2PyHELAiTJm6ied93+KnFLVWEdpz2RnKYt52cwEtYMbGEHYoC3Fqv
+	 QoBRBGg/l6wisRnFtAArdSLnHq2tQ9PIZtHeUiV0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729360AbgBWC2b (ORCPT
+        id S1729128AbgBWCYS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 22 Feb 2020 21:28:31 -0500
-Received: from mail.kernel.org ([198.145.29.99]:54292 "EHLO mail.kernel.org"
+        Sat, 22 Feb 2020 21:24:18 -0500
+Received: from mail.kernel.org ([198.145.29.99]:54098 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727803AbgBWCYU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 22 Feb 2020 21:24:20 -0500
+        id S1729106AbgBWCYP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 22 Feb 2020 21:24:15 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D1C8E21741;
-        Sun, 23 Feb 2020 02:24:18 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B9CCE21741;
+        Sun, 23 Feb 2020 02:24:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1582424659;
-        bh=zwqvGnTZQXuLQfs4bETDMXy9wOSAfwlHiP0Ase33big=;
+        s=default; t=1582424654;
+        bh=sQGY4kSrX0cPAf2T7dj+zWFO/aCKuHm4icQiAjsujVk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=2YaNbXluKUoMmcNqYt4W1YeLjoB8DOqe/UlJIv3zCWQUvN/TKCAgYo7BXqyY2GnmY
-         vLwEkNF03N9YmTCUpfE9Ek9ThjL0kBHI9GdUgls5uhb6ACwnEyQ+jSXVzU5QayuhML
-         PfH9yJ8VDgewN8RW0yRUD67OjLwRUmi81oEuMb/8=
+        b=SKPxcVHJBcWRRCAslqT5pNC18FlMVf5GZ2VIOc+6cNl4IvRdfW5PHg4ZX4CCPrnGj
+         MxxReEHH8b6zpu/dwEMiipu3oQ5jtuFgwzMy193IXSLQTktD5lIn3E/kJmw6TgtEQR
+         IDFFVkIuIk1gE2zw71nD0xx6xkkjY65nO4ew38vw=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     =?UTF-8?q?Bj=C3=B8rn=20Mork?= <bjorn@mork.no>,
-        Lars Melin <larsm17@gmail.com>,
-        Aleksander Morgado <aleksander@aleksander.es>,
-        "David S . Miller" <davem@davemloft.net>,
-        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org,
-        linux-usb@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.14 06/21] qmi_wwan: re-add DW5821e pre-production variant
-Date:   Sat, 22 Feb 2020 21:23:56 -0500
-Message-Id: <20200223022411.2159-6-sashal@kernel.org>
+Cc:     Sean Paul <seanpaul@chromium.org>,
+        Stephen Boyd <swboyd@chromium.org>,
+        Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>,
+        Rob Clark <robdclark@gmail.com>,
+        Douglas Anderson <dianders@chromium.org>,
+        Sasha Levin <sashal@kernel.org>, linux-arm-msm@vger.kernel.org,
+        dri-devel@lists.freedesktop.org, freedreno@lists.freedesktop.org
+Subject: [PATCH AUTOSEL 4.14 02/21] drm/msm: Set dma maximum segment size for mdss
+Date:   Sat, 22 Feb 2020 21:23:52 -0500
+Message-Id: <20200223022411.2159-2-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200223022411.2159-1-sashal@kernel.org>
 References: <20200223022411.2159-1-sashal@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
@@ -63,74 +63,93 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Bjørn Mork <bjorn@mork.no>
+From: Sean Paul <seanpaul@chromium.org>
 
-[ Upstream commit 88bf54603f6f2c137dfee1abf6436ceac3528d2d ]
+[ Upstream commit db735fc4036bbe1fbe606819b5f0ff26cc76cdff ]
 
-Commit f25e1392fdb5 removed the support for the pre-production variant
-of the Dell DW5821e to avoid probing another USB interface unnecessarily.
-However, the pre-production samples are found in the wild, and this lack
-of support is causing problems for users of such samples.  It is therefore
-necessary to support both variants.
+Turning on CONFIG_DMA_API_DEBUG_SG results in the following error:
 
-Matching on both interfaces 0 and 1 is not expected to cause any problem
-with either variant, as only the QMI function will be probed successfully
-on either.  Interface 1 will be rejected based on the HID class for the
-production variant:
+[   12.078665] msm ae00000.mdss: DMA-API: mapping sg segment longer than device claims to support [len=3526656] [max=65536]
+[   12.089870] WARNING: CPU: 6 PID: 334 at /mnt/host/source/src/third_party/kernel/v4.19/kernel/dma/debug.c:1301 debug_dma_map_sg+0x1dc/0x318
+[   12.102655] Modules linked in: joydev
+[   12.106442] CPU: 6 PID: 334 Comm: frecon Not tainted 4.19.0 #2
+[   12.112450] Hardware name: Google Cheza (rev3+) (DT)
+[   12.117566] pstate: 60400009 (nZCv daif +PAN -UAO)
+[   12.122506] pc : debug_dma_map_sg+0x1dc/0x318
+[   12.126995] lr : debug_dma_map_sg+0x1dc/0x318
+[   12.131487] sp : ffffff800cc3ba80
+[   12.134913] x29: ffffff800cc3ba80 x28: 0000000000000000
+[   12.140395] x27: 0000000000000004 x26: 0000000000000004
+[   12.145868] x25: ffffff8008e55b18 x24: 0000000000000000
+[   12.151337] x23: 00000000ffffffff x22: ffffff800921c000
+[   12.156809] x21: ffffffc0fa75b080 x20: ffffffc0f7195090
+[   12.162280] x19: ffffffc0f1c53280 x18: 0000000000000000
+[   12.167749] x17: 0000000000000000 x16: 0000000000000000
+[   12.173218] x15: 0000000000000000 x14: 0720072007200720
+[   12.178689] x13: 0720072007200720 x12: 0720072007200720
+[   12.184161] x11: 0720072007200720 x10: 0720072007200720
+[   12.189641] x9 : ffffffc0f1fc6b60 x8 : 0000000000000000
+[   12.195110] x7 : ffffff8008132ce0 x6 : 0000000000000000
+[   12.200585] x5 : 0000000000000000 x4 : ffffff8008134734
+[   12.206058] x3 : ffffff800cc3b830 x2 : ffffffc0f1fc6240
+[   12.211532] x1 : 25045a74f48a7400 x0 : 25045a74f48a7400
+[   12.217006] Call trace:
+[   12.219535]  debug_dma_map_sg+0x1dc/0x318
+[   12.223671]  get_pages+0x19c/0x20c
+[   12.227177]  msm_gem_fault+0x64/0xfc
+[   12.230874]  __do_fault+0x3c/0x140
+[   12.234383]  __handle_mm_fault+0x70c/0xdb8
+[   12.238603]  handle_mm_fault+0xac/0xc4
+[   12.242473]  do_page_fault+0x1bc/0x3d4
+[   12.246342]  do_translation_fault+0x54/0x88
+[   12.250652]  do_mem_abort+0x60/0xf0
+[   12.254250]  el0_da+0x20/0x24
+[   12.257317] irq event stamp: 67260
+[   12.260828] hardirqs last  enabled at (67259): [<ffffff8008132d0c>] console_unlock+0x214/0x608
+[   12.269693] hardirqs last disabled at (67260): [<ffffff8008080e0c>] do_debug_exception+0x5c/0x178
+[   12.278820] softirqs last  enabled at (67256): [<ffffff8008081664>] __do_softirq+0x4d4/0x520
+[   12.287510] softirqs last disabled at (67249): [<ffffff80080be574>] irq_exit+0xa8/0x100
+[   12.295742] ---[ end trace e63cfc40c313ffab ]---
 
-T:  Bus=01 Lev=03 Prnt=04 Port=00 Cnt=01 Dev#= 16 Spd=480 MxCh= 0
-D:  Ver= 2.10 Cls=ef(misc ) Sub=02 Prot=01 MxPS=64 #Cfgs=  2
-P:  Vendor=413c ProdID=81d7 Rev=03.18
-S:  Manufacturer=DELL
-S:  Product=DW5821e Snapdragon X20 LTE
-S:  SerialNumber=0123456789ABCDEF
-C:  #Ifs= 6 Cfg#= 1 Atr=a0 MxPwr=500mA
-I:  If#= 0 Alt= 0 #EPs= 3 Cls=ff(vend.) Sub=ff Prot=ff Driver=qmi_wwan
-I:  If#= 1 Alt= 0 #EPs= 1 Cls=03(HID  ) Sub=00 Prot=00 Driver=usbhid
-I:  If#= 2 Alt= 0 #EPs= 3 Cls=ff(vend.) Sub=00 Prot=00 Driver=option
-I:  If#= 3 Alt= 0 #EPs= 3 Cls=ff(vend.) Sub=00 Prot=00 Driver=option
-I:  If#= 4 Alt= 0 #EPs= 3 Cls=ff(vend.) Sub=00 Prot=00 Driver=option
-I:  If#= 5 Alt= 0 #EPs= 2 Cls=ff(vend.) Sub=ff Prot=ff Driver=option
+The root of the problem is that the default segment size for sgt is
+(UINT_MAX & PAGE_MASK), and the default segment size for device dma is
+64K. As such, if you compare the 2, you would deduce that the sg segment
+will overflow the device's capacity. In reality, the hardware can
+accommodate the larger sg segments, it's just not initializing its max
+segment properly. This patch initializes the max segment size for the
+mdss device, which gets rid of that pesky warning.
 
-And interface 0 will be rejected based on too few endpoints for the
-pre-production variant:
-
-T: Bus=01 Lev=02 Prnt=02 Port=03 Cnt=03 Dev#= 7 Spd=480 MxCh= 0
-D: Ver= 2.10 Cls=ef(misc ) Sub=02 Prot=01 MxPS=64 #Cfgs= 2
-P: Vendor=413c ProdID=81d7 Rev= 3.18
-S: Manufacturer=DELL
-S: Product=DW5821e Snapdragon X20 LTE
-S: SerialNumber=0123456789ABCDEF
-C: #Ifs= 5 Cfg#= 1 Atr=a0 MxPwr=500mA
-I: If#= 0 Alt= 0 #EPs= 2 Cls=ff(vend.) Sub=ff Prot=ff Driver=
-I: If#= 1 Alt= 0 #EPs= 3 Cls=ff(vend.) Sub=ff Prot=ff Driver=qmi_wwan
-I: If#= 2 Alt= 0 #EPs= 3 Cls=ff(vend.) Sub=00 Prot=00 Driver=option
-I: If#= 3 Alt= 0 #EPs= 3 Cls=ff(vend.) Sub=00 Prot=00 Driver=option
-I: If#= 4 Alt= 0 #EPs= 3 Cls=ff(vend.) Sub=00 Prot=00 Driver=option
-
-Fixes: f25e1392fdb5 ("qmi_wwan: fix interface number for DW5821e production firmware")
-Link: https://whrl.pl/Rf0vNk
-Reported-by: Lars Melin <larsm17@gmail.com>
-Cc: Aleksander Morgado <aleksander@aleksander.es>
-Signed-off-by: Bjørn Mork <bjorn@mork.no>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Reported-by: Stephen Boyd <swboyd@chromium.org>
+Tested-by: Stephen Boyd <swboyd@chromium.org>
+Tested-by: Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
+Reviewed-by: Rob Clark <robdclark@gmail.com>
+Signed-off-by: Sean Paul <seanpaul@chromium.org>
+Signed-off-by: Douglas Anderson <dianders@chromium.org>
+Link: https://patchwork.freedesktop.org/patch/msgid/20200121111813.REPOST.1.I92c66a35fb13f368095b05287bdabdbe88ca6922@changeid
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/usb/qmi_wwan.c | 1 +
- 1 file changed, 1 insertion(+)
+ drivers/gpu/drm/msm/msm_drv.c | 8 ++++++++
+ 1 file changed, 8 insertions(+)
 
-diff --git a/drivers/net/usb/qmi_wwan.c b/drivers/net/usb/qmi_wwan.c
-index db70d4c5778a6..08215a9f61454 100644
---- a/drivers/net/usb/qmi_wwan.c
-+++ b/drivers/net/usb/qmi_wwan.c
-@@ -1287,6 +1287,7 @@ static const struct usb_device_id products[] = {
- 	{QMI_FIXED_INTF(0x413c, 0x81b6, 8)},	/* Dell Wireless 5811e */
- 	{QMI_FIXED_INTF(0x413c, 0x81b6, 10)},	/* Dell Wireless 5811e */
- 	{QMI_FIXED_INTF(0x413c, 0x81d7, 0)},	/* Dell Wireless 5821e */
-+	{QMI_FIXED_INTF(0x413c, 0x81d7, 1)},	/* Dell Wireless 5821e preproduction config */
- 	{QMI_FIXED_INTF(0x413c, 0x81e0, 0)},	/* Dell Wireless 5821e with eSIM support*/
- 	{QMI_FIXED_INTF(0x03f0, 0x4e1d, 8)},	/* HP lt4111 LTE/EV-DO/HSPA+ Gobi 4G Module */
- 	{QMI_FIXED_INTF(0x03f0, 0x9d1d, 1)},	/* HP lt4120 Snapdragon X5 LTE */
+diff --git a/drivers/gpu/drm/msm/msm_drv.c b/drivers/gpu/drm/msm/msm_drv.c
+index 77c45a2ebd833..d9c0687435a05 100644
+--- a/drivers/gpu/drm/msm/msm_drv.c
++++ b/drivers/gpu/drm/msm/msm_drv.c
+@@ -420,6 +420,14 @@ static int msm_drm_init(struct device *dev, struct drm_driver *drv)
+ 	if (ret)
+ 		goto fail;
+ 
++	if (!dev->dma_parms) {
++		dev->dma_parms = devm_kzalloc(dev, sizeof(*dev->dma_parms),
++					      GFP_KERNEL);
++		if (!dev->dma_parms)
++			return -ENOMEM;
++	}
++	dma_set_max_seg_size(dev, DMA_BIT_MASK(32));
++
+ 	msm_gem_shrinker_init(ddev);
+ 
+ 	switch (get_mdp_ver(pdev)) {
 -- 
 2.20.1
 
