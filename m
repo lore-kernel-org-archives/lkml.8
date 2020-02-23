@@ -7,50 +7,48 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 41E59C35671
-	for <linux-kernel@archiver.kernel.org>; Sun, 23 Feb 2020 02:26:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EF771C35669
+	for <linux-kernel@archiver.kernel.org>; Sun, 23 Feb 2020 02:26:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 19FE220659
-	for <linux-kernel@archiver.kernel.org>; Sun, 23 Feb 2020 02:26:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BAA2520659
+	for <linux-kernel@archiver.kernel.org>; Sun, 23 Feb 2020 02:26:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582424784;
-	bh=ZSiJGuWgxzz7UdiyaHP8cOuIVyiHlTqmuX6Y/Goe6AE=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=cOoICRneLOp054+sRBydu6mvbVi+1jKJZumwzRaEWgXkzArMMZb8iNXHf8TttxY5/
-	 5b6psQWjUmwOPu5Psf1iYi25tpcrXYtUYNSYMOlXDNnhXeE5qXawXRk13Il9f+TUS6
-	 UI6xbNBICa2T++2GbwsbMt2MjU6CToR04lTEKbTU=
+	s=default; t=1582424796;
+	bh=cg2as5AkT77EQDRMH1DPFUeJrfDK/wXOqjs5Sf/uJa8=;
+	h=From:To:Cc:Subject:Date:List-ID:From;
+	b=cU/LRI2EpxbzIdkyHINqz2dNJd8PzZmVbSaYpuXV2HFh+FQa5HYsoE583IKQEVtpQ
+	 NSQbTjFXSOgyj9mOreypWXDKxnvv3WaJWCcCla+6k56cL1WnJvc2sOEbw+nMZ5p17/
+	 FQDQNOpx43j77WF/it2i+6p++rF3LLtXfcndhK0M=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729121AbgBWC0W (ORCPT
+        id S1729437AbgBWCYs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 22 Feb 2020 21:26:22 -0500
-Received: from mail.kernel.org ([198.145.29.99]:55256 "EHLO mail.kernel.org"
+        Sat, 22 Feb 2020 21:24:48 -0500
+Received: from mail.kernel.org ([198.145.29.99]:54822 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729475AbgBWCYx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 22 Feb 2020 21:24:53 -0500
+        id S1729382AbgBWCYk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 22 Feb 2020 21:24:40 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E552B21741;
-        Sun, 23 Feb 2020 02:24:51 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C5EB821741;
+        Sun, 23 Feb 2020 02:24:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1582424692;
-        bh=ZSiJGuWgxzz7UdiyaHP8cOuIVyiHlTqmuX6Y/Goe6AE=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=FnoOvQmHiWNIpKQlC9EcT5s2iDLbDRG84BAX0GbPHcOt4aIvTDfkXwrAPHsR4M4+O
-         glcDjwpadaNFeNNCJ06wVEFOG1UIxPCgH3M6LqNZAhXp7n2/PYVHdUe5NX9n/yd75/
-         Km7Kdh9WDZfGeWg/N9flnLDKaiCm6RmwJaCwC6Ak=
+        s=default; t=1582424680;
+        bh=cg2as5AkT77EQDRMH1DPFUeJrfDK/wXOqjs5Sf/uJa8=;
+        h=From:To:Cc:Subject:Date:From;
+        b=fzMXGMXYgGqQJknupMxUlphZk08T/uGkuB4kTV8sPVpbW5XsxitZvyDmsyIadlgw/
+         8RqPWIrH6VJbx6lufODm5YMS1c40Zo3+5rHWCLPgdHnWz/cwrlBxbRDdQZatOk9C0X
+         Rg70cfLNf2cYum2egCzz3F0c+UCJ8IZRTiY6f9GI=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Arthur Kiyanovski <akiyano@amazon.com>,
-        Sameeh Jubran <sameehj@amazon.com>,
-        "David S . Miller" <davem@davemloft.net>,
-        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.9 11/16] net: ena: rss: store hash function as values and not bits
-Date:   Sat, 22 Feb 2020 21:24:33 -0500
-Message-Id: <20200223022438.2398-11-sashal@kernel.org>
+Cc:     Corey Minyard <cminyard@mvista.com>,
+        kbuild test robot <lkp@intel.com>,
+        Sasha Levin <sashal@kernel.org>,
+        openipmi-developer@lists.sourceforge.net
+Subject: [PATCH AUTOSEL 4.9 01/16] ipmi:ssif: Handle a possible NULL pointer reference
+Date:   Sat, 22 Feb 2020 21:24:23 -0500
+Message-Id: <20200223022438.2398-1-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20200223022438.2398-1-sashal@kernel.org>
-References: <20200223022438.2398-1-sashal@kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
@@ -60,53 +58,42 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Arthur Kiyanovski <akiyano@amazon.com>
+From: Corey Minyard <cminyard@mvista.com>
 
-[ Upstream commit 4844470d472d660c26149ad764da2406adb13423 ]
+[ Upstream commit 6b8526d3abc02c08a2f888e8c20b7ac9e5776dfe ]
 
-The device receives, stores and retrieves the hash function value as bits
-and not as their enum value.
+In error cases a NULL can be passed to memcpy.  The length will always
+be zero, so it doesn't really matter, but go ahead and check for NULL,
+anyway, to be more precise and avoid static analysis errors.
 
-The bug:
-* In ena_com_set_hash_function() we set
-  cmd.u.flow_hash_func.selected_func to the bit value of rss->hash_func.
- (1 << rss->hash_func)
-* In ena_com_get_hash_function() we retrieve the hash function and store
-  it's bit value in rss->hash_func. (Now the bit value of rss->hash_func
-  is stored in rss->hash_func instead of it's enum value)
-
-The fix:
-This commit fixes the issue by converting the retrieved hash function
-values from the device to the matching enum value of the set bit using
-ffs(). ffs() finds the first set bit's index in a word. Since the function
-returns 1 for the LSB's index, we need to subtract 1 from the returned
-value (note that BIT(0) is 1).
-
-Fixes: 1738cd3ed342 ("net: ena: Add a driver for Amazon Elastic Network Adapters (ENA)")
-Signed-off-by: Sameeh Jubran <sameehj@amazon.com>
-Signed-off-by: Arthur Kiyanovski <akiyano@amazon.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Reported-by: kbuild test robot <lkp@intel.com>
+Signed-off-by: Corey Minyard <cminyard@mvista.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/ethernet/amazon/ena/ena_com.c | 6 +++++-
- 1 file changed, 5 insertions(+), 1 deletion(-)
+ drivers/char/ipmi/ipmi_ssif.c | 10 +++++++---
+ 1 file changed, 7 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/net/ethernet/amazon/ena/ena_com.c b/drivers/net/ethernet/amazon/ena/ena_com.c
-index be8a2d48c98f2..e1f694322e41a 100644
---- a/drivers/net/ethernet/amazon/ena/ena_com.c
-+++ b/drivers/net/ethernet/amazon/ena/ena_com.c
-@@ -2093,7 +2093,11 @@ int ena_com_get_hash_function(struct ena_com_dev *ena_dev,
- 	if (unlikely(rc))
- 		return rc;
- 
--	rss->hash_func = get_resp.u.flow_hash_func.selected_func;
-+	/* ffs() returns 1 in case the lsb is set */
-+	rss->hash_func = ffs(get_resp.u.flow_hash_func.selected_func);
-+	if (rss->hash_func)
-+		rss->hash_func--;
-+
- 	if (func)
- 		*func = rss->hash_func;
+diff --git a/drivers/char/ipmi/ipmi_ssif.c b/drivers/char/ipmi/ipmi_ssif.c
+index 996b9ae154042..a4ef9a6bd3678 100644
+--- a/drivers/char/ipmi/ipmi_ssif.c
++++ b/drivers/char/ipmi/ipmi_ssif.c
+@@ -746,10 +746,14 @@ static void msg_done_handler(struct ssif_info *ssif_info, int result,
+ 	flags = ipmi_ssif_lock_cond(ssif_info, &oflags);
+ 	msg = ssif_info->curr_msg;
+ 	if (msg) {
++		if (data) {
++			if (len > IPMI_MAX_MSG_LENGTH)
++				len = IPMI_MAX_MSG_LENGTH;
++			memcpy(msg->rsp, data, len);
++		} else {
++			len = 0;
++		}
+ 		msg->rsp_size = len;
+-		if (msg->rsp_size > IPMI_MAX_MSG_LENGTH)
+-			msg->rsp_size = IPMI_MAX_MSG_LENGTH;
+-		memcpy(msg->rsp, data, msg->rsp_size);
+ 		ssif_info->curr_msg = NULL;
+ 	}
  
 -- 
 2.20.1
