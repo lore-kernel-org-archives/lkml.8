@@ -2,94 +2,98 @@ Return-Path: <SRS0=SnAt=4L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 61679C35671
-	for <linux-kernel@archiver.kernel.org>; Sun, 23 Feb 2020 21:25:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7092FC35673
+	for <linux-kernel@archiver.kernel.org>; Sun, 23 Feb 2020 22:01:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3214E206E0
-	for <linux-kernel@archiver.kernel.org>; Sun, 23 Feb 2020 21:25:14 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582493114;
-	bh=UBZMLJ+hZwk33B6GKkoXn94+jtXkwzrj0yNNWPz/3zQ=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=L5AC+IuzGC+vm+PHuQiqC7k5qusx0xEAFqpYPbzVmt3RmaKilrSIX1zKcJTrxLZ2y
-	 L8RzqWuBMjIOze9+elaK7g1xJi99uMlafZTxlbiwhVYQJY/BrujHwx8+/IRf0QtDGw
-	 zLvU4GR/ZtM4iV9eUkYpou4w7Tj+q530UXGz3y44=
+	by mail.kernel.org (Postfix) with ESMTP id 358F6206ED
+	for <linux-kernel@archiver.kernel.org>; Sun, 23 Feb 2020 22:01:28 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="jAF7dl79"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727188AbgBWVZI (ORCPT
+        id S1727133AbgBWWAf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 23 Feb 2020 16:25:08 -0500
-Received: from mail.kernel.org ([198.145.29.99]:49180 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727149AbgBWVZI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 23 Feb 2020 16:25:08 -0500
-Received: from mail-wr1-f52.google.com (mail-wr1-f52.google.com [209.85.221.52])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 97C7120880
-        for <linux-kernel@vger.kernel.org>; Sun, 23 Feb 2020 21:25:07 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1582493107;
-        bh=UBZMLJ+hZwk33B6GKkoXn94+jtXkwzrj0yNNWPz/3zQ=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=XkUKzUybg2pHtUVaVP9yJElwd741P/VdnxJGLiUaj5n3khB/T8MsfTcyiF25DQjsh
-         YnLROAuTTrZYHcRiagNAXXsrOlPgTdi5pMkLJDSXFzz/thSYAmEdu9Vy2YAB9P1uvS
-         NQkqe/05Dc1LUVi28ZoxakXhsEzNLJMO6ApN2c9A=
-Received: by mail-wr1-f52.google.com with SMTP id g4so1707105wro.13
-        for <linux-kernel@vger.kernel.org>; Sun, 23 Feb 2020 13:25:07 -0800 (PST)
-X-Gm-Message-State: APjAAAXTl8DQW1ahKNUdrc+avBcQmo0tj8d/nfi8zvM3r1xLQHaA/pDj
-        LTAaRF16NXQvF5fc+p8lx4DNU68etxTWJwjE9wQvDA==
-X-Google-Smtp-Source: APXvYqx5cdb7YOSRkBl6KJs6CwbRsq8y0XEDkKBScl7E1mxta09QfvSexEeWzzLkmkDwZiaAgEBpJ9t4aXi16/X071I=
-X-Received: by 2002:a05:6000:110b:: with SMTP id z11mr9787955wrw.252.1582493105928;
- Sun, 23 Feb 2020 13:25:05 -0800 (PST)
+        Sun, 23 Feb 2020 17:00:35 -0500
+Received: from mail-yw1-f68.google.com ([209.85.161.68]:44799 "EHLO
+        mail-yw1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726302AbgBWWAf (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 23 Feb 2020 17:00:35 -0500
+Received: by mail-yw1-f68.google.com with SMTP id t141so4352573ywc.11
+        for <linux-kernel@vger.kernel.org>; Sun, 23 Feb 2020 14:00:35 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=oEv7z6kfjOWhzFJ0U6oJmvXOArxz5ZVjmjpUgwRoIf8=;
+        b=jAF7dl79q0/wXBaOE+MXaj+rL4QmCUiy1BQrAY9Pg1t6LCgdtpDDs7//QZ+RFR8+sa
+         FXvaTB1zX8q7xrgU1QvqhU1YncMD9zHbG6G5NQFMFqw4O9o+I/alBs4f1JpSdvnRhNoB
+         C3brQnZsUKLdY885UJcYHp26WELQ8I8pnNQ7E=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=oEv7z6kfjOWhzFJ0U6oJmvXOArxz5ZVjmjpUgwRoIf8=;
+        b=niktMy5j27Zi4PA97PW0uCFW57s1Xux6K8pY9rWWW9vgu763PYB2T6xRKlAEL5dzsv
+         bF2ZzvN7vK7IlLQLKrgQV7ADQ73kXD7FFBjOIWWsigl145mox+wVFwgPx22LTX3fgA3U
+         ONZkaRhHYjav3CW6OhZbp9GCjZLkqs+mPFl2jxquBw1NGJquaLolyHSYMahJeFpBYbkg
+         9WLsPFj56/ZrtcKvPnFN9sfkUvdMleebhkapYb8gPTyd5VpLjgcT3PK75Q3jbS0tlemi
+         BwR/8cUYzc2NlpBfitlLkvjguMh77YJe/zZdthC6VC91AdZM/uGb2QlfSvrS8FqQHOk1
+         LI/g==
+X-Gm-Message-State: APjAAAVCar0ddG2+VAmYmG3cUeYkJynyuBS1S9vADia4+E6jXM1vPH2C
+        xEkERc24LVH0B1Qnqg8PLVUZnP46Yss=
+X-Google-Smtp-Source: APXvYqzgpJ6jKtTA4mnBKg80mHPt0TE/IensxVJ2W3hjvlXkxtWHCBkw0VPd7sl1UV2QXFrbFmH3uw==
+X-Received: by 2002:a0d:edc1:: with SMTP id w184mr1494108ywe.204.1582495232529;
+        Sun, 23 Feb 2020 14:00:32 -0800 (PST)
+Received: from mail-yw1-f43.google.com (mail-yw1-f43.google.com. [209.85.161.43])
+        by smtp.gmail.com with ESMTPSA id 207sm4323110ywq.100.2020.02.23.14.00.30
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Sun, 23 Feb 2020 14:00:30 -0800 (PST)
+Received: by mail-yw1-f43.google.com with SMTP id i126so4364971ywe.7
+        for <linux-kernel@vger.kernel.org>; Sun, 23 Feb 2020 14:00:30 -0800 (PST)
+X-Received: by 2002:a81:3888:: with SMTP id f130mr36072275ywa.138.1582495229594;
+ Sun, 23 Feb 2020 14:00:29 -0800 (PST)
 MIME-Version: 1.0
-References: <20200223205435.114915-1-xypron.glpk@gmx.de>
-In-Reply-To: <20200223205435.114915-1-xypron.glpk@gmx.de>
-From:   Ard Biesheuvel <ardb@kernel.org>
-Date:   Sun, 23 Feb 2020 22:24:54 +0100
-X-Gmail-Original-Message-ID: <CAKv+Gu_NoXwpgrdnTh54SJhCODoPc1WF0CUdQKGTM-YKqsJ12g@mail.gmail.com>
-Message-ID: <CAKv+Gu_NoXwpgrdnTh54SJhCODoPc1WF0CUdQKGTM-YKqsJ12g@mail.gmail.com>
-Subject: Re: [PATCH 1/1] efi/capsule-loader: superfluous assignment
-To:     Heinrich Schuchardt <xypron.glpk@gmx.de>
-Cc:     linux-efi <linux-efi@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+References: <20200222164419.GB3326744@rani.riverdale.lan> <20200222171859.3594058-1-nivedita@alum.mit.edu>
+ <20200222181413.GA22627@ubuntu-m2-xlarge-x86> <20200222185806.ywnqhfqmy67akfsa@google.com>
+ <20200222201715.GA3674682@rani.riverdale.lan> <20200222210101.diqw4zt6lz42ekgx@google.com>
+In-Reply-To: <20200222210101.diqw4zt6lz42ekgx@google.com>
+From:   Kees Cook <keescook@chromium.org>
+Date:   Sun, 23 Feb 2020 14:00:15 -0800
+X-Gmail-Original-Message-ID: <CAGXu5jJQRnPQDq6ZLrtCB-i0A_+AifY2me-BinuKz7LJU8=ePQ@mail.gmail.com>
+Message-ID: <CAGXu5jJQRnPQDq6ZLrtCB-i0A_+AifY2me-BinuKz7LJU8=ePQ@mail.gmail.com>
+Subject: Re: [PATCH] x86/boot/compressed: Fix compressed kernel linking with lld
+To:     Fangrui Song <maskray@google.com>
+Cc:     Arvind Sankar <nivedita@alum.mit.edu>,
+        Borislav Petkov <bp@alien8.de>,
+        Nathan Chancellor <natechancellor@gmail.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>,
+        "H. Peter Anvin" <hpa@zytor.com>, X86 ML <x86@kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        clang-built-linux@googlegroups.com, Michael Matz <matz@suse.de>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, 23 Feb 2020 at 21:54, Heinrich Schuchardt <xypron.glpk@gmx.de> wrote:
->
-> In efi_capsule_write() the value 0 assigned to ret is never used.
->
-> Identified with cppcheck.
->
-> Signed-off-by: Heinrich Schuchardt <xypron.glpk@gmx.de>
+On Sat, Feb 22, 2020 at 1:01 PM 'Fangrui Song' via Clang Built Linux
+<clang-built-linux@googlegroups.com> wrote:
+> https://github.com/torvalds/linux/commit/83a092cf95f28696ddc36c8add0cf03ac034897f
+> added -Wl,--orphan-handling=warn to arch/powerpc/Makefile .
+> x86 can follow if that is appropriate.
 
-Queued in efi/next, thanks
+I've been playing with a series to do this, here:
 
-> ---
->  drivers/firmware/efi/capsule-loader.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
->
-> diff --git a/drivers/firmware/efi/capsule-loader.c b/drivers/firmware/efi/capsule-loader.c
-> index d3067cbd5114..4dde8edd53b6 100644
-> --- a/drivers/firmware/efi/capsule-loader.c
-> +++ b/drivers/firmware/efi/capsule-loader.c
-> @@ -168,7 +168,7 @@ static ssize_t efi_capsule_submit_update(struct capsule_info *cap_info)
->  static ssize_t efi_capsule_write(struct file *file, const char __user *buff,
->                                  size_t count, loff_t *offp)
->  {
-> -       int ret = 0;
-> +       int ret;
->         struct capsule_info *cap_info = file->private_data;
->         struct page *page;
->         void *kbuff = NULL;
-> --
-> 2.25.0
->
+https://git.kernel.org/pub/scm/linux/kernel/git/kees/linux.git/log/?h=linker/orphans/x86-arm
+
+There's some work to be done still...
+
+-- 
+Kees Cook
