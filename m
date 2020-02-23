@@ -8,54 +8,54 @@ X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E9C70C35671
-	for <linux-kernel@archiver.kernel.org>; Sun, 23 Feb 2020 20:47:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 66FA8C35673
+	for <linux-kernel@archiver.kernel.org>; Sun, 23 Feb 2020 20:47:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BB13B206E0
-	for <linux-kernel@archiver.kernel.org>; Sun, 23 Feb 2020 20:47:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2C81C206ED
+	for <linux-kernel@archiver.kernel.org>; Sun, 23 Feb 2020 20:47:48 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="gon4KZhz"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="E9GDlKJB"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727306AbgBWUrm (ORCPT
+        id S1727318AbgBWUrp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 23 Feb 2020 15:47:42 -0500
-Received: from mail-wm1-f67.google.com ([209.85.128.67]:54749 "EHLO
-        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727238AbgBWUrd (ORCPT
+        Sun, 23 Feb 2020 15:47:45 -0500
+Received: from mail-wm1-f66.google.com ([209.85.128.66]:39505 "EHLO
+        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727227AbgBWUrb (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 23 Feb 2020 15:47:33 -0500
-Received: by mail-wm1-f67.google.com with SMTP id z12so3809615wmi.4;
-        Sun, 23 Feb 2020 12:47:31 -0800 (PST)
+        Sun, 23 Feb 2020 15:47:31 -0500
+Received: by mail-wm1-f66.google.com with SMTP id c84so7265942wme.4;
+        Sun, 23 Feb 2020 12:47:29 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=nlEamf3Bb75llXd1Mhw/lOhQJYbINGDlRtFSVygDuDU=;
-        b=gon4KZhzPKlehdd0aPjjxxDnjn7tFM/owUqv/JfmkGPd6K0fNde3p7dUyOImYCLoh+
-         c6nmG5tT4DpwnqSgHS75lzDybHm/p1TshgeQOt0cjnQZLav6IcfBjjw9A+Gz6D9Z0W6A
-         bSaLikGpID0JGmsAvtl2atuaOZPZCkRe4GJxT27Eg+eUL84g53pmb8+d5nMTy+pRsQBw
-         u6zOTnAysaALtKAZINy2yup3zcdwu+0QT8jeGEU9/m/qu1CFLn0j64iMwsXKuioQBMR9
-         97+Z8nZuOjaLC2SuIfOoCW2tTK/imCMEvZ/Fute2lvMU7bxKGxEhE60gpM12cHMZ5SgP
-         NV4Q==
+        bh=sqqxOH1roeZlLfVga52X20fyWtPVIkv1wXk6qPVKwv4=;
+        b=E9GDlKJBpA2I2sI0UBRJOBkaDMEfDrJ2IjL+OubS3ZEeQguTrSXL0Ookw3Q+kqDUmE
+         IBmjnCELPQlZqwvSk4Z+vSQfbJId3l6gJTgaAFA9/0fGwRgJka0LsDdxESoXXP1FNA7D
+         akmnKD+MVg9BpWAnQvmYFbVKrLxjrWoVUIk5DIvknzoMNdotVKvfMdp8neItTvOdCJ6Z
+         Xmz6UzGm1wtcX8zYoURVh5aosAtPXHOX6K/wF8wQzLCXffZ7NA2IscvTmM6oHdCEG537
+         eECE7x1PxnUxgm5hTfdK/vMps4IkfegX3UoDeMc2iki53FGGkDC93eyGdgA1qBVND17R
+         8pXQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references;
-        bh=nlEamf3Bb75llXd1Mhw/lOhQJYbINGDlRtFSVygDuDU=;
-        b=cJ9Z0mAW8AsNmOdVmvh8hTOn6m50O66Kau+miiYhffWqI4sx2r48+5ayCGrsIP73Et
-         d3b2ltVqVFOXqVEq64ahkigOCgL6vTghgbon9feLewROupusiXe0UZuPmuMRxWSMoz3j
-         lca6T3R6Xzy9bPsF/QCw9aiNCuJHqH4WL4jCHqE2fMXCMVVEw9Ws0eKEd0nuhvzpgnaq
-         FkuGzHOXno54bySXO0q95knXdmu0CV897OA7v4XKNFrcYcRTqV0EfSruZyxdW7FTyOt7
-         TiAmQw97vVUX45XURWnp+MYMsPBLyDw4Bzh924oHYsu43AdGBbn0sSELI4hDI58P7XYI
-         qzDg==
-X-Gm-Message-State: APjAAAUX++RTXfT0gmgz4I5FKyxRmJ7xZzFNmHtVRPkWr73d/fHEqglN
-        btpJD3LdwQqwEHfhXtdusbM=
-X-Google-Smtp-Source: APXvYqz/cf1PBssq3BPpoP9LiziohZ60js7tzpnfBEbSAsDu30hCL3wVYhOkSpBgx2WVvxjB0CNi1g==
-X-Received: by 2002:a1c:4c8:: with SMTP id 191mr17418212wme.148.1582490850929;
-        Sun, 23 Feb 2020 12:47:30 -0800 (PST)
+        bh=sqqxOH1roeZlLfVga52X20fyWtPVIkv1wXk6qPVKwv4=;
+        b=XmzMfpHfQOOsOsJY3Q65GXNNKh9Pm+jZig0vg2uAIDM4QnALWLpU5R0Xegjb+kr7pk
+         7oCebflj5thxLkGmYKUwtp+ZHK62AjZLax7+HuMOsyvrW1H0U2WOI2nsLJpWUN1LD8VW
+         clIOTZkQMslGqhXeV5WRf349BfUOvXBzAd3YEMbE3PNIf5tI3nvk+tiU0MSRkdcfivkd
+         zoyKtxIydnxOn6Q6Dlp5OblwQejBa9qoxgrUDiJ2f3BqWdtO/+sHogdgJPt6pXdBZGR3
+         aLwxKW99Yh2UvgZ7Q7LamEcXUvDn7b++xyACdn30j/FNqEUDfm8OK1tjyn9KIybYs0Bm
+         JJpw==
+X-Gm-Message-State: APjAAAUPHiAgSv2rxFLjSseUmyPtXaLyoAn66hPBWia+UmwCG3DiH/jX
+        /ESbp/Amg8ti4rS4dfL79/c=
+X-Google-Smtp-Source: APXvYqweJIEgtN+wGl6p6jIiN/b4kZDAUqprVO6SMbdt+HNTXYx1IMy16ZSpWUmsqQS1JRUwOZZl/g==
+X-Received: by 2002:a7b:c249:: with SMTP id b9mr16979814wmj.61.1582490848518;
+        Sun, 23 Feb 2020 12:47:28 -0800 (PST)
 Received: from localhost.localdomain ([79.115.60.40])
-        by smtp.gmail.com with ESMTPSA id z8sm14817927wrq.22.2020.02.23.12.47.29
+        by smtp.gmail.com with ESMTPSA id z8sm14817927wrq.22.2020.02.23.12.47.27
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 23 Feb 2020 12:47:30 -0800 (PST)
+        Sun, 23 Feb 2020 12:47:28 -0800 (PST)
 From:   Vladimir Oltean <olteanv@gmail.com>
 To:     shawnguo@kernel.org, robh+dt@kernel.org, mark.rutland@arm.com,
         devicetree@vger.kernel.org
@@ -63,9 +63,9 @@ Cc:     andrew@lunn.ch, vivien.didelot@gmail.com, f.fainelli@gmail.com,
         alexandru.marginean@nxp.com, claudiu.manoil@nxp.com,
         michael@walle.cc, davem@davemloft.net, netdev@vger.kernel.org,
         linux-kernel@vger.kernel.org
-Subject: [PATCH v3 devicetree 6/6] arm64: dts: fsl: ls1028a: enable switch PHYs on RDB
-Date:   Sun, 23 Feb 2020 22:47:16 +0200
-Message-Id: <20200223204716.26170-7-olteanv@gmail.com>
+Subject: [PATCH v3 devicetree 4/6] dt-bindings: net: dsa: ocelot: document the vsc9959 core
+Date:   Sun, 23 Feb 2020 22:47:14 +0200
+Message-Id: <20200223204716.26170-5-olteanv@gmail.com>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20200223204716.26170-1-olteanv@gmail.com>
 References: <20200223204716.26170-1-olteanv@gmail.com>
@@ -74,112 +74,152 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Claudiu Manoil <claudiu.manoil@nxp.com>
+From: Vladimir Oltean <vladimir.oltean@nxp.com>
 
-Link the switch PHY nodes to the central MDIO controller PCIe endpoint
-node on LS1028A (implemented as PF3) so that PHYs are accessible via
-MDIO.
+This patch adds the required documentation for the embedded L2 switch
+inside the NXP LS1028A chip.
 
-Enable SGMII AN on the Felix PCS by telling PHYLINK that the VSC8514
-quad PHY is capable of in-band-status.
+I've submitted it in the legacy format instead of yaml schema, because
+DSA itself has not yet been converted to yaml, and this driver defines
+no custom bindings.
 
-The PHYs are used in poll mode due to an issue with the interrupt line
-on current revisions of the LS1028A-RDB board.
-
-Signed-off-by: Claudiu Manoil <claudiu.manoil@nxp.com>
-Signed-off-by: Alex Marginean <alexandru.marginean@nxp.com>
 Signed-off-by: Vladimir Oltean <vladimir.oltean@nxp.com>
 Reviewed-by: Andrew Lunn <andrew@lunn.ch>
 ---
 Changes in v3:
-- Set and enable the CPU port and DSA master from the board-specific
-  fsl-ls1028a-rdb.dts.
-- Move the "status" property to last.
+- Clarify the real restriction regarding enetc_port2 which can't be
+  disabled.
+- Document the supported phy-modes on Felix switch ports.
 
 Changes in v2:
-None.
+Adapted phy-mode = "gmii" to phy-mode = "internal".
 
- .../boot/dts/freescale/fsl-ls1028a-rdb.dts    | 60 +++++++++++++++++++
- 1 file changed, 60 insertions(+)
+ .../devicetree/bindings/net/dsa/ocelot.txt    | 116 ++++++++++++++++++
+ 1 file changed, 116 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/net/dsa/ocelot.txt
 
-diff --git a/arch/arm64/boot/dts/freescale/fsl-ls1028a-rdb.dts b/arch/arm64/boot/dts/freescale/fsl-ls1028a-rdb.dts
-index 14efe3b06042..6d05b76c2c7a 100644
---- a/arch/arm64/boot/dts/freescale/fsl-ls1028a-rdb.dts
-+++ b/arch/arm64/boot/dts/freescale/fsl-ls1028a-rdb.dts
-@@ -177,6 +177,25 @@
- 	status = "okay";
- };
- 
-+&enetc_mdio_pf3 {
-+	/* VSC8514 QSGMII quad PHY */
-+	qsgmii_phy0: ethernet-phy@10 {
-+		reg = <0x10>;
+diff --git a/Documentation/devicetree/bindings/net/dsa/ocelot.txt b/Documentation/devicetree/bindings/net/dsa/ocelot.txt
+new file mode 100644
+index 000000000000..66a129fea705
+--- /dev/null
++++ b/Documentation/devicetree/bindings/net/dsa/ocelot.txt
+@@ -0,0 +1,116 @@
++Microchip Ocelot switch driver family
++=====================================
++
++Felix
++-----
++
++The VSC9959 core is currently the only switch supported by the driver, and is
++found in the NXP LS1028A. It is a PCI device, part of the larger ENETC root
++complex. As a result, the ethernet-switch node is a sub-node of the PCIe root
++complex node and its "reg" property conforms to the parent node bindings:
++
++* reg: Specifies PCIe Device Number and Function Number of the endpoint device,
++  in this case for the Ethernet L2Switch it is PF5 (of device 0, bus 0).
++
++It does not require a "compatible" string.
++
++The interrupt line is used to signal availability of PTP TX timestamps and for
++TSN frame preemption.
++
++For the external switch ports, depending on board configuration, "phy-mode" and
++"phy-handle" are populated by board specific device tree instances. Ports 4 and
++5 are fixed as internal ports in the NXP LS1028A instantiation.
++
++The CPU port property ("ethernet") configures the feature called "NPI port" in
++the Ocelot hardware core. The CPU port in Ocelot is a set of queues, which are
++connected, in the Node Processor Interface (NPI) mode, to an Ethernet port.
++By default, in fsl-ls1028a.dtsi, the NPI port is assigned to the internal
++2.5Gbps port@4, but can be moved to the 1Gbps port@5, depending on the specific
++use case.  Moving the NPI port to an external switch port is hardware possible,
++but there is no platform support for the Linux system on the LS1028A chip to
++operate as an entire slave DSA chip.  NPI functionality (and therefore DSA
++tagging) is supported on a single port at a time.
++
++Any port can be disabled (and in fsl-ls1028a.dtsi, they are indeed all disabled
++by default, and should be enabled on a per-board basis). But if any external
++switch port is enabled at all, the ENETC PF2 (enetc_port2) should be enabled as
++well, regardless of whether it is configured as the DSA master or not. This is
++because the Felix PHYLINK implementation accesses the MAC PCS registers, which
++in hardware truly belong to the ENETC port #2 and not to Felix.
++
++Supported PHY interface types (appropriate SerDes protocol setting changes are
++needed in the RCW binary):
++
++* phy_mode = "internal": on ports 4 and 5
++* phy_mode = "sgmii": on ports 0, 1, 2, 3
++* phy_mode = "qsgmii": on ports 0, 1, 2, 3
++* phy_mode = "usxgmii": on ports 0, 1, 2, 3
++* phy_mode = "2500base-x": on ports 0, 1, 2, 3
++
++For the rest of the device tree binding definitions, which are standard DSA and
++PCI, refer to the following documents:
++
++Documentation/devicetree/bindings/net/dsa/dsa.txt
++Documentation/devicetree/bindings/pci/pci.txt
++
++Example:
++
++&soc {
++	pcie@1f0000000 { /* Integrated Endpoint Root Complex */
++		ethernet-switch@0,5 {
++			reg = <0x000500 0 0 0 0>;
++			/* IEP INT_B */
++			interrupts = <GIC_SPI 95 IRQ_TYPE_LEVEL_HIGH>;
++
++			ports {
++				#address-cells = <1>;
++				#size-cells = <0>;
++
++				/* External ports */
++				port@0 {
++					reg = <0>;
++					label = "swp0";
++				};
++
++				port@1 {
++					reg = <1>;
++					label = "swp1";
++				};
++
++				port@2 {
++					reg = <2>;
++					label = "swp2";
++				};
++
++				port@3 {
++					reg = <3>;
++					label = "swp3";
++				};
++
++				/* Tagging CPU port */
++				port@4 {
++					reg = <4>;
++					ethernet = <&enetc_port2>;
++					phy-mode = "internal";
++
++					fixed-link {
++						speed = <2500>;
++						full-duplex;
++					};
++				};
++
++				/* Non-tagging CPU port */
++				port@5 {
++					reg = <5>;
++					phy-mode = "internal";
++					status = "disabled";
++
++					fixed-link {
++						speed = <1000>;
++						full-duplex;
++					};
++				};
++			};
++		};
 +	};
-+
-+	qsgmii_phy1: ethernet-phy@11 {
-+		reg = <0x11>;
-+	};
-+
-+	qsgmii_phy2: ethernet-phy@12 {
-+		reg = <0x12>;
-+	};
-+
-+	qsgmii_phy3: ethernet-phy@13 {
-+		reg = <0x13>;
-+	};
 +};
-+
- &enetc_port0 {
- 	phy-handle = <&sgmii_phy0>;
- 	phy-connection-type = "sgmii";
-@@ -191,6 +210,47 @@
- 	};
- };
- 
-+&enetc_port2 {
-+	status = "okay";
-+};
-+
-+&mscc_felix_port0 {
-+	label = "swp0";
-+	managed = "in-band-status";
-+	phy-handle = <&qsgmii_phy0>;
-+	phy-mode = "qsgmii";
-+	status = "okay";
-+};
-+
-+&mscc_felix_port1 {
-+	label = "swp1";
-+	managed = "in-band-status";
-+	phy-handle = <&qsgmii_phy1>;
-+	phy-mode = "qsgmii";
-+	status = "okay";
-+};
-+
-+&mscc_felix_port2 {
-+	label = "swp2";
-+	managed = "in-band-status";
-+	phy-handle = <&qsgmii_phy2>;
-+	phy-mode = "qsgmii";
-+	status = "okay";
-+};
-+
-+&mscc_felix_port3 {
-+	label = "swp3";
-+	managed = "in-band-status";
-+	phy-handle = <&qsgmii_phy3>;
-+	phy-mode = "qsgmii";
-+	status = "okay";
-+};
-+
-+&mscc_felix_port4 {
-+	ethernet = <&enetc_port2>;
-+	status = "okay";
-+};
-+
- &sai4 {
- 	status = "okay";
- };
 -- 
 2.17.1
 
