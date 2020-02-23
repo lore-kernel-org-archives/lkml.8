@@ -7,49 +7,49 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B3869C35676
-	for <linux-kernel@archiver.kernel.org>; Sun, 23 Feb 2020 03:45:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 04345C35671
+	for <linux-kernel@archiver.kernel.org>; Sun, 23 Feb 2020 03:45:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 88942208C3
-	for <linux-kernel@archiver.kernel.org>; Sun, 23 Feb 2020 03:45:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BEFED208C3
+	for <linux-kernel@archiver.kernel.org>; Sun, 23 Feb 2020 03:45:48 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=sholland.org header.i=@sholland.org header.b="agoHeIJB";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="wMBMws10"
+	dkim=pass (2048-bit key) header.d=sholland.org header.i=@sholland.org header.b="Nnk7ZUOb";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="nDYUDI5q"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727374AbgBWDpo (ORCPT
+        id S1727183AbgBWDph (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 22 Feb 2020 22:45:44 -0500
-Received: from new4-smtp.messagingengine.com ([66.111.4.230]:60769 "EHLO
-        new4-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727024AbgBWDph (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
         Sat, 22 Feb 2020 22:45:37 -0500
+Received: from new4-smtp.messagingengine.com ([66.111.4.230]:33323 "EHLO
+        new4-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726965AbgBWDpg (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 22 Feb 2020 22:45:36 -0500
 Received: from compute5.internal (compute5.nyi.internal [10.202.2.45])
-        by mailnew.nyi.internal (Postfix) with ESMTP id EFD236A2F;
+        by mailnew.nyi.internal (Postfix) with ESMTP id C4F966A1E;
         Sat, 22 Feb 2020 22:45:35 -0500 (EST)
 Received: from mailfrontend2 ([10.202.2.163])
   by compute5.internal (MEProxy); Sat, 22 Feb 2020 22:45:35 -0500
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=sholland.org; h=
         from:to:cc:subject:date:message-id:in-reply-to:references
-        :mime-version:content-transfer-encoding; s=fm2; bh=4ICm2QiFFrbgz
-        aDEtX2KVwTyX394xQzW/xM+H9iBcqc=; b=agoHeIJBkFE8vM94ydHTpyvjB0qFM
-        A1aev+Pi8n9nMYjxLGXQ8iDyzOiC78x+wn+GGx8bsoTBZgo6HFsZwWapTJP0qyMC
-        d3Abr2s/bjgxDfDCSkett3ede2X1EDKkEy/eAY/81KOc+MLkd5R3ML5Hp8/WmClv
-        8AOQbJtEGqVdqVGJllDo291TytjBkGKmaeWrZMOtEOcTupzzvG0ENZDbxrDjXCln
-        4hsq7CHtUitYTv8aSw+4N8fj3PVCCkO/N9iA3DlW8T0Oh6Zz9kegtLlaHAiRRntm
-        RerTMI4ZSN+lfHajI8UvgXjZZLG1jUEVZ9xLVeaiu5bDC/AbjW9bh3OKQ==
+        :mime-version:content-transfer-encoding; s=fm2; bh=xEUgRs6Eo7JPj
+        +m5PuuwJ2k+XGQGKRuM1/o6sSyplzM=; b=Nnk7ZUObs/FREDBnMBIGIQlbk9/hB
+        OHnQtloJwUPBSezuEntlSgCdrcuj49sBrzn+52lag/e10aT0skZWeUSN6C27672D
+        s+yhPhKqHrV/p22xuXd4/fo0hD4cnmW3L5ECeeevPICnHmI7x0R8j7T7Yy/2xhQN
+        XGoKxbZ+jL6aufYTesxziewgZ548tXriI2XjIvfEKXsuFlwk2PnQO5qPNd62wv1g
+        c2dz16JrReSTHVrZSou953WnzKst8pDfS+1LTLJefpRznjPrl4XOdwGnKM3E0Agi
+        sixVwXvy9Z/fb62b2zFZEfCzJebb2fd/53lm+kg5YslT3G1CBN0L5GkTw==
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
         messagingengine.com; h=cc:content-transfer-encoding:date:from
         :in-reply-to:message-id:mime-version:references:subject:to
         :x-me-proxy:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=
-        fm2; bh=4ICm2QiFFrbgzaDEtX2KVwTyX394xQzW/xM+H9iBcqc=; b=wMBMws10
-        Ui0bo5OH5A12RmpyiDmmKuvRD+LID9AY1Nh3UlT5gbxz3QecDa6K3QyBpspb8uPZ
-        6XQQMceuurNnNKqnViNatEjjaVFX9LDi8RCcJvo8Re8q01JvsOZWTZCnJm3wYaDw
-        EGBc1MdPOn+kw7zA5R/5aktN1pb0fArKLMgQpVE29IroiKSjv1GKDEHy7iCiUC2D
-        vnof129FN904ItAhaUTJ+trJE3t5jTXFx9qmquKiwbWOXzOlYhde5MfS9aj0eh8H
-        n4XMA+Ovd36OD3xOwK1mk0CTKFh7haqtXeFG+5qo6y4ONxxBv/FFd9BtIe04e53Q
-        odY5tYWt8SMg5w==
-X-ME-Sender: <xms:X_VRXgn8aeoKZE50Ng_InK50I28l8xaYg78eezvHXUqtUKB95GW0fA>
+        fm2; bh=xEUgRs6Eo7JPj+m5PuuwJ2k+XGQGKRuM1/o6sSyplzM=; b=nDYUDI5q
+        8FR8xwUv4oxtygL7IpTmLDh/3bqPDsly1+AlprNxpKvRMKIxvU0XG7OJOUxllv+6
+        5fjXtsYbM00wkW3dEKY2gGomFaY2Pcbtr/a8CDd9yotmgmJhrfhtvoV3ggU0Yxdz
+        L8JIKZe9e0dwNEYy+zaN1lE6bUpNRyeIm8x63kyrNUAQt3W4V1ABwHQDpPaqKQXk
+        w/O6VKlYGkHWEkit1/IRWGHLcb4s0ZsQTc9uPj5Z9NUsKz+ieV3qg4lRxRZPtgVM
+        AxNWbhNcBZh5Hp9L6NtSiw16Jh43z0H9bURtPOz9zqNjqZNfpnIDr7YHPROl/isB
+        YaerEMfAw4iAYg==
+X-ME-Sender: <xms:XvVRXsGPhieLJ9ydI2nOrn5F2bTAYDPC2uNGwuU9Pjby6-2gR3AxiQ>
 X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedugedrkeejgdeitdcutefuodetggdotefrodftvf
     curfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfghnecu
     uegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenuc
@@ -57,13 +57,13 @@ X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedugedrkeejgdeitdcutefuodetggdote
     ucfjohhllhgrnhguuceoshgrmhhuvghlsehshhholhhlrghnugdrohhrgheqnecukfhppe
     ejtddrudefhedrudegkedrudehudenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgr
     mhepmhgrihhlfhhrohhmpehsrghmuhgvlhesshhhohhllhgrnhgurdhorhhg
-X-ME-Proxy: <xmx:X_VRXsJSh-_Xp4KYzi3-OayVKioWZvt8DzXLcVhki34Uggvppzlm_w>
-    <xmx:X_VRXhaSzyYnVEZCLJydXyRn5fZFVSKcQ2m9qDLco6IB3pY3Uu8pxw>
-    <xmx:X_VRXuaWfJzW42Ckaf-qWfVnCgeracm8-yZHTygKEIEH_HE3xsJ_ww>
-    <xmx:X_VRXt0GR8nimMRxItRqt9DqUWcD-c7x7BsXaoVI7CBTNDXPPhgVag>
+X-ME-Proxy: <xmx:XvVRXg5FlqsUU1rgAW3-fYS5k3_LfJ4BW7rihWdkjvCZCM3he3aumw>
+    <xmx:XvVRXtZEvRLeZ2-FlV6LSk-2uOz01uxpN3iIRJoRXzSVoPfH8Xq1dg>
+    <xmx:XvVRXmfWil9w341ftIJdPZIthQJPbbvyXQoCgVKuispyKio3Gvg6iQ>
+    <xmx:X_VRXkYXIkMNm3jW85dIxNcE7kl3MiOt4yI7aMamSjIfOhofnNdWzw>
 Received: from titanium.stl.sholland.net (70-135-148-151.lightspeed.stlsmo.sbcglobal.net [70.135.148.151])
-        by mail.messagingengine.com (Postfix) with ESMTPA id 5F4303060FD3;
-        Sat, 22 Feb 2020 22:45:35 -0500 (EST)
+        by mail.messagingengine.com (Postfix) with ESMTPA id 7105C3060F9B;
+        Sat, 22 Feb 2020 22:45:34 -0500 (EST)
 From:   Samuel Holland <samuel@sholland.org>
 To:     Mark Brown <broonie@kernel.org>,
         Liam Girdwood <lgirdwood@gmail.com>,
@@ -74,9 +74,9 @@ To:     Mark Brown <broonie@kernel.org>,
 Cc:     Ondrej Jirman <megous@megous.com>, alsa-devel@alsa-project.org,
         linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org,
         Samuel Holland <samuel@sholland.org>
-Subject: [PATCH v3 3/3] ASoC: simple-card: Add support for codec2codec DAI links
-Date:   Sat, 22 Feb 2020 21:45:33 -0600
-Message-Id: <20200223034533.1035-4-samuel@sholland.org>
+Subject: [PATCH v3 1/3] ALSA: pcm: Add a standalone version of snd_pcm_limit_hw_rates
+Date:   Sat, 22 Feb 2020 21:45:31 -0600
+Message-Id: <20200223034533.1035-2-samuel@sholland.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20200223034533.1035-1-samuel@sholland.org>
 References: <20200223034533.1035-1-samuel@sholland.org>
@@ -87,108 +87,85 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Following the example in cb2cf0de1174 ("ASoC: soc-core: care Codec <->
-Codec case by non_legacy_dai_naming"), determine if a DAI link contains
-only codec DAIs by examining the non_legacy_dai_naming flag in each
-DAI's component.
+It can be useful to derive min/max rates of a snd_pcm_hardware without
+having a snd_pcm_runtime, such as before constructing an ASoC DAI link.
 
-For now, we assume there is only one or a small set of valid PCM stream
-parameters, so num_params == 1 is good enough. We also assume that the
-same params are valid for all supported streams. params is set to the
-subset of parameters common among all DAIs, and then the existing code
-automatically chooses the highest quality of the remaining values when
-the link is brought up.
+Create a new helper that takes a pointer to a snd_pcm_hardware directly,
+and refactor the original function as a wrapper around it, to avoid
+needing to update any call sites.
 
 Signed-off-by: Samuel Holland <samuel@sholland.org>
 ---
- Documentation/sound/soc/codec-to-codec.rst |  9 +++-
- sound/soc/generic/simple-card-utils.c      | 49 ++++++++++++++++++++++
- 2 files changed, 56 insertions(+), 2 deletions(-)
+ include/sound/pcm.h   |  9 ++++++++-
+ sound/core/pcm_misc.c | 18 +++++++++---------
+ 2 files changed, 17 insertions(+), 10 deletions(-)
 
-diff --git a/Documentation/sound/soc/codec-to-codec.rst b/Documentation/sound/soc/codec-to-codec.rst
-index 810109d7500d..4eaa9a0c41fc 100644
---- a/Documentation/sound/soc/codec-to-codec.rst
-+++ b/Documentation/sound/soc/codec-to-codec.rst
-@@ -104,5 +104,10 @@ Make sure to name your corresponding cpu and codec playback and capture
- dai names ending with "Playback" and "Capture" respectively as dapm core
- will link and power those dais based on the name.
- 
--Note that in current device tree there is no way to mark a dai_link
--as codec to codec. However, it may change in future.
-+A dai_link in a "simple-audio-card" will automatically be detected as
-+codec to codec when all DAIs on the link belong to codec components.
-+The dai_link will be initialized with the subset of stream parameters
-+(channels, format, sample rate) supported by all DAIs on the link. Since
-+there is no way to provide these parameters in the device tree, this is
-+mostly useful for communication with simple fixed-function codecs, such
-+as a Bluetooth controller or cellular modem.
-diff --git a/sound/soc/generic/simple-card-utils.c b/sound/soc/generic/simple-card-utils.c
-index 9b794775df53..54294367a40f 100644
---- a/sound/soc/generic/simple-card-utils.c
-+++ b/sound/soc/generic/simple-card-utils.c
-@@ -331,6 +331,51 @@ static int asoc_simple_init_dai(struct snd_soc_dai *dai,
- 	return 0;
+diff --git a/include/sound/pcm.h b/include/sound/pcm.h
+index f657ff08f317..89529dfffaac 100644
+--- a/include/sound/pcm.h
++++ b/include/sound/pcm.h
+@@ -1122,7 +1122,14 @@ snd_pcm_kernel_readv(struct snd_pcm_substream *substream,
+ 	return __snd_pcm_lib_xfer(substream, bufs, false, frames, true);
  }
  
-+static int asoc_simple_init_dai_link_params(struct snd_soc_pcm_runtime *rtd,
-+					    struct simple_dai_props *dai_props)
+-int snd_pcm_limit_hw_rates(struct snd_pcm_runtime *runtime);
++int snd_pcm_hw_limit_rates(struct snd_pcm_hardware *hw);
++
++static inline int
++snd_pcm_limit_hw_rates(struct snd_pcm_runtime *runtime)
 +{
-+	struct snd_soc_dai_link *dai_link = rtd->dai_link;
-+	struct snd_soc_component *component;
-+	struct snd_soc_rtdcom_list *rtdcom;
-+	struct snd_soc_pcm_stream *params;
-+	struct snd_pcm_hardware hw;
-+	int i, ret, stream;
-+
-+	/* Only codecs should have non_legacy_dai_naming set. */
-+	for_each_rtd_components(rtd, i, component) {
-+		if (!component->driver->non_legacy_dai_naming)
-+			return 0;
-+	}
-+
-+	/* Assumes the capabilities are the same for all supported streams */
-+	for (stream = 0; stream < 2; stream++) {
-+		ret = snd_soc_runtime_calc_hw(rtd, &hw, stream);
-+		if (ret == 0)
-+			break;
-+	}
-+
-+	if (ret < 0) {
-+		dev_err(rtd->dev, "simple-card: no valid dai_link params\n");
-+		return ret;
-+	}
-+
-+	params = devm_kzalloc(rtd->dev, sizeof(*params), GFP_KERNEL);
-+	if (!params)
-+		return -ENOMEM;
-+
-+	params->formats = hw.formats;
-+	params->rates = hw.rates;
-+	params->rate_min = hw.rate_min;
-+	params->rate_max = hw.rate_max;
-+	params->channels_min = hw.channels_min;
-+	params->channels_max = hw.channels_max;
-+
-+	dai_link->params = params;
-+	dai_link->num_params = 1;
-+
-+	return 0;
++	return snd_pcm_hw_limit_rates(&runtime->hw);
 +}
 +
- int asoc_simple_dai_init(struct snd_soc_pcm_runtime *rtd)
- {
- 	struct asoc_simple_priv *priv = snd_soc_card_get_drvdata(rtd->card);
-@@ -347,6 +392,10 @@ int asoc_simple_dai_init(struct snd_soc_pcm_runtime *rtd)
- 	if (ret < 0)
- 		return ret;
+ unsigned int snd_pcm_rate_to_rate_bit(unsigned int rate);
+ unsigned int snd_pcm_rate_bit_to_rate(unsigned int rate_bit);
+ unsigned int snd_pcm_rate_mask_intersect(unsigned int rates_a,
+diff --git a/sound/core/pcm_misc.c b/sound/core/pcm_misc.c
+index a6a541511534..5dd2e5335900 100644
+--- a/sound/core/pcm_misc.c
++++ b/sound/core/pcm_misc.c
+@@ -474,32 +474,32 @@ int snd_pcm_format_set_silence(snd_pcm_format_t format, void *data, unsigned int
+ EXPORT_SYMBOL(snd_pcm_format_set_silence);
  
-+	ret = asoc_simple_init_dai_link_params(rtd, dai_props);
-+	if (ret < 0)
-+		return ret;
-+
+ /**
+- * snd_pcm_limit_hw_rates - determine rate_min/rate_max fields
+- * @runtime: the runtime instance
++ * snd_pcm_hw_limit_rates - determine rate_min/rate_max fields
++ * @hw: the pcm hw instance
+  *
+  * Determines the rate_min and rate_max fields from the rates bits of
+- * the given runtime->hw.
++ * the given hw.
+  *
+  * Return: Zero if successful.
+  */
+-int snd_pcm_limit_hw_rates(struct snd_pcm_runtime *runtime)
++int snd_pcm_hw_limit_rates(struct snd_pcm_hardware *hw)
+ {
+ 	int i;
+ 	for (i = 0; i < (int)snd_pcm_known_rates.count; i++) {
+-		if (runtime->hw.rates & (1 << i)) {
+-			runtime->hw.rate_min = snd_pcm_known_rates.list[i];
++		if (hw->rates & (1 << i)) {
++			hw->rate_min = snd_pcm_known_rates.list[i];
+ 			break;
+ 		}
+ 	}
+ 	for (i = (int)snd_pcm_known_rates.count - 1; i >= 0; i--) {
+-		if (runtime->hw.rates & (1 << i)) {
+-			runtime->hw.rate_max = snd_pcm_known_rates.list[i];
++		if (hw->rates & (1 << i)) {
++			hw->rate_max = snd_pcm_known_rates.list[i];
+ 			break;
+ 		}
+ 	}
  	return 0;
  }
- EXPORT_SYMBOL_GPL(asoc_simple_dai_init);
+-EXPORT_SYMBOL(snd_pcm_limit_hw_rates);
++EXPORT_SYMBOL(snd_pcm_hw_limit_rates);
+ 
+ /**
+  * snd_pcm_rate_to_rate_bit - converts sample rate to SNDRV_PCM_RATE_xxx bit
 -- 
 2.24.1
 
