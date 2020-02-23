@@ -6,35 +6,35 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 32C9BC35671
-	for <linux-kernel@archiver.kernel.org>; Sun, 23 Feb 2020 19:30:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DE955C35666
+	for <linux-kernel@archiver.kernel.org>; Sun, 23 Feb 2020 19:30:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0350A208C4
-	for <linux-kernel@archiver.kernel.org>; Sun, 23 Feb 2020 19:30:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B8197208C4
+	for <linux-kernel@archiver.kernel.org>; Sun, 23 Feb 2020 19:30:06 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727221AbgBWTaC (ORCPT
+        id S1727257AbgBWTaG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 23 Feb 2020 14:30:02 -0500
-Received: from foss.arm.com ([217.140.110.172]:51330 "EHLO foss.arm.com"
+        Sun, 23 Feb 2020 14:30:06 -0500
+Received: from foss.arm.com ([217.140.110.172]:51374 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727201AbgBWTaA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 23 Feb 2020 14:30:00 -0500
+        id S1727229AbgBWTaE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 23 Feb 2020 14:30:04 -0500
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 7C03A139F;
-        Sun, 23 Feb 2020 11:30:00 -0800 (PST)
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 5D942101E;
+        Sun, 23 Feb 2020 11:30:04 -0800 (PST)
 Received: from e107158-lin.cambridge.arm.com (e107158-lin.cambridge.arm.com [10.1.195.21])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 7D2473F6CF;
-        Sun, 23 Feb 2020 11:29:59 -0800 (PST)
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 3D64E3F6CF;
+        Sun, 23 Feb 2020 11:30:03 -0800 (PST)
 From:   Qais Yousef <qais.yousef@arm.com>
 To:     Thomas Gleixner <tglx@linutronix.de>
 Cc:     "Paul E . McKenney" <paulmck@kernel.org>,
         Qais Yousef <qais.yousef@arm.com>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will@kernel.org>,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: [PATCH v3 05/15] arm64: Don't use disable_nonboot_cpus()
-Date:   Sun, 23 Feb 2020 19:29:32 +0000
-Message-Id: <20200223192942.18420-6-qais.yousef@arm.com>
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        "H. Peter Anvin" <hpa@zytor.com>, x86@kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH v3 07/15] x86: Replace cpu_up/down with add/remove_cpu
+Date:   Sun, 23 Feb 2020 19:29:34 +0000
+Message-Id: <20200223192942.18420-8-qais.yousef@arm.com>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20200223192942.18420-1-qais.yousef@arm.com>
 References: <20200223192942.18420-1-qais.yousef@arm.com>
@@ -43,44 +43,114 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-disable_nonboot_cpus() is not safe to use when doing machine_down(),
-because it relies on freeze_secondary_cpus() which in turn is
-a suspend/resume related freeze and could abort if the logic detects any
-pending activities that can prevent finishing the offlining process.
+The core device API performs extra housekeeping bits that are missing
+from directly calling cpu_up/down.
 
-Beside disable_nonboot_cpus() is dependent on CONFIG_PM_SLEEP_SMP which
-is an othogonal config to rely on to ensure this function works
-correctly.
+See commit a6717c01ddc2 ("powerpc/rtas: use device model APIs and
+serialization during LPM") for an example description of what might go
+wrong.
 
-Use `reboot_cpu` variable instead of hardcoding 0 as the reboot cpu.
+This also prepares to make cpu_up/down a private interface for anything
+but the cpu subsystem.
 
 Signed-off-by: Qais Yousef <qais.yousef@arm.com>
-CC: Catalin Marinas <catalin.marinas@arm.com>
-CC: Will Deacon <will@kernel.org>
-CC: linux-arm-kernel@lists.infradead.org
+CC: Thomas Gleixner <tglx@linutronix.de>
+CC: Ingo Molnar <mingo@redhat.com>
+CC: Borislav Petkov <bp@alien8.de>
+CC: "H. Peter Anvin" <hpa@zytor.com>
+CC: x86@kernel.org
 CC: linux-kernel@vger.kernel.org
 ---
- arch/arm64/kernel/process.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ arch/x86/kernel/topology.c | 22 ++++++----------------
+ arch/x86/mm/mmio-mod.c     |  4 ++--
+ arch/x86/xen/smp.c         |  2 +-
+ 3 files changed, 9 insertions(+), 19 deletions(-)
 
-diff --git a/arch/arm64/kernel/process.c b/arch/arm64/kernel/process.c
-index bbb0f0c145f6..b33b415fb32e 100644
---- a/arch/arm64/kernel/process.c
-+++ b/arch/arm64/kernel/process.c
-@@ -141,11 +141,11 @@ void arch_cpu_idle_dead(void)
-  * to execute e.g. a RAM-based pin loop is not sufficient. This allows the
-  * kexec'd kernel to use any and all RAM as it sees fit, without having to
-  * avoid any code or data used by any SW CPU pin loop. The CPU hotplug
-- * functionality embodied in disable_nonboot_cpus() to achieve this.
-+ * functionality embodied in smpt_shutdown_nonboot_cpus() to achieve this.
+diff --git a/arch/x86/kernel/topology.c b/arch/x86/kernel/topology.c
+index be5bc2e47c71..b8810ebbc8ae 100644
+--- a/arch/x86/kernel/topology.c
++++ b/arch/x86/kernel/topology.c
+@@ -59,39 +59,29 @@ __setup("cpu0_hotplug", enable_cpu0_hotplug);
   */
- void machine_shutdown(void)
+ int _debug_hotplug_cpu(int cpu, int action)
  {
--	disable_nonboot_cpus();
-+	smp_shutdown_nonboot_cpus(reboot_cpu);
+-	struct device *dev = get_cpu_device(cpu);
+ 	int ret;
+ 
+ 	if (!cpu_is_hotpluggable(cpu))
+ 		return -EINVAL;
+ 
+-	lock_device_hotplug();
+-
+ 	switch (action) {
+ 	case 0:
+-		ret = cpu_down(cpu);
+-		if (!ret) {
++		ret = remove_cpu(cpu);
++		if (!ret)
+ 			pr_info("DEBUG_HOTPLUG_CPU0: CPU %u is now offline\n", cpu);
+-			dev->offline = true;
+-			kobject_uevent(&dev->kobj, KOBJ_OFFLINE);
+-		} else
++		else
+ 			pr_debug("Can't offline CPU%d.\n", cpu);
+ 		break;
+ 	case 1:
+-		ret = cpu_up(cpu);
+-		if (!ret) {
+-			dev->offline = false;
+-			kobject_uevent(&dev->kobj, KOBJ_ONLINE);
+-		} else {
++		ret = add_cpu(cpu);
++		if (ret)
+ 			pr_debug("Can't online CPU%d.\n", cpu);
+-		}
++
+ 		break;
+ 	default:
+ 		ret = -EINVAL;
+ 	}
+ 
+-	unlock_device_hotplug();
+-
+ 	return ret;
  }
  
- /*
+diff --git a/arch/x86/mm/mmio-mod.c b/arch/x86/mm/mmio-mod.c
+index 673de6063345..109325d77b3e 100644
+--- a/arch/x86/mm/mmio-mod.c
++++ b/arch/x86/mm/mmio-mod.c
+@@ -386,7 +386,7 @@ static void enter_uniprocessor(void)
+ 	put_online_cpus();
+ 
+ 	for_each_cpu(cpu, downed_cpus) {
+-		err = cpu_down(cpu);
++		err = remove_cpu(cpu);
+ 		if (!err)
+ 			pr_info("CPU%d is down.\n", cpu);
+ 		else
+@@ -406,7 +406,7 @@ static void leave_uniprocessor(void)
+ 		return;
+ 	pr_notice("Re-enabling CPUs...\n");
+ 	for_each_cpu(cpu, downed_cpus) {
+-		err = cpu_up(cpu);
++		err = add_cpu(cpu);
+ 		if (!err)
+ 			pr_info("enabled CPU%d.\n", cpu);
+ 		else
+diff --git a/arch/x86/xen/smp.c b/arch/x86/xen/smp.c
+index 7a43b2ae19f1..2097fa0ebdb5 100644
+--- a/arch/x86/xen/smp.c
++++ b/arch/x86/xen/smp.c
+@@ -132,7 +132,7 @@ void __init xen_smp_cpus_done(unsigned int max_cpus)
+ 		if (xen_vcpu_nr(cpu) < MAX_VIRT_CPUS)
+ 			continue;
+ 
+-		rc = cpu_down(cpu);
++		rc = remove_cpu(cpu);
+ 
+ 		if (rc == 0) {
+ 			/*
 -- 
 2.17.1
 
