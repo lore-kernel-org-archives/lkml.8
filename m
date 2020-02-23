@@ -2,83 +2,110 @@ Return-Path: <SRS0=SnAt=4L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EB4A1C35671
-	for <linux-kernel@archiver.kernel.org>; Sun, 23 Feb 2020 17:18:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D1E0EC35666
+	for <linux-kernel@archiver.kernel.org>; Sun, 23 Feb 2020 17:20:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 92B76206E0
-	for <linux-kernel@archiver.kernel.org>; Sun, 23 Feb 2020 17:18:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id ABE37206E0
+	for <linux-kernel@archiver.kernel.org>; Sun, 23 Feb 2020 17:20:23 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=tycho-ws.20150623.gappssmtp.com header.i=@tycho-ws.20150623.gappssmtp.com header.b="ZnXU0AiY"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="K2tC5sIv"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727004AbgBWRR7 (ORCPT
+        id S1727104AbgBWRUV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 23 Feb 2020 12:17:59 -0500
-Received: from mail-il1-f193.google.com ([209.85.166.193]:40751 "EHLO
-        mail-il1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726208AbgBWRR7 (ORCPT
+        Sun, 23 Feb 2020 12:20:21 -0500
+Received: from mail-pl1-f195.google.com ([209.85.214.195]:33141 "EHLO
+        mail-pl1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726208AbgBWRUV (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 23 Feb 2020 12:17:59 -0500
-Received: by mail-il1-f193.google.com with SMTP id i7so5777658ilr.7
-        for <linux-kernel@vger.kernel.org>; Sun, 23 Feb 2020 09:17:58 -0800 (PST)
+        Sun, 23 Feb 2020 12:20:21 -0500
+Received: by mail-pl1-f195.google.com with SMTP id ay11so3026476plb.0;
+        Sun, 23 Feb 2020 09:20:19 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=tycho-ws.20150623.gappssmtp.com; s=20150623;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=7SmTtNPBn2T+cb23Q+tOWXTb1iD23pHN7RwXvfrkL9o=;
-        b=ZnXU0AiYUqDbHSfyrXM/7uT2bHICmi3a4U4nFQldVTYotEN+5e57QiIPpx2j2zSfOD
-         3zHezfkmTwch9bXv9L7qNVZUISXIL0ZasnOGiPhmqKXqeiIVBh77ikdN889zLXA/s20t
-         kIe3/boDVkpoKbgdUfDmkRZ+yGN7pFsLsC7uPiX5c6B+IT72iz4zcMTO2mqIXA6QSpG0
-         3IzPiqyfGN/L0Zek8hJCWHEYpx2GRaDD6PYYsl7XSj9fzpSniygzvpB35hW3mOvkoSUQ
-         R3ro9r1cbIxool1PKW0MSGoomdwH8lDS3G2/ySGB76ZVesjXakuXvUgH4TbBHPkGAURr
-         ZpjQ==
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=MUfs7lyaep1+x1XygloZl4yBc6FlYxcZEd+NqGjQwiM=;
+        b=K2tC5sIvThPq+B1y9vvTpJ7jDeA5hkzOt3jM1gpmMFemAmqb2DZ13w/miPvObBb9s4
+         f+fYuH1up+UuDtdTWIoQB7wbpkfOO1WWyFo3mXzs2vDP5+RFnt9U45shdE3HEou5MZ78
+         HUtsEwyuz3mGc6vzuZ3tqIkOkHcgAZEoOSeqxIubgspZcBWnZMYZw9w0o6i90ps7ZmOQ
+         XMXuMUCOsMAoret4ITR+0aS2xSQK3F4dv7+Ha9M0X3OtCr5WrjEJV26jpgA5shrfM8Fv
+         KFxh8UcR8tuZdt8jlArw+CieGDz3+ZrX2pYpDptX6J4gIx8IeSF7/3xZssGRaf7pMaGn
+         r4KQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=7SmTtNPBn2T+cb23Q+tOWXTb1iD23pHN7RwXvfrkL9o=;
-        b=p03hs7J9kcMgl+zJWUUbbbyUqSUqLSlmuEJiULjJnEp2+4WS64DBxKo6ER6Yq1VTD2
-         4BTAibgrjIm31xYXy99X/Nq+77GWIDppy2X2YG5cd1U8sHATA7omdfV9TupFvpznppFf
-         YmafjHDQSDIFnB5NTj62cZf5jYttaVkbWhtHAw/eFUD37Cvdq1SYXtjRfIGYh/OV+Y3Q
-         mm4kLVY1b+4jzVfI5HPjpilV5uPGP7SAfXTKVh6sxLDT4Tfovodn47jH4vdPkfPhLoPu
-         /ejNvkxnSNNqtsp3dxoAGy3HyxcHl6D5AGFQgGxtKCu9gFKmkNguOxmKz/LNO2SrsK+G
-         gHXw==
-X-Gm-Message-State: APjAAAVnCtJS7orbRSiiFpinQCYbp0OOBVEhLHCL9lCMSzNsCOOrZdWk
-        Lyxj9fODx/+pySrHAvO7jm79GvPeAtE=
-X-Google-Smtp-Source: APXvYqw63W2EK7XZYK5s2ZWoKQ8ad6sFR+En3xfuokU2Dmq5tIeMmY7/FNGj8fKk5l4fl6ybs2iYuw==
-X-Received: by 2002:a92:9a47:: with SMTP id t68mr50874060ili.155.1582478278014;
-        Sun, 23 Feb 2020 09:17:58 -0800 (PST)
-Received: from cisco ([2601:282:902:b340:8001:28d8:b4a3:8673])
-        by smtp.gmail.com with ESMTPSA id q1sm2430745iog.8.2020.02.23.09.17.56
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=MUfs7lyaep1+x1XygloZl4yBc6FlYxcZEd+NqGjQwiM=;
+        b=F+6t81up++JtQ3tYBQLqUgODVID4YxBwryjGO5db228x96h7oe1rd3k1iYiebZKEn5
+         bvCiuCl/eYW1ucEa6wgQ0Zcmc7cEB1xF9Gm2obvrQ6KPpkQ1Ymh6VykkLrp5M7oc6By8
+         Tp9htmgfEb97DA3zS9c2V4W7TzY08M39gEKyD8DliP0/KZGdNJCg+r4bpr+aHMhVR/F0
+         v6KyC4Bm2NxcPFghnvO4PYmaDN8KpyIhq22+4XL2HDw0OpomayU6iyS/N6KMaVtMbDfP
+         ewlxx+Zpcjq9ooCEk0f6VpOdSiXVBkS4kGZwXvV4u9oDW5HTR/rsEkWGl/h2pTvk3Wou
+         Eqqg==
+X-Gm-Message-State: APjAAAXbb4GVNPnD7WctZtuJOkSRWJJpz7YyylJ6NYYom39EW3hQYaEc
+        16INPu3+rwtw8Fj0p1Q+CT8=
+X-Google-Smtp-Source: APXvYqybLZBvG94s/8G7V0fd+jZvZdno/xiWU3JfXcc3IQ+YviQtpNXXBQra6Ll5xFmSqG4cefrHSw==
+X-Received: by 2002:a17:902:8eca:: with SMTP id x10mr45052337plo.94.1582478419297;
+        Sun, 23 Feb 2020 09:20:19 -0800 (PST)
+Received: from localhost.localdomain ([103.87.57.33])
+        by smtp.googlemail.com with ESMTPSA id 13sm9505424pfj.68.2020.02.23.09.20.15
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 23 Feb 2020 09:17:57 -0800 (PST)
-Date:   Sun, 23 Feb 2020 10:17:57 -0700
-From:   Tycho Andersen <tycho@tycho.ws>
-To:     linux-kernel@vger.kernel.org, linux-riscv@lists.infradead.org
-Cc:     David Abdurachmanov <david.abdurachmanov@gmail.com>,
-        Kees Cook <keescook@chromium.org>,
-        Andy Lutomirski <luto@amacapital.net>,
-        Paul Walmsley <paul.walmsley@sifive.com>,
-        Oleg Nesterov <oleg@redhat.com>
-Subject: Re: [PATCH] riscv: fix seccomp reject syscall code path
-Message-ID: <20200223171757.GB22040@cisco>
-References: <20200208151817.12383-1-tycho@tycho.ws>
+        Sun, 23 Feb 2020 09:20:18 -0800 (PST)
+From:   Amol Grover <frextrite@gmail.com>
+To:     Pablo Neira Ayuso <pablo@netfilter.org>,
+        Jozsef Kadlecsik <kadlec@netfilter.org>,
+        Florian Westphal <fw@strlen.de>,
+        "David S . Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>
+Cc:     netfilter-devel@vger.kernel.org, coreteam@netfilter.org,
+        netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-kernel-mentees@lists.linuxfoundation.org,
+        Joel Fernandes <joel@joelfernandes.org>,
+        Madhuparna Bhowmik <madhuparnabhowmik10@gmail.com>,
+        "Paul E . McKenney" <paulmck@kernel.org>,
+        Amol Grover <frextrite@gmail.com>
+Subject: [PATCH 1/2] netfilter: Pass lockdep expression to __instance_lookup traversal
+Date:   Sun, 23 Feb 2020 22:49:45 +0530
+Message-Id: <20200223171945.11391-1-frextrite@gmail.com>
+X-Mailer: git-send-email 2.24.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200208151817.12383-1-tycho@tycho.ws>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, Feb 08, 2020 at 08:18:17AM -0700, Tycho Andersen wrote:
-> ...
+log->instance_table[] may be traversed outside RCU read-side
+critical section but under the protection of log->instances_lock.
 
-Ping, any risc-v people have thoughts on this?
+Hence, add the corresponding lockdep expression to silence
+false-positive warnings.
 
-Tycho
+Signed-off-by: Amol Grover <frextrite@gmail.com>
+---
+ net/netfilter/nfnetlink_log.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
+
+diff --git a/net/netfilter/nfnetlink_log.c b/net/netfilter/nfnetlink_log.c
+index 0ba020ca38e6..09acc579b566 100644
+--- a/net/netfilter/nfnetlink_log.c
++++ b/net/netfilter/nfnetlink_log.c
+@@ -104,7 +104,8 @@ __instance_lookup(struct nfnl_log_net *log, u_int16_t group_num)
+ 	struct nfulnl_instance *inst;
+ 
+ 	head = &log->instance_table[instance_hashfn(group_num)];
+-	hlist_for_each_entry_rcu(inst, head, hlist) {
++	hlist_for_each_entry_rcu(inst, head, hlist,
++				 lockdep_is_held(&log->instances_lock)) {
+ 		if (inst->group_num == group_num)
+ 			return inst;
+ 	}
+-- 
+2.24.1
+
