@@ -8,55 +8,55 @@ X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AF898C35670
-	for <linux-kernel@archiver.kernel.org>; Sun, 23 Feb 2020 23:19:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 48CD6C35673
+	for <linux-kernel@archiver.kernel.org>; Sun, 23 Feb 2020 23:19:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 83D9E20880
-	for <linux-kernel@archiver.kernel.org>; Sun, 23 Feb 2020 23:19:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1CF9420880
+	for <linux-kernel@archiver.kernel.org>; Sun, 23 Feb 2020 23:19:34 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ZGuy3lgM"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="dqmHA7Di"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727469AbgBWXSM (ORCPT
+        id S1727355AbgBWXSH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 23 Feb 2020 18:18:12 -0500
-Received: from mail-wm1-f65.google.com ([209.85.128.65]:35766 "EHLO
-        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727359AbgBWXSJ (ORCPT
+        Sun, 23 Feb 2020 18:18:07 -0500
+Received: from mail-wm1-f67.google.com ([209.85.128.67]:55193 "EHLO
+        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727180AbgBWXSE (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 23 Feb 2020 18:18:09 -0500
-Received: by mail-wm1-f65.google.com with SMTP id b17so7457829wmb.0;
-        Sun, 23 Feb 2020 15:18:07 -0800 (PST)
+        Sun, 23 Feb 2020 18:18:04 -0500
+Received: by mail-wm1-f67.google.com with SMTP id z12so3994992wmi.4;
+        Sun, 23 Feb 2020 15:18:03 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=snlmcYtYDuvHwXmAmC2g0GkUCFgaXil3Rfxn4Ydoo+Q=;
-        b=ZGuy3lgMu6uKf/X9D2SHX21zkV8GcEgjqUfqBX2/VsMNPWYVv9yk3VmWIbeXKBoX6h
-         IEJ5XfchVqFSi5MortQ5DvdrkJ+w6DJtKX2ZjIJ6wkteB+gd7FLkaXNDXHT3keEqhEGq
-         7+VzVRQE9s0hXskUNxNOZ1YsJPA+Ll+rRERd8aC840MN4w43/E4tHYsQuiRIN+mOa3aq
-         X7VT1xs+3VvF/1BZzbft8ylQ9pmp2UcMokZfMj713duCV8mVFuct7/zrHVwDxHr3ZCe6
-         3w6dfyqLL0yA7WnUEHuuQNoqoUNTw1sula3AR/Ic6Ip3Swd+DPlzTjzyNTVt6RVbhvWV
-         dxRg==
+        bh=pyULC8zRDdQ34YS1FTwq1d6c2T2bCIAgmeM9ejfxUJc=;
+        b=dqmHA7Di0z6aZI3DD8tanMjnukyJD16fQbr/5grwhOZtuCqBEYND7nYu4+UmdUsJAx
+         hSJdgFo0+xzAwCJLYtxmAl/EMFGp2kZig+OA9U/Rh3hrYBMavTHWGGNxzkFVVQ4cA6Be
+         3fW61yP6HjwLvT5IzDfVnEjYvkDY9llWN7EtVmTZiRtocnsO14/e9qqrxnvps0XS3C5b
+         Kxu5hhHUtoZSsGCUxrC+Anz2EOQ+QHv5tsyaELIcxjd+7Kdp5ofgnCIS1g2mY2dmgw0a
+         vaHA4rZU/Im0r5Y8oMpnzyUgFvR6MZxrlHn4+bTYkx+DPFCQO/HEo1dCmtdMzzRlTBE5
+         BedQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=snlmcYtYDuvHwXmAmC2g0GkUCFgaXil3Rfxn4Ydoo+Q=;
-        b=Cvs7UMkLovrfydS2q655NDOuQM23EBaqVhxc9Bu8I+AxuY8LaKWrfMv5gsQGIRmuLy
-         ks7wlEcRNKmoKLazfYI/yLi/vzzgHLa2vMGNSis5sCd49Rmn9Vq/MYa57nGJY2Sd63kB
-         v6YE1MoAAd15Iq88zVptocS5KBkrZ/ignHkzvy1Y3uQ/nM0tqe2zh4iRXtLu1zAWdQMe
-         9F/KTHMSuY3wQqtMsl2kf4Xxz6K2HP4EG23JI8NF/ZV6k0tIbpy+IcVJ9+ak0JiI1rDd
-         AgnP/yI9IVuDc/sIlEmbQWt5dys8n+CkMrsAjhaLo84NpJFD00Lk2MITAOlX6lYS0JW4
-         8cwg==
-X-Gm-Message-State: APjAAAUnl8ZepI85IR1Cw10meyMwzLIM3jvly+IvBRjUr88OZb2HHidy
-        ilHG0oDbzBGir/edMdNIZYthUdeObvnv
-X-Google-Smtp-Source: APXvYqyYZ3oMJ78+zymZmXiMpsjrXDyNhGOu0imdZd6MmzJ1dwnZa5BV+hh38cDu48X5BkdbSg9p7w==
-X-Received: by 2002:a1c:4341:: with SMTP id q62mr18101720wma.107.1582499887152;
-        Sun, 23 Feb 2020 15:18:07 -0800 (PST)
+        bh=pyULC8zRDdQ34YS1FTwq1d6c2T2bCIAgmeM9ejfxUJc=;
+        b=bg7NH021NDCHwstdyV0qOcNmUSBZUncdOnQ6mCdswSl0SCABSphPJvx6Pe+zaXyy5m
+         AMhXoPRkgAut54iQppsEQH+KpacZY9n/AbGVAJIapwBmDUXbbalJJmVToxycODv/jX34
+         8dRrSxDkRosHMV/PJr2CIo9eng/TvuhxvxlJFP6Rb1GwWoc2GWTsFJ8JSqucIE7P0okE
+         WZ706ZKNCnDo1oEjrQVSEQtoI6BHmPJ7LK6iXgFnEAvRTvuYUxbYwqWJsQwNNmQtctOj
+         YVPBDEc0vZBn1QOMTWr+cFcQU8VuOW90594Dw3QMy7Liu3Ah6exfSFezkfGbysBVGqq5
+         o7Jw==
+X-Gm-Message-State: APjAAAWsotMFdNipyEvzTW5EWzlCuz4vwpS89LAW2+J2OxiOQZXrsjxt
+        3Ilhye8/wOIhKCSS4VzTnO5qhS9qOGe/
+X-Google-Smtp-Source: APXvYqwUpWLcG08hfH/Ti8ghBQEFvbl9xtMZx1Lq+qbVB1C0woND51q3CqSdQBLf9+tcdyIS/jVyLQ==
+X-Received: by 2002:a1c:e108:: with SMTP id y8mr17169102wmg.147.1582499882949;
+        Sun, 23 Feb 2020 15:18:02 -0800 (PST)
 Received: from ninjahost.lan (host-2-102-13-223.as13285.net. [2.102.13.223])
-        by smtp.googlemail.com with ESMTPSA id q6sm8968203wrf.67.2020.02.23.15.18.06
+        by smtp.googlemail.com with ESMTPSA id q6sm8968203wrf.67.2020.02.23.15.18.02
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 23 Feb 2020 15:18:06 -0800 (PST)
+        Sun, 23 Feb 2020 15:18:02 -0800 (PST)
 From:   Jules Irenge <jbi.octave@gmail.com>
 To:     boqun.feng@gmail.com
 Cc:     jbi.octave@gmail.com, linux-kernel@vger.kernel.org,
@@ -65,9 +65,9 @@ Cc:     jbi.octave@gmail.com, linux-kernel@vger.kernel.org,
         Jakub Kicinski <kuba@kernel.org>,
         linux-hams@vger.kernel.org (open list:NETROM NETWORK LAYER),
         netdev@vger.kernel.org (open list:NETWORKING [GENERAL])
-Subject: [PATCH 12/30] net: netrom: Add missing annotation for nr_neigh_start()
-Date:   Sun, 23 Feb 2020 23:16:53 +0000
-Message-Id: <20200223231711.157699-13-jbi.octave@gmail.com>
+Subject: [PATCH 08/30] netrom: Add missing annotation for nr_info_start()
+Date:   Sun, 23 Feb 2020 23:16:49 +0000
+Message-Id: <20200223231711.157699-9-jbi.octave@gmail.com>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20200223231711.157699-1-jbi.octave@gmail.com>
 References: <0/30>
@@ -79,28 +79,28 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Sparse reports a warning at nr_neigh_start()
-warning: context imbalance in nr_neigh_start() - wrong count at exit
-The root cause is the missing annotation at nr_neigh_start()
-Add the missing __acquires(&nr_neigh_list_lock) annotation
+Sparse reports a warning at nr_info_start()
+warning: context imbalance in nr_info_start() - wrong count at exit
+The root cause is the missing annotation at nr_info_start()
+Add the missing __acquires(&nr_list_lock)
 
 Signed-off-by: Jules Irenge <jbi.octave@gmail.com>
 ---
- net/netrom/nr_route.c | 1 +
+ net/netrom/af_netrom.c | 1 +
  1 file changed, 1 insertion(+)
 
-diff --git a/net/netrom/nr_route.c b/net/netrom/nr_route.c
-index 637a743c060d..33e7b91fc805 100644
---- a/net/netrom/nr_route.c
-+++ b/net/netrom/nr_route.c
-@@ -895,6 +895,7 @@ const struct seq_operations nr_node_seqops = {
- };
+diff --git a/net/netrom/af_netrom.c b/net/netrom/af_netrom.c
+index 58d5373c513c..8be06e61ff03 100644
+--- a/net/netrom/af_netrom.c
++++ b/net/netrom/af_netrom.c
+@@ -1230,6 +1230,7 @@ static int nr_ioctl(struct socket *sock, unsigned int cmd, unsigned long arg)
+ #ifdef CONFIG_PROC_FS
  
- static void *nr_neigh_start(struct seq_file *seq, loff_t *pos)
-+	__acquires(&nr_neigh_list_lock)
+ static void *nr_info_start(struct seq_file *seq, loff_t *pos)
++	__acquires(&nr_list_lock)
  {
- 	spin_lock_bh(&nr_neigh_list_lock);
- 	return seq_hlist_start_head(&nr_neigh_list, *pos);
+ 	spin_lock_bh(&nr_list_lock);
+ 	return seq_hlist_start_head(&nr_list, *pos);
 -- 
 2.24.1
 
