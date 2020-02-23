@@ -2,82 +2,173 @@ Return-Path: <SRS0=SnAt=4L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 744B5C35673
-	for <linux-kernel@archiver.kernel.org>; Sun, 23 Feb 2020 17:32:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 599E3C35666
+	for <linux-kernel@archiver.kernel.org>; Sun, 23 Feb 2020 17:32:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 44D58206ED
-	for <linux-kernel@archiver.kernel.org>; Sun, 23 Feb 2020 17:32:10 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582479130;
-	bh=pqcFvd9/dGegpu3QQ/kqdNNkZ61QjgBCWxXQ11Th39k=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=SYEhlwQ+iW0lC+i304qzNnOMtzIEwJ71bmw8PHJGjTIORqg3J7t22aW8ajNEU52/l
-	 AWfC6OrT6EPXI8f6KjgRy08h6qiPHJNGFgs4ReJ5fBX5XHpP1xHW+n8krv7sdNH3AA
-	 Tf5fqB6b1Zil4uxqVZKJuWmEaTGl8QzV+2H6m/wE=
+	by mail.kernel.org (Postfix) with ESMTP id 342FB2067D
+	for <linux-kernel@archiver.kernel.org>; Sun, 23 Feb 2020 17:32:59 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="IHQwvbHO"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727257AbgBWRcJ (ORCPT
+        id S1727180AbgBWRc6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 23 Feb 2020 12:32:09 -0500
-Received: from mail.kernel.org ([198.145.29.99]:35848 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727064AbgBWRcJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 23 Feb 2020 12:32:09 -0500
-Received: from localhost (95-141-97-180.as16211.net [95.141.97.180])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B2B4B2067D;
-        Sun, 23 Feb 2020 17:32:06 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1582479127;
-        bh=pqcFvd9/dGegpu3QQ/kqdNNkZ61QjgBCWxXQ11Th39k=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=qlftUPeQ5QoF4mQVCaMb3jzYQibAkLiC706hCmBsvA7WlgGepgktIcP09/qBko3L4
-         LYQQd9tWqM7OwUaLTFlsIJCwjfBL/ZZ9EuO0TUeHeMpuaSKsh6/NMdiCd3Hthb19kO
-         jfKZfqLQjsOEhA77ilA1ByRLxvZP5p4qo7QimNVs=
-Date:   Sun, 23 Feb 2020 18:32:04 +0100
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     torvalds@linux-foundation.org, akpm@linux-foundation.org,
-        linux@roeck-us.net, shuah@kernel.org, patches@kernelci.org,
-        ben.hutchings@codethink.co.uk, lkft-triage@lists.linaro.org,
-        stable@vger.kernel.org
-Subject: Re: [PATCH 5.5 000/399] 5.5.6-stable review
-Message-ID: <20200223173204.GC485503@kroah.com>
-References: <20200221072402.315346745@linuxfoundation.org>
- <20200223154024.GA131562@kroah.com>
+        Sun, 23 Feb 2020 12:32:58 -0500
+Received: from mail-yw1-f66.google.com ([209.85.161.66]:33875 "EHLO
+        mail-yw1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727027AbgBWRc5 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 23 Feb 2020 12:32:57 -0500
+Received: by mail-yw1-f66.google.com with SMTP id b186so4178470ywc.1;
+        Sun, 23 Feb 2020 09:32:57 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=70VpPYr+0L0MVq2PShKk8nKiIMW+oqGMjSYrERE6AFc=;
+        b=IHQwvbHOb4/ZBWdEpm8t3UmpUCRcyea6cHcccwCmTl+ZnKWVggvB1f4MTOsTXt1ijg
+         J4i8XbWow4DwQQPANTvTPRoqlamUISvuMTYPBMm4B9V8Ntexmd1cn11+CK/7kh6wH5X3
+         1AOLFn6579MXO43Z4Hjor1VvCNIiWkiZCYVMGNFJvmON4jP7svelVWfNYWqsCAyhgMfZ
+         yuj8cMPfcaeEowU/Vhkc+lS8nx5UxuEtvhO3lhrc0VA80k9NMfuKGaD/Dxt7cSo9mbOH
+         h2IW5UHG7upeMr6KgaF6Wc5eKgeMyGreD1WFXEx+38ELOakRcfjDQUFdvV56/xITS0DT
+         bzaA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=70VpPYr+0L0MVq2PShKk8nKiIMW+oqGMjSYrERE6AFc=;
+        b=M3ZqGHgq7vZpK34tHe3b9ZSFli6BwzMvJzpATahzXL33kvh5YU5i9ESSKzWz/9W2Qx
+         SAotweeAVjnP/L9FuYWJu4wGFLW353eO73+WhoiCrHpjZtj7yazSN4OOW0GjCKSIP2Ye
+         YvAobZagp0QnASG6UFjjtFLbBHZ1bmK51/gTQ5B+xQsWq+uEokCzVHEQ4diz7PuVSVDX
+         aA1y33mgduSPVlMmDxTjrJgoHTALGpjBaz6WQ3QiUMf/FGYRg8P7u9JfjfGs6KBZlSJc
+         XT0y62IeIKXK2bOAV+ggfPllPNyrQQ/ZKCZLisNws+pHg20WSXCY2NamH6GzIU7nbSbN
+         mCzA==
+X-Gm-Message-State: APjAAAWWVzQufmy8DtoZgRZiL8mfIJWlNgpDmv60zjfXrxHIBneSIO8M
+        N5nf46NDegA8LoL9iTgixwZ9pGUFuz3bSg==
+X-Google-Smtp-Source: APXvYqxDiMX47GctZzfNliuUOKG+BRLhyhW1BeTu3OoDiOoIe2J/H2VkbP0z2/zj6rhMXuekoe6/1g==
+X-Received: by 2002:a81:a189:: with SMTP id y131mr39466379ywg.329.1582479175215;
+        Sun, 23 Feb 2020 09:32:55 -0800 (PST)
+Received: from localhost.localdomain (072-189-064-225.res.spectrum.com. [72.189.64.225])
+        by smtp.gmail.com with ESMTPSA id b195sm4215980ywh.80.2020.02.23.09.32.53
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 23 Feb 2020 09:32:54 -0800 (PST)
+From:   William Breathitt Gray <vilhelm.gray@gmail.com>
+To:     jic23@kernel.org
+Cc:     linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org,
+        William Breathitt Gray <vilhelm.gray@gmail.com>
+Subject: [PATCH v2] counter: 104-quad-8: Support Differential Encoder Cable Status
+Date:   Sun, 23 Feb 2020 12:32:40 -0500
+Message-Id: <20200223173240.4341-1-vilhelm.gray@gmail.com>
+X-Mailer: git-send-email 2.24.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200223154024.GA131562@kroah.com>
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, Feb 23, 2020 at 04:40:24PM +0100, Greg Kroah-Hartman wrote:
-> On Fri, Feb 21, 2020 at 08:35:25AM +0100, Greg Kroah-Hartman wrote:
-> > This is the start of the stable review cycle for the 5.5.6 release.
-> > There are 399 patches in this series, all will be posted as a response
-> > to this one.  If anyone has any issues with these being applied, please
-> > let me know.
-> > 
-> > Responses should be made by Sun, 23 Feb 2020 07:19:49 +0000.
-> > Anything received after that time might be too late.
-> > 
-> > The whole patch series can be found in one patch at:
-> > 	https://www.kernel.org/pub/linux/kernel/v5.x/stable-review/patch-5.5.6-rc1.gz
-> > or in the git tree and branch at:
-> > 	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-5.5.y
-> > and the diffstat can be found below.
-> 
-> I've released -rc2 with a bunch of changes that I hope should resolve
-> the issues reported:
-> 	https://www.kernel.org/pub/linux/kernel/v5.x/stable-review/patch-5.5.6-rc2.gz
+The ACCES 104-QUAD-8 series provides status information about the
+connection state of the differential encoder cable inputs. This patch
+implements support to expose such information from these devices.
 
--rc3 is out:
-	https://www.kernel.org/pub/linux/kernel/v5.x/stable-review/patch-5.5.6-rc3.gz
+Signed-off-by: William Breathitt Gray <vilhelm.gray@gmail.com>
+---
+Changes in v2:
+ - Set num_ext so quad8_device_ext is actually read
+
+ .../ABI/testing/sysfs-bus-counter-104-quad-8  | 12 ++++++
+ drivers/counter/104-quad-8.c                  | 39 +++++++++++++++++++
+ 2 files changed, 51 insertions(+)
+
+diff --git a/Documentation/ABI/testing/sysfs-bus-counter-104-quad-8 b/Documentation/ABI/testing/sysfs-bus-counter-104-quad-8
+index 46b1f33b2fce..492b3e98f369 100644
+--- a/Documentation/ABI/testing/sysfs-bus-counter-104-quad-8
++++ b/Documentation/ABI/testing/sysfs-bus-counter-104-quad-8
+@@ -1,3 +1,15 @@
++What:		/sys/bus/counter/devices/counterX/cable_status
++KernelVersion:	5.7
++Contact:	linux-iio@vger.kernel.org
++Description:
++		Differential encoder cable status; bits 0 through 7
++		correspond to channels 1 through 8. Writing a 0 to the
++		corresponding bit will enable the status of the
++		respective channel.
++
++		Logic 0 = cable fault (not connected or loose wires)
++		Logic 1 = cable connection good or cable fault disabled
++
+ What:		/sys/bus/counter/devices/counterX/signalY/index_polarity
+ KernelVersion:	5.2
+ Contact:	linux-iio@vger.kernel.org
+diff --git a/drivers/counter/104-quad-8.c b/drivers/counter/104-quad-8.c
+index 17e67a84777d..cd911e223b48 100644
+--- a/drivers/counter/104-quad-8.c
++++ b/drivers/counter/104-quad-8.c
+@@ -56,6 +56,7 @@ struct quad8_iio {
+ 
+ #define QUAD8_REG_CHAN_OP 0x11
+ #define QUAD8_REG_INDEX_INPUT_LEVELS 0x16
++#define QUAD8_DIFF_ENCODER_CABLE_STATUS 0x17
+ /* Borrow Toggle flip-flop */
+ #define QUAD8_FLAG_BT BIT(0)
+ /* Carry Toggle flip-flop */
+@@ -1268,6 +1269,42 @@ static struct counter_count quad8_counts[] = {
+ 	QUAD8_COUNT(7, "Channel 8 Count")
+ };
+ 
++static ssize_t quad8_cable_status_read(struct counter_device *counter,
++				       void *private, char *buf)
++{
++	const struct quad8_iio *const priv = counter->priv;
++	unsigned int status;
++
++	status = inb(priv->base + QUAD8_DIFF_ENCODER_CABLE_STATUS);
++
++	return sprintf(buf, "0x%X\n", status);
++}
++
++static ssize_t quad8_cable_status_write(struct counter_device *counter,
++					void *private, const char *buf,
++					size_t len)
++{
++	struct quad8_iio *const priv = counter->priv;
++	u8 enable;
++	int ret;
++
++	ret = kstrtou8(buf, 0, &enable);
++	if (ret)
++		return ret;
++
++	outb(enable, priv->base + QUAD8_DIFF_ENCODER_CABLE_STATUS);
++
++	return len;
++}
++
++static const struct counter_device_ext quad8_device_ext[] = {
++	{
++		.name = "cable_status",
++		.read = quad8_cable_status_read,
++		.write = quad8_cable_status_write
++	}
++};
++
+ static int quad8_probe(struct device *dev, unsigned int id)
+ {
+ 	struct iio_dev *indio_dev;
+@@ -1304,6 +1341,8 @@ static int quad8_probe(struct device *dev, unsigned int id)
+ 	quad8iio->counter.num_counts = ARRAY_SIZE(quad8_counts);
+ 	quad8iio->counter.signals = quad8_signals;
+ 	quad8iio->counter.num_signals = ARRAY_SIZE(quad8_signals);
++	quad8iio->counter.ext = quad8_device_ext;
++	quad8iio->counter.num_ext = ARRAY_SIZE(quad8_device_ext);
+ 	quad8iio->counter.priv = quad8iio;
+ 	quad8iio->base = base[id];
+ 
+-- 
+2.24.1
+
