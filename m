@@ -8,66 +8,65 @@ X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D5A98C35670
-	for <linux-kernel@archiver.kernel.org>; Sun, 23 Feb 2020 23:19:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 636C3C35673
+	for <linux-kernel@archiver.kernel.org>; Sun, 23 Feb 2020 23:20:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A95C9214DB
-	for <linux-kernel@archiver.kernel.org>; Sun, 23 Feb 2020 23:19:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 376E920880
+	for <linux-kernel@archiver.kernel.org>; Sun, 23 Feb 2020 23:20:03 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="LreYWf0D"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="WxJxvW7S"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727954AbgBWXTz (ORCPT
+        id S1727260AbgBWXSB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 23 Feb 2020 18:19:55 -0500
-Received: from mail-wm1-f66.google.com ([209.85.128.66]:55193 "EHLO
-        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727166AbgBWXSF (ORCPT
+        Sun, 23 Feb 2020 18:18:01 -0500
+Received: from mail-wm1-f68.google.com ([209.85.128.68]:36846 "EHLO
+        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727201AbgBWXR6 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 23 Feb 2020 18:18:05 -0500
-Received: by mail-wm1-f66.google.com with SMTP id z12so3995013wmi.4;
-        Sun, 23 Feb 2020 15:18:04 -0800 (PST)
+        Sun, 23 Feb 2020 18:17:58 -0500
+Received: by mail-wm1-f68.google.com with SMTP id p17so7455460wma.1
+        for <linux-kernel@vger.kernel.org>; Sun, 23 Feb 2020 15:17:56 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=izHY1F8j+df2t9OwA9fWXu5eRF5eYehm5029wXHxxig=;
-        b=LreYWf0DBloZvb0KlyMsbV8daJZDxN7BzedhxGS2M1vxfwFELagpDmYWt5Jqr4vQl1
-         6H3cfxQLjYeYnA6UqxYh7KwwxqS8sxUbiYUhf5kVlbodHMYsT8a8UyxPEF2hCH9q8sds
-         I2dvpeuvF5WRifLIwgumAkIalFx32wfYw1G7XsaYUK+ptM0NQXNJZTejWvLnSdqp5Ysh
-         NREckGmZ9lf8PsCgrmYObPP1KZrSYO6uyXNc/e6ApYZqWLU309w8sEEA7wd+bn7MC4bB
-         g10ZNjs0NPwIyCwAlJPcru/B/TRmEWKCIGv4p6bLccdyIILCnQeeiI7HmePQa6dIfS+a
-         Oe0w==
+        bh=m+LokEgk1OhCrIxCmqaU1nM/hbi0PMRKHeGZ/+qQiZ0=;
+        b=WxJxvW7S7Tz2b6SBXdAVYnjRHLSfa7FbKJLMOZlTGVrI2g01Fgn1qfwPi31Tpvxz/F
+         mtoIEApfsV+vV4P6AYC2imNjwiPxX6kR/eq+B/kav2hBTYR5oSKABqpmoyQ+lVmrSH4H
+         gmIEShzOYsMb7vB12RlsHijOgSMF9BXmKF2kmVPa/BylY5BEhJSGihsBdZb64/TwOS4/
+         zVcjeV9iHUfXWXFNF8JA7Ro20aRnz+nGYgEb7QNHoVj6FzDIfsWiJWTRsueCexqOUt4V
+         lV4MeE9HuAoLj9oAbCXL8/3GSY6/+l8RzDyEKgSE2gaZFVg5X1z9CyJ0HpiGrNbgEP4s
+         Sfkg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=izHY1F8j+df2t9OwA9fWXu5eRF5eYehm5029wXHxxig=;
-        b=UAh20UBx8Zzc0DrHBa8mdN2SlZ3qkNRTgQuKma5ecTvqTMsQrJFBuqe3ojilniuShX
-         9ccApw00A8k3Ka/4aXUJK1nICqc/u3p7AH8tjJUUJtJhSxlm9+9dyiH5oGqTSJQF+ly5
-         hid5rqc1JHSYgaT5ngfOGzonvqzqufdhrvFXNVXZuXZaghY3zd9RneK23selnfViZHNY
-         TYUuE4UXjOMb5tXdklv/naq4L/sxpYe1hrUbHimkFuhvSnNzbg7khsJsZEwV7NsR8sEH
-         hUXXlg4Oj2A4NCNy0KdmlpFmXzFd6wRMzLzyhxsos3CErhhZ1upP5Wfw/yFIQtX5S1Ps
-         kqFg==
-X-Gm-Message-State: APjAAAVuPRsC4Kt6L7BoS+aKm6fdiXUQHq54/k5urFH0lbeybM84bYDM
-        jfB+GJ0J5NSaLV46ckpX3g==
-X-Google-Smtp-Source: APXvYqwyHc0nNrbOi12Sj6zEaiUGypjYKwRVLIaFMUUCNlOvo24h7PuTDa6V1OgusLD6vCalvWXLMQ==
-X-Received: by 2002:a1c:1d8d:: with SMTP id d135mr18045693wmd.92.1582499884063;
-        Sun, 23 Feb 2020 15:18:04 -0800 (PST)
+        bh=m+LokEgk1OhCrIxCmqaU1nM/hbi0PMRKHeGZ/+qQiZ0=;
+        b=Ck2/X8GTEenHY8FSNHrCmQY5tQ7Krtyz96zErLQtg79d0qh9kiQIvanx6G99QibUiv
+         R3iBBZXys6GnQAtwSFbvOsiJWCNbZo2Hr+hnVeD/yWzIiJCEhjkHR9vjOXwlIRLnudhD
+         9gLLRT2qNYb82sSE0KxWkj86ZTEQ4oN9Y3bzne6mWw1q34nZsfDlSfjikVNc42J9GQmR
+         AcgKBviyEuQrk7YasVVZFfGpkKCHFRdUnPcTfrxrZnB8DvGNi4x+nRiGw0UBSFhm3HQC
+         iRH5jVASC1bHi2eQAAZGga2B2/jRPOZ0sm9+TerlOKJ4vGsjSAHsGX+krNjbSwj1cT+4
+         zlqA==
+X-Gm-Message-State: APjAAAUrT6T21OJYuXJRG7aQyDmbU317dHjZDMXlkEcJ9DPa7oERCe4p
+        KdBgHmsSoyjWk3wHPk1tng==
+X-Google-Smtp-Source: APXvYqx1xZoZd3Mg7blMfa6A8ZoF9XsfYVxAGm7/w6r4xbRVfj5XMCLb2k9zu8tiV2VMfYJA/cbBeA==
+X-Received: by 2002:a1c:16:: with SMTP id 22mr18168884wma.8.1582499875389;
+        Sun, 23 Feb 2020 15:17:55 -0800 (PST)
 Received: from ninjahost.lan (host-2-102-13-223.as13285.net. [2.102.13.223])
-        by smtp.googlemail.com with ESMTPSA id q6sm8968203wrf.67.2020.02.23.15.18.03
+        by smtp.googlemail.com with ESMTPSA id q6sm8968203wrf.67.2020.02.23.15.17.54
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 23 Feb 2020 15:18:03 -0800 (PST)
+        Sun, 23 Feb 2020 15:17:54 -0800 (PST)
 From:   Jules Irenge <jbi.octave@gmail.com>
 To:     boqun.feng@gmail.com
 Cc:     jbi.octave@gmail.com, linux-kernel@vger.kernel.org,
-        Ralf Baechle <ralf@linux-mips.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>,
-        linux-hams@vger.kernel.org (open list:NETROM NETWORK LAYER),
-        netdev@vger.kernel.org (open list:NETWORKING [GENERAL])
-Subject: [PATCH 09/30] netrom: Add missing annotation for nr_info_stop()
-Date:   Sun, 23 Feb 2020 23:16:50 +0000
-Message-Id: <20200223231711.157699-10-jbi.octave@gmail.com>
+        Dan Williams <dan.j.williams@intel.com>,
+        Vishal Verma <vishal.l.verma@intel.com>,
+        Dave Jiang <dave.jiang@intel.com>,
+        linux-nvdimm@lists.01.org (open list:DEVICE DIRECT ACCESS (DAX))
+Subject: [PATCH 02/30] dax: Add missing annotations ofr dax_read_lock() and dax_read_unlock()
+Date:   Sun, 23 Feb 2020 23:16:43 +0000
+Message-Id: <20200223231711.157699-3-jbi.octave@gmail.com>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20200223231711.157699-1-jbi.octave@gmail.com>
 References: <0/30>
@@ -79,27 +78,41 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Sparse reports a warning at nr_info_stop()
-warning: context imbalance in nr_info_stop() - unexpected unlock
-The root cause is the missing annotation at nr_info_stop()
-Add the missing __releases(&nr_list_lock)
+Sparse reports warning at dax_read_lock() and at dax_read_unlock()
+
+warning: context imbalance in dax_read_lock() - wrong count at exit
+ warning: context imbalance in dax_read_unlock() - unexpected unlock
+
+The root cause is the mnissing annotations at dax_read_lock()
+	and dax_read_unlock()
+
+Add the missing __acquires(&dax_srcu) notations to dax_read_lock()
+Add the missing __releases(&dax_srcu) annotation to dax_read_unlock()
 
 Signed-off-by: Jules Irenge <jbi.octave@gmail.com>
 ---
- net/netrom/af_netrom.c | 1 +
- 1 file changed, 1 insertion(+)
+ drivers/dax/super.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/net/netrom/af_netrom.c b/net/netrom/af_netrom.c
-index 8be06e61ff03..7b1a74f74aad 100644
---- a/net/netrom/af_netrom.c
-+++ b/net/netrom/af_netrom.c
-@@ -1242,6 +1242,7 @@ static void *nr_info_next(struct seq_file *seq, void *v, loff_t *pos)
- }
+diff --git a/drivers/dax/super.c b/drivers/dax/super.c
+index 26a654dbc69a..f872a2fb98d4 100644
+--- a/drivers/dax/super.c
++++ b/drivers/dax/super.c
+@@ -28,13 +28,13 @@ static struct super_block *dax_superblock __read_mostly;
+ static struct hlist_head dax_host_list[DAX_HASH_SIZE];
+ static DEFINE_SPINLOCK(dax_host_lock);
  
- static void nr_info_stop(struct seq_file *seq, void *v)
-+	__releases(&nr_list_lock)
+-int dax_read_lock(void)
++int dax_read_lock(void) __acquires(&dax_srcu)
  {
- 	spin_unlock_bh(&nr_list_lock);
+ 	return srcu_read_lock(&dax_srcu);
+ }
+ EXPORT_SYMBOL_GPL(dax_read_lock);
+ 
+-void dax_read_unlock(int id)
++void dax_read_unlock(int id) __releases(&dax_srcu)
+ {
+ 	srcu_read_unlock(&dax_srcu, id);
  }
 -- 
 2.24.1
