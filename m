@@ -7,49 +7,46 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 65C4EC35671
-	for <linux-kernel@archiver.kernel.org>; Sun, 23 Feb 2020 02:35:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E9F6CC35671
+	for <linux-kernel@archiver.kernel.org>; Sun, 23 Feb 2020 02:35:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3A4BA2067D
-	for <linux-kernel@archiver.kernel.org>; Sun, 23 Feb 2020 02:35:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C025420659
+	for <linux-kernel@archiver.kernel.org>; Sun, 23 Feb 2020 02:35:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582425330;
-	bh=eJdKrXY9up3SNWC2qqe1sddjplkQ6CTF+Cp0LH+q1tA=;
+	s=default; t=1582425343;
+	bh=d3tCGsaHvyFa1WvXXX3zicSLN3cuLKdXuBZl6y3jaP8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=0LjLWDeSRRUpe2I+R5psZReZRUz70aNw5BOBgo181BW3rM3ze6b8SVa0AQfZpK9qx
-	 2xksP5O4IRKU07SHEzWBHCE3ilzY3hVOZZpIslEnfwTywYLfFtyc2q5S0aXIir+Bbw
-	 tzWNSJz3HxhftYnAYk2EzkmCC1lf+/85umnbU6/E=
+	b=vBuSnoJTFtoKFJH0dpr+YgviqvTTsSXGhBWKeDerz8no+I+Ibd+xjVtkdMhgYfsrv
+	 xrerDyI8O3YBCtE9YOmIx2PgKihN8RO+rlGhOvg0KnQSNxn2B5FzoIGNCB7lRbkwC1
+	 KVGiBeUaEuG3f0hbp7S+dwHXVS0Gu2s5270BMQgA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728940AbgBWCfS (ORCPT
+        id S1728812AbgBWCfm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 22 Feb 2020 21:35:18 -0500
-Received: from mail.kernel.org ([198.145.29.99]:51182 "EHLO mail.kernel.org"
+        Sat, 22 Feb 2020 21:35:42 -0500
+Received: from mail.kernel.org ([198.145.29.99]:51040 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728054AbgBWCWO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 22 Feb 2020 21:22:14 -0500
+        id S1728014AbgBWCWJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 22 Feb 2020 21:22:09 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5D4E5206D7;
-        Sun, 23 Feb 2020 02:22:13 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 714B720707;
+        Sun, 23 Feb 2020 02:22:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1582424534;
-        bh=eJdKrXY9up3SNWC2qqe1sddjplkQ6CTF+Cp0LH+q1tA=;
+        s=default; t=1582424529;
+        bh=d3tCGsaHvyFa1WvXXX3zicSLN3cuLKdXuBZl6y3jaP8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=d1v5mhc0sEQDAOoNy/RcT0DnyYusFasWQthkNLfXaMtiKpwj7s62noJWr6ExWp2tq
-         Y1GdMedbqy3gALm1cSLEjahnv7/PQhQW7/dvSuHpK5o5OSvirDvHoittEES/4k7mVg
-         HGke7aNMBq5p3XivyYSFUy2f5ChQjQvgHWIBWqhM=
+        b=JW1l77BE1GFhCj9xPwvCvl28VmhdOZA0/chhTEcKGDH30aggFPpEKl6WloxPqys/q
+         SoV4uIdTHI09+20TBLDcBXEY7OQG/C+ZvcVGVRRjGIJVmsfEKj4DV9r/pRwLWITemG
+         9H+XxgL6Wd3d/uMwaFeysqtAI+AiQ7/j5G5qr/Xw=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Bruce Allan <bruce.w.allan@intel.com>,
-        Tony Nguyen <anthony.l.nguyen@intel.com>,
-        Andrew Bowers <andrewx.bowers@intel.com>,
-        Jeff Kirsher <jeffrey.t.kirsher@intel.com>,
-        Sasha Levin <sashal@kernel.org>,
-        intel-wired-lan@lists.osuosl.org, netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.5 45/58] ice: update Unit Load Status bitmask to check after reset
-Date:   Sat, 22 Feb 2020 21:21:06 -0500
-Message-Id: <20200223022119.707-45-sashal@kernel.org>
+Cc:     Firo Yang <firo.yang@suse.com>,
+        "David S . Miller" <davem@davemloft.net>,
+        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.5 41/58] enic: prevent waking up stopped tx queues over watchdog reset
+Date:   Sat, 22 Feb 2020 21:21:02 -0500
+Message-Id: <20200223022119.707-41-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200223022119.707-1-sashal@kernel.org>
 References: <20200223022119.707-1-sashal@kernel.org>
@@ -62,81 +59,60 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Bruce Allan <bruce.w.allan@intel.com>
+From: Firo Yang <firo.yang@suse.com>
 
-[ Upstream commit cf8fc2a0863f9ff27ebd2efcdb1f7d378b9fb8a6 ]
+[ Upstream commit 0f90522591fd09dd201065c53ebefdfe3c6b55cb ]
 
-After a reset the Unit Load Status bits in the GLNVM_ULD register to check
-for completion should be 0x7FF before continuing.  Update the mask to check
-(minus the three reserved bits that are always set).
+Recent months, our customer reported several kernel crashes all
+preceding with following message:
+NETDEV WATCHDOG: eth2 (enic): transmit queue 0 timed out
+Error message of one of those crashes:
+BUG: unable to handle kernel paging request at ffffffffa007e090
 
-Signed-off-by: Bruce Allan <bruce.w.allan@intel.com>
-Signed-off-by: Tony Nguyen <anthony.l.nguyen@intel.com>
-Tested-by: Andrew Bowers <andrewx.bowers@intel.com>
-Signed-off-by: Jeff Kirsher <jeffrey.t.kirsher@intel.com>
+After analyzing severl vmcores, I found that most of crashes are
+caused by memory corruption. And all the corrupted memory areas
+are overwritten by data of network packets. Moreover, I also found
+that the tx queues were enabled over watchdog reset.
+
+After going through the source code, I found that in enic_stop(),
+the tx queues stopped by netif_tx_disable() could be woken up over
+a small time window between netif_tx_disable() and the
+napi_disable() by the following code path:
+napi_poll->
+  enic_poll_msix_wq->
+     vnic_cq_service->
+        enic_wq_service->
+           netif_wake_subqueue(enic->netdev, q_number)->
+              test_and_clear_bit(__QUEUE_STATE_DRV_XOFF, &txq->state)
+In turn, upper netowrk stack could queue skb to ENIC NIC though
+enic_hard_start_xmit(). And this might introduce some race condition.
+
+Our customer comfirmed that this kind of kernel crash doesn't occur over
+90 days since they applied this patch.
+
+Signed-off-by: Firo Yang <firo.yang@suse.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/ethernet/intel/ice/ice_common.c     | 17 ++++++++++++-----
- drivers/net/ethernet/intel/ice/ice_hw_autogen.h |  6 ++++++
- 2 files changed, 18 insertions(+), 5 deletions(-)
+ drivers/net/ethernet/cisco/enic/enic_main.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/net/ethernet/intel/ice/ice_common.c b/drivers/net/ethernet/intel/ice/ice_common.c
-index fb1d930470c71..cb437a448305e 100644
---- a/drivers/net/ethernet/intel/ice/ice_common.c
-+++ b/drivers/net/ethernet/intel/ice/ice_common.c
-@@ -937,7 +937,7 @@ void ice_deinit_hw(struct ice_hw *hw)
-  */
- enum ice_status ice_check_reset(struct ice_hw *hw)
- {
--	u32 cnt, reg = 0, grst_delay;
-+	u32 cnt, reg = 0, grst_delay, uld_mask;
+diff --git a/drivers/net/ethernet/cisco/enic/enic_main.c b/drivers/net/ethernet/cisco/enic/enic_main.c
+index acb2856936d20..6e2ab10ad2e6f 100644
+--- a/drivers/net/ethernet/cisco/enic/enic_main.c
++++ b/drivers/net/ethernet/cisco/enic/enic_main.c
+@@ -2013,10 +2013,10 @@ static int enic_stop(struct net_device *netdev)
+ 		napi_disable(&enic->napi[i]);
  
- 	/* Poll for Device Active state in case a recent CORER, GLOBR,
- 	 * or EMPR has occurred. The grst delay value is in 100ms units.
-@@ -959,13 +959,20 @@ enum ice_status ice_check_reset(struct ice_hw *hw)
- 		return ICE_ERR_RESET_FAILED;
- 	}
+ 	netif_carrier_off(netdev);
+-	netif_tx_disable(netdev);
+ 	if (vnic_dev_get_intr_mode(enic->vdev) == VNIC_DEV_INTR_MODE_MSIX)
+ 		for (i = 0; i < enic->wq_count; i++)
+ 			napi_disable(&enic->napi[enic_cq_wq(enic, i)]);
++	netif_tx_disable(netdev);
  
--#define ICE_RESET_DONE_MASK	(GLNVM_ULD_CORER_DONE_M | \
--				 GLNVM_ULD_GLOBR_DONE_M)
-+#define ICE_RESET_DONE_MASK	(GLNVM_ULD_PCIER_DONE_M |\
-+				 GLNVM_ULD_PCIER_DONE_1_M |\
-+				 GLNVM_ULD_CORER_DONE_M |\
-+				 GLNVM_ULD_GLOBR_DONE_M |\
-+				 GLNVM_ULD_POR_DONE_M |\
-+				 GLNVM_ULD_POR_DONE_1_M |\
-+				 GLNVM_ULD_PCIER_DONE_2_M)
-+
-+	uld_mask = ICE_RESET_DONE_MASK;
- 
- 	/* Device is Active; check Global Reset processes are done */
- 	for (cnt = 0; cnt < ICE_PF_RESET_WAIT_COUNT; cnt++) {
--		reg = rd32(hw, GLNVM_ULD) & ICE_RESET_DONE_MASK;
--		if (reg == ICE_RESET_DONE_MASK) {
-+		reg = rd32(hw, GLNVM_ULD) & uld_mask;
-+		if (reg == uld_mask) {
- 			ice_debug(hw, ICE_DBG_INIT,
- 				  "Global reset processes done. %d\n", cnt);
- 			break;
-diff --git a/drivers/net/ethernet/intel/ice/ice_hw_autogen.h b/drivers/net/ethernet/intel/ice/ice_hw_autogen.h
-index e8f32350fed29..6f4a70fa39037 100644
---- a/drivers/net/ethernet/intel/ice/ice_hw_autogen.h
-+++ b/drivers/net/ethernet/intel/ice/ice_hw_autogen.h
-@@ -276,8 +276,14 @@
- #define GLNVM_GENS_SR_SIZE_S			5
- #define GLNVM_GENS_SR_SIZE_M			ICE_M(0x7, 5)
- #define GLNVM_ULD				0x000B6008
-+#define GLNVM_ULD_PCIER_DONE_M			BIT(0)
-+#define GLNVM_ULD_PCIER_DONE_1_M		BIT(1)
- #define GLNVM_ULD_CORER_DONE_M			BIT(3)
- #define GLNVM_ULD_GLOBR_DONE_M			BIT(4)
-+#define GLNVM_ULD_POR_DONE_M			BIT(5)
-+#define GLNVM_ULD_POR_DONE_1_M			BIT(8)
-+#define GLNVM_ULD_PCIER_DONE_2_M		BIT(9)
-+#define GLNVM_ULD_PE_DONE_M			BIT(10)
- #define GLPCI_CNF2				0x000BE004
- #define GLPCI_CNF2_CACHELINE_SIZE_M		BIT(1)
- #define PF_FUNC_RID				0x0009E880
+ 	if (!enic_is_dynamic(enic) && !enic_is_sriov_vf(enic))
+ 		enic_dev_del_station_addr(enic);
 -- 
 2.20.1
 
