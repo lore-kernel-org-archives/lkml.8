@@ -4,50 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7C2B8C35671
-	for <linux-kernel@archiver.kernel.org>; Sun, 23 Feb 2020 02:25:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7554AC35673
+	for <linux-kernel@archiver.kernel.org>; Sun, 23 Feb 2020 02:25:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5016F22464
-	for <linux-kernel@archiver.kernel.org>; Sun, 23 Feb 2020 02:25:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4237424672
+	for <linux-kernel@archiver.kernel.org>; Sun, 23 Feb 2020 02:25:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582424700;
-	bh=k/1DM/98TU/ijAoGfLniJako7x1XJ5bDAuIAfvSeJbc=;
+	s=default; t=1582424707;
+	bh=A2foWvc9jrT5bSCjJRdsWFm8MIww1d4V6xIALYzfqq8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=PIC9MQlkZDK7jR4EnV57JvdDmYO3Z/X8RxTRZJJubHyAZfNkzjWoqys3EvxG+NAx6
-	 43DhB6eJXyBJFoD+KZlY8wbMr17QLvXE9QIOi9tHDsgg7duwsOO79WmnZYxOAkW9Up
-	 P5oDTa2iVDpjVSSuaGXKALM/S8XP4iSZ/ZTtC5Q4=
+	b=Pl2SBfZBXXxFUAjE3fDlgmdApjMs7ZFH+pjxNEBTbg6b2KNfmHIAYaFeO0DA/4plZ
+	 +i18XNhSwXWGtLs24qspCRBhjQKL5p81wRrtN2A86w9WukNYn0q7xgCDDiGSw9aqre
+	 lzuVmiGRubtx6JN1EMaTK1BvtiRKxEoRJKreknF8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729533AbgBWCY6 (ORCPT
+        id S1729606AbgBWCZG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 22 Feb 2020 21:24:58 -0500
-Received: from mail.kernel.org ([198.145.29.99]:55184 "EHLO mail.kernel.org"
+        Sat, 22 Feb 2020 21:25:06 -0500
+Received: from mail.kernel.org ([198.145.29.99]:55450 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728656AbgBWCYv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 22 Feb 2020 21:24:51 -0500
+        id S1729534AbgBWCY7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 22 Feb 2020 21:24:59 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id AE13324653;
-        Sun, 23 Feb 2020 02:24:49 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B411D208C4;
+        Sun, 23 Feb 2020 02:24:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1582424690;
-        bh=k/1DM/98TU/ijAoGfLniJako7x1XJ5bDAuIAfvSeJbc=;
+        s=default; t=1582424698;
+        bh=A2foWvc9jrT5bSCjJRdsWFm8MIww1d4V6xIALYzfqq8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=0IuIQpVIL9GrerIhPmFSfAflMXrEZnq+RnG4S+TjUU4EVmz1W2iWYf3VnChkqMwbP
-         W0b65Sa8qLdbOou+gzx2+62JbY5iMoWZZp96zLgPTeQXZD03b9GKB4kVlfiOijn9+0
-         MAzmtcoVSJPEEv6gVWTvmUr7C8cQYL+O1SNpeQjs=
+        b=KDXlyLVeLWNjwV0ITnOv55zmr1+z5chUoVpmSGa6tnNUUwXxSME77a/GZs/ZLISnn
+         XizcLez0y/kEIek523M3O3sa8C8rDsED5jzMXP6/X3qgcyfhlvjBZM43fogdy9Tyo9
+         QbERRU4qdpL+bficyYB0fxeZ21ANB2lnviCwcKV4=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Arthur Kiyanovski <akiyano@amazon.com>,
-        Sameeh Jubran <sameehj@amazon.com>,
-        "David S . Miller" <davem@davemloft.net>,
-        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.9 09/16] net: ena: fix incorrect default RSS key
-Date:   Sat, 22 Feb 2020 21:24:31 -0500
-Message-Id: <20200223022438.2398-9-sashal@kernel.org>
+Cc:     Sergey Matyukevich <sergey.matyukevich.os@quantenna.com>,
+        Johannes Berg <johannes.berg@intel.com>,
+        Sasha Levin <sashal@kernel.org>,
+        linux-wireless@vger.kernel.org, netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.9 16/16] cfg80211: add missing policy for NL80211_ATTR_STATUS_CODE
+Date:   Sat, 22 Feb 2020 21:24:38 -0500
+Message-Id: <20200223022438.2398-16-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200223022438.2398-1-sashal@kernel.org>
 References: <20200223022438.2398-1-sashal@kernel.org>
@@ -60,81 +60,34 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Arthur Kiyanovski <akiyano@amazon.com>
+From: Sergey Matyukevich <sergey.matyukevich.os@quantenna.com>
 
-[ Upstream commit 0d1c3de7b8c78a5e44b74b62ede4a63629f5d811 ]
+[ Upstream commit ea75080110a4c1fa011b0a73cb8f42227143ee3e ]
 
-Bug description:
-When running "ethtool -x <if_name>" the key shows up as all zeros.
+The nl80211_policy is missing for NL80211_ATTR_STATUS_CODE attribute.
+As a result, for strictly validated commands, it's assumed to not be
+supported.
 
-When we use "ethtool -X <if_name> hfunc toeplitz hkey <some:random:key>" to
-set the key and then try to retrieve it using "ethtool -x <if_name>" then
-we return the correct key because we return the one we saved.
-
-Bug cause:
-We don't fetch the key from the device but instead return the key
-that we have saved internally which is by default set to zero upon
-allocation.
-
-Fix:
-This commit fixes the issue by initializing the key to a random value
-using netdev_rss_key_fill().
-
-Fixes: 1738cd3ed342 ("net: ena: Add a driver for Amazon Elastic Network Adapters (ENA)")
-Signed-off-by: Sameeh Jubran <sameehj@amazon.com>
-Signed-off-by: Arthur Kiyanovski <akiyano@amazon.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Signed-off-by: Sergey Matyukevich <sergey.matyukevich.os@quantenna.com>
+Link: https://lore.kernel.org/r/20200213131608.10541-2-sergey.matyukevich.os@quantenna.com
+Signed-off-by: Johannes Berg <johannes.berg@intel.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/ethernet/amazon/ena/ena_com.c | 15 +++++++++++++++
- drivers/net/ethernet/amazon/ena/ena_com.h |  1 +
- 2 files changed, 16 insertions(+)
+ net/wireless/nl80211.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/drivers/net/ethernet/amazon/ena/ena_com.c b/drivers/net/ethernet/amazon/ena/ena_com.c
-index f09b7887039a2..be8a2d48c98f2 100644
---- a/drivers/net/ethernet/amazon/ena/ena_com.c
-+++ b/drivers/net/ethernet/amazon/ena/ena_com.c
-@@ -839,6 +839,19 @@ static int ena_com_get_feature(struct ena_com_dev *ena_dev,
- 				      0);
- }
- 
-+static void ena_com_hash_key_fill_default_key(struct ena_com_dev *ena_dev)
-+{
-+	struct ena_admin_feature_rss_flow_hash_control *hash_key =
-+		(ena_dev->rss).hash_key;
-+
-+	netdev_rss_key_fill(&hash_key->key, sizeof(hash_key->key));
-+	/* The key is stored in the device in u32 array
-+	 * as well as the API requires the key to be passed in this
-+	 * format. Thus the size of our array should be divided by 4
-+	 */
-+	hash_key->keys_num = sizeof(hash_key->key) / sizeof(u32);
-+}
-+
- static int ena_com_hash_key_allocate(struct ena_com_dev *ena_dev)
- {
- 	struct ena_rss *rss = &ena_dev->rss;
-@@ -2367,6 +2380,8 @@ int ena_com_rss_init(struct ena_com_dev *ena_dev, u16 indr_tbl_log_size)
- 	if (unlikely(rc))
- 		goto err_hash_key;
- 
-+	ena_com_hash_key_fill_default_key(ena_dev);
-+
- 	rc = ena_com_hash_ctrl_init(ena_dev);
- 	if (unlikely(rc))
- 		goto err_hash_ctrl;
-diff --git a/drivers/net/ethernet/amazon/ena/ena_com.h b/drivers/net/ethernet/amazon/ena/ena_com.h
-index 509d7b8e15ab9..628bf7a8fc0cb 100644
---- a/drivers/net/ethernet/amazon/ena/ena_com.h
-+++ b/drivers/net/ethernet/amazon/ena/ena_com.h
-@@ -41,6 +41,7 @@
- #include <linux/spinlock.h>
- #include <linux/types.h>
- #include <linux/wait.h>
-+#include <linux/netdevice.h>
- 
- #include "ena_common_defs.h"
- #include "ena_admin_defs.h"
+diff --git a/net/wireless/nl80211.c b/net/wireless/nl80211.c
+index bb19be78aed70..9823bef65e5ec 100644
+--- a/net/wireless/nl80211.c
++++ b/net/wireless/nl80211.c
+@@ -333,6 +333,7 @@ static const struct nla_policy nl80211_policy[NUM_NL80211_ATTR] = {
+ 	[NL80211_ATTR_CONTROL_PORT_ETHERTYPE] = { .type = NLA_U16 },
+ 	[NL80211_ATTR_CONTROL_PORT_NO_ENCRYPT] = { .type = NLA_FLAG },
+ 	[NL80211_ATTR_PRIVACY] = { .type = NLA_FLAG },
++	[NL80211_ATTR_STATUS_CODE] = { .type = NLA_U16 },
+ 	[NL80211_ATTR_CIPHER_SUITE_GROUP] = { .type = NLA_U32 },
+ 	[NL80211_ATTR_WPA_VERSIONS] = { .type = NLA_U32 },
+ 	[NL80211_ATTR_PID] = { .type = NLA_U32 },
 -- 
 2.20.1
 
