@@ -2,100 +2,101 @@ Return-Path: <SRS0=SnAt=4L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 78D72C35666
-	for <linux-kernel@archiver.kernel.org>; Sun, 23 Feb 2020 14:32:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7EF43C35671
+	for <linux-kernel@archiver.kernel.org>; Sun, 23 Feb 2020 14:33:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5111F206E0
-	for <linux-kernel@archiver.kernel.org>; Sun, 23 Feb 2020 14:32:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4A2BA206E0
+	for <linux-kernel@archiver.kernel.org>; Sun, 23 Feb 2020 14:33:48 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Tzd5nWYA"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726933AbgBWOcY (ORCPT
+        id S1727093AbgBWOdj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 23 Feb 2020 09:32:24 -0500
-Received: from mga09.intel.com ([134.134.136.24]:56097 "EHLO mga09.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726490AbgBWOcY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 23 Feb 2020 09:32:24 -0500
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from fmsmga006.fm.intel.com ([10.253.24.20])
-  by orsmga102.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 23 Feb 2020 06:32:23 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.70,476,1574150400"; 
-   d="scan'208";a="437447468"
-Received: from iweiny-desk2.sc.intel.com ([10.3.52.157])
-  by fmsmga006.fm.intel.com with ESMTP; 23 Feb 2020 06:32:23 -0800
-Date:   Sun, 23 Feb 2020 06:32:23 -0800
-From:   Ira Weiny <ira.weiny@intel.com>
-To:     Roman Gushchin <guro@fb.com>
-Cc:     Dennis Zhou <dennis@kernel.org>, linux-kernel@vger.kernel.org,
-        Petr Mladek <pmladek@suse.com>, Tejun Heo <tj@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Sakari Ailus <sakari.ailus@linux.intel.com>
-Subject: Re: [RESEND PATCH] percpu_ref: Fix comment regarding percpu_ref_init
- flags
-Message-ID: <20200223143222.GA29607@iweiny-DESK2.sc.intel.com>
-References: <20200221231607.12782-1-ira.weiny@intel.com>
- <20200221235627.GA59628@dennisz-mbp.dhcp.thefacebook.com>
- <20200222004656.GA459391@carbon.DHCP.thefacebook.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200222004656.GA459391@carbon.DHCP.thefacebook.com>
-User-Agent: Mutt/1.11.1 (2018-12-01)
+        Sun, 23 Feb 2020 09:33:39 -0500
+Received: from mail-pg1-f195.google.com ([209.85.215.195]:37123 "EHLO
+        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726490AbgBWOdi (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 23 Feb 2020 09:33:38 -0500
+Received: by mail-pg1-f195.google.com with SMTP id z12so3634809pgl.4;
+        Sun, 23 Feb 2020 06:33:38 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id;
+        bh=69Yk8P/qFbghht4lzUdI2eecmMcH8qqFHN3OCd/EKwg=;
+        b=Tzd5nWYAGM+SEbceVpNuxrtzJNBo6OWJtbzTWSSb8B6JOQDE7q1k4sST0MYxVD2+xs
+         2iK7yNmaAAJtAzhb1bgTlS1WZ4XjfBFpo3NlirNP4b0eRhFmiCw1NxM4QfbzBmSqlZJk
+         Nb0HQa24AlWfm19Z0ZNXNxlXn4yHYtK0VCGI+gDXvCsvN25LlU0CiYt8OawGL8tWGWmT
+         M7XkNiOBJMZ2MQ84PWQPVccL31kGSP1XWGwUHPD+wiVQt9FzCkCaujuYVdGiM3r4q0ea
+         B9Ywz1Kd2d2Q1ub9oZJDGE2XXcwTXdv5KNtSN+iXmrFEYuY0VFFFLCQU6qGRlaoLSvgE
+         4HAQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=69Yk8P/qFbghht4lzUdI2eecmMcH8qqFHN3OCd/EKwg=;
+        b=S/lSxKBKN4AdSf9gH1zgGt629mnIBGyf7fPu+tyFdPMLpuGLrDJcGz6xfsfyBKxO/L
+         LS3FAzdQ2cpPh8jDBej+hyalI4K1/ZeZeX+qg895ptGu3giLS6q/9P95o9V0O2IAbLuD
+         prm4PhQK5uUQvkUyApVlWyHgZZDHU4sfJQ4anMc7xXwKUHlwSHYyrm2kk104hMemgbZD
+         2QUyfRxwe35HoE0Ax/nU8HGpIr4XUUMA62OuscdUk1ISttKtZaiJsBCleFV4Am26kLwT
+         vxaJla8RTfSrNVJPE7pKq4s1sHOI9eufNq1/w30fMN1izwCZjz9dH7vjryvjuX9DWyUT
+         7S6w==
+X-Gm-Message-State: APjAAAXhRwX9Eta+EG26aCaXHqROEV5mIUImfwmb89NDiJ5cf4k9AJJM
+        EdeXJ0FywbyR9x1lNXmIIg==
+X-Google-Smtp-Source: APXvYqyuMpfNWCcshVyT4hEGm5SAscjVG1tHFK7wvKEg/Dned1vNx6tuY0HjyvEZJtwbMpUFvuJAVg==
+X-Received: by 2002:a62:7945:: with SMTP id u66mr47940144pfc.82.1582468418248;
+        Sun, 23 Feb 2020 06:33:38 -0800 (PST)
+Received: from madhuparna-HP-Notebook.nitk.ac.in ([2402:3a80:1ee1:fa2c:caf:386d:b081:f71d])
+        by smtp.gmail.com with ESMTPSA id y2sm9576879pff.139.2020.02.23.06.33.31
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 23 Feb 2020 06:33:37 -0800 (PST)
+From:   madhuparnabhowmik10@gmail.com
+To:     johannes@sipsolutions.net, davem@davemloft.net
+Cc:     linux-wireless@vger.kernel.org, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org, joel@joelfernandes.org,
+        linux-kernel-mentees@lists.linuxfoundation.org,
+        frextrite@gmail.com,
+        Madhuparna Bhowmik <madhuparnabhowmik10@gmail.com>
+Subject: [PATCH] net: mac80211: rx.c: Avoid RCU list traversal under mutex
+Date:   Sun, 23 Feb 2020 20:03:02 +0530
+Message-Id: <20200223143302.15390-1-madhuparnabhowmik10@gmail.com>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+From: Madhuparna Bhowmik <madhuparnabhowmik10@gmail.com>
 
-[snip]
+local->sta_mtx is held in __ieee80211_check_fast_rx_iface().
+No need to use list_for_each_entry_rcu() as it also requires
+a cond argument to avoid false lockdep warnings when not used in
+RCU read-side section (with CONFIG_PROVE_RCU_LIST).
+Therefore use list_for_each_entry();
 
-> > > diff --git a/lib/percpu-refcount.c b/lib/percpu-refcount.c
-> > > index 4f6c6ebbbbde..48d7fcff70b6 100644
-> > > --- a/lib/percpu-refcount.c
-> > > +++ b/lib/percpu-refcount.c
-> > > @@ -50,9 +50,9 @@ static unsigned long __percpu *percpu_count_ptr(struct percpu_ref *ref)
-> > >   * @flags: PERCPU_REF_INIT_* flags
-> > >   * @gfp: allocation mask to use
-> > >   *
-> > > - * Initializes @ref.  If @flags is zero, @ref starts in percpu mode with a
-> > > - * refcount of 1; analagous to atomic_long_set(ref, 1).  See the
-> > > - * definitions of PERCPU_REF_INIT_* flags for flag behaviors.
-> > > + * Initializes @ref.  If @flags is zero or PERCPU_REF_ALLOW_REINIT, @ref starts
-> > > + * in percpu mode with a refcount of 1; analagous to atomic_long_set(ref, 1).
-> > > + * See the definitions of PERCPU_REF_INIT_* flags for flag behaviors.
-> > 
-> > Yeah. Prior we had both PERCPU_REF_INIT_ATOMIC and PERCPU_REF_INIT_DEAD
-> > with the latter implying the former. So 0 meant percpu and the others
-> > meant atomic. With PERCPU_REF_ALLOW_REINIT, it's probably easier to
-> > understand by saying if neither PERCPU_REF_INIT_ATOMIC or
-> > PERCPU_REF_INIT_DEAD is set, it starts out in percpu mode which is
-> > mentioned in the comments where the flags are defined.  It's not great
-> > having implied flags, but it's worked so far.
-> > 
-> > Also, it's not quite analagous to atomic_long_set(ref, 1) as there is a
-> > bias to prevent prematurely hitting 0.
-> > 
-> > I can take this and massage the wording a bit.
-> 
-> Hello Ira! Hello Dennis!
-> 
-> Yeah, I'd simple say that it starts in the percpu mode, except the case when
-> PERCPU_REF_INIT_ATOMIC is set, then (atomic mode, 1) and
-> PERCPU_REF_INIT_DEAD is set, then (atomic mode, 0).
-> 
-> PERCPU_REF_ALLOW_REINIT actually doesn't affect the initial state.
-> 
+Signed-off-by: Madhuparna Bhowmik <madhuparnabhowmik10@gmail.com>
+---
+ net/mac80211/rx.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-Thanks for the clarification.  Dennis let me know if you want me to resubmit
-the patch.
-
-Thanks!
-Ira
+diff --git a/net/mac80211/rx.c b/net/mac80211/rx.c
+index 0e05ff037672..0ba98ad9bc85 100644
+--- a/net/mac80211/rx.c
++++ b/net/mac80211/rx.c
+@@ -4114,7 +4114,7 @@ void __ieee80211_check_fast_rx_iface(struct ieee80211_sub_if_data *sdata)
+ 
+ 	lockdep_assert_held(&local->sta_mtx);
+ 
+-	list_for_each_entry_rcu(sta, &local->sta_list, list) {
++	list_for_each_entry(sta, &local->sta_list, list) {
+ 		if (sdata != sta->sdata &&
+ 		    (!sta->sdata->bss || sta->sdata->bss != sdata->bss))
+ 			continue;
+-- 
+2.17.1
 
