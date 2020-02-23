@@ -4,49 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D5A33C35669
-	for <linux-kernel@archiver.kernel.org>; Sun, 23 Feb 2020 02:21:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 90D8EC35669
+	for <linux-kernel@archiver.kernel.org>; Sun, 23 Feb 2020 02:22:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AE9B922525
-	for <linux-kernel@archiver.kernel.org>; Sun, 23 Feb 2020 02:21:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 68AB3227BF
+	for <linux-kernel@archiver.kernel.org>; Sun, 23 Feb 2020 02:22:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582424513;
-	bh=+0DCorTTN4tjWO1sG8JADOF2c+tIaEeqv2Mh+42zHBw=;
+	s=default; t=1582424520;
+	bh=debaHDpQh9zHC+jRrxSqoxKPc5OHTt1KzMpfkCF+MGE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=BsHRQNApUWUIDhCbRh+PI2SN+VhVSCZiBnbpfUknRNqWAQyIc8SSfyz9/wRb13b9l
-	 4543RyOzYlVSHvHxlcEy2HMnWduxVtiwy+it64mCTs4/O1FQ7u8xMtrlzPk3AREMkx
-	 7VJ8kPTHIQb/WRqEyrFtTcokGOuC/ZamlM32gZ8U=
+	b=deayj87AOg3pPWWakV5rT97X0zCeGEyLhR+8fTHfyltXj8UNbNBeiiulw0Eg77mxe
+	 a6xeiwlFUQ+kSvBeiI9C0zRvjdNTrE/BjWlFFmN/Dz2Sob+pvg7BTv0qBTdBvc0mQp
+	 WY/r7J89aWOaZvhGhfL1eQeAt8CJphsc5Pwzr6W4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727756AbgBWCVw (ORCPT
+        id S1727883AbgBWCV6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 22 Feb 2020 21:21:52 -0500
-Received: from mail.kernel.org ([198.145.29.99]:50252 "EHLO mail.kernel.org"
+        Sat, 22 Feb 2020 21:21:58 -0500
+Received: from mail.kernel.org ([198.145.29.99]:50352 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727689AbgBWCVp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 22 Feb 2020 21:21:45 -0500
+        id S1727740AbgBWCVs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 22 Feb 2020 21:21:48 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8CF8C208C3;
-        Sun, 23 Feb 2020 02:21:43 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 291D6208C3;
+        Sun, 23 Feb 2020 02:21:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1582424504;
-        bh=+0DCorTTN4tjWO1sG8JADOF2c+tIaEeqv2Mh+42zHBw=;
+        s=default; t=1582424507;
+        bh=debaHDpQh9zHC+jRrxSqoxKPc5OHTt1KzMpfkCF+MGE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=IxA18fuBodYKiu3El6YEdKUjCg7J4cbCvXLlNqNL4a+E5eR1R6qy/K1MefShIpyn0
-         pc/fBvs3TaoQNQmuG6dlxg049tnZSNQZlqGVd1SqjIbUbdynz9DWwMVBo+qzhmHoE/
-         oxviOgk+UFL1PrHiNKt5swj/YXu6ePyRV/LflQHA=
+        b=smExGh200j7UKkhUlDzNE/0GmED2Fsc0sDm8Q1Mj1QDOmP2m5B83s5Bueby49Ifbn
+         9UTh0UMuUIyjwADxiVNgBKSilFgcPYqeVKXp8bKyGA8WlHpyP99HQLTjskcUVwy2oN
+         0XcDLT55AfZW1jCkuS/v4Egc20cAYfi6sdn4bBTw=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Xiubo Li <xiubli@redhat.com>, Jeff Layton <jlayton@kernel.org>,
-        Ilya Dryomov <idryomov@gmail.com>,
-        Sasha Levin <sashal@kernel.org>, ceph-devel@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.5 20/58] ceph: do not execute direct write in parallel if O_APPEND is specified
-Date:   Sat, 22 Feb 2020 21:20:41 -0500
-Message-Id: <20200223022119.707-20-sashal@kernel.org>
+Cc:     Krishnamraju Eraparaju <krishna2@chelsio.com>,
+        Jason Gunthorpe <jgg@mellanox.com>,
+        Sasha Levin <sashal@kernel.org>, linux-rdma@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.5 23/58] RDMA/siw: Remove unwanted WARN_ON in siw_cm_llp_data_ready()
+Date:   Sat, 22 Feb 2020 21:20:44 -0500
+Message-Id: <20200223022119.707-23-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200223022119.707-1-sashal@kernel.org>
 References: <20200223022119.707-1-sashal@kernel.org>
@@ -59,92 +59,63 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Xiubo Li <xiubli@redhat.com>
+From: Krishnamraju Eraparaju <krishna2@chelsio.com>
 
-[ Upstream commit 8e4473bb50a1796c9c32b244e5dbc5ee24ead937 ]
+[ Upstream commit 663218a3e715fd9339d143a3e10088316b180f4f ]
 
-In O_APPEND & O_DIRECT mode, the data from different writers will
-be possibly overlapping each other since they take the shared lock.
+Warnings like below can fill up the dmesg while disconnecting RDMA
+connections.
+Hence, remove the unwanted WARN_ON.
 
-For example, both Writer1 and Writer2 are in O_APPEND and O_DIRECT
-mode:
+  WARNING: CPU: 6 PID: 0 at drivers/infiniband/sw/siw/siw_cm.c:1229 siw_cm_llp_data_ready+0xc1/0xd0 [siw]
+  RIP: 0010:siw_cm_llp_data_ready+0xc1/0xd0 [siw]
+  Call Trace:
+   <IRQ>
+   tcp_data_queue+0x226/0xb40
+   tcp_rcv_established+0x220/0x620
+   tcp_v4_do_rcv+0x12a/0x1e0
+   tcp_v4_rcv+0xb05/0xc00
+   ip_local_deliver_finish+0x69/0x210
+   ip_local_deliver+0x6b/0xe0
+   ip_rcv+0x273/0x362
+   __netif_receive_skb_core+0xb35/0xc30
+   netif_receive_skb_internal+0x3d/0xb0
+   napi_gro_frags+0x13b/0x200
+   t4_ethrx_handler+0x433/0x7d0 [cxgb4]
+   process_responses+0x318/0x580 [cxgb4]
+   napi_rx_handler+0x14/0x100 [cxgb4]
+   net_rx_action+0x149/0x3b0
+   __do_softirq+0xe3/0x30a
+   irq_exit+0x100/0x110
+   do_IRQ+0x7f/0xe0
+   common_interrupt+0xf/0xf
+   </IRQ>
 
-          Writer1                         Writer2
-
-     shared_lock()                   shared_lock()
-     getattr(CAP_SIZE)               getattr(CAP_SIZE)
-     iocb->ki_pos = EOF              iocb->ki_pos = EOF
-     write(data1)
-                                     write(data2)
-     shared_unlock()                 shared_unlock()
-
-The data2 will overlap the data1 from the same file offset, the
-old EOF.
-
-Switch to exclusive lock instead when O_APPEND is specified.
-
-Signed-off-by: Xiubo Li <xiubli@redhat.com>
-Reviewed-by: Jeff Layton <jlayton@kernel.org>
-Signed-off-by: Ilya Dryomov <idryomov@gmail.com>
+Link: https://lore.kernel.org/r/20200207141429.27927-1-krishna2@chelsio.com
+Signed-off-by: Krishnamraju Eraparaju <krishna2@chelsio.com>
+Signed-off-by: Jason Gunthorpe <jgg@mellanox.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/ceph/file.c | 17 +++++++++++------
- 1 file changed, 11 insertions(+), 6 deletions(-)
+ drivers/infiniband/sw/siw/siw_cm.c | 5 ++---
+ 1 file changed, 2 insertions(+), 3 deletions(-)
 
-diff --git a/fs/ceph/file.c b/fs/ceph/file.c
-index 11929d2bb594c..cd09e63d682b7 100644
---- a/fs/ceph/file.c
-+++ b/fs/ceph/file.c
-@@ -1418,6 +1418,7 @@ static ssize_t ceph_write_iter(struct kiocb *iocb, struct iov_iter *from)
- 	struct ceph_cap_flush *prealloc_cf;
- 	ssize_t count, written = 0;
- 	int err, want, got;
-+	bool direct_lock = false;
- 	loff_t pos;
- 	loff_t limit = max(i_size_read(inode), fsc->max_file_size);
+diff --git a/drivers/infiniband/sw/siw/siw_cm.c b/drivers/infiniband/sw/siw/siw_cm.c
+index 3bccfef40e7e1..ac86363ce1a24 100644
+--- a/drivers/infiniband/sw/siw/siw_cm.c
++++ b/drivers/infiniband/sw/siw/siw_cm.c
+@@ -1225,10 +1225,9 @@ static void siw_cm_llp_data_ready(struct sock *sk)
+ 	read_lock(&sk->sk_callback_lock);
  
-@@ -1428,8 +1429,11 @@ static ssize_t ceph_write_iter(struct kiocb *iocb, struct iov_iter *from)
- 	if (!prealloc_cf)
- 		return -ENOMEM;
- 
-+	if ((iocb->ki_flags & (IOCB_DIRECT | IOCB_APPEND)) == IOCB_DIRECT)
-+		direct_lock = true;
+ 	cep = sk_to_cep(sk);
+-	if (!cep) {
+-		WARN_ON(1);
++	if (!cep)
+ 		goto out;
+-	}
 +
- retry_snap:
--	if (iocb->ki_flags & IOCB_DIRECT)
-+	if (direct_lock)
- 		ceph_start_io_direct(inode);
- 	else
- 		ceph_start_io_write(inode);
-@@ -1519,14 +1523,15 @@ static ssize_t ceph_write_iter(struct kiocb *iocb, struct iov_iter *from)
+ 	siw_dbg_cep(cep, "state: %d\n", cep->state);
  
- 		/* we might need to revert back to that point */
- 		data = *from;
--		if (iocb->ki_flags & IOCB_DIRECT) {
-+		if (iocb->ki_flags & IOCB_DIRECT)
- 			written = ceph_direct_read_write(iocb, &data, snapc,
- 							 &prealloc_cf);
--			ceph_end_io_direct(inode);
--		} else {
-+		else
- 			written = ceph_sync_write(iocb, &data, pos, snapc);
-+		if (direct_lock)
-+			ceph_end_io_direct(inode);
-+		else
- 			ceph_end_io_write(inode);
--		}
- 		if (written > 0)
- 			iov_iter_advance(from, written);
- 		ceph_put_snap_context(snapc);
-@@ -1577,7 +1582,7 @@ static ssize_t ceph_write_iter(struct kiocb *iocb, struct iov_iter *from)
- 
- 	goto out_unlocked;
- out:
--	if (iocb->ki_flags & IOCB_DIRECT)
-+	if (direct_lock)
- 		ceph_end_io_direct(inode);
- 	else
- 		ceph_end_io_write(inode);
+ 	switch (cep->state) {
 -- 
 2.20.1
 
