@@ -5,68 +5,71 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 636C3C35673
-	for <linux-kernel@archiver.kernel.org>; Sun, 23 Feb 2020 23:20:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1A76FC35673
+	for <linux-kernel@archiver.kernel.org>; Sun, 23 Feb 2020 23:20:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 376E920880
-	for <linux-kernel@archiver.kernel.org>; Sun, 23 Feb 2020 23:20:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E1EE720880
+	for <linux-kernel@archiver.kernel.org>; Sun, 23 Feb 2020 23:20:06 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="WxJxvW7S"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Ne0ORNqT"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727260AbgBWXSB (ORCPT
+        id S1727986AbgBWXUE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 23 Feb 2020 18:18:01 -0500
-Received: from mail-wm1-f68.google.com ([209.85.128.68]:36846 "EHLO
-        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727201AbgBWXR6 (ORCPT
+        Sun, 23 Feb 2020 18:20:04 -0500
+Received: from mail-wm1-f66.google.com ([209.85.128.66]:40234 "EHLO
+        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727228AbgBWXSA (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 23 Feb 2020 18:17:58 -0500
-Received: by mail-wm1-f68.google.com with SMTP id p17so7455460wma.1
-        for <linux-kernel@vger.kernel.org>; Sun, 23 Feb 2020 15:17:56 -0800 (PST)
+        Sun, 23 Feb 2020 18:18:00 -0500
+Received: by mail-wm1-f66.google.com with SMTP id t14so7446662wmi.5;
+        Sun, 23 Feb 2020 15:17:59 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=m+LokEgk1OhCrIxCmqaU1nM/hbi0PMRKHeGZ/+qQiZ0=;
-        b=WxJxvW7S7Tz2b6SBXdAVYnjRHLSfa7FbKJLMOZlTGVrI2g01Fgn1qfwPi31Tpvxz/F
-         mtoIEApfsV+vV4P6AYC2imNjwiPxX6kR/eq+B/kav2hBTYR5oSKABqpmoyQ+lVmrSH4H
-         gmIEShzOYsMb7vB12RlsHijOgSMF9BXmKF2kmVPa/BylY5BEhJSGihsBdZb64/TwOS4/
-         zVcjeV9iHUfXWXFNF8JA7Ro20aRnz+nGYgEb7QNHoVj6FzDIfsWiJWTRsueCexqOUt4V
-         lV4MeE9HuAoLj9oAbCXL8/3GSY6/+l8RzDyEKgSE2gaZFVg5X1z9CyJ0HpiGrNbgEP4s
-         Sfkg==
+        bh=/CARPq6Rx4M0QkZy9yfp02dz/1hPE7n1aRAR3+33T8o=;
+        b=Ne0ORNqTPVSAJEg0AsCd2tNIKwEsrr+t1mduNCkvQZZ2W3YYRCdk+38h7fmWJ5/bfl
+         /Pmqo7PItFTHvAyKn5UJQehAjYWz9wYqAGSz8X7Mmpgdppc1X7DDm1tJeM+RQXb2pvkD
+         hcJ1J2nGiCtP6ycFmbE5B7otjueLorYatqQBm9R/db1GnUvCUm7J3sAFXrcU0ccu/1Nt
+         lUR0CBOqRsjxtJDe5VJ789bg0f0dgk+QVV1nvKS2fddWZ7gyz590HnNefX50pC83A+0d
+         zYgGpx61P5DLFgFqEUCMH1Be76UqymOO6UqHajZLhYvFdVX7XiMxxy7pdYsEu6EB42Z0
+         XCeA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=m+LokEgk1OhCrIxCmqaU1nM/hbi0PMRKHeGZ/+qQiZ0=;
-        b=Ck2/X8GTEenHY8FSNHrCmQY5tQ7Krtyz96zErLQtg79d0qh9kiQIvanx6G99QibUiv
-         R3iBBZXys6GnQAtwSFbvOsiJWCNbZo2Hr+hnVeD/yWzIiJCEhjkHR9vjOXwlIRLnudhD
-         9gLLRT2qNYb82sSE0KxWkj86ZTEQ4oN9Y3bzne6mWw1q34nZsfDlSfjikVNc42J9GQmR
-         AcgKBviyEuQrk7YasVVZFfGpkKCHFRdUnPcTfrxrZnB8DvGNi4x+nRiGw0UBSFhm3HQC
-         iRH5jVASC1bHi2eQAAZGga2B2/jRPOZ0sm9+TerlOKJ4vGsjSAHsGX+krNjbSwj1cT+4
-         zlqA==
-X-Gm-Message-State: APjAAAUrT6T21OJYuXJRG7aQyDmbU317dHjZDMXlkEcJ9DPa7oERCe4p
-        KdBgHmsSoyjWk3wHPk1tng==
-X-Google-Smtp-Source: APXvYqx1xZoZd3Mg7blMfa6A8ZoF9XsfYVxAGm7/w6r4xbRVfj5XMCLb2k9zu8tiV2VMfYJA/cbBeA==
-X-Received: by 2002:a1c:16:: with SMTP id 22mr18168884wma.8.1582499875389;
-        Sun, 23 Feb 2020 15:17:55 -0800 (PST)
+        bh=/CARPq6Rx4M0QkZy9yfp02dz/1hPE7n1aRAR3+33T8o=;
+        b=eQalb1ae4UtMXba3YdXPOS8LmqkUB7Kir7r3AoPGf7iVxDxg17n2t0iX7o0zq9y1eG
+         0egEbMXD2EGStkhCF3/4dM3WMi3u/jNonTi2Sky/EsgN9lNpcgr27UNVudQjS2iVNh9P
+         xv3DY4lSREbTi09dWmYIEeJY9yWzbRX34kvkJT6SdlwkbzPDCB12aC/cUfYnUPHvNt5S
+         iCHEJPu/rO7BarbyLqVZKYEaFTBMqlYAjVJCoD71QZFdZFalDIkEc1lDuGV01kPBZsUt
+         E9YONjW6mbmSenHiV2oQ77z7jCmZLZawUJz+MWScQfAfqsddTeQ9dJr9n1N9nNbL9Ymn
+         MDlA==
+X-Gm-Message-State: APjAAAW7+YTY3Z58O5bz4PHny7elPLBzm4bWUuU8jdY3OoQi9oelLI6S
+        jSzNmKYSjZD5hNGT3RWGWnOC18wzznhS
+X-Google-Smtp-Source: APXvYqxw6l5JluB8eO/7r06GVsaOMqh026PREAzJXNRgSwNjd/ag01CwbERbb1XJgx4s3RYjo6UDqg==
+X-Received: by 2002:a05:600c:114d:: with SMTP id z13mr17896219wmz.105.1582499878574;
+        Sun, 23 Feb 2020 15:17:58 -0800 (PST)
 Received: from ninjahost.lan (host-2-102-13-223.as13285.net. [2.102.13.223])
-        by smtp.googlemail.com with ESMTPSA id q6sm8968203wrf.67.2020.02.23.15.17.54
+        by smtp.googlemail.com with ESMTPSA id q6sm8968203wrf.67.2020.02.23.15.17.57
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 23 Feb 2020 15:17:54 -0800 (PST)
+        Sun, 23 Feb 2020 15:17:58 -0800 (PST)
 From:   Jules Irenge <jbi.octave@gmail.com>
 To:     boqun.feng@gmail.com
 Cc:     jbi.octave@gmail.com, linux-kernel@vger.kernel.org,
-        Dan Williams <dan.j.williams@intel.com>,
-        Vishal Verma <vishal.l.verma@intel.com>,
-        Dave Jiang <dave.jiang@intel.com>,
-        linux-nvdimm@lists.01.org (open list:DEVICE DIRECT ACCESS (DAX))
-Subject: [PATCH 02/30] dax: Add missing annotations ofr dax_read_lock() and dax_read_unlock()
-Date:   Sun, 23 Feb 2020 23:16:43 +0000
-Message-Id: <20200223231711.157699-3-jbi.octave@gmail.com>
+        Vlad Yasevich <vyasevich@gmail.com>,
+        Neil Horman <nhorman@tuxdriver.com>,
+        Marcelo Ricardo Leitner <marcelo.leitner@gmail.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>,
+        linux-sctp@vger.kernel.org (open list:SCTP PROTOCOL),
+        netdev@vger.kernel.org (open list:NETWORKING [GENERAL])
+Subject: [PATCH 05/30] sctp: Add missing annotation for sctp_transport_walk_start()
+Date:   Sun, 23 Feb 2020 23:16:46 +0000
+Message-Id: <20200223231711.157699-6-jbi.octave@gmail.com>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20200223231711.157699-1-jbi.octave@gmail.com>
 References: <0/30>
@@ -78,42 +81,32 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Sparse reports warning at dax_read_lock() and at dax_read_unlock()
+Sparse reports a warning at sctp_transport_walk_start()
 
-warning: context imbalance in dax_read_lock() - wrong count at exit
- warning: context imbalance in dax_read_unlock() - unexpected unlock
+warning: context imbalance in sctp_transport_walk_start
+	- wrong count at exit
 
-The root cause is the mnissing annotations at dax_read_lock()
-	and dax_read_unlock()
-
-Add the missing __acquires(&dax_srcu) notations to dax_read_lock()
-Add the missing __releases(&dax_srcu) annotation to dax_read_unlock()
+The root cause is the missing annotation at sctp_transport_walk_start()
+Add the missing __acquires(RCU) annotation
 
 Signed-off-by: Jules Irenge <jbi.octave@gmail.com>
 ---
- drivers/dax/super.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ net/sctp/socket.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/dax/super.c b/drivers/dax/super.c
-index 26a654dbc69a..f872a2fb98d4 100644
---- a/drivers/dax/super.c
-+++ b/drivers/dax/super.c
-@@ -28,13 +28,13 @@ static struct super_block *dax_superblock __read_mostly;
- static struct hlist_head dax_host_list[DAX_HASH_SIZE];
- static DEFINE_SPINLOCK(dax_host_lock);
+diff --git a/net/sctp/socket.c b/net/sctp/socket.c
+index 1b56fc440606..05be67bb0474 100644
+--- a/net/sctp/socket.c
++++ b/net/sctp/socket.c
+@@ -5333,7 +5333,7 @@ int sctp_get_sctp_info(struct sock *sk, struct sctp_association *asoc,
+ EXPORT_SYMBOL_GPL(sctp_get_sctp_info);
  
--int dax_read_lock(void)
-+int dax_read_lock(void) __acquires(&dax_srcu)
+ /* use callback to avoid exporting the core structure */
+-void sctp_transport_walk_start(struct rhashtable_iter *iter)
++void sctp_transport_walk_start(struct rhashtable_iter *iter) __acquires(RCU)
  {
- 	return srcu_read_lock(&dax_srcu);
- }
- EXPORT_SYMBOL_GPL(dax_read_lock);
+ 	rhltable_walk_enter(&sctp_transport_hashtable, iter);
  
--void dax_read_unlock(int id)
-+void dax_read_unlock(int id) __releases(&dax_srcu)
- {
- 	srcu_read_unlock(&dax_srcu, id);
- }
 -- 
 2.24.1
 
