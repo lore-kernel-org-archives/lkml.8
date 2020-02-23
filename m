@@ -2,175 +2,123 @@ Return-Path: <SRS0=SnAt=4L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MSGID_FROM_MTA_HEADER,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 03F68C35671
-	for <linux-kernel@archiver.kernel.org>; Sun, 23 Feb 2020 12:04:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BCB41C35666
+	for <linux-kernel@archiver.kernel.org>; Sun, 23 Feb 2020 12:08:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C4F6920658
-	for <linux-kernel@archiver.kernel.org>; Sun, 23 Feb 2020 12:04:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9472320656
+	for <linux-kernel@archiver.kernel.org>; Sun, 23 Feb 2020 12:08:30 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=amdcloud.onmicrosoft.com header.i=@amdcloud.onmicrosoft.com header.b="zrgm2MAS"
+	dkim=pass (2048-bit key) header.d=arista.com header.i=@arista.com header.b="T3WFs3xj"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727328AbgBWME3 (ORCPT
+        id S1727226AbgBWMI3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 23 Feb 2020 07:04:29 -0500
-Received: from mail-mw2nam12on2087.outbound.protection.outlook.com ([40.107.244.87]:6023
-        "EHLO NAM12-MW2-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727258AbgBWME3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 23 Feb 2020 07:04:29 -0500
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=h3s8o3GB1OFAN5vBhwFVj2a+ailLNDHo0w4aze/Vyi0YoS19yDEGwc21fPSkVMUIYKPQb9UrpFd/lHrSN9ReHhBA88milalKvsiygdr8ILpbSQWTj1L6m8Brc2cz627uQDSxF11cQY4mnGX5BtHVKaoSj3VYh5OF8LyBB10IR0ZaXy6yzdAeoUCcHlvcfMwskum+9C2B2C+ehcg1bEQz55E/1rlrIliWwugHCWPitdF0m0eS6goQhYZI4imU3sbsCkujTc0jmybmr2/in1C+GsUspNUOKoKLJJOIEhQnN/0Xv/dk+T88dTY2pSD27wbUjr1qO2/WEQ72c0ddcf/JrQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=T7jMdzYGZWZjpE497kC91UPQK1IxaOoJsaEkq12vKJU=;
- b=Ns8+twXNIj82U827Sa6do85j3hSHjoQOYcp/KRw/YdvdXwua5uGfaFnvwz3clt2DHpFYv24kZdxcnUwbibRGrBYMyWpIgQAtRuxBXdQbsW7X2DhgipKHI21JUnDVyf9cGYFjjAS/gW6jnDFbmVHp5u7WPUVHCQhpYjTRJleCCtW6OXsxK+BIMigY4q9Do93ywD2TujvIdGg1f2Xv+78OaXWy9SjOjSk/T7ex2zA+T/CzJ4YQ7RXZXj4a40BKkHVwOhFXEA0a+CdKHjHh6/ihNXEIBezJRFslspg+n26Pkh1xijS/Zh0f842eVgwk/WIZM1VIfJdP9jiuoVwnfU8cxQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
- header.d=amd.com; arc=none
+        Sun, 23 Feb 2020 07:08:29 -0500
+Received: from mail-ed1-f65.google.com ([209.85.208.65]:45139 "EHLO
+        mail-ed1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726023AbgBWMI2 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 23 Feb 2020 07:08:28 -0500
+Received: by mail-ed1-f65.google.com with SMTP id v28so8389750edw.12
+        for <linux-kernel@vger.kernel.org>; Sun, 23 Feb 2020 04:08:26 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=amdcloud.onmicrosoft.com; s=selector2-amdcloud-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=T7jMdzYGZWZjpE497kC91UPQK1IxaOoJsaEkq12vKJU=;
- b=zrgm2MAS5Fpd+J6hkekOiF2s6wS2ubWxIWt0h6gY8+8puyH1Lbu2hcRr6a1W1ZDeesyLZWPWVBaSHrP3mcWv4VFBuhUhyfg6QYVkJUB6l76D6E8zIPilNm69Q4EHY7b7SO6iHN1s4a3PcyXhkK/Qnap6D3vLJEl6Ghn10aBE0Bs=
-Authentication-Results: spf=none (sender IP is )
- smtp.mailfrom=Christian.Koenig@amd.com; 
-Received: from DM5PR12MB1705.namprd12.prod.outlook.com (2603:10b6:3:10c::22)
- by DM5PR12MB1625.namprd12.prod.outlook.com (2603:10b6:4:b::13) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2750.21; Sun, 23 Feb 2020 12:04:22 +0000
-Received: from DM5PR12MB1705.namprd12.prod.outlook.com
- ([fe80::d40e:7339:8605:bc92]) by DM5PR12MB1705.namprd12.prod.outlook.com
- ([fe80::d40e:7339:8605:bc92%11]) with mapi id 15.20.2750.021; Sun, 23 Feb
- 2020 12:04:22 +0000
-Subject: Re: [PATCH] dma-buf: Fix missing excl fence waiting
-To:     "Pan, Xinhui" <Xinhui.Pan@amd.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linaro-mm-sig@lists.linaro.org" <linaro-mm-sig@lists.linaro.org>,
-        "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
-        "linux-media@vger.kernel.org" <linux-media@vger.kernel.org>
-Cc:     "sumit.semwal@linaro.org" <sumit.semwal@linaro.org>,
-        "daniel.vetter@ffwll.ch" <daniel.vetter@ffwll.ch>
-References: <B737F1D5-292E-4FE2-89A5-6EF72CB3EED1@amd.com>
-From:   =?UTF-8?Q?Christian_K=c3=b6nig?= <christian.koenig@amd.com>
-Message-ID: <7a2eb42a-2dd9-4303-3947-6bbb4de7a888@amd.com>
-Date:   Sun, 23 Feb 2020 13:04:15 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
-In-Reply-To: <B737F1D5-292E-4FE2-89A5-6EF72CB3EED1@amd.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
-X-ClientProxiedBy: AM3PR05CA0086.eurprd05.prod.outlook.com
- (2603:10a6:207:1::12) To DM5PR12MB1705.namprd12.prod.outlook.com
- (2603:10b6:3:10c::22)
+        d=arista.com; s=googlenew;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=+3bMOmlbRvA7zJn3vOuEZuAwgejpM69Egt00+fb0xdY=;
+        b=T3WFs3xjFny16290cyxTqgKXSvQHbyNny7C93fqZTGkJV8r9xn+3gn9X+ShN8Mk0WM
+         dO0l0LX9EOCikb28IY0VakansjrkDIATf093GmwLD2K0sZ6+9P42gmWllYYzTLFdUz/n
+         66IsUkOKkACqO/c2vI1XM9kgtJO9yB1uvVtGzF+m33sJ86nWvS4jN6kzUeBQWjM+i9un
+         X9r6zms2nXiyWypxNyjOWJkkynQXOMpYW0OIGduqUoMm2tX5dS+/2kQHKMddBuzoBuAm
+         yXltxT8j4g2hIbHmDrlZobCI42zciSKk7RekRZ58PWk1EMYh12RnI3kMC2wdgYb/lrBR
+         hK8g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=+3bMOmlbRvA7zJn3vOuEZuAwgejpM69Egt00+fb0xdY=;
+        b=VorHqDpZMdUsBWeiHsKlffe3/xAQ7hCPzfFqyWWwl4jr7JpTzQKdDeHgWjgbWuogzD
+         hUE8ad4YbFGoOeY/TDd5yxfqaEd0lRuRzqnG56avHcUXAdnCMq+WtAe1j55uphpjQLs9
+         nDQ3Cxm42b+jPTGXl9tOJAfUi9udFQ6Anm6viGPr4Kp9/kqsl1hGs9NUSDippYC6mO+R
+         0kRB42zpoWQ416MEZXWyyfmLzEXYYD+cT3+VVT+XWA4oFsiDrNe5yekwFEdfCk4pAND2
+         2/ZPrNDTILp6M4r188GHmCpudr/kleqyWc9Ul9oHIgt1DQgEdxJb0eoGSs1ebgvGgzML
+         LW4Q==
+X-Gm-Message-State: APjAAAUPwcWjBpRmkit+pl4E7j2BOR2w+6yH7jaSd6nG08E2pvHXtLYs
+        MeZuVzHbPBOfhLNmyBgpMkcTOw==
+X-Google-Smtp-Source: APXvYqwujUALm/F4AQXpMk5SgonEseoix+lVm+NIaBFLz/7op3ah/12Xz9FIQF4VlGK8UsYQdVv84Q==
+X-Received: by 2002:a17:906:1956:: with SMTP id b22mr42774186eje.276.1582459705235;
+        Sun, 23 Feb 2020 04:08:25 -0800 (PST)
+Received: from ?IPv6:2a02:8084:e84:2480:228:f8ff:fe6f:83a8? ([2a02:8084:e84:2480:228:f8ff:fe6f:83a8])
+        by smtp.gmail.com with ESMTPSA id d13sm778142edk.0.2020.02.23.04.08.23
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Sun, 23 Feb 2020 04:08:24 -0800 (PST)
+Subject: Re: [PATCHv2-next 1/3] sysctl/sysrq: Remove __sysrq_enabled copy
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     linux-kernel@vger.kernel.org,
+        Dmitry Safonov <0x7f454c46@gmail.com>,
+        Iurii Zaikin <yzaikin@google.com>,
+        Jiri Slaby <jslaby@suse.com>, Joe Perches <joe@perches.com>,
+        Randy Dunlap <rdunlap@infradead.org>,
+        Vasiliy Khoruzhick <vasilykh@arista.com>,
+        linux-serial@vger.kernel.org, Luis Chamberlain <mcgrof@kernel.org>,
+        Kees Cook <keescook@chromium.org>,
+        linux-fsdevel@vger.kernel.org
+References: <20200114171912.261787-1-dima@arista.com>
+ <20200114171912.261787-2-dima@arista.com>
+ <20200115123601.GA3461986@kroah.com>
+From:   Dmitry Safonov <dima@arista.com>
+Message-ID: <eef8e82a-c254-9391-506b-c9de8e52ee0f@arista.com>
+Date:   Sun, 23 Feb 2020 12:08:23 +0000
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.2
 MIME-Version: 1.0
-X-MS-Exchange-MessageSentRepresentingType: 1
-Received: from [IPv6:2a02:908:1252:fb60:be8a:bd56:1f94:86e7] (2a02:908:1252:fb60:be8a:bd56:1f94:86e7) by AM3PR05CA0086.eurprd05.prod.outlook.com (2603:10a6:207:1::12) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2750.18 via Frontend Transport; Sun, 23 Feb 2020 12:04:20 +0000
-X-Originating-IP: [2a02:908:1252:fb60:be8a:bd56:1f94:86e7]
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-HT: Tenant
-X-MS-Office365-Filtering-Correlation-Id: 7988bf35-994e-4260-608d-08d7b85884c7
-X-MS-TrafficTypeDiagnostic: DM5PR12MB1625:|DM5PR12MB1625:
-X-MS-Exchange-Transport-Forked: True
-X-Microsoft-Antispam-PRVS: <DM5PR12MB1625728BCFD8A28EDB459FA383EF0@DM5PR12MB1625.namprd12.prod.outlook.com>
-X-MS-Oob-TLC-OOBClassifiers: OLM:8273;
-X-Forefront-PRVS: 0322B4EDE1
-X-Forefront-Antispam-Report: SFV:NSPM;SFS:(10009020)(4636009)(346002)(136003)(366004)(39860400002)(396003)(376002)(199004)(189003)(86362001)(66946007)(6486002)(6666004)(36756003)(2616005)(478600001)(5660300002)(81166006)(186003)(8676002)(16526019)(66476007)(52116002)(31696002)(316002)(110136005)(54906003)(81156014)(2906002)(4326008)(66556008)(8936002)(31686004);DIR:OUT;SFP:1101;SCL:1;SRVR:DM5PR12MB1625;H:DM5PR12MB1705.namprd12.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
-Received-SPF: None (protection.outlook.com: amd.com does not designate
- permitted sender hosts)
-X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: H/uT05tIi3sDc45WnmKaKOEKzRq4/ChSSRS1U1j/cRmKAAQwdTpZ5IjWShz3IoI2OX7hh5JdbF1P9XOJLLxdwgsbR+Iz/Q3eZ0py1m1/nGKefmELkbphm7qutU+hcsjtcnQKrqN4lalBc3HF38IrR1bKS7lUZTRWUNe+nUDkgE3ljsznyEXIJ8gmB7EhVjHDEO5BvPVDEG4AGYOSo7nw+WFhtv0KpzVFr3SmpRAiCUxZVq1eLzCccWaLBtUdoE5rpFmw5lRpfiZY4Gz14TDZRXDjaTtM14jr86K39rGB465wBLzuw94dQYodqSs6lfoUfJ8jPXY4zy+EIvGDv6WpxRegQ++b47U4Yz/pt5qYU4U3KEwmesSnIRq2fNgqC1DT4l5ghVyyWttdhzUtnyxJZ4k91PWF1KayiSwmF467LCz+BsU2R7r2QGgPS5YMAThX
-X-MS-Exchange-AntiSpam-MessageData: NmVkClFAZe5lc9iIWc9G9HypLDOn34DsqiuJLZh9ubc0NXB/5ZLvuLuyoEbYk/KgTWwcaLHd1iOSD2QwDUF6BI94mnky3FporMCtAuVsed6/XDIqRP65Wqb80UHSxBJHbYZvONMaE9pyzydPGFzD4jZkke0pammI9snwnOeNjBr+fB0TuwZ9ebjpaxaP3EpcwKp6yz30tmGp5Ikgeh5bdw==
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 7988bf35-994e-4260-608d-08d7b85884c7
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 23 Feb 2020 12:04:22.2845
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: vlGeM6PicH1L/xJy4EzlcrkDm069DYXTxkxnxJkQmwXhdHt0D84Ts2BMxHmcg1Qp
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM5PR12MB1625
+In-Reply-To: <20200115123601.GA3461986@kroah.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Am 23.02.20 um 12:56 schrieb Pan, Xinhui:
-> If shared fence list is not empty, even we want to test all fences, excl fence is ignored.
-> That is abviously wrong, so fix it.
 
-Yeah that is a known issue and I completely agree with you, but other 
-disagree.
+On 1/15/20 12:36 PM, Greg Kroah-Hartman wrote:
+> On Tue, Jan 14, 2020 at 05:19:10PM +0000, Dmitry Safonov wrote:
+[..]
+>> +int sysrq_get_mask(void)
+>> +{
+>> +	if (sysrq_always_enabled)
+>> +		return 1;
+>> +	return sysrq_enabled;
+>> +}
+> 
+> Naming is hard.  And this name is really hard to understand.
 
-See the shared fences are meant to depend on the exclusive fence. So all 
-shared fences must finish only after the exclusive one has finished as well.
+Agree.
 
-The problem now is that for error handling this isn't necessary true. In 
-other words when a shared fence completes with an error it is perfectly 
-possible that he does this before the exclusive fence is finished.
 
-I'm trying to convince Daniel that this is a problem for years :)
+> Traditionally get/put are used for incrementing reference counts.  You
+> don't have a sysrq_put_mask() call, right?  :)
 
-Regards,
-Christian.
+Yes, fair point
 
->
-> Signed-off-by: xinhui pan <xinhui.pan@amd.com>
-> ---
->   drivers/dma-buf/dma-resv.c | 9 +++++----
->   1 file changed, 5 insertions(+), 4 deletions(-)
->
-> diff --git a/drivers/dma-buf/dma-resv.c b/drivers/dma-buf/dma-resv.c
-> index 4264e64788c4..44dc64c547c6 100644
-> --- a/drivers/dma-buf/dma-resv.c
-> +++ b/drivers/dma-buf/dma-resv.c
-> @@ -632,14 +632,14 @@ static inline int dma_resv_test_signaled_single(struct dma_fence *passed_fence)
->    */
->   bool dma_resv_test_signaled_rcu(struct dma_resv *obj, bool test_all)
->   {
-> -	unsigned seq, shared_count;
-> +	unsigned int seq, shared_count, left;
->   	int ret;
->   
->   	rcu_read_lock();
->   retry:
->   	ret = true;
->   	shared_count = 0;
-> -	seq = read_seqcount_begin(&obj->seq);
-> +	left = seq = read_seqcount_begin(&obj->seq);
->   
->   	if (test_all) {
->   		unsigned i;
-> @@ -647,7 +647,7 @@ bool dma_resv_test_signaled_rcu(struct dma_resv *obj, bool test_all)
->   		struct dma_resv_list *fobj = rcu_dereference(obj->fence);
->   
->   		if (fobj)
-> -			shared_count = fobj->shared_count;
-> +			left = shared_count = fobj->shared_count;
->   
->   		for (i = 0; i < shared_count; ++i) {
->   			struct dma_fence *fence = rcu_dereference(fobj->shared[i]);
-> @@ -657,13 +657,14 @@ bool dma_resv_test_signaled_rcu(struct dma_resv *obj, bool test_all)
->   				goto retry;
->   			else if (!ret)
->   				break;
-> +			left--;
->   		}
->   
->   		if (read_seqcount_retry(&obj->seq, seq))
->   			goto retry;
->   	}
->   
-> -	if (!shared_count) {
-> +	if (!left) {
->   		struct dma_fence *fence_excl = rcu_dereference(obj->fence_excl);
->   
->   		if (fence_excl) {
 
+> I think what you want this function to do is, "is sysrq enabled right
+> now" (hint, it's a global function, add kernel-doc to it so we know what
+> it does...).  If so, it should maybe be something like:
+> 
+> 	bool sysrq_is_enabled(void);
+> 
+> which to me makes more sense.
+
+Err, not exactly: there is a function for that which is sysrq_on().
+But for sysctl the value of the mask (or 1 for always_enabled) is
+actually needed to show a proper value back to the userspace reader.
+
+Thanks,
+          Dmitry
