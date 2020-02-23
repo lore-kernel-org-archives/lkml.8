@@ -2,171 +2,150 @@ Return-Path: <SRS0=SnAt=4L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BC86CC35671
-	for <linux-kernel@archiver.kernel.org>; Sun, 23 Feb 2020 11:29:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 57F10C35666
+	for <linux-kernel@archiver.kernel.org>; Sun, 23 Feb 2020 11:30:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 93F3F2192A
-	for <linux-kernel@archiver.kernel.org>; Sun, 23 Feb 2020 11:29:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2A3C020656
+	for <linux-kernel@archiver.kernel.org>; Sun, 23 Feb 2020 11:30:31 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b="GZEnATEb"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="PzabzD3R"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727183AbgBWL31 (ORCPT
+        id S1727274AbgBWLaa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 23 Feb 2020 06:29:27 -0500
-Received: from mail-wm1-f68.google.com ([209.85.128.68]:52420 "EHLO
-        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726023AbgBWL31 (ORCPT
+        Sun, 23 Feb 2020 06:30:30 -0500
+Received: from mail-wm1-f66.google.com ([209.85.128.66]:50227 "EHLO
+        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725980AbgBWLaa (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 23 Feb 2020 06:29:27 -0500
-Received: by mail-wm1-f68.google.com with SMTP id p9so6218903wmc.2
-        for <linux-kernel@vger.kernel.org>; Sun, 23 Feb 2020 03:29:25 -0800 (PST)
+        Sun, 23 Feb 2020 06:30:30 -0500
+Received: by mail-wm1-f66.google.com with SMTP id a5so6210879wmb.0;
+        Sun, 23 Feb 2020 03:30:28 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=broadcom.com; s=google;
-        h=from:to:cc:date:message-id:in-reply-to:references:user-agent
-         :subject:mime-version:content-transfer-encoding;
-        bh=Wsmvetnj/uRqidICErzZezRvkzyJsUsUIsU21dU7djU=;
-        b=GZEnATEbiLPG2xlP1VtmI9eGW0L75Tjcio9m/sk7rU5YfD43fRdeoXb+g3oH9xuej9
-         HdOAjrjAF/CgPwXQAZay9hQhUoKg2DOICY9riwHUIz1WFsRfhL/d3rR7RA+1jsQbJCqk
-         HeKVxF410HwT+IKuUdBOa81l1QrUtp53kbKSY=
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=6bqMQ6Q8pNpUWevMe3I2fQaUxze6ip4xI8Zg0jCRVFY=;
+        b=PzabzD3RJRGWE71FAdfmLXTa3MR80htynajipe846I5/QEDB5Vb9X54dACcFhkLHQt
+         NlcBF1lLBm+JSKY+BboOue0ZTC2I7hQiTUORe++WizJBR0qyv+8CsonjVR2VuFiWRpPL
+         DX/dMl+d64PCZQUQtw9Qnryo13K70HSRqxDmaKbxQJOgm17jDERQSy9qxFdhhfqjOXZ2
+         3Rz9LRVouecAYSjbe4CF8hMDBtzz8EUmGilINrTWW9qN3f4M2JjBZkx4PcvzD0TcV2/g
+         R5lDfm0R/F+r9yqDxeGUM359a8wpruJ5tLT16gXMbm/DU8150QZ5QdWOSPWBrr7l6AqY
+         6PNg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:date:message-id:in-reply-to
-         :references:user-agent:subject:mime-version
-         :content-transfer-encoding;
-        bh=Wsmvetnj/uRqidICErzZezRvkzyJsUsUIsU21dU7djU=;
-        b=j8fVIdqoFn8XmaapKTCq+zh+ysLJ8g103ng5iZPiT+dTAOhp/iax2WKPTy6XAcapna
-         wfD8CJl9AEC7FDQTEaUpJ0/LaXiLIEIcB+2hLBpUuEUgMeEOhuM5WTSCCvf1BGEEDrHi
-         0pKVPcrmGzn1VsxtSZXd1i5FWj5s7Ds8m8hHit9A0EP1LAmECHIXfxiYjiiXoZAWWfdA
-         v6dnsU0Got0Pdey1NnAxxY1o9j8hoWAEgYPOhWMgK6CioYFpNr+b7yRICyRqxD3QRn6/
-         Xv6kdNOjqdcO3qi6f1r/kx9tJD1mv1iktSEdku1GOvbquzKR3/Y1XmdQ0tDXullYndRP
-         EQAw==
-X-Gm-Message-State: APjAAAXOKioPuxhS03ij0Z8q00ZoUAsVNrVTBur17YRqtQR4jHc42mBY
-        PK+CElSSleG+uoZIFeMB7DegSg==
-X-Google-Smtp-Source: APXvYqz6+9MPmpyo+ROixdyxqt/lfCR1xsPFagF33I0ML2XY9pDawBqPDq1xdZxReCF3AUcO3iuYFQ==
-X-Received: by 2002:a1c:4383:: with SMTP id q125mr15905602wma.88.1582457364551;
-        Sun, 23 Feb 2020 03:29:24 -0800 (PST)
-Received: from [192.168.178.38] (f140230.upc-f.chello.nl. [80.56.140.230])
-        by smtp.gmail.com with ESMTPSA id a135sm12328905wme.47.2020.02.23.03.29.23
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Sun, 23 Feb 2020 03:29:23 -0800 (PST)
-From:   Arend Van Spriel <arend.vanspriel@broadcom.com>
-To:     =?UTF-8?B?T25kxZllaiBKaXJtYW4=?= <megous@megous.com>,
-        "Chen-Yu Tsai" <wens@csie.org>
-CC:     "linux-sunxi" <linux-sunxi@googlegroups.com>,
-        Maxime Ripard <mripard@kernel.org>,
-        Tomas Novotny <tomas@novotny.cz>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        "moderated list:ARM/Allwinner sunXi SoC support" 
-        <linux-arm-kernel@lists.infradead.org>,
-        open list <linux-kernel@vger.kernel.org>
-Date:   Sun, 23 Feb 2020 12:29:21 +0100
-Message-ID: <17071cf1268.279b.9b12b7fc0a3841636cfb5e919b41b954@broadcom.com>
-In-Reply-To: <20200223105524.smp3p2quewp3ddop@core.my.home>
-References: <20200222223154.221632-1-megous@megous.com>
- <20200222223154.221632-2-megous@megous.com>
- <CAGb2v67XwrYA8FLF9wpnngm9F-F9UV2m+rr+r3t+KUVv5-EMiw@mail.gmail.com>
- <CAGb2v66G5P_souwFHodO0_NYhWyQ+dGE4fbqLLK3qd9ue7Kk9g@mail.gmail.com>
- <20200223105524.smp3p2quewp3ddop@core.my.home>
-User-Agent: AquaMail/1.23.0-1556 (build: 102300002)
-Subject: Re: [linux-sunxi] [PATCH 1/4] ARM: dts: sun8i-a83t-tbs-a711: OOB WiFi interrupt doesn't work
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=6bqMQ6Q8pNpUWevMe3I2fQaUxze6ip4xI8Zg0jCRVFY=;
+        b=c/cUwXI8xjrKAbQFQJO3yXl9c/dIDoLl/qrOfJpPwerk3yG+0TLqKWwL9RnuqndR+W
+         DiNJqUE0+26/Z/N9X+vCOIBWsb7uyZkcWTOAABEmUjZiQgFW2LRNYir8Ff8ukVVZzBBF
+         vLTyRNCdcRtC0KEF8ifTzE7OVIuxqYuZfwpcVKR8W0aXM9KEQn81BgJm2Cbb7vWicV2Z
+         T3eZBmihjJ/QMtHpZHXfPWuNMM9w6SDQvQfVS1VH1ZpiwIQjPeWo9Gy1MT8Hk32xlTMd
+         0hFbVoVcNstMNb+4QNoKv1Ayw6vkgu3l0KgSUzRjYNlRYkdFUgII0yPB2NWtN9FDSY9q
+         43fw==
+X-Gm-Message-State: APjAAAXp3TvpvSNOjeXrqmTUzMQtEse7v3FbVbAXz3iMxGgX81oo8KEZ
+        6+bgL28XA/G0d+MvssBtYqNijNs=
+X-Google-Smtp-Source: APXvYqxPw0VaSj2Lpsbn4NCOSK4+2vn65MuaG5UcoPoQq4zKGHbihaXwiRo4CEQhaKWgr1UdzAIahw==
+X-Received: by 2002:a1c:2786:: with SMTP id n128mr15528583wmn.47.1582457427827;
+        Sun, 23 Feb 2020 03:30:27 -0800 (PST)
+Received: from avx2 ([46.53.251.128])
+        by smtp.gmail.com with ESMTPSA id i2sm12656810wmb.28.2020.02.23.03.30.26
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 23 Feb 2020 03:30:26 -0800 (PST)
+Date:   Sun, 23 Feb 2020 14:30:24 +0300
+From:   Alexey Dobriyan <adobriyan@gmail.com>
+To:     Joe Perches <joe@perches.com>
+Cc:     akpm@linux-foundation.org, linux-kernel@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org
+Subject: Re: [PATCH v3] proc: faster open/read/close with "permanent" files
+Message-ID: <20200223113024.GA4941@avx2>
+References: <20200222201539.GA22576@avx2>
+ <7c30fd26941948fa1aedd1e73bdc2ebb8efec477.camel@perches.com>
 MIME-Version: 1.0
-Content-Type: text/plain; format=flowed; charset="UTF-8"
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <7c30fd26941948fa1aedd1e73bdc2ebb8efec477.camel@perches.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On February 23, 2020 11:55:25 AM Ondřej Jirman <megous@megous.com> wrote:
+On Sat, Feb 22, 2020 at 12:39:39PM -0800, Joe Perches wrote:
+> On Sat, 2020-02-22 at 23:15 +0300, Alexey Dobriyan wrote:
+> > Now that "struct proc_ops" exist we can start putting there stuff which
+> > could not fly with VFS "struct file_operations"...
+> > 
+> > Most of fs/proc/inode.c file is dedicated to make open/read/.../close reliable
+> > in the event of disappearing /proc entries which usually happens if module is
+> > getting removed. Files like /proc/cpuinfo which never disappear simply do not
+> > need such protection.
+> > 
+> > Save 2 atomic ops, 1 allocation, 1 free per open/read/close sequence for such
+> > "permanent" files.
+> > 
+> > Enable "permanent" flag for
+> > 
+> > 	/proc/cpuinfo
+> > 	/proc/kmsg
+> > 	/proc/modules
+> > 	/proc/slabinfo
+> > 	/proc/stat
+> > 	/proc/sysvipc/*
+> > 	/proc/swaps
+> > 
+> > More will come once I figure out foolproof way to prevent out module
+> > authors from marking their stuff "permanent" for performance reasons
+> > when it is not.
+> > 
+> > This should help with scalability: benchmark is "read /proc/cpuinfo R times
+> > by N threads scattered over the system".
+> 
+> Is this an actual expected use-case?
 
-> Hello,
->
-> On Sun, Feb 23, 2020 at 12:03:46PM +0800, Chen-Yu Tsai wrote:
->> On Sun, Feb 23, 2020 at 11:26 AM Chen-Yu Tsai <wens@csie.org> wrote:
->>>
->>> Hi,
->>>
->>>
->>> On Sun, Feb 23, 2020 at 6:32 AM Ondrej Jirman <megous@megous.com> wrote:
->>>>
->>>> It just causes a constant rate of 5000 interrupts per second for both
->>>> GPIO and MMC, even if nothing is happening. Rely on in-band interrupts
->>>> instead.
->>>>
->>>> Fixes: 0e23372080def7bb ("arm: dts: sun8i: Add the TBS A711 tablet devicetree")
->>>> Signed-off-by: Ondrej Jirman <megous@megous.com>
->>>
->>> What WiFi chip/module does this use? It might be worth asking Broadcom
->>> people to help with this and fix the driver.
->>
->> Based on the comments in the device tree file, it uses an AP6210, which
->> is a BCM43362 inside for SDIO-based WiFi. There is a recent fix in 5.6-rc1
->> for this,
->>
->> 8c8e60fb86a9 brcmfmac: sdio: Fix OOB interrupt initialization on brcm43362
->>
->> which seems to fix things for me. Could you try it on your end?
->
-> I can confirm that it works as you say (on linus/master). 5.5 still doesn't 
-> have
-> the patch, so it's broken there, which confused me I guess.
+Yes.
 
-Hi Ondrej,
+> Is there some additional unnecessary memory consumption
+> in the unscaled systems?
 
-I have seen emails from GregKH including this patch in 5.5 stable so it 
-will also land there eventually.
+No, it's the opposite. Less memory usage for everyone and noticeable
+performance improvement for contented case.
 
-Regards,
-Arend
+> >  static ssize_t proc_reg_read(struct file *file, char __user *buf, size_t count, loff_t *ppos)
+> >  {
+> >  	struct proc_dir_entry *pde = PDE(file_inode(file));
+> >  	ssize_t rv = -EIO;
+> > -	if (use_pde(pde)) {
+> > -		typeof_member(struct proc_ops, proc_read) read;
+> >  
+> > -		read = pde->proc_ops->proc_read;
+> > -		if (read)
+> > -			rv = read(file, buf, count, ppos);
+> > +	if (pde_is_permanent(pde)) {
+> > +		return pde_read(pde, file, buf, count, ppos);
+> > +	} else if (use_pde(pde)) {
+> > +		rv = pde_read(pde, file, buf, count, ppos);
+> >  		unuse_pde(pde);
+> 
+> Perhaps all the function call duplication could be minimized
+> by using code without direct returns like:
+> 
+> 	rv = pde_read(pde, file, buf, count, pos);
+> 	if (!pde_is_permanent(pde))
+> 		unuse_pde(pde);
+> 
+> 	return rv;
 
->
-> Please ignore this patch.
->
-> thank you,
-> Ondrej
->
->> ChenYu
->>
->>
->>> ChenYu
->>>
->>>> ---
->>>> arch/arm/boot/dts/sun8i-a83t-tbs-a711.dts | 3 ---
->>>> 1 file changed, 3 deletions(-)
->>>>
->>>> diff --git a/arch/arm/boot/dts/sun8i-a83t-tbs-a711.dts 
->>>> b/arch/arm/boot/dts/sun8i-a83t-tbs-a711.dts
->>>> index 2fd31a0a0b344..ee5ce3556b2ad 100644
->>>> --- a/arch/arm/boot/dts/sun8i-a83t-tbs-a711.dts
->>>> +++ b/arch/arm/boot/dts/sun8i-a83t-tbs-a711.dts
->>>> @@ -214,9 +214,6 @@ &mmc1 {
->>>>    brcmf: wifi@1 {
->>>>            reg = <1>;
->>>>            compatible = "brcm,bcm4329-fmac";
->>>> -               interrupt-parent = <&r_pio>;
->>>> -               interrupts = <0 3 IRQ_TYPE_LEVEL_LOW>; /* PL3 WL_WAKE_UP */
->>>> -               interrupt-names = "host-wake";
->>>>    };
->>>> };
->>>>
->>>> --
->>>> 2.25.1
->>>>
->>>> --
->>>> You received this message because you are subscribed to the Google Groups 
->>>> "linux-sunxi" group.
->>>> To unsubscribe from this group and stop receiving emails from it, send an 
->>>> email to linux-sunxi+unsubscribe@googlegroups.com.
->>>> To view this discussion on the web, visit 
->>>> https://groups.google.com/d/msgid/linux-sunxi/20200222223154.221632-2-megous%40megous.com.
+Function call non-duplication is false goal.
+Surprisingly it makes code bigger:
 
+	$ ./scripts/bloat-o-meter ../vmlinux-000 ../obj/vmlinux
+	add/remove: 0/0 grow/shrink: 1/0 up/down: 10/0 (10)
+	Function                                     old     new   delta
+	proc_reg_read                                108     118     +10
 
-
+and worse too: "rv" is carried on stack through "unuse_pde" call.
