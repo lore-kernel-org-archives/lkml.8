@@ -4,51 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5899BC35669
-	for <linux-kernel@archiver.kernel.org>; Sun, 23 Feb 2020 02:25:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 56D09C35671
+	for <linux-kernel@archiver.kernel.org>; Sun, 23 Feb 2020 02:25:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 20B7D20707
-	for <linux-kernel@archiver.kernel.org>; Sun, 23 Feb 2020 02:25:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 20DC220707
+	for <linux-kernel@archiver.kernel.org>; Sun, 23 Feb 2020 02:25:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582424714;
-	bh=bIEcXbkcDGAtFRHevsBRWkFZdGSxx9gvCVYRqCiSmYY=;
+	s=default; t=1582424717;
+	bh=yF4Ztizqe6OAY18YyV2d1eE+3ZkYoQOuvreLCSvwfoU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=sQDnl+AbgV/1VQVYCtf7AWBt5NYqDbncX+6Bb2D6t7H1wdDOI/mny8PVS65C7QVaj
-	 GwgAZ0jmoPb74KRd5/a0pKMQjLd39JLoPtvsdi6K3ewoJ6kdVkHNU6NcEvo1MvL9+i
-	 7Etal2aSWXNQArKRjao62WNTJc2vNb/h+hhqKFIU=
+	b=X37f1EpzjDZqkW77y9AtnID/DzYuUEV1sqtLHJZpVtyHhibs4wwYiV3j0UItf1rxn
+	 h4TL4lBsyL2/WXf613AAUykJdfr7FFIM93xzFfMO4pw1dvIR9ZE1MHU8qWTcA/Qei4
+	 b9t7cz698sALOyAx6fL0bPtthd/YVudpDmoYa2KI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728025AbgBWCZM (ORCPT
+        id S1728722AbgBWCZP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 22 Feb 2020 21:25:12 -0500
-Received: from mail.kernel.org ([198.145.29.99]:55642 "EHLO mail.kernel.org"
+        Sat, 22 Feb 2020 21:25:15 -0500
+Received: from mail.kernel.org ([198.145.29.99]:55754 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729598AbgBWCZF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 22 Feb 2020 21:25:05 -0500
+        id S1729620AbgBWCZI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 22 Feb 2020 21:25:08 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D7D1424673;
-        Sun, 23 Feb 2020 02:25:03 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 583CC22464;
+        Sun, 23 Feb 2020 02:25:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1582424704;
-        bh=bIEcXbkcDGAtFRHevsBRWkFZdGSxx9gvCVYRqCiSmYY=;
+        s=default; t=1582424708;
+        bh=yF4Ztizqe6OAY18YyV2d1eE+3ZkYoQOuvreLCSvwfoU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=1ILzwIyOARDqD91F6UtY4/4doKG2qpVWAi2V+w+WqpyrqAO2QRm5wQddJOgPnP7s3
-         napZ5KoyJvHi+uswYg5h9m2mgMw7Fg1iJgNyt3FpdEl1/7iGeXcjE58g1a6IFESi/r
-         iYayQMi2QGZahVLU2dTlAqwwVNWPYpFB7ZAcmLUw=
+        b=WnX/3a90w157XP8Grr7YMXky/0GoERTYcys5nJtQEs4XgcZSiYEHgIcPkqhlXgt+S
+         3Q5GBrynCg7fjW7XfJXVIJFErnKDHhCpXCIRj8qM31u83URH3Ggtn3CgmxJJQCWLDx
+         D8Y1dPgAG4LKCDImc/+XZgene/zMABwLBgK/j1sQ=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Peter Zijlstra <peterz@infradead.org>,
-        Dmitry Osipenko <digetx@gmail.com>,
-        Ingo Molnar <mingo@kernel.org>,
+Cc:     Sergey Matyukevich <sergey.matyukevich.os@quantenna.com>,
+        Johannes Berg <johannes.berg@intel.com>,
         Sasha Levin <sashal@kernel.org>,
-        linux-arm-kernel@lists.infradead.org
-Subject: [PATCH AUTOSEL 4.4 4/7] arm/ftrace: Fix BE text poking
-Date:   Sat, 22 Feb 2020 21:24:56 -0500
-Message-Id: <20200223022459.2594-4-sashal@kernel.org>
+        linux-wireless@vger.kernel.org, netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.4 7/7] cfg80211: add missing policy for NL80211_ATTR_STATUS_CODE
+Date:   Sat, 22 Feb 2020 21:24:59 -0500
+Message-Id: <20200223022459.2594-7-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200223022459.2594-1-sashal@kernel.org>
 References: <20200223022459.2594-1-sashal@kernel.org>
@@ -61,44 +60,34 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Peter Zijlstra <peterz@infradead.org>
+From: Sergey Matyukevich <sergey.matyukevich.os@quantenna.com>
 
-[ Upstream commit be993e44badc448add6a18d6f12b20615692c4c3 ]
+[ Upstream commit ea75080110a4c1fa011b0a73cb8f42227143ee3e ]
 
-The __patch_text() function already applies __opcode_to_mem_*(), so
-when __opcode_to_mem_*() is not the identity (BE*), it is applied
-twice, wrecking the instruction.
+The nl80211_policy is missing for NL80211_ATTR_STATUS_CODE attribute.
+As a result, for strictly validated commands, it's assumed to not be
+supported.
 
-Fixes: 42e51f187f86 ("arm/ftrace: Use __patch_text()")
-Reported-by: Dmitry Osipenko <digetx@gmail.com>
-Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-Signed-off-by: Ingo Molnar <mingo@kernel.org>
-Tested-by: Dmitry Osipenko <digetx@gmail.com>
+Signed-off-by: Sergey Matyukevich <sergey.matyukevich.os@quantenna.com>
+Link: https://lore.kernel.org/r/20200213131608.10541-2-sergey.matyukevich.os@quantenna.com
+Signed-off-by: Johannes Berg <johannes.berg@intel.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm/kernel/ftrace.c | 7 ++-----
- 1 file changed, 2 insertions(+), 5 deletions(-)
+ net/wireless/nl80211.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/arch/arm/kernel/ftrace.c b/arch/arm/kernel/ftrace.c
-index faa9a905826ee..7982409e5c27f 100644
---- a/arch/arm/kernel/ftrace.c
-+++ b/arch/arm/kernel/ftrace.c
-@@ -105,13 +105,10 @@ static int ftrace_modify_code(unsigned long pc, unsigned long old,
- {
- 	unsigned long replaced;
- 
--	if (IS_ENABLED(CONFIG_THUMB2_KERNEL)) {
-+	if (IS_ENABLED(CONFIG_THUMB2_KERNEL))
- 		old = __opcode_to_mem_thumb32(old);
--		new = __opcode_to_mem_thumb32(new);
--	} else {
-+	else
- 		old = __opcode_to_mem_arm(old);
--		new = __opcode_to_mem_arm(new);
--	}
- 
- 	if (validate) {
- 		if (probe_kernel_read(&replaced, (void *)pc, MCOUNT_INSN_SIZE))
+diff --git a/net/wireless/nl80211.c b/net/wireless/nl80211.c
+index fd0bf278067ef..4b30e91106d07 100644
+--- a/net/wireless/nl80211.c
++++ b/net/wireless/nl80211.c
+@@ -330,6 +330,7 @@ static const struct nla_policy nl80211_policy[NUM_NL80211_ATTR] = {
+ 	[NL80211_ATTR_CONTROL_PORT_ETHERTYPE] = { .type = NLA_U16 },
+ 	[NL80211_ATTR_CONTROL_PORT_NO_ENCRYPT] = { .type = NLA_FLAG },
+ 	[NL80211_ATTR_PRIVACY] = { .type = NLA_FLAG },
++	[NL80211_ATTR_STATUS_CODE] = { .type = NLA_U16 },
+ 	[NL80211_ATTR_CIPHER_SUITE_GROUP] = { .type = NLA_U32 },
+ 	[NL80211_ATTR_WPA_VERSIONS] = { .type = NLA_U32 },
+ 	[NL80211_ATTR_PID] = { .type = NLA_U32 },
 -- 
 2.20.1
 
