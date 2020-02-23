@@ -2,52 +2,51 @@ Return-Path: <SRS0=SnAt=4L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,URIBL_RHS_DOB,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BF1BFC35669
-	for <linux-kernel@archiver.kernel.org>; Sun, 23 Feb 2020 02:22:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A73C1C35669
+	for <linux-kernel@archiver.kernel.org>; Sun, 23 Feb 2020 02:22:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8D05E21D56
-	for <linux-kernel@archiver.kernel.org>; Sun, 23 Feb 2020 02:22:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7F74A21D56
+	for <linux-kernel@archiver.kernel.org>; Sun, 23 Feb 2020 02:22:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582424558;
-	bh=YX1TBuFdUVCTm0Ixl1Y81X3tEt1dG0LsEV4R/yy7HiI=;
+	s=default; t=1582424563;
+	bh=lxmqWaZgEEovvSNa32y3/wF6kvfIdlSz5WWFXV6+F1E=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=sF633gPd6mF6UNyR6+5irk3SIavujz0wbB3WyyAZDIB3mZg83WwVihpX62ZdBekqD
-	 zHPPDkZVO2rYD4uDAcatmS108V3D+/ONEYNEzv1HyAHtN4sMV0FJ6LL4GwcLfEokuH
-	 9xEM3x6aJy7kfYW6vUREwLOZPJnzqU6IdXikElc8=
+	b=Tqlr1wSEAOb08+Op8xNQvBTgTRs1TZeGnT+aB6U6JghSBX0Q7hdLDbID1GLuy78Fb
+	 k02PJeqBxvPMmaLNrfrM3XDtxmBApJ11vOljWyliOuLS+7+gmShaaexd95jt/VJKCV
+	 HE7xIxnxEtx0vPBNb70KJtsDwJwpnYyaUg75Tnj4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728221AbgBWCWh (ORCPT
+        id S1728266AbgBWCWm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 22 Feb 2020 21:22:37 -0500
-Received: from mail.kernel.org ([198.145.29.99]:51482 "EHLO mail.kernel.org"
+        Sat, 22 Feb 2020 21:22:42 -0500
+Received: from mail.kernel.org ([198.145.29.99]:51544 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728183AbgBWCW2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 22 Feb 2020 21:22:28 -0500
+        id S1728097AbgBWCWb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 22 Feb 2020 21:22:31 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C7B9220707;
-        Sun, 23 Feb 2020 02:22:26 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id AB13724656;
+        Sun, 23 Feb 2020 02:22:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1582424547;
-        bh=YX1TBuFdUVCTm0Ixl1Y81X3tEt1dG0LsEV4R/yy7HiI=;
+        s=default; t=1582424550;
+        bh=lxmqWaZgEEovvSNa32y3/wF6kvfIdlSz5WWFXV6+F1E=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=yDWgXKuG44ZiBMUCGNlnGYxDoF2Y+aM9KMVNK/gfUIUsHxPniKCkaQI9kC3YdSIDu
-         7HN1pIEh1cJKEOTcR8NhzMALVRTuBn315ShABVCsrGaACBKk4kUFUp0zeVdesyQm9H
-         XZuWrBboFwrdq/e+pNRVhKqjeJ/dd52Hp036DqA8=
+        b=dbVqZsvHZBuNRWwdS6d1YLwVpAJkS2WLZJbbfPPysqkqekUIjJismkdtpD3N+uI3Q
+         0zmEuoLTUwL+YUNsicrE/pYzmQOF7lpQeDPhXCV42rFosn6NJmNTF2QBIWJTDCjYYK
+         SrDqNfJG8RggQDnz+L9DH8hMy/iSEjQU2eFVL9AU=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Anton Eidelman <anton@lightbitslabs.com>,
-        Sagi Grimberg <sagi@grimberg.me>,
-        Keith Busch <kbusch@kernel.org>, Jens Axboe <axboe@kernel.dk>,
+Cc:     Keith Busch <kbusch@kernel.org>, Sagi Grimberg <sagi@grimberg.me>,
+        Christoph Hellwig <hch@lst.de>, Jens Axboe <axboe@kernel.dk>,
         Sasha Levin <sashal@kernel.org>, linux-nvme@lists.infradead.org
-Subject: [PATCH AUTOSEL 5.5 56/58] nvme/tcp: fix bug on double requeue when send fails
-Date:   Sat, 22 Feb 2020 21:21:17 -0500
-Message-Id: <20200223022119.707-56-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 5.5 58/58] nvme/pci: move cqe check after device shutdown
+Date:   Sat, 22 Feb 2020 21:21:19 -0500
+Message-Id: <20200223022119.707-58-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200223022119.707-1-sashal@kernel.org>
 References: <20200223022119.707-1-sashal@kernel.org>
@@ -60,52 +59,77 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Anton Eidelman <anton@lightbitslabs.com>
+From: Keith Busch <kbusch@kernel.org>
 
-[ Upstream commit 2d570a7c0251c594489a2c16b82b14ae30345c03 ]
+[ Upstream commit fa46c6fb5d61b1f17b06d7c6ef75478b576304c7 ]
 
-When nvme_tcp_io_work() fails to send to socket due to
-connection close/reset, error_recovery work is triggered
-from nvme_tcp_state_change() socket callback.
-This cancels all the active requests in the tagset,
-which requeues them.
+Many users have reported nvme triggered irq_startup() warnings during
+shutdown. The driver uses the nvme queue's irq to synchronize scanning
+for completions, and enabling an interrupt affined to only offline CPUs
+triggers the alarming warning.
 
-The failed request, however, was ended and thus requeued
-individually as well unless send returned -EPIPE.
-Another return code to be treated the same way is -ECONNRESET.
+Move the final CQE check to after disabling the device and all
+registered interrupts have been torn down so that we do not have any
+IRQ to synchronize.
 
-Double requeue caused BUG_ON(blk_queued_rq(rq))
-in blk_mq_requeue_request() from either the individual requeue
-of the failed request or the bulk requeue from
-blk_mq_tagset_busy_iter(, nvme_cancel_request, );
-
-Signed-off-by: Anton Eidelman <anton@lightbitslabs.com>
+Link: https://bugzilla.kernel.org/show_bug.cgi?id=206509
 Reviewed-by: Sagi Grimberg <sagi@grimberg.me>
+Reviewed-by: Christoph Hellwig <hch@lst.de>
 Signed-off-by: Keith Busch <kbusch@kernel.org>
 Signed-off-by: Jens Axboe <axboe@kernel.dk>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/nvme/host/tcp.c | 7 ++++++-
- 1 file changed, 6 insertions(+), 1 deletion(-)
+ drivers/nvme/host/pci.c | 23 ++++++++++++++++++-----
+ 1 file changed, 18 insertions(+), 5 deletions(-)
 
-diff --git a/drivers/nvme/host/tcp.c b/drivers/nvme/host/tcp.c
-index 6d43b23a0fc8b..f8fa5c5b79f17 100644
---- a/drivers/nvme/host/tcp.c
-+++ b/drivers/nvme/host/tcp.c
-@@ -1054,7 +1054,12 @@ static void nvme_tcp_io_work(struct work_struct *w)
- 		} else if (unlikely(result < 0)) {
- 			dev_err(queue->ctrl->ctrl.device,
- 				"failed to send request %d\n", result);
--			if (result != -EPIPE)
+diff --git a/drivers/nvme/host/pci.c b/drivers/nvme/host/pci.c
+index 365a2ddbeaa76..094c5924a6835 100644
+--- a/drivers/nvme/host/pci.c
++++ b/drivers/nvme/host/pci.c
+@@ -1407,6 +1407,23 @@ static void nvme_disable_admin_queue(struct nvme_dev *dev, bool shutdown)
+ 	nvme_poll_irqdisable(nvmeq, -1);
+ }
+ 
++/*
++ * Called only on a device that has been disabled and after all other threads
++ * that can check this device's completion queues have synced. This is the
++ * last chance for the driver to see a natural completion before
++ * nvme_cancel_request() terminates all incomplete requests.
++ */
++static void nvme_reap_pending_cqes(struct nvme_dev *dev)
++{
++	u16 start, end;
++	int i;
 +
-+			/*
-+			 * Fail the request unless peer closed the connection,
-+			 * in which case error recovery flow will complete all.
-+			 */
-+			if ((result != -EPIPE) && (result != -ECONNRESET))
- 				nvme_tcp_fail_request(queue->request);
- 			nvme_tcp_done_send_req(queue);
- 			return;
++	for (i = dev->ctrl.queue_count - 1; i > 0; i--) {
++		nvme_process_cq(&dev->queues[i], &start, &end, -1);
++		nvme_complete_cqes(&dev->queues[i], start, end);
++	}
++}
++
+ static int nvme_cmb_qdepth(struct nvme_dev *dev, int nr_io_queues,
+ 				int entry_size)
+ {
+@@ -2242,11 +2259,6 @@ static bool __nvme_disable_io_queues(struct nvme_dev *dev, u8 opcode)
+ 		if (timeout == 0)
+ 			return false;
+ 
+-		/* handle any remaining CQEs */
+-		if (opcode == nvme_admin_delete_cq &&
+-		    !test_bit(NVMEQ_DELETE_ERROR, &nvmeq->flags))
+-			nvme_poll_irqdisable(nvmeq, -1);
+-
+ 		sent--;
+ 		if (nr_queues)
+ 			goto retry;
+@@ -2435,6 +2447,7 @@ static void nvme_dev_disable(struct nvme_dev *dev, bool shutdown)
+ 	nvme_suspend_io_queues(dev);
+ 	nvme_suspend_queue(&dev->queues[0]);
+ 	nvme_pci_disable(dev);
++	nvme_reap_pending_cqes(dev);
+ 
+ 	blk_mq_tagset_busy_iter(&dev->tagset, nvme_cancel_request, &dev->ctrl);
+ 	blk_mq_tagset_busy_iter(&dev->admin_tagset, nvme_cancel_request, &dev->ctrl);
 -- 
 2.20.1
 
