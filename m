@@ -8,67 +8,67 @@ X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 31A72C35673
-	for <linux-kernel@archiver.kernel.org>; Sun, 23 Feb 2020 23:18:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ECC88C35673
+	for <linux-kernel@archiver.kernel.org>; Sun, 23 Feb 2020 23:18:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 09DD6208C3
-	for <linux-kernel@archiver.kernel.org>; Sun, 23 Feb 2020 23:18:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C169D20880
+	for <linux-kernel@archiver.kernel.org>; Sun, 23 Feb 2020 23:18:37 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="GCLwLyyF"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="LC+JynOM"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727830AbgBWXSc (ORCPT
+        id S1727851AbgBWXSg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 23 Feb 2020 18:18:32 -0500
-Received: from mail-wm1-f66.google.com ([209.85.128.66]:55566 "EHLO
-        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727151AbgBWXS0 (ORCPT
+        Sun, 23 Feb 2020 18:18:36 -0500
+Received: from mail-wr1-f68.google.com ([209.85.221.68]:44121 "EHLO
+        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727823AbgBWXSe (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 23 Feb 2020 18:18:26 -0500
-Received: by mail-wm1-f66.google.com with SMTP id q9so7177675wmj.5;
-        Sun, 23 Feb 2020 15:18:25 -0800 (PST)
+        Sun, 23 Feb 2020 18:18:34 -0500
+Received: by mail-wr1-f68.google.com with SMTP id m16so8206862wrx.11
+        for <linux-kernel@vger.kernel.org>; Sun, 23 Feb 2020 15:18:32 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=D226Q712hm4RRuLjuRLwvzFIxXTYHeeP4FIQmGcb/n4=;
-        b=GCLwLyyF5ZoS6d1OmnyDt1cTIkPYcFUnQewizYiPNQ5Ombi1m0z17U0Krh/rOyOkn4
-         n/Lc0hrlyUSfl3Fwv+bRNjPqgyHv8WnWsf2K36q9iXs4xQBQFhovuQH4CyTn8DWIp6WY
-         AVdnQxUK2GhvjAlHrepv5euNhFIhhlxmSN4b3/7PIHcAFnT5wmB41qb2SDo45QOfBVWi
-         RfO+9IF/OYARyUrm1WbG9pkWGpdEEz6OH0f2w8i1kM0zZAkFN5LmzTa9Y7iuxa/nDnAS
-         ZhA3AFm6+1JRxWw0c+3J6/saRBfwGeI+cLXUGPf5tOtREVUIAD8EGjMKzp0KAED2OP4o
-         ViUA==
+        bh=2tqXBx3pW2XeZXOKkdshIeGK59QQ2bzYKaVDgcPRkVc=;
+        b=LC+JynOMXP7MA84ZsHt9UdiFMqJsmNa3E/CM7pzdEnxQOO7BSJr9Y66WxMn4kVenGm
+         wKrzp8mp1TZuE0nU4xai5gJ372ngfriF+gj/tRLcUROfsBGRvHck23lLsasm8Ug7ENh5
+         W4JHollJ9JBHcES90yD8D106jxccdjjnRrAWzrF4z75Y6Nb8WMed+jKYlaYWCvihvuAV
+         zmL68iiOji3Cczzb74zjWOEYbdtu4hTuAAw3RcdSjVfy4z7KCSshP5yUwaiUMuQRh6FX
+         XE2rsMlvncajs3CjxHeVf38/yIOizsa7RlahyEzBO+17rV+P+BWL9MHdm9gDlZOH7+I6
+         9WVg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=D226Q712hm4RRuLjuRLwvzFIxXTYHeeP4FIQmGcb/n4=;
-        b=VgY4x1uKfMT9EpSgGUPN6h2TMgyMWcoDK86GZBRPRfqXTgGG0jplICfPxBukOdcLeZ
-         ZZpHLp6pEbO2KiqeCvBOFx6RI4/+pZLhu6CVcfHPJQkjukeEEbhQl/LWGiDrDG+ti+8O
-         8uel0U2tJN9Uu0erWa4ZE2ZK546rGGZ/I9PzxnZzUnJFy3neMjn/u7CydVOEjmSz8X+T
-         RZHv+X8A5/RwWe6sJylXMwKeWiWhnE3Musa8SCjcfQ4VSeKTFBo5Ww6tYs1ugohVilk8
-         +cvH8FDbb08QHUET21Ze93rDTN9LX+4WH135Ea++pyaTipUiNRQH8q0XOCt2pnFKFh+W
-         I47Q==
-X-Gm-Message-State: APjAAAUwWJPhq+0/lmjFCSeVKw8q70ui/LMDGjIyKvCVZuxF42T5XprR
-        1vNkn1BWKpxJeawXRFpZhw==
-X-Google-Smtp-Source: APXvYqxbSpeNGF2MlyRcH36FppSj1XVmUcZHhQGSkPs2u0+P5CusVXHN5m8U3eJCh0HQtgoHaUvzpA==
-X-Received: by 2002:a05:600c:414e:: with SMTP id h14mr17871964wmm.179.1582499904465;
-        Sun, 23 Feb 2020 15:18:24 -0800 (PST)
+        bh=2tqXBx3pW2XeZXOKkdshIeGK59QQ2bzYKaVDgcPRkVc=;
+        b=hexRP0GPf7RSoI84W0B72foLoWg+LzVbs1Lbq3XMwU0EdTLltef2EBSkyKgTs6qeLW
+         /oPQ0M/lZ3ywX05Ys1NqSGZFKM/aAYg7r6UjyRwYRtZzeUkGGQOrl7pHsT1MNV7pHPRK
+         o/tRH+BbBix1eMxx4MCA7nqiwrsZkhA0qJgd0mEAXywRHmDIX7Mw3LrSB0Lq4YqjcG3X
+         Y8Bi/4lgH1MB1GdWV4Wpt+xVG1wqz4vhv5gcDkrt90inU+Ph6kvhQof9Lpq+T40gbw4F
+         9uWc0n30F7YWlQ0gbSEJt5TARaFanmIZlPUeTZm0LtUA3of4SBSzjxzfHiFiTSYwv58d
+         b3nA==
+X-Gm-Message-State: APjAAAWuupv4cfSny13I8K4sYdHEc46LIJSEs2IVvVlG2yh5m4wvlvGz
+        KdXYVpn6qj3tPduaoJGkzIs+2lkj+Fbr
+X-Google-Smtp-Source: APXvYqz31sShpqsrfPCI5VrtqTypECSad9WivGnN/fCnolmHrDRh2aznSy0cdRBk0LGOojG44TYXjA==
+X-Received: by 2002:a5d:638f:: with SMTP id p15mr61892440wru.402.1582499911744;
+        Sun, 23 Feb 2020 15:18:31 -0800 (PST)
 Received: from ninjahost.lan (host-2-102-13-223.as13285.net. [2.102.13.223])
-        by smtp.googlemail.com with ESMTPSA id q6sm8968203wrf.67.2020.02.23.15.18.23
+        by smtp.googlemail.com with ESMTPSA id q6sm8968203wrf.67.2020.02.23.15.18.30
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 23 Feb 2020 15:18:24 -0800 (PST)
+        Sun, 23 Feb 2020 15:18:31 -0800 (PST)
 From:   Jules Irenge <jbi.octave@gmail.com>
 To:     boqun.feng@gmail.com
 Cc:     jbi.octave@gmail.com, linux-kernel@vger.kernel.org,
-        Sudeep Dutt <sudeep.dutt@intel.com>,
-        Ashutosh Dixit <ashutosh.dixit@intel.com>,
-        Vinod Koul <vkoul@kernel.org>,
-        Dan Williams <dan.j.williams@intel.com>,
-        dmaengine@vger.kernel.org (open list:DMA GENERIC OFFLOAD ENGINE
-        SUBSYSTEM)
-Subject: [PATCH 24/30] dmaengine: mic_x100_dma: Add missing annotation for mic_dma_tx_submit_unlock()
-Date:   Sun, 23 Feb 2020 23:17:05 +0000
-Message-Id: <20200223231711.157699-25-jbi.octave@gmail.com>
+        Oded Gabbay <oded.gabbay@gmail.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Tomer Tayar <ttayar@habana.ai>,
+        Omer Shpigelman <oshpigelman@habana.ai>,
+        Dalit Ben Zoor <dbenzoor@habana.ai>
+Subject: [PATCH 27/30] habanalabs: Add missing annotation for goya_hw_queues_lock()
+Date:   Sun, 23 Feb 2020 23:17:08 +0000
+Message-Id: <20200223231711.157699-28-jbi.octave@gmail.com>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20200223231711.157699-1-jbi.octave@gmail.com>
 References: <0/30>
@@ -80,31 +80,28 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Sparse reports a warning dma_cookie_t mic_dma_tx_submit_unlock()
-
-warning: context imbalance in  mic_dma_tx_submit_unlock()
-	- unexpected unlock
-
-The root cause is the missing annotation at  mic_dma_tx_submit_unlock()
-Add the missing annotation __releases(&mic_ch->prep_lock)
+Sparse reports a warning at goya_hw_queues_lock()
+warning: context imbalance in goya_hw_queues_lock() - wrong count at exit
+The root cause is a missing annotation at goya_hw_queues_lock()
+Add the missing __acquires(&goya->hw_queues_lock) annotation
 
 Signed-off-by: Jules Irenge <jbi.octave@gmail.com>
 ---
- drivers/dma/mic_x100_dma.c | 1 +
+ drivers/misc/habanalabs/goya/goya.c | 1 +
  1 file changed, 1 insertion(+)
 
-diff --git a/drivers/dma/mic_x100_dma.c b/drivers/dma/mic_x100_dma.c
-index fea8608a7810..d15c41151d09 100644
---- a/drivers/dma/mic_x100_dma.c
-+++ b/drivers/dma/mic_x100_dma.c
-@@ -236,6 +236,7 @@ static inline void mic_dma_update_pending(struct mic_dma_chan *ch)
+diff --git a/drivers/misc/habanalabs/goya/goya.c b/drivers/misc/habanalabs/goya/goya.c
+index 7344e8a222ae..8ca7ee57cbc1 100644
+--- a/drivers/misc/habanalabs/goya/goya.c
++++ b/drivers/misc/habanalabs/goya/goya.c
+@@ -5073,6 +5073,7 @@ static bool goya_is_device_idle(struct hl_device *hdev, u32 *mask,
  }
  
- static dma_cookie_t mic_dma_tx_submit_unlock(struct dma_async_tx_descriptor *tx)
-+	__releases(&mic_ch->prep_lock)
+ static void goya_hw_queues_lock(struct hl_device *hdev)
++	__acquires(&goya->hw_queues_lock)
  {
- 	struct mic_dma_chan *mic_ch = to_mic_dma_chan(tx->chan);
- 	dma_cookie_t cookie;
+ 	struct goya_device *goya = hdev->asic_specific;
+ 
 -- 
 2.24.1
 
