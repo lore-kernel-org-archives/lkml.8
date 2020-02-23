@@ -4,49 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 36FC2C35669
-	for <linux-kernel@archiver.kernel.org>; Sun, 23 Feb 2020 02:31:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0D850C35669
+	for <linux-kernel@archiver.kernel.org>; Sun, 23 Feb 2020 02:31:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0E30320659
-	for <linux-kernel@archiver.kernel.org>; Sun, 23 Feb 2020 02:31:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D5BF920659
+	for <linux-kernel@archiver.kernel.org>; Sun, 23 Feb 2020 02:31:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582425100;
-	bh=DrogBba9msTbngHtLmWtxQahOenWiF9iZhri+C8iWa0=;
+	s=default; t=1582425103;
+	bh=rZgYp4t3YarOTqEyv1BmTShhj8LChio37MMcCWbSDBk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=2EvDY2Fp4a9KzC8RE806240wGH2ff4Z2tErcpsrw0fQ4Wa9vRrljEV4VQarS3aKAY
-	 Ls0FEzpfvJ+vdGcYaI6UF0UPu9H276kJu5Ui4yZbgL55zbpSaSZFx8Xh3+cWadrOwB
-	 aKhrN9K3T5ZEwdpqSQUCRl51OCbrBQUQZRllYxLs=
+	b=D3qr+jBuFogyDvXYNjnkUKXtK0AfzGZFlH7Vbpm0h/i19v8Jh5whjeLkWuzUaa1YP
+	 zJQ8i8HNebM+pMhQ2l7FjTaCw8xrUlCopjRdA4fRRu7gkvckDpF5t7STo4gwB1bV0V
+	 3ZkWzgWVcScOBxCg7hieyHpGDnTp09sdfWwnbBjk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728621AbgBWCXW (ORCPT
+        id S1728216AbgBWCbm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 22 Feb 2020 21:23:22 -0500
-Received: from mail.kernel.org ([198.145.29.99]:52736 "EHLO mail.kernel.org"
+        Sat, 22 Feb 2020 21:31:42 -0500
+Received: from mail.kernel.org ([198.145.29.99]:52826 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728569AbgBWCXR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 22 Feb 2020 21:23:17 -0500
+        id S1728613AbgBWCXU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 22 Feb 2020 21:23:20 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9171021741;
-        Sun, 23 Feb 2020 02:23:15 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E5DC2208C3;
+        Sun, 23 Feb 2020 02:23:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1582424596;
-        bh=DrogBba9msTbngHtLmWtxQahOenWiF9iZhri+C8iWa0=;
+        s=default; t=1582424599;
+        bh=rZgYp4t3YarOTqEyv1BmTShhj8LChio37MMcCWbSDBk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=X1U2V2Ug41OgXJJNWMasUgT+ou8o3aPfqslN/H1xf0n3dzxIo2bG8Ur1DfsBHY9+0
-         4ZGZ/TEuDx6tZfNR3V0c7HzTas8hZCWqyt/8IUCc8myuxWljqAi7ZTX81WXfrRWIEH
-         /v3ly0NhPGRm0RMUhCm2YJ2tk6nJ6jGaGORW+HoQ=
+        b=enGLpPLLi4u395t9PbpjTIA6uPmwXQ1vbY2M7t4hyBqIYO3icEspCJo1yHcayov6+
+         Q5Bekj5PEDn+9LQsxa0L/0kLvhKuhG8ozg7QovbbEVfkRy19PAX7hId1aDB++tayj8
+         pp9vpTSkCwdulk245xmF3R03/nzv6EHitHkNpJLM=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Sameeh Jubran <sameehj@amazon.com>,
+Cc:     Arthur Kiyanovski <akiyano@amazon.com>,
+        Sameeh Jubran <sameehj@amazon.com>,
         "David S . Miller" <davem@davemloft.net>,
         Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.4 33/50] net: ena: rss: do not allocate key when not supported
-Date:   Sat, 22 Feb 2020 21:22:18 -0500
-Message-Id: <20200223022235.1404-33-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 5.4 36/50] net: ena: fix incorrectly saving queue numbers when setting RSS indirection table
+Date:   Sat, 22 Feb 2020 21:22:21 -0500
+Message-Id: <20200223022235.1404-36-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200223022235.1404-1-sashal@kernel.org>
 References: <20200223022235.1404-1-sashal@kernel.org>
@@ -59,66 +60,94 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Sameeh Jubran <sameehj@amazon.com>
+From: Arthur Kiyanovski <akiyano@amazon.com>
 
-[ Upstream commit 6a4f7dc82d1e3abd3feb0c60b5041056fcd9880c ]
+[ Upstream commit 92569fd27f5cb0ccbdf7c7d70044b690e89a0277 ]
 
-Currently we allocate the key whether the device supports setting the
-key or not. This commit adds a check to the allocation function and
-handles the error accordingly.
+The indirection table has the indices of the Rx queues. When we store it
+during set indirection operation, we convert the indices to our internal
+representation of the indices.
+
+Our internal representation of the indices is: even indices for Tx and
+uneven indices for Rx, where every Tx/Rx pair are in a consecutive order
+starting from 0. For example if the driver has 3 queues (3 for Tx and 3
+for Rx) then the indices are as follows:
+0  1  2  3  4  5
+Tx Rx Tx Rx Tx Rx
+
+The BUG:
+The issue is that when we satisfy a get request for the indirection
+table, we don't convert the indices back to the original representation.
+
+The FIX:
+Simply apply the inverse function for the indices of the indirection
+table after we set it.
 
 Fixes: 1738cd3ed342 ("net: ena: Add a driver for Amazon Elastic Network Adapters (ENA)")
 Signed-off-by: Sameeh Jubran <sameehj@amazon.com>
+Signed-off-by: Arthur Kiyanovski <akiyano@amazon.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/ethernet/amazon/ena/ena_com.c | 24 ++++++++++++++++++++---
- 1 file changed, 21 insertions(+), 3 deletions(-)
+ drivers/net/ethernet/amazon/ena/ena_ethtool.c | 24 ++++++++++++++++++-
+ drivers/net/ethernet/amazon/ena/ena_netdev.h  |  2 ++
+ 2 files changed, 25 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/net/ethernet/amazon/ena/ena_com.c b/drivers/net/ethernet/amazon/ena/ena_com.c
-index d6b894b06fa30..6f758ece86f60 100644
---- a/drivers/net/ethernet/amazon/ena/ena_com.c
-+++ b/drivers/net/ethernet/amazon/ena/ena_com.c
-@@ -1057,6 +1057,20 @@ static void ena_com_hash_key_fill_default_key(struct ena_com_dev *ena_dev)
- static int ena_com_hash_key_allocate(struct ena_com_dev *ena_dev)
- {
- 	struct ena_rss *rss = &ena_dev->rss;
-+	struct ena_admin_feature_rss_flow_hash_control *hash_key;
-+	struct ena_admin_get_feat_resp get_resp;
-+	int rc;
-+
-+	hash_key = (ena_dev->rss).hash_key;
-+
-+	rc = ena_com_get_feature_ex(ena_dev, &get_resp,
-+				    ENA_ADMIN_RSS_HASH_FUNCTION,
-+				    ena_dev->rss.hash_key_dma_addr,
-+				    sizeof(ena_dev->rss.hash_key), 0);
-+	if (unlikely(rc)) {
-+		hash_key = NULL;
-+		return -EOPNOTSUPP;
-+	}
+diff --git a/drivers/net/ethernet/amazon/ena/ena_ethtool.c b/drivers/net/ethernet/amazon/ena/ena_ethtool.c
+index 52a3decff34a4..446873bed382b 100644
+--- a/drivers/net/ethernet/amazon/ena/ena_ethtool.c
++++ b/drivers/net/ethernet/amazon/ena/ena_ethtool.c
+@@ -636,6 +636,28 @@ static u32 ena_get_rxfh_key_size(struct net_device *netdev)
+ 	return ENA_HASH_KEY_SIZE;
+ }
  
- 	rss->hash_key =
- 		dma_alloc_coherent(ena_dev->dmadev, sizeof(*rss->hash_key),
-@@ -2640,11 +2654,15 @@ int ena_com_rss_init(struct ena_com_dev *ena_dev, u16 indr_tbl_log_size)
- 	if (unlikely(rc))
- 		goto err_indr_tbl;
- 
-+	/* The following function might return unsupported in case the
-+	 * device doesn't support setting the key / hash function. We can safely
-+	 * ignore this error and have indirection table support only.
++static int ena_indirection_table_get(struct ena_adapter *adapter, u32 *indir)
++{
++	struct ena_com_dev *ena_dev = adapter->ena_dev;
++	int i, rc;
++
++	if (!indir)
++		return 0;
++
++	rc = ena_com_indirect_table_get(ena_dev, indir);
++	if (rc)
++		return rc;
++
++	/* Our internal representation of the indices is: even indices
++	 * for Tx and uneven indices for Rx. We need to convert the Rx
++	 * indices to be consecutive
 +	 */
- 	rc = ena_com_hash_key_allocate(ena_dev);
--	if (unlikely(rc))
-+	if (unlikely(rc) && rc != -EOPNOTSUPP)
- 		goto err_hash_key;
--
--	ena_com_hash_key_fill_default_key(ena_dev);
-+	else if (rc != -EOPNOTSUPP)
-+		ena_com_hash_key_fill_default_key(ena_dev);
++	for (i = 0; i < ENA_RX_RSS_TABLE_SIZE; i++)
++		indir[i] = ENA_IO_RXQ_IDX_TO_COMBINED_IDX(indir[i]);
++
++	return rc;
++}
++
+ static int ena_get_rxfh(struct net_device *netdev, u32 *indir, u8 *key,
+ 			u8 *hfunc)
+ {
+@@ -644,7 +666,7 @@ static int ena_get_rxfh(struct net_device *netdev, u32 *indir, u8 *key,
+ 	u8 func;
+ 	int rc;
  
- 	rc = ena_com_hash_ctrl_init(ena_dev);
- 	if (unlikely(rc))
+-	rc = ena_com_indirect_table_get(adapter->ena_dev, indir);
++	rc = ena_indirection_table_get(adapter, indir);
+ 	if (rc)
+ 		return rc;
+ 
+diff --git a/drivers/net/ethernet/amazon/ena/ena_netdev.h b/drivers/net/ethernet/amazon/ena/ena_netdev.h
+index 72ee51a82ec71..dc02950a96b8d 100644
+--- a/drivers/net/ethernet/amazon/ena/ena_netdev.h
++++ b/drivers/net/ethernet/amazon/ena/ena_netdev.h
+@@ -127,6 +127,8 @@
+ 
+ #define ENA_IO_TXQ_IDX(q)	(2 * (q))
+ #define ENA_IO_RXQ_IDX(q)	(2 * (q) + 1)
++#define ENA_IO_TXQ_IDX_TO_COMBINED_IDX(q)	((q) / 2)
++#define ENA_IO_RXQ_IDX_TO_COMBINED_IDX(q)	(((q) - 1) / 2)
+ 
+ #define ENA_MGMNT_IRQ_IDX		0
+ #define ENA_IO_IRQ_FIRST_IDX		1
 -- 
 2.20.1
 
