@@ -7,47 +7,48 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3860AC35669
-	for <linux-kernel@archiver.kernel.org>; Sun, 23 Feb 2020 02:37:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E9711C35669
+	for <linux-kernel@archiver.kernel.org>; Sun, 23 Feb 2020 02:37:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1179920659
-	for <linux-kernel@archiver.kernel.org>; Sun, 23 Feb 2020 02:37:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BF90020659
+	for <linux-kernel@archiver.kernel.org>; Sun, 23 Feb 2020 02:37:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582425473;
-	bh=9O5ymUWpNt3jhqdPiucuIYgwSShPohd5ByDTUrD1C6E=;
+	s=default; t=1582425478;
+	bh=RhEb3fGCpnU1XalWkS33xCgou/sYXgk+ouUqA6P+sGE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=V3XrL6r0qIHI9a7a/OHQas8coKvEyghYI3SnWnNA3qZaLVVQvOLMVW82y3OZUoSwZ
-	 85uCh4nU8Lywk4rGGXg/d7dChH+NmrKzfl4y+6iS/Vzm97gX735zqydom8CFAs18DE
-	 MLc5UYIxacUfzmcwf4Vd3OP58Psg18u3N6V4UO7Y=
+	b=Yr6NbnPvamtAqr4lOooMUbFkxcvxB47i0e1KMZgII6DgM16C2z/4ZVAsogd89MXRv
+	 8SqP4P5A0nuvkWVNwzSV85BhroHl9OK0F1ZRpc121KGCcPf4thfXJN+btiyDfV9SaI
+	 U/JIbdoxGZXnSaO6ObsAafJ6FeN52u085w2Biw0A=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728835AbgBWChw (ORCPT
+        id S1727274AbgBWCVa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 22 Feb 2020 21:37:52 -0500
-Received: from mail.kernel.org ([198.145.29.99]:49828 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727074AbgBWCVa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Sat, 22 Feb 2020 21:21:30 -0500
+Received: from mail.kernel.org ([198.145.29.99]:49754 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727223AbgBWCV0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 22 Feb 2020 21:21:26 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2B5C320707;
-        Sun, 23 Feb 2020 02:21:29 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8FDDC227BF;
+        Sun, 23 Feb 2020 02:21:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1582424489;
-        bh=9O5ymUWpNt3jhqdPiucuIYgwSShPohd5ByDTUrD1C6E=;
+        s=default; t=1582424486;
+        bh=RhEb3fGCpnU1XalWkS33xCgou/sYXgk+ouUqA6P+sGE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=AbZH+oRRBpnZCjZ/dQItPjb1Bj4hwBn+Yt03o9aNM60BLyyQeAXqvIpf9gdqjfW6W
-         uLoHxg16mO5QsY7M+EgOEUO47zt8Zhv6rNS7/EoJMQglf3TK3cr8O46zRnhyNCajEW
-         XI7nhWeXL7vNF6bRxXvP8fYRPW0jZTWZkpbSV0bI=
+        b=WcGMe4bTOk2U8dDAcahsld31TCaXkRWaJT0oj1hbDSkyXmknmbYUcprSmu84lrhHQ
+         ymExHuQxmJMd2dToUDZSdWHORM+a7dknI3ogbpadwP/K20YQqQU9KvbJAwKZJ0fKZX
+         9+2nmIdLB0sh3eMear1ijzrej4VDC2pI7P3bz8K4=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Sergey Matyukevich <sergey.matyukevich.os@quantenna.com>,
-        Johannes Berg <johannes.berg@intel.com>,
-        Sasha Levin <sashal@kernel.org>,
-        linux-wireless@vger.kernel.org, netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.5 08/58] cfg80211: check wiphy driver existence for drvinfo report
-Date:   Sat, 22 Feb 2020 21:20:29 -0500
-Message-Id: <20200223022119.707-8-sashal@kernel.org>
+Cc:     Vincent Guittot <vincent.guittot@linaro.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@kernel.org>,
+        Ben Segall <bsegall@google.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH AUTOSEL 5.5 05/58] sched/fair: Prevent unlimited runtime on throttled group
+Date:   Sat, 22 Feb 2020 21:20:26 -0500
+Message-Id: <20200223022119.707-5-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200223022119.707-1-sashal@kernel.org>
 References: <20200223022119.707-1-sashal@kernel.org>
@@ -60,42 +61,63 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Sergey Matyukevich <sergey.matyukevich.os@quantenna.com>
+From: Vincent Guittot <vincent.guittot@linaro.org>
 
-[ Upstream commit bfb7bac3a8f47100ebe7961bd14e924c96e21ca7 ]
+[ Upstream commit 2a4b03ffc69f2dedc6388e9a6438b5f4c133a40d ]
 
-When preparing ethtool drvinfo, check if wiphy driver is defined
-before dereferencing it. Driver may not exist, e.g. if wiphy is
-attached to a virtual platform device.
+When a running task is moved on a throttled task group and there is no
+other task enqueued on the CPU, the task can keep running using 100% CPU
+whatever the allocated bandwidth for the group and although its cfs rq is
+throttled. Furthermore, the group entity of the cfs_rq and its parents are
+not enqueued but only set as curr on their respective cfs_rqs.
 
-Signed-off-by: Sergey Matyukevich <sergey.matyukevich.os@quantenna.com>
-Link: https://lore.kernel.org/r/20200203105644.28875-1-sergey.matyukevich.os@quantenna.com
-Signed-off-by: Johannes Berg <johannes.berg@intel.com>
+We have the following sequence:
+
+sched_move_task
+  -dequeue_task: dequeue task and group_entities.
+  -put_prev_task: put task and group entities.
+  -sched_change_group: move task to new group.
+  -enqueue_task: enqueue only task but not group entities because cfs_rq is
+    throttled.
+  -set_next_task : set task and group_entities as current sched_entity of
+    their cfs_rq.
+
+Another impact is that the root cfs_rq runnable_load_avg at root rq stays
+null because the group_entities are not enqueued. This situation will stay
+the same until an "external" event triggers a reschedule. Let trigger it
+immediately instead.
+
+Signed-off-by: Vincent Guittot <vincent.guittot@linaro.org>
+Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+Signed-off-by: Ingo Molnar <mingo@kernel.org>
+Acked-by: Ben Segall <bsegall@google.com>
+Link: https://lkml.kernel.org/r/1579011236-31256-1-git-send-email-vincent.guittot@linaro.org
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- net/wireless/ethtool.c | 8 ++++++--
- 1 file changed, 6 insertions(+), 2 deletions(-)
+ kernel/sched/core.c | 9 ++++++++-
+ 1 file changed, 8 insertions(+), 1 deletion(-)
 
-diff --git a/net/wireless/ethtool.c b/net/wireless/ethtool.c
-index a9c0f368db5d2..24e18405cdb48 100644
---- a/net/wireless/ethtool.c
-+++ b/net/wireless/ethtool.c
-@@ -7,9 +7,13 @@
- void cfg80211_get_drvinfo(struct net_device *dev, struct ethtool_drvinfo *info)
- {
- 	struct wireless_dev *wdev = dev->ieee80211_ptr;
-+	struct device *pdev = wiphy_dev(wdev->wiphy);
+diff --git a/kernel/sched/core.c b/kernel/sched/core.c
+index 1f4f8e850cab7..4b6b916ec1be4 100644
+--- a/kernel/sched/core.c
++++ b/kernel/sched/core.c
+@@ -7067,8 +7067,15 @@ void sched_move_task(struct task_struct *tsk)
  
--	strlcpy(info->driver, wiphy_dev(wdev->wiphy)->driver->name,
--		sizeof(info->driver));
-+	if (pdev->driver)
-+		strlcpy(info->driver, pdev->driver->name,
-+			sizeof(info->driver));
-+	else
-+		strlcpy(info->driver, "N/A", sizeof(info->driver));
+ 	if (queued)
+ 		enqueue_task(rq, tsk, queue_flags);
+-	if (running)
++	if (running) {
+ 		set_next_task(rq, tsk);
++		/*
++		 * After changing group, the running task may have joined a
++		 * throttled one but it's still the running task. Trigger a
++		 * resched to make sure that task can still run.
++		 */
++		resched_curr(rq);
++	}
  
- 	strlcpy(info->version, init_utsname()->release, sizeof(info->version));
- 
+ 	task_rq_unlock(rq, tsk, &rf);
+ }
 -- 
 2.20.1
 
