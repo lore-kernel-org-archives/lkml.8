@@ -7,48 +7,48 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BAB2EC35671
-	for <linux-kernel@archiver.kernel.org>; Sun, 23 Feb 2020 02:33:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BEC84C35671
+	for <linux-kernel@archiver.kernel.org>; Sun, 23 Feb 2020 02:33:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 86A6C2067D
-	for <linux-kernel@archiver.kernel.org>; Sun, 23 Feb 2020 02:33:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8C14320659
+	for <linux-kernel@archiver.kernel.org>; Sun, 23 Feb 2020 02:33:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582425191;
-	bh=b7jTCnKwpg6483OPdvoS6UKKcbgT6fOfGV8ctSFzzqw=;
+	s=default; t=1582425197;
+	bh=DlmwdQDlQ9+dL/5tK1OOSNXQg1vVFb3H4mk64k4cgLY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=oqDsXJEm93aGNNXIOM85KIrEAi4qVNRmuSStg/jMpgiF66qZmvatRXYxwBt2Hq9KB
-	 7gkL+g4gc9IEL1Y80xNwZJtxbU1kiE7mPcfYEqsrmdxyUWD/4vpyaNFHw+NBJwP7/Y
-	 yXx10QWOucvYd9+yFqvqbzJEzO2ywJjc5B6ecuvY=
+	b=oQT+r7PjlgHnwsNI3fsvzJS2wTjDDxGVeLxevoKwBSQfUIJ/v/l968WlB2Y52E+b8
+	 1r4snGcd4EECPtvM6hZQE3CExmPM8EcxRmY3pWQ2ll5XabeA7wmLKlYW2fbpRL4c5X
+	 gna3Cvl74HD+c9SU91Pbv4lS5GcyslAaVlNT5TCs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728241AbgBWCdK (ORCPT
+        id S1728681AbgBWCdQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 22 Feb 2020 21:33:10 -0500
-Received: from mail.kernel.org ([198.145.29.99]:52118 "EHLO mail.kernel.org"
+        Sat, 22 Feb 2020 21:33:16 -0500
+Received: from mail.kernel.org ([198.145.29.99]:52092 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728376AbgBWCW4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 22 Feb 2020 21:22:56 -0500
+        id S1728368AbgBWCWy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 22 Feb 2020 21:22:54 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E24D02071E;
-        Sun, 23 Feb 2020 02:22:54 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C4CE522525;
+        Sun, 23 Feb 2020 02:22:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1582424575;
-        bh=b7jTCnKwpg6483OPdvoS6UKKcbgT6fOfGV8ctSFzzqw=;
+        s=default; t=1582424574;
+        bh=DlmwdQDlQ9+dL/5tK1OOSNXQg1vVFb3H4mk64k4cgLY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=oLXteNJ/jFNJrB+pYdHBw6BUn0k8Lml4tFzeElnguToDApq/yGGSmqHDGLK4kr+uJ
-         zNYtY2SpnDEJPCnZPtZR0KKZtWUo7RcGTZhPsiEpmNFHUgSWdrDx0vz4ORyVB7GqR8
-         GQ+o3YfT4efRxl2D1jkURYd5kdq5CqD4Oq9NqU28=
+        b=H7wR/pkFtX8MNMrJoHaCk3R7w5HcB4+IVgrCneqFe3o/0icw+aSiIi7x/ssBsTDG4
+         jlhAX0dG7QYzewPx3Rv7hTqlgTUJY/t8KfXrVCeEja6+o/kQ69vK6taDi5Yqm5BQat
+         +mUiytAwARfyA2z0qIoKPHZD2lirklaM6UU/47Y4=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Kan Liang <kan.liang@linux.intel.com>,
+Cc:     Suren Baghdasaryan <surenb@google.com>,
         Peter Zijlstra <peterz@infradead.org>,
         Ingo Molnar <mingo@kernel.org>,
-        Andi Kleen <ak@linux.intel.com>,
+        Johannes Weiner <hannes@cmpxchg.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 5.4 16/50] perf/x86/intel: Add Elkhart Lake support
-Date:   Sat, 22 Feb 2020 21:22:01 -0500
-Message-Id: <20200223022235.1404-16-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 5.4 15/50] sched/psi: Fix OOB write when writing 0 bytes to PSI files
+Date:   Sat, 22 Feb 2020 21:22:00 -0500
+Message-Id: <20200223022235.1404-15-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200223022235.1404-1-sashal@kernel.org>
 References: <20200223022235.1404-1-sashal@kernel.org>
@@ -61,36 +61,39 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Kan Liang <kan.liang@linux.intel.com>
+From: Suren Baghdasaryan <surenb@google.com>
 
-[ Upstream commit eda23b387f6c4bb2971ac7e874a09913f533b22c ]
+[ Upstream commit 6fcca0fa48118e6d63733eb4644c6cd880c15b8f ]
 
-Elkhart Lake also uses Tremont CPU. From the perspective of Intel PMU,
-there is nothing changed compared with Jacobsville.
-Share the perf code with Jacobsville.
+Issuing write() with count parameter set to 0 on any file under
+/proc/pressure/ will cause an OOB write because of the access to
+buf[buf_size-1] when NUL-termination is performed. Fix this by checking
+for buf_size to be non-zero.
 
-Signed-off-by: Kan Liang <kan.liang@linux.intel.com>
+Signed-off-by: Suren Baghdasaryan <surenb@google.com>
 Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
 Signed-off-by: Ingo Molnar <mingo@kernel.org>
-Reviewed-by: Andi Kleen <ak@linux.intel.com>
-Link: https://lkml.kernel.org/r/1580236279-35492-1-git-send-email-kan.liang@linux.intel.com
+Acked-by: Johannes Weiner <hannes@cmpxchg.org>
+Link: https://lkml.kernel.org/r/20200203212216.7076-1-surenb@google.com
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/x86/events/intel/core.c | 1 +
- 1 file changed, 1 insertion(+)
+ kernel/sched/psi.c | 3 +++
+ 1 file changed, 3 insertions(+)
 
-diff --git a/arch/x86/events/intel/core.c b/arch/x86/events/intel/core.c
-index fcef678c34230..c531e3f3269ed 100644
---- a/arch/x86/events/intel/core.c
-+++ b/arch/x86/events/intel/core.c
-@@ -4746,6 +4746,7 @@ __init int intel_pmu_init(void)
- 		break;
+diff --git a/kernel/sched/psi.c b/kernel/sched/psi.c
+index ce8f6748678a2..9154e745f0978 100644
+--- a/kernel/sched/psi.c
++++ b/kernel/sched/psi.c
+@@ -1199,6 +1199,9 @@ static ssize_t psi_write(struct file *file, const char __user *user_buf,
+ 	if (static_branch_likely(&psi_disabled))
+ 		return -EOPNOTSUPP;
  
- 	case INTEL_FAM6_ATOM_TREMONT_D:
-+	case INTEL_FAM6_ATOM_TREMONT:
- 		x86_pmu.late_ack = true;
- 		memcpy(hw_cache_event_ids, glp_hw_cache_event_ids,
- 		       sizeof(hw_cache_event_ids));
++	if (!nbytes)
++		return -EINVAL;
++
+ 	buf_size = min(nbytes, sizeof(buf));
+ 	if (copy_from_user(buf, user_buf, buf_size))
+ 		return -EFAULT;
 -- 
 2.20.1
 
