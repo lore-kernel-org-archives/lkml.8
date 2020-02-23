@@ -2,98 +2,173 @@ Return-Path: <SRS0=SnAt=4L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7092FC35673
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8ACAFC35671
 	for <linux-kernel@archiver.kernel.org>; Sun, 23 Feb 2020 22:01:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 358F6206ED
+	by mail.kernel.org (Postfix) with ESMTP id 61B89206E2
 	for <linux-kernel@archiver.kernel.org>; Sun, 23 Feb 2020 22:01:28 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="jAF7dl79"
+	dkim=pass (1024-bit key) header.d=gibson.dropbear.id.au header.i=@gibson.dropbear.id.au header.b="LwL/iptB"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727133AbgBWWAf (ORCPT
+        id S1727170AbgBWWBZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 23 Feb 2020 17:00:35 -0500
-Received: from mail-yw1-f68.google.com ([209.85.161.68]:44799 "EHLO
-        mail-yw1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726302AbgBWWAf (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 23 Feb 2020 17:00:35 -0500
-Received: by mail-yw1-f68.google.com with SMTP id t141so4352573ywc.11
-        for <linux-kernel@vger.kernel.org>; Sun, 23 Feb 2020 14:00:35 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=oEv7z6kfjOWhzFJ0U6oJmvXOArxz5ZVjmjpUgwRoIf8=;
-        b=jAF7dl79q0/wXBaOE+MXaj+rL4QmCUiy1BQrAY9Pg1t6LCgdtpDDs7//QZ+RFR8+sa
-         FXvaTB1zX8q7xrgU1QvqhU1YncMD9zHbG6G5NQFMFqw4O9o+I/alBs4f1JpSdvnRhNoB
-         C3brQnZsUKLdY885UJcYHp26WELQ8I8pnNQ7E=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=oEv7z6kfjOWhzFJ0U6oJmvXOArxz5ZVjmjpUgwRoIf8=;
-        b=niktMy5j27Zi4PA97PW0uCFW57s1Xux6K8pY9rWWW9vgu763PYB2T6xRKlAEL5dzsv
-         bF2ZzvN7vK7IlLQLKrgQV7ADQ73kXD7FFBjOIWWsigl145mox+wVFwgPx22LTX3fgA3U
-         ONZkaRhHYjav3CW6OhZbp9GCjZLkqs+mPFl2jxquBw1NGJquaLolyHSYMahJeFpBYbkg
-         9WLsPFj56/ZrtcKvPnFN9sfkUvdMleebhkapYb8gPTyd5VpLjgcT3PK75Q3jbS0tlemi
-         BwR/8cUYzc2NlpBfitlLkvjguMh77YJe/zZdthC6VC91AdZM/uGb2QlfSvrS8FqQHOk1
-         LI/g==
-X-Gm-Message-State: APjAAAVCar0ddG2+VAmYmG3cUeYkJynyuBS1S9vADia4+E6jXM1vPH2C
-        xEkERc24LVH0B1Qnqg8PLVUZnP46Yss=
-X-Google-Smtp-Source: APXvYqzgpJ6jKtTA4mnBKg80mHPt0TE/IensxVJ2W3hjvlXkxtWHCBkw0VPd7sl1UV2QXFrbFmH3uw==
-X-Received: by 2002:a0d:edc1:: with SMTP id w184mr1494108ywe.204.1582495232529;
-        Sun, 23 Feb 2020 14:00:32 -0800 (PST)
-Received: from mail-yw1-f43.google.com (mail-yw1-f43.google.com. [209.85.161.43])
-        by smtp.gmail.com with ESMTPSA id 207sm4323110ywq.100.2020.02.23.14.00.30
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sun, 23 Feb 2020 14:00:30 -0800 (PST)
-Received: by mail-yw1-f43.google.com with SMTP id i126so4364971ywe.7
-        for <linux-kernel@vger.kernel.org>; Sun, 23 Feb 2020 14:00:30 -0800 (PST)
-X-Received: by 2002:a81:3888:: with SMTP id f130mr36072275ywa.138.1582495229594;
- Sun, 23 Feb 2020 14:00:29 -0800 (PST)
+        Sun, 23 Feb 2020 17:01:25 -0500
+Received: from ozlabs.org ([203.11.71.1]:35501 "EHLO ozlabs.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726302AbgBWWBZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 23 Feb 2020 17:01:25 -0500
+Received: by ozlabs.org (Postfix, from userid 1007)
+        id 48QfKZ3rhhz9sR4; Mon, 24 Feb 2020 09:01:22 +1100 (AEDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+        d=gibson.dropbear.id.au; s=201602; t=1582495282;
+        bh=offKD/tuqL/DSDa2v25Jc0IM7BprqmjMf6LCeNiIZbE=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=LwL/iptBEMCarj+f3q8Os3B2TZTfsaK9r0ubJJ13bhD5UKGSewVyTATKgRL6ybTw6
+         TZ6r3y3evxFJ2T7GHqr77PmlzWNZc74Q2JYKrMRZpOZtmz7niIl6Ti9OpZmYSBayjZ
+         TBuqRBuLuno8PmSPypNw+iutg3ImuBykUAEZ9CMI=
+Date:   Mon, 24 Feb 2020 08:59:36 +1100
+From:   David Gibson <david@gibson.dropbear.id.au>
+To:     Frank Rowand <frowand.list@gmail.com>
+Cc:     Alexandre Torgue <alexandre.torgue@st.com>, robh+dt@kernel.org,
+        Masahiro Yamada <masahiroy@kernel.org>,
+        Michal Marek <michal.lkml@markovi.net>, sjg@chromium.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-kbuild@vger.kernel.org, devicetree-compiler@vger.kernel.org,
+        Ian Lepore <ian@freebsd.org>
+Subject: Re: [RFC PATCH v2 1/4] scripts: Add script to generate dtb build
+ information
+Message-ID: <20200223215936.GB1751@umbus.fritz.box>
+References: <20200221161418.20225-1-alexandre.torgue@st.com>
+ <20200221161418.20225-2-alexandre.torgue@st.com>
+ <592e41a4-6115-474e-b6ce-eeb82f858a78@gmail.com>
 MIME-Version: 1.0
-References: <20200222164419.GB3326744@rani.riverdale.lan> <20200222171859.3594058-1-nivedita@alum.mit.edu>
- <20200222181413.GA22627@ubuntu-m2-xlarge-x86> <20200222185806.ywnqhfqmy67akfsa@google.com>
- <20200222201715.GA3674682@rani.riverdale.lan> <20200222210101.diqw4zt6lz42ekgx@google.com>
-In-Reply-To: <20200222210101.diqw4zt6lz42ekgx@google.com>
-From:   Kees Cook <keescook@chromium.org>
-Date:   Sun, 23 Feb 2020 14:00:15 -0800
-X-Gmail-Original-Message-ID: <CAGXu5jJQRnPQDq6ZLrtCB-i0A_+AifY2me-BinuKz7LJU8=ePQ@mail.gmail.com>
-Message-ID: <CAGXu5jJQRnPQDq6ZLrtCB-i0A_+AifY2me-BinuKz7LJU8=ePQ@mail.gmail.com>
-Subject: Re: [PATCH] x86/boot/compressed: Fix compressed kernel linking with lld
-To:     Fangrui Song <maskray@google.com>
-Cc:     Arvind Sankar <nivedita@alum.mit.edu>,
-        Borislav Petkov <bp@alien8.de>,
-        Nathan Chancellor <natechancellor@gmail.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>,
-        "H. Peter Anvin" <hpa@zytor.com>, X86 ML <x86@kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        clang-built-linux@googlegroups.com, Michael Matz <matz@suse.de>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="LZvS9be/3tNcYl/X"
+Content-Disposition: inline
+In-Reply-To: <592e41a4-6115-474e-b6ce-eeb82f858a78@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, Feb 22, 2020 at 1:01 PM 'Fangrui Song' via Clang Built Linux
-<clang-built-linux@googlegroups.com> wrote:
-> https://github.com/torvalds/linux/commit/83a092cf95f28696ddc36c8add0cf03ac034897f
-> added -Wl,--orphan-handling=warn to arch/powerpc/Makefile .
-> x86 can follow if that is appropriate.
 
-I've been playing with a series to do this, here:
+--LZvS9be/3tNcYl/X
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-https://git.kernel.org/pub/scm/linux/kernel/git/kees/linux.git/log/?h=linker/orphans/x86-arm
+On Fri, Feb 21, 2020 at 11:52:34AM -0600, Frank Rowand wrote:
+> On 2/21/20 10:14 AM, Alexandre Torgue wrote:
+> > This commit adds a new script to create a file (in dts file directory) =
+with
+> > some information (date, Linux version, user). This file could then be u=
+sed
+> > to populate "build-info" property in every dts file that would use this
+> > build information:
+> >=20
+> > Example:
+> >=20
+> > / {
+> > 	...
+> > 	build-info =3D /incbin/("dtb-build.txt");
+>=20
+> s/.txt/.dtsi/
 
-There's some work to be done still...
+I don't think that makes sense.  This is an /incbin/ not an /include/
+so the text file is *not* dts information.
 
--- 
-Kees Cook
+> and same wherever the file name is used.
+>=20
+>=20
+> > 	...
+> > };
+> >=20
+> > Signed-off-by: Alexandre Torgue <alexandre.torgue@st.com>
+> >=20
+> > diff --git a/scripts/Makefile.lib b/scripts/Makefile.lib
+> > index bae62549e3d2..a5af84ef4ffc 100644
+> > --- a/scripts/Makefile.lib
+> > +++ b/scripts/Makefile.lib
+> > @@ -246,6 +246,7 @@ quiet_cmd_gzip =3D GZIP    $@
+> >  # DTC
+> >  # --------------------------------------------------------------------=
+-------
+> >  DTC ?=3D $(objtree)/scripts/dtc/dtc
+> > +DTB_GEN_INFO ?=3D $(objtree)/scripts/gen_dtb_build_info.sh
+> > =20
+> >  # Disable noisy checks by default
+> >  ifeq ($(findstring 1,$(KBUILD_EXTRA_WARN)),)
+> > @@ -286,6 +287,7 @@ $(obj)/%.dtb.S: $(obj)/%.dtb FORCE
+> > =20
+> >  quiet_cmd_dtc =3D DTC     $@
+> >  cmd_dtc =3D mkdir -p $(dir ${dtc-tmp}) ; \
+> > +	$(DTB_GEN_INFO) $(src) ; \
+> >  	$(HOSTCC) -E $(dtc_cpp_flags) -x assembler-with-cpp -o $(dtc-tmp) $< =
+; \
+> >  	$(DTC) -O $(2) -o $@ -b 0 \
+> >  		$(addprefix -i,$(dir $<) $(DTC_INCLUDE)) $(DTC_FLAGS) \
+> > diff --git a/scripts/gen_dtb_build_info.sh b/scripts/gen_dtb_build_info=
+=2Esh
+> > new file mode 100755
+> > index 000000000000..0cd8bd98e410
+> > --- /dev/null
+> > +++ b/scripts/gen_dtb_build_info.sh
+> > @@ -0,0 +1,10 @@
+> > +#!/bin/bash
+> > +# SPDX-License-Identifier: GPL-2.0
+> > +
+> > +set -o nounset
+> > +
+> > +DTB_DIR=3D$1
+> > +DTB_COMPILE_BY=3D$(whoami | sed 's/\\/\\\\/')
+> > +DTB_INFO=3D"From Linux $KERNELRELEASE by $DTB_COMPILE_BY the $(date).\=
+0"
+>=20
+> I would remove the filler words "From", "by", "the", and the trailing
+> period ('.').
+>=20
+> <bikeshed>
+> You might consider using a format more like the Linux
+> kernel version line, which puts parenthesis around the
+> compiled by info.
+> </bikeshed>
+>=20
+> -Frank
+>=20
+> > +
+> > +printf "$DTB_INFO" > "$DTB_DIR/dtb-build.txt"
+> >=20
+>=20
+
+--=20
+David Gibson			| I'll have my music baroque, and my code
+david AT gibson.dropbear.id.au	| minimalist, thank you.  NOT _the_ _other_
+				| _way_ _around_!
+http://www.ozlabs.org/~dgibson
+
+--LZvS9be/3tNcYl/X
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAEBCAAdFiEEdfRlhq5hpmzETofcbDjKyiDZs5IFAl5S9cMACgkQbDjKyiDZ
+s5L+uA/+Ijah4iblw6QeplPNZ0j5P3vPdvAPrnFrpiCY6faeGB25BQpakMQSxYd7
+AUVpiyiW7OO5Re1VP7+A7M3RIeR2ZN8Yl7dQsb2Evpbs4cB4LyRfmZCLUebEkUuY
+lOSjFCIwLrM7InrWM2cS3Xim0i5jC9m1SB7TKAG+VQCT+ahF3rHSfoqKDADyoEov
+M6zVCPvPCnw8UF8JsciD3vn1ehO8MFNWDPxJmVl+FqXGn/woSD6CXqMRFOhkMILe
+qIThs0v1fGeKAKZgNnzfblAT8MHwOWIEq/uCDKktxsEFXe0Htb5m7O+jblm2jAyE
+XviDax1jJkzAn8LcJaguDZhekE5AbG4cimW2NV9Y4qYDqcKrUKxJlZxNC+7rAypV
+nlry93xwydvEHISHa2AB7zHOM0BTYlRBOYQRmFrwZO1uc9h4MV2K1P5LAtxRki/h
+gXnKoekE8bkqs6/9P0bTRQ9PpyKs/sYZpUcZmzezuwkopRjHLv1ohlJj/x6dZb9w
+X+FkHVdFs0cREO9nGTUeCvm/rfe+ntpnJzG9iBkOwIj1XVZQQu19CXBYoSAP5uX+
+vsxZH83B//jEMEj/oMYgdFbKxZqxoaFwJxBMRZSHFEHAQ9h+wCQS/tXmHqXvPTWJ
+ds7GSr5+Cv03afxPFENdyX69B1a3YFGT2qDKgln3YuRVs8Ww5no=
+=v1oI
+-----END PGP SIGNATURE-----
+
+--LZvS9be/3tNcYl/X--
