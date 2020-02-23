@@ -5,67 +5,71 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 53AB2C35673
-	for <linux-kernel@archiver.kernel.org>; Sun, 23 Feb 2020 23:18:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4A07BC35673
+	for <linux-kernel@archiver.kernel.org>; Sun, 23 Feb 2020 23:18:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2C7F4217F4
-	for <linux-kernel@archiver.kernel.org>; Sun, 23 Feb 2020 23:18:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1EE8220880
+	for <linux-kernel@archiver.kernel.org>; Sun, 23 Feb 2020 23:18:04 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="LYlWMx6t"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="hJEfNdUl"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727229AbgBWXR7 (ORCPT
+        id S1727276AbgBWXSC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 23 Feb 2020 18:17:59 -0500
-Received: from mail-wr1-f67.google.com ([209.85.221.67]:42759 "EHLO
-        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727064AbgBWXR5 (ORCPT
+        Sun, 23 Feb 2020 18:18:02 -0500
+Received: from mail-wm1-f66.google.com ([209.85.128.66]:35757 "EHLO
+        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727207AbgBWXR7 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 23 Feb 2020 18:17:57 -0500
-Received: by mail-wr1-f67.google.com with SMTP id p18so4599902wre.9;
-        Sun, 23 Feb 2020 15:17:55 -0800 (PST)
+        Sun, 23 Feb 2020 18:17:59 -0500
+Received: by mail-wm1-f66.google.com with SMTP id b17so7457625wmb.0;
+        Sun, 23 Feb 2020 15:17:58 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=XOWxBzMu1Tr1kESKNK3MjAE/ivG0oS+MP+wwV4gJaxc=;
-        b=LYlWMx6tQnhBnK+RPyBuYSnK7VJCHTCJsBHxoBOJPGHciR2FtHRWkllVAllTKe+TPt
-         rH7GUEkBVCVxgBirrDS/pOwYPiXcNNriCE0YJUWqeiZT1yBKbTgM6AF2ftsgv+pJ3fNL
-         Q84mWTwNNY/O0Dve4U/8lgd6pvOVlOQc78G93y4zjDUBr/uLlTD9uRdN+rI44wbX6CuV
-         Yr+iLtooO6U4OgILxuMjPPstHVG+83FVfPUyrjUte/wnGWt+Ey1Zf6B/CiyrhKa2eYAe
-         u7J4G4Zc8yQGD9xvbXPsurj8Pujjum+Z5Njaz5/Odz2tjdKzGaPw5QmwdCLguQUoTWtz
-         c5oQ==
+        bh=IxPYnFwdm6HYoZarbVA1a85F6D8H58D7m4Xg57cuQ3I=;
+        b=hJEfNdUlRN46gddN4A6STA4svNTqFZlPSiI77hwK1jiYQT1XP65YDz+AlW4FiOnLUN
+         ryNH7h1lp3DKqmBLABQWCa6SRfyU6cw/+F3UExOapJkj5Ne3LsP5wFvLnv4tOXXQP1ki
+         eDO3INSfT9gfjsTUH//R3yOJp3akeoG1nSenyKm4m+HF1PQEG+xajZLxI/yX+B0t96FB
+         RmQC58oGzsCLkL+uqrlzEOEQ9uQNCPtzNiyr9tSw/NFW/is5v9cGV0MFw80AoOqUEsOm
+         ptSZae0ykgit8MCCAJhThawefmjmu6NO2oo7cluWhqsRvQpB0yCxRWj0ixjsef5SnY6S
+         LX5g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=XOWxBzMu1Tr1kESKNK3MjAE/ivG0oS+MP+wwV4gJaxc=;
-        b=nZlKVGejli2ObnD3JjIthmNtMeWcWtxSngRnSVHqyr5lF96+7MWypG1GV+Z5ZW82x9
-         DY/+/gwF5jb+lUEsg0BlotuXkvROGM5Ag4ioadtooaYbdGJA4wAusq1cFqEJX5xeckpi
-         Pr8H3l56FBvS06eFIEe19m/NuloHA03/jhj1bcwdAJ09e73YF3YnRZcWbMnv+IPbaSfD
-         INIfOtSmx+OmPy2KWjBq5eM6wRB7AxspWETbjufm4HP3A9sjjkhTOtVau8Gxl/CPILTc
-         9aIemTSl28WF06P5aAOMY4765I7Q/vuwF/RZiJIO3dxo216n4YlJ8gZSiKwPXqzilNnn
-         QKvg==
-X-Gm-Message-State: APjAAAWTfGj4q2/h/TCQTj58HANm3eWGDfuDzmc6rYTPpFIpIx6gZViv
-        QDTDlFawCucgNTFMf0W7c+vyhf245A==
-X-Google-Smtp-Source: APXvYqybPH8c6FwwdT6e/hCdRCrsRHzwMpD1UH8pFx2wVbI2R83W06aNfH89fPPDVGd/0uDAoI3Ptw==
-X-Received: by 2002:adf:e4ca:: with SMTP id v10mr186452wrm.305.1582499874397;
-        Sun, 23 Feb 2020 15:17:54 -0800 (PST)
+        bh=IxPYnFwdm6HYoZarbVA1a85F6D8H58D7m4Xg57cuQ3I=;
+        b=OJLpB0vEepckurDFnPiY1QkRfm3tS0aqc+CuuqAN9JNSy3+uUjzcA8XGnRvuCoAOxv
+         CxSxnp3qI2IPssSzBgHv8VKjTwGXAeACL4RXHDWZ3HUCQ2N4q+MdFjQ0ImTlZXrE7aOC
+         mtDBMWbc2MqMtpQTIFCXtOEuYG0C7p7X47Ct9svOddx1nok2yYrKeGKBxPqxKuQROtHv
+         8pUPWOCTLj91gHDHOsFoh77FsazNm1K7Wd3/TWikR6+7/fEFX/HqGYA0d6FcHD6+puNE
+         CX9z8fcpHC0SBMtO6SB9vsoZWCofwpgtOlXVgYa2MPVurhcHi1tLeBrTP2w40SIdOcO9
+         mIxQ==
+X-Gm-Message-State: APjAAAUQGvg9NQ+9aqK9M1s388QUSsIivr4DsDCN/ZJ1443rwwX/p2i5
+        fJPdWvl60hGzyXbh0zIJuQ==
+X-Google-Smtp-Source: APXvYqxlb5IshkvipPzCa0LMPNtrPnq+GZC2IYdqSD+wKq4wzMM1mhHnt/y8zw+TO/+8uNI6Og3k1w==
+X-Received: by 2002:a1c:df09:: with SMTP id w9mr17047688wmg.143.1582499877478;
+        Sun, 23 Feb 2020 15:17:57 -0800 (PST)
 Received: from ninjahost.lan (host-2-102-13-223.as13285.net. [2.102.13.223])
-        by smtp.googlemail.com with ESMTPSA id q6sm8968203wrf.67.2020.02.23.15.17.53
+        by smtp.googlemail.com with ESMTPSA id q6sm8968203wrf.67.2020.02.23.15.17.56
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 23 Feb 2020 15:17:54 -0800 (PST)
+        Sun, 23 Feb 2020 15:17:57 -0800 (PST)
 From:   Jules Irenge <jbi.octave@gmail.com>
 To:     boqun.feng@gmail.com
 Cc:     jbi.octave@gmail.com, linux-kernel@vger.kernel.org,
-        Chris Mason <clm@fb.com>, Josef Bacik <josef@toxicpanda.com>,
-        David Sterba <dsterba@suse.com>,
-        linux-btrfs@vger.kernel.org (open list:BTRFS FILE SYSTEM)
-Subject: [PATCH 01/30] btrfs: Add missing annotation for release_extent_buffer()
-Date:   Sun, 23 Feb 2020 23:16:42 +0000
-Message-Id: <20200223231711.157699-2-jbi.octave@gmail.com>
+        Vlad Yasevich <vyasevich@gmail.com>,
+        Neil Horman <nhorman@tuxdriver.com>,
+        Marcelo Ricardo Leitner <marcelo.leitner@gmail.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>,
+        linux-sctp@vger.kernel.org (open list:SCTP PROTOCOL),
+        netdev@vger.kernel.org (open list:NETWORKING [GENERAL])
+Subject: [PATCH 04/30] sctp: Add missing annotation for sctp_err_finish()
+Date:   Sun, 23 Feb 2020 23:16:45 +0000
+Message-Id: <20200223231711.157699-5-jbi.octave@gmail.com>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20200223231711.157699-1-jbi.octave@gmail.com>
 References: <0/30>
@@ -77,29 +81,29 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Sparse reports a warning at release_extent_buffer()
-warning: context imbalance in release_extent_buffer() - unexpected unlock
+Sparse reports a warning at sctp_err_finish()
+warning: context imbalance in sctp_err_finish() - unexpected unlock
 
-The root cause is the missing annotation at release_extent_buffer()
-Add the missing __releases(&eb->refs_lock) annotation
+The root cause is a missing annotation at sctp_err_finish()
+Add the missing  __releases(&((__sk)->sk_lock.slock)) annotation
 
 Signed-off-by: Jules Irenge <jbi.octave@gmail.com>
 ---
- fs/btrfs/extent_io.c | 1 +
+ net/sctp/input.c | 1 +
  1 file changed, 1 insertion(+)
 
-diff --git a/fs/btrfs/extent_io.c b/fs/btrfs/extent_io.c
-index c0f202741e09..8b6d6893e7a7 100644
---- a/fs/btrfs/extent_io.c
-+++ b/fs/btrfs/extent_io.c
-@@ -5230,6 +5230,7 @@ static inline void btrfs_release_extent_buffer_rcu(struct rcu_head *head)
- }
+diff --git a/net/sctp/input.c b/net/sctp/input.c
+index efaaefc3bb1c..55d4fc6f371d 100644
+--- a/net/sctp/input.c
++++ b/net/sctp/input.c
+@@ -548,6 +548,7 @@ struct sock *sctp_err_lookup(struct net *net, int family, struct sk_buff *skb,
  
- static int release_extent_buffer(struct extent_buffer *eb)
-+	__releases(&eb->refs_lock)
+ /* Common cleanup code for icmp/icmpv6 error handler. */
+ void sctp_err_finish(struct sock *sk, struct sctp_transport *t)
++	__releases(&((__sk)->sk_lock.slock))
  {
- 	lockdep_assert_held(&eb->refs_lock);
- 
+ 	bh_unlock_sock(sk);
+ 	sctp_transport_put(t);
 -- 
 2.24.1
 
