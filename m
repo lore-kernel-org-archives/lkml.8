@@ -4,53 +4,53 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B7A3FC35673
-	for <linux-kernel@archiver.kernel.org>; Sun, 23 Feb 2020 02:25:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 15056C35671
+	for <linux-kernel@archiver.kernel.org>; Sun, 23 Feb 2020 02:25:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8F97824653
-	for <linux-kernel@archiver.kernel.org>; Sun, 23 Feb 2020 02:25:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D6B1821741
+	for <linux-kernel@archiver.kernel.org>; Sun, 23 Feb 2020 02:25:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582424738;
-	bh=vfmy+weLbNEomCaaCB24R0eMwT33ANh47ZPdbjLS7vU=;
+	s=default; t=1582424743;
+	bh=cy7SP9sbTFkiqIp2R+EgdcYVzesuD6fYlrZu3pfgR18=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=vITIGfpITa95D8yzkj0p8rAnXPFpzLUFpzwN4psPlpM0L3ClaMjiJpRA1xmlnr9QI
-	 U6zRJP/cPFITZhObnhESe81EjHfHLqc1/wqCB0N364sIQwANrKcnp6HcCoaXp0G5jB
-	 MCZoXuVkana1ly0SPc9vPm947mI6NgNhr0urTZbY=
+	b=R4/X8EmRhBxeKQ270381O66HxFMD0XiUYg2wA/p5utnEOvFPXsEIkdmJqiuQ6nnwf
+	 gVGyQCLYQTuuMwkTH6SVVWlA6g6+ndISn9f25XzBkYt4VopYseLjb2sdMTHVTpVjBO
+	 NGRGMPYcbMG4V9v15Pt/9AceXdbIG3xFE6x731C0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729589AbgBWCZE (ORCPT
+        id S1728225AbgBWCZm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 22 Feb 2020 21:25:04 -0500
-Received: from mail.kernel.org ([198.145.29.99]:55404 "EHLO mail.kernel.org"
+        Sat, 22 Feb 2020 21:25:42 -0500
+Received: from mail.kernel.org ([198.145.29.99]:55606 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729509AbgBWCY5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 22 Feb 2020 21:24:57 -0500
+        id S1729573AbgBWCZD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 22 Feb 2020 21:25:03 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 90AC520707;
-        Sun, 23 Feb 2020 02:24:56 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id ADC0A20707;
+        Sun, 23 Feb 2020 02:25:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1582424697;
-        bh=vfmy+weLbNEomCaaCB24R0eMwT33ANh47ZPdbjLS7vU=;
+        s=default; t=1582424703;
+        bh=cy7SP9sbTFkiqIp2R+EgdcYVzesuD6fYlrZu3pfgR18=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=oAwMvfXdhJ+HXOagPZJcQfgt419MuttCbmgIOuAS8UJjZGc8VH8NQ/gPtPxlFoWvW
-         pVxEJ4sFhLHsowIRc0aHf3lufDpVhs+XCV+1T3O9iVtGwy3qA/XC+5H+gkQijEg4kx
-         rhWwtDYNZjXBUOFBGWp99jZtiEqXIGaYste0hkRo=
+        b=eXr7l+E3z4uLI3JGpkGRVleInL5h1rAS255tu78jH+YRorOOalJ66gjcurmG40CBZ
+         dzVtiFqNBbKSd1LisbpAWbeJE5NhGMY0VWpdDURWm49Zdiv9sIt2Q6p/6Yw/YzxJit
+         ppPl+oCPMsuxh1NK82gobZ5uD5LjZg392O/wEDVo=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Frank Sorenson <sorenson@redhat.com>,
-        Steve French <stfrench@microsoft.com>,
-        Sasha Levin <sashal@kernel.org>, linux-cifs@vger.kernel.org,
-        samba-technical@lists.samba.org
-Subject: [PATCH AUTOSEL 4.9 15/16] cifs: Fix mode output in debugging statements
-Date:   Sat, 22 Feb 2020 21:24:37 -0500
-Message-Id: <20200223022438.2398-15-sashal@kernel.org>
+Cc:     Sergey Matyukevich <sergey.matyukevich.os@quantenna.com>,
+        Johannes Berg <johannes.berg@intel.com>,
+        Sasha Levin <sashal@kernel.org>,
+        linux-wireless@vger.kernel.org, netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.4 3/7] cfg80211: check wiphy driver existence for drvinfo report
+Date:   Sat, 22 Feb 2020 21:24:55 -0500
+Message-Id: <20200223022459.2594-3-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20200223022438.2398-1-sashal@kernel.org>
-References: <20200223022438.2398-1-sashal@kernel.org>
+In-Reply-To: <20200223022459.2594-1-sashal@kernel.org>
+References: <20200223022459.2594-1-sashal@kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
@@ -60,70 +60,42 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Frank Sorenson <sorenson@redhat.com>
+From: Sergey Matyukevich <sergey.matyukevich.os@quantenna.com>
 
-[ Upstream commit f52aa79df43c4509146140de0241bc21a4a3b4c7 ]
+[ Upstream commit bfb7bac3a8f47100ebe7961bd14e924c96e21ca7 ]
 
-A number of the debug statements output file or directory mode
-in hex.  Change these to print using octal.
+When preparing ethtool drvinfo, check if wiphy driver is defined
+before dereferencing it. Driver may not exist, e.g. if wiphy is
+attached to a virtual platform device.
 
-Signed-off-by: Frank Sorenson <sorenson@redhat.com>
-Signed-off-by: Steve French <stfrench@microsoft.com>
+Signed-off-by: Sergey Matyukevich <sergey.matyukevich.os@quantenna.com>
+Link: https://lore.kernel.org/r/20200203105644.28875-1-sergey.matyukevich.os@quantenna.com
+Signed-off-by: Johannes Berg <johannes.berg@intel.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/cifs/cifsacl.c | 4 ++--
- fs/cifs/connect.c | 2 +-
- fs/cifs/inode.c   | 2 +-
- 3 files changed, 4 insertions(+), 4 deletions(-)
+ net/wireless/ethtool.c | 8 ++++++--
+ 1 file changed, 6 insertions(+), 2 deletions(-)
 
-diff --git a/fs/cifs/cifsacl.c b/fs/cifs/cifsacl.c
-index 15bac390dff94..10aedc2a4c2dc 100644
---- a/fs/cifs/cifsacl.c
-+++ b/fs/cifs/cifsacl.c
-@@ -603,7 +603,7 @@ static void access_flags_to_mode(__le32 ace_flags, int type, umode_t *pmode,
- 			((flags & FILE_EXEC_RIGHTS) == FILE_EXEC_RIGHTS))
- 		*pmode |= (S_IXUGO & (*pbits_to_set));
+diff --git a/net/wireless/ethtool.c b/net/wireless/ethtool.c
+index e9e91298c70de..3cedf2c2b60bd 100644
+--- a/net/wireless/ethtool.c
++++ b/net/wireless/ethtool.c
+@@ -6,9 +6,13 @@
+ void cfg80211_get_drvinfo(struct net_device *dev, struct ethtool_drvinfo *info)
+ {
+ 	struct wireless_dev *wdev = dev->ieee80211_ptr;
++	struct device *pdev = wiphy_dev(wdev->wiphy);
  
--	cifs_dbg(NOISY, "access flags 0x%x mode now 0x%x\n", flags, *pmode);
-+	cifs_dbg(NOISY, "access flags 0x%x mode now %04o\n", flags, *pmode);
- 	return;
- }
+-	strlcpy(info->driver, wiphy_dev(wdev->wiphy)->driver->name,
+-		sizeof(info->driver));
++	if (pdev->driver)
++		strlcpy(info->driver, pdev->driver->name,
++			sizeof(info->driver));
++	else
++		strlcpy(info->driver, "N/A", sizeof(info->driver));
  
-@@ -632,7 +632,7 @@ static void mode_to_access_flags(umode_t mode, umode_t bits_to_use,
- 	if (mode & S_IXUGO)
- 		*pace_flags |= SET_FILE_EXEC_RIGHTS;
+ 	strlcpy(info->version, init_utsname()->release, sizeof(info->version));
  
--	cifs_dbg(NOISY, "mode: 0x%x, access flags now 0x%x\n",
-+	cifs_dbg(NOISY, "mode: %04o, access flags now 0x%x\n",
- 		 mode, *pace_flags);
- 	return;
- }
-diff --git a/fs/cifs/connect.c b/fs/cifs/connect.c
-index 751bdde6515d5..5909027a18d01 100644
---- a/fs/cifs/connect.c
-+++ b/fs/cifs/connect.c
-@@ -3399,7 +3399,7 @@ int cifs_setup_cifs_sb(struct smb_vol *pvolume_info,
- 	cifs_sb->mnt_gid = pvolume_info->linux_gid;
- 	cifs_sb->mnt_file_mode = pvolume_info->file_mode;
- 	cifs_sb->mnt_dir_mode = pvolume_info->dir_mode;
--	cifs_dbg(FYI, "file mode: 0x%hx  dir mode: 0x%hx\n",
-+	cifs_dbg(FYI, "file mode: %04ho  dir mode: %04ho\n",
- 		 cifs_sb->mnt_file_mode, cifs_sb->mnt_dir_mode);
- 
- 	cifs_sb->actimeo = pvolume_info->actimeo;
-diff --git a/fs/cifs/inode.c b/fs/cifs/inode.c
-index b1c0961e6b3f2..7dda3f137c7aa 100644
---- a/fs/cifs/inode.c
-+++ b/fs/cifs/inode.c
-@@ -1573,7 +1573,7 @@ int cifs_mkdir(struct inode *inode, struct dentry *direntry, umode_t mode)
- 	struct TCP_Server_Info *server;
- 	char *full_path;
- 
--	cifs_dbg(FYI, "In cifs_mkdir, mode = 0x%hx inode = 0x%p\n",
-+	cifs_dbg(FYI, "In cifs_mkdir, mode = %04ho inode = 0x%p\n",
- 		 mode, inode);
- 
- 	cifs_sb = CIFS_SB(inode->i_sb);
 -- 
 2.20.1
 
