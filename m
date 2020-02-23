@@ -2,51 +2,52 @@ Return-Path: <SRS0=SnAt=4L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_RHS_DOB,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D6C6FC35673
-	for <linux-kernel@archiver.kernel.org>; Sun, 23 Feb 2020 02:22:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3607DC35671
+	for <linux-kernel@archiver.kernel.org>; Sun, 23 Feb 2020 02:22:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A9C342067D
-	for <linux-kernel@archiver.kernel.org>; Sun, 23 Feb 2020 02:22:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 08A1F2067D
+	for <linux-kernel@archiver.kernel.org>; Sun, 23 Feb 2020 02:22:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582424549;
-	bh=B121PA6hXOFvZznG/7fDaBlo/sGgh6O5jluLJi1gRzE=;
+	s=default; t=1582424551;
+	bh=FP9cCeMqS7bzSdU4k5Tda3KibME7J/7I+ctecRr3T2Y=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=oJr9vMi069m6MUUoXgrPmfOwecZCSTZW0u172+svOdz5Q64K62skMaDNSysg9iriK
-	 VRX0tH7CRa7qUPMYvaGGX1lI40pp+hDh8oxDwo+vq0ZxmNtZCdCQB48NKfTPaC87z1
-	 CPdgYWJzKSJaiHQXeUMIR2juLQemQ2P6JodphWyw=
+	b=thiQ2cYc+Q4hWBg0DVe1M5OcqIEBZmnbEc4xfYGKoaz/s7aM+KIBp4Zc01QOdo08E
+	 ga2JhSdMxqbsn0PhKNtSr+tfvUK7tCAwE/GfKEzQFWzAeWBmJDZly/OutZYp5KRvD5
+	 KSuFekgMGzx+USaysHTi1p7yupANIGwdkAVPc8tE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727163AbgBWCW2 (ORCPT
+        id S1728208AbgBWCWa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 22 Feb 2020 21:22:28 -0500
-Received: from mail.kernel.org ([198.145.29.99]:51272 "EHLO mail.kernel.org"
+        Sat, 22 Feb 2020 21:22:30 -0500
+Received: from mail.kernel.org ([198.145.29.99]:51286 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728081AbgBWCWT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1728097AbgBWCWT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Sat, 22 Feb 2020 21:22:19 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6B0C92067D;
-        Sun, 23 Feb 2020 02:22:17 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9F2B6206D7;
+        Sun, 23 Feb 2020 02:22:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1582424538;
-        bh=B121PA6hXOFvZznG/7fDaBlo/sGgh6O5jluLJi1gRzE=;
+        s=default; t=1582424539;
+        bh=FP9cCeMqS7bzSdU4k5Tda3KibME7J/7I+ctecRr3T2Y=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=i29fUSWejuaamN9X2xMIwYo4nWhAJv0QZzyPOb74Efb79AsnXZS7XsiUdVT/6qBPg
-         X8Rwk+RGUjVOruIlZbJW/hAhoZs9aNilRNEfRmOJYGpJRaGuX2njnyL+ptZs+IQrXR
-         SLV6brBQ+vVl64Il+bfyjiWchRTagYCCoVC3FIpY=
+        b=hhMlMffFxMZ5r3H5pzQKTPeIiehkuP6HzCA/wZRbgx/qaOg4wG/FKvvtvABXVCrFL
+         KIzhqpyXHvei3M2X/zHXH9U7iW/9zZirS412UveCTOuuPD+O7izsxoRmrIi11Xs3Ae
+         WX7irxvd+6Z23peKtoHh3TPsUPZp+3w0OXd1c3mk=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Jens Axboe <axboe@kernel.dk>, Glauber Costa <glauber@scylladb.com>,
-        Sasha Levin <sashal@kernel.org>, linux-fsdevel@vger.kernel.org,
-        io-uring@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.5 48/58] io-wq: don't call kXalloc_node() with non-online node
-Date:   Sat, 22 Feb 2020 21:21:09 -0500
-Message-Id: <20200223022119.707-48-sashal@kernel.org>
+Cc:     Frank Sorenson <sorenson@redhat.com>,
+        Steve French <stfrench@microsoft.com>,
+        Sasha Levin <sashal@kernel.org>, linux-cifs@vger.kernel.org,
+        samba-technical@lists.samba.org
+Subject: [PATCH AUTOSEL 5.5 49/58] cifs: Fix mode output in debugging statements
+Date:   Sat, 22 Feb 2020 21:21:10 -0500
+Message-Id: <20200223022119.707-49-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200223022119.707-1-sashal@kernel.org>
 References: <20200223022119.707-1-sashal@kernel.org>
@@ -59,134 +60,70 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jens Axboe <axboe@kernel.dk>
+From: Frank Sorenson <sorenson@redhat.com>
 
-[ Upstream commit 7563439adfae153b20331f1567c8b5d0e5cbd8a7 ]
+[ Upstream commit f52aa79df43c4509146140de0241bc21a4a3b4c7 ]
 
-Glauber reports a crash on init on a box he has:
+A number of the debug statements output file or directory mode
+in hex.  Change these to print using octal.
 
- RIP: 0010:__alloc_pages_nodemask+0x132/0x340
- Code: 18 01 75 04 41 80 ce 80 89 e8 48 8b 54 24 08 8b 74 24 1c c1 e8 0c 48 8b 3c 24 83 e0 01 88 44 24 20 48 85 d2 0f 85 74 01 00 00 <3b> 77 08 0f 82 6b 01 00 00 48 89 7c 24 10 89 ea 48 8b 07 b9 00 02
- RSP: 0018:ffffb8be4d0b7c28 EFLAGS: 00010246
- RAX: 0000000000000000 RBX: 0000000000000000 RCX: 000000000000e8e8
- RDX: 0000000000000000 RSI: 0000000000000002 RDI: 0000000000002080
- RBP: 0000000000012cc0 R08: 0000000000000000 R09: 0000000000000002
- R10: 0000000000000dc0 R11: ffff995c60400100 R12: 0000000000000000
- R13: 0000000000012cc0 R14: 0000000000000001 R15: ffff995c60db00f0
- FS:  00007f4d115ca900(0000) GS:ffff995c60d80000(0000) knlGS:0000000000000000
- CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
- CR2: 0000000000002088 CR3: 00000017cca66002 CR4: 00000000007606e0
- DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
- DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
- PKRU: 55555554
- Call Trace:
-  alloc_slab_page+0x46/0x320
-  new_slab+0x9d/0x4e0
-  ___slab_alloc+0x507/0x6a0
-  ? io_wq_create+0xb4/0x2a0
-  __slab_alloc+0x1c/0x30
-  kmem_cache_alloc_node_trace+0xa6/0x260
-  io_wq_create+0xb4/0x2a0
-  io_uring_setup+0x97f/0xaa0
-  ? io_remove_personalities+0x30/0x30
-  ? io_poll_trigger_evfd+0x30/0x30
-  do_syscall_64+0x5b/0x1c0
-  entry_SYSCALL_64_after_hwframe+0x44/0xa9
- RIP: 0033:0x7f4d116cb1ed
-
-which is due to the 'wqe' and 'worker' allocation being node affine.
-But it isn't valid to call the node affine allocation if the node isn't
-online.
-
-Setup structures for even offline nodes, as usual, but skip them in
-terms of thread setup to not waste resources. If the node isn't online,
-just alloc memory with NUMA_NO_NODE.
-
-Reported-by: Glauber Costa <glauber@scylladb.com>
-Tested-by: Glauber Costa <glauber@scylladb.com>
-Signed-off-by: Jens Axboe <axboe@kernel.dk>
+Signed-off-by: Frank Sorenson <sorenson@redhat.com>
+Signed-off-by: Steve French <stfrench@microsoft.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/io-wq.c | 22 ++++++++++++++++++----
- 1 file changed, 18 insertions(+), 4 deletions(-)
+ fs/cifs/cifsacl.c | 4 ++--
+ fs/cifs/connect.c | 2 +-
+ fs/cifs/inode.c   | 2 +-
+ 3 files changed, 4 insertions(+), 4 deletions(-)
 
-diff --git a/fs/io-wq.c b/fs/io-wq.c
-index 0dc4bb6de6566..25ffb6685baea 100644
---- a/fs/io-wq.c
-+++ b/fs/io-wq.c
-@@ -666,11 +666,16 @@ static int io_wq_manager(void *data)
- 	/* create fixed workers */
- 	refcount_set(&wq->refs, workers_to_create);
- 	for_each_node(node) {
-+		if (!node_online(node))
-+			continue;
- 		if (!create_io_worker(wq, wq->wqes[node], IO_WQ_ACCT_BOUND))
- 			goto err;
- 		workers_to_create--;
- 	}
+diff --git a/fs/cifs/cifsacl.c b/fs/cifs/cifsacl.c
+index fb41e51dd5743..25704beb9d4ca 100644
+--- a/fs/cifs/cifsacl.c
++++ b/fs/cifs/cifsacl.c
+@@ -601,7 +601,7 @@ static void access_flags_to_mode(__le32 ace_flags, int type, umode_t *pmode,
+ 			((flags & FILE_EXEC_RIGHTS) == FILE_EXEC_RIGHTS))
+ 		*pmode |= (S_IXUGO & (*pbits_to_set));
  
-+	while (workers_to_create--)
-+		refcount_dec(&wq->refs);
-+
- 	complete(&wq->done);
+-	cifs_dbg(NOISY, "access flags 0x%x mode now 0x%x\n", flags, *pmode);
++	cifs_dbg(NOISY, "access flags 0x%x mode now %04o\n", flags, *pmode);
+ 	return;
+ }
  
- 	while (!kthread_should_stop()) {
-@@ -678,6 +683,9 @@ static int io_wq_manager(void *data)
- 			struct io_wqe *wqe = wq->wqes[node];
- 			bool fork_worker[2] = { false, false };
+@@ -630,7 +630,7 @@ static void mode_to_access_flags(umode_t mode, umode_t bits_to_use,
+ 	if (mode & S_IXUGO)
+ 		*pace_flags |= SET_FILE_EXEC_RIGHTS;
  
-+			if (!node_online(node))
-+				continue;
-+
- 			spin_lock_irq(&wqe->lock);
- 			if (io_wqe_need_worker(wqe, IO_WQ_ACCT_BOUND))
- 				fork_worker[IO_WQ_ACCT_BOUND] = true;
-@@ -793,7 +801,9 @@ static bool io_wq_for_each_worker(struct io_wqe *wqe,
+-	cifs_dbg(NOISY, "mode: 0x%x, access flags now 0x%x\n",
++	cifs_dbg(NOISY, "mode: %04o, access flags now 0x%x\n",
+ 		 mode, *pace_flags);
+ 	return;
+ }
+diff --git a/fs/cifs/connect.c b/fs/cifs/connect.c
+index 05ea0e2b7e0e8..071f5d6726e59 100644
+--- a/fs/cifs/connect.c
++++ b/fs/cifs/connect.c
+@@ -4149,7 +4149,7 @@ int cifs_setup_cifs_sb(struct smb_vol *pvolume_info,
+ 	cifs_sb->mnt_gid = pvolume_info->linux_gid;
+ 	cifs_sb->mnt_file_mode = pvolume_info->file_mode;
+ 	cifs_sb->mnt_dir_mode = pvolume_info->dir_mode;
+-	cifs_dbg(FYI, "file mode: 0x%hx  dir mode: 0x%hx\n",
++	cifs_dbg(FYI, "file mode: %04ho  dir mode: %04ho\n",
+ 		 cifs_sb->mnt_file_mode, cifs_sb->mnt_dir_mode);
  
- 	list_for_each_entry_rcu(worker, &wqe->all_list, all_list) {
- 		if (io_worker_get(worker)) {
--			ret = func(worker, data);
-+			/* no task if node is/was offline */
-+			if (worker->task)
-+				ret = func(worker, data);
- 			io_worker_release(worker);
- 			if (ret)
- 				break;
-@@ -1006,6 +1016,8 @@ void io_wq_flush(struct io_wq *wq)
- 	for_each_node(node) {
- 		struct io_wqe *wqe = wq->wqes[node];
+ 	cifs_sb->actimeo = pvolume_info->actimeo;
+diff --git a/fs/cifs/inode.c b/fs/cifs/inode.c
+index ca76a9287456f..b3f3675e18788 100644
+--- a/fs/cifs/inode.c
++++ b/fs/cifs/inode.c
+@@ -1649,7 +1649,7 @@ int cifs_mkdir(struct inode *inode, struct dentry *direntry, umode_t mode)
+ 	struct TCP_Server_Info *server;
+ 	char *full_path;
  
-+		if (!node_online(node))
-+			continue;
- 		init_completion(&data.done);
- 		INIT_IO_WORK(&data.work, io_wq_flush_func);
- 		data.work.flags |= IO_WQ_WORK_INTERNAL;
-@@ -1038,12 +1050,15 @@ struct io_wq *io_wq_create(unsigned bounded, struct io_wq_data *data)
+-	cifs_dbg(FYI, "In cifs_mkdir, mode = 0x%hx inode = 0x%p\n",
++	cifs_dbg(FYI, "In cifs_mkdir, mode = %04ho inode = 0x%p\n",
+ 		 mode, inode);
  
- 	for_each_node(node) {
- 		struct io_wqe *wqe;
-+		int alloc_node = node;
- 
--		wqe = kzalloc_node(sizeof(struct io_wqe), GFP_KERNEL, node);
-+		if (!node_online(alloc_node))
-+			alloc_node = NUMA_NO_NODE;
-+		wqe = kzalloc_node(sizeof(struct io_wqe), GFP_KERNEL, alloc_node);
- 		if (!wqe)
- 			goto err;
- 		wq->wqes[node] = wqe;
--		wqe->node = node;
-+		wqe->node = alloc_node;
- 		wqe->acct[IO_WQ_ACCT_BOUND].max_workers = bounded;
- 		atomic_set(&wqe->acct[IO_WQ_ACCT_BOUND].nr_running, 0);
- 		if (wq->user) {
-@@ -1051,7 +1066,6 @@ struct io_wq *io_wq_create(unsigned bounded, struct io_wq_data *data)
- 					task_rlimit(current, RLIMIT_NPROC);
- 		}
- 		atomic_set(&wqe->acct[IO_WQ_ACCT_UNBOUND].nr_running, 0);
--		wqe->node = node;
- 		wqe->wq = wq;
- 		spin_lock_init(&wqe->lock);
- 		INIT_WQ_LIST(&wqe->work_list);
+ 	cifs_sb = CIFS_SB(inode->i_sb);
 -- 
 2.20.1
 
