@@ -2,126 +2,170 @@ Return-Path: <SRS0=SnAt=4L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 005AAC35670
-	for <linux-kernel@archiver.kernel.org>; Sun, 23 Feb 2020 03:23:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6B82EC35670
+	for <linux-kernel@archiver.kernel.org>; Sun, 23 Feb 2020 03:26:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D204620659
-	for <linux-kernel@archiver.kernel.org>; Sun, 23 Feb 2020 03:23:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4107721D56
+	for <linux-kernel@archiver.kernel.org>; Sun, 23 Feb 2020 03:26:42 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=sholland.org header.i=@sholland.org header.b="WrBCbsyr";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="MxDbz8Mt"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727337AbgBWDX3 (ORCPT
+        id S1727219AbgBWD0d (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 22 Feb 2020 22:23:29 -0500
-Received: from mail-ed1-f65.google.com ([209.85.208.65]:33335 "EHLO
-        mail-ed1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727093AbgBWDX3 (ORCPT
+        Sat, 22 Feb 2020 22:26:33 -0500
+Received: from out3-smtp.messagingengine.com ([66.111.4.27]:36401 "EHLO
+        out3-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727093AbgBWD0c (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 22 Feb 2020 22:23:29 -0500
-Received: by mail-ed1-f65.google.com with SMTP id r21so7587898edq.0;
-        Sat, 22 Feb 2020 19:23:28 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=RS1myGQD4/DxcloU05LYheuFzcmTnlxgIJwQU+BLqtY=;
-        b=MxI8FM2mm+dZFcmAVdQO8Lq728djsVIYKYj7ANjU90WqVOBTJUKEuJwApjk4ipExGp
-         BRtNw9htGZS6Xi6xW/NHAqV8YmipiBlXN86fD2TH7xJn8PfIaCQdTRpET0hQ+Y3fPSy2
-         v+9+pk2ht3ZRZGc10pKqqdCls0whoBut4YgxlQxTIqPhd2M3VoDsfCXkcijUmkRsJ1lL
-         Logq8Ao1iLpnhCezCzLvMWoo1uXLjDJIJBaDZxt3aSje0K3XEA/9HGmW7g27Bby+r5YO
-         kkkAdaKAlvNolD8Si0Vt6e/6lGGlAx6uh490F2vUkh6sS05MxXzYrQQuFDL7OBhCr/aq
-         07Jg==
-X-Gm-Message-State: APjAAAXnOCoZjXaSYij8JYRIUKgCFCqGbena04Y7KJK68/lry33+9/LV
-        XKxQfKunGFhjP82OfvhwJvWtg+OAlS4=
-X-Google-Smtp-Source: APXvYqwi+kjImUdTL0vzD3gf5zEKNMyj3eI9Fvxf+6hnbmTWovDebi924u/JV7IqYEuNJF+bBAMT7w==
-X-Received: by 2002:aa7:cf81:: with SMTP id z1mr40883593edx.234.1582428207299;
-        Sat, 22 Feb 2020 19:23:27 -0800 (PST)
-Received: from mail-wr1-f43.google.com (mail-wr1-f43.google.com. [209.85.221.43])
-        by smtp.gmail.com with ESMTPSA id n11sm594532eje.86.2020.02.22.19.23.25
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sat, 22 Feb 2020 19:23:26 -0800 (PST)
-Received: by mail-wr1-f43.google.com with SMTP id g3so6334598wrs.12;
-        Sat, 22 Feb 2020 19:23:25 -0800 (PST)
-X-Received: by 2002:a5d:484f:: with SMTP id n15mr57653500wrs.365.1582428205416;
- Sat, 22 Feb 2020 19:23:25 -0800 (PST)
-MIME-Version: 1.0
-References: <20191020134229.1216351-3-megous@megous.com> <20191110124355.1569-1-rikard.falkeborn@gmail.com>
-In-Reply-To: <20191110124355.1569-1-rikard.falkeborn@gmail.com>
-From:   Chen-Yu Tsai <wens@csie.org>
-Date:   Sun, 23 Feb 2020 11:23:15 +0800
-X-Gmail-Original-Message-ID: <CAGb2v67piSbdmDPOU_w3QterPRk7iFnrMAZe05O5ypwraohssQ@mail.gmail.com>
-Message-ID: <CAGb2v67piSbdmDPOU_w3QterPRk7iFnrMAZe05O5ypwraohssQ@mail.gmail.com>
-Subject: Re: [linux-sunxi] [PATCH v2 RESEND] phy: allwinner: Fix GENMASK misuse
-To:     =?UTF-8?Q?Ond=C5=99ej_Jirman?= <megous@megous.com>
-Cc:     linux-usb <linux-usb@vger.kernel.org>,
-        Rikard Falkeborn <rikard.falkeborn@gmail.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        devicetree <devicetree@vger.kernel.org>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        Maxime Ripard <mripard@kernel.org>,
-        Kishon Vijay Abraham I <kishon@ti.com>,
-        Paul Kocialkowski <paul.kocialkowski@bootlin.com>,
-        linux-sunxi <linux-sunxi@googlegroups.com>,
+        Sat, 22 Feb 2020 22:26:32 -0500
+Received: from compute5.internal (compute5.nyi.internal [10.202.2.45])
+        by mailout.nyi.internal (Postfix) with ESMTP id 1A122218C1;
+        Sat, 22 Feb 2020 22:26:32 -0500 (EST)
+Received: from mailfrontend1 ([10.202.2.162])
+  by compute5.internal (MEProxy); Sat, 22 Feb 2020 22:26:32 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=sholland.org; h=
+        subject:to:cc:references:from:message-id:date:mime-version
+        :in-reply-to:content-type:content-transfer-encoding; s=fm2; bh=F
+        q5Pvne5G6qnjZTjneNRiu68lwry5vZNmNqyfbQkjQw=; b=WrBCbsyrPncJazhGd
+        RFrLkBgpnZme+BBLjPPxZnmwb6gkKDFTPRbjKCFgDWDKSq/8Dp8MH15qTOq1xA2v
+        7WK40fZZJsfXO+8RjGCaTIW/AjTta277InhLQSW2UJ6uAYGps+NX+tz3yxfN2V+N
+        OnoYYt7sPmWYCZYFsV705QR4P8y2wpWOI/X7Pp7iLK1g0vPxKK6T/oa2ZTwmdkW1
+        Gbq+Dnc0LUw2EhMSQsdI7LS0IL34/BLldhFhEcYoe8aKP++cCKUjMeWBRYySi4T1
+        gkfU7n1bPDyQdjq5vDOkLBKpCN08X6J/kHRsudP2wBN6DTLjd1EYERKYzpJXsh21
+        ZxesQ==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+        messagingengine.com; h=cc:content-transfer-encoding:content-type
+        :date:from:in-reply-to:message-id:mime-version:references
+        :subject:to:x-me-proxy:x-me-proxy:x-me-sender:x-me-sender
+        :x-sasl-enc; s=fm2; bh=Fq5Pvne5G6qnjZTjneNRiu68lwry5vZNmNqyfbQkj
+        Qw=; b=MxDbz8MtvjBLZkouhiXHV0VhDLj+qXp9f9f3QaqRLsNtD7/9RBUHLXFCE
+        PwwM/muhJ7nnWsXZlT3D6yevyRolrnnHpRYllWTtGhELiyBbyHrKb6GtG9yoeB45
+        ZRYlSB9MSYJNioKXpFYke9aHlAceTmlnYZRuQgqqosbASagu29wPP6zEoOsk00hD
+        Kqvgpk2q2tdE/FRy371s4xQgm2XgxcowsvLgMxIV9OzWJMQwdGoqJQEIykHJOfNR
+        QU2osY8N5JmnppDG1mFfxQrjmbImF78xjIDOkth16T2gTI0BjhHDYf+dGS3HzczC
+        v7OIJw1yprP+MqJupcq4GAWTfVF0A==
+X-ME-Sender: <xms:5_BRXnY4iB3lHEO-NYIBXxVc6VOviTaU6HdPyqCCSoZuRw-azHySEA>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedugedrkeejgdehiecutefuodetggdotefrodftvf
+    curfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfghnecu
+    uegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenuc
+    fjughrpefuvfhfhffkffgfgggjtgfgsehtjeertddtfeejnecuhfhrohhmpefurghmuhgv
+    lhcujfholhhlrghnugcuoehsrghmuhgvlhesshhhohhllhgrnhgurdhorhhgqeenucfkph
+    epjedtrddufeehrddugeekrdduhedunecuvehluhhsthgvrhfuihiivgeptdenucfrrghr
+    rghmpehmrghilhhfrhhomhepshgrmhhuvghlsehshhholhhlrghnugdrohhrgh
+X-ME-Proxy: <xmx:5_BRXim6JjmIQXBUvawqqipBFfS3Fa7opxNXzPzB13LO_wXOA28nhw>
+    <xmx:5_BRXhGAWlH8mhWT3Tycr_xkjzUTDd0MkRBj1bPfsCt1oe9122fjeQ>
+    <xmx:5_BRXpMvz66UiGqpTz7F9SdUCkX0KXDvrWpOCnxaovCM2kMA9ycRgA>
+    <xmx:6PBRXie4gW5iu5GhKuQMgadwWf_ebG3_uzh2GEtPTXb0Ab6wRfeXWQ>
+Received: from [192.168.50.169] (70-135-148-151.lightspeed.stlsmo.sbcglobal.net [70.135.148.151])
+        by mail.messagingengine.com (Postfix) with ESMTPA id 123BE328005A;
+        Sat, 22 Feb 2020 22:26:31 -0500 (EST)
+Subject: Re: [linux-sunxi] [PATCH] arm64: dts: sun50i-h5-orange-pi-pc2: Add
+ CPUX voltage regulator
+To:     megous@megous.com, linux-sunxi@googlegroups.com
+Cc:     Maxime Ripard <mripard@kernel.org>, Chen-Yu Tsai <wens@csie.org>,
         Rob Herring <robh+dt@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
-        Icenowy Zheng <icenowy@aosc.io>
-Content-Type: text/plain; charset="UTF-8"
+        Mark Rutland <mark.rutland@arm.com>,
+        "moderated list:ARM/Allwinner sunXi SoC support" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        open list <linux-kernel@vger.kernel.org>
+References: <20200222214541.210318-1-megous@megous.com>
+From:   Samuel Holland <samuel@sholland.org>
+Message-ID: <92a2b808-8280-7ad4-cfb4-8ff9488c02c8@sholland.org>
+Date:   Sat, 22 Feb 2020 21:26:30 -0600
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.2.2
+MIME-Version: 1.0
+In-Reply-To: <20200222214541.210318-1-megous@megous.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, Feb 23, 2020 at 7:42 AM Ondrej Jirman <megous@megous.com> wrote:
->
-> From: Rikard Falkeborn <rikard.falkeborn@gmail.com>
->
-> Arguments are supposed to be ordered high then low.
->
-> Fixes: a228890f9458 ("phy: allwinner: add phy driver for USB3 PHY on Allwinner H6 SoC")
-> Signed-off-by: Rikard Falkeborn <rikard.falkeborn@gmail.com>
-> Tested-by: Ondrej Jirman <megous@megous.com>
+Hi Ondrej,
+
+On 2/22/20 3:45 PM, Ondrej Jirman wrote:
+> Orange Pi PC2 features sy8106a regulator just like Orange Pi PC.
+> 
 > Signed-off-by: Ondrej Jirman <megous@megous.com>
-
-Acked-by: Chen-Yu Tsai <wens@csie.org>
-
 > ---
-> v1->v2: Add fixes tax. Add Ondrejs Tested-by. No functional change.
->
-> This was last sent in Nov last year. I'm resending, because it probably
-> got forgotten. The only change is adding my SoB, which I understand is
-> required for the sender of the patch.
->
->  drivers/phy/allwinner/phy-sun50i-usb3.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
->
-> diff --git a/drivers/phy/allwinner/phy-sun50i-usb3.c b/drivers/phy/allwinner/phy-sun50i-usb3.c
-> index 1169f3e83a6f..b1c04f71a31d 100644
-> --- a/drivers/phy/allwinner/phy-sun50i-usb3.c
-> +++ b/drivers/phy/allwinner/phy-sun50i-usb3.c
-> @@ -49,7 +49,7 @@
->  #define SUNXI_LOS_BIAS(n)              ((n) << 3)
->  #define SUNXI_LOS_BIAS_MASK            GENMASK(5, 3)
->  #define SUNXI_TXVBOOSTLVL(n)           ((n) << 0)
-> -#define SUNXI_TXVBOOSTLVL_MASK         GENMASK(0, 2)
-> +#define SUNXI_TXVBOOSTLVL_MASK         GENMASK(2, 0)
->
->  struct sun50i_usb3_phy {
->         struct phy *phy;
-> --
-> 2.24.0
->
->
-> _______________________________________________
-> linux-arm-kernel mailing list
-> linux-arm-kernel@lists.infradead.org
-> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
->
-> --
-> You received this message because you are subscribed to the Google Groups "linux-sunxi" group.
-> To unsubscribe from this group and stop receiving emails from it, send an email to linux-sunxi+unsubscribe@googlegroups.com.
-> To view this discussion on the web, visit https://groups.google.com/d/msgid/linux-sunxi/20191110124355.1569-1-rikard.falkeborn%40gmail.com.
+>  .../dts/allwinner/sun50i-h5-orangepi-pc2.dts  | 29 +++++++++++++++++++
+>  1 file changed, 29 insertions(+)
+> 
+> diff --git a/arch/arm64/boot/dts/allwinner/sun50i-h5-orangepi-pc2.dts b/arch/arm64/boot/dts/allwinner/sun50i-h5-orangepi-pc2.dts
+> index 70b5f09984218..5feedde95b5fc 100644
+> --- a/arch/arm64/boot/dts/allwinner/sun50i-h5-orangepi-pc2.dts
+> +++ b/arch/arm64/boot/dts/allwinner/sun50i-h5-orangepi-pc2.dts
+> @@ -85,6 +85,10 @@ reg_usb0_vbus: usb0-vbus {
+>  	};
+>  };
+>  
+> +&cpu0 {
+> +	cpu-supply = <&reg_vdd_cpux>;
+> +};
+> +
+
+This should go alphabetically after "codec".
+
+>  &codec {
+>  	allwinner,audio-routing =
+>  		"Line Out", "LINEOUT",
+> @@ -180,6 +184,31 @@ flash@0 {
+>  	};
+>  };
+>  
+> +&r_i2c {
+
+This should go alphabetically before "spi0".
+
+> +	status = "okay";
+> +
+> +	reg_vdd_cpux: regulator@65 {
+> +		compatible = "silergy,sy8106a";
+> +		reg = <0x65>;
+> +		regulator-name = "vdd-cpux";
+> +		silergy,fixed-microvolt = <1200000>;
+
+The resistors in the datasheet (10k/11.8k) make this 1.1V.
+
+> +		/*
+> +		 * The datasheet uses 1.1V as the minimum value of VDD-CPUX,
+> +		 * however both the Armbian DVFS table and the official one
+> +		 * have operating points with voltage under 1.1V, and both
+> +		 * DVFS table are known to work properly at the lowest
+> +		 * operating point.
+> +		 *
+> +		 * Use 1.0V as the minimum voltage instead.
+> +		 */
+
+The datasheet I have for H5 has "TBD" for the VDD-CPUX volatage range. I think
+this comment only applies to H3 and is not necessary here.
+
+> +		regulator-min-microvolt = <1000000>;
+> +		regulator-max-microvolt = <1400000>;
+> +		regulator-ramp-delay = <200>;
+> +		regulator-boot-on;
+> +		regulator-always-on;
+> +	};
+> +};
+> +
+>  &uart0 {
+>  	pinctrl-names = "default";
+>  	pinctrl-0 = <&uart0_pa_pins>;
+> 
+
+Otherwise,
+Reviewed-by: Samuel Holland <samuel@sholland.org>
+
+Regards,
+Samuel
