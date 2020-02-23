@@ -2,153 +2,122 @@ Return-Path: <SRS0=SnAt=4L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5852AC35675
-	for <linux-kernel@archiver.kernel.org>; Sun, 23 Feb 2020 22:40:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D56E5C35673
+	for <linux-kernel@archiver.kernel.org>; Sun, 23 Feb 2020 22:41:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2EA61206ED
-	for <linux-kernel@archiver.kernel.org>; Sun, 23 Feb 2020 22:40:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9BAA0206E2
+	for <linux-kernel@archiver.kernel.org>; Sun, 23 Feb 2020 22:41:29 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="mFToI9xj"
+	dkim=pass (1024-bit key) header.d=micron.com header.i=@micron.com header.b="eO//hbqX"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727159AbgBWWkx (ORCPT
+        id S1727189AbgBWWl0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 23 Feb 2020 17:40:53 -0500
-Received: from mail-pg1-f196.google.com ([209.85.215.196]:41912 "EHLO
-        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726302AbgBWWkw (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 23 Feb 2020 17:40:52 -0500
-Received: by mail-pg1-f196.google.com with SMTP id 70so4085572pgf.8;
-        Sun, 23 Feb 2020 14:40:52 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=j2mYDc1i3ua7STLlJCa6Hdc5WmjYOywz/EKCcFwocXo=;
-        b=mFToI9xjI4QQ9dypWcrCsgTEWlSEJ6HCXy8z1JYt1MFng6K1F8VTZeGlZhW0+SLGA3
-         4Ga5OgTGeaSZwIyGp87GNUhQ01M2Q3GXMhtRdvs1YmCiXaaVk/2GBwL8zWHwrka9Sa2i
-         uP14yCI5z8L+/b1/JbAi6Vzpf8y+kCyitXPVleKmPNsEq3jrBkf2k9GJUKXBNIwbPr8N
-         yXFQKfR0AVJ7lNqiw5XQs0yuRXpBUQGbppEwIDeLwf/y/8UZxhyMtrEDX46Cyxbp4v0o
-         B4W+pB7ia/IFGgBnAK9/vQwqZw+HDTsIkKZxTd2BPaf1vKrs246j/FhiXU4GDz4NWUem
-         IP+w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=j2mYDc1i3ua7STLlJCa6Hdc5WmjYOywz/EKCcFwocXo=;
-        b=ftgzxoVwi34IRoAVWjoN57om8UULRt9ncA2/HYgB90bm3jc3yBIElj5fGUS4CzNlZJ
-         n8N2dY3KrCy0JWf74T6h6ANEvbH5edsf4xwzoyCjc5s2zVH9TP7JrDntsaJjMYf5cg6F
-         SXqXVmoQxmRDJWg9HxZ0rduLxomAgwaO01I0DOOlBhNaR4y5V2btCDo1puok++4+0FCF
-         Ine6xwriumVkmrjgMsJXhQ+eU3imISombplQH2C6XaRTfCL7b+v1r+hsajC+ZZMDN5Ma
-         454FF6nTHhOWvFQAQEO2FeMmzuRYTLsJGV2OyOJoMAU16qS67z5F5Sk41vy0cRQ6uCnS
-         PE5w==
-X-Gm-Message-State: APjAAAU+viqLENDEwv6EXBWrvZZro6YjiTQjPBKD88RTGNA5yxq0JNQE
-        21KYR8Kfk1QFqfV41je4jew=
-X-Google-Smtp-Source: APXvYqxzYVkwsh8iybt5JEDibUnTgddsvfUWsaYYvbMj8IkRablUTnWOw5fdtlt39H18Ky0wJcLsDw==
-X-Received: by 2002:a63:2cd6:: with SMTP id s205mr49190694pgs.258.1582497651814;
-        Sun, 23 Feb 2020 14:40:51 -0800 (PST)
-Received: from ast-mbp ([2620:10d:c090:400::5:7207])
-        by smtp.gmail.com with ESMTPSA id t19sm9864351pgg.23.2020.02.23.14.40.49
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Sun, 23 Feb 2020 14:40:51 -0800 (PST)
-Date:   Sun, 23 Feb 2020 14:40:48 -0800
-From:   Alexei Starovoitov <alexei.starovoitov@gmail.com>
-To:     Thomas Gleixner <tglx@linutronix.de>
-Cc:     LKML <linux-kernel@vger.kernel.org>,
-        David Miller <davem@davemloft.net>, bpf@vger.kernel.org,
-        netdev@vger.kernel.org, Alexei Starovoitov <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Sebastian Sewior <bigeasy@linutronix.de>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Clark Williams <williams@redhat.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Juri Lelli <juri.lelli@redhat.com>,
-        Ingo Molnar <mingo@kernel.org>,
-        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-        Vinicius Costa Gomes <vinicius.gomes@intel.com>,
-        Jakub Kicinski <kuba@kernel.org>
-Subject: Re: [patch V2 01/20] bpf: Enforce preallocation for all
- instrumentation programs
-Message-ID: <20200223224046.o6ynykpvg6kl75ar@ast-mbp>
-References: <20200222042916.k3r5dj5njoo2ywyj@ast-mbp>
- <87o8tr3thx.fsf@nanos.tec.linutronix.de>
+        Sun, 23 Feb 2020 17:41:26 -0500
+Received: from mail-eopbgr750072.outbound.protection.outlook.com ([40.107.75.72]:55110
+        "EHLO NAM02-BL2-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726302AbgBWWl0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 23 Feb 2020 17:41:26 -0500
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=CXyh43UPlYmYkmfc9X6wv+/O9nzahIws3Gd/A2Tj8pS9DTNpjFn73yHkLa8M/0EK3DulLQVrpAdQCTtvz5Wldzz7VVCglZa4JNp6juHjV4W0+3wp+7a5cOiRHj6zLfixXVsUqbVPfQrT+iLnhmTCcWoG16iSy2kPINa/FnbhykjVHoM9blrUBu3wco++sND3SmRRACBX6FFkZMlmnkG24HX5QMJeDK0ecF8Abwdg9O68jun+NU7wgupwSF229Sp8QQnzjxX8QYgLdjGd7NhIVjrwOKwLFHdPrBE+C2nM0dXqHb/NgWNf0zJ1gL+Kwct9+VXZ4kqfDzwMJAv3yjV84w==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=dAAltzuBU9UJ5UVuOceNimexpEo8PQ1CnszWESZVC2o=;
+ b=G2jg4RxiTLaw484044QtHMJYrXoZgJQbewLrzEYt3MdRElgPlGN9aCkHGqXcb99qQG7x76dqnZA64FG9TMhIxvs0P/wJnquJR5k02Jq63d42tD6bGDsmLgr788vTWJeHmQEDX3QupkmwdHZhbpSYG4rBQvuer3nawcNgLRqpLdwRD9+ODEM4bJ3nJcv73Pto/Gld0Lzcd8O7aRvNr8hfpAgR+YdLjQzC5dRj0eVVpyJkgX6i8cT8m3ARQZk8EJDhIRY80nT3VBv3EfZV6g1+Suws1Rl/RtJOIFp0LrGZ1IEYn2+TJWUa9xR4/Ve+1GDpKnIJnlegSy7BHYjcGE90kA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=micron.com; dmarc=pass action=none header.from=micron.com;
+ dkim=pass header.d=micron.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=micron.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=dAAltzuBU9UJ5UVuOceNimexpEo8PQ1CnszWESZVC2o=;
+ b=eO//hbqX661BScSWzyzNLDePtXlEQaqPlLZEPOTPWDfH9rBObX+FLT669z2cioD+TYXubUNCV4cGuzZRFTWZ4rbu7CUFvmgDEGMwMrC0ax7HsyqHwNGu/m0Bwjm/NdAfZSLN4tSmfJR2NjoVtevCL3AUE69TNs1JUb1k1klbRM8=
+Received: from BN7PR08MB5684.namprd08.prod.outlook.com (2603:10b6:408:35::23)
+ by BN7PR08MB3955.namprd08.prod.outlook.com (2603:10b6:406:89::25) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2750.21; Sun, 23 Feb
+ 2020 22:41:23 +0000
+Received: from BN7PR08MB5684.namprd08.prod.outlook.com
+ ([fe80::589d:e16:907b:5135]) by BN7PR08MB5684.namprd08.prod.outlook.com
+ ([fe80::589d:e16:907b:5135%5]) with mapi id 15.20.2750.021; Sun, 23 Feb 2020
+ 22:41:23 +0000
+From:   "Bean Huo (beanhuo)" <beanhuo@micron.com>
+To:     Stanley Chu <stanley.chu@mediatek.com>,
+        "linux-scsi@vger.kernel.org" <linux-scsi@vger.kernel.org>,
+        "martin.petersen@oracle.com" <martin.petersen@oracle.com>,
+        "avri.altman@wdc.com" <avri.altman@wdc.com>,
+        "alim.akhtar@samsung.com" <alim.akhtar@samsung.com>,
+        "jejb@linux.ibm.com" <jejb@linux.ibm.com>
+CC:     "asutoshd@codeaurora.org" <asutoshd@codeaurora.org>,
+        "cang@codeaurora.org" <cang@codeaurora.org>,
+        "matthias.bgg@gmail.com" <matthias.bgg@gmail.com>,
+        "bvanassche@acm.org" <bvanassche@acm.org>,
+        "linux-mediatek@lists.infradead.org" 
+        <linux-mediatek@lists.infradead.org>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "kuohong.wang@mediatek.com" <kuohong.wang@mediatek.com>,
+        "peter.wang@mediatek.com" <peter.wang@mediatek.com>,
+        "chun-hung.wu@mediatek.com" <chun-hung.wu@mediatek.com>,
+        "andy.teng@mediatek.com" <andy.teng@mediatek.com>
+Subject: RE: [EXT] [PATCH v2 1/1] scsi: ufs: ufs-mediatek: add waiting time
+ for reference clock
+Thread-Topic: [EXT] [PATCH v2 1/1] scsi: ufs: ufs-mediatek: add waiting time
+ for reference clock
+Thread-Index: AQHV5/SBWviNFUGBTUqMAMnr5wxS1KgpZDZw
+Date:   Sun, 23 Feb 2020 22:41:22 +0000
+Message-ID: <BN7PR08MB568451F1637CFCB77843745FDBEF0@BN7PR08MB5684.namprd08.prod.outlook.com>
+References: <20200220134848.8807-1-stanley.chu@mediatek.com>
+ <20200220134848.8807-2-stanley.chu@mediatek.com>
+In-Reply-To: <20200220134848.8807-2-stanley.chu@mediatek.com>
+Accept-Language: en-150, en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-dg-ref: PG1ldGE+PGF0IG5tPSJib2R5LnR4dCIgcD0iYzpcdXNlcnNcYmVhbmh1b1xhcHBkYXRhXHJvYW1pbmdcMDlkODQ5YjYtMzJkMy00YTQwLTg1ZWUtNmI4NGJhMjllMzViXG1zZ3NcbXNnLTliOTJjMjAzLTU2OGQtMTFlYS04YjhjLWRjNzE5NjFmOWRkM1xhbWUtdGVzdFw5YjkyYzIwNS01NjhkLTExZWEtOGI4Yy1kYzcxOTYxZjlkZDNib2R5LnR4dCIgc3o9IjIyMyIgdD0iMTMyMjY5NzEyNzk4OTg2MTk3IiBoPSJ1WHZyRXlYQVZxb0owVzkzRmdXUVdRN2Z6UXM9IiBpZD0iIiBibD0iMCIgYm89IjEiIGNpPSJjQUFBQUVSSFUxUlNSVUZOQ2dVQUFIQUFBQURWTCsxZG11clZBYVNxaC85aGpDRlhwS3FILzJHTUlWY0FBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUJBQUFCQUFBQTFRR0tzQUFBQUFBQUFBQUFBQUFBQUE9PSIvPjwvbWV0YT4=
+x-dg-rorf: true
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=beanhuo@micron.com; 
+x-originating-ip: [165.225.86.144]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 33f06e2f-9150-46c2-06cb-08d7b8b18261
+x-ms-traffictypediagnostic: BN7PR08MB3955:|BN7PR08MB3955:|BN7PR08MB3955:
+x-microsoft-antispam-prvs: <BN7PR08MB39558E644E5D59DF4E47577EDBEF0@BN7PR08MB3955.namprd08.prod.outlook.com>
+x-ms-exchange-transport-forked: True
+x-ms-oob-tlc-oobclassifiers: OLM:400;
+x-forefront-prvs: 0322B4EDE1
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(396003)(136003)(346002)(39860400002)(376002)(366004)(189003)(199004)(71200400001)(33656002)(64756008)(316002)(66556008)(7416002)(5660300002)(66446008)(52536014)(9686003)(7696005)(76116006)(55016002)(81166006)(8936002)(26005)(186003)(2906002)(86362001)(4326008)(110136005)(66476007)(558084003)(66946007)(54906003)(6506007)(81156014)(8676002)(55236004)(478600001);DIR:OUT;SFP:1101;SCL:1;SRVR:BN7PR08MB3955;H:BN7PR08MB5684.namprd08.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+received-spf: None (protection.outlook.com: micron.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: UzpknYlBAlnXG2qm3fgFqqtUpBPjV4czMx//ukw6QPZUMLxwhp6FMx7dW+uITzv7Vhe7aUWm0cYiYK7OHAoR6TP2XFwRkJUQhe2nWeIu/keuxhdAiRJd/McPWT2DonHMOmTPSNKov+HtJA2QouNtldArZ8KUqhb8D7KC7AU0bnqNYpImbUVB5yfkmS4DBkco5WWWt/9SDmYIE/YXxT1N7yro8qCkStyrwLf/aQ3N5I2cm4ilR7NSYw3+rw5O639lxtH/LNYzoo9jcfFX+PSOMc4ZFQwN4ZjmjRdijJcCD+3V4ScytdyBBL945IFtd51te97j1EOtUL7nX+SS6sFv3KS5HJHAWWBs5HfxnAfvhF5SRRUo+eZtaDEDjcXcsh0FUBvZBIqeRBi59Zpv19hkbVBba6uYOY072C+GeItGJBt1a5y8s8Nuy8PlFiiFuelf
+x-ms-exchange-antispam-messagedata: YWTTfKBUOBX+OIirWfp3dMhqNnl8An58L1j5P/Rx1RUlAYx8XkqSUYs2QkQ7wTTlAJmiTUdXUEtxUgmLwd1TYRpuatKPBoSprmmaftA+hFTyHMpn8cCXGOmxukCt2ySYyesC9LIO10zZrwlkla2CXw==
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <87o8tr3thx.fsf@nanos.tec.linutronix.de>
-User-Agent: NeoMutt/20180223
+X-OriginatorOrg: micron.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 33f06e2f-9150-46c2-06cb-08d7b8b18261
+X-MS-Exchange-CrossTenant-originalarrivaltime: 23 Feb 2020 22:41:22.8825
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: f38a5ecd-2813-4862-b11b-ac1d563c806f
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: VakhtzpJ9WyriwznLlhRdvwG4I+3LYZNm02SAcgCi8H0t8NP72P0iJ7rPts/U9tMem7E5G3zC7fQulnSkeg6iw==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BN7PR08MB3955
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, Feb 22, 2020 at 09:40:10AM +0100, Thomas Gleixner wrote:
-> Alexei,
-> 
-> Alexei Starovoitov <alexei.starovoitov@gmail.com> writes:
-> > On Thu, Feb 20, 2020 at 09:45:18PM +0100, Thomas Gleixner wrote:
-> >> The assumption that only programs attached to perf NMI events can deadlock
-> >> on memory allocators is wrong. Assume the following simplified callchain:
-> >>  	 */
-> >> -	if (prog->type == BPF_PROG_TYPE_PERF_EVENT) {
-> >> +	if ((is_tracing_prog_type(prog->type)) {
-> >
-> > This doesn't build.
-> > I assumed the typo somehow sneaked in and proceeded, but it broke
-> > a bunch of tests:
-> > Summary: 1526 PASSED, 0 SKIPPED, 54 FAILED
-> > One can argue that the test are unsafe and broken.
-> > We used to test all those tests with and without prealloc:
-> > map_flags = 0;
-> > run_all_tests();
-> > map_flags = BPF_F_NO_PREALLOC;
-> > run_all_tests();
-> > Then 4 years ago commit 5aa5bd14c5f866 switched hashmap to be no_prealloc
-> > always and that how it stayed since then. We can adjust the tests to use
-> > prealloc with tracing progs, but this breakage shows that there could be plenty
-> > of bpf users that also use BPF_F_NO_PREALLOC with tracing. It could simply
-> > be because they know that their kprobes are in a safe spot (and kmalloc is ok)
-> > and they want to save memory. They could be using large max_entries parameter
-> > for worst case hash map usage, but typical load is low. In general hashtables
-> > don't perform well after 50%, so prealloc is wasting half of the memory. Since
-> > we cannot control where kprobes are placed I'm not sure what is the right fix
-> > here. It feels that if we proceed with this patch somebody will complain and we
-> > would have to revert, but I'm willing to take this risk if we cannot come up
-> > with an alternative fix.
-> 
-> Having something which is known to be broken exposed is not a good option
-> either.
-> 
-> Just assume that someone is investigating a kernel issue. BOFH who is
-> stuck in the 90's uses perf, kprobes and tracepoints. Now he goes on
-> vacation and the new kid in the team decides to flip that over to BPF.
-> So now instead of getting information he deadlocks or crashes the
-> machine.
-> 
-> You can't just tell him, don't do that then. It's broken by design and
-> you really can't tell which probes are safe and which are not because
-> the allocator calls out into whatever functions which might look
-> completely unrelated.
-> 
-> So one way to phase this out would be:
-> 
-> 	if (is_tracing()) {
->         	if (is_perf() || IS_ENABLED(RT))
->                 	return -EINVAL;
->                 WARN_ONCE(.....)
->         }
-> 
-> And clearly write in the warning that this is dangerous, broken and
-> about to be forbidden. Hmm?
 
-Yeah. Let's start with WARN_ONCE and verbose(env, "dangerous, broken")
-so the users see it in the verifier log and people who maintain
-servers (like kernel-team-s in fb, goog, etc) see it as well
-in their dmesg logs. So the motivation will be on both sides.
-Then in few kernel releases we can flip it to disable.
-Or we'll find a way to make it work without pre-allocating.
+>=20
+> Signed-off-by: Stanley Chu <stanley.chu@mediatek.com>
+Reviewed-by: Bean Huo <beanhuo@micron.com>
