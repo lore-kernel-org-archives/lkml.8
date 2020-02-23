@@ -4,49 +4,52 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EE60AC35675
-	for <linux-kernel@archiver.kernel.org>; Sun, 23 Feb 2020 02:23:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1603DC35673
+	for <linux-kernel@archiver.kernel.org>; Sun, 23 Feb 2020 02:23:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BCFFC20707
-	for <linux-kernel@archiver.kernel.org>; Sun, 23 Feb 2020 02:23:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D407720702
+	for <linux-kernel@archiver.kernel.org>; Sun, 23 Feb 2020 02:23:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582424593;
-	bh=GWuUrhosaMkp3+xGKPMnYKEDkAsJtfQyw4gsf0saGCk=;
+	s=default; t=1582424598;
+	bh=3gWKxybEj+MPghi+m6w934dffMdy1LR+18drW+smWv0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=EGh3hX30t47OlZt1Wt1Sd5AA9UFnKBA1Fvd00+HzdDdtiUIFKZ8yAn9e0wyFTppeF
-	 IKeo5RnrDv8kyDBHgReH0arNQSdJ+laSk0HCHynJx+ldRGezp2GtjS/egLX9hydWUP
-	 tXG+11xlKIaT3eAL/c6HYJhs01xobb8IIAteqn8E=
+	b=OCmW/GufW3eVRQ+9Kjjl4jX5C9l2/cK2vym/mBTZkq/YC8Uz2gZSciwSeAPG/wcVh
+	 Hlpz8VQbNM/AvSiiwpNu4l1odkNbTRDcXPS/IHsFdPFyXwBabqYDlrfrfk8n3BpEuu
+	 FrJLhX0in097D8on2mtXK0lRyGFc7WOn9b3e0ogc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728511AbgBWCXM (ORCPT
+        id S1728590AbgBWCXR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 22 Feb 2020 21:23:12 -0500
-Received: from mail.kernel.org ([198.145.29.99]:52218 "EHLO mail.kernel.org"
+        Sat, 22 Feb 2020 21:23:17 -0500
+Received: from mail.kernel.org ([198.145.29.99]:52536 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728435AbgBWCXD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 22 Feb 2020 21:23:03 -0500
+        id S1728493AbgBWCXK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 22 Feb 2020 21:23:10 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2C5B520702;
-        Sun, 23 Feb 2020 02:23:02 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7ECA42071E;
+        Sun, 23 Feb 2020 02:23:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1582424582;
-        bh=GWuUrhosaMkp3+xGKPMnYKEDkAsJtfQyw4gsf0saGCk=;
+        s=default; t=1582424590;
+        bh=3gWKxybEj+MPghi+m6w934dffMdy1LR+18drW+smWv0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=cQJKdhO57evVypPQ7tJ7nZnQErEjt3y89TsJpmxUA7JP/zutbXjGq+ZpZY8ipd9LN
-         +kpQbTNLKY4S26AegVc94HBKANYVKp1BfT6skUUdux4sO1mZtES+Qo437iXGzYlAN/
-         JSf6LSCLu/rhY99wWJ6fw+Ksnop/O75Y2HACEfak=
+        b=iiXKuAQbTpw6+jJNHSSh6+hTFOvcV6LxBXVNx8IlQ1jo5EjYAgmPY+u726UNZQANT
+         01ZfUdnjhM8BxQEPB1RfI6JZAFc4AJEwxo/biayRrazvPUfWBeGgJtdsOQFZloPpX7
+         QZ3rBwdzD/G/IbgHrOvPqn7AAkImJr0ijMHoJnLY=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Krishnamraju Eraparaju <krishna2@chelsio.com>,
-        Jason Gunthorpe <jgg@mellanox.com>,
-        Sasha Levin <sashal@kernel.org>, linux-rdma@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.4 22/50] RDMA/siw: Remove unwanted WARN_ON in siw_cm_llp_data_ready()
-Date:   Sat, 22 Feb 2020 21:22:07 -0500
-Message-Id: <20200223022235.1404-22-sashal@kernel.org>
+Cc:     Brett Creeley <brett.creeley@intel.com>,
+        Andrew Bowers <andrewx.bowers@intel.com>,
+        Jeff Kirsher <jeffrey.t.kirsher@intel.com>,
+        "David S . Miller" <davem@davemloft.net>,
+        Sasha Levin <sashal@kernel.org>,
+        intel-wired-lan@lists.osuosl.org, netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.4 28/50] i40e: Fix the conditional for i40e_vc_validate_vqs_bitmaps
+Date:   Sat, 22 Feb 2020 21:22:13 -0500
+Message-Id: <20200223022235.1404-28-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200223022235.1404-1-sashal@kernel.org>
 References: <20200223022235.1404-1-sashal@kernel.org>
@@ -59,63 +62,47 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Krishnamraju Eraparaju <krishna2@chelsio.com>
+From: Brett Creeley <brett.creeley@intel.com>
 
-[ Upstream commit 663218a3e715fd9339d143a3e10088316b180f4f ]
+[ Upstream commit f27f37a04a69890ac85d9155f03ee2d23b678d8f ]
 
-Warnings like below can fill up the dmesg while disconnecting RDMA
-connections.
-Hence, remove the unwanted WARN_ON.
+Commit d9d6a9aed3f6 ("i40e: Fix virtchnl_queue_select bitmap
+validation") introduced a necessary change for verifying how queue
+bitmaps from the iavf driver get validated. Unfortunately, the
+conditional was reversed. Fix this.
 
-  WARNING: CPU: 6 PID: 0 at drivers/infiniband/sw/siw/siw_cm.c:1229 siw_cm_llp_data_ready+0xc1/0xd0 [siw]
-  RIP: 0010:siw_cm_llp_data_ready+0xc1/0xd0 [siw]
-  Call Trace:
-   <IRQ>
-   tcp_data_queue+0x226/0xb40
-   tcp_rcv_established+0x220/0x620
-   tcp_v4_do_rcv+0x12a/0x1e0
-   tcp_v4_rcv+0xb05/0xc00
-   ip_local_deliver_finish+0x69/0x210
-   ip_local_deliver+0x6b/0xe0
-   ip_rcv+0x273/0x362
-   __netif_receive_skb_core+0xb35/0xc30
-   netif_receive_skb_internal+0x3d/0xb0
-   napi_gro_frags+0x13b/0x200
-   t4_ethrx_handler+0x433/0x7d0 [cxgb4]
-   process_responses+0x318/0x580 [cxgb4]
-   napi_rx_handler+0x14/0x100 [cxgb4]
-   net_rx_action+0x149/0x3b0
-   __do_softirq+0xe3/0x30a
-   irq_exit+0x100/0x110
-   do_IRQ+0x7f/0xe0
-   common_interrupt+0xf/0xf
-   </IRQ>
-
-Link: https://lore.kernel.org/r/20200207141429.27927-1-krishna2@chelsio.com
-Signed-off-by: Krishnamraju Eraparaju <krishna2@chelsio.com>
-Signed-off-by: Jason Gunthorpe <jgg@mellanox.com>
+Fixes: d9d6a9aed3f6 ("i40e: Fix virtchnl_queue_select bitmap validation")
+Signed-off-by: Brett Creeley <brett.creeley@intel.com>
+Tested-by: Andrew Bowers <andrewx.bowers@intel.com>
+Signed-off-by: Jeff Kirsher <jeffrey.t.kirsher@intel.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/infiniband/sw/siw/siw_cm.c | 5 ++---
- 1 file changed, 2 insertions(+), 3 deletions(-)
+ drivers/net/ethernet/intel/i40e/i40e_virtchnl_pf.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/infiniband/sw/siw/siw_cm.c b/drivers/infiniband/sw/siw/siw_cm.c
-index 0454561718d95..31aa41d85ccff 100644
---- a/drivers/infiniband/sw/siw/siw_cm.c
-+++ b/drivers/infiniband/sw/siw/siw_cm.c
-@@ -1225,10 +1225,9 @@ static void siw_cm_llp_data_ready(struct sock *sk)
- 	read_lock(&sk->sk_callback_lock);
+diff --git a/drivers/net/ethernet/intel/i40e/i40e_virtchnl_pf.c b/drivers/net/ethernet/intel/i40e/i40e_virtchnl_pf.c
+index 3515ace0f0201..38042d610f82c 100644
+--- a/drivers/net/ethernet/intel/i40e/i40e_virtchnl_pf.c
++++ b/drivers/net/ethernet/intel/i40e/i40e_virtchnl_pf.c
+@@ -2363,7 +2363,7 @@ static int i40e_vc_enable_queues_msg(struct i40e_vf *vf, u8 *msg)
+ 		goto error_param;
+ 	}
  
- 	cep = sk_to_cep(sk);
--	if (!cep) {
--		WARN_ON(1);
-+	if (!cep)
- 		goto out;
--	}
-+
- 	siw_dbg_cep(cep, "state: %d\n", cep->state);
+-	if (i40e_vc_validate_vqs_bitmaps(vqs)) {
++	if (!i40e_vc_validate_vqs_bitmaps(vqs)) {
+ 		aq_ret = I40E_ERR_PARAM;
+ 		goto error_param;
+ 	}
+@@ -2425,7 +2425,7 @@ static int i40e_vc_disable_queues_msg(struct i40e_vf *vf, u8 *msg)
+ 		goto error_param;
+ 	}
  
- 	switch (cep->state) {
+-	if (i40e_vc_validate_vqs_bitmaps(vqs)) {
++	if (!i40e_vc_validate_vqs_bitmaps(vqs)) {
+ 		aq_ret = I40E_ERR_PARAM;
+ 		goto error_param;
+ 	}
 -- 
 2.20.1
 
