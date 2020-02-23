@@ -6,38 +6,47 @@ X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 148BFC35666
-	for <linux-kernel@archiver.kernel.org>; Sun, 23 Feb 2020 19:30:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4B06FC35671
+	for <linux-kernel@archiver.kernel.org>; Sun, 23 Feb 2020 19:30:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DF83920880
-	for <linux-kernel@archiver.kernel.org>; Sun, 23 Feb 2020 19:30:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 241E9217F4
+	for <linux-kernel@archiver.kernel.org>; Sun, 23 Feb 2020 19:30:37 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727464AbgBWTac (ORCPT
+        id S1727239AbgBWTaF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 23 Feb 2020 14:30:32 -0500
-Received: from foss.arm.com ([217.140.110.172]:51422 "EHLO foss.arm.com"
+        Sun, 23 Feb 2020 14:30:05 -0500
+Received: from foss.arm.com ([217.140.110.172]:51348 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727267AbgBWTaI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 23 Feb 2020 14:30:08 -0500
+        id S1727201AbgBWTaD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 23 Feb 2020 14:30:03 -0500
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id C4526106F;
-        Sun, 23 Feb 2020 11:30:07 -0800 (PST)
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 0D69A30E;
+        Sun, 23 Feb 2020 11:30:03 -0800 (PST)
 Received: from e107158-lin.cambridge.arm.com (e107158-lin.cambridge.arm.com [10.1.195.21])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 6D44E3F6CF;
-        Sun, 23 Feb 2020 11:30:06 -0800 (PST)
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id B1E333F6CF;
+        Sun, 23 Feb 2020 11:30:00 -0800 (PST)
 From:   Qais Yousef <qais.yousef@arm.com>
 To:     Thomas Gleixner <tglx@linutronix.de>
 Cc:     "Paul E . McKenney" <paulmck@kernel.org>,
         Qais Yousef <qais.yousef@arm.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Sakari Ailus <sakari.ailus@linux.intel.com>,
-        sparclinux@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH v3 09/15] sparc: Replace cpu_up/down with add/remove_cpu
-Date:   Sun, 23 Feb 2020 19:29:36 +0000
-Message-Id: <20200223192942.18420-10-qais.yousef@arm.com>
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will@kernel.org>,
+        Steve Capper <steve.capper@arm.com>,
+        Richard Fontana <rfontana@redhat.com>,
+        James Morse <james.morse@arm.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Josh Poimboeuf <jpoimboe@redhat.com>,
+        Ingo Molnar <mingo@kernel.org>,
+        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
+        Nicholas Piggin <npiggin@gmail.com>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        Jiri Kosina <jkosina@suse.cz>,
+        Pavankumar Kondeti <pkondeti@codeaurora.org>,
+        Zhenzhong Duan <zhenzhong.duan@oracle.com>,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: [PATCH v3 06/15] arm64: hibernate.c: Create a new function to handle cpu_up(sleep_cpu)
+Date:   Sun, 23 Feb 2020 19:29:33 +0000
+Message-Id: <20200223192942.18420-7-qais.yousef@arm.com>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20200223192942.18420-1-qais.yousef@arm.com>
 References: <20200223192942.18420-1-qais.yousef@arm.com>
@@ -46,57 +55,105 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The core device API performs extra housekeeping bits that are missing
-from directly calling cpu_up/down.
+In preparation to make cpu_up/down private - move the user in arm64
+hibernate.c to use a new generic function that provides what arm64
+needs.
 
-See commit a6717c01ddc2 ("powerpc/rtas: use device model APIs and
-serialization during LPM") for an example description of what might go
-wrong.
-
-This also prepares to make cpu_up/down a private interface for anything
-but the cpu subsystem.
-
-Acked-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Qais Yousef <qais.yousef@arm.com>
-CC: "David S. Miller" <davem@davemloft.net>
+CC: Catalin Marinas <catalin.marinas@arm.com>
+CC: Will Deacon <will@kernel.org>
+CC: Steve Capper <steve.capper@arm.com>
+CC: Richard Fontana <rfontana@redhat.com>
+CC: James Morse <james.morse@arm.com>
+CC: Mark Rutland <mark.rutland@arm.com>
 CC: Thomas Gleixner <tglx@linutronix.de>
-CC: Bjorn Helgaas <bhelgaas@google.com>
-CC: "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>
-CC: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-CC: Sakari Ailus <sakari.ailus@linux.intel.com>
-CC: sparclinux@vger.kernel.org
+CC: Josh Poimboeuf <jpoimboe@redhat.com>
+CC: Ingo Molnar <mingo@kernel.org>
+CC: "Peter Zijlstra (Intel)" <peterz@infradead.org>
+CC: Nicholas Piggin <npiggin@gmail.com>
+CC: Daniel Lezcano <daniel.lezcano@linaro.org>
+CC: Jiri Kosina <jkosina@suse.cz>
+CC: Pavankumar Kondeti <pkondeti@codeaurora.org>
+CC: Zhenzhong Duan <zhenzhong.duan@oracle.com>
+CC: linux-arm-kernel@lists.infradead.org
 CC: linux-kernel@vger.kernel.org
 ---
+ arch/arm64/kernel/hibernate.c | 13 +++++--------
+ include/linux/cpu.h           |  1 +
+ kernel/cpu.c                  | 24 ++++++++++++++++++++++++
+ 3 files changed, 30 insertions(+), 8 deletions(-)
 
-David, this now uses add/remove_cpu() which you should be CCed on. I wasn't
-sure if I can keep your Ack or remove it in this case. Please let me know if
-you need more clarification.
-
- arch/sparc/kernel/ds.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
-
-diff --git a/arch/sparc/kernel/ds.c b/arch/sparc/kernel/ds.c
-index bbf59b3b4af8..75232cbd58bf 100644
---- a/arch/sparc/kernel/ds.c
-+++ b/arch/sparc/kernel/ds.c
-@@ -555,7 +555,7 @@ static int dr_cpu_configure(struct ds_info *dp, struct ds_cap_state *cp,
+diff --git a/arch/arm64/kernel/hibernate.c b/arch/arm64/kernel/hibernate.c
+index 590963c9c609..5b73e92c99e3 100644
+--- a/arch/arm64/kernel/hibernate.c
++++ b/arch/arm64/kernel/hibernate.c
+@@ -166,14 +166,11 @@ int arch_hibernation_header_restore(void *addr)
+ 		sleep_cpu = -EINVAL;
+ 		return -EINVAL;
+ 	}
+-	if (!cpu_online(sleep_cpu)) {
+-		pr_info("Hibernated on a CPU that is offline! Bringing CPU up.\n");
+-		ret = cpu_up(sleep_cpu);
+-		if (ret) {
+-			pr_err("Failed to bring hibernate-CPU up!\n");
+-			sleep_cpu = -EINVAL;
+-			return ret;
+-		}
++
++	ret = bringup_hibernate_cpu(sleep_cpu);
++	if (ret) {
++		sleep_cpu = -EINVAL;
++		return ret;
+ 	}
  
- 		printk(KERN_INFO "ds-%llu: Starting cpu %d...\n",
- 		       dp->id, cpu);
--		err = cpu_up(cpu);
-+		err = add_cpu(cpu);
- 		if (err) {
- 			__u32 res = DR_CPU_RES_FAILURE;
- 			__u32 stat = DR_CPU_STAT_UNCONFIGURED;
-@@ -611,7 +611,7 @@ static int dr_cpu_unconfigure(struct ds_info *dp,
+ 	resume_hdr = *hdr;
+diff --git a/include/linux/cpu.h b/include/linux/cpu.h
+index 64a246e9c8db..aebe8186cb07 100644
+--- a/include/linux/cpu.h
++++ b/include/linux/cpu.h
+@@ -93,6 +93,7 @@ int add_cpu(unsigned int cpu);
+ void notify_cpu_starting(unsigned int cpu);
+ extern void cpu_maps_update_begin(void);
+ extern void cpu_maps_update_done(void);
++extern int bringup_hibernate_cpu(unsigned int sleep_cpu);
  
- 		printk(KERN_INFO "ds-%llu: Shutting down cpu %d...\n",
- 		       dp->id, cpu);
--		err = cpu_down(cpu);
-+		err = remove_cpu(cpu);
- 		if (err)
- 			dr_cpu_mark(resp, cpu, ncpus,
- 				    DR_CPU_RES_FAILURE,
+ #else	/* CONFIG_SMP */
+ #define cpuhp_tasks_frozen	0
+diff --git a/kernel/cpu.c b/kernel/cpu.c
+index 03c727195b65..bf39c5bfb6d9 100644
+--- a/kernel/cpu.c
++++ b/kernel/cpu.c
+@@ -1275,6 +1275,30 @@ int add_cpu(unsigned int cpu)
+ }
+ EXPORT_SYMBOL_GPL(add_cpu);
+ 
++/**
++ * bringup_hibernate_cpu - Bring up the CPU that we hibernated on
++ * @sleep_cpu: The cpu we hibernated on and should be brought up.
++ *
++ * On some archs like arm64, we can hibernate on any CPU, but on wake up the
++ * CPU we hibernated on might be offline as a side effect of using maxcpus= for
++ * example.
++ */
++int bringup_hibernate_cpu(unsigned int sleep_cpu)
++{
++	int ret;
++
++	if (!cpu_online(sleep_cpu)) {
++		pr_info("Hibernated on a CPU that is offline! Bringing CPU up.\n");
++		ret = cpu_up(sleep_cpu);
++		if (ret) {
++			pr_err("Failed to bring hibernate-CPU up!\n");
++			return ret;
++		}
++	}
++
++	return 0;
++}
++
+ #ifdef CONFIG_PM_SLEEP_SMP
+ static cpumask_var_t frozen_cpus;
+ 
 -- 
 2.17.1
 
