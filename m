@@ -4,50 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CEC23C35671
-	for <linux-kernel@archiver.kernel.org>; Sun, 23 Feb 2020 02:32:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 148B0C35671
+	for <linux-kernel@archiver.kernel.org>; Sun, 23 Feb 2020 02:32:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A322D20659
-	for <linux-kernel@archiver.kernel.org>; Sun, 23 Feb 2020 02:32:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DF32720659
+	for <linux-kernel@archiver.kernel.org>; Sun, 23 Feb 2020 02:32:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582425131;
-	bh=QaUmGOs6VeR87aE8yHZMtpxIbTBHgOfdmQpPxvkOCs0=;
+	s=default; t=1582425133;
+	bh=e1SKCZPdGa2avM3Ux/3r2Ge8S6FtgQ3cCJFYoRw0Vzs=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=eMdwqEf3vr5YSSBoBJNQsmGhpygc2BI1qGXGkdDwgxaQgLeW9zk1Q4qX200fReto7
-	 ntbyghHNamI8Z5+9KF+PkfwzZ46h5GqfRu/dhg3Uiy5xotWNon5mkohw2a0tEZkoiq
-	 MolEG+W4FdfB1VzK0RtkFSiU+VlEX2dIZnet9zgA=
+	b=SRRuoDcaTVURUeCltMaFrsydsn6HWzhuQFj9D44sc9MAommPd4SLQhPNS7aLT0w8Y
+	 AzfooNJqwCTmP3vKiVB5IB2Fitydy3TtaHrtQ090YmNfqQD13IbXDKebyAtmB2/uvR
+	 DZ82EJX6zVKreVnTU9GobIECa390zTdYoPMfY778=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728566AbgBWCXQ (ORCPT
+        id S1727213AbgBWCcM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 22 Feb 2020 21:23:16 -0500
-Received: from mail.kernel.org ([198.145.29.99]:52458 "EHLO mail.kernel.org"
+        Sat, 22 Feb 2020 21:32:12 -0500
+Received: from mail.kernel.org ([198.145.29.99]:52728 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728481AbgBWCXJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 22 Feb 2020 21:23:09 -0500
+        id S1728547AbgBWCXQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 22 Feb 2020 21:23:16 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5BA6A20707;
-        Sun, 23 Feb 2020 02:23:08 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6215624680;
+        Sun, 23 Feb 2020 02:23:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1582424589;
-        bh=QaUmGOs6VeR87aE8yHZMtpxIbTBHgOfdmQpPxvkOCs0=;
+        s=default; t=1582424595;
+        bh=e1SKCZPdGa2avM3Ux/3r2Ge8S6FtgQ3cCJFYoRw0Vzs=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=KU+L7qypDmL2RhBqw3Q6DKJexz1n0/0iIr2dM9leMngmWDly+bmD/0C1m2vqjHCke
-         pAcRvb8D25WfvG0SNYO/8jKAbRVO/invzkGgcyOVvkds+YX0VF3VsCjQaF9YcKaF7j
-         aFwU5NoSlED7ZzlWBDR8BTmpaKfP65j/jm+mL9Co=
+        b=yyFtZjlm7vDnmcfe4+fEPBEAm2mI1xNth7vi5npW+kT3t8mTg+i4OUYSlDYNVRQdo
+         ySpTS1RVaf6fNUSDFRfN4nPuBek1tSMJedO7HSMIYs/Pvtbvx/tUhOlc0dUPgcpA1J
+         l2nIDoxaXCJNjCU4mjDyDsaxOCjRJyfh81eXHqZ8=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Thierry Reding <treding@nvidia.com>,
-        kbuild test robot <lkp@intel.com>,
-        Olof Johansson <olof@lixom.net>,
-        Sasha Levin <sashal@kernel.org>, linux-tegra@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.4 27/50] soc/tegra: fuse: Fix build with Tegra194 configuration
-Date:   Sat, 22 Feb 2020 21:22:12 -0500
-Message-Id: <20200223022235.1404-27-sashal@kernel.org>
+Cc:     Arthur Kiyanovski <akiyano@amazon.com>,
+        Sameeh Jubran <sameehj@amazon.com>,
+        "David S . Miller" <davem@davemloft.net>,
+        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.4 32/50] net: ena: fix incorrect default RSS key
+Date:   Sat, 22 Feb 2020 21:22:17 -0500
+Message-Id: <20200223022235.1404-32-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200223022235.1404-1-sashal@kernel.org>
 References: <20200223022235.1404-1-sashal@kernel.org>
@@ -60,38 +60,81 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Thierry Reding <treding@nvidia.com>
+From: Arthur Kiyanovski <akiyano@amazon.com>
 
-[ Upstream commit 6f4ecbe284df5f22e386a640d9a4b32cede62030 ]
+[ Upstream commit 0d1c3de7b8c78a5e44b74b62ede4a63629f5d811 ]
 
-If only Tegra194 support is enabled, the tegra30_fuse_read() and
-tegra30_fuse_init() function are not declared and cause a build failure.
-Add Tegra194 to the preprocessor guard to make sure these functions are
-available for Tegra194-only builds as well.
+Bug description:
+When running "ethtool -x <if_name>" the key shows up as all zeros.
 
-Link: https://lore.kernel.org/r/20200203143114.3967295-1-thierry.reding@gmail.com
-Reported-by: kbuild test robot <lkp@intel.com>
-Signed-off-by: Thierry Reding <treding@nvidia.com>
-Signed-off-by: Olof Johansson <olof@lixom.net>
+When we use "ethtool -X <if_name> hfunc toeplitz hkey <some:random:key>" to
+set the key and then try to retrieve it using "ethtool -x <if_name>" then
+we return the correct key because we return the one we saved.
+
+Bug cause:
+We don't fetch the key from the device but instead return the key
+that we have saved internally which is by default set to zero upon
+allocation.
+
+Fix:
+This commit fixes the issue by initializing the key to a random value
+using netdev_rss_key_fill().
+
+Fixes: 1738cd3ed342 ("net: ena: Add a driver for Amazon Elastic Network Adapters (ENA)")
+Signed-off-by: Sameeh Jubran <sameehj@amazon.com>
+Signed-off-by: Arthur Kiyanovski <akiyano@amazon.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/soc/tegra/fuse/fuse-tegra30.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ drivers/net/ethernet/amazon/ena/ena_com.c | 15 +++++++++++++++
+ drivers/net/ethernet/amazon/ena/ena_com.h |  1 +
+ 2 files changed, 16 insertions(+)
 
-diff --git a/drivers/soc/tegra/fuse/fuse-tegra30.c b/drivers/soc/tegra/fuse/fuse-tegra30.c
-index be9424a871734..9c3ef0a02fd4e 100644
---- a/drivers/soc/tegra/fuse/fuse-tegra30.c
-+++ b/drivers/soc/tegra/fuse/fuse-tegra30.c
-@@ -35,7 +35,8 @@
-     defined(CONFIG_ARCH_TEGRA_124_SOC) || \
-     defined(CONFIG_ARCH_TEGRA_132_SOC) || \
-     defined(CONFIG_ARCH_TEGRA_210_SOC) || \
--    defined(CONFIG_ARCH_TEGRA_186_SOC)
-+    defined(CONFIG_ARCH_TEGRA_186_SOC) || \
-+    defined(CONFIG_ARCH_TEGRA_194_SOC)
- static u32 tegra30_fuse_read_early(struct tegra_fuse *fuse, unsigned int offset)
+diff --git a/drivers/net/ethernet/amazon/ena/ena_com.c b/drivers/net/ethernet/amazon/ena/ena_com.c
+index e54c44fdcaa73..d6b894b06fa30 100644
+--- a/drivers/net/ethernet/amazon/ena/ena_com.c
++++ b/drivers/net/ethernet/amazon/ena/ena_com.c
+@@ -1041,6 +1041,19 @@ static int ena_com_get_feature(struct ena_com_dev *ena_dev,
+ 				      feature_ver);
+ }
+ 
++static void ena_com_hash_key_fill_default_key(struct ena_com_dev *ena_dev)
++{
++	struct ena_admin_feature_rss_flow_hash_control *hash_key =
++		(ena_dev->rss).hash_key;
++
++	netdev_rss_key_fill(&hash_key->key, sizeof(hash_key->key));
++	/* The key is stored in the device in u32 array
++	 * as well as the API requires the key to be passed in this
++	 * format. Thus the size of our array should be divided by 4
++	 */
++	hash_key->keys_num = sizeof(hash_key->key) / sizeof(u32);
++}
++
+ static int ena_com_hash_key_allocate(struct ena_com_dev *ena_dev)
  {
- 	if (WARN_ON(!fuse->base))
+ 	struct ena_rss *rss = &ena_dev->rss;
+@@ -2631,6 +2644,8 @@ int ena_com_rss_init(struct ena_com_dev *ena_dev, u16 indr_tbl_log_size)
+ 	if (unlikely(rc))
+ 		goto err_hash_key;
+ 
++	ena_com_hash_key_fill_default_key(ena_dev);
++
+ 	rc = ena_com_hash_ctrl_init(ena_dev);
+ 	if (unlikely(rc))
+ 		goto err_hash_ctrl;
+diff --git a/drivers/net/ethernet/amazon/ena/ena_com.h b/drivers/net/ethernet/amazon/ena/ena_com.h
+index 0ce37d54ed108..9b5bd28ed0ac6 100644
+--- a/drivers/net/ethernet/amazon/ena/ena_com.h
++++ b/drivers/net/ethernet/amazon/ena/ena_com.h
+@@ -44,6 +44,7 @@
+ #include <linux/spinlock.h>
+ #include <linux/types.h>
+ #include <linux/wait.h>
++#include <linux/netdevice.h>
+ 
+ #include "ena_common_defs.h"
+ #include "ena_admin_defs.h"
 -- 
 2.20.1
 
