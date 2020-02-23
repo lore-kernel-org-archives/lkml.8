@@ -6,35 +6,44 @@ X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B5434C35671
-	for <linux-kernel@archiver.kernel.org>; Sun, 23 Feb 2020 19:30:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D6A8AC35666
+	for <linux-kernel@archiver.kernel.org>; Sun, 23 Feb 2020 19:30:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8BE3520836
-	for <linux-kernel@archiver.kernel.org>; Sun, 23 Feb 2020 19:30:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B6F3220836
+	for <linux-kernel@archiver.kernel.org>; Sun, 23 Feb 2020 19:30:21 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727366AbgBWTaS (ORCPT
+        id S1727395AbgBWTaU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 23 Feb 2020 14:30:18 -0500
-Received: from foss.arm.com ([217.140.110.172]:51484 "EHLO foss.arm.com"
+        Sun, 23 Feb 2020 14:30:20 -0500
+Received: from foss.arm.com ([217.140.110.172]:51490 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727306AbgBWTaN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 23 Feb 2020 14:30:13 -0500
+        id S1727321AbgBWTaP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 23 Feb 2020 14:30:15 -0500
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id E9F53FEC;
-        Sun, 23 Feb 2020 11:30:12 -0800 (PST)
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 0B20631B;
+        Sun, 23 Feb 2020 11:30:15 -0800 (PST)
 Received: from e107158-lin.cambridge.arm.com (e107158-lin.cambridge.arm.com [10.1.195.21])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 11AE13F6CF;
-        Sun, 23 Feb 2020 11:30:11 -0800 (PST)
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 2B8A53F6CF;
+        Sun, 23 Feb 2020 11:30:13 -0800 (PST)
 From:   Qais Yousef <qais.yousef@arm.com>
 To:     Thomas Gleixner <tglx@linutronix.de>
 Cc:     "Paul E . McKenney" <paulmck@kernel.org>,
         Qais Yousef <qais.yousef@arm.com>,
-        Davidlohr Bueso <dave@stgolabs.net>,
-        Josh Triplett <josh@joshtriplett.org>,
+        Josh Poimboeuf <jpoimboe@redhat.com>,
+        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
+        Jiri Kosina <jkosina@suse.cz>,
+        Nicholas Piggin <npiggin@gmail.com>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        Ingo Molnar <mingo@kernel.org>,
+        Eiichi Tsukata <devel@etsukata.com>,
+        Zhenzhong Duan <zhenzhong.duan@oracle.com>,
+        Nadav Amit <namit@vmware.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
         linux-kernel@vger.kernel.org
-Subject: [PATCH v3 13/15] torture: Replace cpu_up/down with add/remove_cpu
-Date:   Sun, 23 Feb 2020 19:29:40 +0000
-Message-Id: <20200223192942.18420-14-qais.yousef@arm.com>
+Subject: [PATCH v3 14/15] smp: Create a new function to bringup nonboot cpus online
+Date:   Sun, 23 Feb 2020 19:29:41 +0000
+Message-Id: <20200223192942.18420-15-qais.yousef@arm.com>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20200223192942.18420-1-qais.yousef@arm.com>
 References: <20200223192942.18420-1-qais.yousef@arm.com>
@@ -43,68 +52,90 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The core device API performs extra housekeeping bits that are missing
-from directly calling cpu_up/down.
-
-See commit a6717c01ddc2 ("powerpc/rtas: use device model APIs and
-serialization during LPM") for an example description of what might go
-wrong.
-
-This also prepares to make cpu_up/down a private interface for anything
-but the cpu subsystem.
+This is the last direct user of cpu_up() before we can hide it now as
+internal implementation detail of the cpu subsystem.
 
 Signed-off-by: Qais Yousef <qais.yousef@arm.com>
-CC: Davidlohr Bueso <dave@stgolabs.net>
-CC: "Paul E. McKenney" <paulmck@kernel.org>
-CC: Josh Triplett <josh@joshtriplett.org>
+CC: Thomas Gleixner <tglx@linutronix.de>
+CC: Josh Poimboeuf <jpoimboe@redhat.com>
+CC: "Peter Zijlstra (Intel)" <peterz@infradead.org>
+CC: Jiri Kosina <jkosina@suse.cz>
+CC: Nicholas Piggin <npiggin@gmail.com>
+CC: Daniel Lezcano <daniel.lezcano@linaro.org>
+CC: Ingo Molnar <mingo@kernel.org>
+CC: Eiichi Tsukata <devel@etsukata.com>
+CC: Zhenzhong Duan <zhenzhong.duan@oracle.com>
+CC: Nadav Amit <namit@vmware.com>
+CC: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+CC: "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>
 CC: linux-kernel@vger.kernel.org
 ---
- kernel/torture.c | 9 +++++----
- 1 file changed, 5 insertions(+), 4 deletions(-)
+ include/linux/cpu.h |  1 +
+ kernel/cpu.c        | 12 ++++++++++++
+ kernel/smp.c        |  9 +--------
+ 3 files changed, 14 insertions(+), 8 deletions(-)
 
-diff --git a/kernel/torture.c b/kernel/torture.c
-index 7c13f5558b71..a479689eac73 100644
---- a/kernel/torture.c
-+++ b/kernel/torture.c
-@@ -97,7 +97,7 @@ bool torture_offline(int cpu, long *n_offl_attempts, long *n_offl_successes,
- 			 torture_type, cpu);
- 	starttime = jiffies;
- 	(*n_offl_attempts)++;
--	ret = cpu_down(cpu);
-+	ret = remove_cpu(cpu);
- 	if (ret) {
- 		if (verbose)
- 			pr_alert("%s" TORTURE_FLAG
-@@ -148,7 +148,7 @@ bool torture_online(int cpu, long *n_onl_attempts, long *n_onl_successes,
- 			 torture_type, cpu);
- 	starttime = jiffies;
- 	(*n_onl_attempts)++;
--	ret = cpu_up(cpu);
-+	ret = add_cpu(cpu);
- 	if (ret) {
- 		if (verbose)
- 			pr_alert("%s" TORTURE_FLAG
-@@ -192,17 +192,18 @@ torture_onoff(void *arg)
- 	for_each_online_cpu(cpu)
- 		maxcpu = cpu;
- 	WARN_ON(maxcpu < 0);
--	if (!IS_MODULE(CONFIG_TORTURE_TEST))
-+	if (!IS_MODULE(CONFIG_TORTURE_TEST)) {
- 		for_each_possible_cpu(cpu) {
- 			if (cpu_online(cpu))
- 				continue;
--			ret = cpu_up(cpu);
-+			ret = add_cpu(cpu);
- 			if (ret && verbose) {
- 				pr_alert("%s" TORTURE_FLAG
- 					 "%s: Initial online %d: errno %d\n",
- 					 __func__, torture_type, cpu, ret);
- 			}
- 		}
-+	}
+diff --git a/include/linux/cpu.h b/include/linux/cpu.h
+index aebe8186cb07..3d3caecef395 100644
+--- a/include/linux/cpu.h
++++ b/include/linux/cpu.h
+@@ -94,6 +94,7 @@ void notify_cpu_starting(unsigned int cpu);
+ extern void cpu_maps_update_begin(void);
+ extern void cpu_maps_update_done(void);
+ extern int bringup_hibernate_cpu(unsigned int sleep_cpu);
++extern void smp_bringup_nonboot_cpus(unsigned int setup_max_cpus);
  
- 	if (maxcpu == 0) {
- 		VERBOSE_TOROUT_STRING("Only one CPU, so CPU-hotplug testing is disabled");
+ #else	/* CONFIG_SMP */
+ #define cpuhp_tasks_frozen	0
+diff --git a/kernel/cpu.c b/kernel/cpu.c
+index bf39c5bfb6d9..7c6aa427a3a3 100644
+--- a/kernel/cpu.c
++++ b/kernel/cpu.c
+@@ -1299,6 +1299,18 @@ int bringup_hibernate_cpu(unsigned int sleep_cpu)
+ 	return 0;
+ }
+ 
++void smp_bringup_nonboot_cpus(unsigned int setup_max_cpus)
++{
++	unsigned int cpu;
++
++	for_each_present_cpu(cpu) {
++		if (num_online_cpus() >= setup_max_cpus)
++			break;
++		if (!cpu_online(cpu))
++			cpu_up(cpu);
++	}
++}
++
+ #ifdef CONFIG_PM_SLEEP_SMP
+ static cpumask_var_t frozen_cpus;
+ 
+diff --git a/kernel/smp.c b/kernel/smp.c
+index d0ada39eb4d4..9e793cfd6128 100644
+--- a/kernel/smp.c
++++ b/kernel/smp.c
+@@ -589,20 +589,13 @@ void __init setup_nr_cpu_ids(void)
+ void __init smp_init(void)
+ {
+ 	int num_nodes, num_cpus;
+-	unsigned int cpu;
+ 
+ 	idle_threads_init();
+ 	cpuhp_threads_init();
+ 
+ 	pr_info("Bringing up secondary CPUs ...\n");
+ 
+-	/* FIXME: This should be done in userspace --RR */
+-	for_each_present_cpu(cpu) {
+-		if (num_online_cpus() >= setup_max_cpus)
+-			break;
+-		if (!cpu_online(cpu))
+-			cpu_up(cpu);
+-	}
++	smp_bringup_nonboot_cpus(setup_max_cpus);
+ 
+ 	num_nodes = num_online_nodes();
+ 	num_cpus  = num_online_cpus();
 -- 
 2.17.1
 
