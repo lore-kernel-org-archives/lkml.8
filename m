@@ -4,49 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4800CC35671
-	for <linux-kernel@archiver.kernel.org>; Sun, 23 Feb 2020 02:29:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 159F0C35669
+	for <linux-kernel@archiver.kernel.org>; Sun, 23 Feb 2020 02:29:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1C56C20659
-	for <linux-kernel@archiver.kernel.org>; Sun, 23 Feb 2020 02:29:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D81A220659
+	for <linux-kernel@archiver.kernel.org>; Sun, 23 Feb 2020 02:29:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582424951;
-	bh=bFsZhosj2u5QY1KuGWzvAgpaJThZEcEJRDCwEH/gJKE=;
+	s=default; t=1582424954;
+	bh=oRb+qQ42z7SSQSnd5tLDMTTGxa2LKgCi7yV3C6cMEvU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=a5rYmMsLUisZy55ls0dxqwAZuybs5S7VXd4LHWWJoxv+Stacfj9K0soy7cBWSy37R
-	 a1e84Pdae7rfoItkmOv/DwXdreDBzZ8sMQ3b0wQAVhULZFjb2iOFSaGKsrzXDC4WW/
-	 1RFzpC60LATMxtrDFZbg1xrQSk5qgcNoU/kQkoG0=
+	b=qkYhyDFtRas2h5CN8yvSw0s6K8FER6QbTPN6/S1HGZm8N+vpj91Le/WitcdY1VcEA
+	 EqHVVTiwjfKL/rvIhs7mMyM7LRpYe1ipiPJ9XGDRf+jlgokZ1GKwzP8VH5KbW/1gT9
+	 Apxn6GBSiZXhTPjKFZdQjrLmZQJsMpeAkSd0HiqE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727708AbgBWCYE (ORCPT
+        id S1728389AbgBWC3M (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 22 Feb 2020 21:24:04 -0500
-Received: from mail.kernel.org ([198.145.29.99]:53736 "EHLO mail.kernel.org"
+        Sat, 22 Feb 2020 21:29:12 -0500
+Received: from mail.kernel.org ([198.145.29.99]:53880 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728899AbgBWCX5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 22 Feb 2020 21:23:57 -0500
+        id S1728978AbgBWCYE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 22 Feb 2020 21:24:04 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4513A208C4;
-        Sun, 23 Feb 2020 02:23:56 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 526DC208C4;
+        Sun, 23 Feb 2020 02:24:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1582424636;
-        bh=bFsZhosj2u5QY1KuGWzvAgpaJThZEcEJRDCwEH/gJKE=;
+        s=default; t=1582424644;
+        bh=oRb+qQ42z7SSQSnd5tLDMTTGxa2LKgCi7yV3C6cMEvU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=tYqJbqXQ9OMF1yDzwlz7TUaayX5XJ0lCzQBwQlGkHrdTgwVIQeqx2EMhDLMI411fb
-         ZOahQ8B/TaZkFmY4y1ENuiDki8SUD4WDotc6RBYNS5jC73FtKHEs647uI1qu1rkN7X
-         lVat5yq/8IQgjbPCXbiSqW9i/R/jtPa9QXe4NvII=
+        b=ng/WMo6ZezD66MsaInU6YMF/IMPtCBhaODttpSsRySUP8TJyI38Kv1IGsSuMZYNOr
+         kZFPCUFEKtf/9yO/6NYbZASljXJz1UkPR8iM9uV45Rg/t/uUIyFTAwYTu/LCyCEKfr
+         vb/e4EkqEyGhUsLlWTeYx41A/P0TP/XUaxWLKWvo=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Arthur Kiyanovski <akiyano@amazon.com>,
+Cc:     Sameeh Jubran <sameehj@amazon.com>,
         "David S . Miller" <davem@davemloft.net>,
         Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 14/25] net: ena: fix uses of round_jiffies()
-Date:   Sat, 22 Feb 2020 21:23:28 -0500
-Message-Id: <20200223022339.1885-14-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.19 20/25] net: ena: ethtool: use correct value for crc32 hash
+Date:   Sat, 22 Feb 2020 21:23:34 -0500
+Message-Id: <20200223022339.1885-20-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200223022339.1885-1-sashal@kernel.org>
 References: <20200223022339.1885-1-sashal@kernel.org>
@@ -59,73 +59,43 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Arthur Kiyanovski <akiyano@amazon.com>
+From: Sameeh Jubran <sameehj@amazon.com>
 
-[ Upstream commit 2a6e5fa2f4c25b66c763428a3e65363214946931 ]
+[ Upstream commit 886d2089276e40d460731765083a741c5c762461 ]
 
->From the documentation of round_jiffies():
-"Rounds a time delta  in the future (in jiffies) up or down to
-(approximately) full seconds. This is useful for timers for which
-the exact time they fire does not matter too much, as long as
-they fire approximately every X seconds.
-By rounding these timers to whole seconds, all such timers will fire
-at the same time, rather than at various times spread out. The goal
-of this is to have the CPU wake up less, which saves power."
+Up till kernel 4.11 there was no enum defined for crc32 hash in ethtool,
+thus the xor enum was used for supporting crc32.
 
-There are 2 parts to this patch:
-================================
-Part 1:
--------
-In our case we need timer_service to be called approximately every
-X=1 seconds, and the exact time does not matter, so using round_jiffies()
-is the right way to go.
-
-Therefore we add round_jiffies() to the mod_timer() in ena_timer_service().
-
-Part 2:
--------
-round_jiffies() is used in check_for_missing_keep_alive() when
-getting the jiffies of the expiration of the keep_alive timeout. Here it
-is actually a mistake to use round_jiffies() because we want the exact
-time when keep_alive should expire and not an approximate rounded time,
-which can cause early, false positive, timeouts.
-
-Therefore we remove round_jiffies() in the calculation of
-keep_alive_expired() in check_for_missing_keep_alive().
-
-Fixes: 82ef30f13be0 ("net: ena: add hardware hints capability to the driver")
 Fixes: 1738cd3ed342 ("net: ena: Add a driver for Amazon Elastic Network Adapters (ENA)")
-Signed-off-by: Arthur Kiyanovski <akiyano@amazon.com>
+Signed-off-by: Sameeh Jubran <sameehj@amazon.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/ethernet/amazon/ena/ena_netdev.c | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+ drivers/net/ethernet/amazon/ena/ena_ethtool.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/net/ethernet/amazon/ena/ena_netdev.c b/drivers/net/ethernet/amazon/ena/ena_netdev.c
-index 9afb19ebba580..8736718b17359 100644
---- a/drivers/net/ethernet/amazon/ena/ena_netdev.c
-+++ b/drivers/net/ethernet/amazon/ena/ena_netdev.c
-@@ -2847,8 +2847,8 @@ static void check_for_missing_keep_alive(struct ena_adapter *adapter)
- 	if (adapter->keep_alive_timeout == ENA_HW_HINTS_NO_TIMEOUT)
- 		return;
- 
--	keep_alive_expired = round_jiffies(adapter->last_keep_alive_jiffies +
--					   adapter->keep_alive_timeout);
-+	keep_alive_expired = adapter->last_keep_alive_jiffies +
-+			     adapter->keep_alive_timeout;
- 	if (unlikely(time_is_before_jiffies(keep_alive_expired))) {
- 		netif_err(adapter, drv, adapter->netdev,
- 			  "Keep alive watchdog timeout.\n");
-@@ -2950,7 +2950,7 @@ static void ena_timer_service(struct timer_list *t)
- 	}
- 
- 	/* Reset the timer */
--	mod_timer(&adapter->timer_service, jiffies + HZ);
-+	mod_timer(&adapter->timer_service, round_jiffies(jiffies + HZ));
- }
- 
- static int ena_calc_io_queue_num(struct pci_dev *pdev,
+diff --git a/drivers/net/ethernet/amazon/ena/ena_ethtool.c b/drivers/net/ethernet/amazon/ena/ena_ethtool.c
+index d6d79366b7fc1..40354444ecbdf 100644
+--- a/drivers/net/ethernet/amazon/ena/ena_ethtool.c
++++ b/drivers/net/ethernet/amazon/ena/ena_ethtool.c
+@@ -706,7 +706,7 @@ static int ena_get_rxfh(struct net_device *netdev, u32 *indir, u8 *key,
+ 		func = ETH_RSS_HASH_TOP;
+ 		break;
+ 	case ENA_ADMIN_CRC32:
+-		func = ETH_RSS_HASH_XOR;
++		func = ETH_RSS_HASH_CRC32;
+ 		break;
+ 	default:
+ 		netif_err(adapter, drv, netdev,
+@@ -752,7 +752,7 @@ static int ena_set_rxfh(struct net_device *netdev, const u32 *indir,
+ 	case ETH_RSS_HASH_TOP:
+ 		func = ENA_ADMIN_TOEPLITZ;
+ 		break;
+-	case ETH_RSS_HASH_XOR:
++	case ETH_RSS_HASH_CRC32:
+ 		func = ENA_ADMIN_CRC32;
+ 		break;
+ 	default:
 -- 
 2.20.1
 
