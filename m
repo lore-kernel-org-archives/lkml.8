@@ -2,130 +2,173 @@ Return-Path: <SRS0=SnAt=4L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-15.8 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1,USER_IN_DEF_DKIM_WL autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3627CC35666
-	for <linux-kernel@archiver.kernel.org>; Sun, 23 Feb 2020 19:03:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 89BABC35666
+	for <linux-kernel@archiver.kernel.org>; Sun, 23 Feb 2020 19:09:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0B98D206E2
-	for <linux-kernel@archiver.kernel.org>; Sun, 23 Feb 2020 19:03:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5B953206E0
+	for <linux-kernel@archiver.kernel.org>; Sun, 23 Feb 2020 19:09:43 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="AiZCF/a2"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="JSZ7Tv7F"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727150AbgBWTDQ (ORCPT
+        id S1727106AbgBWTJT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 23 Feb 2020 14:03:16 -0500
-Received: from mail-wr1-f68.google.com ([209.85.221.68]:34183 "EHLO
-        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726208AbgBWTDP (ORCPT
+        Sun, 23 Feb 2020 14:09:19 -0500
+Received: from mail-ot1-f68.google.com ([209.85.210.68]:34276 "EHLO
+        mail-ot1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726302AbgBWTJS (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 23 Feb 2020 14:03:15 -0500
-Received: by mail-wr1-f68.google.com with SMTP id n10so7853822wrm.1;
-        Sun, 23 Feb 2020 11:03:14 -0800 (PST)
+        Sun, 23 Feb 2020 14:09:18 -0500
+Received: by mail-ot1-f68.google.com with SMTP id j16so6812518otl.1
+        for <linux-kernel@vger.kernel.org>; Sun, 23 Feb 2020 11:09:18 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:date:from:to:cc:subject:message-id:mail-followup-to
-         :references:mime-version:content-disposition:in-reply-to:user-agent;
-        bh=A5PcRNqVDequHW3hKDEELTuy+nfThlBZndOvTTb6Fzk=;
-        b=AiZCF/a2q8ooI9RYiTznc9nYqhl3/7byEYXyNvKbyt86kczZ4RqS+FIH2UF2g5Rrf7
-         Qdvgpn7kRC/MUeY6T1nIEHbA2m1JijwgttNfNUJZal6KQCWbL7dMuMaBa+Z/czcHjyl4
-         qbdrTbQ4ACXTDuactRbJCJ4naOG0CzW06uyDar3wxOOPDWmxtwgHLmH8sQy3/6HUZHEz
-         El37Fc8TXC20FvNxqSBAXPdEYf9l95rKz7TbOkKjT4wtEJcLpY5xXgUGrCGvXupW/ePL
-         tCxUdqDZt4VAkasTUgJxzyeJOlnsUgTzWKqtl4e80AgugR8cuo69rtFNHb+dCr1SLpkZ
-         Qejg==
+        d=google.com; s=20161025;
+        h=date:from:to:cc:subject:in-reply-to:message-id:references
+         :user-agent:mime-version;
+        bh=htLN1mwGdJtRnyqYUCPJp+OPGglRrhjiWXYVtDt/NKM=;
+        b=JSZ7Tv7F6nQ3YH2jP3HFLdPAhZhy2Y/RM9Au69XuF7TR0GzciTC0aj+0Tv4uRV+9XJ
+         S4Wu6jcRiaRdgV38hOL3giTmwn97IzhRnjQRKVCoYK+wbKxwIa24ektK26DJ43CkLtwN
+         ZT9IiL8y9//RQ99zTTNcqBJXNSogX2r+AwY/uH8cqaruxnp5gzlWpx+9El5byimG0jnA
+         gwXKIGTFa3/cNEDFtAyjXJOHNCZOiszkR89nBIjCVQRfXSF+Sr/HRB0GuxP8BmqtZijN
+         wiRvUQvVfqVjVfedH3LtBOG9DpYU+DUoB1Db0YG0GDCRe4xQFuaaRpiYbX5PICYUsE9L
+         PPqw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
-         :mail-followup-to:references:mime-version:content-disposition
-         :in-reply-to:user-agent;
-        bh=A5PcRNqVDequHW3hKDEELTuy+nfThlBZndOvTTb6Fzk=;
-        b=l/ASUnJcBbeOEeYVUnSA6eUph3xc36drgCp0TyQKUVI1z/CYbvAEZ8hogypLjMo8s5
-         vosy3M3HzoaWyscbgBl0D69t+1xckKuMKr01ywakPS/nhghIzNMRt+EtQnxGgnSX7mW6
-         JzSMJncYqrlff6hu3bhzMJfiPByELr5MRkXgHk+s1QBKN13s53fjbweb0enjXwrhaCGe
-         K4KGK8yY4/C+12dfdL6SlavgmiVIha5X1ihXzFgJXCK2Z9cOu1Pr6RNeHFxQSFaX/QT/
-         EDtGpN1RQ1578hKKPGfkT8CqGK88d64e7Afw8/nh1nG+/ksW1e0ox7D5p0qhMxpVMxMv
-         kXBg==
-X-Gm-Message-State: APjAAAUmjtHuSrKu+Jr75umuhH3m28UxQ3ef/F9qCgSmAsPAENKSrnPc
-        WI+xu9owilH6yLkv5/iaYeM=
-X-Google-Smtp-Source: APXvYqxfXJKIZsXIveZSysVzGSvhzDQFvhvyaaEt/yWFzajfEc5h0Bse/ct1rSyy5oVYBNw1Tp/vLw==
-X-Received: by 2002:a5d:560d:: with SMTP id l13mr35511905wrv.222.1582484593685;
-        Sun, 23 Feb 2020 11:03:13 -0800 (PST)
-Received: from dumbo (ip4da2e549.direct-adsl.nl. [77.162.229.73])
-        by smtp.gmail.com with ESMTPSA id y12sm14812427wrw.88.2020.02.23.11.03.12
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 23 Feb 2020 11:03:12 -0800 (PST)
-Date:   Sun, 23 Feb 2020 20:03:11 +0100
-From:   Domenico Andreoli <domenico.andreoli@linux.com>
-To:     "Darrick J. Wong" <darrick.wong@oracle.com>
-Cc:     Christoph Hellwig <hch@lst.de>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-pm@vger.kernel.org
-Subject: Re: Regression: hibernation is broken since
- e6bc9de714972cac34daa1dc1567ee48a47a9342
-Message-ID: <20200223190311.GA26811@dumbo>
-Mail-Followup-To: "Darrick J. Wong" <darrick.wong@oracle.com>,
-        Christoph Hellwig <hch@lst.de>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-pm@vger.kernel.org
-References: <20200213172351.GA6747@dumbo>
- <20200213175753.GS6874@magnolia>
- <20200213183515.GA8798@dumbo>
- <20200213193410.GB6868@magnolia>
- <20200213194135.GF6870@magnolia>
- <20200214211523.GA32637@dumbo>
- <20200222002319.GK9504@magnolia>
+        h=x-gm-message-state:date:from:to:cc:subject:in-reply-to:message-id
+         :references:user-agent:mime-version;
+        bh=htLN1mwGdJtRnyqYUCPJp+OPGglRrhjiWXYVtDt/NKM=;
+        b=HaYERqVwd+Nr4HuSGiv4pUFaBHoSaZjtFOjFyPIY2z/xC9lqoL/D2B+jDeeppFDa3q
+         +LBGPxtlYMpLEZ3Q9sfXNTbp3UyRZQMt/oEVaVamQ81d5+QfM5c7GXFQf5VM/gvKL1qs
+         19WHnhdPgtLQqbTlTqHqTgRkJtb/r422hEcESTeBlCAEkMLEqZ7cHZxi8QylgH4NQMJl
+         ywFD7btIyJ8IFRdLPaVIOaxO2Fge/KAUuSV3beiy8VGbUH7uQFz4hbputNajUYfL9kSF
+         +DEN7W0TaD72N6nj5XohwBbWsFv1DcEivjZiTp0TqTvX6C1RtFGp8ck9gy7eYKWIh0US
+         pWMg==
+X-Gm-Message-State: APjAAAXYTw7+POcqATXhfVGipiehP55svjaWBnjBLCBEMeG9Tv263+eU
+        r4nvPmEOy6zG87IW9dZeR7MIFA==
+X-Google-Smtp-Source: APXvYqy/p/O4TAQu54lEWny6r9jlQDTbURDNigwuqgFSiLk69KhcFalHKOOJrks6IaVeMj9w1BHaEg==
+X-Received: by 2002:a9d:5786:: with SMTP id q6mr36062007oth.164.1582484957514;
+        Sun, 23 Feb 2020 11:09:17 -0800 (PST)
+Received: from eggly.attlocal.net (172-10-233-147.lightspeed.sntcca.sbcglobal.net. [172.10.233.147])
+        by smtp.gmail.com with ESMTPSA id i6sm3575702oto.62.2020.02.23.11.09.15
+        (version=TLS1 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
+        Sun, 23 Feb 2020 11:09:16 -0800 (PST)
+Date:   Sun, 23 Feb 2020 11:08:56 -0800 (PST)
+From:   Hugh Dickins <hughd@google.com>
+X-X-Sender: hugh@eggly.anvils
+To:     Dan Schatzberg <schatzberg.dan@gmail.com>
+cc:     Jens Axboe <axboe@kernel.dk>, Tejun Heo <tj@kernel.org>,
+        Li Zefan <lizefan@huawei.com>,
+        Johannes Weiner <hannes@cmpxchg.org>,
+        Michal Hocko <mhocko@kernel.org>,
+        Vladimir Davydov <vdavydov.dev@gmail.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Hugh Dickins <hughd@google.com>, Roman Gushchin <guro@fb.com>,
+        Shakeel Butt <shakeelb@google.com>,
+        Chris Down <chris@chrisdown.name>,
+        Yang Shi <yang.shi@linux.alibaba.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        "open list:BLOCK LAYER" <linux-block@vger.kernel.org>,
+        open list <linux-kernel@vger.kernel.org>,
+        "open list:CONTROL GROUP (CGROUP)" <cgroups@vger.kernel.org>,
+        "open list:CONTROL GROUP - MEMORY RESOURCE CONTROLLER (MEMCG)" 
+        <linux-mm@kvack.org>
+Subject: Re: [PATCH v3 2/3] mm: Charge active memcg when no mm is set
+In-Reply-To: <0a27b6fcbd1f7af104d7f4cf0adc6a31e0e7dd19.1582216294.git.schatzberg.dan@gmail.com>
+Message-ID: <alpine.LSU.2.11.2002231058520.5735@eggly.anvils>
+References: <cover.1582216294.git.schatzberg.dan@gmail.com> <0a27b6fcbd1f7af104d7f4cf0adc6a31e0e7dd19.1582216294.git.schatzberg.dan@gmail.com>
+User-Agent: Alpine 2.11 (LSU 23 2013-08-11)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200222002319.GK9504@magnolia>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: TEXT/PLAIN; charset=US-ASCII
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Feb 21, 2020 at 04:23:19PM -0800, Darrick J. Wong wrote:
-> 
-> Ok, third try.  Does the following work?  This is a little more
-> selective in that it only disables the write protection on the swap
-> device/file that uswusp is going to write to.
+On Thu, 20 Feb 2020, Dan Schatzberg wrote:
 
-Yes it works but also verified that once the S_SWAPFILE bit is cleared
-it's never restored, therefore the protecton is gone after the first
-hibernation.
-
+> memalloc_use_memcg() worked for kernel allocations but was silently
+> ignored for user pages.
 > 
-> --D
+> This patch establishes a precedence order for who gets charged:
 > 
-> diff --git a/kernel/power/user.c b/kernel/power/user.c
-> index 77438954cc2b..a3ae9cbbfcf0 100644
-> --- a/kernel/power/user.c
-> +++ b/kernel/power/user.c
-> @@ -372,10 +372,17 @@ static long snapshot_ioctl(struct file *filp, unsigned int cmd,
->  			 */
->  			swdev = new_decode_dev(swap_area.dev);
->  			if (swdev) {
-> +				struct block_device *bd;
-> +
->  				offset = swap_area.offset;
-> -				data->swap = swap_type_of(swdev, offset, NULL);
-> +				data->swap = swap_type_of(swdev, offset, &bd);
->  				if (data->swap < 0)
->  					error = -ENODEV;
-> +
-> +				inode_lock(bd->bd_inode);
-> +				bd->bd_inode->i_flags &= ~S_SWAPFILE;
-> +				inode_unlock(bd->bd_inode);
-> +				bdput(bd);
->  			} else {
->  				data->swap = -1;
->  				error = -EINVAL;
+> 1. If there is a memcg associated with the page already, that memcg is
+>    charged. This happens during swapin.
+> 
+> 2. If an explicit mm is passed, mm->memcg is charged. This happens
+>    during page faults, which can be triggered in remote VMs (eg gup).
+> 
+> 3. Otherwise consult the current process context. If it has configured
+>    a current->active_memcg, use that. Otherwise, current->mm->memcg.
+> 
+> Previously, if a NULL mm was passed to mem_cgroup_try_charge (case 3) it
+> would always charge the root cgroup. Now it looks up the current
+> active_memcg first (falling back to charging the root cgroup if not
+> set).
+> 
+> Signed-off-by: Dan Schatzberg <schatzberg.dan@gmail.com>
+> Acked-by: Johannes Weiner <hannes@cmpxchg.org>
+> Acked-by: Tejun Heo <tj@kernel.org>
 
--- 
-rsa4096: 3B10 0CA1 8674 ACBA B4FE  FCD2 CE5B CF17 9960 DE13
-ed25519: FFB4 0CC3 7F2E 091D F7DA  356E CC79 2832 ED38 CB05
+Acked-by: Hugh Dickins <hughd@google.com>
+
+Yes, internally we have some further not-yet-upstreamed complications
+here (mainly, the "memcg=" mount option for all charges on a tmpfs to
+be charged to that memcg); but what you're doing here does not obstruct
+adding that later, they fit in well with the hierarchy that you (and
+Johannes) mapped out above, and it's really an improvement for shmem
+not to be referring to current there - thanks.
+
+> ---
+>  mm/memcontrol.c | 11 ++++++++---
+>  mm/shmem.c      |  2 +-
+>  2 files changed, 9 insertions(+), 4 deletions(-)
+> 
+> diff --git a/mm/memcontrol.c b/mm/memcontrol.c
+> index 6f6dc8712e39..b174aff4f069 100644
+> --- a/mm/memcontrol.c
+> +++ b/mm/memcontrol.c
+> @@ -6317,7 +6317,8 @@ enum mem_cgroup_protection mem_cgroup_protected(struct mem_cgroup *root,
+>   * @compound: charge the page as compound or small page
+>   *
+>   * Try to charge @page to the memcg that @mm belongs to, reclaiming
+> - * pages according to @gfp_mask if necessary.
+> + * pages according to @gfp_mask if necessary. If @mm is NULL, try to
+> + * charge to the active memcg.
+>   *
+>   * Returns 0 on success, with *@memcgp pointing to the charged memcg.
+>   * Otherwise, an error code is returned.
+> @@ -6361,8 +6362,12 @@ int mem_cgroup_try_charge(struct page *page, struct mm_struct *mm,
+>  		}
+>  	}
+>  
+> -	if (!memcg)
+> -		memcg = get_mem_cgroup_from_mm(mm);
+> +	if (!memcg) {
+> +		if (!mm)
+> +			memcg = get_mem_cgroup_from_current();
+> +		else
+> +			memcg = get_mem_cgroup_from_mm(mm);
+> +	}
+>  
+>  	ret = try_charge(memcg, gfp_mask, nr_pages);
+>  
+> diff --git a/mm/shmem.c b/mm/shmem.c
+> index c8f7540ef048..7c7f5acf89d6 100644
+> --- a/mm/shmem.c
+> +++ b/mm/shmem.c
+> @@ -1766,7 +1766,7 @@ static int shmem_getpage_gfp(struct inode *inode, pgoff_t index,
+>  	}
+>  
+>  	sbinfo = SHMEM_SB(inode->i_sb);
+> -	charge_mm = vma ? vma->vm_mm : current->mm;
+> +	charge_mm = vma ? vma->vm_mm : NULL;
+>  
+>  	page = find_lock_entry(mapping, index);
+>  	if (xa_is_value(page)) {
+> -- 
+> 2.17.1
