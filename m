@@ -2,130 +2,98 @@ Return-Path: <SRS0=SnAt=4L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8D801C35671
-	for <linux-kernel@archiver.kernel.org>; Sun, 23 Feb 2020 02:28:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 666C1C35669
+	for <linux-kernel@archiver.kernel.org>; Sun, 23 Feb 2020 02:28:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 65AC420659
-	for <linux-kernel@archiver.kernel.org>; Sun, 23 Feb 2020 02:28:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3DCA920659
+	for <linux-kernel@archiver.kernel.org>; Sun, 23 Feb 2020 02:28:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582424885;
-	bh=YUp+x46YJV3qWYuyFvqm+xktcZT6q3KY1sQikdYXYxY=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=pkJtFPzEuIAHOzqDqjzJ14HJAxUQwmPCh+WzoNQT2ut2LsxBgRufBHGg1UkyF4Ul+
-	 zzOmmVgv3rhnZJ6dS7NzS4kvyiuordC4UTxIuESA290lAtfmNDCgnWEMkjRaGr1dpb
-	 odZ99vLsebSeocOpvysewdBudPyxb3TdX280yLQQ=
+	s=default; t=1582424889;
+	bh=XXDevdsvXrMFfmYH0SIeJUUJ7CUK8AkX0UYKg2KVDCU=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=SxbDXZ5G6urcXxSXxFm08xj+JDZPhxq+0+0dIpoF9QIQC+MdCqgp4CjJFsrlsWap8
+	 6HZNt9cI24yz3dcS4CIvYWz8ODYGIwAi/O4NyBW87Led3YZJ/dNm138wz2ItnxTp7F
+	 XpSda+LZhWMbRHvvisjpJrGiaA5z9wcvh0JqaEVU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729472AbgBWC2D (ORCPT
+        id S1729224AbgBWCYY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 22 Feb 2020 21:28:03 -0500
-Received: from mail.kernel.org ([198.145.29.99]:54382 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727978AbgBWCYZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 22 Feb 2020 21:24:25 -0500
-Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id EC77621D56;
-        Sun, 23 Feb 2020 02:24:23 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1582424664;
-        bh=YUp+x46YJV3qWYuyFvqm+xktcZT6q3KY1sQikdYXYxY=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=LJS2BV/HcaXa2EkZbiw+TAe0UXoCrlDXJlmNXnL8m4RBwNNOMkjoHARn0U0CEe7r6
-         L2BYgikWRUcj1xN4psMgUbdUP9bGArzI6Sr2Rt2natd7ezQJAQrMtZCDe/cXKsplz8
-         MiCyXz/kLOgli5acwCoTopbZhaYJOVS/8GR8aHWc=
-From:   Sasha Levin <sashal@kernel.org>
-To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Arthur Kiyanovski <akiyano@amazon.com>,
-        "David S . Miller" <davem@davemloft.net>,
-        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.14 10/21] net: ena: fix uses of round_jiffies()
-Date:   Sat, 22 Feb 2020 21:24:00 -0500
-Message-Id: <20200223022411.2159-10-sashal@kernel.org>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20200223022411.2159-1-sashal@kernel.org>
-References: <20200223022411.2159-1-sashal@kernel.org>
+        Sat, 22 Feb 2020 21:24:24 -0500
+Received: from mail-lf1-f68.google.com ([209.85.167.68]:43236 "EHLO
+        mail-lf1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729138AbgBWCYT (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 22 Feb 2020 21:24:19 -0500
+Received: by mail-lf1-f68.google.com with SMTP id s23so4294285lfs.10
+        for <linux-kernel@vger.kernel.org>; Sat, 22 Feb 2020 18:24:18 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linux-foundation.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=dqfK9IxNwj7ckP+MpJmSceONpcVbgVpUow9PPlLP6iA=;
+        b=IIfqKj2QdGhRadPaahvLYJUZd7WA2qCg1z6Q8cD1LMlvinW50KHFPhR9fFz/XyCE/k
+         aB8JOGB9Flmf8exB5hf8IBB2QSftwDTwA+9g9UU6QgopoPRzetdU1Xp1ZpE+Z3rg3FoT
+         y7h9slhbD53JXZysr17OqV0jFNfxzoQdI+4g0=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=dqfK9IxNwj7ckP+MpJmSceONpcVbgVpUow9PPlLP6iA=;
+        b=Xq7rlLXyrAZ2+OEP3b3WGgM6ZXQ2lx6YMY6aPKXF40CxM8a45xJFr1nXo+zjjK/HMf
+         KDyNPsk9t95mOfCrzxo/OzhClpEdZlJXXvd70gVRfBqC/SDHwZcpHZPzfpAcBr/fPKEC
+         1LDGLFkSZrmuANuYzYb7rrPZZdJyEfswCCHCn47r2Oj80aamIhKAk4LUskduhmiqSW1C
+         +0yhKTZYQriUdSaNTkfLIKKUKjFTSzlYMAcnGGq6HkDQBg7KSD0J2gTfwgDvCxtUSx4S
+         F0LZSTfYbUEZ3RmjuJ8s4yxpydMv6NJfkGgEtk5rg+7cU//5gdpyTw9X8kmzvUwnk86v
+         rkfw==
+X-Gm-Message-State: APjAAAVi/qYoZENsYqomQtey355lxpDc5VcxS9Tm+MRWyN+zVjzIECEu
+        QjsEcSAedPCgI5Aa0RZjZhE8qeQbdf8=
+X-Google-Smtp-Source: APXvYqw8ZHfR7N089rhyb96H1EaTXin3D1wXpKQi+Llw6QzHhekXL33SDyrFBhyWYTO6KFD2v+gXJQ==
+X-Received: by 2002:a19:9155:: with SMTP id y21mr9788843lfj.28.1582424657502;
+        Sat, 22 Feb 2020 18:24:17 -0800 (PST)
+Received: from mail-lj1-f181.google.com (mail-lj1-f181.google.com. [209.85.208.181])
+        by smtp.gmail.com with ESMTPSA id w29sm4697463ljd.99.2020.02.22.18.24.16
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Sat, 22 Feb 2020 18:24:16 -0800 (PST)
+Received: by mail-lj1-f181.google.com with SMTP id q8so6239899ljb.2
+        for <linux-kernel@vger.kernel.org>; Sat, 22 Feb 2020 18:24:16 -0800 (PST)
+X-Received: by 2002:a2e:580c:: with SMTP id m12mr26665961ljb.150.1582424656256;
+ Sat, 22 Feb 2020 18:24:16 -0800 (PST)
 MIME-Version: 1.0
-X-stable: review
-X-Patchwork-Hint: Ignore
-Content-Transfer-Encoding: 8bit
+References: <20200223011154.GY23230@ZenIV.linux.org.uk> <20200223011626.4103706-1-viro@ZenIV.linux.org.uk>
+ <20200223011626.4103706-23-viro@ZenIV.linux.org.uk>
+In-Reply-To: <20200223011626.4103706-23-viro@ZenIV.linux.org.uk>
+From:   Linus Torvalds <torvalds@linux-foundation.org>
+Date:   Sat, 22 Feb 2020 18:24:00 -0800
+X-Gmail-Original-Message-ID: <CAHk-=wiD_410q9aBfQN44a3pPYrxjqa6OfFf=5ZCr=rCWgTt3A@mail.gmail.com>
+Message-ID: <CAHk-=wiD_410q9aBfQN44a3pPYrxjqa6OfFf=5ZCr=rCWgTt3A@mail.gmail.com>
+Subject: Re: [RFC][PATCH v2 23/34] merging pick_link() with get_link(), part 6
+To:     Al Viro <viro@zeniv.linux.org.uk>
+Cc:     linux-fsdevel <linux-fsdevel@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Arthur Kiyanovski <akiyano@amazon.com>
+On Sat, Feb 22, 2020 at 5:23 PM Al Viro <viro@zeniv.linux.org.uk> wrote:
+>
+> -       err = pick_link(nd, &path, inode, seq);
+> -       if (err > 0)
+> -               return get_link(nd);
+> -       else
+> -               return ERR_PTR(err);
+> +       return pick_link(nd, &path, inode, seq);
 
-[ Upstream commit 2a6e5fa2f4c25b66c763428a3e65363214946931 ]
+Yay! It's like Christmas.
 
->From the documentation of round_jiffies():
-"Rounds a time delta  in the future (in jiffies) up or down to
-(approximately) full seconds. This is useful for timers for which
-the exact time they fire does not matter too much, as long as
-they fire approximately every X seconds.
-By rounding these timers to whole seconds, all such timers will fire
-at the same time, rather than at various times spread out. The goal
-of this is to have the CPU wake up less, which saves power."
+Except honestly, I think I'd have been happier if the intermediate
+points didn't have that odd syntax in them. Even if it then gets
+removed in the end.
 
-There are 2 parts to this patch:
-================================
-Part 1:
--------
-In our case we need timer_service to be called approximately every
-X=1 seconds, and the exact time does not matter, so using round_jiffies()
-is the right way to go.
-
-Therefore we add round_jiffies() to the mod_timer() in ena_timer_service().
-
-Part 2:
--------
-round_jiffies() is used in check_for_missing_keep_alive() when
-getting the jiffies of the expiration of the keep_alive timeout. Here it
-is actually a mistake to use round_jiffies() because we want the exact
-time when keep_alive should expire and not an approximate rounded time,
-which can cause early, false positive, timeouts.
-
-Therefore we remove round_jiffies() in the calculation of
-keep_alive_expired() in check_for_missing_keep_alive().
-
-Fixes: 82ef30f13be0 ("net: ena: add hardware hints capability to the driver")
-Fixes: 1738cd3ed342 ("net: ena: Add a driver for Amazon Elastic Network Adapters (ENA)")
-Signed-off-by: Arthur Kiyanovski <akiyano@amazon.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- drivers/net/ethernet/amazon/ena/ena_netdev.c | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
-
-diff --git a/drivers/net/ethernet/amazon/ena/ena_netdev.c b/drivers/net/ethernet/amazon/ena/ena_netdev.c
-index 518ff393a026b..d9ece9ac6f53c 100644
---- a/drivers/net/ethernet/amazon/ena/ena_netdev.c
-+++ b/drivers/net/ethernet/amazon/ena/ena_netdev.c
-@@ -2803,8 +2803,8 @@ static void check_for_missing_keep_alive(struct ena_adapter *adapter)
- 	if (adapter->keep_alive_timeout == ENA_HW_HINTS_NO_TIMEOUT)
- 		return;
- 
--	keep_alive_expired = round_jiffies(adapter->last_keep_alive_jiffies +
--					   adapter->keep_alive_timeout);
-+	keep_alive_expired = adapter->last_keep_alive_jiffies +
-+			     adapter->keep_alive_timeout;
- 	if (unlikely(time_is_before_jiffies(keep_alive_expired))) {
- 		netif_err(adapter, drv, adapter->netdev,
- 			  "Keep alive watchdog timeout.\n");
-@@ -2906,7 +2906,7 @@ static void ena_timer_service(unsigned long data)
- 	}
- 
- 	/* Reset the timer */
--	mod_timer(&adapter->timer_service, jiffies + HZ);
-+	mod_timer(&adapter->timer_service, round_jiffies(jiffies + HZ));
- }
- 
- static int ena_calc_io_queue_num(struct pci_dev *pdev,
--- 
-2.20.1
-
+               Linus
