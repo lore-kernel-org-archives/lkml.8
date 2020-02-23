@@ -4,54 +4,56 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 77A2EC35673
-	for <linux-kernel@archiver.kernel.org>; Sun, 23 Feb 2020 02:23:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0F52AC35671
+	for <linux-kernel@archiver.kernel.org>; Sun, 23 Feb 2020 02:23:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 46B9621D56
-	for <linux-kernel@archiver.kernel.org>; Sun, 23 Feb 2020 02:23:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D6D6822464
+	for <linux-kernel@archiver.kernel.org>; Sun, 23 Feb 2020 02:23:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582424608;
-	bh=YHXFE6QN7HtiBj1Mkt+G80ciFeW6QQPn2fBKaykZeQ0=;
+	s=default; t=1582424616;
+	bh=PtriBsXyW8kGTAqXSDy7UYBdHikaU5JTUnz/W1iCUdQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=lyYqQmP45qPDUWvmz4WpepCUCUlD2JOWIhDAMpQuOAU6f/p5tKzdr1nbSg2sPY5Ms
-	 vSwLrdQdbhgNlp9ITQP/eGAaZiUwIp3lA0Ry+4AZBTapag7Y0H76U7xjPwgh4pMiUx
-	 doKtC148JstPAW7wmZmVXNfu2qmuJUlEYQ+EX+W8=
+	b=kg86KHKtRmIkrPVZAxe8IcJzBpR1QyC8/4HtWSwEbDmzJgEsLaxK54pxpHSWtH7Ij
+	 +l757L0XORAKivlo4QevHw9nbCiF0mcTN7N1xlnEchKi2hhIzxEAtAEcDvCbsEMePE
+	 3VE1cMFwIoVI+0pziDo96drpvqLU4ij3oa4OumMA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728666AbgBWCX0 (ORCPT
+        id S1728730AbgBWCXg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 22 Feb 2020 21:23:26 -0500
-Received: from mail.kernel.org ([198.145.29.99]:52854 "EHLO mail.kernel.org"
+        Sat, 22 Feb 2020 21:23:36 -0500
+Received: from mail.kernel.org ([198.145.29.99]:53064 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728639AbgBWCXX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 22 Feb 2020 21:23:23 -0500
+        id S1728002AbgBWCXb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 22 Feb 2020 21:23:31 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 609942071E;
-        Sun, 23 Feb 2020 02:23:22 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E561221D56;
+        Sun, 23 Feb 2020 02:23:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1582424603;
-        bh=YHXFE6QN7HtiBj1Mkt+G80ciFeW6QQPn2fBKaykZeQ0=;
+        s=default; t=1582424610;
+        bh=PtriBsXyW8kGTAqXSDy7UYBdHikaU5JTUnz/W1iCUdQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=dYtJVZPA3zJ/9QlULxlG8XqGlX0OvbDSA0mTzpHB438/+rNFWoUYjggDmL0WmOZaJ
-         OVLYSt4hrhv+06X7IJdNqGIUSRn8JgjhU43f7OV/bNc3RuK/bYvxFP/lD8uCRWlYiB
-         TtSiIdkD1CMRVKxSEVj3Mk8YlWksP6wDEb1El7Ao=
+        b=fzp7kC+kU2UnuVJjIq6os+Ue2DKOyY265IbI6KbWrzIfzQZ01nE65zFwWdkvnYBNm
+         19jxuJPH9qXk2Gx44pgzU3Ku6xPe0kb+rpeQc47agn1v284yFGwd8CWuJNyUD6UO1a
+         HOMPMVXqPXd/7+4ARf/Zi4fQWoRpg1XiezbzA3zE=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Arthur Kiyanovski <akiyano@amazon.com>,
-        Sameeh Jubran <sameehj@amazon.com>,
-        "David S . Miller" <davem@davemloft.net>,
-        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.4 39/50] net: ena: ena-com.c: prevent NULL pointer dereference
-Date:   Sat, 22 Feb 2020 21:22:24 -0500
-Message-Id: <20200223022235.1404-39-sashal@kernel.org>
+Cc:     Shay Bar <shay.bar@celeno.com>,
+        Aviad Brikman <aviad.brikman@celeno.com>,
+        Johannes Berg <johannes.berg@intel.com>,
+        Sasha Levin <sashal@kernel.org>,
+        linux-wireless@vger.kernel.org, netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.4 45/50] mac80211: fix wrong 160/80+80 MHz setting
+Date:   Sat, 22 Feb 2020 21:22:30 -0500
+Message-Id: <20200223022235.1404-45-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200223022235.1404-1-sashal@kernel.org>
 References: <20200223022235.1404-1-sashal@kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
@@ -60,50 +62,68 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Arthur Kiyanovski <akiyano@amazon.com>
+From: Shay Bar <shay.bar@celeno.com>
 
-[ Upstream commit c207979f5ae10ed70aff1bb13f39f0736973de99 ]
+[ Upstream commit 33181ea7f5a62a17fbe55f0f73428ecb5e686be8 ]
 
-comp_ctx can be NULL in a very rare case when an admin command is executed
-during the execution of ena_remove().
+Before this patch, STA's would set new width of 160/80+80 MHz based on AP capability only.
+This is wrong because STA may not support > 80MHz BW.
+Fix is to verify STA has 160/80+80 MHz capability before increasing its width to > 80MHz.
 
-The bug scenario is as follows:
+The "support_80_80" and "support_160" setting is based on:
+"Table 9-272 — Setting of the Supported Channel Width Set subfield and Extended NSS BW
+Support subfield at a STA transmitting the VHT Capabilities Information field"
+From "Draft P802.11REVmd_D3.0.pdf"
 
-* ena_destroy_device() sets the comp_ctx to be NULL
-* An admin command is executed before executing unregister_netdev(),
-  this can still happen because our device can still receive callbacks
-  from the netdev infrastructure such as ethtool commands.
-* When attempting to access the comp_ctx, the bug occurs since it's set
-  to NULL
-
-Fix:
-Added a check that comp_ctx is not NULL
-
-Fixes: 1738cd3ed342 ("net: ena: Add a driver for Amazon Elastic Network Adapters (ENA)")
-Signed-off-by: Sameeh Jubran <sameehj@amazon.com>
-Signed-off-by: Arthur Kiyanovski <akiyano@amazon.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Signed-off-by: Aviad Brikman <aviad.brikman@celeno.com>
+Signed-off-by: Shay Bar <shay.bar@celeno.com>
+Link: https://lore.kernel.org/r/20200210130728.23674-1-shay.bar@celeno.com
+Signed-off-by: Johannes Berg <johannes.berg@intel.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/ethernet/amazon/ena/ena_com.c | 5 +++++
- 1 file changed, 5 insertions(+)
+ net/mac80211/util.c | 16 ++++++++++++++--
+ 1 file changed, 14 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/net/ethernet/amazon/ena/ena_com.c b/drivers/net/ethernet/amazon/ena/ena_com.c
-index 74743fd8a1e0a..304531332e70a 100644
---- a/drivers/net/ethernet/amazon/ena/ena_com.c
-+++ b/drivers/net/ethernet/amazon/ena/ena_com.c
-@@ -200,6 +200,11 @@ static void comp_ctxt_release(struct ena_com_admin_queue *queue,
- static struct ena_comp_ctx *get_comp_ctxt(struct ena_com_admin_queue *queue,
- 					  u16 command_id, bool capture)
- {
-+	if (unlikely(!queue->comp_ctx)) {
-+		pr_err("Completion context is NULL\n");
-+		return NULL;
-+	}
-+
- 	if (unlikely(command_id >= queue->q_depth)) {
- 		pr_err("command id is larger than the queue size. cmd_id: %u queue size %d\n",
- 		       command_id, queue->q_depth);
+diff --git a/net/mac80211/util.c b/net/mac80211/util.c
+index 739e90555d8b9..decd46b383938 100644
+--- a/net/mac80211/util.c
++++ b/net/mac80211/util.c
+@@ -2993,10 +2993,22 @@ bool ieee80211_chandef_vht_oper(struct ieee80211_hw *hw,
+ 	int cf0, cf1;
+ 	int ccfs0, ccfs1, ccfs2;
+ 	int ccf0, ccf1;
++	u32 vht_cap;
++	bool support_80_80 = false;
++	bool support_160 = false;
+ 
+ 	if (!oper || !htop)
+ 		return false;
+ 
++	vht_cap = hw->wiphy->bands[chandef->chan->band]->vht_cap.cap;
++	support_160 = (vht_cap & (IEEE80211_VHT_CAP_SUPP_CHAN_WIDTH_MASK |
++				  IEEE80211_VHT_CAP_EXT_NSS_BW_MASK));
++	support_80_80 = ((vht_cap &
++			 IEEE80211_VHT_CAP_SUPP_CHAN_WIDTH_160_80PLUS80MHZ) ||
++			(vht_cap & IEEE80211_VHT_CAP_SUPP_CHAN_WIDTH_160MHZ &&
++			 vht_cap & IEEE80211_VHT_CAP_EXT_NSS_BW_MASK) ||
++			((vht_cap & IEEE80211_VHT_CAP_EXT_NSS_BW_MASK) >>
++				    IEEE80211_VHT_CAP_EXT_NSS_BW_SHIFT > 1));
+ 	ccfs0 = oper->center_freq_seg0_idx;
+ 	ccfs1 = oper->center_freq_seg1_idx;
+ 	ccfs2 = (le16_to_cpu(htop->operation_mode) &
+@@ -3024,10 +3036,10 @@ bool ieee80211_chandef_vht_oper(struct ieee80211_hw *hw,
+ 			unsigned int diff;
+ 
+ 			diff = abs(ccf1 - ccf0);
+-			if (diff == 8) {
++			if ((diff == 8) && support_160) {
+ 				new.width = NL80211_CHAN_WIDTH_160;
+ 				new.center_freq1 = cf1;
+-			} else if (diff > 8) {
++			} else if ((diff > 8) && support_80_80) {
+ 				new.width = NL80211_CHAN_WIDTH_80P80;
+ 				new.center_freq2 = cf1;
+ 			}
 -- 
 2.20.1
 
