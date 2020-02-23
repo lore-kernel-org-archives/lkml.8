@@ -2,96 +2,80 @@ Return-Path: <SRS0=SnAt=4L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D9413C35673
-	for <linux-kernel@archiver.kernel.org>; Sun, 23 Feb 2020 15:09:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 001D9C35666
+	for <linux-kernel@archiver.kernel.org>; Sun, 23 Feb 2020 15:14:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AFACF20637
-	for <linux-kernel@archiver.kernel.org>; Sun, 23 Feb 2020 15:09:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BA02520675
+	for <linux-kernel@archiver.kernel.org>; Sun, 23 Feb 2020 15:14:42 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727070AbgBWPJY (ORCPT
+        id S1727033AbgBWPOl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 23 Feb 2020 10:09:24 -0500
-Received: from gloria.sntech.de ([185.11.138.130]:60702 "EHLO gloria.sntech.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726208AbgBWPJY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 23 Feb 2020 10:09:24 -0500
-Received: from p508fd060.dip0.t-ipconnect.de ([80.143.208.96] helo=phil.localnet)
-        by gloria.sntech.de with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.89)
-        (envelope-from <heiko@sntech.de>)
-        id 1j5ssh-0003kj-Ga; Sun, 23 Feb 2020 16:09:19 +0100
-From:   Heiko Stuebner <heiko@sntech.de>
-To:     khilman@kernel.org
-Cc:     nm@ti.com, linux-pm@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org,
-        christoph.muellner@theobroma-systems.com
-Subject: Re: [PATCH] PM / AVS: rockchip-io: fix the supply naming for the emmc supply on px30
-Date:   Sun, 23 Feb 2020 16:09:18 +0100
-Message-ID: <2116646.O5uUgpsMTn@phil>
-In-Reply-To: <20200121222859.4069263-1-heiko@sntech.de>
-References: <20200121222859.4069263-1-heiko@sntech.de>
+        Sun, 23 Feb 2020 10:14:41 -0500
+Received: from youngberry.canonical.com ([91.189.89.112]:46731 "EHLO
+        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726208AbgBWPOl (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 23 Feb 2020 10:14:41 -0500
+Received: from 1.general.cking.uk.vpn ([10.172.193.212] helo=localhost)
+        by youngberry.canonical.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.86_2)
+        (envelope-from <colin.king@canonical.com>)
+        id 1j5sxq-0002b0-Ek; Sun, 23 Feb 2020 15:14:38 +0000
+From:   Colin King <colin.king@canonical.com>
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        devel@driverdev.osuosl.org
+Cc:     kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH] staging: rtl8723bs: remove temporary variable CrystalCap
+Date:   Sun, 23 Feb 2020 15:14:38 +0000
+Message-Id: <20200223151438.415542-1-colin.king@canonical.com>
+X-Mailer: git-send-email 2.25.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7Bit
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+From: Colin Ian King <colin.king@canonical.com>
 
-Am Dienstag, 21. Januar 2020, 23:28:59 CET schrieb Heiko Stuebner:
-> From: Heiko Stuebner <heiko.stuebner@theobroma-systems.com>
-> 
-> The supply going to the emmc/flash is named vccio6, not vccio0 and while
-> the code does this correctly already, the comments and error output do not.
-> 
-> So just change these values to the correct ones.
-> 
-> Signed-off-by: Heiko Stuebner <heiko.stuebner@theobroma-systems.com>
+Currently variable CrystalCap is being initialized with the value
+0x20 that is never read so that is redundant and can be removed.
+Clean up the code by removing the need for variable CrystalCap
+since the calculation of the return value is relatively simple.
 
-oh so gently ping on this tiny patch ;-)
+Addresses-Coverity: ("Unused Value")
+Signed-off-by: Colin Ian King <colin.king@canonical.com>
+---
+ drivers/staging/rtl8723bs/hal/odm_CfoTracking.c | 7 +------
+ 1 file changed, 1 insertion(+), 6 deletions(-)
 
-Thanks for considering
-Heiko
-
-> ---
->  drivers/power/avs/rockchip-io-domain.c | 6 +++---
->  1 file changed, 3 insertions(+), 3 deletions(-)
-> 
-> diff --git a/drivers/power/avs/rockchip-io-domain.c b/drivers/power/avs/rockchip-io-domain.c
-> index 398fc954419e..eece97f97ef8 100644
-> --- a/drivers/power/avs/rockchip-io-domain.c
-> +++ b/drivers/power/avs/rockchip-io-domain.c
-> @@ -152,18 +152,18 @@ static void px30_iodomain_init(struct rockchip_iodomain *iod)
->  	int ret;
->  	u32 val;
->  
-> -	/* if no VCCIO0 supply we should leave things alone */
-> +	/* if no VCCIO6 supply we should leave things alone */
->  	if (!iod->supplies[PX30_IO_VSEL_VCCIO6_SUPPLY_NUM].reg)
->  		return;
->  
->  	/*
-> -	 * set vccio0 iodomain to also use this framework
-> +	 * set vccio6 iodomain to also use this framework
->  	 * instead of a special gpio.
->  	 */
->  	val = PX30_IO_VSEL_VCCIO6_SRC | (PX30_IO_VSEL_VCCIO6_SRC << 16);
->  	ret = regmap_write(iod->grf, PX30_IO_VSEL, val);
->  	if (ret < 0)
-> -		dev_warn(iod->dev, "couldn't update vccio0 ctrl\n");
-> +		dev_warn(iod->dev, "couldn't update vccio6 ctrl\n");
->  }
->  
->  static void rk3288_iodomain_init(struct rockchip_iodomain *iod)
-> 
-
-
-
+diff --git a/drivers/staging/rtl8723bs/hal/odm_CfoTracking.c b/drivers/staging/rtl8723bs/hal/odm_CfoTracking.c
+index 95edd148ac24..34d83b238265 100644
+--- a/drivers/staging/rtl8723bs/hal/odm_CfoTracking.c
++++ b/drivers/staging/rtl8723bs/hal/odm_CfoTracking.c
+@@ -40,16 +40,11 @@ static void odm_SetCrystalCap(void *pDM_VOID, u8 CrystalCap)
+ static u8 odm_GetDefaultCrytaltalCap(void *pDM_VOID)
+ {
+ 	PDM_ODM_T pDM_Odm = (PDM_ODM_T)pDM_VOID;
+-	u8 CrystalCap = 0x20;
+ 
+ 	struct adapter *Adapter = pDM_Odm->Adapter;
+ 	struct hal_com_data *pHalData = GET_HAL_DATA(Adapter);
+ 
+-	CrystalCap = pHalData->CrystalCap;
+-
+-	CrystalCap = CrystalCap & 0x3f;
+-
+-	return CrystalCap;
++	return pHalData->CrystalCap & 0x3f;
+ }
+ 
+ static void odm_SetATCStatus(void *pDM_VOID, bool ATCStatus)
+-- 
+2.25.0
 
