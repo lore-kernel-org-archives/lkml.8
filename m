@@ -8,66 +8,67 @@ X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D3037C35675
-	for <linux-kernel@archiver.kernel.org>; Sun, 23 Feb 2020 23:18:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 40FE3C35673
+	for <linux-kernel@archiver.kernel.org>; Sun, 23 Feb 2020 23:18:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A8CB0208C3
-	for <linux-kernel@archiver.kernel.org>; Sun, 23 Feb 2020 23:18:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 17209208C3
+	for <linux-kernel@archiver.kernel.org>; Sun, 23 Feb 2020 23:18:27 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Inl8ZX2e"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="fyRR9/wO"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727730AbgBWXSX (ORCPT
+        id S1727744AbgBWXSZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 23 Feb 2020 18:18:23 -0500
-Received: from mail-wr1-f66.google.com ([209.85.221.66]:41873 "EHLO
-        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727394AbgBWXSU (ORCPT
+        Sun, 23 Feb 2020 18:18:25 -0500
+Received: from mail-wr1-f67.google.com ([209.85.221.67]:35689 "EHLO
+        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727691AbgBWXSW (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 23 Feb 2020 18:18:20 -0500
-Received: by mail-wr1-f66.google.com with SMTP id c9so8237478wrw.8
-        for <linux-kernel@vger.kernel.org>; Sun, 23 Feb 2020 15:18:19 -0800 (PST)
+        Sun, 23 Feb 2020 18:18:22 -0500
+Received: by mail-wr1-f67.google.com with SMTP id w12so8248053wrt.2;
+        Sun, 23 Feb 2020 15:18:21 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=kaCoWQQpn+j8uvyw/vMo9mENl0qa9cM1FVrK9Szu/ak=;
-        b=Inl8ZX2efCpl7XykDudwdLzRAkPHwpBAP9HwzNvbyVid8ien2HR5e1oaE1p4rqeRdN
-         Ynz6W1yd+IPHshnCWe7Q50DiM4PojZ/yPaJJmz9Cn7ioupC9BdgF76X0TWwf7bYTxlh1
-         BH0Q2uAxGM5HThpQ6qiOOI64RgHbSh2+nxDssDHXkPeJ9CgnhBEIJbqoGc6QpHCBerhD
-         0UpsQe6owWz7Q0cOi4eYAzZ3Ql5HaV+uMtbbYWbvqNEPnizsOECdveDl3bQZZkmDHsJq
-         Iqo865UwApuiAr5s9Eu1AwoTJDjCy8m/bjwhS88K3430nZrzwuji31FibCqM38a2/pwR
-         lF3w==
+        bh=Qy7AvatIqffY4xvh/iJWRifOixdLsIdAN4n8+psibAI=;
+        b=fyRR9/wOz6/pueORMQ9XChTVG1DxK0ngllIHnUr5GLw7QNP8uIt7JavJM48/c6DK3f
+         PRl7n2OWBd+vW9WVy4xLzApenTBuRzO85PMsnPeuRtMCAJSjRDUsFkb/cCUdCYE5UeUx
+         2d4hRdmQxnt+C45haJC44mlpZeNN6Lp+Y7awK5/CRXCyNRbh98fDVEXu+kxbpOIThNlD
+         8xJflORRyyzB6ns5dep8GLrAhISeqU2/1+ZmMRMVNH1Qr63v8ULSx3cI9yYfTxKvzCp7
+         uGOEMbYR/vEj9MldNJYgB5L3THQLl0VWM9L3QxE3AA80UPI0e9MPfKkc2vq9fcpB+zBk
+         aKzA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=kaCoWQQpn+j8uvyw/vMo9mENl0qa9cM1FVrK9Szu/ak=;
-        b=mT8VlnODqpTCaCxAGDeJ0GjoFAlFbmiXxtnk841r+KZmcfkOTv+IOAzrTIupmqoGaN
-         MPLB806BM9AoNRoIp/VYICSBDPYiRvkHX5PJxN/oxyjL8s9BcNLhI/vg4jaisiG9KhJg
-         DkaTPH+v/4megG2zPmfmn84hiAzX2ZorXwei1DZzncC93o8gx6e3eKQSUYwjTin9mDPF
-         rY0wRPcq9c3VOliHIhEeyI2wJWrLe7BKqqHoD36fQtXoFxkGv7Up3EW5utNEWOX8TZKg
-         VHG0bscCIENWcKmPlX+GK1l1JRjA93bFaL8ffRTTkLcVEpqxEN8E8gpzbK9QVjoDr4ex
-         ldMw==
-X-Gm-Message-State: APjAAAXQ7RxEq1fxcxYipu41miTOx6ktQb4lP/FDNn1FTfoGixVNTdI4
-        oiv9p7Xr0mVEy42HbZEkT8V+L+WpUo+u
-X-Google-Smtp-Source: APXvYqwNSt+N5xMjtT90GyK1JRD7pbBkhl07kRUByi6TwKYIa4Taet7pmM4ZyKhQWWf8Y1ljJCfOCw==
-X-Received: by 2002:adf:f9cb:: with SMTP id w11mr9021833wrr.383.1582499898333;
-        Sun, 23 Feb 2020 15:18:18 -0800 (PST)
+        bh=Qy7AvatIqffY4xvh/iJWRifOixdLsIdAN4n8+psibAI=;
+        b=eTb8riPwP+sxHbYD1SoWBcAKOxIvKzEl67PIx/kOMVxTI4JjEuklLn82J1nfZuR4s+
+         aTim5NSc6iKhOdju0o9ujcMorzESUqG8hSi5+ZrUH27SA8OO2LG4C71Z6ChcMt3uiBX9
+         oDhg+Q0cyZEo5diNXnMZpcgjRmpxh8PsDmuW7Viz+Cv+Rdu3mQRKkKnE7+p/mgrH81wl
+         vsHu8ndeTHuC+qT4FZXwScSw4kOWX3hfQwbVIZc1JlnaPX77uAasDBiA5VRGm0SThYJE
+         K1vfgbMNmA/4oDI+dh1t3YFM0sNzcq+bZ2MwjyudUYd99RUiC0+w4T59QYlI3Ei1T1em
+         hxfw==
+X-Gm-Message-State: APjAAAVACAoMNZyy1AvodAahMktrvnIpYgQRfzx7iDUxS7UpYFv57Ke1
+        WfoHcFU4uEmIst9JkGsbcg==
+X-Google-Smtp-Source: APXvYqxLrKsNxp44YDZ8paqqib3l4pwruN6fw8TTAaKf2QgDD2HQRNccyOTTHE8v9BiZJ/EZ1I2EQQ==
+X-Received: by 2002:adf:f581:: with SMTP id f1mr63156801wro.264.1582499901211;
+        Sun, 23 Feb 2020 15:18:21 -0800 (PST)
 Received: from ninjahost.lan (host-2-102-13-223.as13285.net. [2.102.13.223])
-        by smtp.googlemail.com with ESMTPSA id q6sm8968203wrf.67.2020.02.23.15.18.17
+        by smtp.googlemail.com with ESMTPSA id q6sm8968203wrf.67.2020.02.23.15.18.20
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 23 Feb 2020 15:18:17 -0800 (PST)
+        Sun, 23 Feb 2020 15:18:20 -0800 (PST)
 From:   Jules Irenge <jbi.octave@gmail.com>
 To:     boqun.feng@gmail.com
 Cc:     jbi.octave@gmail.com, linux-kernel@vger.kernel.org,
-        Minchan Kim <minchan@kernel.org>,
-        Nitin Gupta <ngupta@vflare.org>,
-        Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        linux-mm@kvack.org (open list:ZSMALLOC COMPRESSED SLAB MEMORY ALLOCATOR)
-Subject: [PATCH 20/30] mm/zsmalloc: Add missing annotation for migrate_write_unlock()
-Date:   Sun, 23 Feb 2020 23:17:01 +0000
-Message-Id: <20200223231711.157699-21-jbi.octave@gmail.com>
+        "James E.J. Bottomley" <jejb@linux.ibm.com>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>,
+        Nathan Chancellor <natechancellor@gmail.com>,
+        Varun Prakash <varun@chelsio.com>,
+        Hannes Reinecke <hare@suse.com>,
+        linux-scsi@vger.kernel.org (open list:SCSI SUBSYSTEM)
+Subject: [PATCH 21/30] scsi: csiostor: Add missing annotation for csio_scsi_cleanup_io_q()
+Date:   Sun, 23 Feb 2020 23:17:02 +0000
+Message-Id: <20200223231711.157699-22-jbi.octave@gmail.com>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20200223231711.157699-1-jbi.octave@gmail.com>
 References: <0/30>
@@ -79,28 +80,30 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Sparse reports a warning at migrate_write_unlock()
-warning: context imbalance in migrate_write_unlock() - unexpected unlock
-The root cause is the missing annotation at migrate_write_unlock()
-Add the missing __releases(&zspage->lock)
+Sparse reports a warning at csio_scsi_cleanup_io_q()
+
+warning: context imbalance in csio_scsi_cleanup_io_q() - unexpected unlock
+
+The root cause is the missing annotation at csio_scsi_cleanup_io_q()
+Add the missing __must_hold(&hw->lock)
 
 Signed-off-by: Jules Irenge <jbi.octave@gmail.com>
 ---
- mm/zsmalloc.c | 1 +
+ drivers/scsi/csiostor/csio_scsi.c | 1 +
  1 file changed, 1 insertion(+)
 
-diff --git a/mm/zsmalloc.c b/mm/zsmalloc.c
-index 7ec69a1140cf..cb5541d06823 100644
---- a/mm/zsmalloc.c
-+++ b/mm/zsmalloc.c
-@@ -1852,6 +1852,7 @@ static void migrate_write_lock(struct zspage *zspage)
- }
- 
- static void migrate_write_unlock(struct zspage *zspage)
-+	__releases(&zspage->lock)
+diff --git a/drivers/scsi/csiostor/csio_scsi.c b/drivers/scsi/csiostor/csio_scsi.c
+index 00cf33573136..77cba766ae52 100644
+--- a/drivers/scsi/csiostor/csio_scsi.c
++++ b/drivers/scsi/csiostor/csio_scsi.c
+@@ -1157,6 +1157,7 @@ csio_scsi_cmpl_handler(struct csio_hw *hw, void *wr, uint32_t len,
+  */
+ void
+ csio_scsi_cleanup_io_q(struct csio_scsim *scm, struct list_head *q)
++	__must_hold(&hw->lock)
  {
- 	write_unlock(&zspage->lock);
- }
+ 	struct csio_hw *hw = scm->hw;
+ 	struct csio_ioreq *ioreq;
 -- 
 2.24.1
 
