@@ -2,69 +2,66 @@ Return-Path: <SRS0=SnAt=4L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+X-Spam-Status: No, score=-3.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F1B6AC35671
-	for <linux-kernel@archiver.kernel.org>; Sun, 23 Feb 2020 04:21:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 43586C35670
+	for <linux-kernel@archiver.kernel.org>; Sun, 23 Feb 2020 04:51:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CF53F20578
-	for <linux-kernel@archiver.kernel.org>; Sun, 23 Feb 2020 04:21:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 18D93208C4
+	for <linux-kernel@archiver.kernel.org>; Sun, 23 Feb 2020 04:51:27 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727227AbgBWEVb (ORCPT
+        id S1727150AbgBWEv0 convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 22 Feb 2020 23:21:31 -0500
-Received: from out30-130.freemail.mail.aliyun.com ([115.124.30.130]:60286 "EHLO
-        out30-130.freemail.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726983AbgBWEVb (ORCPT
+        Sat, 22 Feb 2020 23:51:26 -0500
+Received: from smtp2200-217.mail.aliyun.com ([121.197.200.217]:44952 "EHLO
+        smtp2200-217.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726650AbgBWEvZ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 22 Feb 2020 23:21:31 -0500
-X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R671e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01f04455;MF=tianjia.zhang@linux.alibaba.com;NM=1;PH=DS;RN=8;SR=0;TI=SMTPD_---0TqdtHoh_1582431686;
-Received: from 30.27.235.101(mailfrom:tianjia.zhang@linux.alibaba.com fp:SMTPD_---0TqdtHoh_1582431686)
-          by smtp.aliyun-inc.com(127.0.0.1);
-          Sun, 23 Feb 2020 12:21:28 +0800
-Subject: Re: [PATCH] crypto: sm3 - export crypto_sm3_final function
-To:     Herbert Xu <herbert@gondor.apana.org.au>
-Cc:     davem@davemloft.net, ebiggers@kernel.org, pvanleeuwen@rambus.com,
-        zohar@linux.ibm.com, linux-crypto@vger.kernel.org,
-        linux-kernel@vger.kernel.org, gilad@benyossef.com
-References: <20200216090233.109416-1-tianjia.zhang@linux.alibaba.com>
- <20200222011926.GA18695@gondor.apana.org.au>
-From:   Tianjia Zhang <tianjia.zhang@linux.alibaba.com>
-Message-ID: <8acc79e8-8b3d-856d-06d2-5322c9a66be9@linux.alibaba.com>
-Date:   Sun, 23 Feb 2020 12:21:25 +0800
-User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.5.0
-MIME-Version: 1.0
-In-Reply-To: <20200222011926.GA18695@gondor.apana.org.au>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
+        Sat, 22 Feb 2020 23:51:25 -0500
+X-Alimail-AntiSpam: AC=CONTINUE;BC=0.1596171|-1;CH=green;DM=CONTINUE|CONTINUE|true|0.33074-0.00835149-0.660908;DS=CONTINUE|ham_news_journal|0.00902463-0.000304198-0.990671;FP=0|0|0|0|0|-1|-1|-1;HT=e02c03305;MF=ren_guo@c-sky.com;NM=1;PH=DS;RN=3;RT=3;SR=0;TI=SMTPD_---.Gr9GyVW_1582433479;
+Received: from it-c02z45m7lvcf.lan(mailfrom:ren_guo@c-sky.com fp:SMTPD_---.Gr9GyVW_1582433479)
+          by smtp.aliyun-inc.com(10.147.41.137);
+          Sun, 23 Feb 2020 12:51:19 +0800
+Content-Type: text/plain;
+        charset=gb2312
+Mime-Version: 1.0 (Mac OS X Mail 12.4 \(3445.104.11\))
+Subject: Re: linux-next: Signed-off-by missing for commit in the csky tree
+From:   Guo Ren <ren_guo@c-sky.com>
+In-Reply-To: <20200223133451.0c8c0f09@canb.auug.org.au>
+Date:   Sun, 23 Feb 2020 12:51:18 +0800
+Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Transfer-Encoding: 8BIT
+Message-Id: <CDEFD0D4-96C0-4D08-A357-96EA68F2DB64@c-sky.com>
+References: <20200223133451.0c8c0f09@canb.auug.org.au>
+To:     Stephen Rothwell <sfr@canb.auug.org.au>
+X-Mailer: Apple Mail (2.3445.104.11)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Thx, fixed with add:
+Signed-off-by: Guo Ren <guoren@linux.alibaba.com>
+
+Best Regards
+  Guo Ren
 
 
-On 2020/2/22 9:19, Herbert Xu wrote:
-> On Sun, Feb 16, 2020 at 05:02:33PM +0800, Tianjia Zhang wrote:
->> Both crypto_sm3_update and crypto_sm3_finup have been
->> exported, exporting crypto_sm3_final, to avoid having to
->> use crypto_sm3_finup(desc, NULL, 0, dgst) to calculate
->> the hash in some cases.
->>
->> Signed-off-by: Tianjia Zhang <tianjia.zhang@linux.alibaba.com>
->> ---
->>   crypto/sm3_generic.c | 7 ++++---
->>   include/crypto/sm3.h | 2 ++
->>   2 files changed, 6 insertions(+), 3 deletions(-)
-> 
-> Please add this into the series that actually uses the function.
-> It makes no sense on its own.
-> 
-> Thanks,
-> 
 
-The actual use of this function is in sm2 and OSCCA certificates. This 
-set of patches has been submitted to the community. Please review them.
+> 在 2020年2月23日，上午10:34，Stephen Rothwell <sfr@canb.auug.org.au> 写道：
+> 
+> Hi all,
+> 
+> Commit
+> 
+>  24cfce6b33f2 ("csky: Replace <linux/clk-provider.h> by <linux/of_clk.h>")
+> 
+> is missing a Signed-off-by from their committer.
+> 
+> -- 
+> Cheers,
+> Stephen Rothwell
+
