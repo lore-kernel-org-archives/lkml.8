@@ -5,69 +5,75 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5105CC35673
-	for <linux-kernel@archiver.kernel.org>; Sun, 23 Feb 2020 23:18:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 14ACBC35675
+	for <linux-kernel@archiver.kernel.org>; Sun, 23 Feb 2020 23:18:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 24E8B208C4
-	for <linux-kernel@archiver.kernel.org>; Sun, 23 Feb 2020 23:18:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E15A6208C4
+	for <linux-kernel@archiver.kernel.org>; Sun, 23 Feb 2020 23:18:20 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="WBallZcC"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="MUMjaQgN"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727553AbgBWXSQ (ORCPT
+        id S1727670AbgBWXSU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 23 Feb 2020 18:18:16 -0500
-Received: from mail-wm1-f65.google.com ([209.85.128.65]:51763 "EHLO
-        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727376AbgBWXSK (ORCPT
+        Sun, 23 Feb 2020 18:18:20 -0500
+Received: from mail-wr1-f68.google.com ([209.85.221.68]:41867 "EHLO
+        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727483AbgBWXSN (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 23 Feb 2020 18:18:10 -0500
-Received: by mail-wm1-f65.google.com with SMTP id t23so7197616wmi.1;
-        Sun, 23 Feb 2020 15:18:08 -0800 (PST)
+        Sun, 23 Feb 2020 18:18:13 -0500
+Received: by mail-wr1-f68.google.com with SMTP id c9so8237296wrw.8;
+        Sun, 23 Feb 2020 15:18:12 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=CGy+45WF1yFjQt9PrNIN82SV4WB+MIWNf+141Nv3d4s=;
-        b=WBallZcCQBVP54ycId2IyweZf0OIRq3Vs6MGepXlXQ3yqR/UyfmPea+5VtxZ9agXi5
-         +XUHhpN7tc8mo2FBAgr6+0YVx3JoUk2iTX14/CVqlnaVfE3woUEVW5XXdtjVNUOH8UUz
-         Xevzd/wE3T3ViJfH+pF6iy3SxPdPFuRnJ1BxCh0U1b5nKQAVNj6+knS78LyqvADTjq3R
-         LbNYfiQpXnOLxzHR15UPmEMr96M9P1rOWxHHqro+NbETgIc22ECDlmVGTwn9SNYvM9Un
-         6EhPhsenbowTuX8NY4rh2oollFLlvIrdHo4bIE8nkyNKEMtIvCkbTHDuerZMDOB5D3Wi
-         NE9g==
+        bh=WXi0tRYl5HmKRjz98V0jZ+F+bayiPek8dE5Nz6vBIVU=;
+        b=MUMjaQgNz202BO5dopV9PRfH5QcbJltxKRYAfAJ4Ls/9Vu0lUJZwY/Ta99BgWyvSCI
+         G1hWYn0horqZeGZyMi8T9F97h9iehT+9xxENJwQSg/Ov2PPRO1wSwSKurT00PmVcCf6Z
+         wOGpLQKPSaFOTRDlZgKIUEgDr0gLCVgZT9gc85Gj3Gj/vZ98CZkoHevnC1KWVeujip9R
+         ksZrgF7WKqtLZf2Jqiq1/mwww17ieDgOWaaZn97pj+Exvt6kfoAnSjgxsN0l/iRAO2Nw
+         oTvGEfrunxYKPBngTT/dQ4IgpM/zs7maVxGbi3jmW6sB36ue1XWGyUw0t41ts6coQw65
+         pnrw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=CGy+45WF1yFjQt9PrNIN82SV4WB+MIWNf+141Nv3d4s=;
-        b=jK8p7aoRoupKRfpTOQObPi+T9l7V0L3xt4VNqJXmBoanZGczhGnczG+trAYxgEYioT
-         oZCw73250m/IEHb9neSCqGdgAPJSSoKe6vUtXME5LIweYBp7QRJs3I+90xSTKDQKpYo/
-         AGtwAnkUhHbBP/NfEdFciSf8NUh/fwYUNW5KY3OJPtJKIxDWiYZEf/s3DWs7WcJ0Enov
-         wr/KoqBAGuYfP1LYlodCJ8lhYY7KK/w9/Q3dKyRtg9URPcAduqvvySHPM5U+PFZ1xqxA
-         vNpq+ZRA73wKmKiSNqPQ9MTqDQH46IQc8IrrwHm1AG5/trovnuotzHQiVu9UFyXraX6g
-         97eg==
-X-Gm-Message-State: APjAAAVSo/vraY7GsGN7HtZZf9nR05anccTip0qYR3L+UiD9GoRnjLGL
-        RirJalfjzJquuMzx4nuSVQ==
-X-Google-Smtp-Source: APXvYqxfUeeF2Fxdkh3I1gfT9ho53f0a3bly5oHUY4FOJ5p1zPeLRyw9LvFNJf+hG3jJRxgl4JK4dQ==
-X-Received: by 2002:a1c:f713:: with SMTP id v19mr17575701wmh.113.1582499888163;
-        Sun, 23 Feb 2020 15:18:08 -0800 (PST)
+        bh=WXi0tRYl5HmKRjz98V0jZ+F+bayiPek8dE5Nz6vBIVU=;
+        b=Px4NBEpLFbdN+v0xfOQQfLHxHchH7nzeG/o2d0BcKVHmQD5RDEMZ77Es2cHnOXLAWx
+         EwI1V+U34s9lVv9NlhX/cyXFKErrqDJKI4oU6AyuQoFyRnPwS0JIi8YjSXscUZ/VPwWj
+         Qcofsu6ycEcuk2potYMOrS5gJjgIDPcJMq6Iw28rKHUzejPzgnYI9TQAs6Xu9/5CmliI
+         Gi0h60e0VIOzcIC7N7mjSmHbt09wBqO6Vf2RjYrbKahXEKbpWk3q3wFacmW192frJv+H
+         PN2ww9SMwvWWZ2HCaPxXKrKxt3QMKymFG45dMVyUHlWSroaIeSTqE+SRnJ6Uw+z+LEBN
+         ynHA==
+X-Gm-Message-State: APjAAAXoYHr8nImbrKR97jJXiQytWHxxoq+zmr2rzDyb3h/7VU8L1Q05
+        x1Qwd9f6Bv7vkq5LMk8Rui+Pnm1p/L18
+X-Google-Smtp-Source: APXvYqyUS3PmmexjFzZbkTjBeEjNO7Z+vgHQyPvYUPka50mPSCK3v5pBWbftmEzF4ow8BBHpVjG5gA==
+X-Received: by 2002:adf:ce87:: with SMTP id r7mr62130426wrn.245.1582499891874;
+        Sun, 23 Feb 2020 15:18:11 -0800 (PST)
 Received: from ninjahost.lan (host-2-102-13-223.as13285.net. [2.102.13.223])
-        by smtp.googlemail.com with ESMTPSA id q6sm8968203wrf.67.2020.02.23.15.18.07
+        by smtp.googlemail.com with ESMTPSA id q6sm8968203wrf.67.2020.02.23.15.18.10
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 23 Feb 2020 15:18:07 -0800 (PST)
+        Sun, 23 Feb 2020 15:18:11 -0800 (PST)
 From:   Jules Irenge <jbi.octave@gmail.com>
 To:     boqun.feng@gmail.com
 Cc:     jbi.octave@gmail.com, linux-kernel@vger.kernel.org,
-        Ralf Baechle <ralf@linux-mips.org>,
         "David S. Miller" <davem@davemloft.net>,
         Jakub Kicinski <kuba@kernel.org>,
-        linux-hams@vger.kernel.org (open list:NETROM NETWORK LAYER),
+        Allison Randal <allison@lohutok.net>,
+        Steffen Klassert <steffen.klassert@secunet.com>,
+        Jens Axboe <axboe@kernel.dk>, Hannes Reinecke <hare@suse.com>,
+        Kirill Tkhai <ktkhai@virtuozzo.com>,
+        Eric Dumazet <edumazet@google.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Pankaj Bharadiya <pankaj.laxminarayan.bharadiya@intel.com>,
+        Arnd Bergmann <arnd@arndb.de>, Qian Cai <cai@lca.pw>,
         netdev@vger.kernel.org (open list:NETWORKING [GENERAL])
-Subject: [PATCH 13/30] net: netrom: Add missing annotation for nr_neigh_stop()
-Date:   Sun, 23 Feb 2020 23:16:54 +0000
-Message-Id: <20200223231711.157699-14-jbi.octave@gmail.com>
+Subject: [PATCH 15/30] af_unix: Add missing annotation for unix_wait_for_peer()
+Date:   Sun, 23 Feb 2020 23:16:56 +0000
+Message-Id: <20200223231711.157699-16-jbi.octave@gmail.com>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20200223231711.157699-1-jbi.octave@gmail.com>
 References: <0/30>
@@ -79,28 +85,30 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Sparse reports a warning at nr_neigh_stop()
-warning: context imbalance in nr_neigh_stop() - unexpected unlock
-The root cause is the missing annotation at nr_neigh_stop()
-Add the missing __releases(&nr_neigh_list_lock) annotation
+Sparse reports a warning unix_wait_for_peer()
+
+warning: context imbalance in unix_wait_for_peer() - unexpected unlock
+
+The root cause is the missing annotation at unix_wait_for_peer()
+Add the missing annotation __releases(&unix_sk(other)->lock)
 
 Signed-off-by: Jules Irenge <jbi.octave@gmail.com>
 ---
- net/netrom/nr_route.c | 1 +
+ net/unix/af_unix.c | 1 +
  1 file changed, 1 insertion(+)
 
-diff --git a/net/netrom/nr_route.c b/net/netrom/nr_route.c
-index 33e7b91fc805..79f12d8c7b86 100644
---- a/net/netrom/nr_route.c
-+++ b/net/netrom/nr_route.c
-@@ -907,6 +907,7 @@ static void *nr_neigh_next(struct seq_file *seq, void *v, loff_t *pos)
+diff --git a/net/unix/af_unix.c b/net/unix/af_unix.c
+index 62c12cb5763e..cbd7dc01e147 100644
+--- a/net/unix/af_unix.c
++++ b/net/unix/af_unix.c
+@@ -1207,6 +1207,7 @@ static int unix_dgram_connect(struct socket *sock, struct sockaddr *addr,
  }
  
- static void nr_neigh_stop(struct seq_file *seq, void *v)
-+	__releases(&nr_neigh_list_lock)
+ static long unix_wait_for_peer(struct sock *other, long timeo)
++	__releases(&unix_sk(other)->lock)
  {
- 	spin_unlock_bh(&nr_neigh_list_lock);
- }
+ 	struct unix_sock *u = unix_sk(other);
+ 	int sched;
 -- 
 2.24.1
 
