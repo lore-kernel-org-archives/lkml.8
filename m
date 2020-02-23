@@ -7,53 +7,50 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0F52AC35671
-	for <linux-kernel@archiver.kernel.org>; Sun, 23 Feb 2020 02:23:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E5B3DC35669
+	for <linux-kernel@archiver.kernel.org>; Sun, 23 Feb 2020 02:23:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D6D6822464
-	for <linux-kernel@archiver.kernel.org>; Sun, 23 Feb 2020 02:23:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BE63722525
+	for <linux-kernel@archiver.kernel.org>; Sun, 23 Feb 2020 02:23:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582424616;
-	bh=PtriBsXyW8kGTAqXSDy7UYBdHikaU5JTUnz/W1iCUdQ=;
+	s=default; t=1582424621;
+	bh=z6zUjYv03o/ZBQbMjsGF1EYgUSVBYR0phVp6qM4MZ/o=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=kg86KHKtRmIkrPVZAxe8IcJzBpR1QyC8/4HtWSwEbDmzJgEsLaxK54pxpHSWtH7Ij
-	 +l757L0XORAKivlo4QevHw9nbCiF0mcTN7N1xlnEchKi2hhIzxEAtAEcDvCbsEMePE
-	 3VE1cMFwIoVI+0pziDo96drpvqLU4ij3oa4OumMA=
+	b=Rg8y/XMXqS93AJerkTDxGJ758Y9cs4++wrmfTS9jzl5baQzobjEXAIzGTTAPIzFru
+	 EwvO1safxcPxoqzXfM0ORncyhQIqZMFjNsHO+5usrjQvOD32HeypRMjeS4AGXhU6//
+	 ewAWGMycNgUOhJBopceBDyN2TXP7NLoteVPK2Eew=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728730AbgBWCXg (ORCPT
+        id S1728755AbgBWCXk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 22 Feb 2020 21:23:36 -0500
-Received: from mail.kernel.org ([198.145.29.99]:53064 "EHLO mail.kernel.org"
+        Sat, 22 Feb 2020 21:23:40 -0500
+Received: from mail.kernel.org ([198.145.29.99]:53188 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728002AbgBWCXb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 22 Feb 2020 21:23:31 -0500
+        id S1728002AbgBWCXh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 22 Feb 2020 21:23:37 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E561221D56;
-        Sun, 23 Feb 2020 02:23:29 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2D818227BF;
+        Sun, 23 Feb 2020 02:23:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1582424610;
-        bh=PtriBsXyW8kGTAqXSDy7UYBdHikaU5JTUnz/W1iCUdQ=;
+        s=default; t=1582424617;
+        bh=z6zUjYv03o/ZBQbMjsGF1EYgUSVBYR0phVp6qM4MZ/o=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=fzp7kC+kU2UnuVJjIq6os+Ue2DKOyY265IbI6KbWrzIfzQZ01nE65zFwWdkvnYBNm
-         19jxuJPH9qXk2Gx44pgzU3Ku6xPe0kb+rpeQc47agn1v284yFGwd8CWuJNyUD6UO1a
-         HOMPMVXqPXd/7+4ARf/Zi4fQWoRpg1XiezbzA3zE=
+        b=FmVtGLUYOSd3nrpn2uBsGbCRQPrloEn1rbO9f2E1ZhpkxDgSL/2W9GLb5dF+4NPTV
+         L/9JWpOD+vkalWxzjk5/2AZHI5hPEDcYlgB3Bl5oCIbP2XGifq3ewyXDmIqY56z8x3
+         FRs+dy8KigGP/cerQkJrWYJ/Jj78UeMfdP3HRLSk=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Shay Bar <shay.bar@celeno.com>,
-        Aviad Brikman <aviad.brikman@celeno.com>,
-        Johannes Berg <johannes.berg@intel.com>,
-        Sasha Levin <sashal@kernel.org>,
-        linux-wireless@vger.kernel.org, netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.4 45/50] mac80211: fix wrong 160/80+80 MHz setting
-Date:   Sat, 22 Feb 2020 21:22:30 -0500
-Message-Id: <20200223022235.1404-45-sashal@kernel.org>
+Cc:     Keith Busch <kbusch@kernel.org>, Sagi Grimberg <sagi@grimberg.me>,
+        Christoph Hellwig <hch@lst.de>, Jens Axboe <axboe@kernel.dk>,
+        Sasha Levin <sashal@kernel.org>, linux-nvme@lists.infradead.org
+Subject: [PATCH AUTOSEL 5.4 50/50] nvme/pci: move cqe check after device shutdown
+Date:   Sat, 22 Feb 2020 21:22:35 -0500
+Message-Id: <20200223022235.1404-50-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200223022235.1404-1-sashal@kernel.org>
 References: <20200223022235.1404-1-sashal@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
@@ -62,68 +59,77 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Shay Bar <shay.bar@celeno.com>
+From: Keith Busch <kbusch@kernel.org>
 
-[ Upstream commit 33181ea7f5a62a17fbe55f0f73428ecb5e686be8 ]
+[ Upstream commit fa46c6fb5d61b1f17b06d7c6ef75478b576304c7 ]
 
-Before this patch, STA's would set new width of 160/80+80 MHz based on AP capability only.
-This is wrong because STA may not support > 80MHz BW.
-Fix is to verify STA has 160/80+80 MHz capability before increasing its width to > 80MHz.
+Many users have reported nvme triggered irq_startup() warnings during
+shutdown. The driver uses the nvme queue's irq to synchronize scanning
+for completions, and enabling an interrupt affined to only offline CPUs
+triggers the alarming warning.
 
-The "support_80_80" and "support_160" setting is based on:
-"Table 9-272 — Setting of the Supported Channel Width Set subfield and Extended NSS BW
-Support subfield at a STA transmitting the VHT Capabilities Information field"
-From "Draft P802.11REVmd_D3.0.pdf"
+Move the final CQE check to after disabling the device and all
+registered interrupts have been torn down so that we do not have any
+IRQ to synchronize.
 
-Signed-off-by: Aviad Brikman <aviad.brikman@celeno.com>
-Signed-off-by: Shay Bar <shay.bar@celeno.com>
-Link: https://lore.kernel.org/r/20200210130728.23674-1-shay.bar@celeno.com
-Signed-off-by: Johannes Berg <johannes.berg@intel.com>
+Link: https://bugzilla.kernel.org/show_bug.cgi?id=206509
+Reviewed-by: Sagi Grimberg <sagi@grimberg.me>
+Reviewed-by: Christoph Hellwig <hch@lst.de>
+Signed-off-by: Keith Busch <kbusch@kernel.org>
+Signed-off-by: Jens Axboe <axboe@kernel.dk>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- net/mac80211/util.c | 16 ++++++++++++++--
- 1 file changed, 14 insertions(+), 2 deletions(-)
+ drivers/nvme/host/pci.c | 23 ++++++++++++++++++-----
+ 1 file changed, 18 insertions(+), 5 deletions(-)
 
-diff --git a/net/mac80211/util.c b/net/mac80211/util.c
-index 739e90555d8b9..decd46b383938 100644
---- a/net/mac80211/util.c
-+++ b/net/mac80211/util.c
-@@ -2993,10 +2993,22 @@ bool ieee80211_chandef_vht_oper(struct ieee80211_hw *hw,
- 	int cf0, cf1;
- 	int ccfs0, ccfs1, ccfs2;
- 	int ccf0, ccf1;
-+	u32 vht_cap;
-+	bool support_80_80 = false;
-+	bool support_160 = false;
+diff --git a/drivers/nvme/host/pci.c b/drivers/nvme/host/pci.c
+index 14d513087a14b..858805929b2cd 100644
+--- a/drivers/nvme/host/pci.c
++++ b/drivers/nvme/host/pci.c
+@@ -1413,6 +1413,23 @@ static void nvme_disable_admin_queue(struct nvme_dev *dev, bool shutdown)
+ 	nvme_poll_irqdisable(nvmeq, -1);
+ }
  
- 	if (!oper || !htop)
- 		return false;
++/*
++ * Called only on a device that has been disabled and after all other threads
++ * that can check this device's completion queues have synced. This is the
++ * last chance for the driver to see a natural completion before
++ * nvme_cancel_request() terminates all incomplete requests.
++ */
++static void nvme_reap_pending_cqes(struct nvme_dev *dev)
++{
++	u16 start, end;
++	int i;
++
++	for (i = dev->ctrl.queue_count - 1; i > 0; i--) {
++		nvme_process_cq(&dev->queues[i], &start, &end, -1);
++		nvme_complete_cqes(&dev->queues[i], start, end);
++	}
++}
++
+ static int nvme_cmb_qdepth(struct nvme_dev *dev, int nr_io_queues,
+ 				int entry_size)
+ {
+@@ -2248,11 +2265,6 @@ static bool __nvme_disable_io_queues(struct nvme_dev *dev, u8 opcode)
+ 		if (timeout == 0)
+ 			return false;
  
-+	vht_cap = hw->wiphy->bands[chandef->chan->band]->vht_cap.cap;
-+	support_160 = (vht_cap & (IEEE80211_VHT_CAP_SUPP_CHAN_WIDTH_MASK |
-+				  IEEE80211_VHT_CAP_EXT_NSS_BW_MASK));
-+	support_80_80 = ((vht_cap &
-+			 IEEE80211_VHT_CAP_SUPP_CHAN_WIDTH_160_80PLUS80MHZ) ||
-+			(vht_cap & IEEE80211_VHT_CAP_SUPP_CHAN_WIDTH_160MHZ &&
-+			 vht_cap & IEEE80211_VHT_CAP_EXT_NSS_BW_MASK) ||
-+			((vht_cap & IEEE80211_VHT_CAP_EXT_NSS_BW_MASK) >>
-+				    IEEE80211_VHT_CAP_EXT_NSS_BW_SHIFT > 1));
- 	ccfs0 = oper->center_freq_seg0_idx;
- 	ccfs1 = oper->center_freq_seg1_idx;
- 	ccfs2 = (le16_to_cpu(htop->operation_mode) &
-@@ -3024,10 +3036,10 @@ bool ieee80211_chandef_vht_oper(struct ieee80211_hw *hw,
- 			unsigned int diff;
+-		/* handle any remaining CQEs */
+-		if (opcode == nvme_admin_delete_cq &&
+-		    !test_bit(NVMEQ_DELETE_ERROR, &nvmeq->flags))
+-			nvme_poll_irqdisable(nvmeq, -1);
+-
+ 		sent--;
+ 		if (nr_queues)
+ 			goto retry;
+@@ -2441,6 +2453,7 @@ static void nvme_dev_disable(struct nvme_dev *dev, bool shutdown)
+ 	nvme_suspend_io_queues(dev);
+ 	nvme_suspend_queue(&dev->queues[0]);
+ 	nvme_pci_disable(dev);
++	nvme_reap_pending_cqes(dev);
  
- 			diff = abs(ccf1 - ccf0);
--			if (diff == 8) {
-+			if ((diff == 8) && support_160) {
- 				new.width = NL80211_CHAN_WIDTH_160;
- 				new.center_freq1 = cf1;
--			} else if (diff > 8) {
-+			} else if ((diff > 8) && support_80_80) {
- 				new.width = NL80211_CHAN_WIDTH_80P80;
- 				new.center_freq2 = cf1;
- 			}
+ 	blk_mq_tagset_busy_iter(&dev->tagset, nvme_cancel_request, &dev->ctrl);
+ 	blk_mq_tagset_busy_iter(&dev->admin_tagset, nvme_cancel_request, &dev->ctrl);
 -- 
 2.20.1
 
