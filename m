@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2B1E3C35669
-	for <linux-kernel@archiver.kernel.org>; Sun, 23 Feb 2020 02:29:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 904ADC35671
+	for <linux-kernel@archiver.kernel.org>; Sun, 23 Feb 2020 02:29:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EDEBD20659
-	for <linux-kernel@archiver.kernel.org>; Sun, 23 Feb 2020 02:29:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 641C920659
+	for <linux-kernel@archiver.kernel.org>; Sun, 23 Feb 2020 02:29:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582424970;
-	bh=trmqcw4mum0jAgYjGfrbgcFg0HUsASEtcGK5hr0g88M=;
+	s=default; t=1582424973;
+	bh=zGGFlC45Ss+kUat2WZSaxY+SC7iXu20FUF8Aw8wQ1Yo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=aidAhqlzxO9ldIckHDHwbxF0SG3XVnRLVd7CgaKZYzOo3vCbw+pauP4UDfxqhHxcQ
-	 PN/HnkVxDQgO9RHVDynhxiFoqBQKo5PxrxYC+xmhOiIBUfTinOzK6Jeo5DUPQIjCdt
-	 Jg740KKrpHwM78NXM0xHDuCLAA4h7H1/q0gS8KzQ=
+	b=ngm3sLArDqlkx39CGedanTBqGh9232AzrY+/WR16I2GiZliEXjYZ1xz/qYEC6tgur
+	 xJXvApru5Eqjq/PouM4Jprz83+MfJzLL53fFoeM/Lmqurp8KnUJk5Cc8hM6vFxSm5s
+	 kIPjmLEcZtQPUNZ5Iz20kvPLW58wfY3GAyHLMCXo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727296AbgBWCYC (ORCPT
+        id S1728736AbgBWC3c (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 22 Feb 2020 21:24:02 -0500
-Received: from mail.kernel.org ([198.145.29.99]:53674 "EHLO mail.kernel.org"
+        Sat, 22 Feb 2020 21:29:32 -0500
+Received: from mail.kernel.org ([198.145.29.99]:53848 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728871AbgBWCXz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 22 Feb 2020 21:23:55 -0500
+        id S1728950AbgBWCYC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 22 Feb 2020 21:24:02 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E017C21D56;
-        Sun, 23 Feb 2020 02:23:53 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id DA14F208C4;
+        Sun, 23 Feb 2020 02:24:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1582424634;
-        bh=trmqcw4mum0jAgYjGfrbgcFg0HUsASEtcGK5hr0g88M=;
+        s=default; t=1582424641;
+        bh=zGGFlC45Ss+kUat2WZSaxY+SC7iXu20FUF8Aw8wQ1Yo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=0/1GQaQU6BtrHYP+OwejXfkoJpIHqkRRZZ1hGYO6so21BEJHGHIOeHEL4vNoIs+yM
-         PpIP3Z6l53tglCK3irmvivjLC2EY0Tm+yRJiDeFygXgTScQXk0hunRjOqd1n06+9zt
-         xYs4ZJnQwHYic6y9ev7Q37WEcBbL8CSJwjO3osmo=
+        b=JO2TrrdsJs9YKzfq91DWwy66N/KKrpJrz52UlupA3Fpl1gpyQsFhOyMwoL+E2Clni
+         nRJpDhKSBaZ/XRii0UZYs/BNJFzAC37FAh09q4mwUC+HC8alhbKp8ND2yAj217+9CB
+         +XhTZjEbZEM54OfXv6wnba6PWpZNhRK1PxLihuzM=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Thierry Reding <treding@nvidia.com>,
-        kbuild test robot <lkp@intel.com>,
-        Olof Johansson <olof@lixom.net>,
-        Sasha Levin <sashal@kernel.org>, linux-tegra@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 12/25] soc/tegra: fuse: Fix build with Tegra194 configuration
-Date:   Sat, 22 Feb 2020 21:23:26 -0500
-Message-Id: <20200223022339.1885-12-sashal@kernel.org>
+Cc:     Arthur Kiyanovski <akiyano@amazon.com>,
+        Sameeh Jubran <sameehj@amazon.com>,
+        "David S . Miller" <davem@davemloft.net>,
+        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 18/25] net: ena: rss: store hash function as values and not bits
+Date:   Sat, 22 Feb 2020 21:23:32 -0500
+Message-Id: <20200223022339.1885-18-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200223022339.1885-1-sashal@kernel.org>
 References: <20200223022339.1885-1-sashal@kernel.org>
@@ -60,38 +60,54 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Thierry Reding <treding@nvidia.com>
+From: Arthur Kiyanovski <akiyano@amazon.com>
 
-[ Upstream commit 6f4ecbe284df5f22e386a640d9a4b32cede62030 ]
+[ Upstream commit 4844470d472d660c26149ad764da2406adb13423 ]
 
-If only Tegra194 support is enabled, the tegra30_fuse_read() and
-tegra30_fuse_init() function are not declared and cause a build failure.
-Add Tegra194 to the preprocessor guard to make sure these functions are
-available for Tegra194-only builds as well.
+The device receives, stores and retrieves the hash function value as bits
+and not as their enum value.
 
-Link: https://lore.kernel.org/r/20200203143114.3967295-1-thierry.reding@gmail.com
-Reported-by: kbuild test robot <lkp@intel.com>
-Signed-off-by: Thierry Reding <treding@nvidia.com>
-Signed-off-by: Olof Johansson <olof@lixom.net>
+The bug:
+* In ena_com_set_hash_function() we set
+  cmd.u.flow_hash_func.selected_func to the bit value of rss->hash_func.
+ (1 << rss->hash_func)
+* In ena_com_get_hash_function() we retrieve the hash function and store
+  it's bit value in rss->hash_func. (Now the bit value of rss->hash_func
+  is stored in rss->hash_func instead of it's enum value)
+
+The fix:
+This commit fixes the issue by converting the retrieved hash function
+values from the device to the matching enum value of the set bit using
+ffs(). ffs() finds the first set bit's index in a word. Since the function
+returns 1 for the LSB's index, we need to subtract 1 from the returned
+value (note that BIT(0) is 1).
+
+Fixes: 1738cd3ed342 ("net: ena: Add a driver for Amazon Elastic Network Adapters (ENA)")
+Signed-off-by: Sameeh Jubran <sameehj@amazon.com>
+Signed-off-by: Arthur Kiyanovski <akiyano@amazon.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/soc/tegra/fuse/fuse-tegra30.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ drivers/net/ethernet/amazon/ena/ena_com.c | 6 +++++-
+ 1 file changed, 5 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/soc/tegra/fuse/fuse-tegra30.c b/drivers/soc/tegra/fuse/fuse-tegra30.c
-index 257e254c6137f..0ec6385eb15e6 100644
---- a/drivers/soc/tegra/fuse/fuse-tegra30.c
-+++ b/drivers/soc/tegra/fuse/fuse-tegra30.c
-@@ -47,7 +47,8 @@
-     defined(CONFIG_ARCH_TEGRA_124_SOC) || \
-     defined(CONFIG_ARCH_TEGRA_132_SOC) || \
-     defined(CONFIG_ARCH_TEGRA_210_SOC) || \
--    defined(CONFIG_ARCH_TEGRA_186_SOC)
-+    defined(CONFIG_ARCH_TEGRA_186_SOC) || \
-+    defined(CONFIG_ARCH_TEGRA_194_SOC)
- static u32 tegra30_fuse_read_early(struct tegra_fuse *fuse, unsigned int offset)
- {
- 	if (WARN_ON(!fuse->base))
+diff --git a/drivers/net/ethernet/amazon/ena/ena_com.c b/drivers/net/ethernet/amazon/ena/ena_com.c
+index ebc36d15441ce..397fb49156a9a 100644
+--- a/drivers/net/ethernet/amazon/ena/ena_com.c
++++ b/drivers/net/ethernet/amazon/ena/ena_com.c
+@@ -2134,7 +2134,11 @@ int ena_com_get_hash_function(struct ena_com_dev *ena_dev,
+ 	if (unlikely(rc))
+ 		return rc;
+ 
+-	rss->hash_func = get_resp.u.flow_hash_func.selected_func;
++	/* ffs() returns 1 in case the lsb is set */
++	rss->hash_func = ffs(get_resp.u.flow_hash_func.selected_func);
++	if (rss->hash_func)
++		rss->hash_func--;
++
+ 	if (func)
+ 		*func = rss->hash_func;
+ 
 -- 
 2.20.1
 
