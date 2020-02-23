@@ -4,51 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2A823C35669
-	for <linux-kernel@archiver.kernel.org>; Sun, 23 Feb 2020 02:33:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 30D75C35671
+	for <linux-kernel@archiver.kernel.org>; Sun, 23 Feb 2020 02:33:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EC46A2067D
-	for <linux-kernel@archiver.kernel.org>; Sun, 23 Feb 2020 02:33:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 08D742071E
+	for <linux-kernel@archiver.kernel.org>; Sun, 23 Feb 2020 02:33:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582425203;
-	bh=4BypovxFTpsOw6CslQIrS8l2iIcg0DbMZ7zyR66ltGs=;
+	s=default; t=1582425209;
+	bh=7owaZk17bIn9LmORoSnigHfR+cQw1OAbEYXdXpklBJg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=LeXGB1MlL2tXlt1G79Sxkadpx8lvzWo+vOlQLvoQf05TmYCABLMzLTjcvkz/BR+G9
-	 Gq8+aKQ5mAikZ45Y2ETFdQaJzemW9NHXrP+atHT5IM7ySAZxJZz5nVfHmhpA7UFU85
-	 R8cfkY4ANQXgZw79IZRnRoRtEs0c/34klMJUrY3I=
+	b=oDz7gtN9R46Djf4oR+vzzJMnzlfaCsTkPj5qv7iMPNGI/Paxtn7ltMIzj0GJnYsnH
+	 Q246T2ZYD8fP9A8UlM59Ve7XWV1mIYcIIRleltwV1YxZ2j/pVfMVsJ32rhBTu1L6H9
+	 tQVSytS53B6+c0wV5oEZ0JfoD0TM0mF+9HauH0CE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728760AbgBWCdW (ORCPT
+        id S1727895AbgBWCd1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 22 Feb 2020 21:33:22 -0500
-Received: from mail.kernel.org ([198.145.29.99]:52074 "EHLO mail.kernel.org"
+        Sat, 22 Feb 2020 21:33:27 -0500
+Received: from mail.kernel.org ([198.145.29.99]:52030 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728359AbgBWCWx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 22 Feb 2020 21:22:53 -0500
+        id S1728346AbgBWCWw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 22 Feb 2020 21:22:52 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A10A5208C3;
-        Sun, 23 Feb 2020 02:22:52 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7679021D56;
+        Sun, 23 Feb 2020 02:22:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1582424573;
-        bh=4BypovxFTpsOw6CslQIrS8l2iIcg0DbMZ7zyR66ltGs=;
+        s=default; t=1582424572;
+        bh=7owaZk17bIn9LmORoSnigHfR+cQw1OAbEYXdXpklBJg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=lnjy8IttmAKBrnRfPsvHmLkNmLEygi93b6ABCbdQCjGkrVLOacfU1pOoag9rSUOhN
-         4xWKjJLbKa/Mw/eeqwl9+kwPeRWlCcAKSSRaFTFAcLFLkcuXKnhWAVpOU/p5MVMC8Z
-         Aa5h/SJXITJ7dzXALGUuC2S/wpfA/Dyg8CgNvL9o=
+        b=0J+wMWPkn8G8rKtCTmYRrifk5Sm7U90kl5uUWDiPrJjdcI32TL63Z2+qajCC72Tzd
+         ul5pucBDGjirJNB/tpOa6jdE+p+hhfm3WxvDwh8411CmyfVzgIUlSUHDb0+RfURUJ0
+         zrW0epau1T2AjIDuhqWQ1RHTIc0iGOm41MTZDPrY=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Peter Zijlstra <peterz@infradead.org>,
-        Dmitry Osipenko <digetx@gmail.com>,
-        Ingo Molnar <mingo@kernel.org>,
-        Sasha Levin <sashal@kernel.org>,
+Cc:     John Garry <john.garry@huawei.com>,
+        Robin Murphy <robin.murphy@arm.com>,
+        Will Deacon <will@kernel.org>, Sasha Levin <sashal@kernel.org>,
         linux-arm-kernel@lists.infradead.org
-Subject: [PATCH AUTOSEL 5.4 14/50] arm/ftrace: Fix BE text poking
-Date:   Sat, 22 Feb 2020 21:21:59 -0500
-Message-Id: <20200223022235.1404-14-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 5.4 13/50] perf/smmuv3: Use platform_get_irq_optional() for wired interrupt
+Date:   Sat, 22 Feb 2020 21:21:58 -0500
+Message-Id: <20200223022235.1404-13-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200223022235.1404-1-sashal@kernel.org>
 References: <20200223022235.1404-1-sashal@kernel.org>
@@ -61,44 +60,50 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Peter Zijlstra <peterz@infradead.org>
+From: John Garry <john.garry@huawei.com>
 
-[ Upstream commit be993e44badc448add6a18d6f12b20615692c4c3 ]
+[ Upstream commit 0ca2c0319a7bce0e152b51b866979d62dc261e48 ]
 
-The __patch_text() function already applies __opcode_to_mem_*(), so
-when __opcode_to_mem_*() is not the identity (BE*), it is applied
-twice, wrecking the instruction.
+Even though a SMMUv3 PMCG implementation may use an MSI as the form of
+interrupt source, the kernel would still complain that it does not find
+the wired (GSIV) interrupt in this case:
 
-Fixes: 42e51f187f86 ("arm/ftrace: Use __patch_text()")
-Reported-by: Dmitry Osipenko <digetx@gmail.com>
-Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-Signed-off-by: Ingo Molnar <mingo@kernel.org>
-Tested-by: Dmitry Osipenko <digetx@gmail.com>
+root@(none)$ dmesg | grep arm-smmu-v3-pmcg | grep "not found"
+[   59.237219] arm-smmu-v3-pmcg arm-smmu-v3-pmcg.8.auto: IRQ index 0 not found
+[   59.322841] arm-smmu-v3-pmcg arm-smmu-v3-pmcg.9.auto: IRQ index 0 not found
+[   59.422155] arm-smmu-v3-pmcg arm-smmu-v3-pmcg.10.auto: IRQ index 0 not found
+[   59.539014] arm-smmu-v3-pmcg arm-smmu-v3-pmcg.11.auto: IRQ index 0 not found
+[   59.640329] arm-smmu-v3-pmcg arm-smmu-v3-pmcg.12.auto: IRQ index 0 not found
+[   59.743112] arm-smmu-v3-pmcg arm-smmu-v3-pmcg.13.auto: IRQ index 0 not found
+[   59.880577] arm-smmu-v3-pmcg arm-smmu-v3-pmcg.14.auto: IRQ index 0 not found
+[   60.017528] arm-smmu-v3-pmcg arm-smmu-v3-pmcg.15.auto: IRQ index 0 not found
+
+Use platform_get_irq_optional() to silence the warning.
+
+If neither interrupt source is found, then the driver will still warn that
+IRQ setup errored and the probe will fail.
+
+Reviewed-by: Robin Murphy <robin.murphy@arm.com>
+Signed-off-by: John Garry <john.garry@huawei.com>
+Signed-off-by: Will Deacon <will@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm/kernel/ftrace.c | 7 ++-----
- 1 file changed, 2 insertions(+), 5 deletions(-)
+ drivers/perf/arm_smmuv3_pmu.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/arch/arm/kernel/ftrace.c b/arch/arm/kernel/ftrace.c
-index bda949fd84e8b..93caf757f1d5d 100644
---- a/arch/arm/kernel/ftrace.c
-+++ b/arch/arm/kernel/ftrace.c
-@@ -81,13 +81,10 @@ static int ftrace_modify_code(unsigned long pc, unsigned long old,
- {
- 	unsigned long replaced;
+diff --git a/drivers/perf/arm_smmuv3_pmu.c b/drivers/perf/arm_smmuv3_pmu.c
+index 191f410cf35cd..2f8787276d9b8 100644
+--- a/drivers/perf/arm_smmuv3_pmu.c
++++ b/drivers/perf/arm_smmuv3_pmu.c
+@@ -772,7 +772,7 @@ static int smmu_pmu_probe(struct platform_device *pdev)
+ 		smmu_pmu->reloc_base = smmu_pmu->reg_base;
+ 	}
  
--	if (IS_ENABLED(CONFIG_THUMB2_KERNEL)) {
-+	if (IS_ENABLED(CONFIG_THUMB2_KERNEL))
- 		old = __opcode_to_mem_thumb32(old);
--		new = __opcode_to_mem_thumb32(new);
--	} else {
-+	else
- 		old = __opcode_to_mem_arm(old);
--		new = __opcode_to_mem_arm(new);
--	}
+-	irq = platform_get_irq(pdev, 0);
++	irq = platform_get_irq_optional(pdev, 0);
+ 	if (irq > 0)
+ 		smmu_pmu->irq = irq;
  
- 	if (validate) {
- 		if (probe_kernel_read(&replaced, (void *)pc, MCOUNT_INSN_SIZE))
 -- 
 2.20.1
 
