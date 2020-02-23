@@ -7,48 +7,47 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D4646C35671
-	for <linux-kernel@archiver.kernel.org>; Sun, 23 Feb 2020 02:24:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E5649C35669
+	for <linux-kernel@archiver.kernel.org>; Sun, 23 Feb 2020 02:24:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A2B2821741
-	for <linux-kernel@archiver.kernel.org>; Sun, 23 Feb 2020 02:24:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B37D6208C4
+	for <linux-kernel@archiver.kernel.org>; Sun, 23 Feb 2020 02:24:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582424691;
-	bh=iu4YqlFBr8NwRxfR43xbHq3M3RJ2xt42vY3xtDy23XY=;
+	s=default; t=1582424694;
+	bh=ZS8/nYq1P3iQZ/7cVhbUQlgUQa9jZTe4mt8nxCgCiuM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=IAEN8rwZa4urKcCf39eouEzlapl2X2mJfi4lrA0g77LL7psh16HeHKDHDnGoI5PFm
-	 quplIZQlCWDeqf1/7edrXCM0TAj+dOnnMm1ujFcgNzZFxDROsLXB/iingZNqzTXLrw
-	 O9cMmOy2hXQAQVqnRXrYacbN6UUx8jZyaOcRmgGI=
+	b=p+eNCnQkGMy6SVAuHfMnCfsAu1fRveAWx91/0uoNKtAUCg+k286+9N5KdDTrRTF0i
+	 wvyBc/DFEz8vHMA1XqF7j+OkThhzItzZXl4Bb0K7EZNmfIj6tvjOFKVxmIhqUEbNov
+	 AfygkqdJWd8oR/M2CR2EpdAGlh6NiOfCWEcIr15c=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729453AbgBWCYu (ORCPT
+        id S1729487AbgBWCYx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 22 Feb 2020 21:24:50 -0500
-Received: from mail.kernel.org ([198.145.29.99]:55062 "EHLO mail.kernel.org"
+        Sat, 22 Feb 2020 21:24:53 -0500
+Received: from mail.kernel.org ([198.145.29.99]:55152 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729349AbgBWCYr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 22 Feb 2020 21:24:47 -0500
+        id S1729445AbgBWCYt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 22 Feb 2020 21:24:49 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2B61124682;
-        Sun, 23 Feb 2020 02:24:46 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7DBF720707;
+        Sun, 23 Feb 2020 02:24:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1582424686;
-        bh=iu4YqlFBr8NwRxfR43xbHq3M3RJ2xt42vY3xtDy23XY=;
+        s=default; t=1582424689;
+        bh=ZS8/nYq1P3iQZ/7cVhbUQlgUQa9jZTe4mt8nxCgCiuM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=pT9b8yHRRuk/HoiDSzBLBZcGoSmdsOsBwFkkje4c1j5gL8+klpAniGT4U3SoziqD1
-         T2Xe5UYbF3xEIMkt/PwTv5YIIcFmqpcoEFRFUU+A0+VjI/A1kDo8gYcUP1zsyh+hez
-         8SjWW8XA+M+BhLy6ptJahIsVVe1dh+PlPxDF9fsU=
+        b=KOzKoyCWk67RySvjXc86rsu1ZBMJrIHvjwl/+il/zSSew9p1C6GTgdBLfIzJaYB1u
+         SGWNrhjCVQTQ/Sk0gFT8x0HTEuHUcrw6rZY02KuNGIv7sfW6cNjqzuMT5a+NBnh8Gi
+         FPhXlEUmMR+b97pOwztFUMy5L8DS/tBStbCW5YdE=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Peter Zijlstra <peterz@infradead.org>,
-        Dmitry Osipenko <digetx@gmail.com>,
-        Ingo Molnar <mingo@kernel.org>,
-        Sasha Levin <sashal@kernel.org>,
-        linux-arm-kernel@lists.infradead.org
-Subject: [PATCH AUTOSEL 4.9 06/16] arm/ftrace: Fix BE text poking
-Date:   Sat, 22 Feb 2020 21:24:28 -0500
-Message-Id: <20200223022438.2398-6-sashal@kernel.org>
+Cc:     Arthur Kiyanovski <akiyano@amazon.com>,
+        Ezequiel Lara Gomez <ezegomez@amazon.com>,
+        "David S . Miller" <davem@davemloft.net>,
+        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.9 08/16] net: ena: add missing ethtool TX timestamping indication
+Date:   Sat, 22 Feb 2020 21:24:30 -0500
+Message-Id: <20200223022438.2398-8-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200223022438.2398-1-sashal@kernel.org>
 References: <20200223022438.2398-1-sashal@kernel.org>
@@ -61,44 +60,43 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Peter Zijlstra <peterz@infradead.org>
+From: Arthur Kiyanovski <akiyano@amazon.com>
 
-[ Upstream commit be993e44badc448add6a18d6f12b20615692c4c3 ]
+[ Upstream commit cf6d17fde93bdda23c9b02dd5906a12bf8c55209 ]
 
-The __patch_text() function already applies __opcode_to_mem_*(), so
-when __opcode_to_mem_*() is not the identity (BE*), it is applied
-twice, wrecking the instruction.
+Current implementation of the driver calls skb_tx_timestamp()to add a
+software tx timestamp to the skb, however the software-transmit capability
+is not reported in ethtool -T.
 
-Fixes: 42e51f187f86 ("arm/ftrace: Use __patch_text()")
-Reported-by: Dmitry Osipenko <digetx@gmail.com>
-Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-Signed-off-by: Ingo Molnar <mingo@kernel.org>
-Tested-by: Dmitry Osipenko <digetx@gmail.com>
+This commit updates the ethtool structure to report the software-transmit
+capability in ethtool -T using the standard ethtool_op_get_ts_info().
+This function reports all software timestamping capabilities (tx and rx),
+as well as setting phc_index = -1. phc_index is the index of the PTP
+hardware clock device that will be used for hardware timestamps. Since we
+don't have such a device in ENA, using the default -1 value is the correct
+setting.
+
+Fixes: 1738cd3ed342 ("net: ena: Add a driver for Amazon Elastic Network Adapters (ENA)")
+Signed-off-by: Ezequiel Lara Gomez <ezegomez@amazon.com>
+Signed-off-by: Arthur Kiyanovski <akiyano@amazon.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm/kernel/ftrace.c | 7 ++-----
- 1 file changed, 2 insertions(+), 5 deletions(-)
+ drivers/net/ethernet/amazon/ena/ena_ethtool.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/arch/arm/kernel/ftrace.c b/arch/arm/kernel/ftrace.c
-index 414e60ed02573..58a01083b0415 100644
---- a/arch/arm/kernel/ftrace.c
-+++ b/arch/arm/kernel/ftrace.c
-@@ -105,13 +105,10 @@ static int ftrace_modify_code(unsigned long pc, unsigned long old,
- {
- 	unsigned long replaced;
+diff --git a/drivers/net/ethernet/amazon/ena/ena_ethtool.c b/drivers/net/ethernet/amazon/ena/ena_ethtool.c
+index 06fd061a20e9a..d85fe0de28dba 100644
+--- a/drivers/net/ethernet/amazon/ena/ena_ethtool.c
++++ b/drivers/net/ethernet/amazon/ena/ena_ethtool.c
+@@ -819,6 +819,7 @@ static const struct ethtool_ops ena_ethtool_ops = {
+ 	.get_channels		= ena_get_channels,
+ 	.get_tunable		= ena_get_tunable,
+ 	.set_tunable		= ena_set_tunable,
++	.get_ts_info            = ethtool_op_get_ts_info,
+ };
  
--	if (IS_ENABLED(CONFIG_THUMB2_KERNEL)) {
-+	if (IS_ENABLED(CONFIG_THUMB2_KERNEL))
- 		old = __opcode_to_mem_thumb32(old);
--		new = __opcode_to_mem_thumb32(new);
--	} else {
-+	else
- 		old = __opcode_to_mem_arm(old);
--		new = __opcode_to_mem_arm(new);
--	}
- 
- 	if (validate) {
- 		if (probe_kernel_read(&replaced, (void *)pc, MCOUNT_INSN_SIZE))
+ void ena_set_ethtool_ops(struct net_device *netdev)
 -- 
 2.20.1
 
