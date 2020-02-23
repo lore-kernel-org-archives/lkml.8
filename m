@@ -7,47 +7,48 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A3B31C35669
-	for <linux-kernel@archiver.kernel.org>; Sun, 23 Feb 2020 02:30:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E3534C35669
+	for <linux-kernel@archiver.kernel.org>; Sun, 23 Feb 2020 02:30:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7A9E421741
-	for <linux-kernel@archiver.kernel.org>; Sun, 23 Feb 2020 02:30:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AD8A020707
+	for <linux-kernel@archiver.kernel.org>; Sun, 23 Feb 2020 02:30:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582425004;
-	bh=XScb1HpWRssczpAA1YStAmkjyi8I91uCzovYRdXowjM=;
+	s=default; t=1582425008;
+	bh=LkB/ld1v7E5olWXI7Cv6NehVA818PbkX17uUoHk2kUY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=GBLvlh34qasopSGKVhK6ECJFepkOUejosvS8e6yxBfTMgTx1M+sEsSDCLHO1T5cPa
-	 PHnbMzI9W2A6ShK60SItNbbv8pEYV8af9qrLZRPx3nuNmm9JUqyXBksIO9wzam/84n
-	 t8XWqa/P3De4gC2QquboLjT4+C9QYVD/l3YA/0ZQ=
+	b=tf9JnfDcGHZZMREvnREahmJRIVXnRFaYBkYALPrELNhAd7hdabnmHyGO0FF55CkXR
+	 GrSQZ2siyNfMNL6mrYsGjk+9LG/32eQ9c0J2sTLrrSE/7KPUJM6gh0FY1ER1BE7JGq
+	 o8f7NoljpakjLIKkRD1Sj/9jhLfqPKc7aPy8Hi7Q=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728860AbgBWCXx (ORCPT
+        id S1726965AbgBWCaG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 22 Feb 2020 21:23:53 -0500
-Received: from mail.kernel.org ([198.145.29.99]:53442 "EHLO mail.kernel.org"
+        Sat, 22 Feb 2020 21:30:06 -0500
+Received: from mail.kernel.org ([198.145.29.99]:53590 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728793AbgBWCXr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 22 Feb 2020 21:23:47 -0500
+        id S1728857AbgBWCXw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 22 Feb 2020 21:23:52 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8ED7122464;
-        Sun, 23 Feb 2020 02:23:45 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A0627208C4;
+        Sun, 23 Feb 2020 02:23:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1582424626;
-        bh=XScb1HpWRssczpAA1YStAmkjyi8I91uCzovYRdXowjM=;
+        s=default; t=1582424632;
+        bh=LkB/ld1v7E5olWXI7Cv6NehVA818PbkX17uUoHk2kUY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ulKE9AKAoGAsKJnSiI+jfqNyOmOAKKzXf5NEeC6blFC9pZWu20OxH+qARmrK3XZM7
-         74QI1qREq7OnImybnwdNL1jdEscvuAbWK4vVObeLAt5cLbsPsGTKAO/JT+YKCWqZXw
-         u1tSb/0KT1ziLUp4bcvyGHoEkLszHWJWvADPuDDM=
+        b=Jxotl4JexpuDxvKIOzSu5Zqrj/tGj/s209DDSks+GnFjdGzRhTp8qy4FlW258sCOH
+         218jsf9vVeziiZXl/DBTVDHl3CIdllIfJz1UgsM45kXDM05XBXbkQkmCubYPHcga5u
+         AWbg2j1GAmCSJJA5makf6UirvNoDCUr5ljTk82ow=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Johannes Berg <johannes.berg@intel.com>,
-        Luca Coelho <luciano.coelho@intel.com>,
+Cc:     Peter Zijlstra <peterz@infradead.org>,
+        Dmitry Osipenko <digetx@gmail.com>,
+        Ingo Molnar <mingo@kernel.org>,
         Sasha Levin <sashal@kernel.org>,
-        linux-wireless@vger.kernel.org, netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 05/25] mac80211: consider more elements in parsing CRC
-Date:   Sat, 22 Feb 2020 21:23:19 -0500
-Message-Id: <20200223022339.1885-5-sashal@kernel.org>
+        linux-arm-kernel@lists.infradead.org
+Subject: [PATCH AUTOSEL 4.19 10/25] arm/ftrace: Fix BE text poking
+Date:   Sat, 22 Feb 2020 21:23:24 -0500
+Message-Id: <20200223022339.1885-10-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200223022339.1885-1-sashal@kernel.org>
 References: <20200223022339.1885-1-sashal@kernel.org>
@@ -60,66 +61,44 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Johannes Berg <johannes.berg@intel.com>
+From: Peter Zijlstra <peterz@infradead.org>
 
-[ Upstream commit a04564c99bb4a92f805a58e56b2d22cc4978f152 ]
+[ Upstream commit be993e44badc448add6a18d6f12b20615692c4c3 ]
 
-We only use the parsing CRC for checking if a beacon changed,
-and elements with an ID > 63 cannot be represented in the
-filter. Thus, like we did before with WMM and Cisco vendor
-elements, just statically add these forgotten items to the
-CRC:
- - WLAN_EID_VHT_OPERATION
- - WLAN_EID_OPMODE_NOTIF
+The __patch_text() function already applies __opcode_to_mem_*(), so
+when __opcode_to_mem_*() is not the identity (BE*), it is applied
+twice, wrecking the instruction.
 
-I guess that in most cases when VHT/HE operation change, the HT
-operation also changed, and so the change was picked up, but we
-did notice that pure operating mode notification changes were
-ignored.
-
-Signed-off-by: Johannes Berg <johannes.berg@intel.com>
-Signed-off-by: Luca Coelho <luciano.coelho@intel.com>
-Link: https://lore.kernel.org/r/20200131111300.891737-22-luca@coelho.fi
-[restrict to VHT for the mac80211 branch]
-Signed-off-by: Johannes Berg <johannes.berg@intel.com>
+Fixes: 42e51f187f86 ("arm/ftrace: Use __patch_text()")
+Reported-by: Dmitry Osipenko <digetx@gmail.com>
+Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+Signed-off-by: Ingo Molnar <mingo@kernel.org>
+Tested-by: Dmitry Osipenko <digetx@gmail.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- net/mac80211/util.c | 18 ++++++++++++------
- 1 file changed, 12 insertions(+), 6 deletions(-)
+ arch/arm/kernel/ftrace.c | 7 ++-----
+ 1 file changed, 2 insertions(+), 5 deletions(-)
 
-diff --git a/net/mac80211/util.c b/net/mac80211/util.c
-index f101a6460b44b..7fa9871b1db9f 100644
---- a/net/mac80211/util.c
-+++ b/net/mac80211/util.c
-@@ -945,16 +945,22 @@ u32 ieee802_11_parse_elems_crc(const u8 *start, size_t len, bool action,
- 				elem_parse_failed = true;
- 			break;
- 		case WLAN_EID_VHT_OPERATION:
--			if (elen >= sizeof(struct ieee80211_vht_operation))
-+			if (elen >= sizeof(struct ieee80211_vht_operation)) {
- 				elems->vht_operation = (void *)pos;
--			else
--				elem_parse_failed = true;
-+				if (calc_crc)
-+					crc = crc32_be(crc, pos - 2, elen + 2);
-+				break;
-+			}
-+			elem_parse_failed = true;
- 			break;
- 		case WLAN_EID_OPMODE_NOTIF:
--			if (elen > 0)
-+			if (elen > 0) {
- 				elems->opmode_notif = pos;
--			else
--				elem_parse_failed = true;
-+				if (calc_crc)
-+					crc = crc32_be(crc, pos - 2, elen + 2);
-+				break;
-+			}
-+			elem_parse_failed = true;
- 			break;
- 		case WLAN_EID_MESH_ID:
- 			elems->mesh_id = pos;
+diff --git a/arch/arm/kernel/ftrace.c b/arch/arm/kernel/ftrace.c
+index ee673c09aa6c0..dd0215fb6fe23 100644
+--- a/arch/arm/kernel/ftrace.c
++++ b/arch/arm/kernel/ftrace.c
+@@ -106,13 +106,10 @@ static int ftrace_modify_code(unsigned long pc, unsigned long old,
+ {
+ 	unsigned long replaced;
+ 
+-	if (IS_ENABLED(CONFIG_THUMB2_KERNEL)) {
++	if (IS_ENABLED(CONFIG_THUMB2_KERNEL))
+ 		old = __opcode_to_mem_thumb32(old);
+-		new = __opcode_to_mem_thumb32(new);
+-	} else {
++	else
+ 		old = __opcode_to_mem_arm(old);
+-		new = __opcode_to_mem_arm(new);
+-	}
+ 
+ 	if (validate) {
+ 		if (probe_kernel_read(&replaced, (void *)pc, MCOUNT_INSN_SIZE))
 -- 
 2.20.1
 
