@@ -4,49 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6D9EBC35669
-	for <linux-kernel@archiver.kernel.org>; Sun, 23 Feb 2020 02:29:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E1956C35669
+	for <linux-kernel@archiver.kernel.org>; Sun, 23 Feb 2020 02:29:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 37F1D20659
-	for <linux-kernel@archiver.kernel.org>; Sun, 23 Feb 2020 02:29:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id ACC9820659
+	for <linux-kernel@archiver.kernel.org>; Sun, 23 Feb 2020 02:29:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582424981;
-	bh=osVklB8pscuOnNSyEep2Q6rChRj+SW+wKvUMrT7fdAw=;
+	s=default; t=1582424992;
+	bh=8s/VDhbSuYRaoTGEHOdO0eHpgn3QBL6V1BnFX0DcqVk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=chF9dIr3OD3xwD9gbVtHX0jZDjN5TPHpev0oPyLLV84BZvBl+9V/GjC+Bw8k5/F1v
-	 uhl4YsPWXWUL0j84DBNiDuztG0Fh8cxhD8ZDD82lJXD0yCyh7K8anZi7RHD3Brw7lo
-	 1oqDpQo9wi+biPETxwq+ZBNJdNYNf9XyoC0JMnQA=
+	b=HGRG75LlKTU0wgmr32Y5ubncjkYTsT7+7yA6b6mDz1rSxAI0L4twSb76wAyl1iRsb
+	 XBnDFqKLXpUdTdeP7n+2AVU6D0haDPsllKYifHnpSFr1mGYKATnUcP8Lu2TOQuCYSX
+	 JCEfpDh8FqfIVcWYqeqI91+NO6aRXCxQ9ZeENDEg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729196AbgBWC3j (ORCPT
+        id S1729064AbgBWC3v (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 22 Feb 2020 21:29:39 -0500
-Received: from mail.kernel.org ([198.145.29.99]:53800 "EHLO mail.kernel.org"
+        Sat, 22 Feb 2020 21:29:51 -0500
+Received: from mail.kernel.org ([198.145.29.99]:53758 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728938AbgBWCYA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 22 Feb 2020 21:24:00 -0500
+        id S1727267AbgBWCX6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 22 Feb 2020 21:23:58 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B521920707;
-        Sun, 23 Feb 2020 02:23:59 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5F2AB22464;
+        Sun, 23 Feb 2020 02:23:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1582424640;
-        bh=osVklB8pscuOnNSyEep2Q6rChRj+SW+wKvUMrT7fdAw=;
+        s=default; t=1582424638;
+        bh=8s/VDhbSuYRaoTGEHOdO0eHpgn3QBL6V1BnFX0DcqVk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=X22/nCWVoTf5dLFSw5gtu/TZU/FOu37/cqGWOaU0nVFX2Hq0jUSr4ZAmgNDgndJEl
-         IasE7U/+PrcuJl6wPrpUxmXg0FaYyOlcSTKEobyhsfC6s0GVnX/rxl5bKR4rLaO0OW
-         KZeJkGzh7InKpy4t2wIKCFhW6O0aU0DUvqhjyJ4A=
+        b=mKTZ3aef5PGe8ap2UIVwx/+aE+6Pn0fkP0XAQpuBnXNd+zFegxRun6Cl+Vb7Vp4hH
+         9R1pjo/KFkwYR74ODni8JEwgIl7I12/6MggmGDeONShXhUmNkGk0FEAcosOYPbsbMt
+         YbXIEzJ5xOXgfIc5HyP5az54r5kQmwNkjuDbZDEQ=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Sameeh Jubran <sameehj@amazon.com>,
+Cc:     Arthur Kiyanovski <akiyano@amazon.com>,
+        Ezequiel Lara Gomez <ezegomez@amazon.com>,
         "David S . Miller" <davem@davemloft.net>,
         Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 17/25] net: ena: rss: fix failure to get indirection table
-Date:   Sat, 22 Feb 2020 21:23:31 -0500
-Message-Id: <20200223022339.1885-17-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.19 15/25] net: ena: add missing ethtool TX timestamping indication
+Date:   Sat, 22 Feb 2020 21:23:29 -0500
+Message-Id: <20200223022339.1885-15-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200223022339.1885-1-sashal@kernel.org>
 References: <20200223022339.1885-1-sashal@kernel.org>
@@ -59,50 +60,43 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Sameeh Jubran <sameehj@amazon.com>
+From: Arthur Kiyanovski <akiyano@amazon.com>
 
-[ Upstream commit 0c8923c0a64fb5d14bebb9a9065d2dc25ac5e600 ]
+[ Upstream commit cf6d17fde93bdda23c9b02dd5906a12bf8c55209 ]
 
-On old hardware, getting / setting the hash function is not supported while
-gettting / setting the indirection table is.
+Current implementation of the driver calls skb_tx_timestamp()to add a
+software tx timestamp to the skb, however the software-transmit capability
+is not reported in ethtool -T.
 
-This commit enables us to still show the indirection table on older
-hardwares by setting the hash function and key to NULL.
+This commit updates the ethtool structure to report the software-transmit
+capability in ethtool -T using the standard ethtool_op_get_ts_info().
+This function reports all software timestamping capabilities (tx and rx),
+as well as setting phc_index = -1. phc_index is the index of the PTP
+hardware clock device that will be used for hardware timestamps. Since we
+don't have such a device in ENA, using the default -1 value is the correct
+setting.
 
 Fixes: 1738cd3ed342 ("net: ena: Add a driver for Amazon Elastic Network Adapters (ENA)")
-Signed-off-by: Sameeh Jubran <sameehj@amazon.com>
+Signed-off-by: Ezequiel Lara Gomez <ezegomez@amazon.com>
+Signed-off-by: Arthur Kiyanovski <akiyano@amazon.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/ethernet/amazon/ena/ena_ethtool.c | 14 ++++++++++++++
- 1 file changed, 14 insertions(+)
+ drivers/net/ethernet/amazon/ena/ena_ethtool.c | 1 +
+ 1 file changed, 1 insertion(+)
 
 diff --git a/drivers/net/ethernet/amazon/ena/ena_ethtool.c b/drivers/net/ethernet/amazon/ena/ena_ethtool.c
-index 237fbcac734f5..dc63aa912aebb 100644
+index eb9e07fa427ee..237fbcac734f5 100644
 --- a/drivers/net/ethernet/amazon/ena/ena_ethtool.c
 +++ b/drivers/net/ethernet/amazon/ena/ena_ethtool.c
-@@ -661,7 +661,21 @@ static int ena_get_rxfh(struct net_device *netdev, u32 *indir, u8 *key,
- 	if (rc)
- 		return rc;
+@@ -817,6 +817,7 @@ static const struct ethtool_ops ena_ethtool_ops = {
+ 	.get_channels		= ena_get_channels,
+ 	.get_tunable		= ena_get_tunable,
+ 	.set_tunable		= ena_set_tunable,
++	.get_ts_info            = ethtool_op_get_ts_info,
+ };
  
-+	/* We call this function in order to check if the device
-+	 * supports getting/setting the hash function.
-+	 */
- 	rc = ena_com_get_hash_function(adapter->ena_dev, &ena_func, key);
-+
-+	if (rc) {
-+		if (rc == -EOPNOTSUPP) {
-+			key = NULL;
-+			hfunc = NULL;
-+			rc = 0;
-+		}
-+
-+		return rc;
-+	}
-+
- 	if (rc)
- 		return rc;
- 
+ void ena_set_ethtool_ops(struct net_device *netdev)
 -- 
 2.20.1
 
