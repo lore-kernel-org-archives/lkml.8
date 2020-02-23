@@ -2,144 +2,134 @@ Return-Path: <SRS0=SnAt=4L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1EAC2C35671
-	for <linux-kernel@archiver.kernel.org>; Sun, 23 Feb 2020 22:07:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F2F11C35675
+	for <linux-kernel@archiver.kernel.org>; Sun, 23 Feb 2020 22:08:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id ECFEE206E0
-	for <linux-kernel@archiver.kernel.org>; Sun, 23 Feb 2020 22:07:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C8660206E0
+	for <linux-kernel@archiver.kernel.org>; Sun, 23 Feb 2020 22:08:40 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="M8icaUOj"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727156AbgBWWHt (ORCPT
+        id S1727193AbgBWWIj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 23 Feb 2020 17:07:49 -0500
-Received: from zeniv.linux.org.uk ([195.92.253.2]:34946 "EHLO
-        ZenIV.linux.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726302AbgBWWHs (ORCPT
+        Sun, 23 Feb 2020 17:08:39 -0500
+Received: from mail-pl1-f194.google.com ([209.85.214.194]:39655 "EHLO
+        mail-pl1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726302AbgBWWIj (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 23 Feb 2020 17:07:48 -0500
-Received: from viro by ZenIV.linux.org.uk with local (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1j5zPf-0003GM-9F; Sun, 23 Feb 2020 22:07:47 +0000
-Date:   Sun, 23 Feb 2020 22:07:47 +0000
-From:   Al Viro <viro@zeniv.linux.org.uk>
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     linux-fsdevel <linux-fsdevel@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Subject: Re: [RFC][PATCH v2 14/34] new step_into() flag: WALK_NOFOLLOW
-Message-ID: <20200223220747.GZ23230@ZenIV.linux.org.uk>
-References: <20200223011154.GY23230@ZenIV.linux.org.uk>
- <20200223011626.4103706-1-viro@ZenIV.linux.org.uk>
- <20200223011626.4103706-14-viro@ZenIV.linux.org.uk>
- <CAHk-=whzmY4RdkqtitWVB=OJvHG-8_VLZrU1oXBX8b+5qJKBag@mail.gmail.com>
+        Sun, 23 Feb 2020 17:08:39 -0500
+Received: by mail-pl1-f194.google.com with SMTP id g6so3213520plp.6;
+        Sun, 23 Feb 2020 14:08:38 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=XVT/YiAQAM+tR2353qmEjurEX/hNonF51dX4WWwf8g0=;
+        b=M8icaUOjj6WKkl3lO0YEn6n/6EFNlzQtFCC1eFpfB0A/m+Ex3zZ0wgszkR/VJkfPfY
+         vkhN/78yQlMZK6/fc9T3IPSoXy49baEQSfWx2y3JQr0mhinh0oa2x6NB9RxioM/4Ldi4
+         spbiARX9wvnniO6CsAIo5vEnxjdcDvP8AWrukLg3eyPu6zdvPM2goDQBZbjupndIK+wS
+         qKCHAVQHVY8L0oVJxCO6xS02Vj1eRzdExi0jg23VKL0QcHM9/kb+QlRbXHIS3gEt3Us+
+         EgZ/z2QDare/fFMjLb5UiIF0UNCTmWaijATJjPLxc7uwMLOlWQoOMahJVUe6r/P0jJo4
+         UUCQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=XVT/YiAQAM+tR2353qmEjurEX/hNonF51dX4WWwf8g0=;
+        b=V9i0Z8uUYzWiwPvJifes07YpyszzRZTWTlp7pL6GSJLtCCPmDJb1TuA8eDgu9YYp0v
+         JXjTZZ/htuQbBxa6yDm90mmFjxdL0Q1RuCxVL7gPMKZiX5aQA3zDwh0FnO7G1lqGUHdQ
+         uFVq3YwQLu9WmUvhufG+j8Ij+IxE0+waE8Ma5xRbYa3XkvHfdc4sK01lIrdW+MXCqhDG
+         YIpbmG4cyT8WiCLTzMBgt/qMvMMbSnfExLbD6dZCZOU8IHE5rCNXZb7IODNU/krCee5Y
+         pGoWQRrRIp2JlAEz0umCeIrcA1fyMjQy8jysFCCk6xZ69VsXqplhrKnubm/VMWY/ejU/
+         s3+Q==
+X-Gm-Message-State: APjAAAVxmhkbr7qITZ3WUtdUPBkUZlqePtSepBUp7GZjKT5WF6FZTobS
+        cATdulJaVjoOJlRjPA5sASzw1Qzs
+X-Google-Smtp-Source: APXvYqw7avgJ0mrUniGFD86P47DGUntXTbl/vC8rO4/qWXHTyo+kuYAaxDPE5aTYyMY/O+FutHGfxQ==
+X-Received: by 2002:a17:90a:5289:: with SMTP id w9mr16774328pjh.95.1582495718321;
+        Sun, 23 Feb 2020 14:08:38 -0800 (PST)
+Received: from ast-mbp ([2620:10d:c090:400::5:7207])
+        by smtp.gmail.com with ESMTPSA id v8sm9840160pfn.172.2020.02.23.14.08.36
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Sun, 23 Feb 2020 14:08:37 -0800 (PST)
+Date:   Sun, 23 Feb 2020 14:08:34 -0800
+From:   Alexei Starovoitov <alexei.starovoitov@gmail.com>
+To:     Kees Cook <keescook@chromium.org>
+Cc:     Casey Schaufler <casey@schaufler-ca.com>,
+        KP Singh <kpsingh@chromium.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Linux Security Module list 
+        <linux-security-module@vger.kernel.org>,
+        Alexei Starovoitov <ast@kernel.org>,
+        James Morris <jmorris@namei.org>, bpf@vger.kernel.org,
+        netdev@vger.kernel.org
+Subject: Re: [PATCH bpf-next v4 3/8] bpf: lsm: provide attachment points for
+ BPF LSM programs
+Message-ID: <20200223220833.wdhonzvven7payaw@ast-mbp>
+References: <20200220175250.10795-1-kpsingh@chromium.org>
+ <20200220175250.10795-4-kpsingh@chromium.org>
+ <0ef26943-9619-3736-4452-fec536a8d169@schaufler-ca.com>
+ <202002211946.A23A987@keescook>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <CAHk-=whzmY4RdkqtitWVB=OJvHG-8_VLZrU1oXBX8b+5qJKBag@mail.gmail.com>
+In-Reply-To: <202002211946.A23A987@keescook>
+User-Agent: NeoMutt/20180223
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, Feb 22, 2020 at 06:14:45PM -0800, Linus Torvalds wrote:
-> On Sat, Feb 22, 2020 at 5:20 PM Al Viro <viro@zeniv.linux.org.uk> wrote:
-> >
-> >         if (likely(!d_is_symlink(path->dentry)) ||
-> > -          !(flags & WALK_FOLLOW || nd->flags & LOOKUP_FOLLOW)) {
-> > +          !(flags & WALK_FOLLOW || nd->flags & LOOKUP_FOLLOW) ||
-> > +          flags & WALK_NOFOLLOW) {
+On Fri, Feb 21, 2020 at 08:22:59PM -0800, Kees Cook wrote:
 > 
-> Humor me, and don't mix bitwise ops with logical boolean ops without
-> parentheses, ok?
+> If I'm understanding this correctly, there are two issues:
 > 
-> And yes, the old code did it too, so it's not a new thing.
-> 
-> But as it gets even more complex, let's just generally strive for doing
-> 
->    (a & b) || (c & d)
-> 
-> instead of
-> 
->    a & b || c & d
-> 
-> to make it easier to mentally see the grouping.
+> 1- BPF needs to be run last due to fexit trampolines (?)
 
-Can do...  FWIW, the only case where the normal "'and' is multiplication,
-'or' is addition" doesn't give the right result is
-	x | y && z
-written instead of
-	x | (y && z)
-where you would be better off rewriting the expression anyway.
+no.
+The placement of nop call can be anywhere.
+BPF trampoline is automagically converting nop call into a sequence
+of directly invoked BPF programs.
+No link list traversals and no indirect calls in run-time.
 
-FWIW, one of the things in the local pile is this:
+> 2- BPF hooks don't know what may be attached at any given time, so
+>    ALL LSM hooks need to be universally hooked. THIS turns out to create
+>    a measurable performance problem in that the cost of the indirect call
+>    on the (mostly/usually) empty BPF policy is too high.
 
-commit cc1b6724b32de1be108cf6a5f28dbb5aa424b42f
-Author: Al Viro <viro@zeniv.linux.org.uk>
-Date:   Sun Jan 19 12:44:18 2020 -0500
+also no.
 
-    namei: invert the meaning of WALK_FOLLOW
-    
-    old flags & WALK_FOLLOW <=> new !(flags & WALK_TRAILING)
-    That's what that flag had really been used for.
-    
-    Signed-off-by: Al Viro <viro@zeniv.linux.org.uk>
+> So, trying to avoid the indirect calls is, as you say, an optimization,
+> but it might be a needed one due to the other limitations.
 
-diff --git a/fs/namei.c b/fs/namei.c
-index 6eb708014d4b..7d938241157f 100644
---- a/fs/namei.c
-+++ b/fs/namei.c
-@@ -1786,7 +1786,7 @@ static const char *pick_link(struct nameidata *nd, struct path *link,
- 	return NULL;
- }
- 
--enum {WALK_FOLLOW = 1, WALK_MORE = 2, WALK_NOFOLLOW = 4};
-+enum {WALK_TRAILING = 1, WALK_MORE = 2, WALK_NOFOLLOW = 4};
- 
- /*
-  * Do we need to follow links? We _really_ want to be able
-@@ -1805,7 +1805,7 @@ static const char *step_into(struct nameidata *nd, int flags,
- 	if (!(flags & WALK_MORE) && nd->depth)
- 		put_link(nd);
- 	if (likely(!d_is_symlink(path.dentry)) ||
--	   !(flags & WALK_FOLLOW || nd->flags & LOOKUP_FOLLOW) ||
-+	   (flags & WALK_TRAILING && !(nd->flags & LOOKUP_FOLLOW)) ||
- 	   flags & WALK_NOFOLLOW) {
- 		/* not a symlink or should not follow */
- 		path_to_nameidata(&path, nd);
-@@ -2157,10 +2157,10 @@ static int link_path_walk(const char *name, struct nameidata *nd)
- 			if (!name)
- 				return 0;
- 			/* last component of nested symlink */
--			link = walk_component(nd, WALK_FOLLOW);
-+			link = walk_component(nd, 0);
- 		} else {
- 			/* not the last component */
--			link = walk_component(nd, WALK_FOLLOW | WALK_MORE);
-+			link = walk_component(nd, WALK_MORE);
- 		}
- 		if (unlikely(link)) {
- 			if (IS_ERR(link))
-@@ -2288,7 +2288,7 @@ static inline const char *lookup_last(struct nameidata *nd)
- 		nd->flags |= LOOKUP_FOLLOW | LOOKUP_DIRECTORY;
- 
- 	nd->flags &= ~LOOKUP_PARENT;
--	link = walk_component(nd, 0);
-+	link = walk_component(nd, WALK_TRAILING);
- 	if (link) {
- 		nd->flags |= LOOKUP_PARENT;
- 		nd->stack[0].name = NULL;
-@@ -3241,7 +3241,7 @@ static const char *do_last(struct nameidata *nd,
- 	}
- 
- finish_lookup:
--	link = step_into(nd, 0, dentry, inode, seq);
-+	link = step_into(nd, WALK_TRAILING, dentry, inode, seq);
- 	if (unlikely(link)) {
- 		nd->flags |= LOOKUP_PARENT;
- 		nd->flags &= ~(LOOKUP_OPEN|LOOKUP_CREATE|LOOKUP_EXCL);
+I'm convinced that avoiding the cost of retpoline in critical path is a
+requirement for any new infrastructure in the kernel.
+Not only for security, but for any new infra.
+Networking stack converted all such places to conditional calls.
+In BPF land we converted indirect calls to direct jumps and direct calls.
+It took two years to do so. Adding new indirect calls is not an option.
+I'm eagerly waiting for Peter's static_call patches to land to convert
+a lot more indirect calls. May be existing LSMs will take advantage
+of static_call patches too, but static_call is not an option for BPF.
+That's why we introduced BPF trampoline in the last kernel release.
 
+> b) Would there actually be a global benefit to using the static keys
+>    optimization for other LSMs?
 
-and I can simply fold adding extra parens into it.  Or I can fold that into
-the patch you'd been replying to  - I'm still uncertain about the series
-containing WALK_TRAILING...
+Yes. Just compiling with CONFIG_SECURITY adds "if (hlist_empty)" check
+for every hook. Some of those hooks are in critical path. This load+cmp
+can be avoided with static_key optimization. I think it's worth doing.
+
+> If static keys are justified for KRSI
+
+I really like that KRSI costs absolutely zero when it's not enabled.
+Attaching BPF prog to one hook preserves zero cost for all other hooks.
+And when one hook is BPF powered it's using direct call instead of
+super expensive retpoline.
+
+Overall this patch set looks good to me. There was a minor issue with prog
+accounting. I expect only that bit to be fixed in v5.
