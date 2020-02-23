@@ -2,81 +2,135 @@ Return-Path: <SRS0=SnAt=4L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B4A3FC35671
-	for <linux-kernel@archiver.kernel.org>; Sun, 23 Feb 2020 16:53:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 11B44C35671
+	for <linux-kernel@archiver.kernel.org>; Sun, 23 Feb 2020 16:56:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 812AA206E2
-	for <linux-kernel@archiver.kernel.org>; Sun, 23 Feb 2020 16:53:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D8ADA206E2
+	for <linux-kernel@archiver.kernel.org>; Sun, 23 Feb 2020 16:56:41 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="dd8OSsE6"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="rNxBBtQQ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727004AbgBWQx2 (ORCPT
+        id S1727069AbgBWQ4a (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 23 Feb 2020 11:53:28 -0500
-Received: from us-smtp-1.mimecast.com ([205.139.110.61]:43154 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726208AbgBWQx1 (ORCPT
+        Sun, 23 Feb 2020 11:56:30 -0500
+Received: from mail-pf1-f195.google.com ([209.85.210.195]:36884 "EHLO
+        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726208AbgBWQ43 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 23 Feb 2020 11:53:27 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1582476806;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:mime-version:mime-version:content-type:content-type;
-        bh=/e6mKMfpKSy3gdVdlHZUYmc7ZeUH2nePA31LvFPzezg=;
-        b=dd8OSsE6FkTp9YtqqMGutgOFHT8EFZiaaqWcdgab19ax0GUapJCp2p0dMTFlKcuBvb9G/p
-        UvzOLiQrVOejrGwpjlo/PMh1/rYEHi1qbjOZL5jJuXd8+aGI7PddGcRWBZTWYHN9pN+7+4
-        HNuZPMbPFZ4j8eAHgbNLr5qDttQUWi0=
-Received: from mail-ed1-f69.google.com (mail-ed1-f69.google.com
- [209.85.208.69]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-300-8oeqmOaDP0mZ9oEv0QN3MQ-1; Sun, 23 Feb 2020 11:53:24 -0500
-X-MC-Unique: 8oeqmOaDP0mZ9oEv0QN3MQ-1
-Received: by mail-ed1-f69.google.com with SMTP id ay24so5128575edb.0
-        for <linux-kernel@vger.kernel.org>; Sun, 23 Feb 2020 08:53:24 -0800 (PST)
+        Sun, 23 Feb 2020 11:56:29 -0500
+Received: by mail-pf1-f195.google.com with SMTP id p14so4033241pfn.4
+        for <linux-kernel@vger.kernel.org>; Sun, 23 Feb 2020 08:56:29 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=XO/sXJfBbNEYg2i8BDzFxjIgOlJB//vgC4CZTQZkcBA=;
+        b=rNxBBtQQ1h5eC9GnaO1XpnGSAjJa4rsyMbEEzEVTUc8l1CUM0ZZ3ngDfRF8PwBRzN2
+         Yji+hNUzryaURte9YdjZk86z6uPbnY1szJ5McZdvntrRy8r+P0Yv/JPWNq8V0SvaSvU6
+         vV6T1JAxzpg95RMTwg9bg3wyjvQLQpNNQdedXg6xEgpYy2zf9tvt2qUHhsDK0Vc9vkcu
+         XtQiGCLdd6ucO56lFizA2Rlk9e+QkIK6hH1K3kGB6jemkc5I9nyn7vQjcLVS8ilTEjdo
+         G+cuLea2aa1wuPomW/yi6JtUde3y2Bq8MDrA1rBqzpSk5V3MTQxx18F3ToUbeOz/V/Vs
+         0eoA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:from:date:message-id:subject:to;
-        bh=/e6mKMfpKSy3gdVdlHZUYmc7ZeUH2nePA31LvFPzezg=;
-        b=iAlfC0AbdwMrBJBR18Wo+NcgJfV07RMo4tby3xcIO7jZSUC2GchS6w41alpAsELZR3
-         AqgswlrTJT64kYSDSdKAB0n6/6svSElljc6+FZVHgMdVqkj3HKmME/pwULq/t7isTJ/5
-         8HYklZWeTRTJ5Cp8Nxa2XBmQptrs1ffUN9nGe+lv4vWwU+oUu90RH7VouMLvAuXgMehu
-         3YFlZPA8TR51QEXmBIR52MvdXf67ZZBcnvpv40pghI22wAKTrfy8G7rpDi958y1J4ktW
-         kgvqdhpl76cV36QI6coRAAnPypT1GnPPiv9MDH6XYAFdxXTeBzBN5LKVMu0G4cZtPfrr
-         ZLYQ==
-X-Gm-Message-State: APjAAAWc4yW7KJDosuau+lD4T7qN7ZW/s9rwgqd8SSiGfnNsoK+/LorD
-        PVzjmLs6hHFhQmECghYCbbq0zENRU2rrwWbOhzicMQmyoPapRrVGO9oXoG1GRtDtraXGcCftiyi
-        AxhTfwCjlEn7pBgPY8ZBSqf/gxgPPVwOQ0PMi6De7
-X-Received: by 2002:a17:906:af99:: with SMTP id mj25mr41968263ejb.293.1582476803282;
-        Sun, 23 Feb 2020 08:53:23 -0800 (PST)
-X-Google-Smtp-Source: APXvYqxWJ9K1R5sSW2X5rEJRiM2cWz7UXXYiLOljT9yzR7BnnMCDxY+qhaJvp9AAf88p3dKdNXEDi/1cWynDPk3DZ0w=
-X-Received: by 2002:a17:906:af99:: with SMTP id mj25mr41968244ejb.293.1582476803040;
- Sun, 23 Feb 2020 08:53:23 -0800 (PST)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=XO/sXJfBbNEYg2i8BDzFxjIgOlJB//vgC4CZTQZkcBA=;
+        b=DaoIjgPmoi7vRjdhZOHmh9CL8cRV9j0Z9d+F6bmi0bB3PpYGIFlf4g0Anm2j8Gb8WK
+         FUMxsJoaP/5ZbPpp7ZS3bGXSsdr9W0mPQDukdOZTZH1SiFhWdYoosCMkpXzZ1kBhbKql
+         N7612j0QEAv+sSx4N22ZgWIrxhEm6TRF/LJRAxO6s4kw9aFk6njPfrNU2FTCv3HyW3hR
+         KccYa32nBVCo3OZgnS6O3V2Ody5++gTWJLVi/CKxyb6m2zWnTS2vBjhHeyMjyh6tYOlw
+         FvAkg8YIfLSTE/ZzRqn8JVayBHzbrRZ+0fzztTb0W1Ho3zQVFRM+wR9fc1mwcYc0C/M1
+         aUmA==
+X-Gm-Message-State: APjAAAUSRVBL1YtHJjAXJ9MRrK/lwJyKrIpUPEvmE9cSVXUHSyI32B4J
+        kpdO+It8+RWV1ehv/txG6AY=
+X-Google-Smtp-Source: APXvYqyvnAQXYZAiSHcAnr/jKPHoPF8Iqskeukk8OF7zchfnsQWbllUez8qGeMaCz0/RIlFJvn6mXw==
+X-Received: by 2002:a63:d10c:: with SMTP id k12mr3913240pgg.392.1582476988971;
+        Sun, 23 Feb 2020 08:56:28 -0800 (PST)
+Received: from localhost.localdomain ([103.87.57.33])
+        by smtp.googlemail.com with ESMTPSA id w8sm9482995pfn.186.2020.02.23.08.56.24
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 23 Feb 2020 08:56:28 -0800 (PST)
+From:   Amol Grover <frextrite@gmail.com>
+To:     Allison Randal <allison@lohutok.net>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Lu Baolu <baolu.lu@linux.intel.com>,
+        Thomas Gleixner <tglx@linutronix.de>, Qian Cai <cai@lca.pw>,
+        Deepa Dinamani <deepa.kernel@gmail.com>,
+        Joerg Roedel <joro@8bytes.org>
+Cc:     linux-kernel@vger.kernel.org,
+        linux-kernel-mentees@lists.linuxfoundation.org,
+        Joel Fernandes <joel@joelfernandes.org>,
+        Madhuparna Bhowmik <madhuparnabhowmik10@gmail.com>,
+        "Paul E . McKenney" <paulmck@kernel.org>,
+        Amol Grover <frextrite@gmail.com>
+Subject: [PATCH RESEND] iommu: dmar: Fix RCU list debugging warnings
+Date:   Sun, 23 Feb 2020 22:25:39 +0530
+Message-Id: <20200223165538.29870-1-frextrite@gmail.com>
+X-Mailer: git-send-email 2.24.1
 MIME-Version: 1.0
-From:   Matteo Croce <mcroce@redhat.com>
-Date:   Sun, 23 Feb 2020 17:52:47 +0100
-Message-ID: <CAGnkfhy6w4TT=vm9o+USHLHuKpr_fzgbSXaK3JkEKhvgYFQrAQ@mail.gmail.com>
-Subject: typo in MAINTAINERS?
-To:     Minchan Kim <minchan@kernel.org>, Nitin Gupta <ngupta@vflare.org>,
-        Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com>,
-        LKML <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-DRVIER vs DRIVER?
+dmar_drhd_units is traversed using list_for_each_entry_rcu()
+outside of an RCU read side critical section but under the
+protection of dmar_global_lock. Hence add corresponding lockdep
+expression to silence the following false-positive warnings:
 
-ZRAM COMPRESSED RAM BLOCK DEVICE DRVIER
-M:      Minchan Kim <minchan@kernel.org>
-M:      Nitin Gupta <ngupta@vflare.org>
+[    1.603975] =============================
+[    1.603976] WARNING: suspicious RCU usage
+[    1.603977] 5.5.4-stable #17 Not tainted
+[    1.603978] -----------------------------
+[    1.603980] drivers/iommu/intel-iommu.c:4769 RCU-list traversed in non-reader section!!
 
-Regards,
+[    1.603869] =============================
+[    1.603870] WARNING: suspicious RCU usage
+[    1.603872] 5.5.4-stable #17 Not tainted
+[    1.603874] -----------------------------
+[    1.603875] drivers/iommu/dmar.c:293 RCU-list traversed in non-reader section!!
+
+Tested-by: Madhuparna Bhowmik <madhuparnabhowmik10@gmail.com>
+Signed-off-by: Amol Grover <frextrite@gmail.com>
+---
+ include/linux/dmar.h | 8 +++++---
+ 1 file changed, 5 insertions(+), 3 deletions(-)
+
+diff --git a/include/linux/dmar.h b/include/linux/dmar.h
+index f64ca27dc210..712be8bc6a7c 100644
+--- a/include/linux/dmar.h
++++ b/include/linux/dmar.h
+@@ -69,8 +69,9 @@ struct dmar_pci_notify_info {
+ extern struct rw_semaphore dmar_global_lock;
+ extern struct list_head dmar_drhd_units;
+ 
+-#define for_each_drhd_unit(drhd) \
+-	list_for_each_entry_rcu(drhd, &dmar_drhd_units, list)
++#define for_each_drhd_unit(drhd)					\
++	list_for_each_entry_rcu(drhd, &dmar_drhd_units, list,		\
++				dmar_rcu_check())
+ 
+ #define for_each_active_drhd_unit(drhd)					\
+ 	list_for_each_entry_rcu(drhd, &dmar_drhd_units, list)		\
+@@ -81,7 +82,8 @@ extern struct list_head dmar_drhd_units;
+ 		if (i=drhd->iommu, drhd->ignored) {} else
+ 
+ #define for_each_iommu(i, drhd)						\
+-	list_for_each_entry_rcu(drhd, &dmar_drhd_units, list)		\
++	list_for_each_entry_rcu(drhd, &dmar_drhd_units, list,		\
++				dmar_rcu_check())			\
+ 		if (i=drhd->iommu, 0) {} else 
+ 
+ static inline bool dmar_rcu_check(void)
 -- 
-Matteo Croce
-per aspera ad upstream
+2.24.1
 
