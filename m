@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D1F53C35671
-	for <linux-kernel@archiver.kernel.org>; Sun, 23 Feb 2020 02:34:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8B503C35671
+	for <linux-kernel@archiver.kernel.org>; Sun, 23 Feb 2020 02:34:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AA99920659
-	for <linux-kernel@archiver.kernel.org>; Sun, 23 Feb 2020 02:34:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 63EFA20659
+	for <linux-kernel@archiver.kernel.org>; Sun, 23 Feb 2020 02:34:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582425265;
-	bh=61cMcrHpCmck7DJMugnV0iIAxMjsJLcZIVyODY/uwUQ=;
+	s=default; t=1582425274;
+	bh=gevy0Y7WUjal6/sURl3hPhZqxBEX4jIYewIp5CtAAmA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=kEjyFlwqEBCGukb/goOgyqe+nsSdAK0a1FfEYo7XlRkJ7P+G4PC8vSG574yClCiS6
-	 5/HVUxhQv3niZzhnOhRfuK1ezm94NCpYAaDteoW2kde7dbTIJq+m7XkelOX3UTkwxN
-	 ifW+igaWm1bZx5VlFo++Qsp5fFV9W2yWmY02WjMo=
+	b=LGi/n4eAkLSzk/2ecJ0cmJf/lxR1464ID/yvlrqI/b4+GAy5XSEVjDtoVfaqCky9j
+	 eAJQwI1acCZ5OO15ZGOdKxP8hHt+iNy65tQwl0C2c0Da6Xr8x65V558MF3ULCUGemR
+	 gwRsODOrFqGs7/5PLE7OCUCFHq8N9EPVmP1+UXNo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728843AbgBWCeX (ORCPT
+        id S1728855AbgBWCed (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 22 Feb 2020 21:34:23 -0500
-Received: from mail.kernel.org ([198.145.29.99]:51426 "EHLO mail.kernel.org"
+        Sat, 22 Feb 2020 21:34:33 -0500
+Received: from mail.kernel.org ([198.145.29.99]:51418 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728177AbgBWCW1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 22 Feb 2020 21:22:27 -0500
+        id S1728168AbgBWCWZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 22 Feb 2020 21:22:25 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A4F31206D7;
-        Sun, 23 Feb 2020 02:22:25 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7D53221D56;
+        Sun, 23 Feb 2020 02:22:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1582424546;
-        bh=61cMcrHpCmck7DJMugnV0iIAxMjsJLcZIVyODY/uwUQ=;
+        s=default; t=1582424545;
+        bh=gevy0Y7WUjal6/sURl3hPhZqxBEX4jIYewIp5CtAAmA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=OLvDjOcyA1+asZwqWbEWLpb8qRHY7V1gkgc0Lx7GhXuM5uOibhc/WeTHnXdcNFkq0
-         zxesnJaHGa9b9zGW14HS3cMx5wyGjL9oFZFXEt4otLvhX9hhiYh0J6VGJ5rppcx0+F
-         R8jWJRdEHMC+nwfdMBi3TKzI64HVuua3rHwysYR4=
+        b=GKEGki9xnQOzQxCsiv/Nx55yhzhHUM4JOnoRvili6TFjwthbZmR3LVYaqXmzosVHQ
+         5IiWGdVDTKxWye2+I/hVgl3Uj+OGjy6Hndvxxt+j+g/08ybexlfNbF7biImauuQS1q
+         YUXf849aDFuahB9sKDSDiT8HJbUSX6FERJMsVGsQ=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Guangbin Huang <huangguangbin2@huawei.com>,
+Cc:     Yonglong Liu <liuyonglong@huawei.com>,
         Huazhong Tan <tanhuazhong@huawei.com>,
         "David S . Miller" <davem@davemloft.net>,
         Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.5 55/58] net: hns3: fix a copying IPv6 address error in hclge_fd_get_flow_tuples()
-Date:   Sat, 22 Feb 2020 21:21:16 -0500
-Message-Id: <20200223022119.707-55-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 5.5 54/58] net: hns3: fix VF bandwidth does not take effect in some case
+Date:   Sat, 22 Feb 2020 21:21:15 -0500
+Message-Id: <20200223022119.707-54-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200223022119.707-1-sashal@kernel.org>
 References: <20200223022119.707-1-sashal@kernel.org>
@@ -60,61 +60,39 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Guangbin Huang <huangguangbin2@huawei.com>
+From: Yonglong Liu <liuyonglong@huawei.com>
 
-[ Upstream commit 47327c9315b2f3ae4ab659457977a26669631f20 ]
+[ Upstream commit 19eb1123b4e9337fe20b1763fec528f837ec6568 ]
 
-The IPv6 address defined in struct in6_addr is specified as
-big endian, but there is no specified endian in struct
-hclge_fd_rule_tuples, so it  will cause a problem if directly
-use memcpy() to copy ipv6 address between these two structures
-since this field in struct hclge_fd_rule_tuples is little endian.
+When enabling 4 TC after setting the bandwidth of VF, the bandwidth
+of VF will resume to default value, because of the qset resources
+changed in this case.
 
-This patch fixes this problem by using be32_to_cpu() to convert
-endian of IPv6 address of struct in6_addr before copying.
+This patch fixes it by using a fixed VF's qset resources according to
+HNAE3_MAX_TC macro.
 
-Fixes: d93ed94fbeaf ("net: hns3: add aRFS support for PF")
-Signed-off-by: Guangbin Huang <huangguangbin2@huawei.com>
+Fixes: ee9e44248f52 ("net: hns3: add support for configuring bandwidth of VF on the host")
+Signed-off-by: Yonglong Liu <liuyonglong@huawei.com>
 Signed-off-by: Huazhong Tan <tanhuazhong@huawei.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- .../ethernet/hisilicon/hns3/hns3pf/hclge_main.c   | 15 +++++++++------
- 1 file changed, 9 insertions(+), 6 deletions(-)
+ drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_tm.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_main.c b/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_main.c
-index bfdb08572f0cc..5d74f5a60102a 100644
---- a/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_main.c
-+++ b/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_main.c
-@@ -6106,6 +6106,9 @@ static int hclge_get_all_rules(struct hnae3_handle *handle,
- static void hclge_fd_get_flow_tuples(const struct flow_keys *fkeys,
- 				     struct hclge_fd_rule_tuples *tuples)
- {
-+#define flow_ip6_src fkeys->addrs.v6addrs.src.in6_u.u6_addr32
-+#define flow_ip6_dst fkeys->addrs.v6addrs.dst.in6_u.u6_addr32
-+
- 	tuples->ether_proto = be16_to_cpu(fkeys->basic.n_proto);
- 	tuples->ip_proto = fkeys->basic.ip_proto;
- 	tuples->dst_port = be16_to_cpu(fkeys->ports.dst);
-@@ -6114,12 +6117,12 @@ static void hclge_fd_get_flow_tuples(const struct flow_keys *fkeys,
- 		tuples->src_ip[3] = be32_to_cpu(fkeys->addrs.v4addrs.src);
- 		tuples->dst_ip[3] = be32_to_cpu(fkeys->addrs.v4addrs.dst);
- 	} else {
--		memcpy(tuples->src_ip,
--		       fkeys->addrs.v6addrs.src.in6_u.u6_addr32,
--		       sizeof(tuples->src_ip));
--		memcpy(tuples->dst_ip,
--		       fkeys->addrs.v6addrs.dst.in6_u.u6_addr32,
--		       sizeof(tuples->dst_ip));
-+		int i;
-+
-+		for (i = 0; i < IPV6_SIZE; i++) {
-+			tuples->src_ip[i] = be32_to_cpu(flow_ip6_src[i]);
-+			tuples->dst_ip[i] = be32_to_cpu(flow_ip6_dst[i]);
-+		}
- 	}
- }
+diff --git a/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_tm.c b/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_tm.c
+index 180224eab1ca4..28db13253a5e7 100644
+--- a/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_tm.c
++++ b/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_tm.c
+@@ -566,7 +566,7 @@ static void hclge_tm_vport_tc_info_update(struct hclge_vport *vport)
+ 	 */
+ 	kinfo->num_tc = vport->vport_id ? 1 :
+ 			min_t(u16, vport->alloc_tqps, hdev->tm_info.num_tc);
+-	vport->qs_offset = (vport->vport_id ? hdev->tm_info.num_tc : 0) +
++	vport->qs_offset = (vport->vport_id ? HNAE3_MAX_TC : 0) +
+ 				(vport->vport_id ? (vport->vport_id - 1) : 0);
  
+ 	max_rss_size = min_t(u16, hdev->rss_size_max,
 -- 
 2.20.1
 
