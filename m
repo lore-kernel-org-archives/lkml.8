@@ -8,66 +8,66 @@ X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0CDD0C35673
-	for <linux-kernel@archiver.kernel.org>; Sun, 23 Feb 2020 23:19:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AF898C35670
+	for <linux-kernel@archiver.kernel.org>; Sun, 23 Feb 2020 23:19:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D6CC720880
-	for <linux-kernel@archiver.kernel.org>; Sun, 23 Feb 2020 23:19:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 83D9E20880
+	for <linux-kernel@archiver.kernel.org>; Sun, 23 Feb 2020 23:19:25 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="S2gOqbm1"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ZGuy3lgM"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727973AbgBWXTP (ORCPT
+        id S1727469AbgBWXSM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 23 Feb 2020 18:19:15 -0500
-Received: from mail-wm1-f67.google.com ([209.85.128.67]:38228 "EHLO
-        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727611AbgBWXSR (ORCPT
+        Sun, 23 Feb 2020 18:18:12 -0500
+Received: from mail-wm1-f65.google.com ([209.85.128.65]:35766 "EHLO
+        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727359AbgBWXSJ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 23 Feb 2020 18:18:17 -0500
-Received: by mail-wm1-f67.google.com with SMTP id a9so7457716wmj.3
-        for <linux-kernel@vger.kernel.org>; Sun, 23 Feb 2020 15:18:16 -0800 (PST)
+        Sun, 23 Feb 2020 18:18:09 -0500
+Received: by mail-wm1-f65.google.com with SMTP id b17so7457829wmb.0;
+        Sun, 23 Feb 2020 15:18:07 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=P6aPVDykefLHu9vWbDWoJ+MolfROsTG/Ceq0Yzhn9jk=;
-        b=S2gOqbm1yxGnTsrRP5C07CWiBCjIcIVeSH6rMw39UAH1Kjzl7uWufLJ+hto8NqnajQ
-         pF4eKbgtbtaWFsZ/k+eMJB6gqwfrBZNXHd/+hwEXyFUh2gp3PcTYJVBsTyMVDe8yWN9T
-         0pfGrgVkVjufZubYuIV/i0sFOkGVBJ/3kPe+CllpEAFQAd9JrL8Iyg0BoT29CtRkUY0V
-         hXgH79sNFM09rgVSC/l/wMdKTb3tNNMHZrieTCExGtw44DsIumpXNQQNvOmHE0qH4Ie7
-         L+liCjhMzeqHYAk9oGpCsrAbjRGTRwG7nXGazLD7zI60cQZOH9O+Pey7zLJ3wu6WGCEa
-         uQ8g==
+        bh=snlmcYtYDuvHwXmAmC2g0GkUCFgaXil3Rfxn4Ydoo+Q=;
+        b=ZGuy3lgMu6uKf/X9D2SHX21zkV8GcEgjqUfqBX2/VsMNPWYVv9yk3VmWIbeXKBoX6h
+         IEJ5XfchVqFSi5MortQ5DvdrkJ+w6DJtKX2ZjIJ6wkteB+gd7FLkaXNDXHT3keEqhEGq
+         7+VzVRQE9s0hXskUNxNOZ1YsJPA+Ll+rRERd8aC840MN4w43/E4tHYsQuiRIN+mOa3aq
+         X7VT1xs+3VvF/1BZzbft8ylQ9pmp2UcMokZfMj713duCV8mVFuct7/zrHVwDxHr3ZCe6
+         3w6dfyqLL0yA7WnUEHuuQNoqoUNTw1sula3AR/Ic6Ip3Swd+DPlzTjzyNTVt6RVbhvWV
+         dxRg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=P6aPVDykefLHu9vWbDWoJ+MolfROsTG/Ceq0Yzhn9jk=;
-        b=udIOmVLktTTnXTqDg1Of1So4Jl2wdnHB0MdJWoJlo7Kvl6VMwqg2v+xicNrfShPamj
-         JeNWbhsGjSrDiJrcutuGq5j7HFmUEKCK+b+V5+5QyC8SAt5eGjX1YPuNcHD17oY8gBmb
-         vBk9ALiJ77yqpQqvkV209ObPKZ9ZJXT3Uov99fCIq6JonigmnVfykoq18F9aIgDTu7Yo
-         YhSPKbcIsVdBuit2bnyTUD7HPJ2XI13GctMqBkZ4gb1dGr40jszrrIulkJUEx0eh2Puz
-         oEarCx0yCgociSpfC0gsvRtGVkORQ4kp6sHL97GOMStFEcMOaLbcdTotPfiZq9Do4oSn
-         GHQw==
-X-Gm-Message-State: APjAAAVaJiDCy1zQDVId8Br+oLkU00lTDr1oQNKMzvH293hOHgAChhMG
-        q2lrOr0S6TAuwUKMAVMqVw==
-X-Google-Smtp-Source: APXvYqzal3bDkpH/HXQ57tPEbVcB1ODz0w1n/zKTZub6/eEpWLPn6+I6cghxIrKksHQjjaWCmi52MA==
-X-Received: by 2002:a1c:e3c2:: with SMTP id a185mr18023546wmh.27.1582499896239;
-        Sun, 23 Feb 2020 15:18:16 -0800 (PST)
+        bh=snlmcYtYDuvHwXmAmC2g0GkUCFgaXil3Rfxn4Ydoo+Q=;
+        b=Cvs7UMkLovrfydS2q655NDOuQM23EBaqVhxc9Bu8I+AxuY8LaKWrfMv5gsQGIRmuLy
+         ks7wlEcRNKmoKLazfYI/yLi/vzzgHLa2vMGNSis5sCd49Rmn9Vq/MYa57nGJY2Sd63kB
+         v6YE1MoAAd15Iq88zVptocS5KBkrZ/ignHkzvy1Y3uQ/nM0tqe2zh4iRXtLu1zAWdQMe
+         9F/KTHMSuY3wQqtMsl2kf4Xxz6K2HP4EG23JI8NF/ZV6k0tIbpy+IcVJ9+ak0JiI1rDd
+         AgnP/yI9IVuDc/sIlEmbQWt5dys8n+CkMrsAjhaLo84NpJFD00Lk2MITAOlX6lYS0JW4
+         8cwg==
+X-Gm-Message-State: APjAAAUnl8ZepI85IR1Cw10meyMwzLIM3jvly+IvBRjUr88OZb2HHidy
+        ilHG0oDbzBGir/edMdNIZYthUdeObvnv
+X-Google-Smtp-Source: APXvYqyYZ3oMJ78+zymZmXiMpsjrXDyNhGOu0imdZd6MmzJ1dwnZa5BV+hh38cDu48X5BkdbSg9p7w==
+X-Received: by 2002:a1c:4341:: with SMTP id q62mr18101720wma.107.1582499887152;
+        Sun, 23 Feb 2020 15:18:07 -0800 (PST)
 Received: from ninjahost.lan (host-2-102-13-223.as13285.net. [2.102.13.223])
-        by smtp.googlemail.com with ESMTPSA id q6sm8968203wrf.67.2020.02.23.15.18.15
+        by smtp.googlemail.com with ESMTPSA id q6sm8968203wrf.67.2020.02.23.15.18.06
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 23 Feb 2020 15:18:15 -0800 (PST)
+        Sun, 23 Feb 2020 15:18:06 -0800 (PST)
 From:   Jules Irenge <jbi.octave@gmail.com>
 To:     boqun.feng@gmail.com
 Cc:     jbi.octave@gmail.com, linux-kernel@vger.kernel.org,
-        Minchan Kim <minchan@kernel.org>,
-        Nitin Gupta <ngupta@vflare.org>,
-        Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        linux-mm@kvack.org (open list:ZSMALLOC COMPRESSED SLAB MEMORY ALLOCATOR)
-Subject: [PATCH 18/30] mm/zsmalloc: Add missing annotation for zs_unmap_object()
-Date:   Sun, 23 Feb 2020 23:16:59 +0000
-Message-Id: <20200223231711.157699-19-jbi.octave@gmail.com>
+        Ralf Baechle <ralf@linux-mips.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>,
+        linux-hams@vger.kernel.org (open list:NETROM NETWORK LAYER),
+        netdev@vger.kernel.org (open list:NETWORKING [GENERAL])
+Subject: [PATCH 12/30] net: netrom: Add missing annotation for nr_neigh_start()
+Date:   Sun, 23 Feb 2020 23:16:53 +0000
+Message-Id: <20200223231711.157699-13-jbi.octave@gmail.com>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20200223231711.157699-1-jbi.octave@gmail.com>
 References: <0/30>
@@ -79,28 +79,28 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Sparse reports a warning at zs_unmap_object()
-context imbalance in zs_unmap_object() - unexpected unlock
-The root cause is the missing annotation at zs_unmap_object()
-Add the missing __releases(zspage)
+Sparse reports a warning at nr_neigh_start()
+warning: context imbalance in nr_neigh_start() - wrong count at exit
+The root cause is the missing annotation at nr_neigh_start()
+Add the missing __acquires(&nr_neigh_list_lock) annotation
 
 Signed-off-by: Jules Irenge <jbi.octave@gmail.com>
 ---
- mm/zsmalloc.c | 1 +
+ net/netrom/nr_route.c | 1 +
  1 file changed, 1 insertion(+)
 
-diff --git a/mm/zsmalloc.c b/mm/zsmalloc.c
-index 9d3f9b3d22aa..10a96651cb97 100644
---- a/mm/zsmalloc.c
-+++ b/mm/zsmalloc.c
-@@ -1349,6 +1349,7 @@ void *zs_map_object(struct zs_pool *pool, unsigned long handle,
- EXPORT_SYMBOL_GPL(zs_map_object);
+diff --git a/net/netrom/nr_route.c b/net/netrom/nr_route.c
+index 637a743c060d..33e7b91fc805 100644
+--- a/net/netrom/nr_route.c
++++ b/net/netrom/nr_route.c
+@@ -895,6 +895,7 @@ const struct seq_operations nr_node_seqops = {
+ };
  
- void zs_unmap_object(struct zs_pool *pool, unsigned long handle)
-+	__releases(zspage)
+ static void *nr_neigh_start(struct seq_file *seq, loff_t *pos)
++	__acquires(&nr_neigh_list_lock)
  {
- 	struct zspage *zspage;
- 	struct page *page;
+ 	spin_lock_bh(&nr_neigh_list_lock);
+ 	return seq_hlist_start_head(&nr_neigh_list, *pos);
 -- 
 2.24.1
 
