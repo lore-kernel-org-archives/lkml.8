@@ -2,112 +2,92 @@ Return-Path: <SRS0=SnAt=4L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C16A3C35673
-	for <linux-kernel@archiver.kernel.org>; Sun, 23 Feb 2020 18:38:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BB6E7C35666
+	for <linux-kernel@archiver.kernel.org>; Sun, 23 Feb 2020 18:40:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A307D208C3
-	for <linux-kernel@archiver.kernel.org>; Sun, 23 Feb 2020 18:38:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9A978206E0
+	for <linux-kernel@archiver.kernel.org>; Sun, 23 Feb 2020 18:40:10 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727084AbgBWSiL (ORCPT
+        id S1727149AbgBWSkJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 23 Feb 2020 13:38:11 -0500
-Received: from hosting.gsystem.sk ([212.5.213.30]:52830 "EHLO
-        hosting.gsystem.sk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726208AbgBWSiK (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 23 Feb 2020 13:38:10 -0500
-X-Greylist: delayed 546 seconds by postgrey-1.27 at vger.kernel.org; Sun, 23 Feb 2020 13:38:10 EST
-Received: from [192.168.0.2] (unknown [188.167.68.178])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by hosting.gsystem.sk (Postfix) with ESMTPSA id E54DE7A00BF;
-        Sun, 23 Feb 2020 19:29:03 +0100 (CET)
-From:   Ondrej Zary <linux@zary.sk>
-To:     qla2xxx-upstream@qlogic.com, linux-scsi@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: NULL pointer dereference in qla24xx_abort_command, kernel 4.19.98 (Debian)
-Date:   Sun, 23 Feb 2020 19:29:01 +0100
-User-Agent: KMail/1.9.10
-MIME-Version: 1.0
-Content-Type: Text/Plain;
-  charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Content-Disposition: inline
-Message-Id: <202002231929.01662.linux@zary.sk>
+        Sun, 23 Feb 2020 13:40:09 -0500
+Received: from foss.arm.com ([217.140.110.172]:50442 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726208AbgBWSkJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 23 Feb 2020 13:40:09 -0500
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 63F2330E;
+        Sun, 23 Feb 2020 10:40:08 -0800 (PST)
+Received: from e107158-lin.cambridge.arm.com (e107158-lin.cambridge.arm.com [10.1.195.21])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id EC8FE3F703;
+        Sun, 23 Feb 2020 10:40:06 -0800 (PST)
+From:   Qais Yousef <qais.yousef@arm.com>
+To:     Ingo Molnar <mingo@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Dietmar Eggemann <dietmar.eggemann@arm.com>,
+        Pavan Kondeti <pkondeti@codeaurora.org>
+Cc:     Juri Lelli <juri.lelli@redhat.com>,
+        Vincent Guittot <vincent.guittot@linaro.org>,
+        Ben Segall <bsegall@google.com>, Mel Gorman <mgorman@suse.de>,
+        linux-kernel@vger.kernel.org, Qais Yousef <qais.yousef@arm.com>
+Subject: [PATCH v2 0/6] RT Capacity Awareness Fixes & Improvements
+Date:   Sun, 23 Feb 2020 18:39:55 +0000
+Message-Id: <20200223184001.14248-1-qais.yousef@arm.com>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello,
-a couple of days after upgrading a server from Debian 9 (kernel 4.9.210-1)
-to 10 (kernel 4.19.98), qla2xxx crashed, along with mysql.
+Pavan, Steve and Dietmar pointed out a few issues and improvements that could
+be done to the logic of RT Capacity Awareness.
 
-There is an EMC CX3 array connected through the fibre-channel adapter.
-No errors are present in EMC event log.
+This series implements them. The main issue that triggered the discussion is
+the missing fallback mechanism in cpupri_find() if we are running on unfitting
+CPU and no fitting CPU was found. In this case we fallback to the best
+lowest_rq, which means unfitting tasks can move freely in unfitting CPUs, which
+better honours the priority of the task.
 
-This server was running without any problems since Debian 4.
-Is this a known bug?
+This is implemented in patch 1.
 
-[979178.888922] BUG: unable to handle kernel NULL pointer dereference at 0000000000000004
-[979178.889160] PGD 0 P4D 0
-[979178.889243] Oops: 0002 [#1] SMP PTI
-[979178.889362] CPU: 6 PID: 11060 Comm: kworker/u16:2 Not tainted 4.19.0-8-amd64 #1 Debian 4.19.98-1
-[979178.889617] Hardware name: Dell Inc. PowerEdge 2950/0JR815, BIOS 2.7.0 10/30/2010
-[979178.889855] Workqueue: scsi_tmf_4 scmd_eh_abort_handler [scsi_mod]
-[979178.890069] RIP: 0010:qla24xx_async_abort_cmd+0x1b/0x250 [qla2xxx]
-[979178.890258] Code: e9 19 ff ff ff 66 2e 0f 1f 84 00 00 00 00 00 66 66 66 66 90 41 57 41 56 41 55 41 54 55 53 4c 8b 6f 28 4c 8b 7f 20 4c 8b 77 48 <f0> 41 ff 46 04 0f ae
- f0 41 f6 46 24 04 74 17 f0 41 ff 4e 04 bd 02
-[979178.890801] RSP: 0018:ffffb1250ba83da8 EFLAGS: 00010293
-[979178.890966] RAX: 0000000000000800 RBX: ffff93b89db837a8 RCX: 00000000000005f4
-[979178.891178] RDX: ffff93b89e28afa8 RSI: 0000000000000001 RDI: ffff93b8a5018fc0
-[979178.891389] RBP: ffff93b89ccb89c0 R08: ffffffffc0595860 R09: 0000000000000000
-[979178.891600] R10: 8080808080808080 R11: 0000000000000010 R12: ffff93b89db82000
-[979178.891811] R13: ffff93b89db837a8 R14: 0000000000000000 R15: ffff93b89d88a800
-[979178.892023] FS:  0000000000000000(0000) GS:ffff93b8a7b80000(0000) knlGS:0000000000000000
-[979178.892258] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-[979178.892430] CR2: 0000000000000004 CR3: 000000021a62a000 CR4: 00000000000006e0
-[979178.892642] Call Trace:
-[979178.892748]  qla24xx_abort_command+0x218/0x2d0 [qla2xxx]
-[979178.892911]  ? __switch_to_asm+0x41/0x70
-[979178.893031]  ? __switch_to_asm+0x35/0x70
-[979178.893160]  qla2xxx_eh_abort+0x117/0x310 [qla2xxx]
-[979178.893323]  scmd_eh_abort_handler+0x85/0x220 [scsi_mod]
-[979178.893484]  process_one_work+0x1a7/0x3a0
-[979178.893611]  worker_thread+0x30/0x390
-[979178.893727]  ? create_worker+0x1a0/0x1a0
-[979178.893847]  kthread+0x112/0x130
-[979178.893948]  ? kthread_bind+0x30/0x30
-[979178.894064]  ret_from_fork+0x35/0x40
-[979178.894174] Modules linked in: loop ipmi_ssif radeon ttm drm_kms_helper drm coretemp i2c_algo_bit iTCO_wdt iTCO_vendor_support ipmi_si joydev kvm sg evdev i5000_edac
-ipmi_devintf pcc_cpufreq ipmi_msghandler rng_core i5k_amb irqbypass dcdbas serio_raw acpi_cpufreq button pcspkr ext4 crc16 mbcache jbd2 crc32c_generic fscrypto ecb crypto
-_simd cryptd glue_helper aes_x86_64 dm_service_time dm_multipath dm_mod scsi_dh_rdac scsi_dh_emc scsi_dh_alua uas usb_storage hid_generic usbhid hid sr_mod ses cdrom encl
-osure sd_mod scsi_transport_sas ata_generic qla2xxx uhci_hcd ehci_pci ehci_hcd psmouse ata_piix nvme_fc libata nvme_fabrics usbcore nvme_core megaraid_sas scsi_transport_
-fc scsi_mod lpc_ich mfd_core usb_common bnx2
-[979178.895968] CR2: 0000000000000004
-[979178.896075] ---[ end trace 4d42692cc0dc3c87 ]---
-[979178.896225] RIP: 0010:qla24xx_async_abort_cmd+0x1b/0x250 [qla2xxx]
-[979178.896414] Code: e9 19 ff ff ff 66 2e 0f 1f 84 00 00 00 00 00 66 66 66 66 90 41 57 41 56 41 55 41 54 55 53 4c 8b 6f 28 4c 8b 7f 20 4c 8b 77 48 <f0> 41 ff 46 04 0f ae
- f0 41 f6 46 24 04 74 17 f0 41 ff 4e 04 bd 02
-[979178.896956] RSP: 0018:ffffb1250ba83da8 EFLAGS: 00010293
-[979178.897121] RAX: 0000000000000800 RBX: ffff93b89db837a8 RCX: 00000000000005f4
-[979178.897332] RDX: ffff93b89e28afa8 RSI: 0000000000000001 RDI: ffff93b8a5018fc0
-[979178.897544] RBP: ffff93b89ccb89c0 R08: ffffffffc0595860 R09: 0000000000000000
-[979178.908415] R10: 8080808080808080 R11: 0000000000000010 R12: ffff93b89db82000
-[979178.919419] R13: ffff93b89db837a8 R14: 0000000000000000 R15: ffff93b89d88a800
-[979178.930444] FS:  0000000000000000(0000) GS:ffff93b8a7b80000(0000) knlGS:0000000000000000
-[979178.941366] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-[979178.952142] CR2: 0000000000000004 CR3: 000000021a62a000 CR4: 00000000000006e0
-[980103.072740] mysqld[2175]: segfault at 0 ip 000055bbc5cd2d93 sp 00007f2362ffb450 error 6 in mysqld[55bbc551a000+805000]
-[980103.083956] Code: c7 45 00 00 00 00 00 8b 7d cc 4c 89 e2 4c 89 f6 e8 62 81 84 ff 49 89 c7 49 39 c4 0f 84 f6 00 00 00 e8 e1 1c 00 00 41 8b 4d 00 <89> 08 85 c9 74 37 49
- 83 ff ff 0f 84 9d 00 00 00 f6 c3 06 75 28 4d
+The 2nd major issue is on wakeup, the logic that forces a push was incomplete.
+Steve suggested using the overload flag, but Pavan pointed out this could cause
+unnecessary IPIs.
+
+Patch 5 addresses that.
+
+The discussion on patches 1-4 seemed to have reached a consensus. Patch 5 still
+needs more eyes staring at it.
+
+Pavan, if you can provide your Reviewed-by on the patches you're happy with
+that'd be appreciated. A Tested-by would be ever better :)
+
+Discussion on v1 can be found here:
+
+	https://lore.kernel.org/lkml/20200214163949.27850-1-qais.yousef@arm.com/
+
+Thanks
 
 
+Qais Yousef (6):
+  sched/rt: cpupri_find: implement fallback mechanism for !fit case
+  sched/rt: Re-instate old behavior in select_task_rq_rt
+  sched/rt: Optimize cpupri_find on non-heterogenous systems
+  sched/rt: allow pulling unfitting task
+  sched/rt: Better manage pushing unfit tasks on wakeup
+  sched/rt: Remove unnecessary assignment in inc/dec_rt_migration
 
+ kernel/sched/cpupri.c | 167 +++++++++++++++++++++++++++---------------
+ kernel/sched/cpupri.h |   6 +-
+ kernel/sched/rt.c     | 137 ++++++++++++++++++++++++++++++----
+ kernel/sched/sched.h  |   3 +
+ 4 files changed, 237 insertions(+), 76 deletions(-)
 
 -- 
-Ondrej Zary
+2.17.1
+
