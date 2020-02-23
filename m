@@ -4,52 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4E12CC35675
-	for <linux-kernel@archiver.kernel.org>; Sun, 23 Feb 2020 02:23:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EE60AC35675
+	for <linux-kernel@archiver.kernel.org>; Sun, 23 Feb 2020 02:23:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1D0AA208C3
-	for <linux-kernel@archiver.kernel.org>; Sun, 23 Feb 2020 02:23:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BCFFC20707
+	for <linux-kernel@archiver.kernel.org>; Sun, 23 Feb 2020 02:23:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582424589;
-	bh=Y2gDl/DBouWsnZ7k9yTDr+JWTxGOv496eoFBcZNk5EU=;
+	s=default; t=1582424593;
+	bh=GWuUrhosaMkp3+xGKPMnYKEDkAsJtfQyw4gsf0saGCk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=tJqpwqRipca5j6i41d11VkbGBCYjAmv2r9V5ISTk+TpmU+0me0sMAI4BgzFCCL2z0
-	 81cEanAEQ2uCxkwHc6kXd1U7zjSwzccWWObVzrqk2Ji5+InCg/pa5CnCCqv0a5qVqL
-	 1Rzr3M8c6IZoStILKZn66Ga2v6LE9Kljgh22zNEY=
+	b=EGh3hX30t47OlZt1Wt1Sd5AA9UFnKBA1Fvd00+HzdDdtiUIFKZ8yAn9e0wyFTppeF
+	 IKeo5RnrDv8kyDBHgReH0arNQSdJ+laSk0HCHynJx+ldRGezp2GtjS/egLX9hydWUP
+	 tXG+11xlKIaT3eAL/c6HYJhs01xobb8IIAteqn8E=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728468AbgBWCXI (ORCPT
+        id S1728511AbgBWCXM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 22 Feb 2020 21:23:08 -0500
-Received: from mail.kernel.org ([198.145.29.99]:52296 "EHLO mail.kernel.org"
+        Sat, 22 Feb 2020 21:23:12 -0500
+Received: from mail.kernel.org ([198.145.29.99]:52218 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727664AbgBWCXE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 22 Feb 2020 21:23:04 -0500
+        id S1728435AbgBWCXD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 22 Feb 2020 21:23:03 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4C809208C3;
-        Sun, 23 Feb 2020 02:23:03 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2C5B520702;
+        Sun, 23 Feb 2020 02:23:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1582424584;
-        bh=Y2gDl/DBouWsnZ7k9yTDr+JWTxGOv496eoFBcZNk5EU=;
+        s=default; t=1582424582;
+        bh=GWuUrhosaMkp3+xGKPMnYKEDkAsJtfQyw4gsf0saGCk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=GyKMpp3SO5eO513O6RHlh8fg8pO/4d//+FUmK6ZzO/VNCNfrakHlvPDwNVjy096Fq
-         7PUvkRPmyv8dmgZkZnVqo+ZIOomOZ2r5t705p1H8VgtfRRvho0E5fPdra/VdlA80ns
-         JwXaTuSKayKMOtKMzJY8Zf5PPOjvgwOJgOKI/kfc=
+        b=cQJKdhO57evVypPQ7tJ7nZnQErEjt3y89TsJpmxUA7JP/zutbXjGq+ZpZY8ipd9LN
+         +kpQbTNLKY4S26AegVc94HBKANYVKp1BfT6skUUdux4sO1mZtES+Qo437iXGzYlAN/
+         JSf6LSCLu/rhY99wWJ6fw+Ksnop/O75Y2HACEfak=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Aric Cyr <aric.cyr@amd.com>,
-        Harry Wentland <harry.wentland@amd.com>,
-        Bhawanpreet Lakha <Bhawanpreet.Lakha@amd.com>,
-        Alex Deucher <alexander.deucher@amd.com>,
-        Sasha Levin <sashal@kernel.org>, amd-gfx@lists.freedesktop.org,
-        dri-devel@lists.freedesktop.org
-Subject: [PATCH AUTOSEL 5.4 23/50] drm/amd/display: Check engine is not NULL before acquiring
-Date:   Sat, 22 Feb 2020 21:22:08 -0500
-Message-Id: <20200223022235.1404-23-sashal@kernel.org>
+Cc:     Krishnamraju Eraparaju <krishna2@chelsio.com>,
+        Jason Gunthorpe <jgg@mellanox.com>,
+        Sasha Levin <sashal@kernel.org>, linux-rdma@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.4 22/50] RDMA/siw: Remove unwanted WARN_ON in siw_cm_llp_data_ready()
+Date:   Sat, 22 Feb 2020 21:22:07 -0500
+Message-Id: <20200223022235.1404-22-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200223022235.1404-1-sashal@kernel.org>
 References: <20200223022235.1404-1-sashal@kernel.org>
@@ -62,38 +59,63 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Aric Cyr <aric.cyr@amd.com>
+From: Krishnamraju Eraparaju <krishna2@chelsio.com>
 
-[ Upstream commit 2b63d0ec0daf79ba503fa8bfa25e07dc3da274f3 ]
+[ Upstream commit 663218a3e715fd9339d143a3e10088316b180f4f ]
 
-[Why]
-Engine can be NULL in some cases, so we must not acquire it.
+Warnings like below can fill up the dmesg while disconnecting RDMA
+connections.
+Hence, remove the unwanted WARN_ON.
 
-[How]
-Check for NULL engine before acquiring.
+  WARNING: CPU: 6 PID: 0 at drivers/infiniband/sw/siw/siw_cm.c:1229 siw_cm_llp_data_ready+0xc1/0xd0 [siw]
+  RIP: 0010:siw_cm_llp_data_ready+0xc1/0xd0 [siw]
+  Call Trace:
+   <IRQ>
+   tcp_data_queue+0x226/0xb40
+   tcp_rcv_established+0x220/0x620
+   tcp_v4_do_rcv+0x12a/0x1e0
+   tcp_v4_rcv+0xb05/0xc00
+   ip_local_deliver_finish+0x69/0x210
+   ip_local_deliver+0x6b/0xe0
+   ip_rcv+0x273/0x362
+   __netif_receive_skb_core+0xb35/0xc30
+   netif_receive_skb_internal+0x3d/0xb0
+   napi_gro_frags+0x13b/0x200
+   t4_ethrx_handler+0x433/0x7d0 [cxgb4]
+   process_responses+0x318/0x580 [cxgb4]
+   napi_rx_handler+0x14/0x100 [cxgb4]
+   net_rx_action+0x149/0x3b0
+   __do_softirq+0xe3/0x30a
+   irq_exit+0x100/0x110
+   do_IRQ+0x7f/0xe0
+   common_interrupt+0xf/0xf
+   </IRQ>
 
-Signed-off-by: Aric Cyr <aric.cyr@amd.com>
-Reviewed-by: Harry Wentland <harry.wentland@amd.com>
-Acked-by: Bhawanpreet Lakha <Bhawanpreet.Lakha@amd.com>
-Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
+Link: https://lore.kernel.org/r/20200207141429.27927-1-krishna2@chelsio.com
+Signed-off-by: Krishnamraju Eraparaju <krishna2@chelsio.com>
+Signed-off-by: Jason Gunthorpe <jgg@mellanox.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/gpu/drm/amd/display/dc/dce/dce_aux.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/infiniband/sw/siw/siw_cm.c | 5 ++---
+ 1 file changed, 2 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/gpu/drm/amd/display/dc/dce/dce_aux.c b/drivers/gpu/drm/amd/display/dc/dce/dce_aux.c
-index c3f9f4185ce8d..cf877238fff9d 100644
---- a/drivers/gpu/drm/amd/display/dc/dce/dce_aux.c
-+++ b/drivers/gpu/drm/amd/display/dc/dce/dce_aux.c
-@@ -386,7 +386,7 @@ static bool acquire(
- {
- 	enum gpio_result result;
+diff --git a/drivers/infiniband/sw/siw/siw_cm.c b/drivers/infiniband/sw/siw/siw_cm.c
+index 0454561718d95..31aa41d85ccff 100644
+--- a/drivers/infiniband/sw/siw/siw_cm.c
++++ b/drivers/infiniband/sw/siw/siw_cm.c
+@@ -1225,10 +1225,9 @@ static void siw_cm_llp_data_ready(struct sock *sk)
+ 	read_lock(&sk->sk_callback_lock);
  
--	if (!is_engine_available(engine))
-+	if ((engine == NULL) || !is_engine_available(engine))
- 		return false;
+ 	cep = sk_to_cep(sk);
+-	if (!cep) {
+-		WARN_ON(1);
++	if (!cep)
+ 		goto out;
+-	}
++
+ 	siw_dbg_cep(cep, "state: %d\n", cep->state);
  
- 	result = dal_ddc_open(ddc, GPIO_MODE_HARDWARE,
+ 	switch (cep->state) {
 -- 
 2.20.1
 
