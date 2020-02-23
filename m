@@ -4,50 +4,52 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 95981C35671
-	for <linux-kernel@archiver.kernel.org>; Sun, 23 Feb 2020 02:35:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6CB18C35671
+	for <linux-kernel@archiver.kernel.org>; Sun, 23 Feb 2020 02:35:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6C2D220707
-	for <linux-kernel@archiver.kernel.org>; Sun, 23 Feb 2020 02:35:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4505F20707
+	for <linux-kernel@archiver.kernel.org>; Sun, 23 Feb 2020 02:35:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582425306;
-	bh=e1SKCZPdGa2avM3Ux/3r2Ge8S6FtgQ3cCJFYoRw0Vzs=;
+	s=default; t=1582425309;
+	bh=wJ2KCp01KlNHuZcLWsvwY7KPtFEgX8jQ/ItsVEsLmVc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=gZKDzAomcvGNl2HLrxHBm10994liED8Wq/3zISZFsDf0+K0OdHhreTPeVckYJZ6gz
-	 YSfptxR7ZKlKvLydPG6eM8lO5F0tMukIEDS4UFtJfos3jjGYFHvCgYvLSZxpyaQT1c
-	 3IMFHy+33FYQfDzfgs/F2EtzCnR+v7HH8mziybsE=
+	b=l7o3XkMq/XDoSH8h0a50ljI45bXjHbk9rNPP45AfkJNX2bSXCJjwL8QhvzBlgcviW
+	 TbPpVKjtsJdbvLJCvRQTWqxxNddN8spk6CgmR61zJklhu2APWkSUhla2eriKHz4DIz
+	 GeqoQ8Yr57a00v6szk9Os5EBAeu+8jj8mPqOPkCs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728090AbgBWCWT (ORCPT
+        id S1728769AbgBWCfI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 22 Feb 2020 21:22:19 -0500
-Received: from mail.kernel.org ([198.145.29.99]:50764 "EHLO mail.kernel.org"
+        Sat, 22 Feb 2020 21:35:08 -0500
+Received: from mail.kernel.org ([198.145.29.99]:51224 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727890AbgBWCWB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 22 Feb 2020 21:22:01 -0500
+        id S1728072AbgBWCWR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 22 Feb 2020 21:22:17 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 71204208C3;
-        Sun, 23 Feb 2020 02:21:59 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 17AB020702;
+        Sun, 23 Feb 2020 02:22:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1582424520;
-        bh=e1SKCZPdGa2avM3Ux/3r2Ge8S6FtgQ3cCJFYoRw0Vzs=;
+        s=default; t=1582424537;
+        bh=wJ2KCp01KlNHuZcLWsvwY7KPtFEgX8jQ/ItsVEsLmVc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=e2jRetkxtj6Nua6ji2iGNlDOBt3m0bdntwLhxQdaM1s6ynEnud8IOt8lbFIC8Xm+w
-         XL5s7gAs3D/+y8wWar1ZX5SvmKZg1P3PvSCjcFeTx+Mrgq/+HM5B2tnYKfKi6Oqqyy
-         VA4px6ZBRLVWILJwMfI8oCxm6oow1ROQtE34tBmM=
+        b=zTRfBi3fUE1oNyJGw27NZyp6ces1ci1pSmRrZ73Gj3nxCjBYVWcTrapBg5YP6+f52
+         0FqwLpdufsOWy5h2wibmZzpR8cNXxtFjqJHmmTPECH/fZDflu+f+gJmhDNoJ5kWYfO
+         oY/tTbEEV5qsAoAbsYWiq51OO3c/BIvwdUrv8Ik8=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Arthur Kiyanovski <akiyano@amazon.com>,
-        Sameeh Jubran <sameehj@amazon.com>,
-        "David S . Miller" <davem@davemloft.net>,
-        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.5 33/58] net: ena: fix incorrect default RSS key
-Date:   Sat, 22 Feb 2020 21:20:54 -0500
-Message-Id: <20200223022119.707-33-sashal@kernel.org>
+Cc:     Ben Shelton <benjamin.h.shelton@intel.com>,
+        Tony Nguyen <anthony.l.nguyen@intel.com>,
+        Andrew Bowers <andrewx.bowers@intel.com>,
+        Jeff Kirsher <jeffrey.t.kirsher@intel.com>,
+        Sasha Levin <sashal@kernel.org>,
+        intel-wired-lan@lists.osuosl.org, netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.5 47/58] ice: Use correct netif error function
+Date:   Sat, 22 Feb 2020 21:21:08 -0500
+Message-Id: <20200223022119.707-47-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200223022119.707-1-sashal@kernel.org>
 References: <20200223022119.707-1-sashal@kernel.org>
@@ -60,81 +62,35 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Arthur Kiyanovski <akiyano@amazon.com>
+From: Ben Shelton <benjamin.h.shelton@intel.com>
 
-[ Upstream commit 0d1c3de7b8c78a5e44b74b62ede4a63629f5d811 ]
+[ Upstream commit 1d8bd9927234081db15a1d42a7f99505244e3703 ]
 
-Bug description:
-When running "ethtool -x <if_name>" the key shows up as all zeros.
+Use the correct netif_msg_[tx,rx]_error() function to determine whether to
+print the MDD event type.
 
-When we use "ethtool -X <if_name> hfunc toeplitz hkey <some:random:key>" to
-set the key and then try to retrieve it using "ethtool -x <if_name>" then
-we return the correct key because we return the one we saved.
-
-Bug cause:
-We don't fetch the key from the device but instead return the key
-that we have saved internally which is by default set to zero upon
-allocation.
-
-Fix:
-This commit fixes the issue by initializing the key to a random value
-using netdev_rss_key_fill().
-
-Fixes: 1738cd3ed342 ("net: ena: Add a driver for Amazon Elastic Network Adapters (ENA)")
-Signed-off-by: Sameeh Jubran <sameehj@amazon.com>
-Signed-off-by: Arthur Kiyanovski <akiyano@amazon.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Signed-off-by: Ben Shelton <benjamin.h.shelton@intel.com>
+Signed-off-by: Tony Nguyen <anthony.l.nguyen@intel.com>
+Tested-by: Andrew Bowers <andrewx.bowers@intel.com>
+Signed-off-by: Jeff Kirsher <jeffrey.t.kirsher@intel.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/ethernet/amazon/ena/ena_com.c | 15 +++++++++++++++
- drivers/net/ethernet/amazon/ena/ena_com.h |  1 +
- 2 files changed, 16 insertions(+)
+ drivers/net/ethernet/intel/ice/ice_main.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/net/ethernet/amazon/ena/ena_com.c b/drivers/net/ethernet/amazon/ena/ena_com.c
-index e54c44fdcaa73..d6b894b06fa30 100644
---- a/drivers/net/ethernet/amazon/ena/ena_com.c
-+++ b/drivers/net/ethernet/amazon/ena/ena_com.c
-@@ -1041,6 +1041,19 @@ static int ena_com_get_feature(struct ena_com_dev *ena_dev,
- 				      feature_ver);
- }
+diff --git a/drivers/net/ethernet/intel/ice/ice_main.c b/drivers/net/ethernet/intel/ice/ice_main.c
+index c9b35b202639d..7f71f06fa819c 100644
+--- a/drivers/net/ethernet/intel/ice/ice_main.c
++++ b/drivers/net/ethernet/intel/ice/ice_main.c
+@@ -1235,7 +1235,7 @@ static void ice_handle_mdd_event(struct ice_pf *pf)
+ 		u16 queue = ((reg & GL_MDET_TX_TCLAN_QNUM_M) >>
+ 				GL_MDET_TX_TCLAN_QNUM_S);
  
-+static void ena_com_hash_key_fill_default_key(struct ena_com_dev *ena_dev)
-+{
-+	struct ena_admin_feature_rss_flow_hash_control *hash_key =
-+		(ena_dev->rss).hash_key;
-+
-+	netdev_rss_key_fill(&hash_key->key, sizeof(hash_key->key));
-+	/* The key is stored in the device in u32 array
-+	 * as well as the API requires the key to be passed in this
-+	 * format. Thus the size of our array should be divided by 4
-+	 */
-+	hash_key->keys_num = sizeof(hash_key->key) / sizeof(u32);
-+}
-+
- static int ena_com_hash_key_allocate(struct ena_com_dev *ena_dev)
- {
- 	struct ena_rss *rss = &ena_dev->rss;
-@@ -2631,6 +2644,8 @@ int ena_com_rss_init(struct ena_com_dev *ena_dev, u16 indr_tbl_log_size)
- 	if (unlikely(rc))
- 		goto err_hash_key;
- 
-+	ena_com_hash_key_fill_default_key(ena_dev);
-+
- 	rc = ena_com_hash_ctrl_init(ena_dev);
- 	if (unlikely(rc))
- 		goto err_hash_ctrl;
-diff --git a/drivers/net/ethernet/amazon/ena/ena_com.h b/drivers/net/ethernet/amazon/ena/ena_com.h
-index 0ce37d54ed108..9b5bd28ed0ac6 100644
---- a/drivers/net/ethernet/amazon/ena/ena_com.h
-+++ b/drivers/net/ethernet/amazon/ena/ena_com.h
-@@ -44,6 +44,7 @@
- #include <linux/spinlock.h>
- #include <linux/types.h>
- #include <linux/wait.h>
-+#include <linux/netdevice.h>
- 
- #include "ena_common_defs.h"
- #include "ena_admin_defs.h"
+-		if (netif_msg_rx_err(pf))
++		if (netif_msg_tx_err(pf))
+ 			dev_info(dev, "Malicious Driver Detection event %d on TX queue %d PF# %d VF# %d\n",
+ 				 event, queue, pf_num, vf_num);
+ 		wr32(hw, GL_MDET_TX_TCLAN, 0xffffffff);
 -- 
 2.20.1
 
