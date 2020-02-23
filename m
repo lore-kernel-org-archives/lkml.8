@@ -2,314 +2,194 @@ Return-Path: <SRS0=SnAt=4L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_2
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MSGID_FROM_MTA_HEADER,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C3F6CC35671
-	for <linux-kernel@archiver.kernel.org>; Sun, 23 Feb 2020 14:39:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B505CC35673
+	for <linux-kernel@archiver.kernel.org>; Sun, 23 Feb 2020 14:40:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8E657206E2
-	for <linux-kernel@archiver.kernel.org>; Sun, 23 Feb 2020 14:39:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 84008206E2
+	for <linux-kernel@archiver.kernel.org>; Sun, 23 Feb 2020 14:40:28 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=amdcloud.onmicrosoft.com header.i=@amdcloud.onmicrosoft.com header.b="SYCoLMnM"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726983AbgBWOjS (ORCPT
+        id S1727081AbgBWOkZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 23 Feb 2020 09:39:18 -0500
-Received: from mail-a09.ithnet.com ([217.64.83.104]:59609 "EHLO
-        mail-a09.ithnet.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726490AbgBWOjR (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 23 Feb 2020 09:39:17 -0500
-Received: (qmail 7388 invoked by uid 0); 23 Feb 2020 14:39:14 -0000
-Received: from skraw.ml@ithnet.com by mail-a09 
- (Processed in 3.939902 secs); 23 Feb 2020 14:39:14 -0000
-X-Virus-Status: No
-X-ExecutableContent: No
-Received: from dialin014-sr.ithnet.com (HELO ithnet.com) (217.64.64.14)
-  by mail-a09.ithnet.com with ESMTPS (ECDHE-RSA-AES256-GCM-SHA384 encrypted); 23 Feb 2020 14:39:10 -0000
-X-Sender-Authentication: SMTP AUTH verified <skraw.ml@ithnet.com>
-Date:   Sun, 23 Feb 2020 15:39:09 +0100
-From:   Stephan von Krawczynski <skraw.ml@ithnet.com>
-To:     whywontyousue@waifu.club
-Cc:     linux-kernel@vger.kernel.org, rms@gnu.org, bruce@perens.com,
-        bind-users@lists.isc.org
-Subject: Re: General Discussion about GPLness
-Message-ID: <20200223153909.1ba91bae@ithnet.com>
-In-Reply-To: <2241a3e0c8dcba5b69b4f670e181d7cd@waifu.club>
-References: <8b0e828da35ab77c1ad4603768c6eab6@waifu.club>
-        <20200223133301.03eab91d@ithnet.com>
-        <2241a3e0c8dcba5b69b4f670e181d7cd@waifu.club>
-Organization: ith Kommunikationstechnik GmbH
-X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        Sun, 23 Feb 2020 09:40:25 -0500
+Received: from mail-dm6nam11on2053.outbound.protection.outlook.com ([40.107.223.53]:56928
+        "EHLO NAM11-DM6-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726583AbgBWOkZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 23 Feb 2020 09:40:25 -0500
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=jzAl4u56BICAMWBF61uoSeAu7S+3N10Z1LUPgW3fsKsfF87JOE0BpsV/aV0+PCpls15XvWWC4br4qeYEhLUrOh2lCTFJcnIIFPa8OVJ3LbkF8ldgvw0hWzudDFxxk0+8vrEUroUJpsxp1UwIQ7T2utH+HmQPdLC+CsNoTnKQEVNcur8s8MK4/vJqcivYIKPIjyeOssO99/FIjSOMpgnFH2seoxfEakgKSufToSUv9jspDviAPOpuO86RZvxKWRMT23oMRdTx99w5a+zHbvxKkS2sd0xMaiAs4iskXEgqDFhOCFnnttcq6b+5vXLJEk+VYbCa8wRBlXBply/+SgUIAw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=Tt4zeUvrpoLx007urafcQRBjk1ILsOstr0hH//Q/6IQ=;
+ b=UiLSVkfHPePrKB5Nwuc8mgC7Afx/nGzkuY5gIkwWW6KO77bPL/hg9RlIU58MBEzIrkq7/9hmb7YljHh2CvJ8PPd/UWU4tkxp44aRvFzziFDJI5ZIKxcXC56PTjQWNVi6N8gAXYGvwD1I7poC3n/huJyKNssk52UFquKG5M3ksQcL3ksIqDcCa3ZC+tyvFzqLfvhiljOFrLDWHhWbsW/hyG7zwKONBgkSIHVGzLmPHhq2Np4R5NRVuDo9D4SXN1qmDlOPjaeBh56UaWNR/B2doKu+UDGVNbp5XxB0P9UgOPK+SMFARFIQ6LceReRXhjYYjSAjxJcDU3iX8HpHAwPSsw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
+ header.d=amd.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=amdcloud.onmicrosoft.com; s=selector2-amdcloud-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=Tt4zeUvrpoLx007urafcQRBjk1ILsOstr0hH//Q/6IQ=;
+ b=SYCoLMnM07wA4d3dmUdq6nIeZRfAhL3QUIyFL9XYf9Nh5XSHkQlkotAdjFf+H7hreD8ma03LBLVBAoKitKrfTvY6EEKt6ksQU/ylXRf83AEUuCF3PLkkBIh8fJNsQXWV4nCj7fblAyKhEKJ+P7eSSTiMfl2TFxZEOIZ1r/TdfN8=
+Authentication-Results: spf=none (sender IP is )
+ smtp.mailfrom=Christian.Koenig@amd.com; 
+Received: from DM5PR12MB1705.namprd12.prod.outlook.com (2603:10b6:3:10c::22)
+ by DM5PR12MB1849.namprd12.prod.outlook.com (2603:10b6:3:107::23) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2750.21; Sun, 23 Feb
+ 2020 14:40:20 +0000
+Received: from DM5PR12MB1705.namprd12.prod.outlook.com
+ ([fe80::d40e:7339:8605:bc92]) by DM5PR12MB1705.namprd12.prod.outlook.com
+ ([fe80::d40e:7339:8605:bc92%11]) with mapi id 15.20.2750.021; Sun, 23 Feb
+ 2020 14:40:20 +0000
+Subject: Re: [PATCH] dma-buf: Fix missing excl fence waiting
+To:     "Pan, Xinhui" <Xinhui.Pan@amd.com>
+Cc:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linaro-mm-sig@lists.linaro.org" <linaro-mm-sig@lists.linaro.org>,
+        "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
+        "linux-media@vger.kernel.org" <linux-media@vger.kernel.org>,
+        "sumit.semwal@linaro.org" <sumit.semwal@linaro.org>,
+        "daniel.vetter@ffwll.ch" <daniel.vetter@ffwll.ch>
+References: <B737F1D5-292E-4FE2-89A5-6EF72CB3EED1@amd.com>
+ <7a2eb42a-2dd9-4303-3947-6bbb4de7a888@amd.com>
+ <3B6ADD37-8287-4180-B99B-C747DBACC6F4@amd.com>
+From:   =?UTF-8?Q?Christian_K=c3=b6nig?= <christian.koenig@amd.com>
+Message-ID: <60825044-261f-f5e9-bc86-285cd486b398@amd.com>
+Date:   Sun, 23 Feb 2020 13:12:07 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
+In-Reply-To: <3B6ADD37-8287-4180-B99B-C747DBACC6F4@amd.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8bit
+Content-Language: en-US
+X-ClientProxiedBy: ZRAP278CA0010.CHEP278.PROD.OUTLOOK.COM
+ (2603:10a6:910:10::20) To DM5PR12MB1705.namprd12.prod.outlook.com
+ (2603:10b6:3:10c::22)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+X-MS-Exchange-MessageSentRepresentingType: 1
+Received: from [IPv6:2a02:908:1252:fb60:be8a:bd56:1f94:86e7] (2a02:908:1252:fb60:be8a:bd56:1f94:86e7) by ZRAP278CA0010.CHEP278.PROD.OUTLOOK.COM (2603:10a6:910:10::20) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2750.18 via Frontend Transport; Sun, 23 Feb 2020 14:40:16 +0000
+X-Originating-IP: [2a02:908:1252:fb60:be8a:bd56:1f94:86e7]
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-HT: Tenant
+X-MS-Office365-Filtering-Correlation-Id: f5beddf8-29e4-441b-7aa5-08d7b86e4ea6
+X-MS-TrafficTypeDiagnostic: DM5PR12MB1849:|DM5PR12MB1849:
+X-MS-Exchange-Transport-Forked: True
+X-Microsoft-Antispam-PRVS: <DM5PR12MB18497701A0368523FC9058EE83EF0@DM5PR12MB1849.namprd12.prod.outlook.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:9508;
+X-Forefront-PRVS: 0322B4EDE1
+X-Forefront-Antispam-Report: SFV:NSPM;SFS:(10009020)(4636009)(376002)(396003)(39860400002)(366004)(346002)(136003)(189003)(199004)(5660300002)(36756003)(2906002)(52116002)(31696002)(8676002)(81166006)(81156014)(6486002)(86362001)(8936002)(4326008)(66946007)(54906003)(6636002)(6862004)(37006003)(478600001)(16526019)(66556008)(316002)(2616005)(186003)(31686004)(6666004)(66476007);DIR:OUT;SFP:1101;SCL:1;SRVR:DM5PR12MB1849;H:DM5PR12MB1705.namprd12.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+Received-SPF: None (protection.outlook.com: amd.com does not designate
+ permitted sender hosts)
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: 7ZKleIF67ErvCmqm/ACUVQBV76QHFV06IU4tQ3bC72Ye4QXMgyJlw8RTIZWgZMFzoJ3z/0onOek51SA1CLxwTGqa0NShjOR1vXLHm1UBlNbIjepJbsgekuHFPpr+/87DyQnXP1qq7nRRzsftjvHzUuK4qrxhenWKzcupofnL6Z3Yu267RTQGlQL+e2IBdYt6f0vFL/zQ3Hq7TH6FANHdvXuWBq+Ajsv2k1qifAyrju4nzt1QSZlUM6hPbt8UdrodZNQ/ynbP4ojZLUbr5Ll5gMAFXmZSQ7lwl6xNLs83gae7FH4f3qq7VJ/avEvKFl0sAkUtxfZQFMZ8+qdd6+Ig0436RQunqRfCEcfGQOD3f+/XvHAOX1jN3vzEsRkk+U6RdBQk8rz0Z+l4q58n45k0I+f/6zdpcvaIh/CrmzKPqftgv1wlxO3KNwj4MTczG1x/
+X-MS-Exchange-AntiSpam-MessageData: 7mNT5poByy3lGdWn37TJ0u5pu0XOlVn863P7GHaNgoEhASJmAT5cnTv1YMpHsq41+zXq52r0UjPj+S4IeQAJhYjukzjqv45LfimP+snmz1KdSwOwUl6vkV9FVrYSfXsagnAB2ZhJgLUlbBDdXPgBumxXsPA0MRdvxkypO6BfCTCtvgAOfTTKWAJ586VKnX/SJZRU2G1vkWlGzHyHtGh52w==
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: f5beddf8-29e4-441b-7aa5-08d7b86e4ea6
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 23 Feb 2020 14:40:20.4070
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: 4R7/pcFJOEmsPlA+3XezrB5Be/CWhtTO9NRL9k0lQCdCmxDRY1KKtRcT7hsEXEk2
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM5PR12MB1849
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello again,
+Am 23.02.20 um 13:21 schrieb Pan, Xinhui:
+>
+>> 2020年2月23日 20:04，Koenig, Christian <Christian.Koenig@amd.com> 写道：
+>>
+>> Am 23.02.20 um 12:56 schrieb Pan, Xinhui:
+>>> If shared fence list is not empty, even we want to test all fences, excl fence is ignored.
+>>> That is abviously wrong, so fix it.
+>> Yeah that is a known issue and I completely agree with you, but other disagree.
+>>
+>> See the shared fences are meant to depend on the exclusive fence. So all shared fences must finish only after the exclusive one has finished as well.
+> fair enough.
+>
+>> The problem now is that for error handling this isn't necessary true. In other words when a shared fence completes with an error it is perfectly possible that he does this before the exclusive fence is finished.
+>>
+>> I'm trying to convince Daniel that this is a problem for years :)
+>>
+> I have met problems, eviction has race with bo relase.  system memory is overwried by sDMA. the kernel is 4.19, stable one, LOL.
 
-at least you are beginning to sound a bit more like being able to discuss
-something ;-)
-The thing about a lawyer (I learned you are) is that they judge the world
-according to lawsuits. You can learn from the history of my home country that
-laws and courts are no measure for moral and right behaviour.
-So my whole purpose of the thread is not to find out how the laws in the US
-are judging something. It is all about how _we_ (we meaning all the people
-contributing) are judging the issue. Do we really think that it is the right
-thing to do to prevent people from feature-extending linux (and distros) in
-general? The zfs case is special in that it is a simple "free license clash".
-Which means all involved parties agree on the free and open software
-principle, only the licenses (i.e. paper) disagree on the usage of it - to a
-certain extent. But lets not discuss legal details. In the end it all comes up
-to this simple question: what do we really want with the project?
-Because in the end even you have to agree that there is a whole lot more world
-outside the US. If people from other countries agree on something which gives
-a better performance in some area, then the US would be the last ones not to
-jump onto the train. Who can testify better than this project, not being
-native-US.
-Do we think it is illegal to call GPL code from non-GPL code? Yes or no,
-simple choice.
-Me, I don't think so. This is why I suggest we take down the barriers and
-walls for interaction. It should be obvious by now that there will be no
-non-gpl invasion taking place. Instead a non-ideological use of GPL may
-convince even more people that free and open software is a good concept and
-adds benefit to the world and does not _harm_ technological progress.
-Given, not many people think about this from ground up before releasing
-software on linux. This is probably the only reason why you can buy software
-for linux at all. And maybe, only maybe, the lawyers in your beloved case
-where too dumb to turn this case around and ask why the gpl linux software was
-forced to marry with the non-gpl real player (which is/was available
-for linux). According to this courts' point of view this must have been equally
-illegal.
-I mean it extended the gpl software with a new feature without checking for
-gpl compliance.
-As you can see the whole idea of the court in this case is broken. And it
-seems only because noone asked the right questions.
---
-Regards,
-Stephan
+Ok sounds like we add some shared fence which doesn't depend on the 
+exclusive one to finish. That is of course highly problematic for the 
+current handling.
 
+It might be that this happens with the TTM move fence, but I don't of 
+hand know either how to prevent that.
 
+Question at Daniel and others: Can we finally drop this assumption that 
+all shared fences must finish after the exclusive one?
 
-On Sun, 23 Feb 2020 12:56:13 +0000
-whywontyousue@waifu.club wrote:
+Thanks for pointing this out Xinhui,
+Christian.
 
-> If you don't understand English, it will be difficult to get any points 
-> across to you. I will try
-> 
-> In simple terms:
-> 1) Look up the court case "Universal City Studios Inc v Reimerdes,"
-> 
-> 2) In this case someone else' software was running at the same time as 
-> the other persons software, and made changes, extensions _ONLY_ when 
-> running. Just like a non-gpl'd (or gpl'd) module might make changes and 
-> extensions.
-> 
-> 3) The court found this was obviously a modification of the Copyright 
-> owners Work and barred in on summary judgement.
-> 
-> That is why you're not allowed to do as you wish with non-gpl'd modules: 
-> the US Copyright Jurisprudence forbids marring a Copyright owners 
-> _running_ _in_memory_ property against his wishes: it's a Copyright 
-> violation.
-> 
-> That is the reason: people don't want to get sued. That is the ONLY 
-> reason. That's it.
-> 
-> The thing is, the linux copyright owners are wimps and won't sue anyone 
-> even for blatant infringement; so what is the conversation about?
-> 
-> It's like if you were in Russia, and you were copying DVDs. No one is 
-> going to punish you for it: so what is there to discuss? The US 
-> Copyright owners don't have the rocks to Invade Russia, Start a Nuclear 
-> Winter, and DESTROY you for your Copyright Infringement in Russia.
-> 
-> JUST AS, the DOG LIKE Linux Copyright owners don't have the BALLS to 
-> risk being blackballed from the programming industry for DEFENDING THEIR 
-> COPYRIGHT.
-> 
-> The GPL ___IS___ dead. The FSF doesn't protect GCC copyright, and is 
-> opposed to taking any action against blantant in-writing infringers 
-> (OpenSourceSecurity (Grsecurity)) of GCC, just as the LINUX COMMUNITY is 
-> OPPOSED to taking ANY action to defend its Copyrights and moves to 
-> PUNISH those rightsholders who do.
-> 
-> > And another thing: court is for lawyers. Whenever the lawyers take over
-> > something they don't (want to) understand the end is near ...  
-> 
-> I'm a lawyer and a programmer, got something to say?
-> 
-> 
-> > How about talking with real names?  
-> Why would I do that? Tell me? What is in it for me?
-> I can stand here, in the forest, taking shots at your bullshit. Safe. 
-> Secure. My words and their veracity the only measure.
-> 
-> But if I reveal the messanger; you'll just attack the messenger.
-> Tell me how _I_ benifit from telling YOU my name. Tell me.
-> Is it some sort of stupid werkin man white man bravado?
-> 
-> > I have no idea why you spam rms or bruce
-> > with this, as the question is all about _one_ project, namely 
-> > linux-kernel.  
-> 
-> You sent a message to the LKML "Hey why can't I violate the GPL? Let's 
-> just do it!". IE: a licensing discussion. RMS and Bruce Perens, the 
-> founder of the Free Software Movement and the Open Source Initiative are 
-> relevant parties to the discussion.
-> 
-> 
-> > I'd suggest taking them off this topic again ...  
-> You also suggested I reveal my identity on the internet...
-> 
-> 
-> On 2020-02-23 12:33, Stephan von Krawczynski wrote:
-> > Dear whoeveryouare,
-> > 
-> > can you please state in a clearer form (more understandable to 
-> > non-native
-> > english talkers) what your true opinion on the topic is?
-> > And in case you did not understand what I was saying, here is clearer 
-> > form of
-> > my opinion:
-> > 
-> > A kernel module with another license (be it whatsoever) is _no_ 
-> > modification
-> > of the kernel, but an extension of its features. If feature-extension 
-> > is
-> > against the GPL (which I seriously doubt) then I would say "go back 
-> > onto your
-> > trees". Because the human race and evolution is about little else than
-> > feature-extension.
-> > 
-> > And another thing: court is for lawyers. Whenever the lawyers take over
-> > something they don't (want to) understand the end is near ...
-> > 
-> > How about talking with real names? I have no idea why you spam rms or 
-> > bruce
-> > with this, as the question is all about _one_ project, namely 
-> > linux-kernel.
-> > I'd suggest taking them off this topic again ...
-> > 
-> > --
-> > Regards,
-> > Stephan
-> > 
-> > 
-> > 
-> > On Sun, 23 Feb 2020 11:03:56 +0000
-> > whywontyousue@waifu.club wrote:
-> >   
-> >> Dear Stephan von Krawczynski;
-> >> 
-> >> Universal City Studios Inc v Reimerdes, piece of shit.
-> >> 
-> >> "[The court] reasoned that Ferret consumers who used the Ferret as a
-> >> plug-in to the Real Player altered the Real Player user interface by
-> >> adding the Snap search button or replacing it with the Stream box 
-> >> search
-> >> engine button. The court concluded that the plaintiff raised 
-> >> sufficently
-> >> serious questions going to the merits of its claims to warrant an
-> >> injunction pending trial"
-> >> 
-> >> Want to violate the linux kernel copyright, you fucking piece of shit?
-> >> Yes you do. Yes modifying the running kernel with violating pieces is
-> >> copyright infringement, you fucking piece of shit. Yes you should be
-> >> sued. Just as Open Source Security (Grsecurity) should be sued for 
-> >> their
-> >> violations (of section 4 and 6 of the linux kernel copyright license
-> >> (they're also violating the GCC copyrights too)).
-> >> 
-> >> Will they be sued? Will you be sued? No: Linux copyright holders are
-> >> scared little wageslave worker bees. They aren't going to sue you;
-> >> sorry. Why are you even announcing you intent to violate the 
-> >> copyright?
-> >> Why even give these dogs such intellectual deference?
-> >> 
-> >> I wish OpenSourceSecurity would be sued. I wish you would be sued. But
-> >> linux WERKIN MAHN wage slave piece of shit idiots won't do it: I hate
-> >> them much more than I hate the violators. Complete Dogs. They could 
-> >> move
-> >> from strenght to strenght, from victory to victory; but they're scared
-> >> for their "JEHRB"s. I have to say: white men are pathetic scum. If 
-> >> Linux
-> >> was built by others there would rightfully be lawsuits.
-> >> 
-> >> 
-> >>   
-> >> > Stephan von Krawczynski wrote:
-> >> > Hello all,
-> >> >
-> >> > you may have already heard about it or not (several times in the past),
-> >> > non-kernel devices run into a symbol export problem as soon as
-> >> > something is
-> >> > only exported GPL from the kernel.
-> >> > Currently there is a discussion regarding zfs using this call chain:
-> >> >
-> >> > vdev_bio_associate_blkg (zfs) -> blkg_tryget (kernel) ->
-> >> > percpu_ref_tryget
-> >> > (kernel) -> rcu_read_unlock (kernel) -> __rcu_read_unlock (kernel)
-> >> >
-> >> > where __rcu_read_[lock|unlock] is a GPL symbol now used by (not GPL
-> >> > exported)
-> >> > percpu_ref_tryget.
-> >> >
-> >> > That this popped up (again) made me think a bit more general about the
-> >> > issue.
-> >> > And I do wonder if this rather ideologic problem is on the right track
-> >> > currently. Because what the kernel tries to do with the export GPL
-> >> > symbol
-> >> > stuff is to prevent any other licensed software from _using_ it in
-> >> > _runtime_.
-> >> > It does not try to prevent use/copy of the source code inside another
-> >> > non-gpl
-> >> > project.
-> >> > And I do think that this is not the intention of GPL. If it were, then
-> >> > 100% of
-> >> > all mobile phones on this planet are illegal. All of them use GPL
-> >> > software
-> >> > from non-gpl software, be it kernel modules or apps - and I see no
-> >> > difference
-> >> > in the two. The constructed difference between kernel mode software and
-> >> > user-space software is pure ideology. Because during runtime everything
-> >> > is
-> >> > just call-chained.
-> >> > Which means if you fopen() a file in user-space it of course uses GPL
-> >> > symbols
-> >> > down in the chain somewhere. The contents of the opened file are not
-> >> > heaven-sent.
-> >> > If you/we follow the current completely ideology-driven GPL strategy
-> >> > then I am
-> >> > all for completely giving up this whole project. In real world you
-> >> > simply
-> >> > cannot use such a piece of software. The success of linux during the
-> >> > last
-> >> > years (i.e. decade) is not based on the pure GPL strategy, but on the
-> >> > successful interaction between linux and non-GPL software.
-> >> > Just think of the billions of smartphones all using a non-gpl firmware
-> >> > (underneath, and there is no GPL version at all), the kernel (with
-> >> > non-gpl
-> >> > modules) and apps (quite some of which are non-gpl).
-> >> > This is only one prominent example, but there are lots of others.
-> >> > In the end it all sums up to one simple question:
-> >> > Can one _use_ GPL software during runtime as a base for own projects of
-> >> > any
-> >> > license type or not? We are not talking about _copying_ gpl code, we
-> >> > are
-> >> > talking about runtime use.
-> >> > If runtime use is generally allowed, then the export gpl symbol stuff
-> >> > inside
-> >> > the kernel code is nonsense. Because to use the kernel you must be
-> >> > allowed to
-> >> > call it, no matter from where.
-> >> > Hit me.
-> >> >
-> >> > --
-> >> > Regards,
-> >> > Stephan  
-
+>
+> amdgpu add excl fence to bo to move system memory which is done by the drm scheduler.
+> after sDMA finish the moving job,  the memory might have already been released as dma_resv_test_signaled_rcu did not check excl fence.
+>
+> Our local customer report this issue. I took 4 days into it. sigh
+>
+> thanks
+> xinhui
+>
+>> Regards,
+>> Christian.
+>>
+>>> Signed-off-by: xinhui pan <xinhui.pan@amd.com>
+>>> ---
+>>>   drivers/dma-buf/dma-resv.c | 9 +++++----
+>>>   1 file changed, 5 insertions(+), 4 deletions(-)
+>>>
+>>> diff --git a/drivers/dma-buf/dma-resv.c b/drivers/dma-buf/dma-resv.c
+>>> index 4264e64788c4..44dc64c547c6 100644
+>>> --- a/drivers/dma-buf/dma-resv.c
+>>> +++ b/drivers/dma-buf/dma-resv.c
+>>> @@ -632,14 +632,14 @@ static inline int dma_resv_test_signaled_single(struct dma_fence *passed_fence)
+>>>    */
+>>>   bool dma_resv_test_signaled_rcu(struct dma_resv *obj, bool test_all)
+>>>   {
+>>> -	unsigned seq, shared_count;
+>>> +	unsigned int seq, shared_count, left;
+>>>   	int ret;
+>>>     	rcu_read_lock();
+>>>   retry:
+>>>   	ret = true;
+>>>   	shared_count = 0;
+>>> -	seq = read_seqcount_begin(&obj->seq);
+>>> +	left = seq = read_seqcount_begin(&obj->seq);
+>>>     	if (test_all) {
+>>>   		unsigned i;
+>>> @@ -647,7 +647,7 @@ bool dma_resv_test_signaled_rcu(struct dma_resv *obj, bool test_all)
+>>>   		struct dma_resv_list *fobj = rcu_dereference(obj->fence);
+>>>     		if (fobj)
+>>> -			shared_count = fobj->shared_count;
+>>> +			left = shared_count = fobj->shared_count;
+>>>     		for (i = 0; i < shared_count; ++i) {
+>>>   			struct dma_fence *fence = rcu_dereference(fobj->shared[i]);
+>>> @@ -657,13 +657,14 @@ bool dma_resv_test_signaled_rcu(struct dma_resv *obj, bool test_all)
+>>>   				goto retry;
+>>>   			else if (!ret)
+>>>   				break;
+>>> +			left--;
+>>>   		}
+>>>     		if (read_seqcount_retry(&obj->seq, seq))
+>>>   			goto retry;
+>>>   	}
+>>>   -	if (!shared_count) {
+>>> +	if (!left) {
+>>>   		struct dma_fence *fence_excl = rcu_dereference(obj->fence_excl);
+>>>     		if (fence_excl) {
 
