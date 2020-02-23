@@ -2,207 +2,138 @@ Return-Path: <SRS0=SnAt=4L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8CC79C35670
-	for <linux-kernel@archiver.kernel.org>; Sun, 23 Feb 2020 06:34:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7DE8FC35670
+	for <linux-kernel@archiver.kernel.org>; Sun, 23 Feb 2020 06:46:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 52CEF208C3
-	for <linux-kernel@archiver.kernel.org>; Sun, 23 Feb 2020 06:34:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4F0CD208C4
+	for <linux-kernel@archiver.kernel.org>; Sun, 23 Feb 2020 06:46:47 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=resnulli-us.20150623.gappssmtp.com header.i=@resnulli-us.20150623.gappssmtp.com header.b="LrtK9lRK"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726416AbgBWGca (ORCPT
+        id S1726678AbgBWGnf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 23 Feb 2020 01:32:30 -0500
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:4968 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726028AbgBWGc3 (ORCPT
+        Sun, 23 Feb 2020 01:43:35 -0500
+Received: from mail-wr1-f65.google.com ([209.85.221.65]:37924 "EHLO
+        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726028AbgBWGne (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 23 Feb 2020 01:32:29 -0500
-Received: from pps.filterd (m0098399.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 01N6T2m1053928
-        for <linux-kernel@vger.kernel.org>; Sun, 23 Feb 2020 01:32:29 -0500
-Received: from e06smtp03.uk.ibm.com (e06smtp03.uk.ibm.com [195.75.94.99])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2yb1b61k2s-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Sun, 23 Feb 2020 01:32:28 -0500
-Received: from localhost
-        by e06smtp03.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-kernel@vger.kernel.org> from <parth@linux.ibm.com>;
-        Sun, 23 Feb 2020 06:32:26 -0000
-Received: from b06cxnps4074.portsmouth.uk.ibm.com (9.149.109.196)
-        by e06smtp03.uk.ibm.com (192.168.101.133) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Sun, 23 Feb 2020 06:32:23 -0000
-Received: from d06av22.portsmouth.uk.ibm.com (d06av22.portsmouth.uk.ibm.com [9.149.105.58])
-        by b06cxnps4074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 01N6WMKs45875242
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Sun, 23 Feb 2020 06:32:22 GMT
-Received: from d06av22.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 48A0F4C044;
-        Sun, 23 Feb 2020 06:32:22 +0000 (GMT)
-Received: from d06av22.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 3F6134C040;
-        Sun, 23 Feb 2020 06:32:16 +0000 (GMT)
-Received: from localhost.localdomain (unknown [9.102.3.81])
-        by d06av22.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Sun, 23 Feb 2020 06:32:15 +0000 (GMT)
-Subject: Re: [PATCH v4 2/5] sched/numa: Replace runnable_load_avg by load_avg
-To:     Vincent Guittot <vincent.guittot@linaro.org>, mingo@redhat.com,
-        peterz@infradead.org, juri.lelli@redhat.com,
-        dietmar.eggemann@arm.com, rostedt@goodmis.org, bsegall@google.com,
-        mgorman@suse.de, linux-kernel@vger.kernel.org
-Cc:     pauld@redhat.com, valentin.schneider@arm.com, hdanton@sina.com
-References: <20200221132715.20648-1-vincent.guittot@linaro.org>
- <20200221132715.20648-3-vincent.guittot@linaro.org>
-From:   Parth Shah <parth@linux.ibm.com>
-Date:   Sun, 23 Feb 2020 12:02:14 +0530
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.4.0
+        Sun, 23 Feb 2020 01:43:34 -0500
+Received: by mail-wr1-f65.google.com with SMTP id e8so6595074wrm.5
+        for <linux-kernel@vger.kernel.org>; Sat, 22 Feb 2020 22:43:32 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=resnulli-us.20150623.gappssmtp.com; s=20150623;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=NfB/s51uIdoGbaxyHKbys1HDOzUI4Z8k8OTFZnsHy68=;
+        b=LrtK9lRKXimo5SPkLaCMf6BvAYihnCZg3cnBk5msBtcWCHZ+Fz4M0YrHrEuLP13ACd
+         ePwkIAonq48LxXTdhp6c1G4YdG7j3qIzViNWJRdKdMhxffYQxY62D0FUn8kn0s4I2rS1
+         Wtpasd5HAzlS9ZmgiuX1pehA8AAzWq0JCyxGwInkdMwPGsSEuCV0rqLD+KKd+joRFEI8
+         TVs9LxwdlvY94SrlOe9NapZcLjMnASsQtyJf4fXiPOXSk7ubzn5MeCwRviV1dYjI/C+y
+         KT5jbVrltf5Qn51a0LhgksULgadKblB5nscPBGzQ0Kf0iRv81wK45zQMp6pIP+HplL33
+         N05g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=NfB/s51uIdoGbaxyHKbys1HDOzUI4Z8k8OTFZnsHy68=;
+        b=IPcQ4NLZ2xS3md0HL4ENwE4hhQQ4GpuITqCO4bx9hEDWWquNDVRWjnvjWzJK34GSbc
+         D/PvH4J7rGogkbxwdyfLNf/rQbP/KWmYrTFRezSfIh652ZM4SC8E7Gj62MvAyluJI0RL
+         538clwoz/kT2VpDPRsmzixAscYxU/9XAfy57fktRNy93RPKB9BXpbi39w4y2hWFGS3Ic
+         tnObd/61kutHFYKtyWa6bV/GdP5jZsKBkzCffri98BffDPlUZB67CrEZmbA+CaxkJmKf
+         p5qPd/xMqf4TcH41l+nSMD2fZmykb2xSyQYCX27V/c+IIeowP4kH3v8GJMVgWLLYj7zy
+         f7Hw==
+X-Gm-Message-State: APjAAAU+z4elsikYiybAJsEEPZL7/G8Fg4HCl+eHrSuxAfCAr0TTHCHe
+        +z6RHL4ocRTBOxTX8Hzg6XTgSA==
+X-Google-Smtp-Source: APXvYqx4K2w89yDxHRYUL98MkKUT2TpPQG/iw0IXd+XoIFfw8QT5lhbZ9UHumj/9Hk0t+EVd1UC23A==
+X-Received: by 2002:a5d:4f8b:: with SMTP id d11mr56212773wru.87.1582440211406;
+        Sat, 22 Feb 2020 22:43:31 -0800 (PST)
+Received: from localhost (ip-89-177-130-96.net.upcbroadband.cz. [89.177.130.96])
+        by smtp.gmail.com with ESMTPSA id f1sm12197579wro.85.2020.02.22.22.43.30
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sat, 22 Feb 2020 22:43:30 -0800 (PST)
+Date:   Sun, 23 Feb 2020 07:43:29 +0100
+From:   Jiri Pirko <jiri@resnulli.us>
+To:     madhuparnabhowmik10@gmail.com
+Cc:     jiri@mellanox.com, davem@davemloft.net, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org, joel@joelfernandes.org,
+        frextrite@gmail.com,
+        linux-kernel-mentees@lists.linuxfoundation.org, paulmck@kernel.org
+Subject: Re: [PATCH] net: core: devlink.c: Hold devlink->lock from the
+ beginning of devlink_dpipe_table_register()
+Message-ID: <20200223064329.GD2228@nanopsycho>
+References: <20200222065234.8829-1-madhuparnabhowmik10@gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <20200221132715.20648-3-vincent.guittot@linaro.org>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-TM-AS-GCONF: 00
-x-cbid: 20022306-0012-0000-0000-000003896EDC
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 20022306-0013-0000-0000-000021C60B57
-Message-Id: <c595c3be-2fbf-4cd3-5c58-7b5faa055d2f@linux.ibm.com>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.572
- definitions=2020-02-22_08:2020-02-21,2020-02-22 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 spamscore=0 mlxscore=0
- malwarescore=0 phishscore=0 mlxlogscore=999 lowpriorityscore=0 bulkscore=0
- adultscore=0 impostorscore=0 clxscore=1015 priorityscore=1501
- suspectscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2001150001 definitions=main-2002230054
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200222065234.8829-1-madhuparnabhowmik10@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
-
-On 2/21/20 6:57 PM, Vincent Guittot wrote:
-> Similarly to what has been done for the normal load balancer, we can
-> replace runnable_load_avg by load_avg in numa load balancing and track the
-> other statistics like the utilization and the number of running tasks to
-> get to better view of the current state of a node.
+Sat, Feb 22, 2020 at 07:52:34AM CET, madhuparnabhowmik10@gmail.com wrote:
+>From: Madhuparna Bhowmik <madhuparnabhowmik10@gmail.com>
+>
+>devlink_dpipe_table_find() should be called under either
+>rcu_read_lock() or devlink->lock. devlink_dpipe_table_register()
+>calls devlink_dpipe_table_find() without holding the lock
+>and acquires it later. Therefore hold the devlink->lock
+>from the beginning of devlink_dpipe_table_register().
+>
+>Suggested-by: Jiri Pirko <jiri@mellanox.com>
+>Signed-off-by: Madhuparna Bhowmik <madhuparnabhowmik10@gmail.com>
+>---
+> net/core/devlink.c | 15 +++++++++++----
+> 1 file changed, 11 insertions(+), 4 deletions(-)
+>
+>diff --git a/net/core/devlink.c b/net/core/devlink.c
+>index 3e8c94155d93..ba9dd8cb98c3 100644
+>--- a/net/core/devlink.c
+>+++ b/net/core/devlink.c
+>@@ -6840,22 +6840,29 @@ int devlink_dpipe_table_register(struct devlink *devlink,
+> {
+> 	struct devlink_dpipe_table *table;
 > 
-> Signed-off-by: Vincent Guittot <vincent.guittot@linaro.org>
-> Reviewed-by: "Dietmar Eggemann <dietmar.eggemann@arm.com>"
-> ---
->  kernel/sched/fair.c | 102 ++++++++++++++++++++++++++++++--------------
->  1 file changed, 70 insertions(+), 32 deletions(-)
+>-	if (devlink_dpipe_table_find(&devlink->dpipe_table_list, table_name))
+>+	mutex_lock(&devlink->lock);
+>+
+>+	if (devlink_dpipe_table_find(&devlink->dpipe_table_list, table_name)) {
+>+		mutex_unlock(&devlink->lock);
+> 		return -EEXIST;
+>+	}
 > 
-> diff --git a/kernel/sched/fair.c b/kernel/sched/fair.c
-> index 27450c4ddc81..637f4eb47889 100644
-> --- a/kernel/sched/fair.c
-> +++ b/kernel/sched/fair.c
-> @@ -1473,38 +1473,35 @@ bool should_numa_migrate_memory(struct task_struct *p, struct page * page,
->  	       group_faults_cpu(ng, src_nid) * group_faults(p, dst_nid) * 4;
->  }
->  
-> -static inline unsigned long cfs_rq_runnable_load_avg(struct cfs_rq *cfs_rq);
-> -
-> -static unsigned long cpu_runnable_load(struct rq *rq)
-> -{
-> -	return cfs_rq_runnable_load_avg(&rq->cfs);
-> -}
-> +/*
-> + * 'numa_type' describes the node at the moment of load balancing.
-> + */
-> +enum numa_type {
-> +	/* The node has spare capacity that can be used to run more tasks.  */
-> +	node_has_spare = 0,
-> +	/*
-> +	 * The node is fully used and the tasks don't compete for more CPU
-> +	 * cycles. Nevertheless, some tasks might wait before running.
-> +	 */
-> +	node_fully_busy,
-> +	/*
-> +	 * The node is overloaded and can't provide expected CPU cycles to all
-> +	 * tasks.
-> +	 */
-> +	node_overloaded
-> +};
->  
->  /* Cached statistics for all CPUs within a node */
->  struct numa_stats {
->  	unsigned long load;
-> -
-> +	unsigned long util;
->  	/* Total compute capacity of CPUs on a node */
->  	unsigned long compute_capacity;
-> +	unsigned int nr_running;
-> +	unsigned int weight;
-> +	enum numa_type node_type;
->  };
->  
-> -/*
-> - * XXX borrowed from update_sg_lb_stats
-> - */
-> -static void update_numa_stats(struct numa_stats *ns, int nid)
-> -{
-> -	int cpu;
-> -
-> -	memset(ns, 0, sizeof(*ns));
-> -	for_each_cpu(cpu, cpumask_of_node(nid)) {
-> -		struct rq *rq = cpu_rq(cpu);
-> -
-> -		ns->load += cpu_runnable_load(rq);
-> -		ns->compute_capacity += capacity_of(cpu);
-> -	}
-> -
-> -}
-> -
->  struct task_numa_env {
->  	struct task_struct *p;
->  
-> @@ -1521,6 +1518,47 @@ struct task_numa_env {
->  	int best_cpu;
->  };
->  
-> +static unsigned long cpu_load(struct rq *rq);
-> +static unsigned long cpu_util(int cpu);
-> +
-> +static inline enum
-> +numa_type numa_classify(unsigned int imbalance_pct,
-> +			 struct numa_stats *ns)
-> +{
-> +	if ((ns->nr_running > ns->weight) &&
-> +	    ((ns->compute_capacity * 100) < (ns->util * imbalance_pct)))
-> +		return node_overloaded;
-> +
-> +	if ((ns->nr_running < ns->weight) ||
-> +	    ((ns->compute_capacity * 100) > (ns->util * imbalance_pct)))
-> +		return node_has_spare;
-> +
-> +	return node_fully_busy;
-> +}
+>-	if (WARN_ON(!table_ops->size_get))
+>+	if (WARN_ON(!table_ops->size_get)) {
+>+		mutex_unlock(&devlink->lock);
+> 		return -EINVAL;
+>+	}
+> 
+> 	table = kzalloc(sizeof(*table), GFP_KERNEL);
+>-	if (!table)
+>+	if (!table) {
+>+		mutex_unlock(&devlink->lock);
+
+Please use "goto unlock" instead of unlocking on multiple places.
 
 
-I was pondering upon the possible cases of returning node_fully_busy here.
 
-It will return fully busy only when scaled util is exactly equal to
-capacity && ns->nr_running == ns->weight. From reading the patch-set, I
-failed to figure out the implications of it. Ideally, the tasks should
-neither be pulled to or pulled from this node. Is this what its use for?
-
-If yes, then should we return false when checking for load_too_imbalanced
-and found that env->dst_stats.node_type == node_fully_busy ?
-
-[...]
-> @@ -1556,6 +1594,11 @@ static bool load_too_imbalanced(long src_load, long dst_load,
->  	long orig_src_load, orig_dst_load;
->  	long src_capacity, dst_capacity;
->  
-> +
-> +	/* If dst node has spare capacity, there is no real load imbalance */
-> +	if (env->dst_stats.node_type == node_has_spare)
-> +		return false;
-[...]
-
-- Parth
-
+> 		return -ENOMEM;
+>+	}
+> 
+> 	table->name = table_name;
+> 	table->table_ops = table_ops;
+> 	table->priv = priv;
+> 	table->counter_control_extern = counter_control_extern;
+> 
+>-	mutex_lock(&devlink->lock);
+> 	list_add_tail_rcu(&table->list, &devlink->dpipe_table_list);
+> 	mutex_unlock(&devlink->lock);
+> 	return 0;
+>-- 
+>2.17.1
+>
