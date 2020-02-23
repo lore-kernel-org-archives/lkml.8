@@ -2,69 +2,94 @@ Return-Path: <SRS0=SnAt=4L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EFAD7C35666
-	for <linux-kernel@archiver.kernel.org>; Sun, 23 Feb 2020 19:57:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 55FC6C35666
+	for <linux-kernel@archiver.kernel.org>; Sun, 23 Feb 2020 20:19:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C3CD3206E0
-	for <linux-kernel@archiver.kernel.org>; Sun, 23 Feb 2020 19:57:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 20A7A2192A
+	for <linux-kernel@archiver.kernel.org>; Sun, 23 Feb 2020 20:19:36 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b="Bo1BWpsM"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727133AbgBWT5Z (ORCPT
+        id S1727150AbgBWUTf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 23 Feb 2020 14:57:25 -0500
-Received: from hosting.gsystem.sk ([212.5.213.30]:53468 "EHLO
-        hosting.gsystem.sk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726302AbgBWT5Z (ORCPT
+        Sun, 23 Feb 2020 15:19:35 -0500
+Received: from pandora.armlinux.org.uk ([78.32.30.218]:56518 "EHLO
+        pandora.armlinux.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726302AbgBWUTf (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 23 Feb 2020 14:57:25 -0500
-Received: from [192.168.0.2] (188-167-68-178.dynamic.chello.sk [188.167.68.178])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by hosting.gsystem.sk (Postfix) with ESMTPSA id 5ED857A00BF;
-        Sun, 23 Feb 2020 20:57:23 +0100 (CET)
-From:   Ondrej Zary <linux@zary.sk>
-To:     Bart Van Assche <bvanassche@acm.org>
-Subject: Re: NULL pointer dereference in qla24xx_abort_command, kernel 4.19.98 (Debian)
-Date:   Sun, 23 Feb 2020 20:57:15 +0100
-User-Agent: KMail/1.9.10
-Cc:     qla2xxx-upstream@qlogic.com, linux-scsi@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-References: <202002231929.01662.linux@zary.sk> <12dcd970-2aa6-2a9a-0f8c-029201ea84df@acm.org>
-In-Reply-To: <12dcd970-2aa6-2a9a-0f8c-029201ea84df@acm.org>
-X-KMail-QuotePrefix: > 
+        Sun, 23 Feb 2020 15:19:35 -0500
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=armlinux.org.uk; s=pandora-2019; h=Sender:In-Reply-To:Content-Type:
+        MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=VKpyWUJ7gW4E+h1Y5//iHVzFJTXsAhZvji90FqZCHZ0=; b=Bo1BWpsMUXHWoFmIvPDEszdUn
+        JEq8dcLY9j8yHx6HijJLxLxZpPJk5BHAkvNiVKvr/FI1rx/ZJbi6VZrMknyTHObwNDOaJkjBhEomn
+        TMo/C1bocYASl49lrI5X9yrB+dXHSJCNtxtxepUOlkNDxqadtuByghMavnC/wxprEe1mZKfoNu0m7
+        /oJWPyGUvCrwpw3PM+7U5jCrMcqI52rw3oymW4MlBkii1/60Kf1ULuumqjx4zjAjs587EFHHuaRVH
+        0pO5uNDqE0DZchOll+pR5DPzkfNhxGgcUvjKR9GF42YvGaWiJ3Cp7A5O1hyIKUZpfWnm4jqnB6h+9
+        79ii2fnYQ==;
+Received: from shell.armlinux.org.uk ([2001:4d48:ad52:3201:5054:ff:fe00:4ec]:44320)
+        by pandora.armlinux.org.uk with esmtpsa (TLSv1.2:ECDHE-RSA-AES256-GCM-SHA384:256)
+        (Exim 4.90_1)
+        (envelope-from <linux@armlinux.org.uk>)
+        id 1j5xii-0006sy-HP; Sun, 23 Feb 2020 20:19:20 +0000
+Received: from linux by shell.armlinux.org.uk with local (Exim 4.92)
+        (envelope-from <linux@shell.armlinux.org.uk>)
+        id 1j5xie-0005j2-CE; Sun, 23 Feb 2020 20:19:16 +0000
+Date:   Sun, 23 Feb 2020 20:19:16 +0000
+From:   Russell King - ARM Linux admin <linux@armlinux.org.uk>
+To:     Christian Lamparter <chunkeey@gmail.com>
+Cc:     Ansuel Smith <ansuelsmth@gmail.com>,
+        Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Andrew Lunn <andrew@lunn.ch>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Heiner Kallweit <hkallweit1@gmail.com>,
+        linux-arm-msm@vger.kernel.org, netdev@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v6 1/2] net: mdio: add ipq8064 mdio driver
+Message-ID: <20200223201916.GO25745@shell.armlinux.org.uk>
+References: <20200222161629.1862-1-ansuelsmth@gmail.com>
+ <4475595.vek7CkyBFf@debian64>
 MIME-Version: 1.0
-Content-Type: Text/Plain;
-  charset="utf-8"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Message-Id: <202002232057.16101.linux@zary.sk>
+In-Reply-To: <4475595.vek7CkyBFf@debian64>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sunday 23 February 2020 20:26:39 Bart Van Assche wrote:
-> On 2020-02-23 10:29, Ondrej Zary wrote:
-> > a couple of days after upgrading a server from Debian 9 (kernel 4.9.210-1)
-> > to 10 (kernel 4.19.98), qla2xxx crashed, along with mysql.
-> > 
-> > There is an EMC CX3 array connected through the fibre-channel adapter.
-> > No errors are present in EMC event log.
-> > 
-> > This server was running without any problems since Debian 4.
-> > Is this a known bug?
-> 
-> Please report issues encountered with Debian kernels in the Debian bug
-> tracker. If you want the upstream community to assist please retest with
-> an upstream kernel.
+On Sun, Feb 23, 2020 at 12:47:40AM +0100, Christian Lamparter wrote:
+> > +static int
+> > +ipq8064_mdio_read(struct mii_bus *bus, int phy_addr, int reg_offset)
+> > +{
+> > +	struct ipq8064_mdio *priv = bus->priv;
+> > +	u32 miiaddr = MII_BUSY | MII_CLKRANGE_250_300M;
+> > +	u32 ret_val;
+> > +	int err;
+> > +
+> > +	/* Reject clause 45 */
+> > +	if (reg_offset & MII_ADDR_C45)
+> > +		return -EOPNOTSUPP;
+> Heh, C45 on IPQ806X? Ok, anyone know the hardware or is this some fancy
+> forward-thinking future-proofing?
 
-Debian kernel does not have any patches related to qla2xxx driver:
-https://salsa.debian.org/kernel-team/linux/raw/debian/4.19.98-1/debian/patches/series
-
-It crashed after running for 11 days. Not a quick&easy test.
+Quite simply, the driver as written does not support C45, so it should
+reject it, rather than truncating the "reg_offset" and issuing C22
+cycles instead.
 
 -- 
-Ondrej Zary
+RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
+FTTC broadband for 0.8mile line in suburbia: sync at 12.1Mbps down 622kbps up
+According to speedtest.net: 11.9Mbps down 500kbps up
