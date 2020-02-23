@@ -4,57 +4,53 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 93E1DC35671
-	for <linux-kernel@archiver.kernel.org>; Sun, 23 Feb 2020 02:22:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 982D1C35669
+	for <linux-kernel@archiver.kernel.org>; Sun, 23 Feb 2020 02:23:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 69B5122525
-	for <linux-kernel@archiver.kernel.org>; Sun, 23 Feb 2020 02:22:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 702D021741
+	for <linux-kernel@archiver.kernel.org>; Sun, 23 Feb 2020 02:23:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582424579;
-	bh=OfcuyefYI3hSHKkMabhA0vDxDytTX9d3JOM+9rGO+fw=;
+	s=default; t=1582424583;
+	bh=+0DCorTTN4tjWO1sG8JADOF2c+tIaEeqv2Mh+42zHBw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=PtbpXxd99Pu1KTMMP0v1BG2ur1dCUFSbXUVY808zUgmjhnR3uWEYY4tIfH1SbvN0h
-	 adVNGk2Ri6zNULXDmRYpH0wXZUnRUmkxeKf2tljICutv0V832k/mxDQTVZtHPPHJXQ
-	 vnMjeHqIEln+yeoSR/iSzGdTeBdVDzil/aMHGI4o=
+	b=AZc+4ByzgdeNXnHc2i/HQ5JtxobA8OQO+FPwasYD4W2ZQZPgC6qY1yieCnyEcs8kt
+	 kngF6pfWF6ziaipLc59hrdfuavD/ob8yWdnXrY7P8sCuJXcNV5w7sud9RODuBbXbMK
+	 i9zsHzdjZuop+mVRlY4NrTR0OPgiPYCPlvksGgDk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728384AbgBWCW5 (ORCPT
+        id S1728432AbgBWCXC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 22 Feb 2020 21:22:57 -0500
-Received: from mail.kernel.org ([198.145.29.99]:51964 "EHLO mail.kernel.org"
+        Sat, 22 Feb 2020 21:23:02 -0500
+Received: from mail.kernel.org ([198.145.29.99]:52148 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728313AbgBWCWt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 22 Feb 2020 21:22:49 -0500
+        id S1728397AbgBWCXA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 22 Feb 2020 21:23:00 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 929AC22464;
-        Sun, 23 Feb 2020 02:22:47 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6AFDB20702;
+        Sun, 23 Feb 2020 02:22:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1582424568;
-        bh=OfcuyefYI3hSHKkMabhA0vDxDytTX9d3JOM+9rGO+fw=;
+        s=default; t=1582424579;
+        bh=+0DCorTTN4tjWO1sG8JADOF2c+tIaEeqv2Mh+42zHBw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=hP0ywQF2j5NrJKVcVCboVICYg/uun5HDOGUxK7OpY/I9lGDbTHfIO07Tfyuu30LcW
-         oYJcIEoeQVdEA6sciM8XTE1MqZpQVsyzDzcdKC9Vhgwpmq5qGJO2BWo/BaFgfTv48d
-         lLdMLT18jSPbliMHfeh+Rt/Xv2CzSdaANb5qltws=
+        b=Pl4lr3zFxJYIJ39MyST4GOLKM/jsovVFMXTXzBranAcu5RZUhwjfpyHpTIGnY/qP8
+         glxbkHmaF4ERxMhjnFrD5M1/4S6ZvaS4Q2oZHV6yAq7v5mh9nVGQMV/MBXPjMzXTlQ
+         DmQFb+X6lBhEFar+D9Krlc4V5fXosqsalKlGxKuk=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     =?UTF-8?q?Bj=C3=B8rn=20Mork?= <bjorn@mork.no>,
-        Lars Melin <larsm17@gmail.com>,
-        Aleksander Morgado <aleksander@aleksander.es>,
-        "David S . Miller" <davem@davemloft.net>,
-        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org,
-        linux-usb@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.4 10/50] qmi_wwan: re-add DW5821e pre-production variant
-Date:   Sat, 22 Feb 2020 21:21:55 -0500
-Message-Id: <20200223022235.1404-10-sashal@kernel.org>
+Cc:     Xiubo Li <xiubli@redhat.com>, Jeff Layton <jlayton@kernel.org>,
+        Ilya Dryomov <idryomov@gmail.com>,
+        Sasha Levin <sashal@kernel.org>, ceph-devel@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.4 19/50] ceph: do not execute direct write in parallel if O_APPEND is specified
+Date:   Sat, 22 Feb 2020 21:22:04 -0500
+Message-Id: <20200223022235.1404-19-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200223022235.1404-1-sashal@kernel.org>
 References: <20200223022235.1404-1-sashal@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
@@ -63,74 +59,92 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Bjørn Mork <bjorn@mork.no>
+From: Xiubo Li <xiubli@redhat.com>
 
-[ Upstream commit 88bf54603f6f2c137dfee1abf6436ceac3528d2d ]
+[ Upstream commit 8e4473bb50a1796c9c32b244e5dbc5ee24ead937 ]
 
-Commit f25e1392fdb5 removed the support for the pre-production variant
-of the Dell DW5821e to avoid probing another USB interface unnecessarily.
-However, the pre-production samples are found in the wild, and this lack
-of support is causing problems for users of such samples.  It is therefore
-necessary to support both variants.
+In O_APPEND & O_DIRECT mode, the data from different writers will
+be possibly overlapping each other since they take the shared lock.
 
-Matching on both interfaces 0 and 1 is not expected to cause any problem
-with either variant, as only the QMI function will be probed successfully
-on either.  Interface 1 will be rejected based on the HID class for the
-production variant:
+For example, both Writer1 and Writer2 are in O_APPEND and O_DIRECT
+mode:
 
-T:  Bus=01 Lev=03 Prnt=04 Port=00 Cnt=01 Dev#= 16 Spd=480 MxCh= 0
-D:  Ver= 2.10 Cls=ef(misc ) Sub=02 Prot=01 MxPS=64 #Cfgs=  2
-P:  Vendor=413c ProdID=81d7 Rev=03.18
-S:  Manufacturer=DELL
-S:  Product=DW5821e Snapdragon X20 LTE
-S:  SerialNumber=0123456789ABCDEF
-C:  #Ifs= 6 Cfg#= 1 Atr=a0 MxPwr=500mA
-I:  If#= 0 Alt= 0 #EPs= 3 Cls=ff(vend.) Sub=ff Prot=ff Driver=qmi_wwan
-I:  If#= 1 Alt= 0 #EPs= 1 Cls=03(HID  ) Sub=00 Prot=00 Driver=usbhid
-I:  If#= 2 Alt= 0 #EPs= 3 Cls=ff(vend.) Sub=00 Prot=00 Driver=option
-I:  If#= 3 Alt= 0 #EPs= 3 Cls=ff(vend.) Sub=00 Prot=00 Driver=option
-I:  If#= 4 Alt= 0 #EPs= 3 Cls=ff(vend.) Sub=00 Prot=00 Driver=option
-I:  If#= 5 Alt= 0 #EPs= 2 Cls=ff(vend.) Sub=ff Prot=ff Driver=option
+          Writer1                         Writer2
 
-And interface 0 will be rejected based on too few endpoints for the
-pre-production variant:
+     shared_lock()                   shared_lock()
+     getattr(CAP_SIZE)               getattr(CAP_SIZE)
+     iocb->ki_pos = EOF              iocb->ki_pos = EOF
+     write(data1)
+                                     write(data2)
+     shared_unlock()                 shared_unlock()
 
-T: Bus=01 Lev=02 Prnt=02 Port=03 Cnt=03 Dev#= 7 Spd=480 MxCh= 0
-D: Ver= 2.10 Cls=ef(misc ) Sub=02 Prot=01 MxPS=64 #Cfgs= 2
-P: Vendor=413c ProdID=81d7 Rev= 3.18
-S: Manufacturer=DELL
-S: Product=DW5821e Snapdragon X20 LTE
-S: SerialNumber=0123456789ABCDEF
-C: #Ifs= 5 Cfg#= 1 Atr=a0 MxPwr=500mA
-I: If#= 0 Alt= 0 #EPs= 2 Cls=ff(vend.) Sub=ff Prot=ff Driver=
-I: If#= 1 Alt= 0 #EPs= 3 Cls=ff(vend.) Sub=ff Prot=ff Driver=qmi_wwan
-I: If#= 2 Alt= 0 #EPs= 3 Cls=ff(vend.) Sub=00 Prot=00 Driver=option
-I: If#= 3 Alt= 0 #EPs= 3 Cls=ff(vend.) Sub=00 Prot=00 Driver=option
-I: If#= 4 Alt= 0 #EPs= 3 Cls=ff(vend.) Sub=00 Prot=00 Driver=option
+The data2 will overlap the data1 from the same file offset, the
+old EOF.
 
-Fixes: f25e1392fdb5 ("qmi_wwan: fix interface number for DW5821e production firmware")
-Link: https://whrl.pl/Rf0vNk
-Reported-by: Lars Melin <larsm17@gmail.com>
-Cc: Aleksander Morgado <aleksander@aleksander.es>
-Signed-off-by: Bjørn Mork <bjorn@mork.no>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Switch to exclusive lock instead when O_APPEND is specified.
+
+Signed-off-by: Xiubo Li <xiubli@redhat.com>
+Reviewed-by: Jeff Layton <jlayton@kernel.org>
+Signed-off-by: Ilya Dryomov <idryomov@gmail.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/usb/qmi_wwan.c | 1 +
- 1 file changed, 1 insertion(+)
+ fs/ceph/file.c | 17 +++++++++++------
+ 1 file changed, 11 insertions(+), 6 deletions(-)
 
-diff --git a/drivers/net/usb/qmi_wwan.c b/drivers/net/usb/qmi_wwan.c
-index 9485c8d1de8a3..839cef720cf64 100644
---- a/drivers/net/usb/qmi_wwan.c
-+++ b/drivers/net/usb/qmi_wwan.c
-@@ -1363,6 +1363,7 @@ static const struct usb_device_id products[] = {
- 	{QMI_FIXED_INTF(0x413c, 0x81b6, 8)},	/* Dell Wireless 5811e */
- 	{QMI_FIXED_INTF(0x413c, 0x81b6, 10)},	/* Dell Wireless 5811e */
- 	{QMI_FIXED_INTF(0x413c, 0x81d7, 0)},	/* Dell Wireless 5821e */
-+	{QMI_FIXED_INTF(0x413c, 0x81d7, 1)},	/* Dell Wireless 5821e preproduction config */
- 	{QMI_FIXED_INTF(0x413c, 0x81e0, 0)},	/* Dell Wireless 5821e with eSIM support*/
- 	{QMI_FIXED_INTF(0x03f0, 0x4e1d, 8)},	/* HP lt4111 LTE/EV-DO/HSPA+ Gobi 4G Module */
- 	{QMI_FIXED_INTF(0x03f0, 0x9d1d, 1)},	/* HP lt4120 Snapdragon X5 LTE */
+diff --git a/fs/ceph/file.c b/fs/ceph/file.c
+index 11929d2bb594c..cd09e63d682b7 100644
+--- a/fs/ceph/file.c
++++ b/fs/ceph/file.c
+@@ -1418,6 +1418,7 @@ static ssize_t ceph_write_iter(struct kiocb *iocb, struct iov_iter *from)
+ 	struct ceph_cap_flush *prealloc_cf;
+ 	ssize_t count, written = 0;
+ 	int err, want, got;
++	bool direct_lock = false;
+ 	loff_t pos;
+ 	loff_t limit = max(i_size_read(inode), fsc->max_file_size);
+ 
+@@ -1428,8 +1429,11 @@ static ssize_t ceph_write_iter(struct kiocb *iocb, struct iov_iter *from)
+ 	if (!prealloc_cf)
+ 		return -ENOMEM;
+ 
++	if ((iocb->ki_flags & (IOCB_DIRECT | IOCB_APPEND)) == IOCB_DIRECT)
++		direct_lock = true;
++
+ retry_snap:
+-	if (iocb->ki_flags & IOCB_DIRECT)
++	if (direct_lock)
+ 		ceph_start_io_direct(inode);
+ 	else
+ 		ceph_start_io_write(inode);
+@@ -1519,14 +1523,15 @@ static ssize_t ceph_write_iter(struct kiocb *iocb, struct iov_iter *from)
+ 
+ 		/* we might need to revert back to that point */
+ 		data = *from;
+-		if (iocb->ki_flags & IOCB_DIRECT) {
++		if (iocb->ki_flags & IOCB_DIRECT)
+ 			written = ceph_direct_read_write(iocb, &data, snapc,
+ 							 &prealloc_cf);
+-			ceph_end_io_direct(inode);
+-		} else {
++		else
+ 			written = ceph_sync_write(iocb, &data, pos, snapc);
++		if (direct_lock)
++			ceph_end_io_direct(inode);
++		else
+ 			ceph_end_io_write(inode);
+-		}
+ 		if (written > 0)
+ 			iov_iter_advance(from, written);
+ 		ceph_put_snap_context(snapc);
+@@ -1577,7 +1582,7 @@ static ssize_t ceph_write_iter(struct kiocb *iocb, struct iov_iter *from)
+ 
+ 	goto out_unlocked;
+ out:
+-	if (iocb->ki_flags & IOCB_DIRECT)
++	if (direct_lock)
+ 		ceph_end_io_direct(inode);
+ 	else
+ 		ceph_end_io_write(inode);
 -- 
 2.20.1
 
