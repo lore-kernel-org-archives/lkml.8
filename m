@@ -2,116 +2,114 @@ Return-Path: <SRS0=SnAt=4L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1A3AAC35671
-	for <linux-kernel@archiver.kernel.org>; Sun, 23 Feb 2020 09:06:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C4207C35670
+	for <linux-kernel@archiver.kernel.org>; Sun, 23 Feb 2020 09:10:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5B4FA206ED
-	for <linux-kernel@archiver.kernel.org>; Sun, 23 Feb 2020 09:06:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 99090206ED
+	for <linux-kernel@archiver.kernel.org>; Sun, 23 Feb 2020 09:10:02 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=waifu.club header.i=@waifu.club header.b="Xgc6aouB"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="qgn/kwOX"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726822AbgBWJGy (ORCPT
+        id S1727104AbgBWJKB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 23 Feb 2020 04:06:54 -0500
-Received: from mx1.cock.li ([185.10.68.5]:47399 "EHLO cock.li"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725980AbgBWJGx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 23 Feb 2020 04:06:53 -0500
-MIME-Version: 1.0
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=waifu.club; s=mail;
-        t=1582448810; bh=B4hL9a52cOHm1/NITst4DlAuYkEe8s3rEIkI+36jEis=;
-        h=Date:From:To:Subject:From;
-        b=Xgc6aouBII/lhgZbxFARi5YoYdKKZAIYOjWROffFgiNhe/lDsl8x65bDqrsIwtnO1
-         VV7padcqzU35sb4AL0CxEbSXPlMykMQ8lzxjL3LZWP4SaSVM+iRANidUlIej4Jcy3L
-         g89/sCXtmS0HUz11ExDf7U5+0NiLRfGYUDyZP7CrEEjEH/3HLTvkUC4HCHmpga1Aqs
-         Z8Sh/jb8y2YgfBCLm6Sjoa77A4m7UtnGrk1AsEpdu9EK6XeWuBgqteibGmPiap16W+
-         eGaqGDFN9uat8WjILp0DYIsJrTmW63vacN3rQdjzlxwJ0eO+xBBupcjjq6nhYPsUHj
-         Nsh8MZAJZYi5Q==
-Content-Type: text/plain; charset=US-ASCII;
- format=flowed
-Content-Transfer-Encoding: 7bit
-Date:   Sun, 23 Feb 2020 09:06:50 +0000
-From:   whywontyousue@waifu.club
-To:     linux-kernel@vger.kernel.org
-Subject: Why won't you sue? (Open Source Security)
-Message-ID: <1fefac65c620c624e1a5d59c3780655d@waifu.club>
-X-Sender: whywontyousue@waifu.club
-User-Agent: Roundcube Webmail/1.3.10
+        Sun, 23 Feb 2020 04:10:01 -0500
+Received: from mail-wr1-f68.google.com ([209.85.221.68]:34334 "EHLO
+        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725980AbgBWJKB (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 23 Feb 2020 04:10:01 -0500
+Received: by mail-wr1-f68.google.com with SMTP id n10so6845417wrm.1;
+        Sun, 23 Feb 2020 01:09:59 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id;
+        bh=ZNp+EvVTHUsQTuzdSBoBSK7Xad89HXC39l9IXgu0L6k=;
+        b=qgn/kwOXb6rkHNyIZ6bRJng6LH3lH/HQl5AZwfwLmx0GS4J8ExGX9cHMVHTZ6gusnp
+         IxdZB3kMaWI9O5J58icoAOeghd7kIJXFSaavCppXoXS0C5m3QARTQhU6Q57ozihS0u7K
+         BM8LR6pw3Q2yk8nHMMjekoD5UTYdHdJ3hrjbUTWeJncaHnsoJk74/rvV9u/jbZD6CjH/
+         1yjLIPRfXIQKpf6Bn68PMnc8yvQrLQ4yW+qAI90qtMXww/UmKLdkGUPgI9+ZqqmGRzWc
+         bb2CfW3OuE9pYU3+GjUS0v/aUAcKONVTMl8Q7cxujjpxhnQwr0+XE1q+d9nSeEyDWDLr
+         wSLQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=ZNp+EvVTHUsQTuzdSBoBSK7Xad89HXC39l9IXgu0L6k=;
+        b=ivuiVWRwNkrKIbMf4gkkhVLkc35wYK5SRsyUDo/7jr5MBNSbz9E42Ci5/KYrZNZbRz
+         KAJTZ2M1zkpu17QijUqp1UTNCiW6o41f9Yq8C4HQoy/CgYcYSPk6BmxLoRnLgjW+0F7+
+         d09vpmfml4k/5Qo49nMRLUOWbCd716X0LyeyTB6tYfliXGNCVuPorfG1hzPxnY8Umy+7
+         pVc10y3i83HQqaqdOf2MSdL9NxwHsSz04b3qCxN5kAjvP0n1bURJ7g4pyJb246VnqdPQ
+         nGA/knF1W/NuXDrv9s4WB7/zlmUdDafemO3R0ICB6cDQR+FgQPY/usDLt/jKLa1VbC7V
+         a4AQ==
+X-Gm-Message-State: APjAAAU19n4qFUhYK89AV2QG66k7PquwzZrq77k5pWjeMZwaT98uhV7Y
+        ET+mlXmUsKp5hbeIkqHsUnk=
+X-Google-Smtp-Source: APXvYqynWcijyO/xnVA8R+8xgwTevrjbD+iuKtHMtHFQDIaNbai1TGHrC8jRZpNnLtRHAd/Ruv6k3g==
+X-Received: by 2002:a5d:5381:: with SMTP id d1mr58709265wrv.259.1582448998448;
+        Sun, 23 Feb 2020 01:09:58 -0800 (PST)
+Received: from felia.fritz.box ([2001:16b8:2de2:db00:5dbb:1717:2cb6:4104])
+        by smtp.gmail.com with ESMTPSA id d9sm12657464wrx.94.2020.02.23.01.09.57
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 23 Feb 2020 01:09:58 -0800 (PST)
+From:   Lukas Bulwahn <lukas.bulwahn@gmail.com>
+To:     David Daney <david.daney@cavium.com>,
+        Robert Richter <rrichter@marvell.com>,
+        Rob Herring <robh+dt@kernel.org>
+Cc:     Will Deacon <will@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>,
+        Andrew Murray <andrew.murray@arm.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        linux-pci@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        devicetree@vger.kernel.org, Joe Perches <joe@perches.com>,
+        kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Lukas Bulwahn <lukas.bulwahn@gmail.com>
+Subject: [PATCH] MAINTAINERS: clean up PCIE DRIVER FOR CAVIUM THUNDERX
+Date:   Sun, 23 Feb 2020 10:09:50 +0100
+Message-Id: <20200223090950.5259-1-lukas.bulwahn@gmail.com>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Why won't you sue Open Source Security? They are violating your 
-Copyright.
+Commit e1ac611f57c9 ("dt-bindings: PCI: Convert generic host binding to
+DT schema") combines all information from pci-thunder-{pem,ecam}.txt
+into host-generic-pci.yaml, and deleted the two files in
+Documentation/devicetree/bindings/pci/.
 
-> 4. You may not copy, modify, sublicense, or distribute the Program
-except as expressly provided under this License.  Any attempt
-otherwise to copy, modify, sublicense or distribute the Program is
-void, and will automatically terminate your rights under this License.
-However, parties who have received copies, or rights, from you under
-this License will not have their licenses terminated so long as such
-parties remain in full compliance.
+Since then, ./scripts/get_maintainer.pl --self-test complains:
 
-You see this. Do you? It means that if some entity distributes the Work, 
-or modifys the Work, or sublicenses the Work alongside ANY terms not 
-within
-the license text: their license is terminated.
+  no file matches F: Documentation/devicetree/bindings/pci/pci-thunder-*
 
-So if someone decides to modify and distibute a non-seperable derivative 
-Work,
-subject to your copyright; thus subject to your terms: and if they do so
-alongside ANY terms not within the license text: you have a cause of 
-action.
+As the PCIE DRIVER FOR CAVIUM THUNDERX-relevant information is only a
+small part of the host-generic-pci.yaml, do not add this file to the
+PCIE DRIVER FOR CAVIUM THUNDERX entry, and only drop the reference to
+the removed files.
 
-Do you understand this?
+Signed-off-by: Lukas Bulwahn <lukas.bulwahn@gmail.com>
+---
+Robert, are you still the maintainer of this driver?
+Rob Herring, please pick this patch.
+applies cleanly on current master and next-20200221
 
-Let's move on.
+ MAINTAINERS | 1 -
+ 1 file changed, 1 deletion(-)
 
-> 6. Each time you redistribute the Program (or any work based on the
-Program), the recipient automatically receives a license from the
-original licensor to copy, distribute or modify the Program subject to
-these terms and conditions.  You may not impose any further
-restrictions on the recipients' exercise of the rights granted herein.
-You are not responsible for enforcing compliance by third parties to
-this License.
-
-
-Do you see this? This text means that if someone constructively 
-restricts a
-distributee's ability to act according to the permissions you have 
-placed
-in the license: then that distributor loses his license.
-
-Do you understand? No? I didn't think so: you do not want to understand.
-You want to treat the GPL as the BSD license because, even if you are a
-Copyright owner: "I'll LOSE MUH JEHRB if I enforce my copyrights!".
-
-Dog.
-
-
-You have council for the opposition in your free software organizations.
-You believe any bullshit reasons you are given BY such opposing council.
-You're dogs: worker wage slave dogs. You're afraid you'll be blackballed
-from "the industry" if you utilize your rights as a copyright holder.
-
-
-You are disgusting scum: you allow your organizations to be overtaken;
-you ignore causes of action that many IP firms would be happy to assist
-you in pursuing, you ignore your friends, you worship your employers 
-even
-when you have separate pre-existing copyrights.
-
-You're Dogs.
-
-
-IBM: You own these slaves: could you kindly sue Open Source Security for 
-Copyright infringement on the linux kernel copyrights (you own many 
-thereof)?
-Please. These dogs won't hunt: gurl tbg gurve onyyf erzbirq (naq gurl'er 
-cebhq bs vg).
+diff --git a/MAINTAINERS b/MAINTAINERS
+index 2af5fa73155e..d43a8f9769db 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -12953,7 +12953,6 @@ M:	Robert Richter <rrichter@marvell.com>
+ L:	linux-pci@vger.kernel.org
+ L:	linux-arm-kernel@lists.infradead.org (moderated for non-subscribers)
+ S:	Supported
+-F:	Documentation/devicetree/bindings/pci/pci-thunder-*
+ F:	drivers/pci/controller/pci-thunder-*
+ 
+ PCIE DRIVER FOR HISILICON
+-- 
+2.17.1
 
