@@ -7,49 +7,47 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A1B84C35669
-	for <linux-kernel@archiver.kernel.org>; Sun, 23 Feb 2020 02:32:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 66C45C35671
+	for <linux-kernel@archiver.kernel.org>; Sun, 23 Feb 2020 02:32:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 783E52067D
-	for <linux-kernel@archiver.kernel.org>; Sun, 23 Feb 2020 02:32:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3288B20659
+	for <linux-kernel@archiver.kernel.org>; Sun, 23 Feb 2020 02:32:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582425140;
-	bh=PhncEhRCTKBC5B1M7UkmrcPOnOXpB7zh+aV1dws/UrY=;
+	s=default; t=1582425143;
+	bh=U+TwmQghRFL4tyWR71j959Q9l1ND+J3WcgVln4U0tJI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=2K8eTenPJ0ANW+u2Peij7UHsPHjEwlemeVKNt24lN3ZzOC1mvG2Dsckysb/t2EBv/
-	 c5B02A8whq5ijRzXTR6PU4gVanPXzx1DlTa1g8yLD3r/ZN3ZOEgXWaBY4wNBLGc4vy
-	 /mKHYPeotSIlUaP+DrHtG3Q8cGfyg6C1fEC6hFWI=
+	b=KV1+Gkdrbi+uOC5Z/p6vhljAFcnQZy1jGwemBCEmeCxw46Lj/348qXFNFaiplbCbu
+	 e8Ln4Zx4/navZ4LAweQJVfS1ZYwygm6Djszp2751XZUSE4yCWCOvP3ZJJ2/qwfhRQc
+	 B00oRB+V/x5b0jCIfy0qT2dUmSaiJiiCG0xysX+4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728541AbgBWCXO (ORCPT
+        id S1728544AbgBWCcU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 22 Feb 2020 21:23:14 -0500
-Received: from mail.kernel.org ([198.145.29.99]:52378 "EHLO mail.kernel.org"
+        Sat, 22 Feb 2020 21:32:20 -0500
+Received: from mail.kernel.org ([198.145.29.99]:52676 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728453AbgBWCXH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 22 Feb 2020 21:23:07 -0500
+        id S1728531AbgBWCXO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 22 Feb 2020 21:23:14 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E2FAE21741;
-        Sun, 23 Feb 2020 02:23:05 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 28D5F208C3;
+        Sun, 23 Feb 2020 02:23:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1582424586;
-        bh=PhncEhRCTKBC5B1M7UkmrcPOnOXpB7zh+aV1dws/UrY=;
+        s=default; t=1582424593;
+        bh=U+TwmQghRFL4tyWR71j959Q9l1ND+J3WcgVln4U0tJI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=pWnEoicNkqYd5Tjqq6oCdluu4gVcxTF/VTw/4Q8t1hYtq7d5sivBYVMZa0JlaQhyI
-         JJ0b5S3jn8CCRfMp8wbDSpNXzXHfrsUrWsSDtTtNn6Gq8rmutRWRYHBg89A+18/1K1
-         XG3BfVKhLuo5fG8yRDIqphYJ4cMKLpnteoGrWPcs=
+        b=I34+A/WkbFlh7D6erYlOgTd/PMBId3MLe88jIyrjbSdCJf/LVLyRzRMaKN5T8JdAY
+         PGouQV5DolCDNJGxF2k1nEjpdFkotv+qJr016pz0POT4jWcGCZNdvcFp87FJYdwZyc
+         bUzJJkaQg+4kVWYbIiwncyvfbWeWKZWI/5suKx6c=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Isabel Zhang <isabel.zhang@amd.com>,
-        Eric Yang <eric.yang2@amd.com>,
-        Bhawanpreet Lakha <Bhawanpreet.Lakha@amd.com>,
-        Alex Deucher <alexander.deucher@amd.com>,
-        Sasha Levin <sashal@kernel.org>, amd-gfx@lists.freedesktop.org,
-        dri-devel@lists.freedesktop.org
-Subject: [PATCH AUTOSEL 5.4 25/50] drm/amd/display: Add initialitions for PLL2 clock source
-Date:   Sat, 22 Feb 2020 21:22:10 -0500
-Message-Id: <20200223022235.1404-25-sashal@kernel.org>
+Cc:     Arthur Kiyanovski <akiyano@amazon.com>,
+        Ezequiel Lara Gomez <ezegomez@amazon.com>,
+        "David S . Miller" <davem@davemloft.net>,
+        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.4 31/50] net: ena: add missing ethtool TX timestamping indication
+Date:   Sat, 22 Feb 2020 21:22:16 -0500
+Message-Id: <20200223022235.1404-31-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200223022235.1404-1-sashal@kernel.org>
 References: <20200223022235.1404-1-sashal@kernel.org>
@@ -62,58 +60,43 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Isabel Zhang <isabel.zhang@amd.com>
+From: Arthur Kiyanovski <akiyano@amazon.com>
 
-[ Upstream commit c134c3cabae46a56ab2e1f5e5fa49405e1758838 ]
+[ Upstream commit cf6d17fde93bdda23c9b02dd5906a12bf8c55209 ]
 
-[Why]
-Starting from 14nm, the PLL is built into the PHY and the PLL is mapped
-to PHY on 1 to 1 basis. In the code, the DP port is mapped to a PLL that was not
-initialized. This causes DP to HDMI dongle to not light up the display.
+Current implementation of the driver calls skb_tx_timestamp()to add a
+software tx timestamp to the skb, however the software-transmit capability
+is not reported in ethtool -T.
 
-[How]
-Initializations added for PLL2 when creating resources.
+This commit updates the ethtool structure to report the software-transmit
+capability in ethtool -T using the standard ethtool_op_get_ts_info().
+This function reports all software timestamping capabilities (tx and rx),
+as well as setting phc_index = -1. phc_index is the index of the PTP
+hardware clock device that will be used for hardware timestamps. Since we
+don't have such a device in ENA, using the default -1 value is the correct
+setting.
 
-Signed-off-by: Isabel Zhang <isabel.zhang@amd.com>
-Reviewed-by: Eric Yang <eric.yang2@amd.com>
-Acked-by: Bhawanpreet Lakha <Bhawanpreet.Lakha@amd.com>
-Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
+Fixes: 1738cd3ed342 ("net: ena: Add a driver for Amazon Elastic Network Adapters (ENA)")
+Signed-off-by: Ezequiel Lara Gomez <ezegomez@amazon.com>
+Signed-off-by: Arthur Kiyanovski <akiyano@amazon.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/gpu/drm/amd/display/dc/dcn21/dcn21_resource.c | 6 ++++++
- 1 file changed, 6 insertions(+)
+ drivers/net/ethernet/amazon/ena/ena_ethtool.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/drivers/gpu/drm/amd/display/dc/dcn21/dcn21_resource.c b/drivers/gpu/drm/amd/display/dc/dcn21/dcn21_resource.c
-index b0e5e64df2127..161bf7caf3ae0 100644
---- a/drivers/gpu/drm/amd/display/dc/dcn21/dcn21_resource.c
-+++ b/drivers/gpu/drm/amd/display/dc/dcn21/dcn21_resource.c
-@@ -57,6 +57,7 @@
- #include "dcn20/dcn20_dccg.h"
- #include "dcn21_hubbub.h"
- #include "dcn10/dcn10_resource.h"
-+#include "dce110/dce110_resource.h"
- 
- #include "dcn20/dcn20_dwb.h"
- #include "dcn20/dcn20_mmhubbub.h"
-@@ -824,6 +825,7 @@ static const struct dc_debug_options debug_defaults_diags = {
- enum dcn20_clk_src_array_id {
- 	DCN20_CLK_SRC_PLL0,
- 	DCN20_CLK_SRC_PLL1,
-+	DCN20_CLK_SRC_PLL2,
- 	DCN20_CLK_SRC_TOTAL_DCN21
+diff --git a/drivers/net/ethernet/amazon/ena/ena_ethtool.c b/drivers/net/ethernet/amazon/ena/ena_ethtool.c
+index 8c1c73b0ced74..4472e41bd7825 100644
+--- a/drivers/net/ethernet/amazon/ena/ena_ethtool.c
++++ b/drivers/net/ethernet/amazon/ena/ena_ethtool.c
+@@ -805,6 +805,7 @@ static const struct ethtool_ops ena_ethtool_ops = {
+ 	.get_channels		= ena_get_channels,
+ 	.get_tunable		= ena_get_tunable,
+ 	.set_tunable		= ena_set_tunable,
++	.get_ts_info            = ethtool_op_get_ts_info,
  };
  
-@@ -1492,6 +1494,10 @@ static bool construct(
- 			dcn21_clock_source_create(ctx, ctx->dc_bios,
- 				CLOCK_SOURCE_COMBO_PHY_PLL1,
- 				&clk_src_regs[1], false);
-+	pool->base.clock_sources[DCN20_CLK_SRC_PLL2] =
-+			dcn21_clock_source_create(ctx, ctx->dc_bios,
-+				CLOCK_SOURCE_COMBO_PHY_PLL2,
-+				&clk_src_regs[2], false);
- 
- 	pool->base.clk_src_count = DCN20_CLK_SRC_TOTAL_DCN21;
- 
+ void ena_set_ethtool_ops(struct net_device *netdev)
 -- 
 2.20.1
 
