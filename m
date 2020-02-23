@@ -2,111 +2,94 @@ Return-Path: <SRS0=SnAt=4L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.8 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EE5A3C35671
-	for <linux-kernel@archiver.kernel.org>; Sun, 23 Feb 2020 13:35:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4B800C35666
+	for <linux-kernel@archiver.kernel.org>; Sun, 23 Feb 2020 13:36:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C6DC320637
-	for <linux-kernel@archiver.kernel.org>; Sun, 23 Feb 2020 13:35:20 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=megous.com header.i=@megous.com header.b="GNXtzobt"
+	by mail.kernel.org (Postfix) with ESMTP id 2D4A9206E0
+	for <linux-kernel@archiver.kernel.org>; Sun, 23 Feb 2020 13:36:54 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727080AbgBWNfT (ORCPT
+        id S1727064AbgBWNgv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 23 Feb 2020 08:35:19 -0500
-Received: from vps.xff.cz ([195.181.215.36]:42976 "EHLO vps.xff.cz"
+        Sun, 23 Feb 2020 08:36:51 -0500
+Received: from mx2.suse.de ([195.135.220.15]:53548 "EHLO mx2.suse.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726208AbgBWNfT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 23 Feb 2020 08:35:19 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=megous.com; s=mail;
-        t=1582464917; bh=6VpUk0yfA5m3J1dhx2/b9+a44uEwfNvyw0oTvOwyDQ8=;
-        h=Date:From:To:Subject:References:X-My-GPG-KeyId:From;
-        b=GNXtzobtRQPe3S+1nOVOlPHRI/Ge3Segzb4xN/kEe/qKGExn1bm5nxfwvFQY0lNyy
-         FTGLhJiA07xtjUTLNaUfDOQnsSHB1Q91iYt9YyquDI04pFGGH3Hy0X1cwlpJV+2hq0
-         FhgOh997uamzbxcmGs3pi4m1VIpMtVeMN6BrbbAs=
-Date:   Sun, 23 Feb 2020 14:35:17 +0100
-From:   =?utf-8?Q?Ond=C5=99ej?= Jirman <megous@megous.com>
-To:     linux-sunxi@googlegroups.com,
-        Jacek Anaszewski <jacek.anaszewski@gmail.com>,
-        Pavel Machek <pavel@ucw.cz>, Dan Murphy <dmurphy@ti.com>,
-        Rob Herring <robh+dt@kernel.org>, Chen-Yu Tsai <wens@csie.org>,
-        Maxime Ripard <mripard@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Lee Jones <lee.jones@linaro.org>, linux-leds@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org
-Subject: Re: [PATCH 0/4] Add support for charger LED for AXP813 and TBS A711
- Tablet
-Message-ID: <20200223133517.hfqrg5dta2xk4zj3@core.my.home>
-Mail-Followup-To: linux-sunxi@googlegroups.com,
-        Jacek Anaszewski <jacek.anaszewski@gmail.com>,
-        Pavel Machek <pavel@ucw.cz>, Dan Murphy <dmurphy@ti.com>,
-        Rob Herring <robh+dt@kernel.org>, Chen-Yu Tsai <wens@csie.org>,
-        Maxime Ripard <mripard@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Lee Jones <lee.jones@linaro.org>, linux-leds@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org
-References: <20200223131435.681620-1-megous@megous.com>
- <20200223132730.6g7tnm2f263oubhv@core.my.home>
+        id S1726208AbgBWNgv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 23 Feb 2020 08:36:51 -0500
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx2.suse.de (Postfix) with ESMTP id 760FAABF4;
+        Sun, 23 Feb 2020 13:36:49 +0000 (UTC)
+Received: by ds.suse.cz (Postfix, from userid 10065)
+        id E9EF4DA70E; Sun, 23 Feb 2020 14:36:30 +0100 (CET)
+From:   David Sterba <dsterba@suse.com>
+To:     torvalds@linux-foundation.org
+Cc:     David Sterba <dsterba@suse.com>, linux-btrfs@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: [GIT PULL] Btrfs fixes for 5.6-rc3
+Date:   Sun, 23 Feb 2020 14:36:29 +0100
+Message-Id: <cover.1582462302.git.dsterba@suse.com>
+X-Mailer: git-send-email 2.25.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200223132730.6g7tnm2f263oubhv@core.my.home>
-X-My-GPG-KeyId: EBFBDDE11FB918D44D1F56C1F9F0A873BE9777ED
- <https://xff.cz/key.txt>
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, Feb 23, 2020 at 02:27:30PM +0100, megous hlavni wrote:
-> On Sun, Feb 23, 2020 at 02:14:31PM +0100, megous hlavni wrote:
-> > The tablet has a charger LED exposed on the top. This LED is controlled
-> > by AXP813 PMIC. Add support for enabling the LED and using it either
-> > for charging indication (handled by PMIC automatically) or for other uses
-> > via user control.
-> 
-> Dang, I just noticed someone sent a similar driver recently, although I had this
-> one prepared for quite some time (since 2017) in my tree. I guess I should have
-> sent it earlier.
-> 
-> Please ignore.
+Hi,
 
-Though the meaning of "recently" is a bit relative. The other work was sent in
-a year ago. Here's a reference:
+there are fixes that were found during testing with help of error
+injection, plus some other stable material.
 
-  https://lore.kernel.org/patchwork/cover/1042764/
+There's a fixup to patch added to rc1 causing locking in wrong context
+warnings, tests found one more deadlock scenario. The patches are tagged
+for stable, two of them now in the queue but we'd like all three
+released at the same time.
 
-> regards,
-> 	o.
-> 
-> 
-> > Please take a look.
-> > 
-> > thank you and regards,
-> >   Ondrej Jirman
-> > 
-> > Ondrej Jirman (4):
-> >   dt-bindings: leds: Add a binding for AXP813 charger led
-> >   leds: axp20x: Support charger LED on AXP20x like PMICs
-> >   ARM: dts: axp813: Add charger LED
-> >   ARM: dts: sun8i-a83t-tbs-a711: Enable charging LED
-> > 
-> >  .../devicetree/bindings/leds/leds-axp20x.yaml |  24 ++
-> >  arch/arm/boot/dts/axp81x.dtsi                 |   5 +
-> >  arch/arm/boot/dts/sun8i-a83t-tbs-a711.dts     |   4 +
-> >  drivers/leds/Kconfig                          |   7 +
-> >  drivers/leds/Makefile                         |   1 +
-> >  drivers/leds/leds-axp20x.c                    | 240 ++++++++++++++++++
-> >  drivers/mfd/axp20x.c                          |   3 +
-> >  7 files changed, 284 insertions(+)
-> >  create mode 100644 Documentation/devicetree/bindings/leds/leds-axp20x.yaml
-> >  create mode 100644 drivers/leds/leds-axp20x.c
-> > 
-> > -- 
-> > 2.25.1
-> > 
+I'm not happy about fixes to fixes in such a fast succession namely during
+rcs, but I hope we found all the fallouts of 28553fa992cb28be. As the
+other fixes are not urgent I'm also fine with delaying the pull until
+rc4 and coordinating with stable@.
+
+Thanks.
+
+----------------------------------------------------------------
+The following changes since commit 52e29e331070cd7d52a64cbf1b0958212a340e28:
+
+  btrfs: don't set path->leave_spinning for truncate (2020-02-17 16:23:06 +0100)
+
+are available in the Git repository at:
+
+  git://git.kernel.org/pub/scm/linux/kernel/git/kdave/linux.git for-5.6-rc2-tag
+
+for you to fetch changes up to a5ae50dea9111db63d30d700766dd5509602f7ad:
+
+  Btrfs: fix deadlock during fast fsync when logging prealloc extents beyond eof (2020-02-21 16:21:19 +0100)
+
+----------------------------------------------------------------
+Filipe Manana (2):
+      Btrfs: fix btrfs_wait_ordered_range() so that it waits for all ordered extents
+      Btrfs: fix deadlock during fast fsync when logging prealloc extents beyond eof
+
+Jeff Mahoney (1):
+      btrfs: destroy qgroup extent records on transaction abort
+
+Josef Bacik (4):
+      btrfs: reset fs_root to NULL on error in open_ctree
+      btrfs: do not check delayed items are empty for single transaction cleanup
+      btrfs: handle logged extent failure properly
+      btrfs: fix bytes_may_use underflow in prealloc error condtition
+
+ fs/btrfs/disk-io.c      |  3 ++-
+ fs/btrfs/extent-tree.c  |  2 ++
+ fs/btrfs/inode.c        | 26 ++++++++++++++++++--------
+ fs/btrfs/ordered-data.c |  7 ++++++-
+ fs/btrfs/qgroup.c       | 13 +++++++++++++
+ fs/btrfs/qgroup.h       |  1 +
+ fs/btrfs/transaction.c  |  2 ++
+ 7 files changed, 44 insertions(+), 10 deletions(-)
