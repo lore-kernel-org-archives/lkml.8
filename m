@@ -7,54 +7,51 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8BE23C35669
-	for <linux-kernel@archiver.kernel.org>; Sun, 23 Feb 2020 02:24:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9E0CBC35673
+	for <linux-kernel@archiver.kernel.org>; Sun, 23 Feb 2020 02:24:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 63B9724650
-	for <linux-kernel@archiver.kernel.org>; Sun, 23 Feb 2020 02:24:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 68A0624650
+	for <linux-kernel@archiver.kernel.org>; Sun, 23 Feb 2020 02:24:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582424667;
-	bh=oDh7SuUHFtSuw4pwi8W77mLorLw1uIiStk6IAmt32qA=;
+	s=default; t=1582424669;
+	bh=mG6NqNXNbj04E/zezRXFj4wxhEeaoA8AmqYdR2+zFMw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=VPZCnoSY/GXppAATvtQuIj+lvIlZ+q/YqnIQ9E8u9OvMjVscGNMtfFbnl1DppHcY6
-	 kOWsISzKuAC4WQCuoI2OnZbnMYf6arxGbDQSb5eATDtW3yAy1FETYZG8K8AR26eOqc
-	 OEwFvBJhGWYejbwAyVQF3329pYtTpk7VelqT7VtE=
+	b=fPXyehLMN1hsHV70CWvWRqTl3AbODsWBzd3tbBHqryyRo8Zi56GbqKmkLYUjNMKtd
+	 ci/DEkSA8NSgtH9jWBs0kCK+erP9RzFhPPOlqMAw8nnZ8hvH2lFloEi3I+o4/cSBz9
+	 k3y1KxeyOgyjL4G1nmcTnqTsgJLcPVD5cjHvogpc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729237AbgBWCYZ (ORCPT
+        id S1729264AbgBWCY2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 22 Feb 2020 21:24:25 -0500
-Received: from mail.kernel.org ([198.145.29.99]:54312 "EHLO mail.kernel.org"
+        Sat, 22 Feb 2020 21:24:28 -0500
+Received: from mail.kernel.org ([198.145.29.99]:54400 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729181AbgBWCYW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 22 Feb 2020 21:24:22 -0500
+        id S1729238AbgBWCY0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 22 Feb 2020 21:24:26 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4431922525;
-        Sun, 23 Feb 2020 02:24:20 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0CC2520707;
+        Sun, 23 Feb 2020 02:24:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1582424661;
-        bh=oDh7SuUHFtSuw4pwi8W77mLorLw1uIiStk6IAmt32qA=;
+        s=default; t=1582424665;
+        bh=mG6NqNXNbj04E/zezRXFj4wxhEeaoA8AmqYdR2+zFMw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=gD1NmArVwxw9Dh+ih0Ih2m9DRjiFzy8kZntwEPYwVcwTFUS9E0e+6S1vhLhbEsEem
-         droXhpy9nIWkPE6ETl8ZoRaKtaxBqNODB/Xau0hhAz9zOiPfJF0dCgkrRzOTmSc5wv
-         UuAxI8C86PZPqYi52mhLkelL/4lWvEZ1rOQhffsM=
+        b=xkTxpx6Fjbr4oCbz+LA6E+OopSPalEQbVf4kPvXpIljvVANpF9cf5CMIt9jxeZ+Sd
+         gnW6/T63UVe7QHiLvqn3A5Bs0vxVEauCxXAX+YpDQTGNVXwttPH9+sg7YbisV+2ysZ
+         6LzBxQh4tvH9Z7FvRoc8Fnoz7qt+mAgV+GpOF/j0=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     =?UTF-8?q?Bj=C3=B8rn=20Mork?= <bjorn@mork.no>,
-        Kristian Evensen <kristian.evensen@gmail.com>,
-        Aleksander Morgado <aleksander@aleksander.es>,
+Cc:     Arthur Kiyanovski <akiyano@amazon.com>,
+        Ezequiel Lara Gomez <ezegomez@amazon.com>,
         "David S . Miller" <davem@davemloft.net>,
-        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org,
-        linux-usb@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.14 07/21] qmi_wwan: unconditionally reject 2 ep interfaces
-Date:   Sat, 22 Feb 2020 21:23:57 -0500
-Message-Id: <20200223022411.2159-7-sashal@kernel.org>
+        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.14 11/21] net: ena: add missing ethtool TX timestamping indication
+Date:   Sat, 22 Feb 2020 21:24:01 -0500
+Message-Id: <20200223022411.2159-11-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200223022411.2159-1-sashal@kernel.org>
 References: <20200223022411.2159-1-sashal@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
@@ -63,130 +60,43 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Bjørn Mork <bjorn@mork.no>
+From: Arthur Kiyanovski <akiyano@amazon.com>
 
-[ Upstream commit 00516d13d4cfa56ce39da144db2dbf08b09b9357 ]
+[ Upstream commit cf6d17fde93bdda23c9b02dd5906a12bf8c55209 ]
 
-We have been using the fact that the QMI and DIAG functions
-usually are the only ones with class/subclass/protocol being
-ff/ff/ff on Quectel modems. This has allowed us to match the
-QMI function without knowing the exact interface number,
-which can vary depending on firmware configuration.
+Current implementation of the driver calls skb_tx_timestamp()to add a
+software tx timestamp to the skb, however the software-transmit capability
+is not reported in ethtool -T.
 
-The ability to silently reject the DIAG function, which is
-usually handled by the option driver, is important for this
-method to work.  This is done based on the knowledge that it
-has exactly 2 bulk endpoints.  QMI function control interfaces
-will have either 3 or 1 endpoint. This rule is universal so
-the quirk condition can be removed.
+This commit updates the ethtool structure to report the software-transmit
+capability in ethtool -T using the standard ethtool_op_get_ts_info().
+This function reports all software timestamping capabilities (tx and rx),
+as well as setting phc_index = -1. phc_index is the index of the PTP
+hardware clock device that will be used for hardware timestamps. Since we
+don't have such a device in ENA, using the default -1 value is the correct
+setting.
 
-The fixed layouts known from the Gobi1k and Gobi2k modems
-have been gradually replaced by more dynamic layouts, and
-many vendors now use configurable layouts without changing
-device IDs.  Renaming the class/subclass/protocol matching
-macro makes it more obvious that this is now not Quectel
-specific anymore.
-
-Cc: Kristian Evensen <kristian.evensen@gmail.com>
-Cc: Aleksander Morgado <aleksander@aleksander.es>
-Signed-off-by: Bjørn Mork <bjorn@mork.no>
+Fixes: 1738cd3ed342 ("net: ena: Add a driver for Amazon Elastic Network Adapters (ENA)")
+Signed-off-by: Ezequiel Lara Gomez <ezegomez@amazon.com>
+Signed-off-by: Arthur Kiyanovski <akiyano@amazon.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/usb/qmi_wwan.c | 42 ++++++++++++++------------------------
- 1 file changed, 15 insertions(+), 27 deletions(-)
+ drivers/net/ethernet/amazon/ena/ena_ethtool.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/drivers/net/usb/qmi_wwan.c b/drivers/net/usb/qmi_wwan.c
-index 08215a9f61454..189715438328f 100644
---- a/drivers/net/usb/qmi_wwan.c
-+++ b/drivers/net/usb/qmi_wwan.c
-@@ -63,7 +63,6 @@ enum qmi_wwan_flags {
- 
- enum qmi_wwan_quirks {
- 	QMI_WWAN_QUIRK_DTR = 1 << 0,	/* needs "set DTR" request */
--	QMI_WWAN_QUIRK_QUECTEL_DYNCFG = 1 << 1,	/* check num. endpoints */
+diff --git a/drivers/net/ethernet/amazon/ena/ena_ethtool.c b/drivers/net/ethernet/amazon/ena/ena_ethtool.c
+index a2f02c23fe141..c58ad61909519 100644
+--- a/drivers/net/ethernet/amazon/ena/ena_ethtool.c
++++ b/drivers/net/ethernet/amazon/ena/ena_ethtool.c
+@@ -816,6 +816,7 @@ static const struct ethtool_ops ena_ethtool_ops = {
+ 	.get_channels		= ena_get_channels,
+ 	.get_tunable		= ena_get_tunable,
+ 	.set_tunable		= ena_set_tunable,
++	.get_ts_info            = ethtool_op_get_ts_info,
  };
  
- struct qmimux_hdr {
-@@ -853,16 +852,6 @@ static const struct driver_info	qmi_wwan_info_quirk_dtr = {
- 	.data           = QMI_WWAN_QUIRK_DTR,
- };
- 
--static const struct driver_info	qmi_wwan_info_quirk_quectel_dyncfg = {
--	.description	= "WWAN/QMI device",
--	.flags		= FLAG_WWAN | FLAG_SEND_ZLP,
--	.bind		= qmi_wwan_bind,
--	.unbind		= qmi_wwan_unbind,
--	.manage_power	= qmi_wwan_manage_power,
--	.rx_fixup       = qmi_wwan_rx_fixup,
--	.data           = QMI_WWAN_QUIRK_DTR | QMI_WWAN_QUIRK_QUECTEL_DYNCFG,
--};
--
- #define HUAWEI_VENDOR_ID	0x12D1
- 
- /* map QMI/wwan function by a fixed interface number */
-@@ -883,14 +872,18 @@ static const struct driver_info	qmi_wwan_info_quirk_quectel_dyncfg = {
- #define QMI_GOBI_DEVICE(vend, prod) \
- 	QMI_FIXED_INTF(vend, prod, 0)
- 
--/* Quectel does not use fixed interface numbers on at least some of their
-- * devices. We need to check the number of endpoints to ensure that we bind to
-- * the correct interface.
-+/* Many devices have QMI and DIAG functions which are distinguishable
-+ * from other vendor specific functions by class, subclass and
-+ * protocol all being 0xff. The DIAG function has exactly 2 endpoints
-+ * and is silently rejected when probed.
-+ *
-+ * This makes it possible to match dynamically numbered QMI functions
-+ * as seen on e.g. many Quectel modems.
-  */
--#define QMI_QUIRK_QUECTEL_DYNCFG(vend, prod) \
-+#define QMI_MATCH_FF_FF_FF(vend, prod) \
- 	USB_DEVICE_AND_INTERFACE_INFO(vend, prod, USB_CLASS_VENDOR_SPEC, \
- 				      USB_SUBCLASS_VENDOR_SPEC, 0xff), \
--	.driver_info = (unsigned long)&qmi_wwan_info_quirk_quectel_dyncfg
-+	.driver_info = (unsigned long)&qmi_wwan_info_quirk_dtr
- 
- static const struct usb_device_id products[] = {
- 	/* 1. CDC ECM like devices match on the control interface */
-@@ -996,10 +989,10 @@ static const struct usb_device_id products[] = {
- 		USB_DEVICE_AND_INTERFACE_INFO(0x03f0, 0x581d, USB_CLASS_VENDOR_SPEC, 1, 7),
- 		.driver_info = (unsigned long)&qmi_wwan_info,
- 	},
--	{QMI_QUIRK_QUECTEL_DYNCFG(0x2c7c, 0x0125)},	/* Quectel EC25, EC20 R2.0  Mini PCIe */
--	{QMI_QUIRK_QUECTEL_DYNCFG(0x2c7c, 0x0306)},	/* Quectel EP06/EG06/EM06 */
--	{QMI_QUIRK_QUECTEL_DYNCFG(0x2c7c, 0x0512)},	/* Quectel EG12/EM12 */
--	{QMI_QUIRK_QUECTEL_DYNCFG(0x2c7c, 0x0800)},	/* Quectel RM500Q-GL */
-+	{QMI_MATCH_FF_FF_FF(0x2c7c, 0x0125)},	/* Quectel EC25, EC20 R2.0  Mini PCIe */
-+	{QMI_MATCH_FF_FF_FF(0x2c7c, 0x0306)},	/* Quectel EP06/EG06/EM06 */
-+	{QMI_MATCH_FF_FF_FF(0x2c7c, 0x0512)},	/* Quectel EG12/EM12 */
-+	{QMI_MATCH_FF_FF_FF(0x2c7c, 0x0800)},	/* Quectel RM500Q-GL */
- 
- 	/* 3. Combined interface devices matching on interface number */
- 	{QMI_FIXED_INTF(0x0408, 0xea42, 4)},	/* Yota / Megafon M100-1 */
-@@ -1379,7 +1372,6 @@ static int qmi_wwan_probe(struct usb_interface *intf,
- {
- 	struct usb_device_id *id = (struct usb_device_id *)prod;
- 	struct usb_interface_descriptor *desc = &intf->cur_altsetting->desc;
--	const struct driver_info *info;
- 
- 	/* Workaround to enable dynamic IDs.  This disables usbnet
- 	 * blacklisting functionality.  Which, if required, can be
-@@ -1415,12 +1407,8 @@ static int qmi_wwan_probe(struct usb_interface *intf,
- 	 * different. Ignore the current interface if the number of endpoints
- 	 * equals the number for the diag interface (two).
- 	 */
--	info = (void *)id->driver_info;
--
--	if (info->data & QMI_WWAN_QUIRK_QUECTEL_DYNCFG) {
--		if (desc->bNumEndpoints == 2)
--			return -ENODEV;
--	}
-+	if (desc->bNumEndpoints == 2)
-+		return -ENODEV;
- 
- 	return usbnet_probe(intf, id);
- }
+ void ena_set_ethtool_ops(struct net_device *netdev)
 -- 
 2.20.1
 
