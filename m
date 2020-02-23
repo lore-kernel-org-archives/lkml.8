@@ -4,50 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AFE56C35671
-	for <linux-kernel@archiver.kernel.org>; Sun, 23 Feb 2020 02:30:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 53B4CC35673
+	for <linux-kernel@archiver.kernel.org>; Sun, 23 Feb 2020 02:31:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 796462067D
-	for <linux-kernel@archiver.kernel.org>; Sun, 23 Feb 2020 02:30:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 29AB22067D
+	for <linux-kernel@archiver.kernel.org>; Sun, 23 Feb 2020 02:31:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582425057;
-	bh=fsPvjRYgB4pv7V5kfZoupwdYyArfFebXqtBGXqlzQ+o=;
+	s=default; t=1582425063;
+	bh=EvRrfe3Ps87aO1nFmpzG91f2tvwhJSODKG8/2hvJyQg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=f6QXLGhJ/16qU9+vzR94Dt9JttW8ZT3qO3TKCp7OxisqZ5QxkLNgcV78U2jIdihIb
-	 P/37SXXG3RFQ3R6yRxaZleiL/SCoFjT06JT62hd4+HEg30FEfjbipWR5Oo9pE3yFOz
-	 eV2o+V3KjZPsh9iva9TaxQzlNutU4DedQjlwVzHA=
+	b=dD7btjTlUilJaaPmZbI4ETnjn5lvr1v6ghO5H8+YxMmncKQoEPOIl7iMxxcOURCSQ
+	 RH4eRmbGkspcin55589aMJUhRTewzxe9lV2dFw/uMV7r4kNtV0L9CKK0vfuraFCDdB
+	 3Qobf/DbqhJ72D0neKDwJJ58wqN1iARvXzP92MFo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729033AbgBWCaz (ORCPT
+        id S1728701AbgBWCXc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 22 Feb 2020 21:30:55 -0500
-Received: from mail.kernel.org ([198.145.29.99]:53084 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728699AbgBWCXc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Sat, 22 Feb 2020 21:23:32 -0500
+Received: from mail.kernel.org ([198.145.29.99]:52936 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728639AbgBWCX1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 22 Feb 2020 21:23:27 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 310F2227BF;
-        Sun, 23 Feb 2020 02:23:31 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 33F78208C3;
+        Sun, 23 Feb 2020 02:23:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1582424612;
-        bh=fsPvjRYgB4pv7V5kfZoupwdYyArfFebXqtBGXqlzQ+o=;
+        s=default; t=1582424607;
+        bh=EvRrfe3Ps87aO1nFmpzG91f2tvwhJSODKG8/2hvJyQg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=wmTfIVg9jLBGSqts0Dii1gLsE7lMCDrFnWCxmxTEciSqRv5oakdQ0XcivLMt3tCUU
-         Fs1VOCmR48Z5/nOXOJQBKRNsjTONO9jXqAkgRDwbw+D/+Qx78AtBKImidw8iCTfIjE
-         0XKa6ENpM53n9M6Vs5Uz3EoDgObHui/PXOqQNjCo=
+        b=D2kqKhprVjV9YcqA8Ze/cHrfjOyCjEqJqed+2hOKy6xEFHAjHiIMh0e0X/s8NWpR4
+         Pg4ao1VtJ/9yIGVPLxOyCY6CLKMqnc6bpGRC6CWZAw9ZIF3aZkNiCRbj1uNtVWzBpj
+         zTAmeWdz+8pER6IGDnfylUmiQRYj5PbDUmOKteI4=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Yufeng Mo <moyufeng@huawei.com>,
-        Huazhong Tan <tanhuazhong@huawei.com>,
-        "David S . Miller" <davem@davemloft.net>,
-        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.4 46/50] net: hns3: add management table after IMP reset
-Date:   Sat, 22 Feb 2020 21:22:31 -0500
-Message-Id: <20200223022235.1404-46-sashal@kernel.org>
+Cc:     Frank Sorenson <sorenson@redhat.com>,
+        Steve French <stfrench@microsoft.com>,
+        Sasha Levin <sashal@kernel.org>, linux-cifs@vger.kernel.org,
+        samba-technical@lists.samba.org
+Subject: [PATCH AUTOSEL 5.4 42/50] cifs: Fix mode output in debugging statements
+Date:   Sat, 22 Feb 2020 21:22:27 -0500
+Message-Id: <20200223022235.1404-42-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200223022235.1404-1-sashal@kernel.org>
 References: <20200223022235.1404-1-sashal@kernel.org>
@@ -60,40 +60,70 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Yufeng Mo <moyufeng@huawei.com>
+From: Frank Sorenson <sorenson@redhat.com>
 
-[ Upstream commit d0db7ed397517c8b2be24a0d1abfa15df776908e ]
+[ Upstream commit f52aa79df43c4509146140de0241bc21a4a3b4c7 ]
 
-In the current process, the management table is missing after the
-IMP reset. This patch adds the management table to the reset process.
+A number of the debug statements output file or directory mode
+in hex.  Change these to print using octal.
 
-Fixes: f5aac71c0327 ("net: hns3: add manager table initialization for hardware")
-Signed-off-by: Yufeng Mo <moyufeng@huawei.com>
-Signed-off-by: Huazhong Tan <tanhuazhong@huawei.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Signed-off-by: Frank Sorenson <sorenson@redhat.com>
+Signed-off-by: Steve French <stfrench@microsoft.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_main.c | 7 +++++++
- 1 file changed, 7 insertions(+)
+ fs/cifs/cifsacl.c | 4 ++--
+ fs/cifs/connect.c | 2 +-
+ fs/cifs/inode.c   | 2 +-
+ 3 files changed, 4 insertions(+), 4 deletions(-)
 
-diff --git a/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_main.c b/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_main.c
-index 162881005a6df..0c3c63aed2c06 100644
---- a/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_main.c
-+++ b/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_main.c
-@@ -9437,6 +9437,13 @@ static int hclge_reset_ae_dev(struct hnae3_ae_dev *ae_dev)
- 		return ret;
- 	}
+diff --git a/fs/cifs/cifsacl.c b/fs/cifs/cifsacl.c
+index f842944a5c76a..1619af216677c 100644
+--- a/fs/cifs/cifsacl.c
++++ b/fs/cifs/cifsacl.c
+@@ -603,7 +603,7 @@ static void access_flags_to_mode(__le32 ace_flags, int type, umode_t *pmode,
+ 			((flags & FILE_EXEC_RIGHTS) == FILE_EXEC_RIGHTS))
+ 		*pmode |= (S_IXUGO & (*pbits_to_set));
  
-+	ret = init_mgr_tbl(hdev);
-+	if (ret) {
-+		dev_err(&pdev->dev,
-+			"failed to reinit manager table, ret = %d\n", ret);
-+		return ret;
-+	}
-+
- 	ret = hclge_init_fd_config(hdev);
- 	if (ret) {
- 		dev_err(&pdev->dev, "fd table init fail, ret=%d\n", ret);
+-	cifs_dbg(NOISY, "access flags 0x%x mode now 0x%x\n", flags, *pmode);
++	cifs_dbg(NOISY, "access flags 0x%x mode now %04o\n", flags, *pmode);
+ 	return;
+ }
+ 
+@@ -632,7 +632,7 @@ static void mode_to_access_flags(umode_t mode, umode_t bits_to_use,
+ 	if (mode & S_IXUGO)
+ 		*pace_flags |= SET_FILE_EXEC_RIGHTS;
+ 
+-	cifs_dbg(NOISY, "mode: 0x%x, access flags now 0x%x\n",
++	cifs_dbg(NOISY, "mode: %04o, access flags now 0x%x\n",
+ 		 mode, *pace_flags);
+ 	return;
+ }
+diff --git a/fs/cifs/connect.c b/fs/cifs/connect.c
+index 02451d085ddd0..28af1f7523f34 100644
+--- a/fs/cifs/connect.c
++++ b/fs/cifs/connect.c
+@@ -4092,7 +4092,7 @@ int cifs_setup_cifs_sb(struct smb_vol *pvolume_info,
+ 	cifs_sb->mnt_gid = pvolume_info->linux_gid;
+ 	cifs_sb->mnt_file_mode = pvolume_info->file_mode;
+ 	cifs_sb->mnt_dir_mode = pvolume_info->dir_mode;
+-	cifs_dbg(FYI, "file mode: 0x%hx  dir mode: 0x%hx\n",
++	cifs_dbg(FYI, "file mode: %04ho  dir mode: %04ho\n",
+ 		 cifs_sb->mnt_file_mode, cifs_sb->mnt_dir_mode);
+ 
+ 	cifs_sb->actimeo = pvolume_info->actimeo;
+diff --git a/fs/cifs/inode.c b/fs/cifs/inode.c
+index ed59e4a8db598..aafcd79c47722 100644
+--- a/fs/cifs/inode.c
++++ b/fs/cifs/inode.c
+@@ -1586,7 +1586,7 @@ int cifs_mkdir(struct inode *inode, struct dentry *direntry, umode_t mode)
+ 	struct TCP_Server_Info *server;
+ 	char *full_path;
+ 
+-	cifs_dbg(FYI, "In cifs_mkdir, mode = 0x%hx inode = 0x%p\n",
++	cifs_dbg(FYI, "In cifs_mkdir, mode = %04ho inode = 0x%p\n",
+ 		 mode, inode);
+ 
+ 	cifs_sb = CIFS_SB(inode->i_sb);
 -- 
 2.20.1
 
