@@ -7,46 +7,46 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3C308C35671
-	for <linux-kernel@archiver.kernel.org>; Sun, 23 Feb 2020 02:31:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7D09AC35669
+	for <linux-kernel@archiver.kernel.org>; Sun, 23 Feb 2020 02:31:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 138392067D
-	for <linux-kernel@archiver.kernel.org>; Sun, 23 Feb 2020 02:31:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4644520659
+	for <linux-kernel@archiver.kernel.org>; Sun, 23 Feb 2020 02:31:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582425086;
-	bh=d3tCGsaHvyFa1WvXXX3zicSLN3cuLKdXuBZl6y3jaP8=;
+	s=default; t=1582425096;
+	bh=KDYByohL7ndprh8WUuHDrdvmdYbSJj3I7Ol3IM04Fjk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=0wAb4Y+SsEZK+4/2hUPgOfLMjR2UurXa3cc+/Nsh/6/QfsZk30HIIGQGjD0sNsnJZ
-	 22hF9uhKrv0any9QIKXYvXvq5ix04/9EcmQ2qQsoPk4vN3af9amQGOBA4Dxmqj1sKx
-	 BNcMutEkWPduS6hmgle0cpi7iq6gLRKHHhPnfb40=
+	b=MQD1iBhGYrsVMG3QnNLjYRS1HGXVziE7WfX0rECGZAZIwcgbpg7v0LAO5ohySNXTU
+	 J8Y7/+nnUr/62yfb9TYOr1QbrexRBL2asuw9xoKZg9sM776dYRojiNj9HDEqWxCsLt
+	 qD/OfMdbMl4HeySoquNhQBA3RQVulDr9FwLaSARQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728857AbgBWCbY (ORCPT
+        id S1728301AbgBWCbe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 22 Feb 2020 21:31:24 -0500
-Received: from mail.kernel.org ([198.145.29.99]:52876 "EHLO mail.kernel.org"
+        Sat, 22 Feb 2020 21:31:34 -0500
+Received: from mail.kernel.org ([198.145.29.99]:52842 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728646AbgBWCXY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 22 Feb 2020 21:23:24 -0500
+        id S1728627AbgBWCXW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 22 Feb 2020 21:23:22 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 83A0420702;
-        Sun, 23 Feb 2020 02:23:23 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3F0A420702;
+        Sun, 23 Feb 2020 02:23:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1582424604;
-        bh=d3tCGsaHvyFa1WvXXX3zicSLN3cuLKdXuBZl6y3jaP8=;
+        s=default; t=1582424601;
+        bh=KDYByohL7ndprh8WUuHDrdvmdYbSJj3I7Ol3IM04Fjk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=n+MQntf7+ywdkliffpA0ftSOuwQvzUuspg8T09gWL8OttdRUvL6jazClqV8jVpvVg
-         6nHlpBU3yA2N+lZP/tfWbB+KuZNJ2axh65PzXjZbr9OQlWPuyDSCeae0soebv4BRLt
-         CpfaLVMswNOa+FzKhAYR5Gfy7CG3PkQU1ewzNPXU=
+        b=BsjZYw+MN2Xi2zEallaXUwq6emsshBQdlhzvIQCjoq3OXgnRfrT3lCM0qBzx+EjVB
+         iwUIJYJebSyoadFZ+TBm+v3FoCgDgJ0suJLMrKb4jCCzwPq7k7uIj0E/FO2uMOIPxK
+         t3SH88nXW0R5xriO/D0lfPqekt3/ucjiPn8K2XNs=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Firo Yang <firo.yang@suse.com>,
+Cc:     Sameeh Jubran <sameehj@amazon.com>,
         "David S . Miller" <davem@davemloft.net>,
         Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.4 40/50] enic: prevent waking up stopped tx queues over watchdog reset
-Date:   Sat, 22 Feb 2020 21:22:25 -0500
-Message-Id: <20200223022235.1404-40-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 5.4 38/50] net: ena: ethtool: use correct value for crc32 hash
+Date:   Sat, 22 Feb 2020 21:22:23 -0500
+Message-Id: <20200223022235.1404-38-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200223022235.1404-1-sashal@kernel.org>
 References: <20200223022235.1404-1-sashal@kernel.org>
@@ -59,60 +59,43 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Firo Yang <firo.yang@suse.com>
+From: Sameeh Jubran <sameehj@amazon.com>
 
-[ Upstream commit 0f90522591fd09dd201065c53ebefdfe3c6b55cb ]
+[ Upstream commit 886d2089276e40d460731765083a741c5c762461 ]
 
-Recent months, our customer reported several kernel crashes all
-preceding with following message:
-NETDEV WATCHDOG: eth2 (enic): transmit queue 0 timed out
-Error message of one of those crashes:
-BUG: unable to handle kernel paging request at ffffffffa007e090
+Up till kernel 4.11 there was no enum defined for crc32 hash in ethtool,
+thus the xor enum was used for supporting crc32.
 
-After analyzing severl vmcores, I found that most of crashes are
-caused by memory corruption. And all the corrupted memory areas
-are overwritten by data of network packets. Moreover, I also found
-that the tx queues were enabled over watchdog reset.
-
-After going through the source code, I found that in enic_stop(),
-the tx queues stopped by netif_tx_disable() could be woken up over
-a small time window between netif_tx_disable() and the
-napi_disable() by the following code path:
-napi_poll->
-  enic_poll_msix_wq->
-     vnic_cq_service->
-        enic_wq_service->
-           netif_wake_subqueue(enic->netdev, q_number)->
-              test_and_clear_bit(__QUEUE_STATE_DRV_XOFF, &txq->state)
-In turn, upper netowrk stack could queue skb to ENIC NIC though
-enic_hard_start_xmit(). And this might introduce some race condition.
-
-Our customer comfirmed that this kind of kernel crash doesn't occur over
-90 days since they applied this patch.
-
-Signed-off-by: Firo Yang <firo.yang@suse.com>
+Fixes: 1738cd3ed342 ("net: ena: Add a driver for Amazon Elastic Network Adapters (ENA)")
+Signed-off-by: Sameeh Jubran <sameehj@amazon.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/ethernet/cisco/enic/enic_main.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/net/ethernet/amazon/ena/ena_ethtool.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/net/ethernet/cisco/enic/enic_main.c b/drivers/net/ethernet/cisco/enic/enic_main.c
-index acb2856936d20..6e2ab10ad2e6f 100644
---- a/drivers/net/ethernet/cisco/enic/enic_main.c
-+++ b/drivers/net/ethernet/cisco/enic/enic_main.c
-@@ -2013,10 +2013,10 @@ static int enic_stop(struct net_device *netdev)
- 		napi_disable(&enic->napi[i]);
- 
- 	netif_carrier_off(netdev);
--	netif_tx_disable(netdev);
- 	if (vnic_dev_get_intr_mode(enic->vdev) == VNIC_DEV_INTR_MODE_MSIX)
- 		for (i = 0; i < enic->wq_count; i++)
- 			napi_disable(&enic->napi[enic_cq_wq(enic, i)]);
-+	netif_tx_disable(netdev);
- 
- 	if (!enic_is_dynamic(enic) && !enic_is_sriov_vf(enic))
- 		enic_dev_del_station_addr(enic);
+diff --git a/drivers/net/ethernet/amazon/ena/ena_ethtool.c b/drivers/net/ethernet/amazon/ena/ena_ethtool.c
+index 446873bed382b..b0151139abb18 100644
+--- a/drivers/net/ethernet/amazon/ena/ena_ethtool.c
++++ b/drivers/net/ethernet/amazon/ena/ena_ethtool.c
+@@ -693,7 +693,7 @@ static int ena_get_rxfh(struct net_device *netdev, u32 *indir, u8 *key,
+ 		func = ETH_RSS_HASH_TOP;
+ 		break;
+ 	case ENA_ADMIN_CRC32:
+-		func = ETH_RSS_HASH_XOR;
++		func = ETH_RSS_HASH_CRC32;
+ 		break;
+ 	default:
+ 		netif_err(adapter, drv, netdev,
+@@ -739,7 +739,7 @@ static int ena_set_rxfh(struct net_device *netdev, const u32 *indir,
+ 	case ETH_RSS_HASH_TOP:
+ 		func = ENA_ADMIN_TOEPLITZ;
+ 		break;
+-	case ETH_RSS_HASH_XOR:
++	case ETH_RSS_HASH_CRC32:
+ 		func = ENA_ADMIN_CRC32;
+ 		break;
+ 	default:
 -- 
 2.20.1
 
