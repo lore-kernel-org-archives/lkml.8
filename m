@@ -2,134 +2,98 @@ Return-Path: <SRS0=SnAt=4L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.5 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F2F11C35675
-	for <linux-kernel@archiver.kernel.org>; Sun, 23 Feb 2020 22:08:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1168DC35673
+	for <linux-kernel@archiver.kernel.org>; Sun, 23 Feb 2020 22:13:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C8660206E0
-	for <linux-kernel@archiver.kernel.org>; Sun, 23 Feb 2020 22:08:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DBDDF206E0
+	for <linux-kernel@archiver.kernel.org>; Sun, 23 Feb 2020 22:13:34 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="M8icaUOj"
+	dkim=pass (1024-bit key) header.d=gmx.net header.i=@gmx.net header.b="H4trSBHl"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727193AbgBWWIj (ORCPT
+        id S1727125AbgBWWNd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 23 Feb 2020 17:08:39 -0500
-Received: from mail-pl1-f194.google.com ([209.85.214.194]:39655 "EHLO
-        mail-pl1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726302AbgBWWIj (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 23 Feb 2020 17:08:39 -0500
-Received: by mail-pl1-f194.google.com with SMTP id g6so3213520plp.6;
-        Sun, 23 Feb 2020 14:08:38 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=XVT/YiAQAM+tR2353qmEjurEX/hNonF51dX4WWwf8g0=;
-        b=M8icaUOjj6WKkl3lO0YEn6n/6EFNlzQtFCC1eFpfB0A/m+Ex3zZ0wgszkR/VJkfPfY
-         vkhN/78yQlMZK6/fc9T3IPSoXy49baEQSfWx2y3JQr0mhinh0oa2x6NB9RxioM/4Ldi4
-         spbiARX9wvnniO6CsAIo5vEnxjdcDvP8AWrukLg3eyPu6zdvPM2goDQBZbjupndIK+wS
-         qKCHAVQHVY8L0oVJxCO6xS02Vj1eRzdExi0jg23VKL0QcHM9/kb+QlRbXHIS3gEt3Us+
-         EgZ/z2QDare/fFMjLb5UiIF0UNCTmWaijATJjPLxc7uwMLOlWQoOMahJVUe6r/P0jJo4
-         UUCQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=XVT/YiAQAM+tR2353qmEjurEX/hNonF51dX4WWwf8g0=;
-        b=V9i0Z8uUYzWiwPvJifes07YpyszzRZTWTlp7pL6GSJLtCCPmDJb1TuA8eDgu9YYp0v
-         JXjTZZ/htuQbBxa6yDm90mmFjxdL0Q1RuCxVL7gPMKZiX5aQA3zDwh0FnO7G1lqGUHdQ
-         uFVq3YwQLu9WmUvhufG+j8Ij+IxE0+waE8Ma5xRbYa3XkvHfdc4sK01lIrdW+MXCqhDG
-         YIpbmG4cyT8WiCLTzMBgt/qMvMMbSnfExLbD6dZCZOU8IHE5rCNXZb7IODNU/krCee5Y
-         pGoWQRrRIp2JlAEz0umCeIrcA1fyMjQy8jysFCCk6xZ69VsXqplhrKnubm/VMWY/ejU/
-         s3+Q==
-X-Gm-Message-State: APjAAAVxmhkbr7qITZ3WUtdUPBkUZlqePtSepBUp7GZjKT5WF6FZTobS
-        cATdulJaVjoOJlRjPA5sASzw1Qzs
-X-Google-Smtp-Source: APXvYqw7avgJ0mrUniGFD86P47DGUntXTbl/vC8rO4/qWXHTyo+kuYAaxDPE5aTYyMY/O+FutHGfxQ==
-X-Received: by 2002:a17:90a:5289:: with SMTP id w9mr16774328pjh.95.1582495718321;
-        Sun, 23 Feb 2020 14:08:38 -0800 (PST)
-Received: from ast-mbp ([2620:10d:c090:400::5:7207])
-        by smtp.gmail.com with ESMTPSA id v8sm9840160pfn.172.2020.02.23.14.08.36
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Sun, 23 Feb 2020 14:08:37 -0800 (PST)
-Date:   Sun, 23 Feb 2020 14:08:34 -0800
-From:   Alexei Starovoitov <alexei.starovoitov@gmail.com>
-To:     Kees Cook <keescook@chromium.org>
-Cc:     Casey Schaufler <casey@schaufler-ca.com>,
-        KP Singh <kpsingh@chromium.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Linux Security Module list 
-        <linux-security-module@vger.kernel.org>,
-        Alexei Starovoitov <ast@kernel.org>,
-        James Morris <jmorris@namei.org>, bpf@vger.kernel.org,
-        netdev@vger.kernel.org
-Subject: Re: [PATCH bpf-next v4 3/8] bpf: lsm: provide attachment points for
- BPF LSM programs
-Message-ID: <20200223220833.wdhonzvven7payaw@ast-mbp>
-References: <20200220175250.10795-1-kpsingh@chromium.org>
- <20200220175250.10795-4-kpsingh@chromium.org>
- <0ef26943-9619-3736-4452-fec536a8d169@schaufler-ca.com>
- <202002211946.A23A987@keescook>
+        Sun, 23 Feb 2020 17:13:33 -0500
+Received: from mout.gmx.net ([212.227.15.15]:39539 "EHLO mout.gmx.net"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726302AbgBWWNd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 23 Feb 2020 17:13:33 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gmx.net;
+        s=badeba3b8450; t=1582496009;
+        bh=7aF+9AalTCdfS+vpKbzZPW44vdZ1tp1jXR1yYEcXBFE=;
+        h=X-UI-Sender-Class:From:To:Cc:Subject:Date;
+        b=H4trSBHl7PwH385Hd2FNDd2bLFL7rpavBO+jI9Qj9O/Cxzyl6wd9pwd+SvJbcp/kg
+         Q2olTNXXaIZy28F8a+c33SVGi7SAhEHSgbegxU6IbTN4IHR2mQpYbqieQ7wCsGydfo
+         GrtmY8DG3WjNTPol7w4rZnlDN9XPm+8ROtKr+GXs=
+X-UI-Sender-Class: 01bb95c1-4bf8-414a-932a-4f6e2808ef9c
+Received: from LT02.fritz.box ([84.119.33.160]) by mail.gmx.com (mrgmx004
+ [212.227.17.184]) with ESMTPSA (Nemesis) id 1N1wq3-1jYcAz30rh-012DSw; Sun, 23
+ Feb 2020 23:13:28 +0100
+From:   Heinrich Schuchardt <xypron.glpk@gmx.de>
+To:     Ard Biesheuvel <ardb@kernel.org>
+Cc:     linux-efi@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Heinrich Schuchardt <xypron.glpk@gmx.de>
+Subject: [PATCH 1/1] efi: don't shadow i in efi_config_parse_tables()
+Date:   Sun, 23 Feb 2020 23:13:24 +0100
+Message-Id: <20200223221324.156086-1-xypron.glpk@gmx.de>
+X-Mailer: git-send-email 2.25.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <202002211946.A23A987@keescook>
-User-Agent: NeoMutt/20180223
+Content-Transfer-Encoding: quoted-printable
+X-Provags-ID: V03:K1:nigvyDmZdjk7I3PSnXcXZTauKBprqzPvXojHn7qawH8bjs5J+hr
+ l5OQSj7O2w6RibwHk0nEfPSIGec56uacl46t8DaQDI6QfkV5DXEH4hUbZTWRguFcDdk+q3Y
+ KcJim47zrVS+v6QNDzaRpYR7kYuZLHvUY4dLh6QddhdGMsQQWhtc+ogT3rc7bbXznI0wOhw
+ Hz2RujCg1OnbQnTJJmYtQ==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:91uTEu6FxFM=:O5CDhSjasjEcqfxQ4TpEv4
+ v4FrIPaCs3I7cLxqnBxWnLmwfLuMMQYIXTRN9LCpcOJjJO1z7xAW7YrBj5gETfor2brBqZ585
+ 3EmF3SAiqD6VfiMfT9miU9a+6M426iH6nZeBzvnjBh7e83iJoWHFMkdUyVf4EwiSQkqDrUmhr
+ glvtTg1xSFhBN9crfBm367pdHlI8EanVcOSly3tUyoOzZh/vgHqj8a2TYU5JG9T9MeHiBMCyQ
+ AWPWiZW4ggiRJc8mSnrL4JCVEp4Y1+sMN6Ff5irgNgRTnBJ9krBHkMxbTu5XOy8RAbCM+p/gp
+ pD4Ylk7WdAAwiIazYmBQZVkPlJvSA3Q29pTqtlHzXIPHZAfD9ayBIAdCOJCvXOgCpQJ6KrAUM
+ TFuzTzqFFGxzP9DJaxUu4oUic3SIgLEJOBewNyHpeRTyeARmQ/7/vNlRBm4Y7OGtsWgZqfMjq
+ fhlYX7R0bP0io1MBz0e7cyRQin0LEkJMo3JHtdyl4zHxFz9uJkMaqa0l4UCQBEVmjcCvWqeTn
+ 7TgvXn7rPBclquFiEUVr+os0xmewwICEg+1x4FTio6YMw2YkR24IW49RXEggpXmP/WsWTVlhb
+ e8EcdYr9wyjpQLku1Cuv5cVHZS4qGqpzJzA/PYZ+qsmCI4/QH9Zfl+//8BjmIJlLDqtWrv+3B
+ KuO2t2HRcA/3dCHxA0MjFNLS3p9VoJGj5sxjKxn60eM5d6GefREIkcdgEA6HKIAwCCcAWFn6i
+ t+GswjkRh6Ku4T8bKlXYZJZaNj/QNSCIktw2wqa7vByjSsstPHTh1XE5vGbz0LKdakblyOjDo
+ 9vCxnNtXKuRZiHae5IgRopIBGgn4ulcDbwRAMrlalAmoRIle0MTd/FTlmRUOMUt/VBQKDtpRK
+ lXFHZCkATkPbgiWBfomA55yvpqAXNlkP2moiCD6nh5mb0/paUkVqw7Nb7pyGD0g0Mbe5HMayO
+ ibrNIaegtJnLu0VDDTfWfkrerEV7zKuJDWLKqW48YlYW1qi+OulwXFZK4xXpfLpO8ZVzSeOmj
+ B6Gd01jEGywxkKrc64Pc+CFPoOXff9PtQyb8RnrS7oObY5J+Y5sgwGpQcF70eq3SskEndhogh
+ 3huei0c3xx1g+TlPzRSawuBCODqY3e1fhAy+xsE25sI4CamWPEQ62VzMaNuuUY/g93mJP9V/s
+ QPTHzT1g7jK7fU3HOJdrc7ZEc+hKVCPC8TiXCUUp4nVJlKLVC12/A0lO6aQ9L08vOdCAbfHtg
+ 7gMXtHZaSoXBPZ/tv
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Feb 21, 2020 at 08:22:59PM -0800, Kees Cook wrote:
-> 
-> If I'm understanding this correctly, there are two issues:
-> 
-> 1- BPF needs to be run last due to fexit trampolines (?)
+Shadowing variables is generally frowned upon.
 
-no.
-The placement of nop call can be anywhere.
-BPF trampoline is automagically converting nop call into a sequence
-of directly invoked BPF programs.
-No link list traversals and no indirect calls in run-time.
+Let's simply reuse the existing loop counter i instead of shadowing it.
 
-> 2- BPF hooks don't know what may be attached at any given time, so
->    ALL LSM hooks need to be universally hooked. THIS turns out to create
->    a measurable performance problem in that the cost of the indirect call
->    on the (mostly/usually) empty BPF policy is too high.
+Signed-off-by: Heinrich Schuchardt <xypron.glpk@gmx.de>
+=2D--
+ drivers/firmware/efi/efi.c | 1 -
+ 1 file changed, 1 deletion(-)
 
-also no.
+diff --git a/drivers/firmware/efi/efi.c b/drivers/firmware/efi/efi.c
+index 69a585106d30..d0c7f4c1db31 100644
+=2D-- a/drivers/firmware/efi/efi.c
++++ b/drivers/firmware/efi/efi.c
+@@ -553,7 +553,6 @@ int __init efi_config_parse_tables(const efi_config_ta=
+ble_t *config_tables,
+ 		while (prsv) {
+ 			struct linux_efi_memreserve *rsv;
+ 			u8 *p;
+-			int i;
 
-> So, trying to avoid the indirect calls is, as you say, an optimization,
-> but it might be a needed one due to the other limitations.
+ 			/*
+ 			 * Just map a full page: that is what we will get
+=2D-
+2.25.0
 
-I'm convinced that avoiding the cost of retpoline in critical path is a
-requirement for any new infrastructure in the kernel.
-Not only for security, but for any new infra.
-Networking stack converted all such places to conditional calls.
-In BPF land we converted indirect calls to direct jumps and direct calls.
-It took two years to do so. Adding new indirect calls is not an option.
-I'm eagerly waiting for Peter's static_call patches to land to convert
-a lot more indirect calls. May be existing LSMs will take advantage
-of static_call patches too, but static_call is not an option for BPF.
-That's why we introduced BPF trampoline in the last kernel release.
-
-> b) Would there actually be a global benefit to using the static keys
->    optimization for other LSMs?
-
-Yes. Just compiling with CONFIG_SECURITY adds "if (hlist_empty)" check
-for every hook. Some of those hooks are in critical path. This load+cmp
-can be avoided with static_key optimization. I think it's worth doing.
-
-> If static keys are justified for KRSI
-
-I really like that KRSI costs absolutely zero when it's not enabled.
-Attaching BPF prog to one hook preserves zero cost for all other hooks.
-And when one hook is BPF powered it's using direct call instead of
-super expensive retpoline.
-
-Overall this patch set looks good to me. There was a minor issue with prog
-accounting. I expect only that bit to be fixed in v5.
