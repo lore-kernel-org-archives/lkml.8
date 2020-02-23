@@ -2,125 +2,130 @@ Return-Path: <SRS0=SnAt=4L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D28B3C35670
-	for <linux-kernel@archiver.kernel.org>; Sun, 23 Feb 2020 09:57:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 615F0C35670
+	for <linux-kernel@archiver.kernel.org>; Sun, 23 Feb 2020 10:00:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A58BF214DB
-	for <linux-kernel@archiver.kernel.org>; Sun, 23 Feb 2020 09:57:40 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=megous.com header.i=@megous.com header.b="KBLgQTYN"
+	by mail.kernel.org (Postfix) with ESMTP id 37A3E208C4
+	for <linux-kernel@archiver.kernel.org>; Sun, 23 Feb 2020 10:00:29 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1582452029;
+	bh=xwKm9mG+11CRzycDripWRYB5FalIoOmjBWJgOiYvD5k=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=dGg7EpK84j4GY747U1FDNUoLCTMz4/89Ydoss2NbS8338mEtD6TNVjqSu3h1LeOVG
+	 UmQ1eavPnzjSuntmQmR9bRfmR5vwfYrapwfYf3IkwP54p/DXw0EiSjHHvxb8G32IjN
+	 txcaizipUsdYjy6q4pp7r92MCcqpBLSnYjpvNGqw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726953AbgBWJ5j (ORCPT
+        id S1727191AbgBWKA0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 23 Feb 2020 04:57:39 -0500
-Received: from vps.xff.cz ([195.181.215.36]:41430 "EHLO vps.xff.cz"
+        Sun, 23 Feb 2020 05:00:26 -0500
+Received: from mail.kernel.org ([198.145.29.99]:44162 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725980AbgBWJ5j (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 23 Feb 2020 04:57:39 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=megous.com; s=mail;
-        t=1582451857; bh=Hc3Q/e3isq42FZVZz5Pj1+rkdYA5T7YqVfZ3lSbKHwM=;
-        h=Date:From:To:Cc:Subject:References:X-My-GPG-KeyId:From;
-        b=KBLgQTYNtOdfr0C8KgWxzTcFc9H4LySTQ3Y2+AYmD1O0bUlSZ7CqOWG9Bnmy4p0aN
-         UHCxvhQuuCvVN/Eathp3L8kX54EJBUF2WnR1EY0HTlyZJ/EEWGNPCbqE5N2n7BnzCf
-         v4yNsINPB0peqyQ18CwD8sYkROsvuULDUSk5C2J0=
-Date:   Sun, 23 Feb 2020 10:57:36 +0100
-From:   =?utf-8?Q?Ond=C5=99ej?= Jirman <megous@megous.com>
-To:     Chen-Yu Tsai <wens@csie.org>
-Cc:     linux-sunxi <linux-sunxi@googlegroups.com>,
-        Maxime Ripard <mripard@kernel.org>,
-        Tomas Novotny <tomas@novotny.cz>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        "moderated list:ARM/Allwinner sunXi SoC support" 
-        <linux-arm-kernel@lists.infradead.org>,
-        open list <linux-kernel@vger.kernel.org>
-Subject: Re: [linux-sunxi] [PATCH 2/4] ARM: dts: sun8i-a83t-tbs-a711: HM5065
- doesn't like such a high voltage
-Message-ID: <20200223095736.5c3dr66734kv3ypg@core.my.home>
-Mail-Followup-To: Chen-Yu Tsai <wens@csie.org>,
-        linux-sunxi <linux-sunxi@googlegroups.com>,
-        Maxime Ripard <mripard@kernel.org>,
-        Tomas Novotny <tomas@novotny.cz>, Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>,
-        "moderated list:ARM/Allwinner sunXi SoC support" <linux-arm-kernel@lists.infradead.org>,
-        open list <linux-kernel@vger.kernel.org>
-References: <20200222223154.221632-1-megous@megous.com>
- <20200222223154.221632-3-megous@megous.com>
- <CAGb2v67uOXE7_28yn8Q2uo320vE1FsqL-ewG4p1nViim3q0xbw@mail.gmail.com>
+        id S1725980AbgBWKA0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 23 Feb 2020 05:00:26 -0500
+Received: from localhost (95-141-97-180.as16211.net [95.141.97.180])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8CC16206ED;
+        Sun, 23 Feb 2020 10:00:24 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1582452025;
+        bh=xwKm9mG+11CRzycDripWRYB5FalIoOmjBWJgOiYvD5k=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=NwryWQ5Goji2SiP6xJzMmh7wCi300mTSXPWWqyPuSGdZGL3+TXg/MKgteSFqqoFLa
+         vqqDacaNByLoHmQQIHWfBnP8xK+rBbROt7YWk6Tf2cCbWOEgm+iLjcG0PSEFnradCr
+         p1xCdrnh264QsepdCKdaenBu4e5yDT334vyn1CD0=
+Date:   Sun, 23 Feb 2020 11:00:22 +0100
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     Arnd Bergmann <arnd@arndb.de>
+Cc:     Scott Branden <scott.branden@broadcom.com>,
+        Luis Chamberlain <mcgrof@kernel.org>,
+        David Brown <david.brown@linaro.org>,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        Shuah Khan <shuah@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Shuah Khan <skhan@linuxfoundation.org>,
+        "Rafael J . Wysocki" <rafael@kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
+        Linux FS-devel Mailing List <linux-fsdevel@vger.kernel.org>,
+        BCM Kernel Feedback <bcm-kernel-feedback-list@broadcom.com>,
+        Olof Johansson <olof@lixom.net>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Dan Carpenter <dan.carpenter@oracle.com>,
+        Colin Ian King <colin.king@canonical.com>,
+        Kees Cook <keescook@chromium.org>,
+        Takashi Iwai <tiwai@suse.de>,
+        "open list:KERNEL SELFTEST FRAMEWORK" 
+        <linux-kselftest@vger.kernel.org>, Andy Gross <agross@kernel.org>,
+        Desmond Yan <desmond.yan@broadcom.com>,
+        James Hu <james.hu@broadcom.com>
+Subject: Re: [PATCH v2 6/7] misc: bcm-vk: add Broadcom VK driver
+Message-ID: <20200223100022.GB120495@kroah.com>
+References: <20200220004825.23372-1-scott.branden@broadcom.com>
+ <20200220004825.23372-7-scott.branden@broadcom.com>
+ <20200220074711.GA3261162@kroah.com>
+ <ee53fe6f-53de-87c0-db16-989cc15abbce@broadcom.com>
+ <CAK8P3a0y8RfjEng4AsMr4MAPGMTXduiFOyfUzazgw9c+KVWmYA@mail.gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <CAGb2v67uOXE7_28yn8Q2uo320vE1FsqL-ewG4p1nViim3q0xbw@mail.gmail.com>
-X-My-GPG-KeyId: EBFBDDE11FB918D44D1F56C1F9F0A873BE9777ED
- <https://xff.cz/key.txt>
+In-Reply-To: <CAK8P3a0y8RfjEng4AsMr4MAPGMTXduiFOyfUzazgw9c+KVWmYA@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello,
-
-On Sun, Feb 23, 2020 at 11:39:17AM +0800, Chen-Yu Tsai wrote:
-> On Sun, Feb 23, 2020 at 6:32 AM Ondrej Jirman <megous@megous.com> wrote:
-> >
-> > Lowering the voltage solves the quick image degradation over time
-> > (minutes), that was probably caused by overheating.
-> >
-> > Signed-off-by: Ondrej Jirman <megous@megous.com>
+On Sat, Feb 22, 2020 at 09:02:44AM +0100, Arnd Bergmann wrote:
+> On Fri, Feb 21, 2020 at 7:19 PM Scott Branden
+> <scott.branden@broadcom.com> wrote:
+> > On 2020-02-19 11:47 p.m., Greg Kroah-Hartman wrote:
 > 
-> Makes sense. A lot of camera sensors run their digital parts off 1.8V.
-> This one is no different.
+> > > Have you worked with the V4L developers to tie this into the proper
+> > > in-kernel apis for this type of functionality?
+> > We looked at the V4L model doesn't have any support for anything we are
+> > doing in this driver.
+> > We also want a driver that doesn't care about video.  It could be
+> > offloading crypto or other operations.
+> > We talked with Olof about all of this previously and he said leave it as
+> > a misc driver for now.
+> > He was going to discuss at linux plumbers conference that we need some
+> > sort of offload engine model that such devices could fit into.
 > 
-> Acked-by: Chen-Yu Tsai <wens@csie.org>
+> I see. Have you looked at the "uacce" driver submission? It seems
+> theirs is similar enough that there might be some way to share interfaces.
 > 
-> The whole CSI stuff isn't enabled in the device tree yet though, and
-> there are a lot of regulators with CSI in their names. Will this get
-> worked on?
-
-Yes, I'm preparing support for both cameras in this branch:
-
-  https://megous.com/git/linux/log/?h=cam-5.6
-
-Both already work quite well. I'm just sending some fixes early.
-
-Both cameras work best at 1.8V for the digital part.
-
-regards,
-	o.
-
-> ChenYu
+> > > Using a tty driver seems like the totally incorrect way to do this, what
+> > > am I missing?
+> > tty driver is used to provide console access to the processors running
+> > on vk.
+> > Data is sent using the bcm_vk_msg interface by read/write operations
+> > from user space.
+> > VK then gets the messages and DMA's the data to/from host memory when
+> > needed to process.
 > 
-> > ---
-> >  arch/arm/boot/dts/sun8i-a83t-tbs-a711.dts | 4 ++--
-> >  1 file changed, 2 insertions(+), 2 deletions(-)
-> >
-> > diff --git a/arch/arm/boot/dts/sun8i-a83t-tbs-a711.dts b/arch/arm/boot/dts/sun8i-a83t-tbs-a711.dts
-> > index ee5ce3556b2ad..ae1fd2ee3bcce 100644
-> > --- a/arch/arm/boot/dts/sun8i-a83t-tbs-a711.dts
-> > +++ b/arch/arm/boot/dts/sun8i-a83t-tbs-a711.dts
-> > @@ -371,8 +371,8 @@ &reg_dldo2 {
-> >  };
-> >
-> >  &reg_dldo3 {
-> > -       regulator-min-microvolt = <2800000>;
-> > -       regulator-max-microvolt = <2800000>;
-> > +       regulator-min-microvolt = <1800000>;
-> > +       regulator-max-microvolt = <1800000>;
-> >         regulator-name = "vdd-csi";
-> >  };
-> >
-> > --
-> > 2.25.1
-> >
-> > --
-> > You received this message because you are subscribed to the Google Groups "linux-sunxi" group.
-> > To unsubscribe from this group and stop receiving emails from it, send an email to linux-sunxi+unsubscribe@googlegroups.com.
-> > To view this discussion on the web, visit https://groups.google.com/d/msgid/linux-sunxi/20200222223154.221632-3-megous%40megous.com.
+> In turn here, it sounds like you'd want to look at what drivers/misc/mic/
+> and the mellanox bluefield drivers are doing. As I understand, they have the
+> same requirements for console, but have a nicer approach of providing
+> abstract 'virtio' channels between the PCIe endpoint and the host, and
+> then run regular virtio based drivers (console, tty, block, filesystem,
+> network, ...) along with application specific ones to provide the custom
+> high-level protocols. This is also similar to what the drivers/pci/endpoint
+> (from the other end) as the drivers/ntb (pci host on both ends) frameworks
+> and of course the rpmsg/remoteproc framework do.
+> 
+> In the long run, I would want much more consolidation between the
+> low-level parts of all these frameworks, but moving your high-level
+> protocols to the same virtio method would sound like a step in the
+> direction towards a generialized framework and easier sharing of
+> the abstractions.
+
+I agree, please do not override the generic tty api with something so
+hardware-specific like this as it really is not a serial device here.
+
+thanks,
+
+greg k-h
