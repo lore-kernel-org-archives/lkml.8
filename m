@@ -2,170 +2,123 @@ Return-Path: <SRS0=SnAt=4L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 04345C35671
-	for <linux-kernel@archiver.kernel.org>; Sun, 23 Feb 2020 03:45:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 14354C35670
+	for <linux-kernel@archiver.kernel.org>; Sun, 23 Feb 2020 03:54:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BEFED208C3
-	for <linux-kernel@archiver.kernel.org>; Sun, 23 Feb 2020 03:45:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CE0AD2067D
+	for <linux-kernel@archiver.kernel.org>; Sun, 23 Feb 2020 03:54:26 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=sholland.org header.i=@sholland.org header.b="Nnk7ZUOb";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="nDYUDI5q"
+	dkim=pass (2048-bit key) header.d=sholland.org header.i=@sholland.org header.b="eH3O+Uht";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="GyuP/YCv"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727183AbgBWDph (ORCPT
+        id S1727166AbgBWDyZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 22 Feb 2020 22:45:37 -0500
-Received: from new4-smtp.messagingengine.com ([66.111.4.230]:33323 "EHLO
+        Sat, 22 Feb 2020 22:54:25 -0500
+Received: from new4-smtp.messagingengine.com ([66.111.4.230]:44435 "EHLO
         new4-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726965AbgBWDpg (ORCPT
+        by vger.kernel.org with ESMTP id S1726983AbgBWDyZ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 22 Feb 2020 22:45:36 -0500
+        Sat, 22 Feb 2020 22:54:25 -0500
 Received: from compute5.internal (compute5.nyi.internal [10.202.2.45])
-        by mailnew.nyi.internal (Postfix) with ESMTP id C4F966A1E;
-        Sat, 22 Feb 2020 22:45:35 -0500 (EST)
-Received: from mailfrontend2 ([10.202.2.163])
-  by compute5.internal (MEProxy); Sat, 22 Feb 2020 22:45:35 -0500
+        by mailnew.nyi.internal (Postfix) with ESMTP id D30BD141E;
+        Sat, 22 Feb 2020 22:54:23 -0500 (EST)
+Received: from mailfrontend1 ([10.202.2.162])
+  by compute5.internal (MEProxy); Sat, 22 Feb 2020 22:54:23 -0500
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=sholland.org; h=
-        from:to:cc:subject:date:message-id:in-reply-to:references
-        :mime-version:content-transfer-encoding; s=fm2; bh=xEUgRs6Eo7JPj
-        +m5PuuwJ2k+XGQGKRuM1/o6sSyplzM=; b=Nnk7ZUObs/FREDBnMBIGIQlbk9/hB
-        OHnQtloJwUPBSezuEntlSgCdrcuj49sBrzn+52lag/e10aT0skZWeUSN6C27672D
-        s+yhPhKqHrV/p22xuXd4/fo0hD4cnmW3L5ECeeevPICnHmI7x0R8j7T7Yy/2xhQN
-        XGoKxbZ+jL6aufYTesxziewgZ548tXriI2XjIvfEKXsuFlwk2PnQO5qPNd62wv1g
-        c2dz16JrReSTHVrZSou953WnzKst8pDfS+1LTLJefpRznjPrl4XOdwGnKM3E0Agi
-        sixVwXvy9Z/fb62b2zFZEfCzJebb2fd/53lm+kg5YslT3G1CBN0L5GkTw==
+        subject:to:cc:references:from:message-id:date:mime-version
+        :in-reply-to:content-type:content-transfer-encoding; s=fm2; bh=U
+        tQ4ZCxViuOYrkl32VfE2T3Vc4NBhu7cH68gein0hZ8=; b=eH3O+UhtcNk39WqG7
+        7++FXGFTX+4Z2PcXe3xjcwJsOODd4hxFQavwi0/mUwTIoxG9JBuAOmvs5HQJt990
+        QIgs1pI/FaTRd3ev0T4IL+aTvVevCQh7OFSFWKaP/KY94r+EE9D8RHkP90X8PxFC
+        oBLmR6XHSy54HBa/H14DQ7lYQ0J/Ydfp27ocjSVODTDsMZjhEZb10ccofds6YtNi
+        oaCndzsfnBoKSmoY5aRfQXCd4KQVTdffKFdF/fHmCrQVYwGy8OLV2MowadGuAqHn
+        YIqEA+IgJP8fQu88VichUhpYSu9m/bVcLBBWNImzHZQ0a/ObPiE6NmPeg6oxGd8W
+        K6ySQ==
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-        messagingengine.com; h=cc:content-transfer-encoding:date:from
-        :in-reply-to:message-id:mime-version:references:subject:to
-        :x-me-proxy:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=
-        fm2; bh=xEUgRs6Eo7JPj+m5PuuwJ2k+XGQGKRuM1/o6sSyplzM=; b=nDYUDI5q
-        8FR8xwUv4oxtygL7IpTmLDh/3bqPDsly1+AlprNxpKvRMKIxvU0XG7OJOUxllv+6
-        5fjXtsYbM00wkW3dEKY2gGomFaY2Pcbtr/a8CDd9yotmgmJhrfhtvoV3ggU0Yxdz
-        L8JIKZe9e0dwNEYy+zaN1lE6bUpNRyeIm8x63kyrNUAQt3W4V1ABwHQDpPaqKQXk
-        w/O6VKlYGkHWEkit1/IRWGHLcb4s0ZsQTc9uPj5Z9NUsKz+ieV3qg4lRxRZPtgVM
-        AxNWbhNcBZh5Hp9L6NtSiw16Jh43z0H9bURtPOz9zqNjqZNfpnIDr7YHPROl/isB
-        YaerEMfAw4iAYg==
-X-ME-Sender: <xms:XvVRXsGPhieLJ9ydI2nOrn5F2bTAYDPC2uNGwuU9Pjby6-2gR3AxiQ>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedugedrkeejgdeitdcutefuodetggdotefrodftvf
+        messagingengine.com; h=cc:content-transfer-encoding:content-type
+        :date:from:in-reply-to:message-id:mime-version:references
+        :subject:to:x-me-proxy:x-me-proxy:x-me-sender:x-me-sender
+        :x-sasl-enc; s=fm2; bh=UtQ4ZCxViuOYrkl32VfE2T3Vc4NBhu7cH68gein0h
+        Z8=; b=GyuP/YCv6RLhHx+tybgAMZbAWarsj8Ii4R+BOab0Cw4iOfoJaifZtVc/6
+        5Fd1ZIpBORlLHlM5LdItWCbg4TqjJbGHEkASpjlrm+3gGzqj/BwAaZuqBOH0YZxx
+        XM34+pmlF976U4TwYysQcVWaDYNCrA75o/b6cM0a0sM3lmw8zmvMMPJXYX3Fpv4I
+        yYjTsV717azlzXouTRBaux6jcJMDECw07ZfLymaJ80a20T9FvQsSwAYXw9m6V4Vd
+        pFLgMxSD48vcLM7SooibOaf/fbhrA+Hv9V84TE7nSgj9bXlkh7UwPQfclWjLbRGz
+        K9IGLkbdVO+s8xbaE9j7kamSgE9ZQ==
+X-ME-Sender: <xms:avdRXiuiOsH3o0DSLtQ5DE1m9D-9YuzK8izj4qTuqAIMxZEQ3TuaEQ>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedugedrkeejgdeiudcutefuodetggdotefrodftvf
     curfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfghnecu
     uegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenuc
-    fjughrpefhvffufffkofgjfhgggfestdekredtredttdenucfhrhhomhepufgrmhhuvghl
-    ucfjohhllhgrnhguuceoshgrmhhuvghlsehshhholhhlrghnugdrohhrgheqnecukfhppe
-    ejtddrudefhedrudegkedrudehudenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgr
-    mhepmhgrihhlfhhrohhmpehsrghmuhgvlhesshhhohhllhgrnhgurdhorhhg
-X-ME-Proxy: <xmx:XvVRXg5FlqsUU1rgAW3-fYS5k3_LfJ4BW7rihWdkjvCZCM3he3aumw>
-    <xmx:XvVRXtZEvRLeZ2-FlV6LSk-2uOz01uxpN3iIRJoRXzSVoPfH8Xq1dg>
-    <xmx:XvVRXmfWil9w341ftIJdPZIthQJPbbvyXQoCgVKuispyKio3Gvg6iQ>
-    <xmx:X_VRXkYXIkMNm3jW85dIxNcE7kl3MiOt4yI7aMamSjIfOhofnNdWzw>
-Received: from titanium.stl.sholland.net (70-135-148-151.lightspeed.stlsmo.sbcglobal.net [70.135.148.151])
-        by mail.messagingengine.com (Postfix) with ESMTPA id 7105C3060F9B;
-        Sat, 22 Feb 2020 22:45:34 -0500 (EST)
-From:   Samuel Holland <samuel@sholland.org>
-To:     Mark Brown <broonie@kernel.org>,
+    fjughrpefuvfhfhffkffgfgggjtgfgsehtjeertddtfeejnecuhfhrohhmpefurghmuhgv
+    lhcujfholhhlrghnugcuoehsrghmuhgvlhesshhhohhllhgrnhgurdhorhhgqeenucfkph
+    epjedtrddufeehrddugeekrdduhedunecuvehluhhsthgvrhfuihiivgeptdenucfrrghr
+    rghmpehmrghilhhfrhhomhepshgrmhhuvghlsehshhholhhlrghnugdrohhrgh
+X-ME-Proxy: <xmx:avdRXn51utho87JkjiCEVKsYSyaYUpq6F3T40tibOEYao28SHO_3Bw>
+    <xmx:avdRXjN-2TXP4CKuwakTE1BqjwcSJb_74ylsLvfxdtvCfcsv01adtw>
+    <xmx:avdRXrLkOPwWjIuYPLMnhvX-YnhSwzeK0a3As4WIj5J_T5iK2msXFw>
+    <xmx:b_dRXgzcsgknp-tn_3NniTdvYlav4zzWm91Lza6tirW8ghCKDJ3peg>
+Received: from [192.168.50.169] (70-135-148-151.lightspeed.stlsmo.sbcglobal.net [70.135.148.151])
+        by mail.messagingengine.com (Postfix) with ESMTPA id 4E23C3280059;
+        Sat, 22 Feb 2020 22:54:18 -0500 (EST)
+Subject: Re: [PATCH 5/8] ASoC: sun50i-codec-analog: Enable DAPM for headphone
+ switch
+To:     Chen-Yu Tsai <wens@csie.org>
+Cc:     Mark Brown <broonie@kernel.org>,
         Liam Girdwood <lgirdwood@gmail.com>,
         Jaroslav Kysela <perex@perex.cz>,
         Takashi Iwai <tiwai@suse.com>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Jerome Brunet <jbrunet@baylibre.com>
-Cc:     Ondrej Jirman <megous@megous.com>, alsa-devel@alsa-project.org,
-        linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org,
-        Samuel Holland <samuel@sholland.org>
-Subject: [PATCH v3 1/3] ALSA: pcm: Add a standalone version of snd_pcm_limit_hw_rates
-Date:   Sat, 22 Feb 2020 21:45:31 -0600
-Message-Id: <20200223034533.1035-2-samuel@sholland.org>
-X-Mailer: git-send-email 2.24.1
-In-Reply-To: <20200223034533.1035-1-samuel@sholland.org>
-References: <20200223034533.1035-1-samuel@sholland.org>
+        Maxime Ripard <mripard@kernel.org>,
+        Vasily Khoruzhick <anarsoul@gmail.com>,
+        Luca Weiss <luca@z3ntu.xyz>,
+        Linux-ALSA <alsa-devel@alsa-project.org>,
+        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>
+References: <20200217021813.53266-1-samuel@sholland.org>
+ <20200217021813.53266-6-samuel@sholland.org>
+ <CAGb2v65v=wPJNxPfOzp2bcevk0qoDiW-+KFBO1MKHz6gE86DPQ@mail.gmail.com>
+From:   Samuel Holland <samuel@sholland.org>
+Message-ID: <f0037c9d-e3b5-3fa9-1f1a-d52d26de3ed7@sholland.org>
+Date:   Sat, 22 Feb 2020 21:54:17 -0600
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.2.2
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAGb2v65v=wPJNxPfOzp2bcevk0qoDiW-+KFBO1MKHz6gE86DPQ@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-It can be useful to derive min/max rates of a snd_pcm_hardware without
-having a snd_pcm_runtime, such as before constructing an ASoC DAI link.
+On 2/17/20 1:17 AM, Chen-Yu Tsai wrote:
+> On Mon, Feb 17, 2020 at 10:18 AM Samuel Holland <samuel@sholland.org> wrote:
+>>
+>> By including the headphone mute switch to the DAPM graph, both the
+>> headphone amplifier and the Mixer/DAC inputs can be powered off when
+>> the headphones are muted.
+>>
+>> The mute switch is between the source selection and the amplifier,
+>> as per the diagram in the SoC manual.
+>>
+>> Signed-off-by: Samuel Holland <samuel@sholland.org>
+> 
+> Reviewed-by: Chen-Yu Tsai <wens@csie.org>
+> 
+> BTW, have you also considered tying in the headphone volume control?
+> It also has a mute setting.
 
-Create a new helper that takes a pointer to a snd_pcm_hardware directly,
-and refactor the original function as a wrapper around it, to avoid
-needing to update any call sites.
+As far as I can tell, setting a volume control to its "mute" level has no effect
+on the DAPM power state. So I didn't add PGA widgets for the volume controls on
+either codec. I can add them if there's some benefit to doing so.
 
-Signed-off-by: Samuel Holland <samuel@sholland.org>
----
- include/sound/pcm.h   |  9 ++++++++-
- sound/core/pcm_misc.c | 18 +++++++++---------
- 2 files changed, 17 insertions(+), 10 deletions(-)
+> ChenYu
+> 
 
-diff --git a/include/sound/pcm.h b/include/sound/pcm.h
-index f657ff08f317..89529dfffaac 100644
---- a/include/sound/pcm.h
-+++ b/include/sound/pcm.h
-@@ -1122,7 +1122,14 @@ snd_pcm_kernel_readv(struct snd_pcm_substream *substream,
- 	return __snd_pcm_lib_xfer(substream, bufs, false, frames, true);
- }
- 
--int snd_pcm_limit_hw_rates(struct snd_pcm_runtime *runtime);
-+int snd_pcm_hw_limit_rates(struct snd_pcm_hardware *hw);
-+
-+static inline int
-+snd_pcm_limit_hw_rates(struct snd_pcm_runtime *runtime)
-+{
-+	return snd_pcm_hw_limit_rates(&runtime->hw);
-+}
-+
- unsigned int snd_pcm_rate_to_rate_bit(unsigned int rate);
- unsigned int snd_pcm_rate_bit_to_rate(unsigned int rate_bit);
- unsigned int snd_pcm_rate_mask_intersect(unsigned int rates_a,
-diff --git a/sound/core/pcm_misc.c b/sound/core/pcm_misc.c
-index a6a541511534..5dd2e5335900 100644
---- a/sound/core/pcm_misc.c
-+++ b/sound/core/pcm_misc.c
-@@ -474,32 +474,32 @@ int snd_pcm_format_set_silence(snd_pcm_format_t format, void *data, unsigned int
- EXPORT_SYMBOL(snd_pcm_format_set_silence);
- 
- /**
-- * snd_pcm_limit_hw_rates - determine rate_min/rate_max fields
-- * @runtime: the runtime instance
-+ * snd_pcm_hw_limit_rates - determine rate_min/rate_max fields
-+ * @hw: the pcm hw instance
-  *
-  * Determines the rate_min and rate_max fields from the rates bits of
-- * the given runtime->hw.
-+ * the given hw.
-  *
-  * Return: Zero if successful.
-  */
--int snd_pcm_limit_hw_rates(struct snd_pcm_runtime *runtime)
-+int snd_pcm_hw_limit_rates(struct snd_pcm_hardware *hw)
- {
- 	int i;
- 	for (i = 0; i < (int)snd_pcm_known_rates.count; i++) {
--		if (runtime->hw.rates & (1 << i)) {
--			runtime->hw.rate_min = snd_pcm_known_rates.list[i];
-+		if (hw->rates & (1 << i)) {
-+			hw->rate_min = snd_pcm_known_rates.list[i];
- 			break;
- 		}
- 	}
- 	for (i = (int)snd_pcm_known_rates.count - 1; i >= 0; i--) {
--		if (runtime->hw.rates & (1 << i)) {
--			runtime->hw.rate_max = snd_pcm_known_rates.list[i];
-+		if (hw->rates & (1 << i)) {
-+			hw->rate_max = snd_pcm_known_rates.list[i];
- 			break;
- 		}
- 	}
- 	return 0;
- }
--EXPORT_SYMBOL(snd_pcm_limit_hw_rates);
-+EXPORT_SYMBOL(snd_pcm_hw_limit_rates);
- 
- /**
-  * snd_pcm_rate_to_rate_bit - converts sample rate to SNDRV_PCM_RATE_xxx bit
--- 
-2.24.1
-
+Regards,
+Samuel
