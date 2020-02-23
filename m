@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2AE6DC35671
-	for <linux-kernel@archiver.kernel.org>; Sun, 23 Feb 2020 02:26:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 41E59C35671
+	for <linux-kernel@archiver.kernel.org>; Sun, 23 Feb 2020 02:26:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EC9C821741
-	for <linux-kernel@archiver.kernel.org>; Sun, 23 Feb 2020 02:26:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 19FE220659
+	for <linux-kernel@archiver.kernel.org>; Sun, 23 Feb 2020 02:26:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582424777;
-	bh=1UG6/K0ZXbloJbcRrJtGl0di2YcCGVylYoLcKEsDLJc=;
+	s=default; t=1582424784;
+	bh=ZSiJGuWgxzz7UdiyaHP8cOuIVyiHlTqmuX6Y/Goe6AE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=w4znxHkJ36IdpoaJ4vJbEIWf5fYb5Dl4pahuN/Q9nGG8XVtqXOOOIdGsXy3076cbu
-	 8PWLiZSc0WwOe4jxyEgt1fc0SYX02JfJJfamGG3TsNhFnb5tHCpnWVZhOzs5TyDp0U
-	 IMs+t8/Li/DXkrHX4a7zuyYtqcVt3zpTf66sw/HE=
+	b=cOoICRneLOp054+sRBydu6mvbVi+1jKJZumwzRaEWgXkzArMMZb8iNXHf8TttxY5/
+	 5b6psQWjUmwOPu5Psf1iYi25tpcrXYtUYNSYMOlXDNnhXeE5qXawXRk13Il9f+TUS6
+	 UI6xbNBICa2T++2GbwsbMt2MjU6CToR04lTEKbTU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729081AbgBWC0P (ORCPT
+        id S1729121AbgBWC0W (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 22 Feb 2020 21:26:15 -0500
-Received: from mail.kernel.org ([198.145.29.99]:55352 "EHLO mail.kernel.org"
+        Sat, 22 Feb 2020 21:26:22 -0500
+Received: from mail.kernel.org ([198.145.29.99]:55256 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729495AbgBWCYz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 22 Feb 2020 21:24:55 -0500
+        id S1729475AbgBWCYx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 22 Feb 2020 21:24:53 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 479502467C;
-        Sun, 23 Feb 2020 02:24:54 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E552B21741;
+        Sun, 23 Feb 2020 02:24:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1582424695;
-        bh=1UG6/K0ZXbloJbcRrJtGl0di2YcCGVylYoLcKEsDLJc=;
+        s=default; t=1582424692;
+        bh=ZSiJGuWgxzz7UdiyaHP8cOuIVyiHlTqmuX6Y/Goe6AE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=JHiiIPTsOsPZ8DcxCpibLamXnrQshZhhuHWUTtMUMK7QHpnMcLNJ3JYPxti2Yh5M/
-         DGALDgM3iQQse8sFSdpWkpF9Tfm91jq4o02VijWvo1D16Rpv1EjvfumM7h6OHAZRyo
-         BRR56aHOQkKSsUYesMlOV/DxQCwYpRLIg0i61PTE=
+        b=FnoOvQmHiWNIpKQlC9EcT5s2iDLbDRG84BAX0GbPHcOt4aIvTDfkXwrAPHsR4M4+O
+         glcDjwpadaNFeNNCJ06wVEFOG1UIxPCgH3M6LqNZAhXp7n2/PYVHdUe5NX9n/yd75/
+         Km7Kdh9WDZfGeWg/N9flnLDKaiCm6RmwJaCwC6Ak=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 Cc:     Arthur Kiyanovski <akiyano@amazon.com>,
         Sameeh Jubran <sameehj@amazon.com>,
         "David S . Miller" <davem@davemloft.net>,
         Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.9 13/16] net: ena: ena-com.c: prevent NULL pointer dereference
-Date:   Sat, 22 Feb 2020 21:24:35 -0500
-Message-Id: <20200223022438.2398-13-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.9 11/16] net: ena: rss: store hash function as values and not bits
+Date:   Sat, 22 Feb 2020 21:24:33 -0500
+Message-Id: <20200223022438.2398-11-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200223022438.2398-1-sashal@kernel.org>
 References: <20200223022438.2398-1-sashal@kernel.org>
@@ -62,22 +62,25 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Arthur Kiyanovski <akiyano@amazon.com>
 
-[ Upstream commit c207979f5ae10ed70aff1bb13f39f0736973de99 ]
+[ Upstream commit 4844470d472d660c26149ad764da2406adb13423 ]
 
-comp_ctx can be NULL in a very rare case when an admin command is executed
-during the execution of ena_remove().
+The device receives, stores and retrieves the hash function value as bits
+and not as their enum value.
 
-The bug scenario is as follows:
+The bug:
+* In ena_com_set_hash_function() we set
+  cmd.u.flow_hash_func.selected_func to the bit value of rss->hash_func.
+ (1 << rss->hash_func)
+* In ena_com_get_hash_function() we retrieve the hash function and store
+  it's bit value in rss->hash_func. (Now the bit value of rss->hash_func
+  is stored in rss->hash_func instead of it's enum value)
 
-* ena_destroy_device() sets the comp_ctx to be NULL
-* An admin command is executed before executing unregister_netdev(),
-  this can still happen because our device can still receive callbacks
-  from the netdev infrastructure such as ethtool commands.
-* When attempting to access the comp_ctx, the bug occurs since it's set
-  to NULL
-
-Fix:
-Added a check that comp_ctx is not NULL
+The fix:
+This commit fixes the issue by converting the retrieved hash function
+values from the device to the matching enum value of the set bit using
+ffs(). ffs() finds the first set bit's index in a word. Since the function
+returns 1 for the LSB's index, we need to subtract 1 from the returned
+value (note that BIT(0) is 1).
 
 Fixes: 1738cd3ed342 ("net: ena: Add a driver for Amazon Elastic Network Adapters (ENA)")
 Signed-off-by: Sameeh Jubran <sameehj@amazon.com>
@@ -85,25 +88,26 @@ Signed-off-by: Arthur Kiyanovski <akiyano@amazon.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/ethernet/amazon/ena/ena_com.c | 5 +++++
- 1 file changed, 5 insertions(+)
+ drivers/net/ethernet/amazon/ena/ena_com.c | 6 +++++-
+ 1 file changed, 5 insertions(+), 1 deletion(-)
 
 diff --git a/drivers/net/ethernet/amazon/ena/ena_com.c b/drivers/net/ethernet/amazon/ena/ena_com.c
-index e1f694322e41a..9bd2a7a5b5a78 100644
+index be8a2d48c98f2..e1f694322e41a 100644
 --- a/drivers/net/ethernet/amazon/ena/ena_com.c
 +++ b/drivers/net/ethernet/amazon/ena/ena_com.c
-@@ -199,6 +199,11 @@ static inline void comp_ctxt_release(struct ena_com_admin_queue *queue,
- static struct ena_comp_ctx *get_comp_ctxt(struct ena_com_admin_queue *queue,
- 					  u16 command_id, bool capture)
- {
-+	if (unlikely(!queue->comp_ctx)) {
-+		pr_err("Completion context is NULL\n");
-+		return NULL;
-+	}
+@@ -2093,7 +2093,11 @@ int ena_com_get_hash_function(struct ena_com_dev *ena_dev,
+ 	if (unlikely(rc))
+ 		return rc;
+ 
+-	rss->hash_func = get_resp.u.flow_hash_func.selected_func;
++	/* ffs() returns 1 in case the lsb is set */
++	rss->hash_func = ffs(get_resp.u.flow_hash_func.selected_func);
++	if (rss->hash_func)
++		rss->hash_func--;
 +
- 	if (unlikely(command_id >= queue->q_depth)) {
- 		pr_err("command id is larger than the queue size. cmd_id: %u queue size %d\n",
- 		       command_id, queue->q_depth);
+ 	if (func)
+ 		*func = rss->hash_func;
+ 
 -- 
 2.20.1
 
