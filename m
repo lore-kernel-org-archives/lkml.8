@@ -7,51 +7,54 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E1956C35669
-	for <linux-kernel@archiver.kernel.org>; Sun, 23 Feb 2020 02:29:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7F033C35669
+	for <linux-kernel@archiver.kernel.org>; Sun, 23 Feb 2020 02:29:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id ACC9820659
-	for <linux-kernel@archiver.kernel.org>; Sun, 23 Feb 2020 02:29:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 57A9220659
+	for <linux-kernel@archiver.kernel.org>; Sun, 23 Feb 2020 02:29:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582424992;
-	bh=8s/VDhbSuYRaoTGEHOdO0eHpgn3QBL6V1BnFX0DcqVk=;
+	s=default; t=1582424998;
+	bh=jdtBSaRnKwccMpAXvj6ku0+MOgE7Z+PuriNC5fpmV6E=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=HGRG75LlKTU0wgmr32Y5ubncjkYTsT7+7yA6b6mDz1rSxAI0L4twSb76wAyl1iRsb
-	 XBnDFqKLXpUdTdeP7n+2AVU6D0haDPsllKYifHnpSFr1mGYKATnUcP8Lu2TOQuCYSX
-	 JCEfpDh8FqfIVcWYqeqI91+NO6aRXCxQ9ZeENDEg=
+	b=nElz8icEDVOYHhERMK54+iRekIiegylx0JEtRkBWdNVTAxd74EU7YPVKpawX384hv
+	 GkD99eVWNxkRRPs+5leqAYDyKKmARlQEAu6ozyFLrazn8JDpRQWjo2WdLwNXa0sLwq
+	 23ENeg8q5CDljnsWp3N0HimvAsD5s1M2oLecpFN4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729064AbgBWC3v (ORCPT
+        id S1728902AbgBWCX5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 22 Feb 2020 21:29:51 -0500
-Received: from mail.kernel.org ([198.145.29.99]:53758 "EHLO mail.kernel.org"
+        Sat, 22 Feb 2020 21:23:57 -0500
+Received: from mail.kernel.org ([198.145.29.99]:53556 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727267AbgBWCX6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 22 Feb 2020 21:23:58 -0500
+        id S1728842AbgBWCXu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 22 Feb 2020 21:23:50 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5F2AB22464;
-        Sun, 23 Feb 2020 02:23:57 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1066020707;
+        Sun, 23 Feb 2020 02:23:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1582424638;
-        bh=8s/VDhbSuYRaoTGEHOdO0eHpgn3QBL6V1BnFX0DcqVk=;
+        s=default; t=1582424630;
+        bh=jdtBSaRnKwccMpAXvj6ku0+MOgE7Z+PuriNC5fpmV6E=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=mKTZ3aef5PGe8ap2UIVwx/+aE+6Pn0fkP0XAQpuBnXNd+zFegxRun6Cl+Vb7Vp4hH
-         9R1pjo/KFkwYR74ODni8JEwgIl7I12/6MggmGDeONShXhUmNkGk0FEAcosOYPbsbMt
-         YbXIEzJ5xOXgfIc5HyP5az54r5kQmwNkjuDbZDEQ=
+        b=OZoJPWsyNklqTW3o4uFegQsuZGg2vhR1YpIPcCf/He2Pu64QvlIc29UeML8HzJ+Jm
+         P3xBOvSl8sG16zHEN1M7IGG8DXDn2GHU1oUXzYFw4DAdxb9JIpoicio4JdVQoeHNv/
+         lmXcLuRq6GfuXkpCRCX56MSV07oIEt0jCrNIBUCQ=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Arthur Kiyanovski <akiyano@amazon.com>,
-        Ezequiel Lara Gomez <ezegomez@amazon.com>,
+Cc:     =?UTF-8?q?Bj=C3=B8rn=20Mork?= <bjorn@mork.no>,
+        Lars Melin <larsm17@gmail.com>,
+        Aleksander Morgado <aleksander@aleksander.es>,
         "David S . Miller" <davem@davemloft.net>,
-        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 15/25] net: ena: add missing ethtool TX timestamping indication
-Date:   Sat, 22 Feb 2020 21:23:29 -0500
-Message-Id: <20200223022339.1885-15-sashal@kernel.org>
+        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org,
+        linux-usb@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 08/25] qmi_wwan: re-add DW5821e pre-production variant
+Date:   Sat, 22 Feb 2020 21:23:22 -0500
+Message-Id: <20200223022339.1885-8-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200223022339.1885-1-sashal@kernel.org>
 References: <20200223022339.1885-1-sashal@kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
@@ -60,43 +63,74 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Arthur Kiyanovski <akiyano@amazon.com>
+From: Bjørn Mork <bjorn@mork.no>
 
-[ Upstream commit cf6d17fde93bdda23c9b02dd5906a12bf8c55209 ]
+[ Upstream commit 88bf54603f6f2c137dfee1abf6436ceac3528d2d ]
 
-Current implementation of the driver calls skb_tx_timestamp()to add a
-software tx timestamp to the skb, however the software-transmit capability
-is not reported in ethtool -T.
+Commit f25e1392fdb5 removed the support for the pre-production variant
+of the Dell DW5821e to avoid probing another USB interface unnecessarily.
+However, the pre-production samples are found in the wild, and this lack
+of support is causing problems for users of such samples.  It is therefore
+necessary to support both variants.
 
-This commit updates the ethtool structure to report the software-transmit
-capability in ethtool -T using the standard ethtool_op_get_ts_info().
-This function reports all software timestamping capabilities (tx and rx),
-as well as setting phc_index = -1. phc_index is the index of the PTP
-hardware clock device that will be used for hardware timestamps. Since we
-don't have such a device in ENA, using the default -1 value is the correct
-setting.
+Matching on both interfaces 0 and 1 is not expected to cause any problem
+with either variant, as only the QMI function will be probed successfully
+on either.  Interface 1 will be rejected based on the HID class for the
+production variant:
 
-Fixes: 1738cd3ed342 ("net: ena: Add a driver for Amazon Elastic Network Adapters (ENA)")
-Signed-off-by: Ezequiel Lara Gomez <ezegomez@amazon.com>
-Signed-off-by: Arthur Kiyanovski <akiyano@amazon.com>
+T:  Bus=01 Lev=03 Prnt=04 Port=00 Cnt=01 Dev#= 16 Spd=480 MxCh= 0
+D:  Ver= 2.10 Cls=ef(misc ) Sub=02 Prot=01 MxPS=64 #Cfgs=  2
+P:  Vendor=413c ProdID=81d7 Rev=03.18
+S:  Manufacturer=DELL
+S:  Product=DW5821e Snapdragon X20 LTE
+S:  SerialNumber=0123456789ABCDEF
+C:  #Ifs= 6 Cfg#= 1 Atr=a0 MxPwr=500mA
+I:  If#= 0 Alt= 0 #EPs= 3 Cls=ff(vend.) Sub=ff Prot=ff Driver=qmi_wwan
+I:  If#= 1 Alt= 0 #EPs= 1 Cls=03(HID  ) Sub=00 Prot=00 Driver=usbhid
+I:  If#= 2 Alt= 0 #EPs= 3 Cls=ff(vend.) Sub=00 Prot=00 Driver=option
+I:  If#= 3 Alt= 0 #EPs= 3 Cls=ff(vend.) Sub=00 Prot=00 Driver=option
+I:  If#= 4 Alt= 0 #EPs= 3 Cls=ff(vend.) Sub=00 Prot=00 Driver=option
+I:  If#= 5 Alt= 0 #EPs= 2 Cls=ff(vend.) Sub=ff Prot=ff Driver=option
+
+And interface 0 will be rejected based on too few endpoints for the
+pre-production variant:
+
+T: Bus=01 Lev=02 Prnt=02 Port=03 Cnt=03 Dev#= 7 Spd=480 MxCh= 0
+D: Ver= 2.10 Cls=ef(misc ) Sub=02 Prot=01 MxPS=64 #Cfgs= 2
+P: Vendor=413c ProdID=81d7 Rev= 3.18
+S: Manufacturer=DELL
+S: Product=DW5821e Snapdragon X20 LTE
+S: SerialNumber=0123456789ABCDEF
+C: #Ifs= 5 Cfg#= 1 Atr=a0 MxPwr=500mA
+I: If#= 0 Alt= 0 #EPs= 2 Cls=ff(vend.) Sub=ff Prot=ff Driver=
+I: If#= 1 Alt= 0 #EPs= 3 Cls=ff(vend.) Sub=ff Prot=ff Driver=qmi_wwan
+I: If#= 2 Alt= 0 #EPs= 3 Cls=ff(vend.) Sub=00 Prot=00 Driver=option
+I: If#= 3 Alt= 0 #EPs= 3 Cls=ff(vend.) Sub=00 Prot=00 Driver=option
+I: If#= 4 Alt= 0 #EPs= 3 Cls=ff(vend.) Sub=00 Prot=00 Driver=option
+
+Fixes: f25e1392fdb5 ("qmi_wwan: fix interface number for DW5821e production firmware")
+Link: https://whrl.pl/Rf0vNk
+Reported-by: Lars Melin <larsm17@gmail.com>
+Cc: Aleksander Morgado <aleksander@aleksander.es>
+Signed-off-by: Bjørn Mork <bjorn@mork.no>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/ethernet/amazon/ena/ena_ethtool.c | 1 +
+ drivers/net/usb/qmi_wwan.c | 1 +
  1 file changed, 1 insertion(+)
 
-diff --git a/drivers/net/ethernet/amazon/ena/ena_ethtool.c b/drivers/net/ethernet/amazon/ena/ena_ethtool.c
-index eb9e07fa427ee..237fbcac734f5 100644
---- a/drivers/net/ethernet/amazon/ena/ena_ethtool.c
-+++ b/drivers/net/ethernet/amazon/ena/ena_ethtool.c
-@@ -817,6 +817,7 @@ static const struct ethtool_ops ena_ethtool_ops = {
- 	.get_channels		= ena_get_channels,
- 	.get_tunable		= ena_get_tunable,
- 	.set_tunable		= ena_set_tunable,
-+	.get_ts_info            = ethtool_op_get_ts_info,
- };
- 
- void ena_set_ethtool_ops(struct net_device *netdev)
+diff --git a/drivers/net/usb/qmi_wwan.c b/drivers/net/usb/qmi_wwan.c
+index 13c8788e3b6b2..f489df377f5d2 100644
+--- a/drivers/net/usb/qmi_wwan.c
++++ b/drivers/net/usb/qmi_wwan.c
+@@ -1298,6 +1298,7 @@ static const struct usb_device_id products[] = {
+ 	{QMI_FIXED_INTF(0x413c, 0x81b6, 8)},	/* Dell Wireless 5811e */
+ 	{QMI_FIXED_INTF(0x413c, 0x81b6, 10)},	/* Dell Wireless 5811e */
+ 	{QMI_FIXED_INTF(0x413c, 0x81d7, 0)},	/* Dell Wireless 5821e */
++	{QMI_FIXED_INTF(0x413c, 0x81d7, 1)},	/* Dell Wireless 5821e preproduction config */
+ 	{QMI_FIXED_INTF(0x413c, 0x81e0, 0)},	/* Dell Wireless 5821e with eSIM support*/
+ 	{QMI_FIXED_INTF(0x03f0, 0x4e1d, 8)},	/* HP lt4111 LTE/EV-DO/HSPA+ Gobi 4G Module */
+ 	{QMI_FIXED_INTF(0x03f0, 0x9d1d, 1)},	/* HP lt4120 Snapdragon X5 LTE */
 -- 
 2.20.1
 
