@@ -2,150 +2,142 @@ Return-Path: <SRS0=SnAt=4L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 79168C35671
-	for <linux-kernel@archiver.kernel.org>; Sun, 23 Feb 2020 11:04:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DFB3DC35671
+	for <linux-kernel@archiver.kernel.org>; Sun, 23 Feb 2020 11:04:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C8F6E20637
-	for <linux-kernel@archiver.kernel.org>; Sun, 23 Feb 2020 11:04:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B05EC20637
+	for <linux-kernel@archiver.kernel.org>; Sun, 23 Feb 2020 11:04:28 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=waifu.club header.i=@waifu.club header.b="yvC+tz6j"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="tKep900/"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727191AbgBWLED (ORCPT
+        id S1727296AbgBWLE1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 23 Feb 2020 06:04:03 -0500
-Received: from mx1.cock.li ([185.10.68.5]:52975 "EHLO cock.li"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726023AbgBWLED (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 23 Feb 2020 06:04:03 -0500
+        Sun, 23 Feb 2020 06:04:27 -0500
+Received: from mail-pj1-f65.google.com ([209.85.216.65]:40363 "EHLO
+        mail-pj1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725980AbgBWLE1 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 23 Feb 2020 06:04:27 -0500
+Received: by mail-pj1-f65.google.com with SMTP id 12so2788717pjb.5;
+        Sun, 23 Feb 2020 03:04:26 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:date:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=om4f7MVc7Kk4+w+0wroNyFz+6EbbOUYfqD30UnUwIqk=;
+        b=tKep900/tlJjVC1CTw0BrMP83obkKmYKmqiYOzqSXTmPQyOrJhOu24H+yRqljXSZ18
+         D5H8BkZ3Uirf85lOX2Z1eo1LLLC8HbfVDcw9tGClHpQZW0qb65KVC/25iuKtlzzDGV5X
+         bZB9SGwAqiA6A39U3T5p39r8A7Zfh6smCtWH/AmnGvbpBrZUkFOd/qd6Wwt/nOUQXuOE
+         iPTtSoWVjSsNhd7VbtRtYtky4DP9uemZr5fSasy+MvjFLJtCbEgYqwkkI+9tU3cw9aNB
+         lPq6G2+NTWpsyJfilkKZvq5JLP3Dfwc+JE5ewg7uzJmG4etCCfw/pI6UP0qELnxY0AnJ
+         CZVg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:date:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=om4f7MVc7Kk4+w+0wroNyFz+6EbbOUYfqD30UnUwIqk=;
+        b=eZOqICJfpo6nHUuEpnVcc9WLhDH2EXDsq8vkZFmU+bKlIC7EGnI/8TVNXdhJDNkkYx
+         whngDw3ohFiUqaXqF26JodFMZKw/mImnIBsj2VzVxf4AxmF8RQ6xQ0C6qTb2PTi1Mouv
+         bCEnHshn2R9JAaojY3dGA9eHmYe3J4XU4dPDFYkPVSmZ/g1KZWrIVNSWXjAGqiYoZzww
+         AvHXz0RVZ7wZeogw/YXO2dqbfpN92MkfC6yLLyoxrfJT8Z5rbAHBklKty9CjEYDVWkCE
+         7gUKbg5mHmxswD4rXzMgyW9UVCNWSTKIcYO41UqT1G3TdTU8xUyGKtpul7PqCqXslpVZ
+         WKFw==
+X-Gm-Message-State: APjAAAUE4QSqz5qUdbnZ4k2TbYdLnOU06heywYvQbfyEhF5X883xldHD
+        QFlnREN75l74alIIXwesEQ==
+X-Google-Smtp-Source: APXvYqxPpt+EHE/A0V8OL5mRLTRyVUdJzEkkF8DjgaM8xAVR3oGwTUBMypk8vCsioEpJwiUIMw66kA==
+X-Received: by 2002:a17:90a:fb4f:: with SMTP id iq15mr14285642pjb.86.1582455866390;
+        Sun, 23 Feb 2020 03:04:26 -0800 (PST)
+Received: from madhuparna-HP-Notebook ([42.109.138.18])
+        by smtp.gmail.com with ESMTPSA id z5sm9324536pfq.3.2020.02.23.03.04.20
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Sun, 23 Feb 2020 03:04:25 -0800 (PST)
+From:   Madhuparna Bhowmik <madhuparnabhowmik10@gmail.com>
+X-Google-Original-From: Madhuparna Bhowmik <change_this_user_name@gmail.com>
+Date:   Sun, 23 Feb 2020 16:33:42 +0530
+To:     Jiri Pirko <jiri@resnulli.us>
+Cc:     madhuparnabhowmik10@gmail.com, jiri@mellanox.com,
+        davem@davemloft.net, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org, joel@joelfernandes.org,
+        frextrite@gmail.com,
+        linux-kernel-mentees@lists.linuxfoundation.org, paulmck@kernel.org
+Subject: Re: [PATCH] net: core: devlink.c: Use built-in RCU list checking
+Message-ID: <20200223110342.GB2400@madhuparna-HP-Notebook>
+References: <20200221165141.24630-1-madhuparnabhowmik10@gmail.com>
+ <20200221172008.GA2181@nanopsycho>
 MIME-Version: 1.0
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=waifu.club; s=mail;
-        t=1582455838; bh=IJTBgyv66sdEtH/QBo2cuVCt13PZ+jNPq0FYUiFqCfI=;
-        h=Date:From:To:Cc:Subject:From;
-        b=yvC+tz6jDAWQOLMrsry40BAWvRR0MMFTnyeWhphAGuex4V5jBivdY5C56lGOzrp0d
-         FMyohfw1ltwq0rd99ajiAdHcRsG8rtMMYwbF9CDFmzNl6NKfSDd71v2GGUDfc6/TSL
-         l9WquAO4tGxBA4OoMyVCW22NoG2WaYANW67QP2szSb6nTHn483b2riJdwJCvRhohqe
-         gKhgfNuaqXRJtmdVl7ilXudLee7cRAZfCpVk7isBV/MioAXepSygwkXQL+Zys+SzTJ
-         VP59IdwR9pgelRcun0q6CsZAJiPDRxnUH+vFlBzC7mpZ5oZXnpLfu7CMWHibhMufJo
-         pbaoXGPq5otug==
-Content-Type: text/plain; charset=US-ASCII;
- format=flowed
-Content-Transfer-Encoding: 7bit
-Date:   Sun, 23 Feb 2020 11:03:56 +0000
-From:   whywontyousue@waifu.club
-To:     linux-kernel@vger.kernel.org
-Cc:     rms@gnu.org, bruce@perens.com, bind-users@lists.isc.org
-Subject: Re: General Discussion about GPLness
-Message-ID: <8b0e828da35ab77c1ad4603768c6eab6@waifu.club>
-X-Sender: whywontyousue@waifu.club
-User-Agent: Roundcube Webmail/1.3.10
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200221172008.GA2181@nanopsycho>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Dear Stephan von Krawczynski;
-
-Universal City Studios Inc v Reimerdes, piece of shit.
-
-"[The court] reasoned that Ferret consumers who used the Ferret as a 
-plug-in to the Real Player altered the Real Player user interface by 
-adding the Snap search button or replacing it with the Stream box search 
-engine button. The court concluded that the plaintiff raised sufficently 
-serious questions going to the merits of its claims to warrant an 
-injunction pending trial"
-
-Want to violate the linux kernel copyright, you fucking piece of shit? 
-Yes you do. Yes modifying the running kernel with violating pieces is 
-copyright infringement, you fucking piece of shit. Yes you should be 
-sued. Just as Open Source Security (Grsecurity) should be sued for their 
-violations (of section 4 and 6 of the linux kernel copyright license 
-(they're also violating the GCC copyrights too)).
-
-Will they be sued? Will you be sued? No: Linux copyright holders are 
-scared little wageslave worker bees. They aren't going to sue you; 
-sorry. Why are you even announcing you intent to violate the copyright? 
-Why even give these dogs such intellectual deference?
-
-I wish OpenSourceSecurity would be sued. I wish you would be sued. But 
-linux WERKIN MAHN wage slave piece of shit idiots won't do it: I hate 
-them much more than I hate the violators. Complete Dogs. They could move 
-from strenght to strenght, from victory to victory; but they're scared 
-for their "JEHRB"s. I have to say: white men are pathetic scum. If Linux 
-was built by others there would rightfully be lawsuits.
-
-
-
-> Stephan von Krawczynski wrote:
-> Hello all,
+On Fri, Feb 21, 2020 at 06:20:08PM +0100, Jiri Pirko wrote:
+> Fri, Feb 21, 2020 at 05:51:41PM CET, madhuparnabhowmik10@gmail.com wrote:
+> >From: Madhuparna Bhowmik <madhuparnabhowmik10@gmail.com>
+> >
+> >list_for_each_entry_rcu() has built-in RCU and lock checking.
+> >
+> >Pass cond argument to list_for_each_entry_rcu() to silence
+> >false lockdep warning when CONFIG_PROVE_RCU_LIST is enabled
+> >by default.
+> >
+> >Signed-off-by: Madhuparna Bhowmik <madhuparnabhowmik10@gmail.com>
 > 
-> you may have already heard about it or not (several times in the past),
-> non-kernel devices run into a symbol export problem as soon as 
-> something is
-> only exported GPL from the kernel.
-> Currently there is a discussion regarding zfs using this call chain:
+> Reviewed-by: Jiri Pirko <jiri@mellanox.com>
 > 
-> vdev_bio_associate_blkg (zfs) -> blkg_tryget (kernel) -> 
-> percpu_ref_tryget
-> (kernel) -> rcu_read_unlock (kernel) -> __rcu_read_unlock (kernel)
+> Thanks.
 > 
-> where __rcu_read_[lock|unlock] is a GPL symbol now used by (not GPL 
-> exported)
-> percpu_ref_tryget.
+> However, there is a callpath where not devlink lock neither rcu read is
+> taken:
+> devlink_dpipe_table_register()->devlink_dpipe_table_find()
+> I guess that was not the trace you were seeing, right?
 > 
-> That this popped up (again) made me think a bit more general about the 
-> issue.
-> And I do wonder if this rather ideologic problem is on the right track
-> currently. Because what the kernel tries to do with the export GPL 
-> symbol
-> stuff is to prevent any other licensed software from _using_ it in 
-> _runtime_.
-> It does not try to prevent use/copy of the source code inside another 
-> non-gpl
-> project.
-> And I do think that this is not the intention of GPL. If it were, then 
-> 100% of
-> all mobile phones on this planet are illegal. All of them use GPL 
-> software
-> from non-gpl software, be it kernel modules or apps - and I see no 
-> difference
-> in the two. The constructed difference between kernel mode software and
-> user-space software is pure ideology. Because during runtime everything 
-> is
-> just call-chained.
-> Which means if you fopen() a file in user-space it of course uses GPL 
-> symbols
-> down in the chain somewhere. The contents of the opened file are not
-> heaven-sent.
-> If you/we follow the current completely ideology-driven GPL strategy 
-> then I am
-> all for completely giving up this whole project. In real world you 
-> simply
-> cannot use such a piece of software. The success of linux during the 
-> last
-> years (i.e. decade) is not based on the pure GPL strategy, but on the
-> successful interaction between linux and non-GPL software.
-> Just think of the billions of smartphones all using a non-gpl firmware
-> (underneath, and there is no GPL version at all), the kernel (with 
-> non-gpl
-> modules) and apps (quite some of which are non-gpl).
-> This is only one prominent example, but there are lots of others.
-> In the end it all sums up to one simple question:
-> Can one _use_ GPL software during runtime as a base for own projects of 
-> any
-> license type or not? We are not talking about _copying_ gpl code, we 
-> are
-> talking about runtime use.
-> If runtime use is generally allowed, then the export gpl symbol stuff 
-> inside
-> the kernel code is nonsense. Because to use the kernel you must be 
-> allowed to
-> call it, no matter from where.
-> Hit me.
 > 
-> --
-> Regards,
-> Stephan
+> >---
+> > net/core/devlink.c | 3 ++-
+> > 1 file changed, 2 insertions(+), 1 deletion(-)
+> >
+> >diff --git a/net/core/devlink.c b/net/core/devlink.c
+> >index 4c63c9a4c09e..3e8c94155d93 100644
+> >--- a/net/core/devlink.c
+> >+++ b/net/core/devlink.c
+> >@@ -2107,7 +2107,8 @@ devlink_dpipe_table_find(struct list_head *dpipe_tables,
+> > {
+> > 	struct devlink_dpipe_table *table;
+> > 
+> >-	list_for_each_entry_rcu(table, dpipe_tables, list) {
+> >+	list_for_each_entry_rcu(table, dpipe_tables, list,
+> >+				lockdep_is_held(&devlink->lock)) {
+
+Hi Jiri,
+
+I just noticed that this patch does not compile because devlink is
+not passed as an argument to devlink_dpipe_table_find() and it is not
+even global. I am not sure why I didn't encounter this error before
+sending the patch. Anyway, I am sorry about this.
+But it seems to be the right lock that should be held and checked for
+in devlink_dpipe_table_find(). 
+So will it be okay to pass devlink to devlink_dpipe_table_find()?
+Anyway devlink_dpipe_table_find() is only called from functions
+within devlink.c.
+
+Let me know what you think about this.
+Thank you,
+Madhuparna
+
+
+> > 		if (!strcmp(table->name, table_name))
+> > 			return table;
+> > 	}
+> >-- 
+> >2.17.1
+> >
