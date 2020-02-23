@@ -4,52 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 010E2C35669
-	for <linux-kernel@archiver.kernel.org>; Sun, 23 Feb 2020 02:37:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 42804C35671
+	for <linux-kernel@archiver.kernel.org>; Sun, 23 Feb 2020 02:37:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BA5E120659
-	for <linux-kernel@archiver.kernel.org>; Sun, 23 Feb 2020 02:36:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 14E0C20659
+	for <linux-kernel@archiver.kernel.org>; Sun, 23 Feb 2020 02:37:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582425419;
-	bh=h326O0kpeMI5X0FsCoPQhAf7UBcRPRc+4W84GVod7kA=;
+	s=default; t=1582425423;
+	bh=DlmwdQDlQ9+dL/5tK1OOSNXQg1vVFb3H4mk64k4cgLY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=wT6CPZEvvE4b3a2GWZQ7qGn6Q+bl2xk1Jlm8pPBukOvdgeQFtlCrzmP3xvYyl1ZZU
-	 QZcyPJqdzbBHNpyR1bObJh0iP3DoNJ23HibHgCgaUG7yR1Kbj+JR1iYcR6wERLriSh
-	 7nUI91Zq8y0j/3knLLqBO1f0iu4S1sxT/BzQiv1Y=
+	b=FRz1T7GEd4xdDMeVVm3AIP4NM9UdN7hY9+q+bsJGCKpPB65/PtftagiimXDfyNq8b
+	 54y3hcQcbZVz2IWW6R4YeDIa10G9zE94GXUD5F7TwG8THaaI3X97hdec3f2L0RnbZ9
+	 KppwWcDQaySXcyDyxszvmEkBaKQA2eMKgI4wvX4E=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728489AbgBWCg6 (ORCPT
+        id S1727758AbgBWCVu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 22 Feb 2020 21:36:58 -0500
-Received: from mail.kernel.org ([198.145.29.99]:50438 "EHLO mail.kernel.org"
+        Sat, 22 Feb 2020 21:21:50 -0500
+Received: from mail.kernel.org ([198.145.29.99]:50090 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727775AbgBWCVv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 22 Feb 2020 21:21:51 -0500
+        id S1727584AbgBWCVk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 22 Feb 2020 21:21:40 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8ECEC20707;
-        Sun, 23 Feb 2020 02:21:49 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id F23E3214DB;
+        Sun, 23 Feb 2020 02:21:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1582424510;
-        bh=h326O0kpeMI5X0FsCoPQhAf7UBcRPRc+4W84GVod7kA=;
+        s=default; t=1582424499;
+        bh=DlmwdQDlQ9+dL/5tK1OOSNXQg1vVFb3H4mk64k4cgLY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=lku9fMTzyTi73cV/Ub5k0K1Ti0RCx7GxCwOmkrVjqsqWcHAqyBiFFY7tR7npbkiFq
-         1QLtg9/P4pUy4unFNmDZR4iNEvA2kDWCT/w2Pug0vFRJK1CNh2ZRda677rbdKAkpzx
-         fk4t+nc9Gamtvr6oHmpA7TBIkMIOu0ACNfMFqsxA=
+        b=d/wiWVxhT2D5Kpk8Pxkc8zwYBZaZsKY9DMopvXnX6xKznxw9/g85+6Cx9L0iChyge
+         +lcsqQz0aJlMCABR4yJCQNF8XGeNc2Vj/K5Umj2zGCyWxuyL/3En45dzbwZOQM7vqD
+         agb6TOXBzGKuv6TFei//1+/txFRQE8GKGNHs75V8=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Yongqiang Sun <yongqiang.sun@amd.com>,
-        Eric Yang <eric.yang2@amd.com>,
-        Bhawanpreet Lakha <Bhawanpreet.Lakha@amd.com>,
-        Alex Deucher <alexander.deucher@amd.com>,
-        Sasha Levin <sashal@kernel.org>, amd-gfx@lists.freedesktop.org,
-        dri-devel@lists.freedesktop.org
-Subject: [PATCH AUTOSEL 5.5 25/58] drm/amd/display: Limit minimum DPPCLK to 100MHz.
-Date:   Sat, 22 Feb 2020 21:20:46 -0500
-Message-Id: <20200223022119.707-25-sashal@kernel.org>
+Cc:     Suren Baghdasaryan <surenb@google.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@kernel.org>,
+        Johannes Weiner <hannes@cmpxchg.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH AUTOSEL 5.5 16/58] sched/psi: Fix OOB write when writing 0 bytes to PSI files
+Date:   Sat, 22 Feb 2020 21:20:37 -0500
+Message-Id: <20200223022119.707-16-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200223022119.707-1-sashal@kernel.org>
 References: <20200223022119.707-1-sashal@kernel.org>
@@ -62,43 +61,39 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Yongqiang Sun <yongqiang.sun@amd.com>
+From: Suren Baghdasaryan <surenb@google.com>
 
-[ Upstream commit 6c81917a0485ee2a1be0dc23321ac10ecfd9578b ]
+[ Upstream commit 6fcca0fa48118e6d63733eb4644c6cd880c15b8f ]
 
-[Why]
-Underflow is observed when plug in a 4K@60 monitor with
-1366x768 eDP due to DPPCLK is too low.
+Issuing write() with count parameter set to 0 on any file under
+/proc/pressure/ will cause an OOB write because of the access to
+buf[buf_size-1] when NUL-termination is performed. Fix this by checking
+for buf_size to be non-zero.
 
-[How]
-Limit minimum DPPCLK to 100MHz.
-
-Signed-off-by: Yongqiang Sun <yongqiang.sun@amd.com>
-Reviewed-by: Eric Yang <eric.yang2@amd.com>
-Acked-by: Bhawanpreet Lakha <Bhawanpreet.Lakha@amd.com>
-Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
+Signed-off-by: Suren Baghdasaryan <surenb@google.com>
+Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+Signed-off-by: Ingo Molnar <mingo@kernel.org>
+Acked-by: Johannes Weiner <hannes@cmpxchg.org>
+Link: https://lkml.kernel.org/r/20200203212216.7076-1-surenb@google.com
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/gpu/drm/amd/display/dc/clk_mgr/dcn21/rn_clk_mgr.c | 6 ++++++
- 1 file changed, 6 insertions(+)
+ kernel/sched/psi.c | 3 +++
+ 1 file changed, 3 insertions(+)
 
-diff --git a/drivers/gpu/drm/amd/display/dc/clk_mgr/dcn21/rn_clk_mgr.c b/drivers/gpu/drm/amd/display/dc/clk_mgr/dcn21/rn_clk_mgr.c
-index 35c55e54eac01..619b1a18b0441 100644
---- a/drivers/gpu/drm/amd/display/dc/clk_mgr/dcn21/rn_clk_mgr.c
-+++ b/drivers/gpu/drm/amd/display/dc/clk_mgr/dcn21/rn_clk_mgr.c
-@@ -149,6 +149,12 @@ void rn_update_clocks(struct clk_mgr *clk_mgr_base,
- 		rn_vbios_smu_set_min_deep_sleep_dcfclk(clk_mgr, clk_mgr_base->clks.dcfclk_deep_sleep_khz);
- 	}
+diff --git a/kernel/sched/psi.c b/kernel/sched/psi.c
+index ce8f6748678a2..9154e745f0978 100644
+--- a/kernel/sched/psi.c
++++ b/kernel/sched/psi.c
+@@ -1199,6 +1199,9 @@ static ssize_t psi_write(struct file *file, const char __user *user_buf,
+ 	if (static_branch_likely(&psi_disabled))
+ 		return -EOPNOTSUPP;
  
-+	// workaround: Limit dppclk to 100Mhz to avoid lower eDP panel switch to plus 4K monitor underflow.
-+	if (!IS_DIAG_DC(dc->ctx->dce_environment)) {
-+		if (new_clocks->dppclk_khz < 100000)
-+			new_clocks->dppclk_khz = 100000;
-+	}
++	if (!nbytes)
++		return -EINVAL;
 +
- 	if (should_set_clock(safe_to_lower, new_clocks->dppclk_khz, clk_mgr->base.clks.dppclk_khz)) {
- 		if (clk_mgr->base.clks.dppclk_khz > new_clocks->dppclk_khz)
- 			dpp_clock_lowered = true;
+ 	buf_size = min(nbytes, sizeof(buf));
+ 	if (copy_from_user(buf, user_buf, buf_size))
+ 		return -EFAULT;
 -- 
 2.20.1
 
