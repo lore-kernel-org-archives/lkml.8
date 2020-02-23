@@ -8,67 +8,66 @@ X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A1A0FC35673
-	for <linux-kernel@archiver.kernel.org>; Sun, 23 Feb 2020 23:18:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8BF29C35670
+	for <linux-kernel@archiver.kernel.org>; Sun, 23 Feb 2020 23:18:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 77D21208C3
-	for <linux-kernel@archiver.kernel.org>; Sun, 23 Feb 2020 23:18:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6368A20880
+	for <linux-kernel@archiver.kernel.org>; Sun, 23 Feb 2020 23:18:43 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="iRYBDkeQ"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="UD4d+gFy"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727864AbgBWXSj (ORCPT
+        id S1727882AbgBWXSl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 23 Feb 2020 18:18:39 -0500
-Received: from mail-wr1-f67.google.com ([209.85.221.67]:35710 "EHLO
-        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727837AbgBWXSg (ORCPT
+        Sun, 23 Feb 2020 18:18:41 -0500
+Received: from mail-wr1-f68.google.com ([209.85.221.68]:36880 "EHLO
+        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727854AbgBWXSj (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 23 Feb 2020 18:18:36 -0500
-Received: by mail-wr1-f67.google.com with SMTP id w12so8248404wrt.2
-        for <linux-kernel@vger.kernel.org>; Sun, 23 Feb 2020 15:18:35 -0800 (PST)
+        Sun, 23 Feb 2020 18:18:39 -0500
+Received: by mail-wr1-f68.google.com with SMTP id l5so3978151wrx.4
+        for <linux-kernel@vger.kernel.org>; Sun, 23 Feb 2020 15:18:37 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=d52I2cg4cQGyAeOzWmCnImcQNbb68kdLDPhQMpl0hX0=;
-        b=iRYBDkeQ4db5W3MUDu0oR5U/Kb/B0rCA+HzQGJSDMO1cEzbzEJK2wWaP5MDxjSKr1h
-         j1rOgh/9eTwk+Xu5o7uVeYMmTjEZZNCLqkcL1nfYmCgwYopCzLPlI/g22fJGCLbnJqeo
-         AEYr421i8eeHOjanFCkblFnv2Is0kxbP+es1kQLIRF4zI2T0Y5Wp9mikAunnv3U02FvH
-         5Nydert3ZrjQSiGEyy6E28QTzou9vF3s9+68a08XhtCKA7eKcObub1NhHvBihg32j8+1
-         KwqRUvHVR6Sy4+Rzdy7snQEJsahkHApsArExqEovxJWjqx3WxIom+5bZ1a2UBsm+Ymb8
-         Zl8A==
+        bh=lFuxxisMEYe+/8U1Zym099JlZSOgE3VEttxnE0HXI0I=;
+        b=UD4d+gFyw0o+T97IJacOMIMKhMEsSWf7Xgels8RhPpisxO+jHkOTmu//OBuNrNCBlI
+         TvAvQeBYrI3U+tGvbEOUUY022mdZfjFAMqi2ORR9WYsuZu97YRHueeWuFpZkBgLP7DwI
+         OskSFocZVnXw4TX89MbbUxHkRgVkxaqzHiZ9qurCs4c6SZ7vKlKeltlAmxOCY9WEA2/d
+         MVyVjnGJRTQcWRPcvQuZ4dh2bhZPRYNAunhI0xtS/I0NwHJ769jdeYgvwxo+zq9IyA7J
+         h0cCZrkyPy+YJKcxzf3CMwQP/4tQppiyov4Fnot/RmxLPVWt0Qf/3VJszg0PVsVIAy+v
+         r4bQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=d52I2cg4cQGyAeOzWmCnImcQNbb68kdLDPhQMpl0hX0=;
-        b=LB+LnjkZ52X3SK51sPdNjjgAL4ln8nQlvI3R4ocOaD3akcO8kVGWrC/aiB2jtat1hF
-         /mXnNgf/kXrz1Di2UIMKch5U+in7ZLZvOsmjoit36e0YiedzM6TIvhlIFry/npFrOQOM
-         dFUJS6ie7C/EdJObGg/Pa4KXmwUThto9wYkVB77EJUdVL9W24dScXXgSXh6LXDqyCsJZ
-         Kc1XES+RRv9grxlSpbroJRFXRTwTWq6Qv26B2pnZFutmvonNmsSKaqFqiMSgb3+1zjcE
-         k7OAcNZiT9W4tlsyZvJIMCk2+QWFB3Gd7bhLZU+1SHSoAsra66CquUK+wCnPEeSaxeh4
-         6cKQ==
-X-Gm-Message-State: APjAAAVrIliOINl7u5B24HuHNTlJ62LO1sS0zTwzZ6xgUhjTzPLCqeZ1
-        hNImPLIvB+eaWPor7Qq2dQ==
-X-Google-Smtp-Source: APXvYqzpMefoVwUp3yuLfioLy/yTmYHOYMZwjTho0L2njh6fr9gV3sTHqGTH4o32XE/47kp46mrc/w==
-X-Received: by 2002:a5d:5267:: with SMTP id l7mr61272635wrc.84.1582499914687;
-        Sun, 23 Feb 2020 15:18:34 -0800 (PST)
+        bh=lFuxxisMEYe+/8U1Zym099JlZSOgE3VEttxnE0HXI0I=;
+        b=TspGrz6FJrQ9B3N1DXWAA9o00IAzstd0Naek7uvzAPuXKEF1vPHXIleXJ0ZT1jtxZV
+         AfpVC6h/YwCiAg4MGEetHNPPDQIIZgmQfxQDs6yfR5u+IsNoRG3N9gpykHYKFfHuPczC
+         7SwMOHvyVVOAoasl4Bn4WWZPTDrFwSLowRxD3o9AIjtbl4hQo96+N8WPmJHlXKMs+SuW
+         ypd/vKxgmG/I6OqXUbZr6auMPjlPOiQbWNY5dItSSWy5TtLvYFFd1KoAX9Z3RHJdXoes
+         XcVogB7fM1uf8KgJdFT/d6douXasyTE6o2hi6zoLyJg1LqOw3zJ+WKnwqYic3neIV8PU
+         xgKw==
+X-Gm-Message-State: APjAAAXNsbPLQOW6Y77PulfS+o+gKVny5YrvILaZ83kXlibqgZWGy0j9
+        T/Z80a2soRf8Qb3knLZxfQ==
+X-Google-Smtp-Source: APXvYqxAVsgm/trM7tHezLYbyeZyvVRYc8Us2IcaAJzj4wvZPBZUg0JJkJCal/cy2Jx4heZRTDzIvA==
+X-Received: by 2002:adf:dcc2:: with SMTP id x2mr61778973wrm.24.1582499916943;
+        Sun, 23 Feb 2020 15:18:36 -0800 (PST)
 Received: from ninjahost.lan (host-2-102-13-223.as13285.net. [2.102.13.223])
-        by smtp.googlemail.com with ESMTPSA id q6sm8968203wrf.67.2020.02.23.15.18.33
+        by smtp.googlemail.com with ESMTPSA id q6sm8968203wrf.67.2020.02.23.15.18.36
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 23 Feb 2020 15:18:34 -0800 (PST)
+        Sun, 23 Feb 2020 15:18:36 -0800 (PST)
 From:   Jules Irenge <jbi.octave@gmail.com>
 To:     boqun.feng@gmail.com
 Cc:     jbi.octave@gmail.com, linux-kernel@vger.kernel.org,
-        Oded Gabbay <oded.gabbay@gmail.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Tomer Tayar <ttayar@habana.ai>,
-        Omer Shpigelman <oshpigelman@habana.ai>,
-        Dalit Ben Zoor <dbenzoor@habana.ai>
-Subject: [PATCH 28/30] habanalabs: Add missing annotation for goya_hw_queues_unlock()
-Date:   Sun, 23 Feb 2020 23:17:09 +0000
-Message-Id: <20200223231711.157699-29-jbi.octave@gmail.com>
+        Mark Fasheh <mark@fasheh.com>,
+        Joel Becker <jlbec@evilplan.org>,
+        Joseph Qi <joseph.qi@linux.alibaba.com>,
+        ocfs2-devel@oss.oracle.com (moderated list:ORACLE CLUSTER FILESYSTEM 2
+        (OCFS2))
+Subject: [PATCH 30/30] sgi-xp: Add missing annotation for ocfs2_inode_cache_lock() and ocfs2_inode_cache_unlock()
+Date:   Sun, 23 Feb 2020 23:17:11 +0000
+Message-Id: <20200223231711.157699-31-jbi.octave@gmail.com>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20200223231711.157699-1-jbi.octave@gmail.com>
 References: <0/30>
@@ -80,27 +79,43 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Sparse reports a warning at goya_hw_queues_unlock()
-warning: context imbalance in goya_hw_queues_unlock() - unexpected unlock
-The root cause is a missing annotation at goya_hw_queues_unlock()
-Add the missing __releases(&goya->hw_queues_lock) annotation
+Sparse reports a warning at ocfs2_inode_cache_lock()
+and ocfs2_inode_cache_unlock()
+warning: context imbalance in ocfs2_inode_cache_lock()
+	- wrong count at exit
+
+warning: context imbalance in ocfs2_inode_cache_unlock()
+	- unexpected unlock
+The root cause is a missing annotation at ocfs2_inode_cache_lock()
+and at ocfs2_inode_cache_unlock()
+
+Add the missing __acquires(&oi->ip_lock) annotation
+Add the missing __releases(&oi->ip_lock) annotation
 
 Signed-off-by: Jules Irenge <jbi.octave@gmail.com>
 ---
- drivers/misc/habanalabs/goya/goya.c | 1 +
- 1 file changed, 1 insertion(+)
+ fs/ocfs2/inode.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/drivers/misc/habanalabs/goya/goya.c b/drivers/misc/habanalabs/goya/goya.c
-index 8ca7ee57cbc1..6138b461d0f8 100644
---- a/drivers/misc/habanalabs/goya/goya.c
-+++ b/drivers/misc/habanalabs/goya/goya.c
-@@ -5081,6 +5081,7 @@ static void goya_hw_queues_lock(struct hl_device *hdev)
+diff --git a/fs/ocfs2/inode.c b/fs/ocfs2/inode.c
+index 7c9dfd50c1c1..0b87e0a63ab9 100644
+--- a/fs/ocfs2/inode.c
++++ b/fs/ocfs2/inode.c
+@@ -1623,6 +1623,7 @@ static struct super_block *ocfs2_inode_cache_get_super(struct ocfs2_caching_info
  }
  
- static void goya_hw_queues_unlock(struct hl_device *hdev)
-+	__releases(&goya->hw_queues_lock)
+ static void ocfs2_inode_cache_lock(struct ocfs2_caching_info *ci)
++	__acquires(&oi->ip_lock)
  {
- 	struct goya_device *goya = hdev->asic_specific;
+ 	struct ocfs2_inode_info *oi = cache_info_to_inode(ci);
+ 
+@@ -1630,6 +1631,7 @@ static void ocfs2_inode_cache_lock(struct ocfs2_caching_info *ci)
+ }
+ 
+ static void ocfs2_inode_cache_unlock(struct ocfs2_caching_info *ci)
++	__releases(&oi->ip_lock)
+ {
+ 	struct ocfs2_inode_info *oi = cache_info_to_inode(ci);
  
 -- 
 2.24.1
