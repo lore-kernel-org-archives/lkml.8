@@ -2,133 +2,171 @@ Return-Path: <SRS0=SnAt=4L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 22433C35673
-	for <linux-kernel@archiver.kernel.org>; Sun, 23 Feb 2020 11:26:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BC86CC35671
+	for <linux-kernel@archiver.kernel.org>; Sun, 23 Feb 2020 11:29:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EE84E20656
-	for <linux-kernel@archiver.kernel.org>; Sun, 23 Feb 2020 11:26:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 93F3F2192A
+	for <linux-kernel@archiver.kernel.org>; Sun, 23 Feb 2020 11:29:28 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="uuOFmCqu"
+	dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b="GZEnATEb"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727282AbgBWLWn (ORCPT
+        id S1727183AbgBWL31 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 23 Feb 2020 06:22:43 -0500
-Received: from mail-pf1-f194.google.com ([209.85.210.194]:36118 "EHLO
-        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726236AbgBWLWm (ORCPT
+        Sun, 23 Feb 2020 06:29:27 -0500
+Received: from mail-wm1-f68.google.com ([209.85.128.68]:52420 "EHLO
+        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726023AbgBWL31 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 23 Feb 2020 06:22:42 -0500
-Received: by mail-pf1-f194.google.com with SMTP id 185so3784862pfv.3;
-        Sun, 23 Feb 2020 03:22:41 -0800 (PST)
+        Sun, 23 Feb 2020 06:29:27 -0500
+Received: by mail-wm1-f68.google.com with SMTP id p9so6218903wmc.2
+        for <linux-kernel@vger.kernel.org>; Sun, 23 Feb 2020 03:29:25 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id;
-        bh=sN5H5uRLxodeA5ftMsFKjGciLDtvEDOcbHLiiCvT97A=;
-        b=uuOFmCqu1d9sfG86Qiyc9owige0Ou0kvZAf7Aloq6yU5Vs9Jlp+tPaOTsRCcUfJhGv
-         WF2zjCuWOg3RVOe+XDokcsT4rBZyHm7gMWSrS1xYkHaRLFlpxtjW1JbdrslewMQRcddP
-         vaOUjmx5cMva+W5QjX9cNqHMZ1KGYYum6ncoZz+hGhS9J+X4a5zJroahnMULLMNwh6xZ
-         z/Il2UJV4GzTC8L9RTzNNxNNy5F7wyTsi724lok/8K5gM/TnhGMkJzRaluxAr9GAQgyS
-         7vFmi5vd8UJ4iEHPNQrjMIcQEx1C6QU4jh3eCKHcgfUyMyeqQ9PkqvgCBxbEnZ2nJpHJ
-         ZFYQ==
+        d=broadcom.com; s=google;
+        h=from:to:cc:date:message-id:in-reply-to:references:user-agent
+         :subject:mime-version:content-transfer-encoding;
+        bh=Wsmvetnj/uRqidICErzZezRvkzyJsUsUIsU21dU7djU=;
+        b=GZEnATEbiLPG2xlP1VtmI9eGW0L75Tjcio9m/sk7rU5YfD43fRdeoXb+g3oH9xuej9
+         HdOAjrjAF/CgPwXQAZay9hQhUoKg2DOICY9riwHUIz1WFsRfhL/d3rR7RA+1jsQbJCqk
+         HeKVxF410HwT+IKuUdBOa81l1QrUtp53kbKSY=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=sN5H5uRLxodeA5ftMsFKjGciLDtvEDOcbHLiiCvT97A=;
-        b=Qshy3r8q02w75WDT3pdaGJCRkZpNed5PVn++l08w2wvb5HMJeaHA4BAww4dSKWFLlX
-         apevnZtrnih8hQGkx5rRywTGO5SQuFBV8R6tkkKNb0Iyb3VZe1r4/R/dW956PD1yAMXO
-         3sL38Q42Ng677Yq1eUhmIpSP+wD5sVVY//EQJalbU+toDf/HsmJipJ18sCB3dGpV8AjR
-         S6vJv6CZYRwaBHZYUIhHgHcV6bZQaZxpX0y8ei/P5AAgqMGidyEXNp6DvzL5EqwI3AJD
-         Y2Hg/RMPDGHm4BNuTVR8Eb0V+llfC6scay5BhNPR9IIXTF3NIY2ry7CCGIao5aDn8+RV
-         adbw==
-X-Gm-Message-State: APjAAAVRzzHKQc/adL69mm7ntY36EzSgojIW9B3XdU8fnSdgt42p+8f4
-        a3A7u1N9TVP0LTRTsGtneg==
-X-Google-Smtp-Source: APXvYqzFWkFdZrObvg5gTMa7MV1O7ZL7rM1c9JISPyZ95Uyl7uXVnez3GO1zSfXywPpVHNl48+/+8A==
-X-Received: by 2002:a63:ec07:: with SMTP id j7mr47290312pgh.187.1582456960948;
-        Sun, 23 Feb 2020 03:22:40 -0800 (PST)
-Received: from madhuparna-HP-Notebook.nitk.ac.in ([2402:3a80:515:9a49:e8ed:fa6e:a613:7ebf])
-        by smtp.gmail.com with ESMTPSA id j8sm8641078pjb.4.2020.02.23.03.22.37
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 23 Feb 2020 03:22:40 -0800 (PST)
-From:   madhuparnabhowmik10@gmail.com
-To:     jiri@mellanox.com, davem@davemloft.net
-Cc:     netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
-        joel@joelfernandes.org,
-        linux-kernel-mentees@lists.linuxfoundation.org, paulmck@kernel.org,
-        Madhuparna Bhowmik <madhuparnabhowmik10@gmail.com>
-Subject: [PATCH] net: core: devlink.c: Hold devlink->lock from the beginning of devlink_dpipe_table_register()
-Date:   Sun, 23 Feb 2020 16:52:33 +0530
-Message-Id: <20200223112233.13417-1-madhuparnabhowmik10@gmail.com>
-X-Mailer: git-send-email 2.17.1
+        h=x-gm-message-state:from:to:cc:date:message-id:in-reply-to
+         :references:user-agent:subject:mime-version
+         :content-transfer-encoding;
+        bh=Wsmvetnj/uRqidICErzZezRvkzyJsUsUIsU21dU7djU=;
+        b=j8fVIdqoFn8XmaapKTCq+zh+ysLJ8g103ng5iZPiT+dTAOhp/iax2WKPTy6XAcapna
+         wfD8CJl9AEC7FDQTEaUpJ0/LaXiLIEIcB+2hLBpUuEUgMeEOhuM5WTSCCvf1BGEEDrHi
+         0pKVPcrmGzn1VsxtSZXd1i5FWj5s7Ds8m8hHit9A0EP1LAmECHIXfxiYjiiXoZAWWfdA
+         v6dnsU0Got0Pdey1NnAxxY1o9j8hoWAEgYPOhWMgK6CioYFpNr+b7yRICyRqxD3QRn6/
+         Xv6kdNOjqdcO3qi6f1r/kx9tJD1mv1iktSEdku1GOvbquzKR3/Y1XmdQ0tDXullYndRP
+         EQAw==
+X-Gm-Message-State: APjAAAXOKioPuxhS03ij0Z8q00ZoUAsVNrVTBur17YRqtQR4jHc42mBY
+        PK+CElSSleG+uoZIFeMB7DegSg==
+X-Google-Smtp-Source: APXvYqz6+9MPmpyo+ROixdyxqt/lfCR1xsPFagF33I0ML2XY9pDawBqPDq1xdZxReCF3AUcO3iuYFQ==
+X-Received: by 2002:a1c:4383:: with SMTP id q125mr15905602wma.88.1582457364551;
+        Sun, 23 Feb 2020 03:29:24 -0800 (PST)
+Received: from [192.168.178.38] (f140230.upc-f.chello.nl. [80.56.140.230])
+        by smtp.gmail.com with ESMTPSA id a135sm12328905wme.47.2020.02.23.03.29.23
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Sun, 23 Feb 2020 03:29:23 -0800 (PST)
+From:   Arend Van Spriel <arend.vanspriel@broadcom.com>
+To:     =?UTF-8?B?T25kxZllaiBKaXJtYW4=?= <megous@megous.com>,
+        "Chen-Yu Tsai" <wens@csie.org>
+CC:     "linux-sunxi" <linux-sunxi@googlegroups.com>,
+        Maxime Ripard <mripard@kernel.org>,
+        Tomas Novotny <tomas@novotny.cz>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        "moderated list:ARM/Allwinner sunXi SoC support" 
+        <linux-arm-kernel@lists.infradead.org>,
+        open list <linux-kernel@vger.kernel.org>
+Date:   Sun, 23 Feb 2020 12:29:21 +0100
+Message-ID: <17071cf1268.279b.9b12b7fc0a3841636cfb5e919b41b954@broadcom.com>
+In-Reply-To: <20200223105524.smp3p2quewp3ddop@core.my.home>
+References: <20200222223154.221632-1-megous@megous.com>
+ <20200222223154.221632-2-megous@megous.com>
+ <CAGb2v67XwrYA8FLF9wpnngm9F-F9UV2m+rr+r3t+KUVv5-EMiw@mail.gmail.com>
+ <CAGb2v66G5P_souwFHodO0_NYhWyQ+dGE4fbqLLK3qd9ue7Kk9g@mail.gmail.com>
+ <20200223105524.smp3p2quewp3ddop@core.my.home>
+User-Agent: AquaMail/1.23.0-1556 (build: 102300002)
+Subject: Re: [linux-sunxi] [PATCH 1/4] ARM: dts: sun8i-a83t-tbs-a711: OOB WiFi interrupt doesn't work
+MIME-Version: 1.0
+Content-Type: text/plain; format=flowed; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Madhuparna Bhowmik <madhuparnabhowmik10@gmail.com>
+On February 23, 2020 11:55:25 AM Ondřej Jirman <megous@megous.com> wrote:
 
-devlink_dpipe_table_find() should be called under either
-rcu_read_lock() or devlink->lock. devlink_dpipe_table_register()
-calls devlink_dpipe_table_find() without holding the lock
-and acquires it later. Therefore hold the devlink->lock
-from the beginning of devlink_dpipe_table_register().
+> Hello,
+>
+> On Sun, Feb 23, 2020 at 12:03:46PM +0800, Chen-Yu Tsai wrote:
+>> On Sun, Feb 23, 2020 at 11:26 AM Chen-Yu Tsai <wens@csie.org> wrote:
+>>>
+>>> Hi,
+>>>
+>>>
+>>> On Sun, Feb 23, 2020 at 6:32 AM Ondrej Jirman <megous@megous.com> wrote:
+>>>>
+>>>> It just causes a constant rate of 5000 interrupts per second for both
+>>>> GPIO and MMC, even if nothing is happening. Rely on in-band interrupts
+>>>> instead.
+>>>>
+>>>> Fixes: 0e23372080def7bb ("arm: dts: sun8i: Add the TBS A711 tablet devicetree")
+>>>> Signed-off-by: Ondrej Jirman <megous@megous.com>
+>>>
+>>> What WiFi chip/module does this use? It might be worth asking Broadcom
+>>> people to help with this and fix the driver.
+>>
+>> Based on the comments in the device tree file, it uses an AP6210, which
+>> is a BCM43362 inside for SDIO-based WiFi. There is a recent fix in 5.6-rc1
+>> for this,
+>>
+>> 8c8e60fb86a9 brcmfmac: sdio: Fix OOB interrupt initialization on brcm43362
+>>
+>> which seems to fix things for me. Could you try it on your end?
+>
+> I can confirm that it works as you say (on linus/master). 5.5 still doesn't 
+> have
+> the patch, so it's broken there, which confused me I guess.
 
-Suggested-by: Jiri Pirko <jiri@mellanox.com>
-Signed-off-by: Madhuparna Bhowmik <madhuparnabhowmik10@gmail.com>
----
- net/core/devlink.c | 21 ++++++++++++++-------
- 1 file changed, 14 insertions(+), 7 deletions(-)
+Hi Ondrej,
 
-diff --git a/net/core/devlink.c b/net/core/devlink.c
-index 4c63c9a4c09e..e82750bdc496 100644
---- a/net/core/devlink.c
-+++ b/net/core/devlink.c
-@@ -6838,26 +6838,33 @@ int devlink_dpipe_table_register(struct devlink *devlink,
- 				 void *priv, bool counter_control_extern)
- {
- 	struct devlink_dpipe_table *table;
--
--	if (devlink_dpipe_table_find(&devlink->dpipe_table_list, table_name))
--		return -EEXIST;
-+	int err = 0;
- 
- 	if (WARN_ON(!table_ops->size_get))
- 		return -EINVAL;
- 
-+	mutex_lock(&devlink->lock);
-+
-+	if (devlink_dpipe_table_find(&devlink->dpipe_table_list, table_name)) {
-+		err = -EEXIST;
-+		goto unlock;
-+	}
-+
- 	table = kzalloc(sizeof(*table), GFP_KERNEL);
--	if (!table)
--		return -ENOMEM;
-+	if (!table) {
-+		err = -ENOMEM;
-+		goto unlock;
-+	}
- 
- 	table->name = table_name;
- 	table->table_ops = table_ops;
- 	table->priv = priv;
- 	table->counter_control_extern = counter_control_extern;
- 
--	mutex_lock(&devlink->lock);
- 	list_add_tail_rcu(&table->list, &devlink->dpipe_table_list);
-+unlock:
- 	mutex_unlock(&devlink->lock);
--	return 0;
-+	return err;
- }
- EXPORT_SYMBOL_GPL(devlink_dpipe_table_register);
- 
--- 
-2.17.1
+I have seen emails from GregKH including this patch in 5.5 stable so it 
+will also land there eventually.
+
+Regards,
+Arend
+
+>
+> Please ignore this patch.
+>
+> thank you,
+> Ondrej
+>
+>> ChenYu
+>>
+>>
+>>> ChenYu
+>>>
+>>>> ---
+>>>> arch/arm/boot/dts/sun8i-a83t-tbs-a711.dts | 3 ---
+>>>> 1 file changed, 3 deletions(-)
+>>>>
+>>>> diff --git a/arch/arm/boot/dts/sun8i-a83t-tbs-a711.dts 
+>>>> b/arch/arm/boot/dts/sun8i-a83t-tbs-a711.dts
+>>>> index 2fd31a0a0b344..ee5ce3556b2ad 100644
+>>>> --- a/arch/arm/boot/dts/sun8i-a83t-tbs-a711.dts
+>>>> +++ b/arch/arm/boot/dts/sun8i-a83t-tbs-a711.dts
+>>>> @@ -214,9 +214,6 @@ &mmc1 {
+>>>>    brcmf: wifi@1 {
+>>>>            reg = <1>;
+>>>>            compatible = "brcm,bcm4329-fmac";
+>>>> -               interrupt-parent = <&r_pio>;
+>>>> -               interrupts = <0 3 IRQ_TYPE_LEVEL_LOW>; /* PL3 WL_WAKE_UP */
+>>>> -               interrupt-names = "host-wake";
+>>>>    };
+>>>> };
+>>>>
+>>>> --
+>>>> 2.25.1
+>>>>
+>>>> --
+>>>> You received this message because you are subscribed to the Google Groups 
+>>>> "linux-sunxi" group.
+>>>> To unsubscribe from this group and stop receiving emails from it, send an 
+>>>> email to linux-sunxi+unsubscribe@googlegroups.com.
+>>>> To view this discussion on the web, visit 
+>>>> https://groups.google.com/d/msgid/linux-sunxi/20200222223154.221632-2-megous%40megous.com.
+
+
 
