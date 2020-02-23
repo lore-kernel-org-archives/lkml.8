@@ -2,52 +2,52 @@ Return-Path: <SRS0=SnAt=4L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,URIBL_RHS_DOB,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2E256C35669
-	for <linux-kernel@archiver.kernel.org>; Sun, 23 Feb 2020 02:30:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AFE56C35671
+	for <linux-kernel@archiver.kernel.org>; Sun, 23 Feb 2020 02:30:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EFDCD2067D
-	for <linux-kernel@archiver.kernel.org>; Sun, 23 Feb 2020 02:30:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 796462067D
+	for <linux-kernel@archiver.kernel.org>; Sun, 23 Feb 2020 02:30:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582425050;
-	bh=cACRJLPYJUGqekbbL6xWCecdMYb50zkd2HoNIw//Oyc=;
+	s=default; t=1582425057;
+	bh=fsPvjRYgB4pv7V5kfZoupwdYyArfFebXqtBGXqlzQ+o=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=2LhfdazrFHT3EBRsFzc5gAwStv5Fj1mjp9aJdvq+n6sHKI+TAY7wzOPRknpslM2ju
-	 CdYvGZxL9w1WyRjNLAu9e/RYep6pt2s0xXozm7EUQhgDs+DkU0DRVX9MqQ4A4pWq9T
-	 zr8LMuKLxyyMg5EfNWt7AbRpjzdiLGwFo6oKXsA8=
+	b=f6QXLGhJ/16qU9+vzR94Dt9JttW8ZT3qO3TKCp7OxisqZ5QxkLNgcV78U2jIdihIb
+	 P/37SXXG3RFQ3R6yRxaZleiL/SCoFjT06JT62hd4+HEg30FEfjbipWR5Oo9pE3yFOz
+	 eV2o+V3KjZPsh9iva9TaxQzlNutU4DedQjlwVzHA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728933AbgBWCas (ORCPT
+        id S1729033AbgBWCaz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 22 Feb 2020 21:30:48 -0500
-Received: from mail.kernel.org ([198.145.29.99]:53114 "EHLO mail.kernel.org"
+        Sat, 22 Feb 2020 21:30:55 -0500
+Received: from mail.kernel.org ([198.145.29.99]:53084 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728719AbgBWCXe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 22 Feb 2020 21:23:34 -0500
+        id S1728699AbgBWCXc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 22 Feb 2020 21:23:32 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 77FE62071E;
-        Sun, 23 Feb 2020 02:23:33 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 310F2227BF;
+        Sun, 23 Feb 2020 02:23:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1582424614;
-        bh=cACRJLPYJUGqekbbL6xWCecdMYb50zkd2HoNIw//Oyc=;
+        s=default; t=1582424612;
+        bh=fsPvjRYgB4pv7V5kfZoupwdYyArfFebXqtBGXqlzQ+o=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=b6XNaKwCrdR/zoLjg2tZ1IgNynM8WaXGtIOia6IA2gPnu1OqLzaIvUDDOYcMU46GV
-         Wmq394k3rCrqeQvuiAC0VPsi5qm5MlOYP9okXRKoTd8XP+RY3GKOPeZJFtOwy+jBWX
-         QgPhPoGrigHjyyAMYsvCSdt76QhVAciOvFO3sUiw=
+        b=wmTfIVg9jLBGSqts0Dii1gLsE7lMCDrFnWCxmxTEciSqRv5oakdQ0XcivLMt3tCUU
+         Fs1VOCmR48Z5/nOXOJQBKRNsjTONO9jXqAkgRDwbw+D/+Qx78AtBKImidw8iCTfIjE
+         0XKa6ENpM53n9M6Vs5Uz3EoDgObHui/PXOqQNjCo=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Anton Eidelman <anton@lightbitslabs.com>,
-        Sagi Grimberg <sagi@grimberg.me>,
-        Keith Busch <kbusch@kernel.org>, Jens Axboe <axboe@kernel.dk>,
-        Sasha Levin <sashal@kernel.org>, linux-nvme@lists.infradead.org
-Subject: [PATCH AUTOSEL 5.4 48/50] nvme/tcp: fix bug on double requeue when send fails
-Date:   Sat, 22 Feb 2020 21:22:33 -0500
-Message-Id: <20200223022235.1404-48-sashal@kernel.org>
+Cc:     Yufeng Mo <moyufeng@huawei.com>,
+        Huazhong Tan <tanhuazhong@huawei.com>,
+        "David S . Miller" <davem@davemloft.net>,
+        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.4 46/50] net: hns3: add management table after IMP reset
+Date:   Sat, 22 Feb 2020 21:22:31 -0500
+Message-Id: <20200223022235.1404-46-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200223022235.1404-1-sashal@kernel.org>
 References: <20200223022235.1404-1-sashal@kernel.org>
@@ -60,52 +60,40 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Anton Eidelman <anton@lightbitslabs.com>
+From: Yufeng Mo <moyufeng@huawei.com>
 
-[ Upstream commit 2d570a7c0251c594489a2c16b82b14ae30345c03 ]
+[ Upstream commit d0db7ed397517c8b2be24a0d1abfa15df776908e ]
 
-When nvme_tcp_io_work() fails to send to socket due to
-connection close/reset, error_recovery work is triggered
-from nvme_tcp_state_change() socket callback.
-This cancels all the active requests in the tagset,
-which requeues them.
+In the current process, the management table is missing after the
+IMP reset. This patch adds the management table to the reset process.
 
-The failed request, however, was ended and thus requeued
-individually as well unless send returned -EPIPE.
-Another return code to be treated the same way is -ECONNRESET.
-
-Double requeue caused BUG_ON(blk_queued_rq(rq))
-in blk_mq_requeue_request() from either the individual requeue
-of the failed request or the bulk requeue from
-blk_mq_tagset_busy_iter(, nvme_cancel_request, );
-
-Signed-off-by: Anton Eidelman <anton@lightbitslabs.com>
-Reviewed-by: Sagi Grimberg <sagi@grimberg.me>
-Signed-off-by: Keith Busch <kbusch@kernel.org>
-Signed-off-by: Jens Axboe <axboe@kernel.dk>
+Fixes: f5aac71c0327 ("net: hns3: add manager table initialization for hardware")
+Signed-off-by: Yufeng Mo <moyufeng@huawei.com>
+Signed-off-by: Huazhong Tan <tanhuazhong@huawei.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/nvme/host/tcp.c | 7 ++++++-
- 1 file changed, 6 insertions(+), 1 deletion(-)
+ drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_main.c | 7 +++++++
+ 1 file changed, 7 insertions(+)
 
-diff --git a/drivers/nvme/host/tcp.c b/drivers/nvme/host/tcp.c
-index 7544be84ab358..a870144542159 100644
---- a/drivers/nvme/host/tcp.c
-+++ b/drivers/nvme/host/tcp.c
-@@ -1054,7 +1054,12 @@ static void nvme_tcp_io_work(struct work_struct *w)
- 		} else if (unlikely(result < 0)) {
- 			dev_err(queue->ctrl->ctrl.device,
- 				"failed to send request %d\n", result);
--			if (result != -EPIPE)
+diff --git a/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_main.c b/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_main.c
+index 162881005a6df..0c3c63aed2c06 100644
+--- a/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_main.c
++++ b/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_main.c
+@@ -9437,6 +9437,13 @@ static int hclge_reset_ae_dev(struct hnae3_ae_dev *ae_dev)
+ 		return ret;
+ 	}
+ 
++	ret = init_mgr_tbl(hdev);
++	if (ret) {
++		dev_err(&pdev->dev,
++			"failed to reinit manager table, ret = %d\n", ret);
++		return ret;
++	}
 +
-+			/*
-+			 * Fail the request unless peer closed the connection,
-+			 * in which case error recovery flow will complete all.
-+			 */
-+			if ((result != -EPIPE) && (result != -ECONNRESET))
- 				nvme_tcp_fail_request(queue->request);
- 			nvme_tcp_done_send_req(queue);
- 			return;
+ 	ret = hclge_init_fd_config(hdev);
+ 	if (ret) {
+ 		dev_err(&pdev->dev, "fd table init fail, ret=%d\n", ret);
 -- 
 2.20.1
 
