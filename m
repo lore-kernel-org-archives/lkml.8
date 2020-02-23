@@ -2,96 +2,106 @@ Return-Path: <SRS0=SnAt=4L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A0F23C35673
-	for <linux-kernel@archiver.kernel.org>; Sun, 23 Feb 2020 08:04:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 680B7C35671
+	for <linux-kernel@archiver.kernel.org>; Sun, 23 Feb 2020 08:07:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 70C4A208C4
-	for <linux-kernel@archiver.kernel.org>; Sun, 23 Feb 2020 08:04:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3CED2206E0
+	for <linux-kernel@archiver.kernel.org>; Sun, 23 Feb 2020 08:07:54 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726678AbgBWIEu (ORCPT
+        id S1727104AbgBWIHu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 23 Feb 2020 03:04:50 -0500
-Received: from outbound.smtp.vt.edu ([198.82.183.121]:34480 "EHLO
+        Sun, 23 Feb 2020 03:07:50 -0500
+Received: from outbound.smtp.vt.edu ([198.82.183.121]:34890 "EHLO
         omr2.cc.vt.edu" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1725980AbgBWIEu (ORCPT
+        with ESMTP id S1725980AbgBWIHu (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 23 Feb 2020 03:04:50 -0500
+        Sun, 23 Feb 2020 03:07:50 -0500
 Received: from mr4.cc.vt.edu (mr4.cc.ipv6.vt.edu [IPv6:2607:b400:92:8300:0:7b:e2b1:6a29])
-        by omr2.cc.vt.edu (8.14.4/8.14.4) with ESMTP id 01N84mRx021177
-        for <linux-kernel@vger.kernel.org>; Sun, 23 Feb 2020 03:04:48 -0500
-Received: from mail-qk1-f200.google.com (mail-qk1-f200.google.com [209.85.222.200])
-        by mr4.cc.vt.edu (8.14.7/8.14.7) with ESMTP id 01N84h9g011917
-        for <linux-kernel@vger.kernel.org>; Sun, 23 Feb 2020 03:04:48 -0500
-Received: by mail-qk1-f200.google.com with SMTP id q123so5953451qkb.1
-        for <linux-kernel@vger.kernel.org>; Sun, 23 Feb 2020 00:04:48 -0800 (PST)
+        by omr2.cc.vt.edu (8.14.4/8.14.4) with ESMTP id 01N87mnK021569
+        for <linux-kernel@vger.kernel.org>; Sun, 23 Feb 2020 03:07:48 -0500
+Received: from mail-qk1-f199.google.com (mail-qk1-f199.google.com [209.85.222.199])
+        by mr4.cc.vt.edu (8.14.7/8.14.7) with ESMTP id 01N87hWt013771
+        for <linux-kernel@vger.kernel.org>; Sun, 23 Feb 2020 03:07:48 -0500
+Received: by mail-qk1-f199.google.com with SMTP id r142so5955694qke.3
+        for <linux-kernel@vger.kernel.org>; Sun, 23 Feb 2020 00:07:48 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:sender:from:to:cc:subject:in-reply-to:references
-         :mime-version:date:message-id;
-        bh=1sDjklUSRS6YK2uiHcNctH5JVvBEzpdZpp/YBerFW8Q=;
-        b=JYyQnU0potAIx2xfZz5rN25Um5Sl37nyef1I4vRFfT6AAt3Yzz5SaXsvfC67nBixH2
-         WW6pzdPXcgfvo/Zp0BhORznVqaL+leqa+RXrjcW9ocuBFdAkP3LCN+FI3x9nMqi2uPmZ
-         3wB5a4kqO6lyJ3ibXuHlbJvuwWge+faVDM/lN8xtxPAObsMk2DkH7Bc/dnWwGIth+YGL
-         Zv6tdAWUL6njCGpjTld4G+pwWkvGV5Cwi0MH2fD1ListVujc3Ir33Ku9MG+ENY5YrefJ
-         RlsWkKIi9Q3mb2ROJbd9mc02LTlKfil9Kw/7KNMuPAWCeA6sQuh9EXSWvYQXhkiwCmZ7
-         nJvw==
-X-Gm-Message-State: APjAAAV/E2CmvyfeDpNPP2YJwg1yTYMEoq/nrtoabdn8MhBe7snWSPAT
-        73UlKKPFynUaMmmaDOuTzDPNN+FbHIHJzG2zKH5ev+VUK6p6DIo6lznO2iudQDEvyFXSf1DIcyS
-        MbZxTSFB/804oXJHNG0dKOoXlMV04ISgEQqk=
-X-Received: by 2002:ac8:4616:: with SMTP id p22mr42368499qtn.368.1582445083526;
-        Sun, 23 Feb 2020 00:04:43 -0800 (PST)
-X-Google-Smtp-Source: APXvYqwLhVoWW2qQBKGujy+A80rCyV25rTP6B3Jur8sdum1qXflE5F1qwSnbKA4SgT1R0Q+CM8Rjsw==
-X-Received: by 2002:ac8:4616:: with SMTP id p22mr42368472qtn.368.1582445083208;
-        Sun, 23 Feb 2020 00:04:43 -0800 (PST)
+         :mime-version:content-transfer-encoding:date:message-id;
+        bh=xr+dDzI9JDrsuRpKKcdMlTjc/FX5VYBQYyf/vKZ+Y+k=;
+        b=GmXDnrFATfQFtOIbV6c+lhMdEx8VFuCahn89rPSyPySNYL7ybY+d1UTMjCo6yM65eH
+         9kcFWu6oqsufPYTu/gXr6Q+w2uwd1C7p3KxZscGyTMmCJCyvZ2CWCsV69R3vZl7XcfJo
+         WEOS7AhTycSDaXDFSj5AmC9PapvvDA9mSMQHgHJnza/B9+UdPWH/lVu4Pc7w9XL+HE/X
+         8b+gRNgJut4B1tBz3PcjhTieRupPp1w9W+HGjlcKlQkvF4HFdEXCGF+vJADPMosXtTzM
+         nz4I0ZtistYwe8+Mt9p+z8/dbGqlqLVHo99G7O6OoC0D4bURs1cx4QbfHTrjouuR6DRz
+         Bugg==
+X-Gm-Message-State: APjAAAUh500d4HEl0HdHTKhsYsiUVpfu+6FXtY4roB9Z/YRnuMbEWLjK
+        lXOxe4xIiiSwXyvTPqeFFdA0QLYaDg0ph4djZqz8XB9BhtENp2HfdcufwkS25D9cVWW3uqz3Po3
+        lHiONDW7F4hP+RSsuWLI2bouLEpDFegxZN0A=
+X-Received: by 2002:ae9:e207:: with SMTP id c7mr41501807qkc.128.1582445263655;
+        Sun, 23 Feb 2020 00:07:43 -0800 (PST)
+X-Google-Smtp-Source: APXvYqxUbNtLeeLWsKBubaqRUN1o+nqZ96PrUxD1hYlN1VBbq91UR6oUeFaiEmFjwwDt0lm9qBstgg==
+X-Received: by 2002:ae9:e207:: with SMTP id c7mr41501787qkc.128.1582445263393;
+        Sun, 23 Feb 2020 00:07:43 -0800 (PST)
 Received: from turing-police ([2601:5c0:c001:c9e1::359])
-        by smtp.gmail.com with ESMTPSA id w2sm4302117qtd.97.2020.02.23.00.04.41
+        by smtp.gmail.com with ESMTPSA id o7sm4256962qkd.119.2020.02.23.00.07.41
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 23 Feb 2020 00:04:41 -0800 (PST)
+        Sun, 23 Feb 2020 00:07:42 -0800 (PST)
 From:   "Valdis Kl=?utf-8?Q?=c4=93?=tnieks" <valdis.kletnieks@vt.edu>
 X-Google-Original-From: "Valdis Kl=?utf-8?Q?=c4=93?=tnieks" <Valdis.Kletnieks@vt.edu>
 X-Mailer: exmh version 2.9.0 11/07/2018 with nmh-1.7+dev
-To:     Tetsuhiro Kohada <Kohada.Tetsuhiro@dc.MitsubishiElectric.co.jp>
-cc:     Mori.Takahiro@ab.MitsubishiElectric.co.jp,
-        motai.hirotaka@aj.mitsubishielectric.co.jp,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+To:     Kaaira Gupta <kgupta@es.iitr.ac.in>
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         linux-fsdevel@vger.kernel.org, devel@driverdev.osuosl.org,
         linux-kernel@vger.kernel.org
-Subject: Re: [RFC PATCH] staging: exfat: remove symlink feature.
-In-reply-to: <20200219055727.12867-1-Kohada.Tetsuhiro@dc.MitsubishiElectric.co.jp>
-References: <20200219055727.12867-1-Kohada.Tetsuhiro@dc.MitsubishiElectric.co.jp>
+Subject: Re: [PATCH] staging: exfat: remove exfat_fat_sync()
+In-Reply-To: <20200219161738.GA22282@kaaira-HP-Pavilion-Notebook>
+References: <20200219161738.GA22282@kaaira-HP-Pavilion-Notebook>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Date:   Sun, 23 Feb 2020 03:04:40 -0500
-Message-ID: <225183.1582445080@turing-police>
+Content-Type: multipart/signed; boundary="==_Exmh_1582445261_2081P";
+         micalg=pgp-sha1; protocol="application/pgp-signature"
+Content-Transfer-Encoding: 7bit
+Date:   Sun, 23 Feb 2020 03:07:41 -0500
+Message-ID: <225301.1582445261@turing-police>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 19 Feb 2020 14:57:27 +0900, Tetsuhiro Kohada said:
-> Remove symlink feature completely.
->
-> Becouse
-> -Uses reserved areas(defined in the Microsoft exfat specification), causing future incompatibilities.
-> -Not described in Microsoft exfat specifications or SD standards.
-> -For REMOVABLE media, causes incompatibility with other implementations.
-> -Not supported by other major exfat drivers.
-> -Not implemented symlink feature in linux FAT/VFAT.
->
-> Remove this feature completely because of serious media compatibility issues.
-> (Can't enable even with CONFIG)
->
-> If you have any questions about this patch, please let me know.
->
-> Reviewed-by: Takahiro Mori <Mori.Takahiro@ab.MitsubishiElectric.co.jp>
-> Signed-off-by: Tetsuhiro Kohada <Kohada.Tetsuhiro@dc.MitsubishiElectric.co.jp>
+--==_Exmh_1582445261_2081P
+Content-Type: text/plain; charset=us-ascii
 
-Symlink support would be nice, but Tetsuhiro is right - this driver's
-implementation isn't the way to do it. Heaving it over the side and getting a
-standard fat/vfat/exfat extension done is the right way.
+On Wed, 19 Feb 2020 21:47:38 +0530, you said:
+> exfat_fat_sync() is not called anywhere, hence remove it from
+> exfat_cache.c and exfat.h
+
+Yes, it's a leftover from the fat/vfat support that got taken out.
 
 Acked-by: Valdis Kletnieks <valdis.kletnieks@vt.edu>
+
+--==_Exmh_1582445261_2081P
+Content-Type: application/pgp-signature
+
+-----BEGIN PGP SIGNATURE-----
+Comment: Exmh version 2.9.0 11/07/2018
+
+iQIVAwUBXlIyzAdmEQWDXROgAQKS3xAAvMVO5+PRiwz05fvVZ6rxxmqLw7nTxig6
+PLLEw4hV86kyStXxxsUTkeT68F/nIT/FgqBc7eB8gSXLB7te/w/4VeZAmfM7j979
+jJq2MZkNyrsONGnZwu6y+0MU9HXZw5ITanxlG+zVK3Y7YFKvK022W0jaBQLKx4pG
+aUGdnHwKRkzdOHs4eSEI/VuEb4FadQ4GMCbdXvm0C1D5ifN9mcfqMGOCmAu8VmOv
+/IB1dqKcKuPcQ2HBU+jvra74ovNAsXbtQ5f+fpJOov/cUYgv7CdvrIzSm6f/z9N9
+faXxQ4DuO2c+muF1U7V7fMSwuhXxxPBEOQw/Ek3cnRVyW0T4O7IodPMfLsifqX9Z
+1FWYcRCzu4tx6VsVqijuJX6BUYmVZu1UDevbZxcvEil5SGG2EYCn9F77aLVrtyVc
+QgfdjdMNdrdAJg2GWTn2BDuqaz9G2UgRJRMz+/JjKaB23HohzJuOc5pxJH4LAsb7
+45z9ayLUBRBRV2w5MUODKQLdeZiNvZLLalOlyiS7+sTo6N4ivX0DqHjoTGnaYA6i
+UDq2Wv9pnIN4QRp+yCunl30YgqXLyY+deCL7hL02ofwYKKwVRgAnfRBMajKINtuq
+FCMAcGX1hhZYvfSeRCkoBAiNNoQley8RGlguJWwVdAdfu5Yy4zyOtVePMAggyjLv
+BMcwJcDQPuI=
+=xN/F
+-----END PGP SIGNATURE-----
+
+--==_Exmh_1582445261_2081P--
