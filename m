@@ -2,351 +2,160 @@ Return-Path: <SRS0=SnAt=4L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 59D32C35666
-	for <linux-kernel@archiver.kernel.org>; Sun, 23 Feb 2020 18:49:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A1C20C35673
+	for <linux-kernel@archiver.kernel.org>; Sun, 23 Feb 2020 19:01:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 24DBD20656
-	for <linux-kernel@archiver.kernel.org>; Sun, 23 Feb 2020 18:49:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 78BB5206E2
+	for <linux-kernel@archiver.kernel.org>; Sun, 23 Feb 2020 19:01:19 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="DyABcoB5"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727099AbgBWStT (ORCPT
+        id S1727148AbgBWTBS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 23 Feb 2020 13:49:19 -0500
-Received: from foss.arm.com ([217.140.110.172]:50664 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726208AbgBWStT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 23 Feb 2020 13:49:19 -0500
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 9A0AA30E;
-        Sun, 23 Feb 2020 10:49:17 -0800 (PST)
-Received: from localhost (unknown [10.1.198.53])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 377B73F703;
-        Sun, 23 Feb 2020 10:49:17 -0800 (PST)
-Date:   Sun, 23 Feb 2020 18:49:15 +0000
-From:   Ionela Voinescu <ionela.voinescu@arm.com>
-To:     Valentin Schneider <valentin.schneider@arm.com>
-Cc:     catalin.marinas@arm.com, will@kernel.org, mark.rutland@arm.com,
-        maz@kernel.org, suzuki.poulose@arm.com, sudeep.holla@arm.com,
-        lukasz.luba@arm.com, rjw@rjwysocki.net, peterz@infradead.org,
-        mingo@redhat.com, vincent.guittot@linaro.org,
-        viresh.kumar@linaro.org, linux-arm-kernel@lists.infradead.org,
-        linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-pm@vger.kernel.org
-Subject: Re: [PATCH v3 6/7] arm64: use activity monitors for frequency
- invariance
-Message-ID: <20200223184915.GA22925@arm.com>
-References: <20200211184542.29585-1-ionela.voinescu@arm.com>
- <20200211184542.29585-7-ionela.voinescu@arm.com>
- <9eeda406-78a8-a910-f6ef-a367bf407a19@arm.com>
+        Sun, 23 Feb 2020 14:01:18 -0500
+Received: from us-smtp-2.mimecast.com ([205.139.110.61]:43648 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726302AbgBWTBS (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 23 Feb 2020 14:01:18 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1582484477;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=jWcZhHEavbPC3Qi6XM2pKSsf4FRLtu/oPmsWL6brHIY=;
+        b=DyABcoB5XGDthvpfXpq25mwHpE9gstweJa4jxLT3cR49yKgborKNlPkAnSUpMIeUhEV2iT
+        s47KJHPVmEBJ/pQyHekAfEgQZZfKw/6Ghs3TQTXWz00oig9w1GbpImcHNHXp5US5Z//5Ny
+        kU7doOYUhxZHIEd/kutjVady4uWYeNU=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-36-bRjV9tBuNq-TaKDkKNi1mQ-1; Sun, 23 Feb 2020 14:01:13 -0500
+X-MC-Unique: bRjV9tBuNq-TaKDkKNi1mQ-1
+Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id AE633477;
+        Sun, 23 Feb 2020 19:01:11 +0000 (UTC)
+Received: from localhost (ovpn-116-38.ams2.redhat.com [10.36.116.38])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 32B9C1001B30;
+        Sun, 23 Feb 2020 19:01:10 +0000 (UTC)
+From:   Giuseppe Scrivano <gscrivan@redhat.com>
+To:     ebiederm@xmission.com (Eric W. Biederman)
+Cc:     linux-kernel@vger.kernel.org, rcu@vger.kernel.org,
+        paulmck@kernel.org, viro@zeniv.linux.org.uk
+Subject: Re: [PATCH v2] ipc: use a work queue to free_ipc
+References: <20200217183627.4099690-1-gscrivan@redhat.com>
+        <87lfov68a2.fsf@x220.int.ebiederm.org>
+Date:   Sun, 23 Feb 2020 20:01:09 +0100
+In-Reply-To: <87lfov68a2.fsf@x220.int.ebiederm.org> (Eric W. Biederman's
+        message of "Fri, 21 Feb 2020 13:37:57 -0600")
+Message-ID: <871rqlt9fu.fsf@redhat.com>
+User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.3 (gnu/linux)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <9eeda406-78a8-a910-f6ef-a367bf407a19@arm.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+Content-Type: text/plain
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Valentin,
+ebiederm@xmission.com (Eric W. Biederman) writes:
 
-Sorry for the delay in my reply and thank you very much for the review!
-
-I will push v4 very soon with these changes.
-
-On Monday 17 Feb 2020 at 16:59:24 (+0000), Valentin Schneider wrote:
-> > +	 * Pre-compute the fixed ratio between the frequency of the constant
-> > +	 * counter and the maximum frequency of the CPU.
-> > +	 *
-> > +	 *			      const_freq
-> > +	 * arch_max_freq_scale =   ---------------- * SCHED_CAPACITY_SCALE²
-> > +	 *			   cpuinfo_max_freq
-> > +	 *
-> > +	 * We use a factor of 2 * SCHED_CAPACITY_SHIFT -> SCHED_CAPACITY_SCALE²
-> > +	 * in order to ensure a good resolution for arch_max_freq_scale for
-> > +	 * very low arch timer frequencies (up to the KHz range which should be
->                                             ^^^^^
-> <pedantic hat on>: s/up to/down to/
-
-Done!
-
-> > +	 * unlikely).
-> > +	 */
-> > +	ratio = (u64)arch_timer_get_rate() << (2 * SCHED_CAPACITY_SHIFT);
-> > +	ratio = div64_u64(ratio, max_freq_hz);
-> > +	if (!ratio) {
-> > +		pr_err("System timer frequency too low.\n");
-> 
-> Should that be a WARN_ONCE() instead? If the arch timer freq is too low,
-> we'll end up spamming this message, since we go through this for all CPUs.
-
-Done!
-
-> > +		return -EINVAL;
-> > +	}
-> > +
-> > +	per_cpu(arch_max_freq_scale, cpu) = (unsigned long)ratio;
-> > +
-> 
-> It occurred to me that this isn't strictly speaking a per-CPU information as
-> it only depends on the max possible frequency. Not really worth bothering
-> about though, I think.
-> 
-
-Yes, it depends on the max possible frequency of all CPUs in a frequency
-domain. But I wanted to put this factor in a per-cpu variable in order
-to be able to retrieve it faster in topology_scale_freq_tick, rather
-than having to consider policies and related CPUs in that function.
-
-> > +	return 0;
-> > +}
-> > +
-> > +static inline int
-> > +enable_policy_freq_counters(int cpu, cpumask_var_t valid_cpus)
-> > +{
-> > +	struct cpufreq_policy *policy = cpufreq_cpu_get(cpu);
-> > +
-> > +	if (!policy) {
-> > +		pr_debug("CPU%d: No cpufreq policy found.\n", cpu);
-> > +		return false;
-> > +	}
-> > +
-> > +	if (cpumask_subset(policy->related_cpus, valid_cpus)) {
-> > +		cpumask_or(amu_fie_cpus, policy->related_cpus,
-> > +			   amu_fie_cpus);
-> > +		pr_info("CPUs[%*pbl]: counters will be used for FIE.",
-> > +			cpumask_pr_args(amu_fie_cpus));
-> 
-> Could we have a single print of all CPUs in one go? AIUI this will generate a
-> line per cpufreq policy. Maybe just something at the tail of init_amu_fie():
-> 
-> if (!cpumask_empty(amu_fie_cpus))
-> 	pr_info(<blah>);
-> 
-
-Done. I've used this location as well to set the static key that you've
-suggested below.
-
-> > +	}
-> > +
-> > +	cpufreq_cpu_put(policy);
-> > +
-> > +	return true;
-> > +}
-> > +
-> > +static int __init init_amu_fie(void)
-> > +{
-> > +	cpumask_var_t valid_cpus;
-> > +	bool have_policy = false;
-> > +	int cpu;
-> > +
-> > +	if (!zalloc_cpumask_var(&valid_cpus, GFP_KERNEL) ||
-> > +	    !zalloc_cpumask_var(&amu_fie_cpus, GFP_KERNEL))
-> > +		return -ENOMEM;
-> > +
-> > +	for_each_possible_cpu(cpu) {
-> > +		if (validate_cpu_freq_invariance_counters(cpu))
-> > +			continue;
-> > +		cpumask_set_cpu(cpu, valid_cpus);
-> > +		have_policy = enable_policy_freq_counters(cpu, valid_cpus) ||
-> > +			      have_policy;
-> 
-> What about:
-> 		have_policy |= enable_policy_freq_counters(cpu, valid_cpus);
-> 
-
-Done as well.
-
-> > +	}
-> > +
-> > +	if (!have_policy) {
-> > +		/*
-> > +		 * If we are not restricted by cpufreq policies, we only enable
-> > +		 * the use of the AMU feature for FIE if all CPUs support AMU.
-> > +		 * Otherwise, enable_policy_freq_counters has already enabled
-> > +		 * policy cpus.
-> > +		 */
-> > +		if (cpumask_equal(valid_cpus, cpu_possible_mask)) {
-> 
-> Mmm so I'm thinking what we want here is the cpu_present_mask rather than
-> the possible one. This is very corner-casy, but I think that if we fail to
-> boot a secondary, we'll have it possible but not present.
+> Giuseppe Scrivano <gscrivan@redhat.com> writes:
 >
-
-Yes, this is correct. It does depend on the stage it fails at: for
-example if some feature checks fail, a CPU will not be marked in
-cpu_present_mask (see cpu_die_early()), while the following will result
-in possible == present.
-
----
-[    0.056524] EFI services will not be available.
-[    0.065690] smp: Bringing up secondary CPUs ...
-[    0.098010] psci: failed to boot CPU1 (-22)
-[    0.098037] CPU1: failed to boot: -22
-[    0.130290] psci: failed to boot CPU2 (-22)
-[    0.130315] CPU2: failed to boot: -22
-[    0.162568] psci: failed to boot CPU3 (-22)
-[    0.162594] CPU3: failed to boot: -22
-[    0.194890] Detected PIPT I-cache on CPU4
-[    0.194990] GICv3: CPU4: found redistributor 100 region
-0:0x000000002f120000
-[    0.195046] GICv3: CPU4: using allocated LPI pending table
-@0x00000000fc0d0000
-[    0.195133] CPU4: Booted secondary processor 0x0000000100
-[0x410fd0f0]
-[    0.227190] psci: failed to boot CPU5 (-22)
-[    0.227412] CPU5: failed to boot: -22
-[    0.259431] psci: failed to boot CPU6 (-22)
-[    0.259522] CPU6: failed to boot: -22
-[    0.291683] psci: failed to boot CPU7 (-22)
-[    0.291709] CPU7: failed to boot: -22
-[    0.291990] smp: Brought up 1 node, 2 CPUs  
-[..]
-root@buildroot:~# cat present
-0-7
-root@buildroot:~# cat possible
-0-7
-
-This failure happens while the CPU is being brought up (__cpu_up).
-I'm not sure if this should result in set_cpu_present(cpu, 0) as well.
-But it's unrelated to this..
-
-In any case, your suggestion is valid and cpu_present_mask is better to
-be used here.
-
-
-> While at it you could make the loop only target present CPUs, but I think the
-> one bit that matters is this check right here (!present should fail at
-> validate_cpu_freq_invariance_counters()).
-> 
-
-Will change the loop as well. Thanks!
-
-> > +			cpumask_or(amu_fie_cpus, amu_fie_cpus, valid_cpus);
-> > +			pr_info("CPUs[%*pbl]: counters will be used for FIE.",
-> > +				cpumask_pr_args(amu_fie_cpus));
-> > +		}
-> > +	}
-> > +
-> > +	free_cpumask_var(valid_cpus);
-> > +
-> > +	return 0;
-> > +}
-> > +late_initcall_sync(init_amu_fie);
-> > +
-> > +bool topology_cpu_freq_counters(struct cpumask *cpus)
-> > +{
-> > +	return cpumask_available(amu_fie_cpus) &&
-> > +	       cpumask_subset(cpus, amu_fie_cpus);
-> > +}
-> > +
-> > +void topology_scale_freq_tick(void)
-> > +{
-> > +	u64 prev_core_cnt, prev_const_cnt;
-> > +	u64 core_cnt, const_cnt, scale;
-> > +	int cpu = smp_processor_id();
-> > +
-> > +	if (!cpumask_available(amu_fie_cpus) ||
-> > +	    !cpumask_test_cpu(cpu, amu_fie_cpus))
-> > +		return;
-> 
-> It might be a good idea to have a static key to gate our entry into this
-> function - that way we can lessen our impact on older platforms (without AMUs)
-> running a recent kernel with CONFIG_ARM64_AMU_EXTN=y.
-> 
-> x86 does just that, if you look at their arch_scale_freq_tick()
-> implementation. FWIW I don't think we should bother with playing with the
-> key counter to count AMU-enabled CPUs, just enable it at startup if we have
-> > 1 such CPU and let the cpumask drive the rest.
-> 
-> In your check here, the static key check could replace the cpumask_available()
-> check. The static key could also be used for topology_cpu_freq_counters().
+>> it avoids blocking on synchronize_rcu() in kern_umount().
+>>
+>> the code:
+>>
+>> \#define _GNU_SOURCE
+>> \#include <sched.h>
+>> \#include <error.h>
+>> \#include <errno.h>
+>> \#include <stdlib.h>
+>> int main()
+>> {
+>>   int i;
+>>   for (i  = 0; i < 1000; i++)
+>>     if (unshare (CLONE_NEWIPC) < 0)
+>>       error (EXIT_FAILURE, errno, "unshare");
+>> }
+>>
+>> gets from:
+>>
+>> 	Command being timed: "./ipc-namespace"
+>> 	User time (seconds): 0.00
+>> 	System time (seconds): 0.06
+>> 	Percent of CPU this job got: 0%
+>> 	Elapsed (wall clock) time (h:mm:ss or m:ss): 0:08.05
+>>
+>> to:
+>>
+>> 	Command being timed: "./ipc-namespace"
+>> 	User time (seconds): 0.00
+>> 	System time (seconds): 0.02
+>> 	Percent of CPU this job got: 96%
+>> 	Elapsed (wall clock) time (h:mm:ss or m:ss): 0:00.03
 >
-
-Very good idea! Done as well. Yes, the counter (number of AMU enabled
-CPUs) would not be of much help for the moment.
-
-> > +
-> > +	const_cnt = read_sysreg_s(SYS_AMEVCNTR0_CONST_EL0);
-> > +	core_cnt = read_sysreg_s(SYS_AMEVCNTR0_CORE_EL0);
-> > +	prev_const_cnt = this_cpu_read(arch_const_cycles_prev);
-> > +	prev_core_cnt = this_cpu_read(arch_core_cycles_prev);
-> > +
-> > +	if (unlikely(core_cnt <= prev_core_cnt ||
-> > +		     const_cnt <= prev_const_cnt))
-> > +		goto store_and_exit;
-> > +
-> > +	/*
-> > +	 *	    /\core    arch_max_freq_scale
-> > +	 * scale =  ------- * --------------------
-> > +	 *	    /\const   SCHED_CAPACITY_SCALE
-> > +	 *
-> > +	 * We shift by SCHED_CAPACITY_SHIFT (divide by SCHED_CAPACITY_SCALE)
-> > +	 * in order to compensate for the SCHED_CAPACITY_SCALE² factor in
-> > +	 * arch_max_freq_scale (used to ensure its resolution) while keeping
-> > +	 * the scale value in the 0-SCHED_CAPACITY_SCALE capacity range.
-> > +	 */
-> 
-> A simple "See validate_cpu_freq_invariance_counters() for details on the
-> scale factor" would suffice wrt the shifting details.
+> I have a question.  You create 1000 namespaces in a single process
+> and then free them.  So I expect that single process is busy waiting
+> for that kern_umount 1000 types, and waiting for 1000 synchronize_rcu's.
 >
+> Does this ever show up in a real world work-load?
+>
+> Is the cost of a single synchronize_rcu a problem?
 
-Done!
+yes exactly, creating 1000 namespaces is not a real world use case (at
+least in my experience) but I've used it only to show the impact of the
+patch.
 
-Thank you,
-Ionela.
+The cost of the single synchronize_rcu is the issue.
 
-> > +	scale = core_cnt - prev_core_cnt;
-> > +	scale *= this_cpu_read(arch_max_freq_scale);
-> > +	scale = div64_u64(scale >> SCHED_CAPACITY_SHIFT,
-> > +			  const_cnt - prev_const_cnt);
-> > +
-> > +	scale = min_t(unsigned long, scale, SCHED_CAPACITY_SCALE);
-> > +	this_cpu_write(freq_scale, (unsigned long)scale);
-> > +
-> > +store_and_exit:
-> > +	this_cpu_write(arch_core_cycles_prev, core_cnt);
-> > +	this_cpu_write(arch_const_cycles_prev, const_cnt);
-> > +}
-> > +#endif /* CONFIG_ARM64_AMU_EXTN */
-> > diff --git a/drivers/base/arch_topology.c b/drivers/base/arch_topology.c
-> > index 1eb81f113786..1ab2b7503d63 100644
-> > --- a/drivers/base/arch_topology.c
-> > +++ b/drivers/base/arch_topology.c
-> > @@ -29,6 +29,14 @@ void arch_set_freq_scale(struct cpumask *cpus, unsigned long cur_freq,
-> >  	unsigned long scale;
-> >  	int i;
-> >  
-> > +	/*
-> > +	 * If the use of counters for FIE is enabled, just return as we don't
-> > +	 * want to update the scale factor with information from CPUFREQ.
-> > +	 * Instead the scale factor will be updated from arch_scale_freq_tick.
-> > +	 */
-> > +	if (arch_cpu_freq_counters(cpus))
-> > +		return;
-> > +
-> >  	scale = (cur_freq << SCHED_CAPACITY_SHIFT) / max_freq;
-> >  
-> >  	for_each_cpu(i, cpus)
-> > diff --git a/include/linux/topology.h b/include/linux/topology.h
-> > index eb2fe6edd73c..397aad6ae163 100644
-> > --- a/include/linux/topology.h
-> > +++ b/include/linux/topology.h
-> > @@ -227,5 +227,12 @@ static inline const struct cpumask *cpu_cpu_mask(int cpu)
-> >  	return cpumask_of_node(cpu_to_node(cpu));
-> >  }
-> >  
-> > +#ifndef arch_cpu_freq_counters
-> > +static __always_inline
-> > +bool arch_cpu_freq_counters(struct cpumask *cpus)
-> > +{
-> > +	return false;
-> > +}
-> > +#endif
-> >  
-> >  #endif /* _LINUX_TOPOLOGY_H */
-> > 
+Most containers run in their own IPC namespace, so this is a constant
+cost for each container.
+
+
+> The code you are working to avoid is this.
+>
+> void kern_unmount(struct vfsmount *mnt)
+> {
+> 	/* release long term mount so mount point can be released */
+> 	if (!IS_ERR_OR_NULL(mnt)) {
+> 		real_mount(mnt)->mnt_ns = NULL;
+> 		synchronize_rcu();	/* yecchhh... */
+> 		mntput(mnt);
+> 	}
+> }
+>
+> Which makes me wonder if perhaps there might be a simpler solution
+> involving just that code.  But I do realize such a solution
+> would require analyzing all of the code after kern_unmount
+> to see if any of it depends upon the synchronize_rcu.
+>
+>
+> In summary, I see no correctness problems with your code.
+> Code that runs faster is always nice.  In this case I just
+> see the cost being shifted somewhere else not eliminated.
+> I also see a slight increase in complexity.
+>
+> So I am wondering if this was an exercise to speed up a toy
+> benchmark or if this is an effort to speed of real world code.
+
+I've seen the issue while profiling real world work loads.
+
+
+> At the very least some version of the motivation needs to be
+> recorded so that the next time some one comes in an reworks
+> the code they can look in the history and figure out what
+> they need to do to avoid introducing a regeression.
+
+Is it enough in the git commit message or should it be an inline
+comment?
+
+Thanks,
+Giuseppe
+
