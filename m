@@ -4,51 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CD76EC35674
-	for <linux-kernel@archiver.kernel.org>; Sun, 23 Feb 2020 02:21:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D5A33C35669
+	for <linux-kernel@archiver.kernel.org>; Sun, 23 Feb 2020 02:21:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9BB8B22525
-	for <linux-kernel@archiver.kernel.org>; Sun, 23 Feb 2020 02:21:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AE9B922525
+	for <linux-kernel@archiver.kernel.org>; Sun, 23 Feb 2020 02:21:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582424508;
-	bh=4BypovxFTpsOw6CslQIrS8l2iIcg0DbMZ7zyR66ltGs=;
+	s=default; t=1582424513;
+	bh=+0DCorTTN4tjWO1sG8JADOF2c+tIaEeqv2Mh+42zHBw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=HPDOngS+hqYUjSAvRwxON4T4Uji0WU62+J12eURryI9hQnr4KvV1r5lAeKqS8lqd2
-	 U9NPjJfvMC/P+L5qnyqiCdIAlSFLF72VVGrKwdKfDduNGxhtQu6KXhFP7Q6srvIhVz
-	 F32SWULyogx+I+HKwxkEbbc/gJhj7HcCkHk13Bqo=
+	b=BsHRQNApUWUIDhCbRh+PI2SN+VhVSCZiBnbpfUknRNqWAQyIc8SSfyz9/wRb13b9l
+	 4543RyOzYlVSHvHxlcEy2HMnWduxVtiwy+it64mCTs4/O1FQ7u8xMtrlzPk3AREMkx
+	 7VJ8kPTHIQb/WRqEyrFtTcokGOuC/ZamlM32gZ8U=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727735AbgBWCVr (ORCPT
+        id S1727756AbgBWCVw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 22 Feb 2020 21:21:47 -0500
-Received: from mail.kernel.org ([198.145.29.99]:50052 "EHLO mail.kernel.org"
+        Sat, 22 Feb 2020 21:21:52 -0500
+Received: from mail.kernel.org ([198.145.29.99]:50252 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727520AbgBWCVj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 22 Feb 2020 21:21:39 -0500
+        id S1727689AbgBWCVp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 22 Feb 2020 21:21:45 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D404A2067D;
-        Sun, 23 Feb 2020 02:21:37 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8CF8C208C3;
+        Sun, 23 Feb 2020 02:21:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1582424498;
-        bh=4BypovxFTpsOw6CslQIrS8l2iIcg0DbMZ7zyR66ltGs=;
+        s=default; t=1582424504;
+        bh=+0DCorTTN4tjWO1sG8JADOF2c+tIaEeqv2Mh+42zHBw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=dv3kiQmtt6761JCgZYY03CFN+QlNwSo1CwJvsCanXJ+2I72bKs/32RzgYM4fJElqu
-         eEciJP/o9KWz7aHkvy+aYyuSr1Yi9k7PgwDQsAtb8Xq54Wh3+M/rIFnLWlVaPLmefG
-         iKk19ODzQnSWXp0CcQs6rO3vnmeRI+uVSjRS1/cg=
+        b=IxA18fuBodYKiu3El6YEdKUjCg7J4cbCvXLlNqNL4a+E5eR1R6qy/K1MefShIpyn0
+         pc/fBvs3TaoQNQmuG6dlxg049tnZSNQZlqGVd1SqjIbUbdynz9DWwMVBo+qzhmHoE/
+         oxviOgk+UFL1PrHiNKt5swj/YXu6ePyRV/LflQHA=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Peter Zijlstra <peterz@infradead.org>,
-        Dmitry Osipenko <digetx@gmail.com>,
-        Ingo Molnar <mingo@kernel.org>,
-        Sasha Levin <sashal@kernel.org>,
-        linux-arm-kernel@lists.infradead.org
-Subject: [PATCH AUTOSEL 5.5 15/58] arm/ftrace: Fix BE text poking
-Date:   Sat, 22 Feb 2020 21:20:36 -0500
-Message-Id: <20200223022119.707-15-sashal@kernel.org>
+Cc:     Xiubo Li <xiubli@redhat.com>, Jeff Layton <jlayton@kernel.org>,
+        Ilya Dryomov <idryomov@gmail.com>,
+        Sasha Levin <sashal@kernel.org>, ceph-devel@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.5 20/58] ceph: do not execute direct write in parallel if O_APPEND is specified
+Date:   Sat, 22 Feb 2020 21:20:41 -0500
+Message-Id: <20200223022119.707-20-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200223022119.707-1-sashal@kernel.org>
 References: <20200223022119.707-1-sashal@kernel.org>
@@ -61,44 +59,92 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Peter Zijlstra <peterz@infradead.org>
+From: Xiubo Li <xiubli@redhat.com>
 
-[ Upstream commit be993e44badc448add6a18d6f12b20615692c4c3 ]
+[ Upstream commit 8e4473bb50a1796c9c32b244e5dbc5ee24ead937 ]
 
-The __patch_text() function already applies __opcode_to_mem_*(), so
-when __opcode_to_mem_*() is not the identity (BE*), it is applied
-twice, wrecking the instruction.
+In O_APPEND & O_DIRECT mode, the data from different writers will
+be possibly overlapping each other since they take the shared lock.
 
-Fixes: 42e51f187f86 ("arm/ftrace: Use __patch_text()")
-Reported-by: Dmitry Osipenko <digetx@gmail.com>
-Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-Signed-off-by: Ingo Molnar <mingo@kernel.org>
-Tested-by: Dmitry Osipenko <digetx@gmail.com>
+For example, both Writer1 and Writer2 are in O_APPEND and O_DIRECT
+mode:
+
+          Writer1                         Writer2
+
+     shared_lock()                   shared_lock()
+     getattr(CAP_SIZE)               getattr(CAP_SIZE)
+     iocb->ki_pos = EOF              iocb->ki_pos = EOF
+     write(data1)
+                                     write(data2)
+     shared_unlock()                 shared_unlock()
+
+The data2 will overlap the data1 from the same file offset, the
+old EOF.
+
+Switch to exclusive lock instead when O_APPEND is specified.
+
+Signed-off-by: Xiubo Li <xiubli@redhat.com>
+Reviewed-by: Jeff Layton <jlayton@kernel.org>
+Signed-off-by: Ilya Dryomov <idryomov@gmail.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm/kernel/ftrace.c | 7 ++-----
- 1 file changed, 2 insertions(+), 5 deletions(-)
+ fs/ceph/file.c | 17 +++++++++++------
+ 1 file changed, 11 insertions(+), 6 deletions(-)
 
-diff --git a/arch/arm/kernel/ftrace.c b/arch/arm/kernel/ftrace.c
-index bda949fd84e8b..93caf757f1d5d 100644
---- a/arch/arm/kernel/ftrace.c
-+++ b/arch/arm/kernel/ftrace.c
-@@ -81,13 +81,10 @@ static int ftrace_modify_code(unsigned long pc, unsigned long old,
- {
- 	unsigned long replaced;
+diff --git a/fs/ceph/file.c b/fs/ceph/file.c
+index 11929d2bb594c..cd09e63d682b7 100644
+--- a/fs/ceph/file.c
++++ b/fs/ceph/file.c
+@@ -1418,6 +1418,7 @@ static ssize_t ceph_write_iter(struct kiocb *iocb, struct iov_iter *from)
+ 	struct ceph_cap_flush *prealloc_cf;
+ 	ssize_t count, written = 0;
+ 	int err, want, got;
++	bool direct_lock = false;
+ 	loff_t pos;
+ 	loff_t limit = max(i_size_read(inode), fsc->max_file_size);
  
--	if (IS_ENABLED(CONFIG_THUMB2_KERNEL)) {
-+	if (IS_ENABLED(CONFIG_THUMB2_KERNEL))
- 		old = __opcode_to_mem_thumb32(old);
--		new = __opcode_to_mem_thumb32(new);
--	} else {
-+	else
- 		old = __opcode_to_mem_arm(old);
--		new = __opcode_to_mem_arm(new);
--	}
+@@ -1428,8 +1429,11 @@ static ssize_t ceph_write_iter(struct kiocb *iocb, struct iov_iter *from)
+ 	if (!prealloc_cf)
+ 		return -ENOMEM;
  
- 	if (validate) {
- 		if (probe_kernel_read(&replaced, (void *)pc, MCOUNT_INSN_SIZE))
++	if ((iocb->ki_flags & (IOCB_DIRECT | IOCB_APPEND)) == IOCB_DIRECT)
++		direct_lock = true;
++
+ retry_snap:
+-	if (iocb->ki_flags & IOCB_DIRECT)
++	if (direct_lock)
+ 		ceph_start_io_direct(inode);
+ 	else
+ 		ceph_start_io_write(inode);
+@@ -1519,14 +1523,15 @@ static ssize_t ceph_write_iter(struct kiocb *iocb, struct iov_iter *from)
+ 
+ 		/* we might need to revert back to that point */
+ 		data = *from;
+-		if (iocb->ki_flags & IOCB_DIRECT) {
++		if (iocb->ki_flags & IOCB_DIRECT)
+ 			written = ceph_direct_read_write(iocb, &data, snapc,
+ 							 &prealloc_cf);
+-			ceph_end_io_direct(inode);
+-		} else {
++		else
+ 			written = ceph_sync_write(iocb, &data, pos, snapc);
++		if (direct_lock)
++			ceph_end_io_direct(inode);
++		else
+ 			ceph_end_io_write(inode);
+-		}
+ 		if (written > 0)
+ 			iov_iter_advance(from, written);
+ 		ceph_put_snap_context(snapc);
+@@ -1577,7 +1582,7 @@ static ssize_t ceph_write_iter(struct kiocb *iocb, struct iov_iter *from)
+ 
+ 	goto out_unlocked;
+ out:
+-	if (iocb->ki_flags & IOCB_DIRECT)
++	if (direct_lock)
+ 		ceph_end_io_direct(inode);
+ 	else
+ 		ceph_end_io_write(inode);
 -- 
 2.20.1
 
