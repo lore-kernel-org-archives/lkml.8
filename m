@@ -2,95 +2,81 @@ Return-Path: <SRS0=SnAt=4L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A4C95C35673
-	for <linux-kernel@archiver.kernel.org>; Sun, 23 Feb 2020 16:40:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B4A3FC35671
+	for <linux-kernel@archiver.kernel.org>; Sun, 23 Feb 2020 16:53:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 857A92067D
-	for <linux-kernel@archiver.kernel.org>; Sun, 23 Feb 2020 16:40:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 812AA206E2
+	for <linux-kernel@archiver.kernel.org>; Sun, 23 Feb 2020 16:53:43 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="dd8OSsE6"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727004AbgBWQkD (ORCPT
+        id S1727004AbgBWQx2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 23 Feb 2020 11:40:03 -0500
-Received: from sauhun.de ([88.99.104.3]:40724 "EHLO pokefinder.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726208AbgBWQkD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 23 Feb 2020 11:40:03 -0500
-Received: from localhost (unknown [77.247.85.78])
-        by pokefinder.org (Postfix) with ESMTPSA id 429D52C01EF;
-        Sun, 23 Feb 2020 17:40:00 +0100 (CET)
-Date:   Sun, 23 Feb 2020 17:39:59 +0100
-From:   Wolfram Sang <wsa@the-dreams.de>
-To:     Guenter Roeck <linux@roeck-us.net>
-Cc:     Martin Volf <martin.volf.42@gmail.com>,
-        Mika Westerberg <mika.westerberg@linux.intel.com>,
-        Jean Delvare <jdelvare@suse.com>, linux-i2c@vger.kernel.org,
-        linux-hwmon@vger.kernel.org,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Subject: Re: [regression] nct6775 does not load in 5.4 and 5.5, bisected to
- b84398d6d7f90080
-Message-ID: <20200223163959.GA1456@kunai>
-References: <CAM1AHpQ4196tyD=HhBu-2donSsuogabkfP03v1YF26Q7_BgvgA@mail.gmail.com>
- <1bdbac08-86f8-2a57-2b0d-8cd2beb2a1c0@roeck-us.net>
- <CAM1AHpSKFk9ZosQf=k-Rm2=EFqco7y4Lpfb7m07r=j_uJd4T0A@mail.gmail.com>
- <85356d1a-f90d-e94d-16eb-1071d4e94753@roeck-us.net>
- <CAM1AHpSpEFshpUGxKdhLV3XuThQg_XVaPgOWzvrTv6YtzHyO+A@mail.gmail.com>
- <bec1f81c-09a8-ba48-c6c4-5d9b340f7c0b@roeck-us.net>
+        Sun, 23 Feb 2020 11:53:28 -0500
+Received: from us-smtp-1.mimecast.com ([205.139.110.61]:43154 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726208AbgBWQx1 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 23 Feb 2020 11:53:27 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1582476806;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:mime-version:mime-version:content-type:content-type;
+        bh=/e6mKMfpKSy3gdVdlHZUYmc7ZeUH2nePA31LvFPzezg=;
+        b=dd8OSsE6FkTp9YtqqMGutgOFHT8EFZiaaqWcdgab19ax0GUapJCp2p0dMTFlKcuBvb9G/p
+        UvzOLiQrVOejrGwpjlo/PMh1/rYEHi1qbjOZL5jJuXd8+aGI7PddGcRWBZTWYHN9pN+7+4
+        HNuZPMbPFZ4j8eAHgbNLr5qDttQUWi0=
+Received: from mail-ed1-f69.google.com (mail-ed1-f69.google.com
+ [209.85.208.69]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-300-8oeqmOaDP0mZ9oEv0QN3MQ-1; Sun, 23 Feb 2020 11:53:24 -0500
+X-MC-Unique: 8oeqmOaDP0mZ9oEv0QN3MQ-1
+Received: by mail-ed1-f69.google.com with SMTP id ay24so5128575edb.0
+        for <linux-kernel@vger.kernel.org>; Sun, 23 Feb 2020 08:53:24 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:from:date:message-id:subject:to;
+        bh=/e6mKMfpKSy3gdVdlHZUYmc7ZeUH2nePA31LvFPzezg=;
+        b=iAlfC0AbdwMrBJBR18Wo+NcgJfV07RMo4tby3xcIO7jZSUC2GchS6w41alpAsELZR3
+         AqgswlrTJT64kYSDSdKAB0n6/6svSElljc6+FZVHgMdVqkj3HKmME/pwULq/t7isTJ/5
+         8HYklZWeTRTJ5Cp8Nxa2XBmQptrs1ffUN9nGe+lv4vWwU+oUu90RH7VouMLvAuXgMehu
+         3YFlZPA8TR51QEXmBIR52MvdXf67ZZBcnvpv40pghI22wAKTrfy8G7rpDi958y1J4ktW
+         kgvqdhpl76cV36QI6coRAAnPypT1GnPPiv9MDH6XYAFdxXTeBzBN5LKVMu0G4cZtPfrr
+         ZLYQ==
+X-Gm-Message-State: APjAAAWc4yW7KJDosuau+lD4T7qN7ZW/s9rwgqd8SSiGfnNsoK+/LorD
+        PVzjmLs6hHFhQmECghYCbbq0zENRU2rrwWbOhzicMQmyoPapRrVGO9oXoG1GRtDtraXGcCftiyi
+        AxhTfwCjlEn7pBgPY8ZBSqf/gxgPPVwOQ0PMi6De7
+X-Received: by 2002:a17:906:af99:: with SMTP id mj25mr41968263ejb.293.1582476803282;
+        Sun, 23 Feb 2020 08:53:23 -0800 (PST)
+X-Google-Smtp-Source: APXvYqxWJ9K1R5sSW2X5rEJRiM2cWz7UXXYiLOljT9yzR7BnnMCDxY+qhaJvp9AAf88p3dKdNXEDi/1cWynDPk3DZ0w=
+X-Received: by 2002:a17:906:af99:: with SMTP id mj25mr41968244ejb.293.1582476803040;
+ Sun, 23 Feb 2020 08:53:23 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="ikeVEW9yuYc//A+q"
-Content-Disposition: inline
-In-Reply-To: <bec1f81c-09a8-ba48-c6c4-5d9b340f7c0b@roeck-us.net>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+From:   Matteo Croce <mcroce@redhat.com>
+Date:   Sun, 23 Feb 2020 17:52:47 +0100
+Message-ID: <CAGnkfhy6w4TT=vm9o+USHLHuKpr_fzgbSXaK3JkEKhvgYFQrAQ@mail.gmail.com>
+Subject: typo in MAINTAINERS?
+To:     Minchan Kim <minchan@kernel.org>, Nitin Gupta <ngupta@vflare.org>,
+        Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com>,
+        LKML <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+DRVIER vs DRIVER?
 
---ikeVEW9yuYc//A+q
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+ZRAM COMPRESSED RAM BLOCK DEVICE DRVIER
+M:      Minchan Kim <minchan@kernel.org>
+M:      Nitin Gupta <ngupta@vflare.org>
 
+Regards,
+-- 
+Matteo Croce
+per aspera ad upstream
 
-> Outch. This means that the code is broken. ACPIBASE is not configured,
-> or disabled, or the code reads from the wrong PCI configuration register.
-> What I don't understand is why this works with v5.3 kernels; the code
-> looks just as bad there for me. I must be missing something. Either case,
-> the only thing you can really do at this point is to blacklist the
-> iTCO_wdt driver.
->=20
-> Other than that, we can only hope that someone who understands above
-> code can provide a fix. Maybe Wolfram has an idea.
-
-I'd love to but I don't know much about ACPI and its resource handling.
-This is really Jean's realm, and and Jarkko, Andy, and Mika work with
-this driver, too. Let's hope they can provide feedback after the
-weekend.
-
-
---ikeVEW9yuYc//A+q
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCgAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAl5SqtsACgkQFA3kzBSg
-KbaEvRAAjoTnvLiO4/n9cpGcelbYKWFi7Udvn8c3r3i0QqIhqyl6O/720WkY4IMd
-TfpcUcOD73JH6VOTOk9+VJTvjcch9N4TmcCI1PuiHANjrV1shDhuiD9j9vhlXksn
-Tq8dXJfx45rPRLbtnyZEXgf8Wj8f7q9wXeCU4p+DuTVFB+Rn66xZvcPuYPCkjPAM
-bktSfWDFkyv8gwDV8HLbGSpatQqcP8ThyLjCIhGCJu5gthwrVUmIyBFWCScTUX1K
-QZYjmuT+3htEpg25bkIMMCbc8Oq7XFiqM0aJNQWTsC7huiEfim2Z0AW2eIjhqSh3
-dUisQuzng/hbvNzhHiQDJyRj3YB8QdUyTMQeDEt0VzmBNbUtMz8hvoO3QHdBat34
-byCH5Ic6qyRGi/RHwB3wiYSQcDPfuUzaeVUhQbQcuzYeG7qfce8JmMOdi5020DPu
-99Tz+WzuL1AyefV/+y1frulXBo7oX2xK4R0ZNE/LmzzYN16GvelHXj33oIQ7l1j/
-/W/SukcQXGBb06ZxNfFXnOAk7RQhPuk3+oh3QR62Fhffl7fJZmDpcTQZksszba56
-QYBBnYoOdesVA58uLJxaicgICfzZ3x26rsLlPedfmsleD3W/pllR+17iZ49jhbuf
-MRTlJTRbY7VSYMzwLR2+0Z+ilWTDuZryTIeOH+mZEqcWrXUIgiQ=
-=Cndv
------END PGP SIGNATURE-----
-
---ikeVEW9yuYc//A+q--
