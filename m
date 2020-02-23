@@ -2,157 +2,181 @@ Return-Path: <SRS0=SnAt=4L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_2
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8F177C35666
-	for <linux-kernel@archiver.kernel.org>; Sun, 23 Feb 2020 12:21:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CA606C35666
+	for <linux-kernel@archiver.kernel.org>; Sun, 23 Feb 2020 12:33:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5C82020880
-	for <linux-kernel@archiver.kernel.org>; Sun, 23 Feb 2020 12:21:10 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=amdcloud.onmicrosoft.com header.i=@amdcloud.onmicrosoft.com header.b="o5tvQ6Y6"
+	by mail.kernel.org (Postfix) with ESMTP id 91D0920675
+	for <linux-kernel@archiver.kernel.org>; Sun, 23 Feb 2020 12:33:08 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727261AbgBWMVH (ORCPT
+        id S1727239AbgBWMdH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 23 Feb 2020 07:21:07 -0500
-Received: from mail-bn7nam10on2067.outbound.protection.outlook.com ([40.107.92.67]:30817
-        "EHLO NAM10-BN7-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726023AbgBWMVH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 23 Feb 2020 07:21:07 -0500
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=UPjfrCSNRzuK5fI65vy26daCgRtllH3Xejwpq2g5Ps3iEAx2Cb1tGZ2sHpi1I9Fj0x4x7CPsosPMbwX66K+xReEiDxFY/+gqz2DB3ZzZaVFL+hu24kmIPKK8QCE6zaX1fBTfHlRBjgVI2r62rH2UEkYyYyRszeBsS2XqEYltZIbQWvc7qh0g/qnLcg7EjW1AMAmoBGgFMR7Hlto62CMEbU90Futk4H7GTiPn7MJIVFWYm41GQU0HE68ABJ0BySvLchIyI9gHsF4caj8E/MDwtghoByXQfR/sjIHzd3XUc+ca1M4UYSKe2Fv8jGEIeR5mpXDkguqbvoOQ9nnwaHWVNg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=oqL30WLfD79Z2bFSAmH6YUZeMW6je4onjV91Z8ux+/Q=;
- b=PBya04+vy2QkxFNeYkivzWHrHEDjgievAcFhZQS9I78nGkUVMHdh6e5BJNSnn6U2iN8dvgT1KfUmWbCNTdf8bqAKNbc2Oulir2ldNZyyjzEK9Aa6Y/JIw23KmqqP8pcLDUdoISY0dkbszIHkXH8dSvAHvtPTg4Y7JyBIePTvnFqfrUBU/JRURsn2lDjkjUdXGiu29tThANMbqSUfEz7dXkI0FCViDM9p0kOSXgsPCI41ji2qFjRQ9xP6oc7SJLI6TyJOTMrt1jMzpO5uCLjbItUOmqbpFvZ8SQQZr1eKyWdC7vjw9DBMtAXPytpgaZTuqoxscOvIi1v7dXMyfC7ijQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
- header.d=amd.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=amdcloud.onmicrosoft.com; s=selector2-amdcloud-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=oqL30WLfD79Z2bFSAmH6YUZeMW6je4onjV91Z8ux+/Q=;
- b=o5tvQ6Y6uT77IM2mA/TFxumzVx8NvNsoNPbxQhoO1QPl0hK9hds0OfSNAgQmlS9xqyRkPLoiugsgEf0ENAWMVankWNhpluJoCLKq9Lq/B/ZXRyeeT6tcCIgB2XZrVUapOLJ+JJFh0/8hfHSyVCEE1vzetDIxLMSqYkk0BbXwtTM=
-Received: from SN6PR12MB2800.namprd12.prod.outlook.com (52.135.101.138) by
- SN6PR12MB2654.namprd12.prod.outlook.com (52.135.105.28) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2729.22; Sun, 23 Feb 2020 12:21:03 +0000
-Received: from SN6PR12MB2800.namprd12.prod.outlook.com
- ([fe80::b99c:18c0:8685:1c10]) by SN6PR12MB2800.namprd12.prod.outlook.com
- ([fe80::b99c:18c0:8685:1c10%5]) with mapi id 15.20.2729.033; Sun, 23 Feb 2020
- 12:21:02 +0000
-From:   "Pan, Xinhui" <Xinhui.Pan@amd.com>
-To:     "Koenig, Christian" <Christian.Koenig@amd.com>
-CC:     "Pan, Xinhui" <Xinhui.Pan@amd.com>,
-        "Pan, Xinhui" <Xinhui.Pan@amd.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linaro-mm-sig@lists.linaro.org" <linaro-mm-sig@lists.linaro.org>,
-        "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
-        "linux-media@vger.kernel.org" <linux-media@vger.kernel.org>,
-        "sumit.semwal@linaro.org" <sumit.semwal@linaro.org>,
-        "daniel.vetter@ffwll.ch" <daniel.vetter@ffwll.ch>
-Subject: Re: [PATCH] dma-buf: Fix missing excl fence waiting
-Thread-Topic: [PATCH] dma-buf: Fix missing excl fence waiting
-Thread-Index: AQHV6kBAT438z6UDCka2fB4S+SGlWagorjuAgAAEr4A=
-Date:   Sun, 23 Feb 2020 12:21:02 +0000
-Message-ID: <3B6ADD37-8287-4180-B99B-C747DBACC6F4@amd.com>
-References: <B737F1D5-292E-4FE2-89A5-6EF72CB3EED1@amd.com>
- <7a2eb42a-2dd9-4303-3947-6bbb4de7a888@amd.com>
-In-Reply-To: <7a2eb42a-2dd9-4303-3947-6bbb4de7a888@amd.com>
-Accept-Language: zh-CN, en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=Xinhui.Pan@amd.com; 
-x-originating-ip: [101.88.215.164]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-ht: Tenant
-x-ms-office365-filtering-correlation-id: 3a7413f0-74d8-4f15-cd15-08d7b85ad962
-x-ms-traffictypediagnostic: SN6PR12MB2654:|SN6PR12MB2654:
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <SN6PR12MB2654EF7B349FF21542337E4B87EF0@SN6PR12MB2654.namprd12.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:8882;
-x-forefront-prvs: 0322B4EDE1
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(366004)(136003)(39860400002)(396003)(376002)(346002)(199004)(189003)(54906003)(71200400001)(36756003)(66446008)(37006003)(64756008)(66556008)(186003)(86362001)(6506007)(26005)(316002)(76116006)(66946007)(91956017)(66476007)(2616005)(8936002)(8676002)(81166006)(478600001)(81156014)(6636002)(4326008)(6512007)(5660300002)(33656002)(6486002)(6862004)(2906002);DIR:OUT;SFP:1101;SCL:1;SRVR:SN6PR12MB2654;H:SN6PR12MB2800.namprd12.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
-received-spf: None (protection.outlook.com: amd.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: thLNQ7EuS14XRT1NF0e4x3w+kwsMFLJDAltFMSUIhMJ2k9cmD6q/91URpR1gUqREr7wH3UzS4eEt8N0nHJBFMGQeJoEYVwoB+UxkzRTvUcl/xNNxFTBGN3V51oEvmLnBsph+ZmQKbIKZYpJa2IVgLZx9Li/nysw2baHdPUN+Hdc2FQJzWPAQngeprNuoF2tHHv/JYHFu2UFx4Rvn3izBV4ZeOmj2CRUf4z6pHNWCyKMMEkuXIgMU8f7duUIYDN8n7+HKZrMwg2ZGPQ2QTaB8/1n2xaiG65TLDIOGRUy6+KjU4t2CuXmhaa2w61jRICWxJP059ERSn+DtxXHz3CNtjZWEHGMmNdQWREKvx8pcPvRU6/g1EdCYLyjNtp1KMhn7bnVHfKjkVRY6qZT5rvZg+NsEwt1yJmyvwhV9K1EAa9jd7zdC0WLnHUEIEBWfVy3l
-x-ms-exchange-antispam-messagedata: jqScHDHTnDrmZ0xU7IXs/koWh7Dc6oXLz6zLe4Q2ROzOiMKV5duMNxnkRp3qZqAJ4qOYkRU9bn5gakpNjBYpsor3e92mTxvAycQHdp5SE4qfGQdQ2bRNVSx5luh3BDhMvx1Dso7ELkGU/J6kP9zjKA==
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <DBFCDC536B558D4C890DF720A46FCF6E@namprd12.prod.outlook.com>
-Content-Transfer-Encoding: base64
+        Sun, 23 Feb 2020 07:33:07 -0500
+Received: from mail-a09.ithnet.com ([217.64.83.104]:59597 "EHLO
+        mail-a09.ithnet.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726023AbgBWMdH (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 23 Feb 2020 07:33:07 -0500
+Received: (qmail 27432 invoked by uid 0); 23 Feb 2020 12:33:04 -0000
+Received: from skraw.ml@ithnet.com by mail-a09 
+ (Processed in 2.863209 secs); 23 Feb 2020 12:33:04 -0000
+X-Virus-Status: No
+X-ExecutableContent: No
+Received: from dialin014-sr.ithnet.com (HELO ithnet.com) (217.64.64.14)
+  by mail-a09.ithnet.com with ESMTPS (ECDHE-RSA-AES256-GCM-SHA384 encrypted); 23 Feb 2020 12:33:01 -0000
+X-Sender-Authentication: SMTP AUTH verified <skraw.ml@ithnet.com>
+Date:   Sun, 23 Feb 2020 13:33:01 +0100
+From:   Stephan von Krawczynski <skraw.ml@ithnet.com>
+To:     whywontyousue@waifu.club
+Cc:     linux-kernel@vger.kernel.org, rms@gnu.org, bruce@perens.com,
+        bind-users@lists.isc.org
+Subject: Re: General Discussion about GPLness
+Message-ID: <20200223133301.03eab91d@ithnet.com>
+In-Reply-To: <8b0e828da35ab77c1ad4603768c6eab6@waifu.club>
+References: <8b0e828da35ab77c1ad4603768c6eab6@waifu.club>
+Organization: ith Kommunikationstechnik GmbH
+X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 3a7413f0-74d8-4f15-cd15-08d7b85ad962
-X-MS-Exchange-CrossTenant-originalarrivaltime: 23 Feb 2020 12:21:02.8773
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: 2G+qyxRYekt7/GKKTwlKYHViVtqowVx54A/NamS4oVGLdlRK3KzoJ8jSlEmKnRQU
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SN6PR12MB2654
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-DQoNCj4gMjAyMOW5tDLmnIgyM+aXpSAyMDowNO+8jEtvZW5pZywgQ2hyaXN0aWFuIDxDaHJpc3Rp
-YW4uS29lbmlnQGFtZC5jb20+IOWGmemBk++8mg0KPiANCj4gQW0gMjMuMDIuMjAgdW0gMTI6NTYg
-c2NocmllYiBQYW4sIFhpbmh1aToNCj4+IElmIHNoYXJlZCBmZW5jZSBsaXN0IGlzIG5vdCBlbXB0
-eSwgZXZlbiB3ZSB3YW50IHRvIHRlc3QgYWxsIGZlbmNlcywgZXhjbCBmZW5jZSBpcyBpZ25vcmVk
-Lg0KPj4gVGhhdCBpcyBhYnZpb3VzbHkgd3JvbmcsIHNvIGZpeCBpdC4NCj4gDQo+IFllYWggdGhh
-dCBpcyBhIGtub3duIGlzc3VlIGFuZCBJIGNvbXBsZXRlbHkgYWdyZWUgd2l0aCB5b3UsIGJ1dCBv
-dGhlciBkaXNhZ3JlZS4NCj4gDQo+IFNlZSB0aGUgc2hhcmVkIGZlbmNlcyBhcmUgbWVhbnQgdG8g
-ZGVwZW5kIG9uIHRoZSBleGNsdXNpdmUgZmVuY2UuIFNvIGFsbCBzaGFyZWQgZmVuY2VzIG11c3Qg
-ZmluaXNoIG9ubHkgYWZ0ZXIgdGhlIGV4Y2x1c2l2ZSBvbmUgaGFzIGZpbmlzaGVkIGFzIHdlbGwu
-DQpmYWlyIGVub3VnaC4NCg0KPiBUaGUgcHJvYmxlbSBub3cgaXMgdGhhdCBmb3IgZXJyb3IgaGFu
-ZGxpbmcgdGhpcyBpc24ndCBuZWNlc3NhcnkgdHJ1ZS4gSW4gb3RoZXIgd29yZHMgd2hlbiBhIHNo
-YXJlZCBmZW5jZSBjb21wbGV0ZXMgd2l0aCBhbiBlcnJvciBpdCBpcyBwZXJmZWN0bHkgcG9zc2li
-bGUgdGhhdCBoZSBkb2VzIHRoaXMgYmVmb3JlIHRoZSBleGNsdXNpdmUgZmVuY2UgaXMgZmluaXNo
-ZWQuDQo+IA0KPiBJJ20gdHJ5aW5nIHRvIGNvbnZpbmNlIERhbmllbCB0aGF0IHRoaXMgaXMgYSBw
-cm9ibGVtIGZvciB5ZWFycyA6KQ0KPiANCg0KSSBoYXZlIG1ldCBwcm9ibGVtcywgZXZpY3Rpb24g
-aGFzIHJhY2Ugd2l0aCBibyByZWxhc2UuICBzeXN0ZW0gbWVtb3J5IGlzIG92ZXJ3cmllZCBieSBz
-RE1BLiB0aGUga2VybmVsIGlzIDQuMTksIHN0YWJsZSBvbmUsIExPTC4NCg0KYW1kZ3B1IGFkZCBl
-eGNsIGZlbmNlIHRvIGJvIHRvIG1vdmUgc3lzdGVtIG1lbW9yeSB3aGljaCBpcyBkb25lIGJ5IHRo
-ZSBkcm0gc2NoZWR1bGVyLg0KYWZ0ZXIgc0RNQSBmaW5pc2ggdGhlIG1vdmluZyBqb2IsICB0aGUg
-bWVtb3J5IG1pZ2h0IGhhdmUgYWxyZWFkeSBiZWVuIHJlbGVhc2VkIGFzIGRtYV9yZXN2X3Rlc3Rf
-c2lnbmFsZWRfcmN1IGRpZCBub3QgY2hlY2sgZXhjbCBmZW5jZS4NCg0KT3VyIGxvY2FsIGN1c3Rv
-bWVyIHJlcG9ydCB0aGlzIGlzc3VlLiBJIHRvb2sgNCBkYXlzIGludG8gaXQuIHNpZ2gNCg0KdGhh
-bmtzDQp4aW5odWkNCg0KPiBSZWdhcmRzLA0KPiBDaHJpc3RpYW4uDQo+IA0KPj4gDQo+PiBTaWdu
-ZWQtb2ZmLWJ5OiB4aW5odWkgcGFuIDx4aW5odWkucGFuQGFtZC5jb20+DQo+PiAtLS0NCj4+ICBk
-cml2ZXJzL2RtYS1idWYvZG1hLXJlc3YuYyB8IDkgKysrKystLS0tDQo+PiAgMSBmaWxlIGNoYW5n
-ZWQsIDUgaW5zZXJ0aW9ucygrKSwgNCBkZWxldGlvbnMoLSkNCj4+IA0KPj4gZGlmZiAtLWdpdCBh
-L2RyaXZlcnMvZG1hLWJ1Zi9kbWEtcmVzdi5jIGIvZHJpdmVycy9kbWEtYnVmL2RtYS1yZXN2LmMN
-Cj4+IGluZGV4IDQyNjRlNjQ3ODhjNC4uNDRkYzY0YzU0N2M2IDEwMDY0NA0KPj4gLS0tIGEvZHJp
-dmVycy9kbWEtYnVmL2RtYS1yZXN2LmMNCj4+ICsrKyBiL2RyaXZlcnMvZG1hLWJ1Zi9kbWEtcmVz
-di5jDQo+PiBAQCAtNjMyLDE0ICs2MzIsMTQgQEAgc3RhdGljIGlubGluZSBpbnQgZG1hX3Jlc3Zf
-dGVzdF9zaWduYWxlZF9zaW5nbGUoc3RydWN0IGRtYV9mZW5jZSAqcGFzc2VkX2ZlbmNlKQ0KPj4g
-ICAqLw0KPj4gIGJvb2wgZG1hX3Jlc3ZfdGVzdF9zaWduYWxlZF9yY3Uoc3RydWN0IGRtYV9yZXN2
-ICpvYmosIGJvb2wgdGVzdF9hbGwpDQo+PiAgew0KPj4gLQl1bnNpZ25lZCBzZXEsIHNoYXJlZF9j
-b3VudDsNCj4+ICsJdW5zaWduZWQgaW50IHNlcSwgc2hhcmVkX2NvdW50LCBsZWZ0Ow0KPj4gIAlp
-bnQgcmV0Ow0KPj4gICAgCXJjdV9yZWFkX2xvY2soKTsNCj4+ICByZXRyeToNCj4+ICAJcmV0ID0g
-dHJ1ZTsNCj4+ICAJc2hhcmVkX2NvdW50ID0gMDsNCj4+IC0Jc2VxID0gcmVhZF9zZXFjb3VudF9i
-ZWdpbigmb2JqLT5zZXEpOw0KPj4gKwlsZWZ0ID0gc2VxID0gcmVhZF9zZXFjb3VudF9iZWdpbigm
-b2JqLT5zZXEpOw0KPj4gICAgCWlmICh0ZXN0X2FsbCkgew0KPj4gIAkJdW5zaWduZWQgaTsNCj4+
-IEBAIC02NDcsNyArNjQ3LDcgQEAgYm9vbCBkbWFfcmVzdl90ZXN0X3NpZ25hbGVkX3JjdShzdHJ1
-Y3QgZG1hX3Jlc3YgKm9iaiwgYm9vbCB0ZXN0X2FsbCkNCj4+ICAJCXN0cnVjdCBkbWFfcmVzdl9s
-aXN0ICpmb2JqID0gcmN1X2RlcmVmZXJlbmNlKG9iai0+ZmVuY2UpOw0KPj4gICAgCQlpZiAoZm9i
-aikNCj4+IC0JCQlzaGFyZWRfY291bnQgPSBmb2JqLT5zaGFyZWRfY291bnQ7DQo+PiArCQkJbGVm
-dCA9IHNoYXJlZF9jb3VudCA9IGZvYmotPnNoYXJlZF9jb3VudDsNCj4+ICAgIAkJZm9yIChpID0g
-MDsgaSA8IHNoYXJlZF9jb3VudDsgKytpKSB7DQo+PiAgCQkJc3RydWN0IGRtYV9mZW5jZSAqZmVu
-Y2UgPSByY3VfZGVyZWZlcmVuY2UoZm9iai0+c2hhcmVkW2ldKTsNCj4+IEBAIC02NTcsMTMgKzY1
-NywxNCBAQCBib29sIGRtYV9yZXN2X3Rlc3Rfc2lnbmFsZWRfcmN1KHN0cnVjdCBkbWFfcmVzdiAq
-b2JqLCBib29sIHRlc3RfYWxsKQ0KPj4gIAkJCQlnb3RvIHJldHJ5Ow0KPj4gIAkJCWVsc2UgaWYg
-KCFyZXQpDQo+PiAgCQkJCWJyZWFrOw0KPj4gKwkJCWxlZnQtLTsNCj4+ICAJCX0NCj4+ICAgIAkJ
-aWYgKHJlYWRfc2VxY291bnRfcmV0cnkoJm9iai0+c2VxLCBzZXEpKQ0KPj4gIAkJCWdvdG8gcmV0
-cnk7DQo+PiAgCX0NCj4+ICAtCWlmICghc2hhcmVkX2NvdW50KSB7DQo+PiArCWlmICghbGVmdCkg
-ew0KPj4gIAkJc3RydWN0IGRtYV9mZW5jZSAqZmVuY2VfZXhjbCA9IHJjdV9kZXJlZmVyZW5jZShv
-YmotPmZlbmNlX2V4Y2wpOw0KPj4gICAgCQlpZiAoZmVuY2VfZXhjbCkgew0KPiANCg0K
+Dear whoeveryouare,
+
+can you please state in a clearer form (more understandable to non-native
+english talkers) what your true opinion on the topic is?
+And in case you did not understand what I was saying, here is clearer form of
+my opinion:
+
+A kernel module with another license (be it whatsoever) is _no_ modification
+of the kernel, but an extension of its features. If feature-extension is
+against the GPL (which I seriously doubt) then I would say "go back onto your
+trees". Because the human race and evolution is about little else than
+feature-extension.
+
+And another thing: court is for lawyers. Whenever the lawyers take over
+something they don't (want to) understand the end is near ...
+
+How about talking with real names? I have no idea why you spam rms or bruce
+with this, as the question is all about _one_ project, namely linux-kernel.
+I'd suggest taking them off this topic again ...
+
+--
+Regards,
+Stephan
+
+
+
+On Sun, 23 Feb 2020 11:03:56 +0000
+whywontyousue@waifu.club wrote:
+
+> Dear Stephan von Krawczynski;
+> 
+> Universal City Studios Inc v Reimerdes, piece of shit.
+> 
+> "[The court] reasoned that Ferret consumers who used the Ferret as a 
+> plug-in to the Real Player altered the Real Player user interface by 
+> adding the Snap search button or replacing it with the Stream box search 
+> engine button. The court concluded that the plaintiff raised sufficently 
+> serious questions going to the merits of its claims to warrant an 
+> injunction pending trial"
+> 
+> Want to violate the linux kernel copyright, you fucking piece of shit? 
+> Yes you do. Yes modifying the running kernel with violating pieces is 
+> copyright infringement, you fucking piece of shit. Yes you should be 
+> sued. Just as Open Source Security (Grsecurity) should be sued for their 
+> violations (of section 4 and 6 of the linux kernel copyright license 
+> (they're also violating the GCC copyrights too)).
+> 
+> Will they be sued? Will you be sued? No: Linux copyright holders are 
+> scared little wageslave worker bees. They aren't going to sue you; 
+> sorry. Why are you even announcing you intent to violate the copyright? 
+> Why even give these dogs such intellectual deference?
+> 
+> I wish OpenSourceSecurity would be sued. I wish you would be sued. But 
+> linux WERKIN MAHN wage slave piece of shit idiots won't do it: I hate 
+> them much more than I hate the violators. Complete Dogs. They could move 
+> from strenght to strenght, from victory to victory; but they're scared 
+> for their "JEHRB"s. I have to say: white men are pathetic scum. If Linux 
+> was built by others there would rightfully be lawsuits.
+> 
+> 
+> 
+> > Stephan von Krawczynski wrote:
+> > Hello all,
+> > 
+> > you may have already heard about it or not (several times in the past),
+> > non-kernel devices run into a symbol export problem as soon as 
+> > something is
+> > only exported GPL from the kernel.
+> > Currently there is a discussion regarding zfs using this call chain:
+> > 
+> > vdev_bio_associate_blkg (zfs) -> blkg_tryget (kernel) -> 
+> > percpu_ref_tryget
+> > (kernel) -> rcu_read_unlock (kernel) -> __rcu_read_unlock (kernel)
+> > 
+> > where __rcu_read_[lock|unlock] is a GPL symbol now used by (not GPL 
+> > exported)
+> > percpu_ref_tryget.
+> > 
+> > That this popped up (again) made me think a bit more general about the 
+> > issue.
+> > And I do wonder if this rather ideologic problem is on the right track
+> > currently. Because what the kernel tries to do with the export GPL 
+> > symbol
+> > stuff is to prevent any other licensed software from _using_ it in 
+> > _runtime_.
+> > It does not try to prevent use/copy of the source code inside another 
+> > non-gpl
+> > project.
+> > And I do think that this is not the intention of GPL. If it were, then 
+> > 100% of
+> > all mobile phones on this planet are illegal. All of them use GPL 
+> > software
+> > from non-gpl software, be it kernel modules or apps - and I see no 
+> > difference
+> > in the two. The constructed difference between kernel mode software and
+> > user-space software is pure ideology. Because during runtime everything 
+> > is
+> > just call-chained.
+> > Which means if you fopen() a file in user-space it of course uses GPL 
+> > symbols
+> > down in the chain somewhere. The contents of the opened file are not
+> > heaven-sent.
+> > If you/we follow the current completely ideology-driven GPL strategy 
+> > then I am
+> > all for completely giving up this whole project. In real world you 
+> > simply
+> > cannot use such a piece of software. The success of linux during the 
+> > last
+> > years (i.e. decade) is not based on the pure GPL strategy, but on the
+> > successful interaction between linux and non-GPL software.
+> > Just think of the billions of smartphones all using a non-gpl firmware
+> > (underneath, and there is no GPL version at all), the kernel (with 
+> > non-gpl
+> > modules) and apps (quite some of which are non-gpl).
+> > This is only one prominent example, but there are lots of others.
+> > In the end it all sums up to one simple question:
+> > Can one _use_ GPL software during runtime as a base for own projects of 
+> > any
+> > license type or not? We are not talking about _copying_ gpl code, we 
+> > are
+> > talking about runtime use.
+> > If runtime use is generally allowed, then the export gpl symbol stuff 
+> > inside
+> > the kernel code is nonsense. Because to use the kernel you must be 
+> > allowed to
+> > call it, no matter from where.
+> > Hit me.
+> > 
+> > --
+> > Regards,
+> > Stephan  
+
+
