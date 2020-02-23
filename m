@@ -4,53 +4,53 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 15056C35671
-	for <linux-kernel@archiver.kernel.org>; Sun, 23 Feb 2020 02:25:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3B8F6C35669
+	for <linux-kernel@archiver.kernel.org>; Sun, 23 Feb 2020 02:25:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D6B1821741
-	for <linux-kernel@archiver.kernel.org>; Sun, 23 Feb 2020 02:25:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 14CB920659
+	for <linux-kernel@archiver.kernel.org>; Sun, 23 Feb 2020 02:25:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582424743;
-	bh=cy7SP9sbTFkiqIp2R+EgdcYVzesuD6fYlrZu3pfgR18=;
+	s=default; t=1582424750;
+	bh=zzPMN8ClbvNOFCObJbKWZeMGhJ7EDRNIn3a606Z8cqo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=R4/X8EmRhBxeKQ270381O66HxFMD0XiUYg2wA/p5utnEOvFPXsEIkdmJqiuQ6nnwf
-	 gVGyQCLYQTuuMwkTH6SVVWlA6g6+ndISn9f25XzBkYt4VopYseLjb2sdMTHVTpVjBO
-	 NGRGMPYcbMG4V9v15Pt/9AceXdbIG3xFE6x731C0=
+	b=nODhNCoatFOGjPHDcURTBO6yFodf0GipsN9I0dFVimWG9MoErwkPUxi9LMd6XvGda
+	 952dTq0YHKwEJfKTGPkL2BC7MVFUnoZPNkOB6gV1BolwyoU1qfSoh1y8AcmMoThav3
+	 4yY+6bvQkgkJBEIWCVGDjnEmHTWLq12EANS5G+84=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728225AbgBWCZm (ORCPT
+        id S1729562AbgBWCZA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 22 Feb 2020 21:25:42 -0500
-Received: from mail.kernel.org ([198.145.29.99]:55606 "EHLO mail.kernel.org"
+        Sat, 22 Feb 2020 21:25:00 -0500
+Received: from mail.kernel.org ([198.145.29.99]:55276 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729573AbgBWCZD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 22 Feb 2020 21:25:03 -0500
+        id S1729489AbgBWCYz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 22 Feb 2020 21:24:55 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id ADC0A20707;
-        Sun, 23 Feb 2020 02:25:02 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1FF6920707;
+        Sun, 23 Feb 2020 02:24:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1582424703;
-        bh=cy7SP9sbTFkiqIp2R+EgdcYVzesuD6fYlrZu3pfgR18=;
+        s=default; t=1582424693;
+        bh=zzPMN8ClbvNOFCObJbKWZeMGhJ7EDRNIn3a606Z8cqo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=eXr7l+E3z4uLI3JGpkGRVleInL5h1rAS255tu78jH+YRorOOalJ66gjcurmG40CBZ
-         dzVtiFqNBbKSd1LisbpAWbeJE5NhGMY0VWpdDURWm49Zdiv9sIt2Q6p/6Yw/YzxJit
-         ppPl+oCPMsuxh1NK82gobZ5uD5LjZg392O/wEDVo=
+        b=skMloRFrrxvm63DE+WkLRPHJZTdKNCD1tl8inU6GFH6sxDVyIkoIWZIeTcuKFCOil
+         u0TzRgkulXlSo4gw19r2l39rbpxLHND81qCMl7EaoQa3trEENgBpHE+wxUqkh/oijh
+         A9GazKCk9Fm2AM0obqMblLvel2RUtJnLZs7U3w24=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Sergey Matyukevich <sergey.matyukevich.os@quantenna.com>,
-        Johannes Berg <johannes.berg@intel.com>,
-        Sasha Levin <sashal@kernel.org>,
-        linux-wireless@vger.kernel.org, netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.4 3/7] cfg80211: check wiphy driver existence for drvinfo report
-Date:   Sat, 22 Feb 2020 21:24:55 -0500
-Message-Id: <20200223022459.2594-3-sashal@kernel.org>
+Cc:     Arthur Kiyanovski <akiyano@amazon.com>,
+        Sameeh Jubran <sameehj@amazon.com>,
+        "David S . Miller" <davem@davemloft.net>,
+        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.9 12/16] net: ena: fix incorrectly saving queue numbers when setting RSS indirection table
+Date:   Sat, 22 Feb 2020 21:24:34 -0500
+Message-Id: <20200223022438.2398-12-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20200223022459.2594-1-sashal@kernel.org>
-References: <20200223022459.2594-1-sashal@kernel.org>
+In-Reply-To: <20200223022438.2398-1-sashal@kernel.org>
+References: <20200223022438.2398-1-sashal@kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
@@ -60,42 +60,94 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Sergey Matyukevich <sergey.matyukevich.os@quantenna.com>
+From: Arthur Kiyanovski <akiyano@amazon.com>
 
-[ Upstream commit bfb7bac3a8f47100ebe7961bd14e924c96e21ca7 ]
+[ Upstream commit 92569fd27f5cb0ccbdf7c7d70044b690e89a0277 ]
 
-When preparing ethtool drvinfo, check if wiphy driver is defined
-before dereferencing it. Driver may not exist, e.g. if wiphy is
-attached to a virtual platform device.
+The indirection table has the indices of the Rx queues. When we store it
+during set indirection operation, we convert the indices to our internal
+representation of the indices.
 
-Signed-off-by: Sergey Matyukevich <sergey.matyukevich.os@quantenna.com>
-Link: https://lore.kernel.org/r/20200203105644.28875-1-sergey.matyukevich.os@quantenna.com
-Signed-off-by: Johannes Berg <johannes.berg@intel.com>
+Our internal representation of the indices is: even indices for Tx and
+uneven indices for Rx, where every Tx/Rx pair are in a consecutive order
+starting from 0. For example if the driver has 3 queues (3 for Tx and 3
+for Rx) then the indices are as follows:
+0  1  2  3  4  5
+Tx Rx Tx Rx Tx Rx
+
+The BUG:
+The issue is that when we satisfy a get request for the indirection
+table, we don't convert the indices back to the original representation.
+
+The FIX:
+Simply apply the inverse function for the indices of the indirection
+table after we set it.
+
+Fixes: 1738cd3ed342 ("net: ena: Add a driver for Amazon Elastic Network Adapters (ENA)")
+Signed-off-by: Sameeh Jubran <sameehj@amazon.com>
+Signed-off-by: Arthur Kiyanovski <akiyano@amazon.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- net/wireless/ethtool.c | 8 ++++++--
- 1 file changed, 6 insertions(+), 2 deletions(-)
+ drivers/net/ethernet/amazon/ena/ena_ethtool.c | 24 ++++++++++++++++++-
+ drivers/net/ethernet/amazon/ena/ena_netdev.h  |  2 ++
+ 2 files changed, 25 insertions(+), 1 deletion(-)
 
-diff --git a/net/wireless/ethtool.c b/net/wireless/ethtool.c
-index e9e91298c70de..3cedf2c2b60bd 100644
---- a/net/wireless/ethtool.c
-+++ b/net/wireless/ethtool.c
-@@ -6,9 +6,13 @@
- void cfg80211_get_drvinfo(struct net_device *dev, struct ethtool_drvinfo *info)
+diff --git a/drivers/net/ethernet/amazon/ena/ena_ethtool.c b/drivers/net/ethernet/amazon/ena/ena_ethtool.c
+index 8c44ac7232ba2..191d369563595 100644
+--- a/drivers/net/ethernet/amazon/ena/ena_ethtool.c
++++ b/drivers/net/ethernet/amazon/ena/ena_ethtool.c
+@@ -651,6 +651,28 @@ static u32 ena_get_rxfh_key_size(struct net_device *netdev)
+ 	return ENA_HASH_KEY_SIZE;
+ }
+ 
++static int ena_indirection_table_get(struct ena_adapter *adapter, u32 *indir)
++{
++	struct ena_com_dev *ena_dev = adapter->ena_dev;
++	int i, rc;
++
++	if (!indir)
++		return 0;
++
++	rc = ena_com_indirect_table_get(ena_dev, indir);
++	if (rc)
++		return rc;
++
++	/* Our internal representation of the indices is: even indices
++	 * for Tx and uneven indices for Rx. We need to convert the Rx
++	 * indices to be consecutive
++	 */
++	for (i = 0; i < ENA_RX_RSS_TABLE_SIZE; i++)
++		indir[i] = ENA_IO_RXQ_IDX_TO_COMBINED_IDX(indir[i]);
++
++	return rc;
++}
++
+ static int ena_get_rxfh(struct net_device *netdev, u32 *indir, u8 *key,
+ 			u8 *hfunc)
  {
- 	struct wireless_dev *wdev = dev->ieee80211_ptr;
-+	struct device *pdev = wiphy_dev(wdev->wiphy);
+@@ -659,7 +681,7 @@ static int ena_get_rxfh(struct net_device *netdev, u32 *indir, u8 *key,
+ 	u8 func;
+ 	int rc;
  
--	strlcpy(info->driver, wiphy_dev(wdev->wiphy)->driver->name,
--		sizeof(info->driver));
-+	if (pdev->driver)
-+		strlcpy(info->driver, pdev->driver->name,
-+			sizeof(info->driver));
-+	else
-+		strlcpy(info->driver, "N/A", sizeof(info->driver));
+-	rc = ena_com_indirect_table_get(adapter->ena_dev, indir);
++	rc = ena_indirection_table_get(adapter, indir);
+ 	if (rc)
+ 		return rc;
  
- 	strlcpy(info->version, init_utsname()->release, sizeof(info->version));
+diff --git a/drivers/net/ethernet/amazon/ena/ena_netdev.h b/drivers/net/ethernet/amazon/ena/ena_netdev.h
+index 008f2d594d402..326c2e1437b32 100644
+--- a/drivers/net/ethernet/amazon/ena/ena_netdev.h
++++ b/drivers/net/ethernet/amazon/ena/ena_netdev.h
+@@ -110,6 +110,8 @@
  
+ #define ENA_IO_TXQ_IDX(q)	(2 * (q))
+ #define ENA_IO_RXQ_IDX(q)	(2 * (q) + 1)
++#define ENA_IO_TXQ_IDX_TO_COMBINED_IDX(q)	((q) / 2)
++#define ENA_IO_RXQ_IDX_TO_COMBINED_IDX(q)	(((q) - 1) / 2)
+ 
+ #define ENA_MGMNT_IRQ_IDX		0
+ #define ENA_IO_IRQ_FIRST_IDX		1
 -- 
 2.20.1
 
