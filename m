@@ -2,107 +2,177 @@ Return-Path: <SRS0=SnAt=4L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-14.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 470A5C35666
-	for <linux-kernel@archiver.kernel.org>; Sun, 23 Feb 2020 16:06:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A573BC35666
+	for <linux-kernel@archiver.kernel.org>; Sun, 23 Feb 2020 16:23:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 28A93206E2
-	for <linux-kernel@archiver.kernel.org>; Sun, 23 Feb 2020 16:06:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7E0F8206E0
+	for <linux-kernel@archiver.kernel.org>; Sun, 23 Feb 2020 16:23:39 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1582475019;
+	bh=tm6U0RsfbLgt6+HZ125jJ+1tmKJHn2WgIllq+q4yaXw=;
+	h=From:To:Cc:Subject:Date:List-ID:From;
+	b=E6v9ug23rSVZtOo40u8C2us825rKr/NCRB2169APka3oVBB8rquCueerxr0p7gxA6
+	 h2AqscUsgcAvDkeutUJNVHwwOsjb0vRVjn39liYlolCqu2WZmS1jBvR5IUGc+TMrEh
+	 bPyaj5QHTXCs6vMBAqzFzGfiJe7QNJTSbTMMp5Gk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727081AbgBWQGd (ORCPT
+        id S1727004AbgBWQXi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 23 Feb 2020 11:06:33 -0500
-Received: from hera.aquilenet.fr ([185.233.100.1]:45546 "EHLO
-        hera.aquilenet.fr" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726534AbgBWQGc (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 23 Feb 2020 11:06:32 -0500
-X-Greylist: delayed 354 seconds by postgrey-1.27 at vger.kernel.org; Sun, 23 Feb 2020 11:06:32 EST
-Received: from localhost (localhost [127.0.0.1])
-        by hera.aquilenet.fr (Postfix) with ESMTP id 7BAAE1B46;
-        Sun, 23 Feb 2020 17:00:36 +0100 (CET)
-X-Virus-Scanned: Debian amavisd-new at aquilenet.fr
-Received: from hera.aquilenet.fr ([127.0.0.1])
-        by localhost (hera.aquilenet.fr [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id pIxNazIaEtLK; Sun, 23 Feb 2020 17:00:35 +0100 (CET)
-Received: from function (lfbn-bor-1-797-11.w86-234.abo.wanadoo.fr [86.234.239.11])
-        by hera.aquilenet.fr (Postfix) with ESMTPSA id 397E69C3;
-        Sun, 23 Feb 2020 17:00:35 +0100 (CET)
-Received: from samy by function with local (Exim 4.93)
-        (envelope-from <samuel.thibault@ens-lyon.org>)
-        id 1j5te7-005TFX-Gy; Sun, 23 Feb 2020 16:58:19 +0100
-Date:   Sun, 23 Feb 2020 16:58:19 +0100
-From:   Samuel Thibault <samuel.thibault@ens-lyon.org>
-To:     Colin King <colin.king@canonical.com>
-Cc:     William Hubbs <w.d.hubbs@gmail.com>,
-        Chris Brannon <chris@the-brannons.com>,
-        Kirk Reiser <kirk@reisers.ca>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        speakup@linux-speakup.org, devel@driverdev.osuosl.org,
-        kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] staging: speakup: remove redundant initialization of
- pointer p_key
-Message-ID: <20200223155819.hycmdvrsiid27jeg@function>
-Mail-Followup-To: Samuel Thibault <samuel.thibault@ens-lyon.org>,
-        Colin King <colin.king@canonical.com>,
-        William Hubbs <w.d.hubbs@gmail.com>,
-        Chris Brannon <chris@the-brannons.com>,
-        Kirk Reiser <kirk@reisers.ca>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        speakup@linux-speakup.org, devel@driverdev.osuosl.org,
-        kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20200223153954.420731-1-colin.king@canonical.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20200223153954.420731-1-colin.king@canonical.com>
-Organization: I am not organized
-User-Agent: NeoMutt/20170609 (1.8.3)
+        Sun, 23 Feb 2020 11:23:38 -0500
+Received: from mail.kernel.org ([198.145.29.99]:45038 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726208AbgBWQXh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 23 Feb 2020 11:23:37 -0500
+Received: from localhost.localdomain (89.208.247.74.16clouds.com [89.208.247.74])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id D9B25206E0;
+        Sun, 23 Feb 2020 16:23:35 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1582475017;
+        bh=tm6U0RsfbLgt6+HZ125jJ+1tmKJHn2WgIllq+q4yaXw=;
+        h=From:To:Cc:Subject:Date:From;
+        b=rY7tgvt8Od9nK6RFxOXGJBDpww6h3kgy6mXJfeQd0+nv6PoAkMXYLF9NC0D5JnVoa
+         Er1J4+DXyq7yG3Cw3culKBS4u/uv4biwxQMXTqO8bJYtdmbhkh9YaUiKukzz3ot6+p
+         Ed5wQYLykAr1hx3jgtinLdBov6fjRjKtD7WRSS8Q=
+From:   guoren@kernel.org
+To:     torvalds@linux-foundation.org
+Cc:     arnd@arndb.de, linux-kernel@vger.kernel.org,
+        linux-arch@vger.kernel.org, linux-csky@vger.kernel.org
+Subject: [GIT PULL] csky updates for 5.6-rc3
+Date:   Mon, 24 Feb 2020 00:23:32 +0800
+Message-Id: <20200223162332.16495-1-guoren@kernel.org>
+X-Mailer: git-send-email 2.17.0
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Colin King, le dim. 23 févr. 2020 15:39:54 +0000, a ecrit:
-> From: Colin Ian King <colin.king@canonical.com>
-> 
-> Pointer p_key is being initialized with a value that is never read,
-> it is assigned a new value later on. The initialization is redundant
-> and can be removed.
-> 
-> Addresses-Coverity: ("Unused value")
-> Signed-off-by: Colin Ian King <colin.king@canonical.com>
+Hi Linus,
 
-Indeed, thanks!
+Please pull the changes for 5.6-rc3. Sorry, I missed 5.6-rc1 merge window,
+but in this pull request the most are the fixes and the rests are between
+fixes and features. The only outside modification is the MAINTAINERS file
+update with our mailing list.
 
-Reviewed-by: Samuel Thibault <samuel.thibault@ens-lyon.org>
+Best Regards
+ Guo Ren
 
-> ---
->  drivers/staging/speakup/keyhelp.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/drivers/staging/speakup/keyhelp.c b/drivers/staging/speakup/keyhelp.c
-> index 5f1bda37f86d..822ceac83068 100644
-> --- a/drivers/staging/speakup/keyhelp.c
-> +++ b/drivers/staging/speakup/keyhelp.c
-> @@ -49,7 +49,7 @@ static int cur_item, nstates;
->  static void build_key_data(void)
->  {
->  	u_char *kp, counters[MAXFUNCS], ch, ch1;
-> -	u_short *p_key = key_data, key;
-> +	u_short *p_key, key;
->  	int i, offset = 1;
->  
->  	nstates = (int)(state_tbl[-1]);
-> -- 
-> 2.25.0
-> 
+The following changes since commit 11a48a5a18c63fd7621bb050228cebf13566e4d8:
 
--- 
-Samuel
-j'etais en train de nettoyer ma souris et le coup est parti...
- -+- s sur #ens-mim - et en plus c vrai... -+-
+  Linux 5.6-rc2 (2020-02-16 13:16:59 -0800)
+
+are available in the Git repository at:
+
+  https://github.com/c-sky/csky-linux.git tags/csky-for-linus-5.6-rc3
+
+for you to fetch changes up to 99db590b083fa2bc60adfcb5c839a62db4ef1d79:
+
+  csky: Replace <linux/clk-provider.h> by <linux/of_clk.h> (2020-02-23 12:48:55 +0800)
+
+----------------------------------------------------------------
+csky updates for 5.6-rc3
+
+ - Fix up cache flush implementations.
+
+ - Fix up ftrace modify panic.
+
+ - Fix up CONFIG_SMP boot problem.
+
+ - Fix up pt_regs saving for atomic.S.
+
+ - Fix up fixaddr_init without highmem.
+
+ - Fix up stack protector support.
+
+ - Fix up fake Tightly-Coupled Memory codes compile and use.
+
+ - Fix up some typos and coding convention.
+
+The tag is tested with [1].
+
+ 1: https://gitlab.com/c-sky/buildroot/pipelines/120268254
+
+----------------------------------------------------------------
+Geert Uytterhoeven (1):
+      csky: Replace <linux/clk-provider.h> by <linux/of_clk.h>
+
+Guo Ren (17):
+      MAINTAINERS: csky: Add mailing list for csky
+      csky: Tightly-Coupled Memory or Sram support
+      csky: Separate fixaddr_init from highmem
+      csky/mm: Fixup export invalid_pte_table symbol
+      csky: Set regs->usp to kernel sp, when the exception is from kernel
+      csky/smp: Fixup boot failed when CONFIG_SMP
+      csky/Kconfig: Add Kconfig.platforms to support some drivers
+      csky: Support icache flush without specific instructions
+      csky: Remove unnecessary flush_icache_* implementation
+      csky: Enable defer flush_dcache_page for abiv2 cpus (807/810/860)
+      csky: Optimize abiv2 copy_to_user_page with VM_EXEC
+      csky: Add flush_icache_mm to defer flush icache all
+      csky: Fixup ftrace modify panic
+      csky: Remove unused cache implementation
+      csky: Fixup compile warning for three unimplemented syscalls
+      csky: Add setup_initrd check code
+      csky: Implement copy_thread_tls
+
+Krzysztof Kozlowski (1):
+      csky: Cleanup old Kconfig options
+
+Ma Jun (1):
+      csky: Minimize defconfig to support buildroot config.fragment
+
+MaJun (1):
+      csky: Add PCI support
+
+Mao Han (1):
+      csky: Initial stack protector support
+
+Randy Dunlap (1):
+      arch/csky: fix some Kconfig typos
+
+ MAINTAINERS                            |   1 +
+ arch/csky/Kconfig                      |  51 +++++++++-
+ arch/csky/Kconfig.platforms            |   9 ++
+ arch/csky/abiv1/inc/abi/cacheflush.h   |   5 +-
+ arch/csky/abiv1/inc/abi/entry.h        |  19 +++-
+ arch/csky/abiv2/cacheflush.c           |  84 +++++++++++-----
+ arch/csky/abiv2/inc/abi/cacheflush.h   |  33 ++++---
+ arch/csky/abiv2/inc/abi/entry.h        |  11 +++
+ arch/csky/configs/defconfig            |   8 --
+ arch/csky/include/asm/Kbuild           |   1 -
+ arch/csky/include/asm/cache.h          |   1 +
+ arch/csky/include/asm/cacheflush.h     |   1 +
+ arch/csky/include/asm/fixmap.h         |   9 +-
+ arch/csky/include/asm/memory.h         |  25 +++++
+ arch/csky/include/asm/mmu.h            |   1 +
+ arch/csky/include/asm/mmu_context.h    |   2 +
+ arch/csky/include/asm/pci.h            |  34 +++++++
+ arch/csky/include/asm/pgtable.h        |   6 +-
+ arch/csky/include/asm/stackprotector.h |  29 ++++++
+ arch/csky/include/asm/tcm.h            |  24 +++++
+ arch/csky/include/uapi/asm/unistd.h    |   3 +
+ arch/csky/kernel/atomic.S              |   8 +-
+ arch/csky/kernel/process.c             |  13 ++-
+ arch/csky/kernel/setup.c               |   5 +-
+ arch/csky/kernel/smp.c                 |   2 +-
+ arch/csky/kernel/time.c                |   2 +-
+ arch/csky/kernel/vmlinux.lds.S         |  49 ++++++++++
+ arch/csky/mm/Makefile                  |   3 +
+ arch/csky/mm/cachev1.c                 |   5 +
+ arch/csky/mm/cachev2.c                 |  45 +++++----
+ arch/csky/mm/highmem.c                 |  64 +------------
+ arch/csky/mm/init.c                    |  92 ++++++++++++++++++
+ arch/csky/mm/syscache.c                |  13 +--
+ arch/csky/mm/tcm.c                     | 169 +++++++++++++++++++++++++++++++++
+ 34 files changed, 663 insertions(+), 164 deletions(-)
+ create mode 100644 arch/csky/Kconfig.platforms
+ create mode 100644 arch/csky/include/asm/memory.h
+ create mode 100644 arch/csky/include/asm/pci.h
+ create mode 100644 arch/csky/include/asm/stackprotector.h
+ create mode 100644 arch/csky/include/asm/tcm.h
+ create mode 100644 arch/csky/mm/tcm.c
