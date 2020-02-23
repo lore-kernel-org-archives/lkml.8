@@ -4,56 +4,53 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4CC3EC35671
-	for <linux-kernel@archiver.kernel.org>; Sun, 23 Feb 2020 02:27:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EFA88C35671
+	for <linux-kernel@archiver.kernel.org>; Sun, 23 Feb 2020 02:27:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 19C7920659
-	for <linux-kernel@archiver.kernel.org>; Sun, 23 Feb 2020 02:27:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C68C120659
+	for <linux-kernel@archiver.kernel.org>; Sun, 23 Feb 2020 02:27:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582424835;
-	bh=pg/0HzzJS0Cna1JaXLS+c/LWOimynM1RTxHu/iZt4EI=;
+	s=default; t=1582424848;
+	bh=2VtHtDsYyS3H5iXlcYpMfL984qgMkhzZ3L+twuNg+SA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=MfNdzQanfchr07XanzCI4AQGyft2Rv3LrtS9UROUzwuGZXeVr2SFZTrWr1wuIt/V2
-	 B+GxwRgcdTBImhjWjMEJVueSGORo8uIE7wTg0pk54tqK0zh/lG7SJkJb5goPe9f4q+
-	 +Hv+y73Fygs5n1DiQaikKoe8SCqxLC+z05IQNt3w=
+	b=z4Ru5ccfKqibsRm4I9FOs1O1Fsv2z9mIJp63u8m3dt7S4fHgQZerSrLqyJLTNFVM9
+	 RZsGG2/v9PcTTypzkQUcULI7deD2BLBq1HuTVlJLgrxhMO38reOXPxMRFLWI0kJOq8
+	 hnjcoc7s8HaLUCPzPfmxessW1hkl/yleVCeMwzfI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728749AbgBWC1N (ORCPT
+        id S1729386AbgBWC10 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 22 Feb 2020 21:27:13 -0500
-Received: from mail.kernel.org ([198.145.29.99]:54896 "EHLO mail.kernel.org"
+        Sat, 22 Feb 2020 21:27:26 -0500
+Received: from mail.kernel.org ([198.145.29.99]:54640 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729393AbgBWCYm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 22 Feb 2020 21:24:42 -0500
+        id S1728440AbgBWCYf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 22 Feb 2020 21:24:35 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id DFEB820707;
-        Sun, 23 Feb 2020 02:24:40 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 306F120707;
+        Sun, 23 Feb 2020 02:24:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1582424682;
-        bh=pg/0HzzJS0Cna1JaXLS+c/LWOimynM1RTxHu/iZt4EI=;
+        s=default; t=1582424674;
+        bh=2VtHtDsYyS3H5iXlcYpMfL984qgMkhzZ3L+twuNg+SA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=CAdEfPC6q4uPu2pB139kpFsmuLCo5Oe6yoWXYf9soiJf1EdxkhtHf15F1Fg5Rfqnc
-         g4By6u9zdtQYm10tSTeLXqqG/dUSHNvNgVM4W+tgdrc2eB1rcbGlz7SgWPM+6xk3sr
-         3QEffwLYptl5ZAqiDnVHti0rnL81cfKcI9adlXLY=
+        b=CfaKvmDYEPx4MaW0v9e4Mu2ZbaP5YfZpsPPaIc3K8Jjl0H2lhAZGuE+iMVYrKPxyj
+         sxwBjhJ9lNZOZ/OLZj5ct+H/uupy6JJU6MgTfravb3LUkUTQ7cdaoD5cRsw/CUwZOd
+         9UNSzOaBq677/Ho2M1Yj55kbmKgQRYExzwCv6qnk=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Sean Paul <seanpaul@chromium.org>,
-        Stephen Boyd <swboyd@chromium.org>,
-        Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>,
-        Rob Clark <robdclark@gmail.com>,
-        Douglas Anderson <dianders@chromium.org>,
-        Sasha Levin <sashal@kernel.org>, linux-arm-msm@vger.kernel.org,
-        dri-devel@lists.freedesktop.org, freedreno@lists.freedesktop.org
-Subject: [PATCH AUTOSEL 4.9 02/16] drm/msm: Set dma maximum segment size for mdss
-Date:   Sat, 22 Feb 2020 21:24:24 -0500
-Message-Id: <20200223022438.2398-2-sashal@kernel.org>
+Cc:     Frank Sorenson <sorenson@redhat.com>,
+        Steve French <stfrench@microsoft.com>,
+        Sasha Levin <sashal@kernel.org>, linux-cifs@vger.kernel.org,
+        samba-technical@lists.samba.org
+Subject: [PATCH AUTOSEL 4.14 19/21] cifs: Fix mode output in debugging statements
+Date:   Sat, 22 Feb 2020 21:24:09 -0500
+Message-Id: <20200223022411.2159-19-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20200223022438.2398-1-sashal@kernel.org>
-References: <20200223022438.2398-1-sashal@kernel.org>
+In-Reply-To: <20200223022411.2159-1-sashal@kernel.org>
+References: <20200223022411.2159-1-sashal@kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
@@ -63,93 +60,70 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Sean Paul <seanpaul@chromium.org>
+From: Frank Sorenson <sorenson@redhat.com>
 
-[ Upstream commit db735fc4036bbe1fbe606819b5f0ff26cc76cdff ]
+[ Upstream commit f52aa79df43c4509146140de0241bc21a4a3b4c7 ]
 
-Turning on CONFIG_DMA_API_DEBUG_SG results in the following error:
+A number of the debug statements output file or directory mode
+in hex.  Change these to print using octal.
 
-[   12.078665] msm ae00000.mdss: DMA-API: mapping sg segment longer than device claims to support [len=3526656] [max=65536]
-[   12.089870] WARNING: CPU: 6 PID: 334 at /mnt/host/source/src/third_party/kernel/v4.19/kernel/dma/debug.c:1301 debug_dma_map_sg+0x1dc/0x318
-[   12.102655] Modules linked in: joydev
-[   12.106442] CPU: 6 PID: 334 Comm: frecon Not tainted 4.19.0 #2
-[   12.112450] Hardware name: Google Cheza (rev3+) (DT)
-[   12.117566] pstate: 60400009 (nZCv daif +PAN -UAO)
-[   12.122506] pc : debug_dma_map_sg+0x1dc/0x318
-[   12.126995] lr : debug_dma_map_sg+0x1dc/0x318
-[   12.131487] sp : ffffff800cc3ba80
-[   12.134913] x29: ffffff800cc3ba80 x28: 0000000000000000
-[   12.140395] x27: 0000000000000004 x26: 0000000000000004
-[   12.145868] x25: ffffff8008e55b18 x24: 0000000000000000
-[   12.151337] x23: 00000000ffffffff x22: ffffff800921c000
-[   12.156809] x21: ffffffc0fa75b080 x20: ffffffc0f7195090
-[   12.162280] x19: ffffffc0f1c53280 x18: 0000000000000000
-[   12.167749] x17: 0000000000000000 x16: 0000000000000000
-[   12.173218] x15: 0000000000000000 x14: 0720072007200720
-[   12.178689] x13: 0720072007200720 x12: 0720072007200720
-[   12.184161] x11: 0720072007200720 x10: 0720072007200720
-[   12.189641] x9 : ffffffc0f1fc6b60 x8 : 0000000000000000
-[   12.195110] x7 : ffffff8008132ce0 x6 : 0000000000000000
-[   12.200585] x5 : 0000000000000000 x4 : ffffff8008134734
-[   12.206058] x3 : ffffff800cc3b830 x2 : ffffffc0f1fc6240
-[   12.211532] x1 : 25045a74f48a7400 x0 : 25045a74f48a7400
-[   12.217006] Call trace:
-[   12.219535]  debug_dma_map_sg+0x1dc/0x318
-[   12.223671]  get_pages+0x19c/0x20c
-[   12.227177]  msm_gem_fault+0x64/0xfc
-[   12.230874]  __do_fault+0x3c/0x140
-[   12.234383]  __handle_mm_fault+0x70c/0xdb8
-[   12.238603]  handle_mm_fault+0xac/0xc4
-[   12.242473]  do_page_fault+0x1bc/0x3d4
-[   12.246342]  do_translation_fault+0x54/0x88
-[   12.250652]  do_mem_abort+0x60/0xf0
-[   12.254250]  el0_da+0x20/0x24
-[   12.257317] irq event stamp: 67260
-[   12.260828] hardirqs last  enabled at (67259): [<ffffff8008132d0c>] console_unlock+0x214/0x608
-[   12.269693] hardirqs last disabled at (67260): [<ffffff8008080e0c>] do_debug_exception+0x5c/0x178
-[   12.278820] softirqs last  enabled at (67256): [<ffffff8008081664>] __do_softirq+0x4d4/0x520
-[   12.287510] softirqs last disabled at (67249): [<ffffff80080be574>] irq_exit+0xa8/0x100
-[   12.295742] ---[ end trace e63cfc40c313ffab ]---
-
-The root of the problem is that the default segment size for sgt is
-(UINT_MAX & PAGE_MASK), and the default segment size for device dma is
-64K. As such, if you compare the 2, you would deduce that the sg segment
-will overflow the device's capacity. In reality, the hardware can
-accommodate the larger sg segments, it's just not initializing its max
-segment properly. This patch initializes the max segment size for the
-mdss device, which gets rid of that pesky warning.
-
-Reported-by: Stephen Boyd <swboyd@chromium.org>
-Tested-by: Stephen Boyd <swboyd@chromium.org>
-Tested-by: Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
-Reviewed-by: Rob Clark <robdclark@gmail.com>
-Signed-off-by: Sean Paul <seanpaul@chromium.org>
-Signed-off-by: Douglas Anderson <dianders@chromium.org>
-Link: https://patchwork.freedesktop.org/patch/msgid/20200121111813.REPOST.1.I92c66a35fb13f368095b05287bdabdbe88ca6922@changeid
+Signed-off-by: Frank Sorenson <sorenson@redhat.com>
+Signed-off-by: Steve French <stfrench@microsoft.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/gpu/drm/msm/msm_drv.c | 8 ++++++++
- 1 file changed, 8 insertions(+)
+ fs/cifs/cifsacl.c | 4 ++--
+ fs/cifs/connect.c | 2 +-
+ fs/cifs/inode.c   | 2 +-
+ 3 files changed, 4 insertions(+), 4 deletions(-)
 
-diff --git a/drivers/gpu/drm/msm/msm_drv.c b/drivers/gpu/drm/msm/msm_drv.c
-index 6abf315fd6da1..ce32f41fc28aa 100644
---- a/drivers/gpu/drm/msm/msm_drv.c
-+++ b/drivers/gpu/drm/msm/msm_drv.c
-@@ -396,6 +396,14 @@ static int msm_drm_init(struct device *dev, struct drm_driver *drv)
- 	if (ret)
- 		goto fail;
+diff --git a/fs/cifs/cifsacl.c b/fs/cifs/cifsacl.c
+index b98436f5c7c74..73d428af97a9e 100644
+--- a/fs/cifs/cifsacl.c
++++ b/fs/cifs/cifsacl.c
+@@ -603,7 +603,7 @@ static void access_flags_to_mode(__le32 ace_flags, int type, umode_t *pmode,
+ 			((flags & FILE_EXEC_RIGHTS) == FILE_EXEC_RIGHTS))
+ 		*pmode |= (S_IXUGO & (*pbits_to_set));
  
-+	if (!dev->dma_parms) {
-+		dev->dma_parms = devm_kzalloc(dev, sizeof(*dev->dma_parms),
-+					      GFP_KERNEL);
-+		if (!dev->dma_parms)
-+			return -ENOMEM;
-+	}
-+	dma_set_max_seg_size(dev, DMA_BIT_MASK(32));
-+
- 	msm_gem_shrinker_init(ddev);
+-	cifs_dbg(NOISY, "access flags 0x%x mode now 0x%x\n", flags, *pmode);
++	cifs_dbg(NOISY, "access flags 0x%x mode now %04o\n", flags, *pmode);
+ 	return;
+ }
  
- 	switch (get_mdp_ver(pdev)) {
+@@ -632,7 +632,7 @@ static void mode_to_access_flags(umode_t mode, umode_t bits_to_use,
+ 	if (mode & S_IXUGO)
+ 		*pace_flags |= SET_FILE_EXEC_RIGHTS;
+ 
+-	cifs_dbg(NOISY, "mode: 0x%x, access flags now 0x%x\n",
++	cifs_dbg(NOISY, "mode: %04o, access flags now 0x%x\n",
+ 		 mode, *pace_flags);
+ 	return;
+ }
+diff --git a/fs/cifs/connect.c b/fs/cifs/connect.c
+index f0b1279a7de66..c925ca606b9df 100644
+--- a/fs/cifs/connect.c
++++ b/fs/cifs/connect.c
+@@ -3519,7 +3519,7 @@ int cifs_setup_cifs_sb(struct smb_vol *pvolume_info,
+ 	cifs_sb->mnt_gid = pvolume_info->linux_gid;
+ 	cifs_sb->mnt_file_mode = pvolume_info->file_mode;
+ 	cifs_sb->mnt_dir_mode = pvolume_info->dir_mode;
+-	cifs_dbg(FYI, "file mode: 0x%hx  dir mode: 0x%hx\n",
++	cifs_dbg(FYI, "file mode: %04ho  dir mode: %04ho\n",
+ 		 cifs_sb->mnt_file_mode, cifs_sb->mnt_dir_mode);
+ 
+ 	cifs_sb->actimeo = pvolume_info->actimeo;
+diff --git a/fs/cifs/inode.c b/fs/cifs/inode.c
+index a35c141059067..3a10d405362e2 100644
+--- a/fs/cifs/inode.c
++++ b/fs/cifs/inode.c
+@@ -1581,7 +1581,7 @@ int cifs_mkdir(struct inode *inode, struct dentry *direntry, umode_t mode)
+ 	struct TCP_Server_Info *server;
+ 	char *full_path;
+ 
+-	cifs_dbg(FYI, "In cifs_mkdir, mode = 0x%hx inode = 0x%p\n",
++	cifs_dbg(FYI, "In cifs_mkdir, mode = %04ho inode = 0x%p\n",
+ 		 mode, inode);
+ 
+ 	cifs_sb = CIFS_SB(inode->i_sb);
 -- 
 2.20.1
 
