@@ -2,98 +2,153 @@ Return-Path: <SRS0=SnAt=4L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.5 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 283B6C35671
-	for <linux-kernel@archiver.kernel.org>; Sun, 23 Feb 2020 22:25:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5852AC35675
+	for <linux-kernel@archiver.kernel.org>; Sun, 23 Feb 2020 22:40:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F368520675
-	for <linux-kernel@archiver.kernel.org>; Sun, 23 Feb 2020 22:25:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2EA61206ED
+	for <linux-kernel@archiver.kernel.org>; Sun, 23 Feb 2020 22:40:55 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=gmx.net header.i=@gmx.net header.b="JF9Z1zTb"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="mFToI9xj"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727177AbgBWWZr (ORCPT
+        id S1727159AbgBWWkx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 23 Feb 2020 17:25:47 -0500
-Received: from mout.gmx.net ([212.227.15.15]:56979 "EHLO mout.gmx.net"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726302AbgBWWZq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 23 Feb 2020 17:25:46 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gmx.net;
-        s=badeba3b8450; t=1582496742;
-        bh=2i5YMl/hfe+PmpPCLdddML5DVgrpCwKNSzzG2FlJGVI=;
-        h=X-UI-Sender-Class:From:To:Cc:Subject:Date;
-        b=JF9Z1zTbOVc08jB8r1fcLoVfC/IXWI7sFqyw5TvQk4/PznV+stiHKpjc4mv77zV1m
-         MUNzhZ5VkWH6sKm+q5Z58ZQ8klZOAYSuMdWsvqvrB1RLL6jWHioWuCTVeUyHb5c2oE
-         Qu+B9kRnt1P8ABsPyY3N3TvHZkJLbzV5CjZjprrw=
-X-UI-Sender-Class: 01bb95c1-4bf8-414a-932a-4f6e2808ef9c
-Received: from LT02.fritz.box ([84.119.33.160]) by mail.gmx.com (mrgmx004
- [212.227.17.184]) with ESMTPSA (Nemesis) id 1MzyuS-1jJWNB1n4Y-00x2fz; Sun, 23
- Feb 2020 23:25:42 +0100
-From:   Heinrich Schuchardt <xypron.glpk@gmx.de>
-To:     Ard Biesheuvel <ardb@kernel.org>
-Cc:     linux-efi@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Heinrich Schuchardt <xypron.glpk@gmx.de>
-Subject: [PATCH 1/1] efi: superfluous assignment in setup_fake_mem()
-Date:   Sun, 23 Feb 2020 23:25:35 +0100
-Message-Id: <20200223222535.156348-1-xypron.glpk@gmx.de>
-X-Mailer: git-send-email 2.25.0
+        Sun, 23 Feb 2020 17:40:53 -0500
+Received: from mail-pg1-f196.google.com ([209.85.215.196]:41912 "EHLO
+        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726302AbgBWWkw (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 23 Feb 2020 17:40:52 -0500
+Received: by mail-pg1-f196.google.com with SMTP id 70so4085572pgf.8;
+        Sun, 23 Feb 2020 14:40:52 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=j2mYDc1i3ua7STLlJCa6Hdc5WmjYOywz/EKCcFwocXo=;
+        b=mFToI9xjI4QQ9dypWcrCsgTEWlSEJ6HCXy8z1JYt1MFng6K1F8VTZeGlZhW0+SLGA3
+         4Ga5OgTGeaSZwIyGp87GNUhQ01M2Q3GXMhtRdvs1YmCiXaaVk/2GBwL8zWHwrka9Sa2i
+         uP14yCI5z8L+/b1/JbAi6Vzpf8y+kCyitXPVleKmPNsEq3jrBkf2k9GJUKXBNIwbPr8N
+         yXFQKfR0AVJ7lNqiw5XQs0yuRXpBUQGbppEwIDeLwf/y/8UZxhyMtrEDX46Cyxbp4v0o
+         B4W+pB7ia/IFGgBnAK9/vQwqZw+HDTsIkKZxTd2BPaf1vKrs246j/FhiXU4GDz4NWUem
+         IP+w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=j2mYDc1i3ua7STLlJCa6Hdc5WmjYOywz/EKCcFwocXo=;
+        b=ftgzxoVwi34IRoAVWjoN57om8UULRt9ncA2/HYgB90bm3jc3yBIElj5fGUS4CzNlZJ
+         n8N2dY3KrCy0JWf74T6h6ANEvbH5edsf4xwzoyCjc5s2zVH9TP7JrDntsaJjMYf5cg6F
+         SXqXVmoQxmRDJWg9HxZ0rduLxomAgwaO01I0DOOlBhNaR4y5V2btCDo1puok++4+0FCF
+         Ine6xwriumVkmrjgMsJXhQ+eU3imISombplQH2C6XaRTfCL7b+v1r+hsajC+ZZMDN5Ma
+         454FF6nTHhOWvFQAQEO2FeMmzuRYTLsJGV2OyOJoMAU16qS67z5F5Sk41vy0cRQ6uCnS
+         PE5w==
+X-Gm-Message-State: APjAAAU+viqLENDEwv6EXBWrvZZro6YjiTQjPBKD88RTGNA5yxq0JNQE
+        21KYR8Kfk1QFqfV41je4jew=
+X-Google-Smtp-Source: APXvYqxzYVkwsh8iybt5JEDibUnTgddsvfUWsaYYvbMj8IkRablUTnWOw5fdtlt39H18Ky0wJcLsDw==
+X-Received: by 2002:a63:2cd6:: with SMTP id s205mr49190694pgs.258.1582497651814;
+        Sun, 23 Feb 2020 14:40:51 -0800 (PST)
+Received: from ast-mbp ([2620:10d:c090:400::5:7207])
+        by smtp.gmail.com with ESMTPSA id t19sm9864351pgg.23.2020.02.23.14.40.49
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Sun, 23 Feb 2020 14:40:51 -0800 (PST)
+Date:   Sun, 23 Feb 2020 14:40:48 -0800
+From:   Alexei Starovoitov <alexei.starovoitov@gmail.com>
+To:     Thomas Gleixner <tglx@linutronix.de>
+Cc:     LKML <linux-kernel@vger.kernel.org>,
+        David Miller <davem@davemloft.net>, bpf@vger.kernel.org,
+        netdev@vger.kernel.org, Alexei Starovoitov <ast@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Sebastian Sewior <bigeasy@linutronix.de>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Clark Williams <williams@redhat.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Juri Lelli <juri.lelli@redhat.com>,
+        Ingo Molnar <mingo@kernel.org>,
+        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+        Vinicius Costa Gomes <vinicius.gomes@intel.com>,
+        Jakub Kicinski <kuba@kernel.org>
+Subject: Re: [patch V2 01/20] bpf: Enforce preallocation for all
+ instrumentation programs
+Message-ID: <20200223224046.o6ynykpvg6kl75ar@ast-mbp>
+References: <20200222042916.k3r5dj5njoo2ywyj@ast-mbp>
+ <87o8tr3thx.fsf@nanos.tec.linutronix.de>
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:LK6sG8SfIIYx1YnO8w4Z4NnmNAmf4socAqMd1voV54UvOjur99a
- kMkxwqo9TixuLqF5fYZ5zhdENmElOccRM18UokExDcbQlScjL4JyeROW4FtbquugQMfKGpU
- sO8nUSGjCrmkD3GgfffmTg6utY5orpbevCWN4Bc+QmrBANnf6UGBl4WffMVsjFo5umoSMjb
- HMnDjSLRQon2Z+ZP4qPlA==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:NOQSK9gUsYA=:AADbh22rGB0+Y/DtNtpxVi
- XsGJCXDgmZA0mTSTkXrKZ2kH3kB1eGtXTq0DkZ053Eve7GnuUfAoac6GvI7bYwSDsM4+zO29z
- jdbo4hN1vKGvthJT0NIW6PEkq9sxBWdSL6MPy5CPmOpJ+nSDBd0kwCBH3mdARNslbbPbTdSzl
- CLp4KqNz+feXnkISni6jKjtGOfYLMOwOyAwtxMagbyni6gcIn7V1Zha/Oj5HMTuVYkfHVUCpD
- 6O9fG4haMoAztBWiEu/K5EQ9vUN0BImhRtRzzQnBAwpdinybVu+DEspXCp3ZvhlLR9p1SVfHm
- wG7csxmNPs0JqN/96grU7a/MA9v2F67ZptrPyxbMYevofUf0JHxguZuNiPVIuJgT9aaeYd36L
- BlUh/qBH1a2eZrZv9zvDIannzlbf/H+hcZXUeQrNgtFefKTjc6cu3AHhS3nVs3eJYEVbntkJp
- ET2TU9UmuuTys+4eBQczQuWDCI+MABQiNfni3vm++yj5KdFQVbxfS9ySQJIPZeu1xSfc7yZ1E
- VEGr8cHzRDeSsz4YHX5cMHxNf+8/6nwgAtD1V1v4GXHN75SL7WMeJ+EgvyCalkhtz12AlET35
- LMc3rLRQW2Ens5pkQsAR3aDfV7NYHvrCA5IpgOcVAc0Uglw8X+Jms1cexwEPA/NxpPQyjtYm9
- vO2qbCvPmf2IOHrFxEke3FYd1yMW+KXKQKZ/+Bxnepr0Zb+c/AKzoJg4/qbMv0dCyiVYOCyu+
- 9lBt3/9JCjg499WE67auAlJnlXI9yteEx/5SZDSWUSYWUGf3/CfhjcwlAzEAJRw0euPUZBgGI
- Amoecp1RtnU1pN5HKVNTW0ORR0BDE4qqQkMSnjbVl6ZhHIKd7MNpYvFvz7o3lsCsy90efK1id
- si7DnqOdb8vbmcHS0NHUK7URKFrZIyxpgf/ugDFZZM52QLWNtYBVT+j5s3bfgYk6MgxiWm3d9
- fGoPJYZNcOECTd30/E11qDox7+k1svpoqo6lsWWqy7ByibAl9iExgBtUxrBmKqSFy3ra7UuPY
- HsppytmxKFDbDE9uJRQ9C+fEgL9lIFi5rU9UgSQhhuTWMmWhtl2LQSqlyTdj/D3S99rFUG8FA
- QhEBWfl2I4FUy+l12yT1i6zbbwprNEuPHKAvd5SOQuezKEAVUu4Ly1lJHr/j63TivX588CXeW
- Kikml2RmmD1Kuaiee5OGKAXrpvm2LzQhpyVFkMPTBF7XTSrB6DNHsk+YiwY0WLFgf7oXgEu1q
- D9CNS0nWUwi7fiTci
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <87o8tr3thx.fsf@nanos.tec.linutronix.de>
+User-Agent: NeoMutt/20180223
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The value 0 assigned to mem_size is never used. So let's remove the
-assignment.
+On Sat, Feb 22, 2020 at 09:40:10AM +0100, Thomas Gleixner wrote:
+> Alexei,
+> 
+> Alexei Starovoitov <alexei.starovoitov@gmail.com> writes:
+> > On Thu, Feb 20, 2020 at 09:45:18PM +0100, Thomas Gleixner wrote:
+> >> The assumption that only programs attached to perf NMI events can deadlock
+> >> on memory allocators is wrong. Assume the following simplified callchain:
+> >>  	 */
+> >> -	if (prog->type == BPF_PROG_TYPE_PERF_EVENT) {
+> >> +	if ((is_tracing_prog_type(prog->type)) {
+> >
+> > This doesn't build.
+> > I assumed the typo somehow sneaked in and proceeded, but it broke
+> > a bunch of tests:
+> > Summary: 1526 PASSED, 0 SKIPPED, 54 FAILED
+> > One can argue that the test are unsafe and broken.
+> > We used to test all those tests with and without prealloc:
+> > map_flags = 0;
+> > run_all_tests();
+> > map_flags = BPF_F_NO_PREALLOC;
+> > run_all_tests();
+> > Then 4 years ago commit 5aa5bd14c5f866 switched hashmap to be no_prealloc
+> > always and that how it stayed since then. We can adjust the tests to use
+> > prealloc with tracing progs, but this breakage shows that there could be plenty
+> > of bpf users that also use BPF_F_NO_PREALLOC with tracing. It could simply
+> > be because they know that their kprobes are in a safe spot (and kmalloc is ok)
+> > and they want to save memory. They could be using large max_entries parameter
+> > for worst case hash map usage, but typical load is low. In general hashtables
+> > don't perform well after 50%, so prealloc is wasting half of the memory. Since
+> > we cannot control where kprobes are placed I'm not sure what is the right fix
+> > here. It feels that if we proceed with this patch somebody will complain and we
+> > would have to revert, but I'm willing to take this risk if we cannot come up
+> > with an alternative fix.
+> 
+> Having something which is known to be broken exposed is not a good option
+> either.
+> 
+> Just assume that someone is investigating a kernel issue. BOFH who is
+> stuck in the 90's uses perf, kprobes and tracepoints. Now he goes on
+> vacation and the new kid in the team decides to flip that over to BPF.
+> So now instead of getting information he deadlocks or crashes the
+> machine.
+> 
+> You can't just tell him, don't do that then. It's broken by design and
+> you really can't tell which probes are safe and which are not because
+> the allocator calls out into whatever functions which might look
+> completely unrelated.
+> 
+> So one way to phase this out would be:
+> 
+> 	if (is_tracing()) {
+>         	if (is_perf() || IS_ENABLED(RT))
+>                 	return -EINVAL;
+>                 WARN_ONCE(.....)
+>         }
+> 
+> And clearly write in the warning that this is dangerous, broken and
+> about to be forbidden. Hmm?
 
-Signed-off-by: Heinrich Schuchardt <xypron.glpk@gmx.de>
-=2D--
- drivers/firmware/efi/fake_mem.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/drivers/firmware/efi/fake_mem.c b/drivers/firmware/efi/fake_m=
-em.c
-index 6e0f34a38171..2e314306ce3c 100644
-=2D-- a/drivers/firmware/efi/fake_mem.c
-+++ b/drivers/firmware/efi/fake_mem.c
-@@ -80,7 +80,7 @@ void __init efi_fake_memmap(void)
-
- static int __init setup_fake_mem(char *p)
- {
--	u64 start =3D 0, mem_size =3D 0, attribute =3D 0;
-+	u64 start =3D 0, mem_size, attribute =3D 0;
- 	int i;
-
- 	if (!p)
-=2D-
-2.25.0
-
+Yeah. Let's start with WARN_ONCE and verbose(env, "dangerous, broken")
+so the users see it in the verifier log and people who maintain
+servers (like kernel-team-s in fb, goog, etc) see it as well
+in their dmesg logs. So the motivation will be on both sides.
+Then in few kernel releases we can flip it to disable.
+Or we'll find a way to make it work without pre-allocating.
