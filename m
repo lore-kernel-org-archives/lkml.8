@@ -2,106 +2,133 @@ Return-Path: <SRS0=SnAt=4L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EC948C35666
-	for <linux-kernel@archiver.kernel.org>; Sun, 23 Feb 2020 11:26:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 22433C35673
+	for <linux-kernel@archiver.kernel.org>; Sun, 23 Feb 2020 11:26:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C4D3B206ED
+	by mail.kernel.org (Postfix) with ESMTP id EE84E20656
 	for <linux-kernel@archiver.kernel.org>; Sun, 23 Feb 2020 11:26:43 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=arista.com header.i=@arista.com header.b="L4zCbEHE"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="uuOFmCqu"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727159AbgBWLWB (ORCPT
+        id S1727282AbgBWLWn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 23 Feb 2020 06:22:01 -0500
-Received: from mail-ed1-f67.google.com ([209.85.208.67]:42749 "EHLO
-        mail-ed1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726023AbgBWLWB (ORCPT
+        Sun, 23 Feb 2020 06:22:43 -0500
+Received: from mail-pf1-f194.google.com ([209.85.210.194]:36118 "EHLO
+        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726236AbgBWLWm (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 23 Feb 2020 06:22:01 -0500
-Received: by mail-ed1-f67.google.com with SMTP id e10so8318084edv.9
-        for <linux-kernel@vger.kernel.org>; Sun, 23 Feb 2020 03:22:00 -0800 (PST)
+        Sun, 23 Feb 2020 06:22:42 -0500
+Received: by mail-pf1-f194.google.com with SMTP id 185so3784862pfv.3;
+        Sun, 23 Feb 2020 03:22:41 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=arista.com; s=googlenew;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=I7rQJgBtj2WD56CuhDDY5luHd0dpn2aSY0uftQht5ZY=;
-        b=L4zCbEHEPzVE43pBLR7WjtzcS3JDvt5WjCIe2+iDIf92RrrcWY75h+Vn/ZR+naVONz
-         Fcm5D3OfF3aM7CMksqiP2I+71HuT6iHUs3nsiFj6opaJgJ1vDw9YR0pYZJU8PedHfQA6
-         wBD7ISEfBuhjerMlqm11ycAWFmES2smKg9wM+jqewCAztKimeFXNmkXa4IZstD4c/A1T
-         6NC8zAAtl71g1htXbl8fxs2pznxDL4EXhIPCwUx62wyZamIJr99eT5Xwxg1Z4U/NQPx3
-         Tjx1COuUUmV7AhWJcwyA4atKE/yYfeMIyE2vQWSzM2E6hmRq6ZxfZarJbGXmTwU4qgUB
-         vHoQ==
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id;
+        bh=sN5H5uRLxodeA5ftMsFKjGciLDtvEDOcbHLiiCvT97A=;
+        b=uuOFmCqu1d9sfG86Qiyc9owige0Ou0kvZAf7Aloq6yU5Vs9Jlp+tPaOTsRCcUfJhGv
+         WF2zjCuWOg3RVOe+XDokcsT4rBZyHm7gMWSrS1xYkHaRLFlpxtjW1JbdrslewMQRcddP
+         vaOUjmx5cMva+W5QjX9cNqHMZ1KGYYum6ncoZz+hGhS9J+X4a5zJroahnMULLMNwh6xZ
+         z/Il2UJV4GzTC8L9RTzNNxNNy5F7wyTsi724lok/8K5gM/TnhGMkJzRaluxAr9GAQgyS
+         7vFmi5vd8UJ4iEHPNQrjMIcQEx1C6QU4jh3eCKHcgfUyMyeqQ9PkqvgCBxbEnZ2nJpHJ
+         ZFYQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=I7rQJgBtj2WD56CuhDDY5luHd0dpn2aSY0uftQht5ZY=;
-        b=a5EEII5UeMKMJ3UTpeD1dh4QHxXGRpCWKK7VUjUKVBHjtJFEOcdQzMAdJgy5y1trE4
-         dsB9JQRyoHwahVEfDIkfasu1+b71wDYTzZnrMcU4/luk9aqlehPhttuK98GyGqUPXyRP
-         /2pPOAP5bZKHbYaUClLYSLLiBL0bozh09l3TGfs4dLPZltnAfhTozyffi8HkdIA8y2h7
-         eSxE/WMYrLa4y4nF+5R12fqZqklyqLK15O/WFC2HQvGlmZL0RkgT1PXcLHZOY0wF8S4z
-         S/zpWM8Chfhii3QUC00NU25wVDQ8zRp2cUXQSwt7G5Ii3fzYE1P4Z9h+Z0kHJ1xqn0pS
-         iQMQ==
-X-Gm-Message-State: APjAAAXujqW725HTvzSy+XXulTR60k596fr+mr70zS9kXpcLlCWsIU7A
-        6IpXN9aUC50v0lvsB/a3AgenOKvRyE0=
-X-Google-Smtp-Source: APXvYqyD2OOCxUukSbGgSCpuRxlrUzuSY/iqLh1Bk/5C1CX3LGqG3cxQPjzRF8TdhBraa6MyX457BQ==
-X-Received: by 2002:aa7:df09:: with SMTP id c9mr41891593edy.133.1582456919461;
-        Sun, 23 Feb 2020 03:21:59 -0800 (PST)
-Received: from ?IPv6:2a02:8084:e84:2480:228:f8ff:fe6f:83a8? ([2a02:8084:e84:2480:228:f8ff:fe6f:83a8])
-        by smtp.gmail.com with ESMTPSA id b9sm762595edm.60.2020.02.23.03.21.58
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sun, 23 Feb 2020 03:21:58 -0800 (PST)
-Subject: Re: [PATCHv2] watchdog: Add stop_on_reboot parameter to control
- reboot policy
-To:     Guenter Roeck <linux@roeck-us.net>
-Cc:     linux-kernel@vger.kernel.org,
-        Dmitry Safonov <0x7f454c46@gmail.com>,
-        Wim Van Sebroeck <wim@linux-watchdog.org>,
-        linux-watchdog@vger.kernel.org
-References: <20200214162209.129107-1-dima@arista.com>
- <20200222160639.GA12925@roeck-us.net>
-From:   Dmitry Safonov <dima@arista.com>
-Message-ID: <d45c945a-043d-8e18-1f8b-a1e7c7f4d2bb@arista.com>
-Date:   Sun, 23 Feb 2020 11:21:59 +0000
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.2
-MIME-Version: 1.0
-In-Reply-To: <20200222160639.GA12925@roeck-us.net>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=sN5H5uRLxodeA5ftMsFKjGciLDtvEDOcbHLiiCvT97A=;
+        b=Qshy3r8q02w75WDT3pdaGJCRkZpNed5PVn++l08w2wvb5HMJeaHA4BAww4dSKWFLlX
+         apevnZtrnih8hQGkx5rRywTGO5SQuFBV8R6tkkKNb0Iyb3VZe1r4/R/dW956PD1yAMXO
+         3sL38Q42Ng677Yq1eUhmIpSP+wD5sVVY//EQJalbU+toDf/HsmJipJ18sCB3dGpV8AjR
+         S6vJv6CZYRwaBHZYUIhHgHcV6bZQaZxpX0y8ei/P5AAgqMGidyEXNp6DvzL5EqwI3AJD
+         Y2Hg/RMPDGHm4BNuTVR8Eb0V+llfC6scay5BhNPR9IIXTF3NIY2ry7CCGIao5aDn8+RV
+         adbw==
+X-Gm-Message-State: APjAAAVRzzHKQc/adL69mm7ntY36EzSgojIW9B3XdU8fnSdgt42p+8f4
+        a3A7u1N9TVP0LTRTsGtneg==
+X-Google-Smtp-Source: APXvYqzFWkFdZrObvg5gTMa7MV1O7ZL7rM1c9JISPyZ95Uyl7uXVnez3GO1zSfXywPpVHNl48+/+8A==
+X-Received: by 2002:a63:ec07:: with SMTP id j7mr47290312pgh.187.1582456960948;
+        Sun, 23 Feb 2020 03:22:40 -0800 (PST)
+Received: from madhuparna-HP-Notebook.nitk.ac.in ([2402:3a80:515:9a49:e8ed:fa6e:a613:7ebf])
+        by smtp.gmail.com with ESMTPSA id j8sm8641078pjb.4.2020.02.23.03.22.37
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 23 Feb 2020 03:22:40 -0800 (PST)
+From:   madhuparnabhowmik10@gmail.com
+To:     jiri@mellanox.com, davem@davemloft.net
+Cc:     netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+        joel@joelfernandes.org,
+        linux-kernel-mentees@lists.linuxfoundation.org, paulmck@kernel.org,
+        Madhuparna Bhowmik <madhuparnabhowmik10@gmail.com>
+Subject: [PATCH] net: core: devlink.c: Hold devlink->lock from the beginning of devlink_dpipe_table_register()
+Date:   Sun, 23 Feb 2020 16:52:33 +0530
+Message-Id: <20200223112233.13417-1-madhuparnabhowmik10@gmail.com>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Guenter,
+From: Madhuparna Bhowmik <madhuparnabhowmik10@gmail.com>
 
-On 2/22/20 4:06 PM, Guenter Roeck wrote:
-> On Fri, Feb 14, 2020 at 04:22:09PM +0000, Dmitry Safonov wrote:
-[..]
->> +static int stop_on_reboot = -1;
->> +module_param(stop_on_reboot, int, 0644);
->> +MODULE_PARM_DESC(stop_on_reboot, "Stop watchdogs on reboot (0=keep watching, 1=stop)");
->> +
-> 
-> My major concern is that this is writeable at runtime.
-> Changing the value won't change the behavior of already loaded
-> drivers. Unloading and reloading the driver will change its behavior
-> after the value was changed. This would be confusing, and it is hard
-> to imagine for anyone to expect such a behavior. Does this have to be
-> writeable ?
+devlink_dpipe_table_find() should be called under either
+rcu_read_lock() or devlink->lock. devlink_dpipe_table_register()
+calls devlink_dpipe_table_find() without holding the lock
+and acquires it later. Therefore hold the devlink->lock
+from the beginning of devlink_dpipe_table_register().
 
-No, it wasn't. I've messed it up by thinking about fours in 0644, but
-for some reason failed to recognize that it allows root writes.
+Suggested-by: Jiri Pirko <jiri@mellanox.com>
+Signed-off-by: Madhuparna Bhowmik <madhuparnabhowmik10@gmail.com>
+---
+ net/core/devlink.c | 21 ++++++++++++++-------
+ 1 file changed, 14 insertions(+), 7 deletions(-)
 
-I'll follow up with v3, sorry for simple-minded typo.
+diff --git a/net/core/devlink.c b/net/core/devlink.c
+index 4c63c9a4c09e..e82750bdc496 100644
+--- a/net/core/devlink.c
++++ b/net/core/devlink.c
+@@ -6838,26 +6838,33 @@ int devlink_dpipe_table_register(struct devlink *devlink,
+ 				 void *priv, bool counter_control_extern)
+ {
+ 	struct devlink_dpipe_table *table;
+-
+-	if (devlink_dpipe_table_find(&devlink->dpipe_table_list, table_name))
+-		return -EEXIST;
++	int err = 0;
+ 
+ 	if (WARN_ON(!table_ops->size_get))
+ 		return -EINVAL;
+ 
++	mutex_lock(&devlink->lock);
++
++	if (devlink_dpipe_table_find(&devlink->dpipe_table_list, table_name)) {
++		err = -EEXIST;
++		goto unlock;
++	}
++
+ 	table = kzalloc(sizeof(*table), GFP_KERNEL);
+-	if (!table)
+-		return -ENOMEM;
++	if (!table) {
++		err = -ENOMEM;
++		goto unlock;
++	}
+ 
+ 	table->name = table_name;
+ 	table->table_ops = table_ops;
+ 	table->priv = priv;
+ 	table->counter_control_extern = counter_control_extern;
+ 
+-	mutex_lock(&devlink->lock);
+ 	list_add_tail_rcu(&table->list, &devlink->dpipe_table_list);
++unlock:
+ 	mutex_unlock(&devlink->lock);
+-	return 0;
++	return err;
+ }
+ EXPORT_SYMBOL_GPL(devlink_dpipe_table_register);
+ 
+-- 
+2.17.1
 
-Thanks,
-          Dmitry
