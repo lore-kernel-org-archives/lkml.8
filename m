@@ -8,66 +8,66 @@ X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4AD14C35673
-	for <linux-kernel@archiver.kernel.org>; Sun, 23 Feb 2020 23:19:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CA4C5C35670
+	for <linux-kernel@archiver.kernel.org>; Sun, 23 Feb 2020 23:19:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 20A1A20880
-	for <linux-kernel@archiver.kernel.org>; Sun, 23 Feb 2020 23:19:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9FCD120880
+	for <linux-kernel@archiver.kernel.org>; Sun, 23 Feb 2020 23:19:06 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="IHcYEAyD"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="umWQtF4r"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727699AbgBWXSW (ORCPT
+        id S1727637AbgBWXSS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 23 Feb 2020 18:18:22 -0500
-Received: from mail-wm1-f65.google.com ([209.85.128.65]:50832 "EHLO
-        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727521AbgBWXSQ (ORCPT
+        Sun, 23 Feb 2020 18:18:18 -0500
+Received: from mail-wr1-f68.google.com ([209.85.221.68]:38961 "EHLO
+        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727394AbgBWXSL (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 23 Feb 2020 18:18:16 -0500
-Received: by mail-wm1-f65.google.com with SMTP id a5so7183499wmb.0;
-        Sun, 23 Feb 2020 15:18:15 -0800 (PST)
+        Sun, 23 Feb 2020 18:18:11 -0500
+Received: by mail-wr1-f68.google.com with SMTP id y11so8225777wrt.6;
+        Sun, 23 Feb 2020 15:18:10 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=6tp05cGAxe3eIAI8tMjX09BksdgimN4FGWQ4p10y87E=;
-        b=IHcYEAyD7OH6N4cL0P01zGS1LY6NLpg17xhAMUoQ4l2qCBTShJSU+V+GD8NffSJ4yR
-         4nUyMeDByIIBzyKyaGsDY397cpdL7irHiYrtXcT8bIav5QzTbLZ21z10LtnrPhNPhzdN
-         YgDkNRYklHfcShlp9+zlNXf1OwyoW3NiKKrF4NLRP56+3ZynTZNypVrzhDKxWOTlAMBu
-         gBZFN+bbP+cSq4lf7ViI9IVFtM/7fl6ywIL+fgxJGILSK8hXqIcE/vmXuvYfRR74OtP3
-         ZucYROCXTgAw4psyntFEkwA6PDaYyuYum7csOkeZhg76TaUFLSz3AWx7t8TmAlFb/+qE
-         PXzQ==
+        bh=fPUr8jCY8JIDce77aHKLu0kesj5mi5yI8K5HlZIk77s=;
+        b=umWQtF4rQ643Qg1LiBfMBoOhKtVIL5uLVM5lEckOEZTF4gFu93yUOZqUT2SSb79R6N
+         NbsX2uOQCz3H6bKZ/2Ht9YiHeP5bHRxfeCpxWOYKuz3FhMEZgnd7O4/x+72Y8TbrhSDk
+         B+JDguRpue+4HBlYQ6OO7qtJ606wfHWf95eKi47/FdVq0IoOyRbz1EZ7wmp0GjuLMvbq
+         jld1eUMgJMKReDoqZ+I9U7dD/yPB8VEl68LZrwovEVCWPJ+U68q0FES6/ZA6yUR8uJnd
+         THp2YnDws/QDxvFIjAVkx+FwvDvdggLHZzCznpEduCVtBuq0k4AlsHN3HbVne4GXbZK9
+         Cb9A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=6tp05cGAxe3eIAI8tMjX09BksdgimN4FGWQ4p10y87E=;
-        b=uDQCbRQUJLla6BWdyE6JuH66kUUIThlDkYabclQBCe7CiszVl/A18xKIhg7rjxZ0kh
-         6IL9y7nAFMzg2vXg9cW5fFJgqYHMXF8S637l+6kz0k441XU6s4550/eDteOjZDW72BWS
-         8sBaBMJ7dlH/i/pCQvGZtgR2E7ujJ75BhoOG+GJoHrhx4vSerIj6xL7rlbEuBlIMiWyx
-         nS6sobe6atnHhOkxFxtYJGhyeMABmCb7CsNIta2Ji7EtbEDH2l7cuKCfAmmKVqHCTSoI
-         jGNMHMsV+cP3jOFg2BwXziy7O2AiIJpFItMZCc0FLYTBdmvZlAF4PEt7+Lk5yl5VDVU2
-         RhZQ==
-X-Gm-Message-State: APjAAAWzZlaYBFfcNrUkJRtXpTQkt+s83v7w+IN+78VDUkf3nqJRMw+y
-        2I8AcB2fwietXPnq5dx8uw==
-X-Google-Smtp-Source: APXvYqxmP9PDF4LsKT7mYYTv0s5mGlu+CW99N9R7sNSqlyQ8gB98iLC5Vz0HHbfaWWhib/bujdpbZw==
-X-Received: by 2002:a1c:2d91:: with SMTP id t139mr7703539wmt.114.1582499894164;
-        Sun, 23 Feb 2020 15:18:14 -0800 (PST)
+        bh=fPUr8jCY8JIDce77aHKLu0kesj5mi5yI8K5HlZIk77s=;
+        b=kj3fjDniI4wiQM3rFoi3Z5EAZiUpLMQMzNtH5W9GJBZh6xZvodFGNYG1Y+VgP59PDJ
+         PD/5nEb5JhsQ9v9uTfnvAYDFJDl48mgsBGlp2xWRE++84QblEWLrEVYZ13/5xS54l+9t
+         xLmUomEt4I4/j/qptKVafnziC42Kw4rFllhSou+4TWB+Ds4xgfKAyYqeaxAzcB7/T/Jv
+         uBIWbk9qDkkXtDYWRc/HuQ6wNZwDYvaFr+6ybwLkGal5+kSibhJ2ymoihUX/Nhqkc9xL
+         R7KG6/4SGSm3feTc9VlqDv4MvLlfU1UtMgL1HwwmMwL2kd97FN6K40d2hLgXtwfPdYH8
+         ApuA==
+X-Gm-Message-State: APjAAAVhwm5aIJiH5XTJHhtPDt1VqDwkNG3loX1lVruWguegXmZREZHC
+        YTlLj7tN3ouhFAFUB5GP2g==
+X-Google-Smtp-Source: APXvYqzZlbx8It43QShJfKjvjpoTUrSmBRIOwdew2A0aFJvxC0n1wEo4RUyL+HsNRtPaB8C/DW+LWQ==
+X-Received: by 2002:a5d:638f:: with SMTP id p15mr61891483wru.402.1582499889294;
+        Sun, 23 Feb 2020 15:18:09 -0800 (PST)
 Received: from ninjahost.lan (host-2-102-13-223.as13285.net. [2.102.13.223])
-        by smtp.googlemail.com with ESMTPSA id q6sm8968203wrf.67.2020.02.23.15.18.13
+        by smtp.googlemail.com with ESMTPSA id q6sm8968203wrf.67.2020.02.23.15.18.08
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 23 Feb 2020 15:18:13 -0800 (PST)
+        Sun, 23 Feb 2020 15:18:08 -0800 (PST)
 From:   Jules Irenge <jbi.octave@gmail.com>
 To:     boqun.feng@gmail.com
 Cc:     jbi.octave@gmail.com, linux-kernel@vger.kernel.org,
-        Alexey Dobriyan <adobriyan@gmail.com>,
-        Al Viro <viro@zeniv.linux.org.uk>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        David Howells <dhowells@redhat.com>,
-        linux-fsdevel@vger.kernel.org (open list:PROC FILESYSTEM)
-Subject: [PATCH 16/30] proc: Add missing annotation for close_pdeo()
-Date:   Sun, 23 Feb 2020 23:16:57 +0000
-Message-Id: <20200223231711.157699-17-jbi.octave@gmail.com>
+        Gerrit Renker <gerrit@erg.abdn.ac.uk>,
+        "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>,
+        dccp@vger.kernel.org (open list:DCCP PROTOCOL),
+        netdev@vger.kernel.org (open list:NETWORKING [GENERAL])
+Subject: [PATCH 14/30] dccp: Add missing annotation for dccp_child_process()
+Date:   Sun, 23 Feb 2020 23:16:55 +0000
+Message-Id: <20200223231711.157699-15-jbi.octave@gmail.com>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20200223231711.157699-1-jbi.octave@gmail.com>
 References: <0/30>
@@ -79,28 +79,28 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Sparse reports a warning at close_pdeo()
-warning: context imbalance in close_pdeo() - unexpected unlock
-The root cause is the missing annotation at close_pdeo()
-Add the missing __releases(&pde->pde_unload_lock) annotation
+Sparse reports a warning at dccp_child_process()
+warning: context imbalance in dccp_child_process() - unexpected unlock
+The root cause is the missing annotation at dccp_child_process()
+Add the missing __releases(child) annotation
 
 Signed-off-by: Jules Irenge <jbi.octave@gmail.com>
 ---
- fs/proc/inode.c | 1 +
+ net/dccp/minisocks.c | 1 +
  1 file changed, 1 insertion(+)
 
-diff --git a/fs/proc/inode.c b/fs/proc/inode.c
-index 6da18316d209..1f33cb7a6c47 100644
---- a/fs/proc/inode.c
-+++ b/fs/proc/inode.c
-@@ -139,6 +139,7 @@ static void unuse_pde(struct proc_dir_entry *pde)
- 
- /* pde is locked on entry, unlocked on exit */
- static void close_pdeo(struct proc_dir_entry *pde, struct pde_opener *pdeo)
-+	__releases(&pde->pde_unload_lock)
+diff --git a/net/dccp/minisocks.c b/net/dccp/minisocks.c
+index 25187528c308..c5c74a34d139 100644
+--- a/net/dccp/minisocks.c
++++ b/net/dccp/minisocks.c
+@@ -216,6 +216,7 @@ EXPORT_SYMBOL_GPL(dccp_check_req);
+  */
+ int dccp_child_process(struct sock *parent, struct sock *child,
+ 		       struct sk_buff *skb)
++	__releases(child)
  {
- 	/*
- 	 * close() (proc_reg_release()) can't delete an entry and proceed:
+ 	int ret = 0;
+ 	const int state = child->sk_state;
 -- 
 2.24.1
 
