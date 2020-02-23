@@ -7,47 +7,46 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5A434C35671
-	for <linux-kernel@archiver.kernel.org>; Sun, 23 Feb 2020 02:24:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E0EEDC35669
+	for <linux-kernel@archiver.kernel.org>; Sun, 23 Feb 2020 02:24:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2FBF220707
-	for <linux-kernel@archiver.kernel.org>; Sun, 23 Feb 2020 02:24:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B9391208C4
+	for <linux-kernel@archiver.kernel.org>; Sun, 23 Feb 2020 02:24:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582424646;
-	bh=YVHRK6DjXynL+Gn59BM0qKem9iDDoYFReit3E4PXr2M=;
+	s=default; t=1582424650;
+	bh=JEZ4rzOsR34hVkfkKbotBG6rQ5nDfw7n9gyruTxP0oQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=OpZzPFm4vBEnjUPwP54jK2PmRYd6D+uGFrzCGDKne+D5eyf+bh8FJ/tS7I9LoSQ2k
-	 O8Jzst68EM46/XOY545CeGY+CicPr5dHQP0B7ch+p1DMDjZl7iYtBghS8ARXtR2igC
-	 pSW8n+07trb2G4kKQibBr/7B+uDoTpLkX3mo2QSU=
+	b=POmLY8ovlRhNGEipkOjyFbhZdO3p5vs1Ryqz8m/J7dkcd8SC/UFuC+j8QZDmjwLoS
+	 Ju7NUtBMsG7GJB1R6AmGiBBZhIsbU2j1wquGhvY4bPq4q8VEL3tYFHJ1pWI9UR1G8G
+	 e8LNjK3C+j9h/iDxDmRpC1II5kfcv0omgLbL6rbs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728993AbgBWCYF (ORCPT
+        id S1729039AbgBWCYJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 22 Feb 2020 21:24:05 -0500
-Received: from mail.kernel.org ([198.145.29.99]:53782 "EHLO mail.kernel.org"
+        Sat, 22 Feb 2020 21:24:09 -0500
+Received: from mail.kernel.org ([198.145.29.99]:53914 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728930AbgBWCX7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 22 Feb 2020 21:23:59 -0500
+        id S1728995AbgBWCYH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 22 Feb 2020 21:24:07 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8B858208C4;
-        Sun, 23 Feb 2020 02:23:58 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 83EA721741;
+        Sun, 23 Feb 2020 02:24:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1582424639;
-        bh=YVHRK6DjXynL+Gn59BM0qKem9iDDoYFReit3E4PXr2M=;
+        s=default; t=1582424646;
+        bh=JEZ4rzOsR34hVkfkKbotBG6rQ5nDfw7n9gyruTxP0oQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=OTBkDxUzwZPqM4R0nbCkUWRvs+dND3keA7629l3C8gtL8kNQ1mfDXV93HptzT4+b4
-         ryNK2iFFVHcldMYX+reYub32+bdg+k7GRvUQqsbH8NSnPm7PftO446ZB9cLGhBAo4x
-         1kPzA+T0iEEuanpZYpRXZ2+R3bP5rc6q3Fh+bQPQ=
+        b=1bVmM4DcPIyqT/KId5WHEuogtK3H8erqto3RlJKj2O6s5Vi6L1XrYstymnrbGfeD5
+         uEhil2wBjOd2z+a4AfYEM1xqe6liERxK/bqf+wT49O3aGevPHLEv7n2o6qZlVk5/8L
+         GUjtQ7f4UFiJoxVTCdeMh/ZmbtJOGJvAYcQiw8iw=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Arthur Kiyanovski <akiyano@amazon.com>,
-        Sameeh Jubran <sameehj@amazon.com>,
+Cc:     Firo Yang <firo.yang@suse.com>,
         "David S . Miller" <davem@davemloft.net>,
         Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 16/25] net: ena: fix incorrect default RSS key
-Date:   Sat, 22 Feb 2020 21:23:30 -0500
-Message-Id: <20200223022339.1885-16-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.19 22/25] enic: prevent waking up stopped tx queues over watchdog reset
+Date:   Sat, 22 Feb 2020 21:23:36 -0500
+Message-Id: <20200223022339.1885-22-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200223022339.1885-1-sashal@kernel.org>
 References: <20200223022339.1885-1-sashal@kernel.org>
@@ -60,81 +59,60 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Arthur Kiyanovski <akiyano@amazon.com>
+From: Firo Yang <firo.yang@suse.com>
 
-[ Upstream commit 0d1c3de7b8c78a5e44b74b62ede4a63629f5d811 ]
+[ Upstream commit 0f90522591fd09dd201065c53ebefdfe3c6b55cb ]
 
-Bug description:
-When running "ethtool -x <if_name>" the key shows up as all zeros.
+Recent months, our customer reported several kernel crashes all
+preceding with following message:
+NETDEV WATCHDOG: eth2 (enic): transmit queue 0 timed out
+Error message of one of those crashes:
+BUG: unable to handle kernel paging request at ffffffffa007e090
 
-When we use "ethtool -X <if_name> hfunc toeplitz hkey <some:random:key>" to
-set the key and then try to retrieve it using "ethtool -x <if_name>" then
-we return the correct key because we return the one we saved.
+After analyzing severl vmcores, I found that most of crashes are
+caused by memory corruption. And all the corrupted memory areas
+are overwritten by data of network packets. Moreover, I also found
+that the tx queues were enabled over watchdog reset.
 
-Bug cause:
-We don't fetch the key from the device but instead return the key
-that we have saved internally which is by default set to zero upon
-allocation.
+After going through the source code, I found that in enic_stop(),
+the tx queues stopped by netif_tx_disable() could be woken up over
+a small time window between netif_tx_disable() and the
+napi_disable() by the following code path:
+napi_poll->
+  enic_poll_msix_wq->
+     vnic_cq_service->
+        enic_wq_service->
+           netif_wake_subqueue(enic->netdev, q_number)->
+              test_and_clear_bit(__QUEUE_STATE_DRV_XOFF, &txq->state)
+In turn, upper netowrk stack could queue skb to ENIC NIC though
+enic_hard_start_xmit(). And this might introduce some race condition.
 
-Fix:
-This commit fixes the issue by initializing the key to a random value
-using netdev_rss_key_fill().
+Our customer comfirmed that this kind of kernel crash doesn't occur over
+90 days since they applied this patch.
 
-Fixes: 1738cd3ed342 ("net: ena: Add a driver for Amazon Elastic Network Adapters (ENA)")
-Signed-off-by: Sameeh Jubran <sameehj@amazon.com>
-Signed-off-by: Arthur Kiyanovski <akiyano@amazon.com>
+Signed-off-by: Firo Yang <firo.yang@suse.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/ethernet/amazon/ena/ena_com.c | 15 +++++++++++++++
- drivers/net/ethernet/amazon/ena/ena_com.h |  1 +
- 2 files changed, 16 insertions(+)
+ drivers/net/ethernet/cisco/enic/enic_main.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/net/ethernet/amazon/ena/ena_com.c b/drivers/net/ethernet/amazon/ena/ena_com.c
-index c9b21306cf6c4..ebc36d15441ce 100644
---- a/drivers/net/ethernet/amazon/ena/ena_com.c
-+++ b/drivers/net/ethernet/amazon/ena/ena_com.c
-@@ -842,6 +842,19 @@ static int ena_com_get_feature(struct ena_com_dev *ena_dev,
- 				      0);
- }
+diff --git a/drivers/net/ethernet/cisco/enic/enic_main.c b/drivers/net/ethernet/cisco/enic/enic_main.c
+index 733d9172425bf..026a3bd71204f 100644
+--- a/drivers/net/ethernet/cisco/enic/enic_main.c
++++ b/drivers/net/ethernet/cisco/enic/enic_main.c
+@@ -2013,10 +2013,10 @@ static int enic_stop(struct net_device *netdev)
+ 		napi_disable(&enic->napi[i]);
  
-+static void ena_com_hash_key_fill_default_key(struct ena_com_dev *ena_dev)
-+{
-+	struct ena_admin_feature_rss_flow_hash_control *hash_key =
-+		(ena_dev->rss).hash_key;
-+
-+	netdev_rss_key_fill(&hash_key->key, sizeof(hash_key->key));
-+	/* The key is stored in the device in u32 array
-+	 * as well as the API requires the key to be passed in this
-+	 * format. Thus the size of our array should be divided by 4
-+	 */
-+	hash_key->keys_num = sizeof(hash_key->key) / sizeof(u32);
-+}
-+
- static int ena_com_hash_key_allocate(struct ena_com_dev *ena_dev)
- {
- 	struct ena_rss *rss = &ena_dev->rss;
-@@ -2409,6 +2422,8 @@ int ena_com_rss_init(struct ena_com_dev *ena_dev, u16 indr_tbl_log_size)
- 	if (unlikely(rc))
- 		goto err_hash_key;
+ 	netif_carrier_off(netdev);
+-	netif_tx_disable(netdev);
+ 	if (vnic_dev_get_intr_mode(enic->vdev) == VNIC_DEV_INTR_MODE_MSIX)
+ 		for (i = 0; i < enic->wq_count; i++)
+ 			napi_disable(&enic->napi[enic_cq_wq(enic, i)]);
++	netif_tx_disable(netdev);
  
-+	ena_com_hash_key_fill_default_key(ena_dev);
-+
- 	rc = ena_com_hash_ctrl_init(ena_dev);
- 	if (unlikely(rc))
- 		goto err_hash_ctrl;
-diff --git a/drivers/net/ethernet/amazon/ena/ena_com.h b/drivers/net/ethernet/amazon/ena/ena_com.h
-index 7b784f8a06a66..90fce5c0ca48a 100644
---- a/drivers/net/ethernet/amazon/ena/ena_com.h
-+++ b/drivers/net/ethernet/amazon/ena/ena_com.h
-@@ -42,6 +42,7 @@
- #include <linux/spinlock.h>
- #include <linux/types.h>
- #include <linux/wait.h>
-+#include <linux/netdevice.h>
- 
- #include "ena_common_defs.h"
- #include "ena_admin_defs.h"
+ 	if (!enic_is_dynamic(enic) && !enic_is_sriov_vf(enic))
+ 		enic_dev_del_station_addr(enic);
 -- 
 2.20.1
 
