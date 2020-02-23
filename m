@@ -2,143 +2,155 @@ Return-Path: <SRS0=SnAt=4L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 999A1C35666
-	for <linux-kernel@archiver.kernel.org>; Sun, 23 Feb 2020 18:19:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C40F8C35671
+	for <linux-kernel@archiver.kernel.org>; Sun, 23 Feb 2020 18:24:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7466E206ED
-	for <linux-kernel@archiver.kernel.org>; Sun, 23 Feb 2020 18:19:41 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=resnulli-us.20150623.gappssmtp.com header.i=@resnulli-us.20150623.gappssmtp.com header.b="jSbgn2w7"
+	by mail.kernel.org (Postfix) with ESMTP id 9E22E20880
+	for <linux-kernel@archiver.kernel.org>; Sun, 23 Feb 2020 18:24:49 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727165AbgBWSTi (ORCPT
+        id S1727099AbgBWSYs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 23 Feb 2020 13:19:38 -0500
-Received: from mail-wr1-f68.google.com ([209.85.221.68]:38963 "EHLO
-        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726302AbgBWSTi (ORCPT
+        Sun, 23 Feb 2020 13:24:48 -0500
+Received: from bmailout1.hostsharing.net ([83.223.95.100]:46917 "EHLO
+        bmailout1.hostsharing.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726208AbgBWSYs (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 23 Feb 2020 13:19:38 -0500
-Received: by mail-wr1-f68.google.com with SMTP id y11so7732656wrt.6
-        for <linux-kernel@vger.kernel.org>; Sun, 23 Feb 2020 10:19:36 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=resnulli-us.20150623.gappssmtp.com; s=20150623;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=FqHsgNFlSSHhJTOWB1G7rDoiJVu5BMqVM2zZksRNNdQ=;
-        b=jSbgn2w7cVRMomeohFPnY+ivGDINUX5QQpgab5aHCquYazWZCfiXR6X9D2cF64pDA/
-         sTmoA5szkmDXbs8uW46tpiPZW0nMrgkRuh7XvGiYe27YXbA2S/cd1IlNu1oLEEHtvSvI
-         ken/DNbscknXxXjOuDISRVxkEBlSIgxXpk01uscWMjrhMBIBUkqaIYvfhKvxiuqX1Qah
-         6UjW+Vxg2VOgoUFv/syjEBKKGHGH1CgS7hHlZbZedxfj54I8Z6zsYwGqQDNBwseOH5Vs
-         /IfJGEd8T5PAMnFh/Hat/Z6ka8F/eLSGUW2MuGJC6ApE9oS8Jq4xtn1y+VIdsUW/6AnJ
-         7KTQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=FqHsgNFlSSHhJTOWB1G7rDoiJVu5BMqVM2zZksRNNdQ=;
-        b=c0bLl71xTEmibZ+1gB9DhmDK+GNYRdvj6KyW0g7/bBqNsDacVE/e1gegbQWQL7yWza
-         KwkH+rn8EV+3qNbpESeekCG7sSPPnFdvqBGN1enDw0gcboVVZ+6O51FVbWsdrl5kTxyp
-         qcqhW88RgxjLSMrjpaPublEc4C/XGDF3ajkPWQrcqC2WNIeusBdIPo3u1qUM9Jr5B9Gu
-         B99WxcmvhPt54bWiEsyIRd62y9WDOFFEgTThYNhoWgyx7jTnokLyVVWEe2coGzf3bvGy
-         2TNtrYXVmWw3WZVf/01COVPWRyc9bQE/zu/YIOkJFgNm5prwEuTgmtLtyc63FUgQsd07
-         dVNQ==
-X-Gm-Message-State: APjAAAU7eKV/HaWTkg1X4naLDS5aLQwvYz0x7CsLTrEIRH+u/EVRnfsn
-        faC8bIw3G/4J5+MTxHXIvheZaA==
-X-Google-Smtp-Source: APXvYqzlxbuPW7iVzw2Nc2Q1NWGhU2whm7YsebgkXGuNbziiMil+HIMpmUL5LowpYE+fXL0vkQuIBw==
-X-Received: by 2002:adf:e3cd:: with SMTP id k13mr37100249wrm.302.1582481975798;
-        Sun, 23 Feb 2020 10:19:35 -0800 (PST)
-Received: from localhost (ip-89-177-130-96.net.upcbroadband.cz. [89.177.130.96])
-        by smtp.gmail.com with ESMTPSA id b10sm11285443wmj.48.2020.02.23.10.19.35
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 23 Feb 2020 10:19:35 -0800 (PST)
-Date:   Sun, 23 Feb 2020 19:19:34 +0100
-From:   Jiri Pirko <jiri@resnulli.us>
-To:     Madhuparna Bhowmik <madhuparnabhowmik10@gmail.com>
-Cc:     jiri@mellanox.com, davem@davemloft.net, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org, joel@joelfernandes.org,
-        frextrite@gmail.com,
-        linux-kernel-mentees@lists.linuxfoundation.org, paulmck@kernel.org
-Subject: Re: [PATCH] net: core: devlink.c: Use built-in RCU list checking
-Message-ID: <20200223181934.GG2228@nanopsycho>
-References: <20200221165141.24630-1-madhuparnabhowmik10@gmail.com>
- <20200221172008.GA2181@nanopsycho>
- <20200223110342.GB2400@madhuparna-HP-Notebook>
+        Sun, 23 Feb 2020 13:24:48 -0500
+Received: from h08.hostsharing.net (h08.hostsharing.net [83.223.95.28])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (Client CN "*.hostsharing.net", Issuer "COMODO RSA Domain Validation Secure Server CA" (not verified))
+        by bmailout1.hostsharing.net (Postfix) with ESMTPS id DAA4930000E5D;
+        Sun, 23 Feb 2020 19:24:45 +0100 (CET)
+Received: by h08.hostsharing.net (Postfix, from userid 100393)
+        id AFAAA27E893; Sun, 23 Feb 2020 19:24:45 +0100 (CET)
+Date:   Sun, 23 Feb 2020 19:24:45 +0100
+From:   Lukas Wunner <lukas@wunner.de>
+To:     Stefan Wahren <stefan.wahren@i2se.com>
+Cc:     Marc Zyngier <maz@kernel.org>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Jason Cooper <jason@lakedaemon.net>,
+        Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
+        Ray Jui <rjui@broadcom.com>,
+        Scott Branden <sbranden@broadcom.com>,
+        bcm-kernel-feedback-list@broadcom.com,
+        linux-kernel@vger.kernel.org, linux-rpi-kernel@lists.infradead.org,
+        linux-arm-kernel@lists.infradead.org,
+        Serge Schneider <serge@raspberrypi.org>,
+        Kristina Brooks <notstina@gmail.com>,
+        Matthias Brugger <mbrugger@suse.com>,
+        Martin Sperl <kernel@martin.sperl.org>,
+        Phil Elwell <phil@raspberrypi.org>
+Subject: Re: [PATCH v2] irqchip/bcm2835: Quiesce IRQs left enabled by
+ bootloader
+Message-ID: <20200223182445.n44wgrourk4cpfoq@wunner.de>
+References: <20200212123651.apio6kno2cqhcskb@wunner.de>
+ <61cc6b74-3dd2-38d0-6da0-eb3fbd87c598@i2se.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200223110342.GB2400@madhuparna-HP-Notebook>
+In-Reply-To: <61cc6b74-3dd2-38d0-6da0-eb3fbd87c598@i2se.com>
+User-Agent: NeoMutt/20170113 (1.7.2)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Sun, Feb 23, 2020 at 12:03:42PM CET, madhuparnabhowmik10@gmail.com wrote:
->On Fri, Feb 21, 2020 at 06:20:08PM +0100, Jiri Pirko wrote:
->> Fri, Feb 21, 2020 at 05:51:41PM CET, madhuparnabhowmik10@gmail.com wrote:
->> >From: Madhuparna Bhowmik <madhuparnabhowmik10@gmail.com>
->> >
->> >list_for_each_entry_rcu() has built-in RCU and lock checking.
->> >
->> >Pass cond argument to list_for_each_entry_rcu() to silence
->> >false lockdep warning when CONFIG_PROVE_RCU_LIST is enabled
->> >by default.
->> >
->> >Signed-off-by: Madhuparna Bhowmik <madhuparnabhowmik10@gmail.com>
->> 
->> Reviewed-by: Jiri Pirko <jiri@mellanox.com>
->> 
->> Thanks.
->> 
->> However, there is a callpath where not devlink lock neither rcu read is
->> taken:
->> devlink_dpipe_table_register()->devlink_dpipe_table_find()
->> I guess that was not the trace you were seeing, right?
->> 
->> 
->> >---
->> > net/core/devlink.c | 3 ++-
->> > 1 file changed, 2 insertions(+), 1 deletion(-)
->> >
->> >diff --git a/net/core/devlink.c b/net/core/devlink.c
->> >index 4c63c9a4c09e..3e8c94155d93 100644
->> >--- a/net/core/devlink.c
->> >+++ b/net/core/devlink.c
->> >@@ -2107,7 +2107,8 @@ devlink_dpipe_table_find(struct list_head *dpipe_tables,
->> > {
->> > 	struct devlink_dpipe_table *table;
->> > 
->> >-	list_for_each_entry_rcu(table, dpipe_tables, list) {
->> >+	list_for_each_entry_rcu(table, dpipe_tables, list,
->> >+				lockdep_is_held(&devlink->lock)) {
->
->Hi Jiri,
->
->I just noticed that this patch does not compile because devlink is
->not passed as an argument to devlink_dpipe_table_find() and it is not
->even global. I am not sure why I didn't encounter this error before
->sending the patch. Anyway, I am sorry about this.
->But it seems to be the right lock that should be held and checked for
->in devlink_dpipe_table_find(). 
->So will it be okay to pass devlink to devlink_dpipe_table_find()?
+On Sun, Feb 23, 2020 at 06:59:56PM +0100, Stefan Wahren wrote:
+> thanks for all the investigation. Unfortunately the patch below doesn't
+> compile, since it lacks the definiton of REG_FIQ_ENABLE.
 
-Sure.
+Ugh, I recall fixing that when compile-testing.  I must have forgotten
+to invoke "git commit --amend" before "git format-patch".
 
->Anyway devlink_dpipe_table_find() is only called from functions
->within devlink.c.
->
->Let me know what you think about this.
->Thank you,
->Madhuparna
->
->
->> > 		if (!strcmp(table->name, table_name))
->> > 			return table;
->> > 	}
->> >-- 
->> >2.17.1
->> >
+> Btw the name is a little bit unlucky because it defines a single flag
+> within REG_FIQ_CONTROL instead of a separate register.
+
+The Foundation's repo uses that name so I stuck by it to reduce the
+number of merge conflicts Phil will have to resolve.  Happy to change
+though, suggestions welcome.
+
+Thanks!
+
+Lukas
+
+> >
+> > -- >8 --
+> > From: Lukas Wunner <lukas@wunner.de>
+> > Subject: [PATCH] irqchip/bcm2835: Quiesce IRQs left enabled by bootloader
+> >
+> > Per the spec, the BCM2835's IRQs are all disabled when coming out of
+> > power-on reset.  Its IRQ driver assumes that's still the case when the
+> > kernel boots and does not perform any initialization of the registers.
+> > However the Raspberry Pi Foundation's bootloader leaves the USB
+> > interrupt enabled when handing over control to the kernel.
+> >
+> > Quiesce IRQs and the FIQ if they were left enabled and log a message to
+> > let users know that they should update the bootloader once a fixed
+> > version is released.
+> >
+> > If the USB interrupt is not quiesced and the USB driver later on claims
+> > the FIQ (as it does on the Raspberry Pi Foundation's downstream kernel),
+> > interrupt latency for all other peripherals increases and occasional
+> > lockups occur.  That's because both the FIQ and the normal USB interrupt
+> > fire simultaneously.
+> >
+> > On a multicore Raspberry Pi, if normal interrupts are routed to CPU 0
+> > and the FIQ to CPU 1 (hardcoded in the Foundation's kernel), then a USB
+> > interrupt causes CPU 0 to spin in bcm2836_chained_handle_irq() until the
+> > FIQ on CPU 1 has cleared it.  Other peripherals' interrupts are starved
+> > as long.  I've seen CPU 0 blocked for up to 2.9 msec.  eMMC throughput
+> > on a Compute Module 3 irregularly dips to 23.0 MB/s without this commit
+> > but remains relatively constant at 23.5 MB/s with this commit.
+> >
+> > The lockups occur when CPU 0 receives a USB interrupt while holding a
+> > lock which CPU 1 is trying to acquire while the FIQ is temporarily
+> > disabled on CPU 1.  At best users get RCU CPU stall warnings, but most
+> > of the time the system just freezes.
+> >
+> > Fixes: 89214f009c1d ("ARM: bcm2835: add interrupt controller driver")
+> > Signed-off-by: Lukas Wunner <lukas@wunner.de>
+> > Reviewed-by: Florian Fainelli <f.fainelli@gmail.com>
+> > Cc: stable@vger.kernel.org # v3.7+
+> > Cc: Serge Schneider <serge@raspberrypi.org>
+> > Cc: Kristina Brooks <notstina@gmail.com>
+> > ---
+> >  drivers/irqchip/irq-bcm2835.c | 14 ++++++++++++++
+> >  1 file changed, 14 insertions(+)
+> >
+> > diff --git a/drivers/irqchip/irq-bcm2835.c b/drivers/irqchip/irq-bcm2835.c
+> > index 418245d..eca9ac7 100644
+> > --- a/drivers/irqchip/irq-bcm2835.c
+> > +++ b/drivers/irqchip/irq-bcm2835.c
+> > @@ -135,6 +135,7 @@ static int __init armctrl_of_init(struct device_node *node,
+> >  {
+> >  	void __iomem *base;
+> >  	int irq, b, i;
+> > +	u32 reg;
+> >  
+> >  	base = of_iomap(node, 0);
+> >  	if (!base)
+> > @@ -157,6 +158,19 @@ static int __init armctrl_of_init(struct device_node *node,
+> >  				handle_level_irq);
+> >  			irq_set_probe(irq);
+> >  		}
+> > +
+> > +		reg = readl_relaxed(intc.enable[b]);
+> > +		if (reg) {
+> > +			writel_relaxed(reg, intc.disable[b]);
+> > +			pr_err(FW_BUG "Bootloader left irq enabled: "
+> > +			       "bank %d irq %*pbl\n", b, IRQS_PER_BANK, &reg);
+> > +		}
+> > +	}
+> > +
+> > +	reg = readl_relaxed(base + REG_FIQ_CONTROL);
+> > +	if (reg & REG_FIQ_ENABLE) {
+> > +		writel_relaxed(0, base + REG_FIQ_CONTROL);
+> > +		pr_err(FW_BUG "Bootloader left fiq enabled\n");
+> >  	}
+> >  
+> >  	if (is_2836) {
