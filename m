@@ -2,140 +2,163 @@ Return-Path: <SRS0=SnAt=4L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9C09FC35671
-	for <linux-kernel@archiver.kernel.org>; Sun, 23 Feb 2020 11:49:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 73745C35673
+	for <linux-kernel@archiver.kernel.org>; Sun, 23 Feb 2020 11:56:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4FA28206ED
-	for <linux-kernel@archiver.kernel.org>; Sun, 23 Feb 2020 11:49:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 419F120658
+	for <linux-kernel@archiver.kernel.org>; Sun, 23 Feb 2020 11:56:23 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=arista.com header.i=@arista.com header.b="cjFMGUPW"
+	dkim=pass (1024-bit key) header.d=amdcloud.onmicrosoft.com header.i=@amdcloud.onmicrosoft.com header.b="Jw+XAsHD"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727240AbgBWLtn (ORCPT
+        id S1727191AbgBWL4T (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 23 Feb 2020 06:49:43 -0500
-Received: from mail-ed1-f67.google.com ([209.85.208.67]:33922 "EHLO
-        mail-ed1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725980AbgBWLtm (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 23 Feb 2020 06:49:42 -0500
-Received: by mail-ed1-f67.google.com with SMTP id r18so8413115edl.1
-        for <linux-kernel@vger.kernel.org>; Sun, 23 Feb 2020 03:49:41 -0800 (PST)
+        Sun, 23 Feb 2020 06:56:19 -0500
+Received: from mail-dm6nam11on2046.outbound.protection.outlook.com ([40.107.223.46]:35502
+        "EHLO NAM11-DM6-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725980AbgBWL4T (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 23 Feb 2020 06:56:19 -0500
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=WdTBoHc5BpSlzkdJtICXy3kSqjlPWNqKHW3UshT8Tr4EVP4BPoP480iM08o04cwfi3v1poeK+h/MatccJyzt77pshi0F8DGRELEhx99HQH2ejkN/z8doXuOstuvBDvPepBNGIudC5YFN9rUHF+3W7Aj3zqDcM4YgIlsuqDfTBvKPIauWWFw/VMvQY2wNNE7K04PAwSJWNcUDirb3i4KjhiGOstwkSEWpM1p/DOnNEZONyR6za9UDYBXHIBgGdh5ez3sv3HVdBO2YAcndbX/rDeHywKPGynhsq0HnOpee/LDLEs0RBBSI7hH2pUMHq4XpdOfNtPdui0OrEeIIlKd8Bw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=U8GHXFzEsa3qLyrNQV+MbsMsbDND+2yLW1H5RTJzVvE=;
+ b=AgzCn6MJ27syW/bo3vOeU+vsSsQRYbGAEDqsvEi2mwZDfA1e0C7S392zwnAe+72xnrAZH8NJHX9zGmumVBIRqAq7/X+0D63oD9ODIi/GvsbB3r/DjPfqr7yLjDAHdjzSXU+5jg1mVbuNN4B0W3cYLb3F0laebJd7ClsX1En6rtt0AM7yToPYxw5Z3EO6HKgIMifYnpfCIJT0hK8GE1Ia/HPkOrF2JqNfliv7KvmS5WHbMVwytE2CGkqwhmj0NsOU2puOHpbsHvAClS//zW8yt4N15RhhI7GpMIcrwKeAdNfBWUkO+eJ7KBy5gPzjRg23FV0X3y+Tup0YEY2XOdH3AQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
+ header.d=amd.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=arista.com; s=googlenew;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=HhQ3dLxQEyfhwpgG/2V7Ytlqomn7vI0cGazzgEuSPP4=;
-        b=cjFMGUPWHpL5PPkyHsnZZp8nPNIIf6PV3J2w0KK0MP8ALMJLpyl2VwGYFZzmHmztFe
-         2rMcbumUsJbphS9ZhoIAkKb3Qv1UfvDckpnHs2oS5H4ws5g6UhTiwzbL4nWGeVB5ztw3
-         5Z6EaA9/t7KL4QwJ30yOz3TYyRir3LvW/U6bZNJE39tvtoR4g5kravOCeHhn4XwZzXmI
-         XQHo+WbDK8Y+J9msu2AxjLCqypo5Jp+eccQaya6ruf0qBO1ndZxuR2iJzl9qnQ96Bw/H
-         XpVP/tMnnKMQpQcWYv7IKJqF8TylPJtutxGvJ0zoI7O5RXNvU7UGZ4f9jtdfUtU2pjov
-         dx1w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=HhQ3dLxQEyfhwpgG/2V7Ytlqomn7vI0cGazzgEuSPP4=;
-        b=CohmY9OmBzQHgu6mdwqJHJG2B5aeEKTC60WIINU2lRo4M9vAonh54slkxPuMj+Hr4M
-         babR+30pvvUpkvPQ3VMZgPkTUugJ4cfqJRR5DAFit+iCTzHxtD33voiWg8t2eYpyLDLw
-         NzfM2OC4WVFFchwg6PwVs1YJf7//jz3eZEDPz3oNwCBpnubkIWxk4x9GjXQk6cYSExig
-         dZTwQ0UBCxSo7JP9c95wvSsdNYA/gb6gxBA1n0nZrZY4gm39KC8s2Rs+E+FdWXGIsiEu
-         OO6CDHFXyWjBTHnnLaxbEE1Ymw6ctEsvMr72OfjFKifz/W4+VWr+oUNofGtZ7egR7Hyf
-         xNUw==
-X-Gm-Message-State: APjAAAXJEGnkjR5qlJXv43N1ZTcPrwVUUIfLcp8YehXwbJ4AQBT/4qnn
-        Hk9qEyDmyue9k9rP8nOnRdZgNsvnRvc=
-X-Google-Smtp-Source: APXvYqwzGpMCywapv/KxwqGPT90G4Og93tXFNsN7NA8LY36Ur3LZd8RUwnMTrBLigSli5ExMbM2z9g==
-X-Received: by 2002:a05:6402:1044:: with SMTP id e4mr41838931edu.233.1582458581021;
-        Sun, 23 Feb 2020 03:49:41 -0800 (PST)
-Received: from localhost.localdomain ([2a02:8084:e84:2480:228:f8ff:fe6f:83a8])
-        by smtp.gmail.com with ESMTPSA id i31sm786194edi.42.2020.02.23.03.49.39
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 23 Feb 2020 03:49:40 -0800 (PST)
-From:   Dmitry Safonov <dima@arista.com>
-To:     linux-kernel@vger.kernel.org
-Cc:     Dmitry Safonov <0x7f454c46@gmail.com>,
-        Dmitry Safonov <dima@arista.com>,
-        Guenter Roeck <linux@roeck-us.net>,
-        Wim Van Sebroeck <wim@linux-watchdog.org>,
-        linux-watchdog@vger.kernel.org
-Subject: [PATCHv3] watchdog: Add stop_on_reboot parameter to control reboot policy
-Date:   Sun, 23 Feb 2020 11:49:39 +0000
-Message-Id: <20200223114939.194754-1-dima@arista.com>
-X-Mailer: git-send-email 2.25.0
+ d=amdcloud.onmicrosoft.com; s=selector2-amdcloud-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=U8GHXFzEsa3qLyrNQV+MbsMsbDND+2yLW1H5RTJzVvE=;
+ b=Jw+XAsHDWZozD1jAqp/kTm6Q1YBEQgwxvbgsFCU941pbC5e5v8K4+0YfqR1WPj9If4wC1mYI3aH2Nxld5/MIzCZEn4HtrYs0TMVHoXYyzLTSeQIP/Y7/LiKZw2Fov9zONKGUl9zThV31qHWh9zjDK5QpdAAIir9TnfVjqszGYso=
+Received: from SN6PR12MB2800.namprd12.prod.outlook.com (2603:10b6:805:6c::10)
+ by SN6PR12MB2701.namprd12.prod.outlook.com (2603:10b6:805:6f::30) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2729.24; Sun, 23 Feb
+ 2020 11:56:15 +0000
+Received: from SN6PR12MB2800.namprd12.prod.outlook.com
+ ([fe80::b99c:18c0:8685:1c10]) by SN6PR12MB2800.namprd12.prod.outlook.com
+ ([fe80::b99c:18c0:8685:1c10%5]) with mapi id 15.20.2729.033; Sun, 23 Feb 2020
+ 11:56:15 +0000
+From:   "Pan, Xinhui" <Xinhui.Pan@amd.com>
+To:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linaro-mm-sig@lists.linaro.org" <linaro-mm-sig@lists.linaro.org>,
+        "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
+        "linux-media@vger.kernel.org" <linux-media@vger.kernel.org>
+CC:     "sumit.semwal@linaro.org" <sumit.semwal@linaro.org>,
+        "daniel.vetter@ffwll.ch" <daniel.vetter@ffwll.ch>,
+        "Koenig, Christian" <Christian.Koenig@amd.com>
+Subject: [PATCH] dma-buf: Fix missing excl fence waiting
+Thread-Topic: [PATCH] dma-buf: Fix missing excl fence waiting
+Thread-Index: AQHV6kBADZ+jdaLUr0CyJYyj5pb2Hg==
+Date:   Sun, 23 Feb 2020 11:56:15 +0000
+Message-ID: <B737F1D5-292E-4FE2-89A5-6EF72CB3EED1@amd.com>
+Accept-Language: zh-CN, en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=Xinhui.Pan@amd.com; 
+x-originating-ip: [101.88.215.164]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-ht: Tenant
+x-ms-office365-filtering-correlation-id: 891c2a85-e7f8-47e6-4fa0-08d7b85762c2
+x-ms-traffictypediagnostic: SN6PR12MB2701:|SN6PR12MB2701:
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <SN6PR12MB27010B4283E16F5A877BE5D687EF0@SN6PR12MB2701.namprd12.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:2958;
+x-forefront-prvs: 0322B4EDE1
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(366004)(396003)(136003)(346002)(376002)(39850400004)(189003)(199004)(2906002)(4326008)(6512007)(81166006)(54906003)(86362001)(26005)(6506007)(6486002)(91956017)(71200400001)(66946007)(316002)(76116006)(8936002)(33656002)(186003)(110136005)(5660300002)(66476007)(81156014)(66556008)(8676002)(2616005)(66446008)(478600001)(36756003)(64756008);DIR:OUT;SFP:1101;SCL:1;SRVR:SN6PR12MB2701;H:SN6PR12MB2800.namprd12.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+received-spf: None (protection.outlook.com: amd.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: XGCyTEwFzn8MMty6NUKgV87kAg6L2KfnGs4XUmzu/SGsr/z1LmLYTIVAUH7qLZkAHCqPACnHke47QO91EPuYqy61QOps6ztHZsy3il7xzoidfyz4eUENzI7eip73nHD+3YUlJFMkfPP/w3W5Mdjs91QOCPHZRRZ0jyJ3xvbjcEq+AhvpeahwneC/WDX3OcUkDALDkPAflVL+GXQt3DZccTf8ev14TvHUyFStvJsUuEO5mGUrZ+hNP3+BCnUdg/ugss4PV7iESolQonq5+P5AnsQ5z6l7HKRXb/qMvHXOUiefdxWUj/1cm5UKXMg31g8NSSt+nKUL8L3eS2dpTtakOWmBYHBFYYFjztpkYrnhIlKjQ/j7kFfEB/aDvJ+Lgkp0dGMF4Ah9UDF/c8/Vrsoctz3UfJuveGen5FVbO56If+V0NNzxXxSMtyYvHJL20LiV
+x-ms-exchange-antispam-messagedata: VPZ8/5zawckNMnkqmXwfl/Ypz86d9s8jV9jgWJjeAPcCL9+x2NizbaOQASMHw6P6h//QaXMAEi/APpy6qCFCnyv/Cl8mZgdJDhIsSA9VKs7q1aea2KYluUyqOqzABxFdCRe9APH28/SJEzQmHJBkQg==
+Content-Type: text/plain; charset="us-ascii"
+Content-ID: <2673CC912478F547BA3CE5D28290070F@namprd12.prod.outlook.com>
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 891c2a85-e7f8-47e6-4fa0-08d7b85762c2
+X-MS-Exchange-CrossTenant-originalarrivaltime: 23 Feb 2020 11:56:15.2293
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: HzaejKnVZPiMXNYp+OkcZz5QxdBfhzf1kKf89KQr8ANZUm7DQzAcoZRwTWoC455c
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SN6PR12MB2701
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Many watchdog drivers use watchdog_stop_on_reboot() helper in order
-to stop the watchdog on system reboot. Unfortunately, this logic is
-coded in driver's probe function and doesn't allows user to decide what
-to do during shutdown/reboot.
+If shared fence list is not empty, even we want to test all fences, excl fe=
+nce is ignored.
+That is abviously wrong, so fix it.
 
-On the other side, Xen and Qemu watchdog drivers (xen_wdt and i6300esb)
-may be configured to either send NMI or turn off/reboot VM as
-the watchdog action. As the kernel may stuck at any state, sending NMIs
-can't reliably reboot the VM.
-
-At Arista, we benefited from the following set-up: the emulated watchdogs
-trigger VM reset and softdog is set to catch less severe conditions to
-generate vmcore. Just before reboot watchdog's timeout is increased
-to some good-enough value (3 mins). That keeps watchdog always running
-and guarantees that VM doesn't stuck.
-
-Provide new stop_on_reboot module parameter to let user control
-watchdog's reboot policy.
-
-Cc: Guenter Roeck <linux@roeck-us.net>
-Cc: Wim Van Sebroeck <wim@linux-watchdog.org>
-Cc: linux-watchdog@vger.kernel.org
-Signed-off-by: Dmitry Safonov <dima@arista.com>
+Signed-off-by: xinhui pan <xinhui.pan@amd.com>
 ---
-Changes:
-v3: Make module parameter read-only in runtime (Thanks Guenter for
-    spotting the typo!)
-v2: Add module parameter instead of ioctl()
+ drivers/dma-buf/dma-resv.c | 9 +++++----
+ 1 file changed, 5 insertions(+), 4 deletions(-)
 
- drivers/watchdog/watchdog_core.c | 12 ++++++++++++
- 1 file changed, 12 insertions(+)
-
-diff --git a/drivers/watchdog/watchdog_core.c b/drivers/watchdog/watchdog_core.c
-index 861daf4f37b2..423844757812 100644
---- a/drivers/watchdog/watchdog_core.c
-+++ b/drivers/watchdog/watchdog_core.c
-@@ -39,6 +39,10 @@
- 
- static DEFINE_IDA(watchdog_ida);
- 
-+static int stop_on_reboot = -1;
-+module_param(stop_on_reboot, int, 0444);
-+MODULE_PARM_DESC(stop_on_reboot, "Stop watchdogs on reboot (0=keep watching, 1=stop)");
-+
- /*
-  * Deferred Registration infrastructure.
-  *
-@@ -254,6 +258,14 @@ static int __watchdog_register_device(struct watchdog_device *wdd)
+diff --git a/drivers/dma-buf/dma-resv.c b/drivers/dma-buf/dma-resv.c
+index 4264e64788c4..44dc64c547c6 100644
+--- a/drivers/dma-buf/dma-resv.c
++++ b/drivers/dma-buf/dma-resv.c
+@@ -632,14 +632,14 @@ static inline int dma_resv_test_signaled_single(struc=
+t dma_fence *passed_fence)
+  */
+ bool dma_resv_test_signaled_rcu(struct dma_resv *obj, bool test_all)
+ {
+-	unsigned seq, shared_count;
++	unsigned int seq, shared_count, left;
+ 	int ret;
+=20
+ 	rcu_read_lock();
+ retry:
+ 	ret =3D true;
+ 	shared_count =3D 0;
+-	seq =3D read_seqcount_begin(&obj->seq);
++	left =3D seq =3D read_seqcount_begin(&obj->seq);
+=20
+ 	if (test_all) {
+ 		unsigned i;
+@@ -647,7 +647,7 @@ bool dma_resv_test_signaled_rcu(struct dma_resv *obj, b=
+ool test_all)
+ 		struct dma_resv_list *fobj =3D rcu_dereference(obj->fence);
+=20
+ 		if (fobj)
+-			shared_count =3D fobj->shared_count;
++			left =3D shared_count =3D fobj->shared_count;
+=20
+ 		for (i =3D 0; i < shared_count; ++i) {
+ 			struct dma_fence *fence =3D rcu_dereference(fobj->shared[i]);
+@@ -657,13 +657,14 @@ bool dma_resv_test_signaled_rcu(struct dma_resv *obj,=
+ bool test_all)
+ 				goto retry;
+ 			else if (!ret)
+ 				break;
++			left--;
  		}
+=20
+ 		if (read_seqcount_retry(&obj->seq, seq))
+ 			goto retry;
  	}
- 
-+	/* Module parameter to force watchdog policy on reboot. */
-+	if (stop_on_reboot != -1) {
-+		if (stop_on_reboot)
-+			set_bit(WDOG_STOP_ON_REBOOT, &wdd->status);
-+		else
-+			clear_bit(WDOG_STOP_ON_REBOOT, &wdd->status);
-+	}
-+
- 	if (test_bit(WDOG_STOP_ON_REBOOT, &wdd->status)) {
- 		wdd->reboot_nb.notifier_call = watchdog_reboot_notifier;
- 
--- 
-2.25.0
+=20
+-	if (!shared_count) {
++	if (!left) {
+ 		struct dma_fence *fence_excl =3D rcu_dereference(obj->fence_excl);
+=20
+ 		if (fence_excl) {
+--=20
+2.21.0 (Apple Git-122)
+
 
