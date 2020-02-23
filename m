@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 75B36C35669
-	for <linux-kernel@archiver.kernel.org>; Sun, 23 Feb 2020 02:30:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A3B31C35669
+	for <linux-kernel@archiver.kernel.org>; Sun, 23 Feb 2020 02:30:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3C65420707
-	for <linux-kernel@archiver.kernel.org>; Sun, 23 Feb 2020 02:30:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7A9E421741
+	for <linux-kernel@archiver.kernel.org>; Sun, 23 Feb 2020 02:30:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582425002;
-	bh=9O5ymUWpNt3jhqdPiucuIYgwSShPohd5ByDTUrD1C6E=;
+	s=default; t=1582425004;
+	bh=XScb1HpWRssczpAA1YStAmkjyi8I91uCzovYRdXowjM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=RlqSS/UEJ4rgP0Ymzc+yEx0sycGetbjWdvCMBY/Fd3V5AfapWyVyXaZ82YzVVCYDC
-	 dy/lFgU8AEai4C/3qKiL5nZSE2xQqvVr1vz9A63bRz+6c3M0czd//8aiyLLHY6u8/n
-	 zwjKTitxEm/fWIF7at128S7JXsjnOS7Ow92TgOTs=
+	b=GBLvlh34qasopSGKVhK6ECJFepkOUejosvS8e6yxBfTMgTx1M+sEsSDCLHO1T5cPa
+	 PHnbMzI9W2A6ShK60SItNbbv8pEYV8af9qrLZRPx3nuNmm9JUqyXBksIO9wzam/84n
+	 t8XWqa/P3De4gC2QquboLjT4+C9QYVD/l3YA/0ZQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728881AbgBWCXz (ORCPT
+        id S1728860AbgBWCXx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 22 Feb 2020 21:23:55 -0500
-Received: from mail.kernel.org ([198.145.29.99]:53496 "EHLO mail.kernel.org"
+        Sat, 22 Feb 2020 21:23:53 -0500
+Received: from mail.kernel.org ([198.145.29.99]:53442 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728801AbgBWCXs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 22 Feb 2020 21:23:48 -0500
+        id S1728793AbgBWCXr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 22 Feb 2020 21:23:47 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id AE15024653;
-        Sun, 23 Feb 2020 02:23:46 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8ED7122464;
+        Sun, 23 Feb 2020 02:23:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1582424627;
-        bh=9O5ymUWpNt3jhqdPiucuIYgwSShPohd5ByDTUrD1C6E=;
+        s=default; t=1582424626;
+        bh=XScb1HpWRssczpAA1YStAmkjyi8I91uCzovYRdXowjM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=fRfD09iVE4FDJSglQdY+vMOm6JoEmE8kG1xvAZWC5wFdnwb/leD8uLqej6CW8dbim
-         lAxGcHCc25mVaWuaHZCCPjB9+dVznITsiZNyrgglT4afcmjlHQGTOcgJh4PMbMrk2f
-         PdxEQLHtcrdDZ4zxbu9kj27xpLX9E1yyjerwBbeg=
+        b=ulKE9AKAoGAsKJnSiI+jfqNyOmOAKKzXf5NEeC6blFC9pZWu20OxH+qARmrK3XZM7
+         74QI1qREq7OnImybnwdNL1jdEscvuAbWK4vVObeLAt5cLbsPsGTKAO/JT+YKCWqZXw
+         u1tSb/0KT1ziLUp4bcvyGHoEkLszHWJWvADPuDDM=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Sergey Matyukevich <sergey.matyukevich.os@quantenna.com>,
-        Johannes Berg <johannes.berg@intel.com>,
+Cc:     Johannes Berg <johannes.berg@intel.com>,
+        Luca Coelho <luciano.coelho@intel.com>,
         Sasha Levin <sashal@kernel.org>,
         linux-wireless@vger.kernel.org, netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 06/25] cfg80211: check wiphy driver existence for drvinfo report
-Date:   Sat, 22 Feb 2020 21:23:20 -0500
-Message-Id: <20200223022339.1885-6-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.19 05/25] mac80211: consider more elements in parsing CRC
+Date:   Sat, 22 Feb 2020 21:23:19 -0500
+Message-Id: <20200223022339.1885-5-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200223022339.1885-1-sashal@kernel.org>
 References: <20200223022339.1885-1-sashal@kernel.org>
@@ -60,42 +60,66 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Sergey Matyukevich <sergey.matyukevich.os@quantenna.com>
+From: Johannes Berg <johannes.berg@intel.com>
 
-[ Upstream commit bfb7bac3a8f47100ebe7961bd14e924c96e21ca7 ]
+[ Upstream commit a04564c99bb4a92f805a58e56b2d22cc4978f152 ]
 
-When preparing ethtool drvinfo, check if wiphy driver is defined
-before dereferencing it. Driver may not exist, e.g. if wiphy is
-attached to a virtual platform device.
+We only use the parsing CRC for checking if a beacon changed,
+and elements with an ID > 63 cannot be represented in the
+filter. Thus, like we did before with WMM and Cisco vendor
+elements, just statically add these forgotten items to the
+CRC:
+ - WLAN_EID_VHT_OPERATION
+ - WLAN_EID_OPMODE_NOTIF
 
-Signed-off-by: Sergey Matyukevich <sergey.matyukevich.os@quantenna.com>
-Link: https://lore.kernel.org/r/20200203105644.28875-1-sergey.matyukevich.os@quantenna.com
+I guess that in most cases when VHT/HE operation change, the HT
+operation also changed, and so the change was picked up, but we
+did notice that pure operating mode notification changes were
+ignored.
+
+Signed-off-by: Johannes Berg <johannes.berg@intel.com>
+Signed-off-by: Luca Coelho <luciano.coelho@intel.com>
+Link: https://lore.kernel.org/r/20200131111300.891737-22-luca@coelho.fi
+[restrict to VHT for the mac80211 branch]
 Signed-off-by: Johannes Berg <johannes.berg@intel.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- net/wireless/ethtool.c | 8 ++++++--
- 1 file changed, 6 insertions(+), 2 deletions(-)
+ net/mac80211/util.c | 18 ++++++++++++------
+ 1 file changed, 12 insertions(+), 6 deletions(-)
 
-diff --git a/net/wireless/ethtool.c b/net/wireless/ethtool.c
-index a9c0f368db5d2..24e18405cdb48 100644
---- a/net/wireless/ethtool.c
-+++ b/net/wireless/ethtool.c
-@@ -7,9 +7,13 @@
- void cfg80211_get_drvinfo(struct net_device *dev, struct ethtool_drvinfo *info)
- {
- 	struct wireless_dev *wdev = dev->ieee80211_ptr;
-+	struct device *pdev = wiphy_dev(wdev->wiphy);
- 
--	strlcpy(info->driver, wiphy_dev(wdev->wiphy)->driver->name,
--		sizeof(info->driver));
-+	if (pdev->driver)
-+		strlcpy(info->driver, pdev->driver->name,
-+			sizeof(info->driver));
-+	else
-+		strlcpy(info->driver, "N/A", sizeof(info->driver));
- 
- 	strlcpy(info->version, init_utsname()->release, sizeof(info->version));
- 
+diff --git a/net/mac80211/util.c b/net/mac80211/util.c
+index f101a6460b44b..7fa9871b1db9f 100644
+--- a/net/mac80211/util.c
++++ b/net/mac80211/util.c
+@@ -945,16 +945,22 @@ u32 ieee802_11_parse_elems_crc(const u8 *start, size_t len, bool action,
+ 				elem_parse_failed = true;
+ 			break;
+ 		case WLAN_EID_VHT_OPERATION:
+-			if (elen >= sizeof(struct ieee80211_vht_operation))
++			if (elen >= sizeof(struct ieee80211_vht_operation)) {
+ 				elems->vht_operation = (void *)pos;
+-			else
+-				elem_parse_failed = true;
++				if (calc_crc)
++					crc = crc32_be(crc, pos - 2, elen + 2);
++				break;
++			}
++			elem_parse_failed = true;
+ 			break;
+ 		case WLAN_EID_OPMODE_NOTIF:
+-			if (elen > 0)
++			if (elen > 0) {
+ 				elems->opmode_notif = pos;
+-			else
+-				elem_parse_failed = true;
++				if (calc_crc)
++					crc = crc32_be(crc, pos - 2, elen + 2);
++				break;
++			}
++			elem_parse_failed = true;
+ 			break;
+ 		case WLAN_EID_MESH_ID:
+ 			elems->mesh_id = pos;
 -- 
 2.20.1
 
