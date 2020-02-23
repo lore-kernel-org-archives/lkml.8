@@ -7,54 +7,52 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2472BC35669
-	for <linux-kernel@archiver.kernel.org>; Sun, 23 Feb 2020 02:21:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 99F55C35669
+	for <linux-kernel@archiver.kernel.org>; Sun, 23 Feb 2020 02:21:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E41C02067D
-	for <linux-kernel@archiver.kernel.org>; Sun, 23 Feb 2020 02:21:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 72CFB20702
+	for <linux-kernel@archiver.kernel.org>; Sun, 23 Feb 2020 02:21:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582424501;
-	bh=OfcuyefYI3hSHKkMabhA0vDxDytTX9d3JOM+9rGO+fw=;
+	s=default; t=1582424503;
+	bh=wW3mnCktbCYmM3gZdL9hrOX6Kz4wm/IgY/aenYoR6z4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=0lIHalAstD3eU0OQZrjzuTKzrGK7VxHEpUDvMOEnnSWpf98WOhlJQj02ePLIY1vfW
-	 FDUzBoCu1YPVvm5vtKj4k0d8sdUohEtq6o1d0PQ8tlepFBnc6mid39trUJJD6uCaM4
-	 IoSiZfBnlKB37hU0KlVErm77PA4CpiBaPCsTiZik=
+	b=YDFOC1OUum//Q/37XSOwuXH/wclgbGLX8d0nVN1vJmhxgjpVYMVuL+gpSmvXMSt4I
+	 EEsRfTXCS1bNncyyIhc2W85t0jPw6jzEMekGpmj8JGfhGGmZ4AiE1cm56nyoN095bu
+	 mFiB29GzPARdp32DR6XAaImMVqvDCtCtk1XiuvEs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727592AbgBWCVk (ORCPT
+        id S1727648AbgBWCVm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 22 Feb 2020 21:21:40 -0500
-Received: from mail.kernel.org ([198.145.29.99]:49970 "EHLO mail.kernel.org"
+        Sat, 22 Feb 2020 21:21:42 -0500
+Received: from mail.kernel.org ([198.145.29.99]:50022 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727364AbgBWCVe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 22 Feb 2020 21:21:34 -0500
+        id S1727463AbgBWCVg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 22 Feb 2020 21:21:36 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id BF64720707;
-        Sun, 23 Feb 2020 02:21:32 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7231D206D7;
+        Sun, 23 Feb 2020 02:21:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1582424493;
-        bh=OfcuyefYI3hSHKkMabhA0vDxDytTX9d3JOM+9rGO+fw=;
+        s=default; t=1582424496;
+        bh=wW3mnCktbCYmM3gZdL9hrOX6Kz4wm/IgY/aenYoR6z4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=uyF8qFjtzFLk/jbalLPUsbZZ0MDDNvMz1Q3iZFv4bnEDl7mqIhpoIrIEenw23h6NE
-         cv6z8EmwhWebuhIZ8LK4/N8yfT8tFQaw+8xDWe+xAL/yvv0vb4HofRuRMzQywibr5Z
-         MZs21bFunWZnMwvkKIVntVU7z6nEde0TQbteTpPY=
+        b=WQBAbsWzvtMRjXQbTgdX4fDc5GPRQQFng1WapaT/Wvc6IaJjmeg/rkqLkB0igxBNa
+         O9Lzu1VeOL26H2/7WP7JwmwtS/dcZFYoOCsD3VcFCsI8M0RP7n4ZUFd0O6bnEAT8Wc
+         eaRMPCEebJsvL4MXokF3uMLB5bsVFcZPFo2fy9oI=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     =?UTF-8?q?Bj=C3=B8rn=20Mork?= <bjorn@mork.no>,
-        Lars Melin <larsm17@gmail.com>,
-        Aleksander Morgado <aleksander@aleksander.es>,
-        "David S . Miller" <davem@davemloft.net>,
-        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org,
-        linux-usb@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.5 11/58] qmi_wwan: re-add DW5821e pre-production variant
-Date:   Sat, 22 Feb 2020 21:20:32 -0500
-Message-Id: <20200223022119.707-11-sashal@kernel.org>
+Cc:     Trond Myklebust <trondmy@gmail.com>,
+        Trond Myklebust <trond.myklebust@hammerspace.com>,
+        Benjamin Coddington <bcodding@gmail.com>,
+        Anna Schumaker <Anna.Schumaker@Netapp.com>,
+        Sasha Levin <sashal@kernel.org>, linux-nfs@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.5 13/58] NFSv4: Fix races between open and dentry revalidation
+Date:   Sat, 22 Feb 2020 21:20:34 -0500
+Message-Id: <20200223022119.707-13-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200223022119.707-1-sashal@kernel.org>
 References: <20200223022119.707-1-sashal@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
@@ -63,74 +61,79 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Bjørn Mork <bjorn@mork.no>
+From: Trond Myklebust <trondmy@gmail.com>
 
-[ Upstream commit 88bf54603f6f2c137dfee1abf6436ceac3528d2d ]
+[ Upstream commit cf5b4059ba7197d6cef9c0e024979d178ed8c8ec ]
 
-Commit f25e1392fdb5 removed the support for the pre-production variant
-of the Dell DW5821e to avoid probing another USB interface unnecessarily.
-However, the pre-production samples are found in the wild, and this lack
-of support is causing problems for users of such samples.  It is therefore
-necessary to support both variants.
+We want to make sure that we revalidate the dentry if and only if
+we've done an OPEN by filename.
+In order to avoid races with remote changes to the directory on the
+server, we want to save the verifier before calling OPEN. The exception
+is if the server returned a delegation with our OPEN, as we then
+know that the filename can't have changed on the server.
 
-Matching on both interfaces 0 and 1 is not expected to cause any problem
-with either variant, as only the QMI function will be probed successfully
-on either.  Interface 1 will be rejected based on the HID class for the
-production variant:
-
-T:  Bus=01 Lev=03 Prnt=04 Port=00 Cnt=01 Dev#= 16 Spd=480 MxCh= 0
-D:  Ver= 2.10 Cls=ef(misc ) Sub=02 Prot=01 MxPS=64 #Cfgs=  2
-P:  Vendor=413c ProdID=81d7 Rev=03.18
-S:  Manufacturer=DELL
-S:  Product=DW5821e Snapdragon X20 LTE
-S:  SerialNumber=0123456789ABCDEF
-C:  #Ifs= 6 Cfg#= 1 Atr=a0 MxPwr=500mA
-I:  If#= 0 Alt= 0 #EPs= 3 Cls=ff(vend.) Sub=ff Prot=ff Driver=qmi_wwan
-I:  If#= 1 Alt= 0 #EPs= 1 Cls=03(HID  ) Sub=00 Prot=00 Driver=usbhid
-I:  If#= 2 Alt= 0 #EPs= 3 Cls=ff(vend.) Sub=00 Prot=00 Driver=option
-I:  If#= 3 Alt= 0 #EPs= 3 Cls=ff(vend.) Sub=00 Prot=00 Driver=option
-I:  If#= 4 Alt= 0 #EPs= 3 Cls=ff(vend.) Sub=00 Prot=00 Driver=option
-I:  If#= 5 Alt= 0 #EPs= 2 Cls=ff(vend.) Sub=ff Prot=ff Driver=option
-
-And interface 0 will be rejected based on too few endpoints for the
-pre-production variant:
-
-T: Bus=01 Lev=02 Prnt=02 Port=03 Cnt=03 Dev#= 7 Spd=480 MxCh= 0
-D: Ver= 2.10 Cls=ef(misc ) Sub=02 Prot=01 MxPS=64 #Cfgs= 2
-P: Vendor=413c ProdID=81d7 Rev= 3.18
-S: Manufacturer=DELL
-S: Product=DW5821e Snapdragon X20 LTE
-S: SerialNumber=0123456789ABCDEF
-C: #Ifs= 5 Cfg#= 1 Atr=a0 MxPwr=500mA
-I: If#= 0 Alt= 0 #EPs= 2 Cls=ff(vend.) Sub=ff Prot=ff Driver=
-I: If#= 1 Alt= 0 #EPs= 3 Cls=ff(vend.) Sub=ff Prot=ff Driver=qmi_wwan
-I: If#= 2 Alt= 0 #EPs= 3 Cls=ff(vend.) Sub=00 Prot=00 Driver=option
-I: If#= 3 Alt= 0 #EPs= 3 Cls=ff(vend.) Sub=00 Prot=00 Driver=option
-I: If#= 4 Alt= 0 #EPs= 3 Cls=ff(vend.) Sub=00 Prot=00 Driver=option
-
-Fixes: f25e1392fdb5 ("qmi_wwan: fix interface number for DW5821e production firmware")
-Link: https://whrl.pl/Rf0vNk
-Reported-by: Lars Melin <larsm17@gmail.com>
-Cc: Aleksander Morgado <aleksander@aleksander.es>
-Signed-off-by: Bjørn Mork <bjorn@mork.no>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Signed-off-by: Trond Myklebust <trond.myklebust@hammerspace.com>
+Reviewed-by: Benjamin Coddington <bcodding@gmail.com>
+Tested-by: Benjamin Coddington <bcodding@gmail.com>
+Signed-off-by: Anna Schumaker <Anna.Schumaker@Netapp.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/usb/qmi_wwan.c | 1 +
- 1 file changed, 1 insertion(+)
+ fs/nfs/nfs4file.c |  1 -
+ fs/nfs/nfs4proc.c | 18 ++++++++++++++++--
+ 2 files changed, 16 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/net/usb/qmi_wwan.c b/drivers/net/usb/qmi_wwan.c
-index 9485c8d1de8a3..839cef720cf64 100644
---- a/drivers/net/usb/qmi_wwan.c
-+++ b/drivers/net/usb/qmi_wwan.c
-@@ -1363,6 +1363,7 @@ static const struct usb_device_id products[] = {
- 	{QMI_FIXED_INTF(0x413c, 0x81b6, 8)},	/* Dell Wireless 5811e */
- 	{QMI_FIXED_INTF(0x413c, 0x81b6, 10)},	/* Dell Wireless 5811e */
- 	{QMI_FIXED_INTF(0x413c, 0x81d7, 0)},	/* Dell Wireless 5821e */
-+	{QMI_FIXED_INTF(0x413c, 0x81d7, 1)},	/* Dell Wireless 5821e preproduction config */
- 	{QMI_FIXED_INTF(0x413c, 0x81e0, 0)},	/* Dell Wireless 5821e with eSIM support*/
- 	{QMI_FIXED_INTF(0x03f0, 0x4e1d, 8)},	/* HP lt4111 LTE/EV-DO/HSPA+ Gobi 4G Module */
- 	{QMI_FIXED_INTF(0x03f0, 0x9d1d, 1)},	/* HP lt4120 Snapdragon X5 LTE */
+diff --git a/fs/nfs/nfs4file.c b/fs/nfs/nfs4file.c
+index 620de905cba97..3f892035c1413 100644
+--- a/fs/nfs/nfs4file.c
++++ b/fs/nfs/nfs4file.c
+@@ -86,7 +86,6 @@ nfs4_file_open(struct inode *inode, struct file *filp)
+ 	if (inode != d_inode(dentry))
+ 		goto out_drop;
+ 
+-	nfs_set_verifier(dentry, nfs_save_change_attribute(dir));
+ 	nfs_file_set_open_context(filp, ctx);
+ 	nfs_fscache_open_file(inode, filp);
+ 	err = 0;
+diff --git a/fs/nfs/nfs4proc.c b/fs/nfs/nfs4proc.c
+index 6ddb4f517d373..13c2de527718a 100644
+--- a/fs/nfs/nfs4proc.c
++++ b/fs/nfs/nfs4proc.c
+@@ -2962,10 +2962,13 @@ static int _nfs4_open_and_get_state(struct nfs4_opendata *opendata,
+ 	struct dentry *dentry;
+ 	struct nfs4_state *state;
+ 	fmode_t acc_mode = _nfs4_ctx_to_accessmode(ctx);
++	struct inode *dir = d_inode(opendata->dir);
++	unsigned long dir_verifier;
+ 	unsigned int seq;
+ 	int ret;
+ 
+ 	seq = raw_seqcount_begin(&sp->so_reclaim_seqcount);
++	dir_verifier = nfs_save_change_attribute(dir);
+ 
+ 	ret = _nfs4_proc_open(opendata, ctx);
+ 	if (ret != 0)
+@@ -2993,8 +2996,19 @@ static int _nfs4_open_and_get_state(struct nfs4_opendata *opendata,
+ 			dput(ctx->dentry);
+ 			ctx->dentry = dentry = alias;
+ 		}
+-		nfs_set_verifier(dentry,
+-				nfs_save_change_attribute(d_inode(opendata->dir)));
++	}
++
++	switch(opendata->o_arg.claim) {
++	default:
++		break;
++	case NFS4_OPEN_CLAIM_NULL:
++	case NFS4_OPEN_CLAIM_DELEGATE_CUR:
++	case NFS4_OPEN_CLAIM_DELEGATE_PREV:
++		if (!opendata->rpc_done)
++			break;
++		if (opendata->o_res.delegation_type != 0)
++			dir_verifier = nfs_save_change_attribute(dir);
++		nfs_set_verifier(dentry, dir_verifier);
+ 	}
+ 
+ 	/* Parse layoutget results before we check for access */
 -- 
 2.20.1
 
