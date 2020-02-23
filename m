@@ -7,46 +7,49 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 90D8EC35669
-	for <linux-kernel@archiver.kernel.org>; Sun, 23 Feb 2020 02:22:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B0654C35671
+	for <linux-kernel@archiver.kernel.org>; Sun, 23 Feb 2020 02:22:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 68AB3227BF
-	for <linux-kernel@archiver.kernel.org>; Sun, 23 Feb 2020 02:22:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 87FC3208C4
+	for <linux-kernel@archiver.kernel.org>; Sun, 23 Feb 2020 02:22:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582424520;
-	bh=debaHDpQh9zHC+jRrxSqoxKPc5OHTt1KzMpfkCF+MGE=;
+	s=default; t=1582424526;
+	bh=2REOLpkCJd4hYNiNITF5nO4LqXdwtJyusVRdt6oSl5Q=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=deayj87AOg3pPWWakV5rT97X0zCeGEyLhR+8fTHfyltXj8UNbNBeiiulw0Eg77mxe
-	 a6xeiwlFUQ+kSvBeiI9C0zRvjdNTrE/BjWlFFmN/Dz2Sob+pvg7BTv0qBTdBvc0mQp
-	 WY/r7J89aWOaZvhGhfL1eQeAt8CJphsc5Pwzr6W4=
+	b=EbuErfYhv1qSjrr8ihbOe/JgMRz/hZZP4/sIfM73Qhn0JFLQ6xMLoS+1kYlyvDqkf
+	 UPrxHuHF8XkVNkb1OTVvro2S3F6vZM5nzdltgWoDVghCQucW7qzEfNNinrycvlkTQC
+	 TAgcp0YdNRXFOeUAHYiiFgZPKG7OkCpsosKT+I9o=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727883AbgBWCV6 (ORCPT
+        id S1727973AbgBWCWE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 22 Feb 2020 21:21:58 -0500
-Received: from mail.kernel.org ([198.145.29.99]:50352 "EHLO mail.kernel.org"
+        Sat, 22 Feb 2020 21:22:04 -0500
+Received: from mail.kernel.org ([198.145.29.99]:50476 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727740AbgBWCVs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 22 Feb 2020 21:21:48 -0500
+        id S1727792AbgBWCVw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 22 Feb 2020 21:21:52 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 291D6208C3;
-        Sun, 23 Feb 2020 02:21:47 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id DAFA0214DB;
+        Sun, 23 Feb 2020 02:21:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1582424507;
-        bh=debaHDpQh9zHC+jRrxSqoxKPc5OHTt1KzMpfkCF+MGE=;
+        s=default; t=1582424511;
+        bh=2REOLpkCJd4hYNiNITF5nO4LqXdwtJyusVRdt6oSl5Q=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=smExGh200j7UKkhUlDzNE/0GmED2Fsc0sDm8Q1Mj1QDOmP2m5B83s5Bueby49Ifbn
-         9UTh0UMuUIyjwADxiVNgBKSilFgcPYqeVKXp8bKyGA8WlHpyP99HQLTjskcUVwy2oN
-         0XcDLT55AfZW1jCkuS/v4Egc20cAYfi6sdn4bBTw=
+        b=C53XMo2VkjduZurMvNdBbfDvQwoeLR1HUTQrwyn4JPBeNcEYTkCvS/hZbn5oZGfSR
+         6nOdn5bkUovA315d0G4hQ39H7+01XHQn93zftvfRhMJ0LE0XbBmr8ZuNPgEvf8bkEF
+         2GZFVSnyQz6yvlg2dy5tx/7NX/f7Gb77pJ4cMDtg=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Krishnamraju Eraparaju <krishna2@chelsio.com>,
-        Jason Gunthorpe <jgg@mellanox.com>,
-        Sasha Levin <sashal@kernel.org>, linux-rdma@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.5 23/58] RDMA/siw: Remove unwanted WARN_ON in siw_cm_llp_data_ready()
-Date:   Sat, 22 Feb 2020 21:20:44 -0500
-Message-Id: <20200223022119.707-23-sashal@kernel.org>
+Cc:     Isabel Zhang <isabel.zhang@amd.com>,
+        Eric Yang <eric.yang2@amd.com>,
+        Bhawanpreet Lakha <Bhawanpreet.Lakha@amd.com>,
+        Alex Deucher <alexander.deucher@amd.com>,
+        Sasha Levin <sashal@kernel.org>, amd-gfx@lists.freedesktop.org,
+        dri-devel@lists.freedesktop.org
+Subject: [PATCH AUTOSEL 5.5 26/58] drm/amd/display: Add initialitions for PLL2 clock source
+Date:   Sat, 22 Feb 2020 21:20:47 -0500
+Message-Id: <20200223022119.707-26-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200223022119.707-1-sashal@kernel.org>
 References: <20200223022119.707-1-sashal@kernel.org>
@@ -59,63 +62,58 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Krishnamraju Eraparaju <krishna2@chelsio.com>
+From: Isabel Zhang <isabel.zhang@amd.com>
 
-[ Upstream commit 663218a3e715fd9339d143a3e10088316b180f4f ]
+[ Upstream commit c134c3cabae46a56ab2e1f5e5fa49405e1758838 ]
 
-Warnings like below can fill up the dmesg while disconnecting RDMA
-connections.
-Hence, remove the unwanted WARN_ON.
+[Why]
+Starting from 14nm, the PLL is built into the PHY and the PLL is mapped
+to PHY on 1 to 1 basis. In the code, the DP port is mapped to a PLL that was not
+initialized. This causes DP to HDMI dongle to not light up the display.
 
-  WARNING: CPU: 6 PID: 0 at drivers/infiniband/sw/siw/siw_cm.c:1229 siw_cm_llp_data_ready+0xc1/0xd0 [siw]
-  RIP: 0010:siw_cm_llp_data_ready+0xc1/0xd0 [siw]
-  Call Trace:
-   <IRQ>
-   tcp_data_queue+0x226/0xb40
-   tcp_rcv_established+0x220/0x620
-   tcp_v4_do_rcv+0x12a/0x1e0
-   tcp_v4_rcv+0xb05/0xc00
-   ip_local_deliver_finish+0x69/0x210
-   ip_local_deliver+0x6b/0xe0
-   ip_rcv+0x273/0x362
-   __netif_receive_skb_core+0xb35/0xc30
-   netif_receive_skb_internal+0x3d/0xb0
-   napi_gro_frags+0x13b/0x200
-   t4_ethrx_handler+0x433/0x7d0 [cxgb4]
-   process_responses+0x318/0x580 [cxgb4]
-   napi_rx_handler+0x14/0x100 [cxgb4]
-   net_rx_action+0x149/0x3b0
-   __do_softirq+0xe3/0x30a
-   irq_exit+0x100/0x110
-   do_IRQ+0x7f/0xe0
-   common_interrupt+0xf/0xf
-   </IRQ>
+[How]
+Initializations added for PLL2 when creating resources.
 
-Link: https://lore.kernel.org/r/20200207141429.27927-1-krishna2@chelsio.com
-Signed-off-by: Krishnamraju Eraparaju <krishna2@chelsio.com>
-Signed-off-by: Jason Gunthorpe <jgg@mellanox.com>
+Signed-off-by: Isabel Zhang <isabel.zhang@amd.com>
+Reviewed-by: Eric Yang <eric.yang2@amd.com>
+Acked-by: Bhawanpreet Lakha <Bhawanpreet.Lakha@amd.com>
+Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/infiniband/sw/siw/siw_cm.c | 5 ++---
- 1 file changed, 2 insertions(+), 3 deletions(-)
+ drivers/gpu/drm/amd/display/dc/dcn21/dcn21_resource.c | 6 ++++++
+ 1 file changed, 6 insertions(+)
 
-diff --git a/drivers/infiniband/sw/siw/siw_cm.c b/drivers/infiniband/sw/siw/siw_cm.c
-index 3bccfef40e7e1..ac86363ce1a24 100644
---- a/drivers/infiniband/sw/siw/siw_cm.c
-+++ b/drivers/infiniband/sw/siw/siw_cm.c
-@@ -1225,10 +1225,9 @@ static void siw_cm_llp_data_ready(struct sock *sk)
- 	read_lock(&sk->sk_callback_lock);
+diff --git a/drivers/gpu/drm/amd/display/dc/dcn21/dcn21_resource.c b/drivers/gpu/drm/amd/display/dc/dcn21/dcn21_resource.c
+index b29b2c99a564e..554062859866d 100644
+--- a/drivers/gpu/drm/amd/display/dc/dcn21/dcn21_resource.c
++++ b/drivers/gpu/drm/amd/display/dc/dcn21/dcn21_resource.c
+@@ -57,6 +57,7 @@
+ #include "dcn20/dcn20_dccg.h"
+ #include "dcn21_hubbub.h"
+ #include "dcn10/dcn10_resource.h"
++#include "dce110/dce110_resource.h"
  
- 	cep = sk_to_cep(sk);
--	if (!cep) {
--		WARN_ON(1);
-+	if (!cep)
- 		goto out;
--	}
-+
- 	siw_dbg_cep(cep, "state: %d\n", cep->state);
+ #include "dcn20/dcn20_dwb.h"
+ #include "dcn20/dcn20_mmhubbub.h"
+@@ -866,6 +867,7 @@ static const struct dc_debug_options debug_defaults_diags = {
+ enum dcn20_clk_src_array_id {
+ 	DCN20_CLK_SRC_PLL0,
+ 	DCN20_CLK_SRC_PLL1,
++	DCN20_CLK_SRC_PLL2,
+ 	DCN20_CLK_SRC_TOTAL_DCN21
+ };
  
- 	switch (cep->state) {
+@@ -1736,6 +1738,10 @@ static bool construct(
+ 			dcn21_clock_source_create(ctx, ctx->dc_bios,
+ 				CLOCK_SOURCE_COMBO_PHY_PLL1,
+ 				&clk_src_regs[1], false);
++	pool->base.clock_sources[DCN20_CLK_SRC_PLL2] =
++			dcn21_clock_source_create(ctx, ctx->dc_bios,
++				CLOCK_SOURCE_COMBO_PHY_PLL2,
++				&clk_src_regs[2], false);
+ 
+ 	pool->base.clk_src_count = DCN20_CLK_SRC_TOTAL_DCN21;
+ 
 -- 
 2.20.1
 
