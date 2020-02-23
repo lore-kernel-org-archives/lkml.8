@@ -2,160 +2,130 @@ Return-Path: <SRS0=SnAt=4L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+X-Spam-Status: No, score=-5.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A1C20C35673
-	for <linux-kernel@archiver.kernel.org>; Sun, 23 Feb 2020 19:01:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3627CC35666
+	for <linux-kernel@archiver.kernel.org>; Sun, 23 Feb 2020 19:03:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 78BB5206E2
-	for <linux-kernel@archiver.kernel.org>; Sun, 23 Feb 2020 19:01:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0B98D206E2
+	for <linux-kernel@archiver.kernel.org>; Sun, 23 Feb 2020 19:03:20 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="DyABcoB5"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="AiZCF/a2"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727148AbgBWTBS (ORCPT
+        id S1727150AbgBWTDQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 23 Feb 2020 14:01:18 -0500
-Received: from us-smtp-2.mimecast.com ([205.139.110.61]:43648 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726302AbgBWTBS (ORCPT
+        Sun, 23 Feb 2020 14:03:16 -0500
+Received: from mail-wr1-f68.google.com ([209.85.221.68]:34183 "EHLO
+        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726208AbgBWTDP (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 23 Feb 2020 14:01:18 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1582484477;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=jWcZhHEavbPC3Qi6XM2pKSsf4FRLtu/oPmsWL6brHIY=;
-        b=DyABcoB5XGDthvpfXpq25mwHpE9gstweJa4jxLT3cR49yKgborKNlPkAnSUpMIeUhEV2iT
-        s47KJHPVmEBJ/pQyHekAfEgQZZfKw/6Ghs3TQTXWz00oig9w1GbpImcHNHXp5US5Z//5Ny
-        kU7doOYUhxZHIEd/kutjVady4uWYeNU=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-36-bRjV9tBuNq-TaKDkKNi1mQ-1; Sun, 23 Feb 2020 14:01:13 -0500
-X-MC-Unique: bRjV9tBuNq-TaKDkKNi1mQ-1
-Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id AE633477;
-        Sun, 23 Feb 2020 19:01:11 +0000 (UTC)
-Received: from localhost (ovpn-116-38.ams2.redhat.com [10.36.116.38])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 32B9C1001B30;
-        Sun, 23 Feb 2020 19:01:10 +0000 (UTC)
-From:   Giuseppe Scrivano <gscrivan@redhat.com>
-To:     ebiederm@xmission.com (Eric W. Biederman)
-Cc:     linux-kernel@vger.kernel.org, rcu@vger.kernel.org,
-        paulmck@kernel.org, viro@zeniv.linux.org.uk
-Subject: Re: [PATCH v2] ipc: use a work queue to free_ipc
-References: <20200217183627.4099690-1-gscrivan@redhat.com>
-        <87lfov68a2.fsf@x220.int.ebiederm.org>
-Date:   Sun, 23 Feb 2020 20:01:09 +0100
-In-Reply-To: <87lfov68a2.fsf@x220.int.ebiederm.org> (Eric W. Biederman's
-        message of "Fri, 21 Feb 2020 13:37:57 -0600")
-Message-ID: <871rqlt9fu.fsf@redhat.com>
-User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.3 (gnu/linux)
+        Sun, 23 Feb 2020 14:03:15 -0500
+Received: by mail-wr1-f68.google.com with SMTP id n10so7853822wrm.1;
+        Sun, 23 Feb 2020 11:03:14 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=sender:date:from:to:cc:subject:message-id:mail-followup-to
+         :references:mime-version:content-disposition:in-reply-to:user-agent;
+        bh=A5PcRNqVDequHW3hKDEELTuy+nfThlBZndOvTTb6Fzk=;
+        b=AiZCF/a2q8ooI9RYiTznc9nYqhl3/7byEYXyNvKbyt86kczZ4RqS+FIH2UF2g5Rrf7
+         Qdvgpn7kRC/MUeY6T1nIEHbA2m1JijwgttNfNUJZal6KQCWbL7dMuMaBa+Z/czcHjyl4
+         qbdrTbQ4ACXTDuactRbJCJ4naOG0CzW06uyDar3wxOOPDWmxtwgHLmH8sQy3/6HUZHEz
+         El37Fc8TXC20FvNxqSBAXPdEYf9l95rKz7TbOkKjT4wtEJcLpY5xXgUGrCGvXupW/ePL
+         tCxUdqDZt4VAkasTUgJxzyeJOlnsUgTzWKqtl4e80AgugR8cuo69rtFNHb+dCr1SLpkZ
+         Qejg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
+         :mail-followup-to:references:mime-version:content-disposition
+         :in-reply-to:user-agent;
+        bh=A5PcRNqVDequHW3hKDEELTuy+nfThlBZndOvTTb6Fzk=;
+        b=l/ASUnJcBbeOEeYVUnSA6eUph3xc36drgCp0TyQKUVI1z/CYbvAEZ8hogypLjMo8s5
+         vosy3M3HzoaWyscbgBl0D69t+1xckKuMKr01ywakPS/nhghIzNMRt+EtQnxGgnSX7mW6
+         JzSMJncYqrlff6hu3bhzMJfiPByELr5MRkXgHk+s1QBKN13s53fjbweb0enjXwrhaCGe
+         K4KGK8yY4/C+12dfdL6SlavgmiVIha5X1ihXzFgJXCK2Z9cOu1Pr6RNeHFxQSFaX/QT/
+         EDtGpN1RQ1578hKKPGfkT8CqGK88d64e7Afw8/nh1nG+/ksW1e0ox7D5p0qhMxpVMxMv
+         kXBg==
+X-Gm-Message-State: APjAAAUmjtHuSrKu+Jr75umuhH3m28UxQ3ef/F9qCgSmAsPAENKSrnPc
+        WI+xu9owilH6yLkv5/iaYeM=
+X-Google-Smtp-Source: APXvYqxfXJKIZsXIveZSysVzGSvhzDQFvhvyaaEt/yWFzajfEc5h0Bse/ct1rSyy5oVYBNw1Tp/vLw==
+X-Received: by 2002:a5d:560d:: with SMTP id l13mr35511905wrv.222.1582484593685;
+        Sun, 23 Feb 2020 11:03:13 -0800 (PST)
+Received: from dumbo (ip4da2e549.direct-adsl.nl. [77.162.229.73])
+        by smtp.gmail.com with ESMTPSA id y12sm14812427wrw.88.2020.02.23.11.03.12
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 23 Feb 2020 11:03:12 -0800 (PST)
+Date:   Sun, 23 Feb 2020 20:03:11 +0100
+From:   Domenico Andreoli <domenico.andreoli@linux.com>
+To:     "Darrick J. Wong" <darrick.wong@oracle.com>
+Cc:     Christoph Hellwig <hch@lst.de>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-pm@vger.kernel.org
+Subject: Re: Regression: hibernation is broken since
+ e6bc9de714972cac34daa1dc1567ee48a47a9342
+Message-ID: <20200223190311.GA26811@dumbo>
+Mail-Followup-To: "Darrick J. Wong" <darrick.wong@oracle.com>,
+        Christoph Hellwig <hch@lst.de>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-pm@vger.kernel.org
+References: <20200213172351.GA6747@dumbo>
+ <20200213175753.GS6874@magnolia>
+ <20200213183515.GA8798@dumbo>
+ <20200213193410.GB6868@magnolia>
+ <20200213194135.GF6870@magnolia>
+ <20200214211523.GA32637@dumbo>
+ <20200222002319.GK9504@magnolia>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200222002319.GK9504@magnolia>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-ebiederm@xmission.com (Eric W. Biederman) writes:
+On Fri, Feb 21, 2020 at 04:23:19PM -0800, Darrick J. Wong wrote:
+> 
+> Ok, third try.  Does the following work?  This is a little more
+> selective in that it only disables the write protection on the swap
+> device/file that uswusp is going to write to.
 
-> Giuseppe Scrivano <gscrivan@redhat.com> writes:
->
->> it avoids blocking on synchronize_rcu() in kern_umount().
->>
->> the code:
->>
->> \#define _GNU_SOURCE
->> \#include <sched.h>
->> \#include <error.h>
->> \#include <errno.h>
->> \#include <stdlib.h>
->> int main()
->> {
->>   int i;
->>   for (i  = 0; i < 1000; i++)
->>     if (unshare (CLONE_NEWIPC) < 0)
->>       error (EXIT_FAILURE, errno, "unshare");
->> }
->>
->> gets from:
->>
->> 	Command being timed: "./ipc-namespace"
->> 	User time (seconds): 0.00
->> 	System time (seconds): 0.06
->> 	Percent of CPU this job got: 0%
->> 	Elapsed (wall clock) time (h:mm:ss or m:ss): 0:08.05
->>
->> to:
->>
->> 	Command being timed: "./ipc-namespace"
->> 	User time (seconds): 0.00
->> 	System time (seconds): 0.02
->> 	Percent of CPU this job got: 96%
->> 	Elapsed (wall clock) time (h:mm:ss or m:ss): 0:00.03
->
-> I have a question.  You create 1000 namespaces in a single process
-> and then free them.  So I expect that single process is busy waiting
-> for that kern_umount 1000 types, and waiting for 1000 synchronize_rcu's.
->
-> Does this ever show up in a real world work-load?
->
-> Is the cost of a single synchronize_rcu a problem?
+Yes it works but also verified that once the S_SWAPFILE bit is cleared
+it's never restored, therefore the protecton is gone after the first
+hibernation.
 
-yes exactly, creating 1000 namespaces is not a real world use case (at
-least in my experience) but I've used it only to show the impact of the
-patch.
+> 
+> --D
+> 
+> diff --git a/kernel/power/user.c b/kernel/power/user.c
+> index 77438954cc2b..a3ae9cbbfcf0 100644
+> --- a/kernel/power/user.c
+> +++ b/kernel/power/user.c
+> @@ -372,10 +372,17 @@ static long snapshot_ioctl(struct file *filp, unsigned int cmd,
+>  			 */
+>  			swdev = new_decode_dev(swap_area.dev);
+>  			if (swdev) {
+> +				struct block_device *bd;
+> +
+>  				offset = swap_area.offset;
+> -				data->swap = swap_type_of(swdev, offset, NULL);
+> +				data->swap = swap_type_of(swdev, offset, &bd);
+>  				if (data->swap < 0)
+>  					error = -ENODEV;
+> +
+> +				inode_lock(bd->bd_inode);
+> +				bd->bd_inode->i_flags &= ~S_SWAPFILE;
+> +				inode_unlock(bd->bd_inode);
+> +				bdput(bd);
+>  			} else {
+>  				data->swap = -1;
+>  				error = -EINVAL;
 
-The cost of the single synchronize_rcu is the issue.
-
-Most containers run in their own IPC namespace, so this is a constant
-cost for each container.
-
-
-> The code you are working to avoid is this.
->
-> void kern_unmount(struct vfsmount *mnt)
-> {
-> 	/* release long term mount so mount point can be released */
-> 	if (!IS_ERR_OR_NULL(mnt)) {
-> 		real_mount(mnt)->mnt_ns = NULL;
-> 		synchronize_rcu();	/* yecchhh... */
-> 		mntput(mnt);
-> 	}
-> }
->
-> Which makes me wonder if perhaps there might be a simpler solution
-> involving just that code.  But I do realize such a solution
-> would require analyzing all of the code after kern_unmount
-> to see if any of it depends upon the synchronize_rcu.
->
->
-> In summary, I see no correctness problems with your code.
-> Code that runs faster is always nice.  In this case I just
-> see the cost being shifted somewhere else not eliminated.
-> I also see a slight increase in complexity.
->
-> So I am wondering if this was an exercise to speed up a toy
-> benchmark or if this is an effort to speed of real world code.
-
-I've seen the issue while profiling real world work loads.
-
-
-> At the very least some version of the motivation needs to be
-> recorded so that the next time some one comes in an reworks
-> the code they can look in the history and figure out what
-> they need to do to avoid introducing a regeression.
-
-Is it enough in the git commit message or should it be an inline
-comment?
-
-Thanks,
-Giuseppe
-
+-- 
+rsa4096: 3B10 0CA1 8674 ACBA B4FE  FCD2 CE5B CF17 9960 DE13
+ed25519: FFB4 0CC3 7F2E 091D F7DA  356E CC79 2832 ED38 CB05
