@@ -7,49 +7,47 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1603DC35673
-	for <linux-kernel@archiver.kernel.org>; Sun, 23 Feb 2020 02:23:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 10B28C35671
+	for <linux-kernel@archiver.kernel.org>; Sun, 23 Feb 2020 02:23:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D407720702
-	for <linux-kernel@archiver.kernel.org>; Sun, 23 Feb 2020 02:23:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D9CB721741
+	for <linux-kernel@archiver.kernel.org>; Sun, 23 Feb 2020 02:23:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582424598;
-	bh=3gWKxybEj+MPghi+m6w934dffMdy1LR+18drW+smWv0=;
+	s=default; t=1582424605;
+	bh=/wvHWtSABa6XrGoPvgU/g74uNC1TiUDqH775k+bJX6s=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=OCmW/GufW3eVRQ+9Kjjl4jX5C9l2/cK2vym/mBTZkq/YC8Uz2gZSciwSeAPG/wcVh
-	 Hlpz8VQbNM/AvSiiwpNu4l1odkNbTRDcXPS/IHsFdPFyXwBabqYDlrfrfk8n3BpEuu
-	 FrJLhX0in097D8on2mtXK0lRyGFc7WOn9b3e0ogc=
+	b=eL1otiBy6PcBWD4S4DtdnwUKEo7GnJLXSF+Zga1vsYs4ak+Fun6Vu7k2zcepWZOM+
+	 m2CjcrtHX34gdmjNPLk15QZcPCbgfFLixAXO7fs/5+OtcZ615GJmDdUv1mBNP8k/j8
+	 f6vt/NO/W61jn/rAF5TM7SRJbNt9EWrA6kJm2dNU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728590AbgBWCXR (ORCPT
+        id S1728653AbgBWCXY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 22 Feb 2020 21:23:17 -0500
-Received: from mail.kernel.org ([198.145.29.99]:52536 "EHLO mail.kernel.org"
+        Sat, 22 Feb 2020 21:23:24 -0500
+Received: from mail.kernel.org ([198.145.29.99]:52834 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728493AbgBWCXK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 22 Feb 2020 21:23:10 -0500
+        id S1728615AbgBWCXV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 22 Feb 2020 21:23:21 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7ECA42071E;
-        Sun, 23 Feb 2020 02:23:09 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1969221741;
+        Sun, 23 Feb 2020 02:23:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1582424590;
-        bh=3gWKxybEj+MPghi+m6w934dffMdy1LR+18drW+smWv0=;
+        s=default; t=1582424600;
+        bh=/wvHWtSABa6XrGoPvgU/g74uNC1TiUDqH775k+bJX6s=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=iiXKuAQbTpw6+jJNHSSh6+hTFOvcV6LxBXVNx8IlQ1jo5EjYAgmPY+u726UNZQANT
-         01ZfUdnjhM8BxQEPB1RfI6JZAFc4AJEwxo/biayRrazvPUfWBeGgJtdsOQFZloPpX7
-         QZ3rBwdzD/G/IbgHrOvPqn7AAkImJr0ijMHoJnLY=
+        b=FtnXFnPoSR340Kj8gsqiTZHnj8uUJtm0GKp4DL9KWOk4Ueivx6Z+Ppzv/doU1coy0
+         55JJVG3Jb78CzekPVn05jt+3t6Sa+gFnKFdSrGgYm773SUzkN08FY4+x/8/PtqpOqM
+         CegqiAlsBES47kXJsqBZZKBofKSof/N++vlwN6EY=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Brett Creeley <brett.creeley@intel.com>,
-        Andrew Bowers <andrewx.bowers@intel.com>,
-        Jeff Kirsher <jeffrey.t.kirsher@intel.com>,
+Cc:     Arthur Kiyanovski <akiyano@amazon.com>,
+        Sameeh Jubran <sameehj@amazon.com>,
         "David S . Miller" <davem@davemloft.net>,
-        Sasha Levin <sashal@kernel.org>,
-        intel-wired-lan@lists.osuosl.org, netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.4 28/50] i40e: Fix the conditional for i40e_vc_validate_vqs_bitmaps
-Date:   Sat, 22 Feb 2020 21:22:13 -0500
-Message-Id: <20200223022235.1404-28-sashal@kernel.org>
+        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.4 37/50] net: ena: fix corruption of dev_idx_to_host_tbl
+Date:   Sat, 22 Feb 2020 21:22:22 -0500
+Message-Id: <20200223022235.1404-37-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200223022235.1404-1-sashal@kernel.org>
 References: <20200223022235.1404-1-sashal@kernel.org>
@@ -62,47 +60,81 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Brett Creeley <brett.creeley@intel.com>
+From: Arthur Kiyanovski <akiyano@amazon.com>
 
-[ Upstream commit f27f37a04a69890ac85d9155f03ee2d23b678d8f ]
+[ Upstream commit e3f89f91e98ce07dc0f121a3b70d21aca749ba39 ]
 
-Commit d9d6a9aed3f6 ("i40e: Fix virtchnl_queue_select bitmap
-validation") introduced a necessary change for verifying how queue
-bitmaps from the iavf driver get validated. Unfortunately, the
-conditional was reversed. Fix this.
+The function ena_com_ind_tbl_convert_from_device() has an overflow
+bug as explained below. Either way, this function is not needed at
+all since we don't retrieve the indirection table from the device
+at any point which means that this conversion is not needed.
 
-Fixes: d9d6a9aed3f6 ("i40e: Fix virtchnl_queue_select bitmap validation")
-Signed-off-by: Brett Creeley <brett.creeley@intel.com>
-Tested-by: Andrew Bowers <andrewx.bowers@intel.com>
-Signed-off-by: Jeff Kirsher <jeffrey.t.kirsher@intel.com>
+The bug:
+The for loop iterates over all io_sq_queues, when passing the actual
+number of used queues the io_sq_queues[i].idx equals 0 since they are
+uninitialized which results in the following code to be executed till
+the end of the loop:
+
+dev_idx_to_host_tbl[0] = i;
+
+This results dev_idx_to_host_tbl[0] in being equal to
+ENA_TOTAL_NUM_QUEUES - 1.
+
+Fixes: 1738cd3ed342 ("net: ena: Add a driver for Amazon Elastic Network Adapters (ENA)")
+Signed-off-by: Sameeh Jubran <sameehj@amazon.com>
+Signed-off-by: Arthur Kiyanovski <akiyano@amazon.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/ethernet/intel/i40e/i40e_virtchnl_pf.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ drivers/net/ethernet/amazon/ena/ena_com.c | 28 -----------------------
+ 1 file changed, 28 deletions(-)
 
-diff --git a/drivers/net/ethernet/intel/i40e/i40e_virtchnl_pf.c b/drivers/net/ethernet/intel/i40e/i40e_virtchnl_pf.c
-index 3515ace0f0201..38042d610f82c 100644
---- a/drivers/net/ethernet/intel/i40e/i40e_virtchnl_pf.c
-+++ b/drivers/net/ethernet/intel/i40e/i40e_virtchnl_pf.c
-@@ -2363,7 +2363,7 @@ static int i40e_vc_enable_queues_msg(struct i40e_vf *vf, u8 *msg)
- 		goto error_param;
- 	}
+diff --git a/drivers/net/ethernet/amazon/ena/ena_com.c b/drivers/net/ethernet/amazon/ena/ena_com.c
+index 8ab192cb26b74..74743fd8a1e0a 100644
+--- a/drivers/net/ethernet/amazon/ena/ena_com.c
++++ b/drivers/net/ethernet/amazon/ena/ena_com.c
+@@ -1281,30 +1281,6 @@ static int ena_com_ind_tbl_convert_to_device(struct ena_com_dev *ena_dev)
+ 	return 0;
+ }
  
--	if (i40e_vc_validate_vqs_bitmaps(vqs)) {
-+	if (!i40e_vc_validate_vqs_bitmaps(vqs)) {
- 		aq_ret = I40E_ERR_PARAM;
- 		goto error_param;
- 	}
-@@ -2425,7 +2425,7 @@ static int i40e_vc_disable_queues_msg(struct i40e_vf *vf, u8 *msg)
- 		goto error_param;
- 	}
+-static int ena_com_ind_tbl_convert_from_device(struct ena_com_dev *ena_dev)
+-{
+-	u16 dev_idx_to_host_tbl[ENA_TOTAL_NUM_QUEUES] = { (u16)-1 };
+-	struct ena_rss *rss = &ena_dev->rss;
+-	u8 idx;
+-	u16 i;
+-
+-	for (i = 0; i < ENA_TOTAL_NUM_QUEUES; i++)
+-		dev_idx_to_host_tbl[ena_dev->io_sq_queues[i].idx] = i;
+-
+-	for (i = 0; i < 1 << rss->tbl_log_size; i++) {
+-		if (rss->rss_ind_tbl[i].cq_idx > ENA_TOTAL_NUM_QUEUES)
+-			return -EINVAL;
+-		idx = (u8)rss->rss_ind_tbl[i].cq_idx;
+-
+-		if (dev_idx_to_host_tbl[idx] > ENA_TOTAL_NUM_QUEUES)
+-			return -EINVAL;
+-
+-		rss->host_rss_ind_tbl[i] = dev_idx_to_host_tbl[idx];
+-	}
+-
+-	return 0;
+-}
+-
+ static void ena_com_update_intr_delay_resolution(struct ena_com_dev *ena_dev,
+ 						 u16 intr_delay_resolution)
+ {
+@@ -2638,10 +2614,6 @@ int ena_com_indirect_table_get(struct ena_com_dev *ena_dev, u32 *ind_tbl)
+ 	if (!ind_tbl)
+ 		return 0;
  
--	if (i40e_vc_validate_vqs_bitmaps(vqs)) {
-+	if (!i40e_vc_validate_vqs_bitmaps(vqs)) {
- 		aq_ret = I40E_ERR_PARAM;
- 		goto error_param;
- 	}
+-	rc = ena_com_ind_tbl_convert_from_device(ena_dev);
+-	if (unlikely(rc))
+-		return rc;
+-
+ 	for (i = 0; i < (1 << rss->tbl_log_size); i++)
+ 		ind_tbl[i] = rss->host_rss_ind_tbl[i];
+ 
 -- 
 2.20.1
 
