@@ -2,40 +2,95 @@ Return-Path: <SRS0=SnAt=4L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.8 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4B800C35666
-	for <linux-kernel@archiver.kernel.org>; Sun, 23 Feb 2020 13:36:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 955C3C35666
+	for <linux-kernel@archiver.kernel.org>; Sun, 23 Feb 2020 13:55:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2D4A9206E0
-	for <linux-kernel@archiver.kernel.org>; Sun, 23 Feb 2020 13:36:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6C9CD208C4
+	for <linux-kernel@archiver.kernel.org>; Sun, 23 Feb 2020 13:55:12 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Sc4xJC04"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727064AbgBWNgv (ORCPT
+        id S1726953AbgBWNzL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 23 Feb 2020 08:36:51 -0500
-Received: from mx2.suse.de ([195.135.220.15]:53548 "EHLO mx2.suse.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726208AbgBWNgv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 23 Feb 2020 08:36:51 -0500
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx2.suse.de (Postfix) with ESMTP id 760FAABF4;
-        Sun, 23 Feb 2020 13:36:49 +0000 (UTC)
-Received: by ds.suse.cz (Postfix, from userid 10065)
-        id E9EF4DA70E; Sun, 23 Feb 2020 14:36:30 +0100 (CET)
-From:   David Sterba <dsterba@suse.com>
-To:     torvalds@linux-foundation.org
-Cc:     David Sterba <dsterba@suse.com>, linux-btrfs@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: [GIT PULL] Btrfs fixes for 5.6-rc3
-Date:   Sun, 23 Feb 2020 14:36:29 +0100
-Message-Id: <cover.1582462302.git.dsterba@suse.com>
-X-Mailer: git-send-email 2.25.0
+        Sun, 23 Feb 2020 08:55:11 -0500
+Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:25886 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726208AbgBWNzK (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 23 Feb 2020 08:55:10 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1582466109;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=EPL+Ij7TjC4xr/HDB4HJ/CmiyuAMo98kUlya8NTfiGA=;
+        b=Sc4xJC04U8MggAwXFJbHu83UUD2bdHJPW+FpzO1vBIqrfKE9+52AJMwC/yprqYA96Hcyew
+        ggSUVPw1vzBiPv3c1Nd5ycUMcOVE+LMCSbzScQGjRUXeBZL1+n6O9tWPS3DHplTNi6jLd5
+        jDIk39AwhaTjS5bOpzZSSEXyZTomzzc=
+Received: from mail-wm1-f69.google.com (mail-wm1-f69.google.com
+ [209.85.128.69]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-385-RxDNjo4_MZmNBGfSy8cdHQ-1; Sun, 23 Feb 2020 08:55:07 -0500
+X-MC-Unique: RxDNjo4_MZmNBGfSy8cdHQ-1
+Received: by mail-wm1-f69.google.com with SMTP id w12so1804140wmc.3
+        for <linux-kernel@vger.kernel.org>; Sun, 23 Feb 2020 05:55:07 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=EPL+Ij7TjC4xr/HDB4HJ/CmiyuAMo98kUlya8NTfiGA=;
+        b=RVuC4a+kHwvjGC6+ZsbVZ5sd1XcOomPM43N8WPOvjrWvx5Ws7otkJ5P125NoZyXRpI
+         +OenAAZg7HbKJ7FiQz+JkDi2N9BgJjosnSc46uiYCvtjbTKOXHRvl7W1zFVJrc2rn2y+
+         92ZxO0FjTE87bOWhUN0EUWDeMSkg52k2NQxja6vCs49n3GKv6dnveEG4cV0ZEJIz4PhO
+         Vfs/F++NvoAzuhh/DtmkIBSq+65MLl24nesZ/vZ5by1XSbmXolzImWp0+IpnpLemrSzT
+         GJsie1mX7tXsud8PZ2hLtXcL7WyIXvb3KNb60ZUAZIrag1wj8OfRiudDSLiuSVVdXZvx
+         REcg==
+X-Gm-Message-State: APjAAAVw2g3fSmUH9sfki7IvWqDJt3RFLnA0EUN0VdAJxsJc11qywnVC
+        PHIGq5CFlgSlNosJwcP2QAi5tL5GcIEhFPVzFqyqxPnRqlDnuIqvJUy6XI5+Og8bXs+FypphGSB
+        QO0Lz3r07rqC96IZ83Yx1Qg4P
+X-Received: by 2002:adf:9486:: with SMTP id 6mr1957485wrr.341.1582466106374;
+        Sun, 23 Feb 2020 05:55:06 -0800 (PST)
+X-Google-Smtp-Source: APXvYqzhpUioWe32CRYNPZd2baCs11PLqnIlZcWUisoENKm7kuIL0HbsVPj5XrcWe2JVuQuw92rvvQ==
+X-Received: by 2002:adf:9486:: with SMTP id 6mr1957468wrr.341.1582466106174;
+        Sun, 23 Feb 2020 05:55:06 -0800 (PST)
+Received: from x1.localdomain (2001-1c00-0c0c-fe00-fc7e-fd47-85c1-1ab3.cable.dynamic.v6.ziggo.nl. [2001:1c00:c0c:fe00:fc7e:fd47:85c1:1ab3])
+        by smtp.gmail.com with ESMTPSA id h13sm10309833wml.45.2020.02.23.05.55.04
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Sun, 23 Feb 2020 05:55:05 -0800 (PST)
+Subject: Re: [PATCH v3 3/3] x86/tsc_msr: Make MSR derived TSC frequency more
+ accurate
+To:     Thomas Gleixner <tglx@linutronix.de>,
+        Andy Shevchenko <andy@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>
+Cc:     Vipul Kumar <vipulk0511@gmail.com>,
+        Vipul Kumar <vipul_kumar@mentor.com>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        Srikanth Krishnakar <Srikanth_Krishnakar@mentor.com>,
+        Cedric Hombourger <Cedric_Hombourger@mentor.com>,
+        Len Brown <len.brown@intel.com>,
+        Rahul Tanwar <rahul.tanwar@linux.intel.com>,
+        Tony Luck <tony.luck@intel.com>,
+        Gayatri Kammela <gayatri.kammela@intel.com>, x86@kernel.org,
+        linux-kernel@vger.kernel.org, stable@vger.kernel.org
+References: <20200207205456.113758-1-hdegoede@redhat.com>
+ <20200207205456.113758-3-hdegoede@redhat.com>
+ <87eev67xkc.fsf@nanos.tec.linutronix.de>
+From:   Hans de Goede <hdegoede@redhat.com>
+Message-ID: <36b1e1bb-cbb0-88c0-dab2-aa5e14233e63@redhat.com>
+Date:   Sun, 23 Feb 2020 14:55:03 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.5.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <87eev67xkc.fsf@nanos.tec.linutronix.de>
+Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
@@ -43,53 +98,52 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 Hi,
 
-there are fixes that were found during testing with help of error
-injection, plus some other stable material.
+On 2/8/20 1:05 AM, Thomas Gleixner wrote:
+> Hans,
+> 
+> Hans de Goede <hdegoede@redhat.com> writes:
+>> @@ -120,11 +180,23 @@ unsigned long cpu_khz_from_msr(void)
+>>   	rdmsr(MSR_FSB_FREQ, lo, hi);
+>>   	index = lo & freq_desc->mask;
+>>   
+>> -	/* Map CPU reference clock freq ID(0-7) to CPU reference clock freq(KHz) */
+>> -	freq = freq_desc->freqs[index];
+>> -
+>> -	/* TSC frequency = maximum resolved freq * maximum resolved bus ratio */
+>> -	res = freq * ratio;
+>> +	/*
+>> +	 * Note this also catches cases where the index points to an unpopulated
+>> +	 * part of muldiv, in that case the else will set freq and res to 0.
+>> +	 */
+>> +	if (freq_desc->muldiv[index].divider) {
+>> +		freq = DIV_ROUND_CLOSEST(TSC_REFERENCE_KHZ *
+>> +					   freq_desc->muldiv[index].multiplier,
+>> +					 freq_desc->muldiv[index].divider);
+>> +		/* Multiply by ratio before the divide for better accuracy */
+>> +		res = DIV_ROUND_CLOSEST(TSC_REFERENCE_KHZ *
+>> +					   freq_desc->muldiv[index].multiplier *
+>> +					   ratio,
+>> +					freq_desc->muldiv[index].divider);
+> 
+> What about:
+> 
+>          struct muldiv *md = &freq_desc->muldiv[index];
+> 
+>          if (md->divider) {
+> 		tscref = TSC_REFERENCE_KHZ * md->multiplier;
+>          	freq = DIV_ROUND_CLOSEST(tscref, md->divider);
+> 		/*
+>                   * Multiplying by ratio before the division has better
+>                   * accuracy than just calculating freq * ratio
+>                   */
+>                  res = DIV_ROUND_CLOSEST(tscref * ratio, md->divider);
+> 
+> Hmm?
 
-There's a fixup to patch added to rc1 causing locking in wrong context
-warnings, tests found one more deadlock scenario. The patches are tagged
-for stable, two of them now in the queue but we'd like all three
-released at the same time.
+That indeed looks nicer, I've prepared (and tested) a v4 with the
+suggested change, I'll send out v4 right after this email.
 
-I'm not happy about fixes to fixes in such a fast succession namely during
-rcs, but I hope we found all the fallouts of 28553fa992cb28be. As the
-other fixes are not urgent I'm also fine with delaying the pull until
-rc4 and coordinating with stable@.
+Regards,
 
-Thanks.
+Hans
 
-----------------------------------------------------------------
-The following changes since commit 52e29e331070cd7d52a64cbf1b0958212a340e28:
-
-  btrfs: don't set path->leave_spinning for truncate (2020-02-17 16:23:06 +0100)
-
-are available in the Git repository at:
-
-  git://git.kernel.org/pub/scm/linux/kernel/git/kdave/linux.git for-5.6-rc2-tag
-
-for you to fetch changes up to a5ae50dea9111db63d30d700766dd5509602f7ad:
-
-  Btrfs: fix deadlock during fast fsync when logging prealloc extents beyond eof (2020-02-21 16:21:19 +0100)
-
-----------------------------------------------------------------
-Filipe Manana (2):
-      Btrfs: fix btrfs_wait_ordered_range() so that it waits for all ordered extents
-      Btrfs: fix deadlock during fast fsync when logging prealloc extents beyond eof
-
-Jeff Mahoney (1):
-      btrfs: destroy qgroup extent records on transaction abort
-
-Josef Bacik (4):
-      btrfs: reset fs_root to NULL on error in open_ctree
-      btrfs: do not check delayed items are empty for single transaction cleanup
-      btrfs: handle logged extent failure properly
-      btrfs: fix bytes_may_use underflow in prealloc error condtition
-
- fs/btrfs/disk-io.c      |  3 ++-
- fs/btrfs/extent-tree.c  |  2 ++
- fs/btrfs/inode.c        | 26 ++++++++++++++++++--------
- fs/btrfs/ordered-data.c |  7 ++++++-
- fs/btrfs/qgroup.c       | 13 +++++++++++++
- fs/btrfs/qgroup.h       |  1 +
- fs/btrfs/transaction.c  |  2 ++
- 7 files changed, 44 insertions(+), 10 deletions(-)
