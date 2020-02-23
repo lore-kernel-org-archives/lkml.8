@@ -2,114 +2,112 @@ Return-Path: <SRS0=SnAt=4L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.5 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 57E80C35673
-	for <linux-kernel@archiver.kernel.org>; Sun, 23 Feb 2020 20:46:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E336BC35675
+	for <linux-kernel@archiver.kernel.org>; Sun, 23 Feb 2020 20:47:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 291A4206E0
-	for <linux-kernel@archiver.kernel.org>; Sun, 23 Feb 2020 20:46:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B8630206ED
+	for <linux-kernel@archiver.kernel.org>; Sun, 23 Feb 2020 20:47:27 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=gmx.net header.i=@gmx.net header.b="ijsR8YKo"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="HQEpLHI9"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727149AbgBWUqH (ORCPT
+        id S1727166AbgBWUr0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 23 Feb 2020 15:46:07 -0500
-Received: from mout.gmx.net ([212.227.15.15]:41821 "EHLO mout.gmx.net"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726302AbgBWUqH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 23 Feb 2020 15:46:07 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gmx.net;
-        s=badeba3b8450; t=1582490762;
-        bh=qZfvYCLOSrTYaWWsIfw80OJFIKAonSXgx7/lAZyVBkU=;
-        h=X-UI-Sender-Class:From:To:Cc:Subject:Date;
-        b=ijsR8YKoBO62QCVTY06/A3BiWJM3wBjwZ+a1C6GUTKHyuumVewbHX906j3MlLikKH
-         dTjC2JXns5pTz2gc0B64yYJ/UxAL/REMqLvwxWvd9mPVAtzw2esCTDr91004aAMPSK
-         rJN2VDFia784afw+DLPs7FBrDNEI6yLAAK3gAN7s=
-X-UI-Sender-Class: 01bb95c1-4bf8-414a-932a-4f6e2808ef9c
-Received: from LT02.fritz.box ([84.119.33.160]) by mail.gmx.com (mrgmx004
- [212.227.17.184]) with ESMTPSA (Nemesis) id 1N3se2-1jW7uE20zg-00zjY6; Sun, 23
- Feb 2020 21:46:02 +0100
-From:   Heinrich Schuchardt <xypron.glpk@gmx.de>
-To:     Ard Biesheuvel <ardb@kernel.org>
-Cc:     linux-efi@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Heinrich Schuchardt <xypron.glpk@gmx.de>
-Subject: [PATCH 1/1] efi/esrt: unused variable in __init efi_esrt_init
-Date:   Sun, 23 Feb 2020 21:45:57 +0100
-Message-Id: <20200223204557.114634-1-xypron.glpk@gmx.de>
-X-Mailer: git-send-email 2.25.0
-MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:pgqCYKkQTKbRoU/yupnI6uC3jb44FCQ4Nu5SZfjmYi48GCYUaF3
- LcQqpdRjzjFMihjuVPeVeGtgnczUfIuPrNN12Ea6SpCIINCIkyWCfNr7IsDSPoBhBOvEoV2
- cacth49QHwyCf+wETJjAJzuXwqFEIKWDHkMdJWofLQxtB8CmxQdHavJyUnOvzsxSoRpewdf
- /TW6ufF5aSeBWXHDf/oeQ==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:l+ZkU9xBG24=:NmPPnFNG44eSRXj0nkemg9
- m0NhSvL4npoC0y/GlDTqfR8i5j4Ia0ZVbefZNpH8pgU51sgToGPGlmdmZrhiFxisEikHxbikC
- V8GtDPNEZlB2u6Z82PQcM4GBMZoevjHiysXFZG3NX5RgcsaNgcG021jMvoJvK4IeSvEQ+Fwf5
- BeWVkZh7vjBJRniePcr94zrBfKIwN2u/hK64vIJl8jg8T+5cw6IgSWm62ryIl6+BlIDiaUvHT
- 7qR8CRewv+qKmbLqlLRGhepm6bncNYUP3V3odzkM7pfPODv8MwRT9MXmrWi+lDT6H422yTLY1
- qv5H2zZ9+erqDmqF55xefS4NMXGtAlGg2TvgkInV4qAY06UWcRElpYPGY5Dt9pOWnSpS0mSyR
- tvX3tE4sLZ1OpKzrlDaFKHDllYKinjdvmpqsfvOvNVqGS0abkZ97Qrs2EU1XOQsw2h8JRzg0n
- cF5BafV7C6F/8IL8HPM5Ime4LA3aG8BIV0+o4Vj3DtBqvwbec5n9F/mvTOYBCeqvlAlZGdr39
- Wn4nNIlWxNyIeM3ve6SXqCjSS2Zkcxw7GuALgKu3drj1wcTynGyul53/p7t/TssbbgEhZZiuD
- srG5cyXRA1ghzDalsGKLV9GQn7qNo0cPC109M1e8vq0e8v1gwXaaum38enmlNs7M0e0x9Mrvs
- QVSdHOOdZOxcApIPtzVYaAXBbiEU519t1wOiY23NkqLRwBFHFbhf09aF54sH2r/6WN85+yZjp
- H5L0pGn1pdDiKqWrkK/2xjsJDbaLfyMtkXt2VdV/rOgA2h7nVNfXbchQHd5upc/efgv3L7rqm
- UjmUTu2M2fVZYHQ2I12C54rCgj3iTyK/wW4r241Q9vbNJyOpoD6Z3AuVFyKUw+lyml3GF4SX/
- I28Ygrg3HHF5KTPacw8MgmkYyYdMyivpOrJVfsNvfi+eLSvwwY37xhwkYLlYVWcFss6uJZjMp
- WSBmulwv/NNr8splMGb8Y6BI2L95Z3JNNueV2+L5zNQr0zW3HdnnTHjXH0+qR/h9BKnQO8S56
- aQdMnkrUQWAGpojQxL3GKZZCre3PK4fygWLE9/DrvBIqbjg6Zijp6YdrbLaavuOzsEFNvreFe
- YqS3ys4JS+eogbSkrV4ByIhcTzztRKylti8MO9iyrmrJ5MVK96RpSokklEV2dpvd28DeO6FPX
- lwvah8TSPjydtzeheeqJ3JEPLGS0+gQE0+ZqOWmY/wqxBoDWsO4U5BGcz6PmWfSrviBu+ZkMI
- sIbiFuddlZJm48ukl
+        Sun, 23 Feb 2020 15:47:26 -0500
+Received: from mail-wr1-f66.google.com ([209.85.221.66]:35819 "EHLO
+        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726302AbgBWUrZ (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 23 Feb 2020 15:47:25 -0500
+Received: by mail-wr1-f66.google.com with SMTP id w12so8014974wrt.2;
+        Sun, 23 Feb 2020 12:47:24 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id;
+        bh=dYvDaxnK7N8VHnHWyAqlhoUjikl2bpEp/fZaR4PA5yI=;
+        b=HQEpLHI94p2qFtS2zhPoDbgf7BLmlTYTOQZ9X++aii+fJNKVXufaaXWZcENMIABVNO
+         +dgyaNAnajZiAbt3mtZgqFqCvGtTNeLVDUI50bGIIFNa95moYomyNFbucadEID3U7D6S
+         7NbLPnqLvxIcCelF+e3RUJZMCAxVUIAUjdTCl22LHcx7efKshdE+ux1FpWoGoGHGC0dF
+         zeSvUpRinmdKFJJiVHVx3d8PqeRI0BStazS7M6QRnNV8/KQuL7utvWHPdkT7RwiKClWY
+         CC6V+2XLvMbWF5qyHBLb9KKYc1vGK3oXJWwwVMJWTG2zw/HDgf/cOTqxMgnbtCTAc+C9
+         y9/Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=dYvDaxnK7N8VHnHWyAqlhoUjikl2bpEp/fZaR4PA5yI=;
+        b=VXibfa/DaUhmMhX0s9CvsHNdOAUfTgWj4OJYiYk2l+yTxqwjnoZRM9b9OUWgoSYjs0
+         2goEQ+xviLf4HhVHIp2IO+BOP+R4IsFVrH8aHUjGcLSZfq4mXSz9CCl7hN/Ar59HmaOj
+         /qHdrcdE9grqNa3Bk4uL1DxWa+n8JTyvEY1pMqHqyDmc52CEm+L6gefB34G8UwcP1V2V
+         skALOi46vPYaw96zInGci4AIr1vdeBWVeU1xbxsbzOg1o1M5AEB2geKiA/FDwrhEIQd1
+         4VG+1+1LvdLIBYOP/G8e5WlArLk1h/0/naiogll4BTjWsaNGzf/wkk/myBeIs8p+sm5d
+         KJ6w==
+X-Gm-Message-State: APjAAAUmL6gpZ/WBu+TYaS02jip1TAuixXYiVtwtq/lCTlcqyDL2eOdN
+        pjgxgONZ+Ymeewme07aYg5U=
+X-Google-Smtp-Source: APXvYqzOIbfDcyi3z4DPafb4aEFDR4g29HJ/uXN0DH7JH7MyLQr8+ujIF3HOvRWBmOdNtfhzulHh/g==
+X-Received: by 2002:adf:dfc7:: with SMTP id q7mr8868933wrn.45.1582490843420;
+        Sun, 23 Feb 2020 12:47:23 -0800 (PST)
+Received: from localhost.localdomain ([79.115.60.40])
+        by smtp.gmail.com with ESMTPSA id z8sm14817927wrq.22.2020.02.23.12.47.21
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 23 Feb 2020 12:47:22 -0800 (PST)
+From:   Vladimir Oltean <olteanv@gmail.com>
+To:     shawnguo@kernel.org, robh+dt@kernel.org, mark.rutland@arm.com,
+        devicetree@vger.kernel.org
+Cc:     andrew@lunn.ch, vivien.didelot@gmail.com, f.fainelli@gmail.com,
+        alexandru.marginean@nxp.com, claudiu.manoil@nxp.com,
+        michael@walle.cc, davem@davemloft.net, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH v3 devicetree 0/6] DT bindings for Felix DSA switch on LS1028A
+Date:   Sun, 23 Feb 2020 22:47:10 +0200
+Message-Id: <20200223204716.26170-1-olteanv@gmail.com>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Remove an unused variable in __init efi_esrt_init().
-Simplify a logical constraint.
+This series officializes the device tree bindings for the embedded
+Ethernet switch on NXP LS1028A (and for the reference design board).
+The driver has been in the tree since v5.4-rc6.
 
-Signed-off-by: Heinrich Schuchardt <xypron.glpk@gmx.de>
-=2D--
- drivers/firmware/efi/esrt.c | 6 ++----
- 1 file changed, 2 insertions(+), 4 deletions(-)
+It also performs some DT binding changes and minor cleanup, as per
+feedback received in v1 and v2:
 
-diff --git a/drivers/firmware/efi/esrt.c b/drivers/firmware/efi/esrt.c
-index 2762e0662bf4..e3d692696583 100644
-=2D-- a/drivers/firmware/efi/esrt.c
-+++ b/drivers/firmware/efi/esrt.c
-@@ -240,7 +240,6 @@ void __init efi_esrt_init(void)
- {
- 	void *va;
- 	struct efi_system_resource_table tmpesrt;
--	struct efi_system_resource_entry_v1 *v1_entries;
- 	size_t size, max, entry_size, entries_size;
- 	efi_memory_desc_t md;
- 	int rc;
-@@ -288,14 +287,13 @@ void __init efi_esrt_init(void)
- 	memcpy(&tmpesrt, va, sizeof(tmpesrt));
- 	early_memunmap(va, size);
+- I've changed the DT bindings for the internal ports from "gmii" to
+  "internal". This means changing the ENETC phy-mode as well, for
+  uniformity. So I would like the entire series to be merged through a
+  single tree, probably the devicetree one - something which David
+  Miller has aggreed to, here [0].
+- Disabled all Ethernet ports in the LS1028A DTSI by default, which
+  means not only the newly introduced switch ports, but also RGMII
+  standalone port 1.
 
--	if (tmpesrt.fw_resource_version =3D=3D 1) {
--		entry_size =3D sizeof (*v1_entries);
--	} else {
-+	if (tmpesrt.fw_resource_version !=3D 1) {
- 		pr_err("Unsupported ESRT version %lld.\n",
- 		       tmpesrt.fw_resource_version);
- 		return;
- 	}
+[0]: https://lkml.org/lkml/2020/2/19/973
 
-+	entry_size =3D sizeof(struct efi_system_resource_entry_v1);
- 	if (tmpesrt.fw_resource_count > 0 && max - size < entry_size) {
- 		pr_err("ESRT memory map entry can only hold the header. (max: %zu size:=
- %zu)\n",
- 		       max - size, entry_size);
-=2D-
-2.25.0
+Claudiu Manoil (2):
+  arm64: dts: fsl: ls1028a: add node for Felix switch
+  arm64: dts: fsl: ls1028a: enable switch PHYs on RDB
+
+Vladimir Oltean (4):
+  arm64: dts: fsl: ls1028a: delete extraneous #interrupt-cells for ENETC
+    RCIE
+  arm64: dts: fsl: ls1028a: disable all enetc ports by default
+  net: dsa: felix: Use PHY_INTERFACE_MODE_INTERNAL instead of GMII
+  dt-bindings: net: dsa: ocelot: document the vsc9959 core
+
+ .../devicetree/bindings/net/dsa/ocelot.txt    | 116 ++++++++++++++++++
+ .../boot/dts/freescale/fsl-ls1028a-qds.dts    |   1 +
+ .../boot/dts/freescale/fsl-ls1028a-rdb.dts    |  61 ++++++++-
+ .../arm64/boot/dts/freescale/fsl-ls1028a.dtsi |  89 +++++++++++++-
+ drivers/net/dsa/ocelot/felix.c                |   3 +-
+ drivers/net/dsa/ocelot/felix_vsc9959.c        |   3 +-
+ 6 files changed, 265 insertions(+), 8 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/net/dsa/ocelot.txt
+
+-- 
+2.17.1
 
