@@ -2,92 +2,83 @@ Return-Path: <SRS0=SnAt=4L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AFA01C35666
-	for <linux-kernel@archiver.kernel.org>; Sun, 23 Feb 2020 17:11:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EB4A1C35671
+	for <linux-kernel@archiver.kernel.org>; Sun, 23 Feb 2020 17:18:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 81058217F4
-	for <linux-kernel@archiver.kernel.org>; Sun, 23 Feb 2020 17:11:30 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582477890;
-	bh=8OqyEc7QNyMjoxGmRiTLt1GHC5rgEgONufByIwUsCfE=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=k0DVzqBOW4UZ0YuF+YJ3WDBn+RomKKYjhkP0u+pqol4/WsK4l+FqoCNt2cOERDm/l
-	 2HrgcKyCbcJhc0+tO39kfLDy3PclKNdM98RQQbX7lnzmo7qpRmHpocHWslb525+KNT
-	 Y1nsSJPC76Jjhe/BCDLbWm8GouvM/7LsYEeQkO0Q=
+	by mail.kernel.org (Postfix) with ESMTP id 92B76206E0
+	for <linux-kernel@archiver.kernel.org>; Sun, 23 Feb 2020 17:18:00 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=tycho-ws.20150623.gappssmtp.com header.i=@tycho-ws.20150623.gappssmtp.com header.b="ZnXU0AiY"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727027AbgBWRL3 (ORCPT
+        id S1727004AbgBWRR7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 23 Feb 2020 12:11:29 -0500
-Received: from mail.kernel.org ([198.145.29.99]:55928 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726208AbgBWRL3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 23 Feb 2020 12:11:29 -0500
-Received: from localhost (95-141-97-180.as16211.net [95.141.97.180])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 32EFF206E0;
-        Sun, 23 Feb 2020 17:11:28 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1582477888;
-        bh=8OqyEc7QNyMjoxGmRiTLt1GHC5rgEgONufByIwUsCfE=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=2MtTavgKoK5qRZ5VqTTxSalzi9v3SSijmLs3uSd/UKixNKt0syBDc6Z5fGoEdcDMI
-         WnE3THI6SHQOubFJR/5BWGJzwP8s3vlpweWz6LeCBcSRDFMsOxzCZcPbI3re6JV7it
-         Xea7UwaNKItKjKGLFVbZh4rVVKPhnkpLc51tOATM=
-Date:   Sun, 23 Feb 2020 18:11:26 +0100
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     Ben Hutchings <ben.hutchings@codethink.co.uk>
-Cc:     Guenter Roeck <linux@roeck-us.net>, linux-kernel@vger.kernel.org,
-        torvalds@linux-foundation.org, akpm@linux-foundation.org,
-        shuah@kernel.org, patches@kernelci.org,
-        lkft-triage@lists.linaro.org, stable@vger.kernel.org
-Subject: Re: [PATCH 5.4 000/344] 5.4.22-stable review
-Message-ID: <20200223171126.GB275658@kroah.com>
-References: <20200221072349.335551332@linuxfoundation.org>
- <45ea9919-8924-fd56-6c78-3cf7f23bb7ff@roeck-us.net>
- <9a4b6a0a2cbc6264e691b501ac962767283f08ad.camel@codethink.co.uk>
+        Sun, 23 Feb 2020 12:17:59 -0500
+Received: from mail-il1-f193.google.com ([209.85.166.193]:40751 "EHLO
+        mail-il1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726208AbgBWRR7 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 23 Feb 2020 12:17:59 -0500
+Received: by mail-il1-f193.google.com with SMTP id i7so5777658ilr.7
+        for <linux-kernel@vger.kernel.org>; Sun, 23 Feb 2020 09:17:58 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=tycho-ws.20150623.gappssmtp.com; s=20150623;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=7SmTtNPBn2T+cb23Q+tOWXTb1iD23pHN7RwXvfrkL9o=;
+        b=ZnXU0AiYUqDbHSfyrXM/7uT2bHICmi3a4U4nFQldVTYotEN+5e57QiIPpx2j2zSfOD
+         3zHezfkmTwch9bXv9L7qNVZUISXIL0ZasnOGiPhmqKXqeiIVBh77ikdN889zLXA/s20t
+         kIe3/boDVkpoKbgdUfDmkRZ+yGN7pFsLsC7uPiX5c6B+IT72iz4zcMTO2mqIXA6QSpG0
+         3IzPiqyfGN/L0Zek8hJCWHEYpx2GRaDD6PYYsl7XSj9fzpSniygzvpB35hW3mOvkoSUQ
+         R3ro9r1cbIxool1PKW0MSGoomdwH8lDS3G2/ySGB76ZVesjXakuXvUgH4TbBHPkGAURr
+         ZpjQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=7SmTtNPBn2T+cb23Q+tOWXTb1iD23pHN7RwXvfrkL9o=;
+        b=p03hs7J9kcMgl+zJWUUbbbyUqSUqLSlmuEJiULjJnEp2+4WS64DBxKo6ER6Yq1VTD2
+         4BTAibgrjIm31xYXy99X/Nq+77GWIDppy2X2YG5cd1U8sHATA7omdfV9TupFvpznppFf
+         YmafjHDQSDIFnB5NTj62cZf5jYttaVkbWhtHAw/eFUD37Cvdq1SYXtjRfIGYh/OV+Y3Q
+         mm4kLVY1b+4jzVfI5HPjpilV5uPGP7SAfXTKVh6sxLDT4Tfovodn47jH4vdPkfPhLoPu
+         /ejNvkxnSNNqtsp3dxoAGy3HyxcHl6D5AGFQgGxtKCu9gFKmkNguOxmKz/LNO2SrsK+G
+         gHXw==
+X-Gm-Message-State: APjAAAVnCtJS7orbRSiiFpinQCYbp0OOBVEhLHCL9lCMSzNsCOOrZdWk
+        Lyxj9fODx/+pySrHAvO7jm79GvPeAtE=
+X-Google-Smtp-Source: APXvYqw63W2EK7XZYK5s2ZWoKQ8ad6sFR+En3xfuokU2Dmq5tIeMmY7/FNGj8fKk5l4fl6ybs2iYuw==
+X-Received: by 2002:a92:9a47:: with SMTP id t68mr50874060ili.155.1582478278014;
+        Sun, 23 Feb 2020 09:17:58 -0800 (PST)
+Received: from cisco ([2601:282:902:b340:8001:28d8:b4a3:8673])
+        by smtp.gmail.com with ESMTPSA id q1sm2430745iog.8.2020.02.23.09.17.56
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 23 Feb 2020 09:17:57 -0800 (PST)
+Date:   Sun, 23 Feb 2020 10:17:57 -0700
+From:   Tycho Andersen <tycho@tycho.ws>
+To:     linux-kernel@vger.kernel.org, linux-riscv@lists.infradead.org
+Cc:     David Abdurachmanov <david.abdurachmanov@gmail.com>,
+        Kees Cook <keescook@chromium.org>,
+        Andy Lutomirski <luto@amacapital.net>,
+        Paul Walmsley <paul.walmsley@sifive.com>,
+        Oleg Nesterov <oleg@redhat.com>
+Subject: Re: [PATCH] riscv: fix seccomp reject syscall code path
+Message-ID: <20200223171757.GB22040@cisco>
+References: <20200208151817.12383-1-tycho@tycho.ws>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <9a4b6a0a2cbc6264e691b501ac962767283f08ad.camel@codethink.co.uk>
+In-Reply-To: <20200208151817.12383-1-tycho@tycho.ws>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Feb 21, 2020 at 03:15:02PM +0000, Ben Hutchings wrote:
-> On Fri, 2020-02-21 at 06:22 -0800, Guenter Roeck wrote:
-> > On 2/20/20 11:36 PM, Greg Kroah-Hartman wrote:
-> > > This is the start of the stable review cycle for the 5.4.22 release.
-> > > There are 344 patches in this series, all will be posted as a response
-> > > to this one.  If anyone has any issues with these being applied, please
-> > > let me know.
-> > > 
-> > > Responses should be made by Sun, 23 Feb 2020 07:19:49 +0000.
-> > > Anything received after that time might be too late.
-> > > 
-> > 
-> > Build reference: v5.4.21-345-gbae6e9bf73af
-> > gcc version: x86_64-linux-gcc (GCC) 9.2.0
-> > 
-> > Building x86_64:allnoconfig ... failed
-> > --------------
-> > Error log:
-> > arch/x86/kernel/unwind_orc.c: In function 'unwind_init':
-> > arch/x86/kernel/unwind_orc.c:278:56: error: 'orc_sort_cmp' undeclared (first use in this function)
-> > 
-> > Affects v{4.14,4.19,5,4,5,5}.y.queue.
-> 
-> This seems to be due to commit 22a7fa8848c5 (x86-unwind-orc-fix-
-> config_modules-build-warning.patch), which is only valid after commit
-> f14bf6a350df "x86/unwind/orc: Remove boot-time ORC unwind tables
-> sorting".
+On Sat, Feb 08, 2020 at 08:18:17AM -0700, Tycho Andersen wrote:
+> ...
 
-Ugh, sorry about that, now dropped from everywhere.  I'll push out a
--rc3 soon...
+Ping, any risc-v people have thoughts on this?
 
-greg k-h
+Tycho
