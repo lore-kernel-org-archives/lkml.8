@@ -2,93 +2,94 @@ Return-Path: <SRS0=SnAt=4L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 48B00C35671
-	for <linux-kernel@archiver.kernel.org>; Sun, 23 Feb 2020 10:20:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D5E0CC35671
+	for <linux-kernel@archiver.kernel.org>; Sun, 23 Feb 2020 10:20:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 11FA9208C3
-	for <linux-kernel@archiver.kernel.org>; Sun, 23 Feb 2020 10:20:49 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=megous.com header.i=@megous.com header.b="XkoEqgLq"
+	by mail.kernel.org (Postfix) with ESMTP id ABBE6208C3
+	for <linux-kernel@archiver.kernel.org>; Sun, 23 Feb 2020 10:20:52 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727165AbgBWKUr (ORCPT
+        id S1727227AbgBWKUv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 23 Feb 2020 05:20:47 -0500
-Received: from vps.xff.cz ([195.181.215.36]:41666 "EHLO vps.xff.cz"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725980AbgBWKUr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 23 Feb 2020 05:20:47 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=megous.com; s=mail;
-        t=1582453245; bh=2tN9XTMyK3Umo3ghVIJmzvxq0UXC2Jq+XBIALehkoD0=;
-        h=Date:From:To:Cc:Subject:References:X-My-GPG-KeyId:From;
-        b=XkoEqgLqCnr+tkqDHpkd4XMU7/XEpc92wTJDACbB7353407pP6PMR1qytzkz8FZu9
-         50U87c+urvZy12Gr8YgpdEk3XegL8DQZRxBdek5sj07FSSwcPyS+ePNawjzN/TcXEx
-         1AP8JFD35wgNTZAY7pyYtQYQcHvAp7Uu2ccSeofs=
-Date:   Sun, 23 Feb 2020 11:20:44 +0100
-From:   =?utf-8?Q?Ond=C5=99ej?= Jirman <megous@megous.com>
-To:     Lars Melin <larsm17@gmail.com>
-Cc:     linux-usb@vger.kernel.org, Oliver Neukum <oneukum@suse.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        open list <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] Support Castles Vega5000 PoS terminal USB
-Message-ID: <20200223102044.odcmcxdk45egxu5i@core.my.home>
-Mail-Followup-To: Lars Melin <larsm17@gmail.com>, linux-usb@vger.kernel.org,
-        Oliver Neukum <oneukum@suse.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        open list <linux-kernel@vger.kernel.org>
-References: <20200222233202.237967-1-megous@megous.com>
- <9d9263a0-cddb-0efb-46a5-1d223a8232e3@gmail.com>
+        Sun, 23 Feb 2020 05:20:51 -0500
+Received: from mail-a09.ithnet.com ([217.64.83.104]:59577 "EHLO
+        mail-a09.ithnet.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725980AbgBWKUt (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 23 Feb 2020 05:20:49 -0500
+X-Greylist: delayed 401 seconds by postgrey-1.27 at vger.kernel.org; Sun, 23 Feb 2020 05:20:48 EST
+Received: (qmail 8830 invoked by uid 0); 23 Feb 2020 10:14:06 -0000
+Received: from skraw.ml@ithnet.com by mail-a09 
+ (Processed in 2.902792 secs); 23 Feb 2020 10:14:06 -0000
+X-Virus-Status: No
+X-ExecutableContent: No
+Received: from dialin014-sr.ithnet.com (HELO ithnet.com) (217.64.64.14)
+  by mail-a09.ithnet.com with ESMTPS (ECDHE-RSA-AES256-GCM-SHA384 encrypted); 23 Feb 2020 10:14:03 -0000
+X-Sender-Authentication: SMTP AUTH verified <skraw.ml@ithnet.com>
+Date:   Sun, 23 Feb 2020 11:14:02 +0100
+From:   Stephan von Krawczynski <skraw.ml@ithnet.com>
+To:     linux-kernel@vger.kernel.org
+Subject: General Discussion about GPLness
+Message-ID: <20200223111402.189c8739@ithnet.com>
+Organization: ith Kommunikationstechnik GmbH
+X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <9d9263a0-cddb-0efb-46a5-1d223a8232e3@gmail.com>
-X-My-GPG-KeyId: EBFBDDE11FB918D44D1F56C1F9F0A873BE9777ED
- <https://xff.cz/key.txt>
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello,
+Hello all,
 
-On Sun, Feb 23, 2020 at 10:08:04AM +0700, Lars Melin wrote:
-> On 2/23/2020 06:32, Ondrej Jirman wrote:
-> > This terminal's USB port needs NO_UNION_NORMAL quirk to work with
-> > cdc-acm driver.
-> > 
-> > Signed-off-by: Ondrej Jirman <megous@megous.com>
-> > ---
-> >   drivers/usb/class/cdc-acm.c | 3 +++
-> >   1 file changed, 3 insertions(+)
-> > 
-> > diff --git a/drivers/usb/class/cdc-acm.c b/drivers/usb/class/cdc-acm.c
-> > index 62f4fb9b362f1..8577441c81a4d 100644
-> > --- a/drivers/usb/class/cdc-acm.c
-> > +++ b/drivers/usb/class/cdc-acm.c
-> > @@ -1739,6 +1739,9 @@ static const struct usb_device_id acm_ids[] = {
-> >   	{ USB_DEVICE(0x22b8, 0x2d9a),   /* modem + AT port + diagnostics + NMEA */
-> >   	.driver_info = NO_UNION_NORMAL, /* handle only modem interface          */
-> >   	},
-> > +	{ USB_DEVICE(0x0ca6, 0xa050), /* Castles Technology VEGA 5000 */
-> > +	.driver_info = NO_UNION_NORMAL, /* reports zero length descriptor */
-> > +	},
-> >   	{ USB_DEVICE(0x0572, 0x1329), /* Hummingbird huc56s (Conexant) */
-> >   	.driver_info = NO_UNION_NORMAL, /* union de
-> 
-> This quirk is in the driver since almost a year ago.
+you may have already heard about it or not (several times in the past),
+non-kernel devices run into a symbol export problem as soon as something is
+only exported GPL from the kernel.
+Currently there is a discussion regarding zfs using this call chain:
 
-You're right. Thank you.
+vdev_bio_associate_blkg (zfs) -> blkg_tryget (kernel) -> percpu_ref_tryget
+(kernel) -> rcu_read_unlock (kernel) -> __rcu_read_unlock (kernel)
 
-I held to the patch for way too long, and didn't notice someone else patched
-it in the meantime.
+where __rcu_read_[lock|unlock] is a GPL symbol now used by (not GPL exported)
+percpu_ref_tryget.
 
-regards,
-	o.
+That this popped up (again) made me think a bit more general about the issue.
+And I do wonder if this rather ideologic problem is on the right track
+currently. Because what the kernel tries to do with the export GPL symbol
+stuff is to prevent any other licensed software from _using_ it in _runtime_.
+It does not try to prevent use/copy of the source code inside another non-gpl
+project.
+And I do think that this is not the intention of GPL. If it were, then 100% of
+all mobile phones on this planet are illegal. All of them use GPL software
+from non-gpl software, be it kernel modules or apps - and I see no difference
+in the two. The constructed difference between kernel mode software and
+user-space software is pure ideology. Because during runtime everything is
+just call-chained.
+Which means if you fopen() a file in user-space it of course uses GPL symbols
+down in the chain somewhere. The contents of the opened file are not
+heaven-sent.
+If you/we follow the current completely ideology-driven GPL strategy then I am
+all for completely giving up this whole project. In real world you simply
+cannot use such a piece of software. The success of linux during the last
+years (i.e. decade) is not based on the pure GPL strategy, but on the
+successful interaction between linux and non-GPL software.
+Just think of the billions of smartphones all using a non-gpl firmware
+(underneath, and there is no GPL version at all), the kernel (with non-gpl
+modules) and apps (quite some of which are non-gpl).
+This is only one prominent example, but there are lots of others.
+In the end it all sums up to one simple question:
+Can one _use_ GPL software during runtime as a base for own projects of any
+license type or not? We are not talking about _copying_ gpl code, we are
+talking about runtime use.
+If runtime use is generally allowed, then the export gpl symbol stuff inside
+the kernel code is nonsense. Because to use the kernel you must be allowed to
+call it, no matter from where.
+Hit me.
 
-> br
-> /Lars
-> 
+-- 
+Regards,
+Stephan
