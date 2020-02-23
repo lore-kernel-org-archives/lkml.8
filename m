@@ -2,74 +2,78 @@ Return-Path: <SRS0=SnAt=4L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 22569C35671
-	for <linux-kernel@archiver.kernel.org>; Sun, 23 Feb 2020 15:40:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F047FC35673
+	for <linux-kernel@archiver.kernel.org>; Sun, 23 Feb 2020 15:40:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E53E6206E0
-	for <linux-kernel@archiver.kernel.org>; Sun, 23 Feb 2020 15:40:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BDCB0206ED
+	for <linux-kernel@archiver.kernel.org>; Sun, 23 Feb 2020 15:40:29 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1582472429;
+	bh=Z8JTCN9ynirPfFpiNMj7oH3o0KhFkMgy/VcRwAhOc5I=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=nZ7xqTuwslBtV5PwF7X1JURMEyXWaVYS/L8b9wUwrEhV54NeyeN2a9PG/njFESqmm
+	 i/u8SdeCONR4DzpNgS7rABFlQH+Y1okUBL6x/OsToySR3+h/YoXhNtf8F1Av/K6y9q
+	 6DpaBQ9hCYtRtg2cSvM96ooTmkL1uAPhC0UcUPN8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727033AbgBWPkD (ORCPT
+        id S1727103AbgBWPk2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 23 Feb 2020 10:40:03 -0500
-Received: from youngberry.canonical.com ([91.189.89.112]:46944 "EHLO
-        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726208AbgBWPkD (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 23 Feb 2020 10:40:03 -0500
-Received: from 1.general.cking.uk.vpn ([10.172.193.212] helo=localhost)
-        by youngberry.canonical.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.86_2)
-        (envelope-from <colin.king@canonical.com>)
-        id 1j5tMI-0006bc-HJ; Sun, 23 Feb 2020 15:39:54 +0000
-From:   Colin King <colin.king@canonical.com>
-To:     William Hubbs <w.d.hubbs@gmail.com>,
-        Chris Brannon <chris@the-brannons.com>,
-        Kirk Reiser <kirk@reisers.ca>,
-        Samuel Thibault <samuel.thibault@ens-lyon.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        speakup@linux-speakup.org, devel@driverdev.osuosl.org
-Cc:     kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH] staging: speakup: remove redundant initialization of pointer p_key
-Date:   Sun, 23 Feb 2020 15:39:54 +0000
-Message-Id: <20200223153954.420731-1-colin.king@canonical.com>
-X-Mailer: git-send-email 2.25.0
+        Sun, 23 Feb 2020 10:40:28 -0500
+Received: from mail.kernel.org ([198.145.29.99]:39088 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727069AbgBWPk2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 23 Feb 2020 10:40:28 -0500
+Received: from localhost (95-141-97-180.as16211.net [95.141.97.180])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3A70E206E0;
+        Sun, 23 Feb 2020 15:40:27 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1582472427;
+        bh=Z8JTCN9ynirPfFpiNMj7oH3o0KhFkMgy/VcRwAhOc5I=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=K2WabDH2aI4xVlE0R9iHOxaACB3CRi2Z+rTzXraiRD1qjTn+Dg31TaS8LM6ji/a1F
+         f7QDEzWWB6M1/57/3Cum06OPamU6q/PQMYkvTyXCHTt9UQouXybEoRzFu4T9zDuDNM
+         C8rEUV7ul4mCKB5WjMY9zetqNTMO0HSDyPC1yvKg=
+Date:   Sun, 23 Feb 2020 16:40:24 +0100
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     torvalds@linux-foundation.org, akpm@linux-foundation.org,
+        linux@roeck-us.net, shuah@kernel.org, patches@kernelci.org,
+        ben.hutchings@codethink.co.uk, lkft-triage@lists.linaro.org,
+        stable@vger.kernel.org
+Subject: Re: [PATCH 5.5 000/399] 5.5.6-stable review
+Message-ID: <20200223154024.GA131562@kroah.com>
+References: <20200221072402.315346745@linuxfoundation.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200221072402.315346745@linuxfoundation.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Colin Ian King <colin.king@canonical.com>
+On Fri, Feb 21, 2020 at 08:35:25AM +0100, Greg Kroah-Hartman wrote:
+> This is the start of the stable review cycle for the 5.5.6 release.
+> There are 399 patches in this series, all will be posted as a response
+> to this one.  If anyone has any issues with these being applied, please
+> let me know.
+> 
+> Responses should be made by Sun, 23 Feb 2020 07:19:49 +0000.
+> Anything received after that time might be too late.
+> 
+> The whole patch series can be found in one patch at:
+> 	https://www.kernel.org/pub/linux/kernel/v5.x/stable-review/patch-5.5.6-rc1.gz
+> or in the git tree and branch at:
+> 	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-5.5.y
+> and the diffstat can be found below.
 
-Pointer p_key is being initialized with a value that is never read,
-it is assigned a new value later on. The initialization is redundant
-and can be removed.
-
-Addresses-Coverity: ("Unused value")
-Signed-off-by: Colin Ian King <colin.king@canonical.com>
----
- drivers/staging/speakup/keyhelp.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/drivers/staging/speakup/keyhelp.c b/drivers/staging/speakup/keyhelp.c
-index 5f1bda37f86d..822ceac83068 100644
---- a/drivers/staging/speakup/keyhelp.c
-+++ b/drivers/staging/speakup/keyhelp.c
-@@ -49,7 +49,7 @@ static int cur_item, nstates;
- static void build_key_data(void)
- {
- 	u_char *kp, counters[MAXFUNCS], ch, ch1;
--	u_short *p_key = key_data, key;
-+	u_short *p_key, key;
- 	int i, offset = 1;
- 
- 	nstates = (int)(state_tbl[-1]);
--- 
-2.25.0
+I've released -rc2 with a bunch of changes that I hope should resolve
+the issues reported:
+	https://www.kernel.org/pub/linux/kernel/v5.x/stable-review/patch-5.5.6-rc2.gz
 
