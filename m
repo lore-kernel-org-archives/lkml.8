@@ -4,56 +4,52 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A1CF5C35671
-	for <linux-kernel@archiver.kernel.org>; Sun, 23 Feb 2020 02:34:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 109E9C35669
+	for <linux-kernel@archiver.kernel.org>; Sun, 23 Feb 2020 02:34:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 735CF20659
-	for <linux-kernel@archiver.kernel.org>; Sun, 23 Feb 2020 02:34:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D5C442067D
+	for <linux-kernel@archiver.kernel.org>; Sun, 23 Feb 2020 02:34:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582425286;
-	bh=PtriBsXyW8kGTAqXSDy7UYBdHikaU5JTUnz/W1iCUdQ=;
+	s=default; t=1582425294;
+	bh=TkxtcHX/hfDE6kKJ2CzjP9PIAziqcd/Z3aylXr8hs0w=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=aQqkONGZvordcE3XSVItN1xGHWH90+BsHpYD44IMT2SvjHqlUT7QBDq1Cgc3KCfvh
-	 AGA6FHytqAk4Z5ziSC78kjUjk4tZA5LkD+wmXjcx8OgQ/d1+KYPzgRgjnmL7TioOHV
-	 TcWBvStEeDpAQlZjIHbIFt0m35C3sGHFQTnSlFG0=
+	b=hVmlg+xF6cHAzmxbSGiRHi67VT2vbjE/urup6h+qum4jBOg7wXhO852OexV+CJnDd
+	 Sef69+o5i9+gCXePBh8zVzS62kYBtCi1OwElkp2xpvc6jj4vaDxu53g3DCN3itqiYL
+	 B0t/9Q03WYvMctI/zkJjxy/P9Q0PiIha8opp9a3A=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728877AbgBWCeo (ORCPT
+        id S1728524AbgBWCex (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 22 Feb 2020 21:34:44 -0500
-Received: from mail.kernel.org ([198.145.29.99]:51360 "EHLO mail.kernel.org"
+        Sat, 22 Feb 2020 21:34:53 -0500
+Received: from mail.kernel.org ([198.145.29.99]:51314 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728130AbgBWCWX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 22 Feb 2020 21:22:23 -0500
+        id S1728110AbgBWCWV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 22 Feb 2020 21:22:21 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 053F2208C3;
-        Sun, 23 Feb 2020 02:22:21 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C889E20702;
+        Sun, 23 Feb 2020 02:22:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1582424542;
-        bh=PtriBsXyW8kGTAqXSDy7UYBdHikaU5JTUnz/W1iCUdQ=;
+        s=default; t=1582424540;
+        bh=TkxtcHX/hfDE6kKJ2CzjP9PIAziqcd/Z3aylXr8hs0w=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=X932TZecS8SDghWmK/+lVskKiKGwIihu8IgZkI6/x1Bt/xLH8PSDwmY9PKXCq/AoB
-         D17uu74H7nx/pr/CvY9njxyOw8CC7Zi7D4vR8becgIZXn6RhhuKEgcuIvQzYqYwsLp
-         0cC4BDJ0owhzrctgdVHHl1D+nJVWbphhI+qkmbHc=
+        b=KK8L4wxIVy4O+CZre/wV7sVd1dwsC3W6V+vUuNVssGo7l+jSJThUZXarUPIq7dxf6
+         pebZRlM1Gy42XWhJYQH0+dy7rP5oBhOkkdlNRmUOeiG8XIFr3xkHmixzSFlciNQk+w
+         EmRrmose4+l4ZXXqd6fQsdVEkGnnrn7ABCxHtaNU=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Shay Bar <shay.bar@celeno.com>,
-        Aviad Brikman <aviad.brikman@celeno.com>,
-        Johannes Berg <johannes.berg@intel.com>,
-        Sasha Levin <sashal@kernel.org>,
-        linux-wireless@vger.kernel.org, netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.5 52/58] mac80211: fix wrong 160/80+80 MHz setting
-Date:   Sat, 22 Feb 2020 21:21:13 -0500
-Message-Id: <20200223022119.707-52-sashal@kernel.org>
+Cc:     Coly Li <colyli@suse.de>, Jens Axboe <axboe@kernel.dk>,
+        Sasha Levin <sashal@kernel.org>, linux-bcache@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.5 50/58] bcache: ignore pending signals when creating gc and allocator thread
+Date:   Sat, 22 Feb 2020 21:21:11 -0500
+Message-Id: <20200223022119.707-50-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200223022119.707-1-sashal@kernel.org>
 References: <20200223022119.707-1-sashal@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
@@ -62,68 +58,100 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Shay Bar <shay.bar@celeno.com>
+From: Coly Li <colyli@suse.de>
 
-[ Upstream commit 33181ea7f5a62a17fbe55f0f73428ecb5e686be8 ]
+[ Upstream commit 0b96da639a4874311e9b5156405f69ef9fc3bef8 ]
 
-Before this patch, STA's would set new width of 160/80+80 MHz based on AP capability only.
-This is wrong because STA may not support > 80MHz BW.
-Fix is to verify STA has 160/80+80 MHz capability before increasing its width to > 80MHz.
+When run a cache set, all the bcache btree node of this cache set will
+be checked by bch_btree_check(). If the bcache btree is very large,
+iterating all the btree nodes will occupy too much system memory and
+the bcache registering process might be selected and killed by system
+OOM killer. kthread_run() will fail if current process has pending
+signal, therefore the kthread creating in run_cache_set() for gc and
+allocator kernel threads are very probably failed for a very large
+bcache btree.
 
-The "support_80_80" and "support_160" setting is based on:
-"Table 9-272 — Setting of the Supported Channel Width Set subfield and Extended NSS BW
-Support subfield at a STA transmitting the VHT Capabilities Information field"
-From "Draft P802.11REVmd_D3.0.pdf"
+Indeed such OOM is safe and the registering process will exit after
+the registration done. Therefore this patch flushes pending signals
+during the cache set start up, specificly in bch_cache_allocator_start()
+and bch_gc_thread_start(), to make sure run_cache_set() won't fail for
+large cahced data set.
 
-Signed-off-by: Aviad Brikman <aviad.brikman@celeno.com>
-Signed-off-by: Shay Bar <shay.bar@celeno.com>
-Link: https://lore.kernel.org/r/20200210130728.23674-1-shay.bar@celeno.com
-Signed-off-by: Johannes Berg <johannes.berg@intel.com>
+Signed-off-by: Coly Li <colyli@suse.de>
+Signed-off-by: Jens Axboe <axboe@kernel.dk>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- net/mac80211/util.c | 16 ++++++++++++++--
- 1 file changed, 14 insertions(+), 2 deletions(-)
+ drivers/md/bcache/alloc.c | 18 ++++++++++++++++--
+ drivers/md/bcache/btree.c | 13 +++++++++++++
+ 2 files changed, 29 insertions(+), 2 deletions(-)
 
-diff --git a/net/mac80211/util.c b/net/mac80211/util.c
-index 739e90555d8b9..decd46b383938 100644
---- a/net/mac80211/util.c
-+++ b/net/mac80211/util.c
-@@ -2993,10 +2993,22 @@ bool ieee80211_chandef_vht_oper(struct ieee80211_hw *hw,
- 	int cf0, cf1;
- 	int ccfs0, ccfs1, ccfs2;
- 	int ccf0, ccf1;
-+	u32 vht_cap;
-+	bool support_80_80 = false;
-+	bool support_160 = false;
+diff --git a/drivers/md/bcache/alloc.c b/drivers/md/bcache/alloc.c
+index a1df0d95151c6..8bc1faf71ff2f 100644
+--- a/drivers/md/bcache/alloc.c
++++ b/drivers/md/bcache/alloc.c
+@@ -67,6 +67,7 @@
+ #include <linux/blkdev.h>
+ #include <linux/kthread.h>
+ #include <linux/random.h>
++#include <linux/sched/signal.h>
+ #include <trace/events/bcache.h>
  
- 	if (!oper || !htop)
- 		return false;
+ #define MAX_OPEN_BUCKETS 128
+@@ -733,8 +734,21 @@ int bch_open_buckets_alloc(struct cache_set *c)
  
-+	vht_cap = hw->wiphy->bands[chandef->chan->band]->vht_cap.cap;
-+	support_160 = (vht_cap & (IEEE80211_VHT_CAP_SUPP_CHAN_WIDTH_MASK |
-+				  IEEE80211_VHT_CAP_EXT_NSS_BW_MASK));
-+	support_80_80 = ((vht_cap &
-+			 IEEE80211_VHT_CAP_SUPP_CHAN_WIDTH_160_80PLUS80MHZ) ||
-+			(vht_cap & IEEE80211_VHT_CAP_SUPP_CHAN_WIDTH_160MHZ &&
-+			 vht_cap & IEEE80211_VHT_CAP_EXT_NSS_BW_MASK) ||
-+			((vht_cap & IEEE80211_VHT_CAP_EXT_NSS_BW_MASK) >>
-+				    IEEE80211_VHT_CAP_EXT_NSS_BW_SHIFT > 1));
- 	ccfs0 = oper->center_freq_seg0_idx;
- 	ccfs1 = oper->center_freq_seg1_idx;
- 	ccfs2 = (le16_to_cpu(htop->operation_mode) &
-@@ -3024,10 +3036,10 @@ bool ieee80211_chandef_vht_oper(struct ieee80211_hw *hw,
- 			unsigned int diff;
+ int bch_cache_allocator_start(struct cache *ca)
+ {
+-	struct task_struct *k = kthread_run(bch_allocator_thread,
+-					    ca, "bcache_allocator");
++	struct task_struct *k;
++
++	/*
++	 * In case previous btree check operation occupies too many
++	 * system memory for bcache btree node cache, and the
++	 * registering process is selected by OOM killer. Here just
++	 * ignore the SIGKILL sent by OOM killer if there is, to
++	 * avoid kthread_run() being failed by pending signals. The
++	 * bcache registering process will exit after the registration
++	 * done.
++	 */
++	if (signal_pending(current))
++		flush_signals(current);
++
++	k = kthread_run(bch_allocator_thread, ca, "bcache_allocator");
+ 	if (IS_ERR(k))
+ 		return PTR_ERR(k);
  
- 			diff = abs(ccf1 - ccf0);
--			if (diff == 8) {
-+			if ((diff == 8) && support_160) {
- 				new.width = NL80211_CHAN_WIDTH_160;
- 				new.center_freq1 = cf1;
--			} else if (diff > 8) {
-+			} else if ((diff > 8) && support_80_80) {
- 				new.width = NL80211_CHAN_WIDTH_80P80;
- 				new.center_freq2 = cf1;
- 			}
+diff --git a/drivers/md/bcache/btree.c b/drivers/md/bcache/btree.c
+index 14d6c33b0957e..78f0711a25849 100644
+--- a/drivers/md/bcache/btree.c
++++ b/drivers/md/bcache/btree.c
+@@ -34,6 +34,7 @@
+ #include <linux/random.h>
+ #include <linux/rcupdate.h>
+ #include <linux/sched/clock.h>
++#include <linux/sched/signal.h>
+ #include <linux/rculist.h>
+ #include <linux/delay.h>
+ #include <trace/events/bcache.h>
+@@ -1917,6 +1918,18 @@ static int bch_gc_thread(void *arg)
+ 
+ int bch_gc_thread_start(struct cache_set *c)
+ {
++	/*
++	 * In case previous btree check operation occupies too many
++	 * system memory for bcache btree node cache, and the
++	 * registering process is selected by OOM killer. Here just
++	 * ignore the SIGKILL sent by OOM killer if there is, to
++	 * avoid kthread_run() being failed by pending signals. The
++	 * bcache registering process will exit after the registration
++	 * done.
++	 */
++	if (signal_pending(current))
++		flush_signals(current);
++
+ 	c->gc_thread = kthread_run(bch_gc_thread, c, "bcache_gc");
+ 	return PTR_ERR_OR_ZERO(c->gc_thread);
+ }
 -- 
 2.20.1
 
