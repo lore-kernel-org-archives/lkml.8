@@ -2,150 +2,140 @@ Return-Path: <SRS0=SnAt=4L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 57F10C35666
-	for <linux-kernel@archiver.kernel.org>; Sun, 23 Feb 2020 11:30:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9C09FC35671
+	for <linux-kernel@archiver.kernel.org>; Sun, 23 Feb 2020 11:49:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2A3C020656
-	for <linux-kernel@archiver.kernel.org>; Sun, 23 Feb 2020 11:30:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4FA28206ED
+	for <linux-kernel@archiver.kernel.org>; Sun, 23 Feb 2020 11:49:46 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="PzabzD3R"
+	dkim=pass (2048-bit key) header.d=arista.com header.i=@arista.com header.b="cjFMGUPW"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727274AbgBWLaa (ORCPT
+        id S1727240AbgBWLtn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 23 Feb 2020 06:30:30 -0500
-Received: from mail-wm1-f66.google.com ([209.85.128.66]:50227 "EHLO
-        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725980AbgBWLaa (ORCPT
+        Sun, 23 Feb 2020 06:49:43 -0500
+Received: from mail-ed1-f67.google.com ([209.85.208.67]:33922 "EHLO
+        mail-ed1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725980AbgBWLtm (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 23 Feb 2020 06:30:30 -0500
-Received: by mail-wm1-f66.google.com with SMTP id a5so6210879wmb.0;
-        Sun, 23 Feb 2020 03:30:28 -0800 (PST)
+        Sun, 23 Feb 2020 06:49:42 -0500
+Received: by mail-ed1-f67.google.com with SMTP id r18so8413115edl.1
+        for <linux-kernel@vger.kernel.org>; Sun, 23 Feb 2020 03:49:41 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=6bqMQ6Q8pNpUWevMe3I2fQaUxze6ip4xI8Zg0jCRVFY=;
-        b=PzabzD3RJRGWE71FAdfmLXTa3MR80htynajipe846I5/QEDB5Vb9X54dACcFhkLHQt
-         NlcBF1lLBm+JSKY+BboOue0ZTC2I7hQiTUORe++WizJBR0qyv+8CsonjVR2VuFiWRpPL
-         DX/dMl+d64PCZQUQtw9Qnryo13K70HSRqxDmaKbxQJOgm17jDERQSy9qxFdhhfqjOXZ2
-         3Rz9LRVouecAYSjbe4CF8hMDBtzz8EUmGilINrTWW9qN3f4M2JjBZkx4PcvzD0TcV2/g
-         R5lDfm0R/F+r9yqDxeGUM359a8wpruJ5tLT16gXMbm/DU8150QZ5QdWOSPWBrr7l6AqY
-         6PNg==
+        d=arista.com; s=googlenew;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=HhQ3dLxQEyfhwpgG/2V7Ytlqomn7vI0cGazzgEuSPP4=;
+        b=cjFMGUPWHpL5PPkyHsnZZp8nPNIIf6PV3J2w0KK0MP8ALMJLpyl2VwGYFZzmHmztFe
+         2rMcbumUsJbphS9ZhoIAkKb3Qv1UfvDckpnHs2oS5H4ws5g6UhTiwzbL4nWGeVB5ztw3
+         5Z6EaA9/t7KL4QwJ30yOz3TYyRir3LvW/U6bZNJE39tvtoR4g5kravOCeHhn4XwZzXmI
+         XQHo+WbDK8Y+J9msu2AxjLCqypo5Jp+eccQaya6ruf0qBO1ndZxuR2iJzl9qnQ96Bw/H
+         XpVP/tMnnKMQpQcWYv7IKJqF8TylPJtutxGvJ0zoI7O5RXNvU7UGZ4f9jtdfUtU2pjov
+         dx1w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=6bqMQ6Q8pNpUWevMe3I2fQaUxze6ip4xI8Zg0jCRVFY=;
-        b=c/cUwXI8xjrKAbQFQJO3yXl9c/dIDoLl/qrOfJpPwerk3yG+0TLqKWwL9RnuqndR+W
-         DiNJqUE0+26/Z/N9X+vCOIBWsb7uyZkcWTOAABEmUjZiQgFW2LRNYir8Ff8ukVVZzBBF
-         vLTyRNCdcRtC0KEF8ifTzE7OVIuxqYuZfwpcVKR8W0aXM9KEQn81BgJm2Cbb7vWicV2Z
-         T3eZBmihjJ/QMtHpZHXfPWuNMM9w6SDQvQfVS1VH1ZpiwIQjPeWo9Gy1MT8Hk32xlTMd
-         0hFbVoVcNstMNb+4QNoKv1Ayw6vkgu3l0KgSUzRjYNlRYkdFUgII0yPB2NWtN9FDSY9q
-         43fw==
-X-Gm-Message-State: APjAAAXp3TvpvSNOjeXrqmTUzMQtEse7v3FbVbAXz3iMxGgX81oo8KEZ
-        6+bgL28XA/G0d+MvssBtYqNijNs=
-X-Google-Smtp-Source: APXvYqxPw0VaSj2Lpsbn4NCOSK4+2vn65MuaG5UcoPoQq4zKGHbihaXwiRo4CEQhaKWgr1UdzAIahw==
-X-Received: by 2002:a1c:2786:: with SMTP id n128mr15528583wmn.47.1582457427827;
-        Sun, 23 Feb 2020 03:30:27 -0800 (PST)
-Received: from avx2 ([46.53.251.128])
-        by smtp.gmail.com with ESMTPSA id i2sm12656810wmb.28.2020.02.23.03.30.26
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=HhQ3dLxQEyfhwpgG/2V7Ytlqomn7vI0cGazzgEuSPP4=;
+        b=CohmY9OmBzQHgu6mdwqJHJG2B5aeEKTC60WIINU2lRo4M9vAonh54slkxPuMj+Hr4M
+         babR+30pvvUpkvPQ3VMZgPkTUugJ4cfqJRR5DAFit+iCTzHxtD33voiWg8t2eYpyLDLw
+         NzfM2OC4WVFFchwg6PwVs1YJf7//jz3eZEDPz3oNwCBpnubkIWxk4x9GjXQk6cYSExig
+         dZTwQ0UBCxSo7JP9c95wvSsdNYA/gb6gxBA1n0nZrZY4gm39KC8s2Rs+E+FdWXGIsiEu
+         OO6CDHFXyWjBTHnnLaxbEE1Ymw6ctEsvMr72OfjFKifz/W4+VWr+oUNofGtZ7egR7Hyf
+         xNUw==
+X-Gm-Message-State: APjAAAXJEGnkjR5qlJXv43N1ZTcPrwVUUIfLcp8YehXwbJ4AQBT/4qnn
+        Hk9qEyDmyue9k9rP8nOnRdZgNsvnRvc=
+X-Google-Smtp-Source: APXvYqwzGpMCywapv/KxwqGPT90G4Og93tXFNsN7NA8LY36Ur3LZd8RUwnMTrBLigSli5ExMbM2z9g==
+X-Received: by 2002:a05:6402:1044:: with SMTP id e4mr41838931edu.233.1582458581021;
+        Sun, 23 Feb 2020 03:49:41 -0800 (PST)
+Received: from localhost.localdomain ([2a02:8084:e84:2480:228:f8ff:fe6f:83a8])
+        by smtp.gmail.com with ESMTPSA id i31sm786194edi.42.2020.02.23.03.49.39
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 23 Feb 2020 03:30:26 -0800 (PST)
-Date:   Sun, 23 Feb 2020 14:30:24 +0300
-From:   Alexey Dobriyan <adobriyan@gmail.com>
-To:     Joe Perches <joe@perches.com>
-Cc:     akpm@linux-foundation.org, linux-kernel@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org
-Subject: Re: [PATCH v3] proc: faster open/read/close with "permanent" files
-Message-ID: <20200223113024.GA4941@avx2>
-References: <20200222201539.GA22576@avx2>
- <7c30fd26941948fa1aedd1e73bdc2ebb8efec477.camel@perches.com>
+        Sun, 23 Feb 2020 03:49:40 -0800 (PST)
+From:   Dmitry Safonov <dima@arista.com>
+To:     linux-kernel@vger.kernel.org
+Cc:     Dmitry Safonov <0x7f454c46@gmail.com>,
+        Dmitry Safonov <dima@arista.com>,
+        Guenter Roeck <linux@roeck-us.net>,
+        Wim Van Sebroeck <wim@linux-watchdog.org>,
+        linux-watchdog@vger.kernel.org
+Subject: [PATCHv3] watchdog: Add stop_on_reboot parameter to control reboot policy
+Date:   Sun, 23 Feb 2020 11:49:39 +0000
+Message-Id: <20200223114939.194754-1-dima@arista.com>
+X-Mailer: git-send-email 2.25.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <7c30fd26941948fa1aedd1e73bdc2ebb8efec477.camel@perches.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, Feb 22, 2020 at 12:39:39PM -0800, Joe Perches wrote:
-> On Sat, 2020-02-22 at 23:15 +0300, Alexey Dobriyan wrote:
-> > Now that "struct proc_ops" exist we can start putting there stuff which
-> > could not fly with VFS "struct file_operations"...
-> > 
-> > Most of fs/proc/inode.c file is dedicated to make open/read/.../close reliable
-> > in the event of disappearing /proc entries which usually happens if module is
-> > getting removed. Files like /proc/cpuinfo which never disappear simply do not
-> > need such protection.
-> > 
-> > Save 2 atomic ops, 1 allocation, 1 free per open/read/close sequence for such
-> > "permanent" files.
-> > 
-> > Enable "permanent" flag for
-> > 
-> > 	/proc/cpuinfo
-> > 	/proc/kmsg
-> > 	/proc/modules
-> > 	/proc/slabinfo
-> > 	/proc/stat
-> > 	/proc/sysvipc/*
-> > 	/proc/swaps
-> > 
-> > More will come once I figure out foolproof way to prevent out module
-> > authors from marking their stuff "permanent" for performance reasons
-> > when it is not.
-> > 
-> > This should help with scalability: benchmark is "read /proc/cpuinfo R times
-> > by N threads scattered over the system".
-> 
-> Is this an actual expected use-case?
+Many watchdog drivers use watchdog_stop_on_reboot() helper in order
+to stop the watchdog on system reboot. Unfortunately, this logic is
+coded in driver's probe function and doesn't allows user to decide what
+to do during shutdown/reboot.
 
-Yes.
+On the other side, Xen and Qemu watchdog drivers (xen_wdt and i6300esb)
+may be configured to either send NMI or turn off/reboot VM as
+the watchdog action. As the kernel may stuck at any state, sending NMIs
+can't reliably reboot the VM.
 
-> Is there some additional unnecessary memory consumption
-> in the unscaled systems?
+At Arista, we benefited from the following set-up: the emulated watchdogs
+trigger VM reset and softdog is set to catch less severe conditions to
+generate vmcore. Just before reboot watchdog's timeout is increased
+to some good-enough value (3 mins). That keeps watchdog always running
+and guarantees that VM doesn't stuck.
 
-No, it's the opposite. Less memory usage for everyone and noticeable
-performance improvement for contented case.
+Provide new stop_on_reboot module parameter to let user control
+watchdog's reboot policy.
 
-> >  static ssize_t proc_reg_read(struct file *file, char __user *buf, size_t count, loff_t *ppos)
-> >  {
-> >  	struct proc_dir_entry *pde = PDE(file_inode(file));
-> >  	ssize_t rv = -EIO;
-> > -	if (use_pde(pde)) {
-> > -		typeof_member(struct proc_ops, proc_read) read;
-> >  
-> > -		read = pde->proc_ops->proc_read;
-> > -		if (read)
-> > -			rv = read(file, buf, count, ppos);
-> > +	if (pde_is_permanent(pde)) {
-> > +		return pde_read(pde, file, buf, count, ppos);
-> > +	} else if (use_pde(pde)) {
-> > +		rv = pde_read(pde, file, buf, count, ppos);
-> >  		unuse_pde(pde);
-> 
-> Perhaps all the function call duplication could be minimized
-> by using code without direct returns like:
-> 
-> 	rv = pde_read(pde, file, buf, count, pos);
-> 	if (!pde_is_permanent(pde))
-> 		unuse_pde(pde);
-> 
-> 	return rv;
+Cc: Guenter Roeck <linux@roeck-us.net>
+Cc: Wim Van Sebroeck <wim@linux-watchdog.org>
+Cc: linux-watchdog@vger.kernel.org
+Signed-off-by: Dmitry Safonov <dima@arista.com>
+---
+Changes:
+v3: Make module parameter read-only in runtime (Thanks Guenter for
+    spotting the typo!)
+v2: Add module parameter instead of ioctl()
 
-Function call non-duplication is false goal.
-Surprisingly it makes code bigger:
+ drivers/watchdog/watchdog_core.c | 12 ++++++++++++
+ 1 file changed, 12 insertions(+)
 
-	$ ./scripts/bloat-o-meter ../vmlinux-000 ../obj/vmlinux
-	add/remove: 0/0 grow/shrink: 1/0 up/down: 10/0 (10)
-	Function                                     old     new   delta
-	proc_reg_read                                108     118     +10
+diff --git a/drivers/watchdog/watchdog_core.c b/drivers/watchdog/watchdog_core.c
+index 861daf4f37b2..423844757812 100644
+--- a/drivers/watchdog/watchdog_core.c
++++ b/drivers/watchdog/watchdog_core.c
+@@ -39,6 +39,10 @@
+ 
+ static DEFINE_IDA(watchdog_ida);
+ 
++static int stop_on_reboot = -1;
++module_param(stop_on_reboot, int, 0444);
++MODULE_PARM_DESC(stop_on_reboot, "Stop watchdogs on reboot (0=keep watching, 1=stop)");
++
+ /*
+  * Deferred Registration infrastructure.
+  *
+@@ -254,6 +258,14 @@ static int __watchdog_register_device(struct watchdog_device *wdd)
+ 		}
+ 	}
+ 
++	/* Module parameter to force watchdog policy on reboot. */
++	if (stop_on_reboot != -1) {
++		if (stop_on_reboot)
++			set_bit(WDOG_STOP_ON_REBOOT, &wdd->status);
++		else
++			clear_bit(WDOG_STOP_ON_REBOOT, &wdd->status);
++	}
++
+ 	if (test_bit(WDOG_STOP_ON_REBOOT, &wdd->status)) {
+ 		wdd->reboot_nb.notifier_call = watchdog_reboot_notifier;
+ 
+-- 
+2.25.0
 
-and worse too: "rv" is carried on stack through "unuse_pde" call.
