@@ -4,49 +4,53 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DA0E5C35671
-	for <linux-kernel@archiver.kernel.org>; Sun, 23 Feb 2020 02:38:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CBABCC35669
+	for <linux-kernel@archiver.kernel.org>; Sun, 23 Feb 2020 02:38:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B14B620659
-	for <linux-kernel@archiver.kernel.org>; Sun, 23 Feb 2020 02:38:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A3C0620659
+	for <linux-kernel@archiver.kernel.org>; Sun, 23 Feb 2020 02:38:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582425489;
-	bh=+40wnswt2X6l0D2VIVpVPpbKqIq9PD1hvybaVhrTmbc=;
+	s=default; t=1582425491;
+	bh=jgup64UFrKiSacTUai/nnQoGjwFMsP91KXVuOUvxR9Y=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=FNkdKE26BBbRmpIeRuEJr42Pg+QHy8Ev7j3u6K2Z1tWbOqTrtkxZI5ZEhcEB1E15o
-	 HjKS7PTkIf2IMyzUWCunyQw3u1iBKcZPZZFu7a6ANAZHZLCHVPpBlO1Z/mnSo7HFI0
-	 Ee0yflNqnA+XZd+T21HR+9ON0hx6cjpnAsidTRkg=
+	b=AUodhaydBI4F32tT8Vsxoi2A7yaQz8GXNVJEDZwu8SNg7JlD79ZfDRH3d9x8F9cMK
+	 Jr56Pye7uzDjSgAE/4W5k2GsfMPAZu6Mp9sUM/sAk7T3BnAe7V6rjVykWwJuOmiWCc
+	 kn02TvIfQ1iy0/H9inr6UZadIm33YMvXVFDCFjcA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728589AbgBWCiI (ORCPT
+        id S1727202AbgBWCVZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 22 Feb 2020 21:38:08 -0500
-Received: from mail.kernel.org ([198.145.29.99]:49690 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727209AbgBWCVZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Sat, 22 Feb 2020 21:21:25 -0500
+Received: from mail.kernel.org ([198.145.29.99]:49614 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726884AbgBWCVX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 22 Feb 2020 21:21:23 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8146120702;
-        Sun, 23 Feb 2020 02:21:24 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E16BF20707;
+        Sun, 23 Feb 2020 02:21:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1582424485;
-        bh=+40wnswt2X6l0D2VIVpVPpbKqIq9PD1hvybaVhrTmbc=;
+        s=default; t=1582424483;
+        bh=jgup64UFrKiSacTUai/nnQoGjwFMsP91KXVuOUvxR9Y=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=cj1pdorL40chrtkEvTqyKxeLromijlLssHy3x7Mda+Ot0B3mi185zxNLHmoKWEj5v
-         QuWPwZJgIWXgykowdUFDE+VXOXZg+Xu68731TI3IVR1sFAl5iRtuYKBkQwFz6ZVBYb
-         O/jhafUlV3Z2qeyFcEf5CKpiTRNya4moZWKTKGqY=
+        b=mKEPZg9XNxYb3l081cV1rCPx3z1PqyKWt6WIlfMJW+GNYrMKspmHD21OErUSN0z3p
+         7kpdF8sP1SdPIy5hl7zWt4aGgQ2FGsv8I+XfVwbOI96IjFFb71CPyyKDLUvd2AbH94
+         GkZWZuRnKCWCAosN/YcyBo5kvhRK6p66WZ2wF3pY=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     "Peter Zijlstra (Intel)" <peterz@infradead.org>,
-        Scott Wood <swood@redhat.com>, Ingo Molnar <mingo@kernel.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 5.5 04/58] timers/nohz: Update NOHZ load in remote tick
-Date:   Sat, 22 Feb 2020 21:20:25 -0500
-Message-Id: <20200223022119.707-4-sashal@kernel.org>
+Cc:     Sean Paul <seanpaul@chromium.org>,
+        Stephen Boyd <swboyd@chromium.org>,
+        Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>,
+        Rob Clark <robdclark@gmail.com>,
+        Douglas Anderson <dianders@chromium.org>,
+        Sasha Levin <sashal@kernel.org>, linux-arm-msm@vger.kernel.org,
+        dri-devel@lists.freedesktop.org, freedreno@lists.freedesktop.org
+Subject: [PATCH AUTOSEL 5.5 02/58] drm/msm: Set dma maximum segment size for mdss
+Date:   Sat, 22 Feb 2020 21:20:23 -0500
+Message-Id: <20200223022119.707-2-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200223022119.707-1-sashal@kernel.org>
 References: <20200223022119.707-1-sashal@kernel.org>
@@ -59,148 +63,93 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: "Peter Zijlstra (Intel)" <peterz@infradead.org>
+From: Sean Paul <seanpaul@chromium.org>
 
-[ Upstream commit ebc0f83c78a2d26384401ecf2d2fa48063c0ee27 ]
+[ Upstream commit db735fc4036bbe1fbe606819b5f0ff26cc76cdff ]
 
-The way loadavg is tracked during nohz only pays attention to the load
-upon entering nohz.  This can be particularly noticeable if full nohz is
-entered while non-idle, and then the cpu goes idle and stays that way for
-a long time.
+Turning on CONFIG_DMA_API_DEBUG_SG results in the following error:
 
-Use the remote tick to ensure that full nohz cpus report their deltas
-within a reasonable time.
+[   12.078665] msm ae00000.mdss: DMA-API: mapping sg segment longer than device claims to support [len=3526656] [max=65536]
+[   12.089870] WARNING: CPU: 6 PID: 334 at /mnt/host/source/src/third_party/kernel/v4.19/kernel/dma/debug.c:1301 debug_dma_map_sg+0x1dc/0x318
+[   12.102655] Modules linked in: joydev
+[   12.106442] CPU: 6 PID: 334 Comm: frecon Not tainted 4.19.0 #2
+[   12.112450] Hardware name: Google Cheza (rev3+) (DT)
+[   12.117566] pstate: 60400009 (nZCv daif +PAN -UAO)
+[   12.122506] pc : debug_dma_map_sg+0x1dc/0x318
+[   12.126995] lr : debug_dma_map_sg+0x1dc/0x318
+[   12.131487] sp : ffffff800cc3ba80
+[   12.134913] x29: ffffff800cc3ba80 x28: 0000000000000000
+[   12.140395] x27: 0000000000000004 x26: 0000000000000004
+[   12.145868] x25: ffffff8008e55b18 x24: 0000000000000000
+[   12.151337] x23: 00000000ffffffff x22: ffffff800921c000
+[   12.156809] x21: ffffffc0fa75b080 x20: ffffffc0f7195090
+[   12.162280] x19: ffffffc0f1c53280 x18: 0000000000000000
+[   12.167749] x17: 0000000000000000 x16: 0000000000000000
+[   12.173218] x15: 0000000000000000 x14: 0720072007200720
+[   12.178689] x13: 0720072007200720 x12: 0720072007200720
+[   12.184161] x11: 0720072007200720 x10: 0720072007200720
+[   12.189641] x9 : ffffffc0f1fc6b60 x8 : 0000000000000000
+[   12.195110] x7 : ffffff8008132ce0 x6 : 0000000000000000
+[   12.200585] x5 : 0000000000000000 x4 : ffffff8008134734
+[   12.206058] x3 : ffffff800cc3b830 x2 : ffffffc0f1fc6240
+[   12.211532] x1 : 25045a74f48a7400 x0 : 25045a74f48a7400
+[   12.217006] Call trace:
+[   12.219535]  debug_dma_map_sg+0x1dc/0x318
+[   12.223671]  get_pages+0x19c/0x20c
+[   12.227177]  msm_gem_fault+0x64/0xfc
+[   12.230874]  __do_fault+0x3c/0x140
+[   12.234383]  __handle_mm_fault+0x70c/0xdb8
+[   12.238603]  handle_mm_fault+0xac/0xc4
+[   12.242473]  do_page_fault+0x1bc/0x3d4
+[   12.246342]  do_translation_fault+0x54/0x88
+[   12.250652]  do_mem_abort+0x60/0xf0
+[   12.254250]  el0_da+0x20/0x24
+[   12.257317] irq event stamp: 67260
+[   12.260828] hardirqs last  enabled at (67259): [<ffffff8008132d0c>] console_unlock+0x214/0x608
+[   12.269693] hardirqs last disabled at (67260): [<ffffff8008080e0c>] do_debug_exception+0x5c/0x178
+[   12.278820] softirqs last  enabled at (67256): [<ffffff8008081664>] __do_softirq+0x4d4/0x520
+[   12.287510] softirqs last disabled at (67249): [<ffffff80080be574>] irq_exit+0xa8/0x100
+[   12.295742] ---[ end trace e63cfc40c313ffab ]---
 
-[ swood: Added changelog and removed recheck of stopped tick. ]
+The root of the problem is that the default segment size for sgt is
+(UINT_MAX & PAGE_MASK), and the default segment size for device dma is
+64K. As such, if you compare the 2, you would deduce that the sg segment
+will overflow the device's capacity. In reality, the hardware can
+accommodate the larger sg segments, it's just not initializing its max
+segment properly. This patch initializes the max segment size for the
+mdss device, which gets rid of that pesky warning.
 
-Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-Signed-off-by: Scott Wood <swood@redhat.com>
-Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-Signed-off-by: Ingo Molnar <mingo@kernel.org>
-Link: https://lkml.kernel.org/r/1578736419-14628-3-git-send-email-swood@redhat.com
+Reported-by: Stephen Boyd <swboyd@chromium.org>
+Tested-by: Stephen Boyd <swboyd@chromium.org>
+Tested-by: Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
+Reviewed-by: Rob Clark <robdclark@gmail.com>
+Signed-off-by: Sean Paul <seanpaul@chromium.org>
+Signed-off-by: Douglas Anderson <dianders@chromium.org>
+Link: https://patchwork.freedesktop.org/patch/msgid/20200121111813.REPOST.1.I92c66a35fb13f368095b05287bdabdbe88ca6922@changeid
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- include/linux/sched/nohz.h |  2 ++
- kernel/sched/core.c        |  4 +++-
- kernel/sched/loadavg.c     | 33 +++++++++++++++++++++++----------
- 3 files changed, 28 insertions(+), 11 deletions(-)
+ drivers/gpu/drm/msm/msm_drv.c | 8 ++++++++
+ 1 file changed, 8 insertions(+)
 
-diff --git a/include/linux/sched/nohz.h b/include/linux/sched/nohz.h
-index 1abe91ff6e4a2..6d67e9a5af6bb 100644
---- a/include/linux/sched/nohz.h
-+++ b/include/linux/sched/nohz.h
-@@ -15,9 +15,11 @@ static inline void nohz_balance_enter_idle(int cpu) { }
+diff --git a/drivers/gpu/drm/msm/msm_drv.c b/drivers/gpu/drm/msm/msm_drv.c
+index c84f0a8b3f2ce..b73fbb65e14b2 100644
+--- a/drivers/gpu/drm/msm/msm_drv.c
++++ b/drivers/gpu/drm/msm/msm_drv.c
+@@ -441,6 +441,14 @@ static int msm_drm_init(struct device *dev, struct drm_driver *drv)
+ 	if (ret)
+ 		goto err_msm_uninit;
  
- #ifdef CONFIG_NO_HZ_COMMON
- void calc_load_nohz_start(void);
-+void calc_load_nohz_remote(struct rq *rq);
- void calc_load_nohz_stop(void);
- #else
- static inline void calc_load_nohz_start(void) { }
-+static inline void calc_load_nohz_remote(struct rq *rq) { }
- static inline void calc_load_nohz_stop(void) { }
- #endif /* CONFIG_NO_HZ_COMMON */
- 
-diff --git a/kernel/sched/core.c b/kernel/sched/core.c
-index ee3685385a6a3..1f4f8e850cab7 100644
---- a/kernel/sched/core.c
-+++ b/kernel/sched/core.c
-@@ -3676,6 +3676,7 @@ static void sched_tick_remote(struct work_struct *work)
- 	if (cpu_is_offline(cpu))
- 		goto out_unlock;
- 
-+	curr = rq->curr;
- 	update_rq_clock(rq);
- 
- 	if (!is_idle_task(curr)) {
-@@ -3688,10 +3689,11 @@ static void sched_tick_remote(struct work_struct *work)
- 	}
- 	curr->sched_class->task_tick(rq, curr, 0);
- 
-+	calc_load_nohz_remote(rq);
- out_unlock:
- 	rq_unlock_irq(rq, &rf);
--
- out_requeue:
++	if (!dev->dma_parms) {
++		dev->dma_parms = devm_kzalloc(dev, sizeof(*dev->dma_parms),
++					      GFP_KERNEL);
++		if (!dev->dma_parms)
++			return -ENOMEM;
++	}
++	dma_set_max_seg_size(dev, DMA_BIT_MASK(32));
 +
- 	/*
- 	 * Run the remote tick once per second (1Hz). This arbitrary
- 	 * frequency is large enough to avoid overload but short enough
-diff --git a/kernel/sched/loadavg.c b/kernel/sched/loadavg.c
-index 28a516575c181..de22da666ac73 100644
---- a/kernel/sched/loadavg.c
-+++ b/kernel/sched/loadavg.c
-@@ -231,16 +231,11 @@ static inline int calc_load_read_idx(void)
- 	return calc_load_idx & 1;
- }
+ 	msm_gem_shrinker_init(ddev);
  
--void calc_load_nohz_start(void)
-+static void calc_load_nohz_fold(struct rq *rq)
- {
--	struct rq *this_rq = this_rq();
- 	long delta;
- 
--	/*
--	 * We're going into NO_HZ mode, if there's any pending delta, fold it
--	 * into the pending NO_HZ delta.
--	 */
--	delta = calc_load_fold_active(this_rq, 0);
-+	delta = calc_load_fold_active(rq, 0);
- 	if (delta) {
- 		int idx = calc_load_write_idx();
- 
-@@ -248,6 +243,24 @@ void calc_load_nohz_start(void)
- 	}
- }
- 
-+void calc_load_nohz_start(void)
-+{
-+	/*
-+	 * We're going into NO_HZ mode, if there's any pending delta, fold it
-+	 * into the pending NO_HZ delta.
-+	 */
-+	calc_load_nohz_fold(this_rq());
-+}
-+
-+/*
-+ * Keep track of the load for NOHZ_FULL, must be called between
-+ * calc_load_nohz_{start,stop}().
-+ */
-+void calc_load_nohz_remote(struct rq *rq)
-+{
-+	calc_load_nohz_fold(rq);
-+}
-+
- void calc_load_nohz_stop(void)
- {
- 	struct rq *this_rq = this_rq();
-@@ -268,7 +281,7 @@ void calc_load_nohz_stop(void)
- 		this_rq->calc_load_update += LOAD_FREQ;
- }
- 
--static long calc_load_nohz_fold(void)
-+static long calc_load_nohz_read(void)
- {
- 	int idx = calc_load_read_idx();
- 	long delta = 0;
-@@ -323,7 +336,7 @@ static void calc_global_nohz(void)
- }
- #else /* !CONFIG_NO_HZ_COMMON */
- 
--static inline long calc_load_nohz_fold(void) { return 0; }
-+static inline long calc_load_nohz_read(void) { return 0; }
- static inline void calc_global_nohz(void) { }
- 
- #endif /* CONFIG_NO_HZ_COMMON */
-@@ -346,7 +359,7 @@ void calc_global_load(unsigned long ticks)
- 	/*
- 	 * Fold the 'old' NO_HZ-delta to include all NO_HZ CPUs.
- 	 */
--	delta = calc_load_nohz_fold();
-+	delta = calc_load_nohz_read();
- 	if (delta)
- 		atomic_long_add(delta, &calc_load_tasks);
- 
+ 	switch (get_mdp_ver(pdev)) {
 -- 
 2.20.1
 
