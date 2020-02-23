@@ -7,48 +7,49 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AE0E4C35671
-	for <linux-kernel@archiver.kernel.org>; Sun, 23 Feb 2020 02:21:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3BC88C35671
+	for <linux-kernel@archiver.kernel.org>; Sun, 23 Feb 2020 02:21:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8688C20702
-	for <linux-kernel@archiver.kernel.org>; Sun, 23 Feb 2020 02:21:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1137820718
+	for <linux-kernel@archiver.kernel.org>; Sun, 23 Feb 2020 02:21:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582424483;
-	bh=16G+r9AkZmKoMHThPkU6o83ScBvSpFl2idhcFxZGbFM=;
-	h=From:To:Cc:Subject:Date:List-ID:From;
-	b=Nnl5iMA88pyPJm7cgyTNruVuV/61IKL7nBBuEDoDaHEyB/hKEhCMolD2G+x1GpeNg
-	 /HBwpyelslqmvHJ0PzPVU2G9wW9td6MqHd5PD1CCWN5PzXfSW6b4BplijULyEDZzvl
-	 +LYEVctiwat8CEOcUUDufCxyqq5fq6C91vgPGXqE=
+	s=default; t=1582424489;
+	bh=dAKRPrEv8MvRl7W0SCrxto34+2lkAH7rU70sRWQelXg=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=ECaq4Cib7b0KKwP4BvZBKXb5NBcVCyKa7ww/zjRu+nPjrBBbpAYqTvpG6zg0dSRZN
+	 b1mDgWa6/r5nc8fHHTpO+AaSMIbXRtGQP9UVBmTjF6F0kW1Zx24XOPRCIqhjjo9DzV
+	 HTAlb1Onff8S7s1OHC4ZBgRXTUoJkcjQP/IO0m2Q=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727169AbgBWCVW (ORCPT
+        id S1727100AbgBWCV1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 22 Feb 2020 21:21:22 -0500
-Received: from mail.kernel.org ([198.145.29.99]:49588 "EHLO mail.kernel.org"
+        Sat, 22 Feb 2020 21:21:27 -0500
+Received: from mail.kernel.org ([198.145.29.99]:49636 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726884AbgBWCVW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 22 Feb 2020 21:21:22 -0500
+        id S1727183AbgBWCVY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 22 Feb 2020 21:21:24 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id CA19F206D7;
-        Sun, 23 Feb 2020 02:21:20 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 60F4920718;
+        Sun, 23 Feb 2020 02:21:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1582424481;
-        bh=16G+r9AkZmKoMHThPkU6o83ScBvSpFl2idhcFxZGbFM=;
-        h=From:To:Cc:Subject:Date:From;
-        b=cE4LC7sZFobWxmdj04przMbydyRa443MDzq+xR4DNCmE1nC8ufg92O7iqdBDkBI/j
-         j3m7OoufwrS5/as9sxUnxmcxvHhOygt0nfNlc2xL0lVmApSFbzZ3H5q51XLCeUtB6a
-         Bnn8ahl7SC+6sJtaZes9c/nTmiel6BrJDH8b+kj8=
+        s=default; t=1582424484;
+        bh=dAKRPrEv8MvRl7W0SCrxto34+2lkAH7rU70sRWQelXg=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=kjJkzojwOvHoagvqcXpq0ULIKso2MG+E55Qk3Dfv9KvBWTF450Qkv+ank0TefBSVV
+         VQSRIHeNlLcOTljGVZj0tQabLAZnGnPx5KWoZHyjEZ3zD77m+mdMny/wAUNr8XJmPM
+         lALybNXKFMShDJmfOvmVRGXqVVaoGpxGmRoSSDi8=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Corey Minyard <cminyard@mvista.com>,
-        kbuild test robot <lkp@intel.com>,
-        Sasha Levin <sashal@kernel.org>,
-        openipmi-developer@lists.sourceforge.net
-Subject: [PATCH AUTOSEL 5.5 01/58] ipmi:ssif: Handle a possible NULL pointer reference
-Date:   Sat, 22 Feb 2020 21:20:22 -0500
-Message-Id: <20200223022119.707-1-sashal@kernel.org>
+Cc:     Scott Wood <swood@redhat.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@kernel.org>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH AUTOSEL 5.5 03/58] sched/core: Don't skip remote tick for idle CPUs
+Date:   Sat, 22 Feb 2020 21:20:24 -0500
+Message-Id: <20200223022119.707-3-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20200223022119.707-1-sashal@kernel.org>
+References: <20200223022119.707-1-sashal@kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
@@ -58,43 +59,60 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Corey Minyard <cminyard@mvista.com>
+From: Scott Wood <swood@redhat.com>
 
-[ Upstream commit 6b8526d3abc02c08a2f888e8c20b7ac9e5776dfe ]
+[ Upstream commit 488603b815a7514c7009e6fc339d74ed4a30f343 ]
 
-In error cases a NULL can be passed to memcpy.  The length will always
-be zero, so it doesn't really matter, but go ahead and check for NULL,
-anyway, to be more precise and avoid static analysis errors.
+This will be used in the next patch to get a loadavg update from
+nohz cpus.  The delta check is skipped because idle_sched_class
+doesn't update se.exec_start.
 
-Reported-by: kbuild test robot <lkp@intel.com>
-Signed-off-by: Corey Minyard <cminyard@mvista.com>
+Signed-off-by: Scott Wood <swood@redhat.com>
+Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+Signed-off-by: Ingo Molnar <mingo@kernel.org>
+Link: https://lkml.kernel.org/r/1578736419-14628-2-git-send-email-swood@redhat.com
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/char/ipmi/ipmi_ssif.c | 10 +++++++---
- 1 file changed, 7 insertions(+), 3 deletions(-)
+ kernel/sched/core.c | 18 ++++++++++--------
+ 1 file changed, 10 insertions(+), 8 deletions(-)
 
-diff --git a/drivers/char/ipmi/ipmi_ssif.c b/drivers/char/ipmi/ipmi_ssif.c
-index 22c6a2e612360..8ac390c2b5147 100644
---- a/drivers/char/ipmi/ipmi_ssif.c
-+++ b/drivers/char/ipmi/ipmi_ssif.c
-@@ -775,10 +775,14 @@ static void msg_done_handler(struct ssif_info *ssif_info, int result,
- 	flags = ipmi_ssif_lock_cond(ssif_info, &oflags);
- 	msg = ssif_info->curr_msg;
- 	if (msg) {
-+		if (data) {
-+			if (len > IPMI_MAX_MSG_LENGTH)
-+				len = IPMI_MAX_MSG_LENGTH;
-+			memcpy(msg->rsp, data, len);
-+		} else {
-+			len = 0;
-+		}
- 		msg->rsp_size = len;
--		if (msg->rsp_size > IPMI_MAX_MSG_LENGTH)
--			msg->rsp_size = IPMI_MAX_MSG_LENGTH;
--		memcpy(msg->rsp, data, msg->rsp_size);
- 		ssif_info->curr_msg = NULL;
- 	}
+diff --git a/kernel/sched/core.c b/kernel/sched/core.c
+index 894fb81313fd1..ee3685385a6a3 100644
+--- a/kernel/sched/core.c
++++ b/kernel/sched/core.c
+@@ -3668,22 +3668,24 @@ static void sched_tick_remote(struct work_struct *work)
+ 	 * statistics and checks timeslices in a time-independent way, regardless
+ 	 * of when exactly it is running.
+ 	 */
+-	if (idle_cpu(cpu) || !tick_nohz_tick_stopped_cpu(cpu))
++	if (!tick_nohz_tick_stopped_cpu(cpu))
+ 		goto out_requeue;
  
+ 	rq_lock_irq(rq, &rf);
+ 	curr = rq->curr;
+-	if (is_idle_task(curr) || cpu_is_offline(cpu))
++	if (cpu_is_offline(cpu))
+ 		goto out_unlock;
+ 
+ 	update_rq_clock(rq);
+-	delta = rq_clock_task(rq) - curr->se.exec_start;
+ 
+-	/*
+-	 * Make sure the next tick runs within a reasonable
+-	 * amount of time.
+-	 */
+-	WARN_ON_ONCE(delta > (u64)NSEC_PER_SEC * 3);
++	if (!is_idle_task(curr)) {
++		/*
++		 * Make sure the next tick runs within a reasonable
++		 * amount of time.
++		 */
++		delta = rq_clock_task(rq) - curr->se.exec_start;
++		WARN_ON_ONCE(delta > (u64)NSEC_PER_SEC * 3);
++	}
+ 	curr->sched_class->task_tick(rq, curr, 0);
+ 
+ out_unlock:
 -- 
 2.20.1
 
