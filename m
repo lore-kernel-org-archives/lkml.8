@@ -7,46 +7,46 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7D09AC35669
-	for <linux-kernel@archiver.kernel.org>; Sun, 23 Feb 2020 02:31:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 36FC2C35669
+	for <linux-kernel@archiver.kernel.org>; Sun, 23 Feb 2020 02:31:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4644520659
-	for <linux-kernel@archiver.kernel.org>; Sun, 23 Feb 2020 02:31:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0E30320659
+	for <linux-kernel@archiver.kernel.org>; Sun, 23 Feb 2020 02:31:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582425096;
-	bh=KDYByohL7ndprh8WUuHDrdvmdYbSJj3I7Ol3IM04Fjk=;
+	s=default; t=1582425100;
+	bh=DrogBba9msTbngHtLmWtxQahOenWiF9iZhri+C8iWa0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=MQD1iBhGYrsVMG3QnNLjYRS1HGXVziE7WfX0rECGZAZIwcgbpg7v0LAO5ohySNXTU
-	 J8Y7/+nnUr/62yfb9TYOr1QbrexRBL2asuw9xoKZg9sM776dYRojiNj9HDEqWxCsLt
-	 qD/OfMdbMl4HeySoquNhQBA3RQVulDr9FwLaSARQ=
+	b=2EvDY2Fp4a9KzC8RE806240wGH2ff4Z2tErcpsrw0fQ4Wa9vRrljEV4VQarS3aKAY
+	 Ls0FEzpfvJ+vdGcYaI6UF0UPu9H276kJu5Ui4yZbgL55zbpSaSZFx8Xh3+cWadrOwB
+	 aKhrN9K3T5ZEwdpqSQUCRl51OCbrBQUQZRllYxLs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728301AbgBWCbe (ORCPT
+        id S1728621AbgBWCXW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 22 Feb 2020 21:31:34 -0500
-Received: from mail.kernel.org ([198.145.29.99]:52842 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728627AbgBWCXW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Sat, 22 Feb 2020 21:23:22 -0500
+Received: from mail.kernel.org ([198.145.29.99]:52736 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728569AbgBWCXR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 22 Feb 2020 21:23:17 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3F0A420702;
-        Sun, 23 Feb 2020 02:23:21 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9171021741;
+        Sun, 23 Feb 2020 02:23:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1582424601;
-        bh=KDYByohL7ndprh8WUuHDrdvmdYbSJj3I7Ol3IM04Fjk=;
+        s=default; t=1582424596;
+        bh=DrogBba9msTbngHtLmWtxQahOenWiF9iZhri+C8iWa0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=BsjZYw+MN2Xi2zEallaXUwq6emsshBQdlhzvIQCjoq3OXgnRfrT3lCM0qBzx+EjVB
-         iwUIJYJebSyoadFZ+TBm+v3FoCgDgJ0suJLMrKb4jCCzwPq7k7uIj0E/FO2uMOIPxK
-         t3SH88nXW0R5xriO/D0lfPqekt3/ucjiPn8K2XNs=
+        b=X1U2V2Ug41OgXJJNWMasUgT+ou8o3aPfqslN/H1xf0n3dzxIo2bG8Ur1DfsBHY9+0
+         4ZGZ/TEuDx6tZfNR3V0c7HzTas8hZCWqyt/8IUCc8myuxWljqAi7ZTX81WXfrRWIEH
+         /v3ly0NhPGRm0RMUhCm2YJ2tk6nJ6jGaGORW+HoQ=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 Cc:     Sameeh Jubran <sameehj@amazon.com>,
         "David S . Miller" <davem@davemloft.net>,
         Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.4 38/50] net: ena: ethtool: use correct value for crc32 hash
-Date:   Sat, 22 Feb 2020 21:22:23 -0500
-Message-Id: <20200223022235.1404-38-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 5.4 33/50] net: ena: rss: do not allocate key when not supported
+Date:   Sat, 22 Feb 2020 21:22:18 -0500
+Message-Id: <20200223022235.1404-33-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200223022235.1404-1-sashal@kernel.org>
 References: <20200223022235.1404-1-sashal@kernel.org>
@@ -61,41 +61,64 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Sameeh Jubran <sameehj@amazon.com>
 
-[ Upstream commit 886d2089276e40d460731765083a741c5c762461 ]
+[ Upstream commit 6a4f7dc82d1e3abd3feb0c60b5041056fcd9880c ]
 
-Up till kernel 4.11 there was no enum defined for crc32 hash in ethtool,
-thus the xor enum was used for supporting crc32.
+Currently we allocate the key whether the device supports setting the
+key or not. This commit adds a check to the allocation function and
+handles the error accordingly.
 
 Fixes: 1738cd3ed342 ("net: ena: Add a driver for Amazon Elastic Network Adapters (ENA)")
 Signed-off-by: Sameeh Jubran <sameehj@amazon.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/ethernet/amazon/ena/ena_ethtool.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ drivers/net/ethernet/amazon/ena/ena_com.c | 24 ++++++++++++++++++++---
+ 1 file changed, 21 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/net/ethernet/amazon/ena/ena_ethtool.c b/drivers/net/ethernet/amazon/ena/ena_ethtool.c
-index 446873bed382b..b0151139abb18 100644
---- a/drivers/net/ethernet/amazon/ena/ena_ethtool.c
-+++ b/drivers/net/ethernet/amazon/ena/ena_ethtool.c
-@@ -693,7 +693,7 @@ static int ena_get_rxfh(struct net_device *netdev, u32 *indir, u8 *key,
- 		func = ETH_RSS_HASH_TOP;
- 		break;
- 	case ENA_ADMIN_CRC32:
--		func = ETH_RSS_HASH_XOR;
-+		func = ETH_RSS_HASH_CRC32;
- 		break;
- 	default:
- 		netif_err(adapter, drv, netdev,
-@@ -739,7 +739,7 @@ static int ena_set_rxfh(struct net_device *netdev, const u32 *indir,
- 	case ETH_RSS_HASH_TOP:
- 		func = ENA_ADMIN_TOEPLITZ;
- 		break;
--	case ETH_RSS_HASH_XOR:
-+	case ETH_RSS_HASH_CRC32:
- 		func = ENA_ADMIN_CRC32;
- 		break;
- 	default:
+diff --git a/drivers/net/ethernet/amazon/ena/ena_com.c b/drivers/net/ethernet/amazon/ena/ena_com.c
+index d6b894b06fa30..6f758ece86f60 100644
+--- a/drivers/net/ethernet/amazon/ena/ena_com.c
++++ b/drivers/net/ethernet/amazon/ena/ena_com.c
+@@ -1057,6 +1057,20 @@ static void ena_com_hash_key_fill_default_key(struct ena_com_dev *ena_dev)
+ static int ena_com_hash_key_allocate(struct ena_com_dev *ena_dev)
+ {
+ 	struct ena_rss *rss = &ena_dev->rss;
++	struct ena_admin_feature_rss_flow_hash_control *hash_key;
++	struct ena_admin_get_feat_resp get_resp;
++	int rc;
++
++	hash_key = (ena_dev->rss).hash_key;
++
++	rc = ena_com_get_feature_ex(ena_dev, &get_resp,
++				    ENA_ADMIN_RSS_HASH_FUNCTION,
++				    ena_dev->rss.hash_key_dma_addr,
++				    sizeof(ena_dev->rss.hash_key), 0);
++	if (unlikely(rc)) {
++		hash_key = NULL;
++		return -EOPNOTSUPP;
++	}
+ 
+ 	rss->hash_key =
+ 		dma_alloc_coherent(ena_dev->dmadev, sizeof(*rss->hash_key),
+@@ -2640,11 +2654,15 @@ int ena_com_rss_init(struct ena_com_dev *ena_dev, u16 indr_tbl_log_size)
+ 	if (unlikely(rc))
+ 		goto err_indr_tbl;
+ 
++	/* The following function might return unsupported in case the
++	 * device doesn't support setting the key / hash function. We can safely
++	 * ignore this error and have indirection table support only.
++	 */
+ 	rc = ena_com_hash_key_allocate(ena_dev);
+-	if (unlikely(rc))
++	if (unlikely(rc) && rc != -EOPNOTSUPP)
+ 		goto err_hash_key;
+-
+-	ena_com_hash_key_fill_default_key(ena_dev);
++	else if (rc != -EOPNOTSUPP)
++		ena_com_hash_key_fill_default_key(ena_dev);
+ 
+ 	rc = ena_com_hash_ctrl_init(ena_dev);
+ 	if (unlikely(rc))
 -- 
 2.20.1
 
