@@ -4,50 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 62C8BC35673
-	for <linux-kernel@archiver.kernel.org>; Sun, 23 Feb 2020 02:28:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 638E9C35673
+	for <linux-kernel@archiver.kernel.org>; Sun, 23 Feb 2020 02:29:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3973320707
-	for <linux-kernel@archiver.kernel.org>; Sun, 23 Feb 2020 02:28:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3079F20707
+	for <linux-kernel@archiver.kernel.org>; Sun, 23 Feb 2020 02:29:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582424935;
-	bh=VJl0l3HT/6xbtOrM+ACwuJjPmzziUCLCfBox3w+pcyw=;
+	s=default; t=1582424943;
+	bh=Z1dMYpLb4NXWfxeWUpFhtCK6YiwnMMMDAucUO+4ynRI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=dXxu2rNBZYk0I3XRu9cK3c+QmRxPqncIInRe/octsIbtYZIdWTHwEyTkznDW8Gz2q
-	 hDigqpG/Hyq8aGGx2TQlRcx+yamDvMyd9gmkoTazqahMKzyyGf7Vx7oyNjjQ9QTzaH
-	 ykI479Uw9qygVcGPzZnHeqFI927T6DWMAKlYsqH8=
+	b=1bb+0GYwV260gDFZAgiph7Wb0OdAMxmTGJLRAMSuSCYqgDcZks8F7nNxWYJ0fvdRO
+	 af4gOq3/PCgXACOv+8xHTt/7yTgKySLczD2Vynkbod0nIl/3sZCypyKZnKDHrYBjLQ
+	 rxx4G9G1fKDjT5Ws/4V3+pIiazh01RfoU3qgjWoE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729067AbgBWCYL (ORCPT
+        id S1729019AbgBWCYH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 22 Feb 2020 21:24:11 -0500
-Received: from mail.kernel.org ([198.145.29.99]:53956 "EHLO mail.kernel.org"
+        Sat, 22 Feb 2020 21:24:07 -0500
+Received: from mail.kernel.org ([198.145.29.99]:53896 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729016AbgBWCYI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 22 Feb 2020 21:24:08 -0500
+        id S1728930AbgBWCYF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 22 Feb 2020 21:24:05 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A274C20707;
-        Sun, 23 Feb 2020 02:24:06 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 676FE20707;
+        Sun, 23 Feb 2020 02:24:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1582424647;
-        bh=VJl0l3HT/6xbtOrM+ACwuJjPmzziUCLCfBox3w+pcyw=;
+        s=default; t=1582424645;
+        bh=Z1dMYpLb4NXWfxeWUpFhtCK6YiwnMMMDAucUO+4ynRI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=cI+K1ytMSCn9uv19ci5GUWUzIBKXTKKcgeJDdrnhl0zGTzd/DIrhpXLgAbWJAi2t4
-         jp40Bi1Zd3L9JSktzVKniQXj9Iy0uqiO7+l51pQUVWNUjppl/SPnNoIPFgESYNAk34
-         cHdx4zo7yZU6z5y2eEnlgRpDEr0W3sDXHZhNxkLU=
+        b=kTQuon4QGDs36mcl0Md1vyET78E4KOoe2+1BWaX4zSg1SgRsEu5q8HfyS1KrOKJGE
+         Ube478Ig3PEoFUfOVC2Wo8bHr8K+GNE0goJKqdPQnKqsRCNqvWCtZeZxihTpg9ij0c
+         fVPQCI2Y8wvXpC7z9ihTkQPr1IOjtLgW1/2F3gFI=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Frank Sorenson <sorenson@redhat.com>,
-        Steve French <stfrench@microsoft.com>,
-        Sasha Levin <sashal@kernel.org>, linux-cifs@vger.kernel.org,
-        samba-technical@lists.samba.org
-Subject: [PATCH AUTOSEL 4.19 23/25] cifs: Fix mode output in debugging statements
-Date:   Sat, 22 Feb 2020 21:23:37 -0500
-Message-Id: <20200223022339.1885-23-sashal@kernel.org>
+Cc:     Arthur Kiyanovski <akiyano@amazon.com>,
+        Sameeh Jubran <sameehj@amazon.com>,
+        "David S . Miller" <davem@davemloft.net>,
+        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 21/25] net: ena: ena-com.c: prevent NULL pointer dereference
+Date:   Sat, 22 Feb 2020 21:23:35 -0500
+Message-Id: <20200223022339.1885-21-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200223022339.1885-1-sashal@kernel.org>
 References: <20200223022339.1885-1-sashal@kernel.org>
@@ -60,70 +60,50 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Frank Sorenson <sorenson@redhat.com>
+From: Arthur Kiyanovski <akiyano@amazon.com>
 
-[ Upstream commit f52aa79df43c4509146140de0241bc21a4a3b4c7 ]
+[ Upstream commit c207979f5ae10ed70aff1bb13f39f0736973de99 ]
 
-A number of the debug statements output file or directory mode
-in hex.  Change these to print using octal.
+comp_ctx can be NULL in a very rare case when an admin command is executed
+during the execution of ena_remove().
 
-Signed-off-by: Frank Sorenson <sorenson@redhat.com>
-Signed-off-by: Steve French <stfrench@microsoft.com>
+The bug scenario is as follows:
+
+* ena_destroy_device() sets the comp_ctx to be NULL
+* An admin command is executed before executing unregister_netdev(),
+  this can still happen because our device can still receive callbacks
+  from the netdev infrastructure such as ethtool commands.
+* When attempting to access the comp_ctx, the bug occurs since it's set
+  to NULL
+
+Fix:
+Added a check that comp_ctx is not NULL
+
+Fixes: 1738cd3ed342 ("net: ena: Add a driver for Amazon Elastic Network Adapters (ENA)")
+Signed-off-by: Sameeh Jubran <sameehj@amazon.com>
+Signed-off-by: Arthur Kiyanovski <akiyano@amazon.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/cifs/cifsacl.c | 4 ++--
- fs/cifs/connect.c | 2 +-
- fs/cifs/inode.c   | 2 +-
- 3 files changed, 4 insertions(+), 4 deletions(-)
+ drivers/net/ethernet/amazon/ena/ena_com.c | 5 +++++
+ 1 file changed, 5 insertions(+)
 
-diff --git a/fs/cifs/cifsacl.c b/fs/cifs/cifsacl.c
-index 1d377b7f28605..130bdca9e5680 100644
---- a/fs/cifs/cifsacl.c
-+++ b/fs/cifs/cifsacl.c
-@@ -603,7 +603,7 @@ static void access_flags_to_mode(__le32 ace_flags, int type, umode_t *pmode,
- 			((flags & FILE_EXEC_RIGHTS) == FILE_EXEC_RIGHTS))
- 		*pmode |= (S_IXUGO & (*pbits_to_set));
- 
--	cifs_dbg(NOISY, "access flags 0x%x mode now 0x%x\n", flags, *pmode);
-+	cifs_dbg(NOISY, "access flags 0x%x mode now %04o\n", flags, *pmode);
- 	return;
- }
- 
-@@ -632,7 +632,7 @@ static void mode_to_access_flags(umode_t mode, umode_t bits_to_use,
- 	if (mode & S_IXUGO)
- 		*pace_flags |= SET_FILE_EXEC_RIGHTS;
- 
--	cifs_dbg(NOISY, "mode: 0x%x, access flags now 0x%x\n",
-+	cifs_dbg(NOISY, "mode: %04o, access flags now 0x%x\n",
- 		 mode, *pace_flags);
- 	return;
- }
-diff --git a/fs/cifs/connect.c b/fs/cifs/connect.c
-index 576cf71576da1..5a4d677a5b19d 100644
---- a/fs/cifs/connect.c
-+++ b/fs/cifs/connect.c
-@@ -3792,7 +3792,7 @@ int cifs_setup_cifs_sb(struct smb_vol *pvolume_info,
- 	cifs_sb->mnt_gid = pvolume_info->linux_gid;
- 	cifs_sb->mnt_file_mode = pvolume_info->file_mode;
- 	cifs_sb->mnt_dir_mode = pvolume_info->dir_mode;
--	cifs_dbg(FYI, "file mode: 0x%hx  dir mode: 0x%hx\n",
-+	cifs_dbg(FYI, "file mode: %04ho  dir mode: %04ho\n",
- 		 cifs_sb->mnt_file_mode, cifs_sb->mnt_dir_mode);
- 
- 	cifs_sb->actimeo = pvolume_info->actimeo;
-diff --git a/fs/cifs/inode.c b/fs/cifs/inode.c
-index 26154db6c87f1..fbebf241dbf24 100644
---- a/fs/cifs/inode.c
-+++ b/fs/cifs/inode.c
-@@ -1579,7 +1579,7 @@ int cifs_mkdir(struct inode *inode, struct dentry *direntry, umode_t mode)
- 	struct TCP_Server_Info *server;
- 	char *full_path;
- 
--	cifs_dbg(FYI, "In cifs_mkdir, mode = 0x%hx inode = 0x%p\n",
-+	cifs_dbg(FYI, "In cifs_mkdir, mode = %04ho inode = 0x%p\n",
- 		 mode, inode);
- 
- 	cifs_sb = CIFS_SB(inode->i_sb);
+diff --git a/drivers/net/ethernet/amazon/ena/ena_com.c b/drivers/net/ethernet/amazon/ena/ena_com.c
+index 397fb49156a9a..d52ab752b37f1 100644
+--- a/drivers/net/ethernet/amazon/ena/ena_com.c
++++ b/drivers/net/ethernet/amazon/ena/ena_com.c
+@@ -201,6 +201,11 @@ static inline void comp_ctxt_release(struct ena_com_admin_queue *queue,
+ static struct ena_comp_ctx *get_comp_ctxt(struct ena_com_admin_queue *queue,
+ 					  u16 command_id, bool capture)
+ {
++	if (unlikely(!queue->comp_ctx)) {
++		pr_err("Completion context is NULL\n");
++		return NULL;
++	}
++
+ 	if (unlikely(command_id >= queue->q_depth)) {
+ 		pr_err("command id is larger than the queue size. cmd_id: %u queue size %d\n",
+ 		       command_id, queue->q_depth);
 -- 
 2.20.1
 
