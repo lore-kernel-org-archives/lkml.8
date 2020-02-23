@@ -2,364 +2,126 @@ Return-Path: <SRS0=SnAt=4L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,URIBL_BLOCKED,
+	USER_AGENT_SANE_2 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D938DC35675
-	for <linux-kernel@archiver.kernel.org>; Sun, 23 Feb 2020 13:14:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 89005C35671
+	for <linux-kernel@archiver.kernel.org>; Sun, 23 Feb 2020 13:15:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A782420675
-	for <linux-kernel@archiver.kernel.org>; Sun, 23 Feb 2020 13:14:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 55ECF20675
+	for <linux-kernel@archiver.kernel.org>; Sun, 23 Feb 2020 13:15:20 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=megous.com header.i=@megous.com header.b="hA75GDF8"
+	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="cyjb4Jh2"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727159AbgBWNOw (ORCPT
+        id S1727176AbgBWNPT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 23 Feb 2020 08:14:52 -0500
-Received: from vps.xff.cz ([195.181.215.36]:42672 "EHLO vps.xff.cz"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726302AbgBWNOw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 23 Feb 2020 08:14:52 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=megous.com; s=mail;
-        t=1582463689; bh=n1Gw4xmsWHFb3xKKdvOT2QnTlBh8AtTBj3a2tgGFxec=;
-        h=From:To:Cc:Subject:Date:References:From;
-        b=hA75GDF8j3AnG+DDG8IxhwbfCnxrf3sRc12Lu5upBWtrjBLOVk9aPnsnJeiFYef0E
-         rGL25ko6X6f3B1SpUiiQXEJcG9mYGj10vqRPxDLMYXl3Qu+m2RB+YAM7PCkDwrvhf7
-         rVOi6DT/6zgiOJSgs2JE1PpnT5vursi1wDOlcPmY=
-From:   Ondrej Jirman <megous@megous.com>
-To:     linux-sunxi@googlegroups.com,
-        Jacek Anaszewski <jacek.anaszewski@gmail.com>,
-        Pavel Machek <pavel@ucw.cz>, Dan Murphy <dmurphy@ti.com>,
-        Rob Herring <robh+dt@kernel.org>, Chen-Yu Tsai <wens@csie.org>,
-        Maxime Ripard <mripard@kernel.org>
-Cc:     Ondrej Jirman <megous@megous.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Lee Jones <lee.jones@linaro.org>, linux-leds@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org
-Subject: [PATCH 2/4] leds: axp20x: Support charger LED on AXP20x like PMICs
-Date:   Sun, 23 Feb 2020 14:14:33 +0100
-Message-Id: <20200223131435.681620-3-megous@megous.com>
-In-Reply-To: <20200223131435.681620-1-megous@megous.com>
-References: <20200223131435.681620-1-megous@megous.com>
+        Sun, 23 Feb 2020 08:15:19 -0500
+Received: from mailgw02.mediatek.com ([210.61.82.184]:62408 "EHLO
+        mailgw02.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726302AbgBWNPS (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 23 Feb 2020 08:15:18 -0500
+X-UUID: 1d18b034a6be43ee88cd15a93b00d9fb-20200223
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
+        h=Content-Transfer-Encoding:MIME-Version:Content-Type:References:In-Reply-To:Date:CC:To:From:Subject:Message-ID; bh=HUcMinlJztCOhwy6UvhkEzNXlyN6matYqtCW9mEf2tg=;
+        b=cyjb4Jh2uiN5gqUWXcDwNSbbBVQ3VHvCM2Bac0nMvB+TU+UEj1X0VX443+da8woBc78lZX2D00EuYgtDBxqrxzXVnpF/zvaNrtN7oOulBxQJJ5XSmN6RM2SeAzYcvbTPeIwqoYFR2vF7IIKMvWuCsA2LkzSg713ZlOzSXTT6XpQ=;
+X-UUID: 1d18b034a6be43ee88cd15a93b00d9fb-20200223
+Received: from mtkcas06.mediatek.inc [(172.21.101.30)] by mailgw02.mediatek.com
+        (envelope-from <macpaul.lin@mediatek.com>)
+        (Cellopoint E-mail Firewall v4.1.10 Build 0809 with TLS)
+        with ESMTP id 708867206; Sun, 23 Feb 2020 21:15:08 +0800
+Received: from mtkcas09.mediatek.inc (172.21.101.178) by
+ mtkmbs01n2.mediatek.inc (172.21.101.79) with Microsoft SMTP Server (TLS) id
+ 15.0.1395.4; Sun, 23 Feb 2020 21:11:02 +0800
+Received: from [172.21.77.33] (172.21.77.33) by mtkcas09.mediatek.inc
+ (172.21.101.73) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
+ Transport; Sun, 23 Feb 2020 21:14:50 +0800
+Message-ID: <1582463706.19053.32.camel@mtkswgap22>
+Subject: Re: [PATCH] lib: iov_iter.c: fix a possible calculation error on
+ remaining bytes
+From:   Macpaul Lin <macpaul.lin@mediatek.com>
+To:     Al Viro <viro@zeniv.linux.org.uk>
+CC:     Matthias Brugger <matthias.bgg@gmail.com>,
+        Shen Jing <jingx.shen@intel.com>,
+        Sasha Levin <sashal@kernel.org>,
+        John Stultz <john.stultz@linaro.org>,
+        Andrzej Pietrasiewicz <andrzej.p@collabora.com>,
+        Vincent Pelletier <plr.vincent@gmail.com>,
+        Jerry Zhang <zhangjerry@google.com>,
+        <linux-usb@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-mediatek@lists.infradead.org>,
+        Mediatek WSD Upstream <wsd_upstream@mediatek.com>,
+        CC Hwang <cc.hwang@mediatek.com>,
+        Loda Chou <loda.chou@mediatek.com>
+Date:   Sun, 23 Feb 2020 21:15:06 +0800
+In-Reply-To: <20200218124142.GJ23230@ZenIV.linux.org.uk>
+References: <1582011672-17189-1-git-send-email-macpaul.lin@mediatek.com>
+         <20200218124142.GJ23230@ZenIV.linux.org.uk>
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.2.3-0ubuntu6 
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+X-TM-SNTS-SMTP: D743D5FFED43F9BC952FE27FF4BE8AE9BAFC6F359885D5FD278658A4DF9A560E2000:8
+X-MTK:  N
+Content-Transfer-Encoding: base64
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-There is single LED that can be turned on and off by the user, or set to
-be controlled by the charger in 2 different modes.
-
-The driver initializes the LED to be controlled by the charger, but
-allows to switch it to user control, and change the mode of charging
-indication via a sysfs.
-
-The driver was developed on AXP813, but should work on other PMICs like
-that without changes.
-
-Signed-off-by: Ondrej Jirman <megous@megous.com>
----
- drivers/leds/Kconfig       |   7 ++
- drivers/leds/Makefile      |   1 +
- drivers/leds/leds-axp20x.c | 240 +++++++++++++++++++++++++++++++++++++
- drivers/mfd/axp20x.c       |   3 +
- 4 files changed, 251 insertions(+)
- create mode 100644 drivers/leds/leds-axp20x.c
-
-diff --git a/drivers/leds/Kconfig b/drivers/leds/Kconfig
-index d82f1dea37111..80a3f31f6f4c3 100644
---- a/drivers/leds/Kconfig
-+++ b/drivers/leds/Kconfig
-@@ -846,6 +846,13 @@ config LEDS_TPS6105X
- 	  It is a single boost converter primarily for white LEDs and
- 	  audio amplifiers.
- 
-+config LEDS_AXP20X
-+	tristate "Charger LED support for AXP20X-like PMICs (AXP813, ...)"
-+	depends on LEDS_CLASS && MFD_AXP20X
-+	help
-+	  This option enables support for on-chip LED driver on
-+	  AXP20X-like PMICs.
-+
- comment "LED Triggers"
- source "drivers/leds/trigger/Kconfig"
- 
-diff --git a/drivers/leds/Makefile b/drivers/leds/Makefile
-index d7e1107753fb1..80ea1bc4744b0 100644
---- a/drivers/leds/Makefile
-+++ b/drivers/leds/Makefile
-@@ -86,6 +86,7 @@ obj-$(CONFIG_LEDS_TI_LMU_COMMON)	+= leds-ti-lmu-common.o
- obj-$(CONFIG_LEDS_LM3697)		+= leds-lm3697.o
- obj-$(CONFIG_LEDS_LM36274)		+= leds-lm36274.o
- obj-$(CONFIG_LEDS_TPS6105X)		+= leds-tps6105x.o
-+obj-$(CONFIG_LEDS_AXP20X)		+= leds-axp20x.o
- 
- # LED SPI Drivers
- obj-$(CONFIG_LEDS_CR0014114)		+= leds-cr0014114.o
-diff --git a/drivers/leds/leds-axp20x.c b/drivers/leds/leds-axp20x.c
-new file mode 100644
-index 0000000000000..e6c9853b84d52
---- /dev/null
-+++ b/drivers/leds/leds-axp20x.c
-@@ -0,0 +1,240 @@
-+// SPDX-License-Identifier: GPL-2.0-or-later
-+/*
-+ * LED Driver for X-Powers AXP813 PMIC and similar.
-+ *
-+ * Copyright(c) 2020 Ondrej Jirman <megous@megous.com>
-+ */
-+
-+#include <linux/module.h>
-+#include <linux/kernel.h>
-+#include <linux/platform_device.h>
-+#include <linux/leds.h>
-+#include <linux/slab.h>
-+#include <linux/of.h>
-+#include <linux/of_device.h>
-+#include <linux/mfd/axp20x.h>
-+
-+#define AXP20X_CHGLED_CTRL_MASK		BIT(3)
-+#define AXP20X_CHGLED_CTRL_CHARGER	BIT(3)
-+#define AXP20X_CHGLED_CTRL_USER		0
-+
-+#define AXP20X_CHRG_CTRL2_MODE		BIT(4)
-+
-+#define AXP20X_CHGLED_USER_STATE_MASK		GENMASK(5, 4)
-+#define AXP20X_CHGLED_USER_STATE_OFF		(0 << 4)
-+#define AXP20X_CHGLED_USER_STATE_BLINK_SLOW	(1 << 4)
-+#define AXP20X_CHGLED_USER_STATE_BLINK_FAST	(2 << 4)
-+#define AXP20X_CHGLED_USER_STATE_ON		(3 << 4)
-+
-+struct axp20x_led {
-+	struct led_classdev cdev;
-+	struct regmap *regmap;
-+};
-+
-+static int axp20x_led_set(struct led_classdev *led_cdev,
-+			   enum led_brightness value)
-+{
-+	struct axp20x_led *led =
-+			container_of(led_cdev, struct axp20x_led, cdev);
-+	unsigned int val;
-+
-+	val = value == LED_OFF ? AXP20X_CHGLED_USER_STATE_OFF :
-+		AXP20X_CHGLED_USER_STATE_ON;
-+
-+	return regmap_update_bits(led->regmap, AXP20X_OFF_CTRL,
-+				  AXP20X_CHGLED_USER_STATE_MASK, val);
-+
-+}
-+
-+static ssize_t charger_control_show(struct device *dev,
-+				    struct device_attribute *attr, char *buf)
-+{
-+	struct led_classdev *led_cdev = dev_get_drvdata(dev);
-+	struct axp20x_led *led =
-+		container_of(led_cdev, struct axp20x_led, cdev);
-+	unsigned int val;
-+	int ret;
-+
-+	ret = regmap_read(led->regmap, AXP20X_OFF_CTRL, &val);
-+	if (ret)
-+		return ret;
-+
-+	return scnprintf(buf, PAGE_SIZE, "%u\n",
-+			 val & AXP20X_CHGLED_CTRL_MASK ? 1 : 0);
-+}
-+
-+static ssize_t charger_control_store(struct device *dev,
-+				     struct device_attribute *attr,
-+				     const char *buf, size_t len)
-+{
-+	struct led_classdev *led_cdev = dev_get_drvdata(dev);
-+	struct axp20x_led *led =
-+			container_of(led_cdev, struct axp20x_led, cdev);
-+	bool status;
-+	int ret;
-+
-+	ret = kstrtobool(buf, &status);
-+	if (ret)
-+		return ret;
-+
-+	ret = regmap_update_bits(led->regmap, AXP20X_OFF_CTRL,
-+				 AXP20X_CHGLED_CTRL_MASK,
-+				 status ? AXP20X_CHGLED_CTRL_CHARGER :
-+				 AXP20X_CHGLED_CTRL_USER);
-+	if (ret)
-+		return ret;
-+
-+	return len;
-+}
-+
-+static ssize_t charger_mode_show(struct device *dev,
-+				 struct device_attribute *attr, char *buf)
-+{
-+	struct led_classdev *led_cdev = dev_get_drvdata(dev);
-+	struct axp20x_led *led =
-+		container_of(led_cdev, struct axp20x_led, cdev);
-+	unsigned int val;
-+	int ret;
-+
-+	ret = regmap_read(led->regmap, AXP20X_CHRG_CTRL2, &val);
-+	if (ret)
-+		return ret;
-+
-+	return scnprintf(buf, PAGE_SIZE, "%u\n",
-+			 val & AXP20X_CHRG_CTRL2_MODE ? 1 : 0);
-+}
-+
-+static ssize_t charger_mode_store(struct device *dev,
-+				  struct device_attribute *attr,
-+				  const char *buf, size_t len)
-+{
-+	struct led_classdev *led_cdev = dev_get_drvdata(dev);
-+	struct axp20x_led *led =
-+		container_of(led_cdev, struct axp20x_led, cdev);
-+	unsigned int mode;
-+	int ret;
-+
-+	ret = kstrtouint(buf, 0, &mode);
-+	if (ret)
-+		return ret;
-+
-+	if (mode > 1)
-+		return -ERANGE;
-+
-+	ret = regmap_update_bits(led->regmap, AXP20X_CHRG_CTRL2,
-+				 AXP20X_CHRG_CTRL2_MODE,
-+				 mode ? AXP20X_CHRG_CTRL2_MODE : 0);
-+	if (ret)
-+		return ret;
-+
-+	return len;
-+}
-+
-+static DEVICE_ATTR_RW(charger_control);
-+static DEVICE_ATTR_RW(charger_mode);
-+
-+static struct attribute *axp20x_led_attrs[] = {
-+	&dev_attr_charger_control.attr,
-+	&dev_attr_charger_mode.attr,
-+	NULL,
-+};
-+
-+ATTRIBUTE_GROUPS(axp20x_led);
-+
-+static int axp20x_led_probe(struct platform_device *pdev)
-+{
-+	struct axp20x_dev *axp20x;
-+	struct axp20x_led *led;
-+	int ret;
-+
-+	if (!of_device_is_available(pdev->dev.of_node))
-+		return -ENODEV;
-+
-+	axp20x = dev_get_drvdata(pdev->dev.parent);
-+	if (!axp20x)
-+		return -EINVAL;
-+
-+	led = devm_kzalloc(&pdev->dev,
-+			   sizeof(struct axp20x_led),
-+			   GFP_KERNEL);
-+	if (!led)
-+		return -ENOMEM;
-+
-+	platform_set_drvdata(pdev, led);
-+
-+	led->regmap = axp20x->regmap;
-+
-+	led->cdev.name = "axp20x-chgarger-led";
-+	led->cdev.brightness_set_blocking = axp20x_led_set;
-+	led->cdev.brightness = LED_OFF;
-+	led->cdev.max_brightness = 1;
-+	led->cdev.groups = axp20x_led_groups,
-+
-+	ret = devm_led_classdev_register(pdev->dev.parent, &led->cdev);
-+	if (ret) {
-+		dev_err(&pdev->dev, "Failed to register device %s\n",
-+			led->cdev.name);
-+		return ret;
-+	}
-+
-+	ret = regmap_update_bits(led->regmap, AXP20X_OFF_CTRL,
-+				 AXP20X_CHGLED_CTRL_MASK,
-+				 AXP20X_CHGLED_CTRL_CHARGER);
-+	if (ret) {
-+		dev_err(&pdev->dev, "Failed to enable charger control\n");
-+		return ret;
-+	}
-+
-+	ret = axp20x_led_set(&led->cdev, led->cdev.brightness);
-+	if (ret) {
-+		dev_err(&pdev->dev, "Failed to init led brightness\n");
-+		return ret;
-+	}
-+
-+	return 0;
-+}
-+
-+static void axp20x_led_shutdown(struct platform_device *pdev)
-+{
-+	struct axp20x_led *led = platform_get_drvdata(pdev);
-+
-+	/* On shutdown, we want to give LED control back to the PMIC,
-+	 * so that it doesn't stay on, while the system is off.
-+	 */
-+
-+	axp20x_led_set(&led->cdev, LED_OFF);
-+
-+	regmap_update_bits(led->regmap, AXP20X_OFF_CTRL,
-+			   AXP20X_CHGLED_CTRL_MASK,
-+			   AXP20X_CHGLED_CTRL_CHARGER);
-+}
-+
-+static int axp20x_led_remove(struct platform_device *pdev)
-+{
-+	axp20x_led_shutdown(pdev);
-+
-+	return 0;
-+}
-+
-+static const struct of_device_id axp20x_leds_of_match[] = {
-+	{ .compatible = "x-powers,axp813-charger-led", },
-+	{ },
-+};
-+MODULE_DEVICE_TABLE(of, axp20x_leds_of_match);
-+
-+static struct platform_driver axp20x_led_driver = {
-+	.driver		= {
-+		.name	= "leds-axp20x",
-+		.of_match_table = axp20x_leds_of_match,
-+	},
-+	.probe		= axp20x_led_probe,
-+	.remove		= axp20x_led_remove,
-+	.shutdown	= axp20x_led_shutdown,
-+};
-+
-+module_platform_driver(axp20x_led_driver);
-+
-+MODULE_AUTHOR("Ondrej Jirman <megous@megous.com>");
-+MODULE_DESCRIPTION("LED driver for AXP813 PMIC");
-+MODULE_LICENSE("GPL");
-+MODULE_ALIAS("platform:leds-axp20x");
-diff --git a/drivers/mfd/axp20x.c b/drivers/mfd/axp20x.c
-index aa59496e43768..dcd68397b9d23 100644
---- a/drivers/mfd/axp20x.c
-+++ b/drivers/mfd/axp20x.c
-@@ -806,6 +806,9 @@ static const struct mfd_cell axp813_cells[] = {
- 		.num_resources	= ARRAY_SIZE(axp803_usb_power_supply_resources),
- 		.resources	= axp803_usb_power_supply_resources,
- 		.of_compatible	= "x-powers,axp813-usb-power-supply",
-+	}, {
-+		.name		= "axp20x-charger-led",
-+		.of_compatible	= "x-powers,axp813-charger-led",
- 	},
- };
- 
--- 
-2.25.1
+T24gVHVlLCAyMDIwLTAyLTE4IGF0IDEyOjQxICswMDAwLCBBbCBWaXJvIHdyb3RlOg0KPiBPbiBU
+dWUsIEZlYiAxOCwgMjAyMCBhdCAwMzo0MToxMlBNICswODAwLCBNYWNwYXVsIExpbiB3cm90ZToN
+Cj4gPiBUaGlzIGlzc3VlIHdhcyBmb3VuZCB3aGVuIGFkYmQgdHJ5aW5nIHRvIG9wZW4gZnVuY3Rp
+b25mcyB3aXRoIEFJTyBtb2RlLg0KPiA+IFVzdWFsbHksIHdlIG5lZWQgdG8gc2V0ICJzZXRwcm9w
+IHN5cy51c2IuZmZzLmFpb19jb21wYXQgMCIgdG8gZW5hYmxlDQo+ID4gYWRiZCB3aXRoIEFJTyBt
+b2RlIG9uIEFuZHJvaWQuDQo+ID4gDQo+ID4gV2hlbiBhZGJkIGlzIG9wZW5pbmcgZnVuY3Rpb25m
+cywgaXQgd2lsbCB0cnkgdG8gcmVhZCAyNCBieXRlcyBhdCB0aGUNCj4gPiBmaXNydCByZWFkIEkv
+TyBjb250cm9sLiBJZiB0aGlzIHJlYWRpbmcgaGFzIGJlZW4gZmFpbGVkLCBhZGJkIHdpbGwNCj4g
+PiB0cnkgdG8gc2VuZCBGVU5DVElPTkZTX0NMRUFSX0hBTFQgdG8gZnVuY3Rpb25mcy4gV2hlbiBh
+ZGJkIGlzIGluIEFJTw0KPiA+IG1vZGUsIGZ1bmN0aW9uZnMgd2lsbCBiZSBhY3RlZCB3aXRoIGFz
+eW5jcm9uaXplZCBJL08gcGF0aC4gQWZ0ZXIgdGhlDQo+ID4gc3VjY2Vzc2Z1bCByZWFkIHRyYW5z
+ZmVyIGhhcyBiZWVuIGNvbXBsZXRlZCBieSBnYWRnZXQgaGFyZHdhcmUsIHRoZQ0KPiA+IGZvbGxv
+d2luZyBzZXJpZXMgb2YgZnVuY3Rpb25zIHdpbGwgYmUgY2FsbGVkLg0KPiA+ICAgZmZzX2VwZmls
+ZV9hc3luY19pb19jb21wbGV0ZSgpIC0+IGZmc191c2VyX2NvcHlfd29ya2VyKCkgLT4NCj4gPiAg
+ICAgY29weV90b19pdGVyKCkgLT4gX2NvcHlfdG9faXRlcigpIC0+IGNvcHlvdXQoKSAtPg0KPiA+
+ICAgICBpdGVyYXRlX2FuZF9hZHZhbmNlKCkgLT4gaXRlcmF0ZV9pb3ZlYygpDQo+ID4gDQo+ID4g
+QWRkaW5nIGRlYnVnIHRyYWNlIHRvIHRoZXNlIGZ1bmN0aW9ucywgaXQgaGFzIGJlZW4gZm91bmQg
+dGhhdCBpbg0KPiA+IGl0ZXJhdGVfaW92ZWMoKSwgdGhlIGNhbGN1bGF0aW9uIHJlc3VsdCBvZiBu
+IHdpbGwgYmUgdHVybmVkIGludG8gemVyby4NCj4gPiAgICBuID0gd2FudGVkIC0gbjsgLyogMCA9
+PSBuID0gMjQgLSAyNDsgKi8NCj4gPiBXaGljaCBjYXVzZXMgY29weW91dCgpIHdvbid0IGNvcHkg
+ZGF0YSB0byB1c2Vyc3BhY2Ugc2luY2UgdGhlIGxlbmd0aA0KPiA+IHRvIGJlIGNvcGllZCAidi5p
+b3ZfbGVuIiB3aWxsIGJlIHplcm8sIHdoaWNoIGlzbid0IGNvcnJlY3QuIFRoaXMgYWxzbw0KPiA+
+IGxlYWRzIGZmc19jb3B5X3RvX2l0ZXIoKSBhbHdheXMgcmV0dXJuIC1FRkFVTFQuIEZpbmFsbHkg
+YWRiZCBjYW5ub3QNCj4gPiBvcGVuIGZ1bmN0aW9uZnMgYW5kIHNlbmQgRlVOQ1RJT05GU19DTEVB
+Ul9IQUxULg0KPiA+IA0KPiA+IFNpZ25lZC1vZmYtYnk6IE1hY3BhdWwgTGluIDxtYWNwYXVsLmxp
+bkBtZWRpYXRlay5jb20+DQo+ID4gLS0tDQo+ID4gIGxpYi9pb3ZfaXRlci5jIHwgMyArKy0NCj4g
+PiAgMSBmaWxlIGNoYW5nZWQsIDIgaW5zZXJ0aW9ucygrKSwgMSBkZWxldGlvbigtKQ0KPiA+IA0K
+PiA+IGRpZmYgLS1naXQgYS9saWIvaW92X2l0ZXIuYyBiL2xpYi9pb3ZfaXRlci5jDQo+ID4gaW5k
+ZXggZmIyOWMwMmM2YTNjLi5mOTMzNDE0NGUyNTkgMTAwNjQ0DQo+ID4gLS0tIGEvbGliL2lvdl9p
+dGVyLmMNCj4gPiArKysgYi9saWIvaW92X2l0ZXIuYw0KPiA+IEBAIC0zNiw3ICszNiw4IEBADQo+
+ID4gIAkJc2tpcCA9IF9fdi5pb3ZfbGVuOwkJCVwNCj4gPiAgCQluIC09IF9fdi5pb3ZfbGVuOwkJ
+CVwNCj4gPiAgCX0JCQkJCQlcDQo+ID4gLQluID0gd2FudGVkIC0gbjsJCQkJCVwNCj4gPiArCWlm
+IChuICE9IHdhbnRlZCkJCQkJXA0KPiA+ICsJCW4gPSB3YW50ZWQgLSBuOwkJCQlcDQo+ID4gIH0N
+Cj4gDQo+IAlGaXJzdCBvZiBhbGwsIG5vdGhpbmcgaW4gdGhhdCBsaW5lIGNhbiBwb3NzaWJseSAq
+Y2F1c2UqDQo+IGNvcHlvdXQoKSB0byBkbyBhbnl0aGluZyAtIGl0J3MgYWZ0ZXIgdGhlIGNhbGxz
+IG9mIHN0ZXAuICBXaGF0J3MNCj4gbW9yZSwgdGhpcyBjaGFuZ2VzIGJlaGF2aW91ciBvbmx5IHdo
+ZW4gd2FudGVkIHdvdWxkJ3ZlIGJlZW4gZXF1YWwgdG8NCj4gbiwgZG9lc24ndCBpdD8gIFdoaWNo
+IHRyYW5zbGF0ZXMgaW50byAibm8gZGVjcmVtZW50cyBvZiBuIGhhdmUNCj4gaGFwcGVuZWQgYXQg
+YWxsIiwgaS5lLiAibm90aGluZyBoYXMgYmVlbiBjb3BpZWQiLiAgSU9XLCBpdCdzDQo+IGEgY29u
+c2VxdWVuY2Ugb2Ygbm8gY29weW91dCwgbm90IHRoZSBjYXVzZSBvZiBzdWNoLiAgWW91IGNhbg0K
+PiBtYWtlIGNvcHlfdG9faXRlcigpIGxpZSBhbmQgcHJldGVuZCBpZiBoYXMgY29waWVkIGV2ZXJ5
+dGhpbmcNCj4gd2hlbiBpdCBoYXMgY29waWVkIG5vdGhpbmcsIGJ1dCB0aGF0IHdvbid0IGNoYW5n
+ZSB0aGUgdW5kZXJseWluZw0KPiBidWcuDQo+IA0KPiAJU28gSSdtIGFmcmFpZCB5b3VyIGRlYnVn
+Z2luZyBpcyBub3QgZmluaXNoZWQgLSB5b3UNCj4gc3RpbGwgbmVlZCB0byBmaW5kIG91dCB3aGF0
+IGNhdXNlcyB0aGUgY29weW91dCBmYWlsdXJlcyBhbmQvb3INCj4gQlMgaW92X2l0ZXIgcGFkZGVk
+IGJ5IGNhbGxlci4NCg0KVGhhbmtzIGZvciB5b3VyIGV4cGxhbmF0aW9uLiBBZnRlciB0aGVzZSBk
+YXlzLCBJJ3ZlIGZvdW5kIHRoaXMgaXNzdWUNCm9ubHkgaGFwcGVuZWQgb24gYXJtIDY0LWJpdCBz
+eXN0ZW0sIHdoaWxlIGFybSAzMi1iaXQgc3lzdGVtIHdvcmtzIHdlbGwuDQpBZnRlciBtb3JlIGRl
+YnVnZ2luZywgaXQgbG9va3MgbGlrZSBhcm0gNjQgdGFnZ2VkIEFCSSByZWxhdGVkIGlzc3VlLg0K
+SSd2ZSB1cGRhdGUgYSBuZXcgcGF0Y2ggaGVyZTogDQogICAgdXNiOiBnYWRnZXQ6IGZfZnM6IHRy
+eSB0byBmaXggQUlPIGlzc3VlIHVuZGVyIEFSTSA2NCBiaXQgVEFHR0VEIG1vZGUNCiAgICBodHRw
+czovL2xrbWwub3JnL2xrbWwvMjAyMC8yLzIzLzE2Lg0KDQpUaGFua3MuDQpNYWNwYXVsIExpbi4N
+Cg==
 
