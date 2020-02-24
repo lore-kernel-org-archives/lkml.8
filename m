@@ -6,47 +6,46 @@ X-Spam-Status: No, score=-5.4 required=3.0 tests=FROM_LOCAL_HEX,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
 	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C3B24C35679
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 08:28:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 30389C35679
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 08:28:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8D18520675
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 08:28:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 066B620675
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 08:28:20 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727275AbgBXI2P (ORCPT
+        id S1727327AbgBXI2S (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Feb 2020 03:28:15 -0500
-Received: from mail-io1-f72.google.com ([209.85.166.72]:41689 "EHLO
-        mail-io1-f72.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726216AbgBXI2O (ORCPT
+        Mon, 24 Feb 2020 03:28:18 -0500
+Received: from mail-il1-f198.google.com ([209.85.166.198]:34292 "EHLO
+        mail-il1-f198.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727290AbgBXI2Q (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Feb 2020 03:28:14 -0500
-Received: by mail-io1-f72.google.com with SMTP id z201so14182003iof.8
-        for <linux-kernel@vger.kernel.org>; Mon, 24 Feb 2020 00:28:13 -0800 (PST)
+        Mon, 24 Feb 2020 03:28:16 -0500
+Received: by mail-il1-f198.google.com with SMTP id l13so17084818ils.1
+        for <linux-kernel@vger.kernel.org>; Mon, 24 Feb 2020 00:28:14 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
-        bh=jFxjTyVtQ1y1wxhLl6u+yHn3djDe27YTjrCu1DkL3DE=;
-        b=GG/izn58SPIeInHK+Qjf6j3iHMpCOIjyAxCB/p5ppGY+9pNL3/+Ux6Qehh/2csAmtL
-         TZoG8YynEjcWuX7aVS0CeuE8i5L+dPHp9ElS/7OKKnXu/IKIvLPGyIlVoFxowyQSSJtX
-         tT7ennpypU9HfCoLzkWNWvFanCOK4gWK0PGyKDbbe7p7B2sSj2j4o6B7WVHR85X8MM/I
-         08Lue5379BFKHFhO4JiiLyb9uwNjmYJAdWi51sbT8jwxQA02yI7UJOuNmDrc2sViXHOa
-         YqEsnATigrRe6mIAc2i75p2w1ViqOeRGCvq9xu0TdS3ToAkt+zKiD6UKJ2yu9mCuPkXJ
-         nB5w==
-X-Gm-Message-State: APjAAAUg/15d1UCog3zxlD/3apb56OsDOUCsMNoSKzRitPZPWYdWpWIi
-        +lfDrZYVPuMzq0wkUE86W9VsFolDRSqSYj2RNs0V+5gRQQro
-X-Google-Smtp-Source: APXvYqzNVdPLqYe8Lhyql7BRC2gHcDr9y0qa5iIMN2bsWQA9IofMC36ALNd3nziXdhY8AI3OCetEfdI8owWhwXct9YVhDdbABcCq
+        bh=vIr8nJYtkSIDBRrSoe4ExdWOaV6ukpSgeZOvoFewiik=;
+        b=U0g3fdM4OQdkzmdelvG8CqcV+pGepf75SDdA+q7edT87jauIYi6BH9+Z9So23WPPCI
+         tG1AzxJFFeulpLH1/dQ399WScQkffI8xVwN5nKRXONBWHlSxAHbX6Xa9eIfe69ckNDv1
+         MAFbVRbWsuvtNFci1OZu7hQ3pFTdtYckvi/5glqGMvnhLwlAiZFaTtpjX5ahzWPAdJml
+         YRQpXZyZCnL9DyRwCXjESqM6NqrCMXAH14mbcAMiCfRQZkKHLJULOq0Rluw+RM2WNslS
+         Y7h6kyEB140eVBfhcQ/OBHsD3sKJNhAOlOQKNJSBrFoqkIHEqRB1P5MhQsJvs73sMtW6
+         9P7w==
+X-Gm-Message-State: APjAAAXeaGB762L3vJ9TVdBaRLXDiDan2lBiqG6Y1kZ1jg1Gz4f4EnrE
+        7shEiJTwUiq6dnZu4UA47LgumI1Fpb+oxddYRKN5KkLJo60d
+X-Google-Smtp-Source: APXvYqz6Dl+O/zUPHweusabUaTXYFRCVXNHMMm6d2eRzNjR6zt40sXIZNX4g6R3D/LevvNRZjCkHkhD6GjX3E/r9k8PpGfjbo4O2
 MIME-Version: 1.0
-X-Received: by 2002:a6b:39c4:: with SMTP id g187mr49157362ioa.271.1582532893452;
- Mon, 24 Feb 2020 00:28:13 -0800 (PST)
-Date:   Mon, 24 Feb 2020 00:28:13 -0800
+X-Received: by 2002:a6b:5905:: with SMTP id n5mr49714675iob.242.1582532894287;
+ Mon, 24 Feb 2020 00:28:14 -0800 (PST)
+Date:   Mon, 24 Feb 2020 00:28:14 -0800
 X-Google-Appengine-App-Id: s~syzkaller
 X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <000000000000f5aedd059f4e26a2@google.com>
-Subject: BUG: unable to handle kernel paging request in ethnl_update_bitset32
-From:   syzbot <syzbot+7fd4ed5b4234ab1fdccd@syzkaller.appspotmail.com>
-To:     davem@davemloft.net, f.fainelli@gmail.com, kuba@kernel.org,
-        linux-kernel@vger.kernel.org, mkubecek@suse.cz,
-        netdev@vger.kernel.org, syzkaller-bugs@googlegroups.com
+Message-ID: <000000000000026ac5059f4e27f3@google.com>
+Subject: WARNING: kobject bug in ib_register_device
+From:   syzbot <syzbot+da615ac67d4dbea32cbc@syzkaller.appspotmail.com>
+To:     gregkh@linuxfoundation.org, linux-kernel@vger.kernel.org,
+        rafael@kernel.org, syzkaller-bugs@googlegroups.com
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
@@ -59,88 +58,76 @@ syzbot found the following crash on:
 
 HEAD commit:    d2eee258 Merge tag 'for-5.6-rc2-tag' of git://git.kernel.o..
 git tree:       upstream
-console output: https://syzkaller.appspot.com/x/log.txt?x=1740c265e00000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=3b8906eb6a7d6028
-dashboard link: https://syzkaller.appspot.com/bug?extid=7fd4ed5b4234ab1fdccd
-compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
-syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=10e2fde9e00000
-C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=14543a7ee00000
+console output: https://syzkaller.appspot.com/x/log.txt?x=1176f74ee00000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=3e57a6b450fb9883
+dashboard link: https://syzkaller.appspot.com/bug?extid=da615ac67d4dbea32cbc
+compiler:       clang version 10.0.0 (https://github.com/llvm/llvm-project/ c2443155a0fb245c8f17f2c1c72b6ea391e86e81)
+syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=1146d245e00000
+C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=12e2fde9e00000
 
 IMPORTANT: if you fix the bug, please add the following tag to the commit:
-Reported-by: syzbot+7fd4ed5b4234ab1fdccd@syzkaller.appspotmail.com
+Reported-by: syzbot+da615ac67d4dbea32cbc@syzkaller.appspotmail.com
 
-IPVS: ftp: loaded support on port[0] = 21
-BUG: unable to handle page fault for address: ffffed10192af087
-#PF: supervisor read access in kernel mode
-#PF: error_code(0x0000) - not-present page
-PGD 21ffef067 P4D 21ffef067 PUD 12fff6067 PMD 0 
-Oops: 0000 [#1] PREEMPT SMP KASAN
-CPU: 0 PID: 9626 Comm: syz-executor696 Not tainted 5.6.0-rc2-syzkaller #0
+batman_adv: batadv0: Interface activated: batadv_slave_1
+------------[ cut here ]------------
+kobject: (000000005127ca6c): attempted to be registered with empty name!
+WARNING: CPU: 0 PID: 8971 at lib/kobject.c:236 kobject_add_internal+0x12c/0xaa0 lib/kobject.c:234
+Kernel panic - not syncing: panic_on_warn set ...
+CPU: 0 PID: 8971 Comm: syz-executor318 Not tainted 5.6.0-rc2-syzkaller #0
 Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
-RIP: 0010:ethnl_bitmap32_not_zero net/ethtool/bitset.c:112 [inline]
-RIP: 0010:ethnl_compact_sanity_checks net/ethtool/bitset.c:529 [inline]
-RIP: 0010:ethnl_update_bitset32.part.0+0x8be/0x1820 net/ethtool/bitset.c:572
-Code: 45 85 e4 0f 84 aa 03 00 00 e8 6e 31 05 fb 48 8b 85 c8 fe ff ff 4e 8d 2c a8 48 b8 00 00 00 00 00 fc ff df 4c 89 ea 48 c1 ea 03 <0f> b6 14 02 4c 89 e8 83 e0 07 83 c0 03 38 d0 7c 0c 84 d2 74 08 4c
-RSP: 0018:ffffc9000672f248 EFLAGS: 00010a07
-RAX: dffffc0000000000 RBX: ffff8880a957843c RCX: ffffffff867055d4
-RDX: 1ffff110192af087 RSI: ffffffff867055e2 RDI: 0000000000000005
-RBP: ffffc9000672f3b0 R08: ffff888099244600 R09: ffffc9000672f318
-R10: fffff52000ce5e68 R11: ffffc9000672f347 R12: 0000000000000010
-R13: ffff8880c957843c R14: ffff8880a957844c R15: ffffc9000672f388
-FS:  000000000252c940(0000) GS:ffff8880ae800000(0000) knlGS:0000000000000000
-CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-CR2: ffffed10192af087 CR3: 00000000a8aac000 CR4: 00000000001406f0
-DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
 Call Trace:
- ethnl_update_bitset32 net/ethtool/bitset.c:562 [inline]
- ethnl_update_bitset+0x4d/0x67 net/ethtool/bitset.c:734
- ethnl_update_linkmodes net/ethtool/linkmodes.c:303 [inline]
- ethnl_set_linkmodes+0x461/0xc30 net/ethtool/linkmodes.c:357
- genl_family_rcv_msg_doit net/netlink/genetlink.c:672 [inline]
- genl_family_rcv_msg net/netlink/genetlink.c:717 [inline]
- genl_rcv_msg+0x67d/0xea0 net/netlink/genetlink.c:734
- netlink_rcv_skb+0x177/0x450 net/netlink/af_netlink.c:2478
- genl_rcv+0x29/0x40 net/netlink/genetlink.c:745
+ __dump_stack lib/dump_stack.c:77 [inline]
+ dump_stack+0x1fb/0x318 lib/dump_stack.c:118
+ panic+0x264/0x7a9 kernel/panic.c:221
+ __warn+0x209/0x210 kernel/panic.c:582
+ report_bug+0x1b6/0x2f0 lib/bug.c:195
+ fixup_bug arch/x86/kernel/traps.c:174 [inline]
+ do_error_trap+0xcf/0x1c0 arch/x86/kernel/traps.c:267
+ do_invalid_op+0x36/0x40 arch/x86/kernel/traps.c:286
+ invalid_op+0x23/0x30 arch/x86/entry/entry_64.S:1027
+RIP: 0010:kobject_add_internal+0x12c/0xaa0 lib/kobject.c:234
+Code: 64 f9 41 be fe ff ff ff e9 59 06 00 00 e8 4c 63 64 f9 eb 05 e8 45 63 64 f9 48 c7 c7 83 8b 08 89 4c 89 ee 31 c0 e8 f4 28 36 f9 <0f> 0b 41 be ea ff ff ff e9 2f 06 00 00 48 89 45 b8 e8 1e 63 64 f9
+RSP: 0018:ffffc900077e71b0 EFLAGS: 00010246
+RAX: 5b8212945f64c000 RBX: 0000000000000000 RCX: ffff888091c3a2c0
+RDX: 0000000000000000 RSI: 0000000080000000 RDI: 0000000000000000
+RBP: ffffc900077e7230 R08: ffffffff81600324 R09: ffffed1015d46618
+R10: ffffed1015d46618 R11: 0000000000000000 R12: dffffc0000000000
+R13: ffff88809fb88668 R14: 1ffff11013f710cd R15: 0000000000000000
+ kobject_add_varg lib/kobject.c:390 [inline]
+ kobject_add+0xef/0x190 lib/kobject.c:442
+ device_add+0x4b2/0x1ad0 drivers/base/core.c:2412
+ ib_register_device+0x11df/0x15b0 drivers/infiniband/core/device.c:1371
+ rxe_register_device+0x3f6/0x530 drivers/infiniband/sw/rxe/rxe_verbs.c:1231
+ rxe_add+0x1373/0x14f0 drivers/infiniband/sw/rxe/rxe.c:302
+ rxe_net_add+0x79/0xe0 drivers/infiniband/sw/rxe/rxe_net.c:539
+ rxe_newlink+0x31/0x90 drivers/infiniband/sw/rxe/rxe.c:318
+ nldev_newlink+0x403/0x4a0 drivers/infiniband/core/nldev.c:1538
+ rdma_nl_rcv_msg drivers/infiniband/core/netlink.c:195 [inline]
+ rdma_nl_rcv_skb drivers/infiniband/core/netlink.c:239 [inline]
+ rdma_nl_rcv+0x701/0xa20 drivers/infiniband/core/netlink.c:259
  netlink_unicast_kernel net/netlink/af_netlink.c:1303 [inline]
- netlink_unicast+0x59e/0x7e0 net/netlink/af_netlink.c:1329
- netlink_sendmsg+0x91c/0xea0 net/netlink/af_netlink.c:1918
+ netlink_unicast+0x766/0x920 net/netlink/af_netlink.c:1329
+ netlink_sendmsg+0xa2b/0xd40 net/netlink/af_netlink.c:1918
  sock_sendmsg_nosec net/socket.c:652 [inline]
- sock_sendmsg+0xd7/0x130 net/socket.c:672
- ____sys_sendmsg+0x753/0x880 net/socket.c:2343
- ___sys_sendmsg+0x100/0x170 net/socket.c:2397
- __sys_sendmsg+0x105/0x1d0 net/socket.c:2430
+ sock_sendmsg net/socket.c:672 [inline]
+ ____sys_sendmsg+0x4f7/0x7f0 net/socket.c:2343
+ ___sys_sendmsg net/socket.c:2397 [inline]
+ __sys_sendmsg+0x1ed/0x290 net/socket.c:2430
  __do_sys_sendmsg net/socket.c:2439 [inline]
  __se_sys_sendmsg net/socket.c:2437 [inline]
- __x64_sys_sendmsg+0x78/0xb0 net/socket.c:2437
- do_syscall_64+0xfa/0x790 arch/x86/entry/common.c:294
+ __x64_sys_sendmsg+0x7f/0x90 net/socket.c:2437
+ do_syscall_64+0xf7/0x1c0 arch/x86/entry/common.c:294
  entry_SYSCALL_64_after_hwframe+0x49/0xbe
-RIP: 0033:0x4460a9
-Code: 18 89 d0 c3 66 2e 0f 1f 84 00 00 00 00 00 0f 1f 00 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 0f 83 8b d2 fb ff c3 66 2e 0f 1f 84 00 00 00 00
-RSP: 002b:00007fff543f17b8 EFLAGS: 00000246 ORIG_RAX: 000000000000002e
-RAX: ffffffffffffffda RBX: 0000000000000003 RCX: 00000000004460a9
-RDX: 0000000000000000 RSI: 0000000020000240 RDI: 0000000000000003
-RBP: 0000000000000000 R08: 0000000000000000 R09: 0000000000000003
-R10: 0000000000000000 R11: 0000000000000246 R12: 00007fff543f17f0
-R13: 0000000000000003 R14: 0000000000000004 R15: 00007fff543f18c0
-Modules linked in:
-CR2: ffffed10192af087
----[ end trace 4138f4d807e125a3 ]---
-RIP: 0010:ethnl_bitmap32_not_zero net/ethtool/bitset.c:112 [inline]
-RIP: 0010:ethnl_compact_sanity_checks net/ethtool/bitset.c:529 [inline]
-RIP: 0010:ethnl_update_bitset32.part.0+0x8be/0x1820 net/ethtool/bitset.c:572
-Code: 45 85 e4 0f 84 aa 03 00 00 e8 6e 31 05 fb 48 8b 85 c8 fe ff ff 4e 8d 2c a8 48 b8 00 00 00 00 00 fc ff df 4c 89 ea 48 c1 ea 03 <0f> b6 14 02 4c 89 e8 83 e0 07 83 c0 03 38 d0 7c 0c 84 d2 74 08 4c
-RSP: 0018:ffffc9000672f248 EFLAGS: 00010a07
-RAX: dffffc0000000000 RBX: ffff8880a957843c RCX: ffffffff867055d4
-RDX: 1ffff110192af087 RSI: ffffffff867055e2 RDI: 0000000000000005
-RBP: ffffc9000672f3b0 R08: ffff888099244600 R09: ffffc9000672f318
-R10: fffff52000ce5e68 R11: ffffc9000672f347 R12: 0000000000000010
-R13: ffff8880c957843c R14: ffff8880a957844c R15: ffffc9000672f388
-FS:  000000000252c940(0000) GS:ffff8880ae800000(0000) knlGS:0000000000000000
-CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-CR2: ffffed10192af087 CR3: 00000000a8aac000 CR4: 00000000001406f0
-DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+RIP: 0033:0x4433f9
+Code: 18 89 d0 c3 66 2e 0f 1f 84 00 00 00 00 00 0f 1f 00 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 0f 83 7b 10 fc ff c3 66 2e 0f 1f 84 00 00 00 00
+RSP: 002b:00007ffd5d50d798 EFLAGS: 00000246 ORIG_RAX: 000000000000002e
+RAX: ffffffffffffffda RBX: 0000000000000003 RCX: 00000000004433f9
+RDX: 0000000000000000 RSI: 0000000020000000 RDI: 0000000000000003
+RBP: 00007ffd5d50d7b0 R08: 0000000001bbbbbb R09: 0000000001bbbbbb
+R10: 0000000000000000 R11: 0000000000000246 R12: 0000000000000000
+R13: 0000000000404990 R14: 0000000000000000 R15: 0000000000000000
+Kernel Offset: disabled
+Rebooting in 86400 seconds..
 
 
 ---
