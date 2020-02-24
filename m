@@ -7,38 +7,38 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AB570C35679
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 08:54:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 17034C35679
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 08:54:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7D71E2467C
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 08:54:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E2C6224680
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 08:54:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582534461;
-	bh=xrrfTjqUA3ZASNnw1o4uS2gmW3iXWsgg3RblIOSWWqI=;
+	s=default; t=1582534466;
+	bh=7CICMqnQF7xoeXIcHQwwcYQyrJAiXAKQVpcrdIOkVs0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=PmXX/zGM9OdgJPEC6iLwyGskeSuOMKJPgYdV0Bxh4S/X9qrXqOUqdPWleJFLqZbjy
-	 RCkC7Hw2ZJP7CYUQR7t5b80+Qmc92/QC0o39FpvQ4YTZA3HgSA3c20+7BTTSsOJhqf
-	 ZI/qduZRIXv9br7Trh6oUtTzVzVqKgWVFrIU+1mM=
+	b=jplWJfitX03PGZ+lgsL6BJDJRqkCqokAY74ML6j8KevsckoQnCETq+PxAhqQlJ2rt
+	 /8o+TKrYj0n5GvqEvbAmhNpGF8TnTHHwMxzOSmBagqBwlH3znm/m8B8woehPaoBYb2
+	 MGMk/J/FQMB9IV3cLJ4mnd2MCkqx9CAQkIHJbfJE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727930AbgBXIyT (ORCPT
+        id S1727950AbgBXIyY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Feb 2020 03:54:19 -0500
-Received: from mail.kernel.org ([198.145.29.99]:37886 "EHLO mail.kernel.org"
+        Mon, 24 Feb 2020 03:54:24 -0500
+Received: from mail.kernel.org ([198.145.29.99]:38186 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727874AbgBXIyJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Feb 2020 03:54:09 -0500
+        id S1727922AbgBXIyT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 24 Feb 2020 03:54:19 -0500
 Received: from localhost (unknown [213.57.247.131])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4262A2173E;
-        Mon, 24 Feb 2020 08:54:08 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 71FB02467B;
+        Mon, 24 Feb 2020 08:54:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1582534449;
-        bh=xrrfTjqUA3ZASNnw1o4uS2gmW3iXWsgg3RblIOSWWqI=;
+        s=default; t=1582534459;
+        bh=7CICMqnQF7xoeXIcHQwwcYQyrJAiXAKQVpcrdIOkVs0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=A5iZmhTRmUn/EPy32nqLlSWM5WfQttuKqn4dbBy8VG02OxsrjPuaD+8W4A6q5F9DM
-         FZ2FOcmPYjlGCraRdBnSQi97CVacB1XRy4LwwP2A+nkfH9aWiXmQw3g8kSwgc/6IVW
-         J6CH/BqFSwYKOHGgISLqxhlzEzGahYBe36/Sk1UU=
+        b=JJTAeR9ayq/7gpoqTs0ucBNF6RjjiUfWLGqKFQotgasYidscHQDypnj0noNXhKuKc
+         6YxHl2uZXwI/55RAxsonoICXoxR/Cq8iThS3AjjsrqmiMVnXhJE7YCa8lrIqA7YrNl
+         4Iry43nvcx2moeiY/pbbjrYEsj5hBFt4fSWZRu10=
 From:   Leon Romanovsky <leon@kernel.org>
 To:     "David S. Miller" <davem@davemloft.net>,
         Jakub Kicinski <kuba@kernel.org>
@@ -68,9 +68,9 @@ Cc:     Leon Romanovsky <leonro@mellanox.com>,
         Arthur Kiyanovski <akiyano@amazon.com>,
         Jes Sorensen <jes@trained-monkey.org>,
         nios2-dev@lists.rocketboards.org, Chen-Yu Tsai <wens@csie.org>
-Subject: [PATCH net-next v1 16/18] net/aquantia: Delete module version
-Date:   Mon, 24 Feb 2020 10:53:09 +0200
-Message-Id: <20200224085311.460338-17-leon@kernel.org>
+Subject: [PATCH net-next v1 09/18] net/allwinner: Remove driver version
+Date:   Mon, 24 Feb 2020 10:53:02 +0200
+Message-Id: <20200224085311.460338-10-leon@kernel.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20200224085311.460338-1-leon@kernel.org>
 References: <20200224085311.460338-1-leon@kernel.org>
@@ -83,94 +83,33 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Leon Romanovsky <leonro@mellanox.com>
 
-There is no need to keep module and driver versions in in-tree
-kernel code.
+There is no need in custom driver version for in-tree code.
 
 Signed-off-by: Leon Romanovsky <leonro@mellanox.com>
 ---
- drivers/net/ethernet/aquantia/atlantic/aq_cfg.h     |  4 ----
- drivers/net/ethernet/aquantia/atlantic/aq_common.h  |  1 -
- drivers/net/ethernet/aquantia/atlantic/aq_ethtool.c |  1 -
- drivers/net/ethernet/aquantia/atlantic/aq_main.c    |  1 -
- drivers/net/ethernet/aquantia/atlantic/ver.h        | 12 ------------
- 5 files changed, 19 deletions(-)
- delete mode 100644 drivers/net/ethernet/aquantia/atlantic/ver.h
+ drivers/net/ethernet/allwinner/sun4i-emac.c | 2 --
+ 1 file changed, 2 deletions(-)
 
-diff --git a/drivers/net/ethernet/aquantia/atlantic/aq_cfg.h b/drivers/net/ethernet/aquantia/atlantic/aq_cfg.h
-index f0c41f7408e5..7560f5506e55 100644
---- a/drivers/net/ethernet/aquantia/atlantic/aq_cfg.h
-+++ b/drivers/net/ethernet/aquantia/atlantic/aq_cfg.h
-@@ -9,8 +9,6 @@
- #ifndef AQ_CFG_H
- #define AQ_CFG_H
+diff --git a/drivers/net/ethernet/allwinner/sun4i-emac.c b/drivers/net/ethernet/allwinner/sun4i-emac.c
+index 22cadfbeedfb..18d3b4340bd4 100644
+--- a/drivers/net/ethernet/allwinner/sun4i-emac.c
++++ b/drivers/net/ethernet/allwinner/sun4i-emac.c
+@@ -33,7 +33,6 @@
+ #include "sun4i-emac.h"
 
--#include <generated/utsrelease.h>
--
- #define AQ_CFG_VECS_DEF   8U
- #define AQ_CFG_TCS_DEF    1U
+ #define DRV_NAME		"sun4i-emac"
+-#define DRV_VERSION		"1.02"
 
-@@ -85,7 +83,5 @@
- #define AQ_CFG_DRV_AUTHOR      "aQuantia"
- #define AQ_CFG_DRV_DESC        "aQuantia Corporation(R) Network Driver"
- #define AQ_CFG_DRV_NAME        "atlantic"
--#define AQ_CFG_DRV_VERSION	UTS_RELEASE \
--				AQ_CFG_DRV_VERSION_SUFFIX
+ #define EMAC_MAX_FRAME_LEN	0x0600
 
- #endif /* AQ_CFG_H */
-diff --git a/drivers/net/ethernet/aquantia/atlantic/aq_common.h b/drivers/net/ethernet/aquantia/atlantic/aq_common.h
-index 42ea8d8daa46..c8c402b013bb 100644
---- a/drivers/net/ethernet/aquantia/atlantic/aq_common.h
-+++ b/drivers/net/ethernet/aquantia/atlantic/aq_common.h
-@@ -12,7 +12,6 @@
- #include <linux/etherdevice.h>
- #include <linux/pci.h>
- #include <linux/if_vlan.h>
--#include "ver.h"
- #include "aq_cfg.h"
- #include "aq_utils.h"
+@@ -212,7 +211,6 @@ static void emac_get_drvinfo(struct net_device *dev,
+ 			      struct ethtool_drvinfo *info)
+ {
+ 	strlcpy(info->driver, DRV_NAME, sizeof(info->driver));
+-	strlcpy(info->version, DRV_VERSION, sizeof(info->version));
+ 	strlcpy(info->bus_info, dev_name(&dev->dev), sizeof(info->bus_info));
+ }
 
-diff --git a/drivers/net/ethernet/aquantia/atlantic/aq_ethtool.c b/drivers/net/ethernet/aquantia/atlantic/aq_ethtool.c
-index 7b55633d2cb9..0bdaa0d785b7 100644
---- a/drivers/net/ethernet/aquantia/atlantic/aq_ethtool.c
-+++ b/drivers/net/ethernet/aquantia/atlantic/aq_ethtool.c
-@@ -132,7 +132,6 @@ static void aq_ethtool_get_drvinfo(struct net_device *ndev,
- 	regs_count = aq_nic_get_regs_count(aq_nic);
-
- 	strlcat(drvinfo->driver, AQ_CFG_DRV_NAME, sizeof(drvinfo->driver));
--	strlcat(drvinfo->version, AQ_CFG_DRV_VERSION, sizeof(drvinfo->version));
-
- 	snprintf(drvinfo->fw_version, sizeof(drvinfo->fw_version),
- 		 "%u.%u.%u", firmware_version >> 24,
-diff --git a/drivers/net/ethernet/aquantia/atlantic/aq_main.c b/drivers/net/ethernet/aquantia/atlantic/aq_main.c
-index 538f460a3da7..9fcab646cbd5 100644
---- a/drivers/net/ethernet/aquantia/atlantic/aq_main.c
-+++ b/drivers/net/ethernet/aquantia/atlantic/aq_main.c
-@@ -19,7 +19,6 @@
- #include <linux/udp.h>
-
- MODULE_LICENSE("GPL v2");
--MODULE_VERSION(AQ_CFG_DRV_VERSION);
- MODULE_AUTHOR(AQ_CFG_DRV_AUTHOR);
- MODULE_DESCRIPTION(AQ_CFG_DRV_DESC);
-
-diff --git a/drivers/net/ethernet/aquantia/atlantic/ver.h b/drivers/net/ethernet/aquantia/atlantic/ver.h
-deleted file mode 100644
-index 597654b51e01..000000000000
---- a/drivers/net/ethernet/aquantia/atlantic/ver.h
-+++ /dev/null
-@@ -1,12 +0,0 @@
--/* SPDX-License-Identifier: GPL-2.0-only */
--/*
-- * aQuantia Corporation Network Driver
-- * Copyright (C) 2014-2017 aQuantia Corporation. All rights reserved
-- */
--
--#ifndef VER_H
--#define VER_H
--
--#define AQ_CFG_DRV_VERSION_SUFFIX "-kern"
--
--#endif /* VER_H */
 --
 2.24.1
 
