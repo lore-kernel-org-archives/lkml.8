@@ -2,114 +2,121 @@ Return-Path: <SRS0=7TUr=4M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_2 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7210FC38BE2
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 19:57:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6BD83C38BE6
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 19:58:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 54BFC20838
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 19:57:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4CD3F20838
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 19:58:46 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727426AbgBXT5i (ORCPT
+        id S1727421AbgBXT6p (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Feb 2020 14:57:38 -0500
-Received: from mga05.intel.com ([192.55.52.43]:14001 "EHLO mga05.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726593AbgBXT5h (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Feb 2020 14:57:37 -0500
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from orsmga002.jf.intel.com ([10.7.209.21])
-  by fmsmga105.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 24 Feb 2020 11:57:37 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.70,481,1574150400"; 
-   d="scan'208";a="255695319"
-Received: from iweiny-desk2.sc.intel.com ([10.3.52.157])
-  by orsmga002.jf.intel.com with ESMTP; 24 Feb 2020 11:57:36 -0800
-Date:   Mon, 24 Feb 2020 11:57:36 -0800
-From:   Ira Weiny <ira.weiny@intel.com>
-To:     Dave Chinner <david@fromorbit.com>
-Cc:     linux-kernel@vger.kernel.org,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        "Darrick J. Wong" <darrick.wong@oracle.com>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Christoph Hellwig <hch@lst.de>,
-        "Theodore Y. Ts'o" <tytso@mit.edu>, Jan Kara <jack@suse.cz>,
-        linux-ext4@vger.kernel.org, linux-xfs@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org
-Subject: Re: [PATCH V4 09/13] fs/xfs: Add write aops lock to xfs layer
-Message-ID: <20200224195735.GA11565@iweiny-DESK2.sc.intel.com>
-References: <20200221004134.30599-1-ira.weiny@intel.com>
- <20200221004134.30599-10-ira.weiny@intel.com>
- <20200224003455.GY10776@dread.disaster.area>
+        Mon, 24 Feb 2020 14:58:45 -0500
+Received: from 9.mo68.mail-out.ovh.net ([46.105.78.111]:48022 "EHLO
+        9.mo68.mail-out.ovh.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726593AbgBXT6o (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 24 Feb 2020 14:58:44 -0500
+Received: from player698.ha.ovh.net (unknown [10.110.115.188])
+        by mo68.mail-out.ovh.net (Postfix) with ESMTP id 1030415AA38
+        for <linux-kernel@vger.kernel.org>; Mon, 24 Feb 2020 20:58:42 +0100 (CET)
+Received: from sk2.org (82-65-25-201.subs.proxad.net [82.65.25.201])
+        (Authenticated sender: steve@sk2.org)
+        by player698.ha.ovh.net (Postfix) with ESMTPSA id 3A332FB0C78D;
+        Mon, 24 Feb 2020 19:58:34 +0000 (UTC)
+Date:   Mon, 24 Feb 2020 20:58:33 +0100
+From:   Stephen Kitt <steve@sk2.org>
+To:     Jonathan Corbet <corbet@lwn.net>, Ingo Molnar <mingo@redhat.com>,
+        Thomas Gleixner <tglx@linutronix.de>, x86@kernel.org,
+        linux-doc@vger.kernel.org
+Cc:     linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] docs: sysctl/kernel: document acpi_video_flags
+Message-ID: <20200224205833.3016789f@heffalump.sk2.org>
+In-Reply-To: <20200221165502.31770-1-steve@sk2.org>
+References: <20200221165502.31770-1-steve@sk2.org>
+X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200224003455.GY10776@dread.disaster.area>
-User-Agent: Mutt/1.11.1 (2018-12-01)
+Content-Type: multipart/signed; micalg=pgp-sha512;
+ boundary="Sig_/m24mW9PsjW.9ELm8gJu.TnZ"; protocol="application/pgp-signature"
+X-Ovh-Tracer-Id: 3094254422545550725
+X-VR-SPAMSTATE: OK
+X-VR-SPAMSCORE: -100
+X-VR-SPAMCAUSE: gggruggvucftvghtrhhoucdtuddrgedugedrledtgddufeefucetufdoteggodetrfdotffvucfrrhhofhhilhgvmecuqfggjfdpvefjgfevmfevgfenuceurghilhhouhhtmecuhedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmnecujfgurhepfffhvffukfgjfhfogggtsehgtderreertddvnecuhfhrohhmpefuthgvphhhvghnucfmihhtthcuoehsthgvvhgvsehskhdvrdhorhhgqeenucfkpheptddrtddrtddrtddpkedvrdeihedrvdehrddvtddunecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehmohguvgepshhmthhpqdhouhhtpdhhvghlohepphhlrgihvghrieelkedrhhgrrdhovhhhrdhnvghtpdhinhgvtheptddrtddrtddrtddpmhgrihhlfhhrohhmpehsthgvvhgvsehskhdvrdhorhhgpdhrtghpthhtoheplhhinhhugidqkhgvrhhnvghlsehvghgvrhdrkhgvrhhnvghlrdhorhhg
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Feb 24, 2020 at 11:34:55AM +1100, Dave Chinner wrote:
-> On Thu, Feb 20, 2020 at 04:41:30PM -0800, ira.weiny@intel.com wrote:
-> > From: Ira Weiny <ira.weiny@intel.com>
-> > 
+--Sig_/m24mW9PsjW.9ELm8gJu.TnZ
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-[snip]
+On Fri, 21 Feb 2020 17:55:02 +0100, Stephen Kitt <steve@sk2.org> wrote:
+> Based on the implementation in arch/x86/kernel/acpi/sleep.c, in
+> particular the acpi_sleep_setup() function.
+>=20
+> Signed-off-by: Stephen Kitt <steve@sk2.org>
+> ---
+>  Documentation/admin-guide/sysctl/kernel.rst | 11 +++++++++--
+>  1 file changed, 9 insertions(+), 2 deletions(-)
+>=20
+> diff --git a/Documentation/admin-guide/sysctl/kernel.rst
+> b/Documentation/admin-guide/sysctl/kernel.rst index
+> 534781ba3eac..1c48ab4bfe30 100644 ---
+> a/Documentation/admin-guide/sysctl/kernel.rst +++
+> b/Documentation/admin-guide/sysctl/kernel.rst @@ -54,8 +54,15 @@ free spa=
+ce
+> valid for 30 seconds. acpi_video_flags
+>  =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
+> =20
+> -See Documentation/kernel/power/video.txt, it allows mode of video boot
+> -to be set during run time.
+> +See :doc:`/power/video`. This allows the video resume mode to be set,
+> +in a similar fashion to the ``acpi_sleep`` kernel parameter, by
+> +combining the following values:
+> +
+> +=3D =3D=3D=3D=3D=3D=3D=3D
+> +1 s3_bios
+> +2 s3_mode
+> +4 s3_beep
+> +=3D =3D=3D=3D=3D=3D=3D=3D
+> =20
+> =20
+>  auto_msgmni
+> --=20
+> 2.20.1
+>=20
 
-> > 
-> > diff --git a/fs/xfs/xfs_inode.c b/fs/xfs/xfs_inode.c
-> > index 35df324875db..5b014c428f0f 100644
-> > --- a/fs/xfs/xfs_inode.c
-> > +++ b/fs/xfs/xfs_inode.c
-> > @@ -142,12 +142,12 @@ xfs_ilock_attr_map_shared(
-> >   *
-> >   * Basic locking order:
-> >   *
-> > - * i_rwsem -> i_mmap_lock -> page_lock -> i_ilock
-> > + * s_dax_sem -> i_rwsem -> i_mmap_lock -> page_lock -> i_ilock
-> >   *
-> >   * mmap_sem locking order:
-> >   *
-> >   * i_rwsem -> page lock -> mmap_sem
-> > - * mmap_sem -> i_mmap_lock -> page_lock
-> > + * s_dax_sem -> mmap_sem -> i_mmap_lock -> page_lock
-> >   *
-> >   * The difference in mmap_sem locking order mean that we cannot hold the
-> >   * i_mmap_lock over syscall based read(2)/write(2) based IO. These IO paths can
-> > @@ -182,6 +182,9 @@ xfs_ilock(
-> >  	       (XFS_ILOCK_SHARED | XFS_ILOCK_EXCL));
-> >  	ASSERT((lock_flags & ~(XFS_LOCK_MASK | XFS_LOCK_SUBCLASS_MASK)) == 0);
-> >  
-> > +	if (lock_flags & XFS_DAX_EXCL)
-> > +		inode_aops_down_write(VFS_I(ip));
-> 
-> I largely don't see the point of adding this to xfs_ilock/iunlock.
-> 
-> It's only got one caller, so I don't see much point in adding it to
-> an interface that has over a hundred other call sites that don't
-> need or use this lock. just open code it where it is needed in the
-> ioctl code.
+I forgot to include the base commit information; this is against 8f21f54b8a=
+95
+in docs-next.
 
-I know it seems overkill but if we don't do this we need to code a flag to be
-returned from xfs_ioctl_setattr_dax_invalidate().  This flag is then used in
-xfs_ioctl_setattr_get_trans() to create the transaction log item which can then
-be properly used to unlock the lock in xfs_inode_item_release()
+Regards,
 
-I don't know of a cleaner way to communicate to xfs_inode_item_release() to
-unlock i_aops_sem after the transaction is complete.
+Stephen
 
-Ira
+--Sig_/m24mW9PsjW.9ELm8gJu.TnZ
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
 
-> 
-> Cheers,
-> 
-> Dave.
-> -- 
-> Dave Chinner
-> david@fromorbit.com
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAEBCgAdFiEEnPVX/hPLkMoq7x0ggNMC9Yhtg5wFAl5UKukACgkQgNMC9Yht
+g5ykHw//dc4KmvEg8tU/J/gP9UfZFugohw/U4tRXGpht45fnHCnDg+ldFiMAewKA
+29VYEKg5M/KlEKz0yVTvTh+/XTa41TN/Iz3GQpBLPCZaJs/ZfTncX1rpmzjQVLev
+nOIuM8wHkGiQ7SPkn2OE4tZAr+4p15204+0GlQESvyiRBFH4Z4CSyAPWwlQxGol4
+dG4j5yRq3FWp9dTGn3BjtykOJmnyy506d32CQLB4lCjOGK57DV8fdK6kCwDXzi+4
+/0nO4Sx8xQQ8sWAh/VUOoSlaNUfMLExHXQY26lXGJ4ozxohegZQkhxM+mAz7V3AQ
+oWIOMRNnBZA+sSp7d+lCmnVxNt2NkC/7A9foqTzKLe2CjXMhfvJ6o3KLvBuS5H1r
+IixsZ8f6GjJuIG7PHqTyB/A2d6OwUGw20pEuFFCrUVwF2Gdiz+FIpMFCfJ4mAbTS
+qhO7PZG42HC7rrajkysI44/+HOEve7XT55euYDIZOorsj7P6Anh+yUwgWPgiU+zF
+gath9A8FCEq6VqvvjVNot9KAM/rhzGkfTEd2ZAJVntl3bAA/use291hpTCvqapVH
+NvJsHFeLku1rWfHWN0a233Qx0ENho8FZdbyj8uENwBmyBxTzR2J8ngbVr89qYjV5
+8RfTZUe+GckQOHrikkI2EbojMrCRf4iyA6dfJv93GzZG0YOq5s8=
+=m/8w
+-----END PGP SIGNATURE-----
+
+--Sig_/m24mW9PsjW.9ELm8gJu.TnZ--
