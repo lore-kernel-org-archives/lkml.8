@@ -7,47 +7,46 @@ X-Spam-Status: No, score=-11.8 required=3.0
 	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 72DABC11D2F
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 15:20:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 36DDAC11D32
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 15:20:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 484532082F
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 15:20:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0D25120838
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 15:20:53 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728018AbgBXPUr (ORCPT
+        id S1728068AbgBXPUv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Feb 2020 10:20:47 -0500
-Received: from Galois.linutronix.de ([193.142.43.55]:50321 "EHLO
+        Mon, 24 Feb 2020 10:20:51 -0500
+Received: from Galois.linutronix.de ([193.142.43.55]:50338 "EHLO
         Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727749AbgBXPUq (ORCPT
+        with ESMTP id S1728023AbgBXPUt (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Feb 2020 10:20:46 -0500
+        Mon, 24 Feb 2020 10:20:49 -0500
 Received: from [5.158.153.53] (helo=tip-bot2.lab.linutronix.de)
         by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
         (Exim 4.80)
         (envelope-from <tip-bot2@linutronix.de>)
-        id 1j6FX6-0005qJ-Vm; Mon, 24 Feb 2020 16:20:33 +0100
+        id 1j6FXA-0005r6-Ca; Mon, 24 Feb 2020 16:20:36 +0100
 Received: from [127.0.1.1] (localhost [IPv6:::1])
-        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id A27661C213A;
+        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id F12721C213D;
         Mon, 24 Feb 2020 16:20:32 +0100 (CET)
 Date:   Mon, 24 Feb 2020 15:20:32 -0000
-From:   "tip-bot2 for Mel Gorman" <tip-bot2@linutronix.de>
+From:   "tip-bot2 for Vincent Guittot" <tip-bot2@linutronix.de>
 Reply-to: linux-kernel@vger.kernel.org
 To:     linux-tip-commits@vger.kernel.org
-Subject: [tip: sched/core] sched/numa: Use similar logic to the load balancer
- for moving between domains with spare capacity
-Cc:     Mel Gorman <mgorman@techsingularity.net>,
+Subject: [tip: sched/core] sched/numa: Replace runnable_load_avg by load_avg
+Cc:     Vincent Guittot <vincent.guittot@linaro.org>,
+        Mel Gorman <mgorman@techsingularity.net>,
         Ingo Molnar <mingo@kernel.org>,
+        "Dietmar Eggemann" <dietmar.eggemann@arm.com>,
         Peter Zijlstra <a.p.zijlstra@chello.nl>,
-        Vincent Guittot <vincent.guittot@linaro.org>,
         Juri Lelli <juri.lelli@redhat.com>,
-        Dietmar Eggemann <dietmar.eggemann@arm.com>,
         Valentin Schneider <valentin.schneider@arm.com>,
         Phil Auld <pauld@redhat.com>, Hillf Danton <hdanton@sina.com>,
         x86 <x86@kernel.org>, LKML <linux-kernel@vger.kernel.org>
-In-Reply-To: <20200224095223.13361-7-mgorman@techsingularity.net>
-References: <20200224095223.13361-7-mgorman@techsingularity.net>
+In-Reply-To: <20200224095223.13361-6-mgorman@techsingularity.net>
+References: <20200224095223.13361-6-mgorman@techsingularity.net>
 MIME-Version: 1.0
-Message-ID: <158255763235.28353.6329377716415522983.tip-bot2@tip-bot2>
+Message-ID: <158255763273.28353.4606148712630409487.tip-bot2@tip-bot2>
 X-Mailer: tip-git-log-daemon
 Robot-ID: <tip-bot2.linutronix.de>
 Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
@@ -63,158 +62,189 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 The following commit has been merged into the sched/core branch of tip:
 
-Commit-ID:     fb86f5b2119245afd339280099b4e9417cc0b03a
-Gitweb:        https://git.kernel.org/tip/fb86f5b2119245afd339280099b4e9417cc0b03a
-Author:        Mel Gorman <mgorman@techsingularity.net>
-AuthorDate:    Mon, 24 Feb 2020 09:52:16 
+Commit-ID:     6499b1b2dd1b8d404a16b9fbbf1af6b9b3c1d83d
+Gitweb:        https://git.kernel.org/tip/6499b1b2dd1b8d404a16b9fbbf1af6b9b3c1d83d
+Author:        Vincent Guittot <vincent.guittot@linaro.org>
+AuthorDate:    Mon, 24 Feb 2020 09:52:15 
 Committer:     Ingo Molnar <mingo@kernel.org>
-CommitterDate: Mon, 24 Feb 2020 11:36:35 +01:00
+CommitterDate: Mon, 24 Feb 2020 11:36:34 +01:00
 
-sched/numa: Use similar logic to the load balancer for moving between domains with spare capacity
+sched/numa: Replace runnable_load_avg by load_avg
 
-The standard load balancer generally tries to keep the number of running
-tasks or idle CPUs balanced between NUMA domains. The NUMA balancer allows
-tasks to move if there is spare capacity but this causes a conflict and
-utilisation between NUMA nodes gets badly skewed. This patch uses similar
-logic between the NUMA balancer and load balancer when deciding if a task
-migrating to its preferred node can use an idle CPU.
+Similarly to what has been done for the normal load balancer, we can
+replace runnable_load_avg by load_avg in numa load balancing and track the
+other statistics like the utilization and the number of running tasks to
+get to better view of the current state of a node.
 
+Signed-off-by: Vincent Guittot <vincent.guittot@linaro.org>
 Signed-off-by: Mel Gorman <mgorman@techsingularity.net>
 Signed-off-by: Ingo Molnar <mingo@kernel.org>
+Reviewed-by: "Dietmar Eggemann <dietmar.eggemann@arm.com>"
 Acked-by: Peter Zijlstra <a.p.zijlstra@chello.nl>
-Cc: Vincent Guittot <vincent.guittot@linaro.org>
 Cc: Juri Lelli <juri.lelli@redhat.com>
-Cc: Dietmar Eggemann <dietmar.eggemann@arm.com>
 Cc: Valentin Schneider <valentin.schneider@arm.com>
 Cc: Phil Auld <pauld@redhat.com>
 Cc: Hillf Danton <hdanton@sina.com>
-Link: https://lore.kernel.org/r/20200224095223.13361-7-mgorman@techsingularity.net
+Link: https://lore.kernel.org/r/20200224095223.13361-6-mgorman@techsingularity.net
 ---
- kernel/sched/fair.c | 81 +++++++++++++++++++++++++++-----------------
- 1 file changed, 50 insertions(+), 31 deletions(-)
+ kernel/sched/fair.c | 102 +++++++++++++++++++++++++++++--------------
+ 1 file changed, 70 insertions(+), 32 deletions(-)
 
 diff --git a/kernel/sched/fair.c b/kernel/sched/fair.c
-index bc3d651..7a3c66f 100644
+index a6c7f8b..bc3d651 100644
 --- a/kernel/sched/fair.c
 +++ b/kernel/sched/fair.c
-@@ -1520,6 +1520,7 @@ struct task_numa_env {
+@@ -1473,38 +1473,35 @@ bool should_numa_migrate_memory(struct task_struct *p, struct page * page,
+ 	       group_faults_cpu(ng, src_nid) * group_faults(p, dst_nid) * 4;
+ }
  
- static unsigned long cpu_load(struct rq *rq);
- static unsigned long cpu_util(int cpu);
-+static inline long adjust_numa_imbalance(int imbalance, int src_nr_running);
+-static inline unsigned long cfs_rq_runnable_load_avg(struct cfs_rq *cfs_rq);
+-
+-static unsigned long cpu_runnable_load(struct rq *rq)
+-{
+-	return cfs_rq_runnable_load_avg(&rq->cfs);
+-}
++/*
++ * 'numa_type' describes the node at the moment of load balancing.
++ */
++enum numa_type {
++	/* The node has spare capacity that can be used to run more tasks.  */
++	node_has_spare = 0,
++	/*
++	 * The node is fully used and the tasks don't compete for more CPU
++	 * cycles. Nevertheless, some tasks might wait before running.
++	 */
++	node_fully_busy,
++	/*
++	 * The node is overloaded and can't provide expected CPU cycles to all
++	 * tasks.
++	 */
++	node_overloaded
++};
  
- static inline enum
- numa_type numa_classify(unsigned int imbalance_pct,
-@@ -1594,11 +1595,6 @@ static bool load_too_imbalanced(long src_load, long dst_load,
+ /* Cached statistics for all CPUs within a node */
+ struct numa_stats {
+ 	unsigned long load;
+-
++	unsigned long util;
+ 	/* Total compute capacity of CPUs on a node */
+ 	unsigned long compute_capacity;
++	unsigned int nr_running;
++	unsigned int weight;
++	enum numa_type node_type;
+ };
+ 
+-/*
+- * XXX borrowed from update_sg_lb_stats
+- */
+-static void update_numa_stats(struct numa_stats *ns, int nid)
+-{
+-	int cpu;
+-
+-	memset(ns, 0, sizeof(*ns));
+-	for_each_cpu(cpu, cpumask_of_node(nid)) {
+-		struct rq *rq = cpu_rq(cpu);
+-
+-		ns->load += cpu_runnable_load(rq);
+-		ns->compute_capacity += capacity_of(cpu);
+-	}
+-
+-}
+-
+ struct task_numa_env {
+ 	struct task_struct *p;
+ 
+@@ -1521,6 +1518,47 @@ struct task_numa_env {
+ 	int best_cpu;
+ };
+ 
++static unsigned long cpu_load(struct rq *rq);
++static unsigned long cpu_util(int cpu);
++
++static inline enum
++numa_type numa_classify(unsigned int imbalance_pct,
++			 struct numa_stats *ns)
++{
++	if ((ns->nr_running > ns->weight) &&
++	    ((ns->compute_capacity * 100) < (ns->util * imbalance_pct)))
++		return node_overloaded;
++
++	if ((ns->nr_running < ns->weight) ||
++	    ((ns->compute_capacity * 100) > (ns->util * imbalance_pct)))
++		return node_has_spare;
++
++	return node_fully_busy;
++}
++
++/*
++ * XXX borrowed from update_sg_lb_stats
++ */
++static void update_numa_stats(struct task_numa_env *env,
++			      struct numa_stats *ns, int nid)
++{
++	int cpu;
++
++	memset(ns, 0, sizeof(*ns));
++	for_each_cpu(cpu, cpumask_of_node(nid)) {
++		struct rq *rq = cpu_rq(cpu);
++
++		ns->load += cpu_load(rq);
++		ns->util += cpu_util(cpu);
++		ns->nr_running += rq->cfs.h_nr_running;
++		ns->compute_capacity += capacity_of(cpu);
++	}
++
++	ns->weight = cpumask_weight(cpumask_of_node(nid));
++
++	ns->node_type = numa_classify(env->imbalance_pct, ns);
++}
++
+ static void task_numa_assign(struct task_numa_env *env,
+ 			     struct task_struct *p, long imp)
+ {
+@@ -1556,6 +1594,11 @@ static bool load_too_imbalanced(long src_load, long dst_load,
  	long orig_src_load, orig_dst_load;
  	long src_capacity, dst_capacity;
  
--
--	/* If dst node has spare capacity, there is no real load imbalance */
--	if (env->dst_stats.node_type == node_has_spare)
--		return false;
--
++
++	/* If dst node has spare capacity, there is no real load imbalance */
++	if (env->dst_stats.node_type == node_has_spare)
++		return false;
++
  	/*
  	 * The load is corrected for the CPU capacity available on each node.
  	 *
-@@ -1757,19 +1753,42 @@ unlock:
- static void task_numa_find_cpu(struct task_numa_env *env,
- 				long taskimp, long groupimp)
- {
--	long src_load, dst_load, load;
- 	bool maymove = false;
- 	int cpu;
+@@ -1788,10 +1831,10 @@ static int task_numa_migrate(struct task_struct *p)
+ 	dist = env.dist = node_distance(env.src_nid, env.dst_nid);
+ 	taskweight = task_weight(p, env.src_nid, dist);
+ 	groupweight = group_weight(p, env.src_nid, dist);
+-	update_numa_stats(&env.src_stats, env.src_nid);
++	update_numa_stats(&env, &env.src_stats, env.src_nid);
+ 	taskimp = task_weight(p, env.dst_nid, dist) - taskweight;
+ 	groupimp = group_weight(p, env.dst_nid, dist) - groupweight;
+-	update_numa_stats(&env.dst_stats, env.dst_nid);
++	update_numa_stats(&env, &env.dst_stats, env.dst_nid);
  
--	load = task_h_load(env->p);
--	dst_load = env->dst_stats.load + load;
--	src_load = env->src_stats.load - load;
--
- 	/*
--	 * If the improvement from just moving env->p direction is better
--	 * than swapping tasks around, check if a move is possible.
-+	 * If dst node has spare capacity, then check if there is an
-+	 * imbalance that would be overruled by the load balancer.
- 	 */
--	maymove = !load_too_imbalanced(src_load, dst_load, env);
-+	if (env->dst_stats.node_type == node_has_spare) {
-+		unsigned int imbalance;
-+		int src_running, dst_running;
-+
-+		/*
-+		 * Would movement cause an imbalance? Note that if src has
-+		 * more running tasks that the imbalance is ignored as the
-+		 * move improves the imbalance from the perspective of the
-+		 * CPU load balancer.
-+		 * */
-+		src_running = env->src_stats.nr_running - 1;
-+		dst_running = env->dst_stats.nr_running + 1;
-+		imbalance = max(0, dst_running - src_running);
-+		imbalance = adjust_numa_imbalance(imbalance, src_running);
-+
-+		/* Use idle CPU if there is no imbalance */
-+		if (!imbalance)
-+			maymove = true;
-+	} else {
-+		long src_load, dst_load, load;
-+		/*
-+		 * If the improvement from just moving env->p direction is better
-+		 * than swapping tasks around, check if a move is possible.
-+		 */
-+		load = task_h_load(env->p);
-+		dst_load = env->dst_stats.load + load;
-+		src_load = env->src_stats.load - load;
-+		maymove = !load_too_imbalanced(src_load, dst_load, env);
-+	}
+ 	/* Try to find a spot on the preferred nid. */
+ 	task_numa_find_cpu(&env, taskimp, groupimp);
+@@ -1824,7 +1867,7 @@ static int task_numa_migrate(struct task_struct *p)
  
- 	for_each_cpu(cpu, cpumask_of_node(env->dst_nid)) {
- 		/* Skip this CPU if the source task cannot migrate */
-@@ -8694,6 +8713,21 @@ next_group:
+ 			env.dist = dist;
+ 			env.dst_nid = nid;
+-			update_numa_stats(&env.dst_stats, env.dst_nid);
++			update_numa_stats(&env, &env.dst_stats, env.dst_nid);
+ 			task_numa_find_cpu(&env, taskimp, groupimp);
+ 		}
  	}
+@@ -3686,11 +3729,6 @@ static void remove_entity_load_avg(struct sched_entity *se)
+ 	raw_spin_unlock_irqrestore(&cfs_rq->removed.lock, flags);
  }
  
-+static inline long adjust_numa_imbalance(int imbalance, int src_nr_running)
-+{
-+	unsigned int imbalance_min;
-+
-+	/*
-+	 * Allow a small imbalance based on a simple pair of communicating
-+	 * tasks that remain local when the source domain is almost idle.
-+	 */
-+	imbalance_min = 2;
-+	if (src_nr_running <= imbalance_min)
-+		return 0;
-+
-+	return imbalance;
-+}
-+
- /**
-  * calculate_imbalance - Calculate the amount of imbalance present within the
-  *			 groups of a given sched_domain during load balance.
-@@ -8790,24 +8824,9 @@ static inline void calculate_imbalance(struct lb_env *env, struct sd_lb_stats *s
- 		}
- 
- 		/* Consider allowing a small imbalance between NUMA groups */
--		if (env->sd->flags & SD_NUMA) {
--			unsigned int imbalance_min;
+-static inline unsigned long cfs_rq_runnable_load_avg(struct cfs_rq *cfs_rq)
+-{
+-	return cfs_rq->avg.runnable_load_avg;
+-}
 -
--			/*
--			 * Compute an allowed imbalance based on a simple
--			 * pair of communicating tasks that should remain
--			 * local and ignore them.
--			 *
--			 * NOTE: Generally this would have been based on
--			 * the domain size and this was evaluated. However,
--			 * the benefit is similar across a range of workloads
--			 * and machines but scaling by the domain size adds
--			 * the risk that lower domains have to be rebalanced.
--			 */
--			imbalance_min = 2;
--			if (busiest->sum_nr_running <= imbalance_min)
--				env->imbalance = 0;
--		}
-+		if (env->sd->flags & SD_NUMA)
-+			env->imbalance = adjust_numa_imbalance(env->imbalance,
-+						busiest->sum_nr_running);
- 
- 		return;
- 	}
+ static inline unsigned long cfs_rq_load_avg(struct cfs_rq *cfs_rq)
+ {
+ 	return cfs_rq->avg.load_avg;
