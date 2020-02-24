@@ -2,129 +2,163 @@ Return-Path: <SRS0=7TUr=4M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CEA05C3567B
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 07:03:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 36A30C35679
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 07:09:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9A49D20675
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 07:03:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0B63620714
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 07:09:40 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Vt4uH1X7"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727185AbgBXHDK (ORCPT
+        id S1727193AbgBXHJe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Feb 2020 02:03:10 -0500
-Received: from mail5.windriver.com ([192.103.53.11]:53568 "EHLO mail5.wrs.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726509AbgBXHDJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Feb 2020 02:03:09 -0500
-Received: from ALA-HCA.corp.ad.wrs.com (ala-hca.corp.ad.wrs.com [147.11.189.40])
-        by mail5.wrs.com (8.15.2/8.15.2) with ESMTPS id 01O70LVi011567
-        (version=TLSv1 cipher=AES256-SHA bits=256 verify=FAIL);
-        Sun, 23 Feb 2020 23:00:31 -0800
-Received: from [128.224.162.175] (128.224.162.175) by ALA-HCA.corp.ad.wrs.com
- (147.11.189.50) with Microsoft SMTP Server (TLS) id 14.3.468.0; Sun, 23 Feb
- 2020 23:00:11 -0800
-Subject: Re: [PATCH] perf: Support Python 3.8+ in Makefile
-To:     Sam Lunt <samueljlunt@gmail.com>
-CC:     <linux-kernel@vger.kernel.org>, <peterz@infradead.org>,
-        <mingo@redhat.com>, <acme@kernel.org>, <mark.rutland@arm.com>,
-        <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@redhat.com>,
-        <namhyung@kernel.org>, <trivial@kernel.org>
-References: <20200131181123.tmamivhq4b7uqasr@gmail.com>
- <30752f2a-fe0b-4150-c32d-07690fb43b82@windriver.com>
- <CAGn10uUFJLh7J5rNcbH-Y6aGGr0vK_YN40gry9PXh_tx3sSXMg@mail.gmail.com>
-From:   He Zhe <zhe.he@windriver.com>
-Message-ID: <3f59e138-6f19-5419-2397-fc7d2e5f9df9@windriver.com>
-Date:   Mon, 24 Feb 2020 15:00:05 +0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.1
-MIME-Version: 1.0
-In-Reply-To: <CAGn10uUFJLh7J5rNcbH-Y6aGGr0vK_YN40gry9PXh_tx3sSXMg@mail.gmail.com>
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
-Content-Language: en-US
-X-Originating-IP: [128.224.162.175]
+        Mon, 24 Feb 2020 02:09:34 -0500
+Received: from mail-pj1-f65.google.com ([209.85.216.65]:52895 "EHLO
+        mail-pj1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726925AbgBXHJe (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 24 Feb 2020 02:09:34 -0500
+Received: by mail-pj1-f65.google.com with SMTP id ep11so3764969pjb.2
+        for <linux-kernel@vger.kernel.org>; Sun, 23 Feb 2020 23:09:34 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=from:to:cc:subject:date:message-id;
+        bh=/uPpAa8jWLyAfBp8dYHRA7/+Um011bRC49XujdAf5Gw=;
+        b=Vt4uH1X74Vz34W4kXqEU9GjpdIZaRNOAYiAWTOQ1UMED+e4JPXHiBpOaVyjcaVd6Xr
+         mwMnRNpFFPHTP7Gh8z4MbfmYwCoLizdEfNCeHaaBFRVzWWW3uAGRXaHOh8xOlsePS3Xk
+         KJndJ4aA72+df4iyDsnn1aOnF+Q9uxP6u4F5HkUf+K6q1mKovKBf66+1zFlqN1LyzOa8
+         LbMnvdTdK3XIXzEvXZjgnMxWI/yQ+gXwotfTyHJ3RLQEjWJPxj5t+Egdz+lUhJo9dRfa
+         u/D2StJKNQqVIu12NKg5SEGQNT5MF+9ByQWsSxLoCgpc2V2hImqq6MQgaUExsrNZq+iP
+         F8Ww==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=/uPpAa8jWLyAfBp8dYHRA7/+Um011bRC49XujdAf5Gw=;
+        b=VBBvNo+j4WGMs1bUPXmENXV8I5DXnirIsfHbB/g0w8PzJ+CQu8TbX0HNsNLa9scA2B
+         DJwPkZMyoDagHdYn0oeANG+qcnFIKCHwQRR982YDh8jUBDWTJWdxkysaMd5E2QOkTZA1
+         8ZtCPS0wtuFVeYFu8vgHxtmAQprat9w8Gw2CI0wc4Ar9ycRjEAbAcyVWq3NTAIsK0CHn
+         3MKXpys0MDRe9FCSaZ9BF/oegUvInBYvLwsuifhh9LD9FjqFEVUmjXzBFmmLNQgX3rbd
+         0iNrTmnh5pmpUimB0uDn5O9s3eyQ6mSTj0TZwkQgJQkW8JU+B2U+jmZQ8YoB69TdRU5A
+         LPtQ==
+X-Gm-Message-State: APjAAAXwwtzhNUTVzBPbtqEkwL9ic8c6PNc5JGQ8JmgSgKDUSJFmBeGG
+        y9oHAMfDoq3x1dYmeWMDLEE0bg==
+X-Google-Smtp-Source: APXvYqx0OSRTVCSeiYO1FV+Igbe6EP8kYjyMiN+xj3uIr/PdSbQKLLUBdVhv8Rkb7x00XxnT3mbpQA==
+X-Received: by 2002:a17:90a:d789:: with SMTP id z9mr18855684pju.5.1582528173696;
+        Sun, 23 Feb 2020 23:09:33 -0800 (PST)
+Received: from localhost.localdomain (li1566-229.members.linode.com. [139.162.86.229])
+        by smtp.gmail.com with ESMTPSA id d24sm11522905pfq.75.2020.02.23.23.09.13
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
+        Sun, 23 Feb 2020 23:09:32 -0800 (PST)
+From:   Zhangfei Gao <zhangfei.gao@linaro.org>
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Herbert Xu <herbert@gondor.apana.org.au>,
+        jonathan.cameron@huawei.com, dave.jiang@intel.com,
+        grant.likely@arm.com, jean-philippe <jean-philippe@linaro.org>,
+        Jerome Glisse <jglisse@redhat.com>,
+        ilias.apalodimas@linaro.org, francois.ozog@linaro.org,
+        kenneth-lee-2012@foxmail.com, Wangzhou <wangzhou1@hisilicon.com>,
+        "haojian . zhuang" <haojian.zhuang@linaro.org>,
+        guodong.xu@linaro.org
+Cc:     linux-accelerators@lists.ozlabs.org, linux-kernel@vger.kernel.org,
+        linux-crypto@vger.kernel.org, iommu@lists.linux-foundation.org,
+        Zhangfei Gao <zhangfei.gao@linaro.org>
+Subject: [PATCH] uacce: unmap remaining mmapping from user space
+Date:   Mon, 24 Feb 2020 15:06:56 +0800
+Message-Id: <1582528016-2873-1-git-send-email-zhangfei.gao@linaro.org>
+X-Mailer: git-send-email 2.7.4
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+When uacce parent device module is removed, user app may
+still keep the mmaped area, which can be accessed unsafely.
+When rmmod, Parent device drvier will call uacce_remove,
+which unmap all remaining mapping from user space for safety.
+VM_FAULT_SIGBUS is also reported to user space accordingly.
 
+Suggested-by: Dave Jiang <dave.jiang@intel.com>
+Signed-off-by: Zhangfei Gao <zhangfei.gao@linaro.org>
+---
+ drivers/misc/uacce/uacce.c | 17 +++++++++++++++++
+ include/linux/uacce.h      |  2 ++
+ 2 files changed, 19 insertions(+)
 
-On 2/23/20 12:38 AM, Sam Lunt wrote:
-> On Sun, Feb 16, 2020 at 8:24 PM He Zhe <zhe.he@windriver.com> wrote:
->> On 2/1/20 2:11 AM, Sam Lunt wrote:
->>> Python 3.8 changed the output of 'python-config --ldflags' to no longer
->>> include the '-lpythonX.Y' flag (this apparently fixed an issue loading
->>> modules with a statically linked Python executable).  The libpython
->>> feature check in linux/build/feature fails if the Python library is not
->>> included in FEATURE_CHECK_LDFLAGS-libpython variable.
->>>
->>> This adds a check in the Makefile to determine if PYTHON_CONFIG accepts
->>> the '--embed' flag and passes that flag alongside '--ldflags' if so.
->>>
->>> tools/perf is the only place the libpython feature check is used.
->>>
->>> Signed-off-by: Sam Lunt <samuel.j.lunt@gmail.com>
->>> ---
->>>  tools/perf/Makefile.config | 11 ++++++++++-
->>>  1 file changed, 10 insertions(+), 1 deletion(-)
->>>
->>> diff --git a/tools/perf/Makefile.config b/tools/perf/Makefile.config
->>> index c90f4146e5a2..ccf99351f058 100644
->>> --- a/tools/perf/Makefile.config
->>> +++ b/tools/perf/Makefile.config
->>> @@ -228,8 +228,17 @@ strip-libs  = $(filter-out -l%,$(1))
->>>
->>>  PYTHON_CONFIG_SQ := $(call shell-sq,$(PYTHON_CONFIG))
->>>
->>> +# Python 3.8 changed the output of `python-config --ldflags` to not include the
->>> +# '-lpythonX.Y' flag unless '--embed' is also passed. The feature check for
->>> +# libpython fails if that flag is not included in LDFLAGS
->>> +ifeq ($(shell $(PYTHON_CONFIG_SQ) --ldflags --embed 2>&1 1>/dev/null; echo $$?), 0)
->>> +  PYTHON_CONFIG_LDFLAGS := --ldflags --embed
->>> +else
->>> +  PYTHON_CONFIG_LDFLAGS := --ldflags
->>> +endif
->>> +
->>>  ifdef PYTHON_CONFIG
->>> -  PYTHON_EMBED_LDOPTS := $(shell $(PYTHON_CONFIG_SQ) --ldflags 2>/dev/null)
->>> +  PYTHON_EMBED_LDOPTS := $(shell $(PYTHON_CONFIG_SQ) $(PYTHON_CONFIG_LDFLAGS) 2>/dev/null)
->> I met the same problem. Would the following change be more simple and clear?
->>
->> -  PYTHON_EMBED_LDOPTS := $(shell $(PYTHON_CONFIG_SQ) --ldflags 2>/dev/null)
->> +  PYTHON_EMBED_LDOPTS := $(shell $(PYTHON_CONFIG_SQ) --ldflags --embed 2>/dev/null || $(PYTHON_CONFIG_SQ) --ldflags 2>/dev/null)
-> That change is nearly equivalent to the change I'd suggested, just
-> squashed into one line. I think it's certainly more terse, but I'm not
-> sure it's any clearer.
->
-> It's also making the implicit assumption that PYTHON_CONFIG_SQ does
-> not print anything to stdout when it exits with a non-zero return
-> code. I think that's probably a safe assumption, but it seems more
-> robust not to make that assumption at all.
-
-That said, such assumption was also made in the "else" case of your change and
-in the original line. If we wanted that robustness, we'd better give a stricter
-condition and a warning like below.
-
-+ifeq ($(shell $(PYTHON_CONFIG_SQ) --ldflags --embed 2>&1 1>/dev/null; echo $$?), 0)
-+  PYTHON_CONFIG_LDFLAGS := --ldflags --embed
-+else ifeq ($(shell $(PYTHON_CONFIG_SQ) --ldflags 2>&1 1>/dev/null; echo $$?), 0)
-+  PYTHON_CONFIG_LDFLAGS := --ldflags
-+else
-+  $(warning Failed to get python ldflags.)
-+endif
-
-Given that such kind of assumptions spread across kernel makefiles, the
-one-liner might be good enough.
-
-
-Regards,
-Zhe
-
->
-> Best,
-> Sam
+diff --git a/drivers/misc/uacce/uacce.c b/drivers/misc/uacce/uacce.c
+index ffced4d..1bcc5e6 100644
+--- a/drivers/misc/uacce/uacce.c
++++ b/drivers/misc/uacce/uacce.c
+@@ -224,6 +224,7 @@ static int uacce_fops_open(struct inode *inode, struct file *filep)
+ 
+ 	init_waitqueue_head(&q->wait);
+ 	filep->private_data = q;
++	uacce->inode = inode;
+ 	q->state = UACCE_Q_INIT;
+ 
+ 	return 0;
+@@ -253,6 +254,14 @@ static int uacce_fops_release(struct inode *inode, struct file *filep)
+ 	return 0;
+ }
+ 
++static vm_fault_t uacce_vma_fault(struct vm_fault *vmf)
++{
++	if (vmf->flags & (FAULT_FLAG_MKWRITE | FAULT_FLAG_WRITE))
++		return VM_FAULT_SIGBUS;
++
++	return 0;
++}
++
+ static void uacce_vma_close(struct vm_area_struct *vma)
+ {
+ 	struct uacce_queue *q = vma->vm_private_data;
+@@ -265,6 +274,7 @@ static void uacce_vma_close(struct vm_area_struct *vma)
+ }
+ 
+ static const struct vm_operations_struct uacce_vm_ops = {
++	.fault = uacce_vma_fault,
+ 	.close = uacce_vma_close,
+ };
+ 
+@@ -585,6 +595,13 @@ void uacce_remove(struct uacce_device *uacce)
+ 		cdev_device_del(uacce->cdev, &uacce->dev);
+ 	xa_erase(&uacce_xa, uacce->dev_id);
+ 	put_device(&uacce->dev);
++
++	/*
++	 * unmap remainning mapping from user space, preventing user still
++	 * access the mmaped area while parent device is already removed
++	 */
++	if (uacce->inode)
++		unmap_mapping_range(uacce->inode->i_mapping, 0, 0, 1);
+ }
+ EXPORT_SYMBOL_GPL(uacce_remove);
+ 
+diff --git a/include/linux/uacce.h b/include/linux/uacce.h
+index 904a461..0e215e6 100644
+--- a/include/linux/uacce.h
++++ b/include/linux/uacce.h
+@@ -98,6 +98,7 @@ struct uacce_queue {
+  * @priv: private pointer of the uacce
+  * @mm_list: list head of uacce_mm->list
+  * @mm_lock: lock for mm_list
++ * @inode: core vfs
+  */
+ struct uacce_device {
+ 	const char *algs;
+@@ -113,6 +114,7 @@ struct uacce_device {
+ 	void *priv;
+ 	struct list_head mm_list;
+ 	struct mutex mm_lock;
++	struct inode *inode;
+ };
+ 
+ /**
+-- 
+2.7.4
 
