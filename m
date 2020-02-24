@@ -2,280 +2,180 @@ Return-Path: <SRS0=7TUr=4M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C9357C3567B
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 08:57:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 18977C35679
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 08:59:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9CBB82192A
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 08:57:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E1B892192A
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 08:59:32 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727554AbgBXI5w (ORCPT
+        id S1727260AbgBXI7b (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Feb 2020 03:57:52 -0500
-Received: from mga09.intel.com ([134.134.136.24]:28301 "EHLO mga09.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727170AbgBXI5w (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Feb 2020 03:57:52 -0500
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga008.fm.intel.com ([10.253.24.58])
-  by orsmga102.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 24 Feb 2020 00:57:49 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.70,479,1574150400"; 
-   d="scan'208";a="231068941"
-Received: from joy-optiplex-7040.sh.intel.com ([10.239.13.16])
-  by fmsmga008.fm.intel.com with ESMTP; 24 Feb 2020 00:57:47 -0800
-From:   Yan Zhao <yan.y.zhao@intel.com>
-To:     zhenyuw@linux.intel.com
-Cc:     alex.williamson@redhat.com, intel-gvt-dev@lists.freedesktop.org,
-        kvm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        pbonzini@redhat.com, kevin.tian@intel.com, peterx@redhat.com,
-        Yan Zhao <yan.y.zhao@intel.com>
-Subject: [PATCH v3 7/7] drm/i915/gvt: rw more pages a time for shadow context
-Date:   Mon, 24 Feb 2020 03:48:24 -0500
-Message-Id: <20200224084824.31992-1-yan.y.zhao@intel.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20200224084350.31574-1-yan.y.zhao@intel.com>
-References: <20200224084350.31574-1-yan.y.zhao@intel.com>
+        Mon, 24 Feb 2020 03:59:31 -0500
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:9538 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726509AbgBXI7b (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 24 Feb 2020 03:59:31 -0500
+Received: from pps.filterd (m0098414.ppops.net [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 01O8okXk067623
+        for <linux-kernel@vger.kernel.org>; Mon, 24 Feb 2020 03:59:29 -0500
+Received: from e06smtp04.uk.ibm.com (e06smtp04.uk.ibm.com [195.75.94.100])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 2yb1ar74vb-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Mon, 24 Feb 2020 03:59:29 -0500
+Received: from localhost
+        by e06smtp04.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-kernel@vger.kernel.org> from <parth@linux.ibm.com>;
+        Mon, 24 Feb 2020 08:59:28 -0000
+Received: from b06cxnps4076.portsmouth.uk.ibm.com (9.149.109.198)
+        by e06smtp04.uk.ibm.com (192.168.101.134) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Mon, 24 Feb 2020 08:59:22 -0000
+Received: from d06av24.portsmouth.uk.ibm.com (d06av24.portsmouth.uk.ibm.com [9.149.105.60])
+        by b06cxnps4076.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 01O8xL4C35782706
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Mon, 24 Feb 2020 08:59:21 GMT
+Received: from d06av24.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 7D88942049;
+        Mon, 24 Feb 2020 08:59:21 +0000 (GMT)
+Received: from d06av24.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id ED01242041;
+        Mon, 24 Feb 2020 08:59:18 +0000 (GMT)
+Received: from localhost.in.ibm.com (unknown [9.124.35.160])
+        by d06av24.portsmouth.uk.ibm.com (Postfix) with ESMTP;
+        Mon, 24 Feb 2020 08:59:18 +0000 (GMT)
+From:   Parth Shah <parth@linux.ibm.com>
+To:     linux-kernel@vger.kernel.org
+Cc:     peterz@infradead.org, mingo@redhat.com, vincent.guittot@linaro.org,
+        dietmar.eggemann@arm.com, qais.yousef@arm.com,
+        chris.hyser@oracle.com, patrick.bellasi@matbug.net,
+        valentin.schneider@arm.com, David.Laight@ACULAB.COM,
+        pjt@google.com, pavel@ucw.cz, tj@kernel.org,
+        dhaval.giani@oracle.com, qperret@google.com,
+        tim.c.chen@linux.intel.com
+Subject: [PATCH v4 0/4] Introduce per-task latency_nice for scheduler hints
+Date:   Mon, 24 Feb 2020 14:29:14 +0530
+X-Mailer: git-send-email 2.17.2
+X-TM-AS-GCONF: 00
+x-cbid: 20022408-0016-0000-0000-000002E9B3D3
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 20022408-0017-0000-0000-0000334CD9F6
+Message-Id: <20200224085918.16955-1-parth@linux.ibm.com>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.572
+ definitions=2020-02-24_02:2020-02-21,2020-02-24 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 lowpriorityscore=0
+ priorityscore=1501 mlxlogscore=999 malwarescore=0 mlxscore=0 adultscore=0
+ phishscore=0 bulkscore=0 clxscore=1015 impostorscore=0 spamscore=0
+ suspectscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2001150001 definitions=main-2002240078
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-1. as shadow context is pinned in intel_vgpu_setup_submission() and
-unpinned in intel_vgpu_clean_submission(), its base virtual address of
-is safely obtained from lrc_reg_state. no need to call kmap()/kunmap()
-repeatedly.
+This is the 4th revision of the patch set to introduce latency_nice as a
+per task attribute.
 
-2. IOVA(GPA)s of context pages are checked in this patch and if they are
-continuous, read/write them together in one intel_gvt_hypervisor_read_gpa()
-/intel_gvt_hypervisor_write_gpa().
+The previous version can be found at:
+v1: https://lkml.org/lkml/2019/11/25/151
+v2: https://lkml.org/lkml/2019/12/8/10
+v3: https://lkml.org/lkml/2020/1/16/319
 
-after the two changes in this patch,
-average cycles for populate_shadow_context() and update_guest_context()
-are reduced by ~10000-20000 cycles, depending on the average continuous
-pages in each read/write.
+Changes in this revision are:
+v3->v4:
+- Based on Chris's comment, added security check to refrain non-root user
+  set lower value than the current latency_nice values.
+v2 -> v3:
+- This series changes the longer attribute name to "latency_nice" as per
+  the comment from Dietmar Eggemann https://lkml.org/lkml/2019/12/5/394
+v1 -> v2:
+- Addressed comments from Qais Yousef
+- As per suggestion from Dietmar, moved content from newly created
+  include/linux/sched/latency_tolerance.h to kernel/sched/sched.h
+- Extend sched_setattr() to support latency_tolerance in tools headers UAPI
 
-(1) comparison of cycles of
-populate_shadow_context() + update_guest_context() when executing
-different benchmarks
- -------------------------------------------------------------
-|       cycles      | glmark2     | lightsmark  | openarena   |
-|-------------------------------------------------------------|
-| before this patch | 65968       | 97852       | 61373       |
-|  after this patch | 56017 (85%) | 73862 (75%) | 47463 (77%) |
- -------------------------------------------------------------
 
-(2) average count of pages read/written a time in
-populate_shadow_context() and update_guest_context()
-for each benchmark
+Introduction:
+==============
+This patch series introduces a new per-task attribute latency_nice to
+provide the scheduler hints about the latency requirements of the task [1].
 
- -----------------------------------------------------------
-|     page cnt      | glmark2     | lightsmark  | openarena |
-|-----------------------------------------------------------|
-| before this patch |    1        |      1      |    1      |
-|  after this patch |    5.25     |     19.99   |   20      |
- ------------------------------------------------------------
+Latency_nice is a ranged attribute of a task with the value ranging
+from [-20, 19] both inclusive which makes it align with the task nice
+value.
 
-(3) comparison of benchmarks scores
- ---------------------------------------------------------------------
-|      score        | glmark2       | lightsmark     | openarena      |
-|---------------------------------------------------------------------|
-| before this patch | 1244          | 222.18         | 114.4          |
-|  after this patch | 1248 (100.3%) | 225.8 (101.6%) | 115.0 (100.9%) |
- ---------------------------------------------------------------------
+The value should provide scheduler hints about the relative latency
+requirements of tasks, meaning the task with "latency_nice = -20"
+should have lower latency requirements than compared to those tasks with
+higher values. Similarly a task with "latency_nice = 19" can have higher
+latency and hence such tasks may not care much about latency.
 
-Signed-off-by: Yan Zhao <yan.y.zhao@intel.com>
----
- drivers/gpu/drm/i915/gvt/scheduler.c | 101 +++++++++++++++++++--------
- 1 file changed, 73 insertions(+), 28 deletions(-)
+The default value is set to 0. The usecases discussed below can use this
+range of [-20, 19] for latency_nice for the specific purpose. This
+patch does not implement any use cases for such attribute so that any
+change in naming or range does not affect much to the other (future)
+patches using this. The actual use of latency_nice during task wakeup
+and load-balancing is yet to be coded for each of those usecases.
 
-diff --git a/drivers/gpu/drm/i915/gvt/scheduler.c b/drivers/gpu/drm/i915/gvt/scheduler.c
-index 5b2a7d072ec9..c2b521b099bc 100644
---- a/drivers/gpu/drm/i915/gvt/scheduler.c
-+++ b/drivers/gpu/drm/i915/gvt/scheduler.c
-@@ -129,16 +129,22 @@ static int populate_shadow_context(struct intel_vgpu_workload *workload)
- 	struct intel_vgpu *vgpu = workload->vgpu;
- 	struct intel_gvt *gvt = vgpu->gvt;
- 	int ring_id = workload->ring_id;
--	struct drm_i915_gem_object *ctx_obj =
--		workload->req->hw_context->state->obj;
-+	struct intel_context *ctx_ce = workload->req->hw_context;
- 	struct execlist_ring_context *shadow_ring_context;
--	struct page *page;
- 	void *dst;
-+	void *context_base;
- 	unsigned long context_gpa, context_page_num;
-+	unsigned long seq_gpa_base; /* first gpa of successive GPAs */
-+	int seq_page_cnt; /* cnt of GPAs that are successive */
- 	int i;
- 
--	page = i915_gem_object_get_page(ctx_obj, LRC_STATE_PN);
--	shadow_ring_context = kmap(page);
-+	GEM_BUG_ON(!intel_context_is_pinned(ctx_ce));
-+
-+	context_base = (void *) ctx_ce->lrc_reg_state -
-+				(LRC_STATE_PN << I915_GTT_PAGE_SHIFT);
-+
-+	shadow_ring_context = context_base +
-+				(LRC_STATE_PN << I915_GTT_PAGE_SHIFT);
- 
- 	sr_oa_regs(workload, (u32 *)shadow_ring_context, true);
- #define COPY_REG(name) \
-@@ -170,7 +176,6 @@ static int populate_shadow_context(struct intel_vgpu_workload *workload)
- 			I915_GTT_PAGE_SIZE - sizeof(*shadow_ring_context));
- 
- 	sr_oa_regs(workload, (u32 *)shadow_ring_context, false);
--	kunmap(page);
- 
- 	if (IS_RESTORE_INHIBIT(shadow_ring_context->ctx_ctrl.val))
- 		return 0;
-@@ -185,8 +190,12 @@ static int populate_shadow_context(struct intel_vgpu_workload *workload)
- 	if (IS_BROADWELL(gvt->dev_priv) && ring_id == RCS0)
- 		context_page_num = 19;
- 
--	i = 2;
--	while (i < context_page_num) {
-+
-+	/* find continuous GPAs from gma until the first discontinuous GPA
-+	 * read continuous GPAs into dst virtual address
-+	 */
-+	seq_page_cnt = 0;
-+	for (i = 2; i < context_page_num; i++) {
- 		context_gpa = intel_vgpu_gma_to_gpa(vgpu->gtt.ggtt_mm,
- 				(u32)((workload->ctx_desc.lrca + i) <<
- 				I915_GTT_PAGE_SHIFT));
-@@ -195,12 +204,26 @@ static int populate_shadow_context(struct intel_vgpu_workload *workload)
- 			return -EFAULT;
- 		}
- 
--		page = i915_gem_object_get_page(ctx_obj, i);
--		dst = kmap(page);
--		intel_gvt_hypervisor_read_gpa(vgpu, context_gpa, dst,
--				I915_GTT_PAGE_SIZE);
--		kunmap(page);
--		i++;
-+		if (seq_page_cnt == 0) {
-+			seq_gpa_base = context_gpa;
-+			dst = context_base + (i << I915_GTT_PAGE_SHIFT);
-+		} else if (context_gpa != seq_gpa_base +
-+					(seq_page_cnt << I915_GTT_PAGE_SHIFT))
-+			goto read;
-+
-+		seq_page_cnt++;
-+
-+		if (i == context_page_num - 1)
-+			goto read;
-+
-+		continue;
-+
-+read:
-+		intel_gvt_hypervisor_read_gpa(vgpu, seq_gpa_base, dst,
-+					seq_page_cnt << I915_GTT_PAGE_SHIFT);
-+		seq_page_cnt = 1;
-+		seq_gpa_base = context_gpa;
-+		dst = context_base + (i << I915_GTT_PAGE_SHIFT);
- 	}
- 	return 0;
- }
-@@ -787,20 +810,24 @@ static void update_guest_context(struct intel_vgpu_workload *workload)
- 	struct i915_request *rq = workload->req;
- 	struct intel_vgpu *vgpu = workload->vgpu;
- 	struct intel_gvt *gvt = vgpu->gvt;
--	struct drm_i915_gem_object *ctx_obj = rq->hw_context->state->obj;
-+	struct intel_context *ctx_ce = workload->req->hw_context;
- 	struct execlist_ring_context *shadow_ring_context;
--	struct page *page;
--	void *src;
- 	unsigned long context_gpa, context_page_num;
-+	unsigned long seq_gpa_base; /* first gpa of successive GPAs */
-+	int seq_page_cnt; /* cnt of GPAs that are successive */
- 	int i;
- 	struct drm_i915_private *dev_priv = gvt->dev_priv;
- 	u32 ring_base;
- 	u32 head, tail;
- 	u16 wrap_count;
-+	void *src;
-+	void *context_base;
- 
- 	gvt_dbg_sched("ring id %d workload lrca %x\n", rq->engine->id,
- 		      workload->ctx_desc.lrca);
- 
-+	GEM_BUG_ON(!intel_context_is_pinned(ctx_ce));
-+
- 	head = workload->rb_head;
- 	tail = workload->rb_tail;
- 	wrap_count = workload->guest_rb_head >> RB_HEAD_WRAP_CNT_OFF;
-@@ -824,9 +851,14 @@ static void update_guest_context(struct intel_vgpu_workload *workload)
- 	if (IS_BROADWELL(gvt->dev_priv) && rq->engine->id == RCS0)
- 		context_page_num = 19;
- 
--	i = 2;
-+	context_base = (void *) ctx_ce->lrc_reg_state -
-+		 LRC_STATE_PN * PAGE_SIZE;
- 
--	while (i < context_page_num) {
-+	/* find continuous GPAs from gma until the first discontinuous GPA
-+	 * write continuous GPAs from src virtual address
-+	 */
-+	seq_page_cnt = 0;
-+	for (i = 2; i < context_page_num; i++) {
- 		context_gpa = intel_vgpu_gma_to_gpa(vgpu->gtt.ggtt_mm,
- 				(u32)((workload->ctx_desc.lrca + i) <<
- 					I915_GTT_PAGE_SHIFT));
-@@ -835,19 +867,33 @@ static void update_guest_context(struct intel_vgpu_workload *workload)
- 			return;
- 		}
- 
--		page = i915_gem_object_get_page(ctx_obj, i);
--		src = kmap(page);
--		intel_gvt_hypervisor_write_gpa(vgpu, context_gpa, src,
--				I915_GTT_PAGE_SIZE);
--		kunmap(page);
--		i++;
-+		if (seq_page_cnt == 0) {
-+			seq_gpa_base = context_gpa;
-+			src = context_base + (i << I915_GTT_PAGE_SHIFT);
-+		} else if (context_gpa != seq_gpa_base +
-+					(seq_page_cnt << I915_GTT_PAGE_SHIFT))
-+			goto write;
-+
-+		seq_page_cnt++;
-+
-+		if (i == context_page_num - 1)
-+			goto write;
-+
-+		continue;
-+
-+write:
-+		intel_gvt_hypervisor_write_gpa(vgpu, seq_gpa_base, src,
-+					seq_page_cnt << I915_GTT_PAGE_SHIFT);
-+		seq_page_cnt = 1;
-+		seq_gpa_base = context_gpa;
-+		src = context_base + (i << I915_GTT_PAGE_SHIFT);
- 	}
- 
- 	intel_gvt_hypervisor_write_gpa(vgpu, workload->ring_context_gpa +
- 		RING_CTX_OFF(ring_header.val), &workload->rb_tail, 4);
- 
--	page = i915_gem_object_get_page(ctx_obj, LRC_STATE_PN);
--	shadow_ring_context = kmap(page);
-+	shadow_ring_context = context_base +
-+				(LRC_STATE_PN << I915_GTT_PAGE_SHIFT);
- 
- #define COPY_REG(name) \
- 	intel_gvt_hypervisor_write_gpa(vgpu, workload->ring_context_gpa + \
-@@ -865,7 +911,6 @@ static void update_guest_context(struct intel_vgpu_workload *workload)
- 			sizeof(*shadow_ring_context),
- 			I915_GTT_PAGE_SIZE - sizeof(*shadow_ring_context));
- 
--	kunmap(page);
- }
- 
- void intel_vgpu_clean_workloads(struct intel_vgpu *vgpu,
+As per my view, this defined attribute can be used in following ways for a
+some of the usecases:
+1 Reduce search scan time for select_idle_cpu():
+- Reduce search scans for finding idle CPU for a waking task with lower
+  latency_nice values.
+
+2 TurboSched:
+- Classify the tasks with higher latency_nice values as a small
+  background task given that its historic utilization is very low, for
+  which the scheduler can search for more number of cores to do task
+  packing.  A task with a latency_nice >= some_threshold (e.g, == 19)
+  and util <= 12.5% can be background tasks.
+
+3 Optimize AVX512 based workload:
+- Bias scheduler to not put a task having (latency_nice == -20) on a
+  core occupying AVX512 based workload.
+
+
+Series Organization:
+====================
+- Patch 1-3: Add support for latency_nice attr in the task struct using
+  	     sched_{set,get}attr syscall
+- Patch 4  : Add permission checks for setting the value.
+
+
+The patch series can be applied on tip/sched/core at the
+commit 000619680c37 ("sched/fair: Remove wake_cap()")
+
+
+References:
+============
+[1]. Usecases for the per-task latency-nice attribute,
+     https://lkml.org/lkml/2019/9/30/215
+[2]. Task Latency-nice, "Subhra Mazumdar",
+     https://lkml.org/lkml/2019/8/30/829
+[3]. Introduce per-task latency_tolerance for scheduler hints,
+     https://lkml.org/lkml/2019/12/8/10
+
+
+
+Parth Shah (4):
+  sched: Introduce latency-nice as a per-task attribute
+  sched/core: Propagate parent task's latency requirements to the child
+    task
+  sched: Allow sched_{get,set}attr to change latency_nice of the task
+  sched/core: Add permission checks for setting the latency_nice value
+
+ include/linux/sched.h            |  1 +
+ include/uapi/linux/sched.h       |  4 +++-
+ include/uapi/linux/sched/types.h | 19 +++++++++++++++++++
+ kernel/sched/core.c              | 25 +++++++++++++++++++++++++
+ kernel/sched/sched.h             | 18 ++++++++++++++++++
+ tools/include/uapi/linux/sched.h |  4 +++-
+ 6 files changed, 69 insertions(+), 2 deletions(-)
+
 -- 
-2.17.1
+2.17.2
 
