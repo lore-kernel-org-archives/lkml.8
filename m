@@ -2,112 +2,275 @@ Return-Path: <SRS0=7TUr=4M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 676BBC35679
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 09:54:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F0213C3567B
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 09:54:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3858720842
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 09:54:14 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="hvufIr9p"
+	by mail.kernel.org (Postfix) with ESMTP id C3D9720863
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 09:54:21 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727701AbgBXJyN (ORCPT
+        id S1727716AbgBXJyU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Feb 2020 04:54:13 -0500
-Received: from bombadil.infradead.org ([198.137.202.133]:43434 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726838AbgBXJyM (ORCPT
+        Mon, 24 Feb 2020 04:54:20 -0500
+Received: from outbound-smtp10.blacknight.com ([46.22.139.15]:37757 "EHLO
+        outbound-smtp10.blacknight.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726838AbgBXJyU (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Feb 2020 04:54:12 -0500
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
-        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=ox3XWd1h0UFdpJWgXqkeLH4EDTvT30rmX9E287Fs9Mc=; b=hvufIr9pooCrFsZ9kEGSb3f9zq
-        4Q9DVNZ15CcdRQCq97rhL4JOELdYuB6qgEtuCrUXJHS5a0aNDfaTGG2YzSnEUhQBrUkW2ezu5tHoq
-        JnPB18Zj+IhYdDz8luHXPvbKtHYB7nHZPOpNRQnGUD09DeR/ZMph9x3QOiTH2A4oTGvBsVYYMlMrT
-        Yvjqsqkd+Hagu08xedXb36TL04iGKAQingnpTBCRpMNfjHSJ0HCaVYpJVjIoZ2hd4ZfoSnRP5ConU
-        Zu55UjbeVcGBan5KNcYVpVgT46OwtMa/4w0uIXpGDXRWaP7xfUbEY+480pUtO8Z+FEGs9IG+mqDLc
-        HWexdmVg==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
-        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1j6ARA-00007B-RU; Mon, 24 Feb 2020 09:54:05 +0000
-Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (Client did not present a certificate)
-        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id DD7B730783F;
-        Mon, 24 Feb 2020 10:52:07 +0100 (CET)
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id 636002B4DAAD2; Mon, 24 Feb 2020 10:54:02 +0100 (CET)
-Date:   Mon, 24 Feb 2020 10:54:02 +0100
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     Andy Shevchenko <andy.shevchenko@gmail.com>
-Cc:     Jesse Brandeburg <jesse.brandeburg@intel.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        "maintainer:X86 ARCHITECTURE (32-BIT AND 64-BIT)" <x86@kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Rasmus Villemoes <linux@rasmusvillemoes.dk>,
-        Andriy Shevchenko <andriy.shevchenko@intel.com>,
-        Dan Williams <dan.j.williams@intel.com>
-Subject: Re: [PATCH v4 1/2] x86: fix bitops.h warning with a moved cast
-Message-ID: <20200224095402.GD14897@hirez.programming.kicks-ass.net>
-References: <20200222000214.2169531-1-jesse.brandeburg@intel.com>
- <CAHp75Vc=9aSt1DH-LzDHnX1+fnPpkJWHkkh0-ApTL0zm+ZA2oQ@mail.gmail.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAHp75Vc=9aSt1DH-LzDHnX1+fnPpkJWHkkh0-ApTL0zm+ZA2oQ@mail.gmail.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+        Mon, 24 Feb 2020 04:54:20 -0500
+Received: from mail.blacknight.com (pemlinmail04.blacknight.ie [81.17.254.17])
+        by outbound-smtp10.blacknight.com (Postfix) with ESMTPS id A52221C35A8
+        for <linux-kernel@vger.kernel.org>; Mon, 24 Feb 2020 09:54:17 +0000 (GMT)
+Received: (qmail 25669 invoked from network); 24 Feb 2020 09:54:17 -0000
+Received: from unknown (HELO stampy.112glenside.lan) (mgorman@techsingularity.net@[84.203.18.57])
+  by 81.17.254.9 with ESMTPA; 24 Feb 2020 09:54:17 -0000
+From:   Mel Gorman <mgorman@techsingularity.net>
+To:     Peter Zijlstra <peterz@infradead.org>
+Cc:     Ingo Molnar <mingo@kernel.org>,
+        Vincent Guittot <vincent.guittot@linaro.org>,
+        Juri Lelli <juri.lelli@redhat.com>,
+        Dietmar Eggemann <dietmar.eggemann@arm.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Ben Segall <bsegall@google.com>,
+        Valentin Schneider <valentin.schneider@arm.com>,
+        Phil Auld <pauld@redhat.com>, Hillf Danton <hdanton@sina.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Mel Gorman <mgorman@techsingularity.net>
+Subject: [PATCH 10/13] sched/numa: Prefer using an idle cpu as a migration target instead of comparing tasks
+Date:   Mon, 24 Feb 2020 09:52:20 +0000
+Message-Id: <20200224095223.13361-11-mgorman@techsingularity.net>
+X-Mailer: git-send-email 2.16.4
+In-Reply-To: <20200224095223.13361-1-mgorman@techsingularity.net>
+References: <20200224095223.13361-1-mgorman@techsingularity.net>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, Feb 22, 2020 at 11:39:57AM +0200, Andy Shevchenko wrote:
-> On Sat, Feb 22, 2020 at 2:04 AM Jesse Brandeburg
+task_numa_find_cpu can scan a node multiple times. Minimally it scans to
+gather statistics and later to find a suitable target. In some cases, the
+second scan will simply pick an idle CPU if the load is not imbalanced.
 
-> > -#define CONST_MASK(nr)                 (1 << ((nr) & 7))
-> > +#define CONST_MASK(nr)                 ((u8)1 << ((nr) & 7))
-> >
-> >  static __always_inline void
-> >  arch_set_bit(long nr, volatile unsigned long *addr)
-> > @@ -54,7 +54,7 @@ arch_set_bit(long nr, volatile unsigned long *addr)
-> >         if (__builtin_constant_p(nr)) {
-> >                 asm volatile(LOCK_PREFIX "orb %1,%0"
-> >                         : CONST_MASK_ADDR(nr, addr)
-> > -                       : "iq" ((u8)CONST_MASK(nr))
-> > +                       : "iq" (CONST_MASK(nr))
+This patch caches information on an idle core while gathering statistics
+and uses it immediately if load is not imbalanced to avoid a second scan
+of the node runqueues. Preference is given to an idle core rather than an
+idle SMT sibling to avoid packing HT siblings due to linearly scanning the
+node cpumask.
 
-Note how this is not equivalent, the old code actually handed in a u8
-while the new code hands int. By moving the (u8) cast into the parens,
-you casl 1 to u8, which then instantly gets promoted to 'int' due to the
-'<<' operator.
+As a side-effect, even when the second scan is necessary, the importance
+of using select_idle_sibling is much reduced because information on idle
+CPUs is cached and can be reused.
 
-> >                         : "memory");
-> >         } else {
-> >                 asm volatile(LOCK_PREFIX __ASM_SIZE(bts) " %1,%0"
-> > @@ -74,7 +74,7 @@ arch_clear_bit(long nr, volatile unsigned long *addr)
-> >         if (__builtin_constant_p(nr)) {
-> >                 asm volatile(LOCK_PREFIX "andb %1,%0"
-> >                         : CONST_MASK_ADDR(nr, addr)
-> > -                       : "iq" ((u8)~CONST_MASK(nr)));
-> > +                       : "iq" (CONST_MASK(nr) ^ 0xff));
-> 
-> I'm wondering if the original, by Peter Z, order allows us to drop
-> (u8) casting in the CONST_MASK completely.
+Note that this patch actually makes is harder to move to an idle CPU
+as multiple tasks can race for the same idle CPU due to a race checking
+numa_migrate_on. This is addressed in the next patch.
 
-I'm thinking it's all nonsense anyway :-), the result of either << or ^
-is always promoted to int anyway.
+Signed-off-by: Mel Gorman <mgorman@techsingularity.net>
+---
+ kernel/sched/fair.c | 119 ++++++++++++++++++++++++++++++++++++++++++++--------
+ 1 file changed, 102 insertions(+), 17 deletions(-)
 
-The sparse complaint was that ~CONST_MASK(nr) had high bits set which
-were lost, which is true, but a copmletely stupid warning IMO.
+diff --git a/kernel/sched/fair.c b/kernel/sched/fair.c
+index 8ce9a04e7efb..e285aa0cdd4f 100644
+--- a/kernel/sched/fair.c
++++ b/kernel/sched/fair.c
+@@ -1500,8 +1500,29 @@ struct numa_stats {
+ 	unsigned int nr_running;
+ 	unsigned int weight;
+ 	enum numa_type node_type;
++	int idle_cpu;
+ };
+ 
++static inline bool is_core_idle(int cpu)
++{
++#ifdef CONFIG_SCHED_SMT
++	int sibling;
++
++	for_each_cpu(sibling, cpu_smt_mask(cpu)) {
++		if (cpu == sibling)
++			continue;
++
++		if (!idle_cpu(cpu))
++			return false;
++	}
++#endif
++
++	return true;
++}
++
++/* Forward declarations of select_idle_sibling helpers */
++static inline bool test_idle_cores(int cpu, bool def);
++
+ struct task_numa_env {
+ 	struct task_struct *p;
+ 
+@@ -1537,15 +1558,39 @@ numa_type numa_classify(unsigned int imbalance_pct,
+ 	return node_fully_busy;
+ }
+ 
++static inline int numa_idle_core(int idle_core, int cpu)
++{
++#ifdef CONFIG_SCHED_SMT
++	if (!static_branch_likely(&sched_smt_present) ||
++	    idle_core >= 0 || !test_idle_cores(cpu, false))
++		return idle_core;
++
++	/*
++	 * Prefer cores instead of packing HT siblings
++	 * and triggering future load balancing.
++	 */
++	if (is_core_idle(cpu))
++		idle_core = cpu;
++#endif
++
++	return idle_core;
++}
++
+ /*
+- * XXX borrowed from update_sg_lb_stats
++ * Gather all necessary information to make NUMA balancing placement
++ * decisions that are compatible with standard load balancer. This
++ * borrows code and logic from update_sg_lb_stats but sharing a
++ * common implementation is impractical.
+  */
+ static void update_numa_stats(struct task_numa_env *env,
+-			      struct numa_stats *ns, int nid)
++			      struct numa_stats *ns, int nid,
++			      bool find_idle)
+ {
+-	int cpu;
++	int cpu, idle_core = -1;
+ 
+ 	memset(ns, 0, sizeof(*ns));
++	ns->idle_cpu = -1;
++
+ 	for_each_cpu(cpu, cpumask_of_node(nid)) {
+ 		struct rq *rq = cpu_rq(cpu);
+ 
+@@ -1553,11 +1598,25 @@ static void update_numa_stats(struct task_numa_env *env,
+ 		ns->util += cpu_util(cpu);
+ 		ns->nr_running += rq->cfs.h_nr_running;
+ 		ns->compute_capacity += capacity_of(cpu);
++
++		if (find_idle && !rq->nr_running && idle_cpu(cpu)) {
++			if (READ_ONCE(rq->numa_migrate_on) ||
++			    !cpumask_test_cpu(cpu, env->p->cpus_ptr))
++				continue;
++
++			if (ns->idle_cpu == -1)
++				ns->idle_cpu = cpu;
++
++			idle_core = numa_idle_core(idle_core, cpu);
++		}
+ 	}
+ 
+ 	ns->weight = cpumask_weight(cpumask_of_node(nid));
+ 
+ 	ns->node_type = numa_classify(env->imbalance_pct, ns);
++
++	if (idle_core >= 0)
++		ns->idle_cpu = idle_core;
+ }
+ 
+ static void task_numa_assign(struct task_numa_env *env,
+@@ -1566,7 +1625,7 @@ static void task_numa_assign(struct task_numa_env *env,
+ 	struct rq *rq = cpu_rq(env->dst_cpu);
+ 
+ 	/* Bail out if run-queue part of active NUMA balance. */
+-	if (xchg(&rq->numa_migrate_on, 1))
++	if (env->best_cpu != env->dst_cpu && xchg(&rq->numa_migrate_on, 1))
+ 		return;
+ 
+ 	/*
+@@ -1730,19 +1789,39 @@ static void task_numa_compare(struct task_numa_env *env,
+ 		goto unlock;
+ 
+ assign:
+-	/*
+-	 * One idle CPU per node is evaluated for a task numa move.
+-	 * Call select_idle_sibling to maybe find a better one.
+-	 */
++	/* Evaluate an idle CPU for a task numa move. */
+ 	if (!cur) {
++		int cpu = env->dst_stats.idle_cpu;
++
++		/* Nothing cached so current CPU went idle since the search. */
++		if (cpu < 0)
++			cpu = env->dst_cpu;
++
+ 		/*
+-		 * select_idle_siblings() uses an per-CPU cpumask that
+-		 * can be used from IRQ context.
++		 * If the CPU is no longer truly idle and the previous best CPU
++		 * is, keep using it.
+ 		 */
+-		local_irq_disable();
+-		env->dst_cpu = select_idle_sibling(env->p, env->src_cpu,
++		if (!idle_cpu(cpu) && env->best_cpu >= 0 &&
++		    idle_cpu(env->best_cpu)) {
++			cpu = env->best_cpu;
++		}
++
++		/*
++		 * Use select_idle_sibling if the previously found idle CPU is
++		 * not idle any more.
++		 */
++		if (!idle_cpu(cpu)) {
++			/*
++			 * select_idle_siblings() uses an per-CPU cpumask that
++			 * can be used from IRQ context.
++			 */
++			local_irq_disable();
++			cpu = select_idle_sibling(env->p, env->src_cpu,
+ 						   env->dst_cpu);
+-		local_irq_enable();
++			local_irq_enable();
++		}
++
++		env->dst_cpu = cpu;
+ 	}
+ 
+ 	task_numa_assign(env, cur, imp);
+@@ -1776,8 +1855,14 @@ static void task_numa_find_cpu(struct task_numa_env *env,
+ 		imbalance = adjust_numa_imbalance(imbalance, src_running);
+ 
+ 		/* Use idle CPU if there is no imbalance */
+-		if (!imbalance)
++		if (!imbalance) {
+ 			maymove = true;
++			if (env->dst_stats.idle_cpu >= 0) {
++				env->dst_cpu = env->dst_stats.idle_cpu;
++				task_numa_assign(env, NULL, 0);
++				return;
++			}
++		}
+ 	} else {
+ 		long src_load, dst_load, load;
+ 		/*
+@@ -1850,10 +1935,10 @@ static int task_numa_migrate(struct task_struct *p)
+ 	dist = env.dist = node_distance(env.src_nid, env.dst_nid);
+ 	taskweight = task_weight(p, env.src_nid, dist);
+ 	groupweight = group_weight(p, env.src_nid, dist);
+-	update_numa_stats(&env, &env.src_stats, env.src_nid);
++	update_numa_stats(&env, &env.src_stats, env.src_nid, false);
+ 	taskimp = task_weight(p, env.dst_nid, dist) - taskweight;
+ 	groupimp = group_weight(p, env.dst_nid, dist) - groupweight;
+-	update_numa_stats(&env, &env.dst_stats, env.dst_nid);
++	update_numa_stats(&env, &env.dst_stats, env.dst_nid, true);
+ 
+ 	/* Try to find a spot on the preferred nid. */
+ 	task_numa_find_cpu(&env, taskimp, groupimp);
+@@ -1886,7 +1971,7 @@ static int task_numa_migrate(struct task_struct *p)
+ 
+ 			env.dist = dist;
+ 			env.dst_nid = nid;
+-			update_numa_stats(&env, &env.dst_stats, env.dst_nid);
++			update_numa_stats(&env, &env.dst_stats, env.dst_nid, true);
+ 			task_numa_find_cpu(&env, taskimp, groupimp);
+ 		}
+ 	}
+-- 
+2.16.4
 
-By using 0xff ^ CONST_MASK(nr), those bits will not be set and will not
-be lost.
-
-None of that has anything to do with where we place a pointless cast
-more or less.
