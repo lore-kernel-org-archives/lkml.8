@@ -7,117 +7,94 @@ X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 39351C38BE2
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 18:38:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F2337C38BE1
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 18:38:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1429220836
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 18:38:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C72D120836
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 18:38:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582569494;
-	bh=HKGf1vixZ1cIXykh3YzYG1OpYhwbo+RkoLyvnacjPoI=;
+	s=default; t=1582569521;
+	bh=hi7JVfRDoeyGdxQwYXLmOT+g7MYjuTMVBzMDWJXeBDo=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=FhpcVaWw0bAYmExXbmEXc5OiNvSXfPgACL5fXwIsnbCJDnA7ztwzb+P741QtRaAcH
-	 k92j8NuDLdv0vbb+180ru9qBiYCYHNK70+Ytbn36h0O+fg+oFBRjLfrBNRXYDxA5mv
-	 qhghS5TJMZ/Lm7tCVqTSn1vszse/JE3oOvffl4iI=
+	b=wObPzXYKmjQZjvruGkmmBR9IG2ouLWKwnq/g2aBagAkgxJQN0FuZJEPAOF/ng7QzC
+	 u4AaggNx82uR4SUCdwW7Pgy2+JzD2Dl1eIhmD7i93gi9pyVXMDLp1ezBSJqCYwIVRP
+	 Sj2TzAnglUHARzfrH8Waygj/2H6mG1U5c3dWDprs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727867AbgBXSiM (ORCPT
+        id S1728002AbgBXSik (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Feb 2020 13:38:12 -0500
-Received: from mail-ot1-f66.google.com ([209.85.210.66]:36120 "EHLO
-        mail-ot1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726652AbgBXSiM (ORCPT
+        Mon, 24 Feb 2020 13:38:40 -0500
+Received: from mail-oi1-f195.google.com ([209.85.167.195]:42516 "EHLO
+        mail-oi1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727426AbgBXSik (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Feb 2020 13:38:12 -0500
-Received: by mail-ot1-f66.google.com with SMTP id j20so9683143otq.3;
-        Mon, 24 Feb 2020 10:38:11 -0800 (PST)
+        Mon, 24 Feb 2020 13:38:40 -0500
+Received: by mail-oi1-f195.google.com with SMTP id j132so9914181oih.9;
+        Mon, 24 Feb 2020 10:38:39 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=CTcGzA0z5i+6lNDLcB/Tsj2HAX7a4+dM5kF5P26aJ2Y=;
-        b=k2JC62cHMtWz7LTQXqVrY5QKna9x8UDbQDJkUF07FaV9q1x6t9roaGxsv6cYCC87x9
-         4rZG9Tu6PzT7Vh3nYvhLhI/AvmIUluQnssRHAOe+T20rZIFkMPlQMxz7c74tuDHaOm+C
-         wyUxob4BfNvLFIfdbmBM+Oh2bjHa+/4LFhMUjU6+8G4CNSvbrxG22BTokdI3FbFtiplt
-         6GprUsbHBDdk0ldg39zylIE9XEAdF7o9kmACVbSjlaL+od3Oc9uteb2CYgbSn2YB5B4o
-         +wvnb7/EojT7RXoQHzU702XZFEskKOJ/0FTkaDui3VLJHPhVYoTvOUqv/qFHtv2/UPyu
-         hBMg==
-X-Gm-Message-State: APjAAAVArL3LsqZXwFmp3HB+vTiVwxy28WB/6z07JTpbEnke+1SCN9Nw
-        9ii/iyTdL7wlhd5g8GFBfqbQtI4=
-X-Google-Smtp-Source: APXvYqxDJn4NGNj1cMp1cZ6TxisP/0/u3ApEFGvmUGox+1qFMTezAYo1AiqpbEkiMaIenh1wvw6Fng==
-X-Received: by 2002:a9d:624e:: with SMTP id i14mr42070548otk.371.1582569491495;
-        Mon, 24 Feb 2020 10:38:11 -0800 (PST)
+        bh=KIxNc55NxgvE6j0xfm1Sga8uXN4KJSN+Vsg27kwf7bU=;
+        b=mKktKwbglu9GqnkhcORY7KXfzfcZFnoBo0KKTZerphRK84SZfhmhBozIk6MUNvFTso
+         Wih/r0tJp6AKjBjIaI0Go6/ONYL25QggMs7PzbwXQ5xguCkoXgS5MS8IA0/RfI43rv6S
+         z6aauZ1PpBOKLDs4cqiwiVoO4tpdFHwxCag2hkowExlSdMn7HhzpjVHzLQu/d3B3Zcts
+         GW7qnEgo/chJSp9blh2By47WHSagYT2x3VZ1AVclbendyQWLcsvYGLdbkGd2mCTUoa3M
+         iPTiE02fziQRNVsoAYsthD1em/n6ABTxBZvFigbnBpLuyUhBfiPp70jvLTx2S9NcnFzD
+         NXDA==
+X-Gm-Message-State: APjAAAUX5S37DakqBTa3VX2Wj4iO/jiSkpV0W1op1uhXqUJvgAsqsvyw
+        xE/habjThRYT6PjBjXys3tTTWBo=
+X-Google-Smtp-Source: APXvYqxC6zs4BbgyhbSt2wk1ri78YubmFXP2o6p/yzAa8uQASyj3D+CsBlGjSGUpt95oH0h+E4uoQw==
+X-Received: by 2002:aca:f20b:: with SMTP id q11mr353554oih.78.1582569519126;
+        Mon, 24 Feb 2020 10:38:39 -0800 (PST)
 Received: from rob-hp-laptop (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.gmail.com with ESMTPSA id 108sm4769375oti.1.2020.02.24.10.38.10
+        by smtp.gmail.com with ESMTPSA id v202sm4296761oie.10.2020.02.24.10.38.38
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 24 Feb 2020 10:38:10 -0800 (PST)
-Received: (nullmailer pid 32747 invoked by uid 1000);
-        Mon, 24 Feb 2020 18:38:10 -0000
-Date:   Mon, 24 Feb 2020 12:38:10 -0600
+        Mon, 24 Feb 2020 10:38:38 -0800 (PST)
+Received: (nullmailer pid 1132 invoked by uid 1000);
+        Mon, 24 Feb 2020 18:38:37 -0000
+Date:   Mon, 24 Feb 2020 12:38:37 -0600
 From:   Rob Herring <robh@kernel.org>
-To:     Tim Harvey <tharvey@gateworks.com>
-Cc:     Lee Jones <lee.jones@linaro.org>, Jean Delvare <jdelvare@suse.com>,
-        Guenter Roeck <linux@roeck-us.net>,
-        linux-hwmon@vger.kernel.org, Frank Rowand <frowand.list@gmail.com>,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Robert Jones <rjones@gateworks.com>,
-        Tim Harvey <tharvey@gateworks.com>
-Subject: Re: [PATCH v4 1/3] dt-bindings: mfd: Add Gateworks System Controller
- bindings
-Message-ID: <20200224183810.GA32214@bogus>
-References: <1582320476-1098-1-git-send-email-tharvey@gateworks.com>
- <1582320476-1098-2-git-send-email-tharvey@gateworks.com>
+To:     Grygorii Strashko <grygorii.strashko@ti.com>
+Cc:     Roger Quadros <rogerq@ti.com>, Tero Kristo <t-kristo@ti.com>,
+        netdev@vger.kernel.org, devicetree@vger.kernel.org,
+        "David S. Miller" <davem@davemloft.net>,
+        Peter Ujfalusi <peter.ujfalusi@ti.com>,
+        Sekhar Nori <nsekhar@ti.com>, linux-kernel@vger.kernel.org,
+        Grygorii Strashko <grygorii.strashko@ti.com>
+Subject: Re: [PATCH net-next 4/9] dt-binding: ti: am65x: document mcu cpsw
+ nuss
+Message-ID: <20200224183837.GA476@bogus>
+References: <20200222155752.22021-1-grygorii.strashko@ti.com>
+ <20200222155752.22021-5-grygorii.strashko@ti.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <1582320476-1098-2-git-send-email-tharvey@gateworks.com>
+In-Reply-To: <20200222155752.22021-5-grygorii.strashko@ti.com>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 21 Feb 2020 13:27:54 -0800, Tim Harvey wrote:
-> This patch adds documentation of device-tree bindings for the
-> Gateworks System Controller (GSC).
+On Sat, 22 Feb 2020 17:57:47 +0200, Grygorii Strashko wrote:
+> Document device tree bindings for The TI AM654x/J721E SoC Gigabit Ethernet MAC
+> (Media Access Controller - CPSW2G NUSS). The CPSW NUSS provides Ethernet packet
+> communication for the device.
 > 
-> Signed-off-by: Tim Harvey <tharvey@gateworks.com>
-> 
-> v4:
->  - move to using pwm<n>_auto_point<m>_{pwm,temp} for FAN PWM
->  - remove unncessary resolution/scaling properties for ADCs
->  - update to yaml
->  - remove watchdog
-> 
-> v3:
->  - replaced _ with -
->  - remove input bindings
->  - added full description of hwmon
->  - fix unit address of hwmon child nodes
-> 
-> update dts
-> 
-> Signed-off-by: Tim Harvey <tharvey@gateworks.com>
-> 
-> merge with binding doc
+> Signed-off-by: Grygorii Strashko <grygorii.strashko@ti.com>
 > ---
->  .../devicetree/bindings/mfd/gateworks-gsc.yaml     | 156 +++++++++++++++++++++
->  1 file changed, 156 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/mfd/gateworks-gsc.yaml
+>  .../bindings/net/ti,k3-am654-cpsw-nuss.yaml   | 226 ++++++++++++++++++
+>  1 file changed, 226 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/net/ti,k3-am654-cpsw-nuss.yaml
 > 
 
 My bot found errors running 'make dt_binding_check' on your patch:
 
-warning: no schema found in file: Documentation/devicetree/bindings/mfd/gateworks-gsc.yaml
-/builds/robherring/linux-dt-review/Documentation/devicetree/bindings/mfd/gateworks-gsc.yaml: ignoring, error parsing file
-Documentation/devicetree/bindings/display/simple-framebuffer.example.dts:21.16-37.11: Warning (chosen_node_is_root): /example-0/chosen: chosen node must be at root node
-Documentation/devicetree/bindings/mfd/gateworks-gsc.yaml:  while parsing a block mapping
-  in "<unicode string>", line 62, column 11
-did not find expected key
-  in "<unicode string>", line 75, column 12
-Documentation/devicetree/bindings/Makefile:12: recipe for target 'Documentation/devicetree/bindings/mfd/gateworks-gsc.example.dts' failed
-make[1]: *** [Documentation/devicetree/bindings/mfd/gateworks-gsc.example.dts] Error 1
+/builds/robherring/linux-dt-review/Documentation/devicetree/bindings/net/ti,k3-am654-cpsw-nuss.yaml: properties:ethernet-ports:patternProperties:^port@[0-9]+$: 'minItems' is not one of ['type', 'description', 'dependencies', 'properties', 'patternProperties', 'additionalProperties', 'unevaluatedProperties', 'deprecated', 'required', 'allOf', 'anyOf', 'oneOf', '$ref']
+Documentation/devicetree/bindings/Makefile:12: recipe for target 'Documentation/devicetree/bindings/net/ti,k3-am654-cpsw-nuss.example.dts' failed
+make[1]: *** [Documentation/devicetree/bindings/net/ti,k3-am654-cpsw-nuss.example.dts] Error 1
 Makefile:1263: recipe for target 'dt_binding_check' failed
 make: *** [dt_binding_check] Error 2
 
-See https://patchwork.ozlabs.org/patch/1242346
+See https://patchwork.ozlabs.org/patch/1242523
 Please check and re-submit.
