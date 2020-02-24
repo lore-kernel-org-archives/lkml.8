@@ -2,82 +2,79 @@ Return-Path: <SRS0=7TUr=4M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.3 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BCA59C3567B
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 06:00:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9E8FBC3567B
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 06:02:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 990D620714
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 06:00:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7B86F20714
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 06:02:25 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726810AbgBXGAw (ORCPT
+        id S1727197AbgBXGCY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Feb 2020 01:00:52 -0500
-Received: from helcar.hmeau.com ([216.24.177.18]:35422 "EHLO fornost.hmeau.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725535AbgBXGAv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Feb 2020 01:00:51 -0500
-Received: from gwarestrin.me.apana.org.au ([192.168.0.7] helo=gwarestrin.arnor.me.apana.org.au)
-        by fornost.hmeau.com with smtp (Exim 4.89 #2 (Debian))
-        id 1j66nK-0005cZ-VE; Mon, 24 Feb 2020 17:00:44 +1100
-Received: by gwarestrin.arnor.me.apana.org.au (sSMTP sendmail emulation); Mon, 24 Feb 2020 17:00:42 +1100
-Date:   Mon, 24 Feb 2020 17:00:42 +1100
-From:   Herbert Xu <herbert@gondor.apana.org.au>
-To:     Linus Torvalds <torvalds@linux-foundation.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Linux Crypto Mailing List <linux-crypto@vger.kernel.org>
-Subject: [GIT PULL] Crypto Fixes for 5.6
-Message-ID: <20200224060042.GA26184@gondor.apana.org.au>
-References: <20190916084901.GA20338@gondor.apana.org.au>
- <20190923050515.GA6980@gondor.apana.org.au>
- <20191202062017.ge4rz72ki3vczhgb@gondor.apana.org.au>
- <20191214084749.jt5ekav5o5pd2dcp@gondor.apana.org.au>
- <20200115150812.mo2eycc53lbsgvue@gondor.apana.org.au>
- <20200213033231.xjwt6uf54nu26qm5@gondor.apana.org.au>
+        Mon, 24 Feb 2020 01:02:24 -0500
+Received: from szxga05-in.huawei.com ([45.249.212.191]:10677 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726509AbgBXGCY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 24 Feb 2020 01:02:24 -0500
+Received: from DGGEMS409-HUB.china.huawei.com (unknown [172.30.72.60])
+        by Forcepoint Email with ESMTP id 7BBA65D9DB5044CD82B9;
+        Mon, 24 Feb 2020 14:02:20 +0800 (CST)
+Received: from localhost.localdomain (10.69.192.56) by
+ DGGEMS409-HUB.china.huawei.com (10.3.19.209) with Microsoft SMTP Server id
+ 14.3.439.0; Mon, 24 Feb 2020 14:02:13 +0800
+From:   Tian Tao <tiantao6@hisilicon.com>
+To:     <puck.chen@hisilicon.com>, <airlied@linux.ie>, <daniel@ffwll.ch>,
+        <tzimmermann@suse.de>, <kraxel@redhat.com>,
+        <alexander.deucher@amd.com>, <tglx@linutronix.de>,
+        <dri-devel@lists.freedesktop.org>, <xinliang.liu@linaro.org>,
+        <linux-kernel@vger.kernel.org>
+CC:     <linuxarm@huawei.com>
+Subject: [PATCH v2] drm/hisilicon: Fixed pcie resource conflict between drm and firmware
+Date:   Mon, 24 Feb 2020 14:01:52 +0800
+Message-ID: <1582524112-5628-1-git-send-email-tiantao6@hisilicon.com>
+X-Mailer: git-send-email 2.7.4
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200213033231.xjwt6uf54nu26qm5@gondor.apana.org.au>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: text/plain
+X-Originating-IP: [10.69.192.56]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Linus:
+use the drm_fb_helper_remove_conflicting_pci_framebuffer to remove
+the framebuffer initialized by fireware/bootloader to avoid resource
+conflict.
 
-This push fixes a Kconfig-related build error and an integer overflow
-in chacha20poly1305.
+Signed-off-by: Tian Tao <tiantao6@hisilicon.com>
 
-The following changes since commit 2343d1529aff8b552589f622c23932035ed7a05d:
+---
+v2: 	use the general API to remove the conflict resource instead of rolling
+	our own.
+---
+---
+ drivers/gpu/drm/hisilicon/hibmc/hibmc_drm_drv.c | 5 +++++
+ 1 file changed, 5 insertions(+)
 
-  crypto: Kconfig - allow tests to be disabled when manager is disabled (2020-02-05 17:00:57 +0800)
-
-are available in the git repository at:
-
-  git://git.kernel.org/pub/scm/linux/kernel/git/herbert/crypto-2.6.git linus
-
-for you to fetch changes up to c9cc0517bba9f0213f1e55172feceb99e5512daf:
-
-  crypto: chacha20poly1305 - prevent integer overflow on large input (2020-02-14 14:48:37 +0800)
-
-----------------------------------------------------------------
-Hongbo Yao (1):
-      tee: amdtee: amdtee depends on CRYPTO_DEV_CCP_DD
-
-Jason A. Donenfeld (1):
-      crypto: chacha20poly1305 - prevent integer overflow on large input
-
- drivers/tee/amdtee/Kconfig    | 2 +-
- lib/crypto/chacha20poly1305.c | 3 +++
- 2 files changed, 4 insertions(+), 1 deletion(-)
-
-Thanks,
+diff --git a/drivers/gpu/drm/hisilicon/hibmc/hibmc_drm_drv.c b/drivers/gpu/drm/hisilicon/hibmc/hibmc_drm_drv.c
+index 4a8a4cf..7518980 100644
+--- a/drivers/gpu/drm/hisilicon/hibmc/hibmc_drm_drv.c
++++ b/drivers/gpu/drm/hisilicon/hibmc/hibmc_drm_drv.c
+@@ -327,6 +327,11 @@ static int hibmc_pci_probe(struct pci_dev *pdev,
+ 	struct drm_device *dev;
+ 	int ret;
+ 
++	ret = drm_fb_helper_remove_conflicting_pci_framebuffers(pdev,
++							"hibmcdrmfb");
++	if (ret)
++		return ret;
++
+ 	dev = drm_dev_alloc(&hibmc_driver, &pdev->dev);
+ 	if (IS_ERR(dev)) {
+ 		DRM_ERROR("failed to allocate drm_device\n");
 -- 
-Email: Herbert Xu <herbert@gondor.apana.org.au>
-Home Page: http://gondor.apana.org.au/~herbert/
-PGP Key: http://gondor.apana.org.au/~herbert/pubkey.txt
+2.7.4
+
