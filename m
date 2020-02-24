@@ -7,46 +7,46 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3BC0CC11D30
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 18:21:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 04995C11D2F
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 18:22:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1300120880
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 18:21:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C36CD20838
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 18:22:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582568515;
-	bh=INkkX8BeAdlsUyfuW01txMYdtezcAInzGJF0a9bDL/s=;
+	s=default; t=1582568520;
+	bh=HHffBA1xZRZJMcbypgR4QrM3PbiivCptJcaucVhdCx4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Y5EVVCfVBCaz6EQxX+iDvMvdjqbd/vSyV2+VFXb5qRx/W4dR93CQwYIM+bS6dxrM3
-	 JYRuLXdLExZFHsqXpBjRaZ7XF7wF47bAm/Tqvr0689xBWc1w6Apm7sVMblM+sRBXa/
-	 Fkn7br02sQBZ3uJvFAc5F9mkQcdfPwdhc6NTgtwc=
+	b=v5ZY/1IpBX/0Ry9/Bp78NUqdWZs8aNvJQn1gJuLTW8Ixh0mX+1wmks+p6ZV0zRAX5
+	 YMz+UaFk8LEEEl0GJOZBwcs3XuddmA2CnnZtN4T9iap0rdKVKp5vf1Jg6yHqCfHPvm
+	 ifhrIb3IeaMVpMTBi+1RCxnbH4gqnQYUM8U9Lt/w=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727883AbgBXSVx (ORCPT
+        id S1727934AbgBXSV7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Feb 2020 13:21:53 -0500
-Received: from mail.kernel.org ([198.145.29.99]:58880 "EHLO mail.kernel.org"
+        Mon, 24 Feb 2020 13:21:59 -0500
+Received: from mail.kernel.org ([198.145.29.99]:58860 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727796AbgBXSVx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Feb 2020 13:21:53 -0500
+        id S1727727AbgBXSVw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 24 Feb 2020 13:21:52 -0500
 Received: from ebiggers-linuxstation.mtv.corp.google.com (unknown [104.132.1.77])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 58FBE21556;
+        by mail.kernel.org (Postfix) with ESMTPSA id 0DD0D2084E;
         Mon, 24 Feb 2020 18:21:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
         s=default; t=1582568512;
-        bh=INkkX8BeAdlsUyfuW01txMYdtezcAInzGJF0a9bDL/s=;
+        bh=HHffBA1xZRZJMcbypgR4QrM3PbiivCptJcaucVhdCx4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=jJXJxiHTm22qH3SBmM4MRCguLBq1bAnC5/btGewKrr+QC8nsgutiJynfhYUD+wquk
-         iYwAnVsP8bLB+onR6Pa8Ks8FPzHjkwHNyByGzJSf0cwLDbj57kkGK+n4I2zreTaYd4
-         pUJMNq7FmNq05Vv86iXS9S8BTrnvonxalQqwy4AM=
+        b=LD8DxQ3oknenBHer0gtf++MxWrn5G/pw1pR3EHAuHoD0J8hzJNry3BXTJ2BbkYXrq
+         fRuyBA37lI58VOhUMoPLvf5KfRgc3M9TA2Wq7w/vUIsAGu+pwKwzk+d72QTeswXQsj
+         FF/yW1GimcDuuMu9Kg52GjA+742jdXWuyvSFM8c8=
 From:   Eric Biggers <ebiggers@kernel.org>
 To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         Jiri Slaby <jslaby@suse.com>
 Cc:     linux-kernel@vger.kernel.org, syzkaller-bugs@googlegroups.com,
         Al Viro <viro@zeniv.linux.org.uk>
-Subject: [PATCH v2 2/2] tty: fix compat TIOCGSERIAL checking wrong function ptr
-Date:   Mon, 24 Feb 2020 10:20:44 -0800
-Message-Id: <20200224182044.234553-3-ebiggers@kernel.org>
+Subject: [PATCH v2 1/2] tty: fix compat TIOCGSERIAL leaking uninitialized memory
+Date:   Mon, 24 Feb 2020 10:20:43 -0800
+Message-Id: <20200224182044.234553-2-ebiggers@kernel.org>
 X-Mailer: git-send-email 2.25.0.265.gbab2e86ba0-goog
 In-Reply-To: <20200224182044.234553-1-ebiggers@kernel.org>
 References: <20200224181532.GA109047@gmail.com>
@@ -62,33 +62,37 @@ From: Eric Biggers <ebiggers@google.com>
 
 Commit 77654350306a ("take compat TIOC[SG]SERIAL treatment into
 tty_compat_ioctl()") changed the compat version of TIOCGSERIAL to start
-checking for the presence of the ->set_serial function pointer rather
-than ->get_serial.  This appears to be a copy-and-paste error, since
-->get_serial is the function pointer that is called as well as the
-pointer that is checked by the non-compat version of TIOCGSERIAL.
+copying a whole 'serial_struct32' to userspace rather than individual
+fields, but failed to initialize all padding and fields -- namely the
+hole after the 'iomem_reg_shift' field, and the 'reserved' field.
 
-Fix this by checking the correct function pointer.
+Fix this by initializing the struct to zero.
 
+[v2: use sizeof, and convert the adjacent line for consistency.]
+
+Reported-by: syzbot+8da9175e28eadcb203ce@syzkaller.appspotmail.com
 Fixes: 77654350306a ("take compat TIOC[SG]SERIAL treatment into tty_compat_ioctl()")
 Cc: <stable@vger.kernel.org> # v4.20+
 Signed-off-by: Eric Biggers <ebiggers@google.com>
 ---
- drivers/tty/tty_io.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/tty/tty_io.c | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
 diff --git a/drivers/tty/tty_io.c b/drivers/tty/tty_io.c
-index db4a13bc855ed6..5a6f36b391d95d 100644
+index 1fcf7ad83dfa0a..db4a13bc855ed6 100644
 --- a/drivers/tty/tty_io.c
 +++ b/drivers/tty/tty_io.c
-@@ -2734,7 +2734,7 @@ static int compat_tty_tiocgserial(struct tty_struct *tty,
- 	memset(&v, 0, sizeof(v));
- 	memset(&v32, 0, sizeof(v32));
+@@ -2730,7 +2730,9 @@ static int compat_tty_tiocgserial(struct tty_struct *tty,
+ 	struct serial_struct32 v32;
+ 	struct serial_struct v;
+ 	int err;
+-	memset(&v, 0, sizeof(struct serial_struct));
++
++	memset(&v, 0, sizeof(v));
++	memset(&v32, 0, sizeof(v32));
  
--	if (!tty->ops->set_serial)
-+	if (!tty->ops->get_serial)
+ 	if (!tty->ops->set_serial)
  		return -ENOTTY;
- 	err = tty->ops->get_serial(tty, &v);
- 	if (!err) {
 -- 
 2.25.0.265.gbab2e86ba0-goog
 
