@@ -2,88 +2,123 @@ Return-Path: <SRS0=7TUr=4M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 846EAC38BE6
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 20:53:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1C4FDC38BE6
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 20:54:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5A26F21556
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 20:53:00 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="WN8t6JCT"
+	by mail.kernel.org (Postfix) with ESMTP id F0B0321556
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 20:54:37 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727689AbgBXUw7 (ORCPT
+        id S1727699AbgBXUyh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Feb 2020 15:52:59 -0500
-Received: from bilbo.ozlabs.org ([203.11.71.1]:38675 "EHLO ozlabs.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726722AbgBXUw5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Feb 2020 15:52:57 -0500
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 48RDm56mz5z9sNg;
-        Tue, 25 Feb 2020 07:52:53 +1100 (AEDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
-        s=201702; t=1582577574;
-        bh=MAXNZNQzY7aWe610oRUrFuU3fPXDxQs5ZuGRxGqGl+s=;
-        h=Date:From:To:Cc:Subject:From;
-        b=WN8t6JCTEEWspOP6wUG02//WxqNNyCl/nUuZHhC/p8JPKQjxiHFOy1L9sKlIjpQu9
-         cyDZF3y36tuIjFmlxiTm6CI/+zUxFHldY9pou8K57hfmOJeZbbEhtayxMZbGlKw6C9
-         AlZWbSjlSrGPToKerpyHYk2L6HZj2W1q58gZqmG5Fln0guHeRcngd7ajwo2zsCIeP1
-         Fc2Hfv/qIQWW4y/dQjQM6DyEQR25221idG1gqpyC8xliSu+gRCYEqZJuZrkNKJNP9b
-         BI4pF/xKXdCMbJdT4EPscVz3EgmfW5fzhF25ETjdiMWaGlIRXWjt5uSN6tBCW9vqU/
-         xUBFsK9pdbuCw==
-Date:   Tue, 25 Feb 2020 07:52:37 +1100
-From:   Stephen Rothwell <sfr@canb.auug.org.au>
-To:     Steve French <smfrench@gmail.com>,
-        CIFS <linux-cifs@vger.kernel.org>
-Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Subject: linux-next: Signed-off-by missing for commit in the cifs tree
-Message-ID: <20200225075237.61e103e4@canb.auug.org.au>
-MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/PMq/HqWQoevQGdgfHWnJ69F";
- protocol="application/pgp-signature"; micalg=pgp-sha256
+        Mon, 24 Feb 2020 15:54:37 -0500
+Received: from lists.gateworks.com ([108.161.130.12]:58465 "EHLO
+        lists.gateworks.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727168AbgBXUyh (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 24 Feb 2020 15:54:37 -0500
+Received: from 68-189-91-139.static.snlo.ca.charter.com ([68.189.91.139] helo=tharvey.pdc.gateworks.com)
+        by lists.gateworks.com with esmtp (Exim 4.82)
+        (envelope-from <tharvey@gateworks.com>)
+        id 1j6KlH-0005EU-4S; Mon, 24 Feb 2020 20:55:31 +0000
+From:   Tim Harvey <tharvey@gateworks.com>
+To:     Lee Jones <lee.jones@linaro.org>, Jean Delvare <jdelvare@suse.com>,
+        Guenter Roeck <linux@roeck-us.net>,
+        linux-hwmon@vger.kernel.org, Rob Herring <robh+dt@kernel.org>,
+        Frank Rowand <frowand.list@gmail.com>,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Robert Jones <rjones@gateworks.com>
+Cc:     Tim Harvey <tharvey@gateworks.com>
+Subject: [PATCH v5 0/3] Add support for the Gateworks System Controller
+Date:   Mon, 24 Feb 2020 12:54:22 -0800
+Message-Id: <1582577665-13554-1-git-send-email-tharvey@gateworks.com>
+X-Mailer: git-send-email 2.7.4
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/PMq/HqWQoevQGdgfHWnJ69F
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+This series adds support for the Gateworks System Controller used on Gateworks
+Laguna, Ventana, and Newport product families.
 
-Hi all,
+The GSC is an MSP430 I2C slave controller whose firmware embeds the following
+features:
+ - I/O expander (16 GPIO's emulating a PCA955x)
+ - EEPROM (enumating AT24)
+ - RTC (enumating DS1672)
+ - HWMON
+ - Interrupt controller with tamper detect, user pushbotton
+ - Watchdog controller capable of full board power-cycle
+ - Power Control capable of full board power-cycle
 
-Commit
+see http://trac.gateworks.com/wiki/gsc for more details
+---
+v5:
+ - fix checkpatch issues
+ - fix dt_binding_check issues
+ - address feedback from v4
 
-  39452a5239bb ("cifs: call wake_up(&server->response_q) inside of cifs_rec=
-onnect()")
+v4:
+ - hwmon: move to using pwm<n>_auto_point<m>_{pwm,temp} for FAN PWM
+ - hwmon: remove unncessary resolution/scaling properties for ADCs
+ - bindings: update to yaml Documentation
+ - removed watchdog driver
 
-is missing a Signed-off-by from its committer.
+v3:
+ - removed unnecessary input driver
+ - added wdt driver
+ - bindings: encorporated feedback from mailng list
+ - hwmon:
+ - encoroprated feedback from mailng list
+ - added support for raw ADC voltage input used in newer GSC firmware
 
---=20
-Cheers,
-Stephen Rothwell
+v2:
+ - change license comment block style
+ - remove COMPILE_TEST
+ - fixed whitespace issues
+ - replaced a printk with dev_err
+ - remove DEBUG
+ - simplify regmap_bulk_read err check
+ - remove break after returns in switch statement
+ - fix fan setpoint buffer address
+ - remove unnecessary parens
+ - consistently use struct device *dev pointer
+ - add validation for hwmon child node props
+ - move parsing of of to own function
+ - use strlcpy to ensure null termination
+ - fix static array sizes and removed unnecessary initializers
+ - dynamically allocate channels
+ - fix fan input label
+ - support platform data
 
---Sig_/PMq/HqWQoevQGdgfHWnJ69F
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
+Tim Harvey (3):
+  dt-bindings: mfd: Add Gateworks System Controller bindings
+  mfd: add Gateworks System Controller core driver
+  hwmon: add Gateworks System Controller support
 
------BEGIN PGP SIGNATURE-----
+ .../devicetree/bindings/mfd/gateworks-gsc.yaml     | 158 +++++++++
+ Documentation/hwmon/gsc-hwmon.rst                  |  53 +++
+ Documentation/hwmon/index.rst                      |   1 +
+ MAINTAINERS                                        |  11 +
+ drivers/hwmon/Kconfig                              |   9 +
+ drivers/hwmon/Makefile                             |   1 +
+ drivers/hwmon/gsc-hwmon.c                          | 371 +++++++++++++++++++++
+ drivers/mfd/Kconfig                                |  10 +
+ drivers/mfd/Makefile                               |   1 +
+ drivers/mfd/gateworks-gsc.c                        | 292 ++++++++++++++++
+ include/linux/mfd/gsc.h                            |  72 ++++
+ include/linux/platform_data/gsc_hwmon.h            |  44 +++
+ 12 files changed, 1023 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/mfd/gateworks-gsc.yaml
+ create mode 100644 Documentation/hwmon/gsc-hwmon.rst
+ create mode 100644 drivers/hwmon/gsc-hwmon.c
+ create mode 100644 drivers/mfd/gateworks-gsc.c
+ create mode 100644 include/linux/mfd/gsc.h
+ create mode 100644 include/linux/platform_data/gsc_hwmon.h
 
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl5UN5UACgkQAVBC80lX
-0GwMwQf/RKRlhmK1GG9uxgicXXh6I9YeBC8wbuEM0dWRRh/PtFuBm3CJ4S1Rp/l7
-5qy7A4tMWBP0NZ4jYeVRVyNVZdhLpIykZGBgUiBUD0RVA0fiIDSgMfB5El+hJDJI
-SdvmjOBMxuif17PS08n7VcIWS84vKTQ2T8Ih/wgyHO0/olVR206fqvV/wzRgmZ1N
-gTj2JtDnWPDXbgX1g3ejWnOKzVvOK4SpcQdR6T5WtxN1E+rdB7TPHiMRhQoG78pL
-b1nGAWJMJhYAqLAVA+K9/uZpe9AO6ZmVhLlzOJPqb32ghZX/xapPm5bVqNRn7bqp
-VseVTIAUSNNIYkBIq0q9gedwfI43Gg==
-=EFT4
------END PGP SIGNATURE-----
+-- 
+2.7.4
 
---Sig_/PMq/HqWQoevQGdgfHWnJ69F--
