@@ -2,115 +2,88 @@ Return-Path: <SRS0=7TUr=4M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8EB39C11D2F
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BD5B4C11D32
 	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 17:00:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6B72820836
+	by mail.kernel.org (Postfix) with ESMTP id 8A5572084E
 	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 17:00:28 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1582563628;
+	bh=W7+NdE/sBOj4Ciqjv7fao4Un5OJFKOe6I3yj4AfiFkA=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=1YMYwK2XbZhTDoOTn7IW+WQUjZX9JCzi5C9uMbdjGabzWd+RRJqzYN8ilmOj9ZN2e
+	 O73qP3kzMOjfImclz451YxhwUlwKBrt6KcDRD6FH+PhhbNXOsn33Gv25HTynqS8Ks0
+	 nvEkIdCdNx++kgeic4g2yYVMn+Uc8b+BdnkvANck=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727701AbgBXRA0 (ORCPT
+        id S1727837AbgBXRA1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Feb 2020 12:00:26 -0500
-Received: from mga17.intel.com ([192.55.52.151]:63010 "EHLO mga17.intel.com"
+        Mon, 24 Feb 2020 12:00:27 -0500
+Received: from foss.arm.com ([217.140.110.172]:39960 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727108AbgBXRA0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Feb 2020 12:00:26 -0500
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga005.fm.intel.com ([10.253.24.32])
-  by fmsmga107.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 24 Feb 2020 09:00:25 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.70,480,1574150400"; 
-   d="scan'208";a="435965233"
-Received: from jbrandeb-desk4.amr.corp.intel.com (HELO localhost) ([10.166.241.50])
-  by fmsmga005.fm.intel.com with ESMTP; 24 Feb 2020 09:00:25 -0800
-Date:   Mon, 24 Feb 2020 09:00:24 -0800
-From:   Jesse Brandeburg <jesse.brandeburg@intel.com>
-To:     Peter Zijlstra <peterz@infradead.org>
-Cc:     Andy Shevchenko <andy.shevchenko@gmail.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        "maintainer:X86 ARCHITECTURE (32-BIT AND 64-BIT)" <x86@kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Rasmus Villemoes <linux@rasmusvillemoes.dk>,
-        Andriy Shevchenko <andriy.shevchenko@intel.com>,
-        Dan Williams <dan.j.williams@intel.com>
-Subject: Re: [PATCH v4 1/2] x86: fix bitops.h warning with a moved cast
-Message-ID: <20200224090024.000055ae@intel.com>
-In-Reply-To: <20200224095402.GD14897@hirez.programming.kicks-ass.net>
-References: <20200222000214.2169531-1-jesse.brandeburg@intel.com>
-        <CAHp75Vc=9aSt1DH-LzDHnX1+fnPpkJWHkkh0-ApTL0zm+ZA2oQ@mail.gmail.com>
-        <20200224095402.GD14897@hirez.programming.kicks-ass.net>
-X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; i686-w64-mingw32)
+        id S1727108AbgBXRA1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 24 Feb 2020 12:00:27 -0500
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id AAA8A1FB;
+        Mon, 24 Feb 2020 09:00:26 -0800 (PST)
+Received: from localhost (unknown [10.37.6.21])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 2E8433F703;
+        Mon, 24 Feb 2020 09:00:26 -0800 (PST)
+Date:   Mon, 24 Feb 2020 17:00:24 +0000
+From:   Mark Brown <broonie@kernel.org>
+To:     Denis 'GNUtoo' Carikli <GNUtoo@cyberdimension.org>
+Cc:     Andreas Kemnade <andreas@kemnade.info>, hns@goldelico.com,
+        j.neuschaefer@gmx.net, contact@paulk.fr, josua.mayer@jm0.eu,
+        lgirdwood@gmail.com, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH RFC] regulator: core: fix handling negative voltages e.g.
+ in EPD PMICs
+Message-ID: <20200224170024.GK6215@sirena.org.uk>
+References: <20200223153502.15306-1-andreas@kemnade.info>
+ <20200224162131.2a4f9b01@primarylaptop.localdomain>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="M9kwpIYUMbI/2cCx"
+Content-Disposition: inline
+In-Reply-To: <20200224162131.2a4f9b01@primarylaptop.localdomain>
+X-Cookie: How you look depends on where you go.
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 24 Feb 2020 10:54:02 +0100 Peter wrote:
-> On Sat, Feb 22, 2020 at 11:39:57AM +0200, Andy Shevchenko wrote:
-> > On Sat, Feb 22, 2020 at 2:04 AM Jesse Brandeburg  
-> 
-> > > -#define CONST_MASK(nr)                 (1 << ((nr) & 7))
-> > > +#define CONST_MASK(nr)                 ((u8)1 << ((nr) & 7))
-> > >
-> > >  static __always_inline void
-> > >  arch_set_bit(long nr, volatile unsigned long *addr)
-> > > @@ -54,7 +54,7 @@ arch_set_bit(long nr, volatile unsigned long *addr)
-> > >         if (__builtin_constant_p(nr)) {
-> > >                 asm volatile(LOCK_PREFIX "orb %1,%0"
-> > >                         : CONST_MASK_ADDR(nr, addr)
-> > > -                       : "iq" ((u8)CONST_MASK(nr))
-> > > +                       : "iq" (CONST_MASK(nr))  
-> 
-> Note how this is not equivalent, the old code actually handed in a u8
-> while the new code hands int. By moving the (u8) cast into the parens,
-> you casl 1 to u8, which then instantly gets promoted to 'int' due to the
-> '<<' operator.
 
-True. Which is why I had decided to use the strongly typed local
-variables, which as I recall you mentioned were "sad", so I had tried
-to fix it with the simpler changes. Everything is a negotiation with
-the compiler and tools here, about how clearly you can communicate the
-code's intent and functionality while still keeping it performant.
+--M9kwpIYUMbI/2cCx
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-> > >                         : "memory");
-> > >         } else {
-> > >                 asm volatile(LOCK_PREFIX __ASM_SIZE(bts) " %1,%0"
-> > > @@ -74,7 +74,7 @@ arch_clear_bit(long nr, volatile unsigned long *addr)
-> > >         if (__builtin_constant_p(nr)) {
-> > >                 asm volatile(LOCK_PREFIX "andb %1,%0"
-> > >                         : CONST_MASK_ADDR(nr, addr)
-> > > -                       : "iq" ((u8)~CONST_MASK(nr)));
-> > > +                       : "iq" (CONST_MASK(nr) ^ 0xff));  
-> > 
-> > I'm wondering if the original, by Peter Z, order allows us to drop
-> > (u8) casting in the CONST_MASK completely.  
-> 
-> I'm thinking it's all nonsense anyway :-), the result of either << or ^
-> is always promoted to int anyway.
+On Mon, Feb 24, 2020 at 04:21:31PM +0100, Denis 'GNUtoo' Carikli wrote:
+> Andreas Kemnade <andreas@kemnade.info> wrote:
 
-Yeah, I realize this is *all* nonsense, but I *do* see value in making
-the code not generate sparse warnings, as long as the end result
-doesn't generate code change. It allows you to run more tools to find
-bugs with less false positives.
+> > No idea about the "Amazon Kindle Fire (first generation)"
+> > which also has a partial devicetree in mainline.
 
-> The sparse complaint was that ~CONST_MASK(nr) had high bits set which
-> were lost, which is true, but a copmletely stupid warning IMO.
-> 
-> By using 0xff ^ CONST_MASK(nr), those bits will not be set and will not
-> be lost.
-> 
-> None of that has anything to do with where we place a pointless cast
-> more or less.
+> I think that the first generation Kindle Fire (omap4-kc1.dts) are
+> regular tablet and have a regular display (no e-ink).
 
-Well now that we have the test module, I'll check that the simplest
-possible patch of just changing the one line for ~CONST_MASK(nr) to
-0xFF ^ CONST_MASK(nr) will fix the issue.
+Right, all Kindle Fire devices have regular displays.
+
+--M9kwpIYUMbI/2cCx
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl5UAScACgkQJNaLcl1U
+h9BhHggAhiZGz+eNFZStZ9O0Qnpt/aA7SqICKdTqmMPsB4L8dbfbPzDcu4zobgNx
+pVUjdbTpUR0tsQQrNc+i/ozy947hTdNEJI21zDnDrpNFC6lLUz6H69AWnjlEiJt0
+052c5hU+q6it5PaoztU/VlA7N6M6Tuj2PjlO9Y6hwmhVZuHitMI2j4g2stz03Rzt
++vZowNFcs9JSg6hLaRwr/9bcKMfD0oNmhODt0gQbYnbSZ7pIrSctwWMwFLoHbHm4
+mhDv0DIfV48gALTBtI67I9z9+AoG2JlB6wce+U14asllME4PZkJtaDnfeFMFAeHC
+T5wMlnskg2myKf/xeb+yQkY8LHgbYQ==
+=Z7Tn
+-----END PGP SIGNATURE-----
+
+--M9kwpIYUMbI/2cCx--
