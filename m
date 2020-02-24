@@ -2,144 +2,168 @@ Return-Path: <SRS0=7TUr=4M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URI_HEX,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E28B4C35679
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 04:43:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A0E7BC35669
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 04:45:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BA52120661
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 04:43:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7493320661
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 04:45:12 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="mhvItGsY"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727324AbgBXEnI (ORCPT
+        id S1727287AbgBXEpL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 23 Feb 2020 23:43:08 -0500
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:38868 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1727252AbgBXEnH (ORCPT
+        Sun, 23 Feb 2020 23:45:11 -0500
+Received: from hqnvemgate24.nvidia.com ([216.228.121.143]:16566 "EHLO
+        hqnvemgate24.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727189AbgBXEpL (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 23 Feb 2020 23:43:07 -0500
-Received: from pps.filterd (m0098417.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 01O4dOmX058120
-        for <linux-kernel@vger.kernel.org>; Sun, 23 Feb 2020 23:43:06 -0500
-Received: from e06smtp02.uk.ibm.com (e06smtp02.uk.ibm.com [195.75.94.98])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2yb12aa0tk-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Sun, 23 Feb 2020 23:43:05 -0500
-Received: from localhost
-        by e06smtp02.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-kernel@vger.kernel.org> from <alastair@au1.ibm.com>;
-        Mon, 24 Feb 2020 04:43:03 -0000
-Received: from b06avi18878370.portsmouth.uk.ibm.com (9.149.26.194)
-        by e06smtp02.uk.ibm.com (192.168.101.132) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Mon, 24 Feb 2020 04:42:57 -0000
-Received: from d06av22.portsmouth.uk.ibm.com (d06av22.portsmouth.uk.ibm.com [9.149.105.58])
-        by b06avi18878370.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 01O4guim46072208
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 24 Feb 2020 04:42:56 GMT
-Received: from d06av22.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 1CA284C05A;
-        Mon, 24 Feb 2020 04:42:56 +0000 (GMT)
-Received: from d06av22.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id B721D4C040;
-        Mon, 24 Feb 2020 04:42:55 +0000 (GMT)
-Received: from ozlabs.au.ibm.com (unknown [9.192.253.14])
-        by d06av22.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Mon, 24 Feb 2020 04:42:55 +0000 (GMT)
-Received: from adsilva.ozlabs.ibm.com (haven.au.ibm.com [9.192.254.114])
-        (using TLSv1.2 with cipher AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by ozlabs.au.ibm.com (Postfix) with ESMTPSA id 12D96A00E5;
-        Mon, 24 Feb 2020 15:42:51 +1100 (AEDT)
-Subject: Re: [PATCH v3 00/27] Add support for OpenCAPI Persistent Memory
- devices
-From:   "Alastair D'Silva" <alastair@au1.ibm.com>
-To:     Matthew Wilcox <willy@infradead.org>
-Cc:     Dan Williams <dan.j.williams@intel.com>,
-        "Aneesh Kumar K . V" <aneesh.kumar@linux.ibm.com>,
-        "Oliver O'Halloran" <oohall@gmail.com>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Paul Mackerras <paulus@samba.org>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Frederic Barrat <fbarrat@linux.ibm.com>,
-        Andrew Donnellan <ajd@linux.ibm.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Vishal Verma <vishal.l.verma@intel.com>,
-        Dave Jiang <dave.jiang@intel.com>,
-        Ira Weiny <ira.weiny@intel.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        Rob Herring <robh@kernel.org>,
-        Anton Blanchard <anton@ozlabs.org>,
-        Krzysztof Kozlowski <krzk@kernel.org>,
-        Mahesh Salgaonkar <mahesh@linux.vnet.ibm.com>,
-        Madhavan Srinivasan <maddy@linux.vnet.ibm.com>,
-        =?ISO-8859-1?Q?C=E9dric?= Le Goater <clg@kaod.org>,
-        Anju T Sudhakar <anju@linux.vnet.ibm.com>,
-        Hari Bathini <hbathini@linux.ibm.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Greg Kurz <groug@kaod.org>,
-        Nicholas Piggin <npiggin@gmail.com>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        Alexey Kardashevskiy <aik@ozlabs.ru>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linuxppc-dev <linuxppc-dev@lists.ozlabs.org>,
-        linux-nvdimm <linux-nvdimm@lists.01.org>,
-        Linux MM <linux-mm@kvack.org>
-Date:   Mon, 24 Feb 2020 15:42:54 +1100
-In-Reply-To: <20200224043750.GM24185@bombadil.infradead.org>
-References: <20200221032720.33893-1-alastair@au1.ibm.com>
-         <CAPcyv4j2hut1YDrotC=QkcM+S0SZwpd9_4hD2aChn+cKD+62oA@mail.gmail.com>
-         <240fbefc6275ac0a6f2aa68715b3b73b0e7a8310.camel@au1.ibm.com>
-         <20200224043750.GM24185@bombadil.infradead.org>
-Organization: IBM Australia
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.34.3 (3.34.3-1.fc31) 
+        Sun, 23 Feb 2020 23:45:11 -0500
+Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate24.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5e53548a0000>; Sun, 23 Feb 2020 20:43:54 -0800
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate101.nvidia.com (PGP Universal service);
+  Sun, 23 Feb 2020 20:45:10 -0800
+X-PGP-Universal: processed;
+        by hqpgpgate101.nvidia.com on Sun, 23 Feb 2020 20:45:10 -0800
+Received: from [10.2.163.13] (10.124.1.5) by HQMAIL107.nvidia.com
+ (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Mon, 24 Feb
+ 2020 04:45:09 +0000
+Subject: Re: [RFC PATCH v3 4/6] media: tegra: Add Tegra210 Video input driver
+From:   Sowjanya Komatineni <skomatineni@nvidia.com>
+To:     Hans Verkuil <hverkuil@xs4all.nl>, <thierry.reding@gmail.com>,
+        <jonathanh@nvidia.com>, <frankc@nvidia.com>,
+        <helen.koike@collabora.com>, <sboyd@kernel.org>
+CC:     <linux-media@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-clk@vger.kernel.org>, <linux-tegra@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>
+References: <1581704608-31219-1-git-send-email-skomatineni@nvidia.com>
+ <1581704608-31219-5-git-send-email-skomatineni@nvidia.com>
+ <b301c247-537d-d78e-b057-a3225b10de7e@xs4all.nl>
+ <dc592f29-3109-d10c-7df7-ffdb2755ade0@xs4all.nl>
+ <b3933aa1-0717-183d-f00c-2d5fd6836a18@nvidia.com>
+Message-ID: <12a36c2a-593c-e555-d44e-e2e6c4c1a562@nvidia.com>
+Date:   Sun, 23 Feb 2020 20:45:23 -0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-X-TM-AS-GCONF: 00
-x-cbid: 20022404-0008-0000-0000-00000355CAB3
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 20022404-0009-0000-0000-00004A76E1C2
-Message-Id: <83034494d5c3da1fa63b172e844f85d0fec7910a.camel@au1.ibm.com>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.572
- definitions=2020-02-23_07:2020-02-21,2020-02-23 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxscore=0 bulkscore=0
- clxscore=1015 priorityscore=1501 lowpriorityscore=0 suspectscore=0
- adultscore=0 malwarescore=0 impostorscore=0 phishscore=0 mlxlogscore=683
- spamscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2001150001 definitions=main-2002240039
+In-Reply-To: <b3933aa1-0717-183d-f00c-2d5fd6836a18@nvidia.com>
+X-Originating-IP: [10.124.1.5]
+X-ClientProxiedBy: HQMAIL101.nvidia.com (172.20.187.10) To
+ HQMAIL107.nvidia.com (172.20.187.13)
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Transfer-Encoding: quoted-printable
+Content-Language: en-US
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1582519434; bh=FgL2m4fXOwXtVm1YDLzjj9gGq1pHL5mo0ZGAZTooP+k=;
+        h=X-PGP-Universal:Subject:From:To:CC:References:Message-ID:Date:
+         User-Agent:MIME-Version:In-Reply-To:X-Originating-IP:
+         X-ClientProxiedBy:Content-Type:Content-Transfer-Encoding:
+         Content-Language;
+        b=mhvItGsYXSiFtNz1X3+DppRrTX+dFSreZSJx2j4/v3zXgHP8Ggd0Hdj6pvi2ELyH7
+         QfLmADm0c7h5+P5+3UNFCVSAWL0/6ou70OdYiJIDnWuwgUhPoxcAuoav6wO76qjjy2
+         OtBvX67nahf+Vn9zGizDtg2jIN6/tqEL/jog+trcZZVg06/5EkjFBoac3V2CKhEihZ
+         08HY9spxNs0lkvTr5HyvM+jH6C8tveHsTtP/WrA0xbTcbLIiR8EvQ7U8AW/tfn8Rhf
+         71HujkEU9IiYYq+bk3KQaYba7YB6Sh/j8uZLxyo8XRWvGmX6S7tBJXPaEAiKFByynm
+         Qz09Y9N8qfTvA==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, 2020-02-23 at 20:37 -0800, Matthew Wilcox wrote:
-> On Mon, Feb 24, 2020 at 03:34:07PM +1100, Alastair D'Silva wrote:
-> > V3:
-> >   - Rebase against next/next-20200220
-> >   - Move driver to arch/powerpc/platforms/powernv, we now expect
-> > this
-> >     driver to go upstream via the powerpc tree
-> 
-> That's rather the opposite direction of normal; mostly drivers live
-> under
-> drivers/ and not in arch/.  It's easier for drivers to get overlooked
-> when doing tree-wide changes if they're hiding.
 
-This is true, however, given that it was not all that desirable to have
-it under drivers/nvdimm, it's sister driver (for the same hardware) is
-also under arch, and that we don't expect this driver to be used on any
-platform other than powernv, we think this was the most reasonable
-place to put it.
+On 2/20/20 11:11 AM, Sowjanya Komatineni wrote:
+>
+> On 2/20/20 5:33 AM, Hans Verkuil wrote:
+>> External email: Use caution opening links or attachments
+>>
+>>
+>> (Replying to myself so I can explain this a bit more)
+>>
+>> On 2/20/20 1:44 PM, Hans Verkuil wrote:
+>>>> +
+>>>> +static int tegra_csi_tpg_channels_alloc(struct tegra_csi *csi)
+>>>> +{
+>>>> +=C2=A0=C2=A0=C2=A0 struct device_node *node =3D csi->dev->of_node;
+>>>> +=C2=A0=C2=A0=C2=A0 unsigned int port_num;
+>>>> +=C2=A0=C2=A0=C2=A0 int ret;
+>>>> +=C2=A0=C2=A0=C2=A0 struct tegra_csi_channel *item;
+>>>> +=C2=A0=C2=A0=C2=A0 unsigned int tpg_channels =3D csi->soc->csi_max_ch=
+annels;
+>>>> +
+>>>> +=C2=A0=C2=A0=C2=A0 /* allocate CSI channel for each CSI x2 ports */
+>>>> +=C2=A0=C2=A0=C2=A0 for (port_num =3D 0; port_num < tpg_channels; port=
+_num++) {
+>>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 it=
+em =3D devm_kzalloc(csi->dev, sizeof(*item), GFP_KERNEL);
+>>> Using devm_*alloc can be dangerous. If someone unbinds the driver, then
+>>> all memory allocated with devm_ is immediately freed. But if an=20
+>>> application
+>>> still has a filehandle open, then when it closes it it might still=20
+>>> reference
+>>> this already-freed memory.
+>>>
+>>> I recommend that you avoid using devm_*alloc for media drivers.
+>> A good test is to unbind & bind the driver:
+>>
+>> cd /sys/devices/platform/50000000.host1x/54080000.vi/driver
+>> echo -n 54080000.vi >unbind
+>> echo -n 54080000.vi >bind
+>>
+>> First just do this without the driver being used. That already
+>> gives me 'list_del corruption' kernel messages (list debugging
+>> is turned on in my kernel).
 
--- 
-Alastair D'Silva
-Open Source Developer
-Linux Technology Centre, IBM Australia
-mob: 0423 762 819
+Will fix in v4 to use kzalloc and also proper release v4l2 to make sure=20
+unbind/bind works properly.
 
+BTW, tegra vi and csi are registered as clients to host1x video driver.
+
+So, unbind and bind should be done with host1x video driver "tegra-video"
+
+cd /sys/devices/platform/50000000.host1x/tegra-video/driver
+echo -n tegra-video > unbind
+echo -n tegra-video > bind
+
+>>
+>> Note that this first test is basically identical to a rmmod/modprobe
+>> of the driver. But when I compiled the driver as a module it didn't
+>> create any video device nodes! Nor did I see any errors in the kernel
+>> log. I didn't pursue this, and perhaps I did something wrong, but it's
+>> worth taking a look at.
+>>
+>> The next step would be to have a video node open with:
+>>
+>> v4l2-ctl --sleep 10
+>>
+>> then while it is sleeping unbind the driver and see what happens
+>> when v4l2-ctl exits.
+>>
+>> Worst case is when you are streaming:
+>>
+>> v4l2-ctl --stream-mmap
+>>
+>> and then unbind.
+>>
+>> In general, the best way to get this to work correctly is:
+>>
+>> 1) don't use devm_*alloc
+>> 2) set the release callback of struct v4l2_device and do all freeing=20
+>> there.
+>> 3) in the platform remove() callback you call media_device_unregister()
+>> =C2=A0=C2=A0=C2=A0 and video_unregister_device().
+> Reg 3, in current patch, media_device_unregister is called in=20
+> host1x_video_remove
+> video_unregister_device happens during host1x_video_remove ->=20
+> host1x_device_exit -> tegra_vi_exit -> tegra_vi_channels_cleanup
+>
+>> It's worth getting this right in this early stage, rather than fixing it
+>> in the future.
+>>
+>> Regards,
+>>
+>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 Hans
