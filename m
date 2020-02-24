@@ -2,125 +2,116 @@ Return-Path: <SRS0=7TUr=4M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 64D82C38BE2
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 20:47:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9DDB7C38BE2
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 20:49:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 356CC218AC
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 20:47:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 71900218AC
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 20:49:18 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="LjAGpPe2"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="OczUm8C+"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727619AbgBXUrH (ORCPT
+        id S1727500AbgBXUtR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Feb 2020 15:47:07 -0500
-Received: from us-smtp-1.mimecast.com ([205.139.110.61]:48155 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726722AbgBXUrG (ORCPT
+        Mon, 24 Feb 2020 15:49:17 -0500
+Received: from mail-pf1-f193.google.com ([209.85.210.193]:34021 "EHLO
+        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727249AbgBXUtQ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Feb 2020 15:47:06 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1582577225;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=IFb+JCg9fvYWv5+TRl87E0pCWdLFykFOxMEyimKBu0o=;
-        b=LjAGpPe2iUW9s22G7Kz69Xx0kykV3W/C5QrOgBdyDRGKuuKPOGDCX4Z+oNmBiZfL5J2zEr
-        4VsjQd2dECITwQufh3yKTL62cbXsPcPu+naIaZcTFYNfa+11UFysQhF/o+WKn8ZDVfCz3K
-        D6JsBLWSyXUD53ugGFSPaWCt1CF0wZQ=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-146-qc6Bg33hOUu4BiiD38JGXQ-1; Mon, 24 Feb 2020 15:47:01 -0500
-X-MC-Unique: qc6Bg33hOUu4BiiD38JGXQ-1
-Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 0D917802562;
-        Mon, 24 Feb 2020 20:47:00 +0000 (UTC)
-Received: from krava (ovpn-204-48.brq.redhat.com [10.40.204.48])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id C93C560BF3;
-        Mon, 24 Feb 2020 20:46:57 +0000 (UTC)
-Date:   Mon, 24 Feb 2020 21:46:55 +0100
-From:   Jiri Olsa <jolsa@redhat.com>
-To:     "Jin, Yao" <yao.jin@linux.intel.com>
-Cc:     acme@kernel.org, jolsa@kernel.org, peterz@infradead.org,
-        mingo@redhat.com, alexander.shishkin@linux.intel.com,
-        Linux-kernel@vger.kernel.org, ak@linux.intel.com,
-        kan.liang@intel.com, yao.jin@intel.com
-Subject: Re: [PATCH v3 2/2] Support interactive annotation of code without
- symbols
-Message-ID: <20200224204655.GB100468@krava>
-References: <20200224022225.30264-1-yao.jin@linux.intel.com>
- <20200224022225.30264-3-yao.jin@linux.intel.com>
- <20200224123526.GF16664@krava>
- <ed9fea55-1568-ab55-cf4a-52fef7c429bf@linux.intel.com>
+        Mon, 24 Feb 2020 15:49:16 -0500
+Received: by mail-pf1-f193.google.com with SMTP id i6so5967285pfc.1
+        for <linux-kernel@vger.kernel.org>; Mon, 24 Feb 2020 12:49:15 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=Knih+VN2aCDc/a1HoFO7myAtDlhjV/MlW8P0R3Lsz6k=;
+        b=OczUm8C+dyhkoniILj5vfVY4thaCbz21wL2o4W1iPYLN9C4renHakPjsF0wN0R7/PK
+         ROPGME4HFALbizqzw1uzuow6v90oO21JNpQ0Hr7lrx+A0wR64NqvDttBrP4paCpdWnJb
+         lOLBYJKGbEys0X6LmeU5FRf/32pR3JtoRkOVvDP57MCLKY9KimfY+2nzfYJEmKoNRBYJ
+         /h6lqh0bL7uHCyZcI/GWe7et69cavIHc2Z8/zf1f2QCxsl5E4QCUwqtxu2quIDIDBgfQ
+         nUtI6hXUyfh3TWoZCpwPyFAfAnEo+DBDvtiD0vepaVwWYKW+1vr6W6KOI+b1XU/sur8P
+         TwmQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=Knih+VN2aCDc/a1HoFO7myAtDlhjV/MlW8P0R3Lsz6k=;
+        b=tYi6YsJjZ+BNp/+ZggdaGIl2MobmtOZvXlVNyMUnLKLKqexp3gAusyt8H8UaQj/0o9
+         ZmJuaWhp84m+N+Qm9ZZVqY2RKz8/2bk1ufdI52ffNNIbDs0yACrmI/AAez1pvp6vL1H0
+         iKN1qw8+Z6bP18q1teg4C0+Yu2wX693U6rEOYae7wiiWrexavZICIBpwGRxTV3ETv++k
+         NPgDcrWnSoHmceqiHAReoeKZN4I7C1mduCPHw6fmTyDLHRCYF0Vjxcfg7IW7tgunE6E8
+         MklDeiND7CMcVV9eHnHiDTB/rDbNOayVHO3KdAs3ehz4lHvD4hQoO8ZGQ7GtawbjfPRK
+         kRBw==
+X-Gm-Message-State: APjAAAWV7RqmbuHvKZHhqHnxyqLt5WgOGslsQQfl/eYFEOyPaJwshMQI
+        BKhUdyumAKHQOhapcPqn4el9T4MTUzCYDZnuRii5bg==
+X-Google-Smtp-Source: APXvYqw/5xtBB4M8e/Uzl06X/DNHHJ4sVpSAPy5BInZBQUvOdUmCLpLw5WP2Xnfzc1QQidBPvN+2ZD6FIeRUpJsUdTc=
+X-Received: by 2002:a63:4453:: with SMTP id t19mr17312657pgk.381.1582577354652;
+ Mon, 24 Feb 2020 12:49:14 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <ed9fea55-1568-ab55-cf4a-52fef7c429bf@linux.intel.com>
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
+References: <20200222235709.GA3786197@rani.riverdale.lan> <20200223193715.83729-1-nivedita@alum.mit.edu>
+In-Reply-To: <20200223193715.83729-1-nivedita@alum.mit.edu>
+From:   Nick Desaulniers <ndesaulniers@google.com>
+Date:   Mon, 24 Feb 2020 12:49:03 -0800
+Message-ID: <CAKwvOd=qVmb7UEzUSQ5-MUhpRA9Jpu3fMmmMLGdmydLoJV-kkQ@mail.gmail.com>
+Subject: Re: [PATCH 0/2] Stop generating .eh_frame sections
+To:     Arvind Sankar <nivedita@alum.mit.edu>
+Cc:     Borislav Petkov <bp@alien8.de>,
+        Nathan Chancellor <natechancellor@gmail.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        "maintainer:X86 ARCHITECTURE (32-BIT AND 64-BIT)" <x86@kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        clang-built-linux <clang-built-linux@googlegroups.com>,
+        Michael Matz <matz@suse.de>, Fangrui Song <maskray@google.com>,
+        Kees Cook <keescook@chromium.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Feb 24, 2020 at 11:39:43PM +0800, Jin, Yao wrote:
+On Sun, Feb 23, 2020 at 11:37 AM Arvind Sankar <nivedita@alum.mit.edu> wrote:
+>
+> In three places in the x86 kernel we are currently generating .eh_frame
+> sections only to discard them later via linker script. This is in the
+> boot code (setup.elf), the realmode trampoline (realmode.elf) and the
+> compressed kernel.
+>
+> Implement Fangrui and Nick's suggestion [1] to fix KBUILD_CFLAGS by
+> adding -fno-asynchronous-unwind-tables to avoid generating .eh_frame
+> sections in the first place, rather than discarding it in the linker
+> script.
+>
+> Arvind Sankar (2):
+>   arch/x86: Use -fno-asynchronous-unwind-tables to suppress .eh_frame sections
+>   arch/x86: Drop unneeded linker script discard of .eh_frame
 
-SNIP
+Thanks for the series! I've left some feedback for a v2. Would you
+mind please including a revert of ("x86/boot/compressed: Remove
+unnecessary sections from bzImage") in a v2 series?  Our CI being red
+through the weekend is no bueno.
 
-> > > +	sym = symbol__new(addr, ANNOTATION_DUMMY_LEN, 0, 0, name);
-> > > +	if (sym) {
-> > > +		src = symbol__hists(sym, 1);
-> > > +		if (!src) {
-> > > +			symbol__delete(sym);
-> > > +			return NULL;
-> > > +		}
-> > 
-> > hi,
-> > I like the patchset:
-> > 
-> > Acked-by: Jiri Olsa <jolsa@redhat.com>
-> > 
-> > could you please also check if we can do this earlier,
-> > so the dummy symbol is actualy collecting all the hits?
-> > 
-> > like within the symbol__inc_addr_samples function,
-> > but I mght be missing something..
-> > 
-> > thanks,
-> > jirka
-> > 
-> 
-> Thanks so much for like and ack this patchset!
-> 
-> For your suggestion, I had thought about the similar idea before. Maybe we
-> can, but we need to process some cases.
-> 
-> Say the first address is 0x1000 and the dummy symbol size is 256. We create
-> a new dummy symbol for this address (start address is 0x1000 and end address
-> is 0x1100).
-> 
-> If the second address is 0x1010, we can't create a new dummy symbol for this
-> address directly. On the contrary, we need to search the dummy symbol list
-> by the address first. If the dummy symbol is found then reuse this symbol.
-> 
-> This idea is a bit more complicated than current patchset in implementation
-> but it can collect the hits for the dummy symbols, that's the advantage. The
-> advantage of current patchset is it's very simple. :)
+>
+>  arch/x86/boot/Makefile                | 1 +
+>  arch/x86/boot/compressed/Makefile     | 1 +
+>  arch/x86/boot/setup.ld                | 1 -
+>  arch/x86/kernel/vmlinux.lds.S         | 3 ---
+>  arch/x86/realmode/rm/Makefile         | 1 +
+>  arch/x86/realmode/rm/realmode.lds.S   | 1 -
+>  drivers/firmware/efi/libstub/Makefile | 3 ++-
+>  7 files changed, 5 insertions(+), 6 deletions(-)
+>
+> --
+> 2.24.1
+>
 
-ah right, we dont know the symbol's size.. perhaps we could hold
-histogram of unresolved addresses and use it later on when displaying
-the annotation for the particular unresolved address.. but then
-how to bucket the counts for accounting.. yep, it seems tricky ;-)
 
-> 
-> Accept current patchset or rewrite for the new idea, both OK for me. :)
-
-I think you it can be build on top of this
-
-thanks,
-jirka
-
+-- 
+Thanks,
+~Nick Desaulniers
