@@ -2,140 +2,153 @@ Return-Path: <SRS0=7TUr=4M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EA07AC38BF9
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 22:43:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7DA30C38BF9
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 22:43:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BA26720732
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 22:43:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 524C72072D
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 22:43:57 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="U5wcAY78"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="hsDvzxEI"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728606AbgBXWns (ORCPT
+        id S1728256AbgBXWmi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Feb 2020 17:43:48 -0500
-Received: from mail-qt1-f194.google.com ([209.85.160.194]:45245 "EHLO
-        mail-qt1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728226AbgBXWnr (ORCPT
+        Mon, 24 Feb 2020 17:42:38 -0500
+Received: from mail-lf1-f65.google.com ([209.85.167.65]:39794 "EHLO
+        mail-lf1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727976AbgBXWmh (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Feb 2020 17:43:47 -0500
-Received: by mail-qt1-f194.google.com with SMTP id d9so7723593qte.12
-        for <linux-kernel@vger.kernel.org>; Mon, 24 Feb 2020 14:43:46 -0800 (PST)
+        Mon, 24 Feb 2020 17:42:37 -0500
+Received: by mail-lf1-f65.google.com with SMTP id n30so7250233lfh.6;
+        Mon, 24 Feb 2020 14:42:35 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=sender:from:date:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=2fqwSDzA0qJPpkXoUfayaMO91DSowAScYmB2Y++l/a8=;
-        b=U5wcAY78fNAT6JrMEi+/p2hrw25/AJUpkfQvL/Ljki2hEcUEkNRdFH8A3WZk7VqHj4
-         KSasPNBO/tnV+eC4t8T8Wyrda8gK6tx9L4ysCtVbFDLZtkfOomSfGbgns1UKOJwRE45W
-         dZL7ofeJ83oWexlCiTL71Anr2EQH4b8JnACYvqtNzFbts09bV4aNf7RE1w+W+nYChgsr
-         59GrzZSQnPUf5VtOtohsMcP7OFjM+qStclRVdkbLMoJqUJ9VYRl+/yW7fjVGElRtHLNs
-         1CV3CY2YgO2e1xKCiy1tQU6x/HA/xB5wj5Gjz3h2ddh0VAEPOOmBWw19f4JwFSLtnAEv
-         smrw==
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=7nkAq5GfDlPZXykqJhY6isdTe+F5tuToLJNPg+hqtHo=;
+        b=hsDvzxEIXKi4FCYfJ+ZLDZvH+mO5gpla9lgaqgwCyubD5j1EFvFa4tU8W4A4hDIoQk
+         wG0OZ/NNTuhpGZSWv2pgrhYTXAWLizcWgpnKFwzGRi812pEuunDzPgsZ+HAZPj4DhWU+
+         uoR1UfzWpfmgXR6LOXTOWEkwidUdizHBP6htjShFLM5/scmf1G8aKvKiWaFq4BLJ8RZo
+         SRtRWqBunY83Ubn08d2lFVWLeL7pmb/vMAUHl9x+opS7bECRvdrrNhFpQmIRq85kFFZy
+         e1jAifEZe7EsFWtx9tTlFNTt8xW0VPv+Xqh0BrXJD9EbkgJrJNNK+NF47ginS/Pfmddh
+         hzdA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:from:date:to:cc:subject:message-id
-         :references:mime-version:content-disposition:in-reply-to:user-agent;
-        bh=2fqwSDzA0qJPpkXoUfayaMO91DSowAScYmB2Y++l/a8=;
-        b=pUvrSTS8bMoIbQAnCh3Ov5H2nOEhZLNbVQDz3S8C1/KH3C1qKLFHeEBoNhLtvtccCP
-         FJWsbBvikD8ogBbjpeqqaY7aeqqgi8Gw3U6B+aClOgI6Gb2kZQKvnL3isqMcNxfYpnnS
-         RuzDO3uIcWQaDqGWFCVfcW7Z5kpyJhdhi0dP3rTxJ+HBJ9lqsTmLKVj0g+RG1/1kDYAh
-         exh8f/7XhqL5cSeKSfQP1tk7Yjn6Gq5MoJ8L6h8jfFcEewpCZBpVotuM/DmyPxjQolux
-         uPEFMBtWY5AhAzmALBboqoxXtN0ZGbT++T0gjAqLM1sUlCq21O+FEDa2N/Ihv1RazRwN
-         o+1g==
-X-Gm-Message-State: APjAAAVMbo85RRmj556VtxuutA9fv8cfz5CWbMo//vSUbR3ZJyPw7dUm
-        M7Zk6dUbBnVNnE/FBHtvzZo=
-X-Google-Smtp-Source: APXvYqw8+jEg8gvPmeH8S420a8jIk4XnnJGz1ipKsykeqLPVFuVVoCftrE9rn0JljXfx/6JhabMxGg==
-X-Received: by 2002:ac8:1b59:: with SMTP id p25mr51970654qtk.336.1582584226324;
-        Mon, 24 Feb 2020 14:43:46 -0800 (PST)
-Received: from rani.riverdale.lan ([2001:470:1f07:5f3::b55f])
-        by smtp.gmail.com with ESMTPSA id g17sm6599084qtq.29.2020.02.24.14.43.45
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=7nkAq5GfDlPZXykqJhY6isdTe+F5tuToLJNPg+hqtHo=;
+        b=os2yXgEE5c0N+RNVVvrCaU+NKm4cGc//wYnm/hIXilAHEtRoVFB+7oLlDaYvH904Wk
+         xGDWdQZXixuYLfO2mW0yHVncSVsvDA/7WPw8HiLnJ5o6lu2EMf4coWQLpyYP2I9oifRj
+         oEhkp8pUkEZLIpXgaa3h3AlQoFW0KHu7KAQFcPj+e2RYji9ztcf5Mo/FuxsNS2zv1RCz
+         KeCvALyomXMY+/zUoU1lSAzBKOnlzlVj89qxfrCjLjOXrCTg8/kyCbkEI7LuzeTF5Mwq
+         pfS6c7xGHhQWsUljodHsDD0uifdgQI+xAp27mzT8m7nKF3Jq7OAhsp+5rwpwCAR5tqvM
+         8SHA==
+X-Gm-Message-State: APjAAAVAyHPqQ7RY2uEHH3kkVgbvP0p846iagzEKt0ShWrXTkRFsLPU6
+        k1iu8tNj7Uw5yj/yFrYzOQk=
+X-Google-Smtp-Source: APXvYqyWxyrGGjB38rrxlxmx71Ht5tQ+diDjSZVo+lOGG4jypLBemdCB7MVBd0yPrQFDFq4AqnoA+g==
+X-Received: by 2002:a19:ee0a:: with SMTP id g10mr9964294lfb.182.1582584154684;
+        Mon, 24 Feb 2020 14:42:34 -0800 (PST)
+Received: from localhost.localdomain (79-139-233-37.dynamic.spd-mgts.ru. [79.139.233.37])
+        by smtp.gmail.com with ESMTPSA id j7sm6264833lfh.25.2020.02.24.14.42.33
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 24 Feb 2020 14:43:45 -0800 (PST)
-From:   Arvind Sankar <nivedita@alum.mit.edu>
-X-Google-Original-From: Arvind Sankar <arvind@rani.riverdale.lan>
-Date:   Mon, 24 Feb 2020 17:43:44 -0500
-To:     Fangrui Song <maskray@google.com>
-Cc:     Arvind Sankar <nivedita@alum.mit.edu>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        Michael Matz <matz@suse.de>, Borislav Petkov <bp@alien8.de>,
-        Nathan Chancellor <natechancellor@gmail.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        "maintainer:X86 ARCHITECTURE (32-BIT AND 64-BIT)" <x86@kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        clang-built-linux <clang-built-linux@googlegroups.com>,
-        Kees Cook <keescook@chromium.org>
-Subject: Re: [PATCH 2/2] x86/boot/compressed: Remove unnecessary sections
- from bzImage
-Message-ID: <20200224224343.GA572699@rani.riverdale.lan>
-References: <20200222070218.GA27571@ubuntu-m2-xlarge-x86>
- <20200222072144.asqaxlv364s6ezbv@google.com>
- <20200222074254.GB11284@zn.tnic>
- <20200222162225.GA3326744@rani.riverdale.lan>
- <CAKwvOdnvMS21s9gLp5nUpDAOu=c7-iWYuKTeFUq+PMhsJOKUgw@mail.gmail.com>
- <alpine.LSU.2.21.2002241319150.12812@wotan.suse.de>
- <CAKwvOd=nCAyXtng1N-fvNYa=-NGD0yu+Rm6io9F1gs0FieatwA@mail.gmail.com>
- <20200224212828.xvxl3mklpvlrdtiw@google.com>
- <20200224214845.GC409112@rani.riverdale.lan>
- <20200224221703.eqql5hrx4ccngwa5@google.com>
+        Mon, 24 Feb 2020 14:42:34 -0800 (PST)
+From:   Dmitry Osipenko <digetx@gmail.com>
+To:     Thierry Reding <thierry.reding@gmail.com>,
+        Jonathan Hunter <jonathanh@nvidia.com>,
+        Peter De Schrijver <pdeschrijver@nvidia.com>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        =?UTF-8?q?Micha=C5=82=20Miros=C5=82aw?= <mirq-linux@rere.qmqm.pl>,
+        Jasper Korten <jja2000@gmail.com>,
+        David Heidelberg <david@ixit.cz>,
+        Peter Geis <pgwipeout@gmail.com>,
+        Nicolas Chauvet <kwizart@gmail.com>
+Cc:     linux-pm@vger.kernel.org, linux-tegra@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH v11 01/17] ARM: tegra: Compile sleep-tegra20/30.S unconditionally
+Date:   Tue, 25 Feb 2020 01:40:41 +0300
+Message-Id: <20200224224057.21877-2-digetx@gmail.com>
+X-Mailer: git-send-email 2.24.0
+In-Reply-To: <20200224224057.21877-1-digetx@gmail.com>
+References: <20200224224057.21877-1-digetx@gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20200224221703.eqql5hrx4ccngwa5@google.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Feb 24, 2020 at 02:17:03PM -0800, Fangrui Song wrote:
-> On 2020-02-24, Arvind Sankar wrote:
-> >On Mon, Feb 24, 2020 at 01:28:28PM -0800, Fangrui Song wrote:
-> >> Hi Michael, please see my other reply on this thread: https://lkml.org/lkml/2020/2/24/47
-> >>
-> >> Synthesized sections can be matched as well. For example, SECTIONS { .pltfoo : { *(.plt) }} can rename the output section .plt to .pltfoo
-> >> It seems that in GNU ld, the synthesized section is associated with the
-> >> original object file, so it can be written as:
-> >>
-> >>    SECTIONS { .pltfoo : { a.o(.plt) }}
-> >>
-> >> In lld, you need a wildcard to match the synthesized section *(.plt)
-> >>
-> >> .rela.dyn is another example.
-> >>
-> >
-> >With the BFD toolchain, file matching doesn't actually seem to work at
-> >least for .rela.dyn. I've tried playing around with it in the past and
-> >if you try to use file-matching to capture relocations from a particular
-> >input file, it just doesn't work sensibly.
-> 
-> I think most things are working in GNU ld...
-> 
-> /* a.x */
-> SECTIONS {
->    .rela.pltfoo : { a.o(.rela.plt) }  /* *(.rela.plt) with lld */
->    .rela.dynfoo : { a.o(.rela.data) } /* *(.rela.dyn) with lld */
-> }
+The sleep-tegra*.S provides functionality required for suspend/resume
+and CPU hotplugging. The new unified CPUIDLE driver will support multiple
+hardware generations starting from Terga20 and ending with Tegra124, the
+driver will utilize functions that are provided by the assembly and thus
+it is cleaner to compile that code without any build-dependencies in order
+to avoid churning with #ifdef's.
 
-The file matching doesn't do anything sensible. If you split your .data
-section out into b.s, and update the linker script so it filters for
-b.o(.rela.data), .rela.dynfoo doesn't get created, instead the default
-.rela.dyn will contains the .data section relocation. If you keep the
-filter as a.o(.rela.data), you get .rela.dynfoo, even though a.o doesn't
-actually contain any .rela.data section any more.
+Acked-by: Peter De Schrijver <pdeschrijver@nvidia.com>
+Tested-by: Peter Geis <pgwipeout@gmail.com>
+Tested-by: Jasper Korten <jja2000@gmail.com>
+Tested-by: David Heidelberg <david@ixit.cz>
+Tested-by: Nicolas Chauvet <kwizart@gmail.com>
+Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
+---
+ arch/arm/mach-tegra/Makefile | 6 ++----
+ arch/arm/mach-tegra/sleep.h  | 2 --
+ 2 files changed, 2 insertions(+), 6 deletions(-)
 
-> 
-> % cat <<e > a.s
->   .globl foo
->   foo:
->     call bar
->   .data
->   .quad quz
-> e
-> % as a.s -o a.o
-> % ld.bfd -T a.x a.o -shared -o a.so
+diff --git a/arch/arm/mach-tegra/Makefile b/arch/arm/mach-tegra/Makefile
+index 6c1dff2eccc2..965862608ff6 100644
+--- a/arch/arm/mach-tegra/Makefile
++++ b/arch/arm/mach-tegra/Makefile
+@@ -8,13 +8,13 @@ obj-y					+= reset.o
+ obj-y					+= reset-handler.o
+ obj-y					+= sleep.o
+ obj-y					+= tegra.o
++obj-y					+= sleep-tegra20.o
++obj-y					+= sleep-tegra30.o
+ obj-$(CONFIG_CPU_IDLE)			+= cpuidle.o
+-obj-$(CONFIG_ARCH_TEGRA_2x_SOC)		+= sleep-tegra20.o
+ obj-$(CONFIG_ARCH_TEGRA_2x_SOC)		+= pm-tegra20.o
+ ifeq ($(CONFIG_CPU_IDLE),y)
+ obj-$(CONFIG_ARCH_TEGRA_2x_SOC)		+= cpuidle-tegra20.o
+ endif
+-obj-$(CONFIG_ARCH_TEGRA_3x_SOC)		+= sleep-tegra30.o
+ obj-$(CONFIG_ARCH_TEGRA_3x_SOC)		+= pm-tegra30.o
+ ifeq ($(CONFIG_CPU_IDLE),y)
+ obj-$(CONFIG_ARCH_TEGRA_3x_SOC)		+= cpuidle-tegra30.o
+@@ -22,12 +22,10 @@ endif
+ obj-$(CONFIG_SMP)			+= platsmp.o
+ obj-$(CONFIG_HOTPLUG_CPU)               += hotplug.o
+ 
+-obj-$(CONFIG_ARCH_TEGRA_114_SOC)	+= sleep-tegra30.o
+ obj-$(CONFIG_ARCH_TEGRA_114_SOC)	+= pm-tegra30.o
+ ifeq ($(CONFIG_CPU_IDLE),y)
+ obj-$(CONFIG_ARCH_TEGRA_114_SOC)	+= cpuidle-tegra114.o
+ endif
+-obj-$(CONFIG_ARCH_TEGRA_124_SOC)	+= sleep-tegra30.o
+ obj-$(CONFIG_ARCH_TEGRA_124_SOC)	+= pm-tegra30.o
+ ifeq ($(CONFIG_CPU_IDLE),y)
+ obj-$(CONFIG_ARCH_TEGRA_124_SOC)	+= cpuidle-tegra114.o
+diff --git a/arch/arm/mach-tegra/sleep.h b/arch/arm/mach-tegra/sleep.h
+index 78ef32a907c8..63e2205cbc82 100644
+--- a/arch/arm/mach-tegra/sleep.h
++++ b/arch/arm/mach-tegra/sleep.h
+@@ -120,10 +120,8 @@ void tegra_resume(void);
+ int tegra_sleep_cpu_finish(unsigned long);
+ void tegra_disable_clean_inv_dcache(u32 flag);
+ 
+-#ifdef CONFIG_HOTPLUG_CPU
+ void tegra20_hotplug_shutdown(void);
+ void tegra30_hotplug_shutdown(void);
+-#endif
+ 
+ void tegra20_cpu_shutdown(int cpu);
+ int tegra20_cpu_is_resettable_soon(void);
+-- 
+2.24.0
+
