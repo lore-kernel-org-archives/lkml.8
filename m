@@ -4,66 +4,67 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F3160C35679
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 09:14:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 87880C35679
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 09:14:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C21D720836
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 09:14:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 50F3C20658
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 09:14:40 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=cerno.tech header.i=@cerno.tech header.b="yK5Ohju6";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="SiqE15r0"
+	dkim=pass (2048-bit key) header.d=cerno.tech header.i=@cerno.tech header.b="MGDZcc/A";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="c+QKLXSW"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727325AbgBXJJC (ORCPT
+        id S1728043AbgBXJOi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Feb 2020 04:09:02 -0500
-Received: from wnew3-smtp.messagingengine.com ([64.147.123.17]:44823 "EHLO
+        Mon, 24 Feb 2020 04:14:38 -0500
+Received: from wnew3-smtp.messagingengine.com ([64.147.123.17]:46793 "EHLO
         wnew3-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727115AbgBXJI7 (ORCPT
+        by vger.kernel.org with ESMTP id S1727282AbgBXJJB (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Feb 2020 04:08:59 -0500
+        Mon, 24 Feb 2020 04:09:01 -0500
 Received: from compute3.internal (compute3.nyi.internal [10.202.2.43])
-        by mailnew.west.internal (Postfix) with ESMTP id 5CCBB54F;
-        Mon, 24 Feb 2020 04:08:56 -0500 (EST)
+        by mailnew.west.internal (Postfix) with ESMTP id E69695C7;
+        Mon, 24 Feb 2020 04:08:58 -0500 (EST)
 Received: from mailfrontend1 ([10.202.2.162])
-  by compute3.internal (MEProxy); Mon, 24 Feb 2020 04:08:57 -0500
+  by compute3.internal (MEProxy); Mon, 24 Feb 2020 04:09:00 -0500
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cerno.tech; h=
         from:to:cc:subject:date:message-id:in-reply-to:references
-        :mime-version:content-transfer-encoding; s=fm2; bh=mPma2BR0l1tBP
-        abwm95lyd5UfLZW9fXkUpmHIiAKdz8=; b=yK5Ohju6603q5LvF1eeHhCRAciomk
-        a88acboqocKkpJ56P/NHvNfJ8kHkYXP4hC7WYenUQjMOvkXnrEchJAipm1JnPP3l
-        hzXdyuDyRIOaQLsk1ZQh957sTlqq8f1M+jtITQVmvn3tu6QrwxzU7OspOKXvDglc
-        Xaij5T7+V279+aKKitTuFkniHGZ14Kad8cf++MHTMzF922tcHkMIoLOdEIZSO25k
-        q2z7eSWxAWMNR0suJRdG+E5B8q4HLDuwwKUTnoCrL9mHIY7jErY6ipN9s1ApdAjt
-        dCtj3XN34jiy1QBhXcchA6eZNPyucu0mcSMOuINVy65D2lsLVmdNrtM5g==
+        :mime-version:content-transfer-encoding; s=fm2; bh=HvoZm/CXRFjaX
+        9itj5UKgqnwKV1jLHEaQ0lrY8kkzVk=; b=MGDZcc/Aq+Rw4qJP/RvJzxTT9zuhi
+        Vw+TSvutgz7J4MvR9+z/TbcjkJv4Zi88/MjjG+cIgUqJsI6OO5SuD6cRd72CXOQt
+        JxLhFehkvSPlU3Yt2PPeUezeD8RxbQ4PMvq33YaFO0gZSq09wVLDMkWB1nol/HYU
+        zKJ+4w2Txt1LtjjDqVyb3jQFYTc1pLhDQ9m90nKDOGn1+VeU5CEZEEQYc8WGeWrs
+        7hP4oZ1/foDhV2db+JDIY7KrI6OJfLakLunHY9SQXPmBh3y2zqRDAd6eP4pWny2o
+        sIHXd8Voz0Vo+ngIbUWFwe980Mbxc4t/nPmSzlPgrB4vfa38Dqd5m32wA==
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
         messagingengine.com; h=cc:content-transfer-encoding:date:from
         :in-reply-to:message-id:mime-version:references:subject:to
         :x-me-proxy:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=
-        fm2; bh=mPma2BR0l1tBPabwm95lyd5UfLZW9fXkUpmHIiAKdz8=; b=SiqE15r0
-        jST1WHM2j4nwUY3KRPrRZgAtqyYqAdIhCa210Bc6inU6yieqSj+FkK0ReZ31ughB
-        2L72ugc1q9PVsp3X9jSQWYyWkIMWjxAgpQMZaTHXvnghbPrs2DU2R97KqMpzYXUR
-        evmKCRZRz5IuE39aRKouTH1Zooiy1Nw6z2qfUEAAKDAfLXNYaq1ZDqflCjdBhcRE
-        xfZyb6wAG98Gnd71/Bd9rpfnRg0SJd3iLcu74xj66lAdLraLoelEBwlqjcuJBVkX
-        LuRbWZibnGwxyv8SiDwiMagxSmlg6AXrbfV/1x/HuJqEf4uRTJgZDpYUcDVrqkae
-        d1y1mSEUGbFK2w==
-X-ME-Sender: <xms:pJJTXtgKVwHM_3O-v7pJ9fNUvFDN1t-SGoJPw2wtCM-EFCtmRoawVw>
+        fm2; bh=HvoZm/CXRFjaX9itj5UKgqnwKV1jLHEaQ0lrY8kkzVk=; b=c+QKLXSW
+        +lO4HtiCmhypK+Tn77ju2BGiGE7BW8mK1MP50t1b4EQ6lLOqGGTBV82mAINI5Xpa
+        c9BFIe4wm1tirltt+UcyDrTn4jy2fCDSd35PXwpblyEdb6Db9fl2WK3BFnvJTyOc
+        A1N9YrBqwqUynzJ2lVZ+9dBnXsg0KFQDzRf35dfQldUZDPyjbvBrF6pi6rzYIEZ2
+        VLaFWgRTTe7Z6O93/VZyloD70+j1TC08nV35OS9x/KY3NqoBrnGvhX5r2+qNyS4H
+        OL8rqQSdRQX5KiS2uFMc11sSQa2J73YBVw4OQf0pS44k5UL224UO9p7Xgo6pgxjJ
+        W1g1YvEbQGr0Zw==
+X-ME-Sender: <xms:qpJTXui9P-ESxQHWQI0LBhgMVPCVH-_TflmnM0T37CJ4nj8eXhQIeg>
 X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedugedrledtucetufdoteggodetrfdotffvucfrrh
     hofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgenuceurghi
-    lhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmnecujfgurh
-    ephffvufffkffojghfggfgsedtkeertdertddtnecuhfhrohhmpeforgigihhmvgcutfhi
-    phgrrhguuceomhgrgihimhgvsegtvghrnhhordhtvggthheqnecukfhppeeltddrkeelrd
-    eikedrjeeinecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehmrghilhhfrhho
-    mhepmhgrgihimhgvsegtvghrnhhordhtvggthh
-X-ME-Proxy: <xmx:pJJTXix9Y3ulNkmav60cdqJtJzRB0eDhJ25b12-2X_35iSJPswp44w>
-    <xmx:pJJTXpPykQdFZzlJ0PJYOPMDqOCx5ngeyKcn8HBcE_qQHq_pgPZdvw>
-    <xmx:pJJTXjXRoICUAXNIZjtmbH35ojG9eghAedET_ASqQf2o0EVy6HCxrA>
-    <xmx:qJJTXiS2ml6O3QORmCFbxt_L5y5Cbk-Nwiwxpu04jQJiNKnkjwRy-FdEIjA>
+    lhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmnegovehorg
+    hsthgrlhdqhfeguddvqddtvdculdduhedtmdenucfjughrpefhvffufffkofgjfhgggfes
+    tdekredtredttdenucfhrhhomhepofgrgihimhgvucftihhprghrugcuoehmrgigihhmvg
+    estggvrhhnohdrthgvtghhqeenucffohhmrghinhepuggvvhhitggvthhrvggvrdhorhhg
+    necukfhppeeltddrkeelrdeikedrjeeinecuvehluhhsthgvrhfuihiivgepudenucfrrg
+    hrrghmpehmrghilhhfrhhomhepmhgrgihimhgvsegtvghrnhhordhtvggthh
+X-ME-Proxy: <xmx:qpJTXptRT016RRkMhbPQfof06Wfpic8DS3Pheb28o5RxhTaMcZ1pyw>
+    <xmx:qpJTXuzKfIDjKvfhnyFsq8vH8PHwy67PHK6l2qfL59Ixa8tVZi1GGw>
+    <xmx:qpJTXuYQ-EYI7Ph_T6fUEUFtwoVw5M2SOelNa6j3CuwQXXR9bbteHQ>
+    <xmx:qpJTXqIMbS5I4ZHSFhuiDyYWNPNy0FtWfuosE_chf1Ddj-TKPAbvkKnsV_4>
 Received: from localhost (lfbn-tou-1-1502-76.w90-89.abo.wanadoo.fr [90.89.68.76])
-        by mail.messagingengine.com (Postfix) with ESMTPA id 71D9D328005A;
-        Mon, 24 Feb 2020 04:08:52 -0500 (EST)
+        by mail.messagingengine.com (Postfix) with ESMTPA id 2D4A3328005A;
+        Mon, 24 Feb 2020 04:08:58 -0500 (EST)
 From:   Maxime Ripard <maxime@cerno.tech>
 To:     Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
         Eric Anholt <eric@anholt.net>
@@ -75,14 +76,13 @@ Cc:     dri-devel@lists.freedesktop.org,
         Tim Gover <tim.gover@raspberrypi.com>,
         Phil Elwell <phil@raspberrypi.com>,
         Maxime Ripard <maxime@cerno.tech>,
-        Kamal Dasu <kdasu.kdev@gmail.com>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Wolfram Sang <wsa@the-dreams.de>, linux-i2c@vger.kernel.org,
+        Michael Turquette <mturquette@baylibre.com>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Rob Herring <robh+dt@kernel.org>, linux-clk@vger.kernel.org,
         devicetree@vger.kernel.org
-Subject: [PATCH 02/89] dt-bindings: i2c: brcmstb: Add BCM2711 BSC/AUTO-I2C binding
-Date:   Mon, 24 Feb 2020 10:06:04 +0100
-Message-Id: <9e427ff22fa40b7146b44aee6468559499deb1f1.1582533919.git-series.maxime@cerno.tech>
+Subject: [PATCH 06/89] dt-bindings: clock: Add a binding for the RPi Firmware clocks
+Date:   Mon, 24 Feb 2020 10:06:08 +0100
+Message-Id: <9166f3acdc2a64e3f3ca1cd2e283005ee2df37c9.1582533919.git-series.maxime@cerno.tech>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <cover.6c896ace9a5a7840e9cec008b553cbb004ca1f91.1582533919.git-series.maxime@cerno.tech>
 References: <cover.6c896ace9a5a7840e9cec008b553cbb004ca1f91.1582533919.git-series.maxime@cerno.tech>
@@ -93,97 +93,65 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The HDMI blocks in the BCM2771 have an i2c controller to retrieve the
-EDID. This block is split into two parts, the BSC and the AUTO_I2C,
-lying in two separate register areas.
+The firmare running on the RPi VideoCore can be used to discover and
+change the various clocks running in the BCM2711. Since devices will
+need to use them through the DT, let's add a pretty simple binding.
 
-The AUTO_I2C block has a mailbox-like interface and will take away the
-BSC control from the CPU if enabled. However, the BSC is the actually
-the same controller than the one supported by the brcmstb driver, and
-the AUTO_I2C doesn't really bring any immediate benefit.
-
-We can model it in the DT as a single device with two register range,
-which will allow us to use or or the other in the driver without
-changing anything in the DT.
-
-Cc: Kamal Dasu <kdasu.kdev@gmail.com>
-Cc: Florian Fainelli <f.fainelli@gmail.com>
+Cc: Michael Turquette <mturquette@baylibre.com>
+Cc: Stephen Boyd <sboyd@kernel.org>
 Cc: Rob Herring <robh+dt@kernel.org>
-Cc: Wolfram Sang <wsa@the-dreams.de>
-Cc: bcm-kernel-feedback-list@broadcom.com
-Cc: linux-i2c@vger.kernel.org
+Cc: linux-clk@vger.kernel.org
 Cc: devicetree@vger.kernel.org
 Signed-off-by: Maxime Ripard <maxime@cerno.tech>
 ---
- Documentation/devicetree/bindings/i2c/brcm,brcmstb-i2c.yaml | 40 ++++++-
- 1 file changed, 39 insertions(+), 1 deletion(-)
+ Documentation/devicetree/bindings/clock/raspberrypi,firmware-clocks.yaml | 39 +++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 39 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/clock/raspberrypi,firmware-clocks.yaml
 
-diff --git a/Documentation/devicetree/bindings/i2c/brcm,brcmstb-i2c.yaml b/Documentation/devicetree/bindings/i2c/brcm,brcmstb-i2c.yaml
-index 3189d74096e8..edbca2476128 100644
---- a/Documentation/devicetree/bindings/i2c/brcm,brcmstb-i2c.yaml
-+++ b/Documentation/devicetree/bindings/i2c/brcm,brcmstb-i2c.yaml
-@@ -15,11 +15,21 @@ allOf:
- properties:
-   compatible:
-     enum:
-+      - brcm,bcm2711-hdmi-i2c
-       - brcm,brcmstb-i2c
-       - brcm,brcmper-i2c
- 
-   reg:
--    maxItems: 1
-+    minItems: 1
-+    maxItems: 2
-+    items:
-+      - description: BSC register range
-+      - description: Auto-I2C register range
+diff --git a/Documentation/devicetree/bindings/clock/raspberrypi,firmware-clocks.yaml b/Documentation/devicetree/bindings/clock/raspberrypi,firmware-clocks.yaml
+new file mode 100644
+index 000000000000..d37bc311321d
+--- /dev/null
++++ b/Documentation/devicetree/bindings/clock/raspberrypi,firmware-clocks.yaml
+@@ -0,0 +1,39 @@
++# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/clock/raspberrypi,firmware-clocks.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
 +
-+  reg-names:
-+    items:
-+      - const: bsc
-+      - const: auto-i2c
- 
-   interrupts:
-     maxItems: 1
-@@ -45,6 +55,26 @@ required:
- 
- unevaluatedProperties: false
- 
-+if:
-+  properties:
-+    compatible:
-+      contains:
-+        enum:
-+          - brcm,bcm2711-hdmi-i2c
++title: RaspberryPi Firmware Clocks Device Tree Bindings
 +
-+then:
-+  properties:
-+    reg:
-+      minItems: 2
++maintainers:
++  - Maxime Ripard <mripard@kernel.org>
 +
-+  required:
-+    - reg-names
++properties:
++  "#clock-cells":
++    const: 1
 +
-+else:
-+  properties:
-+    reg:
-+      maxItems: 1
++  compatible:
++    const: raspberrypi,firmware-clocks
 +
- examples:
-   - |
-       bsca: i2c@f0406200 {
-@@ -56,4 +86,12 @@ examples:
-           interrupt-names = "upg_bsca";
-       };
- 
++  raspberrypi,firmware:
++    $ref: /schemas/types.yaml#/definitions/phandle
++    description: >
++      Phandle to the mailbox node to communicate with the firmware.
++
++required:
++  - "#clock-cells"
++  - compatible
++  - raspberrypi,firmware
++
++additionalProperties: false
++
++examples:
 +  - |
-+      ddc0: i2c@7ef04500 {
-+          compatible = "brcm,bcm2711-hdmi-i2c";
-+          reg = <0x7ef04500 0x100>, <0x7ef00b00 0x300>;
-+          reg-names = "bsc", "auto-i2c";
-+          clock-frequency = <390000>;
-+      };
++    firmware_clocks: firmware-clocks {
++        compatible = "raspberrypi,firmware-clocks";
++        raspberrypi,firmware = <&firmware>;
++        #clock-cells = <1>;
++    };
 +
- ...
++...
 -- 
 git-series 0.9.1
