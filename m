@@ -2,251 +2,211 @@ Return-Path: <SRS0=7TUr=4M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 72B3CC11D2F
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 11:16:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 20595C11D30
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 11:17:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 37F1020828
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 11:16:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E406D20828
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 11:17:27 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=xilinx.onmicrosoft.com header.i=@xilinx.onmicrosoft.com header.b="XMyKjqXj"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="qCprhKuf"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727352AbgBXLQz (ORCPT
+        id S1727318AbgBXLR0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Feb 2020 06:16:55 -0500
-Received: from mail-bn8nam11on2051.outbound.protection.outlook.com ([40.107.236.51]:20960
-        "EHLO NAM11-BN8-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727183AbgBXLQy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Feb 2020 06:16:54 -0500
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=nLLMxOzo2X4DsbAO3mSaz12G8BlOk4ImDN/9sBVv086OW/fA2j2QEwn/l+A7TfcUwDHN1Sr8jPu0o/s8C72HiGoTdbF4Vnht8+tF+roqNiK3fqO4mpbun7DcR0y93A0J1tugd5Jw5J7O3VvsjqmVAhx1r1PTxVnjfvdfS1M/xkgJ1GbH7c53NmSj8OB6k8tVqyGex0o4a37pSieFAzx2yupv1cZ03R3LrSjca7+GI9BeD36KhZCVE5T8BqBhW8bT/GdvnFdBopmlgxjQALBY5cb4sDlh3OXkeI4uDkqNEnNo2eFKr5kn8znn3oCywisTEyG5hlFA/xVIqGROK9B19w==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=4Pr7gPEiD0+bE0kBCHf08UVzDpL18zDobWFqHourYQQ=;
- b=Qg617cDdcO41of+fbZCoY/oXxEBpYPTdDfwNNnFWsgr8fKuylHrgBZyScYlWsmAcLDVpoqC8NHu0qYYylvZmKjDCfr2DuyZ3+Mctjjx3CGdYYBewGcSWCodWX2ZXYOei5xBFsXE0XLvyTBl5bLWbl2Cy2tgwHZUz1yu13tOHub982PTDL7zNLDxsdV5MndjaOOIP2Dl4nLvN1j8yn06D17wgumPXQhotxz3fG+c5A19QyOR3Etq7uvcr1dwjAqkF2am91VTlgYjkrlojnbWFwP0QYf7OMnzGbHm9GLJ3gY6DmTXfBaU3DivTDbwD9oPdKLWNClzb35mSAQjd9ZIn2g==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 149.199.60.83) smtp.rcpttodomain=vger.kernel.org smtp.mailfrom=xilinx.com;
- dmarc=bestguesspass action=none header.from=xilinx.com; dkim=none (message
- not signed); arc=none
+        Mon, 24 Feb 2020 06:17:26 -0500
+Received: from mail-vs1-f66.google.com ([209.85.217.66]:44012 "EHLO
+        mail-vs1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727183AbgBXLR0 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 24 Feb 2020 06:17:26 -0500
+Received: by mail-vs1-f66.google.com with SMTP id 7so5427553vsr.10
+        for <linux-kernel@vger.kernel.org>; Mon, 24 Feb 2020 03:17:25 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=xilinx.onmicrosoft.com; s=selector2-xilinx-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=4Pr7gPEiD0+bE0kBCHf08UVzDpL18zDobWFqHourYQQ=;
- b=XMyKjqXjxtUAx7QyxnuNKuqSCQLTqJPZm7GGeO5dVAVmO0e1eVcbjEexl7Z9T7PvA48NVZM869Xp3LF/xnFYQUH9vtf2u479T5BqpD1j8lzapnW5DaKm6B2duY+oWiKyoKObjFXnKVQJgLEuFWUD0a3Vt/H3KAvBd9O8z5w7RRY=
-Received: from BL0PR02CA0078.namprd02.prod.outlook.com (2603:10b6:208:51::19)
- by DM5PR02MB3877.namprd02.prod.outlook.com (2603:10b6:4:b9::34) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2750.21; Mon, 24 Feb
- 2020 11:16:51 +0000
-Received: from SN1NAM02FT026.eop-nam02.prod.protection.outlook.com
- (2a01:111:f400:7e44::201) by BL0PR02CA0078.outlook.office365.com
- (2603:10b6:208:51::19) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2750.17 via Frontend
- Transport; Mon, 24 Feb 2020 11:16:51 +0000
-Authentication-Results: spf=pass (sender IP is 149.199.60.83)
- smtp.mailfrom=xilinx.com; vger.kernel.org; dkim=none (message not signed)
- header.d=none;vger.kernel.org; dmarc=bestguesspass action=none
- header.from=xilinx.com;
-Received-SPF: Pass (protection.outlook.com: domain of xilinx.com designates
- 149.199.60.83 as permitted sender) receiver=protection.outlook.com;
- client-ip=149.199.60.83; helo=xsj-pvapsmtpgw01;
-Received: from xsj-pvapsmtpgw01 (149.199.60.83) by
- SN1NAM02FT026.mail.protection.outlook.com (10.152.72.97) with Microsoft SMTP
- Server (version=TLS1_0, cipher=TLS_RSA_WITH_AES_256_CBC_SHA) id 15.20.2750.19
- via Frontend Transport; Mon, 24 Feb 2020 11:16:50 +0000
-Received: from unknown-38-66.xilinx.com ([149.199.38.66] helo=xsj-pvapsmtp01)
-        by xsj-pvapsmtpgw01 with esmtp (Exim 4.63)
-        (envelope-from <michal.simek@xilinx.com>)
-        id 1j6BjG-0004T4-7i; Mon, 24 Feb 2020 03:16:50 -0800
-Received: from [127.0.0.1] (helo=localhost)
-        by xsj-pvapsmtp01 with smtp (Exim 4.63)
-        (envelope-from <michal.simek@xilinx.com>)
-        id 1j6BjB-0000gg-4M; Mon, 24 Feb 2020 03:16:45 -0800
-Received: from [172.30.17.108]
-        by xsj-pvapsmtp01 with esmtp (Exim 4.63)
-        (envelope-from <michals@xilinx.com>)
-        id 1j6Bj5-0000fs-Su; Mon, 24 Feb 2020 03:16:40 -0800
-Subject: Re: [PATCH] rtc: zynqmp: Add calibration set and get support
-To:     Srinivas Neeli <srinivas.neeli@xilinx.com>, a.zummo@towertech.it,
-        alexandre.belloni@bootlin.com, michal.simek@xilinx.com,
-        sgoud@xilinx.com, shubhraj@xilinx.com
-Cc:     linux-rtc@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org, git@xilinx.com,
-        Srinivas Goud <srinivas.goud@xilinx.com>
-References: <1582191106-30431-1-git-send-email-srinivas.neeli@xilinx.com>
-From:   Michal Simek <michal.simek@xilinx.com>
-Message-ID: <00b3e6dd-50d6-f5a7-a861-e6db91f6eafb@xilinx.com>
-Date:   Mon, 24 Feb 2020 12:16:36 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.1
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=OUODaV4g/LRsT9laa1RfS2Gjv8Ee9++UWwJ4Sw725dw=;
+        b=qCprhKufyO3XeXF1Aqp29azedeaBSklsvi974/pSi6i0bchDKMA4QiFMab5B21GrAe
+         aPoY6lwFLf7Gw2xanmYW4sxSuFHgY4Xq8xejK43M4UWJXLiCyVhfobC/upBKa5N439Rh
+         UrZkuSPo2w3vO+tp2Qmhv6CnKM9kdSkH+cU4BnfswdYciN8+EQDHPABtp4NjjVlp7/ic
+         xYvgFba8E2IQfqzX74vKJdfmnIi94LtAwbuxmCOWrwXmDlG8oFC+0EpJuWcbvIOSb1EQ
+         Z8MidMnV4IMTNouaTbNpnRGhV/z2LCi6ucZfAAdWcx2wW9juODo9RHEIz6Jw7SSBG2Ve
+         Y+CA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=OUODaV4g/LRsT9laa1RfS2Gjv8Ee9++UWwJ4Sw725dw=;
+        b=N3pxO3ozLk/idl2IE6LtfzlRmbmsQ0oT5a004aHjW+mCMPurjCi+y6l3Trq2+fnFCL
+         t88dU7uMB4dXI1taPcWP4ykiJu/69RYhpIWQcDVWD+x1On5FiuAeOWlgmW6/7Dwn+7Y+
+         lUtivWfBv47z6hMK9RaZI1cmmmLuVh9KhVmiM8m8AsdGcp0jiztjgd4eGQcSoVjWAbbN
+         INfyGcPNtZ+Atl9eDF72+omo7JY1kBStXU24r/W0eRHtySuYSJTkxfVettHntSlW5sxJ
+         Kw1dCq87zrIRy0M+XJDfiGALWwgd1wvf45ClEhpXZPamnMPW3Q7L1firRMohJ+G9Q61L
+         AeQQ==
+X-Gm-Message-State: APjAAAWWacqfrla9mc9etBdzwB6BkSXPcgnRQBabyqtturxelCKBRwAI
+        BypDysSjyF2X27snSfYvdrzns18H6xLXNi5nvm5aeA==
+X-Google-Smtp-Source: APXvYqykuSBIrbPM5IWUnabFpOFy1So7ym0Ta+33qTdsbP9AdXLucE6bZY92p+EYmu6x3IjSyvP9hqD43SlDiqCcj/g=
+X-Received: by 2002:a05:6102:757:: with SMTP id v23mr26694580vsg.35.1582543045041;
+ Mon, 24 Feb 2020 03:17:25 -0800 (PST)
 MIME-Version: 1.0
-In-Reply-To: <1582191106-30431-1-git-send-email-srinivas.neeli@xilinx.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-TM-AS-Product-Ver: IMSS-7.1.0.1224-8.2.0.1013-23620.005
-X-TM-AS-User-Approved-Sender: Yes;Yes
-X-EOPAttributedMessage: 0
-X-MS-Office365-Filtering-HT: Tenant
-X-Forefront-Antispam-Report: CIP:149.199.60.83;IPV:;CTRY:US;EFV:NLI;SFV:NSPM;SFS:(10009020)(4636009)(39860400002)(136003)(346002)(396003)(376002)(189003)(199004)(26005)(478600001)(31696002)(6636002)(107886003)(316002)(5660300002)(2906002)(31686004)(8676002)(8936002)(356004)(9786002)(36756003)(426003)(186003)(2616005)(70586007)(81166006)(81156014)(44832011)(6666004)(336012)(70206006)(4326008);DIR:OUT;SFP:1101;SCL:1;SRVR:DM5PR02MB3877;H:xsj-pvapsmtpgw01;FPR:;SPF:Pass;LANG:en;PTR:unknown-60-83.xilinx.com;MX:1;A:1;
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id: 4c0055e7-0c45-4e62-5bb0-08d7b91b0bb9
-X-MS-TrafficTypeDiagnostic: DM5PR02MB3877:
-X-Microsoft-Antispam-PRVS: <DM5PR02MB38772BCC31E42BF62A0E98F6C6EC0@DM5PR02MB3877.namprd02.prod.outlook.com>
-X-Auto-Response-Suppress: DR, RN, NRN, OOF, AutoReply
-X-MS-Oob-TLC-OOBClassifiers: OLM:6790;
-X-Forefront-PRVS: 032334F434
-X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: WyCVdl8W3E/fdoqXSuRd94M9GmTHEcfgerXl8ImW4uRIydZFyfrPXJ18QArwrzVPjUmB+IvRL/wkmLL1hYstWnLkBgx2ZTtJ/QJjcTKEpIUyoSPv0FDUv/YMac2WvRoNgBtBk4ExwP7y6p+FAnKaGNaLqIU0U36IIlomNAhLO57L0uigmNowPdNWjfAxiMlfhyg+HwnFYGWU+heG3vM7MCeDwZ+l7xy3d9zMAs/92iOXO3RI5Xx/ItDV2IwRnnlgxA/KvxIEDYz8c5pMFNQj9V3kUxlJtUq4RXSNVMcTrX9rYLG/D16FxuNfzKmPkvzjVADiby2AqNbKsEr+3cRF+B70M6iPrFMOGpx+9wIe+pl25bGu/qx9SPb1apJqdcyBuTDYW1/m0oVqK7zmKGWUMUSIaZ91MV27ZawOlOJRoQZKuNuhLb5fn8Jka7ovfVod
-X-OriginatorOrg: xilinx.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 24 Feb 2020 11:16:50.6675
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: 4c0055e7-0c45-4e62-5bb0-08d7b91b0bb9
-X-MS-Exchange-CrossTenant-Id: 657af505-d5df-48d0-8300-c31994686c5c
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=657af505-d5df-48d0-8300-c31994686c5c;Ip=[149.199.60.83];Helo=[xsj-pvapsmtpgw01]
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM5PR02MB3877
+References: <CA+G9fYuqAQfhzF2BzHr7vMHx68bo8-jT+ob_F3eHQ3=oFjgYdg@mail.gmail.com>
+ <CAPDyKFqqhxC-pmV_j8PLY-D=AbqCAbiipAAHXLpJ4N_BiYYOFw@mail.gmail.com>
+ <CA+G9fYugQuAERqp3VXUFG-3QxXoF8bz7OSMh6WGSZcrGkbfDSQ@mail.gmail.com>
+ <CAPDyKFo-vEO7zN_F+NqcKtnKmAo_deOZx3gYNiks3yTAQAjv-Q@mail.gmail.com> <a602a27a-b960-ce56-c541-3b4b95f5dce2@nvidia.com>
+In-Reply-To: <a602a27a-b960-ce56-c541-3b4b95f5dce2@nvidia.com>
+From:   Ulf Hansson <ulf.hansson@linaro.org>
+Date:   Mon, 24 Feb 2020 12:16:48 +0100
+Message-ID: <CAPDyKFrXQgtHa4gLaKUi_F0rs4FMBai3Y_+TcHZR_zpkb0B4QQ@mail.gmail.com>
+Subject: Re: LKFT: arm x15: mmc1: cache flush error -110
+To:     Bitan Biswas <bbiswas@nvidia.com>,
+        Adrian Hunter <adrian.hunter@intel.com>
+Cc:     Naresh Kamboju <naresh.kamboju@linaro.org>,
+        Jens Axboe <axboe@kernel.dk>,
+        Alexei Starovoitov <ast@kernel.org>,
+        linux-block <linux-block@vger.kernel.org>,
+        lkft-triage@lists.linaro.org,
+        open list <linux-kernel@vger.kernel.org>,
+        "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>,
+        Arnd Bergmann <arnd@arndb.de>,
+        John Stultz <john.stultz@linaro.org>,
+        Thierry Reding <treding@nvidia.com>,
+        Jon Hunter <jonathanh@nvidia.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 20. 02. 20 10:31, Srinivas Neeli wrote:
-> ZynqMp RTC controller has a calibration feature to compensate
-> time deviation due to input clock inaccuracy.
-> Set and get calibration API's are used for setting and getting
-> calibration value from the controller calibration register.
-> 
-> Signed-off-by: Srinivas Goud <srinivas.goud@xilinx.com>
-> Signed-off-by: Srinivas Neeli <srinivas.neeli@xilinx.com>
-> ---
->  drivers/rtc/rtc-zynqmp.c | 78 ++++++++++++++++++++++++++++++++++++++++++++++++
->  1 file changed, 78 insertions(+)
-> 
-> diff --git a/drivers/rtc/rtc-zynqmp.c b/drivers/rtc/rtc-zynqmp.c
-> index 4b1077e2f826..b4118e9e4fcc 100644
-> --- a/drivers/rtc/rtc-zynqmp.c
-> +++ b/drivers/rtc/rtc-zynqmp.c
-> @@ -40,6 +40,12 @@
->  #define RTC_CALIB_MASK		0x1FFFFF
->  #define RTC_ALRM_MASK          BIT(1)
->  #define RTC_MSEC               1000
-> +#define RTC_FR_MASK             0xF0000
-> +#define RTC_SEC_MAX_VAL         0xFFFFFFFF
-> +#define RTC_FR_MAX_TICKS        16
-> +#define RTC_OFFSET_MAX          150000
-> +#define RTC_OFFSET_MIN          -150000
-> +#define RTC_PPB                 1000000000LL
->  
++ Adrian
 
-please use tabs here.
+On Fri, 21 Feb 2020 at 20:44, Bitan Biswas <bbiswas@nvidia.com> wrote:
+>
+> On 2/21/20 1:48 AM, Ulf Hansson wrote:
+> > External email: Use caution opening links or attachments
+> >
+> >
+> > On Thu, 20 Feb 2020 at 18:54, Naresh Kamboju <naresh.kamboju@linaro.org> wrote:
+> >>
+> >> On Wed, 19 Feb 2020 at 21:54, Ulf Hansson <ulf.hansson@linaro.org> wrote:
+> >>>
+> >>> On Thu, 13 Feb 2020 at 16:43, Naresh Kamboju <naresh.kamboju@linaro.org> wrote:
+> >>>>
+> >>>
+> >>> Try to restore the value for the cache flush timeout, by updating the
+> >>> define MMC_CACHE_FLUSH_TIMEOUT_MS to 10 * 60 * 1000".
+> >>
+> >> I have increased the timeout to 10 minutes but it did not help.
+> >> Same error found.
+> >> [  608.679353] mmc1: Card stuck being busy! mmc_poll_for_busy
+> >> [  608.684964] mmc1: cache flush error -110
+> >> [  608.689005] blk_update_request: I/O error, dev mmcblk1, sector
+> >> 4302400 op 0x1:(WRITE) flags 0x20800 phys_seg 1 prio class 0
+> >>
+> >> OTOH, What best i could do for my own experiment to revert all three patches and
+> >> now the reported error gone and device mount successfully [1].
+> >>
+> >> List of patches reverted,
+> >>    mmc: core: Specify timeouts for BKOPS and CACHE_FLUSH for eMMC
+> >>    mmc: block: Use generic_cmd6_time when modifying
+> >>      INAND_CMD38_ARG_EXT_CSD
+> >>    mmc: core: Default to generic_cmd6_time as timeout in __mmc_switch()
+> >>
+> >> [1] https://lkft.validation.linaro.org/scheduler/job/1238275#L4346
+> >>
+> >> - Naresh
+> >
+> > Thanks for testing!
+> >
+> > This sounds a bit weird, I must say. Also, while looking into the
+> > logs, it seems like you are comparing a v5.5 kernel with v5.6-rc2, but
+> > maybe I didn't read the logs carefully enough.
+> >
+> >   In any case, I am looking into creating a debug patch so we can
+> > narrow down the problem a bit further.
+> >
+> > Kind regards
+> > Uffe
+> >
+>
+> Hi Ulf,
+>
+>   I see that Jetson-TX2 / Jetson-Xavier suspend test is aborted and
+> below error is seen due to the commit
+> 24ed3bd01d6a844fd5e8a75f48d0a3d10ed71bf9  ("mmc: core: Specify timeouts
+> for BKOPS and CACHE_FLUSH for eMMC"):
+>
+> ##
+> [  268.976197] Freezing user space processes ... (elapsed 0.001 seconds)
+> done.
+> [  268.984414] OOM killer disabled.
+> [  268.987635] Freezing remaining freezable tasks ... (elapsed 0.000
+> seconds) done.
+> [  269.217471] PM: dpm_run_callback(): mmc_bus_suspend+0x0/0x58 returns -110
+> [  269.224255] PM: Device mmc1:0001 failed to suspend: error -110
+> [  269.230080] PM: Some devices failed to suspend, or early wake event
+> detected
 
->  struct xlnx_rtc_dev {
->  	struct rtc_device	*rtc;
-> @@ -184,12 +190,84 @@ static void xlnx_init_rtc(struct xlnx_rtc_dev *xrtcdev)
->  	writel(xrtcdev->calibval, (xrtcdev->reg_base + RTC_CALIB_WR));
->  }
->  
-> +static int xlnx_rtc_read_offset(struct device *dev, long *offset)
-> +{
-> +	struct xlnx_rtc_dev *xrtcdev = dev_get_drvdata(dev);
-> +	long offset_val;
-> +	unsigned int reg;
-> +	unsigned int tick_mult = RTC_PPB / xrtcdev->calibval;
-> +
-> +	reg = readl(xrtcdev->reg_base + RTC_CALIB_RD);
-> +
-> +	/* Offset with seconds ticks */
-> +	offset_val = reg & RTC_TICK_MASK;
-> +	offset_val = offset_val - xrtcdev->calibval;
-> +	offset_val = offset_val * tick_mult;
-> +
-> +	/* Offset with fractional ticks */
-> +	if (reg & RTC_FR_EN)
-> +		offset_val += ((reg & RTC_FR_MASK) >> RTC_FR_DATSHIFT)
-> +			* (tick_mult / RTC_FR_MAX_TICKS);
-> +	*offset = offset_val;
-> +
-> +	return 0;
-> +}
-> +
-> +static int xlnx_rtc_set_offset(struct device *dev, long offset)
-> +{
-> +	struct xlnx_rtc_dev *xrtcdev = dev_get_drvdata(dev);
-> +	short int  max_tick;
-> +	unsigned char fract_tick = 0;
-> +	unsigned int  calibval;
+Is there also a print in the log about "Card stuck being busy!"?
 
-double space.
+In any case, it seems like the timeout error (-110) is happening way
+too soon. The cache flush timeout is now 30s, but the timeout seems to
+fire only a few hundred ms (at most) after the cache flush command has
+been sent.
 
-> +	int fract_offset;
-> +	unsigned int tick_mult = RTC_PPB / xrtcdev->calibval;
-> +
-> +	/* Make sure offset value is within supported range */
-> +	if (offset < RTC_OFFSET_MIN || offset > RTC_OFFSET_MAX)
-> +		return -ERANGE;
-> +
-> +	/* Number ticks for given offset */
-> +	max_tick = div_s64_rem(offset, tick_mult, &fract_offset);
-> +
-> +	/* Number fractional ticks for given offset */
-> +	if (fract_offset) {
-> +		if (fract_offset < 0) {
-> +			fract_offset = fract_offset + tick_mult;
-> +			max_tick--;
-> +		}
-> +		if (fract_offset > (tick_mult / RTC_FR_MAX_TICKS)) {
-> +			for (fract_tick = 1; fract_tick < 16; fract_tick++) {
-> +				if (fract_offset <=
-> +				    (fract_tick *
-> +				     (tick_mult / RTC_FR_MAX_TICKS)))
-> +					break;
-> +			}
-> +		}
-> +	}
-> +
-> +	/* Zynqmp RTC uses second and fractional tick
-> +	 * counters for compensation
-> +	 */
-> +	calibval = max_tick + xrtcdev->calibval;
-> +
-> +	if (fract_tick)
-> +		calibval |= RTC_FR_EN;
-> +
-> +	calibval |= (fract_tick <<  RTC_FR_DATSHIFT);
+> ##
+>
+>   I find that from the commit the changes in mmc_flush_cache below is
+> the cause.
+>
+> ##
+> @@ -961,7 +963,8 @@ int mmc_flush_cache(struct mmc_card *card)
+>                          (card->ext_csd.cache_size > 0) &&
+>                          (card->ext_csd.cache_ctrl & 1)) {
+>                  err = mmc_switch(card, EXT_CSD_CMD_SET_NORMAL,
+> -                               EXT_CSD_FLUSH_CACHE, 1, 0);
+> +                                EXT_CSD_FLUSH_CACHE, 1,
+> +                                MMC_CACHE_FLUSH_TIMEOUT_MS);
+>
+> ##
+>
+>   Do you have suggestion to try for the suspend errors ?
 
-here is double space.
+Just as a quick sanity test, please try the below patch, which
+restores the old cache flush timeout to 10min.
 
-> +
-> +	writel(calibval, (xrtcdev->reg_base + RTC_CALIB_WR));
-> +
-> +	return 0;
-> +}
-> +
->  static const struct rtc_class_ops xlnx_rtc_ops = {
->  	.set_time	  = xlnx_rtc_set_time,
->  	.read_time	  = xlnx_rtc_read_time,
->  	.read_alarm	  = xlnx_rtc_read_alarm,
->  	.set_alarm	  = xlnx_rtc_set_alarm,
->  	.alarm_irq_enable = xlnx_rtc_alarm_irq_enable,
-> +	.read_offset    = xlnx_rtc_read_offset,
-> +	.set_offset     = xlnx_rtc_set_offset,
+However, as I indicated above, this seems to be a problem that needs
+to be fixed at in the host driver side. For the sdhci driver, there is
+a bit of a tricky logic around how to deal with timeouts in
+sdhci_send_command(). My best guess is that's where we should look
+more closely (and I am doing that).
 
-use tabs as is done above.
+From: Ulf Hansson <ulf.hansson@linaro.org>
+Date: Mon, 24 Feb 2020 11:43:33 +0100
+Subject: [PATCH] mmc: core: Restore busy timeout for eMMC cache flushing
 
->  };
->  
->  static irqreturn_t xlnx_rtc_interrupt(int irq, void *id)
-> 
+Signed-off-by: Ulf Hansson <ulf.hansson@linaro.org>
+---
+ drivers/mmc/core/mmc_ops.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-The rest looks good.
+diff --git a/drivers/mmc/core/mmc_ops.c b/drivers/mmc/core/mmc_ops.c
+index da425ee2d9bf..713e7dd6d028 100644
+--- a/drivers/mmc/core/mmc_ops.c
++++ b/drivers/mmc/core/mmc_ops.c
+@@ -21,7 +21,7 @@
 
-Thanks,
-Michal
+ #define MMC_OPS_TIMEOUT_MS             (10 * 60 * 1000) /* 10min*/
+ #define MMC_BKOPS_TIMEOUT_MS           (120 * 1000) /* 120s */
+-#define MMC_CACHE_FLUSH_TIMEOUT_MS     (30 * 1000) /* 30s */
++#define MMC_CACHE_FLUSH_TIMEOUT_MS     (10 * 60 * 1000) /* 10min */
+
+ static const u8 tuning_blk_pattern_4bit[] = {
+        0xff, 0x0f, 0xff, 0x00, 0xff, 0xcc, 0xc3, 0xcc,
+-- 
+
+Kind regards
+Uffe
