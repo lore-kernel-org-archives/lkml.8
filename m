@@ -2,108 +2,184 @@ Return-Path: <SRS0=7TUr=4M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BDB22C35679
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 05:32:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6911FC3567B
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 05:37:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 861FB20661
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 05:32:35 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ZWrpZPkw"
+	by mail.kernel.org (Postfix) with ESMTP id 3E94F20656
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 05:37:05 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727218AbgBXFce (ORCPT
+        id S1726628AbgBXFhD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Feb 2020 00:32:34 -0500
-Received: from mail-pg1-f195.google.com ([209.85.215.195]:34665 "EHLO
-        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726597AbgBXFcd (ORCPT
+        Mon, 24 Feb 2020 00:37:03 -0500
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:49738 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725809AbgBXFhD (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Feb 2020 00:32:33 -0500
-Received: by mail-pg1-f195.google.com with SMTP id j4so4530887pgi.1;
-        Sun, 23 Feb 2020 21:32:33 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=gmAc8ivr/C7d+QzZGVBXrbDmIH8je8z/sIj0mHBkKGA=;
-        b=ZWrpZPkwcspILxRqZCPH6tehznrkWPgVYfNG0SD2upeoyUXb2JLfL7V8pdTjmALv0S
-         +JADJ8tHoCASKaF0JZPZDYLtP+dyWdjrRL9md1pi6U2CvIaiBRLL2/oulbtKziwqEpEX
-         jfDoCmYscWwSCtgfxTLf0hfKSbWa0RlcjEFt9n5ZZ89ECzhLBm6S97D5Q3hGtHH3mbi7
-         q2lLJCeowTs88oR0wkYSShUwFfqhe8HymVHK+F1khjwVYT+fdB6q7ZLc5dLEnMw+RCIb
-         pWLlzM2EP5kESxosnQWxBnEcv1ESO7Ld7CkPd6VltMfOI0r77iMlOrXSMsIhaqzR84CJ
-         zE8Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=gmAc8ivr/C7d+QzZGVBXrbDmIH8je8z/sIj0mHBkKGA=;
-        b=h9OmwCGixfXUVNbS1LvSazBcPhb0hL2GwK5Vkp2wz2VGRL7BNMrGIJ/ZUSo3qncVFB
-         AFMA0V/AqEcC8RWUMT5ctEYSu+m4pIOrj5wAMCOiq4v4qbsv/VbaHT3mDhAAYpGbMSrF
-         TbKDnFPQ4APmta9U8Ma1SBodKKEdTJUCjgACe/NKUTyCihhTr4OijBHdASTlZ3ITjq1T
-         fwf2tfEiU9QBYoLUmdT215cMA8z2GdmuEHn5BBzzZtr+xdggG+oMFllIGuEH5dOitZE3
-         uSxpHFis+opBhsI6seMu/gx4vAUq5mqghuS/CY72Yt6AbHA2b6jz6wJNMlZWG44x4SdR
-         I/5Q==
-X-Gm-Message-State: APjAAAWq2BhN76jEyMtd9BTltn5U2DnqKQQ7TtYoT8MD4hR89gusQXYK
-        jrd+nuk5vm+LdlDhq3K7cAs=
-X-Google-Smtp-Source: APXvYqw2+OoNUwC+DHYLkIWINIDRLfS6iaF7yKwT/NrQkJuKpO0+htrhpSkg4MTKvnr4RSsOJ2K1Xg==
-X-Received: by 2002:aa7:8804:: with SMTP id c4mr50981283pfo.214.1582522352952;
-        Sun, 23 Feb 2020 21:32:32 -0800 (PST)
-Received: from f3 (ag119225.dynamic.ppp.asahi-net.or.jp. [157.107.119.225])
-        by smtp.gmail.com with ESMTPSA id z10sm10489746pgf.35.2020.02.23.21.32.28
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 23 Feb 2020 21:32:31 -0800 (PST)
-Date:   Mon, 24 Feb 2020 14:32:25 +0900
-From:   Benjamin Poirier <benjamin.poirier@gmail.com>
-To:     Kaaira Gupta <kgupta@es.iitr.ac.in>
-Cc:     Manish Chopra <manishc@marvell.com>, GR-Linux-NIC-Dev@marvell.com,
+        Mon, 24 Feb 2020 00:37:03 -0500
+Received: from pps.filterd (m0098410.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 01O5YbQo059499
+        for <linux-kernel@vger.kernel.org>; Mon, 24 Feb 2020 00:37:02 -0500
+Received: from e06smtp04.uk.ibm.com (e06smtp04.uk.ibm.com [195.75.94.100])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2yb1qc1fgx-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Mon, 24 Feb 2020 00:37:02 -0500
+Received: from localhost
+        by e06smtp04.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-kernel@vger.kernel.org> from <alastair@au1.ibm.com>;
+        Mon, 24 Feb 2020 05:36:59 -0000
+Received: from b06avi18626390.portsmouth.uk.ibm.com (9.149.26.192)
+        by e06smtp04.uk.ibm.com (192.168.101.134) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Mon, 24 Feb 2020 05:36:52 -0000
+Received: from d06av22.portsmouth.uk.ibm.com (d06av22.portsmouth.uk.ibm.com [9.149.105.58])
+        by b06avi18626390.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 01O5ZtQ041026038
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Mon, 24 Feb 2020 05:35:55 GMT
+Received: from d06av22.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id E1EAE4C040;
+        Mon, 24 Feb 2020 05:36:51 +0000 (GMT)
+Received: from d06av22.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 3831A4C04E;
+        Mon, 24 Feb 2020 05:36:51 +0000 (GMT)
+Received: from ozlabs.au.ibm.com (unknown [9.192.253.14])
+        by d06av22.portsmouth.uk.ibm.com (Postfix) with ESMTP;
+        Mon, 24 Feb 2020 05:36:51 +0000 (GMT)
+Received: from adsilva.ozlabs.ibm.com (haven.au.ibm.com [9.192.254.114])
+        (using TLSv1.2 with cipher AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by ozlabs.au.ibm.com (Postfix) with ESMTPSA id 8D3FDA00E5;
+        Mon, 24 Feb 2020 16:36:46 +1100 (AEDT)
+Subject: Re: [PATCH v3 06/27] ocxl: Tally up the LPC memory on a link &
+ allow it to be mapped
+From:   "Alastair D'Silva" <alastair@au1.ibm.com>
+To:     Andrew Donnellan <ajd@linux.ibm.com>
+Cc:     "Aneesh Kumar K . V" <aneesh.kumar@linux.ibm.com>,
+        "Oliver O'Halloran" <oohall@gmail.com>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Paul Mackerras <paulus@samba.org>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Frederic Barrat <fbarrat@linux.ibm.com>,
+        Arnd Bergmann <arnd@arndb.de>,
         Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        netdev@vger.kernel.org, devel@driverdev.osuosl.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] staging: qlge: add braces around macro arguments
-Message-ID: <20200224053225.GB312634@f3>
-References: <20200221195649.GA18450@kaaira-HP-Pavilion-Notebook>
+        Dan Williams <dan.j.williams@intel.com>,
+        Vishal Verma <vishal.l.verma@intel.com>,
+        Dave Jiang <dave.jiang@intel.com>,
+        Ira Weiny <ira.weiny@intel.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        Rob Herring <robh@kernel.org>,
+        Anton Blanchard <anton@ozlabs.org>,
+        Krzysztof Kozlowski <krzk@kernel.org>,
+        Mahesh Salgaonkar <mahesh@linux.vnet.ibm.com>,
+        Madhavan Srinivasan <maddy@linux.vnet.ibm.com>,
+        =?ISO-8859-1?Q?C=E9dric?= Le Goater <clg@kaod.org>,
+        Anju T Sudhakar <anju@linux.vnet.ibm.com>,
+        Hari Bathini <hbathini@linux.ibm.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Greg Kurz <groug@kaod.org>,
+        Nicholas Piggin <npiggin@gmail.com>,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        Alexey Kardashevskiy <aik@ozlabs.ru>,
+        linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
+        linux-nvdimm@lists.01.org, linux-mm@kvack.org
+Date:   Mon, 24 Feb 2020 16:36:49 +1100
+In-Reply-To: <8a6eaedd-d806-9111-84ac-c4961227d69c@linux.ibm.com>
+References: <20200221032720.33893-1-alastair@au1.ibm.com>
+         <20200221032720.33893-7-alastair@au1.ibm.com>
+         <8a6eaedd-d806-9111-84ac-c4961227d69c@linux.ibm.com>
+Organization: IBM Australia
+Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.34.3 (3.34.3-1.fc31) 
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200221195649.GA18450@kaaira-HP-Pavilion-Notebook>
+Content-Transfer-Encoding: 7bit
+X-TM-AS-GCONF: 00
+x-cbid: 20022405-0016-0000-0000-000002E9A6ED
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 20022405-0017-0000-0000-0000334CCC78
+Message-Id: <a682c49c96e49e20e78bb97d59b596e65d02b454.camel@au1.ibm.com>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.572
+ definitions=2020-02-24_01:2020-02-21,2020-02-24 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 lowpriorityscore=0
+ spamscore=0 clxscore=1015 impostorscore=0 suspectscore=0 phishscore=0
+ mlxlogscore=953 bulkscore=0 mlxscore=0 adultscore=0 malwarescore=0
+ priorityscore=1501 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2001150001 definitions=main-2002240047
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2020/02/22 01:26 +0530, Kaaira Gupta wrote:
-> Fix checkpatch.pl warnings of adding braces around macro arguments to
-> prevent precedence issues by adding braces in qlge_dbg.c
+On Mon, 2020-02-24 at 16:25 +1100, Andrew Donnellan wrote:
+> On 21/2/20 2:26 pm, Alastair D'Silva wrote:
+> > From: Alastair D'Silva <alastair@d-silva.org>
+> > 
+> > Tally up the LPC memory on an OpenCAPI link & allow it to be mapped
+> > 
+> > Signed-off-by: Alastair D'Silva <alastair@d-silva.org>
 > 
-> Signed-off-by: Kaaira Gupta <kgupta@es.iitr.ac.in>
-> ---
->  drivers/staging/qlge/qlge_dbg.c | 6 +++---
->  1 file changed, 3 insertions(+), 3 deletions(-)
+> This commit message is a bit short and could do with some further 
+> explanation.
 > 
-> diff --git a/drivers/staging/qlge/qlge_dbg.c b/drivers/staging/qlge/qlge_dbg.c
-> index 8cf39615c520..c7af2548d119 100644
-> --- a/drivers/staging/qlge/qlge_dbg.c
-> +++ b/drivers/staging/qlge/qlge_dbg.c
-> @@ -1525,7 +1525,7 @@ void ql_dump_regs(struct ql_adapter *qdev)
->  #ifdef QL_STAT_DUMP
->  
->  #define DUMP_STAT(qdev, stat)	\
-> -	pr_err("%s = %ld\n", #stat, (unsigned long)qdev->nic_stats.stat)
-> +	pr_err("%s = %ld\n", #stat, (unsigned long)(qdev)->nic_stats.stat)
->  
->  void ql_dump_stat(struct ql_adapter *qdev)
->  {
-> @@ -1578,12 +1578,12 @@ void ql_dump_stat(struct ql_adapter *qdev)
->  #ifdef QL_DEV_DUMP
->  
->  #define DUMP_QDEV_FIELD(qdev, type, field)		\
-> -	pr_err("qdev->%-24s = " type "\n", #field, qdev->field)
-> +	pr_err("qdev->%-24s = " type "\n", #field, (qdev)->(field))
->  #define DUMP_QDEV_DMA_FIELD(qdev, field)		\
->  	pr_err("qdev->%-24s = %llx\n", #field, (unsigned long long)qdev->field)
-                                                                   ^^^^
-You missed one.
+> In particular - it's worth explaining why the tracking of available
+> LPC 
+> memory needs to be done at a link level, because a single OpenCAPI
+> card 
+> can have multiple PCI functions, each with multiple AFUs which define
+> an 
+> amount of LPC memory they have, even if the common case is expected
+> to 
+> be a single function with a single AFU and thus one LPC area per
+> link.
+
+Ok
+
+> 
+> Snowpatch has a few checkpatch issues to report:
+> 
+> https://openpower.xyz/job/snowpatch/job/snowpatch-linux-checkpatch/11800//artifact/linux/checkpatch.log
+> 
+
+Gah, I could have sworn I ran checkpatch against this :/
+
+> The code generally looks okay to me.
+> 
+> > diff --git a/drivers/misc/ocxl/ocxl_internal.h
+> > b/drivers/misc/ocxl/ocxl_internal.h
+> > index 198e4e4bc51d..d0c8c4838f42 100644
+> > --- a/drivers/misc/ocxl/ocxl_internal.h
+> > +++ b/drivers/misc/ocxl/ocxl_internal.h
+> > @@ -142,4 +142,37 @@ int ocxl_irq_offset_to_id(struct ocxl_context
+> > *ctx, u64 offset);
+> >   u64 ocxl_irq_id_to_offset(struct ocxl_context *ctx, int irq_id);
+> >   void ocxl_afu_irq_free_all(struct ocxl_context *ctx);
+> >   
+> > +/**
+> > + * ocxl_link_add_lpc_mem() - Increment the amount of memory
+> > required by an OpenCAPI link
+> > + *
+> > + * @link_handle: The OpenCAPI link handle
+> > + * @offset: The offset of the memory to add
+> > + * @size: The amount of memory to increment by
+> > + *
+> > + * Returns 0 on success, negative on overflow
+> > + */
+> 
+> I think "amount of memory required" isn't the best way to express
+> this.
+> 
+> Might as well explicitly say -EINVAL on overflow.
+> 
+
+Ok
+
+-- 
+Alastair D'Silva
+Open Source Developer
+Linux Technology Centre, IBM Australia
+mob: 0423 762 819
+
