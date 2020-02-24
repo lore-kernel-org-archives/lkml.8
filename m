@@ -2,143 +2,112 @@ Return-Path: <SRS0=7TUr=4M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 453E0C3567B
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 09:54:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 676BBC35679
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 09:54:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1DC6220842
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 09:54:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3858720842
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 09:54:14 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="hvufIr9p"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727686AbgBXJyJ (ORCPT
+        id S1727701AbgBXJyN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Feb 2020 04:54:09 -0500
-Received: from outbound-smtp08.blacknight.com ([46.22.139.13]:54279 "EHLO
-        outbound-smtp08.blacknight.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726838AbgBXJyJ (ORCPT
+        Mon, 24 Feb 2020 04:54:13 -0500
+Received: from bombadil.infradead.org ([198.137.202.133]:43434 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726838AbgBXJyM (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Feb 2020 04:54:09 -0500
-Received: from mail.blacknight.com (pemlinmail04.blacknight.ie [81.17.254.17])
-        by outbound-smtp08.blacknight.com (Postfix) with ESMTPS id 73A9C1C359D
-        for <linux-kernel@vger.kernel.org>; Mon, 24 Feb 2020 09:54:07 +0000 (GMT)
-Received: (qmail 25002 invoked from network); 24 Feb 2020 09:54:07 -0000
-Received: from unknown (HELO stampy.112glenside.lan) (mgorman@techsingularity.net@[84.203.18.57])
-  by 81.17.254.9 with ESMTPA; 24 Feb 2020 09:54:07 -0000
-From:   Mel Gorman <mgorman@techsingularity.net>
-To:     Peter Zijlstra <peterz@infradead.org>
-Cc:     Ingo Molnar <mingo@kernel.org>,
-        Vincent Guittot <vincent.guittot@linaro.org>,
-        Juri Lelli <juri.lelli@redhat.com>,
-        Dietmar Eggemann <dietmar.eggemann@arm.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Ben Segall <bsegall@google.com>,
-        Valentin Schneider <valentin.schneider@arm.com>,
-        Phil Auld <pauld@redhat.com>, Hillf Danton <hdanton@sina.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Mel Gorman <mgorman@techsingularity.net>
-Subject: [PATCH 09/13] sched/fair: Take into account runnable_avg to classify group
-Date:   Mon, 24 Feb 2020 09:52:19 +0000
-Message-Id: <20200224095223.13361-10-mgorman@techsingularity.net>
-X-Mailer: git-send-email 2.16.4
-In-Reply-To: <20200224095223.13361-1-mgorman@techsingularity.net>
-References: <20200224095223.13361-1-mgorman@techsingularity.net>
+        Mon, 24 Feb 2020 04:54:12 -0500
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
+        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=ox3XWd1h0UFdpJWgXqkeLH4EDTvT30rmX9E287Fs9Mc=; b=hvufIr9pooCrFsZ9kEGSb3f9zq
+        4Q9DVNZ15CcdRQCq97rhL4JOELdYuB6qgEtuCrUXJHS5a0aNDfaTGG2YzSnEUhQBrUkW2ezu5tHoq
+        JnPB18Zj+IhYdDz8luHXPvbKtHYB7nHZPOpNRQnGUD09DeR/ZMph9x3QOiTH2A4oTGvBsVYYMlMrT
+        Yvjqsqkd+Hagu08xedXb36TL04iGKAQingnpTBCRpMNfjHSJ0HCaVYpJVjIoZ2hd4ZfoSnRP5ConU
+        Zu55UjbeVcGBan5KNcYVpVgT46OwtMa/4w0uIXpGDXRWaP7xfUbEY+480pUtO8Z+FEGs9IG+mqDLc
+        HWexdmVg==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
+        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1j6ARA-00007B-RU; Mon, 24 Feb 2020 09:54:05 +0000
+Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (Client did not present a certificate)
+        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id DD7B730783F;
+        Mon, 24 Feb 2020 10:52:07 +0100 (CET)
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id 636002B4DAAD2; Mon, 24 Feb 2020 10:54:02 +0100 (CET)
+Date:   Mon, 24 Feb 2020 10:54:02 +0100
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     Andy Shevchenko <andy.shevchenko@gmail.com>
+Cc:     Jesse Brandeburg <jesse.brandeburg@intel.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        "maintainer:X86 ARCHITECTURE (32-BIT AND 64-BIT)" <x86@kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Rasmus Villemoes <linux@rasmusvillemoes.dk>,
+        Andriy Shevchenko <andriy.shevchenko@intel.com>,
+        Dan Williams <dan.j.williams@intel.com>
+Subject: Re: [PATCH v4 1/2] x86: fix bitops.h warning with a moved cast
+Message-ID: <20200224095402.GD14897@hirez.programming.kicks-ass.net>
+References: <20200222000214.2169531-1-jesse.brandeburg@intel.com>
+ <CAHp75Vc=9aSt1DH-LzDHnX1+fnPpkJWHkkh0-ApTL0zm+ZA2oQ@mail.gmail.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAHp75Vc=9aSt1DH-LzDHnX1+fnPpkJWHkkh0-ApTL0zm+ZA2oQ@mail.gmail.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Vincent Guittot <vincent.guittot@linaro.org>
+On Sat, Feb 22, 2020 at 11:39:57AM +0200, Andy Shevchenko wrote:
+> On Sat, Feb 22, 2020 at 2:04 AM Jesse Brandeburg
 
-Take into account the new runnable_avg signal to classify a group and to
-mitigate the volatility of util_avg in face of intensive migration or
-new task with random utilization.
+> > -#define CONST_MASK(nr)                 (1 << ((nr) & 7))
+> > +#define CONST_MASK(nr)                 ((u8)1 << ((nr) & 7))
+> >
+> >  static __always_inline void
+> >  arch_set_bit(long nr, volatile unsigned long *addr)
+> > @@ -54,7 +54,7 @@ arch_set_bit(long nr, volatile unsigned long *addr)
+> >         if (__builtin_constant_p(nr)) {
+> >                 asm volatile(LOCK_PREFIX "orb %1,%0"
+> >                         : CONST_MASK_ADDR(nr, addr)
+> > -                       : "iq" ((u8)CONST_MASK(nr))
+> > +                       : "iq" (CONST_MASK(nr))
 
-Signed-off-by: Vincent Guittot <vincent.guittot@linaro.org>
-Reviewed-by: "Dietmar Eggemann <dietmar.eggemann@arm.com>"
-Signed-off-by: Mel Gorman <mgorman@techsingularity.net>
----
- kernel/sched/fair.c | 31 ++++++++++++++++++++++++++++++-
- 1 file changed, 30 insertions(+), 1 deletion(-)
+Note how this is not equivalent, the old code actually handed in a u8
+while the new code hands int. By moving the (u8) cast into the parens,
+you casl 1 to u8, which then instantly gets promoted to 'int' due to the
+'<<' operator.
 
-diff --git a/kernel/sched/fair.c b/kernel/sched/fair.c
-index 24fbbb588df2..8ce9a04e7efb 100644
---- a/kernel/sched/fair.c
-+++ b/kernel/sched/fair.c
-@@ -5470,6 +5470,24 @@ static unsigned long cpu_runnable(struct rq *rq)
- 	return cfs_rq_runnable_avg(&rq->cfs);
- }
- 
-+static unsigned long cpu_runnable_without(struct rq *rq, struct task_struct *p)
-+{
-+	struct cfs_rq *cfs_rq;
-+	unsigned int runnable;
-+
-+	/* Task has no contribution or is new */
-+	if (cpu_of(rq) != task_cpu(p) || !READ_ONCE(p->se.avg.last_update_time))
-+		return cpu_runnable(rq);
-+
-+	cfs_rq = &rq->cfs;
-+	runnable = READ_ONCE(cfs_rq->avg.runnable_avg);
-+
-+	/* Discount task's runnable from CPU's runnable */
-+	lsub_positive(&runnable, p->se.avg.runnable_avg);
-+
-+	return runnable;
-+}
-+
- static unsigned long capacity_of(int cpu)
- {
- 	return cpu_rq(cpu)->cpu_capacity;
-@@ -7753,7 +7771,8 @@ struct sg_lb_stats {
- 	unsigned long avg_load; /*Avg load across the CPUs of the group */
- 	unsigned long group_load; /* Total load over the CPUs of the group */
- 	unsigned long group_capacity;
--	unsigned long group_util; /* Total utilization of the group */
-+	unsigned long group_util; /* Total utilization over the CPUs of the group */
-+	unsigned long group_runnable; /* Total runnable time over the CPUs of the group */
- 	unsigned int sum_nr_running; /* Nr of tasks running in the group */
- 	unsigned int sum_h_nr_running; /* Nr of CFS tasks running in the group */
- 	unsigned int idle_cpus;
-@@ -7974,6 +7993,10 @@ group_has_capacity(unsigned int imbalance_pct, struct sg_lb_stats *sgs)
- 	if (sgs->sum_nr_running < sgs->group_weight)
- 		return true;
- 
-+	if ((sgs->group_capacity * imbalance_pct) <
-+			(sgs->group_runnable * 100))
-+		return false;
-+
- 	if ((sgs->group_capacity * 100) >
- 			(sgs->group_util * imbalance_pct))
- 		return true;
-@@ -7999,6 +8022,10 @@ group_is_overloaded(unsigned int imbalance_pct, struct sg_lb_stats *sgs)
- 			(sgs->group_util * imbalance_pct))
- 		return true;
- 
-+	if ((sgs->group_capacity * imbalance_pct) <
-+			(sgs->group_runnable * 100))
-+		return true;
-+
- 	return false;
- }
- 
-@@ -8093,6 +8120,7 @@ static inline void update_sg_lb_stats(struct lb_env *env,
- 
- 		sgs->group_load += cpu_load(rq);
- 		sgs->group_util += cpu_util(i);
-+		sgs->group_runnable += cpu_runnable(rq);
- 		sgs->sum_h_nr_running += rq->cfs.h_nr_running;
- 
- 		nr_running = rq->nr_running;
-@@ -8368,6 +8396,7 @@ static inline void update_sg_wakeup_stats(struct sched_domain *sd,
- 
- 		sgs->group_load += cpu_load_without(rq, p);
- 		sgs->group_util += cpu_util_without(i, p);
-+		sgs->group_runnable += cpu_runnable_without(rq, p);
- 		local = task_running_on_cpu(i, p);
- 		sgs->sum_h_nr_running += rq->cfs.h_nr_running - local;
- 
--- 
-2.16.4
+> >                         : "memory");
+> >         } else {
+> >                 asm volatile(LOCK_PREFIX __ASM_SIZE(bts) " %1,%0"
+> > @@ -74,7 +74,7 @@ arch_clear_bit(long nr, volatile unsigned long *addr)
+> >         if (__builtin_constant_p(nr)) {
+> >                 asm volatile(LOCK_PREFIX "andb %1,%0"
+> >                         : CONST_MASK_ADDR(nr, addr)
+> > -                       : "iq" ((u8)~CONST_MASK(nr)));
+> > +                       : "iq" (CONST_MASK(nr) ^ 0xff));
+> 
+> I'm wondering if the original, by Peter Z, order allows us to drop
+> (u8) casting in the CONST_MASK completely.
 
+I'm thinking it's all nonsense anyway :-), the result of either << or ^
+is always promoted to int anyway.
+
+The sparse complaint was that ~CONST_MASK(nr) had high bits set which
+were lost, which is true, but a copmletely stupid warning IMO.
+
+By using 0xff ^ CONST_MASK(nr), those bits will not be set and will not
+be lost.
+
+None of that has anything to do with where we place a pointless cast
+more or less.
