@@ -2,196 +2,120 @@ Return-Path: <SRS0=7TUr=4M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 00D2CC35671
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 13:49:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2685DC11D2F
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 13:50:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BC26B2080D
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 13:49:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F05752082F
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 13:50:20 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="GKohwu+Z"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=crapouillou.net header.i=@crapouillou.net header.b="L6ubBwVU"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727451AbgBXNtj (ORCPT
+        id S1727521AbgBXNuT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Feb 2020 08:49:39 -0500
-Received: from us-smtp-2.mimecast.com ([205.139.110.61]:58399 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1727160AbgBXNtj (ORCPT
+        Mon, 24 Feb 2020 08:50:19 -0500
+Received: from outils.crapouillou.net ([89.234.176.41]:44106 "EHLO
+        crapouillou.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727310AbgBXNuT (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Feb 2020 08:49:39 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1582552177;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+        Mon, 24 Feb 2020 08:50:19 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=crapouillou.net;
+        s=mail; t=1582552217; h=from:from:sender:reply-to:subject:subject:date:date:
+         message-id:message-id:to:to:cc:cc:mime-version:mime-version:
+         content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=tAQyvgVC9umTI3C0mE/08IO0Mq8UDdBPvvOVcWUX2u0=;
-        b=GKohwu+ZwHce2xVgsnBKrRTdlLt77EghCyVdljb+KWvS4/bNq83FOlmbkUyGWDdZIwD+Ye
-        A9l5HGpOgoDwAj8xNtT7120KTbWiSvSvYELuJR95MqF0NbeA57V9+HOBKfbur5AQMSWu3s
-        B0B3YSoPBxEBs+ai1IFiXbyrH2WR8to=
-Received: from mail-wm1-f71.google.com (mail-wm1-f71.google.com
- [209.85.128.71]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-316-YctGikqoPl2t24QX7pcTTg-1; Mon, 24 Feb 2020 08:49:36 -0500
-X-MC-Unique: YctGikqoPl2t24QX7pcTTg-1
-Received: by mail-wm1-f71.google.com with SMTP id p2so2393541wmi.8
-        for <linux-kernel@vger.kernel.org>; Mon, 24 Feb 2020 05:49:36 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:in-reply-to:references:date
-         :message-id:mime-version;
-        bh=tAQyvgVC9umTI3C0mE/08IO0Mq8UDdBPvvOVcWUX2u0=;
-        b=eVaAqVgMQbaeT1fJQIu4U7Kup+q1mwz5HtJd5hVu8/SJTs24P1H70e5XBJOdN9HI3z
-         y9RoatWQ9M7MJjRq5lLludDt8bGUdn1CMbgEL307Cex77t89zQ4K7DKivzyCKF63h+qW
-         HxPUgNdqxpTiiKIgXu6kNQQRBeIvdRGMKg46AzU52+GSRiK2DpmnUc4Lbh8zbVi09YIk
-         IsNP+N7fXptbIjXqZLhFIycYhXLAI+5XLcwUUf4+2Hf30q8gdMZk3L6drakJi7soTbPz
-         5kIfhfuwPYKZb7rGE4bjjVJQPJlI6aZ2Oe6QeOl5JPoJj2U9H6glrmPZZ4sjf1Pv/E6p
-         c2FQ==
-X-Gm-Message-State: APjAAAVg2RQd3Il/ea8R88Z+1w7iyGqvwlP4t5hVsZSYeDk/mW1+QDon
-        k9U3GdfWgLZqXpdlsAgVHh7Z/Q7+3ww5QHZXCwPRDL61CYNjxMKt0XdTCnZHZTWpAxDYFEf4C0g
-        aWrOFVx2TCRNiwYyA6cq5QjSw
-X-Received: by 2002:a5d:4a06:: with SMTP id m6mr67336211wrq.155.1582552175129;
-        Mon, 24 Feb 2020 05:49:35 -0800 (PST)
-X-Google-Smtp-Source: APXvYqxdBw9gt33lYnR/XKzr9wDVBrAP8s0iq8iWevpyYhiw+9MMonU5wAHsUexqdA1oN+hOyWiseQ==
-X-Received: by 2002:a5d:4a06:: with SMTP id m6mr67336184wrq.155.1582552174866;
-        Mon, 24 Feb 2020 05:49:34 -0800 (PST)
-Received: from vitty.brq.redhat.com (nat-pool-brq-t.redhat.com. [213.175.37.10])
-        by smtp.gmail.com with ESMTPSA id t128sm19156199wmf.28.2020.02.24.05.49.34
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 24 Feb 2020 05:49:34 -0800 (PST)
-From:   Vitaly Kuznetsov <vkuznets@redhat.com>
-To:     Sean Christopherson <sean.j.christopherson@intel.com>
-Cc:     Paolo Bonzini <pbonzini@redhat.com>,
-        Wanpeng Li <wanpengli@tencent.com>,
-        Jim Mattson <jmattson@google.com>,
-        Joerg Roedel <joro@8bytes.org>, kvm@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 28/61] KVM: x86: Refactor cpuid_mask() to auto-retrieve the register
-In-Reply-To: <20200201185218.24473-29-sean.j.christopherson@intel.com>
-References: <20200201185218.24473-1-sean.j.christopherson@intel.com> <20200201185218.24473-29-sean.j.christopherson@intel.com>
-Date:   Mon, 24 Feb 2020 14:49:33 +0100
-Message-ID: <87d0a4p02a.fsf@vitty.brq.redhat.com>
+        bh=Gayg0dvW7Vxh44527/5/QBVVwgamIXCkDGSKwc5wh8w=;
+        b=L6ubBwVUI9l2GUxjJRsIXFgTlgmiqPeEY/Ds8x9vSobalTK9GybsBhSdLfkjsMyxSliMl+
+        t5nsDtaGy4eJtwcBn0zxeoTZpnAuNvVu9n54j3xa/DJRuN2sH9O2XUCXpUBSPltLEcpzRm
+        wKGju+jBzSc4pTRK2ZtM6VZGpPr3RQI=
+Date:   Mon, 24 Feb 2020 10:50:04 -0300
+From:   Paul Cercueil <paul@crapouillou.net>
+Subject: Re: [PATCH 2/2] MAINTAINERS: Set MIPS status to Odd Fixes
+To:     Philippe =?iso-8859-1?q?Mathieu-Daud=E9?= <f4bug@amsat.org>
+Cc:     Paul Burton <paulburton@kernel.org>,
+        "open list:BROADCOM NVRAM DRIVER" <linux-mips@vger.kernel.org>,
+        open list <linux-kernel@vger.kernel.org>
+Message-Id: <1582552204.3.0@crapouillou.net>
+In-Reply-To: <CAAdtpL5JgO0Wtned6KKKKYyM7ZWQ6Y=9X=EQRWYYXgOZ7nbWBg@mail.gmail.com>
+References: <20200219191730.1277800-1-paulburton@kernel.org>
+        <20200219191730.1277800-3-paulburton@kernel.org>
+        <1582387719.3.1@crapouillou.net>
+        <CAAdtpL5JgO0Wtned6KKKKYyM7ZWQ6Y=9X=EQRWYYXgOZ7nbWBg@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=iso-8859-1; format=flowed
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Sean Christopherson <sean.j.christopherson@intel.com> writes:
-
-> Use the recently introduced cpuid_entry_get_reg() to automatically get
-> the appropriate register when masking a CPUID entry.
->
-> No functional change intended.
->
-> Signed-off-by: Sean Christopherson <sean.j.christopherson@intel.com>
-> ---
->  arch/x86/kvm/cpuid.c | 28 +++++++++++++++-------------
->  1 file changed, 15 insertions(+), 13 deletions(-)
->
-> diff --git a/arch/x86/kvm/cpuid.c b/arch/x86/kvm/cpuid.c
-> index 195f4dcc8c6a..cb5870a323cc 100644
-> --- a/arch/x86/kvm/cpuid.c
-> +++ b/arch/x86/kvm/cpuid.c
-> @@ -254,10 +254,12 @@ int kvm_vcpu_ioctl_get_cpuid2(struct kvm_vcpu *vcpu,
->  	return r;
->  }
->  
-> -static __always_inline void cpuid_mask(u32 *word, int wordnum)
-> +static __always_inline void cpuid_entry_mask(struct kvm_cpuid_entry2 *entry,
-> +					     enum cpuid_leafs leaf)
->  {
-> -	reverse_cpuid_check(wordnum);
-> -	*word &= boot_cpu_data.x86_capability[wordnum];
-> +	u32 *reg = cpuid_entry_get_reg(entry, leaf * 32);
-> +
-> +	*reg &= boot_cpu_data.x86_capability[leaf];
->  }
->  
->  struct kvm_cpuid_array {
-> @@ -373,13 +375,13 @@ static inline void do_cpuid_7_mask(struct kvm_cpuid_entry2 *entry)
->  	case 0:
->  		entry->eax = min(entry->eax, 1u);
->  		entry->ebx &= kvm_cpuid_7_0_ebx_x86_features;
-> -		cpuid_mask(&entry->ebx, CPUID_7_0_EBX);
-> +		cpuid_entry_mask(entry, CPUID_7_0_EBX);
->  		/* TSC_ADJUST is emulated */
->  		cpuid_entry_set(entry, X86_FEATURE_TSC_ADJUST);
->  
->  		entry->ecx &= kvm_cpuid_7_0_ecx_x86_features;
->  		f_la57 = cpuid_entry_get(entry, X86_FEATURE_LA57);
-> -		cpuid_mask(&entry->ecx, CPUID_7_ECX);
-> +		cpuid_entry_mask(entry, CPUID_7_ECX);
->  		/* Set LA57 based on hardware capability. */
->  		entry->ecx |= f_la57;
->  		entry->ecx |= f_umip;
-> @@ -389,7 +391,7 @@ static inline void do_cpuid_7_mask(struct kvm_cpuid_entry2 *entry)
->  			cpuid_entry_clear(entry, X86_FEATURE_PKU);
->  
->  		entry->edx &= kvm_cpuid_7_0_edx_x86_features;
-> -		cpuid_mask(&entry->edx, CPUID_7_EDX);
-> +		cpuid_entry_mask(entry, CPUID_7_EDX);
->  		if (boot_cpu_has(X86_FEATURE_IBPB) && boot_cpu_has(X86_FEATURE_IBRS))
->  			cpuid_entry_set(entry, X86_FEATURE_SPEC_CTRL);
->  		if (boot_cpu_has(X86_FEATURE_STIBP))
-> @@ -507,9 +509,9 @@ static inline int __do_cpuid_func(struct kvm_cpuid_array *array, u32 function)
->  		break;
->  	case 1:
->  		entry->edx &= kvm_cpuid_1_edx_x86_features;
-> -		cpuid_mask(&entry->edx, CPUID_1_EDX);
-> +		cpuid_entry_mask(entry, CPUID_1_EDX);
->  		entry->ecx &= kvm_cpuid_1_ecx_x86_features;
-> -		cpuid_mask(&entry->ecx, CPUID_1_ECX);
-> +		cpuid_entry_mask(entry, CPUID_1_ECX);
->  		/* we support x2apic emulation even if host does not support
->  		 * it since we emulate x2apic in software */
->  		cpuid_entry_set(entry, X86_FEATURE_X2APIC);
-> @@ -619,7 +621,7 @@ static inline int __do_cpuid_func(struct kvm_cpuid_array *array, u32 function)
->  			goto out;
->  
->  		entry->eax &= kvm_cpuid_D_1_eax_x86_features;
-> -		cpuid_mask(&entry->eax, CPUID_D_1_EAX);
-> +		cpuid_entry_mask(entry, CPUID_D_1_EAX);
->  		if (entry->eax & (F(XSAVES)|F(XSAVEC)))
->  			entry->ebx = xstate_required_size(supported_xcr0, true);
->  		else
-> @@ -699,9 +701,9 @@ static inline int __do_cpuid_func(struct kvm_cpuid_array *array, u32 function)
->  		break;
->  	case 0x80000001:
->  		entry->edx &= kvm_cpuid_8000_0001_edx_x86_features;
-> -		cpuid_mask(&entry->edx, CPUID_8000_0001_EDX);
-> +		cpuid_entry_mask(entry, CPUID_8000_0001_EDX);
->  		entry->ecx &= kvm_cpuid_8000_0001_ecx_x86_features;
-> -		cpuid_mask(&entry->ecx, CPUID_8000_0001_ECX);
-> +		cpuid_entry_mask(entry, CPUID_8000_0001_ECX);
->  		break;
->  	case 0x80000007: /* Advanced power management */
->  		/* invariant TSC is CPUID.80000007H:EDX[8] */
-> @@ -720,7 +722,7 @@ static inline int __do_cpuid_func(struct kvm_cpuid_array *array, u32 function)
->  		entry->eax = g_phys_as | (virt_as << 8);
->  		entry->edx = 0;
->  		entry->ebx &= kvm_cpuid_8000_0008_ebx_x86_features;
-> -		cpuid_mask(&entry->ebx, CPUID_8000_0008_EBX);
-> +		cpuid_entry_mask(entry, CPUID_8000_0008_EBX);
->  		/*
->  		 * AMD has separate bits for each SPEC_CTRL bit.
->  		 * arch/x86/kernel/cpu/bugs.c is kind enough to
-> @@ -763,7 +765,7 @@ static inline int __do_cpuid_func(struct kvm_cpuid_array *array, u32 function)
->  		break;
->  	case 0xC0000001:
->  		entry->edx &= kvm_cpuid_C000_0001_edx_x86_features;
-> -		cpuid_mask(&entry->edx, CPUID_C000_0001_EDX);
-> +		cpuid_entry_mask(entry, CPUID_C000_0001_EDX);
->  		break;
->  	case 3: /* Processor serial number */
->  	case 5: /* MONITOR/MWAIT */
+Hi Philippe,
 
 
-Reviewed-by: Vitaly Kuznetsov <vkuznets@redhat.com>
+Le lun., f=E9vr. 24, 2020 at 09:37, Philippe Mathieu-Daud=E9=20
+<f4bug@amsat.org> a =E9crit :
+> On Sat, Feb 22, 2020 at 5:08 PM Paul Cercueil <paul@crapouillou.net>=20
+> wrote:
+>>=20
+>>  Hi,
+>>=20
+>>  So I think Thomas is the best candidate to be maintainer, since he=20
+>> has
+>>  both experience and free time ;)
+>>=20
+>>  I'm sort-of the maintainer for the Ingenic platform and drivers, if
+>>  Jiaxun wants to do the same for Loongson hardware, that would make
+>>  Thomas' job easier. Having three co-maintainers with equal rights=20
+>> would
+>>  be a total mess.
+>=20
+> You might want to add yourself a R: entry in MAINTAINERS, to be listed
+> as designated reviewer on the Ingenic patches.
+> (Similarly for Jiaxun with Loongson).
 
--- 
-Vitaly
+I'm in there already as a M: entry.
+
+-Paul
+
+>>=20
+>>  Le mer., f=E9vr. 19, 2020 at 11:17, Paul Burton=20
+>> <paulburton@kernel.org>
+>>  a =E9crit :
+>>  > My time with MIPS the company has reached its end, and so at best=20
+>> I'll
+>>  > have little time spend on maintaining arch/mips/. Reflect that in
+>>  > MAINTAINERS by changing status to Odd Fixes. Hopefully this might=20
+>> spur
+>>  > the involvement of someone with more time, but even if not it=20
+>> should
+>>  > help serve to avoid unrealistic expectations.
+>>  >
+>>  > Signed-off-by: Paul Burton <paulburton@kernel.org>
+>>  > ---
+>>  >  MAINTAINERS | 2 +-
+>>  >  1 file changed, 1 insertion(+), 1 deletion(-)
+>>  >
+>>  > diff --git a/MAINTAINERS b/MAINTAINERS
+>>  > index afa228ade18e..67f05f6dbf77 100644
+>>  > --- a/MAINTAINERS
+>>  > +++ b/MAINTAINERS
+>>  > @@ -11120,7 +11120,7 @@ W:    http://www.linux-mips.org/
+>>  >  T:   git git://git.linux-mips.org/pub/scm/ralf/linux.git
+>>  >  T:   git=20
+>> git://git.kernel.org/pub/scm/linux/kernel/git/mips/linux.git
+>>  >  Q:   http://patchwork.linux-mips.org/project/linux-mips/list/
+>>  > -S:   Supported
+>>  > +S:   Odd Fixes
+>>  >  F:   Documentation/devicetree/bindings/mips/
+>>  >  F:   Documentation/mips/
+>>  >  F:   arch/mips/
+>>=20
+>>=20
+
+=
 
