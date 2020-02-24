@@ -2,124 +2,107 @@ Return-Path: <SRS0=7TUr=4M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 560C5C35671
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 11:25:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8922DC35671
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 11:25:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 264FC20732
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 11:25:42 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="XyvGvgkM"
+	by mail.kernel.org (Postfix) with ESMTP id 685EE20732
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 11:25:49 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727378AbgBXLZl (ORCPT
+        id S1727448AbgBXLZs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Feb 2020 06:25:41 -0500
-Received: from aserp2120.oracle.com ([141.146.126.78]:38270 "EHLO
-        aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726778AbgBXLZk (ORCPT
+        Mon, 24 Feb 2020 06:25:48 -0500
+Received: from baptiste.telenet-ops.be ([195.130.132.51]:36400 "EHLO
+        baptiste.telenet-ops.be" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726778AbgBXLZr (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Feb 2020 06:25:40 -0500
-Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
-        by aserp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 01O87YYb160437;
-        Mon, 24 Feb 2020 08:09:04 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
- : subject : message-id : references : mime-version : content-type :
- content-transfer-encoding : in-reply-to; s=corp-2020-01-29;
- bh=6qKJx4gzfpljmcOcHGiZyzYN7Uu40KJ6LMB+X9Hu3pM=;
- b=XyvGvgkMuU4oe4Kzr5MzIxqxC+MueWnjd1wupeXsL9K9hXTjjJ6cIu4lDsnEob+ZeSLO
- bAazjaqCAshQfY2xw1WvrBuTF54mzLT8+JRflg74v7DZCg6dJnLBBU0TN7y8p9tZ0UN3
- yPWVNQHZltckspOi/qND1jd7zQw0PDfhL20h482qprLNvVhTjFutQ1eWB46kc22OhSeB
- 4RfxIcLwMZHi3bNkQuV3LoLYsAclXmH9jfdJa3f1fv3zX5ok+ATBKwRBNKJLfn0eXdAh
- NJxkNQ33cwRn1beht/VJWiNTl5fP1UIyZZc2HIGo/ScUc490uAZP21v0Xzbux6HIAZTy nw== 
-Received: from userp3020.oracle.com (userp3020.oracle.com [156.151.31.79])
-        by aserp2120.oracle.com with ESMTP id 2ybvr4hw5m-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 24 Feb 2020 08:09:04 +0000
-Received: from pps.filterd (userp3020.oracle.com [127.0.0.1])
-        by userp3020.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 01O87q9q182572;
-        Mon, 24 Feb 2020 08:09:03 GMT
-Received: from userv0121.oracle.com (userv0121.oracle.com [156.151.31.72])
-        by userp3020.oracle.com with ESMTP id 2ybe10nc98-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 24 Feb 2020 08:09:03 +0000
-Received: from abhmp0007.oracle.com (abhmp0007.oracle.com [141.146.116.13])
-        by userv0121.oracle.com (8.14.4/8.13.8) with ESMTP id 01O88xmR024337;
-        Mon, 24 Feb 2020 08:08:59 GMT
-Received: from kadam (/129.205.23.165)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Mon, 24 Feb 2020 00:08:59 -0800
-Date:   Mon, 24 Feb 2020 11:08:42 +0300
-From:   Dan Carpenter <dan.carpenter@oracle.com>
-To:     Scott Branden <scott.branden@broadcom.com>
-Cc:     Luis Chamberlain <mcgrof@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        David Brown <david.brown@linaro.org>,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        Shuah Khan <shuah@kernel.org>, bjorn.andersson@linaro.org,
-        Shuah Khan <skhan@linuxfoundation.org>,
-        Arnd Bergmann <arnd@arndb.de>,
-        "Rafael J . Wysocki" <rafael@kernel.org>,
-        linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org,
-        BCM Kernel Feedback <bcm-kernel-feedback-list@broadcom.com>,
-        Olof Johansson <olof@lixom.net>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Colin Ian King <colin.king@canonical.com>,
-        Kees Cook <keescook@chromium.org>,
-        Takashi Iwai <tiwai@suse.de>, linux-kselftest@vger.kernel.org,
-        Andy Gross <agross@kernel.org>
-Subject: Re: [PATCH v2 3/7] test_firmware: add partial read support for
- request_firmware_into_buf
-Message-ID: <20200224080842.GA3308@kadam>
-References: <20200220004825.23372-1-scott.branden@broadcom.com>
- <20200220004825.23372-4-scott.branden@broadcom.com>
- <20200220084255.GW7838@kadam>
- <9afab7f8-1b5f-a7bb-6b76-f7b19efb2979@broadcom.com>
- <4a666590-461d-17f9-5580-31a41869383f@broadcom.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <4a666590-461d-17f9-5580-31a41869383f@broadcom.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9540 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 mlxlogscore=999 spamscore=0
- suspectscore=0 malwarescore=0 phishscore=0 bulkscore=0 mlxscore=0
- adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2001150001 definitions=main-2002240071
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9540 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 mlxlogscore=999 spamscore=0
- clxscore=1015 adultscore=0 lowpriorityscore=0 malwarescore=0
- priorityscore=1501 mlxscore=0 impostorscore=0 suspectscore=0 phishscore=0
- bulkscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2001150001 definitions=main-2002240071
+        Mon, 24 Feb 2020 06:25:47 -0500
+Received: from ramsan ([84.195.182.253])
+        by baptiste.telenet-ops.be with bizsmtp
+        id 6bRe2200c5USYZQ01bReUi; Mon, 24 Feb 2020 12:25:45 +0100
+Received: from rox.of.borg ([192.168.97.57])
+        by ramsan with esmtp (Exim 4.90_1)
+        (envelope-from <geert@linux-m68k.org>)
+        id 1j6Brm-0003AP-QG; Mon, 24 Feb 2020 12:25:38 +0100
+Received: from geert by rox.of.borg with local (Exim 4.90_1)
+        (envelope-from <geert@linux-m68k.org>)
+        id 1j6Brm-0003mM-NM; Mon, 24 Feb 2020 12:25:38 +0100
+From:   Geert Uytterhoeven <geert@linux-m68k.org>
+To:     Liam Girdwood <lgirdwood@gmail.com>,
+        Mark Brown <broonie@kernel.org>,
+        Jaroslav Kysela <perex@perex.cz>,
+        Takashi Iwai <tiwai@suse.com>,
+        Randy Dunlap <rdunlap@infradead.org>,
+        Robert Jarzmik <robert.jarzmik@free.fr>
+Cc:     alsa-devel@alsa-project.org, linux-kernel@vger.kernel.org,
+        Geert Uytterhoeven <geert@linux-m68k.org>
+Subject: [PATCH] ASoC: Fix SND_SOC_ALL_CODECS imply ac97 fallout
+Date:   Mon, 24 Feb 2020 12:25:37 +0100
+Message-Id: <20200224112537.14483-1-geert@linux-m68k.org>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Feb 21, 2020 at 05:13:08PM -0800, Scott Branden wrote:
-> > > > +static ssize_t test_dev_config_show_size_t(char *buf, int cfg)
-> > > > +{
-> > > > +    size_t val;
-> > > > +
-> > > > +    mutex_lock(&test_fw_mutex);
-> > > > +    val = cfg;
-> > > > +    mutex_unlock(&test_fw_mutex);
-> > > Both val and cfg are stack variables so there is no need for locking.
-> > > Probably you meant to pass a pointer to cfg?
-> I am following the existing code as was done for
-> test_dev_config_show_bool(),
-> test_dev_config_show_int(),
-> test_dev_config_show_u8()
+On i386 randconfig:
 
-Heh.  Yes.  Those are buggy as well.  Good eyes.  Could you send a patch
-to fix them?
+    sound/soc/codecs/wm9705.o: In function `wm9705_soc_resume':
+    wm9705.c:(.text+0x128): undefined reference to `snd_ac97_reset'
+    sound/soc/codecs/wm9712.o: In function `wm9712_soc_resume':
+    wm9712.c:(.text+0x2d1): undefined reference to `snd_ac97_reset'
+    sound/soc/codecs/wm9713.o: In function `wm9713_soc_resume':
+    wm9713.c:(.text+0x820): undefined reference to `snd_ac97_reset'
 
-regards,
-dan caprnter
+Fix this by adding the missing dependencies on SND_SOC_AC97_BUS.
+
+Reported-by: Randy Dunlap <rdunlap@infradead.org>
+Signed-off-by: Geert Uytterhoeven <geert@linux-m68k.org>
+---
+Before commit ea00d95200d02ece ("ASoC: Use imply for
+SND_SOC_ALL_CODECS"), SND_SOC_ALL_CODECS used:
+
+    select SND_SOC_WM9705 if (SND_SOC_AC97_BUS || SND_SOC_AC97_BUS_NEW)
+    select SND_SOC_WM9712 if (SND_SOC_AC97_BUS || SND_SOC_AC97_BUS_NEW)
+    select SND_SOC_WM9713 if (SND_SOC_AC97_BUS || SND_SOC_AC97_BUS_NEW)
+
+but SND_SOC_AC97_BUS_NEW never existed in upstream.
+Should there be another dependency>
+
+See also "non-existent SND_SOC_AC97_BUS_NEW (was: Re: [PATCH v9] ASoC:
+pxa: switch to new ac97 bus support)"
+http://lore.kernel.org/r/CAMuHMdU3uxfBwKd8SkOtZSDV5Ai3CKc3CWRhDy0Cz94T1Hn0iA@mail.gmail.com
+---
+ sound/soc/codecs/Kconfig | 3 +++
+ 1 file changed, 3 insertions(+)
+
+diff --git a/sound/soc/codecs/Kconfig b/sound/soc/codecs/Kconfig
+index 9e9d54e4576ce5ba..a7e89567edbe8b47 100644
+--- a/sound/soc/codecs/Kconfig
++++ b/sound/soc/codecs/Kconfig
+@@ -1610,16 +1610,19 @@ config SND_SOC_WM9090
+ 
+ config SND_SOC_WM9705
+ 	tristate
++	depends on SND_SOC_AC97_BUS
+ 	select REGMAP_AC97
+ 	select AC97_BUS_COMPAT if AC97_BUS_NEW
+ 
+ config SND_SOC_WM9712
+ 	tristate
++	depends on SND_SOC_AC97_BUS
+ 	select REGMAP_AC97
+ 	select AC97_BUS_COMPAT if AC97_BUS_NEW
+ 
+ config SND_SOC_WM9713
+ 	tristate
++	depends on SND_SOC_AC97_BUS
+ 	select REGMAP_AC97
+ 	select AC97_BUS_COMPAT if AC97_BUS_NEW
+ 
+-- 
+2.17.1
 
