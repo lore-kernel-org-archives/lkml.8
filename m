@@ -2,163 +2,159 @@ Return-Path: <SRS0=7TUr=4M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 14BE2C3567B
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 09:14:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E77C9C11D2A
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 09:14:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DDFFE2080D
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 09:14:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B968C2080D
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 09:14:05 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=cerno.tech header.i=@cerno.tech header.b="MyOYQRN1";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="vK82XeD2"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728546AbgBXJOC (ORCPT
+        id S1728530AbgBXJOB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Feb 2020 04:14:02 -0500
-Received: from mail3-relais-sop.national.inria.fr ([192.134.164.104]:36500
-        "EHLO mail3-relais-sop.national.inria.fr" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727581AbgBXJOA (ORCPT
+        Mon, 24 Feb 2020 04:14:01 -0500
+Received: from wnew3-smtp.messagingengine.com ([64.147.123.17]:52311 "EHLO
+        wnew3-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727706AbgBXJJ3 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Feb 2020 04:14:00 -0500
-X-IronPort-AV: E=Sophos;i="5.70,479,1574118000"; 
-   d="scan'208";a="340198529"
-Received: from dt-lawall.paris.inria.fr ([128.93.67.65])
-  by mail3-relais-sop.national.inria.fr with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 24 Feb 2020 10:13:57 +0100
-Date:   Mon, 24 Feb 2020 10:13:52 +0100 (CET)
-From:   Julia Lawall <julia.lawall@inria.fr>
-X-X-Sender: julia@hadrien
-To:     Stefan Schaeckeler <schaecsn@gmx.net>
-cc:     linux-i2c@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Andy Lutomirski <luto@kernel.org>, kbuild-all@lists.01.org
-Subject: Re: [PATCH 1/1] i2c: imc: Add support for Intel iMC SMBus host
- controller. (fwd)
-Message-ID: <alpine.DEB.2.21.2002241012330.2936@hadrien>
-User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
+        Mon, 24 Feb 2020 04:09:29 -0500
+Received: from compute3.internal (compute3.nyi.internal [10.202.2.43])
+        by mailnew.west.internal (Postfix) with ESMTP id 7C04460A;
+        Mon, 24 Feb 2020 04:09:27 -0500 (EST)
+Received: from mailfrontend1 ([10.202.2.162])
+  by compute3.internal (MEProxy); Mon, 24 Feb 2020 04:09:28 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cerno.tech; h=
+        from:to:cc:subject:date:message-id:in-reply-to:references
+        :mime-version:content-transfer-encoding; s=fm2; bh=aLIZ5LnWvXHZ2
+        KPr943ijW9nE1rxXfu6BQqu+bNMhqk=; b=MyOYQRN1ivxuli0O9VwvFX3toOraW
+        BorRGB/DXvZG/kcuG0lrqyoFgtQS4cPVf77IoOsae5xGJXD/WdpPh4zM/EkZLCPv
+        Bf65zttBer3S6zAGebATwP12MqB8/HQ+0utrgv4m4cU9x9u+WY2za0dc1+oAtS6Q
+        X2LpQ1Su3+DOqluQGEtNX920o3txbK8i/OpqKRk9LN2PZC50BUgnjr/CSxgAOkWt
+        fycnjtx9xRMEm+/jm8qn4DbQB2IiKoc+9SFx/Nd7LcTgYqcbK5DT63xB312OMG1f
+        yi0fBCUDcokxmhOH7M/lCJGXH4eoK6GwNfsTdDKmkBRcjMp6QzwxP7ElQ==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+        messagingengine.com; h=cc:content-transfer-encoding:date:from
+        :in-reply-to:message-id:mime-version:references:subject:to
+        :x-me-proxy:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=
+        fm2; bh=aLIZ5LnWvXHZ2KPr943ijW9nE1rxXfu6BQqu+bNMhqk=; b=vK82XeD2
+        tN01lrRlqIYhjq844eDqHAoL/JvZ9liUkLgJBErytm7MKu32XAaS5hFQ+qoK65B2
+        ujFpomVr9QMMTvWXOcCP9rTpjhuHfxQYR1tSQJhvpGkTt0Qg/iJmJ9DRkFc8U1et
+        sJukVoOdUPiO8JlJdqvib3fPeeL1dDelfn+naAQucYU5xZF+0B03xNP0MwstOhhM
+        Pxd6BQ+AyvwpazBNFmxvM7or8fwWtL58Zs+iV6BuCHhE764cz7wMdmXb77Np1Xj8
+        fi6iDfYwwqDbvkXPi2Hlhxg9Jzsfkt7AfV0wP9pCH+HcoiJ7LCD4ZdanePiqusG6
+        367VsekrTsomeA==
+X-ME-Sender: <xms:x5JTXgmUWlcZ69BwNFEZgLYWwDYDt-IjpbVRc6JGALgFXMB_HfDO4A>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedugedrledtucetufdoteggodetrfdotffvucfrrh
+    hofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgenuceurghi
+    lhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmnegovehorg
+    hsthgrlhdqhfeguddvqddtvdculdduhedtmdenucfjughrpefhvffufffkofgjfhgggfes
+    tdekredtredttdenucfhrhhomhepofgrgihimhgvucftihhprghrugcuoehmrgigihhmvg
+    estggvrhhnohdrthgvtghhqeenucffohhmrghinhepuggvvhhitggvthhrvggvrdhorhhg
+    necukfhppeeltddrkeelrdeikedrjeeinecuvehluhhsthgvrhfuihiivgepvdenucfrrg
+    hrrghmpehmrghilhhfrhhomhepmhgrgihimhgvsegtvghrnhhordhtvggthh
+X-ME-Proxy: <xmx:x5JTXmYng-63hYNbwXJAGr9mlbVybD8XA_DQnsjOPJ4toCH-n6wbYA>
+    <xmx:x5JTXgXIKD6vpGtE91-f3iwOH5TN_iy8ivH5_809foA_FYMD3m2Z-A>
+    <xmx:x5JTXmD6nIeYMWNwLxdmwkuN-nWDfJu09Hoq70FoPVEdtjJJUUDVGA>
+    <xmx:x5JTXlsqEma54XpKLlZYasWlHw2lKy6hn6y7IvZ2Zuo2rXrsoP5FtWdh2lM>
+Received: from localhost (lfbn-tou-1-1502-76.w90-89.abo.wanadoo.fr [90.89.68.76])
+        by mail.messagingengine.com (Postfix) with ESMTPA id B8BE8328005A;
+        Mon, 24 Feb 2020 04:09:26 -0500 (EST)
+From:   Maxime Ripard <maxime@cerno.tech>
+To:     Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
+        Eric Anholt <eric@anholt.net>
+Cc:     dri-devel@lists.freedesktop.org,
+        linux-rpi-kernel@lists.infradead.org,
+        bcm-kernel-feedback-list@broadcom.com,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        Dave Stevenson <dave.stevenson@raspberrypi.com>,
+        Tim Gover <tim.gover@raspberrypi.com>,
+        Phil Elwell <phil@raspberrypi.com>,
+        Maxime Ripard <maxime@cerno.tech>,
+        Philipp Zabel <p.zabel@pengutronix.de>,
+        Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org
+Subject: [PATCH 26/89] dt-bindings: clock: Add BCM2711 DVP binding
+Date:   Mon, 24 Feb 2020 10:06:28 +0100
+Message-Id: <106e8a589a79eb70668b03d7160994c6a09a92c4.1582533919.git-series.maxime@cerno.tech>
+X-Mailer: git-send-email 2.24.1
+In-Reply-To: <cover.6c896ace9a5a7840e9cec008b553cbb004ca1f91.1582533919.git-series.maxime@cerno.tech>
+References: <cover.6c896ace9a5a7840e9cec008b553cbb004ca1f91.1582533919.git-series.maxime@cerno.tech>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello,
+The BCM2711 has a unit controlling the HDMI0 and HDMI1 clock and reset
+signals. Let's add a binding for it.
 
-Devm-allocated data should not be kfreed.  The label probe_out_free does
-not look necessary.
-
-julia
-
----------- Forwarded message ----------
-Date: Mon, 24 Feb 2020 11:49:07 +0800
-From: kbuild test robot <lkp@intel.com>
-To: kbuild@lists.01.org
-Cc: Julia Lawall <julia.lawall@lip6.fr>
-Subject: Re: [PATCH 1/1] i2c: imc: Add support for Intel iMC SMBus host
-    controller.
-
-CC: kbuild-all@lists.01.org
-In-Reply-To: <1582498270-50674-2-git-send-email-schaecsn@gmx.net>
-References: <1582498270-50674-2-git-send-email-schaecsn@gmx.net>
-TO: Stefan Schaeckeler <schaecsn@gmx.net>
-CC: linux-i2c@vger.kernel.org, linux-kernel@vger.kernel.org, Andy Lutomirski <luto@kernel.org>
-
-Hi Stefan,
-
-I love your patch! Perhaps something to improve:
-
-[auto build test WARNING on wsa/i2c/for-next]
-[also build test WARNING on linux/master linus/master v5.6-rc2 next-20200221]
-[if your patch is applied to the wrong git tree, please drop us a note to help
-improve the system. BTW, we also suggest to use '--base' option to specify the
-base tree in git format-patch, please see https://stackoverflow.com/a/37406982]
-
-url:    https://github.com/0day-ci/linux/commits/Stefan-Schaeckeler/i2c-imc-Add-support-for-Intel-iMC-SMBus-host-controller/20200224-065435
-base:   https://git.kernel.org/pub/scm/linux/kernel/git/wsa/linux.git i2c/for-next
-:::::: branch date: 5 hours ago
-:::::: commit date: 5 hours ago
-
-If you fix the issue, kindly add following tag
-Reported-by: kbuild test robot <lkp@intel.com>
-Reported-by: Julia Lawall <julia.lawall@lip6.fr>
-
->> drivers/i2c/busses/i2c-imc.c:447:1-6: WARNING: invalid free of devm_ allocated data
-
-# https://github.com/0day-ci/linux/commit/d7855ea60367262eb4f8252da00de63a0b546234
-git remote add linux-review https://github.com/0day-ci/linux
-git remote update linux-review
-git checkout d7855ea60367262eb4f8252da00de63a0b546234
-vim +447 drivers/i2c/busses/i2c-imc.c
-
-d7855ea6036726 Stefan Schaeckeler 2020-02-23  382
-d7855ea6036726 Stefan Schaeckeler 2020-02-23  383  static int imc_probe(struct pci_dev *dev, const struct pci_device_id *id)
-d7855ea6036726 Stefan Schaeckeler 2020-02-23  384  {
-d7855ea6036726 Stefan Schaeckeler 2020-02-23  385  	int i, j, err;
-d7855ea6036726 Stefan Schaeckeler 2020-02-23  386  	struct imc_priv *priv;
-d7855ea6036726 Stefan Schaeckeler 2020-02-23  387  	struct pci_dev *sad;  /* System Address Decoder */
-d7855ea6036726 Stefan Schaeckeler 2020-02-23  388  	u32 sadcntl;
-d7855ea6036726 Stefan Schaeckeler 2020-02-23  389
-d7855ea6036726 Stefan Schaeckeler 2020-02-23  390  	/* Sanity check. This device is always at 0x13.0 */
-d7855ea6036726 Stefan Schaeckeler 2020-02-23  391  	if (dev->devfn != PCI_DEVFN(0x13, 0))
-d7855ea6036726 Stefan Schaeckeler 2020-02-23  392  		return -ENODEV;
-d7855ea6036726 Stefan Schaeckeler 2020-02-23  393
-d7855ea6036726 Stefan Schaeckeler 2020-02-23  394  	priv = devm_kzalloc(&dev->dev, sizeof(*priv), GFP_KERNEL);
-d7855ea6036726 Stefan Schaeckeler 2020-02-23  395  	if (!priv)
-d7855ea6036726 Stefan Schaeckeler 2020-02-23  396  		return -ENOMEM;
-d7855ea6036726 Stefan Schaeckeler 2020-02-23  397  	priv->pci_dev = dev;
-d7855ea6036726 Stefan Schaeckeler 2020-02-23  398  	pci_set_drvdata(dev, priv);
-d7855ea6036726 Stefan Schaeckeler 2020-02-23  399
-d7855ea6036726 Stefan Schaeckeler 2020-02-23  400  	/*
-d7855ea6036726 Stefan Schaeckeler 2020-02-23  401  	 * From sad, we learn the local node id of the socket.
-d7855ea6036726 Stefan Schaeckeler 2020-02-23  402  	 *
-d7855ea6036726 Stefan Schaeckeler 2020-02-23  403  	 * The socket will not change at runtime and so we throw away sad.
-d7855ea6036726 Stefan Schaeckeler 2020-02-23  404  	 */
-d7855ea6036726 Stefan Schaeckeler 2020-02-23  405  	sad = imc_get_related_device(dev->bus, PCI_DEVFN(0x0f, 5),
-d7855ea6036726 Stefan Schaeckeler 2020-02-23  406  				     PCI_DEVICE_ID_INTEL_BROADWELL_IMC_SAD);
-d7855ea6036726 Stefan Schaeckeler 2020-02-23  407  	if (!sad) {
-d7855ea6036726 Stefan Schaeckeler 2020-02-23  408  		err = -ENODEV;
-d7855ea6036726 Stefan Schaeckeler 2020-02-23  409  		goto probe_out_free;
-d7855ea6036726 Stefan Schaeckeler 2020-02-23  410  	}
-d7855ea6036726 Stefan Schaeckeler 2020-02-23  411  	pci_read_config_dword(sad, SADCNTL, &sadcntl);
-d7855ea6036726 Stefan Schaeckeler 2020-02-23  412  	pci_dev_put(sad);
-d7855ea6036726 Stefan Schaeckeler 2020-02-23  413
-d7855ea6036726 Stefan Schaeckeler 2020-02-23  414  	/*
-d7855ea6036726 Stefan Schaeckeler 2020-02-23  415  	 * From pcu, we access the CLTT polling interval.
-d7855ea6036726 Stefan Schaeckeler 2020-02-23  416  	 *
-d7855ea6036726 Stefan Schaeckeler 2020-02-23  417  	 * The polling interval is set by BIOS. We assume it will not change at
-d7855ea6036726 Stefan Schaeckeler 2020-02-23  418  	 * runtime and cache the initial value.
-d7855ea6036726 Stefan Schaeckeler 2020-02-23  419  	 */
-d7855ea6036726 Stefan Schaeckeler 2020-02-23  420  	priv->pcu.pci_dev = imc_get_related_device(dev->bus, PCI_DEVFN(0x1e, 1),
-d7855ea6036726 Stefan Schaeckeler 2020-02-23  421  					 PCI_DEVICE_ID_INTEL_BROADWELL_IMC_PCU);
-d7855ea6036726 Stefan Schaeckeler 2020-02-23  422  	if (!priv->pcu.pci_dev) {
-d7855ea6036726 Stefan Schaeckeler 2020-02-23  423  		err = -ENODEV;
-d7855ea6036726 Stefan Schaeckeler 2020-02-23  424  		goto probe_out_free;
-d7855ea6036726 Stefan Schaeckeler 2020-02-23  425  	}
-d7855ea6036726 Stefan Schaeckeler 2020-02-23  426  	pci_read_config_dword(priv->pcu.pci_dev, TSODCNTL,
-d7855ea6036726 Stefan Schaeckeler 2020-02-23  427  			      &priv->pcu.tsod_polling_interval);
-d7855ea6036726 Stefan Schaeckeler 2020-02-23  428
-d7855ea6036726 Stefan Schaeckeler 2020-02-23  429  	mutex_init(&priv->pcu.mutex);
-d7855ea6036726 Stefan Schaeckeler 2020-02-23  430
-d7855ea6036726 Stefan Schaeckeler 2020-02-23  431  	for (i = 0; i < 2; i++) {
-d7855ea6036726 Stefan Schaeckeler 2020-02-23  432  		err = imc_init_channelpair(priv, i,
-d7855ea6036726 Stefan Schaeckeler 2020-02-23  433  					   sadcntl & SADCNTL_LOCAL_NODEID_MASK);
-d7855ea6036726 Stefan Schaeckeler 2020-02-23  434  		if (err)
-d7855ea6036726 Stefan Schaeckeler 2020-02-23  435  			goto probe_out_free_channelpair;
-d7855ea6036726 Stefan Schaeckeler 2020-02-23  436  	}
-d7855ea6036726 Stefan Schaeckeler 2020-02-23  437
-d7855ea6036726 Stefan Schaeckeler 2020-02-23  438  	return 0;
-d7855ea6036726 Stefan Schaeckeler 2020-02-23  439
-d7855ea6036726 Stefan Schaeckeler 2020-02-23  440  probe_out_free_channelpair:
-d7855ea6036726 Stefan Schaeckeler 2020-02-23  441  	for (j = 0; j < i; j++)
-d7855ea6036726 Stefan Schaeckeler 2020-02-23  442  		imc_free_channelpair(priv, j);
-d7855ea6036726 Stefan Schaeckeler 2020-02-23  443
-d7855ea6036726 Stefan Schaeckeler 2020-02-23  444  	mutex_destroy(&priv->pcu.mutex);
-d7855ea6036726 Stefan Schaeckeler 2020-02-23  445
-d7855ea6036726 Stefan Schaeckeler 2020-02-23  446  probe_out_free:
-d7855ea6036726 Stefan Schaeckeler 2020-02-23 @447  	kfree(priv);
-d7855ea6036726 Stefan Schaeckeler 2020-02-23  448  	return err;
-d7855ea6036726 Stefan Schaeckeler 2020-02-23  449  }
-d7855ea6036726 Stefan Schaeckeler 2020-02-23  450
-
+Cc: Philipp Zabel <p.zabel@pengutronix.de>
+Cc: Rob Herring <robh+dt@kernel.org>
+Cc: devicetree@vger.kernel.org
+Signed-off-by: Maxime Ripard <maxime@cerno.tech>
 ---
-0-DAY CI Kernel Test Service, Intel Corporation
-https://lists.01.org/hyperkitty/list/kbuild-all@lists.01.org
+ Documentation/devicetree/bindings/clock/brcm,bcm2711-dvp.yaml | 47 +++++++-
+ 1 file changed, 47 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/clock/brcm,bcm2711-dvp.yaml
+
+diff --git a/Documentation/devicetree/bindings/clock/brcm,bcm2711-dvp.yaml b/Documentation/devicetree/bindings/clock/brcm,bcm2711-dvp.yaml
+new file mode 100644
+index 000000000000..08543ecbe35b
+--- /dev/null
++++ b/Documentation/devicetree/bindings/clock/brcm,bcm2711-dvp.yaml
+@@ -0,0 +1,47 @@
++# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/clock/brcm,bcm2711-dvp.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
++
++title: Broadcom BCM2711 HDMI DVP Device Tree Bindings
++
++maintainers:
++  - Maxime Ripard <mripard@kernel.org>
++
++properties:
++  "#clock-cells":
++    const: 1
++
++  "#reset-cells":
++    const: 1
++
++  compatible:
++    const: brcm,brcm2711-dvp
++
++  reg:
++    maxItems: 1
++
++  clocks:
++    maxItems: 1
++
++required:
++  - "#clock-cells"
++  - "#reset-cells"
++  - compatible
++  - reg
++  - clocks
++
++additionalProperties: false
++
++examples:
++  - |
++    dvp: clock@7ef00000 {
++        compatible = "brcm,brcm2711-dvp";
++        reg = <0x7ef00000 0x10>;
++        clocks = <&clk_108MHz>;
++        #clock-cells = <1>;
++        #reset-cells = <1>;
++    };
++
++...
+-- 
+git-series 0.9.1
