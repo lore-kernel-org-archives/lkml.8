@@ -2,100 +2,158 @@ Return-Path: <SRS0=7TUr=4M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2F783C35679
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 03:05:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 05384C35673
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 03:05:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0893D2067D
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 03:05:05 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582513505;
-	bh=lBP3sLiTdE3mK2nNhYHVOrpOPMuKGWVZqzVUSARmOQ8=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=WFJB7SOzDX1dBbSxiJKZ+Vp6LcIEGA/CUJFNoONusp+GPHB2MlFEo7971SY+n8xvT
-	 DXXcpjWFiCwSOv0tlaMycZhC3vD/2MDlyeovSaBEhxOK1vrnSTf0gsMiIqlmHfdhCK
-	 A9RbiiAqtv+RhsmdYasCiSo7kCAsroW8j31ADoZE=
+	by mail.kernel.org (Postfix) with ESMTP id DC01A20658
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 03:05:57 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727188AbgBXDFD (ORCPT
+        id S1727223AbgBXDF5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 23 Feb 2020 22:05:03 -0500
-Received: from mail.kernel.org ([198.145.29.99]:37608 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727156AbgBXDFD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 23 Feb 2020 22:05:03 -0500
-Received: from dragon (80.251.214.228.16clouds.com [80.251.214.228])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 58C9A20658;
-        Mon, 24 Feb 2020 03:04:59 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1582513502;
-        bh=lBP3sLiTdE3mK2nNhYHVOrpOPMuKGWVZqzVUSARmOQ8=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=LyOMw9JJ7RmFgbAhf5K9kXqji7z86MdXF9Aru7jF0ubHaQAAUUdHqWnWrtC9IUJhi
-         NFqfqFuWFHoHb0jHKr9z6MiGVOtY5wOx41yY4V0XpG2rGMLM0hjnVMrwouex3YD4DJ
-         c0zfOo/Qy8cuxrfTKfXFuEe4B3IxNkj7e67IqTLM=
-Date:   Mon, 24 Feb 2020 11:04:55 +0800
-From:   Shawn Guo <shawnguo@kernel.org>
-To:     Anson Huang <Anson.Huang@nxp.com>
-Cc:     mturquette@baylibre.com, sboyd@kernel.org, s.hauer@pengutronix.de,
-        kernel@pengutronix.de, festevam@gmail.com, robh+dt@kernel.org,
-        mark.rutland@arm.com, abel.vesa@nxp.com, peng.fan@nxp.com,
-        fugang.duan@nxp.com, linux-clk@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        Linux-imx@nxp.com
-Subject: Re: [PATCH 3/3] clk: imx8mp: Correct the enet_qos parent clock
-Message-ID: <20200224030453.GG27688@dragon>
-References: <1582092251-19222-1-git-send-email-Anson.Huang@nxp.com>
- <1582092251-19222-3-git-send-email-Anson.Huang@nxp.com>
+        Sun, 23 Feb 2020 22:05:57 -0500
+Received: from out30-133.freemail.mail.aliyun.com ([115.124.30.133]:37547 "EHLO
+        out30-133.freemail.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727156AbgBXDF4 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 23 Feb 2020 22:05:56 -0500
+X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R191e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01f04428;MF=yun.wang@linux.alibaba.com;NM=1;PH=DS;RN=18;SR=0;TI=SMTPD_---0TqheseS_1582513549;
+Received: from testdeMacBook-Pro.local(mailfrom:yun.wang@linux.alibaba.com fp:SMTPD_---0TqheseS_1582513549)
+          by smtp.aliyun-inc.com(127.0.0.1);
+          Mon, 24 Feb 2020 11:05:51 +0800
+Subject: Re: [PATCH RESEND v8 1/2] sched/numa: introduce per-cgroup NUMA
+ locality info
+To:     Mel Gorman <mgorman@suse.de>
+Cc:     Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Juri Lelli <juri.lelli@redhat.com>,
+        Vincent Guittot <vincent.guittot@linaro.org>,
+        Dietmar Eggemann <dietmar.eggemann@arm.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Ben Segall <bsegall@google.com>,
+        Luis Chamberlain <mcgrof@kernel.org>,
+        Kees Cook <keescook@chromium.org>,
+        Iurii Zaikin <yzaikin@google.com>,
+        Michal Koutn? <mkoutny@suse.com>,
+        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-doc@vger.kernel.org,
+        "Paul E. McKenney" <paulmck@linux.ibm.com>,
+        Randy Dunlap <rdunlap@infradead.org>,
+        Jonathan Corbet <corbet@lwn.net>
+References: <fe56d99d-82e0-498c-ae44-f7cde83b5206@linux.alibaba.com>
+ <cde13472-46c0-7e17-175f-4b2ba4d8148a@linux.alibaba.com>
+ <20200214151048.GL14914@hirez.programming.kicks-ass.net>
+ <20200217115810.GA3420@suse.de>
+ <881deb50-163e-442a-41ec-b375cc445e4d@linux.alibaba.com>
+ <20200217141616.GB3420@suse.de>
+ <114519ab-4e9e-996a-67b8-4f5fcecba72a@linux.alibaba.com>
+ <20200221142010.GT3420@suse.de>
+From:   =?UTF-8?B?546L6LSH?= <yun.wang@linux.alibaba.com>
+Message-ID: <2def511f-4eb4-4c70-cd68-415fa63453eb@linux.alibaba.com>
+Date:   Mon, 24 Feb 2020 11:05:49 +0800
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.13; rv:68.0)
+ Gecko/20100101 Thunderbird/68.4.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1582092251-19222-3-git-send-email-Anson.Huang@nxp.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+In-Reply-To: <20200221142010.GT3420@suse.de>
+Content-Type: text/plain; charset=UTF-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Feb 19, 2020 at 02:04:11PM +0800, Anson Huang wrote:
-> From: Fugang Duan <fugang.duan@nxp.com>
+
+
+On 2020/2/21 下午10:20, Mel Gorman wrote:
+[snip]
+>>>
+>>> Which is a very interesting corner case in itself but also one that
+>>> could have potentially have been inferred from monitoring /proc/vmstat
+>>> numa_pte_updates or on a per-task basis by monitoring /proc/PID/sched and
+>>> watching numa_scan_seq and total_numa_faults. Accumulating the information
+>>> on a per-cgroup basis would require a bit more legwork.
+>>
+>> That's not working for daily monitoring...
+>>
 > 
-> enet_qos is for eqos tsn AXI bus clock whose clock source is from
-> ccm_enet_axi_clk_root, and controlled by CCM_CCGR59(offset 0x43b0)
-> and CCM_CCGR64(offset 0x4400), so correct enet_qos root clock's
-> parent clock to sim_enet.
+> Indeed although at least /proc/vmstat is cheap to monitor and it could
+> at least be tracked if the number of NUMA faults are abnormally low or
+> the ratio of remote to local hints are problematic.
 > 
-> Fixes: 9c140d992676 ("clk: imx: Add support for i.MX8MP clock driver")
-> Signed-off-by: Fugang Duan <fugang.duan@nxp.com>
-
-When you forward a patch from someone, you need to add your SoB.
-
-I fixed it up and applied all.
-
-Shawn
-
-> ---
->  drivers/clk/imx/clk-imx8mp.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
+>> Besides, compared with locality, this require much more deeper understand
+>> on the implementation, which could even be tough for NUMA developers to
+>> assemble all these statistics together.
+>>
 > 
-> diff --git a/drivers/clk/imx/clk-imx8mp.c b/drivers/clk/imx/clk-imx8mp.c
-> index 1a9d7a0..cb58fb8 100644
-> --- a/drivers/clk/imx/clk-imx8mp.c
-> +++ b/drivers/clk/imx/clk-imx8mp.c
-> @@ -688,7 +688,7 @@ static int imx8mp_clocks_probe(struct platform_device *pdev)
->  	hws[IMX8MP_CLK_CAN1_ROOT] = imx_clk_hw_gate2("can1_root_clk", "can1", ccm_base + 0x4350, 0);
->  	hws[IMX8MP_CLK_CAN2_ROOT] = imx_clk_hw_gate2("can2_root_clk", "can2", ccm_base + 0x4360, 0);
->  	hws[IMX8MP_CLK_SDMA1_ROOT] = imx_clk_hw_gate4("sdma1_root_clk", "ipg_root", ccm_base + 0x43a0, 0);
-> -	hws[IMX8MP_CLK_ENET_QOS_ROOT] = imx_clk_hw_gate4("enet_qos_root_clk", "enet_axi", ccm_base + 0x43b0, 0);
-> +	hws[IMX8MP_CLK_ENET_QOS_ROOT] = imx_clk_hw_gate4("enet_qos_root_clk", "sim_enet_root_clk", ccm_base + 0x43b0, 0);
->  	hws[IMX8MP_CLK_SIM_ENET_ROOT] = imx_clk_hw_gate4("sim_enet_root_clk", "enet_axi", ccm_base + 0x4400, 0);
->  	hws[IMX8MP_CLK_GPU2D_ROOT] = imx_clk_hw_gate4("gpu2d_root_clk", "gpu2d_div", ccm_base + 0x4450, 0);
->  	hws[IMX8MP_CLK_GPU3D_ROOT] = imx_clk_hw_gate4("gpu3d_root_clk", "gpu3d_core_div", ccm_base + 0x4460, 0);
-> -- 
-> 2.7.4
+> My point is that even with the patch, the definition of locality is
+> subtle. At a single point in time, the locality might appear to be low
+> but it's due to an event that happened far in the past.
+
+Agree, the locality's meaning just keep changing... only those who
+understand the implementation can figure out the useful information.
+
+> 
+>>>
+>>>> Maybe not a good example, but we just try to highlight that NUMA Balancing
+>>>> could have issue in some cases, and we want them to be exposed, somehow,
+>>>> maybe by the locality.
+>>>>
+>>>
+>>> Again, I'm somewhat neutral on the patch simply because I would not use
+>>> the information for debugging problems with NUMA balancing. I would try
+>>> using tracepoints and if the tracepoints were not good enough, I'd add or
+>>> fix them -- similar to what I had to do with sched_stick_numa recently.
+>>> The caveat is that I mostly look at this sort of problem as a developer.
+>>> Sysadmins have very different requirements, especially simplicity even
+>>> if the simplicity in this case is an illusion.
+>>
+>> Fair enough, but I guess PeterZ still want your Ack, so neutral means
+>> refuse in this case :-(
+>>
+> 
+> I think the patch is functionally harmless and can be disabled but I also
+> would be wary of dealing with a bug report that was based on the numbers
+> provided by the locality metric. The bulk of the work related to the bug
+> would likely be spent on trying to explain the metric and I've dealt with
+> quite a few bugs that were essentially "We don't like this number and think
+> something is wrong because of it -- fix it". Even then, I would want the
+> workload isolated and then vmstat recorded over time to determine it's
+> a persistent problem or not. That's the reason why I'm relucant to ack it.
+> 
+> I fully acknowledge that this may have value for sysadmins and may be a
+> good enough reason to merge it for environments that typically build and
+> configure their own kernels. I doubt that general distributions would
+> enable it but that's a guess.
+
+Thanks for the kindly explain, I get the point.
+
+False alarm maybe fine to admin, but could be nightmare if the user keep
+asking why, I suppose those who want to do some improvement on NUMA may be
+interested :-P
+
+Anyway, I understand there is a gap between general requirement and this
+locality idea, and it's really hard to be fulfill...
+
+> 
+>> BTW, how do you think about the documentation in second patch?
+>>
+> 
+> I think the documentation is great, it's clear and explains itself well.
+> 
+>> Do you think it's necessary to have a doc to explain NUMA related statistics?
+>>
+> 
+> It would be nice but AFAIK, the stats in vmstats are not documented.
+> They are there because recording them over time can be very useful when
+> dealing with user bug reports.
+
+Another TODO then :-)
+
+Regards,
+Michael Wang
+
 > 
