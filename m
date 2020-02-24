@@ -2,146 +2,103 @@ Return-Path: <SRS0=7TUr=4M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AE10DC11D32
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 12:47:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E5D43C11D2F
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 12:51:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7E1B22072D
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 12:47:55 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582548475;
-	bh=X9JTF+JlJ3uGZ0qil4K9u4hZ1e6Fgfb8qXJKC/hhAzQ=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=zCPLO6SasaZgdqbVNHylN+ak8QwszPKCDO1EaA1OrsVO1GAMmQc56PBTWyQqrgqp5
-	 lCvRUc+eLhyGYVuZXmOc4jz0PcUVbo0rvEEf++gFyY6okVUt0i2nsYSRAavp5Sjw5r
-	 qUQgIKT1kMouyo50erdWfKGkrmBgtbqN8vlTXzvs=
+	by mail.kernel.org (Postfix) with ESMTP id BB6DB2072D
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 12:51:20 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727504AbgBXMrx convert rfc822-to-8bit (ORCPT
+        id S1727438AbgBXMvT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Feb 2020 07:47:53 -0500
-Received: from mail-ed1-f67.google.com ([209.85.208.67]:36492 "EHLO
-        mail-ed1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726778AbgBXMrw (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Feb 2020 07:47:52 -0500
-Received: by mail-ed1-f67.google.com with SMTP id j17so11757997edp.3;
-        Mon, 24 Feb 2020 04:47:49 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to;
-        bh=6p1Rm/cgq3FqTcHGA+7QXUNsBMb6waSsaCWakkpOhMI=;
-        b=KevIibRzjYHkz7b3z6zkclYIBEKkafAUwE0AyTYxwKkMUyb291I/ISo9i/2pJpdEN5
-         E7UTE6jq2iIK+vPwAx8KGjc42VQoQD5Ntf+jqooSbNMmjOHP+3JOcQ/Lrsrj325oAnEi
-         +ouDUf8DvLtsQsUnNfxkgk2/12MLSptugXSzI2yQA9Sh20Rw3wm6lpERRHqRRmmxgrJe
-         1hW0w2XoDojno+hlDHbVVrYTRgezXrfJij2GDVSstbFmSOpVmpKDmSjVMER8vCabCfEQ
-         X1HixIwZkQZLTGTfzNCVP99iMk0IXXLQzMv8GAD2THs12N4gBuJfpJdKFA3V3XFM+MYB
-         VOww==
-X-Gm-Message-State: APjAAAUo/2ViXnpSnrWar8ORCQBgfeHSnsSGfxcYNqZLmKw9eEIGVNQY
-        h5SDppDFpaq1um3eKVv6IDQ=
-X-Google-Smtp-Source: APXvYqxOCnjuqHzZ8w9dppB5X8CKpWu3LAO4qx3F7JuCo/1tjWWY0qRzHXx7PYmPGsjZ1wOThemeng==
-X-Received: by 2002:a17:906:7fd0:: with SMTP id r16mr45290488ejs.319.1582548468870;
-        Mon, 24 Feb 2020 04:47:48 -0800 (PST)
-Received: from pi3 ([194.230.155.125])
-        by smtp.googlemail.com with ESMTPSA id n19sm944550edy.9.2020.02.24.04.47.46
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 24 Feb 2020 04:47:48 -0800 (PST)
-Date:   Mon, 24 Feb 2020 13:47:44 +0100
-From:   Krzysztof Kozlowski <krzk@kernel.org>
-To:     Jiri Slaby <jirislaby@gmail.com>
-Cc:     Richard Henderson <rth@twiddle.net>,
-        Ivan Kokshaysky <ink@jurassic.park.msu.ru>,
-        Matt Turner <mattst88@gmail.com>,
-        Alexey Brodkin <abrodkin@synopsys.com>,
-        Vineet Gupta <vgupta@synopsys.com>,
-        "James E.J. Bottomley" <James.Bottomley@hansenpartnership.com>,
-        Helge Deller <deller@gmx.de>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Paul Mackerras <paulus@samba.org>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Yoshinori Sato <ysato@users.sourceforge.jp>,
-        Rich Felker <dalias@libc.org>,
-        Dave Airlie <airlied@redhat.com>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Ben Skeggs <bskeggs@redhat.com>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Nick Kossifidis <mickflemm@gmail.com>,
-        Luis Chamberlain <mcgrof@kernel.org>,
-        Kalle Valo <kvalo@codeaurora.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        Dave Jiang <dave.jiang@intel.com>,
-        Jon Mason <jdmason@kudzu.us>, Allen Hubbe <allenbh@gmail.com>,
-        "Michael S. Tsirkin" <mst@redhat.com>,
-        Jason Wang <jasowang@redhat.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Geert Uytterhoeven <geert+renesas@glider.be>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        linux-alpha@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-snps-arc@lists.infradead.org, linux-parisc@vger.kernel.org,
-        linuxppc-dev@lists.ozlabs.org, linux-sh@vger.kernel.org,
-        dri-devel@lists.freedesktop.org, nouveau@lists.freedesktop.org,
-        linux-media@vger.kernel.org, linux-wireless@vger.kernel.org,
-        netdev@vger.kernel.org, linux-ntb@googlegroups.com,
-        virtualization@lists.linux-foundation.org,
-        linux-arch@vger.kernel.org
-Subject: Re: [RESEND PATCH v2 9/9] ath5k: Constify ioreadX() iomem argument
- (as in generic implementation)
-Message-ID: <20200224124744.GA1949@pi3>
-References: <20200219175007.13627-1-krzk@kernel.org>
- <20200219175007.13627-10-krzk@kernel.org>
- <518a9023-f802-17b3-fca5-582400bc34ae@gmail.com>
+        Mon, 24 Feb 2020 07:51:19 -0500
+Received: from inva020.nxp.com ([92.121.34.13]:33642 "EHLO inva020.nxp.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727290AbgBXMvT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 24 Feb 2020 07:51:19 -0500
+Received: from inva020.nxp.com (localhost [127.0.0.1])
+        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id 276CB1AECE6;
+        Mon, 24 Feb 2020 13:51:17 +0100 (CET)
+Received: from inva024.eu-rdc02.nxp.com (inva024.eu-rdc02.nxp.com [134.27.226.22])
+        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id 1B0351AECE0;
+        Mon, 24 Feb 2020 13:51:17 +0100 (CET)
+Received: from fsr-ub1864-014.ea.freescale.net (fsr-ub1864-014.ea.freescale.net [10.171.95.219])
+        by inva024.eu-rdc02.nxp.com (Postfix) with ESMTP id 7E781203CB;
+        Mon, 24 Feb 2020 13:51:16 +0100 (CET)
+From:   =?UTF-8?q?Horia=20Geant=C4=83?= <horia.geanta@nxp.com>
+To:     Shawn Guo <shawnguo@kernel.org>, Rob Herring <robh+dt@kernel.org>,
+        Sascha Hauer <s.hauer@pengutronix.de>
+Cc:     Aymen Sghaier <aymen.sghaier@nxp.com>,
+        NXP Linux Team <linux-imx@nxp.com>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        Fabio Estevam <festevam@gmail.com>,
+        Anson Huang <Anson.Huang@nxp.com>, devicetree@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-crypto@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH] arm64: dts: imx8mp: add crypto node
+Date:   Mon, 24 Feb 2020 14:50:23 +0200
+Message-Id: <20200224125023.29780-1-horia.geanta@nxp.com>
+X-Mailer: git-send-email 2.17.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8BIT
-In-Reply-To: <518a9023-f802-17b3-fca5-582400bc34ae@gmail.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+X-Virus-Scanned: ClamAV using ClamSMTP
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Feb 20, 2020 at 10:48:33AM +0100, Jiri Slaby wrote:
-> On 19. 02. 20, 18:50, Krzysztof Kozlowski wrote:
-> > The ioreadX() helpers have inconsistent interface.  On some architectures
-> > void *__iomem address argument is a pointer to const, on some not.
-> > 
-> > Implementations of ioreadX() do not modify the memory under the address
-> > so they can be converted to a "const" version for const-safety and
-> > consistency among architectures.
-> > 
-> > Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
-> > Acked-by: Kalle Valo <kvalo@codeaurora.org>
-> > ---
-> >  drivers/net/wireless/ath/ath5k/ahb.c | 10 +++++-----
-> >  1 file changed, 5 insertions(+), 5 deletions(-)
-> > 
-> > diff --git a/drivers/net/wireless/ath/ath5k/ahb.c b/drivers/net/wireless/ath/ath5k/ahb.c
-> > index 2c9cec8b53d9..8bd01df369fb 100644
-> > --- a/drivers/net/wireless/ath/ath5k/ahb.c
-> > +++ b/drivers/net/wireless/ath/ath5k/ahb.c
-> > @@ -138,18 +138,18 @@ static int ath_ahb_probe(struct platform_device *pdev)
-> >  
-> >  	if (bcfg->devid >= AR5K_SREV_AR2315_R6) {
-> >  		/* Enable WMAC AHB arbitration */
-> > -		reg = ioread32((void __iomem *) AR5K_AR2315_AHB_ARB_CTL);
-> > +		reg = ioread32((const void __iomem *) AR5K_AR2315_AHB_ARB_CTL);
-> 
-> While I understand why the parameter of ioread32 should be const, I
-> don't see a reason for these casts on the users' side. What does it
-> bring except longer code to read?
+Add node for CAAM - Cryptographic Acceleration and Assurance Module.
 
-Because the argument is an int:
+Signed-off-by: Horia Geantă <horia.geanta@nxp.com>
+---
+ arch/arm64/boot/dts/freescale/imx8mp.dtsi | 30 +++++++++++++++++++++++
+ 1 file changed, 30 insertions(+)
 
-drivers/net/wireless/ath/ath5k/ahb.c: In function ‘ath_ahb_probe’:
-drivers/net/wireless/ath/ath5k/ahb.c:141:18: warning: passing argument 1 of ‘ioread32’ makes pointer from integer without a cast [-Wint-conversion]
-   reg = ioread32(AR5K_AR2315_AHB_ARB_CTL);
-
-Best regards,
-Krzysztof
+diff --git a/arch/arm64/boot/dts/freescale/imx8mp.dtsi b/arch/arm64/boot/dts/freescale/imx8mp.dtsi
+index 61cf373ad268..bee170bd282a 100644
+--- a/arch/arm64/boot/dts/freescale/imx8mp.dtsi
++++ b/arch/arm64/boot/dts/freescale/imx8mp.dtsi
+@@ -443,6 +443,36 @@
+ 				status = "disabled";
+ 			};
+ 
++			crypto: crypto@30900000 {
++				compatible = "fsl,sec-v4.0";
++				#address-cells = <1>;
++				#size-cells = <1>;
++				reg = <0x30900000 0x40000>;
++				ranges = <0 0x30900000 0x40000>;
++				interrupts = <GIC_SPI 91 IRQ_TYPE_LEVEL_HIGH>;
++				clocks = <&clk IMX8MP_CLK_AHB>,
++					 <&clk IMX8MP_CLK_IPG_ROOT>;
++				clock-names = "aclk", "ipg";
++
++				sec_jr0: jr@1000 {
++					compatible = "fsl,sec-v4.0-job-ring";
++					reg = <0x1000 0x1000>;
++					interrupts = <GIC_SPI 105 IRQ_TYPE_LEVEL_HIGH>;
++				};
++
++				sec_jr1: jr@2000 {
++					compatible = "fsl,sec-v4.0-job-ring";
++					reg = <0x2000 0x1000>;
++					interrupts = <GIC_SPI 106 IRQ_TYPE_LEVEL_HIGH>;
++				};
++
++				sec_jr2: jr@3000 {
++					compatible = "fsl,sec-v4.0-job-ring";
++					reg = <0x3000 0x1000>;
++					interrupts = <GIC_SPI 114 IRQ_TYPE_LEVEL_HIGH>;
++				};
++			};
++
+ 			i2c1: i2c@30a20000 {
+ 				compatible = "fsl,imx8mp-i2c", "fsl,imx21-i2c";
+ 				#address-cells = <1>;
+-- 
+2.17.1
 
