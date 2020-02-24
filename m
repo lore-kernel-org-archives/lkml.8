@@ -2,132 +2,328 @@ Return-Path: <SRS0=7TUr=4M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+X-Spam-Status: No, score=-9.5 required=3.0 tests=DKIM_ADSP_CUSTOM_MED,
+	DKIM_INVALID,DKIM_SIGNED,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CE3B6C38BE8
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 21:08:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EC911C38BF9
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 21:10:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A43F421D7E
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 21:08:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B133920CC7
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 21:10:44 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="kFvrHvCA"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="XLfNCpXs"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728002AbgBXVIR (ORCPT
+        id S1728011AbgBXVKn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Feb 2020 16:08:17 -0500
-Received: from bombadil.infradead.org ([198.137.202.133]:52476 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727959AbgBXVIP (ORCPT
+        Mon, 24 Feb 2020 16:10:43 -0500
+Received: from mail-wr1-f65.google.com ([209.85.221.65]:40856 "EHLO
+        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727459AbgBXVKn (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Feb 2020 16:08:15 -0500
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
-        Content-Type:In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:
-        Subject:Sender:Reply-To:Content-ID:Content-Description;
-        bh=wsGhSoKnLaf4Gepe/RjTZTFl9ZitebfbgqF1KGfWOVU=; b=kFvrHvCA1VqkPYaS7PWS5/6nov
-        KLWffRhU+xxC7Oat9iPO3z9OQpDhJERAbj0zPJ+aJC7ajdJJJ6ERcSEmrA/6uNqhPrLoPpAklzium
-        n39w5yb9rmP0qbbZTxykQoiVzUaPJWCeMcEOG1L61M8J2N51Orb6zTiofvtKEh6nh1UM2IF0PSIH8
-        FKvL/oHQA262Kh5ES8UZe0NgUBMZ86WkuhIgA8i0kHGcRa/KRx8oU6RpVLIfmmul2CWjFp+y4iF5g
-        UkCI2Ivjc/1bM/7dIvsCVbNC4CNnKJDp/yIMgTh/oG81WVrnJQ0jzt6GrO1OHJVUGiBmKIIHSe6sE
-        YQFItm4w==;
-Received: from [2601:1c0:6280:3f0:897c:6038:c71d:ecac]
-        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1j6Kxa-0001MU-2p; Mon, 24 Feb 2020 21:08:14 +0000
-Subject: Re: [PATCH] docs: process: changes.rst: Escape --version to fix
- Sphinx output
-To:     Matthew Wilcox <willy@infradead.org>,
-        Jonathan Corbet <corbet@lwn.net>
-Cc:     =?UTF-8?Q?Jonathan_Neusch=c3=a4fer?= <j.neuschaefer@gmx.net>,
-        linux-doc@vger.kernel.org, Andi Kleen <ak@linux.intel.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        "Darrick J. Wong" <darrick.wong@oracle.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        "Chang S. Bae" <chang.seok.bae@intel.com>,
-        linux-kernel@vger.kernel.org
-References: <20200223222228.27089-1-j.neuschaefer@gmx.net>
- <20200224110815.6f7561d1@lwn.net> <20200224184719.GA2363@latitude>
- <20200224185227.GO24185@bombadil.infradead.org>
- <20200224115851.6684d516@lwn.net>
- <20200224191248.GP24185@bombadil.infradead.org>
-From:   Randy Dunlap <rdunlap@infradead.org>
-Message-ID: <e31ce703-c88b-7901-60a7-62fd5e78a1e0@infradead.org>
-Date:   Mon, 24 Feb 2020 13:08:13 -0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.1
+        Mon, 24 Feb 2020 16:10:43 -0500
+Received: by mail-wr1-f65.google.com with SMTP id t3so12104340wru.7;
+        Mon, 24 Feb 2020 13:10:39 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=yy+X7DrHgGbuvo7Mx28qlKxTXUfj1P67Jn/BBZc/WKg=;
+        b=XLfNCpXsrWvjZwCmy/Zo99J+1y8dgO5B5/o+wYElugvJj0BkMYjO30D1DJdrs1tCjQ
+         8jWBzkc/eD68T1JGA2Nbn5ayt/6xpwMBid4X+Bqzycyh92C5KT6o03ENWGqWkDRpwcs5
+         0Hdi+0aJWIVLq4+9TePmg/TRLLJTA4qpIdeMb5A4dt+Sp2Pov6xcT1VQK/7tFCGNmVFe
+         nMoPLkJZBqkWdKrF9agGC+zb3aCWEWvXsjWGoi8qgh+yO9HjGSrayV1mTXqyqe/1f9hj
+         1Zzotv6GeeAjpmYlPBLURqmL5rIR+803nlcQPdwipqreTX+plwZVaEJNPlT4zwxYQCvP
+         WHSw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=yy+X7DrHgGbuvo7Mx28qlKxTXUfj1P67Jn/BBZc/WKg=;
+        b=GqwutCb7yY1gVIE/0bQSHM8yUr73mDzjoKiGpbJInbhnu8Y160C/ttCsnuewUNyvWe
+         W8rmJkqnLD/1Fj9K1r/G20wEBkZwDThYcL+WlwexN8R/A7qnmgEvz+5PAFTHsfxNriyg
+         /OeSQvJ5Ult7TRMVeoCJj1AfsFCNG90W+ZYk+rYX0fGyCnPzLqH9ZgKNbFtg6rkaBbM9
+         NxvkjkHCb3H/pF0QQSVp4SWE6ON4FL2Dph56U52eDJgSUBsHd3E2Q0rBH+vZhY0Mj6PX
+         jjGNIKAzxUS5YGbrp5Z1qysqpU7UhUSY0OmgN+A7EF6AWMxk4/6LxrFwGNKbgr1gcRBK
+         5MEw==
+X-Gm-Message-State: APjAAAVIpJ2Noy2Xqd+HBObsFi6WIAnGTl6kUp7Qjke+E63xGwBj/HP6
+        G8yQJiR3K9+842bR+/A1W5Q=
+X-Google-Smtp-Source: APXvYqwpactMwwAc9SldXGTqY/9FGnHhtkz3TSQnJOPuxltn9o8CNNW4qRVWBv+BEyXXHzG766THcw==
+X-Received: by 2002:adf:82ef:: with SMTP id 102mr17341019wrc.23.1582578638971;
+        Mon, 24 Feb 2020 13:10:38 -0800 (PST)
+Received: from Ansuel-XPS.localdomain (93-39-149-95.ip76.fastwebnet.it. [93.39.149.95])
+        by smtp.googlemail.com with ESMTPSA id i204sm917780wma.44.2020.02.24.13.10.37
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 24 Feb 2020 13:10:38 -0800 (PST)
+From:   Ansuel Smith <ansuelsmth@gmail.com>
+Cc:     Ansuel Smith <ansuelsmth@gmail.com>,
+        Christian Lamparter <chunkeey@gmail.com>,
+        Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Andrew Lunn <andrew@lunn.ch>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Heiner Kallweit <hkallweit1@gmail.com>,
+        Russell King <linux@armlinux.org.uk>,
+        linux-arm-msm@vger.kernel.org, netdev@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH v7 1/2] net: mdio: add ipq8064 mdio driver
+Date:   Mon, 24 Feb 2020 22:10:30 +0100
+Message-Id: <20200224211035.16897-1-ansuelsmth@gmail.com>
+X-Mailer: git-send-email 2.25.0
 MIME-Version: 1.0
-In-Reply-To: <20200224191248.GP24185@bombadil.infradead.org>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
 Content-Transfer-Encoding: 8bit
+To:     unlisted-recipients:; (no To-header on input)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2/24/20 11:12 AM, Matthew Wilcox wrote:
-> On Mon, Feb 24, 2020 at 11:58:51AM -0700, Jonathan Corbet wrote:
->> On Mon, 24 Feb 2020 10:52:27 -0800
->> Matthew Wilcox <willy@infradead.org> wrote:
->>
->>> On Mon, Feb 24, 2020 at 07:47:19PM +0100, Jonathan Neuschäfer wrote:
->>>> On Mon, Feb 24, 2020 at 11:08:15AM -0700, Jonathan Corbet wrote:  
->>>>> On Sun, 23 Feb 2020 23:22:27 +0100
->>>>> Jonathan Neuschäfer <j.neuschaefer@gmx.net> wrote:
->>>>>   
->>>>>> Without double-backticks, Sphinx wrongly turns "--version" into
->>>>>> "–version" with a Unicode EN DASH (U+2013), that is visually easy to
->>>>>> confuse with a single ASCII dash.
->>>>>>
->>>>>> Signed-off-by: Jonathan Neuschäfer <j.neuschaefer@gmx.net>  
->>>>>
->>>>> This certainly seems worth addressing.  But I would *really* rather find
->>>>> a way to tell Sphinx not to do that rather than making all of these
->>>>> tweaks - which we will certainly find ourselves having to do over and
->>>>> over again.  I can try to look into that in a bit, but if somebody were
->>>>> to beat me to it ... :)  
->>>>
->>>> This seems to do the trick:
->>>>
->>>> diff --git a/Documentation/conf.py b/Documentation/conf.py
->>>> index 3c7bdf4cd31f..8f2a7ae95184 100644
->>>> --- a/Documentation/conf.py
->>>> +++ b/Documentation/conf.py
->>>> @@ -587,6 +587,9 @@ pdf_documents = [
->>>>  kerneldoc_bin = '../scripts/kernel-doc'
->>>>  kerneldoc_srctree = '..'
->>>>
->>>> +# Render -- as two dashes
->>>> +smartquotes = False  
->>>
->>> I think what Jon was looking for was the ability to selectively turn
->>> smartquotes off for a section and then reenable it?
->>
->> No that's not what I was thinking, actually.  Unless somebody can come up
->> with a good reason to the contrary, just disabling that behavior globally
->> strikes me as the right thing to do.
-> 
-> Well, sometimes -- when the time is right -- I like to use en-dashes.
-> It's probably no great loss, though.
-> 
-> grep finds me these interesting examples:
-> 
-> Documentation/RCU/Design/Memory-Ordering/Tree-RCU-Memory-Ordering.rst:Tree RCU's grace--period memory-ordering guarantees rely most heavily on
-> Documentation/accounting/psi.rst:scarcity aids users in sizing workloads to hardware--or provisioning
-> Documentation/admin-guide/acpi/cppc_sysfs.rst:  -r--r--r-- 1 root root 65536 Mar  5 19:38 feedback_ctrs
-> Documentation/admin-guide/mm/hugetlbpage.rst:task that modifies ``nr_hugepages``. The default for the allowed nodes--when the
-> Documentation/block/null_blk.rst:home_node=[0--nr_nodes]: Default: NUMA_NO_NODE
-> Documentation/admin-guide/svga.rst::Copyright: |copy| 1995--1999 Martin Mares, <mj@ucw.cz>
-> Documentation/media/uapi/v4l/pixfmt-srggb10-ipu3.rst:        G\ :sub:`0108high`\ (bits 1--0)
-> 
-> (in all, 368 lines, but they're not all in .rst files)
-> 
+Currently ipq806x soc use generic bitbang driver to
+comunicate with the gmac ethernet interface.
+Add a dedicated driver created by chunkeey to fix this.
 
-Not trying to be contrary, but I would prefer to keep .rst files as much
-ASCII as possible.
+Signed-off-by: Christian Lamparter <chunkeey@gmail.com>
+Co-developed-by: Christian Lamparter <chunkeey@gmail.com>
+Signed-off-by: Ansuel Smith <ansuelsmth@gmail.com>
+---
+Changes in v7:
+- Add myself as module author and copyright
+- Reduced usleep_range to 8-10 as suggested by chunkeey
 
+Changes in v6:
+- Fix error in commit description
+- Add co-developed tag
+
+Changes in v5:
+- Rename define to more rappresentative name
+
+Changes in v4:
+- Fix wrong print value in dev_err 
+
+Changes in v3:
+- Fix wrong return logic on error
+
+Changes in v2:
+- Use regmap_read_poll_timeout
+- Reject clause 45
+ 
+ drivers/net/phy/Kconfig        |   8 ++
+ drivers/net/phy/Makefile       |   1 +
+ drivers/net/phy/mdio-ipq8064.c | 169 +++++++++++++++++++++++++++++++++
+ 3 files changed, 178 insertions(+)
+ create mode 100644 drivers/net/phy/mdio-ipq8064.c
+
+diff --git a/drivers/net/phy/Kconfig b/drivers/net/phy/Kconfig
+index 9dabe03a668c..ec2a5493a7e8 100644
+--- a/drivers/net/phy/Kconfig
++++ b/drivers/net/phy/Kconfig
+@@ -157,6 +157,14 @@ config MDIO_I2C
+ 
+ 	  This is library mode.
+ 
++config MDIO_IPQ8064
++	tristate "Qualcomm IPQ8064 MDIO interface support"
++	depends on HAS_IOMEM && OF_MDIO
++	depends on MFD_SYSCON
++	help
++	  This driver supports the MDIO interface found in the network
++	  interface units of the IPQ8064 SoC
++
+ config MDIO_MOXART
+ 	tristate "MOXA ART MDIO interface support"
+ 	depends on ARCH_MOXART || COMPILE_TEST
+diff --git a/drivers/net/phy/Makefile b/drivers/net/phy/Makefile
+index fe5badf13b65..8f02bd2089f3 100644
+--- a/drivers/net/phy/Makefile
++++ b/drivers/net/phy/Makefile
+@@ -36,6 +36,7 @@ obj-$(CONFIG_MDIO_CAVIUM)	+= mdio-cavium.o
+ obj-$(CONFIG_MDIO_GPIO)		+= mdio-gpio.o
+ obj-$(CONFIG_MDIO_HISI_FEMAC)	+= mdio-hisi-femac.o
+ obj-$(CONFIG_MDIO_I2C)		+= mdio-i2c.o
++obj-$(CONFIG_MDIO_IPQ8064)	+= mdio-ipq8064.o
+ obj-$(CONFIG_MDIO_MOXART)	+= mdio-moxart.o
+ obj-$(CONFIG_MDIO_MSCC_MIIM)	+= mdio-mscc-miim.o
+ obj-$(CONFIG_MDIO_OCTEON)	+= mdio-octeon.o
+diff --git a/drivers/net/phy/mdio-ipq8064.c b/drivers/net/phy/mdio-ipq8064.c
+new file mode 100644
+index 000000000000..9713d6e8c076
+--- /dev/null
++++ b/drivers/net/phy/mdio-ipq8064.c
+@@ -0,0 +1,169 @@
++// SPDX-License-Identifier: GPL-2.0
++/*
++ * Qualcomm IPQ8064 MDIO interface driver
++ *
++ * Copyright (C) 2019 Christian Lamparter <chunkeey@gmail.com>
++ * Copyright (C) 2020 Ansuel Smith <ansuelsmth@gmail.com>
++ */
++
++#include <linux/delay.h>
++#include <linux/kernel.h>
++#include <linux/module.h>
++#include <linux/regmap.h>
++#include <linux/of_mdio.h>
++#include <linux/phy.h>
++#include <linux/platform_device.h>
++#include <linux/mfd/syscon.h>
++
++/* MII address register definitions */
++#define MII_ADDR_REG_ADDR                       0x10
++#define MII_BUSY                                BIT(0)
++#define MII_WRITE                               BIT(1)
++#define MII_CLKRANGE_60_100M                    (0 << 2)
++#define MII_CLKRANGE_100_150M                   (1 << 2)
++#define MII_CLKRANGE_20_35M                     (2 << 2)
++#define MII_CLKRANGE_35_60M                     (3 << 2)
++#define MII_CLKRANGE_150_250M                   (4 << 2)
++#define MII_CLKRANGE_250_300M                   (5 << 2)
++#define MII_CLKRANGE_MASK			GENMASK(4, 2)
++#define MII_REG_SHIFT				6
++#define MII_REG_MASK				GENMASK(10, 6)
++#define MII_ADDR_SHIFT				11
++#define MII_ADDR_MASK				GENMASK(15, 11)
++
++#define MII_DATA_REG_ADDR                       0x14
++
++#define MII_MDIO_DELAY_USEC                     (1000)
++#define MII_MDIO_RETRY_MSEC                     (10)
++
++struct ipq8064_mdio {
++	struct regmap *base; /* NSS_GMAC0_BASE */
++};
++
++static int
++ipq8064_mdio_wait_busy(struct ipq8064_mdio *priv)
++{
++	u32 busy;
++
++	return regmap_read_poll_timeout(priv->base, MII_ADDR_REG_ADDR, busy,
++					!(busy & MII_BUSY), MII_MDIO_DELAY_USEC,
++					MII_MDIO_RETRY_MSEC * USEC_PER_MSEC);
++}
++
++static int
++ipq8064_mdio_read(struct mii_bus *bus, int phy_addr, int reg_offset)
++{
++	struct ipq8064_mdio *priv = bus->priv;
++	u32 miiaddr = MII_BUSY | MII_CLKRANGE_250_300M;
++	u32 ret_val;
++	int err;
++
++	/* Reject clause 45 */
++	if (reg_offset & MII_ADDR_C45)
++		return -EOPNOTSUPP;
++
++	miiaddr |= ((phy_addr << MII_ADDR_SHIFT) & MII_ADDR_MASK) |
++		   ((reg_offset << MII_REG_SHIFT) & MII_REG_MASK);
++
++	regmap_write(priv->base, MII_ADDR_REG_ADDR, miiaddr);
++	usleep_range(8, 10);
++
++	err = ipq8064_mdio_wait_busy(priv);
++	if (err)
++		return err;
++
++	regmap_read(priv->base, MII_DATA_REG_ADDR, &ret_val);
++	return (int)ret_val;
++}
++
++static int
++ipq8064_mdio_write(struct mii_bus *bus, int phy_addr, int reg_offset, u16 data)
++{
++	struct ipq8064_mdio *priv = bus->priv;
++	u32 miiaddr = MII_WRITE | MII_BUSY | MII_CLKRANGE_250_300M;
++
++	/* Reject clause 45 */
++	if (reg_offset & MII_ADDR_C45)
++		return -EOPNOTSUPP;
++
++	regmap_write(priv->base, MII_DATA_REG_ADDR, data);
++
++	miiaddr |= ((phy_addr << MII_ADDR_SHIFT) & MII_ADDR_MASK) |
++		   ((reg_offset << MII_REG_SHIFT) & MII_REG_MASK);
++
++	regmap_write(priv->base, MII_ADDR_REG_ADDR, miiaddr);
++	usleep_range(8, 10);
++
++	return ipq8064_mdio_wait_busy(priv);
++}
++
++static int
++ipq8064_mdio_probe(struct platform_device *pdev)
++{
++	struct device_node *np = pdev->dev.of_node;
++	struct ipq8064_mdio *priv;
++	struct mii_bus *bus;
++	int ret;
++
++	bus = devm_mdiobus_alloc_size(&pdev->dev, sizeof(*priv));
++	if (!bus)
++		return -ENOMEM;
++
++	bus->name = "ipq8064_mdio_bus";
++	bus->read = ipq8064_mdio_read;
++	bus->write = ipq8064_mdio_write;
++	snprintf(bus->id, MII_BUS_ID_SIZE, "%s-mii", dev_name(&pdev->dev));
++	bus->parent = &pdev->dev;
++
++	priv = bus->priv;
++	priv->base = syscon_node_to_regmap(np);
++	if (IS_ERR(priv->base) && priv->base != ERR_PTR(-EPROBE_DEFER))
++		priv->base = syscon_regmap_lookup_by_phandle(np, "master");
++
++	if (priv->base == ERR_PTR(-EPROBE_DEFER)) {
++		return -EPROBE_DEFER;
++	} else if (IS_ERR(priv->base)) {
++		dev_err(&pdev->dev, "error getting syscon regmap, error=%pe\n",
++				priv->base);
++		return PTR_ERR(priv->base);
++	}
++
++	ret = of_mdiobus_register(bus, np);
++	if (ret)
++		return ret;
++
++	platform_set_drvdata(pdev, bus);
++	return 0;
++}
++
++static int
++ipq8064_mdio_remove(struct platform_device *pdev)
++{
++	struct mii_bus *bus = platform_get_drvdata(pdev);
++
++	mdiobus_unregister(bus);
++
++	return 0;
++}
++
++static const struct of_device_id ipq8064_mdio_dt_ids[] = {
++	{ .compatible = "qcom,ipq8064-mdio" },
++	{ }
++};
++MODULE_DEVICE_TABLE(of, ipq8064_mdio_dt_ids);
++
++static struct platform_driver ipq8064_mdio_driver = {
++	.probe = ipq8064_mdio_probe,
++	.remove = ipq8064_mdio_remove,
++	.driver = {
++		.name = "ipq8064-mdio",
++		.of_match_table = ipq8064_mdio_dt_ids,
++	},
++};
++
++module_platform_driver(ipq8064_mdio_driver);
++
++MODULE_DESCRIPTION("Qualcomm IPQ8064 MDIO interface driver");
++MODULE_AUTHOR("Christian Lamparter <chunkeey@gmail.com>");
++MODULE_AUTHOR("Ansuel Smith <ansuelsmth@gmail.com>");
++MODULE_LICENSE("GPL");
 -- 
-~Randy
+2.25.0
 
