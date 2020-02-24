@@ -2,46 +2,43 @@ Return-Path: <SRS0=7TUr=4M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 56C06C11D30
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 16:01:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 203E6C11D32
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 16:02:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 385D320828
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 16:01:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 01A2C2082F
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 16:02:04 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727976AbgBXQBX (ORCPT
+        id S1727986AbgBXQCC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Feb 2020 11:01:23 -0500
-Received: from foss.arm.com ([217.140.110.172]:39214 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727849AbgBXQBW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Feb 2020 11:01:22 -0500
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id EB16D1FB;
-        Mon, 24 Feb 2020 08:01:21 -0800 (PST)
-Received: from e113632-lin (e113632-lin.cambridge.arm.com [10.1.194.46])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 7FC263F703;
-        Mon, 24 Feb 2020 08:01:20 -0800 (PST)
-References: <20200224095223.13361-9-mgorman@techsingularity.net> <158255763157.28353.3693734020236686000.tip-bot2@tip-bot2>
-User-agent: mu4e 0.9.17; emacs 26.3
-From:   Valentin Schneider <valentin.schneider@arm.com>
-To:     linux-kernel@vger.kernel.org
-Cc:     linux-tip-commits@vger.kernel.org,
-        Vincent Guittot <vincent.guittot@linaro.org>,
-        Mel Gorman <mgorman@techsingularity.net>,
-        Ingo Molnar <mingo@kernel.org>,
-        Dietmar Eggemann <dietmar.eggemann@arm.com>,
-        Peter Zijlstra <a.p.zijlstra@chello.nl>,
-        Juri Lelli <juri.lelli@redhat.com>,
-        Phil Auld <pauld@redhat.com>, Hillf Danton <hdanton@sina.com>,
-        x86 <x86@kernel.org>
-Subject: Re: [tip: sched/core] sched/pelt: Add a new runnable average signal
-In-reply-to: <158255763157.28353.3693734020236686000.tip-bot2@tip-bot2>
-Date:   Mon, 24 Feb 2020 16:01:04 +0000
-Message-ID: <jhj36b06klb.fsf@arm.com>
+        Mon, 24 Feb 2020 11:02:02 -0500
+Received: from Galois.linutronix.de ([193.142.43.55]:50487 "EHLO
+        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727895AbgBXQCC (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 24 Feb 2020 11:02:02 -0500
+Received: from [5.158.153.52] (helo=nanos.tec.linutronix.de)
+        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
+        (Exim 4.80)
+        (envelope-from <tglx@linutronix.de>)
+        id 1j6GB3-00070V-1W; Mon, 24 Feb 2020 17:01:49 +0100
+Received: by nanos.tec.linutronix.de (Postfix, from userid 1000)
+        id A1F5A10408E; Mon, 24 Feb 2020 17:01:48 +0100 (CET)
+From:   Thomas Gleixner <tglx@linutronix.de>
+To:     Borislav Petkov <bp@alien8.de>,
+        Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
+Cc:     tony.luck@intel.com, mingo@redhat.com, hpa@zytor.com,
+        x86@kernel.org, linux-edac@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        Chris Wilson <chris@chris-wilson.co.uk>
+Subject: Re: [PATCH] x86/mce/therm_throt: Handle case where throttle_active_work() is called on behalf of an offline CPU
+In-Reply-To: <20200224125525.GA29318@zn.tnic>
+References: <20200222162432.497201-1-srinivas.pandruvada@linux.intel.com> <20200222175151.GD11284@zn.tnic> <40989625ca5496a986ca3e595957da83723777f4.camel@linux.intel.com> <20200224125525.GA29318@zn.tnic>
+Date:   Mon, 24 Feb 2020 17:01:48 +0100
+Message-ID: <87y2ssm0sz.fsf@nanos.tec.linutronix.de>
 MIME-Version: 1.0
 Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
@@ -49,19 +46,45 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Borislav Petkov <bp@alien8.de> writes:
 
-tip-bot2 for Vincent Guittot writes:
+> On Sat, Feb 22, 2020 at 04:25:59PM -0800, Srinivas Pandruvada wrote:
+>> If the condition is false, will it prevent offline CPU before executing
+>> next statement and reschedule on another CPU? Although It will not
+>> cause any error or crash but in rare circumstance may print premature
+>> warning/normal message based on the current CPU's state.
+>
+> Why, offline CPU is offline CPU?
+>
+> Btw, I'm asking whether you can do the simpler thing *instead* of your
+> patch. You basically don't run the workqueue callback on offlined CPUs:
+>
+> 	get_online_cpus();
+>
+> 	if (cpu_is_offline(smp_processor_id()))
+> 		goto out;
+>
+> 	...
+>
+>
+> out:
+> 	put_online_cpus();
 
-> Signed-off-by: Vincent Guittot <vincent.guittot@linaro.org>
-> Signed-off-by: Mel Gorman <mgorman@techsingularity.net>
-> Signed-off-by: Ingo Molnar <mingo@kernel.org>
-> Reviewed-by: "Dietmar Eggemann <dietmar.eggemann@arm.com>"
-> Acked-by: Peter Zijlstra <a.p.zijlstra@chello.nl>
+Which is wrong as well. Trying to "fix" it in the work queue callback is
+papering over the root cause.
 
-With the fork time initialization thing being sorted out, the rest of the
-runnable series can claim my
+Why is any work scheduled on an outgoing CPU after this CPU executed
+thermal_throttle_offline()?
 
-Reviewed-by: Valentin Schneider <valentin.schneider@arm.com>
+When thermal_throttle_offline() is invoked the cpu bound work queues are
+still functional and thermal_throttle_offline() cancels outstanding
+work.
 
-but I doubt any of that is worth the hassle since it's in tip already. Just
-figured I'd mention it, being in Cc and all :-)
+So no, please fix the root cause not the symptom.
+
+Thanks,
+
+        tglx
+
+
+
