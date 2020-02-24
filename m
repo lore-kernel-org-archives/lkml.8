@@ -2,160 +2,179 @@ Return-Path: <SRS0=7TUr=4M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-19.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F3A57C38BFA
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 21:43:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B69C2C38BFA
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 21:43:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C916E21556
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 21:43:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8363621556
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 21:43:28 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="L7SG/xfX"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="AZZQBgPs"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728039AbgBXVnJ (ORCPT
+        id S1728117AbgBXVn1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Feb 2020 16:43:09 -0500
-Received: from mail-pj1-f66.google.com ([209.85.216.66]:55949 "EHLO
-        mail-pj1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727421AbgBXVnJ (ORCPT
+        Mon, 24 Feb 2020 16:43:27 -0500
+Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:32754 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1727932AbgBXVn0 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Feb 2020 16:43:09 -0500
-Received: by mail-pj1-f66.google.com with SMTP id d5so315673pjz.5
-        for <linux-kernel@vger.kernel.org>; Mon, 24 Feb 2020 13:43:09 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=f4i1Oi5gvnAT7W5MjdBiXsrt20m/drKTjt6b50/GmPk=;
-        b=L7SG/xfX1nYfYR47lHZ/EU0bNdSkhTKLbKcDJ/0L4JsRZcNcDOwhFktZmAfS9XsEIb
-         Eg4CWq2HuCVTvqoUK5NOUuVL7lhPfJG40VnuzY1tIcjUT7c+r1/jVyw1+gZVdVfaJAcM
-         7Oqb/WvCaX08H6RatY4KlDnmebPamywqyhtN5cDyAcuK24daaFV75HsmTVlStqGr8xvD
-         DtxBS46FVZ63h6pu17YHdQegTTHPEi6m4iEMqQ+6HpMnVbcFX3+Ea4HwCvhRQRDfSUza
-         RHwop0L14gPlk5dnkyDk1/RTel8oW5xep+mKhfWXfAEMFN8EvOqxZHssMAtcazIX9JFM
-         QCVA==
+        Mon, 24 Feb 2020 16:43:26 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1582580605;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=2ZTIZjXSpWgQEjNf7zkISWcKkdhFuO/dpS7p5N+PWmY=;
+        b=AZZQBgPssL0UVRSABmgpnuAINdUPi9XKPkgmDypzIg/PEKhIkt1qgHBs2C+E5V6T93z2fR
+        szNxX5h0LmKtdy9DQauc5PKnk0jTx7uuz3CHWEkuf88oWTl0ha3mwZvdrMyCVLXDbl0hk1
+        OCdmu1AsTEh9T2qCr3UwJ0BTYvYMpXQ=
+Received: from mail-wm1-f72.google.com (mail-wm1-f72.google.com
+ [209.85.128.72]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-295-8RgybDzNO9SrVQlAViwwiw-1; Mon, 24 Feb 2020 16:43:24 -0500
+X-MC-Unique: 8RgybDzNO9SrVQlAViwwiw-1
+Received: by mail-wm1-f72.google.com with SMTP id r19so104134wmh.1
+        for <linux-kernel@vger.kernel.org>; Mon, 24 Feb 2020 13:43:24 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=f4i1Oi5gvnAT7W5MjdBiXsrt20m/drKTjt6b50/GmPk=;
-        b=YgOU/DeH1CB4RMNdxrjF4ufODruYRE2Fjc7mHiTOEkQLb3kz9YvkM8h4GdbxcoMpCj
-         2oyzRnUVPkw44swwqlX9SH1vSEeIhZEYKoxy1iwUF5dm7I1SdVnE4EtNecp6u4MI4jNN
-         sD5jSkMsxLAvWw/sGFn55cVJ/tgYcZRBnF3+ExDADWOWoc3FEAF6YeYBANcG40eu/Gm9
-         t+xWlRA96EJ2jfJN/d7dwVfgx8LYdxbEl8lR5HElx67X57aLi2KpPB3WB9NWuqxoAHxB
-         MIVJmIimovdEgjwhVEZGvkus6LfUApETGKSUbXijNJ/kpn06s8A0+5cTV3vu4if6hytd
-         Zrzw==
-X-Gm-Message-State: APjAAAXz69sgjJX/DgG6kj7jHHRIce4rYVg5VXBcXbfL9l+rpec3nJuv
-        uUffc2Don+YeRBELQ7w7pNo81bCzadq8Dd6TjJLfeQ==
-X-Google-Smtp-Source: APXvYqx5PDmpmRkn5e1Czz8bTwU/PYLt2gbRo8nyFaCfXHR8fdccOtxwzqqR/+IBZX4HgL76XY/OS0FsqY1hOMTMEC8=
-X-Received: by 2002:a17:902:760e:: with SMTP id k14mr49231805pll.119.1582580588273;
- Mon, 24 Feb 2020 13:43:08 -0800 (PST)
+        h=x-gm-message-state:from:to:cc:subject:in-reply-to:references:date
+         :message-id:mime-version;
+        bh=2ZTIZjXSpWgQEjNf7zkISWcKkdhFuO/dpS7p5N+PWmY=;
+        b=eHRwFY6aVsE5FEnu2e04rEqieF9862ZsfAozvKfH3pOWu1bx5wAGBkpq2Jiamr6k3c
+         2tIfqHyDrkA1R6bOpMa+rJz2TNRpJa5UMrUEW9MXKCC+vr1glkuCIwNC9s784waz5OYK
+         6Vh0kq9uXi9dW/MrSE6HcyCKuWwi1da0ENPwJrew0GgFZT+lKHHI5BqB4uhWzNQZe0Y3
+         qrwD1VYZVXCAk5yGNrZVspoMvWg8VLOwDj4uVp8ShrMuIw7mbC7A0kclwn8En07/X+Sx
+         CTYMWe5d874JL+anQ1qBC3R7V2IF0rSYwKA8S1HbIB6JuY4EitpA9HsCj4o8cK2ybCAL
+         GwDA==
+X-Gm-Message-State: APjAAAWiEs8MGMKy3hBhfgh+4aPtPxocWhSTznZcG48Z4mFKwiFXwNsG
+        VUcnsdZzIMOFFCtdrJ9tVm2Dzjn5bXNAS2Lc3UvfFz78/ja9zXem+R9AkrLjYj4x/L4PmwFBt0k
+        Wt6spN0kuRHgezAunaaikfy71
+X-Received: by 2002:adf:ee4c:: with SMTP id w12mr141256wro.310.1582580603021;
+        Mon, 24 Feb 2020 13:43:23 -0800 (PST)
+X-Google-Smtp-Source: APXvYqxfUQpyKHaWhH8NpLQgO8sQ2P6mnJ1qvsJ2nyTxYMe6mzd0IBSOhbjFl56D51dU32ArURO5eg==
+X-Received: by 2002:adf:ee4c:: with SMTP id w12mr141245wro.310.1582580602825;
+        Mon, 24 Feb 2020 13:43:22 -0800 (PST)
+Received: from vitty.brq.redhat.com (g-server-2.ign.cz. [91.219.240.2])
+        by smtp.gmail.com with ESMTPSA id t131sm1077916wmb.13.2020.02.24.13.43.21
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 24 Feb 2020 13:43:22 -0800 (PST)
+From:   Vitaly Kuznetsov <vkuznets@redhat.com>
+To:     Sean Christopherson <sean.j.christopherson@intel.com>
+Cc:     Paolo Bonzini <pbonzini@redhat.com>,
+        Wanpeng Li <wanpengli@tencent.com>,
+        Jim Mattson <jmattson@google.com>,
+        Joerg Roedel <joro@8bytes.org>, kvm@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 41/61] KVM: x86: Move XSAVES CPUID adjust to VMX's KVM cpu cap update
+In-Reply-To: <20200201185218.24473-42-sean.j.christopherson@intel.com>
+References: <20200201185218.24473-1-sean.j.christopherson@intel.com> <20200201185218.24473-42-sean.j.christopherson@intel.com>
+Date:   Mon, 24 Feb 2020 22:43:20 +0100
+Message-ID: <878skroe4n.fsf@vitty.brq.redhat.com>
 MIME-Version: 1.0
-References: <20191023002014.22571-1-natechancellor@gmail.com> <20200221045740.GA43417@ubuntu-m2-xlarge-x86>
-In-Reply-To: <20200221045740.GA43417@ubuntu-m2-xlarge-x86>
-From:   Nick Desaulniers <ndesaulniers@google.com>
-Date:   Mon, 24 Feb 2020 13:42:57 -0800
-Message-ID: <CAKwvOdku24UV8J4uSKFFc7gmwOP28-8K352BJepb_z-octFoPw@mail.gmail.com>
-Subject: Re: [PATCH] usb: gadget: udc: bdc: Remove unnecessary NULL checks in bdc_req_complete
-To:     Nathan Chancellor <natechancellor@gmail.com>,
-        Ashwini Pahuja <ashwini.linux@gmail.com>,
-        Felipe Balbi <balbi@kernel.org>
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-usb@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>,
-        clang-built-linux <clang-built-linux@googlegroups.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Feb 20, 2020 at 8:57 PM Nathan Chancellor
-<natechancellor@gmail.com> wrote:
+Sean Christopherson <sean.j.christopherson@intel.com> writes:
+
+> Move the clearing of the XSAVES CPUID bit into VMX, which has a separate
+> VMCS control to enable XSAVES in non-root, to eliminate the last ugly
+> renmant of the undesirable "unsigned f_* = *_supported ? F(*) : 0"
+> pattern in the common CPUID handling code.
 >
-> I know it has been a while but ping?
-
-Sorry! Too many bugs...barely treading water! Send help!
-
+> Drop ->xsaves_supported(), CPUID adjustment was the only user.
 >
-> On Tue, Oct 22, 2019 at 05:20:15PM -0700, Nathan Chancellor wrote:
-> > When building with Clang + -Wtautological-pointer-compare:
-> >
-> > drivers/usb/gadget/udc/bdc/bdc_ep.c:543:28: warning: comparison of
-> > address of 'req->queue' equal to a null pointer is always false
-> > [-Wtautological-pointer-compare]
-> >         if (req == NULL  || &req->queue == NULL || &req->usb_req == NULL)
-> >                              ~~~~~^~~~~    ~~~~
-> > drivers/usb/gadget/udc/bdc/bdc_ep.c:543:51: warning: comparison of
-> > address of 'req->usb_req' equal to a null pointer is always false
-> > [-Wtautological-pointer-compare]
-> >         if (req == NULL  || &req->queue == NULL || &req->usb_req == NULL)
-> >                                                     ~~~~~^~~~~~~    ~~~~
-> > 2 warnings generated.
-> >
-> > As it notes, these statements will always evaluate to false so remove
-> > them.
-
-`req` is an instance of a `struct bdc_req` defined in
-drivers/usb/gadget/udc/bdc/bdc.h as:
-333 struct bdc_req {
-334   struct usb_request  usb_req;
-335   struct list_head  queue;
-336   struct bdc_ep   *ep;
-337   /* only one Transfer per request */
-338   struct bd_transfer bd_xfr;
-339   int epnum;
-340 };
-
-So indeed the non-pointer, struct members can never be NULL.
-
-I think the second check that was removed should be
-`req->usb_req.complete == NULL`, since otherwise `&req->usb_req` may
-be passed to usb_gadget_giveback_request which tries to invoke the
-`complete` member as a callback.  There are numerous places in
-drivers/usb/gadget/udc/bdc/bdc_ep.c that assign `complete = NULL`.
-
-Can the maintainers clarify?
-
-> >
-> > Fixes: efed421a94e6 ("usb: gadget: Add UDC driver for Broadcom USB3.0 device controller IP BDC")
-> > Link: https://github.com/ClangBuiltLinux/linux/issues/749
-> > Signed-off-by: Nathan Chancellor <natechancellor@gmail.com>
-> > ---
-> >
-> > Note: I am not sure if these checks were intended to check if the
-> > contents of these arrays were NULL or if there should be some other
-> > checks in lieu of these; I am not familiar with the USB subsystem to
-> > answer this but I will happily respin the patch if this is not correct.
-> >
-> >  drivers/usb/gadget/udc/bdc/bdc_ep.c | 2 +-
-> >  1 file changed, 1 insertion(+), 1 deletion(-)
-> >
-> > diff --git a/drivers/usb/gadget/udc/bdc/bdc_ep.c b/drivers/usb/gadget/udc/bdc/bdc_ep.c
-> > index a4d9b5e1e50e..d49c6dc1082d 100644
-> > --- a/drivers/usb/gadget/udc/bdc/bdc_ep.c
-> > +++ b/drivers/usb/gadget/udc/bdc/bdc_ep.c
-> > @@ -540,7 +540,7 @@ static void bdc_req_complete(struct bdc_ep *ep, struct bdc_req *req,
-> >  {
-> >       struct bdc *bdc = ep->bdc;
-> >
-> > -     if (req == NULL  || &req->queue == NULL || &req->usb_req == NULL)
-> > +     if (req == NULL)
-> >               return;
-> >
-> >       dev_dbg(bdc->dev, "%s ep:%s status:%d\n", __func__, ep->name, status);
-> > --
-> > 2.23.0
-> >
+> No functional change intended.
 >
-> --
-> You received this message because you are subscribed to the Google Groups "Clang Built Linux" group.
-> To unsubscribe from this group and stop receiving emails from it, send an email to clang-built-linux+unsubscribe@googlegroups.com.
-> To view this discussion on the web visit https://groups.google.com/d/msgid/clang-built-linux/20200221045740.GA43417%40ubuntu-m2-xlarge-x86.
+> Signed-off-by: Sean Christopherson <sean.j.christopherson@intel.com>
+> ---
+>  arch/x86/include/asm/kvm_host.h | 1 -
+>  arch/x86/kvm/cpuid.c            | 4 ----
+>  arch/x86/kvm/svm.c              | 6 ------
+>  arch/x86/kvm/vmx/vmx.c          | 5 ++++-
+>  4 files changed, 4 insertions(+), 12 deletions(-)
+>
+> diff --git a/arch/x86/include/asm/kvm_host.h b/arch/x86/include/asm/kvm_host.h
+> index ba828569cda5..dd690fb5ceca 100644
+> --- a/arch/x86/include/asm/kvm_host.h
+> +++ b/arch/x86/include/asm/kvm_host.h
+> @@ -1163,7 +1163,6 @@ struct kvm_x86_ops {
+>  	void (*handle_exit_irqoff)(struct kvm_vcpu *vcpu,
+>  		enum exit_fastpath_completion *exit_fastpath);
+>  
+> -	bool (*xsaves_supported)(void);
+>  	bool (*umip_emulated)(void);
+>  	bool (*pt_supported)(void);
+>  
+> diff --git a/arch/x86/kvm/cpuid.c b/arch/x86/kvm/cpuid.c
+> index c2a4c9df49a9..77a6c1db138d 100644
+> --- a/arch/x86/kvm/cpuid.c
+> +++ b/arch/x86/kvm/cpuid.c
+> @@ -626,10 +626,6 @@ static inline int __do_cpuid_func(struct kvm_cpuid_array *array, u32 function)
+>  			goto out;
+>  
+>  		cpuid_entry_mask(entry, CPUID_D_1_EAX);
+> -
+> -		if (!kvm_x86_ops->xsaves_supported())
+> -			cpuid_entry_clear(entry, X86_FEATURE_XSAVES);
+> -
+>  		if (entry->eax & (F(XSAVES)|F(XSAVEC)))
+>  			entry->ebx = xstate_required_size(supported_xcr0, true);
+>  		else
+> diff --git a/arch/x86/kvm/svm.c b/arch/x86/kvm/svm.c
+> index f98a192459f7..7cb05945162e 100644
+> --- a/arch/x86/kvm/svm.c
+> +++ b/arch/x86/kvm/svm.c
+> @@ -6080,11 +6080,6 @@ static bool svm_rdtscp_supported(void)
+>  	return boot_cpu_has(X86_FEATURE_RDTSCP);
+>  }
+>  
+> -static bool svm_xsaves_supported(void)
+> -{
+> -	return boot_cpu_has(X86_FEATURE_XSAVES);
+> -}
+> -
+>  static bool svm_umip_emulated(void)
+>  {
+>  	return false;
+> @@ -7455,7 +7450,6 @@ static struct kvm_x86_ops svm_x86_ops __ro_after_init = {
+>  	.cpuid_update = svm_cpuid_update,
+>  
+>  	.rdtscp_supported = svm_rdtscp_supported,
+> -	.xsaves_supported = svm_xsaves_supported,
+>  	.umip_emulated = svm_umip_emulated,
+>  	.pt_supported = svm_pt_supported,
+>  
+> diff --git a/arch/x86/kvm/vmx/vmx.c b/arch/x86/kvm/vmx/vmx.c
+> index bae915431c72..cfd0ef314176 100644
+> --- a/arch/x86/kvm/vmx/vmx.c
+> +++ b/arch/x86/kvm/vmx/vmx.c
+> @@ -7131,6 +7131,10 @@ static __init void vmx_set_cpu_caps(void)
+>  	    boot_cpu_has(X86_FEATURE_OSPKE))
+>  		kvm_cpu_cap_set(X86_FEATURE_PKU);
+>  
+> +	/* CPUID 0xD.1 */
+> +	if (!vmx_xsaves_supported())
+> +		kvm_cpu_cap_clear(X86_FEATURE_XSAVES);
+> +
+>  	/* CPUID 0x80000001 */
+>  	if (!cpu_has_vmx_rdtscp())
+>  		kvm_cpu_cap_clear(X86_FEATURE_RDTSCP);
+> @@ -7886,7 +7890,6 @@ static struct kvm_x86_ops vmx_x86_ops __ro_after_init = {
+>  
+>  	.check_intercept = vmx_check_intercept,
+>  	.handle_exit_irqoff = vmx_handle_exit_irqoff,
+> -	.xsaves_supported = vmx_xsaves_supported,
+>  	.umip_emulated = vmx_umip_emulated,
+>  	.pt_supported = vmx_pt_supported,
 
-
+Reviewed-by: Vitaly Kuznetsov <vkuznets@redhat.com>
 
 -- 
-Thanks,
-~Nick Desaulniers
+Vitaly
+
