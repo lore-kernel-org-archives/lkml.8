@@ -2,112 +2,152 @@ Return-Path: <SRS0=7TUr=4M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
 	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 48698C35670
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 01:40:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 05B10C35673
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 01:42:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2159520637
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 01:40:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D144120675
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 01:42:04 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=crapouillou.net header.i=@crapouillou.net header.b="oh19lA7Y"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="LUV/rPwj"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727319AbgBXBkx (ORCPT
+        id S1727237AbgBXBmD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 23 Feb 2020 20:40:53 -0500
-Received: from outils.crapouillou.net ([89.234.176.41]:49074 "EHLO
-        crapouillou.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727187AbgBXBkw (ORCPT
+        Sun, 23 Feb 2020 20:42:03 -0500
+Received: from mail-io1-f65.google.com ([209.85.166.65]:38430 "EHLO
+        mail-io1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727180AbgBXBmD (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 23 Feb 2020 20:40:52 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=crapouillou.net;
-        s=mail; t=1582508432; h=from:from:sender:reply-to:subject:subject:date:date:
-         message-id:message-id:to:to:cc:cc:mime-version:mime-version:
-         content-type:content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=oIkXOlcvNEOIaRYiGfAyK5BuGM9pBUckulvUHXDUA/o=;
-        b=oh19lA7Y+/lMvQJvuk01jY2lt4HiB5GsVM4pab5dECNKgQ7/KgLArEi1XYDAy6HWKxJSlk
-        vFN8ZeRApMBcFzRmsKHMet86STXBZ36MLl+d6GALYng5pD1C22iRXaFLnzhPkYQQAaCDQO
-        nJgAwgWNbb1o+iWD/arXfsoPtOvOvkM=
-From:   Paul Cercueil <paul@crapouillou.net>
-To:     Bin Liu <b-liu@ti.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     od@zcrc.me, linux-usb@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Paul Cercueil <paul@crapouillou.net>
-Subject: [PATCH v2 5/5] usb: musb: jz4740: Add support for the JZ4770
-Date:   Sun, 23 Feb 2020 22:40:08 -0300
-Message-Id: <20200224014008.27114-5-paul@crapouillou.net>
-In-Reply-To: <20200224014008.27114-1-paul@crapouillou.net>
-References: <20200224014008.27114-1-paul@crapouillou.net>
+        Sun, 23 Feb 2020 20:42:03 -0500
+Received: by mail-io1-f65.google.com with SMTP id s24so8599909iog.5;
+        Sun, 23 Feb 2020 17:42:02 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=YhVgmjRGEwVCyeThkvJVHxfg3EG7YiNfvIKBv+nVMeI=;
+        b=LUV/rPwj6sFkk08tsYihfkSiIOu8DvPGR9ALzpZ9KEjJ6cm9TWhEVZs9gZjyFmGljq
+         hvNoZ9u8VINM0NVs03UyvMhfM790FRf3XJ9AZydNYvoRqSiwaLNqSenynHYtCoED8LCw
+         179biq4AALGeC06TKxnhDnmaLqwcFsmVT6PgPICaHH6IyXnfkpOLiO8VIMGa4vT3so6s
+         sG9GWsbxFay4pd/LRS9RapfOb0zBs3zUbaQWcf3L9pLU+tg5xg50TvzBrsMJXzpRb42X
+         xOzQlLVWgHVWo6GAxPE+ZZ7vcy20LfDsT+MM6IXZi4WpSxVePSAyytGXAuuWemRY/A91
+         ArpQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=YhVgmjRGEwVCyeThkvJVHxfg3EG7YiNfvIKBv+nVMeI=;
+        b=qCY1ebVaaV3XmUyxitSk0rYZfvCCv961I5YY5ta/HToS/zp45Pus+PS7noaldhiP1I
+         EAFYDYwoyBDerLS5xugIkxVm0lGLH7k+LyAx4iYc9ZaaQlaM+9kumtl338XcfQZ86GzZ
+         Ml9Dgrk8E9x8oRP0Qc6JisQHDv/YY4Uk6ssEkkcQBFA/Gzsi1ZoRWiJiFiiVcpAVqLsn
+         ccBFlq3r7TnlmDQCgHUMOdW9y7EZHcnFVX5o06YD5bHNhpRwsTSc7xdFBd168Vgdk59k
+         q4rZZoP0n3vsfP7gh2Q1nNCn3sneWINpevW1MDAz5ILIefWA1M5Dsn0Hu7+vO753LOQR
+         RC5w==
+X-Gm-Message-State: APjAAAUkgbgWnnzZqlcCqMapc28R/HJpKGDpkC2hQQ2d8leFwPzoiQZz
+        N7643DZV2RykL7DfusYdkVlxdUBB2tCsIbTi8CqEti2b+V0=
+X-Google-Smtp-Source: APXvYqzy3E4LciHHLkjXPWnbETKxqDYnUpxeTOYY1bhH38hgYV9T9015a+g5H5J9m6THVyk1bJHSl1mQeVBibIecwQA=
+X-Received: by 2002:a5d:87ca:: with SMTP id q10mr49147056ios.192.1582508522424;
+ Sun, 23 Feb 2020 17:42:02 -0800 (PST)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20200222183010.197844-1-adelva@google.com> <20200223145635.GB29607@iweiny-DESK2.sc.intel.com>
+In-Reply-To: <20200223145635.GB29607@iweiny-DESK2.sc.intel.com>
+From:   "Oliver O'Halloran" <oohall@gmail.com>
+Date:   Mon, 24 Feb 2020 12:41:51 +1100
+Message-ID: <CAOSf1CH-WMA5DDt9LKcPPZwb-ya-y=1WCc8mrUEEDMjg0WeX5g@mail.gmail.com>
+Subject: Re: [PATCH 1/2] libnvdimm/of_pmem: handle memory-region in DT
+To:     Ira Weiny <ira.weiny@intel.com>
+Cc:     Alistair Delva <adelva@google.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Kenny Root <kroot@google.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Vishal Verma <vishal.l.verma@intel.com>,
+        Dave Jiang <dave.jiang@intel.com>,
+        Device Tree <devicetree@vger.kernel.org>,
+        "linux-nvdimm@lists.01.org" <linux-nvdimm@lists.01.org>,
+        kernel-team@android.com
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add support for probing the jz4740-musb driver on the JZ4770 SoC.
+On Mon, Feb 24, 2020 at 1:56 AM Ira Weiny <ira.weiny@intel.com> wrote:
+>
+> On Sat, Feb 22, 2020 at 10:30:09AM -0800, Alistair Delva wrote:
+> > From: Kenny Root <kroot@google.com>
+> >
+> > Add support for parsing the 'memory-region' DT property in addition to
+> > the 'reg' DT property. This enables use cases where the pmem region is
+> > not in I/O address space or dedicated memory (e.g. a bootloader
+> > carveout).
+> >
+> > Signed-off-by: Kenny Root <kroot@google.com>
+> > Signed-off-by: Alistair Delva <adelva@google.com>
+> > Cc: "Oliver O'Halloran" <oohall@gmail.com>
+> > Cc: Rob Herring <robh+dt@kernel.org>
+> > Cc: Dan Williams <dan.j.williams@intel.com>
+> > Cc: Vishal Verma <vishal.l.verma@intel.com>
+> > Cc: Dave Jiang <dave.jiang@intel.com>
+> > Cc: Ira Weiny <ira.weiny@intel.com>
+> > Cc: devicetree@vger.kernel.org
+> > Cc: linux-nvdimm@lists.01.org
+> > Cc: kernel-team@android.com
+> > ---
+> >  drivers/nvdimm/of_pmem.c | 75 ++++++++++++++++++++++++++--------------
+> >  1 file changed, 50 insertions(+), 25 deletions(-)
+> >
+> > diff --git a/drivers/nvdimm/of_pmem.c b/drivers/nvdimm/of_pmem.c
+> > index 8224d1431ea9..a68e44fb0041 100644
+> > --- a/drivers/nvdimm/of_pmem.c
+> > +++ b/drivers/nvdimm/of_pmem.c
+> > @@ -14,13 +14,47 @@ struct of_pmem_private {
+> >       struct nvdimm_bus *bus;
+> >  };
+> >
+> > +static void of_pmem_register_region(struct platform_device *pdev,
+> > +                                 struct nvdimm_bus *bus,
+> > +                                 struct device_node *np,
+> > +                                 struct resource *res, bool is_volatile)
+>
+> FWIW it would be easier to review if this was splut into a patch which created
+> the helper of_pmem_register_region() without the new logic.  Then added the new
+> logic here.
 
-The USB IP in the JZ4770 works the same Inventra IP as for the JZ4740,
-but it features more endpoints, and officially supports OTG.
+Yeah, that wouldn't hurt.
 
-Signed-off-by: Paul Cercueil <paul@crapouillou.net>
----
+*snip*
 
-Notes:
-    v2: No change
+> > +     i = 0;
+> > +     while ((mr_np = of_parse_phandle(np, "memory-region", i++))) {
+> > +             ret = of_address_to_resource(mr_np, 0, &res);
+> > +             if (ret)
+> > +                     dev_warn(
+> > +                             &pdev->dev,
+> > +                             "Unable to acquire memory-region from %pOF: %d\n",
+> > +                             mr_np, ret);
+> >               else
+> > -                     dev_dbg(&pdev->dev, "Registered region %pR from %pOF\n",
+> > -                                     ndr_desc.res, np);
+> > +                     of_pmem_register_region(pdev, bus, np, &res,
+> > +                                             is_volatile);
+> > +             of_node_put(mr_np);
+>
+> Why of_node_put()?
 
- drivers/usb/musb/jz4740.c | 28 ++++++++++++++++++++++++++++
- 1 file changed, 28 insertions(+)
+"memory-region" is an array of pointers to nodes in /reserved-memory/
+which describe the actual memory region. of_parse_phandle() elevates
+the refcount of the returned node and we need to balance that.
 
-diff --git a/drivers/usb/musb/jz4740.c b/drivers/usb/musb/jz4740.c
-index b6747bad4fb2..8c52a1fa6fbc 100644
---- a/drivers/usb/musb/jz4740.c
-+++ b/drivers/usb/musb/jz4740.c
-@@ -161,6 +161,33 @@ static const struct musb_hdrc_platform_data jz4740_musb_pdata = {
- 	.platform_ops	= &jz4740_musb_ops,
- };
- 
-+static struct musb_fifo_cfg jz4770_musb_fifo_cfg[] = {
-+	{ .hw_ep_num = 1, .style = FIFO_TX, .maxpacket = 512, },
-+	{ .hw_ep_num = 1, .style = FIFO_RX, .maxpacket = 512, },
-+	{ .hw_ep_num = 2, .style = FIFO_TX, .maxpacket = 512, },
-+	{ .hw_ep_num = 2, .style = FIFO_RX, .maxpacket = 512, },
-+	{ .hw_ep_num = 3, .style = FIFO_TX, .maxpacket = 512, },
-+	{ .hw_ep_num = 3, .style = FIFO_RX, .maxpacket = 512, },
-+	{ .hw_ep_num = 4, .style = FIFO_TX, .maxpacket = 512, },
-+	{ .hw_ep_num = 4, .style = FIFO_RX, .maxpacket = 512, },
-+	{ .hw_ep_num = 5, .style = FIFO_TX, .maxpacket = 512, },
-+	{ .hw_ep_num = 5, .style = FIFO_RX, .maxpacket = 512, },
-+};
-+
-+static struct musb_hdrc_config jz4770_musb_config = {
-+	.multipoint	= 1,
-+	.num_eps	= 11,
-+	.ram_bits	= 11,
-+	.fifo_cfg	= jz4770_musb_fifo_cfg,
-+	.fifo_cfg_size	= ARRAY_SIZE(jz4770_musb_fifo_cfg),
-+};
-+
-+static const struct musb_hdrc_platform_data jz4770_musb_pdata = {
-+	.mode		= MUSB_PERIPHERAL, /* TODO: support OTG */
-+	.config		= &jz4770_musb_config,
-+	.platform_ops	= &jz4740_musb_ops,
-+};
-+
- static int jz4740_probe(struct platform_device *pdev)
- {
- 	struct device			*dev = &pdev->dev;
-@@ -248,6 +275,7 @@ static int jz4740_remove(struct platform_device *pdev)
- 
- static const struct of_device_id jz4740_musb_of_match[] = {
- 	{ .compatible = "ingenic,jz4740-musb", .data = &jz4740_musb_pdata },
-+	{ .compatible = "ingenic,jz4770-musb", .data = &jz4770_musb_pdata },
- 	{ /* sentinel */ },
- };
- MODULE_DEVICE_TABLE(of, jz4740_musb_of_match);
--- 
-2.25.0
-
+>
+> Ira
+> >       }
+> >
+> >       return 0;
+> > --
+> > 2.25.0.265.gbab2e86ba0-goog
+> >
