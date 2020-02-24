@@ -7,63 +7,63 @@ X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2E716C3567B
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 09:10:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 24C7AC11D2A
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 09:10:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EFEBE20866
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 09:09:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E72252086A
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 09:10:03 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=cerno.tech header.i=@cerno.tech header.b="mjMpcBn3";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="0cSn/KUr"
+	dkim=pass (2048-bit key) header.d=cerno.tech header.i=@cerno.tech header.b="iH5+T9km";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="qt3Z8nS6"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728030AbgBXJJ6 (ORCPT
+        id S1727276AbgBXJKD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Feb 2020 04:09:58 -0500
-Received: from wnew3-smtp.messagingengine.com ([64.147.123.17]:52995 "EHLO
+        Mon, 24 Feb 2020 04:10:03 -0500
+Received: from wnew3-smtp.messagingengine.com ([64.147.123.17]:48057 "EHLO
         wnew3-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727962AbgBXJJy (ORCPT
+        by vger.kernel.org with ESMTP id S1728028AbgBXJJ7 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Feb 2020 04:09:54 -0500
+        Mon, 24 Feb 2020 04:09:59 -0500
 Received: from compute3.internal (compute3.nyi.internal [10.202.2.43])
-        by mailnew.west.internal (Postfix) with ESMTP id 47E41616;
-        Mon, 24 Feb 2020 04:09:53 -0500 (EST)
-Received: from mailfrontend1 ([10.202.2.162])
-  by compute3.internal (MEProxy); Mon, 24 Feb 2020 04:09:54 -0500
+        by mailnew.west.internal (Postfix) with ESMTP id 90566616;
+        Mon, 24 Feb 2020 04:09:57 -0500 (EST)
+Received: from mailfrontend2 ([10.202.2.163])
+  by compute3.internal (MEProxy); Mon, 24 Feb 2020 04:09:58 -0500
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cerno.tech; h=
         from:to:cc:subject:date:message-id:in-reply-to:references
-        :mime-version:content-transfer-encoding; s=fm2; bh=BZ8qwxiUvBZQ8
-        XCeOSM3aeENgF1M6Ek2r+XXrpD++oU=; b=mjMpcBn3VEn4Gs90PJobNhLX2RuUb
-        BflwJrrAag3d6nTqtlDu24NAzO3nhtFRs+ZfN/8Thv3WYOooHzCemH7dzdZt5AiP
-        OA7mXEDA6aKIMkgFPeLe/2o/E/odOm3FDKfUrNiSqSJeG2fcox9PJ9oMgXWJ0OTe
-        pqBJg0Gpo7Ogr4RGnM2vF/e9eeRo0ya+wGdslASNv15wAkd3LSo8qfekwf387oP/
-        opNHmTL8xeGPXcSBlLe8igHjaUkhGqDuiM5LMjEzFDY2x9ZeSufcio1/DYfI7ox9
-        UA0wepbXSCHmAxvrwcAvyImkQRew0ubQ+0N8mkex5l7ovhRaQ/F9iW+Pg==
+        :mime-version:content-transfer-encoding; s=fm2; bh=3rltT13G+L+1c
+        57hjhCuMYYG1tpoQkl5+Nulwk8ESAE=; b=iH5+T9kmTb1qcPe/I4o9A3KT1RSZF
+        3rqgbO1TIsr+k5BMkcOc85XBAQ+eQ3sO46SRJY2TCN/36NTS7T7z9sddTyhbGc3r
+        35+FcJp2Kr2Z8Imwc9p6trul17aIlTm7eEd0vEW6gy0CSvbvgKUKnJk0bAibSgM5
+        E5TEi9t0d8syAAw7fTS5R+7QlTZ0ZJHvFhf3ogHibuG/CcsRcKeE8rnndI7tV5AW
+        RBwNDCoQgL+1QnrPo8JXROkFi3q8bHdEphY+U4AQ+YCoIFd7hp2plB3+Kb9oBrCb
+        K8OQKVobNmidy+X/KUc1JwoQ716D5pxEf2rX+FnjaOAdzn0adRLnmbcjA==
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
         messagingengine.com; h=cc:content-transfer-encoding:date:from
         :in-reply-to:message-id:mime-version:references:subject:to
         :x-me-proxy:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=
-        fm2; bh=BZ8qwxiUvBZQ8XCeOSM3aeENgF1M6Ek2r+XXrpD++oU=; b=0cSn/KUr
-        E6BGzZgjxL/czDTV+0FL37QBGDimVzDe70HCgfbg59q00D/G9//O3BQpqJk0X+g7
-        MBCorlzMe8x+GvkCM3CKiMyZ8h65E2yEpNdIft2huQ6JuccNKtge96ol9rlsLO2L
-        77wJpqz1gvK9leA42tqThvApBGHkwxvqc88wx2R6fyBe+1vWwslPxqGzFhDMZwEd
-        SgOJ4mMZroYJ+HZTwc9+2OkOlmaCGX2mr+zmKCjnLQECGgOqEQlP+PvvmxAYHn+8
-        T9juDgpK8O2U0GrHeaffKvXpXTDlGvarRmn5J6h+uLxWTBvtxdE8lJxpsXb0ghqO
-        CnUhOS9C41WgDA==
-X-ME-Sender: <xms:4JJTXjuN0lM882kL32HTTu8YYRbTQRs921Ri9aYF4bCglsWUPN_1sA>
+        fm2; bh=3rltT13G+L+1c57hjhCuMYYG1tpoQkl5+Nulwk8ESAE=; b=qt3Z8nS6
+        nBgFfZZuTQVtchxhEjJ1Unu04oQqhZfNnegQOKP3c6/SoFan3cxrKPODh2x7RYmp
+        xBJZfUjRILt7wywb0Ki6Sj0oPo+wr2IXrpzfUN5x4KfOveMDuWg4v+WP47dmQEaq
+        NxbN31mmNbA5bqn7CVVqz7uscuu3lRj3KswMpr58gGGrfD7a9H/1hLeMy28O0n6M
+        3/DgX5+R07oJBQjbv1WZxkpjnMxswn6DEaXf8hYm8qpu66zrAxgIo43zX3tBlIHX
+        hBnxZ68pwjeEAmhYBHwb4dvwzMpiaJNjUsQgF18xbkcdL5lUrvZStks19axA64Cz
+        dT5z1T0z7NM3Rw==
+X-ME-Sender: <xms:5ZJTXo20TGsxtUHTVz6QBQfJAJ-7C9uNbfd9LXKG44Bv-bvAWbS-0w>
 X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedugedrledtucetufdoteggodetrfdotffvucfrrh
     hofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgenuceurghi
     lhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmnecujfgurh
     ephffvufffkffojghfggfgsedtkeertdertddtnecuhfhrohhmpeforgigihhmvgcutfhi
     phgrrhguuceomhgrgihimhgvsegtvghrnhhordhtvggthheqnecukfhppeeltddrkeelrd
-    eikedrjeeinecuvehluhhsthgvrhfuihiivgepfeehnecurfgrrhgrmhepmhgrihhlfhhr
+    eikedrjeeinecuvehluhhsthgvrhfuihiivgepfeelnecurfgrrhgrmhepmhgrihhlfhhr
     ohhmpehmrgigihhmvgestggvrhhnohdrthgvtghh
-X-ME-Proxy: <xmx:4JJTXi9OgsXoroxAkvZlBf8Ts6Z27TUrPWeF9SiFg65zpj9atAjybQ>
-    <xmx:4JJTXhmrfQP8zLUWzz8ZtJIi8X8bI-hJUAtggzXkgy5Y-vUGCMG4iw>
-    <xmx:4JJTXobbvLJscED640_8uQ3q5qWWkGcVY9E4v1mBgS7PPigHS06zgw>
-    <xmx:4JJTXibTrcp4CZaO4d1jweq6jp3m-mxxVZCkfzdj3ajJGy6rpFxeC1HNG6s>
+X-ME-Proxy: <xmx:5ZJTXgk-q4FJPHHRPhkNHiCphejoaWLSs4-UsjWI-VkYYyEoWRJ5Dg>
+    <xmx:5ZJTXs-VZhjsbkDgKtiOfyvUEt-rs7G6B76YjCJVIUjnJSFER7b7lg>
+    <xmx:5ZJTXvGqislwdzjv-uqPfW2xF4l3Q-39gaCadxNBnzGhw7Wo86Thgg>
+    <xmx:5ZJTXu7ySU6_HRwaHdTGm9imRBHMGVLhPGj-m5xLEnc-m4PD-QEAb-3RrvM>
 Received: from localhost (lfbn-tou-1-1502-76.w90-89.abo.wanadoo.fr [90.89.68.76])
-        by mail.messagingengine.com (Postfix) with ESMTPA id 8373A328005D;
-        Mon, 24 Feb 2020 04:09:52 -0500 (EST)
+        by mail.messagingengine.com (Postfix) with ESMTPA id CF6793060BD1;
+        Mon, 24 Feb 2020 04:09:56 -0500 (EST)
 From:   Maxime Ripard <maxime@cerno.tech>
 To:     Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
         Eric Anholt <eric@anholt.net>
@@ -75,9 +75,9 @@ Cc:     dri-devel@lists.freedesktop.org,
         Tim Gover <tim.gover@raspberrypi.com>,
         Phil Elwell <phil@raspberrypi.com>,
         Maxime Ripard <maxime@cerno.tech>
-Subject: [PATCH 44/89] drm/vc4: crtc: Move crtc state to common header
-Date:   Mon, 24 Feb 2020 10:06:46 +0100
-Message-Id: <7cd63487d785ccad68c847d9bbf6afe867996e5e.1582533919.git-series.maxime@cerno.tech>
+Subject: [PATCH 47/89] drm/vc4: crtc: Turn static const variable into a define
+Date:   Mon, 24 Feb 2020 10:06:49 +0100
+Message-Id: <f509208841b8d5a4cbff3bacaee4ca7fedb13969.1582533919.git-series.maxime@cerno.tech>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <cover.6c896ace9a5a7840e9cec008b553cbb004ca1f91.1582533919.git-series.maxime@cerno.tech>
 References: <cover.6c896ace9a5a7840e9cec008b553cbb004ca1f91.1582533919.git-series.maxime@cerno.tech>
@@ -88,78 +88,51 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-We'll need to access the crtc_state from outside of vc4_crtc.c, so let's
-move it to vc4_drv.h
+The hvs_latency_pix variable doesn't need to be a variable and can just be
+defined.
 
 Signed-off-by: Maxime Ripard <maxime@cerno.tech>
 ---
- drivers/gpu/drm/vc4/vc4_crtc.c | 21 ---------------------
- drivers/gpu/drm/vc4/vc4_drv.h  | 21 +++++++++++++++++++++
- 2 files changed, 21 insertions(+), 21 deletions(-)
+ drivers/gpu/drm/vc4/vc4_crtc.c | 8 +++++---
+ 1 file changed, 5 insertions(+), 3 deletions(-)
 
 diff --git a/drivers/gpu/drm/vc4/vc4_crtc.c b/drivers/gpu/drm/vc4/vc4_crtc.c
-index ce902d31f92c..0f8446e4a397 100644
+index 4a2ea897eb48..53ce2bbb10b5 100644
 --- a/drivers/gpu/drm/vc4/vc4_crtc.c
 +++ b/drivers/gpu/drm/vc4/vc4_crtc.c
-@@ -44,27 +44,6 @@
+@@ -44,6 +44,8 @@
  #include "vc4_drv.h"
  #include "vc4_regs.h"
  
--struct vc4_crtc_state {
--	struct drm_crtc_state base;
--	/* Dlist area for this CRTC configuration. */
--	struct drm_mm_node mm;
--	bool feed_txp;
--	bool txp_armed;
--
--	struct {
--		unsigned int left;
--		unsigned int right;
--		unsigned int top;
--		unsigned int bottom;
--	} margins;
--};
--
--static inline struct vc4_crtc_state *
--to_vc4_crtc_state(struct drm_crtc_state *crtc_state)
--{
--	return (struct vc4_crtc_state *)crtc_state;
--}
--
++#define HVS_FIFO_LATENCY_PIX	6
++
  #define CRTC_WRITE(offset, val) writel(val, vc4_crtc->regs + (offset))
  #define CRTC_READ(offset) readl(vc4_crtc->regs + (offset))
  
-diff --git a/drivers/gpu/drm/vc4/vc4_drv.h b/drivers/gpu/drm/vc4/vc4_drv.h
-index 07318badf82c..0aa3a9e64ea0 100644
---- a/drivers/gpu/drm/vc4/vc4_drv.h
-+++ b/drivers/gpu/drm/vc4/vc4_drv.h
-@@ -484,6 +484,27 @@ to_vc4_crtc(struct drm_crtc *crtc)
- 	return (struct vc4_crtc *)crtc;
+@@ -227,21 +229,21 @@ vc4_crtc_update_gamma_lut(struct drm_crtc *crtc)
+ 	vc4_crtc_lut_load(crtc);
  }
  
-+struct vc4_crtc_state {
-+	struct drm_crtc_state base;
-+	/* Dlist area for this CRTC configuration. */
-+	struct drm_mm_node mm;
-+	bool feed_txp;
-+	bool txp_armed;
 +
-+	struct {
-+		unsigned int left;
-+		unsigned int right;
-+		unsigned int top;
-+		unsigned int bottom;
-+	} margins;
-+};
-+
-+static inline struct vc4_crtc_state *
-+to_vc4_crtc_state(struct drm_crtc_state *crtc_state)
-+{
-+	return (struct vc4_crtc_state *)crtc_state;
-+}
-+
- #define V3D_READ(offset) readl(vc4->v3d->regs + offset)
- #define V3D_WRITE(offset, val) writel(val, vc4->v3d->regs + offset)
- #define HVS_READ(offset) readl(vc4->hvs->regs + offset)
+ static u32 vc4_get_fifo_full_level(u32 format)
+ {
+ 	static const u32 fifo_len_bytes = 64;
+-	static const u32 hvs_latency_pix = 6;
+ 
+ 	switch (format) {
+ 	case PV_CONTROL_FORMAT_DSIV_16:
+ 	case PV_CONTROL_FORMAT_DSIC_16:
+-		return fifo_len_bytes - 2 * hvs_latency_pix;
++		return fifo_len_bytes - 2 * HVS_FIFO_LATENCY_PIX;
+ 	case PV_CONTROL_FORMAT_DSIV_18:
+ 		return fifo_len_bytes - 14;
+ 	case PV_CONTROL_FORMAT_24:
+ 	case PV_CONTROL_FORMAT_DSIV_24:
+ 	default:
+-		return fifo_len_bytes - 3 * hvs_latency_pix;
++		return fifo_len_bytes - 3 * HVS_FIFO_LATENCY_PIX;
+ 	}
+ }
+ 
 -- 
 git-series 0.9.1
