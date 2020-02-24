@@ -6,34 +6,34 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 12972C38BFA
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 22:54:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 010E4C38BFA
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 22:54:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E472120838
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 22:54:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C9F5120838
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 22:54:26 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728407AbgBXWyR (ORCPT
+        id S1728377AbgBXWyP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Feb 2020 17:54:17 -0500
-Received: from foss.arm.com ([217.140.110.172]:43916 "EHLO foss.arm.com"
+        Mon, 24 Feb 2020 17:54:15 -0500
+Received: from foss.arm.com ([217.140.110.172]:43892 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728361AbgBXWyN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Feb 2020 17:54:13 -0500
+        id S1728344AbgBXWyM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 24 Feb 2020 17:54:12 -0500
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 4F1B431B;
-        Mon, 24 Feb 2020 14:54:13 -0800 (PST)
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 185521063;
+        Mon, 24 Feb 2020 14:54:12 -0800 (PST)
 Received: from mammon-tx2.austin.arm.com (mammon-tx2.austin.arm.com [10.118.28.62])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id 3E32B3F534;
-        Mon, 24 Feb 2020 14:54:13 -0800 (PST)
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id 0780B3F534;
+        Mon, 24 Feb 2020 14:54:12 -0800 (PST)
 From:   Jeremy Linton <jeremy.linton@arm.com>
 To:     netdev@vger.kernel.org
 Cc:     opendmb@gmail.com, f.fainelli@gmail.com, davem@davemloft.net,
         bcm-kernel-feedback-list@broadcom.com,
         linux-kernel@vger.kernel.org, wahrenst@gmx.net, andrew@lunn.ch,
         hkallweit1@gmail.com, Jeremy Linton <jeremy.linton@arm.com>
-Subject: [PATCH v2 5/6] net: bcmgenet: Fetch MAC address from the adapter
-Date:   Mon, 24 Feb 2020 16:54:02 -0600
-Message-Id: <20200224225403.1650656-6-jeremy.linton@arm.com>
+Subject: [PATCH v2 3/6] net: bcmgenet: enable automatic phy discovery
+Date:   Mon, 24 Feb 2020 16:54:00 -0600
+Message-Id: <20200224225403.1650656-4-jeremy.linton@arm.com>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20200224225403.1650656-1-jeremy.linton@arm.com>
 References: <20200224225403.1650656-1-jeremy.linton@arm.com>
@@ -44,107 +44,109 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-ARM/ACPI machines should utilize self describing hardware
-when possible. The MAC address on the BCMGENET can be
-read from the adapter if a full featured firmware has already
-programmed it. Lets try using the address already programmed,
-if it appears to be valid.
+The unimac mdio driver falls back to scanning the
+entire bus if its given an appropriate mask. In ACPI
+mode we expect that the system is well behaved and
+conforms to recent versions of the specification.
 
-It should be noted that while we move the macaddr logic below
-the clock and power logic in the driver, none of that code will
-ever be active in an ACPI environment as the device will be
-attached to the acpi power domain, and brought to full power
-with all clocks enabled immediately before the device probe
-routine is called.
-
-One side effect of the above tweak is that while its now
-possible to read the MAC address via _DSD properties, it should
-be avoided.
+We then utilize phy_find_first(), and
+phy_connect_direct() to find and attach to the
+discovered phy during net_device open. While its
+apparently possible to build a genet based device
+with multiple phys on a single mdio bus, this works
+for current machines. Further, this driver makes
+a number of assumptions about the platform device,
+mac, mdio and phy all being 1:1. Lastly, It also
+avoids having to create references across the ACPI
+namespace hierarchy.
 
 Signed-off-by: Jeremy Linton <jeremy.linton@arm.com>
-Acked-by: Florian Fainelli <f.fainelli@gmail.com>
 ---
- .../net/ethernet/broadcom/genet/bcmgenet.c    | 39 +++++++++++++------
- 1 file changed, 27 insertions(+), 12 deletions(-)
+ drivers/net/ethernet/broadcom/genet/bcmmii.c | 39 +++++++++++++++++---
+ 1 file changed, 33 insertions(+), 6 deletions(-)
 
-diff --git a/drivers/net/ethernet/broadcom/genet/bcmgenet.c b/drivers/net/ethernet/broadcom/genet/bcmgenet.c
-index 179855171918..412156745b5c 100644
---- a/drivers/net/ethernet/broadcom/genet/bcmgenet.c
-+++ b/drivers/net/ethernet/broadcom/genet/bcmgenet.c
-@@ -2772,6 +2772,21 @@ static void bcmgenet_set_hw_addr(struct bcmgenet_priv *priv,
- 	bcmgenet_umac_writel(priv, (addr[4] << 8) | addr[5], UMAC_MAC1);
- }
+diff --git a/drivers/net/ethernet/broadcom/genet/bcmmii.c b/drivers/net/ethernet/broadcom/genet/bcmmii.c
+index e7a1bf8ed36f..678545e580d4 100644
+--- a/drivers/net/ethernet/broadcom/genet/bcmmii.c
++++ b/drivers/net/ethernet/broadcom/genet/bcmmii.c
+@@ -5,7 +5,7 @@
+  * Copyright (c) 2014-2017 Broadcom
+  */
  
-+static void bcmgenet_get_hw_addr(struct bcmgenet_priv *priv,
-+				 unsigned char *addr)
-+{
-+	u32 addr_tmp;
-+
-+	addr_tmp = bcmgenet_umac_readl(priv, UMAC_MAC0);
-+	addr[0] = addr_tmp >> 24;
-+	addr[1] = (addr_tmp >> 16) & 0xff;
-+	addr[2] = (addr_tmp >>	8) & 0xff;
-+	addr[3] = addr_tmp & 0xff;
-+	addr_tmp = bcmgenet_umac_readl(priv, UMAC_MAC1);
-+	addr[4] = (addr_tmp >> 8) & 0xff;
-+	addr[5] = addr_tmp & 0xff;
-+}
-+
- /* Returns a reusable dma control register value */
- static u32 bcmgenet_dma_disable(struct bcmgenet_priv *priv)
- {
-@@ -3467,7 +3482,6 @@ static int bcmgenet_probe(struct platform_device *pdev)
- 	const struct bcmgenet_plat_data *pdata;
- 	struct bcmgenet_priv *priv;
- 	struct net_device *dev;
--	const void *macaddr = NULL;
- 	unsigned int i;
- 	int err = -EIO;
- 
-@@ -3498,11 +3512,6 @@ static int bcmgenet_probe(struct platform_device *pdev)
- 	}
- 	priv->wol_irq = platform_get_irq_optional(pdev, 2);
- 
--	if (dn)
--		macaddr = of_get_mac_address(dn);
--	else if (pd)
--		macaddr = pd->mac_address;
 -
- 	priv->base = devm_platform_ioremap_resource(pdev, 0);
- 	if (IS_ERR(priv->base)) {
- 		err = PTR_ERR(priv->base);
-@@ -3513,12 +3522,6 @@ static int bcmgenet_probe(struct platform_device *pdev)
++#include <linux/acpi.h>
+ #include <linux/types.h>
+ #include <linux/delay.h>
+ #include <linux/wait.h>
+@@ -311,7 +311,8 @@ int bcmgenet_mii_config(struct net_device *dev, bool init)
+ int bcmgenet_mii_probe(struct net_device *dev)
+ {
+ 	struct bcmgenet_priv *priv = netdev_priv(dev);
+-	struct device_node *dn = priv->pdev->dev.of_node;
++	struct device *kdev = &priv->pdev->dev;
++	struct device_node *dn = kdev->of_node;
+ 	struct phy_device *phydev;
+ 	u32 phy_flags = 0;
+ 	int ret;
+@@ -334,7 +335,27 @@ int bcmgenet_mii_probe(struct net_device *dev)
+ 			return -ENODEV;
+ 		}
+ 	} else {
+-		phydev = dev->phydev;
++		if (has_acpi_companion(kdev)) {
++			char mdio_bus_id[MII_BUS_ID_SIZE];
++			struct mii_bus *unimacbus;
++
++			snprintf(mdio_bus_id, MII_BUS_ID_SIZE, "%s-%d",
++				 UNIMAC_MDIO_DRV_NAME, priv->pdev->id);
++
++			unimacbus = mdio_find_bus(mdio_bus_id);
++			if (!unimacbus) {
++				pr_err("Unable to find mii\n");
++				return -ENODEV;
++			}
++			phydev = phy_find_first(unimacbus);
++			put_device(&unimacbus->dev);
++			if (!phydev) {
++				pr_err("Unable to find PHY\n");
++				return -ENODEV;
++			}
++		} else {
++			phydev = dev->phydev;
++		}
+ 		phydev->dev_flags = phy_flags;
  
- 	SET_NETDEV_DEV(dev, &pdev->dev);
- 	dev_set_drvdata(&pdev->dev, dev);
--	if (IS_ERR_OR_NULL(macaddr) || !is_valid_ether_addr(macaddr)) {
--		dev_warn(&pdev->dev, "using random Ethernet MAC\n");
--		eth_hw_addr_random(dev);
--	} else {
--		ether_addr_copy(dev->dev_addr, macaddr);
--	}
- 	dev->watchdog_timeo = 2 * HZ;
- 	dev->ethtool_ops = &bcmgenet_ethtool_ops;
- 	dev->netdev_ops = &bcmgenet_netdev_ops;
-@@ -3599,6 +3602,18 @@ static int bcmgenet_probe(struct platform_device *pdev)
- 	if (device_get_phy_mode(&pdev->dev) == PHY_INTERFACE_MODE_INTERNAL)
- 		bcmgenet_power_up(priv, GENET_POWER_PASSIVE);
- 
-+	if ((pd) && (!IS_ERR_OR_NULL(pd->mac_address)))
-+		ether_addr_copy(dev->dev_addr, pd->mac_address);
+ 		ret = phy_connect_direct(dev, phydev, bcmgenet_mii_setup,
+@@ -455,9 +476,12 @@ static int bcmgenet_mii_register(struct bcmgenet_priv *priv)
+ 	/* Retain this platform_device pointer for later cleanup */
+ 	priv->mii_pdev = ppdev;
+ 	ppdev->dev.parent = &pdev->dev;
+-	ppdev->dev.of_node = bcmgenet_mii_of_find_mdio(priv);
+-	if (pdata)
++	if (dn)
++		ppdev->dev.of_node = bcmgenet_mii_of_find_mdio(priv);
++	else if (pdata)
+ 		bcmgenet_mii_pdata_init(priv, &ppd);
 +	else
-+		if (!device_get_mac_address(&pdev->dev, dev->dev_addr, ETH_ALEN))
-+			if (has_acpi_companion(&pdev->dev))
-+				bcmgenet_get_hw_addr(priv, dev->dev_addr);
-+
-+	if (!is_valid_ether_addr(dev->dev_addr)) {
-+		dev_warn(&pdev->dev, "using random Ethernet MAC\n");
-+		eth_hw_addr_random(dev);
-+	}
-+
- 	reset_umac(priv);
++		ppd.phy_mask = ~0;
  
- 	err = bcmgenet_mii_init(dev);
+ 	ret = platform_device_add_resources(ppdev, &res, 1);
+ 	if (ret)
+@@ -591,10 +615,13 @@ static int bcmgenet_mii_pd_init(struct bcmgenet_priv *priv)
+ 
+ static int bcmgenet_mii_bus_init(struct bcmgenet_priv *priv)
+ {
+-	struct device_node *dn = priv->pdev->dev.of_node;
++	struct device *kdev = &priv->pdev->dev;
++	struct device_node *dn = kdev->of_node;
+ 
+ 	if (dn)
+ 		return bcmgenet_mii_of_init(priv);
++	else if (has_acpi_companion(kdev))
++		return bcmgenet_phy_interface_init(priv);
+ 	else
+ 		return bcmgenet_mii_pd_init(priv);
+ }
 -- 
 2.24.1
 
