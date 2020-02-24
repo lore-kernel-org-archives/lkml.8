@@ -2,83 +2,118 @@ Return-Path: <SRS0=7TUr=4M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_2 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2F2A4C38BE7
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 18:25:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C2B5BC38BE2
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 18:27:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 12D7C20838
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 18:25:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 93F7120838
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 18:27:01 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=kemnade.info header.i=@kemnade.info header.b="dY8IaE5C"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727935AbgBXSZe (ORCPT
+        id S1727855AbgBXS1A (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Feb 2020 13:25:34 -0500
-Received: from metis.ext.pengutronix.de ([85.220.165.71]:36899 "EHLO
-        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727426AbgBXSZe (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Feb 2020 13:25:34 -0500
-Received: from pty.hi.pengutronix.de ([2001:67c:670:100:1d::c5])
-        by metis.ext.pengutronix.de with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1j6IQ0-0002cD-Bx; Mon, 24 Feb 2020 19:25:24 +0100
-Received: from ukl by pty.hi.pengutronix.de with local (Exim 4.89)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1j6IPy-00016N-Ke; Mon, 24 Feb 2020 19:25:22 +0100
-Date:   Mon, 24 Feb 2020 19:25:22 +0100
-From:   Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
-        <u.kleine-koenig@pengutronix.de>
-To:     Guenter Roeck <linux@roeck-us.net>
-Cc:     Anson Huang <anson.huang@nxp.com>,
-        "wim@linux-watchdog.org" <wim@linux-watchdog.org>,
-        "shawnguo@kernel.org" <shawnguo@kernel.org>,
-        "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>,
-        "kernel@pengutronix.de" <kernel@pengutronix.de>,
-        "festevam@gmail.com" <festevam@gmail.com>,
-        "linux-watchdog@vger.kernel.org" <linux-watchdog@vger.kernel.org>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        dl-linux-imx <linux-imx@nxp.com>
-Subject: Re: [PATCH] watchdog: imx2_wdt: Drop .remove callback
-Message-ID: <20200224182522.33qeusb4xbxxt3o3@pengutronix.de>
-References: <1582512687-13312-1-git-send-email-Anson.Huang@nxp.com>
- <20200224102211.clzqw4vtzc4nz5df@pengutronix.de>
- <DB3PR0402MB391637EB54A1FD37059FBE47F5EC0@DB3PR0402MB3916.eurprd04.prod.outlook.com>
- <33c3778f-fc7e-8564-f767-91aafae03122@roeck-us.net>
+        Mon, 24 Feb 2020 13:27:00 -0500
+Received: from mail.andi.de1.cc ([85.214.55.253]:59030 "EHLO mail.andi.de1.cc"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727711AbgBXS07 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 24 Feb 2020 13:26:59 -0500
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=kemnade.info; s=20180802; h=Content-Type:MIME-Version:References:
+        In-Reply-To:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=dW1HMa4rYjoRN6o4qGmlHnnb84Fh1VUVfvXVgxMfmUQ=; b=dY8IaE5CkgPLQ7YZC6gvSfchU
+        3ywVvcIqgeMU25nroaLZf32pvbv+xAMcAMNa4+l0rvk0kTOsHKY+JxW591vlJ34Q9KQM97ZZDO4ew
+        VF+TT6zjRvo/eTwvuiU3reMvFZeb/KMqN8fzpOH/J8kCjdTmwLO5KCmzTdd1jBxWrlowM=;
+Received: from p200300ccff096700e2cec3fffe93fc31.dip0.t-ipconnect.de ([2003:cc:ff09:6700:e2ce:c3ff:fe93:fc31] helo=eeepc)
+        by mail.andi.de1.cc with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.89)
+        (envelope-from <andreas@kemnade.info>)
+        id 1j6IRO-00020N-La; Mon, 24 Feb 2020 19:26:51 +0100
+Received: from localhost ([::1])
+        by localhost with esmtp (Exim 4.92)
+        (envelope-from <andreas@kemnade.info>)
+        id 1j6IRN-0003Su-VR; Mon, 24 Feb 2020 19:26:50 +0100
+Date:   Mon, 24 Feb 2020 19:26:38 +0100
+From:   Andreas Kemnade <andreas@kemnade.info>
+To:     Jonathan Cameron <jic23@kernel.org>
+Cc:     knaack.h@gmx.de, lars@metafoo.de, pmeerw@pmeerw.net,
+        lee.jones@linaro.org, b.galvani@gmail.com,
+        linus.walleij@linaro.org, linux-kernel@vger.kernel.org,
+        linux-iio@vger.kernel.org, phh@phh.me, stefan@agner.ch,
+        letux-kernel@openphoenux.org, martin.blumenstingl@googlemail.com
+Subject: Re: [PATCH v3 2/4] iio: adc: rn5t618: Add ADC driver for
+ RN5T618/RC5T619
+Message-ID: <20200224192638.5e928565@kemnade.info>
+In-Reply-To: <20200221130733.240f0d6d@archlinux>
+References: <20200218061725.22420-1-andreas@kemnade.info>
+        <20200218061725.22420-3-andreas@kemnade.info>
+        <20200221130733.240f0d6d@archlinux>
+X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; i686-pc-linux-gnu)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <33c3778f-fc7e-8564-f767-91aafae03122@roeck-us.net>
-User-Agent: NeoMutt/20170113 (1.7.2)
-X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c5
-X-SA-Exim-Mail-From: ukl@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
+Content-Type: multipart/signed; micalg=pgp-sha256;
+ boundary="Sig_/8qWJlQBWjvmN_Jw+gTD8qUG"; protocol="application/pgp-signature"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Feb 24, 2020 at 06:15:17AM -0800, Guenter Roeck wrote:
-> How would you expect the watchdog core to stop the watchdog
-> with no stop function in the driver ?
+--Sig_/8qWJlQBWjvmN_Jw+gTD8qUG
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-I'm not 100% sure, but I think the situation is that you cannot stop the
-watchdog in the watchdog register range, but if you stop the clock it
-will never expire.
+On Fri, 21 Feb 2020 13:07:33 +0000
+Jonathan Cameron <jic23@kernel.org> wrote:
 
-That's why I asked if the devm action callback stops the watchdog.
+> On Tue, 18 Feb 2020 07:17:23 +0100
+> Andreas Kemnade <andreas@kemnade.info> wrote:
+>=20
+> > Both chips have an A/D converter capable of measuring
+> > things like VBAT, VUSB and analog inputs.
+> >=20
+> > Signed-off-by: Andreas Kemnade <andreas@kemnade.info> =20
+> One trivial comment inline.  Looks good to me and I'm assuming
+> this will got through the mfd tree.
+>=20
+> Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+>=20
+> > ---
+> > depends on (build and runtime):
+> > https://lore.kernel.org/lkml/20191220122416.31881-1-andreas@kemnade.inf=
+o/
+> >=20
+Is there anything left on my side to do which prevents merging of these
+series? The above-mentioned series add interrupt support for the mfd, which
+this series uses, so this series cannot be applied without that.
 
-Didn't look into the details though ...
+Regards,
+Andreas
 
-Best regards
-Uwe
+--Sig_/8qWJlQBWjvmN_Jw+gTD8qUG
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
 
--- 
-Pengutronix e.K.                           | Uwe Kleine-König            |
-Industrial Linux Solutions                 | https://www.pengutronix.de/ |
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAEBCAAdFiEEPIWxmAFyOaBcwCpFl4jFM1s/ye8FAl5UFV4ACgkQl4jFM1s/
+ye/Ovw/9G4MUqzsiPEnHC0EDXiLwMc2+0J/bKLt40RhYk1A5a2MVuB8JcYaDPsdd
+zeqTnzOpbyytZtrDm1Xnp6qb2jdxBT8fO1n24GxVEpYS+0D55BBK02lxOg5J1czO
+yau4y/N/F7qSYXZNOcr95zcr5/BmSy9TxOyTfiZOF6wh0EkmJi21gn1MbkouiGeM
+rFTw9JzTVm8n+cw/309ltJyzL9mVgFaM/UfJU7nsvxCzjSpIvnn2fkSYCHTfhsQl
+ec742IsXfS/9myKcOi401PuePAvclL52SIoNH+2oc1M1xXGjof93sALEXLF17AiF
+bRGj/w0DDFXwJHnsAdDIYnrUnl0GTcny3tQMvcNVLAWxOQ5QALnIq8uWQa3FaIph
+Z8mdIwCz1Awt5W1h0n/qdObuB75pDHDwChiH7OCF02e7KmXwLG+mPAWOW2IWDhIl
+rsBFrRvwjyvotTCa9AwNLuMwJOl3435AI/hpCUTKsoi4J3tS2c23Cp4UYXSWEe0v
+E50n6reMOof7oM71nNfq8xcvB5gI7UYl8Ay2zAE7MYG2ojyk/8yiGh5RN6it3ZY0
+LUJdIXubjgaXi+EObOGalc4WSs7qqiZp5qGrCr0lLIeDU4spAcIdepcdIKPVcmzD
+/8RxqVNQbIYcxqwh9wVoWNNqUhW8SmYm3ujqyQyOtlchL8X0khQ=
+=sm5T
+-----END PGP SIGNATURE-----
+
+--Sig_/8qWJlQBWjvmN_Jw+gTD8qUG--
