@@ -2,90 +2,87 @@ Return-Path: <SRS0=7TUr=4M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C5033C11D2D
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 10:10:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4F00DC3567B
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 10:11:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A6F8E2080D
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 10:10:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 232812080D
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 10:11:24 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="hE/+Zv4Y"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727376AbgBXKKF (ORCPT
+        id S1727252AbgBXKLW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Feb 2020 05:10:05 -0500
-Received: from mail-ot1-f67.google.com ([209.85.210.67]:36760 "EHLO
-        mail-ot1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727183AbgBXKKE (ORCPT
+        Mon, 24 Feb 2020 05:11:22 -0500
+Received: from bombadil.infradead.org ([198.137.202.133]:41050 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726452AbgBXKLW (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Feb 2020 05:10:04 -0500
-Received: by mail-ot1-f67.google.com with SMTP id j20so8218131otq.3;
-        Mon, 24 Feb 2020 02:10:03 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=Om7nrQID6FlX5mnR8/K/zRP8xkeIh57Aql009khB7UA=;
-        b=QwD/RMvhWiOiK4id1MLqkGh3lbx3VjXs8lj5y8sF6Wj3NZ20Wx6cWasU7F6I4mo5H0
-         03PLhV/GaN2Ypp7gTSQu9ZaVs9+Z1MwMY7k9PYh1B68Ph8Zj7gQeArFlthUfczMHdcl2
-         SNUG8uOc+sEDY/XX28Foia7Sxjp4hSkQqmepq39AYpi/kbFuWum0WgvmKoDVMjlijr0t
-         E2iausk9rL0Cf08R/D1YBymPGkiD6BcSXaxRt9GHcYO5ZnpBKP1rlEjnaUl+qkJo93CP
-         qqt8llm5dgp+Tbju8hEQ29uUWWuHKcGdIn70VtuXJg1BNCbGpUnpIhK5XhKO/Gu3uWfB
-         4c9A==
-X-Gm-Message-State: APjAAAWJOUl2uMmEdvUacUrUjMQKr2feoHkH3cYqT1KNca1ff8Oczsur
-        tNsSX12OXRGcjTxBQbZDJl4uCF3Bb+ODPh2yKkY=
-X-Google-Smtp-Source: APXvYqy+o+XiQlh0QOaMvapvhpar/cq7MfutM+nGBFLIiCFASeVH1V3juGWAUqxFnDRUGQgq4DrqTaiwZyWthqnvpxI=
-X-Received: by 2002:a05:6830:1d4:: with SMTP id r20mr24550265ota.107.1582539003523;
- Mon, 24 Feb 2020 02:10:03 -0800 (PST)
+        Mon, 24 Feb 2020 05:11:22 -0500
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
+        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=jQLP9mf1jL7YgaAq+WWe3RXOAlNUOB8M/rZLTtdU6Ik=; b=hE/+Zv4YtW+bNi38wjH2XW0cfI
+        XfFfIrLWpB9YhWBcW920X1N79/Bwmrd5ByMeR+iEh3DuV9AB0XniibpgIkpGQLvLzSZexAJNNZtvC
+        ZHEqi0w8Iw4T2rNYXOXLOnOPyMv/1Ga/esJPtaxdJ4HNV0aRDDJtWuTWm28VlAdUc3kaCz1XDdOBZ
+        0AwppBoRlgeswmXoBXHnF1XXpMBJOhNk5+60QnK9l4nqOkhQp/h1Ao29g3L+HseGg74xXw/gEM5BK
+        zLQCD5DGJXptRxIvRF1mJfZqocuFU5WOSqnHWOCNkL01zk8bRkwi527iG/VONdS+Kv/sed9UNwaUg
+        DH3lXg5w==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
+        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1j6AhR-00034m-MK; Mon, 24 Feb 2020 10:10:53 +0000
+Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (Client did not present a certificate)
+        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 91C30300F7A;
+        Mon, 24 Feb 2020 11:08:56 +0100 (CET)
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id F331629B39F55; Mon, 24 Feb 2020 11:10:50 +0100 (CET)
+Date:   Mon, 24 Feb 2020 11:10:50 +0100
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     Joel Fernandes <joel@joelfernandes.org>
+Cc:     linux-kernel@vger.kernel.org, linux-arch@vger.kernel.org,
+        rostedt@goodmis.org, mingo@kernel.org, gregkh@linuxfoundation.org,
+        gustavo@embeddedor.com, tglx@linutronix.de, paulmck@kernel.org,
+        josh@joshtriplett.org, mathieu.desnoyers@efficios.com,
+        jiangshanlai@gmail.com, luto@kernel.org, tony.luck@intel.com,
+        frederic@kernel.org, dan.carpenter@oracle.com, mhiramat@kernel.org
+Subject: Re: [PATCH v4 01/27] lockdep: Teach lockdep about "USED" <- "IN-NMI"
+ inversions
+Message-ID: <20200224101050.GE14897@hirez.programming.kicks-ass.net>
+References: <20200221133416.777099322@infradead.org>
+ <20200221134215.090538203@infradead.org>
+ <20200222030843.GA191380@google.com>
 MIME-Version: 1.0
-References: <1582525304-32113-1-git-send-email-anshuman.khandual@arm.com>
-In-Reply-To: <1582525304-32113-1-git-send-email-anshuman.khandual@arm.com>
-From:   Geert Uytterhoeven <geert@linux-m68k.org>
-Date:   Mon, 24 Feb 2020 11:09:52 +0100
-Message-ID: <CAMuHMdXMSTLevTH1gkM8B53LtRUQ80o=t+W27z0QT-dNKkkYgQ@mail.gmail.com>
-Subject: Re: [PATCH] mm/vma: Append unlikely() while testing VMA access permissions
-To:     Anshuman Khandual <anshuman.khandual@arm.com>
-Cc:     Linux MM <linux-mm@kvack.org>, Guo Ren <guoren@kernel.org>,
-        Ralf Baechle <ralf@linux-mips.org>,
-        Paul Burton <paulburton@kernel.org>,
-        Mike Rapoport <rppt@linux.ibm.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        linux-m68k <linux-m68k@lists.linux-m68k.org>,
-        linux-mips@vger.kernel.org, linux-csky@vger.kernel.org,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200222030843.GA191380@google.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Anshuman,
+On Fri, Feb 21, 2020 at 10:08:43PM -0500, Joel Fernandes wrote:
+> On Fri, Feb 21, 2020 at 02:34:17PM +0100, Peter Zijlstra wrote:
+> > nmi_enter() does lockdep_off() and hence lockdep ignores everything.
+> > 
+> > And NMI context makes it impossible to do full IN-NMI tracking like we
+> > do IN-HARDIRQ, that could result in graph_lock recursion.
+> 
+> The patch makes sense to me.
+> 
+> Reviewed-by: Joel Fernandes (Google) <joel@joelfernandes.org>
+> 
+> NOTE:
+> Also, I was wondering if we can detect the graph_lock recursion case and
+> avoid doing anything bad, that way we enable more of the lockdep
+> functionality for NMI where possible. Not sure if the suggestion makes sense
+> though!
 
-Thanks for your patch!
-
-On Mon, Feb 24, 2020 at 7:22 AM Anshuman Khandual
-<anshuman.khandual@arm.com> wrote:
-> It is unlikely that an inaccessible VMA without required permission flags
-> will get a page fault. Hence lets just append unlikely() directive to such
-
-Why? Isn't it the idea that you get a page fault when the page is not
-accessible?
-
-> checks in order to improve performance while also standardizing it across
-> various platforms.
-
-Does it make a difference to add these? Have you benchmarked this?
-https://lwn.net/Articles/420019/
-
-Gr{oetje,eeting}s,
-
-                        Geert
-
-
---
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+Yeah, I considered playing trylock games, but figured I shouldn't make
+it more complicated that it needs to be.
