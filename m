@@ -2,88 +2,103 @@ Return-Path: <SRS0=7TUr=4M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 61E1BC11D2F
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 11:57:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CEA55C11D2F
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 11:58:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 300F920828
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 11:57:55 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582545475;
-	bh=TQUIowE30VdAV33/T/Y32SzcQ1qQJwEAknSYGo0aouQ=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=V7zn4w4DafSR4fohwZl84MM/O/EOdKCBEenvgn4hs9YUC6FH2bf3vaZ3JiONcAE8L
-	 clZOrQtsf1Zlcbm2ehLHY8Z6YI8nIuJozrqWfOOLnrQeLYNmNoV38i4qJpNgm+8c22
-	 Nb3uTetsCzC7ed9pFFWVUfBhdxRA+wd2v47K/m/I=
+	by mail.kernel.org (Postfix) with ESMTP id A53AD20828
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 11:58:33 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="mXta5En0"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727486AbgBXL5y (ORCPT
+        id S1727448AbgBXL6c (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Feb 2020 06:57:54 -0500
-Received: from foss.arm.com ([217.140.110.172]:35990 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727299AbgBXL5x (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Feb 2020 06:57:53 -0500
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 4B73D30E;
-        Mon, 24 Feb 2020 03:57:53 -0800 (PST)
-Received: from localhost (unknown [10.37.6.21])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id C1A943F534;
-        Mon, 24 Feb 2020 03:57:52 -0800 (PST)
-Date:   Mon, 24 Feb 2020 11:57:51 +0000
-From:   Mark Brown <broonie@kernel.org>
-To:     Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
-Cc:     mazziesaccount@gmail.com, Sebastian Reichel <sre@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
+        Mon, 24 Feb 2020 06:58:32 -0500
+Received: from mail27.static.mailgun.info ([104.130.122.27]:35661 "EHLO
+        mail27.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727329AbgBXL6c (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 24 Feb 2020 06:58:32 -0500
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1582545511; h=References: In-Reply-To: Message-Id: Date:
+ Subject: Cc: To: From: Sender;
+ bh=m/EVAf0XIo2GAshIf8Zwsc9/slrvZ7lw/UTHXKbwTyA=; b=mXta5En0e77oQTYL7IzeDd46zy1gEhiGdjv8n0tkAhn1jZksxpaU4ji2cfwg8h8LJEydvd+Z
+ HTd8b5LFjvhtlHFO6uppkUYTO0twcFE9SaL8mtSHDysvjd5k7u6KqnuVCN9G0Mh4sM3cHCtj
+ 2z+be/J0bLTzq1zBSze/0kaDa/Q=
+X-Mailgun-Sending-Ip: 104.130.122.27
+X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
+Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
+ by mxa.mailgun.org with ESMTP id 5e53ba5b.7f964c51e998-smtp-out-n01;
+ Mon, 24 Feb 2020 11:58:19 -0000 (UTC)
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id CD826C433A2; Mon, 24 Feb 2020 11:58:19 +0000 (UTC)
+Received: from vbadigan-linux.qualcomm.com (blr-c-bdr-fw-01_GlobalNAT_AllZones-Outside.qualcomm.com [103.229.19.19])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: vbadigan)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 7925CC43383;
+        Mon, 24 Feb 2020 11:58:13 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 7925CC43383
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=vbadigan@codeaurora.org
+From:   Veerabhadrarao Badiganti <vbadigan@codeaurora.org>
+To:     ulf.hansson@linaro.org, robh+dt@kernel.org
+Cc:     asutoshd@codeaurora.org, stummala@codeaurora.org,
+        sayalil@codeaurora.org, cang@codeaurora.org,
+        rampraka@codeaurora.org, dianders@google.com,
+        linux-mmc@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-arm-msm@vger.kernel.org,
+        Veerabhadrarao Badiganti <vbadigan@codeaurora.org>,
         Mark Rutland <mark.rutland@arm.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        "Rafael J. Wysocki" <rafael@kernel.org>,
-        Liam Girdwood <lgirdwood@gmail.com>, linux-pm@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Markus Laine <markus.laine@fi.rohmeurope.com>,
-        Mikko Mutanen <mikko.mutanen@fi.rohmeurope.com>
-Subject: Re: [RFC PATCH v3 5/8] regulator: use linear_ranges helper
-Message-ID: <20200224115751.GE6215@sirena.org.uk>
-References: <cover.1582182989.git.matti.vaittinen@fi.rohmeurope.com>
- <ba2eb2d7363b386136a546a769a6e2d077558094.1582182989.git.matti.vaittinen@fi.rohmeurope.com>
-MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="SWTRyWv/ijrBap1m"
-Content-Disposition: inline
-In-Reply-To: <ba2eb2d7363b386136a546a769a6e2d077558094.1582182989.git.matti.vaittinen@fi.rohmeurope.com>
-X-Cookie: How you look depends on where you go.
-User-Agent: Mutt/1.10.1 (2018-07-13)
+        devicetree@vger.kernel.org (open list:OPEN FIRMWARE AND FLATTENED
+        DEVICE TREE BINDINGS)
+Subject: [PATCH V3] dt-bindings: mmc: sdhci-msm: Add CQE reg map
+Date:   Mon, 24 Feb 2020 17:27:50 +0530
+Message-Id: <1582545470-11530-1-git-send-email-vbadigan@codeaurora.org>
+X-Mailer: git-send-email 1.9.1
+In-Reply-To: <1581434955-11087-1-git-send-email-vbadigan@codeaurora.org>
+References: <1581434955-11087-1-git-send-email-vbadigan@codeaurora.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+CQE feature has been enabled on sdhci-msm. Add CQE reg map
+and reg names that need to be supplied for supporting CQE feature.
 
---SWTRyWv/ijrBap1m
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Signed-off-by: Veerabhadrarao Badiganti <vbadigan@codeaurora.org>
+---
+Changes since V2:
+	- Dropped _mem suffix to reg names.
 
-On Thu, Feb 20, 2020 at 09:36:38AM +0200, Matti Vaittinen wrote:
-> Change the regulator helpers to use common linear_ranges code.
+Changes since V1:
+	- Updated description for more clarity & Fixed typos.
+---
+ Documentation/devicetree/bindings/mmc/sdhci-msm.txt | 8 +++++++-
+ 1 file changed, 7 insertions(+), 1 deletion(-)
 
-This needs to be squashed in with the previous commit to avoid build
-breaks.
-
---SWTRyWv/ijrBap1m
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl5Tuj4ACgkQJNaLcl1U
-h9A5bQf/c4NDAlkQYJrML9SwHTF60tD0f1c0dJS+Yp8mVWpsiRYH6J1Sl4x4+Ru+
-X4T2HfntKJBGkXNERIAZ4GwzpsN/O3oiADfVbsy1IqQuz9eFG1k6k7XLVo81J1iD
-mVptuQuSWgi6bmtETBLwYxRHunxFNSod/cMEROMPYFMRxos8oA9MiiIYlgYN1eSA
-ll1OvO1fyUIsjG+4gVayDyPRIVmY1D/65VKs50eyhp2PTenK6CGED0zfuqmqBV3p
-yXukhloW+FocYcEHTrIfk2XevHfJEOM9PJdIGD4aXzqfNOZnZb3p4A0d5vLn9LnG
-p2ITROFZ1P/XSRcV2OCDSIzdr68vgg==
-=+guT
------END PGP SIGNATURE-----
-
---SWTRyWv/ijrBap1m--
+diff --git a/Documentation/devicetree/bindings/mmc/sdhci-msm.txt b/Documentation/devicetree/bindings/mmc/sdhci-msm.txt
+index 7ee639b..5445931 100644
+--- a/Documentation/devicetree/bindings/mmc/sdhci-msm.txt
++++ b/Documentation/devicetree/bindings/mmc/sdhci-msm.txt
+@@ -26,7 +26,13 @@ Required properties:
+ 
+ - reg: Base address and length of the register in the following order:
+ 	- Host controller register map (required)
+-	- SD Core register map (required for msm-v4 and below)
++	- SD Core register map (required for controllers earlier than msm-v5)
++	- CQE register map (Optional, CQE support is present on SDHC instance meant
++	                    for eMMC and version v4.2 and above)
++- reg-names: When CQE register map is supplied, below reg-names are required
++	- "hc" for Host controller register map
++	- "core" for SD core register map
++	- "cqhci" for CQE register map
+ - interrupts: Should contain an interrupt-specifiers for the interrupts:
+ 	- Host controller interrupt (required)
+ - pinctrl-names: Should contain only one value - "default".
+-- 
+Qualcomm India Private Limited, on behalf of Qualcomm Innovation Center, Inc., is a member of Code Aurora Forum, a Linux Foundation Collaborative Project
