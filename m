@@ -2,88 +2,116 @@ Return-Path: <SRS0=7TUr=4M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 360F1C35679
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 09:32:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AF22DC3567B
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 09:32:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EF44B20714
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 09:32:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8253C20714
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 09:32:41 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="pJxRw5xv"
+	dkim=pass (2048-bit key) header.d=cerno.tech header.i=@cerno.tech header.b="WWOqYQDa";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="Hh0uNwDy"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727197AbgBXJcd (ORCPT
+        id S1727302AbgBXJck (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Feb 2020 04:32:33 -0500
-Received: from merlin.infradead.org ([205.233.59.134]:34982 "EHLO
-        merlin.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726452AbgBXJcd (ORCPT
+        Mon, 24 Feb 2020 04:32:40 -0500
+Received: from out3-smtp.messagingengine.com ([66.111.4.27]:56345 "EHLO
+        out3-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726452AbgBXJck (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Feb 2020 04:32:33 -0500
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=YE6seiuyITlCDuzDkVuYwXtaOchvz2Zcj5WBB7bLhu0=; b=pJxRw5xvyA192Np0aiMhypwZx5
-        6oXL9mvcpUosr3wV8H+J4Pe0XSbsDTfuIGe/lznJnmhRjC1QOh+svtG3exsfFw2TsiSD9nwLUauZh
-        QyKAb45l6kxXSQnWG9VimZkphBY5F3R5hmB6oZPk3jLs7NFo57HiA+dR/p5iOSE7JMCMF+EoC2zHK
-        ZO+9bHWYjD99JOZqewDCfXi812/xZHfqRRJYVXesmhmmBTFa3HSlfyFN7cSimQHbkSuhFPEjT1Qn3
-        yQIoiitPZYoT2vQCv5mc8c295Y2yPEWWU3wl4VKbhR/oId6VvceXkO12wCmV+KCqP/05N4ug7nGwb
-        6Ksxurig==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
-        by merlin.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1j6A66-0002rC-HM; Mon, 24 Feb 2020 09:32:18 +0000
-Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (Client did not present a certificate)
-        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id D3696300F7A;
-        Mon, 24 Feb 2020 10:30:20 +0100 (CET)
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id 59F282B4DAAD0; Mon, 24 Feb 2020 10:32:15 +0100 (CET)
-Date:   Mon, 24 Feb 2020 10:32:15 +0100
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     qiwuchen55@gmail.com
-Cc:     mingo@redhat.com, juri.lelli@redhat.com,
-        vincent.guittot@linaro.org, dietmar.eggemann@arm.com,
-        rostedt@goodmis.org, bsegall@google.com, mgorman@suse.de,
-        linux-kernel@vger.kernel.org, chenqiwu <chenqiwu@xiaomi.com>
-Subject: Re: [PATCH] sched/pelt: use shift operation instead of division
- operation
-Message-ID: <20200224093215.GC14897@hirez.programming.kicks-ass.net>
-References: <1582515055-14515-1-git-send-email-qiwuchen55@gmail.com>
+        Mon, 24 Feb 2020 04:32:40 -0500
+Received: from compute3.internal (compute3.nyi.internal [10.202.2.43])
+        by mailout.nyi.internal (Postfix) with ESMTP id BEA8D20B51;
+        Mon, 24 Feb 2020 04:32:38 -0500 (EST)
+Received: from mailfrontend1 ([10.202.2.162])
+  by compute3.internal (MEProxy); Mon, 24 Feb 2020 04:32:38 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cerno.tech; h=
+        date:from:to:cc:subject:message-id:references:mime-version
+        :content-type:in-reply-to; s=fm2; bh=SmI05YfllgEMaDGebG7yKu+Qbjz
+        kPlrBEKDifZ9AT5U=; b=WWOqYQDaH8h49mUNSnqF4QsbjkvmJTMOFxqCjBvYI1S
+        8g8kyo1JMmxO+r4aX2c/9CgtT3CTV0c4jAm6M3QiQQRAudfnfc8Ocyf7V3hCHDvb
+        +tCrDU5pxSJsuoFw2uaPYFbb9Ax3z3Ap8swNSFyZCCP9fpj2ajygohh6pSfZ4OFK
+        TqNE9mnTxjdR4dj+dRa1QA+6LfSimBblFVbuFjDlFrH+LaelgBmjSwX2bFMDjZEk
+        sjXtesCZXUqbyvjriM2MMLyHi2eWB9+ogZeeaCqslwScj2elqrkPPd7b6lVzecEy
+        8NMPoScYGkTo7qlVW3URVxDnFh4tk6xT56GRNcpJkVA==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+        messagingengine.com; h=cc:content-type:date:from:in-reply-to
+        :message-id:mime-version:references:subject:to:x-me-proxy
+        :x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm2; bh=SmI05Y
+        fllgEMaDGebG7yKu+QbjzkPlrBEKDifZ9AT5U=; b=Hh0uNwDyojH9X9eU0N1JxH
+        bFgKcpkwxC3DrLOPoPQrQqYSWatF27WPH9BKDnC+S4gNbKjdmiGlRXIxwRcFhKpt
+        fThBFLxmqkyk8C97NCGQ2oPQJO0iUkELNerQbv7SVjl0w8lJSwTvr1ahjVuIrq9A
+        TB7p8Ye+pDi/wkexY8aH/mKyWYioKQkCoJtbKE8/mVySbVZY7859BXHww2Beh5v0
+        M0//GD4TcPsE3J8PLszeb9OPWLFeGJX4ELCeJgEnaTZgNs50LN9mmUC9I1bvOTs5
+        Y6BEPU+OlrrqQ4YnRMNa+YX6Ffeazr0LtZ/X3MWh1Mk958LltVtZpeI18O6Z4m3w
+        ==
+X-ME-Sender: <xms:NZhTXu3feOUHnxI6g5TRmQnFx5ov_Ol7tkPfmKoQSACpNTiqO-wzPw>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedugedrledtgddthecutefuodetggdotefrodftvf
+    curfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfghnecu
+    uegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenuc
+    fjughrpeffhffvuffkfhggtggujgesghdtreertddtvdenucfhrhhomhepofgrgihimhgv
+    ucftihhprghrugcuoehmrgigihhmvgestggvrhhnohdrthgvtghhqeenucfkphepledtrd
+    ekledrieekrdejieenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepmhgrihhl
+    fhhrohhmpehmrgigihhmvgestggvrhhnohdrthgvtghh
+X-ME-Proxy: <xmx:NZhTXn_Bg6y2yQfRTOwOjxBwzLPrEnIw3S1NtDxpcWjbwzu8lk5-tQ>
+    <xmx:NZhTXj3-lmGiZHCsCU-snpOGhVFNytNdzqIQHbZsOl3ab1IW_BJB5g>
+    <xmx:NZhTXs8XxOlhrTQ4rkwBQydE2tczzM5MnXviVfQu4eqS8OHYxJuMIw>
+    <xmx:NphTXhNLSY6qOWm83RgG_0rWEgmnx_kO13MJXHxq7dKmK0PiFWI8JQ>
+Received: from localhost (lfbn-tou-1-1502-76.w90-89.abo.wanadoo.fr [90.89.68.76])
+        by mail.messagingengine.com (Postfix) with ESMTPA id 283DB3280060;
+        Mon, 24 Feb 2020 04:32:37 -0500 (EST)
+Date:   Mon, 24 Feb 2020 10:32:35 +0100
+From:   Maxime Ripard <maxime@cerno.tech>
+To:     Ondrej Jirman <megous@megous.com>
+Cc:     linux-sunxi@googlegroups.com, Chen-Yu Tsai <wens@csie.org>,
+        Tomas Novotny <tomas@novotny.cz>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        "moderated list:ARM/Allwinner sunXi SoC support" 
+        <linux-arm-kernel@lists.infradead.org>,
+        open list <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH 0/4] Assortment of fixes for TBS A711 Tablet
+Message-ID: <20200224093235.7hqazfxzadzqwlng@gilmour.lan>
+References: <20200222223154.221632-1-megous@megous.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="ugm5lafujjcs4zuh"
 Content-Disposition: inline
-In-Reply-To: <1582515055-14515-1-git-send-email-qiwuchen55@gmail.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20200222223154.221632-1-megous@megous.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Feb 24, 2020 at 11:30:55AM +0800, qiwuchen55@gmail.com wrote:
-> From: chenqiwu <chenqiwu@xiaomi.com>
-> 
-> Use shift operation to calculate the periods instead of division,
-> since shift operation is more efficient than division operation.
-> 
-> Signed-off-by: chenqiwu <chenqiwu@xiaomi.com>
-> ---
->  kernel/sched/pelt.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/kernel/sched/pelt.c b/kernel/sched/pelt.c
-> index bd006b7..ac79f8e 100644
-> --- a/kernel/sched/pelt.c
-> +++ b/kernel/sched/pelt.c
-> @@ -114,7 +114,7 @@ static u32 __accumulate_pelt_segments(u64 periods, u32 d1, u32 d3)
->  	u64 periods;
->  
->  	delta += sa->period_contrib;
-> -	periods = delta / 1024; /* A period is 1024us (~1ms) */
-> +	periods = delta >> 10; /* A period is 1024us (~1ms) */
 
-Find me a compiler that stupid.
+--ugm5lafujjcs4zuh
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+
+On Sat, Feb 22, 2020 at 11:31:50PM +0100, Ondrej Jirman wrote:
+> This series fixes some issues with camera overvolting, USB-OTG/charging,
+> and WiFi OOB interrupt being stuck.
+>
+> Please take a look.
+
+Applied 2,3 and 4
+
+Maxime
+
+--ugm5lafujjcs4zuh
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iHUEABYIAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCXlOYMwAKCRDj7w1vZxhR
+xXS1AP0ZLJkOP74wrxp4yvAMDXitjkezQh6SiGvTEOgZkrMpbQEA4NTdiVYQUVPW
+dGuZKk/63QYvyf81LF2BFCmuenIV2wk=
+=C6+q
+-----END PGP SIGNATURE-----
+
+--ugm5lafujjcs4zuh--
