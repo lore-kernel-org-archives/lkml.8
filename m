@@ -7,37 +7,38 @@ X-Spam-Status: No, score=-14.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B4493C35DE6
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 23:31:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 48ADAC35DE4
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 23:32:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 82C3A21556
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 23:31:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0D25120732
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 23:32:04 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728661AbgBXXb6 (ORCPT
+        id S1728687AbgBXXcC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Feb 2020 18:31:58 -0500
-Received: from bilbo.ozlabs.org ([203.11.71.1]:40657 "EHLO ozlabs.org"
+        Mon, 24 Feb 2020 18:32:02 -0500
+Received: from bilbo.ozlabs.org ([203.11.71.1]:37147 "EHLO ozlabs.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728621AbgBXXbz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Feb 2020 18:31:55 -0500
+        id S1728653AbgBXXb6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 24 Feb 2020 18:31:58 -0500
 Received: by ozlabs.org (Postfix, from userid 1034)
-        id 48RJHY3J95z9sQx; Tue, 25 Feb 2020 10:31:53 +1100 (AEDT)
+        id 48RJHc4FLjz9sRN; Tue, 25 Feb 2020 10:31:56 +1100 (AEDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ellerman.id.au;
-        s=201909; t=1582587113;
-        bh=eU9PRGdwkqGR+XaxfNgvc4i2nXKN+QYEl3ouFzBRDbU=;
+        s=201909; t=1582587116;
+        bh=e+3S5c2g5Nka9xFqjuZ71WCKyjhhE+9WODC+LK78bD8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=aDw4UtfhFG6qv243lzcRBOUEyawDqK8JQT0PoAmzWj2xLYda6U2gHJTQJxFZw5+af
-         Ob0oWDBa4owzV9XVP4vVbJDMY5uVniDVn8wiVmZXD1aVlx0INVZhEWVsXFeeC5lKoP
-         KQE9Mo0HkNJp7E7mGwcahgz0vvsjnrvF6t6YVjYbCfmjAVktC4DqfaT6zpjdONjT4r
-         bbLrhNNurvRv8QiU/38xvRwgECTZoq7WDnu7BN3AVVlMO0Tjx/WzWYR1Gnoy6u57z1
-         gL+NVpCoTyoM71QhSqBjsavrqbig+hbjJH1pK3vDVfBK3L8ZwxpH0/KGzXhfeXOpQz
-         45SQ7Lzyjd6pw==
+        b=mnsO4rESThUzbouiP/Ygtw9wkEaYY7Tu9u2nvdJOILEdxeoPcT+rkxwa35wyNoYwY
+         O/7R81Ij+KqHvu6v7/AHce+9syqNu+emDTOX0x2GRlo7Ip0uCISfYjhiGW/052iudU
+         P3hsWzqJaDbsh942QuA9YmETjLxe9TxQwej5s1C6Ttd1TzMiEvRttnG8YqL3ViQxdu
+         VZHth2JulDJ7DpLRxUWXawl5WzRJiiKKdjeqDoyzanP1V6DakM9TyMAAp9rcsX9DNA
+         uraTO/ZHZ4XDphJCiLfV3yT9mux9zT5U7Cqdl4aBvV8JeXe4nt/dZ+bign5QVIAZak
+         D5mka8sRLtKoQ==
 From:   Michael Ellerman <mpe@ellerman.id.au>
 To:     linuxppc-dev@ozlabs.org
-Cc:     linux-kernel@vger.kernel.org, Anatolij Gustschin <agust@denx.de>
-Subject: [PATCH 6/8] powerpc: Update MPC5XXX MAINTAINERS entry
-Date:   Tue, 25 Feb 2020 10:31:44 +1100
-Message-Id: <20200224233146.23734-6-mpe@ellerman.id.au>
+Cc:     linux-kernel@vger.kernel.org, Scott Wood <oss@buserror.net>,
+        Kumar Gala <galak@kernel.crashing.org>
+Subject: [PATCH 8/8] powerpc: Update 83xx/85xx MAINTAINERS entry
+Date:   Tue, 25 Feb 2020 10:31:46 +1100
+Message-Id: <20200224233146.23734-8-mpe@ellerman.id.au>
 X-Mailer: git-send-email 2.21.1
 In-Reply-To: <20200224233146.23734-1-mpe@ellerman.id.au>
 References: <20200224233146.23734-1-mpe@ellerman.id.au>
@@ -48,31 +49,37 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-It's several years since the last commit from Anatolij, so mark
-MPC5XXX as "Odd Fixes" rather than "Maintained".
+Scott said he was still maintaining this "sort of", so change the
+status to Odd Fixes.
 
-Also the git link no longer works so remove it.
+Kumar has long ago moved on to greener pastures.
 
-Cc: Anatolij Gustschin <agust@denx.de>
+Remove the dead penguinppc.org link.
+
+Cc: Scott Wood <oss@buserror.net>
+Cc: Kumar Gala <galak@kernel.crashing.org>
 Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
 ---
- MAINTAINERS | 3 +--
- 1 file changed, 1 insertion(+), 2 deletions(-)
+ MAINTAINERS | 4 +---
+ 1 file changed, 1 insertion(+), 3 deletions(-)
 
 diff --git a/MAINTAINERS b/MAINTAINERS
-index d5db5cac5a39..a46e19aadcbc 100644
+index febffee28d00..2e917116ef6a 100644
 --- a/MAINTAINERS
 +++ b/MAINTAINERS
-@@ -9639,8 +9639,7 @@ N:	pseries
- LINUX FOR POWERPC EMBEDDED MPC5XXX
- M:	Anatolij Gustschin <agust@denx.de>
- L:	linuxppc-dev@lists.ozlabs.org
--T:	git git://git.denx.de/linux-denx-agust.git
--S:	Maintained
-+S:	Odd Fixes
- F:	arch/powerpc/platforms/512x/
- F:	arch/powerpc/platforms/52xx/
+@@ -9650,11 +9650,9 @@ F:	arch/powerpc/platforms/44x/
  
+ LINUX FOR POWERPC EMBEDDED PPC83XX AND PPC85XX
+ M:	Scott Wood <oss@buserror.net>
+-M:	Kumar Gala <galak@kernel.crashing.org>
+-W:	http://www.penguinppc.org/
+ L:	linuxppc-dev@lists.ozlabs.org
+ T:	git git://git.kernel.org/pub/scm/linux/kernel/git/scottwood/linux.git
+-S:	Maintained
++S:	Odd fixes
+ F:	arch/powerpc/platforms/83xx/
+ F:	arch/powerpc/platforms/85xx/
+ F:	Documentation/devicetree/bindings/powerpc/fsl/
 -- 
 2.21.1
 
