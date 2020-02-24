@@ -2,160 +2,111 @@ Return-Path: <SRS0=7TUr=4M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B7435C35670
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 01:43:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D5CCFC35673
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 01:44:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 86BF6206E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 01:43:44 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="odvADANg"
+	by mail.kernel.org (Postfix) with ESMTP id B429420675
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 01:44:48 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727221AbgBXBnn (ORCPT
+        id S1727236AbgBXBor convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 23 Feb 2020 20:43:43 -0500
-Received: from mail-vk1-f194.google.com ([209.85.221.194]:40116 "EHLO
-        mail-vk1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727169AbgBXBnm (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 23 Feb 2020 20:43:42 -0500
-Received: by mail-vk1-f194.google.com with SMTP id c129so2096096vkh.7
-        for <linux-kernel@vger.kernel.org>; Sun, 23 Feb 2020 17:43:41 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=/tDUe/596kLQOTI3w8zi8SEzFY93PKMz1mi66rU0+Hs=;
-        b=odvADANgVGTTfCRvnRE2ojhtUfO+STbMJFvaug7W5NcEtwaHV2bzfquurK62hxfoxz
-         J1WGUscx/FqcJyd2LKg0uW/ayUJhMz9gW4laps101NC0y7kosjR2vtcLKWV5HCwLaVXZ
-         55q8ZXghnSNGEp1J+fcMyICppzh9rikjzkwxhEZjC9Q33G6d4jZafMi9JMz3Tpocwicf
-         ZKssWuh3fB05xobe3VJud4FR6mqwnA8UcC5XiVkFAT8aT3bmApl0EtWQGrD/KIvtlBGx
-         xQpPlASjuOcmfu9RllWf90OuQBMIYy75dsmFnMc9rbZkj0Ote8ki0v0nu1zQ3Zilf1wF
-         pipQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=/tDUe/596kLQOTI3w8zi8SEzFY93PKMz1mi66rU0+Hs=;
-        b=UcOCLGW3cSwg+30hK/cfWyS65NDr6QRFtxPEk94K8hVdDMKeEjRRYD/NM8q+ynu4jQ
-         mQouBUICMknu4v/vVo2ca4fR9FnyfyQokSGBOtdGp+s7jQaNm0Vz0F5oUSNrouNVmA2N
-         rLjYN0A9MY5WaIKhi3waLNELhWDZrESQ/dYFFmFigd0JeaT1pNFlDtkWcaMYYa6QJywA
-         zWbx8wRiGsiTgkOLsZcQAUZUzhP/CJPNSRdXmgu9gLdhppUaO32h9h6SWCf9SvOmMbcl
-         Y/vKJYp2ZrYK8CqO+f+ao2OEej8dhmkqh8pefm7LVo3c6WN/qsUtlaeHvNb6rRiSaK+5
-         VyWw==
-X-Gm-Message-State: APjAAAWmAnjP4m1HKpFRqLRlq2HN6gbqBIvVxYtFE5z9y8i25Eo+k0nf
-        DYNFsU7S+Zhj0MHCN1tWSIVQ2FeE//3ocMeBoRcw6w==
-X-Google-Smtp-Source: APXvYqypuLtLmgW4rAaRuxj1Wpdl9Fq5n92rcRfcLstwQaDQC8z/1gbliCGTeVFx6ViQYEvWrjlLa+VXyYd2Ab1orhM=
-X-Received: by 2002:a1f:90d4:: with SMTP id s203mr22035473vkd.65.1582508620766;
- Sun, 23 Feb 2020 17:43:40 -0800 (PST)
+        Sun, 23 Feb 2020 20:44:47 -0500
+Received: from szxga08-in.huawei.com ([45.249.212.255]:48706 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1727151AbgBXBor (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 23 Feb 2020 20:44:47 -0500
+Received: from DGGEMM401-HUB.china.huawei.com (unknown [172.30.72.53])
+        by Forcepoint Email with ESMTP id 3F9634FCA9B9E5C9F61D;
+        Mon, 24 Feb 2020 09:44:44 +0800 (CST)
+Received: from dggeme752-chm.china.huawei.com (10.3.19.98) by
+ DGGEMM401-HUB.china.huawei.com (10.3.20.209) with Microsoft SMTP Server (TLS)
+ id 14.3.439.0; Mon, 24 Feb 2020 09:44:43 +0800
+Received: from dggeme753-chm.china.huawei.com (10.3.19.99) by
+ dggeme752-chm.china.huawei.com (10.3.19.98) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id
+ 15.1.1713.5; Mon, 24 Feb 2020 09:44:43 +0800
+Received: from dggeme753-chm.china.huawei.com ([10.7.64.70]) by
+ dggeme753-chm.china.huawei.com ([10.7.64.70]) with mapi id 15.01.1713.004;
+ Mon, 24 Feb 2020 09:44:43 +0800
+From:   linmiaohe <linmiaohe@huawei.com>
+To:     Sean Christopherson <sean.j.christopherson@intel.com>
+CC:     "pbonzini@redhat.com" <pbonzini@redhat.com>,
+        "rkrcmar@redhat.com" <rkrcmar@redhat.com>,
+        "vkuznets@redhat.com" <vkuznets@redhat.com>,
+        "wanpengli@tencent.com" <wanpengli@tencent.com>,
+        "jmattson@google.com" <jmattson@google.com>,
+        "joro@8bytes.org" <joro@8bytes.org>,
+        "tglx@linutronix.de" <tglx@linutronix.de>,
+        "mingo@redhat.com" <mingo@redhat.com>,
+        "bp@alien8.de" <bp@alien8.de>, "hpa@zytor.com" <hpa@zytor.com>,
+        "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "x86@kernel.org" <x86@kernel.org>
+Subject: Re: [PATCH] KVM: X86: eliminate some meaningless code
+Thread-Topic: [PATCH] KVM: X86: eliminate some meaningless code
+Thread-Index: AdXqsyQk+rut2bDwRPO7k/XEvhn+sQ==
+Date:   Mon, 24 Feb 2020 01:44:43 +0000
+Message-ID: <5ac7a51dbcc7408d87b14be75b41f1dc@huawei.com>
+Accept-Language: en-US
+Content-Language: zh-CN
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-originating-ip: [10.173.221.158]
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 8BIT
 MIME-Version: 1.0
-References: <20200222183010.197844-1-adelva@google.com> <20200223145635.GB29607@iweiny-DESK2.sc.intel.com>
- <CAOSf1CH-WMA5DDt9LKcPPZwb-ya-y=1WCc8mrUEEDMjg0WeX5g@mail.gmail.com>
-In-Reply-To: <CAOSf1CH-WMA5DDt9LKcPPZwb-ya-y=1WCc8mrUEEDMjg0WeX5g@mail.gmail.com>
-From:   Alistair Delva <adelva@google.com>
-Date:   Sun, 23 Feb 2020 17:43:29 -0800
-Message-ID: <CANDihLF8bjOVAypQF-L-h82wcW5OBj4MQZRNRthAoaXPM51gpA@mail.gmail.com>
-Subject: Re: [PATCH 1/2] libnvdimm/of_pmem: handle memory-region in DT
-To:     "Oliver O'Halloran" <oohall@gmail.com>
-Cc:     Ira Weiny <ira.weiny@intel.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Kenny Root <kroot@google.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Vishal Verma <vishal.l.verma@intel.com>,
-        Dave Jiang <dave.jiang@intel.com>,
-        Device Tree <devicetree@vger.kernel.org>,
-        "linux-nvdimm@lists.01.org" <linux-nvdimm@lists.01.org>,
-        kernel-team@android.com
-Content-Type: text/plain; charset="UTF-8"
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, Feb 23, 2020 at 5:42 PM Oliver O'Halloran <oohall@gmail.com> wrote:
+Sean Christopherson <sean.j.christopherson@intel.com> wrote:
+> On Fri, Feb 21, 2020 at 10:05:26PM +0800, linmiaohe wrote:
+>> From: Miaohe Lin <linmiaohe@huawei.com>
+>> 
+>> When kvm_vcpu_ioctl_get_cpuid2() fails, we set cpuid->nent to the 
+>> value of
+>> vcpu->arch.cpuid_nent. But this is in vain as cpuid->nent is not 
+>> vcpu->copied to
+>> userspace by copy_to_user() from call site. Get rid of this 
+>> meaningless assignment and further cleanup the var r and out jump label.
 >
-> On Mon, Feb 24, 2020 at 1:56 AM Ira Weiny <ira.weiny@intel.com> wrote:
-> >
-> > On Sat, Feb 22, 2020 at 10:30:09AM -0800, Alistair Delva wrote:
-> > > From: Kenny Root <kroot@google.com>
-> > >
-> > > Add support for parsing the 'memory-region' DT property in addition to
-> > > the 'reg' DT property. This enables use cases where the pmem region is
-> > > not in I/O address space or dedicated memory (e.g. a bootloader
-> > > carveout).
-> > >
-> > > Signed-off-by: Kenny Root <kroot@google.com>
-> > > Signed-off-by: Alistair Delva <adelva@google.com>
-> > > Cc: "Oliver O'Halloran" <oohall@gmail.com>
-> > > Cc: Rob Herring <robh+dt@kernel.org>
-> > > Cc: Dan Williams <dan.j.williams@intel.com>
-> > > Cc: Vishal Verma <vishal.l.verma@intel.com>
-> > > Cc: Dave Jiang <dave.jiang@intel.com>
-> > > Cc: Ira Weiny <ira.weiny@intel.com>
-> > > Cc: devicetree@vger.kernel.org
-> > > Cc: linux-nvdimm@lists.01.org
-> > > Cc: kernel-team@android.com
-> > > ---
-> > >  drivers/nvdimm/of_pmem.c | 75 ++++++++++++++++++++++++++--------------
-> > >  1 file changed, 50 insertions(+), 25 deletions(-)
-> > >
-> > > diff --git a/drivers/nvdimm/of_pmem.c b/drivers/nvdimm/of_pmem.c
-> > > index 8224d1431ea9..a68e44fb0041 100644
-> > > --- a/drivers/nvdimm/of_pmem.c
-> > > +++ b/drivers/nvdimm/of_pmem.c
-> > > @@ -14,13 +14,47 @@ struct of_pmem_private {
-> > >       struct nvdimm_bus *bus;
-> > >  };
-> > >
-> > > +static void of_pmem_register_region(struct platform_device *pdev,
-> > > +                                 struct nvdimm_bus *bus,
-> > > +                                 struct device_node *np,
-> > > +                                 struct resource *res, bool is_volatile)
-> >
-> > FWIW it would be easier to review if this was splut into a patch which created
-> > the helper of_pmem_register_region() without the new logic.  Then added the new
-> > logic here.
->
-> Yeah, that wouldn't hurt.
->
-> *snip*
->
-> > > +     i = 0;
-> > > +     while ((mr_np = of_parse_phandle(np, "memory-region", i++))) {
-> > > +             ret = of_address_to_resource(mr_np, 0, &res);
-> > > +             if (ret)
-> > > +                     dev_warn(
-> > > +                             &pdev->dev,
-> > > +                             "Unable to acquire memory-region from %pOF: %d\n",
-> > > +                             mr_np, ret);
-> > >               else
-> > > -                     dev_dbg(&pdev->dev, "Registered region %pR from %pOF\n",
-> > > -                                     ndr_desc.res, np);
-> > > +                     of_pmem_register_region(pdev, bus, np, &res,
-> > > +                                             is_volatile);
-> > > +             of_node_put(mr_np);
-> >
-> > Why of_node_put()?
->
-> "memory-region" is an array of pointers to nodes in /reserved-memory/
-> which describe the actual memory region. of_parse_phandle() elevates
-> the refcount of the returned node and we need to balance that.
+>Ha, took me a while to see that.
 
-That was my understanding too.
+Sorry about it. I'am not good at it. :(
 
-Thanks both for the review and sorry for the last minute untested
-variable rename! I'll fix both and split the refactoring out in v2.
+>>
+>> On the other hand, when kvm_vcpu_ioctl_get_cpuid2() succeeds, we do 
+>>  			 vcpu->arch.cpuid_nent * sizeof(struct kvm_cpuid_entry2)))
+>> -		goto out;
+>> -	return 0;
+>
+>Hmm, so this ioctl() is straight up broken.  cpuid->nent should be updated on success so that userspace knows how many entries were retrieved, i.e.
+>the code should look something like below, with kvm_arch_vcpu_ioctl() unchanged.
+>
+>I'm guessing no VMM actually uses this ioctl(), e.g. neither Qemu or CrosVM use it, which is why the broken behavior has gone unnoticed.  Don't suppose you'd want to write a selftest to hammer KVM_{SET,GET}_CPUID2?
+>
+>int kvm_vcpu_ioctl_get_cpuid2(struct kvm_vcpu *vcpu,
+>                              struct kvm_cpuid2 *cpuid,
+>                              struct kvm_cpuid_entry2 __user *entries) {
+>        if (cpuid->nent < vcpu->arch.cpuid_nent)
+>                return -E2BIG;
+>
+>        if (copy_to_user(entries, &vcpu->arch.cpuid_entries,
+>                         vcpu->arch.cpuid_nent * sizeof(struct kvm_cpuid_entry2)))
+>                return -EFAULT;
+>
+>	cpuid->nent = vcpu->arch.cpuid_nent;
+>
+>        return 0;
+>}
+>
 
-> >
-> > Ira
-> > >       }
-> > >
-> > >       return 0;
-> > > --
-> > > 2.25.0.265.gbab2e86ba0-goog
-> > >
+I searched KVM_GET_CPUID2 from Qemu, it's not used. So maybe we could just drop KVM_GET_CPUID2 altogether as
+suggested by Paolo. Thanks for your review.
+
