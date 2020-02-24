@@ -4,66 +4,66 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 364C0C11D2A
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 09:14:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F3160C35679
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 09:14:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0647F20836
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 09:14:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C21D720836
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 09:14:32 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=cerno.tech header.i=@cerno.tech header.b="BUvdZv5w";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="nYqUxtdB"
+	dkim=pass (2048-bit key) header.d=cerno.tech header.i=@cerno.tech header.b="yK5Ohju6";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="SiqE15r0"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727302AbgBXJJB (ORCPT
+        id S1727325AbgBXJJC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Feb 2020 04:09:01 -0500
-Received: from wnew3-smtp.messagingengine.com ([64.147.123.17]:60663 "EHLO
+        Mon, 24 Feb 2020 04:09:02 -0500
+Received: from wnew3-smtp.messagingengine.com ([64.147.123.17]:44823 "EHLO
         wnew3-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727240AbgBXJI7 (ORCPT
+        by vger.kernel.org with ESMTP id S1727115AbgBXJI7 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 24 Feb 2020 04:08:59 -0500
 Received: from compute3.internal (compute3.nyi.internal [10.202.2.43])
-        by mailnew.west.internal (Postfix) with ESMTP id A7151580;
-        Mon, 24 Feb 2020 04:08:57 -0500 (EST)
-Received: from mailfrontend2 ([10.202.2.163])
-  by compute3.internal (MEProxy); Mon, 24 Feb 2020 04:08:58 -0500
+        by mailnew.west.internal (Postfix) with ESMTP id 5CCBB54F;
+        Mon, 24 Feb 2020 04:08:56 -0500 (EST)
+Received: from mailfrontend1 ([10.202.2.162])
+  by compute3.internal (MEProxy); Mon, 24 Feb 2020 04:08:57 -0500
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cerno.tech; h=
         from:to:cc:subject:date:message-id:in-reply-to:references
-        :mime-version:content-transfer-encoding; s=fm2; bh=TaGtmbCmLF2Fo
-        LaNLgYEVhUrtAG5EI8ELKtGohVOro0=; b=BUvdZv5wWbBsyN+nVxMcymEYKnG/i
-        wumVPJ1GGKyeY9X98f7lFwy/vqAo/3ILVZij8Zh+y5Xfo0ygANooo9z0+g2sO59f
-        p+OQgAUMplLubLWDJasuSHAoF92w95eXqoIzrU41x9JIXrk/5lcq71j684ILXVY3
-        TzC1/FaoqAitEJTWJCPVqt0tVto+aO6bpoX+OjdhBbpjK68VW4s8KZ1ZZFm3u2g6
-        gVO3BJ86kuPkl7n05ln+w1cuntEhkaPj3xcfXq7j6jjwfRXviScqkza7u1lqEoxK
-        CLyhnf381uQs+oXE6Of/IQXptxoHnXzyjZfWZk2V2544Z7YUydfFMm8Lw==
+        :mime-version:content-transfer-encoding; s=fm2; bh=mPma2BR0l1tBP
+        abwm95lyd5UfLZW9fXkUpmHIiAKdz8=; b=yK5Ohju6603q5LvF1eeHhCRAciomk
+        a88acboqocKkpJ56P/NHvNfJ8kHkYXP4hC7WYenUQjMOvkXnrEchJAipm1JnPP3l
+        hzXdyuDyRIOaQLsk1ZQh957sTlqq8f1M+jtITQVmvn3tu6QrwxzU7OspOKXvDglc
+        Xaij5T7+V279+aKKitTuFkniHGZ14Kad8cf++MHTMzF922tcHkMIoLOdEIZSO25k
+        q2z7eSWxAWMNR0suJRdG+E5B8q4HLDuwwKUTnoCrL9mHIY7jErY6ipN9s1ApdAjt
+        dCtj3XN34jiy1QBhXcchA6eZNPyucu0mcSMOuINVy65D2lsLVmdNrtM5g==
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
         messagingengine.com; h=cc:content-transfer-encoding:date:from
         :in-reply-to:message-id:mime-version:references:subject:to
         :x-me-proxy:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=
-        fm2; bh=TaGtmbCmLF2FoLaNLgYEVhUrtAG5EI8ELKtGohVOro0=; b=nYqUxtdB
-        ucZ+FoExm9RSKGYxVbpWe0m+/9MAZNY1asuA+zyCxTqj7ONdleIeo2INZ1KF7HhB
-        04Jbl3M5h7czA9pwT94y8hedIiyzfYupFmkFmtK65NIC/nPt9TtgSX1FSjHtKedP
-        D2otDpQHJ7rQ/Sn/3UxlmFiM8XQQ0H0y6El+kBLAUsy4OGhsWyNkrOb8jomkV5J/
-        Cl6ISglAwA/f3mY0ss8KqWsc+BKz8uhe8FilbTD4soKTpFbw8gcAFnmLWiowuCM3
-        K/RiUa3Fkk3nYizxIgHnXkJaIU8RWwjGeuteRgxaJPDcFVEefb/v4E3hXfTTZf8J
-        IpmddzCpoQb5JQ==
-X-ME-Sender: <xms:qZJTXibiV2JmdrenwtVxvc563scseREJr743WVaIpYFcl4SKVOWXcA>
+        fm2; bh=mPma2BR0l1tBPabwm95lyd5UfLZW9fXkUpmHIiAKdz8=; b=SiqE15r0
+        jST1WHM2j4nwUY3KRPrRZgAtqyYqAdIhCa210Bc6inU6yieqSj+FkK0ReZ31ughB
+        2L72ugc1q9PVsp3X9jSQWYyWkIMWjxAgpQMZaTHXvnghbPrs2DU2R97KqMpzYXUR
+        evmKCRZRz5IuE39aRKouTH1Zooiy1Nw6z2qfUEAAKDAfLXNYaq1ZDqflCjdBhcRE
+        xfZyb6wAG98Gnd71/Bd9rpfnRg0SJd3iLcu74xj66lAdLraLoelEBwlqjcuJBVkX
+        LuRbWZibnGwxyv8SiDwiMagxSmlg6AXrbfV/1x/HuJqEf4uRTJgZDpYUcDVrqkae
+        d1y1mSEUGbFK2w==
+X-ME-Sender: <xms:pJJTXtgKVwHM_3O-v7pJ9fNUvFDN1t-SGoJPw2wtCM-EFCtmRoawVw>
 X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedugedrledtucetufdoteggodetrfdotffvucfrrh
     hofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgenuceurghi
     lhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmnecujfgurh
     ephffvufffkffojghfggfgsedtkeertdertddtnecuhfhrohhmpeforgigihhmvgcutfhi
     phgrrhguuceomhgrgihimhgvsegtvghrnhhordhtvggthheqnecukfhppeeltddrkeelrd
-    eikedrjeeinecuvehluhhsthgvrhfuihiivgepudenucfrrghrrghmpehmrghilhhfrhho
+    eikedrjeeinecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehmrghilhhfrhho
     mhepmhgrgihimhgvsegtvghrnhhordhtvggthh
-X-ME-Proxy: <xmx:qZJTXqp3oFJPciVBlxgdDC9h8a9BxU9CNpJfmxjZpPpAIM0IxWCmtw>
-    <xmx:qZJTXupOIe_jrq_5DGf-EojaB-WYHmzJqgH7j6BhDxEulCViWIlHpw>
-    <xmx:qZJTXs3LFZ6uvQdFooOTqbYPSW5tcpeMuQ1pZlzXj6ril02CcB9OhQ>
-    <xmx:qZJTXg8U8qKaPUjruZQXyaa_vKRq4r35zf92rmA2zyp9TFlP99K29hnE-9s>
+X-ME-Proxy: <xmx:pJJTXix9Y3ulNkmav60cdqJtJzRB0eDhJ25b12-2X_35iSJPswp44w>
+    <xmx:pJJTXpPykQdFZzlJ0PJYOPMDqOCx5ngeyKcn8HBcE_qQHq_pgPZdvw>
+    <xmx:pJJTXjXRoICUAXNIZjtmbH35ojG9eghAedET_ASqQf2o0EVy6HCxrA>
+    <xmx:qJJTXiS2ml6O3QORmCFbxt_L5y5Cbk-Nwiwxpu04jQJiNKnkjwRy-FdEIjA>
 Received: from localhost (lfbn-tou-1-1502-76.w90-89.abo.wanadoo.fr [90.89.68.76])
-        by mail.messagingengine.com (Postfix) with ESMTPA id C2E4930610E8;
-        Mon, 24 Feb 2020 04:08:56 -0500 (EST)
+        by mail.messagingengine.com (Postfix) with ESMTPA id 71D9D328005A;
+        Mon, 24 Feb 2020 04:08:52 -0500 (EST)
 From:   Maxime Ripard <maxime@cerno.tech>
 To:     Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
         Eric Anholt <eric@anholt.net>
@@ -75,11 +75,14 @@ Cc:     dri-devel@lists.freedesktop.org,
         Tim Gover <tim.gover@raspberrypi.com>,
         Phil Elwell <phil@raspberrypi.com>,
         Maxime Ripard <maxime@cerno.tech>,
-        Michael Turquette <mturquette@baylibre.com>,
-        Stephen Boyd <sboyd@kernel.org>, linux-clk@vger.kernel.org
-Subject: [PATCH 05/89] clk: Return error code when of provider pointer is NULL
-Date:   Mon, 24 Feb 2020 10:06:07 +0100
-Message-Id: <ab03d578775df76c12e1dcff5d5cc5c1eb4d6fa7.1582533919.git-series.maxime@cerno.tech>
+        Kamal Dasu <kdasu.kdev@gmail.com>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Wolfram Sang <wsa@the-dreams.de>, linux-i2c@vger.kernel.org,
+        devicetree@vger.kernel.org
+Subject: [PATCH 02/89] dt-bindings: i2c: brcmstb: Add BCM2711 BSC/AUTO-I2C binding
+Date:   Mon, 24 Feb 2020 10:06:04 +0100
+Message-Id: <9e427ff22fa40b7146b44aee6468559499deb1f1.1582533919.git-series.maxime@cerno.tech>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <cover.6c896ace9a5a7840e9cec008b553cbb004ca1f91.1582533919.git-series.maxime@cerno.tech>
 References: <cover.6c896ace9a5a7840e9cec008b553cbb004ca1f91.1582533919.git-series.maxime@cerno.tech>
@@ -90,66 +93,97 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The clock framework DT provider helpers don't check the pointers in the
-array registered by the clock provider before returning it.
+The HDMI blocks in the BCM2771 have an i2c controller to retrieve the
+EDID. This block is split into two parts, the BSC and the AUTO_I2C,
+lying in two separate register areas.
 
-This means that if the array is sparse, we will end up returning a NULL
-pointer while the caller expects an error pointer, resulting in a crash.
+The AUTO_I2C block has a mailbox-like interface and will take away the
+BSC control from the CPU if enabled. However, the BSC is the actually
+the same controller than the one supported by the brcmstb driver, and
+the AUTO_I2C doesn't really bring any immediate benefit.
 
-Let's test the pointer returned and properly return an error if the pointer
-is NULL.
+We can model it in the DT as a single device with two register range,
+which will allow us to use or or the other in the driver without
+changing anything in the DT.
 
-Cc: Michael Turquette <mturquette@baylibre.com>
-Cc: Stephen Boyd <sboyd@kernel.org>
-Cc: linux-clk@vger.kernel.org
+Cc: Kamal Dasu <kdasu.kdev@gmail.com>
+Cc: Florian Fainelli <f.fainelli@gmail.com>
+Cc: Rob Herring <robh+dt@kernel.org>
+Cc: Wolfram Sang <wsa@the-dreams.de>
+Cc: bcm-kernel-feedback-list@broadcom.com
+Cc: linux-i2c@vger.kernel.org
+Cc: devicetree@vger.kernel.org
 Signed-off-by: Maxime Ripard <maxime@cerno.tech>
 ---
- drivers/clk/clk.c | 14 ++++++++++++--
- 1 file changed, 12 insertions(+), 2 deletions(-)
+ Documentation/devicetree/bindings/i2c/brcm,brcmstb-i2c.yaml | 40 ++++++-
+ 1 file changed, 39 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/clk/clk.c b/drivers/clk/clk.c
-index f0f2b599fd7e..8532b5ed1060 100644
---- a/drivers/clk/clk.c
-+++ b/drivers/clk/clk.c
-@@ -4318,13 +4318,18 @@ struct clk *of_clk_src_onecell_get(struct of_phandle_args *clkspec, void *data)
- {
- 	struct clk_onecell_data *clk_data = data;
- 	unsigned int idx = clkspec->args[0];
-+	struct clk *clk;
+diff --git a/Documentation/devicetree/bindings/i2c/brcm,brcmstb-i2c.yaml b/Documentation/devicetree/bindings/i2c/brcm,brcmstb-i2c.yaml
+index 3189d74096e8..edbca2476128 100644
+--- a/Documentation/devicetree/bindings/i2c/brcm,brcmstb-i2c.yaml
++++ b/Documentation/devicetree/bindings/i2c/brcm,brcmstb-i2c.yaml
+@@ -15,11 +15,21 @@ allOf:
+ properties:
+   compatible:
+     enum:
++      - brcm,bcm2711-hdmi-i2c
+       - brcm,brcmstb-i2c
+       - brcm,brcmper-i2c
  
- 	if (idx >= clk_data->clk_num) {
- 		pr_err("%s: invalid clock index %u\n", __func__, idx);
- 		return ERR_PTR(-EINVAL);
- 	}
- 
--	return clk_data->clks[idx];
-+	clk = clk_data->clks[idx];
-+	if (!clk)
-+		return ERR_PTR(-ENODEV);
+   reg:
+-    maxItems: 1
++    minItems: 1
++    maxItems: 2
++    items:
++      - description: BSC register range
++      - description: Auto-I2C register range
 +
-+	return clk;
- }
- EXPORT_SYMBOL_GPL(of_clk_src_onecell_get);
++  reg-names:
++    items:
++      - const: bsc
++      - const: auto-i2c
  
-@@ -4333,13 +4338,18 @@ of_clk_hw_onecell_get(struct of_phandle_args *clkspec, void *data)
- {
- 	struct clk_hw_onecell_data *hw_data = data;
- 	unsigned int idx = clkspec->args[0];
-+	struct clk_hw *hw;
+   interrupts:
+     maxItems: 1
+@@ -45,6 +55,26 @@ required:
  
- 	if (idx >= hw_data->num) {
- 		pr_err("%s: invalid index %u\n", __func__, idx);
- 		return ERR_PTR(-EINVAL);
- 	}
+ unevaluatedProperties: false
  
--	return hw_data->hws[idx];
-+	hw = hw_data->hws[idx];
-+	if (!hw)
-+		return ERR_PTR(-ENODEV);
++if:
++  properties:
++    compatible:
++      contains:
++        enum:
++          - brcm,bcm2711-hdmi-i2c
 +
-+	return hw;
- }
- EXPORT_SYMBOL_GPL(of_clk_hw_onecell_get);
++then:
++  properties:
++    reg:
++      minItems: 2
++
++  required:
++    - reg-names
++
++else:
++  properties:
++    reg:
++      maxItems: 1
++
+ examples:
+   - |
+       bsca: i2c@f0406200 {
+@@ -56,4 +86,12 @@ examples:
+           interrupt-names = "upg_bsca";
+       };
  
++  - |
++      ddc0: i2c@7ef04500 {
++          compatible = "brcm,bcm2711-hdmi-i2c";
++          reg = <0x7ef04500 0x100>, <0x7ef00b00 0x300>;
++          reg-names = "bsc", "auto-i2c";
++          clock-frequency = <390000>;
++      };
++
+ ...
 -- 
 git-series 0.9.1
