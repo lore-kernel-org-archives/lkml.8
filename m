@@ -6,94 +6,90 @@ X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3DA32C11D32
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 13:19:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6C3BEC35671
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 13:20:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1F60A20828
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 13:19:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 479F320828
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 13:20:22 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727474AbgBXNTl (ORCPT
+        id S1727510AbgBXNUV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Feb 2020 08:19:41 -0500
-Received: from foss.arm.com ([217.140.110.172]:36978 "EHLO foss.arm.com"
+        Mon, 24 Feb 2020 08:20:21 -0500
+Received: from mga11.intel.com ([192.55.52.93]:3141 "EHLO mga11.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727281AbgBXNTk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Feb 2020 08:19:40 -0500
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 3790730E;
-        Mon, 24 Feb 2020 05:19:40 -0800 (PST)
-Received: from [10.163.1.29] (unknown [10.163.1.29])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id DD26E3F534;
-        Mon, 24 Feb 2020 05:19:35 -0800 (PST)
-Subject: Re: [PATCH] mm/vma: Append unlikely() while testing VMA access
- permissions
-To:     Geert Uytterhoeven <geert@linux-m68k.org>
-Cc:     Linux MM <linux-mm@kvack.org>, Guo Ren <guoren@kernel.org>,
-        Ralf Baechle <ralf@linux-mips.org>,
-        Paul Burton <paulburton@kernel.org>,
-        Mike Rapoport <rppt@linux.ibm.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        linux-m68k <linux-m68k@lists.linux-m68k.org>,
-        linux-mips@vger.kernel.org, linux-csky@vger.kernel.org,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-References: <1582525304-32113-1-git-send-email-anshuman.khandual@arm.com>
- <CAMuHMdXMSTLevTH1gkM8B53LtRUQ80o=t+W27z0QT-dNKkkYgQ@mail.gmail.com>
-From:   Anshuman Khandual <anshuman.khandual@arm.com>
-Message-ID: <f23b808a-d71f-de44-b31b-057ec883b92f@arm.com>
-Date:   Mon, 24 Feb 2020 18:49:34 +0530
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:52.0) Gecko/20100101
- Thunderbird/52.9.1
+        id S1727329AbgBXNUU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 24 Feb 2020 08:20:20 -0500
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from fmsmga004.fm.intel.com ([10.253.24.48])
+  by fmsmga102.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 24 Feb 2020 05:20:19 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.70,480,1574150400"; 
+   d="scan'208";a="260339378"
+Received: from shbuild999.sh.intel.com (HELO localhost) ([10.239.147.113])
+  by fmsmga004.fm.intel.com with ESMTP; 24 Feb 2020 05:20:14 -0800
+Date:   Mon, 24 Feb 2020 21:20:14 +0800
+From:   Feng Tang <feng.tang@intel.com>
+To:     Linus Torvalds <torvalds@linux-foundation.org>,
+        ying.huang@intel.com
+Cc:     Jiri Olsa <jolsa@redhat.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        kernel test robot <rong.a.chen@intel.com>,
+        Ingo Molnar <mingo@kernel.org>,
+        Vince Weaver <vincent.weaver@maine.edu>,
+        Jiri Olsa <jolsa@kernel.org>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Arnaldo Carvalho de Melo <acme@redhat.com>,
+        "Naveen N. Rao" <naveen.n.rao@linux.vnet.ibm.com>,
+        Ravi Bangoria <ravi.bangoria@linux.ibm.com>,
+        Stephane Eranian <eranian@google.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        LKML <linux-kernel@vger.kernel.org>, lkp@lists.01.org,
+        andi.kleen@intel.com, "Huang, Ying" <ying.huang@intel.com>
+Subject: Re: [LKP] Re: [perf/x86] 81ec3f3c4c: will-it-scale.per_process_ops
+ -5.5% regression
+Message-ID: <20200224132014.GA63607@shbuild999.sh.intel.com>
+References: <20200205123216.GO12867@shao2-debian>
+ <20200205125804.GM14879@hirez.programming.kicks-ass.net>
+ <20200221080325.GA67807@shbuild999.sh.intel.com>
+ <20200221132048.GE652992@krava>
+ <20200223141147.GA53531@shbuild999.sh.intel.com>
+ <CAHk-=wjKFTzfDWjAAabHTZcityeLpHmEQRrKdTuk0f4GWcoohQ@mail.gmail.com>
+ <20200224003301.GA5061@shbuild999.sh.intel.com>
+ <CAHk-=whi87NNOnNXJ6CvyyedmhnS8dZA2YkQQSajvBArH5XOeA@mail.gmail.com>
+ <20200224021915.GC5061@shbuild999.sh.intel.com>
 MIME-Version: 1.0
-In-Reply-To: <CAMuHMdXMSTLevTH1gkM8B53LtRUQ80o=t+W27z0QT-dNKkkYgQ@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200224021915.GC5061@shbuild999.sh.intel.com>
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Mon, Feb 24, 2020 at 10:19:15AM +0800, Feng Tang wrote:
+> > 
+> > > No, it's not the biggest, I tried another machine 'Xeon Phi(TM) CPU 7295',
+> > > which has 72C/288T, and the regression is not seen. This is the part
+> > > confusing me :)
+> > 
+> > Hmm.
+> > 
+> > Humor me - what  happens if you turn off SMT on that Cascade Lake
+> > system?  Maybe it's about the thread ID bit in the L1? Although again,
+> > I'd have expected things to get _worse_ if it's the two fields that
+> > are now in the same cachline thanks to alignment.
+> 
+> I'll try it and report back.
 
-On 02/24/2020 03:39 PM, Geert Uytterhoeven wrote:
-> Hi Anshuman,
-> 
-> Thanks for your patch!
-> 
-> On Mon, Feb 24, 2020 at 7:22 AM Anshuman Khandual
-> <anshuman.khandual@arm.com> wrote:
->> It is unlikely that an inaccessible VMA without required permission flags
->> will get a page fault. Hence lets just append unlikely() directive to such
-> 
-> Why? Isn't it the idea that you get a page fault when the page is not
-> accessible?
+I added "nosmt=force" on the 2S 4 nodes 96C/192T machine, and tested
+both 96 and 192 processes, and the regression still exists.
 
-Yeah it is. But the point here is to have a directive indicating that it is
-unlikely that such scenarios will exist frequently even though they are very
-much possible.
+Also for Ying's suggestion about separate 'sigpending' to another cache
+line than '__refcount', it can not heal the regression either.
 
-> 
->> checks in order to improve performance while also standardizing it across
->> various platforms.
-> 
-> Does it make a difference to add these? Have you benchmarked this?
-> https://lwn.net/Articles/420019/
-
-I dont have access to these platforms. As I had noted down previously, this
-was only build tested. The primary motivation was that the likeliness or
-rather unlikeliness for page faults on inaccessible VMAs are more workload
-specific. Hence should not be platform dependent and this change was just
-trying to make it similar in some platforms.
-
-> 
-> Gr{oetje,eeting}s,
-> 
->                         Geert
-> 
-> 
-> --
-> Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-> 
-> In personal conversations with technical people, I call myself a hacker. But
-> when I'm talking to journalists I just say "programmer" or something like that.
->                                 -- Linus Torvalds
-> 
+Thanks,
+Feng
