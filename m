@@ -2,111 +2,146 @@ Return-Path: <SRS0=7TUr=4M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A3275C35671
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 14:05:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5C115C11D2F
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 14:08:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8362721927
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 14:05:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 265E52072D
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 14:08:10 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="lDOz9L58"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727668AbgBXOFP (ORCPT
+        id S1727513AbgBXOII (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Feb 2020 09:05:15 -0500
-Received: from mga18.intel.com ([134.134.136.126]:45777 "EHLO mga18.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727348AbgBXOFO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Feb 2020 09:05:14 -0500
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga005.fm.intel.com ([10.253.24.32])
-  by orsmga106.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 24 Feb 2020 06:05:11 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.70,480,1574150400"; 
-   d="scan'208";a="435914695"
-Received: from blu2-mobl3.ccr.corp.intel.com (HELO [10.254.212.230]) ([10.254.212.230])
-  by fmsmga005.fm.intel.com with ESMTP; 24 Feb 2020 06:05:08 -0800
-Cc:     baolu.lu@linux.intel.com, iommu@lists.linux-foundation.org,
-        linux-kernel@vger.kernel.org,
-        Havard Skinnemoen <hskinnemoen@google.com>,
-        Deepa Dinamani <deepadinamani@google.com>,
-        Moritz Fischer <mdf@kernel.org>
-Subject: Re: [PATCH v2] iommu/vt-d: Fix a bug in intel_iommu_iova_to_phys()
- for huge page
-To:     Yonghyun Hwang <yonghyun@google.com>,
-        David Woodhouse <dwmw2@infradead.org>,
-        Joerg Roedel <joro@8bytes.org>
-References: <20200220194431.169629-1-yonghyun@google.com>
- <795521c0-af5b-36a1-e05c-324377d04d8a@linux.intel.com>
-From:   Lu Baolu <baolu.lu@linux.intel.com>
-Message-ID: <ab64969a-5a52-5a22-061b-de57a5ac5627@linux.intel.com>
-Date:   Mon, 24 Feb 2020 22:05:04 +0800
+        Mon, 24 Feb 2020 09:08:08 -0500
+Received: from mailout2.w1.samsung.com ([210.118.77.12]:35043 "EHLO
+        mailout2.w1.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727451AbgBXOII (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 24 Feb 2020 09:08:08 -0500
+Received: from eucas1p1.samsung.com (unknown [182.198.249.206])
+        by mailout2.w1.samsung.com (KnoxPortal) with ESMTP id 20200224140806euoutp02d3710206594cdf1f0aeaf736604e26d1~2W9RUOPoQ0971309713euoutp02E
+        for <linux-kernel@vger.kernel.org>; Mon, 24 Feb 2020 14:08:06 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout2.w1.samsung.com 20200224140806euoutp02d3710206594cdf1f0aeaf736604e26d1~2W9RUOPoQ0971309713euoutp02E
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+        s=mail20170921; t=1582553286;
+        bh=F6LcwmwJuCoUGp60qGZo5dj9ozdjL1efjDoXk9YAcWQ=;
+        h=Subject:To:Cc:From:Date:In-Reply-To:References:From;
+        b=lDOz9L58JB0iLTsppl08OGRUtYqTQo/zb1tUiQj+nfa8VQ5NRwLbU3urVynQf1Vej
+         YVx8dHJRBTO7V9p5PFmb+/JsJv3oZRYlqyHhcox7VID0346TuIqKsYaELOlJ8D/u1Y
+         str3ci1AcZcdXTl0AJmjSszGw1MYIBHI/xHR4cng=
+Received: from eusmges3new.samsung.com (unknown [203.254.199.245]) by
+        eucas1p2.samsung.com (KnoxPortal) with ESMTP id
+        20200224140806eucas1p23b445f5dcea4e466f8499d74f1ab93a6~2W9RIE53o2081120811eucas1p2A;
+        Mon, 24 Feb 2020 14:08:06 +0000 (GMT)
+Received: from eucas1p1.samsung.com ( [182.198.249.206]) by
+        eusmges3new.samsung.com (EUCPMTA) with SMTP id 5F.E0.60698.6C8D35E5; Mon, 24
+        Feb 2020 14:08:06 +0000 (GMT)
+Received: from eusmtrp1.samsung.com (unknown [182.198.249.138]) by
+        eucas1p1.samsung.com (KnoxPortal) with ESMTPA id
+        20200224140805eucas1p1559dcc94f7015c49681b560952a03376~2W9QxLT543163931639eucas1p1K;
+        Mon, 24 Feb 2020 14:08:05 +0000 (GMT)
+Received: from eusmgms1.samsung.com (unknown [182.198.249.179]) by
+        eusmtrp1.samsung.com (KnoxPortal) with ESMTP id
+        20200224140805eusmtrp1cdde73c4d19b16e15a9516bb860d799a~2W9Qwcw7p1015510155eusmtrp1I;
+        Mon, 24 Feb 2020 14:08:05 +0000 (GMT)
+X-AuditID: cbfec7f5-a0fff7000001ed1a-34-5e53d8c6695d
+Received: from eusmtip1.samsung.com ( [203.254.199.221]) by
+        eusmgms1.samsung.com (EUCPMTA) with SMTP id B3.12.08375.5C8D35E5; Mon, 24
+        Feb 2020 14:08:05 +0000 (GMT)
+Received: from [106.120.51.15] (unknown [106.120.51.15]) by
+        eusmtip1.samsung.com (KnoxPortal) with ESMTPA id
+        20200224140805eusmtip1d19c8436fefaeb2e96b37b27ed639535~2W9QXYJWL1698016980eusmtip1t;
+        Mon, 24 Feb 2020 14:08:05 +0000 (GMT)
+Subject: Re: [PATCH 1/3] regulator: max14577: Add proper dt-compatible
+ strings
+To:     Mark Brown <broonie@kernel.org>
+Cc:     linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Krzysztof Kozlowski <krzk@kernel.org>,
+        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
+        Chanwoo Choi <cw00.choi@samsung.com>,
+        MyungJoo Ham <myungjoo.ham@samsung.com>,
+        Sebastian Reichel <sre@kernel.org>,
+        Rob Herring <robh+dt@kernel.org>
+From:   Marek Szyprowski <m.szyprowski@samsung.com>
+Message-ID: <61dc8192-e313-021f-9e23-928257a66984@samsung.com>
+Date:   Mon, 24 Feb 2020 15:08:05 +0100
 User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.5.0
+        Thunderbird/68.5.0
 MIME-Version: 1.0
-In-Reply-To: <795521c0-af5b-36a1-e05c-324377d04d8a@linux.intel.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
+In-Reply-To: <20200221171342.GI5546@sirena.org.uk>
+Content-Transfer-Encoding: 7bit
 Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFlrDKsWRmVeSWpSXmKPExsWy7djPc7rHbgTHGTzeLGyxccZ6VoupD5+w
+        WVz/8pzV4vz5DewWl3fNYbP43HuE0eJ24wo2i9a9R9gtTu8uceD02LSqk82jb8sqRo/Pm+QC
+        mKO4bFJSczLLUov07RK4Mra332IruMleceXEAdYGxslsXYycHBICJhIbv05j72Lk4hASWMEo
+        seDyCkYI5wujxN3jV5khnM9AmaO/4FomLVsI1bKcUaL/z0co5y2jxJqD05lAqoQFAiQWXLvF
+        CGKLCChLXP2+lwWkiFlgC5NE/8Z5YKPYBAwlut52gdm8AnYSTcffgTWzCKhK7Pk6gRXEFhWI
+        lZi98jALRI2gxMmZT8BsTgEjiedzNoItYBaQl9j+dg4zhC0ucevJfCaQZRIC29glvvW8Z4a4
+        20Vi1bxPUD8IS7w6voUdwpaROD25hwWioZlR4uG5tewQTg+jxOWmGYwQVdYSd86BQoADaIWm
+        xPpd+hBhR4kLU84xgYQlBPgkbrwVhDiCT2LStunMEGFeiY42IYhqNYlZx9fBrT144RLzBEal
+        WUhem4XknVlI3pmFsHcBI8sqRvHU0uLc9NRi47zUcr3ixNzi0rx0veT83E2MwDR0+t/xrzsY
+        9/1JOsQowMGoxMMrsTc4Tog1say4MvcQowQHs5IIrzdjUJwQb0piZVVqUX58UWlOavEhRmkO
+        FiVxXuNFL2OFBNITS1KzU1MLUotgskwcnFINjGq61dvKg/ZtnzJP4kvV2Wkbv2aEVLCIsER9
+        r47NntfpsUOucf1SvgBVwcKQP25TQ77FOr7d7ezWzSNo8rOzlcNq43H3FvXSW9I3bNOC85m0
+        rF1TUtcFeUdeDunMauk/0zQvXDSnM1KYuSBF6bvfIkabkv3Gy/Ke7Hn77fkZgWeBMqGvXS4p
+        sRRnJBpqMRcVJwIAIcljzD8DAAA=
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFtrLIsWRmVeSWpSXmKPExsVy+t/xu7pHbwTHGRzvt7LYOGM9q8XUh0/Y
+        LK5/ec5qcf78BnaLy7vmsFl87j3CaHG7cQWbReveI+wWp3eXOHB6bFrVyebRt2UVo8fnTXIB
+        zFF6NkX5pSWpChn5xSW2StGGFkZ6hpYWekYmlnqGxuaxVkamSvp2NimpOZllqUX6dgl6Gdvb
+        b7EV3GSvuHLiAGsD42S2LkZODgkBE4lJyxaydzFycQgJLGWUaHrawgKRkJE4Oa2BFcIWlvhz
+        rYsNoug1o8TpFa2MXYwcHMICfhJrZxmA1IgIKEtc/b6XBaSGWWAbk8SlpjmMEA2fmSQa/t1i
+        BqliEzCU6HrbBbaaV8BOoun4OyYQm0VAVWLP1wlg20QFYiVuzOxggqgRlDg58wnYRZwCRhLP
+        52xkBLGZBcwk5m1+yAxhy0tsfzsHyhaXuPVkPtMERqFZSNpnIWmZhaRlFpKWBYwsqxhFUkuL
+        c9Nziw31ihNzi0vz0vWS83M3MQKjbtuxn5t3MF7aGHyIUYCDUYmHV2JvcJwQa2JZcWXuIUYJ
+        DmYlEV5vxqA4Id6UxMqq1KL8+KLSnNTiQ4ymQM9NZJYSTc4HJoS8knhDU0NzC0tDc2NzYzML
+        JXHeDoGDMUIC6YklqdmpqQWpRTB9TBycUg2MHBc0TGQ2iKyrYfQLyZzpE6mkdeZdwoPP7Y0X
+        XnlIMl6MOPjhueNaBtEEZTvnE8/6Jtk/TmLO4dryfrHhZJl/90+dOiHAfPUmm2J5wS6G/1cX
+        TmnY0nDfaql8harkwoayiccU3x0v2a4TdV5jt4Cm+Ckdn/X5GoEOZ0/4z1n57lzFvv9/WU+J
+        K7EUZyQaajEXFScCAJF83I7QAgAA
+X-CMS-MailID: 20200224140805eucas1p1559dcc94f7015c49681b560952a03376
+X-Msg-Generator: CA
+Content-Type: text/plain; charset="utf-8"
+X-RootMTR: 20200220145134eucas1p288ae1910d3e8d12dc12f010ed0b07b45
+X-EPHeader: CA
+CMS-TYPE: 201P
+X-CMS-RootMailID: 20200220145134eucas1p288ae1910d3e8d12dc12f010ed0b07b45
+References: <CGME20200220145134eucas1p288ae1910d3e8d12dc12f010ed0b07b45@eucas1p2.samsung.com>
+        <20200220145127.21273-1-m.szyprowski@samsung.com>
+        <20200220165614.GD3926@sirena.org.uk>
+        <964b8c4c-36ca-203d-e62b-4a8fc970e23d@samsung.com>
+        <20200221123813.GB5546@sirena.org.uk>
+        <b52332cd-1dec-fdfe-51fc-8605d94abe7d@samsung.com>
+        <20200221171342.GI5546@sirena.org.uk>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Joerg and Yonghyun,
+Hi Mark,
 
-I found a problem in the test. I am still working on this. Please hold
-on for a while.
+On 21.02.2020 18:13, Mark Brown wrote:
+> On Fri, Feb 21, 2020 at 02:23:57PM +0100, Marek Szyprowski wrote:
+>> On 21.02.2020 13:38, Mark Brown wrote:
+>>> We could just remove the compatible strings from the binding
+>>> documentation, they won't do any harm if we don't use them.
+>> Frankly I have no strong opinion on this. I've just wanted to fix the
+>> broken autoloading of the drivers compiled as modules.
+> Shouldn't adding the relevant module table for the platform devices work
+> just as well for that?  Possibly also deleting the of_compatible bits in
+> the MFD as well, ISTR that's needed to make the platform device work.
 
-Best regards,
-baolu
+Right. This will work too. MFD cells will match to their drivers by the 
+name and modalias strings will be correct. The question is which 
+approach is preffered? Krzysztof? I've checked other mfd drivers, but I 
+cannot find any pattern in this area.
 
-On 2020/2/22 21:05, Lu Baolu wrote:
-> Hi,
-> 
-> On 2020/2/21 3:44, Yonghyun Hwang wrote:
->> intel_iommu_iova_to_phys() has a bug when it translates an IOVA for a 
->> huge
->> page onto its corresponding physical address. This commit fixes the 
->> bug by
->> accomodating the level of page entry for the IOVA and adds IOVA's lower
->> address to the physical address.
->>
->> Signed-off-by: Yonghyun Hwang <yonghyun@google.com>
-> 
-> This fix looks good to me.
-> 
-> Cc: <stable@kernel.org> # As far back as possible
-> Acked-by: Lu Baolu <baolu.lu@linux.intel.com>
-> 
-> Best regards,
-> baolu
-> 
->> ---
->>
->> Changes from v1:
->> - level cannot be 0. So, the condition, "if (level > 1)", is removed, 
->> which results in a simple code.
->> - a macro, BIT_MASK, is used to have a bit mask
->>
->> ---
->>   drivers/iommu/intel-iommu.c | 4 +++-
->>   1 file changed, 3 insertions(+), 1 deletion(-)
->>
->> diff --git a/drivers/iommu/intel-iommu.c b/drivers/iommu/intel-iommu.c
->> index 932267f49f9a..4fd5c6287b6d 100644
->> --- a/drivers/iommu/intel-iommu.c
->> +++ b/drivers/iommu/intel-iommu.c
->> @@ -5554,7 +5554,9 @@ static phys_addr_t 
->> intel_iommu_iova_to_phys(struct iommu_domain *domain,
->>       pte = pfn_to_dma_pte(dmar_domain, iova >> VTD_PAGE_SHIFT, &level);
->>       if (pte)
->> -        phys = dma_pte_addr(pte);
->> +        phys = dma_pte_addr(pte) +
->> +            (iova & (BIT_MASK(level_to_offset_bits(level) +
->> +                        VTD_PAGE_SHIFT) - 1));
->>       return phys;
->>   }
->>
+Best regards
+-- 
+Marek Szyprowski, PhD
+Samsung R&D Institute Poland
+
