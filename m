@@ -2,66 +2,68 @@ Return-Path: <SRS0=7TUr=4M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1E9BDC38BFA
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 21:30:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 92F07C38BFF
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 21:32:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F3B74218AC
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 21:30:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5B55B2084E
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 21:32:22 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="faavxfwY"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728277AbgBXV3p (ORCPT
+        id S1728023AbgBXVcV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Feb 2020 16:29:45 -0500
-Received: from shards.monkeyblade.net ([23.128.96.9]:38760 "EHLO
-        shards.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728236AbgBXV3k (ORCPT
+        Mon, 24 Feb 2020 16:32:21 -0500
+Received: from bombadil.infradead.org ([198.137.202.133]:58886 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726980AbgBXVcV (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Feb 2020 16:29:40 -0500
-Received: from localhost (unknown [IPv6:2601:601:9f00:477::3d5])
-        (using TLSv1 with cipher AES256-SHA (256/256 bits))
-        (Client did not present a certificate)
-        (Authenticated sender: davem-davemloft)
-        by shards.monkeyblade.net (Postfix) with ESMTPSA id 7670D121A82E8;
-        Mon, 24 Feb 2020 13:29:39 -0800 (PST)
-Date:   Mon, 24 Feb 2020 13:29:39 -0800 (PST)
-Message-Id: <20200224.132939.1625539021646596115.davem@davemloft.net>
-To:     jbi.octave@gmail.com
-Cc:     boqun.feng@gmail.com, linux-kernel@vger.kernel.org,
-        kuba@kernel.org, allison@lohutok.net, steffen.klassert@secunet.com,
-        axboe@kernel.dk, hare@suse.com, ktkhai@virtuozzo.com,
-        edumazet@google.com, tglx@linutronix.de,
-        pankaj.laxminarayan.bharadiya@intel.com, arnd@arndb.de, cai@lca.pw,
-        netdev@vger.kernel.org
-Subject: Re: [PATCH 15/30] af_unix: Add missing annotation for
- unix_wait_for_peer()
-From:   David Miller <davem@davemloft.net>
-In-Reply-To: <20200223231711.157699-16-jbi.octave@gmail.com>
-References: <0/30>
-        <20200223231711.157699-1-jbi.octave@gmail.com>
-        <20200223231711.157699-16-jbi.octave@gmail.com>
-X-Mailer: Mew version 6.8 on Emacs 26.1
-Mime-Version: 1.0
-Content-Type: Text/Plain; charset=us-ascii
-Content-Transfer-Encoding: 7bit
-X-Greylist: Sender succeeded SMTP AUTH, not delayed by milter-greylist-4.5.12 (shards.monkeyblade.net [149.20.54.216]); Mon, 24 Feb 2020 13:29:40 -0800 (PST)
+        Mon, 24 Feb 2020 16:32:21 -0500
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
+        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=emtDgV24Eo0XKJNO3XWaY50cgCvPe4AajCupipZ+mFM=; b=faavxfwYgJ6BV4aMG0yBGMTdvs
+        FIHOEugMta99lUrJ1bnzTZ/FRNYp6SPEABIaJ5EtGCi+eQP8a0kjK0ZbLdgXYa/37U/swNDVC13km
+        Va5rLvps0hefygpoSkbchuXiH08P6MV/rAg7EcSCaaM7QZSEw0JsM/CNamhza4du/dvIO9YVBTlnB
+        RoHdf0GoNG+qOIjDajjFjogi72piGjB1CilX1d9marpYm2pZ/fzynRHB+WFG63bofIN3ZLXSOH6JY
+        ttUElXB1HnhGmHknkGtgPrvb11HJuWiiU/SslxTdDxTUKWpXvJpAQegm1IrAR6sPxW+YVNdZRQbOd
+        Gj+d14cg==;
+Received: from hch by bombadil.infradead.org with local (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1j6LKu-0003kl-Dd; Mon, 24 Feb 2020 21:32:20 +0000
+Date:   Mon, 24 Feb 2020 13:32:20 -0800
+From:   Christoph Hellwig <hch@infradead.org>
+To:     Matthew Wilcox <willy@infradead.org>
+Cc:     linux-fsdevel@vger.kernel.org, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org, linux-btrfs@vger.kernel.org,
+        linux-erofs@lists.ozlabs.org, linux-ext4@vger.kernel.org,
+        linux-f2fs-devel@lists.sourceforge.net, cluster-devel@redhat.com,
+        ocfs2-devel@oss.oracle.com, linux-xfs@vger.kernel.org
+Subject: Re: [PATCH v7 01/24] mm: Move readahead prototypes from mm.h
+Message-ID: <20200224213220.GA13895@infradead.org>
+References: <20200219210103.32400-1-willy@infradead.org>
+ <20200219210103.32400-2-willy@infradead.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200219210103.32400-2-willy@infradead.org>
+X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jules Irenge <jbi.octave@gmail.com>
-Date: Sun, 23 Feb 2020 23:16:56 +0000
+On Wed, Feb 19, 2020 at 01:00:40PM -0800, Matthew Wilcox wrote:
+> From: "Matthew Wilcox (Oracle)" <willy@infradead.org>
+> 
+> The readahead code is part of the page cache so should be found in the
+> pagemap.h file.  force_page_cache_readahead is only used within mm,
+> so move it to mm/internal.h instead.  Remove the parameter names where
+> they add no value, and rename the ones which were actively misleading.
 
-> Sparse reports a warning unix_wait_for_peer()
-> 
-> warning: context imbalance in unix_wait_for_peer() - unexpected unlock
-> 
-> The root cause is the missing annotation at unix_wait_for_peer()
-> Add the missing annotation __releases(&unix_sk(other)->lock)
-> 
-> Signed-off-by: Jules Irenge <jbi.octave@gmail.com>
+Looks good,
 
-Applied.
+Reviewed-by: Christoph Hellwig <hch@lst.de>
