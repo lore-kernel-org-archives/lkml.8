@@ -2,91 +2,88 @@ Return-Path: <SRS0=7TUr=4M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 80DA7C3567B
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 08:39:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4847DC11D27
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 08:43:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4A22D20714
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 08:39:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1677020714
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 08:43:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582533563;
-	bh=i6Nzvo7MFgvQK+Kwv//m7fnUr/Yby9wrtOGUf97vUc4=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=NGSgYklY/79p21aqVniyKPTdMef3WBMWcSdx9ysLIesQnsM8m4C1B+f0K+RJXabNd
-	 cL2jFLmUOvr72G/EizHpbA47Lx3/4fN0m0IUiL7euQ0yIs8HyAXu1pAinLJfzg+xDM
-	 jChLrnp/VRLQnVYoBb78EIS9tyvYQO5e5qoeISio=
+	s=default; t=1582533799;
+	bh=9veiwHQ321Wt5pyHqEi/01Nw1+0zBBW21SsYQPjAqOc=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=Dy0Qsql3GLI/9pgNbeGxAYVVgWDLM4s0XcwjnOgRdERt0QeymmaKOYDYL6nzCzQTs
+	 LpOipUWxrYLAPb8pR5P7aIs4Sv36baYzVQFgXjcPKHgQigagnW4PajgjU9Rnxa/4n6
+	 m30pM3dlUIuTbuKDBT5Dv42yGQCGpDTGC6E/vHAQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727438AbgBXIjW (ORCPT
+        id S1727219AbgBXInS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Feb 2020 03:39:22 -0500
-Received: from mail.kernel.org ([198.145.29.99]:51950 "EHLO mail.kernel.org"
+        Mon, 24 Feb 2020 03:43:18 -0500
+Received: from mail.kernel.org ([198.145.29.99]:55138 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727168AbgBXIjW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Feb 2020 03:39:22 -0500
-Received: from sol.hsd1.ca.comcast.net (c-107-3-166-239.hsd1.ca.comcast.net [107.3.166.239])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        id S1726452AbgBXInR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 24 Feb 2020 03:43:17 -0500
+Received: from dragon (80.251.214.228.16clouds.com [80.251.214.228])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 66A5B20661;
-        Mon, 24 Feb 2020 08:39:21 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 543AB20661;
+        Mon, 24 Feb 2020 08:43:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1582533561;
-        bh=i6Nzvo7MFgvQK+Kwv//m7fnUr/Yby9wrtOGUf97vUc4=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=x88gTQHRYmutwqv2YL5+EuTyw2DJ3U+u2XEyOrOVBOWrPALGx7ZHfp1u9u5l37YqH
-         GlLJrK6+HtQrfU7zMai7ZarA+By/bMbiEKjyW+VeZwsCjAqnKRMmrK+6sqoR07sGQW
-         54lG5DnoQ+ER1hP4v+8rzWQTpxWQgRSXQHRAx+4U=
-From:   Eric Biggers <ebiggers@kernel.org>
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Jiri Slaby <jslaby@suse.com>
-Cc:     linux-kernel@vger.kernel.org, syzkaller-bugs@googlegroups.com,
-        Al Viro <viro@zeniv.linux.org.uk>
-Subject: [PATCH] tty: fix compat TIOCGSERIAL leaking uninitialized memory
-Date:   Mon, 24 Feb 2020 00:38:38 -0800
-Message-Id: <20200224083838.306381-1-ebiggers@kernel.org>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <000000000000387920059f4e0351@google.com>
-References: <000000000000387920059f4e0351@google.com>
+        s=default; t=1582533797;
+        bh=9veiwHQ321Wt5pyHqEi/01Nw1+0zBBW21SsYQPjAqOc=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=U0n5WXGRRH/yQhjuQyGKM/mRikRUbqKQ4zz6qfsZ+Gowv69j8/VHm2lzuTmD9hJvn
+         /kSOKy0zDgzWKceEvlzewW3AnxCtUEaQKmNAjGFnbeHsgsAY+AfCxD9MOMPm+D4G/x
+         4Y6PxQOrEdSh8ieKEQVtvoGvSkQCfIglQ6GLai5k=
+Date:   Mon, 24 Feb 2020 16:43:10 +0800
+From:   Shawn Guo <shawnguo@kernel.org>
+To:     Michael Walle <michael@walle.cc>
+Cc:     xiaowei.bao@nxp.com, Zhiqiang.Hou@nxp.com, bhelgaas@google.com,
+        devicetree@vger.kernel.org, leoyang.li@nxp.com,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linux-pci@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
+        lorenzo.pieralisi@arm.com, mark.rutland@arm.com,
+        minghuan.Lian@nxp.com, mingkai.hu@nxp.com, robh+dt@kernel.org,
+        roy.zang@nxp.com
+Subject: Re: [PATCH v6 2/3] arm64: dts: ls1028a: Add PCIe controller DT nodes
+Message-ID: <20200224084307.GD27688@dragon>
+References: <20190902034319.14026-2-xiaowei.bao@nxp.com>
+ <20200224081105.13878-1-michael@walle.cc>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200224081105.13878-1-michael@walle.cc>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Eric Biggers <ebiggers@google.com>
+On Mon, Feb 24, 2020 at 09:11:05AM +0100, Michael Walle wrote:
+> Hi Xiaowei, Hi Shawn,
+> 
+> > LS1028a implements 2 PCIe 3.0 controllers.
+> 
+> Patch 1/3 and 3/3 are in Linus' tree but nobody seems to care about this patch
+> anymore :(
+> 
+> This doesn't work well with the IOMMU, because the iommu-map property is
+> missing. The bootloader needs the &smmu phandle to fixup the entry. See
+> below.
+> 
+> Shawn, will you add this patch to your tree once its fixed, considering it
+> just adds the device tree node for the LS1028A?
 
-Commit 77654350306a ("take compat TIOC[SG]SERIAL treatment into
-tty_compat_ioctl()") changed the compat version of TIOCGSERIAL to start
-copying a whole struct to userspace rather than individual fields, but
-failed to initialize all padding and fields -- namely the hole after the
-'iomem_reg_shift' field, and the 'reserved' field.
+The patch/thread is a bit aged.  You may want to send an updated patch
+for discussion.
 
-Fix this by initializing the struct to zero.
+Shawn
 
-Reported-by: syzbot+8da9175e28eadcb203ce@syzkaller.appspotmail.com
-Fixes: 77654350306a ("take compat TIOC[SG]SERIAL treatment into tty_compat_ioctl()")
-Cc: <stable@vger.kernel.org> # v4.20+
-Signed-off-by: Eric Biggers <ebiggers@google.com>
----
- drivers/tty/tty_io.c | 1 +
- 1 file changed, 1 insertion(+)
-
-diff --git a/drivers/tty/tty_io.c b/drivers/tty/tty_io.c
-index 1fcf7ad83dfa0..d24c250312edf 100644
---- a/drivers/tty/tty_io.c
-+++ b/drivers/tty/tty_io.c
-@@ -2731,6 +2731,7 @@ static int compat_tty_tiocgserial(struct tty_struct *tty,
- 	struct serial_struct v;
- 	int err;
- 	memset(&v, 0, sizeof(struct serial_struct));
-+	memset(&v32, 0, sizeof(struct serial_struct32));
- 
- 	if (!tty->ops->set_serial)
- 		return -ENOTTY;
--- 
-2.25.1
-
+> 
+> > 
+> > Signed-off-by: Xiaowei Bao <xiaowei.bao@nxp.com>
+> > Signed-off-by: Hou Zhiqiang <Zhiqiang.Hou@nxp.com>
