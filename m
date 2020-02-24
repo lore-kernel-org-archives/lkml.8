@@ -2,134 +2,111 @@ Return-Path: <SRS0=7TUr=4M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 782EFC11D32
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 15:29:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A65E7C11D2F
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 15:29:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5ACA520828
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 15:29:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 795E42082F
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 15:29:39 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="aqlsWUNP"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727926AbgBXP3N (ORCPT
+        id S1727939AbgBXP3i (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Feb 2020 10:29:13 -0500
-Received: from mx2.suse.de ([195.135.220.15]:49788 "EHLO mx2.suse.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727581AbgBXP3M (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Feb 2020 10:29:12 -0500
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx2.suse.de (Postfix) with ESMTP id 2EF5DADBE;
-        Mon, 24 Feb 2020 15:29:10 +0000 (UTC)
-Subject: Re: [PATCH 2/2] mm,thp,compaction,cma: allow THP migration for CMA
- allocations
-To:     Rik van Riel <riel@surriel.com>, linux-kernel@vger.kernel.org,
-        riel@fb.com
-Cc:     kernel-team@fb.com, akpm@linux-foundation.org, linux-mm@kvack.org,
-        mhocko@kernel.org, mgorman@techsingularity.net,
-        rientjes@google.com, aarcange@redhat.com
-References: <cover.1582321645.git.riel@surriel.com>
- <3289dc5e6c4c3174999598d8293adf8ed3e93b57.1582321645.git.riel@surriel.com>
-From:   Vlastimil Babka <vbabka@suse.cz>
-Autocrypt: addr=vbabka@suse.cz; prefer-encrypt=mutual; keydata=
- mQINBFZdmxYBEADsw/SiUSjB0dM+vSh95UkgcHjzEVBlby/Fg+g42O7LAEkCYXi/vvq31JTB
- KxRWDHX0R2tgpFDXHnzZcQywawu8eSq0LxzxFNYMvtB7sV1pxYwej2qx9B75qW2plBs+7+YB
- 87tMFA+u+L4Z5xAzIimfLD5EKC56kJ1CsXlM8S/LHcmdD9Ctkn3trYDNnat0eoAcfPIP2OZ+
- 9oe9IF/R28zmh0ifLXyJQQz5ofdj4bPf8ecEW0rhcqHfTD8k4yK0xxt3xW+6Exqp9n9bydiy
- tcSAw/TahjW6yrA+6JhSBv1v2tIm+itQc073zjSX8OFL51qQVzRFr7H2UQG33lw2QrvHRXqD
- Ot7ViKam7v0Ho9wEWiQOOZlHItOOXFphWb2yq3nzrKe45oWoSgkxKb97MVsQ+q2SYjJRBBH4
- 8qKhphADYxkIP6yut/eaj9ImvRUZZRi0DTc8xfnvHGTjKbJzC2xpFcY0DQbZzuwsIZ8OPJCc
- LM4S7mT25NE5kUTG/TKQCk922vRdGVMoLA7dIQrgXnRXtyT61sg8PG4wcfOnuWf8577aXP1x
- 6mzw3/jh3F+oSBHb/GcLC7mvWreJifUL2gEdssGfXhGWBo6zLS3qhgtwjay0Jl+kza1lo+Cv
- BB2T79D4WGdDuVa4eOrQ02TxqGN7G0Biz5ZLRSFzQSQwLn8fbwARAQABtCBWbGFzdGltaWwg
- QmFia2EgPHZiYWJrYUBzdXNlLmN6PokCVAQTAQoAPgIbAwULCQgHAwUVCgkICwUWAgMBAAIe
- AQIXgBYhBKlA1DSZLC6OmRA9UCJPp+fMgqZkBQJcbbyGBQkH8VTqAAoJECJPp+fMgqZkpGoP
- /1jhVihakxw1d67kFhPgjWrbzaeAYOJu7Oi79D8BL8Vr5dmNPygbpGpJaCHACWp+10KXj9yz
- fWABs01KMHnZsAIUytVsQv35DMMDzgwVmnoEIRBhisMYOQlH2bBn/dqBjtnhs7zTL4xtqEcF
- 1hoUFEByMOey7gm79utTk09hQE/Zo2x0Ikk98sSIKBETDCl4mkRVRlxPFl4O/w8dSaE4eczH
- LrKezaFiZOv6S1MUKVKzHInonrCqCNbXAHIeZa3JcXCYj1wWAjOt9R3NqcWsBGjFbkgoKMGD
- usiGabetmQjXNlVzyOYdAdrbpVRNVnaL91sB2j8LRD74snKsV0Wzwt90YHxDQ5z3M75YoIdl
- byTKu3BUuqZxkQ/emEuxZ7aRJ1Zw7cKo/IVqjWaQ1SSBDbZ8FAUPpHJxLdGxPRN8Pfw8blKY
- 8mvLJKoF6i9T6+EmlyzxqzOFhcc4X5ig5uQoOjTIq6zhLO+nqVZvUDd2Kz9LMOCYb516cwS/
- Enpi0TcZ5ZobtLqEaL4rupjcJG418HFQ1qxC95u5FfNki+YTmu6ZLXy+1/9BDsPuZBOKYpUm
- 3HWSnCS8J5Ny4SSwfYPH/JrtberWTcCP/8BHmoSpS/3oL3RxrZRRVnPHFzQC6L1oKvIuyXYF
- rkybPXYbmNHN+jTD3X8nRqo+4Qhmu6SHi3Vq
-Message-ID: <05027092-a43e-756f-4fee-78f29a048ca1@suse.cz>
-Date:   Mon, 24 Feb 2020 16:29:09 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.5.0
+        Mon, 24 Feb 2020 10:29:38 -0500
+Received: from mail-wm1-f68.google.com ([209.85.128.68]:54652 "EHLO
+        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727701AbgBXP3i (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 24 Feb 2020 10:29:38 -0500
+Received: by mail-wm1-f68.google.com with SMTP id z12so6195574wmi.4
+        for <linux-kernel@vger.kernel.org>; Mon, 24 Feb 2020 07:29:36 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to
+         :user-agent;
+        bh=AXpFOJp0zSaTFAP+me7G07Iilsucf3whVGy3CIL9cVI=;
+        b=aqlsWUNPbsW9l28BYG/n5HyXAUrCXzZQydP4nPSMTpgPgE7D9QXgxjLMGZtexm0jFa
+         Lm0qzuluSGBlNKpNchaYfMS7nS4loKI4RVOfhX/JnJHzd1YsDB7DZQ2fLXN+WfCRCCwY
+         WG1Ya2gJH4sFiQA0nkfGCminkhxH73nrSrsG248xK8Vsxv4+9/G4unhB5wOMtmOdLg3z
+         T++jB+yd5dzHPinJnxW7PyAGeyfKhUA87XxmdT+hlSywoCt3/R27XGzCwFqCxruLTIvf
+         MhPbb1KfkobcJenuHhtKE2Zp0Z6UKs74Y9KPa8uejUm6zAnbQ0OgJ4JOrxktbnc9zJnP
+         Tsvg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to:user-agent;
+        bh=AXpFOJp0zSaTFAP+me7G07Iilsucf3whVGy3CIL9cVI=;
+        b=U/gshKI3ezeRy7vd2YCMPkMCysuqiXEXU7r4rI4jCmfoAtQc0SS5BZ1ckFajVA56FB
+         lfrXyAdO7HQzhmmWYwgeVEsRZ3FFpKP8SYaagU5+RnVIdiWz+rcU0ZYoRnbL2duR2ft4
+         OiNLV81Zq505n2FgHRHeqoMRY68Tds/NRhXZ+NVt5WCL6xqCFci1/mwFZPRYPx6W/RZW
+         jh5tK6gtZTkinpfxWKddH24cYp/+l6PBy/jqAMjVCsWBVPof1ZUsCUcMq8KTBMq8cqaJ
+         z7RH+e6ZiErWGlBW88e310iaJiFzGcWUI0CZm+kAqL7YYyKcxT+Y1QCoY50hsXDCxjKH
+         WXsg==
+X-Gm-Message-State: APjAAAWVr09/utjIqI5gAjhLfnrf+o/tUP8Z6kpRlFDlsILiq1bvM8NW
+        aHRLl54nvdD6VVAud3aDwn75dw==
+X-Google-Smtp-Source: APXvYqyW7u01kII2K7pYNHauJqRc75jIktUIXQaMXO5DBluLiHAFSlxuEEylaK9W/agE16CWGXMiNQ==
+X-Received: by 2002:a7b:c14e:: with SMTP id z14mr22226152wmi.58.1582558176258;
+        Mon, 24 Feb 2020 07:29:36 -0800 (PST)
+Received: from dell ([2.31.163.122])
+        by smtp.gmail.com with ESMTPSA id f8sm18200741wru.12.2020.02.24.07.29.35
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 24 Feb 2020 07:29:35 -0800 (PST)
+Date:   Mon, 24 Feb 2020 15:30:06 +0000
+From:   Lee Jones <lee.jones@linaro.org>
+To:     Mika Westerberg <mika.westerberg@linux.intel.com>
+Cc:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Darren Hart <dvhart@infradead.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        "H . Peter Anvin" <hpa@zytor.com>, x86@kernel.org,
+        Zha Qipeng <qipeng.zha@intel.com>,
+        "David E . Box" <david.e.box@linux.intel.com>,
+        Guenter Roeck <linux@roeck-us.net>,
+        Heikki Krogerus <heikki.krogerus@linux.intel.com>,
+        Wim Van Sebroeck <wim@linux-watchdog.org>,
+        platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v6 10/19] mfd: intel_soc_pmic: Add SCU IPC member to
+ struct intel_soc_pmic
+Message-ID: <20200224153006.GV3494@dell>
+References: <20200217131446.32818-1-mika.westerberg@linux.intel.com>
+ <20200217131446.32818-11-mika.westerberg@linux.intel.com>
 MIME-Version: 1.0
-In-Reply-To: <3289dc5e6c4c3174999598d8293adf8ed3e93b57.1582321645.git.riel@surriel.com>
 Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200217131446.32818-11-mika.westerberg@linux.intel.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2/21/20 10:53 PM, Rik van Riel wrote:
-> @@ -981,7 +981,9 @@ isolate_migratepages_block(struct compact_control *cc, unsigned long low_pfn,
->  		if (__isolate_lru_page(page, isolate_mode) != 0)
->  			goto isolate_fail;
->  
-> -		VM_BUG_ON_PAGE(PageCompound(page), page);
-> +		/* The whole page is taken off the LRU; skip the tail pages. */
-> +		if (PageCompound(page))
-> +			low_pfn += compound_nr(page) - 1;
->  
->  		/* Successfully isolated */
->  		del_page_from_lru_list(page, lruvec, page_lru(page));
+On Mon, 17 Feb 2020, Mika Westerberg wrote:
 
-This continues by:
-inc_node_page_state(page, NR_ISOLATED_ANON + page_is_file_cache(page));
-
-
-I think it now needs to use mod_node_page_state() with
-hpage_nr_pages(page) otherwise the counter will underflow after the
-migration?
-
-> diff --git a/mm/page_alloc.c b/mm/page_alloc.c
-> index a36736812596..38c8ddfcecc8 100644
-> --- a/mm/page_alloc.c
-> +++ b/mm/page_alloc.c
-> @@ -8253,14 +8253,16 @@ struct page *has_unmovable_pages(struct zone *zone, struct page *page,
->  
->  		/*
->  		 * Hugepages are not in LRU lists, but they're movable.
-> +		 * THPs are on the LRU, but need to be counted as #small pages.
->  		 * We need not scan over tail pages because we don't
->  		 * handle each tail page individually in migration.
->  		 */
-> -		if (PageHuge(page)) {
-> +		if (PageTransHuge(page)) {
-
-Hmm, PageTransHuge() has VM_BUG_ON() for tail pages, while this code is
-written so that it can encounter a tail page and skip the rest of the
-compound page properly. So I would be worried about this.
-
-Also PageTransHuge() is basically just a PageHead() so for each
-non-hugetlbfs compound page this will assume it's a THP, while correctly
-it should reach the __PageMovable() || PageLRU(page) tests below.
-
-So probably this should do something like.
-
-if (PageHuge(page) || PageTransCompound(page)) {
-...
-   if (PageHuge(page) && !hpage_migration_supported)) return page.
-   if (!PageLRU(head) && !__PageMovable(head)) return page
-...
-
->  			struct page *head = compound_head(page);
->  			unsigned int skip_pages;
->  
-> -			if (!hugepage_migration_supported(page_hstate(head)))
-> +			if (PageHuge(page) &&
-> +			    !hugepage_migration_supported(page_hstate(head)))
->  				return page;
->  
->  			skip_pages = compound_nr(head) - (page - head);
+> Both PMIC drivers (intel_soc_pmic_mrfld and intel_soc_pmic_bxtwc) will
+> be using this field going forward to access the SCU IPC instance.
 > 
+> While there add kernel-doc for the intel_soc_pmic structure.
+> 
+> Signed-off-by: Mika Westerberg <mika.westerberg@linux.intel.com>
+> Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+> ---
+>  include/linux/mfd/intel_soc_pmic.h | 15 +++++++++++++++
+>  1 file changed, 15 insertions(+)
 
+For my own reference:
+  Acked-for-MFD-by: Lee Jones <lee.jones@linaro.org>
+
+-- 
+Lee Jones [李琼斯]
+Linaro Services Technical Lead
+Linaro.org │ Open source software for ARM SoCs
+Follow Linaro: Facebook | Twitter | Blog
