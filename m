@@ -2,51 +2,50 @@ Return-Path: <SRS0=7TUr=4M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.4 required=3.0 tests=FROM_LOCAL_HEX,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 31CC2C35671
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 13:28:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5D732C35671
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 13:28:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 102882080D
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 13:28:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 389672080D
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 13:28:42 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727460AbgBXN2K (ORCPT
+        id S1727487AbgBXN2l (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Feb 2020 08:28:10 -0500
-Received: from mail-il1-f200.google.com ([209.85.166.200]:40015 "EHLO
-        mail-il1-f200.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726308AbgBXN2K (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Feb 2020 08:28:10 -0500
-Received: by mail-il1-f200.google.com with SMTP id m18so18363485ill.7
-        for <linux-kernel@vger.kernel.org>; Mon, 24 Feb 2020 05:28:10 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
-        bh=NdXzwTxsYE7lPypqKfg8VI+A23wMd8ir8/7mmStWt7k=;
-        b=Y5159shKgUdynhJJbYmh4gB2DXyjknnYufBm4fgNHnjR9zv0jxZtnnov1bCFeqBrph
-         VqlJn7laLp4I5wwgfQTW+WGKB/UUTJwAcpXBfrbYWao6B7gaKLX+JvooT7y30iYWLcAd
-         CmaiYRSu5nsvsVeuMcg3nmdn5loc4vSDBibKfC7qj+3WtQ1IrFDGJUCjVJkf+8XI6coT
-         8vTuFnY6XLdCvl598mWJgBTg9TpYWw1j+DVMGHvVNeZbdt3p73PO2a2ExArUql4c9Hy5
-         zR0wdpBwfLfGDbLR+Cq0vytffU43T27I5CFGghsERuNb7dz6aHOhXvWLThaLdC7hY4b8
-         fBAg==
-X-Gm-Message-State: APjAAAXnSJ7gj4BAC/JyNwDBoYoMkGFoqJ6YUgZE5OJsfH7o3Z67Rgdl
-        dY4EhScIxmKm40HO+3edw9P0ZzAjPBUEoXI2L9xQ0zxI8DjU
-X-Google-Smtp-Source: APXvYqweyiNUVJGTJoX5ERMX8NHJ8mNoRsKvSYNdHnsdQBG9TPmhkHb1wEBwR6Hp44QzW3GOSbiloznyeIhCS0xwfz4n68Lt8fqx
+        Mon, 24 Feb 2020 08:28:41 -0500
+Received: from mx2.suse.de ([195.135.220.15]:38216 "EHLO mx2.suse.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726308AbgBXN2l (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 24 Feb 2020 08:28:41 -0500
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx2.suse.de (Postfix) with ESMTP id A9C1BAB6D;
+        Mon, 24 Feb 2020 13:28:38 +0000 (UTC)
+Date:   Mon, 24 Feb 2020 13:28:36 +0000 (UTC)
+From:   Michael Matz <matz@suse.de>
+To:     Nick Desaulniers <ndesaulniers@google.com>
+cc:     Arvind Sankar <nivedita@alum.mit.edu>,
+        Fangrui Song <maskray@google.com>,
+        Borislav Petkov <bp@alien8.de>,
+        Nathan Chancellor <natechancellor@gmail.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        "maintainer:X86 ARCHITECTURE (32-BIT AND 64-BIT)" <x86@kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        clang-built-linux <clang-built-linux@googlegroups.com>,
+        Kees Cook <keescook@chromium.org>
+Subject: Re: [PATCH 2/2] x86/boot/compressed: Remove unnecessary sections
+ from bzImage
+In-Reply-To: <CAKwvOdnvMS21s9gLp5nUpDAOu=c7-iWYuKTeFUq+PMhsJOKUgw@mail.gmail.com>
+Message-ID: <alpine.LSU.2.21.2002241319150.12812@wotan.suse.de>
+References: <20200109150218.16544-1-nivedita@alum.mit.edu> <20200109150218.16544-2-nivedita@alum.mit.edu> <20200222050845.GA19912@ubuntu-m2-xlarge-x86> <20200222065521.GA11284@zn.tnic> <20200222070218.GA27571@ubuntu-m2-xlarge-x86> <20200222072144.asqaxlv364s6ezbv@google.com>
+ <20200222074254.GB11284@zn.tnic> <20200222162225.GA3326744@rani.riverdale.lan> <CAKwvOdnvMS21s9gLp5nUpDAOu=c7-iWYuKTeFUq+PMhsJOKUgw@mail.gmail.com>
+User-Agent: Alpine 2.21 (LSU 202 2017-01-01)
 MIME-Version: 1.0
-X-Received: by 2002:a5e:da42:: with SMTP id o2mr49041886iop.125.1582550889689;
- Mon, 24 Feb 2020 05:28:09 -0800 (PST)
-Date:   Mon, 24 Feb 2020 05:28:09 -0800
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <0000000000009e7712059f5257af@google.com>
-Subject: BUG: bad host encryption descriptor; descriptor is too short (3 vs 5 needed)
-From:   syzbot <syzbot+069037c83014b5536cb7@syzkaller.appspotmail.com>
-To:     andreyknvl@google.com, linux-kernel@vger.kernel.org,
-        linux-usb@vger.kernel.org, syzkaller-bugs@googlegroups.com
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=US-ASCII
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
@@ -54,37 +53,53 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 Hello,
 
-syzbot found the following crash on:
+On Sat, 22 Feb 2020, Nick Desaulniers wrote:
 
-HEAD commit:    307a2623 usb: gadget: add raw-gadget interface
-git tree:       https://github.com/google/kasan.git usb-fuzzer
-console output: https://syzkaller.appspot.com/x/log.txt?x=13fa7a29e00000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=cf0c83d9cbd23d52
-dashboard link: https://syzkaller.appspot.com/bug?extid=069037c83014b5536cb7
-compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
-syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=12acfe09e00000
-C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=1613d1b5e00000
+> > > > In GNU ld, it seems that .shstrtab .symtab and .strtab are special
+> > > > cased. Neither the input section description *(.shstrtab) nor *(*)
+> > > > discards .shstrtab . I feel that this is a weird case (probably even a bug)
+> > > > that lld should not implement.
+> > >
+> > > Ok, forget what the tools do for a second: why is .shstrtab special and
+> > > why would one want to keep it?
+> > >
+> > > Because one still wants to know what the section names of an object are
+> > > or other tools need it or why?
+> > >
+> > > Thx.
+> > >
+> > > --
+> > > Regards/Gruss,
+> > >     Boris.
+> > >
+> > > https://people.kernel.org/tglx/notes-about-netiquette
+> >
+> > .shstrtab is required by the ELF specification. The e_shstrndx field in
+> > the ELF header is the index of .shstrtab, and each section in the
+> > section table is required to have an sh_name that points into the
+> > .shstrtab.
+> 
+> Yeah, I can see it both ways.  That `*` doesn't glob all remaining
+> sections is surprising to me, but bfd seems to be "extra helpful" in
+> not discarding sections that are required via ELF spec.
 
-IMPORTANT: if you fix the bug, please add the following tag to the commit:
-Reported-by: syzbot+069037c83014b5536cb7@syzkaller.appspotmail.com
+In a way the /DISCARD/ assignment should be thought of as applying to 
+_input_ sections (as all such section references on the RHS), not 
+necessarily to output sections.  What this then means for sections that 
+are synthesized by the link editor is less clear.  Some of them are 
+generated regardless (as you noted, e.g. the symbol table and associated 
+string sections, including section name string table), some of them are 
+suppressed, and either lead to an followup error (e.g. with .gnu.hash), or 
+to invalid output (e.g. missing .dynsym for executables simply lead to 
+segfaults when running them).
 
-usb 1-1: config 0 interface 0 altsetting 0 has 2 endpoint descriptors, different from the interface descriptor's value: 4
-usb 1-1: New USB device found, idVendor=13dc, idProduct=5611, bcdDevice=40.15
-usb 1-1: New USB device strings: Mfr=0, Product=0, SerialNumber=0
-usb 1-1: config 0 descriptor??
-hwa-hc 1-1:0.0: Wire Adapter v106.52 newer than groked v1.0
-usb 1-1: BUG: bad host encryption descriptor; descriptor is too short (3 vs 5 needed)
-usb 1-1: supported encryption types: 
-usb 1-1: E: host doesn't support CCM-1 crypto
-hwa-hc 1-1:0.0: Cannot initialize internals: -19
+That's the reason for the perceived inconsistency with behaviour on '*': 
+it's application to synthesized sections.  Arguably bfd should be fixed to 
+also not discard the other essential sections (or alternatively to give an 
+error when an essential section is discarded).  The lld behaviour of e.g. 
+discarding .shstrtab (or other synthesized sections necessary for valid 
+ELF output) doesn't make much sense either, though.
 
 
----
-This bug is generated by a bot. It may contain errors.
-See https://goo.gl/tpsmEJ for more information about syzbot.
-syzbot engineers can be reached at syzkaller@googlegroups.com.
-
-syzbot will keep track of this bug report. See:
-https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
-syzbot can test patches for this bug, for details see:
-https://goo.gl/tpsmEJ#testing-patches
+Ciao,
+Michael.
