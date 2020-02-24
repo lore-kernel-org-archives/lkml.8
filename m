@@ -2,341 +2,263 @@ Return-Path: <SRS0=7TUr=4M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A6542C38BF9
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 21:41:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 70602C38BF9
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 21:41:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7416E2176D
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 21:41:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3328A2176D
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 21:41:26 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="IEVKAGga"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728180AbgBXVky (ORCPT
+        id S1728335AbgBXVlZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Feb 2020 16:40:54 -0500
-Received: from wtarreau.pck.nerim.net ([62.212.114.60]:31498 "EHLO 1wt.eu"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728148AbgBXVkv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Feb 2020 16:40:51 -0500
-X-Greylist: delayed 986 seconds by postgrey-1.27 at vger.kernel.org; Mon, 24 Feb 2020 16:40:39 EST
-Received: (from willy@localhost)
-        by pcw.home.local (8.15.2/8.15.2/Submit) id 01OLO5v6008697;
-        Mon, 24 Feb 2020 22:24:05 +0100
-From:   Willy Tarreau <w@1wt.eu>
-To:     Denis Efremov <efremov@linux.com>
-Cc:     Jens Axboe <axboe@kernel.dk>, linux-kernel@vger.kernel.org,
-        linux-block@vger.kernel.org,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Willy Tarreau <w@1wt.eu>
-Subject: [PATCH 06/10] floppy: cleanup: expand macro DP
-Date:   Mon, 24 Feb 2020 22:23:48 +0100
-Message-Id: <20200224212352.8640-7-w@1wt.eu>
-X-Mailer: git-send-email 2.9.0
-In-Reply-To: <20200224212352.8640-1-w@1wt.eu>
-References: <20200224212352.8640-1-w@1wt.eu>
+        Mon, 24 Feb 2020 16:41:25 -0500
+Received: from mail-pl1-f194.google.com ([209.85.214.194]:44001 "EHLO
+        mail-pl1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728312AbgBXVlX (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 24 Feb 2020 16:41:23 -0500
+Received: by mail-pl1-f194.google.com with SMTP id p11so4572033plq.10
+        for <linux-kernel@vger.kernel.org>; Mon, 24 Feb 2020 13:41:22 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=g1FhGTDL8AVFZXNru5fbzASJM+cg6EOxs9nHV0lzNKQ=;
+        b=IEVKAGgaxj82dG4Cpwq3+YmGUyR0pewWh2bRscDfWtiNIE7WbQOuRUBd6DiJTm8Gqt
+         AzHr4ROxwZicAqQo8SwglMxcYxv4Oawq2nlM09RceB0Dg9sqEz1GGQ4TXBq4Ac+RJGJz
+         wHVIK+pZeZugJSrrwRLJ+/az21NXjZ37wblLA=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=g1FhGTDL8AVFZXNru5fbzASJM+cg6EOxs9nHV0lzNKQ=;
+        b=K4LVb9c1zphXgDACv6/rvgA0aCHn972AXP/XEC216KQ1higc3mzpua835pYP3rbZ4C
+         SV12ggs+EIGFW1nYvafW21llbtx7lDlfNR7lGnNWILa8omEtFn6zfwYXh5sAXX64hYzo
+         Br1ZmeIjYKA5LktNFnDSvZJfIqpPp4LPJ/aJybg65YPaiw8NRilV9nqO1Vu2QY0cqSBE
+         gesMJ9+Pp+Cmx7n2j4Qcux5M/SZ3WMo6+pijTY+fzgQ+i02LBQ9XM6dLPc10ET/qUQ4z
+         3IgYLx9tZpPR9tO8fcQHLFoUPa4ADZOJFsuNOBgut7b93dPenwXJ3HhpJ53Dg44KzYZ4
+         MsjQ==
+X-Gm-Message-State: APjAAAW9pGRE/WUlN2gUEM1qY1ACMXa8nqCuMZG7pxJffe5Qnalf6TdZ
+        LqYaTwqKSOFoz0g9CqlKmpylkw==
+X-Google-Smtp-Source: APXvYqzwjEv2qe8tukvEE57R7Vz3qP4mX4z2ov8bcn7+2KXjnQONWS2ZnRfjQX7ObF+9HfWrLw8bAw==
+X-Received: by 2002:a17:90a:d80b:: with SMTP id a11mr1280200pjv.142.1582580482136;
+        Mon, 24 Feb 2020 13:41:22 -0800 (PST)
+Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
+        by smtp.gmail.com with ESMTPSA id w2sm13565100pfw.43.2020.02.24.13.41.20
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 24 Feb 2020 13:41:21 -0800 (PST)
+Date:   Mon, 24 Feb 2020 13:41:19 -0800
+From:   Kees Cook <keescook@chromium.org>
+To:     Casey Schaufler <casey@schaufler-ca.com>
+Cc:     KP Singh <kpsingh@chromium.org>,
+        Alexei Starovoitov <alexei.starovoitov@gmail.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Linux Security Module list 
+        <linux-security-module@vger.kernel.org>,
+        Alexei Starovoitov <ast@kernel.org>,
+        James Morris <jmorris@namei.org>, bpf@vger.kernel.org,
+        netdev@vger.kernel.org
+Subject: Re: [PATCH bpf-next v4 3/8] bpf: lsm: provide attachment points for
+ BPF LSM programs
+Message-ID: <202002241136.C4F9F7DFF@keescook>
+References: <20200220175250.10795-1-kpsingh@chromium.org>
+ <20200220175250.10795-4-kpsingh@chromium.org>
+ <0ef26943-9619-3736-4452-fec536a8d169@schaufler-ca.com>
+ <202002211946.A23A987@keescook>
+ <20200223220833.wdhonzvven7payaw@ast-mbp>
+ <c5c67ece-e5c1-9e8f-3a2b-60d8d002c894@schaufler-ca.com>
+ <20200224171305.GA21886@chromium.org>
+ <00c216e1-bcfd-b7b1-5444-2a2dfa69190b@schaufler-ca.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <00c216e1-bcfd-b7b1-5444-2a2dfa69190b@schaufler-ca.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This macro doesn't bring much value and only slightly obfuscates the
-code by silently using global variable "current_drive", let's expand it.
+On Mon, Feb 24, 2020 at 10:45:27AM -0800, Casey Schaufler wrote:
+> On 2/24/2020 9:13 AM, KP Singh wrote:
+> > On 24-Feb 08:32, Casey Schaufler wrote:
+> >> On 2/23/2020 2:08 PM, Alexei Starovoitov wrote:
+> >>> On Fri, Feb 21, 2020 at 08:22:59PM -0800, Kees Cook wrote:
+> >>>> If I'm understanding this correctly, there are two issues:
+> >>>>
+> >>>> 1- BPF needs to be run last due to fexit trampolines (?)
+> >>> no.
+> >>> The placement of nop call can be anywhere.
+> >>> BPF trampoline is automagically converting nop call into a sequence
+> >>> of directly invoked BPF programs.
+> >>> No link list traversals and no indirect calls in run-time.
+> >> Then why the insistence that it be last?
+> > I think this came out of the discussion about not being able to
+> > override the other LSMs and introduce a new attack vector with some
+> > arguments discussed at:
+> >
+> >   https://lore.kernel.org/bpf/20200109194302.GA85350@google.com/
+> >
+> > Let's say we have SELinux + BPF runnng on the system. BPF should still
+> > respect any decisions made by SELinux. This hasn't got anything to
+> > do with the usage of fexit trampolines.
+> 
+> The discussion sited is more about GPL than anything else.
+> 
+> The LSM rule is that any security module must be able to
+> accept the decisions of others. SELinux has to accept decisions
+> made ahead of it. It always has, as LSM checks occur after
+> "traditional" checks, which may fail. The only reason that you
+> need to be last in this implementation appears to be that you
+> refuse to use the general mechanisms. You can't blame SELinux
+> for that.
 
-Signed-off-by: Willy Tarreau <w@1wt.eu>
----
- drivers/block/floppy.c | 84 ++++++++++++++++++++++++++++----------------------
- 1 file changed, 47 insertions(+), 37 deletions(-)
+Okay, this is why I wanted to try to state things plainly. The "in last
+position" appears to be the result of a couple design choices:
 
-diff --git a/drivers/block/floppy.c b/drivers/block/floppy.c
-index a76a9bb..7744e42 100644
---- a/drivers/block/floppy.c
-+++ b/drivers/block/floppy.c
-@@ -306,7 +306,6 @@ static bool initialized;
- 	/* reverse mapping from unit and fdc to drive */
- #define REVDRIVE(fdc, unit) ((unit) + ((fdc) << 2))
- 
--#define DP	(&drive_params[current_drive])
- #define DRS	(&drive_state[current_drive])
- #define DRWE	(&write_errors[current_drive])
- 
-@@ -624,7 +623,7 @@ static inline void set_debugt(void)
- 
- static inline void debugt(const char *func, const char *msg)
- {
--	if (DP->flags & DEBUGT)
-+	if (drive_params[current_drive].flags & DEBUGT)
- 		pr_info("%s:%s dtime=%lu\n", func, msg, jiffies - debugtimer);
- }
- #else
-@@ -824,7 +823,7 @@ static int set_dor(int fdc, char mask, char data)
- 
- static void twaddle(void)
- {
--	if (DP->select_delay)
-+	if (drive_params[current_drive].select_delay)
- 		return;
- 	fd_outb(fdc_state[fdc].dor & ~(0x10 << UNIT(current_drive)), FD_DOR);
- 	fd_outb(fdc_state[fdc].dor, FD_DOR);
-@@ -950,7 +949,7 @@ static void scandrives(void)
- 	int drive;
- 	int saved_drive;
- 
--	if (DP->select_delay)
-+	if (drive_params[current_drive].select_delay)
- 		return;
- 
- 	saved_drive = current_drive;
-@@ -1009,7 +1008,8 @@ static void cancel_activity(void)
-  * transfer */
- static void fd_watchdog(void)
- {
--	debug_dcl(DP->flags, "calling disk change from watchdog\n");
-+	debug_dcl(drive_params[current_drive].flags,
-+		  "calling disk change from watchdog\n");
- 
- 	if (disk_change(current_drive)) {
- 		DPRINT("disk removed during i/o\n");
-@@ -1310,20 +1310,23 @@ static void fdc_specify(void)
- 	}
- 
- 	/* Convert step rate from microseconds to milliseconds and 4 bits */
--	srt = 16 - DIV_ROUND_UP(DP->srt * scale_dtr / 1000, NOMINAL_DTR);
-+	srt = 16 - DIV_ROUND_UP(drive_params[current_drive].srt * scale_dtr / 1000,
-+				NOMINAL_DTR);
- 	if (slow_floppy)
- 		srt = srt / 4;
- 
- 	SUPBOUND(srt, 0xf);
- 	INFBOUND(srt, 0);
- 
--	hlt = DIV_ROUND_UP(DP->hlt * scale_dtr / 2, NOMINAL_DTR);
-+	hlt = DIV_ROUND_UP(drive_params[current_drive].hlt * scale_dtr / 2,
-+			   NOMINAL_DTR);
- 	if (hlt < 0x01)
- 		hlt = 0x01;
- 	else if (hlt > 0x7f)
- 		hlt = hlt_max_code;
- 
--	hut = DIV_ROUND_UP(DP->hut * scale_dtr / 16, NOMINAL_DTR);
-+	hut = DIV_ROUND_UP(drive_params[current_drive].hut * scale_dtr / 16,
-+			   NOMINAL_DTR);
- 	if (hut < 0x1)
- 		hut = 0x1;
- 	else if (hut > 0xf)
-@@ -1430,10 +1433,10 @@ static int interpret_errors(void)
- 		} else if (ST1 & ST1_ND) {
- 			set_bit(FD_NEED_TWADDLE_BIT, &DRS->flags);
- 		} else if (ST1 & ST1_OR) {
--			if (DP->flags & FTD_MSG)
-+			if (drive_params[current_drive].flags & FTD_MSG)
- 				DPRINT("Over/Underrun - retrying\n");
- 			bad = 0;
--		} else if (*errors >= DP->max_errors.reporting) {
-+		} else if (*errors >= drive_params[current_drive].max_errors.reporting) {
- 			print_errors();
- 		}
- 		if (ST2 & ST2_WC || ST2 & ST2_BC)
-@@ -1471,13 +1474,13 @@ static void setup_rw_floppy(void)
- 		flags |= FD_RAW_INTR;
- 
- 	if ((flags & FD_RAW_SPIN) && !(flags & FD_RAW_NO_MOTOR)) {
--		ready_date = DRS->spinup_date + DP->spinup;
-+		ready_date = DRS->spinup_date + drive_params[current_drive].spinup;
- 		/* If spinup will take a long time, rerun scandrives
- 		 * again just before spinup completion. Beware that
- 		 * after scandrives, we must again wait for selection.
- 		 */
--		if (time_after(ready_date, jiffies + DP->select_delay)) {
--			ready_date -= DP->select_delay;
-+		if (time_after(ready_date, jiffies + drive_params[current_drive].select_delay)) {
-+			ready_date -= drive_params[current_drive].select_delay;
- 			function = floppy_start;
- 		} else
- 			function = setup_rw_floppy;
-@@ -1528,9 +1531,10 @@ static void seek_interrupt(void)
- 		return;
- 	}
- 	if (DRS->track >= 0 && DRS->track != ST1 && !blind_seek) {
--		debug_dcl(DP->flags,
-+		debug_dcl(drive_params[current_drive].flags,
- 			  "clearing NEWCHANGE flag because of effective seek\n");
--		debug_dcl(DP->flags, "jiffies=%lu\n", jiffies);
-+		debug_dcl(drive_params[current_drive].flags, "jiffies=%lu\n",
-+			  jiffies);
- 		clear_bit(FD_DISK_NEWCHANGE_BIT, &DRS->flags);
- 					/* effective seek */
- 		DRS->select_date = jiffies;
-@@ -1551,9 +1555,10 @@ static void check_wp(void)
- 		}
- 		clear_bit(FD_VERIFY_BIT, &DRS->flags);
- 		clear_bit(FD_NEED_TWADDLE_BIT, &DRS->flags);
--		debug_dcl(DP->flags,
-+		debug_dcl(drive_params[current_drive].flags,
- 			  "checking whether disk is write protected\n");
--		debug_dcl(DP->flags, "wp=%x\n", ST3 & 0x40);
-+		debug_dcl(drive_params[current_drive].flags, "wp=%x\n",
-+			  ST3 & 0x40);
- 		if (!(ST3 & 0x40))
- 			set_bit(FD_DISK_WRITABLE_BIT, &DRS->flags);
- 		else
-@@ -1567,7 +1572,8 @@ static void seek_floppy(void)
- 
- 	blind_seek = 0;
- 
--	debug_dcl(DP->flags, "calling disk change from %s\n", __func__);
-+	debug_dcl(drive_params[current_drive].flags,
-+		  "calling disk change from %s\n", __func__);
- 
- 	if (!test_bit(FD_DISK_NEWCHANGE_BIT, &DRS->flags) &&
- 	    disk_change(current_drive) && (raw_cmd->flags & FD_RAW_NEED_DISK)) {
-@@ -1591,7 +1597,7 @@ static void seek_floppy(void)
- 		if (raw_cmd->track)
- 			track = raw_cmd->track - 1;
- 		else {
--			if (DP->flags & FD_SILENT_DCL_CLEAR) {
-+			if (drive_params[current_drive].flags & FD_SILENT_DCL_CLEAR) {
- 				set_dor(fdc, ~(0x10 << UNIT(current_drive)), 0);
- 				blind_seek = 1;
- 				raw_cmd->flags |= FD_RAW_NEED_SEEK;
-@@ -1643,7 +1649,7 @@ static void recal_interrupt(void)
- 			 * not to move at recalibration is to
- 			 * be already at track 0.) Clear the
- 			 * new change flag */
--			debug_dcl(DP->flags,
-+			debug_dcl(drive_params[current_drive].flags,
- 				  "clearing NEWCHANGE flag because of second recalibrate\n");
- 
- 			clear_bit(FD_DISK_NEWCHANGE_BIT, &DRS->flags);
-@@ -1884,7 +1890,7 @@ static int start_motor(void (*function)(void))
- 	set_dor(fdc, mask, data);
- 
- 	/* wait_for_completion also schedules reset if needed. */
--	return fd_wait_for_completion(DRS->select_date + DP->select_delay,
-+	return fd_wait_for_completion(DRS->select_date + drive_params[current_drive].select_delay,
- 				      function);
- }
- 
-@@ -1899,9 +1905,10 @@ static void floppy_ready(void)
- 	if (fdc_dtr())
- 		return;
- 
--	debug_dcl(DP->flags, "calling disk change from floppy_ready\n");
-+	debug_dcl(drive_params[current_drive].flags,
-+		  "calling disk change from floppy_ready\n");
- 	if (!(raw_cmd->flags & FD_RAW_NO_MOTOR) &&
--	    disk_change(current_drive) && !DP->select_delay)
-+	    disk_change(current_drive) && !drive_params[current_drive].select_delay)
- 		twaddle();	/* this clears the dcl on certain
- 				 * drive/controller combinations */
- 
-@@ -1930,7 +1937,8 @@ static void floppy_start(void)
- 	reschedule_timeout(current_reqD, "floppy start");
- 
- 	scandrives();
--	debug_dcl(DP->flags, "setting NEWCHANGE in floppy_start\n");
-+	debug_dcl(drive_params[current_drive].flags,
-+		  "setting NEWCHANGE in floppy_start\n");
- 	set_bit(FD_DISK_NEWCHANGE_BIT, &DRS->flags);
- 	floppy_ready();
- }
-@@ -2032,11 +2040,11 @@ static int next_valid_format(void)
- 
- 	probed_format = DRS->probed_format;
- 	while (1) {
--		if (probed_format >= 8 || !DP->autodetect[probed_format]) {
-+		if (probed_format >= 8 || !drive_params[current_drive].autodetect[probed_format]) {
- 			DRS->probed_format = 0;
- 			return 1;
- 		}
--		if (floppy_type[DP->autodetect[probed_format]].sect) {
-+		if (floppy_type[drive_params[current_drive].autodetect[probed_format]].sect) {
- 			DRS->probed_format = probed_format;
- 			return 0;
- 		}
-@@ -2055,11 +2063,11 @@ static void bad_flp_intr(void)
- 	}
- 	err_count = ++(*errors);
- 	INFBOUND(DRWE->badness, err_count);
--	if (err_count > DP->max_errors.abort)
-+	if (err_count > drive_params[current_drive].max_errors.abort)
- 		cont->done(0);
--	if (err_count > DP->max_errors.reset)
-+	if (err_count > drive_params[current_drive].max_errors.reset)
- 		fdc_state[fdc].reset = 1;
--	else if (err_count > DP->max_errors.recal)
-+	else if (err_count > drive_params[current_drive].max_errors.recal)
- 		DRS->track = NEED_2_RECAL;
- }
- 
-@@ -2189,7 +2197,7 @@ static int do_format(int drive, struct format_descr *tmp_format_req)
- 
- 	set_floppy(drive);
- 	if (!_floppy ||
--	    _floppy->track > DP->tracks ||
-+	    _floppy->track > drive_params[current_drive].tracks ||
- 	    tmp_format_req->track >= _floppy->track ||
- 	    tmp_format_req->head >= _floppy->head ||
- 	    (_floppy->sect << 2) % (1 << FD_SIZECODE(_floppy)) ||
-@@ -2345,7 +2353,7 @@ static void rw_interrupt(void)
- 	}
- 
- 	if (probing) {
--		if (DP->flags & FTD_MSG)
-+		if (drive_params[current_drive].flags & FTD_MSG)
- 			DPRINT("Auto-detected floppy type %s in fd%d\n",
- 			       _floppy->name, current_drive);
- 		current_type[current_drive] = _floppy;
-@@ -2675,9 +2683,9 @@ static int make_raw_rw_request(void)
- 		 */
- 		if (!direct ||
- 		    (indirect * 2 > direct * 3 &&
--		     *errors < DP->max_errors.read_track &&
-+		     *errors < drive_params[current_drive].max_errors.read_track &&
- 		     ((!probing ||
--		       (DP->read_track & (1 << DRS->probed_format)))))) {
-+		       (drive_params[current_drive].read_track & (1 << DRS->probed_format)))))) {
- 			max_size = blk_rq_sectors(current_req);
- 		} else {
- 			raw_cmd->kernel_data = bio_data(current_req->bio);
-@@ -2855,7 +2863,7 @@ static void redo_fd_request(void)
- 			}
- 		}
- 		probing = 1;
--		_floppy = floppy_type + DP->autodetect[DRS->probed_format];
-+		_floppy = floppy_type + drive_params[current_drive].autodetect[DRS->probed_format];
- 	} else
- 		probing = 0;
- 	errors = &(current_req->error_count);
-@@ -2934,7 +2942,8 @@ static int poll_drive(bool interruptible, int flag)
- 	raw_cmd->track = 0;
- 	raw_cmd->cmd_count = 0;
- 	cont = &poll_cont;
--	debug_dcl(DP->flags, "setting NEWCHANGE in poll_drive\n");
-+	debug_dcl(drive_params[current_drive].flags,
-+		  "setting NEWCHANGE in poll_drive\n");
- 	set_bit(FD_DISK_NEWCHANGE_BIT, &DRS->flags);
- 
- 	return wait_til_done(floppy_ready, interruptible);
-@@ -3205,7 +3214,8 @@ static int raw_cmd_ioctl(int cmd, void __user *param)
- 	raw_cmd = my_raw_cmd;
- 	cont = &raw_cmd_cont;
- 	ret = wait_til_done(floppy_start, true);
--	debug_dcl(DP->flags, "calling disk change from raw_cmd ioctl\n");
-+	debug_dcl(drive_params[current_drive].flags,
-+		  "calling disk change from raw_cmd ioctl\n");
- 
- 	if (ret != -EINTR && fdc_state[fdc].reset)
- 		ret = -EIO;
-@@ -4386,7 +4396,7 @@ static void __init set_cmos(int *ints, int dummy, int dummy2)
- 	if (current_drive >= 4 && !FDC2)
- 		FDC2 = 0x370;
- #endif
--	DP->cmos = ints[2];
-+	drive_params[current_drive].cmos = ints[2];
- 	DPRINT("setting CMOS code to %d\n", ints[2]);
- }
- 
+-the idea of "not wanting to get in the way of other LSMs", while
+ admirable, needs to actually be a non-goal to be "just" a stacked LSM
+ (as you're saying here Casey). This position _was_ required for the
+ non-privileged LSM case to avoid security implications, but that goal
+ not longer exists here either.
+
+-optimally using the zero-cost call-outs (static key + fexit trampolines)
+ meant it didn't interact well with the existing stacking mechanism.
+
+So, fine, these appear to be design choices, not *specifically*
+requirements. Let's move on, I think there is more to unpack here...
+
+> >>>> 2- BPF hooks don't know what may be attached at any given time, so
+> >>>>    ALL LSM hooks need to be universally hooked. THIS turns out to create
+> >>>>    a measurable performance problem in that the cost of the indirect call
+> >>>>    on the (mostly/usually) empty BPF policy is too high.
+> >>> also no.
+
+AIUI, there was some confusion on Alexei's reply here. I, perhaps,
+was not as clear as I needed to be. I think the later discussion on
+performance overheads gets more into the point, and gets us closer to
+the objections Alexei had. More below...
+
+> >   This approach still had the issues of an indirect call and an
+> >   extra check when not used. So this was not truly zero overhead even
+> >   after special casing BPF.
+> 
+> The LSM mechanism is not zero overhead. It never has been. That's why
+> you can compile it out. You get added value at a price. You get the
+> ability to use SELinux and KRSI together at a price. If that's unacceptable
+> you can go the route of seccomp, which doesn't use LSM for many of the
+> same reasons you're on about.
+> [...]
+> >>>> So, trying to avoid the indirect calls is, as you say, an optimization,
+> >>>> but it might be a needed one due to the other limitations.
+> >>> I'm convinced that avoiding the cost of retpoline in critical path is a
+> >>> requirement for any new infrastructure in the kernel.
+> >> Sorry, I haven't gotten that memo.
+
+I agree with Casey here -- it's a nice goal, but those cost evaluations have
+not yet(?[1]) hit the LSM world. I think it's a desirable goal, to be
+sure, but this does appear to be an early optimization.
+
+> [...]
+> It can do that wholly within KRSI hooks. You don't need to
+> put KRSI specific code into security.c.
+
+This observation is where I keep coming back to.
+
+Yes, the resulting code is not as fast as it could be. The fact that BPF
+triggers the worst-case performance of LSM hooking is the "new" part
+here, from what I can see.
+
+I suspect the problem is that folks in the BPF subsystem don't want to
+be seen as slowing anything down, even other subsystems, so they don't
+want to see this done in the traditional LSM hooking way (which contains
+indirect calls).
+
+But the LSM subsystem doesn't want special cases (Casey has worked very
+hard to generalize everything there for stacking). It is really hard to
+accept adding a new special case when there are still special cases yet
+to be worked out even in the LSM code itself[2].
+
+> >>> Networking stack converted all such places to conditional calls.
+> >>> In BPF land we converted indirect calls to direct jumps and direct calls.
+> >>> It took two years to do so. Adding new indirect calls is not an option.
+> >>> I'm eagerly waiting for Peter's static_call patches to land to convert
+> >>> a lot more indirect calls. May be existing LSMs will take advantage
+> >>> of static_call patches too, but static_call is not an option for BPF.
+> >>> That's why we introduced BPF trampoline in the last kernel release.
+> >> Sorry, but I don't see how BPF is so overwhelmingly special.
+> > My analogy here is that if every tracepoint in the kernel were of the
+> > type:
+> >
+> > if (trace_foo_enabled) // <-- Overhead here, solved with static key
+> >    trace_foo(a);  // <-- retpoline overhead, solved with fexit trampolines
+
+This is a helpful distillation; thanks.
+
+static keys (perhaps better described as static branches) make sense to
+me; I'm familiar with them being used all over the place[3]. The resulting
+"zero performance" branch mechanism is extremely handy.
+
+I had been thinking about the fexit stuff only as a way for BPF to call
+into kernel functions directly, and I missed the place where this got
+used for calling from the kernel into BPF directly. KP walked me through
+the fexit stuff off list. I missed where there NOP stub ("noinline int
+bpf_lsm_##NAME(__VA_ARGS__) { return 0; }") was being patched by BPF in
+https://lore.kernel.org/lkml/20200220175250.10795-6-kpsingh@chromium.org/
+The key bit being "bpf_trampoline_update(prog)"
+
+> > It would be very hard to justify enabling them on a production system,
+> > and the same can be said for BPF and KRSI.
+> 
+> The same can be and has been said about the LSM infrastructure.
+> If BPF and KRSI are that performance critical you shouldn't be
+> tying them to LSM, which is known to have overhead. If you can't
+> accept the LSM overhead, get out of the LSM. Or, help us fix the
+> LSM infrastructure to make its overhead closer to zero. Whether
+> you believe it or not, a lot of work has gone into keeping the LSM
+> overhead as small as possible while remaining sufficiently general
+> to perform its function.
+> 
+> No. If you're too special to play by LSM rules then you're special
+> enough to get into the kernel using more direct means.
+
+So, I see the primary conflict here being about the performance
+optimizations. AIUI:
+
+- BPF subsystem maintainers do not want any new slowdown associated
+  with BPF
+- LSM subsystem maintainers do not want any new special cases in
+  LSM stacking
+
+So, unless James is going to take this over Casey's objections, the path
+forward I see here is:
+
+- land a "slow" KRSI (i.e. one that hooks every hook with a stub).
+- optimize calling for all LSMs
+
+Does this seem right to everyone?
+
+-Kees
+
+
+[1] There is a "known cost to LSM", but as Casey mentions, it's been
+generally deemed "acceptable". There have been some recent attempts to
+quantify it, but it's not been very clear:
+https://lore.kernel.org/linux-security-module/c98000ea-df0e-1ab7-a0e2-b47d913f50c8@tycho.nsa.gov/ (lore is missing half this conversation for some reason)
+
+[2] Casey's work to generalize the LSM interfaces continues and it quite
+complex:
+https://lore.kernel.org/linux-security-module/20200214234203.7086-1-casey@schaufler-ca.com/
+
+[3] E.g. HARDENED_USERCOPY uses it:
+https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/mm/usercopy.c?h=v5.5#n258
+and so does the heap memory auto-initialization:
+https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/mm/slab.h?h=v5.5#n676
+
 -- 
-2.9.0
-
+Kees Cook
