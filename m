@@ -2,98 +2,103 @@ Return-Path: <SRS0=7TUr=4M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 45F83C35675
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 00:03:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 89E0AC35670
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 00:06:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1E9DC20727
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 00:03:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4BF4C2067D
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 00:06:59 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="R+LQ7BVM"
+	dkim=pass (2048-bit key) header.d=aj.id.au header.i=@aj.id.au header.b="pMIvQxSM";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="Kl9m75Lg"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727188AbgBXAD2 (ORCPT
+        id S1727193AbgBXAG5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 23 Feb 2020 19:03:28 -0500
-Received: from mail-pl1-f193.google.com ([209.85.214.193]:39960 "EHLO
-        mail-pl1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727151AbgBXAD2 (ORCPT
+        Sun, 23 Feb 2020 19:06:57 -0500
+Received: from out1-smtp.messagingengine.com ([66.111.4.25]:55471 "EHLO
+        out1-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727167AbgBXAG4 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 23 Feb 2020 19:03:28 -0500
-Received: by mail-pl1-f193.google.com with SMTP id y1so3296986plp.7;
-        Sun, 23 Feb 2020 16:03:28 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=18oRYkSQJ5CDqKpipuY8ehhqpaRemt5r3RZCizdeEpI=;
-        b=R+LQ7BVMj+A/i6955rq5UFhJ2AGhjGbtH5b79lgGODLOGqBV6WJdqhIxl8I9kblKXS
-         e/W0VrRX6W/VKFj2MZAO8KYzQEHinLLcY8xoeDcQ8Y4nTXgC4pYUXzsWF0+yRfXHUS+V
-         T/UsJU0s8I3FE6MQfmBsq+ulIb8mXuelRGrRK7kZyE4fu12qolBU2sCE/BwA86TL3sWF
-         29DUNa198+Z7ywmHDiwRavl8gj3eTw7Dqo56aZTWEdddD+JZMB845/3rXK77wSjUhZke
-         kefJvYfWv8078B9Qvd0MNFyHPTC6umr+nvcSKA+9CNyXN7Q94gd0MxpKOCX+F34SertR
-         KsyA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:subject:to:cc:references:from:message-id
-         :date:user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=18oRYkSQJ5CDqKpipuY8ehhqpaRemt5r3RZCizdeEpI=;
-        b=Oaez5XfHzmFDDUPfsW30BWX3AN0wmRZV5ZX/b7WtasEuA3idleSW/653IHsgKKcSk+
-         72t6v/dbhBhy+C6TyxCNRDSjwcvyYlry8JjyQrZs6HLc2HSlgILIyKXfYmRNb2Hpc9Ow
-         t5Y4qZUBi5ihdsHZ0bGyoWTr3KDZul9eCuKWnPB7bw4Wl8AtFphQaEOBZ/oxwQ0KiRzl
-         xnOxO4VYdqakwpglKixkHQWTgBQK3+9bnE3Lj+f6DNjsqVR/0iZOMUrWl62PmQ0zTtbG
-         0KsSHvTmNZei/7jdvSVdvjP7eFqYTCKYClOS//1lxibLhDpr6vhK7jwcsxv7AUQApTWy
-         ESwg==
-X-Gm-Message-State: APjAAAWJ4hDpobz8Kfh65BHU2tVxF446zuKoWxJc1v6cxnE89ejViMfm
-        s/j6x9Vdg7+oG6ZkmMjAY9gYfcoJ
-X-Google-Smtp-Source: APXvYqzUaNlSXBx2vwtO2lpMvCMg2Hp5JdInETzu8qjszV+jx5JZtja+rsPLKxVnrOhvqzbjm5jBDQ==
-X-Received: by 2002:a17:90a:8586:: with SMTP id m6mr17277639pjn.121.1582502607650;
-        Sun, 23 Feb 2020 16:03:27 -0800 (PST)
-Received: from server.roeck-us.net ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
-        by smtp.gmail.com with ESMTPSA id ep2sm9823568pjb.31.2020.02.23.16.03.26
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sun, 23 Feb 2020 16:03:26 -0800 (PST)
-Subject: Re: [PATCH 4.19 000/191] 4.19.106-stable review
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-kernel@vger.kernel.org
-Cc:     torvalds@linux-foundation.org, akpm@linux-foundation.org,
-        shuah@kernel.org, patches@kernelci.org,
-        ben.hutchings@codethink.co.uk, lkft-triage@lists.linaro.org,
-        stable@vger.kernel.org
-References: <20200221072250.732482588@linuxfoundation.org>
-From:   Guenter Roeck <linux@roeck-us.net>
-Message-ID: <0d50ada2-e0b2-6665-135b-b3720bea431b@roeck-us.net>
-Date:   Sun, 23 Feb 2020 16:03:25 -0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.1
-MIME-Version: 1.0
-In-Reply-To: <20200221072250.732482588@linuxfoundation.org>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+        Sun, 23 Feb 2020 19:06:56 -0500
+Received: from compute4.internal (compute4.nyi.internal [10.202.2.44])
+        by mailout.nyi.internal (Postfix) with ESMTP id 8C30F20A4B;
+        Sun, 23 Feb 2020 19:06:55 -0500 (EST)
+Received: from imap2 ([10.202.2.52])
+  by compute4.internal (MEProxy); Sun, 23 Feb 2020 19:06:55 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=aj.id.au; h=
+        mime-version:message-id:in-reply-to:references:date:from:to:cc
+        :subject:content-type; s=fm2; bh=zjhLqXsGdwHmDXQ4loElGl5IBhTi4NI
+        teyaEj1OhzX0=; b=pMIvQxSM7Sx8a5nkQzbt7ZFK/MAHlcTi1D3f+ks+P/0EKLo
+        6SAqSKgyK7eLnr9gb0WRoCjmsYSevkz8doLPRU1crKf5iem3xkd91XjVTtfyed2s
+        UbmZlOaMOEb59rUmSADPxSLYxolVKZoVbLe37IJ5wPtR9xDI5YCK31SYR4xq2Rci
+        ki5Nio2Ku7yuTJp5vz0QYgmRkmbr8xQgEivf7MMb5CdGnzUF8gIPfzyCe62xojx6
+        8o5bo/Mht62rUZRbcPQuvEw2skBtB5C8IcZFPteC19ML2U7GcJQ0ppMkRxQjbVs+
+        x7m9qqyhICAxmAiCZS/lgflQwPX0tSrkAAS0x1w==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+        messagingengine.com; h=cc:content-type:date:from:in-reply-to
+        :message-id:mime-version:references:subject:to:x-me-proxy
+        :x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm2; bh=zjhLqX
+        sGdwHmDXQ4loElGl5IBhTi4NIteyaEj1OhzX0=; b=Kl9m75Lgt1kvotcVMiTCEa
+        JFVqY3d6ZyBArGZn0X/iKGaAt5+J2Cb747X2tw0H5gVULjjSILHn+yVRBwMZpKOY
+        omSWqe+HmTx3Ie6sjlPNWbb/gSWajKydpCgmKodvgaIgQFtPT++1JbTOc2VretjJ
+        uevH6h1m+YOWSDuXPZbOHvnL6rqrlGLqKL6+7VDmmPgSr5wPzwPTrdUZ3arjA2/E
+        plgeoIKlvPk1hB8roLOrX8o+HSTsgctZC9bIo3maQpEh6P1I6XqFwPaVXnsC7VrS
+        gYdbyKc0NuEvflaGG8hn21IuEVmU2Tlf7km9ao34juMTsOu415lpyzU83XkJzjPw
+        ==
+X-ME-Sender: <xms:nBNTXlGexT6W00zZwqe5NhyI45Mm3-x-EfUkj2m1tCDBTPa45nLLkQ>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedugedrkeelgddulecutefuodetggdotefrodftvf
+    curfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfghnecu
+    uegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenuc
+    fjughrpefofgggkfgjfhffhffvufgtsehttdertderredtnecuhfhrohhmpedftehnughr
+    vgifucflvghffhgvrhihfdcuoegrnhgurhgvfiesrghjrdhiugdrrghuqeenucevlhhush
+    htvghrufhiiigvpedtnecurfgrrhgrmhepmhgrihhlfhhrohhmpegrnhgurhgvfiesrghj
+    rdhiugdrrghu
+X-ME-Proxy: <xmx:nBNTXoDnePLBa_Y_9k7NJkxs4WhfSQp8lTAkWuV86lg67zuSOFyFNQ>
+    <xmx:nBNTXhko0weVkNUI0dB4G_laWk2E0gIVeuw7fS2hjoyfGZk3yLZYsg>
+    <xmx:nBNTXjSqxLmg3j9fEEBlhoG8sA6IUJPl3sLCZdb3uQrjMKSS4GwFZQ>
+    <xmx:nxNTXokN7xZ8q4h5XmrjbQQZMMPf4p_hbjDdjrAiAWe_PRVXSUi1Og>
+Received: by mailuser.nyi.internal (Postfix, from userid 501)
+        id C3486E00D1; Sun, 23 Feb 2020 19:06:52 -0500 (EST)
+X-Mailer: MessagingEngine.com Webmail Interface
+User-Agent: Cyrus-JMAP/3.1.7-802-g7a41c81-fmstable-20200203v1
+Mime-Version: 1.0
+Message-Id: <020e9eb5-4fdc-44d0-b00e-42b6e6435110@www.fastmail.com>
+In-Reply-To: <20200222235152.242816-1-megous@megous.com>
+References: <20200222235152.242816-1-megous@megous.com>
+Date:   Mon, 24 Feb 2020 10:36:47 +1030
+From:   "Andrew Jeffery" <andrew@aj.id.au>
+To:     "Ondrej Jirman" <megous@megous.com>, linux-kernel@vger.kernel.org
+Cc:     "Joel Stanley" <joel@jms.id.au>, "David Airlie" <airlied@linux.ie>,
+        "Daniel Vetter" <daniel@ffwll.ch>,
+        "open list:DRM DRIVER FOR ASPEED BMC GFX" 
+        <linux-aspeed@lists.ozlabs.org>,
+        "open list:DRM DRIVERS" <dri-devel@lists.freedesktop.org>,
+        "moderated list:ARM/ASPEED MACHINE SUPPORT" 
+        <linux-arm-kernel@lists.infradead.org>
+Subject: Re: [PATCH] drm: aspeed: Fix GENMASK misuse
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2/20/20 11:39 PM, Greg Kroah-Hartman wrote:
-> This is the start of the stable review cycle for the 4.19.106 release.
-> There are 191 patches in this series, all will be posted as a response
-> to this one.  If anyone has any issues with these being applied, please
-> let me know.
+
+
+On Sun, 23 Feb 2020, at 10:21, Ondrej Jirman wrote:
+> Arguments to GENMASK should be msb >= lsb.
 > 
-> Responses should be made by Sun, 23 Feb 2020 07:19:49 +0000.
-> Anything received after that time might be too late.
-> 
+> Signed-off-by: Ondrej Jirman <megous@megous.com>
+> ---
+> I just grepped the whole kernel tree for GENMASK argument order issues,
+> and this is one of the three that popped up. No testing was done.
 
-For v4.19.105-185-g119e922a87ef:
+I think someone's sent a patch previously, and last time it turned into a
+discussion about how the macros aren't actually used and could be
+removed.
 
-Build results:
-	total: 156 pass: 156 fail: 0
-Qemu test results:
-	total: 403 pass: 403 fail: 0
+Regardless:
 
-Guenter
+Reviewed-by: Andrew Jeffery <andrew@aj.id.au>
