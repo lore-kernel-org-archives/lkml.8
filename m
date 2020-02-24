@@ -2,59 +2,62 @@ Return-Path: <SRS0=7TUr=4M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7E3D8C35679
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 04:50:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E9528C35679
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 04:50:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4CF5F20714
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 04:50:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C10F220661
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 04:50:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582519823;
-	bh=raLSkCsVsEsGVWKAl7s7CtI/m6bBykJgg2wahMZMTJA=;
-	h=From:To:Cc:Subject:Date:List-ID:From;
-	b=w3jVxVMi5kWUVee29IOhCETo6/ftrNfDbX5Era2vopC5MGhg4g9Srmq/r46AnrIf9
-	 NvsdlYyA3xiJohkA+g5eo+uutUcddfYOG99kWQ/6jjdG+Be5rnwzffa0Vh/eGrjlD+
-	 fj22RCPevfIyME2hBcmooCIMob2sY/V6Poze+WUg=
+	s=default; t=1582519829;
+	bh=gnBUbAVvQ/znBp5r6XVo7TvmU96qO2uqPCr26cpQG7k=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=Wa0cqdtzPD3cH1Wsh7GinPuxjZ2w3zAucBVh9xsiqTEN/R77bZHA+SvUxQFkyLwRR
+	 cEquefnGHd5bcQKsgs9bt/LQEA5HAFSQNqX/3Q6qJTYs+pEYjJ3tqo7ZWKN3BITJTW
+	 8Auy34/CSU5i9yPPXpfTN4y78EPOIwvM5Sllj/x4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727268AbgBXEuW (ORCPT
+        id S1727302AbgBXEu3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 23 Feb 2020 23:50:22 -0500
-Received: from mail.kernel.org ([198.145.29.99]:38052 "EHLO mail.kernel.org"
+        Sun, 23 Feb 2020 23:50:29 -0500
+Received: from mail.kernel.org ([198.145.29.99]:38174 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727186AbgBXEuW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 23 Feb 2020 23:50:22 -0500
+        id S1727186AbgBXEu2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 23 Feb 2020 23:50:28 -0500
 Received: from localhost.localdomain (unknown [122.182.199.233])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id CEEF320661;
-        Mon, 24 Feb 2020 04:50:16 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 42C77206CC;
+        Mon, 24 Feb 2020 04:50:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1582519821;
-        bh=raLSkCsVsEsGVWKAl7s7CtI/m6bBykJgg2wahMZMTJA=;
-        h=From:To:Cc:Subject:Date:From;
-        b=Z+CPGI+ivK+KlgnAbdUQ9sbHqEVCzb5EXR1H0M1jtjH31mMDljeUtIqaMJ3O25YJK
-         owXXj8jvzhCgC7pnesz/a6Sw7oqysc/WpdTosYl1fCENLi7f/gJqmoigMv+6w3juTz
-         dRuRuxDdcGMTu38owzybyUgbAqcsj4UWircjTWXc=
+        s=default; t=1582519827;
+        bh=gnBUbAVvQ/znBp5r6XVo7TvmU96qO2uqPCr26cpQG7k=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=hJlcH3gURXBSPGqX7Lp4mgDM3tg1Za2k3UVApvx2ne93B9Nc33wSG7LXWdV4RE9uA
+         iXrzX2+GWiMHlwgC6Kxvrx7QmXd5r6nM3fS/LESaDmLW4RN/p84rUZawukQMYhwETU
+         riJMemsMva2f+p2QVMDDSkQxOJwPQ4v79K72eCFk=
 From:   Vinod Koul <vkoul@kernel.org>
 To:     Stephen Boyd <sboyd@kernel.org>
 Cc:     linux-arm-msm@vger.kernel.org,
         Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Vinod Koul <vkoul@kernel.org>,
+        Taniya Das <tdas@codeaurora.org>,
         Rob Herring <robh+dt@kernel.org>,
         Mark Rutland <mark.rutland@arm.com>,
         devicetree@vger.kernel.org, Andy Gross <agross@kernel.org>,
         Michael Turquette <mturquette@baylibre.com>,
         linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org,
         psodagud@codeaurora.org, tsoni@codeaurora.org,
-        jshriram@codeaurora.org, tdas@codeaurora.org,
-        vnkgutta@codeaurora.org
-Subject: [PATCH v4 0/5] Add clock drivers for SM8250 SoC
-Date:   Mon, 24 Feb 2020 10:19:58 +0530
-Message-Id: <20200224045003.3783838-1-vkoul@kernel.org>
+        jshriram@codeaurora.org, vnkgutta@codeaurora.org,
+        Vinod Koul <vkoul@kernel.org>
+Subject: [PATCH v4 1/5] clk: qcom: clk-alpha-pll: Use common names for defines
+Date:   Mon, 24 Feb 2020 10:19:59 +0530
+Message-Id: <20200224045003.3783838-2-vkoul@kernel.org>
 X-Mailer: git-send-email 2.24.1
+In-Reply-To: <20200224045003.3783838-1-vkoul@kernel.org>
+References: <20200224045003.3783838-1-vkoul@kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -62,44 +65,153 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This series adds clock drivers support for SM8250 SoC.  As part of the
-device tree, the sm8250 dts file has basic nodes like CPU, PSCI, intc, timer
-and clock controller.
+From: Taniya Das <tdas@codeaurora.org>
 
-Required clock controller driver and RPMH cloks are added to
-support peripherals like USB.
+The PLL run and standby modes are similar across the PLLs, thus rename
+them to common names and update the use of these.
 
-All this configuration is added to support SM8250 to boot up to the
-serial console.
+Signed-off-by: Taniya Das <tdas@codeaurora.org>
+Signed-off-by: Venkata Narendra Kumar Gutta <vnkgutta@codeaurora.org>
+Signed-off-by: Vinod Koul <vkoul@kernel.org>
+---
+ drivers/clk/qcom/clk-alpha-pll.c | 40 ++++++++++++++------------------
+ 1 file changed, 17 insertions(+), 23 deletions(-)
 
-Changes in v4:
- - Make qcom,gcc-sm8250.yaml license as dual GPL + BSD
-
-Changes in v3:
-- Dropped accepted patches by Steve
-- Split the common rename patch to rename and refactor patches
-- Rebase on clk/clk-qcom and move yaml binding to .../bindings/clock/qcom,gcc-sm8250.yaml
-- Fix comments form Steve on gcc-sm8250 clk driver
-
-Taniya Das (5):
-  clk: qcom: clk-alpha-pll: Use common names for defines
-  clk: qcom: clk-alpha-pll: Refactor trion PLL
-  clk: qcom: clk-alpha-pll: Add support for controlling Lucid PLLs
-  dt-bindings: clock: Add SM8250 GCC clock bindings
-  clk: qcom: gcc: Add global clock controller driver for SM8250
-
- .../bindings/clock/qcom,gcc-sm8250.yaml       |   72 +
- drivers/clk/qcom/Kconfig                      |    7 +
- drivers/clk/qcom/Makefile                     |    1 +
- drivers/clk/qcom/clk-alpha-pll.c              |  264 +-
- drivers/clk/qcom/clk-alpha-pll.h              |   12 +
- drivers/clk/qcom/gcc-sm8250.c                 | 3690 +++++++++++++++++
- include/dt-bindings/clock/qcom,gcc-sm8250.h   |  271 ++
- 7 files changed, 4268 insertions(+), 49 deletions(-)
- create mode 100644 Documentation/devicetree/bindings/clock/qcom,gcc-sm8250.yaml
- create mode 100644 drivers/clk/qcom/gcc-sm8250.c
- create mode 100644 include/dt-bindings/clock/qcom,gcc-sm8250.h
-
+diff --git a/drivers/clk/qcom/clk-alpha-pll.c b/drivers/clk/qcom/clk-alpha-pll.c
+index 6d946770a80f..0bdf6e45fac9 100644
+--- a/drivers/clk/qcom/clk-alpha-pll.c
++++ b/drivers/clk/qcom/clk-alpha-pll.c
+@@ -134,15 +134,10 @@ EXPORT_SYMBOL_GPL(clk_alpha_pll_regs);
+ #define PLL_HUAYRA_N_MASK		0xff
+ #define PLL_HUAYRA_ALPHA_WIDTH		16
+ 
+-#define FABIA_OPMODE_STANDBY	0x0
+-#define FABIA_OPMODE_RUN	0x1
+-
+-#define FABIA_PLL_OUT_MASK	0x7
+-#define FABIA_PLL_RATE_MARGIN	500
+-
+-#define TRION_PLL_STANDBY	0x0
+-#define TRION_PLL_RUN		0x1
+-#define TRION_PLL_OUT_MASK	0x7
++#define PLL_STANDBY		0x0
++#define PLL_RUN			0x1
++#define PLL_OUT_MASK		0x7
++#define PLL_RATE_MARGIN		500
+ 
+ #define pll_alpha_width(p)					\
+ 		((PLL_ALPHA_VAL_U(p) - PLL_ALPHA_VAL(p) == 4) ?	\
+@@ -766,7 +761,7 @@ static int trion_pll_is_enabled(struct clk_alpha_pll *pll,
+ 	if (ret)
+ 		return 0;
+ 
+-	return ((opmode_regval & TRION_PLL_RUN) && (mode_regval & PLL_OUTCTRL));
++	return ((opmode_regval & PLL_RUN) && (mode_regval & PLL_OUTCTRL));
+ }
+ 
+ static int clk_trion_pll_is_enabled(struct clk_hw *hw)
+@@ -796,7 +791,7 @@ static int clk_trion_pll_enable(struct clk_hw *hw)
+ 	}
+ 
+ 	/* Set operation mode to RUN */
+-	regmap_write(regmap, PLL_OPMODE(pll), TRION_PLL_RUN);
++	regmap_write(regmap, PLL_OPMODE(pll), PLL_RUN);
+ 
+ 	ret = wait_for_pll_enable_lock(pll);
+ 	if (ret)
+@@ -804,7 +799,7 @@ static int clk_trion_pll_enable(struct clk_hw *hw)
+ 
+ 	/* Enable the PLL outputs */
+ 	ret = regmap_update_bits(regmap, PLL_USER_CTL(pll),
+-				 TRION_PLL_OUT_MASK, TRION_PLL_OUT_MASK);
++				 PLL_OUT_MASK, PLL_OUT_MASK);
+ 	if (ret)
+ 		return ret;
+ 
+@@ -837,12 +832,12 @@ static void clk_trion_pll_disable(struct clk_hw *hw)
+ 
+ 	/* Disable the PLL outputs */
+ 	ret = regmap_update_bits(regmap, PLL_USER_CTL(pll),
+-				 TRION_PLL_OUT_MASK, 0);
++				 PLL_OUT_MASK, 0);
+ 	if (ret)
+ 		return;
+ 
+ 	/* Place the PLL mode in STANDBY */
+-	regmap_write(regmap, PLL_OPMODE(pll), TRION_PLL_STANDBY);
++	regmap_write(regmap, PLL_OPMODE(pll), PLL_STANDBY);
+ 	regmap_update_bits(regmap, PLL_MODE(pll), PLL_RESET_N, PLL_RESET_N);
+ }
+ 
+@@ -1089,14 +1084,14 @@ static int alpha_pll_fabia_enable(struct clk_hw *hw)
+ 		return ret;
+ 
+ 	/* Skip If PLL is already running */
+-	if ((opmode_val & FABIA_OPMODE_RUN) && (val & PLL_OUTCTRL))
++	if ((opmode_val & PLL_RUN) && (val & PLL_OUTCTRL))
+ 		return 0;
+ 
+ 	ret = regmap_update_bits(regmap, PLL_MODE(pll), PLL_OUTCTRL, 0);
+ 	if (ret)
+ 		return ret;
+ 
+-	ret = regmap_write(regmap, PLL_OPMODE(pll), FABIA_OPMODE_STANDBY);
++	ret = regmap_write(regmap, PLL_OPMODE(pll), PLL_STANDBY);
+ 	if (ret)
+ 		return ret;
+ 
+@@ -1105,7 +1100,7 @@ static int alpha_pll_fabia_enable(struct clk_hw *hw)
+ 	if (ret)
+ 		return ret;
+ 
+-	ret = regmap_write(regmap, PLL_OPMODE(pll), FABIA_OPMODE_RUN);
++	ret = regmap_write(regmap, PLL_OPMODE(pll), PLL_RUN);
+ 	if (ret)
+ 		return ret;
+ 
+@@ -1114,7 +1109,7 @@ static int alpha_pll_fabia_enable(struct clk_hw *hw)
+ 		return ret;
+ 
+ 	ret = regmap_update_bits(regmap, PLL_USER_CTL(pll),
+-				 FABIA_PLL_OUT_MASK, FABIA_PLL_OUT_MASK);
++				 PLL_OUT_MASK, PLL_OUT_MASK);
+ 	if (ret)
+ 		return ret;
+ 
+@@ -1144,13 +1139,12 @@ static void alpha_pll_fabia_disable(struct clk_hw *hw)
+ 		return;
+ 
+ 	/* Disable main outputs */
+-	ret = regmap_update_bits(regmap, PLL_USER_CTL(pll), FABIA_PLL_OUT_MASK,
+-				 0);
++	ret = regmap_update_bits(regmap, PLL_USER_CTL(pll), PLL_OUT_MASK, 0);
+ 	if (ret)
+ 		return;
+ 
+ 	/* Place the PLL in STANDBY */
+-	regmap_write(regmap, PLL_OPMODE(pll), FABIA_OPMODE_STANDBY);
++	regmap_write(regmap, PLL_OPMODE(pll), PLL_STANDBY);
+ }
+ 
+ static unsigned long alpha_pll_fabia_recalc_rate(struct clk_hw *hw,
+@@ -1171,7 +1165,7 @@ static int alpha_pll_fabia_set_rate(struct clk_hw *hw, unsigned long rate,
+ 	struct clk_alpha_pll *pll = to_clk_alpha_pll(hw);
+ 	u32 l, alpha_width = pll_alpha_width(pll);
+ 	u64 a;
+-	unsigned long rrate, max = rate + FABIA_PLL_RATE_MARGIN;
++	unsigned long rrate, max = rate + PLL_RATE_MARGIN;
+ 
+ 	rrate = alpha_pll_round_rate(rate, prate, &l, &a, alpha_width);
+ 
+@@ -1230,7 +1224,7 @@ static int alpha_pll_fabia_prepare(struct clk_hw *hw)
+ 	 * Due to a limited number of bits for fractional rate programming, the
+ 	 * rounded up rate could be marginally higher than the requested rate.
+ 	 */
+-	if (rrate > (cal_freq + FABIA_PLL_RATE_MARGIN) || rrate < cal_freq)
++	if (rrate > (cal_freq + PLL_RATE_MARGIN) || rrate < cal_freq)
+ 		return -EINVAL;
+ 
+ 	/* Setup PLL for calibration frequency */
 -- 
 2.24.1
 
