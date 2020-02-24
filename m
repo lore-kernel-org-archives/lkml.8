@@ -6,47 +6,46 @@ X-Spam-Status: No, score=-5.4 required=3.0 tests=FROM_LOCAL_HEX,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
 	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 50472C3567B
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 08:28:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 76D4AC3567B
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 08:28:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2C0C520675
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 08:28:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 52CBE20714
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 08:28:50 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727474AbgBXI2i (ORCPT
+        id S1727193AbgBXI2O (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Feb 2020 03:28:38 -0500
-Received: from mail-il1-f199.google.com ([209.85.166.199]:34297 "EHLO
+        Mon, 24 Feb 2020 03:28:14 -0500
+Received: from mail-il1-f199.google.com ([209.85.166.199]:39084 "EHLO
         mail-il1-f199.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727237AbgBXI2P (ORCPT
+        with ESMTP id S1726452AbgBXI2O (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Feb 2020 03:28:15 -0500
-Received: by mail-il1-f199.google.com with SMTP id l13so17084843ils.1
-        for <linux-kernel@vger.kernel.org>; Mon, 24 Feb 2020 00:28:15 -0800 (PST)
+        Mon, 24 Feb 2020 03:28:14 -0500
+Received: by mail-il1-f199.google.com with SMTP id c24so16967221ila.6
+        for <linux-kernel@vger.kernel.org>; Mon, 24 Feb 2020 00:28:14 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
-        bh=W9h08KTSjSCdy4kLKcKAldx/qM48NLEiDmE9jIQx3TQ=;
-        b=WEuwcvoUwBRmS7HwEGpTdlxnH0PDYcOYMEN/M6ut7nLFJaAFXip0FXBdomH/8mY8Kt
-         7s/huKgEdPqvJyZP+MDxFElidGX/S373I/lX2qO8owCF+ym90+SiTgD2eK7ScR4Y8Wnq
-         dVZKEFZeSXZGq+OhCXMb1kPQTk2qy1+ejLR9sKjTIX4A+uLEyuX+XU3buMvdAloJ2FlQ
-         9hw51FWzpHZwRla4Ap95i8ANkXF+z8/Mo/SU3YTidSHr4xoz9uLMNdtWjrD8mpqOtbRC
-         3Q3ClHhuVVTBucOqevgBS2vNUt0YlhnfRXoqW6hZouSZjs2ir3alqhWwJDruV1Dtel/c
-         tAaA==
-X-Gm-Message-State: APjAAAUsCCT6JHMEt1SYSO/gyxXG8MDEZGrh0T2t8IE6ZI3yjq5qnbhB
-        uR2TEoQYn3yT5VRe5qADFn2FPVJ57xiUN6NMKlVA7+YovZAE
-X-Google-Smtp-Source: APXvYqx1krtC9a0XOk9/Sr6rX0i4xU5AKD6T/W5yYOfuYSjBW0REBDhxBqlsBR3+vBeHdhRO59PmNGVwgEeiqnW3xJFbNyHyLykv
+        bh=pYGatFicrbglupdARJznOrNIqMZ4ujkbH/2DBHb9eKg=;
+        b=i56z8reU9ZGioytBJmyDT5JSUt0/zDugHxh8xCi8YHcic08RAYu+4EpPeZ3HHxqSCC
+         nrHHl3mcwExYWfRgMV60GwIZ7YDgiCwZ9Ya8kxpxE123P8aoRBO7rxiVvZsYuPq43/jm
+         OYrNcaVapwNFTMuZ6FMmwv1qJGB1hYSZXweTwjFK29VigkkFUHlDSgsfaH9SQB87kGcj
+         ba/iGkZaX0/hBYi/zbozSsq2uK8YqHgnrUgxNds4S1XBM/1DYGW1fEY9hE1NTptKFGpj
+         YSK8teOpMpksX5Lk+ut/DhlCZTckigf+l9UElj1RFw0J/rtAr8QssOaSte5j4DYAZczI
+         k9Vg==
+X-Gm-Message-State: APjAAAV+sh7tU0AdF1F1BEJGXiK0ueE+cVZSavmyv1qSp2s4iQ/0GoZH
+        ydenb6jE7gtp2qqw+0cT776unF+W4gOxwpFa7BcAXKxP2d64
+X-Google-Smtp-Source: APXvYqzBY2WbTHwkw5r6uemXyd4m2EQk7GMd+RoLGF9laEPT2xiswkHlF8OOmE7RkUrrGhPe6sa0+d9ze2j6ARx+pXcDCeWtia6D
 MIME-Version: 1.0
-X-Received: by 2002:a02:b38f:: with SMTP id p15mr50212592jan.56.1582532894740;
- Mon, 24 Feb 2020 00:28:14 -0800 (PST)
-Date:   Mon, 24 Feb 2020 00:28:14 -0800
+X-Received: by 2002:a92:cc04:: with SMTP id s4mr35066051ilp.193.1582532893787;
+ Mon, 24 Feb 2020 00:28:13 -0800 (PST)
+Date:   Mon, 24 Feb 2020 00:28:13 -0800
 X-Google-Appengine-App-Id: s~syzkaller
 X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <0000000000000955df059f4e276f@google.com>
-Subject: KMSAN: uninit-value in number (2)
-From:   syzbot <syzbot+9bcb0c9409066696d3aa@syzkaller.appspotmail.com>
-To:     davem@davemloft.net, glider@google.com, kuba@kernel.org,
-        linux-can@vger.kernel.org, linux-kernel@vger.kernel.org,
-        mkl@pengutronix.de, netdev@vger.kernel.org, socketcan@hartkopp.net,
+Message-ID: <000000000000fac9a5059f4e266d@google.com>
+Subject: KMSAN: uninit-value in audit_log_vformat
+From:   syzbot <syzbot+e4b12d8d202701f08b6d@syzkaller.appspotmail.com>
+To:     eparis@redhat.com, glider@google.com, linux-audit@redhat.com,
+        linux-kernel@vger.kernel.org, paul@paul-moore.com,
         syzkaller-bugs@googlegroups.com
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
@@ -60,59 +59,57 @@ syzbot found the following crash on:
 
 HEAD commit:    8bbbc5cf kmsan: don't compile memmove
 git tree:       https://github.com/google/kmsan.git master
-console output: https://syzkaller.appspot.com/x/log.txt?x=1661da7ee00000
+console output: https://syzkaller.appspot.com/x/log.txt?x=11d7c109e00000
 kernel config:  https://syzkaller.appspot.com/x/.config?x=cd0e9a6b0e555cc3
-dashboard link: https://syzkaller.appspot.com/bug?extid=9bcb0c9409066696d3aa
+dashboard link: https://syzkaller.appspot.com/bug?extid=e4b12d8d202701f08b6d
 compiler:       clang version 10.0.0 (https://github.com/llvm/llvm-project/ c2443155a0fb245c8f17f2c1c72b6ea391e86e81)
-syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=111141a1e00000
-C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=13ad5245e00000
+userspace arch: i386
+syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=1287fdd9e00000
+C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=13ffec81e00000
 
 IMPORTANT: if you fix the bug, please add the following tag to the commit:
-Reported-by: syzbot+9bcb0c9409066696d3aa@syzkaller.appspotmail.com
+Reported-by: syzbot+e4b12d8d202701f08b6d@syzkaller.appspotmail.com
 
 =====================================================
-BUG: KMSAN: uninit-value in number+0x9f8/0x2000 lib/vsprintf.c:459
-CPU: 1 PID: 11897 Comm: syz-executor136 Not tainted 5.6.0-rc2-syzkaller #0
+BUG: KMSAN: uninit-value in string_nocheck lib/vsprintf.c:608 [inline]
+BUG: KMSAN: uninit-value in string+0x522/0x690 lib/vsprintf.c:689
+CPU: 1 PID: 12069 Comm: syz-executor170 Not tainted 5.6.0-rc2-syzkaller #0
 Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
 Call Trace:
  __dump_stack lib/dump_stack.c:77 [inline]
  dump_stack+0x1c9/0x220 lib/dump_stack.c:118
  kmsan_report+0xf7/0x1e0 mm/kmsan/kmsan_report.c:118
  __msan_warning+0x58/0xa0 mm/kmsan/kmsan_instr.c:215
- number+0x9f8/0x2000 lib/vsprintf.c:459
- vsnprintf+0x1d85/0x31b0 lib/vsprintf.c:2640
- vscnprintf+0xc2/0x180 lib/vsprintf.c:2677
- vprintk_store+0xef/0x11d0 kernel/printk/printk.c:1917
- vprintk_emit+0x2c0/0x860 kernel/printk/printk.c:1984
- vprintk_default+0x90/0xa0 kernel/printk/printk.c:2029
- vprintk_func+0x636/0x820 kernel/printk/printk_safe.c:386
- printk+0x18b/0x1d3 kernel/printk/printk.c:2062
- canfd_rcv+0x370/0x3a0 net/can/af_can.c:697
- __netif_receive_skb_one_core net/core/dev.c:5198 [inline]
- __netif_receive_skb net/core/dev.c:5312 [inline]
- netif_receive_skb_internal net/core/dev.c:5402 [inline]
- netif_receive_skb+0xe77/0xf20 net/core/dev.c:5461
- tun_rx_batched include/linux/skbuff.h:4321 [inline]
- tun_get_user+0x6aef/0x6f60 drivers/net/tun.c:1997
- tun_chr_write_iter+0x1f2/0x360 drivers/net/tun.c:2026
- call_write_iter include/linux/fs.h:1901 [inline]
- new_sync_write fs/read_write.c:483 [inline]
- __vfs_write+0xa5a/0xca0 fs/read_write.c:496
- vfs_write+0x44a/0x8f0 fs/read_write.c:558
- ksys_write+0x267/0x450 fs/read_write.c:611
- __do_sys_write fs/read_write.c:623 [inline]
- __se_sys_write+0x92/0xb0 fs/read_write.c:620
- __x64_sys_write+0x4a/0x70 fs/read_write.c:620
- do_syscall_64+0xb8/0x160 arch/x86/entry/common.c:296
- entry_SYSCALL_64_after_hwframe+0x44/0xa9
-RIP: 0033:0x440239
-Code: 18 89 d0 c3 66 2e 0f 1f 84 00 00 00 00 00 0f 1f 00 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 0f 83 fb 13 fc ff c3 66 2e 0f 1f 84 00 00 00 00
-RSP: 002b:00007ffd3d6d1f28 EFLAGS: 00000246 ORIG_RAX: 0000000000000001
-RAX: ffffffffffffffda RBX: 0000000000003172 RCX: 0000000000440239
-RDX: 0000000000000004 RSI: 0000000020000200 RDI: 0000000000000003
-RBP: 656c6c616b7a7973 R08: 0000000000401ac0 R09: 0000000000401ac0
-R10: 0000000000401ac0 R11: 0000000000000246 R12: 0000000000401ac0
-R13: 0000000000401b50 R14: 0000000000000000 R15: 0000000000000000
+ string_nocheck lib/vsprintf.c:608 [inline]
+ string+0x522/0x690 lib/vsprintf.c:689
+ vsnprintf+0x207d/0x31b0 lib/vsprintf.c:2574
+ audit_log_vformat+0x583/0xcd0 kernel/audit.c:1856
+ audit_log_format+0x220/0x260 kernel/audit.c:1890
+ audit_receive_msg kernel/audit.c:1338 [inline]
+ audit_receive+0x3688/0x6be0 kernel/audit.c:1513
+ netlink_unicast_kernel net/netlink/af_netlink.c:1302 [inline]
+ netlink_unicast+0xf9e/0x1100 net/netlink/af_netlink.c:1328
+ netlink_sendmsg+0x1246/0x14d0 net/netlink/af_netlink.c:1917
+ sock_sendmsg_nosec net/socket.c:652 [inline]
+ sock_sendmsg net/socket.c:672 [inline]
+ ____sys_sendmsg+0x12b6/0x1350 net/socket.c:2343
+ ___sys_sendmsg net/socket.c:2397 [inline]
+ __sys_sendmsg+0x451/0x5f0 net/socket.c:2430
+ __compat_sys_sendmsg net/compat.c:642 [inline]
+ __do_compat_sys_sendmsg net/compat.c:649 [inline]
+ __se_compat_sys_sendmsg net/compat.c:646 [inline]
+ __ia32_compat_sys_sendmsg+0xed/0x130 net/compat.c:646
+ do_syscall_32_irqs_on arch/x86/entry/common.c:339 [inline]
+ do_fast_syscall_32+0x3c7/0x6e0 arch/x86/entry/common.c:410
+ entry_SYSENTER_compat+0x68/0x77 arch/x86/entry/entry_64_compat.S:139
+RIP: 0023:0xf7f12d99
+Code: 90 e8 0b 00 00 00 f3 90 0f ae e8 eb f9 8d 74 26 00 89 3c 24 c3 90 90 90 90 90 90 90 90 90 90 90 90 51 52 55 89 e5 0f 34 cd 80 <5d> 5a 59 c3 90 90 90 90 eb 0d 90 90 90 90 90 90 90 90 90 90 90 90
+RSP: 002b:00000000ffadf8ac EFLAGS: 00000246 ORIG_RAX: 0000000000000172
+RAX: ffffffffffffffda RBX: 0000000000000004 RCX: 0000000020000200
+RDX: 0000000000000000 RSI: 00000000080ea080 RDI: 00000000ffadf900
+RBP: 0000000000000000 R08: 0000000000000000 R09: 0000000000000000
+R10: 0000000000000000 R11: 0000000000000000 R12: 0000000000000000
+R13: 0000000000000000 R14: 0000000000000000 R15: 0000000000000000
 
 Uninit was created at:
  kmsan_save_stack_with_flags mm/kmsan/kmsan.c:144 [inline]
@@ -123,21 +120,20 @@ Uninit was created at:
  __kmalloc_reserve net/core/skbuff.c:142 [inline]
  __alloc_skb+0x2fd/0xac0 net/core/skbuff.c:210
  alloc_skb include/linux/skbuff.h:1051 [inline]
- alloc_skb_with_frags+0x18c/0xa70 net/core/skbuff.c:5766
- sock_alloc_send_pskb+0xada/0xc60 net/core/sock.c:2242
- tun_alloc_skb drivers/net/tun.c:1529 [inline]
- tun_get_user+0x10ae/0x6f60 drivers/net/tun.c:1843
- tun_chr_write_iter+0x1f2/0x360 drivers/net/tun.c:2026
- call_write_iter include/linux/fs.h:1901 [inline]
- new_sync_write fs/read_write.c:483 [inline]
- __vfs_write+0xa5a/0xca0 fs/read_write.c:496
- vfs_write+0x44a/0x8f0 fs/read_write.c:558
- ksys_write+0x267/0x450 fs/read_write.c:611
- __do_sys_write fs/read_write.c:623 [inline]
- __se_sys_write+0x92/0xb0 fs/read_write.c:620
- __x64_sys_write+0x4a/0x70 fs/read_write.c:620
- do_syscall_64+0xb8/0x160 arch/x86/entry/common.c:296
- entry_SYSCALL_64_after_hwframe+0x44/0xa9
+ netlink_alloc_large_skb net/netlink/af_netlink.c:1174 [inline]
+ netlink_sendmsg+0x7d3/0x14d0 net/netlink/af_netlink.c:1892
+ sock_sendmsg_nosec net/socket.c:652 [inline]
+ sock_sendmsg net/socket.c:672 [inline]
+ ____sys_sendmsg+0x12b6/0x1350 net/socket.c:2343
+ ___sys_sendmsg net/socket.c:2397 [inline]
+ __sys_sendmsg+0x451/0x5f0 net/socket.c:2430
+ __compat_sys_sendmsg net/compat.c:642 [inline]
+ __do_compat_sys_sendmsg net/compat.c:649 [inline]
+ __se_compat_sys_sendmsg net/compat.c:646 [inline]
+ __ia32_compat_sys_sendmsg+0xed/0x130 net/compat.c:646
+ do_syscall_32_irqs_on arch/x86/entry/common.c:339 [inline]
+ do_fast_syscall_32+0x3c7/0x6e0 arch/x86/entry/common.c:410
+ entry_SYSENTER_compat+0x68/0x77 arch/x86/entry/entry_64_compat.S:139
 =====================================================
 
 
