@@ -2,121 +2,148 @@ Return-Path: <SRS0=7TUr=4M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D4FBFC38BE0
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 20:41:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E3826C38BE0
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 20:43:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AAC5020732
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 20:41:58 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="b3YSlCQ2"
+	by mail.kernel.org (Postfix) with ESMTP id C343320732
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 20:43:29 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727267AbgBXUl5 (ORCPT
+        id S1727662AbgBXUn2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Feb 2020 15:41:57 -0500
-Received: from mail-wm1-f65.google.com ([209.85.128.65]:39615 "EHLO
-        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726722AbgBXUl4 (ORCPT
+        Mon, 24 Feb 2020 15:43:28 -0500
+Received: from Galois.linutronix.de ([193.142.43.55]:51048 "EHLO
+        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726722AbgBXUn2 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Feb 2020 15:41:56 -0500
-Received: by mail-wm1-f65.google.com with SMTP id c84so758938wme.4
-        for <linux-kernel@vger.kernel.org>; Mon, 24 Feb 2020 12:41:55 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=myk+lKJeHf/NwI1kOPcB/C/w3kbJudSAOTZpQWJrDy0=;
-        b=b3YSlCQ2DhhT1QITJ97tuveUx5HUmQqLdz+spOgtQuuIvUoj1TPqRO4qJlnLa23T1Z
-         GiZpa8KTn9prX+n5E6DpWEAz2eqSSYyKpO0MUthh+HNLxA0AdTppyHboDMcQQ/YhPrfN
-         x8mjqUzAydJeQAEdpPphmdJzWI2rPQdduCVC6nCHL464zNbXsv2t4ojssmSiXwmaqfIR
-         uTNYBh8gsjTxzI+BZWsaDfZN3MRjHEuKeKs1extqa5Irj+Mj1q2YDPQqejRXiXNqU9fS
-         Folm1MWgCiceFpz6pol6s5uVGD5hNnQ3HFLR0k1nA2qJIPe0dZUplLTCvRUz/dwehhg8
-         CQGQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=myk+lKJeHf/NwI1kOPcB/C/w3kbJudSAOTZpQWJrDy0=;
-        b=hwZ++Dl8HR8iXPXUwjTk8yue9eSsQoAaJCrSUrPxmweEMQlLxBt1queOOXiWG2vfyj
-         oYZkRlQLVH0/WU/Ti0TaLjqHBLohgpH+WlrJf2nNlaeXSIyNdBMsHoLs6V4dDRO9nxyr
-         8JS4f/VcE0qsDeQjUdrspfFFoloDQreWl+VsRqC//CJ0kwMVj+5zBng3eIO6oVC9nNOH
-         HsltwGcXDeHvvRgxeh+lAS/d9HR5XHfnWL2HGcUSAzbfFjD8wh4rTd/JPBq4Xg5t3C3g
-         Mpc83Qd57kDetJithA4aySKCciTr4TKqeOsethK2aeNSkBsdm70r43Amb/HhYCZwkUez
-         QFqQ==
-X-Gm-Message-State: APjAAAXvjbyN5SXJz3Q5C/Y8FCkVzPp8VAz1qp9RfmZ+n7p8RWz2hkk7
-        huyQQjeJd57kzfgVUIpT4A==
-X-Google-Smtp-Source: APXvYqwzyNh4fYpdcAkxTPstW6qmCCTN7eutGDv0MC2GBY2COJ6PGJe9MKA9fPgywPp0f4VI/LSMxA==
-X-Received: by 2002:a1c:2b44:: with SMTP id r65mr796422wmr.72.1582576914733;
-        Mon, 24 Feb 2020 12:41:54 -0800 (PST)
-Received: from ninjahub.lan (host-2-102-13-223.as13285.net. [2.102.13.223])
-        by smtp.googlemail.com with ESMTPSA id h128sm863315wmh.33.2020.02.24.12.41.53
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 24 Feb 2020 12:41:54 -0800 (PST)
-From:   Jules Irenge <jbi.octave@gmail.com>
-To:     boqun.feng@gmail.com
-Cc:     joseph.qi@linux.alibab.com, Jules Irenge <jbi.octave@gmail.com>,
-        Mark Fasheh <mark@fasheh.com>,
-        Joel Becker <jlbec@evilplan.org>,
-        Joseph Qi <joseph.qi@linux.alibaba.com>,
-        ocfs2-devel@oss.oracle.com (moderated list:ORACLE CLUSTER FILESYSTEM 2
-        (OCFS2)), linux-kernel@vger.kernel.org (open list)
-Subject: [PATCH] ocfs2: Add missing annotations for ocfs2_refcount_cache_lock() and ocfs2_refcount_cache_unlock()
-Date:   Mon, 24 Feb 2020 20:41:30 +0000
-Message-Id: <20200224204130.18178-1-jbi.octave@gmail.com>
-X-Mailer: git-send-email 2.24.1
+        Mon, 24 Feb 2020 15:43:28 -0500
+Received: from p5de0bf0b.dip0.t-ipconnect.de ([93.224.191.11] helo=nanos.tec.linutronix.de)
+        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
+        (Exim 4.80)
+        (envelope-from <tglx@linutronix.de>)
+        id 1j6KZ3-0005g7-1V; Mon, 24 Feb 2020 21:42:53 +0100
+Received: by nanos.tec.linutronix.de (Postfix, from userid 1000)
+        id 36301104088; Mon, 24 Feb 2020 21:42:52 +0100 (CET)
+From:   Thomas Gleixner <tglx@linutronix.de>
+To:     Alexei Starovoitov <alexei.starovoitov@gmail.com>
+Cc:     LKML <linux-kernel@vger.kernel.org>,
+        David Miller <davem@davemloft.net>, bpf@vger.kernel.org,
+        netdev@vger.kernel.org, Alexei Starovoitov <ast@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Sebastian Sewior <bigeasy@linutronix.de>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Clark Williams <williams@redhat.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Juri Lelli <juri.lelli@redhat.com>,
+        Ingo Molnar <mingo@kernel.org>,
+        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+        Vinicius Costa Gomes <vinicius.gomes@intel.com>,
+        Jakub Kicinski <kuba@kernel.org>
+Subject: Re: [patch V3 06/22] bpf/trace: Remove redundant preempt_disable from trace_call_bpf()
+In-Reply-To: <20200224194017.rtwjcgjxnmltisfe@ast-mbp>
+References: <20200224140131.461979697@linutronix.de> <20200224145643.059995527@linutronix.de> <20200224194017.rtwjcgjxnmltisfe@ast-mbp>
+Date:   Mon, 24 Feb 2020 21:42:52 +0100
+Message-ID: <875zfvk983.fsf@nanos.tec.linutronix.de>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-Linutronix-Spam-Score: -1.0
+X-Linutronix-Spam-Level: -
+X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Sparse reports warnings at ocfs2_refcount_cache_lock()
-	and ocfs2_refcount_cache_unlock()
+Alexei Starovoitov <alexei.starovoitov@gmail.com> writes:
+> On Mon, Feb 24, 2020 at 03:01:37PM +0100, Thomas Gleixner wrote:
+>> --- a/kernel/trace/bpf_trace.c
+>> +++ b/kernel/trace/bpf_trace.c
+>> @@ -83,7 +83,7 @@ unsigned int trace_call_bpf(struct trace
+>>  	if (in_nmi()) /* not supported yet */
+>>  		return 1;
+>>  
+>> -	preempt_disable();
+>> +	cant_sleep();
+>>  
+>>  	if (unlikely(__this_cpu_inc_return(bpf_prog_active) != 1)) {
+>>  		/*
+>> @@ -115,7 +115,6 @@ unsigned int trace_call_bpf(struct trace
+>>  
+>>   out:
+>>  	__this_cpu_dec(bpf_prog_active);
+>> -	preempt_enable();
+>
+> My testing uncovered that above was too aggressive:
+> [   41.533438] BUG: assuming atomic context at kernel/trace/bpf_trace.c:86
+> [   41.534265] in_atomic(): 0, irqs_disabled(): 0, pid: 2348, name: test_progs
+> [   41.536907] Call Trace:
+> [   41.537167]  dump_stack+0x75/0xa0
+> [   41.537546]  __cant_sleep.cold.105+0x8b/0xa3
+> [   41.538018]  ? exit_to_usermode_loop+0x77/0x140
+> [   41.538493]  trace_call_bpf+0x4e/0x2e0
+> [   41.538908]  __uprobe_perf_func.isra.15+0x38f/0x690
+> [   41.539399]  ? probes_profile_seq_show+0x220/0x220
+> [   41.539962]  ? __mutex_lock_slowpath+0x10/0x10
+> [   41.540412]  uprobe_dispatcher+0x5de/0x8f0
+> [   41.540875]  ? uretprobe_dispatcher+0x7c0/0x7c0
+> [   41.541404]  ? down_read_killable+0x200/0x200
+> [   41.541852]  ? __kasan_kmalloc.constprop.6+0xc1/0xd0
+> [   41.542356]  uprobe_notify_resume+0xacf/0x1d60
 
-warning: context imbalance in ocfs2_refcount_cache_lock()
-	- wrong count at exit
-warning: context imbalance in ocfs2_refcount_cache_unlock()
-	- unexpected unlock
+Duh. I missed that particular callchain.
 
-The root cause is the missing annotation at ocfs2_refcount_cache_lock()
-	and at ocfs2_refcount_cache_unlock()
+> The following fixes it:
+>
+> commit 7b7b71ff43cc0b15567b60c38a951c8a2cbc97f0 (HEAD -> bpf-next)
+> Author: Alexei Starovoitov <ast@kernel.org>
+> Date:   Mon Feb 24 11:27:15 2020 -0800
+>
+>     bpf: disable migration for bpf progs attached to uprobe
+>
+>     trace_call_bpf() no longer disables preemption on its own.
+>     All callers of this function has to do it explicitly.
+>
+>     Signed-off-by: Alexei Starovoitov <ast@kernel.org>
+>
+> diff --git a/kernel/trace/trace_uprobe.c b/kernel/trace/trace_uprobe.c
+> index 18d16f3ef980..7581f5eb6091 100644
+> --- a/kernel/trace/trace_uprobe.c
+> +++ b/kernel/trace/trace_uprobe.c
+> @@ -1333,8 +1333,15 @@ static void __uprobe_perf_func(struct trace_uprobe *tu,
+>         int size, esize;
+>         int rctx;
+>
+> -       if (bpf_prog_array_valid(call) && !trace_call_bpf(call, regs))
+> -               return;
+> +       if (bpf_prog_array_valid(call)) {
+> +               u32 ret;
+> +
+> +               migrate_disable();
+> +               ret = trace_call_bpf(call, regs);
+> +               migrate_enable();
+> +               if (!ret)
+> +                       return;
+> +       }
+>
+> But looking at your patch cant_sleep() seems unnecessary strong.
+> Should it be cant_migrate() instead?
 
-Add the missing __acquires(&rf->rf_lock) annotation
-	to ocfs2_refcount_cache_lock()
-Add the missing __releases(&rf->rf_lock) annotation
-	to ocfs2_refcount_cache_unlock()
+Yes, if we go with the migrate_disable(). OTOH, having a
+preempt_disable() in that uprobe callsite should work as well, then we
+can keep the cant_sleep() check which covers all other callsites
+properly. No strong opinion though.
 
-Signed-off-by: Jules Irenge <jbi.octave@gmail.com>
----
- fs/ocfs2/refcounttree.c | 2 ++
- 1 file changed, 2 insertions(+)
+> And two calls to __this_cpu*() replaced with this_cpu*() ?
 
-diff --git a/fs/ocfs2/refcounttree.c b/fs/ocfs2/refcounttree.c
-index ee43e51188be..da99c80f49da 100644
---- a/fs/ocfs2/refcounttree.c
-+++ b/fs/ocfs2/refcounttree.c
-@@ -154,6 +154,7 @@ ocfs2_refcount_cache_get_super(struct ocfs2_caching_info *ci)
- }
- 
- static void ocfs2_refcount_cache_lock(struct ocfs2_caching_info *ci)
-+	__acquires(&rf->rf_lock)
- {
- 	struct ocfs2_refcount_tree *rf = cache_info_to_refcount(ci);
- 
-@@ -161,6 +162,7 @@ static void ocfs2_refcount_cache_lock(struct ocfs2_caching_info *ci)
- }
- 
- static void ocfs2_refcount_cache_unlock(struct ocfs2_caching_info *ci)
-+	__releases(&rf->rf_lock)
- {
- 	struct ocfs2_refcount_tree *rf = cache_info_to_refcount(ci);
- 
--- 
-2.24.1
+See above.
 
+> If you can ack it I can fix it up in place and apply the whole thing.
+
+Ack.
+
+Thanks,
+
+     tglx
