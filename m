@@ -2,158 +2,93 @@ Return-Path: <SRS0=7TUr=4M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 13D7FC3567B
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 10:48:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9EA1DC3567B
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 10:51:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CA83C20732
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 10:48:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6F97220732
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 10:51:07 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=ellerman.id.au header.i=@ellerman.id.au header.b="VxO9///u"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="aWpye4I3"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727324AbgBXKsd (ORCPT
+        id S1727265AbgBXKvG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Feb 2020 05:48:33 -0500
-Received: from bilbo.ozlabs.org ([203.11.71.1]:50395 "EHLO ozlabs.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726778AbgBXKsd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Feb 2020 05:48:33 -0500
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 48QzLj0yR2z9sP7;
-        Mon, 24 Feb 2020 21:48:29 +1100 (AEDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ellerman.id.au;
-        s=201909; t=1582541309;
-        bh=706Vp/HHmo+lrWjl+3TUImaROxTZwoAKGRpck8URTZ0=;
-        h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
-        b=VxO9///uot9PqW/pBL7CbpvXKurwqJJXDD+1rHaEkqYGJbz4JApxRwSgEaG9JgiqY
-         MSCgqTqNjbWiX6c2l99XfmIGaQNylMpN1+ZkxmymBClnJPLLnJD9K7G88fx4+ZfF0y
-         ioriFn8/lOj7U6uP6L/mIsS2lTjetKpbH++Odf0j0sNcP4KV4CcQFsJniBZ1it730B
-         eIjaSQcPF6HJrEasbl825N2kn5tFd//X4L/YOjr4vi1DuxJhSx1KZ82piqRDLrdSMz
-         ZhbII0tBnxb80mqFiTlA/Uv1d5iuYPxemFVFdzdX7ANLmAmeTzi8K6WhZ9k5st/eLe
-         RWCUH81LjTiAA==
-From:   Michael Ellerman <mpe@ellerman.id.au>
-To:     Christophe Leroy <christophe.leroy@c-s.fr>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Paul Mackerras <paulus@samba.org>, mikey@neuling.org
-Cc:     linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org
-Subject: Re: [RFC PATCH v2 02/12] powerpc/ptrace: drop unnecessary #ifdefs CONFIG_PPC64
-In-Reply-To: <34af3942cd27f6b5365caae772fb8e0af44763d5.1561735587.git.christophe.leroy@c-s.fr>
-References: <cover.1561735587.git.christophe.leroy@c-s.fr> <34af3942cd27f6b5365caae772fb8e0af44763d5.1561735587.git.christophe.leroy@c-s.fr>
-Date:   Mon, 24 Feb 2020 21:48:26 +1100
-Message-ID: <878sks1csl.fsf@mpe.ellerman.id.au>
+        Mon, 24 Feb 2020 05:51:06 -0500
+Received: from mail-wr1-f68.google.com ([209.85.221.68]:46516 "EHLO
+        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726216AbgBXKvF (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 24 Feb 2020 05:51:05 -0500
+Received: by mail-wr1-f68.google.com with SMTP id g4so3457399wro.13
+        for <linux-kernel@vger.kernel.org>; Mon, 24 Feb 2020 02:51:04 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to
+         :user-agent;
+        bh=kRZXlrxsXiUp76pJUg1A1idTwmDFL/za+p20Iqq28LA=;
+        b=aWpye4I3V+5CEJjrj2uJR2xdbJS/+LF+RYdn4SVnfHM9zW4soJtQ4DDCMlq2w8ovK0
+         Ne7XZTqiG87ZTLAd16bMV86ij+XfEGZ9bdyoAhvgJQmUWZONyDwo+FuC6jAI0Ev9yd3w
+         iLQJ+n9OeXvD6/P3xfk9GVRurzCDqhcs62ad6RhI2qMZJPfjl7S5ZRZwSgDk/E1Xp5GG
+         P03a78iPpoFRBGzbWcA/a+oiLtSnw7+gJtTsRPT9MU8MxiMQR4i1kXwBgIz3piUYxLR8
+         zpA90VETnE0sbGG7q1y46Xa6FF20y4h8NEvoWw5EruFK+LE9cXNWHD9EjMBkecD4FZFm
+         MpVA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to:user-agent;
+        bh=kRZXlrxsXiUp76pJUg1A1idTwmDFL/za+p20Iqq28LA=;
+        b=R1y3oqH7ivtcy9mU8GN9/jbxDpcH3aM/42EeMFG/wjtptqS8mWfWq8yecmhSa9PpNU
+         5Al8+dEC05KMt7/M4rRlkF2T31zQR6aLJBGVI1zHh65ahxCThsFsUplhwDwvCDASc+Zn
+         DVQRxTY4o+m1PSoY/k76r7l95Ps3D5TRG42Z0cCOD+LCF7uSZGjfxzQ9PD+j/n0uMT0d
+         oVhLpa2Q0/W4z+JIcwsBq2ZeJ16POBC/OvsBRZCX/juauWypzz+FLmnmKC+8WgUSq9Yd
+         DHbd9kJq/6cdpZ2x3SjucAUcAlR7WnmO5+fLFcxrAPeUfgEXmEws6hvGQgee9sBKEVLR
+         k+KQ==
+X-Gm-Message-State: APjAAAUW+YclmnxtMpgL2HcKJK8eUnEjvG0QtQevemCUjep9fu9e8GWt
+        JKxDq30XCfWtI/UGDZxGqFQ6avXPMQs=
+X-Google-Smtp-Source: APXvYqxrdCUTNHecQ/lWt1/A5Ue3ifumWztPy7Ua4Idfks8Z+yOSveQHA4M4xhgaYqjMo1tm6Jnzig==
+X-Received: by 2002:adf:a19c:: with SMTP id u28mr65545868wru.221.1582541464079;
+        Mon, 24 Feb 2020 02:51:04 -0800 (PST)
+Received: from dell ([2.31.163.122])
+        by smtp.gmail.com with ESMTPSA id w19sm16854001wmc.22.2020.02.24.02.51.03
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 24 Feb 2020 02:51:03 -0800 (PST)
+Date:   Mon, 24 Feb 2020 10:51:34 +0000
+From:   Lee Jones <lee.jones@linaro.org>
+To:     Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+Cc:     linux-kernel@vger.kernel.org, kernel-janitors@vger.kernel.org
+Subject: Re: [PATCH] mfd: Kconfig: Fix some typo
+Message-ID: <20200224105134.GQ3494@dell>
+References: <20200216113242.20268-1-christophe.jaillet@wanadoo.fr>
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200216113242.20268-1-christophe.jaillet@wanadoo.fr>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Christophe Leroy <christophe.leroy@c-s.fr> writes:
-> Drop a bunch of #ifdefs CONFIG_PPC64 that are not vital.
->
-> Signed-off-by: Christophe Leroy <christophe.leroy@c-s.fr>
+On Sun, 16 Feb 2020, Christophe JAILLET wrote:
+
+> Fix several variations of typo around functionality.ies
+> 
+> Signed-off-by: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
 > ---
->  arch/powerpc/include/asm/ptrace.h      |  9 ++++-----
->  arch/powerpc/include/uapi/asm/ptrace.h | 12 ++++--------
->  arch/powerpc/kernel/ptrace/ptrace.c    | 24 +++---------------------
->  3 files changed, 11 insertions(+), 34 deletions(-)
->
-> diff --git a/arch/powerpc/include/asm/ptrace.h b/arch/powerpc/include/asm/ptrace.h
-> index faa5a338ac5a..1506a9c61d50 100644
-> --- a/arch/powerpc/include/asm/ptrace.h
-> +++ b/arch/powerpc/include/asm/ptrace.h
-> @@ -36,11 +36,10 @@ struct pt_regs
->  			unsigned long link;
->  			unsigned long xer;
->  			unsigned long ccr;
-> -#ifdef CONFIG_PPC64
-> -			unsigned long softe;
-> -#else
-> -			unsigned long mq;
-> -#endif
-> +			union {
-> +				unsigned long softe;
-> +				unsigned long mq;
-> +			};
->  			unsigned long trap;
->  			unsigned long dar;
->  			unsigned long dsisr;
-> diff --git a/arch/powerpc/include/uapi/asm/ptrace.h b/arch/powerpc/include/uapi/asm/ptrace.h
-> index f5f1ccc740fc..37d7befbb8dc 100644
-> --- a/arch/powerpc/include/uapi/asm/ptrace.h
-> +++ b/arch/powerpc/include/uapi/asm/ptrace.h
-> @@ -43,12 +43,11 @@ struct pt_regs
->  	unsigned long link;
->  	unsigned long xer;
->  	unsigned long ccr;
-> -#ifdef __powerpc64__
-> -	unsigned long softe;		/* Soft enabled/disabled */
-> -#else
-> -	unsigned long mq;		/* 601 only (not used at present) */
-> +	union {
-> +		unsigned long softe;	/* Soft enabled/disabled */
-> +		unsigned long mq;	/* 601 only (not used at present) */
->  					/* Used on APUS to hold IPL value. */
-> -#endif
-> +	};
+>  drivers/mfd/Kconfig | 8 ++++----
+>  1 file changed, 4 insertions(+), 4 deletions(-)
 
-As Andreas pointed out this is not safe as this is a uapi header.
+Applied, thanks.
 
->  	unsigned long trap;		/* Reason for being here */
->  	/* N.B. for critical exceptions on 4xx, the dar and dsisr
->  	   fields are overloaded to hold srr0 and srr1. */
-> @@ -105,11 +104,8 @@ struct pt_regs
->  #define PT_LNK	36
->  #define PT_XER	37
->  #define PT_CCR	38
-> -#ifndef __powerpc64__
->  #define PT_MQ	39
-> -#else
->  #define PT_SOFTE 39
-> -#endif
-
-I'd also rather leave that as it is.
-
-There's a slim chance it could break some code that already has either
-of those defined.
-
-If you need them both defined to make other code work in the kernel
-that's fine, in the kernel header we can do:
-
-// Ensure these are always defined inside the kernel to avoid #ifdefs
-#ifdef CONFIG_PPC64
-#define PT_MQ	39
-#else
-#define PT_SOFTE 39
-#endif
-
-
->  #define PT_TRAP	40
->  #define PT_DAR	41
->  #define PT_DSISR 42
-> diff --git a/arch/powerpc/kernel/ptrace/ptrace.c b/arch/powerpc/kernel/ptrace/ptrace.c
-> index 684b0b315c32..0afb223c4d57 100644
-> --- a/arch/powerpc/kernel/ptrace/ptrace.c
-> +++ b/arch/powerpc/kernel/ptrace/ptrace.c
-> @@ -113,11 +113,8 @@ static const struct pt_regs_offset regoffset_table[] = {
->  	REG_OFFSET_NAME(link),
->  	REG_OFFSET_NAME(xer),
->  	REG_OFFSET_NAME(ccr),
-> -#ifdef CONFIG_PPC64
->  	REG_OFFSET_NAME(softe),
-> -#else
->  	REG_OFFSET_NAME(mq),
-> -#endif
-
-Pretty sure that will cause breakage. The offset is ABI.
-
-
-cheers
-
+-- 
+Lee Jones [李琼斯]
+Linaro Services Technical Lead
+Linaro.org │ Open source software for ARM SoCs
+Follow Linaro: Facebook | Twitter | Blog
