@@ -2,165 +2,110 @@ Return-Path: <SRS0=7TUr=4M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 05EE7C38BF9
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 21:23:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AA415C38BF9
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 21:26:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D196F21927
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 21:23:23 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582579403;
-	bh=XnkYOmulZ8/lTR2roVqGnBGPNTBbKp8TG7sz+XwMTDk=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=IFt54IMh22Xk012z556FIr5NpxuOrRxqZ5SFJj8h1QwwXdQJeuMKbKEVyN+AclbyO
-	 1lpB6MnTDoSmrJQ6c7AIDakqNjVvoPlolHLrcD3MOQ25WfdXy83iSmOIh+TPruaaG7
-	 Gjr1ROdpbSP4mzL46iHB6Ng6PUz2LepNa2W2RTCY=
+	by mail.kernel.org (Postfix) with ESMTP id 7A21021927
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 21:26:56 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="OcguIZZn"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727910AbgBXVXW (ORCPT
+        id S1727670AbgBXV0z (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Feb 2020 16:23:22 -0500
-Received: from mail.kernel.org ([198.145.29.99]:38002 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727322AbgBXVXW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Feb 2020 16:23:22 -0500
-Received: from localhost (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1758C218AC;
-        Mon, 24 Feb 2020 21:23:21 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1582579401;
-        bh=XnkYOmulZ8/lTR2roVqGnBGPNTBbKp8TG7sz+XwMTDk=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=YEBbehGBXvp3CPzembrHbTI7ud/HJbKPdfdL/5pEC9w0esFKdekF03AbMqJimpl3v
-         GyNxtEab/KQ7pvDrxIQLOiihaSlLV3ofzr6lxx3lXS8nfHcuHYlg/ojkeQRf93SlxT
-         WILXyi0OKIOmyLdmAOyEDENKwyzUFskZ0DxFhC4c=
-Date:   Mon, 24 Feb 2020 16:23:19 -0500
-From:   Sasha Levin <sashal@kernel.org>
-To:     Sascha Hauer <s.hauer@pengutronix.de>
-Cc:     Andreas Tobler <andreas.tobler@onway.ch>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "stable@vger.kernel.org" <stable@vger.kernel.org>,
-        Robin Gong <yibin.gong@nxp.com>, Vinod Koul <vkoul@kernel.org>
-Subject: Re: [PATCH 5.4 160/344] dmaengine: imx-sdma: Fix memory leak
-Message-ID: <20200224212319.GE26320@sasha-vm>
-References: <20200221072349.335551332@linuxfoundation.org>
- <20200221072403.369335694@linuxfoundation.org>
- <1429291b-77c5-41aa-8dee-8858eba6d138@onway.ch>
- <20200224145718.GD3335@pengutronix.de>
+        Mon, 24 Feb 2020 16:26:55 -0500
+Received: from fllv0016.ext.ti.com ([198.47.19.142]:37316 "EHLO
+        fllv0016.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726651AbgBXV0y (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 24 Feb 2020 16:26:54 -0500
+Received: from fllv0035.itg.ti.com ([10.64.41.0])
+        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id 01OLQlgn027242;
+        Mon, 24 Feb 2020 15:26:47 -0600
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1582579607;
+        bh=4qPYELmFmgibaPNNjkEtcv7GMDHvqjmbMNb1EKBFr+c=;
+        h=From:To:CC:Subject:Date;
+        b=OcguIZZnpqVlndxEAUSl9GdNIesbUiQvd3GMjgqM4NZyA99Moq4qan9ggS+8MSBst
+         XWZuqJuZ/YGHuafq/uMnY/3zFdU31wCkm1dLsXZ3pnyuI/muMuvVuSXvA6tWm/KVwJ
+         xL6SqVyyB3jOB0XdxNenm3usdJjllFwBUd8cfFlk=
+Received: from DLEE109.ent.ti.com (dlee109.ent.ti.com [157.170.170.41])
+        by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTP id 01OLQls2039303;
+        Mon, 24 Feb 2020 15:26:47 -0600
+Received: from DLEE103.ent.ti.com (157.170.170.33) by DLEE109.ent.ti.com
+ (157.170.170.41) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Mon, 24
+ Feb 2020 15:26:47 -0600
+Received: from fllv0040.itg.ti.com (10.64.41.20) by DLEE103.ent.ti.com
+ (157.170.170.33) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
+ Frontend Transport; Mon, 24 Feb 2020 15:26:47 -0600
+Received: from lelv0597.itg.ti.com (lelv0597.itg.ti.com [10.181.64.32])
+        by fllv0040.itg.ti.com (8.15.2/8.15.2) with ESMTP id 01OLQlRO039232;
+        Mon, 24 Feb 2020 15:26:47 -0600
+Received: from localhost (irmo.dhcp.ti.com [128.247.58.153])
+        by lelv0597.itg.ti.com (8.14.7/8.14.7) with ESMTP id 01OLQlxs089088;
+        Mon, 24 Feb 2020 15:26:47 -0600
+From:   Suman Anna <s-anna@ti.com>
+To:     "Michael S. Tsirkin" <mst@redhat.com>,
+        Jason Wang <jasowang@redhat.com>
+CC:     Tiwei Bie <tiwei.bie@intel.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        <virtualization@lists.linux-foundation.org>,
+        <linux-kernel@vger.kernel.org>, <linux-remoteproc@vger.kernel.org>,
+        Suman Anna <s-anna@ti.com>
+Subject: [PATCH] virtio_ring: Fix mem leak with vring_new_virtqueue()
+Date:   Mon, 24 Feb 2020 15:26:43 -0600
+Message-ID: <20200224212643.30672-1-s-anna@ti.com>
+X-Mailer: git-send-email 2.23.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii; format=flowed
-Content-Disposition: inline
-In-Reply-To: <20200224145718.GD3335@pengutronix.de>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Feb 24, 2020 at 03:57:18PM +0100, Sascha Hauer wrote:
->On Mon, Feb 24, 2020 at 01:24:04PM +0000, Andreas Tobler wrote:
->> Hi all,
->>
->> On 21.02.20 08:39, Greg Kroah-Hartman wrote:
->> > From: Sascha Hauer <s.hauer@pengutronix.de>
->> >
->> > [ Upstream commit 02939cd167095f16328a1bd5cab5a90b550606df ]
->> >
->> > The current descriptor is not on any list of the virtual DMA channel.
->> > Once sdma_terminate_all() is called when a descriptor is currently
->> > in flight then this one is forgotten to be freed. We have to call
->> > vchan_terminate_vdesc() on this descriptor to re-add it to the lists.
->> > Now that we also free the currently running descriptor we can (and
->> > actually have to) remove the current descriptor from its list also
->> > for the cyclic case.
->> >
->> > Signed-off-by: Sascha Hauer <s.hauer@pengutronix.de>
->> > Reviewed-by: Robin Gong <yibin.gong@nxp.com>
->> > Tested-by: Robin Gong <yibin.gong@nxp.com>
->> > Link: https://lore.kernel.org/r/20191216105328.15198-10-s.hauer@pengutronix.de
->> > Signed-off-by: Vinod Koul <vkoul@kernel.org>
->> > Signed-off-by: Sasha Levin <sashal@kernel.org>
->> > ---
->> >   drivers/dma/imx-sdma.c | 19 +++++++++++--------
->> >   1 file changed, 11 insertions(+), 8 deletions(-)
->> >
->> > diff --git a/drivers/dma/imx-sdma.c b/drivers/dma/imx-sdma.c
->> > index c27e206a764c3..66f1b2ac5cde4 100644
->> > --- a/drivers/dma/imx-sdma.c
->> > +++ b/drivers/dma/imx-sdma.c
->> > @@ -760,12 +760,8 @@ static void sdma_start_desc(struct sdma_channel *sdmac)
->> >   		return;
->> >   	}
->> >   	sdmac->desc = desc = to_sdma_desc(&vd->tx);
->> > -	/*
->> > -	 * Do not delete the node in desc_issued list in cyclic mode, otherwise
->> > -	 * the desc allocated will never be freed in vchan_dma_desc_free_list
->> > -	 */
->> > -	if (!(sdmac->flags & IMX_DMA_SG_LOOP))
->> > -		list_del(&vd->node);
->> > +
->> > +	list_del(&vd->node);
->> >
->> >   	sdma->channel_control[channel].base_bd_ptr = desc->bd_phys;
->> >   	sdma->channel_control[channel].current_bd_ptr = desc->bd_phys;
->> > @@ -1071,7 +1067,6 @@ static void sdma_channel_terminate_work(struct work_struct *work)
->> >
->> >   	spin_lock_irqsave(&sdmac->vc.lock, flags);
->> >   	vchan_get_all_descriptors(&sdmac->vc, &head);
->> > -	sdmac->desc = NULL;
->> >   	spin_unlock_irqrestore(&sdmac->vc.lock, flags);
->> >   	vchan_dma_desc_free_list(&sdmac->vc, &head);
->> >   	sdmac->context_loaded = false;
->> > @@ -1080,11 +1075,19 @@ static void sdma_channel_terminate_work(struct work_struct *work)
->> >   static int sdma_disable_channel_async(struct dma_chan *chan)
->> >   {
->> >   	struct sdma_channel *sdmac = to_sdma_chan(chan);
->> > +	unsigned long flags;
->> > +
->> > +	spin_lock_irqsave(&sdmac->vc.lock, flags);
->> >
->> >   	sdma_disable_channel(chan);
->> >
->> > -	if (sdmac->desc)
->> > +	if (sdmac->desc) {
->> > +		vchan_terminate_vdesc(&sdmac->desc->vd);
->> > +		sdmac->desc = NULL;
->> >   		schedule_work(&sdmac->terminate_worker);
->> > +	}
->> > +
->> > +	spin_unlock_irqrestore(&sdmac->vc.lock, flags);
->> >
->> >   	return 0;
->> >   }
->> >
->>
->> This patch breaks our imx6 board with the attached trace.  Reverting the
->> patch makes it boot again.
->> I tried also 5.6-rc3 and it booted too. A closer look into imx-sdma.c
->> from 5.6-rc3 showed me some details which might have to be backported as
->> well to make this patch work.
->> I tried a1ff6a07f5a3951fcac84f064a76d1ad79c10e40 and was somehow
->> successful. I still have one trace but the board boots now.
->>
->> Any insights from the experts?
->
->This series should be applied as a whole or not, only 7/9 is optional.
->
->It seems I have to avoid the trigger word "fix" in my commit messages or
->make sure these patches won't apply without their dependencies :-/
+The functions vring_new_virtqueue() and __vring_new_virtqueue() are used
+with split rings, and any allocations within these functions are managed
+outside of the .we_own_ring flag. The commit cbeedb72b97a ("virtio_ring:
+allocate desc state for split ring separately") allocates the desc state
+within the __vring_new_virtqueue() but frees it only when the .we_own_ring
+flag is set. This leads to a memory leak when freeing such allocated
+virtqueues with the vring_del_virtqueue() function.
 
-Or you could just tag the dependencies so that we could take all of them
-as well? We have a nice "Depends-on:" tag that makes it easy.
+Fix this by moving the desc_state free code outside the flag and only
+for split rings. Issue was discovered during testing with remoteproc
+and virtio_rpmsg.
 
-As with everything in life, you want to communicate more effectively
-rather than not communicate at all.
+Fixes: cbeedb72b97a ("virtio_ring: allocate desc state for split ring separately")
+Signed-off-by: Suman Anna <s-anna@ti.com>
+---
+ drivers/virtio/virtio_ring.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
+diff --git a/drivers/virtio/virtio_ring.c b/drivers/virtio/virtio_ring.c
+index 867c7ebd3f10..58b96baa8d48 100644
+--- a/drivers/virtio/virtio_ring.c
++++ b/drivers/virtio/virtio_ring.c
+@@ -2203,10 +2203,10 @@ void vring_del_virtqueue(struct virtqueue *_vq)
+ 					 vq->split.queue_size_in_bytes,
+ 					 vq->split.vring.desc,
+ 					 vq->split.queue_dma_addr);
+-
+-			kfree(vq->split.desc_state);
+ 		}
+ 	}
++	if (!vq->packed_ring)
++		kfree(vq->split.desc_state);
+ 	list_del(&_vq->list);
+ 	kfree(vq);
+ }
 -- 
-Thanks,
-Sasha
+2.23.0
+
