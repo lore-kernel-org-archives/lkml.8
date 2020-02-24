@@ -2,131 +2,107 @@ Return-Path: <SRS0=7TUr=4M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 24352C35679
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 10:03:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C9EE1C3567B
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 10:05:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F3C5620732
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 10:03:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A20CC20732
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 10:05:42 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727240AbgBXKD1 (ORCPT
+        id S1727189AbgBXKFl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Feb 2020 05:03:27 -0500
-Received: from lhrrgout.huawei.com ([185.176.76.210]:2455 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726509AbgBXKD1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Feb 2020 05:03:27 -0500
-Received: from lhreml707-cah.china.huawei.com (unknown [172.18.7.106])
-        by Forcepoint Email with ESMTP id 181C7ED5757C216E6D05;
-        Mon, 24 Feb 2020 10:03:26 +0000 (GMT)
-Received: from lhreml724-chm.china.huawei.com (10.201.108.75) by
- lhreml707-cah.china.huawei.com (10.201.108.48) with Microsoft SMTP Server
- (TLS) id 14.3.408.0; Mon, 24 Feb 2020 10:03:25 +0000
-Received: from [127.0.0.1] (10.202.226.45) by lhreml724-chm.china.huawei.com
- (10.201.108.75) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256) id 15.1.1713.5; Mon, 24 Feb
- 2020 10:03:25 +0000
-Subject: Re: Query on device links
-To:     Saravana Kannan <saravanak@google.com>
-CC:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        "Rafael J. Wysocki" <rafael@kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-References: <7f7d9b37-3f10-fefb-db23-86c8f83e8885@huawei.com>
- <CAGETcx_eHbVLmfYy5ggMKgXR1MQosLarrfpJA8j65krbvAzEbg@mail.gmail.com>
-From:   John Garry <john.garry@huawei.com>
-Message-ID: <e9b404b4-a7bf-71ba-203c-adde0e334d56@huawei.com>
-Date:   Mon, 24 Feb 2020 10:03:24 +0000
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.1.2
+        Mon, 24 Feb 2020 05:05:41 -0500
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:38492 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726452AbgBXKFl (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 24 Feb 2020 05:05:41 -0500
+Received: from pps.filterd (m0098393.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 01OA4jlq144248
+        for <linux-kernel@vger.kernel.org>; Mon, 24 Feb 2020 05:05:40 -0500
+Received: from e06smtp05.uk.ibm.com (e06smtp05.uk.ibm.com [195.75.94.101])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2yax37eew5-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Mon, 24 Feb 2020 05:05:40 -0500
+Received: from localhost
+        by e06smtp05.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-kernel@vger.kernel.org> from <parth@linux.ibm.com>;
+        Mon, 24 Feb 2020 10:05:38 -0000
+Received: from b06cxnps4074.portsmouth.uk.ibm.com (9.149.109.196)
+        by e06smtp05.uk.ibm.com (192.168.101.135) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Mon, 24 Feb 2020 10:05:34 -0000
+Received: from d06av21.portsmouth.uk.ibm.com (d06av21.portsmouth.uk.ibm.com [9.149.105.232])
+        by b06cxnps4074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 01OA5XwJ43057346
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Mon, 24 Feb 2020 10:05:33 GMT
+Received: from d06av21.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 3699A52050;
+        Mon, 24 Feb 2020 10:05:33 +0000 (GMT)
+Received: from localhost.localdomain (unknown [9.124.35.160])
+        by d06av21.portsmouth.uk.ibm.com (Postfix) with ESMTP id 57B3B5204E;
+        Mon, 24 Feb 2020 10:05:31 +0000 (GMT)
+Subject: Re: [PATCH v4 4/5] sched/pelt: Add a new runnable average signal
+To:     Vincent Guittot <vincent.guittot@linaro.org>, mingo@redhat.com,
+        peterz@infradead.org, juri.lelli@redhat.com,
+        dietmar.eggemann@arm.com, rostedt@goodmis.org, bsegall@google.com,
+        mgorman@suse.de, linux-kernel@vger.kernel.org
+Cc:     pauld@redhat.com, valentin.schneider@arm.com, hdanton@sina.com
+References: <20200221132715.20648-1-vincent.guittot@linaro.org>
+ <20200221132715.20648-5-vincent.guittot@linaro.org>
+From:   Parth Shah <parth@linux.ibm.com>
+Date:   Mon, 24 Feb 2020 15:35:30 +0530
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.4.0
 MIME-Version: 1.0
-In-Reply-To: <CAGETcx_eHbVLmfYy5ggMKgXR1MQosLarrfpJA8j65krbvAzEbg@mail.gmail.com>
-Content-Type: text/plain; charset="utf-8"; format=flowed
+In-Reply-To: <20200221132715.20648-5-vincent.guittot@linaro.org>
+Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.202.226.45]
-X-ClientProxiedBy: lhreml708-chm.china.huawei.com (10.201.108.57) To
- lhreml724-chm.china.huawei.com (10.201.108.75)
-X-CFilter-Loop: Reflected
+Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
+x-cbid: 20022410-0020-0000-0000-000003AD0AED
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 20022410-0021-0000-0000-000022051B71
+Message-Id: <1bf450ee-a731-794c-452c-654a508365b5@linux.ibm.com>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.572
+ definitions=2020-02-24_02:2020-02-21,2020-02-24 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxscore=0 impostorscore=0
+ bulkscore=0 spamscore=0 suspectscore=0 mlxlogscore=793 priorityscore=1501
+ lowpriorityscore=0 clxscore=1015 phishscore=0 malwarescore=0 adultscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2001150001
+ definitions=main-2002240087
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 22/02/2020 06:55, Saravana Kannan wrote:
-> On Thu, Feb 6, 2020 at 2:32 AM John Garry <john.garry@huawei.com> wrote:
->>
->> Hi guys,
-> 
-> Sorry it took a while to get back.
 
-no worries, it may have seemed a daft question
 
-> 
->>
->> According to "Limitations" section @
->> https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/Documentation/driver-api/device_link.rst#n110,
->> for a managed link, lack of the supplier driver may cause indefinite
->> delay in probing of the consumer. Is there any way around this?
-> 
-> Currently, no. There's no way to guarantee ordering AND ignore
-> supplier failures.
-> 
->> So I just want the probe order attempt of the supplier and consumer to
->> be guaranteed, but the supplier probe may not be successful, i.e. does
->> not actually bind.
->>
->> In my case, I would like to use device_link_add(supplier, consumer,
->> DL_FLAG_AUTOPROBE_CONSUMER), but I find the supplier probe may fail (and
->> not due to -EPROBE_DEFER), and my consumer remains in limbo.
-> 
-> The requirements seem to contradict each other. If you depend on the
-> supplier, how can you probe the consumer if the supplier fails?
+On 2/21/20 6:57 PM, Vincent Guittot wrote:
+> Now that runnable_load_avg has been removed, we can replace it by a new
+> signal that will highlight the runnable pressure on a cfs_rq. This signal
+> track the waiting time of tasks on rq and can help to better define the
+> state of rqs.
 
-In fact, I now consider what I was attempting to be a hack and not the 
-proper solution to the problem.
+[...]
 
-So we assign an IOMMU group to a device in the really_probe() dma 
-configure, which I required to be in order.
+> @@ -5389,6 +5444,11 @@ static unsigned long cpu_load_without(struct rq *rq, struct task_struct *p)
+>  	return load;
+>  }
+>  
+> +static unsigned long cpu_runnable(struct rq *rq)
+> +{
+> +	return cfs_rq_runnable_avg(&rq->cfs);
+> +}
 
-However the proper approach may now be to take the device iommu group 
-assignment outside the device driver probe path, and not consider device 
-links as the solution or any such device driver probe ordering.
+Why not move cpu-runnable definition to Patch 5? to get rid of
+warning: ‘cpu_runnable’ defined but not used [-Wunused-function]
+static unsigned long cpu_runnable(struct rq *rq)
 
-> 
->> You may ask my I want this ordering at all - it is because in
->> really_probe(), we do the device DMA configure before the actual device
->> driver probe, and I just need that ordering to be ensured between devices.
-> 
-> I'm assuming the supplier in your case is the "dma device" (is it an
-> iommu?)?
+[...]
 
-No, just 2 PCI devices, the port and an end device.
+- Parth
 
-  So if it fails, how is your consumer probing without the
-> supplier? I'd think something like a DMA would be fundamental?
-> 
-> Why can't this logic be handled in your consumer driver instead of
-> using device links? 
-
-Yes, I did try something like this, but, again, it just looks like the 
-IOMMU group device assignment needs rework.
-
-Why can't your consumer driver return
-> -EPROBE_DEFER if the dma ops are not set up correctly until some point
-> after which (after late_initcall?) the consumer will continue probing
-> without returning -EPROBE_DEFER even if the supplier isn't there/dma
-> ops aren't set up? >
-> Can you give a more concrete example of your devices? Or why the
-> suggestion above might not work?
-
-As above.
-
-Please note that we still may want to use device links for ensuring 
-probe ordering of the DMA device and the IOMMU, but this is not a 
-specifically related issue.
-
-Much appreciated,
-john
