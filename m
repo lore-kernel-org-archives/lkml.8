@@ -2,108 +2,134 @@ Return-Path: <SRS0=7TUr=4M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A24ACC38BF9
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 22:00:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 900B3C38BFA
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 22:00:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 78AF82176D
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 22:00:34 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582581634;
-	bh=EZ+Ei0mMz9aXg3foEaWmEi27b7awpExGYB0AFFAuoqI=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=VzpttNIygRYRQp0EVjAK1wSzEIIeQp/UF9/VB1wkKm2mk/liXOnY4kC7lZjXOvA14
-	 H3PqtsZOC5uph60wWxg+cPd6SUjGkGqoReRv8olQaTQNqvjk4g9XiI5MoWCg3ciNaw
-	 XNHr1JiKxwP1Txj3l/MB9FwhgKkupWnugIf3ZznY=
+	by mail.kernel.org (Postfix) with ESMTP id 6B9972176D
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 22:00:37 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728062AbgBXWAd (ORCPT
+        id S1728185AbgBXWAg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Feb 2020 17:00:33 -0500
-Received: from mail.kernel.org ([198.145.29.99]:41112 "EHLO mail.kernel.org"
+        Mon, 24 Feb 2020 17:00:36 -0500
+Received: from mga06.intel.com ([134.134.136.31]:22327 "EHLO mga06.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727421AbgBXWAc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Feb 2020 17:00:32 -0500
-Received: from localhost (unknown [104.132.1.66])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1DD0120CC7;
-        Mon, 24 Feb 2020 22:00:32 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1582581632;
-        bh=EZ+Ei0mMz9aXg3foEaWmEi27b7awpExGYB0AFFAuoqI=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=g0MIX48mZqh7MT751Vhna3OD982qJJ5UTkzxOZbW23WmZhEVMyMaAgEy6GR85ShQY
-         MHxPab2CLyyQ6oJO+pLL5YlNbtDt7e3pw1yr8mRUi30r1jQqo/NRNHPI+4NTbb5z5x
-         n82nVdimza2L8+HJKyGBjmGN4g2OgB6DaVVPCJkM=
-Date:   Mon, 24 Feb 2020 14:00:31 -0800
-From:   Jaegeuk Kim <jaegeuk@kernel.org>
-To:     Chao Yu <yuchao0@huawei.com>
-Cc:     linux-f2fs-devel@lists.sourceforge.net,
-        linux-kernel@vger.kernel.org, chao@kernel.org
-Subject: Re: [PATCH 3/3] f2fs: avoid unneeded barrier in do_checkpoint()
-Message-ID: <20200224220031.GC77839@google.com>
-References: <20200218102136.32150-1-yuchao0@huawei.com>
- <20200218102136.32150-3-yuchao0@huawei.com>
- <20200219025154.GB96609@google.com>
- <576f8389-ba27-b461-5466-cc62e84b5c92@huawei.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <576f8389-ba27-b461-5466-cc62e84b5c92@huawei.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+        id S1727421AbgBXWAf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 24 Feb 2020 17:00:35 -0500
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga003.fm.intel.com ([10.253.24.29])
+  by orsmga104.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 24 Feb 2020 14:00:33 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.70,481,1574150400"; 
+   d="scan'208";a="284477336"
+Received: from otc-lr-04.jf.intel.com ([10.54.39.48])
+  by FMSMGA003.fm.intel.com with ESMTP; 24 Feb 2020 14:00:33 -0800
+From:   kan.liang@linux.intel.com
+To:     acme@kernel.org, jolsa@redhat.com, mingo@redhat.com,
+        peterz@infradead.org, linux-kernel@vger.kernel.org
+Cc:     mark.rutland@arm.com, namhyung@kernel.org,
+        ravi.bangoria@linux.ibm.com, yao.jin@linux.intel.com,
+        ak@linux.intel.com, Kan Liang <kan.liang@linux.intel.com>
+Subject: [PATCH V2 0/5] Support metric group constraint
+Date:   Mon, 24 Feb 2020 13:59:19 -0800
+Message-Id: <1582581564-184429-1-git-send-email-kan.liang@linux.intel.com>
+X-Mailer: git-send-email 2.7.4
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 02/19, Chao Yu wrote:
-> On 2020/2/19 10:51, Jaegeuk Kim wrote:
-> > On 02/18, Chao Yu wrote:
-> >> We don't need to wait all dirty page submitting IO twice,
-> >> remove unneeded wait step.
-> > 
-> > What happens if checkpoint and other meta writs are reordered?
-> 
-> checkpoint can be done as following:
-> 
-> 1. All meta except last cp-park of checkpoint area.
-> 2. last cp-park of checkpoint area
-> 
-> So we only need to keep barrier in between step 1 and 2, we don't need
-> to care about the write order of meta in step 1, right?
+From: Kan Liang <kan.liang@linux.intel.com>
 
-Ah, let me integrate this patch into Sahitya's patch.
+Changes since V1:
+- Remove global static flag violate_nmi_constraint, and add a new
+  function metricgroup___watchdog_constraint_hint() for all
+  watchdog constraint hints in patch 4.
+  The rest of the patches are not changed.
 
-f2fs: fix the panic in do_checkpoint()
+Some metric groups, e.g. Page_Walks_Utilization, will never count when
+NMI watchdog is enabled.
 
-> 
-> Thanks,
-> 
-> > 
-> >>
-> >> Signed-off-by: Chao Yu <yuchao0@huawei.com>
-> >> ---
-> >>  fs/f2fs/checkpoint.c | 2 --
-> >>  1 file changed, 2 deletions(-)
-> >>
-> >> diff --git a/fs/f2fs/checkpoint.c b/fs/f2fs/checkpoint.c
-> >> index 751815cb4c2b..9c88fb3d255a 100644
-> >> --- a/fs/f2fs/checkpoint.c
-> >> +++ b/fs/f2fs/checkpoint.c
-> >> @@ -1384,8 +1384,6 @@ static int do_checkpoint(struct f2fs_sb_info *sbi, struct cp_control *cpc)
-> >>  
-> >>  	/* Flush all the NAT/SIT pages */
-> >>  	f2fs_sync_meta_pages(sbi, META, LONG_MAX, FS_CP_META_IO);
-> >> -	/* Wait for all dirty meta pages to be submitted for IO */
-> >> -	f2fs_wait_on_all_pages(sbi, F2FS_DIRTY_META);
-> >>  
-> >>  	/*
-> >>  	 * modify checkpoint
-> >> -- 
-> >> 2.18.0.rc1
-> > .
-> > 
+ $echo 1 > /proc/sys/kernel/nmi_watchdog
+ $perf stat -M Page_Walks_Utilization
+
+ Performance counter stats for 'system wide':
+
+ <not counted>      itlb_misses.walk_pending       (0.00%)
+ <not counted>      dtlb_load_misses.walk_pending  (0.00%)
+ <not counted>      dtlb_store_misses.walk_pending (0.00%)
+ <not counted>      ept.walk_pending               (0.00%)
+ <not counted>      cycles                         (0.00%)
+
+       2.343460588 seconds time elapsed
+
+ Some events weren't counted. Try disabling the NMI watchdog:
+        echo 0 > /proc/sys/kernel/nmi_watchdog
+        perf stat ...
+        echo 1 > /proc/sys/kernel/nmi_watchdog
+ The events in group usually have to be from the same PMU. Try
+ reorganizing the group.
+
+A metric group is a weak group, which relies on group validation
+code in the kernel to determine whether to be opened as a group or
+a non-group. However, group validation code may return false-positives,
+especially when NMI watchdog is enabled. (The metric group is allowed
+as a group but will never be scheduled.)
+
+The attempt to fix the group validation code has been rejected.
+https://lore.kernel.org/lkml/20200117091341.GX2827@hirez.programming.kicks-ass.net/
+Because we cannot accurately predict whether the group can be scheduled
+as a group, only by checking current status.
+
+This patch set provides another solution to mitigate the issue.
+Add "MetricConstraint" in event list, which provides a hint for perf tool,
+e.g. "MetricConstraint": "NO_NMI_WATCHDOG". Perf tool can change the
+metric group to non-group (standalone metrics) if NMI watchdog is enabled.
+
+After applying the patch,
+
+ $echo 1 > /proc/sys/kernel/nmi_watchdog
+ $perf stat -M Page_Walks_Utilization
+  Splitting metric group Page_Walks_Utilization into standalone metrics.
+  Try disabling the NMI watchdog to comply NO_NMI_WATCHDOG metric constraint:
+        echo 0 > /proc/sys/kernel/nmi_watchdog
+        perf stat ...
+        echo 1 > /proc/sys/kernel/nmi_watchdog
+
+ Performance counter stats for 'system wide':
+
+        18,253,454      itlb_misses.walk_pending  #      0.0
+                              Page_Walks_Utilization   (50.55%)
+        78,051,525      dtlb_load_misses.walk_pending  (50.55%)
+        29,213,063      dtlb_store_misses.walk_pending (50.55%)
+                 0      ept.walk_pending               (50.55%)
+     2,542,132,364      cycles                         (49.92%)
+
+       1.037095993 seconds time elapsed
+
+Kan Liang (5):
+  perf jevents: Support metric constraint
+  perf metricgroup: Factor out metricgroup__add_metric_weak_group()
+  perf util: Factor out sysctl__nmi_watchdog_enabled()
+  perf metricgroup: Support metric constraint
+  perf vendor events: Add NO_NMI_WATCHDOG metric constraint
+
+ .../arch/x86/cascadelakex/clx-metrics.json         |   3 +-
+ .../pmu-events/arch/x86/skylake/skl-metrics.json   |   3 +-
+ .../pmu-events/arch/x86/skylakex/skx-metrics.json  |   3 +-
+ tools/perf/pmu-events/jevents.c                    |  19 ++--
+ tools/perf/pmu-events/jevents.h                    |   2 +-
+ tools/perf/pmu-events/pmu-events.h                 |   1 +
+ tools/perf/util/metricgroup.c                      | 109 ++++++++++++++++-----
+ tools/perf/util/stat-display.c                     |   6 +-
+ tools/perf/util/util.c                             |  18 ++++
+ tools/perf/util/util.h                             |   2 +
+ 10 files changed, 128 insertions(+), 38 deletions(-)
+
+-- 
+2.7.4
+
