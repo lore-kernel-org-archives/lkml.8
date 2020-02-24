@@ -2,130 +2,81 @@ Return-Path: <SRS0=7TUr=4M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0019DC11D3D
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 23:25:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CA2D8C11D3D
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 23:26:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BA93820732
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 23:25:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9A73820732
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 23:26:38 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728376AbgBXXZ6 (ORCPT
+        id S1728402AbgBXX0h (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Feb 2020 18:25:58 -0500
-Received: from mga17.intel.com ([192.55.52.151]:27462 "EHLO mga17.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727957AbgBXXZ6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Feb 2020 18:25:58 -0500
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from orsmga005.jf.intel.com ([10.7.209.41])
-  by fmsmga107.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 24 Feb 2020 15:25:57 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.70,481,1574150400"; 
-   d="scan'208";a="410040498"
-Received: from sjchrist-coffee.jf.intel.com (HELO linux.intel.com) ([10.54.74.202])
-  by orsmga005.jf.intel.com with ESMTP; 24 Feb 2020 15:25:54 -0800
-Date:   Mon, 24 Feb 2020 15:25:54 -0800
-From:   Sean Christopherson <sean.j.christopherson@intel.com>
-To:     Vitaly Kuznetsov <vkuznets@redhat.com>
-Cc:     Paolo Bonzini <pbonzini@redhat.com>,
-        Wanpeng Li <wanpengli@tencent.com>,
-        Jim Mattson <jmattson@google.com>,
-        Joerg Roedel <joro@8bytes.org>, kvm@vger.kernel.org,
+        Mon, 24 Feb 2020 18:26:37 -0500
+Received: from shards.monkeyblade.net ([23.128.96.9]:40008 "EHLO
+        shards.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727081AbgBXX0h (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 24 Feb 2020 18:26:37 -0500
+Received: from localhost (unknown [50.226.181.18])
+        (using TLSv1 with cipher AES256-SHA (256/256 bits))
+        (Client did not present a certificate)
+        (Authenticated sender: davem-davemloft)
+        by shards.monkeyblade.net (Postfix) with ESMTPSA id A3A45124CE3CD;
+        Mon, 24 Feb 2020 15:26:36 -0800 (PST)
+Date:   Mon, 24 Feb 2020 15:26:35 -0800 (PST)
+Message-Id: <20200224.152635.883427110923588122.davem@davemloft.net>
+To:     gustavo@embeddedor.com
+Cc:     vishal@chelsio.com, netdev@vger.kernel.org,
         linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 38/61] KVM: x86: Introduce kvm_cpu_caps to replace
- runtime CPUID masking
-Message-ID: <20200224232554.GR29865@linux.intel.com>
-References: <20200201185218.24473-1-sean.j.christopherson@intel.com>
- <20200201185218.24473-39-sean.j.christopherson@intel.com>
- <87h7zgndxl.fsf@vitty.brq.redhat.com>
- <20200224225743.GP29865@linux.intel.com>
- <87ftezmv30.fsf@vitty.brq.redhat.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <87ftezmv30.fsf@vitty.brq.redhat.com>
-User-Agent: Mutt/1.5.24 (2015-08-30)
+Subject: Re: [PATCH net-next] chelsio: Replace zero-length array with
+ flexible-array member
+From:   David Miller <davem@davemloft.net>
+In-Reply-To: <20200224163024.GA27867@embeddedor>
+References: <20200224163024.GA27867@embeddedor>
+X-Mailer: Mew version 6.8 on Emacs 26.3
+Mime-Version: 1.0
+Content-Type: Text/Plain; charset=us-ascii
+Content-Transfer-Encoding: 7bit
+X-Greylist: Sender succeeded SMTP AUTH, not delayed by milter-greylist-4.5.12 (shards.monkeyblade.net [149.20.54.216]); Mon, 24 Feb 2020 15:26:36 -0800 (PST)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Feb 25, 2020 at 12:20:03AM +0100, Vitaly Kuznetsov wrote:
-> Sean Christopherson <sean.j.christopherson@intel.com> writes:
-> 
-> > On Mon, Feb 24, 2020 at 05:32:54PM +0100, Vitaly Kuznetsov wrote:
-> >> Sean Christopherson <sean.j.christopherson@intel.com> writes:
-> >> 
-> 
-> ...
-> 
-> >
-> >> > +
-> >> > +	BUILD_BUG_ON(sizeof(kvm_cpu_caps) >
-> >> > +		     sizeof(boot_cpu_data.x86_capability));
-> >> > +
-> >> > +	memcpy(&kvm_cpu_caps, &boot_cpu_data.x86_capability,
-> >> > +	       sizeof(kvm_cpu_caps));
-> >> > +
-> >> > +	kvm_cpu_cap_mask(CPUID_1_EDX,
-> >> > +		F(FPU) | F(VME) | F(DE) | F(PSE) |
-> >> > +		F(TSC) | F(MSR) | F(PAE) | F(MCE) |
-> >> > +		F(CX8) | F(APIC) | 0 /* Reserved */ | F(SEP) |
-> >> > +		F(MTRR) | F(PGE) | F(MCA) | F(CMOV) |
-> >> > +		F(PAT) | F(PSE36) | 0 /* PSN */ | F(CLFLUSH) |
-> >> > +		0 /* Reserved, DS, ACPI */ | F(MMX) |
-> >> > +		F(FXSR) | F(XMM) | F(XMM2) | F(SELFSNOOP) |
-> >> > +		0 /* HTT, TM, Reserved, PBE */
-> >> > +	);
-> >> > +
-> >> > +	kvm_cpu_cap_mask(CPUID_8000_0001_EDX,
-> >> > +		F(FPU) | F(VME) | F(DE) | F(PSE) |
-> >> > +		F(TSC) | F(MSR) | F(PAE) | F(MCE) |
-> >> > +		F(CX8) | F(APIC) | 0 /* Reserved */ | F(SYSCALL) |
-> >> > +		F(MTRR) | F(PGE) | F(MCA) | F(CMOV) |
-> >> > +		F(PAT) | F(PSE36) | 0 /* Reserved */ |
-> >> > +		f_nx | 0 /* Reserved */ | F(MMXEXT) | F(MMX) |
-> >> > +		F(FXSR) | F(FXSR_OPT) | f_gbpages | F(RDTSCP) |
-> >> > +		0 /* Reserved */ | f_lm | F(3DNOWEXT) | F(3DNOW)
-> >> > +	);
-> >> > +
-> >> > +	kvm_cpu_cap_mask(CPUID_1_ECX,
-> >> > +		/* NOTE: MONITOR (and MWAIT) are emulated as NOP,
-> >> > +		 * but *not* advertised to guests via CPUID ! */
-> >> > +		F(XMM3) | F(PCLMULQDQ) | 0 /* DTES64, MONITOR */ |
-> >> > +		0 /* DS-CPL, VMX, SMX, EST */ |
-> >> > +		0 /* TM2 */ | F(SSSE3) | 0 /* CNXT-ID */ | 0 /* Reserved */ |
-> >> > +		F(FMA) | F(CX16) | 0 /* xTPR Update, PDCM */ |
-> >> > +		F(PCID) | 0 /* Reserved, DCA */ | F(XMM4_1) |
-> >> > +		F(XMM4_2) | F(X2APIC) | F(MOVBE) | F(POPCNT) |
-> >> > +		0 /* Reserved*/ | F(AES) | F(XSAVE) | 0 /* OSXSAVE */ | F(AVX) |
-> >> > +		F(F16C) | F(RDRAND)
-> >> > +	);
-> >> 
-> >> I would suggest we order things by CPUID_NUM here, i.e.
-> >> 
-> >> CPUID_1_ECX
-> >> CPUID_1_EDX
-> >> CPUID_7_1_EAX
-> >> CPUID_7_0_EBX
-> >> CPUID_7_ECX
-> >> CPUID_7_EDX
-> >> CPUID_D_1_EAX
-> >> ...
-> >
-> > Hmm, generally speaking I agree, but I didn't want to change the ordering
-> > in this patch when moving the code.  Throw a patch on top?  Leave as is?
-> > Something else?
-> 
-> My line of thought was: it's not a mechanical "s,const u32
-> xxx_x86_features =,kvm_cpu_cap_mask...," change, things get moved from
-> do_cpuid_7_mask() and __do_cpuid_func() so we may as well re-order them,
-> reviewing-wise it's more or less the same. But honestly, this is very
-> minor, feel free to leave as-is.
+From: "Gustavo A. R. Silva" <gustavo@embeddedor.com>
+Date: Mon, 24 Feb 2020 10:30:24 -0600
 
-Fair enough, I'll throw it into this patch.
+> The current codebase makes use of the zero-length array language
+> extension to the C90 standard, but the preferred mechanism to declare
+> variable-length types such as these ones is a flexible array member[1][2],
+> introduced in C99:
+> 
+> struct foo {
+>         int stuff;
+>         struct boo array[];
+> };
+> 
+> By making use of the mechanism above, we will get a compiler warning
+> in case the flexible array does not occur last in the structure, which
+> will help us prevent some kind of undefined behavior bugs from being
+> inadvertently introduced[3] to the codebase from now on.
+> 
+> Also, notice that, dynamic memory allocations won't be affected by
+> this change:
+> 
+> "Flexible array members have incomplete type, and so the sizeof operator
+> may not be applied. As a quirk of the original implementation of
+> zero-length arrays, sizeof evaluates to zero."[1]
+> 
+> This issue was found with the help of Coccinelle.
+> 
+> [1] https://gcc.gnu.org/onlinedocs/gcc/Zero-Length.html
+> [2] https://github.com/KSPP/linux/issues/21
+> [3] commit 76497732932f ("cxgb3/l2t: Fix undefined behaviour")
+> 
+> Signed-off-by: Gustavo A. R. Silva <gustavo@embeddedor.com>
+
+Applied.
