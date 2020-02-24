@@ -2,269 +2,167 @@ Return-Path: <SRS0=7TUr=4M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 317EEC38BFA
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 21:46:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3A3EDC38BFA
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 21:46:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EC84D2176D
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 21:46:08 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582580769;
-	bh=z1i6mPyjX9QN96QoVDwIkGCue6T+aiaxeFUnXYRrfi8=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=0T3p7+96Fd6obLaXwjMc8+BOqFNZ1aDMk0DM/eNIRaNzOORSoOJdegfTwjf1t/py3
-	 QWbPCXIf3kgIEmH6nGdKCu0SOlT71Kr1ZHKObvfjOEru5y4DQ2Sp56xN0mS2mVoY2s
-	 13bBhnwDTJTtVJlxhvwJXmdmVdf8IV+FSy2s7Ylg=
+	by mail.kernel.org (Postfix) with ESMTP id E656A2176D
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 21:46:25 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=paul-moore-com.20150623.gappssmtp.com header.i=@paul-moore-com.20150623.gappssmtp.com header.b="JKSwM3wh"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727978AbgBXVqH (ORCPT
+        id S1728022AbgBXVqY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Feb 2020 16:46:07 -0500
-Received: from mail.kernel.org ([198.145.29.99]:56964 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726980AbgBXVqH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Feb 2020 16:46:07 -0500
-Received: from localhost (unknown [104.132.1.66])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D502C21556;
-        Mon, 24 Feb 2020 21:46:05 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1582580765;
-        bh=z1i6mPyjX9QN96QoVDwIkGCue6T+aiaxeFUnXYRrfi8=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=dqP6l2T/2FIUunzolALuF9clQGvFZOXhCelT8Qin4TRHtDwzVCnL79h8bNf3MI8AU
-         foTvYmuQ2pzY0ANmkJ4J3BbiF4EeAH/MZvlB2rxTeN4DmiNRs1UOslBfA7XIAArBZj
-         p90q6kQ20jKtDJM5rZ19ddYjxYwD5Q+W+ahZLSTM=
-Date:   Mon, 24 Feb 2020 13:46:05 -0800
-From:   Jaegeuk Kim <jaegeuk@kernel.org>
-To:     Chao Yu <yuchao0@huawei.com>
-Cc:     linux-f2fs-devel@lists.sourceforge.net,
-        linux-kernel@vger.kernel.org, chao@kernel.org
-Subject: Re: [RFC PATCH 2/2] f2fs: introduce F2FS_IOC_RELEASE_COMPRESS_BLOCKS
-Message-ID: <20200224214605.GA77839@google.com>
-References: <20200221100922.16781-1-yuchao0@huawei.com>
- <20200221100922.16781-2-yuchao0@huawei.com>
+        Mon, 24 Feb 2020 16:46:24 -0500
+Received: from mail-ed1-f68.google.com ([209.85.208.68]:43513 "EHLO
+        mail-ed1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726980AbgBXVqY (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 24 Feb 2020 16:46:24 -0500
+Received: by mail-ed1-f68.google.com with SMTP id dc19so13714577edb.10
+        for <linux-kernel@vger.kernel.org>; Mon, 24 Feb 2020 13:46:22 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=paul-moore-com.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=Mbks2n1OJmqw5AGOznijH9+PH3W9rleO/9kgzMTk5hI=;
+        b=JKSwM3whhrlwPsFUIZCV7rj4Tn1qvPyMOASuCrI+m6Ij9p8367LDwx4wMjg2+KI5Mp
+         xpHMcedMZlNw1Ngi3ZwMMwkFJxPVoI8/F8L9bhNiD5oLbUa66fRXy4d8LIJcMJFXck02
+         EG9cNAs3DWLgrn+6RHs/lpWUD2cJarxdY3iVQS4SI9CzCxkz/g6pC1VhEW4Wk4OqYomq
+         YUR4yZPxWtC9E7cuA8vj5bRHWOIn5ZLoAsUN4nmINLcJwyHYfkkSNuTHDJe176ThoRMW
+         KTJ7j48WINCgGYXNnMvY0t1UxsJ93d0nioFXDHQbVWSYmXUOgze9eaOQx1TAkripleJZ
+         hX/A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=Mbks2n1OJmqw5AGOznijH9+PH3W9rleO/9kgzMTk5hI=;
+        b=YrvL6GJ1TgHO+ZPHxGic+TcFThyqeQcNKMz7AKW3t734kREJticrzFJi4picRPMRJJ
+         8021qR1ynDkbningHjaKjtGMJkN3Ujm9o4IFdrpmI3xo+ZJieC2GowM5EUw3sR8OobaU
+         6DkC7XGPfrW5xdmElYJzKKN+E9Yzcr0SWfQHiL2HvrBpCg9nvF1vwQSy8Nvil6qbDKOX
+         +AXSsWJOLIHaHhoXm/fjIrim2rwZHndV5ulPzRhhKEDXhA1INS+xUE9XnqGojXfYaQuz
+         NtGHabzuM0sFNIQlF6YGMKPTv4v15m/suo2OqfRs6qUmwfTfpOMgtf6uWDgNN6oDWHz7
+         dFSg==
+X-Gm-Message-State: APjAAAX+5+HFZRVajKYKdlFt0LVteEsz7LW2TujUENwdLjaNSud9PS0I
+        1oFRD/7dTkmhTt61PszviQb+AOwyp5FLR6wDxwll
+X-Google-Smtp-Source: APXvYqzXaLiMEGi5ggk+RJZ9dzJKfkf6BADqrs0/OlxsYIECdztYv9xliaJOFpyEn2sZX8VP/IsqCZAoksIaCA2YEJA=
+X-Received: by 2002:a17:906:19d0:: with SMTP id h16mr50525241ejd.70.1582580782033;
+ Mon, 24 Feb 2020 13:46:22 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200221100922.16781-2-yuchao0@huawei.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+References: <00000000000067c539059f4ddf1a@google.com>
+In-Reply-To: <00000000000067c539059f4ddf1a@google.com>
+From:   Paul Moore <paul@paul-moore.com>
+Date:   Mon, 24 Feb 2020 16:46:10 -0500
+Message-ID: <CAHC9VhSm4iojreY4q5Lno1QMrwB8SuKfANJGv2LVdbcpFukHvw@mail.gmail.com>
+Subject: Re: KMSAN: uninit-value in audit_receive
+To:     linux-audit@redhat.com
+Cc:     Eric Paris <eparis@redhat.com>, glider@google.com,
+        linux-kernel@vger.kernel.org, syzkaller-bugs@googlegroups.com,
+        syzbot <syzbot+399c44bf1f43b8747403@syzkaller.appspotmail.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 02/21, Chao Yu wrote:
-> There are still reserved blocks on compressed inode, this patch
-> introduce a new ioctl to help release reserved blocks back to
-> filesystem, so that userspace can reuse those freed space.
+On Mon, Feb 24, 2020 at 3:08 AM syzbot
+<syzbot+399c44bf1f43b8747403@syzkaller.appspotmail.com> wrote:
+>
+> Hello,
+>
+> syzbot found the following crash on:
+>
+> HEAD commit:    8bbbc5cf kmsan: don't compile memmove
+> git tree:       https://github.com/google/kmsan.git master
+> console output: https://syzkaller.appspot.com/x/log.txt?x=15c21c81e00000
+> kernel config:  https://syzkaller.appspot.com/x/.config?x=cd0e9a6b0e555cc3
+> dashboard link: https://syzkaller.appspot.com/bug?extid=399c44bf1f43b8747403
+> compiler:       clang version 10.0.0 (https://github.com/llvm/llvm-project/ c2443155a0fb245c8f17f2c1c72b6ea391e86e81)
+> userspace arch: i386
+> syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=10dbda7ee00000
+> C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=1721fe09e00000
+>
+> IMPORTANT: if you fix the bug, please add the following tag to the commit:
+> Reported-by: syzbot+399c44bf1f43b8747403@syzkaller.appspotmail.com
+>
+> =====================================================
+> BUG: KMSAN: uninit-value in audit_set_feature kernel/audit.c:1119 [inline]
+> BUG: KMSAN: uninit-value in audit_receive_msg kernel/audit.c:1318 [inline]
+> BUG: KMSAN: uninit-value in audit_receive+0x2691/0x6be0 kernel/audit.c:1513
 
-I thought we can add compressed_blocks into free space, after converting
-the file to immutable one. Otherwise, this patch is able to corrupt the
-filesystem very easily.
+I'm guessing that the issue here is that we aren't checking to make
+sure a properly formatted message is sent down to the kernel and if a
+truncated AUDIT_SET_FEATURE message is sent would could end up looking
+into an audit_features struct that isn't complete.
 
-> 
-> Signed-off-by: Chao Yu <yuchao0@huawei.com>
-> ---
->  fs/f2fs/f2fs.h |   6 +++
->  fs/f2fs/file.c | 129 ++++++++++++++++++++++++++++++++++++++++++++++++-
->  2 files changed, 134 insertions(+), 1 deletion(-)
-> 
-> diff --git a/fs/f2fs/f2fs.h b/fs/f2fs/f2fs.h
-> index 15199df5d40a..468f807fd917 100644
-> --- a/fs/f2fs/f2fs.h
-> +++ b/fs/f2fs/f2fs.h
-> @@ -427,6 +427,8 @@ static inline bool __has_cursum_space(struct f2fs_journal *journal,
->  #define F2FS_IOC_PRECACHE_EXTENTS	_IO(F2FS_IOCTL_MAGIC, 15)
->  #define F2FS_IOC_RESIZE_FS		_IOW(F2FS_IOCTL_MAGIC, 16, __u64)
->  #define F2FS_IOC_GET_COMPRESS_BLOCKS	_IOR(F2FS_IOCTL_MAGIC, 17, __u64)
-> +#define F2FS_IOC_RELEASE_COMPRESS_BLOCKS				\
-> +					_IOR(F2FS_IOCTL_MAGIC, 18, __u64)
->  
->  #define F2FS_IOC_GET_VOLUME_NAME	FS_IOC_GETFSLABEL
->  #define F2FS_IOC_SET_VOLUME_NAME	FS_IOC_SETFSLABEL
-> @@ -3957,6 +3959,10 @@ static inline void f2fs_i_compr_blocks_update(struct inode *inode,
->  {
->  	int diff = F2FS_I(inode)->i_cluster_size - blocks;
->  
-> +	/* don't update i_compr_blocks if saved blocks were released */
-> +	if (!add && !F2FS_I(inode)->i_compr_blocks)
-> +		return;
-> +
->  	if (add) {
->  		F2FS_I(inode)->i_compr_blocks += diff;
->  		stat_add_compr_blocks(inode, diff);
-> diff --git a/fs/f2fs/file.c b/fs/f2fs/file.c
-> index 235708c892af..613f87151d90 100644
-> --- a/fs/f2fs/file.c
-> +++ b/fs/f2fs/file.c
-> @@ -557,6 +557,7 @@ void f2fs_truncate_data_blocks_range(struct dnode_of_data *dn, int count)
->  	bool compressed_cluster = false;
->  	int cluster_index = 0, valid_blocks = 0;
->  	int cluster_size = F2FS_I(dn->inode)->i_cluster_size;
-> +	bool released = !F2FS_I(dn->inode)->i_compr_blocks;
->  
->  	if (IS_INODE(dn->node_page) && f2fs_has_extra_attr(dn->inode))
->  		base = get_extra_isize(dn->inode);
-> @@ -595,7 +596,9 @@ void f2fs_truncate_data_blocks_range(struct dnode_of_data *dn, int count)
->  			clear_inode_flag(dn->inode, FI_FIRST_BLOCK_WRITTEN);
->  
->  		f2fs_invalidate_blocks(sbi, blkaddr);
-> -		nr_free++;
-> +
-> +		if (released && blkaddr != COMPRESS_ADDR)
-> +			nr_free++;
->  	}
->  
->  	if (compressed_cluster)
-> @@ -3416,6 +3419,127 @@ static int f2fs_get_compress_blocks(struct file *filp, unsigned long arg)
->  	return put_user(blocks, (u64 __user *)arg);
->  }
->  
-> +static int release_compress_blocks(struct dnode_of_data *dn, pgoff_t count)
-> +{
-> +	struct f2fs_sb_info *sbi = F2FS_I_SB(dn->inode);
-> +	unsigned int released_blocks = 0;
-> +	int cluster_size = F2FS_I(dn->inode)->i_cluster_size;
-> +
-> +	while (count) {
-> +		int compr_blocks = 0;
-> +		block_t blkaddr = f2fs_data_blkaddr(dn);
-> +		int i;
-> +
-> +		if (blkaddr != COMPRESS_ADDR) {
-> +			dn->ofs_in_node += cluster_size;
-> +			goto next;
-> +		}
-> +
-> +		for (i = 0; i < cluster_size; i++, dn->ofs_in_node++) {
-> +			blkaddr = f2fs_data_blkaddr(dn);
-> +
-> +			if (__is_valid_data_blkaddr(blkaddr)) {
-> +				compr_blocks++;
-> +				if (unlikely(!f2fs_is_valid_blkaddr(sbi, blkaddr,
-> +							DATA_GENERIC_ENHANCE)))
-> +					return -EFSCORRUPTED;
-> +			}
-> +
-> +			if (blkaddr != NEW_ADDR)
-> +				continue;
-> +
-> +			dn->data_blkaddr = NULL_ADDR;
-> +			f2fs_set_data_blkaddr(dn);
-> +		}
-> +
-> +		f2fs_i_compr_blocks_update(dn->inode, compr_blocks, false);
-> +		dec_valid_block_count(sbi, dn->inode,
-> +					cluster_size - compr_blocks);
-> +
-> +		released_blocks += cluster_size - compr_blocks;
-> +next:
-> +		count -= cluster_size;
-> +	}
-> +
-> +	return released_blocks;
-> +}
-> +
-> +static int f2fs_release_compress_blocks(struct file *filp, unsigned long arg)
-> +{
-> +	struct inode *inode = file_inode(filp);
-> +	struct f2fs_sb_info *sbi = F2FS_I_SB(inode);
-> +	pgoff_t page_idx = 0, last_idx;
-> +	unsigned int released_blocks = 0;
-> +	int ret;
-> +
-> +	if (!f2fs_sb_has_compression(F2FS_I_SB(inode)))
-> +		return -EOPNOTSUPP;
-> +
-> +	if (!f2fs_compressed_file(inode))
-> +		return -EINVAL;
-> +
-> +	if (f2fs_readonly(sbi->sb))
-> +		return -EROFS;
-> +
-> +	ret = mnt_want_write_file(filp);
-> +	if (ret)
-> +		return ret;
-> +
-> +	if (!F2FS_I(inode)->i_compr_blocks)
-> +		goto out;
-> +
-> +	f2fs_balance_fs(F2FS_I_SB(inode), true);
-> +
-> +	inode_lock(inode);
-> +
-> +	down_write(&F2FS_I(inode)->i_gc_rwsem[WRITE]);
-> +	down_write(&F2FS_I(inode)->i_mmap_sem);
-> +
-> +	last_idx = DIV_ROUND_UP(i_size_read(inode), PAGE_SIZE);
-> +
-> +	while (page_idx < last_idx) {
-> +		struct dnode_of_data dn;
-> +		pgoff_t end_offset, count;
-> +
-> +		set_new_dnode(&dn, inode, NULL, NULL, 0);
-> +		ret = f2fs_get_dnode_of_data(&dn, page_idx, LOOKUP_NODE);
-> +		if (ret) {
-> +			if (ret == -ENOENT) {
-> +				page_idx = f2fs_get_next_page_offset(&dn,
-> +								page_idx);
-> +				ret = 0;
-> +				continue;
-> +			}
-> +			break;
-> +		}
-> +
-> +		end_offset = ADDRS_PER_PAGE(dn.node_page, inode);
-> +		count = min(end_offset - dn.ofs_in_node, last_idx - page_idx);
-> +
-> +		ret = release_compress_blocks(&dn, count);
-> +
-> +		f2fs_put_dnode(&dn);
-> +
-> +		if (ret < 0)
-> +			break;
-> +
-> +		page_idx += count;
-> +		released_blocks += ret;
-> +	}
-> +
-> +	up_write(&F2FS_I(inode)->i_gc_rwsem[WRITE]);
-> +	up_write(&F2FS_I(inode)->i_mmap_sem);
-> +
-> +	inode_unlock(inode);
-> +out:
-> +	mnt_drop_write_file(filp);
-> +
-> +	if (!ret)
-> +		ret = put_user(released_blocks, (u64 __user *)arg);
-> +
-> +	return ret;
-> +}
-> +
->  long f2fs_ioctl(struct file *filp, unsigned int cmd, unsigned long arg)
->  {
->  	if (unlikely(f2fs_cp_error(F2FS_I_SB(file_inode(filp)))))
-> @@ -3496,6 +3620,8 @@ long f2fs_ioctl(struct file *filp, unsigned int cmd, unsigned long arg)
->  		return f2fs_set_volume_name(filp, arg);
->  	case F2FS_IOC_GET_COMPRESS_BLOCKS:
->  		return f2fs_get_compress_blocks(filp, arg);
-> +	case F2FS_IOC_RELEASE_COMPRESS_BLOCKS:
-> +		return f2fs_release_compress_blocks(filp, arg);
->  	default:
->  		return -ENOTTY;
->  	}
-> @@ -3654,6 +3780,7 @@ long f2fs_compat_ioctl(struct file *file, unsigned int cmd, unsigned long arg)
->  	case F2FS_IOC_GET_VOLUME_NAME:
->  	case F2FS_IOC_SET_VOLUME_NAME:
->  	case F2FS_IOC_GET_COMPRESS_BLOCKS:
-> +	case F2FS_IOC_RELEASE_COMPRESS_BLOCKS:
->  		break;
->  	default:
->  		return -ENOIOCTLCMD;
-> -- 
-> 2.18.0.rc1
+The fix should be relatively simple, verify that the netlink payload
+is at least sizeof(audit_features) big before we inspect it.  Patch
+coming shortly.
+
+> CPU: 1 PID: 11583 Comm: syz-executor100 Not tainted 5.6.0-rc2-syzkaller #0
+> Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
+> Call Trace:
+>  __dump_stack lib/dump_stack.c:77 [inline]
+>  dump_stack+0x1c9/0x220 lib/dump_stack.c:118
+>  kmsan_report+0xf7/0x1e0 mm/kmsan/kmsan_report.c:118
+>  __msan_warning+0x58/0xa0 mm/kmsan/kmsan_instr.c:215
+>  audit_set_feature kernel/audit.c:1119 [inline]
+>  audit_receive_msg kernel/audit.c:1318 [inline]
+>  audit_receive+0x2691/0x6be0 kernel/audit.c:1513
+>  netlink_unicast_kernel net/netlink/af_netlink.c:1302 [inline]
+>  netlink_unicast+0xf9e/0x1100 net/netlink/af_netlink.c:1328
+>  netlink_sendmsg+0x1246/0x14d0 net/netlink/af_netlink.c:1917
+>  sock_sendmsg_nosec net/socket.c:652 [inline]
+>  sock_sendmsg net/socket.c:672 [inline]
+>  ____sys_sendmsg+0x12b6/0x1350 net/socket.c:2343
+>  ___sys_sendmsg net/socket.c:2397 [inline]
+>  __sys_sendmsg+0x451/0x5f0 net/socket.c:2430
+>  __compat_sys_sendmsg net/compat.c:642 [inline]
+>  __do_compat_sys_sendmsg net/compat.c:649 [inline]
+>  __se_compat_sys_sendmsg net/compat.c:646 [inline]
+>  __ia32_compat_sys_sendmsg+0xed/0x130 net/compat.c:646
+>  do_syscall_32_irqs_on arch/x86/entry/common.c:339 [inline]
+>  do_fast_syscall_32+0x3c7/0x6e0 arch/x86/entry/common.c:410
+>  entry_SYSENTER_compat+0x68/0x77 arch/x86/entry/entry_64_compat.S:139
+> RIP: 0023:0xf7fcbd99
+> Code: 90 e8 0b 00 00 00 f3 90 0f ae e8 eb f9 8d 74 26 00 89 3c 24 c3 90 90 90 90 90 90 90 90 90 90 90 90 51 52 55 89 e5 0f 34 cd 80 <5d> 5a 59 c3 90 90 90 90 eb 0d 90 90 90 90 90 90 90 90 90 90 90 90
+> RSP: 002b:00000000ff99b74c EFLAGS: 00000246 ORIG_RAX: 0000000000000172
+> RAX: ffffffffffffffda RBX: 0000000000000003 RCX: 00000000200000c0
+> RDX: 0000000000000000 RSI: 00000000080ea078 RDI: 00000000ff99b7a0
+> RBP: 0000000000000000 R08: 0000000000000000 R09: 0000000000000000
+> R10: 0000000000000000 R11: 0000000000000000 R12: 0000000000000000
+> R13: 0000000000000000 R14: 0000000000000000 R15: 0000000000000000
+>
+> Uninit was created at:
+>  kmsan_save_stack_with_flags mm/kmsan/kmsan.c:144 [inline]
+>  kmsan_internal_poison_shadow+0x66/0xd0 mm/kmsan/kmsan.c:127
+>  kmsan_slab_alloc+0x8a/0xe0 mm/kmsan/kmsan_hooks.c:82
+>  slab_alloc_node mm/slub.c:2793 [inline]
+>  __kmalloc_node_track_caller+0xb40/0x1200 mm/slub.c:4401
+>  __kmalloc_reserve net/core/skbuff.c:142 [inline]
+>  __alloc_skb+0x2fd/0xac0 net/core/skbuff.c:210
+>  alloc_skb include/linux/skbuff.h:1051 [inline]
+>  netlink_alloc_large_skb net/netlink/af_netlink.c:1174 [inline]
+>  netlink_sendmsg+0x7d3/0x14d0 net/netlink/af_netlink.c:1892
+>  sock_sendmsg_nosec net/socket.c:652 [inline]
+>  sock_sendmsg net/socket.c:672 [inline]
+>  ____sys_sendmsg+0x12b6/0x1350 net/socket.c:2343
+>  ___sys_sendmsg net/socket.c:2397 [inline]
+>  __sys_sendmsg+0x451/0x5f0 net/socket.c:2430
+>  __compat_sys_sendmsg net/compat.c:642 [inline]
+>  __do_compat_sys_sendmsg net/compat.c:649 [inline]
+>  __se_compat_sys_sendmsg net/compat.c:646 [inline]
+>  __ia32_compat_sys_sendmsg+0xed/0x130 net/compat.c:646
+>  do_syscall_32_irqs_on arch/x86/entry/common.c:339 [inline]
+>  do_fast_syscall_32+0x3c7/0x6e0 arch/x86/entry/common.c:410
+>  entry_SYSENTER_compat+0x68/0x77 arch/x86/entry/entry_64_compat.S:139
+> =====================================================
+
+
+
+-- 
+paul moore
+www.paul-moore.com
