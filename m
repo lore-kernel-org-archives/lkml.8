@@ -2,81 +2,53 @@ Return-Path: <SRS0=7TUr=4M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
+X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 859F5C3567B
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 09:04:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C3734C35679
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 09:07:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 594312082E
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 09:04:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9C01620675
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 09:07:14 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727301AbgBXJE2 (ORCPT
+        id S1727206AbgBXJHN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Feb 2020 04:04:28 -0500
-Received: from metis.ext.pengutronix.de ([85.220.165.71]:32983 "EHLO
+        Mon, 24 Feb 2020 04:07:13 -0500
+Received: from metis.ext.pengutronix.de ([85.220.165.71]:46381 "EHLO
         metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726628AbgBXJE1 (ORCPT
+        with ESMTP id S1726765AbgBXJHN (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Feb 2020 04:04:27 -0500
-Received: from gallifrey.ext.pengutronix.de ([2001:67c:670:201:5054:ff:fe8d:eefb] helo=bjornoya.blackshift.org)
-        by metis.ext.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        Mon, 24 Feb 2020 04:07:13 -0500
+Received: from pty.hi.pengutronix.de ([2001:67c:670:100:1d::c5])
+        by metis.ext.pengutronix.de with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
         (Exim 4.92)
-        (envelope-from <mkl@pengutronix.de>)
-        id 1j69f4-0000HH-4S; Mon, 24 Feb 2020 10:04:22 +0100
-Received: from [IPv6:2a03:f580:87bc:d400:6ccf:3365:1a9c:55ad] (unknown [IPv6:2a03:f580:87bc:d400:6ccf:3365:1a9c:55ad])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-384) server-signature RSA-PSS (4096 bits) server-digest SHA256
-         client-signature RSA-PSS (4096 bits) client-digest SHA256)
-        (Client CN "mkl@blackshift.org", Issuer "StartCom Class 1 Client CA" (not verified))
-        (Authenticated sender: mkl@blackshift.org)
-        by smtp.blackshift.org (Postfix) with ESMTPSA id 0355F4BF396;
-        Mon, 24 Feb 2020 08:54:19 +0000 (UTC)
-Subject: Re: KMSAN: uninit-value in number (2)
-To:     syzbot <syzbot+9bcb0c9409066696d3aa@syzkaller.appspotmail.com>,
-        davem@davemloft.net, glider@google.com, kuba@kernel.org,
-        linux-can@vger.kernel.org, linux-kernel@vger.kernel.org,
-        netdev@vger.kernel.org, socketcan@hartkopp.net,
-        syzkaller-bugs@googlegroups.com,
-        Oliver Hartkopp <socketcan@hartkopp.net>
-References: <0000000000000955df059f4e276f@google.com>
-From:   Marc Kleine-Budde <mkl@pengutronix.de>
-Openpgp: preference=signencrypt
-Autocrypt: addr=mkl@pengutronix.de; prefer-encrypt=mutual; keydata=
- mQINBFFVq30BEACtnSvtXHoeHJxG6nRULcvlkW6RuNwHKmrqoksispp43X8+nwqIFYgb8UaX
- zu8T6kZP2wEIpM9RjEL3jdBjZNCsjSS6x1qzpc2+2ivjdiJsqeaagIgvy2JWy7vUa4/PyGfx
- QyUeXOxdj59DvLwAx8I6hOgeHx2X/ntKAMUxwawYfPZpP3gwTNKc27dJWSomOLgp+gbmOmgc
- 6U5KwhAxPTEb3CsT5RicsC+uQQFumdl5I6XS+pbeXZndXwnj5t84M+HEj7RN6bUfV2WZO/AB
- Xt5+qFkC/AVUcj/dcHvZwQJlGeZxoi4veCoOT2MYqfR0ax1MmN+LVRvKm29oSyD4Ts/97cbs
- XsZDRxnEG3z/7Winiv0ZanclA7v7CQwrzsbpCv+oj+zokGuKasofzKdpywkjAfSE1zTyF+8K
- nxBAmzwEqeQ3iKqBc3AcCseqSPX53mPqmwvNVS2GqBpnOfY7Mxr1AEmxdEcRYbhG6Xdn+ACq
- Dq0Db3A++3PhMSaOu125uIAIwMXRJIzCXYSqXo8NIeo9tobk0C/9w3fUfMTrBDtSviLHqlp8
- eQEP8+TDSmRP/CwmFHv36jd+XGmBHzW5I7qw0OORRwNFYBeEuiOIgxAfjjbLGHh9SRwEqXAL
- kw+WVTwh0MN1k7I9/CDVlGvc3yIKS0sA+wudYiselXzgLuP5cQARAQABtCZNYXJjIEtsZWlu
- ZS1CdWRkZSA8bWtsQHBlbmd1dHJvbml4LmRlPokCVAQTAQoAPgIbAwIeAQIXgAULCQgHAwUV
- CgkICwUWAgMBABYhBMFAC6CzmJ5vvH1bXCte4hHFiupUBQJcUsSbBQkM366zAAoJECte4hHF
- iupUgkAP/2RdxKPZ3GMqag33jKwKAbn/fRqAFWqUH9TCsRH3h6+/uEPnZdzhkL4a9p/6OeJn
- Z6NXqgsyRAOTZsSFcwlfxLNHVxBWm8pMwrBecdt4lzrjSt/3ws2GqxPsmza1Gs61lEdYvLST
- Ix2vPbB4FAfE0kizKAjRZzlwOyuHOr2ilujDsKTpFtd8lV1nBNNn6HBIBR5ShvJnwyUdzuby
- tOsSt7qJEvF1x3y49bHCy3uy+MmYuoEyG6zo9udUzhVsKe3hHYC2kfB16ZOBjFC3lH2U5An+
- yQYIIPZrSWXUeKjeMaKGvbg6W9Oi4XEtrwpzUGhbewxCZZCIrzAH2hz0dUhacxB201Y/faY6
- BdTS75SPs+zjTYo8yE9Y9eG7x/lB60nQjJiZVNvZ88QDfVuLl/heuIq+fyNajBbqbtBT5CWf
- mOP4Dh4xjm3Vwlz8imWW/drEVJZJrPYqv0HdPbY8jVMpqoe5jDloyVn3prfLdXSbKPexlJaW
- 5tnPd4lj8rqOFShRnLFCibpeHWIumqrIqIkiRA9kFW3XMgtU6JkIrQzhJb6Tc6mZg2wuYW0d
- Wo2qvdziMgPkMFiWJpsxM9xPk9BBVwR+uojNq5LzdCsXQ2seG0dhaOTaaIDWVS8U/V8Nqjrl
- 6bGG2quo5YzJuXKjtKjZ4R6k762pHJ3tnzI/jnlc1sXz
-Message-ID: <545255e6-0ad1-bdcd-c421-9823833326f3@pengutronix.de>
-Date:   Mon, 24 Feb 2020 09:54:14 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        (envelope-from <ukl@pengutronix.de>)
+        id 1j69hj-0000fq-GO; Mon, 24 Feb 2020 10:07:07 +0100
+Received: from ukl by pty.hi.pengutronix.de with local (Exim 4.89)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1j69hi-00070c-HT; Mon, 24 Feb 2020 10:07:06 +0100
+Date:   Mon, 24 Feb 2020 10:07:06 +0100
+From:   Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
+        <u.kleine-koenig@pengutronix.de>
+To:     Lokesh Vutla <lokeshvutla@ti.com>
+Cc:     Thierry Reding <thierry.reding@gmail.com>,
+        Tony Lindgren <tony@atomide.com>,
+        Linux OMAP Mailing List <linux-omap@vger.kernel.org>,
+        linux-kernel@vger.kernel.org, linux-pwm@vger.kernel.org,
+        Sekhar Nori <nsekhar@ti.com>
+Subject: Re: [PATCH 4/4] pwm: omap-dmtimer: Implement .apply callback
+Message-ID: <20200224090706.xsujpc3yiqlmmrmm@pengutronix.de>
+References: <20200224052135.17278-1-lokeshvutla@ti.com>
+ <20200224052135.17278-5-lokeshvutla@ti.com>
 MIME-Version: 1.0
-In-Reply-To: <0000000000000955df059f4e276f@google.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-GB
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-X-SA-Exim-Connect-IP: 2001:67c:670:201:5054:ff:fe8d:eefb
-X-SA-Exim-Mail-From: mkl@pengutronix.de
+In-Reply-To: <20200224052135.17278-5-lokeshvutla@ti.com>
+User-Agent: NeoMutt/20170113 (1.7.2)
+X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c5
+X-SA-Exim-Mail-From: ukl@pengutronix.de
 X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
 X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
 Sender: linux-kernel-owner@vger.kernel.org
@@ -84,120 +56,208 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2/24/20 9:28 AM, syzbot wrote:
-> Hello,
+On Mon, Feb 24, 2020 at 10:51:35AM +0530, Lokesh Vutla wrote:
+> Implement .apply callback and drop the legacy callbacks(enable, disable,
+> config, set_polarity).
 > 
-> syzbot found the following crash on:
+> Signed-off-by: Lokesh Vutla <lokeshvutla@ti.com>
+> ---
+>  drivers/pwm/pwm-omap-dmtimer.c | 141 +++++++++++++++++++--------------
+>  1 file changed, 80 insertions(+), 61 deletions(-)
 > 
-> HEAD commit:    8bbbc5cf kmsan: don't compile memmove
-> git tree:       https://github.com/google/kmsan.git master
-> console output: https://syzkaller.appspot.com/x/log.txt?x=1661da7ee00000
-> kernel config:  https://syzkaller.appspot.com/x/.config?x=cd0e9a6b0e555cc3
-> dashboard link: https://syzkaller.appspot.com/bug?extid=9bcb0c9409066696d3aa
-> compiler:       clang version 10.0.0 (https://github.com/llvm/llvm-project/ c2443155a0fb245c8f17f2c1c72b6ea391e86e81)
-> syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=111141a1e00000
-> C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=13ad5245e00000
-> 
-> IMPORTANT: if you fix the bug, please add the following tag to the commit:
-> Reported-by: syzbot+9bcb0c9409066696d3aa@syzkaller.appspotmail.com
-> 
-> =====================================================
-> BUG: KMSAN: uninit-value in number+0x9f8/0x2000 lib/vsprintf.c:459
-> CPU: 1 PID: 11897 Comm: syz-executor136 Not tainted 5.6.0-rc2-syzkaller #0
-> Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
-> Call Trace:
->  __dump_stack lib/dump_stack.c:77 [inline]
->  dump_stack+0x1c9/0x220 lib/dump_stack.c:118
->  kmsan_report+0xf7/0x1e0 mm/kmsan/kmsan_report.c:118
->  __msan_warning+0x58/0xa0 mm/kmsan/kmsan_instr.c:215
->  number+0x9f8/0x2000 lib/vsprintf.c:459
->  vsnprintf+0x1d85/0x31b0 lib/vsprintf.c:2640
->  vscnprintf+0xc2/0x180 lib/vsprintf.c:2677
->  vprintk_store+0xef/0x11d0 kernel/printk/printk.c:1917
->  vprintk_emit+0x2c0/0x860 kernel/printk/printk.c:1984
->  vprintk_default+0x90/0xa0 kernel/printk/printk.c:2029
->  vprintk_func+0x636/0x820 kernel/printk/printk_safe.c:386
->  printk+0x18b/0x1d3 kernel/printk/printk.c:2062
->  canfd_rcv+0x370/0x3a0 net/can/af_can.c:697
->  __netif_receive_skb_one_core net/core/dev.c:5198 [inline]
->  __netif_receive_skb net/core/dev.c:5312 [inline]
->  netif_receive_skb_internal net/core/dev.c:5402 [inline]
->  netif_receive_skb+0xe77/0xf20 net/core/dev.c:5461
->  tun_rx_batched include/linux/skbuff.h:4321 [inline]
->  tun_get_user+0x6aef/0x6f60 drivers/net/tun.c:1997
->  tun_chr_write_iter+0x1f2/0x360 drivers/net/tun.c:2026
->  call_write_iter include/linux/fs.h:1901 [inline]
->  new_sync_write fs/read_write.c:483 [inline]
->  __vfs_write+0xa5a/0xca0 fs/read_write.c:496
->  vfs_write+0x44a/0x8f0 fs/read_write.c:558
->  ksys_write+0x267/0x450 fs/read_write.c:611
->  __do_sys_write fs/read_write.c:623 [inline]
->  __se_sys_write+0x92/0xb0 fs/read_write.c:620
->  __x64_sys_write+0x4a/0x70 fs/read_write.c:620
->  do_syscall_64+0xb8/0x160 arch/x86/entry/common.c:296
->  entry_SYSCALL_64_after_hwframe+0x44/0xa9
-> RIP: 0033:0x440239
-> Code: 18 89 d0 c3 66 2e 0f 1f 84 00 00 00 00 00 0f 1f 00 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 0f 83 fb 13 fc ff c3 66 2e 0f 1f 84 00 00 00 00
-> RSP: 002b:00007ffd3d6d1f28 EFLAGS: 00000246 ORIG_RAX: 0000000000000001
-> RAX: ffffffffffffffda RBX: 0000000000003172 RCX: 0000000000440239
-> RDX: 0000000000000004 RSI: 0000000020000200 RDI: 0000000000000003
-> RBP: 656c6c616b7a7973 R08: 0000000000401ac0 R09: 0000000000401ac0
-> R10: 0000000000401ac0 R11: 0000000000000246 R12: 0000000000401ac0
-> R13: 0000000000401b50 R14: 0000000000000000 R15: 0000000000000000
-> 
-> Uninit was created at:
->  kmsan_save_stack_with_flags mm/kmsan/kmsan.c:144 [inline]
->  kmsan_internal_poison_shadow+0x66/0xd0 mm/kmsan/kmsan.c:127
->  kmsan_slab_alloc+0x8a/0xe0 mm/kmsan/kmsan_hooks.c:82
->  slab_alloc_node mm/slub.c:2793 [inline]
->  __kmalloc_node_track_caller+0xb40/0x1200 mm/slub.c:4401
->  __kmalloc_reserve net/core/skbuff.c:142 [inline]
->  __alloc_skb+0x2fd/0xac0 net/core/skbuff.c:210
->  alloc_skb include/linux/skbuff.h:1051 [inline]
->  alloc_skb_with_frags+0x18c/0xa70 net/core/skbuff.c:5766
->  sock_alloc_send_pskb+0xada/0xc60 net/core/sock.c:2242
->  tun_alloc_skb drivers/net/tun.c:1529 [inline]
->  tun_get_user+0x10ae/0x6f60 drivers/net/tun.c:1843
->  tun_chr_write_iter+0x1f2/0x360 drivers/net/tun.c:2026
->  call_write_iter include/linux/fs.h:1901 [inline]
->  new_sync_write fs/read_write.c:483 [inline]
->  __vfs_write+0xa5a/0xca0 fs/read_write.c:496
->  vfs_write+0x44a/0x8f0 fs/read_write.c:558
->  ksys_write+0x267/0x450 fs/read_write.c:611
->  __do_sys_write fs/read_write.c:623 [inline]
->  __se_sys_write+0x92/0xb0 fs/read_write.c:620
->  __x64_sys_write+0x4a/0x70 fs/read_write.c:620
->  do_syscall_64+0xb8/0x160 arch/x86/entry/common.c:296
->  entry_SYSCALL_64_after_hwframe+0x44/0xa9
-> =====================================================
+> diff --git a/drivers/pwm/pwm-omap-dmtimer.c b/drivers/pwm/pwm-omap-dmtimer.c
+> index 58c61559e72f..aeda4ab12385 100644
+> --- a/drivers/pwm/pwm-omap-dmtimer.c
+> +++ b/drivers/pwm/pwm-omap-dmtimer.c
+> @@ -31,8 +31,18 @@
+>  #define DM_TIMER_LOAD_MIN 0xfffffffe
+>  #define DM_TIMER_MAX      0xffffffff
+>  
+> +/**
+> + * struct pwm_omap_dmtimer_chip - Structure representing a pwm chip
+> + *				  corresponding to omap dmtimer.
+> + * @chip:		PWM chip structure representing PWM controller
+> + * @mutex:		Mutex to protect pwm apply state
+> + * @dm_timer:		Pointer to omap dm timer.
+> + * @pdata:		Pointer to omap dm timer ops.
+> + * dm_timer_pdev:	Pointer to omap dm timer platform device
+> + */
+>  struct pwm_omap_dmtimer_chip {
+>  	struct pwm_chip chip;
+> +	/* Mutex to protect pwm apply state */
+>  	struct mutex mutex;
+>  	struct omap_dm_timer *dm_timer;
+>  	const struct omap_dm_timer_ops *pdata;
+> @@ -45,11 +55,22 @@ to_pwm_omap_dmtimer_chip(struct pwm_chip *chip)
+>  	return container_of(chip, struct pwm_omap_dmtimer_chip, chip);
+>  }
+>  
+> +/**
+> + * pwm_omap_dmtimer_get_clock_cycles() - Get clock cycles in a time frame
+> + * @clk_rate:	pwm timer clock rate
+> + * @ns:		time frame in nano seconds.
+> + *
+> + * Return number of clock cycles in a given period(ins ns).
+> + */
+>  static u32 pwm_omap_dmtimer_get_clock_cycles(unsigned long clk_rate, int ns)
+>  {
+>  	return DIV_ROUND_CLOSEST_ULL((u64)clk_rate * ns, NSEC_PER_SEC);
+>  }
+>  
+> +/**
+> + * pwm_omap_dmtimer_start() - Start the pwm omap dm timer in pwm mode
+> + * @omap:	Pointer to pwm omap dm timer chip
+> + */
+>  static void pwm_omap_dmtimer_start(struct pwm_omap_dmtimer_chip *omap)
+>  {
+>  	/*
+> @@ -67,32 +88,16 @@ static void pwm_omap_dmtimer_start(struct pwm_omap_dmtimer_chip *omap)
+>  	omap->pdata->start(omap->dm_timer);
+>  }
+>  
+> -static int pwm_omap_dmtimer_enable(struct pwm_chip *chip,
+> -				   struct pwm_device *pwm)
+> -{
+> -	struct pwm_omap_dmtimer_chip *omap = to_pwm_omap_dmtimer_chip(chip);
+> -
+> -	mutex_lock(&omap->mutex);
+> -	omap->pdata->set_pwm(omap->dm_timer,
+> -			     pwm_get_polarity(pwm) == PWM_POLARITY_INVERSED,
+> -			     true, OMAP_TIMER_TRIGGER_OVERFLOW_AND_COMPARE);
+> -
+> -	pwm_omap_dmtimer_start(omap);
+> -	mutex_unlock(&omap->mutex);
+> -
+> -	return 0;
+> -}
+> -
+> -static void pwm_omap_dmtimer_disable(struct pwm_chip *chip,
+> -				     struct pwm_device *pwm)
+> -{
+> -	struct pwm_omap_dmtimer_chip *omap = to_pwm_omap_dmtimer_chip(chip);
+> -
+> -	mutex_lock(&omap->mutex);
+> -	omap->pdata->stop(omap->dm_timer);
+> -	mutex_unlock(&omap->mutex);
+> -}
+> -
+> +/**
+> + * pwm_omap_dmtimer_config() - Update the configuration of pwm omap dm timer
+> + * @chip:	Pointer to PWM controller
+> + * @pwm:	Pointer to PWM channel
+> + * @duty_ns:	New duty cycle in nano seconds
+> + * @period_ns:	New period in nano seconds
+> + *
+> + * Return 0 if successfully changed the period/duty_cycle else appropriate
+> + * error.
+> + */
+>  static int pwm_omap_dmtimer_config(struct pwm_chip *chip,
+>  				   struct pwm_device *pwm,
+>  				   int duty_ns, int period_ns)
+> @@ -100,30 +105,26 @@ static int pwm_omap_dmtimer_config(struct pwm_chip *chip,
+>  	struct pwm_omap_dmtimer_chip *omap = to_pwm_omap_dmtimer_chip(chip);
+>  	u32 period_cycles, duty_cycles;
+>  	u32 load_value, match_value;
+> -	struct clk *fclk;
+>  	unsigned long clk_rate;
+> +	struct clk *fclk;
+>  
+>  	dev_dbg(chip->dev, "requested duty cycle: %d ns, period: %d ns\n",
+>  		duty_ns, period_ns);
+>  
+> -	mutex_lock(&omap->mutex);
+>  	if (duty_ns == pwm_get_duty_cycle(pwm) &&
+> -	    period_ns == pwm_get_period(pwm)) {
+> -		/* No change - don't cause any transients. */
+> -		mutex_unlock(&omap->mutex);
+> +	    period_ns == pwm_get_period(pwm))
+>  		return 0;
+> -	}
+>  
+>  	fclk = omap->pdata->get_fclk(omap->dm_timer);
+>  	if (!fclk) {
+>  		dev_err(chip->dev, "invalid pmtimer fclk\n");
+> -		goto err_einval;
+> +		return -EINVAL;
+>  	}
+>  
+>  	clk_rate = clk_get_rate(fclk);
+>  	if (!clk_rate) {
+>  		dev_err(chip->dev, "invalid pmtimer fclk rate\n");
+> -		goto err_einval;
+> +		return -EINVAL;
+>  	}
+>  
+>  	dev_dbg(chip->dev, "clk rate: %luHz\n", clk_rate);
+> @@ -151,7 +152,7 @@ static int pwm_omap_dmtimer_config(struct pwm_chip *chip,
+>  		dev_info(chip->dev,
+>  			 "period %d ns too short for clock rate %lu Hz\n",
+>  			 period_ns, clk_rate);
+> -		goto err_einval;
+> +		return -EINVAL;
+>  	}
+>  
+>  	if (duty_cycles < 1) {
+> @@ -183,54 +184,72 @@ static int pwm_omap_dmtimer_config(struct pwm_chip *chip,
+>  	dev_dbg(chip->dev, "load value: %#08x (%d), match value: %#08x (%d)\n",
+>  		load_value, load_value,	match_value, match_value);
+>  
+> -	mutex_unlock(&omap->mutex);
+> -
+>  	return 0;
+> -
+> -err_einval:
+> -	mutex_unlock(&omap->mutex);
+> -
+> -	return -EINVAL;
+>  }
+>  
+> -static int pwm_omap_dmtimer_set_polarity(struct pwm_chip *chip,
+> -					 struct pwm_device *pwm,
+> -					 enum pwm_polarity polarity)
+> +/**
+> + * pwm_omap_dmtimer_apply() - Changes the state of the pwm omap dm timer.
+> + * @chip:	Pointer to PWM controller
+> + * @pwm:	Pointer to PWM channel
+> + * @state:	New sate to apply
+> + *
+> + * Return 0 if successfully changed the state else appropriate error.
+> + */
+> +static int pwm_omap_dmtimer_apply(struct pwm_chip *chip,
+> +				  struct pwm_device *pwm,
+> +				  const struct pwm_state *state)
+>  {
+>  	struct pwm_omap_dmtimer_chip *omap = to_pwm_omap_dmtimer_chip(chip);
+> +	int ret = 0;
+>  
+> -	/*
+> -	 * PWM core will not call set_polarity while PWM is enabled so it's
+> -	 * safe to reconfigure the timer here without stopping it first.
+> -	 */
+>  	mutex_lock(&omap->mutex);
+> -	omap->pdata->set_pwm(omap->dm_timer,
+> -			     polarity == PWM_POLARITY_INVERSED,
+> -			     true, OMAP_TIMER_TRIGGER_OVERFLOW_AND_COMPARE);
+> +
+> +	if (pwm_is_enabled(pwm) && !state->enabled) {
 
-> static int canfd_rcv(struct sk_buff *skb, struct net_device *dev,
->                      struct packet_type *pt, struct net_device *orig_dev)
-> {
->         struct canfd_frame *cfd = (struct canfd_frame *)skb->data;
-> 
->         if (unlikely(dev->type != ARPHRD_CAN || skb->len != CANFD_MTU ||
->                      cfd->len > CANFD_MAX_DLEN)) {
->                 pr_warn_once("PF_CAN: dropped non conform CAN FD skbuf: dev type %d, len %d, datalen %d\n",
->                              dev->type, skb->len, cfd->len);
-                                                    ^^^^^^^^
+In my book calling PWM API functions (designed for PWM consumers) is not
+so nice. I would prefer you checking the hardware registers or cache the
+state locally instead of relying on the core here.
 
-If the skb is to short, we'll access the skb->data out of bounds, when
-dereferencing cfd. I think we have to remove the "datalen" from the
-warning message.
+It would be great to have a general description at the top of the driver
+(like for example drivers/pwm/pwm-sifive.c) that answers things like:
 
->                 kfree_skb(skb);
->                 return NET_RX_DROP;
->         }
-> 
->         can_receive(skb, dev);
->         return NET_RX_SUCCESS;
-> }
+ - Does calling .stop completes the currently running period (it
+   should)?
+ - Does changing polarity, duty_cycle and period complete the running
+   period?
+ - How does the hardware behave on disable? (i.e. does it output the
+   state the pin is at in that moment? Does it go High-Z?)
 
-Marc
+Best regards
+Uwe
 
 -- 
-Pengutronix e.K.                 | Marc Kleine-Budde           |
-Embedded Linux                   | https://www.pengutronix.de  |
-Vertretung West/Dortmund         | Phone: +49-231-2826-924     |
-Amtsgericht Hildesheim, HRA 2686 | Fax:   +49-5121-206917-5555 |
+Pengutronix e.K.                           | Uwe Kleine-König            |
+Industrial Linux Solutions                 | https://www.pengutronix.de/ |
