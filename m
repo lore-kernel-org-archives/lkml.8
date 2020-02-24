@@ -2,104 +2,64 @@ Return-Path: <SRS0=7TUr=4M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 43ABDC38BE2
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 18:43:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D8A12C38BE1
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 18:44:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1DC5920836
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 18:43:28 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="k2mwXkvd"
+	by mail.kernel.org (Postfix) with ESMTP id BCB0220836
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 18:44:09 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727948AbgBXSn0 (ORCPT
+        id S1727996AbgBXSoI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Feb 2020 13:43:26 -0500
-Received: from mail-lf1-f68.google.com ([209.85.167.68]:42844 "EHLO
-        mail-lf1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726652AbgBXSn0 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Feb 2020 13:43:26 -0500
-Received: by mail-lf1-f68.google.com with SMTP id 83so7520248lfh.9;
-        Mon, 24 Feb 2020 10:43:24 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=uCmCqGkBSNCRTaEPKViwOJ/762o19mpcQcrckJGGFEA=;
-        b=k2mwXkvdmgi8pr7kvr78v5r1c+AnLoKifDlTcCs/ZSikAZfhL088/hZVAQ1V1srjUW
-         adK/hdF1CUFI0dDf+hlDbEPRtlSXcL2zxq95AAYfEpOO3eQVdUf6EvX6rChQV8hQbo8v
-         8riLPA0EsHRca0FXC9j8nsopqWH1As4UIhBuVffez4KsHgxuWIUp19NXeLhknVrRe9+N
-         Sp+7x/eT/OC8u0VhApIAdQrx/AVHnjtYqgZrVQAlEAT/ebn/eqX6kf+7Fv8zELrAO9uZ
-         EYLmQ5qTINJfnaSl40WMelswQ70B8cmZf+d4kRok2h07fXkML/ilqbhADPJoekdqgL9f
-         sAGw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=uCmCqGkBSNCRTaEPKViwOJ/762o19mpcQcrckJGGFEA=;
-        b=dJm9Fgpy1bQ+KGzcl6iMNXaP68RSmMxvacWkPTUHaa4ye0Y10Kc6++tMEZc71AAmbv
-         bxWw6RZXVx0Z2qrXF4PZvvv9FOCD4Zy7EKOsqe+rAhCYns+g8otab1oNQR+vMmSpKKwy
-         Tv3G3YAaLBs+VrKDiJNyydUdxFt/OG6IHDWD6prKyrFkFqvMQr7AvgdnnXH7/lE9kkGA
-         z3Gqxct5NFEUH+5aZ/aU+C3gANnrnDRcZS3j4+IX4AkPjNfcAhLcHLHjGE8ARvebR4Ko
-         TI9m5dcoMxmreDW8ZnMJV6rwl7+d32Zstz/Wl04TRgwvgtkGhTCm9O0Clz5AJLT3ILMG
-         nJng==
-X-Gm-Message-State: APjAAAWeTyhvaF6/RlrdZHMq4gIdynLni+Rr3WleD+1VtMYKB91VhYNL
-        WPRzpxP8NR2WIBGmERFBpgBOryI8ZnJAv6V1uJw=
-X-Google-Smtp-Source: APXvYqxVfNaWgGUCHRkeDD7FAEMlSi7VmD5rdHw5mtCFT9xR0L3S4D33CNY+Hp391gODfjB72gHp7oBEt0X4O41lZ/o=
-X-Received: by 2002:a05:6512:10d4:: with SMTP id k20mr11537422lfg.70.1582569803984;
- Mon, 24 Feb 2020 10:43:23 -0800 (PST)
+        Mon, 24 Feb 2020 13:44:08 -0500
+Received: from foss.arm.com ([217.140.110.172]:41830 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726652AbgBXSoI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 24 Feb 2020 13:44:08 -0500
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 71CB51FB;
+        Mon, 24 Feb 2020 10:44:07 -0800 (PST)
+Received: from e113632-lin (e113632-lin.cambridge.arm.com [10.1.194.46])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 407B43F703;
+        Mon, 24 Feb 2020 10:44:05 -0800 (PST)
+References: <20200224141142.25445-1-ionela.voinescu@arm.com> <20200224141142.25445-6-ionela.voinescu@arm.com>
+User-agent: mu4e 0.9.17; emacs 26.3
+From:   Valentin Schneider <valentin.schneider@arm.com>
+To:     Ionela Voinescu <ionela.voinescu@arm.com>
+Cc:     catalin.marinas@arm.com, will@kernel.org, mark.rutland@arm.com,
+        maz@kernel.org, suzuki.poulose@arm.com, sudeep.holla@arm.com,
+        lukasz.luba@arm.com, dietmar.eggemann@arm.com, rjw@rjwysocki.net,
+        peterz@infradead.org, mingo@redhat.com, vincent.guittot@linaro.org,
+        viresh.kumar@linaro.org, linux-arm-kernel@lists.infradead.org,
+        linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-pm@vger.kernel.org
+Subject: Re: [PATCH v4 5/7] cpufreq: add function to get the hardware max frequency
+In-reply-to: <20200224141142.25445-6-ionela.voinescu@arm.com>
+Date:   Mon, 24 Feb 2020 18:44:03 +0000
+Message-ID: <jhjlforygek.fsf@arm.com>
 MIME-Version: 1.0
-References: <20200224172236.22478-1-frieder.schrempf@kontron.de>
-In-Reply-To: <20200224172236.22478-1-frieder.schrempf@kontron.de>
-From:   Fabio Estevam <festevam@gmail.com>
-Date:   Mon, 24 Feb 2020 15:43:13 -0300
-Message-ID: <CAOMZO5CyYbAZRZrGLJNJXNJiekJXptUTu8tOfVw6y7-n-CXesg@mail.gmail.com>
-Subject: Re: [PATCH] dma: imx-sdma: Fix the event id check to include RX event
- for UART6
-To:     Schrempf Frieder <frieder.schrempf@kontron.de>
-Cc:     Dan Williams <dan.j.williams@intel.com>,
-        Linus Walleij <linus.ml.walleij@gmail.com>,
-        NXP Linux Team <linux-imx@nxp.com>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        Shawn Guo <shawnguo@kernel.org>, Vinod Koul <vkoul@kernel.org>,
-        "stable@vger.kernel.org" <stable@vger.kernel.org>,
-        "dmaengine@vger.kernel.org" <dmaengine@vger.kernel.org>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Frieder,
+Ionela Voinescu writes:
 
-On Mon, Feb 24, 2020 at 2:22 PM Schrempf Frieder
-<frieder.schrempf@kontron.de> wrote:
+> Add weak function to return the hardware maximum frequency of a CPU,
+> with the default implementation returning cpuinfo.max_freq, which is
+> the best information we can generically get from the cpufreq framework.
 >
-> From: Frieder Schrempf <frieder.schrempf@kontron.de>
+> The default can be overwritten by a strong function in platforms
+> that want to provide an alternative implementation, with more accurate
+> information, obtained either from hardware or firmware.
 >
-> On i.MX6 the DMA event for the RX channel of UART6 is '0'. To fix
+> Signed-off-by: Ionela Voinescu <ionela.voinescu@arm.com>
+> Acked-by: Viresh Kumar <viresh.kumar@linaro.org>
+> Cc: Rafael J. Wysocki <rjw@rjwysocki.net>
+> Cc: Viresh Kumar <viresh.kumar@linaro.org>
 
-I would suggest being a bit more specific than saying i.MX6.
-
-I see UART6 is present on i.MX6UL/i.MX6SX, but not on i.MX6Q/i.MX6DL,
-so it would be better to specify it in the commit log.
-
-imx6ul.dtsi does not have dma nodes under uart6, so I guess you fixed
-it for imx6sx.
-
-> the broken DMA support for UART6, we change the check for event_id0
-> to include '0' as a valid id.
->
-> Fixes: 1ec1e82f2510 ("dmaengine: Add Freescale i.MX SDMA support")
-> Cc: stable@vger.kernel.org
-> Signed-off-by: Frieder Schrempf <frieder.schrempf@kontron.de>
-
-Reviewed-by: Fabio Estevam <festevam@gmail.com>
+Reviewed-by: Valentin Schneider <valentin.schneider@arm.com>
