@@ -2,114 +2,77 @@ Return-Path: <SRS0=7TUr=4M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3CCDFC11D2F
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 16:34:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5B0D4C11D2F
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 16:34:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 119DD2080D
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 16:34:36 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="MXxp49h1"
+	by mail.kernel.org (Postfix) with ESMTP id 303C62080D
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 16:34:52 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728035AbgBXQee (ORCPT
+        id S1727797AbgBXQev (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Feb 2020 11:34:34 -0500
-Received: from bombadil.infradead.org ([198.137.202.133]:34964 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727299AbgBXQee (ORCPT
+        Mon, 24 Feb 2020 11:34:51 -0500
+Received: from outbound-smtp03.blacknight.com ([81.17.249.16]:58694 "EHLO
+        outbound-smtp03.blacknight.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727299AbgBXQeu (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Feb 2020 11:34:34 -0500
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
-        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=M9yl3DP9ucs4uObZLy5iqNZp2w5Oe3v/bojnGtEYlbQ=; b=MXxp49h1d8mC9C7ommRJDgNBg2
-        wpKAI81DLo1i64lQCugUzdwQycxvzgFZ6U1ieomQy7t/y+0i/eg9+QGcWjdlFUVTwTsZ+loAjfQL9
-        kwA2oeX/gkS4E3vhclr++JkVYwPasd1TuYViTEC3VX6pDL9S6CDzlcJT5ynjNFl5Q6clD8NilTrdT
-        qErRR5aXXXwqXAlyuMPvlf8MFKRNHaXd3mRCYW0/UUGAg96OJGYEQw73S22k3Xx75P/Yp2pfoBi6u
-        UApcmr/PU89uYMAqBLAEJi3+2vGbUpGhKGlDQW5GtMNxRBVH8FwpQzEczySgu8VoBekplb1p45twD
-        VkCVDaGg==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
-        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1j6GgN-0003n0-S5; Mon, 24 Feb 2020 16:34:12 +0000
-Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (Client did not present a certificate)
-        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 4C6C6305EFE;
-        Mon, 24 Feb 2020 17:32:15 +0100 (CET)
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id CA7B4202BD153; Mon, 24 Feb 2020 17:34:09 +0100 (CET)
-Date:   Mon, 24 Feb 2020 17:34:09 +0100
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     Steven Rostedt <rostedt@goodmis.org>
-Cc:     Andy Lutomirski <luto@kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        linux-arch <linux-arch@vger.kernel.org>,
+        Mon, 24 Feb 2020 11:34:50 -0500
+Received: from mail.blacknight.com (pemlinmail05.blacknight.ie [81.17.254.26])
+        by outbound-smtp03.blacknight.com (Postfix) with ESMTPS id 10999C0C07
+        for <linux-kernel@vger.kernel.org>; Mon, 24 Feb 2020 16:34:49 +0000 (GMT)
+Received: (qmail 20607 invoked from network); 24 Feb 2020 16:34:48 -0000
+Received: from unknown (HELO techsingularity.net) (mgorman@techsingularity.net@[84.203.18.57])
+  by 81.17.254.9 with ESMTPSA (AES256-SHA encrypted, authenticated); 24 Feb 2020 16:34:48 -0000
+Date:   Mon, 24 Feb 2020 16:34:46 +0000
+From:   Mel Gorman <mgorman@techsingularity.net>
+To:     Valentin Schneider <valentin.schneider@arm.com>
+Cc:     linux-kernel@vger.kernel.org, linux-tip-commits@vger.kernel.org,
+        Vincent Guittot <vincent.guittot@linaro.org>,
         Ingo Molnar <mingo@kernel.org>,
-        Joel Fernandes <joel@joelfernandes.org>,
-        Greg KH <gregkh@linuxfoundation.org>, gustavo@embeddedor.com,
-        Thomas Gleixner <tglx@linutronix.de>, paulmck@kernel.org,
-        Josh Triplett <josh@joshtriplett.org>,
-        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-        Lai Jiangshan <jiangshanlai@gmail.com>,
-        Tony Luck <tony.luck@intel.com>,
-        Frederic Weisbecker <frederic@kernel.org>,
-        Dan Carpenter <dan.carpenter@oracle.com>,
-        Masami Hiramatsu <mhiramat@kernel.org>
-Subject: Re: [PATCH v4 05/27] x86: Replace ist_enter() with nmi_enter()
-Message-ID: <20200224163409.GJ18400@hirez.programming.kicks-ass.net>
-References: <20200221133416.777099322@infradead.org>
- <20200221134215.328642621@infradead.org>
- <CALCETrU7nezN7d3GEZ8h8HbRfvZ0+F9+Ahb7fLvZ9FVaHN9x2w@mail.gmail.com>
- <20200221202246.GA14897@hirez.programming.kicks-ass.net>
- <20200224104346.GJ14946@hirez.programming.kicks-ass.net>
- <20200224112708.4f307ba3@gandalf.local.home>
+        Dietmar Eggemann <dietmar.eggemann@arm.com>,
+        Peter Zijlstra <a.p.zijlstra@chello.nl>,
+        Juri Lelli <juri.lelli@redhat.com>,
+        Phil Auld <pauld@redhat.com>, Hillf Danton <hdanton@sina.com>,
+        x86 <x86@kernel.org>
+Subject: Re: [tip: sched/core] sched/pelt: Add a new runnable average signal
+Message-ID: <20200224163446.GA3466@techsingularity.net>
+References: <20200224095223.13361-9-mgorman@techsingularity.net>
+ <158255763157.28353.3693734020236686000.tip-bot2@tip-bot2>
+ <jhj36b06klb.fsf@arm.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=iso-8859-15
 Content-Disposition: inline
-In-Reply-To: <20200224112708.4f307ba3@gandalf.local.home>
+In-Reply-To: <jhj36b06klb.fsf@arm.com>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Feb 24, 2020 at 11:27:08AM -0500, Steven Rostedt wrote:
-> On Mon, 24 Feb 2020 11:43:46 +0100
-> Peter Zijlstra <peterz@infradead.org> wrote:
+On Mon, Feb 24, 2020 at 04:01:04PM +0000, Valentin Schneider wrote:
 > 
-> > -dotraplinkage void notrace do_int3(struct pt_regs *regs, long error_code)
-> > +dotraplinkage notrace void do_int3(struct pt_regs *regs, long error_code)
-> >  {
-> >  	if (poke_int3_handler(regs))
-> >  		return;
-> >  
-> >  	/*
-> > -	 * Use ist_enter despite the fact that we don't use an IST stack.
-> > -	 * We can be called from a kprobe in non-CONTEXT_KERNEL kernel
-> > -	 * mode or even during context tracking state changes.
-> > -	 *
-> > -	 * This means that we can't schedule.  That's okay.
-> > +	 * Unlike any other non-IST entry, we can be called from pretty much
-> > +	 * any location in the kernel through kprobes -- text_poke() will most
-> > +	 * likely be handled by poke_int3_handler() above. This means this
-> > +	 * handler is effectively NMI-like.
-> >  	 */
-> > -	ist_enter(regs);
-> > +	nmi_enter();
+> tip-bot2 for Vincent Guittot writes:
 > 
-> Hmm, note that nmi_enter() calls other functions. Did you make sure
-> all of them are not able to be kprobed. This is different than just
-> being "NMI like", it's that if they are kprobed, then this will go into
-> an infinite loop because nothing can have a kprobe before the kprobe
-> int3 handler is called here.
+> > Signed-off-by: Vincent Guittot <vincent.guittot@linaro.org>
+> > Signed-off-by: Mel Gorman <mgorman@techsingularity.net>
+> > Signed-off-by: Ingo Molnar <mingo@kernel.org>
+> > Reviewed-by: "Dietmar Eggemann <dietmar.eggemann@arm.com>"
+> > Acked-by: Peter Zijlstra <a.p.zijlstra@chello.nl>
+> 
+> With the fork time initialization thing being sorted out, the rest of the
+> runnable series can claim my
+> 
+> Reviewed-by: Valentin Schneider <valentin.schneider@arm.com>
+> 
+> but I doubt any of that is worth the hassle since it's in tip already. Just
+> figured I'd mention it, being in Cc and all :-)
 
-I did not audit that; I went with the fact that hitting kprobes before
-in_nmi() is true is a bug.
+Whether the tag gets included or not, it's nice to have definite
+confirmation that you're ok with this version!
 
-Looking at nmi_enter(), that leaves trace_hardirq_enter(), since we know
-we marked rcu_nmi_enter() as NOKPROBES, per the patches elsewhere in
-this series.
+-- 
+Mel Gorman
+SUSE Labs
