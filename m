@@ -2,130 +2,115 @@ Return-Path: <SRS0=7TUr=4M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 727D4C11D32
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 16:44:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BB69DC11D32
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 16:47:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4807120836
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 16:44:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 929A420836
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 16:47:30 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="vREfHiAc"
+	dkim=pass (2048-bit key) header.d=es-iitr-ac-in.20150623.gappssmtp.com header.i=@es-iitr-ac-in.20150623.gappssmtp.com header.b="ZwdohMMj"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727862AbgBXQoZ (ORCPT
+        id S1727711AbgBXQr3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Feb 2020 11:44:25 -0500
-Received: from mail-lj1-f194.google.com ([209.85.208.194]:43309 "EHLO
-        mail-lj1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727426AbgBXQoZ (ORCPT
+        Mon, 24 Feb 2020 11:47:29 -0500
+Received: from mail-pj1-f66.google.com ([209.85.216.66]:40389 "EHLO
+        mail-pj1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726806AbgBXQr3 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Feb 2020 11:44:25 -0500
-Received: by mail-lj1-f194.google.com with SMTP id a13so10831595ljm.10;
-        Mon, 24 Feb 2020 08:44:23 -0800 (PST)
+        Mon, 24 Feb 2020 11:47:29 -0500
+Received: by mail-pj1-f66.google.com with SMTP id 12so4441379pjb.5
+        for <linux-kernel@vger.kernel.org>; Mon, 24 Feb 2020 08:47:28 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:from:to:cc:references:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=7oxyU+d/d8XY0EKKPhE8sqzYMShwxJo5/S8/lQ/V5N0=;
-        b=vREfHiAcCl3Ua/9aE0F/R/DCXJsDhkt0GbZfVzmifGktCU/jwX2OqEQRiUQWx3y3aF
-         R3IesHPQ3nOz7dDnpYasa3b4xh5RtIQsMSR4AK0GKulOtxBtHOK+0IRp6+xXQl8DekSq
-         K7tRl7rkDu028QqORiYJcRNvv2jq/VGc3ExSi15VSd+Wg9vxIzstLU2PFTiSoSV8eTzg
-         SkEPVpnDoVfVzonqwuHAXoRCS/oUd4B8SPQwlhrvid4M7DNht8bAYCbUyt+TBbPeLKLx
-         +++tSCVLRiSQL0rcKLslEKovzIObrtQ3r/q5ZtS9NjvLAD6ZqaVhvBHEXHfD8N9s0Kce
-         5wng==
+        d=es-iitr-ac-in.20150623.gappssmtp.com; s=20150623;
+        h=from:date:to:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=2zePMqHb3pxqOSl/NHaUkMDrUSvpWjI4HscCu6Jr28k=;
+        b=ZwdohMMjroCJi5cDmXzMY1AW4fuHeMb0XbtE7ZyLvdY2TmdNxW4nhXx6yqm4f03V4O
+         eT3TFPHeWwM2FEyVDDAvDi+WtbvSyoqjV6MkeirxuqmP70depek/y+KRWpeWdnaiqGFS
+         Z+76/2ZoqQLn0ew3wr7AJ39b3DSalwhweP2CQvZ+O4/N03aQ5R9CV9iSLCv0j9dL6TD7
+         kUY6/Bb4yRNNfLGRj60fR0SUuwvkwcMrTFRjB/tqpFiiMhw1aKdRg1Tq7qyEe8SKRNxZ
+         uNmI5mAV5zoffPBG/GN2+NvnGFdN5MUCEB3F34AXL5kmt26jahSW5Do+o6OUe1BLRTfL
+         buyQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:from:to:cc:references:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=7oxyU+d/d8XY0EKKPhE8sqzYMShwxJo5/S8/lQ/V5N0=;
-        b=O+8r7xIRw3b6usH0GlnWAbXBTf79Ou95rUbxYMU0N0r1mRTed253izpGPYzy16Ctll
-         iwQunVILyqqgdWWVIEt//FBjO+jHgmrEGLYSKiUS9CBqSXu3QanRP/t+thPGCjzipBbV
-         Iro/MwgBw2FFX4n27J/7s2y4xSj+5Er5LUI+xf+9W2iQ8rEHUeTB74Rg4xRTjAt3hiCy
-         Xyd9ecZ1cKdMl55sczdhCLegiUpOiyenu926+XTm0sJKezwB3M0kzZDY9jZylenMlZIe
-         iNG1V7GoeuorEu0xPpiLQ+uM77Uhlal3VWpk2vR3YcMFPujjzlrHt2ftrUlNlsUoHUTD
-         adCg==
-X-Gm-Message-State: APjAAAVEdqwp9DBL3ciL4yvgL3STQQTT2SNIMJMDjY2m4yxf8UwG07oF
-        mfHYtTS+AdyklvZ7uFllR+rUGHbG
-X-Google-Smtp-Source: APXvYqxbXa1nMc8dn3aaTyS28EGQspo1Xxm3d/K1Vcn3KJ/wuGB59VnWqLqhQ7TXq1K/B/jcc3gHkQ==
-X-Received: by 2002:a05:651c:321:: with SMTP id b1mr31007810ljp.62.1582562661509;
-        Mon, 24 Feb 2020 08:44:21 -0800 (PST)
-Received: from [192.168.2.145] (79-139-233-37.dynamic.spd-mgts.ru. [79.139.233.37])
-        by smtp.googlemail.com with ESMTPSA id e8sm7884285ljb.45.2020.02.24.08.44.20
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 24 Feb 2020 08:44:20 -0800 (PST)
-Subject: Re: [PATCH v9 00/17] Consolidate and improve NVIDIA Tegra CPUIDLE
- driver(s)
-From:   Dmitry Osipenko <digetx@gmail.com>
-To:     Thierry Reding <thierry.reding@gmail.com>,
-        Jonathan Hunter <jonathanh@nvidia.com>,
-        Peter De Schrijver <pdeschrijver@nvidia.com>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>,
-        =?UTF-8?B?TWljaGHFgiBNaXJvc8WCYXc=?= <mirq-linux@rere.qmqm.pl>,
-        Jasper Korten <jja2000@gmail.com>,
-        David Heidelberg <david@ixit.cz>,
-        Peter Geis <pgwipeout@gmail.com>
-Cc:     linux-pm@vger.kernel.org, linux-tegra@vger.kernel.org,
+        h=x-gm-message-state:from:date:to:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=2zePMqHb3pxqOSl/NHaUkMDrUSvpWjI4HscCu6Jr28k=;
+        b=XM+my4xUUjhh8BmSfFxf4ntlXM0XefsHvsyo8xKXJvDPMHengbwnPD+5v+S4tejBO1
+         iGMN4QCLDoic0lyzSnL7crwgLIfExH4TDHlh9O46Otr1OpeCuPFf3tNMjd9gwz71C0yZ
+         qXweh0SOhR1JHe2uyuw1nhXWm5t2gRn5MIyylX+RodXO8T8hTF3+ab4+3+SClqXUMSc2
+         /DtxXpzFHLdvN/2ewVgmw0gnHguoF/U8D0HB1ka/yTNwv+0clfWNNZ5AdVJHsQwBomzq
+         pJBsQb+IFU8KIlli0rTyHrYlxz/MK8wt52sHKNWYslwl4a+z07D6zv86lLh9oLQytjN+
+         HP9g==
+X-Gm-Message-State: APjAAAUmLtEHxGlCeeGi8AbqXnJ+FH3HuNca8+dXDe74bWM/UfDd4zAy
+        xf1tyZbMVdTAEWyBBEpWgo43Kg==
+X-Google-Smtp-Source: APXvYqwecQZyBx2Lu6irbcoubh2qjH4GBrXCroPb6bZfgoJ7nVIHn8R8yjAR6JV/sdr+Y/WoSHiLuw==
+X-Received: by 2002:a17:902:9342:: with SMTP id g2mr49081074plp.339.1582562848308;
+        Mon, 24 Feb 2020 08:47:28 -0800 (PST)
+Received: from kaaira-HP-Pavilion-Notebook ([103.37.201.170])
+        by smtp.gmail.com with ESMTPSA id d3sm13201089pfn.113.2020.02.24.08.47.25
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Mon, 24 Feb 2020 08:47:27 -0800 (PST)
+From:   Kaaira Gupta <kgupta@es.iitr.ac.in>
+X-Google-Original-From: Kaaira Gupta <Kaairakgupta@es.iitr.ac.in>
+Date:   Mon, 24 Feb 2020 22:17:21 +0530
+To:     Joe Perches <joe@perches.com>, Manish Chopra <manishc@marvell.com>,
+        GR-Linux-NIC-Dev@marvell.com,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        netdev@vger.kernel.org, devel@driverdev.osuosl.org,
         linux-kernel@vger.kernel.org
-References: <20200212235134.12638-1-digetx@gmail.com>
-Message-ID: <6fc959d6-8602-5ab0-d624-b410827005cf@gmail.com>
-Date:   Mon, 24 Feb 2020 19:44:19 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.3.0
+Subject: Re: [PATCH v4] staging: qlge: emit debug and dump at same level
+Message-ID: <20200224164721.GA7214@kaaira-HP-Pavilion-Notebook>
+References: <20200224082448.GA6826@kaaira-HP-Pavilion-Notebook>
+ <84410699e6acbffca960aa2944e9f5869478b178.camel@perches.com>
 MIME-Version: 1.0
-In-Reply-To: <20200212235134.12638-1-digetx@gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <84410699e6acbffca960aa2944e9f5869478b178.camel@perches.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-13.02.2020 02:51, Dmitry Osipenko пишет:
-> Hello,
+On Mon, Feb 24, 2020 at 05:38:09AM -0800, Joe Perches wrote:
+> On Mon, 2020-02-24 at 13:54 +0530, Kaaira Gupta wrote:
+> > Simplify code in ql_mpi_core_to_log() by calling print_hex_dump()
+> > instead of existing functions so that the debug and dump are
+> > emitted at the same KERN_<LEVEL>
+> []
+> > diff --git a/drivers/staging/qlge/qlge_dbg.c b/drivers/staging/qlge/qlge_dbg.c
+> []
+> > @@ -1324,27 +1324,10 @@ void ql_mpi_core_to_log(struct work_struct *work)
+> >  {
+> >  	struct ql_adapter *qdev =
+> >  		container_of(work, struct ql_adapter, mpi_core_to_log.work);
+> > -	u32 *tmp, count;
+> > -	int i;
+> >  
+> > -	count = sizeof(struct ql_mpi_coredump) / sizeof(u32);
+> > -	tmp = (u32 *)qdev->mpi_coredump;
+> > -	netif_printk(qdev, drv, KERN_DEBUG, qdev->ndev,
+> > -		     "Core is dumping to log file!\n");
 > 
-> This series does the following:
+> There is no real need to delete this line.
 > 
->   1. Unifies Tegra20/30/114 drivers into a single driver and moves it out
->      into common drivers/cpuidle/ directory.
+> And if you really want to, it'd be better to mention
+> the removal in the commit message description.
 > 
->   2. Enables CPU cluster power-down idling state on Tegra30.
-> 
-> In the end there is a quite nice clean up of the Tegra CPUIDLE drivers
-> and of the Tegra's arch code in general. Please apply, thanks!
-> 
-> !!!WARNING!!! This series was made on top of the cpufreq patches [1]. But it
->               should be fine as long as Thierry Reding would pick up this and
->               the cpufreq patchsets via the Tegra tree, otherwise there will
->               one minor merge-conflict.
-> 
-> [1] https://patchwork.ozlabs.org/project/linux-tegra/list/?series=158206
-> 
-> Changelog:
-> 
-> v9: - Added acks from Peter De Schrijver.
-> 
->     - Added tested-by from Peter Geis, Jasper Korten and David Heidelberg
->       who tested these patches on Ouya, TF300T and Nexus 7 devices.
-> 
->     - Temporarily dropped the "cpuidle: tegra: Support CPU cluster power-down
->       state on Tegra30" patch because Michał Mirosław reported that it didn't
->       work well on his TF300T. After some testing we found that changing
->       a way in which firmware performs L2 cache maintenance helps, but later
->       on we also found that the current v9 series works just fine without the
->       extra firmware changes using recent linux-next and the reason why v8
->       didn't work before is still unknown (need more testing). So I decided
->       that it will be better to postpone the dropped patch until we know for
->       sure that it works well for everyone in every possible configuration.
-> 
->     - Rebased this series on top of recent linux-next, in a result dropped
->       the "cpuidle: Avoid NULL dereference in cpuidle_driver_state_disabled()"
->       patch because it's not needed anymore.
+> As is for this change, there is no "debug" and "dump"
+> as the commit message description shows, just "dump".
 
-I just noticed that this patchset was versioned wrongly, it should've
-been v10. Sorry for the confusion, next version will be v11.
+This patch has already been added to the tree, if I amend the commit now
+using git rebase, won't it affect the upstream as the SHA-1 of the
+commit and it's children will change?
+
+> 
+> 
+> 
+> 
