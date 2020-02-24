@@ -2,77 +2,137 @@ Return-Path: <SRS0=7TUr=4M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0BD0FC3567B
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 08:12:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D92B6C35679
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 08:15:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DDBDB20714
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 08:12:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B1BED20658
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 08:15:56 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=shutemov-name.20150623.gappssmtp.com header.i=@shutemov-name.20150623.gappssmtp.com header.b="0aRJ8jlk"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727242AbgBXIMl (ORCPT
+        id S1727202AbgBXIPy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Feb 2020 03:12:41 -0500
-Received: from hostingweb31-40.netsons.net ([89.40.174.40]:39873 "EHLO
-        hostingweb31-40.netsons.net" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726216AbgBXIMl (ORCPT
+        Mon, 24 Feb 2020 03:15:54 -0500
+Received: from mail-lj1-f196.google.com ([209.85.208.196]:45893 "EHLO
+        mail-lj1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726216AbgBXIPx (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Feb 2020 03:12:41 -0500
-Received: from [109.168.11.45] (port=54830 helo=[192.168.101.73])
-        by hostingweb31.netsons.net with esmtpsa (TLSv1.2:ECDHE-RSA-AES128-GCM-SHA256:128)
-        (Exim 4.92)
-        (envelope-from <luca@lucaceresoli.net>)
-        id 1j68r0-000fay-0z; Mon, 24 Feb 2020 09:12:38 +0100
-Subject: Re: [RFC PATCH 4/7] i2c: of: remove superfluous parameter from
- exported function
-To:     Wolfram Sang <wsa+renesas@sang-engineering.com>,
-        linux-i2c@vger.kernel.org
-Cc:     linux-renesas-soc@vger.kernel.org, linux-i3c@lists.infradead.org,
-        Kieran Bingham <kieran@ksquared.org.uk>,
-        =?UTF-8?Q?Niklas_S=c3=b6derlund?= <niklas.soderlund@ragnatech.se>,
-        Jacopo Mondi <jacopo@jmondi.org>,
-        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
-        Vladimir Zapolskiy <vz@mleia.com>,
-        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
-References: <20200220172403.26062-1-wsa+renesas@sang-engineering.com>
- <20200220172403.26062-5-wsa+renesas@sang-engineering.com>
-From:   Luca Ceresoli <luca@lucaceresoli.net>
-Message-ID: <264977e0-f45c-759d-3bc3-5bb23e97bf5a@lucaceresoli.net>
-Date:   Mon, 24 Feb 2020 09:12:37 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.1
+        Mon, 24 Feb 2020 03:15:53 -0500
+Received: by mail-lj1-f196.google.com with SMTP id e18so8991349ljn.12
+        for <linux-kernel@vger.kernel.org>; Mon, 24 Feb 2020 00:15:52 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=shutemov-name.20150623.gappssmtp.com; s=20150623;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to;
+        bh=9E4atKHNFhMUgRRiEy/HKZbsazKIFq0A6zQaS+Ym2Rs=;
+        b=0aRJ8jlk7K/HKTsns95GBBaEHmGtOdnFbjYj9vIhbo4+tLtlyfufBnVwleKPB1/X98
+         Pgtv8FVCl9tXtLobT7bdmwNtDdZHepJTvYQCXdV9n1wLvHk+nzSJlzAmbOEH8mlNtA7v
+         2DGluNg5tOwwERslMq2gB1V/ls4vsq6Q3436qFBbuOHbRKV974b0zOc/iXXNTzaB7r9u
+         0Y+UxTJda51orCm8P6331EASksnvu6HLENq7I9WhIqKwFNvx+Aj7pHEwlDpT19zJbP6d
+         hq9a+vogQGu+76vpLV9FQ94YnCrRP3OaxqfAj5NR7t5mEhqvtmmMD5AZ5LSwOYCEeT2G
+         hHlg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to;
+        bh=9E4atKHNFhMUgRRiEy/HKZbsazKIFq0A6zQaS+Ym2Rs=;
+        b=d6nbSiQT8mHiQrl/7LyMzYoCYuDsFJAj7OrTktOooIZDkzlwz2DI+RD/t3TXJXs5oW
+         cnJ/3PubEVkZ6ubNWIEHOme47ORyRcQxwHXTvL6VFJp6F6+R+X57wugAlg+UwKYCcb3F
+         T9DY8EEx6D0zbg9Bm/ZibKWPqK+bYK/Y/GGn0WpjmS+CcxePLI95K2Q6/ZXpfswhh3fh
+         yz1//Xdp05a9x9dB/6aACN4oBgylVpbZhqLbqdMcHkZXy9IeDQZ7H3KqZT36f+V6Bmm+
+         wQuGYiXX2kCrf/qK5kwG18JJYTDxY+a741kmyAbBeHjwJYP91CQaMyJx6YqFFtfny227
+         y7XA==
+X-Gm-Message-State: APjAAAWCCBTpWjKao6Z6Sj+RwW5Wr/sSlxVKSSzZkdE3YZVow7QNDGXH
+        CSEdkVhF+vFKedDDW7yQ7tqBzg==
+X-Google-Smtp-Source: APXvYqzgh1ZGX/532+S4qeKBsp3fOZk0JQWUNLbURDxZxQbr4hjc1+mWNY2lYVuZyvgFoFMOCV92hw==
+X-Received: by 2002:a2e:9b5a:: with SMTP id o26mr29929299ljj.190.1582532151395;
+        Mon, 24 Feb 2020 00:15:51 -0800 (PST)
+Received: from box.localdomain ([86.57.175.117])
+        by smtp.gmail.com with ESMTPSA id n189sm3008847lfa.14.2020.02.24.00.15.50
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 24 Feb 2020 00:15:50 -0800 (PST)
+Received: by box.localdomain (Postfix, from userid 1000)
+        id DF908100FD9; Mon, 24 Feb 2020 11:16:22 +0300 (+03)
+Date:   Mon, 24 Feb 2020 11:16:22 +0300
+From:   "Kirill A. Shutemov" <kirill@shutemov.name>
+To:     Brian Geffon <bgeffon@google.com>
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        "Michael S . Tsirkin" <mst@redhat.com>,
+        Arnd Bergmann <arnd@arndb.de>, linux-kernel@vger.kernel.org,
+        linux-mm@kvack.org, linux-api@vger.kernel.org,
+        Andy Lutomirski <luto@amacapital.net>,
+        Will Deacon <will@kernel.org>,
+        Andrea Arcangeli <aarcange@redhat.com>,
+        Sonny Rao <sonnyrao@google.com>,
+        Minchan Kim <minchan@kernel.org>,
+        Joel Fernandes <joel@joelfernandes.org>,
+        Yu Zhao <yuzhao@google.com>,
+        Jesse Barnes <jsbarnes@google.com>,
+        Florian Weimer <fweimer@redhat.com>, mtk.manpages@gmail.com,
+        linux-man@vger.kernel.org, Lokesh Gidra <lokeshgidra@google.com>
+Subject: Re: [PATCH v7 1/2] mm: Add MREMAP_DONTUNMAP to mremap().
+Message-ID: <20200224081622.f4oy2pqk6aq6krfp@box>
+References: <20200221174248.244748-1-bgeffon@google.com>
 MIME-Version: 1.0
-In-Reply-To: <20200220172403.26062-5-wsa+renesas@sang-engineering.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
-X-AntiAbuse: Primary Hostname - hostingweb31.netsons.net
-X-AntiAbuse: Original Domain - vger.kernel.org
-X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
-X-AntiAbuse: Sender Address Domain - lucaceresoli.net
-X-Get-Message-Sender-Via: hostingweb31.netsons.net: authenticated_id: luca+lucaceresoli.net/only user confirmed/virtual account not confirmed
-X-Authenticated-Sender: hostingweb31.netsons.net: luca@lucaceresoli.net
-X-Source: 
-X-Source-Args: 
-X-Source-Dir: 
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200221174248.244748-1-bgeffon@google.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
-
-On 20/02/20 18:24, Wolfram Sang wrote:
-> 'dev' is only used for printing an error message. However, that
-> information is not needed because '%pOF' fully describes the location of
-> the error. Drop the 'dev' and remove the superfluous parameter.
+On Fri, Feb 21, 2020 at 09:42:46AM -0800, Brian Geffon wrote:
+> When remapping an anonymous, private mapping, if MREMAP_DONTUNMAP is
+> set, the source mapping will not be removed. The remap operation
+> will be performed as it would have been normally by moving over the
+> page tables to the new mapping. The old vma will have any locked
+> flags cleared, have no pagetables, and any userfaultfds that were
+> watching that range will continue watching it.
 > 
-> Signed-off-by: Wolfram Sang <wsa+renesas@sang-engineering.com>
+> For a mapping that is shared or not anonymous, MREMAP_DONTUNMAP will cause
+> the mremap() call to fail. Because MREMAP_DONTUNMAP always results in moving
+> a VMA you MUST use the MREMAP_MAYMOVE flag, it's not possible to resize
+> a VMA while also moving with MREMAP_DONTUNMAP so old_len must always
+> be equal to the new_len otherwise it will return -EINVAL.
+> 
+> We hope to use this in Chrome OS where with userfaultfd we could write
+> an anonymous mapping to disk without having to STOP the process or worry
+> about VMA permission changes.
+> 
+> This feature also has a use case in Android, Lokesh Gidra has said
+> that "As part of using userfaultfd for GC, We'll have to move the physical
+> pages of the java heap to a separate location. For this purpose mremap
+> will be used. Without the MREMAP_DONTUNMAP flag, when I mremap the java
+> heap, its virtual mapping will be removed as well. Therefore, we'll
+> require performing mmap immediately after. This is not only time consuming
+> but also opens a time window where a native thread may call mmap and
+> reserve the java heap's address range for its own usage. This flag
+> solves the problem."
+> 
+>   v6 -> v7:
+>     - Don't allow resizing VMA as part of MREMAP_DONTUNMAP.
+>       There is no clear use case at the moment and it can be added
+>       later as it simplifies the implementation for now.
+> 
+>   v5 -> v6:
+>     - Code cleanup suggested by Kirill.
+> 
+>   v4 -> v5:
+>     - Correct commit message to more accurately reflect the behavior.
+>     - Clear VM_LOCKED and VM_LOCKEDONFAULT on the old vma.
+>            
+> Signed-off-by: Brian Geffon <bgeffon@google.com>
+> Reviewed-by: Minchan Kim <minchan@kernel.org>
+> Tested-by: Lokesh Gidra <lokeshgidra@google.com>
 
-Reviewed-by: Luca Ceresoli <luca@lucaceresoli.net>
+Acked-by: Kirill A. Shutemov <kirill.shutemov@linux.intel.com>
 
 -- 
-Luca
+ Kirill A. Shutemov
