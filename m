@@ -2,131 +2,160 @@ Return-Path: <SRS0=7TUr=4M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+X-Spam-Status: No, score=-9.5 required=3.0 tests=DKIM_ADSP_CUSTOM_MED,
+	DKIM_INVALID,DKIM_SIGNED,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 195FDC38BE2
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 21:10:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 38A7DC38BF9
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 21:10:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E589E20CC7
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 21:10:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0DC1621556
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 21:10:55 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="oZiPir4x"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="mEQqfu/s"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728043AbgBXVKr (ORCPT
+        id S1728077AbgBXVKx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Feb 2020 16:10:47 -0500
-Received: from bombadil.infradead.org ([198.137.202.133]:52568 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727459AbgBXVKo (ORCPT
+        Mon, 24 Feb 2020 16:10:53 -0500
+Received: from mail-wm1-f68.google.com ([209.85.128.68]:38255 "EHLO
+        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728020AbgBXVKq (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Feb 2020 16:10:44 -0500
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Transfer-Encoding
-        :Content-Type:MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:
-        Sender:Reply-To:Content-ID:Content-Description;
-        bh=L0GIM9MAsSIaJJiexM0xuoxKVH/JVljqr41EeL13Z0g=; b=oZiPir4xFnYRx0BLoPhBMvRQvU
-        V2Tqtk080yr3krPKTvNMG68B26yasVH+F5S2xLrS1PuijKxvfc/3P2oKVTTbOY8eZTLoANQ4Eulkm
-        RrpnaIPipGkPUvZE0xa9wy0Agla7DdEbmPTa5IjoXQZ8fekzdNHtgJYhxgZ41X3vXL7eVCUNMNZt1
-        V2Gr7rARQa3KZCFAySIv7eh/BNc9MLOj7fssjEOir6qfNbqXhAj7YxY6cx/k3NR7Ps/dGRKRBXhuA
-        PlapI3r6HoV1kgfepTRY8bTgHEzez+spvlYPJUXSl+aNh+H8E0LlCauWnxvvSCJAMdlDhL8jVa2iK
-        pALRl0Tw==;
-Received: from willy by bombadil.infradead.org with local (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1j6L00-0002hH-4Z; Mon, 24 Feb 2020 21:10:44 +0000
-Date:   Mon, 24 Feb 2020 13:10:44 -0800
-From:   Matthew Wilcox <willy@infradead.org>
-To:     Randy Dunlap <rdunlap@infradead.org>
-Cc:     Jonathan Corbet <corbet@lwn.net>,
-        Jonathan =?iso-8859-1?Q?Neusch=E4fer?= <j.neuschaefer@gmx.net>,
-        linux-doc@vger.kernel.org, Andi Kleen <ak@linux.intel.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        "Darrick J. Wong" <darrick.wong@oracle.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        "Chang S. Bae" <chang.seok.bae@intel.com>,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] docs: process: changes.rst: Escape --version to fix
- Sphinx output
-Message-ID: <20200224211044.GQ24185@bombadil.infradead.org>
-References: <20200223222228.27089-1-j.neuschaefer@gmx.net>
- <20200224110815.6f7561d1@lwn.net>
- <20200224184719.GA2363@latitude>
- <20200224185227.GO24185@bombadil.infradead.org>
- <20200224115851.6684d516@lwn.net>
- <20200224191248.GP24185@bombadil.infradead.org>
- <e31ce703-c88b-7901-60a7-62fd5e78a1e0@infradead.org>
+        Mon, 24 Feb 2020 16:10:46 -0500
+Received: by mail-wm1-f68.google.com with SMTP id a9so853098wmj.3;
+        Mon, 24 Feb 2020 13:10:43 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=6yWM1dVY3KXj+nN/ReZRFLyP/i4t8gAHjBcXNGyYMFQ=;
+        b=mEQqfu/sa9O0wq9FoZjyB9hUTWBa49Do30CEHoosU8I3drOeyns0gC/iuheDQyubhm
+         OCXQE1qe58xL9PnsLfZizKbQTBlmKJ/l1QCnoY2mfh/jp1+q1yDELzhrbKHUsgt0Lk7K
+         GldgrHtK+7B4E+tmjmJexuQkBHi2+zfJrD9rv9kQQMTJ/2zX+uNqRCvWmRK6ttUMge1/
+         dXw7z78dorngi9f4d6Jh4a7/WP8EEeg12oTS04V5Vi5NnkDP6s+9pYPrkdQ0AnqmSO+5
+         o9X2tvRJX0BnfdaoiPMOjLgp0NRIpowhse0FOEZE0w5owUentgkd03jn41a80cUR3/wf
+         RCHw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=6yWM1dVY3KXj+nN/ReZRFLyP/i4t8gAHjBcXNGyYMFQ=;
+        b=YNRHL2qps+WJDv4pKxNdCtyfRueL9W7q7W3Ejh2qi5MAQC//qnqNp8LdJ2SMNDUbX2
+         Dw+iHXDFctkwhzouwSRFhX+tHUkZgeOiMWSLWVMIJsjjkyi6/V8I/J9ZfTxeJajfTcUV
+         6WXWMJldqhDoi5SX0IVVaFxBWM73cuy8If/c0mscQMCEqVewMQbbJ4r8zVlfE+2kZtSk
+         RBllxOJfoV7zxpnUsQRDtC8+Pjk/cewfzR5O0C5aqYVw8zVsI1m5BAiZYt4eU3TDKXOH
+         Lp+CbbNz4zGALXX/DGyu5KSoVcYgtp9O9MFAV5R1J3AUoVJ+C8gM2DIoYw8Irma9S0LX
+         QJ3w==
+X-Gm-Message-State: APjAAAW7UZXVd0g8BYl0+pGIh/RlfhWiv4FGQD8jtav0xLat7YKtuI8l
+        AcJCpDB/jWFz35ig0BQo9Xs=
+X-Google-Smtp-Source: APXvYqz9cj0t68TUy8GusArQPezxkC+gx4AYZMHTOs3PD80Kjlhjopv9YCUoeEh7xdXJ1rKrFGO04Q==
+X-Received: by 2002:a05:600c:230d:: with SMTP id 13mr938547wmo.13.1582578642434;
+        Mon, 24 Feb 2020 13:10:42 -0800 (PST)
+Received: from Ansuel-XPS.localdomain (93-39-149-95.ip76.fastwebnet.it. [93.39.149.95])
+        by smtp.googlemail.com with ESMTPSA id i204sm917780wma.44.2020.02.24.13.10.41
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 24 Feb 2020 13:10:41 -0800 (PST)
+From:   Ansuel Smith <ansuelsmth@gmail.com>
+Cc:     Ansuel Smith <ansuelsmth@gmail.com>,
+        Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Andrew Lunn <andrew@lunn.ch>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Heiner Kallweit <hkallweit1@gmail.com>,
+        Russell King <linux@armlinux.org.uk>,
+        linux-arm-msm@vger.kernel.org, netdev@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH v7 2/2] Documentation: devictree: Add ipq806x mdio bindings
+Date:   Mon, 24 Feb 2020 22:10:31 +0100
+Message-Id: <20200224211035.16897-2-ansuelsmth@gmail.com>
+X-Mailer: git-send-email 2.25.0
+In-Reply-To: <20200224211035.16897-1-ansuelsmth@gmail.com>
+References: <20200224211035.16897-1-ansuelsmth@gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <e31ce703-c88b-7901-60a7-62fd5e78a1e0@infradead.org>
+To:     unlisted-recipients:; (no To-header on input)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Feb 24, 2020 at 01:08:13PM -0800, Randy Dunlap wrote:
-> On 2/24/20 11:12 AM, Matthew Wilcox wrote:
-> > On Mon, Feb 24, 2020 at 11:58:51AM -0700, Jonathan Corbet wrote:
-> >> On Mon, 24 Feb 2020 10:52:27 -0800
-> >> Matthew Wilcox <willy@infradead.org> wrote:
-> >>
-> >>> On Mon, Feb 24, 2020 at 07:47:19PM +0100, Jonathan Neuschäfer wrote:
-> >>>> On Mon, Feb 24, 2020 at 11:08:15AM -0700, Jonathan Corbet wrote:  
-> >>>>> On Sun, 23 Feb 2020 23:22:27 +0100
-> >>>>> Jonathan Neuschäfer <j.neuschaefer@gmx.net> wrote:
-> >>>>>   
-> >>>>>> Without double-backticks, Sphinx wrongly turns "--version" into
-> >>>>>> "–version" with a Unicode EN DASH (U+2013), that is visually easy to
-> >>>>>> confuse with a single ASCII dash.
-> >>>>>>
-> >>>>>> Signed-off-by: Jonathan Neuschäfer <j.neuschaefer@gmx.net>  
-> >>>>>
-> >>>>> This certainly seems worth addressing.  But I would *really* rather find
-> >>>>> a way to tell Sphinx not to do that rather than making all of these
-> >>>>> tweaks - which we will certainly find ourselves having to do over and
-> >>>>> over again.  I can try to look into that in a bit, but if somebody were
-> >>>>> to beat me to it ... :)  
-> >>>>
-> >>>> This seems to do the trick:
-> >>>>
-> >>>> diff --git a/Documentation/conf.py b/Documentation/conf.py
-> >>>> index 3c7bdf4cd31f..8f2a7ae95184 100644
-> >>>> --- a/Documentation/conf.py
-> >>>> +++ b/Documentation/conf.py
-> >>>> @@ -587,6 +587,9 @@ pdf_documents = [
-> >>>>  kerneldoc_bin = '../scripts/kernel-doc'
-> >>>>  kerneldoc_srctree = '..'
-> >>>>
-> >>>> +# Render -- as two dashes
-> >>>> +smartquotes = False  
-> >>>
-> >>> I think what Jon was looking for was the ability to selectively turn
-> >>> smartquotes off for a section and then reenable it?
-> >>
-> >> No that's not what I was thinking, actually.  Unless somebody can come up
-> >> with a good reason to the contrary, just disabling that behavior globally
-> >> strikes me as the right thing to do.
-> > 
-> > Well, sometimes -- when the time is right -- I like to use en-dashes.
-> > It's probably no great loss, though.
-> > 
-> > grep finds me these interesting examples:
-> > 
-> > Documentation/RCU/Design/Memory-Ordering/Tree-RCU-Memory-Ordering.rst:Tree RCU's grace--period memory-ordering guarantees rely most heavily on
-> > Documentation/accounting/psi.rst:scarcity aids users in sizing workloads to hardware--or provisioning
-> > Documentation/admin-guide/acpi/cppc_sysfs.rst:  -r--r--r-- 1 root root 65536 Mar  5 19:38 feedback_ctrs
-> > Documentation/admin-guide/mm/hugetlbpage.rst:task that modifies ``nr_hugepages``. The default for the allowed nodes--when the
-> > Documentation/block/null_blk.rst:home_node=[0--nr_nodes]: Default: NUMA_NO_NODE
-> > Documentation/admin-guide/svga.rst::Copyright: |copy| 1995--1999 Martin Mares, <mj@ucw.cz>
-> > Documentation/media/uapi/v4l/pixfmt-srggb10-ipu3.rst:        G\ :sub:`0108high`\ (bits 1--0)
-> > 
-> > (in all, 368 lines, but they're not all in .rst files)
-> > 
-> 
-> Not trying to be contrary, but I would prefer to keep .rst files as much
-> ASCII as possible.
+Add documentations for ipq806x mdio driver.
 
-I don't think anybody is arguing otherwise.  The question is whether
-minusminus should be left as a pair of minus signs or whether it should
-be converted into an en-dash.
+Signed-off-by: Ansuel Smith <ansuelsmth@gmail.com>
+---
+Changes in v7:
+- Fix dt_binding_check problem
+
+ .../bindings/net/qcom,ipq8064-mdio.yaml       | 55 +++++++++++++++++++
+ 1 file changed, 55 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/net/qcom,ipq8064-mdio.yaml
+
+diff --git a/Documentation/devicetree/bindings/net/qcom,ipq8064-mdio.yaml b/Documentation/devicetree/bindings/net/qcom,ipq8064-mdio.yaml
+new file mode 100644
+index 000000000000..3178cbfdc661
+--- /dev/null
++++ b/Documentation/devicetree/bindings/net/qcom,ipq8064-mdio.yaml
+@@ -0,0 +1,55 @@
++# SPDX-License-Identifier: GPL-2.0-or-later
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/net/qcom,ipq8064-mdio.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
++
++title: Qualcomm ipq806x MDIO bus controller
++
++maintainers:
++  - Ansuel Smith <ansuelsmth@gmail.com>
++
++description: |+
++  The ipq806x soc have a MDIO dedicated controller that is
++  used to comunicate with the gmac phy conntected.
++  Child nodes of this MDIO bus controller node are standard
++  Ethernet PHY device nodes as described in
++  Documentation/devicetree/bindings/net/phy.txt
++
++allOf:
++  - $ref: "mdio.yaml#"
++
++properties:
++  compatible:
++    const: qcom,ipq8064-mdio
++  reg:
++    maxItems: 1
++    description: address and length of the register set for the device
++  clocks:
++    maxItems: 1
++    description: A reference to the clock supplying the MDIO bus controller
++
++required:
++  - compatible
++  - reg
++  - clocks
++  - "#address-cells"
++  - "#size-cells"
++
++examples:
++  - |
++    mdio0: mdio@37000000 {
++        #address-cells = <1>;
++        #size-cells = <0>;
++
++        compatible = "qcom,ipq8064-mdio", "syscon";
++        reg = <0x37000000 0x200000>;
++        resets = <&gcc GMAC_CORE1_RESET>;
++        reset-names = "stmmaceth";
++        clocks = <&gcc GMAC_CORE1_CLK>;
++
++        switch@10 {
++            compatible = "qca,qca8337";
++            /* ... */
++        };
++    };
+-- 
+2.25.0
+
