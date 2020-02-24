@@ -6,102 +6,119 @@ X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 43F3EC38BFA
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 21:32:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6CF30C38BFA
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 21:33:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 16C112084E
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 21:32:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3CE7B2084E
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 21:33:24 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="n2R+f4R/"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="E9YB0nYW"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728068AbgBXVc2 (ORCPT
+        id S1727932AbgBXVdX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Feb 2020 16:32:28 -0500
-Received: from merlin.infradead.org ([205.233.59.134]:42534 "EHLO
-        merlin.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726980AbgBXVc1 (ORCPT
+        Mon, 24 Feb 2020 16:33:23 -0500
+Received: from mail-qk1-f194.google.com ([209.85.222.194]:39525 "EHLO
+        mail-qk1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726980AbgBXVdW (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Feb 2020 16:32:27 -0500
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=91LwxLWvdfJmKpIkvnbgVBtKYjb/D3h4IRfL3vb9smw=; b=n2R+f4R/VQE8sdI8xxw08ZSM4s
-        2VktBF/WEtXYZWmIIdQvP5UhysH3fmG732lFdKX3UuW3KvVZxDlQrLYAgwAFu2KOyit6nHfP+FGnT
-        7Md1GgBE3FOnkz1ZuCi5cRgYkO3oRst5y4CJhT5TfCZfmXrg0xmNTm+jRKnAvlSTKMj3cMGERS3bX
-        Pv1uvCRdzjcnXlD2ECh65C6U91CA/ZbfyBabEGIqt0gpMQNKqKy9S0AudEZtcF3tW7erIgWu267bs
-        C4QD66T+Ig/yXxg891EnEeRR73Z8SX6hdCHRoWC3qLyTKtlssSdZsU09s274E7dP4NCl7uGM0v/NI
-        FbiOoWoQ==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=worktop.programming.kicks-ass.net)
-        by merlin.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1j6LKP-0000dO-30; Mon, 24 Feb 2020 21:31:49 +0000
-Received: by worktop.programming.kicks-ass.net (Postfix, from userid 1000)
-        id 81F1C980E37; Mon, 24 Feb 2020 22:31:39 +0100 (CET)
-Date:   Mon, 24 Feb 2020 22:31:39 +0100
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     Steven Rostedt <rostedt@goodmis.org>
-Cc:     Andy Lutomirski <luto@kernel.org>,
+        Mon, 24 Feb 2020 16:33:22 -0500
+Received: by mail-qk1-f194.google.com with SMTP id e16so7256213qkl.6
+        for <linux-kernel@vger.kernel.org>; Mon, 24 Feb 2020 13:33:22 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=sender:from:date:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=jRWoeoOM8DL9OmT3+yYVal9mOTve0BZlMU96rBIIFe0=;
+        b=E9YB0nYWyyqpbnhocJZ8cG/fU3LFV5rYqfrQVQ6ggzZbU09l2ZOa+8zYB9o5rcQykY
+         KkX+C5jQspLPr+su1sQHvmXtf8cebQcqN/URtvzxylUvBst7P49jC7Ka+QWawUifzD7O
+         KJ+46Cfra+s7sfRvYu3LZ6bW62hG64FoVYV5l5iIGbAcf/QUkBSAz8DY2ABk3wsuKlNZ
+         jqffs0SivE29ITfqb6DjFe9XecxTiK7kwIZzYr6Bd4rBpyPkbCKntST5NbJyIsmk3z5X
+         WlGFxI8T/pl5ROuE4ftxTNgkIxFTJM8TyWCUlMScCiDGabeQBEMd46kn4Y8AzFwNtEj9
+         zLog==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:from:date:to:cc:subject:message-id
+         :references:mime-version:content-disposition:in-reply-to:user-agent;
+        bh=jRWoeoOM8DL9OmT3+yYVal9mOTve0BZlMU96rBIIFe0=;
+        b=paOISClX27NWDwR9xSNOucEzsA4bVmc9CaIRD3fTRvkv3rQr6AnNL5H/s58Gjnonks
+         coVSVMuySL3Hy9kjIRgshVEkSKFdawomfM0nk9DFjys14L5dKUJhNtW23I6+804rgyM0
+         j+iJNkxSjrk1Mrf7aLvlpbY3oehRSS0jmQRMLv0enmuxgFsV/LF2RnQ8rxY+01kZN8Tk
+         NlbNR7WJEOhv+kJNxSbxvfYdcWnc2gnspQ4Qu6jKxZQihtIDK89/HdawUmgsNg57/1Oz
+         jx/lNOoXg9GY5EV8i8JL2ZL7Cs/kJ36IQSAjsd5s7BKkThJABKROaQQ4uOjCu15pjzhg
+         f4zg==
+X-Gm-Message-State: APjAAAWKBSMIZRA0q9osQ9VPmbFCp9O3DzYLpT1qwCa1QqgMFNOsGTP/
+        3E4wGvNEmrL/KsPZQKyJTE0=
+X-Google-Smtp-Source: APXvYqy4/TarFYSnVxoCsF3QA4gs91/IwvBd/MT049wjd2XdXdsBEFfmCj6sek4n5bI8YLgzyqy6+A==
+X-Received: by 2002:a05:620a:2224:: with SMTP id n4mr4141190qkh.21.1582580001588;
+        Mon, 24 Feb 2020 13:33:21 -0800 (PST)
+Received: from rani.riverdale.lan ([2001:470:1f07:5f3::b55f])
+        by smtp.gmail.com with ESMTPSA id 132sm6409229qkn.109.2020.02.24.13.33.21
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 24 Feb 2020 13:33:21 -0800 (PST)
+From:   Arvind Sankar <nivedita@alum.mit.edu>
+X-Google-Original-From: Arvind Sankar <arvind@rani.riverdale.lan>
+Date:   Mon, 24 Feb 2020 16:33:19 -0500
+To:     Nick Desaulniers <ndesaulniers@google.com>
+Cc:     Arvind Sankar <nivedita@alum.mit.edu>,
+        Borislav Petkov <bp@alien8.de>,
+        Nathan Chancellor <natechancellor@gmail.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        "maintainer:X86 ARCHITECTURE (32-BIT AND 64-BIT)" <x86@kernel.org>,
         LKML <linux-kernel@vger.kernel.org>,
-        linux-arch <linux-arch@vger.kernel.org>,
-        Ingo Molnar <mingo@kernel.org>,
-        Joel Fernandes <joel@joelfernandes.org>,
-        Greg KH <gregkh@linuxfoundation.org>, gustavo@embeddedor.com,
-        Thomas Gleixner <tglx@linutronix.de>, paulmck@kernel.org,
-        Josh Triplett <josh@joshtriplett.org>,
-        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-        Lai Jiangshan <jiangshanlai@gmail.com>,
-        Tony Luck <tony.luck@intel.com>,
-        Frederic Weisbecker <frederic@kernel.org>,
-        Dan Carpenter <dan.carpenter@oracle.com>,
-        Masami Hiramatsu <mhiramat@kernel.org>
-Subject: Re: [PATCH v4 05/27] x86: Replace ist_enter() with nmi_enter()
-Message-ID: <20200224213139.GO11457@worktop.programming.kicks-ass.net>
-References: <20200221133416.777099322@infradead.org>
- <20200221134215.328642621@infradead.org>
- <CALCETrU7nezN7d3GEZ8h8HbRfvZ0+F9+Ahb7fLvZ9FVaHN9x2w@mail.gmail.com>
- <20200221202246.GA14897@hirez.programming.kicks-ass.net>
- <20200224104346.GJ14946@hirez.programming.kicks-ass.net>
- <20200224112708.4f307ba3@gandalf.local.home>
- <20200224163409.GJ18400@hirez.programming.kicks-ass.net>
- <20200224114754.0fb798c1@gandalf.local.home>
+        clang-built-linux <clang-built-linux@googlegroups.com>,
+        Michael Matz <matz@suse.de>, Fangrui Song <maskray@google.com>,
+        Kees Cook <keescook@chromium.org>,
+        Andy Lutomirski <luto@kernel.org>
+Subject: Re: [PATCH 2/2] arch/x86: Drop unneeded linker script discard of
+ .eh_frame
+Message-ID: <20200224213319.GB409112@rani.riverdale.lan>
+References: <20200222235709.GA3786197@rani.riverdale.lan>
+ <20200223193715.83729-3-nivedita@alum.mit.edu>
+ <CAKwvOdmqM5aHnDCyL62gmWV5wFrKwAEdkHq+HPnvp3ZYA=dtbg@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20200224114754.0fb798c1@gandalf.local.home>
+In-Reply-To: <CAKwvOdmqM5aHnDCyL62gmWV5wFrKwAEdkHq+HPnvp3ZYA=dtbg@mail.gmail.com>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Feb 24, 2020 at 11:47:54AM -0500, Steven Rostedt wrote:
-> On Mon, 24 Feb 2020 17:34:09 +0100
-> Peter Zijlstra <peterz@infradead.org> wrote:
+On Mon, Feb 24, 2020 at 12:45:51PM -0800, Nick Desaulniers wrote:
 > 
-> > Looking at nmi_enter(), that leaves trace_hardirq_enter(), since we know
-> > we marked rcu_nmi_enter() as NOKPROBES, per the patches elsewhere in
-> > this series.
+> grepping for eh_frame in arch/x86/ there's a comment in
+> arch/x86/include/asm/dwarf2.h:
+>  40 #ifndef BUILD_VDSO
+>  41   /*
+>  42    * Emit CFI data in .debug_frame sections, not .eh_frame
+> sections.
+>  43    * The latter we currently just discard since we don't do DWARF
+>  44    * unwinding at runtime.  So only the offline DWARF information is
+>  45    * useful to anyone.  Note we should not use this directive if
+>  46    * vmlinux.lds.S gets changed so it doesn't discard .eh_frame.
+>  47    */
+>  48   .cfi_sections .debug_frame
 > 
-> Maybe this was addressed already in the series, but I'm just looking at
-> Linus's master branch we have:
+> add via:
+> commit 7b956f035a9ef ("x86/asm: Re-add parts of the manual CFI infrastructure")
 > 
-> #define nmi_enter()                                             \
->         do {                                                    \
->                 arch_nmi_enter();                               \
->                 printk_nmi_enter();                             \
->                 lockdep_off();                                  \
->                 ftrace_nmi_enter();                             \
->                 BUG_ON(in_nmi());                               \
->                 preempt_count_add(NMI_OFFSET + HARDIRQ_OFFSET); \
->                 rcu_nmi_enter();                                \
->                 trace_hardirq_enter();                          \
->         } while (0)
+> https://sourceware.org/binutils/docs/as/CFI-directives.html#g_t_002ecfi_005fsections-section_005flist
+> is the manual's section on .cfi_sections directives, and states `The
+> default if this directive is not used is .cfi_sections .eh_frame.`.
+> So the comment is slightly stale since we're no longer explicitly
+> discarding .eh_frame in arch/x86/kernel/vmlinux.lds.S, rather
+> preventing the generation via -fno-asynchronous-unwind-tables in
+> KBUILD_CFLAGS (across a few different Makefiles).  Would you mind also
+> updating the comment in arch/x86/include/asm/dwarf2.h in a V2? The
+> rest of this patch LGTM.
 > 
-> 
-> Just want to confirm that printk_nmi_enter(), lockdep_off(),
-> and ftrace_nmi_enter() are all marked fully with NOKPROBE.
 
-*sigh*, right you are, I only looked at notrace, not nokprobe.
+i.e. just replace that last sentence with "Note ... if we decide to use
+runtime DWARF unwinding again"?
 
-In particular the ftrace one is a bit off a mess, let me sort through
-that.
+The whole ifdef-ery machinery there is obsolete, all the directives its
+checking support for have been there since binutils-2.18, so should
+probably also clean it up to just unconditionally define them.
