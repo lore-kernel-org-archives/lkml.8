@@ -2,184 +2,177 @@ Return-Path: <SRS0=7TUr=4M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 28576C11D32
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 17:23:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 30A4FC11D34
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 17:23:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0022C20732
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 17:23:18 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="g+oJppTD"
+	by mail.kernel.org (Postfix) with ESMTP id 1053220CC7
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 17:23:21 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728417AbgBXRXR (ORCPT
+        id S1728392AbgBXRXM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Feb 2020 12:23:17 -0500
-Received: from mail-wr1-f65.google.com ([209.85.221.65]:45117 "EHLO
-        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728384AbgBXRXN (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Feb 2020 12:23:13 -0500
-Received: by mail-wr1-f65.google.com with SMTP id g3so11308994wrs.12
-        for <linux-kernel@vger.kernel.org>; Mon, 24 Feb 2020 09:23:11 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=from:date:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=Z7r4FCCdgK//1AJV7o7c7T7DxWEhsHdVIX0fUYjE4Ts=;
-        b=g+oJppTDpv5kQixddVJjhu7C9YgdQArMSg5hmvMNu3Y69lt1nSnlv6e4GUhHjgzmhc
-         kpyDv0phuVbr2tlC8zCjmDiCR1McS75gOj4mhVZnXt6t/GONUhBWF2zamYaURL31rXtE
-         7lQy0TnmmSKA733p9DxpdQcfGDWL0NZ7BMpRU=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:date:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=Z7r4FCCdgK//1AJV7o7c7T7DxWEhsHdVIX0fUYjE4Ts=;
-        b=OxzgBnYTXyU0vNwDHo16U0lfOOc3+uhsSHsk7j6NTEMmbhKcn0coJ86h6wuoMqCVVh
-         0vL27BQhyCBg9lRzmohJ2DIn7UstH2WHB6Bqj4XM4WMexQJVpd1JDI/OEIDDb8AMeF7w
-         fFhU+1b/QOGLR49HvyK17YkxtrxxdUlSNjVMLWLBZipG5/aQfyJOs9yqW+V85YHGjHEH
-         iaCIzX30R0FGLWMAttxSNCC4Y6Wn6j8LHH5LlK4bgtaQ82GyE1OcuwjMC/ECZH7avbtR
-         4tCF0ao/fMSXT1dElE/fsFyNcsoF4fVE5lCq3FxnQO/9gr7Jk6i+limkRUYcY23v7sMg
-         uf1w==
-X-Gm-Message-State: APjAAAXHGW142xkLuBkgb9v1Lrgxq5dfZR1gfD+UugseUn8S5Nm6d2GQ
-        SFUgKG9CYyi2gAwtON3MTY4C8IlJwl0=
-X-Google-Smtp-Source: APXvYqw/rLv+BSiAvCyHeUmMe9yYodWuPz2r3aFrU2+asq1tfmpvCuhAPRCp6EaiEEqrhW9IeqWgdQ==
-X-Received: by 2002:a5d:5706:: with SMTP id a6mr67768995wrv.108.1582564990967;
-        Mon, 24 Feb 2020 09:23:10 -0800 (PST)
-Received: from chromium.org ([2620:0:105f:fd00:d960:542a:a1d:648a])
-        by smtp.gmail.com with ESMTPSA id j15sm20087903wrp.9.2020.02.24.09.23.10
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 24 Feb 2020 09:23:10 -0800 (PST)
-From:   KP Singh <kpsingh@chromium.org>
-X-Google-Original-From: KP Singh <kpsingh>
-Date:   Mon, 24 Feb 2020 18:23:09 +0100
-To:     Kees Cook <keescook@chromium.org>
-Cc:     Casey Schaufler <casey@schaufler-ca.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Linux Security Module list 
-        <linux-security-module@vger.kernel.org>,
-        Alexei Starovoitov <ast@kernel.org>,
-        James Morris <jmorris@namei.org>
-Subject: Re: [PATCH bpf-next v4 3/8] bpf: lsm: provide attachment points for
- BPF LSM programs
-Message-ID: <20200224172309.GB21886@chromium.org>
-References: <20200220175250.10795-1-kpsingh@chromium.org>
- <20200220175250.10795-4-kpsingh@chromium.org>
- <0ef26943-9619-3736-4452-fec536a8d169@schaufler-ca.com>
- <202002211946.A23A987@keescook>
+        Mon, 24 Feb 2020 12:23:12 -0500
+Received: from mail.kernel.org ([198.145.29.99]:58074 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727775AbgBXRVS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 24 Feb 2020 12:21:18 -0500
+Received: from gandalf.local.home (cpe-66-24-58-225.stny.res.rr.com [66.24.58.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2D41D20838;
+        Mon, 24 Feb 2020 17:21:17 +0000 (UTC)
+Received: from rostedt by gandalf.local.home with local (Exim 4.93)
+        (envelope-from <rostedt@goodmis.org>)
+        id 1j6HPw-001Abu-2d; Mon, 24 Feb 2020 12:21:16 -0500
+Message-Id: <20200224172115.943693379@goodmis.org>
+User-Agent: quilt/0.65
+Date:   Mon, 24 Feb 2020 12:20:23 -0500
+From:   Steven Rostedt <rostedt@goodmis.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Ingo Molnar <mingo@kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        Tom Zanussi <tom.zanussi@linux.intel.com>,
+        kernel test robot <rong.a.chen@intel.com>,
+        Tom Zanussi <zanussi@kernel.org>
+Subject: [for-linus][PATCH 01/15] tracing: Make sure synth_event_trace() example always uses u64
+References: <20200224172022.330525468@goodmis.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <202002211946.A23A987@keescook>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: text/plain; charset=ISO-8859-15
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Kees,
+From: Tom Zanussi <zanussi@kernel.org>
 
-Thanks for the feedback!
+synth_event_trace() is the varargs version of synth_event_trace_array(),
+which takes an array of u64, as do synth_event_add_val() et al.
 
-On 21-Feb 20:22, Kees Cook wrote:
-> On Thu, Feb 20, 2020 at 03:49:05PM -0800, Casey Schaufler wrote:
-> > On 2/20/2020 9:52 AM, KP Singh wrote:
-> > > From: KP Singh <kpsingh@google.com>
-> > 
-> > Sorry about the heavy list pruning - the original set
-> > blows thunderbird up.
-> 
-> (I've added some people back; I had to dig this thread back out of lkml
-> since I didn't get a direct copy...)
-> 
-> > > The BPF LSM programs are implemented as fexit trampolines to avoid the
-> > > overhead of retpolines. These programs cannot be attached to security_*
-> > > wrappers as there are quite a few security_* functions that do more than
-> > > just calling the LSM callbacks.
-> > >
-> > > This was discussed on the lists in:
-> > >
-> > >   https://lore.kernel.org/bpf/20200123152440.28956-1-kpsingh@chromium.org/T/#m068becce588a0cdf01913f368a97aea4c62d8266
-> > >
-> > > Adding a NOP callback after all the static LSM callbacks are called has
-> > > the following benefits:
-> > >
-> > > - The BPF programs run at the right stage of the security_* wrappers.
-> > > - They run after all the static LSM hooks allowed the operation,
-> > >   therefore cannot allow an action that was already denied.
-> > 
-> > I still say that the special call-out to BPF is unnecessary.
-> > I remain unconvinced by the arguments. You aren't doing anything
-> > so special that the general mechanism won't work.
-> 
-> If I'm understanding this correctly, there are two issues:
-> 
-> 1- BPF needs to be run last due to fexit trampolines (?)
-> 
-> 2- BPF hooks don't know what may be attached at any given time, so
->    ALL LSM hooks need to be universally hooked. THIS turns out to create
->    a measurable performance problem in that the cost of the indirect call
->    on the (mostly/usually) empty BPF policy is too high.
-> 
-> "1" can be solved a lot of ways, and doesn't seem to be a debated part
-> of this series.
-> 
-> "2" is interesting -- it creates a performance problem for EVERYONE that
-> builds in this kernel feature, regardless of them using it. Excepting
-> SELinux, "traditional" LSMs tends to be relatively sparse in their hooking:
-> 
-> $ grep '^      struct hlist_head' include/linux/lsm_hooks.h | wc -l
-> 230
-> $ for i in apparmor loadpin lockdown safesetid selinux smack tomoyo yama ; \
->   do echo -n "$i " && (cd $i && git grep LSM_HOOK_INIT | wc -l) ; done
-> apparmor   68
-> loadpin     3
-> lockdown    1
-> safesetid   2
-> selinux   202
-> smack     108
-> tomoyo     28
-> yama        4
-> 
-> So, trying to avoid the indirect calls is, as you say, an optimization,
-> but it might be a needed one due to the other limitations.
-> 
-> To me, some questions present themselves:
-> 
-> a) What, exactly, are the performance characteristics of:
-> 	"before"
-> 	"with indirect calls"
-> 	"with static keys optimization"
+To not only be consistent with those, but also to address the fact
+that synth_event_trace() expects every arg to be of the same type
+since it doesn't also pass in e.g. a format string, the caller needs
+to make sure all args are of the same type, u64.  u64 is used because
+it needs to accomodate the largest type available in synthetic events,
+which is u64.
 
-Good suggestion!
+This fixes the bug reported by the kernel test robot/Rong Chen.
 
-I will do some analysis and come back with the numbers.
+Link: https://lore.kernel.org/lkml/20200212113444.GS12867@shao2-debian/
+Link: http://lkml.kernel.org/r/894c4e955558b521210ee0642ba194a9e603354c.1581720155.git.zanussi@kernel.org
 
-> 
-> b) Would there actually be a global benefit to using the static keys
->    optimization for other LSMs? (Especially given that they're already
->    sparsely populated and policy likely determines utility -- all the
->    LSMs would just turn ON all their static keys or turn off ALL their
->    static keys depending on having policy loaded.)
+Fixes: 9fe41efaca084 ("tracing: Add synth event generation test module")
+Reported-by: kernel test robot <rong.a.chen@intel.com>
+Signed-off-by: Tom Zanussi <zanussi@kernel.org>
+Signed-off-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
+---
+ kernel/trace/synth_event_gen_test.c | 34 ++++++++++++++---------------
+ 1 file changed, 17 insertions(+), 17 deletions(-)
 
-As Alexei mentioned, we can use the patches for static calls after
-they are merged:
+diff --git a/kernel/trace/synth_event_gen_test.c b/kernel/trace/synth_event_gen_test.c
+index 4aefe003cb7c..6866280a9b10 100644
+--- a/kernel/trace/synth_event_gen_test.c
++++ b/kernel/trace/synth_event_gen_test.c
+@@ -111,11 +111,11 @@ static int __init test_gen_synth_cmd(void)
+ 	/* Create some bogus values just for testing */
+ 
+ 	vals[0] = 777;			/* next_pid_field */
+-	vals[1] = (u64)"hula hoops";	/* next_comm_field */
++	vals[1] = (u64)(long)"hula hoops";	/* next_comm_field */
+ 	vals[2] = 1000000;		/* ts_ns */
+ 	vals[3] = 1000;			/* ts_ms */
+ 	vals[4] = smp_processor_id();	/* cpu */
+-	vals[5] = (u64)"thneed";	/* my_string_field */
++	vals[5] = (u64)(long)"thneed";	/* my_string_field */
+ 	vals[6] = 598;			/* my_int_field */
+ 
+ 	/* Now generate a gen_synth_test event */
+@@ -218,11 +218,11 @@ static int __init test_empty_synth_event(void)
+ 	/* Create some bogus values just for testing */
+ 
+ 	vals[0] = 777;			/* next_pid_field */
+-	vals[1] = (u64)"tiddlywinks";	/* next_comm_field */
++	vals[1] = (u64)(long)"tiddlywinks";	/* next_comm_field */
+ 	vals[2] = 1000000;		/* ts_ns */
+ 	vals[3] = 1000;			/* ts_ms */
+ 	vals[4] = smp_processor_id();	/* cpu */
+-	vals[5] = (u64)"thneed_2.0";	/* my_string_field */
++	vals[5] = (u64)(long)"thneed_2.0";	/* my_string_field */
+ 	vals[6] = 399;			/* my_int_field */
+ 
+ 	/* Now trace an empty_synth_test event */
+@@ -290,11 +290,11 @@ static int __init test_create_synth_event(void)
+ 	/* Create some bogus values just for testing */
+ 
+ 	vals[0] = 777;			/* next_pid_field */
+-	vals[1] = (u64)"tiddlywinks";	/* next_comm_field */
++	vals[1] = (u64)(long)"tiddlywinks";	/* next_comm_field */
+ 	vals[2] = 1000000;		/* ts_ns */
+ 	vals[3] = 1000;			/* ts_ms */
+ 	vals[4] = smp_processor_id();	/* cpu */
+-	vals[5] = (u64)"thneed";	/* my_string_field */
++	vals[5] = (u64)(long)"thneed";	/* my_string_field */
+ 	vals[6] = 398;			/* my_int_field */
+ 
+ 	/* Now generate a create_synth_test event */
+@@ -330,7 +330,7 @@ static int __init test_add_next_synth_val(void)
+ 		goto out;
+ 
+ 	/* next_comm_field */
+-	ret = synth_event_add_next_val((u64)"slinky", &trace_state);
++	ret = synth_event_add_next_val((u64)(long)"slinky", &trace_state);
+ 	if (ret)
+ 		goto out;
+ 
+@@ -350,7 +350,7 @@ static int __init test_add_next_synth_val(void)
+ 		goto out;
+ 
+ 	/* my_string_field */
+-	ret = synth_event_add_next_val((u64)"thneed_2.01", &trace_state);
++	ret = synth_event_add_next_val((u64)(long)"thneed_2.01", &trace_state);
+ 	if (ret)
+ 		goto out;
+ 
+@@ -396,12 +396,12 @@ static int __init test_add_synth_val(void)
+ 	if (ret)
+ 		goto out;
+ 
+-	ret = synth_event_add_val("next_comm_field", (u64)"silly putty",
++	ret = synth_event_add_val("next_comm_field", (u64)(long)"silly putty",
+ 				  &trace_state);
+ 	if (ret)
+ 		goto out;
+ 
+-	ret = synth_event_add_val("my_string_field", (u64)"thneed_9",
++	ret = synth_event_add_val("my_string_field", (u64)(long)"thneed_9",
+ 				  &trace_state);
+ 	if (ret)
+ 		goto out;
+@@ -423,13 +423,13 @@ static int __init test_trace_synth_event(void)
+ 
+ 	/* Trace some bogus values just for testing */
+ 	ret = synth_event_trace(create_synth_test, 7,	/* number of values */
+-				444,			/* next_pid_field */
+-				(u64)"clackers",	/* next_comm_field */
+-				1000000,		/* ts_ns */
+-				1000,			/* ts_ms */
+-				smp_processor_id(),	/* cpu */
+-				(u64)"Thneed",		/* my_string_field */
+-				999);			/* my_int_field */
++				(u64)444,		/* next_pid_field */
++				(u64)(long)"clackers",	/* next_comm_field */
++				(u64)1000000,		/* ts_ns */
++				(u64)1000,		/* ts_ms */
++				(u64)smp_processor_id(),/* cpu */
++				(u64)(long)"Thneed",	/* my_string_field */
++				(u64)999);		/* my_int_field */
+ 	return ret;
+ }
+ 
+-- 
+2.25.0
 
-https://lore.kernel.org/lkml/8bc857824f82462a296a8a3c4913a11a7f801e74.1547073843.git.jpoimboe@redhat.com/
 
-to make the framework better (as a separate series) especially given
-that we are unsure how they work with BPF.
-
-- KP
-
-> 
-> If static keys are justified for KRSI (by "a") then it seems the approach
-> here should stand. If "b" is also true, then we need an additional
-> series to apply this optimization for the other LSMs (but that seems
-> distinctly separate from THIS series).
-> 
-> -- 
-> Kees Cook
