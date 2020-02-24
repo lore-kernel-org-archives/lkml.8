@@ -2,111 +2,69 @@ Return-Path: <SRS0=7TUr=4M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 25141C11D34
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 15:15:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5CF73C11D32
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 15:15:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F087C2082F
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 15:15:19 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582557320;
-	bh=o1nOGaQHdZL0UAsK/bjsu+6BAwDuNsTZaQNaSLe2HLE=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=XPZY0iWCKQZsndavwVQhYzeeb+6SasFNACByauPG3Wrkx25piOfq0lSFcbXNkAIse
-	 ziuq/6vQISROrFNwqoohxuhfFgnz9f23G/869kPYN14sKqRgvdTKsIcSg0w6UT4CKT
-	 MD3brxILW0RUsp103uykq2RSQpJBOVjQ/0G88ukU=
+	by mail.kernel.org (Postfix) with ESMTP id 3D2C420828
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 15:15:37 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727901AbgBXPPT (ORCPT
+        id S1727939AbgBXPPg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Feb 2020 10:15:19 -0500
-Received: from mail.kernel.org ([198.145.29.99]:42248 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727742AbgBXPPS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Feb 2020 10:15:18 -0500
-Received: from mail-qv1-f49.google.com (mail-qv1-f49.google.com [209.85.219.49])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D7BEA20838;
-        Mon, 24 Feb 2020 15:15:17 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1582557318;
-        bh=o1nOGaQHdZL0UAsK/bjsu+6BAwDuNsTZaQNaSLe2HLE=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=HRf8OqzGxscXlFCy7Kr95TbhR2fqQG8f2vdcwZdx5MMJTpA8+DrGUKwwDupCJHAXJ
-         Lpe/vG+HPf7LfAKpn/L6UjmIzGsfYogpJjWyPPuIKX2EwdWPCP33Ps5cc9AEuDNSJq
-         wd6cUOAExGR8miZSpHtD5A3/EEFKNcuBNIhykFfA=
-Received: by mail-qv1-f49.google.com with SMTP id y2so4236512qvu.13;
-        Mon, 24 Feb 2020 07:15:17 -0800 (PST)
-X-Gm-Message-State: APjAAAXYoRVmrwG9KiFEgH3rdmQm/NtEw+2dx8UdR2DZVjccrCMCJl0E
-        ciO2aAKbC83gJoKWEtKrQCoT47aDzgg6YDdxVA==
-X-Google-Smtp-Source: APXvYqx6fBgVnq9vjh/yHZnkbthH3EWPw/BqHYWMQ6citY+xthXlZQgnZuHLmeSOEN0UIorxy5g/2npA/CWQaro2QqE=
-X-Received: by 2002:a0c:ef47:: with SMTP id t7mr12552684qvs.136.1582557317000;
- Mon, 24 Feb 2020 07:15:17 -0800 (PST)
+        Mon, 24 Feb 2020 10:15:36 -0500
+Received: from youngberry.canonical.com ([91.189.89.112]:53126 "EHLO
+        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727727AbgBXPPf (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 24 Feb 2020 10:15:35 -0500
+Received: from 1.general.cking.uk.vpn ([10.172.193.212] helo=localhost)
+        by youngberry.canonical.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.86_2)
+        (envelope-from <colin.king@canonical.com>)
+        id 1j6FSF-0004iJ-1C; Mon, 24 Feb 2020 15:15:31 +0000
+From:   Colin King <colin.king@canonical.com>
+To:     Jyri Sarha <jsarha@ti.com>, Tomi Valkeinen <tomi.valkeinen@ti.com>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        dri-devel@lists.freedesktop.org
+Cc:     kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH][next] drm/tidss: fix spelling mistake "bufer" -> "buffer"
+Date:   Mon, 24 Feb 2020 15:15:30 +0000
+Message-Id: <20200224151530.360369-1-colin.king@canonical.com>
+X-Mailer: git-send-email 2.25.0
 MIME-Version: 1.0
-References: <CFE9AEF5-FFF9-44A9-90D8-DE6AC7E7DD4F@goldelico.com>
- <20200220060001.25807-1-andreas@kemnade.info> <CAL_JsqKTdpbLfPq_eGUf-w-0s8JMndbMrQ2BsMt+8y+eqQ-kZw@mail.gmail.com>
- <20200224074804.3a5999ca@kemnade.info>
-In-Reply-To: <20200224074804.3a5999ca@kemnade.info>
-From:   Rob Herring <robh@kernel.org>
-Date:   Mon, 24 Feb 2020 09:15:05 -0600
-X-Gmail-Original-Message-ID: <CAL_JsqKNAQT996sDSW+k=SZq5NwzQn4wbEB0fS9_19rKdXMGYg@mail.gmail.com>
-Message-ID: <CAL_JsqKNAQT996sDSW+k=SZq5NwzQn4wbEB0fS9_19rKdXMGYg@mail.gmail.com>
-Subject: Re: [PATCH RFC] Bindings: nvmem: add bindings for JZ4780 efuse
-To:     Andreas Kemnade <andreas@kemnade.info>
-Cc:     "H. Nikolaus Schaller" <hns@goldelico.com>,
-        PrasannaKumar Muralidharan <prasannatsmkumar@gmail.com>,
-        Paul Cercueil <paul@crapouillou.net>,
-        Mathieu Malaterre <malat@debian.org>,
-        Srinivas Kandagatla <srinivas.kandagatla@linaro.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        Discussions about the Letux Kernel 
-        <letux-kernel@openphoenux.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        "open list:MIPS" <linux-mips@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Feb 24, 2020 at 12:48 AM Andreas Kemnade <andreas@kemnade.info> wrote:
->
-> On Thu, 20 Feb 2020 13:53:55 -0600
-> Rob Herring <robh@kernel.org> wrote:
->
-> [...]
-> > > +
-> > > +required:
-> > > +  - compatible
-> > > +  - reg
-> > > +  - clock
-> >
-> > 'make dt_binding_check' would have pointed the error here for you:
-> >
-> I did run make dt_binding_check...
-> It stopped because the jz4780-cgu.h included was missing. Then I have added
-> that line and have started dt_binding_check again.
-> At least here it is doing a full rerun in the second part.
-> After some time I scrolled back and noticed DTC passed
-> and missed that
->
-> > /builds/robherring/linux-dt-review/Documentation/devicetree/bindings/nvmem/ingenic,jz4780-efuse.example.dt.yaml:
-> > efuse@134100d0: 'clock' is a required property
-> >
-> in the CHECKS line. Well, dt_binding_check is a bit noisy. I guess I should
-> have redirected all output to a text file, before and after my changes. and
-> diffed the results.
-> Is there any script ready for that?
+From: Colin Ian King <colin.king@canonical.com>
 
-grep 'ingenic,jz4780-efuse' <build log> ?
+There is a spelling mistake in a dev_dbg message. Fix it.
 
-Noisy? There's 8 warnings on Linus' master currently[1]. I try to keep
-that at 0, but I wouldn't call 8 noisy.
+Signed-off-by: Colin Ian King <colin.king@canonical.com>
+---
+ drivers/gpu/drm/tidss/tidss_dispc.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-Rob
+diff --git a/drivers/gpu/drm/tidss/tidss_dispc.c b/drivers/gpu/drm/tidss/tidss_dispc.c
+index eeb160dc047b..d49f2d6d57df 100644
+--- a/drivers/gpu/drm/tidss/tidss_dispc.c
++++ b/drivers/gpu/drm/tidss/tidss_dispc.c
+@@ -1699,7 +1699,7 @@ static int dispc_vid_calc_scaling(struct dispc_device *dispc,
+ 
+ 		if (sp->xinc > f->xinc_max) {
+ 			dev_dbg(dispc->dev,
+-				"%s: Too wide input bufer %u > %u\n", __func__,
++				"%s: Too wide input buffer %u > %u\n", __func__,
+ 				state->src_w >> 16, in_width_max * f->xinc_max);
+ 			return -EINVAL;
+ 		}
+-- 
+2.25.0
 
-[1] https://gitlab.com/robherring/linux-dt-bindings/-/jobs/447630363
