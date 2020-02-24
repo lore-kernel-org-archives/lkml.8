@@ -2,327 +2,112 @@ Return-Path: <SRS0=7TUr=4M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0C88EC3567B
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 09:49:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 20FBAC35679
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 09:50:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D8B8220863
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 09:49:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AE50C20836
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 09:50:04 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="N51uzigH"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727393AbgBXJtb (ORCPT
+        id S1727429AbgBXJuD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Feb 2020 04:49:31 -0500
-Received: from inva021.nxp.com ([92.121.34.21]:52846 "EHLO inva021.nxp.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726628AbgBXJtb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Feb 2020 04:49:31 -0500
-Received: from inva021.nxp.com (localhost [127.0.0.1])
-        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id 2716F20DC44;
-        Mon, 24 Feb 2020 10:49:28 +0100 (CET)
-Received: from invc005.ap-rdc01.nxp.com (invc005.ap-rdc01.nxp.com [165.114.16.14])
-        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id 2B71B20DC35;
-        Mon, 24 Feb 2020 10:49:22 +0100 (CET)
-Received: from localhost.localdomain (shlinux2.ap.freescale.net [10.192.224.44])
-        by invc005.ap-rdc01.nxp.com (Postfix) with ESMTP id 131B3402B3;
-        Mon, 24 Feb 2020 17:49:15 +0800 (SGT)
-From:   Sherry Sun <sherry.sun@nxp.com>
-To:     bp@alien8.de, mchehab@kernel.org, tony.luck@intel.com,
-        james.morse@arm.com, rrichter@marvell.com, michal.simek@xilinx.com
-Cc:     linux-edac@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org, linux-imx@nxp.com, frank.li@nxp.com
-Subject: [PATCH 3/3] EDAC: synopsys: Add useful output information for 64 bit systems
-Date:   Mon, 24 Feb 2020 17:42:37 +0800
-Message-Id: <1582537357-10339-4-git-send-email-sherry.sun@nxp.com>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1582537357-10339-1-git-send-email-sherry.sun@nxp.com>
-References: <1582537357-10339-1-git-send-email-sherry.sun@nxp.com>
-X-Virus-Scanned: ClamAV using ClamSMTP
+        Mon, 24 Feb 2020 04:50:03 -0500
+Received: from lelv0142.ext.ti.com ([198.47.23.249]:36498 "EHLO
+        lelv0142.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727311AbgBXJuD (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 24 Feb 2020 04:50:03 -0500
+Received: from fllv0034.itg.ti.com ([10.64.40.246])
+        by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id 01O9nwWL077916;
+        Mon, 24 Feb 2020 03:49:58 -0600
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1582537798;
+        bh=HLip2YpnIGSxCwy5xrSBcH9I9sf6oirYzrhmh5MeiXA=;
+        h=From:To:CC:Subject:Date;
+        b=N51uzigHsE1ZPyzRl0CJpmg5wq7auBaamExDjhbMdcCpCxaTL4pEizhmxZHK6IfGR
+         ONmRBcsYzHjo2+TTtiCDDs0HwgW/XjEm8LquqxWSccaL37jsIJf7CAn6gVo9Xq7A+e
+         wAyofX/qBwoYoHq4ZVaX8/drBHwJdJOWJFNeD0KM=
+Received: from DLEE103.ent.ti.com (dlee103.ent.ti.com [157.170.170.33])
+        by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 01O9nww6097396
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Mon, 24 Feb 2020 03:49:58 -0600
+Received: from DLEE109.ent.ti.com (157.170.170.41) by DLEE103.ent.ti.com
+ (157.170.170.33) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Mon, 24
+ Feb 2020 03:49:57 -0600
+Received: from fllv0040.itg.ti.com (10.64.41.20) by DLEE109.ent.ti.com
+ (157.170.170.41) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
+ Frontend Transport; Mon, 24 Feb 2020 03:49:57 -0600
+Received: from a0393678ub.india.ti.com (ileax41-snat.itg.ti.com [10.172.224.153])
+        by fllv0040.itg.ti.com (8.15.2/8.15.2) with ESMTP id 01O9nsnB103443;
+        Mon, 24 Feb 2020 03:49:55 -0600
+From:   Kishon Vijay Abraham I <kishon@ti.com>
+To:     Kishon Vijay Abraham I <kishon@ti.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+CC:     Bjorn Helgaas <bhelgaas@google.com>, <linux-pci@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>
+Subject: [PATCH v3 0/5] PCI: Endpoint: Miscellaneous improvements
+Date:   Mon, 24 Feb 2020 15:23:33 +0530
+Message-ID: <20200224095338.3758-1-kishon@ti.com>
+X-Mailer: git-send-email 2.17.1
+MIME-Version: 1.0
+Content-Type: text/plain
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Now the synopsys_edac driver only support to output the 32-bit error
-data, but for 64 bit systems, such as i.MX8MP, 64 bit error data is
-needed. At the same time, when CE/UE happens, syndrome data is also
-useful to showed to user. So here add data_high and syndrome data for
-64-bit systems.
+Changes from v2:
+*) Added "Tested-by" tag from Vidya Sagar
+*) Added stable fixes tag to "Fix for concurrent memory allocation in
+   OB address region"
+   
+Changes from v1:
+Rebased to Linux 5.6-rc1 and removed dependencies to my other series
+to unblock [1]
 
-And in order to distinguish 64-bit systems and other systems, here
-adjust the position of the zynqmp_get_dtype(), so we can called
-this function to distinguish it. To ensure that functions of the same
-function are in the same position, here adjust the position of the
-zynq_get_dtype() too.
+[1] -> http://lore.kernel.org/r/20200103100736.27627-1-vidyas@nvidia.com
 
-Signed-off-by: Sherry Sun <sherry.sun@nxp.com>
----
- drivers/edac/synopsys_edac.c | 182 ++++++++++++++++++++---------------
- 1 file changed, 102 insertions(+), 80 deletions(-)
+v1 of this patch series can be found @
+http://lore.kernel.org/r/20191231100331.6316-1-kishon@ti.com
 
-diff --git a/drivers/edac/synopsys_edac.c b/drivers/edac/synopsys_edac.c
-index ef7e907c7956..ae541efefeb8 100644
---- a/drivers/edac/synopsys_edac.c
-+++ b/drivers/edac/synopsys_edac.c
-@@ -278,18 +278,22 @@
-  * @col:	Column number.
-  * @bank:	Bank number.
-  * @bitpos:	Bit position.
-- * @data:	Data causing the error.
-+ * @data_low:	Low bit data causing the error.
-+ * @data_high:	High bit data causing the error(used for 64 bit systems).
-  * @bankgrpnr:	Bank group number.
-  * @blknr:	Block number.
-+ * @syndrome:	Syndrome of the error.
-  */
- struct ecc_error_info {
- 	u32 row;
- 	u32 col;
- 	u32 bank;
- 	u32 bitpos;
--	u32 data;
-+	u32 data_low;
-+	u32 data_high;
- 	u32 bankgrpnr;
- 	u32 blknr;
-+	u32 syndrome;
- };
- 
- /**
-@@ -354,6 +358,70 @@ struct synps_platform_data {
- 	int quirks;
- };
- 
-+/**
-+ * zynq_get_dtype - Return the controller memory width.
-+ * @base:	DDR memory controller base address.
-+ *
-+ * Get the EDAC device type width appropriate for the current controller
-+ * configuration.
-+ *
-+ * Return: a device type width enumeration.
-+ */
-+static enum dev_type zynq_get_dtype(const void __iomem *base)
-+{
-+	enum dev_type dt;
-+	u32 width;
-+
-+	width = readl(base + CTRL_OFST);
-+	width = (width & CTRL_BW_MASK) >> CTRL_BW_SHIFT;
-+
-+	switch (width) {
-+	case DDRCTL_WDTH_16:
-+		dt = DEV_X2;
-+		break;
-+	case DDRCTL_WDTH_32:
-+		dt = DEV_X4;
-+		break;
-+	default:
-+		dt = DEV_UNKNOWN;
-+	}
-+
-+	return dt;
-+}
-+
-+/**
-+ * zynqmp_get_dtype - Return the controller memory width.
-+ * @base:	DDR memory controller base address.
-+ *
-+ * Get the EDAC device type width appropriate for the current controller
-+ * configuration.
-+ *
-+ * Return: a device type width enumeration.
-+ */
-+static enum dev_type zynqmp_get_dtype(const void __iomem *base)
-+{
-+	enum dev_type dt;
-+	u32 width;
-+
-+	width = readl(base + CTRL_OFST);
-+	width = (width & ECC_CTRL_BUSWIDTH_MASK) >> ECC_CTRL_BUSWIDTH_SHIFT;
-+	switch (width) {
-+	case DDRCTL_EWDTH_16:
-+		dt = DEV_X2;
-+		break;
-+	case DDRCTL_EWDTH_32:
-+		dt = DEV_X4;
-+		break;
-+	case DDRCTL_EWDTH_64:
-+		dt = DEV_X8;
-+		break;
-+	default:
-+		dt = DEV_UNKNOWN;
-+	}
-+
-+	return dt;
-+}
-+
- /**
-  * zynq_get_error_info - Get the current ECC error info.
-  * @priv:	DDR memory controller private instance data.
-@@ -385,9 +453,9 @@ static int zynq_get_error_info(struct synps_edac_priv *priv)
- 	p->ceinfo.row = (regval & ADDR_ROW_MASK) >> ADDR_ROW_SHIFT;
- 	p->ceinfo.col = regval & ADDR_COL_MASK;
- 	p->ceinfo.bank = (regval & ADDR_BANK_MASK) >> ADDR_BANK_SHIFT;
--	p->ceinfo.data = readl(base + CE_DATA_31_0_OFST);
-+	p->ceinfo.data_low = readl(base + CE_DATA_31_0_OFST);
- 	edac_dbg(3, "CE bit position: %d data: %d\n", p->ceinfo.bitpos,
--		 p->ceinfo.data);
-+		 p->ceinfo.data_low);
- 	clearval = ECC_CTRL_CLR_CE_ERR;
- 
- ue_err:
-@@ -399,7 +467,7 @@ static int zynq_get_error_info(struct synps_edac_priv *priv)
- 	p->ueinfo.row = (regval & ADDR_ROW_MASK) >> ADDR_ROW_SHIFT;
- 	p->ueinfo.col = regval & ADDR_COL_MASK;
- 	p->ueinfo.bank = (regval & ADDR_BANK_MASK) >> ADDR_BANK_SHIFT;
--	p->ueinfo.data = readl(base + UE_DATA_31_0_OFST);
-+	p->ueinfo.data_low = readl(base + UE_DATA_31_0_OFST);
- 	clearval |= ECC_CTRL_CLR_UE_ERR;
- 
- out:
-@@ -443,10 +511,14 @@ static int zynqmp_get_error_info(struct synps_edac_priv *priv)
- 	p->ceinfo.bankgrpnr = (regval &	ECC_CEADDR1_BNKGRP_MASK) >>
- 					ECC_CEADDR1_BNKGRP_SHIFT;
- 	p->ceinfo.blknr = (regval & ECC_CEADDR1_BLKNR_MASK);
--	p->ceinfo.data = readl(base + ECC_CSYND0_OFST);
--	edac_dbg(2, "ECCCSYN0: 0x%08X ECCCSYN1: 0x%08X ECCCSYN2: 0x%08X\n",
--		 readl(base + ECC_CSYND0_OFST), readl(base + ECC_CSYND1_OFST),
--		 readl(base + ECC_CSYND2_OFST));
-+	p->ceinfo.data_low = readl(base + ECC_CSYND0_OFST);
-+	if (zynqmp_get_dtype(base) == DEV_X8) {
-+		p->ceinfo.data_high = readl(base + ECC_CSYND1_OFST);
-+		p->ceinfo.syndrome = readl(base + ECC_CSYND2_OFST);
-+		edac_dbg(2, "CE data_low: 0x%08X data_high: 0x%08X syndrome: 0x%08X\n",
-+			 p->ceinfo.data_low, p->ceinfo.data_high,
-+			 p->ceinfo.syndrome);
-+	}
- ue_err:
- 	if (!p->ue_cnt)
- 		goto out;
-@@ -459,7 +531,14 @@ static int zynqmp_get_error_info(struct synps_edac_priv *priv)
- 	p->ueinfo.bank = (regval & ECC_CEADDR1_BNKNR_MASK) >>
- 					ECC_CEADDR1_BNKNR_SHIFT;
- 	p->ueinfo.blknr = (regval & ECC_CEADDR1_BLKNR_MASK);
--	p->ueinfo.data = readl(base + ECC_UESYND0_OFST);
-+	p->ueinfo.data_low = readl(base + ECC_UESYND0_OFST);
-+	if (zynqmp_get_dtype(base) == DEV_X8) {
-+		p->ueinfo.data_high = readl(base + ECC_UESYND1_OFST);
-+		p->ueinfo.syndrome = readl(base + ECC_UESYND2_OFST);
-+		edac_dbg(2, "UE data_low: 0x%08X data_high: 0x%08X syndrome: 0x%08X\n",
-+			 p->ueinfo.data_low, p->ueinfo.data_high,
-+			 p->ueinfo.syndrome);
-+	}
- out:
- 	clearval = ECC_CTRL_CLR_CE_ERR | ECC_CTRL_CLR_CE_ERRCNT;
- 	clearval |= ECC_CTRL_CLR_UE_ERR | ECC_CTRL_CLR_UE_ERRCNT;
-@@ -480,6 +559,7 @@ static void handle_error(struct mem_ctl_info *mci, struct synps_ecc_status *p)
- {
- 	struct synps_edac_priv *priv = mci->pvt_info;
- 	struct ecc_error_info *pinf;
-+	int n;
- 
- 	if (p->ce_cnt) {
- 		pinf = &p->ceinfo;
-@@ -487,13 +567,19 @@ static void handle_error(struct mem_ctl_info *mci, struct synps_ecc_status *p)
- 			snprintf(priv->message, SYNPS_EDAC_MSG_SIZE,
- 				 "DDR ECC error type:%s Row %d Bank %d Col %d Bit Position: %d Data: 0x%08x",
- 				 "CE", pinf->row, pinf->bank, pinf->col,
--				 pinf->bitpos, pinf->data);
-+				 pinf->bitpos, pinf->data_low);
- 		} else {
--			snprintf(priv->message, SYNPS_EDAC_MSG_SIZE,
--				 "DDR ECC error type:%s Row %d Bank %d BankGroup Number %d Block Number %d Bit Position: %d Data: 0x%08x",
--				 "CE", pinf->row, pinf->bank,
--				 pinf->bankgrpnr, pinf->blknr,
--				 pinf->bitpos, pinf->data);
-+			n = snprintf(priv->message, SYNPS_EDAC_MSG_SIZE,
-+				     "DDR ECC error type:%s Row %d Bank %d BankGroup Number %d Block Number %d Bit Position: %d Data: 0x%08x",
-+				     "CE", pinf->row, pinf->bank,
-+				     pinf->bankgrpnr, pinf->blknr,
-+				     pinf->bitpos, pinf->data_low);
-+
-+			if (zynqmp_get_dtype(priv->baseaddr) == DEV_X8)
-+				snprintf(priv->message + n,
-+					SYNPS_EDAC_MSG_SIZE - n,
-+					" Data_high: 0x%08x Syndrome: 0x%08x",
-+					pinf->data_high, pinf->syndrome);
- 		}
- 
- 		edac_mc_handle_error(HW_EVENT_ERR_CORRECTED, mci,
-@@ -636,70 +722,6 @@ static void check_errors(struct mem_ctl_info *mci)
- 		 priv->ce_cnt, priv->ue_cnt);
- }
- 
--/**
-- * zynq_get_dtype - Return the controller memory width.
-- * @base:	DDR memory controller base address.
-- *
-- * Get the EDAC device type width appropriate for the current controller
-- * configuration.
-- *
-- * Return: a device type width enumeration.
-- */
--static enum dev_type zynq_get_dtype(const void __iomem *base)
--{
--	enum dev_type dt;
--	u32 width;
--
--	width = readl(base + CTRL_OFST);
--	width = (width & CTRL_BW_MASK) >> CTRL_BW_SHIFT;
--
--	switch (width) {
--	case DDRCTL_WDTH_16:
--		dt = DEV_X2;
--		break;
--	case DDRCTL_WDTH_32:
--		dt = DEV_X4;
--		break;
--	default:
--		dt = DEV_UNKNOWN;
--	}
--
--	return dt;
--}
--
--/**
-- * zynqmp_get_dtype - Return the controller memory width.
-- * @base:	DDR memory controller base address.
-- *
-- * Get the EDAC device type width appropriate for the current controller
-- * configuration.
-- *
-- * Return: a device type width enumeration.
-- */
--static enum dev_type zynqmp_get_dtype(const void __iomem *base)
--{
--	enum dev_type dt;
--	u32 width;
--
--	width = readl(base + CTRL_OFST);
--	width = (width & ECC_CTRL_BUSWIDTH_MASK) >> ECC_CTRL_BUSWIDTH_SHIFT;
--	switch (width) {
--	case DDRCTL_EWDTH_16:
--		dt = DEV_X2;
--		break;
--	case DDRCTL_EWDTH_32:
--		dt = DEV_X4;
--		break;
--	case DDRCTL_EWDTH_64:
--		dt = DEV_X8;
--		break;
--	default:
--		dt = DEV_UNKNOWN;
--	}
--
--	return dt;
--}
--
- /**
-  * zynq_get_ecc_state - Return the controller ECC enable/disable status.
-  * @base:	DDR memory controller base address.
+This series adds miscellaneous improvements to PCIe endpoint core.
+1) Protect concurrent access to memory allocation in pci-epc-mem
+2) Replace spinlock with mutex in pci-epc-core and also use
+   notification chain mechanism to notify EPC events to EPF driver.
+3) Since endpoint function device can be created by multiple
+   mechanisms (configfs, devicetree, etc..), allowing each of these
+   mechanisms to assign a function number would result in mutliple
+   endpoint function devices having the same function number. In order
+   to avoid this, let EPC core assign a function number to the
+   endpoint device.
+
+Kishon Vijay Abraham I (5):
+  PCI: endpoint: Use notification chain mechanism to notify EPC events
+    to EPF
+  PCI: endpoint: Replace spinlock with mutex
+  PCI: endpoint: Fix for concurrent memory allocation in OB address
+    region
+  PCI: endpoint: Protect concurrent access to pci_epf_ops with mutex
+  PCI: endpoint: Assign function number for each PF in EPC core
+
+ drivers/pci/endpoint/functions/pci-epf-test.c |  13 +-
+ drivers/pci/endpoint/pci-ep-cfs.c             |  27 +----
+ drivers/pci/endpoint/pci-epc-core.c           | 113 ++++++++----------
+ drivers/pci/endpoint/pci-epc-mem.c            |  10 +-
+ drivers/pci/endpoint/pci-epf-core.c           |  33 ++---
+ include/linux/pci-epc.h                       |  19 ++-
+ include/linux/pci-epf.h                       |   9 +-
+ 7 files changed, 108 insertions(+), 116 deletions(-)
+
 -- 
 2.17.1
 
