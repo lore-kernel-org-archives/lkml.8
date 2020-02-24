@@ -2,208 +2,145 @@ Return-Path: <SRS0=7TUr=4M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham
+X-Spam-Status: No, score=-13.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 41748C38BE1
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 18:57:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1210FC38BE1
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 18:57:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1273420838
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 18:57:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DC7522080D
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 18:57:54 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ThSS+lG1"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727957AbgBXS5Y (ORCPT
+        id S1728008AbgBXS5x (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Feb 2020 13:57:24 -0500
-Received: from mga02.intel.com ([134.134.136.20]:44868 "EHLO mga02.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727730AbgBXS5Y (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Feb 2020 13:57:24 -0500
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga003.jf.intel.com ([10.7.209.27])
-  by orsmga101.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 24 Feb 2020 10:57:23 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.70,481,1574150400"; 
-   d="scan'208";a="237412500"
-Received: from lkp-server01.sh.intel.com (HELO lkp-server01) ([10.239.97.150])
-  by orsmga003.jf.intel.com with ESMTP; 24 Feb 2020 10:57:22 -0800
-Received: from kbuild by lkp-server01 with local (Exim 4.89)
-        (envelope-from <lkp@intel.com>)
-        id 1j6Iuv-000AhX-HD; Tue, 25 Feb 2020 02:57:21 +0800
-Date:   Tue, 25 Feb 2020 02:56:34 +0800
-From:   kbuild test robot <lkp@intel.com>
-To:     "x86-ml" <x86@kernel.org>
-Cc:     linux-kernel@vger.kernel.org
-Subject: [tip:x86/kdump] BUILD SUCCESS
- 8efbc518b884e1db2dd6a6fce62d0112ab871dcf
-Message-ID: <5e541c62.tENa9/IHnyVP/md3%lkp@intel.com>
-User-Agent: Heirloom mailx 12.5 6/20/10
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Transfer-Encoding: 7bit
+        Mon, 24 Feb 2020 13:57:53 -0500
+Received: from mail-wm1-f66.google.com ([209.85.128.66]:39765 "EHLO
+        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727108AbgBXS5x (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 24 Feb 2020 13:57:53 -0500
+Received: by mail-wm1-f66.google.com with SMTP id c84so430163wme.4;
+        Mon, 24 Feb 2020 10:57:51 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=sender:from:to:cc:subject:date:message-id;
+        bh=aQRhD9hViNOdfqkPRzFwHAM04jgTQv3FSxcn1Z2TBAs=;
+        b=ThSS+lG1FnRduPHMNFueF2fpUzcUWyQB63bcTouvvVJWxUMYRapCmy1E2wZoXY+sP6
+         6+ZtkFX+4eflwMBDBUD4ULb2iNtnvaASIjzFJMFM7+VCjNRJC5wSFtfhed3Yaqd12uJ7
+         T3kaKUXcVSBu7pJcE/12OMpu5RHpzy7hxwNBgdAjTee1KsGAIjrf4XGBu4jFrhy39A/d
+         TYdYnOZITlZEH66ZZeSk72PJWC9qPoXQ5pLnOAYMmmpZJf1p0ho3ndKBOQquHsuD88zA
+         z645dLZIEjvHmHjL4Oz47jSpHN2EmBASD+33w1nB0evjJsOp9ys5SuS2fah5LO4+lZK+
+         /9dQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:from:to:cc:subject:date:message-id;
+        bh=aQRhD9hViNOdfqkPRzFwHAM04jgTQv3FSxcn1Z2TBAs=;
+        b=CQdTzlmxBor/+b3yaN0QJfF1+pS1d3y8XTCSOyQ38QAu9XDPas/MaGw+OY4rP+KdKc
+         x3+yL6Phe9TfEnNT0lWv0HYNuwFRGFUW/mtWr4S2LEjpFoHaHGiMObvdQ6bVPo4XBDat
+         HnQRt34h7LcvGyCh/e7VGqjdz5h/2PXbwqI35pkPt/62k8Bpau+o9uCGLGR7huOnaBza
+         mi1DbT0nKEgxCkIvT7HSGppvzVADENJ9WWKP2Jlq//JlowE3n8NQqu25P0e3kcjNiIid
+         b5ji2JxUV4NAVTJo2UfY4FEJVUW3Tsnxi/gVV897YnOLO8TcKMq9t/Fv8j3VpRU07mNy
+         TqRw==
+X-Gm-Message-State: APjAAAVYJ8SkRaQF2+GAdRHqkWXoZ4zUuNfaha3XhHEZsJEX/Hh3MCm6
+        pSkh0IwTz2BVGtDyz6joR6AWSvf9
+X-Google-Smtp-Source: APXvYqwXtl93vM0GQoS/Inue+qM/b3QuF68VzbSt9SrrlANF/Xx786+GjGcyrQ6vVHF4Ij4wEx7x5A==
+X-Received: by 2002:a1c:44d:: with SMTP id 74mr431615wme.53.1582570671045;
+        Mon, 24 Feb 2020 10:57:51 -0800 (PST)
+Received: from 640k.lan ([93.56.166.5])
+        by smtp.gmail.com with ESMTPSA id a16sm20491965wrx.87.2020.02.24.10.57.50
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Mon, 24 Feb 2020 10:57:50 -0800 (PST)
+From:   Paolo Bonzini <pbonzini@redhat.com>
+To:     torvalds@linux-foundation.org
+Cc:     linux-kernel@vger.kernel.org, kvm@vger.kernel.org
+Subject: [GIT PULL] KVM changes for Linux 5.6-rc4
+Date:   Mon, 24 Feb 2020 19:57:49 +0100
+Message-Id: <1582570669-45822-1-git-send-email-pbonzini@redhat.com>
+X-Mailer: git-send-email 1.8.3.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git  x86/kdump
-branch HEAD: 8efbc518b884e1db2dd6a6fce62d0112ab871dcf  x86/kexec: Do not reserve EFI setup_data in the kexec e820 table
+Linus,
 
-elapsed time: 483m
+The following changes since commit 120881b9e888689cbdb90a1dd1689684d8bc95f3:
 
-configs tested: 145
-configs skipped: 106
+  docs: virt: guest-halt-polling.txt convert to ReST (2020-02-12 20:10:08 +0100)
 
-The following configs have been built successfully.
-More configs may be tested in the coming days.
+are available in the git repository at:
 
-arm                              allmodconfig
-arm                               allnoconfig
-arm                              allyesconfig
-arm64                            allmodconfig
-arm64                             allnoconfig
-arm64                            allyesconfig
-arm                         at91_dt_defconfig
-arm                           efm32_defconfig
-arm                          exynos_defconfig
-arm                        multi_v5_defconfig
-arm                        multi_v7_defconfig
-arm                        shmobile_defconfig
-arm                           sunxi_defconfig
-arm64                               defconfig
-sparc                            allyesconfig
-ia64                                defconfig
-parisc                generic-32bit_defconfig
-mips                      fuloong2e_defconfig
-riscv                    nommu_virt_defconfig
-arc                                 defconfig
-s390                          debug_defconfig
-h8300                    h8300h-sim_defconfig
-parisc                generic-64bit_defconfig
-s390                             allmodconfig
-i386                              allnoconfig
-i386                             alldefconfig
-i386                             allyesconfig
-i386                                defconfig
-ia64                             alldefconfig
-ia64                             allmodconfig
-ia64                              allnoconfig
-ia64                             allyesconfig
-c6x                              allyesconfig
-c6x                        evmc6678_defconfig
-nios2                         10m50_defconfig
-nios2                         3c120_defconfig
-openrisc                    or1ksim_defconfig
-openrisc                 simple_smp_defconfig
-xtensa                       common_defconfig
-xtensa                          iss_defconfig
-alpha                               defconfig
-csky                                defconfig
-nds32                             allnoconfig
-nds32                               defconfig
-h8300                     edosk2674_defconfig
-h8300                       h8s-sim_defconfig
-m68k                             allmodconfig
-m68k                       m5475evb_defconfig
-m68k                          multi_defconfig
-m68k                           sun3_defconfig
-arc                              allyesconfig
-microblaze                      mmu_defconfig
-microblaze                    nommu_defconfig
-powerpc                           allnoconfig
-powerpc                             defconfig
-powerpc                       ppc64_defconfig
-powerpc                          rhel-kconfig
-mips                           32r2_defconfig
-mips                         64r6el_defconfig
-mips                             allmodconfig
-mips                              allnoconfig
-mips                             allyesconfig
-mips                      malta_kvm_defconfig
-parisc                            allnoconfig
-parisc                           allyesconfig
-x86_64               randconfig-a001-20200224
-x86_64               randconfig-a002-20200224
-x86_64               randconfig-a003-20200224
-i386                 randconfig-a001-20200224
-i386                 randconfig-a002-20200224
-i386                 randconfig-a003-20200224
-csky                 randconfig-a001-20200224
-openrisc             randconfig-a001-20200224
-s390                 randconfig-a001-20200224
-sh                   randconfig-a001-20200224
-xtensa               randconfig-a001-20200224
-x86_64               randconfig-b001-20200224
-x86_64               randconfig-b002-20200224
-x86_64               randconfig-b003-20200224
-i386                 randconfig-b001-20200224
-i386                 randconfig-b002-20200224
-i386                 randconfig-b003-20200224
-x86_64               randconfig-c001-20200224
-x86_64               randconfig-c002-20200224
-x86_64               randconfig-c003-20200224
-i386                 randconfig-c001-20200224
-i386                 randconfig-c002-20200224
-i386                 randconfig-c003-20200224
-x86_64               randconfig-d001-20200224
-x86_64               randconfig-d002-20200224
-x86_64               randconfig-d003-20200224
-i386                 randconfig-d001-20200224
-i386                 randconfig-d002-20200224
-i386                 randconfig-d003-20200224
-x86_64               randconfig-e001-20200224
-x86_64               randconfig-e002-20200224
-x86_64               randconfig-e003-20200224
-i386                 randconfig-e001-20200224
-i386                 randconfig-e002-20200224
-i386                 randconfig-e003-20200224
-x86_64               randconfig-f003-20200224
-x86_64               randconfig-f002-20200224
-x86_64               randconfig-f001-20200224
-i386                 randconfig-f001-20200224
-i386                 randconfig-f003-20200224
-i386                 randconfig-f002-20200224
-x86_64               randconfig-g001-20200223
-x86_64               randconfig-g002-20200223
-x86_64               randconfig-g003-20200223
-i386                 randconfig-g001-20200223
-i386                 randconfig-g002-20200223
-i386                 randconfig-g003-20200223
-x86_64               randconfig-g001-20200224
-x86_64               randconfig-g002-20200224
-x86_64               randconfig-g003-20200224
-i386                 randconfig-g001-20200224
-i386                 randconfig-g002-20200224
-i386                 randconfig-g003-20200224
-x86_64               randconfig-h001-20200224
-x86_64               randconfig-h002-20200224
-x86_64               randconfig-h003-20200224
-i386                 randconfig-h001-20200224
-i386                 randconfig-h002-20200224
-i386                 randconfig-h003-20200224
-riscv                            allmodconfig
-riscv                             allnoconfig
-riscv                            allyesconfig
-riscv                               defconfig
-riscv                          rv32_defconfig
-s390                             alldefconfig
-s390                              allnoconfig
-s390                             allyesconfig
-s390                                defconfig
-s390                       zfcpdump_defconfig
-sparc                               defconfig
-sparc64                          allmodconfig
-sparc64                           allnoconfig
-sparc64                          allyesconfig
-sparc64                             defconfig
-x86_64                              fedora-25
-x86_64                                  kexec
-x86_64                                    lkp
-x86_64                                   rhel
-x86_64                         rhel-7.2-clear
-x86_64                               rhel-7.6
+  https://git.kernel.org/pub/scm/virt/kvm/kvm.git tags/for-linus
 
----
-0-DAY CI Kernel Test Service, Intel Corporation
-https://lists.01.org/hyperkitty/list/kbuild-all@lists.01.org
+for you to fetch changes up to a93236fcbe1d0248461b29c0f87cb0b510c94e6f:
+
+  KVM: s390: rstify new ioctls in api.rst (2020-02-24 19:28:40 +0100)
+
+----------------------------------------------------------------
+Bugfixes, including the fix for CVE-2020-2732 and a few
+issues found by "make W=1".
+
+----------------------------------------------------------------
+Christian Borntraeger (1):
+      KVM: s390: rstify new ioctls in api.rst
+
+Li RongQing (1):
+      KVM: fix error handling in svm_hardware_setup
+
+Miaohe Lin (4):
+      KVM: nVMX: Fix some obsolete comments and grammar error
+      KVM: x86: don't notify userspace IOAPIC on edge-triggered interrupt EOI
+      KVM: apic: avoid calculating pending eoi from an uninitialized val
+      KVM: SVM: Fix potential memory leak in svm_cpu_init()
+
+Oliver Upton (3):
+      KVM: nVMX: Emulate MTF when performing instruction emulation
+      KVM: nVMX: Refactor IO bitmap checks into helper function
+      KVM: nVMX: Check IO instruction VM-exit conditions
+
+Paolo Bonzini (4):
+      KVM: x86: enable -Werror
+      KVM: x86: fix missing prototypes
+      KVM: x86: fix incorrect comparison in trace event
+      KVM: nVMX: Don't emulate instructions in guest mode
+
+Qian Cai (1):
+      kvm/emulate: fix a -Werror=cast-function-type
+
+Suravee Suthikulpanit (1):
+      kvm: x86: svm: Fix NULL pointer dereference when AVIC not enabled
+
+Vitaly Kuznetsov (2):
+      KVM: nVMX: handle nested posted interrupts when apicv is disabled for L1
+      KVM: nVMX: clear PIN_BASED_POSTED_INTR from nested pinbased_ctls only when apicv is globally disabled
+
+Xiaoyao Li (1):
+      KVM: VMX: Add VMX_FEATURE_USR_WAIT_PAUSE
+
+wanpeng li (1):
+      KVM: nVMX: Hold KVM's srcu lock when syncing vmcs12->shadow
+
+ Documentation/virt/kvm/api.rst     |  33 +++++-----
+ arch/x86/include/asm/kvm_emulate.h |  13 +++-
+ arch/x86/include/asm/kvm_host.h    |   3 +-
+ arch/x86/include/asm/vmx.h         |   2 +-
+ arch/x86/include/asm/vmxfeatures.h |   1 +
+ arch/x86/include/uapi/asm/kvm.h    |   1 +
+ arch/x86/kvm/Makefile              |   1 +
+ arch/x86/kvm/emulate.c             |  36 ++++------
+ arch/x86/kvm/irq_comm.c            |   2 +-
+ arch/x86/kvm/lapic.c               |   9 ++-
+ arch/x86/kvm/mmutrace.h            |   2 +-
+ arch/x86/kvm/svm.c                 |  65 ++++++++++---------
+ arch/x86/kvm/vmx/capabilities.h    |   1 +
+ arch/x86/kvm/vmx/nested.c          |  89 ++++++++++++++++++-------
+ arch/x86/kvm/vmx/nested.h          |  10 ++-
+ arch/x86/kvm/vmx/vmx.c             | 130 +++++++++++++++++++++++++++++++------
+ arch/x86/kvm/vmx/vmx.h             |   3 +
+ arch/x86/kvm/x86.c                 |   2 +
+ include/linux/kvm_host.h           |   2 +
+ 19 files changed, 284 insertions(+), 121 deletions(-)
