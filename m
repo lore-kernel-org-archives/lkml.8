@@ -2,207 +2,126 @@ Return-Path: <SRS0=7TUr=4M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A155BC11D32
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 16:37:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 47915C11D30
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 16:37:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 792D920836
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 16:37:14 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582562234;
-	bh=EaF2MyjS2zZaaolBzvb8Q1sCIgrqXN34CG6/GRVu+iw=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=LjC/7UrbBX3TNNWm8wib6cIhV0qhKfvRJU20vSMmmCh95CtHccvNGUamUnP0IaugG
-	 sinZGawftMJeXz63ExiFrGV5ZZshPBgM79yiX53GoWCT/qNE1dWqvMXSzTOrTACo1q
-	 pEGit8b2KyBhtV7UktUaeC/bIs9zU4mOpNkycv80=
+	by mail.kernel.org (Postfix) with ESMTP id 1E09120836
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 16:37:42 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="OyK0PgTu"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727867AbgBXQhN (ORCPT
+        id S1727887AbgBXQhl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Feb 2020 11:37:13 -0500
-Received: from mail.kernel.org ([198.145.29.99]:41986 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727160AbgBXQhN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Feb 2020 11:37:13 -0500
-Received: from localhost (unknown [122.182.199.233])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 009AA20637;
-        Mon, 24 Feb 2020 16:37:10 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1582562232;
-        bh=EaF2MyjS2zZaaolBzvb8Q1sCIgrqXN34CG6/GRVu+iw=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=tPm95vGIpi/ZtZoLMfrUCE5SZ1PDT8Cqi/ELFlvHsA0J9xzr54BhKa5RXGOBckvjD
-         OEqlGIjTd8HOAwSrcTqxPCRsYsGZiQY0h4/c84ANrlzg9t/pFgFAtnM4nv/xrdDYV2
-         lhOTZmDtPZ50QYXLS/9CWV4vnFKRBxEVBXYuBZSk=
-Date:   Mon, 24 Feb 2020 22:07:07 +0530
-From:   Vinod Koul <vkoul@kernel.org>
-To:     Peter Ujfalusi <peter.ujfalusi@ti.com>
-Cc:     dmaengine@vger.kernel.org, linux-kernel@vger.kernel.org,
-        dan.j.williams@intel.com, geert@linux-m68k.org
-Subject: Re: [PATCH v3] dmaengine: Add basic debugfs support
-Message-ID: <20200224163707.GA2618@vkoul-mobl>
-References: <20200205111557.24125-1-peter.ujfalusi@ti.com>
+        Mon, 24 Feb 2020 11:37:41 -0500
+Received: from mail-wm1-f68.google.com ([209.85.128.68]:51431 "EHLO
+        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727160AbgBXQhk (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 24 Feb 2020 11:37:40 -0500
+Received: by mail-wm1-f68.google.com with SMTP id t23so9640377wmi.1;
+        Mon, 24 Feb 2020 08:37:39 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=G+aCWrTPtazwLlxUW4Ddtt63F9Ca8NXitPxy5zGxSeo=;
+        b=OyK0PgTuu8fZ6LWuZ+3xulzUbpo6OkLEHg5JQCENw1b0M3fbmycMihPs93zkd4g5Ip
+         6zUV3hF0GXG8uun2UldTFXG7dSb3ET1ASbVPw2A7sw38RPRA4C9hrEZzG8/kvgu50uyd
+         iJvZJRooEICcStMF8z8Aezj9eQM5Mw293VUUj/fsbAkJgtKjGHD9mTCpikqyZZIfW4Gn
+         FT5CmFQYYmNGDbXI9RyYjHeUmsqoWo6XjFkgYtSuPDBoMdeIPwN3ytRNq6sEEXWM5IVf
+         uFuZxFka9JOmO2uNGtwA6uPVvgsRuccqNw4AHCGPw8X7NuLGyo1pAOZ6UUPW4pRl0XDt
+         DxbA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=G+aCWrTPtazwLlxUW4Ddtt63F9Ca8NXitPxy5zGxSeo=;
+        b=uJIQWfxqDKicuAaRhbS/DUBwxnRj7tpCj45FyapevJ/8YOfHHBJTkeCj2868YLf27L
+         TyOvEWPJR8KQm1DZpWO/JgXOkPbjUO8IexuFtD5oBXltoLO9ouNvpR+ehVM5OOcVyuqq
+         KsXEzlzlsnSUvRfd/npsdSZq35372EPyWmDwagU/0gZZxYIzxtbqmG4/iuVsSEOiXfvz
+         5V7kRKngy700gGbHHRrLrB71T3E9ivHR2KqOL+trC5Sl1qFMFFuz6dGiRsDWQoWBEFiK
+         iYTr+bhXWqbt9SukaA6thn8oAUSCfqloa5KOxnwzLV8t71jhEIv2N8a3Le/qgqR4BI0D
+         GU+Q==
+X-Gm-Message-State: APjAAAXoOxLmP2z+GMdA4QZoEl1f9+hiEi7OqCB2PJMrTvttV6nf/AMb
+        j+3qOrkjeUoxJ+3RvWQyqg8ROvh0j4DrCyQPJuQ=
+X-Google-Smtp-Source: APXvYqypeNv5N1UPqLrdNY1QVTfMCrOJzcCdwq3nCvUSqZP/cKgLDJ52UQni4EZNo2D8GxsZtIZcJ6xTcainQzr/3EA=
+X-Received: by 2002:a05:600c:217:: with SMTP id 23mr22797412wmi.124.1582562258838;
+ Mon, 24 Feb 2020 08:37:38 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200205111557.24125-1-peter.ujfalusi@ti.com>
+References: <20200127165646.19806-1-andrew.smirnov@gmail.com>
+ <20200127165646.19806-7-andrew.smirnov@gmail.com> <VI1PR0402MB34857006B42E8F0DAFECC514981B0@VI1PR0402MB3485.eurprd04.prod.outlook.com>
+In-Reply-To: <VI1PR0402MB34857006B42E8F0DAFECC514981B0@VI1PR0402MB3485.eurprd04.prod.outlook.com>
+From:   Andrey Smirnov <andrew.smirnov@gmail.com>
+Date:   Mon, 24 Feb 2020 08:37:27 -0800
+Message-ID: <CAHQ1cqHDotfJVUM9+Dk7=LyFxDhSWmud66HiZSzbZkKtn9R0Ug@mail.gmail.com>
+Subject: Re: [PATCH v7 6/9] crypto: caam - check if RNG job failed
+To:     Horia Geanta <horia.geanta@nxp.com>
+Cc:     "linux-crypto@vger.kernel.org" <linux-crypto@vger.kernel.org>,
+        Chris Healy <cphealy@gmail.com>,
+        Lucas Stach <l.stach@pengutronix.de>,
+        Herbert Xu <herbert@gondor.apana.org.au>,
+        Iuliana Prodan <iuliana.prodan@nxp.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        dl-linux-imx <linux-imx@nxp.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 05-02-20, 13:15, Peter Ujfalusi wrote:
-> Via the /sys/kernel/debug/dmaengine users can get information about the
-> DMA devices and the used channels.
-> 
-> Example output on am654-evm with audio using two channels and after running
-> dmatest on 6 channels:
-> 
-> # cat /sys/kernel/debug/dmaengine
-> dma0 (285c0000.dma-controller): number of channels: 96
-> 
-> dma1 (31150000.dma-controller): number of channels: 267
->  dma1chan0    | 2b00000.mcasp:tx
->  dma1chan1    | 2b00000.mcasp:rx
->  dma1chan2    | in-use
->  dma1chan3    | in-use
->  dma1chan4    | in-use
->  dma1chan5    | in-use
->  dma1chan6    | in-use
->  dma1chan7    | in-use
-> 
-> For slave channels we can show the device and the channel name a given
-> channel is requested.
-> For non slave devices the only information we know is that the channel is
-> in use.
-> 
-> DMA drivers can implement the optional dbg_show callback to provide
-> controller specific information instead of the generic one.
-> 
-> It is easy to extend the generic dmaengine_dbg_show() to print additional
-> information about the used channels.
-> 
-> I have taken the idea from gpiolib.
-> 
-> Signed-off-by: Peter Ujfalusi <peter.ujfalusi@ti.com>
-> ---
-> Hi,
-> 
-> Changes since v2:
-> - Use dma_chan_name() for printing the channel's name
-> 
-> Changes since v1:
-> - Use much more simplified fops for the debugfs file (via DEFINE_SHOW_ATTRIBUTE)
-> - do not allow modification to dma_device_list while the debugfs file is read
-> - rename the slave_name to dbg_client_name (it is only for debugging)
-> - print information about dma_router if it is used by the channel
-> - Formating of the output slightly changed
-> 
-> Regards,
-> Peter
-> 
->  drivers/dma/dmaengine.c   | 65 +++++++++++++++++++++++++++++++++++++++
->  include/linux/dmaengine.h | 12 +++++++-
->  2 files changed, 76 insertions(+), 1 deletion(-)
-> 
-> diff --git a/drivers/dma/dmaengine.c b/drivers/dma/dmaengine.c
-> index c3b1283b6d31..37c3a4cd5b1a 100644
-> --- a/drivers/dma/dmaengine.c
-> +++ b/drivers/dma/dmaengine.c
-> @@ -32,6 +32,7 @@
->  #define pr_fmt(fmt) KBUILD_MODNAME ": " fmt
->  
->  #include <linux/platform_device.h>
-> +#include <linux/debugfs.h>
->  #include <linux/dma-mapping.h>
->  #include <linux/init.h>
->  #include <linux/module.h>
-> @@ -760,6 +761,11 @@ struct dma_chan *dma_request_chan(struct device *dev, const char *name)
->  		return chan ? chan : ERR_PTR(-EPROBE_DEFER);
->  
->  found:
-> +#ifdef CONFIG_DEBUG_FS
-> +	chan->dbg_client_name = kasprintf(GFP_KERNEL, "%s:%s", dev_name(dev),
-> +					  name);
-> +#endif
-> +
->  	chan->name = kasprintf(GFP_KERNEL, "dma:%s", name);
->  	if (!chan->name)
->  		return chan;
-> @@ -837,6 +843,11 @@ void dma_release_channel(struct dma_chan *chan)
->  		chan->name = NULL;
->  		chan->slave = NULL;
->  	}
-> +
-> +#ifdef CONFIG_DEBUG_FS
-> +	kfree(chan->dbg_client_name);
-> +	chan->dbg_client_name = NULL;
-> +#endif
->  	mutex_unlock(&dma_list_mutex);
->  }
->  EXPORT_SYMBOL_GPL(dma_release_channel);
-> @@ -1562,3 +1573,57 @@ static int __init dma_bus_init(void)
->  	return class_register(&dma_devclass);
->  }
->  arch_initcall(dma_bus_init);
-> +
-> +#ifdef CONFIG_DEBUG_FS
-> +static void dmaengine_dbg_show(struct seq_file *s, struct dma_device *dma_dev)
-> +{
-> +	struct dma_chan *chan;
-> +
-> +	list_for_each_entry(chan, &dma_dev->channels, device_node) {
-> +		if (chan->client_count) {
-> +			seq_printf(s, " %-13s| %s", dma_chan_name(chan),
-> +				   chan->dbg_client_name ?: "in-use");
-> +
-> +			if (chan->router)
-> +				seq_printf(s, " (via router: %s)\n",
-> +					dev_name(chan->router->dev));
-> +			else
-> +				seq_puts(s, "\n");
-> +		}
-> +	}
-> +}
-> +
-> +static int dmaengine_debugfs_show(struct seq_file *s, void *data)
-> +{
-> +	struct dma_device *dma_dev = NULL;
-> +
-> +	mutex_lock(&dma_list_mutex);
-> +	list_for_each_entry(dma_dev, &dma_device_list, global_node) {
-> +		seq_printf(s, "dma%d (%s): number of channels: %u\n",
-> +			   dma_dev->dev_id, dev_name(dma_dev->dev),
-> +			   dma_dev->chancnt);
-> +
-> +		if (dma_dev->dbg_show)
-> +			dma_dev->dbg_show(s, dma_dev);
- do we really want a custom dbg_show()..? Drivers can add their own
-files...
+On Wed, Feb 12, 2020 at 2:41 AM Horia Geanta <horia.geanta@nxp.com> wrote:
+>
+> On 1/27/2020 6:57 PM, Andrey Smirnov wrote:
+> > @@ -60,12 +65,12 @@ static struct caam_rng_ctx *to_caam_rng_ctx(struct hwrng *r)
+> >  static void caam_rng_done(struct device *jrdev, u32 *desc, u32 err,
+> >                         void *context)
+> >  {
+> > -     struct completion *done = context;
+> > +     struct caam_rng_job_ctx *jctx = context;
+> >
+> >       if (err)
+> > -             caam_jr_strstatus(jrdev, err);
+> > +             *jctx->err = caam_jr_strstatus(jrdev, err);
+> >
+> > -     complete(done);
+> > +     complete(jctx->done);
+> >  }
+> >
+> >  static u32 *caam_init_desc(u32 *desc, dma_addr_t dst_dma, int len)
+> > @@ -89,6 +94,10 @@ static int caam_rng_read_one(struct device *jrdev,
+> >  {
+> >       dma_addr_t dst_dma;
+> >       int err;
+> > +     struct caam_rng_job_ctx jctx = {
+> > +             .done = done,
+> > +             .err  = &err,
+> > +     };
+> >
+> >       len = min_t(int, len, CAAM_RNG_MAX_FIFO_STORE_SIZE);
+> >
+> > @@ -101,7 +110,7 @@ static int caam_rng_read_one(struct device *jrdev,
+> >       init_completion(done);
+> >       err = caam_jr_enqueue(jrdev,
+> >                             caam_init_desc(desc, dst_dma, len),
+> > -                           caam_rng_done, done);
+> > +                           caam_rng_done, &jctx);
+> AFAICT there's a race condition b/w caam_jr_enqueue() and caam_rng_done(),
+> both writing to "err":
+> caam_jr_enqueue()
+>         -> JR interrupt -> caam_jr_interrupt() -> tasklet_schedule()...
+>         -> spin_unlock_bh()
+>         -> caam_jr_dequeue() -> caam_rng_done() -> write err
+>         -> return 0 -> write err
+>
 
-> +		else
-> +			dmaengine_dbg_show(s, dma_dev);
-> +
-> +		if (!list_is_last(&dma_dev->global_node, &dma_device_list))
-> +			seq_puts(s, "\n");
-> +	}
-> +	mutex_unlock(&dma_list_mutex);
-> +
-> +	return 0;
-> +}
-> +DEFINE_SHOW_ATTRIBUTE(dmaengine_debugfs);
-> +
-> +static int __init dmaengine_debugfs_init(void)
-> +{
-> +	/* /sys/kernel/debug/dmaengine */
-> +	debugfs_create_file("dmaengine", 0444, NULL, NULL,
-> +			    &dmaengine_debugfs_fops);
+Yes, I thought it didn't really matter for calling
+wait_for_completion(done), but now that I think on it again, it can
+return wrong result code from vcaam_rng_read_one(). Will fix in v8.
 
-Should we add a directory? That way we can keep adding stuff into that
-one
--- 
-~Vinod
+Thanks,
+Andrey Smirnov
