@@ -2,115 +2,83 @@ Return-Path: <SRS0=7TUr=4M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5A84EC11D24
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 06:31:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0BE90C35679
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 06:31:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 38F822072D
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 06:31:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D39E520661
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 06:31:27 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="TPmHKW48"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727444AbgBXGbV (ORCPT
+        id S1727463AbgBXGb0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Feb 2020 01:31:21 -0500
-Received: from olimex.com ([184.105.72.32]:45909 "EHLO olimex.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727423AbgBXGbT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Feb 2020 01:31:19 -0500
-Received: from 94.155.250.134 ([94.155.250.134])
-        by olimex.com with ESMTPSA (ECDHE-RSA-AES128-GCM-SHA256:TLSv1.2:Kx=ECDH:Au=RSA:Enc=AESGCM(128):Mac=AEAD) (SMTP-AUTH username stefan@olimex.com, mechanism PLAIN)
-        for <linux-kernel@vger.kernel.org>; Sun, 23 Feb 2020 22:31:11 -0800
-Subject: Re: [linux-sunxi] Re: [PATCH 0/4] Add support for charger LED for
- AXP813 and TBS A711 Tablet
-To:     linux-sunxi@googlegroups.com,
-        Jacek Anaszewski <jacek.anaszewski@gmail.com>,
-        Pavel Machek <pavel@ucw.cz>, Dan Murphy <dmurphy@ti.com>,
-        Rob Herring <robh+dt@kernel.org>, Chen-Yu Tsai <wens@csie.org>,
-        Maxime Ripard <mripard@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Lee Jones <lee.jones@linaro.org>, linux-leds@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org
-References: <20200223131435.681620-1-megous@megous.com>
- <20200223132730.6g7tnm2f263oubhv@core.my.home>
- <20200223133517.hfqrg5dta2xk4zj3@core.my.home>
-From:   Stefan Mavrodiev <stefan@olimex.com>
-Message-ID: <1464324b-2b69-c20e-4af8-f32ae5451ea6@olimex.com>
-Date:   Mon, 24 Feb 2020 08:31:06 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.1
+        Mon, 24 Feb 2020 01:31:26 -0500
+Received: from mail-lj1-f170.google.com ([209.85.208.170]:39128 "EHLO
+        mail-lj1-f170.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727197AbgBXGbZ (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 24 Feb 2020 01:31:25 -0500
+Received: by mail-lj1-f170.google.com with SMTP id o15so8741810ljg.6
+        for <linux-kernel@vger.kernel.org>; Sun, 23 Feb 2020 22:31:23 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=B6/VXN/riP71mCT7qHtBjSkrNxoJZJJB4MT4JYPDpck=;
+        b=TPmHKW48Ysrhnhx/b/lWggw4rt/v1MsWdRNZRG8bcfy/Pr2UGJLyi/vtc7nI83lzAV
+         bIWIrbUL2CXLaFF0UJQL+xjNrUWHw4mJBDEHFv8LzsTMjAf2uKoI66eNzORxXhmA1tct
+         hM3oncsWX16jmzZwbY8Tq9XeWyyto52TmfI6JUWK0N90Gwq+RE9ijVtQQvD9Cs1iJEQq
+         OBlLk/2Qg56aoWd2oTTnbzElIVZBpSUeoHmLWLxpWHZi7ajB6AOy8IQ/LfFCUYbACpgn
+         22f2wrUq0hZIYg4Yvt4x3CEqnLbbZy9zHBF8/JajcoafcJZCJeIuw44dauywNwwCejUn
+         2bQA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=B6/VXN/riP71mCT7qHtBjSkrNxoJZJJB4MT4JYPDpck=;
+        b=VGw8JBXHp790fD5fCt6QgSR1ZndDpwr8tkGqMr/97pM9K+gDjL7V0jbH6U22KTG6et
+         PHhvwlVJq1fLrekLk3eGhToozc5RIX+8jIalE/g/68+W2X5IffWv4Sa/ZSTYQ1IlwHh5
+         s0EqAeSwdXK2vNNaNjAqnrT0km/t2nnyEzreiezZXdxpckVxYHX4fJ8dH2hBHgxqvvAn
+         NJh85nm7lRU/U2t+HhrMmLRlxn5i3OubYaWTJDSeCLtmDuFGevOEgomcwjOVoLXxY5/p
+         q4d72IyzEF4PLtyRef9z0w1jis+sk+s25Qpv1c/O/8IznoTxlJTpxrwd9zz4qIXUmfRd
+         8RPg==
+X-Gm-Message-State: APjAAAUyHGahrWDtC7pV4bcElTp6abZf9RJvQYc+GjRRHTUabv6X4/Jl
+        zK848kM+17lFRQU1JTEYFpBtOhJ/7sD1O5kAmngF
+X-Google-Smtp-Source: APXvYqzCets3klF2yiOvrJ3xHkpvKVhM7CGgTckA9GbP9Oj3WrNPed5eiyuTwfO716e2IHFKnOUh8ey48pupRf75vo8=
+X-Received: by 2002:a2e:7812:: with SMTP id t18mr31072503ljc.289.1582525882593;
+ Sun, 23 Feb 2020 22:31:22 -0800 (PST)
 MIME-Version: 1.0
-In-Reply-To: <20200223133517.hfqrg5dta2xk4zj3@core.my.home>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
-Content-Language: en-US
+References: <20200212222922.5dfa9f36@oasis.local.home> <20200213042331.157606-1-zzyiwei@google.com>
+ <20200213090308.223f3f20@gandalf.local.home> <CAKT=dDmB=TX++VeL=-NihDv5L4iBn_48=i7Lsnrkd+4e13QQsQ@mail.gmail.com>
+In-Reply-To: <CAKT=dDmB=TX++VeL=-NihDv5L4iBn_48=i7Lsnrkd+4e13QQsQ@mail.gmail.com>
+From:   Yiwei Zhang <zzyiwei@google.com>
+Date:   Sun, 23 Feb 2020 22:31:11 -0800
+Message-ID: <CAKT=dDnt174adfWzSiNfheA5EVL32AG_2RQa0861V2Mjh-f51w@mail.gmail.com>
+Subject: Re: [PATCH v3] gpu/trace: add gpu memory tracepoints
+To:     Steven Rostedt <rostedt@goodmis.org>, mingo@redhat.com,
+        Greg KH <gregkh@linuxfoundation.org>, elder@kernel.org,
+        federico.vaga@cern.ch, tony.luck@intel.com, vilhelm.gray@gmail.com,
+        Linus Walleij <linus.walleij@linaro.org>, tglx@linutronix.de,
+        yamada.masahiro@socionext.com, paul.walmsley@sifive.com
+Cc:     linux-kernel@vger.kernel.org,
+        Prahlad Kilambi <prahladk@google.com>,
+        Joel Fernandes <joelaf@google.com>,
+        android-kernel <android-kernel@google.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Dear gpu and tracing owners,
 
-On 2/23/20 3:35 PM, Ondřej Jirman wrote:
-> On Sun, Feb 23, 2020 at 02:27:30PM +0100, megous hlavni wrote:
->> On Sun, Feb 23, 2020 at 02:14:31PM +0100, megous hlavni wrote:
->>> The tablet has a charger LED exposed on the top. This LED is controlled
->>> by AXP813 PMIC. Add support for enabling the LED and using it either
->>> for charging indication (handled by PMIC automatically) or for other uses
->>> via user control.
->> Dang, I just noticed someone sent a similar driver recently, although I had this
->> one prepared for quite some time (since 2017) in my tree. I guess I should have
->> sent it earlier.
->>
->> Please ignore.
-> Though the meaning of "recently" is a bit relative. The other work was sent in
-> a year ago. Here's a reference:
->
->    https://lore.kernel.org/patchwork/cover/1042764/
+It's been a while and this is just a gentle and friendly re-ping for
+review of this small patch.
 
-Hi,
-
-I'm the author of the 'other' work. I don't know the full story here, 
-but I don't
-mind someone else submitting this patch as his.
-
-When I submitted the last patch, there was the proposal to use the 
-ledtrig-pattern instead
-of sysfs entries. Also AXP209 has inverted CTRL bit.
-
-Please read the the 'other' discussion.
-
-Best regards,
-Stefan Mavrodiev
-
->
->> regards,
->> 	o.
->>
->>
->>> Please take a look.
->>>
->>> thank you and regards,
->>>    Ondrej Jirman
->>>
->>> Ondrej Jirman (4):
->>>    dt-bindings: leds: Add a binding for AXP813 charger led
->>>    leds: axp20x: Support charger LED on AXP20x like PMICs
->>>    ARM: dts: axp813: Add charger LED
->>>    ARM: dts: sun8i-a83t-tbs-a711: Enable charging LED
->>>
->>>   .../devicetree/bindings/leds/leds-axp20x.yaml |  24 ++
->>>   arch/arm/boot/dts/axp81x.dtsi                 |   5 +
->>>   arch/arm/boot/dts/sun8i-a83t-tbs-a711.dts     |   4 +
->>>   drivers/leds/Kconfig                          |   7 +
->>>   drivers/leds/Makefile                         |   1 +
->>>   drivers/leds/leds-axp20x.c                    | 240 ++++++++++++++++++
->>>   drivers/mfd/axp20x.c                          |   3 +
->>>   7 files changed, 284 insertions(+)
->>>   create mode 100644 Documentation/devicetree/bindings/leds/leds-axp20x.yaml
->>>   create mode 100644 drivers/leds/leds-axp20x.c
->>>
->>> -- 
->>> 2.25.1
->>>
+Many many thanks!
+Yiwei
