@@ -2,164 +2,141 @@ Return-Path: <SRS0=7TUr=4M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
+X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 58873C11D2F
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 11:38:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 875BCC35671
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 11:38:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2618F2082F
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 11:38:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5B3902082F
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 11:38:59 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=inango-systems.com header.i=@inango-systems.com header.b="MhAaKCxK"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="kYez6mqH"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727464AbgBXLin (ORCPT
+        id S1727498AbgBXLi6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Feb 2020 06:38:43 -0500
-Received: from mail.inango-systems.com ([178.238.230.57]:52694 "EHLO
-        mail.inango-sw.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726778AbgBXLin (ORCPT
+        Mon, 24 Feb 2020 06:38:58 -0500
+Received: from mail-wm1-f66.google.com ([209.85.128.66]:39030 "EHLO
+        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726778AbgBXLi5 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Feb 2020 06:38:43 -0500
-Received: from localhost (localhost [127.0.0.1])
-        by mail.inango-sw.com (Postfix) with ESMTP id C89711080215;
-        Mon, 24 Feb 2020 13:38:40 +0200 (IST)
-Received: from mail.inango-sw.com ([127.0.0.1])
-        by localhost (mail.inango-sw.com [127.0.0.1]) (amavisd-new, port 10032)
-        with ESMTP id Tk_QqCuKFQR9; Mon, 24 Feb 2020 13:38:40 +0200 (IST)
-Received: from localhost (localhost [127.0.0.1])
-        by mail.inango-sw.com (Postfix) with ESMTP id D147B10808D5;
-        Mon, 24 Feb 2020 13:38:39 +0200 (IST)
-DKIM-Filter: OpenDKIM Filter v2.10.3 mail.inango-sw.com D147B10808D5
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=inango-systems.com;
-        s=45A440E0-D841-11E8-B985-5FCC721607E0; t=1582544319;
-        bh=+tskScq4uIA9/TPrFKSW1RmSTzCHD1HXtfjqxrFsbFE=;
-        h=Date:From:To:Message-ID:MIME-Version;
-        b=MhAaKCxKw3wcjYk2jSTLQEqlUfJjL0pDFFhUxpYohYorUAybcha+kbxcRw3jeMCkH
-         CJoZ2PVhyqs/Gss/Dqf0nH3u+4Sbs9kog60cuP3O5kSYBLJr/rJBKoGYPWfodQ1/G+
-         Km34EfwPHjpqI+52fz4LUVu7qHh2yWG9ejCE6TPTKzM3CzOTwNz3gfze14GgLWWcGW
-         /e1+ui1AdXK1rHtMAjPfuwZOSOVDE3T9AtxSFHb9EH88PfM8dgnH2NqdO28srur5hI
-         KJaW70RSa9HuivPsaoJyoATUvgN60y/Gscqly6wsbyPPOG/yrgkP1X5ri8IpPmwNtK
-         xvp34tyPd6s3Q==
-X-Virus-Scanned: amavisd-new at inango-sw.com
-Received: from mail.inango-sw.com ([127.0.0.1])
-        by localhost (mail.inango-sw.com [127.0.0.1]) (amavisd-new, port 10026)
-        with ESMTP id 6d9Agr_Au4KF; Mon, 24 Feb 2020 13:38:39 +0200 (IST)
-Received: from mail.inango-sw.com (mail.inango-sw.com [172.17.220.3])
-        by mail.inango-sw.com (Postfix) with ESMTP id A834F1080215;
-        Mon, 24 Feb 2020 13:38:39 +0200 (IST)
-Date:   Mon, 24 Feb 2020 13:38:39 +0200 (IST)
-From:   Nikolai Merinov <n.merinov@inango-systems.com>
-To:     hch <hch@infradead.org>
-Cc:     Davidlohr Bueso <dave@stgolabs.net>, Jens Axboe <axboe@kernel.dk>,
-        Ard Biesheuvel <ardb@kernel.org>,
-        linux-efi <linux-efi@vger.kernel.org>,
-        linux-block <linux-block@vger.kernel.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>
-Message-ID: <797777312.1324734.1582544319435.JavaMail.zimbra@inango-systems.com>
-In-Reply-To: <20200218185336.GA14242@infradead.org>
-References: <20181124162123.21300-1-n.merinov@inango-systems.com> <20191224092119.4581-1-n.merinov@inango-systems.com> <20200108133926.GC4455@infradead.org> <26f7bd89f212f68b03a4b207e96d8702c9049015.1578910723.git.n.merinov@inango-systems.com> <20200218185336.GA14242@infradead.org>
-Subject: Re: [PATCH v3] partitions/efi: Fix partition name parsing in GUID
- partition entry
+        Mon, 24 Feb 2020 06:38:57 -0500
+Received: by mail-wm1-f66.google.com with SMTP id c84so9012338wme.4
+        for <linux-kernel@vger.kernel.org>; Mon, 24 Feb 2020 03:38:56 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to
+         :user-agent;
+        bh=YaVwweN+aW1ZCvHJhQTdqSj28sX6FFGNSbihhchPVRg=;
+        b=kYez6mqHDaN2QlJo5jP1V1uZimfHQ9jdJwXu4K4TW5lh4MWBrDGoyrsRW7NolG00gT
+         HjOQ/tQlKcPQiAaxdiVteQgNTPNoqguqCxYivYk/wiMYPsz0Dw5lU2msyD+5n1C18MrU
+         CHWeuUKRlT/KUT3wqn6xbgiJzl97ogAHL8ZUZmsTQfTaq4vC8AMJYugY9n4kW/XLeoNH
+         I5GOHGSS5sbMPQazJI3ib8LBjFKHtQBF2MLyzRnjx9IoJL64VKHshjulyrKUjWmyN+UN
+         eqpvq/nCyvK3lIQxuWgsfzoxgxZAMQTODMnrr21Eo2IbuZkSoHedFOebtZ8rlli0zzt3
+         KaDQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to:user-agent;
+        bh=YaVwweN+aW1ZCvHJhQTdqSj28sX6FFGNSbihhchPVRg=;
+        b=kvKOUAn0Xo2FTp2JuIKoqMgXPPqaIAahXtsAe5GLCUQpmfBhflS46jsGWMvrvFCFZh
+         Bhj+nfxhyfm4w1/ZMky4r5tEGMdZuw7URKGzbKcFmeLPZhCqP/ger5vH503+DSwnnoxa
+         +tJLXYvR2QVk7DZ1YHN3LH3nDNauWA88F1AWEdlEK0aoinmuc9YkzrUrQPSxTDpuGlwN
+         ZuHGNQVqKccX7hXexDPDcPqa1d9Pg8j0KbS1fbtUT3ZHpeB8nSDgmkZ5hUl+ibFJTTqW
+         yFWYgBBT1aYOPEAs11Z7jIqqC/aQ42eQJRDGoDPZLHoPKxPEbSkFQDREVudwjWfM4ioy
+         zbuQ==
+X-Gm-Message-State: APjAAAXKwPcgkuqYKtVQAxAFxr6dHOrXvX9+zpXvmo7ANNgzdCzMHbX3
+        SsQDAplDNM/mQcKaudtYbq6lTw==
+X-Google-Smtp-Source: APXvYqwWZw+MC/+NeJW1pCU8kARU161lx+zVhbRPwDhs8FF72zbQu2fF5sJsbWI5fLprolMJPlcfug==
+X-Received: by 2002:a1c:7d8b:: with SMTP id y133mr22313770wmc.165.1582544336115;
+        Mon, 24 Feb 2020 03:38:56 -0800 (PST)
+Received: from dell ([2.31.163.122])
+        by smtp.gmail.com with ESMTPSA id e11sm7572535wrm.80.2020.02.24.03.38.55
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 24 Feb 2020 03:38:55 -0800 (PST)
+Date:   Mon, 24 Feb 2020 11:39:26 +0000
+From:   Lee Jones <lee.jones@linaro.org>
+To:     Baolin Wang <baolin.wang7@gmail.com>
+Cc:     arnd@arndb.de, zhang.lyra@gmail.com, orsonzhai@gmail.com,
+        linux-kernel@vger.kernel.org
+Subject: Re: [RESEND PATCH] mfd: sc27xx: Add USB charger type detection
+ support
+Message-ID: <20200224113926.GU3494@dell>
+References: <049eb16cf995d3a2dd0de01f4c0ed09965e36f92.1581906151.git.baolin.wang7@gmail.com>
 MIME-Version: 1.0
-Content-Type: multipart/mixed; 
-        boundary="----=_Part_1324732_122210119.1582544319433"
-X-Originating-IP: [172.17.220.3]
-X-Mailer: Zimbra 8.8.15_GA_3888 (ZimbraWebClient - GC80 (Linux)/8.8.15_GA_3890)
-Thread-Topic: partitions/efi: Fix partition name parsing in GUID partition entry
-Thread-Index: RHN8sBujnu07ZUv014i9wZGHW1Y/bw==
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <049eb16cf995d3a2dd0de01f4c0ed09965e36f92.1581906151.git.baolin.wang7@gmail.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-------=_Part_1324732_122210119.1582544319433
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
+On Mon, 17 Feb 2020, Baolin Wang wrote:
 
-Hi Christoph, 
+> The Spreadtrum SC27XX series PMICs supply the USB charger type detection
+> function, and related registers are located on the PMIC global registers
+> region, thus we implement and export this function in the MFD driver for
+> users to get the USB charger type.
+> 
+> Signed-off-by: Baolin Wang <baolin.wang7@gmail.com>
+> ---
+>  drivers/mfd/sprd-sc27xx-spi.c   |   52 +++++++++++++++++++++++++++++++++++++++
+>  include/linux/mfd/sc27xx-pmic.h |    7 ++++++
+>  2 files changed, 59 insertions(+)
+>  create mode 100644 include/linux/mfd/sc27xx-pmic.h
 
-> I'd rather use plain __le16 and le16_to_cpu here. Also the be 
-> variants seems to be entirely unused. 
+[...]
 
-Looks like I misunderstood your comment from https://patchwork.kernel.org/patch/11309223/: 
+> +enum usb_charger_type sprd_pmic_detect_charger_type(struct device *dev)
+> +{
+> +	struct spi_device *spi = to_spi_device(dev);
+> +	struct sprd_pmic *ddata = spi_get_drvdata(spi);
+> +	const struct sprd_pmic_data *pdata = ddata->pdata;
+> +	enum usb_charger_type type;
+> +	u32 val;
+> +	int ret;
+> +
+> +	ret = regmap_read_poll_timeout(ddata->regmap, pdata->charger_det, val,
+> +				       (val & SPRD_PMIC_CHG_DET_DONE),
+> +				       SPRD_PMIC_CHG_DET_DELAY_US,
+> +				       SPRD_PMIC_CHG_DET_TIMEOUT);
+> +	if (ret) {
+> +		dev_err(&spi->dev, "failed to detect charger type\n");
+> +		return UNKNOWN_TYPE;
+> +	}
+> +
+> +	switch (val & SPRD_PMIC_CHG_TYPE_MASK) {
+> +	case SPRD_PMIC_CDP_TYPE:
+> +		type = CDP_TYPE;
+> +		break;
+> +	case SPRD_PMIC_DCP_TYPE:
+> +		type = DCP_TYPE;
+> +		break;
+> +	case SPRD_PMIC_SDP_TYPE:
+> +		type = SDP_TYPE;
+> +		break;
+> +	default:
+> +		type = UNKNOWN_TYPE;
+> +		break;
+> +	}
+> +
+> +	return type;
+> +}
+> +EXPORT_SYMBOL_GPL(sprd_pmic_detect_charger_type);
 
-> Please add a an efi_char_from_cpu or similarly named helper 
-> to encapsulate this logic. 
+Where is this called from?
 
-The "le16_to_cpu(ptes[i].partition_name[label_count])" call is the 
-full implementation of the "efi_char_from_cpu" logic. Do you want 
-to encapsulate "utf16_le_to_7bit_string" logic entirely like in
-the attached version?
+Why isn't the charger type detected in the charger driver?
 
-Regards,
-Nikolai
-
-------=_Part_1324732_122210119.1582544319433
-Content-Type: text/x-patch;
- name=v4-0001-partitions-efi-Fix-partition-name-parsing-in-GUID.patch
-Content-Disposition: attachment;
- filename=v4-0001-partitions-efi-Fix-partition-name-parsing-in-GUID.patch
-Content-Transfer-Encoding: base64
-
-RnJvbSA4NDJjZjIyZDZmNmY5MTg3MmJjYjA0YWM2YWJlNzc5NGZlZGUyM2ZkIE1vbiBTZXAgMTcg
-MDA6MDA6MDAgMjAwMQpGcm9tOiBOaWtvbGFpIE1lcmlub3YgPG4ubWVyaW5vdkBpbmFuZ28tc3lz
-dGVtcy5jb20+CkRhdGU6IFNhdCwgMjQgTm92IDIwMTggMjA6NDI6MjcgKzA1MDAKU3ViamVjdDog
-W1BBVENIIHY0XSBwYXJ0aXRpb25zL2VmaTogRml4IHBhcnRpdGlvbiBuYW1lIHBhcnNpbmcgaW4g
-R1VJRAogcGFydGl0aW9uIGVudHJ5CgpHVUlEIHBhcnRpdGlvbiBlbnRyeSBkZWZpbmVkIHRvIGhh
-dmUgYSBwYXJ0aXRpb24gbmFtZSBhcyAzNiBVVEYtMTZMRQpjb2RlIHVuaXRzLiBUaGlzIG1lYW5z
-IHRoYXQgb24gYmlnLWVuZGlhbiBwbGF0Zm9ybXMgQVNDSUkgc3ltYm9scwp3b3VsZCBiZSByZWFk
-IHdpdGggMHhYWDAwIGVmaV9jaGFyMTZfdCBjaGFyYWN0ZXIgY29kZS4gSW4gb3JkZXIgdG8KY29y
-cmVjdGx5IGV4dHJhY3QgQVNDSUkgY2hhcmFjdGVycyBmcm9tIGEgcGFydGl0aW9uIG5hbWUgZmll
-bGQgd2UKc2hvdWxkIGJlIGNvbnZlcnRlZCBmcm9tIDE2TEUgdG8gQ1BVIGFyY2hpdGVjdHVyZS4K
-ClRoZSBwcm9ibGVtIGV4aXN0cyBvbiBhbGwgYmlnIGVuZGlhbiBwbGF0Zm9ybXMuCgpTaWduZWQt
-b2ZmLWJ5OiBOaWtvbGFpIE1lcmlub3YgPG4ubWVyaW5vdkBpbmFuZ28tc3lzdGVtcy5jb20+CkZp
-eGVzOiBlZWM3ZWNmZWRlNzQgKCJnZW5oZCwgZWZpOiBhZGQgZWZpIHBhcnRpdGlvbiBtZXRhZGF0
-YSB0byBoZF9zdHJ1Y3RzIikKLS0tCiBibG9jay9wYXJ0aXRpb25zL2VmaS5jIHwgMzUgKysrKysr
-KysrKysrKysrKysrKysrKysrKystLS0tLS0tLS0KIGJsb2NrL3BhcnRpdGlvbnMvZWZpLmggfCAg
-MiArLQogMiBmaWxlcyBjaGFuZ2VkLCAyNyBpbnNlcnRpb25zKCspLCAxMCBkZWxldGlvbnMoLSkK
-CmRpZmYgLS1naXQgYS9ibG9jay9wYXJ0aXRpb25zL2VmaS5jIGIvYmxvY2svcGFydGl0aW9ucy9l
-ZmkuYwppbmRleCBkYjJmZWY3ZGZjNDcuLmQyNmEwNjU0ZDdjYSAxMDA2NDQKLS0tIGEvYmxvY2sv
-cGFydGl0aW9ucy9lZmkuYworKysgYi9ibG9jay9wYXJ0aXRpb25zL2VmaS5jCkBAIC02NTYsNiAr
-NjU2LDMwIEBAIHN0YXRpYyBpbnQgZmluZF92YWxpZF9ncHQoc3RydWN0IHBhcnNlZF9wYXJ0aXRp
-b25zICpzdGF0ZSwgZ3B0X2hlYWRlciAqKmdwdCwKICAgICAgICAgcmV0dXJuIDA7CiB9CiAKKy8q
-KgorICogdXRmMTZfbGVfdG9fN2JpdCgpOiBOYWl2ZWx5IGNvbnZlcnRzIFVURi0xNkxFIHN0cmlu
-ZyB0byA3Yml0IGNoYXJhY3RlcnMKKyAqIEBpbjogaW5wdXQgVVRGLTE2TEUgc3RyaW5nCisgKiBA
-c2l6ZTogc2l6ZSBvZiB0aGUgaW5wdXQgc3RyaW5nCisgKiBAb3V0OiBvdXRwdXQgc3RyaW5nIHB0
-ciwgc2hvdWxkIGJlIGNhcGFibGUgdG8gc3RvcmUgQHNpemUrMSBjaGFyYWN0ZXJzCisgKgorICog
-RGVzY3JpcHRpb246IENvbnZlcnRzIEBzaXplIFVURjE2LUxFIHN5bWJvbHMgZnJvbSBAaW4gc3Ry
-aW5nIHRvIDdiaXQKKyAqIGNoYXJhY3RlcnMgYW5kIHN0b3JlIHRoZW0gdG8gQG91dC4gQWRkcyB0
-cmFpbGluZyB6ZXJvIHRvIEBvdXQgYXJyYXkuCisgKi8KK3N0YXRpYyB2b2lkIHV0ZjE2X2xlX3Rv
-XzdiaXQoY29uc3QgX19sZTE2ICppbiwgdW5zaWduZWQgaW50IHNpemUsIHU4ICpvdXQpCit7CisJ
-dW5zaWduZWQgaW50IGkgPSAwOworCisJb3V0W3NpemVdID0gMDsKKwl3aGlsZSAoaSA8IHNpemUp
-IHsKKwkJdTggYyA9IGxlMTZfdG9fY3B1KGluW2ldKSAmIDB4ZmY7CisKKwkJaWYgKGMgJiYgIWlz
-cHJpbnQoYykpCisJCQljID0gJyEnOworCQlvdXRbaV0gPSBjOworCQlpKys7CisJfQorfQorCiAv
-KioKICAqIGVmaV9wYXJ0aXRpb24oc3RydWN0IHBhcnNlZF9wYXJ0aXRpb25zICpzdGF0ZSkKICAq
-IEBzdGF0ZTogZGlzayBwYXJzZWQgcGFydGl0aW9ucwpAQCAtNjkyLDcgKzcxNiw2IEBAIGludCBl
-ZmlfcGFydGl0aW9uKHN0cnVjdCBwYXJzZWRfcGFydGl0aW9ucyAqc3RhdGUpCiAKIAlmb3IgKGkg
-PSAwOyBpIDwgbGUzMl90b19jcHUoZ3B0LT5udW1fcGFydGl0aW9uX2VudHJpZXMpICYmIGkgPCBz
-dGF0ZS0+bGltaXQtMTsgaSsrKSB7CiAJCXN0cnVjdCBwYXJ0aXRpb25fbWV0YV9pbmZvICppbmZv
-OwotCQl1bnNpZ25lZCBsYWJlbF9jb3VudCA9IDA7CiAJCXVuc2lnbmVkIGxhYmVsX21heDsKIAkJ
-dTY0IHN0YXJ0ID0gbGU2NF90b19jcHUocHRlc1tpXS5zdGFydGluZ19sYmEpOwogCQl1NjQgc2l6
-ZSA9IGxlNjRfdG9fY3B1KHB0ZXNbaV0uZW5kaW5nX2xiYSkgLQpAQCAtNzEzLDE0ICs3MzYsOCBA
-QCBpbnQgZWZpX3BhcnRpdGlvbihzdHJ1Y3QgcGFyc2VkX3BhcnRpdGlvbnMgKnN0YXRlKQogCQkv
-KiBOYWl2ZWx5IGNvbnZlcnQgVVRGMTYtTEUgdG8gNyBiaXRzLiAqLwogCQlsYWJlbF9tYXggPSBt
-aW4oQVJSQVlfU0laRShpbmZvLT52b2xuYW1lKSAtIDEsCiAJCQkJQVJSQVlfU0laRShwdGVzW2ld
-LnBhcnRpdGlvbl9uYW1lKSk7Ci0JCWluZm8tPnZvbG5hbWVbbGFiZWxfbWF4XSA9IDA7Ci0JCXdo
-aWxlIChsYWJlbF9jb3VudCA8IGxhYmVsX21heCkgewotCQkJdTggYyA9IHB0ZXNbaV0ucGFydGl0
-aW9uX25hbWVbbGFiZWxfY291bnRdICYgMHhmZjsKLQkJCWlmIChjICYmICFpc3ByaW50KGMpKQot
-CQkJCWMgPSAnISc7Ci0JCQlpbmZvLT52b2xuYW1lW2xhYmVsX2NvdW50XSA9IGM7Ci0JCQlsYWJl
-bF9jb3VudCsrOwotCQl9CisJCXV0ZjE2X2xlX3RvXzdiaXQocHRlc1tpXS5wYXJ0aXRpb25fbmFt
-ZSwgbGFiZWxfbWF4LAorCQkJCSBpbmZvLT52b2xuYW1lKTsKIAkJc3RhdGUtPnBhcnRzW2kgKyAx
-XS5oYXNfaW5mbyA9IHRydWU7CiAJfQogCWtmcmVlKHB0ZXMpOwpkaWZmIC0tZ2l0IGEvYmxvY2sv
-cGFydGl0aW9ucy9lZmkuaCBiL2Jsb2NrL3BhcnRpdGlvbnMvZWZpLmgKaW5kZXggM2U4NTc2MTU3
-NTc1Li4wYjZkNWI3YmUxMTEgMTAwNjQ0Ci0tLSBhL2Jsb2NrL3BhcnRpdGlvbnMvZWZpLmgKKysr
-IGIvYmxvY2svcGFydGl0aW9ucy9lZmkuaApAQCAtODgsNyArODgsNyBAQCB0eXBlZGVmIHN0cnVj
-dCBfZ3B0X2VudHJ5IHsKIAlfX2xlNjQgc3RhcnRpbmdfbGJhOwogCV9fbGU2NCBlbmRpbmdfbGJh
-OwogCWdwdF9lbnRyeV9hdHRyaWJ1dGVzIGF0dHJpYnV0ZXM7Ci0JZWZpX2NoYXIxNl90IHBhcnRp
-dGlvbl9uYW1lWzcyIC8gc2l6ZW9mIChlZmlfY2hhcjE2X3QpXTsKKwlfX2xlMTYgcGFydGl0aW9u
-X25hbWVbNzIgLyBzaXplb2YgKF9fbGUxNildOwogfSBfX3BhY2tlZCBncHRfZW50cnk7CiAKIHR5
-cGVkZWYgc3RydWN0IF9ncHRfbWJyX3JlY29yZCB7Ci0tIAoyLjE3LjEKCg==
-------=_Part_1324732_122210119.1582544319433--
+-- 
+Lee Jones [李琼斯]
+Linaro Services Technical Lead
+Linaro.org │ Open source software for ARM SoCs
+Follow Linaro: Facebook | Twitter | Blog
