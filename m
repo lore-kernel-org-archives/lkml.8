@@ -2,126 +2,90 @@ Return-Path: <SRS0=7TUr=4M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 29C98C11D2F
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 13:05:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AF423C35671
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 13:06:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F3F832080D
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 13:05:50 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="AB6j+LNP"
+	by mail.kernel.org (Postfix) with ESMTP id 8949220732
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 13:06:46 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727737AbgBXNFt (ORCPT
+        id S1727464AbgBXNGp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Feb 2020 08:05:49 -0500
-Received: from lelv0143.ext.ti.com ([198.47.23.248]:45988 "EHLO
-        lelv0143.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727700AbgBXNFp (ORCPT
+        Mon, 24 Feb 2020 08:06:45 -0500
+Received: from metis.ext.pengutronix.de ([85.220.165.71]:40303 "EHLO
+        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727299AbgBXNGo (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Feb 2020 08:05:45 -0500
-Received: from fllv0035.itg.ti.com ([10.64.41.0])
-        by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id 01OD5cT2080212;
-        Mon, 24 Feb 2020 07:05:38 -0600
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1582549538;
-        bh=NoTiM3qBMEyCC2jtwAhrwbmn1nJbJib85I1Dv5AFyZw=;
-        h=From:To:CC:Subject:Date:In-Reply-To:References;
-        b=AB6j+LNP7pmX2zwYm2diuBEmnjFKftkHjLTp6MGRZvznh3yIHCBJtsxVlVO53QT28
-         aqqFH5BjvTrsEwhlzclSZ4YXwR6sk5rpKdNz+NB9wYFa4hMheAzvwJ2hV1FnLUxIsb
-         RlvY5sy6PVshY0lUOhGB1973AdWSHV1vvaESNZbI=
-Received: from DLEE105.ent.ti.com (dlee105.ent.ti.com [157.170.170.35])
-        by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTP id 01OD5cXg109547;
-        Mon, 24 Feb 2020 07:05:38 -0600
-Received: from DLEE104.ent.ti.com (157.170.170.34) by DLEE105.ent.ti.com
- (157.170.170.35) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Mon, 24
- Feb 2020 07:05:38 -0600
-Received: from lelv0326.itg.ti.com (10.180.67.84) by DLEE104.ent.ti.com
- (157.170.170.34) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
- Frontend Transport; Mon, 24 Feb 2020 07:05:37 -0600
-Received: from a0393678ub.india.ti.com (ileax41-snat.itg.ti.com [10.172.224.153])
-        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id 01OD5M7R017839;
-        Mon, 24 Feb 2020 07:05:35 -0600
-From:   Kishon Vijay Abraham I <kishon@ti.com>
-To:     Kishon Vijay Abraham I <kishon@ti.com>,
-        Tom Joseph <tjoseph@cadence.com>,
-        Rob Herring <robh+dt@kernel.org>
-CC:     Bjorn Helgaas <bhelgaas@google.com>, <linux-pci@vger.kernel.org>,
-        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-Subject: [PATCH v3 4/4] dt-bindings: PCI: cadence: Deprecate inbound/outbound specific bindings
-Date:   Mon, 24 Feb 2020 18:39:05 +0530
-Message-ID: <20200224130905.952-5-kishon@ti.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20200224130905.952-1-kishon@ti.com>
-References: <20200224130905.952-1-kishon@ti.com>
+        Mon, 24 Feb 2020 08:06:44 -0500
+Received: from soja.hi.pengutronix.de ([2001:67c:670:100:3ad5:47ff:feaf:13da])
+        by metis.ext.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.92)
+        (envelope-from <o.rempel@pengutronix.de>)
+        id 1j6DRa-0008Nf-79; Mon, 24 Feb 2020 14:06:42 +0100
+Subject: Re: [PATCH 1/3] dt-bindings: mailbox: imx-mu: add fsl,scu property
+To:     peng.fan@nxp.com, shawnguo@kernel.org, s.hauer@pengutronix.de,
+        jassisinghbrar@gmail.com, leonard.crestez@nxp.com
+Cc:     aisheng.dong@nxp.com, devicetree@vger.kernel.org,
+        hongxing.zhu@nxp.com, m.felsch@pengutronix.de,
+        linux-kernel@vger.kernel.org, linux-imx@nxp.com,
+        kernel@pengutronix.de, festevam@gmail.com,
+        linux-arm-kernel@lists.infradead.org
+References: <1582546474-21721-1-git-send-email-peng.fan@nxp.com>
+ <1582546474-21721-2-git-send-email-peng.fan@nxp.com>
+From:   Oleksij Rempel <o.rempel@pengutronix.de>
+Message-ID: <ad6b8ee4-f5c5-dc44-b06e-d265101ce5ad@pengutronix.de>
+Date:   Mon, 24 Feb 2020 14:06:41 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.5.0
 MIME-Version: 1.0
-Content-Type: text/plain
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+In-Reply-To: <1582546474-21721-2-git-send-email-peng.fan@nxp.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-SA-Exim-Connect-IP: 2001:67c:670:100:3ad5:47ff:feaf:13da
+X-SA-Exim-Mail-From: o.rempel@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Deprecate cdns,max-outbound-regions and cdns,no-bar-match-nbits as both
-these could be derived from "ranges" and "dma-ranges" property.
+Hi Peng,
 
-Signed-off-by: Kishon Vijay Abraham I <kishon@ti.com>
----
- Documentation/devicetree/bindings/pci/cdns,cdns-pcie-host.yaml | 3 +--
- Documentation/devicetree/bindings/pci/cdns-pcie-host.yaml      | 1 +
- Documentation/devicetree/bindings/pci/cdns-pcie.yaml           | 1 +
- 3 files changed, 3 insertions(+), 2 deletions(-)
+On 24.02.20 13:14, peng.fan@nxp.com wrote:
+> From: Peng Fan <peng.fan@nxp.com>
+> 
+> Add fsl,scu property, this needs to be enabled for SCU channel type.
+> 
+> Signed-off-by: Peng Fan <peng.fan@nxp.com>
+> ---
+>   Documentation/devicetree/bindings/mailbox/fsl,mu.txt | 1 +
+>   1 file changed, 1 insertion(+)
+> 
+> diff --git a/Documentation/devicetree/bindings/mailbox/fsl,mu.txt b/Documentation/devicetree/bindings/mailbox/fsl,mu.txt
+> index 9c43357c5924..5b502bcf7122 100644
+> --- a/Documentation/devicetree/bindings/mailbox/fsl,mu.txt
+> +++ b/Documentation/devicetree/bindings/mailbox/fsl,mu.txt
+> @@ -45,6 +45,7 @@ Optional properties:
+>   -------------------
+>   - clocks :	phandle to the input clock.
+>   - fsl,mu-side-b : Should be set for side B MU.
+> +- fsl,scu: Support i.MX8/8X SCU channel type
 
-diff --git a/Documentation/devicetree/bindings/pci/cdns,cdns-pcie-host.yaml b/Documentation/devicetree/bindings/pci/cdns,cdns-pcie-host.yaml
-index cabbe46ff578..84a8f095d031 100644
---- a/Documentation/devicetree/bindings/pci/cdns,cdns-pcie-host.yaml
-+++ b/Documentation/devicetree/bindings/pci/cdns,cdns-pcie-host.yaml
-@@ -45,8 +45,6 @@ examples:
-             #size-cells = <2>;
-             bus-range = <0x0 0xff>;
-             linux,pci-domain = <0>;
--            cdns,max-outbound-regions = <16>;
--            cdns,no-bar-match-nbits = <32>;
-             vendor-id = <0x17cd>;
-             device-id = <0x0200>;
- 
-@@ -57,6 +55,7 @@ examples:
- 
-             ranges = <0x02000000 0x0 0x42000000  0x0 0x42000000  0x0 0x1000000>,
-                      <0x01000000 0x0 0x43000000  0x0 0x43000000  0x0 0x0010000>;
-+            dma-ranges = <0x02000000 0x0 0x0 0x0 0x0 0x1 0x00000000>;
- 
-             #interrupt-cells = <0x1>;
- 
-diff --git a/Documentation/devicetree/bindings/pci/cdns-pcie-host.yaml b/Documentation/devicetree/bindings/pci/cdns-pcie-host.yaml
-index ab6e43b636ec..d1c34f83a765 100644
---- a/Documentation/devicetree/bindings/pci/cdns-pcie-host.yaml
-+++ b/Documentation/devicetree/bindings/pci/cdns-pcie-host.yaml
-@@ -23,5 +23,6 @@ properties:
-     minimum: 0
-     maximum: 64
-     default: 32
-+    deprecated: true
- 
-   msi-parent: true
-diff --git a/Documentation/devicetree/bindings/pci/cdns-pcie.yaml b/Documentation/devicetree/bindings/pci/cdns-pcie.yaml
-index 6887ccc339cc..893cf7de9891 100644
---- a/Documentation/devicetree/bindings/pci/cdns-pcie.yaml
-+++ b/Documentation/devicetree/bindings/pci/cdns-pcie.yaml
-@@ -17,6 +17,7 @@ properties:
-     minimum: 1
-     maximum: 32
-     default: 32
-+    deprecated: true
- 
-   phys:
-     description:
+Hm.. what you are doing is a "link aggregation" with round-robin scheduling:
+https://en.wikipedia.org/wiki/Link_aggregation
+
+I would be happy if we can define a generic mailbox property for this.
+
+Kind regards,
+Oleksij Rempel
+
 -- 
-2.17.1
-
+Pengutronix e.K.                           |                             |
+Industrial Linux Solutions                 | http://www.pengutronix.de/  |
+Peiner Str. 6-8, 31137 Hildesheim, Germany | Phone: +49-5121-206917-0    |
+Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
