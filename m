@@ -2,166 +2,112 @@ Return-Path: <SRS0=7TUr=4M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B7D7AC11D2F
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 13:29:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6C835C35671
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 13:31:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8580C2080D
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 13:29:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3D0762072D
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 13:31:21 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=stapelberg-ch.20150623.gappssmtp.com header.i=@stapelberg-ch.20150623.gappssmtp.com header.b="m8G5HZMb"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="qzi+z6/V"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727554AbgBXN33 (ORCPT
+        id S1727181AbgBXNbT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Feb 2020 08:29:29 -0500
-Received: from mail-oi1-f196.google.com ([209.85.167.196]:35499 "EHLO
-        mail-oi1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727064AbgBXN33 (ORCPT
+        Mon, 24 Feb 2020 08:31:19 -0500
+Received: from mail-pf1-f194.google.com ([209.85.210.194]:46106 "EHLO
+        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726208AbgBXNbT (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Feb 2020 08:29:29 -0500
-Received: by mail-oi1-f196.google.com with SMTP id b18so8918862oie.2
-        for <linux-kernel@vger.kernel.org>; Mon, 24 Feb 2020 05:29:27 -0800 (PST)
+        Mon, 24 Feb 2020 08:31:19 -0500
+Received: by mail-pf1-f194.google.com with SMTP id k29so5361176pfp.13
+        for <linux-kernel@vger.kernel.org>; Mon, 24 Feb 2020 05:31:19 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=stapelberg-ch.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:from:date:message-id:subject:to;
-        bh=nXap8ruoJmQKUv4CaZGUjHx6jvvxzBsJg2NNbHNKxQI=;
-        b=m8G5HZMbWY4YSd5U1wyMqaxMB37vSbxOyTgmaGDnw+WSPp5PJwEfDTILdQUV8cE6L0
-         yNgQ67/h331ehCJAkg5aTWAZnfuX9O4q34SXM+X7/SYEPbYqW34E4KZm2Tkgn3RE3kHz
-         510tyHVzQkWBywV5eGhZgkLPkbXSHtV+GGAw7dC61fLBO9B9KedNbgts455XIJYwKScT
-         9UoEI1//fRO56ZtkCiL3s1+9duXMATRA0rhVL9kR0SLpHMQWvkSVSgepPBFJjDb3yWz7
-         kyO/W4jsxukxctF9aJM8WYUNv7cZ0J9AtS4Od2+Y3hQOzKOdV8oLtn+CgFEVcaDD6Xgz
-         8h4A==
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=rk9xFvrjs94J+cp6mV5Ai1OOkOUlDjUhG7M3DID+zb4=;
+        b=qzi+z6/Ve5agNazfStEPp1krW8/Y9os6e49n6WwFKKdXzlgwJW/Nz5aIMZd/jVnXJS
+         NkmSfKEpwpyaIFY+c8fIFe4qon5D8vmYazu9w61STa7MqiJA8FjeO4edRGtuEU9W70i8
+         0kCsRRfwMG3Zxq0ZGl4fb2vCGJNgtjfdkSh2pNto1agwD/QX2WyPIQ1u5vYDA+QRxmy3
+         9rf51iu0Z8t5xFTJBYcEvH1YdfdM+PQU0tzgA4qrCUtEr/TMPVrKCrWZuz4At4QshjKI
+         +pZJuOaXLECoY9tjdn2FqqI/zCX2BIyt0ZH4jmm5L9+Hbk1mKuxa7QBD2j3kqMoY/wHn
+         seiQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:from:date:message-id:subject:to;
-        bh=nXap8ruoJmQKUv4CaZGUjHx6jvvxzBsJg2NNbHNKxQI=;
-        b=eG3wDt6Fgp59t01ZnzEinbn7k0SVhc6AWycFCCWXj5GepmWeIZMmn81KCnXZ06qb6l
-         BtBwYFZlgaTVZwET6S/4rm47fCcglGn3RPelZ7jA2TvMvIyv0Y7hskatYd6nFVpnDRg/
-         v6MPvmJz0wMOCtgFL11yQRGGNV3Jvl22fIM7CnwjKnWLkmYJ4HZSMzTPP94WbXjFlC1Q
-         3n5SYi+MYwtPcCZ8sOt/nhD1lXYM7c4y7ATgaG8FO2nXQvYhVUeLngKNJSlw2s54fM8f
-         0BcOh23aVVwNHF1HwrBf1XqDimF+FtdMZx/TVK+DbjOh+agio6wKOIe4Dv9UbNhjjx57
-         Eamg==
-X-Gm-Message-State: APjAAAViH2tl/m3IJfqpmsfD+qPsETBZPJVHmGWTKf6W+ujkEBNUcCuY
-        Ao03z1PQRl9PRSzTCWjkDz7yYba1iIgYiiNvr9Q4lA==
-X-Google-Smtp-Source: APXvYqwECe16deFmFXuBsvDM/qb21glybS3RCWMPqamv7CRpcXexvL/6SRpYwtVSbyfeor9Ee1S/VqTKWSeSMr8H57g=
-X-Received: by 2002:aca:cc07:: with SMTP id c7mr12168055oig.165.1582550966813;
- Mon, 24 Feb 2020 05:29:26 -0800 (PST)
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=rk9xFvrjs94J+cp6mV5Ai1OOkOUlDjUhG7M3DID+zb4=;
+        b=LmqFN/bo+/Om66SQSTZHHErI85+KeeJ2wHUQI40anCO1f1NIHCHPf1QEtfolIMDFXu
+         3Zwex6KWYrCkT4ETK1CUjDxAi/4PdrDlntPhJgrxIvV/lQxDkBRi+GZGpf5daD7th2C6
+         Co5c9ofzR+vhJ5/k63bj8VP0/POc6l8BraP8ba2DH0TRmeBt/+kykUYxQEJllIFVwe2i
+         Jq81SjPYpORIElIW48FRYfPyfEYqGSkKWQHne5uCfhlm9kXEUjX4cZBItd8qXrYgbgUd
+         +gQRxNAqMHKdhU0B14J/ibRGUMqlfeEnP+McWXu5SSsXiDABoPa0eC+4N35rRWVNZaKy
+         vwsg==
+X-Gm-Message-State: APjAAAUU9zNPrg8JFjEbDducr2xlwDMbG/gBCbRZeDwpHtE6Y2qjIdH2
+        sN76eet5IxPMOaieSknrVY0OjdG/dp+YSNrNW0P+Yw==
+X-Google-Smtp-Source: APXvYqyGqf4l/KWsrKzVIZkIBaE13bDXEBj992jRnsMCg6qwHyy+4e2P6IqnWeBvjXVr6y9mcWJGu39tDMEba6hLpN4=
+X-Received: by 2002:a62:b604:: with SMTP id j4mr32889697pff.93.1582551077701;
+ Mon, 24 Feb 2020 05:31:17 -0800 (PST)
 MIME-Version: 1.0
-From:   Michael Stapelberg <michael+lkml@stapelberg.ch>
-Date:   Mon, 24 Feb 2020 14:29:15 +0100
-Message-ID: <CANnVG6kZzN1Ja0EmxG3pVTdMx8Kf8fezGWBtCYUzk888VaFThg@mail.gmail.com>
-Subject: Writing to FUSE via mmap extremely slow (sometimes) on some machines?
-To:     fuse-devel <fuse-devel@lists.sourceforge.net>,
-        Miklos Szeredi <miklos@szeredi.hu>,
-        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org
-Content-Type: multipart/mixed; boundary="0000000000003777a4059f525cbe"
+References: <0000000000009e7712059f5257af@google.com>
+In-Reply-To: <0000000000009e7712059f5257af@google.com>
+From:   Andrey Konovalov <andreyknvl@google.com>
+Date:   Mon, 24 Feb 2020 14:31:06 +0100
+Message-ID: <CAAeHK+y2WZpj9jKMqZLZe5J9LxtdxaMeqA=9hGE=70fTL6s8sA@mail.gmail.com>
+Subject: Re: BUG: bad host encryption descriptor; descriptor is too short (3
+ vs 5 needed)
+To:     syzbot <syzbot+069037c83014b5536cb7@syzkaller.appspotmail.com>
+Cc:     LKML <linux-kernel@vger.kernel.org>,
+        USB list <linux-usb@vger.kernel.org>,
+        syzkaller-bugs <syzkaller-bugs@googlegroups.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---0000000000003777a4059f525cbe
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+On Mon, Feb 24, 2020 at 2:28 PM syzbot
+<syzbot+069037c83014b5536cb7@syzkaller.appspotmail.com> wrote:
+>
+> Hello,
+>
+> syzbot found the following crash on:
+>
+> HEAD commit:    307a2623 usb: gadget: add raw-gadget interface
+> git tree:       https://github.com/google/kasan.git usb-fuzzer
+> console output: https://syzkaller.appspot.com/x/log.txt?x=13fa7a29e00000
+> kernel config:  https://syzkaller.appspot.com/x/.config?x=cf0c83d9cbd23d52
+> dashboard link: https://syzkaller.appspot.com/bug?extid=069037c83014b5536cb7
+> compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
+> syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=12acfe09e00000
+> C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=1613d1b5e00000
+>
+> IMPORTANT: if you fix the bug, please add the following tag to the commit:
+> Reported-by: syzbot+069037c83014b5536cb7@syzkaller.appspotmail.com
+>
+> usb 1-1: config 0 interface 0 altsetting 0 has 2 endpoint descriptors, different from the interface descriptor's value: 4
+> usb 1-1: New USB device found, idVendor=13dc, idProduct=5611, bcdDevice=40.15
+> usb 1-1: New USB device strings: Mfr=0, Product=0, SerialNumber=0
+> usb 1-1: config 0 descriptor??
+> hwa-hc 1-1:0.0: Wire Adapter v106.52 newer than groked v1.0
+> usb 1-1: BUG: bad host encryption descriptor; descriptor is too short (3 vs 5 needed)
+> usb 1-1: supported encryption types:
+> usb 1-1: E: host doesn't support CCM-1 crypto
+> hwa-hc 1-1:0.0: Cannot initialize internals: -19
+>
+>
+> ---
+> This bug is generated by a bot. It may contain errors.
+> See https://goo.gl/tpsmEJ for more information about syzbot.
+> syzbot engineers can be reached at syzkaller@googlegroups.com.
+>
+> syzbot will keep track of this bug report. See:
+> https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
+> syzbot can test patches for this bug, for details see:
+> https://goo.gl/tpsmEJ#testing-patches
 
-Hey,
-
-I=E2=80=99m running into an issue where writes via mmap are extremely slow.
-The mmap program I=E2=80=99m using to test is attached.
-
-The symptom is that the program usually completes in 0.x seconds, but
-then sometimes takes minutes to complete! E.g.:
-
-% dd if=3D/dev/urandom of=3D/tmp/was bs=3D1M count=3D99
-
-% ./fusexmp_fh /tmp/mnt
-
-% time ~/mmap /tmp/was /tmp/mnt/tmp/stapelberg.1
-Mapped src: 0x10000  and dst: 0x21b8b000
-memcpy done
-~/mmap /tmp/was /tmp/mnt/tmp/stapelberg.1  0.06s user 0.20s system 48%
-cpu 0.544 total
-
-% time   ~/mmap /tmp/was /tmp/mnt/tmp/stapelberg.1
-Mapped src: 0x10000  and dst: 0x471fb000
-memcpy done
-~/mmap /tmp/was /tmp/mnt/tmp/stapelberg.1  0.05s user 0.22s system 0%
-cpu 2:03.39 total
-
-This affects both an in-house FUSE file system and also FUSE=E2=80=99s
-fusexmp_fh from 2.9.7 (matching what our in-house FS uses).
-
-While this is happening, the machine is otherwise idle. E.g. dstat shows:
-
---total-cpu-usage-- -dsk/total- -net/total- ---paging-- ---system--
-usr sys idl wai stl| read  writ| recv  send|  in   out | int   csw
-  1   0  98   1   0|   0     0 |  19k   23k|   0     0 |  14k   27k
-  1   0  98   1   0|   0     0 |  33k   53k|   0     0 |  14k   29k
-  0   0  98   1   0|   0   176k|  27k   26k|   0     0 |  13k   25k
-[=E2=80=A6]
-
-While this is happening, using cp(1) to copy the same file is fast (1
-second). It=E2=80=99s only mmap-based writing that=E2=80=99s slow.
-
-This is with Linux 5.2.17, but has been going on for years apparently.
-
-I haven=E2=80=99t quite figured out what the pattern is with regards to the
-machines that are affected. One wild guess I have is that it might be
-related to RAM? The machine on which I can most frequently reproduce
-the issue has 192GB of RAM, whereas I haven=E2=80=99t been able to reproduc=
-e
-the issue on my workstation with 64GB of RAM.
-
-Any ideas what I could check to further narrow down this issue?
-
-Thanks,
-
---0000000000003777a4059f525cbe
-Content-Type: text/x-csrc; charset="US-ASCII"; name="mmap.c"
-Content-Disposition: attachment; filename="mmap.c"
-Content-Transfer-Encoding: base64
-Content-ID: <f_k70g91jk0>
-X-Attachment-Id: f_k70g91jk0
-
-I2luY2x1ZGUgPHN5cy90eXBlcy5oPgojaW5jbHVkZSA8c3lzL3N0YXQuaD4KI2luY2x1ZGUgPHN5
-cy9tbWFuLmg+IAojaW5jbHVkZSA8ZmNudGwuaD4KI2luY2x1ZGUgPHN0cmluZy5oPgojaW5jbHVk
-ZSA8c3RkaW8uaD4KI2luY2x1ZGUgPHN0ZGxpYi5oPgojaW5jbHVkZSA8dW5pc3RkLmg+CgovKgog
-KiBBbiBpbXBsZW1lbnRhdGlvbiBvZiBjb3B5ICgiY3AiKSB0aGF0IHVzZXMgbWVtb3J5IG1hcHMu
-ICBWYXJpb3VzCiAqIGVycm9yIGNoZWNraW5nIGhhcyBiZWVuIHJlbW92ZWQgdG8gcHJvbW90ZSBy
-ZWFkYWJpbGl0eQogKi8KCi8vIFdoZXJlIHdlIHdhbnQgdGhlIHNvdXJjZSBmaWxlJ3MgbWVtb3J5
-IG1hcCB0byBsaXZlIGluIHZpcnR1YWwgbWVtb3J5Ci8vIFRoZSBkZXN0aW5hdGlvbiBmaWxlIHJl
-c2lkZXMgaW1tZWRpYXRlbHkgYWZ0ZXIgdGhlIHNvdXJjZSBmaWxlCiNkZWZpbmUgTUFQX0xPQ0FU
-SU9OIDB4NjEwMAoKaW50IG1haW4gKGludCBhcmdjLCBjaGFyICphcmd2W10pIHsKIGludCBmZGlu
-LCBmZG91dDsKIGNoYXIgKnNyYywgKmRzdDsKIHN0cnVjdCBzdGF0IHN0YXRidWY7CiBvZmZfdCBm
-aWxlU2l6ZSA9IDA7CgogaWYgKGFyZ2MgIT0gMykgewogICBwcmludGYgKCJ1c2FnZTogYS5vdXQg
-PGZyb21maWxlPiA8dG9maWxlPlxuIik7CiAgIGV4aXQoMCk7CiB9CgogLyogb3BlbiB0aGUgaW5w
-dXQgZmlsZSAqLwogaWYgKChmZGluID0gb3BlbiAoYXJndlsxXSwgT19SRE9OTFkpKSA8IDApIHsK
-ICAgcHJpbnRmICgiY2FuJ3Qgb3BlbiAlcyBmb3IgcmVhZGluZ1xuIiwgYXJndlsxXSk7CiAgIGV4
-aXQoMCk7CiB9CgogLyogb3Blbi9jcmVhdGUgdGhlIG91dHB1dCBmaWxlICovCiBpZiAoKGZkb3V0
-ID0gb3BlbiAoYXJndlsyXSwgT19SRFdSIHwgT19DUkVBVCB8IE9fVFJVTkMsIDA2MDApKSA8IDAp
-IHsKICAgcHJpbnRmICgiY2FuJ3QgY3JlYXRlICVzIGZvciB3cml0aW5nXG4iLCBhcmd2WzJdKTsK
-ICAgZXhpdCgwKTsKIH0KIAogLyogZmluZCBzaXplIG9mIGlucHV0IGZpbGUgKi8KIGZzdGF0IChm
-ZGluLCZzdGF0YnVmKSA7CiBmaWxlU2l6ZSA9IHN0YXRidWYuc3Rfc2l6ZTsKIAogLyogZ28gdG8g
-dGhlIGxvY2F0aW9uIGNvcnJlc3BvbmRpbmcgdG8gdGhlIGxhc3QgYnl0ZSAqLwogaWYgKGxzZWVr
-IChmZG91dCwgZmlsZVNpemUgLSAxLCBTRUVLX1NFVCkgPT0gLTEpIHsKICAgcHJpbnRmICgibHNl
-ZWsgZXJyb3JcbiIpOwogICBleGl0KDApOwogfQogCiAvKiB3cml0ZSBhIGR1bW15IGJ5dGUgYXQg
-dGhlIGxhc3QgbG9jYXRpb24gKi8KIHdyaXRlIChmZG91dCwgIiIsIDEpOwogCiAvKiAKICAqIG1l
-bW9yeSBtYXAgdGhlIGlucHV0IGZpbGUuICBPbmx5IHRoZSBmaXJzdCB0d28gYXJndW1lbnRzIGFy
-ZQogICogaW50ZXJlc3Rpbmc6IDEpIHRoZSBsb2NhdGlvbiBhbmQgMikgdGhlIHNpemUgb2YgdGhl
-IG1lbW9yeSBtYXAgCiAgKiBpbiB2aXJ0dWFsIG1lbW9yeSBzcGFjZS4gTm90ZSB0aGF0IHRoZSBs
-b2NhdGlvbiBpcyBvbmx5IGEgImhpbnQiOwogICogdGhlIE9TIGNhbiBjaG9vc2UgdG8gcmV0dXJu
-IGEgZGlmZmVyZW50IHZpcnR1YWwgbWVtb3J5IGFkZHJlc3MuCiAgKiBUaGlzIGlzIGlsbHVzdHJh
-dGVkIGJ5IHRoZSBwcmludGYgY29tbWFuZCBiZWxvdy4KICovCgogc3JjID0gbW1hcCAoKHZvaWQq
-KSBNQVBfTE9DQVRJT04sIGZpbGVTaXplLCAKCSAgICAgUFJPVF9SRUFELCBNQVBfU0hBUkVEIHwg
-TUFQX1BPUFVMQVRFLCBmZGluLCAwKTsKCiAvKiBtZW1vcnkgbWFwIHRoZSBvdXRwdXQgZmlsZSBh
-ZnRlciB0aGUgaW5wdXQgZmlsZSAqLwogZHN0ID0gbW1hcCAoKHZvaWQqKSBNQVBfTE9DQVRJT04g
-KyBmaWxlU2l6ZSAsIGZpbGVTaXplICwgCgkgICAgIFBST1RfUkVBRCB8IFBST1RfV1JJVEUsIE1B
-UF9TSEFSRUQsIGZkb3V0LCAwKTsKCgogcHJpbnRmKCJNYXBwZWQgc3JjOiAweCV4ICBhbmQgZHN0
-OiAweCV4XG4iLHNyYyxkc3QpOwoKIC8qIENvcHkgdGhlIGlucHV0IGZpbGUgdG8gdGhlIG91dHB1
-dCBmaWxlICovCiBtZW1jcHkgKGRzdCwgc3JjLCBmaWxlU2l6ZSk7CgogcHJpbnRmKCJtZW1jcHkg
-ZG9uZVxuIik7CgogLy8gd2Ugc2hvdWxkIHByb2JhYmx5IHVubWFwIG1lbW9yeSBhbmQgY2xvc2Ug
-dGhlIGZpbGVzCn0gLyogbWFpbiAqLwo=
---0000000000003777a4059f525cbe--
+#syz dup: BUG: bad host security descriptor; not enough data (4 vs 5 left)
