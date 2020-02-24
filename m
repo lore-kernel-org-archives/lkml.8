@@ -2,93 +2,60 @@ Return-Path: <SRS0=7TUr=4M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9AE28C38BF9
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 21:41:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AB802C38BFF
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 21:41:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7A87421556
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 21:41:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 807D421556
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 21:41:47 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="igQ0lGMG"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728347AbgBXVlf (ORCPT
+        id S1728368AbgBXVlq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Feb 2020 16:41:35 -0500
-Received: from wtarreau.pck.nerim.net ([62.212.114.60]:31498 "EHLO 1wt.eu"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727459AbgBXVkk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Feb 2020 16:40:40 -0500
-X-Greylist: delayed 986 seconds by postgrey-1.27 at vger.kernel.org; Mon, 24 Feb 2020 16:40:39 EST
-Received: (from willy@localhost)
-        by pcw.home.local (8.15.2/8.15.2/Submit) id 01OLO4Ms008693;
-        Mon, 24 Feb 2020 22:24:04 +0100
-From:   Willy Tarreau <w@1wt.eu>
-To:     Denis Efremov <efremov@linux.com>
-Cc:     Jens Axboe <axboe@kernel.dk>, linux-kernel@vger.kernel.org,
-        linux-block@vger.kernel.org,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Willy Tarreau <w@1wt.eu>
-Subject: [PATCH 02/10] floppy: cleanup: expand macro UFDCS
-Date:   Mon, 24 Feb 2020 22:23:44 +0100
-Message-Id: <20200224212352.8640-3-w@1wt.eu>
-X-Mailer: git-send-email 2.9.0
-In-Reply-To: <20200224212352.8640-1-w@1wt.eu>
-References: <20200224212352.8640-1-w@1wt.eu>
+        Mon, 24 Feb 2020 16:41:46 -0500
+Received: from bombadil.infradead.org ([198.137.202.133]:34478 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727459AbgBXVlp (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 24 Feb 2020 16:41:45 -0500
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
+        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=NvJp7tTodaVHCZTEDiIj+yawWDduVL3Oct69ajAcLic=; b=igQ0lGMGn8KdLvHIbVPzsUeKgG
+        j10MnNZMuq6fJKQv0MSVMg+Y/0gN9OgLzE7u9neWDTcLC9mCS/LiX246FGoWpmJbXSwegQgcBjLdz
+        Nq2o1N+9I6tazK/m7Q+iUOpOFQC5u31Jr4q1tpXtMSrfjarKH1or/of3lwGNKGFGGmfUhoaO/xPni
+        DbhCdWHHlwIkwP0z1vHfOioVeL34vwJvtBGTOWey9/IAzoY4g2jfskQNrhQAq5UlyQR6bBY+vr+U7
+        eSTr5r0V4JFmSHrHc92QOQOikws4qtL6e6cfeY76efaL2sTg5s8ZwJ7y4F6h4+ALSsJfavSgqAWxq
+        YsGLY/Ng==;
+Received: from hch by bombadil.infradead.org with local (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1j6LU1-0007Zo-K2; Mon, 24 Feb 2020 21:41:45 +0000
+Date:   Mon, 24 Feb 2020 13:41:45 -0800
+From:   Christoph Hellwig <hch@infradead.org>
+To:     Matthew Wilcox <willy@infradead.org>
+Cc:     linux-fsdevel@vger.kernel.org, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org, linux-btrfs@vger.kernel.org,
+        linux-erofs@lists.ozlabs.org, linux-ext4@vger.kernel.org,
+        linux-f2fs-devel@lists.sourceforge.net, cluster-devel@redhat.com,
+        ocfs2-devel@oss.oracle.com, linux-xfs@vger.kernel.org
+Subject: Re: [PATCH v7 10/24] mm: Add readahead address space operation
+Message-ID: <20200224214145.GG13895@infradead.org>
+References: <20200219210103.32400-1-willy@infradead.org>
+ <20200219210103.32400-11-willy@infradead.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200219210103.32400-11-willy@infradead.org>
+X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This macro doesn't bring much value and only slightly obfuscates the
-code by silently using local variable "drive", let's expand it.
+Looks fine modulo the little data type issue:
 
-Signed-off-by: Willy Tarreau <w@1wt.eu>
----
- drivers/block/floppy.c | 9 ++++-----
- 1 file changed, 4 insertions(+), 5 deletions(-)
-
-diff --git a/drivers/block/floppy.c b/drivers/block/floppy.c
-index 93e0840..182148a 100644
---- a/drivers/block/floppy.c
-+++ b/drivers/block/floppy.c
-@@ -313,7 +313,6 @@ static bool initialized;
- #define UDP	(&drive_params[drive])
- #define UDRS	(&drive_state[drive])
- #define UDRWE	(&write_errors[drive])
--#define UFDCS	(&fdc_state[FDC(drive)])
- 
- #define PH_HEAD(floppy, head) (((((floppy)->stretch & 2) >> 1) ^ head) << 2)
- #define STRETCH(floppy)	((floppy)->stretch & FD_STRETCH)
-@@ -3549,7 +3548,7 @@ static int fd_locked_ioctl(struct block_device *bdev, fmode_t mode, unsigned int
- 	case FDRESET:
- 		return user_reset_fdc(drive, (int)param, true);
- 	case FDGETFDCSTAT:
--		outparam = UFDCS;
-+		outparam = &fdc_state[FDC(drive)];
- 		break;
- 	case FDWERRORCLR:
- 		memset(UDRWE, 0, sizeof(*UDRWE));
-@@ -3833,7 +3832,7 @@ static int compat_getfdcstat(int drive,
- 	struct floppy_fdc_state v;
- 
- 	mutex_lock(&floppy_mutex);
--	v = *UFDCS;
-+	v = fdc_state[FDC(drive)];
- 	mutex_unlock(&floppy_mutex);
- 
- 	memset(&v32, 0, sizeof(struct compat_floppy_fdc_state));
-@@ -4062,8 +4061,8 @@ static int floppy_open(struct block_device *bdev, fmode_t mode)
- 			buffer_track = -1;
- 	}
- 
--	if (UFDCS->rawcmd == 1)
--		UFDCS->rawcmd = 2;
-+	if (fdc_state[FDC(drive)].rawcmd == 1)
-+		fdc_state[FDC(drive)].rawcmd = 2;
- 
- 	if (!(mode & FMODE_NDELAY)) {
- 		if (mode & (FMODE_READ|FMODE_WRITE)) {
--- 
-2.9.0
-
+Reviewed-by: Christoph Hellwig <hch@lst.de>
