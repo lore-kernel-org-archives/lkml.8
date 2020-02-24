@@ -2,94 +2,212 @@ Return-Path: <SRS0=7TUr=4M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0E815C11D2F
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 16:29:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B47D4C11D2F
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 16:29:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D63502084E
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 16:29:10 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=cmpxchg-org.20150623.gappssmtp.com header.i=@cmpxchg-org.20150623.gappssmtp.com header.b="H70cCu9p"
+	by mail.kernel.org (Postfix) with ESMTP id 88E022080D
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 16:29:24 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727895AbgBXQ3J (ORCPT
+        id S1727972AbgBXQ3X (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Feb 2020 11:29:09 -0500
-Received: from mail-qv1-f67.google.com ([209.85.219.67]:33378 "EHLO
-        mail-qv1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727299AbgBXQ3J (ORCPT
+        Mon, 24 Feb 2020 11:29:23 -0500
+Received: from out02.mta.xmission.com ([166.70.13.232]:49502 "EHLO
+        out02.mta.xmission.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727299AbgBXQ3X (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Feb 2020 11:29:09 -0500
-Received: by mail-qv1-f67.google.com with SMTP id ek2so4399166qvb.0
-        for <linux-kernel@vger.kernel.org>; Mon, 24 Feb 2020 08:29:08 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=cmpxchg-org.20150623.gappssmtp.com; s=20150623;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=ayL/a+KEUEgG8kUr32wkz/zkDzUV2JeP3xXHo8B3UmY=;
-        b=H70cCu9pyk/xG3LyHYdYjgRM9JXlOdn+iavwajhfdD56D1QKqyTUIY2WkWWtme6T0R
-         X0EtycCQX0mfKuXRA6ip6+B1shl+Y6MAmt8aVaNkw+P3d2QwiRZOY4VAilSFo2tH6GIQ
-         8uEVQQOlAQDRDWY2xyGEK8Q0x9rigYd6AkhIDBvgupLxMxT8V29iDdKekTkoNVIIZNPd
-         7015RAXtidGAd5WyQQRSIZmwrkqDA9hCTOs1MQAWoZxLPA70GcMdUahyXRINEk0eQgq/
-         9IVdQi0vJuUcoWegqbsfRr+0WWwFJ+hfJsYJI+qic+gun0s6YEN3aVVEXUYixc8DAe2r
-         K4cQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=ayL/a+KEUEgG8kUr32wkz/zkDzUV2JeP3xXHo8B3UmY=;
-        b=JyrN9sdm5dV0N91Z/1AhP7JfRe1krOgUin1mvjcriQNd9n7v4MysW/Xn4iFEpWryG/
-         TWQrEZeUdJiwLpAd1M0TjYwoc9+uABT1alYqPSxDG68u5aMFTmmicDh7ogP6Gfhweg9X
-         6CnOYrEwzuidA1wML7rRXKGoz7H6XGj5kO3QsLnzR9GYDFPEdTmvm3ZIO+UfJ9t1cw5e
-         +y4W8i+7jKdbYfWNlfC//RmXXqrDOWCQm6FSM10Py3zXb2X4pGOkpgh6vDGUSaAnea+8
-         YyIh7jN39cfujUyrdVyBWwpwf01U32r0Q9INr+dWfg5T67f/ayDlAh54FpJaLpXa0pTg
-         VpBQ==
-X-Gm-Message-State: APjAAAV+V30BoquT1riS+9rVwoGlFNMPJDyrjRC6+ViXL7/CNjxnxFMu
-        cJCOiN/VkfVC02QeHtoEvniAJw==
-X-Google-Smtp-Source: APXvYqx0pL8vfqPmQyNgg4FDblN91V9G8PXmIWaM6qg3/8YLstc1EGv3MDjK1Z35pn05cPP4mT77ew==
-X-Received: by 2002:a0c:ed32:: with SMTP id u18mr45645692qvq.2.1582561748197;
-        Mon, 24 Feb 2020 08:29:08 -0800 (PST)
-Received: from localhost ([2620:10d:c091:500::1:e64b])
-        by smtp.gmail.com with ESMTPSA id y91sm6291011qtd.13.2020.02.24.08.29.07
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 24 Feb 2020 08:29:07 -0800 (PST)
-Date:   Mon, 24 Feb 2020 11:29:06 -0500
-From:   Johannes Weiner <hannes@cmpxchg.org>
-To:     Qian Cai <cai@lca.pw>
-Cc:     tj@kernel.org, lizefan@huawei.com, cgroups@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] cgroup: fix psi_show() crash on 32bit ino archs
-Message-ID: <20200224162906.GB1674@cmpxchg.org>
-References: <20200224030007.3990-1-cai@lca.pw>
+        Mon, 24 Feb 2020 11:29:23 -0500
+Received: from in01.mta.xmission.com ([166.70.13.51])
+        by out02.mta.xmission.com with esmtps (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.90_1)
+        (envelope-from <ebiederm@xmission.com>)
+        id 1j6Gbh-0004No-IS; Mon, 24 Feb 2020 09:29:21 -0700
+Received: from ip68-227-160-95.om.om.cox.net ([68.227.160.95] helo=x220.xmission.com)
+        by in01.mta.xmission.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.87)
+        (envelope-from <ebiederm@xmission.com>)
+        id 1j6Gbg-0007qC-Jo; Mon, 24 Feb 2020 09:29:21 -0700
+From:   ebiederm@xmission.com (Eric W. Biederman)
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     Al Viro <viro@zeniv.linux.org.uk>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Kernel Hardening <kernel-hardening@lists.openwall.com>,
+        Linux API <linux-api@vger.kernel.org>,
+        Linux FS Devel <linux-fsdevel@vger.kernel.org>,
+        Linux Security Module <linux-security-module@vger.kernel.org>,
+        Akinobu Mita <akinobu.mita@gmail.com>,
+        Alexey Dobriyan <adobriyan@gmail.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Andy Lutomirski <luto@kernel.org>,
+        Daniel Micay <danielmicay@gmail.com>,
+        Djalal Harouni <tixxdz@gmail.com>,
+        "Dmitry V . Levin" <ldv@altlinux.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Ingo Molnar <mingo@kernel.org>,
+        "J . Bruce Fields" <bfields@fieldses.org>,
+        Jeff Layton <jlayton@poochiereds.net>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Kees Cook <keescook@chromium.org>,
+        Oleg Nesterov <oleg@redhat.com>,
+        Solar Designer <solar@openwall.com>,
+        Alexey Gladkov <gladkov.alexey@gmail.com>
+References: <20200210150519.538333-8-gladkov.alexey@gmail.com>
+        <87v9odlxbr.fsf@x220.int.ebiederm.org>
+        <20200212144921.sykucj4mekcziicz@comp-core-i7-2640m-0182e6>
+        <87tv3vkg1a.fsf@x220.int.ebiederm.org>
+        <CAHk-=wg52stFtUxMOxs3afkwDWmWn1JXC7RJ7dPsTrJbnxpZVg@mail.gmail.com>
+        <87v9obipk9.fsf@x220.int.ebiederm.org>
+        <CAHk-=wgwmu4jpmOqW0+Lz0dcem1Fub=ThLHvmLobf_WqCq7bwg@mail.gmail.com>
+        <20200212200335.GO23230@ZenIV.linux.org.uk>
+        <CAHk-=wi+1CPShMFvJNPfnrJ8DD8uVKUOQ5TQzQUNGLUkeoahkg@mail.gmail.com>
+        <20200212203833.GQ23230@ZenIV.linux.org.uk>
+        <20200212204124.GR23230@ZenIV.linux.org.uk>
+        <CAHk-=wi5FOGV_3tALK3n6E2fK3Oa_yCYkYQtCSaXLSEm2DUCKg@mail.gmail.com>
+        <87lfp7h422.fsf@x220.int.ebiederm.org>
+        <CAHk-=wgmn9Qds0VznyphouSZW6e42GWDT5H1dpZg8pyGDGN+=w@mail.gmail.com>
+        <87pnejf6fz.fsf@x220.int.ebiederm.org>
+        <871rqpaswu.fsf_-_@x220.int.ebiederm.org>
+        <871rqk2brn.fsf_-_@x220.int.ebiederm.org>
+Date:   Mon, 24 Feb 2020 10:27:17 -0600
+In-Reply-To: <871rqk2brn.fsf_-_@x220.int.ebiederm.org> (Eric W. Biederman's
+        message of "Mon, 24 Feb 2020 10:25:16 -0600")
+Message-ID: <87pne40x3u.fsf_-_@x220.int.ebiederm.org>
+User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.1 (gnu/linux)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200224030007.3990-1-cai@lca.pw>
+Content-Type: text/plain
+X-XM-SPF: eid=1j6Gbg-0007qC-Jo;;;mid=<87pne40x3u.fsf_-_@x220.int.ebiederm.org>;;;hst=in01.mta.xmission.com;;;ip=68.227.160.95;;;frm=ebiederm@xmission.com;;;spf=neutral
+X-XM-AID: U2FsdGVkX1/UflptKI2kFaz4P7DX3c7LedTcEBcQNz8=
+X-SA-Exim-Connect-IP: 68.227.160.95
+X-SA-Exim-Mail-From: ebiederm@xmission.com
+Subject: [PATCH v2 2/6] proc: Generalize proc_sys_prune_dcache into proc_prune_siblings_dcache
+X-SA-Exim-Version: 4.2.1 (built Thu, 05 May 2016 13:38:54 -0600)
+X-SA-Exim-Scanned: Yes (on in01.mta.xmission.com)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, Feb 23, 2020 at 10:00:07PM -0500, Qian Cai wrote:
-> Similar to the commit d7495343228f ("cgroup: fix incorrect
-> WARN_ON_ONCE() in cgroup_setup_root()"), cgroup_id(root_cgrp) does not
-> equal to 1 on 32bit ino archs which triggers all sorts of issues with
-> psi_show() on s390x. For example,
-> 
->  BUG: KASAN: slab-out-of-bounds in collect_percpu_times+0x2d0/
->  Read of size 4 at addr 000000001e0ce000 by task read_all/3667
->  collect_percpu_times+0x2d0/0x798
->  psi_show+0x7c/0x2a8
->  seq_read+0x2ac/0x830
->  vfs_read+0x92/0x150
->  ksys_read+0xe2/0x188
->  system_call+0xd8/0x2b4
-> 
-> Fix it by using cgroup_ino().
-> 
-> Fixes: 743210386c03 ("cgroup: use cgrp->kn->id as the cgroup ID")
-> Signed-off-by: Qian Cai <cai@lca.pw>
 
-Acked-by: Johannes Weiner <hannes@cmpxchg.org>
+This prepares the way for allowing the pid part of proc to use this
+dcache pruning code as well.
+
+Signed-off-by: Eric W. Biederman <ebiederm@xmission.com>
+---
+ fs/proc/inode.c       | 38 ++++++++++++++++++++++++++++++++++++++
+ fs/proc/internal.h    |  1 +
+ fs/proc/proc_sysctl.c | 35 +----------------------------------
+ 3 files changed, 40 insertions(+), 34 deletions(-)
+
+diff --git a/fs/proc/inode.c b/fs/proc/inode.c
+index bdae442d5262..74ce4a8d05eb 100644
+--- a/fs/proc/inode.c
++++ b/fs/proc/inode.c
+@@ -103,6 +103,44 @@ void __init proc_init_kmemcache(void)
+ 	BUILD_BUG_ON(sizeof(struct proc_dir_entry) >= SIZEOF_PDE);
+ }
+ 
++void proc_prune_siblings_dcache(struct hlist_head *inodes, spinlock_t *lock)
++{
++	struct inode *inode;
++	struct proc_inode *ei;
++	struct hlist_node *node;
++	struct super_block *sb;
++
++	rcu_read_lock();
++	for (;;) {
++		node = hlist_first_rcu(inodes);
++		if (!node)
++			break;
++		ei = hlist_entry(node, struct proc_inode, sibling_inodes);
++		spin_lock(lock);
++		hlist_del_init_rcu(&ei->sibling_inodes);
++		spin_unlock(lock);
++
++		inode = &ei->vfs_inode;
++		sb = inode->i_sb;
++		if (!atomic_inc_not_zero(&sb->s_active))
++			continue;
++		inode = igrab(inode);
++		rcu_read_unlock();
++		if (unlikely(!inode)) {
++			deactivate_super(sb);
++			rcu_read_lock();
++			continue;
++		}
++
++		d_prune_aliases(inode);
++		iput(inode);
++		deactivate_super(sb);
++
++		rcu_read_lock();
++	}
++	rcu_read_unlock();
++}
++
+ static int proc_show_options(struct seq_file *seq, struct dentry *root)
+ {
+ 	struct super_block *sb = root->d_sb;
+diff --git a/fs/proc/internal.h b/fs/proc/internal.h
+index 366cd3aa690b..ba9a991824a5 100644
+--- a/fs/proc/internal.h
++++ b/fs/proc/internal.h
+@@ -210,6 +210,7 @@ extern const struct inode_operations proc_pid_link_inode_operations;
+ extern const struct super_operations proc_sops;
+ 
+ void proc_init_kmemcache(void);
++void proc_prune_siblings_dcache(struct hlist_head *inodes, spinlock_t *lock);
+ void set_proc_pid_nlink(void);
+ extern struct inode *proc_get_inode(struct super_block *, struct proc_dir_entry *);
+ extern void proc_entry_rundown(struct proc_dir_entry *);
+diff --git a/fs/proc/proc_sysctl.c b/fs/proc/proc_sysctl.c
+index 42fbb7f3c587..5da9d7f7ae34 100644
+--- a/fs/proc/proc_sysctl.c
++++ b/fs/proc/proc_sysctl.c
+@@ -269,40 +269,7 @@ static void unuse_table(struct ctl_table_header *p)
+ 
+ static void proc_sys_prune_dcache(struct ctl_table_header *head)
+ {
+-	struct inode *inode;
+-	struct proc_inode *ei;
+-	struct hlist_node *node;
+-	struct super_block *sb;
+-
+-	rcu_read_lock();
+-	for (;;) {
+-		node = hlist_first_rcu(&head->inodes);
+-		if (!node)
+-			break;
+-		ei = hlist_entry(node, struct proc_inode, sibling_inodes);
+-		spin_lock(&sysctl_lock);
+-		hlist_del_init_rcu(&ei->sibling_inodes);
+-		spin_unlock(&sysctl_lock);
+-
+-		inode = &ei->vfs_inode;
+-		sb = inode->i_sb;
+-		if (!atomic_inc_not_zero(&sb->s_active))
+-			continue;
+-		inode = igrab(inode);
+-		rcu_read_unlock();
+-		if (unlikely(!inode)) {
+-			deactivate_super(sb);
+-			rcu_read_lock();
+-			continue;
+-		}
+-
+-		d_prune_aliases(inode);
+-		iput(inode);
+-		deactivate_super(sb);
+-
+-		rcu_read_lock();
+-	}
+-	rcu_read_unlock();
++	proc_prune_siblings_dcache(&head->inodes, &sysctl_lock);
+ }
+ 
+ /* called under sysctl_lock, will reacquire if has to wait */
+-- 
+2.25.0
+
