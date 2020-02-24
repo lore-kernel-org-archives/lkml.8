@@ -2,141 +2,99 @@ Return-Path: <SRS0=7TUr=4M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 35B82C11D2A
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 09:20:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2F773C35679
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 09:22:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0C6DD20828
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 09:20:25 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=cerno.tech header.i=@cerno.tech header.b="oQm/TvZr";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="TB1cVtI7"
+	by mail.kernel.org (Postfix) with ESMTP id 0EAE420714
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 09:22:09 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727337AbgBXJUX (ORCPT
+        id S1727242AbgBXJWH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Feb 2020 04:20:23 -0500
-Received: from out3-smtp.messagingengine.com ([66.111.4.27]:37287 "EHLO
-        out3-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726687AbgBXJUX (ORCPT
+        Mon, 24 Feb 2020 04:22:07 -0500
+Received: from mout.kundenserver.de ([212.227.17.24]:52251 "EHLO
+        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726216AbgBXJWH (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Feb 2020 04:20:23 -0500
-Received: from compute3.internal (compute3.nyi.internal [10.202.2.43])
-        by mailout.nyi.internal (Postfix) with ESMTP id 2A13C213F4;
-        Mon, 24 Feb 2020 04:20:22 -0500 (EST)
-Received: from mailfrontend2 ([10.202.2.163])
-  by compute3.internal (MEProxy); Mon, 24 Feb 2020 04:20:22 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cerno.tech; h=
-        date:from:to:subject:message-id:references:mime-version
-        :content-type:in-reply-to; s=fm2; bh=4FAYsRBkOa26LsnccPdAjqvJIED
-        dTNwKyyIBqp33KCo=; b=oQm/TvZrb6E0KKtZjwj4oLmuTwNtRu/ZzfE8hYWtGcp
-        Zdlk5Rwp2eM4hzTMgk/zutAqvI5olyTeKBkqKpQqYDxJUrPadyonrEahuzKoYPGt
-        BJcPpyZhrhXPO49WwV+BqSSxTHYrJ9F4v8Duld4dARf9Ro9MWfHNOC/+o73uV4hi
-        zY2bLJZWQzf8IDygpnMkZsYDSR62WPQiF67k7cJ5nA+5UMHAah92TRUp2Ivy2YM5
-        zxvRPRHyhMMxym8nohwPbiicTedXrCBcj8UwUNs2khX6dlUEByH/Fu1Me2znAOT+
-        gO4lAXCNzFWw+IheiQrz4ibItuWxp5FIGPDBl063TpQ==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-        messagingengine.com; h=content-type:date:from:in-reply-to
-        :message-id:mime-version:references:subject:to:x-me-proxy
-        :x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm2; bh=4FAYsR
-        BkOa26LsnccPdAjqvJIEDdTNwKyyIBqp33KCo=; b=TB1cVtI7pUAdoX37U/vKc+
-        Q8DsIeECEz6n+zWjYKz74EGrCWSY3QVqyIh3POnjEmwHUcy++O4DYzdi50bL8w7x
-        tekaRk8Xbqj/a3hHrnGNcfA+5s2LZ2ySXvYcRcnIdGnk/8vOCvPJcrEFGpaGeeAD
-        1Q10CgytV8KHt0KWHgf/SnHUFVaSQITQThsxN6n9Keo4a9RKIc9m2yzoFsvbbE/P
-        fAsfTk0uEwrEMwd4eYzM3C/BQb78eg1Q6cG/OIZdy9ND/MYWP1ww2Rz4UOXWNaqT
-        6m79mZj/UEdzzJzLthinl/9cxavc1Ma4vcgDaiFomsGcUOv9kdwZrAsYVskMD+eQ
-        ==
-X-ME-Sender: <xms:VZVTXivAV4qTGhIgkivrNTDdStEHgW2t2TFf9F9v1LOD1VJzrWvfOQ>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedugedrledtgddtfecutefuodetggdotefrodftvf
-    curfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfghnecu
-    uegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenuc
-    fjughrpeffhffvuffkfhggtggujgesghdtreertddtjeenucfhrhhomhepofgrgihimhgv
-    ucftihhprghrugcuoehmrgigihhmvgestggvrhhnohdrthgvtghhqeenucffohhmrghinh
-    epmhgvghhouhhsrdgtohhmnecukfhppeeltddrkeelrdeikedrjeeinecuvehluhhsthgv
-    rhfuihiivgeptdenucfrrghrrghmpehmrghilhhfrhhomhepmhgrgihimhgvsegtvghrnh
-    hordhtvggthh
-X-ME-Proxy: <xmx:VZVTXrtAzwF5qL7tKYhe4jpESrv0JcEiS4SRjdfhNF_90G2USVAnAw>
-    <xmx:VZVTXqtJstnCcUjycgKQ665U69xBH6prjVnV3GQAYXHzJ_Q9LEV-wQ>
-    <xmx:VZVTXr6ATPbOEfpWow4nNkbdeUAZAxBYlWTrn5sV6vvnpq1CKgUfJQ>
-    <xmx:VpVTXknoqFgA-zhEBQqERw_FNEFnXT1zmzU6JVrsYQoSIJkpUdDMkw>
-Received: from localhost (lfbn-tou-1-1502-76.w90-89.abo.wanadoo.fr [90.89.68.76])
-        by mail.messagingengine.com (Postfix) with ESMTPA id 4C12E3060F9B;
-        Mon, 24 Feb 2020 04:20:21 -0500 (EST)
-Date:   Mon, 24 Feb 2020 10:20:20 +0100
-From:   Maxime Ripard <maxime@cerno.tech>
-To:     Chen-Yu Tsai <wens@csie.org>,
-        linux-sunxi <linux-sunxi@googlegroups.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        "moderated list:ARM/Allwinner sunXi SoC support" 
-        <linux-arm-kernel@lists.infradead.org>,
-        open list <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] ARM: dts: sun8i-a83t: Add thermal trip points/cooling
- maps
-Message-ID: <20200224092020.xxru2rkhrywonrx7@gilmour.lan>
-References: <20200222214039.209426-1-megous@megous.com>
- <CAGb2v647zKVrDvnHeLvwNPEZLX+yTgPq-x7MJkp9=duzkQN3mw@mail.gmail.com>
- <20200223101050.lqe5uegpmoyqvna6@core.my.home>
+        Mon, 24 Feb 2020 04:22:07 -0500
+Received: from [192.168.178.56] ([109.104.43.98]) by mrelayeu.kundenserver.de
+ (mreue109 [212.227.15.183]) with ESMTPSA (Nemesis) id
+ 1MGi6m-1jA1oK1ycM-00DqDT; Mon, 24 Feb 2020 10:21:42 +0100
+Subject: Re: [PATCH v2] irqchip/bcm2835: Quiesce IRQs left enabled by
+ bootloader
+To:     Lukas Wunner <lukas@wunner.de>
+Cc:     Marc Zyngier <maz@kernel.org>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Jason Cooper <jason@lakedaemon.net>,
+        Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
+        Ray Jui <rjui@broadcom.com>,
+        Scott Branden <sbranden@broadcom.com>,
+        bcm-kernel-feedback-list@broadcom.com,
+        linux-kernel@vger.kernel.org, linux-rpi-kernel@lists.infradead.org,
+        linux-arm-kernel@lists.infradead.org,
+        Serge Schneider <serge@raspberrypi.org>,
+        Kristina Brooks <notstina@gmail.com>,
+        Matthias Brugger <mbrugger@suse.com>,
+        Martin Sperl <kernel@martin.sperl.org>,
+        Phil Elwell <phil@raspberrypi.org>
+References: <20200212123651.apio6kno2cqhcskb@wunner.de>
+ <61cc6b74-3dd2-38d0-6da0-eb3fbd87c598@i2se.com>
+ <20200223182445.n44wgrourk4cpfoq@wunner.de>
+From:   Stefan Wahren <stefan.wahren@i2se.com>
+Message-ID: <1a5735e8-b876-92e4-9f1e-687f5abf8708@i2se.com>
+Date:   Mon, 24 Feb 2020 10:21:39 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="2s6qec42w4cbjxw2"
-Content-Disposition: inline
-In-Reply-To: <20200223101050.lqe5uegpmoyqvna6@core.my.home>
+In-Reply-To: <20200223182445.n44wgrourk4cpfoq@wunner.de>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
+X-Provags-ID: V03:K1:nvv+kzY7b4+AacEf0WpzQB8/RizEp3+ZM6DrnRkvntJts48S1Pw
+ rOcsEq61Ufa2KgomwK6FKBjdHDbxoyzKZcaFckx5h0rSqwHToryJcMrXqIMg2baqOSOoVkL
+ 7kz9+JW7d2XTEd9ZaxchbR9jPOTPlhyIPA2jNxnH30QPJXyBXfnW9aGu8ZTbKx+czIe5xYo
+ vmJkkzZJOQH6cNOLp4MBA==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:fAsX8aDpBAI=:/wSapfaezyq+vnt/TzdcWr
+ HLvx64INvtF3e82wUf+qOZiYxrFUCJ/aIhLi9DTMRBxUOfcBjkk98VZVh7nwgY2plXye0Ngsv
+ dRztdjzU3ZxL89f5kO6rrcSWfZ7mrg4iZK3U7SsZ1ZE/6Zi1xdZ0lWh0nweqf5KJ6tDzghp9t
+ zN5V7RfjsNhus25gjZkFfecbY/PhjDbr808sukOEXuBZm8k8c7r6KnHRjAoJRVhMR8H4JP0An
+ Ls4RU+jCZSCB+5zTrVKYrnORTpP4GF+eNgOFPPSnJNi7m+OmozV/Eg3PBtWitHIw3bA+PQjag
+ Lx268ak1oVJHCiv6+R/dYSCbKjMnih/zEFf+sqw3//zrwNyaGkLo5uHwnuINzYZcch5p7Sl7s
+ 90k9ToxqbFTaMuwG473sB8X7A33ET5NxKm9e6cB+yNHWMzIHarGPZRADS2XG46v4j/Bw+4rlq
+ gpPWn7HgX+fK7BFfE4VPj7DMQGNmKtLu9ScH8FEc70oh/Y5s3RsQexbjUZKizp1U4FHLcCJXB
+ CVoeATEmafQAajFSf7y1hcNF883fL7pVuFI9lq0o1GxZcn5fBOsD1+6yx3wjuBc+gYiELf0Ev
+ cMrgwCAr27zyIVZqWPyycA0QQbUxuiuSABK3LnaDl0qibNur/V8xO5upivU9ZSyvWT/CNZ5u4
+ Zd3gMkLljB2uJpmPiXI/S94WskRRsJILUtGI4zzn8O8e0CjwhgmKIdt5whryEji03uFePjU5P
+ GObo3F7YUN4HIIKv5f92OmJZpuAUiKt+AhLjlKmTHNPyKat7ZbYr8s2IIM6ABXkStqnSXVxEn
+ mwTRduyOrKY0l9tCzlBOH3ZCGWkdWAdHj5Ueur/gtT218+bEFEpjAizflyQUGn5ay3BXm7X
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Hi Lukas,
 
---2s6qec42w4cbjxw2
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-
-On Sun, Feb 23, 2020 at 11:10:50AM +0100, Ond=C5=99ej Jirman wrote:
-> Hello,
+On 23.02.20 19:24, Lukas Wunner wrote:
+> On Sun, Feb 23, 2020 at 06:59:56PM +0100, Stefan Wahren wrote:
+>> thanks for all the investigation. Unfortunately the patch below doesn't
+>> compile, since it lacks the definiton of REG_FIQ_ENABLE.
+> Ugh, I recall fixing that when compile-testing.  I must have forgotten
+> to invoke "git commit --amend" before "git format-patch".
 >
-> On Sun, Feb 23, 2020 at 11:29:07AM +0800, Chen-Yu Tsai wrote:
-> > Hi,
-> >
-> > On Sun, Feb 23, 2020 at 5:40 AM Ondrej Jirman <megous@megous.com> wrote:
-> > >
-> > > This enables passive cooling by down-regulating CPU voltage
-> > > and frequency.
-> >
-> > Please state for the record how the trip points were derived. Were they=
- from
-> > the BSP? Or the user manual?
->
-> The values are taken from the BSP for A83T:
->
-> https://megous.com/git/linux/tree/drivers/thermal/sunxi-temperature.c?h=
-=3Da83t-3.4-bsp-tbs-a711#n747
->
-> The datasheet only mentions recommended Ta (ambient operating temperature=
-) range
-> -20 to +70=C2=B0C. So die voltages will be larger than that. I guess that=
- roughly
-> matches the BSP values.
+>> Btw the name is a little bit unlucky because it defines a single flag
+>> within REG_FIQ_CONTROL instead of a separate register.
+> The Foundation's repo uses that name so I stuck by it to reduce the
+> number of merge conflicts Phil will have to resolve.  Happy to change
+> though, suggestions welcome.
 
-Can you put that in the commit log?
+readability has a higher prio. How about:
 
-Thanks!
-Maxime
+#define FIQ_CONTROL_ENABLE BIT(7)
 
---2s6qec42w4cbjxw2
-Content-Type: application/pgp-signature; name="signature.asc"
+Regards
+Stefan
 
------BEGIN PGP SIGNATURE-----
-
-iHUEABYIAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCXlOVVAAKCRDj7w1vZxhR
-xX3uAP9BHDiExokGZnYdS2Hnvg/6BxQA+lI33CwXBcAtyDDNygD9Hd30W+Yao0Js
-DAIsy3WRebkWFb2c2O+NCt21wer90gI=
-=pwbG
------END PGP SIGNATURE-----
-
---2s6qec42w4cbjxw2--
