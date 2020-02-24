@@ -2,197 +2,120 @@ Return-Path: <SRS0=7TUr=4M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B7E9FC35671
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 13:18:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 96D98C11D2F
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 13:18:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9641D20866
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 13:18:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6B8C120828
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 13:18:31 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1582550311;
+	bh=lv1M7Ii9Kt5bXH1YXOoOMU/lPivMJ76BP24o9zQYoQI=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=yXJoNYb0wIBvgj6XQDQganx8eXDQGwkK/FORRZJZGxRdNkeDG6pK29bsjuZ3DQPW9
+	 H5C0DawQijLIjltHPd+Q/KXblKnuNXLBeND7vnJX8dWXplEd96pbiLP/riMlIEDDyK
+	 6JRlu2Z8yUEsycHhYoCLPreECPgCIc87vDLyQ3fA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727483AbgBXNSX (ORCPT
+        id S1727553AbgBXNSa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Feb 2020 08:18:23 -0500
-Received: from youngberry.canonical.com ([91.189.89.112]:49625 "EHLO
-        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727275AbgBXNSX (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Feb 2020 08:18:23 -0500
-Received: from ip5f5bf7ec.dynamic.kabel-deutschland.de ([95.91.247.236] helo=wittgenstein)
-        by youngberry.canonical.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.86_2)
-        (envelope-from <christian.brauner@ubuntu.com>)
-        id 1j6Dcq-0005Wj-K9; Mon, 24 Feb 2020 13:18:20 +0000
-Date:   Mon, 24 Feb 2020 14:18:19 +0100
-From:   Christian Brauner <christian.brauner@ubuntu.com>
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     "David S. Miller" <davem@davemloft.net>,
-        linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
-        "Rafael J. Wysocki" <rafael@kernel.org>,
-        Pavel Machek <pavel@ucw.cz>, Jakub Kicinski <kuba@kernel.org>,
-        Eric Dumazet <edumazet@google.com>,
-        Stephen Hemminger <stephen@networkplumber.org>,
-        linux-pm@vger.kernel.org
-Subject: Re: [PATCH net-next v3 5/9] device: add device_change_owner()
-Message-ID: <20200224131819.gos6xlqwlrnqc7gt@wittgenstein>
-References: <20200218162943.2488012-1-christian.brauner@ubuntu.com>
- <20200218162943.2488012-6-christian.brauner@ubuntu.com>
- <20200220112513.GH3374196@kroah.com>
+        Mon, 24 Feb 2020 08:18:30 -0500
+Received: from foss.arm.com ([217.140.110.172]:36960 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727275AbgBXNS3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 24 Feb 2020 08:18:29 -0500
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id C53E730E;
+        Mon, 24 Feb 2020 05:18:28 -0800 (PST)
+Received: from localhost (unknown [10.37.6.21])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 49DE93F534;
+        Mon, 24 Feb 2020 05:18:28 -0800 (PST)
+Date:   Mon, 24 Feb 2020 13:18:26 +0000
+From:   Mark Brown <broonie@kernel.org>
+To:     Sameer Pujar <spujar@nvidia.com>
+Cc:     Jon Hunter <jonathanh@nvidia.com>, perex@perex.cz, tiwai@suse.com,
+        robh+dt@kernel.org, lgirdwood@gmail.com, thierry.reding@gmail.com,
+        digetx@gmail.com, alsa-devel@alsa-project.org,
+        devicetree@vger.kernel.org, linux-tegra@vger.kernel.org,
+        linux-kernel@vger.kernel.org, sharadg@nvidia.com,
+        mkumard@nvidia.com, viswanathl@nvidia.com, rlokhande@nvidia.com,
+        dramesh@nvidia.com, atalambedu@nvidia.com
+Subject: Re: Re: [PATCH v3 03/10] ASoC: tegra: add Tegra210 based DMIC driver
+Message-ID: <20200224131826.GI6215@sirena.org.uk>
+References: <1582180492-25297-1-git-send-email-spujar@nvidia.com>
+ <1582180492-25297-4-git-send-email-spujar@nvidia.com>
+ <20200221130005.GD5546@sirena.org.uk>
+ <316ce0d5-318d-0533-ef06-bd7e8672f893@nvidia.com>
+ <20200221165535.GG5546@sirena.org.uk>
+ <47f94534-e997-d56c-5793-ae832fb2add4@nvidia.com>
+ <20200224114406.GB6215@sirena.org.uk>
+ <f70c7c12-dbc0-a725-f06a-86fab868e7dc@nvidia.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="CNK/L7dwKXQ4Ub8J"
 Content-Disposition: inline
-In-Reply-To: <20200220112513.GH3374196@kroah.com>
+In-Reply-To: <f70c7c12-dbc0-a725-f06a-86fab868e7dc@nvidia.com>
+X-Cookie: How you look depends on where you go.
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Feb 20, 2020 at 12:25:13PM +0100, Greg Kroah-Hartman wrote:
-> On Tue, Feb 18, 2020 at 05:29:39PM +0100, Christian Brauner wrote:
-> > Add a helper to change the owner of a device's sysfs entries. This
-> > needs to happen when the ownership of a device is changed, e.g. when
-> > moving network devices between network namespaces.
-> > This function will be used to correctly account for ownership changes,
-> > e.g. when moving network devices between network namespaces.
-> > 
-> > Signed-off-by: Christian Brauner <christian.brauner@ubuntu.com>
-> > ---
-> > /* v2 */
-> > unchanged
-> > 
-> > /* v3 */
-> > -  Greg Kroah-Hartman <gregkh@linuxfoundation.org>:
-> >    - Add explicit uid/gid parameters.
-> > ---
-> >  drivers/base/core.c    | 80 ++++++++++++++++++++++++++++++++++++++++++
-> >  include/linux/device.h |  1 +
-> >  2 files changed, 81 insertions(+)
-> > 
-> > diff --git a/drivers/base/core.c b/drivers/base/core.c
-> > index 42a672456432..ec0d5e8cfd0f 100644
-> > --- a/drivers/base/core.c
-> > +++ b/drivers/base/core.c
-> > @@ -3458,6 +3458,86 @@ int device_move(struct device *dev, struct device *new_parent,
-> >  }
-> >  EXPORT_SYMBOL_GPL(device_move);
-> >  
-> > +static int device_attrs_change_owner(struct device *dev, kuid_t kuid,
-> > +				     kgid_t kgid)
-> > +{
-> > +	struct kobject *kobj = &dev->kobj;
-> > +	struct class *class = dev->class;
-> > +	const struct device_type *type = dev->type;
-> > +	int error;
-> > +
-> > +	if (class) {
-> > +		error = sysfs_groups_change_owner(kobj, class->dev_groups, kuid,
-> > +						  kgid);
-> > +		if (error)
-> > +			return error;
-> > +	}
-> > +
-> > +	if (type) {
-> > +		error = sysfs_groups_change_owner(kobj, type->groups, kuid,
-> > +						  kgid);
-> > +		if (error)
-> > +			return error;
-> > +	}
-> > +
-> > +	error = sysfs_groups_change_owner(kobj, dev->groups, kuid, kgid);
-> > +	if (error)
-> > +		return error;
-> > +
-> > +	if (device_supports_offline(dev) && !dev->offline_disabled) {
-> > +		error = sysfs_file_change_owner_by_name(
-> > +			kobj, dev_attr_online.attr.name, kuid, kgid);
-> > +		if (error)
-> > +			return error;
-> > +	}
-> > +
-> > +	return 0;
-> > +}
-> > +
-> > +/**
-> > + * device_change_owner - change the owner of an existing device.
-> 
-> The "owner" and what else gets changed here?  Please document this
-> better.
-> 
-> 
-> > + * @dev: device.
-> > + * @kuid: new owner's kuid
-> > + * @kgid: new owner's kgid
-> > + */
-> > +int device_change_owner(struct device *dev, kuid_t kuid, kgid_t kgid)
-> > +{
-> > +	int error;
-> > +	struct kobject *kobj = &dev->kobj;
-> > +
-> > +	dev = get_device(dev);
-> > +	if (!dev)
-> > +		return -EINVAL;
-> > +
-> > +	error = sysfs_change_owner(kobj, kuid, kgid);
-> 
-> the kobject of the device is changed, good.
-> 
-> > +	if (error)
-> > +		goto out;
-> > +
-> > +	error = sysfs_file_change_owner_by_name(kobj, dev_attr_uevent.attr.name,
-> > +						kuid, kgid);
-> 
-> Why call out the uevent file explicitly here?
 
-This again, mirrors the creation of a kobject in sysfs. The uevent file
-is created separately and thus should be chowned separately.
+--CNK/L7dwKXQ4Ub8J
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-> 
-> > +	if (error)
-> > +		goto out;
-> > +
-> > +	error = device_attrs_change_owner(dev, kuid, kgid);
-> > +	if (error)
-> > +		goto out;
-> 
-> Doesn't this also change the uevent file?
+On Mon, Feb 24, 2020 at 05:59:33PM +0530, Sameer Pujar wrote:
+> On 2/24/2020 5:14 PM, Mark Brown wrote:
 
-No, not as far as I can tell. The uevent file is created in an extra
-step when the kobject/sysfs entries are created.
+> > I don't think so, I'd not expect the individual drivers to be doing
+> > anything user visible here - if we know what a digital transformation
+> > looks like the framework should be offering anything that's needed to
+> > users (and hiding controls that don't have any practical control in a
+> > given system).
 
-> 
-> > +
-> > +#ifdef CONFIG_BLOCK
-> > +	if (sysfs_deprecated && dev->class == &block_class)
-> > +		goto out;
-> > +#endif
-> 
-> Ugh, we still need this?
+> Are you suggesting to have some alternate way of users configuring sample
+> rates (and other params) and not use mixer control method?
 
-Yeah, apparently. It's what I gather from how a device is added.
+I'm mainly saying the driver shouldn't be doing it directly, it should
+be doing something much closer to hwparams for digital formats.
 
-> 
-> > +
-> > +	error = sysfs_link_change_owner(&dev->class->p->subsys.kobj, &dev->kobj,
-> > +					dev_name(dev), kuid, kgid);
-> 
-> Now what is this changing?
+> This is a typical use case we see,
+> - [stream-1] Lets say high resolution audio is playing (96kHz, 24-bit,
+> stereo)
+> - [stream-2] Randomly system notifications of small durations come (48kHz,
+> 16-bit, stereo)
+> The requirement is, both streams should be mixed and played.
 
-So, this changed the ownership of the class link for the device to match
-the directory entry for that device, so e.g. given a network device
-symlink (or any other type) that points to the actual directory entry
-for that device:
+Most systems like this would run the output at a fixed sample rate here
+so there'd be no runtime configuration.
 
-/sys/class/net/my-dev -> ../../devices/virtual/net/my-dev
+> Is there a better way for user to configure custom audio paths?
 
-it makes my-dev show the same permissions as the directory my-dev has.
-If we don't do this this will look weird, because the symlink will show
-different permissions than the target it is pointoing to.
+Fit what you're doing into DPCM.  It's not particularly great but it's
+what we have at the minute.
 
-> 
-> Again, more documentation please as to exactly what is being changed in
-> this function is needed.
+This isn't me not understanding your use case, this is me saying that
+it would be better to either work like other existing drivers or improve
+the framework so that it works better for everyone.
 
-Sure!
+--CNK/L7dwKXQ4Ub8J
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl5TzSEACgkQJNaLcl1U
+h9BAhwf/QhpoDg6KiehDe7VRnOhtmPEXAczk9wdg+IxjQr0QRsmC+kn/PQ9O+TJG
+puwkmjpN5PJmU+kUECaCiZO5midMxKemgI4ITEHhtBGmuOhaRv/Fq4HwHJoYPvNu
+QCgOqLmAA/A7GSMZFPKterSWZ37254QlSiiBo77wWvzBgsByJ/JaBEyvWOPHQfaJ
+S+TsoKJV2hh73j8GfBxMJPzoDxoetly2+sUhudtNG7fPAlKyoX7rkRYn/JBmlFxf
+Zz3VF3oq+6zyraU3o7z/Ki76E5MXclTItaA0qQ0sYKJmVdbN4VMAwmzsqBhVe1e9
+fGzmk+Ai8I9CHO4TczYKw5D5YYxs8A==
+=ZFLp
+-----END PGP SIGNATURE-----
+
+--CNK/L7dwKXQ4Ub8J--
