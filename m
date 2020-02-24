@@ -2,105 +2,125 @@ Return-Path: <SRS0=7TUr=4M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1B780C35669
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 04:10:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1EECBC35669
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 04:15:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E2B7520880
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 04:10:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D35E720656
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 04:15:46 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="wRS84xUh"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ubxAfdRS"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727276AbgBXEKD (ORCPT
+        id S1727237AbgBXEPp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 23 Feb 2020 23:10:03 -0500
-Received: from mail26.static.mailgun.info ([104.130.122.26]:14196 "EHLO
-        mail26.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727249AbgBXEKC (ORCPT
+        Sun, 23 Feb 2020 23:15:45 -0500
+Received: from mail-oi1-f195.google.com ([209.85.167.195]:47083 "EHLO
+        mail-oi1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727188AbgBXEPp (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 23 Feb 2020 23:10:02 -0500
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1582517402; h=References: In-Reply-To: Message-Id: Date:
- Subject: Cc: To: From: Sender;
- bh=t5BJ5aFBD9UMUe9X6zgCFjhoAHrfuzcXqsWzLsVqcss=; b=wRS84xUh5JrUKzy/JxTNEtImNVuMRtc5Lt7Vzi6hV/tQ7+Xf7N7ra6aykpw3XLUdMIDHSZ5/
- 7rM8umTBaZ9qZ1vRIqxL2y1bCS1FWypzreYIyhaCee1qAacCyyi/np5T/ofrxWatWKSICCZ0
- BobA2o1bz8KSHHwYlth3Ohtip4I=
-X-Mailgun-Sending-Ip: 104.130.122.26
-X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
-Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
- by mxa.mailgun.org with ESMTP id 5e534c8c.7fa67f5ca378-smtp-out-n02;
- Mon, 24 Feb 2020 04:09:48 -0000 (UTC)
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id 17DE5C447A9; Mon, 24 Feb 2020 04:09:45 +0000 (UTC)
-Received: from pacamara-linux.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: cang)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 89709C433A2;
-        Mon, 24 Feb 2020 04:09:44 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 89709C433A2
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=cang@codeaurora.org
-From:   Can Guo <cang@codeaurora.org>
-To:     asutoshd@codeaurora.org, nguyenb@codeaurora.org,
-        hongwus@codeaurora.org, rnayak@codeaurora.org,
-        linux-scsi@vger.kernel.org, kernel-team@android.com,
-        saravanak@google.com, salyzyn@google.com, cang@codeaurora.org
-Cc:     Alim Akhtar <alim.akhtar@samsung.com>,
-        Avri Altman <avri.altman@wdc.com>,
-        "James E.J. Bottomley" <jejb@linux.ibm.com>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>,
-        Stanley Chu <stanley.chu@mediatek.com>,
-        Bean Huo <beanhuo@micron.com>,
-        Bart Van Assche <bvanassche@acm.org>,
-        Venkat Gopalakrishnan <venkatg@codeaurora.org>,
-        Tomas Winkler <tomas.winkler@intel.com>,
-        linux-kernel@vger.kernel.org (open list)
-Subject: [PATCH v2 1/2] scsi: ufs: Allow vendor apply device quirks in advance
-Date:   Sun, 23 Feb 2020 20:09:21 -0800
-Message-Id: <1582517363-11536-2-git-send-email-cang@codeaurora.org>
-X-Mailer: git-send-email 1.9.1
-In-Reply-To: <1582517363-11536-1-git-send-email-cang@codeaurora.org>
-References: <1582517363-11536-1-git-send-email-cang@codeaurora.org>
+        Sun, 23 Feb 2020 23:15:45 -0500
+Received: by mail-oi1-f195.google.com with SMTP id a22so7703085oid.13
+        for <linux-kernel@vger.kernel.org>; Sun, 23 Feb 2020 20:15:44 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=FtOOndOWZSDXybYasUpcnffIRI9DWgK6w/MiME7iIyA=;
+        b=ubxAfdRSx4t292O11yEtyiS45hr76kV1ZivVX31imh2sVv75jLafbyUz7Sk1vhKyxp
+         U13Q/QyCrb1aj+hIbtw0GbB38ZxZTf8ujH/gF/AoxXfgmJIQZRUmNB+wz9ovq7qGobWp
+         G44SlHNyrlhH9etlitz8Coe5/JG8nsbDkfJCXZEdB2d57vC+27jxfoP7pvkjpGMwE2tv
+         UKWS3Qba+HfkFV3b9bj1Lw+a0LCULnCBDhQAcmEbJZatno/M2G5bGIAYZAF+xe3JMZSb
+         MpBmk1MgsDydiP+3bWDi+e8VGZtDdj2UKTO7P8FWNWodW+Olv4cSOHD49ywVJrYVUDsr
+         1ksA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=FtOOndOWZSDXybYasUpcnffIRI9DWgK6w/MiME7iIyA=;
+        b=Fgb0QQb6Ak7phZ9iF1Ap2MbPUnik/uBW7+qgY8558YjtblooxzZBn16aTvyGYzfO+p
+         ufuzWmaRKG4l6GICczxaQUWWuxPGiL3eBQMXnuDNf7OaQ2GMJERTuzbZsTHfD5Ccaljp
+         Q/q06w/Crno/gQRhtN9uC3zuk3tmVInpL7zUyECq58+HtuMT4zgZX5R0EHuyOXVYUhwc
+         9Yjj1gyvfyKGjaptMxaZezjuVaj7+bZaZjC4XkotfOqbUDFUL8V33CvL4BAU0O9PK4/W
+         YhJ4p1d9vsYLO/KiIVXusj9zvXea0RC2MWzrFdgCkbfX6mq6jGlvlGszFqcxwzyMXAFj
+         SEtQ==
+X-Gm-Message-State: APjAAAXq3TVJ4AQiB9uNbF1bLOD9nTgGwY9anLhC0tK02sHhrKX2MbhW
+        y+5Zqvw1e6m7ih6qhZNzGW0=
+X-Google-Smtp-Source: APXvYqzq2PcrTKVvsY8h4Bm2ZVrzilS6ewqvNS0QEaJ85ba/Rqs8yck9S9qvBi4qg2zbS1IE0l8juQ==
+X-Received: by 2002:aca:5f87:: with SMTP id t129mr11397800oib.36.1582517744531;
+        Sun, 23 Feb 2020 20:15:44 -0800 (PST)
+Received: from ubuntu-m2-xlarge-x86 ([2604:1380:4111:8b00::1])
+        by smtp.gmail.com with ESMTPSA id j13sm3701944oii.14.2020.02.23.20.15.43
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Sun, 23 Feb 2020 20:15:43 -0800 (PST)
+Date:   Sun, 23 Feb 2020 21:15:42 -0700
+From:   Nathan Chancellor <natechancellor@gmail.com>
+To:     Arvind Sankar <nivedita@alum.mit.edu>
+Cc:     Nick Desaulniers <ndesaulniers@google.com>,
+        Borislav Petkov <bp@alien8.de>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>,
+        "H. Peter Anvin" <hpa@zytor.com>, x86@kernel.org,
+        linux-kernel@vger.kernel.org, clang-built-linux@googlegroups.com,
+        Michael Matz <matz@suse.de>, Fangrui Song <maskray@google.com>,
+        Kees Cook <keescook@chromium.org>
+Subject: Re: [PATCH 0/2] Stop generating .eh_frame sections
+Message-ID: <20200224041542.GA55909@ubuntu-m2-xlarge-x86>
+References: <20200222235709.GA3786197@rani.riverdale.lan>
+ <20200223193715.83729-1-nivedita@alum.mit.edu>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200223193715.83729-1-nivedita@alum.mit.edu>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Currently ufshcd_vops_apply_dev_quirks() comes after all UniPro parameters
-have been tuned. Move it up so that vendors have a chance to apply device
-quirks in advance.
+On Sun, Feb 23, 2020 at 02:37:13PM -0500, Arvind Sankar wrote:
+> In three places in the x86 kernel we are currently generating .eh_frame
+> sections only to discard them later via linker script. This is in the
+> boot code (setup.elf), the realmode trampoline (realmode.elf) and the
+> compressed kernel.
+> 
+> Implement Fangrui and Nick's suggestion [1] to fix KBUILD_CFLAGS by
+> adding -fno-asynchronous-unwind-tables to avoid generating .eh_frame
+> sections in the first place, rather than discarding it in the linker
+> script.
+> 
+> Arvind Sankar (2):
+>   arch/x86: Use -fno-asynchronous-unwind-tables to suppress .eh_frame sections
+>   arch/x86: Drop unneeded linker script discard of .eh_frame
+> 
+>  arch/x86/boot/Makefile                | 1 +
+>  arch/x86/boot/compressed/Makefile     | 1 +
+>  arch/x86/boot/setup.ld                | 1 -
+>  arch/x86/kernel/vmlinux.lds.S         | 3 ---
+>  arch/x86/realmode/rm/Makefile         | 1 +
+>  arch/x86/realmode/rm/realmode.lds.S   | 1 -
+>  drivers/firmware/efi/libstub/Makefile | 3 ++-
+>  7 files changed, 5 insertions(+), 6 deletions(-)
+> 
+> -- 
+> 2.24.1
+> 
 
-Signed-off-by: Can Guo <cang@codeaurora.org>
----
- drivers/scsi/ufs/ufshcd.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+With both of these patches applied on top of next-20200221 and a revert
+of commit e11831d0ada3 ("x86/boot/compressed: Remove unnecessary
+sections from bzImage"), I do not see any .eh_frame sections in the
+following files:
 
-diff --git a/drivers/scsi/ufs/ufshcd.c b/drivers/scsi/ufs/ufshcd.c
-index abd0e6b..03af432 100644
---- a/drivers/scsi/ufs/ufshcd.c
-+++ b/drivers/scsi/ufs/ufshcd.c
-@@ -6804,14 +6804,14 @@ static void ufshcd_tune_unipro_params(struct ufs_hba *hba)
- 		ufshcd_tune_pa_hibern8time(hba);
- 	}
- 
-+	ufshcd_vops_apply_dev_quirks(hba);
-+
- 	if (hba->dev_quirks & UFS_DEVICE_QUIRK_PA_TACTIVATE)
- 		/* set 1ms timeout for PA_TACTIVATE */
- 		ufshcd_dme_set(hba, UIC_ARG_MIB(PA_TACTIVATE), 10);
- 
- 	if (hba->dev_quirks & UFS_DEVICE_QUIRK_HOST_PA_TACTIVATE)
- 		ufshcd_quirk_tune_host_pa_tactivate(hba);
--
--	ufshcd_vops_apply_dev_quirks(hba);
- }
- 
- static void ufshcd_clear_dbg_ufs_stats(struct ufs_hba *hba)
--- 
-The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
-a Linux Foundation Collaborative Project
+$ readelf -S arch/x86/boot/setup.elf \
+arch/x86/realmode/rm/realmode.elf \
+arch/x86/boot/compressed/vmlinux \
+vmlinux |& grep eh_frame
+
+Additionally, I can see -fno-asynchronous-unwind-tables get added to
+files that didn't previously have it.
+
+Reviewed-by: Nathan Chancellor <natechancellor@gmail.com>
+Tested-by: Nathan Chancellor <natechancellor@gmail.com>
