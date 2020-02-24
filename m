@@ -6,31 +6,31 @@ X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0FE03C11D35
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 15:04:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5A7BDC11D2F
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 15:04:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E537920836
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 15:04:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3C67C2072D
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 15:04:07 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728185AbgBXPD4 (ORCPT
+        id S1728018AbgBXPDY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Feb 2020 10:03:56 -0500
-Received: from Galois.linutronix.de ([193.142.43.55]:50221 "EHLO
-        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727888AbgBXPDY (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 24 Feb 2020 10:03:24 -0500
+Received: from Galois.linutronix.de ([193.142.43.55]:50195 "EHLO
+        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727822AbgBXPDV (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 24 Feb 2020 10:03:21 -0500
 Received: from [5.158.153.52] (helo=nanos.tec.linutronix.de)
         by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
         (Exim 4.80)
         (envelope-from <tglx@linutronix.de>)
-        id 1j6FFz-00054v-Ti; Mon, 24 Feb 2020 16:02:52 +0100
+        id 1j6FFp-0004sF-NK; Mon, 24 Feb 2020 16:02:41 +0100
 Received: from nanos.tec.linutronix.de (localhost [IPv6:::1])
-        by nanos.tec.linutronix.de (Postfix) with ESMTP id 28C3F10409E;
-        Mon, 24 Feb 2020 16:02:45 +0100 (CET)
-Message-Id: <20200224145644.708960317@linutronix.de>
+        by nanos.tec.linutronix.de (Postfix) with ESMTP id 6696510408F;
+        Mon, 24 Feb 2020 16:02:41 +0100 (CET)
+Message-Id: <20200224145642.953923067@linutronix.de>
 User-Agent: quilt/0.65
-Date:   Mon, 24 Feb 2020 15:01:53 +0100
+Date:   Mon, 24 Feb 2020 15:01:36 +0100
 From:   Thomas Gleixner <tglx@linutronix.de>
 To:     LKML <linux-kernel@vger.kernel.org>
 Cc:     David Miller <davem@davemloft.net>, bpf@vger.kernel.org,
@@ -45,7 +45,7 @@ Cc:     David Miller <davem@davemloft.net>, bpf@vger.kernel.org,
         Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
         Vinicius Costa Gomes <vinicius.gomes@intel.com>,
         Jakub Kicinski <kuba@kernel.org>
-Subject: [patch V3 22/22] bpf/stackmap: Dont trylock mmap_sem with PREEMPT_RT and interrupts disabled
+Subject: [patch V3 05/22] bpf/trace: Remove EXPORT from trace_call_bpf()
 References: <20200224140131.461979697@linutronix.de>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -54,61 +54,23 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: David Miller <davem@davemloft.net>
+All callers are built in. No point to export this.
 
-In a RT kernel down_read_trylock() cannot be used from NMI context and
-up_read_non_owner() is another problematic issue.
-
-So in such a configuration, simply elide the annotated stackmap and
-just report the raw IPs.
-
-In the longer term, it might be possible to provide a atomic friendly
-versions of the page cache traversal which will at least provide the info
-if the pages are resident and don't need to be paged in.
-
-[ tglx: Use IS_ENABLED() to avoid the #ifdeffery, fixup the irq work
-  	callback and add a comment ]
-
-Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-
 ---
- kernel/bpf/stackmap.c |   18 +++++++++++++++---
- 1 file changed, 15 insertions(+), 3 deletions(-)
+V3: New patch 
+---
+ kernel/trace/bpf_trace.c |    1 -
+ 1 file changed, 1 deletion(-)
 
---- a/kernel/bpf/stackmap.c
-+++ b/kernel/bpf/stackmap.c
-@@ -40,6 +40,9 @@ static void do_up_read(struct irq_work *
- {
- 	struct stack_map_irq_work *work;
+--- a/kernel/trace/bpf_trace.c
++++ b/kernel/trace/bpf_trace.c
+@@ -119,7 +119,6 @@ unsigned int trace_call_bpf(struct trace
  
-+	if (WARN_ON_ONCE(IS_ENABLED(CONFIG_PREEMPT_RT)))
-+		return;
-+
- 	work = container_of(entry, struct stack_map_irq_work, irq_work);
- 	up_read_non_owner(work->sem);
- 	work->sem = NULL;
-@@ -288,10 +291,19 @@ static void stack_map_get_build_id_offse
- 	struct stack_map_irq_work *work = NULL;
+ 	return ret;
+ }
+-EXPORT_SYMBOL_GPL(trace_call_bpf);
  
- 	if (irqs_disabled()) {
--		work = this_cpu_ptr(&up_read_work);
--		if (atomic_read(&work->irq_work.flags) & IRQ_WORK_BUSY)
--			/* cannot queue more up_read, fallback */
-+		if (!IS_ENABLED(CONFIG_PREEMPT_RT)) {
-+			work = this_cpu_ptr(&up_read_work);
-+			if (atomic_read(&work->irq_work.flags) & IRQ_WORK_BUSY) {
-+				/* cannot queue more up_read, fallback */
-+				irq_work_busy = true;
-+			}
-+		} else {
-+			/*
-+			 * PREEMPT_RT does not allow to trylock mmap sem in
-+			 * interrupt disabled context. Force the fallback code.
-+			 */
- 			irq_work_busy = true;
-+		}
- 	}
- 
- 	/*
+ #ifdef CONFIG_BPF_KPROBE_OVERRIDE
+ BPF_CALL_2(bpf_override_return, struct pt_regs *, regs, unsigned long, rc)
 
