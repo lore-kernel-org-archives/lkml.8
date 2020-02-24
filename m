@@ -2,87 +2,97 @@ Return-Path: <SRS0=7TUr=4M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E7074C35641
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 04:36:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 016C1C35669
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 04:37:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B5902206CC
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 04:36:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C2D7D20675
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 04:37:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582518986;
-	bh=/4yI/EmjrZA0BYlRei8XKfUb9S0CAu/7EaLhXrGl1ws=;
+	s=default; t=1582519025;
+	bh=P5Qao53KIB3kKLtEhL3ENA/1Qg4vJttiLKMmauTZHwM=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=JEyugRXR1W7SodA39FVcD5+czKsNyPeqR+BMg1JKZSAKKXoNtN5QKVQQGu/emPhLS
-	 ayW52s2QA/42SDqGZUBjEf7TPGD9S4ewj688RECCp1tQzAzTLFaKsSgMYuVps4snqG
-	 wEORNX2eF4QRdbpxUZ+4MnPXnapg2O7nlWZznrw4=
+	b=PIqJ/bwNrEMSeOexIYmQVx5mE6YsDkw9ewldA+DYKhIC4EfX2VhChDMzU1PK9h81Y
+	 2O+ZhhW4Xto0XT/dTT6r8ivyDewwpQHkwX0yna7d1mcVr9fJQrXuMVvDM470SWWkbb
+	 fmYTmYt+RyNChmgx400n/HC0cRu2RV6h8Ur2/FTw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727262AbgBXEgZ (ORCPT
+        id S1727306AbgBXEhE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 23 Feb 2020 23:36:25 -0500
-Received: from mail.kernel.org ([198.145.29.99]:33774 "EHLO mail.kernel.org"
+        Sun, 23 Feb 2020 23:37:04 -0500
+Received: from mail.kernel.org ([198.145.29.99]:33936 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727186AbgBXEgZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 23 Feb 2020 23:36:25 -0500
+        id S1727186AbgBXEhE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 23 Feb 2020 23:37:04 -0500
 Received: from localhost (unknown [122.182.199.233])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1F62C20658;
-        Mon, 24 Feb 2020 04:36:23 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E67E820661;
+        Mon, 24 Feb 2020 04:37:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1582518984;
-        bh=/4yI/EmjrZA0BYlRei8XKfUb9S0CAu/7EaLhXrGl1ws=;
+        s=default; t=1582519023;
+        bh=P5Qao53KIB3kKLtEhL3ENA/1Qg4vJttiLKMmauTZHwM=;
         h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=Lvn3yXXeFP97NyX/cctvAFkNpXvDs5frfR5b2WU+WX48PSjNSjq4heS4n+XRb/06h
-         Mef1kqZSjAGz78wE7IsrHpbECrGo39ABGQnKLuSsstTPLrcGKITFibkbqgW+9FFAtz
-         geKvomcOZGuenkEti1zgBFSVxWIQ4iJbWCi3jENo=
-Date:   Mon, 24 Feb 2020 10:06:18 +0530
+        b=ewBQR6pVIKPrBiJR5jIKavdNiN5bHXovPDNL5epeduTDKGuszb0KwcL6I3Z8EJzdO
+         UaZafLdb473sPnq2h3vQ1sAPAS3Q7QwbTYnO1yynhfDT20e7bZFURSlIBeKadgx5m5
+         0iwvisMb55keuSIChleojblBwAbrykM223OLLR2M=
+Date:   Mon, 24 Feb 2020 10:06:59 +0530
 From:   Vinod Koul <vkoul@kernel.org>
 To:     Rob Herring <robh@kernel.org>
-Cc:     devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
-        Alexandre Torgue <alexandre.torgue@st.com>,
-        Stephen Boyd <sboyd@kernel.org>,
-        Maxime Ripard <mripard@kernel.org>,
-        Chen-Yu Tsai <wens@csie.org>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Sam Ravnborg <sam@ravnborg.org>,
-        Jonathan Cameron <jic23@kernel.org>,
-        Kukjin Kim <kgene@kernel.org>,
-        Krzysztof Kozlowski <krzk@kernel.org>,
-        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Lee Jones <lee.jones@linaro.org>,
-        Ulf Hansson <ulf.hansson@linaro.org>,
-        Srinivas Kandagatla <srinivas.kandagatla@linaro.org>,
-        Kishon Vijay Abraham I <kishon@ti.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Mark Brown <broonie@kernel.org>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>
-Subject: Re: [PATCH] dt-bindings: Fix dtc warnings in examples
-Message-ID: <20200224043618.GR2618@vkoul-mobl>
-References: <20200221222711.15973-1-robh@kernel.org>
+Cc:     Stephen Boyd <sboyd@kernel.org>, linux-arm-msm@vger.kernel.org,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Taniya Das <tdas@codeaurora.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        devicetree@vger.kernel.org, Andy Gross <agross@kernel.org>,
+        Michael Turquette <mturquette@baylibre.com>,
+        linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org,
+        psodagud@codeaurora.org, tsoni@codeaurora.org,
+        jshriram@codeaurora.org, vnkgutta@codeaurora.org
+Subject: Re: [PATCH v3 4/5] dt-bindings: clock: Add SM8250 GCC clock bindings
+Message-ID: <20200224043659.GS2618@vkoul-mobl>
+References: <20200216102725.2629155-1-vkoul@kernel.org>
+ <20200216102725.2629155-5-vkoul@kernel.org>
+ <20200218203345.GA19813@bogus>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200221222711.15973-1-robh@kernel.org>
+In-Reply-To: <20200218203345.GA19813@bogus>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 21-02-20, 16:27, Rob Herring wrote:
-> Fix all the warnings in the DT binding schema examples when built with
-> 'W=1'. This is in preparation to make that the default for examples.
+On 18-02-20, 14:33, Rob Herring wrote:
+> On Sun, Feb 16, 2020 at 03:57:24PM +0530, Vinod Koul wrote:
+> > From: Taniya Das <tdas@codeaurora.org>
+> > 
+> > Add device tree bindings for global clock controller on SM8250 SoCs.
+> > 
+> > Signed-off-by: Taniya Das <tdas@codeaurora.org>
+> > Signed-off-by: Venkata Narendra Kumar Gutta <vnkgutta@codeaurora.org>
+> > Signed-off-by: Vinod Koul <vkoul@kernel.org>
+> > ---
+> >  .../bindings/clock/qcom,gcc-sm8250.yaml       |  72 +++++
+> >  include/dt-bindings/clock/qcom,gcc-sm8250.h   | 271 ++++++++++++++++++
+> >  2 files changed, 343 insertions(+)
+> >  create mode 100644 Documentation/devicetree/bindings/clock/qcom,gcc-sm8250.yaml
+> >  create mode 100644 include/dt-bindings/clock/qcom,gcc-sm8250.h
+> > 
+> > diff --git a/Documentation/devicetree/bindings/clock/qcom,gcc-sm8250.yaml b/Documentation/devicetree/bindings/clock/qcom,gcc-sm8250.yaml
+> > new file mode 100644
+> > index 000000000000..d48fb25b0d44
+> > --- /dev/null
+> > +++ b/Documentation/devicetree/bindings/clock/qcom,gcc-sm8250.yaml
+> > @@ -0,0 +1,72 @@
+> > +# SPDX-License-Identifier: GPL-2.0-only
 > 
+> Dual license new bindings please:
+> 
+> (GPL-2.0-only OR BSD-2-Clause)
 
-For this:
-
->  .../devicetree/bindings/dma/ti/k3-udma.yaml        | 14 +-------------
-
-Acked-by: Vinod Koul <vkoul@kernel.org>
+Sure will update, thanks for pointing
 
 -- 
 ~Vinod
