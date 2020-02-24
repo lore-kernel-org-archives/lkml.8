@@ -2,131 +2,347 @@ Return-Path: <SRS0=7TUr=4M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.4 required=3.0 tests=FROM_LOCAL_HEX,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6AA7BC11D2F
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 15:50:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B0BCFC11D2F
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 15:51:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 494A420838
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 15:50:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 775432080D
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 15:51:01 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Ga8jHGpP"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727960AbgBXPuO (ORCPT
+        id S1727998AbgBXPvA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Feb 2020 10:50:14 -0500
-Received: from mail-il1-f197.google.com ([209.85.166.197]:37160 "EHLO
-        mail-il1-f197.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727426AbgBXPuN (ORCPT
+        Mon, 24 Feb 2020 10:51:00 -0500
+Received: from us-smtp-1.mimecast.com ([207.211.31.81]:51842 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1727834AbgBXPvA (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Feb 2020 10:50:13 -0500
-Received: by mail-il1-f197.google.com with SMTP id z79so19128716ilf.4
-        for <linux-kernel@vger.kernel.org>; Mon, 24 Feb 2020 07:50:13 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
-        bh=0SPr26mI+Ln+VEGi2ZBkQ06IkHYjWyiRTey+U7CAMzI=;
-        b=OmqfdA/yTh4TFhKvNOOsY+7qTOSkpNDKRFn7rHwQqsKfySftW14Y1IvaN0M9IoLBBF
-         5DRJoVN2Wy+QE8L1p92Xk/tntdw3tBeuN/eum0wvDwCttdOJsy0MpZLES/a7L8B+GrnO
-         NvTXtB3pldGzAwq3RR0DRVC7ZqYP2ZL8tGDQ7kJwL7QPtcf5LKkOX3uHRdVhv9TSwFWF
-         cj6gIPk7fz2YCwIygR0yUdwV4U5XmlLOGfsd4I2TocMbQflWYwxR1z4/u6CMZfyaAFRM
-         dJ/zAQmCvcJ1cwMFmD0E7QJyTKGqwcUJIDpJh/l0nDr16NYy9OcQjOKNFsuvMvqKP+xk
-         wh0Q==
-X-Gm-Message-State: APjAAAU9E1szVUUP9myI3OGLFUTTJ/vZ1VwV9i3iIlUwf+G2No1UeTFe
-        3d0OezdzpPyaQSxlLUW2XllGmpD7fmZjAVQe8zuZjsml1Drj
-X-Google-Smtp-Source: APXvYqw8l+W5ul1p0y8OZ7F3acv+6dm6McJK460la8gPyOWNNrGQ8+HpzuwTA3I8Sjoe3TrlWO955kYHB2Gd+qamKrawFaqXHjCj
+        Mon, 24 Feb 2020 10:51:00 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1582559459;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=QBzUZ88HV/a/URXm6yEfvQuZQiaiabo38k1vUrUp5ms=;
+        b=Ga8jHGpPcVkLbvL3t7f0/yvOxAN6ySAdDLAfcYL5MRD/6Iyn0iQwnjrF35SSszwcFgHEQN
+        yp5ki0olIxuLh7OZrvklluUoSkflxcIzRyR0YMNFetjnUCsAQkONplctFAtfmO59lK7OLe
+        olhGjMRgn63JilzejYKolbQEdYRGFsE=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-467-yfLDZ9uRPrC00asKZvOedg-1; Mon, 24 Feb 2020 10:50:54 -0500
+X-MC-Unique: yfLDZ9uRPrC00asKZvOedg-1
+Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 9EC25477;
+        Mon, 24 Feb 2020 15:50:50 +0000 (UTC)
+Received: from kamzik.brq.redhat.com (unknown [10.43.2.160])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id D41C060BF7;
+        Mon, 24 Feb 2020 15:50:45 +0000 (UTC)
+Date:   Mon, 24 Feb 2020 16:50:43 +0100
+From:   Andrew Jones <drjones@redhat.com>
+To:     John Andersen <john.s.andersen@intel.com>
+Cc:     tglx@linutronix.de, mingo@redhat.com, bp@alien8.de, x86@kernel.org,
+        pbonzini@redhat.com, hpa@zytor.com,
+        sean.j.christopherson@intel.com, vkuznets@redhat.com,
+        wanpengli@tencent.com, jmattson@google.com, liran.alon@oracle.com,
+        luto@kernel.org, joro@8bytes.org, rick.p.edgecombe@intel.com,
+        kristen@linux.intel.com, arjan@linux.intel.com,
+        linux-kernel@vger.kernel.org, kvm@vger.kernel.org
+Subject: Re: [RFC v2 3/4] selftests: kvm: add test for CR pinning with SMM
+Message-ID: <20200224155043.m5ajw63g3p7kyfey@kamzik.brq.redhat.com>
+References: <20200218215902.5655-1-john.s.andersen@intel.com>
+ <20200218215902.5655-4-john.s.andersen@intel.com>
 MIME-Version: 1.0
-X-Received: by 2002:a6b:9188:: with SMTP id t130mr48740603iod.215.1582559413092;
- Mon, 24 Feb 2020 07:50:13 -0800 (PST)
-Date:   Mon, 24 Feb 2020 07:50:13 -0800
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <000000000000a74731059f545387@google.com>
-Subject: WARNING in tracepoint_probe_register_prio (4)
-From:   syzbot <syzbot+1b2f76c6fb6f549f728b@syzkaller.appspotmail.com>
-To:     allison@lohutok.net, gregkh@linuxfoundation.org,
-        gustavo@embeddedor.com, linux-kernel@vger.kernel.org,
-        netdev@vger.kernel.org, rfontana@redhat.com,
-        syzkaller-bugs@googlegroups.com, tglx@linutronix.de
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200218215902.5655-4-john.s.andersen@intel.com>
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello,
+On Tue, Feb 18, 2020 at 01:59:01PM -0800, John Andersen wrote:
+> Check that paravirtualized control register pinning blocks modifications
+> of pinned CR values stored in SMRAM on exit from SMM.
+> 
+> Signed-off-by: John Andersen <john.s.andersen@intel.com>
+> ---
+>  tools/testing/selftests/kvm/.gitignore        |   1 +
+>  tools/testing/selftests/kvm/Makefile          |   1 +
+>  .../selftests/kvm/include/x86_64/processor.h  |   9 +
+>  .../selftests/kvm/x86_64/smm_cr_pin_test.c    | 180 ++++++++++++++++++
+>  4 files changed, 191 insertions(+)
+>  create mode 100644 tools/testing/selftests/kvm/x86_64/smm_cr_pin_test.c
+> 
+> diff --git a/tools/testing/selftests/kvm/.gitignore b/tools/testing/selftests/kvm/.gitignore
+> index 30072c3f52fb..08e18ae1b80f 100644
+> --- a/tools/testing/selftests/kvm/.gitignore
+> +++ b/tools/testing/selftests/kvm/.gitignore
+> @@ -7,6 +7,7 @@
+>  /x86_64/platform_info_test
+>  /x86_64/set_sregs_test
+>  /x86_64/smm_test
+> +/x86_64/smm_cr_pin_test
+>  /x86_64/state_test
+>  /x86_64/sync_regs_test
+>  /x86_64/vmx_close_while_nested_test
+> diff --git a/tools/testing/selftests/kvm/Makefile b/tools/testing/selftests/kvm/Makefile
+> index d91c53b726e6..f3fdac72fc74 100644
+> --- a/tools/testing/selftests/kvm/Makefile
+> +++ b/tools/testing/selftests/kvm/Makefile
+> @@ -19,6 +19,7 @@ TEST_GEN_PROGS_x86_64 += x86_64/mmio_warning_test
+>  TEST_GEN_PROGS_x86_64 += x86_64/platform_info_test
+>  TEST_GEN_PROGS_x86_64 += x86_64/set_sregs_test
+>  TEST_GEN_PROGS_x86_64 += x86_64/smm_test
+> +TEST_GEN_PROGS_x86_64 += x86_64/smm_cr_pin_test
+>  TEST_GEN_PROGS_x86_64 += x86_64/state_test
+>  TEST_GEN_PROGS_x86_64 += x86_64/sync_regs_test
+>  TEST_GEN_PROGS_x86_64 += x86_64/vmx_close_while_nested_test
+> diff --git a/tools/testing/selftests/kvm/include/x86_64/processor.h b/tools/testing/selftests/kvm/include/x86_64/processor.h
+> index 7428513a4c68..70394d2ffa5d 100644
+> --- a/tools/testing/selftests/kvm/include/x86_64/processor.h
+> +++ b/tools/testing/selftests/kvm/include/x86_64/processor.h
+> @@ -197,6 +197,11 @@ static inline uint64_t get_cr0(void)
+>  	return cr0;
+>  }
+>  
+> +static inline void set_cr0(uint64_t val)
+> +{
+> +	__asm__ __volatile__("mov %0, %%cr0" : : "r" (val) : "memory");
+> +}
+> +
+>  static inline uint64_t get_cr3(void)
+>  {
+>  	uint64_t cr3;
+> @@ -380,4 +385,8 @@ void kvm_get_cpu_address_width(unsigned int *pa_bits, unsigned int *va_bits);
+>  /* VMX_EPT_VPID_CAP bits */
+>  #define VMX_EPT_VPID_CAP_AD_BITS       (1ULL << 21)
+>  
+> +/* KVM MSRs */
+> +#define MSR_KVM_CR0_PINNED	0x4b564d08
+> +#define MSR_KVM_CR4_PINNED	0x4b564d09
+> +
+>  #endif /* SELFTEST_KVM_PROCESSOR_H */
+> diff --git a/tools/testing/selftests/kvm/x86_64/smm_cr_pin_test.c b/tools/testing/selftests/kvm/x86_64/smm_cr_pin_test.c
+> new file mode 100644
+> index 000000000000..013983bb4ba4
+> --- /dev/null
+> +++ b/tools/testing/selftests/kvm/x86_64/smm_cr_pin_test.c
+> @@ -0,0 +1,180 @@
+> +// SPDX-License-Identifier: GPL-2.0
+> +/*
+> + * Tests for control register pinning not being affected by SMRAM writes.
+> + */
+> +#define _GNU_SOURCE /* for program_invocation_short_name */
+> +#include <fcntl.h>
+> +#include <stdio.h>
+> +#include <stdlib.h>
+> +#include <stdint.h>
+> +#include <string.h>
+> +#include <sys/ioctl.h>
+> +
+> +#include "test_util.h"
+> +
+> +#include "kvm_util.h"
+> +
+> +#include "processor.h"
+> +
+> +#define VCPU_ID	      1
+> +
+> +#define PAGE_SIZE  4096
+> +
+> +#define SMRAM_SIZE 65536
+> +#define SMRAM_MEMSLOT ((1 << 16) | 1)
+> +#define SMRAM_PAGES (SMRAM_SIZE / PAGE_SIZE)
+> +#define SMRAM_GPA 0x1000000
+> +#define SMRAM_STAGE 0xfe
+> +
+> +#define STR(x) #x
+> +#define XSTR(s) STR(s)
 
-syzbot found the following crash on:
+linux/stringify.h is in tools/
 
-HEAD commit:    50089780 selftests/bpf: Fix build of sockmap_ktls.c
-git tree:       bpf-next
-console output: https://syzkaller.appspot.com/x/log.txt?x=13087de9e00000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=768cc3d3e277cc16
-dashboard link: https://syzkaller.appspot.com/bug?extid=1b2f76c6fb6f549f728b
-compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
+> +
+> +#define SYNC_PORT 0xe
+> +#define DONE 0xff
+> +
+> +#define CR0_PINNED X86_CR0_WP
+> +#define CR4_PINNED (X86_CR4_SMAP | X86_CR4_UMIP)
+> +#define CR4_ALL (CR4_PINNED | X86_CR4_SMEP)
+> +
+> +/*
+> + * This is compiled as normal 64-bit code, however, SMI handler is executed
+> + * in real-address mode. To stay simple we're limiting ourselves to a mode
+> + * independent subset of asm here.
+> + * SMI handler always report back fixed stage SMRAM_STAGE.
+> + */
+> +uint8_t smi_handler[] = {
+> +	0xb0, SMRAM_STAGE,    /* mov $SMRAM_STAGE, %al */
+> +	0xe4, SYNC_PORT,      /* in $SYNC_PORT, %al */
+> +	0x0f, 0xaa,           /* rsm */
+> +};
+> +
+> +void sync_with_host(uint64_t phase)
+> +{
+> +	asm volatile("in $" XSTR(SYNC_PORT)", %%al \n"
+> +		     : : "a" (phase));
+> +}
 
-Unfortunately, I don't have any reproducer for this crash yet.
+Any reason not to use GUEST_SYNC() ?
 
-IMPORTANT: if you fix the bug, please add the following tag to the commit:
-Reported-by: syzbot+1b2f76c6fb6f549f728b@syzkaller.appspotmail.com
+> +
+> +void self_smi(void)
+> +{
+> +	wrmsr(APIC_BASE_MSR + (APIC_ICR >> 4),
+> +	      APIC_DEST_SELF | APIC_INT_ASSERT | APIC_DM_SMI);
+> +}
+> +
+> +void guest_code(void *unused)
+> +{
 
-------------[ cut here ]------------
-WARNING: CPU: 1 PID: 25402 at kernel/tracepoint.c:243 tracepoint_add_func kernel/tracepoint.c:243 [inline]
-WARNING: CPU: 1 PID: 25402 at kernel/tracepoint.c:243 tracepoint_probe_register_prio+0x217/0x790 kernel/tracepoint.c:315
-Kernel panic - not syncing: panic_on_warn set ...
-CPU: 1 PID: 25402 Comm: syz-executor.3 Not tainted 5.6.0-rc1-syzkaller #0
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
-Call Trace:
- __dump_stack lib/dump_stack.c:77 [inline]
- dump_stack+0x197/0x210 lib/dump_stack.c:118
- panic+0x2e3/0x75c kernel/panic.c:221
- __warn.cold+0x2f/0x3e kernel/panic.c:582
- report_bug+0x289/0x300 lib/bug.c:195
- fixup_bug arch/x86/kernel/traps.c:174 [inline]
- fixup_bug arch/x86/kernel/traps.c:169 [inline]
- do_error_trap+0x11b/0x200 arch/x86/kernel/traps.c:267
- do_invalid_op+0x37/0x50 arch/x86/kernel/traps.c:286
- invalid_op+0x23/0x30 arch/x86/entry/entry_64.S:1027
-RIP: 0010:tracepoint_add_func kernel/tracepoint.c:243 [inline]
-RIP: 0010:tracepoint_probe_register_prio+0x217/0x790 kernel/tracepoint.c:315
-Code: 48 89 f8 48 c1 e8 03 80 3c 08 00 0f 85 bf 04 00 00 48 8b 45 b8 49 3b 45 08 0f 85 21 ff ff ff 41 bd ef ff ff ff e8 d9 7b fe ff <0f> 0b e8 d2 7b fe ff 48 c7 c7 e0 5d be 89 e8 16 52 78 06 44 89 e8
-RSP: 0018:ffffc90001617a68 EFLAGS: 00010212
-RAX: 0000000000040000 RBX: ffffffff8aa13ec0 RCX: ffffc9001009d000
-RDX: 000000000000191d RSI: ffffffff81771237 RDI: ffff888090ad3d30
-RBP: ffffc90001617ac0 R08: ffff88809ae4e600 R09: fffffbfff137cbbd
-R10: ffffc90001617a58 R11: ffffffff89be5de7 R12: ffff888090ad3d10
-R13: 00000000ffffffef R14: 00000000ffffffff R15: ffffffff81505c80
- tracepoint_probe_register+0x2b/0x40 kernel/tracepoint.c:335
- trace_event_reg+0x299/0x350 kernel/trace/trace_events.c:301
- perf_trace_event_reg kernel/trace/trace_event_perf.c:129 [inline]
- perf_trace_event_init+0x564/0x9c0 kernel/trace/trace_event_perf.c:204
- perf_trace_init+0x189/0x250 kernel/trace/trace_event_perf.c:228
- perf_tp_event_init+0xa6/0x120 kernel/events/core.c:9020
- perf_try_init_event+0x135/0x590 kernel/events/core.c:10471
- perf_init_event kernel/events/core.c:10523 [inline]
- perf_event_alloc.part.0+0x158f/0x3710 kernel/events/core.c:10803
- perf_event_alloc kernel/events/core.c:11170 [inline]
- __do_sys_perf_event_open+0x6f6/0x2c00 kernel/events/core.c:11286
- __se_sys_perf_event_open kernel/events/core.c:11160 [inline]
- __x64_sys_perf_event_open+0xbe/0x150 kernel/events/core.c:11160
- do_syscall_64+0xfa/0x790 arch/x86/entry/common.c:294
- entry_SYSCALL_64_after_hwframe+0x49/0xbe
-RIP: 0033:0x45c449
-Code: ad b6 fb ff c3 66 2e 0f 1f 84 00 00 00 00 00 66 90 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 0f 83 7b b6 fb ff c3 66 2e 0f 1f 84 00 00 00 00
-RSP: 002b:00007f5cb81c1c78 EFLAGS: 00000246 ORIG_RAX: 000000000000012a
-RAX: ffffffffffffffda RBX: 00007f5cb81c26d4 RCX: 000000000045c449
-RDX: 0000000000000000 RSI: 0000000000000000 RDI: 000000002025c000
-RBP: 000000000076bfc0 R08: 0000000000000000 R09: 0000000000000000
-R10: ffffffffffffffff R11: 0000000000000246 R12: 00000000ffffffff
-R13: 0000000000000812 R14: 00000000004ca890 R15: 000000000076bfcc
-Kernel Offset: disabled
-Rebooting in 86400 seconds..
+Why not just define guest_code as 'void guest_code(void)' ?
 
+> +	uint64_t apicbase = rdmsr(MSR_IA32_APICBASE);
+> +
+> +	(void)unused;
+> +
+> +	sync_with_host(1);
+> +
+> +	wrmsr(MSR_IA32_APICBASE, apicbase | X2APIC_ENABLE);
+> +
+> +	sync_with_host(2);
+> +
+> +	set_cr0(get_cr0() | CR0_PINNED);
+> +
+> +	wrmsr(MSR_KVM_CR0_PINNED, CR0_PINNED);
+> +
+> +	sync_with_host(3);
+> +
+> +	set_cr4(get_cr4() | CR4_PINNED);
+> +
+> +	sync_with_host(4);
+> +
+> +	/* Pin SMEP low */
+> +	wrmsr(MSR_KVM_CR4_PINNED, CR4_PINNED);
+> +
+> +	sync_with_host(5);
+> +
+> +	self_smi();
+> +
+> +	sync_with_host(DONE);
 
----
-This bug is generated by a bot. It may contain errors.
-See https://goo.gl/tpsmEJ for more information about syzbot.
-syzbot engineers can be reached at syzkaller@googlegroups.com.
+GUEST_DONE() ?
 
-syzbot will keep track of this bug report. See:
-https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
+> +}
+> +
+> +int main(int argc, char *argv[])
+> +{
+> +	struct kvm_regs regs;
+> +	struct kvm_sregs sregs;
+> +	struct kvm_vm *vm;
+> +	struct kvm_run *run;
+> +	struct kvm_x86_state *state;
+> +	int stage, stage_reported;
+> +	u64 *cr;
+> +
+> +	/* Create VM */
+> +	vm = vm_create_default(VCPU_ID, 0, guest_code);
+> +
+> +	vcpu_set_cpuid(vm, VCPU_ID, kvm_get_supported_cpuid());
+> +
+> +	run = vcpu_state(vm, VCPU_ID);
+> +
+> +	vm_userspace_mem_region_add(vm, VM_MEM_SRC_ANONYMOUS, SMRAM_GPA,
+> +				    SMRAM_MEMSLOT, SMRAM_PAGES, 0);
+> +	TEST_ASSERT(vm_phy_pages_alloc(vm, SMRAM_PAGES, SMRAM_GPA, SMRAM_MEMSLOT)
+> +		    == SMRAM_GPA, "could not allocate guest physical addresses?");
+> +
+> +	memset(addr_gpa2hva(vm, SMRAM_GPA), 0x0, SMRAM_SIZE);
+> +	memcpy(addr_gpa2hva(vm, SMRAM_GPA) + 0x8000, smi_handler,
+> +	       sizeof(smi_handler));
+> +
+> +	vcpu_set_msr(vm, VCPU_ID, MSR_IA32_SMBASE, SMRAM_GPA);
+> +
+> +	vcpu_args_set(vm, VCPU_ID, 1, 0);
+
+guest_code() doesn't use inputs, so why set rdi to zero?
+
+> +
+> +	for (stage = 1;; stage++) {
+> +		_vcpu_run(vm, VCPU_ID);
+> +
+> +		TEST_ASSERT(run->exit_reason == KVM_EXIT_IO,
+> +			    "Stage %d: unexpected exit reason: %u (%s),\n",
+> +			    stage, run->exit_reason,
+> +			    exit_reason_str(run->exit_reason));
+> +
+> +		memset(&regs, 0, sizeof(regs));
+> +		vcpu_regs_get(vm, VCPU_ID, &regs);
+> +
+> +		memset(&sregs, 0, sizeof(sregs));
+> +		vcpu_sregs_get(vm, VCPU_ID, &sregs);
+> +
+> +		stage_reported = regs.rax & 0xff;
+
+If you use GUEST_ASSERT() and get_ucall() then stage_reported is uc.args[1].
+Why mask it with 0xff? Shouldn't the test assert if the stage is an
+unexpected value?
+
+> +
+> +		if (stage_reported == DONE) {
+
+uc.cmd == UCALL_DONE
+
+> +			TEST_ASSERT((sregs.cr0 & CR0_PINNED) == CR0_PINNED,
+> +				    "Unexpected cr0. Bits missing: %llx",
+> +				    sregs.cr0 ^ (CR0_PINNED | sregs.cr0));
+> +			TEST_ASSERT((sregs.cr4 & CR4_ALL) == CR4_PINNED,
+> +				    "Unexpected cr4. Bits missing: %llx, cr4: %llx",
+> +				    sregs.cr4 ^ (CR4_ALL | sregs.cr4),
+> +				    sregs.cr4);
+> +			goto done;
+> +		}
+> +
+> +		TEST_ASSERT(stage_reported == stage ||
+> +			    stage_reported == SMRAM_STAGE,
+> +			    "Unexpected stage: #%x, got %x",
+> +			    stage, stage_reported);
+> +
+> +		/* Within SMM modify CR0/4 to not contain pinned bits. */
+> +		if (stage_reported == SMRAM_STAGE) {
+> +			cr = (u64 *)(addr_gpa2hva(vm, SMRAM_GPA + 0x8000 + 0x7f58));
+> +			*cr &= ~CR0_PINNED;
+> +
+> +			cr = (u64 *)(addr_gpa2hva(vm, SMRAM_GPA + 0x8000 + 0x7f48));
+> +			/* Unset pinned, set one that was pinned low */
+> +			*cr &= ~CR4_PINNED;
+> +			*cr |= X86_CR4_SMEP;
+> +		}
+> +
+> +		state = vcpu_save_state(vm, VCPU_ID);
+> +		kvm_vm_release(vm);
+> +		kvm_vm_restart(vm, O_RDWR);
+> +		vm_vcpu_add(vm, VCPU_ID);
+> +		vcpu_set_cpuid(vm, VCPU_ID, kvm_get_supported_cpuid());
+> +		vcpu_load_state(vm, VCPU_ID, state);
+> +		run = vcpu_state(vm, VCPU_ID);
+> +		free(state);
+> +	}
+> +
+> +done:
+> +	kvm_vm_free(vm);
+> +}
+> -- 
+> 2.21.0
+>
+
+Thanks,
+drew 
+
