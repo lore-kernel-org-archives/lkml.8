@@ -2,177 +2,92 @@ Return-Path: <SRS0=7TUr=4M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-15.9 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1,
-	USER_IN_DEF_DKIM_WL autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C32F3C38C00
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 22:27:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6C13EC38BFF
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 22:27:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 949FB21744
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 22:27:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 372C62176D
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 22:27:44 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="jjb/ltj6"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Wci2Ct75"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728018AbgBXW1G (ORCPT
+        id S1728129AbgBXW1n (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Feb 2020 17:27:06 -0500
-Received: from mail-pf1-f194.google.com ([209.85.210.194]:39876 "EHLO
-        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727249AbgBXW1F (ORCPT
+        Mon, 24 Feb 2020 17:27:43 -0500
+Received: from mail-io1-f65.google.com ([209.85.166.65]:46331 "EHLO
+        mail-io1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727219AbgBXW1m (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Feb 2020 17:27:05 -0500
-Received: by mail-pf1-f194.google.com with SMTP id 84so6078118pfy.6
-        for <linux-kernel@vger.kernel.org>; Mon, 24 Feb 2020 14:27:05 -0800 (PST)
+        Mon, 24 Feb 2020 17:27:42 -0500
+Received: by mail-io1-f65.google.com with SMTP id e7so1865871ioe.13;
+        Mon, 24 Feb 2020 14:27:42 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=date:from:to:cc:subject:in-reply-to:message-id:references
-         :user-agent:mime-version;
-        bh=N8uW5I9vM7M9dgZNeVW89oSVwdXb7JJspNMFnTdsIHM=;
-        b=jjb/ltj6Dl/BLTImTnJOx8f83qe1X4RzfCIi0nAKuiuNm3I+v4BiMZM3nVaxBwTeMc
-         l3pBEm+HLYafUv3VwQdccIkJfM7jJ17q2NBMff+Xrh7g8a2/wWd/VZqn0/VA0K9pVNrk
-         2rvarsLrO+8NmUy3S4E0Tr8l1mM/QmYgVZlVIq2QZKbZI7ZAeWabBUvaEWdKlGaQ713s
-         aLRbqW0JQ3aTtmT/yflWtlmiIFAfgGsy/8fRQUq3qM8XyzI/PWHF10BSbeQv/UVNyryi
-         wI/S7mR3tpBOQY7dW143Gh5Rc1V8IlnUBh3Ec6i14WV6z65uFb3RZ+h9gU6MwghxdEmk
-         tbaw==
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=okoEokk8koFi0gbrNVrs/CtK734/+xWplYEPxW27+Gc=;
+        b=Wci2Ct75KDbCFUhLx2OoDlxXrlzD6YzLomd/+CaJKS7ovaUCAfTfeP+SKU3NDEQBKG
+         X5UJJrKhPzn5aPiK0tCRQJAOx6GCV3NJsv3ahtsP55qKWaBjuwD0lhuhZ7DUAnzH2Bqi
+         xTdlPhbbBl8o0UjlB3xFGoTkKtSRVV4p9yrPaPR5H7gbe9K3tQbQ7wWiI5CqXlpdFWM8
+         f/0JJGm1fMj8xFUACo8xRr+jXCzDwQolfdJxkynDJdkQ2UF4Th9PtcXeaVPYfqoswlV8
+         Aq/PVHB7koAmFnt/R7pFT6gZpoWuv9XuLOvXP3EaArqfs7jj/mUGLbxUcDBhuwbfpng2
+         nQBg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:in-reply-to:message-id
-         :references:user-agent:mime-version;
-        bh=N8uW5I9vM7M9dgZNeVW89oSVwdXb7JJspNMFnTdsIHM=;
-        b=iALbhxzo2ulmmhgdM6YxLYS+/5BDAb29YrFr7QnO7oYU2xnEPfPeXFyEeFNCGJTEtg
-         SxLy6S/0YsBP6rcd29NB6UEbat1aSaULA49o+/E3lOB3ChfWwpvI1gf52N8lI04l31nc
-         o7Qd4lWmUUVdj766fOowTeX4x8w1/3GrRmWabMS7qN1sZWCjL4cPolYGmtIHEt+HcxH8
-         58Oi0ZGviLM89D5sxQUV4fyCf11hBYmfH/BnYuoktQiQU0oPoe0f6/CVxPgXC15dknvU
-         P7fH0Vl2EIsCGhJ77mSUQAwnC5Ja6B3dnxHS4eu6rz5mj3/bTGTPSAu65q+6Twn4l4S8
-         kBBQ==
-X-Gm-Message-State: APjAAAU35FHTFLWHwxGPlXOdfAIivQssbzxZGGrx6R3g5Fyxh7XXYeGG
-        Qik2oQSbYIh22Ncl9tosvzqljQ==
-X-Google-Smtp-Source: APXvYqzh5p4xJuU9VecvA+EavGY+LuUQ1KKByt917r/gAyMV0FwOD6sP6TJIudNiZHy7NfjhmNHCAQ==
-X-Received: by 2002:a63:1a5b:: with SMTP id a27mr3598267pgm.249.1582583224197;
-        Mon, 24 Feb 2020 14:27:04 -0800 (PST)
-Received: from [100.112.92.218] ([104.133.9.106])
-        by smtp.gmail.com with ESMTPSA id v25sm13820038pfe.147.2020.02.24.14.27.02
-        (version=TLS1 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
-        Mon, 24 Feb 2020 14:27:03 -0800 (PST)
-Date:   Mon, 24 Feb 2020 14:26:45 -0800 (PST)
-From:   Hugh Dickins <hughd@google.com>
-X-X-Sender: hugh@eggly.anvils
-To:     Dan Schatzberg <schatzberg.dan@gmail.com>
-cc:     Jens Axboe <axboe@kernel.dk>, Tejun Heo <tj@kernel.org>,
-        Li Zefan <lizefan@huawei.com>,
-        Johannes Weiner <hannes@cmpxchg.org>,
-        Michal Hocko <mhocko@kernel.org>,
-        Vladimir Davydov <vdavydov.dev@gmail.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Hugh Dickins <hughd@google.com>, Roman Gushchin <guro@fb.com>,
-        Shakeel Butt <shakeelb@google.com>,
-        Chris Down <chris@chrisdown.name>,
-        Yang Shi <yang.shi@linux.alibaba.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        "open list:BLOCK LAYER" <linux-block@vger.kernel.org>,
-        open list <linux-kernel@vger.kernel.org>,
-        "open list:CONTROL GROUP (CGROUP)" <cgroups@vger.kernel.org>,
-        "open list:CONTROL GROUP - MEMORY RESOURCE CONTROLLER (MEMCG)" 
-        <linux-mm@kvack.org>
-Subject: Re: [PATCH v3 2/3] mm: Charge active memcg when no mm is set
-In-Reply-To: <4456276af198412b2d41cd09d246cd20e0c6d22a.1582581887.git.schatzberg.dan@gmail.com>
-Message-ID: <alpine.LSU.2.11.2002241425001.1576@eggly.anvils>
-References: <cover.1582581887.git.schatzberg.dan@gmail.com> <4456276af198412b2d41cd09d246cd20e0c6d22a.1582581887.git.schatzberg.dan@gmail.com>
-User-Agent: Alpine 2.11 (LSU 23 2013-08-11)
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=okoEokk8koFi0gbrNVrs/CtK734/+xWplYEPxW27+Gc=;
+        b=LtWhOWBg4FDJdDjGaBzQcYApdIoX3PqBiDtIm0Ep0iiiCPLZbI8IyYxqipMOdAG5JR
+         9dolEYQFgoDlv4mwB9r8WOtROuI2CA9Q4owI7dl6GMTmDQXqcMoLNAMoP1uDNwpJMX1x
+         SdnBKtSOWhNxG1NWCZXw7NryMDmQ8byxe7ys7RKIc02ZojMlww67PFqfAeauTfvOd6Gk
+         loh2OxHtlfdfpedbQn/N9l8d/nNfZGKH3VOer9uq+QwzsPK7PDnW+9uo/SOQV+66HIV9
+         AT4c4ZHoHHF4pfJ2ZtFZLiwod1sbFzEK7dgqKO84zn0sK3yUnr6m5WB9ODPBm8vWckoB
+         XStQ==
+X-Gm-Message-State: APjAAAVhnCJuCe9ahEuCTNDMUud4ybPsTlHvgchbSOvykSEwUTFhzr+K
+        ytyJ3tiH8kua+UseiGXtrq9uS8jpZItF3q1wtqeBQA==
+X-Google-Smtp-Source: APXvYqyvB53aFrIiMdZSK+Pyl7Sam7svWwN4rs//H5xeSV3qfK+PHY59oqCwhlbWovNG9LjrT85SyFgM+QyFjzuDSKs=
+X-Received: by 2002:a02:5b8a:: with SMTP id g132mr2106136jab.78.1582583261895;
+ Mon, 24 Feb 2020 14:27:41 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: TEXT/PLAIN; charset=US-ASCII
+References: <20200225075237.61e103e4@canb.auug.org.au>
+In-Reply-To: <20200225075237.61e103e4@canb.auug.org.au>
+From:   Steve French <smfrench@gmail.com>
+Date:   Mon, 24 Feb 2020 16:27:31 -0600
+Message-ID: <CAH2r5mv0YhqRNYogxo4TkK9FdzG1JrDz1SBfQt2+91RgdiAEfg@mail.gmail.com>
+Subject: Re: linux-next: Signed-off-by missing for commit in the cifs tree
+To:     Stephen Rothwell <sfr@canb.auug.org.au>
+Cc:     CIFS <linux-cifs@vger.kernel.org>,
+        Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 24 Feb 2020, Dan Schatzberg wrote:
+fixed
 
-> memalloc_use_memcg() worked for kernel allocations but was silently
-> ignored for user pages.
-> 
-> This patch establishes a precedence order for who gets charged:
-> 
-> 1. If there is a memcg associated with the page already, that memcg is
->    charged. This happens during swapin.
-> 
-> 2. If an explicit mm is passed, mm->memcg is charged. This happens
->    during page faults, which can be triggered in remote VMs (eg gup).
-> 
-> 3. Otherwise consult the current process context. If it has configured
->    a current->active_memcg, use that. Otherwise, current->mm->memcg.
-> 
-> Previously, if a NULL mm was passed to mem_cgroup_try_charge (case 3) it
-> would always charge the root cgroup. Now it looks up the current
-> active_memcg first (falling back to charging the root cgroup if not
-> set).
-> 
-> Signed-off-by: Dan Schatzberg <schatzberg.dan@gmail.com>
-> Acked-by: Johannes Weiner <hannes@cmpxchg.org>
-> Acked-by: Tejun Heo <tj@kernel.org>
-> Acked-by: Chris Down <chris@chrisdown.name>
+On Mon, Feb 24, 2020 at 2:52 PM Stephen Rothwell <sfr@canb.auug.org.au> wrote:
+>
+> Hi all,
+>
+> Commit
+>
+>   39452a5239bb ("cifs: call wake_up(&server->response_q) inside of cifs_reconnect()")
+>
+> is missing a Signed-off-by from its committer.
+>
+> --
+> Cheers,
+> Stephen Rothwell
 
-Acked-by: Hugh Dickins <hughd@google.com>
 
-> Reviewed-by: Shakeel Butt <shakeelb@google.com>
-> Signed-off-by: Dan Schatzberg <schatzberg.dan@gmail.com>
-> ---
->  mm/memcontrol.c | 11 ++++++++---
->  mm/shmem.c      |  4 ++--
->  2 files changed, 10 insertions(+), 5 deletions(-)
-> 
-> diff --git a/mm/memcontrol.c b/mm/memcontrol.c
-> index d09776cd6e10..222e4aac0c85 100644
-> --- a/mm/memcontrol.c
-> +++ b/mm/memcontrol.c
-> @@ -6319,7 +6319,8 @@ enum mem_cgroup_protection mem_cgroup_protected(struct mem_cgroup *root,
->   * @compound: charge the page as compound or small page
->   *
->   * Try to charge @page to the memcg that @mm belongs to, reclaiming
-> - * pages according to @gfp_mask if necessary.
-> + * pages according to @gfp_mask if necessary. If @mm is NULL, try to
-> + * charge to the active memcg.
->   *
->   * Returns 0 on success, with *@memcgp pointing to the charged memcg.
->   * Otherwise, an error code is returned.
-> @@ -6363,8 +6364,12 @@ int mem_cgroup_try_charge(struct page *page, struct mm_struct *mm,
->  		}
->  	}
->  
-> -	if (!memcg)
-> -		memcg = get_mem_cgroup_from_mm(mm);
-> +	if (!memcg) {
-> +		if (!mm)
-> +			memcg = get_mem_cgroup_from_current();
-> +		else
-> +			memcg = get_mem_cgroup_from_mm(mm);
-> +	}
->  
->  	ret = try_charge(memcg, gfp_mask, nr_pages);
->  
-> diff --git a/mm/shmem.c b/mm/shmem.c
-> index c8f7540ef048..8664c97851f2 100644
-> --- a/mm/shmem.c
-> +++ b/mm/shmem.c
-> @@ -1631,7 +1631,7 @@ static int shmem_swapin_page(struct inode *inode, pgoff_t index,
->  {
->  	struct address_space *mapping = inode->i_mapping;
->  	struct shmem_inode_info *info = SHMEM_I(inode);
-> -	struct mm_struct *charge_mm = vma ? vma->vm_mm : current->mm;
-> +	struct mm_struct *charge_mm = vma ? vma->vm_mm : NULL;
->  	struct mem_cgroup *memcg;
->  	struct page *page;
->  	swp_entry_t swap;
-> @@ -1766,7 +1766,7 @@ static int shmem_getpage_gfp(struct inode *inode, pgoff_t index,
->  	}
->  
->  	sbinfo = SHMEM_SB(inode->i_sb);
-> -	charge_mm = vma ? vma->vm_mm : current->mm;
-> +	charge_mm = vma ? vma->vm_mm : NULL;
->  
->  	page = find_lock_entry(mapping, index);
->  	if (xa_is_value(page)) {
-> -- 
-> 2.17.1
+
+-- 
+Thanks,
+
+Steve
