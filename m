@@ -2,182 +2,83 @@ Return-Path: <SRS0=7TUr=4M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BF63AC38BF9
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 21:40:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 49B0CC38BFA
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 21:40:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8C00E21556
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 21:40:41 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="g2l2vA7Y"
+	by mail.kernel.org (Postfix) with ESMTP id 2596021556
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 21:40:45 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728020AbgBXVkk (ORCPT
+        id S1728097AbgBXVkn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Feb 2020 16:40:40 -0500
-Received: from bombadil.infradead.org ([198.137.202.133]:33032 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727554AbgBXVkj (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Feb 2020 16:40:39 -0500
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
-        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=65KytlXyewvGVahoyRdvC+touLtUiIJaP98fPBSxLjQ=; b=g2l2vA7YLEfvfs7PQ14x+FPEhp
-        1yaO+e12NroUCtyLzhwbqCapyooZwwnLxi+zYHYu3dx7j2bMNHjss/eCzGNTD/EgfSGkmy2vqfB/1
-        a8aXbUB4VDDYPX2I3IiQq/ggTnUl5tDhZIXMueCk6qBKa8Ikv0C4AABTBTz6X+htegap1EuJ3Cmuu
-        XjjoRbv+jad91N6BXSewZH82e8r0TxczCQ6AY9KLZ9TAm9lelsNdvBqkpqpmmJyJriMqbLAFjvaTl
-        8tmbQcMyyKIENDLcVreqHkRX3rFqoaFnNOPMjt9KICrGTFJ9ulD8TPuf60nR4pqcPpkSV/GTxYPmA
-        b7e5Yhug==;
-Received: from hch by bombadil.infradead.org with local (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1j6LSx-0007AA-4f; Mon, 24 Feb 2020 21:40:39 +0000
-Date:   Mon, 24 Feb 2020 13:40:39 -0800
-From:   Christoph Hellwig <hch@infradead.org>
-To:     Matthew Wilcox <willy@infradead.org>
-Cc:     linux-fsdevel@vger.kernel.org, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org, linux-btrfs@vger.kernel.org,
-        linux-erofs@lists.ozlabs.org, linux-ext4@vger.kernel.org,
-        linux-f2fs-devel@lists.sourceforge.net, cluster-devel@redhat.com,
-        ocfs2-devel@oss.oracle.com, linux-xfs@vger.kernel.org
-Subject: Re: [PATCH v7 09/24] mm: Put readahead pages in cache earlier
-Message-ID: <20200224214039.GF13895@infradead.org>
-References: <20200219210103.32400-1-willy@infradead.org>
- <20200219210103.32400-10-willy@infradead.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200219210103.32400-10-willy@infradead.org>
-X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
+        Mon, 24 Feb 2020 16:40:43 -0500
+Received: from wtarreau.pck.nerim.net ([62.212.114.60]:31498 "EHLO 1wt.eu"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727554AbgBXVkl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 24 Feb 2020 16:40:41 -0500
+X-Greylist: delayed 986 seconds by postgrey-1.27 at vger.kernel.org; Mon, 24 Feb 2020 16:40:39 EST
+Received: (from willy@localhost)
+        by pcw.home.local (8.15.2/8.15.2/Submit) id 01OLO4kA008691;
+        Mon, 24 Feb 2020 22:24:04 +0100
+From:   Willy Tarreau <w@1wt.eu>
+To:     Denis Efremov <efremov@linux.com>
+Cc:     Jens Axboe <axboe@kernel.dk>, linux-kernel@vger.kernel.org,
+        linux-block@vger.kernel.org,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Willy Tarreau <w@1wt.eu>
+Subject: [PATCH 00/10] floppy driver cleanups (deobfuscation)
+Date:   Mon, 24 Feb 2020 22:23:42 +0100
+Message-Id: <20200224212352.8640-1-w@1wt.eu>
+X-Mailer: git-send-email 2.9.0
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Feb 19, 2020 at 01:00:48PM -0800, Matthew Wilcox wrote:
-> From: "Matthew Wilcox (Oracle)" <willy@infradead.org>
-> 
-> When populating the page cache for readahead, mappings that use
-> ->readpages must populate the page cache themselves as the pages are
-> passed on a linked list which would normally be used for the page cache's
-> LRU.  For mappings that use ->readpage or the upcoming ->readahead method,
-> we can put the pages into the page cache as soon as they're allocated,
-> which solves a race between readahead and direct IO.  It also lets us
-> remove the gfp argument from read_pages().
-> 
-> Use the new readahead_page() API to implement the repeated calls to
-> ->readpage(), just like most filesystems will.  This iterator also
-> supports huge pages, even though none of the filesystems have been
-> converted to use them yet.
-> 
-> Signed-off-by: Matthew Wilcox (Oracle) <willy@infradead.org>
-> ---
->  include/linux/pagemap.h | 20 +++++++++++++++++
->  mm/readahead.c          | 48 +++++++++++++++++++++++++----------------
->  2 files changed, 49 insertions(+), 19 deletions(-)
-> 
-> diff --git a/include/linux/pagemap.h b/include/linux/pagemap.h
-> index 55fcea0249e6..4989d330fada 100644
-> --- a/include/linux/pagemap.h
-> +++ b/include/linux/pagemap.h
-> @@ -647,8 +647,28 @@ struct readahead_control {
->  /* private: use the readahead_* accessors instead */
->  	pgoff_t _index;
->  	unsigned int _nr_pages;
-> +	unsigned int _batch_count;
->  };
->  
-> +static inline struct page *readahead_page(struct readahead_control *rac)
-> +{
-> +	struct page *page;
-> +
-> +	BUG_ON(rac->_batch_count > rac->_nr_pages);
-> +	rac->_nr_pages -= rac->_batch_count;
-> +	rac->_index += rac->_batch_count;
-> +	rac->_batch_count = 0;
-> +
-> +	if (!rac->_nr_pages)
-> +		return NULL;
-> +
-> +	page = xa_load(&rac->mapping->i_pages, rac->_index);
-> +	VM_BUG_ON_PAGE(!PageLocked(page), page);
-> +	rac->_batch_count = hpage_nr_pages(page);
-> +
-> +	return page;
-> +}
-> +
->  /* The number of pages in this readahead block */
->  static inline unsigned int readahead_count(struct readahead_control *rac)
->  {
-> diff --git a/mm/readahead.c b/mm/readahead.c
-> index 83df5c061d33..aaa209559ba2 100644
-> --- a/mm/readahead.c
-> +++ b/mm/readahead.c
-> @@ -113,15 +113,14 @@ int read_cache_pages(struct address_space *mapping, struct list_head *pages,
->  
->  EXPORT_SYMBOL(read_cache_pages);
->  
-> -static void read_pages(struct readahead_control *rac, struct list_head *pages,
-> -		gfp_t gfp)
-> +static void read_pages(struct readahead_control *rac, struct list_head *pages)
->  {
->  	const struct address_space_operations *aops = rac->mapping->a_ops;
-> +	struct page *page;
->  	struct blk_plug plug;
-> -	unsigned page_idx;
->  
->  	if (!readahead_count(rac))
-> -		return;
-> +		goto out;
->  
->  	blk_start_plug(&plug);
->  
-> @@ -130,23 +129,23 @@ static void read_pages(struct readahead_control *rac, struct list_head *pages,
->  				readahead_count(rac));
->  		/* Clean up the remaining pages */
->  		put_pages_list(pages);
-> -		goto out;
-> -	}
-> -
-> -	for (page_idx = 0; page_idx < readahead_count(rac); page_idx++) {
-> -		struct page *page = lru_to_page(pages);
-> -		list_del(&page->lru);
-> -		if (!add_to_page_cache_lru(page, rac->mapping, page->index,
-> -				gfp))
-> +		rac->_index += rac->_nr_pages;
-> +		rac->_nr_pages = 0;
-> +	} else {
-> +		while ((page = readahead_page(rac))) {
->  			aops->readpage(rac->file, page);
-> -		put_page(page);
-> +			put_page(page);
-> +		}
->  	}
->  
-> -out:
->  	blk_finish_plug(&plug);
->  
->  	BUG_ON(!list_empty(pages));
-> -	rac->_nr_pages = 0;
-> +	BUG_ON(readahead_count(rac));
-> +
-> +out:
-> +	/* If we were called due to a conflicting page, skip over it */
-> +	rac->_index++;
->  }
->  
->  /*
-> @@ -165,9 +164,11 @@ void __do_page_cache_readahead(struct address_space *mapping,
->  	LIST_HEAD(page_pool);
->  	loff_t isize = i_size_read(inode);
->  	gfp_t gfp_mask = readahead_gfp_mask(mapping);
-> +	bool use_list = mapping->a_ops->readpages;
+As indicated in commit 2e90ca6 ("floppy: check FDC index for errors
+before assigning it") there are some surprising effects in the floppy
+driver due to some macros referencing global or local variables while
+at first glance being inoffensive.
 
-I find this single use variable a little weird.  Not a dealbreaker,
-but just checking the methods would seem a little more obvious to me.
+This patchset aims at removing these macros and replacing all of their
+occurrences by the equivalent code. Most of the work was done under
+Coccinelle's assistance, and it was verified that the resulting binary
+code is exactly the same as the original one.
 
-Except for this and the other nitpick the patch looks good to me:
+The aim is not to make the driver prettier, as Linus mentioned it's
+already not pretty. It only aims at making potential bugs more visible,
+given almost all latest changes to this driver were fixes for out-of-
+bounds and similar bugs.
 
-Reviewed-by: Christoph Hellwig <hch@lst.de>
+As a side effect, some lines got longer, causing checkpatch to complain
+a bit, but I preferred to let it complain as I didn't want to break them
+apart as I'm already seeing the trap of going too far here.
+
+The patches are broken by macro (or sets of macros when relevant) so
+that each of them remains reviewable.
+
+I can possibly go a bit further in the cleanup but I haven't used
+floppies for a few years now and am not interested in doing too much
+on this driver by lack of use cases.
+
+Willy Tarreau (10):
+  floppy: cleanup: expand macro FDCS
+  floppy: cleanup: expand macro UFDCS
+  floppy: cleanup: expand macro UDP
+  floppy: cleanup: expand macro UDRS
+  floppy: cleanup: expand macro UDRWE
+  floppy: cleanup: expand macro DP
+  floppy: cleanup: expand macro DRS
+  floppy: cleanup: expand macro DRWE
+  floppy: cleanup: expand the R/W / format command macros
+  floppy: cleanup: expand the reply_buffer macros
+
+ drivers/block/floppy.c | 971 +++++++++++++++++++++++++------------------------
+ 1 file changed, 499 insertions(+), 472 deletions(-)
+
+-- 
+2.9.0
+
