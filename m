@@ -2,280 +2,173 @@ Return-Path: <SRS0=7TUr=4M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 20293C11D2F
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 10:17:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 70B4EC11D2F
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 10:18:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EAAF32084E
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 10:17:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 44DE620836
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 10:18:02 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="WixG3cAl"
+	dkim=pass (1024-bit key) header.d=xilinx.onmicrosoft.com header.i=@xilinx.onmicrosoft.com header.b="jmnDs3bO"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727327AbgBXKRm (ORCPT
+        id S1727405AbgBXKSB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Feb 2020 05:17:42 -0500
-Received: from mail-io1-f65.google.com ([209.85.166.65]:35825 "EHLO
-        mail-io1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726509AbgBXKRl (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Feb 2020 05:17:41 -0500
-Received: by mail-io1-f65.google.com with SMTP id h8so9710668iob.2;
-        Mon, 24 Feb 2020 02:17:41 -0800 (PST)
+        Mon, 24 Feb 2020 05:18:01 -0500
+Received: from mail-bn8nam12on2071.outbound.protection.outlook.com ([40.107.237.71]:6149
+        "EHLO NAM12-BN8-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726509AbgBXKSB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 24 Feb 2020 05:18:01 -0500
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=NyA/G1bZn1gc/f34dVcvJhZxXqLwUm+CmjobDzj5y+AwB27IRr9laV8L2fGIJx2w2zQ/OwHyWTnrk6VIiIaBrwpCABupNN6wgijLAO4ed8LD0oThd718YvjQ0S8c5ShcLRI0T/7xRrQFpV2zvh9c7WyKDTbEoy0lC24ADZbZk05KLG+njqZidZXGVBq7XeR8pmmHBZ5vM+tjLlmH3QpB2jhTo11sKKJ+DqA4b7v0YBjp381MX3gOqamRIEeA7CQI1n4GkQUe0RK1Xrz/wa257SjD42r+cqt5Ln83aOlf9w9dRGU7b6AfH0SGyI+Lz9QVbfIatV+zmPfhFUMbjC+4Jw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=zVtFvnRZ9VJpMCxxPhvBAs4hb6GT0QuQsyKC2jmna8w=;
+ b=lhwtO9CJcWPRTRqRlf4xwlT8ahC0uCfTJmT0gF0GQBXdpk3Naz3FO/e6hjGIzfouD/hbsOE4GlGEoIbMx+hfJbd16K2q1D1DRTD9SmWt2W9/RkSGKGnNMWxO1Y4SAumiFtsglu720g0BQNfAmojxtO5+KcNdwaW5wEKbN1gTqOG9hBJyLBGk6BOt+FTYOYM/m6bmtNWQamJFQih5jNBzUlTALhkaAXxlbPoQHixcFny++9lY3oc6ggxO2x7jnvrEbD6hmNDPZiR9guLR1PNQEs32ZJ/jPi27kcb05lIlneaCCGusiFgwj51jIJeTRP1t5o0wmmDn6chASKtQl2e42Q==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 149.199.60.83) smtp.rcpttodomain=linaro.org smtp.mailfrom=xilinx.com;
+ dmarc=bestguesspass action=none header.from=xilinx.com; dkim=none (message
+ not signed); arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=7tqgnHB78w+khquGpyEPrfbvz14CK0FBf/BfCrVKj88=;
-        b=WixG3cAlWOKVA4zty0GxO81FbCDDDdvXcsrqJIiNoeOazlCyYJhLt//qepqkHWRO+i
-         au8MthJG6xQCVYimonXq9J9UTkxQXTdXeNwnnCFAHRTYFa09tVbWDVrszuNNcd48xy79
-         M4607MnC3gbpRzJcoaCojUBEi5DyF0la38CNAh+2NTCj+lJ+103ixbRogzGDVh1V4uM+
-         9+r0ecBMS49H+uLc6Edb//J6Pj451lLdugtqNKHmng3AISj9RlOqV9UNxLAUgRxMb2bU
-         xkN1jLWgnF70i9ajrtqOS07p8Qzum6J0p4vXRWAInArvAziclsYDozRZmKb9k128O5se
-         MvGQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=7tqgnHB78w+khquGpyEPrfbvz14CK0FBf/BfCrVKj88=;
-        b=bNCcRnyk0ujTkRi2WuPJz7sNGdZZG0zY6b+6BGuH4xxPhTJfA2j2xTPii2Kd4u0vBW
-         hi3WluAjkHiTJss3qZgsR+Y/ewSQo4NOJqVXIItrowhQYIzYXqcWnQjAGxAN2Phinklf
-         3lDY8TR7myuisQMogyMh8HTrNdV3igzF9yKsU+Fq2TvuFo5xI1Q013MB9lIOLcLOZ1sL
-         V1Phs4BUjpb5f2LZ1Gt48r5onmtZifjFrnbjD+gjpA2qagsEBLIETnpK9jFmYn4xDKH7
-         hovnof7K9GcE87cKFy+p54Pgdg3Z6yN6EC7QPaddqpl+Ctm9c7/jN8UpG5cPwfUCCIYv
-         l4eA==
-X-Gm-Message-State: APjAAAXMeEpHKkSsCme3RTY8j+illlWR1z9/MgOnFC8TWcpaCb5J9lUR
-        CfT863YF02NMdAMMVJWy17PUKdXPYN1uD2iRniDsIILt
-X-Google-Smtp-Source: APXvYqwPv4BN9QmonBXFEkWlD/VhU4fuL8hHLJ8UwrlbVXmch79Uws0KccS8fO8B/i+cYv9Wj4Xn1YJ0Kro0+Mktymw=
-X-Received: by 2002:a6b:b48e:: with SMTP id d136mr50065897iof.243.1582539460606;
- Mon, 24 Feb 2020 02:17:40 -0800 (PST)
+ d=xilinx.onmicrosoft.com; s=selector2-xilinx-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=zVtFvnRZ9VJpMCxxPhvBAs4hb6GT0QuQsyKC2jmna8w=;
+ b=jmnDs3bOoQ/rSQAI6OCMWMB1Hv6Aha+sLzzVYIuaD+lUPNAQkf6BfgAnlMEvsQLrLy857jzRAOmC/5p1N9DKZNYhIVaAFtip+n8Y224cKKoP0ubRYXmK5a3CuXFTGjl0sG6DVvsszujSYl50p2RfObLWXGhowQUl7MWoQigRCPo=
+Received: from SN4PR0201CA0040.namprd02.prod.outlook.com
+ (2603:10b6:803:2e::26) by CY4PR02MB2824.namprd02.prod.outlook.com
+ (2603:10b6:903:122::22) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2750.21; Mon, 24 Feb
+ 2020 10:17:56 +0000
+Received: from BL2NAM02FT040.eop-nam02.prod.protection.outlook.com
+ (2a01:111:f400:7e46::202) by SN4PR0201CA0040.outlook.office365.com
+ (2603:10b6:803:2e::26) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2750.18 via Frontend
+ Transport; Mon, 24 Feb 2020 10:17:56 +0000
+Authentication-Results: spf=pass (sender IP is 149.199.60.83)
+ smtp.mailfrom=xilinx.com; linaro.org; dkim=none (message not signed)
+ header.d=none;linaro.org; dmarc=bestguesspass action=none
+ header.from=xilinx.com;
+Received-SPF: Pass (protection.outlook.com: domain of xilinx.com designates
+ 149.199.60.83 as permitted sender) receiver=protection.outlook.com;
+ client-ip=149.199.60.83; helo=xsj-pvapsmtpgw01;
+Received: from xsj-pvapsmtpgw01 (149.199.60.83) by
+ BL2NAM02FT040.mail.protection.outlook.com (10.152.77.193) with Microsoft SMTP
+ Server (version=TLS1_0, cipher=TLS_RSA_WITH_AES_256_CBC_SHA) id 15.20.2750.18
+ via Frontend Transport; Mon, 24 Feb 2020 10:17:56 +0000
+Received: from unknown-38-66.xilinx.com ([149.199.38.66] helo=xsj-pvapsmtp01)
+        by xsj-pvapsmtpgw01 with esmtp (Exim 4.63)
+        (envelope-from <michal.simek@xilinx.com>)
+        id 1j6AoF-0004AZ-Ig; Mon, 24 Feb 2020 02:17:55 -0800
+Received: from [127.0.0.1] (helo=localhost)
+        by xsj-pvapsmtp01 with smtp (Exim 4.63)
+        (envelope-from <michal.simek@xilinx.com>)
+        id 1j6AoA-0005uU-Fm; Mon, 24 Feb 2020 02:17:50 -0800
+Received: from xsj-pvapsmtp01 (mailhost.xilinx.com [149.199.38.66])
+        by xsj-smtp-dlp2.xlnx.xilinx.com (8.13.8/8.13.1) with ESMTP id 01OAHffE001598;
+        Mon, 24 Feb 2020 02:17:41 -0800
+Received: from [172.30.17.108]
+        by xsj-pvapsmtp01 with esmtp (Exim 4.63)
+        (envelope-from <michals@xilinx.com>)
+        id 1j6Ao0-0005t5-RW; Mon, 24 Feb 2020 02:17:41 -0800
+Subject: Re: [PATCH 1/2] dt-bindings: mmc: arasan: Document 'xlnx,versal-8.9a'
+ controller
+To:     Manish Narani <manish.narani@xilinx.com>, ulf.hansson@linaro.org,
+        robh+dt@kernel.org, mark.rutland@arm.com, michal.simek@xilinx.com,
+        adrian.hunter@intel.com
+Cc:     linux-mmc@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        git@xilinx.com
+References: <1582115313-115667-1-git-send-email-manish.narani@xilinx.com>
+ <1582115313-115667-2-git-send-email-manish.narani@xilinx.com>
+From:   Michal Simek <michal.simek@xilinx.com>
+Message-ID: <040f8348-7338-446f-8571-481daa281c93@xilinx.com>
+Date:   Mon, 24 Feb 2020 11:17:37 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.1
 MIME-Version: 1.0
-References: <20200216173446.1823-1-linux.amoon@gmail.com> <20200216173446.1823-4-linux.amoon@gmail.com>
- <1jmu9hzlo2.fsf@starbuckisacylon.baylibre.com> <CANAwSgSaQgU=H3h0S9deT11HA8z9R=Fhy5Kawii9tSBxKf2Wgw@mail.gmail.com>
- <CAFBinCCSosE1XfwbKZOR9G+DVYg8zFcKShmTNWUhh1e8W0VoAQ@mail.gmail.com>
- <CANAwSgRZy1K0GZq30cEoH2KiJfjX-5LvkMy79ZeM_aSEyrkD+g@mail.gmail.com> <1jo8togwmi.fsf@starbuckisacylon.baylibre.com>
-In-Reply-To: <1jo8togwmi.fsf@starbuckisacylon.baylibre.com>
-From:   Anand Moon <linux.amoon@gmail.com>
-Date:   Mon, 24 Feb 2020 15:47:29 +0530
-Message-ID: <CANAwSgSKUEJEe_H6XnKmHZNtB549jLau=TY00jzCHAC8zb_7oA@mail.gmail.com>
-Subject: Re: [PATCHv1 3/3] clk: meson: g12a: set cpu clock divider flags too CLK_IS_CRITICAL
-To:     Jerome Brunet <jbrunet@baylibre.com>
-Cc:     Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Neil Armstrong <narmstrong@baylibre.com>,
-        Michael Turquette <mturquette@baylibre.com>,
-        Stephen Boyd <sboyd@kernel.org>,
-        Kevin Hilman <khilman@baylibre.com>,
-        devicetree <devicetree@vger.kernel.org>,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
-        linux-amlogic@lists.infradead.org,
-        Linux Kernel <linux-kernel@vger.kernel.org>,
-        "open list:COMMON CLK FRAMEWORK" <linux-clk@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <1582115313-115667-2-git-send-email-manish.narani@xilinx.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-RCIS-Action: ALLOW
+X-TM-AS-Product-Ver: IMSS-7.1.0.1224-8.2.0.1013-23620.005
+X-TM-AS-User-Approved-Sender: Yes;Yes
+X-EOPAttributedMessage: 0
+X-MS-Office365-Filtering-HT: Tenant
+X-Forefront-Antispam-Report: CIP:149.199.60.83;IPV:;CTRY:US;EFV:NLI;SFV:NSPM;SFS:(10009020)(4636009)(376002)(39860400002)(346002)(396003)(136003)(199004)(189003)(186003)(478600001)(4326008)(26005)(2616005)(36756003)(31686004)(107886003)(426003)(70586007)(70206006)(44832011)(336012)(81166006)(316002)(8936002)(5660300002)(6666004)(9786002)(356004)(81156014)(2906002)(8676002)(31696002)(142933001);DIR:OUT;SFP:1101;SCL:1;SRVR:CY4PR02MB2824;H:xsj-pvapsmtpgw01;FPR:;SPF:Pass;LANG:en;PTR:unknown-60-83.xilinx.com;A:1;MX:1;
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-Correlation-Id: 07fdc851-6839-4768-e714-08d7b912d0fa
+X-MS-TrafficTypeDiagnostic: CY4PR02MB2824:
+X-Microsoft-Antispam-PRVS: <CY4PR02MB282478D3DFD7DEF3F1DA34CCC6EC0@CY4PR02MB2824.namprd02.prod.outlook.com>
+X-Auto-Response-Suppress: DR, RN, NRN, OOF, AutoReply
+X-MS-Oob-TLC-OOBClassifiers: OLM:5797;
+X-Forefront-PRVS: 032334F434
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: DYimMkl99p4Q9eDudgPdLGPM11GvFhjvY6lA/UjfopiOdYo4QWEa3F/WKP/XNF+JNZ5yPyl1sEXzFTICz17ORUpdYUz7fc0+eO8yL2h8IYf6CGsRO15JwgJz3rqJXG1bg9da8iWKsorI1SfjQ9gL1930h9dLU64V8T1bCeuh1huFMFWFjGvI5lvMbgqen5mirea4CoA4kYoUsh58+zaAmttBSxW4dFI2ZqRorH14uysS2pAbko50wcl0ZyFOix9scPM34/p0EzY/I3YdB2u7p5EZdK+kW3hXwcLYgLg1TJuNfbwi+Baij/LgNe4m72mEj2LoLDwUylzpU1z+IZDlrpxIlzCG7/ZnDe2+Sx8YxkYpPoMLLExdNLRaJ0yrHOM9Cl1IcxY/wF3I2LtjBcGipKzQpMDAA5QR7TYQSBIO6VkA4EEpwYeBpmeLebMmU8z5qgy1d30+4ro6SYptyiegByBLjUt5LYNaXfBUsR5ChT0kY9mDc6B73Xh+IDRlM7WZ
+X-OriginatorOrg: xilinx.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 24 Feb 2020 10:17:56.1117
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: 07fdc851-6839-4768-e714-08d7b912d0fa
+X-MS-Exchange-CrossTenant-Id: 657af505-d5df-48d0-8300-c31994686c5c
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=657af505-d5df-48d0-8300-c31994686c5c;Ip=[149.199.60.83];Helo=[xsj-pvapsmtpgw01]
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: CY4PR02MB2824
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi  Jerome,
+On 19. 02. 20 13:28, Manish Narani wrote:
+> Add documentation for 'xlnx,versal-8.9a' SDHCI controller followed by
+> example.
+> 
+> Signed-off-by: Manish Narani <manish.narani@xilinx.com>
+> ---
+>  .../devicetree/bindings/mmc/arasan,sdhci.txt      | 15 +++++++++++++++
+>  1 file changed, 15 insertions(+)
+> 
+> diff --git a/Documentation/devicetree/bindings/mmc/arasan,sdhci.txt b/Documentation/devicetree/bindings/mmc/arasan,sdhci.txt
+> index 428685eb2ded..630fe707f5c4 100644
+> --- a/Documentation/devicetree/bindings/mmc/arasan,sdhci.txt
+> +++ b/Documentation/devicetree/bindings/mmc/arasan,sdhci.txt
+> @@ -18,6 +18,9 @@ Required Properties:
+>      - "xlnx,zynqmp-8.9a": ZynqMP SDHCI 8.9a PHY
+>        For this device it is strongly suggested to include clock-output-names and
+>        #clock-cells.
+> +    - "xlnx,versal-8.9a": Versal SDHCI 8.9a PHY
+> +      For this device it is strongly suggested to include clock-output-names and
+> +      #clock-cells.
+>      - "ti,am654-sdhci-5.1", "arasan,sdhci-5.1": TI AM654 MMC PHY
+>  	Note: This binding has been deprecated and moved to [5].
+>      - "intel,lgm-sdhci-5.1-emmc", "arasan,sdhci-5.1": Intel LGM eMMC PHY
+> @@ -104,6 +107,18 @@ Example:
+>  		clk-phase-sd-hs = <63>, <72>;
+>  	};
+>  
+> +	sdhci: mmc@f1040000 {
+> +		compatible = "xlnx,versal-8.9a", "arasan,sdhci-8.9a";
+> +		interrupt-parent = <&gic>;
+> +		interrupts = <0 126 4>;
+> +		reg = <0x0 0xf1040000 0x0 0x10000>;
+> +		clocks = <&clk200>, <&clk200>;
+> +		clock-names = "clk_xin", "clk_ahb";
+> +		clock-output-names = "clk_out_sd0", "clk_in_sd0";
+> +		#clock-cells = <1>;
+> +		clk-phase-sd-hs = <132>, <60>;
+> +	};
+> +
+>  	emmc: sdhci@ec700000 {
+>  		compatible = "intel,lgm-sdhci-5.1-emmc", "arasan,sdhci-5.1";
+>  		reg = <0xec700000 0x300>;
+> 
 
-On Mon, 24 Feb 2020 at 15:01, Jerome Brunet <jbrunet@baylibre.com> wrote:
->
->
-> On Sun 23 Feb 2020 at 14:34, Anand Moon <linux.amoon@gmail.com> wrote:
->
-> > Hi Martin / Jerome / Neil,
-> >
-> > On Fri, 21 Feb 2020 at 02:45, Martin Blumenstingl
-> > <martin.blumenstingl@googlemail.com> wrote:
-> >>
-> >> Hi Anand,
-> >>
-> >> On Mon, Feb 17, 2020 at 2:30 PM Anand Moon <linux.amoon@gmail.com> wrote:
-> >> [...]
-> >> > > > @@ -681,7 +682,7 @@ static struct clk_regmap g12b_cpub_clk = {
-> >> > > >                       &g12a_sys_pll.hw
-> >> > > >               },
-> >> > > >               .num_parents = 2,
-> >> > > > -             .flags = CLK_SET_RATE_PARENT,
-> >> > > > +             .flags = CLK_SET_RATE_PARENT | CLK_IS_CRITICAL,
-> >> > >
-> >> > > Why not. Neil what do you think of this ?
-> >> > > If nothing is claiming this clock and enabling it then I suppose it
-> >> > > could make sense.
-> >> > >
-> >> > I would like core developers to handle this.
-> >> > Sorry for the noise.
-> >> can you please resend this patch with only the change to g12b_cpub_clk?
-> >> I have no G12B board myself so it would be great if you could take care of this!
-> >>
-> >>
-> >> Martin
-> >
-> > Thanks, yes I will try again, but I have a question.
-> >
-> > On eMMC module  *cpub_clk* is not getting enabled, see below is
-> > clk_summay of eMMC.
->
-> I'm sorry but I don't understand the link between the cpu clock of the
-> second cluster and MMC.
->
-> > [...]
-> >           fclk_div2_div               1        1        0   999999985
-> >         0     0  50000
-> >              fclk_div2                2        2        0   999999985
-> >         0     0  50000
-> >                 ff3f0000.ethernet#m250_sel       1        1        0
-> > 999999985          0     0  50000
-> >                    ff3f0000.ethernet#m250_div       1        1
-> > 0   249999997          0     0  50000
-> >                       ff3f0000.ethernet#fixed_div2       1        1
-> >     0   124999998          0     0  50000
-> >                          ff3f0000.ethernet#rgmii_tx_en       1
-> > 1        0   124999998          0     0  50000
-> >                 ffe07000.mmc#mux       1        1        0   999999985
-> >          0     0  50000
-> >                    ffe07000.mmc#div       1        1        0
-> > 199999997          0     0  50000
-> >                 cpub_clk_dyn1_sel       0        0        0
-> > 999999985          0     0  50000
-> >                    cpub_clk_dyn1       0        0        0   999999985
-> >          0     0  50000
-> >                       cpub_clk_dyn       0        0        0
-> > 999999985          0     0  50000
-> >                          cpub_clk       0        0        0
-> > 999999985          0     0  50000
-> >                             cpub_clk_div8       0        0        0
-> > 124999998          0     0  50000
-> >                             cpub_clk_div7       0        0        0
-> > 142857140          0     0  50000
-> >                             cpub_clk_div6       0        0        0
-> > 166666664          0     0  50000
-> >                                cpub_clk_trace_sel       0        0
-> >    0   166666664          0     0  50000
-> >                                   cpub_clk_trace       0        0
-> >   0   166666664          0     0  50000
-> >                             cpub_clk_div5       0        0        0
-> > 199999997          0     0  50000
-> >                                cpub_clk_apb_sel       0        0
-> >  0   199999997          0     0  50000
-> >                                   cpub_clk_apb       0        0
-> > 0   199999997          0     0  50000
-> >                             cpub_clk_div4       0        0        0
-> > 249999996          0     0  50000
-> >                             cpub_clk_div3       0        0        0
-> > 333333328          0     0  50000
-> >                                cpub_clk_atb_sel       0        0
-> >  0   333333328          0     0  50000
-> >                                   cpub_clk_atb       0        0
-> > 0   333333328          0     0  50000
-> >                             cpub_clk_div2       0        0        0
-> > 499999992          0     0  50000
-> >                                cpub_clk_axi_sel       0        0
-> >  0   499999992          0     0  50000
-> >                                   cpub_clk_axi       0        0
-> > 0   499999992          0     0  50000
-> >                             cpub_clk_div16_en       0        0
-> > 0   999999985          0     0  50000
-> >                                cpub_clk_div16       0        0
-> > 0    62499999          0     0  50000
->
-> I can't read that.
->
-> >
-> > After enable *cpub_clk* flags with
-> > .flags = CLK_SET_RATE_PARENT | CLK_IS_CRITICAL,
-> > this clk is enabled on microSD card see clk_summary below.
->
-> Again, I don't get the relationship between cpub and sdcard (or eMMC)
->
+Acked-by: Michal Simek <michal.simek@xilinx.com>
 
-Yes their is not relation with the cpub and sdcard and eMMC,
-I understood  that cpub_clk is not getting enable which is causing
-the staling at booting using sdcard.
-
-sorry about this logs.
-
-> > [...]
-> >          fclk_div2_div               1        1        0   999999985
-> >        0     0  50000
-> >              fclk_div2                3        3        0   999999985
-> >         0     0  50000
-> >                 ff3f0000.ethernet#m250_sel       1        1        0
-> > 999999985          0     0  50000
-> >                    ff3f0000.ethernet#m250_div       1        1
-> > 0   249999997          0     0  50000
-> >                       ff3f0000.ethernet#fixed_div2       1        1
-> >     0   124999998          0     0  50000
-> >                          ff3f0000.ethernet#rgmii_tx_en       1
-> > 1        0   124999998          0     0  50000
-> >                 ffe05000.sd#mux       1        1        0   999999985
-> >         0     0  50000
-> >                    ffe05000.sd#div       1        1        0
-> > 50000000          0     0  50000
-> >                 cpub_clk_dyn1_sel       1        1        0
-> > 999999985          0     0  50000
-> >                    cpub_clk_dyn1       1        1        0   999999985
-> >          0     0  50000
-> >                       cpub_clk_dyn       1        1        0
-> > 999999985          0     0  50000
-> >                          cpub_clk       1        1        0
-> > 999999985          0     0  50000
-> >                             cpub_clk_div8       0        0        0
-> > 124999998          0     0  50000
-> >                             cpub_clk_div7       0        0        0
-> > 142857140          0     0  50000
-> >                             cpub_clk_div6       0        0        0
-> > 166666664          0     0  50000
-> >                                cpub_clk_trace_sel       0        0
-> >    0   166666664          0     0  50000
-> >                                   cpub_clk_trace       0        0
-> >   0   166666664          0     0  50000
-> >                             cpub_clk_div5       0        0        0
-> > 199999997          0     0  50000
-> >                                cpub_clk_apb_sel       0        0
-> >  0   199999997          0     0  50000
-> >                                   cpub_clk_apb       0        0
-> > 0   199999997          0     0  50000
-> >                             cpub_clk_div4       0        0        0
-> > 249999996          0     0  50000
-> >                             cpub_clk_div3       0        0        0
-> > 333333328          0     0  50000
-> >                                cpub_clk_atb_sel       0        0
-> >  0   333333328          0     0  50000
-> >                                   cpub_clk_atb       0        0
-> > 0   333333328          0     0  50000
-> >                             cpub_clk_div2       0        0        0
-> > 499999992          0     0  50000
-> >                                cpub_clk_axi_sel       0        0
-> >  0   499999992          0     0  50000
-> >                                   cpub_clk_axi       0        0
-> > 0   499999992          0     0  50000
-> >                             cpub_clk_div16_en       0        0
-> > 0   999999985          0     0  50000
-> >                                cpub_clk_div16       0        0
-> > 0    62499999          0     0  50000
-> >                    cpub_clk_dyn1_div       0        0        0
-> > 999999985          0     0  50000
-> >
-> > Is this correct approach to set the flags to enable *cpub_clk*.
-> > .flags = CLK_SET_RATE_PARENT | CLK_IS_CRITICAL,
-> >
-> > What I meant is their *Dyn_enable[26]* field for enable/disable for
-> > HHI_SYS_CPU_CLK_CNTL0 and HHI_SYS_CPUB_CLK_CNTL clk controller.
-> > in the S922X datasheets which could help resolve this issue.
-> > Any thought on this.
->
-> I sorry but I'm just lost. I don't understand anything above so I can't
-> comment.
-
-I am not able to express my self clearly,
-I will try to submit the patch by enable cpub_clk with following flags.
-
- .flags = CLK_SET_RATE_PARENT | CLK_IS_CRITICAL,
-
--Anand
+Thanks,
+Michal
