@@ -2,266 +2,154 @@ Return-Path: <SRS0=7TUr=4M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MSGID_FROM_MTA_HEADER,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6119CC11D2F
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 10:25:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DC9B3C11D30
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 10:26:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2BC5620828
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 10:25:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AB03720828
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 10:26:59 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Z3WB2W3b"
+	dkim=pass (2048-bit key) header.d=marvell.com header.i=@marvell.com header.b="u+9JZhJN";
+	dkim=pass (1024-bit key) header.d=marvell.onmicrosoft.com header.i=@marvell.onmicrosoft.com header.b="OGCdSJgT"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727252AbgBXKZI (ORCPT
+        id S1727295AbgBXK06 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Feb 2020 05:25:08 -0500
-Received: from us-smtp-2.mimecast.com ([205.139.110.61]:53283 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726687AbgBXKZH (ORCPT
+        Mon, 24 Feb 2020 05:26:58 -0500
+Received: from mx0b-0016f401.pphosted.com ([67.231.156.173]:64244 "EHLO
+        mx0b-0016f401.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726509AbgBXK06 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Feb 2020 05:25:07 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1582539905;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=gy+vhmoT6JM3Yv4RVEvhda7Thq8Oh3Z0jshMS0ARWMg=;
-        b=Z3WB2W3buQrh528MIAYislH4RE/kofCs1hllZJDEzKazP9jCvC3oYXTYeWfsHqup0egjOP
-        Swam3ZftxYF+yH0rOq6z6Z05DJoBM7ZH3Fsz3qtK25RN2srvgNf+nlu6kHxWivsr3nQSxy
-        P/MzSHxEQ0Vt24XvJd7Q+GDglDaC0kQ=
-Received: from mail-qt1-f197.google.com (mail-qt1-f197.google.com
- [209.85.160.197]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-106-nn0zouffOeOryH3IhmmX_Q-1; Mon, 24 Feb 2020 05:25:03 -0500
-X-MC-Unique: nn0zouffOeOryH3IhmmX_Q-1
-Received: by mail-qt1-f197.google.com with SMTP id m8so10141796qta.20
-        for <linux-kernel@vger.kernel.org>; Mon, 24 Feb 2020 02:25:03 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=gy+vhmoT6JM3Yv4RVEvhda7Thq8Oh3Z0jshMS0ARWMg=;
-        b=UZ/pmtTUhvTfgy5GPY3fDJA+ZJPtBwul/3AhTnOQt4g9gjZdeJ5rvT2KE/ChYNNeN8
-         PbtTQt6Y190GDJMZdv8couulZMwPHQIfrtJkKsM8DToWEzB2vy6LHw1LDmqHrnK/MzAl
-         zkzuSGlOhmIn/EhPQsJIHvMuNLrakP2DCs1J+zY3R2r1zANr4wq+kbA3ee483+w97pGr
-         LeCvgD3e8Y1Emhumx1vGG5zPXqx+E1jH0YIDD/x62wS4QWaGHbxGaY/MUhBlo99UaKa/
-         r5r62pm/AdXh8tDiaMvJ+I4x4yCvJ3EYsTmiZuA75avon1KMVnxoIQP6ZufEw4n2NgFz
-         +NZg==
-X-Gm-Message-State: APjAAAUs92z7evGQnpdFgp4oiwhyLuyDgBTS19N3G6qpsCh47FiSqxsw
-        GK/H9eHJ4g6N8kf+r+0CV1i54vw7AAb7gtC/+41CctgE1pY7tfbqqRYwbu75jwPhPgJ5lxp8PZ9
-        vnENhN/pfFrvY7NFQkfcL/YsLYbwGMWvlI9TwUcqU
-X-Received: by 2002:a37:a881:: with SMTP id r123mr14184704qke.199.1582539902831;
-        Mon, 24 Feb 2020 02:25:02 -0800 (PST)
-X-Google-Smtp-Source: APXvYqztFT5Zfqx4XMsPU01nDc9vsIiEe1j5CK26LdX74+ps7d85rr9U4y9yqiVVjcliDp+alv+x51zsiwVwJlJsaVY=
-X-Received: by 2002:a37:a881:: with SMTP id r123mr14184671qke.199.1582539902450;
- Mon, 24 Feb 2020 02:25:02 -0800 (PST)
+        Mon, 24 Feb 2020 05:26:58 -0500
+Received: from pps.filterd (m0045851.ppops.net [127.0.0.1])
+        by mx0b-0016f401.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 01OAPHMM024077;
+        Mon, 24 Feb 2020 02:26:42 -0800
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=marvell.com; h=date : from : to :
+ cc : subject : message-id : references : content-type : in-reply-to :
+ mime-version; s=pfpt0818; bh=rwyTeoFkSkKpb+yKNfh1/RiEe4+6DwPvTwU2MpxR9iA=;
+ b=u+9JZhJN+h4Q8xgh0Ppcfz8wMk9awqIykm52eS39pUjdM6OGLuJZRlLwCp4OfVVOjU9y
+ TTC8XME3VuQscWYumkRAx7GFuD2LmHRFV+Tv+BW2ZZMwQJeWm0U0m8oFwPVFg2NiV837
+ iWtHMRhKUzS6gzvHCwURUbn2eGLBXIIR87znz9qPe1l/CxpHOfW/f+tn8jGpHX0I1UL8
+ LHmf1Y6Impqjhiq+i424a9YzJHdq8k6dbN0FIQIEso0KtEnaBPDEzg/AZ7l4w+BGmsRW
+ tMlujdJre/cDHFLfY9pOPGX6mUnXonwvEbuj7PRpVipTmhTIP4LtOfsRuo3RGebj22zu JA== 
+Received: from sc-exch02.marvell.com ([199.233.58.182])
+        by mx0b-0016f401.pphosted.com with ESMTP id 2yb4pt5sdu-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-SHA384 bits=256 verify=NOT);
+        Mon, 24 Feb 2020 02:26:42 -0800
+Received: from SC-EXCH02.marvell.com (10.93.176.82) by SC-EXCH02.marvell.com
+ (10.93.176.82) with Microsoft SMTP Server (TLS) id 15.0.1497.2; Mon, 24 Feb
+ 2020 02:26:40 -0800
+Received: from NAM04-BN3-obe.outbound.protection.outlook.com (104.47.46.50) by
+ SC-EXCH02.marvell.com (10.93.176.82) with Microsoft SMTP Server (TLS) id
+ 15.0.1497.2 via Frontend Transport; Mon, 24 Feb 2020 02:26:40 -0800
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=MKZmgrzdKKDrSo+oMtMJD37rVixhcpcL1XGpBjIVa8oo5XYnmeED6FvoujDTfPrxwRBCCs7mm8dbDfw2k+6mfbTEOk51OdElmYf7TMRYiQln7SslycrOsv19/N22tnFYv736WWEyyjidLYG1D39Q7BgRil2VuqA3+YuoPoLMJxxFIcQsYZdw2UX7GQOado4oiYv7q9fJNu7lqrQVUNGDLdHy/yrenwE8w8hPIv4e08UFXiCU4pWHiFlF0fQiw8k8y2v9aXWc6s8k6zeXmBs4Bzn/TzW5tCY1cYXjyAH73tbfk+cRiq6PmWmOacB6AEbX5FjwFJeX0pIRg5GXPwMhdg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=rwyTeoFkSkKpb+yKNfh1/RiEe4+6DwPvTwU2MpxR9iA=;
+ b=G4f+8gorMmb54ftcgD/SpHYaa0ygGrae5HQRZpX1ete94mSywwL00Z0v1Oocki8bDXkKVJuZRBrKsPY/+VQx/D7BLxrvekVKmtyTLGfoeg3c1Xou4S3R/YKRUfx1HgMhECfFwvJXBDXBZqPq3hrb0cBbn+tOxqkzIGqxaAhuF1ChdKcZK0DmJDql+Pl71AbVeaebBa3L8t25UM9IDk/y0G3blmHcrKu0SAD8F3aB8w8Alz7FnHVsmJnQo96bDtxmdAdEPF1EPaY1aLUmoxNymyYlrC8rpP1gdrq2NiXlkynkXhBI6vXFN5HNCb+oLIIp4p+wcPSpy5aylQmWHa6xQw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=marvell.com; dmarc=pass action=none header.from=marvell.com;
+ dkim=pass header.d=marvell.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=marvell.onmicrosoft.com; s=selector1-marvell-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=rwyTeoFkSkKpb+yKNfh1/RiEe4+6DwPvTwU2MpxR9iA=;
+ b=OGCdSJgTt1xBjNlJutWKR24ZBTW4VhT5ULs9vaQybDwiXhiy48gN7+RKlsRw3FSFYv9bbVfJdlxHovWBQBS8uJyw4aubKcsGmWP75sF6Q3K/Mia2v0HRV+jgSQXrEZjGpMjFrzLWxpyl691bpp7dJ8glySMRo6i+R/xANF1wBWQ=
+Received: from MN2PR18MB3408.namprd18.prod.outlook.com (2603:10b6:208:165::10)
+ by MN2PR18MB3248.namprd18.prod.outlook.com (2603:10b6:208:16c::10) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2750.21; Mon, 24 Feb
+ 2020 10:26:39 +0000
+Received: from MN2PR18MB3408.namprd18.prod.outlook.com
+ ([fe80::30c4:52fe:fdf8:faff]) by MN2PR18MB3408.namprd18.prod.outlook.com
+ ([fe80::30c4:52fe:fdf8:faff%7]) with mapi id 15.20.2750.021; Mon, 24 Feb 2020
+ 10:26:39 +0000
+Date:   Mon, 24 Feb 2020 11:26:31 +0100
+From:   Robert Richter <rrichter@marvell.com>
+To:     Lukas Bulwahn <lukas.bulwahn@gmail.com>
+CC:     Rob Herring <robh+dt@kernel.org>, Will Deacon <will@kernel.org>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Andrew Murray <andrew.murray@arm.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        <linux-pci@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <devicetree@vger.kernel.org>, Joe Perches <joe@perches.com>,
+        <kernel-janitors@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] MAINTAINERS: clean up PCIE DRIVER FOR CAVIUM THUNDERX
+Message-ID: <20200224102631.c5yluo6u5ipghyz4@rric.localdomain>
+References: <20200223090950.5259-1-lukas.bulwahn@gmail.com>
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200223090950.5259-1-lukas.bulwahn@gmail.com>
+User-Agent: NeoMutt/20170113 (1.7.2)
+X-ClientProxiedBy: HE1PR0902CA0016.eurprd09.prod.outlook.com
+ (2603:10a6:3:e5::26) To MN2PR18MB3408.namprd18.prod.outlook.com
+ (2603:10b6:208:165::10)
 MIME-Version: 1.0
-References: <158230810644.2185128.16726948836367716086.stgit@warthog.procyon.org.uk>
- <1582316494.3376.45.camel@HansenPartnership.com>
-In-Reply-To: <1582316494.3376.45.camel@HansenPartnership.com>
-From:   Miklos Szeredi <mszeredi@redhat.com>
-Date:   Mon, 24 Feb 2020 11:24:51 +0100
-Message-ID: <CAOssrKehjnTwbc6A1VagM5hG_32hy3mXZenx_PdGgcUGxYOaLQ@mail.gmail.com>
-Subject: Re: [PATCH 00/17] VFS: Filesystem information and notifications [ver #17]
-To:     James Bottomley <James.Bottomley@hansenpartnership.com>
-Cc:     David Howells <dhowells@redhat.com>,
-        viro <viro@zeniv.linux.org.uk>, Ian Kent <raven@themaw.net>,
-        christian@brauner.io, Jann Horn <jannh@google.com>,
-        darrick.wong@oracle.com, Linux API <linux-api@vger.kernel.org>,
-        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
-        lkml <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+X-MS-Exchange-MessageSentRepresentingType: 1
+Received: from rric.localdomain (31.208.96.227) by HE1PR0902CA0016.eurprd09.prod.outlook.com (2603:10a6:3:e5::26) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2750.18 via Frontend Transport; Mon, 24 Feb 2020 10:26:36 +0000
+X-Originating-IP: [31.208.96.227]
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-Correlation-Id: cbc2b49a-9060-40e0-740b-08d7b9140850
+X-MS-TrafficTypeDiagnostic: MN2PR18MB3248:
+X-Microsoft-Antispam-PRVS: <MN2PR18MB3248FD63358A92416E31E6CAD9EC0@MN2PR18MB3248.namprd18.prod.outlook.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:6790;
+X-Forefront-PRVS: 032334F434
+X-Forefront-Antispam-Report: SFV:NSPM;SFS:(10009020)(4636009)(346002)(39860400002)(376002)(396003)(366004)(136003)(199004)(189003)(4744005)(53546011)(6506007)(86362001)(54906003)(8936002)(6666004)(478600001)(81156014)(4326008)(6916009)(8676002)(7416002)(81166006)(16526019)(52116002)(7696005)(66476007)(26005)(186003)(5660300002)(66556008)(1076003)(956004)(316002)(55016002)(9686003)(66946007)(2906002);DIR:OUT;SFP:1101;SCL:1;SRVR:MN2PR18MB3248;H:MN2PR18MB3408.namprd18.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+Received-SPF: None (protection.outlook.com: marvell.com does not designate
+ permitted sender hosts)
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: WcbjnANNbe0y6EasU91hh4AToRZy1Kr4obBDFIFtjC5fgqSJ0DliaEsA4jfoBbkuywXgagXshvcx0Ra5jPlpbwAIK82KBBYvv8h9JHnlmJSkqxmi/s7Lxs+QI0ZS1kOmwoO1cgbMTJ7lATgaZvKZEU2ygOdMYVjiW05iaWli6p2dX/Y96Tse6trWbyaeVAKiysThasjEtLQEoc/uLA1+KCIuyX9Szk7qhQA+kmFOCjx6dvgLNO96z2aLHohsDKXbDebRbm0vendvxyv7K+L4e3WZxqk2osAKwsVfeTTIKCfLux5oBg0vO4Cvx+Tbt08YANBSwrVrATyUD5j926RSC56GOPEzPtiyybTZoSPgDlHoIq+N1IGRNNlB1F+KeocXm84l9VZfe9AvLDLX8G+ovVL5p2MhwLwwIC0ssuwTbGKdgAzCTBLFEjd+aiR7FHTs
+X-MS-Exchange-AntiSpam-MessageData: ENropoDvTVnM2vdcYAZvvhbbRvlGYTptLW8l2VhabOEdyyHmejlcWEV7RrMlRjepzJDNnO5EJpxOUu6zxJkkECmAZ7AHiRy95pYTasMAjNt3kxQRPH54DmqsJKUajTrEVRXm11xjCrqM7M7cyd331A==
+X-MS-Exchange-CrossTenant-Network-Message-Id: cbc2b49a-9060-40e0-740b-08d7b9140850
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 24 Feb 2020 10:26:38.8498
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 70e1fb47-1155-421d-87fc-2e58f638b6e0
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: 6Ha3TaM+RftgQJenvcs4eFrBVsK0SJulT4trcZSzEepBA4KslhOueJ6z3ni0W824/CC//r416bhdoTE+x8XaXQ==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: MN2PR18MB3248
+X-OriginatorOrg: marvell.com
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.572
+ definitions=2020-02-24_02:2020-02-21,2020-02-24 signatures=0
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Feb 21, 2020 at 9:21 PM James Bottomley
-<James.Bottomley@hansenpartnership.com> wrote:
->
-> On Fri, 2020-02-21 at 18:01 +0000, David Howells wrote:
-> [...]
-> > ============================
-> > FILESYSTEM INFORMATION QUERY
-> > ============================
-> >
-> > The fsinfo() system call allows information about the filesystem at a
-> > particular path point to be queried as a set of attributes, some of
-> > which may have more than one value.
-> >
-> > Attribute values are of four basic types:
-> >
-> >  (1) Version dependent-length structure (size defined by type).
-> >
-> >  (2) Variable-length string (up to 4096, including NUL).
-> >
-> >  (3) List of structures (up to INT_MAX size).
-> >
-> >  (4) Opaque blob (up to INT_MAX size).
-> >
-> > Attributes can have multiple values either as a sequence of values or
-> > a sequence-of-sequences of values and all the values of a particular
-> > attribute must be of the same type.
-> >
-> > Note that the values of an attribute *are* allowed to vary between
-> > dentries within a single superblock, depending on the specific dentry
-> > that you're looking at, but all the values of an attribute have to be
-> > of the same type.
-> >
-> > I've tried to make the interface as light as possible, so
-> > integer/enum attribute selector rather than string and the core does
-> > all the allocation and extensibility support work rather than leaving
-> > that to the filesystems. That means that for the first two attribute
-> > types, the filesystem will always see a sufficiently-sized buffer
-> > allocated.  Further, this removes the possibility of the filesystem
-> > gaining access to the userspace buffer.
-> >
-> >
-> > fsinfo() allows a variety of information to be retrieved about a
-> > filesystem and the mount topology:
-> >
-> >  (1) General superblock attributes:
-> >
-> >      - Filesystem identifiers (UUID, volume label, device numbers,
-> > ...)
-> >      - The limits on a filesystem's capabilities
-> >      - Information on supported statx fields and attributes and IOC
-> > flags.
-> >      - A variety single-bit flags indicating supported capabilities.
-> >      - Timestamp resolution and range.
-> >      - The amount of space/free space in a filesystem (as statfs()).
-> >      - Superblock notification counter.
-> >
-> >  (2) Filesystem-specific superblock attributes:
-> >
-> >      - Superblock-level timestamps.
-> >      - Cell name.
-> >      - Server names and addresses.
-> >      - Filesystem-specific information.
-> >
-> >  (3) VFS information:
-> >
-> >      - Mount topology information.
-> >      - Mount attributes.
-> >      - Mount notification counter.
-> >
-> >  (4) Information about what the fsinfo() syscall itself supports,
-> > including
-> >      the type and struct/element size of attributes.
-> >
-> > The system is extensible:
-> >
-> >  (1) New attributes can be added.  There is no requirement that a
-> >      filesystem implement every attribute.  Note that the core VFS
-> > keeps a
-> >      table of types and sizes so it can handle future extensibility
-> > rather
-> >      than delegating this to the filesystems.
-> >
-> >  (2) Version length-dependent structure attributes can be made larger
-> > and
-> >      have additional information tacked on the end, provided it keeps
-> > the
-> >      layout of the existing fields.  If an older process asks for a
-> > shorter
-> >      structure, it will only be given the bits it asks for.  If a
-> > newer
-> >      process asks for a longer structure on an older kernel, the
-> > extra
-> >      space will be set to 0.  In all cases, the size of the data
-> > actually
-> >      available is returned.
-> >
-> >      In essence, the size of a structure is that structure's version:
-> > a
-> >      smaller size is an earlier version and a later version includes
-> >      everything that the earlier version did.
-> >
-> >  (3) New single-bit capability flags can be added.  This is a
-> > structure-typed
-> >      attribute and, as such, (2) applies.  Any bits you wanted but
-> > the kernel
-> >      doesn't support are automatically set to 0.
-> >
-> > fsinfo() may be called like the following, for example:
-> >
-> >       struct fsinfo_params params = {
-> >               .at_flags       = AT_SYMLINK_NOFOLLOW,
-> >               .flags          = FSINFO_FLAGS_QUERY_PATH,
-> >               .request        = FSINFO_ATTR_AFS_SERVER_ADDRESSES,
-> >               .Nth            = 2,
-> >       };
-> >       struct fsinfo_server_address address;
-> >       len = fsinfo(AT_FDCWD, "/afs/grand.central.org/doc", &params,
-> >                    &address, sizeof(address));
-> >
-> > The above example would query an AFS filesystem to retrieve the
-> > address
-> > list for the 3rd server, and:
-> >
-> >       struct fsinfo_params params = {
-> >               .at_flags       = AT_SYMLINK_NOFOLLOW,
-> >               .flags          = FSINFO_FLAGS_QUERY_PATH,
-> >               .request        = FSINFO_ATTR_AFS_CELL_NAME;
-> >       };
-> >       char cell_name[256];
-> >       len = fsinfo(AT_FDCWD, "/afs/grand.central.org/doc", &params,
-> >                    &cell_name, sizeof(cell_name));
-> >
-> > would retrieve the name of an AFS cell as a string.
-> >
-> > In future, I want to make fsinfo() capable of querying a context
-> > created by
-> > fsopen() or fspick(), e.g.:
-> >
-> >       fd = fsopen("ext4", 0);
-> >       struct fsinfo_params params = {
-> >               .flags          = FSINFO_FLAGS_QUERY_FSCONTEXT,
-> >               .request        = FSINFO_ATTR_PARAMETERS;
-> >       };
-> >       char buffer[65536];
-> >       fsinfo(fd, NULL, &params, &buffer, sizeof(buffer));
-> >
-> > even if that context doesn't currently have a superblock attached.  I
-> > would prefer this to contain length-prefixed strings so that there's
-> > no need to insert escaping, especially as any character, including
-> > '\', can be used as the separator in cifs and so that binary
-> > parameters can be returned (though that is a lesser issue).
->
-> Could I make a suggestion about how this should be done in a way that
-> doesn't actually require the fsinfo syscall at all: it could just be
-> done with fsconfig.  The idea is based on something I've wanted to do
-> for configfd but couldn't because otherwise it wouldn't substitute for
-> fsconfig, but Christian made me think it was actually essential to the
-> ability of the seccomp and other verifier tools in the critique of
-> configfd and I belive the same critique applies here.
->
-> Instead of making fsconfig functionally configure ... as in you pass
-> the attribute name, type and parameters down into the fs specific
-> handler and the handler does a string match and then verifies the
-> parameters and then acts on them, make it table configured, so what
-> each fstype does is register a table of attributes which can be got and
-> optionally set (with each attribute having a get and optional set
-> function).  We'd have multiple tables per fstype, so the generic VFS
-> can register a table of attributes it understands for every fstype
-> (things like name, uuid and the like) and then each fs type would
-> register a table of fs specific attributes following the same pattern.
-> The system would examine the fs specific table before the generic one,
-> allowing overrides.  fsconfig would have the ability to both get and
-> set attributes, permitting retrieval as well as setting (which is how I
-> get rid of the fsinfo syscall), we'd have a global parameter, which
-> would retrieve the entire table by name and type so the whole thing is
-> introspectable because the upper layer knows a-priori all the
-> attributes which can be set for a given fs type and what type they are
-> (so we can make more of the parsing generic).  Any attribute which
-> doesn't have a set routine would be read only and all attributes would
-> have to have a get routine meaning everything is queryable.
+Hi Lukas,
 
-And that makes me wonder: would a
-"/sys/class/fs/$ST_DEV/options/$OPTION" type interface be feasible for
-this?
+On 23.02.20 10:09:50, Lukas Bulwahn wrote:
+> Commit e1ac611f57c9 ("dt-bindings: PCI: Convert generic host binding to
+> DT schema") combines all information from pci-thunder-{pem,ecam}.txt
+> into host-generic-pci.yaml, and deleted the two files in
+> Documentation/devicetree/bindings/pci/.
+> 
+> Since then, ./scripts/get_maintainer.pl --self-test complains:
+> 
+>   no file matches F: Documentation/devicetree/bindings/pci/pci-thunder-*
+> 
+> As the PCIE DRIVER FOR CAVIUM THUNDERX-relevant information is only a
+> small part of the host-generic-pci.yaml, do not add this file to the
+> PCIE DRIVER FOR CAVIUM THUNDERX entry, and only drop the reference to
+> the removed files.
+> 
+> Signed-off-by: Lukas Bulwahn <lukas.bulwahn@gmail.com>
+
+Acked-by: Robert Richter <rrichter@marvell.com>
+
+> ---
+> Robert, are you still the maintainer of this driver?
+
+Sure. I inherited the driver a couple of months ago from David who is
+no longer at Cavium/ Marvell.
 
 Thanks,
-Miklos
 
+-Robert
