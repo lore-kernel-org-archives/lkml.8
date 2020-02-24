@@ -5,58 +5,58 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 90C80C38BF9
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 22:43:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A905FC38C00
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 22:43:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 62B782176D
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 22:43:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7E0E82176D
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 22:43:29 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="l0bwjGD5"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="VTWpPhMP"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728526AbgBXWnY (ORCPT
+        id S1728357AbgBXWmr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Feb 2020 17:43:24 -0500
-Received: from mail-lf1-f65.google.com ([209.85.167.65]:46813 "EHLO
-        mail-lf1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728347AbgBXWms (ORCPT
+        Mon, 24 Feb 2020 17:42:47 -0500
+Received: from mail-lf1-f68.google.com ([209.85.167.68]:34026 "EHLO
+        mail-lf1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728286AbgBXWml (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Feb 2020 17:42:48 -0500
-Received: by mail-lf1-f65.google.com with SMTP id u2so5355700lfk.13;
-        Mon, 24 Feb 2020 14:42:46 -0800 (PST)
+        Mon, 24 Feb 2020 17:42:41 -0500
+Received: by mail-lf1-f68.google.com with SMTP id l18so8090450lfc.1;
+        Mon, 24 Feb 2020 14:42:40 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=cRfDY6o3JLtgU0E8AhwXsc4tadD+Z274NBI7QDEmKc0=;
-        b=l0bwjGD5lP1/kKdENiUvJpnEe46PGmODo54ldG8Nn/hn5AqZ0QZsaFHVGdFuw0W3ga
-         dYKPi0HoCKLSZp8D37kDa+TeuSAWjMhrLSiQ8nhJ7NEIzdE/2PIcKou04mnPE18MYrTk
-         iVUNcWGLpVcRaatDmYiWRW3oK8DPn/AYbH52fPAQtmShrgCfXoxlsUWXgGTbSybtG65y
-         fnFkmOAsTv6uQ/mB317SKgrFKSqvnt7d3zwJv47YyU2eTp4u79coppYiagOZmoS9JJyp
-         8Yv6lB+Yo30rKD8UrZrjsGZqlwFN+QJoyyKSrIHjovh3GNnzW86SMRHvSKeYomOtEtCT
-         KLnw==
+        bh=yZz7QgsxQ4uyx68/8153bWEF0AWiZKqVTKgRumgoQuo=;
+        b=VTWpPhMPY/gx2kYMEUN0bcpzny+WbY64scqPHNOglRbpaEes0HkOBMGJrhNnDkvdsT
+         ros54ymnoKNq89puC32FdFFJo21jCQxkK//dpNkclWvl0wXfbyLw25slQfbTeJSoP6/a
+         RNueTam9dBZQrxa9ZM7l+bYSmEDNnS8eN7V1DWyU7u4b3IJnQv4uNrmi7Nk5cayz9/og
+         xZ3bLWjvijbK+FKRgtrk5bSokdklCmSn4v1LtESJNmAiCAN5KTlxLHp5ivFPXRDcUdtZ
+         6E2xvc7vTUP+DtFMq8PQSIQ5HW2TKYnhtopuxiYU+QeTNWILYRx4tumn5ygLamEPeUra
+         jCXQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=cRfDY6o3JLtgU0E8AhwXsc4tadD+Z274NBI7QDEmKc0=;
-        b=fK7PGnK4hernRuVGq57/wgv/N+y12kLRqcuoUw6T7Q9XyF2grLwXvESHfMY/MSKbLo
-         hAAUv2oY3ZD1hjXTSRqRpCL9GtwJB5lJ3dDyImPJWhnn6xVRhvmvYxn2kk52F4bPj5Ds
-         VO8cS407SB4i7lF5drl7/sdrbmtm5KHuoze7Kuj8dzDIHGUvv7ukjNYi4JfsSb9tPiLi
-         MX04GdHeJ9a79499wHQ1ClWQBd3iBBr0KRuc3ky6MYy4/olMwhiegnInZ6QdwXATOYx5
-         r1D64HpAlv2GUdXiFxejiLSTpVU4SekJRayNROY72yhnbwcfzag3k2FjKJyd0vj426r+
-         YlrQ==
-X-Gm-Message-State: APjAAAW+ZymS4FCmYXHI3G66x1anwd7bAFLgRo0w2YUl7v1CULeRGu4W
-        Utg4nqB2vzEMC3TLPfGYQPA=
-X-Google-Smtp-Source: APXvYqyiEo42FEGINsJwrlFM47li49pvziubmyXDSxiDbXkU50bgs4t6+l4qei0sFjfyNOhLuJoPrA==
-X-Received: by 2002:ac2:53b3:: with SMTP id j19mr15273156lfh.127.1582584165819;
-        Mon, 24 Feb 2020 14:42:45 -0800 (PST)
+        bh=yZz7QgsxQ4uyx68/8153bWEF0AWiZKqVTKgRumgoQuo=;
+        b=k1bKTJo3q/zeI95eHNCAPOeYQ8ZXAxEGUev2A4hRP6k/KlgTUiNiKo6hy0/cdGQipT
+         AgI+Mg8ErMAAP6+Se4/mLg9Jhzdlh1QghxPSnkDx0SlmgTTbYAuCVEYk5BFr2hoMrArC
+         GAyAfFUFoORhDtUNx14hBx3tpwXHOrfnvRZPwZO9CBT4i4p4BpVO75ORSPyKvARpb7K9
+         9L81U3SsYLs1C6m17XJJeQneKYqJi+VLmmzd6ZT0HYDPjD/eRGxTfVyH24BLoLMU1wGB
+         OZbn7YOf0qpTRl0eIGS0NO8R+l4af+cehAnAacCAXh0gd2Vdz/lq3Jc3BN8iC96U8Hv5
+         7nFA==
+X-Gm-Message-State: APjAAAVZQupqfDZ9vh6rKFVMJHJggubrSLw7V0sRUqrtEv2RZVhKg1wC
+        hdZxofyaEJFAfuXGvVLRsQu5epzJ
+X-Google-Smtp-Source: APXvYqzCvMTAV5yJ1CoyECAEZ/p0qK9Jx4VB6LK1pFm/2xFPOOUyURrRfdJT7UJqZNPdEoVeuuoWQQ==
+X-Received: by 2002:a19:6a03:: with SMTP id u3mr3412917lfu.159.1582584159438;
+        Mon, 24 Feb 2020 14:42:39 -0800 (PST)
 Received: from localhost.localdomain (79-139-233-37.dynamic.spd-mgts.ru. [79.139.233.37])
-        by smtp.gmail.com with ESMTPSA id j7sm6264833lfh.25.2020.02.24.14.42.44
+        by smtp.gmail.com with ESMTPSA id j7sm6264833lfh.25.2020.02.24.14.42.38
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 24 Feb 2020 14:42:45 -0800 (PST)
+        Mon, 24 Feb 2020 14:42:38 -0800 (PST)
 From:   Dmitry Osipenko <digetx@gmail.com>
 To:     Thierry Reding <thierry.reding@gmail.com>,
         Jonathan Hunter <jonathanh@nvidia.com>,
@@ -70,9 +70,9 @@ To:     Thierry Reding <thierry.reding@gmail.com>,
         Nicolas Chauvet <kwizart@gmail.com>
 Cc:     linux-pm@vger.kernel.org, linux-tegra@vger.kernel.org,
         linux-kernel@vger.kernel.org
-Subject: [PATCH v11 11/17] arm: tegra20/30: cpuidle: Remove unnecessary memory barrier
-Date:   Tue, 25 Feb 2020 01:40:51 +0300
-Message-Id: <20200224224057.21877-12-digetx@gmail.com>
+Subject: [PATCH v11 05/17] ARM: tegra: Propagate error from tegra_idle_lp2_last()
+Date:   Tue, 25 Feb 2020 01:40:45 +0300
+Message-Id: <20200224224057.21877-6-digetx@gmail.com>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20200224224057.21877-1-digetx@gmail.com>
 References: <20200224224057.21877-1-digetx@gmail.com>
@@ -83,9 +83,9 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-There is no good justification for smp_rmb() after returning from LP2
-because there are no memory operations that require SMP synchronization.
-Thus remove the confusing barrier.
+Technically cpu_suspend() may fail and it's never good to lose information
+about failure. For example things like cpuidle core could correctly sample
+idling time in the case of failure.
 
 Acked-by: Peter De Schrijver <pdeschrijver@nvidia.com>
 Tested-by: Peter Geis <pgwipeout@gmail.com>
@@ -95,36 +95,96 @@ Tested-by: Nicolas Chauvet <kwizart@gmail.com>
 Acked-by: Daniel Lezcano <daniel.lezcano@linaro.org>
 Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
 ---
- arch/arm/mach-tegra/cpuidle-tegra20.c | 2 --
- arch/arm/mach-tegra/cpuidle-tegra30.c | 2 --
- 2 files changed, 4 deletions(-)
+ arch/arm/mach-tegra/cpuidle-tegra20.c | 6 ++++--
+ arch/arm/mach-tegra/cpuidle-tegra30.c | 4 +---
+ arch/arm/mach-tegra/pm.c              | 8 ++++++--
+ arch/arm/mach-tegra/pm.h              | 2 +-
+ 4 files changed, 12 insertions(+), 8 deletions(-)
 
 diff --git a/arch/arm/mach-tegra/cpuidle-tegra20.c b/arch/arm/mach-tegra/cpuidle-tegra20.c
-index 8cdffdf7acd7..6db380515a6a 100644
+index 78c20025dcfe..b3087ece9421 100644
 --- a/arch/arm/mach-tegra/cpuidle-tegra20.c
 +++ b/arch/arm/mach-tegra/cpuidle-tegra20.c
-@@ -197,8 +197,6 @@ static int tegra20_idle_lp2_coupled(struct cpuidle_device *dev,
+@@ -86,15 +86,17 @@ static bool tegra20_cpu_cluster_power_down(struct cpuidle_device *dev,
+ 					   struct cpuidle_driver *drv,
+ 					   int index)
+ {
++	bool ret;
++
+ 	while (!tegra_cpu_rail_off_ready())
+ 		cpu_relax();
  
- 	local_fiq_enable();
+-	tegra_idle_lp2_last();
++	ret = !tegra_idle_lp2_last();
  
--	smp_rmb();
--
- 	return entered_lp2 ? index : 0;
+ 	if (cpu_online(1))
+ 		tegra20_wake_cpu1_from_reset();
+ 
+-	return true;
++	return ret;
  }
- #endif
+ 
+ #ifdef CONFIG_SMP
 diff --git a/arch/arm/mach-tegra/cpuidle-tegra30.c b/arch/arm/mach-tegra/cpuidle-tegra30.c
-index a4f0add46a27..80ae64bcdf50 100644
+index a3ce8dabfe18..17cbd118abee 100644
 --- a/arch/arm/mach-tegra/cpuidle-tegra30.c
 +++ b/arch/arm/mach-tegra/cpuidle-tegra30.c
-@@ -113,8 +113,6 @@ static int tegra30_idle_lp2(struct cpuidle_device *dev,
+@@ -68,9 +68,7 @@ static bool tegra30_cpu_cluster_power_down(struct cpuidle_device *dev,
+ 		return false;
+ 	}
  
- 	local_fiq_enable();
- 
--	smp_rmb();
+-	tegra_idle_lp2_last();
 -
- 	return (entered_lp2) ? index : 0;
+-	return true;
++	return !tegra_idle_lp2_last();
  }
- #endif
+ 
+ #ifdef CONFIG_SMP
+diff --git a/arch/arm/mach-tegra/pm.c b/arch/arm/mach-tegra/pm.c
+index a72f9a2d3cb7..a094acaca307 100644
+--- a/arch/arm/mach-tegra/pm.c
++++ b/arch/arm/mach-tegra/pm.c
+@@ -189,14 +189,16 @@ static void tegra_pm_set(enum tegra_suspend_mode mode)
+ 	tegra_pmc_enter_suspend_mode(mode);
+ }
+ 
+-void tegra_idle_lp2_last(void)
++int tegra_idle_lp2_last(void)
+ {
++	int err;
++
+ 	tegra_pm_set(TEGRA_SUSPEND_LP2);
+ 
+ 	cpu_cluster_pm_enter();
+ 	suspend_cpu_complex();
+ 
+-	cpu_suspend(PHYS_OFFSET - PAGE_OFFSET, &tegra_sleep_cpu);
++	err = cpu_suspend(PHYS_OFFSET - PAGE_OFFSET, &tegra_sleep_cpu);
+ 
+ 	/*
+ 	 * Resume L2 cache if it wasn't re-enabled early during resume,
+@@ -208,6 +210,8 @@ void tegra_idle_lp2_last(void)
+ 
+ 	restore_cpu_complex();
+ 	cpu_cluster_pm_exit();
++
++	return err;
+ }
+ 
+ enum tegra_suspend_mode tegra_pm_validate_suspend_mode(
+diff --git a/arch/arm/mach-tegra/pm.h b/arch/arm/mach-tegra/pm.h
+index 2c294f6365c0..7d72f31dee77 100644
+--- a/arch/arm/mach-tegra/pm.h
++++ b/arch/arm/mach-tegra/pm.h
+@@ -25,7 +25,7 @@ void tegra30_sleep_core_init(void);
+ 
+ void tegra_clear_cpu_in_lp2(void);
+ void tegra_set_cpu_in_lp2(void);
+-void tegra_idle_lp2_last(void);
++int tegra_idle_lp2_last(void);
+ extern void (*tegra_tear_down_cpu)(void);
+ 
+ #ifdef CONFIG_PM_SLEEP
 -- 
 2.24.0
 
