@@ -2,99 +2,390 @@ Return-Path: <SRS0=7TUr=4M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 69AD3C11D2F
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 16:41:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D6842C11D30
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 16:43:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3D29420836
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 16:41:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9B7A120836
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 16:43:31 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="VqshzTI1"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="lruTX+Yq"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728072AbgBXQle (ORCPT
+        id S1727745AbgBXQna (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Feb 2020 11:41:34 -0500
-Received: from mail-qk1-f193.google.com ([209.85.222.193]:39399 "EHLO
-        mail-qk1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727673AbgBXQld (ORCPT
+        Mon, 24 Feb 2020 11:43:30 -0500
+Received: from mail-ua1-f68.google.com ([209.85.222.68]:42064 "EHLO
+        mail-ua1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727426AbgBXQna (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Feb 2020 11:41:33 -0500
-Received: by mail-qk1-f193.google.com with SMTP id e16so6416963qkl.6;
-        Mon, 24 Feb 2020 08:41:32 -0800 (PST)
+        Mon, 24 Feb 2020 11:43:30 -0500
+Received: by mail-ua1-f68.google.com with SMTP id p2so3442807uao.9
+        for <linux-kernel@vger.kernel.org>; Mon, 24 Feb 2020 08:43:28 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=sender:from:date:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=KgaP9kfhgbQPcLmwOVvyl3qUPWyDRWXIggQgrOZJnPU=;
-        b=VqshzTI1c2dtcWeo7t2Iz1lROlK0exHkZtWqTk0/QudIUBDQcTSj/AdNExlGIBjo/G
-         tod4bSblMawKNPN7xMYHqMYJjJrW6rWb8S+TmXz34PQ2SNZuKn98VmqpLdMi2JDPla9M
-         i6lBZV8Pxy/zciCTWqHrTtvq2QreyPRDS3BE9XIYAiPzNCGI5RzUUnEZYsuu+ydeksmW
-         xMQ5P66N5H/KVqH2lmhrxwUS+UPgNRBiu2o+N2zxuYhmX6PHsLqzA6s3TosbK5VgQfaE
-         fQ5bkmUDPQAjttOZfFuv4LwpyNl1amGx/t2IjL4mP3jLMCBZt5qPjvBUMGcshVX+l/fr
-         qNww==
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=x3iMdgcJvhdPaNdsBIZMg+A92EcAUzwpTpA940qYnKo=;
+        b=lruTX+YqdxxtwSJdiuUeSP9//uqvNR8HQ6aMPj8TaZ2lyJWECp2EhvRoFkT2hrU7Wj
+         hqV4iCJgs9dIgmUp1T75c0QOD/GDNuhNNo2nF+yd2RHGFQyTOwZoYMkIzK3v/yrWvUmN
+         a6p1MAIljW3JVw+c4ZGkDn50r7nbRrQbtQTSEyzfeKMfu988yr+Al3VmOTG2bGlR1/hv
+         d7hTIOTEMejBSj49OcBJenumu5HOUP5cjxT+pJxgNhbrg34QdUdilKSLg/o4xRTrIIow
+         IPEyCyxyuZahW13WboKhz4lMKzJygpMmWT8EdrUaIxwzDW3gfPm0XFppTgRad/L95eYu
+         +kZw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:from:date:to:cc:subject:message-id
-         :references:mime-version:content-disposition:in-reply-to:user-agent;
-        bh=KgaP9kfhgbQPcLmwOVvyl3qUPWyDRWXIggQgrOZJnPU=;
-        b=L+Gb8i6ZaL2mxvDhG4hLyXY3UdGofI61O3fr9zlTlLL9u7xs1Ez2cjGKIAhxNAwyWB
-         KtbQc+TptATORJ/l0Hj20mmwqURRtvNsgMEZsF5ig1OVsI7CSyj979Y0cGHuy9LRtyZd
-         QCa+SXQm22AlcttLPN4O+LZtX3jKFUyrxlZqWz2wfoeqWAJ5HP/2wf1O+DxaDRLVKtPn
-         wG1BlHqdOqzbxmt2jgQkwWgTJg5BEaBW3AzG6BKdukYA3roXhEeGvjpaj7ozajGcMrGd
-         WbqPmvJNbGtisw7nV+ps8MLS6vm6ftF/YJGjx7fXosrk425R6i+YkzCdBNR2k6eCmISu
-         qYGg==
-X-Gm-Message-State: APjAAAUH3PhIqZNAQUKwYOvFSHSSwHfPM5cHDoIcAsqvQ40qfp4r0zGp
-        UIyyiIfkvDC3WjrzFjKSBSM=
-X-Google-Smtp-Source: APXvYqyG9rasJcmAxXd/HsQxuO6sM/fXQAyqQlhlbY9+JUzKIR8upAMXrWKSxBZHwBnt4Q3n/hhnnA==
-X-Received: by 2002:a37:7a04:: with SMTP id v4mr15387961qkc.246.1582562491536;
-        Mon, 24 Feb 2020 08:41:31 -0800 (PST)
-Received: from rani.riverdale.lan ([2001:470:1f07:5f3::b55f])
-        by smtp.gmail.com with ESMTPSA id l184sm5913461qkc.107.2020.02.24.08.41.31
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 24 Feb 2020 08:41:31 -0800 (PST)
-From:   Arvind Sankar <nivedita@alum.mit.edu>
-X-Google-Original-From: Arvind Sankar <arvind@rani.riverdale.lan>
-Date:   Mon, 24 Feb 2020 11:41:29 -0500
-To:     Borislav Petkov <bp@suse.de>
-Cc:     linux-tip-commits@vger.kernel.org,
-        Arvind Sankar <nivedita@alum.mit.edu>,
-        Borislav Petkov <bp@suse.de>,
-        Nathan Chancellor <natechancellor@gmail.com>,
-        x86 <x86@kernel.org>, LKML <linux-kernel@vger.kernel.org>
-Subject: Re: [tip: x86/boot] x86/boot/compressed: Remove .eh_frame section
- from bzImage
-Message-ID: <20200224164129.GA312716@rani.riverdale.lan>
-References: <20200109150218.16544-2-nivedita@alum.mit.edu>
- <158254422067.28353.10866888120950973607.tip-bot2@tip-bot2>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=x3iMdgcJvhdPaNdsBIZMg+A92EcAUzwpTpA940qYnKo=;
+        b=NiqFbtpw+spBKhwJVzY0G7lZcRBZvJOuD7BMQSrmxH1YWnE2aMpg9wYIm/pExLJFqm
+         3yyafc24PA+CBUnwBlUpZUjqJ+wUhYXxHULOzSl1joDXpcjW22rJftChX8uq7oIQPGrN
+         VQ0wzOBUfLxBeIo/xCaHtvkRrzK3impeZKdEBxzt3+/TG+lURaEFNuSiFbc8XFm0WqGL
+         0y0DwmaZSDB57qm4sZq7HZjz4B06pST1lTmSl+O9mH+1nOY7O5pyJeEqxpVK7fFp1CE2
+         IgUpQfHZPdwKt/S8LnlJUEPJPwSYxxjdmICykpoPI3ia+dlGevt2SjqC5v7K1snxO53L
+         cfxQ==
+X-Gm-Message-State: APjAAAWKK2TYwAu0jdDARkR+2EtEl7UJb36qP8FzRMtdJqSc6XNY3dRz
+        pxLWPhVsvH2OqvtglOz4SXEEFj5m5Bp1cXp4qR0=
+X-Google-Smtp-Source: APXvYqzuEHPbJyvf7Zomfe2zD858nZ57HHaM8XAcCazN86Cg76mKsOnwz+E+VVGEHB3mcMPwIQ+JMm6UZp2wFk2Hf2o=
+X-Received: by 2002:ab0:66d4:: with SMTP id d20mr24839010uaq.64.1582562607061;
+ Mon, 24 Feb 2020 08:43:27 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <158254422067.28353.10866888120950973607.tip-bot2@tip-bot2>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+References: <1582271336-3708-1-git-send-email-kevin3.tang@gmail.com> <1582271336-3708-3-git-send-email-kevin3.tang@gmail.com>
+In-Reply-To: <1582271336-3708-3-git-send-email-kevin3.tang@gmail.com>
+From:   Emil Velikov <emil.l.velikov@gmail.com>
+Date:   Mon, 24 Feb 2020 16:43:08 +0000
+Message-ID: <CACvgo53vUwt2vrcFTYGQCx30pQ1+FsxsAX7OOC9J7YfgQz2Qfg@mail.gmail.com>
+Subject: Re: [PATCH RFC v3 2/6] drm/sprd: add Unisoc's drm kms master
+To:     Kevin Tang <kevin3.tang@gmail.com>
+Cc:     Dave Airlie <airlied@linux.ie>, Daniel Vetter <daniel@ffwll.ch>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Orson Zhai <orsonzhai@gmail.com>,
+        ML dri-devel <dri-devel@lists.freedesktop.org>,
+        "Linux-Kernel@Vger. Kernel. Org" <linux-kernel@vger.kernel.org>,
+        Chunyan Zhang <zhang.lyra@gmail.com>,
+        Baolin Wang <baolin.wang@linaro.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Feb 24, 2020 at 11:37:00AM -0000, tip-bot2 for Arvind Sankar wrote:
-> The following commit has been merged into the x86/boot branch of tip:
-> 
-> Commit-ID:     0eea39a234dc52063d14541fabcb2c64516a2328
-> Gitweb:        https://git.kernel.org/tip/0eea39a234dc52063d14541fabcb2c64516a2328
-> Author:        Arvind Sankar <nivedita@alum.mit.edu>
-> AuthorDate:    Thu, 09 Jan 2020 10:02:18 -05:00
-> Committer:     Borislav Petkov <bp@suse.de>
-> CommitterDate: Mon, 24 Feb 2020 12:30:28 +01:00
-> 
-> x86/boot/compressed: Remove .eh_frame section from bzImage
-> 
+Hi all,
 
-Hi Boris, apologies for the confusion and unnecessary work I've created,
-but I think the preference is to merge the 2-patch series I posted
-yesterday [1] instead of this.
+On Fri, 21 Feb 2020 at 11:15, Kevin Tang <kevin3.tang@gmail.com> wrote:
+>
+> From: Kevin Tang <kevin.tang@unisoc.com>
+>
+> Adds drm support for the Unisoc's display subsystem.
+>
+> This is drm device and gem driver. This driver provides support for the
+> Direct Rendering Infrastructure (DRI) in XFree86 4.1.0 and higher.
+>
+> Cc: Orson Zhai <orsonzhai@gmail.com>
+> Cc: Baolin Wang <baolin.wang@linaro.org>
+> Cc: Chunyan Zhang <zhang.lyra@gmail.com>
+> Signed-off-by: Kevin Tang <kevin.tang@unisoc.com>
+> ---
+>  drivers/gpu/drm/Kconfig         |   2 +
+>  drivers/gpu/drm/Makefile        |   1 +
+>  drivers/gpu/drm/sprd/Kconfig    |  14 ++
+>  drivers/gpu/drm/sprd/Makefile   |   7 +
+>  drivers/gpu/drm/sprd/sprd_drm.c | 292 ++++++++++++++++++++++++++++++++++++++++
+>  drivers/gpu/drm/sprd/sprd_drm.h |  16 +++
+>  6 files changed, 332 insertions(+)
+>  create mode 100644 drivers/gpu/drm/sprd/Kconfig
+>  create mode 100644 drivers/gpu/drm/sprd/Makefile
+>  create mode 100644 drivers/gpu/drm/sprd/sprd_drm.c
+>  create mode 100644 drivers/gpu/drm/sprd/sprd_drm.h
+>
+> diff --git a/drivers/gpu/drm/Kconfig b/drivers/gpu/drm/Kconfig
+> index bfdadc3..cead12c 100644
+> --- a/drivers/gpu/drm/Kconfig
+> +++ b/drivers/gpu/drm/Kconfig
+> @@ -387,6 +387,8 @@ source "drivers/gpu/drm/aspeed/Kconfig"
+>
+>  source "drivers/gpu/drm/mcde/Kconfig"
+>
+> +source "drivers/gpu/drm/sprd/Kconfig"
+> +
+>  # Keep legacy drivers last
+>
+>  menuconfig DRM_LEGACY
+> diff --git a/drivers/gpu/drm/Makefile b/drivers/gpu/drm/Makefile
+> index 9f1c7c4..85ca211 100644
+> --- a/drivers/gpu/drm/Makefile
+> +++ b/drivers/gpu/drm/Makefile
+> @@ -122,3 +122,4 @@ obj-$(CONFIG_DRM_LIMA)  += lima/
+>  obj-$(CONFIG_DRM_PANFROST) += panfrost/
+>  obj-$(CONFIG_DRM_ASPEED_GFX) += aspeed/
+>  obj-$(CONFIG_DRM_MCDE) += mcde/
+> +obj-$(CONFIG_DRM_SPRD) += sprd/
+> diff --git a/drivers/gpu/drm/sprd/Kconfig b/drivers/gpu/drm/sprd/Kconfig
+> new file mode 100644
+> index 0000000..79f286b
+> --- /dev/null
+> +++ b/drivers/gpu/drm/sprd/Kconfig
+> @@ -0,0 +1,14 @@
+> +config DRM_SPRD
+> +       tristate "DRM Support for Unisoc SoCs Platform"
+> +       depends on ARCH_SPRD
+> +       depends on DRM && OF
+> +       select DRM_KMS_HELPER
+> +       select DRM_GEM_CMA_HELPER
+> +       select DRM_KMS_CMA_HELPER
+> +       select DRM_MIPI_DSI
+> +       select DRM_PANEL
+> +       select VIDEOMODE_HELPERS
+> +       select BACKLIGHT_CLASS_DEVICE
+> +       help
+> +         Choose this option if you have a Unisoc chipsets.
+> +         If M is selected the module will be called sprd-drm.
+> \ No newline at end of file
+> diff --git a/drivers/gpu/drm/sprd/Makefile b/drivers/gpu/drm/sprd/Makefile
+> new file mode 100644
+> index 0000000..63b8751
+> --- /dev/null
+> +++ b/drivers/gpu/drm/sprd/Makefile
+> @@ -0,0 +1,7 @@
+> +# SPDX-License-Identifier: GPL-2.0
+> +
+> +ccflags-y += -Iinclude/drm
+> +
+> +subdir-ccflags-y += -I$(src)
+> +
+> +obj-y := sprd_drm.o
+> diff --git a/drivers/gpu/drm/sprd/sprd_drm.c b/drivers/gpu/drm/sprd/sprd_drm.c
+> new file mode 100644
+> index 0000000..7cac098
+> --- /dev/null
+> +++ b/drivers/gpu/drm/sprd/sprd_drm.c
+> @@ -0,0 +1,292 @@
+> +// SPDX-License-Identifier: GPL-2.0
+> +/*
+> + * Copyright (C) 2019 Unisoc Inc.
+> + */
+> +
+> +#include <linux/component.h>
+> +#include <linux/dma-mapping.h>
+> +#include <linux/module.h>
+> +#include <linux/mutex.h>
+> +#include <linux/of_graph.h>
+> +#include <linux/of_platform.h>
+> +
+> +#include <drm/drm_atomic_helper.h>
+> +#include <drm/drm_crtc_helper.h>
+> +#include <drm/drm_drv.h>
+> +#include <drm/drm_gem_cma_helper.h>
+> +#include <drm/drm_gem_framebuffer_helper.h>
+> +#include <drm/drm_probe_helper.h>
+> +#include <drm/drm_vblank.h>
+> +
+> +#include "sprd_drm.h"
+> +
+> +#define DRIVER_NAME    "sprd"
+> +#define DRIVER_DESC    "Spreadtrum SoCs' DRM Driver"
+> +#define DRIVER_DATE    "20191101"
+> +#define DRIVER_MAJOR   1
+> +#define DRIVER_MINOR   0
+> +
+> +static const struct drm_mode_config_helper_funcs sprd_drm_mode_config_helper = {
+> +       .atomic_commit_tail = drm_atomic_helper_commit_tail_rpm,
+> +};
+> +
+> +static const struct drm_mode_config_funcs sprd_drm_mode_config_funcs = {
+> +       .fb_create = drm_gem_fb_create,
+> +       .atomic_check = drm_atomic_helper_check,
+> +       .atomic_commit = drm_atomic_helper_commit,
+> +};
+> +
+> +static void sprd_drm_mode_config_init(struct drm_device *drm)
+> +{
+> +       drm_mode_config_init(drm);
+> +
+> +       drm->mode_config.min_width = 0;
+> +       drm->mode_config.min_height = 0;
+> +       drm->mode_config.max_width = 8192;
+> +       drm->mode_config.max_height = 8192;
+> +       drm->mode_config.allow_fb_modifiers = true;
+> +
+> +       drm->mode_config.funcs = &sprd_drm_mode_config_funcs;
+> +       drm->mode_config.helper_private = &sprd_drm_mode_config_helper;
+> +}
+> +
+> +DEFINE_DRM_GEM_CMA_FOPS(sprd_drm_fops);
+> +
+> +static struct drm_driver sprd_drm_drv = {
+> +       .driver_features        = DRIVER_GEM | DRIVER_MODESET | DRIVER_ATOMIC,
+> +       .fops                   = &sprd_drm_fops,
+> +
+> +       /* GEM Operations */
+> +       DRM_GEM_CMA_VMAP_DRIVER_OPS,
+> +
+> +       .name                   = DRIVER_NAME,
+> +       .desc                   = DRIVER_DESC,
+> +       .date                   = DRIVER_DATE,
+> +       .major                  = DRIVER_MAJOR,
+> +       .minor                  = DRIVER_MINOR,
+> +};
+> +
+> +static int sprd_drm_bind(struct device *dev)
+> +{
+> +       struct drm_device *drm;
+> +       struct sprd_drm *sprd;
+> +       int err;
+> +
+> +       drm = drm_dev_alloc(&sprd_drm_drv, dev);
+> +       if (IS_ERR(drm))
+> +               return PTR_ERR(drm);
+> +
+> +       dev_set_drvdata(dev, drm);
+> +
+> +       sprd = devm_kzalloc(drm->dev, sizeof(*sprd), GFP_KERNEL);
+> +       if (!sprd) {
+> +               err = -ENOMEM;
+> +               goto err_free_drm;
+> +       }
+> +       drm->dev_private = sprd;
+> +
+> +       sprd_drm_mode_config_init(drm);
+> +
+> +       /* bind and init sub drivers */
+> +       err = component_bind_all(drm->dev, drm);
+> +       if (err) {
+> +               DRM_ERROR("failed to bind all component.\n");
+> +               goto err_dc_cleanup;
+> +       }
+> +
+> +       /* vblank init */
+> +       err = drm_vblank_init(drm, drm->mode_config.num_crtc);
+> +       if (err) {
+> +               DRM_ERROR("failed to initialize vblank.\n");
+> +               goto err_unbind_all;
+> +       }
+> +       /* with irq_enabled = true, we can use the vblank feature. */
+> +       drm->irq_enabled = true;
+> +
+> +       /* reset all the states of crtc/plane/encoder/connector */
+> +       drm_mode_config_reset(drm);
+> +
+> +       /* init kms poll for handling hpd */
+> +       drm_kms_helper_poll_init(drm);
+> +
+> +       err = drm_dev_register(drm, 0);
+> +       if (err < 0)
+> +               goto err_kms_helper_poll_fini;
+> +
+> +       return 0;
+> +
+> +err_kms_helper_poll_fini:
+> +       drm_kms_helper_poll_fini(drm);
+> +err_unbind_all:
+> +       component_unbind_all(drm->dev, drm);
+> +err_dc_cleanup:
+> +       drm_mode_config_cleanup(drm);
+> +err_free_drm:
+> +       drm_dev_put(drm);
+> +       return err;
+> +}
+> +
+> +static void sprd_drm_unbind(struct device *dev)
+> +{
+> +       drm_put_dev(dev_get_drvdata(dev));
+> +}
+> +
+> +static const struct component_master_ops drm_component_ops = {
+> +       .bind = sprd_drm_bind,
+> +       .unbind = sprd_drm_unbind,
+> +};
+> +
+> +static int compare_of(struct device *dev, void *data)
+> +{
+> +       struct device_node *np = data;
+> +
+> +       DRM_DEBUG("compare %s\n", np->full_name);
+> +
+> +       return dev->of_node == np;
+> +}
+> +
+> +static int sprd_drm_component_probe(struct device *dev,
+> +                          const struct component_master_ops *m_ops)
+> +{
+> +       struct device_node *ep, *port, *remote;
+> +       struct component_match *match = NULL;
+> +       int i;
+> +
+> +       if (!dev->of_node)
+> +               return -EINVAL;
+> +
+> +       /*
+> +        * Bind the crtc's ports first, so that drm_of_find_possible_crtcs()
+> +        * called from encoder's .bind callbacks works as expected
+> +        */
+> +       for (i = 0; ; i++) {
+> +               port = of_parse_phandle(dev->of_node, "ports", i);
+> +               if (!port)
+> +                       break;
+> +
+> +               if (!of_device_is_available(port->parent)) {
+> +                       of_node_put(port);
+> +                       continue;
+> +               }
+> +
+> +               component_match_add(dev, &match, compare_of, port->parent);
+> +               of_node_put(port);
+> +       }
+> +
+> +       if (i == 0) {
+> +               dev_err(dev, "missing 'ports' property\n");
+> +               return -ENODEV;
+> +       }
+> +
+> +       if (!match) {
+> +               dev_err(dev, "no available port\n");
+> +               return -ENODEV;
+> +       }
+> +
+> +       /*
+> +        * For bound crtcs, bind the encoders attached to their remote endpoint
+> +        */
+> +       for (i = 0; ; i++) {
+> +               port = of_parse_phandle(dev->of_node, "ports", i);
+> +               if (!port)
+> +                       break;
+> +
+> +               if (!of_device_is_available(port->parent)) {
+> +                       of_node_put(port);
+> +                       continue;
+> +               }
+> +
+> +               for_each_child_of_node(port, ep) {
+> +                       remote = of_graph_get_remote_port_parent(ep);
+> +                       if (!remote || !of_device_is_available(remote)) {
+> +                               of_node_put(remote);
+> +                               continue;
+> +                       } else if (!of_device_is_available(remote->parent)) {
+> +                               dev_warn(dev, "parent device of %s is not available\n",
+> +                                        remote->full_name);
+> +                               of_node_put(remote);
+> +                               continue;
+> +                       }
+> +
+> +                       component_match_add(dev, &match, compare_of, remote);
+> +                       of_node_put(remote);
+> +               }
+> +               of_node_put(port);
+> +       }
+> +
+> +       return component_master_add_with_match(dev, m_ops, match);
 
-[1] https://lore.kernel.org/lkml/20200223193715.83729-1-nivedita@alum.mit.edu/
+This whole function is effectively a copy of drm_of_component_probe().
+Reuse that instead.
+
+With that + comments from Sam addressed this patch is:
+Reviewed-by: Emil Velikov <emil.velikov@collabora.com>
+
+-Emil
