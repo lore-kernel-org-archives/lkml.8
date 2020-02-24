@@ -2,150 +2,147 @@ Return-Path: <SRS0=7TUr=4M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D8C99C11D32
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 14:32:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2AE62C11D2F
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 14:33:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BAF4E20828
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 14:32:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F282820836
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 14:33:27 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="QfjzaEZh"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727735AbgBXOcX (ORCPT
+        id S1727746AbgBXOd0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Feb 2020 09:32:23 -0500
-Received: from foss.arm.com ([217.140.110.172]:37972 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727709AbgBXOcX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Feb 2020 09:32:23 -0500
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id A0F5630E;
-        Mon, 24 Feb 2020 06:32:22 -0800 (PST)
-Received: from e121166-lin.cambridge.arm.com (e121166-lin.cambridge.arm.com [10.1.196.255])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id D5A413F534;
-        Mon, 24 Feb 2020 06:32:20 -0800 (PST)
-Date:   Mon, 24 Feb 2020 14:32:18 +0000
-From:   Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-To:     Vidya Sagar <vidyas@nvidia.com>
-Cc:     jingoohan1@gmail.com, gustavo.pimentel@synopsys.com,
-        andrew.murray@arm.com, bhelgaas@google.com, kishon@ti.com,
-        thierry.reding@gmail.com, Jisheng.Zhang@synaptics.com,
-        jonathanh@nvidia.com, linux-pci@vger.kernel.org,
-        linux-kernel@vger.kernel.org, kthota@nvidia.com,
-        mmaddireddy@nvidia.com, sagar.tv@gmail.com
-Subject: Re: [PATCH V3 4/5] PCI: dwc: Add API to notify core initialization
- completion
-Message-ID: <20200224143218.GC15614@e121166-lin.cambridge.arm.com>
-References: <20200217121036.3057-1-vidyas@nvidia.com>
- <20200217121036.3057-5-vidyas@nvidia.com>
- <20200224113217.GA11120@e121166-lin.cambridge.arm.com>
- <77748536-4f9a-1357-8180-91c1da2e912e@nvidia.com>
+        Mon, 24 Feb 2020 09:33:26 -0500
+Received: from mail-qv1-f65.google.com ([209.85.219.65]:41054 "EHLO
+        mail-qv1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727640AbgBXOd0 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 24 Feb 2020 09:33:26 -0500
+Received: by mail-qv1-f65.google.com with SMTP id s7so4205968qvn.8
+        for <linux-kernel@vger.kernel.org>; Mon, 24 Feb 2020 06:33:25 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=KtVE+M/QzqjMA0LXVSAcGGMxNRrQrUffaB41/q7Jg7E=;
+        b=QfjzaEZh6clLZyrsSHBjJB+To7NtJfJxhD5peI+XskEUG/RgcoA7WjXzki6TFtfVd9
+         6pQwY/8J2YuRA9AJgCLb1JB6K8eGI03JqEjvUwBUR8jByLJl7WLLWDypOGdr4CRoyGUJ
+         pPdBen41DO+mXyqv54p5ITDQBky8Bwj+bTkip5sjyG06mwrFCbIZpnQmHeIpoWRcEP0D
+         Uvsw6A6s5FCzT9s74Y5An4aVXJXrRquWj+KsOGdaibeqtVYRc15SlGN1oe3cfcamxw4E
+         21E+lbWk748iykOqWMR9E9+EF7ZYB6Nd1fu1tssSFnPAt37x/6F9mgDZ5Ywzz5YLpsSP
+         qfTA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=KtVE+M/QzqjMA0LXVSAcGGMxNRrQrUffaB41/q7Jg7E=;
+        b=K0uMCZ/vomwbD/enLSq7ex1LGk4DOdE9hQlasgoJdzwkcvtQznbFyYYNxiX1mrIXB6
+         G4ZzLYEvtyQqTUauank1zmf0yL+L+gh9zTRmPmJanbzvRi+XlA6OFJOvr9ptWAG2M2W6
+         RZtRGhuOkiqtav3MqUmJINWxviu37VCJQ1rBxPcz3KkHwZNHtcRV4nQIq+Fwfe6oJJ5F
+         DCNRdm/zxwJLnz1BCvt+DsI/YWRcJ/egtHXzRQ54uInwd0D3yQyXicLeSuanusOadyPl
+         m+P/YRfP1P3oKvdNwplSMJNq4TPww+TGcM+BDzmwSTVEkZCYp6EfHNjcvtUexAt8tSLk
+         uQXw==
+X-Gm-Message-State: APjAAAUeONepWtPJRNC+sD+fJEt3R0q5RymP7zwxZw5Y8PLs/JlE3bJA
+        RT8LfClBmFSt4BKHTF7dKIkRPA==
+X-Google-Smtp-Source: APXvYqx7/SfIzF+cHNZN/EI637voNvWoHEIAqnXo0ChgnO1pODCGwfLwDVJctrQiu4iLZ9qfO9weMA==
+X-Received: by 2002:a0c:f6cd:: with SMTP id d13mr43722790qvo.20.1582554804777;
+        Mon, 24 Feb 2020 06:33:24 -0800 (PST)
+Received: from [192.168.1.92] (pool-71-255-246-27.washdc.fios.verizon.net. [71.255.246.27])
+        by smtp.gmail.com with ESMTPSA id g2sm4813805qka.42.2020.02.24.06.33.23
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 24 Feb 2020 06:33:24 -0800 (PST)
+Subject: Re: [Patch v10 1/9] sched/pelt: Add support to track thermal pressure
+To:     Randy Dunlap <rdunlap@infradead.org>, mingo@redhat.com,
+        peterz@infradead.org, ionela.voinescu@arm.com,
+        vincent.guittot@linaro.org, dietmar.eggemann@arm.com,
+        rui.zhang@intel.com, qperret@google.com, daniel.lezcano@linaro.org,
+        viresh.kumar@linaro.org, rostedt@goodmis.org, will@kernel.org,
+        catalin.marinas@arm.com, sudeep.holla@arm.com,
+        juri.lelli@redhat.com, corbet@lwn.net
+Cc:     linux-kernel@vger.kernel.org, amit.kachhap@gmail.com,
+        javi.merino@kernel.org, amit.kucheria@verdurent.com
+References: <20200222005213.3873-1-thara.gopinath@linaro.org>
+ <20200222005213.3873-2-thara.gopinath@linaro.org>
+ <db1a554a-1c8a-0078-def5-4b5f1ee68c99@infradead.org>
+ <d7890dc4-f5d8-9bad-8473-062c0206da09@linaro.org>
+ <a3102cf8-bb77-fed4-ffc7-8ef74e9feb23@infradead.org>
+From:   Thara Gopinath <thara.gopinath@linaro.org>
+Message-ID: <2c680a71-31ee-3a9a-4859-5c4cbc9dc0e1@linaro.org>
+Date:   Mon, 24 Feb 2020 09:33:22 -0500
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <77748536-4f9a-1357-8180-91c1da2e912e@nvidia.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+In-Reply-To: <a3102cf8-bb77-fed4-ffc7-8ef74e9feb23@infradead.org>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Feb 24, 2020 at 05:50:26PM +0530, Vidya Sagar wrote:
+
+
+On 2/22/20 1:50 PM, Randy Dunlap wrote:
+> On 2/22/20 10:27 AM, Thara Gopinath wrote:
+>>
+>>
+>> On 2/21/20 7:59 PM, Randy Dunlap wrote:
+>>> On 2/21/20 4:52 PM, Thara Gopinath wrote:
+>>>> diff --git a/init/Kconfig b/init/Kconfig
+>>>> index 2a25c769eaaa..8d56902efa70 100644
+>>>> --- a/init/Kconfig
+>>>> +++ b/init/Kconfig
+>>>> @@ -464,6 +464,10 @@ config HAVE_SCHED_AVG_IRQ
+>>>>        depends on IRQ_TIME_ACCOUNTING || PARAVIRT_TIME_ACCOUNTING
+>>>>        depends on SMP
+>>>>    +config HAVE_SCHED_THERMAL_PRESSURE
+>>>> +    bool "Enable periodic averaging of thermal pressure"
+>>>
+>>> This prompt string makes this symbol user-configurable, but
+>>> I don't think that's what you want here.
+>>
+>> Hi Randy,
+>> Thank you for the review.
+>> Actually I thought being user-configurable is a good idea as it will allow users to easily enable it and see if the benefits their systems. (I used menuconfig while developing, to enable it).
+>> Do you see a reason why this should not be so?
+>>
+>>>
+>>>> +    depends on SMP
+>>>> +
+>>>>    config BSD_PROCESS_ACCT
+>>>>        bool "BSD Process Accounting"
+>>>>        depends on MULTIUSER
+> 
+> Hi Thara,
+> Is there some other way that HAVE_SCHED_THERMAL_PRESSURE can become
+> set/enabled?  for example, is it selected by any other options?
+> 
+> The Kconfig symbols that begin with HAVE_ are usually something that
+> are platform-specific and are usually set (selected) by other options,
+> or they are "default y".
+> 
+> In init/Kconfig, I see 15 other HAVE_ Kconfig symbols,
+> and none of them have user prompt strings.  They are either selected
+> elsewhere or set inside their Kconfig block.
+> 
+> Maybe you just want to rename the Kconfig symbol so that it does not
+> being with HAVE_.
+
+  Hi Randy,
+
+I see what you mean. I will send an update to this patch with HAVE_ 
+removed. It is not selected by any other options. Best is for user to 
+select it or platform/SoC configs to enable it.
 > 
 > 
-> On 2/24/2020 5:02 PM, Lorenzo Pieralisi wrote:
-> > External email: Use caution opening links or attachments
-> > 
-> > 
-> > On Mon, Feb 17, 2020 at 05:40:35PM +0530, Vidya Sagar wrote:
-> > > Add a new API dw_pcie_ep_init_notify() to let platform drivers
-> > > call it when the core is available for initialization.
-> > > 
-> > > Signed-off-by: Vidya Sagar <vidyas@nvidia.com>
-> > > Acked-by: Kishon Vijay Abraham I <kishon@ti.com>
-> > > ---
-> > > V3:
-> > > * Added Acked-by: Kishon Vijay Abraham I <kishon@ti.com>
-> > > 
-> > > V2:
-> > > * None
-> > > 
-> > >   drivers/pci/controller/dwc/pcie-designware-ep.c | 7 +++++++
-> > >   drivers/pci/controller/dwc/pcie-designware.h    | 5 +++++
-> > >   2 files changed, 12 insertions(+)
-> > > 
-> > > diff --git a/drivers/pci/controller/dwc/pcie-designware-ep.c b/drivers/pci/controller/dwc/pcie-designware-ep.c
-> > > index 84a102df9f62..dfbb806c25bf 100644
-> > > --- a/drivers/pci/controller/dwc/pcie-designware-ep.c
-> > > +++ b/drivers/pci/controller/dwc/pcie-designware-ep.c
-> > > @@ -19,6 +19,13 @@ void dw_pcie_ep_linkup(struct dw_pcie_ep *ep)
-> > >        pci_epc_linkup(epc);
-> > >   }
-> > > 
-> > > +void dw_pcie_ep_init_notify(struct dw_pcie_ep *ep)
-> > > +{
-> > > +     struct pci_epc *epc = ep->epc;
-> > > +
-> > > +     pci_epc_init_notify(epc);
-> > > +}
-> > 
-> > Do we really need this wrapper ? I would drop this code and I would
-> > appreciate if you could post tegra changes benefiting from this
-> > series, at the moment I don't see any user of this newly added
-> > infrastructure.
-> I've posted that series also for review
-> @ http://patchwork.ozlabs.org/project/linux-pci/list/?series=152889
-> Sorry if I have to create explicit dependency by some means. I'm not
-> aware of that and would like to know if that exists. All that I did was
-> to mention this as a dependency for the other (Tegra change) series.
 
-No worries - I just want to merge code that is actually used, I assume
-the series above should be reposted right ? You need an ACK from Thierry
-for it and we can merge the whole thing on top of Kishon's patches.
-
-I was just referring to the wrapper above, it does not seem very
-useful given that we can call pci_epc_init_notify() directly,
-please correct me if I am wrong, there does not seem to be anything
-DWC specific (at least for the time being) in the _notify() hook.
-
-Thanks,
-Lorenzo
-
-> 
-> Thanks,
-> Vidya Sagar
-> 
-> > 
-> > Thanks,
-> > Lorenzo
-> > 
-> > >   static void __dw_pcie_ep_reset_bar(struct dw_pcie *pci, enum pci_barno bar,
-> > >                                   int flags)
-> > >   {
-> > > diff --git a/drivers/pci/controller/dwc/pcie-designware.h b/drivers/pci/controller/dwc/pcie-designware.h
-> > > index b67b7f756bc2..aa98fbd50807 100644
-> > > --- a/drivers/pci/controller/dwc/pcie-designware.h
-> > > +++ b/drivers/pci/controller/dwc/pcie-designware.h
-> > > @@ -412,6 +412,7 @@ static inline int dw_pcie_allocate_domains(struct pcie_port *pp)
-> > >   void dw_pcie_ep_linkup(struct dw_pcie_ep *ep);
-> > >   int dw_pcie_ep_init(struct dw_pcie_ep *ep);
-> > >   int dw_pcie_ep_init_complete(struct dw_pcie_ep *ep);
-> > > +void dw_pcie_ep_init_notify(struct dw_pcie_ep *ep);
-> > >   void dw_pcie_ep_exit(struct dw_pcie_ep *ep);
-> > >   int dw_pcie_ep_raise_legacy_irq(struct dw_pcie_ep *ep, u8 func_no);
-> > >   int dw_pcie_ep_raise_msi_irq(struct dw_pcie_ep *ep, u8 func_no,
-> > > @@ -434,6 +435,10 @@ static inline int dw_pcie_ep_init_complete(struct dw_pcie_ep *ep)
-> > >        return 0;
-> > >   }
-> > > 
-> > > +static inline void dw_pcie_ep_init_notify(struct dw_pcie_ep *ep)
-> > > +{
-> > > +}
-> > > +
-> > >   static inline void dw_pcie_ep_exit(struct dw_pcie_ep *ep)
-> > >   {
-> > >   }
-> > > --
-> > > 2.17.1
-> > > 
+-- 
+Warm Regards
+Thara
