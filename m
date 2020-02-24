@@ -2,67 +2,145 @@ Return-Path: <SRS0=7TUr=4M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 577C6C11D2F
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 15:52:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5A3D9C11D2F
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 15:53:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3494520828
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 15:52:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 33C9020828
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 15:53:35 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727903AbgBXPwh convert rfc822-to-8bit (ORCPT
+        id S1727934AbgBXPxe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Feb 2020 10:52:37 -0500
-Received: from Galois.linutronix.de ([193.142.43.55]:50465 "EHLO
-        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727359AbgBXPwh (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Feb 2020 10:52:37 -0500
-Received: from bigeasy by Galois.linutronix.de with local (Exim 4.80)
-        (envelope-from <bigeasy@linutronix.de>)
-        id 1j6G26-0006oN-7y; Mon, 24 Feb 2020 16:52:34 +0100
-Date:   Mon, 24 Feb 2020 16:52:34 +0100
-From:   Sebastian Andrzej Siewior <bigeasy@linutronix.de>
-To:     Tom Zanussi <zanussi@kernel.org>
-Cc:     LKML <linux-kernel@vger.kernel.org>,
-        linux-rt-users <linux-rt-users@vger.kernel.org>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Carsten Emde <C.Emde@osadl.org>,
-        John Kacur <jkacur@redhat.com>, Daniel Wagner <wagi@monom.org>
-Subject: Re: [PATCH RT 20/25] kmemleak: Cosmetic changes
-Message-ID: <20200224155234.brdcpecpfboyjjon@linutronix.de>
-References: <cover.1582320278.git.zanussi@kernel.org>
- <c3cf47877f79afa92634bf376488c8aa71378a26.1582320278.git.zanussi@kernel.org>
- <20200224091204.xzn6cheydarek6ex@linutronix.de>
- <1582557503.12738.22.camel@kernel.org>
+        Mon, 24 Feb 2020 10:53:34 -0500
+Received: from mga02.intel.com ([134.134.136.20]:30204 "EHLO mga02.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727825AbgBXPxd (ORCPT <rfc822;Linux-kernel@vger.kernel.org>);
+        Mon, 24 Feb 2020 10:53:33 -0500
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga001.fm.intel.com ([10.253.24.23])
+  by orsmga101.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 24 Feb 2020 07:53:32 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.70,480,1574150400"; 
+   d="scan'208";a="349942304"
+Received: from yjin15-mobl1.ccr.corp.intel.com (HELO [10.254.211.36]) ([10.254.211.36])
+  by fmsmga001.fm.intel.com with ESMTP; 24 Feb 2020 07:53:29 -0800
+Subject: Re: [PATCH v3 2/2] Support interactive annotation of code without
+ symbols
+To:     Ravi Bangoria <ravi.bangoria@linux.ibm.com>,
+        Jiri Olsa <jolsa@redhat.com>
+Cc:     alexander.shishkin@linux.intel.com, acme@kernel.org,
+        jolsa@kernel.org, peterz@infradead.org, mingo@redhat.com,
+        Linux-kernel@vger.kernel.org, ak@linux.intel.com,
+        kan.liang@intel.com, yao.jin@intel.com
+References: <20200224022225.30264-1-yao.jin@linux.intel.com>
+ <20200224022225.30264-3-yao.jin@linux.intel.com>
+ <6d8858e7-01a7-70fd-5c22-7b79b308fb95@linux.ibm.com>
+ <20200224135141.GH16664@krava>
+ <e8f944f5-0cca-44d3-dec2-3985e72bacc8@linux.ibm.com>
+From:   "Jin, Yao" <yao.jin@linux.intel.com>
+Message-ID: <0c76f0d9-89d5-1913-0736-3b991c742e8c@linux.intel.com>
+Date:   Mon, 24 Feb 2020 23:53:28 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.5.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8BIT
-In-Reply-To: <1582557503.12738.22.camel@kernel.org>
+In-Reply-To: <e8f944f5-0cca-44d3-dec2-3985e72bacc8@linux.ibm.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2020-02-24 09:18:23 [-0600], Tom Zanussi wrote:
-> > What should be applied instead is
-> > 	fb2c57edcb943 ("kmemleak: Change the lock of kmemleak_object to
-> > raw_spinlock_t")
-> > 
+
+
+On 2/24/2020 10:04 PM, Ravi Bangoria wrote:
 > 
-> I did apply that patch (as patch 14/25 of this series).  This patch
-> seemed like it was adding some comment bits mised for that one, which
-> is all it does.
-
-Bah. So I saw that (#14/25), considered okay but while looking at this
-patch I was comparing against v4.14.164-rt73 and forgot about it…
-
-> Thanks,
 > 
-> Tom
+> On 2/24/20 7:21 PM, Jiri Olsa wrote:
+>> On Mon, Feb 24, 2020 at 06:55:12PM +0530, Ravi Bangoria wrote:
+>>> Hi Jin,
+>>>
+>>> On 2/24/20 7:52 AM, Jin Yao wrote:
+>>>> For perf report on stripped binaries it is currently impossible to do
+>>>> annotation. The annotation state is all tied to symbols, but there are
+>>>> either no symbols, or symbols are not covering all the code.
+>>>>
+>>>> We should support the annotation functionality even without symbols.
+>>>>
+>>>> This patch fakes a symbol and the symbol name is the string of address.
+>>>> After that, we just follow current annotation working flow.
+>>>>
+>>>> For example,
+>>>>
+>>>> 1. perf report
+>>>>
+>>>> Overhead  Command  Shared Object     Symbol
+>>>>     20.67%  div      libc-2.27.so      [.] __random_r
+>>>>     17.29%  div      libc-2.27.so      [.] __random
+>>>>     10.59%  div      div               [.] 0x0000000000000628
+>>>>      9.25%  div      div               [.] 0x0000000000000612
+>>>>      6.11%  div      div               [.] 0x0000000000000645
+>>>>
+>>>> 2. Select the line of "10.59%  div      div               [.] 
+>>>> 0x0000000000000628" and ENTER.
+>>>>
+>>>> Annotate 0x0000000000000628
+>>>> Zoom into div thread
+>>>> Zoom into div DSO (use the 'k' hotkey to zoom directly into the kernel)
+>>>> Browse map details
+>>>> Run scripts for samples of symbol [0x0000000000000628]
+>>>> Run scripts for all samples
+>>>> Switch to another data file in PWD
+>>>> Exit
+>>>>
+>>>> 3. Select the "Annotate 0x0000000000000628" and ENTER.
+>>>>
+>>>> Percent│
+>>>>          │
+>>>>          │
+>>>>          │     Disassembly of section .text:
+>>>>          │
+>>>>          │     0000000000000628 <.text+0x68>:
+>>>>          │       divsd %xmm4,%xmm0
+>>>>          │       divsd %xmm3,%xmm1
+>>>>          │       movsd (%rsp),%xmm2
+>>>>          │       addsd %xmm1,%xmm0
+>>>>          │       addsd %xmm2,%xmm0
+>>>>          │       movsd %xmm0,(%rsp)
+>>>>
+>>>> Now we can see the dump of object starting from 0x628.
+>>>
+>>> If I press 'a' on address, it's not annotating. But if I annotate
+>>> by pressing enter, like you explained, it works. Is it intentional?
+>>
+>> I saw that too, but I thought it's unrelated issue,
+>> because we played with that just recently
+>>
+>> if you go through the 'enter' way and back, then the
+>> next time 'a' works ;-)
+> 
+> Yes.
+> 
+> I liked the series so I was trying out the patches. Just reporting 
+> issues I found...
+> 
+> jump/call arrows are also screwed up.. Like jump instruction is showing 
+> call arrows.
+> But these all are minor issues and can be fixed later on. I don't mind ;)
+> 
+> Ravi
+> 
 
-Sebastian.
+Some jumps will show arrow '->". For example,
+
+→ jne   120
+
+Yes, we can check and fix that later.
+
+Thanks
+Jin Yao
