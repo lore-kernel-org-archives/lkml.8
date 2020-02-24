@@ -2,267 +2,82 @@ Return-Path: <SRS0=7TUr=4M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DEFC1C35677
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 01:28:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 61F8EC35673
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 01:28:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AA52120836
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 01:28:19 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582507699;
-	bh=wuZf8v7s/ZfDka2P3YUYpDnWNCA0VPIdBjzd5E5TqzQ=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=LhwfuSIq7hCLgLHXRnSBpMv/1Fq3rSL80HFxbcr/v1ksbhWTgbphswwqVV0uCFAHd
-	 J1sGmEmovwKsxAedhbItcCEmv0Ot78rxu52ndbTwEVpGsZPbteazZyUGBVO33VIlAH
-	 2qEmwS2qOPrtXpeuNRJoV20bHYpmqzyNRVzvpGio=
+	by mail.kernel.org (Postfix) with ESMTP id 413B021D56
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 01:28:39 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727235AbgBXB2S (ORCPT
+        id S1727213AbgBXB2i (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 23 Feb 2020 20:28:18 -0500
-Received: from mail.kernel.org ([198.145.29.99]:46868 "EHLO mail.kernel.org"
+        Sun, 23 Feb 2020 20:28:38 -0500
+Received: from mga07.intel.com ([134.134.136.100]:16750 "EHLO mga07.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727151AbgBXB2S (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 23 Feb 2020 20:28:18 -0500
-Received: from dragon (80.251.214.228.16clouds.com [80.251.214.228])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7D8582067D;
-        Mon, 24 Feb 2020 01:28:13 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1582507697;
-        bh=wuZf8v7s/ZfDka2P3YUYpDnWNCA0VPIdBjzd5E5TqzQ=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=xinodtHybZ2zERMZboQ/lO0ba3tYO8hysLnZ+8z8p/HwgmJNwzOEtqGv0qefOr4nb
-         e4PPc9NJ2J6knJJMxeZRa2va7rNicVIqLqghHXzDVFZxhc36nu4tZa5LuNkbVSRkDe
-         KKy5Enhd/KSrF2UMpc/9V+590EtR5a/cz5g+V4FM=
-Date:   Mon, 24 Feb 2020 09:28:10 +0800
-From:   Shawn Guo <shawnguo@kernel.org>
-To:     Zhiqiang Hou <Zhiqiang.Hou@nxp.com>
-Cc:     linux-pci@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        bhelgaas@google.com, robh+dt@kernel.org, andrew.murray@arm.com,
-        arnd@arndb.de, mark.rutland@arm.com, l.subrahmanya@mobiveil.co.in,
-        m.karthikeyan@mobiveil.co.in, leoyang.li@nxp.com,
-        lorenzo.pieralisi@arm.com, catalin.marinas@arm.com,
-        will.deacon@arm.com, Mingkai.Hu@nxp.com, Minghuan.Lian@nxp.com,
-        Xiaowei.Bao@nxp.com
-Subject: Re: [PATCHv10 12/13] arm64: dts: lx2160a: Add PCIe controller DT
- nodes
-Message-ID: <20200224012809.GB14331@dragon>
-References: <20200213040644.45858-1-Zhiqiang.Hou@nxp.com>
- <20200213040644.45858-13-Zhiqiang.Hou@nxp.com>
+        id S1727151AbgBXB2h (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 23 Feb 2020 20:28:37 -0500
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga002.jf.intel.com ([10.7.209.21])
+  by orsmga105.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 23 Feb 2020 17:28:37 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.70,478,1574150400"; 
+   d="scan'208";a="255428790"
+Received: from unknown (HELO [10.238.4.82]) ([10.238.4.82])
+  by orsmga002.jf.intel.com with ESMTP; 23 Feb 2020 17:28:36 -0800
+Reply-To: like.xu@intel.com
+Subject: Re: [Ask for Help]LBR usage in kernel
+To:     =?UTF-8?B?6ZmI5byL5466?= <jasoncyx@163.com>,
+        linux-kernel@vger.kernel.org, linux-x86_64@vger.kernel.org
+References: <3dad7270.821a.17062dfcb99.Coremail.jasoncyx@163.com>
+From:   "Xu, Like" <like.xu@intel.com>
+Organization: Intel OTC
+Message-ID: <edadc513-a331-7a5f-01f2-c06217d925a5@intel.com>
+Date:   Mon, 24 Feb 2020 09:28:35 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.5.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200213040644.45858-13-Zhiqiang.Hou@nxp.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+In-Reply-To: <3dad7270.821a.17062dfcb99.Coremail.jasoncyx@163.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8bit
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Feb 13, 2020 at 12:06:43PM +0800, Zhiqiang Hou wrote:
-> From: Hou Zhiqiang <Zhiqiang.Hou@nxp.com>
-> 
-> The LX2160A integrated 6 PCIe Gen4 controllers.
-> 
-> Signed-off-by: Hou Zhiqiang <Zhiqiang.Hou@nxp.com>
-> Reviewed-by: Minghuan Lian <Minghuan.Lian@nxp.com>
-> ---
-> V10:
->  - No change
-> 
->  .../arm64/boot/dts/freescale/fsl-lx2160a.dtsi | 163 ++++++++++++++++++
->  1 file changed, 163 insertions(+)
-> 
-> diff --git a/arch/arm64/boot/dts/freescale/fsl-lx2160a.dtsi b/arch/arm64/boot/dts/freescale/fsl-lx2160a.dtsi
-> index e5ee5591e52b..aee2810d91cc 100644
-> --- a/arch/arm64/boot/dts/freescale/fsl-lx2160a.dtsi
-> +++ b/arch/arm64/boot/dts/freescale/fsl-lx2160a.dtsi
-> @@ -1076,5 +1076,168 @@
->  				};
->  			};
->  		};
-> +
-> +		pcie@3400000 {
+Hi 弋玺,
 
-The nodes should be sorted in unit-address.  That said, they should be
-added after ata3: sata@3230000.
+On 2020/2/20 21:53, 陈弋玺 wrote:
+> Hi experts,
+>      We want to try to retreive callchains of some perf events from LBR rather than frame stacks, as the information in frame stacks would be optimized by compiler. After investigating the usage of LBR in kernel, we found that LBR can only operated via Intel PMU,
+The default driver to operate LBR on the Linux is the PMU deriver,
+which is one of perf feature ofs and I assume you know about its basic usages.
 
-> +			compatible = "fsl,lx2160a-pcie";
-> +			reg = <0x00 0x03400000 0x0 0x00100000   /* controller registers */
-> +			       0x80 0x00000000 0x0 0x00001000>; /* configuration space */
-> +			reg-names = "csr_axi_slave", "config_axi_slave";
-> +			interrupts = <GIC_SPI 108 IRQ_TYPE_LEVEL_HIGH>, /* AER interrupt */
-> +				     <GIC_SPI 108 IRQ_TYPE_LEVEL_HIGH>, /* PME interrupt */
-> +				     <GIC_SPI 108 IRQ_TYPE_LEVEL_HIGH>; /* controller interrupt */
-> +			interrupt-names = "aer", "pme", "intr";
-> +			#address-cells = <3>;
-> +			#size-cells = <2>;
-> +			device_type = "pci";
-> +			dma-coherent;
-> +			apio-wins = <8>;
-> +			ppio-wins = <8>;
-> +			bus-range = <0x0 0xff>;
-> +			ranges = <0x82000000 0x0 0x40000000 0x80 0x40000000 0x0 0x40000000>; /* non-prefetchable memory */
-> +			msi-parent = <&its>;
-> +			#interrupt-cells = <1>;
-> +			interrupt-map-mask = <0 0 0 7>;
-> +			interrupt-map = <0000 0 0 1 &gic 0 0 GIC_SPI 109 IRQ_TYPE_LEVEL_HIGH>,
-> +					<0000 0 0 2 &gic 0 0 GIC_SPI 110 IRQ_TYPE_LEVEL_HIGH>,
-> +					<0000 0 0 3 &gic 0 0 GIC_SPI 111 IRQ_TYPE_LEVEL_HIGH>,
-> +					<0000 0 0 4 &gic 0 0 GIC_SPI 112 IRQ_TYPE_LEVEL_HIGH>;
-> +			status = "disabled";
-> +		};
-> +
-> +		pcie@3500000 {
-> +			compatible = "fsl,lx2160a-pcie";
-> +			reg = <0x00 0x03500000 0x0 0x00100000   /* controller registers */
-> +			       0x88 0x00000000 0x0 0x00001000>; /* configuration space */
-> +			reg-names = "csr_axi_slave", "config_axi_slave";
-> +			interrupts = <GIC_SPI 113 IRQ_TYPE_LEVEL_HIGH>, /* AER interrupt */
-> +				     <GIC_SPI 113 IRQ_TYPE_LEVEL_HIGH>, /* PME interrupt */
-> +				     <GIC_SPI 113 IRQ_TYPE_LEVEL_HIGH>; /* controller interrupt */
-> +			interrupt-names = "aer", "pme", "intr";
-> +			#address-cells = <3>;
-> +			#size-cells = <2>;
-> +			device_type = "pci";
-> +			dma-coherent;
-> +			apio-wins = <8>;
-> +			ppio-wins = <8>;
-> +			bus-range = <0x0 0xff>;
-> +			ranges = <0x82000000 0x0 0x40000000 0x88 0x40000000 0x0 0x40000000>; /* non-prefetchable memory */
-> +			msi-parent = <&its>;
-> +			#interrupt-cells = <1>;
-> +			interrupt-map-mask = <0 0 0 7>;
-> +			interrupt-map = <0000 0 0 1 &gic 0 0 GIC_SPI 114 IRQ_TYPE_LEVEL_HIGH>,
-> +					<0000 0 0 2 &gic 0 0 GIC_SPI 115 IRQ_TYPE_LEVEL_HIGH>,
-> +					<0000 0 0 3 &gic 0 0 GIC_SPI 116 IRQ_TYPE_LEVEL_HIGH>,
-> +					<0000 0 0 4 &gic 0 0 GIC_SPI 117 IRQ_TYPE_LEVEL_HIGH>;
-> +			status = "disabled";
-> +		};
-> +
-> +		pcie@3600000 {
-> +			compatible = "fsl,lx2160a-pcie";
-> +			reg = <0x00 0x03600000 0x0 0x00100000   /* controller registers */
-> +			       0x90 0x00000000 0x0 0x00001000>; /* configuration space */
-> +			reg-names = "csr_axi_slave", "config_axi_slave";
-> +			interrupts = <GIC_SPI 118 IRQ_TYPE_LEVEL_HIGH>, /* AER interrupt */
-> +				     <GIC_SPI 118 IRQ_TYPE_LEVEL_HIGH>, /* PME interrupt */
-> +				     <GIC_SPI 118 IRQ_TYPE_LEVEL_HIGH>; /* controller interrupt */
-> +			interrupt-names = "aer", "pme", "intr";
-> +			#address-cells = <3>;
-> +			#size-cells = <2>;
-> +			device_type = "pci";
-> +			dma-coherent;
-> +			apio-wins = <256>;
-> +			ppio-wins = <24>;
-> +			bus-range = <0x0 0xff>;
-> +			ranges = <0x82000000 0x0 0x40000000 0x90 0x40000000 0x0 0x40000000>; /* non-prefetchable memory */
-> +			msi-parent = <&its>;
-> +			#interrupt-cells = <1>;
-> +			interrupt-map-mask = <0 0 0 7>;
-> +			interrupt-map = <0000 0 0 1 &gic 0 0 GIC_SPI 119 IRQ_TYPE_LEVEL_HIGH>,
-> +					<0000 0 0 2 &gic 0 0 GIC_SPI 120 IRQ_TYPE_LEVEL_HIGH>,
-> +					<0000 0 0 3 &gic 0 0 GIC_SPI 121 IRQ_TYPE_LEVEL_HIGH>,
-> +					<0000 0 0 4 &gic 0 0 GIC_SPI 122 IRQ_TYPE_LEVEL_HIGH>;
-> +			status = "disabled";
-> +		};
-> +
-> +		pcie@3700000 {
-> +			compatible = "fsl,lx2160a-pcie";
-> +			reg = <0x00 0x03700000 0x0 0x00100000   /* controller registers */
-> +			       0x98 0x00000000 0x0 0x00001000>; /* configuration space */
-> +			reg-names = "csr_axi_slave", "config_axi_slave";
-> +			interrupts = <GIC_SPI 123 IRQ_TYPE_LEVEL_HIGH>, /* AER interrupt */
-> +				     <GIC_SPI 123 IRQ_TYPE_LEVEL_HIGH>, /* PME interrupt */
-> +				     <GIC_SPI 123 IRQ_TYPE_LEVEL_HIGH>; /* controller interrupt */
-> +			interrupt-names = "aer", "pme", "intr";
-> +			#address-cells = <3>;
-> +			#size-cells = <2>;
-> +			device_type = "pci";
-> +			dma-coherent;
-> +			apio-wins = <8>;
-> +			ppio-wins = <8>;
-> +			bus-range = <0x0 0xff>;
-> +			ranges = <0x82000000 0x0 0x40000000 0x98 0x40000000 0x0 0x40000000>; /* non-prefetchable memory */
-> +			msi-parent = <&its>;
-> +			#interrupt-cells = <1>;
-> +			interrupt-map-mask = <0 0 0 7>;
-> +			interrupt-map = <0000 0 0 1 &gic 0 0 GIC_SPI 124 IRQ_TYPE_LEVEL_HIGH>,
-> +					<0000 0 0 2 &gic 0 0 GIC_SPI 125 IRQ_TYPE_LEVEL_HIGH>,
-> +					<0000 0 0 3 &gic 0 0 GIC_SPI 126 IRQ_TYPE_LEVEL_HIGH>,
-> +					<0000 0 0 4 &gic 0 0 GIC_SPI 127 IRQ_TYPE_LEVEL_HIGH>;
-> +			status = "disabled";
-> +		};
-> +
-> +		pcie@3800000 {
-> +			compatible = "fsl,lx2160a-pcie";
-> +			reg = <0x00 0x03800000 0x0 0x00100000   /* controller registers */
-> +			       0xa0 0x00000000 0x0 0x00001000>; /* configuration space */
-> +			reg-names = "csr_axi_slave", "config_axi_slave";
-> +			interrupts = <GIC_SPI 128 IRQ_TYPE_LEVEL_HIGH>, /* AER interrupt */
-> +				     <GIC_SPI 128 IRQ_TYPE_LEVEL_HIGH>, /* PME interrupt */
-> +				     <GIC_SPI 128 IRQ_TYPE_LEVEL_HIGH>; /* controller interrupt */
-> +			interrupt-names = "aer", "pme", "intr";
-> +			#address-cells = <3>;
-> +			#size-cells = <2>;
-> +			device_type = "pci";
-> +			dma-coherent;
-> +			apio-wins = <256>;
-> +			ppio-wins = <24>;
-> +			bus-range = <0x0 0xff>;
-> +			ranges = <0x82000000 0x0 0x40000000 0xa0 0x40000000 0x0 0x40000000>; /* non-prefetchable memory */
-> +			msi-parent = <&its>;
-> +			#interrupt-cells = <1>;
-> +			interrupt-map-mask = <0 0 0 7>;
-> +			interrupt-map = <0000 0 0 1 &gic 0 0 GIC_SPI 129 IRQ_TYPE_LEVEL_HIGH>,
-> +					<0000 0 0 2 &gic 0 0 GIC_SPI 130 IRQ_TYPE_LEVEL_HIGH>,
-> +					<0000 0 0 3 &gic 0 0 GIC_SPI 131 IRQ_TYPE_LEVEL_HIGH>,
-> +					<0000 0 0 4 &gic 0 0 GIC_SPI 132 IRQ_TYPE_LEVEL_HIGH>;
-> +			status = "disabled";
-> +		};
-> +
-> +		pcie@3900000 {
-> +			compatible = "fsl,lx2160a-pcie";
-> +			reg = <0x00 0x03900000 0x0 0x00100000   /* controller registers */
-> +			       0xa8 0x00000000 0x0 0x00001000>; /* configuration space */
-> +			reg-names = "csr_axi_slave", "config_axi_slave";
-> +			interrupts = <GIC_SPI 103 IRQ_TYPE_LEVEL_HIGH>, /* AER interrupt */
-> +				     <GIC_SPI 103 IRQ_TYPE_LEVEL_HIGH>, /* PME interrupt */
-> +				     <GIC_SPI 103 IRQ_TYPE_LEVEL_HIGH>; /* controller interrupt */
-> +			interrupt-names = "aer", "pme", "intr";
-> +			#address-cells = <3>;
-> +			#size-cells = <2>;
-> +			device_type = "pci";
-> +			dma-coherent;
-> +			apio-wins = <8>;
-> +			ppio-wins = <8>;
-> +			bus-range = <0x0 0xff>;
-> +			ranges = <0x82000000 0x0 0x40000000 0xa8 0x40000000 0x0 0x40000000>; /* non-prefetchable memory */
-> +			msi-parent = <&its>;
-> +			#interrupt-cells = <1>;
-> +			interrupt-map-mask = <0 0 0 7>;
-> +			interrupt-map = <0000 0 0 1 &gic 0 0 GIC_SPI 104 IRQ_TYPE_LEVEL_HIGH>,
-> +					<0000 0 0 2 &gic 0 0 GIC_SPI 105 IRQ_TYPE_LEVEL_HIGH>,
-> +					<0000 0 0 3 &gic 0 0 GIC_SPI 106 IRQ_TYPE_LEVEL_HIGH>,
-> +					<0000 0 0 4 &gic 0 0 GIC_SPI 107 IRQ_TYPE_LEVEL_HIGH>;
-> +			status = "disabled";
-> +		};
-> +
+     perf record -b ./workload
+     perf record --call-graph lbr ./workload
 
-Unnecessary newline.
+Other performance monitoring tools like Emon, VTune and other non-opensource
+commercial tools in Ring 0 could operate LBR as well.
+> that means for now only callchains of hardware events can be retrieved from LBR. Is that correct?
+the callchains and the basic branch records in sampling mode.
+>   
+>      If yes, I wonder if callchains of other perf events(eg. tracepoint, software events) can be retrieved from LBR?
+Software events like trace points are not retrieved from LBR,
+but you could wrapper them with intentional branch instructions changes.
 
-I fixed them up and applied the patch.
+> Or only callchains of events on PMU can be retrieved from LBR as there are some hardware restrictions?
+I won't say its hardware restrictions but intentional behavior.
+It's all about your innovative ideas to operate LBR for your purpose.
 
-Shawn
+Thanks,
+Like Xu
+>
+> Thanks for any help you can offer!
+>
+> Best Regards,
+> Yixi Chen
 
->  	};
->  };
-> -- 
-> 2.17.1
-> 
