@@ -2,161 +2,184 @@ Return-Path: <SRS0=7TUr=4M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+X-Spam-Status: No, score=-22.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT,USER_IN_DEF_DKIM_WL autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 27819C11D2F
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 17:41:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CA639C11D30
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 17:41:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F23B320838
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 17:41:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9763E20838
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 17:41:43 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="RVEFVPgU"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727996AbgBXRlf convert rfc822-to-8bit (ORCPT
+        id S1728085AbgBXRlm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Feb 2020 12:41:35 -0500
-Received: from mail-oln040092253048.outbound.protection.outlook.com ([40.92.253.48]:3042
-        "EHLO APC01-SG2-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727108AbgBXRlf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Feb 2020 12:41:35 -0500
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=IssB8YMASMk4zHe6uzbb11vyLmtpkWQAdijUu4we9y0K3ePN2Esqzvvj9Bbn4EudyfmOkj3+Jm3avXtGzJtPUtqBEEx5iGNWTXlIeGGB3OVQ3zeb4g88Fg0EhyjBdE2FsEtgv5zlu2dKz0coTqMh9F59ypvoOI026er//UwFAdLQwbcAgpYAVwxlzf5PmPROsR4KsZyA03p/dh7beRi1U3KE6J17tNNJtF79CQcHw5lrUsh0SBELPCJOJxYIOjc2cEZFSITUGLa1LNM6LXzEM60RA6oqs2MJd8HmWhqo0rK0RnAY2haMZZ0lv4z9m5SPWX/giYi7C/2AizKB0Jg6jg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=cSBnHgGhkpwZZX1J+LmpmXL2RcXs62FDjpl1W8/fQRs=;
- b=iVI+NywUm7dDQ4IJaFnj+dOnY1lYYTkxFmII+2vCq3Uv8kQ4JbK8EhTNFprzbGqPX7ofIMYe1m82rj6HLqqRSGlW3MOkP3+ywYscqd/eoK+EVcNGw3FRuvj1zOB8I4U1iVe3QMNnZ8FoMS4mhmLy4aEsrHFD7cOUutaY52A6BFQVRB3i4xUvgNu2e21I52EdOLiZe6puFAwx13jzHdp274vOr75jiuywPFxO9sHp/mNOzmkYMh607imffR2gTLIU17lZ6frw82wIDCD4hjecOGTTiV8ufKhsZMQnxGces1P+Z4hT6gVHjpwKRm44PyY2EoJiEM5IESTYJIMsxnCD9A==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=none; dmarc=none;
- dkim=none; arc=none
-Received: from SG2APC01FT063.eop-APC01.prod.protection.outlook.com
- (2a01:111:e400:7ebd::39) by
- SG2APC01HT094.eop-APC01.prod.protection.outlook.com (2a01:111:e400:7ebd::406)
- with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2750.19; Mon, 24 Feb
- 2020 17:41:30 +0000
-Received: from PSXP216MB0438.KORP216.PROD.OUTLOOK.COM (10.152.250.56) by
- SG2APC01FT063.mail.protection.outlook.com (10.152.251.186) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2750.18 via Frontend Transport; Mon, 24 Feb 2020 17:41:30 +0000
-Received: from PSXP216MB0438.KORP216.PROD.OUTLOOK.COM
- ([fe80::a5dc:fc1:6544:5cb2]) by PSXP216MB0438.KORP216.PROD.OUTLOOK.COM
- ([fe80::a5dc:fc1:6544:5cb2%7]) with mapi id 15.20.2750.021; Mon, 24 Feb 2020
- 17:41:30 +0000
-Received: from nicholas-dell-linux (2001:44b8:6065:1c:6059:d44:6861:fae2) by ME2PR01CA0168.ausprd01.prod.outlook.com (2603:10c6:201:2f::36) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2750.18 via Frontend Transport; Mon, 24 Feb 2020 17:41:28 +0000
-From:   Nicholas Johnson <nicholas.johnson-opensource@outlook.com.au>
-To:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-CC:     Mika Westerberg <mika.westerberg@linux.intel.com>,
-        Srinivas Kandagatla <srinivas.kandagatla@linaro.org>,
-        Nicholas Johnson <nicholas.johnson-opensource@outlook.com.au>
-Subject: [PATCH v1 0/3] nvmem: Add support for write-only instances, and
- clean-up
-Thread-Topic: [PATCH v1 0/3] nvmem: Add support for write-only instances, and
- clean-up
-Thread-Index: AQHV6zml/lsHzrfInUOXwCupSAP1TQ==
-Date:   Mon, 24 Feb 2020 17:41:30 +0000
-Message-ID: <PSXP216MB043899D4B8F693E1E5C3ECCE80EC0@PSXP216MB0438.KORP216.PROD.OUTLOOK.COM>
-Accept-Language: en-AU, en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-clientproxiedby: ME2PR01CA0168.ausprd01.prod.outlook.com
- (2603:10c6:201:2f::36) To PSXP216MB0438.KORP216.PROD.OUTLOOK.COM
- (2603:1096:300:d::20)
-x-incomingtopheadermarker: OriginalChecksum:3A99595262EFCE974F49FFF5C7C6930DB2BC3146F838F029544504691909DB8F;UpperCasedChecksum:42C0B7F69CC2765735B347B06DE20C478D7F4AA1499FCDCDD7F4F0B5F3E59605;SizeAsReceived:7726;Count:48
-x-ms-exchange-messagesentrepresentingtype: 1
-x-tmn:  [4mUZlQKDR0p4ZAE15jshWF2Mq9Dpkq/HFZQ82XQkiNwGYEYqs5K41vC3Gon3j4DJ]
-x-microsoft-original-message-id: <20200224174123.GA3529@nicholas-dell-linux>
-x-ms-publictraffictype: Email
-x-incomingheadercount: 48
-x-eopattributedmessage: 0
-x-ms-office365-filtering-correlation-id: 95c6403a-188e-4b5e-702d-08d7b950c7f6
-x-ms-exchange-slblob-mailprops: gjx25WM8ZNX0Yn+GlkLgg++2GZLLkjhCFs4BmVC9YOIiGW1jh1Xj87g2enqQ+EVjPyGI6zyJI72lacpmhVHGpSq5ZwC9TcIhFmUkw+RjQdMpfi+9/+HSv0jWEetbK+dhiUKVlw3l+kqIPGssmwcQI8auSPu/IpjwQ0iznsDWpJAsnKKvZdS4eiAACkg4FGX/5Z82K8R2/feEPdmM8Nar+/wywJHwRkHX+eih8XP21dy+qCN+qbZBIlIpsW6AefFY/nZdi/rrBu4pNh7ec++LWOtSabXSZk/KZi+vgn2CHEmf+N3DW0NjaNiRIYFleskDOEljASU0OmknCxvHZRdIK8aGRxOlEsHcSJWRQZdyu7uCCvQQnFsHX9x+aEeMWxM4Emv/A1hYPiZEW9KCuGSA1dxV2IHWQtxAyJkMNlFN4iwDaATrEccylQaXTKzAGmazo/3taHxoAtT1U0l1jmHVoPrztNHsb65Y7Oq1TDP3Yrak9vTmBoEvXoPIrnowcfvXQFqS5ev2NcpRZCpwM35euhBzuKNy5RjR35+9311VOoNGcHNMEz4ET0Erct+gp/WddCInV8iRiZa1t2SuLCh+jDD2rr5JcDW15iWof0HmMnhRikEIsMJ67xfQtujmEAzJb5J2gOCpAvd2uyd9H2YIo+3o5N039DCLJDJswT6a4jZOJ5A5M+2IFvLddvaOafGqcQz6apaupbstdMxSXoyPJNJd72G1KSfOiR/jPWaAizI=
-x-ms-traffictypediagnostic: SG2APC01HT094:
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: KvtLkTBTfsgIuzqXB51kPUeV5keYRCzfVMp/wZEQ4/nHcR3ztzHAauX04goDomw7HajeY9FASDOsM1Ga6c7XRdmY6+IkTlvuyzFo7ycw8HHQHXnxwSBb3bZzjMrKI5IPvqDLmUgFYC/QlMsAqY7q2kuG3SkbHVI9TX0Hr6uls0laucqN4OtTL1Ql0F7TbHZJ
-x-ms-exchange-antispam-messagedata: 2F35Dm8iy6RxmCTFlgfbeqoD7+IOizFDgvCPy2i23tz/mYF3Mjxxj4dKgrntuCoXCj3pM2wiJGhJMlKf99bE/ct1poLnjPs+ITVaI6KlIVf4R7WNVCgdU/xm/+KQjZrHtKD08VNAVgUyEWqdw0X+qeJaSYJkuf2yw0QtoM1jSWTk8cgJjTzoRzDGdS17IRACrWfQiLibdGm6XGL1Y6oLdA==
-x-ms-exchange-transport-forked: True
-Content-Type: text/plain; charset="us-ascii"
-Content-ID: <81DCA365029F814DBC8ECE92D1FC09D3@KORP216.PROD.OUTLOOK.COM>
-Content-Transfer-Encoding: 8BIT
-MIME-Version: 1.0
-X-OriginatorOrg: outlook.com
-X-MS-Exchange-CrossTenant-RMS-PersistedConsumerOrg: 00000000-0000-0000-0000-000000000000
-X-MS-Exchange-CrossTenant-Network-Message-Id: 95c6403a-188e-4b5e-702d-08d7b950c7f6
-X-MS-Exchange-CrossTenant-rms-persistedconsumerorg: 00000000-0000-0000-0000-000000000000
-X-MS-Exchange-CrossTenant-originalarrivaltime: 24 Feb 2020 17:41:30.5950
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Internet
-X-MS-Exchange-CrossTenant-id: 84df9e7f-e9f6-40af-b435-aaaaaaaaaaaa
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SG2APC01HT094
+        Mon, 24 Feb 2020 12:41:42 -0500
+Received: from mail-pg1-f201.google.com ([209.85.215.201]:54549 "EHLO
+        mail-pg1-f201.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728043AbgBXRll (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 24 Feb 2020 12:41:41 -0500
+Received: by mail-pg1-f201.google.com with SMTP id l17so7077741pgh.21
+        for <linux-kernel@vger.kernel.org>; Mon, 24 Feb 2020 09:41:41 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=date:message-id:mime-version:subject:from:to:cc;
+        bh=5nz7K/9gLs7EaewmF2wRn410ngVKaW83QWECedJma1o=;
+        b=RVEFVPgU+ScpyMwz7WfaB+ItQ1JnmyRVQdauoq5Hla6qBbUseznXc4uAFG7Bn9wDIQ
+         xN27LFJFYWTi2nwnRc4n2jIIiBUA8AKjhSKIsI2w6L+MLGraE8CBzpoNAY+jQj142T2c
+         GbsQkJys39l//NmYke/Dl3qt8pWth1ivhTFGoSuRmWOi7ZTEiuEwu6uqmf2+EAbN4Xwj
+         yGcx48yYsSLTF7Fs/bk88t2dE9K/MNFltYl2jSGsjdtuAIUIy3NePMj0qin8WcxIsvMK
+         KuM4AmzgvD5/9sbPJ652/5IesJ6rdo9giLLcRyRm2CxhsY9OnV2nuczIFHaSA+kRg/W7
+         /IdA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:message-id:mime-version:subject:from:to:cc;
+        bh=5nz7K/9gLs7EaewmF2wRn410ngVKaW83QWECedJma1o=;
+        b=RNgdMIvylS+1+1IMIoljhTh4OvpRViD37z8WEuA11hjqSwtf5vfkmT8oQ8c2aTdivS
+         kuSIIyp1y+9oR1Gkw3bQD8zJNlLnV1Apl+siFyYVu38LcAeFlFt7xBZeM5RDYgGYS/FB
+         IqVMSPoXwhQJRV32lF2h5tLIJSt3Z5TcudCUvY2rB0iuT3CNgi3HXwXJbGMRyXoaB2ti
+         +9GoxohuiIW2SkZ4CKszBBVN9HxP6N6tyntPcXA2Jv1dT/HsTap2edWw+fvCkbVCU4Wj
+         dpcx+mFIjUHj2I4k3xXMJNEJCxaLKjr6fkFOQoaSYXFP/rzvXgSkSCksZPT7TBXo2mYC
+         i3vA==
+X-Gm-Message-State: APjAAAU/I6xHiDQXR89Xm5e/4/NmVCTI5yArz8G4LRBKe7LV/bmqjaKX
+        3VDtvIomCDPfDVnkfeIQvXNbccGcQXPAtDYTKBM=
+X-Google-Smtp-Source: APXvYqyH8QxNwAutG1ZN9iCwc4/0fjrPF2jacaW4sjYkH4gbhT4P+UST1Yofs3uM/wUc87c1owiFJwJcD3WtXXPUqY0=
+X-Received: by 2002:a63:ae0a:: with SMTP id q10mr53967461pgf.178.1582566100948;
+ Mon, 24 Feb 2020 09:41:40 -0800 (PST)
+Date:   Mon, 24 Feb 2020 09:41:28 -0800
+Message-Id: <20200224174129.2664-1-ndesaulniers@google.com>
+Mime-Version: 1.0
+X-Mailer: git-send-email 2.25.0.265.gbab2e86ba0-goog
+Subject: [PATCH] Documentation/llvm: add documentation on building w/ Clang/LLVM
+From:   Nick Desaulniers <ndesaulniers@google.com>
+To:     corbet@lwn.net, masahiroy@kernel.org
+Cc:     Nick Desaulniers <ndesaulniers@google.com>,
+        Kees Cook <keescook@chromium.org>,
+        Nathan Chancellor <natechancellor@gmail.com>,
+        Michal Marek <michal.lkml@markovi.net>,
+        linux-kbuild@vger.kernel.org, linux-doc@vger.kernel.org,
+        linux-kernel@vger.kernel.org, clang-built-linux@googlegroups.com
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[Based on Linux v5.6-rc3, does not apply successfully to Linux v5.6-rc2]
+Added to kbuild documentation. Provides more official info on building
+kernels with Clang and LLVM than our wiki.
 
-Hello all,
+Suggested-by: Kees Cook <keescook@chromium.org>
+Reviewed-by: Nathan Chancellor <natechancellor@gmail.com>
+Signed-off-by: Nick Desaulniers <ndesaulniers@google.com>
+---
+ Documentation/kbuild/index.rst |  1 +
+ Documentation/kbuild/llvm.rst  | 80 ++++++++++++++++++++++++++++++++++
+ 2 files changed, 81 insertions(+)
+ create mode 100644 Documentation/kbuild/llvm.rst
 
-I offer the first patch in this series to support write-only instances 
-of nvmem. The use-case is the Thunderbolt driver, for which Mika 
-Westerberg needs write-only nvmem. Refer to 03cd45d2e219 ("thunderbolt: 
-Prevent crash if non-active NVMem file is read").
-
-The second patch in this series reverts the workaround 03cd45d2e219 
-("thunderbolt: Prevent crash if non-active NVMem file is read") which 
-Mika applied in the mean time to prevent a kernel-mode NULL dereference. 
-If Mika wants to do this himself or there is some reason not to apply 
-this, that is fine, but in my mind, it is a logical progression to apply 
-one after the other in the same series.
-
-The third patch in this series removes the .read_only field, because we 
-do not have a .write_only field. It only makes sense to have both or 
-neither. Having either of them makes it hard to be consistent - what 
-happens if a driver were to set both .read_only and .write_only? And 
-there is the question of deciding if the nvmem is read-only because of 
-the .read_only, or based on if the .reg_read is not NULL. What if they 
-disagree? This patch does touch a lot of files, and I will understand if 
-you do not wish to apply it. It is optional and does not need to be 
-applied with the first two.
-
-Thank you in advance for reviewing these.
-
-Kind regards,
-
-Nicholas Johnson (3):
-  nvmem: Add support for write-only instances
-  Revert "thunderbolt: Prevent crash if non-active NVMem file is read"
-  nvmem: Remove .read_only field from nvmem_config
-
- drivers/misc/eeprom/at24.c          |  4 +-
- drivers/misc/eeprom/at25.c          |  4 +-
- drivers/misc/eeprom/eeprom_93xx46.c |  4 +-
- drivers/mtd/mtdcore.c               |  1 -
- drivers/nvmem/bcm-ocotp.c           |  1 -
- drivers/nvmem/core.c                |  5 +-
- drivers/nvmem/imx-iim.c             |  1 -
- drivers/nvmem/imx-ocotp-scu.c       |  1 -
- drivers/nvmem/imx-ocotp.c           |  1 -
- drivers/nvmem/lpc18xx_otp.c         |  1 -
- drivers/nvmem/meson-mx-efuse.c      |  1 -
- drivers/nvmem/nvmem-sysfs.c         | 77 ++++++++++++++++++++++++++---
- drivers/nvmem/nvmem.h               |  1 -
- drivers/nvmem/rockchip-efuse.c      |  1 -
- drivers/nvmem/rockchip-otp.c        |  1 -
- drivers/nvmem/sc27xx-efuse.c        |  1 -
- drivers/nvmem/sprd-efuse.c          |  1 -
- drivers/nvmem/stm32-romem.c         |  1 -
- drivers/nvmem/sunxi_sid.c           |  1 -
- drivers/nvmem/uniphier-efuse.c      |  1 -
- drivers/nvmem/zynqmp_nvmem.c        |  1 -
- drivers/soc/tegra/fuse/fuse-tegra.c |  1 -
- drivers/thunderbolt/switch.c        |  8 ---
- drivers/w1/slaves/w1_ds250x.c       |  1 -
- include/linux/nvmem-provider.h      |  2 -
- 25 files changed, 77 insertions(+), 45 deletions(-)
-
+diff --git a/Documentation/kbuild/index.rst b/Documentation/kbuild/index.rst
+index 0f144fad99a6..3882bd5f7728 100644
+--- a/Documentation/kbuild/index.rst
++++ b/Documentation/kbuild/index.rst
+@@ -19,6 +19,7 @@ Kernel Build System
+ 
+     issues
+     reproducible-builds
++    llvm
+ 
+ .. only::  subproject and html
+ 
+diff --git a/Documentation/kbuild/llvm.rst b/Documentation/kbuild/llvm.rst
+new file mode 100644
+index 000000000000..68ae022aebc0
+--- /dev/null
++++ b/Documentation/kbuild/llvm.rst
+@@ -0,0 +1,80 @@
++==============================
++Building Linux with Clang/LLVM
++==============================
++
++This document covers how to build the Linux kernel with Clang and LLVM
++utilities.
++
++About
++-----
++
++The Linux kernel has always traditionally been compiled with GNU toolchains
++such as GCC and binutils. On going work has allowed for `Clang
++<https://clang.llvm.org/>`_ and `LLVM <https://llvm.org/>`_ utilities to be
++used as viable substitutes. Distributions such as `Android
++<https://www.android.com/>`_, `ChromeOS
++<https://www.chromium.org/chromium-os>`_, and `OpenMandriva
++<https://www.openmandriva.org/>`_ use Clang built kernels.  `LLVM is a
++collection of toolchain components implemented in terms of C++ objects
++<https://www.aosabook.org/en/llvm.html>`_. Clang is a front-end to LLVM that
++supports C and the GNU C extensions required by the kernel, and is pronounced
++"klang," not "see-lang."
++
++Clang
++-----
++
++The compiler used can be swapped out via `CC=` command line argument to `make`.
++`CC=` should be set when selecting a config and during a build.
++
++	make CC=clang defconfig
++
++	make CC=clang
++
++Cross Compiling
++---------------
++
++A single Clang compiler binary will typically contain all supported backends,
++which can help simplify cross compiling.
++
++	ARCH=arm64 CROSS_COMPILE=aarch64-linux-gnu- make CC=clang
++
++`CROSS_COMPILE` is not used to suffix the Clang compiler binary, instead
++`CROSS_COMPILE` is used to set a command line flag: `--target <triple>`. For
++example:
++
++	clang --target aarch64-linux-gnu foo.c
++
++LLVM Utilities
++--------------
++
++LLVM has substitutes for GNU binutils utilities. These can be invoked as
++additional parameters to `make`.
++
++	make CC=clang AS=clang LD=ld.lld AR=llvm-ar NM=llvm-nm STRIP=llvm-strip \\
++	  OBJCOPY=llvm-objcopy OBJDUMP=llvm-objdump OBJSIZE=llvm-objsize \\
++	  READELF=llvm-readelf HOSTCC=clang HOSTCXX=clang++ HOSTAR=llvm-ar \\
++	  HOSTLD=ld.lld
++
++Getting Help
++------------
++
++- `Website <https://clangbuiltlinux.github.io/>`_
++- `Mailing List <https://groups.google.com/forum/#!forum/clang-built-linux>`_: <clang-built-linux@googlegroups.com>
++- `Issue Tracker <https://github.com/ClangBuiltLinux/linux/issues>`_
++- IRC: #clangbuiltlinux on chat.freenode.net
++- `Telegram <https://t.me/ClangBuiltLinux>`_: @ClangBuiltLinux
++- `Wiki <https://github.com/ClangBuiltLinux/linux/wiki>`_
++- `Beginner Bugs <https://github.com/ClangBuiltLinux/linux/issues?q=is%3Aopen+is%3Aissue+label%3A%22good+first+issue%22>`_
++
++Getting LLVM
++-------------
++
++- http://releases.llvm.org/download.html
++- https://github.com/llvm/llvm-project
++- https://llvm.org/docs/GettingStarted.html
++- https://llvm.org/docs/CMake.html
++- https://apt.llvm.org/
++- https://www.archlinux.org/packages/extra/x86_64/llvm/
++- https://github.com/ClangBuiltLinux/tc-build
++- https://github.com/ClangBuiltLinux/linux/wiki/Building-Clang-from-source
++- https://android.googlesource.com/platform/prebuilts/clang/host/linux-x86/
 -- 
-2.25.1
+2.25.0.265.gbab2e86ba0-goog
 
