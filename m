@@ -2,122 +2,136 @@ Return-Path: <SRS0=7TUr=4M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C7A49C3567B
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 06:49:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9BD9AC3567B
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 06:51:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9E83320661
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 06:49:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6E95520714
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 06:51:29 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="ZPUPeHm7"
+	dkim=pass (1024-bit key) header.d=gibson.dropbear.id.au header.i=@gibson.dropbear.id.au header.b="gMA87Wx6"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727311AbgBXGtO (ORCPT
+        id S1727218AbgBXGv2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Feb 2020 01:49:14 -0500
-Received: from us-smtp-2.mimecast.com ([207.211.31.81]:25639 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1727193AbgBXGtN (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Feb 2020 01:49:13 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1582526952;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=OFrZl6Sw3yEf+caSATqePnmBvtnNQFZ6PQ2MTTPkWY4=;
-        b=ZPUPeHm7W7bYUdLzxTLyCr/4UluFXuIVJj3AewnyRmTYQnCzMb2yOIRCyCEAnXam55Gfxh
-        J9JAqxZ6BTpOmeurmPNNDpX8KOqZNoaU67nTlKK+k5p5HnTT6qb2qXzPCkqPuVlMqLkMK6
-        pxpXLOoFT3779sf3VvExMkMVmiFliOU=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-103-2pKoJM5WNTO2krrL8cQnhw-1; Mon, 24 Feb 2020 01:49:10 -0500
-X-MC-Unique: 2pKoJM5WNTO2krrL8cQnhw-1
-Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id CB5E0800D54;
-        Mon, 24 Feb 2020 06:49:07 +0000 (UTC)
-Received: from [10.72.13.147] (ovpn-13-147.pek2.redhat.com [10.72.13.147])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 4035A5C21B;
-        Mon, 24 Feb 2020 06:48:49 +0000 (UTC)
-Subject: Re: [PATCH V4 3/5] vDPA: introduce vDPA bus
-To:     Harpreet Singh Anand <hanand@xilinx.com>,
-        "mst@redhat.com" <mst@redhat.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
-        "virtualization@lists.linux-foundation.org" 
-        <virtualization@lists.linux-foundation.org>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>
-Cc:     "tiwei.bie@intel.com" <tiwei.bie@intel.com>,
-        "jgg@mellanox.com" <jgg@mellanox.com>,
-        "maxime.coquelin@redhat.com" <maxime.coquelin@redhat.com>,
-        "cunming.liang@intel.com" <cunming.liang@intel.com>,
-        "zhihong.wang@intel.com" <zhihong.wang@intel.com>,
-        "rob.miller@broadcom.com" <rob.miller@broadcom.com>,
-        "xiao.w.wang@intel.com" <xiao.w.wang@intel.com>,
-        "haotian.wang@sifive.com" <haotian.wang@sifive.com>,
-        "lingshan.zhu@intel.com" <lingshan.zhu@intel.com>,
-        "eperezma@redhat.com" <eperezma@redhat.com>,
-        "lulu@redhat.com" <lulu@redhat.com>,
-        "parav@mellanox.com" <parav@mellanox.com>,
-        "kevin.tian@intel.com" <kevin.tian@intel.com>,
-        "stefanha@redhat.com" <stefanha@redhat.com>,
-        "rdunlap@infradead.org" <rdunlap@infradead.org>,
-        "hch@infradead.org" <hch@infradead.org>,
-        "aadam@redhat.com" <aadam@redhat.com>,
-        "jiri@mellanox.com" <jiri@mellanox.com>,
-        "shahafs@mellanox.com" <shahafs@mellanox.com>,
-        "mhabets@solarflare.com" <mhabets@solarflare.com>
-References: <20200220061141.29390-1-jasowang@redhat.com>
- <20200220061141.29390-4-jasowang@redhat.com>
- <BY5PR02MB63714A03B7135F8C4054C1E8BBEC0@BY5PR02MB6371.namprd02.prod.outlook.com>
-From:   Jason Wang <jasowang@redhat.com>
-Message-ID: <d6ea5dcb-3933-920b-523e-a494d323ef8a@redhat.com>
-Date:   Mon, 24 Feb 2020 14:48:48 +0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        Mon, 24 Feb 2020 01:51:28 -0500
+Received: from bilbo.ozlabs.org ([203.11.71.1]:45701 "EHLO ozlabs.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726990AbgBXGv1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 24 Feb 2020 01:51:27 -0500
+Received: by ozlabs.org (Postfix, from userid 1007)
+        id 48Qt596JR7z9sRQ; Mon, 24 Feb 2020 17:51:25 +1100 (AEDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+        d=gibson.dropbear.id.au; s=201602; t=1582527085;
+        bh=4toq+o4FWYWnXZF2qhVnr45b/rNEVYKG5cy9H9uQF6w=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=gMA87Wx6tBiuJB6UgG+glqvbxC6ABwj/iRhqAEx62Xk9uiswratDNTSr3AAa71CXv
+         GPUNJKQ/bDn7vXGBXFm2T/BC6o2tFusk2R+id/HezhrRbfqJ0xpErOvpDBEnHAlL93
+         576GQ8Ja7NR/3iFZTxbI/J02SIr0x/x5yeKPtEZk=
+Date:   Mon, 24 Feb 2020 17:50:53 +1100
+From:   David Gibson <david@gibson.dropbear.id.au>
+To:     Christoph Hellwig <hch@lst.de>
+Cc:     Halil Pasic <pasic@linux.ibm.com>,
+        "Michael S. Tsirkin" <mst@redhat.com>,
+        Jason Wang <jasowang@redhat.com>,
+        Marek Szyprowski <m.szyprowski@samsung.com>,
+        Robin Murphy <robin.murphy@arm.com>,
+        linux-s390@vger.kernel.org,
+        virtualization@lists.linux-foundation.org,
+        linux-kernel@vger.kernel.org, iommu@lists.linux-foundation.org,
+        Christian Borntraeger <borntraeger@de.ibm.com>,
+        Janosch Frank <frankja@linux.ibm.com>,
+        Viktor Mihajlovski <mihajlov@linux.ibm.com>,
+        Cornelia Huck <cohuck@redhat.com>,
+        Ram Pai <linuxram@us.ibm.com>,
+        Thiago Jung Bauermann <bauerman@linux.ibm.com>,
+        "Lendacky, Thomas" <Thomas.Lendacky@amd.com>,
+        Michael Mueller <mimu@linux.ibm.com>
+Subject: Re: [PATCH 2/2] virtio: let virtio use DMA API when guest RAM is
+ protected
+Message-ID: <20200224065053.GM1751@umbus.fritz.box>
+References: <20200220160606.53156-1-pasic@linux.ibm.com>
+ <20200220160606.53156-3-pasic@linux.ibm.com>
+ <20200220161309.GB12709@lst.de>
+ <20200221025915.GB2298@umbus.fritz.box>
+ <20200221163645.GB10054@lst.de>
 MIME-Version: 1.0
-In-Reply-To: <BY5PR02MB63714A03B7135F8C4054C1E8BBEC0@BY5PR02MB6371.namprd02.prod.outlook.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
-Content-Transfer-Encoding: quoted-printable
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="tv2SIFopg1r47n4a"
+Content-Disposition: inline
+In-Reply-To: <20200221163645.GB10054@lst.de>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
 
-On 2020/2/24 =E4=B8=8B=E5=8D=882:14, Harpreet Singh Anand wrote:
-> Is there a plan to add an API in vDPA_config_ops for getting the notifi=
-cation area from the VDPA device (something similar to get_notify_area in=
- the VDPA DPDK case)? This will make the notifications from the guest  (v=
-host_vdpa use case) to the VDPA device more efficient - at least for virt=
-io 1.0+ drivers in the VM.
->
-> I believe this would require enhancement to the vhost ioctl (something =
-similar to the  VHOST_USER_SLAVE_VRING_HOST_NOTIFIER_MSG).
+--tv2SIFopg1r47n4a
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
+On Fri, Feb 21, 2020 at 05:36:45PM +0100, Christoph Hellwig wrote:
+> On Fri, Feb 21, 2020 at 01:59:15PM +1100, David Gibson wrote:
+> > > Hell no.  This is a detail of the platform DMA direct implementation.
+> > > Drivers have no business looking at this flag, and virtio finally nee=
+ds
+> > > to be fixed to use the DMA API properly for everything but legacy dev=
+ices.
+> >=20
+> > So, this patch definitely isn't right as it stands, but I'm struggling
+> > to understand what it is you're saying is the right way.
+> >=20
+> > By "legacy devices" I assume you mean pre-virtio-1.0 devices, that
+> > lack the F_VERSION_1 feature flag.  Is that right?  Because I don't
+> > see how being a legacy device or not relates to use of the DMA API.
+>=20
+> No.   "legacy" is anything that does not set F_ACCESS_PLATFORM.
 
-Yes, we plan to add that on top. Basically, here's what we plan to do:=20
-(sorted by urgency)
+Hm, I see.
 
-1) direct doorbell mapping as you asked here
-2) direct interrupt injection (when platform support, e.g through posted=20
-interrupt)
-3) control virtqueue support
+The trouble is I think we can only reasonably call things "legacy"
+when essentially all currently in use OSes have support for the new,
+better way of doing things.  That is, alas, not really the case for
+F_ACCESS_PLATFORM.
 
-Thanks
+> > I *think* what you are suggesting here is that virtio devices that
+> > have !F_IOMMU_PLATFORM should have their dma_ops set up so that the
+> > DMA API treats IOVA=3D=3DPA, which will satisfy what the device expects.
+> > Then the virtio driver can use the DMA API the same way for both
+> > F_IOMMU_PLATFORM and !F_IOMMU_PLATFORM devices.
+>=20
+> No.  Those should just keep using the existing legacy non-dma ops
+> case and be done with it.  No changes to that and most certainly
+> no new features.
+>=20
 
+--=20
+David Gibson			| I'll have my music baroque, and my code
+david AT gibson.dropbear.id.au	| minimalist, thank you.  NOT _the_ _other_
+				| _way_ _around_!
+http://www.ozlabs.org/~dgibson
 
->
->
-> Regards,
-> Harpreet
->
+--tv2SIFopg1r47n4a
+Content-Type: application/pgp-signature; name="signature.asc"
 
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAEBCAAdFiEEdfRlhq5hpmzETofcbDjKyiDZs5IFAl5TckoACgkQbDjKyiDZ
+s5K3ZRAAhMCdmN1OrUKfgLFhJWQQeC89dOZY69wRPSGHIRGqp2vdz/84iVFYTXtM
+KJIVtt/k4q5tdpB8FDlRYkPkBjAxZxwUXCQ5ErZ8bUW+1l9qidMcmM81ud6CuDo5
+JnNILm61f05ut+aJtoH8N9pHLWVp6Xd7D0U2EuZm3O1E1Ru7eWh89XVqZszqy/0v
+wU+HF11K6jWai0ZBUmsbHzRzklrXB832SfHRxREYTgaAnfIJciC+VoYClfLDdz5l
+IHqFw/HkmOM0gbiuTsirWTmIZYgdiGm2luvqn3UJRSUeMur5r1KAQb54VdTXoxm6
+85M7AILjY82m3QKG4xWbSzH778IFxv3fhbfNo1lOT0f4IAn3bJ3xNrlP72vmzq03
+mnU3XYWDD7Bi7ohPJmNL/KatbmLDSBGW55f6VxdcydKUEWC4EOdLhAm3D1L9GOI7
+m9MOyhkKifhvysv3yA4+Wu6lEhJS7C/xLLzZIKuXS/2YWeplK4meqBoIgBnLD9L1
+oD4EK/yI9AQu0WLj2SPUP5jWzMxaUzKHrseBf8Lzk1i/IrMrOxqYF3+Mz6hHZkey
++3lNPAAPuD+FeZC34MWsH7jL/JPT3RPDGHjtIf7fP2f/VPZygVJCOUh5/vYnX4dI
+v2Jd5yIETXGCRsGnZcxnszGVK3J0zN+skCNsyIZKwRBsZuBTLj0=
+=Q89/
+-----END PGP SIGNATURE-----
+
+--tv2SIFopg1r47n4a--
