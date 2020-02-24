@@ -8,66 +8,66 @@ X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6D287C35673
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 00:49:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C9A26C35673
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 00:49:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 41532206E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 00:49:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 90CA8206E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 00:49:59 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="W/7+FoB+"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="CMcacNiQ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727244AbgBXAti (ORCPT
+        id S1727258AbgBXAt6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 23 Feb 2020 19:49:38 -0500
-Received: from mail-pl1-f195.google.com ([209.85.214.195]:34966 "EHLO
-        mail-pl1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727156AbgBXAth (ORCPT
+        Sun, 23 Feb 2020 19:49:58 -0500
+Received: from mail-pf1-f193.google.com ([209.85.210.193]:32856 "EHLO
+        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727151AbgBXAt6 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 23 Feb 2020 19:49:37 -0500
-Received: by mail-pl1-f195.google.com with SMTP id g6so3338908plt.2;
-        Sun, 23 Feb 2020 16:49:37 -0800 (PST)
+        Sun, 23 Feb 2020 19:49:58 -0500
+Received: by mail-pf1-f193.google.com with SMTP id n7so4469543pfn.0;
+        Sun, 23 Feb 2020 16:49:57 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=date:from:to:cc:subject:message-id:references:mime-version
          :content-disposition:in-reply-to:user-agent;
-        bh=Meowi5DfMOFxxX4xOwtpguRWIG7M6enGckZnIU74nGo=;
-        b=W/7+FoB+ozkb+Xyyu4fSfdCAdsMwfsUrHmvM+zIYWkrC4IDkacHAv5yJjhxw8eGbHM
-         K5zmd2tsZ08+yz4hXj+t1SrUrpYWok5Hehs29Fz2y8KASRqHGUnVIFRN/iHcUH3bougI
-         ME62u7PNQFHIMrcxB8YPUf1ctok/reiQZ6qKxXSOUJ7YPvfAUHR49P2t1E3OPUwh5pX8
-         JgqwSSB+JyvlSC+8TDPyj2JpVR0aah6/fkKqo9563ICz3Ii436VD/3yS3FwUxGeFzAdS
-         V0U4cLpZ6qN6UwvgVNSJ8JLZIDHBtuJvhRRqz6AUCbL5kpUaWl8uE5GZOmC8oN02y3FT
-         JUUw==
+        bh=YMwZfyhzKIn7XIlMpWIz2TroR95Fj3VWRLrDKbQ2Lxo=;
+        b=CMcacNiQtw7mwU+R6DdkhKVrKtXvLJTBouSHy+fja+ccQfhoBoE+TZA6qGN1iYUdHr
+         QB7+FFYYfrUPxCrN6Gm4ilSNAlmICz6N89h5SboiPmSnET/8cMdScCjWnD8D0wUTN+FV
+         eec9uLA7PY2AWH45m+oL12zPOIx8Y0w9Mb00E3ouXN05G90srlSwppPUsS3llOb69YxZ
+         wO5KH/ec+5ejn7Hu76TNx8NJcpucv/xBDTTpBgPM4j1u5uxn75hP1/lpDqwPzT3We8dd
+         9bNcUOoxkU2oZsGOu00io8ZBpD8yHXHq3xiY/bzFmGlbqILqbh52HdM25PeKmGJ1LBZk
+         3/3Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=Meowi5DfMOFxxX4xOwtpguRWIG7M6enGckZnIU74nGo=;
-        b=ZI6hNGNsMZ2ptmHBcQd6eJvqCFg8q9Y8cz5ovdof4QjuoZpkT3MmziEQu4qqpJKzdo
-         lTSZcIIXLSNGbfeKKRzZFm4Pdy9PtNvrxJu/ztuF7GP36w52W+mI0K6tqHS+NSlTJ5Lz
-         N/hPoqPxtDvQY+HF4Es7SCrcrcjoETPebcaOKAUQyV19mKy6j0T3wD2lxXlnluTDb0X3
-         TI9YZNHQaQ8H/PH0vEneqmRCa4cYFThq9bSgtEZ/QlGJUsOM7n8VRhhsBjapzAiVQT7F
-         iwZSUyoBo20vNdDzpgRxpC00/mKaMAJ9KEd5dOERUjSO3fvTraL5Dk+T10hHKBuDdJgn
-         kN3g==
-X-Gm-Message-State: APjAAAWYCXwi4hdHm3mN/JkoTCJHy2to77e+JXoGmIfhnKkehjcEbwST
-        oB997NFrhuVBrdT7l0FEPsLNIbPVhA8=
-X-Google-Smtp-Source: APXvYqxJuhp+NjLXk/V2SFRgmnc6mX+B5KA2khn1FT6uE3njP24qOzgfQ0B3aPcDoXNOLUsRyCUTgA==
-X-Received: by 2002:a17:902:8a81:: with SMTP id p1mr47501862plo.284.1582505376985;
-        Sun, 23 Feb 2020 16:49:36 -0800 (PST)
+        bh=YMwZfyhzKIn7XIlMpWIz2TroR95Fj3VWRLrDKbQ2Lxo=;
+        b=UgTesJjNS5M10N6bwjcLKs4OifwFur42j/r65aTxr9HCMN5Bf7Ylp1ERw1bWlh48RD
+         RSdTt2PVSRlGz+yWLIQcWT5wDZ9JSGSXAJe+nBCxym2NAjwBUubbdC/m5eGe2fnMcits
+         kIdPohYPrLh5UC/5vlJ2RILW+nul574uVL4xtCkg1Lmo0UZyqPAAo7JutzdYvZP6yQ86
+         DDowiriLUeXgdnI0WO1fBp/KWWeF972kIc7FJlPZw/wHLcejPWZaXzPrrjjjQ8OJlkZl
+         kGZhYJq5ODpXdegBsuQLTp5o0PF/xQDSAcUL0MsP7cgpzgLzbpc1BDiOOyw+5waXZda0
+         E0Yg==
+X-Gm-Message-State: APjAAAUmuKWLOowik2SFJfrulcM8JW/qMZSY1lJSYYPPnRy+eayBfB87
+        eQgXAsOI4PH5QPIAWvKRPRhYRRomT94=
+X-Google-Smtp-Source: APXvYqyNRXyuEATpC3EHUKNuhaNoIa7Q5flofrUDddV7fxB4wBa/JBLzn77e9Rs+wea+VmBrpTdDHw==
+X-Received: by 2002:a62:e217:: with SMTP id a23mr49051595pfi.50.1582505397048;
+        Sun, 23 Feb 2020 16:49:57 -0800 (PST)
 Received: from localhost ([106.51.232.35])
-        by smtp.gmail.com with ESMTPSA id 70sm10063367pfw.140.2020.02.23.16.49.36
+        by smtp.gmail.com with ESMTPSA id r11sm10182014pgi.9.2020.02.23.16.49.56
         (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Sun, 23 Feb 2020 16:49:36 -0800 (PST)
-Date:   Mon, 24 Feb 2020 06:19:35 +0530
+        Sun, 23 Feb 2020 16:49:56 -0800 (PST)
+Date:   Mon, 24 Feb 2020 06:19:55 +0530
 From:   afzal mohammed <afzal.mohd.ma@gmail.com>
-To:     linux-hexagon@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc:     Brian Cain <bcain@codeaurora.org>,
-        Richard Fontana <rfontana@redhat.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Allison Randal <allison@lohutok.net>,
+To:     linux-ia64@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc:     Tony Luck <tony.luck@intel.com>, Fenghua Yu <fenghua.yu@intel.com>,
+        Tom Vaden <tom.vaden@hpe.com>,
+        Mike Rapoport <rppt@linux.ibm.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
         Thomas Gleixner <tglx@linutronix.de>,
-        Alexios Zavras <alexios.zavras@intel.com>
-Subject: [PATCH v2 04/18] hexagon: replace setup_irq() by request_irq()
-Message-ID: <44775ff418e0b784311c1d86aae4927da7fcc645.1582471508.git.afzal.mohd.ma@gmail.com>
+        Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+Subject: [PATCH v2 05/18] ia64: replace setup_irq() by request_irq()
+Message-ID: <336789c09434b468a2443f5cb2063e2530ca4a1e.1582471508.git.afzal.mohd.ma@gmail.com>
 References: <cover.1582471508.git.afzal.mohd.ma@gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
@@ -101,81 +101,182 @@ v2:
            pr_err("%s: request_irq() failed"
  * Commit message massage
 
- arch/hexagon/kernel/smp.c  | 17 ++++++++---------
- arch/hexagon/kernel/time.c | 11 +++--------
- 2 files changed, 11 insertions(+), 17 deletions(-)
+ arch/ia64/kernel/irq_ia64.c | 42 ++++++++++--------------------
+ arch/ia64/kernel/mca.c      | 51 +++++++++++--------------------------
+ 2 files changed, 29 insertions(+), 64 deletions(-)
 
-diff --git a/arch/hexagon/kernel/smp.c b/arch/hexagon/kernel/smp.c
-index 0bbbe652a513..67f4b0bff250 100644
---- a/arch/hexagon/kernel/smp.c
-+++ b/arch/hexagon/kernel/smp.c
-@@ -114,12 +114,6 @@ void send_ipi(const struct cpumask *cpumask, enum ipi_message_type msg)
- 	local_irq_restore(flags);
- }
- 
--static struct irqaction ipi_intdesc = {
--	.handler = handle_ipi,
--	.flags = IRQF_TRIGGER_RISING,
--	.name = "ipi_handler"
--};
--
- void __init smp_prepare_boot_cpu(void)
- {
- }
-@@ -155,7 +149,9 @@ void start_secondary(void)
- 
- 	cpu = smp_processor_id();
- 
--	setup_irq(BASE_IPI_IRQ + cpu, &ipi_intdesc);
-+	if (request_irq(BASE_IPI_IRQ + cpu, handle_ipi, IRQF_TRIGGER_RISING,
-+			"ipi_handler", NULL))
-+		pr_err("%s: request_irq() failed\n", "ipi_handler");
- 
- 	/*  Register the clock_event dummy  */
- 	setup_percpu_clockdev();
-@@ -213,8 +209,11 @@ void __init smp_prepare_cpus(unsigned int max_cpus)
- 		set_cpu_present(i, true);
- 
- 	/*  Also need to register the interrupts for IPI  */
--	if (max_cpus > 1)
--		setup_irq(BASE_IPI_IRQ, &ipi_intdesc);
-+	if (max_cpus > 1) {
-+		if (request_irq(BASE_IPI_IRQ, handle_ipi, IRQF_TRIGGER_RISING,
-+				"ipi_handler", NULL))
-+			pr_err("%s: request_irq() failed\n", "ipi_handler");
-+	}
- }
- 
- void smp_send_reschedule(int cpu)
-diff --git a/arch/hexagon/kernel/time.c b/arch/hexagon/kernel/time.c
-index f99e9257bed4..26550e46cf91 100644
---- a/arch/hexagon/kernel/time.c
-+++ b/arch/hexagon/kernel/time.c
-@@ -143,13 +143,6 @@ static irqreturn_t timer_interrupt(int irq, void *devid)
+diff --git a/arch/ia64/kernel/irq_ia64.c b/arch/ia64/kernel/irq_ia64.c
+index 8e91c86e8072..166a38dae663 100644
+--- a/arch/ia64/kernel/irq_ia64.c
++++ b/arch/ia64/kernel/irq_ia64.c
+@@ -351,11 +351,6 @@ static irqreturn_t smp_irq_move_cleanup_interrupt(int irq, void *dev_id)
  	return IRQ_HANDLED;
  }
  
--/*  This should also be pulled from devtree  */
--static struct irqaction rtos_timer_intdesc = {
--	.handler = timer_interrupt,
--	.flags = IRQF_TIMER | IRQF_TRIGGER_RISING,
--	.name = "rtos_timer"
+-static struct irqaction irq_move_irqaction = {
+-	.handler =	smp_irq_move_cleanup_interrupt,
+-	.name =		"irq_move"
+-};
+-
+ static int __init parse_vector_domain(char *arg)
+ {
+ 	if (!arg)
+@@ -586,28 +581,15 @@ static irqreturn_t dummy_handler (int irq, void *dev_id)
+ 	return IRQ_NONE;
+ }
+ 
+-static struct irqaction ipi_irqaction = {
+-	.handler =	handle_IPI,
+-	.name =		"IPI"
 -};
 -
  /*
-  * time_init_deferred - called by start_kernel to set up timer/clock source
-  *
-@@ -195,7 +188,9 @@ void __init time_init_deferred(void)
+  * KVM uses this interrupt to force a cpu out of guest mode
+  */
+-static struct irqaction resched_irqaction = {
+-	.handler =	dummy_handler,
+-	.name =		"resched"
+-};
+-
+-static struct irqaction tlb_irqaction = {
+-	.handler =	dummy_handler,
+-	.name =		"tlb_flush"
+-};
+ 
  #endif
  
- 	clockevents_register_device(ce_dev);
--	setup_irq(ce_dev->irq, &rtos_timer_intdesc);
-+	if (request_irq(ce_dev->irq, timer_interrupt,
-+			IRQF_TIMER | IRQF_TRIGGER_RISING, "rtos_timer", NULL))
-+		pr_err("%s: request_irq() failed\n", "rtos_timer");
+ void
+-ia64_native_register_percpu_irq (ia64_vector vec, struct irqaction *action)
++ia64_native_register_percpu_irq(ia64_vector vec, const char *name,
++				irq_handler_t handler)
+ {
+ 	unsigned int irq;
+ 
+@@ -615,8 +597,9 @@ ia64_native_register_percpu_irq (ia64_vector vec, struct irqaction *action)
+ 	BUG_ON(bind_irq_vector(irq, vec, CPU_MASK_ALL));
+ 	irq_set_status_flags(irq, IRQ_PER_CPU);
+ 	irq_set_chip(irq, &irq_type_ia64_lsapic);
+-	if (action)
+-		setup_irq(irq, action);
++	if (handler)
++		if (request_irq(irq, handler, 0, name, NULL))
++			pr_err("request_irq() for %s failed", name);
+ 	irq_set_handler(irq, handle_percpu_irq);
  }
  
- void __init time_init(void)
+@@ -624,9 +607,10 @@ void __init
+ ia64_native_register_ipi(void)
+ {
+ #ifdef CONFIG_SMP
+-	register_percpu_irq(IA64_IPI_VECTOR, &ipi_irqaction);
+-	register_percpu_irq(IA64_IPI_RESCHEDULE, &resched_irqaction);
+-	register_percpu_irq(IA64_IPI_LOCAL_TLB_FLUSH, &tlb_irqaction);
++	register_percpu_irq(IA64_IPI_VECTOR, "IPI", handle_IPI);
++	register_percpu_irq(IA64_IPI_RESCHEDULE, "resched", dummy_handler);
++	register_percpu_irq(IA64_IPI_LOCAL_TLB_FLUSH, "tlb_flush",
++			    dummy_handler);
+ #endif
+ }
+ 
+@@ -635,10 +619,12 @@ init_IRQ (void)
+ {
+ 	acpi_boot_init();
+ 	ia64_register_ipi();
+-	register_percpu_irq(IA64_SPURIOUS_INT_VECTOR, NULL);
++	register_percpu_irq(IA64_SPURIOUS_INT_VECTOR, NULL, NULL);
+ #ifdef CONFIG_SMP
+-	if (vector_domain_type != VECTOR_DOMAIN_NONE)
+-		register_percpu_irq(IA64_IRQ_MOVE_VECTOR, &irq_move_irqaction);
++	if (vector_domain_type != VECTOR_DOMAIN_NONE) {
++		register_percpu_irq(IA64_IRQ_MOVE_VECTOR, "irq_move",
++				    smp_irq_move_cleanup_interrupt);
++	}
+ #endif
+ #ifdef CONFIG_PERFMON
+ 	pfm_init_percpu();
+diff --git a/arch/ia64/kernel/mca.c b/arch/ia64/kernel/mca.c
+index bf2cb9294795..e3d12b376f92 100644
+--- a/arch/ia64/kernel/mca.c
++++ b/arch/ia64/kernel/mca.c
+@@ -1766,36 +1766,6 @@ ia64_mca_disable_cpe_polling(char *str)
+ 
+ __setup("disable_cpe_poll", ia64_mca_disable_cpe_polling);
+ 
+-static struct irqaction cmci_irqaction = {
+-	.handler =	ia64_mca_cmc_int_handler,
+-	.name =		"cmc_hndlr"
+-};
+-
+-static struct irqaction cmcp_irqaction = {
+-	.handler =	ia64_mca_cmc_int_caller,
+-	.name =		"cmc_poll"
+-};
+-
+-static struct irqaction mca_rdzv_irqaction = {
+-	.handler =	ia64_mca_rendez_int_handler,
+-	.name =		"mca_rdzv"
+-};
+-
+-static struct irqaction mca_wkup_irqaction = {
+-	.handler =	ia64_mca_wakeup_int_handler,
+-	.name =		"mca_wkup"
+-};
+-
+-static struct irqaction mca_cpe_irqaction = {
+-	.handler =	ia64_mca_cpe_int_handler,
+-	.name =		"cpe_hndlr"
+-};
+-
+-static struct irqaction mca_cpep_irqaction = {
+-	.handler =	ia64_mca_cpe_int_caller,
+-	.name =		"cpe_poll"
+-};
+-
+ /* Minimal format of the MCA/INIT stacks.  The pseudo processes that run on
+  * these stacks can never sleep, they cannot return from the kernel to user
+  * space, they do not appear in a normal ps listing.  So there is no need to
+@@ -2056,18 +2026,23 @@ void __init ia64_mca_irq_init(void)
+ 	 *  Configure the CMCI/P vector and handler. Interrupts for CMC are
+ 	 *  per-processor, so AP CMC interrupts are setup in smp_callin() (smpboot.c).
+ 	 */
+-	register_percpu_irq(IA64_CMC_VECTOR, &cmci_irqaction);
+-	register_percpu_irq(IA64_CMCP_VECTOR, &cmcp_irqaction);
++	register_percpu_irq(IA64_CMC_VECTOR, "cmc_hndlr",
++			    ia64_mca_cmc_int_handler);
++	register_percpu_irq(IA64_CMCP_VECTOR, "cmc_poll",
++			    ia64_mca_cmc_int_caller);
+ 	ia64_mca_cmc_vector_setup();       /* Setup vector on BSP */
+ 
+ 	/* Setup the MCA rendezvous interrupt vector */
+-	register_percpu_irq(IA64_MCA_RENDEZ_VECTOR, &mca_rdzv_irqaction);
++	register_percpu_irq(IA64_MCA_RENDEZ_VECTOR, "mca_rdzv",
++			    ia64_mca_rendez_int_handler);
+ 
+ 	/* Setup the MCA wakeup interrupt vector */
+-	register_percpu_irq(IA64_MCA_WAKEUP_VECTOR, &mca_wkup_irqaction);
++	register_percpu_irq(IA64_MCA_WAKEUP_VECTOR, "mca_wkup",
++			    ia64_mca_wakeup_int_handler);
+ 
+ 	/* Setup the CPEI/P handler */
+-	register_percpu_irq(IA64_CPEP_VECTOR, &mca_cpep_irqaction);
++	register_percpu_irq(IA64_CPEP_VECTOR, "cpe_poll",
++			    ia64_mca_cpe_int_caller);
+ }
+ 
+ /*
+@@ -2108,7 +2083,11 @@ ia64_mca_late_init(void)
+ 			if (irq > 0) {
+ 				cpe_poll_enabled = 0;
+ 				irq_set_status_flags(irq, IRQ_PER_CPU);
+-				setup_irq(irq, &mca_cpe_irqaction);
++				if (request_irq(irq, ia64_mca_cpe_int_handler,
++						0, "cpe_hndlr", NULL)) {
++					pr_err("%s: request_irq() failed\n",
++					       "cpe_hndlr");
++				}
+ 				ia64_cpe_irq = irq;
+ 				ia64_mca_register_cpev(cpe_vector);
+ 				IA64_MCA_DEBUG("%s: CPEI/P setup and enabled.\n",
 -- 
 2.25.1
 
