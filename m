@@ -2,103 +2,102 @@ Return-Path: <SRS0=7TUr=4M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4C853C35673
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 01:58:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 74B2EC35670
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 01:58:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2CEAA205C9
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 01:58:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 47C73206E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 01:58:56 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727215AbgBXB6P (ORCPT
+        id S1727229AbgBXB6z (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 23 Feb 2020 20:58:15 -0500
-Received: from mga09.intel.com ([134.134.136.24]:10201 "EHLO mga09.intel.com"
+        Sun, 23 Feb 2020 20:58:55 -0500
+Received: from foss.arm.com ([217.140.110.172]:55792 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727151AbgBXB6O (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 23 Feb 2020 20:58:14 -0500
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-  by orsmga102.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 23 Feb 2020 17:58:13 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.70,478,1574150400"; 
-   d="scan'208";a="349819289"
-Received: from yhuang-dev.sh.intel.com (HELO yhuang-dev) ([10.239.159.23])
-  by fmsmga001.fm.intel.com with ESMTP; 23 Feb 2020 17:58:09 -0800
-From:   "Huang\, Ying" <ying.huang@intel.com>
-To:     Feng Tang <feng.tang@intel.com>
-Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
-        Jiri Olsa <jolsa@redhat.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        kernel test robot <rong.a.chen@intel.com>,
-        Ingo Molnar <mingo@kernel.org>,
-        Vince Weaver <vincent.weaver@maine.edu>,
-        Jiri Olsa <jolsa@kernel.org>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        "Arnaldo Carvalho de Melo" <acme@kernel.org>,
-        Arnaldo Carvalho de Melo <acme@redhat.com>,
-        "Naveen N. Rao" <naveen.n.rao@linux.vnet.ibm.com>,
-        Ravi Bangoria <ravi.bangoria@linux.ibm.com>,
-        Stephane Eranian <eranian@google.com>,
-        "Thomas Gleixner" <tglx@linutronix.de>,
-        LKML <linux-kernel@vger.kernel.org>, <lkp@lists.01.org>,
-        <andi.kleen@intel.com>
-Subject: Re: [LKP] Re: [perf/x86] 81ec3f3c4c: will-it-scale.per_process_ops -5.5% regression
-References: <20200205123216.GO12867@shao2-debian>
-        <20200205125804.GM14879@hirez.programming.kicks-ass.net>
-        <20200221080325.GA67807@shbuild999.sh.intel.com>
-        <20200221132048.GE652992@krava>
-        <20200223141147.GA53531@shbuild999.sh.intel.com>
-        <CAHk-=wjKFTzfDWjAAabHTZcityeLpHmEQRrKdTuk0f4GWcoohQ@mail.gmail.com>
-        <20200224003301.GA5061@shbuild999.sh.intel.com>
-        <CAHk-=whi87NNOnNXJ6CvyyedmhnS8dZA2YkQQSajvBArH5XOeA@mail.gmail.com>
-Date:   Mon, 24 Feb 2020 09:58:09 +0800
-In-Reply-To: <CAHk-=whi87NNOnNXJ6CvyyedmhnS8dZA2YkQQSajvBArH5XOeA@mail.gmail.com>
-        (Linus Torvalds's message of "Sun, 23 Feb 2020 17:06:33 -0800")
-Message-ID: <87lfosd9vy.fsf@yhuang-dev.intel.com>
-User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.1 (gnu/linux)
+        id S1727151AbgBXB6y (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 23 Feb 2020 20:58:54 -0500
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id E20D41FB;
+        Sun, 23 Feb 2020 17:58:53 -0800 (PST)
+Received: from [10.162.16.95] (p8cg001049571a15.blr.arm.com [10.162.16.95])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 97E1F3F6CF;
+        Sun, 23 Feb 2020 17:58:46 -0800 (PST)
+Subject: Re: [PATCH V14] mm/debug: Add tests validating architecture page
+ table helpers
+To:     linux-mm@kvack.org
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        Mike Rapoport <rppt@linux.ibm.com>,
+        Vineet Gupta <vgupta@synopsys.com>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will@kernel.org>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Paul Mackerras <paulus@samba.org>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Heiko Carstens <heiko.carstens@de.ibm.com>,
+        Vasily Gorbik <gor@linux.ibm.com>,
+        Christian Borntraeger <borntraeger@de.ibm.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        "Kirill A . Shutemov" <kirill@shutemov.name>,
+        Paul Walmsley <paul.walmsley@sifive.com>,
+        Palmer Dabbelt <palmer@dabbelt.com>,
+        linux-snps-arc@lists.infradead.org,
+        linux-arm-kernel@lists.infradead.org,
+        linuxppc-dev@lists.ozlabs.org, linux-s390@vger.kernel.org,
+        linux-riscv@lists.infradead.org, x86@kernel.org,
+        linux-arch@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Christophe Leroy <christophe.leroy@c-s.fr>
+References: <1581909460-19148-1-git-send-email-anshuman.khandual@arm.com>
+From:   Anshuman Khandual <anshuman.khandual@arm.com>
+Message-ID: <fac4f03a-0cd3-29ad-b5e2-9aca2dd07b39@arm.com>
+Date:   Mon, 24 Feb 2020 07:28:46 +0530
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:52.0) Gecko/20100101
+ Thunderbird/52.9.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=ascii
+In-Reply-To: <1581909460-19148-1-git-send-email-anshuman.khandual@arm.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Linus Torvalds <torvalds@linux-foundation.org> writes:
+On 02/17/2020 08:47 AM, Anshuman Khandual wrote:
+> This adds a test validation for architecture exported page table helpers.
+> Patch adds basic transformation tests at various levels of the page table.
+> 
+> This test was originally suggested by Catalin during arm64 THP migration
+> RFC discussion earlier. Going forward it can include more specific tests
+> with respect to various generic MM functions like THP, HugeTLB etc and
+> platform specific tests.
+> 
+> https://lore.kernel.org/linux-mm/20190628102003.GA56463@arrakis.emea.arm.com/
+> 
+> Needs to be applied on linux V5.6-rc2
+> 
+> Changes in V14:
+> 
+> - Disabled DEBUG_VM_PGFLAGS for IA64 and ARM (32 Bit) per Andrew and Christophe
+> - Updated DEBUG_VM_PGFLAGS documentation wrt EXPERT and disabled platforms
+> - Updated RANDOM_[OR|NZ]VALUE open encodings with GENMASK() per Catalin
+> - Updated s390 constraint bits from 12 to 4 (S390_MASK_BITS) per Gerald
+> - Updated in-code documentation for RANDOM_ORVALUE per Gerald
+> - Updated pxx_basic_tests() to use invert functions first per Catalin
+> - Dropped ARCH_HAS_4LEVEL_HACK check from pud_basic_tests()
+> - Replaced __ARCH_HAS_[4|5]LEVEL_HACK with __PAGETABLE_[PUD|P4D]_FOLDED per Catalin
+> - Trimmed the CC list on the commit message per Catalin
 
-> On Sun, Feb 23, 2020 at 4:33 PM Feng Tang <feng.tang@intel.com> wrote:
->>
->> From the perf c2c data, and the source code checking, the conflicts
->> only happens for root_user.__count, and root_user.sigpending, as
->> all running tasks are accessing this global data for get/put and
->> other operations.
->
-> That's odd.
->
-> Why? Because those two would be guaranteed to be in the same cacheline
-> _after_ you've aligned that user_struct.
->
-> So if it were a false sharing issue between those two, it would
-> actually get _worse_ with alignment. Those two fields are basically
-> next to each other.
->
-> But maybe it was straddling a cacheline before, and it caused two
-> cache accesses each time?
->
-> I find this as confusing as you do.
->
-> If it's sigpending vs the __refcount, then we almost always change
-> them together. sigpending gets incremented by __sigqueue_alloc() -
-> which also does a "get_uid()", and then we decrement it in
-> __sigqueue_free() - which also does a "free_uid().
->
+Hello Andrew,
 
-One way to verify this is to change the layout of user_struct (or
-root_user) to make __count and sigpending fields to be in 2 separate
-cache lines explicitly.
+As there are no further comments on this patch from last week, wondering
+if you would possibly consider this patch. But if you feel there is still
+something which need to be taken care here, please do let me know.
 
-Best Regards,
-Huang, Ying
+Thank you.
+
+- Anshuman
