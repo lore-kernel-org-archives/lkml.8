@@ -2,175 +2,184 @@ Return-Path: <SRS0=7TUr=4M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E3497C38BFA
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 21:22:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 46A33C38BF9
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 21:22:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A7D6220732
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 21:22:24 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="JeKTqq/I"
+	by mail.kernel.org (Postfix) with ESMTP id 16C35222C2
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 21:22:39 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727689AbgBXVWX (ORCPT
+        id S1727851AbgBXVWi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Feb 2020 16:22:23 -0500
-Received: from mail-pf1-f196.google.com ([209.85.210.196]:45424 "EHLO
-        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726651AbgBXVWW (ORCPT
+        Mon, 24 Feb 2020 16:22:38 -0500
+Received: from out01.mta.xmission.com ([166.70.13.231]:46662 "EHLO
+        out01.mta.xmission.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727709AbgBXVWh (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Feb 2020 16:22:22 -0500
-Received: by mail-pf1-f196.google.com with SMTP id 2so5981038pfg.12
-        for <linux-kernel@vger.kernel.org>; Mon, 24 Feb 2020 13:22:22 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=bH6EploGU3w+XX+y+9X71Wyht2oE1L8WWitTABuRGD4=;
-        b=JeKTqq/Ix2Z64h5hXGhO3BfyYx3eQN8cqoo3ojfGrKXDfsjPGtwJWiXv/pVA5KDLqA
-         1woYIXuC5x5EM0WpJUWj6rjG65W+uG3YNEnsX/4VAVWNYxwdmmKr76meSKAU3j/ul047
-         mZ/2gZEiXP4neMPeGMjbGdDKc6ZN/vQYxCAszbaO5CU7LQAC4Y7dGqHMydpGyr1gbzjG
-         xF+oI+xVoXIuNjGwvk02TSUR41f/ZiQil54xotrFYZYY2WnbnYYBNwbu/cZb7sFay1OM
-         fHEan28VIjkYh8sBwrIpGcxGXi4GeORcAOx2nbBFly9XwFpEsG4mBsdahZYcwuxByifp
-         aYEw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=bH6EploGU3w+XX+y+9X71Wyht2oE1L8WWitTABuRGD4=;
-        b=irerlqlJlK6DR6fMPo+aay9JnMn9UsouYT9akUu65EEhDBZYHCcaGW6zU1UfCBP1aN
-         KuL2WDcMnUg0lPi6KVr0ug6657Ny0apBm/vUUT2oNByPG+9D8jmBJPQdkB+035iLgnqf
-         rsOGmamI6USNeK7dJ/QGMdRTIkPJixAzUnyCNl6a3CIYl+Y3yOKO6AE3XpRmUAwtfdvq
-         IQDM5W3/di5S6KUKOAvmm2dY5etpD5bs2Hg91I8FbDogeZlAGx9Hs052zHnskxG8b97N
-         k3gjY8e2xIHV4h2BYk6B8X7Wwu2KvuwO31/RdSRg9WI/53Vv8UdwDy2r0JzpG7lCWrGe
-         UTAg==
-X-Gm-Message-State: APjAAAWk55cC2AbjoyQ/xKp5wGTi/cL5xfqlKuNhK//j4u6cnkAlsLDM
-        qVXyfrAMqnobOkLO77F55S7lj3h/6VOJl+FFbm61fA==
-X-Google-Smtp-Source: APXvYqzAZ16Zg0jjIROjTgN53DC2hQo3zYxMHYvl5OwyxgB2WLc4rEW2lAgeXD7LRtD548EgaRpOwVMEQ00RQW3MzFM=
-X-Received: by 2002:a62:37c7:: with SMTP id e190mr53845033pfa.165.1582579341630;
- Mon, 24 Feb 2020 13:22:21 -0800 (PST)
-MIME-Version: 1.0
-References: <20200222235709.GA3786197@rani.riverdale.lan> <20200223193715.83729-2-nivedita@alum.mit.edu>
- <CAKwvOdniNba30cUX9QAZdVPg2MhjVETVgrvUUzwaHF70Dr3PrQ@mail.gmail.com>
- <20200224210522.GA409112@rani.riverdale.lan> <20200224211209.3snqf7atf5h4ywcr@google.com>
- <CAKwvOd=4YAj1yzncXeyDvw4ghuPCHNYU0NMGnYEDwKNozcm-uw@mail.gmail.com>
-In-Reply-To: <CAKwvOd=4YAj1yzncXeyDvw4ghuPCHNYU0NMGnYEDwKNozcm-uw@mail.gmail.com>
-From:   Nick Desaulniers <ndesaulniers@google.com>
-Date:   Mon, 24 Feb 2020 13:22:10 -0800
-Message-ID: <CAKwvOdkoy_oaZP1fxybJu23f+V0fyrESzFO63UZenUDy+5290A@mail.gmail.com>
-Subject: Re: [PATCH 1/2] arch/x86: Use -fno-asynchronous-unwind-tables to
- suppress .eh_frame sections
-To:     Fangrui Song <maskray@google.com>
-Cc:     Arvind Sankar <nivedita@alum.mit.edu>,
-        Borislav Petkov <bp@alien8.de>,
-        Nathan Chancellor <natechancellor@gmail.com>,
+        Mon, 24 Feb 2020 16:22:37 -0500
+Received: from in02.mta.xmission.com ([166.70.13.52])
+        by out01.mta.xmission.com with esmtps (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.90_1)
+        (envelope-from <ebiederm@xmission.com>)
+        id 1j6LBT-0007lJ-1K; Mon, 24 Feb 2020 14:22:35 -0700
+Received: from ip68-227-160-95.om.om.cox.net ([68.227.160.95] helo=x220.xmission.com)
+        by in02.mta.xmission.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.87)
+        (envelope-from <ebiederm@xmission.com>)
+        id 1j6LBR-0002HL-BN; Mon, 24 Feb 2020 14:22:34 -0700
+From:   ebiederm@xmission.com (Eric W. Biederman)
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     Feng Tang <feng.tang@intel.com>, Oleg Nesterov <oleg@redhat.com>,
+        Jiri Olsa <jolsa@redhat.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        kernel test robot <rong.a.chen@intel.com>,
+        Ingo Molnar <mingo@kernel.org>,
+        Vince Weaver <vincent.weaver@maine.edu>,
+        Jiri Olsa <jolsa@kernel.org>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Arnaldo Carvalho de Melo <acme@redhat.com>,
+        "Naveen N. Rao" <naveen.n.rao@linux.vnet.ibm.com>,
+        Ravi Bangoria <ravi.bangoria@linux.ibm.com>,
+        Stephane Eranian <eranian@google.com>,
         Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        "maintainer:X86 ARCHITECTURE (32-BIT AND 64-BIT)" <x86@kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        clang-built-linux <clang-built-linux@googlegroups.com>,
-        Michael Matz <matz@suse.de>, Kees Cook <keescook@chromium.org>,
-        Ard Biesheuvel <ardb@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+        LKML <linux-kernel@vger.kernel.org>, lkp@lists.01.org,
+        andi.kleen@intel.com, "Huang\, Ying" <ying.huang@intel.com>
+References: <20200205123216.GO12867@shao2-debian>
+        <20200205125804.GM14879@hirez.programming.kicks-ass.net>
+        <20200221080325.GA67807@shbuild999.sh.intel.com>
+        <20200221132048.GE652992@krava>
+        <20200223141147.GA53531@shbuild999.sh.intel.com>
+        <CAHk-=wjKFTzfDWjAAabHTZcityeLpHmEQRrKdTuk0f4GWcoohQ@mail.gmail.com>
+        <20200224003301.GA5061@shbuild999.sh.intel.com>
+        <CAHk-=whi87NNOnNXJ6CvyyedmhnS8dZA2YkQQSajvBArH5XOeA@mail.gmail.com>
+        <20200224021915.GC5061@shbuild999.sh.intel.com>
+        <CAHk-=wjkSb1OkiCSn_fzf2v7A=K0bNsUEeQa+06XMhTO+oQUaA@mail.gmail.com>
+        <CAHk-=wifdJHrfnmwwzPpH-0X6SaZxtdmRWpSNwf8xsXD2iE4dA@mail.gmail.com>
+        <CAHk-=wgbR4ocHAOiaj7x+V7dVoYr-mD2N7Y_MRPJ+Q+GohDYeg@mail.gmail.com>
+Date:   Mon, 24 Feb 2020 15:20:26 -0600
+In-Reply-To: <CAHk-=wgbR4ocHAOiaj7x+V7dVoYr-mD2N7Y_MRPJ+Q+GohDYeg@mail.gmail.com>
+        (Linus Torvalds's message of "Mon, 24 Feb 2020 12:47:14 -0800")
+Message-ID: <87a757znqd.fsf@x220.int.ebiederm.org>
+User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.1 (gnu/linux)
+MIME-Version: 1.0
+Content-Type: text/plain
+X-XM-SPF: eid=1j6LBR-0002HL-BN;;;mid=<87a757znqd.fsf@x220.int.ebiederm.org>;;;hst=in02.mta.xmission.com;;;ip=68.227.160.95;;;frm=ebiederm@xmission.com;;;spf=neutral
+X-XM-AID: U2FsdGVkX1/SSyf6yZIP/k5uVMtCOs9svimc0568GaY=
+X-SA-Exim-Connect-IP: 68.227.160.95
+X-SA-Exim-Mail-From: ebiederm@xmission.com
+Subject: Re: [LKP] Re: [perf/x86] 81ec3f3c4c: will-it-scale.per_process_ops -5.5% regression
+X-SA-Exim-Version: 4.2.1 (built Thu, 05 May 2016 13:38:54 -0600)
+X-SA-Exim-Scanned: Yes (on in02.mta.xmission.com)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Feb 24, 2020 at 1:17 PM Nick Desaulniers
-<ndesaulniers@google.com> wrote:
->
-> On Mon, Feb 24, 2020 at 1:12 PM Fangrui Song <maskray@google.com> wrote:
-> >
-> > On 2020-02-24, Arvind Sankar wrote:
-> > >On Mon, Feb 24, 2020 at 12:33:49PM -0800, Nick Desaulniers wrote:
-> > >> On Sun, Feb 23, 2020 at 11:37 AM Arvind Sankar <nivedita@alum.mit.edu> wrote:
-> > >> >
-> > >> > While discussing a patch to discard .eh_frame from the compressed
-> > >> > vmlinux using the linker script, Fangrui Song pointed out [1] that these
-> > >> > sections shouldn't exist in the first place because arch/x86/Makefile
-> > >> > uses -fno-asynchronous-unwind-tables.
-> > >>
-> > >> Another benefit is that -fno-asynchronous-unwind-tables may help
-> > >> reduce the size of .text!
-> > >> https://stackoverflow.com/a/26302715/1027966
-> > >
-> > >Hm I don't see any change in .text size.
-> > >> > diff --git a/drivers/firmware/efi/libstub/Makefile b/drivers/firmware/efi/libstub/Makefile
-> > >> > index 98a81576213d..a1140c4ee478 100644
-> > >> > --- a/drivers/firmware/efi/libstub/Makefile
-> > >> > +++ b/drivers/firmware/efi/libstub/Makefile
-> > >> > @@ -12,7 +12,8 @@ cflags-$(CONFIG_X86)          += -m$(BITS) -D__KERNEL__ -O2 \
-> > >> >                                    -mno-mmx -mno-sse -fshort-wchar \
-> > >> >                                    -Wno-pointer-sign \
-> > >> >                                    $(call cc-disable-warning, address-of-packed-member) \
-> > >> > -                                  $(call cc-disable-warning, gnu)
-> > >> > +                                  $(call cc-disable-warning, gnu) \
-> > >> > +                                  -fno-asynchronous-unwind-tables
-> > >>
-> > >> I think we want to add this flag a little lower, line 27 has:
-> > >>
-> > >> KBUILD_CFLAGS     := $(cflags-y) -DDISABLE_BRANCH_PROFILING \
-> > >>
-> > >> so the `cflags-y` variable you modify in this hunk will only set
-> > >> -fno-asynchronous-unwind-tables for CONFIG_X86, which I don't think is
-> > >> intentional.  Though when I run
-> > >
-> > >It is intentional -- the other case is that we're building for ARM,
-> > >which only filters out the regular KBUILD_CFLAGS, so adding the flag for
-> > >it should not be necessary. The cflags for ARM are constructed by
-> > >manipulating KBUILD_CFLAGS. Besides it may or may not want unwind
-> > >tables. 32-bit ARM appears to have an option to enable -funwind-tables.
->
-> Ah, right the `subst` from `KBUILD_CFLAGS`.
-> Are there other architectures that care about EFI beyond x86 and ARM? IA64?
+Linus Torvalds <torvalds@linux-foundation.org> writes:
 
-Looks like while IA64 supports CONFIG_EFI, it doesn't support
-CONFIG_EFI_STUB, which controls whether drivers/firmware/efi/libstub/
-gets built or not. So that patch should be good to go.
+> [ Adding a few more people that tend to be involved in signal
+> handling. Just in case - even if they probably don't care ]
+>
+> On Mon, Feb 24, 2020 at 12:09 PM Linus Torvalds
+> <torvalds@linux-foundation.org> wrote:
+>>
+>> TOTALLY UNTESTED patch attached. It may be completely buggy garbage,
+>> but it _looks_ trivial enough.
+>
+> I've tested it, and the profiles on the silly microbenchmark look much
+> nicer. Now it's just the sigpending update shows up, the refcount case
+> clearly still occasionally happens, but it's now in the noise.
+>
+> I made slight changes to the __sigqueue_alloc() case to generate
+> better code: since we now use that atomic_inc_return() anyway, we
+> might as well then use the value that is returned for the
+> RLIMIT_SIGPENDING check too, instead of reading it again.
+>
+> That might avoid another potential cacheline bounce, plus the
+> generated code just looks better.
+>
+> Updated (and now slightly tested!) patch attached.
+>
+> It would be interesting if this is noticeable on your benchmark
+> numbers. I didn't actually _time_ anything, I just looked at profiles.
+>
+> But my setup clearly isn't going to see the horrible contention case
+> anyway, so my timing numbers wouldn't be all that interesting.
+>
+>              Linus
 
-Reviewed-by: Nick Desaulniers <ndesaulniers@google.com>
+I keep looking at your patch and wondering if there isn't a way
+to remove the uid refcount entirely on this path.
 
->
-> >
-> > clang (as of today) has not implemented the
-> > -funwind-tables/-fasynchronous-unwind-tables distinction as GCC does..
-> > (probably because not many people care..)
->
-> Ah, thanks for the clarification.
->
-> >
-> > >>
-> > >> $ llvm-readelf -S drivers/firmware/efi/libstub/lib.a | grep eh_frame
-> > >>
-> > >> after doing an x86_64 defconfig, I don't get any hits. Do you observe
-> > >> .eh_frame sections on any of these objects in this dir? (I'm fine
-> > >> adding it to be safe, but I'm curious why I'm not seeing any
-> > >> .eh_frame)
-> > >>
-> > >
-> > >You mean before this patch, right? I see hits on every .o file in there
-> > >(compiling with gcc 9.2.0).
-> > >
-> > >> >
-> > >> >  # arm64 uses the full KBUILD_CFLAGS so it's necessary to explicitly
-> > >> >  # disable the stackleak plugin
-> > >> > --
-> > >> > 2.24.1
-> > >> >
->
->
->
-> --
-> Thanks,
-> ~Nick Desaulniers
+Linus I might be wrong but I have this sense that your change will only
+help when signal delivery is backed up.  I expect in the common case
+there won't be any pending signals outstanding for the user.
+
+Not that I see anything bad jumping out at me from your patch.
+
+Eric
 
 
 
--- 
-Thanks,
-~Nick Desaulniers
+>  kernel/signal.c | 23 ++++++++++++++---------
+>  1 file changed, 14 insertions(+), 9 deletions(-)
+>
+> diff --git a/kernel/signal.c b/kernel/signal.c
+> index 9ad8dea93dbb..5b2396350dd1 100644
+> --- a/kernel/signal.c
+> +++ b/kernel/signal.c
+> @@ -413,27 +413,32 @@ __sigqueue_alloc(int sig, struct task_struct *t, gfp_t flags, int override_rlimi
+>  {
+>  	struct sigqueue *q = NULL;
+>  	struct user_struct *user;
+> +	int sigpending;
+>  
+>  	/*
+>  	 * Protect access to @t credentials. This can go away when all
+>  	 * callers hold rcu read lock.
+> +	 *
+> +	 * NOTE! A pending signal will hold on to the user refcount,
+> +	 * and we get/put the refcount only when the sigpending count
+> +	 * changes from/to zero.
+>  	 */
+>  	rcu_read_lock();
+> -	user = get_uid(__task_cred(t)->user);
+> -	atomic_inc(&user->sigpending);
+> +	user = __task_cred(t)->user;
+> +	sigpending = atomic_inc_return(&user->sigpending);
+> +	if (sigpending == 1)
+> +		get_uid(user);
+>  	rcu_read_unlock();
+>  
+> -	if (override_rlimit ||
+> -	    atomic_read(&user->sigpending) <=
+> -			task_rlimit(t, RLIMIT_SIGPENDING)) {
+> +	if (override_rlimit || likely(sigpending <= task_rlimit(t, RLIMIT_SIGPENDING))) {
+>  		q = kmem_cache_alloc(sigqueue_cachep, flags);
+>  	} else {
+>  		print_dropped_signal(sig);
+>  	}
+>  
+>  	if (unlikely(q == NULL)) {
+> -		atomic_dec(&user->sigpending);
+> -		free_uid(user);
+> +		if (atomic_dec_and_test(&user->sigpending))
+> +			free_uid(user);
+>  	} else {
+>  		INIT_LIST_HEAD(&q->list);
+>  		q->flags = 0;
+> @@ -447,8 +452,8 @@ static void __sigqueue_free(struct sigqueue *q)
+>  {
+>  	if (q->flags & SIGQUEUE_PREALLOC)
+>  		return;
+> -	atomic_dec(&q->user->sigpending);
+> -	free_uid(q->user);
+> +	if (atomic_dec_and_test(&q->user->sigpending))
+> +		free_uid(q->user);
+>  	kmem_cache_free(sigqueue_cachep, q);
+>  }
+>  
