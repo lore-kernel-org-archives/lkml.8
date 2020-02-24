@@ -2,64 +2,81 @@ Return-Path: <SRS0=7TUr=4M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B1ACDC11D3A
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 23:21:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7482FC11D3D
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 23:22:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8DE2720732
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 23:21:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 49B4121556
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 23:22:14 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="LBIgL2R1"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728567AbgBXXVy (ORCPT
+        id S1728594AbgBXXWN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Feb 2020 18:21:54 -0500
-Received: from mail-qv1-f68.google.com ([209.85.219.68]:43701 "EHLO
-        mail-qv1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728423AbgBXXVd (ORCPT
+        Mon, 24 Feb 2020 18:22:13 -0500
+Received: from mail-lj1-f196.google.com ([209.85.208.196]:34447 "EHLO
+        mail-lj1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728269AbgBXXWN (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Feb 2020 18:21:33 -0500
-Received: by mail-qv1-f68.google.com with SMTP id p2so4910434qvo.10
-        for <linux-kernel@vger.kernel.org>; Mon, 24 Feb 2020 15:21:31 -0800 (PST)
+        Mon, 24 Feb 2020 18:22:13 -0500
+Received: by mail-lj1-f196.google.com with SMTP id x7so12010378ljc.1;
+        Mon, 24 Feb 2020 15:22:11 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=zapvrSfkAB3Uioa0nez7vq8hKDYWAUjvXWTGHeYzWos=;
+        b=LBIgL2R1SmP7LAGLEx/TpjHkceKP+P5sl9nZPJ1hyTlDFlMVMehRZ6uaqa+TmbNivl
+         faAZ7A4q4sjwQCEyeZ9hJ/CvLphRdl5um0VN8X5bgUKsyc9F/ObUKhLmiWf5Q4tDJKzA
+         bDfgQmQtHNWU7CkdR2DYcddL8JvY18DthXp4V0ZjlqGewVd6CTgko6T9FVyF2K4aWs4L
+         xUOwjQnG7Dk8f8UNVz+n+d6LjH4R+kLPxipZum7HQwCjUAQIoHq+pp7+lByDPDinoxXv
+         ggEw+ESzTgAwIDbRlh2KpoQ+/avsXQ1LWmGn0C0+m2uT4LdPgEGuIUXtYpM+tGQ27rwi
+         Kd7Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=7eJOUKA9+YMnHErB2iphiqe6znDzVNUSfeCBuEYYLTo=;
-        b=GPE3CUlzT3eyIhBmINTkYX8CdPykwb7Lmj44V0fBTtJy1w9lWv18/XIO9TLvii0hwJ
-         5l0RAtQFCqgTTf/TaEjCDlvJqbaSprGm4QJNokODwI3P+3DdpZgJtj1NToOInEe6J0eO
-         IoA2/XmVPwenRjy8sSZaQ6fv/ObwpvLdncch0sg9NfzZ1juvv8v/4QsACigG/YfgRggn
-         k3uo3mxbvxNiVLczUeMZy+CyRvzR+Q3ETtzIkNCLvJOeM59N4Fj7rhtPg3h6GOrkOeA5
-         kidBXIDPMCZVpNO68XkDdCH0tQePA8ui2TcUbOMLzlXfzDvBvX3bSeWP7z7pErpYTD36
-         QUBA==
-X-Gm-Message-State: APjAAAXME+vVI1deLLgpZ3mW1zPSY2YdR6qbogIveyZGwsXQ1XBtiimp
-        yExSx+stjH/UBBQquC/LiEE=
-X-Google-Smtp-Source: APXvYqweEcGUAPh3nLyKqwQtOcSUxZYzKkDEZDE1pbyx598pt0vVqfbz2Ci4kDXbHLybdeSWfOCj1A==
-X-Received: by 2002:ad4:580b:: with SMTP id dd11mr45660696qvb.242.1582586491073;
-        Mon, 24 Feb 2020 15:21:31 -0800 (PST)
-Received: from rani.riverdale.lan ([2001:470:1f07:5f3::b55f])
-        by smtp.gmail.com with ESMTPSA id 202sm3757849qkg.132.2020.02.24.15.21.30
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=zapvrSfkAB3Uioa0nez7vq8hKDYWAUjvXWTGHeYzWos=;
+        b=POx4EAh/Ir1mibZFKohq8D55HPE0RABKqYXRzFYOD+qGwZLFPITuh+wMFP1cHR/wDF
+         WWADpCscaaXCThw/xGXMWoYXt9/KHeqgGcXavW7QJk92MJk8iqLaGfSsp24QGhcQ/3/I
+         zw4mvXt7uWOW3pLfW7TTBc/XvlfSUPqH+0wxP+ee9nwykykWVKF5J1Trhapqo+DG7HFf
+         06BOO/kpmaVv8LC2l+J7hpQ140BUACOkASUO5X+DDryUNhmwsMx9mVF+0s/RRQg1xph8
+         DDjx4A06+1LiESzyTmNcWUpj/s2kNKQJuRwqPW2V8c4tvUBQNAXIq2WzQ7xQQV6VcapV
+         HosQ==
+X-Gm-Message-State: APjAAAXhtVutycekfAHiEAEXNah/rdMz8WWtegOG7ru4DTgAdhRU/mlG
+        AsTCLpl4OHBGfnS46q/sM48=
+X-Google-Smtp-Source: APXvYqy2AwxPlR5v2q81yED52jU8uKleIyr/LgSvP0EERemjAGpVSBC7rLykQwNndyW1YfTzcJkBnQ==
+X-Received: by 2002:a2e:9d11:: with SMTP id t17mr32664047lji.169.1582586530637;
+        Mon, 24 Feb 2020 15:22:10 -0800 (PST)
+Received: from localhost.localdomain (79-139-233-37.dynamic.spd-mgts.ru. [79.139.233.37])
+        by smtp.gmail.com with ESMTPSA id r10sm8154071ljk.9.2020.02.24.15.22.09
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 24 Feb 2020 15:21:30 -0800 (PST)
-From:   Arvind Sankar <nivedita@alum.mit.edu>
-To:     Nick Desaulniers <ndesaulniers@google.com>
-Cc:     Borislav Petkov <bp@alien8.de>,
-        Nathan Chancellor <natechancellor@gmail.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>,
-        "H. Peter Anvin" <hpa@zytor.com>, x86@kernel.org,
-        LKML <linux-kernel@vger.kernel.org>,
-        clang-built-linux <clang-built-linux@googlegroups.com>,
-        Michael Matz <matz@suse.de>, Fangrui Song <maskray@google.com>,
-        Kees Cook <keescook@chromium.org>,
-        Andy Lutomirski <luto@kernel.org>
-Subject: [PATCH v2 0/2] Stop generating .eh_frame sections
-Date:   Mon, 24 Feb 2020 18:21:27 -0500
-Message-Id: <20200224232129.597160-1-nivedita@alum.mit.edu>
-X-Mailer: git-send-email 2.24.1
-In-Reply-To: <CAKwvOdn6cxm9EpB7A9kLasttPwLY2csnhqgNAdkJ6_s2DP1-HA@mail.gmail.com>
-References: <CAKwvOdn6cxm9EpB7A9kLasttPwLY2csnhqgNAdkJ6_s2DP1-HA@mail.gmail.com>
+        Mon, 24 Feb 2020 15:22:10 -0800 (PST)
+From:   Dmitry Osipenko <digetx@gmail.com>
+To:     Jens Axboe <axboe@kernel.dk>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Jonathan Hunter <jonathanh@nvidia.com>,
+        =?UTF-8?q?Micha=C5=82=20Miros=C5=82aw?= <mirq-linux@rere.qmqm.pl>,
+        David Heidelberg <david@ixit.cz>,
+        Peter Geis <pgwipeout@gmail.com>,
+        Stephen Warren <swarren@wwwdotorg.org>,
+        Nicolas Chauvet <kwizart@gmail.com>,
+        Ulf Hansson <ulf.hansson@linaro.org>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        Billy Laws <blaws05@gmail.com>
+Cc:     linux-tegra@vger.kernel.org, linux-block@vger.kernel.org,
+        Andrey Danin <danindrey@mail.ru>,
+        Gilles Grandou <gilles@grandou.net>,
+        Ryan Grachek <ryan@edited.us>, linux-mmc@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH v1 0/3] Introduce NVIDIA Tegra Partition Table
+Date:   Tue, 25 Feb 2020 02:18:38 +0300
+Message-Id: <20200224231841.26550-1-digetx@gmail.com>
+X-Mailer: git-send-email 2.24.0
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -67,37 +84,39 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-In three places in the x86 kernel we are currently generating .eh_frame
-sections only to discard them later via linker script. This is in the
-boot code (setup.elf), the realmode trampoline (realmode.elf) and the
-compressed kernel.
+Some NVIDIA Tegra devices have GPT entry at a wrong location and others may
+even not have it at all. So either a custom workaround for GPT parsing or
+TegraPT support is needed for those devices if we want to support them in
+upstream kernel. The former solution was already rejected [1], let's try
+the latter.
 
-Implement Fangrui and Nick's suggestion [1] to fix KBUILD_CFLAGS by
-adding -fno-asynchronous-unwind-tables to avoid generating .eh_frame
-sections in the first place, rather than discarding it in the linker
-script.
+[1] https://patchwork.ozlabs.org/patch/1240809/
 
-Changes from v1:
+Big thanks to everyone who helped with figuring out the TegraPT format!
 
-Rebase on top of tip:x86/boot and include reverting the addition of
-	.eh_frame discard in compressed/vmlinux.lds.S.
-Fix up a comment that refers to .eh_frame, pointed out by Nick.
+Dmitry Osipenko (3):
+  mmc: core: Add raw_boot_mult field to mmc_ext_csd
+  mmc: block: Add mmc_bdev_to_card() helper
+  partitions: Introduce NVIDIA Tegra Partition Table
 
-Arvind Sankar (2):
-  arch/x86: Use -fno-asynchronous-unwind-tables to suppress .eh_frame sections
-  arch/x86: Drop unneeded linker script discard of .eh_frame
-
- arch/x86/boot/Makefile                 | 1 +
- arch/x86/boot/compressed/Makefile      | 1 +
- arch/x86/boot/compressed/vmlinux.lds.S | 5 -----
- arch/x86/boot/setup.ld                 | 1 -
- arch/x86/include/asm/dwarf2.h          | 4 ++--
- arch/x86/kernel/vmlinux.lds.S          | 7 ++-----
- arch/x86/realmode/rm/Makefile          | 1 +
- arch/x86/realmode/rm/realmode.lds.S    | 1 -
- drivers/firmware/efi/libstub/Makefile  | 3 ++-
- 9 files changed, 9 insertions(+), 15 deletions(-)
+ arch/arm/mach-tegra/tegra.c         |  35 +++
+ block/partitions/Kconfig            |   8 +
+ block/partitions/Makefile           |   1 +
+ block/partitions/check.c            |   4 +
+ block/partitions/tegra.c            | 373 ++++++++++++++++++++++++++++
+ block/partitions/tegra.h            |  71 ++++++
+ drivers/mmc/core/block.c            |  14 ++
+ drivers/mmc/core/mmc.c              |   2 +
+ include/linux/mmc/card.h            |   4 +
+ include/soc/tegra/bct.h             |  42 ++++
+ include/soc/tegra/common.h          |   9 +
+ include/soc/tegra/partition_table.h |  18 ++
+ 12 files changed, 581 insertions(+)
+ create mode 100644 block/partitions/tegra.c
+ create mode 100644 block/partitions/tegra.h
+ create mode 100644 include/soc/tegra/bct.h
+ create mode 100644 include/soc/tegra/partition_table.h
 
 -- 
-2.24.1
+2.24.0
 
