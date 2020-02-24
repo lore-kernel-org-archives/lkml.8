@@ -2,209 +2,88 @@ Return-Path: <SRS0=7TUr=4M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DE883C35679
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 10:06:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 872F7C35679
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 10:07:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9FFB32080D
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 10:06:53 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="PIGP89Zz"
+	by mail.kernel.org (Postfix) with ESMTP id 5AF422080D
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 10:07:56 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727282AbgBXKGw (ORCPT
+        id S1727299AbgBXKHz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Feb 2020 05:06:52 -0500
-Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:28699 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726452AbgBXKGw (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Feb 2020 05:06:52 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1582538810;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=ro7hbSrhbV6QQf7iIOQlkTIE8EO1Z4s/xtlyNWIthpI=;
-        b=PIGP89ZzXIAbbeD8F7yN6Mn5Yvnz3w9cCS8TwEKR9dF81aWOYS9XTZs0eqzaQKOnTTXzgq
-        dqnUEgQAb0WfXLKeiJukbMTntv/dY3f1Jp3f4GmHsMlpqxj21ZjYq1I0AliNsm4ZySi2rY
-        ulHSjEHFIhT/kJvNmpFE5gHwPRnvYeo=
-Received: from mail-wm1-f70.google.com (mail-wm1-f70.google.com
- [209.85.128.70]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-309-zPPPEE_hNWime0EIS9X8Gg-1; Mon, 24 Feb 2020 05:06:48 -0500
-X-MC-Unique: zPPPEE_hNWime0EIS9X8Gg-1
-Received: by mail-wm1-f70.google.com with SMTP id f207so2227060wme.6
-        for <linux-kernel@vger.kernel.org>; Mon, 24 Feb 2020 02:06:48 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:in-reply-to:references:date
-         :message-id:mime-version;
-        bh=ro7hbSrhbV6QQf7iIOQlkTIE8EO1Z4s/xtlyNWIthpI=;
-        b=aaGmlkg70WlODLkZCIj/VWtyM+U33EUauP8Ge7djq5uH8mmWDGanYUOVHO9t7CEOOm
-         6Xihptor4Ga2DiHTF4CjJn1JgMf/Z3L5masiKzQ2O+StBiS5nCDl2fsy4w/m1913KwmV
-         1X7LHbW3ucSnm+giDqZfv6wO5Dw0/XYU3mtx/87kmpesMXtiaTreXoqcu+Pq82XVfp7p
-         SGgaVyTCYxT81SsZJtji8pK2HGnt5oRnFYCYI4SoQjGAx87GkkB9aruKYAjEDb/shi61
-         IOX74EemCJdRKY2MpnhcEI+umqWj3iOL5Xm+DFTBjVX86Qy/JzJwZ2VCS0wSUwwLcmF/
-         H/RA==
-X-Gm-Message-State: APjAAAUzQxfxFkfOOGyLlk6wRKlIMi/qCKB5BvZFDTGSFK/0azXo/1RU
-        HtOzN/YihGy4QRaxnYGlgRasfazyS/EyQ0xj5G6FZQhuujy6U0NeZ3qhQFaG59ljLG6Xk5m9p6e
-        6U7BocK5pHK5JoJPj23IBoksk
-X-Received: by 2002:a05:600c:291e:: with SMTP id i30mr21938668wmd.40.1582538807575;
-        Mon, 24 Feb 2020 02:06:47 -0800 (PST)
-X-Google-Smtp-Source: APXvYqx2oYNyKCIkJ9tYswwTh+AP5S3FN10V3XIgU+IuB437b4pbTmM9yfG3v2DmNnjXERGuyBka/g==
-X-Received: by 2002:a05:600c:291e:: with SMTP id i30mr21938634wmd.40.1582538807266;
-        Mon, 24 Feb 2020 02:06:47 -0800 (PST)
-Received: from vitty.brq.redhat.com (nat-pool-brq-t.redhat.com. [213.175.37.10])
-        by smtp.gmail.com with ESMTPSA id k16sm18277255wru.0.2020.02.24.02.06.46
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 24 Feb 2020 02:06:46 -0800 (PST)
-From:   Vitaly Kuznetsov <vkuznets@redhat.com>
-To:     linmiaohe <linmiaohe@huawei.com>
-Cc:     kvm@vger.kernel.org, linux-kernel@vger.kernel.org, x86@kernel.org,
-        pbonzini@redhat.com, rkrcmar@redhat.com,
-        sean.j.christopherson@intel.com, wanpengli@tencent.com,
-        jmattson@google.com, joro@8bytes.org, tglx@linutronix.de,
-        mingo@redhat.com, bp@alien8.de, hpa@zytor.com
-Subject: Re: [PATCH RESEND] KVM: X86: eliminate obsolete KVM_GET_CPUID2 ioctl
-In-Reply-To: <1582516032-5161-1-git-send-email-linmiaohe@huawei.com>
-References: <1582516032-5161-1-git-send-email-linmiaohe@huawei.com>
-Date:   Mon, 24 Feb 2020 11:06:45 +0100
-Message-ID: <87o8topadm.fsf@vitty.brq.redhat.com>
+        Mon, 24 Feb 2020 05:07:55 -0500
+Received: from foss.arm.com ([217.140.110.172]:34802 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726216AbgBXKHy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 24 Feb 2020 05:07:54 -0500
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 70FB930E;
+        Mon, 24 Feb 2020 02:07:54 -0800 (PST)
+Received: from [192.168.1.161] (unknown [172.31.20.19])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id A8F7C3F703;
+        Mon, 24 Feb 2020 02:07:53 -0800 (PST)
+Subject: Re: [PATCH 5/5] arm64/vdso: Restrict splitting VVAR VMA
+To:     Andrei Vagin <avagin@gmail.com>
+Cc:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Dmitry Safonov <dima@arista.com>
+References: <20200204175913.74901-1-avagin@gmail.com>
+ <20200204175913.74901-6-avagin@gmail.com>
+ <df8fa53c-5c21-b620-0254-ffefdd3a8834@arm.com>
+ <20200223233013.GB349924@gmail.com>
+From:   Vincenzo Frascino <vincenzo.frascino@arm.com>
+Message-ID: <248ddd41-d3b3-05f2-4e49-177236726209@arm.com>
+Date:   Mon, 24 Feb 2020 10:08:08 +0000
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-Content-Type: text/plain
+In-Reply-To: <20200223233013.GB349924@gmail.com>
+Content-Type: text/plain; charset=koi8-r
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-linmiaohe <linmiaohe@huawei.com> writes:
+Hi Andrei,
 
-> From: Miaohe Lin <linmiaohe@huawei.com>
+On 2/23/20 11:30 PM, Andrei Vagin wrote:
+[...]
+
+> 
+> Hmmm. I have read the code of special_mapping_mremap() and I don't see where
+> it restricts splitting the vvar mapping.
+> 
+> Here is the code what I see in the source:
+> 
+> static int special_mapping_mremap(struct vm_area_struct *new_vma)
+> {
+>         struct vm_special_mapping *sm = new_vma->vm_private_data;
+> 
+>         if (WARN_ON_ONCE(current->mm != new_vma->vm_mm))
+>                 return -EFAULT;
+> 
+>         if (sm->mremap)
+>                 return sm->mremap(sm, new_vma);
+> 
+>         return 0;
+> }
+> 
+> And I have checked that without this patch, I can remap only one page of
+> the vvar mapping.
 >
-> KVM_GET_CPUID2 ioctl is straight up broken 
 
-It may make sense to add the gory details from your previous patch where
-you were trying to fix it.
+I checked it a second time and I agree. The check on new_size is required in
+this case.
 
-> and not used anywhere. Remove it directly.
->
-> Suggested-by: Paolo Bonzini <pbonzini@redhat.com>
-> Signed-off-by: Miaohe Lin <linmiaohe@huawei.com>
-> ---
->  arch/x86/kvm/cpuid.c           | 20 --------------------
->  arch/x86/kvm/cpuid.h           |  3 ---
->  arch/x86/kvm/x86.c             | 17 -----------------
->  include/uapi/linux/kvm.h       |  1 -
->  tools/include/uapi/linux/kvm.h |  1 -
->  5 files changed, 42 deletions(-)
->
-> diff --git a/arch/x86/kvm/cpuid.c b/arch/x86/kvm/cpuid.c
-> index b1c469446b07..5e041a1282b8 100644
-> --- a/arch/x86/kvm/cpuid.c
-> +++ b/arch/x86/kvm/cpuid.c
-> @@ -261,26 +261,6 @@ int kvm_vcpu_ioctl_set_cpuid2(struct kvm_vcpu *vcpu,
->  	return r;
->  }
->  
-> -int kvm_vcpu_ioctl_get_cpuid2(struct kvm_vcpu *vcpu,
-> -			      struct kvm_cpuid2 *cpuid,
-> -			      struct kvm_cpuid_entry2 __user *entries)
-> -{
-> -	int r;
-> -
-> -	r = -E2BIG;
-> -	if (cpuid->nent < vcpu->arch.cpuid_nent)
-> -		goto out;
-> -	r = -EFAULT;
-> -	if (copy_to_user(entries, &vcpu->arch.cpuid_entries,
-> -			 vcpu->arch.cpuid_nent * sizeof(struct kvm_cpuid_entry2)))
-> -		goto out;
-> -	return 0;
-> -
-> -out:
-> -	cpuid->nent = vcpu->arch.cpuid_nent;
-> -	return r;
-> -}
-> -
->  static __always_inline void cpuid_mask(u32 *word, int wordnum)
->  {
->  	reverse_cpuid_check(wordnum);
-> diff --git a/arch/x86/kvm/cpuid.h b/arch/x86/kvm/cpuid.h
-> index 7366c618aa04..76555de38e1b 100644
-> --- a/arch/x86/kvm/cpuid.h
-> +++ b/arch/x86/kvm/cpuid.h
-> @@ -19,9 +19,6 @@ int kvm_vcpu_ioctl_set_cpuid(struct kvm_vcpu *vcpu,
->  int kvm_vcpu_ioctl_set_cpuid2(struct kvm_vcpu *vcpu,
->  			      struct kvm_cpuid2 *cpuid,
->  			      struct kvm_cpuid_entry2 __user *entries);
-> -int kvm_vcpu_ioctl_get_cpuid2(struct kvm_vcpu *vcpu,
-> -			      struct kvm_cpuid2 *cpuid,
-> -			      struct kvm_cpuid_entry2 __user *entries);
->  bool kvm_cpuid(struct kvm_vcpu *vcpu, u32 *eax, u32 *ebx,
->  	       u32 *ecx, u32 *edx, bool check_limit);
->  
-> diff --git a/arch/x86/kvm/x86.c b/arch/x86/kvm/x86.c
-> index fbabb2f06273..ddcc51b89e2c 100644
-> --- a/arch/x86/kvm/x86.c
-> +++ b/arch/x86/kvm/x86.c
-> @@ -4286,23 +4286,6 @@ long kvm_arch_vcpu_ioctl(struct file *filp,
->  					      cpuid_arg->entries);
->  		break;
->  	}
-> -	case KVM_GET_CPUID2: {
-> -		struct kvm_cpuid2 __user *cpuid_arg = argp;
-> -		struct kvm_cpuid2 cpuid;
-> -
-> -		r = -EFAULT;
-> -		if (copy_from_user(&cpuid, cpuid_arg, sizeof(cpuid)))
-> -			goto out;
-> -		r = kvm_vcpu_ioctl_get_cpuid2(vcpu, &cpuid,
-> -					      cpuid_arg->entries);
-> -		if (r)
-> -			goto out;
-> -		r = -EFAULT;
-> -		if (copy_to_user(cpuid_arg, &cpuid, sizeof(cpuid)))
-> -			goto out;
-> -		r = 0;
-> -		break;
-> -	}
->  	case KVM_GET_MSRS: {
->  		int idx = srcu_read_lock(&vcpu->kvm->srcu);
->  		r = msr_io(vcpu, argp, do_get_msr, 1);
-> diff --git a/include/uapi/linux/kvm.h b/include/uapi/linux/kvm.h
-> index 4b95f9a31a2f..b37b8c1f300e 100644
-> --- a/include/uapi/linux/kvm.h
-> +++ b/include/uapi/linux/kvm.h
-> @@ -1380,7 +1380,6 @@ struct kvm_s390_ucas_mapping {
->  #define KVM_GET_LAPIC             _IOR(KVMIO,  0x8e, struct kvm_lapic_state)
->  #define KVM_SET_LAPIC             _IOW(KVMIO,  0x8f, struct kvm_lapic_state)
->  #define KVM_SET_CPUID2            _IOW(KVMIO,  0x90, struct kvm_cpuid2)
-> -#define KVM_GET_CPUID2            _IOWR(KVMIO, 0x91, struct kvm_cpuid2)
-
-Even if we decide to be strong and remove KVM_GET_CPUID2 completely, I'd
-suggest we leave a comment here saying that it was deprecated. Leaving
-the branch in case (returning the same -EINVAL as passing an unsupported
-IOCTL) may also make sense (with a 'deprecated' comment of course).
-
->  /* Available with KVM_CAP_VAPIC */
->  #define KVM_TPR_ACCESS_REPORTING  _IOWR(KVMIO, 0x92, struct kvm_tpr_access_ctl)
->  /* Available with KVM_CAP_VAPIC */
-> diff --git a/tools/include/uapi/linux/kvm.h b/tools/include/uapi/linux/kvm.h
-> index f0a16b4adbbd..431106dedd2c 100644
-> --- a/tools/include/uapi/linux/kvm.h
-> +++ b/tools/include/uapi/linux/kvm.h
-> @@ -1379,7 +1379,6 @@ struct kvm_s390_ucas_mapping {
->  #define KVM_GET_LAPIC             _IOR(KVMIO,  0x8e, struct kvm_lapic_state)
->  #define KVM_SET_LAPIC             _IOW(KVMIO,  0x8f, struct kvm_lapic_state)
->  #define KVM_SET_CPUID2            _IOW(KVMIO,  0x90, struct kvm_cpuid2)
-> -#define KVM_GET_CPUID2            _IOWR(KVMIO, 0x91, struct kvm_cpuid2)
->  /* Available with KVM_CAP_VAPIC */
->  #define KVM_TPR_ACCESS_REPORTING  _IOWR(KVMIO, 0x92, struct kvm_tpr_access_ctl)
->  /* Available with KVM_CAP_VAPIC */
+> Thanks,
+> Andrei
+> 
 
 -- 
-Vitaly
-
+Regards,
+Vincenzo
