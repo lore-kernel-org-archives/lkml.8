@@ -2,113 +2,224 @@ Return-Path: <SRS0=7TUr=4M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D96D3C3567B
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 06:36:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 71A9FC3567B
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 06:37:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id ACDC020661
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 06:36:21 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="T94v3JSl"
+	by mail.kernel.org (Postfix) with ESMTP id 3BE2B20661
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 06:37:09 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1582526229;
+	bh=nteMY6ukhs8V/oKG37aUtU6inGDQFjnMuRAfI/7pHrg=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=BXoSta03hnWs8FRmpeidhrYkepottDDHGSOB4VtmQDcbAOfF06dwgMTiqRMByZt8d
+	 bxwqP+sn7IGXGmhYMLc3MW2Pgtpmg1d94TADnB9FayzJGltddmjCUc3qbSJ+JFgjKD
+	 Yl8CDY86Dhiofl2IWcYssv37aQyZSOTtySQ/9hO4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727219AbgBXGgU (ORCPT
+        id S1727256AbgBXGhI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Feb 2020 01:36:20 -0500
-Received: from userp2120.oracle.com ([156.151.31.85]:56454 "EHLO
-        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726452AbgBXGgU (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Feb 2020 01:36:20 -0500
-Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
-        by userp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 01O6ZCQB148301;
-        Mon, 24 Feb 2020 06:35:51 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
- : subject : message-id : references : mime-version : content-type :
- in-reply-to; s=corp-2020-01-29;
- bh=qvvE/QeaFeeWvi/ZddnrDx5vkFAlwi415cDHF7+KM3Q=;
- b=T94v3JSljCelxXlRsVLe9P13vnGTez4Pmixsn20wAhCZGBwBYR+iOXCiP6SH3RlxdRlA
- 3pkUrkI+xBYuSn6yF08lfauBBShUfIW4PuQPoVad9kb9qlcqUcRZV3RtZuFumrgiS/bZ
- cr4z0BoxeqG65NviRh0/muLrZvJeOeTL8Vr5Qp3UieerOSYeMLgEtIQWLpLmWFLM2QG8
- AR8NOstuLywh+PpJectwnUQOqb4TXpc6KMKD1rlXVcx1lOCHUoufXeIvTpMxhpyK4cTr
- fSO4z4eoEdsoGpXYbWatayLl+LiGNet61SR2ll4lgymBvIS8FWcUIXPCU2X+BMPSQKtN gw== 
-Received: from userp3030.oracle.com (userp3030.oracle.com [156.151.31.80])
-        by userp2120.oracle.com with ESMTP id 2yavxrd616-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 24 Feb 2020 06:35:51 +0000
-Received: from pps.filterd (userp3030.oracle.com [127.0.0.1])
-        by userp3030.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 01O6W4U5038129;
-        Mon, 24 Feb 2020 06:35:51 GMT
-Received: from userv0122.oracle.com (userv0122.oracle.com [156.151.31.75])
-        by userp3030.oracle.com with ESMTP id 2ybdsfvyb1-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 24 Feb 2020 06:35:51 +0000
-Received: from abhmp0006.oracle.com (abhmp0006.oracle.com [141.146.116.12])
-        by userv0122.oracle.com (8.14.4/8.14.4) with ESMTP id 01O6Ze0E008125;
-        Mon, 24 Feb 2020 06:35:40 GMT
-Received: from kadam (/129.205.23.165)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Sun, 23 Feb 2020 22:35:39 -0800
-Date:   Mon, 24 Feb 2020 09:35:29 +0300
-From:   Dan Carpenter <dan.carpenter@oracle.com>
-To:     Colin King <colin.king@canonical.com>
-Cc:     Roy Pledge <Roy.Pledge@nxp.com>, Li Yang <leoyang.li@nxp.com>,
-        Youri Querry <youri.querry_1@nxp.com>,
-        linuxppc-dev@lists.ozlabs.org,
-        linux-arm-kernel@lists.infradead.org,
-        kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH][next] soc: fsl: dpio: fix dereference of pointer p
- before null check
-Message-ID: <20200224063529.GA3286@kadam>
-References: <20200221231143.30131-1-colin.king@canonical.com>
+        Mon, 24 Feb 2020 01:37:08 -0500
+Received: from mail.kernel.org ([198.145.29.99]:35046 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726060AbgBXGhH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 24 Feb 2020 01:37:07 -0500
+Received: from dragon (80.251.214.228.16clouds.com [80.251.214.228])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0860520661;
+        Mon, 24 Feb 2020 06:37:03 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1582526226;
+        bh=nteMY6ukhs8V/oKG37aUtU6inGDQFjnMuRAfI/7pHrg=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=oTmb9lI6BrX9vuK8J+iX1SciGipjUms1Qwtmz6To5leJaFyHn5Mm/fri5+EnBcQt8
+         w3FVCNVLjns8Kht/qG1iSmf57L3+VD25346O9iPNOXkKULV/f7tRafpGFHtQzouj2m
+         SgB431ifbvn4+wC3OeyQ8klGnX4MbebuBBjWeNy8=
+Date:   Mon, 24 Feb 2020 14:36:59 +0800
+From:   Shawn Guo <shawnguo@kernel.org>
+To:     Vladimir Oltean <olteanv@gmail.com>
+Cc:     robh+dt@kernel.org, mark.rutland@arm.com,
+        devicetree@vger.kernel.org, davem@davemloft.net,
+        netdev@vger.kernel.org, andrew@lunn.ch, vivien.didelot@gmail.com,
+        f.fainelli@gmail.com, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 net-next/devicetree 4/5] arm64: dts: fsl: ls1028a: add
+ node for Felix switch
+Message-ID: <20200224063655.GM27688@dragon>
+References: <20200219151259.14273-1-olteanv@gmail.com>
+ <20200219151259.14273-5-olteanv@gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200221231143.30131-1-colin.king@canonical.com>
+In-Reply-To: <20200219151259.14273-5-olteanv@gmail.com>
 User-Agent: Mutt/1.9.4 (2018-02-28)
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9540 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 phishscore=0 suspectscore=0 spamscore=0
- malwarescore=0 mlxscore=0 bulkscore=0 mlxlogscore=999 adultscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2001150001
- definitions=main-2002240056
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9540 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 impostorscore=0 lowpriorityscore=0
- spamscore=0 clxscore=1011 suspectscore=0 bulkscore=0 mlxlogscore=999
- malwarescore=0 phishscore=0 adultscore=0 priorityscore=1501 mlxscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2001150001
- definitions=main-2002240056
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Feb 21, 2020 at 11:11:43PM +0000, Colin King wrote:
-> ---
->  drivers/soc/fsl/dpio/qbman-portal.c | 5 +++--
->  1 file changed, 3 insertions(+), 2 deletions(-)
+On Wed, Feb 19, 2020 at 05:12:58PM +0200, Vladimir Oltean wrote:
+> From: Claudiu Manoil <claudiu.manoil@nxp.com>
 > 
-> diff --git a/drivers/soc/fsl/dpio/qbman-portal.c b/drivers/soc/fsl/dpio/qbman-portal.c
-> index 740ee0d19582..d1f49caa5b13 100644
-> --- a/drivers/soc/fsl/dpio/qbman-portal.c
-> +++ b/drivers/soc/fsl/dpio/qbman-portal.c
-> @@ -249,10 +249,11 @@ struct qbman_swp *qbman_swp_init(const struct qbman_swp_desc *d)
->  	u32 mask_size;
->  	u32 eqcr_pi;
+> Add the switch device node, available on PF5, so that the switch port
+> sub-nodes (net devices) can be linked to corresponding board specific
+> phy nodes (external ports) or have their link mode defined (internal
+> ports).
+> 
+> The switch device features 6 ports, 4 with external links and 2
+> internally facing to the LS1028A SoC and connected via fixed links to 2
+> internal ENETC Ethernet controller ports.
+> 
+> Add the corresponding ENETC host port device nodes, mapped to PF2 and
+> PF6 PCIe functions. Since the switch only supports tagging on one CPU
+> port, only one port pair (swp4, eno2) is enabled by default and the
+> other, lower speed, port pair is disabled to prevent the PCI core from
+> probing them. If enabled, swp5 will be a fixed-link slave port.
+> 
+> DSA tagging can also be moved from the swp4-eno2 2.5G port pair to the
+> 1G swp5-eno3 pair by changing the ethernet = <&enetc_port2> phandle to
+> <&enetc_port3> and moving it under port5, but in that case enetc_port2
+> should not be disabled, because it is the hardware owner of the Felix
+> PCS and disabling its memory would result in access faults in the Felix
+> DSA driver.
+> 
+> All ports are disabled by default, except one CPU port.
+> 
+> The switch's INTB interrupt line signals:
+> - PTP timestamp ready in timestamp FIFO
+> - TSN Frame Preemption
+> 
+> And don't forget to enable the 4MB BAR4 in the root complex ECAM space,
+> where the switch registers are mapped.
+> 
+> Signed-off-by: Claudiu Manoil <claudiu.manoil@nxp.com>
+> Signed-off-by: Alex Marginean <alexandru.marginean@nxp.com>
+> Signed-off-by: Yangbo Lu <yangbo.lu@nxp.com>
+> Signed-off-by: Vladimir Oltean <vladimir.oltean@nxp.com>
+> ---
+> Changes in v2:
+> Adapted phy-mode = "gmii" to phy-mode = "internal".
+> 
+>  .../arm64/boot/dts/freescale/fsl-ls1028a.dtsi | 84 ++++++++++++++++++-
+>  1 file changed, 83 insertions(+), 1 deletion(-)
+> 
+> diff --git a/arch/arm64/boot/dts/freescale/fsl-ls1028a.dtsi b/arch/arm64/boot/dts/freescale/fsl-ls1028a.dtsi
+> index dfead691e509..a6b9c6d1eb5e 100644
+> --- a/arch/arm64/boot/dts/freescale/fsl-ls1028a.dtsi
+> +++ b/arch/arm64/boot/dts/freescale/fsl-ls1028a.dtsi
+> @@ -700,7 +700,9 @@
+>  				  /* PF1: VF0-1 BAR0 - non-prefetchable memory */
+>  				  0x82000000 0x0 0x00000000  0x1 0xf8210000  0x0 0x020000
+>  				  /* PF1: VF0-1 BAR2 - prefetchable memory */
+> -				  0xc2000000 0x0 0x00000000  0x1 0xf8230000  0x0 0x020000>;
+> +				  0xc2000000 0x0 0x00000000  0x1 0xf8230000  0x0 0x020000
+> +				  /* BAR4 (PF5) - non-prefetchable memory */
+> +				  0x82000000 0x0 0x00000000  0x1 0xfc000000  0x0 0x400000>;
 >  
-> -	spin_lock_init(&p->access_spinlock);
-> -
->  	if (!p)
->  		return NULL;
+>  			enetc_port0: ethernet@0,0 {
+>  				compatible = "fsl,enetc";
+> @@ -710,6 +712,18 @@
+>  				compatible = "fsl,enetc";
+>  				reg = <0x000100 0 0 0 0>;
+>  			};
 > +
-> +	spin_lock_init(&p->access_spinlock);
+> +			enetc_port2: ethernet@0,2 {
+> +				compatible = "fsl,enetc";
+> +				reg = <0x000200 0 0 0 0>;
+> +				phy-mode = "gmii";
+> +
+> +				fixed-link {
+> +					speed = <1000>;
+> +					full-duplex;
+> +				};
+> +			};
+> +
+>  			enetc_mdio_pf3: mdio@0,3 {
+>  				compatible = "fsl,enetc-mdio";
+>  				reg = <0x000300 0 0 0 0>;
+> @@ -722,6 +736,74 @@
+>  				clocks = <&clockgen 4 0>;
+>  				little-endian;
+>  			};
+> +
+> +			ethernet-switch@0,5 {
+> +				reg = <0x000500 0 0 0 0>;
+> +				/* IEP INT_B */
+> +				interrupts = <GIC_SPI 95 IRQ_TYPE_LEVEL_HIGH>;
+> +
+> +				ports {
+> +					#address-cells = <1>;
+> +					#size-cells = <0>;
+> +
+> +					/* external ports */
+> +					mscc_felix_port0: port@0 {
+> +						reg = <0>;
+> +						status = "disabled";
+> +					};
+> +
+> +					mscc_felix_port1: port@1 {
+> +						reg = <1>;
+> +						status = "disabled";
+> +					};
+> +
+> +					mscc_felix_port2: port@2 {
+> +						reg = <2>;
+> +						status = "disabled";
+> +					};
+> +
+> +					mscc_felix_port3: port@3 {
+> +						reg = <3>;
+> +						status = "disabled";
+> +					};
+> +
+> +					/* Internal port with DSA tagging */
+> +					mscc_felix_port4: port@4 {
+> +						reg = <4>;
+> +						phy-mode = "internal";
+> +						ethernet = <&enetc_port2>;
+> +
+> +						fixed-link {
+> +							speed = <2500>;
+> +							full-duplex;
+> +						};
+> +					};
+> +
+> +					/* Internal port without DSA tagging */
+> +					mscc_felix_port5: port@5 {
+> +						reg = <5>;
+> +						phy-mode = "internal";
+> +						status = "disabled";
+> +
+> +						fixed-link {
+> +							speed = <1000>;
+> +							full-duplex;
+> +						};
+> +					};
+> +				};
+> +			};
+> +
+> +			enetc_port3: ethernet@0,6 {
+> +				compatible = "fsl,enetc";
+> +				reg = <0x000600 0 0 0 0>;
+> +				status = "disabled";
 
-Allocations in the declaration blog are not super common in the kernel,
-but they're more bug prone.  Generally, it's not beautiful to call a
-function which can fail in the allocation block.
+Please have 'status' at bottom of the property list.
 
-regards,
-dan carpenter
+Shawn
 
+> +				phy-mode = "gmii";
+> +
+> +				fixed-link {
+> +					speed = <1000>;
+> +					full-duplex;
+> +				};
+> +			};
+>  		};
+>  	};
+>  
+> -- 
+> 2.17.1
+> 
