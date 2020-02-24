@@ -2,109 +2,148 @@ Return-Path: <SRS0=7TUr=4M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 183CAC11D30
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 11:14:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D57FAC35671
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 11:15:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EA1F320828
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 11:14:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7DA4620828
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 11:15:24 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=bfs.de header.i=@bfs.de header.b="y+zc+9Pn"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727312AbgBXLOv (ORCPT
+        id S1727348AbgBXLPV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Feb 2020 06:14:51 -0500
-Received: from mail-oi1-f194.google.com ([209.85.167.194]:36822 "EHLO
-        mail-oi1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727185AbgBXLOv (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Feb 2020 06:14:51 -0500
-Received: by mail-oi1-f194.google.com with SMTP id c16so8583869oic.3
-        for <linux-kernel@vger.kernel.org>; Mon, 24 Feb 2020 03:14:50 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=6J56GZAIisN7s+G2kGZDSpihGRsq1TAS9IAl8pKmY94=;
-        b=Z0jP380Lxb0eRiJN5AEV9SSTUKxx1hREr5vNP3OB+wgj+pYvYBya7wCD6B1n3Iyfqk
-         NJlqS5wyXs/tqTW8GXMUsZkSwnNz6eipE/QTRM86gG1LqO2TFMtgFbcxLm48hh30Tk0/
-         Wacgs88yW5yUl8y91pZljIE6YGOu4GXJOKNo4k7BfkVhWMCgtPB346JwIUReJ+3qXR2l
-         qAGaXZoiN/rDZejL1S2m2iua+Mo2aJX1fmD9w1AXdFgaPQcnB2v2hXaCKjbEaHZKxf6t
-         WtLJJOKoYg2u8M/ALDjJmBuLUgwBn/jnXBnGb7EpfEod/YH+sKZZnuttOe98CYAPOXNQ
-         mCEw==
-X-Gm-Message-State: APjAAAV/58Q64LbPpfp7lcJKyvbwo2UsPE9VrECGYsbBT9nfDjyhppnx
-        7VVy9JDWJSZWodDOyNH5/18hN3dY+ajgkJ2OPF0=
-X-Google-Smtp-Source: APXvYqyJGLntakWARp86s91QH32t/qVwHjeTCsojy/gtzoQLTXH03yoyT3RIy6NniXxO35oP/uCuX+NiSRuYe1mWX5k=
-X-Received: by 2002:aca:b4c3:: with SMTP id d186mr11814856oif.131.1582542890533;
- Mon, 24 Feb 2020 03:14:50 -0800 (PST)
+        Mon, 24 Feb 2020 06:15:21 -0500
+Received: from mx01-muc.bfs.de ([193.174.230.67]:9507 "EHLO mx01-muc.bfs.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726778AbgBXLPV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 24 Feb 2020 06:15:21 -0500
+X-Greylist: delayed 437 seconds by postgrey-1.27 at vger.kernel.org; Mon, 24 Feb 2020 06:15:19 EST
+Received: from SRVEX01-SZ.bfs.intern (exchange-sz.bfs.de [10.129.90.31])
+        by mx01-muc.bfs.de (Postfix) with ESMTPS id 2D1DF2030F;
+        Mon, 24 Feb 2020 12:07:59 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bfs.de; s=dkim201901;
+        t=1582542479; h=from:from:sender:reply-to:subject:subject:date:date:
+         message-id:message-id:to:to:cc:cc:mime-version:mime-version:
+         content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=JCtrqclveZMR9bnvI+c35GZ68+SSPkioSoUcgAu7HVQ=;
+        b=y+zc+9PnKoovr5BCvCo7GA9XEMgHyanYcREL45gWStYT8FIVh0tkI2IGR2q9b6ou4y5pGB
+        KXxEKJRqUWb4K8ChNHjFfVSIsUG3Jm8zHEIb4hkFMnjnYecVWizeskB/g8JecJXwtAzlql
+        86muZe7+JOTHRRWLcXJ5j43HYRv0kLkyk1KeCxeAQITpysgfjL2cl1MxfQYwo8Gr/h4a0i
+        +UVP98BmP73xXpaZ36gQEkEvBo83YSsbc6X2kh2Y99VbHfOQWQZPSg04IrZZWx7uX3RyFZ
+        Xb3IVS98u8Z42h5jgh8qYVrA0Kmng8xE+lNLp+pO7usS65/ms61XDIvawoF4ww==
+Received: from SRVEX01-SZ.bfs.intern (10.129.90.31) by SRVEX01-SZ.bfs.intern
+ (10.129.90.31) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.1913.5; Mon, 24 Feb
+ 2020 12:07:55 +0100
+Received: from SRVEX01-SZ.bfs.intern ([fe80::7d2d:f9cb:2761:d24a]) by
+ SRVEX01-SZ.bfs.intern ([fe80::7d2d:f9cb:2761:d24a%6]) with mapi id
+ 15.01.1913.005; Mon, 24 Feb 2020 12:07:55 +0100
+From:   Walter Harms <wharms@bfs.de>
+To:     Colin King <colin.king@canonical.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        "devel@driverdev.osuosl.org" <devel@driverdev.osuosl.org>
+CC:     "kernel-janitors@vger.kernel.org" <kernel-janitors@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: AW: [PATCH] staging: rtl8723bs: core: remove redundant zero'ing of
+ counter variable k
+Thread-Topic: [PATCH] staging: rtl8723bs: core: remove redundant zero'ing of
+ counter variable k
+Thread-Index: AQHV6l3vorwXgv50W0ysut7cburs2qgqLndI
+Date:   Mon, 24 Feb 2020 11:07:55 +0000
+Message-ID: <5f875f84e6014d2bb5b78f71dc2831a2@bfs.de>
+References: <20200223152840.418439-1-colin.king@canonical.com>
+In-Reply-To: <20200223152840.418439-1-colin.king@canonical.com>
+Accept-Language: de-DE, en-US
+Content-Language: de-DE
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-originating-ip: [10.137.16.39]
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-References: <20180603201202.15468-1-robert.jarzmik@free.fr>
-In-Reply-To: <20180603201202.15468-1-robert.jarzmik@free.fr>
-From:   Geert Uytterhoeven <geert@linux-m68k.org>
-Date:   Mon, 24 Feb 2020 12:14:39 +0100
-Message-ID: <CAMuHMdU3uxfBwKd8SkOtZSDV5Ai3CKc3CWRhDy0Cz94T1Hn0iA@mail.gmail.com>
-Subject: non-existent SND_SOC_AC97_BUS_NEW (was: Re: [PATCH v9] ASoC: pxa:
- switch to new ac97 bus support)
-To:     Robert Jarzmik <robert.jarzmik@free.fr>
-Cc:     Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>,
-        Daniel Mack <daniel@zonque.org>,
-        Haojian Zhuang <haojian.zhuang@gmail.com>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        Mark Brown <broonie@kernel.org>,
-        ALSA Development Mailing List <alsa-devel@alsa-project.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>
-Content-Type: text/plain; charset="UTF-8"
+Authentication-Results: mx01-muc.bfs.de
+X-Spamd-Result: default: False [-3.00 / 7.00];
+         ARC_NA(0.00)[];
+         TO_DN_EQ_ADDR_SOME(0.00)[];
+         HAS_XOIP(0.00)[];
+         FROM_HAS_DN(0.00)[];
+         TO_DN_SOME(0.00)[];
+         TO_MATCH_ENVRCPT_ALL(0.00)[];
+         MIME_GOOD(-0.10)[text/plain];
+         RCPT_COUNT_FIVE(0.00)[5];
+         DKIM_SIGNED(0.00)[];
+         NEURAL_HAM(-0.00)[-0.989,0];
+         RCVD_NO_TLS_LAST(0.10)[];
+         FROM_EQ_ENVFROM(0.00)[];
+         MIME_TRACE(0.00)[0:+];
+         RCVD_COUNT_TWO(0.00)[2];
+         MID_RHS_MATCH_FROM(0.00)[];
+         BAYES_HAM(-3.00)[99.99%]
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Robert,
 
-On Sun, Jun 3, 2018 at 10:12 PM Robert Jarzmik <robert.jarzmik@free.fr> wrote:
-> Switch to the new ac97 bus support in sound/ac97 instead of the legacy
-> snd_ac97 one.
->
-> Signed-off-by: Robert Jarzmik <robert.jarzmik@free.fr>
+________________________________________
+Von: kernel-janitors-owner@vger.kernel.org <kernel-janitors-owner@vger.kern=
+el.org> im Auftrag von Colin King <colin.king@canonical.com>
+Gesendet: Sonntag, 23. Februar 2020 16:28
+An: Greg Kroah-Hartman; devel@driverdev.osuosl.org
+Cc: kernel-janitors@vger.kernel.org; linux-kernel@vger.kernel.org
+Betreff: [PATCH] staging: rtl8723bs: core: remove redundant zero'ing of cou=
+nter variable k
 
-This is commit 1c8bc7b3de5e76cb ("ASoC: pxa: switch to new ac97 bus
-support") in v4.20-rc1 and later.
+From: Colin Ian King <colin.king@canonical.com>
 
-> --- a/sound/soc/pxa/Kconfig
-> +++ b/sound/soc/pxa/Kconfig
-> @@ -20,13 +20,12 @@ config SND_MMP_SOC
->
->  config SND_PXA2XX_AC97
->         tristate
-> -       select SND_AC97_CODEC
->
->  config SND_PXA2XX_SOC_AC97
->         tristate
-> -       select AC97_BUS
-> +       select AC97_BUS_NEW
->         select SND_PXA2XX_LIB_AC97
-> -       select SND_SOC_AC97_BUS
-> +       select SND_SOC_AC97_BUS_NEW
+The zero'ing of counter variable k is redundant as it is never read
+after breaking out of the while loop. Remove it.
 
-The actual SND_SOC_AC97_BUS_NEW symbol never made it upstream, although
-4 of its users did (3 have been removed in commit ea00d95200d02ece
-("ASoC: Use imply for SND_SOC_ALL_CODECS")).
+Addresses-Coverity: ("Unused value")
+Signed-off-by: Colin Ian King <colin.king@canonical.com>
+---
+ drivers/staging/rtl8723bs/core/rtw_efuse.c | 4 +---
+ 1 file changed, 1 insertion(+), 3 deletions(-)
 
-The definition seems to have been dropped silently in v4 of the series.
-What should the select be replaced with? Or should it just be dropped?
+diff --git a/drivers/staging/rtl8723bs/core/rtw_efuse.c b/drivers/staging/r=
+tl8723bs/core/rtw_efuse.c
+index 3b8848182221..bdb6ff8aab7d 100644
+--- a/drivers/staging/rtl8723bs/core/rtw_efuse.c
++++ b/drivers/staging/rtl8723bs/core/rtw_efuse.c
+@@ -244,10 +244,8 @@ u16        Address)
+                while (!(Bytetemp & 0x80)) {
+                        Bytetemp =3D rtw_read8(Adapter, EFUSE_CTRL+3);
+                        k++;
+-                       if (k =3D=3D 1000) {
+-                               k =3D 0;
++                       if (k =3D=3D 1000)
+                                break;
+-                       }
 
-Thanks!
+IMHO this is confusing to read, i suggest:
 
-Gr{oetje,eeting}s,
+ for(k=3D0;k<1000;k++) {
+      Bytetemp =3D rtw_read8(Adapter, EFUSE_CTRL+3);
+      if ( Bytetemp & 0x80 )
+               break;
+      }
 
-                        Geert
+ NTL is am wondering what will happen if k=3D=3D1000
+ and Bytetemp is still invalid. Will rtw_read8() fail or
+ simply return invalid data ?
 
-
+ ym2c,
+ re,
+ wh
+                }
+                return rtw_read8(Adapter, EFUSE_CTRL);
+        } else
 --
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+2.25.0
 
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
