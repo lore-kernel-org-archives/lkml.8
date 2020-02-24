@@ -6,364 +6,142 @@ X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6775CC35671
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 12:11:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4D4C1C35671
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 12:13:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2DD2120732
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 12:11:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2AEF320732
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 12:13:38 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727401AbgBXMLp (ORCPT
+        id S1727359AbgBXMNg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Feb 2020 07:11:45 -0500
-Received: from foss.arm.com ([217.140.110.172]:36186 "EHLO foss.arm.com"
+        Mon, 24 Feb 2020 07:13:36 -0500
+Received: from mx2.suse.de ([195.135.220.15]:57982 "EHLO mx2.suse.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727185AbgBXMLo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Feb 2020 07:11:44 -0500
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 5FE7630E;
-        Mon, 24 Feb 2020 04:11:43 -0800 (PST)
-Received: from e107158-lin.cambridge.arm.com (e107158-lin.cambridge.arm.com [10.1.195.21])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 10B0B3F534;
-        Mon, 24 Feb 2020 04:11:41 -0800 (PST)
-Date:   Mon, 24 Feb 2020 12:11:39 +0000
-From:   Qais Yousef <qais.yousef@arm.com>
-To:     Pavan Kondeti <pkondeti@codeaurora.org>
-Cc:     Ingo Molnar <mingo@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Dietmar Eggemann <dietmar.eggemann@arm.com>,
-        Juri Lelli <juri.lelli@redhat.com>,
-        Vincent Guittot <vincent.guittot@linaro.org>,
-        Ben Segall <bsegall@google.com>, Mel Gorman <mgorman@suse.de>,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 5/6] sched/rt: Better manage pushing unfit tasks on
- wakeup
-Message-ID: <20200224121139.cbz2dt5heiouknif@e107158-lin.cambridge.arm.com>
-References: <20200223184001.14248-1-qais.yousef@arm.com>
- <20200223184001.14248-6-qais.yousef@arm.com>
- <20200224061004.GH28029@codeaurora.org>
+        id S1727183AbgBXMNg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 24 Feb 2020 07:13:36 -0500
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx2.suse.de (Postfix) with ESMTP id E660CAECE;
+        Mon, 24 Feb 2020 12:13:32 +0000 (UTC)
+Date:   Mon, 24 Feb 2020 13:13:31 +0100
+From:   Petr Mladek <pmladek@suse.com>
+To:     Frederic Weisbecker <frederic@kernel.org>
+Cc:     Peter Zijlstra <peterz@infradead.org>,
+        linux-kernel@vger.kernel.org, linux-arch@vger.kernel.org,
+        rostedt@goodmis.org, mingo@kernel.org, joel@joelfernandes.org,
+        gregkh@linuxfoundation.org, gustavo@embeddedor.com,
+        tglx@linutronix.de, paulmck@kernel.org, josh@joshtriplett.org,
+        mathieu.desnoyers@efficios.com, jiangshanlai@gmail.com,
+        luto@kernel.org, tony.luck@intel.com, dan.carpenter@oracle.com,
+        mhiramat@kernel.org, Will Deacon <will@kernel.org>,
+        Marc Zyngier <maz@kernel.org>
+Subject: Re: [PATCH v4 02/27] hardirq/nmi: Allow nested nmi_enter()
+Message-ID: <20200224121331.tnkvp6mmjchm4s2i@pathway.suse.cz>
+References: <20200221133416.777099322@infradead.org>
+ <20200221134215.149193474@infradead.org>
+ <20200221222129.GB28251@lenoir>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200224061004.GH28029@codeaurora.org>
-User-Agent: NeoMutt/20171215
+In-Reply-To: <20200221222129.GB28251@lenoir>
+User-Agent: NeoMutt/20170912 (1.9.0)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 02/24/20 11:40, Pavan Kondeti wrote:
-> Hi Qais,
-> 
-> On Sun, Feb 23, 2020 at 06:40:00PM +0000, Qais Yousef wrote:
-> > On wakeup, if a task doesn't fit the CPU it is running on (due to its
-> > uclamp_min value), then we trigger the push mechanism to try to find a
-> > more suitable CPU.
+On Fri 2020-02-21 23:21:30, Frederic Weisbecker wrote:
+> On Fri, Feb 21, 2020 at 02:34:18PM +0100, Peter Zijlstra wrote:
+> > Since there are already a number of sites (ARM64, PowerPC) that
+> > effectively nest nmi_enter(), lets make the primitive support this
+> > before adding even more.
 > > 
-> > But the logic introduced in commit 804d402fb6f6 ("sched/rt: Make RT capacity-aware")
-> > was incomplete. If the rq isn't overloaded, push_rt_task() will bail out
-> > immediately.
-> > 
-> > Steve suggested using the overloaded flag to force the push, but as
-> > Pavan pointed out this could cause a lot of unnecessary IPIs in case of
-> > HAVE_RT_PUSH_IPI.
-> > 
-> > To still allow pushing unfitting task ASAP, but without causing a lot of
-> > disturbance in case this is not possible (no available CPU that is
-> > running at a lower priority level), introduce a new rt_nr_unfitting in
-> > struct rt_rq and use that to manage how hard we try to push an unfitting
-> > task in push_rt_task().
-> > 
-> 
-> The 1-4 patches in this series are looking good to me.
-> 
-> At this point (after applying 4 patches), removing rt_task_fits_capacity()
-> check from switched_to_rt() and task_woken_rt() would be sufficient, I think.
-> i.e no changes to push/pull logic and we have a fallback for wakeup time cpu
-> selection.
-> 
-> It is not clear what you meant by pushing the unfit task ASAP. A running
-> task on a little CPU can not be pushed to BIG CPU. That would require waking
-> a migration task to do the migration. The other problem is if CPU has more
-> than 2 tasks (excluding running task) which one to be pushed. Are you trying
-> to solve this problem?
-
-Not that's not the problem I'm trying to solve.
-
-Without this patch, spawning 2 tasks in Juno, I see a delay in one of the tasks
-to move to a big CPU, despite the CPU not having any tasks running on it.
-
-> 
-> 
-> > If the task is pinned to a single CPU, we won't inc rt_nr_unfitting,
-> > hence skipping the push in this case.
-> > 
-> > Also there's no need to force a push on switched_to_rt(). On the next
-> > wakeup we should handle it which should suffice.
-> > 
-> > Fixes: 804d402fb6f6 ("sched/rt: Make RT capacity-aware")
-> > LINK: https://lore.kernel.org/lkml/20200221080701.GF28029@codeaurora.org/
-> > Signed-off-by: Qais Yousef <qais.yousef@arm.com>
+> > Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+> > Reviewed-by: Petr Mladek <pmladek@suse.com>
+> > Acked-by: Will Deacon <will@kernel.org>
+> > Acked-by: Marc Zyngier <maz@kernel.org>
 > > ---
-> >  kernel/sched/rt.c    | 100 +++++++++++++++++++++++++++++++++++++++----
-> >  kernel/sched/sched.h |   3 ++
-> >  2 files changed, 95 insertions(+), 8 deletions(-)
+> >  arch/arm64/include/asm/hardirq.h |    4 ++--
+> >  arch/arm64/kernel/sdei.c         |   14 ++------------
+> >  arch/arm64/kernel/traps.c        |    8 ++------
+> >  arch/powerpc/kernel/traps.c      |   22 ++++++----------------
+> >  include/linux/hardirq.h          |    5 ++++-
+> >  include/linux/preempt.h          |    4 ++--
+> >  kernel/printk/printk_safe.c      |    6 ++++--
+> >  7 files changed, 22 insertions(+), 41 deletions(-)
 > > 
-> > diff --git a/kernel/sched/rt.c b/kernel/sched/rt.c
-> > index 9ae8a9fabe8b..b35e49cdafcc 100644
-> > --- a/kernel/sched/rt.c
-> > +++ b/kernel/sched/rt.c
-> > @@ -11,6 +11,7 @@ int sched_rr_timeslice = RR_TIMESLICE;
-> >  int sysctl_sched_rr_timeslice = (MSEC_PER_SEC / HZ) * RR_TIMESLICE;
+> > --- a/kernel/printk/printk_safe.c
+> > +++ b/kernel/printk/printk_safe.c
+> > @@ -296,12 +296,14 @@ static __printf(1, 0) int vprintk_nmi(co
 > >  
-> >  static int do_sched_rt_period_timer(struct rt_bandwidth *rt_b, int overrun);
-> > +static bool rt_task_fits_capacity(struct task_struct *p, int cpu);
-> >  
-> >  struct rt_bandwidth def_rt_bandwidth;
-> >  
-> > @@ -313,6 +314,27 @@ static void update_rt_migration(struct rt_rq *rt_rq)
-> >  	}
-> >  }
-> >  
-> > +#ifdef CONFIG_UCLAMP_TASK
-> > +static void inc_rt_unfit_tasks(struct task_struct *p, struct rt_rq *rt_rq)
-> > +{
-> > +	int cpu = cpu_of(rq_of_rt_rq(rt_rq));
-> > +
-> > +	if (!rt_task_fits_capacity(p, cpu))
-> > +		rt_rq->rt_nr_unfit++;
-> > +}
-> > +
-> > +static void dec_rt_unfit_tasks(struct task_struct *p, struct rt_rq *rt_rq)
-> > +{
-> > +	int cpu = cpu_of(rq_of_rt_rq(rt_rq));
-> > +
-> > +	if (!rt_task_fits_capacity(p, cpu))
-> > +		rt_rq->rt_nr_unfit--;
-> > +}
-> > +#else
-> > +static void inc_rt_unfit_tasks(struct task_struct *p, struct rt_rq *rt_rq) {}
-> > +static void dec_rt_unfit_tasks(struct task_struct *p, struct rt_rq *rt_rq) {}
-> > +#endif
-> > +
-> >  static void inc_rt_migration(struct sched_rt_entity *rt_se, struct rt_rq *rt_rq)
+> >  void notrace printk_nmi_enter(void)
 > >  {
-> >  	struct task_struct *p;
-> > @@ -324,9 +346,17 @@ static void inc_rt_migration(struct sched_rt_entity *rt_se, struct rt_rq *rt_rq)
-> >  	rt_rq = &rq_of_rt_rq(rt_rq)->rt;
-> >  
-> >  	rt_rq->rt_nr_total++;
-> > -	if (p->nr_cpus_allowed > 1)
-> > +	if (p->nr_cpus_allowed > 1) {
-> >  		rt_rq->rt_nr_migratory++;
-> >  
-> > +		/*
-> > +		 * The task is dequeued and queue again on set_cpus_allowed(),
-> > +		 * so we can't end up with a unbalanced inc/dec if
-> > +		 * p->nr_cpus_allowed has changed.
-> > +		 */
-> > +		inc_rt_unfit_tasks(p, rt_rq);
-> > +	}
-> > +
-> >  	update_rt_migration(rt_rq);
+> > -	this_cpu_or(printk_context, PRINTK_NMI_CONTEXT_MASK);
+> > +	if (!in_nmi())
+> > +		this_cpu_or(printk_context, PRINTK_NMI_CONTEXT_MASK);
 > >  }
 > >  
-> > @@ -341,12 +371,29 @@ static void dec_rt_migration(struct sched_rt_entity *rt_se, struct rt_rq *rt_rq)
-> >  	rt_rq = &rq_of_rt_rq(rt_rq)->rt;
-> >  
-> >  	rt_rq->rt_nr_total--;
-> > -	if (p->nr_cpus_allowed > 1)
-> > +	if (p->nr_cpus_allowed > 1) {
-> >  		rt_rq->rt_nr_migratory--;
-> >  
-> > +		/*
-> > +		 * The task is dequeued and queue again on set_cpus_allowed(),
-> > +		 * so we can't end up with a unbalanced inc/dec if
-> > +		 * p->nr_cpus_allowed has changed.
-> > +		 */
-> > +		dec_rt_unfit_tasks(p, rt_rq);
-> > +	}
-> > +
-> 
-> When uclamp values are changed via cgroups or global sysctl knobs, we don't
-> enqueue/dequeue all tasks similar to sched_setattr. So a task that was fit
-> at enqueue time can become unfit if uclamp values are changed in between.
-
-Hmm good point.
-
-> 
-> >  	update_rt_migration(rt_rq);
-> >  }
-> >  
-> > +static inline int has_unfit_tasks(struct rq *rq)
-> > +{
-> > +#ifdef CONFIG_UCLAMP_TASK
-> > +	return rq->rt.rt_nr_unfit;
-> > +#else
-> > +	return 0;
-> > +#endif
-> > +}
-> > +
-> >  static inline int has_pushable_tasks(struct rq *rq)
+> >  void notrace printk_nmi_exit(void)
 > >  {
-> >  	return !plist_head_empty(&rq->rt.pushable_tasks);
-> > @@ -1862,8 +1909,9 @@ static int push_rt_task(struct rq *rq)
-> >  	struct task_struct *next_task;
-> >  	struct rq *lowest_rq;
-> >  	int ret = 0;
-> > +	bool fit;
-> >  
-> > -	if (!rq->rt.overloaded)
-> > +	if (!rq->rt.overloaded && !has_unfit_tasks(rq))
-> >  		return 0;
-> >  
+> > -	this_cpu_and(printk_context, ~PRINTK_NMI_CONTEXT_MASK);
+> > +	if (!in_nmi())
+> > +		this_cpu_and(printk_context, ~PRINTK_NMI_CONTEXT_MASK);
+> >  }
 > 
-> When there is one unfit RT task, are we setting overloaded anywhere due
-> to fitness check? I don't see that in this patch.
+> If the outermost NMI is interrupted while between printk_nmi_enter()
+> and preempt_count_add(), there is still a risk that we race and clear?
 
-No. I abandoned tinkering with the overloaded flag, it'd make things more
-complex than I'd like them to.
+Great catch!
 
-> Even if we set overload condition, we can't push the running task.
+There is plenty of space in the printk_context variable. I would
+reserve one byte there for the NMI context to be on the safe side
+and be done with it.
 
-This gives me the desired effect. I do see the task moving to the right CPU in
-2 RT tasks test. Without it, if an RT task was spawned on little CPU I could
-see a big delay for it to move to a big CPU although the big CPU is free.
+It should never overflow. The BUG_ON(in_nmi() == NMI_MASK)
+in nmi_enter() will trigger much earlier.
 
-> 
-> >  	next_task = pick_next_pushable_task(rq);
-> > @@ -1874,12 +1922,21 @@ static int push_rt_task(struct rq *rq)
-> >  	if (WARN_ON(next_task == rq->curr))
-> >  		return 0;
-> >  
-> > +	/*
-> > +	 * The rq could be overloaded because it has unfitting task, if that's
-> > +	 * the case then we need to try harder to find a better fitting CPU.
-> > +	 */
-> > +	fit = rt_task_fits_capacity(next_task, cpu_of(rq));
-> > +
-> >  	/*
-> >  	 * It's possible that the next_task slipped in of
-> >  	 * higher priority than current. If that's the case
-> >  	 * just reschedule current.
-> > +	 *
-> > +	 * Unless next_task doesn't fit in this cpu, then continue with the
-> > +	 * attempt to push it.
-> >  	 */
-> > -	if (unlikely(next_task->prio < rq->curr->prio)) {
-> > +	if (unlikely(next_task->prio < rq->curr->prio && fit)) {
-> >  		resched_curr(rq);
-> >  		return 0;
-> >  	}
-> > @@ -1922,6 +1979,35 @@ static int push_rt_task(struct rq *rq)
-> >  		goto retry;
-> >  	}
-> >  
-> > +	/*
-> > +	 * Bail out if the task doesn't fit on either CPUs.
-> > +	 *
-> > +	 * Unless..
-> > +	 *
-> > +	 * * The rq is already overloaded, then push anyway.
-> > +	 *
-> > +	 * * The priority of next_task is higher than current, then we
-> > +	 *   resched_curr(). We forced skipping this condition above if the rq
-> > +	 *   was overloaded but the task didn't fit.
-> > +	 */
-> > +	if (!fit && !rt_task_fits_capacity(next_task, cpu_of(lowest_rq))) {
-> > +
-> > +		/*
-> > +		 * If the system wasn't overloaded, then pretend we didn't run.
-> > +		 */
-> > +		if (!rq->rt.overloaded)
-> > +			goto out_unlock;
-> > +
-> > +		/*
-> > +		 * If the system is overloaded, we forced skipping this
-> > +		 * condition, so re-evaluate it.
-> > +		 */
-> > +		if (unlikely(next_task->prio < rq->curr->prio)) {
-> > +			resched_curr(rq);
-> > +			goto out_unlock;
-> > +		}
-> > +	}
-> > +
-> >  	deactivate_task(rq, next_task, 0);
-> >  	set_task_cpu(next_task, lowest_rq->cpu);
-> >  	activate_task(lowest_rq, next_task, 0);
-> > @@ -1929,6 +2015,7 @@ static int push_rt_task(struct rq *rq)
-> >  
-> >  	resched_curr(lowest_rq);
-> >  
-> > +out_unlock:
-> >  	double_unlock_balance(rq, lowest_rq);
-> >  
-> >  out:
-> > @@ -2297,10 +2384,7 @@ static void switched_to_rt(struct rq *rq, struct task_struct *p)
-> >  	 */
-> >  	if (task_on_rq_queued(p) && rq->curr != p) {
-> >  #ifdef CONFIG_SMP
-> > -		bool need_to_push = rq->rt.overloaded ||
-> > -				    !rt_task_fits_capacity(p, cpu_of(rq));
-> > -
-> > -		if (p->nr_cpus_allowed > 1 && need_to_push)
-> > +		if (p->nr_cpus_allowed > 1 && rq->rt.overloaded)
-> >  			rt_queue_push_tasks(rq);
-> 
-> Right. What about the check in task_woken_rt()? We should remove it
-> from there too.
+Also I hope that printk_context will get removed with
+the lockless printk() implementation soon anyway.
 
-We could do, temporarily, to get these fixes into 5.6. But I do think
-select_task_rq_rt() doesn't do a good enough job into pushing unfit tasks to
-the right CPUs.
 
-I don't understand the reasons behind your objection. It seems you think that
-select_task_rq_rt() should be enough, but not AFAICS. Can you be a bit more
-detailed please?
+diff --git a/kernel/printk/internal.h b/kernel/printk/internal.h
+index c8e6ab689d42..109c5ab70a0c 100644
+--- a/kernel/printk/internal.h
++++ b/kernel/printk/internal.h
+@@ -6,9 +6,11 @@
+ 
+ #ifdef CONFIG_PRINTK
+ 
+-#define PRINTK_SAFE_CONTEXT_MASK	 0x3fffffff
+-#define PRINTK_NMI_DIRECT_CONTEXT_MASK	 0x40000000
+-#define PRINTK_NMI_CONTEXT_MASK		 0x80000000
++#define PRINTK_SAFE_CONTEXT_MASK	0x007ffffff
++#define PRINTK_NMI_DIRECT_CONTEXT_MASK	0x008000000
++#define PRINTK_NMI_CONTEXT_MASK		0xff0000000
++
++#define PRINTK_NMI_CONTEXT_OFFSET	0x010000000
+ 
+ extern raw_spinlock_t logbuf_lock;
+ 
+diff --git a/kernel/printk/printk_safe.c b/kernel/printk/printk_safe.c
+index b4045e782743..e8989418a139 100644
+--- a/kernel/printk/printk_safe.c
++++ b/kernel/printk/printk_safe.c
+@@ -296,12 +296,12 @@ static __printf(1, 0) int vprintk_nmi(const char *fmt, va_list args)
+ 
+ void notrace printk_nmi_enter(void)
+ {
+-	this_cpu_or(printk_context, PRINTK_NMI_CONTEXT_MASK);
++	this_cpu_add(printk_context, PRINTK_NMI_CONTEXT_OFFSET);
+ }
+ 
+ void notrace printk_nmi_exit(void)
+ {
+-	this_cpu_and(printk_context, ~PRINTK_NMI_CONTEXT_MASK);
++	this_cpu_sub(printk_context, PRINTK_NMI_CONTEXT_OFFSET);
+ }
+ 
+ /*
 
-FWIW, here's a screenshot of what I see
-
-	https://imgur.com/a/peV27nE
-
-After the first activation, select_task_rq_rt() fails to find the right CPU
-(due to the same move all tasks to the cpumask_fist()) - but when the task
-wakes up on 4, the logic I put causes it to migrate to CPU2, which is the 2nd
-big core. CPU1 and CPU2 are the big cores on Juno.
-
-Now maybe we should fix select_task_rq_rt() to better balance tasks, but not
-sure how easy is that.
-
-Steve suggested the overload idea, so I assumed it's okay. But given the IPI
-issue you highlighted, I thought better not make overloaded conditions more
-complex and just a take a simpler approach which I think should be fine - bar
-the uclamp caveat you highlighted. Which should be solvable..
-
-Thanks
-
---
-Qais Yousef
-
-> 
-> >  #endif /* CONFIG_SMP */
-> >  		if (p->prio < rq->curr->prio && cpu_online(cpu_of(rq)))
-> > diff --git a/kernel/sched/sched.h b/kernel/sched/sched.h
-> > index 1a88dc8ad11b..7dea81ccd49a 100644
-> > --- a/kernel/sched/sched.h
-> > +++ b/kernel/sched/sched.h
-> > @@ -603,6 +603,9 @@ struct rt_rq {
-> >  #ifdef CONFIG_SMP
-> >  	unsigned long		rt_nr_migratory;
-> >  	unsigned long		rt_nr_total;
-> > +#ifdef CONFIG_UCLAMP_TASK
-> > +	unsigned long		rt_nr_unfit;
-> > +#endif
-> >  	int			overloaded;
-> >  	struct plist_head	pushable_tasks;
-> >  
-> > -- 
-> > 2.17.1
-> > 
-> 
-> -- 
-> Qualcomm India Private Limited, on behalf of Qualcomm Innovation Center, Inc.
-> Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum, a Linux Foundation Collaborative Project.
+Best Regards,
+Petr
