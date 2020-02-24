@@ -2,263 +2,257 @@ Return-Path: <SRS0=7TUr=4M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2A670C3567B
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 10:39:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 90757C35679
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 10:39:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E895B20732
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 10:39:16 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="oHVF9pcg"
+	by mail.kernel.org (Postfix) with ESMTP id 5708320732
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 10:39:37 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1582540777;
+	bh=oC8IkTl8qq+zq5+idqEtSaGP+eyDve6SMvv4Khg34+c=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=xzW5Ilvb5TAj6bt/jo7LexXADqsYHdWPfCOruuwTwXIA8ks63LQYKyl8XLhQstMGk
+	 lCFFPuc3fKRJYwP+w9EKDnZrF+c/A/i37tcCGMJBqUuVoo20p9LXcJH5YdcLLmEtPd
+	 c17Ddla81weEd2w99DsI+4wQIlQZAJ9yWlMgavl4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727703AbgBXKjP (ORCPT
+        id S1727714AbgBXKjg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Feb 2020 05:39:15 -0500
-Received: from mail27.static.mailgun.info ([104.130.122.27]:57116 "EHLO
-        mail27.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727670AbgBXKjN (ORCPT
+        Mon, 24 Feb 2020 05:39:36 -0500
+Received: from mail-ot1-f67.google.com ([209.85.210.67]:33555 "EHLO
+        mail-ot1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727359AbgBXKjf (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Feb 2020 05:39:13 -0500
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1582540753; h=References: In-Reply-To: Message-Id: Date:
- Subject: Cc: To: From: Sender;
- bh=5nSSnVNmNJogukqg7A641k6LgSPfPvqm2ujAm22+Qjk=; b=oHVF9pcgwlgsmy4KmYCLSdKbALD3dq9Ph1kTnsDMGBQY1/CfUIKs7t7EKEW7mXXj7BHDxKYa
- GtvzWgdCFO6aGSCkc1WLCVSrRPsaAVPdkeQn2qN2Rv97V4mk8pQLf86x1ewIaJsMsSbUNoje
- gA65eABBoPvTS9GkLbpEiYnJBtE=
-X-Mailgun-Sending-Ip: 104.130.122.27
-X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
-Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
- by mxa.mailgun.org with ESMTP id 5e53a7c7.7fd8bb61ea08-smtp-out-n02;
- Mon, 24 Feb 2020 10:39:03 -0000 (UTC)
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id 1E5C9C447A2; Mon, 24 Feb 2020 10:39:01 +0000 (UTC)
-Received: from tdas-linux.qualcomm.com (blr-c-bdr-fw-01_GlobalNAT_AllZones-Outside.qualcomm.com [103.229.19.19])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: tdas)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id E30C4C447A6;
-        Mon, 24 Feb 2020 10:38:56 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org E30C4C447A6
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=tdas@codeaurora.org
-From:   Taniya Das <tdas@codeaurora.org>
-To:     Stephen Boyd <sboyd@kernel.org>,
-        =?UTF-8?q?Michael=20Turquette=20=C2=A0?= <mturquette@baylibre.com>
-Cc:     David Brown <david.brown@linaro.org>,
-        Rajendra Nayak <rnayak@codeaurora.org>,
-        linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org,
-        linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Andy Gross <agross@kernel.org>, devicetree@vger.kernel.org,
-        robh@kernel.org, robh+dt@kernel.org,
-        Taniya Das <tdas@codeaurora.org>
-Subject: [PATCH v5 5/5] clk: qcom: Add modem clock controller driver for SC7180
-Date:   Mon, 24 Feb 2020 16:08:23 +0530
-Message-Id: <1582540703-6328-6-git-send-email-tdas@codeaurora.org>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1582540703-6328-1-git-send-email-tdas@codeaurora.org>
-References: <1582540703-6328-1-git-send-email-tdas@codeaurora.org>
+        Mon, 24 Feb 2020 05:39:35 -0500
+Received: by mail-ot1-f67.google.com with SMTP id w6so8289307otk.0;
+        Mon, 24 Feb 2020 02:39:35 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=pfCiZDK1CnODGfD7R/bmkbjrbPhAPqhXLKFJ2vQzq2Q=;
+        b=WH7X6PxPCVf2QaHfHcZvmf3s6OLbOURVs4AdyUVIP5l2DRCAJNnfq0J0hElFPEa8Qo
+         s/CLxrKLsj5/rLRP8IkW8ONy6hsiLwQbzY4a1SCxaHh20D4fIlOwBs7EECIKFhA7xj4U
+         kpsqWA3/L3aPZLHEQUxaCK+7nYwudQWGRbwEU0SLFaiC9wpxySyxJHaUugoQLrN36Ctv
+         M/cbyEbWlaShSCRU7Lt7e86haPS/0KptE9HhPQEu0dtMCLC/hENu1N/n/2ZWOKJdjego
+         NzNNk52NtyvElC/2P6JDlSVisicTqS9lVj9EsdPrq/50V2uOMKiDNveaQUq69LA1JQP/
+         zbhQ==
+X-Gm-Message-State: APjAAAU8l37NyHiGtP0uaZnYJrX5oNDIuVM4tIdBbKD+oFEp3O0q4riN
+        a5gFyQx1DtoU46bHFfkFAuaLzxLoEXlYSuGKAl0=
+X-Google-Smtp-Source: APXvYqy8Scnn+Iklf474MLavNjhVwGP7WqIRW+5ATgatZLAqljUyUkEe9IwRKpcvEKlJSUSwNkJtUSrenRwB2LKnIa0=
+X-Received: by 2002:a05:6830:4b9:: with SMTP id l25mr18590355otd.266.1582540774775;
+ Mon, 24 Feb 2020 02:39:34 -0800 (PST)
+MIME-Version: 1.0
+References: <1654227.8mz0SueHsU@kreacher> <87wo8rjsa4.fsf@riseup.net>
+ <CAJZ5v0hAn0V-QhebFt=vqKK6gBLxjTq7SNOWOStt7huCXMSH7g@mail.gmail.com>
+ <878sl6j4fd.fsf@riseup.net> <CAJZ5v0jNFMwqSwSones91WgDwGqusyY1nEMDKAYuSZiLjH61dw@mail.gmail.com>
+ <CAJZ5v0iMvzFGbuYsOo+AkWAqUbkQVT-FHsTDbStPiNenw783LQ@mail.gmail.com>
+ <87sgjegh20.fsf@riseup.net> <CAJZ5v0hm2vVbM5dXGitvvUrWoZXZXXaJ+P3x38BjHRukZKgB3Q@mail.gmail.com>
+ <87imk8hpud.fsf@riseup.net>
+In-Reply-To: <87imk8hpud.fsf@riseup.net>
+From:   "Rafael J. Wysocki" <rafael@kernel.org>
+Date:   Mon, 24 Feb 2020 11:39:23 +0100
+Message-ID: <CAJZ5v0iz5e6GhpJcphKtyzS=MeteuQeSVOVkL-9YjeQ3OWO-Jw@mail.gmail.com>
+Subject: Re: [PATCH 00/28] PM: QoS: Get rid of unuseful code and rework CPU
+ latency QoS interface
+To:     Francisco Jerez <currojerez@riseup.net>
+Cc:     "Rafael J. Wysocki" <rafael@kernel.org>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Linux PM <linux-pm@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Amit Kucheria <amit.kucheria@linaro.org>,
+        "Pandruvada, Srinivas" <srinivas.pandruvada@intel.com>,
+        Rodrigo Vivi <rodrigo.vivi@intel.com>,
+        Peter Zijlstra <peterz@infradead.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add support for the modem clock controller found on SC7180
-based devices. This would allow modem drivers to probe and
-control their clocks.
+Sorry for the late response, I was offline for a major part of the
+previous week.
 
-Signed-off-by: Taniya Das <tdas@codeaurora.org>
----
- drivers/clk/qcom/Kconfig      |   9 +++
- drivers/clk/qcom/Makefile     |   1 +
- drivers/clk/qcom/mss-sc7180.c | 143 ++++++++++++++++++++++++++++++++++++++++++
- 3 files changed, 153 insertions(+)
- create mode 100644 drivers/clk/qcom/mss-sc7180.c
+On Fri, Feb 14, 2020 at 9:31 PM Francisco Jerez <currojerez@riseup.net> wrote:
+>
+> "Rafael J. Wysocki" <rafael@kernel.org> writes:
+>
+> > On Fri, Feb 14, 2020 at 1:14 AM Francisco Jerez <currojerez@riseup.net> wrote:
+> >>
+> >> "Rafael J. Wysocki" <rafael@kernel.org> writes:
+> >>
+> >> > On Thu, Feb 13, 2020 at 12:34 PM Rafael J. Wysocki <rafael@kernel.org> wrote:
+> >
+> > [cut]
+> >
+> >> >
+> >> > I think that your use case is almost equivalent to the thermal
+> >> > pressure one, so you'd want to limit the max and so that would be
+> >> > something similar to store_max_perf_pct() with its input side hooked
+> >> > up to a QoS list.
+> >> >
+> >> > But it looks like that QoS list would rather be of a "reservation"
+> >> > type, so a request added to it would mean something like "leave this
+> >> > fraction of power that appears to be available to the CPU subsystem
+> >> > unused, because I need it for a different purpose".  And in principle
+> >> > there might be multiple requests in there at the same time and those
+> >> > "reservations" would add up.  So that would be a kind of "limited sum"
+> >> > QoS type which wasn't even there before my changes.
+> >> >
+> >> > A user of that QoS list might then do something like
+> >> >
+> >> > ret = cpu_power_reserve_add(1, 4);
+> >> >
+> >> > meaning that it wants 25% of the "potential" CPU power to be not
+> >> > utilized by CPU performance scaling and that could affect the
+> >> > scheduler through load modifications (kind of along the thermal
+> >> > pressure patchset discussed some time ago) and HWP (as well as the
+> >> > non-HWP intel_pstate by preventing turbo frequencies from being used
+> >> > etc).
+> >>
+> >> The problems with this are the same as with the per-CPU frequency QoS
+> >> approach: How does the device driver know what the appropriate fraction
+> >> of CPU power is?
+> >
+> > Of course it doesn't know and it may never know exactly, but it may guess.
+> >
+> > Also, it may set up a feedback loop: request an aggressive
+> > reservation, run for a while, measure something and refine if there's
+> > headroom.  Then repeat.
+> >
+>
+> Yeah, of course, but that's obviously more computationally intensive and
+> less accurate than computing an approximately optimal constraint in a
+> single iteration (based on knowledge from performance counters and a
+> notion of the latency requirements of the application), since such a
+> feedback loop relies on repeatedly overshooting and undershooting the
+> optimal value (the latter causes an artificial CPU bottleneck, possibly
+> slowing down other applications too) in order to converge to and remain
+> in a neighborhood of the optimal value.
 
-diff --git a/drivers/clk/qcom/Kconfig b/drivers/clk/qcom/Kconfig
-index 15cdcdc..4225f86 100644
---- a/drivers/clk/qcom/Kconfig
-+++ b/drivers/clk/qcom/Kconfig
-@@ -280,6 +280,15 @@ config SC_GPUCC_7180
- 	  Say Y if you want to support graphics controller devices and
- 	  functionality such as 3D graphics.
+I'm not saying that feedback loops are the way to go in general, but
+that in some cases they are applicable and this particular case looks
+like it may be one of them.
 
-+config SC_MSS_7180
-+	tristate "SC7180 Modem Clock Controller"
-+	select SC_GCC_7180
-+	help
-+	  Support for the Modem Subsystem clock controller on Qualcomm
-+	  Technologies, Inc on SC7180 devices.
-+	  Say Y if you want to use the Modem branch clocks of the Modem
-+	  subsystem clock controller to reset the MSS subsystem.
-+
- config SC_VIDEOCC_7180
- 	tristate "SC7180 Video Clock Controller"
- 	select SC_GCC_7180
-diff --git a/drivers/clk/qcom/Makefile b/drivers/clk/qcom/Makefile
-index 656a87e..9135592 100644
---- a/drivers/clk/qcom/Makefile
-+++ b/drivers/clk/qcom/Makefile
-@@ -50,6 +50,7 @@ obj-$(CONFIG_QCS_TURING_404) += turingcc-qcs404.o
- obj-$(CONFIG_SC_DISPCC_7180) += dispcc-sc7180.o
- obj-$(CONFIG_SC_GCC_7180) += gcc-sc7180.o
- obj-$(CONFIG_SC_GPUCC_7180) += gpucc-sc7180.o
-+obj-$(CONFIG_SC_MSS_7180) += mss-sc7180.o
- obj-$(CONFIG_SC_VIDEOCC_7180) += videocc-sc7180.o
- obj-$(CONFIG_SDM_CAMCC_845) += camcc-sdm845.o
- obj-$(CONFIG_SDM_DISPCC_845) += dispcc-sdm845.o
-diff --git a/drivers/clk/qcom/mss-sc7180.c b/drivers/clk/qcom/mss-sc7180.c
-new file mode 100644
-index 0000000..993749e
---- /dev/null
-+++ b/drivers/clk/qcom/mss-sc7180.c
-@@ -0,0 +1,143 @@
-+// SPDX-License-Identifier: GPL-2.0-only
-+/*
-+ * Copyright (c) 2019, The Linux Foundation. All rights reserved.
-+ */
-+
-+#include <linux/clk-provider.h>
-+#include <linux/platform_device.h>
-+#include <linux/module.h>
-+#include <linux/of_address.h>
-+#include <linux/pm_clock.h>
-+#include <linux/pm_runtime.h>
-+#include <linux/regmap.h>
-+
-+#include <dt-bindings/clock/qcom,mss-sc7180.h>
-+
-+#include "clk-regmap.h"
-+#include "clk-branch.h"
-+#include "common.h"
-+
-+static struct clk_branch mss_axi_nav_clk = {
-+	.halt_reg = 0x20bc,
-+	.halt_check = BRANCH_HALT,
-+	.clkr = {
-+		.enable_reg = 0x20bc,
-+		.enable_mask = BIT(0),
-+		.hw.init = &(struct clk_init_data){
-+			.name = "mss_axi_nav_clk",
-+			.parent_data = &(const struct clk_parent_data){
-+				.fw_name = "gcc_mss_nav_axi_clk",
-+			},
-+			.num_parents = 1,
-+			.ops = &clk_branch2_ops,
-+		},
-+	},
-+};
-+
-+static struct clk_branch mss_axi_crypto_clk = {
-+	.halt_reg = 0x20cc,
-+	.halt_check = BRANCH_HALT,
-+	.clkr = {
-+		.enable_reg = 0x20cc,
-+		.enable_mask = BIT(0),
-+		.hw.init = &(struct clk_init_data){
-+			.name = "mss_axi_crypto_clk",
-+			.parent_data = &(const struct clk_parent_data){
-+				.fw_name = "gcc_mss_mfab_axis_clk",
-+			},
-+			.num_parents = 1,
-+			.ops = &clk_branch2_ops,
-+		},
-+	},
-+};
-+
-+static const struct regmap_config mss_regmap_config = {
-+	.reg_bits	= 32,
-+	.reg_stride	= 4,
-+	.val_bits	= 32,
-+	.fast_io	= true,
-+};
-+
-+static struct clk_regmap *mss_sc7180_clocks[] = {
-+	[MSS_AXI_CRYPTO_CLK] = &mss_axi_crypto_clk.clkr,
-+	[MSS_AXI_NAV_CLK] = &mss_axi_nav_clk.clkr,
-+};
-+
-+static const struct qcom_cc_desc mss_sc7180_desc = {
-+	.config = &mss_regmap_config,
-+	.clks = mss_sc7180_clocks,
-+	.num_clks = ARRAY_SIZE(mss_sc7180_clocks),
-+};
-+
-+static int mss_sc7180_probe(struct platform_device *pdev)
-+{
-+	int ret;
-+
-+	pm_runtime_enable(&pdev->dev);
-+	ret = pm_clk_create(&pdev->dev);
-+	if (ret)
-+		goto disable_pm_runtime;
-+
-+	ret = pm_clk_add(&pdev->dev, "cfg_ahb");
-+	if (ret < 0) {
-+		dev_err(&pdev->dev, "failed to acquire iface clock\n");
-+		goto destroy_pm_clk;
-+	}
-+
-+	ret = qcom_cc_probe(pdev, &mss_sc7180_desc);
-+	if (ret < 0)
-+		goto destroy_pm_clk;
-+
-+	return 0;
-+
-+destroy_pm_clk:
-+	pm_clk_destroy(&pdev->dev);
-+
-+disable_pm_runtime:
-+	pm_runtime_disable(&pdev->dev);
-+
-+	return ret;
-+}
-+
-+static int mss_sc7180_remove(struct platform_device *pdev)
-+{
-+	pm_clk_destroy(&pdev->dev);
-+	pm_runtime_disable(&pdev->dev);
-+
-+	return 0;
-+}
-+
-+static const struct dev_pm_ops mss_sc7180_pm_ops = {
-+	SET_RUNTIME_PM_OPS(pm_clk_suspend, pm_clk_resume, NULL)
-+};
-+
-+static const struct of_device_id mss_sc7180_match_table[] = {
-+	{ .compatible = "qcom,sc7180-mss" },
-+	{ }
-+};
-+MODULE_DEVICE_TABLE(of, mss_sc7180_match_table);
-+
-+static struct platform_driver mss_sc7180_driver = {
-+	.probe		= mss_sc7180_probe,
-+	.remove		= mss_sc7180_remove,
-+	.driver		= {
-+		.name		= "sc7180-mss",
-+		.of_match_table = mss_sc7180_match_table,
-+		.pm = &mss_sc7180_pm_ops,
-+	},
-+};
-+
-+static int __init mss_sc7180_init(void)
-+{
-+	return platform_driver_register(&mss_sc7180_driver);
-+}
-+subsys_initcall(mss_sc7180_init);
-+
-+static void __exit mss_sc7180_exit(void)
-+{
-+	platform_driver_unregister(&mss_sc7180_driver);
-+}
-+module_exit(mss_sc7180_exit);
-+
-+MODULE_DESCRIPTION("QTI MSS SC7180 Driver");
-+MODULE_LICENSE("GPL v2");
---
-Qualcomm INDIA, on behalf of Qualcomm Innovation Center, Inc.is a member
-of the Code Aurora Forum, hosted by the  Linux Foundation.
+> Incidentally people tested a power balancing solution with a feedback
+> loop very similar to the one you're describing side by side to the RFC
+> patch series I provided a link to earlier (which targeted Gen9 LP
+> parts), and the energy efficiency improvements they observed were
+> roughly half of the improvement obtained with my series unsurprisingly.
+>
+> Not to speak about generalizing such a feedback loop to bottlenecks on
+> multiple I/O devices.
+
+The generalizing part I'm totally unconvinced above.
+
+> >> Depending on the instantaneous behavior of the
+> >> workload it might take 1% or 95% of the CPU power in order to keep the
+> >> IO device busy.  Each user of this would need to monitor the performance
+> >> of every CPU in the system and update the constraints on each of them
+> >> periodically (whether or not they're talking to that IO device, which
+> >> would possibly negatively impact the latency of unrelated applications
+> >> running on other CPUs, unless we're willing to race with the task
+> >> scheduler).
+> >
+> > No, it just needs to measure a signal representing how much power *it*
+> > gets and decide whether or not it can let the CPU subsystem use more
+> > power.
+> >
+>
+> Well yes it's technically possible to set frequency constraints based on
+> trial-and-error without sampling utilization information from the CPU
+> cores, but don't we agree that this kind of information can be highly
+> valuable?
+
+OK, so there are three things, frequency constraints (meaning HWP min
+and max limits, for example), frequency requests (this is what cpufreq
+does) and power limits.
+
+If the processor has at least some autonomy in driving the frequency,
+using frequency requests (i.e. cpufreq governors) for limiting power
+is inefficient in general, because the processor is not required to
+grant those requests at all.
+
+Using frequency limits may be good enough, but it generally limits the
+processor's ability to respond at short-time scales (for example,
+setting the max frequency limit will prevent the processor from using
+frequencies above that limit even temporarily, but that might be the
+most energy-efficient option in some cases).
+
+Using power limits (which is what RAPL does) doesn't bring such shortcomings in.
+
+> >> A solution based on utilization clamps (with some
+> >> extensions) sounds more future-proof to me honestly.
+> >
+> > Except that it would be rather hard to connect it to something like
+> > RAPL, which should be quite straightforward with the approach I'm
+> > talking about.
+> >
+>
+> I think using RAPL as additional control variable would be useful, but
+> fully orthogonal to the cap being set by some global mechanism or being
+> derived from the aggregation of a number of per-process power caps based
+> on the scheduler behavior.
+
+I'm not sure what do you mean by "the cap" here.  A maximum frequency
+limit or something else?
+
+> The latter sounds like the more reasonable
+> fit for a multi-tasking, possibly virtualized environment honestly.
+> Either way RAPL is neither necessary nor sufficient in order to achieve
+> the energy efficiency improvement I'm working on.
+
+The "not necessary" I can agree with, but I don't see any arguments
+for the "not sufficient" statement.
+
+> > The problem with all scheduler-based ways, again, is that there is no
+> > direct connection between the scheduler and HWP,
+>
+> I was planning to introduce such a connection in RFC part 2.  I have a
+> prototype for that based on a not particularly pretty custom interface,
+> I wouldn't mind trying to get it to use utilization clamps if you think
+> that's the way forward.
+
+Well, I may think so, but that's just thinking at this point.  I have
+no real numbers to support that theory.
+
+> > or even with whatever the processor does with the P-states in the
+> > turbo range.  If any P-state in the turbo range is requested, the
+> > processor has a license to use whatever P-state it wants, so this
+> > pretty much means allowing it to use as much power as it can.
+> >
+> > So in the first place, if you want to limit the use of power in the
+> > CPU subsystem through frequency control alone, you need to prevent it
+> > from using turbo P-states at all.  However, with RAPL you can just
+> > limit power which may still allow some (but not all) turbo P-states to
+> > be used.
+>
+> My goal is not to limit the use of power of the CPU (if it has enough
+> load to utilize 100% of the cycles at turbo frequency so be it), but to
+> get it to use it more efficiently.  If you are constrained by a given
+> power budget (e.g. the TDP or the one you want set via RAPL) you can do
+> more with it if you set a stable frequency rather than if you let the
+> CPU bounce back and forth between turbo and idle.
+
+Well, this basically means driving the CPU frequency by hand with the
+assumption that the processor cannot do the right thing in this
+respect, while in theory the HWP algorithm should be able to produce
+the desired result.
+
+IOW, your argumentation seems to go into the "HWP is useless"
+direction, more or less and while there are people who will agree with
+such a statement, others won't.
+
+> This can only be
+> achieved effectively if the frequency governor has a rough idea of the
+> latency requirements of the workload, since it involves a
+> latency/energy-efficiency trade-off.
+
+Let me state this again (and this will be the last time, because I
+don't really like to repeat points): the frequency governor can only
+*request* the processor to do something in general and the request may
+or may not be granted, for various reasons.  If it is not granted, the
+whole "control" mechanism fails.
