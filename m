@@ -7,72 +7,72 @@ X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C76A3C35679
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 09:56:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 99B5AC3567B
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 09:58:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9A11F20842
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 09:56:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6B9A720828
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 09:58:15 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="tgtYloE7"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="cHVx95hV"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727486AbgBXJ4Z (ORCPT
+        id S1727237AbgBXJ6O (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Feb 2020 04:56:25 -0500
-Received: from mail-wr1-f67.google.com ([209.85.221.67]:43875 "EHLO
-        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726216AbgBXJ4Z (ORCPT
+        Mon, 24 Feb 2020 04:58:14 -0500
+Received: from mail-wm1-f65.google.com ([209.85.128.65]:40087 "EHLO
+        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726509AbgBXJ6O (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Feb 2020 04:56:25 -0500
-Received: by mail-wr1-f67.google.com with SMTP id r11so9577114wrq.10
-        for <linux-kernel@vger.kernel.org>; Mon, 24 Feb 2020 01:56:24 -0800 (PST)
+        Mon, 24 Feb 2020 04:58:14 -0500
+Received: by mail-wm1-f65.google.com with SMTP id t14so8646924wmi.5
+        for <linux-kernel@vger.kernel.org>; Mon, 24 Feb 2020 01:58:12 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=date:from:to:cc:subject:message-id:references:mime-version
          :content-disposition:content-transfer-encoding:in-reply-to
          :user-agent;
-        bh=83WW05lhEWXGN1JxKFA4ekygi1Trv1Nm3ZrdseE3tVI=;
-        b=tgtYloE7TZ6UonSIPskVA7JcMS8ZkE82CuKqfDohvY0umS9z0GjafnpMTiXmBSnyBk
-         JYJ6q7a07PbUizh9Tr1EQqK9Rw6CuVPiK3iwJCafR3WLjjm98xDLOXYAAtuuKDHt03W0
-         d9JXZBBtl3ALgoRb1T8zTTQW65Y5XPKByLKoaqrfTNBXVkNQ4Mc2GTQduXteAh9EnZuZ
-         Z8t60QvEi1gzsBuwfvZNoEJ+9U3FmyWl82GRWkBwAz3OrHlo2uWbQyhb4U3l2jAmT7Oe
-         rQ20JFDEXG1iWgGnDH132cGTh4grqoYSda3Hmy/nKHiRj3/6bX+sD5/1916NNKUTTw0A
-         6uUw==
+        bh=49MOW3x5Q2EIMR0C2C+zitJNdeJI9n/hJ6NB+GHf350=;
+        b=cHVx95hVVTBbNXWIJhYbmieb5ZF/Vh8964RBQFBIRDXC4oLUKdd7Eka9cPJKwogZyy
+         zJ5vu8P2G/CDGZYESWgkvbOuz5Q+SrPs04QR621E6OGXiyQE4pVVN2RprD1xgk9SxPJx
+         oB8Mkv3BNCzNYuZWzdicoXbOX+7OawL1Lxin3BfTgmj9eZZhz7dzFLvHSwihKlEKT0zX
+         F+meIL2ES5QH+/WtP1VChyjIPwW+GHorCRL7qj5SmxJKTfZTAjPeovS21NA/8tedLTZM
+         wU1YFtvZdv6mF4BxulYSHcNpCK+Wki0mMgLmd7WphjZ8LuSTx+lcqd3mhVUKhFJDjsIl
+         ySPQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:content-transfer-encoding
          :in-reply-to:user-agent;
-        bh=83WW05lhEWXGN1JxKFA4ekygi1Trv1Nm3ZrdseE3tVI=;
-        b=kqL2lfE2PiHVEaiG+Shk8y3rWQikOkOLeFQ7AR3Oyt7igQXbLo6DaeMqmYzLJ8s1Ip
-         wS5uopHQhEgkcSY87VumCLF+DIXlYI4UvbVdZQd1i1lKvAeJjOL/xhefy41p2WXxGzJE
-         dtRtL11Rw/+SkGBskzEMyXtETCDeTY2BhrLAfhnMNbAcku97UVWE6omrJSSmQHX9idpY
-         DOAMdBcs6qnV9Scic1vC6PyEsXncXsAfvqIV3j5FWZzDww/S0bGDrrPeeKJ+mTvVteXA
-         15HvCFuPnd2ryN5bImIJ1sNWngRwatB91zUJFQLPjCiOUU3go8wnkTbQYB97mhSnIK50
-         dj+Q==
-X-Gm-Message-State: APjAAAU1z0v1W7EBqimpkVPw+foeWhlaquHC8dIPa5cPR1I/1m+gz69j
-        E4AwnYK0hyLh76dGKUpY69/wkQ==
-X-Google-Smtp-Source: APXvYqyv+04rATj1+viPMM5ZF5AfpDdU1oN1oxCucdan3Urn52RETMlxPMlSL0lvmXcUKWSljy054w==
-X-Received: by 2002:a5d:69c6:: with SMTP id s6mr986853wrw.32.1582538183371;
-        Mon, 24 Feb 2020 01:56:23 -0800 (PST)
+        bh=49MOW3x5Q2EIMR0C2C+zitJNdeJI9n/hJ6NB+GHf350=;
+        b=PVQ1U/tiE3jjLMgwPCqwuJaACEzCSknsgGnveyvam5G96owrWFhUacPC4RgFkLkTu/
+         VbhgyKbq3arfGF5ea1n9yrmMxeB0p1Xpwq9n/yU7/cOGznURYjXnyGHA2jka6Lo10Z2u
+         UATIqRylgb4ci7kHLnq6HrqQ7FfT1Wj20k4BqxG4IusP0n7O+hmGeKCWWDqrR1/k/GQ8
+         P9hqFo6L0R6E35cH10ZspSqNLMNKwJzEODuevhYxB8V1ouw9KqsiNPyJLFonCThM0YHq
+         lTnjHGCGtAyW/Cqb7ZA7bJh6TSSBesf9W1Mj0ET2exJUgrNMg1+u5sZ0jswKJHgDXoHf
+         D9vA==
+X-Gm-Message-State: APjAAAWBIVZ72/ZUaGDaLWqOHHnaLRXhdI6XdMne9M4onLuy7gDedLrC
+        7Hffa2VRoMP8vVV2Ij0WZ1Rpyg==
+X-Google-Smtp-Source: APXvYqxntMA0/kHe4mhcbaQePDY0JI+9GyfIszoT66eEVLA/snKqiqCvF94JeH7YujAmUCkzQFzxKA==
+X-Received: by 2002:a1c:610a:: with SMTP id v10mr14045898wmb.44.1582538291980;
+        Mon, 24 Feb 2020 01:58:11 -0800 (PST)
 Received: from dell ([2.31.163.122])
-        by smtp.gmail.com with ESMTPSA id z16sm564269wrp.33.2020.02.24.01.56.22
+        by smtp.gmail.com with ESMTPSA id e8sm11849943wru.7.2020.02.24.01.58.11
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 24 Feb 2020 01:56:22 -0800 (PST)
-Date:   Mon, 24 Feb 2020 09:56:54 +0000
+        Mon, 24 Feb 2020 01:58:11 -0800 (PST)
+Date:   Mon, 24 Feb 2020 09:58:42 +0000
 From:   Lee Jones <lee.jones@linaro.org>
 To:     Adam Thomson <Adam.Thomson.Opensource@diasemi.com>
 Cc:     linux-kernel@vger.kernel.org,
         Support Opensource <support.opensource@diasemi.com>
-Subject: Re: [RESEND PATCH 1/2] mfd: da9063: Fix revision handling to
- correctly select reg tables
-Message-ID: <20200224095654.GI3494@dell>
+Subject: Re: [RESEND PATCH 2/2] mfd: da9063: Add support for latest DA
+ silicon revision
+Message-ID: <20200224095842.GJ3494@dell>
 References: <cover.1579864546.git.Adam.Thomson.Opensource@diasemi.com>
- <c75e6e04281fd8da78cd209a888664c35a6fb8c1.1579864546.git.Adam.Thomson.Opensource@diasemi.com>
+ <d4bf00408895f8b6d4aadc95e3059e5e3a848566.1579864546.git.Adam.Thomson.Opensource@diasemi.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <c75e6e04281fd8da78cd209a888664c35a6fb8c1.1579864546.git.Adam.Thomson.Opensource@diasemi.com>
+In-Reply-To: <d4bf00408895f8b6d4aadc95e3059e5e3a848566.1579864546.git.Adam.Thomson.Opensource@diasemi.com>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
@@ -81,33 +81,20 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 On Fri, 24 Jan 2020, Adam Thomson wrote:
 
-> The current implementation performs checking in the i2c_probe()
-> function of the variant_code but does this immediately after the
-> containing struct has been initialised as all zero. This means the
-> check for variant code will always default to using the BB tables
-> and will never select AD. The variant code is subsequently set
-> by device_init() and later used by the RTC so really it's a little
-> fortunate this mismatch works.
+> This update adds new regmap tables to support the latest DA silicon
+> which will automatically be selected based on the chip and variant
+> information read from the device.
 > 
-> This update creates an initial temporary regmap instantiation to
-> simply read the chip and variant/revision information (common to
-> all revisions) so that it can subsequently correctly choose the
-> proper regmap tables for real initialisation.
-
-IIUC, you have a dependency issue whereby the device type is required
-before you can select the correct Regmap configuration.  Is that
-correct?
-
-If so, using Regmap for the initial register reads sounds like
-over-kill.  What's stopping you simply using raw reads before the
-Regmap is instantiated?
-
 > Signed-off-by: Adam Thomson <Adam.Thomson.Opensource@diasemi.com>
 > ---
->  drivers/mfd/da9063-core.c            |  31 -------
->  drivers/mfd/da9063-i2c.c             | 167 +++++++++++++++++++++++++++++++----
->  include/linux/mfd/da9063/registers.h |  15 ++--
->  3 files changed, 160 insertions(+), 53 deletions(-)
+>  drivers/mfd/da9063-i2c.c        | 91 ++++++++++++++++++++++++++++++++++++-----
+>  include/linux/mfd/da9063/core.h |  1 +
+>  2 files changed, 82 insertions(+), 10 deletions(-)
+
+Looks fine at first blush:
+
+For my own reference:
+  Acked-for-MFD-by: Lee Jones <lee.jones@linaro.org>
 
 -- 
 Lee Jones [李琼斯]
