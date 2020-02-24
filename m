@@ -2,96 +2,119 @@ Return-Path: <SRS0=7TUr=4M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0EAA5C11D30
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 11:46:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5685BC35671
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 11:49:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DA4112072D
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 11:46:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2B5762072D
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 11:49:55 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="IYYHtx4H"
+	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="ugYQv4c3"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727727AbgBXLqo (ORCPT
+        id S1727444AbgBXLtx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Feb 2020 06:46:44 -0500
-Received: from mail27.static.mailgun.info ([104.130.122.27]:32987 "EHLO
-        mail27.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727627AbgBXLqo (ORCPT
+        Mon, 24 Feb 2020 06:49:53 -0500
+Received: from perceval.ideasonboard.com ([213.167.242.64]:47118 "EHLO
+        perceval.ideasonboard.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727318AbgBXLtx (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Feb 2020 06:46:44 -0500
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1582544803; h=References: In-Reply-To: Message-Id: Date:
- Subject: Cc: To: From: Sender;
- bh=RQyNQ3DFWtlsQXD4V++chr0ZTqGNZET5yxGQsVzgceo=; b=IYYHtx4HRv0jxoTXuHO1zqgAp0bHy2AhOQJKWAixhw2tK8DeqboirrecZ95PK0bqn19c0kpR
- zF4eEGcAxtG+yOTKF6TpyM8UPami1a3YRHWXNjY2N3N9GLxJsLQxS9lnB8oID07MKzcMVk0o
- hdpofe/xF0mh1w+VWUbchgRj0w0=
-X-Mailgun-Sending-Ip: 104.130.122.27
-X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
-Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
- by mxa.mailgun.org with ESMTP id 5e53b7a1.7f963daa67a0-smtp-out-n01;
- Mon, 24 Feb 2020 11:46:41 -0000 (UTC)
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id 475DDC4479D; Mon, 24 Feb 2020 11:46:41 +0000 (UTC)
-Received: from vbadigan-linux.qualcomm.com (blr-c-bdr-fw-01_GlobalNAT_AllZones-Outside.qualcomm.com [103.229.19.19])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: vbadigan)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 3C3B6C43383;
-        Mon, 24 Feb 2020 11:46:37 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 3C3B6C43383
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=vbadigan@codeaurora.org
-From:   Veerabhadrarao Badiganti <vbadigan@codeaurora.org>
-To:     ulf.hansson@linaro.org, robh+dt@kernel.org
-Cc:     devicetree@vger.kernel.org, linux-mmc@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
-        Veerabhadrarao Badiganti <vbadigan@codeaurora.org>,
-        Mark Rutland <mark.rutland@arm.com>
-Subject: [PATCH V2] dt-bindings: mmc: sdhci-msm: Add CQE reg map
-Date:   Mon, 24 Feb 2020 17:14:43 +0530
-Message-Id: <1582544683-9505-1-git-send-email-vbadigan@codeaurora.org>
-X-Mailer: git-send-email 1.9.1
-In-Reply-To: <1581434955-11087-1-git-send-email-vbadigan@codeaurora.org>
-References: <1581434955-11087-1-git-send-email-vbadigan@codeaurora.org>
+        Mon, 24 Feb 2020 06:49:53 -0500
+Received: from pendragon.ideasonboard.com (81-175-216-236.bb.dnainternet.fi [81.175.216.236])
+        by perceval.ideasonboard.com (Postfix) with ESMTPSA id 12C21E89;
+        Mon, 24 Feb 2020 12:49:50 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
+        s=mail; t=1582544991;
+        bh=VVerRb6P9n4J0byG4RDsnhoDAwB4cAvUJUyugM/0Jkc=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=ugYQv4c39w/BkPop3ddbphnw7qyYCMDbqcgPLKuDgjGcZC5LoOJius+czrFIHnrb+
+         u816peG8yGigqAo9ygdzkTC9q7i8yW3GmL2ZSQlkPVa5pSTcbXErFNcBc5VMpcR6Cd
+         Zk0y5c8XWW8nPgbWZw6H0KcjPP3rblcv841JCdU8=
+Date:   Mon, 24 Feb 2020 13:49:29 +0200
+From:   Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+To:     Kaaira Gupta <kgupta@es.iitr.ac.in>
+Cc:     Vaibhav Agarwal <vaibhav.sr@gmail.com>,
+        Mark Greer <mgreer@animalcreek.com>,
+        Johan Hovold <johan@kernel.org>, Alex Elder <elder@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        greybus-dev@lists.linaro.org, devel@driverdev.osuosl.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [greybus-dev] [PATCH] staging: greybus: match parenthesis
+ alignment
+Message-ID: <20200224114929.GB4827@pendragon.ideasonboard.com>
+References: <20200219195651.GA485@kaaira-HP-Pavilion-Notebook>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20200219195651.GA485@kaaira-HP-Pavilion-Notebook>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-CQE feature has been enabled on sdhci-msm. Add CQE reg map
-and reg names that need to be supplied for supporting CQE feature.
+Hi Kaaira,
 
-Signed-off-by: Veerabhadrarao Badiganti <vbadigan@codeaurora.org>
----
+Thank you for the patch.
 
-Changes since V1:
-	- Dropped _mem suffix to reg names.
----
- Documentation/devicetree/bindings/mmc/sdhci-msm.txt | 8 +++++++-
- 1 file changed, 7 insertions(+), 1 deletion(-)
+On Thu, Feb 20, 2020 at 01:26:51AM +0530, Kaaira Gupta wrote:
+> Fix checkpatch.pl warning of alignment should match open parenthesis in
+> audio_codec.c
+> 
+> Signed-off-by: Kaaira Gupta <kgupta@es.iitr.ac.in>
+> ---
+>  drivers/staging/greybus/audio_codec.c | 8 ++++----
+>  1 file changed, 4 insertions(+), 4 deletions(-)
+> 
+> diff --git a/drivers/staging/greybus/audio_codec.c b/drivers/staging/greybus/audio_codec.c
+> index 08746c85dea6..d62f91f4e9a2 100644
+> --- a/drivers/staging/greybus/audio_codec.c
+> +++ b/drivers/staging/greybus/audio_codec.c
+> @@ -70,7 +70,7 @@ static int gbaudio_module_enable_tx(struct gbaudio_codec_info *codec,
+>  		i2s_port = 0;	/* fixed for now */
+>  		cportid = data->connection->hd_cport_id;
+>  		ret = gb_audio_apbridgea_register_cport(data->connection,
+> -						i2s_port, cportid,
+> +							i2s_port, cportid,
+>  						AUDIO_APBRIDGEA_DIRECTION_TX);
 
-diff --git a/Documentation/devicetree/bindings/mmc/sdhci-msm.txt b/Documentation/devicetree/bindings/mmc/sdhci-msm.txt
-index 7ee639b..5445931 100644
---- a/Documentation/devicetree/bindings/mmc/sdhci-msm.txt
-+++ b/Documentation/devicetree/bindings/mmc/sdhci-msm.txt
-@@ -26,7 +26,13 @@ Required properties:
- 
- - reg: Base address and length of the register in the following order:
- 	- Host controller register map (required)
--	- SD Core register map (required for msm-v4 and below)
-+	- SD Core register map (required for controllers earlier than msm-v5)
-+	- CQE register map (Optional, CQE support is present on SDHC instance meant
-+	                    for eMMC and version v4.2 and above)
-+- reg-names: When CQE register map is supplied, below reg-names are required
-+	- "hc" for Host controller register map
-+	- "core" for SD core register map
-+	- "cqhci" for CQE register map
- - interrupts: Should contain an interrupt-specifiers for the interrupts:
- 	- Host controller interrupt (required)
- - pinctrl-names: Should contain only one value - "default".
+I'm curious to know why you think the line you changed deserves a
+modification, while the next one doesn't :-)
+
+>  		if (ret) {
+>  			dev_err_ratelimited(module->dev,
+> @@ -160,7 +160,7 @@ static int gbaudio_module_disable_tx(struct gbaudio_module_info *module, int id)
+>  		i2s_port = 0;	/* fixed for now */
+>  		cportid = data->connection->hd_cport_id;
+>  		ret = gb_audio_apbridgea_unregister_cport(data->connection,
+> -						i2s_port, cportid,
+> +							  i2s_port, cportid,
+>  						AUDIO_APBRIDGEA_DIRECTION_TX);
+>  		if (ret) {
+>  			dev_err_ratelimited(module->dev,
+> @@ -205,7 +205,7 @@ static int gbaudio_module_enable_rx(struct gbaudio_codec_info *codec,
+>  		i2s_port = 0;	/* fixed for now */
+>  		cportid = data->connection->hd_cport_id;
+>  		ret = gb_audio_apbridgea_register_cport(data->connection,
+> -						i2s_port, cportid,
+> +							i2s_port, cportid,
+>  						AUDIO_APBRIDGEA_DIRECTION_RX);
+>  		if (ret) {
+>  			dev_err_ratelimited(module->dev,
+> @@ -295,7 +295,7 @@ static int gbaudio_module_disable_rx(struct gbaudio_module_info *module, int id)
+>  		i2s_port = 0;	/* fixed for now */
+>  		cportid = data->connection->hd_cport_id;
+>  		ret = gb_audio_apbridgea_unregister_cport(data->connection,
+> -						i2s_port, cportid,
+> +							  i2s_port, cportid,
+>  						AUDIO_APBRIDGEA_DIRECTION_RX);
+>  		if (ret) {
+>  			dev_err_ratelimited(module->dev,
+
 -- 
-Qualcomm India Private Limited, on behalf of Qualcomm Innovation Center, Inc., is a member of Code Aurora Forum, a Linux Foundation Collaborative Project
+Regards,
+
+Laurent Pinchart
