@@ -2,103 +2,150 @@ Return-Path: <SRS0=7TUr=4M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 89E0AC35670
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 00:06:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 38CB1C35673
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 00:13:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4BF4C2067D
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 00:06:59 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=aj.id.au header.i=@aj.id.au header.b="pMIvQxSM";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="Kl9m75Lg"
+	by mail.kernel.org (Postfix) with ESMTP id 128C82067D
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 00:13:00 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1582503180;
+	bh=Vbzy1EcOquFHvTqzOzQC+gU9JXZnvbZ5bJcf12Ri5wc=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=FATwv4TGaKVs8Cje9JVfILepnbYwHMs0a9unCkVz/TnglE761an8i1LLyMETm1QV+
+	 vSRl1JFbcy3zkyFT611upqCGXUKw8Fb3BkVmbGTJjKvAj+3nI4llA2OYXeoDpno94Y
+	 AWUAJ4ELhuka1cE+ZZZDbHZZyX/XTHDdiSj4mU6I=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727193AbgBXAG5 (ORCPT
+        id S1727181AbgBXAM4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 23 Feb 2020 19:06:57 -0500
-Received: from out1-smtp.messagingengine.com ([66.111.4.25]:55471 "EHLO
-        out1-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727167AbgBXAG4 (ORCPT
+        Sun, 23 Feb 2020 19:12:56 -0500
+Received: from mail-oi1-f193.google.com ([209.85.167.193]:34433 "EHLO
+        mail-oi1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726534AbgBXAM4 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 23 Feb 2020 19:06:56 -0500
-Received: from compute4.internal (compute4.nyi.internal [10.202.2.44])
-        by mailout.nyi.internal (Postfix) with ESMTP id 8C30F20A4B;
-        Sun, 23 Feb 2020 19:06:55 -0500 (EST)
-Received: from imap2 ([10.202.2.52])
-  by compute4.internal (MEProxy); Sun, 23 Feb 2020 19:06:55 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=aj.id.au; h=
-        mime-version:message-id:in-reply-to:references:date:from:to:cc
-        :subject:content-type; s=fm2; bh=zjhLqXsGdwHmDXQ4loElGl5IBhTi4NI
-        teyaEj1OhzX0=; b=pMIvQxSM7Sx8a5nkQzbt7ZFK/MAHlcTi1D3f+ks+P/0EKLo
-        6SAqSKgyK7eLnr9gb0WRoCjmsYSevkz8doLPRU1crKf5iem3xkd91XjVTtfyed2s
-        UbmZlOaMOEb59rUmSADPxSLYxolVKZoVbLe37IJ5wPtR9xDI5YCK31SYR4xq2Rci
-        ki5Nio2Ku7yuTJp5vz0QYgmRkmbr8xQgEivf7MMb5CdGnzUF8gIPfzyCe62xojx6
-        8o5bo/Mht62rUZRbcPQuvEw2skBtB5C8IcZFPteC19ML2U7GcJQ0ppMkRxQjbVs+
-        x7m9qqyhICAxmAiCZS/lgflQwPX0tSrkAAS0x1w==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-        messagingengine.com; h=cc:content-type:date:from:in-reply-to
-        :message-id:mime-version:references:subject:to:x-me-proxy
-        :x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm2; bh=zjhLqX
-        sGdwHmDXQ4loElGl5IBhTi4NIteyaEj1OhzX0=; b=Kl9m75Lgt1kvotcVMiTCEa
-        JFVqY3d6ZyBArGZn0X/iKGaAt5+J2Cb747X2tw0H5gVULjjSILHn+yVRBwMZpKOY
-        omSWqe+HmTx3Ie6sjlPNWbb/gSWajKydpCgmKodvgaIgQFtPT++1JbTOc2VretjJ
-        uevH6h1m+YOWSDuXPZbOHvnL6rqrlGLqKL6+7VDmmPgSr5wPzwPTrdUZ3arjA2/E
-        plgeoIKlvPk1hB8roLOrX8o+HSTsgctZC9bIo3maQpEh6P1I6XqFwPaVXnsC7VrS
-        gYdbyKc0NuEvflaGG8hn21IuEVmU2Tlf7km9ao34juMTsOu415lpyzU83XkJzjPw
-        ==
-X-ME-Sender: <xms:nBNTXlGexT6W00zZwqe5NhyI45Mm3-x-EfUkj2m1tCDBTPa45nLLkQ>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedugedrkeelgddulecutefuodetggdotefrodftvf
-    curfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfghnecu
-    uegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenuc
-    fjughrpefofgggkfgjfhffhffvufgtsehttdertderredtnecuhfhrohhmpedftehnughr
-    vgifucflvghffhgvrhihfdcuoegrnhgurhgvfiesrghjrdhiugdrrghuqeenucevlhhush
-    htvghrufhiiigvpedtnecurfgrrhgrmhepmhgrihhlfhhrohhmpegrnhgurhgvfiesrghj
-    rdhiugdrrghu
-X-ME-Proxy: <xmx:nBNTXoDnePLBa_Y_9k7NJkxs4WhfSQp8lTAkWuV86lg67zuSOFyFNQ>
-    <xmx:nBNTXhko0weVkNUI0dB4G_laWk2E0gIVeuw7fS2hjoyfGZk3yLZYsg>
-    <xmx:nBNTXjSqxLmg3j9fEEBlhoG8sA6IUJPl3sLCZdb3uQrjMKSS4GwFZQ>
-    <xmx:nxNTXokN7xZ8q4h5XmrjbQQZMMPf4p_hbjDdjrAiAWe_PRVXSUi1Og>
-Received: by mailuser.nyi.internal (Postfix, from userid 501)
-        id C3486E00D1; Sun, 23 Feb 2020 19:06:52 -0500 (EST)
-X-Mailer: MessagingEngine.com Webmail Interface
-User-Agent: Cyrus-JMAP/3.1.7-802-g7a41c81-fmstable-20200203v1
-Mime-Version: 1.0
-Message-Id: <020e9eb5-4fdc-44d0-b00e-42b6e6435110@www.fastmail.com>
-In-Reply-To: <20200222235152.242816-1-megous@megous.com>
-References: <20200222235152.242816-1-megous@megous.com>
-Date:   Mon, 24 Feb 2020 10:36:47 +1030
-From:   "Andrew Jeffery" <andrew@aj.id.au>
-To:     "Ondrej Jirman" <megous@megous.com>, linux-kernel@vger.kernel.org
-Cc:     "Joel Stanley" <joel@jms.id.au>, "David Airlie" <airlied@linux.ie>,
-        "Daniel Vetter" <daniel@ffwll.ch>,
-        "open list:DRM DRIVER FOR ASPEED BMC GFX" 
-        <linux-aspeed@lists.ozlabs.org>,
-        "open list:DRM DRIVERS" <dri-devel@lists.freedesktop.org>,
-        "moderated list:ARM/ASPEED MACHINE SUPPORT" 
-        <linux-arm-kernel@lists.infradead.org>
-Subject: Re: [PATCH] drm: aspeed: Fix GENMASK misuse
-Content-Type: text/plain
+        Sun, 23 Feb 2020 19:12:56 -0500
+Received: by mail-oi1-f193.google.com with SMTP id l136so7378951oig.1;
+        Sun, 23 Feb 2020 16:12:56 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=dXtF/HmMIrcd+cQtmXxs/T7lgY990MkWtsdCks/TALQ=;
+        b=n1y0GFsabmOGSPdsWZwUCkx5zUH6EwT/QM3R2QhUuCiDi3yzz+PlNtyUy0TyjkaW2z
+         0UXfQNjTXmYZoELA1HAxUQAJLNjYNY39B8SSw1qtR/Cqi/xKT2FFUKwGb4qakt8texD1
+         edAMrtAmNF4Sj0eT4p4yVi/E7U96+SFVo695gqCUl3zp/ufLB857dk4BhGP2ojxdNTeu
+         sdZnAq0wGuvcG783Ra8g15VheMBuZu+3T/i2ZAdMaV7dEcMcm0uBLSzpNj0Yh228rE53
+         eoVqjUwO8HOcdq3BR66pH5P9r1PCCjFKfh6XDdi7fOqtSjygDUrlxhS89HckN2/1s9vI
+         DMlA==
+X-Gm-Message-State: APjAAAUY7HY0fwsDVAp/1y9UjrNXKl7d/BQGrMtUQhIpE4or/3pTYyF1
+        NZCivzGDXntTznKoRJ2k6vTFf8FpkvFWt1z7LDbfOw==
+X-Google-Smtp-Source: APXvYqzdpH/FefyGNd/m5kE+ZaANP4jSIXHMUatJ93J6tlevnB7xPSMTV256Cq9jT+92l+vsHgJ3g0osYRVYlYV+4is=
+X-Received: by 2002:a54:4e96:: with SMTP id c22mr11067116oiy.110.1582503175589;
+ Sun, 23 Feb 2020 16:12:55 -0800 (PST)
+MIME-Version: 1.0
+References: <1582319350-23515-1-git-send-email-cai@lca.pw>
+In-Reply-To: <1582319350-23515-1-git-send-email-cai@lca.pw>
+From:   "Rafael J. Wysocki" <rafael@kernel.org>
+Date:   Mon, 24 Feb 2020 01:12:41 +0100
+Message-ID: <CAJZ5v0iSEV9S=zTa9++vUCO6GTfBE2sxNY+b4mMMt4Y6RCRvjA@mail.gmail.com>
+Subject: Re: [PATCH -next] power/qos: fix a data race in pm_qos_*_value
+To:     Qian Cai <cai@lca.pw>
+Cc:     "Rafael J. Wysocki" <rjw@rjwysocki.net>, elver@google.com,
+        Linux PM <linux-pm@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Fri, Feb 21, 2020 at 10:09 PM Qian Cai <cai@lca.pw> wrote:
+>
+> cpu_latency_constraints.target_value could be accessed concurrently as
+> noticed by KCSAN,
 
+Yes, they could, pretty much by design.
 
-On Sun, 23 Feb 2020, at 10:21, Ondrej Jirman wrote:
-> Arguments to GENMASK should be msb >= lsb.
-> 
-> Signed-off-by: Ondrej Jirman <megous@megous.com>
+So why *exactly* is this a problem?
+
+>  LTP: starting ppoll01
+>  BUG: KCSAN: data-race in cpu_latency_qos_limit / pm_qos_update_target
+
+It may be a bug under certain conditions, but you don't mention what
+conditions they are.  Reporting it as a general bug is not accurate at
+the very least.
+
+>  write to 0xffffffff99081470 of 4 bytes by task 27532 on cpu 2:
+>   pm_qos_update_target+0xa4/0x370
+>   pm_qos_set_value at kernel/power/qos.c:78
+>   cpu_latency_qos_apply+0x3b/0x50
+>   cpu_latency_qos_remove_request+0xea/0x270
+>   cpu_latency_qos_release+0x4b/0x70
+>   __fput+0x187/0x3d0
+>   ____fput+0x1e/0x30
+>   task_work_run+0xbf/0x130
+>   do_exit+0xa78/0xfd0
+>   do_group_exit+0x8b/0x180
+>   __x64_sys_exit_group+0x2e/0x30
+>   do_syscall_64+0x91/0xb05
+>   entry_SYSCALL_64_after_hwframe+0x49/0xbe
+>
+>  read to 0xffffffff99081470 of 4 bytes by task 0 on cpu 41:
+>   cpu_latency_qos_limit+0x1f/0x30
+>   pm_qos_read_value at kernel/power/qos.c:55
+>   cpuidle_governor_latency_req+0x4f/0x80
+>   cpuidle_governor_latency_req at drivers/cpuidle/governor.c:114
+>   menu_select+0x6b/0xc29
+>   cpuidle_select+0x50/0x70
+>   do_idle+0x214/0x280
+>   cpu_startup_entry+0x1d/0x1f
+>   start_secondary+0x1b2/0x230
+>   secondary_startup_64+0xb6/0xc0
+>
+>  Reported by Kernel Concurrency Sanitizer on:
+>  CPU: 41 PID: 0 Comm: swapper/41 Tainted: G L 5.6.0-rc2-next-20200221+ #7
+>  Hardware name: HPE ProLiant DL385 Gen10/ProLiant DL385 Gen10, BIOS A40 07/10/2019
+>
+> The read is outside pm_qos_lock critical section which results in a data
+> race.
+
+This is purely theoretical AFAICS and so it should be presented this way.
+
+Also the call traces above don't add much value to the changelog, so
+maybe try to explain what the problem is in English.
+
+> Fix it by adding a pair of READ|WRITE_ONCE().
+>
+> Signed-off-by: Qian Cai <cai@lca.pw>
 > ---
-> I just grepped the whole kernel tree for GENMASK argument order issues,
-> and this is one of the three that popped up. No testing was done.
-
-I think someone's sent a patch previously, and last time it turned into a
-discussion about how the macros aren't actually used and could be
-removed.
-
-Regardless:
-
-Reviewed-by: Andrew Jeffery <andrew@aj.id.au>
+>  kernel/power/qos.c | 4 ++--
+>  1 file changed, 2 insertions(+), 2 deletions(-)
+>
+> diff --git a/kernel/power/qos.c b/kernel/power/qos.c
+> index 32927682bcc4..db0bed2cae26 100644
+> --- a/kernel/power/qos.c
+> +++ b/kernel/power/qos.c
+> @@ -52,7 +52,7 @@
+>   */
+>  s32 pm_qos_read_value(struct pm_qos_constraints *c)
+>  {
+> -       return c->target_value;
+> +       return READ_ONCE(c->target_value);
+>  }
+>
+>  static int pm_qos_get_value(struct pm_qos_constraints *c)
+> @@ -75,7 +75,7 @@ static int pm_qos_get_value(struct pm_qos_constraints *c)
+>
+>  static void pm_qos_set_value(struct pm_qos_constraints *c, s32 value)
+>  {
+> -       c->target_value = value;
+> +       WRITE_ONCE(c->target_value, value);
+>  }
+>
+>  /**
+> --
+> 1.8.3.1
+>
