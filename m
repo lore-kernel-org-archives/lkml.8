@@ -2,196 +2,96 @@ Return-Path: <SRS0=7TUr=4M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1BE48C38BF9
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 22:47:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6A782C38BFF
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 22:47:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DAB3020732
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 22:47:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3DAF920732
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 22:47:21 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=paul-moore-com.20150623.gappssmtp.com header.i=@paul-moore-com.20150623.gappssmtp.com header.b="CroVqUi7"
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="D1Nb9GkF"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728226AbgBXWrE (ORCPT
+        id S1728277AbgBXWrU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Feb 2020 17:47:04 -0500
-Received: from mail-ed1-f65.google.com ([209.85.208.65]:35862 "EHLO
-        mail-ed1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727670AbgBXWrE (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Feb 2020 17:47:04 -0500
-Received: by mail-ed1-f65.google.com with SMTP id j17so13916899edp.3
-        for <linux-kernel@vger.kernel.org>; Mon, 24 Feb 2020 14:47:03 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=paul-moore-com.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=IiEfOHCrh6zWQVm34gh4O8v2Un9u1uyhgcdvK71qZmY=;
-        b=CroVqUi7mIIS7wL8nV78oVXOVovbLpfhD/u/2t3d2nfMCOWhxPe3VMYEVuTYeVyqG1
-         ZTijB0v0aZ/Xe5zpPggXKkMyXFYkBjEgh2uddniuE8SilGKtNxFK8Bk1iXDUrzXFHa8q
-         TRuR+8K/3NxLu1uARxS7/yYn4EQV0taV0ke8D3n6Yapg6UKSNDG0VMeiy1wt92RG1BWP
-         ZvHR21B7B7CFDmXP0McRMNoPXJg0UojQpOhH48jPZAxCZJxrPiloskjyhRCL89zp2YqA
-         vQOgTKa7bn+l6kTA5gEZ6TfUE+eLoP1mJFfwEx0G0TcrYjahZYW5oivzdEaEy4OEqXre
-         tX/w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=IiEfOHCrh6zWQVm34gh4O8v2Un9u1uyhgcdvK71qZmY=;
-        b=fgRVg59d+IW9t0gW6qUjvpZOZ0fSVkKMUkzuJ7gesabj2ihsy3dL6TO3qILYTU/nZ0
-         uhAkjz7Giqs8rLWs/NpW+J1jHwEwVs8nS7GL5RDroI0Q+05/poLClFwEipY1wEU73Q5v
-         mYtnfHOtEDQ0l19RguavrJkBp/tcF/wbFzv63kvIZqNRgs8H4suFeTWMivckcsRx1msL
-         +BojxorBrSjItKwuhuDhuMnXhWLLpJmDcYM3oZqCQDjuEJ3F6EIt8YoXgFqsv4nq4YhW
-         WdGcMHn2/upsvDbHHDPlq7VwkoXP70mYZJbWJbnyvoPq62dAApk4k+NQEAJ1f3ZDTDeS
-         gssw==
-X-Gm-Message-State: APjAAAVeZbBUEai28p7q7mpA4ic2LtALPka86okwfqIVY+ENtsAlOEmk
-        REqdVn1/eB3sKU/SIdJn+Tl87w/CizOw+FblQmSs
-X-Google-Smtp-Source: APXvYqyoEHk7Xyx5zXdxxgh2THrTubUE2a7R58KdpvBAlLT9giKcRzhphu4hO4d4zL35ZHuLq9wq3CyiOiQrMTUn+N0=
-X-Received: by 2002:a50:a7a5:: with SMTP id i34mr49474602edc.128.1582584422397;
- Mon, 24 Feb 2020 14:47:02 -0800 (PST)
+        Mon, 24 Feb 2020 17:47:20 -0500
+Received: from ozlabs.org ([203.11.71.1]:33421 "EHLO ozlabs.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726651AbgBXWrT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 24 Feb 2020 17:47:19 -0500
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 48RHJ54KSbz9sPR;
+        Tue, 25 Feb 2020 09:47:17 +1100 (AEDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
+        s=201702; t=1582584437;
+        bh=vfJOx5tLhhMomws9ueSanwVw/zLkBBGcyCECo+XL7EE=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=D1Nb9GkFHHoYso8VO2hzVDarY4ayYPEIaHCSvftsIN4iKcTMmUYfp0icyWhelT3jk
+         pVcnGj3FJll26r/gL2IXExj+Saa8NXG0hr505VkNpUbhKWeZnCdV8phwYIRl40bZBv
+         FVsMIjDmHFzR57BLiwjHwLwKe8qrDaklaAjFcdT3kMwMDwq018V5Xmsmx1CXcO6UM5
+         YYMmv5Q5kdthvVpHVPjjT0FDjsFljLdkGQPb6VZY/hdhxl+gr2cTiS4uCw1pIQyxlI
+         Yg3HQDvOSBlL8uuN5ED4TAkyAGo9gK6+Sspsvi5GCbMIosKASiUdBAF3Uq6In8BJXt
+         5DDry5CrY/tdQ==
+Date:   Tue, 25 Feb 2020 09:47:17 +1100
+From:   Stephen Rothwell <sfr@canb.auug.org.au>
+To:     David Miller <davem@davemloft.net>
+Cc:     netdev@vger.kernel.org, linux-next@vger.kernel.org,
+        linux-kernel@vger.kernel.org, martin.varghese@nokia.com,
+        willemb@google.com
+Subject: Re: linux-next: build warning after merge of the net-next tree
+Message-ID: <20200225094717.241cef90@canb.auug.org.au>
+In-Reply-To: <20200224.144243.1485587034182183004.davem@davemloft.net>
+References: <20200225092736.137df206@canb.auug.org.au>
+        <20200224.144243.1485587034182183004.davem@davemloft.net>
 MIME-Version: 1.0
-References: <0000000000003cbb40059f4e0346@google.com> <CAHC9VhQVXk5ucd3=7OC=BxEkZGGLfXv9bESX67Mr-TRmTwxjEg@mail.gmail.com>
- <17916d0509978e14d9a5e9eb52d760fa57460542.camel@redhat.com>
-In-Reply-To: <17916d0509978e14d9a5e9eb52d760fa57460542.camel@redhat.com>
-From:   Paul Moore <paul@paul-moore.com>
-Date:   Mon, 24 Feb 2020 17:46:50 -0500
-Message-ID: <CAHC9VhQnbdJprbdTa_XcgUJaiwhzbnGMWJqHczU54UMk0AFCtw@mail.gmail.com>
-Subject: Re: kernel panic: audit: backlog limit exceeded
-To:     Eric Paris <eparis@redhat.com>
-Cc:     syzbot <syzbot+9a5e789e4725b9ef1316@syzkaller.appspotmail.com>,
-        a@unstable.cc, b.a.t.m.a.n@lists.open-mesh.org,
-        dan.carpenter@oracle.com, davem@davemloft.net, fzago@cray.com,
-        gregkh@linuxfoundation.org, john.hammond@intel.com,
-        linux-audit@redhat.com, linux-kernel@vger.kernel.org,
-        mareklindner@neomailbox.ch, netdev@vger.kernel.org,
-        sw@simonwunderlich.de, syzkaller-bugs@googlegroups.com
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: multipart/signed; boundary="Sig_/7WdfuLsgSNjHxudAQ3i4qO6";
+ protocol="application/pgp-signature"; micalg=pgp-sha256
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Feb 24, 2020 at 5:43 PM Eric Paris <eparis@redhat.com> wrote:
-> https://syzkaller.appspot.com/x/repro.syz?x=151b1109e00000 (the
-> reproducer listed) looks like it is literally fuzzing the AUDIT_SET.
-> Which seems like this is working as designed if it is setting the
-> failure mode to 2.
+--Sig_/7WdfuLsgSNjHxudAQ3i4qO6
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-So it is, good catch :)  I saw the panic and instinctively chalked
-that up to a mistaken config, not expecting that it was what was being
-tested.
+Hi Dave,
 
-> On Mon, 2020-02-24 at 17:38 -0500, Paul Moore wrote:
-> > On Mon, Feb 24, 2020 at 3:18 AM syzbot
-> > <syzbot+9a5e789e4725b9ef1316@syzkaller.appspotmail.com> wrote:
-> > > Hello,
-> > >
-> > > syzbot found the following crash on:
-> > >
-> > > HEAD commit:    36a44bcd Merge branch 'bnxt_en-shutdown-and-kexec-
-> > > kdump-re..
-> > > git tree:       net
-> > > console output:
-> > > https://syzkaller.appspot.com/x/log.txt?x=148bfdd9e00000
-> > > kernel config:
-> > > https://syzkaller.appspot.com/x/.config?x=768cc3d3e277cc16
-> > > dashboard link:
-> > > https://syzkaller.appspot.com/bug?extid=9a5e789e4725b9ef1316
-> > > compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
-> > > syz repro:
-> > > https://syzkaller.appspot.com/x/repro.syz?x=151b1109e00000
-> > > C reproducer:
-> > > https://syzkaller.appspot.com/x/repro.c?x=128bfdd9e00000
-> > >
-> > > The bug was bisected to:
-> > >
-> > > commit 0c1b9970ddd4cc41002321c3877e7f91aacb896d
-> > > Author: Dan Carpenter <dan.carpenter@oracle.com>
-> > > Date:   Fri Jul 28 14:42:27 2017 +0000
-> > >
-> > >     staging: lustre: lustre: Off by two in lmv_fid2path()
-> > >
-> > > bisection log:
-> > > https://syzkaller.appspot.com/x/bisect.txt?x=17e6c3e9e00000
-> > > final crash:
-> > > https://syzkaller.appspot.com/x/report.txt?x=1416c3e9e00000
-> > > console output:
-> > > https://syzkaller.appspot.com/x/log.txt?x=1016c3e9e00000
-> > >
-> > > IMPORTANT: if you fix the bug, please add the following tag to the
-> > > commit:
-> > > Reported-by: syzbot+9a5e789e4725b9ef1316@syzkaller.appspotmail.com
-> > > Fixes: 0c1b9970ddd4 ("staging: lustre: lustre: Off by two in
-> > > lmv_fid2path()")
-> > >
-> > > audit: audit_backlog=13 > audit_backlog_limit=7
-> > > audit: audit_lost=1 audit_rate_limit=0 audit_backlog_limit=7
-> > > Kernel panic - not syncing: audit: backlog limit exceeded
-> > > CPU: 1 PID: 9913 Comm: syz-executor024 Not tainted 5.6.0-rc1-
-> > > syzkaller #0
-> > > Hardware name: Google Google Compute Engine/Google Compute Engine,
-> > > BIOS Google 01/01/2011
-> > > Call Trace:
-> > >  __dump_stack lib/dump_stack.c:77 [inline]
-> > >  dump_stack+0x197/0x210 lib/dump_stack.c:118
-> > >  panic+0x2e3/0x75c kernel/panic.c:221
-> > >  audit_panic.cold+0x32/0x32 kernel/audit.c:307
-> > >  audit_log_lost kernel/audit.c:377 [inline]
-> > >  audit_log_lost+0x8b/0x180 kernel/audit.c:349
-> > >  audit_log_start kernel/audit.c:1788 [inline]
-> > >  audit_log_start+0x70e/0x7c0 kernel/audit.c:1745
-> > >  audit_log+0x95/0x120 kernel/audit.c:2345
-> > >  xt_replace_table+0x61d/0x830 net/netfilter/x_tables.c:1413
-> > >  __do_replace+0x1da/0x950 net/ipv6/netfilter/ip6_tables.c:1084
-> > >  do_replace net/ipv6/netfilter/ip6_tables.c:1157 [inline]
-> > >  do_ip6t_set_ctl+0x33a/0x4c8 net/ipv6/netfilter/ip6_tables.c:1681
-> > >  nf_sockopt net/netfilter/nf_sockopt.c:106 [inline]
-> > >  nf_setsockopt+0x77/0xd0 net/netfilter/nf_sockopt.c:115
-> > >  ipv6_setsockopt net/ipv6/ipv6_sockglue.c:949 [inline]
-> > >  ipv6_setsockopt+0x147/0x180 net/ipv6/ipv6_sockglue.c:933
-> > >  tcp_setsockopt net/ipv4/tcp.c:3165 [inline]
-> > >  tcp_setsockopt+0x8f/0xe0 net/ipv4/tcp.c:3159
-> > >  sock_common_setsockopt+0x94/0xd0 net/core/sock.c:3149
-> > >  __sys_setsockopt+0x261/0x4c0 net/socket.c:2130
-> > >  __do_sys_setsockopt net/socket.c:2146 [inline]
-> > >  __se_sys_setsockopt net/socket.c:2143 [inline]
-> > >  __x64_sys_setsockopt+0xbe/0x150 net/socket.c:2143
-> > >  do_syscall_64+0xfa/0x790 arch/x86/entry/common.c:294
-> > >  entry_SYSCALL_64_after_hwframe+0x49/0xbe
-> > > RIP: 0033:0x44720a
-> > > Code: 49 89 ca b8 37 00 00 00 0f 05 48 3d 01 f0 ff ff 0f 83 1a e0
-> > > fb ff c3 66 0f 1f 84 00 00 00 00 00 49 89 ca b8 36 00 00 00 0f 05
-> > > <48> 3d 01 f0 ff ff 0f 83 fa df fb ff c3 66 0f 1f 84 00 00 00 00 00
-> > > RSP: 002b:00007ffd032dec78 EFLAGS: 00000286 ORIG_RAX:
-> > > 0000000000000036
-> > > RAX: ffffffffffffffda RBX: 0000000000000003 RCX: 000000000044720a
-> > > RDX: 0000000000000040 RSI: 0000000000000029 RDI: 0000000000000003
-> > > RBP: 00007ffd032deda0 R08: 00000000000003b8 R09: 0000000000004000
-> > > R10: 00000000006d7b40 R11: 0000000000000286 R12: 00007ffd032deca0
-> > > R13: 00000000006d9d60 R14: 0000000000000029 R15: 00000000006d7ba0
-> > > Kernel Offset: disabled
-> > > Rebooting in 86400 seconds..
-> > >
-> > >
-> > > ---
-> > > This bug is generated by a bot. It may contain errors.
-> > > See https://goo.gl/tpsmEJ for more information about syzbot.
-> > > syzbot engineers can be reached at syzkaller@googlegroups.com.
-> > >
-> > > syzbot will keep track of this bug report. See:
-> > > https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
-> > > For information about bisection process see:
-> > > https://goo.gl/tpsmEJ#bisection
-> > > syzbot can test patches for this bug, for details see:
-> > > https://goo.gl/tpsmEJ#testing-patches
-> >
-> > Similar to syzbot report 72461ac44b36c98f58e5, see my comments there.
-> >
+On Mon, 24 Feb 2020 14:42:43 -0800 (PST) David Miller <davem@davemloft.net>=
+ wrote:
 >
+> Sorry, my compiler didn't show this.
 
+Yeah, these ones especially change with compiler version.  I am
+currently running gcc v9.2.1 if it matters.
 
--- 
-paul moore
-www.paul-moore.com
+> I've committed the following into net-next, hopefully it does the trick:
+
+Thanks.
+
+--=20
+Cheers,
+Stephen Rothwell
+
+--Sig_/7WdfuLsgSNjHxudAQ3i4qO6
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl5UUnUACgkQAVBC80lX
+0GyJcwf+OpfhwXjW2MtUL3rY/Aup9ojzEyDatjhR7JjeW7LxMavSo/ZJkq9Xctr9
+zOHUk9NznLJrg1JA5SXkO/h8nvPzYhB78bOZ79KgkNwepDjc4Ip71z0RpwLFv0x9
+Y6jFHlX/Y+LoWSCrUrrc00B0dJKiE4yXcmBfn8Cu2BEGBG3s0KGATTNkmFYxQuha
+JhyGgd336Ik48fG1CE967vfjomfKTQSbQEkrzPS+UkY5o9xtzFTXDOjDbaAF3Xcg
+L+5NS0if9VXhwlrM+TgkiWW7e2ystAXD37Tf3sGQpHg1FiVCnc91kgDN+Nn2K1oU
+o7CPaxN6r9GFRGx/AlCTLkoq3oBuuA==
+=vP2X
+-----END PGP SIGNATURE-----
+
+--Sig_/7WdfuLsgSNjHxudAQ3i4qO6--
