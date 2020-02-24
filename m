@@ -2,268 +2,148 @@ Return-Path: <SRS0=7TUr=4M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 74291C11D25
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 06:02:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9D4DEC11D24
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 06:02:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 436AF20714
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 06:02:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6BDA420714
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 06:02:57 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=wdc.com header.i=@wdc.com header.b="TUSc5hJd";
+	dkim=pass (1024-bit key) header.d=sharedspace.onmicrosoft.com header.i=@sharedspace.onmicrosoft.com header.b="KU2DfVfp"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727278AbgBXGCr (ORCPT
+        id S1727307AbgBXGC4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Feb 2020 01:02:47 -0500
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:54922 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726509AbgBXGCr (ORCPT
+        Mon, 24 Feb 2020 01:02:56 -0500
+Received: from esa1.hgst.iphmx.com ([68.232.141.245]:12711 "EHLO
+        esa1.hgst.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726452AbgBXGCz (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Feb 2020 01:02:47 -0500
-Received: from pps.filterd (m0098417.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 01O5xFhT002592
-        for <linux-kernel@vger.kernel.org>; Mon, 24 Feb 2020 01:02:45 -0500
-Received: from e06smtp03.uk.ibm.com (e06smtp03.uk.ibm.com [195.75.94.99])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2yb12abq2x-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Mon, 24 Feb 2020 01:02:44 -0500
-Received: from localhost
-        by e06smtp03.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-kernel@vger.kernel.org> from <ajd@linux.ibm.com>;
-        Mon, 24 Feb 2020 06:02:42 -0000
-Received: from b06cxnps4074.portsmouth.uk.ibm.com (9.149.109.196)
-        by e06smtp03.uk.ibm.com (192.168.101.133) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Mon, 24 Feb 2020 06:02:35 -0000
-Received: from d06av24.portsmouth.uk.ibm.com (mk.ibm.com [9.149.105.60])
-        by b06cxnps4074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 01O62YUF55312562
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 24 Feb 2020 06:02:34 GMT
-Received: from d06av24.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id C81824204F;
-        Mon, 24 Feb 2020 06:02:34 +0000 (GMT)
-Received: from d06av24.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 24F704203F;
-        Mon, 24 Feb 2020 06:02:34 +0000 (GMT)
-Received: from ozlabs.au.ibm.com (unknown [9.192.253.14])
-        by d06av24.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Mon, 24 Feb 2020 06:02:34 +0000 (GMT)
-Received: from [10.61.2.125] (haven.au.ibm.com [9.192.254.114])
-        (using TLSv1.2 with cipher DHE-RSA-AES128-SHA (128/128 bits))
-        (No client certificate requested)
-        by ozlabs.au.ibm.com (Postfix) with ESMTPSA id 4FAB0A00E5;
-        Mon, 24 Feb 2020 17:02:29 +1100 (AEDT)
-Subject: Re: [PATCH v3 07/27] ocxl: Add functions to map/unmap LPC memory
-To:     "Alastair D'Silva" <alastair@au1.ibm.com>, alastair@d-silva.org
-Cc:     "Aneesh Kumar K . V" <aneesh.kumar@linux.ibm.com>,
-        "Oliver O'Halloran" <oohall@gmail.com>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Paul Mackerras <paulus@samba.org>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Frederic Barrat <fbarrat@linux.ibm.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Vishal Verma <vishal.l.verma@intel.com>,
-        Dave Jiang <dave.jiang@intel.com>,
-        Ira Weiny <ira.weiny@intel.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        Rob Herring <robh@kernel.org>,
-        Anton Blanchard <anton@ozlabs.org>,
-        Krzysztof Kozlowski <krzk@kernel.org>,
-        Mahesh Salgaonkar <mahesh@linux.vnet.ibm.com>,
-        Madhavan Srinivasan <maddy@linux.vnet.ibm.com>,
-        =?UTF-8?Q?C=c3=a9dric_Le_Goater?= <clg@kaod.org>,
-        Anju T Sudhakar <anju@linux.vnet.ibm.com>,
-        Hari Bathini <hbathini@linux.ibm.com>,
+        Mon, 24 Feb 2020 01:02:55 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
+  d=wdc.com; i=@wdc.com; q=dns/txt; s=dkim.wdc.com;
+  t=1582524175; x=1614060175;
+  h=from:to:cc:subject:date:message-id:references:
+   in-reply-to:content-transfer-encoding:mime-version;
+  bh=RdSQBCdhCAyLaTUzbVdmagsSqo+vY/q/C+XEYF99tFk=;
+  b=TUSc5hJdOZmQtO0nb/wY6afzGhS7fc1A7szo6uZU8ncnzNWUtjFhazkm
+   m8VVwnn14i7mbhNsUDDnOGytdUO3uYR7ZxO1cPxUvV8xhOKy0vV/C07JB
+   RJr99Y6QwmO7Ew0NuDQpkdvBsHDFAtrpKwW0aqtbTGWQua3sj6EWLW+zt
+   NLf+X+Q3Zh/mzdk1UYuPOGtFKE2oEfN3CoRTgTDOOwXXCJ2a/kSTCYqge
+   MG/DcP7BznHfwOYwipMQp7MRDXuo68S8JACvZCxSlOBlGehWrtPdAubur
+   LkgcVVNdtUC3JGIGdIGBd13EfZrFq2pETfresVlVB8GNumSKAtqGXBtnA
+   g==;
+IronPort-SDR: xwo/0jq9CPtPcsqMRgahQDRlnZ5e8+ESza0iMSVcuxc4z3DaPMb+tcmEa3wwHp/uLlQHrNhY1O
+ OhtLiD4QqCxfZhaWoWFsE1q0kNhgE1slAlFUXMZnCrH2GGbPI9z75NSmcik2Mc/KNaLlGCqdeN
+ 3cRUICmUnpHDNbDR2ZcutTV1F2zNutvwixaBx7lLZV69617jYlLHvyJZ8VVczeCWmnQiTatKcK
+ jDBch073irZJtAazulcgAqqjQl3pu5wYuSTEeq7/+lXjKQSMiTb/OFScHjt22HEmUivoWA7/5n
+ 5Bc=
+X-IronPort-AV: E=Sophos;i="5.70,479,1574092800"; 
+   d="scan'208";a="238687240"
+Received: from mail-bn7nam10lp2101.outbound.protection.outlook.com (HELO NAM10-BN7-obe.outbound.protection.outlook.com) ([104.47.70.101])
+  by ob1.hgst.iphmx.com with ESMTP; 24 Feb 2020 14:02:52 +0800
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=OFLI5BsIP+8pSYY2Kn+2SAioyFqURQ/MxtOSQEsRA4uxxsn4iZcu6hAVcnE1gPlIIcMykUfiPsx+Fh0DRDtMu6xI17p9P0TxMoPnL6VeHB0lE96JpWePHpBC1QDN5Um490LPoHX3J0amolCiXJKZMjCQ4MuP2nWH2Y8eb7+jerImOPu7C+7MnZ2RTFsv9J/MzoADcWQQxVxPFkE1obx51CjSFdtmwexdKt+KRHDuKul7hg257C/peCD/FHWABY9wvtBwUXeKk0eY6W0eMOkXuY5SjpL9tP8hgf02rvxyRnt+W4zDRcn0OEqO3SCxdN7M0UCf0OJL/q+TE8fKCrSDDg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=RdSQBCdhCAyLaTUzbVdmagsSqo+vY/q/C+XEYF99tFk=;
+ b=Yr/LmHlgwYToN9/MNW85Zq3XKI6HNm9KPnrKEvEtzZEup83Cm4VJ3UwQDfP5TU5Gh4ns8sHfwMZfiwA/Yzh8uknToM9fhUnvyzwMUWg+C771qvS24HAMIqOFWMlH5JhpQFlOW3zuTkhBiP3QLooAwUXzZ1nQWT445X5RuSCxVi4lymEzEvgma8cRK0ZOepslrS/pDgaB9AulCIJE27R2Yli7+5YalHOCHV+W1M+Tg0basbflqn+ZE2b3t4h4xskWLhtZYERrBz3aSB3bByr7ytCVnahkl61tfSWbdWm3SbsFqHKsUihRmXJB1UJnXSkV07HaFkN3pUHb1P0m+VW8sA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=wdc.com; dmarc=pass action=none header.from=wdc.com; dkim=pass
+ header.d=wdc.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=sharedspace.onmicrosoft.com; s=selector2-sharedspace-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=RdSQBCdhCAyLaTUzbVdmagsSqo+vY/q/C+XEYF99tFk=;
+ b=KU2DfVfpHX3w1kiuP8/L8VeYAU37LFs+3IWqSY0Teq9PBP2sFrWc9MWoajUl2bUzyj6iXqSotqGbemC/Rc6KpWpLSjMol94pZtJ5yFvdX/kCeIyorQJmDtauDHchWtIN7TPrUE2LLWTSR4bd+JgU0y7LiHxaoQsuc/CNZiNtY7Q=
+Received: from MN2PR04MB6991.namprd04.prod.outlook.com (2603:10b6:208:1e1::17)
+ by MN2PR04MB5967.namprd04.prod.outlook.com (2603:10b6:208:da::15) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2750.21; Mon, 24 Feb
+ 2020 06:02:50 +0000
+Received: from MN2PR04MB6991.namprd04.prod.outlook.com
+ ([fe80::3885:5fac:44af:5de7]) by MN2PR04MB6991.namprd04.prod.outlook.com
+ ([fe80::3885:5fac:44af:5de7%7]) with mapi id 15.20.2750.021; Mon, 24 Feb 2020
+ 06:02:50 +0000
+From:   Avri Altman <Avri.Altman@wdc.com>
+To:     Can Guo <cang@codeaurora.org>,
+        "asutoshd@codeaurora.org" <asutoshd@codeaurora.org>,
+        "nguyenb@codeaurora.org" <nguyenb@codeaurora.org>,
+        "hongwus@codeaurora.org" <hongwus@codeaurora.org>,
+        "rnayak@codeaurora.org" <rnayak@codeaurora.org>,
+        "linux-scsi@vger.kernel.org" <linux-scsi@vger.kernel.org>,
+        "kernel-team@android.com" <kernel-team@android.com>,
+        "saravanak@google.com" <saravanak@google.com>,
+        "salyzyn@google.com" <salyzyn@google.com>
+CC:     Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Alim Akhtar <alim.akhtar@samsung.com>,
+        "James E.J. Bottomley" <jejb@linux.ibm.com>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>,
+        Alexios Zavras <alexios.zavras@intel.com>,
+        Bart Van Assche <bvanassche@acm.org>,
+        Evan Green <evgreen@chromium.org>,
+        Bean Huo <beanhuo@micron.com>,
         Thomas Gleixner <tglx@linutronix.de>,
-        Greg Kurz <groug@kaod.org>,
-        Nicholas Piggin <npiggin@gmail.com>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        Alexey Kardashevskiy <aik@ozlabs.ru>,
-        linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
-        linux-nvdimm@lists.01.org, linux-mm@kvack.org
-References: <20200221032720.33893-1-alastair@au1.ibm.com>
- <20200221032720.33893-8-alastair@au1.ibm.com>
-From:   Andrew Donnellan <ajd@linux.ibm.com>
-Date:   Mon, 24 Feb 2020 17:02:32 +1100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.5.0
-MIME-Version: 1.0
-In-Reply-To: <20200221032720.33893-8-alastair@au1.ibm.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
+        "open list:ARM/QUALCOMM SUPPORT" <linux-arm-msm@vger.kernel.org>,
+        open list <linux-kernel@vger.kernel.org>
+Subject: RE: [PATCH v2 2/2] scsi: ufs-qcom: Apply QUIRK_HOST_TACTIVATE for WDC
+ UFS devices
+Thread-Topic: [PATCH v2 2/2] scsi: ufs-qcom: Apply QUIRK_HOST_TACTIVATE for
+ WDC UFS devices
+Thread-Index: AQHV6shLxOgg5dXgLkWaOqDHyNQQHKgp2lKg
+Date:   Mon, 24 Feb 2020 06:02:50 +0000
+Message-ID: <MN2PR04MB69918204ABD7CB0076627971FCEC0@MN2PR04MB6991.namprd04.prod.outlook.com>
+References: <1582517363-11536-1-git-send-email-cang@codeaurora.org>
+ <1582517363-11536-3-git-send-email-cang@codeaurora.org>
+In-Reply-To: <1582517363-11536-3-git-send-email-cang@codeaurora.org>
+Accept-Language: en-US
 Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-TM-AS-GCONF: 00
-x-cbid: 20022406-0012-0000-0000-00000389A9F7
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 20022406-0013-0000-0000-000021C64816
-Message-Id: <ebd1c438-1164-8c7c-7067-2389d64740e7@linux.ibm.com>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.572
- definitions=2020-02-24_01:2020-02-21,2020-02-24 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxscore=0 bulkscore=0
- clxscore=1015 priorityscore=1501 lowpriorityscore=0 suspectscore=0
- adultscore=0 malwarescore=0 impostorscore=0 phishscore=0 mlxlogscore=999
- spamscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2001150001 definitions=main-2002240051
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=Avri.Altman@wdc.com; 
+x-originating-ip: [212.25.79.133]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-ht: Tenant
+x-ms-office365-filtering-correlation-id: ce56f191-07ce-440f-ddd5-08d7b8ef2e34
+x-ms-traffictypediagnostic: MN2PR04MB5967:
+x-microsoft-antispam-prvs: <MN2PR04MB5967FFF50348F330DC477298FCEC0@MN2PR04MB5967.namprd04.prod.outlook.com>
+wdcipoutbound: EOP-TRUE
+x-ms-oob-tlc-oobclassifiers: OLM:773;
+x-forefront-prvs: 032334F434
+x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(4636009)(396003)(39860400002)(136003)(376002)(366004)(346002)(189003)(199004)(8936002)(316002)(7416002)(186003)(26005)(110136005)(54906003)(55016002)(558084003)(6506007)(33656002)(76116006)(66446008)(64756008)(66556008)(66476007)(7696005)(81166006)(2906002)(5660300002)(52536014)(86362001)(478600001)(9686003)(66946007)(71200400001)(4326008)(81156014)(8676002);DIR:OUT;SFP:1102;SCL:1;SRVR:MN2PR04MB5967;H:MN2PR04MB6991.namprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: DXY8hhiHHcGBLVP+wbGZHsPKgfcuhUioIrBoRouRxWm1oxDFDO4pLjEQ0UladrDN3Hqv2gmsHnsAH1TUUSyjqkV3H/5grurvk0UohWBGhDTJE/DUW/zumaenJVEQb6tZo3Dw9Qfs8hm5gGDJRrrPx0Zjjkfztg9i0cMyOHmeleCCpOrRs561c7TlxaENlwYvVZIGngs8DgN58/BPuy3R1Bj7ThyOgChIJZ17qqfPCAsJCE5zgmgF3fOdxdyAVYbgHVqsJ/NuMjhAtdHBNxqc0FFsmbzwQn1gHlC+ahDttTiEh0eeD3JV5GtbSpi6YZuYBEJqYeks7swBj7WrL/pUd7c3NUy1qGWexW+rWqKBPbXROx43z5zJ61mSuiY4CCUKkqm7Q8MmezMyMW7FXx/p7JhH2NpgBewve5fc+fi6fK2APSE475HbcpGgTooqb8wX
+x-ms-exchange-antispam-messagedata: K4bLq5xXe2gJMi0r6ghX85F7pn0ZeSIE/T2v/XzXm4oX2kCeoe2VSgyeZXp8JCL3SBCrQR+mQ7WbDBAchosZ1Qak5I9f/vZSKH08vPP7x1ttKm2stj1vNwX8ob/+C9jLcZewhtFxe2wsNj0Sfl9KJw==
+x-ms-exchange-transport-forked: True
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
+MIME-Version: 1.0
+X-OriginatorOrg: wdc.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: ce56f191-07ce-440f-ddd5-08d7b8ef2e34
+X-MS-Exchange-CrossTenant-originalarrivaltime: 24 Feb 2020 06:02:50.5347
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: b61c8803-16f3-4c35-9b17-6f65f441df86
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: lEv9RIlMdeynfy3A+eR5frJW2X6OEHhq6X3IutHKU0+K1kBq9LCODeU4yPvb5u7BPocFvypkKyvyukFfTSXAMA==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: MN2PR04MB5967
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 21/2/20 2:27 pm, Alastair D'Silva wrote:
-> From: Alastair D'Silva <alastair@d-silva.org>
-> 
-> Add functions to map/unmap LPC memory
-> 
-> Signed-off-by: Alastair D'Silva <alastair@d-silva.org>
-> ---
->   drivers/misc/ocxl/core.c          | 51 +++++++++++++++++++++++++++++++
->   drivers/misc/ocxl/ocxl_internal.h |  3 ++
->   include/misc/ocxl.h               | 21 +++++++++++++
->   3 files changed, 75 insertions(+)
-> 
-> diff --git a/drivers/misc/ocxl/core.c b/drivers/misc/ocxl/core.c
-> index 2531c6cf19a0..75ff14e3882a 100644
-> --- a/drivers/misc/ocxl/core.c
-> +++ b/drivers/misc/ocxl/core.c
-> @@ -210,6 +210,56 @@ static void unmap_mmio_areas(struct ocxl_afu *afu)
->   	release_fn_bar(afu->fn, afu->config.global_mmio_bar);
->   }
->   
-> +int ocxl_afu_map_lpc_mem(struct ocxl_afu *afu)
-> +{
-> +	struct pci_dev *dev = to_pci_dev(afu->fn->dev.parent);
-> +
-> +	if ((afu->config.lpc_mem_size + afu->config.special_purpose_mem_size) == 0)
-> +		return 0;
-
-I'd prefer the comparison here to be:
-
-   afu->config.lpc_mem_size == 0 &&
-     afu->config.special_purpose_mem_size == 0
-
-so a reader doesn't have to think about what this means.
-
-> +
-> +	afu->lpc_base_addr = ocxl_link_lpc_map(afu->fn->link, dev);
-> +	if (afu->lpc_base_addr == 0)
-> +		return -EINVAL;
-> +
-> +	if (afu->config.lpc_mem_size > 0) {
-> +		afu->lpc_res.start = afu->lpc_base_addr + afu->config.lpc_mem_offset;
-
-Maybe not for this series - hmm, I wonder if we should print a warning 
-somewhere (maybe in read_afu_lpc_memory_info()?) if we see the case 
-where (lpc_mem_offset > 0 && lpc_mem_size == 0). Likewise for special 
-purpose?
-
-> +		afu->lpc_res.end = afu->lpc_res.start + afu->config.lpc_mem_size - 1;
-> +	}
-> +
-> +	if (afu->config.special_purpose_mem_size > 0) {
-> +		afu->special_purpose_res.start = afu->lpc_base_addr +
-> +						 afu->config.special_purpose_mem_offset;
-> +		afu->special_purpose_res.end = afu->special_purpose_res.start +
-> +					       afu->config.special_purpose_mem_size - 1;
-> +	}
-> +
-> +	return 0;
-> +}
-> +EXPORT_SYMBOL_GPL(ocxl_afu_map_lpc_mem);
-> +
-> +struct resource *ocxl_afu_lpc_mem(struct ocxl_afu *afu)
-> +{
-> +	return &afu->lpc_res;
-> +}
-> +EXPORT_SYMBOL_GPL(ocxl_afu_lpc_mem);
-
-What's the point of this function? A layer of indirection just in case 
-we need it in future?
-
-> +
-> +static void unmap_lpc_mem(struct ocxl_afu *afu)
-> +{
-> +	struct pci_dev *dev = to_pci_dev(afu->fn->dev.parent);
-> +
-> +	if (afu->lpc_res.start || afu->special_purpose_res.start) {
-> +		void *link = afu->fn->link;
-> +
-> +		// only release the link when the the last consumer calls release
-> +		ocxl_link_lpc_release(link, dev);
-> +
-> +		afu->lpc_res.start = 0;
-> +		afu->lpc_res.end = 0;
-> +		afu->special_purpose_res.start = 0;
-> +		afu->special_purpose_res.end = 0;
-> +	}
-> +}
-> +
->   static int configure_afu(struct ocxl_afu *afu, u8 afu_idx, struct pci_dev *dev)
->   {
->   	int rc;
-> @@ -251,6 +301,7 @@ static int configure_afu(struct ocxl_afu *afu, u8 afu_idx, struct pci_dev *dev)
->   
->   static void deconfigure_afu(struct ocxl_afu *afu)
->   {
-> +	unmap_lpc_mem(afu);
->   	unmap_mmio_areas(afu);
->   	reclaim_afu_pasid(afu);
->   	reclaim_afu_actag(afu);
-> diff --git a/drivers/misc/ocxl/ocxl_internal.h b/drivers/misc/ocxl/ocxl_internal.h
-> index d0c8c4838f42..ce0cac1da416 100644
-> --- a/drivers/misc/ocxl/ocxl_internal.h
-> +++ b/drivers/misc/ocxl/ocxl_internal.h
-> @@ -52,6 +52,9 @@ struct ocxl_afu {
->   	void __iomem *global_mmio_ptr;
->   	u64 pp_mmio_start;
->   	void *private;
-> +	u64 lpc_base_addr; /* Covers both LPC & special purpose memory */
-> +	struct resource lpc_res;
-> +	struct resource special_purpose_res;
->   };
->   
->   enum ocxl_context_status {
-> diff --git a/include/misc/ocxl.h b/include/misc/ocxl.h
-> index 357ef1aadbc0..d8b0b4d46bfb 100644
-> --- a/include/misc/ocxl.h
-> +++ b/include/misc/ocxl.h
-> @@ -203,6 +203,27 @@ int ocxl_irq_set_handler(struct ocxl_context *ctx, int irq_id,
->   
->   // AFU Metadata
->   
-> +/**
-> + * ocxl_afu_map_lpc_mem() - Map the LPC system & special purpose memory for an AFU
-> + * Do not call this during device discovery, as there may me multiple
-
-be
-
-> + * devices on a link, and the memory is mapped for the whole link, not
-> + * just one device. It should only be called after all devices have
-> + * registered their memory on the link.
-> + *
-> + * @afu: The AFU that has the LPC memory to map
-> + *
-> + * Returns 0 on success, negative on failure
-> + */
-> +int ocxl_afu_map_lpc_mem(struct ocxl_afu *afu);
-> +
-> +/**
-> + * ocxl_afu_lpc_mem() - Get the physical address range of LPC memory for an AFU
-> + * @afu: The AFU associated with the LPC memory
-> + *
-> + * Returns a pointer to the resource struct for the physical address range
-> + */
-> +struct resource *ocxl_afu_lpc_mem(struct ocxl_afu *afu);
-> +
->   /**
->    * ocxl_afu_config() - Get a pointer to the config for an AFU
->    * @afu: a pointer to the AFU to get the config for
-> 
-
--- 
-Andrew Donnellan              OzLabs, ADL Canberra
-ajd@linux.ibm.com             IBM Australia Limited
-
+=20
+>=20
+> Western Digital UFS devices require host's PA_TACTIVATE to be lower than
+> device's PA_TACTIVATE, otherwise it may get stuck during hibern8 sequence=
+.
+>=20
+> Signed-off-by: Can Guo <cang@codeaurora.org>
+Acked-by: Avri Altman <avri.altman@wdc.com>
