@@ -2,282 +2,382 @@ Return-Path: <SRS0=7TUr=4M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E10A0C35675
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 00:47:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6857AC35670
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 00:48:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A6BA1206E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 00:47:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2BE28206E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 00:48:49 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="PCBjXDV2"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ABa/DeAN"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727218AbgBXArR (ORCPT
+        id S1727183AbgBXAss (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 23 Feb 2020 19:47:17 -0500
-Received: from mail-pl1-f196.google.com ([209.85.214.196]:46861 "EHLO
-        mail-pl1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727151AbgBXArQ (ORCPT
+        Sun, 23 Feb 2020 19:48:48 -0500
+Received: from mail-pg1-f196.google.com ([209.85.215.196]:40101 "EHLO
+        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727151AbgBXAsr (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 23 Feb 2020 19:47:16 -0500
-Received: by mail-pl1-f196.google.com with SMTP id y8so3321776pll.13;
-        Sun, 23 Feb 2020 16:47:14 -0800 (PST)
+        Sun, 23 Feb 2020 19:48:47 -0500
+Received: by mail-pg1-f196.google.com with SMTP id z7so4217092pgk.7;
+        Sun, 23 Feb 2020 16:48:46 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:mime-version:content-disposition
-         :user-agent;
-        bh=NGZulyvP6eeKZRuNg6oqElKEJJKue2aiE15uYLFokJ4=;
-        b=PCBjXDV2zJyWyUYKXQD7Jm6R1zYT5v9A16XrzB4xrFI0uL56BWSUxYsbb3pgfHjJM4
-         3ipAexIiEslMZDwOOaa94nPIsSoQ7vBuYVX6dPIAz0p2Fx2e5QQdAiBXet/rp2e859QD
-         C/ntghzO2NWtyylyCoarUR80PjFo18wm6WZQX5YNL8p8CwAcHXNe1j6xGh3lKp3ZO6ee
-         G/p372+XBSLe3aOhAHwK2gkC8twzKPK5ZzM3rNV+gztlq9wAIKohcox+ymJPnNuQBYdh
-         NYxVp8PYBgoDNKDfBWpN1DdEgWacKJZsio9gzz4ZlxNacNr3RnzWuh/b3pRGLpArdV9I
-         h7Og==
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=rnRwnrYbUqRCcKjbWwPR9TGdpT0kVMsls9T0v5tRHwI=;
+        b=ABa/DeANMNoDTrmP0c09xtF2RNnLb4ywtDzZstPu18oDDHqnplwqJREeyuZDsLut4Z
+         gUWYNmMoez7j8Vgyv2wvxu1PzYkyoBm6uaaFkXh9DEIl1qb9JEK8e3iGj/TbVC8xCYO0
+         /VJ9x1dgnm1lf6T7g/I+RK6/0A+OVpwwNOW7J/z8+QKb2ZMUgq0bCmQBSPZ6uYBC9ciT
+         x/yE/IvxlEdmxkToPHX+po2cAZWsFpwxTe4BIe9HU/jPWf7JwD07xYew+ePVbo/I296d
+         pH0zbUjvE5OFeDGwcAKMP5rwBlWAQwNUZ8sf5jEMVEtKBddPuyXcNdXPnSWrpQyInz0n
+         /5YQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
-         :content-disposition:user-agent;
-        bh=NGZulyvP6eeKZRuNg6oqElKEJJKue2aiE15uYLFokJ4=;
-        b=VB1TReNvINo+ytbSohXUtTC4AQv6JazBRmVT+oW2KpiwSoTdXHfHjB5JSBTS7sXodS
-         86u6seejH0yxGTw2cZqlgES1dfdSRHnkhE8xyTqvt7Z+r6MDRDn2Q9sAc/OCA/0B3YGx
-         XZZrx2S+pv8xOWL9cI5U0GrUWiXgia/kLLppbYHhmqwYkaAviRQSTbBkmCkW9L1WLjjG
-         /JCEWK1lJsswNenScktZYDXw1gbpVQoikX/6KD3I5NYUSsxd+V/P8bNGWIh6r2voz/zP
-         1bdDLFwwu2MvguDiisEou647jKpo13+M6nV7rtYZqFscFuCLuCj5ZmGZX4o0A0/lYJs3
-         7taQ==
-X-Gm-Message-State: APjAAAUDO4ATTFOAi1jGJuDH2RhNenoFwjXFNLwjxkcK1/hYPevvzjQg
-        tpPAIzQKpDRliKWbdZBqHo8NUyeb5XY=
-X-Google-Smtp-Source: APXvYqzsrg2HiD2xn64NNxjB867u34XuwSUi1T0w+UBfhB69kaB63NtC9WJD72JPVEqh7kGl2/xMKw==
-X-Received: by 2002:a17:90a:5285:: with SMTP id w5mr17583711pjh.77.1582505233395;
-        Sun, 23 Feb 2020 16:47:13 -0800 (PST)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=rnRwnrYbUqRCcKjbWwPR9TGdpT0kVMsls9T0v5tRHwI=;
+        b=BErPPgBWQpbJT5soKpYzfRimALfiZPLxMMleLRJu7F7CpngV+ELdeyvzv0qwEi93+o
+         xktYlBlS6533et52v+ryKcBVKDYBlyeF7yAbvkAepOS+2TMTxwy1hcErNtUb/kY8sd0U
+         UAOLGIhZ5dzYyrNqKadRaTzag4OjbVQ2TtNBTyD2eCEFn4ZxSREZ//NP8E3eaqo8sLMt
+         AQxwXrzdOKLptUwhXdGSWl8ke12BwfWKdorW8Ki4wOVjKm9MqIPatPGQuWmW2+wFPIsd
+         IpbGz7Sg2hwxLbyaZRnah6Li68g7Xf05euqSQ/LCe3Onu2+S3/2fVfasjzxqOYQ5p+kE
+         MVzQ==
+X-Gm-Message-State: APjAAAVWW54W06tEKNxtWG4oHfrI6QywWA9fC6ieU8CZF3lc/Ncsinhw
+        T5Off5Yf66YzJzsscC3b+8xrG6/ryTg=
+X-Google-Smtp-Source: APXvYqxxIZqMgZAWP6eAYbAuM3WqC6mPT4bQV1SnxFcLHp7bsPvTu9DRDHJa3BaNwBGxBv5ZLoHnrQ==
+X-Received: by 2002:a63:ee12:: with SMTP id e18mr22467512pgi.33.1582505326136;
+        Sun, 23 Feb 2020 16:48:46 -0800 (PST)
 Received: from localhost ([106.51.232.35])
-        by smtp.gmail.com with ESMTPSA id k3sm5291565pgh.34.2020.02.23.16.47.12
+        by smtp.gmail.com with ESMTPSA id c26sm10141116pfi.46.2020.02.23.16.48.45
         (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Sun, 23 Feb 2020 16:47:12 -0800 (PST)
-Date:   Mon, 24 Feb 2020 06:17:11 +0530
+        Sun, 23 Feb 2020 16:48:45 -0800 (PST)
+Date:   Mon, 24 Feb 2020 06:18:44 +0530
 From:   afzal mohammed <afzal.mohd.ma@gmail.com>
-To:     linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-samsung-soc@vger.kernel.org, x86@kernel.org,
-        linux-sh@vger.kernel.org, linux-s390@vger.kernel.org,
-        linuxppc-dev@lists.ozlabs.org, linux-parisc@vger.kernel.org,
-        linux-mips@vger.kernel.org, linux-m68k@lists.linux-m68k.org,
-        linux-ia64@vger.kernel.org, linux-hexagon@vger.kernel.org,
-        linux-c6x-dev@linux-c6x.org, linux-omap@vger.kernel.org,
-        linux-alpha@vger.kernel.org
-Cc:     Thomas Gleixner <tglx@linutronix.de>
-Subject: [PATCH v2 00/18] genirq: Remove setup_irq()
-Message-ID: <cover.1582471508.git.afzal.mohd.ma@gmail.com>
+To:     linux-kernel@vger.kernel.org, linux-alpha@vger.kernel.org
+Cc:     Richard Henderson <rth@twiddle.net>,
+        Ivan Kokshaysky <ink@jurassic.park.msu.ru>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Matt Turner <mattst88@gmail.com>
+Subject: [PATCH v2 01/18] alpha: replace setup_irq() by request_irq()
+Message-ID: <45ef08d7b0e531b237d7651fb57906c391f725f5.1582471508.git.afzal.mohd.ma@gmail.com>
+References: <cover.1582471508.git.afzal.mohd.ma@gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
+In-Reply-To: <cover.1582471508.git.afzal.mohd.ma@gmail.com>
 User-Agent: Mutt/1.9.3 (2018-01-21)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-While trying to understand internals of irq handling, came across a
-thread [1] in which tglx was referring to avoid usage of setup_irq().
-The early boot setup_irq() invocations happen either via 'init_IRQ()'
-or 'time_init()', while memory allocators are ready by 'mm_init()'.
+request_irq() is preferred over setup_irq(). The early boot setup_irq()
+invocations happen either via 'init_IRQ()' or 'time_init()', while
+memory allocators are ready by 'mm_init()'.
 
-Hence instances of setup_irq() are replaced by request_irq() &
-setup_irq() [along with remove_irq()] definition deleted in the last
-patch.
+Per tglx[1], setup_irq() existed in olden days when allocators were not
+ready by the time early interrupts were initialized.
+
+Hence replace setup_irq() by request_irq().
 
 Seldom remove_irq() usage has been observed coupled with setup_irq(),
 wherever that has been found, it too has been replaced by free_irq().
 
-Build & boot tested on ARM & x86_64 platforms (ensured that on the
-machines used for testing, modifications made in this series is being
-exercised at runtime)
-
-Much of the changes were created using Coccinelle with an intention
-to learn it. But not everything could be automated.
-
-Searching with 'git grep -n '\Wsetup_irq('' & avoiding the irrelevant
-ones, 153 invocation's of setup_irq() were found. 112 could be replaced
-w/ cocci, of which in a few files some desired hunks were missing or
-not as expected, these were fixed up manually. Also the remaining 41
-had to be done manually.
-
-Although cocci could replace 112, because of line continue not
-happening at paranthesis for request_irq(), around 80 had to be
-manually aligned in the request_irq() statement.
-
-So though many changes could be automated, there are a considerable
-amount of manual changes, please review carefully especially mips &
-alpha.
-
-Usage of setup_percpu_irq() is untouched w/ this series.
-
-There are 2 checkpatch warning about usage of BUG(), they were already
-present w/ setup_irq(), status quo maintained.
-
 [1] https://lkml.kernel.org/r/alpine.DEB.2.20.1710191609480.1971@nanos
 
-Since changes from v1 are trivial as below, tags received has been
-applied to the relevant patches, if any objections, please shout.
+Signed-off-by: afzal mohammed <afzal.mohd.ma@gmail.com>
+---
 
 v2:
  * Replace pr_err("request_irq() on %s failed" by
            pr_err("%s: request_irq() failed"
- * m68k: remove now irrelevant comment separation comment lines
  * Commit message massage
 
+ arch/alpha/kernel/irq_alpha.c     | 29 +++++------------------------
+ arch/alpha/kernel/irq_i8259.c     |  8 ++------
+ arch/alpha/kernel/irq_impl.h      |  7 +------
+ arch/alpha/kernel/irq_pyxis.c     |  3 ++-
+ arch/alpha/kernel/sys_alcor.c     |  3 ++-
+ arch/alpha/kernel/sys_cabriolet.c |  3 ++-
+ arch/alpha/kernel/sys_eb64p.c     |  3 ++-
+ arch/alpha/kernel/sys_marvel.c    |  2 +-
+ arch/alpha/kernel/sys_miata.c     |  6 ++++--
+ arch/alpha/kernel/sys_ruffian.c   |  3 ++-
+ arch/alpha/kernel/sys_rx164.c     |  3 ++-
+ arch/alpha/kernel/sys_sx164.c     |  3 ++-
+ arch/alpha/kernel/sys_wildfire.c  |  7 ++-----
+ arch/alpha/kernel/time.c          |  6 ++----
+ 14 files changed, 31 insertions(+), 55 deletions(-)
 
-afzal mohammed (18):
-  alpha: replace setup_irq() by request_irq()
-  ARM: replace setup_irq() by request_irq()
-  c6x: replace setup_irq() by request_irq()
-  hexagon: replace setup_irq() by request_irq()
-  ia64: replace setup_irq() by request_irq()
-  m68k: Replace setup_irq() by request_irq()
-  microblaze: Replace setup_irq() by request_irq()
-  MIPS: Replace setup_irq() by request_irq()
-  parisc: Replace setup_irq() by request_irq()
-  powerpc: Replace setup_irq() by request_irq()
-  s390: replace setup_irq() by request_irq()
-  sh: replace setup_irq() by request_irq()
-  unicore32: replace setup_irq() by request_irq()
-  x86: Replace setup_irq() by request_irq()
-  xtensa: replace setup_irq() by request_irq()
-  clocksource: Replace setup_irq() by request_irq()
-  irqchip: Replace setup_irq() by request_irq()
-  genirq: Remove setup_irq() and remove_irq()
-
- arch/alpha/kernel/irq_alpha.c                 | 29 ++-------
- arch/alpha/kernel/irq_i8259.c                 |  8 +--
- arch/alpha/kernel/irq_impl.h                  |  7 +--
- arch/alpha/kernel/irq_pyxis.c                 |  3 +-
- arch/alpha/kernel/sys_alcor.c                 |  3 +-
- arch/alpha/kernel/sys_cabriolet.c             |  3 +-
- arch/alpha/kernel/sys_eb64p.c                 |  3 +-
- arch/alpha/kernel/sys_marvel.c                |  2 +-
- arch/alpha/kernel/sys_miata.c                 |  6 +-
- arch/alpha/kernel/sys_ruffian.c               |  3 +-
- arch/alpha/kernel/sys_rx164.c                 |  3 +-
- arch/alpha/kernel/sys_sx164.c                 |  3 +-
- arch/alpha/kernel/sys_wildfire.c              |  7 +--
- arch/alpha/kernel/time.c                      |  6 +-
- arch/arm/mach-cns3xxx/core.c                  | 10 +---
- arch/arm/mach-ebsa110/core.c                  | 10 +---
- arch/arm/mach-ep93xx/timer-ep93xx.c           | 12 ++--
- arch/arm/mach-footbridge/dc21285-timer.c      | 11 +---
- arch/arm/mach-footbridge/isa-irq.c            |  8 +--
- arch/arm/mach-footbridge/isa-timer.c          | 11 +---
- arch/arm/mach-iop32x/time.c                   | 12 ++--
- arch/arm/mach-mmp/time.c                      | 11 +---
- arch/arm/mach-omap1/pm.c                      | 22 ++++---
- arch/arm/mach-omap1/time.c                    | 10 +---
- arch/arm/mach-omap1/timer32k.c                | 10 +---
- arch/arm/mach-omap2/timer.c                   | 11 +---
- arch/arm/mach-rpc/time.c                      |  8 +--
- arch/arm/mach-spear/time.c                    |  9 +--
- arch/arm/plat-orion/time.c                    | 10 +---
- arch/c6x/platforms/timer64.c                  | 11 +---
- arch/hexagon/kernel/smp.c                     | 17 +++---
- arch/hexagon/kernel/time.c                    | 11 +---
- arch/ia64/kernel/irq_ia64.c                   | 42 +++++--------
- arch/ia64/kernel/mca.c                        | 51 +++++-----------
- arch/m68k/68000/timers.c                      | 11 +---
- arch/m68k/coldfire/pit.c                      | 11 +---
- arch/m68k/coldfire/sltimers.c                 | 19 ++----
- arch/m68k/coldfire/timers.c                   | 21 ++-----
- arch/microblaze/kernel/timer.c                | 10 +---
- arch/mips/alchemy/common/time.c               | 11 +---
- arch/mips/ar7/irq.c                           | 18 +++---
- arch/mips/ath25/ar2315.c                      |  9 +--
- arch/mips/ath25/ar5312.c                      |  9 +--
- arch/mips/bcm63xx/irq.c                       | 38 +++++-------
- arch/mips/cobalt/irq.c                        | 14 ++---
- arch/mips/dec/setup.c                         | 59 ++++++++-----------
- arch/mips/emma/markeins/irq.c                 | 20 +++----
- arch/mips/include/asm/sni.h                   |  2 +-
- arch/mips/jazz/irq.c                          | 12 +---
- arch/mips/kernel/cevt-bcm1480.c               | 11 +---
- arch/mips/kernel/cevt-ds1287.c                |  9 +--
- arch/mips/kernel/cevt-gt641xx.c               |  9 +--
- arch/mips/kernel/cevt-r4k.c                   |  4 +-
- arch/mips/kernel/cevt-sb1250.c                | 11 +---
- arch/mips/kernel/cevt-txx9.c                  | 11 +---
- arch/mips/kernel/i8253.c                      | 10 +---
- arch/mips/kernel/rtlx-mt.c                    |  8 +--
- arch/mips/kernel/smp.c                        | 33 ++++-------
- arch/mips/lasat/interrupt.c                   | 10 +---
- arch/mips/loongson2ef/common/bonito-irq.c     |  9 +--
- .../loongson2ef/common/cs5536/cs5536_mfgpt.c  | 10 +---
- arch/mips/loongson2ef/fuloong-2e/irq.c        | 14 ++---
- arch/mips/loongson2ef/lemote-2f/irq.c         | 20 ++-----
- arch/mips/loongson32/common/irq.c             | 21 ++++---
- arch/mips/loongson32/common/time.c            | 12 ++--
- arch/mips/loongson64/hpet.c                   | 10 +---
- arch/mips/mti-malta/malta-int.c               | 10 +---
- arch/mips/netlogic/xlr/fmn.c                  |  9 +--
- arch/mips/pmcs-msp71xx/msp_irq.c              | 28 ++++-----
- arch/mips/pmcs-msp71xx/msp_smp.c              | 22 ++-----
- arch/mips/pmcs-msp71xx/msp_time.c             |  7 ++-
- arch/mips/ralink/cevt-rt3352.c                | 17 +++---
- arch/mips/sgi-ip22/ip22-eisa.c                |  8 +--
- arch/mips/sgi-ip22/ip22-int.c                 | 49 +++++----------
- arch/mips/sgi-ip32/ip32-irq.c                 | 18 ++----
- arch/mips/sni/a20r.c                          |  4 +-
- arch/mips/sni/irq.c                           |  8 +--
- arch/mips/sni/pcit.c                          |  8 ++-
- arch/mips/sni/rm200.c                         | 23 +++-----
- arch/mips/sni/time.c                          | 10 +---
- arch/mips/vr41xx/common/irq.c                 |  9 +--
- arch/parisc/kernel/irq.c                      | 21 ++-----
- arch/powerpc/platforms/85xx/mpc85xx_cds.c     | 10 +---
- arch/powerpc/platforms/8xx/cpm1.c             |  9 +--
- arch/powerpc/platforms/8xx/m8xx_setup.c       |  9 +--
- arch/powerpc/platforms/chrp/setup.c           | 14 ++---
- arch/powerpc/platforms/powermac/pic.c         | 31 ++++------
- arch/powerpc/platforms/powermac/smp.c         |  9 +--
- arch/s390/kernel/irq.c                        |  8 +--
- arch/sh/boards/mach-cayman/irq.c              | 18 ++----
- arch/sh/drivers/dma/dma-pvr2.c                |  9 +--
- arch/unicore32/kernel/time.c                  | 11 +---
- arch/x86/kernel/irqinit.c                     | 18 +++---
- arch/x86/kernel/time.c                        | 10 +---
- arch/xtensa/kernel/smp.c                      |  8 +--
- arch/xtensa/kernel/time.c                     | 10 +---
- drivers/clocksource/bcm2835_timer.c           |  8 +--
- drivers/clocksource/bcm_kona_timer.c          | 10 +---
- drivers/clocksource/dw_apb_timer.c            | 11 +---
- drivers/clocksource/exynos_mct.c              | 12 ++--
- drivers/clocksource/mxs_timer.c               | 10 +---
- drivers/clocksource/nomadik-mtu.c             | 11 +---
- drivers/clocksource/samsung_pwm_timer.c       | 12 ++--
- drivers/clocksource/timer-atlas7.c            | 50 ++++++++--------
- drivers/clocksource/timer-cs5535.c            | 10 +---
- drivers/clocksource/timer-efm32.c             | 10 +---
- drivers/clocksource/timer-fsl-ftm.c           | 10 +---
- drivers/clocksource/timer-imx-gpt.c           | 10 +---
- drivers/clocksource/timer-integrator-ap.c     | 11 +---
- drivers/clocksource/timer-meson6.c            | 11 +---
- drivers/clocksource/timer-orion.c             |  9 +--
- drivers/clocksource/timer-prima2.c            | 11 +---
- drivers/clocksource/timer-pxa.c               | 10 +---
- drivers/clocksource/timer-sp804.c             | 11 +---
- drivers/clocksource/timer-u300.c              |  9 +--
- drivers/clocksource/timer-vf-pit.c            | 10 +---
- drivers/clocksource/timer-vt8500.c            | 11 +---
- drivers/clocksource/timer-zevio.c             | 13 ++--
- drivers/irqchip/irq-i8259.c                   |  9 +--
- drivers/irqchip/irq-ingenic.c                 | 11 ++--
- drivers/parisc/eisa.c                         |  8 +--
- drivers/s390/cio/airq.c                       |  8 +--
- drivers/s390/cio/cio.c                        |  8 +--
- include/linux/dw_apb_timer.h                  |  1 -
- include/linux/irq.h                           |  2 -
- kernel/irq/manage.c                           | 44 --------------
- 126 files changed, 528 insertions(+), 1117 deletions(-)
-
-
-base-commit: v5.6-rc1
+diff --git a/arch/alpha/kernel/irq_alpha.c b/arch/alpha/kernel/irq_alpha.c
+index da3e10d5f7fe..fe46a7bdbf68 100644
+--- a/arch/alpha/kernel/irq_alpha.c
++++ b/arch/alpha/kernel/irq_alpha.c
+@@ -213,32 +213,13 @@ process_mcheck_info(unsigned long vector, unsigned long la_ptr,
+  * The special RTC interrupt type.  The interrupt itself was
+  * processed by PALcode, and comes in via entInt vector 1.
+  */
+-
+-struct irqaction timer_irqaction = {
+-	.handler	= rtc_timer_interrupt,
+-	.name		= "timer",
+-};
+-
+ void __init
+-init_rtc_irq(void)
++init_rtc_irq(irqreturn_t handler)
+ {
+ 	irq_set_chip_and_handler_name(RTC_IRQ, &dummy_irq_chip,
+ 				      handle_percpu_irq, "RTC");
+-	setup_irq(RTC_IRQ, &timer_irqaction);
++	if (!handler)
++		handler = rtc_timer_interrupt;
++	if (request_irq(RTC_IRQ, handler, 0, "timer", NULL))
++		pr_err("request_irq() for %s failed\n", "timer");
+ }
+-
+-/* Dummy irqactions.  */
+-struct irqaction isa_cascade_irqaction = {
+-	.handler	= no_action,
+-	.name		= "isa-cascade"
+-};
+-
+-struct irqaction timer_cascade_irqaction = {
+-	.handler	= no_action,
+-	.name		= "timer-cascade"
+-};
+-
+-struct irqaction halt_switch_irqaction = {
+-	.handler	= no_action,
+-	.name		= "halt-switch"
+-};
+diff --git a/arch/alpha/kernel/irq_i8259.c b/arch/alpha/kernel/irq_i8259.c
+index 5d54c076a8ae..85a854655c67 100644
+--- a/arch/alpha/kernel/irq_i8259.c
++++ b/arch/alpha/kernel/irq_i8259.c
+@@ -82,11 +82,6 @@ struct irq_chip i8259a_irq_type = {
+ void __init
+ init_i8259a_irqs(void)
+ {
+-	static struct irqaction cascade = {
+-		.handler	= no_action,
+-		.name		= "cascade",
+-	};
+-
+ 	long i;
+ 
+ 	outb(0xff, 0x21);	/* mask all of 8259A-1 */
+@@ -96,7 +91,8 @@ init_i8259a_irqs(void)
+ 		irq_set_chip_and_handler(i, &i8259a_irq_type, handle_level_irq);
+ 	}
+ 
+-	setup_irq(2, &cascade);
++	if (request_irq(2, no_action, 0, "cascade", NULL))
++		pr_err("%s: request_irq() failed\n", "cascade");
+ }
+ 
+ 
+diff --git a/arch/alpha/kernel/irq_impl.h b/arch/alpha/kernel/irq_impl.h
+index 16f2b0276f3a..7ac58be4ccf4 100644
+--- a/arch/alpha/kernel/irq_impl.h
++++ b/arch/alpha/kernel/irq_impl.h
+@@ -21,14 +21,9 @@ extern void isa_no_iack_sc_device_interrupt(unsigned long);
+ extern void srm_device_interrupt(unsigned long);
+ extern void pyxis_device_interrupt(unsigned long);
+ 
+-extern struct irqaction timer_irqaction;
+-extern struct irqaction isa_cascade_irqaction;
+-extern struct irqaction timer_cascade_irqaction;
+-extern struct irqaction halt_switch_irqaction;
+-
+ extern void init_srm_irqs(long, unsigned long);
+ extern void init_pyxis_irqs(unsigned long);
+-extern void init_rtc_irq(void);
++extern void init_rtc_irq(irqreturn_t handler);
+ 
+ extern void common_init_isa_dma(void);
+ 
+diff --git a/arch/alpha/kernel/irq_pyxis.c b/arch/alpha/kernel/irq_pyxis.c
+index a968b10e687d..41b613f44da0 100644
+--- a/arch/alpha/kernel/irq_pyxis.c
++++ b/arch/alpha/kernel/irq_pyxis.c
+@@ -107,5 +107,6 @@ init_pyxis_irqs(unsigned long ignore_mask)
+ 		irq_set_status_flags(i, IRQ_LEVEL);
+ 	}
+ 
+-	setup_irq(16+7, &isa_cascade_irqaction);
++	if (request_irq(16 + 7, no_action, 0, "isa-cascade", NULL))
++		pr_err("request_irq() for %s failed\n", "isa-cascade");
+ }
+diff --git a/arch/alpha/kernel/sys_alcor.c b/arch/alpha/kernel/sys_alcor.c
+index e56efd5b855f..2db834bf7a84 100644
+--- a/arch/alpha/kernel/sys_alcor.c
++++ b/arch/alpha/kernel/sys_alcor.c
+@@ -133,7 +133,8 @@ alcor_init_irq(void)
+ 	init_i8259a_irqs();
+ 	common_init_isa_dma();
+ 
+-	setup_irq(16+31, &isa_cascade_irqaction);
++	if (request_irq(16 + 31, no_action, 0, "isa-cascade", NULL))
++		pr_err("request_irq() for %s failed\n", "isa-cascade");
+ }
+ 
+ 
+diff --git a/arch/alpha/kernel/sys_cabriolet.c b/arch/alpha/kernel/sys_cabriolet.c
+index 10bc46a4ec40..3d4ee60ca930 100644
+--- a/arch/alpha/kernel/sys_cabriolet.c
++++ b/arch/alpha/kernel/sys_cabriolet.c
+@@ -112,7 +112,8 @@ common_init_irq(void (*srm_dev_int)(unsigned long v))
+ 	}
+ 
+ 	common_init_isa_dma();
+-	setup_irq(16+4, &isa_cascade_irqaction);
++	if (request_irq(16 + 4, no_action, 0, "isa-cascade", NULL))
++		pr_err("request_irq() for %s failed\n", "isa-cascade");
+ }
+ 
+ #ifndef CONFIG_ALPHA_PC164
+diff --git a/arch/alpha/kernel/sys_eb64p.c b/arch/alpha/kernel/sys_eb64p.c
+index 5251937ec1b4..6c7f15703dad 100644
+--- a/arch/alpha/kernel/sys_eb64p.c
++++ b/arch/alpha/kernel/sys_eb64p.c
+@@ -123,7 +123,8 @@ eb64p_init_irq(void)
+ 	}
+ 
+ 	common_init_isa_dma();
+-	setup_irq(16+5, &isa_cascade_irqaction);
++	if (request_irq(16 + 5, no_action, 0, "isa-cascade", NULL))
++		pr_err("request_irq() for %s failed\n", "isa-cascade");
+ }
+ 
+ /*
+diff --git a/arch/alpha/kernel/sys_marvel.c b/arch/alpha/kernel/sys_marvel.c
+index 8d34cf6e002a..533899a4a1a1 100644
+--- a/arch/alpha/kernel/sys_marvel.c
++++ b/arch/alpha/kernel/sys_marvel.c
+@@ -397,7 +397,7 @@ marvel_init_pci(void)
+ static void __init
+ marvel_init_rtc(void)
+ {
+-	init_rtc_irq();
++	init_rtc_irq(NULL);
+ }
+ 
+ static void
+diff --git a/arch/alpha/kernel/sys_miata.c b/arch/alpha/kernel/sys_miata.c
+index 6fa07dc5339d..edff228ae451 100644
+--- a/arch/alpha/kernel/sys_miata.c
++++ b/arch/alpha/kernel/sys_miata.c
+@@ -81,8 +81,10 @@ miata_init_irq(void)
+ 	init_pyxis_irqs(0x63b0000);
+ 
+ 	common_init_isa_dma();
+-	setup_irq(16+2, &halt_switch_irqaction);	/* SRM only? */
+-	setup_irq(16+6, &timer_cascade_irqaction);
++	if (request_irq(16 + 2, no_action, 0, "halt-switch", NULL))
++		pr_err("request_irq() for %s failed\n", "halt-switch");
++	if (request_irq(16 + 6, no_action, 0, "timer-cascade", NULL))
++		pr_err("request_irq() for %s failed\n", "timer-cascade");
+ }
+ 
+ 
+diff --git a/arch/alpha/kernel/sys_ruffian.c b/arch/alpha/kernel/sys_ruffian.c
+index 07830cccabf9..f2ff64b6553e 100644
+--- a/arch/alpha/kernel/sys_ruffian.c
++++ b/arch/alpha/kernel/sys_ruffian.c
+@@ -82,7 +82,8 @@ ruffian_init_rtc(void)
+ 	outb(0x31, 0x42);
+ 	outb(0x13, 0x42);
+ 
+-	setup_irq(0, &timer_irqaction);
++	if (request_irq(0, rtc_timer_interrupt, 0, "timer", NULL))
++		pr_err("request_irq() for %s failed\n", "timer");
+ }
+ 
+ static void
+diff --git a/arch/alpha/kernel/sys_rx164.c b/arch/alpha/kernel/sys_rx164.c
+index a3db719d3c38..46c3bd7ed910 100644
+--- a/arch/alpha/kernel/sys_rx164.c
++++ b/arch/alpha/kernel/sys_rx164.c
+@@ -106,7 +106,8 @@ rx164_init_irq(void)
+ 	init_i8259a_irqs();
+ 	common_init_isa_dma();
+ 
+-	setup_irq(16+20, &isa_cascade_irqaction);
++	if (request_irq(16 + 20, no_action, 0, "isa-cascade", NULL))
++		pr_err("request_irq() for %s failed\n", "isa-cascade");
+ }
+ 
+ 
+diff --git a/arch/alpha/kernel/sys_sx164.c b/arch/alpha/kernel/sys_sx164.c
+index 1ec638a2746a..f6f85b2a9c96 100644
+--- a/arch/alpha/kernel/sys_sx164.c
++++ b/arch/alpha/kernel/sys_sx164.c
+@@ -54,7 +54,8 @@ sx164_init_irq(void)
+ 	else
+ 		init_pyxis_irqs(0xff00003f0000UL);
+ 
+-	setup_irq(16+6, &timer_cascade_irqaction);
++	if (request_irq(16 + 6, no_action, 0, "timer-cascade", NULL))
++		pr_err("request_irq() for %s failed\n", "timer-cascade");
+ }
+ 
+ /*
+diff --git a/arch/alpha/kernel/sys_wildfire.c b/arch/alpha/kernel/sys_wildfire.c
+index 8e64052811ab..ceddbf95897f 100644
+--- a/arch/alpha/kernel/sys_wildfire.c
++++ b/arch/alpha/kernel/sys_wildfire.c
+@@ -156,10 +156,6 @@ static void __init
+ wildfire_init_irq_per_pca(int qbbno, int pcano)
+ {
+ 	int i, irq_bias;
+-	static struct irqaction isa_enable = {
+-		.handler	= no_action,
+-		.name		= "isa_enable",
+-	};
+ 
+ 	irq_bias = qbbno * (WILDFIRE_PCA_PER_QBB * WILDFIRE_IRQ_PER_PCA)
+ 		 + pcano * WILDFIRE_IRQ_PER_PCA;
+@@ -198,7 +194,8 @@ wildfire_init_irq_per_pca(int qbbno, int pcano)
+ 		irq_set_status_flags(i + irq_bias, IRQ_LEVEL);
+ 	}
+ 
+-	setup_irq(32+irq_bias, &isa_enable);
++	if (request_irq(32 + irq_bias, no_action, 0, "isa_enable", NULL))
++		pr_err("%s: request_irq() failed\n", "isa_enable");
+ }
+ 
+ static void __init
+diff --git a/arch/alpha/kernel/time.c b/arch/alpha/kernel/time.c
+index 0069360697ee..4d01c392ab14 100644
+--- a/arch/alpha/kernel/time.c
++++ b/arch/alpha/kernel/time.c
+@@ -242,7 +242,7 @@ common_init_rtc(void)
+ 	outb(0x31, 0x42);
+ 	outb(0x13, 0x42);
+ 
+-	init_rtc_irq();
++	init_rtc_irq(NULL);
+ }
+ 
+ 
+@@ -396,9 +396,7 @@ time_init(void)
+ 	if (alpha_using_qemu) {
+ 		clocksource_register_hz(&qemu_cs, NSEC_PER_SEC);
+ 		init_qemu_clockevent();
+-
+-		timer_irqaction.handler = qemu_timer_interrupt;
+-		init_rtc_irq();
++		init_rtc_irq(qemu_timer_interrupt);
+ 		return;
+ 	}
+ 
 -- 
 2.25.1
 
