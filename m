@@ -2,136 +2,105 @@ Return-Path: <SRS0=7TUr=4M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9331CC3567B
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 09:54:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 84599C11D2A
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 09:54:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 71D4D20828
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 09:54:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5C30220828
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 09:54:47 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1582538087;
+	bh=amKl61Bx9wirD52czRjlCxNhJCo5rFHqGOoLwz/o3NM=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=O9DipM+lAm8hULPhtvj8S3vp1n+wcc0/BgAQsy9vgyim4gFxr0bxf0CPyfLbCY4Kv
+	 GIavpJhSRJOxCaWl/PeTE5akdj+M9TQIG5af5Ip+YcIK7WnT8UhbPxL7huITXIMJU5
+	 jlr+t99QO4n6ltlW1PnISC/wvxR01PQaZzc1ZgEs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727744AbgBXJyk (ORCPT
+        id S1727755AbgBXJyq convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Feb 2020 04:54:40 -0500
-Received: from outbound-smtp22.blacknight.com ([81.17.249.190]:49069 "EHLO
-        outbound-smtp22.blacknight.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726838AbgBXJyj (ORCPT
+        Mon, 24 Feb 2020 04:54:46 -0500
+Received: from mail-ot1-f65.google.com ([209.85.210.65]:32870 "EHLO
+        mail-ot1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726765AbgBXJyp (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Feb 2020 04:54:39 -0500
-Received: from mail.blacknight.com (pemlinmail04.blacknight.ie [81.17.254.17])
-        by outbound-smtp22.blacknight.com (Postfix) with ESMTPS id 05B74148004
-        for <linux-kernel@vger.kernel.org>; Mon, 24 Feb 2020 09:54:38 +0000 (GMT)
-Received: (qmail 27537 invoked from network); 24 Feb 2020 09:54:37 -0000
-Received: from unknown (HELO stampy.112glenside.lan) (mgorman@techsingularity.net@[84.203.18.57])
-  by 81.17.254.9 with ESMTPA; 24 Feb 2020 09:54:37 -0000
-From:   Mel Gorman <mgorman@techsingularity.net>
-To:     Peter Zijlstra <peterz@infradead.org>
-Cc:     Ingo Molnar <mingo@kernel.org>,
-        Vincent Guittot <vincent.guittot@linaro.org>,
-        Juri Lelli <juri.lelli@redhat.com>,
-        Dietmar Eggemann <dietmar.eggemann@arm.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Ben Segall <bsegall@google.com>,
-        Valentin Schneider <valentin.schneider@arm.com>,
-        Phil Auld <pauld@redhat.com>, Hillf Danton <hdanton@sina.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Mel Gorman <mgorman@techsingularity.net>
-Subject: [PATCH 12/13] sched/numa: Bias swapping tasks based on their preferred node
-Date:   Mon, 24 Feb 2020 09:52:22 +0000
-Message-Id: <20200224095223.13361-13-mgorman@techsingularity.net>
-X-Mailer: git-send-email 2.16.4
-In-Reply-To: <20200224095223.13361-1-mgorman@techsingularity.net>
-References: <20200224095223.13361-1-mgorman@techsingularity.net>
+        Mon, 24 Feb 2020 04:54:45 -0500
+Received: by mail-ot1-f65.google.com with SMTP id w6so8182695otk.0;
+        Mon, 24 Feb 2020 01:54:45 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=gc6ixcj3vcw3nu96Ty+gdGEq2138xYv/wwhs4XUu2JA=;
+        b=tmAb1VYcMDhWJ0yTxSndDi4CVoc1mbrUMwol37RDmTWtqSN2ivlBNBSjkskjnt7l3L
+         Bv5hvvDgkmw10ftcd83CADKWctU/mHCnp7Gfdwf69k7MyeNQc5/Lj97PtMSwHXmgFyGv
+         A/6Bp42/Q0od1NYRYl2GwIStuAsyngKtEq2cN2eKrd/GiqiWlbkz9pAdM1pgQIvTdzPD
+         g5pPplwVn2b3HovZMm1GO+Lq8J8Vp+Q+u6MKILNOzSAvnhgxNBpTh+PFppS9FZ9bZUf0
+         NYEqB4d5dPzU73M5e9yTiZARBF/ZX/rtV39erW1XSpNm5PSc81txEEU6Sf9rfXES4Lkq
+         gBmQ==
+X-Gm-Message-State: APjAAAVJ2SuHxQGvv+6F5Vf/8R1O4rTZlD+l+uzjCfHojmZBXevO7/th
+        4Fewyxn/lhq6/ROK8LEW18+TJcLXwAUXRx50VV7aIgaj
+X-Google-Smtp-Source: APXvYqwA/mVepV1pQKvgqqZxKBhmxkxDpD3Midirk8+nN9iSD2FCRjNLiUIZZcvJ8NGUXV4sWFOoHCwmaSvVBvDl5ag=
+X-Received: by 2002:a05:6830:1651:: with SMTP id h17mr37281264otr.167.1582538084570;
+ Mon, 24 Feb 2020 01:54:44 -0800 (PST)
+MIME-Version: 1.0
+References: <CAJZ5v0iSEV9S=zTa9++vUCO6GTfBE2sxNY+b4mMMt4Y6RCRvjA@mail.gmail.com>
+ <62491094-D13B-4EED-8190-4AA4EB77036B@lca.pw>
+In-Reply-To: <62491094-D13B-4EED-8190-4AA4EB77036B@lca.pw>
+From:   "Rafael J. Wysocki" <rafael@kernel.org>
+Date:   Mon, 24 Feb 2020 10:54:33 +0100
+Message-ID: <CAJZ5v0jXZOd0yfnwcP1NrfrXnALx=5E1nmK8DHk8bJ0SLUYzAQ@mail.gmail.com>
+Subject: Re: [PATCH -next] power/qos: fix a data race in pm_qos_*_value
+To:     Qian Cai <cai@lca.pw>
+Cc:     "Rafael J. Wysocki" <rafael@kernel.org>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>, elver@google.com,
+        Linux PM <linux-pm@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8BIT
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-When swapping tasks for NUMA balancing, it is preferred that tasks move
-to or remain on their preferred node. When considering an imbalance,
-encourage tasks to move to their preferred node and discourage tasks from
-moving away from their preferred node.
+On Mon, Feb 24, 2020 at 2:01 AM Qian Cai <cai@lca.pw> wrote:
+>
+>
+>
+> > On Feb 23, 2020, at 7:12 PM, Rafael J. Wysocki <rafael@kernel.org> wrote:
+> >
+> > It may be a bug under certain conditions, but you don't mention what
+> > conditions they are.  Reporting it as a general bug is not accurate at
+> > the very least.
+>
+> Could we rule out load tearing, store tearing and reload of global_req in cpuidle_governor_latency() for all compilers and architectures which could introduce logic bugs?
+>
+>         int global_req = cpu_latency_qos_limit();
+>
+>         if (device_req > global_req)
+>                 device_req = global_req;
+>
+> If under register pressure, the compiler might get ride of the tmp variable, i.e.,
+>
+> If (device_req > cpu_latency_qos_limit())
+> —-> race with the writer.
+>          device_req = cpu_latency_qos_limit();
 
-Signed-off-by: Mel Gorman <mgorman@techsingularity.net>
----
- kernel/sched/fair.c | 43 +++++++++++++++++++++++++++++++++++++------
- 1 file changed, 37 insertions(+), 6 deletions(-)
+Yes, there is a race here with or without the WRITE_ONCE()/READ_ONCE()
+annotations (note that these annotations don't prevent CPUs from
+reordering things, so device_req may be set before global_req
+regardless).
 
-diff --git a/kernel/sched/fair.c b/kernel/sched/fair.c
-index ee14cd9815ec..63f22b1a5f0b 100644
---- a/kernel/sched/fair.c
-+++ b/kernel/sched/fair.c
-@@ -1741,18 +1741,27 @@ static void task_numa_compare(struct task_numa_env *env,
- 			goto unlock;
- 	}
- 
-+	/* Skip this swap candidate if cannot move to the source cpu. */
-+	if (!cpumask_test_cpu(env->src_cpu, cur->cpus_ptr))
-+		goto unlock;
-+
-+	/*
-+	 * Skip this swap candidate if it is not moving to its preferred
-+	 * node and the best task is.
-+	 */
-+	if (env->best_task &&
-+	    env->best_task->numa_preferred_nid == env->src_nid &&
-+	    cur->numa_preferred_nid != env->src_nid) {
-+		goto unlock;
-+	}
-+
- 	/*
- 	 * "imp" is the fault differential for the source task between the
- 	 * source and destination node. Calculate the total differential for
- 	 * the source task and potential destination task. The more negative
- 	 * the value is, the more remote accesses that would be expected to
- 	 * be incurred if the tasks were swapped.
--	 */
--	/* Skip this swap candidate if cannot move to the source cpu */
--	if (!cpumask_test_cpu(env->src_cpu, cur->cpus_ptr))
--		goto unlock;
--
--	/*
-+	 *
- 	 * If dst and source tasks are in the same NUMA group, or not
- 	 * in any group then look only at task weights.
- 	 */
-@@ -1779,12 +1788,34 @@ static void task_numa_compare(struct task_numa_env *env,
- 			       task_weight(cur, env->dst_nid, dist);
- 	}
- 
-+	/* Discourage picking a task already on its preferred node */
-+	if (cur->numa_preferred_nid == env->dst_nid)
-+		imp -= imp / 16;
-+
-+	/*
-+	 * Encourage picking a task that moves to its preferred node.
-+	 * This potentially makes imp larger than it's maximum of
-+	 * 1998 (see SMALLIMP and task_weight for why) but in this
-+	 * case, it does not matter.
-+	 */
-+	if (cur->numa_preferred_nid == env->src_nid)
-+		imp += imp / 8;
-+
- 	if (maymove && moveimp > imp && moveimp > env->best_imp) {
- 		imp = moveimp;
- 		cur = NULL;
- 		goto assign;
- 	}
- 
-+	/*
-+	 * Prefer swapping with a task moving to its preferred node over a
-+	 * task that is not.
-+	 */
-+	if (env->best_task && cur->numa_preferred_nid == env->src_nid &&
-+	    env->best_task->numa_preferred_nid != env->src_nid) {
-+		goto assign;
-+	}
-+
- 	/*
- 	 * If the NUMA importance is less than SMALLIMP,
- 	 * task migration might only result in ping pong
--- 
-2.16.4
+However, worst-case it may cause an old value to be used and that can
+happen anyway if the entire cpuidle_governor_latency_req() runs
+between the curr_value update and pm_qos_set_value() in
+pm_qos_update_target(), for example.
 
+IOW, there is no guarantee that the new value will be used immediately
+after updating a QoS request anyway.
+
+I agree with adding the annotations (I was considering posting a patch
+doing that myself), but just as a matter of making the intention
+clear.
