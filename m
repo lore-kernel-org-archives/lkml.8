@@ -2,111 +2,136 @@ Return-Path: <SRS0=7TUr=4M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B2AEFC35679
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 09:11:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 72509C3567B
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 09:11:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 81D2320658
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 09:11:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 42B9420658
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 09:11:20 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=cerno.tech header.i=@cerno.tech header.b="d0BLb0ou";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="qV/Fy4nY"
+	dkim=pass (2048-bit key) header.d=cerno.tech header.i=@cerno.tech header.b="lZ4OE2YE";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="r57KjA79"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728405AbgBXJLC (ORCPT
+        id S1727964AbgBXJLT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Feb 2020 04:11:02 -0500
-Received: from wnew3-smtp.messagingengine.com ([64.147.123.17]:44317 "EHLO
-        wnew3-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1728360AbgBXJKw (ORCPT
+        Mon, 24 Feb 2020 04:11:19 -0500
+Received: from new3-smtp.messagingengine.com ([66.111.4.229]:36727 "EHLO
+        new3-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727794AbgBXJLD (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Feb 2020 04:10:52 -0500
+        Mon, 24 Feb 2020 04:11:03 -0500
 Received: from compute3.internal (compute3.nyi.internal [10.202.2.43])
-        by mailnew.west.internal (Postfix) with ESMTP id C55F0647;
-        Mon, 24 Feb 2020 04:10:50 -0500 (EST)
+        by mailnew.nyi.internal (Postfix) with ESMTP id 34D407698;
+        Mon, 24 Feb 2020 04:11:02 -0500 (EST)
 Received: from mailfrontend1 ([10.202.2.162])
-  by compute3.internal (MEProxy); Mon, 24 Feb 2020 04:10:51 -0500
+  by compute3.internal (MEProxy); Mon, 24 Feb 2020 04:11:02 -0500
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cerno.tech; h=
-        from:to:cc:subject:date:message-id:in-reply-to:references
-        :mime-version:content-transfer-encoding; s=fm2; bh=2fIkfY5nUkZIR
-        qQtgh0SSi7eUztpIu/nJGe44ypJz6g=; b=d0BLb0ouXXmUM+WD9WAJIQRjiH1UF
-        7Eu7oAJdPEP9LzPovr4VVVyLCHxdnAb+B97wtDQKp86K6x9axFpZxR4mnIEDslyv
-        CbWmQ8lob/ljcoyUQ2Iw9gwwBBPV5w1NzFL2h+KZTPtK8mdwbS7uJgSPi6kJFdxi
-        mcPq/bDx11YvLHEikKFx9I4nNxBq42WNYfQ83BbUCAfd+19Da+KQ/HZfdvoafMCO
-        AsKhUGFU9gqI73OjyvzG3uf+dRQMnlY49kFQxBg1e7dhBnifWIi8hA3pAlYNuAh3
-        qUgT4/HSgx6Tf9b0RBOFwH2ofEIHS+i0yFKBJ7yW3JGROVHHZpjXORD+w==
+        date:from:to:cc:subject:message-id:references:mime-version
+        :content-type:in-reply-to; s=fm2; bh=P6NSWkrKZ4ycnvFOSuy67yShL4e
+        kMBsFHiAL05968xc=; b=lZ4OE2YE954qYDC16RXXOtM/qnFZraFfeQ0BPlrNAQt
+        GXa5BRrgjuoMXO09Hj3a+SRn3OWbiJfp1i7iHeX49HvPtvYKGj2ka60gIk6QygsS
+        xOedDCFBmF5v3PSXS+L3NxwVtIqE9RznUlMhphBxtmlaexBZKMCsLbsXEtmnyWFY
+        pEHkRiCnYtzef/iZ9FYqOK2PmauywfwotGSDS2ZUzSt7Y+pIb5q+qAQYlq5a9+4S
+        4EP5CiPaANupbgvtbAquupThLnPHIfavvUMjae8bB/oPE3uGTWNm4571hPnqzcdV
+        tIp44pxnFoVzlNbG6lpp5aNwDIpEsxcIGB/g47CMCuw==
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-        messagingengine.com; h=cc:content-transfer-encoding:date:from
-        :in-reply-to:message-id:mime-version:references:subject:to
-        :x-me-proxy:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=
-        fm2; bh=2fIkfY5nUkZIRqQtgh0SSi7eUztpIu/nJGe44ypJz6g=; b=qV/Fy4nY
-        TXKbE/dM8iqVFsceTTI+Illnfw8CXYuZ8qfr60faLiEog8z5wMqXoxCIiJM7qDdr
-        a8swyO2o4Rx+qHqafljPgVmmK/gvYzFajotR3MbMLvN8MfXE45wp9VAKgEmjjnyT
-        DJ6KVPs68BoSfK14GAtkJQOmhqSJjGJ0yGgXG2SIJfDShjbKJvzUSQrRlXwF4QuG
-        ijHVvHU/ybpTEvloD6LDLP0QV95I6GHJwzfmamVaryl3OO2HhUAv7MwqWlqV0Gti
-        hj6svxdbqjY6s+44evv0hQhTSNUQ//AOD40pykE1LKEtgb9NJv2urymy+ulQw7MV
-        C09/8REOAfEi9A==
-X-ME-Sender: <xms:GpNTXhKujlOv74uPEMTBfHTxQCHSjzTzmLXBpvj1tBcC19YpZQSWgw>
+        messagingengine.com; h=cc:content-type:date:from:in-reply-to
+        :message-id:mime-version:references:subject:to:x-me-proxy
+        :x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm2; bh=P6NSWk
+        rKZ4ycnvFOSuy67yShL4ekMBsFHiAL05968xc=; b=r57KjA79/p5plmAAJXNv/J
+        hnoNbfH/Fm5PIKdb1WwapcoQy4JZwmrTAKiYdDrU1xmPe7YO7cg67fWW48x/8Fg0
+        W26pjrXMh+5qpMVxoKbHogk903GtPfV8zMhdIYPCRS2I4WRgLVL9zN0dmtKVcK+i
+        +nFZkhg/lAgAR/F4y/hcFeDm10hT/erEAES/h79aAY8bMLzzV6UcDsBWX01txzKi
+        9J3KqrQ01PWX26AWkYE4nz7E7TgV/YUQHv3e2RlERTMoj0olsRWysMp3i+g4zilC
+        ikqMBqw87Ow0nRPMkSim4j0vTFLFbDC0hjG/xkHYH/Scm6XVExWWXkLkrNQgbz8w
+        ==
+X-ME-Sender: <xms:JJNTXoeASscD0ZE79XXdYIUaj_4HERRURm8t60DN_w_LZdOkXgefiQ>
 X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedugedrledtucetufdoteggodetrfdotffvucfrrh
     hofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgenuceurghi
     lhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmnecujfgurh
-    ephffvufffkffojghfggfgsedtkeertdertddtnecuhfhrohhmpeforgigihhmvgcutfhi
+    epfffhvffukfhfgggtuggjsehgtderredttddvnecuhfhrohhmpeforgigihhmvgcutfhi
     phgrrhguuceomhgrgihimhgvsegtvghrnhhordhtvggthheqnecukfhppeeltddrkeelrd
-    eikedrjeeinecuvehluhhsthgvrhfuihiivgepvdefnecurfgrrhgrmhepmhgrihhlfhhr
-    ohhmpehmrgigihhmvgestggvrhhnohdrthgvtghh
-X-ME-Proxy: <xmx:GpNTXhY_4XmIOfiJ1ZtmWsedmUg9z8WSCDjJ7fkoGjEgAvDhWjYlYw>
-    <xmx:GpNTXkuNiEHorzz-rJ1XCGogn7RrAAscO1hiic62o3K1jYAxJVGXZA>
-    <xmx:GpNTXmuUOPBSH7xvLKWa320T6e2g4cSi4vg6iWqQvT1sL_9_yK-Rkg>
-    <xmx:GpNTXoVV0lwPzHjtumqbaG2BXZzRbKSG5iTm-gqmY9t8FKEMfMShhw50fzk>
+    eikedrjeeinecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehmrghilhhfrhho
+    mhepmhgrgihimhgvsegtvghrnhhordhtvggthh
+X-ME-Proxy: <xmx:JJNTXluWuPtuGN1waXd_JiswnG4e7u-fVcy7PczKJAgHSvNxt3tqQg>
+    <xmx:JJNTXv_wMhB5XVyVpuBZBac9XmYEjBsod6Y6Tlf2Dk6TfKZoM0gR_w>
+    <xmx:JJNTXo1zXyyBSNGeEc12xnIp9_AK21g3yWfN8SJAGvtSF8hQMAa4Sg>
+    <xmx:JpNTXugmknZ6EKgtv52oiyQ9y3cZAT18nBrpAmieETp8hBTU8RsCag>
 Received: from localhost (lfbn-tou-1-1502-76.w90-89.abo.wanadoo.fr [90.89.68.76])
-        by mail.messagingengine.com (Postfix) with ESMTPA id 12401328005E;
-        Mon, 24 Feb 2020 04:10:49 -0500 (EST)
+        by mail.messagingengine.com (Postfix) with ESMTPA id 421BA328005A;
+        Mon, 24 Feb 2020 04:11:00 -0500 (EST)
+Date:   Mon, 24 Feb 2020 10:10:59 +0100
 From:   Maxime Ripard <maxime@cerno.tech>
-To:     Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
-        Eric Anholt <eric@anholt.net>
-Cc:     dri-devel@lists.freedesktop.org,
-        linux-rpi-kernel@lists.infradead.org,
-        bcm-kernel-feedback-list@broadcom.com,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        Dave Stevenson <dave.stevenson@raspberrypi.com>,
-        Tim Gover <tim.gover@raspberrypi.com>,
-        Phil Elwell <phil@raspberrypi.com>,
-        Maxime Ripard <maxime@cerno.tech>
-Subject: [PATCH 84/89] drm/vc4: hdmi: Remove unused CEC_CLOCK_DIV define
-Date:   Mon, 24 Feb 2020 10:07:26 +0100
-Message-Id: <7050dab4e8d23a36ee1f7238b32a5a8f92c38e3c.1582533919.git-series.maxime@cerno.tech>
-X-Mailer: git-send-email 2.24.1
-In-Reply-To: <cover.6c896ace9a5a7840e9cec008b553cbb004ca1f91.1582533919.git-series.maxime@cerno.tech>
-References: <cover.6c896ace9a5a7840e9cec008b553cbb004ca1f91.1582533919.git-series.maxime@cerno.tech>
+To:     Ondrej Jirman <megous@megous.com>
+Cc:     linux-sunxi@googlegroups.com,
+        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+        Rob Herring <robh+dt@kernel.org>, Chen-Yu Tsai <wens@csie.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Luca Weiss <luca@z3ntu.xyz>, Tomas Novotny <tomas@novotny.cz>,
+        linux-input@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Subject: Re: [PATCH 3/4] ARM: dts: sun8i-a83t-tbs-a711: Add support for the
+ vibrator motor
+Message-ID: <20200224091059.lljffogofbexhudt@gilmour.lan>
+References: <20200222231428.233621-1-megous@megous.com>
+ <20200222231428.233621-4-megous@megous.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="rf2uuzktvcqtstk3"
+Content-Disposition: inline
+In-Reply-To: <20200222231428.233621-4-megous@megous.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The CEC_CLOCK_DIV define is not used anywhere in the driver, let's remove
-it.
 
-Signed-off-by: Maxime Ripard <maxime@cerno.tech>
----
- drivers/gpu/drm/vc4/vc4_hdmi.c | 1 -
- 1 file changed, 1 deletion(-)
+--rf2uuzktvcqtstk3
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-diff --git a/drivers/gpu/drm/vc4/vc4_hdmi.c b/drivers/gpu/drm/vc4/vc4_hdmi.c
-index 1762484bd97a..9b06352da377 100644
---- a/drivers/gpu/drm/vc4/vc4_hdmi.c
-+++ b/drivers/gpu/drm/vc4/vc4_hdmi.c
-@@ -54,7 +54,6 @@
- 
- #define HSM_CLOCK_FREQ 163682864
- #define CEC_CLOCK_FREQ 40000
--#define CEC_CLOCK_DIV  (HSM_CLOCK_FREQ / CEC_CLOCK_FREQ)
- 
- static int vc4_hdmi_debugfs_regs(struct seq_file *m, void *unused)
- {
--- 
-git-series 0.9.1
+Hi,
+
+On Sun, Feb 23, 2020 at 12:14:27AM +0100, Ondrej Jirman wrote:
+> The board has a vibrator mottor. Hook it to the input subsystem.
+>
+> Signed-off-by: Ondrej Jirman <megous@megous.com>
+> ---
+>  arch/arm/boot/dts/sun8i-a83t-tbs-a711.dts | 5 +++++
+>  1 file changed, 5 insertions(+)
+>
+> diff --git a/arch/arm/boot/dts/sun8i-a83t-tbs-a711.dts b/arch/arm/boot/dts/sun8i-a83t-tbs-a711.dts
+> index 2fd31a0a0b344..a22920275e99b 100644
+> --- a/arch/arm/boot/dts/sun8i-a83t-tbs-a711.dts
+> +++ b/arch/arm/boot/dts/sun8i-a83t-tbs-a711.dts
+> @@ -99,6 +99,11 @@ panel_input: endpoint {
+>  		};
+>  	};
+>
+> +	vibrator {
+> +		compatible = "gpio-vibrator";
+> +		vcc-supply = <&reg_ldo_io1>;
+> +	};
+> +
+
+LDO IO1 can also be muxed in as a GPIO iirc, why did you choose the
+regulator instead?
+
+Maxime
+
+--rf2uuzktvcqtstk3
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iHUEABYIAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCXlOTIwAKCRDj7w1vZxhR
+xVFTAQDQJHOWWsog4Y0l4mRxEOjNKPwakKZYlCWd4M50UL9jDAEArb1p2WwTIOaO
+jt5TR3xH+He9Bb3uaRGhWtWZpIcV9Aw=
+=/rlr
+-----END PGP SIGNATURE-----
+
+--rf2uuzktvcqtstk3--
