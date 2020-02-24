@@ -2,119 +2,97 @@ Return-Path: <SRS0=7TUr=4M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E4651C11D30
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 11:32:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7A0D1C11D30
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 11:37:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A23A820732
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 11:32:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4745720866
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 11:37:01 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1582544221;
+	bh=r2PiGWSmrETgWx2LEGxivHnEQxtJCs3wPIZoGPYxoyQ=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=1TqoZlIqQRRJUMlP4M2tFtaBxf9v/07QDa+eF27alUg50eGYJSOvZvIndFTS9pVrQ
+	 uJnV+jwyDcRpdtoTMB6NiLzUDxtnfBqlJ5lbAD2t6a9kS+Jcl+8X75GqCg9N80vmxa
+	 M6hTauldwwjVlCYJguYjln0SIb/8rhhAZQMMU0VM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727460AbgBXLch (ORCPT
+        id S1727306AbgBXLhA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Feb 2020 06:32:37 -0500
-Received: from foss.arm.com ([217.140.110.172]:35588 "EHLO foss.arm.com"
+        Mon, 24 Feb 2020 06:37:00 -0500
+Received: from foss.arm.com ([217.140.110.172]:35634 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727240AbgBXLch (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Feb 2020 06:32:37 -0500
+        id S1726778AbgBXLg7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 24 Feb 2020 06:36:59 -0500
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id B2D5830E;
-        Mon, 24 Feb 2020 03:32:36 -0800 (PST)
-Received: from e121166-lin.cambridge.arm.com (e121166-lin.cambridge.arm.com [10.1.196.255])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id E897A3F703;
-        Mon, 24 Feb 2020 03:32:34 -0800 (PST)
-Date:   Mon, 24 Feb 2020 11:32:25 +0000
-From:   Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-To:     Vidya Sagar <vidyas@nvidia.com>
-Cc:     jingoohan1@gmail.com, gustavo.pimentel@synopsys.com,
-        andrew.murray@arm.com, bhelgaas@google.com, kishon@ti.com,
-        thierry.reding@gmail.com, Jisheng.Zhang@synaptics.com,
-        jonathanh@nvidia.com, linux-pci@vger.kernel.org,
-        linux-kernel@vger.kernel.org, kthota@nvidia.com,
-        mmaddireddy@nvidia.com, sagar.tv@gmail.com
-Subject: Re: [PATCH V3 4/5] PCI: dwc: Add API to notify core initialization
- completion
-Message-ID: <20200224113217.GA11120@e121166-lin.cambridge.arm.com>
-References: <20200217121036.3057-1-vidyas@nvidia.com>
- <20200217121036.3057-5-vidyas@nvidia.com>
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 1234E30E;
+        Mon, 24 Feb 2020 03:36:59 -0800 (PST)
+Received: from localhost (unknown [10.37.6.21])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 897CF3F703;
+        Mon, 24 Feb 2020 03:36:58 -0800 (PST)
+Date:   Mon, 24 Feb 2020 11:36:57 +0000
+From:   Mark Brown <broonie@kernel.org>
+To:     Rob Herring <robh@kernel.org>
+Cc:     devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+        Alexandre Torgue <alexandre.torgue@st.com>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Maxime Ripard <mripard@kernel.org>,
+        Chen-Yu Tsai <wens@csie.org>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Sam Ravnborg <sam@ravnborg.org>, Vinod Koul <vkoul@kernel.org>,
+        Jonathan Cameron <jic23@kernel.org>,
+        Kukjin Kim <kgene@kernel.org>,
+        Krzysztof Kozlowski <krzk@kernel.org>,
+        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Lee Jones <lee.jones@linaro.org>,
+        Ulf Hansson <ulf.hansson@linaro.org>,
+        Srinivas Kandagatla <srinivas.kandagatla@linaro.org>,
+        Kishon Vijay Abraham I <kishon@ti.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>
+Subject: Re: [PATCH] dt-bindings: Fix dtc warnings in examples
+Message-ID: <20200224113657.GA6215@sirena.org.uk>
+References: <20200221222711.15973-1-robh@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="2oS5YaxWCcQjTEyO"
 Content-Disposition: inline
-In-Reply-To: <20200217121036.3057-5-vidyas@nvidia.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+In-Reply-To: <20200221222711.15973-1-robh@kernel.org>
+X-Cookie: How you look depends on where you go.
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Feb 17, 2020 at 05:40:35PM +0530, Vidya Sagar wrote:
-> Add a new API dw_pcie_ep_init_notify() to let platform drivers
-> call it when the core is available for initialization.
-> 
-> Signed-off-by: Vidya Sagar <vidyas@nvidia.com>
-> Acked-by: Kishon Vijay Abraham I <kishon@ti.com>
-> ---
-> V3:
-> * Added Acked-by: Kishon Vijay Abraham I <kishon@ti.com>
-> 
-> V2:
-> * None
-> 
->  drivers/pci/controller/dwc/pcie-designware-ep.c | 7 +++++++
->  drivers/pci/controller/dwc/pcie-designware.h    | 5 +++++
->  2 files changed, 12 insertions(+)
-> 
-> diff --git a/drivers/pci/controller/dwc/pcie-designware-ep.c b/drivers/pci/controller/dwc/pcie-designware-ep.c
-> index 84a102df9f62..dfbb806c25bf 100644
-> --- a/drivers/pci/controller/dwc/pcie-designware-ep.c
-> +++ b/drivers/pci/controller/dwc/pcie-designware-ep.c
-> @@ -19,6 +19,13 @@ void dw_pcie_ep_linkup(struct dw_pcie_ep *ep)
->  	pci_epc_linkup(epc);
->  }
->  
-> +void dw_pcie_ep_init_notify(struct dw_pcie_ep *ep)
-> +{
-> +	struct pci_epc *epc = ep->epc;
-> +
-> +	pci_epc_init_notify(epc);
-> +}
 
-Do we really need this wrapper ? I would drop this code and I would
-appreciate if you could post tegra changes benefiting from this
-series, at the moment I don't see any user of this newly added
-infrastructure.
+--2oS5YaxWCcQjTEyO
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-Thanks,
-Lorenzo
+On Fri, Feb 21, 2020 at 04:27:10PM -0600, Rob Herring wrote:
+> Fix all the warnings in the DT binding schema examples when built with
+> 'W=1'. This is in preparation to make that the default for examples.
 
->  static void __dw_pcie_ep_reset_bar(struct dw_pcie *pci, enum pci_barno bar,
->  				   int flags)
->  {
-> diff --git a/drivers/pci/controller/dwc/pcie-designware.h b/drivers/pci/controller/dwc/pcie-designware.h
-> index b67b7f756bc2..aa98fbd50807 100644
-> --- a/drivers/pci/controller/dwc/pcie-designware.h
-> +++ b/drivers/pci/controller/dwc/pcie-designware.h
-> @@ -412,6 +412,7 @@ static inline int dw_pcie_allocate_domains(struct pcie_port *pp)
->  void dw_pcie_ep_linkup(struct dw_pcie_ep *ep);
->  int dw_pcie_ep_init(struct dw_pcie_ep *ep);
->  int dw_pcie_ep_init_complete(struct dw_pcie_ep *ep);
-> +void dw_pcie_ep_init_notify(struct dw_pcie_ep *ep);
->  void dw_pcie_ep_exit(struct dw_pcie_ep *ep);
->  int dw_pcie_ep_raise_legacy_irq(struct dw_pcie_ep *ep, u8 func_no);
->  int dw_pcie_ep_raise_msi_irq(struct dw_pcie_ep *ep, u8 func_no,
-> @@ -434,6 +435,10 @@ static inline int dw_pcie_ep_init_complete(struct dw_pcie_ep *ep)
->  	return 0;
->  }
->  
-> +static inline void dw_pcie_ep_init_notify(struct dw_pcie_ep *ep)
-> +{
-> +}
-> +
->  static inline void dw_pcie_ep_exit(struct dw_pcie_ep *ep)
->  {
->  }
-> -- 
-> 2.17.1
-> 
+Acked-by: Mark Brown <broonie@kernel.org>
+
+--2oS5YaxWCcQjTEyO
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl5TtVYACgkQJNaLcl1U
+h9CNEAf/eNHuOKO9UX+XLz39Z16Ulv5iko14dyR+Uci0d4nowFtBZ1253dv32wRW
+pDpU9iu7Ha04MkvyNDFgz5RsgR/jyLE8/t30zbbaJZWwc6XGVI/KCZkvfdNYrAsq
+J4NEjRnt/M+HN0ZUsu30SS95/X50PMTLNJ8gU4OwsohVranbzKRqFcoCbbGvpXUw
+yP6W5MiCrd3LpU1sG20gJK1ZJQHPO4R3U/sUwyEbJmhvZYJB+KOC2Jl+paUbHrSO
+DLZeZ+w3AOroZ5oxxzPMO5033k7K6NI0mA449VtZ6BXgjGuhlMaQCbJFE8aAGWJi
+eajjwC/Ufgc8Il8KswwWGa5j9e6ZZQ==
+=f6dA
+-----END PGP SIGNATURE-----
+
+--2oS5YaxWCcQjTEyO--
