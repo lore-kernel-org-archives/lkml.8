@@ -2,148 +2,171 @@ Return-Path: <SRS0=7TUr=4M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-14.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E3826C38BE0
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 20:43:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A0458C38BE0
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 20:46:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C343320732
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 20:43:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6CDF2218AC
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 20:46:05 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="ZRHSZE7c"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727662AbgBXUn2 (ORCPT
+        id S1727513AbgBXUqE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Feb 2020 15:43:28 -0500
-Received: from Galois.linutronix.de ([193.142.43.55]:51048 "EHLO
-        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726722AbgBXUn2 (ORCPT
+        Mon, 24 Feb 2020 15:46:04 -0500
+Received: from mail-pf1-f195.google.com ([209.85.210.195]:43701 "EHLO
+        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727168AbgBXUqD (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Feb 2020 15:43:28 -0500
-Received: from p5de0bf0b.dip0.t-ipconnect.de ([93.224.191.11] helo=nanos.tec.linutronix.de)
-        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
-        (Exim 4.80)
-        (envelope-from <tglx@linutronix.de>)
-        id 1j6KZ3-0005g7-1V; Mon, 24 Feb 2020 21:42:53 +0100
-Received: by nanos.tec.linutronix.de (Postfix, from userid 1000)
-        id 36301104088; Mon, 24 Feb 2020 21:42:52 +0100 (CET)
-From:   Thomas Gleixner <tglx@linutronix.de>
-To:     Alexei Starovoitov <alexei.starovoitov@gmail.com>
-Cc:     LKML <linux-kernel@vger.kernel.org>,
-        David Miller <davem@davemloft.net>, bpf@vger.kernel.org,
-        netdev@vger.kernel.org, Alexei Starovoitov <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Sebastian Sewior <bigeasy@linutronix.de>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Clark Williams <williams@redhat.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Juri Lelli <juri.lelli@redhat.com>,
-        Ingo Molnar <mingo@kernel.org>,
-        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-        Vinicius Costa Gomes <vinicius.gomes@intel.com>,
-        Jakub Kicinski <kuba@kernel.org>
-Subject: Re: [patch V3 06/22] bpf/trace: Remove redundant preempt_disable from trace_call_bpf()
-In-Reply-To: <20200224194017.rtwjcgjxnmltisfe@ast-mbp>
-References: <20200224140131.461979697@linutronix.de> <20200224145643.059995527@linutronix.de> <20200224194017.rtwjcgjxnmltisfe@ast-mbp>
-Date:   Mon, 24 Feb 2020 21:42:52 +0100
-Message-ID: <875zfvk983.fsf@nanos.tec.linutronix.de>
+        Mon, 24 Feb 2020 15:46:03 -0500
+Received: by mail-pf1-f195.google.com with SMTP id s1so5946104pfh.10
+        for <linux-kernel@vger.kernel.org>; Mon, 24 Feb 2020 12:46:03 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=MEUjVJOmmnH8Vpry0d5ts1AnA+rtuK/pfVKzn69oCns=;
+        b=ZRHSZE7cvsR8ZpuUv+0O/R6CEbotxvDzUTKr58Hu5rzAVvhc5byGevQLVKGfr3WYRS
+         X7rvaAMMuyAAy11+scG8MQkejq/RMoDBKrT/gsnwHzc4uSHxtILLLZczYt7kQ4OvzxsV
+         Z0S8qIe4VtwkrnPbdsFsKXclLTRiVLxYNgwlHkeS9YiaTk8xbH8o6VPHtX5q0b+HCWL8
+         4xcQpSkdnZwJNj1veGMZSfm4m91IDsNo0htOJ0kCV1y9Qr6c7rbIRiXBpDoPjOYwKTUz
+         MUIvnH/WP6X3u6A2SuRGG1vyXqfECTLIi7+bQC959qaY7FpXvMEgH5M/iznKjfT23Rrs
+         3+2w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=MEUjVJOmmnH8Vpry0d5ts1AnA+rtuK/pfVKzn69oCns=;
+        b=Ue4FvMeV0D7zlTrUI9UPXnZ+QZe2M6iJvdrGJ6cVdIIJBAqi+33oaf6Eb8s7frd895
+         j3GlMkP/dXcQfzkjUfMJa9C6bUa3cMTT4KSZfz+E8lyuxtHSCg7dFmeUZ66UYkVCOWZ+
+         W2DRwCBi6Oj2ElS4mnnJAWXoMFJsWF3pXTx2RvTdk2N8b4m3b0wNARDjy3D2hHaOy7A4
+         sJ/Fm1LwSfbh6FHcULrOUuleOUebBocUC7mvTF0HijVl1xQf06qItN6JwJ/3lXHRHndp
+         LVr8r/Ewp59URrYnQHHQgLOs5skfwLm0RkPoZmpy91nl9mi1QPdVs9+17hJLRi8sgUcG
+         hAkw==
+X-Gm-Message-State: APjAAAUGrWLJcxDHRn6RQsOnKQuZ0tfkfdt8z3eUE1CRCxYAX4j+MC2F
+        nL/YSxY/w5ABC15lKHN8bJSojEwqAC4hVkfwihVv/Q==
+X-Google-Smtp-Source: APXvYqwYY1dqclugRmuGNa9VUAWt9QQ0+AQN7P4Oqc84Wto02XmTfN071m89dZO+NSy0VOc5Eu6L5g9dOb3pNc4TVUU=
+X-Received: by 2002:a62:37c7:: with SMTP id e190mr53707489pfa.165.1582577162505;
+ Mon, 24 Feb 2020 12:46:02 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Linutronix-Spam-Score: -1.0
-X-Linutronix-Spam-Level: -
-X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
+References: <20200222235709.GA3786197@rani.riverdale.lan> <20200223193715.83729-3-nivedita@alum.mit.edu>
+In-Reply-To: <20200223193715.83729-3-nivedita@alum.mit.edu>
+From:   Nick Desaulniers <ndesaulniers@google.com>
+Date:   Mon, 24 Feb 2020 12:45:51 -0800
+Message-ID: <CAKwvOdmqM5aHnDCyL62gmWV5wFrKwAEdkHq+HPnvp3ZYA=dtbg@mail.gmail.com>
+Subject: Re: [PATCH 2/2] arch/x86: Drop unneeded linker script discard of .eh_frame
+To:     Arvind Sankar <nivedita@alum.mit.edu>
+Cc:     Borislav Petkov <bp@alien8.de>,
+        Nathan Chancellor <natechancellor@gmail.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        "maintainer:X86 ARCHITECTURE (32-BIT AND 64-BIT)" <x86@kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        clang-built-linux <clang-built-linux@googlegroups.com>,
+        Michael Matz <matz@suse.de>, Fangrui Song <maskray@google.com>,
+        Kees Cook <keescook@chromium.org>,
+        Andy Lutomirski <luto@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Alexei Starovoitov <alexei.starovoitov@gmail.com> writes:
-> On Mon, Feb 24, 2020 at 03:01:37PM +0100, Thomas Gleixner wrote:
->> --- a/kernel/trace/bpf_trace.c
->> +++ b/kernel/trace/bpf_trace.c
->> @@ -83,7 +83,7 @@ unsigned int trace_call_bpf(struct trace
->>  	if (in_nmi()) /* not supported yet */
->>  		return 1;
->>  
->> -	preempt_disable();
->> +	cant_sleep();
->>  
->>  	if (unlikely(__this_cpu_inc_return(bpf_prog_active) != 1)) {
->>  		/*
->> @@ -115,7 +115,6 @@ unsigned int trace_call_bpf(struct trace
->>  
->>   out:
->>  	__this_cpu_dec(bpf_prog_active);
->> -	preempt_enable();
+On Sun, Feb 23, 2020 at 11:37 AM Arvind Sankar <nivedita@alum.mit.edu> wrote:
 >
-> My testing uncovered that above was too aggressive:
-> [   41.533438] BUG: assuming atomic context at kernel/trace/bpf_trace.c:86
-> [   41.534265] in_atomic(): 0, irqs_disabled(): 0, pid: 2348, name: test_progs
-> [   41.536907] Call Trace:
-> [   41.537167]  dump_stack+0x75/0xa0
-> [   41.537546]  __cant_sleep.cold.105+0x8b/0xa3
-> [   41.538018]  ? exit_to_usermode_loop+0x77/0x140
-> [   41.538493]  trace_call_bpf+0x4e/0x2e0
-> [   41.538908]  __uprobe_perf_func.isra.15+0x38f/0x690
-> [   41.539399]  ? probes_profile_seq_show+0x220/0x220
-> [   41.539962]  ? __mutex_lock_slowpath+0x10/0x10
-> [   41.540412]  uprobe_dispatcher+0x5de/0x8f0
-> [   41.540875]  ? uretprobe_dispatcher+0x7c0/0x7c0
-> [   41.541404]  ? down_read_killable+0x200/0x200
-> [   41.541852]  ? __kasan_kmalloc.constprop.6+0xc1/0xd0
-> [   41.542356]  uprobe_notify_resume+0xacf/0x1d60
-
-Duh. I missed that particular callchain.
-
-> The following fixes it:
+> Now that we don't generate .eh_frame sections for the files in setup.elf
+> and realmode.elf, the linker scripts don't need the /DISCARD/ any more.
 >
-> commit 7b7b71ff43cc0b15567b60c38a951c8a2cbc97f0 (HEAD -> bpf-next)
-> Author: Alexei Starovoitov <ast@kernel.org>
-> Date:   Mon Feb 24 11:27:15 2020 -0800
->
->     bpf: disable migration for bpf progs attached to uprobe
->
->     trace_call_bpf() no longer disables preemption on its own.
->     All callers of this function has to do it explicitly.
->
->     Signed-off-by: Alexei Starovoitov <ast@kernel.org>
->
-> diff --git a/kernel/trace/trace_uprobe.c b/kernel/trace/trace_uprobe.c
-> index 18d16f3ef980..7581f5eb6091 100644
-> --- a/kernel/trace/trace_uprobe.c
-> +++ b/kernel/trace/trace_uprobe.c
-> @@ -1333,8 +1333,15 @@ static void __uprobe_perf_func(struct trace_uprobe *tu,
->         int size, esize;
->         int rctx;
->
-> -       if (bpf_prog_array_valid(call) && !trace_call_bpf(call, regs))
-> -               return;
-> +       if (bpf_prog_array_valid(call)) {
-> +               u32 ret;
-> +
-> +               migrate_disable();
-> +               ret = trace_call_bpf(call, regs);
-> +               migrate_enable();
-> +               if (!ret)
-> +                       return;
-> +       }
->
-> But looking at your patch cant_sleep() seems unnecessary strong.
-> Should it be cant_migrate() instead?
+> Also remove the one in the main kernel linker script, since there are no
+> .eh_frame sections already.
 
-Yes, if we go with the migrate_disable(). OTOH, having a
-preempt_disable() in that uprobe callsite should work as well, then we
-can keep the cant_sleep() check which covers all other callsites
-properly. No strong opinion though.
+Yep, we could go even further and validate the object files post link
+such that $(READELF) reported no .eh_frame section, suggesting the use
+of -fno-asynchronous-unwind-tables in KBUILD_CFLAGS.
 
-> And two calls to __this_cpu*() replaced with this_cpu*() ?
+>
+> Signed-off-by: Arvind Sankar <nivedita@alum.mit.edu>
+> ---
+>  arch/x86/boot/setup.ld              | 1 -
+>  arch/x86/kernel/vmlinux.lds.S       | 3 ---
+>  arch/x86/realmode/rm/realmode.lds.S | 1 -
+>  3 files changed, 5 deletions(-)
+>
+> diff --git a/arch/x86/boot/setup.ld b/arch/x86/boot/setup.ld
+> index 3da1c37c6dd5..24c95522f231 100644
+> --- a/arch/x86/boot/setup.ld
+> +++ b/arch/x86/boot/setup.ld
+> @@ -52,7 +52,6 @@ SECTIONS
+>         _end = .;
+>
+>         /DISCARD/       : {
+> -               *(.eh_frame)
+>                 *(.note*)
+>         }
+>
+> diff --git a/arch/x86/kernel/vmlinux.lds.S b/arch/x86/kernel/vmlinux.lds.S
+> index e3296aa028fe..54f7b9f46446 100644
+> --- a/arch/x86/kernel/vmlinux.lds.S
+> +++ b/arch/x86/kernel/vmlinux.lds.S
+> @@ -412,9 +412,6 @@ SECTIONS
+>         DWARF_DEBUG
+>
+>         DISCARDS
+> -       /DISCARD/ : {
+> -               *(.eh_frame)
+> -       }
+>  }
 
-See above.
+grepping for eh_frame in arch/x86/ there's a comment in
+arch/x86/include/asm/dwarf2.h:
+ 40 #ifndef BUILD_VDSO
+ 41   /*
+ 42    * Emit CFI data in .debug_frame sections, not .eh_frame
+sections.
+ 43    * The latter we currently just discard since we don't do DWARF
+ 44    * unwinding at runtime.  So only the offline DWARF information is
+ 45    * useful to anyone.  Note we should not use this directive if
+ 46    * vmlinux.lds.S gets changed so it doesn't discard .eh_frame.
+ 47    */
+ 48   .cfi_sections .debug_frame
 
-> If you can ack it I can fix it up in place and apply the whole thing.
+add via:
+commit 7b956f035a9ef ("x86/asm: Re-add parts of the manual CFI infrastructure")
 
-Ack.
+https://sourceware.org/binutils/docs/as/CFI-directives.html#g_t_002ecfi_005fsections-section_005flist
+is the manual's section on .cfi_sections directives, and states `The
+default if this directive is not used is .cfi_sections .eh_frame.`.
+So the comment is slightly stale since we're no longer explicitly
+discarding .eh_frame in arch/x86/kernel/vmlinux.lds.S, rather
+preventing the generation via -fno-asynchronous-unwind-tables in
+KBUILD_CFLAGS (across a few different Makefiles).  Would you mind also
+updating the comment in arch/x86/include/asm/dwarf2.h in a V2? The
+rest of this patch LGTM.
 
+>
+>
+> diff --git a/arch/x86/realmode/rm/realmode.lds.S b/arch/x86/realmode/rm/realmode.lds.S
+> index 64d135d1ee63..63aa51875ba0 100644
+> --- a/arch/x86/realmode/rm/realmode.lds.S
+> +++ b/arch/x86/realmode/rm/realmode.lds.S
+> @@ -71,7 +71,6 @@ SECTIONS
+>         /DISCARD/ : {
+>                 *(.note*)
+>                 *(.debug*)
+> -               *(.eh_frame*)
+>         }
+>
+>  #include "pasyms.h"
+> --
+> 2.24.1
+>
+
+
+-- 
 Thanks,
-
-     tglx
+~Nick Desaulniers
