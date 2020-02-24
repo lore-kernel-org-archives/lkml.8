@@ -2,118 +2,127 @@ Return-Path: <SRS0=7TUr=4M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 11F99C11D30
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 16:03:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1DF67C11D2F
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 16:04:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E733120828
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 16:03:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DAC7420828
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 16:04:58 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="BNsXSLGw"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727851AbgBXQDr (ORCPT
+        id S1727946AbgBXQE5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Feb 2020 11:03:47 -0500
-Received: from eu-smtp-delivery-151.mimecast.com ([146.101.78.151]:43260 "EHLO
-        eu-smtp-delivery-151.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727177AbgBXQDr (ORCPT
+        Mon, 24 Feb 2020 11:04:57 -0500
+Received: from mail26.static.mailgun.info ([104.130.122.26]:49982 "EHLO
+        mail26.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727489AbgBXQE5 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Feb 2020 11:03:47 -0500
-Received: from AcuMS.aculab.com (156.67.243.126 [156.67.243.126]) (Using
- TLS) by relay.mimecast.com with ESMTP id
- uk-mta-165-GCRGvgq5PuayjL5fff0xdw-1; Mon, 24 Feb 2020 16:03:25 +0000
-X-MC-Unique: GCRGvgq5PuayjL5fff0xdw-1
-Received: from AcuMS.Aculab.com (fd9f:af1c:a25b:0:43c:695e:880f:8750) by
- AcuMS.aculab.com (fd9f:af1c:a25b:0:43c:695e:880f:8750) with Microsoft SMTP
- Server (TLS) id 15.0.1347.2; Mon, 24 Feb 2020 16:03:24 +0000
-Received: from AcuMS.Aculab.com ([fe80::43c:695e:880f:8750]) by
- AcuMS.aculab.com ([fe80::43c:695e:880f:8750%12]) with mapi id 15.00.1347.000;
- Mon, 24 Feb 2020 16:03:24 +0000
-From:   David Laight <David.Laight@ACULAB.COM>
-To:     'Ian Rogers' <irogers@google.com>,
-        Nick Desaulniers <nick.desaulniers@gmail.com>
-CC:     Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        clang-built-linux <clang-built-linux@googlegroups.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@redhat.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Jin Yao <yao.jin@linux.intel.com>,
-        Changbin Du <changbin.du@intel.com>,
-        John Keeping <john@metanate.com>,
-        Song Liu <songliubraving@fb.com>,
-        LKML <linux-kernel@vger.kernel.org>
-Subject: RE: [PATCH] perf: fix -Wstring-compare
-Thread-Topic: [PATCH] perf: fix -Wstring-compare
-Thread-Index: AQHV6tcUuLM+xYY6ZEGXR+PNFoTxX6gqgYIg
-Date:   Mon, 24 Feb 2020 16:03:24 +0000
-Message-ID: <dad75d5a7aa443e39dc20972d80ee83c@AcuMS.aculab.com>
-References: <20200223193456.25291-1-nick.desaulniers@gmail.com>
- <CAP-5=fU=+uYZDb2uSFO8CTJ-Ange4Nxh4mmsOC1MS=Tedois9g@mail.gmail.com>
-In-Reply-To: <CAP-5=fU=+uYZDb2uSFO8CTJ-Ange4Nxh4mmsOC1MS=Tedois9g@mail.gmail.com>
-Accept-Language: en-GB, en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-ms-exchange-transport-fromentityheader: Hosted
-x-originating-ip: [10.202.205.107]
+        Mon, 24 Feb 2020 11:04:57 -0500
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1582560296; h=Content-Type: Cc: To: Subject: Message-ID:
+ Date: From: In-Reply-To: References: MIME-Version: Sender;
+ bh=hONwJDRPPASCJa7NuZbPYpImYBsMqPVL5iKoRqF+ugQ=; b=BNsXSLGwwEh7u7GgkkuBnpAvkLlTzb5yytLtMhMQtBH9Gg0wATDj0NHkhHKVZ9Z63otRltIh
+ ioCGvzH5E31eq2E8uMx7CbHFj/QJR86wRM+BtL/whxtGUx6KLJnPB16vVcXeOXmDCNT/xG0M
+ rclQ/SlsxOFr/z4IG0ehQN4Fl3E=
+X-Mailgun-Sending-Ip: 104.130.122.26
+X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
+Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
+ by mxa.mailgun.org with ESMTP id 5e53f428.7f27a5696110-smtp-out-n03;
+ Mon, 24 Feb 2020 16:04:56 -0000 (UTC)
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id 6F17EC43383; Mon, 24 Feb 2020 16:04:55 +0000 (UTC)
+Received: from mail-ed1-f52.google.com (mail-ed1-f52.google.com [209.85.208.52])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: pkondeti)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id F0ED0C447A9
+        for <linux-kernel@vger.kernel.org>; Mon, 24 Feb 2020 16:04:53 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org F0ED0C447A9
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=pkondeti@codeaurora.org
+Received: by mail-ed1-f52.google.com with SMTP id g19so12451725eds.11
+        for <linux-kernel@vger.kernel.org>; Mon, 24 Feb 2020 08:04:53 -0800 (PST)
+X-Gm-Message-State: APjAAAUqp0YAyD9O04yTxTY9sU5lShzy6o09Ks313Zwmo8Ph1uWXr276
+        ywfLUky0GlgK9NemyUKvbR3DMsnWTEr0+IiyEw0=
+X-Google-Smtp-Source: APXvYqzPbAbrSOMiSdDnH+Vt7T6YYylICz+sTLYjALdjb/80+cuLv5NEGzQY62chIwqu+PlYeIeruLnWvQyumTNvRQc=
+X-Received: by 2002:a05:6402:a49:: with SMTP id bt9mr45817212edb.144.1582560292603;
+ Mon, 24 Feb 2020 08:04:52 -0800 (PST)
 MIME-Version: 1.0
-X-Mimecast-Spam-Score: 0
-X-Mimecast-Originator: aculab.com
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: base64
+References: <20200223184001.14248-1-qais.yousef@arm.com> <20200223184001.14248-6-qais.yousef@arm.com>
+ <20200224061004.GH28029@codeaurora.org> <20200224121139.cbz2dt5heiouknif@e107158-lin.cambridge.arm.com>
+In-Reply-To: <20200224121139.cbz2dt5heiouknif@e107158-lin.cambridge.arm.com>
+From:   Pavan Kondeti <pkondeti@codeaurora.org>
+Date:   Mon, 24 Feb 2020 21:34:41 +0530
+X-Gmail-Original-Message-ID: <CAEU1=PncyV=-vqjkDHSJ4hUhhTfYUgVN-HAe4zXMHtFx1oc5XA@mail.gmail.com>
+Message-ID: <CAEU1=PncyV=-vqjkDHSJ4hUhhTfYUgVN-HAe4zXMHtFx1oc5XA@mail.gmail.com>
+Subject: Re: [PATCH v2 5/6] sched/rt: Better manage pushing unfit tasks on wakeup
+To:     Qais Yousef <qais.yousef@arm.com>
+Cc:     Pavan Kondeti <pkondeti@codeaurora.org>,
+        Ingo Molnar <mingo@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Dietmar Eggemann <dietmar.eggemann@arm.com>,
+        Juri Lelli <juri.lelli@redhat.com>,
+        Vincent Guittot <vincent.guittot@linaro.org>,
+        Ben Segall <bsegall@google.com>, Mel Gorman <mgorman@suse.de>,
+        LKML <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-RnJvbTogSWFuIFJvZ2Vycw0KPiBTZW50OiAyNCBGZWJydWFyeSAyMDIwIDA1OjU2DQo+IE9uIFN1
-biwgRmViIDIzLCAyMDIwIGF0IDExOjM1IEFNIE5pY2sgRGVzYXVsbmllcnMNCj4gPG5pY2suZGVz
-YXVsbmllcnNAZ21haWwuY29tPiB3cm90ZToNCj4gPg0KPiA+IENsYW5nIHdhcm5zOg0KPiA+DQo+
-ID4gdXRpbC9ibG9jay1pbmZvLmM6Mjk4OjE4OiBlcnJvcjogcmVzdWx0IG9mIGNvbXBhcmlzb24g
-YWdhaW5zdCBhIHN0cmluZw0KPiA+IGxpdGVyYWwgaXMgdW5zcGVjaWZpZWQgKHVzZSBhbiBleHBs
-aWNpdCBzdHJpbmcgY29tcGFyaXNvbiBmdW5jdGlvbg0KPiA+IGluc3RlYWQpIFstV2Vycm9yLC1X
-c3RyaW5nLWNvbXBhcmVdDQo+ID4gICAgICAgICBpZiAoKHN0YXJ0X2xpbmUgIT0gU1JDTElORV9V
-TktOT1dOKSAmJiAoZW5kX2xpbmUgIT0gU1JDTElORV9VTktOT1dOKSkgew0KPiA+ICAgICAgICAg
-ICAgICAgICAgICAgICAgIF4gIH5+fn5+fn5+fn5+fn5+fg0KPiA+IHV0aWwvYmxvY2staW5mby5j
-OjI5ODo1MTogZXJyb3I6IHJlc3VsdCBvZiBjb21wYXJpc29uIGFnYWluc3QgYSBzdHJpbmcNCj4g
-PiBsaXRlcmFsIGlzIHVuc3BlY2lmaWVkICh1c2UgYW4gZXhwbGljaXQgc3RyaW5nIGNvbXBhcmlz
-b24gZnVuY3Rpb24NCj4gPiBpbnN0ZWFkKSBbLVdlcnJvciwtV3N0cmluZy1jb21wYXJlXQ0KPiA+
-ICAgICAgICAgaWYgKChzdGFydF9saW5lICE9IFNSQ0xJTkVfVU5LTk9XTikgJiYgKGVuZF9saW5l
-ICE9IFNSQ0xJTkVfVU5LTk9XTikpIHsNCj4gPiAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgICBeICB+fn5+fn5+fn5+fn5+fn4NCj4gPiB1dGls
-L2Jsb2NrLWluZm8uYzoyOTg6MTg6IGVycm9yOiByZXN1bHQgb2YgY29tcGFyaXNvbiBhZ2FpbnN0
-IGEgc3RyaW5nDQo+ID4gbGl0ZXJhbCBpcyB1bnNwZWNpZmllZCAodXNlIGFuIGV4cGxpY2l0IHN0
-cmluZw0KPiA+IGNvbXBhcmlzb24gZnVuY3Rpb24gaW5zdGVhZCkgWy1XZXJyb3IsLVdzdHJpbmct
-Y29tcGFyZV0NCj4gPiAgICAgICAgIGlmICgoc3RhcnRfbGluZSAhPSBTUkNMSU5FX1VOS05PV04p
-ICYmIChlbmRfbGluZSAhPSBTUkNMSU5FX1VOS05PV04pKSB7DQo+ID4gICAgICAgICAgICAgICAg
-ICAgICAgICAgXiAgfn5+fn5+fn5+fn5+fn5+DQo+ID4gdXRpbC9ibG9jay1pbmZvLmM6Mjk4OjUx
-OiBlcnJvcjogcmVzdWx0IG9mIGNvbXBhcmlzb24gYWdhaW5zdCBhIHN0cmluZw0KPiA+IGxpdGVy
-YWwgaXMgdW5zcGVjaWZpZWQgKHVzZSBhbiBleHBsaWNpdCBzdHJpbmcgY29tcGFyaXNvbiBmdW5j
-dGlvbg0KPiA+IGluc3RlYWQpIFstV2Vycm9yLC1Xc3RyaW5nLWNvbXBhcmVdDQo+ID4gICAgICAg
-ICBpZiAoKHN0YXJ0X2xpbmUgIT0gU1JDTElORV9VTktOT1dOKSAmJiAoZW5kX2xpbmUgIT0gU1JD
-TElORV9VTktOT1dOKSkgew0KPiA+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgIF4gIH5+fn5+fn5+fn5+fn5+fg0KPiA+IHV0aWwvbWFwLmM6
-NDM0OjE1OiBlcnJvcjogcmVzdWx0IG9mIGNvbXBhcmlzb24gYWdhaW5zdCBhIHN0cmluZyBsaXRl
-cmFsDQo+ID4gaXMgdW5zcGVjaWZpZWQgKHVzZSBhbiBleHBsaWNpdCBzdHJpbmcgY29tcGFyaXNv
-biBmdW5jdGlvbiBpbnN0ZWFkKQ0KPiA+IFstV2Vycm9yLC1Xc3RyaW5nLWNvbXBhcmVdDQo+ID4g
-ICAgICAgICAgICAgICAgIGlmIChzcmNsaW5lICE9IFNSQ0xJTkVfVU5LTk9XTikNCj4gPiAgICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgXiAgfn5+fn5+fn5+fn5+fn5+DQo+ID4NCj4gPiBMaW5r
-OiBodHRwczovL2dpdGh1Yi5jb20vQ2xhbmdCdWlsdExpbnV4L2xpbnV4L2lzc3Vlcy85MDANCj4g
-PiBTaWduZWQtb2ZmLWJ5OiBOaWNrIERlc2F1bG5pZXJzIDxuaWNrLmRlc2F1bG5pZXJzQGdtYWls
-LmNvbT4NCj4gPiAtLS0NCj4gPiBOb3RlOiB3YXMgZ2VuZXJhdGVkIG9mZiBvZiBtYWlubGluZTsg
-Y2FuIHJlYmFzZSBvbiAtbmV4dCBpZiBpdCBkb2Vzbid0DQo+ID4gYXBwbHkgY2xlYW5seS4NCj4g
-DQo+IExvb2tzIGdvb2QgdG8gbWUuIFNvbWUgbW9yZSBjb250ZXh0Og0KPiBodHRwczovL2NsYW5n
-Lmxsdm0ub3JnL2RvY3MvRGlhZ25vc3RpY3NSZWZlcmVuY2UuaHRtbCN3c3RyaW5nLWNvbXBhcmUN
-Cj4gVGhlIHNwZWMgc2F5czoNCj4gSi4xIFVuc3BlY2lmaWVkIGJlaGF2aW9yDQo+IFRoZSBmb2xs
-b3dpbmcgYXJlIHVuc3BlY2lmaWVkOg0KPiAuLiBXaGV0aGVyIHR3byBzdHJpbmcgbGl0ZXJhbHMg
-cmVzdWx0IGluIGRpc3RpbmN0IGFycmF5cyAoNi40LjUpLg0KDQpKdXN0IGNoYW5nZSB0aGUgKHBy
-b2JhYmxlKToNCiNkZWZpbmUgU1JDTElORV9VTktOT1dOICJ1bmtub3duIg0Kd2l0aA0Kc3RhdGlj
-IGNvbnN0IGNoYXIgU1JDX0xJTkVfVU5LTk9XTltdID0gInVuayI7DQoNCglEYXZpZA0KDQotDQpS
-ZWdpc3RlcmVkIEFkZHJlc3MgTGFrZXNpZGUsIEJyYW1sZXkgUm9hZCwgTW91bnQgRmFybSwgTWls
-dG9uIEtleW5lcywgTUsxIDFQVCwgVUsNClJlZ2lzdHJhdGlvbiBObzogMTM5NzM4NiAoV2FsZXMp
-DQo=
+Hi Qais,
 
+On Mon, Feb 24, 2020 at 5:42 PM Qais Yousef <qais.yousef@arm.com> wrote:
+[...]
+> We could do, temporarily, to get these fixes into 5.6. But I do think
+> select_task_rq_rt() doesn't do a good enough job into pushing unfit tasks to
+> the right CPUs.
+>
+> I don't understand the reasons behind your objection. It seems you think that
+> select_task_rq_rt() should be enough, but not AFAICS. Can you be a bit more
+> detailed please?
+>
+> FWIW, here's a screenshot of what I see
+>
+>         https://imgur.com/a/peV27nE
+>
+> After the first activation, select_task_rq_rt() fails to find the right CPU
+> (due to the same move all tasks to the cpumask_fist()) - but when the task
+> wakes up on 4, the logic I put causes it to migrate to CPU2, which is the 2nd
+> big core. CPU1 and CPU2 are the big cores on Juno.
+>
+> Now maybe we should fix select_task_rq_rt() to better balance tasks, but not
+> sure how easy is that.
+>
+
+Thanks for the trace. Now things are clear to me. Two RT tasks woke up
+simultaneously and the first task got its previous CPU i.e CPU#1. The next task
+goes through find_lowest_rq() and got the same CPU#1. Since this task priority
+is not more than the just queued task (already queued on CPU#1), it is sent
+to its previous CPU i.e CPU#4 in your case.
+
+From task_woken_rt() path, CPU#4 attempts push_rt_tasks(). CPU#4 is
+not overloaded,
+but we have rt_task_fits_capacity() check which forces the push. Since the CPU
+is not overloaded, your has_unfit_tasks() comes to rescue and push the
+task. Since
+the task has not scheduled in yet, it is eligible for push. You added checks
+to skip resched_curr() in push_rt_tasks() otherwise the push won't happen.
+
+Finally, I understood your patch. Obviously this is not clear to me
+before. I am not
+sure if this patch is the right approach to solve this race. I will
+think a bit more.
+
+Thanks,
+Pavan
+-- 
+Qualcomm India Private Limited, on behalf of Qualcomm Innovation Center, Inc.
+Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum, a
+Linux Foundation Collaborative Project
