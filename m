@@ -2,73 +2,120 @@ Return-Path: <SRS0=7TUr=4M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EB5CEC38BF9
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 21:53:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 760E6C38BFA
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 21:53:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B760920CC7
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 21:53:26 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="RwxpBsPs"
+	by mail.kernel.org (Postfix) with ESMTP id 5159720CC7
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 21:53:32 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728019AbgBXVxZ (ORCPT
+        id S1728095AbgBXVxb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Feb 2020 16:53:25 -0500
-Received: from bombadil.infradead.org ([198.137.202.133]:38516 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726980AbgBXVxZ (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Feb 2020 16:53:25 -0500
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
-        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=mw9BVCxn7pfkdLzlqdnU62sf9jMMFSFqSbqAU1P/njM=; b=RwxpBsPsAgcRXU3+CiEQvZpAse
-        L2XfCTem5LohmiBMGiEV7Hm4Q3mq7vEyPk+b+gdQxjievErsV1U0sY4fKiS2rqk8DgPLM6tE/jyo7
-        RUfRapcRZfourQ1+8voII3tkr9GhwLaPUKBKdb6fQeopIO4chmzl/v5t6FIfWR7wbQiRF1O6EBK0h
-        WaTduDEs7a07V+6hmEAGyqVmyNUglmconIZmqhNx+20JaYUAmyxvUJX8V1fiSDOy0IFJWCuWrnlre
-        puYN8dx/kZQdNIUe/ZOCrJV6SjguxVWedPzERekOT5SPrIVJ6wsJiCGW49A+qXEg0yXWQjvam0IVc
-        Md0CFWPg==;
-Received: from hch by bombadil.infradead.org with local (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1j6LfI-0004DG-G7; Mon, 24 Feb 2020 21:53:24 +0000
-Date:   Mon, 24 Feb 2020 13:53:24 -0800
-From:   Christoph Hellwig <hch@infradead.org>
-To:     Matthew Wilcox <willy@infradead.org>
-Cc:     linux-fsdevel@vger.kernel.org, linux-xfs@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        linux-f2fs-devel@lists.sourceforge.net, cluster-devel@redhat.com,
-        linux-mm@kvack.org, ocfs2-devel@oss.oracle.com,
-        linux-ext4@vger.kernel.org, linux-erofs@lists.ozlabs.org,
-        linux-btrfs@vger.kernel.org
-Subject: Re: [Cluster-devel] [PATCH v7 12/24] mm: Add
- page_cache_readahead_unbounded
-Message-ID: <20200224215324.GA16051@infradead.org>
-References: <20200219210103.32400-1-willy@infradead.org>
- <20200219210103.32400-13-willy@infradead.org>
+        Mon, 24 Feb 2020 16:53:31 -0500
+Received: from mga06.intel.com ([134.134.136.31]:21809 "EHLO mga06.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726980AbgBXVx3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 24 Feb 2020 16:53:29 -0500
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from orsmga007.jf.intel.com ([10.7.209.58])
+  by orsmga104.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 24 Feb 2020 13:53:29 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.70,481,1574150400"; 
+   d="scan'208";a="226126679"
+Received: from iweiny-desk2.sc.intel.com ([10.3.52.157])
+  by orsmga007.jf.intel.com with ESMTP; 24 Feb 2020 13:53:28 -0800
+Date:   Mon, 24 Feb 2020 13:53:28 -0800
+From:   Ira Weiny <ira.weiny@intel.com>
+To:     Christoph Hellwig <hch@lst.de>
+Cc:     Jonas Bonn <jonas@southpole.se>,
+        Stefan Kristiansson <stefan.kristiansson@saunalahti.fi>,
+        Stafford Horne <shorne@gmail.com>,
+        Marek Szyprowski <m.szyprowski@samsung.com>,
+        Robin Murphy <robin.murphy@arm.com>,
+        Will Deacon <will@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        openrisc@lists.librecores.org, iommu@lists.linux-foundation.org,
+        linux-arm-kernel@lists.infradead.org, linux-arch@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 4/5] dma-direct: provide a arch_dma_clear_uncached hook
+Message-ID: <20200224215327.GB11565@iweiny-DESK2.sc.intel.com>
+References: <20200224194446.690816-1-hch@lst.de>
+ <20200224194446.690816-5-hch@lst.de>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200219210103.32400-13-willy@infradead.org>
-X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
+In-Reply-To: <20200224194446.690816-5-hch@lst.de>
+User-Agent: Mutt/1.11.1 (2018-12-01)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Feb 19, 2020 at 01:00:51PM -0800, Matthew Wilcox wrote:
-> From: "Matthew Wilcox (Oracle)" <willy@infradead.org>
+On Mon, Feb 24, 2020 at 11:44:44AM -0800, Christoph Hellwig wrote:
+> This allows the arch code to reset the page tables to cached access when
+> freeing a dma coherent allocation that was set to uncached using
+> arch_dma_set_uncached.
 > 
-> ext4 and f2fs have duplicated the guts of the readahead code so
-> they can read past i_size.  Instead, separate out the guts of the
-> readahead code so they can call it directly.
+> Signed-off-by: Christoph Hellwig <hch@lst.de>
+> ---
+>  arch/Kconfig                    | 7 +++++++
+>  include/linux/dma-noncoherent.h | 1 +
+>  kernel/dma/direct.c             | 2 ++
+>  3 files changed, 10 insertions(+)
+> 
+> diff --git a/arch/Kconfig b/arch/Kconfig
+> index 090cfe0c82a7..c26302f90c96 100644
+> --- a/arch/Kconfig
+> +++ b/arch/Kconfig
+> @@ -255,6 +255,13 @@ config ARCH_HAS_SET_DIRECT_MAP
+>  config ARCH_HAS_DMA_SET_UNCACHED
+>  	bool
+>  
+> +#
+> +# Select if the architectures provides the arch_dma_clear_uncached symbol
+> +# to undo an in-place page table remap for uncached access.
+> +#
+> +config ARCH_HAS_DMA_CLEAR_UNCACHED
+> +	bool
+> +
+>  # Select if arch init_task must go in the __init_task_data section
+>  config ARCH_TASK_STRUCT_ON_STACK
+>  	bool
+> diff --git a/include/linux/dma-noncoherent.h b/include/linux/dma-noncoherent.h
+> index 1a4039506673..b59f1b6be3e9 100644
+> --- a/include/linux/dma-noncoherent.h
+> +++ b/include/linux/dma-noncoherent.h
+> @@ -109,5 +109,6 @@ static inline void arch_dma_prep_coherent(struct page *page, size_t size)
+>  #endif /* CONFIG_ARCH_HAS_DMA_PREP_COHERENT */
+>  
+>  void *arch_dma_set_uncached(void *addr, size_t size);
+> +void arch_dma_clear_uncached(void *addr, size_t size);
+>  
+>  #endif /* _LINUX_DMA_NONCOHERENT_H */
+> diff --git a/kernel/dma/direct.c b/kernel/dma/direct.c
+> index f01a8191fd59..a8560052a915 100644
+> --- a/kernel/dma/direct.c
+> +++ b/kernel/dma/direct.c
+> @@ -219,6 +219,8 @@ void dma_direct_free_pages(struct device *dev, size_t size, void *cpu_addr,
+>  
+>  	if (IS_ENABLED(CONFIG_DMA_REMAP) && is_vmalloc_addr(cpu_addr))
+>  		vunmap(cpu_addr);
+> +	else if (IS_ENABLED(CONFIG_ARCH_HAS_DMA_CLEAR_UNCACHED))
+> +		arch_dma_clear_uncached(cpu_addr, size);
 
-I don't like this, but then I like the horrible open coded versions
-even less..  Can you add a do not use for new code comment to the
-function as well?
+Isn't using arch_dma_clear_uncached() before patch 5 going to break
+bisectability?
 
-Otherwise looks good:
+Ira
 
-Reviewed-by: Christoph Hellwig <hch@lst.de>
+>  
+>  	dma_free_contiguous(dev, dma_direct_to_page(dev, dma_addr), size);
+>  }
+> -- 
+> 2.24.1
+> 
