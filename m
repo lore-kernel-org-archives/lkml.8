@@ -2,257 +2,196 @@ Return-Path: <SRS0=7TUr=4M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 90757C35679
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 10:39:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F3044C3567B
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 10:41:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5708320732
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 10:39:37 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582540777;
-	bh=oC8IkTl8qq+zq5+idqEtSaGP+eyDve6SMvv4Khg34+c=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=xzW5Ilvb5TAj6bt/jo7LexXADqsYHdWPfCOruuwTwXIA8ks63LQYKyl8XLhQstMGk
-	 lCFFPuc3fKRJYwP+w9EKDnZrF+c/A/i37tcCGMJBqUuVoo20p9LXcJH5YdcLLmEtPd
-	 c17Ddla81weEd2w99DsI+4wQIlQZAJ9yWlMgavl4=
+	by mail.kernel.org (Postfix) with ESMTP id C826920732
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 10:41:27 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727714AbgBXKjg (ORCPT
+        id S1727290AbgBXKl0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Feb 2020 05:39:36 -0500
-Received: from mail-ot1-f67.google.com ([209.85.210.67]:33555 "EHLO
-        mail-ot1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727359AbgBXKjf (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Feb 2020 05:39:35 -0500
-Received: by mail-ot1-f67.google.com with SMTP id w6so8289307otk.0;
-        Mon, 24 Feb 2020 02:39:35 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=pfCiZDK1CnODGfD7R/bmkbjrbPhAPqhXLKFJ2vQzq2Q=;
-        b=WH7X6PxPCVf2QaHfHcZvmf3s6OLbOURVs4AdyUVIP5l2DRCAJNnfq0J0hElFPEa8Qo
-         s/CLxrKLsj5/rLRP8IkW8ONy6hsiLwQbzY4a1SCxaHh20D4fIlOwBs7EECIKFhA7xj4U
-         kpsqWA3/L3aPZLHEQUxaCK+7nYwudQWGRbwEU0SLFaiC9wpxySyxJHaUugoQLrN36Ctv
-         M/cbyEbWlaShSCRU7Lt7e86haPS/0KptE9HhPQEu0dtMCLC/hENu1N/n/2ZWOKJdjego
-         NzNNk52NtyvElC/2P6JDlSVisicTqS9lVj9EsdPrq/50V2uOMKiDNveaQUq69LA1JQP/
-         zbhQ==
-X-Gm-Message-State: APjAAAU8l37NyHiGtP0uaZnYJrX5oNDIuVM4tIdBbKD+oFEp3O0q4riN
-        a5gFyQx1DtoU46bHFfkFAuaLzxLoEXlYSuGKAl0=
-X-Google-Smtp-Source: APXvYqy8Scnn+Iklf474MLavNjhVwGP7WqIRW+5ATgatZLAqljUyUkEe9IwRKpcvEKlJSUSwNkJtUSrenRwB2LKnIa0=
-X-Received: by 2002:a05:6830:4b9:: with SMTP id l25mr18590355otd.266.1582540774775;
- Mon, 24 Feb 2020 02:39:34 -0800 (PST)
+        Mon, 24 Feb 2020 05:41:26 -0500
+Received: from szxga04-in.huawei.com ([45.249.212.190]:11103 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726509AbgBXKl0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 24 Feb 2020 05:41:26 -0500
+Received: from DGGEMS407-HUB.china.huawei.com (unknown [172.30.72.60])
+        by Forcepoint Email with ESMTP id 10C96F9334DF5F66A2DF;
+        Mon, 24 Feb 2020 18:41:08 +0800 (CST)
+Received: from [10.134.22.195] (10.134.22.195) by smtp.huawei.com
+ (10.3.19.207) with Microsoft SMTP Server (TLS) id 14.3.439.0; Mon, 24 Feb
+ 2020 18:41:04 +0800
+Subject: Re: [f2fs-dev] Writes stoped working on f2fs after the compression
+ support was added
+From:   Chao Yu <yuchao0@huawei.com>
+To:     Jaegeuk Kim <jaegeuk@kernel.org>, <linux-kernel@vger.kernel.org>,
+        <linux-f2fs-devel@lists.sourceforge.net>
+References: <20191209222345.1078-1-jaegeuk@kernel.org>
+ <20200222044617.pfrhnz2iavkrtdn6@core.my.home>
+ <20200222181721.tzrrohep5l3yklpf@core.my.home>
+ <bec3798b-f861-b132-9138-221027bb5195@huawei.com>
+Message-ID: <b1eb9b22-b570-41ab-5177-2c89105428a2@huawei.com>
+Date:   Mon, 24 Feb 2020 18:41:03 +0800
+User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:52.0) Gecko/20100101
+ Thunderbird/52.9.1
 MIME-Version: 1.0
-References: <1654227.8mz0SueHsU@kreacher> <87wo8rjsa4.fsf@riseup.net>
- <CAJZ5v0hAn0V-QhebFt=vqKK6gBLxjTq7SNOWOStt7huCXMSH7g@mail.gmail.com>
- <878sl6j4fd.fsf@riseup.net> <CAJZ5v0jNFMwqSwSones91WgDwGqusyY1nEMDKAYuSZiLjH61dw@mail.gmail.com>
- <CAJZ5v0iMvzFGbuYsOo+AkWAqUbkQVT-FHsTDbStPiNenw783LQ@mail.gmail.com>
- <87sgjegh20.fsf@riseup.net> <CAJZ5v0hm2vVbM5dXGitvvUrWoZXZXXaJ+P3x38BjHRukZKgB3Q@mail.gmail.com>
- <87imk8hpud.fsf@riseup.net>
-In-Reply-To: <87imk8hpud.fsf@riseup.net>
-From:   "Rafael J. Wysocki" <rafael@kernel.org>
-Date:   Mon, 24 Feb 2020 11:39:23 +0100
-Message-ID: <CAJZ5v0iz5e6GhpJcphKtyzS=MeteuQeSVOVkL-9YjeQ3OWO-Jw@mail.gmail.com>
-Subject: Re: [PATCH 00/28] PM: QoS: Get rid of unuseful code and rework CPU
- latency QoS interface
-To:     Francisco Jerez <currojerez@riseup.net>
-Cc:     "Rafael J. Wysocki" <rafael@kernel.org>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Linux PM <linux-pm@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Amit Kucheria <amit.kucheria@linaro.org>,
-        "Pandruvada, Srinivas" <srinivas.pandruvada@intel.com>,
-        Rodrigo Vivi <rodrigo.vivi@intel.com>,
-        Peter Zijlstra <peterz@infradead.org>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <bec3798b-f861-b132-9138-221027bb5195@huawei.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
+X-Originating-IP: [10.134.22.195]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Sorry for the late response, I was offline for a major part of the
-previous week.
+On 2020/2/24 18:37, Chao Yu wrote:
+> Hi,
+> 
+> Thanks for the report.
+> 
+> On 2020/2/23 2:17, Ondřej Jirman wrote:
+>> Hello,
+>>
+>> I observe hung background f2fs task on 5.6-rc2+ shortly after boot, leading to
+>> panics. I use f2fs as rootfs. See below for stack trace. The reads continue to
+>> work (if I disable panic on hung task). But sync blocks, writes block, etc.
+>>
+>> It does not happen on all my f2fs filesystems, so it may depend on workload
+>> or my particular filesystem state. It happens on two separate devices though,
+>> both 32-bit, and doesn't happen on a 64-bit device. (might be a false lead,
+>> though)
+>>
+>> I went through the f2fs-for-5.6 tag/branch and reverted each patch right
+>> down to:
+>>
+>>   4c8ff7095bef64fc47e996a938f7d57f9e077da3 f2fs: support data compression
+>>
+>> I could still reproduce the issue.
+>>
+>> After reverting the data compression too, I could no longer reproduce the
+>> issue. Perhaps not very helpful, since that patch is huge.
+>>
+>> I tried to collect some information. Some ftrace logs, etc. Not sure what would
+>> help debug this. Let me know if I can help debug this more.
+>>
+>> Symptoms look the same as this issue:
+>>
+>>   https://www.mail-archive.com/linux-f2fs-devel@lists.sourceforge.net/msg15298.html
+>>
+>> ftrace: https://megous.com/dl/tmp/f2fs-debug-info.txt
+>>
+>> longer ftrace: https://megous.com/dl/tmp/f2fs-debug-info-full.txt
+> 
+> I checked the full trace log, however I didn't find any clue to troubleshot this issue.
+> 
+> [snip]
+> 
+>> dmesg:
+> 
+> Could you dump all other task stack info via "echo "t" > /proc/sysrq-trigger"?
+> 
+>>
+>> [  246.758021] INFO: task kworker/u16:1:58 blocked for more than 122 seconds.
+>> [  246.758040]       Not tainted 5.6.0-rc2-00590-g9983bdae4974e #11
+>> [  246.758044] "echo 0 > /proc/sys/kernel/hung_task_timeout_secs" disables this message.
+>> [  246.758052] kworker/u16:1   D    0    58      2 0x00000000
+>> [  246.758090] Workqueue: writeback wb_workfn (flush-179:0)
+>> [  246.758099] Backtrace:
+>> [  246.758121] [<c0912b90>] (__schedule) from [<c0913234>] (schedule+0x78/0xf4)
+>> [  246.758130]  r10:da644000 r9:00000000 r8:da645a60 r7:da283e10 r6:00000002 r5:da644000
+>> [  246.758132]  r4:da4d3600
+>> [  246.758148] [<c09131bc>] (schedule) from [<c017ec74>] (rwsem_down_write_slowpath+0x24c/0x4c0)
+>> [  246.758152]  r5:00000001 r4:da283e00
+>> [  246.758161] [<c017ea28>] (rwsem_down_write_slowpath) from [<c0915f2c>] (down_write+0x6c/0x70)
+>> [  246.758167]  r10:da283e00 r9:da645d80 r8:d9ed0000 r7:00000001 r6:00000000 r5:eff213b0
+>> [  246.758169]  r4:da283e00
+>> [  246.758187] [<c0915ec0>] (down_write) from [<c0435b80>] (f2fs_write_single_data_page+0x608/0x7ac)
+> 
+> I'm not sure what is this semaphore, I suspect this is F2FS_I(inode)->i_sem, in order to make
+> sure of this, can you help to add below function, and use them to replace
+> all {down,up}_{write,read}(&.i_sem) invoking? then reproduce this issue and catch the log.
 
-On Fri, Feb 14, 2020 at 9:31 PM Francisco Jerez <currojerez@riseup.net> wrote:
->
-> "Rafael J. Wysocki" <rafael@kernel.org> writes:
->
-> > On Fri, Feb 14, 2020 at 1:14 AM Francisco Jerez <currojerez@riseup.net> wrote:
-> >>
-> >> "Rafael J. Wysocki" <rafael@kernel.org> writes:
-> >>
-> >> > On Thu, Feb 13, 2020 at 12:34 PM Rafael J. Wysocki <rafael@kernel.org> wrote:
-> >
-> > [cut]
-> >
-> >> >
-> >> > I think that your use case is almost equivalent to the thermal
-> >> > pressure one, so you'd want to limit the max and so that would be
-> >> > something similar to store_max_perf_pct() with its input side hooked
-> >> > up to a QoS list.
-> >> >
-> >> > But it looks like that QoS list would rather be of a "reservation"
-> >> > type, so a request added to it would mean something like "leave this
-> >> > fraction of power that appears to be available to the CPU subsystem
-> >> > unused, because I need it for a different purpose".  And in principle
-> >> > there might be multiple requests in there at the same time and those
-> >> > "reservations" would add up.  So that would be a kind of "limited sum"
-> >> > QoS type which wasn't even there before my changes.
-> >> >
-> >> > A user of that QoS list might then do something like
-> >> >
-> >> > ret = cpu_power_reserve_add(1, 4);
-> >> >
-> >> > meaning that it wants 25% of the "potential" CPU power to be not
-> >> > utilized by CPU performance scaling and that could affect the
-> >> > scheduler through load modifications (kind of along the thermal
-> >> > pressure patchset discussed some time ago) and HWP (as well as the
-> >> > non-HWP intel_pstate by preventing turbo frequencies from being used
-> >> > etc).
-> >>
-> >> The problems with this are the same as with the per-CPU frequency QoS
-> >> approach: How does the device driver know what the appropriate fraction
-> >> of CPU power is?
-> >
-> > Of course it doesn't know and it may never know exactly, but it may guess.
-> >
-> > Also, it may set up a feedback loop: request an aggressive
-> > reservation, run for a while, measure something and refine if there's
-> > headroom.  Then repeat.
-> >
->
-> Yeah, of course, but that's obviously more computationally intensive and
-> less accurate than computing an approximately optimal constraint in a
-> single iteration (based on knowledge from performance counters and a
-> notion of the latency requirements of the application), since such a
-> feedback loop relies on repeatedly overshooting and undershooting the
-> optimal value (the latter causes an artificial CPU bottleneck, possibly
-> slowing down other applications too) in order to converge to and remain
-> in a neighborhood of the optimal value.
+Sorry, just forgot attaching below function.
 
-I'm not saying that feedback loops are the way to go in general, but
-that in some cases they are applicable and this particular case looks
-like it may be one of them.
+void inode_down_write(struct inode *inode)
+{
+	printk("%s from %pS\n", __func__, __builtin_return_address(0));
+	down_write(&F2FS_I(inode)->i_sem);
+}
 
-> Incidentally people tested a power balancing solution with a feedback
-> loop very similar to the one you're describing side by side to the RFC
-> patch series I provided a link to earlier (which targeted Gen9 LP
-> parts), and the energy efficiency improvements they observed were
-> roughly half of the improvement obtained with my series unsurprisingly.
->
-> Not to speak about generalizing such a feedback loop to bottlenecks on
-> multiple I/O devices.
+void inode_up_write(struct inode *inode)
+{
+	up_write(&F2FS_I(inode)->i_sem);
+	printk("%s from %pS\n", __func__, __builtin_return_address(0));
+}
 
-The generalizing part I'm totally unconvinced above.
+void inode_down_read(struct inode *inode)
+{
+	printk("%s from %pS\n", __func__, __builtin_return_address(0));
+	down_read(&F2FS_I(inode)->i_sem);
+}
 
-> >> Depending on the instantaneous behavior of the
-> >> workload it might take 1% or 95% of the CPU power in order to keep the
-> >> IO device busy.  Each user of this would need to monitor the performance
-> >> of every CPU in the system and update the constraints on each of them
-> >> periodically (whether or not they're talking to that IO device, which
-> >> would possibly negatively impact the latency of unrelated applications
-> >> running on other CPUs, unless we're willing to race with the task
-> >> scheduler).
-> >
-> > No, it just needs to measure a signal representing how much power *it*
-> > gets and decide whether or not it can let the CPU subsystem use more
-> > power.
-> >
->
-> Well yes it's technically possible to set frequency constraints based on
-> trial-and-error without sampling utilization information from the CPU
-> cores, but don't we agree that this kind of information can be highly
-> valuable?
+void inode_up_read(struct inode *inode)
+{
+	up_read(&F2FS_I(inode)->i_sem);
+	printk("%s from %pS\n", __func__, __builtin_return_address(0));
+}
 
-OK, so there are three things, frequency constraints (meaning HWP min
-and max limits, for example), frequency requests (this is what cpufreq
-does) and power limits.
-
-If the processor has at least some autonomy in driving the frequency,
-using frequency requests (i.e. cpufreq governors) for limiting power
-is inefficient in general, because the processor is not required to
-grant those requests at all.
-
-Using frequency limits may be good enough, but it generally limits the
-processor's ability to respond at short-time scales (for example,
-setting the max frequency limit will prevent the processor from using
-frequencies above that limit even temporarily, but that might be the
-most energy-efficient option in some cases).
-
-Using power limits (which is what RAPL does) doesn't bring such shortcomings in.
-
-> >> A solution based on utilization clamps (with some
-> >> extensions) sounds more future-proof to me honestly.
-> >
-> > Except that it would be rather hard to connect it to something like
-> > RAPL, which should be quite straightforward with the approach I'm
-> > talking about.
-> >
->
-> I think using RAPL as additional control variable would be useful, but
-> fully orthogonal to the cap being set by some global mechanism or being
-> derived from the aggregation of a number of per-process power caps based
-> on the scheduler behavior.
-
-I'm not sure what do you mean by "the cap" here.  A maximum frequency
-limit or something else?
-
-> The latter sounds like the more reasonable
-> fit for a multi-tasking, possibly virtualized environment honestly.
-> Either way RAPL is neither necessary nor sufficient in order to achieve
-> the energy efficiency improvement I'm working on.
-
-The "not necessary" I can agree with, but I don't see any arguments
-for the "not sufficient" statement.
-
-> > The problem with all scheduler-based ways, again, is that there is no
-> > direct connection between the scheduler and HWP,
->
-> I was planning to introduce such a connection in RFC part 2.  I have a
-> prototype for that based on a not particularly pretty custom interface,
-> I wouldn't mind trying to get it to use utilization clamps if you think
-> that's the way forward.
-
-Well, I may think so, but that's just thinking at this point.  I have
-no real numbers to support that theory.
-
-> > or even with whatever the processor does with the P-states in the
-> > turbo range.  If any P-state in the turbo range is requested, the
-> > processor has a license to use whatever P-state it wants, so this
-> > pretty much means allowing it to use as much power as it can.
-> >
-> > So in the first place, if you want to limit the use of power in the
-> > CPU subsystem through frequency control alone, you need to prevent it
-> > from using turbo P-states at all.  However, with RAPL you can just
-> > limit power which may still allow some (but not all) turbo P-states to
-> > be used.
->
-> My goal is not to limit the use of power of the CPU (if it has enough
-> load to utilize 100% of the cycles at turbo frequency so be it), but to
-> get it to use it more efficiently.  If you are constrained by a given
-> power budget (e.g. the TDP or the one you want set via RAPL) you can do
-> more with it if you set a stable frequency rather than if you let the
-> CPU bounce back and forth between turbo and idle.
-
-Well, this basically means driving the CPU frequency by hand with the
-assumption that the processor cannot do the right thing in this
-respect, while in theory the HWP algorithm should be able to produce
-the desired result.
-
-IOW, your argumentation seems to go into the "HWP is useless"
-direction, more or less and while there are people who will agree with
-such a statement, others won't.
-
-> This can only be
-> achieved effectively if the frequency governor has a rough idea of the
-> latency requirements of the workload, since it involves a
-> latency/energy-efficiency trade-off.
-
-Let me state this again (and this will be the last time, because I
-don't really like to repeat points): the frequency governor can only
-*request* the processor to do something in general and the request may
-or may not be granted, for various reasons.  If it is not granted, the
-whole "control" mechanism fails.
+> 
+> Thanks,
+> 
+>> [  246.758190]  r5:eff213b0 r4:da283c60
+>> [  246.758198] [<c0435578>] (f2fs_write_single_data_page) from [<c0435fd8>] (f2fs_write_cache_pages+0x2b4/0x7c4)
+>> [  246.758204]  r10:da645c28 r9:da283d60 r8:da283c60 r7:0000000f r6:da645d80 r5:00000001
+>> [  246.758206]  r4:eff213b0
+>> [  246.758214] [<c0435d24>] (f2fs_write_cache_pages) from [<c043682c>] (f2fs_write_data_pages+0x344/0x35c)
+>> [  246.758220]  r10:00000000 r9:d9ed002c r8:d9ed0000 r7:00000004 r6:da283d60 r5:da283c60
+>> [  246.758223]  r4:da645d80
+>> [  246.758238] [<c04364e8>] (f2fs_write_data_pages) from [<c0267ee8>] (do_writepages+0x3c/0xd4)
+>> [  246.758244]  r10:0000000a r9:c0e03d00 r8:00000c00 r7:c0264ddc r6:da645d80 r5:da283d60
+>> [  246.758246]  r4:da283c60
+>> [  246.758254] [<c0267eac>] (do_writepages) from [<c0310cbc>] (__writeback_single_inode+0x44/0x454)
+>> [  246.758259]  r7:da283d60 r6:da645eac r5:da645d80 r4:da283c60
+>> [  246.758266] [<c0310c78>] (__writeback_single_inode) from [<c03112d0>] (writeback_sb_inodes+0x204/0x4b0)
+>> [  246.758272]  r10:0000000a r9:c0e03d00 r8:da283cc8 r7:da283c60 r6:da645eac r5:da283d08
+>> [  246.758274]  r4:d9dc9848
+>> [  246.758281] [<c03110cc>] (writeback_sb_inodes) from [<c03115cc>] (__writeback_inodes_wb+0x50/0xe4)
+>> [  246.758287]  r10:da3797a8 r9:c0e03d00 r8:d9dc985c r7:da645eac r6:00000000 r5:d9dc9848
+>> [  246.758289]  r4:da5a8800
+>> [  246.758296] [<c031157c>] (__writeback_inodes_wb) from [<c03118f4>] (wb_writeback+0x294/0x338)
+>> [  246.758302]  r10:fffbf200 r9:da644000 r8:c0e04e64 r7:d9dc9848 r6:d9dc9874 r5:da645eac
+>> [  246.758305]  r4:d9dc9848
+>> [  246.758312] [<c0311660>] (wb_writeback) from [<c0312dac>] (wb_workfn+0x35c/0x54c)
+>> [  246.758318]  r10:da5f2005 r9:d9dc984c r8:d9dc9948 r7:d9dc9848 r6:00000000 r5:d9dc9954
+>> [  246.758321]  r4:000031e6
+>> [  246.758334] [<c0312a50>] (wb_workfn) from [<c014f2b8>] (process_one_work+0x214/0x544)
+>> [  246.758340]  r10:da5f2005 r9:00000200 r8:00000000 r7:da5f2000 r6:ef044400 r5:da5eb000
+>> [  246.758343]  r4:d9dc9954
+>> [  246.758350] [<c014f0a4>] (process_one_work) from [<c014f634>] (worker_thread+0x4c/0x574)
+>> [  246.758357]  r10:ef044400 r9:c0e03d00 r8:ef044418 r7:00000088 r6:ef044400 r5:da5eb014
+>> [  246.758359]  r4:da5eb000
+>> [  246.758368] [<c014f5e8>] (worker_thread) from [<c01564fc>] (kthread+0x144/0x170)
+>> [  246.758374]  r10:ec9e5e90 r9:dabf325c r8:da5eb000 r7:da644000 r6:00000000 r5:da5fe000
+>> [  246.758377]  r4:dabf3240
+>> [  246.758386] [<c01563b8>] (kthread) from [<c01010e8>] (ret_from_fork+0x14/0x2c)
+>> [  246.758391] Exception stack(0xda645fb0 to 0xda645ff8)
+>> [  246.758397] 5fa0:                                     00000000 00000000 00000000 00000000
+>> [  246.758402] 5fc0: 00000000 00000000 00000000 00000000 00000000 00000000 00000000 00000000
+>> [  246.758407] 5fe0: 00000000 00000000 00000000 00000000 00000013 00000000
+>> [  246.758413]  r10:00000000 r9:00000000 r8:00000000 r7:00000000 r6:00000000 r5:c01563b8
+>> [  246.758416]  r4:da5fe000
+>> .
+>>
+> 
+> 
+> _______________________________________________
+> Linux-f2fs-devel mailing list
+> Linux-f2fs-devel@lists.sourceforge.net
+> https://lists.sourceforge.net/lists/listinfo/linux-f2fs-devel
+> 
