@@ -2,135 +2,155 @@ Return-Path: <SRS0=7TUr=4M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.8 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 54391C11D27
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 08:36:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5553CC3567B
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 08:36:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 34AEA20675
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 08:36:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 21E8120714
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 08:36:47 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="ibNSapZo"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727229AbgBXIg0 convert rfc822-to-8bit (ORCPT
+        id S1727282AbgBXIgp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Feb 2020 03:36:26 -0500
-Received: from mail-yb1-f194.google.com ([209.85.219.194]:38253 "EHLO
-        mail-yb1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726216AbgBXIg0 (ORCPT
+        Mon, 24 Feb 2020 03:36:45 -0500
+Received: from mail-wr1-f67.google.com ([209.85.221.67]:45847 "EHLO
+        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726687AbgBXIgp (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Feb 2020 03:36:26 -0500
-Received: by mail-yb1-f194.google.com with SMTP id x9so2188053ybl.5;
-        Mon, 24 Feb 2020 00:36:25 -0800 (PST)
+        Mon, 24 Feb 2020 03:36:45 -0500
+Received: by mail-wr1-f67.google.com with SMTP id g3so9246820wrs.12
+        for <linux-kernel@vger.kernel.org>; Mon, 24 Feb 2020 00:36:42 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to
+         :user-agent;
+        bh=eQfv9Vg9FNZ1IKRXYyQ5Ipdv+XiwvqU0fwrAQYdRsOI=;
+        b=ibNSapZoeaEr3wrJYHv3XHiZ3QcEoiPhb1ADLXE8orFfh3k42YaX4YlosY1nBAT8lS
+         jMm7/rqDIRZdU064CtAfPx5YbYBvl7ntri7GdwIc8mvg1v8U0drfYleP53Whm4JQPesp
+         GpaVjSUlYI0RqKT50IZ/z5kW2AjKtlb+JmsmLWDkU2+NWWvhndcZJqjcxewYKbmVgDfq
+         ew/ledAYYSUEtv1Pu8r3gEdvxhdultHphkN+D8Hiq/5C1URDUylLs9b/OX3ZAzzb7J3G
+         /vJ776u4B4JJw0jQ5ZHDsLhCqQwmx5O1kY2cUSXXysfxE0HWZhSOXK7RtR16TR7nSHmA
+         GHyg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=q0jb5gMjGa4PfJxdPglKntQPi2NqeTmaCRfMvu23RV8=;
-        b=WNgoh0XuXoFzcKX+dQU7yQ1yXjbDE6pPQSogkShURYVgLpfW7eAFnrh1av99H5ZmIC
-         gU6WjPifLKnSqtc3Ls9TPZ9vcGR1tJjqMWWsjdgw6HsT3foRGRFFJS9P/MrsIxg2FCHJ
-         k8VERC9O7WsTdiSINmFRkj8ofRZknXDPZlohNEefFw5m3e6RWekbqKb2aFf6LqXSZTTY
-         uY27SF1WaqGSdFenF4HPCnwBWzWH31FcKeGDZ5qG2Ed4rqBRyg+RfABUW4L4pOU6Hfx9
-         Cmh89fnFbHEiGrtF3GRTS2aqn149M9w2jEn3AJVCkx/xSgboLEVkcx7evQaOtzlDtOwh
-         AzEw==
-X-Gm-Message-State: APjAAAVyGMH7yKljspGAc07muN2tdgiJ/xRAK1e2tRG+h8xRCo/Weyyn
-        CH0Uo9xn32UuwsAdqf4srtx1L52eGCWJ8z4IaNA=
-X-Google-Smtp-Source: APXvYqzcev14sMikUL9qbmJCdEphDWOt+vCkyAYC6iit4CnQoj+xQqI9JRB/zqHvmgJQYuBZ2Xk3P7OYqWGMwW4W7z0=
-X-Received: by 2002:a25:99c3:: with SMTP id q3mr41717240ybo.323.1582533385430;
- Mon, 24 Feb 2020 00:36:25 -0800 (PST)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to:user-agent;
+        bh=eQfv9Vg9FNZ1IKRXYyQ5Ipdv+XiwvqU0fwrAQYdRsOI=;
+        b=T+FnJ2QbKK/mUra3hROTNvsqOH3s+G0NsSZcjXf9tQcnmJc/4n/cBc7r98mgRJiUCm
+         /X2XQP47mSBRCEFrqoZqogJ/6ew8iVg7oZoYerKyJDLhmeThitS89GtSuZKnn++K/LLw
+         qmqSOUoftZK4KQccWYAOvF6ChhW++QwAq2HcBssYq6u1ixGSGEvdsygkOBsjofQXGpf6
+         paWluyx7mFYrIqphERBXrL7CBVsrVYL03c3FzrYtu6ys9Gl3q4Tu7nWC9TNNxNVneI3L
+         dnudlc405Zzm+/1B4JJsnYKspXGyvQNZqjmaVq4e2VuAvW+0fNvp/AZmjiL1gDCIYKo6
+         qMyw==
+X-Gm-Message-State: APjAAAWfit4QeIYusge/I9tD2fJflvjNKVInfWRBNEoqQ5or6G6NbI9B
+        xLMQvzsseEUHnBO222RYRtQseQ==
+X-Google-Smtp-Source: APXvYqw/NrMmIvPn6D5GC4zuvZdHE1WEiDRn6PxfraTp2mGxrE4G9Fpye1/arFzUCjW7Eud9wvHmZQ==
+X-Received: by 2002:a5d:4bcf:: with SMTP id l15mr2765537wrt.0.1582533402119;
+        Mon, 24 Feb 2020 00:36:42 -0800 (PST)
+Received: from dell ([2.31.163.122])
+        by smtp.gmail.com with ESMTPSA id f65sm17120731wmf.29.2020.02.24.00.36.40
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 24 Feb 2020 00:36:41 -0800 (PST)
+Date:   Mon, 24 Feb 2020 08:37:12 +0000
+From:   Lee Jones <lee.jones@linaro.org>
+To:     Rob Herring <robh@kernel.org>
+Cc:     devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+        Alexandre Torgue <alexandre.torgue@st.com>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Maxime Ripard <mripard@kernel.org>,
+        Chen-Yu Tsai <wens@csie.org>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Sam Ravnborg <sam@ravnborg.org>, Vinod Koul <vkoul@kernel.org>,
+        Jonathan Cameron <jic23@kernel.org>,
+        Kukjin Kim <kgene@kernel.org>,
+        Krzysztof Kozlowski <krzk@kernel.org>,
+        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Ulf Hansson <ulf.hansson@linaro.org>,
+        Srinivas Kandagatla <srinivas.kandagatla@linaro.org>,
+        Kishon Vijay Abraham I <kishon@ti.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Mark Brown <broonie@kernel.org>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>
+Subject: Re: [PATCH] dt-bindings: Fix dtc warnings in examples
+Message-ID: <20200224083712.GH3494@dell>
+References: <20200221222711.15973-1-robh@kernel.org>
 MIME-Version: 1.0
-References: <20200222170417.1531867-1-paulburton@kernel.org>
-In-Reply-To: <20200222170417.1531867-1-paulburton@kernel.org>
-From:   =?UTF-8?Q?Philippe_Mathieu=2DDaud=C3=A9?= <f4bug@amsat.org>
-Date:   Mon, 24 Feb 2020 09:36:13 +0100
-Message-ID: <CAAdtpL6_zMhuRC48K=-jaircv1KppGkfmad0OMDz32Yy8STOSg@mail.gmail.com>
-Subject: Re: [PATCH v2] MAINTAINERS: Hand MIPS over to Thomas
-To:     Paul Burton <paulburton@kernel.org>
-Cc:     "open list:BROADCOM NVRAM DRIVER" <linux-mips@vger.kernel.org>,
-        open list <linux-kernel@vger.kernel.org>,
-        Ralf Baechle <ralf@linux-mips.org>,
-        Thomas Bogendoerfer <tsbogend@alpha.franken.de>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8BIT
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200221222711.15973-1-robh@kernel.org>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, Feb 22, 2020 at 6:04 PM Paul Burton <paulburton@kernel.org> wrote:
->
-> My time with MIPS the company has reached its end, and so at best I'll
-> have little time spend on maintaining arch/mips/.
->
-> Ralf last authored a patch over 2 years ago, the last time he committed
-> one is even further back & activity was sporadic for a while before
-> that. The reality is that he isn't active.
->
-> Having a new maintainer with time to do things properly will be
-> beneficial all round. Thomas Bogendoerfer has been involved in MIPS
-> development for a long time & has offered to step up as maintainer, so
-> add Thomas and remove myself & Ralf from the MIPS entry.
->
-> Ralf already has an entry in CREDITS to honor his contributions, so this
-> just adds one for me.
->
-> Signed-off-by: Paul Burton <paulburton@kernel.org>
-> Cc: Ralf Baechle <ralf@linux-mips.org>
-> Cc: Thomas Bogendoerfer <tsbogend@alpha.franken.de>
-> Cc: linux-mips@vger.kernel.org
-> ---
-> Changes in v2:
-> - Merge the 2 patches & add Thomas :)
-> - Drop the link to Ralf's git tree
-> ---
->  CREDITS     | 5 +++++
->  MAINTAINERS | 6 ++----
->  2 files changed, 7 insertions(+), 4 deletions(-)
->
-> diff --git a/CREDITS b/CREDITS
-> index a97d3280a627..032b5994f476 100644
-> --- a/CREDITS
-> +++ b/CREDITS
-> @@ -567,6 +567,11 @@ D: Original author of Amiga FFS filesystem
->  S: Orlando, Florida
->  S: USA
->
-> +N: Paul Burton
-> +E: paulburton@kernel.org
-> +W: https://pburton.com
-> +D: MIPS maintainer 2018-2020
-> +
->  N: Lennert Buytenhek
->  E: kernel@wantstofly.org
->  D: Original (2.4) rewrite of the ethernet bridging code
-> diff --git a/MAINTAINERS b/MAINTAINERS
-> index a0d86490c2c6..86e70a216ab1 100644
-> --- a/MAINTAINERS
-> +++ b/MAINTAINERS
-> @@ -11114,14 +11114,12 @@ S:    Maintained
->  F:     drivers/usb/image/microtek.*
->
->  MIPS
-> -M:     Ralf Baechle <ralf@linux-mips.org>
-> -M:     Paul Burton <paulburton@kernel.org>
-> +M:     Thomas Bogendoerfer <tsbogend@alpha.franken.de>
->  L:     linux-mips@vger.kernel.org
->  W:     http://www.linux-mips.org/
-> -T:     git git://git.linux-mips.org/pub/scm/ralf/linux.git
->  T:     git git://git.kernel.org/pub/scm/linux/kernel/git/mips/linux.git
->  Q:     http://patchwork.linux-mips.org/project/linux-mips/list/
-> -S:     Supported
-> +S:     Maintained
->  F:     Documentation/devicetree/bindings/mips/
->  F:     Documentation/mips/
->  F:     arch/mips/
-> --
-> 2.25.1
->
+On Fri, 21 Feb 2020, Rob Herring wrote:
 
-Thank you Paul for your MIPS work.
-Thank you Thomas for stepping in :)
+> Fix all the warnings in the DT binding schema examples when built with
+> 'W=1'. This is in preparation to make that the default for examples.
+> 
+> Cc: Maxime Coquelin <mcoquelin.stm32@gmail.com>
+> Cc: Alexandre Torgue <alexandre.torgue@st.com>
+> Cc: Stephen Boyd <sboyd@kernel.org>
+> Cc: Maxime Ripard <mripard@kernel.org>
+> Cc: Chen-Yu Tsai <wens@csie.org>
+> Cc: Thierry Reding <thierry.reding@gmail.com>
+> Cc: Sam Ravnborg <sam@ravnborg.org>
+> Cc: Vinod Koul <vkoul@kernel.org>
+> Cc: Jonathan Cameron <jic23@kernel.org>
+> Cc: Kukjin Kim <kgene@kernel.org>
+> Cc: Krzysztof Kozlowski <krzk@kernel.org>
+> Cc: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+> Cc: Bartosz Golaszewski <bgolaszewski@baylibre.com>
+> Cc: Lee Jones <lee.jones@linaro.org>
+> Cc: Ulf Hansson <ulf.hansson@linaro.org>
+> Cc: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+> Cc: Kishon Vijay Abraham I <kishon@ti.com>
+> Cc: Linus Walleij <linus.walleij@linaro.org>
+> Cc: Mark Brown <broonie@kernel.org>
+> Cc: Daniel Lezcano <daniel.lezcano@linaro.org>
+> Signed-off-by: Rob Herring <robh@kernel.org>
+> ---
+>  .../devicetree/bindings/arm/stm32/st,mlahb.yaml    |  2 +-
+>  .../clock/allwinner,sun4i-a10-osc-clk.yaml         |  2 +-
+>  .../bindings/clock/allwinner,sun9i-a80-gt-clk.yaml |  2 +-
+>  .../display/allwinner,sun4i-a10-tv-encoder.yaml    |  6 +-----
+>  .../bindings/display/bridge/anx6345.yaml           | 10 ++--------
+>  .../display/panel/leadtek,ltk500hd1829.yaml        |  2 ++
+>  .../bindings/display/panel/xinpeng,xpp055c272.yaml |  2 ++
+>  .../bindings/display/simple-framebuffer.yaml       |  6 +-----
+>  .../devicetree/bindings/dma/ti/k3-udma.yaml        | 14 +-------------
+>  .../devicetree/bindings/gpu/arm,mali-bifrost.yaml  | 14 +++++++-------
+>  .../devicetree/bindings/gpu/arm,mali-midgard.yaml  | 14 +++++++-------
+>  .../bindings/iio/adc/samsung,exynos-adc.yaml       |  2 +-
+>  .../bindings/input/touchscreen/goodix.yaml         |  2 +-
+>  .../devicetree/bindings/media/ti,cal.yaml          |  2 +-
 
-FWIW:
-Reviewed-by: Philippe Mathieu-Daudé <f4bug@amsat.org>
+>  .../devicetree/bindings/mfd/max77650.yaml          |  4 ++--
+
+Acked-by: Lee Jones <lee.jones@linaro.org>
+
+>  .../devicetree/bindings/mmc/mmc-controller.yaml    |  1 +
+>  Documentation/devicetree/bindings/nvmem/nvmem.yaml |  2 ++
+>  .../bindings/phy/allwinner,sun4i-a10-usb-phy.yaml  |  2 +-
+>  .../bindings/pinctrl/st,stm32-pinctrl.yaml         |  2 +-
+>  .../devicetree/bindings/regulator/regulator.yaml   |  2 +-
+>  .../sram/allwinner,sun4i-a10-system-control.yaml   |  2 +-
+>  .../bindings/timer/allwinner,sun4i-a10-timer.yaml  |  2 +-
+>  22 files changed, 39 insertions(+), 58 deletions(-)
+
+-- 
+Lee Jones [李琼斯]
+Linaro Services Technical Lead
+Linaro.org │ Open source software for ARM SoCs
+Follow Linaro: Facebook | Twitter | Blog
