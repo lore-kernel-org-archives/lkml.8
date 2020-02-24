@@ -2,176 +2,134 @@ Return-Path: <SRS0=7TUr=4M=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+X-Spam-Status: No, score=-11.8 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6F258C38BE0
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 19:40:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 27592C38BE0
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 19:41:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 42E562084E
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 19:40:41 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="L1po6j4D"
+	by mail.kernel.org (Postfix) with ESMTP id 07E5A2080D
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Feb 2020 19:41:20 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727237AbgBXTkZ (ORCPT
+        id S1727310AbgBXTlT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Feb 2020 14:40:25 -0500
-Received: from mail-pg1-f194.google.com ([209.85.215.194]:46683 "EHLO
-        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726452AbgBXTkY (ORCPT
+        Mon, 24 Feb 2020 14:41:19 -0500
+Received: from Galois.linutronix.de ([193.142.43.55]:51010 "EHLO
+        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726452AbgBXTlT (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Feb 2020 14:40:24 -0500
-Received: by mail-pg1-f194.google.com with SMTP id y30so5630707pga.13;
-        Mon, 24 Feb 2020 11:40:23 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=scSwL+/ed755uFJ90j5w37fp1jhFdhEzmUIhsR9VTAA=;
-        b=L1po6j4D2H92/hvRNB11HbAiY3p65YpajFhZyxuGdxVo5LmdthkVftmbEuFuNr2eOd
-         /qeH7F5Sdd4lzzTIwY0Qm1orxwZYM/2VYZEmrBgSbWyybZGjDTVVmtRetD1r1dYY9Lnz
-         VxBM7ZgNqfLXpuIr1ne9lX2Of44YfXAcGIAppUrf+PO/cmYH9A23xpCIn4SQEhRhvU3U
-         D1LciOrVN3MF0P7WIeTD+Uq+In2Rtt2NJMTURx9eSX3NpmArN9EnOJ1LSlCIaG3Hc3Tp
-         TwRtD2ktz0obLOPl9rAsgP0RVXoZ8fO8GZrQBdkwliHs0T9Ar3tw0y0mqVrrTvH2KyCq
-         8GyQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=scSwL+/ed755uFJ90j5w37fp1jhFdhEzmUIhsR9VTAA=;
-        b=gWnLTRvbAX/d/KkvWl17s+6NqPhmi17zk65tQKWRBqari1c6gVyGn/d4SmV8rWol+O
-         bUjVJy4IaSvAHZWIgwSamqM7inlDA19JVYVVKU2LZ36Dc4Q24RJ0z/CuJVzTb/9VRXQe
-         dbFcDblIGJeV82eyZOjE3/IKodOXwYar7zGSwd2gY9jY8U2281t7fm7FdlPGA+D+IFmm
-         dWvIZAE6NIZv8nuTC0LR2lt65wghSiCBkxwttBebDWhNogCF2EPVkL/fry0u1yiIsyq+
-         +H/1IvA866SnZcNr64odP8r1EtpQ1S2Vl+FhHs1H8IIVZeSV5uPPu2xGR8KX3eWqfLF3
-         lTZQ==
-X-Gm-Message-State: APjAAAVNYBgVSW875kyzEjpMcOmiPZqkTL3BBebvAo6gsy7VKJCr8BTW
-        wzhn/ssK8TvcwIE7xA56phQ=
-X-Google-Smtp-Source: APXvYqx7VayPo9fzLuogwXiuuGdtCzqJw9WAlW/sl/zsATRzG3Aw0hYmTpG2ua/khpWVbjOkDYWeSQ==
-X-Received: by 2002:a63:cc09:: with SMTP id x9mr34807474pgf.339.1582573223430;
-        Mon, 24 Feb 2020 11:40:23 -0800 (PST)
-Received: from ast-mbp ([2620:10d:c090:500::6:2457])
-        by smtp.gmail.com with ESMTPSA id w14sm13704058pgi.22.2020.02.24.11.40.21
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Mon, 24 Feb 2020 11:40:22 -0800 (PST)
-Date:   Mon, 24 Feb 2020 11:40:20 -0800
-From:   Alexei Starovoitov <alexei.starovoitov@gmail.com>
-To:     Thomas Gleixner <tglx@linutronix.de>
-Cc:     LKML <linux-kernel@vger.kernel.org>,
-        David Miller <davem@davemloft.net>, bpf@vger.kernel.org,
-        netdev@vger.kernel.org, Alexei Starovoitov <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Sebastian Sewior <bigeasy@linutronix.de>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Clark Williams <williams@redhat.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Juri Lelli <juri.lelli@redhat.com>,
-        Ingo Molnar <mingo@kernel.org>,
-        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-        Vinicius Costa Gomes <vinicius.gomes@intel.com>,
-        Jakub Kicinski <kuba@kernel.org>
-Subject: Re: [patch V3 06/22] bpf/trace: Remove redundant preempt_disable
- from trace_call_bpf()
-Message-ID: <20200224194017.rtwjcgjxnmltisfe@ast-mbp>
-References: <20200224140131.461979697@linutronix.de>
- <20200224145643.059995527@linutronix.de>
+        Mon, 24 Feb 2020 14:41:19 -0500
+Received: from [5.158.153.53] (helo=tip-bot2.lab.linutronix.de)
+        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
+        (Exim 4.80)
+        (envelope-from <tip-bot2@linutronix.de>)
+        id 1j6JZE-00042F-00; Mon, 24 Feb 2020 20:39:01 +0100
+Received: from [127.0.1.1] (localhost [IPv6:::1])
+        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id 49DC51C2141;
+        Mon, 24 Feb 2020 20:38:53 +0100 (CET)
+Date:   Mon, 24 Feb 2020 19:38:52 -0000
+From:   "tip-bot2 for Dave Hansen" <tip-bot2@linutronix.de>
+Reply-to: linux-kernel@vger.kernel.org
+To:     linux-tip-commits@vger.kernel.org
+Subject: [tip: x86/fpu] x86/pkeys: Add check for pkey "overflow"
+Cc:     Alex Shi <alex.shi@linux.alibaba.com>,
+        Dave Hansen <dave.hansen@intel.com>,
+        Borislav Petkov <bp@suse.de>, x86 <x86@kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>
+In-Reply-To: <20200122165346.AD4DA150@viggo.jf.intel.com>
+References: <20200122165346.AD4DA150@viggo.jf.intel.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200224145643.059995527@linutronix.de>
-User-Agent: NeoMutt/20180223
+Message-ID: <158257313295.28353.13260588823755271323.tip-bot2@tip-bot2>
+X-Mailer: tip-git-log-daemon
+Robot-ID: <tip-bot2.linutronix.de>
+Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-Linutronix-Spam-Score: -1.0
+X-Linutronix-Spam-Level: -
+X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Feb 24, 2020 at 03:01:37PM +0100, Thomas Gleixner wrote:
-> Similar to __bpf_trace_run this is redundant because __bpf_trace_run() is
-> invoked from a trace point via __DO_TRACE() which already disables
-> preemption _before_ invoking any of the functions which are attached to a
-> trace point.
-> 
-> Remove it and add a cant_sleep() check.
-> 
-> Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-> ---
-> V3: New patch. Replaces the previous one which converted this to migrate_disable() 
-> ---
->  kernel/trace/bpf_trace.c |    3 +--
->  1 file changed, 1 insertion(+), 2 deletions(-)
-> 
-> --- a/kernel/trace/bpf_trace.c
-> +++ b/kernel/trace/bpf_trace.c
-> @@ -83,7 +83,7 @@ unsigned int trace_call_bpf(struct trace
->  	if (in_nmi()) /* not supported yet */
->  		return 1;
->  
-> -	preempt_disable();
-> +	cant_sleep();
->  
->  	if (unlikely(__this_cpu_inc_return(bpf_prog_active) != 1)) {
->  		/*
-> @@ -115,7 +115,6 @@ unsigned int trace_call_bpf(struct trace
->  
->   out:
->  	__this_cpu_dec(bpf_prog_active);
-> -	preempt_enable();
+The following commit has been merged into the x86/fpu branch of tip:
 
-My testing uncovered that above was too aggressive:
-[   41.533438] BUG: assuming atomic context at kernel/trace/bpf_trace.c:86
-[   41.534265] in_atomic(): 0, irqs_disabled(): 0, pid: 2348, name: test_progs
-[   41.536907] Call Trace:
-[   41.537167]  dump_stack+0x75/0xa0
-[   41.537546]  __cant_sleep.cold.105+0x8b/0xa3
-[   41.538018]  ? exit_to_usermode_loop+0x77/0x140
-[   41.538493]  trace_call_bpf+0x4e/0x2e0
-[   41.538908]  __uprobe_perf_func.isra.15+0x38f/0x690
-[   41.539399]  ? probes_profile_seq_show+0x220/0x220
-[   41.539962]  ? __mutex_lock_slowpath+0x10/0x10
-[   41.540412]  uprobe_dispatcher+0x5de/0x8f0
-[   41.540875]  ? uretprobe_dispatcher+0x7c0/0x7c0
-[   41.541404]  ? down_read_killable+0x200/0x200
-[   41.541852]  ? __kasan_kmalloc.constprop.6+0xc1/0xd0
-[   41.542356]  uprobe_notify_resume+0xacf/0x1d60
+Commit-ID:     16171bffc829272d5e6014bad48f680cb50943d9
+Gitweb:        https://git.kernel.org/tip/16171bffc829272d5e6014bad48f680cb50943d9
+Author:        Dave Hansen <dave.hansen@linux.intel.com>
+AuthorDate:    Wed, 22 Jan 2020 08:53:46 -08:00
+Committer:     Borislav Petkov <bp@suse.de>
+CommitterDate: Mon, 24 Feb 2020 20:25:21 +01:00
 
-The following fixes it:
+x86/pkeys: Add check for pkey "overflow"
 
-commit 7b7b71ff43cc0b15567b60c38a951c8a2cbc97f0 (HEAD -> bpf-next)
-Author: Alexei Starovoitov <ast@kernel.org>
-Date:   Mon Feb 24 11:27:15 2020 -0800
+Alex Shi reported the pkey macros above arch_set_user_pkey_access()
+to be unused.  They are unused, and even refer to a nonexistent
+CONFIG option.
 
-    bpf: disable migration for bpf progs attached to uprobe
+But, they might have served a good use, which was to ensure that
+the code does not try to set values that would not fit in the
+PKRU register.  As it stands, a too-large 'pkey' value would
+be likely to silently overflow the u32 new_pkru_bits.
 
-    trace_call_bpf() no longer disables preemption on its own.
-    All callers of this function has to do it explicitly.
+Add a check to look for overflows.  Also add a comment to remind
+any future developer to closely examine the types used to store
+pkey values if arch_max_pkey() ever changes.
 
-    Signed-off-by: Alexei Starovoitov <ast@kernel.org>
+This boots and passes the x86 pkey selftests.
 
-diff --git a/kernel/trace/trace_uprobe.c b/kernel/trace/trace_uprobe.c
-index 18d16f3ef980..7581f5eb6091 100644
---- a/kernel/trace/trace_uprobe.c
-+++ b/kernel/trace/trace_uprobe.c
-@@ -1333,8 +1333,15 @@ static void __uprobe_perf_func(struct trace_uprobe *tu,
-        int size, esize;
-        int rctx;
+Reported-by: Alex Shi <alex.shi@linux.alibaba.com>
+Signed-off-by: Dave Hansen <dave.hansen@intel.com>
+Signed-off-by: Borislav Petkov <bp@suse.de>
+Link: https://lkml.kernel.org/r/20200122165346.AD4DA150@viggo.jf.intel.com
+---
+ arch/x86/include/asm/pkeys.h |  5 +++++
+ arch/x86/kernel/fpu/xstate.c |  9 +++++++--
+ 2 files changed, 12 insertions(+), 2 deletions(-)
 
--       if (bpf_prog_array_valid(call) && !trace_call_bpf(call, regs))
--               return;
-+       if (bpf_prog_array_valid(call)) {
-+               u32 ret;
+diff --git a/arch/x86/include/asm/pkeys.h b/arch/x86/include/asm/pkeys.h
+index 19b137f..2ff9b98 100644
+--- a/arch/x86/include/asm/pkeys.h
++++ b/arch/x86/include/asm/pkeys.h
+@@ -4,6 +4,11 @@
+ 
+ #define ARCH_DEFAULT_PKEY	0
+ 
++/*
++ * If more than 16 keys are ever supported, a thorough audit
++ * will be necessary to ensure that the types that store key
++ * numbers and masks have sufficient capacity.
++ */
+ #define arch_max_pkey() (boot_cpu_has(X86_FEATURE_OSPKE) ? 16 : 1)
+ 
+ extern int arch_set_user_pkey_access(struct task_struct *tsk, int pkey,
+diff --git a/arch/x86/kernel/fpu/xstate.c b/arch/x86/kernel/fpu/xstate.c
+index 73fe597..32b153d 100644
+--- a/arch/x86/kernel/fpu/xstate.c
++++ b/arch/x86/kernel/fpu/xstate.c
+@@ -895,8 +895,6 @@ const void *get_xsave_field_ptr(int xfeature_nr)
+ 
+ #ifdef CONFIG_ARCH_HAS_PKEYS
+ 
+-#define NR_VALID_PKRU_BITS (CONFIG_NR_PROTECTION_KEYS * 2)
+-#define PKRU_VALID_MASK (NR_VALID_PKRU_BITS - 1)
+ /*
+  * This will go out and modify PKRU register to set the access
+  * rights for @pkey to @init_val.
+@@ -915,6 +913,13 @@ int arch_set_user_pkey_access(struct task_struct *tsk, int pkey,
+ 	if (!boot_cpu_has(X86_FEATURE_OSPKE))
+ 		return -EINVAL;
+ 
++	/*
++	 * This code should only be called with valid 'pkey'
++	 * values originating from in-kernel users.  Complain
++	 * if a bad value is observed.
++	 */
++	WARN_ON_ONCE(pkey >= arch_max_pkey());
 +
-+               migrate_disable();
-+               ret = trace_call_bpf(call, regs);
-+               migrate_enable();
-+               if (!ret)
-+                       return;
-+       }
-
-But looking at your patch cant_sleep() seems unnecessary strong.
-Should it be cant_migrate() instead?
-And two calls to __this_cpu*() replaced with this_cpu*() ?
-If you can ack it I can fix it up in place and apply the whole thing.
-That was the only issue I found.
+ 	/* Set the bits we need in PKRU:  */
+ 	if (init_val & PKEY_DISABLE_ACCESS)
+ 		new_pkru_bits |= PKRU_AD_BIT;
